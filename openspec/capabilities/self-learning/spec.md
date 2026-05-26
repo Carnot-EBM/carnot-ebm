@@ -8119,3 +8119,79 @@ mutation claim, explicit failed precondition diagnostics, and
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-LEARN-3090 | Implemented (`python/carnot/eval/fr11_resyn_kancl_completeness_repair_v1.py`) | Implemented (`tests/python/test_experiment_3090_fr11_resyn_kancl_completeness_repair_v1.py`) |
+
+## REQ-LEARN-3103: FR-11 ReSyn/KAN-CL Stress Promotion Boundary
+
+**Given** Exp 3090 recovered FR-11 under a controller-only ReSyn/KAN-CL
+budget and Exp 3097 produced a ready exact fixture evaluation protocol
+**When** Exp 3103 stress-tests that controller-only loop
+**Then** it SHALL load the Exp 3090 controller evidence and the Exp 3097
+protocol manifest before any stress update.
+**And** it SHALL define harder family holdouts, prior-retention cases,
+shuffled-label negative controls, no-feedback controls, and delayed-regression
+probes.
+**And** it SHALL replay only bounded controller-side updates and SHALL NOT
+mutate base model weights, KAN model weights, or invoke live model inference.
+**And** it SHALL measure soundness mistakes, completeness mistakes,
+family-holdout delta, prior-retention delta, delayed-regression delta,
+rollback count, and negative-control outcomes.
+**And** it SHALL set `promotion_decision` to one of `controller_only`,
+`blocked`, or `broader_promotion_candidate` based only on measured stress
+boundaries.
+
+The terminal artifact SHALL be
+`results/experiment_3103_fr11_resyn_kancl_stress_promotion_boundary_v2.json`
+and SHALL include `fr11_stress_ready`, `continuous_self_learning_task`,
+`promotion_decision`, `soundness_mistakes`, `completeness_mistakes`,
+`family_holdout_delta`, `prior_retention_delta`, `delayed_regression_delta`,
+`rollback_count`, `negative_control_results`, `source_artifacts`,
+`inference_substrate`, and `honest_verdict`.
+
+### REQ-LEARN-3103 Sub-requirements
+
+- REQ-LEARN-3103-1: The stress runner SHALL fail closed with
+  `promotion_decision="blocked"` when the Exp 3090 prior artifact, Exp 3097
+  protocol artifact, or Exp 3097 stratified manifest is missing, malformed, or
+  not ready.
+- REQ-LEARN-3103-2: The stress split SHALL contain non-empty train-update,
+  harder family-holdout, prior-retention, delayed-regression, no-feedback, and
+  shuffled-label negative-control partitions.
+- REQ-LEARN-3103-3: `negative_control_results` SHALL report no-feedback and
+  shuffled-label outcomes, including case counts, deltas, mistake counts, and
+  rollback status for unsafe shuffled candidates.
+- REQ-LEARN-3103-4: `soundness_mistakes` SHALL count stress rows whose exact
+  protocol target is reject but the controller accepts; `completeness_mistakes`
+  SHALL count stress rows whose exact protocol target is accept but the
+  controller rejects or abstains.
+- REQ-LEARN-3103-5: `prior_retention_delta` SHALL compare the stressed
+  candidate against the Exp 3090 prior controller target semantics so protocol
+  gains cannot silently erase prior controller behavior.
+- REQ-LEARN-3103-6: `promotion_decision` SHALL be `blocked` whenever the
+  stressed candidate has nonzero soundness mistakes, nonzero completeness
+  mistakes, negative prior retention, positive negative-control delta, or any
+  forbidden model-weight mutation claim.
+
+### SCENARIO-LEARN-3103: Stress Boundary Blocks Broader FR-11 Promotion
+
+**Given** the ready Exp 3090 artifact and ready Exp 3097 exact protocol
+**When** Exp 3103 replays the controller-only update on protocol feedback
+**Then** it writes a complete terminal artifact with
+`fr11_stress_ready=true`, `continuous_self_learning_task=true`, measured
+stress deltas, visible rollback behavior, `promotion_decision="blocked"` when
+the stress budget fails, no base model weight mutation, and an `honest_verdict`
+beginning with `complete_`.
+
+### SCENARIO-LEARN-3103-BLOCKED: Missing Stress Preconditions Fail Closed
+
+**Given** missing Exp 3090 or Exp 3097 source evidence
+**When** Exp 3103 runs
+**Then** it writes the required artifact fields with zeroed metrics,
+`fr11_stress_ready=false`, `promotion_decision="blocked"`, empty negative
+controls, no model-weight mutation claim, explicit failed precondition
+diagnostics, and `honest_verdict="blocked_precondition_failed"`.
+
+## Implementation Status (REQ-LEARN-3103)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-LEARN-3103 | Planned (`python/carnot/eval/fr11_resyn_kancl_stress_promotion_boundary_v2.py`) | Planned (`tests/python/test_experiment_3103_fr11_resyn_kancl_stress_promotion_boundary_v2.py`) |
