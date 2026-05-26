@@ -1,145 +1,156 @@
-# Research Roadmap vNEXT - Milestone 2026.05.290
+# Research Roadmap vNEXT - Milestone 2026.05.291
 
-**Title:** Certified Verifier Recovery + Explicit Repair Boundary + FR-11 Curriculum Guard
+**Title:** Live SOTA Verifier Repair + FR-11 EvoEnv + Bounded Energy Monitors
 **Created:** 2026-05-26
 **Status:** Planned
-**Supersedes:** 2026.05.289 "Verifier/Repair Recovery + MaxSAT Routing + Sidecar Boundaries"
+**Supersedes:** 2026.05.290 "Certified Verifier Recovery + Explicit Repair Boundary + FR-11 Curriculum Guard"
 **Execution queue:** `research-roadmap-next.yaml`
 
-## What 2026.05.289 Proved
+## What 2026.05.290 Proved
 
-Milestone `.289` completed every scheduled task except the intentionally
-gate-blocked verifier-calibration and repair runs, but the capstone authority
-still reports `paper_ready=false`. The authoritative closeout is
-`results/experiment_3108_capstone_v289.json`:
+Milestone `.290` completed every scheduled task and repaired several missing
+or ambiguous evidence surfaces, but it did not make the project paper-ready.
+The authoritative closeout is
+`results/experiment_3121_capstone_v290.json`:
 
 - `capstone_ready=true`
 - `paper_ready=false`
 - `publication_blocker_count=36`
-- `verifier_gain_status=model_spec_gap_or_gated_verifier_gain_recovery_incomplete`
-- `repair_claim_status=blocked_gated_missing_verifier_gated_repair_not_promoted`
-- `fr11_self_learning_status=clean_controller_only_soundness_zero_completeness_promotion_blocked`
-- `ebt_arm_status=projection_only_sidecar_pipeline_no_model_integration`
-- `sampler_hardware_status=diagnostic_only_cpu_microbench_no_hardware_speedup`
-- `gatemate_status=blocked_no_rerun_operator_actions_required_no_speedup_claim`
-- `ssqa_status=gated_skipped_host_visible_readback_missing`
+- `blocker_delta_from_v23=0`
+- `next_top_gap=publishable_verifier_repair_headline_evidence`
+- `verifier_gain_status=solver_certified_ready_no_live_sota_lift`
+- `repair_claim_status=bounded_micro_panel_zero_delta_no_promotion`
+- `fr11_self_learning_status=controller_only_soundness_zero_completeness_zero_no_weight_update`
+- `ebt_arm_status=projection_only_sidecar_correlation_no_live_model_integration`
+- `sampler_hardware_status=bounded_clut_cpu_only_no_hardware_speedup`
 
-The main positive result is that `.289` made the evidence surface much more
-mechanical. `exp3097` produced a 72-case exact fixture protocol and `exp3098`
-produced an auditable MaxSAT routing policy. `exp3099` ran a non-tiny local
-SOTA panel over 48 exact cases with `false_accept_rate=0.0` and
-`rejection_recall=1.0`, but `abstention_precision=0.0` and matrix v23 still
-flagged a model-spec metadata gap. `exp3100` proved that Z3 was available and
-vacuity guards passed, but `formal_feedback_v2_ready=false` because cached
-SOTA-pair availability was treated as a hard readiness condition; the
-solver-only baseline outperformed guided attempts. `exp3101` and `exp3102`
-therefore gate-blocked, leaving the repair micro-panel artifact absent.
+The main positive result is that solver authority is now real rather than
+aspirational. `exp3111` emitted 72 certificates over exact fixtures with
+Z3/MCS-style localization and vacuity guards. `exp3112` and `exp3113` showed
+diagnostic verifier gains on exact labels with `false_accept_rate=0.0`, but
+the evidence did not use a full mandated SOTA cache pair. `exp3114` localized
+fragment-level verification targets, and `exp3115` finally wrote the repair
+micro-panel artifact, honestly reporting `repair_success_delta=0.0`.
 
-FR-11 remained honest: controller-only soundness was clean, but completeness
-and retention failed promotion. `exp3103` reported `soundness_mistakes=0`,
-`completeness_mistakes=12`, `prior_retention_delta=-0.444444`, and
-`promotion_decision=blocked`. Architecture work stayed bounded:
-`exp3104` shipped sidecar pipeline tests without live model integration,
-`exp3105` shipped a CPU cLUT microbench with no hardware claim, and `exp3106`
-kept GateMate/SSQA blocked on missing operator-visible evidence.
+FR-11 also improved its boundary: `exp3116` reported zero soundness and
+completeness mistakes for the new controller-only unsolvable curriculum guard,
+with positive prior-retention and family-holdout deltas. It still made no
+weight-update claim. Architecture work remained bounded: `exp3117` measured
+EBT/ARM sidecar correlation without live integration, `exp3118` integrated a
+CPU-only cLUT backend with no hardware claim, and `exp3119` preserved
+GateMate/SSQA blocked status due to missing operator-visible evidence.
 
-| Area | `.289` result | `.290` consequence |
+| Area | `.290` result | `.291` consequence |
 | --- | --- | --- |
-| Exact fixtures | 72 usable fixtures and 48-case SOTA panel floor | Reuse exact authority; do not spend a task rediscovering fixtures |
-| Model specs | Mandated model IDs attempted, but matrix found headline metadata gap | Add a cache/model-spec corrigendum before any headline LLM result |
-| Formal feedback | Z3 available, vacuity guarded, but v2 blocked by cached SOTA-pair condition and negative guided delta | Decouple solver-certified coherence feedback from LLM cache availability |
-| Calibration | Gate-blocked on `formal_feedback_v2_ready=false` | Run diagnostic calibration gated on readiness, not on assumed positive lift |
-| Repair | Missing/gate-blocked artifact | Always emit an explicit repair boundary artifact, even when repair cannot run |
-| FR-11 | Soundness clean but completeness and retention promotion blocked | Add unsolvable/hard-family curriculum and retention guard, still controller-only |
-| EBT/ARM | Projection-only sidecar with tests | Measure sidecar score correlation before any integration claim |
-| Sampling/hardware | CPU cLUT diagnostic only; GateMate/SSQA evidence absent | Integrate cLUT as a bounded backend path and ingest hardware evidence only |
+| Local SOTA cache | Only `unsloth/gemma-4-26B-A4B-it-GGUF` appeared in headline-ready cache artifacts; Qwen3.6 and Gemma-4-31B stayed missing | Start with a v2 cache/precondition manifest and block headline live claims if no mandated model is usable |
+| Certified verification | Solver-certified feedback exists; diagnostic gains were solver/exact-label driven, not live SOTA lift | Run a difficulty-stratified local SOTA panel and a prefix-bound verifier pilot under explicit cache/precondition accounting |
+| Repair | Artifact exists but zero repair delta and no intent preservation | Try multi-turn repair only with monitors, exact tests, and no headline wording promotion |
+| Multi-turn reasoning | Fragment-level verification exists, but no satisfiable-drift audit | Add interwhen/DRIFT-inspired fragment-time monitors and a returned-answer ledger consistency gate |
+| FR-11 | Controller-only guard is cleaner but not continuous self-learning by PRD standards | Add EvoEnv-style verifiable environment synthesis with solve-verify asymmetry and retention gates |
+| EBT/ARM | Sidecars remain projection-only | Measure auditable energy budgets over exact fixtures and local traces before any integration claim |
+| KAN/KAEM | KAN verification remains architecture context | Add one bounded MILP/PWA audit to turn KAN interpretability into a verifier artifact |
+| Hardware | cLUT CPU backend works; GateMate/SSQA still require operator evidence | Keep hardware as evidence ingestion and sampler-boundary accounting, not board execution |
 
 ## Three Biggest Gaps To PRD Vision
 
-1. **Certified verifier and repair gap.** The PRD requires verifiable reasoning
-   under solver/test authority. Carnot still has no positive verifier gain, no
-   promoted formal-feedback loop, and no repair micro-panel artifact. `.290`
-   must turn MaxSAT routing into solver-certified coherence feedback, repair
-   the model-spec metadata gap, and produce an explicit repair boundary artifact
-   whether repair runs or blocks.
+1. **Publishable verifier and repair evidence.** The PRD requires verifiable
+   reasoning and useful repair under solver/test authority. Carnot now has
+   certified solver feedback but still lacks a live mandated-SOTA verifier lift
+   and any nonzero repair result. `.291` must separate cache/precondition
+   readiness from solver readiness, stratify live verifier evidence by
+   difficulty, add bounded deterministic probability/coverage checks, and only
+   run repair through exact tests and monitors.
 
-2. **Continuous self-learning promotion gap.** FR-11 remains controller-only.
-   The current controller can avoid soundness mistakes under stress, but it
-   loses completeness and prior retention. `.290` must test an unsolvable or
-   hard-family curriculum guard with rollback and retention gates before any
-   stronger learning claim.
+2. **Continuous self-learning beyond controller-only guards.** FR-11 asks for
+   autonomous self-learning. `.290` proved a safer curriculum controller, but
+   it did not synthesize reusable learning environments, update weights, or
+   show durable memory beyond controller state. `.291` must test a bounded
+   EvoEnv-style loop: generate or admit executable constraint environments,
+   prove solve-verify asymmetry, track retention, and reject answer leakage.
 
-3. **Architecture-to-evidence bridge gap.** The long-term architecture points
-   toward EBT/ARM value scoring, KAN/KAEM verification, and sampler hardware,
-   but local evidence is still projection-only or diagnostic-only. `.290`
-   should measure sidecar score correlation and cLUT backend integration while
-   preserving no-live-integration and no-hardware-speedup claims.
+3. **Architecture-to-evidence bridge.** The long-term Carnot architecture
+   points to EBT/ARM energy diagnostics, KAN/KAEM verification, and sampler
+   hardware. Current artifacts are projection-only or CPU-only. `.291` should
+   convert those ideas into bounded evidence: energy-budget diagnostics,
+   KAN PWA/MILP verification accounting, and operator-evidence-only hardware
+   status.
 
 ## New Research Integrated
 
-The post-`.289` planning sweep was appended to `research-references.md` before
-this milestone was designed. Findings shaping `.290`:
+The post-`.290` planning sweep was appended to `research-references.md` before
+this milestone was designed. Findings shaping `.291`:
 
 | Finding | Source | Milestone use |
 | --- | --- | --- |
-| Proof-carrying coherent reasoning can compile answer selection plus logical constraints to weighted MaxSAT with certificates, coherence gaps, and minimal repair distance | OpenReview `liNC8KHvUy` | Build formal-feedback v3 around solver-certified coherence and MCS/MUS-style localized contradictions |
-| LOVER uses unsupervised logic regularization over multiple reasoning paths | arXiv:2605.05893 | Pilot a logic-regularized verifier on exact fixtures while keeping exact labels authoritative |
-| NuRL identifies zero-pass hard samples as a blind spot for online RL and uses abstract self-generated hints | arXiv:2509.25666 / OpenReview `hfNnQHkTtv` | Adapt the idea only to FR-11 controller memory and curriculum, with retention and soundness gates |
-| KAN property verification can use piecewise affine abstractions and MILP bounds | arXiv:2602.06737 | Add bounded KAN verification context for follow-on work; do not make it a headline `.290` blocker |
-| EBFT uses sequence-level feature matching framed as energy-based fine-tuning | arXiv:2603.12248 | Inform sidecar score-correlation diagnostics without claiming weight updates |
-| Lyapunov-style energy matching offers stopping/certification criteria for samplers | arXiv:2605.05530 | Keep as sampler design context for cLUT/sidecar follow-on |
-| Extropic THRML/XTR-0/Z1 and Logical Intelligence Kona remain public architecture context | Extropic / Logical Intelligence pages | Keep hardware and commercial EBM claims evidence-bounded in local artifacts |
+| EvoEnv reframes self-improvement as verifiable environment synthesis with stable solve-verify asymmetry | arXiv:2605.14392 / Hugging Face papers | `exp3128` builds the required FR-11 continuous self-learning pilot around executable, solver-labeled environments |
+| ReVeal trains generation and verification through multi-turn tool feedback | OpenReview `q56ZI1Co43` | `exp3127` tries a multi-turn repair ladder with tests and Z3 as authority |
+| interwhen verifies partial traces at runtime with plug-in monitors | Microsoft Research / GitHub | `exp3126` adds fragment-time monitors before final repair |
+| BEAVER computes sound probability bounds for prefix-closed semantic constraints | OpenReview `xO3efBXHM9` | `exp3125` pilots prefix-closed verifier bounds on bounded exact fixtures |
+| Variation in Verification warns that verifier scale and generator strength interact with difficulty | OpenReview `DcEuBwrWnB` | `exp3124` stratifies local SOTA verifier results by exact difficulty and generator family |
+| DRIFT-Bench shows residual failures are often satisfiable drift after MUS repair | OpenReview `B9gtT1hhEm` | `exp3126` and `exp3129` add ledger-consistency and returned-answer drift fields |
+| ARM-EBM v4 was revised 2026-05-25 and EBT has active 2026 follow-ons such as LoopUS and CEM | arXiv:2512.15605, 2507.02092, 2605.11011, 2605.07588 | `exp3130` measures energy budgets and approximation gaps rather than claiming integration |
+| KAN property verification via PWA/MILP remains the most concrete KAN verifier path | arXiv:2602.06737 | `exp3131` creates a bounded KAN abstraction audit |
+| FPGA/p-bit and thermodynamic hardware literature remains active but external | arXiv:2506.00269, 2512.24558, Extropic hardware page | `exp3132` preserves hardware evidence boundaries and avoids speedup claims |
 
 ## Architecture Direction
 
-`.290` keeps the authority stack conservative: exact fixtures, Z3, execution
-tests, and solver certificates decide correctness; local SOTA GGUF models are
-candidate generators and trace sources; sidecar energy layers provide bounded
-diagnostics until live integration is proven.
+`.291` keeps exact solvers, executable tests, and certified monitors as the
+only authorities. Local SOTA GGUF models may generate candidates, traces, or
+probabilities, but they cannot certify their own correctness. EBT/ARM, KAN,
+and sampler layers remain sidecars until they produce bounded local evidence.
 
 ```text
-                +-----------------------------------+
-                | research-roadmap-next.yaml        |
-                | exp3109 ... exp3121               |
-                +-----------------+-----------------+
-                                  |
-                                  v
-+------------------+    +--------+---------+    +-----------------------+
-| .289 authorities | -> | model-spec/cache | -> | certified coherence   |
-| matrix v23       |    | corrigendum      |    | feedback v3           |
-| capstone v289    |    | exp3110          |    | exp3111               |
-+------------------+    +--------+---------+    +-----------+-----------+
-                                  |                          |
-                                  v                          v
-                         +--------+---------+      +---------+----------+
-                         | logic-regularized| ---> | diagnostic verifier|
-                         | verifier pilot   |      | calibration v5     |
-                         | exp3112          |      | exp3113            |
-                         +--------+---------+      +---------+----------+
-                                  |                          |
-                                  v                          v
-                         +--------+---------+      +---------+----------+
-                         | fragment/code    | ---> | explicit repair    |
-                         | verifier pilot   |      | boundary artifact  |
-                         | exp3114          |      | exp3115            |
-                         +------------------+      +--------------------+
+                +-------------------------------------+
+                | .290 capstone + matrix v24          |
+                | paper_ready=false, blockers=36      |
+                +-------------------+-----------------+
+                                    |
+                                    v
+        +---------------------------+---------------------------+
+        | exp3122 archive + exp3123 SOTA cache/preconditions    |
+        +---------------------------+---------------------------+
+                                    |
+              +---------------------+---------------------+
+              |                                           |
+              v                                           v
+   +----------+-----------+                    +----------+-----------+
+   | exp3124 live SOTA    |                    | exp3128 FR-11        |
+   | verifier panel       |                    | EvoEnv synthesis     |
+   +----------+-----------+                    +----------+-----------+
+              |                                           |
+              v                                           v
+   +----------+-----------+                    +----------+-----------+
+   | exp3125 prefix-bound |                    | exp3129 constraint   |
+   | deterministic pilot  |                    | memory/drift audit   |
+   +----------+-----------+                    +----------+-----------+
+              |
+              v
+   +----------+-----------+
+   | exp3126 fragment-time|
+   | monitors + drift     |
+   +----------+-----------+
+              |
+              v
+   +----------+-----------+
+   | exp3127 multi-turn   |
+   | repair ladder        |
+   +----------------------+
 
-+------------------+    +------------------+    +-----------------------+
-| FR-11 .289       | -> | unsolvable        |    | sidecar / cLUT /     |
-| stress artifact  |    | curriculum guard  |    | hardware evidence    |
-| exp3103          |    | exp3116           |    | exp3117-exp3119      |
-+------------------+    +------------------+    +-----------+-----------+
-                                                              |
-                                                              v
-                                                  +-----------+-----------+
-                                                  | matrix v24 + capstone |
-                                                  | exp3120 + exp3121     |
-                                                  +-----------------------+
+   +----------------------+      +----------------------+      +----------------------+
+   | exp3130 ARM/EBT      |      | exp3131 KAN PWA/MILP |      | exp3132 hardware     |
+   | energy budget        |      | verifier audit       |      | evidence boundary    |
+   +----------+-----------+      +----------+-----------+      +----------+-----------+
+              \                         |                         /
+               \                        |                        /
+                v                       v                       v
+                  +---------------------+---------------------+
+                  | exp3133 matrix v25 + exp3134 capstone     |
+                  +-------------------------------------------+
 ```
 
 ## Required SOTA Model Policy
 
-Every `.290` experiment that invokes an LLM must include `MODEL_SPECS` and
+Every `.291` experiment that invokes a local LLM must include `MODEL_SPECS` and
 must attempt at least one mandated local SOTA GGUF:
 
 - `unsloth/Qwen3.6-35B-A3B-GGUF` (flagship MoE)
@@ -147,153 +158,152 @@ must attempt at least one mandated local SOTA GGUF:
 - `unsloth/gemma-4-26B-A4B-it-GGUF` (middle MoE)
 
 Legacy small models such as `Qwen3.5-0.8B` and `gemma-4-E4B-it` may appear
-only as CPU smoke tests. They cannot headline verifier, formal-feedback,
-repair, or self-learning results. Tasks that need live models must record
-cache status, exact model IDs, selected quantization/file if known, prompt
-hashes, live-call counts, and whether headline evidence was skipped because no
-mandated model was usable.
+only as CPU smoke tests. They cannot headline verifier, repair, or
+self-learning results. Tasks that need live models must record cache status,
+exact model IDs, selected quantization/file when known, prompt hashes, live-call
+counts, GPU/precondition checks, and whether headline evidence was skipped
+because no mandated model was usable.
 
 ## Milestone Phases
 
-### Phase A - Archive, Model-Spec Corrigendum, and Certified Feedback
+### Phase A - Archive and Local SOTA Readiness
 
-**Goal:** turn `.289`'s clearer failure surface into an unblocked formal
-feedback path without depending on a cached two-model SOTA pair.
+**Goal:** make `.291` activation and model availability mechanical before any
+headline verifier or repair run.
 
-- `exp3109` archives `.289`, stages `.290`, and carries forward matrix v23
-  blocker authority.
-- `exp3110` writes the model-spec/cache manifest corrigendum so headline local
-  SOTA artifacts expose `mandatory_headline_model_ids` and cache status
-  consistently.
-- `exp3111` builds certified coherence feedback v3 using Z3/MaxSAT-style
-  certificates, MCS/MUS localization, and solver-only baselines.
+- `exp3122` archives `.290`, carries forward matrix v24 and capstone blockers,
+  and stages `.291` without editing `research-roadmap.yaml`.
+- `exp3123` writes the local SOTA cache/precondition manifest v2, including
+  dual-RTX state, model IDs, cache files, `cached_sota_pair_available`, and
+  headline-claim rules.
 
-### Phase B - Verifier Recovery and Repair Boundary
+### Phase B - Live Verifier, Bounds, Monitors, and Repair
 
-**Goal:** test logic-regularized verification and diagnostic calibration on the
-exact protocol, then ensure repair never disappears as a missing artifact.
+**Goal:** turn certified solver feedback into publishable live-model evidence,
+or produce a precise blocker when cache or verifier behavior prevents that.
 
-- `exp3112` pilots a LOVER-inspired logic-regularized verifier over exact
-  fixtures and mandated local SOTA traces when available.
-- `exp3113` runs verifier calibration v5 diagnostically: it may report negative
-  or zero lift, but must produce a usable gate decision.
-- `exp3114` adds a fragment-level code/constraint verification pilot to expose
-  localized repair targets before full candidate repair.
-- `exp3115` writes the explicit repair micro-panel v4 artifact. If calibration
-  does not unblock repair, the artifact must say so mechanically.
+- `exp3124` runs a difficulty-stratified mandated-SOTA verifier panel over exact
+  fixtures and reports live lift, false accepts, false rejects, and repair gate
+  status.
+- `exp3125` pilots a BEAVER-inspired prefix-closed deterministic verifier bound
+  on small exact constraints.
+- `exp3126` adds interwhen/DRIFT-style fragment-time monitors and returned
+  answer ledger-consistency checks.
+- `exp3127` runs a ReVeal-style multi-turn repair ladder only when the verifier
+  panel reports an unblocked repair gate; tests and Z3 remain the authorities.
 
-### Phase C - Continuous Self-Learning and Architecture Boundaries
+### Phase C - Continuous Self-Learning and Architecture Evidence
 
-**Goal:** improve FR-11's controller-only boundary and move sidecar/sampler
-work from projection to measured, bounded integration.
+**Goal:** advance FR-11 and the EBT/KAN/sampler architecture without claiming
+more than local artifacts prove.
 
-- `exp3116` is the required continuous self-learning experiment. It tests a
-  solver-derived unsolvable/hard-family curriculum guard with rollback,
-  soundness, completeness, and retention gates.
-- `exp3117` measures EBT/ARM sidecar score correlation against exact labels
-  while preserving no-live-model-integration and no-weight-update claims.
-- `exp3118` integrates the cLUT sampler as an optional CPU backend path with
-  distribution checks and no hardware claim.
-- `exp3119` ingests GateMate/SSQA operator evidence if present and otherwise
-  keeps rerun/readback blocked.
+- `exp3128` is the required continuous self-learning experiment. It builds an
+  EvoEnv-style verifiable environment synthesis pilot for constraint families.
+- `exp3129` audits FR-11 constraint memory, retention, and satisfiable drift
+  after the environment pilot.
+- `exp3130` converts ARM/EBT sidecar work into an auditable energy-budget
+  diagnostic over exact fixtures and local traces.
+- `exp3131` builds a bounded KAN PWA/MILP verifier abstraction audit.
+- `exp3132` ingests hardware/operator evidence and updates sampler boundaries
+  without flashing, synthesizing, or claiming speedup.
 
 ### Phase D - Matrix and Capstone
 
-**Goal:** close `.290` from artifacts, not intent.
+**Goal:** close from artifacts, not intent.
 
-- `exp3120` builds cross-corpus matrix v24 with explicit rows for model-spec
-  metadata, certified feedback, repair artifact presence, FR-11 promotion, and
-  architecture boundaries.
-- `exp3121` writes the `.290` capstone and recommends the next milestone from
-  matrix v24.
+- `exp3133` builds cross-corpus matrix v25 with rows for SOTA cache coverage,
+  live verifier lift, prefix bounds, drift monitors, repair, FR-11 EvoEnv,
+  energy budgets, KAN verification, and hardware boundaries.
+- `exp3134` writes the `.291` capstone and recommends the next milestone from
+  matrix v25.
 
 ## Dependency Graph
 
 ```text
-exp3109 archive
-  -> exp3110 model-spec/cache corrigendum
-        -> exp3111 certified coherence feedback v3
-              -> exp3112 logic-regularized verifier pilot
-              -> exp3113 diagnostic verifier calibration v5
-                    -> exp3115 explicit repair boundary artifact
-        -> exp3116 FR-11 unsolvable curriculum guard
+exp3122 archive
+  -> exp3123 SOTA cache/preconditions
+       -> exp3124 live SOTA verifier panel
+            -> exp3125 prefix-bound verifier pilot
+            -> exp3126 fragment-time monitor + satisfiable drift audit
+                 -> exp3127 multi-turn repair ladder
+       -> exp3128 FR-11 EvoEnv synthesis
+            -> exp3129 FR-11 memory/drift audit
+       -> exp3130 ARM/EBT energy-budget diagnostic
 
-exp3114 fragment-level verification -> exp3115 explicit repair boundary
+exp3131 KAN PWA/MILP audit
+exp3132 hardware evidence/sampler boundary
 
-exp3109 -> exp3117 EBT/ARM sidecar score correlation
-exp3109 -> exp3118 cLUT backend integration boundary
-exp3109 -> exp3119 GateMate/SSQA evidence ingestion
-
-exp3109..exp3119 -> exp3120 matrix v24 -> exp3121 capstone
+exp3124, exp3125, exp3126, exp3127, exp3128, exp3129, exp3130, exp3131, exp3132
+  -> exp3133 matrix v25
+       -> exp3134 capstone v291
 ```
 
-Structured conductor gates:
+Structured conductor gates are used only where skipping the agent call is
+useful and safe:
 
-- `exp3111` requires `exp3110.sota_model_manifest_ready == true`.
-- `exp3112` requires `exp3111.certified_coherence_feedback_v3_ready == true`.
-- `exp3113` requires `exp3111.certified_coherence_feedback_v3_ready == true`.
-- `exp3121` requires `exp3120.matrix_v24_ready == true`.
-
-Repair is deliberately not conductor-gated on a positive verifier delta:
-`exp3115` must always run and write an explicit artifact. It may internally
-set `repair_run_executed=false` and `repair_unblocked=false`.
+- `exp3124` gates on `exp3123.sota_cache_manifest_v2_ready == true`.
+- `exp3125` gates on `exp3124.exact_live_sota_panel_v6_ready == true`.
+- `exp3126` gates on `exp3124.exact_live_sota_panel_v6_ready == true`.
+- `exp3127` gates on `exp3124.repair_gate_state == "unblocked"` and
+  `exp3126.fragment_time_monitor_v1_ready == true`.
+- `exp3129` gates on `exp3128.fr11_evoenv_pilot_v1_ready == true`.
+- `exp3130` gates on `exp3123.sota_cache_manifest_v2_ready == true`.
+- `exp3134` gates on `exp3133.matrix_v25_ready == true`.
 
 ## Hardware Requirements
 
-- **Dual RTX 3090 CUDA:** required only if `exp3112`, `exp3113`, `exp3115`, or
-  `exp3116` performs live local SOTA inference. Each task must use the cached
-  SOTA pattern from `scripts/experiment_template.py`, record cache status, and
-  skip headline LLM claims if no mandated model is usable.
-- **CPU-only:** sufficient for `exp3109`, `exp3110`, `exp3111` solver-only
-  certificate work, `exp3114`, `exp3117`, `exp3118`, `exp3120`, and `exp3121`.
-- **GateMate / SSQA:** no board flash, no synthesis, and no hardware command is
-  required by the plan. `exp3119` may only ingest operator-provided evidence
-  files. If evidence is missing, it must write a blocked artifact.
-- **KV260 / PolarFire / AMD XDNA / Extropic TSU:** out of scope for `.290`
-  execution. They may appear only as architecture context already tracked in
-  the hardware wishlist.
+`.291` uses hardware conservatively:
+
+- **Dual RTX 3090 CUDA:** required for live mandated GGUF attempts in
+  `exp3124`, `exp3127`, `exp3128`, and `exp3130` when local cache permits.
+  All compute tasks must record `preconditions_checked`,
+  `gpu_preflight`, `model_cache_status`, and `inference_substrate`.
+- **CPU/Z3:** required for solver certificates, prefix-bound checks, monitors,
+  FR-11 environment validation, KAN MILP/PWA accounting, and matrix/capstone
+  aggregation.
+- **GateMate/SSQA/KV260:** no board execution is scheduled. `exp3132` may only
+  inspect documented operator-provided evidence and must record
+  `hardware_commands_run: []` unless the operator has explicitly supplied a
+  transcript from an earlier run.
+- **THRML/TSU:** architecture context only; no TSU latency, energy, or hardware
+  execution claim is allowed.
 
 ## Experiment List
 
-| ID | Title | Deliverable |
-| --- | --- | --- |
-| exp3109 | Archive .289 and activate .290 | `results/experiment_3109_archive_v289_activate_v290.json` |
-| exp3110 | Local SOTA model-spec/cache manifest corrigendum | `results/experiment_3110_sota_model_spec_cache_manifest_corrigendum_v1.json` |
-| exp3111 | Certified coherence Z3/MCS feedback v3 | `results/experiment_3111_certified_coherence_z3_mcs_feedback_v3.json` |
-| exp3112 | Logic-regularized verifier reasoning pilot | `results/experiment_3112_logic_regularized_verifier_pilot_v1.json` |
-| exp3113 | Diagnostic local SOTA verifier calibration v5 | `results/experiment_3113_diagnostic_local_sota_verifier_calibration_v5.json` |
-| exp3114 | Fragment-level code/constraint verification pilot | `results/experiment_3114_fragment_level_code_constraint_verification_pilot_v1.json` |
-| exp3115 | Explicit repair gate and micro-panel artifact v4 | `results/experiment_3115_explicit_repair_gate_micro_panel_v4.json` |
-| exp3116 | FR-11 unsolvable curriculum and retention guard | `results/experiment_3116_fr11_unsolvable_curriculum_retention_guard_v1.json` |
-| exp3117 | EBT/ARM sidecar score-correlation boundary v3 | `results/experiment_3117_ebt_arm_sidecar_score_correlation_boundary_v3.json` |
-| exp3118 | cLUT sampler backend integration boundary v2 | `results/experiment_3118_clut_sampler_backend_integration_boundary_v2.json` |
-| exp3119 | GateMate/SSQA operator evidence ingestion v4 | `results/experiment_3119_gatemate_ssqa_operator_evidence_ingestion_v4.json` |
-| exp3120 | Cross-corpus matrix v24 | `results/experiment_3120_cross_corpus_matrix_v24.json` |
-| exp3121 | Capstone v290 | `results/experiment_3121_capstone_v290.json` |
+| ID | Title | Phase | Deliverable |
+| --- | --- | --- | --- |
+| exp3122 | Archive .290 and activate .291 planning | A | `results/experiment_3122_archive_v290_activate_v291.json` |
+| exp3123 | Local SOTA cache and precondition manifest v2 | A | `results/experiment_3123_sota_cache_preconditions_manifest_v2.json` |
+| exp3124 | Difficulty-stratified live SOTA verifier panel v6 | B | `results/experiment_3124_difficulty_stratified_live_sota_verifier_panel_v6.json` |
+| exp3125 | Prefix-closed deterministic verifier bound pilot | B | `results/experiment_3125_prefix_closed_deterministic_verifier_bound_pilot_v1.json` |
+| exp3126 | Fragment-time monitor and satisfiable-drift audit | B | `results/experiment_3126_fragment_time_monitor_satisfiable_drift_audit_v1.json` |
+| exp3127 | Multi-turn monitored repair ladder | B | `results/experiment_3127_multi_turn_monitored_repair_ladder_v1.json` |
+| exp3128 | FR-11 EvoEnv verifiable environment synthesis | C | `results/experiment_3128_fr11_evoenv_verifiable_environment_synthesis_v1.json` |
+| exp3129 | FR-11 constraint memory retention and drift audit | C | `results/experiment_3129_fr11_constraint_memory_retention_drift_audit_v1.json` |
+| exp3130 | ARM/EBT energy-budget sidecar diagnostic v2 | C | `results/experiment_3130_arm_ebt_energy_budget_sidecar_diagnostic_v2.json` |
+| exp3131 | KAN PWA/MILP verifier abstraction audit | C | `results/experiment_3131_kan_pwa_milp_verifier_abstraction_audit_v1.json` |
+| exp3132 | Hardware evidence and sampler boundary v5 | C | `results/experiment_3132_hardware_evidence_sampler_boundary_v5.json` |
+| exp3133 | Cross-corpus matrix v25 | D | `results/experiment_3133_cross_corpus_matrix_v25.json` |
+| exp3134 | Capstone v291 | D | `results/experiment_3134_capstone_v291.json` |
 
 ## Acceptance Criteria
 
-`.290` succeeds if the capstone can answer these questions from artifacts:
-
-1. Does every local SOTA headline artifact expose the mandated model IDs and
-   cache status without a matrix metadata gap?
-2. Does formal-feedback v3 produce a solver-certified coherence artifact with
-   vacuity guards and a solver-only baseline?
-3. Does verifier calibration v5 run diagnostically and produce a gate decision
-   even if lift is non-positive?
-4. Does the repair micro-panel v4 artifact exist and explicitly state whether
-   repair ran, blocked, or should remain retired?
-5. Does FR-11 improve completeness/retention without soundness mistakes, or
-   correctly remain controller-only and blocked from promotion?
-6. Do sidecar, cLUT, and hardware tasks keep no-live-integration and
-   no-hardware-speedup boundaries honest?
-7. Does matrix v24 reduce blockers or explain why the count remains unchanged?
+- All tasks either complete or honestly gate/skip with artifact-visible reasons.
+- `research-roadmap.yaml` and `scripts/research_conductor.py` remain unchanged.
+- Every local LLM task includes the mandated SOTA GGUF model list and records
+  cache/precondition status before inference.
+- No experiment promotes repair unless exact tests or solvers accept the repair
+  and intent/ledger preservation is measured.
+- FR-11 has at least one continuous self-learning artifact based on executable
+  verifiable environments, with retention and soundness gates.
+- Energy, KAN, and hardware claims stay bounded to measured local artifacts.
+- `research-references.md`, `ops/status.md`, `ops/changelog.md`,
+  `_bmad/traceability.md`, and this roadmap can be reconciled after execution.
 
 ## Failed-Rerun Compliance
 
-Every task whose scope overlaps a retired, failed, blocked, or bounded prior
-experiment includes a `prior_failures` entry in `research-roadmap-next.yaml`
-with all four required fields:
+Every task whose scope intersects previous failures or bounded/blocked attempts
+has a `prior_failures` block in `research-roadmap-next.yaml` with:
 
 - `experiment_id`
 - `verdict`
@@ -301,24 +311,23 @@ with all four required fields:
 - `retire_if_same_verdict: true`
 
 No task reuses a retired experiment ID. No `requires` or `gated_on` chain points
-to a retired upstream experiment.
+to a retired upstream task. The repair tasks explicitly avoid the retired
+unsupported repair-headline wording path; they only collect bounded evidence.
 
 ## Decentralization Implications
 
-`.290` continues to advance the decentralized-agent thesis only through
-verifiable local artifacts:
-
-- local SOTA GGUFs stay optional candidates, not authorities;
-- solvers and exact fixtures remain portable correctness witnesses;
-- model cache and hardware access are recorded as local availability facts;
-- missing operator hardware evidence blocks hardware claims rather than
-  weakening the claim boundary.
+`.291` preserves Carnot's local-first stance. Local open GGUF models are the
+only allowed headline LLM substrate; closed APIs may not be used for core
+claims. Exact solvers, executable tests, and local artifacts remain portable and
+auditable. External systems such as Extropic, Kona, Microsoft interwhen, and
+OpenReview papers are references, not dependencies.
 
 ## Out of Scope
 
-- Training or fine-tuning any mandated SOTA GGUF.
-- Claiming live EBT/ARM model integration.
-- Claiming GateMate, SSQA, KV260, PolarFire, AMD XDNA, or Extropic TSU speedup
-  without authenticated local execution evidence.
-- Publishing paper-ready status unless matrix v24 and capstone v290 remove or
-  explicitly downgrade the remaining blockers.
+- Editing `research-roadmap.yaml` or `scripts/research_conductor.py`
+- Pushing changes
+- Public documentation edits
+- Closed-model headline evidence
+- TSU/Kona/hardware speedup claims without local authenticated evidence
+- Board flashing, synthesis, or readback during hardware evidence ingestion
+- Promoting zero-delta repair as a positive headline

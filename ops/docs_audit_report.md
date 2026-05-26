@@ -4,49 +4,48 @@
 # docs_audit_report — 2026-05-26
 
 ## TL;DR (stranger's 30-second take)
-A stranger would close this tab in under 15 seconds. While the hero section's hook is excellent, the page rapidly devolves into an unpolished internal status report riddled with broken file-path interpolations, undefined acronyms, and suspiciously perfect 1.0 metrics.
+A stranger will bounce immediately because the page is a dense wall of over 30 floating cards littered with impenetrable internal project jargon. It reads like a defensive milestone status report for internal stakeholders rather than a clear product pitch, making it impossible to quickly grasp the value proposition.
 
 ## TOP 3 PROBLEMS
-1. RAW EXPERIMENT IDs LEAKED: Broken interpolation has injected raw local file paths (like `@results/...`) directly into the HTML text and CSS.
-2. THICK INSIDER JARGON: The page bombards readers with acronyms (FoVer, SVAMP, PREM, TTC) that are never defined.
-3. PER-MILESTONE NARRATIVE: "Recent progress" and Blog sections read like defensive sprint retrospectives rather than a product pitch.
+1. Rampant internal jargon in Results and Features (FoVer, CCTU, PRM-BiasBench, PREM, TTC) that means nothing to an outsider.
+2. The "Evidence" section is an unreadable wall of 12 context-free metric cards that look fabricated or copy-pasted from internal logs.
+3. A literal raw file path leaked into the HTML headline for the Live benchmark card.
 
 ## DETAILED FINDINGS
 ### Bloat
-- Results grid — 12 cards — Suggested cap: 6 cards. (12 dense benchmark cards will overwhelm a stranger).
-- Blog section — 7 cards — Suggested cap: 3 cards. (Summaries are long and read like internal release notes).
+- Entire Page — 33 individual box cards — Cap to max 6 key features and 3 headline results. A stranger will skim none of this if confronted with a wall of boxes.
+- "Evidence" results-grid section — 12 cards — Cap to 3-4.
 
 ### Internal jargon
-- Live benchmark card — `@results/citation_hallucination_field_verifier_2932_raw/spilled-energy-2602-18671:real_Gemma4-26B-A4B-it.txt` — A raw experiment output path is displayed verbatim in the headline.
-- HTML Header & CSS — `@results/adversarial_gsm8k_data_400.json` and `@openspec/change-proposals/...` — Raw file paths have been erroneously interpolated into Google Fonts URLs and `@media` query declarations.
-- Recent progress card — `FoVer`, `5-seed dual-condition` — Unexplained dataset/baseline terms.
-- Test-Time Compute card — `PREM`, `TTC` — Acronyms with zero prior explanation.
-- Math reasoning card — `SVAMP`, `FoVer baseline` — Complete gibberish to a non-researcher.
+- "Recent progress" card — `FoVer`, `5-seed dual-condition`, `architecture-only 0.8947` — A stranger has no idea what corpus or architecture this refers to.
+- "Features" section (Test-Time Compute card) — `TTC`, `PREM`, `Process-Reward Energy Model variance` — Academic/internal terms used without definition.
+- "Results" section — `VeriCoT equation-style CoT fix`, `HumanEval-50, execute-feedback-retry`, `PRM-BiasBench-style attacks`, `CCTU constrained micro-benchmark` — Internal experiment names and configurations provide zero context to a visitor.
 
 ### Per-milestone narrative
-- Recent progress card — "Repinned from v2 0.9857 after pre-submission adversarial audit..." is pure internal status reporting.
-- Blog section (Multiple cards) — "We paid for a hostile audit of our paper draft...", "Three rigorous theory rounds approved the architecture..." — These frame the project as an ongoing internal struggle rather than a stable tool.
+- "Recent progress" card — `Repinned from v2 0.9857 after pre-submission adversarial audit` reads exactly like an internal status update or pull request comment.
+- "Research operations" card — `Carnot is developed through an autonomous research loop...` describes internal developer processes and methodology, not product value.
+- "Results" intro text — `Model benchmark rows use live GPU inference... synthetic pilots are included only when...` reads like a defensive disclaimer for internal peer reviewers.
 
 ### Inconsistencies
-- "No model fine-tuning required" (How it works section) vs. "Training — Two-GPU parallel retrain 2.0x speedup" (Results grid). Why is there a parallel retrain metric if no fine-tuning is needed?
+- "No model fine-tuning required" (How it works) vs. "Training — Two-GPU parallel retrain" and "model weights mirrored at huggingface" (Results/Hero). If it doesn't need tuning, why are there weights and training metrics being advertised?
+- "Works with any LLM you can call" (Hero) vs. "A self-improving system that reads from its own past outputs" (Blog). Is it a passive verifier pipeline or a self-updating autonomous agent?
 
 ### Missing essentials
-- Who maintains it and what is their backing? The footer mentions "Ian Blenke", but there is no context on community size, organizational backing, or stability for enterprise use.
+- How to install: The hero text mentions `pip install carnot-ebm`, but the "Quick Start" code window completely omits the actual installation command, jumping straight to Python imports.
 
 ### Fabrication signals
-- Math extraction card — `TP rate: 0.5 -> 1.0` — A perfect 1.0 true positive rate on extraction looks suspiciously perfect without a credibility anchor.
-- Adversarial audit card — `k=5 ensemble catches 60/60 attacks` — 100% recall on adversarial prompts triggers immediate BS detectors.
-- Blog post ("Carnot Dogfooding") — `Zero false positives` — Claims of zero false positives over 639 experiments strain credulity.
+- "Math extraction" card — `TP rate: 0.5 → 1.0` — Perfect 1.0 (100%) metric without credibility anchors.
+- "Adversarial audit" card — `catches 60/60 attacks` — 100% success rate on 60 attacks looks artificially constructed.
+- "Dogfooding" blog card — `Zero false positives` — Highly suspect claim for any probabilistic system operating over nearly a month.
+- "Live benchmark" card — `HumanEval pass @results/citation_hallucination_field_verifier_2932_raw/spilled-energy-2602-18671:real_Gemma4-26B-A4B-it.txt 0% → 36%` — A literal file path artifact leaked into the HTML claim.
 
 ## WHAT'S WORKING
-- The hero pitch ("Catch the mistakes your LLM confidently makes up.") is clear, grounded, and immediately understandable.
-- The 3-step "Extract -> Check -> Repair" Bento grid effectively translates complex architecture into an approachable workflow.
+- The hero section clearly states the problem in one simple sentence ("Catch the mistakes your LLM confidently makes up.") and provides an intuitive contrast ("One-word-at-a-time" vs "Whole-answer check").
+- The quickstart code snippet is clean and demonstrates the API value immediately in three lines.
 
 ## RECOMMENDED OPERATOR ACTIONS
-1. REMOVE all leaked raw file paths and experiment IDs from the HTML and CSS (especially the Live benchmark card and `<head>` tags).
-2. PURGE the defensive, internal milestone narrative from the "Recent progress" card.
-3. DEFINE or REMOVE insider jargon (FoVer, SVAMP, PREM, TTC) to ensure the copy is accessible to a general technical audience.
-4. CUT the Results grid down to the 4-6 most impactful, easiest-to-understand metrics.
-5. ADD explicit bounds or caveats to the perfect 1.0 metrics (60/60 attacks, 1.0 TP rate) to make them mathematically credible.
-6. REMOVE the "Training" card from the Results grid to resolve the contradiction with the "no fine-tuning required" claim.
-7. PRUNE the Blog section to feature only the top 3 most relevant posts for newcomers.
+1. Delete the literal file path `@results/...` from the "Live benchmark" card immediately.
+2. Purge all internal experiment jargon (FoVer, CCTU, PREM, TTC) and replace with descriptive English.
+3. Slash the 12 result cards down to the top 3 most impressive, externally understandable metrics.
+4. Remove the defensive milestone/process narratives from the "Evidence" and "Recent progress" descriptions.
+5. Add the `pip install carnot-ebm` command block explicitly to the top of the Quick Start code window.

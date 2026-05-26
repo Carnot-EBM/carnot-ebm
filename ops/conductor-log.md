@@ -6345,3 +6345,4 @@ web search: site |
 | 2026-05-26 08:47 UTC | GateMate/SSQA operator evidence ingestion v4 | OK | 81 passed in 2.33s |
 | 2026-05-26 09:07 UTC | Cross-corpus matrix v24 | OK | 81 passed in 2.46s |
 | 2026-05-26 09:20 UTC | Capstone v290 | OK | 81 passed in 2.40s |
+| 2026-05-26 10:06 UTC | Plan next milestone | FAIL | Codex CLI error: Wall-clock+idle timeout after 1337s (300s silence). Last out |

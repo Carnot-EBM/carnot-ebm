@@ -16452,3 +16452,138 @@ GateMate/SSQA still blocked on missing operator-visible evidence.
   proof as authority, and expose localized constraint failures rather than
   promoting probabilistic confidence as proof.
   Source: https://logicalintelligence.com/kona-ebms-energy-based-models
+
+## 2026-05-26 Post-.290 Planning Sweep (Milestone 2026.05.291)
+
+Milestone `.290` proved certified solver feedback and diagnostic verifier
+calibration can run, but the capstone still reports `paper_ready=false`,
+`publication_blocker_count=36`, missing Qwen3.6/Gemma-4-31B headline cache
+coverage, zero repair lift, FR-11 controller-only learning, projection-only
+EBT/ARM sidecars, CPU-only cLUT sampling, and no operator-visible GateMate/SSQA
+speedup evidence. This sweep prioritizes work that can reduce those blockers
+without weakening verifier authenticity.
+
+- **Learning to Build the Environment: Self-Evolving Reasoning RL via
+  Verifiable Environment Synthesis / EvoEnv (arXiv:2605.14392; Hugging Face
+  papers, May 2026)**: reframes self-improvement as synthesizing executable
+  environments that sample instances, compute references, and score responses,
+  with admission gates for validation, difficulty calibration, and novelty.
+  Relevance to Carnot: `.291` should turn FR-11 from a controller-only
+  curriculum guard into a bounded environment-synthesis pilot over solver-labeled
+  constraint families. The acceptance gate should be stable solve-verify
+  asymmetry, no answer leakage, retention, and zero soundness regression rather
+  than model-weight promotion.
+  Sources: https://arxiv.org/abs/2605.14392 and
+  https://huggingface.co/papers/2605.14392
+
+- **ReVeal: Self-Evolving Code Agents via Reliable Self-Verification
+  (OpenReview ICLR 2026 Poster)**: trains iterative code generation and
+  self-verification with tool feedback and turn-level credit assignment, and
+  reports deeper test-time evolution from generation-verification turns.
+  Relevance to Carnot: repair work should stop treating repair as one candidate
+  pass. `.291` can run a multi-turn code/constraint repair ladder where tests,
+  Z3, and execution are the only authorities, while local SOTA GGUF models only
+  propose candidates.
+  Source: https://openreview.net/forum?id=q56ZI1Co43
+
+- **interwhen: A Generalizable Framework for Verifiable Reasoning with
+  Test-time Monitors (Microsoft Research / GitHub, February 2026)**: verifies
+  partial reasoning traces as they are produced, extracts verifiable properties,
+  and steers model output with asynchronous monitors, reporting 100% soundness
+  in external-verifier settings and 4x efficiency versus some test-time scaling
+  baselines. Relevance to Carnot: `.291` should test fragment-time monitors
+  before final answer repair, especially for satisfiable drift and multi-turn
+  constraint ledgers.
+  Sources:
+  https://www.microsoft.com/en-us/research/publication/interwhen-a-generalizable-framework-for-verifiable-reasoning-with-test-time-monitors/
+  and https://github.com/microsoft/interwhen
+
+- **BEAVER: An Efficient Deterministic LLM Verifier (OpenReview VerifAI-2
+  2026 Workshop)**: explores generation space under prefix-closed semantic
+  constraints and maintains sound probability bounds using token tries and
+  frontier data structures, outperforming looser empirical/sampling bounds in
+  reported risk identification. Relevance to Carnot: a small prefix-closed bound
+  pilot is a natural next step for certified local SOTA generation; it should
+  report bounds and coverage, not binary correctness claims beyond the explored
+  frontier.
+  Source: https://openreview.net/forum?id=xO3efBXHM9
+
+- **Variation in Verification: Understanding Verification Dynamics in Large
+  Language Models (OpenReview ICLR 2026 Poster)**: evaluates generative
+  verifiers across problem difficulty, generator strength, and verifier
+  strength, finding that easy problems and weaker-generator errors are easier
+  to certify while stronger verifiers do not always yield meaningful gains.
+  Relevance to Carnot: `.291` SOTA verifier panels should stratify by exact
+  difficulty and generator family, and should not assume bigger local models
+  will repair the zero-delta micro-panel by scale alone.
+  Source: https://openreview.net/forum?id=DcEuBwrWnB
+
+- **Residual Drift Dominates Contradiction in Multi-Turn Constraint Reasoning
+  (OpenReview ICLR 2026 Workshop)**: DRIFT-Bench reports that after
+  solver-guided repair, remaining failures are mostly satisfiable drift rather
+  than outright contradiction, so final answers must be checked against the
+  maintained constraint state. Relevance to Carnot: `.291` should add a
+  satisfiable-drift audit to repair and FR-11 traces, with a ledger-consistency
+  gate distinct from unsat-core/MUS repair success.
+  Source: https://openreview.net/forum?id=B9gtT1hhEm
+
+- **Autoregressive Language Models are Secretly Energy-Based Models
+  (arXiv:2512.15605 v4, revised 2026-05-25)**: establishes a function-space
+  bijection between ARMs and EBMs via the chain rule and a soft Bellman
+  equation view, plus EBM-to-ARM distillation error bounds. Relevance to Carnot:
+  `.291` should convert EBT/ARM sidecar work from correlation-only into an
+  auditable energy-budget diagnostic over exact fixtures: report prefix energy,
+  final exact verdict, and any bound/approximation gap before claiming live
+  integration.
+  Source: https://arxiv.org/abs/2512.15605
+
+- **Semantic Scholar citation check for EBT (arXiv:2507.02092) and ARM-EBM
+  (arXiv:2512.15605)**: Semantic Scholar listed 22 citations for EBT on
+  2026-05-26, including 2026 follow-ons such as LoopUS (arXiv:2605.11011) and
+  Causal Energy Minimization (arXiv:2605.07588). Semantic Scholar rate-limited
+  the ARM-EBM citation query, but public search showed the paper was revised to
+  v4 on 2026-05-25. Relevance to Carnot: EBT remains live research context, but
+  `.291` should treat follow-ons as design inspiration until local artifacts
+  show live model or bounded energy-budget utility.
+  Sources: https://arxiv.org/abs/2507.02092,
+  https://arxiv.org/abs/2605.11011, https://arxiv.org/abs/2605.07588, and
+  https://arxiv.org/abs/2512.15605
+
+- **LoopUS: Recasting Pretrained LLMs into Looped Latent Refinement Models
+  (arXiv:2605.11011)**: recasts a pretrained LLM into encoder, looped reasoning
+  block, and decoder with selective gating, random deep supervision, and a
+  confidence head for adaptive exit. Relevance to Carnot: not a local retrofit
+  target for `.291`, but a useful control idea: record when verifier/repair
+  loops should early-exit because solver/test monitors already certify or block
+  the candidate.
+  Source: https://arxiv.org/abs/2605.11011
+
+- **Revisiting Transformer Layer Parameterization Through Causal Energy
+  Minimization (arXiv:2605.07588)**: interprets transformer layers as updates
+  on conditional energy functions and motivates recursive/weight-sharing energy
+  designs. Relevance to Carnot: keep as architecture context for EBT/ARM and
+  KAEM, but do not claim layer-level energy integration without model changes
+  and tests.
+  Source: https://arxiv.org/abs/2605.07588
+
+- **Extended-variable probabilistic computing with p-dits (arXiv:2506.00269)
+  and 2025-2026 probabilistic Ising hardware reports**: p-dit FPGA work reports
+  large time-to-solution gains on integer quadratic programming; MTJ PIM and
+  probabilistic-computing papers show active hardware acceleration for sampling
+  and Ising-style optimization. Relevance to Carnot: these strengthen the long
+  hardware thesis, but `.291` should only ingest local GateMate/SSQA/KV260
+  operator evidence and otherwise keep CPU cLUT/Ising results as simulation or
+  architecture context.
+  Sources: https://arxiv.org/abs/2506.00269,
+  https://arxiv.org/abs/2512.24558, and
+  https://pubmed.ncbi.nlm.nih.gov/41997933/
+
+- **Extropic hardware and Logical Intelligence Kona public status re-check
+  (May 2026)**: Extropic still presents XTR-0 as a Q3 2025 research platform
+  and Z1 as early-access 2026 hardware; Kona still frames EBMs as a
+  constraint-enforcing layer under AI stacks rather than a chatbot. Relevance
+  to Carnot: `.291` should preserve the same evidence boundary: cite these as
+  architecture signals, not as support for local TSU, Kona, or hardware speedup
+  claims.
+  Sources: https://extropic.ai/hardware and
+  https://logicalintelligence.com/kona-ebms-energy-based-models
