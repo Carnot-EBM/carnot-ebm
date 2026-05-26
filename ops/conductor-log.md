@@ -6385,3 +6385,5 @@ web search: site |
 | 2026-05-26 18:12 UTC | Capstone v292 | OK | 81 passed in 3.06s |
 | 2026-05-26 18:40 UTC | Plan next milestone | FAIL | Codex CLI error: search: https://huggingface.co/papers/2605.21488
 web search: |
+| 2026-05-26 19:33 UTC | Plan milestone 2026.05.293 | OK | 14 tasks proposed |
+| 2026-05-26 19:35 UTC | Milestone 2026.05.293 activated | OK | 14 tasks queued |
