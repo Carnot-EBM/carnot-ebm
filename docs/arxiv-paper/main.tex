@@ -853,6 +853,7 @@ as hardware precedent for future accelerator work, not as a substitute
 for Carnot's sampler-specific detailed-balance requirement.
 
 \paragraph{FPGA latency, single-point measurement.}
+\label{sec:hardware-fpga-latency-singlepoint}
 The KV260 achieves $24.83\,\mu s$ per sweep at 32 spins (max\_popcount in exp1068 artifact)
 (exp1068 hardware-measured smoke test); a rigorous
 CPU-vs-FPGA comparison requires matching $N$ and per-sample
@@ -860,6 +861,14 @@ basis on both sides, and will be reported in follow-up work.
 The previous side-by-side latency figure has been retracted
 because its CPU reference (exp1081 $\sim 290$\,ms) was not
 measured on the same per-sample basis as the FPGA point.
+\emph{Update for v6:} the headline KV260 latency citation has since
+been refreshed to exp2898's $24.05\,\mu s$ at $n=64$ across three
+seeds (with bitstream sha256 anchored), and the same-basis
+CPU comparator has been measured via exp2939
+($0.982\times$~--- the FPGA is approximately two percent slower
+than the same-schedule CPU at this $n$). See
+Section~\ref{sec:hardware-portfolio-update} for the full
+post-.243 hardware portfolio update.
 
 \subsection{The $\chi \leq 4$ Sparse-Constraint Accelerator}
 
@@ -2002,6 +2011,7 @@ The following topics remain useful research context, but they are not paper-v6 h
 \begin{itemize}
   \item \textbf{same-basis CPU-vs-FPGA speedup} moves to future work: The KV260 latency point is measured, but same-N CPU-vs-FPGA timing has not been measured on the same per-sample basis.
   Supporting input: \path{results/experiment_1460_hardware_portfolio_narrowing.json}.
+  \emph{Update for v6:} exp2939 (2026-05-22) subsequently measured the same-schedule CPU comparator at $n=64$; the apples-to-apples KV260-vs-CPU speedup is $0.982\times$ (i.e., the FPGA is approximately two percent slower than the same-schedule CPU at this $n$). This retracts the speedup framing rather than promoting it; the KV260 is reframed as a POC functional simulator anchoring future high-$N$ deployment, not as a production accelerator at current $d \in \{128, 256\}$. See Section~\ref{sec:hardware-portfolio-update} for context.
   \item \textbf{Extropic Z1/XTR-0, NPU, photonic, D-Wave, and large-FPGA execution} moves to future work: The 20260507 hardware narrowing keeps these tracks deferred until authenticated local execution or concrete reopen gates exist.
   Supporting input: \path{docs/research-notes/hardware_portfolio_narrowing.md}.
   \item \textbf{k=6, k=15, and arbitrary verifier-composition scaling} moves to appendix: Measured k\_eff and joint-null-space evidence support only the bounded k=5 framing plus theory-backed future cross-mechanism work.
