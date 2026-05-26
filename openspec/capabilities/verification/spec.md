@@ -1862,6 +1862,76 @@ contract before accepting any verifier row.
 |---|---|---|
 | REQ-VERIFY-3137 | Implemented (`python/carnot/verify/exact_safe_accept_abstain_contract_v1.py`) | Implemented (`tests/python/test_experiment_3137_exact_safe_accept_abstain_contract_v1.py`) |
 
+### REQ-VERIFY-3138: Canonical Answer And VeriCoT Grounding Pilot V1
+
+The repository shall provide an Exp 3138 deterministic canonical-answer and
+premise-grounding pilot that writes
+`results/experiment_3138_canonical_answer_vericot_grounding_pilot_v1.json`
+from checked-in artifacts only. The pilot MUST consume the Exp 3136
+false-accept autopsy, Exp 3137 exact-safe contract, Exp 3111 certified
+coherence/Z3 feedback, and Exp 3126 fragment-time monitor ledger. It MUST NOT
+run fresh live inference, invoke a model-backed verifier, modify
+`scripts/research_conductor.py`, push commits, or claim a production VeriCoT
+verifier.
+
+The pilot shall define canonical forms for validity labels, SAT labels,
+numeric answers, bounded JSON-like outputs, and code-fragment verdicts.
+Validity labels and SAT labels SHALL remain different answer-token families so
+that `VALID` is not answer-equivalent to `SAT` or `UNSAT`. Numeric answers
+SHALL normalize equivalent integer/decimal surface forms. Bounded JSON-like
+outputs SHALL normalize key order and compact separators while refusing
+unbounded structures. Code-fragment verdicts SHALL normalize runtime verdict
+phrases such as assertion pass/fail into a separate code-verdict family.
+
+For every known false-accept regression row, the pilot shall map available
+fragment, ledger, or explanation evidence into simple premise records. Rows
+with no available step or premise evidence MUST include an explicit absent
+premise-grounding record. The replay shall check candidate answer
+canonicalization, premise-to-answer consistency, answer-to-premise
+consistency, exact-label agreement, solver-certificate agreement, and
+monitor-ledger replay agreement. Blocking reasons SHALL distinguish
+canonicalization blocks, premise-grounding blocks, and ledger-replay blocks so
+parser/answer extraction failures remain separate from reasoning failures.
+
+The terminal artifact MUST include
+`canonical_grounding_pilot_v1_ready`, `canonicalizer_implemented`,
+`premise_grounding_rows`, `regression_rows_evaluated`,
+`false_accept_rows_blocked`, `canonicalization_block_count`,
+`premise_grounding_block_count`, `ledger_replay_block_count`,
+`residual_false_accept_rows`, `tests_run`, `source_artifacts`,
+`inference_substrate`, and `honest_verdict`. It SHOULD also include row-level
+canonical forms, premise records, solver-certificate summaries, ledger replay
+summaries, source checksums, and deterministic self-checks.
+
+`canonical_grounding_pilot_v1_ready` shall be true only when the canonicalizer
+is implemented in code, all required source artifacts are present, at least
+one known false-accept regression row is evaluated, every evaluated
+false-accept row is blocked from accept by one or more explicit categories,
+source replay is deterministic, no live inference or solver execution is
+declared, and `honest_verdict` starts with a terminal success prefix.
+
+### SCENARIO-VERIFY-3138: False-Accept Rows Are Blocked By Canonical Grounding
+
+Given Exp 3136 has recorded .291 false-accept rows, Exp 3137 has replayed the
+exact-safe accept/abstain/reject contract, Exp 3111 has solver-certificate
+feedback for the same fixture IDs, and Exp 3126 has replayable monitor-ledger
+events,
+When Exp 3138 builds the canonical grounding pilot,
+Then it writes the required terminal JSON artifact, canonicalizes the exact
+and candidate answers for every known false-accept row, marks absent premise
+grounding explicitly when no step evidence exists, reports row-level
+premise/answer and answer/premise consistency against exact labels and solver
+certificates, reports canonicalization, premise-grounding, and ledger-replay
+block counts, leaves `residual_false_accept_rows` empty only when every known
+false accept is blocked, and records that no live model-backed verifier was
+introduced.
+
+## Implementation Status (REQ-VERIFY-3138)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-VERIFY-3138 | Implemented (`python/carnot/verify/canonical_answer_vericot_grounding_pilot_v1.py`) | Implemented (`tests/python/test_experiment_3138_canonical_answer_vericot_grounding_pilot_v1.py`) |
+
 ### REQ-VERIFY-3073: EBT/ARM-EBM Adapter Feasibility Audit
 
 The repository shall provide an Exp 3073 deterministic architecture audit that

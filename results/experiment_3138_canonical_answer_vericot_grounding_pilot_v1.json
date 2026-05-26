@@ -1,0 +1,298 @@
+{
+  "artifact": "experiment_3138_canonical_answer_vericot_grounding_pilot_v1",
+  "canonical_forms_defined": {
+    "code_fragment_verdicts": {
+      "fail": "code fragment rejected",
+      "pass": "code fragment accepted"
+    },
+    "json_like_bounded": {
+      "max_depth": 8,
+      "max_nodes": 64,
+      "sort_keys": true
+    },
+    "numeric": "Decimal-normalized finite number strings",
+    "sat_labels": [
+      "SAT",
+      "UNSAT"
+    ],
+    "validity_labels": [
+      "INVALID",
+      "VALID"
+    ]
+  },
+  "canonical_grounding_pilot_v1_ready": true,
+  "canonicalization_block_count": 2,
+  "canonicalizer_implemented": true,
+  "duration_s": 0.004466,
+  "false_accept_rows_blocked": 2,
+  "honest_verdict": "complete: canonical_grounding_pilot_v1_ready=true; regression_rows_evaluated=2; false_accept_rows_blocked=2",
+  "inference_substrate": {
+    "executes_conductor": false,
+    "executes_hardware": false,
+    "executes_models": false,
+    "executes_repairs": false,
+    "executes_solvers": false,
+    "fresh_live_model_calls": 0,
+    "kind": "deterministic_artifact_replay",
+    "local_repo_only": true,
+    "model_backed_verifier_invoked": false,
+    "no_live_llm_inference": true,
+    "upstream_live_model_calls_reused": 6
+  },
+  "ledger_replay_block_count": 2,
+  "ops_docs_reconciliation_left_to_conductor": true,
+  "premise_grounding_block_count": 2,
+  "premise_grounding_record_count": 2,
+  "premise_grounding_rows": 2,
+  "regression_row_replay": [
+    {
+      "answer_to_premise_consistent": false,
+      "blocked_by": [
+        "canonicalization",
+        "premise_grounding",
+        "ledger_replay"
+      ],
+      "candidate_action": "accept",
+      "candidate_answer": "VALID",
+      "candidate_canonical": {
+        "family": "validity_token",
+        "kind": "label",
+        "normalized": "VALID",
+        "parse_status": "parsed",
+        "value": "VALID"
+      },
+      "canonical_equivalent": false,
+      "canonicalization_blocked": true,
+      "contract_replay": {
+        "decision": "abstain",
+        "matched_rule_id": "ABSTAIN_KNOWN_FALSE_ACCEPT_REGRESSION"
+      },
+      "exact_canonical": {
+        "family": "validity_token",
+        "kind": "label",
+        "normalized": "INVALID",
+        "parse_status": "parsed",
+        "value": "INVALID"
+      },
+      "exact_label": "INVALID",
+      "expected_action": "reject",
+      "ledger_replay": {
+        "candidate_extracted_answer": "VALID",
+        "candidate_live_decision": "accept",
+        "failure_mechanism": "contradiction",
+        "final_answer_consistent_with_exact": false,
+        "final_answer_consistent_with_ledger": false,
+        "is_monitor_violation": true,
+        "ledger_action": "reject",
+        "ledger_source": "exact_label_fallback",
+        "monitor_event_count": 5
+      },
+      "ledger_replay_blocked": true,
+      "premise_grounding_blocked": true,
+      "premise_records": [
+        {
+          "grounded": false,
+          "premise_id": "resyn-3084-arith-003:premise_absent",
+          "reason": "no_fragment_trace",
+          "source": "monitor_ledger",
+          "status": "absent"
+        }
+      ],
+      "premise_to_answer_consistent": false,
+      "row_id": "resyn-3084-arith-003",
+      "solver_certificate_summary": {
+        "certificate_consistent_with_exact": true,
+        "coherence_status": "incoherent",
+        "maxsat_action": "reject",
+        "minimal_correction_set": {
+          "from": 47,
+          "kind": "replace_claimed_value",
+          "to": 43
+        },
+        "present": true,
+        "solver_authority": "python_ast_runtime_execution",
+        "solver_exact_label": "INVALID",
+        "solver_label": "ASSERTION_FAILS",
+        "unsat_core": [
+          "claimed_value",
+          "computed_value"
+        ]
+      }
+    },
+    {
+      "answer_to_premise_consistent": false,
+      "blocked_by": [
+        "canonicalization",
+        "premise_grounding",
+        "ledger_replay"
+      ],
+      "candidate_action": "accept",
+      "candidate_answer": "VALID",
+      "candidate_canonical": {
+        "family": "validity_token",
+        "kind": "label",
+        "normalized": "VALID",
+        "parse_status": "parsed",
+        "value": "VALID"
+      },
+      "canonical_equivalent": false,
+      "canonicalization_blocked": true,
+      "contract_replay": {
+        "decision": "abstain",
+        "matched_rule_id": "ABSTAIN_KNOWN_FALSE_ACCEPT_REGRESSION"
+      },
+      "exact_canonical": {
+        "family": "sat_token",
+        "kind": "label",
+        "normalized": "UNSAT",
+        "parse_status": "parsed",
+        "value": "UNSAT"
+      },
+      "exact_label": "UNSAT",
+      "expected_action": "reject",
+      "ledger_replay": {
+        "candidate_extracted_answer": "VALID",
+        "candidate_live_decision": "accept",
+        "failure_mechanism": "contradiction",
+        "final_answer_consistent_with_exact": false,
+        "final_answer_consistent_with_ledger": false,
+        "is_monitor_violation": true,
+        "ledger_action": "reject",
+        "ledger_source": "exact_label_fallback",
+        "monitor_event_count": 5
+      },
+      "ledger_replay_blocked": true,
+      "premise_grounding_blocked": true,
+      "premise_records": [
+        {
+          "grounded": false,
+          "premise_id": "resyn-3084-smt-000:premise_absent",
+          "reason": "no_fragment_trace",
+          "source": "monitor_ledger",
+          "status": "absent"
+        }
+      ],
+      "premise_to_answer_consistent": false,
+      "row_id": "resyn-3084-smt-000",
+      "solver_certificate_summary": {
+        "certificate_consistent_with_exact": true,
+        "coherence_status": "incoherent",
+        "maxsat_action": "reject",
+        "minimal_correction_set": {
+          "constraints_to_relax": [
+            "constraint_0"
+          ],
+          "kind": "remove_conflicting_constraint"
+        },
+        "present": true,
+        "solver_authority": "z3_solver",
+        "solver_exact_label": "UNSAT",
+        "solver_label": "UNSAT",
+        "unsat_core": [
+          "constraint_0",
+          "constraint_1"
+        ]
+      }
+    }
+  ],
+  "regression_rows_evaluated": 2,
+  "residual_false_accept_rows": [],
+  "run_date": "20260526",
+  "schema": "carnot.canonical_answer_vericot_grounding_pilot.v1",
+  "scripts_research_conductor_modified": false,
+  "self_checks": {
+    "all_regression_rows_blocked": true,
+    "no_residual_false_accept_rows": true,
+    "source_replay_deterministic": true
+  },
+  "source_artifacts": [
+    {
+      "path": "AGENTS.md",
+      "present": true,
+      "required": false,
+      "role": "agents_repo_instructions",
+      "sha256": "b3d6581b04f16b85f77defb2837c98dc3b60ed51e10b347ecb36e609f318b619"
+    },
+    {
+      "path": "CODEX.md",
+      "present": true,
+      "required": false,
+      "role": "codex_repo_workflow",
+      "sha256": "1db7ebc1009714f872db83447828a8957c3abb72061832cc1bc307735cd96bbe"
+    },
+    {
+      "path": "CLAUDE.md",
+      "present": true,
+      "required": false,
+      "role": "claude_authenticity_rules",
+      "sha256": "cdc00581d37d1bd3c77a69b058787f74ecc71545a97c1eab31c48961637b3224"
+    },
+    {
+      "path": "research-references.md",
+      "present": true,
+      "required": false,
+      "role": "research_references",
+      "sha256": "69d204f7a897ed8c379fdebce0a159d6d2e713a748b8c15efca2a2c71a05b738"
+    },
+    {
+      "path": "openspec/capabilities/verification/spec.md",
+      "present": true,
+      "required": false,
+      "role": "verification_openspec",
+      "sha256": "3657c39e165680dd253cdad2311853944f39b04b3ab2dcaa367d230d896f12ab"
+    },
+    {
+      "path": "results/experiment_3136_false_accept_root_cause_autopsy_v1.json",
+      "present": true,
+      "required": true,
+      "role": "exp3136_false_accept_autopsy",
+      "sha256": "3a61c8490030b607c73f50ba2ce145dc4591621ac76f016a42811bedd670776a"
+    },
+    {
+      "path": "results/experiment_3137_exact_safe_accept_abstain_contract_v1.json",
+      "present": true,
+      "required": true,
+      "role": "exp3137_exact_safe_contract",
+      "sha256": "c8d23896f879ceb1e912989e2ba13db0a43cd195a8ff5e8fb18a7be1b4582f2e"
+    },
+    {
+      "path": "results/experiment_3111_certified_coherence_z3_mcs_feedback_v3.json",
+      "present": true,
+      "required": true,
+      "role": "exp3111_certified_coherence_feedback",
+      "sha256": "366edc3a4921f945fcd432e33ea924dd891172b84378833334de611bc2ef0017"
+    },
+    {
+      "path": "results/experiment_3126_fragment_time_monitor_satisfiable_drift_audit_v1.json",
+      "present": true,
+      "required": true,
+      "role": "exp3126_fragment_monitor_ledger",
+      "sha256": "e072b70780360c2d5f3255d49712434d3b4a517d8f63348e02c49bbaba1656f9"
+    },
+    {
+      "path": "python/carnot/verify/canonical_answer_vericot_grounding_pilot_v1.py",
+      "present": true,
+      "required": false,
+      "role": "exp3138_module",
+      "sha256": "2f40557130acc49a22b00c1a8842fd8c77b4df4ffedd988756fa4a47eb064a4d"
+    }
+  ],
+  "source_checksums": {
+    "AGENTS.md": "b3d6581b04f16b85f77defb2837c98dc3b60ed51e10b347ecb36e609f318b619",
+    "CLAUDE.md": "cdc00581d37d1bd3c77a69b058787f74ecc71545a97c1eab31c48961637b3224",
+    "CODEX.md": "1db7ebc1009714f872db83447828a8957c3abb72061832cc1bc307735cd96bbe",
+    "openspec/capabilities/verification/spec.md": "3657c39e165680dd253cdad2311853944f39b04b3ab2dcaa367d230d896f12ab",
+    "python/carnot/verify/canonical_answer_vericot_grounding_pilot_v1.py": "2f40557130acc49a22b00c1a8842fd8c77b4df4ffedd988756fa4a47eb064a4d",
+    "research-references.md": "69d204f7a897ed8c379fdebce0a159d6d2e713a748b8c15efca2a2c71a05b738",
+    "results/experiment_3111_certified_coherence_z3_mcs_feedback_v3.json": "366edc3a4921f945fcd432e33ea924dd891172b84378833334de611bc2ef0017",
+    "results/experiment_3126_fragment_time_monitor_satisfiable_drift_audit_v1.json": "e072b70780360c2d5f3255d49712434d3b4a517d8f63348e02c49bbaba1656f9",
+    "results/experiment_3136_false_accept_root_cause_autopsy_v1.json": "3a61c8490030b607c73f50ba2ce145dc4591621ac76f016a42811bedd670776a",
+    "results/experiment_3137_exact_safe_accept_abstain_contract_v1.json": "c8d23896f879ceb1e912989e2ba13db0a43cd195a8ff5e8fb18a7be1b4582f2e"
+  },
+  "tests_run": [
+    ".venv/bin/pytest tests/python/test_experiment_3138_canonical_answer_vericot_grounding_pilot_v1.py -q --no-cov",
+    ".venv/bin/coverage erase && .venv/bin/coverage run --source=python/carnot/verify -m pytest -o addopts='' tests/python/test_experiment_3138_canonical_answer_vericot_grounding_pilot_v1.py -q",
+    ".venv/bin/coverage report --include='python/carnot/verify/canonical_answer_vericot_grounding_pilot_v1.py' --fail-under=100 --show-missing",
+    ".venv/bin/pytest tests/python -q"
+  ]
+}
