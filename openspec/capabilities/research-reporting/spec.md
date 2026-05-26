@@ -9485,3 +9485,69 @@ metadata, and an `honest_verdict` that starts with `complete:`.
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-REPORT-3120 | Planned (`python/carnot/reporting/cross_corpus_matrix_v24_3120.py`) | Planned (`tests/python/test_experiment_3120_cross_corpus_matrix_v24.py`) |
+
+### REQ-REPORT-3121: Capstone .290 From Matrix V24
+
+The repository shall provide an Exp 3121 milestone .290 capstone generator
+that writes `results/experiment_3121_capstone_v290.json` using
+`results/experiment_3120_cross_corpus_matrix_v24.json` as the primary
+authority and `results/experiment_3108_capstone_v289.json` as the prior
+capstone comparison point. The generator MUST summarize milestone closeout
+from concrete checked-in artifacts, not planned roadmap intent. It MUST NOT
+run live model inference, verifier scoring, repair generation, solver
+execution, synthesis, board flashing, hardware readback, the conductor, pushes,
+or modify `scripts/research_conductor.py`.
+
+The capstone MUST report whether the model-spec/cache gap, formal-feedback
+readiness, calibration gate, explicit repair micro-panel, FR-11 promotion
+boundary, EBT/ARM sidecar boundary, cLUT sampler boundary, GateMate blocker,
+and SSQA blocker changed from .289. It MUST preserve matrix v24 boundaries:
+solver-certified feedback may be clean without live SOTA lift, diagnostic
+verifier gains remain diagnostic unless promoted by matrix rows, repair remains
+bounded when the repair micro-panel records zero success delta or no intent
+preservation, FR-11 remains controller-only/no-weight-update unless matrix rows
+promote broader learning, EBT/ARM sidecar work remains projection-only without
+live model integration, cLUT work remains CPU/bounded without authenticated
+hardware speedup, GateMate remains blocked without operator evidence, and SSQA
+remains gated-skipped without host-visible readback.
+
+The terminal artifact MUST include `capstone_ready`, `paper_ready`,
+`publication_blocker_count`, `blocker_delta_from_v23`,
+`verifier_gain_status`, `formal_feedback_status`, `repair_claim_status`,
+`fr11_self_learning_status`, `ebt_arm_status`, `sampler_hardware_status`,
+`gatemate_status`, `ssqa_status`, `next_recommendation`,
+`source_artifacts`, `inference_substrate`, and `honest_verdict`. It MAY
+include row summaries, milestone proof statements, paper-readiness checks,
+source checksums, remaining top gaps, ops-reconciliation decisions, and
+measured `duration_s` as long as every value is derived from checked-in
+artifacts or file presence/checksum checks. `paper_ready` MUST be true only
+when `capstone_ready` is true and matrix v24 reports zero publication blockers
+or an explicitly documented publication-downgrade policy that removes all
+remaining blockers from headline scope. When a conductor prompt assigns ops
+reconciliation to a separate step, the generator MUST leave `ops/status.md`,
+`ops/changelog.md`, and `_bmad/traceability.md` unchanged.
+
+#### SCENARIO-REPORT-3121: Capstone .290 Closes From Matrix V24 Evidence
+
+**Given** matrix v24 exists and reports `matrix_v24_ready=true`
+**And** matrix v24 reports 36 publication blockers, `blocker_delta_from_v23=0`,
+no missing artifacts, clean certified coherence feedback, diagnostic-only
+verifier calibration, bounded SOTA cache/model coverage, a bounded explicit
+repair micro-panel with zero repair success delta, bounded controller-only
+FR-11 retention, projection-only EBT/ARM sidecar evidence, bounded CPU-only
+cLUT backend evidence, blocked GateMate operator evidence, and gated-skipped
+SSQA readback evidence
+**When** the Exp 3121 capstone generator runs
+**Then** it writes `results/experiment_3121_capstone_v290.json` with
+`capstone_ready=true`, `paper_ready=false`, `publication_blocker_count=36`,
+`blocker_delta_from_v23=0`, required status fields derived from matrix v24,
+source-artifact provenance, aggregation-only inference-substrate metadata, a
+next recommendation naming the top three remaining gaps, no ops/status/
+traceability reconciliation performed by this task, and an `honest_verdict`
+that starts with `complete:`.
+
+## Implementation Status (REQ-REPORT-3121)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-3121 | Planned (`python/carnot/reporting/capstone_v290_3121.py`) | Planned (`tests/python/test_experiment_3121_capstone_v290.py`) |

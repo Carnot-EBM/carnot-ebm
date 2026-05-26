@@ -1,0 +1,287 @@
+{
+  "artifact": "experiment_3121_capstone_v290",
+  "blocker_delta_from_v23": 0,
+  "capstone_ready": true,
+  "delta_from_v289": {
+    "calibration_gate": "changed: diagnostic calibration records repair_gate_state=unblocked while staying diagnostic-only.",
+    "formal_feedback": "changed: certified coherence feedback is clean; live SOTA lift remains unclaimed.",
+    "fr11_promotion": "changed: FR-11 soundness/completeness mistakes are 0/0, within controller-only/no-weight-update scope.",
+    "gatemate_ssqa": "unchanged: GateMate remains blocked_operator_evidence_incomplete and SSQA remains gated_skipped_host_visible_readback_missing.",
+    "model_spec_gap": "changed: matrix status_counts has model_spec_gap=0, but headline cache coverage remains bounded via 1 gap row(s).",
+    "repair_artifact": "changed: explicit repair gate micro-panel executed, but repair_success_delta=0.0 keeps repair bounded.",
+    "sidecar_clut_boundaries": "unchanged in promotion: EBT/ARM remains projection_only_no_live_model_integration and cLUT remains bounded_cpu_only_no_hardware_speedup."
+  },
+  "duration_s": 0.006225649965927005,
+  "ebt_arm_status": "projection_only_sidecar_correlation_no_live_model_integration",
+  "formal_feedback_status": "solver_certified_feedback_ready_no_live_sota_lift",
+  "fr11_self_learning_status": "bounded_controller_only_soundness_zero_completeness_zero_no_weight_update",
+  "gatemate_status": "blocked_operator_evidence_incomplete_no_hardware_run",
+  "headline_model_spec_gaps": [
+    {
+      "missing_model_ids": [
+        "unsloth/Qwen3.6-35B-A3B-GGUF",
+        "unsloth/gemma-4-31B-it-GGUF"
+      ],
+      "present_model_ids": [
+        "unsloth/gemma-4-26B-A4B-it-GGUF"
+      ],
+      "reason": "mandated headline model cache coverage incomplete; cached SOTA pair unavailable",
+      "row_id": "dot290:exp3110_sota_model_spec_cache_manifest",
+      "source_artifact": "results/experiment_3110_sota_model_spec_cache_manifest_corrigendum_v1.json"
+    }
+  ],
+  "honest_verdict": "complete: capstone_ready=true; paper_ready=false; publication_blocker_count=36; blocker_delta_from_v23=0; next_top_gap=publishable_verifier_repair_headline_evidence",
+  "inference_substrate": {
+    "executes_conductor": false,
+    "executes_hardware": false,
+    "executes_models": false,
+    "executes_repairs": false,
+    "executes_solvers": false,
+    "executes_verifiers": false,
+    "hardware_commands_run": [],
+    "kind": "aggregation_from_checked_in_artifacts",
+    "live_model_calls": 0,
+    "no_live_llm_inference": true
+  },
+  "invariant_violations": [],
+  "matrix_v24_summary": {
+    "blocker_delta_from_v23": 0,
+    "matrix_v24_ready": true,
+    "missing_artifacts_count": 0,
+    "publication_blocker_count": 36,
+    "rows_total": 102,
+    "status_counts": {
+      "blocked": 5,
+      "bounded": 13,
+      "clean": 31,
+      "diagnostic_only": 4,
+      "flagged": 7,
+      "gated_skipped": 7,
+      "missing": 2,
+      "model_spec_gap": 0,
+      "projection_only": 2,
+      "retired": 31
+    }
+  },
+  "milestone": "2026.05.290",
+  "milestone_proved": [
+    "Matrix v24 is complete over 102 rows with 0 missing artifacts and aggregation-only provenance.",
+    "Solver-certified feedback is ready on exact fixtures, but the capstone does not claim live SOTA verifier lift.",
+    "The repair gate ran and was unblocked, but repair_success_delta=0.0 keeps repair non-promoted.",
+    "FR-11 passed the .290 retention guard only as controller_only with no model-weight update claim.",
+    "Architecture work stayed bounded: projection_only_no_live_model_integration, bounded_cpu_only_no_hardware_speedup, blocked_operator_evidence_incomplete, and gated_skipped_host_visible_readback_missing."
+  ],
+  "next_recommendation": "Next milestone: prioritize publishable verifier/repair evidence first by resolving mandated SOTA cache coverage, prior flagged repair rows, and a positive gated repair micro-panel; second, collect operator-owned GateMate/SSQA host-visible evidence without speedup claims; third, either integrate EBT/ARM sidecars with live model tests or obtain authenticated cLUT/hardware speedup evidence, otherwise keep those rows bounded.",
+  "no_live_repair_rerun": true,
+  "no_new_board_flash": true,
+  "no_new_hardware_run": true,
+  "no_new_model_execution": true,
+  "no_new_solver_run": true,
+  "no_new_synthesis_run": true,
+  "no_new_verifier_run": true,
+  "ops_reconciliation_decision": {
+    "capstone_artifact_alone_is_deliverable": true,
+    "ops_changelog_updated": false,
+    "ops_status_updated": false,
+    "reason": "task stop rule delegates ops/status/changelog/traceability reconciliation to conductor",
+    "research_complete_updated": false,
+    "traceability_updated_after_spec": false
+  },
+  "paper_readiness_checks": [
+    {
+      "check": "capstone_ready",
+      "passed": true,
+      "reason": "matrix v24 authority loaded and required invariants reconciled"
+    },
+    {
+      "check": "publication_blocker_count_zero_or_downgraded",
+      "passed": false,
+      "reason": "publication_blocker_count=36 and no all-blockers-downgraded policy"
+    },
+    {
+      "check": "headline_model_spec_gaps",
+      "passed": false,
+      "reason": "headline_model_spec_gaps=1; missing mandated cached SOTA coverage remains bounded"
+    }
+  ],
+  "paper_ready": false,
+  "prior_capstone_summary": {
+    "artifact": "experiment_3108_capstone_v289",
+    "capstone_ready": true,
+    "paper_ready": false,
+    "publication_blocker_count": 36
+  },
+  "publication_blocker_count": 36,
+  "remaining_top_gaps": [
+    "publishable_verifier_repair_headline_evidence",
+    "operator_owned_gatemate_ssqa_host_visible_evidence",
+    "live_model_or_authenticated_hardware_architecture_integration"
+  ],
+  "repair_claim_status": "bounded_micro_panel_executed_zero_delta_no_promotion",
+  "required_source_errors": [],
+  "run_date": "20260526",
+  "sampler_hardware_status": "bounded_clut_cpu_only_no_hardware_speedup",
+  "schema": "carnot.milestone_capstone.v290_matrix_v24_aggregation.v1",
+  "scripts_research_conductor_modified": false,
+  "source_artifacts": [
+    {
+      "experiment_id": "experiment_3120_cross_corpus_matrix_v24",
+      "path": "results/experiment_3120_cross_corpus_matrix_v24.json",
+      "present": true,
+      "readable_json_object": true,
+      "required": true,
+      "role": "matrix_v24_authority",
+      "sha256": "df3d0d5018f69abb78d51925dce2c3188818e8434ff3babd027b9aa13ee4d9a8",
+      "source_type": "json"
+    },
+    {
+      "experiment_id": "experiment_3108_capstone_v289",
+      "path": "results/experiment_3108_capstone_v289.json",
+      "present": true,
+      "readable_json_object": true,
+      "required": true,
+      "role": "prior_capstone_v289",
+      "sha256": "87c626dfacdcf488d00fb07da2ab97ca3d3d428bd305aaacf6940b8e798882f0",
+      "source_type": "json"
+    },
+    {
+      "experiment_id": "experiment_3107_cross_corpus_matrix_v23",
+      "path": "results/experiment_3107_cross_corpus_matrix_v23.json",
+      "present": true,
+      "readable_json_object": true,
+      "required": true,
+      "role": "matrix_v23_authority",
+      "sha256": "503c48fa6773196d0baa16860a73d626e0e8abad5d49d25d32c6c33486c21ac1",
+      "source_type": "json"
+    },
+    {
+      "experiment_id": "experiment_3109_archive_v289_activate_v290",
+      "path": "results/experiment_3109_archive_v289_activate_v290.json",
+      "present": true,
+      "readable_json_object": true,
+      "required": false,
+      "role": "archive_v289_activate_v290",
+      "sha256": "136b9af586d7965defcb8131dbccb5de677856d7ba6117f6dad9eed5b9cebb75",
+      "source_type": "json"
+    },
+    {
+      "experiment_id": "experiment_3110_sota_model_spec_cache_manifest_corrigendum_v1",
+      "path": "results/experiment_3110_sota_model_spec_cache_manifest_corrigendum_v1.json",
+      "present": true,
+      "readable_json_object": true,
+      "required": false,
+      "role": "sota_model_spec_cache_manifest",
+      "sha256": "1707ec755287b47f7e205200e2787e8eac93e33a8d1490515748c0ce3b2acb24",
+      "source_type": "json"
+    },
+    {
+      "experiment_id": "experiment_3111_certified_coherence_z3_mcs_feedback_v3",
+      "path": "results/experiment_3111_certified_coherence_z3_mcs_feedback_v3.json",
+      "present": true,
+      "readable_json_object": true,
+      "required": false,
+      "role": "certified_coherence_feedback",
+      "sha256": "366edc3a4921f945fcd432e33ea924dd891172b84378833334de611bc2ef0017",
+      "source_type": "json"
+    },
+    {
+      "experiment_id": "experiment_3112_logic_regularized_verifier_pilot_v1",
+      "path": "results/experiment_3112_logic_regularized_verifier_pilot_v1.json",
+      "present": true,
+      "readable_json_object": true,
+      "required": false,
+      "role": "logic_regularized_verifier_pilot",
+      "sha256": "2a45e27a7004e2904a89c2e4f6799cc75a323a04f851b7cdc428e59555fa1724",
+      "source_type": "json"
+    },
+    {
+      "experiment_id": "experiment_3113_diagnostic_local_sota_verifier_calibration_v5",
+      "path": "results/experiment_3113_diagnostic_local_sota_verifier_calibration_v5.json",
+      "present": true,
+      "readable_json_object": true,
+      "required": false,
+      "role": "diagnostic_verifier_calibration",
+      "sha256": "28650d5ae3d461c022e2081717b43e9428b8d6e13fb4e437b09e6b1ee2acd405",
+      "source_type": "json"
+    },
+    {
+      "experiment_id": "experiment_3114_fragment_level_code_constraint_verification_pilot_v1",
+      "path": "results/experiment_3114_fragment_level_code_constraint_verification_pilot_v1.json",
+      "present": true,
+      "readable_json_object": true,
+      "required": false,
+      "role": "fragment_level_verification",
+      "sha256": "80c3011c4498bc187a1af72bc1d8423ffb2a233d82d7b16b9ad5fadd26365ccd",
+      "source_type": "json"
+    },
+    {
+      "experiment_id": "experiment_3115_explicit_repair_gate_micro_panel_v4",
+      "path": "results/experiment_3115_explicit_repair_gate_micro_panel_v4.json",
+      "present": true,
+      "readable_json_object": true,
+      "required": false,
+      "role": "explicit_repair_gate_micro_panel",
+      "sha256": "d1acea99957f3189e8196b6bce70138bc9712215bf742f9913b51a19a360fbe5",
+      "source_type": "json"
+    },
+    {
+      "experiment_id": "experiment_3116_fr11_unsolvable_curriculum_retention_guard_v1",
+      "path": "results/experiment_3116_fr11_unsolvable_curriculum_retention_guard_v1.json",
+      "present": true,
+      "readable_json_object": true,
+      "required": false,
+      "role": "fr11_curriculum_retention_guard",
+      "sha256": "76232d270a8772d47affd6da90f49d8301b461a1bbd3192e74dbb8bf281316cf",
+      "source_type": "json"
+    },
+    {
+      "experiment_id": "experiment_3117_ebt_arm_sidecar_score_correlation_boundary_v3",
+      "path": "results/experiment_3117_ebt_arm_sidecar_score_correlation_boundary_v3.json",
+      "present": true,
+      "readable_json_object": true,
+      "required": false,
+      "role": "ebt_arm_sidecar_score_correlation",
+      "sha256": "c22911a80d1ca2119850b6e1a220f0accba6931b9ee243e489b660bae7100680",
+      "source_type": "json"
+    },
+    {
+      "experiment_id": "exp3118",
+      "path": "results/experiment_3118_clut_sampler_backend_integration_boundary_v2.json",
+      "present": true,
+      "readable_json_object": true,
+      "required": false,
+      "role": "clut_sampler_backend_integration",
+      "sha256": "cbdc9da2db114dfdbf745eb4c4ad14998708d32ae7577e01ab5dd866d395ce07",
+      "source_type": "json"
+    },
+    {
+      "experiment_id": "experiment_3119_gatemate_ssqa_operator_evidence_ingestion_v4",
+      "path": "results/experiment_3119_gatemate_ssqa_operator_evidence_ingestion_v4.json",
+      "present": true,
+      "readable_json_object": true,
+      "required": false,
+      "role": "gatemate_ssqa_operator_evidence",
+      "sha256": "fc0f711666ea046c03774a76b935dd6b022f4b7dcc61dd884672c2aa21d42430",
+      "source_type": "json"
+    }
+  ],
+  "source_checksums": {
+    "results/experiment_3107_cross_corpus_matrix_v23.json": "503c48fa6773196d0baa16860a73d626e0e8abad5d49d25d32c6c33486c21ac1",
+    "results/experiment_3108_capstone_v289.json": "87c626dfacdcf488d00fb07da2ab97ca3d3d428bd305aaacf6940b8e798882f0",
+    "results/experiment_3109_archive_v289_activate_v290.json": "136b9af586d7965defcb8131dbccb5de677856d7ba6117f6dad9eed5b9cebb75",
+    "results/experiment_3110_sota_model_spec_cache_manifest_corrigendum_v1.json": "1707ec755287b47f7e205200e2787e8eac93e33a8d1490515748c0ce3b2acb24",
+    "results/experiment_3111_certified_coherence_z3_mcs_feedback_v3.json": "366edc3a4921f945fcd432e33ea924dd891172b84378833334de611bc2ef0017",
+    "results/experiment_3112_logic_regularized_verifier_pilot_v1.json": "2a45e27a7004e2904a89c2e4f6799cc75a323a04f851b7cdc428e59555fa1724",
+    "results/experiment_3113_diagnostic_local_sota_verifier_calibration_v5.json": "28650d5ae3d461c022e2081717b43e9428b8d6e13fb4e437b09e6b1ee2acd405",
+    "results/experiment_3114_fragment_level_code_constraint_verification_pilot_v1.json": "80c3011c4498bc187a1af72bc1d8423ffb2a233d82d7b16b9ad5fadd26365ccd",
+    "results/experiment_3115_explicit_repair_gate_micro_panel_v4.json": "d1acea99957f3189e8196b6bce70138bc9712215bf742f9913b51a19a360fbe5",
+    "results/experiment_3116_fr11_unsolvable_curriculum_retention_guard_v1.json": "76232d270a8772d47affd6da90f49d8301b461a1bbd3192e74dbb8bf281316cf",
+    "results/experiment_3117_ebt_arm_sidecar_score_correlation_boundary_v3.json": "c22911a80d1ca2119850b6e1a220f0accba6931b9ee243e489b660bae7100680",
+    "results/experiment_3118_clut_sampler_backend_integration_boundary_v2.json": "cbdc9da2db114dfdbf745eb4c4ad14998708d32ae7577e01ab5dd866d395ce07",
+    "results/experiment_3119_gatemate_ssqa_operator_evidence_ingestion_v4.json": "fc0f711666ea046c03774a76b935dd6b022f4b7dcc61dd884672c2aa21d42430",
+    "results/experiment_3120_cross_corpus_matrix_v24.json": "df3d0d5018f69abb78d51925dce2c3188818e8434ff3babd027b9aa13ee4d9a8"
+  },
+  "ssqa_status": "gated_skipped_host_visible_readback_missing",
+  "status_updates_written": false,
+  "verifier_gain_status": "diagnostic_gain_recovered_but_headline_bounded_by_cache_and_prior_flags"
+}
