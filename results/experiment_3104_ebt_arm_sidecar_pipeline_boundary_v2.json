@@ -1,0 +1,120 @@
+{
+  "adapter_schema_ready": true,
+  "artifact": "experiment_3104_ebt_arm_sidecar_pipeline_boundary_v2",
+  "duration_s": 0.0,
+  "full_suite_status": "not rerun in Exp 3104; known .288/Exp 3091 context: `.venv/bin/pytest tests/python -q` failed with 20 failed, 7823 passed, 38 skipped, 1 error; xdist internal error at tests/python/test_experiment_295_apple_verify_repair.py::test_partial_artifact_has_stall_at.",
+  "honest_verdict": "complete: sidecar_boundary_v2_ready=true; targeted offline tests validate schema_import_replay_boundary_only; projection_only_no_live_model_integration_no_speedup",
+  "implementation_edits": [],
+  "inference_substrate": {
+    "generation_performed": false,
+    "gpu_required": false,
+    "kind": "offline_sidecar_tests",
+    "live_llm_inference": false,
+    "live_model_inference": false,
+    "model_weights_loaded": false,
+    "sidecar_only": true,
+    "speedup_claimed": false,
+    "training_performed": false,
+    "weight_update_performed": false
+  },
+  "no_live_model_integration_claim": true,
+  "no_weight_update_claim": true,
+  "non_claims": [
+    "no EBT/ARM training",
+    "no model weight update",
+    "no live model inference integration",
+    "no generation-loop integration",
+    "no benchmark speedup",
+    "no hardware acceleration"
+  ],
+  "pipeline_adapter_importable": true,
+  "remaining_integration_blockers": [
+    "No live EBT/ARM model integration is wired or claimed.",
+    "No model weights are loaded or mutated; the scorer uses cached JSON rows only.",
+    "No generation loop or inference-time replacement consumes sidecar scores.",
+    "No benchmark speedup or hardware acceleration evidence is present.",
+    "The broad Python suite had known unrelated failures in the .288/Exp 3091 context and was not rerun for this boundary-only task."
+  ],
+  "run_date": "20260526",
+  "schema": "carnot.ebt_arm_sidecar_pipeline_boundary.v2",
+  "sidecar_boundary_v2_ready": true,
+  "source_artifacts": [
+    {
+      "claim_boundary": "schema_and_cached_replay_prototype_only",
+      "id": "exp3091_sidecar_schema_prototype",
+      "kind": "prior_result",
+      "path": "results/experiment_3091_ebt_arm_sidecar_adapter_schema_prototype_v1.json"
+    },
+    {
+      "claim_boundary": "projection_only_sidecar_schema_no_model_integration",
+      "id": "exp3094_capstone_v288",
+      "kind": "prior_capstone",
+      "path": "results/experiment_3094_capstone_v288.json"
+    },
+    {
+      "claim_boundary": "sidecar_spec_anchor",
+      "id": "verification_spec_req_3091",
+      "kind": "openspec",
+      "path": "openspec/capabilities/verification/spec.md"
+    },
+    {
+      "claim_boundary": "data_shape_only",
+      "id": "sidecar_json_schema",
+      "kind": "schema",
+      "path": "python/carnot/schemas/ebt_arm_sidecar_adapter_v1.json"
+    },
+    {
+      "claim_boundary": "deterministic_cached_replay_only",
+      "id": "sidecar_replay_scorer",
+      "kind": "local_code",
+      "path": "python/carnot/inference/ebt_arm_sidecar_adapter.py"
+    },
+    {
+      "claim_boundary": "focused_boundary_validation",
+      "id": "sidecar_boundary_v2_tests",
+      "kind": "test",
+      "path": "tests/python/test_experiment_3104_ebt_arm_sidecar_pipeline_boundary_v2.py"
+    }
+  ],
+  "spec_gap_recorded": "No new OpenSpec requirement was added because REQ-VERIFY-3091 already covers the checked sidecar schema/replay boundary and no implementation code was edited.",
+  "spec_refs": [
+    "REQ-VERIFY-3091",
+    "SCENARIO-VERIFY-3091"
+  ],
+  "targeted_test_commands": [
+    ".venv/bin/pytest -o addopts='' tests/python/test_experiment_3091_ebt_arm_sidecar_adapter_schema_prototype.py -q (passed: 8)",
+    "ruff check tests/python/test_experiment_3104_ebt_arm_sidecar_pipeline_boundary_v2.py (passed)",
+    "ruff format --check tests/python/test_experiment_3104_ebt_arm_sidecar_pipeline_boundary_v2.py (passed after formatting)",
+    ".venv/bin/pytest -o addopts='' tests/python/test_experiment_3104_ebt_arm_sidecar_pipeline_boundary_v2.py -q (passed: 3)",
+    ".venv/bin/pytest -o addopts='' tests/python/test_experiment_3091_ebt_arm_sidecar_adapter_schema_prototype.py tests/python/test_experiment_3104_ebt_arm_sidecar_pipeline_boundary_v2.py -q (passed: 11)",
+    "PYTHONPATH=python .venv/bin/coverage run --source=python/carnot/inference -m pytest -o addopts='' tests/python/test_experiment_3091_ebt_arm_sidecar_adapter_schema_prototype.py tests/python/test_experiment_3104_ebt_arm_sidecar_pipeline_boundary_v2.py -q (passed: 11)",
+    ".venv/bin/coverage report --include=python/carnot/inference/ebt_arm_sidecar_adapter.py --fail-under=100 (passed: 100% sidecar adapter coverage)"
+  ],
+  "targeted_tests_passed": true,
+  "validation_manifest": {
+    "adapter_module": "carnot.inference.ebt_arm_sidecar_adapter",
+    "adapter_symbols_imported": [
+      "SidecarReplayScorer",
+      "example_sidecar_records",
+      "load_sidecar_schema",
+      "validate_sidecar_record"
+    ],
+    "deterministic_replay": true,
+    "fixture_count": 2,
+    "replay_total_energies": [
+      0.08,
+      30.9
+    ],
+    "required_schema_fields": [
+      "record_id",
+      "candidate",
+      "constraints",
+      "energy_terms",
+      "verifier_feedback",
+      "confidence",
+      "exact_label_reference",
+      "source_artifacts"
+    ],
+    "schema_path": "python/carnot/schemas/ebt_arm_sidecar_adapter_v1.json"
+  }
+}
