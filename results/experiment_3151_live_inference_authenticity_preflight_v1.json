@@ -1,7 +1,7 @@
 {
   "artifact": "experiment_3151_live_inference_authenticity_preflight_v1",
-  "blocked_reason": "duration_s=10.698484 is shorter than minimum plausible duration 60.0",
-  "duration_s": 10.698484,
+  "blocked_reason": "duration_s=10.590346 is shorter than minimum plausible duration 60.0",
+  "duration_s": 10.590346,
   "field_principles": {
     "blocked_reason": "blocked preflights must be actionable",
     "headline_claim_allowed": "smoke tests do not create headline evidence",
@@ -19,7 +19,7 @@
     "transcript_hashes": "outputs must be replay-identifiable without copying long text"
   },
   "headline_claim_allowed": false,
-  "honest_verdict": "blocked_duration_too_short: preflight_passed=false; live_call_count=1; detail=duration_s=10.698484 is shorter than minimum plausible duration 60.0",
+  "honest_verdict": "blocked_duration_too_short: preflight_passed=false; live_call_count=1; detail=duration_s=10.590346 is shorter than minimum plausible duration 60.0",
   "inference_substrate": {
     "cpu_probe": {
       "platform": "Linux-7.0.4-1-cachyos-x86_64-with-glibc2.43",
@@ -93,7 +93,7 @@
   ],
   "minimum_duration_requirement_s": 60.0,
   "model_load_evidence": {
-    "generation_wall_time_s": 0.431858,
+    "generation_wall_time_s": 0.432167,
     "load_attempted": true,
     "load_command": [
       "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
@@ -110,7 +110,7 @@
       "8"
     ],
     "load_command_sha256": "cade71f4639643e79c5518cabcfd408a30a236cbadae05840afef5a20f7993b7",
-    "load_wall_time_s": 8.175068,
+    "load_wall_time_s": 7.96673,
     "path_exists": true,
     "returncode": 0,
     "runtime": "llama_cpp",
@@ -118,8 +118,8 @@
     "selected_model_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
     "selected_model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
     "stderr_summary": "llama_context: n_ctx_seq (512) < n_ctx_train (262144) -- the full capacity of the model will not be utilized\nllama_kv_cache_iswa: using full-size SWA cache (ref: https://github.com/ggml-org/llama.cpp/pull/13194#issuecomment-2868343055)\nllama_kv_cache: the V embeddings have different sizes across layers and FA is not enabled - padding V cache to 2048\nllama_kv_cache: the V embeddings have different sizes across layers and FA is not enabled - padding V cache to 2048\n",
-    "stdout_summary": "{\"generation_wall_time_s\": 0.431858, \"load_wall_time_s\": 8.175068, \"ok\": true, \"output_text\": \"\\n\\nthought\\n<channel|>VALID\", \"runtime\": \"llama_cpp\", \"total_worker_wall_time_s\": 8.746727, \"usage\": {\"completion_tokens\": 5, \"prompt_tokens\": 19, \"total_tokens\": 24}}\n",
-    "total_worker_wall_time_s": 8.746727,
+    "stdout_summary": "{\"generation_wall_time_s\": 0.432167, \"load_wall_time_s\": 7.96673, \"ok\": true, \"output_text\": \"\\n\\nthought\\n<channel|>VALID\", \"runtime\": \"llama_cpp\", \"total_worker_wall_time_s\": 8.546801, \"usage\": {\"completion_tokens\": 5, \"prompt_tokens\": 19, \"total_tokens\": 24}}\n",
+    "total_worker_wall_time_s": 8.546801,
     "worker_code_sha256": "976bf3b8bbd73fdff7e15a4d7b98488ecc40e2db095ba72b30047c663b92b2b7"
   },
   "model_specs": [
@@ -216,7 +216,7 @@
   },
   "preflight_passed": false,
   "random_seed": 20260526,
-  "reproducibility_checksum": "3805fc54fec0f4906679fd1491e99ad215389b4800d1328000b09c74a3b51791",
+  "reproducibility_checksum": "36d5fb8816f2e08ac39204a39a22c3139f39c1321d0e297c46a8d4ed66c6b6ec",
   "run_date": "20260526",
   "schema": "carnot.live_inference_authenticity_preflight.v1",
   "selected_model_ids": [
@@ -265,7 +265,7 @@
       "readable_json_object": null,
       "required": true,
       "role": "verification_openspec",
-      "sha256": "a86c6168ea3aec6f6259f04d3de001eb742c680dce4e4a0e46310239f326d92e",
+      "sha256": "f61cddf8a4008668572d0a309bbf4e50423746f56e602986f2e14fe080ea2b57",
       "source_type": "text"
     },
     {
@@ -318,7 +318,7 @@
     "AGENTS.md": "b3d6581b04f16b85f77defb2837c98dc3b60ed51e10b347ecb36e609f318b619",
     "CLAUDE.md": "cdc00581d37d1bd3c77a69b058787f74ecc71545a97c1eab31c48961637b3224",
     "CODEX.md": "1db7ebc1009714f872db83447828a8957c3abb72061832cc1bc307735cd96bbe",
-    "openspec/capabilities/verification/spec.md": "a86c6168ea3aec6f6259f04d3de001eb742c680dce4e4a0e46310239f326d92e",
+    "openspec/capabilities/verification/spec.md": "f61cddf8a4008668572d0a309bbf4e50423746f56e602986f2e14fe080ea2b57",
     "python/carnot/verify/live_inference_authenticity_preflight_v1.py": "580279cb9c20268f38388a0d46527399b4d39ccab48192c46bfcf49add31d66b",
     "results/experiment_3123_sota_cache_preconditions_manifest_v2.json": "93701a360f686883fa035e96be0a32f93acafa151f9245bd37bf7d4a92a20950",
     "results/experiment_3139_live_sota_verifier_rerun_v7.json": "46f11dcddbbad66590691de7b2e8f615d94f39f0c0dbb05bcc552c4021d1a0f8",

@@ -2174,7 +2174,7 @@ headline results.
 
 | Requirement | Implementation | Tests |
 |---|---|---|
-| REQ-VERIFY-3151 | Planned (`python/carnot/verify/live_inference_authenticity_preflight_v1.py`) | Planned (`tests/python/test_experiment_3151_live_inference_authenticity_preflight_v1.py`) |
+| REQ-VERIFY-3151 | Implemented (`python/carnot/verify/live_inference_authenticity_preflight_v1.py`) | Implemented (`tests/python/test_experiment_3151_live_inference_authenticity_preflight_v1.py`) |
 
 ### REQ-VERIFY-3073: EBT/ARM-EBM Adapter Feasibility Audit
 
