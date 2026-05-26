@@ -20,6 +20,10 @@ pip install carnot-ebm
 
 Python 3.11+. CPU-only by default (JAX will pick GPU if you have one, but it isn't required). If the install fails, see the troubleshooting note at the end.
 
+**macOS note:** Apple's bundled Python is still 3.9 and won't work. Install a current Python first: `brew install python`, then use `python3` (not `python`) for the commands below. Or use `uv`: `uv python install 3.11 && uv pip install carnot-ebm` resolves both the version and isolation question in one step.
+
+**First-call note:** the first time you import `VerifyRepairPipeline` in a fresh Python session, JAX initialization plus extractor warmup take 3-5 seconds. If your terminal seems to pause on the first call, that's normal — subsequent calls in the same session are sub-millisecond.
+
 ## Step 1 — The five-line "hello, world"
 
 Open [`01_basic_verify.py`](../examples/tutorial-project/01_basic_verify.py). The whole file is about forty lines of which five do the work:

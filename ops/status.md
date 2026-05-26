@@ -1,6 +1,48 @@
 # Carnot — Operational Status
 
-**Last Updated:** 2026-05-26 (Milestone 2026.05.289 operational retrospective complete)
+**Last Updated:** 2026-05-26 (Phase 1 ship gate CLOSED — external reproducer CG completed install + tutorial on macOS; all 8 of 8 ship criteria met)
+
+## Session 2026-05-26 - Phase 1 Ship Gate CLOSED
+
+External reproducer "CG" (initials only) ran `pip install carnot-ebm`
++ the documented tutorial on a macOS machine. After updating Python
+(vanilla macOS is stuck at 3.9), the install completed and the
+quickstart worked as documented. CG surfaced three small
+documentation gaps that have been addressed in the same commit that
+records the artifact:
+
+1. macOS Python 3.11+ note (brew install python OR uv python install)
+2. python3 vs python on macOS convention
+3. First-call JAX initialization pause (3-5s) documented as normal
+4. Bonus: uv first-class mention in install instructions
+
+Phase 1 ship gate, final state — 8 of 8 mechanical criteria met:
+
+| Criterion | State |
+|---|---|
+| All FR-* implemented | ✓ |
+| PyPI package published (carnot-ebm) | ✓ |
+| HuggingFace mirror (huggingface.co/Carnot-EBM) | ✓ |
+| Apache-2.0 license | ✓ |
+| CLI entrypoints declared in pyproject.toml | ✓ |
+| MCP server module + docs | ✓ |
+| Discoverable tutorial walkthrough (docs/tutorial.md) | ✓ (2026-05-24) |
+| ≥1 independent reproducer artifact | ✓ (CG, 2026-05-26) |
+
+The reproducer artifact lives at
+`ops/external-reproducer-2026-05-26-cg.md` and records CG's verbatim
+feedback, what worked, what surfaced as doc gaps, fixes applied, and
+cross-references to the tutorial path CG walked.
+
+Per CLAUDE.md "Project Vision (Three Phases + Parallel Tracks)" the
+Phase 1 ship gate is now closed. Phase 1 ships as a useful,
+operational software product. The autonomous research conductor's
+ongoing work (currently milestone .292 verifier-recovery + repair-gate
+work) continues per its normal trajectory. Phase 2 hardware and Phase
+3 foundation-model tracks continue per their respective roadmaps. The
+remaining publication-blocker discipline (paper-v6 arXiv submission,
+36-blocker ledger, etc.) is parallel to Phase 1 ship and unchanged by
+this gate closure.
 
 ## Session 2026-05-26 - Milestone 2026.05.289 Operational Retrospective Complete
 

@@ -10,6 +10,32 @@ pip install carnot-ebm
 
 This installs the `carnot` CLI and the Python library. Requires Python 3.11+.
 
+### macOS users
+
+Apple's bundled Python on macOS is still 3.9 and is not supported. Install a current Python via Homebrew before running `pip install`:
+
+```bash
+brew install python      # gets a current 3.x
+python3 --version        # confirm 3.11 or newer
+python3 -m pip install carnot-ebm
+```
+
+On macOS, use the `python3` command (not `python`) unless you've set up an alias. The code samples below show `python` for brevity; substitute `python3` if that's what your shell resolves.
+
+### Using `uv` (recommended for clean environments)
+
+If you use [`uv`](https://github.com/astral-sh/uv) for Python env management, the equivalent commands are:
+
+```bash
+uv python install 3.11             # if you don't have a 3.11+ already
+uv pip install carnot-ebm
+uv run python -c "from carnot.pipeline import VerifyRepairPipeline; print('OK')"
+```
+
+`uv run` handles the version + isolation question in a single step, which removes any `python` vs `python3` ambiguity.
+
+### Development install (cloned repo)
+
 If you're working from a clone of the repository and want to develop against it, use the editable install with dev extras instead:
 
 ```bash
@@ -18,6 +44,7 @@ pip install -e ".[dev]"
 
 > JAX runs on CPU by default. For GPU acceleration, install with `pip install carnot-ebm[cuda]`.
 > On AMD/ROCm systems, force CPU mode: `JAX_PLATFORMS=cpu`.
+> **First-call note:** the first time you import `VerifyRepairPipeline` in a fresh Python session, JAX initialization plus extractor warmup take 3-5 seconds. This is normal; subsequent calls in the same session are sub-millisecond.
 
 ### First time using Carnot?
 
