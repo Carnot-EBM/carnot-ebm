@@ -9410,3 +9410,78 @@ inference claim, a passed vacuity guard, source-artifact provenance, and an
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-REPORT-3111 | Planned (`python/carnot/reporting/certified_coherence_feedback_v3_3111.py`) | Planned (`tests/python/test_experiment_3111_certified_coherence_z3_mcs_feedback_v3.py`) |
+
+### REQ-REPORT-3120: Cross-Corpus Matrix V24 From .290 Artifacts
+
+The repository shall provide an Exp 3120 cross-corpus matrix v24 generator
+that writes `results/experiment_3120_cross_corpus_matrix_v24.json` using
+matrix v23, the milestone .289 capstone, and all available `.290` result
+artifacts as checked-in evidence. The generator MUST load
+`results/experiment_3107_cross_corpus_matrix_v23.json` and
+`results/experiment_3108_capstone_v289.json` as previous authorities before
+classifying v24 rows. It MUST also attempt to load the `.290` artifacts for
+archive activation, model-spec/cache manifest, certified coherence feedback,
+logic-regularized verifier pilot, diagnostic verifier calibration, fragment
+verification, explicit repair gate micro-panel, FR-11 curriculum retention,
+EBT/ARM sidecar correlation, cLUT sampler backend integration, and
+GateMate/SSQA operator evidence. Missing `.290` artifacts MUST be recorded
+explicitly rather than inferred from downstream prose.
+
+The matrix MUST preserve the v23 row vocabulary: `clean`, `flagged`,
+`bounded`, `blocked`, `gated_skipped`, `missing`, `retired`,
+`projection_only`, `diagnostic_only`, and `model_spec_gap`. Superseded v23
+rows MAY be retired only when a concrete v24 row cites the replacement
+artifact. Model-spec/cache evidence MUST clear the old metadata-only gap only
+when mandated model IDs and selected cached mandated model evidence are
+present; cached-pair and missing-cache limitations MUST remain visible.
+Verifier and repair rows MUST distinguish solver-certified diagnostics,
+diagnostic calibration, fragment localization, repair-gate execution, repair
+success, false-repair acceptance, and intent preservation rather than treating
+the existence of a repair artifact as a clean repair claim. FR-11 rows MUST
+preserve controller-only and no-weight-update boundaries. EBT/ARM sidecar,
+cLUT backend, GateMate, and SSQA rows MUST remain bounded, projection-only,
+blocked, or gated-skipped when the source artifacts declare no live model
+integration, no hardware execution, no host-visible readback, or no speedup
+claim.
+
+The generator MUST recompute `publication_blocker_count`,
+`blocker_delta_from_v23`, `missing_artifacts`, `headline_model_spec_gaps`, and
+`status_counts` from row statuses. It MUST flag any loaded artifact whose
+terminal `honest_verdict` contradicts the artifact readiness fields used for
+row classification. The terminal artifact MUST include
+`matrix_v24_ready`, `rows_total`, `status_counts`,
+`publication_blocker_count`, `blocker_delta_from_v23`, `missing_artifacts`,
+`headline_model_spec_gaps`, `verifier_repair_status`, `fr11_status`,
+`architecture_boundary_status`, `source_artifacts`, `inference_substrate`,
+and `honest_verdict`. It MAY include row details, source checksums,
+publication blocker rows, replacement reconciliation, invariant violations,
+and contradiction details. `matrix_v24_ready` MUST be true only when previous
+authorities are readable, every status is valid, status counts reconcile with
+row count, publication blockers reconcile with row statuses, and the
+inference substrate declares aggregation-only work with no live model,
+repair, solver, conductor, or hardware execution by the matrix builder.
+
+#### SCENARIO-REPORT-3120: V24 Aggregates .290 Without Claim Promotion
+
+**Given** matrix v23 and capstone .289 are present
+**And** `.290` artifacts include model-spec/cache manifest, certified
+coherence feedback, logic-regularized verifier pilot, diagnostic verifier
+calibration, fragment-level verification, explicit repair gate micro-panel,
+FR-11 curriculum retention, EBT/ARM sidecar correlation, cLUT backend
+integration, and GateMate/SSQA operator evidence
+**When** the Exp 3120 matrix v24 generator runs
+**Then** it writes `results/experiment_3120_cross_corpus_matrix_v24.json`
+with `matrix_v24_ready=true`, all required schema fields, status counts
+derived from rows, publication blockers derived from blocked/bounded/gated/
+missing/projection/model-spec statuses, blocker delta measured against v23,
+missing `.290` artifacts recorded explicitly, headline model/cache policy
+gaps preserved, verifier/repair, FR-11, and architecture-boundary summaries
+reported without live-inference or hardware overclaim, contradiction flags for
+inconsistent verdict/readiness evidence, aggregation-only inference-substrate
+metadata, and an `honest_verdict` that starts with `complete:`.
+
+## Implementation Status (REQ-REPORT-3120)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-3120 | Planned (`python/carnot/reporting/cross_corpus_matrix_v24_3120.py`) | Planned (`tests/python/test_experiment_3120_cross_corpus_matrix_v24.py`) |
