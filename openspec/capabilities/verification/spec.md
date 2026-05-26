@@ -1733,6 +1733,69 @@ or open-world correctness claim.
 |---|---|---|
 | REQ-VERIFY-3125 | Implemented (`python/carnot/eval/prefix_closed_deterministic_verifier_bound_pilot_v1.py`) | Implemented (`tests/python/test_experiment_3125_prefix_closed_deterministic_verifier_bound_pilot.py`) |
 
+### REQ-VERIFY-3126: Fragment-Time Monitor And Satisfiable-Drift Audit
+
+The repository shall provide an Exp 3126 deterministic fragment-time monitor
+that writes
+`results/experiment_3126_fragment_time_monitor_satisfiable_drift_audit_v1.json`
+from checked-in exact fixture and trace artifacts only. The monitor MUST
+consume the .290 exact-verifier manifest exposed by Exp 3097, the Exp 3114
+fragment/code verification artifact, and the Exp 3124 difficulty-stratified
+live SOTA verifier panel. It MUST NOT run fresh live inference, modify
+`scripts/research_conductor.py`, push commits, or claim repair success.
+
+The monitor shall emit replayable event rows for partial trace state,
+candidate final answer, constraint ledger, exact test/Z3 result, and drift
+classification. Constraint-ledger events shall preserve the ledger action
+derived from exact fragment status when fragments are present and from exact
+solver/test labels otherwise. Candidate-answer events shall compare returned
+answers against both exact labels and the maintained ledger. Drift
+classification events shall separate `contradiction`, `satisfiable_drift`,
+`extraction_format_failure`, `data_prior_mismatch`, and `unknown` failures;
+non-failing rows may be labeled `no_failure` and missing bounded-panel returns
+may be labeled `not_observed` without being counted as monitor violations.
+
+The terminal artifact MUST include
+`fragment_time_monitor_v1_ready`, `monitored_fixture_count`,
+`monitor_event_schema`, `monitor_violation_count`,
+`satisfiable_drift_count`, `contradiction_count`,
+`ledger_consistency_rate`, `failure_mechanism_counts`,
+`downstream_repair_constraints`, `tests_run`, `source_artifacts`,
+`inference_substrate`, and `honest_verdict`. It SHOULD also include
+`monitor_events`, `monitor_event_count`, `ledger_replay_summary`,
+`self_checks`, and `event_stream_hash` so downstream repair can verify that
+partial-state evidence was replayed before any repair prompt is authorized.
+
+`fragment_time_monitor_v1_ready` shall be true only when at least one exact
+fixture is monitored, the required event schema is present, all required
+source artifacts are available, ledger replay passes, final-answer consistency
+is checked for every observed candidate answer, monitor determinism is
+self-checked, no fresh live inference is declared, and `honest_verdict` starts
+with a terminal success prefix. `monitor_violation_count`,
+`satisfiable_drift_count`, `contradiction_count`, and
+`ledger_consistency_rate` shall be derived from replayed monitor events rather
+than copied unverified from upstream artifacts.
+
+### SCENARIO-VERIFY-3126: Monitor Evidence Gates Repair Before Any Repair Claim
+
+Given the .290 exact fixture manifest, Exp 3114 fragment/code verification
+rows, and Exp 3124 verifier-panel live rows are present,
+When Exp 3126 builds the fragment-time monitor artifact,
+Then it writes the required terminal JSON artifact, records no new live
+inference, defines the replayable monitor event schema, emits event rows for
+partial state, final answer, ledger, exact result, and drift classification,
+counts contradiction separately from satisfiable drift, reports
+ledger-consistency and failure-mechanism counts from event replay, records
+self-checks for ledger replay, final-answer consistency, and determinism, and
+exposes downstream repair constraints that require monitor evidence before any
+repair generation or repair-success claim.
+
+## Implementation Status (REQ-VERIFY-3126)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-VERIFY-3126 | Implemented (`python/carnot/eval/fragment_time_monitor_satisfiable_drift_audit_v1.py`) | Implemented (`tests/python/test_experiment_3126_fragment_time_monitor_satisfiable_drift_audit.py`) |
+
 ### REQ-VERIFY-3073: EBT/ARM-EBM Adapter Feasibility Audit
 
 The repository shall provide an Exp 3073 deterministic architecture audit that
