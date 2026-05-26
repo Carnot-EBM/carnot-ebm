@@ -1204,6 +1204,65 @@ deterministic readiness.
 **And** `legacy_smoke_only_used=false`
 **And** `honest_verdict` starts with `blocked_sota_gguf_unavailable`.
 
+### REQ-INFER-SOTA-023: Exp 3123 SOTA Cache Preconditions Manifest v2
+
+The system SHALL provide an Exp 3123 local-only SOTA cache/precondition
+manifest that downstream live-LLM headline tasks can consume before invoking
+verifiers, repair loops, self-learning loops, energy sidecars, or any other
+compute-bound live model path.  The manifest SHALL probe only local filesystem,
+cache, GPU-preflight, and checked-in artifact state; it SHALL NOT download
+models and SHALL NOT run live model inference.
+
+The manifest SHALL write
+`results/experiment_3123_sota_cache_preconditions_manifest_v2.json` and SHALL
+make the mandated headline policy explicit for:
+`unsloth/Qwen3.6-35B-A3B-GGUF`,
+`unsloth/gemma-4-31B-it-GGUF`, and
+`unsloth/gemma-4-26B-A4B-it-GGUF`.  It SHALL record nonzero local GGUF
+availability separately from HuggingFace `.no_exist` sentinels and zero-byte
+markers, and it SHALL preserve whether `cached_sota_pair()` can resolve two
+loadable mandated specs separately from whether at least one mandated SOTA
+model is available for a bounded single-model live attempt.
+
+The artifact SHALL include `sota_cache_manifest_v2_ready`,
+`mandatory_headline_model_ids`, `present_model_ids`, `missing_model_ids`,
+`selected_headline_model_ids`, `cached_sota_pair_available`,
+`any_single_sota_available`, `headline_claim_allowed`, `gpu_preflight`,
+`downstream_usage`, `source_artifacts`, `inference_substrate`, and
+`honest_verdict`.  `headline_claim_allowed` SHALL be true only for downstream
+work that attempts at least one locally present mandated model and records live
+model evidence; pair/comparative headline claims SHALL additionally require
+`cached_sota_pair_available=true`.
+
+### SCENARIO-INFER-SOTA-023-001: Single Cached Mandated Model Opens Bounded Attempts Only
+
+**Given** exactly one mandated SOTA GGUF resolves from local cache
+**And** `cached_sota_pair()` does not return two loadable specs
+**When** Exp 3123 builds the precondition manifest
+**Then** `any_single_sota_available=true`
+**And** `cached_sota_pair_available=false`
+**And** `selected_headline_model_ids` contains only the present mandated model
+**And** downstream live-LLM rules require a bounded attempt on that present
+model or a blocked/diagnostic artifact before any headline claim.
+
+### SCENARIO-INFER-SOTA-023-002: Missing Mandated Cache Blocks Live Claims Without Solver Work
+
+**Given** no mandated SOTA GGUF resolves from local cache
+**When** Exp 3123 builds the precondition manifest
+**Then** `present_model_ids=[]`
+**And** `missing_model_ids` lists all mandated headline model IDs
+**And** `headline_claim_allowed=false`
+**And** solver-only downstream rules remain allowed without model availability
+while live-LLM downstream rules require a blocked/diagnostic artifact.
+
+### SCENARIO-INFER-SOTA-023-003: Legacy Small Models Are Smoke-Only
+
+**Given** legacy small model cache entries exist
+**When** Exp 3123 builds the precondition manifest
+**Then** legacy small model IDs may appear only in `smoke_test_model_ids`
+**And** they SHALL NOT appear in `present_model_ids`,
+`selected_headline_model_ids`, or any headline-claim allowance rule.
+
 ### REQ-INFER-018: EBT Abstraction Layer
 
 The system SHALL provide an Energy-Based Transformer (EBT) abstraction layer that bridges autoregressive LLMs (like the mandated SOTA GGUF models) to an EBT formulation. This enables System-2 gradient refinement at inference time by providing a way to calculate sequence energy.
@@ -1291,6 +1350,7 @@ instead of silently producing invalid EBM energies.
 | REQ-INFER-SOTA-018 | Implemented (`python/carnot/reporting/spilled_energy_logit_detector_micro_panel_v1.py`) | Implemented (`tests/python/test_experiment_2917_spilled_energy_logit_detector_micro_panel.py`) |
 | REQ-INFER-SOTA-021 | Implemented (`scripts/experiment_3013_sota_gguf_logprob_telemetry_preflight_v1.py`) | Implemented (`tests/python/test_experiment_3013_sota_gguf_logprob_telemetry_preflight.py`) |
 | REQ-INFER-SOTA-022 | Implemented (`python/carnot/experiment_3043_verified_speculation_transcript_fingerprint.py`) | Implemented (`tests/python/test_experiment_3043_verified_speculation_transcript_fingerprint.py`) |
+| REQ-INFER-SOTA-023 | Implemented (`python/carnot/reporting/sota_cache_preconditions_manifest_v2.py`) | Implemented (`tests/python/test_experiment_3123_sota_cache_preconditions_manifest_v2.py`) |
 | REQ-INFER-2041 | Proposed | Proposed |
 | REQ-INFER-2056 | Implemented (`crates/carnot-boltzmann/src/lib.rs`, `crates/carnot-python/src/lib.rs`) | Implemented (`crates/carnot-boltzmann/tests/soft_bellman.rs`, `tests/python/test_soft_bellman_pyo3.py`) |
 
