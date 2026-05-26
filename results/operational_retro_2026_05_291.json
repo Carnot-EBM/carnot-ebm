@@ -1,0 +1,28 @@
+{
+  "schema": "carnot.operational_retro.v64",
+  "milestone": "2026.05.291",
+  "generated_at": "2026-05-26T14:02:03.336477Z",
+  "retro_type": "operational_in_progress",
+  "summary": "The authoritative timing block contains no milestone-scoped experiment commits, so this retro records 0 completed experiments, 0 total wall-time minutes, and 0 compute-bound experiments. The idle GPU snapshot is not actionable for compute-bound efficiency because there are no compute-bound timing rows to join it to.",
+  "slowest_experiments": [],
+  "bottlenecks_identified": [
+    "no data available this milestone for compute-bound slowest-run analysis",
+    "no data available this milestone for DualGPURunner engagement"
+  ],
+  "improvements_suggested": [
+    "Add an explicit empty-window sentinel to the timing collector so operational retrospectives can short-circuit runtime ranking when no experiment commits exist.",
+    "Attach GPU telemetry only to timing rows with compute-bound markers, leaving synthesis-only or empty milestones out of GPU-idle bottleneck reporting.",
+    "Emit a concise activation-window provenance line in the retro artifact that names why no experiment rows were eligible."
+  ],
+  "top_3_highest_leverage_actions": [
+    "Implement the empty-window sentinel in the timing export.",
+    "Gate GPU-idle warnings behind joined compute-bound timing entries.",
+    "Make the retro writer populate no-data answers for slowest experiments, GPU efficiency, and parallel-runner coverage automatically."
+  ],
+  "compute_bound_experiments_count": 0,
+  "gpu_idle_on_compute_bound_tasks": null,
+  "meta_reflection": "No experiment-level runtime claims are possible from this milestone input. The safest operational lesson is to improve no-data handling, not to infer bottlenecks from idle hardware telemetry alone.",
+  "estimated_time_savings_pct": 0,
+  "total_wall_time_minutes": 0,
+  "experiments_completed": 0
+}
