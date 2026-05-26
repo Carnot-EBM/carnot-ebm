@@ -1559,6 +1559,63 @@ uses an `honest_verdict` beginning with `complete:`.
 |---|---|---|
 | REQ-VERIFY-3114 | Implemented (`python/carnot/eval/fragment_verification_pilot_3114.py`) | Implemented (`tests/python/test_experiment_3114_fragment_level_code_constraint_verification_pilot.py`) |
 
+### REQ-VERIFY-3115: Explicit Repair Gate And Micro-Panel V4
+
+The repository shall provide an Exp 3115 explicit repair boundary builder that
+writes `results/experiment_3115_explicit_repair_gate_micro_panel_v4.json` in
+all cases. The builder shall consume Exp 3113 diagnostic repair-gate evidence
+and Exp 3114 fragment-level repair targets. It MUST NOT modify
+`scripts/research_conductor.py`, push commits, use legacy tiny models for
+headline repair evidence, or allow the repair micro-panel to disappear as a
+missing artifact.
+
+If Exp 3113 `repair_gate_state` is not `unblocked`, the builder MUST NOT run
+repair generation. It shall still write a terminal artifact with
+`repair_micro_panel_v4_artifact_ready=true`, `repair_unblocked=false`,
+`repair_run_executed=false`, and an actionable `gate_block_reason` derived from
+the upstream gate state and source evidence. If Exp 3113 is unblocked, the
+builder shall load the Exp 3114 repair target manifest and attempt the smallest
+available exact-fixture repair micro-panel using at least one selected cached
+mandated local SOTA GGUF model. Any missing target manifest, missing selected
+SOTA model, or runtime failure shall be recorded as an explicit blocked repair
+boundary rather than a missing artifact.
+
+Executed repair rows shall verify repaired outputs with exact offline
+authority matching the target family: Python AST arithmetic assertions for
+assertion repairs, Python JSON parsing for JSON repairs, and deterministic
+integer constraint evaluation for numeric constraint repairs. The artifact
+shall report `repair_success_delta`, `false_repair_accept_rate`, and
+`intent_preservation_rate`; blocked artifacts shall set these metrics to
+finite zero values and state why generation did not run. Model/cache metadata
+and inference substrate details shall remain auditable whether repair ran or
+remained blocked.
+
+The terminal artifact MUST include
+`repair_micro_panel_v4_artifact_ready`, `repair_unblocked`,
+`repair_run_executed`, `gate_block_reason`, `model_specs`,
+`selected_headline_model_ids`, `exact_ground_truth_count`,
+`repair_success_delta`, `false_repair_accept_rate`,
+`intent_preservation_rate`, `tests_run`, `source_artifacts`,
+`inference_substrate`, and `honest_verdict`.
+
+### SCENARIO-VERIFY-3115: Repair Boundary Artifact Never Disappears
+
+Given Exp 3113 and Exp 3114 source artifacts may be present, blocked, or
+unblocked,
+When Exp 3115 builds the explicit repair gate and micro-panel artifact,
+Then it always writes
+`results/experiment_3115_explicit_repair_gate_micro_panel_v4.json`, separates
+`repair_unblocked` from `repair_run_executed`, records concrete blocked
+reasons when generation is not authorized or cannot execute, and, when repair
+does execute, verifies every accepted repair against exact offline authority
+while preserving mandated SOTA model/cache provenance.
+
+## Implementation Status (REQ-VERIFY-3115)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-VERIFY-3115 | Implemented (`python/carnot/eval/explicit_repair_gate_micro_panel_v4.py`) | Implemented (`tests/python/test_experiment_3115_explicit_repair_gate_micro_panel_v4.py`) |
+
 ### REQ-VERIFY-3073: EBT/ARM-EBM Adapter Feasibility Audit
 
 The repository shall provide an Exp 3073 deterministic architecture audit that

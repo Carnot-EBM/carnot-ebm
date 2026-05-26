@@ -1,0 +1,248 @@
+{
+  "artifact": "experiment_3115_explicit_repair_gate_micro_panel_v4",
+  "duration_s": 11.453653,
+  "exact_ground_truth_count": 4,
+  "false_repair_accept_rate": 0.0,
+  "gate_block_reason": "repair_gate_unblocked",
+  "honest_verdict": "complete: repair_micro_panel_v4_artifact_ready=true; repair_run_executed=true; repair_success_delta=0.0; false_repair_accept_rate=0.0; intent_preservation_rate=0.0",
+  "inference_substrate": {
+    "exact_offline_authority": true,
+    "executes_models": true,
+    "kind": "explicit_repair_gate_micro_panel_v4",
+    "legacy_tiny_models_headline_eligible": false,
+    "live_llm_inference": true,
+    "new_model_execution": true,
+    "repair_generator_kind": "live_llama_cpp",
+    "repair_run_executed": true,
+    "repair_unblocked": true,
+    "selected_mandated_sota_model_count": 1
+  },
+  "intent_preservation_rate": 0.0,
+  "model_specs": [
+    {
+      "cache_present": false,
+      "cache_status": "cache_missing",
+      "file_size_bytes": null,
+      "hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "model_path": null,
+      "name": "Qwen3.6-35B-A3B",
+      "preferred_quant": "Q4_K_M",
+      "quantization": "Q4_K_M",
+      "role": "moe",
+      "selected": false
+    },
+    {
+      "cache_present": true,
+      "cache_status": "cached",
+      "file_size_bytes": 16947539744,
+      "gpu": 0,
+      "hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+      "name": "Gemma4-26B-A4B-it",
+      "preferred_quant": "Q4_K_M",
+      "quantization": "Q4_K_M",
+      "role": "moe",
+      "selected": true
+    },
+    {
+      "cache_present": false,
+      "cache_status": "cache_missing",
+      "file_size_bytes": null,
+      "hf_id": "unsloth/gemma-4-31B-it-GGUF",
+      "model_path": null,
+      "name": "Gemma4-31B-it",
+      "preferred_quant": "Q4_K_M",
+      "quantization": "Q4_K_M",
+      "role": "dense",
+      "selected": false
+    }
+  ],
+  "repair_micro_panel_v4_artifact_ready": true,
+  "repair_rows": [
+    {
+      "accepted": false,
+      "exact_verified": false,
+      "fixture_id": "resyn-3084-arith-001",
+      "fragment_id": "resyn-3084-arith-001:assert_claim",
+      "intent_preserved": false,
+      "model_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+      "raw_candidate": "evidence_evidence: {\"assertion\": \"assert (((4 + 3) * 2) - 0) == 16\", \"evidence_id\": \"resyn-3084-arith-001:assert_claim\",- \"computed_value\": 14, \"evidence_id\":- \"resyn-3084-arith-001:assert_claim\", \"expression\": \"(4 + 3)",
+      "repaired_fragment": "evidence_evidence: {\"assertion\": \"assert (((4 + 3) * 2) - 0) == 16\", \"evidence_id\": \"resyn-3084-arith-001:assert_claim\",- \"computed_value\": 14, \"evidence_id\":- \"resyn-3084-arith-001:assert_claim\", \"expression\": \"(4 + 3)",
+      "row_index": 0,
+      "solver_evidence": {
+        "assertion": "assert (((4 + 3) * 2) - 0) == 16",
+        "authority": "python_ast_literal_evaluator",
+        "claimed_fragment": "16",
+        "claimed_value": 16,
+        "computed_value": 14,
+        "expression": "(4 + 3) * 2 - 0"
+      },
+      "verification_errors": [
+        "assertion_parse_or_eval_error: SyntaxError: unterminated string literal (detected at line 1) (<unknown>, line 1)"
+      ]
+    },
+    {
+      "accepted": false,
+      "exact_verified": false,
+      "fixture_id": "resyn-3084-repair-json-000",
+      "fragment_id": "resyn-3084-repair-json-000:json_document",
+      "intent_preserved": false,
+      "model_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+      "raw_candidate": "Evidence-based repair: l'encha\u00eenement-3115-fragment-repair.3-revised-1.json (thought-process-process-process-process-process-process-process-process-process-process-process-process-process-process-process-process-process-process-process-process-process-process-process-process-process-process-process-process-process-process-useless-process",
+      "repaired_fragment": "Evidence-based repair: l'encha\u00eenement-3115-fragment-repair.3-revised-1.json (thought-process-process-process-process-process-process-process-process-process-process-process-process-process-process-process-process-process-process-process-process-process-process-process-process-process-process-process-process-process-process-useless-process",
+      "row_index": 1,
+      "solver_evidence": {
+        "authority": "python_json_parser",
+        "candidate": "{\"mode\": \"bounded\" \"limit\": 2}",
+        "parse_error": "Expecting ',' delimiter: line 1 column 20 (char 19)"
+      },
+      "verification_errors": [
+        "json_parse_error: Expecting value: line 1 column 1 (char 0)"
+      ]
+    },
+    {
+      "accepted": false,
+      "exact_verified": false,
+      "fixture_id": "resyn-3084-repair-smt-001",
+      "fragment_id": "resyn-3084-repair-smt-001:constraint:2",
+      "intent_preserved": false,
+      "model_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+      "raw_candidate": "evidence-based-repaired-fragment-repair-strategy: evidence-based-repaired-fragment-repair-strategy",
+      "repaired_fragment": "evidence-based-repaired-fragment-repair-strategy: evidence-based-repaired-fragment-repair-strategy",
+      "row_index": 2,
+      "solver_evidence": {
+        "assignment": {
+          "rx_1": 2,
+          "ry_1": 1
+        },
+        "authority": "deterministic_integer_constraint_evaluator",
+        "constraint": "rx_1 + ry_1 == 11",
+        "lhs_value": 3,
+        "rhs_value": 11
+      },
+      "verification_errors": [
+        "numeric_parse_or_eval_error: JSONDecodeError: Expecting value: line 1 column 1 (char 0)"
+      ]
+    },
+    {
+      "accepted": false,
+      "exact_verified": false,
+      "fixture_id": "resyn-3084-repair-py-002",
+      "fragment_id": "resyn-3084-repair-py-002:assert_claim",
+      "intent_preserved": false,
+      "model_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+      "raw_candidate": "solver_evidence: {\"assertion\": \"assert ((7 * 2) - 2) == thought_process_process_step_1\",  way_of_|thought_process_process_step_1\", way_of_|thought_process_process_step_1\", way_of_|thought_|thought_process_process_step_1\", way_of_|thought_process_process_step_1\", way",
+      "repaired_fragment": "solver_evidence: {\"assertion\": \"assert ((7 * 2) - 2) == thought_process_process_step_1\",  way_of_|thought_process_process_step_1\", way_of_|thought_process_process_step_1\", way_of_|thought_|thought_process_process_step_1\", way_of_|thought_process_process_step_1\", way",
+      "row_index": 3,
+      "solver_evidence": {
+        "assertion": "assert ((7 * 2) - 2) == 13",
+        "authority": "python_ast_literal_evaluator",
+        "claimed_fragment": "13",
+        "claimed_value": 13,
+        "computed_value": 12,
+        "expression": "7 * 2 - 2"
+      },
+      "verification_errors": [
+        "assertion_parse_or_eval_error: SyntaxError: ':' expected after dictionary key (<unknown>, line 1)"
+      ]
+    }
+  ],
+  "repair_run_executed": true,
+  "repair_success_delta": 0.0,
+  "repair_target_count": 4,
+  "repair_target_manifest_path": "results/fragment_verification_pilot_3114/repair_target_manifest.jsonl",
+  "repair_unblocked": true,
+  "run_date": "20260526",
+  "schema": "carnot.explicit_repair_gate_micro_panel.v4",
+  "selected_headline_model_ids": [
+    "unsloth/gemma-4-26B-A4B-it-GGUF"
+  ],
+  "source_artifacts": [
+    {
+      "exists": true,
+      "id": "agents_repo_instructions",
+      "path": "AGENTS.md",
+      "required": false,
+      "sha256": "b3d6581b04f16b85f77defb2837c98dc3b60ed51e10b347ecb36e609f318b619"
+    },
+    {
+      "exists": true,
+      "id": "codex_repo_workflow",
+      "path": "CODEX.md",
+      "required": false,
+      "sha256": "1db7ebc1009714f872db83447828a8957c3abb72061832cc1bc307735cd96bbe"
+    },
+    {
+      "exists": true,
+      "id": "claude_authenticity_rules",
+      "path": "CLAUDE.md",
+      "required": false,
+      "sha256": "cdc00581d37d1bd3c77a69b058787f74ecc71545a97c1eab31c48961637b3224"
+    },
+    {
+      "exists": true,
+      "id": "experiment_template_cache_policy",
+      "path": "scripts/experiment_template.py",
+      "required": false,
+      "sha256": "86559064fcfb0e0f06cb021609f1e82342c9d8464dc86b654d30d889f787de9f"
+    },
+    {
+      "exists": true,
+      "id": "exp3097_exact_protocol",
+      "path": "results/experiment_3097_exact_fixture_eval_protocol_audit_v1.json",
+      "required": true,
+      "sha256": "92954fc69cc0209268b626c9af9fb8554c62f89503ad52b3ad583d588ee1dace"
+    },
+    {
+      "exists": true,
+      "id": "exp3110_model_manifest",
+      "path": "results/experiment_3110_sota_model_spec_cache_manifest_corrigendum_v1.json",
+      "required": true,
+      "sha256": "1707ec755287b47f7e205200e2787e8eac93e33a8d1490515748c0ce3b2acb24"
+    },
+    {
+      "exists": true,
+      "id": "exp3113_repair_gate",
+      "path": "results/experiment_3113_diagnostic_local_sota_verifier_calibration_v5.json",
+      "required": true,
+      "sha256": "28650d5ae3d461c022e2081717b43e9428b8d6e13fb4e437b09e6b1ee2acd405"
+    },
+    {
+      "exists": true,
+      "id": "exp3114_fragment_pilot",
+      "path": "results/experiment_3114_fragment_level_code_constraint_verification_pilot_v1.json",
+      "required": true,
+      "sha256": "80c3011c4498bc187a1af72bc1d8423ffb2a233d82d7b16b9ad5fadd26365ccd"
+    },
+    {
+      "exists": true,
+      "id": "exp3114_repair_target_manifest",
+      "path": "results/fragment_verification_pilot_3114/repair_target_manifest.jsonl",
+      "required": true,
+      "sha256": "46f6c7cc4286b04ebed79b77d255c5ddd4b8084fc77201b73682f53ea3e53748"
+    }
+  ],
+  "source_checksums": {
+    "AGENTS.md": "b3d6581b04f16b85f77defb2837c98dc3b60ed51e10b347ecb36e609f318b619",
+    "CLAUDE.md": "cdc00581d37d1bd3c77a69b058787f74ecc71545a97c1eab31c48961637b3224",
+    "CODEX.md": "1db7ebc1009714f872db83447828a8957c3abb72061832cc1bc307735cd96bbe",
+    "results/experiment_3097_exact_fixture_eval_protocol_audit_v1.json": "92954fc69cc0209268b626c9af9fb8554c62f89503ad52b3ad583d588ee1dace",
+    "results/experiment_3110_sota_model_spec_cache_manifest_corrigendum_v1.json": "1707ec755287b47f7e205200e2787e8eac93e33a8d1490515748c0ce3b2acb24",
+    "results/experiment_3113_diagnostic_local_sota_verifier_calibration_v5.json": "28650d5ae3d461c022e2081717b43e9428b8d6e13fb4e437b09e6b1ee2acd405",
+    "results/experiment_3114_fragment_level_code_constraint_verification_pilot_v1.json": "80c3011c4498bc187a1af72bc1d8423ffb2a233d82d7b16b9ad5fadd26365ccd",
+    "results/fragment_verification_pilot_3114/repair_target_manifest.jsonl": "46f6c7cc4286b04ebed79b77d255c5ddd4b8084fc77201b73682f53ea3e53748",
+    "scripts/experiment_template.py": "86559064fcfb0e0f06cb021609f1e82342c9d8464dc86b654d30d889f787de9f"
+  },
+  "tests_run": [
+    ".venv/bin/pytest tests/python/test_experiment_3115_explicit_repair_gate_micro_panel_v4.py -q --no-cov",
+    ".venv/bin/coverage run --include='*/explicit_repair_gate_micro_panel_v4.py' -m pytest -o addopts='' tests/python/test_experiment_3115_explicit_repair_gate_micro_panel_v4.py -q",
+    ".venv/bin/coverage report --include='*/explicit_repair_gate_micro_panel_v4.py' --fail-under=100 --show-missing",
+    ".venv/bin/python scripts/check_spec_coverage.py",
+    ".venv/bin/pytest tests/python/test_experiment_1664_e2e.py -q --no-cov",
+    ".venv/bin/pytest tests/python -q"
+  ]
+}
