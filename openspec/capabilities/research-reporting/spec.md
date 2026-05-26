@@ -9629,3 +9629,72 @@ performed by this task, and an `honest_verdict` that starts with `complete:`.
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-REPORT-3122 | Implemented (`python/carnot/reporting/archive_v290_activate_v291_3122.py`) | Implemented (`tests/python/test_experiment_3122_archive_v290_activate_v291.py`) |
+
+### REQ-REPORT-3133: Cross-Corpus Matrix V25 From .291 Artifacts
+
+The repository shall provide an Exp 3133 cross-corpus matrix v25 generator
+that writes `results/experiment_3133_cross_corpus_matrix_v25.json` using
+`results/experiment_3120_cross_corpus_matrix_v24.json` and
+`results/experiment_3121_capstone_v290.json` as the baseline authorities
+before classifying `.291` rows. The generator MUST attempt to load every
+available `.291` result artifact from Exp 3122 through Exp 3132 and MUST
+record missing or malformed `.291` artifacts explicitly rather than inferring
+success from downstream absence.
+
+The matrix MUST preserve the v24 status vocabulary: `clean`, `flagged`,
+`bounded`, `blocked`, `gated_skipped`, `missing`, `retired`,
+`projection_only`, `diagnostic_only`, and `model_spec_gap`. It MUST carry
+forward matrix v24 rows without changing their statuses and append `.291`
+rows for archive handoff, SOTA cache coverage, live SOTA verifier lift,
+prefix-closed deterministic bounds, fragment-time monitors, the repair
+ladder, FR-11 EvoEnv synthesis, FR-11 constraint-memory retention, ARM/EBT
+energy budgets, KAN PWA/MILP abstraction, and hardware/sampler boundaries.
+Rows for bounded, blocked, projection-only, diagnostic-only, missing, and
+gate-blocked evidence MUST remain visible as matrix rows and in summary
+fields. The generator MUST NOT promote a row to `clean` because an artifact is
+absent or because a downstream artifact exists.
+
+The generator MUST recompute `prior_publication_blocker_count`,
+`publication_blocker_count`, `blocker_delta_from_v24`, `missing_artifacts`,
+`status_counts`, headline claim allowances, verifier/repair summary, FR-11
+summary, architecture-boundary summary, diagnostic-only rows, gated skips, and
+architecture-boundary rows from source artifact fields and row statuses. The
+terminal artifact MUST include `matrix_v25_ready`, `rows_total`,
+`prior_publication_blocker_count`, `publication_blocker_count`,
+`blocker_delta_from_v24`, `missing_artifacts`, `status_counts`,
+`headline_claim_allowance_summary`, `verifier_repair_summary`,
+`fr11_summary`, `architecture_boundary_summary`, `source_artifacts`,
+`inference_substrate`, and `honest_verdict`. It MAY include row details,
+publication blocker rows, source checksums, invariant violations, and
+diagnostic row lists. `matrix_v25_ready` MUST be true only when the matrix v24
+authority is ready, the capstone v290 authority is ready, status counts
+reconcile with row count, publication blockers reconcile with row statuses,
+and the matrix builder declares aggregation-only work with no live model,
+repair, solver, conductor, or hardware execution.
+
+#### SCENARIO-REPORT-3133: V25 Aggregates .291 Without Inferring Success
+
+**Given** matrix v24 exists and reports `matrix_v24_ready=true`
+**And** capstone v290 exists and reports `capstone_ready=true`
+**And** `.291` artifacts include archive handoff, SOTA cache coverage, live
+SOTA verifier lift, prefix bounds, fragment-time monitor evidence, a
+gate-blocked repair ladder, FR-11 EvoEnv evidence, FR-11 memory evidence,
+ARM/EBT energy-budget diagnostics, KAN PWA/MILP bounded abstraction evidence,
+and hardware/sampler boundary evidence
+**When** the Exp 3133 matrix v25 generator runs
+**Then** it writes `results/experiment_3133_cross_corpus_matrix_v25.json`
+with `matrix_v25_ready=true`, all required schema fields, v24 rows carried
+forward unchanged, `.291` rows appended with bounded/blocked/projection-only/
+diagnostic/missing evidence visible, publication blockers derived from row
+statuses, blocker delta measured against v24, missing artifacts recorded
+explicitly, headline claim allowances constrained by source evidence,
+verifier/repair, FR-11, and architecture-boundary summaries reported without
+live-inference or hardware overclaim by the matrix builder, source-artifact
+traceability, aggregation-only inference-substrate metadata, and an
+`honest_verdict` that starts with `complete:`.
+
+## Implementation Status (REQ-REPORT-3133)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-3133 | Planned (`python/carnot/reporting/cross_corpus_matrix_v25_3133.py`) | Planned (`tests/python/test_experiment_3133_cross_corpus_matrix_v25.py`) |
