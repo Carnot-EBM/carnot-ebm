@@ -9053,3 +9053,84 @@ no live model or hardware execution, and an `honest_verdict` that starts with
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-REPORT-3096 | Planned (`python/carnot/reporting/publication_blocker_triage_retirement_ledger_3096.py`) | Planned (`tests/python/test_experiment_3096_publication_blocker_triage_and_retirement_ledger.py`) |
+
+### REQ-REPORT-3107: Cross-Corpus Matrix V23 From .289 Artifacts
+
+The repository shall provide an Exp 3107 cross-corpus matrix v23 generator
+that writes `results/experiment_3107_cross_corpus_matrix_v23.json` using
+matrix v22, the milestone .288 capstone, the Exp 3096 blocker triage ledger,
+and all available `.289` result artifacts as checked-in evidence. The
+generator MUST read `results/experiment_3093_cross_corpus_matrix_v22.json`,
+`results/experiment_3094_capstone_v288.json`, and
+`results/experiment_3096_publication_blocker_triage_and_retirement_ledger_v2.json`
+as authority inputs before classifying rows. It MUST NOT run live model
+inference, verifier scoring, repair generation, solver execution, synthesis,
+board flashing, hardware readback, the conductor, pushes, or modify
+`scripts/research_conductor.py`.
+
+The matrix MUST normalize every current row into exactly one of these statuses:
+`clean`, `flagged`, `bounded`, `blocked`, `gated_skipped`, `missing`,
+`retired`, `projection_only`, `diagnostic_only`, or `model_spec_gap`.
+Completed archive, protocol, and boundary rows MAY be clean only when their
+own terminal artifacts are present and ready. Diagnostic or policy-only rows
+MUST remain `diagnostic_only` rather than reducing publication blockers.
+Live LLM headline rows MUST NOT be marked clean unless the artifact carries
+mandated headline model IDs, corresponding `model_specs` for every mandated
+model, and exact fixture counts that meet the `.289` protocol minimum. Gated,
+bounded, projection-only, operator-evidence, missing, model-spec-gap, and
+diagnostic-only rows MUST remain visible instead of being promoted by
+downstream prose or by unrelated successful preflights.
+
+The generator MUST compare the v23 publication blocker count against Exp
+3096's `publication_blocker_count_before` and explain every blocker increase
+or decrease. Superseded v22 blocker rows MAY be retired only when a concrete
+v23 replacement row is added, and the replacement status MUST preserve the
+unresolved blocker class when `.289` evidence remains blocked, gated-skipped,
+missing, projection-only, bounded, flagged, or model-spec-gapped. GateMate and
+SSQA rows MUST remain blocked or gated-skipped until operator-owned
+host-visible evidence is present. EBT/ARM rows MUST remain `projection_only`
+unless checked-in adapter implementation and live-inference integration
+evidence exist. Missing Exp 3102 repair micro-panel evidence MUST remain
+visible as missing rather than being inferred from the Exp 3098 MaxSAT policy
+or any structured-emitter preflight.
+
+The terminal artifact MUST include `matrix_v23_ready`, `rows_total`,
+`status_counts`, `publication_blocker_count`, `blocker_delta_from_v22`,
+`missing_artifacts`, `headline_model_spec_gaps`, `capstone_input_artifacts`,
+`source_artifacts`, `inference_substrate`, and `honest_verdict`. It MAY
+include row-level details, blocker reconciliation details, source checksums,
+and invariant violations. `matrix_v23_ready` MUST be true only when authority
+inputs are readable, all row statuses are valid, `status_counts` reconciles
+with `rows_total`, `publication_blocker_count` reconciles with all
+publication-blocking row statuses, every required source is cited, and the
+inference substrate declares aggregation-only work with no live model or
+hardware execution. The `honest_verdict` MUST start with a terminal success
+prefix when the matrix is ready; otherwise it MUST report the blocked
+precondition.
+
+#### SCENARIO-REPORT-3107: V23 Preserves Blockers Without Diagnostic Overclaim
+
+**Given** matrix v22, capstone .288, and the Exp 3096 blocker triage ledger are
+present
+**And** `.289` artifacts include archive activation, exact-fixture protocol
+audit, MaxSAT abstention policy, local SOTA confidence panel, Z3/test-oracle
+feedback, blocked verifier calibration, FR-11 stress boundary, EBT/ARM
+sidecar boundary, cLUT microbench, and GateMate/SSQA operator-evidence
+ingestion
+**And** Exp 3102 repair micro-panel evidence is absent
+**When** the Exp 3107 matrix v23 generator runs
+**Then** it writes `results/experiment_3107_cross_corpus_matrix_v23.json`
+with `matrix_v23_ready=true`, status counts for clean, flagged, bounded,
+blocked, gated-skipped, missing, retired, projection-only, diagnostic-only,
+and model-spec-gap rows, blocker movement reconciled against Exp 3096's
+ledger, missing Exp 3102 evidence kept visible, live-LLM model-spec gaps
+listed rather than promoted, diagnostic-only policy/microbench rows kept out
+of publication blocker reductions, aggregation-only inference-substrate
+metadata, capstone input artifacts for Exp 3108, and an `honest_verdict` that
+starts with `complete:`.
+
+## Implementation Status (REQ-REPORT-3107)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-3107 | Implemented (`python/carnot/reporting/cross_corpus_matrix_v23_3107.py`) | Implemented (`tests/python/test_experiment_3107_cross_corpus_matrix_v23.py`) |
