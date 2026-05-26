@@ -202,6 +202,39 @@ Then the artifact records the Exp 2893 KAN node count, the Exp 2898 KV260 LUT,
 BRAM, and DSP counts, a deterministic next-size scaling estimate, the cited
 upstream artifact paths and checksums, and every required schema field.
 
+## REQ-KAN-3131: KAN PWA/MILP Verifier Abstraction Audit V1
+
+The KAN verification tier SHALL provide a bounded Exp 3131 audit that inspects
+whether local KAN/KAEM verifier code exists, builds a tiny piecewise-affine
+abstraction from the existing CPU-only fixture when it does, and records local
+and global error-bound accounting plus a MILP-compatible property check.
+
+The audit MUST write
+`results/experiment_3131_kan_pwa_milp_verifier_abstraction_audit_v1.json` with
+the following schema fields: `kan_pwa_milp_audit_v1_ready`,
+`kan_code_present`, `abstraction_count`, `local_error_bound_summary`,
+`global_error_bound_summary`, `milp_property_check_count`,
+`milp_property_pass_count`, `implementation_blockers`, `tests_run`,
+`source_artifacts`, `inference_substrate`, and `honest_verdict`.
+
+If local KAN/PWA verifier code is missing, the artifact MUST fail closed with a
+deterministic implementation-boundary contract that names the exact missing
+modules, schemas, and tests required before implementation. If local code is
+present, the audit MUST keep claims bounded to abstraction accounting and MUST
+NOT claim deployed verifier improvement, trained-network soundness, hardware
+execution, model-weight updates, or live LLM inference.
+
+### SCENARIO-KAN-3131: Existing Tiny KAN PWA/MILP Fixture Produces Bounded Audit
+
+Given the existing Exp 2876 two-unit KAN-style PWA/MILP fixture and the local
+OpenSpec KAN capability,
+When the Exp 3131 audit runs on CPU,
+Then the artifact reports KAN code presence, abstraction count, explicit
+per-unit local error bounds, propagated global output bounds, MILP-compatible
+property-check pass/fail counts, source artifact provenance, no live inference
+substrate, no implementation blockers, and an honest terminal verdict with no
+deployed verifier improvement claim.
+
 ## REQ-KAN-1384: EBM-CoT Hinge Calibration Probe on FoVer Pairs
 
 The KAN energy tier SHALL support a CPU-only FoVer calibration probe that
