@@ -1,0 +1,28 @@
+{
+  "schema": "carnot.operational_retro.v64",
+  "milestone": "2026.05.293",
+  "generated_at": "2026-05-26T23:15:05Z",
+  "retro_type": "operational_full",
+  "total_wall_time_minutes": 0,
+  "experiments_completed": 0,
+  "compute_bound_experiments_count": 0,
+  "slowest_experiments": [],
+  "gpu_idle_on_compute_bound_tasks": null,
+  "summary": "Authoritative timing reports 0 completed experiments, 0 total wall-time minutes, and 0 compute-bound experiments. Slowest experiment ranking, compute-bound GPU-efficiency assessment, and DualGPURunner coverage are no data available this milestone.",
+  "bottlenecks_identified": [
+    "No milestone-scoped experiment commits were present in TIMING DATA, so operational bottlenecks cannot be attributed to individual experiments.",
+    "GPU idle was not flagged as a bottleneck because TIMING DATA contains 0 compute-bound experiments."
+  ],
+  "improvements_suggested": [
+    "Emit a structured empty-window diagnostic when retrospective timing extraction finds no experiment commits after milestone activation.",
+    "Gate GPU-utilization warnings on compute_bound timing rows so synthesis-only closeouts do not create false operational bottlenecks.",
+    "Record the activation boundary and timing-query inputs in the retrospective artifact whenever experiments_completed is 0."
+  ],
+  "top_3_highest_leverage_actions": [
+    "Add an explicit no-data reason field to the timing extractor output.",
+    "Keep GPU-idle logic dependent on compute_bound tags rather than raw monitor state alone.",
+    "Add a closeout check that confirms the milestone activation boundary before generating slowest-experiment tables."
+  ],
+  "estimated_time_savings_pct": 0,
+  "meta_reflection": "The GPU monitor reported idle hardware, but the timing block contains no compute-bound tasks, so the idle state is not evidence of wasted compute. The useful lesson is observability: this milestone needs a clearer no-data path for timing extraction rather than inferred performance analysis."
+}

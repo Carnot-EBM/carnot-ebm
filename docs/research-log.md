@@ -4711,3 +4711,9 @@ The critical path for milestone .250:
 - theme: Operations retro for a milestone ledger without experiment commits
 - key result: Authoritative timing contains 0 completed experiments and 0 compute-bound experiments; longest compute-bound tasks, compute-bound GPU efficiency, and 2+ model DualGPURunner coverage are no data available this milestone.
 - acceptance: no data available this milestone
+
+### Milestone 2026.05.293
+- exp_range: no data available this milestone
+- theme: Operational retrospective with no post-activation timing rows
+- key result: Authoritative timing found no experiment commits since activation; compute-bound ranking, GPU efficiency on compute-bound work, and DualGPURunner assessment are no data available this milestone.
+- acceptance: no data available this milestone

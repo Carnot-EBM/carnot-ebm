@@ -6410,3 +6410,4 @@ web search: |
 | 2026-05-26 22:24 UTC | KAN proof-carrying monitor expansion | OK | 81 passed in 2.23s |
 | 2026-05-26 22:37 UTC | Hardware and sampler evidence boundary v7 | OK | 81 passed in 3.60s |
 | 2026-05-26 22:57 UTC | Cross-corpus matrix v27 | OK | 81 passed in 3.17s |
+| 2026-05-26 23:10 UTC | Milestone .293 capstone | OK | 81 passed in 3.54s |
