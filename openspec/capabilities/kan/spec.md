@@ -273,6 +273,41 @@ error bounds, a MILP property result, and a checksum, reports whether the
 records would have prevented or only audited the `.291` false-accept families,
 and writes every required schema field with `deployed_verifier_claim=false`.
 
+## REQ-KAN-3159: KAN Proof-Carrying Monitor Expansion V1
+
+The KAN verification tier SHALL provide a bounded Exp 3159 expansion that
+loads the prior Exp 3145 proof-carrying monitor records, the Exp 3131 KAN
+PWA/MILP abstraction evidence, and the Exp 3136 exact false-accept/clean row
+sets, then attaches proof-carrying metadata to a small number of additional
+exact monitor rows when local code and artifacts support it.
+
+The expansion MUST write
+`results/experiment_3159_kan_proof_carrying_monitor_expansion_v1.json` with
+the following schema fields: `kan_proof_carrying_monitor_expansion_v1_ready`,
+`monitor_record_count`, `new_monitor_record_count`,
+`exact_row_coverage_count`, `pwa_milp_bound_records`,
+`deployed_verifier_claim_allowed`, `residual_blockers`, `tests_run`,
+`source_artifacts`, `inference_substrate`, and `honest_verdict`.
+
+Each `pwa_milp_bound_records` entry MUST expose a fixture ID, an exact-label
+link, domain bounds, local and global PWA error-bound summaries, MILP/PWA
+solver status, residual risk, and a deterministic checksum. The artifact MUST
+set `deployed_verifier_claim_allowed=false` unless a real deployed verifier has
+been implemented and tested. Bounded monitor-record expansion MUST NOT claim
+trained-network soundness, live LLM inference, generation-path integration,
+hardware execution, model-weight mutation, or deployment.
+
+### SCENARIO-KAN-3159: Exact Clean Rows Extend Prior Monitor Records
+
+Given the completed Exp 3145 boundary artifact and the Exp 3136 autopsy row
+sets,
+When the Exp 3159 expansion builder runs on CPU,
+Then it carries forward the prior false-accept proof records, attaches new
+records to additional clean exact rows, reports explicit total/new/exact-row
+coverage counts, preserves inspectable PWA/MILP bound records, records residual
+deployment blockers, and writes every required schema field with
+`deployed_verifier_claim_allowed=false`.
+
 ## REQ-KAN-1384: EBM-CoT Hinge Calibration Probe on FoVer Pairs
 
 The KAN energy tier SHALL support a CPU-only FoVer calibration probe that
