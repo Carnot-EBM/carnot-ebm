@@ -6310,3 +6310,5 @@ web search: site |
 | 2026-05-26 00:41 UTC | GateMate/SSQA operator evidence ingestion v2 | OK | 81 passed in 3.23s |
 | 2026-05-26 00:58 UTC | Cross-corpus matrix v22 | OK | 81 passed in 2.72s |
 | 2026-05-26 01:13 UTC | Capstone .288 | OK | 81 passed in 2.92s |
+| 2026-05-26 01:58 UTC | Plan milestone 2026.05.289 | OK | 14 tasks proposed |
+| 2026-05-26 02:00 UTC | Milestone 2026.05.289 activated | OK | 14 tasks queued |
