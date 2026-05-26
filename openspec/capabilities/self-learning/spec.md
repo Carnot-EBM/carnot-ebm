@@ -8435,3 +8435,81 @@ diagnostics, and a blocked `honest_verdict`.
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-LEARN-3129 | Implemented (`python/carnot/eval/fr11_constraint_memory_retention_drift_audit_v1.py`) | Implemented (`tests/python/test_experiment_3129_fr11_constraint_memory_retention_drift_audit_v1.py`) |
+
+## REQ-LEARN-3142: FR-11 VeRA EvoEnv Hardening v2
+
+**Given** Exp 3128 admitted executable EvoEnv-style environments, Exp 3129
+records the constraint-memory audit and ledger blocker, and Exp 3123 records
+the mandated local SOTA model cache policy
+**When** Exp 3142 runs the VeRA-style FR-11 hardening pass
+**Then** it SHALL load every admitted environment, generate executable
+equivalent variants and hardened variants with deterministic solver templates,
+and replay both prior and new variants through exact validators and a
+constraint-memory ledger.
+**And** it SHALL report live-model variant generation separately from
+solver-only variant generation by recording `model_specs`,
+`selected_model_ids`, `live_call_count`, and
+`live_model_variant_generation`.
+**And** it SHALL measure determinism, solve-verify asymmetry, answer leakage,
+novelty, difficulty calibration, ledger consistency, soundness, and
+completeness without claiming model-weight learning.
+
+The terminal artifact SHALL be
+`results/experiment_3142_fr11_vera_evoenv_hardening_v2.json` and SHALL include
+`fr11_vera_evoenv_v2_ready`, `continuous_self_learning_targeted`,
+`model_specs`, `selected_model_ids`, `live_call_count`,
+`live_model_variant_generation`, `admitted_environment_count`,
+`equivalent_variant_count`, `hardened_variant_count`,
+`solve_verify_asymmetry_pass_rate`, `no_answer_leakage_pass_rate`,
+`ledger_consistency_rate`, `soundness_errors`, `completeness_errors`,
+`no_weight_update_claim`, `promotion_recommendation`, `tests_run`,
+`source_artifacts`, `inference_substrate`, and `honest_verdict`.
+
+### REQ-LEARN-3142 Sub-requirements
+
+- REQ-LEARN-3142-1: The variant generator SHALL produce at least one
+  equivalent variant and at least one hardened variant per admitted Exp 3128
+  environment, using only executable templates and deterministic solver
+  parameters unless live model calls are explicitly recorded.
+- REQ-LEARN-3142-2: Equivalent variants SHALL preserve the admitted
+  environment's exact solution count while changing prompt or variable surface
+  form enough to yield a new novelty signature.
+- REQ-LEARN-3142-3: Hardened variants SHALL preserve exact solver authority
+  and no-answer-leakage while increasing verifier hardness or reducing
+  solution density relative to the admitted source environment.
+- REQ-LEARN-3142-4: The hardening replay SHALL count soundness errors as exact
+  invalid assignments accepted by a variant verifier and completeness errors as
+  exact valid assignments rejected by a variant verifier; readiness requires
+  both counts to be zero.
+- REQ-LEARN-3142-5: The memory-ledger replay SHALL include the prior Exp 3129
+  ledger consistency measurement and the new exact variant ledger measurement
+  so the Exp 3129 blocker remains directly auditable.
+- REQ-LEARN-3142-6: The artifact SHALL set `no_weight_update_claim=true` and
+  SHALL NOT claim base-model, KAN-model, or LLM-weight learning when only
+  controller/environment variants are generated.
+
+### SCENARIO-LEARN-3142: VeRA Variants Harden EvoEnv Without Weight Claims
+
+**Given** ready Exp 3123, Exp 3128, and Exp 3129 source artifacts
+**When** Exp 3142 generates solver-only VeRA-E and VeRA-H variants and replays
+them through exact validators and memory ledgers
+**Then** it writes a complete terminal artifact with the admitted-environment
+denominator preserved, nonzero equivalent and hardened variant counts, zero
+soundness errors, zero completeness errors, no live-model generation claim when
+no live call occurred, `no_weight_update_claim=true`, an explicit promotion
+recommendation, and an `honest_verdict` beginning with `complete:`.
+
+### SCENARIO-LEARN-3142-BLOCKED: Missing VeRA Source Evidence Fails Closed
+
+**Given** missing Exp 3123, Exp 3128, or Exp 3129 source evidence
+**When** Exp 3142 runs
+**Then** it writes the required artifact fields with zeroed variant metrics,
+`fr11_vera_evoenv_v2_ready=false`, zero live calls,
+`live_model_variant_generation=false`, no model-weight mutation claim, explicit
+failed-precondition diagnostics, and a blocked `honest_verdict`.
+
+## Implementation Status (REQ-LEARN-3142)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-LEARN-3142 | Implemented (`python/carnot/eval/fr11_vera_evoenv_hardening_v2.py`) | Implemented (`tests/python/test_experiment_3142_fr11_vera_evoenv_hardening_v2.py`) |

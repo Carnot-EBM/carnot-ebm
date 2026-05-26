@@ -6372,3 +6372,5 @@ web search: site |
 | 2026-05-26 15:54 UTC | Live SOTA verifier rerun v7 | OK | 81 passed in 3.02s |
 | 2026-05-26 16:10 UTC | Repair gate unlock decision | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_3140_repair_ |
 | 2026-05-26 16:18 UTC | Repair gate unlock decision | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_3140_repair_ |
+| 2026-05-26 16:28 UTC | Repair gate unlock decision | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_3140_repair_ |
+| 2026-05-26 16:30 UTC | Multi-turn repair ladder v2 | GATE_BLOCK | Pre-emptive skip: upstream retired (exp3140-repair-gate-unlock-decision) |
