@@ -6303,3 +6303,5 @@ web search: site |
 | 2026-05-25 23:44 UTC | Gated local SOTA verifier calibration v3 | GATE_BLOCK | 3 of 3 gate(s) failed; first failure: exp3085-icalm-task-abstention-sota-panel.a |
 | 2026-05-25 23:56 UTC | XGrammar-2 structured repair emitter preflight | OK | 81 passed in 2.77s |
 | 2026-05-25 23:58 UTC | Gated XGrammar SOTA repair micro-panel v2 | GATE_BLOCK | Pre-emptive skip: upstream retired (exp3087-gated-local-sota-verifier-calibratio |
+| 2026-05-26 00:11 UTC | FR-11 ReSyn/KAN-CL completeness repair pilot | OK | 81 passed in 2.73s |
+| 2026-05-26 00:13 UTC | Gated XGrammar SOTA repair micro-panel v2 | GATE_BLOCK | Pre-emptive skip: upstream retired (exp3087-gated-local-sota-verifier-calibratio |
