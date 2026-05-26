@@ -16358,3 +16358,97 @@ hardware evidence.
   to Carnot: `.289` should keep functional tests and solver-only baselines as
   mandatory vacuity guards for any formal-feedback lift claim.
   Source: https://arxiv.org/abs/2601.12845
+
+---
+
+## 2026-05-26 Post-.289 Planning Sweep (Milestone 2026.05.290)
+
+Scope: arXiv 2025-2026, OpenReview ICLR/LLM-reasoning pages, Hugging Face
+paper discovery, GitHub discovery for EBM/constraint/KAN tooling, Extropic
+hardware/software pages, Logical Intelligence Kona pages, and citation-watch
+context around EBT (2507.02092) and ARM-as-EBM (2512.15605). This sweep was
+run after `.289` completed with `paper_ready=false`,
+`publication_blocker_count=36`, a model-spec metadata gap in the local SOTA
+abstention panel, `formal_feedback_v2_ready=false`, a gate-blocked verifier
+calibration, a missing/gate-blocked repair micro-panel, FR-11 still
+controller-only with soundness clean but completeness/retention failures,
+EBT/ARM sidecar evidence still projection-only, a CPU-only cLUT microbench, and
+GateMate/SSQA still blocked on missing operator-visible evidence.
+
+- **Certified Coherent Reasoning for LLMs via Weighted MaxSAT and
+  Belief-Revision Geometry (OpenReview ICLR 2026 Workshop, `liNC8KHvUy`)**:
+  compiles multi-query answer selection plus logical constraints into weighted
+  partial MaxSAT and emits solver-checkable coherence certificates, coherence
+  gaps, and belief-revision-style minimal repair distances. Relevance to
+  Carnot: `.290` should upgrade `.289`'s MaxSAT routing policy into a
+  certificate-bearing formal-feedback path, with exact solver/test authority
+  and explicit minimal-change repair distance instead of an LLM-only verifier
+  delta.
+  Source: https://openreview.net/forum?id=liNC8KHvUy
+
+- **Logic-Regularized Verifier Elicits Reasoning from LLMs / LOVER
+  (arXiv:2605.05893; ACL 2025 long paper)**: trains an unsupervised verifier by
+  treating validity as a binary latent variable and enforcing negation,
+  intra-answer-group, and inter-answer-group logical consistency over multiple
+  reasoning paths. Relevance to Carnot: `.290` should test a
+  logic-regularized verifier pilot on exact fixtures, using mandated local SOTA
+  GGUF traces when available, while keeping exact solvers as authority and
+  measuring false-positive/false-negative movement separately.
+  Source: https://arxiv.org/abs/2605.05893
+
+- **Nudging the Boundaries of LLM Reasoning (arXiv:2509.25666; ICLR 2026
+  poster)**: identifies zero-pass "unsolvable" samples as a blind spot for
+  online RL and uses self-generated abstract hints to turn some of them into
+  learnable samples without revealing answers. Relevance to Carnot: `.290`
+  should adapt the idea only at the FR-11 controller layer: detect hard or
+  zero-pass constraint families, inject solver-derived abstract hints into the
+  controller/curriculum memory, and require soundness/retention gates before
+  any promotion.
+  Sources: https://arxiv.org/abs/2509.25666 and
+  https://openreview.net/forum?id=hfNnQHkTtv
+
+- **Optimal Abstractions for Verifying Properties of Kolmogorov-Arnold Networks
+  (KANs) (arXiv:2602.06737)**: replaces KAN units with piecewise affine
+  abstractions, tracks local/global approximation error, and encodes property
+  checks as MILP while optimizing the number of pieces by dynamic programming
+  and knapsack allocation. Relevance to Carnot: this gives a concrete path for
+  moving KAN/KAEM components from "interpretable module" to bounded verifier
+  artifact: `.290` can add a small KAN abstraction audit or reserve it as a
+  follow-on once verifier/repair gates are unblocked.
+  Source: https://arxiv.org/abs/2602.06737
+
+- **Matching Features, Not Tokens: Energy-Based Fine-Tuning of Language Models
+  (arXiv:2603.12248)**: frames sequence-level feature matching as
+  energy-based fine-tuning, using rollout statistics instead of token-only
+  teacher forcing or scalar verifier rewards. Relevance to Carnot: this is not
+  a `.290` weight-update target, but it informs EBT/ARM sidecar scoring:
+  compare sidecar energy/feature summaries against exact-label outcomes before
+  claiming any live model integration or self-learning beyond controller-only.
+  Source: https://arxiv.org/abs/2603.12248
+
+- **Energy Generative Modeling: A Lyapunov-based Energy Matching Perspective
+  (arXiv:2605.05530)**: connects static scalar energies, Langevin sampling, and
+  Lyapunov-style stopping/certification criteria, and notes barrier-function
+  routes for constrained generation. Relevance to Carnot: useful for future
+  sampler stopping criteria and constrained-generation barriers; `.290` should
+  keep it as design context unless cLUT/sidecar artifacts produce measurable
+  local signals.
+  Source: https://arxiv.org/abs/2605.05530
+
+- **Extropic XTR-0/Z1/THRML public status (2025-2026)**: Extropic lists XTR-0
+  as a development platform, Z1 as early-access 2026 hardware, and THRML as the
+  available JAX software path for block Gibbs and EBM/PGM experimentation.
+  Relevance to Carnot: `.290` can keep THRML/TSU in architecture context, but
+  must not claim TSU latency, energy, or hardware execution without
+  authenticated local evidence.
+  Sources: https://extropic.ai/hardware,
+  https://extropic.ai/writing/thermodynamic-computing-from-zero-to-one, and
+  https://github.com/extropic-ai/thrml
+
+- **Logical Intelligence Kona 1.0 public architecture language (2026)**: Kona
+  is presented as a constraint-enforcing EBM layer beneath AI stacks, with
+  Aleph as verified reasoning. Relevance to Carnot: the transferable lesson is
+  architectural discipline: keep LLMs as candidate generators, keep solver/test
+  proof as authority, and expose localized constraint failures rather than
+  promoting probabilistic confidence as proof.
+  Source: https://logicalintelligence.com/kona-ebms-energy-based-models
