@@ -4,48 +4,52 @@
 # docs_audit_report — 2026-05-26
 
 ## TL;DR (stranger's 30-second take)
-A stranger will bounce immediately because the page is a dense wall of over 30 floating cards littered with impenetrable internal project jargon. It reads like a defensive milestone status report for internal stakeholders rather than a clear product pitch, making it impossible to quickly grasp the value proposition.
+I would close the tab by the time I reached the Results section. The page starts strong but quickly devolves into a wall of internal experiment IDs, unexplained acronyms, and suspiciously perfect numbers that destroy its credibility.
 
 ## TOP 3 PROBLEMS
-1. Rampant internal jargon in Results and Features (FoVer, CCTU, PRM-BiasBench, PREM, TTC) that means nothing to an outsider.
-2. The "Evidence" section is an unreadable wall of 12 context-free metric cards that look fabricated or copy-pasted from internal logs.
-3. A literal raw file path leaked into the HTML headline for the Live benchmark card.
+1. **Leaked Internal Jargon** — Raw file paths (e.g., `@results/...`) and internal test harness flags are pasted directly into marketing cards.
+2. **Bloat and Cognitive Overload** — The page dumps 28 different cards on the user, ignoring the fact that a stranger will skim none of them if there are too many.
+3. **Fabrication Signals** — Claims of 100% extraction, 60/60 attacks caught, and "Zero false positives" scream overfitted or cherry-picked data.
 
 ## DETAILED FINDINGS
 ### Bloat
-- Entire Page — 33 individual box cards — Cap to max 6 key features and 3 headline results. A stranger will skim none of this if confronted with a wall of boxes.
-- "Evidence" results-grid section — 12 cards — Cap to 3-4.
+- Entire Page — 28 total cards (2 problem, 7 bento, 12 results, 7 blog) — Cap at ~15-20 cards max.
+- Results Grid — 12 cards — Cap at 6 cards.
+- Writing/Blog Grid — 7 cards — Cap at 3 cards.
 
 ### Internal jargon
-- "Recent progress" card — `FoVer`, `5-seed dual-condition`, `architecture-only 0.8947` — A stranger has no idea what corpus or architecture this refers to.
-- "Features" section (Test-Time Compute card) — `TTC`, `PREM`, `Process-Reward Energy Model variance` — Academic/internal terms used without definition.
-- "Results" section — `VeriCoT equation-style CoT fix`, `HumanEval-50, execute-feedback-retry`, `PRM-BiasBench-style attacks`, `CCTU constrained micro-benchmark` — Internal experiment names and configurations provide zero context to a visitor.
+- Results / SOTA 35B Card — `@results/citation_hallucination_field_verifier_2932_raw/spilled-energy-2602-18671:real_Gemma4-26B-A4B-it.txt` — A raw file path means absolutely nothing to a stranger and looks like a templating error.
+- Results / Code repair — `IterativeSelfRepair (HumanEval-50, execute-feedback-retry)` — Internal test harness parameters that have no context.
+- Hero / Recent progress — `FoVer (5-seed dual-condition; architecture-only 0.8947)` — "FoVer" is an unexplained dataset/acronym, and the condition flags are insider shorthand.
+- Features / TTC & PREM — `PREM variance` — Process-Reward Energy Model is defined but its "variance" is used as a jargon wall.
 
 ### Per-milestone narrative
-- "Recent progress" card — `Repinned from v2 0.9857 after pre-submission adversarial audit` reads exactly like an internal status update or pull request comment.
-- "Research operations" card — `Carnot is developed through an autonomous research loop...` describes internal developer processes and methodology, not product value.
-- "Results" intro text — `Model benchmark rows use live GPU inference... synthetic pilots are included only when...` reads like a defensive disclaimer for internal peer reviewers.
+- Hero / Stats Bar — "382 Completed milestones" — Visitors do not care about your Jira board or internal sprint metrics.
+- Hero / Recent progress — "Repinned from v2 0.9857 after pre-submission adversarial audit" — Reads like an internal retrospective or commit message, not product copy.
+- Preprint section — "paper-v6" — Internal versioning that is irrelevant to a new reader.
 
 ### Inconsistencies
-- "No model fine-tuning required" (How it works) vs. "Training — Two-GPU parallel retrain" and "model weights mirrored at huggingface" (Results/Hero). If it doesn't need tuning, why are there weights and training metrics being advertised?
-- "Works with any LLM you can call" (Hero) vs. "A self-improving system that reads from its own past outputs" (Blog). Is it a passive verifier pipeline or a self-updating autonomous agent?
+- Qwen vs Gemma — The "SOTA 35B" result card claims the benchmark is on `Qwen3.6-35B-A3B`, but the leaked raw file path in the exact same card says `real_Gemma4-26B-A4B-it.txt`.
 
 ### Missing essentials
-- How to install: The hero text mentions `pip install carnot-ebm`, but the "Quick Start" code window completely omits the actual installation command, jumping straight to Python imports.
+- Why should I trust the numbers? — The page claims "Every number below is backed by a checked-in experiment artifact," but provides no human-readable link or instructions on *how* a stranger can actually verify this. The raw `@results/...` text is unclickable and only confuses the user.
 
 ### Fabrication signals
-- "Math extraction" card — `TP rate: 0.5 → 1.0` — Perfect 1.0 (100%) metric without credibility anchors.
-- "Adversarial audit" card — `catches 60/60 attacks` — 100% success rate on 60 attacks looks artificially constructed.
-- "Dogfooding" blog card — `Zero false positives` — Highly suspect claim for any probabilistic system operating over nearly a month.
-- "Live benchmark" card — `HumanEval pass @results/citation_hallucination_field_verifier_2932_raw/spilled-energy-2602-18671:real_Gemma4-26B-A4B-it.txt 0% → 36%` — A literal file path artifact leaked into the HTML claim.
+- Math extraction card — `1.0` TP rate (perfect 100% is an immediate credibility killer).
+- Adversarial audit card — `60/60 attacks` (perfect score implies a tiny or overfitted test set).
+- Training card — `2.0x speedup` (suspiciously exact round number).
+- Writing / Carnot Dogfooding — "Zero false positives" (claiming zero errors in an LLM pipeline triggers instant skepticism).
 
 ## WHAT'S WORKING
-- The hero section clearly states the problem in one simple sentence ("Catch the mistakes your LLM confidently makes up.") and provides an intuitive contrast ("One-word-at-a-time" vs "Whole-answer check").
-- The quickstart code snippet is clean and demonstrates the API value immediately in three lines.
+- The hero one-liner ("Catch the mistakes your LLM confidently makes up") is punchy and immediately communicates the value prop.
+- The "Extract -> Check -> Repair" 3-step mental model in the Bento grid is logically sound and easy to follow.
+- The dual Quickstart tabs (Python/Rust) clearly communicate the dual-language nature of the project.
 
 ## RECOMMENDED OPERATOR ACTIONS
-1. Delete the literal file path `@results/...` from the "Live benchmark" card immediately.
-2. Purge all internal experiment jargon (FoVer, CCTU, PREM, TTC) and replace with descriptive English.
-3. Slash the 12 result cards down to the top 3 most impressive, externally understandable metrics.
-4. Remove the defensive milestone/process narratives from the "Evidence" and "Recent progress" descriptions.
-5. Add the `pip install carnot-ebm` command block explicitly to the top of the Quick Start code window.
+1. Delete the raw `@results/...` file path from the "SOTA 35B" result card and fix the Qwen vs Gemma model contradiction.
+2. Remove or add strong contextual anchors to the perfect numbers (1.0 TP, 60/60, Zero false positives) to restore credibility.
+3. Trim the Results grid from 12 cards to the 6 most impactful, easy-to-understand metrics.
+4. Trim the Blog/Writing section from 7 cards down to 3.
+5. Scrub internal harness flags (e.g., `execute-feedback-retry`) and acronyms (`FoVer`) from the public copy.
+6. Replace the "382 Completed milestones" stat with a metric that users care about, or remove it entirely.
+7. Rewrite the "Recent progress" hero card to focus purely on the capability, omitting the internal audit history.

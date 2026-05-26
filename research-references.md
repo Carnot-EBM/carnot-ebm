@@ -16587,3 +16587,57 @@ without weakening verifier authenticity.
   claims.
   Sources: https://extropic.ai/hardware and
   https://logicalintelligence.com/kona-ebms-energy-based-models
+
+## 2026-05-26 External Research Refresh (Milestone 2026.05.291)
+
+This refresh was run after re-checking arXiv, OpenReview, Hugging Face papers,
+GitHub project pages, Extropic, Logical Intelligence, and Semantic Scholar. The
+Semantic Scholar API returned HTTP 429 for direct citation-list queries on
+`2507.02092` and `2512.15605`, so the EBT/ARM-EBM citation check remains
+source-limited to public search/arXiv pages unless a keyed API query is run.
+
+- **Distributional Energy-Based Models for Uncertainty-Aware Structured LLM
+  Reasoning (arXiv:2605.18871, May 2026)**: proposes a decomposed energy
+  function that combines learned quality scoring with deterministic analytical
+  constraint penalties, plus uncertainty-driven regeneration or abstention.
+  The abstract explicitly warns about a code-domain model-identity shortcut.
+  Relevance to Carnot: `.291` should add energy-budget sidecar fields that
+  separate deterministic constraint penalties, learned/proxy quality signals,
+  uncertainty, and model-identity confounds before claiming any ARM/EBT utility.
+  Source: https://arxiv.org/abs/2605.18871
+
+- **HalluGuard: Demystifying Data-Driven and Reasoning-Driven Hallucinations
+  in LLMs (arXiv:2601.18753; ICLR 2026)**: decomposes hallucination risk into
+  data-driven and reasoning-driven components and reports an NTK-based score
+  across multiple benchmarks and model backbones. Relevance to Carnot: `.291`
+  verifier artifacts should label whether each failure is caused by missing
+  facts/model prior mismatch, reasoning-trace instability, satisfiable drift,
+  or hard contradiction; otherwise a single false-accept rate hides the
+  mechanism Carnot needs to fix.
+  Source: https://arxiv.org/abs/2601.18753
+
+- **AgentV-RL: Scaling Reward Modeling with Agentic Verifier
+  (arXiv:2604.16004; ACL 2026)**: turns reward modeling into a multi-turn,
+  tool-augmented verifier with complementary forward and backward checks.
+  Relevance to Carnot: `.291` repair should include bidirectional ledger checks:
+  forward from premises to candidate answer, and backward from final answer to
+  the maintained constraints, with tests/Z3 as the final authority.
+  Source: https://arxiv.org/abs/2604.16004
+
+- **VerifyBench: A Systematic Benchmark for Evaluating Reasoning Verifiers
+  Across Domains (AAAI 2026)**: reports verifier sensitivity to input
+  structure and cross-domain generalization limits, with tradeoffs between
+  specialized verifiers and general LLM judges. Relevance to Carnot: `.291`
+  live SOTA verifier panels should stratify by fixture family, difficulty, and
+  answer-extraction format; a pooled headline score is not enough evidence.
+  Source: https://ojs.aaai.org/index.php/AAAI/article/view/40448
+
+- **XGrammar-2 and llguidance constrained decoding status (GitHub, 2025-2026)**:
+  XGrammar reports a May 2026 XGrammar-2 release and broad integration with
+  vLLM/SGLang/TensorRT-LLM/MLC-LLM; llguidance documents CFG/JSON-schema token
+  masks with roughly tens-of-microseconds CPU overhead for common tokenizers.
+  Relevance to Carnot: constrained decoding is useful for structural output
+  integrity, but it should be treated as syntax/format assurance only. It does
+  not replace exact semantic checks, prefix-closed bounds, or solver authority.
+  Sources: https://github.com/mlc-ai/xgrammar and
+  https://github.com/guidance-ai/llguidance
