@@ -1,0 +1,33 @@
+{
+  "experiment": 3127,
+  "schema": "blocked_gate_check_v1",
+  "run_date": "2026-05-26",
+  "started_at": "2026-05-26T12:04:03.670067+00:00",
+  "finished_at": "2026-05-26T12:04:03.670067+00:00",
+  "duration_s": 0.0,
+  "status": "blocked",
+  "title": "Multi-turn monitored repair ladder",
+  "honest_verdict": "blocked_gate_check_failed",
+  "gate_check_summary": "1 of 2 gate(s) failed; first failure: exp3124-difficulty-stratified-live-sota-verifier-panel-v6.repair_gate_state (actual='blocked_false_accept' == expected='unblocked')",
+  "gates_evaluated": [
+    {
+      "upstream": "exp3124-difficulty-stratified-live-sota-verifier-panel-v6",
+      "artifact_field": "repair_gate_state",
+      "op": "==",
+      "expected": "unblocked",
+      "actual": "blocked_false_accept",
+      "passed": false,
+      "reason": "actual='blocked_false_accept' == expected='unblocked'"
+    },
+    {
+      "upstream": "exp3126-fragment-time-monitor-satisfiable-drift-audit",
+      "artifact_field": "fragment_time_monitor_v1_ready",
+      "op": "==",
+      "expected": true,
+      "actual": true,
+      "passed": true,
+      "reason": "actual=True == expected=True"
+    }
+  ],
+  "blocked_at_layer": "conductor_pre_gate"
+}
