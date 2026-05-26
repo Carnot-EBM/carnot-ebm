@@ -10155,3 +10155,82 @@ and an `honest_verdict` that starts with `complete:`.
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-REPORT-3149 | Implemented (`python/carnot/reporting/archive_v292_activate_v293_3149.py`) | Implemented (`tests/python/test_experiment_3149_archive_v292_activate_v293.py`) |
+
+### REQ-REPORT-3161: Cross-Corpus Matrix V27 From .293 Artifacts
+
+The repository shall provide an Exp 3161 cross-corpus matrix v27 generator
+that writes `results/experiment_3161_cross_corpus_matrix_v27.json` using
+`results/experiment_3147_cross_corpus_matrix_v26.json` and
+`results/experiment_3148_capstone_v292.json` as baseline authorities before
+classifying `.293` evidence. The generator MUST attempt to load every expected
+`.293` artifact from Exp 3149 through Exp 3160, including gated or absent
+artifacts for clean live verifier rerun v8, repair ladder v3, and
+TraceFix-style repair. Missing canonical deliverables and available
+gate-block aliases MUST be recorded explicitly rather than inferred as
+successes.
+
+The matrix MUST classify each task row as one of `clean`, `blocked`,
+`flagged`, `gated_skipped`, `diagnostic_only`, `projection_only`, `bounded`,
+`missing`, or `retired`. It MUST carry forward matrix v26 rows without
+smoothing flagged, blocked, gated, missing, bounded, projection-only,
+diagnostic-only, or retired statuses, and append `.293` rows for the
+archive/handoff, adversarial verifier evidence corrigendum, live inference
+authenticity preflight, clean live verifier rerun, repair gate, repair ladder,
+TraceFix counterexample repair pilot, FR-11 ledger closure, FR-11 residual
+memory audit, EBCN energy sidecar calibration, KAN proof-carrying monitor
+expansion, and hardware/sampler evidence boundary.
+
+The generator MUST recompute `publication_blocker_count` and
+`blocker_delta_from_v26` from row statuses. It MUST surface inherited
+adversarial flags from the corrigendum, preserve missing artifacts and flagged
+upstreams, and summarize false-accept recovery, live verifier evidence trust,
+repair gate/ladder status, FR-11 self-learning status, energy sidecar status,
+KAN status, hardware status, and paper-readiness implications without running
+live inference, verifier scoring, repairs, solvers, hardware commands, the
+conductor, or any push.
+
+The terminal artifact MUST include `matrix_v27_ready`, `rows_total`,
+`status_counts`, `publication_blocker_count`, `blocker_delta_from_v26`,
+`inherited_adversarial_flag_count`, `missing_artifacts`,
+`false_accept_recovery_summary`, `repair_summary`, `fr11_summary`,
+`architecture_boundary_summary`, `source_artifacts`, `inference_substrate`,
+and `honest_verdict`. It MAY include row details, publication blocker rows,
+source checksums, required source errors, invariant violations, and
+paper-readiness implication fields. `matrix_v27_ready` MUST be true only when
+the matrix v26 authority is ready, the capstone v292 authority is ready,
+status counts reconcile with row count, publication blockers reconcile with
+row statuses, and the matrix builder declares aggregation-only work with no
+new live model, verifier, repair, solver, conductor, or hardware execution.
+When a conductor prompt assigns ops reconciliation to a separate step, the
+generator MUST leave `ops/status.md`, `ops/changelog.md`, and
+`_bmad/traceability.md` unchanged.
+
+#### SCENARIO-REPORT-3161: V27 Aggregates .293 Without Hiding Blockers
+
+**Given** matrix v26 exists and reports `matrix_v26_ready=true`
+**And** capstone v292 exists and reports `capstone_ready=true`
+**And** `.293` artifacts include archive handoff, adversarial verifier
+corrigendum, a blocked live-inference preflight, a blocked repair-gate
+artifact, FR-11 closure/audit artifacts, energy sidecar calibration, KAN
+monitor expansion, and hardware/sampler boundary evidence
+**And** the clean live verifier rerun and repair ladder artifacts are absent
+because their gates did not pass
+**When** the Exp 3161 matrix v27 generator runs
+**Then** it writes `results/experiment_3161_cross_corpus_matrix_v27.json`
+with `matrix_v27_ready=true`, all required schema fields, v26 rows carried
+forward without status smoothing, `.293` rows appended with blocked/flagged/
+gated/diagnostic/projection/bounded evidence visible, publication blockers
+derived from row statuses, blocker delta measured against v26, inherited
+adversarial flag counts preserved, missing artifacts recorded explicitly,
+false-accept recovery and live-verifier trust summarized without overclaim,
+repair execution kept blocked/skipped when gates fail, FR-11 kept
+controller-memory-only until ledger consistency reaches 1.0, energy/KAN/
+hardware claims kept bounded, source-artifact traceability, aggregation-only
+inference-substrate metadata, and an `honest_verdict` that starts with
+`complete:`.
+
+## Implementation Status (REQ-REPORT-3161)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-3161 | Implemented (`python/carnot/reporting/cross_corpus_matrix_v27_3161.py`) | Implemented (`tests/python/test_experiment_3161_cross_corpus_matrix_v27.py`) |
