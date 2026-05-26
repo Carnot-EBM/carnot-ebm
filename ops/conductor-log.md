@@ -6383,3 +6383,5 @@ web search: site |
 | 2026-05-26 17:41 UTC | Hardware and sampler evidence boundary v6 | OK | 81 passed in 3.39s |
 | 2026-05-26 17:58 UTC | Cross-corpus matrix v26 | OK | 81 passed in 2.73s |
 | 2026-05-26 18:12 UTC | Capstone v292 | OK | 81 passed in 3.06s |
+| 2026-05-26 18:40 UTC | Plan next milestone | FAIL | Codex CLI error: search: https://huggingface.co/papers/2605.21488
+web search: |

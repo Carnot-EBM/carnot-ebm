@@ -1,29 +1,29 @@
 {
   "schema": "carnot.operational_retro.v64",
   "milestone": "2026.05.292",
-  "generated_at": "2026-05-26T18:17:33Z",
+  "generated_at": "2026-05-26T18:44:39Z",
   "retro_type": "operational_full",
   "total_wall_time_minutes": 0,
   "experiments_completed": 0,
   "compute_bound_experiments_count": 0,
   "slowest_experiments": [],
   "gpu_idle_on_compute_bound_tasks": null,
-  "summary": "Milestone 2026.05.292 has experiments_completed=0 and total_wall_time_minutes=0, so there are no completed experiment rows to rank. With compute_bound_experiments_count=0, compute-bound runtime, GPU efficiency on compute-bound tasks, and 2+ model DualGPURunner assessment are no data available this milestone.",
+  "summary": "Milestone 2026.05.292 records experiments_completed=0, total_wall_time_minutes=0, and compute_bound_experiments_count=0 from the locked timing fields. Slowest compute-bound experiments, GPU efficiency on compute-bound work, and parallel multi-model runner coverage are no data available this milestone.",
   "bottlenecks_identified": [
-    "No milestone-scoped experiment commits were found, so operational efficiency is unmeasured rather than slow.",
-    "Compute-bound analysis has no data available this milestone because compute_bound_experiments_count=0.",
-    "GPU idle telemetry was not escalated as a bottleneck because there were no compute-bound timing rows."
+    "no data available this milestone for longest compute-bound experiments",
+    "no data available this milestone for GPU utilization on compute-bound tasks",
+    "no data available this milestone for 2+ model DualGPURunner engagement"
   ],
   "improvements_suggested": [
-    "Add a pre-retro activation-window guard that requires an explicit no-data acknowledgement when experiments_completed=0.",
-    "Have the timing collector distinguish an empty experiment ledger from a zero-minute execution ledger.",
-    "Make the retrospective template auto-fill compute-bound, GPU-efficiency, and DualGPURunner sections with no data available this milestone when compute_bound_experiments_count=0."
+    "Add an empty-activation-window marker to the timing export before retrospective generation.",
+    "Require the retro writer to emit no-data sections automatically when experiments_completed=0.",
+    "Keep GPU-idle warnings separate from bottleneck lists unless a compute-bound timing row is present."
   ],
   "top_3_highest_leverage_actions": [
-    "Add a zero-completed-experiment sentinel before generating the operational retro.",
-    "Record first-experiment-commit status in the milestone heartbeat after activation.",
-    "Gate GPU-efficiency recommendations on compute_bound_experiments_count before surfacing them as bottlenecks."
+    "Emit a timing-export sentinel for milestones with no experiment commits.",
+    "Auto-fill no-data answers for compute-bound runtime, GPU efficiency, and DualGPURunner coverage.",
+    "Join GPU telemetry to compute-bound timing rows before creating operational recommendations."
   ],
   "estimated_time_savings_pct": 0,
-  "meta_reflection": "The supplied GPU snapshot shows idle devices, but the timing ledger has compute_bound_experiments_count=0; under the milestone rule this is not compute-bound inefficiency. The useful next improvement is better no-data detection before operational analysis, not GPU scheduling enforcement."
+  "meta_reflection": "The GPU snapshot alone cannot support a compute-bound inefficiency claim because the timing data has compute_bound_experiments_count=0. The useful tooling change is earlier empty-window detection, not scheduling enforcement."
 }
