@@ -8279,3 +8279,84 @@ precondition diagnostics, and `honest_verdict="blocked_precondition_failed"`.
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-LEARN-3116 | Implemented (`python/carnot/eval/fr11_unsolvable_curriculum_retention_guard_v1.py`) | Implemented (`tests/python/test_experiment_3116_fr11_unsolvable_curriculum_retention_guard_v1.py`) |
+
+## REQ-LEARN-3128: FR-11 EvoEnv Verifiable Environment Synthesis Pilot
+
+**Given** Exp 3123 records the mandated local SOTA model cache status and Exp
+3116 records the prior hard-family retention guard
+**When** Exp 3128 runs the bounded EvoEnv-style FR-11 pilot
+**Then** it SHALL define executable constraint-environment schemas that can
+sample deterministic instances, compute exact reference solutions, and score
+candidate responses with a verifier cheaper than the solver.
+**And** it SHALL admit a bounded set of candidate environments only when each
+environment passes executable determinism, solve-verify asymmetry, novelty
+against prior fixture evidence, difficulty calibration, no-answer-leakage, and
+solver-authority checks.
+**And** it SHALL separate live model environment synthesis from solver-only
+environment admission by reporting `selected_model_ids`, `live_call_count`, and
+`live_model_environment_synthesis` without using legacy small models for
+headline FR-11 evidence.
+**And** it SHALL replay the prior FR-11 retention family evidence so new
+environment curricula do not regress prior exact constraints, while explicitly
+declaring that no model-weight update happened unless separately tested.
+
+The terminal artifact SHALL be
+`results/experiment_3128_fr11_evoenv_verifiable_environment_synthesis_v1.json`
+and SHALL include `fr11_evoenv_pilot_v1_ready`,
+`continuous_self_learning_targeted`, `model_specs`, `selected_model_ids`,
+`live_call_count`, `live_model_environment_synthesis`,
+`candidate_environment_count`, `admitted_environment_count`,
+`solve_verify_asymmetry_pass_rate`, `novelty_pass_rate`,
+`no_answer_leakage_pass_rate`, `retention_delta`, `soundness_errors`,
+`completeness_errors`, `no_weight_update_claim`, `tests_run`,
+`source_artifacts`, `inference_substrate`, and `honest_verdict`.
+
+### REQ-LEARN-3128 Sub-requirements
+
+- REQ-LEARN-3128-1: The schema SHALL include a constraint-environment object
+  with deterministic sampling, exact reference computation, and response
+  scoring methods.
+- REQ-LEARN-3128-2: Admission SHALL reject any candidate that is nondeterministic,
+  duplicate of prior fixture evidence, too easy or too hard for bounded replay,
+  leaks its canonical answer in the prompt, lacks exact solver authority, or
+  fails the solve-verify asymmetry threshold.
+- REQ-LEARN-3128-3: Solver authority SHALL count false accepts as
+  `soundness_errors` and false rejects of canonical references as
+  `completeness_errors`; `fr11_evoenv_pilot_v1_ready` SHALL require both counts
+  to be zero.
+- REQ-LEARN-3128-4: The pilot SHALL read the Exp 3123 precondition manifest and
+  report mandated model availability, but SHALL set
+  `live_model_environment_synthesis=false` and `live_call_count=0` whenever no
+  live model call was actually made.
+- REQ-LEARN-3128-5: The retention replay SHALL compare prior FR-11 exact-family
+  decisions before and after adding the admitted environments and SHALL require
+  `retention_delta >= 0.0` for readiness.
+- REQ-LEARN-3128-6: The artifact SHALL set `no_weight_update_claim=true` and
+  SHALL NOT claim base-model, KAN-model, or LLM-weight learning for controller
+  or environment-schema admission.
+
+### SCENARIO-LEARN-3128: Bounded EvoEnv Admission Produces Reusable Environments
+
+**Given** ready Exp 3123 and Exp 3116 source artifacts
+**When** Exp 3128 samples bounded constraint-environment candidates and runs the
+admission gates
+**Then** it writes a complete terminal artifact with at least one admitted
+environment, zero soundness errors, zero completeness errors, nonnegative
+retention delta, no live-model synthesis claim unless a live call occurred,
+`no_weight_update_claim=true`, and an `honest_verdict` beginning with
+`complete:`.
+
+### SCENARIO-LEARN-3128-BLOCKED: Missing Source Evidence Fails Closed
+
+**Given** missing Exp 3123 or Exp 3116 evidence
+**When** Exp 3128 runs
+**Then** it writes the required artifact fields with zero admitted
+environments, zero live calls, `live_model_environment_synthesis=false`,
+`fr11_evoenv_pilot_v1_ready=false`, explicit failed-precondition diagnostics,
+and a blocked `honest_verdict`.
+
+## Implementation Status (REQ-LEARN-3128)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-LEARN-3128 | Implemented (`python/carnot/eval/fr11_evoenv_verifiable_environment_synthesis_v1.py`) | Implemented (`tests/python/test_experiment_3128_fr11_evoenv_verifiable_environment_synthesis_v1.py`) |
