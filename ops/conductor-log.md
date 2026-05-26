@@ -6370,3 +6370,4 @@ web search: site |
 | 2026-05-26 15:20 UTC | Exact-safe accept and abstain contract | OK | 81 passed in 3.20s |
 | 2026-05-26 15:36 UTC | Canonical answer and VeriCoT grounding pilot | OK | 81 passed in 2.94s |
 | 2026-05-26 15:54 UTC | Live SOTA verifier rerun v7 | OK | 81 passed in 3.02s |
+| 2026-05-26 16:10 UTC | Repair gate unlock decision | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_3140_repair_ |
