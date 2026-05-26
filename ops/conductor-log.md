@@ -6337,3 +6337,4 @@ web search: site |
 | 2026-05-26 06:36 UTC | Certified coherence Z3/MCS feedback v3 | OK | 81 passed in 3.06s |
 | 2026-05-26 06:54 UTC | Logic-regularized verifier reasoning pilot | OK | 81 passed in 2.82s |
 | 2026-05-26 07:11 UTC | Diagnostic local SOTA verifier calibration v5 | OK | 81 passed in 2.46s |
+| 2026-05-26 07:28 UTC | Fragment-level code/constraint verification pilot | OK | 81 passed in 2.29s |
