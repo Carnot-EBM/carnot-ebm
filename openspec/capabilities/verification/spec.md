@@ -1502,6 +1502,63 @@ model-cache and panel-size gates also pass.
 |---|---|---|
 | REQ-VERIFY-3113 | Implemented (`python/carnot/eval/diagnostic_local_sota_verifier_calibration_v5.py`) | Implemented (`tests/python/test_experiment_3113_diagnostic_local_sota_verifier_calibration_v5.py`) |
 
+### REQ-VERIFY-3114: Fragment-Level Code And Constraint Verification Pilot
+
+The repository shall provide an Exp 3114 deterministic offline pilot that
+writes
+`results/experiment_3114_fragment_level_code_constraint_verification_pilot_v1.json`
+from checked-in exact fixture artifacts only. The pilot MUST NOT invoke live
+LLM inference, modify `scripts/research_conductor.py`, push commits, or claim
+repair success. Its purpose is to localize exact candidate failures into
+repairable fragments or constraint clauses before any broader repair run.
+
+The pilot shall consume the Exp 3097 stratified exact-fixture manifest, Exp
+3100 Z3/test-oracle feedback artifact, and Exp 3111 certified-coherence
+artifact. It shall select deterministic fixtures that include repairable
+invalid candidates and code/assertion-style constraints. For each selected
+fixture it shall split candidates into fragments or clauses using structured
+parsing where available: JSON parsing for JSON candidates, Python AST parsing
+for assertion candidates, and structured constraint parsing for integer
+assignment clauses. Each fragment or clause shall be checked with an exact
+offline authority and labeled `pass`, `fail`, `unknown`, or `non-applicable`.
+
+The pilot shall emit a repair target manifest at
+`results/fragment_verification_pilot_3114/repair_target_manifest.jsonl` with
+one row per failing fragment. Each manifest row MUST include
+`fixture_id`, `fragment_id`, `failing_constraint`, `expected_direction`, and
+`solver_evidence`. Solver evidence may come from exact Python AST/runtime,
+JSON parser diagnostics, or deterministic integer constraint evaluation, but
+the authority must be explicit and must not depend on live model output.
+
+The terminal artifact MUST include
+`fragment_verification_pilot_ready`, `exact_fixture_count`, `fragment_count`,
+`failing_fragment_count`, `unknown_fragment_count`,
+`repair_target_manifest_path`, `tests_run`, `source_artifacts`,
+`inference_substrate`, and `honest_verdict`. `fragment_verification_pilot_ready`
+shall be true only when at least one exact fixture is selected, at least one
+fragment is checked, failing fragments are written to the repair target
+manifest, unknown fragments are counted honestly, all required source
+artifacts are present, no live inference is declared, and the `honest_verdict`
+starts with a terminal success prefix.
+
+### SCENARIO-VERIFY-3114: Fragment Checks Localize Repair Targets Offline
+
+Given Exp 3097, Exp 3100, and Exp 3111 source artifacts are present and the
+stratified exact-fixture manifest contains repairable JSON, numeric, Python
+assertion, and arithmetic assertion rows,
+When the Exp 3114 pilot runs,
+Then it writes the required terminal JSON artifact, records no live LLM
+inference, emits fragment rows labeled with exact pass/fail/unknown or
+non-applicable states, writes a repair target manifest whose failing rows carry
+the required localization fields, reports fixture and fragment counts, and
+uses an `honest_verdict` beginning with `complete:`.
+
+## Implementation Status (REQ-VERIFY-3114)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-VERIFY-3114 | Implemented (`python/carnot/eval/fragment_verification_pilot_3114.py`) | Implemented (`tests/python/test_experiment_3114_fragment_level_code_constraint_verification_pilot.py`) |
+
 ### REQ-VERIFY-3073: EBT/ARM-EBM Adapter Feasibility Audit
 
 The repository shall provide an Exp 3073 deterministic architecture audit that
