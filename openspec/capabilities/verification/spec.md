@@ -2054,6 +2054,62 @@ otherwise preserves exact blockers while avoiding repair execution.
 |---|---|---|
 | REQ-VERIFY-3140 | Implemented (`python/carnot/verify/repair_gate_unlock_decision_v1.py`) | Implemented (`tests/python/test_experiment_3140_repair_gate_unlock_decision_v1.py`) |
 
+### REQ-VERIFY-3150: Adversarial Verifier-Evidence Corrigendum V1
+
+The repository shall provide an Exp 3150 deterministic adversarial
+verifier-evidence corrigendum that writes
+`results/experiment_3150_adversarial_verifier_evidence_corrigendum_v1.json`
+from checked-in artifacts only. The builder MUST consume the Exp 3136
+false-accept autopsy, Exp 3137 exact-safe accept/abstain/reject contract, Exp
+3138 canonical grounding pilot, Exp 3139 live verifier rerun, Exp 3140 repair
+gate decision, Exp 3147 cross-corpus matrix, and Exp 3148 capstone. It MUST
+NOT call live models, execute repair generation, execute verifiers, modify
+`scripts/research_conductor.py`, or push commits.
+
+The corrigendum SHALL classify adversarial evidence flags separately,
+including tautology, too-short duration, missing random seed or reproducibility
+checksum, missing transcript evidence, inconsistent model-load evidence, and
+aggregate artifacts that inherit flagged source data. It SHALL build a
+sanity-check table covering field provenance, non-tautological recomputation,
+adversarial regression rows, and methodology completeness, and SHALL decide
+which downstream fields remain safe for gates versus which fields are blocked
+pending a clean rerun.
+
+The terminal artifact MUST include `adversarial_corrigendum_v1_ready`,
+`audited_artifacts`, `flagged_artifact_count`, `adversarial_flag_counts`,
+`safe_downstream_fields`, `blocked_downstream_fields`,
+`known_false_accept_recovery_preserved`, `live_verifier_evidence_trusted`,
+`repair_gate_implication`, `methodology_requirements_for_rerun`,
+`source_artifacts`, `inference_substrate`, and `honest_verdict`. It SHOULD
+also include sanity-check rows, inherited-flag traceability, tests run,
+duration, and source checksums.
+
+`adversarial_corrigendum_v1_ready` shall be true only when all required source
+artifacts are readable, at least one flagged source is classified, exact replay
+success from Exp 3137 and Exp 3138 is preserved, live verifier evidence is not
+trusted when authenticity evidence is missing, and
+`repair_gate_implication` is one of `blocked_pending_clean_rerun`,
+`exact_recovery_only_no_repair_unlock`, or `clean_rerun_required_before_unlock`.
+
+### SCENARIO-VERIFY-3150: Exact Recovery Survives While Live Evidence Is Blocked
+
+Given the Exp 3139 live verifier rerun is adversarially flagged for
+methodology and duration problems, and Exp 3137 plus Exp 3138 report exact
+false-accept regression rows blocked by deterministic replay,
+When Exp 3150 builds the adversarial evidence corrigendum,
+Then it writes the required terminal JSON artifact without live inference,
+preserves exact-safe false-accept recovery as a safe downstream gate input,
+blocks live verifier lift, live false-accept-rate, verifier gain, and repair
+unlock fields pending a clean rerun, records inherited flags for the matrix and
+capstone, and emits a machine-readable repair-gate implication that prevents
+repair from unlocking from untrusted live-inference evidence.
+
+## Implementation Status (REQ-VERIFY-3150)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-VERIFY-3150 | Planned (`python/carnot/verify/adversarial_verifier_evidence_corrigendum_v1.py`) | Planned (`tests/python/test_experiment_3150_adversarial_verifier_evidence_corrigendum_v1.py`) |
+
 ### REQ-VERIFY-3073: EBT/ARM-EBM Adapter Feasibility Audit
 
 The repository shall provide an Exp 3073 deterministic architecture audit that
