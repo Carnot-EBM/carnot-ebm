@@ -1683,6 +1683,56 @@ blocked verdict.
 |---|---|---|
 | REQ-VERIFY-3124 | Implemented (`python/carnot/eval/difficulty_stratified_live_sota_verifier_panel_v6.py`) | Implemented (`tests/python/test_experiment_3124_difficulty_stratified_live_sota_verifier_panel_v6.py`) |
 
+### REQ-VERIFY-3125: Prefix-Closed Deterministic Verifier Bound Pilot
+
+The repository shall provide an Exp 3125 bounded local pilot that enumerates a
+small deterministic token/prefix frontier over exact prefix-closed semantic
+constraints and writes
+`results/experiment_3125_prefix_closed_deterministic_verifier_bound_pilot_v1.json`.
+The pilot MUST NOT run live model inference, MUST NOT modify
+`scripts/research_conductor.py`, and MUST NOT claim full LLM correctness beyond
+the explored frontier.
+
+The pilot shall use a small exact fixture subset with JSON-like answer shape,
+answer-label semantics, bounded numeric invariants, and forbidden-token
+constraints. The prefix abstraction shall reject prefixes that cannot be
+extended into a satisfying terminal candidate, preserve monotonic rejection
+once a prefix is pruned, and aggregate conservative lower and upper
+satisfaction bounds from a deterministic finite token prior. Explored frontier
+size, pruned-prefix count, bound width, explored probability mass, and semantic
+coverage limitations shall be reported explicitly.
+
+The terminal artifact MUST include `prefix_closed_bound_pilot_ready`,
+`constraint_families`, `fixture_count`, `explored_prefix_count`,
+`pruned_prefix_count`, `lower_bound`, `upper_bound`, `bound_width`,
+`semantic_coverage`, `limitations`, `tests_run`, `source_artifacts`,
+`inference_substrate`, and `honest_verdict`.
+
+`prefix_closed_bound_pilot_ready` shall be true only when at least one exact
+fixture is enumerated, the deterministic frontier has both accepted or viable
+mass and pruned-prefix evidence, lower and upper bounds are finite and ordered,
+`bound_width == upper_bound - lower_bound`, semantic coverage separates syntax
+from semantic and non-covered live-LLM claims, no live model inference is used,
+and `honest_verdict` starts with a terminal success prefix.
+
+### SCENARIO-VERIFY-3125: Exact Prefix Frontier Produces Bounded Local Evidence
+
+Given the Exp 3125 exact JSON-like fixtures and deterministic token prior are
+available,
+When the prefix-closed bound pilot enumerates the bounded frontier,
+Then it accepts only terminal candidates that satisfy exact JSON parsing,
+answer-label, bounded-score, and forbidden-token checks; rejects invalid
+prefixes monotonically; aggregates lower and upper satisfaction bounds from the
+explored prefix mass; reports frontier, pruned-prefix, semantic-coverage, and
+limitation fields; and writes the terminal artifact without making a live-model
+or open-world correctness claim.
+
+## Implementation Status (REQ-VERIFY-3125)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-VERIFY-3125 | Implemented (`python/carnot/eval/prefix_closed_deterministic_verifier_bound_pilot_v1.py`) | Implemented (`tests/python/test_experiment_3125_prefix_closed_deterministic_verifier_bound_pilot.py`) |
+
 ### REQ-VERIFY-3073: EBT/ARM-EBM Adapter Feasibility Audit
 
 The repository shall provide an Exp 3073 deterministic architecture audit that
