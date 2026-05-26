@@ -418,5 +418,13 @@
   "started_at": "2026-05-26T04:23:41Z",
   "status": "success",
   "title": "CPU cLUT Random-Variate Sampler Microbench",
-  "invariant_violations": []
+  "invariant_violations": [],
+  "flagged_adversarial": true,
+  "corrigendum_pending": [
+    {
+      "kind": "TAUTOLOGY",
+      "severity": "critical",
+      "detail": "experiment=3105.0 and random_seed=3105.0 agree to >5 sig figs. Two distinct metrics matching this precisely is more likely a bug than a finding."
+    }
+  ]
 }
