@@ -1174,6 +1174,52 @@ and uses an `honest_verdict` beginning with `complete:`.
 |---|---|---|
 | REQ-VERIFY-3073 | Implemented (`python/carnot/eval/ebt_arm_ebm_adapter_feasibility_audit_v1.py`) | Implemented (`tests/python/test_experiment_3073_ebt_arm_ebm_adapter_feasibility_audit.py`) |
 
+### REQ-VERIFY-3091: EBT/ARM Sidecar Adapter Schema Prototype
+
+The repository shall provide an Exp 3091 deterministic sidecar-only prototype
+for EBT/ARM adapter data. The prototype MUST define a canonical JSON schema
+for cached sidecar rows containing a candidate, constraints, deterministic
+energy terms, verifier feedback, confidence and abstention metadata, and exact
+label references. The prototype MUST NOT integrate with live model inference,
+train an EBT/ARM model, mutate model weights, claim benchmark speedup, or claim
+hardware acceleration.
+
+The repository shall also provide an inspectable replay scorer that consumes
+cached sidecar rows and computes deterministic energy components from stored
+fields only. The scorer may use explicit constraints, stored token logprobs,
+stored verifier feedback, confidence metadata, and exact label references; it
+MUST declare no live LLM inference, no model weight loading, no generation, and
+no dependency on live model weights.
+
+The terminal artifact MUST be written to
+`results/experiment_3091_ebt_arm_sidecar_adapter_schema_prototype_v1.json` and
+include `adapter_schema_ready`, `sidecar_replay_scorer_ready`, `schema_path`,
+`replay_scorer_path`, `tests_added_or_reused`, `implementation_claim_boundary`,
+`no_weight_update_claim`, `source_artifacts`, `inference_substrate`, and
+`honest_verdict`.
+
+`adapter_schema_ready` may be true only when the schema path exists and covers
+the required sidecar row fields. `sidecar_replay_scorer_ready` may be true only
+when deterministic replay examples validate the same score across repeated
+runs and the artifact records the no-live-inference boundary.
+
+### SCENARIO-VERIFY-3091: Cached Sidecar Rows Replay Without Live Weights
+
+Given the Exp 3073 feasibility audit found local EBT/ARM adapter surfaces but
+did not claim an implementation,
+When the Exp 3091 prototype validates fixture sidecar rows and replays their
+energy components,
+Then the terminal artifact names the concrete schema and scorer paths, records
+the fixture tests, reports no live model inference or model-weight loading,
+keeps EBT/ARM training and runtime integration out of scope, and uses an
+`honest_verdict` beginning with `complete:`.
+
+## Implementation Status (REQ-VERIFY-3091)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-VERIFY-3091 | Implemented (`python/carnot/inference/ebt_arm_sidecar_adapter.py`; `python/carnot/eval/ebt_arm_sidecar_adapter_schema_prototype_v1.py`; `python/carnot/schemas/ebt_arm_sidecar_adapter_v1.json`) | Implemented (`tests/python/test_experiment_3091_ebt_arm_sidecar_adapter_schema_prototype.py`) |
+
 ### REQ-VERIFY-3006: EqR Fixed-Point Energy Diagnostic Over Cached Validator Trajectories
 
 The repository shall provide a deterministic Exp 3006 fixed-point energy
