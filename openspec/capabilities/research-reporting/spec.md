@@ -9851,3 +9851,77 @@ and an `honest_verdict` that starts with `complete:`.
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-REPORT-3135 | Implemented (`python/carnot/reporting/archive_v291_activate_v292_3135.py`) | Implemented (`tests/python/test_experiment_3135_archive_v291_activate_v292.py`) |
+
+### REQ-REPORT-3136: False-Accept Root-Cause Autopsy For .291 Verifier Contract
+
+The repository shall provide an Exp 3136 false-accept autopsy generator that
+writes `results/experiment_3136_false_accept_root_cause_autopsy_v1.json` from
+checked-in `.291` verifier evidence only. The generator MUST use
+`results/experiment_3124_difficulty_stratified_live_sota_verifier_panel_v6.json`
+as the source of live verifier rows and exact labels, MUST compare those rows
+against prefix-bound evidence from
+`results/experiment_3125_prefix_closed_deterministic_verifier_bound_pilot_v1.json`,
+fragment-time monitor events from
+`results/experiment_3126_fragment_time_monitor_satisfiable_drift_audit_v1.json`,
+and the matrix/capstone summaries in Exp 3133 and Exp 3134, and MAY include
+prior Exp 3099 panel JSONL rows when present. It MUST NOT run live model
+inference, verifier scoring, repair generation, solver execution, synthesis,
+hardware commands, the conductor, pushes, or modify
+`scripts/research_conductor.py`.
+
+The autopsy MUST recompute the Exp 3124 false-accept rate from row-level
+decisions rather than trusting only aggregate artifact fields. It MUST identify
+the exact row IDs responsible for false accepts; preserve each available live
+row's exact label, live model verdict, extracted answer, difficulty bucket,
+fixture family, prompt hash, and matching monitor events; and classify every
+false accept into one of `answer-extraction failure`, `prompt ambiguity`,
+`exact-label mismatch`, `premise/step grounding failure`,
+`SAT/validity-token confusion`, `model prior/data mismatch`,
+`contradiction miss`, or `unknown`. The classification MUST separate parser
+failures from reasoning failures, audit exact-label and prompt evidence, and
+record whether prefix-bound coverage or fragment-monitor ledger fields explain
+or fail to cover each false-accept row.
+
+The terminal artifact MUST include
+`false_accept_autopsy_v1_ready`, `source_false_accept_rate`,
+`false_accept_row_ids`, `false_accept_mechanism_counts`,
+`extraction_failure_count`, `prompt_ambiguity_count`,
+`exact_label_mismatch_count`, `contradiction_miss_count`,
+`regression_row_set`, `recommended_contract_changes`, `source_artifacts`,
+`inference_substrate`, and `honest_verdict`. It MAY include full
+`verifier_rows`, `false_accept_rows`, prefix-bound comparisons, monitor ledger
+summaries, source checksums, and measured `duration_s`, provided every claim is
+derived from checked-in artifacts. `false_accept_autopsy_v1_ready` shall be
+true only when Exp 3124 live rows are present, the recomputed false-accept rate
+matches the source aggregate within tolerance, all false accepts are
+classified, and the regression row set contains every false-accept row. When a
+conductor prompt assigns ops reconciliation to a separate step, the generator
+MUST leave `ops/status.md`, `ops/changelog.md`, and `_bmad/traceability.md`
+unchanged.
+
+#### SCENARIO-REPORT-3136: .291 False Accepts Become Regression Evidence
+
+**Given** Exp 3124 exists and reports `false_accept_rate=0.5` over six live
+rows, with exact-reject rows `resyn-3084-smt-000` and
+`resyn-3084-arith-003` accepted by the live model
+**And** Exp 3125 reports only bounded finite prefix coverage
+**And** Exp 3126 reports monitor events that classify both rows as
+contradictions with ledger action `reject`
+**And** Exp 3133 and Exp 3134 preserve the live-verifier false-accept blocker
+**When** the Exp 3136 autopsy generator runs
+**Then** it writes `results/experiment_3136_false_accept_root_cause_autopsy_v1.json`
+with `false_accept_autopsy_v1_ready=true`, `source_false_accept_rate=0.5`,
+`false_accept_row_ids=["resyn-3084-arith-003", "resyn-3084-smt-000"]`,
+mechanism counts separating SAT/validity-token confusion from contradiction
+misses, zero extraction, prompt-ambiguity, and exact-label-mismatch counts,
+a regression row set containing both false accepts, contract changes requiring
+row-level negative regression fixtures and ledger-backed token-family
+constraints, source-artifact provenance, aggregation-only inference-substrate
+metadata, no ops/status/traceability reconciliation performed by this task,
+and an `honest_verdict` that starts with `complete:`.
+
+## Implementation Status (REQ-REPORT-3136)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-3136 | Planned (`python/carnot/reporting/false_accept_root_cause_autopsy_v1_3136.py`) | Planned (`tests/python/test_experiment_3136_false_accept_root_cause_autopsy_v1.py`) |
