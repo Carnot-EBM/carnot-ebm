@@ -1796,6 +1796,72 @@ repair generation or repair-success claim.
 |---|---|---|
 | REQ-VERIFY-3126 | Implemented (`python/carnot/eval/fragment_time_monitor_satisfiable_drift_audit_v1.py`) | Implemented (`tests/python/test_experiment_3126_fragment_time_monitor_satisfiable_drift_audit.py`) |
 
+### REQ-VERIFY-3137: Exact-Safe Accept Abstain Reject Contract V1
+
+The repository shall provide an Exp 3137 exact-safe accept/abstain/reject
+contract builder that writes
+`results/experiment_3137_exact_safe_accept_abstain_contract_v1.json` from
+checked-in artifacts only. The builder MUST consume the Exp 3136 false-accept
+autopsy, Exp 3125 prefix-closed bound pilot, Exp 3126 fragment-time monitor
+ledger, Exp 3098 MaxSAT abstention policy when present, and the Exp 3097 exact
+fixture manifest. It MUST NOT run fresh live inference, modify
+`scripts/research_conductor.py`, push commits, or open a repair gate directly.
+
+The contract shall define ordered auditable rules for `accept`, `abstain`, and
+`reject`. Accept shall require exact accept labels, parse confidence at the
+declared exact floor, answer-token-family agreement, premise/answer
+consistency, prefix-bound coverage for the accepted label, and monitor-ledger
+agreement when replay evidence exists. Reject shall be allowed for exact
+reject labels when the candidate agrees with the exact label or the exact
+authority and monitor ledger both require rejection. Abstain shall take
+precedence for known .291 false-accept regression rows, known false-accept
+failure families, missing exact labels, low parse confidence, token-family
+mismatch, unavailable accept-label prefix coverage, missing live monitor
+ledger evidence, or any residual unsafe tie.
+
+The builder shall replay the contract over the .291 live verifier rows from
+the Exp 3136 autopsy and over the prior exact fixture rows exposed by the
+Exp 3097 manifest. Replay metrics shall count false accepts, abstentions, and
+false rejects directly from the replayed decisions. All known Exp 3136
+regression rows MUST appear in `regression_row_set` and MUST NOT receive an
+`accept` replay decision; abstention is permitted for those rows.
+
+The terminal artifact MUST include `acceptance_contract_v1_ready`,
+`contract_rules`, `known_false_accept_rows_blocked`,
+`replay_false_accept_rate`, `replay_abstention_rate`,
+`replay_false_reject_rate`, `repair_gate_prerequisites`,
+`regression_row_set`, `tests_run`, `source_artifacts`,
+`inference_substrate`, and `honest_verdict`. It SHOULD also include replay
+rows, replay counts, self-checks, source checksums, and no-live-inference
+guard fields so the next live rerun can consume the contract without implicit
+policy inference.
+
+`acceptance_contract_v1_ready` shall be true only when all required source
+artifacts are present, the ordered rules include at least one accept rule, one
+reject rule, and one abstain rule, the replay has zero false accepts, every
+known false-accept regression row is blocked from accept, replay metrics are
+finite rates in `[0, 1]`, deterministic self-checks pass, no fresh inference
+is declared, and the `honest_verdict` starts with a terminal success prefix.
+
+### SCENARIO-VERIFY-3137: Regression Rows Are Blocked Before Live Rerun
+
+Given the Exp 3136 autopsy has recorded .291 false-accept rows, Exp 3125 has
+reported prefix-bound coverage, Exp 3126 has replayable monitor-ledger events,
+and the Exp 3097 exact fixture manifest is available,
+When Exp 3137 builds the exact-safe contract,
+Then it writes the required terminal JSON artifact, exposes ordered
+machine-readable contract rules, replays every .291 live row and prior exact
+fixture row, reports zero replay false accepts, reports the abstention and
+false-reject rates, lists all known false-accept regression rows, and records
+repair-gate prerequisites that require the next live rerun to load this
+contract before accepting any verifier row.
+
+## Implementation Status (REQ-VERIFY-3137)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-VERIFY-3137 | Implemented (`python/carnot/verify/exact_safe_accept_abstain_contract_v1.py`) | Implemented (`tests/python/test_experiment_3137_exact_safe_accept_abstain_contract_v1.py`) |
+
 ### REQ-VERIFY-3073: EBT/ARM-EBM Adapter Feasibility Audit
 
 The repository shall provide an Exp 3073 deterministic architecture audit that

@@ -6366,3 +6366,4 @@ web search: site |
 | 2026-05-26 14:34 UTC | Plan milestone 2026.05.292 | OK | 14 tasks proposed |
 | 2026-05-26 14:36 UTC | Milestone 2026.05.292 activated | OK | 14 tasks queued |
 | 2026-05-26 14:51 UTC | Archive .291 and activate .292 planning | OK | 81 passed in 2.94s |
+| 2026-05-26 15:05 UTC | False-accept root-cause autopsy | OK | 81 passed in 3.03s |
