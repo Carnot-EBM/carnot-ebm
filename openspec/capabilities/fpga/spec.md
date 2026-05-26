@@ -2865,6 +2865,75 @@ actions, and a terminal verdict beginning with `complete:`.
 
 ---
 
+### REQ-HW-093
+
+**Title:** Exp 3106 GateMate/SSQA operator evidence ingestion v3 MUST update the no-rerun/readback boundary from .288 evidence only
+
+**Description:**
+Experiment 3106 MUST produce
+`results/experiment_3106_gatemate_ssqa_operator_evidence_ingestion_v3.json`
+as the current GateMate/SSQA no-rerun/readback boundary for milestone .289.
+The ingestion MUST load the .288 capstone hardware ledger, the Exp 3092 v2
+operator-evidence ledger, and every checked-in operator-evidence path named or
+implied by those ledgers. It MUST inspect only local repository evidence and
+MUST NOT flash a GateMate board, run synthesis or PnR, execute readback,
+execute live model inference, claim timing, or claim speedup.
+
+`gatemate_rerun_allowed=true` is permitted only when all operator-owned
+GateMate rerun evidence is present: authoritative selected-output CCF binding,
+concrete host-reader command, expected transcript, and opened safety limits.
+`ssqa_readback_allowed=true` is permitted only when the required
+host-visible smoke transcript evidence is also present with checksum, command,
+expected and observed transcript, matched transcript status, CCF binding,
+flash/readback fields, timing fields, and sampler configuration. If either
+evidence set is missing, Exp 3106 MUST fail closed, keep the corresponding
+allowed field false, record every checked path, list the exact missing evidence,
+and state the allowed next operator-owned scope without timing or speedup
+claims.
+
+**Acceptance criteria:**
+- `results/experiment_3106_gatemate_ssqa_operator_evidence_ingestion_v3.json`
+  is generated with `operator_evidence_ingestion_v3_ready`,
+  `gatemate_rerun_allowed`, `ssqa_readback_allowed`,
+  `operator_ready_artifacts`, `missing_operator_actions`,
+  `speedup_claim_made`, `hardware_commands_run`, `source_artifacts`,
+  `inference_substrate`, and `honest_verdict`.
+- The artifact records checked paths named by the .288 hardware ledger and the
+  Exp 3092 source/check-path ledger, including missing paths.
+- Missing GateMate output-contract evidence keeps
+  `gatemate_rerun_allowed=false` and records the missing pinout/CCF binding,
+  host reader command, expected transcript, or safety-limit action.
+- Missing or non-passing host-visible smoke evidence keeps
+  `ssqa_readback_allowed=false` and records the missing host-visible smoke
+  fields required before SSQA readback can run.
+- When all required evidence exists, Exp 3106 records concrete evidence paths
+  in `operator_ready_artifacts` and records the allowed next experiment scope,
+  while still declaring no hardware command, no live model inference, no timing
+  claim, and no speedup claim by Exp 3106 itself.
+
+**Implementation status:** Pending (Exp 3106)
+
+---
+
+### SCENARIO-HW-093
+
+**Scenario:** GateMate/SSQA operator evidence ingestion v3 keeps hardware blocked when .288 evidence still lacks operator-visible proof.
+
+**Given:** The .288 capstone and Exp 3092 v2 ledger record missing GateMate
+pinout/CCF binding, host reader command, expected transcript, safety-limit
+opening, and host-visible smoke evidence.
+**When:** Exp 3106 inspects only checked-in local evidence named or implied by
+those ledgers.
+**Then:** It writes the v3 JSON with
+`operator_evidence_ingestion_v3_ready=true`, `gatemate_rerun_allowed=false`,
+`ssqa_readback_allowed=false`, `hardware_commands_run=[]`,
+`speedup_claim_made=false`, explicit checked paths and missing operator
+actions, and a terminal verdict beginning with `complete:`.
+
+**Implementation status:** Pending (Exp 3106)
+
+---
+
 ### SCENARIO-HW-091
 
 **Scenario:** Matrix v21 GateMate/SSQA refresh carries forward no-rerun blockers when operator evidence is absent.
