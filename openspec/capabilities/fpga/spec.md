@@ -3005,6 +3005,82 @@ actions, and a terminal verdict beginning with `complete:`.
 
 ---
 
+### REQ-HW-095
+
+**Title:** Exp 3132 hardware evidence and sampler boundary ledger MUST keep all hardware claims bounded to authenticated local artifacts
+
+**Description:**
+Experiment 3132 MUST produce
+`results/experiment_3132_hardware_evidence_sampler_boundary_v5.json` as the
+`.291` hardware evidence and sampler boundary ledger. The ledger MUST read the
+current checked-in cLUT sampler artifact, GateMate/SSQA operator-evidence
+artifact, hardware status documentation, and available local result/transcript
+artifacts. It MUST inspect only existing local files and MUST NOT flash boards,
+run synthesis or PnR, execute board commands, perform hardware readback, run
+live model inference, or promote speedup claims from unauthenticated evidence.
+
+The ledger MUST record the current evidence state for GateMate, SSQA, KV260,
+PolarFire, THRML/TSU, and cLUT separately. GateMate evidence is complete only
+when the operator-visible output contract, host-reader command, expected
+transcript, safety limits, and host-visible smoke evidence are all complete in
+checked-in artifacts. SSQA readback is ready only when host-visible readback
+evidence exists. KV260 and PolarFire rows MAY report authenticated historical
+hardware evidence when matching local artifact/transcript files are present,
+but they MUST keep those rows scoped to their recorded workload and MUST NOT
+turn historical timing or dispatch evidence into a fresh sampler speedup claim.
+THRML/TSU rows MUST disallow hardware claims unless authenticated TSU hardware
+evidence exists locally. cLUT rows MUST remain CPU-only unless authenticated
+hardware execution evidence exists.
+
+**Acceptance criteria:**
+- `results/experiment_3132_hardware_evidence_sampler_boundary_v5.json` is
+  generated with `hardware_evidence_sampler_boundary_v5_ready`,
+  `hardware_commands_run`, `gatemate_evidence_complete`,
+  `ssqa_readback_ready`, `kv260_evidence_status`,
+  `polarfire_evidence_status`, `thrml_tsu_claim_allowed`,
+  `clut_sampler_boundary`, `missing_operator_evidence`,
+  `speedup_claim_allowed`, `source_artifacts`, `inference_substrate`, and
+  `honest_verdict`.
+- `hardware_commands_run` is an empty list for Exp 3132 itself unless an
+  existing checked-in command transcript is explicitly summarized as historical
+  evidence.
+- Missing GateMate/SSQA evidence from Exp 3119 remains actionable in
+  `missing_operator_evidence`; no GateMate, SSQA, sampler, readback, timing, or
+  speedup claim is allowed while those fields remain incomplete.
+- KV260 and PolarFire statuses cite local artifact/transcript paths when
+  authenticated historical evidence exists, and otherwise report a blocked or
+  missing status without probing devices.
+- THRML/TSU status disallows TSU hardware claims when only software simulator or
+  import evidence exists.
+- cLUT status records CPU-only sampler integration from Exp 3118 and preserves
+  `hardware_claim_made=false`, empty hardware commands, and no hardware speedup
+  promotion.
+
+**Implementation status:** Planned (Exp 3132)
+
+---
+
+### SCENARIO-HW-095
+
+**Scenario:** Hardware evidence and sampler boundary v5 refreshes .291 status without running hardware.
+
+**Given:** Exp 3118 records CPU-only cLUT backend integration and Exp 3119
+records incomplete GateMate/SSQA operator evidence.
+**When:** Exp 3132 scans checked-in local hardware/status/result artifacts for
+transcripts, hashes, pinouts, readbacks, and timing evidence.
+**Then:** It writes the v5 JSON with
+`hardware_evidence_sampler_boundary_v5_ready=true`,
+`hardware_commands_run=[]`, `gatemate_evidence_complete=false`,
+`ssqa_readback_ready=false`, per-substrate hardware statuses, CPU-only cLUT
+boundary metadata, actionable missing operator evidence, no speedup claim
+allowed, local source-artifact provenance, evidence-ingestion
+inference-substrate metadata, and a terminal verdict beginning with
+`complete:`.
+
+**Implementation status:** Planned (Exp 3132)
+
+---
+
 ### SCENARIO-HW-091
 
 **Scenario:** Matrix v21 GateMate/SSQA refresh carries forward no-rerun blockers when operator evidence is absent.
