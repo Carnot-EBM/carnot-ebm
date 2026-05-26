@@ -16,7 +16,7 @@ This model card describes the standalone ThinkPRM v3 checkpoint. For the
 full verifier-ensemble framework, see
 [github.com/Carnot-EBM/carnot-ebm](https://github.com/Carnot-EBM/carnot-ebm).
 
-- **Model ID:** `Carnot-EBM/ThinkPRM-v3`
+- **Model ID:** `Carnot-EBM/carnot-thinkprm-v3`
 - **Architecture:** Process Reward Model adapter; step-level classifier over
   hidden-state features
 - **Framework:** Python / PyTorch + safetensors
@@ -76,7 +76,7 @@ from huggingface_hub import hf_hub_download
 import safetensors.torch
 
 path = hf_hub_download(
-    repo_id="Carnot-EBM/ThinkPRM-v3",
+    repo_id="Carnot-EBM/carnot-thinkprm-v3",
     filename="checkpoint.safetensors",
 )
 state_dict = safetensors.torch.load_file(path)

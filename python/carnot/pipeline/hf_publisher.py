@@ -99,7 +99,7 @@ The model achieved an Area Under the Receiver Operating Characteristic (AUROC) c
 # pip install carnot
 from huggingface_hub import hf_hub_download
 import safetensors.torch
-path = hf_hub_download(repo_id="Carnot-EBM/ThinkPRM-v3", filename="checkpoint.safetensors")
+path = hf_hub_download(repo_id="Carnot-EBM/carnot-thinkprm-v3", filename="checkpoint.safetensors")
 # load model
 ```
 

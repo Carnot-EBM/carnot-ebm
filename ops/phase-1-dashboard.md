@@ -5,7 +5,7 @@
 | Prong | Status | Evidence / URL | Date | Next Action |
 |-------|--------|----------------|------|-------------|
 | PyPI Publish Workflow | Pending | [Workflow Run](https://github.com/Carnot-EBM/carnot-ebm/actions/runs/25951913694) | 2026-05-16T05:34:00Z | Operator manual approval at GH Environment 'pypi' |
-| HuggingFace Mirror | Shipped | [ThinkPRM-v3](https://huggingface.co/Carnot-EBM/ThinkPRM-v3) | 2026-05-16T05:45:39Z | None |
+| HuggingFace Mirror | Shipped | [ThinkPRM-v3](https://huggingface.co/Carnot-EBM/carnot-thinkprm-v3) | 2026-05-16T05:45:39Z | None |
 | MCP Integrator Docs | Shipped | `docs/integrator-guide.md` | 2026-05-16T12:00:00Z | None |
 | Independent Reproducer | Pending | `ops/phase-1-reproducers.md` | 2026-05-16T07:35:54Z | Pending remote trigger |
 
