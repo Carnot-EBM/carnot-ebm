@@ -2110,6 +2110,72 @@ repair from unlocking from untrusted live-inference evidence.
 |---|---|---|
 | REQ-VERIFY-3150 | Planned (`python/carnot/verify/adversarial_verifier_evidence_corrigendum_v1.py`) | Planned (`tests/python/test_experiment_3150_adversarial_verifier_evidence_corrigendum_v1.py`) |
 
+### REQ-VERIFY-3151: Live Inference Authenticity Preflight V1
+
+The repository shall provide an Exp 3151 live-inference authenticity preflight
+builder that writes
+`results/experiment_3151_live_inference_authenticity_preflight_v1.json`
+before any clean Exp 3152 live SOTA verifier rerun can claim live model
+evidence. The builder MUST read the mandated local SOTA GGUF policy, inspect
+the Exp 3123 cache/precondition manifest and the current filesystem paths
+without downloading models, and MUST NOT score a verifier panel, execute
+repairs, modify `scripts/research_conductor.py`, or use legacy small models as
+headline evidence.
+
+The preflight SHALL define the required evidence for a clean live rerun:
+selected mandated model IDs, path existence and nonzero size, the exact load
+command, model-load wall time, GPU/CPU substrate, transcript hashes, prompt and
+completion token counts, `random_seed`, `reproducibility_checksum`, and a
+minimum plausible duration requirement. If a mandated local SOTA GGUF is
+usable and the local runtime is safe to invoke, it SHALL run at most one
+bounded smoke prompt on one mandated model and record only hash/provenance
+evidence. If no mandated local SOTA GGUF is usable, CUDA/runtime support is
+absent, the smoke call fails, or duration evidence is implausible, it SHALL
+write a complete blocked artifact with `preflight_passed=false`,
+`live_call_count=0` unless a real smoke transcript was produced,
+`headline_claim_allowed=false`, and an actionable `blocked_reason`.
+
+The terminal artifact MUST include
+`live_inference_authenticity_preflight_ready`, `model_specs`,
+`locally_usable_model_ids`, `selected_model_ids`, `preflight_passed`,
+`live_call_count`, `model_load_evidence`, `transcript_hashes`,
+`minimum_duration_requirement_s`, `headline_claim_allowed`, `blocked_reason`,
+`source_artifacts`, `inference_substrate`, and `honest_verdict`. It SHOULD also
+include an Exp 3152 reusable preflight contract, token counts, field-principle
+annotations, tests run, duration, source checksums, and the reproducibility
+checksum used by the gate.
+
+`preflight_passed` shall be true only when at least one mandated local SOTA
+GGUF path exists, a selected mandated model completes the bounded smoke call,
+the model-load evidence includes a nonnegative load wall time and exact load
+command, transcript hashes and token counts are nonempty, the wall-clock
+duration meets the explicit minimum duration requirement, and
+`headline_claim_allowed=false` because a smoke preflight alone cannot create a
+headline verifier result. `honest_verdict` MUST start with a terminal
+`complete:`/`complete_`/`success:`/`success_`/`passed:`/`passed_`/`shipped_`
+prefix only for a passed preflight, and with `blocked_` for any failed
+precondition.
+
+### SCENARIO-VERIFY-3151: Authenticity Preflight Blocks Unproven Live Claims
+
+Given Exp 3123 exposes mandated local SOTA cache evidence and Exp 3139 was
+flagged for live-call claims that lacked coherent model-load evidence,
+When Exp 3151 builds the live-inference authenticity preflight,
+Then it writes the required terminal JSON artifact without scoring the
+verifier panel, records mandated model availability from both the manifest and
+actual filesystem paths, attempts at most one bounded mandated-model smoke
+call when locally safe, records load-command, load-duration, transcript-hash,
+token-count, seed, checksum, and substrate evidence, sets
+`headline_claim_allowed=false`, and exposes a reusable Exp 3152 contract that
+requires the same authenticity evidence before any clean live SOTA rerun can
+headline results.
+
+## Implementation Status (REQ-VERIFY-3151)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-VERIFY-3151 | Planned (`python/carnot/verify/live_inference_authenticity_preflight_v1.py`) | Planned (`tests/python/test_experiment_3151_live_inference_authenticity_preflight_v1.py`) |
+
 ### REQ-VERIFY-3073: EBT/ARM-EBM Adapter Feasibility Audit
 
 The repository shall provide an Exp 3073 deterministic architecture audit that
