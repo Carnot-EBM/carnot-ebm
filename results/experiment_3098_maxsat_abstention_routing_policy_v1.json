@@ -1,0 +1,246 @@
+{
+  "artifact": "experiment_3098_maxsat_abstention_routing_policy_v1",
+  "downstream_usage": {
+    "exp3099": {
+      "must_load_policy_from": "results/maxsat_abstention_routing_policy_3098/policy.json",
+      "required_behavior": "route every accept/reject/abstain row through the policy and report policy decisions",
+      "required_field": "maxsat_policy_used",
+      "task": "local SOTA confidence abstention panel v3"
+    },
+    "exp3101": {
+      "must_load_policy_from": "results/maxsat_abstention_routing_policy_3098/policy.json",
+      "required_behavior": "compare raw verifier gain against MaxSAT-routed gain using the same policy",
+      "required_metric": "verifier_gain_delta_with_maxsat",
+      "task": "local SOTA verifier calibration v4"
+    },
+    "exp3102": {
+      "gate": "exp3101.verifier_gain_delta_with_maxsat > 0.0",
+      "must_load_policy_from": "results/maxsat_abstention_routing_policy_3098/policy.json",
+      "required_behavior": "run repair only after positive MaxSAT-routed verifier gain and recheck syntax, schema, exact semantics, and intent preservation",
+      "task": "gated structured repair micro-panel v3"
+    }
+  },
+  "duration_s": 0.0025210630847141147,
+  "fallback_evaluator": {
+    "enumerates_actions": [
+      "accept",
+      "reject",
+      "abstain"
+    ],
+    "fail_closed_default": "abstain",
+    "filters_hard_constraint_violations": true,
+    "kind": "deterministic_reference_evaluator",
+    "scores_remaining_actions": "declared soft weights only",
+    "silent_solver_fallback_allowed": false,
+    "tie_break_order": [
+      "abstain",
+      "reject",
+      "accept"
+    ],
+    "used_when": "no local MaxSAT or MaxSMT solver package is installed"
+  },
+  "hard_constraints": [
+    {
+      "blocks_actions": [
+        "accept",
+        "reject"
+      ],
+      "description": "Accept is infeasible when the candidate disagrees with exact labels; reject is infeasible for an exact-consistent safe candidate.",
+      "id": "HC_EXACT_LABEL_AGREEMENT",
+      "topic": "exact_label_disagreement"
+    },
+    {
+      "blocks_actions": [
+        "accept",
+        "reject"
+      ],
+      "description": "Headline live accept/reject routes require a mandated local GGUF cache; missing cache leaves only abstain/blocked evidence.",
+      "id": "HC_MODEL_CACHE_AVAILABLE",
+      "topic": "model_cache_availability"
+    },
+    {
+      "blocks_actions": [
+        "accept"
+      ],
+      "description": "Repair promotion cannot accept when measured formal-feedback lift is negative.",
+      "id": "HC_FORMAL_FEEDBACK_NONNEGATIVE",
+      "topic": "formal_feedback_lift"
+    },
+    {
+      "blocks_actions": [
+        "accept"
+      ],
+      "description": "Accept requires both syntax validity and declared schema validity.",
+      "id": "HC_SYNTAX_SCHEMA_VALID",
+      "topic": "syntax_schema_validity"
+    },
+    {
+      "blocks_actions": [
+        "accept"
+      ],
+      "description": "Accepting a repair candidate requires exact intent preservation.",
+      "id": "HC_REPAIR_INTENT_PRESERVED",
+      "topic": "repair_intent_preservation"
+    },
+    {
+      "blocks_actions": [
+        "accept",
+        "reject"
+      ],
+      "description": "Headline accept/reject decisions are infeasible below the exact-count floor.",
+      "id": "HC_NO_TINY_PANEL_HEADLINE",
+      "topic": "no_tiny_panel_disqualification"
+    }
+  ],
+  "honest_verdict": "complete: maxsat_policy_ready=true; deterministic_fallback=available",
+  "inference_substrate": {
+    "executes_models": false,
+    "fallback_evaluator_available": true,
+    "kind": "offline_policy_design_and_reference_evaluator",
+    "live_llm_calls": 0,
+    "maxsat_solver_required": false,
+    "no_live_llm_inference": true,
+    "uses_checked_in_artifacts_only": true
+  },
+  "maxsat_policy_ready": true,
+  "objective_terms": {
+    "abstention_confidence_floor": 0.7,
+    "hard_constraint_penalty": "infinite",
+    "maximize": "sum of satisfied weighted soft constraints after hard filtering",
+    "tie_break_order": [
+      "abstain",
+      "reject",
+      "accept"
+    ],
+    "weights": {
+      "abstain_on_uncertainty": 70,
+      "accept_exact_consistent": 100,
+      "minimize_false_accept": 120,
+      "minimize_false_reject": 60,
+      "minimize_unnecessary_abstention": 20,
+      "prefer_formal_feedback_lift": 40,
+      "preserve_repair_intent": 35,
+      "reject_exact_inconsistent": 100
+    }
+  },
+  "routing_policy_path": "results/maxsat_abstention_routing_policy_3098/policy.json",
+  "routing_policy_sha256": "48db5dd2348986a7cea8e64a06ad5f8d48841dfc42db52fd136f761e4ff0d268",
+  "run_date": "20260526",
+  "schema": "carnot.maxsat_abstention_routing_policy_artifact.v1",
+  "soft_constraints": [
+    {
+      "id": "SC_ACCEPT_EXACT",
+      "reward_action": "accept",
+      "topic": "accept_exact_consistent",
+      "weight": 100,
+      "when": "exact_label_match=true and expected_action=accept"
+    },
+    {
+      "id": "SC_REJECT_INEXACT",
+      "reward_action": "reject",
+      "topic": "reject_exact_inconsistent",
+      "weight": 100,
+      "when": "exact_label_match=false or expected_action=reject"
+    },
+    {
+      "id": "SC_ABSTAIN_UNCERTAIN",
+      "reward_action": "abstain",
+      "topic": "abstain_on_uncertainty",
+      "weight": 70,
+      "when": "confidence < abstention_confidence_floor"
+    },
+    {
+      "id": "SC_FORMAL_LIFT",
+      "reward_action": "accept",
+      "topic": "prefer_formal_feedback_lift",
+      "weight": 40,
+      "when": "formal_feedback_delta > 0"
+    },
+    {
+      "id": "SC_INTENT",
+      "reward_action": "accept",
+      "topic": "preserve_repair_intent",
+      "weight": 35,
+      "when": "repair_candidate=false or repair_intent_preserved=true"
+    },
+    {
+      "id": "SC_FALSE_ACCEPT",
+      "reward_action": "reject_or_abstain",
+      "topic": "minimize_false_accept",
+      "weight": 120,
+      "when": "candidate is exact-inconsistent or expected_action=reject"
+    },
+    {
+      "id": "SC_FALSE_REJECT",
+      "reward_action": "accept_or_abstain",
+      "topic": "minimize_false_reject",
+      "weight": 60,
+      "when": "candidate is exact-consistent, safe, and expected_action=accept"
+    },
+    {
+      "id": "SC_AVOID_ABSTAIN",
+      "reward_action": "accept_or_reject",
+      "topic": "minimize_unnecessary_abstention",
+      "weight": 20,
+      "when": "confidence >= abstention_confidence_floor and a hard-safe action exists"
+    }
+  ],
+  "source_artifacts": [
+    {
+      "exists": true,
+      "id": "codex",
+      "path": "CODEX.md",
+      "role": "repo spec-first workflow",
+      "sha256": "1db7ebc1009714f872db83447828a8957c3abb72061832cc1bc307735cd96bbe"
+    },
+    {
+      "exists": true,
+      "id": "claude",
+      "path": "CLAUDE.md",
+      "role": "artifact-authenticity and tiny-panel discipline",
+      "sha256": "cdc00581d37d1bd3c77a69b058787f74ecc71545a97c1eab31c48961637b3224"
+    },
+    {
+      "exists": true,
+      "id": "research_references",
+      "path": "research-references.md",
+      "role": "local literature context",
+      "sha256": "a86412e8f1a39713a296ea54e765d5f089b842b9589b967ec81a1a5736ab54cc"
+    },
+    {
+      "exists": true,
+      "id": "exp3097_protocol",
+      "path": "results/experiment_3097_exact_fixture_eval_protocol_audit_v1.json",
+      "role": ".289 exact-fixture protocol authority",
+      "sha256": "92954fc69cc0209268b626c9af9fb8554c62f89503ad52b3ad583d588ee1dace"
+    },
+    {
+      "exists": true,
+      "id": "exp3085_abstention",
+      "path": "results/experiment_3085_icalm_task_abstention_sota_panel_v2.json",
+      "role": ".288 tiny abstention-panel failure",
+      "sha256": "ce9eb977bd305d99c578884acb12a17fe541908ee05aa1594a649593e34888c4"
+    },
+    {
+      "exists": true,
+      "id": "exp3087_calibration_gate",
+      "path": "results/experiment_3087_gated_local_sota_verifier_calibration_v3.json",
+      "role": ".288 calibration gate failure",
+      "sha256": "f4c5f64b545985d683c17607cd5dcb318e275c8800cea6848a0a2b5209e3897a"
+    },
+    {
+      "exists": true,
+      "id": "exp3094_capstone",
+      "path": "results/experiment_3094_capstone_v288.json",
+      "role": ".288 capstone and .289 blocker summary",
+      "sha256": "cee5c519c79e8f52561f5f74b0d5d4daf078ca7c50d4c44816b6e758d14dba98"
+    },
+    {
+      "id": "openreview_qmr9vbwrab",
+      "last_modified": "2026-04-25",
+      "published": "2026-03-05",
+      "role": "weighted MaxSAT/MaxSMT routing design context",
+      "url": "https://openreview.net/forum?id=Qmr9VbwRaB"
+    }
+  ]
+}

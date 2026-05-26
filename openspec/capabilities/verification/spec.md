@@ -1173,6 +1173,60 @@ below the minimum live-evaluation counts.
 |---|---|---|
 | REQ-VERIFY-3097 | Implemented (`python/carnot/eval/exact_fixture_eval_protocol_audit_v1.py`) | Implemented (`tests/python/test_experiment_3097_exact_fixture_eval_protocol_audit.py`) |
 
+### REQ-VERIFY-3098: MaxSAT Abstention Routing Policy
+
+The repository shall provide an Exp 3098 offline MaxSAT-style routing policy
+for `.289` SOTA verifier and repair experiments. The policy shall write
+`results/experiment_3098_maxsat_abstention_routing_policy_v1.json` and a
+machine-readable routing policy file without modifying
+`scripts/research_conductor.py` or invoking live model inference.
+
+The policy shall translate Carnot accept, reject, and abstain decisions into
+non-negotiable hard constraints and auditable weighted soft constraints. Hard
+constraints MUST cover exact-label disagreement, mandated model-cache
+availability for headline live runs, syntax/schema validity, repair intent
+preservation, no-tiny-panel disqualification, and the requirement that formal
+feedback lift must be nonnegative before repair promotion. Weighted soft
+constraints MUST expose the tradeoffs among accepting exact-consistent
+candidates, rejecting exact-inconsistent candidates, abstaining on uncertainty,
+preferring formal-feedback lift, preserving repair intent, minimizing false
+accepts, minimizing false rejects, and minimizing unnecessary abstention.
+
+When a MaxSAT/MaxSMT solver package is unavailable locally, the policy shall
+fail closed to a deterministic reference evaluator that enumerates the three
+actions (`accept`, `reject`, `abstain`), filters any action violating a hard
+constraint, scores the remaining actions by the declared soft weights, and
+breaks ties in the fixed order `abstain`, `reject`, `accept`. The fallback
+MUST be described in the terminal artifact so downstream tasks cannot silently
+use an absent solver as permission to accept.
+
+The terminal artifact MUST include `maxsat_policy_ready`,
+`routing_policy_path`, `hard_constraints`, `soft_constraints`,
+`objective_terms`, `fallback_evaluator`, `downstream_usage`,
+`source_artifacts`, `inference_substrate`, and `honest_verdict`.
+`maxsat_policy_ready` shall be true only when the routing policy file exists,
+all required hard and soft constraint topics are represented, the fallback
+evaluator is deterministic and fail-closed, downstream usage is defined for
+Exp 3099, Exp 3101, and Exp 3102, prior `.288` failure artifacts are cited,
+and `inference_substrate` declares no live model inference.
+
+### SCENARIO-VERIFY-3098: Policy Routes Accept Reject And Abstain Deterministically
+
+Given the Exp 3097 exact-fixture protocol is ready and the `.288` abstention,
+formal-feedback, calibration, and capstone artifacts are available,
+When Exp 3098 builds the MaxSAT-style policy,
+Then it writes the terminal artifact with complete hard/soft constraints,
+records the OpenReview weighted MaxSAT routing reference as design context,
+writes a concrete policy JSON consumed by Exp 3099, Exp 3101, and Exp 3102,
+and reports a deterministic fallback evaluator that abstains when every
+accept/reject route violates a hard constraint or ties with a safer route.
+
+## Implementation Status (REQ-VERIFY-3098)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-VERIFY-3098 | Implemented (`python/carnot/eval/maxsat_abstention_routing_policy_v1.py`) | Implemented (`tests/python/test_experiment_3098_maxsat_abstention_routing_policy.py`) |
+
 ### REQ-VERIFY-3073: EBT/ARM-EBM Adapter Feasibility Audit
 
 The repository shall provide an Exp 3073 deterministic architecture audit that
