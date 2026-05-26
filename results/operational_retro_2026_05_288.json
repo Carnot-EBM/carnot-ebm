@@ -1,0 +1,29 @@
+{
+  "schema": "carnot.operational_retro.v64",
+  "milestone": "2026.05.288",
+  "generated_at": "2026-05-26T01:20:08Z",
+  "retro_type": "operational_full",
+  "summary": "Milestone 2026.05.288 has 0 completed experiments, 0 total wall-time minutes, and 0 compute-bound experiments in the authoritative timing block. Compute-bound slowest-run analysis, GPU efficiency, and DualGPURunner coverage are no data available this milestone.",
+  "total_wall_time_minutes": 0,
+  "experiments_completed": 0,
+  "slowest_experiments": [],
+  "bottlenecks_identified": [
+    "no data available this milestone for compute-bound slowest-experiment analysis",
+    "no data available this milestone for compute-bound GPU-efficiency analysis",
+    "no data available this milestone for 2+ model DualGPURunner coverage"
+  ],
+  "improvements_suggested": [
+    "Add a retrospective preflight that emits an explicit no-data artifact before narrative synthesis when experiments_completed is 0.",
+    "Include activation timestamp, experiment row count, and compute-bound row count in the timing-data header so empty milestone windows are visible before GPU recommendations are interpreted.",
+    "Have the GPU monitor annotate whether any live timing row was compute-bound before suggesting scheduling or DualGPURunner actions."
+  ],
+  "top_3_highest_leverage_actions": [
+    "Gate operational-retro synthesis on a non-empty activation-scoped timing ledger or an explicit no-data override.",
+    "Make the timing collector print the activation timestamp and the post-activation experiment-row count in the TIMING DATA block.",
+    "Wire compute_bound_experiments_count into the GPU interpretation path so idle GPUs are never treated as bottlenecks when the count is 0."
+  ],
+  "compute_bound_experiments_count": 0,
+  "gpu_idle_on_compute_bound_tasks": null,
+  "estimated_time_savings_pct": 0,
+  "meta_reflection": "The main risk in this milestone is inventing an operational story from an empty timing source. This retrospective treats the idle GPU snapshot as context only and leaves compute-bound efficiency unanswered until a compute-bound timing row exists."
+}
