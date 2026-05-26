@@ -6324,3 +6324,5 @@ web search: site |
 | 2026-05-26 03:48 UTC | Gated structured repair micro-panel v3 | GATE_BLOCK | Pre-emptive skip: upstream retired (exp3101-local-sota-verifier-calibration-v4) |
 | 2026-05-26 04:04 UTC | FR-11 ReSyn/KAN-CL stress and promotion boundary | OK | 81 passed in 3.01s |
 | 2026-05-26 04:06 UTC | Gated structured repair micro-panel v3 | GATE_BLOCK | Pre-emptive skip: upstream retired (exp3101-local-sota-verifier-calibration-v4) |
+| 2026-05-26 04:11 UTC | EBT/ARM sidecar pipeline boundary v2 | OK | 81 passed in 3.13s |
+| 2026-05-26 04:13 UTC | Gated structured repair micro-panel v3 | GATE_BLOCK | Pre-emptive skip: upstream retired (exp3101-local-sota-verifier-calibration-v4) |
