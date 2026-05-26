@@ -8360,3 +8360,78 @@ and a blocked `honest_verdict`.
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-LEARN-3128 | Implemented (`python/carnot/eval/fr11_evoenv_verifiable_environment_synthesis_v1.py`) | Implemented (`tests/python/test_experiment_3128_fr11_evoenv_verifiable_environment_synthesis_v1.py`) |
+
+## REQ-LEARN-3129: FR-11 Constraint Memory Retention And Drift Audit
+
+**Given** Exp 3128 admitted EvoEnv-style constraint environments and Exp 3116
+records the prior FR-11 hard-family retention guard
+**When** Exp 3129 audits the admitted environments after synthesis
+**Then** it SHALL reload the admitted environments from the Exp 3128 artifact,
+reconstruct their executable validators, and replay every admitted environment
+by exact enumeration rather than trusting stored pass/fail summaries.
+**And** it SHALL replay the prior FR-11 guarded decision families from Exp 3116
+against their exact target actions so the audit can detect forgetting after
+environment-memory admission.
+**And** it SHALL replay the Exp 3126 fragment-time monitor ledger so
+satisfiable drift remains distinct from contradiction, format failure, and
+data-prior mismatch.
+**And** it SHALL separate controller/environment memory from model-weight
+learning by reporting the inference substrate and by keeping
+`no_weight_update_claim=true`.
+
+The terminal artifact SHALL be
+`results/experiment_3129_fr11_constraint_memory_retention_drift_audit_v1.json`
+and SHALL include `fr11_constraint_memory_audit_v1_ready`,
+`admitted_environment_count`, `replay_family_count`,
+`prior_retention_delta`, `novelty_retention_delta`, `soundness_errors`,
+`completeness_errors`, `satisfiable_drift_count`,
+`ledger_consistency_rate`, `promotion_recommendation`,
+`no_weight_update_claim`, `tests_run`, `source_artifacts`,
+`inference_substrate`, and `honest_verdict`.
+
+### REQ-LEARN-3129 Sub-requirements
+
+- REQ-LEARN-3129-1: The audit denominator SHALL match Exp 3128's
+  `admitted_environment_count` and SHALL fail closed when that count diverges
+  from the number of replayed admitted-environment rows.
+- REQ-LEARN-3129-2: Environment replay SHALL count soundness errors as exact
+  invalid assignments accepted by the environment verifier and completeness
+  errors as exact valid assignments rejected by the environment verifier.
+- REQ-LEARN-3129-3: Prior retention replay SHALL compute
+  `prior_retention_delta` from Exp 3116 guarded decisions before and after the
+  audit replay; negative deltas SHALL block FR-11 promotion.
+- REQ-LEARN-3129-4: Novelty retention replay SHALL compute
+  `novelty_retention_delta` by comparing Exp 3128 admission-time environment
+  success against the post-synthesis exact replay success rate.
+- REQ-LEARN-3129-5: Satisfiable drift SHALL be recomputed from Exp 3126 monitor
+  events and SHALL NOT be merged into contradiction or generic soundness
+  counters.
+- REQ-LEARN-3129-6: `promotion_recommendation` SHALL explicitly distinguish
+  controller/environment-memory reuse from model-weight learning, and the audit
+  SHALL set `no_weight_update_claim=true`.
+
+### SCENARIO-LEARN-3129: EvoEnv Memory Retains Prior And Novel Families
+
+**Given** ready Exp 3116, Exp 3126, and Exp 3128 source artifacts
+**When** Exp 3129 replays prior FR-11 families and admitted EvoEnv families
+through exact validators
+**Then** it writes a complete terminal artifact whose admitted-environment
+denominator matches Exp 3128, whose soundness and completeness errors are zero,
+whose prior and novelty retention deltas are nonnegative, whose satisfiable
+drift count is recomputed separately, whose no-weight-update claim is true, and
+whose `honest_verdict` begins with `complete:`.
+
+### SCENARIO-LEARN-3129-BLOCKED: Missing Audit Sources Fail Closed
+
+**Given** missing Exp 3116, Exp 3126, or Exp 3128 source evidence
+**When** Exp 3129 runs
+**Then** it writes the required artifact fields with zeroed replay metrics,
+`fr11_constraint_memory_audit_v1_ready=false`, a blocking promotion
+recommendation, no model-weight mutation claim, explicit failed-precondition
+diagnostics, and a blocked `honest_verdict`.
+
+## Implementation Status (REQ-LEARN-3129)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-LEARN-3129 | Implemented (`python/carnot/eval/fr11_constraint_memory_retention_drift_audit_v1.py`) | Implemented (`tests/python/test_experiment_3129_fr11_constraint_memory_retention_drift_audit_v1.py`) |

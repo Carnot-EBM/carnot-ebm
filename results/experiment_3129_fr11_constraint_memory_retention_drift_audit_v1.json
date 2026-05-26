@@ -1,0 +1,177 @@
+{
+  "admitted_environment_count": 3,
+  "artifact": "experiment_3129_fr11_constraint_memory_retention_drift_audit_v1",
+  "completeness_errors": 0,
+  "duration_s": 0.004615,
+  "forgetting_regression_count": 0,
+  "fr11_constraint_memory_audit_v1_ready": true,
+  "honest_verdict": "complete: fr11_constraint_memory_audit_v1_ready=true; promotion_recommendation=promote_controller_environment_memory_only_block_model_weight_learning_until_ledger_consistency_is_1.0; no model-weight update claimed",
+  "inference_substrate": {
+    "base_model_weights_updated": false,
+    "controller_environment_memory_only": true,
+    "controller_guard_memory_replayed": true,
+    "environment_schema_memory_replayed": true,
+    "executes_exact_solvers": true,
+    "executes_model_generation": false,
+    "fresh_live_inference_calls": 0,
+    "kan_model_weight_training": false,
+    "mode": "artifact_only_constraint_memory_audit",
+    "model_weight_learning": false,
+    "model_weight_mutation": false,
+    "model_weight_training": false,
+    "source_drift_monitor_artifact": "results/experiment_3126_fragment_time_monitor_satisfiable_drift_audit_v1.json",
+    "source_environment_artifact": "results/experiment_3128_fr11_evoenv_verifiable_environment_synthesis_v1.json",
+    "source_prior_guard_artifact": "results/experiment_3116_fr11_unsolvable_curriculum_retention_guard_v1.json",
+    "uses_checked_in_artifacts_only": true
+  },
+  "ledger_consistency_rate": 0.666667,
+  "no_weight_update_claim": true,
+  "novelty_retention_delta": 0.0,
+  "precondition_checks": {
+    "exp3116_no_weight_update_claim": true,
+    "exp3116_retention_ready": true,
+    "exp3126_drift_monitor_ready": true,
+    "exp3128_evoenv_ready": true,
+    "exp3128_no_weight_update_claim": true
+  },
+  "prior_retention_delta": 0.0,
+  "promotion_recommendation": "promote_controller_environment_memory_only_block_model_weight_learning_until_ledger_consistency_is_1.0",
+  "replay_family_count": 7,
+  "replay_summaries": {
+    "environment_memory": {
+      "admitted_environment_count": 3,
+      "baseline_success_rate": 1.0,
+      "completeness_errors": 0,
+      "family_count": 3,
+      "novelty_retention_delta": 0.0,
+      "post_replay_success_rate": 1.0,
+      "replay_rows": [
+        {
+          "assignment_count": 49,
+          "completeness_errors": 0,
+          "environment_id": "modular_balance-3128-0",
+          "exact_replay_passed": true,
+          "family_id": "modular_balance",
+          "reference_consistent": true,
+          "soundness_errors": 0,
+          "valid_assignment_count": 6
+        },
+        {
+          "assignment_count": 343,
+          "completeness_errors": 0,
+          "environment_id": "interval_order-3128-0",
+          "exact_replay_passed": true,
+          "family_id": "interval_order",
+          "reference_consistent": true,
+          "soundness_errors": 0,
+          "valid_assignment_count": 9
+        },
+        {
+          "assignment_count": 81,
+          "completeness_errors": 0,
+          "environment_id": "graph_coloring-3128-0",
+          "exact_replay_passed": true,
+          "family_id": "graph_coloring",
+          "reference_consistent": true,
+          "soundness_errors": 0,
+          "valid_assignment_count": 18
+        }
+      ],
+      "replayed_environment_count": 3,
+      "soundness_errors": 0
+    },
+    "prior_retention": {
+      "completeness_errors": 0,
+      "family_count": 4,
+      "post_replay_correct_rate": 1.0,
+      "prior_case_count": 72,
+      "prior_correct_rate": 1.0,
+      "prior_retention_delta": 0.0,
+      "soundness_errors": 0
+    },
+    "satisfiable_drift": {
+      "contradiction_count": 2,
+      "ledger_consistency_rate": 0.666667,
+      "monitor_violation_count": 2,
+      "satisfiable_drift_count": 0
+    }
+  },
+  "run_date": "20260526",
+  "satisfiable_drift_count": 0,
+  "schema": "carnot.fr11.constraint_memory_retention_drift_audit.v1",
+  "soundness_errors": 0,
+  "source_artifacts": [
+    {
+      "exists": true,
+      "id": "agents_repo_instructions",
+      "path": "AGENTS.md",
+      "required": false,
+      "sha256": "b3d6581b04f16b85f77defb2837c98dc3b60ed51e10b347ecb36e609f318b619"
+    },
+    {
+      "exists": true,
+      "id": "codex_repo_workflow",
+      "path": "CODEX.md",
+      "required": false,
+      "sha256": "1db7ebc1009714f872db83447828a8957c3abb72061832cc1bc307735cd96bbe"
+    },
+    {
+      "exists": true,
+      "id": "claude_authenticity_rules",
+      "path": "CLAUDE.md",
+      "required": false,
+      "sha256": "cdc00581d37d1bd3c77a69b058787f74ecc71545a97c1eab31c48961637b3224"
+    },
+    {
+      "exists": true,
+      "id": "self_learning_openspec",
+      "path": "openspec/capabilities/self-learning/spec.md",
+      "required": false,
+      "sha256": "4fc2c08a1424b12de7334b3b876fe1b86e4b69cc197066156c025b05863fcb30"
+    },
+    {
+      "exists": true,
+      "id": "exp3116_fr11_retention_guard",
+      "path": "results/experiment_3116_fr11_unsolvable_curriculum_retention_guard_v1.json",
+      "required": true,
+      "sha256": "76232d270a8772d47affd6da90f49d8301b461a1bbd3192e74dbb8bf281316cf"
+    },
+    {
+      "exists": true,
+      "id": "exp3126_satisfiable_drift_audit",
+      "path": "results/experiment_3126_fragment_time_monitor_satisfiable_drift_audit_v1.json",
+      "required": true,
+      "sha256": "e072b70780360c2d5f3255d49712434d3b4a517d8f63348e02c49bbaba1656f9"
+    },
+    {
+      "exists": true,
+      "id": "exp3128_evoenv_admission",
+      "path": "results/experiment_3128_fr11_evoenv_verifiable_environment_synthesis_v1.json",
+      "required": true,
+      "sha256": "faa36b912ec0a67d9a4afa426c6a0d2ae0656fd122c89bbf18e66fef53b22f6d"
+    },
+    {
+      "exists": true,
+      "id": "exp3129_module",
+      "path": "python/carnot/eval/fr11_constraint_memory_retention_drift_audit_v1.py",
+      "required": false,
+      "sha256": "3c9407d712128c6eede09a7a4246980539987322d389587de0ac09524b78fde1"
+    },
+    {
+      "exists": true,
+      "id": "exp3129_tests",
+      "path": "tests/python/test_experiment_3129_fr11_constraint_memory_retention_drift_audit_v1.py",
+      "required": false,
+      "sha256": "d2149aee112a2f4b18d952b0874420ea30c24117cea68408da9ef56b91c9e8b5"
+    }
+  ],
+  "tests_run": [
+    ".venv/bin/pytest -o addopts='' tests/python/test_experiment_3129_fr11_constraint_memory_retention_drift_audit_v1.py -q (passed: 5 passed)",
+    ".venv/bin/coverage erase && .venv/bin/coverage run --source=python/carnot/eval -m pytest -o addopts='' tests/python/test_experiment_3129_fr11_constraint_memory_retention_drift_audit_v1.py -q && .venv/bin/coverage report --include='python/carnot/eval/fr11_constraint_memory_retention_drift_audit_v1.py' --fail-under=100 --show-missing (passed: 100% new-code coverage)",
+    "/usr/bin/ruff check python/carnot/eval/fr11_constraint_memory_retention_drift_audit_v1.py tests/python/test_experiment_3129_fr11_constraint_memory_retention_drift_audit_v1.py (passed)",
+    "/usr/bin/ruff format --check python/carnot/eval/fr11_constraint_memory_retention_drift_audit_v1.py tests/python/test_experiment_3129_fr11_constraint_memory_retention_drift_audit_v1.py (passed)",
+    ".venv/bin/python scripts/check_spec_coverage.py tests/python/test_experiment_3129_fr11_constraint_memory_retention_drift_audit_v1.py (passed)",
+    ".venv/bin/python scripts/check_spec_coverage.py (failed: 444 pre-existing untraced tests outside Exp 3129)",
+    ".venv/bin/pytest tests/python -q (failed: 20 failed, 7853 passed, 38 skipped, 1 error; xdist internal error in tests/python/test_experiment_295_apple_verify_repair.py::test_partial_artifact_has_stall_at after tokenizer prewarm MemoryError)"
+  ]
+}
