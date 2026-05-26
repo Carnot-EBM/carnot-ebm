@@ -27,6 +27,7 @@ try:
     from .equilibrium_matching import EquilibriumMatchingSampler
     from .continuous_gumbel import ContinuousGumbelSampler
     from .casal import CASALSampler, casal_sample
+    from .clut_random_variate import ClutLogisticBernoulliSampler
     from .gpu_oim_simulator import (
         GPUOscillatorIsingSimulator,
         JEPARetrainResult,
@@ -58,6 +59,7 @@ else:
         "EquilibriumMatchingSampler",
         "ContinuousGumbelSampler",
         "CASALSampler",
+        "ClutLogisticBernoulliSampler",
         "HMCSampler",
         "KnuthYaoSampler",
         "SelfAdaptiveIsingSampler",

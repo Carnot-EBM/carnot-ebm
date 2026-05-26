@@ -433,6 +433,47 @@ parity thresholds
 **And** it writes `results/experiment_2043_aia_knuth_yao.json` without a
 hardware execution claim.
 
+### REQ-SAMPLE-3105: CPU cLUT Logistic Bernoulli Microbench
+
+Carnot MUST provide a CPU-only compressed lookup-table random-variate sampler
+for Bernoulli draws whose probabilities are logistic transforms of Ising-style
+local fields. The implementation MUST remain a software microbench and MUST
+not claim FPGA, GateMate, KV260, TSU, or other hardware speedup without
+authenticated hardware execution evidence.
+
+Sub-requirements:
+- REQ-SAMPLE-3105-1: `python/carnot/samplers/clut_random_variate.py` SHALL
+  provide a compressed fixed-point logistic lookup-table sampler that maps
+  local-field logits to Bernoulli samples with deterministic NumPy seeds.
+- REQ-SAMPLE-3105-2: The sampler SHALL expose exact-logistic baseline sampling
+  and distribution-error helpers so tests can compare cLUT empirical
+  frequencies and table approximation error against exact sigmoid
+  probabilities.
+- REQ-SAMPLE-3105-3: Experiment 3105 SHALL benchmark the cLUT sampler against a
+  simple exact-logistic baseline on CPU using deterministic seeds and SHALL
+  report speed only as CPU wall-clock timing.
+- REQ-SAMPLE-3105-4: Experiment 3105 SHALL write
+  `results/experiment_3105_clut_random_variate_sampler_microbench_v1.json`
+  with `clut_microbench_ready`, `implementation_path`, `benchmark_commands`,
+  `distribution_error`, `speedup_vs_baseline`, `fpga_mapping_notes_path`,
+  `hardware_claim_made`, `hardware_commands_run`, `source_artifacts`,
+  `inference_substrate`, and a terminal `honest_verdict`.
+- REQ-SAMPLE-3105-5: FPGA/GateMate mapping notes SHALL be written as
+  architecture context only, separated from the executable benchmark, and
+  SHALL state that no hardware commands were run.
+
+### SCENARIO-SAMPLE-3105: CPU cLUT Microbench Writes Claim-Bounded Artifact
+
+**Given** deterministic Ising-style local-field logits and a fixed random seed
+**When** the cLUT sampler and exact-logistic baseline each emit Bernoulli
+samples on CPU
+**Then** the cLUT table approximation and empirical distribution errors are
+recorded against exact sigmoid probabilities
+**And** CPU timing records a scoped speedup versus the simple baseline
+**And** `results/experiment_3105_clut_random_variate_sampler_microbench_v1.json`
+is written with `hardware_claim_made=false` and an empty
+`hardware_commands_run` list.
+
 ### REQ-SAMPLE-2059: TSUSampler thrml API Integration Stub
 
 Carnot MUST provide a `TSUSampler` interface inside `python/carnot/samplers/tsu_sampler.py` that mocks the `thrml` SDK API.
