@@ -1,0 +1,29 @@
+{
+  "schema": "carnot.operational_retro.v64",
+  "milestone": "2026.05.289",
+  "generated_at": "2026-05-26T05:16:17Z",
+  "retro_type": "operational_in_progress",
+  "summary": "No experiment commits were found since activation, so this retrospective records 0 total wall-time minutes, 0 completed experiments, and 0 compute-bound experiments. Slowest-experiment, compute-bound GPU efficiency, and DualGPURunner analysis have no data available this milestone.",
+  "total_wall_time_minutes": 0,
+  "experiments_completed": 0,
+  "slowest_experiments": [],
+  "bottlenecks_identified": [
+    "No post-activation experiment commits were present in the authoritative timing data, so runtime bottlenecks cannot be ranked.",
+    "The operational visibility gap is that retrospective generation reached a zero-experiment timing window instead of a milestone with at least one timing row."
+  ],
+  "improvements_suggested": [
+    "Add a pre-retro timing sentinel that emits an explicit no-data artifact or defers full efficiency analysis when experiments_completed is 0.",
+    "Expose activation-to-first-experiment status in conductor telemetry before operational retrospective generation.",
+    "Keep GPU-idle and DualGPURunner recommendations gated on compute_bound_experiments_count > 0 and parallel-model markers.",
+    "Include structured compute_bound and parallel_model_count fields in every future timing row so GPU efficiency can be assessed without inference."
+  ],
+  "top_3_highest_leverage_actions": [
+    "Add a pre-retro timing sentinel for experiments_completed=0.",
+    "Publish activation-to-first-experiment heartbeat status before the retrospective task runs.",
+    "Require explicit compute-bound and parallel-model markers in the timing export."
+  ],
+  "compute_bound_experiments_count": 0,
+  "gpu_idle_on_compute_bound_tasks": null,
+  "estimated_time_savings_pct": 0,
+  "meta_reflection": "No savings percentage is estimated because the timing data contains 0 completed experiments; assigning a nonzero percentage would invent a baseline. The idle GPU snapshot is not treated as a compute-bound issue because compute_bound_experiments_count is 0."
+}

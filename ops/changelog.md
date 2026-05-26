@@ -1,5 +1,9 @@
 # Carnot — Changelog
 
+## 2026-05-26 (Milestone 2026.05.289 Operational Retrospective)
+
+- [outer-loop] Wrote `results/operational_retro_2026_05_289.json` (schema `carnot.operational_retro.v64`). Authoritative TIMING DATA reports 0 total wall-time minutes, 0 completed experiments, 0 compute-bound experiments, and no slowest-experiment rows. GPU STATE showed both RTX 3090s idle, but `gpu_idle_on_compute_bound_tasks=null` because no compute-bound timing row exists; compute-bound GPU efficiency and DualGPURunner engagement have no data available this milestone. Recommended next tooling change: add a pre-retro timing sentinel and activation-to-first-experiment heartbeat before full operational efficiency analysis.
+
 ## 2026-05-26 (Milestone 2026.05.289 Research Planning)
 
 - [outer-loop] Planned milestone 2026.05.289 as "Verifier/Repair Recovery + MaxSAT Routing + Sidecar Boundaries" after the operator confirmed all `.288` tasks completed. Used `results/experiment_3094_capstone_v288.json` as the authoritative closeout: `.288` completed but remained `paper_ready=false` because verifier/repair evidence stayed flagged/gated/missing, EBT/ARM stayed projection-only, and GateMate/SSQA stayed blocked on operator evidence, while FR-11 recovered to clean controller-only status.
