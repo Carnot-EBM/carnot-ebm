@@ -1,0 +1,42 @@
+{
+  "experiment": 3153,
+  "schema": "blocked_gate_check_v1",
+  "run_date": "2026-05-26",
+  "started_at": "2026-05-26T20:42:08.032440+00:00",
+  "finished_at": "2026-05-26T20:42:08.032440+00:00",
+  "duration_s": 0.0,
+  "status": "blocked",
+  "title": "Repair gate unlock decision v2",
+  "honest_verdict": "blocked_gate_check_failed",
+  "gate_check_summary": "3 of 3 gate(s) failed; first failure: exp3152-clean-live-sota-verifier-rerun-v8.clean_live_verifier_rerun_v8_ready (upstream artifact not found for task id 'exp3152-clean-live-sota-verifier-rerun-v8')",
+  "gates_evaluated": [
+    {
+      "upstream": "exp3152-clean-live-sota-verifier-rerun-v8",
+      "artifact_field": "clean_live_verifier_rerun_v8_ready",
+      "op": "==",
+      "expected": true,
+      "actual": null,
+      "passed": false,
+      "reason": "upstream artifact not found for task id 'exp3152-clean-live-sota-verifier-rerun-v8'"
+    },
+    {
+      "upstream": "exp3152-clean-live-sota-verifier-rerun-v8",
+      "artifact_field": "flagged_adversarial",
+      "op": "==",
+      "expected": false,
+      "actual": null,
+      "passed": false,
+      "reason": "upstream artifact not found for task id 'exp3152-clean-live-sota-verifier-rerun-v8'"
+    },
+    {
+      "upstream": "exp3152-clean-live-sota-verifier-rerun-v8",
+      "artifact_field": "false_accept_gate_passed",
+      "op": "==",
+      "expected": true,
+      "actual": null,
+      "passed": false,
+      "reason": "upstream artifact not found for task id 'exp3152-clean-live-sota-verifier-rerun-v8'"
+    }
+  ],
+  "blocked_at_layer": "conductor_pre_gate"
+}

@@ -6391,3 +6391,5 @@ web search: |
 | 2026-05-26 20:06 UTC | Adversarial verifier evidence corrigendum | OK | 81 passed in 3.07s |
 | 2026-05-26 20:24 UTC | Live SOTA inference authenticity preflight | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_3151_live_in |
 | 2026-05-26 20:32 UTC | Live SOTA inference authenticity preflight | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_3151_live_in |
+| 2026-05-26 20:40 UTC | Live SOTA inference authenticity preflight | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_3151_live_in |
+| 2026-05-26 20:42 UTC | Clean live SOTA verifier rerun v8 | GATE_BLOCK | Pre-emptive skip: upstream retired (exp3151-live-inference-authenticity-prefligh |
