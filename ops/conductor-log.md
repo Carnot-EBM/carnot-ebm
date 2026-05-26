@@ -6409,3 +6409,4 @@ web search: |
 | 2026-05-26 21:37 UTC | Energy constraint sidecar calibration | OK | 81 passed in 4.07s |
 | 2026-05-26 22:24 UTC | KAN proof-carrying monitor expansion | OK | 81 passed in 2.23s |
 | 2026-05-26 22:37 UTC | Hardware and sampler evidence boundary v7 | OK | 81 passed in 3.60s |
+| 2026-05-26 22:57 UTC | Cross-corpus matrix v27 | OK | 81 passed in 3.17s |

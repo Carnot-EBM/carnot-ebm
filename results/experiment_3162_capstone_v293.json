@@ -1,0 +1,381 @@
+{
+  "artifact": "experiment_3162_capstone_v293",
+  "blocker_delta_from_v26": 10,
+  "capstone_ready": true,
+  "capstone_v293_ready": true,
+  "duration_s": 0.00435,
+  "ebt_arm_status": "projection_only_scalar_auc_1.0_exact_rows_6_no_live_integration_blockers_6",
+  "fr11_improved_from_v292": true,
+  "fr11_promotion_allowed": false,
+  "fr11_self_learning_status": "improved_to_0.857143_but_promotion_blocked_controller_memory_only_no_weight_update",
+  "hardware_energy_kan_headline_safe": false,
+  "headline_forbidden_claims": [
+    "live_verifier_headline",
+    "repair_headline",
+    "fr11_model_weight_learning",
+    "energy_sidecar_live_integration",
+    "kan_deployed_verifier",
+    "hardware_speedup"
+  ],
+  "headline_safe_claims": [
+    "matrix_v27_aggregation_complete",
+    "exact_replay_known_false_accept_rows_preserved",
+    "fr11_controller_memory_ledger_replay_bounded",
+    "kan_exact_monitor_records_bounded"
+  ],
+  "honest_verdict": "complete: capstone_v293_ready=true; capstone_ready=true; paper_ready=false; publication_blocker_count=65; blocker_delta_from_v26=10; next_top_gap=clean_live_verifier_corrigendum_repair_gate",
+  "inference_substrate": {
+    "executes_conductor": false,
+    "executes_hardware": false,
+    "executes_models": false,
+    "executes_repairs": false,
+    "executes_solvers": false,
+    "executes_verifiers": false,
+    "hardware_commands_run_by_capstone": [],
+    "kind": "aggregation_from_checked_in_matrix_v27_capstone_v292_and_dot293_artifacts",
+    "live_model_calls_run_by_capstone": 0,
+    "local_repo_only": true,
+    "no_live_llm_inference": true,
+    "source": "results/experiment_3161_cross_corpus_matrix_v27.json"
+  },
+  "invariant_violations": [],
+  "kan_status": "bounded_monitor_records_4_new_2_no_deployed_verifier_blockers_3",
+  "matrix_v27_summary": {
+    "blocker_delta_from_v26": 10,
+    "matrix_v27_ready": true,
+    "missing_artifact_count": 4,
+    "prior_publication_blocker_count": 55,
+    "publication_blocker_count": 65,
+    "rows_total": 136,
+    "status_counts": {
+      "blocked": 14,
+      "bounded": 22,
+      "clean": 35,
+      "diagnostic_only": 5,
+      "flagged": 12,
+      "gated_skipped": 10,
+      "missing": 2,
+      "projection_only": 5,
+      "retired": 31
+    }
+  },
+  "milestone": "2026.05.293",
+  "missing_artifacts": [
+    {
+      "experiment_id": "exp3141",
+      "path": "results/experiment_3141_multi_turn_repair_ladder_v2.json",
+      "reason": "carried_forward_missing_artifact_from_v26"
+    },
+    {
+      "experiment_id": "exp3152",
+      "path": "results/experiment_3152_clean_live_sota_verifier_rerun_v8.json",
+      "reason": "missing_or_gated_dot293_artifact"
+    },
+    {
+      "experiment_id": "exp3154",
+      "path": "results/experiment_3154_multi_turn_repair_ladder_v3.json",
+      "reason": "missing_or_gated_dot293_artifact"
+    },
+    {
+      "experiment_id": "exp3155",
+      "loaded_alias_path": "results/experiment_3155_tracefix_counterexample_repair_pilot.json",
+      "path": "results/experiment_3155_tracefix_counterexample_repair_pilot_v1.json",
+      "reason": "missing_expected_dot293_deliverable_alias_loaded"
+    }
+  ],
+  "next_milestone_recommendations": [
+    "Run a clean live verifier rerun with complete duration, seed, checksum, transcript, and model-load evidence.",
+    "Open the repair gate only after the clean live verifier rerun is trusted and the false-accept regression rows stay blocked.",
+    "Execute the multi-turn repair ladder only after the gate opens; otherwise keep repair correctly skipped."
+  ],
+  "next_top_gap": "clean_live_verifier_corrigendum_repair_gate",
+  "no_new_board_flash": true,
+  "no_new_hardware_run": true,
+  "no_new_model_execution": true,
+  "no_new_repair_run": true,
+  "no_new_solver_run": true,
+  "no_new_synthesis_run": true,
+  "no_new_verifier_run": true,
+  "ops_reconciliation_decision": {
+    "capstone_artifact_alone_is_deliverable": true,
+    "ops_changelog_updated": false,
+    "ops_status_updated": false,
+    "reason": "task stop rule delegates ops/status/changelog/traceability reconciliation to conductor",
+    "traceability_updated_after_spec": false
+  },
+  "paper_readiness_checks": [
+    {
+      "check": "capstone_ready",
+      "passed": true
+    },
+    {
+      "check": "publication_blocker_count_zero",
+      "passed": false
+    },
+    {
+      "check": "clean_verifier_evidence",
+      "passed": false
+    },
+    {
+      "check": "repair_status_promotable",
+      "passed": false
+    },
+    {
+      "check": "fr11_promotion_allowed",
+      "passed": false
+    },
+    {
+      "check": "architecture_boundary_headline_safe",
+      "passed": false
+    }
+  ],
+  "paper_ready": false,
+  "publication_blocker_count": 65,
+  "repair_gate_status": "blocked_pending_clean_rerun_gate_failed",
+  "repair_ladder_status": "correctly_skipped_gate_blocked_no_live_repair_attempts",
+  "repair_skip_was_correct": true,
+  "repair_was_executed": false,
+  "required_source_errors": [],
+  "run_date": "20260526",
+  "sampler_hardware_status": "blocked_no_authenticated_speedup_no_hardware_commands_missing_operator_evidence_8",
+  "schema": "carnot.milestone_capstone.v293_matrix_v27_aggregation.v1",
+  "scripts_research_conductor_modified": false,
+  "source_artifacts": [
+    {
+      "alias_loaded": false,
+      "experiment_id": "exp3161",
+      "loaded_path": "results/experiment_3161_cross_corpus_matrix_v27.json",
+      "path": "results/experiment_3161_cross_corpus_matrix_v27.json",
+      "present": true,
+      "primary_present": true,
+      "readable_json_object": true,
+      "ready_field": "matrix_v27_ready",
+      "required": true,
+      "role": "matrix_v27_authority",
+      "sha256": "040681c000d1ab40b177e80a101644ac53a718b13b4fb9c42205fa8133c9c76d",
+      "source_type": "json"
+    },
+    {
+      "alias_loaded": false,
+      "experiment_id": "exp3147",
+      "loaded_path": "results/experiment_3147_cross_corpus_matrix_v26.json",
+      "path": "results/experiment_3147_cross_corpus_matrix_v26.json",
+      "present": true,
+      "primary_present": true,
+      "readable_json_object": true,
+      "ready_field": "matrix_v26_ready",
+      "required": true,
+      "role": "matrix_v26_authority",
+      "sha256": "717b1b5157fecef098d2eb9dad0f41a5f18b45b93bbbf01875ade7f7fa73f2e5",
+      "source_type": "json"
+    },
+    {
+      "alias_loaded": false,
+      "experiment_id": "exp3148",
+      "loaded_path": "results/experiment_3148_capstone_v292.json",
+      "path": "results/experiment_3148_capstone_v292.json",
+      "present": true,
+      "primary_present": true,
+      "readable_json_object": true,
+      "ready_field": "capstone_ready",
+      "required": true,
+      "role": "capstone_v292_authority",
+      "sha256": "96d8daf928feff7224887fa9ffce5160445f265f7650525295b989f4e67d8276",
+      "source_type": "json"
+    },
+    {
+      "alias_loaded": false,
+      "experiment_id": "exp3149",
+      "loaded_path": "results/experiment_3149_archive_v292_activate_v293.json",
+      "path": "results/experiment_3149_archive_v292_activate_v293.json",
+      "present": true,
+      "primary_present": true,
+      "readable_json_object": true,
+      "ready_field": "archive_v292_activate_v293_ready",
+      "required": false,
+      "role": "archive_v292_activate_v293",
+      "sha256": "c3bc9a9806acf7594f4e66deafc4b16fa437d00b38bbbaea795ccf7fca879202",
+      "source_type": "json"
+    },
+    {
+      "alias_loaded": false,
+      "experiment_id": "exp3150",
+      "loaded_path": "results/experiment_3150_adversarial_verifier_evidence_corrigendum_v1.json",
+      "path": "results/experiment_3150_adversarial_verifier_evidence_corrigendum_v1.json",
+      "present": true,
+      "primary_present": true,
+      "readable_json_object": true,
+      "ready_field": "adversarial_corrigendum_v1_ready",
+      "required": false,
+      "role": "adversarial_corrigendum",
+      "sha256": "8ed4c24bfb562e56d37265d6cab02a60adba416bba3d9c7026714d714cf6eb57",
+      "source_type": "json"
+    },
+    {
+      "alias_loaded": false,
+      "experiment_id": "exp3151",
+      "loaded_path": "results/experiment_3151_live_inference_authenticity_preflight_v1.json",
+      "path": "results/experiment_3151_live_inference_authenticity_preflight_v1.json",
+      "present": true,
+      "primary_present": true,
+      "readable_json_object": true,
+      "ready_field": "live_inference_authenticity_preflight_ready",
+      "required": false,
+      "role": "live_inference_authenticity_preflight",
+      "sha256": "3ad9237f6351c8d18f385bf661f26d17bbe2594945befdd08b302a4024f49893",
+      "source_type": "json"
+    },
+    {
+      "alias_loaded": false,
+      "experiment_id": "exp3152",
+      "loaded_path": "results/experiment_3152_clean_live_sota_verifier_rerun_v8.json",
+      "path": "results/experiment_3152_clean_live_sota_verifier_rerun_v8.json",
+      "present": false,
+      "primary_present": false,
+      "readable_json_object": false,
+      "ready_field": "clean_live_verifier_rerun_v8_ready",
+      "required": false,
+      "role": "clean_live_verifier_rerun",
+      "sha256": null,
+      "source_type": "json"
+    },
+    {
+      "alias_loaded": false,
+      "experiment_id": "exp3153",
+      "loaded_path": "results/experiment_3153_repair_gate_unlock_decision_v2.json",
+      "path": "results/experiment_3153_repair_gate_unlock_decision_v2.json",
+      "present": true,
+      "primary_present": true,
+      "readable_json_object": true,
+      "ready_field": "repair_gate_decision_v2_ready",
+      "required": false,
+      "role": "repair_gate_v2",
+      "sha256": "5695617c86d6a7682ba40415953a2f75ac4f5b7ced5916d3ad05e15133ee9cb8",
+      "source_type": "json"
+    },
+    {
+      "alias_loaded": false,
+      "experiment_id": "exp3154",
+      "loaded_path": "results/experiment_3154_multi_turn_repair_ladder_v3.json",
+      "path": "results/experiment_3154_multi_turn_repair_ladder_v3.json",
+      "present": false,
+      "primary_present": false,
+      "readable_json_object": false,
+      "ready_field": "multi_turn_repair_ladder_v3_ready",
+      "required": false,
+      "role": "repair_ladder_v3",
+      "sha256": null,
+      "source_type": "json"
+    },
+    {
+      "alias_loaded": true,
+      "experiment_id": "exp3155",
+      "loaded_path": "results/experiment_3155_tracefix_counterexample_repair_pilot.json",
+      "path": "results/experiment_3155_tracefix_counterexample_repair_pilot_v1.json",
+      "present": true,
+      "primary_present": false,
+      "readable_json_object": true,
+      "ready_field": "tracefix_counterexample_repair_pilot_v1_ready",
+      "required": false,
+      "role": "tracefix_counterexample_repair",
+      "sha256": "4432db4ebde43215efebe710d2e286fe46baaaf9a9c6ccb862dd65b7bc971faf",
+      "source_type": "json"
+    },
+    {
+      "alias_loaded": false,
+      "experiment_id": "exp3156",
+      "loaded_path": "results/experiment_3156_fr11_ledger_consistency_closure_v1.json",
+      "path": "results/experiment_3156_fr11_ledger_consistency_closure_v1.json",
+      "present": true,
+      "primary_present": true,
+      "readable_json_object": true,
+      "ready_field": "fr11_ledger_consistency_closure_v1_ready",
+      "required": false,
+      "role": "fr11_ledger_consistency_closure",
+      "sha256": "2178e83f0ff3d09849017e246a5333ec929a7eb8678ca7443b1cf147212cd3db",
+      "source_type": "json"
+    },
+    {
+      "alias_loaded": false,
+      "experiment_id": "exp3157",
+      "loaded_path": "results/experiment_3157_fr11_attractor_residual_memory_audit_v1.json",
+      "path": "results/experiment_3157_fr11_attractor_residual_memory_audit_v1.json",
+      "present": true,
+      "primary_present": true,
+      "readable_json_object": true,
+      "ready_field": "fr11_attractor_residual_memory_audit_v1_ready",
+      "required": false,
+      "role": "fr11_attractor_residual_memory",
+      "sha256": "235a650d2ac2d33650bda18044ade4c4c2d37ea299d9aca10e7597306c24bc24",
+      "source_type": "json"
+    },
+    {
+      "alias_loaded": false,
+      "experiment_id": "exp3158",
+      "loaded_path": "results/experiment_3158_ebcn_energy_sidecar_calibration_v1.json",
+      "path": "results/experiment_3158_ebcn_energy_sidecar_calibration_v1.json",
+      "present": true,
+      "primary_present": true,
+      "readable_json_object": true,
+      "ready_field": "ebcn_energy_sidecar_calibration_v1_ready",
+      "required": false,
+      "role": "ebcn_energy_sidecar_calibration",
+      "sha256": "b8df749e2f3a471079584550e50d191960d9f01673918a6e9d80e1b4bbd2c706",
+      "source_type": "json"
+    },
+    {
+      "alias_loaded": false,
+      "experiment_id": "exp3159",
+      "loaded_path": "results/experiment_3159_kan_proof_carrying_monitor_expansion_v1.json",
+      "path": "results/experiment_3159_kan_proof_carrying_monitor_expansion_v1.json",
+      "present": true,
+      "primary_present": true,
+      "readable_json_object": true,
+      "ready_field": "kan_proof_carrying_monitor_expansion_v1_ready",
+      "required": false,
+      "role": "kan_monitor_expansion",
+      "sha256": "ab9d5d5fae878314b0f3b7e1c6e357254a24b91f5d7069eb0e040c86888aa08a",
+      "source_type": "json"
+    },
+    {
+      "alias_loaded": false,
+      "experiment_id": "exp3160",
+      "loaded_path": "results/experiment_3160_hardware_sampler_evidence_boundary_v7.json",
+      "path": "results/experiment_3160_hardware_sampler_evidence_boundary_v7.json",
+      "present": true,
+      "primary_present": true,
+      "readable_json_object": true,
+      "ready_field": "hardware_sampler_evidence_boundary_v7_ready",
+      "required": false,
+      "role": "hardware_sampler_boundary",
+      "sha256": "19a9b04df9fef152856a8ea32fed4b487fa2c73befc1bf6da5bf6bcb6d42c549",
+      "source_type": "json"
+    }
+  ],
+  "source_checksums": {
+    "results/experiment_3147_cross_corpus_matrix_v26.json": "717b1b5157fecef098d2eb9dad0f41a5f18b45b93bbbf01875ade7f7fa73f2e5",
+    "results/experiment_3148_capstone_v292.json": "96d8daf928feff7224887fa9ffce5160445f265f7650525295b989f4e67d8276",
+    "results/experiment_3149_archive_v292_activate_v293.json": "c3bc9a9806acf7594f4e66deafc4b16fa437d00b38bbbaea795ccf7fca879202",
+    "results/experiment_3150_adversarial_verifier_evidence_corrigendum_v1.json": "8ed4c24bfb562e56d37265d6cab02a60adba416bba3d9c7026714d714cf6eb57",
+    "results/experiment_3151_live_inference_authenticity_preflight_v1.json": "3ad9237f6351c8d18f385bf661f26d17bbe2594945befdd08b302a4024f49893",
+    "results/experiment_3152_clean_live_sota_verifier_rerun_v8.json": null,
+    "results/experiment_3153_repair_gate_unlock_decision_v2.json": "5695617c86d6a7682ba40415953a2f75ac4f5b7ced5916d3ad05e15133ee9cb8",
+    "results/experiment_3154_multi_turn_repair_ladder_v3.json": null,
+    "results/experiment_3155_tracefix_counterexample_repair_pilot_v1.json": "4432db4ebde43215efebe710d2e286fe46baaaf9a9c6ccb862dd65b7bc971faf",
+    "results/experiment_3156_fr11_ledger_consistency_closure_v1.json": "2178e83f0ff3d09849017e246a5333ec929a7eb8678ca7443b1cf147212cd3db",
+    "results/experiment_3157_fr11_attractor_residual_memory_audit_v1.json": "235a650d2ac2d33650bda18044ade4c4c2d37ea299d9aca10e7597306c24bc24",
+    "results/experiment_3158_ebcn_energy_sidecar_calibration_v1.json": "b8df749e2f3a471079584550e50d191960d9f01673918a6e9d80e1b4bbd2c706",
+    "results/experiment_3159_kan_proof_carrying_monitor_expansion_v1.json": "ab9d5d5fae878314b0f3b7e1c6e357254a24b91f5d7069eb0e040c86888aa08a",
+    "results/experiment_3160_hardware_sampler_evidence_boundary_v7.json": "19a9b04df9fef152856a8ea32fed4b487fa2c73befc1bf6da5bf6bcb6d42c549",
+    "results/experiment_3161_cross_corpus_matrix_v27.json": "040681c000d1ab40b177e80a101644ac53a718b13b4fb9c42205fa8133c9c76d"
+  },
+  "status_updates_written": false,
+  "verifier_evidence_status": "corrigendum_preserved_exact_replay_but_did_not_unblock_repair_live_evidence_untrusted",
+  "what_293_proved": [
+    "corrigendum preserved exact known-false-accept replay, but live verifier evidence_trusted=false and clean_live_rerun_status=gated_skipped.",
+    "repair was not executed: repair_gate_state=blocked, repair_ladder_status=gated_skipped, repair_attempt_count=0.",
+    "FR-11 improved to ledger_consistency_rate=0.857143, but promotion remains block_fr11_promotion_until_ledger_consistency_reaches_1.0.",
+    "matrix v27 is complete over 136 rows with 65 publication blockers.",
+    "Architecture claims stay bounded: energy_sidecar=projection_only, KAN=bounded, hardware=blocked."
+  ]
+}

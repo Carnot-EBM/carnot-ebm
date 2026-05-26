@@ -10234,3 +10234,81 @@ inference-substrate metadata, and an `honest_verdict` that starts with
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-REPORT-3161 | Implemented (`python/carnot/reporting/cross_corpus_matrix_v27_3161.py`) | Implemented (`tests/python/test_experiment_3161_cross_corpus_matrix_v27.py`) |
+
+### REQ-REPORT-3162: Milestone .293 Capstone From Matrix V27
+
+The repository shall provide an Exp 3162 milestone .293 capstone generator
+that writes `results/experiment_3162_capstone_v293.json` using
+`results/experiment_3161_cross_corpus_matrix_v27.json`,
+`results/experiment_3148_capstone_v292.json`, and all available `.293`
+source artifacts as traced evidence. The generator MUST summarize what `.293`
+proved, what remains blocked, whether the adversarial verifier-evidence
+corrigendum unblocked repair, whether repair was executed or correctly
+skipped, whether FR-11 improved and is promotion-eligible, whether any
+hardware, energy-sidecar, or KAN claim is headline-safe, and which single
+`next_top_gap` should drive the next milestone. It MUST NOT run live model
+inference, verifier scoring, repair generation, solver execution, synthesis,
+board flashing, hardware readback, the conductor, pushes, or modify
+`scripts/research_conductor.py`.
+
+The capstone MUST explicitly determine `capstone_v293_ready`,
+`capstone_ready`, `paper_ready`, `publication_blocker_count`,
+`blocker_delta_from_v26`, and `next_top_gap`. `paper_ready` MUST be decided
+only from publication blocker count, clean verifier evidence, repair status,
+FR-11 promotion status, and architecture boundary status. Matrix completion
+alone is insufficient. The capstone MUST report status strings for verifier
+evidence, the repair gate, the repair ladder, FR-11 self-learning, EBT/ARM,
+KAN, and sampler/hardware. The capstone MUST preserve matrix v27 boundaries:
+the verifier-evidence corrigendum may preserve exact known-false-accept replay
+evidence, but it MUST NOT unblock repair while live verifier evidence remains
+untrusted or the clean live rerun is absent; a blocked repair gate MUST keep
+repair execution skipped; FR-11 ledger improvement MUST NOT permit promotion
+until ledger consistency reaches 1.0 and the source evidence permits it;
+energy-sidecar calibration MUST NOT imply live integration; KAN monitor
+records MUST NOT imply a deployed verifier; and sampler/hardware rows MUST
+NOT imply authenticated speedup, board execution, Kona, or THRML/TSU claims
+unless source artifacts say so.
+
+The terminal artifact MUST include `capstone_v293_ready`, `capstone_ready`,
+`paper_ready`, `publication_blocker_count`, `blocker_delta_from_v26`,
+`next_top_gap`, `verifier_evidence_status`, `repair_gate_status`,
+`repair_ladder_status`, `fr11_self_learning_status`, `ebt_arm_status`,
+`kan_status`, `sampler_hardware_status`, `what_293_proved`,
+`next_milestone_recommendations`, `source_artifacts`, `inference_substrate`,
+and `honest_verdict`. It MAY include matrix summaries, paper-readiness checks,
+claim boundary lists, FR-11 promotion fields, repair-execution fields, source
+checksums, required source errors, invariant violations, and measured
+`duration_s` as long as every value is derived from checked-in artifacts or
+file presence/checksum checks. When a conductor prompt assigns ops
+reconciliation to a separate step, the generator MUST leave `ops/status.md`,
+`ops/changelog.md`, and `_bmad/traceability.md` unchanged.
+
+#### SCENARIO-REPORT-3162: Capstone .293 Closes With Repair Still Blocked
+
+**Given** matrix v27 exists and reports `matrix_v27_ready=true`
+**And** capstone v292 exists and reports `capstone_ready=true`
+**And** matrix v27 reports 65 publication blockers,
+`blocker_delta_from_v26=10`, verifier evidence as untrusted after the
+corrigendum, live-inference preflight as blocked, clean live rerun and repair
+ladder artifacts as absent or gated-skipped, repair gate as blocked before
+repair execution, FR-11 ledger consistency as 0.857143 with no model-weight
+update claim, EBT/ARM as projection-only, KAN as bounded monitor records, and
+hardware/sampler evidence as blocked without authenticated speedup
+**When** the Exp 3162 capstone generator runs
+**Then** it writes `results/experiment_3162_capstone_v293.json` with
+`capstone_v293_ready=true`, `capstone_ready=true`, `paper_ready=false`,
+`publication_blocker_count=65`, `blocker_delta_from_v26=10`,
+`next_top_gap` naming the clean live verifier / repair-gate blocker, required
+status fields derived from matrix v27, `what_293_proved` explaining that the
+corrigendum preserved exact replay but did not unblock repair, repair marked
+correctly skipped, FR-11 marked improved but not promotion-eligible, hardware,
+energy, and KAN headline claims disallowed, source-artifact provenance,
+aggregation-only inference-substrate metadata, no ops/status/traceability
+reconciliation performed by this task, and an `honest_verdict` that starts
+with `complete:`.
+
+## Implementation Status (REQ-REPORT-3162)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-3162 | Implemented (`python/carnot/reporting/capstone_v293_3162.py`) | Implemented (`tests/python/test_experiment_3162_capstone_v293.py`) |
