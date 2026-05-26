@@ -8671,3 +8671,78 @@ diagnostics, and a blocked `honest_verdict`.
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-LEARN-3156 | Implemented (`python/carnot/eval/fr11_ledger_consistency_closure_v1.py`) | Implemented (`tests/python/test_experiment_3156_fr11_ledger_consistency_closure_v1.py`) |
+
+## REQ-LEARN-3157: FR-11 Attractor Residual Memory Audit
+
+**Given** Exp 3156 records a bounded FR-11 ledger closure panel, Exp 3143
+records experience-driven verifier memory, and Exp 3136 records historical
+false-accept-prone verifier families
+**When** Exp 3157 audits attractor/residual-style controller memory
+**Then** it SHALL define measurable residual-like signals available from exact
+replay, including repeated mismatch count, convergence to a stable verdict,
+contradiction-core stability, and memory routing entropy.
+**And** it SHALL replay those signals over the FR-11 ledger closure panel and
+historical false-accept-prone families without running live LLM inference or
+mutating model weights.
+**And** it SHALL measure whether residual memory suppresses redundant checks,
+escalates risky families, or introduces unsafe skips.
+**And** it SHALL block promotion when any unsafe skip appears or when Exp 3156
+ledger consistency is below 1.0, preserving `no_weight_update_claim=true`.
+
+The terminal artifact SHALL be
+`results/experiment_3157_fr11_attractor_residual_memory_audit_v1.json` and
+SHALL include `fr11_attractor_residual_memory_audit_v1_ready`,
+`continuous_self_learning_targeted`, `residual_signal_definitions`,
+`replay_panel_count`, `risky_family_escalation_rate`,
+`redundant_check_suppression_rate`, `unsafe_skip_count`,
+`promotion_recommendation`, `no_weight_update_claim`, `source_artifacts`,
+`inference_substrate`, and `honest_verdict`.
+
+### REQ-LEARN-3157 Sub-requirements
+
+- REQ-LEARN-3157-1: `residual_signal_definitions` SHALL be a machine-readable
+  list defining repeated mismatch count, stable verdict convergence,
+  contradiction-core stability, and memory routing entropy, including the
+  exact replay fields used to compute each signal.
+- REQ-LEARN-3157-2: The replay denominator SHALL be the Exp 3156 closure panel,
+  augmented with Exp 3143 routing memory when row ids overlap; the artifact
+  SHALL report the explicit `replay_panel_count`.
+- REQ-LEARN-3157-3: Risky-family escalation SHALL count rows whose family or
+  exact row has prior false-accept, ledger-inconsistency, or repeated-mismatch
+  evidence and whose residual policy routes to `escalate`.
+- REQ-LEARN-3157-4: Redundant-check suppression SHALL be allowed only for rows
+  with stable exact verdict convergence, no repeated mismatch evidence, no
+  contradiction-core instability, and a low-risk Exp 3143 routing decision.
+- REQ-LEARN-3157-5: `unsafe_skip_count` SHALL count any suppressed row whose
+  exact replay expects rejection, whose observed decision is not acceptably
+  consistent, or whose family is risky; any unsafe skip SHALL block promotion.
+- REQ-LEARN-3157-6: The artifact SHALL set `no_weight_update_claim=true` and
+  SHALL distinguish controller residual/routing memory updates from base-model,
+  KAN-model, or LLM-weight learning.
+
+### SCENARIO-LEARN-3157: Residual Memory Escalates Risk And Blocks Imperfect Ledger Promotion
+
+**Given** ready Exp 3156, Exp 3143, and Exp 3136 source artifacts
+**When** Exp 3157 computes residual-like signals and simulates the bounded
+controller memory policy
+**Then** it writes a complete terminal artifact with a nonzero replay
+denominator, all required residual signal definitions, positive risky-family
+escalation, measured redundant-check suppression, zero unsafe skips, an
+explicit blocked promotion recommendation when Exp 3156 ledger consistency is
+below 1.0, `no_weight_update_claim=true`, and an `honest_verdict` beginning
+with `complete:`.
+
+### SCENARIO-LEARN-3157-BLOCKED: Missing Residual Audit Sources Fail Closed
+
+**Given** missing Exp 3156, Exp 3143, or Exp 3136 source evidence
+**When** Exp 3157 runs
+**Then** it writes the required artifact fields with zeroed routing metrics,
+`fr11_attractor_residual_memory_audit_v1_ready=false`, no model-weight
+mutation claim, explicit failed-precondition diagnostics, and a blocked
+`honest_verdict`.
+
+## Implementation Status (REQ-LEARN-3157)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-LEARN-3157 | Implemented (`python/carnot/eval/fr11_attractor_residual_memory_audit_v1.py`) | Implemented (`tests/python/test_experiment_3157_fr11_attractor_residual_memory_audit_v1.py`) |
