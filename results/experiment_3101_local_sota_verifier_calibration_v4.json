@@ -1,0 +1,33 @@
+{
+  "experiment": 3101,
+  "schema": "blocked_gate_check_v1",
+  "run_date": "2026-05-26",
+  "started_at": "2026-05-26T03:42:43.662894+00:00",
+  "finished_at": "2026-05-26T03:42:43.662894+00:00",
+  "duration_s": 0.0,
+  "status": "blocked",
+  "title": "Local SOTA verifier calibration v4",
+  "honest_verdict": "blocked_gate_check_failed",
+  "gate_check_summary": "1 of 2 gate(s) failed; first failure: exp3100-z3-oracle-feedback-v2.formal_feedback_v2_ready (actual=False == expected=True)",
+  "gates_evaluated": [
+    {
+      "upstream": "exp3099-local-sota-confidence-abstention-panel-v3",
+      "artifact_field": "abstention_panel_v3_ready",
+      "op": "==",
+      "expected": true,
+      "actual": true,
+      "passed": true,
+      "reason": "actual=True == expected=True"
+    },
+    {
+      "upstream": "exp3100-z3-oracle-feedback-v2",
+      "artifact_field": "formal_feedback_v2_ready",
+      "op": "==",
+      "expected": true,
+      "actual": false,
+      "passed": false,
+      "reason": "actual=False == expected=True"
+    }
+  ],
+  "blocked_at_layer": "conductor_pre_gate"
+}
