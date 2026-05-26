@@ -36,10 +36,13 @@
     5. ``FPGAIsingSampler`` — optional KV260/PYNQ-oriented backend with a
        software-model control plane and CPU fallback.
 
-    6. ``get_backend(name)`` — factory function that maps a string name to a
+    6. ``ClutCpuBackend`` — optional CPU adapter for the cLUT logistic
+       Bernoulli random-variate path. It is opt-in and does not alter defaults.
+
+    7. ``get_backend(name)`` — factory function that maps a string name to a
        backend instance. Reads ``CARNOT_BACKEND`` env var as default.
 
-Spec: REQ-SAMPLE-003, REQ-SAMPLE-2250
+Spec: REQ-SAMPLE-003, REQ-SAMPLE-2250, REQ-SAMPLE-3118
 """
 
 from __future__ import annotations
@@ -55,6 +58,7 @@ import jax.numpy as jnp
 import jax.random as jrandom
 import numpy as np
 
+from carnot.samplers.clut_backend import ClutCpuBackend
 from carnot.samplers.parallel_ising import AnnealingSchedule, ParallelIsingSampler
 
 logger = logging.getLogger(__name__)
@@ -582,6 +586,7 @@ BackendFactory = Callable[[], SamplerBackend]
 
 _BACKENDS: dict[str, BackendFactory] = {
     "casal": CASALBackend,
+    "clut_cpu": ClutCpuBackend,
     "cpu": CpuBackend,
     "tsu": TsuBackend,
 }
@@ -602,6 +607,7 @@ def _build_backend_registry() -> dict[str, type]:
 
     return {
         "casal": CASALBackend,
+        "clut_cpu": ClutCpuBackend,
         "cpu": CpuBackend,
         "dwave": DWaveNealBackend,
         "thrml_tsu": TSUSampler,
@@ -633,6 +639,7 @@ def get_sampler_backend(name: str | None = None) -> object:
 
         Supported backends:
         - ``"cpu"``: ``CpuBackend`` (wraps ``ParallelIsingSampler``, JAX-based)
+        - ``"clut_cpu"``: ``ClutCpuBackend`` (CPU-only cLUT random-variate path)
         - ``"casal"``: ``CASALBackend`` (wraps ``CASALSampler`` for continuous
           primal-dual simulation)
         - ``"dwave"``: ``DWaveNealBackend`` (D-Wave Ocean SDK or CPU fallback)
@@ -690,7 +697,7 @@ def get_backend(name: str | None = None) -> SamplerBackend:
     Raises:
         ValueError: If the name doesn't match any registered backend.
 
-    Spec: REQ-SAMPLE-003
+    Spec: REQ-SAMPLE-003, REQ-SAMPLE-3118
     """
     if name is None:
         name = os.environ.get("CARNOT_BACKEND", "cpu")

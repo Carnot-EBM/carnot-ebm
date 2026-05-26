@@ -2,6 +2,7 @@
 
 try:
     from .backend import (
+        ClutCpuBackend,
         CpuBackend,
         SamplerBackend,
         TsuBackend,
@@ -60,6 +61,7 @@ else:
         "ContinuousGumbelSampler",
         "CASALSampler",
         "ClutLogisticBernoulliSampler",
+        "ClutCpuBackend",
         "HMCSampler",
         "KnuthYaoSampler",
         "SelfAdaptiveIsingSampler",

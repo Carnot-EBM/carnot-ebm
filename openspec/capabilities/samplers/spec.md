@@ -474,6 +474,46 @@ recorded against exact sigmoid probabilities
 is written with `hardware_claim_made=false` and an empty
 `hardware_commands_run` list.
 
+### REQ-SAMPLE-3118: Optional CPU cLUT Backend Integration Boundary
+
+Carnot MUST expose the cLUT logistic Bernoulli sampler as an optional CPU
+backend adapter without changing the default sampler backend. The adapter MUST
+remain a software-only path and MUST NOT claim FPGA, GateMate, KV260, TSU, or
+other hardware speedup without authenticated hardware execution evidence.
+
+Sub-requirements:
+- REQ-SAMPLE-3118-1: `python/carnot/samplers/clut_backend.py` SHALL provide a
+  `ClutCpuBackend` adapter that satisfies the existing sampler backend call
+  shape for `sample` and `minimize_energy`.
+- REQ-SAMPLE-3118-2: The adapter SHALL use deterministic NumPy seeds so backend
+  selection tests can reproduce identical samples for identical seeds.
+- REQ-SAMPLE-3118-3: Registering the adapter SHALL preserve the existing
+  default backend when no explicit backend name or environment override is
+  supplied.
+- REQ-SAMPLE-3118-4: Tests SHALL check backend selection, reproducibility,
+  zero-coupling Bernoulli distribution error, and default-backend preservation.
+- REQ-SAMPLE-3118-5: Experiment 3118 SHALL write
+  `results/experiment_3118_clut_sampler_backend_integration_boundary_v2.json`
+  with `clut_backend_integration_boundary_v2_ready`, `implementation_paths`,
+  `default_backend_preserved`, `distribution_checks_passed`,
+  `cpu_timing_summary`, `hardware_claim_made`, `hardware_commands_run`,
+  `tests_run`, `source_artifacts`, `inference_substrate`, and a terminal
+  `honest_verdict`.
+
+### SCENARIO-SAMPLE-3118: cLUT Backend Is Optional And Claim-Bounded
+
+**Given** deterministic zero-coupling Ising logits and the default sampler
+configuration
+**When** `clut_cpu` is requested explicitly through the backend factory
+**Then** the returned adapter emits reproducible Bernoulli samples using the
+cLUT random-variate path
+**And** empirical distribution error is recorded against exact sigmoid
+probabilities
+**And** the default backend remains `cpu` when no backend override is supplied
+**And** `results/experiment_3118_clut_sampler_backend_integration_boundary_v2.json`
+records CPU-only integration status with `hardware_claim_made=false` and an
+empty `hardware_commands_run` list.
+
 ### REQ-SAMPLE-2059: TSUSampler thrml API Integration Stub
 
 Carnot MUST provide a `TSUSampler` interface inside `python/carnot/samplers/tsu_sampler.py` that mocks the `thrml` SDK API.

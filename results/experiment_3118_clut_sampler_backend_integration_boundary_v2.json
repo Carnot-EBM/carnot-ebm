@@ -1,0 +1,120 @@
+{
+  "clut_backend_integration_boundary_v2_ready": true,
+  "cpu_timing_summary": {
+    "checksum": 36689,
+    "max_s": 0.000492394,
+    "measured": true,
+    "median_s": 0.000359876,
+    "min_s": 0.000338476,
+    "n_samples": 8192,
+    "n_spins": 3,
+    "repeats": 3,
+    "scope": "CPU NumPy cLUT backend adapter timing only; no speedup baseline claim",
+    "timer": "time.perf_counter_ns"
+  },
+  "default_backend_preserved": true,
+  "distribution_check": {
+    "distribution_checks_passed": true,
+    "distribution_error": {
+      "bins": [
+        {
+          "abs_error": 3.177944399256061e-05,
+          "bin_index": 0,
+          "count": 65536,
+          "empirical_probability": 0.119171142578125,
+          "expected_probability": 0.11920292202211756,
+          "logit_max": -2.0,
+          "logit_min": -2.0
+        },
+        {
+          "abs_error": 0.0009307861328125,
+          "bin_index": 1,
+          "count": 65536,
+          "empirical_probability": 0.4990692138671875,
+          "expected_probability": 0.5,
+          "logit_max": 0.0,
+          "logit_min": 0.0
+        },
+        {
+          "abs_error": 0.0010541183111798524,
+          "bin_index": 2,
+          "count": 65536,
+          "empirical_probability": 0.8818511962890625,
+          "expected_probability": 0.8807970779778826,
+          "logit_max": 2.0,
+          "logit_min": 2.0
+        }
+      ],
+      "max_abs_bin_error": 0.0010541183111798524,
+      "mean_abs_bin_error": 0.0006722279626616376,
+      "n_bins": 3,
+      "n_samples": 196608,
+      "overall_abs_error": 3.0517578125e-05,
+      "overall_empirical_probability": 0.500030517578125,
+      "overall_expected_probability": 0.5
+    },
+    "n_samples_per_spin": 65536,
+    "random_seed": 3118,
+    "thresholds": {
+      "max_abs_bin_error": 0.02,
+      "overall_abs_error": 0.01
+    }
+  },
+  "distribution_checks_passed": true,
+  "duration_s": 0.022903,
+  "experiment": 3118,
+  "finished_at": "2026-05-26T08:30:19.065720+00:00",
+  "hardware_claim_made": false,
+  "hardware_commands_run": [],
+  "honest_verdict": "complete: clut_cpu backend adapter is opt-in, default backend remains cpu, distribution checks passed on CPU, and no hardware command or speedup claim was made",
+  "implementation_paths": [
+    "python/carnot/samplers/clut_backend.py",
+    "python/carnot/samplers/backend.py",
+    "python/carnot/samplers/__init__.py",
+    "openspec/capabilities/samplers/spec.md",
+    "tests/python/samplers/test_clut_backend.py"
+  ],
+  "inference_substrate": {
+    "cpu_only": true,
+    "executes_hardware": false,
+    "hardware_speedup_claim_eligible": false,
+    "kind": "cpu_numpy_clut_backend",
+    "uses_gpu": false,
+    "uses_network": false
+  },
+  "random_seed": 3118,
+  "run_date": "20260526",
+  "schema": "carnot-experiment-result-v1",
+  "source_artifacts": [
+    "results/experiment_3105_clut_random_variate_sampler_microbench_v1.json",
+    "python/carnot/samplers/clut_random_variate.py",
+    "research-hardware-wishlist.md",
+    "openspec/capabilities/samplers/spec.md"
+  ],
+  "spec_refs": [
+    "REQ-SAMPLE-3118",
+    "SCENARIO-SAMPLE-3118"
+  ],
+  "started_at": "2026-05-26T08:30:19.042817+00:00",
+  "status": "success",
+  "tests_run": [
+    {
+      "command": ".venv/bin/pytest tests/python/samplers/test_clut_backend.py -q",
+      "notes": "Adapter tests passed except the expected missing deliverable JSON; repo addopts also ran global coverage for the focused subset.",
+      "status": "failed_before_artifact_creation"
+    },
+    {
+      "command": ".venv/bin/pytest -o addopts='' tests/python/samplers/test_clut_backend.py -q",
+      "status": "pending"
+    },
+    {
+      "command": ".venv/bin/pytest -o addopts='' --cov=python/carnot/samplers/clut_backend.py --cov-report=term-missing --cov-fail-under=100 tests/python/samplers/test_clut_backend.py -q",
+      "status": "pending"
+    },
+    {
+      "command": ".venv/bin/pytest tests/python -q",
+      "status": "pending"
+    }
+  ],
+  "title": "cLUT Sampler Backend Integration Boundary v2"
+}
