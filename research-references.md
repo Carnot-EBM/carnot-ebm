@@ -16749,3 +16749,71 @@ false accepts and ledger inconsistency before any broader paper claim.
   Sources: https://extropic.ai/software, https://extropic.ai/hardware,
   https://logicalintelligence.com/blog/aleph-leading-benchmarks, and
   https://logicalintelligence.com/kona-ebms-energy-based-models
+
+## Post-.292 Planning Sweep for Milestone 2026.05.293 (May 2026)
+
+- **Sanity Checks for Long-Form Hallucination Detection (arXiv:2605.08346)**:
+  proposes stress tests for hallucination detectors so systems cannot pass only
+  by exploiting benchmark artifacts or superficial correlations. Relevance to
+  Carnot: `.292` produced live verifier and matrix artifacts that were later
+  flagged for tautology, too-short duration, and missing methodology. `.293`
+  should add an adversarial verifier-evidence sanity check before using a live
+  rerun to unlock repair.
+  Source: https://arxiv.org/abs/2605.08346
+
+- **TraceFix: Repairing Agent Coordination Protocols with TLA+ Counterexamples
+  (arXiv:2605.07935)**: synthesizes coordination protocols, checks them with
+  TLC, and iteratively repairs using model-checker counterexamples until the
+  protocol verifies. Relevance to Carnot: this is a strong pattern for the
+  blocked repair ladder. `.293` should include a counterexample-guided repair
+  pilot where exact tests/TLA+/Z3 counterexamples are the only authority and LLM
+  proposals remain candidates.
+  Source: https://arxiv.org/abs/2605.07935
+
+- **LogicVault: Persistent Symbolic Belief States for Cross-Query Logical
+  Consistency in LLMs (OpenReview, ICLR 2026 Logical Reasoning workshop)**:
+  formalizes responses into first-order logic, stores them in a persistent
+  belief vault, checks new claims against prior beliefs with Z3, and repairs
+  contradictions using minimal unsatisfiable cores. Relevance to Carnot:
+  `.293` can use this as a design cue for FR-11 continuous self-learning:
+  persistent symbolic memory may be promoted only when ledger consistency reaches
+  1.0 and exact counterexamples remain replayable.
+  Source: https://openreview.net/forum?id=3pkSTLDiHo
+
+- **Energy-Based Constraint Networks: Learning Structural Coherence Across
+  Modalities (arXiv:2605.00960)**: learns scalar and per-position energies from
+  contrastive corruption pairs, composes independently trained violation
+  branches, and emphasizes compatible energy scales for composition. Relevance
+  to Carnot: useful for a bounded false-accept energy sidecar that localizes
+  constraint violations, but `.293` should keep this diagnostic until the live
+  verifier evidence is clean and the energy scores are calibrated against exact
+  labels.
+  Source: https://arxiv.org/abs/2605.00960
+
+- **Scalable Token-Level Hallucination Detection in Large Language Models
+  (arXiv:2605.12384)** and **The First Token Knows: Single-Decode Confidence for
+  Hallucination Detection (arXiv:2605.05166)**: both argue for cheaper
+  fine-grained hallucination signals than repeated self-consistency. Relevance
+  to Carnot: these are diagnostic signals only. They can help flag suspicious
+  verifier outputs, but exact solvers/tests must remain acceptance authority.
+  Sources: https://arxiv.org/abs/2605.12384 and
+  https://huggingface.co/papers/2605.05166
+
+- **Equilibrium Reasoners: Learning Attractors Enables Scalable Reasoning
+  (arXiv:2605.21488)** and **Solve the Loop: Attractor Models for Language and
+  Reasoning (arXiv:2605.12466)**: study iterative latent refinement and
+  fixed-point attractor dynamics for hard reasoning tasks. Relevance to Carnot:
+  these support a bounded FR-11 attractor-memory audit, especially residual or
+  convergence signals for self-learning controllers. They should not be treated
+  as deployed verifier evidence without local implementation and exact-label
+  calibration.
+  Sources: https://huggingface.co/papers/2605.21488 and
+  https://arxiv.org/abs/2605.12466
+
+- **Extropic THRML/TSU and Logical Intelligence Kona/Aleph re-check
+  (May 2026)**: public pages still support architecture tracking only. Relevance
+  to Carnot: `.293` should keep the hardware/sampler lane as authenticated
+  evidence ingestion. Do not claim local TSU/Kona/board speedups from public
+  vendor pages or stale wish-list entries.
+  Sources: https://extropic.ai/software, https://extropic.ai/hardware, and
+  https://logicalintelligence.com/kona-ebms-energy-based-models
