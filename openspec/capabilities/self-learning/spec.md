@@ -8195,3 +8195,87 @@ diagnostics, and `honest_verdict="blocked_precondition_failed"`.
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-LEARN-3103 | Planned (`python/carnot/eval/fr11_resyn_kancl_stress_promotion_boundary_v2.py`) | Planned (`tests/python/test_experiment_3103_fr11_resyn_kancl_stress_promotion_boundary_v2.py`) |
+
+---
+
+## REQ-LEARN-3116: FR-11 Unsolvable/Hard-Family Curriculum Retention Guard
+
+**Given** Exp 3103 blocked broader FR-11 promotion because the controller-only
+stress replay retained zero soundness mistakes but still had completeness
+mistakes and negative retention
+**When** Exp 3116 builds a controller-only curriculum over the hard or zero-pass
+families identified from Exp 3103 and the Exp 3097 exact fixture protocol
+**Then** it SHALL generate only abstract, solver-derived hints from checked
+certificate evidence and SHALL NOT reveal final answers, mutate base model
+weights, mutate KAN model weights, or invoke live model inference.
+**And** it SHALL apply only controller-memory updates with rollback gates over
+no-feedback, shuffled-hint, stale-hint, and contradictory-hint controls when
+those controls are feasible from the available hard-family evidence.
+**And** it SHALL measure soundness mistakes, completeness mistakes,
+family-holdout delta, prior-retention delta, delayed-regression delta, rollback
+count, and hint usefulness against the Exp 3103 promotion-boundary baseline.
+**And** it SHALL mechanically promote only when soundness mistakes are zero,
+prior retention is nonnegative, completeness mistakes are reduced versus Exp
+3103, delayed regression is nonnegative, and negative controls fail safely.
+
+The terminal artifact SHALL be
+`results/experiment_3116_fr11_unsolvable_curriculum_retention_guard_v1.json`
+and SHALL include `fr11_unsolvable_curriculum_ready`,
+`continuous_self_learning_task`, `controller_only`, `no_weight_update_claim`,
+`model_specs`, `hard_family_count`, `unsolvable_detection_summary`,
+`hint_policy_summary`, `soundness_mistakes`, `completeness_mistakes`,
+`prior_retention_delta`, `delayed_regression_delta`, `rollback_count`,
+`promotion_decision`, `negative_controls`, `tests_run`, `source_artifacts`,
+`inference_substrate`, and `honest_verdict`.
+
+### REQ-LEARN-3116 Sub-requirements
+
+- REQ-LEARN-3116-1: The runner SHALL fail closed with
+  `promotion_decision="blocked"` when Exp 3090, Exp 3097, Exp 3103, or the
+  Exp 3097 stratified manifest is missing, malformed, or not ready.
+- REQ-LEARN-3116-2: Hard-family detection SHALL be auditable from prior stress
+  completeness mistakes, prior-retention regressions, exact fixture rows, or
+  generated controller-only curriculum rows, and SHALL report the hard-family
+  count and zero-pass family count.
+- REQ-LEARN-3116-3: Hints SHALL be abstract and solver-derived: each hint SHALL
+  cite only certificate class, task axis, family, perturbation type, authority,
+  and target context, and SHALL record that no final answer or model-weight
+  update was used.
+- REQ-LEARN-3116-4: Negative controls SHALL include no-feedback, shuffled-hint,
+  stale-hint, and contradictory-hint entries when feasible, each reporting case
+  count, mistake counts, deltas, rollback status, and whether the promotion gate
+  failed safely.
+- REQ-LEARN-3116-5: `soundness_mistakes` SHALL count exact-rejected protocol
+  rows accepted by the guarded controller; `completeness_mistakes` SHALL count
+  exact-accepted protocol rows rejected or abstained by the guarded controller.
+- REQ-LEARN-3116-6: `promotion_decision` SHALL be `controller_only` only when
+  there are zero soundness mistakes, fewer completeness mistakes than Exp 3103,
+  nonnegative prior retention, nonnegative delayed regression, a positive
+  family-holdout delta, and every negative control fails safely without model
+  weight mutation.
+
+### SCENARIO-LEARN-3116: Abstract Hints Repair Hard Completeness and Retention
+
+**Given** ready Exp 3090, Exp 3097, and Exp 3103 source artifacts
+**When** Exp 3116 replays solver-derived abstract hints over the identified
+hard/zero-pass families
+**Then** it writes a complete terminal artifact with controller-only learning,
+no weight updates, zero protocol soundness mistakes, fewer completeness mistakes
+than Exp 3103, nonnegative prior retention, nonnegative delayed regression,
+negative controls that fail safely, `promotion_decision="controller_only"`, and
+an `honest_verdict` beginning with `complete_`.
+
+### SCENARIO-LEARN-3116-BLOCKED: Missing Curriculum Sources Fail Closed
+
+**Given** missing Exp 3090, Exp 3097, Exp 3103, or stratified fixture evidence
+**When** Exp 3116 runs
+**Then** it writes the required artifact fields with zeroed metrics,
+`fr11_unsolvable_curriculum_ready=false`, `promotion_decision="blocked"`,
+empty negative controls, no model-weight mutation claim, explicit failed
+precondition diagnostics, and `honest_verdict="blocked_precondition_failed"`.
+
+## Implementation Status (REQ-LEARN-3116)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-LEARN-3116 | Implemented (`python/carnot/eval/fr11_unsolvable_curriculum_retention_guard_v1.py`) | Implemented (`tests/python/test_experiment_3116_fr11_unsolvable_curriculum_retention_guard_v1.py`) |
