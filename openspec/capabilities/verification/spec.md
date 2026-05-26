@@ -1385,6 +1385,60 @@ formal-feedback lift.
 |---|---|---|
 | REQ-VERIFY-3100 | Implemented (`python/carnot/eval/z3_oracle_feedback_v2.py`) | Implemented (`tests/python/test_experiment_3100_z3_oracle_feedback_v2.py`) |
 
+### REQ-VERIFY-3112: Logic-Regularized Verifier Pilot On Exact Fixtures
+
+The repository shall provide an Exp 3112 deterministic pilot that writes
+`results/experiment_3112_logic_regularized_verifier_pilot_v1.json` by scoring
+a non-tiny `.289` exact-fixture subset with LOVER-style logic diagnostics
+without promoting the result as verifier recovery.
+
+The pilot shall consume the Exp 3097 stratified exact-fixture manifest, Exp
+3099 local SOTA confidence/abstention panel rows, Exp 3110 mandated model
+cache manifest, and Exp 3111 certified coherence feedback v3 certificates. It
+shall select only fixtures that have clear positive/negative exact labels and
+matching certified feedback fields, construct multiple deterministic
+candidate/reasoning paths per fixture including contrastive true/false
+assertions, and keep exact solver labels as the sole ground truth authority.
+
+The pilot shall compute negation consistency, intra-answer-group consistency,
+inter-answer-group consistency, agreement with exact labels, verifier recall
+movement, and false-positive movement against the Exp 3099 route decisions.
+False-positive and false-negative movement shall be reported separately. New
+live LLM inference is optional; if it is not run, the artifact shall set
+`live_llm_inference=false` and identify any reused cached trace source without
+conflating it with a fresh live run.
+
+The terminal artifact MUST include
+`logic_regularized_verifier_pilot_ready`, `model_specs`,
+`mandatory_headline_model_ids`, `selected_headline_model_ids`,
+`live_llm_inference`, `exact_ground_truth_count`,
+`negation_consistency_rate`, `answer_group_consistency_rate`,
+`verifier_recall_delta`, `false_positive_delta`, `tests_run`,
+`source_artifacts`, `inference_substrate`, and `honest_verdict`. It shall also
+record selected fixture IDs, path counts, separate false-positive and
+false-negative movement summaries, the row-level diagnostic transcript path,
+and whether any promotion claim was made. `logic_regularized_verifier_pilot_ready`
+shall be true only when the selected exact subset is non-tiny, every selected
+fixture has certified feedback v3 fields, at least two candidate paths are
+scored per fixture, all required diagnostics are finite rates in `[0, 1]`, and
+the `honest_verdict` starts with a terminal success prefix.
+
+### SCENARIO-VERIFY-3112: Logic Diagnostics Measure Movement Without Promotion
+
+Given Exp 3097, Exp 3099, Exp 3110, and Exp 3111 source artifacts are present,
+When Exp 3112 scores the exact positive/negative subset,
+Then it writes the required artifact fields, records no fresh live LLM
+inference unless explicitly run, computes negation and answer-group
+consistency over contrastive paths, compares its pilot decisions against Exp
+3099 route decisions, reports false-positive and false-negative movement
+separately, and keeps promotion disabled while exact labels remain authority.
+
+## Implementation Status (REQ-VERIFY-3112)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-VERIFY-3112 | Implemented (`python/carnot/eval/logic_regularized_verifier_pilot_v1.py`) | Implemented (`tests/python/test_experiment_3112_logic_regularized_verifier_pilot.py`) |
+
 ### REQ-VERIFY-3073: EBT/ARM-EBM Adapter Feasibility Audit
 
 The repository shall provide an Exp 3073 deterministic architecture audit that
