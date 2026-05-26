@@ -6336,3 +6336,4 @@ web search: site |
 | 2026-05-26 06:21 UTC | Local SOTA model-spec/cache manifest corrigendum | OK | 81 passed in 2.76s |
 | 2026-05-26 06:36 UTC | Certified coherence Z3/MCS feedback v3 | OK | 81 passed in 3.06s |
 | 2026-05-26 06:54 UTC | Logic-regularized verifier reasoning pilot | OK | 81 passed in 2.82s |
+| 2026-05-26 07:11 UTC | Diagnostic local SOTA verifier calibration v5 | OK | 81 passed in 2.46s |

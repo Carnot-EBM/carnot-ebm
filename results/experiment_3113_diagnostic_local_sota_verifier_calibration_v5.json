@@ -769,5 +769,23 @@
     ".venv/bin/pytest tests/python -q"
   ],
   "verifier_gain_delta": 0.518519,
-  "verifier_gain_delta_with_certified_coherence": 0.518519
+  "verifier_gain_delta_with_certified_coherence": 0.518519,
+  "flagged_adversarial": true,
+  "corrigendum_pending": [
+    {
+      "kind": "TAUTOLOGY",
+      "severity": "critical",
+      "detail": "verifier_gain_delta=0.518519 and verifier_gain_delta_with_certified_coherence=0.518519 agree to >5 sig figs. Two distinct metrics matching this precisely is more likely a bug than a finding."
+    },
+    {
+      "kind": "DURATION_TOO_SHORT",
+      "severity": "critical",
+      "detail": "duration_s=0.003434 but artifact references compute-bound markers (GGUF / CUDA / live model). Loading and running a real model takes >=60.0s minimum; this completed too fast to have invoked the model."
+    },
+    {
+      "kind": "METHODOLOGY_MISSING",
+      "severity": "warn",
+      "detail": "Compute-bound artifact missing: random_seed, reproducibility_checksum. Methodology unverifiable."
+    }
+  ]
 }
