@@ -9134,3 +9134,78 @@ starts with `complete:`.
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-REPORT-3107 | Implemented (`python/carnot/reporting/cross_corpus_matrix_v23_3107.py`) | Implemented (`tests/python/test_experiment_3107_cross_corpus_matrix_v23.py`) |
+
+### REQ-REPORT-3108: Capstone .289 From Matrix V23
+
+The repository shall provide an Exp 3108 milestone .289 capstone generator
+that writes `results/experiment_3108_capstone_v289.json` using
+`results/experiment_3107_cross_corpus_matrix_v23.json` as the final authority
+for the milestone. The generator MUST load matrix v23 and every capstone input
+artifact path named by Exp 3107 before emitting the capstone. Missing optional
+input artifacts MUST remain visible as missing evidence rather than blocking
+capstone closure when matrix v23 already records the absence. The generator
+MUST NOT run live model inference, verifier scoring, repair generation, solver
+execution, synthesis, board flashing, hardware readback, the conductor, pushes,
+or modify `scripts/research_conductor.py`.
+
+The capstone MUST summarize the matrix v23 result by PRD gap:
+verifier/repair, FR-11 self-learning, EBT/ARM bridge, cLUT sampler/hardware
+adjacency, GateMate/SSQA evidence, and publication readiness. It MUST preserve
+blocked, gated-skipped, bounded, projection-only, diagnostic-only, missing,
+flagged, retired, clean, and model-spec-gap matrix statuses exactly, and MUST
+not convert diagnostic-only cLUT CPU microbench evidence into hardware
+speedup, sidecar/schema work into model integration, operator evidence
+ingestion into hardware speedup evidence, or readback gates into host-visible
+readback evidence. FR-11 may be summarized as clean only within the
+controller-only boundary; promotion to broader continuous learning MUST remain
+blocked when the matrix records completeness mistakes or an explicit blocked
+promotion decision. Repair claims MUST remain gated by verifier evidence and
+the missing Exp 3102 repair micro-panel until those matrix rows become clean.
+
+The terminal artifact MUST include `capstone_ready`, `paper_ready`,
+`publication_blocker_count`, `verifier_gain_status`, `repair_claim_status`,
+`fr11_self_learning_status`, `ebt_arm_status`, `sampler_hardware_status`,
+`gatemate_status`, `ssqa_status`, `next_milestone_recommendation`,
+`source_artifacts`, `inference_substrate`, and `honest_verdict`. It MAY
+include PRD-gap summaries, blocker movement from matrix v22 to matrix v23,
+paper-readiness checks, row citations, source checksums, missing capstone
+input artifacts, required source errors, no-new-execution booleans, and
+measured `duration_s` as long as every value is derived from checked-in
+artifacts or file presence/checksum checks. `paper_ready` MUST be true only
+when `capstone_ready` is true, `publication_blocker_count` is zero, matrix v23
+has no headline model-spec gaps, no capstone input artifact needed for a
+headline claim is missing, and headline claims have exact-grounded evidence
+with mandated model specifications. `honest_verdict` MUST start with a
+terminal success prefix when the capstone is ready; otherwise it MUST report
+the blocked precondition. When a conductor prompt assigns ops reconciliation
+to a separate step, the generator MUST leave `ops/status.md`,
+`ops/changelog.md`, and `_bmad/traceability.md` unchanged.
+
+#### SCENARIO-REPORT-3108: Capstone .289 Closes Without Paper Overclaim
+
+**Given** matrix v23 exists and reports `matrix_v23_ready=true`
+**And** matrix v23 names every capstone input artifact for Exp 3108
+**And** matrix v23 reports nonzero publication blockers for verifier/repair,
+paper readiness, EBT/ARM projection-only work, GateMate blocked evidence, SSQA
+gated-skipped evidence, missing repair micro-panel evidence, and live-LLM
+headline model-spec gaps
+**And** matrix v23 records diagnostic-only MaxSAT and cLUT rows that are not
+headline evidence
+**When** the Exp 3108 capstone generator runs
+**Then** it writes `results/experiment_3108_capstone_v289.json` with
+`capstone_ready=true`, `paper_ready=false`, `publication_blocker_count` copied
+from matrix v23, verifier and repair statuses kept model-spec-gapped, blocked,
+gated, or missing until exact-grounded evidence clears, FR-11 summarized as
+controller-only clean while broader promotion remains blocked by completeness
+stress, EBT/ARM kept projection-only, cLUT kept diagnostic-only without a
+hardware-speedup claim, GateMate kept blocked without a speedup claim, SSQA
+kept gated-skipped without host-visible readback, all source artifacts cited,
+aggregation-only inference-substrate metadata, a next-milestone recommendation
+based on the remaining highest-impact blockers, and an `honest_verdict` that
+starts with `complete:`.
+
+## Implementation Status (REQ-REPORT-3108)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-3108 | Implemented (`python/carnot/reporting/capstone_v289_3108.py`) | Implemented (`tests/python/test_experiment_3108_capstone_v289.py`) |
