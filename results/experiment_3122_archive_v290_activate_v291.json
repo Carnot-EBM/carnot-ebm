@@ -1,0 +1,451 @@
+{
+  "activation_performed_by_this_task": false,
+  "archive_v290_activate_v291_ready": true,
+  "artifact": "experiment_3122_archive_v290_activate_v291",
+  "blocked_reasons": [],
+  "carry_forward_blockers": [
+    {
+      "blocker_id": "publication_blockers_36",
+      "description": "36 publication blockers",
+      "expected_carry_forward_value": 36,
+      "matches_expected": true,
+      "source": "results/experiment_3121_capstone_v290.json",
+      "source_field": "publication_blocker_count",
+      "value": 36
+    },
+    {
+      "blocker_id": "missing_headline_cache_coverage",
+      "description": "missing Qwen3.6/Gemma-4-31B headline cache coverage",
+      "expected_carry_forward_value": {
+        "missing_model_ids": [
+          "unsloth/Qwen3.6-35B-A3B-GGUF",
+          "unsloth/gemma-4-31B-it-GGUF"
+        ],
+        "present_model_ids": [
+          "unsloth/gemma-4-26B-A4B-it-GGUF"
+        ]
+      },
+      "matches_expected": true,
+      "source": "results/experiment_3121_capstone_v290.json",
+      "source_field": "headline_model_spec_gaps",
+      "value": {
+        "missing_model_ids": [
+          "unsloth/Qwen3.6-35B-A3B-GGUF",
+          "unsloth/gemma-4-31B-it-GGUF"
+        ],
+        "present_model_ids": [
+          "unsloth/gemma-4-26B-A4B-it-GGUF"
+        ]
+      }
+    },
+    {
+      "blocker_id": "diagnostic_only_verifier_lift",
+      "description": "diagnostic-only verifier lift",
+      "expected_carry_forward_value": "diagnostic_gain_recovered_but_headline_bounded_by_cache_and_prior_flags",
+      "matches_expected": true,
+      "source": "results/experiment_3121_capstone_v290.json",
+      "source_field": "verifier_gain_status",
+      "value": "diagnostic_gain_recovered_but_headline_bounded_by_cache_and_prior_flags"
+    },
+    {
+      "blocker_id": "zero_repair_delta",
+      "description": "zero repair delta",
+      "expected_carry_forward_value": {
+        "repair_claim_status": "bounded_micro_panel_executed_zero_delta_no_promotion",
+        "repair_success_delta": 0.0
+      },
+      "matches_expected": true,
+      "source": "results/experiment_3121_capstone_v290.json",
+      "source_field": "repair_claim_status,repair_success_delta",
+      "value": {
+        "repair_claim_status": "bounded_micro_panel_executed_zero_delta_no_promotion",
+        "repair_success_delta": 0.0
+      }
+    },
+    {
+      "blocker_id": "fr11_controller_only_learning",
+      "description": "FR-11 controller-only learning",
+      "expected_carry_forward_value": "bounded_controller_only_soundness_zero_completeness_zero_no_weight_update",
+      "matches_expected": true,
+      "source": "results/experiment_3121_capstone_v290.json",
+      "source_field": "fr11_self_learning_status",
+      "value": "bounded_controller_only_soundness_zero_completeness_zero_no_weight_update"
+    },
+    {
+      "blocker_id": "ebt_arm_projection_only",
+      "description": "EBT/ARM projection-only",
+      "expected_carry_forward_value": "projection_only_sidecar_correlation_no_live_model_integration",
+      "matches_expected": true,
+      "source": "results/experiment_3121_capstone_v290.json",
+      "source_field": "ebt_arm_status",
+      "value": "projection_only_sidecar_correlation_no_live_model_integration"
+    },
+    {
+      "blocker_id": "cpu_only_clut",
+      "description": "CPU-only cLUT",
+      "expected_carry_forward_value": "bounded_clut_cpu_only_no_hardware_speedup",
+      "matches_expected": true,
+      "source": "results/experiment_3121_capstone_v290.json",
+      "source_field": "sampler_hardware_status",
+      "value": "bounded_clut_cpu_only_no_hardware_speedup"
+    },
+    {
+      "blocker_id": "missing_operator_visible_hardware_evidence",
+      "description": "missing operator-visible hardware evidence",
+      "expected_carry_forward_value": {
+        "gatemate_status": "blocked_operator_evidence_incomplete_no_hardware_run",
+        "ssqa_status": "gated_skipped_host_visible_readback_missing"
+      },
+      "matches_expected": true,
+      "source": "results/experiment_3121_capstone_v290.json",
+      "source_field": "gatemate_status,ssqa_status",
+      "value": {
+        "gatemate_status": "blocked_operator_evidence_incomplete_no_hardware_run",
+        "ssqa_status": "gated_skipped_host_visible_readback_missing"
+      }
+    }
+  ],
+  "duration_s": 0.031798,
+  "honest_verdict": "complete: archive_v290_activate_v291_ready=true; prior_capstone_ready=true; prior_paper_ready=false; prior_publication_blocker_count=36; next_milestone=2026.05.291; roadmap_source=research-roadmap.yaml",
+  "inference_substrate": {
+    "executes_conductor": false,
+    "executes_hardware": false,
+    "executes_models": false,
+    "executes_repairs": false,
+    "executes_solvers": false,
+    "executes_verifiers": false,
+    "hardware_commands_run": [],
+    "kind": "aggregation_from_upstream_artifacts",
+    "live_model_calls": 0,
+    "local_repo_only": true,
+    "no_live_llm_inference": true,
+    "source": "checked_in_artifacts"
+  },
+  "missing_source_artifacts": [
+    "research-roadmap-next.yaml"
+  ],
+  "next_milestone": "2026.05.291",
+  "no_historical_artifact_rewrite": true,
+  "no_live_repair_rerun": true,
+  "no_new_board_flash": true,
+  "no_new_hardware_run": true,
+  "no_new_model_execution": true,
+  "no_new_solver_run": true,
+  "no_new_synthesis_run": true,
+  "no_new_verifier_run": true,
+  "no_push": true,
+  "ops_changelog_updated": false,
+  "ops_docs_reconciliation_left_to_conductor": true,
+  "ops_status_updated": false,
+  "prior_capstone_ready": true,
+  "prior_milestone": "2026.05.290",
+  "prior_paper_ready": false,
+  "prior_paper_ready_source_field_present": true,
+  "prior_publication_blocker_count": 36,
+  "prior_publication_blocker_count_source": "capstone_publication_blocker_count",
+  "research_roadmap_next_yaml_modified": false,
+  "research_roadmap_yaml_modified": false,
+  "roadmap_handoff": {
+    "active_roadmap_milestone": "2026.05.291",
+    "expected_milestone": "2026.05.291",
+    "expected_milestone_doc": "openspec/change-proposals/research-roadmap-vNEXT.md",
+    "milestone_doc_matches": true,
+    "milestone_matches": true,
+    "non_empty_tasks": true,
+    "observed_milestone": "2026.05.291",
+    "observed_milestone_doc": "openspec/change-proposals/research-roadmap-vNEXT.md",
+    "requested_staged_roadmap_path": "research-roadmap-next.yaml",
+    "requested_staged_roadmap_present": false,
+    "source_path": "research-roadmap.yaml",
+    "source_present": true,
+    "task_ids": [
+      "exp3122-archive-v290-activate-v291",
+      "exp3123-sota-cache-preconditions-manifest-v2",
+      "exp3124-difficulty-stratified-live-sota-verifier-panel-v6",
+      "exp3125-prefix-closed-deterministic-verifier-bound-pilot",
+      "exp3126-fragment-time-monitor-satisfiable-drift-audit",
+      "exp3127-multi-turn-monitored-repair-ladder-v1",
+      "exp3128-fr11-evoenv-verifiable-environment-synthesis-v1",
+      "exp3129-fr11-constraint-memory-retention-drift-audit-v1",
+      "exp3130-arm-ebt-energy-budget-sidecar-diagnostic-v2",
+      "exp3131-kan-pwa-milp-verifier-abstraction-audit-v1",
+      "exp3132-hardware-evidence-sampler-boundary-v5",
+      "exp3133-cross-corpus-matrix-v25",
+      "exp3134-capstone-v291"
+    ],
+    "used_active_roadmap_fallback": true
+  },
+  "run_date": "20260526",
+  "schema": "carnot.archive_activation.v290_to_v291.v1",
+  "scripts_research_conductor_modified": false,
+  "source_artifacts": [
+    {
+      "path": "results/experiment_3120_cross_corpus_matrix_v24.json",
+      "present": true,
+      "role": "matrix_v24",
+      "sha256": "df3d0d5018f69abb78d51925dce2c3188818e8434ff3babd027b9aa13ee4d9a8"
+    },
+    {
+      "path": "results/experiment_3121_capstone_v290.json",
+      "present": true,
+      "role": "capstone_v290",
+      "sha256": "895cf16d93c6fb1101705f8f23b951b1cdbb0bfea3afce5d35da888762bac1d6"
+    },
+    {
+      "path": "research-roadmap-next.yaml",
+      "present": false,
+      "role": "staged_roadmap",
+      "sha256": null
+    },
+    {
+      "path": "research-roadmap.yaml",
+      "present": true,
+      "role": "active_roadmap",
+      "sha256": "e2f3ff23da6f0871c0c30936d754e43b5735fc3354331a04f4d2052d78f4035f"
+    },
+    {
+      "path": "openspec/change-proposals/research-roadmap-vNEXT.md",
+      "present": true,
+      "role": "vnext_doc",
+      "sha256": "c591c5171290fddb0e58c4721d95b42d94969cafb923fbd90bb262a0d0f3ffc0"
+    },
+    {
+      "path": "AGENTS.md",
+      "present": true,
+      "role": "agents_instructions",
+      "sha256": "b3d6581b04f16b85f77defb2837c98dc3b60ed51e10b347ecb36e609f318b619"
+    },
+    {
+      "path": "CODEX.md",
+      "present": true,
+      "role": "codex_instructions",
+      "sha256": "1db7ebc1009714f872db83447828a8957c3abb72061832cc1bc307735cd96bbe"
+    },
+    {
+      "path": "CLAUDE.md",
+      "present": true,
+      "role": "claude_instructions",
+      "sha256": "cdc00581d37d1bd3c77a69b058787f74ecc71545a97c1eab31c48961637b3224"
+    },
+    {
+      "path": "scripts/research_conductor.py",
+      "present": true,
+      "role": "research_conductor",
+      "sha256": "293d09f47a3aa965a1a4785f8db278db4364f8d93c11ebbf465c99448e20c5e2"
+    },
+    {
+      "path": "ops/status.md",
+      "present": true,
+      "role": "ops_status",
+      "sha256": "555f5e7f8a39d90032b96825b7fe1a575d1508f951b97be5618baca94a0063e6"
+    },
+    {
+      "path": "ops/changelog.md",
+      "present": true,
+      "role": "ops_changelog",
+      "sha256": "7d829af93920800de4dd1e00bcee55f41707738c9e7c8e919f52274ad1f62bf9"
+    },
+    {
+      "path": "_bmad/traceability.md",
+      "present": true,
+      "role": "traceability",
+      "sha256": "7cb816027fe6978ff861a799d83de610c1a10d5efeab36f07cd18904485fe2a9"
+    }
+  ],
+  "source_checksums": {
+    "AGENTS.md": "b3d6581b04f16b85f77defb2837c98dc3b60ed51e10b347ecb36e609f318b619",
+    "CLAUDE.md": "cdc00581d37d1bd3c77a69b058787f74ecc71545a97c1eab31c48961637b3224",
+    "CODEX.md": "1db7ebc1009714f872db83447828a8957c3abb72061832cc1bc307735cd96bbe",
+    "_bmad/traceability.md": "7cb816027fe6978ff861a799d83de610c1a10d5efeab36f07cd18904485fe2a9",
+    "openspec/change-proposals/research-roadmap-vNEXT.md": "c591c5171290fddb0e58c4721d95b42d94969cafb923fbd90bb262a0d0f3ffc0",
+    "ops/changelog.md": "7d829af93920800de4dd1e00bcee55f41707738c9e7c8e919f52274ad1f62bf9",
+    "ops/status.md": "555f5e7f8a39d90032b96825b7fe1a575d1508f951b97be5618baca94a0063e6",
+    "research-roadmap-next.yaml": null,
+    "research-roadmap.yaml": "e2f3ff23da6f0871c0c30936d754e43b5735fc3354331a04f4d2052d78f4035f",
+    "results/experiment_3120_cross_corpus_matrix_v24.json": "df3d0d5018f69abb78d51925dce2c3188818e8434ff3babd027b9aa13ee4d9a8",
+    "results/experiment_3121_capstone_v290.json": "895cf16d93c6fb1101705f8f23b951b1cdbb0bfea3afce5d35da888762bac1d6",
+    "scripts/research_conductor.py": "293d09f47a3aa965a1a4785f8db278db4364f8d93c11ebbf465c99448e20c5e2"
+  },
+  "status_summary_290": {
+    "capstone_ready": true,
+    "ebt_arm_status": "projection_only_sidecar_correlation_no_live_model_integration",
+    "formal_feedback_status": "solver_certified_feedback_ready_no_live_sota_lift",
+    "fr11_self_learning_status": "bounded_controller_only_soundness_zero_completeness_zero_no_weight_update",
+    "gatemate_status": "blocked_operator_evidence_incomplete_no_hardware_run",
+    "matrix_v24_ready": true,
+    "model_cache_status": {
+      "headline_model_spec_gaps": [
+        {
+          "missing_model_ids": [
+            "unsloth/Qwen3.6-35B-A3B-GGUF",
+            "unsloth/gemma-4-31B-it-GGUF"
+          ],
+          "present_model_ids": [
+            "unsloth/gemma-4-26B-A4B-it-GGUF"
+          ],
+          "reason": "mandated headline model cache coverage incomplete; cached SOTA pair unavailable",
+          "row_id": "dot290:exp3110_sota_model_spec_cache_manifest",
+          "source_artifact": "results/experiment_3110_sota_model_spec_cache_manifest_corrigendum_v1.json"
+        }
+      ],
+      "missing_model_ids": [
+        "unsloth/Qwen3.6-35B-A3B-GGUF",
+        "unsloth/gemma-4-31B-it-GGUF"
+      ],
+      "present_model_ids": [
+        "unsloth/gemma-4-26B-A4B-it-GGUF"
+      ]
+    },
+    "next_top_gap": "publishable_verifier_repair_headline_evidence",
+    "paper_ready": false,
+    "publication_blocker_count": 36,
+    "publication_blocker_count_source": "capstone_publication_blocker_count",
+    "repair_claim_status": "bounded_micro_panel_executed_zero_delta_no_promotion",
+    "sampler_hardware_status": "bounded_clut_cpu_only_no_hardware_speedup",
+    "source_artifacts": [
+      {
+        "experiment_id": "experiment_3120_cross_corpus_matrix_v24",
+        "path": "results/experiment_3120_cross_corpus_matrix_v24.json",
+        "present": true,
+        "readable_json_object": true,
+        "required": true,
+        "role": "matrix_v24_authority",
+        "sha256": "df3d0d5018f69abb78d51925dce2c3188818e8434ff3babd027b9aa13ee4d9a8",
+        "source_type": "json"
+      },
+      {
+        "experiment_id": "experiment_3108_capstone_v289",
+        "path": "results/experiment_3108_capstone_v289.json",
+        "present": true,
+        "readable_json_object": true,
+        "required": true,
+        "role": "prior_capstone_v289",
+        "sha256": "87c626dfacdcf488d00fb07da2ab97ca3d3d428bd305aaacf6940b8e798882f0",
+        "source_type": "json"
+      },
+      {
+        "experiment_id": "experiment_3107_cross_corpus_matrix_v23",
+        "path": "results/experiment_3107_cross_corpus_matrix_v23.json",
+        "present": true,
+        "readable_json_object": true,
+        "required": true,
+        "role": "matrix_v23_authority",
+        "sha256": "503c48fa6773196d0baa16860a73d626e0e8abad5d49d25d32c6c33486c21ac1",
+        "source_type": "json"
+      },
+      {
+        "experiment_id": "experiment_3109_archive_v289_activate_v290",
+        "path": "results/experiment_3109_archive_v289_activate_v290.json",
+        "present": true,
+        "readable_json_object": true,
+        "required": false,
+        "role": "archive_v289_activate_v290",
+        "sha256": "136b9af586d7965defcb8131dbccb5de677856d7ba6117f6dad9eed5b9cebb75",
+        "source_type": "json"
+      },
+      {
+        "experiment_id": "experiment_3110_sota_model_spec_cache_manifest_corrigendum_v1",
+        "path": "results/experiment_3110_sota_model_spec_cache_manifest_corrigendum_v1.json",
+        "present": true,
+        "readable_json_object": true,
+        "required": false,
+        "role": "sota_model_spec_cache_manifest",
+        "sha256": "1707ec755287b47f7e205200e2787e8eac93e33a8d1490515748c0ce3b2acb24",
+        "source_type": "json"
+      },
+      {
+        "experiment_id": "experiment_3111_certified_coherence_z3_mcs_feedback_v3",
+        "path": "results/experiment_3111_certified_coherence_z3_mcs_feedback_v3.json",
+        "present": true,
+        "readable_json_object": true,
+        "required": false,
+        "role": "certified_coherence_feedback",
+        "sha256": "366edc3a4921f945fcd432e33ea924dd891172b84378833334de611bc2ef0017",
+        "source_type": "json"
+      },
+      {
+        "experiment_id": "experiment_3112_logic_regularized_verifier_pilot_v1",
+        "path": "results/experiment_3112_logic_regularized_verifier_pilot_v1.json",
+        "present": true,
+        "readable_json_object": true,
+        "required": false,
+        "role": "logic_regularized_verifier_pilot",
+        "sha256": "2a45e27a7004e2904a89c2e4f6799cc75a323a04f851b7cdc428e59555fa1724",
+        "source_type": "json"
+      },
+      {
+        "experiment_id": "experiment_3113_diagnostic_local_sota_verifier_calibration_v5",
+        "path": "results/experiment_3113_diagnostic_local_sota_verifier_calibration_v5.json",
+        "present": true,
+        "readable_json_object": true,
+        "required": false,
+        "role": "diagnostic_verifier_calibration",
+        "sha256": "28650d5ae3d461c022e2081717b43e9428b8d6e13fb4e437b09e6b1ee2acd405",
+        "source_type": "json"
+      },
+      {
+        "experiment_id": "experiment_3114_fragment_level_code_constraint_verification_pilot_v1",
+        "path": "results/experiment_3114_fragment_level_code_constraint_verification_pilot_v1.json",
+        "present": true,
+        "readable_json_object": true,
+        "required": false,
+        "role": "fragment_level_verification",
+        "sha256": "80c3011c4498bc187a1af72bc1d8423ffb2a233d82d7b16b9ad5fadd26365ccd",
+        "source_type": "json"
+      },
+      {
+        "experiment_id": "experiment_3115_explicit_repair_gate_micro_panel_v4",
+        "path": "results/experiment_3115_explicit_repair_gate_micro_panel_v4.json",
+        "present": true,
+        "readable_json_object": true,
+        "required": false,
+        "role": "explicit_repair_gate_micro_panel",
+        "sha256": "d1acea99957f3189e8196b6bce70138bc9712215bf742f9913b51a19a360fbe5",
+        "source_type": "json"
+      },
+      {
+        "experiment_id": "experiment_3116_fr11_unsolvable_curriculum_retention_guard_v1",
+        "path": "results/experiment_3116_fr11_unsolvable_curriculum_retention_guard_v1.json",
+        "present": true,
+        "readable_json_object": true,
+        "required": false,
+        "role": "fr11_curriculum_retention_guard",
+        "sha256": "76232d270a8772d47affd6da90f49d8301b461a1bbd3192e74dbb8bf281316cf",
+        "source_type": "json"
+      },
+      {
+        "experiment_id": "experiment_3117_ebt_arm_sidecar_score_correlation_boundary_v3",
+        "path": "results/experiment_3117_ebt_arm_sidecar_score_correlation_boundary_v3.json",
+        "present": true,
+        "readable_json_object": true,
+        "required": false,
+        "role": "ebt_arm_sidecar_score_correlation",
+        "sha256": "c22911a80d1ca2119850b6e1a220f0accba6931b9ee243e489b660bae7100680",
+        "source_type": "json"
+      },
+      {
+        "experiment_id": "exp3118",
+        "path": "results/experiment_3118_clut_sampler_backend_integration_boundary_v2.json",
+        "present": true,
+        "readable_json_object": true,
+        "required": false,
+        "role": "clut_sampler_backend_integration",
+        "sha256": "cbdc9da2db114dfdbf745eb4c4ad14998708d32ae7577e01ab5dd866d395ce07",
+        "source_type": "json"
+      },
+      {
+        "experiment_id": "experiment_3119_gatemate_ssqa_operator_evidence_ingestion_v4",
+        "path": "results/experiment_3119_gatemate_ssqa_operator_evidence_ingestion_v4.json",
+        "present": true,
+        "readable_json_object": true,
+        "required": false,
+        "role": "gatemate_ssqa_operator_evidence",
+        "sha256": "fc0f711666ea046c03774a76b935dd6b022f4b7dcc61dd884672c2aa21d42430",
+        "source_type": "json"
+      }
+    ],
+    "ssqa_status": "gated_skipped_host_visible_readback_missing",
+    "verifier_gain_status": "diagnostic_gain_recovered_but_headline_bounded_by_cache_and_prior_flags"
+  },
+  "traceability_updated": false
+}

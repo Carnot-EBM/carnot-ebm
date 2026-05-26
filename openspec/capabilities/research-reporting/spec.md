@@ -9551,3 +9551,81 @@ that starts with `complete:`.
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-REPORT-3121 | Planned (`python/carnot/reporting/capstone_v290_3121.py`) | Planned (`tests/python/test_experiment_3121_capstone_v290.py`) |
+
+### REQ-REPORT-3122: Archive .290 And Confirm .291 Roadmap Handoff
+
+The repository shall provide an Exp 3122 archive/handoff generator that writes
+`results/experiment_3122_archive_v290_activate_v291.json` using only checked-in
+`.290` matrix/capstone artifacts, roadmap YAML/Markdown files, and file
+presence/checksum evidence. It MUST treat
+`results/experiment_3121_capstone_v290.json` as the completed `.290`
+authority artifact and MUST set `prior_capstone_ready` directly from that
+artifact's `capstone_ready` field. It MUST set `prior_paper_ready` directly
+from that artifact's `paper_ready` field and MUST set
+`prior_publication_blocker_count` directly from that artifact's
+`publication_blocker_count` field rather than inferring paper readiness or
+blocker count from roadmap state, capstone completion, or matrix readiness.
+
+The generator MUST summarize `.290` status fields from the capstone authority:
+`paper_ready`, `publication_blocker_count`, `next_top_gap`,
+`headline_model_spec_gaps` as model-cache status, `verifier_gain_status`,
+`formal_feedback_status`, `repair_claim_status`, `fr11_self_learning_status`,
+`ebt_arm_status`, `sampler_hardware_status`, `gatemate_status`,
+`ssqa_status`, and `source_artifacts`. Its carry-forward blocker list MUST
+preserve the unresolved `.290` blockers: 36 publication blockers, missing
+Qwen3.6/Gemma-4-31B headline cache coverage, diagnostic-only verifier lift,
+zero repair delta, FR-11 controller-only learning, EBT/ARM projection-only
+status, CPU-only cLUT status, and missing operator-visible hardware evidence.
+
+The generator MUST verify the `.291` roadmap handoff without modifying
+`research-roadmap.yaml`, `research-roadmap-next.yaml`, or
+`scripts/research_conductor.py`. It MUST prefer `research-roadmap-next.yaml`
+when that staged file exists and otherwise MAY use the already-active
+`research-roadmap.yaml` as a read-only fallback, provided the artifact records
+that the requested staged roadmap is absent. Whichever roadmap source is used
+MUST target milestone `2026.05.291`, point `milestone_doc` to
+`openspec/change-proposals/research-roadmap-vNEXT.md`, and contain at least
+one task. The workflow MUST NOT activate the roadmap itself, run the
+conductor, push commits, rewrite historical result artifacts, run live model
+inference, run verifier scoring, run repair generation, run solvers, run
+synthesis, flash hardware, or collect hardware readback.
+
+The terminal artifact MUST include `archive_v290_activate_v291_ready`,
+`prior_capstone_ready`, `prior_paper_ready`,
+`prior_publication_blocker_count`, `carry_forward_blockers`,
+`next_milestone`, `source_artifacts`, `inference_substrate`, and
+`honest_verdict`. It MAY include `.290` status summaries, roadmap handoff
+metadata, no-new-execution booleans, protected-file modification flags,
+missing source artifacts, source checksums, and measured `duration_s` as long
+as every value is derived from checked-in artifacts or file presence/checksum
+checks. When a conductor prompt assigns ops reconciliation to a separate step,
+the generator MUST leave `ops/status.md`, `ops/changelog.md`, and
+`_bmad/traceability.md` unchanged. `honest_verdict` MUST start with
+`complete:` only when the prior capstone is ready and the `.291` roadmap
+handoff evidence is valid; otherwise it MUST report the blocked precondition.
+
+#### SCENARIO-REPORT-3122: Archive .290 Without Activating Roadmap
+
+**Given** `results/experiment_3121_capstone_v290.json` exists and reports
+`capstone_ready=true`
+**And** the capstone reports `paper_ready=false`, 36 publication blockers,
+missing Qwen3.6/Gemma-4-31B headline cache coverage, diagnostic-only verifier
+lift, zero repair delta, FR-11 controller-only learning, EBT/ARM
+projection-only status, CPU-only cLUT status, and missing GateMate/SSQA
+operator-visible hardware evidence
+**And** the `.291` roadmap source, either staged or already active, targets
+`2026.05.291` and points `milestone_doc` to
+`openspec/change-proposals/research-roadmap-vNEXT.md`
+**When** the Exp 3122 archive/handoff generator runs
+**Then** it writes `results/experiment_3122_archive_v290_activate_v291.json`
+with `archive_v290_activate_v291_ready=true`, `prior_capstone_ready=true`,
+`prior_paper_ready=false`, `prior_publication_blocker_count=36`, the `.290`
+capstone status summary preserved, the eight carry-forward blocker classes
+visible, aggregation-only inference-substrate metadata, no roadmap activation
+performed by this task, and an `honest_verdict` that starts with `complete:`.
+
+## Implementation Status (REQ-REPORT-3122)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-3122 | Implemented (`python/carnot/reporting/archive_v290_activate_v291_3122.py`) | Implemented (`tests/python/test_experiment_3122_archive_v290_activate_v291.py`) |
