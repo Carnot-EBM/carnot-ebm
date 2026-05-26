@@ -6320,3 +6320,5 @@ web search: site |
 | 2026-05-26 03:40 UTC | Z3 and test-oracle formal feedback v2 | OK | 81 passed in 3.08s |
 | 2026-05-26 03:42 UTC | Local SOTA verifier calibration v4 | GATE_BLOCK | 1 of 2 gate(s) failed; first failure: exp3100-z3-oracle-feedback-v2.formal_feedb |
 | 2026-05-26 03:44 UTC | Local SOTA verifier calibration v4 | GATE_BLOCK | 1 of 2 gate(s) failed; first failure: exp3100-z3-oracle-feedback-v2.formal_feedb |
+| 2026-05-26 03:46 UTC | Local SOTA verifier calibration v4 | GATE_BLOCK | 1 of 2 gate(s) failed; first failure: exp3100-z3-oracle-feedback-v2.formal_feedb |
+| 2026-05-26 03:48 UTC | Gated structured repair micro-panel v3 | GATE_BLOCK | Pre-emptive skip: upstream retired (exp3101-local-sota-verifier-calibration-v4) |
