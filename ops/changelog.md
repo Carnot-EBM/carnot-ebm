@@ -7482,3 +7482,4 @@ ModuleNotFoundError: No module named 'torch'; results/experiment_2828_fover_memo
 - 2026-05-26: Canonical answer and VeriCoT grounding pilot (⚠️ Blocked) — honest_verdict=complete: canonical_grounding_pilot_v1_ready=true; regression_rows_evaluated=2; false_accept_rows_blocked=2; results/experiment_3138_canonical_answer_vericot_grounding_pilot_v1.json
 - 2026-05-26: Live SOTA verifier rerun v7 (✅ Complete) — honest_verdict=complete: live_verifier_rerun_v7_ready=true; false_accept_rate=0.0; verifier_gain_delta=0.5; live_call_count=6; results/experiment_3139_live_sota_verifier_rerun_v7.json
 - 2026-05-26: Repair gate unlock decision (⚠️ Blocked) — honest_verdict=blocked_other: exp3139 flagged_adversarial=true; results/experiment_3140_repair_gate_unlock_decision_v1.json
+- 2026-05-26: Repair gate unlock decision (⚠️ Blocked) — honest_verdict=blocked_other: exp3139 flagged_adversarial=true; results/experiment_3140_repair_gate_unlock_decision_v1.json
