@@ -6315,3 +6315,4 @@ web search: site |
 | 2026-05-26 02:12 UTC | Archive .288 and activate .289 | OK | 81 passed in 2.70s |
 | 2026-05-26 02:26 UTC | Publication blocker triage and retirement ledger v | OK | 81 passed in 2.45s |
 | 2026-05-26 02:41 UTC | Exact fixture evaluation protocol audit | OK | 81 passed in 2.87s |
+| 2026-05-26 02:55 UTC | MaxSAT abstention routing policy | OK | 81 passed in 3.23s |
