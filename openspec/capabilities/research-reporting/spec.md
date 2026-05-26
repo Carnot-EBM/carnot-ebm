@@ -8841,3 +8841,71 @@ inference-substrate metadata, capstone input artifacts for Exp 3094, and an
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-REPORT-3093 | Planned (`python/carnot/reporting/cross_corpus_matrix_v22_3093.py`) | Planned (`tests/python/test_experiment_3093_cross_corpus_matrix_v22.py`) |
+
+### REQ-REPORT-3094: Capstone .288 From Matrix V22
+
+The repository shall provide an Exp 3094 milestone .288 capstone generator
+that writes `results/experiment_3094_capstone_v288.json` using
+`results/experiment_3093_cross_corpus_matrix_v22.json` as the final authority
+for the milestone. The generator MUST load matrix v22 and every capstone input
+artifact path named by Exp 3093 before emitting the capstone. Missing optional
+input artifacts MUST remain visible as missing evidence rather than blocking
+capstone closure when matrix v22 already records the absence. The generator
+MUST NOT run live model inference, verifier scoring, repair generation, solver
+execution, synthesis, board flashing, hardware readback, the conductor, pushes,
+or modify `scripts/research_conductor.py`.
+
+The capstone MUST summarize the matrix v22 result by PRD gap: verifier/repair,
+FR-11 self-learning, EBT/ARM bridge, hardware evidence, and publication
+readiness. It MUST preserve blocked, gated-skipped, bounded, missing, flagged,
+retired, clean, and projection-only matrix statuses exactly, and MUST not
+convert sidecar/schema work into model-integration evidence, operator evidence
+ingestion into hardware speedup evidence, or readback gates into host-visible
+readback evidence. FR-11 may move only within the controller-only boundary when
+matrix v22 records zero soundness mistakes, zero completeness mistakes, and
+non-vacuous controls. Repair claims MUST remain gated by verifier evidence and
+the missing Exp 3089 repair micro-panel until those matrix rows become clean.
+
+The terminal artifact MUST include `capstone_ready`, `paper_ready`,
+`publication_blocker_count`, `verifier_gain_status`, `repair_claim_status`,
+`fr11_self_learning_status`, `ebt_arm_status`, `gatemate_status`,
+`ssqa_status`, `next_milestone_recommendation`, `source_artifacts`,
+`inference_substrate`, and `honest_verdict`. It MAY include PRD-gap summaries,
+status movement from matrix v21 to matrix v22, paper-readiness checks, row
+citations, source checksums, missing capstone input artifacts, required source
+errors, no-new-execution booleans, and measured `duration_s` as long as every
+value is derived from checked-in artifacts or file presence/checksum checks.
+`paper_ready` MUST be true only when `capstone_ready` is true,
+`publication_blocker_count` is zero, matrix v22 has no headline model-spec
+gaps, no capstone input artifact needed for a headline claim is missing, and
+headline claims have exact-grounded evidence. `honest_verdict` MUST start with
+a terminal success prefix when the capstone is ready; otherwise it MUST report
+the blocked precondition. When a conductor prompt assigns ops reconciliation
+to a separate step, the generator MUST leave `ops/status.md`,
+`ops/changelog.md`, and `_bmad/traceability.md` unchanged.
+
+#### SCENARIO-REPORT-3094: Capstone .288 Closes Without Paper Overclaim
+
+**Given** matrix v22 exists and reports `matrix_v22_ready=true`
+**And** matrix v22 names every capstone input artifact for Exp 3094
+**And** matrix v22 reports nonzero publication blockers for verifier/repair,
+paper readiness, EBT/ARM projection-only work, GateMate blocked evidence, SSQA
+gated-skipped evidence, missing repair micro-panel evidence, and live-LLM
+headline model-spec gaps
+**When** the Exp 3094 capstone generator runs
+**Then** it writes `results/experiment_3094_capstone_v288.json` with
+`capstone_ready=true`, `paper_ready=false`, `publication_blocker_count` copied
+from matrix v22, verifier and repair statuses kept flagged/gated/missing until
+exact-grounded evidence clears, FR-11 summarized as controller-only clean only
+when matrix v22 records the zero-mistake budget repair, EBT/ARM kept
+projection-only, GateMate kept blocked without a speedup claim, SSQA kept
+gated-skipped without host-visible readback, all source artifacts cited,
+aggregation-only inference-substrate metadata, a next-milestone recommendation
+based on the remaining highest-impact blockers, and an `honest_verdict` that
+starts with `complete:`.
+
+## Implementation Status (REQ-REPORT-3094)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-3094 | Implemented (`python/carnot/reporting/capstone_v288_3094.py`) | Implemented (`tests/python/test_experiment_3094_capstone_v288.py`) |
