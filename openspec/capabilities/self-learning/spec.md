@@ -8034,3 +8034,88 @@ model-weight mutation claim, and
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-LEARN-3077 | Implemented (`python/carnot/eval/fr11_soundness_bounded_online_self_learning_pilot_v1.py`) | Implemented (`tests/python/test_experiment_3077_fr11_soundness_bounded_online_self_learning_pilot_v1.py`) |
+
+## REQ-LEARN-3090: FR-11 ReSyn KAN-CL Completeness Repair Pilot
+
+**Given** Exp 3084 has produced a ready ReSyn exact fixture bank with
+deterministic SMT, arithmetic, JSON, and Python-runtime labels
+**When** Exp 3090 runs a bounded FR-11 online self-learning pilot
+**Then** it SHALL fail closed with
+`honest_verdict="blocked_fixture_precondition_failed"` unless the Exp 3084
+artifact exists, reports `resyn_fixture_bank_ready=true`, the manifest exists,
+all loaded fixture rows expose exact labels, and delayed-regression rows have
+exact labels available.
+**And** it SHALL update only bounded controller-side state, never model weights.
+**And** it SHALL use concrete KAN-CL-inspired retention anchors, such as
+per-family knots plus constraint-local basis weights, to retain prior exact
+negative capability while learning from online fixture feedback.
+**And** it SHALL run baseline, online update, no-feedback control,
+shuffled-feedback control, perturbation-family holdout, prior-retention, and
+delayed-regression checks.
+**And** it SHALL count soundness mistakes, completeness mistakes, family-holdout
+delta, prior-retention delta, no-feedback control delta, shuffled-feedback
+control delta, KAN-CL anchor count, rollback count, delayed-regression delta,
+and contradiction-rate delta.
+**And** it SHALL keep promotion bounded to controller-only claims unless exact
+soundness and completeness budgets both pass, and SHALL always declare no
+model-weight mutation.
+
+The terminal artifact SHALL be
+`results/experiment_3090_fr11_resyn_kancl_completeness_repair_v1.json` and
+SHALL include `fr11_resyn_kancl_ready`, `continuous_self_learning_task`,
+`promotion_decision`, `soundness_mistakes`, `completeness_mistakes`,
+`family_holdout_delta`, `prior_retention_delta`,
+`no_feedback_control_delta`, `shuffled_feedback_control_delta`,
+`kancl_anchor_count`, `rollback_count`, `delayed_regression_delta`,
+`preconditions_checked`, `inference_substrate`, and `honest_verdict`.
+
+### REQ-LEARN-3090 Sub-requirements
+
+- REQ-LEARN-3090-1: The pilot SHALL check Exp 3084 readiness and exact delayed-
+  regression labels before any controller update, and SHALL write a blocked
+  artifact rather than running a partial pilot when fixture preconditions fail.
+- REQ-LEARN-3090-2: The online update policy SHALL mutate only bounded
+  controller anchors/weights and trace memory, SHALL cap anchor weights, and
+  SHALL rollback shuffled or unsafe candidate updates that introduce exact
+  soundness mistakes or fail control gates.
+- REQ-LEARN-3090-3: The KAN-CL-inspired anchor report SHALL include a positive
+  `kancl_anchor_count` and concrete per-anchor fields for family knots and
+  constraint-local basis weights.
+- REQ-LEARN-3090-4: The artifact SHALL report online soundness mistakes as
+  exact-rejected fixtures accepted by the controller and completeness mistakes
+  as exact-accepted fixtures rejected or abstained by the online controller.
+- REQ-LEARN-3090-5: The controls SHALL be non-vacuous: the no-feedback and
+  shuffled-feedback control deltas must not explain the online holdout gain,
+  and the shuffled candidate SHALL be reversible through an explicit rollback
+  count when it violates the policy.
+- REQ-LEARN-3090-6: `fr11_resyn_kancl_ready` SHALL be true only for a complete
+  controller-only pilot with exact fixture preconditions checked, no live model
+  inference, no model-weight training, no model-weight mutation, positive
+  holdout improvement, nonnegative prior retention, zero online soundness
+  mistakes, and zero online completeness mistakes.
+
+### SCENARIO-LEARN-3090: KAN-CL Anchors Repair Completeness Without Soundness Regression
+
+**Given** the ready Exp 3084 fixture bank
+**When** Exp 3090 applies bounded online exact feedback to controller anchors
+**Then** the online controller records zero soundness mistakes, zero completeness
+mistakes, a positive perturbation-family holdout delta, nonnegative prior-
+retention delta, no-feedback and shuffled-feedback controls at zero or worse
+delta, at least one concrete KAN-CL anchor, at least one rolled-back shuffled
+candidate, no model-weight mutation, `fr11_resyn_kancl_ready=true`, and an
+`honest_verdict` beginning with `complete_`.
+
+### SCENARIO-LEARN-3090-BLOCKED: Missing Fixture Preconditions Fail Closed
+
+**Given** missing, malformed, or not-ready Exp 3084 fixture evidence
+**When** Exp 3090 runs
+**Then** it writes the required artifact fields with zeroed metrics,
+`fr11_resyn_kancl_ready=false`, no live model inference claim, no model-weight
+mutation claim, explicit failed precondition diagnostics, and
+`honest_verdict="blocked_fixture_precondition_failed"`.
+
+## Implementation Status (REQ-LEARN-3090)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-LEARN-3090 | Implemented (`python/carnot/eval/fr11_resyn_kancl_completeness_repair_v1.py`) | Implemented (`tests/python/test_experiment_3090_fr11_resyn_kancl_completeness_repair_v1.py`) |
