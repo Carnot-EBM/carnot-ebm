@@ -2441,6 +2441,65 @@ calibration is complete or `blocked_` when required source evidence is missing.
 |---|---|---|
 | REQ-VERIFY-3144 | Implemented (`python/carnot/eval/ebt_arm_false_accept_calibration_boundary_v3.py`) | Implemented (`tests/python/test_experiment_3144_ebt_arm_false_accept_calibration_boundary_v3.py`) |
 
+### REQ-VERIFY-3158: EBCN Energy Sidecar Calibration v1
+
+The repository shall provide an Exp 3158 offline EBCN-inspired energy sidecar
+calibration generator that writes
+`results/experiment_3158_ebcn_energy_sidecar_calibration_v1.json` from checked-in
+exact-labeled evidence only. The generator MUST consume the Exp 3144 sidecar
+calibration rows, Exp 3136 known false-accept autopsy rows, Exp 3137 exact-safe
+accept/abstain contract rows, Exp 3138 canonical grounding rows, and local
+research/reference files. It MUST NOT run live model inference, train an EBCN
+or EBT model, integrate the sidecar into generation, mutate model weights, push
+commits, or modify `scripts/research_conductor.py`.
+
+The calibration MUST select exact-labeled rows covering known false accepts,
+clean accepts, contradictions, and satisfiable drift cases. It MUST define a
+bounded scalar energy from label-blind sidecar fields, define per-row
+violation-localization fields from monitor ledger positions or a deterministic
+diagnostic fallback, and compute whether scalar energy separates known false
+accepts from clean exact rows without using exact labels, false-accept flags,
+or approximation-gap labels as scalar-energy inputs.
+
+The terminal artifact MUST include `ebcn_energy_sidecar_calibration_v1_ready`,
+`exact_labeled_row_count`, `known_false_accept_rows_scored`,
+`scalar_energy_auc`, `violation_localization_coverage`,
+`scale_compatibility_notes`, `live_integration_claim_allowed`,
+`residual_blockers`, `tests_run`, `source_artifacts`, `inference_substrate`,
+and `honest_verdict`. `live_integration_claim_allowed` MUST remain false unless
+real generation-path sidecar integration code and tests are implemented in the
+same change.
+
+`ebcn_energy_sidecar_calibration_v1_ready` may be true only when required
+checked-in source artifacts are present, at least one exact-labeled row is
+scored, every Exp 3136 known false-accept row is scored, scalar-energy AUC is
+finite against clean exact rows, violation localization covers every row that
+requires localization, no label-aware field is used in scalar energy, the
+inference substrate declares zero new live model calls, and residual blockers
+keep live verifier integration disallowed.
+
+### SCENARIO-VERIFY-3158: Bounded EBCN Sidecar Scores Exact False Accepts
+
+Given Exp 3144 contains row-level sidecar energy fields, Exp 3136 identifies
+known false accepts with exact labels and monitor events, Exp 3137 contains the
+exact-safe accept/abstain contract, and Exp 3138 contains canonical grounding
+for the false-accept regressions,
+When the Exp 3158 calibration generator runs,
+Then it writes the terminal JSON artifact, consumes only checked-in artifacts,
+scores exact-labeled rows spanning false accepts, clean accepts,
+contradictions, and satisfiable drift, reports a bounded scalar energy AUC
+against clean exact rows, reports violation-localization coverage, records
+scale-compatibility assumptions for branch-composed energies, leaves
+`live_integration_claim_allowed=false`, and uses an `honest_verdict` beginning
+with `complete:` when diagnostic evidence is complete or `blocked_` when
+required source evidence is missing.
+
+## Implementation Status (REQ-VERIFY-3158)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-VERIFY-3158 | Implemented (`python/carnot/eval/ebcn_energy_sidecar_calibration_v1.py`) | Implemented (`tests/python/test_experiment_3158_ebcn_energy_sidecar_calibration_v1.py`) |
+
 ### REQ-VERIFY-3006: EqR Fixed-Point Energy Diagnostic Over Cached Validator Trajectories
 
 The repository shall provide a deterministic Exp 3006 fixed-point energy

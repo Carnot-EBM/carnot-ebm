@@ -1,0 +1,989 @@
+{
+  "artifact": "experiment_3158_ebcn_energy_sidecar_calibration_v1",
+  "blocked_reasons": [],
+  "calibration_rows": [
+    {
+      "categories": [
+        "clean_accept",
+        "satisfiable_drift"
+      ],
+      "contract_decision": "accept",
+      "deterministic_constraint_penalty": 0.0,
+      "difficulty_buckets": [
+        "easy",
+        "satisfiable_drift",
+        "fragment_code"
+      ],
+      "energy_branches": [
+        {
+          "name": "structural_constraint",
+          "value": 0.0,
+          "weight": 0.45
+        },
+        {
+          "name": "sidecar_global_energy",
+          "value": 0.240756,
+          "weight": 0.35
+        },
+        {
+          "name": "answer_uncertainty",
+          "value": 0.278499,
+          "weight": 0.2
+        }
+      ],
+      "exact_label": "VALID",
+      "exact_outcome": "accepted",
+      "expected_action": "accept",
+      "failure_mechanism": "no_failure",
+      "final_energy_proxy": 0.317099,
+      "fixture_family": "arithmetic_code_assertions",
+      "grounding_blocks": [],
+      "known_false_accept": false,
+      "live_decision": "accept",
+      "localization_covered": true,
+      "monitor_events": [
+        {
+          "event_index": 0,
+          "event_type": "partial_trace_state",
+          "payload": {
+            "fragment_count": 2,
+            "fragment_ids": [
+              "resyn-3084-arith-000:assert_claim",
+              "resyn-3084-arith-000:assert_expression"
+            ],
+            "fragment_status_counts": {
+              "pass": 2
+            },
+            "partial_state": "fragment_trace_present"
+          }
+        },
+        {
+          "event_index": 1,
+          "event_type": "constraint_ledger",
+          "payload": {
+            "constraint_count": 2,
+            "constraints": [
+              {
+                "constraint_id": "resyn-3084-arith-000:assert_claim",
+                "expected_direction": "no change",
+                "failing_constraint": "",
+                "solver_evidence": {
+                  "assertion": "assert (((3 + 2) * 1) - 0) == 5",
+                  "authority": "python_ast_literal_evaluator",
+                  "claimed_fragment": "5",
+                  "claimed_value": 5,
+                  "computed_value": 5,
+                  "expression": "(3 + 2) * 1 - 0"
+                },
+                "status": "pass"
+              },
+              {
+                "constraint_id": "resyn-3084-arith-000:assert_expression",
+                "expected_direction": "no change",
+                "failing_constraint": "",
+                "solver_evidence": {
+                  "authority": "python_ast_literal_evaluator",
+                  "computed_value": 5,
+                  "expression": "(3 + 2) * 1 - 0"
+                },
+                "status": "pass"
+              }
+            ],
+            "ledger_action": "accept",
+            "ledger_hash": "e46ded2d10992fd54e9f5ea2e23aa03f1fb4961d597c34b4b5794f843ce6688f",
+            "ledger_source": "fragment_checks"
+          }
+        },
+        {
+          "event_index": 2,
+          "event_type": "exact_test_z3_result",
+          "payload": {
+            "answer_extraction_format": "validity_token",
+            "exact_authority_available": true,
+            "exact_label": "VALID",
+            "expected_action": "accept",
+            "label_source": "python_ast_runtime_execution",
+            "solver_label": "assertion_passes"
+          }
+        },
+        {
+          "event_index": 3,
+          "event_type": "candidate_final_answer",
+          "payload": {
+            "expected_action": "accept",
+            "extracted_answer": "VALID",
+            "final_answer_consistent_with_exact": true,
+            "final_answer_consistent_with_ledger": true,
+            "has_returned_answer": true,
+            "ledger_action": "accept",
+            "live_decision": "accept",
+            "observed": true,
+            "prompt_hash": "7e82d3fd8011419dc0894ec1d4e79a0756ec05867e86e981219033db53e22b17",
+            "raw_output_hash": "01a25c87e8a7d939bf8a17dedcb42b55bd2ee3ad88bff43b45383a983e258faa"
+          }
+        },
+        {
+          "event_index": 4,
+          "event_type": "drift_classification",
+          "payload": {
+            "exact_label": "VALID",
+            "expected_action": "accept",
+            "failure_mechanism": "no_failure",
+            "is_monitor_violation": false,
+            "ledger_action": "accept",
+            "live_decision": "accept"
+          }
+        }
+      ],
+      "quality_proxy": 0.721501,
+      "row_id": "resyn-3084-arith-000",
+      "scalar_energy": 0.139964,
+      "uncertainty_proxy": 0.278499,
+      "uses_exact_label_reference_for_score": false,
+      "violation_expected": false,
+      "violation_localization": []
+    },
+    {
+      "categories": [
+        "contradiction"
+      ],
+      "contract_decision": "reject",
+      "deterministic_constraint_penalty": 1.02,
+      "difficulty_buckets": [
+        "easy",
+        "contradiction",
+        "fragment_code"
+      ],
+      "energy_branches": [
+        {
+          "name": "structural_constraint",
+          "value": 0.50495,
+          "weight": 0.45
+        },
+        {
+          "name": "sidecar_global_energy",
+          "value": 0.727038,
+          "weight": 0.35
+        },
+        {
+          "name": "answer_uncertainty",
+          "value": 0.584718,
+          "weight": 0.2
+        }
+      ],
+      "exact_label": "INVALID",
+      "exact_outcome": "rejected",
+      "expected_action": "reject",
+      "failure_mechanism": "no_failure",
+      "final_energy_proxy": 2.663518,
+      "fixture_family": "arithmetic_code_assertions",
+      "grounding_blocks": [],
+      "known_false_accept": false,
+      "live_decision": "reject",
+      "localization_covered": true,
+      "monitor_events": [
+        {
+          "event_index": 5,
+          "event_type": "partial_trace_state",
+          "payload": {
+            "fragment_count": 2,
+            "fragment_ids": [
+              "resyn-3084-arith-001:assert_claim",
+              "resyn-3084-arith-001:assert_expression"
+            ],
+            "fragment_status_counts": {
+              "fail": 1,
+              "pass": 1
+            },
+            "partial_state": "fragment_trace_present"
+          }
+        },
+        {
+          "event_index": 6,
+          "event_type": "constraint_ledger",
+          "payload": {
+            "constraint_count": 2,
+            "constraints": [
+              {
+                "constraint_id": "resyn-3084-arith-001:assert_claim",
+                "expected_direction": "replace claimed value 16 with 14",
+                "failing_constraint": "claimed_value == computed_value",
+                "solver_evidence": {
+                  "assertion": "assert (((4 + 3) * 2) - 0) == 16",
+                  "authority": "python_ast_literal_evaluator",
+                  "claimed_fragment": "16",
+                  "claimed_value": 16,
+                  "computed_value": 14,
+                  "expression": "(4 + 3) * 2 - 0"
+                },
+                "status": "fail"
+              },
+              {
+                "constraint_id": "resyn-3084-arith-001:assert_expression",
+                "expected_direction": "no change",
+                "failing_constraint": "",
+                "solver_evidence": {
+                  "authority": "python_ast_literal_evaluator",
+                  "computed_value": 14,
+                  "expression": "(4 + 3) * 2 - 0"
+                },
+                "status": "pass"
+              }
+            ],
+            "ledger_action": "reject",
+            "ledger_hash": "ba3aa8fa86168226c8d19cb05ff5257a4259a9cef2bac9f688de982f4db4f6a8",
+            "ledger_source": "fragment_checks"
+          }
+        },
+        {
+          "event_index": 7,
+          "event_type": "exact_test_z3_result",
+          "payload": {
+            "answer_extraction_format": "validity_token",
+            "exact_authority_available": true,
+            "exact_label": "INVALID",
+            "expected_action": "reject",
+            "label_source": "python_ast_runtime_execution",
+            "solver_label": "assertion_fails"
+          }
+        },
+        {
+          "event_index": 8,
+          "event_type": "candidate_final_answer",
+          "payload": {
+            "expected_action": "reject",
+            "extracted_answer": "INVALID",
+            "final_answer_consistent_with_exact": true,
+            "final_answer_consistent_with_ledger": true,
+            "has_returned_answer": true,
+            "ledger_action": "reject",
+            "live_decision": "reject",
+            "observed": true,
+            "prompt_hash": "5ed1807ffc115b8986aab297c0b0987297a8b355a2e9b5502fc2412866b58470",
+            "raw_output_hash": "a368c09c5437a5f33ca8e5a0c926b436caa5253642292fb5585cf4a66da9ef45"
+          }
+        },
+        {
+          "event_index": 9,
+          "event_type": "drift_classification",
+          "payload": {
+            "exact_label": "INVALID",
+            "expected_action": "reject",
+            "failure_mechanism": "no_failure",
+            "is_monitor_violation": false,
+            "ledger_action": "reject",
+            "live_decision": "reject"
+          }
+        }
+      ],
+      "quality_proxy": 0.415282,
+      "row_id": "resyn-3084-arith-001",
+      "scalar_energy": 0.598634,
+      "uncertainty_proxy": 0.584718,
+      "uses_exact_label_reference_for_score": false,
+      "violation_expected": true,
+      "violation_localization": [
+        {
+          "branch": "structural_constraint",
+          "position": "resyn-3084-arith-001:assert_claim",
+          "severity": 0.50495,
+          "source": "monitor_constraint_ledger"
+        }
+      ]
+    },
+    {
+      "categories": [
+        "clean_accept",
+        "satisfiable_drift"
+      ],
+      "contract_decision": "accept",
+      "deterministic_constraint_penalty": 0.0,
+      "difficulty_buckets": [
+        "easy",
+        "satisfiable_drift",
+        "fragment_code"
+      ],
+      "energy_branches": [
+        {
+          "name": "structural_constraint",
+          "value": 0.0,
+          "weight": 0.45
+        },
+        {
+          "name": "sidecar_global_energy",
+          "value": 0.24147,
+          "weight": 0.35
+        },
+        {
+          "name": "answer_uncertainty",
+          "value": 0.279539,
+          "weight": 0.2
+        }
+      ],
+      "exact_label": "VALID",
+      "exact_outcome": "accepted",
+      "expected_action": "accept",
+      "failure_mechanism": "no_failure",
+      "final_energy_proxy": 0.318339,
+      "fixture_family": "arithmetic_code_assertions",
+      "grounding_blocks": [],
+      "known_false_accept": false,
+      "live_decision": "accept",
+      "localization_covered": true,
+      "monitor_events": [
+        {
+          "event_index": 10,
+          "event_type": "partial_trace_state",
+          "payload": {
+            "fragment_count": 0,
+            "fragment_ids": [],
+            "fragment_status_counts": {},
+            "partial_state": "no_fragment_trace"
+          }
+        },
+        {
+          "event_index": 11,
+          "event_type": "constraint_ledger",
+          "payload": {
+            "constraint_count": 0,
+            "constraints": [],
+            "ledger_action": "accept",
+            "ledger_hash": "d768214591fa14a32c8e95a92e1543c748adc5d197ff03d6695c062ff363ad92",
+            "ledger_source": "exact_label_fallback"
+          }
+        },
+        {
+          "event_index": 12,
+          "event_type": "exact_test_z3_result",
+          "payload": {
+            "answer_extraction_format": "validity_token",
+            "exact_authority_available": true,
+            "exact_label": "VALID",
+            "expected_action": "accept",
+            "label_source": "python_ast_runtime_execution",
+            "solver_label": "assertion_passes"
+          }
+        },
+        {
+          "event_index": 13,
+          "event_type": "candidate_final_answer",
+          "payload": {
+            "expected_action": "accept",
+            "extracted_answer": "VALID",
+            "final_answer_consistent_with_exact": true,
+            "final_answer_consistent_with_ledger": true,
+            "has_returned_answer": true,
+            "ledger_action": "accept",
+            "live_decision": "accept",
+            "observed": true,
+            "prompt_hash": "8ccbbc7526005f1ccfa226e39f474a6d453860fc92038292f21a5be445c6fb25",
+            "raw_output_hash": "01a25c87e8a7d939bf8a17dedcb42b55bd2ee3ad88bff43b45383a983e258faa"
+          }
+        },
+        {
+          "event_index": 14,
+          "event_type": "drift_classification",
+          "payload": {
+            "exact_label": "VALID",
+            "expected_action": "accept",
+            "failure_mechanism": "no_failure",
+            "is_monitor_violation": false,
+            "ledger_action": "accept",
+            "live_decision": "accept"
+          }
+        }
+      ],
+      "quality_proxy": 0.720461,
+      "row_id": "resyn-3084-arith-002",
+      "scalar_energy": 0.140422,
+      "uncertainty_proxy": 0.279539,
+      "uses_exact_label_reference_for_score": false,
+      "violation_expected": false,
+      "violation_localization": []
+    },
+    {
+      "categories": [
+        "known_false_accept",
+        "contradiction"
+      ],
+      "contract_decision": "abstain",
+      "deterministic_constraint_penalty": 1.04,
+      "difficulty_buckets": [
+        "easy",
+        "contradiction",
+        "fragment_code"
+      ],
+      "energy_branches": [
+        {
+          "name": "structural_constraint",
+          "value": 0.509804,
+          "weight": 0.45
+        },
+        {
+          "name": "sidecar_global_energy",
+          "value": 0.730236,
+          "weight": 0.35
+        },
+        {
+          "name": "answer_uncertainty",
+          "value": 0.588138,
+          "weight": 0.2
+        }
+      ],
+      "exact_label": "INVALID",
+      "exact_outcome": "rejected",
+      "expected_action": "reject",
+      "failure_mechanism": "contradiction",
+      "final_energy_proxy": 2.706938,
+      "fixture_family": "arithmetic_code_assertions",
+      "grounding_blocks": [
+        "canonicalization",
+        "premise_grounding",
+        "ledger_replay"
+      ],
+      "known_false_accept": true,
+      "live_decision": "accept",
+      "localization_covered": true,
+      "monitor_events": [
+        {
+          "event_index": 15,
+          "event_type": "partial_trace_state",
+          "payload": {
+            "fragment_count": 0,
+            "fragment_ids": [],
+            "fragment_status_counts": {},
+            "partial_state": "no_fragment_trace"
+          }
+        },
+        {
+          "event_index": 16,
+          "event_type": "constraint_ledger",
+          "payload": {
+            "constraint_count": 0,
+            "constraints": [],
+            "ledger_action": "reject",
+            "ledger_hash": "7c1974b6ff884697ea2527f0824b062096e58eddd80e0fc76ba23989a4e253eb",
+            "ledger_source": "exact_label_fallback"
+          }
+        },
+        {
+          "event_index": 17,
+          "event_type": "exact_test_z3_result",
+          "payload": {
+            "answer_extraction_format": "validity_token",
+            "exact_authority_available": true,
+            "exact_label": "INVALID",
+            "expected_action": "reject",
+            "label_source": "python_ast_runtime_execution",
+            "solver_label": "assertion_fails"
+          }
+        },
+        {
+          "event_index": 18,
+          "event_type": "candidate_final_answer",
+          "payload": {
+            "expected_action": "reject",
+            "extracted_answer": "VALID",
+            "final_answer_consistent_with_exact": false,
+            "final_answer_consistent_with_ledger": false,
+            "has_returned_answer": true,
+            "ledger_action": "reject",
+            "live_decision": "accept",
+            "observed": true,
+            "prompt_hash": "7a726516254046b59f9f74ed1ce9e8e68596565170d9b2d7eea39ab904d4b178",
+            "raw_output_hash": "01a25c87e8a7d939bf8a17dedcb42b55bd2ee3ad88bff43b45383a983e258faa"
+          }
+        },
+        {
+          "event_index": 19,
+          "event_type": "drift_classification",
+          "payload": {
+            "exact_label": "INVALID",
+            "expected_action": "reject",
+            "failure_mechanism": "contradiction",
+            "is_monitor_violation": true,
+            "ledger_action": "reject",
+            "live_decision": "accept"
+          }
+        }
+      ],
+      "quality_proxy": 0.411862,
+      "row_id": "resyn-3084-arith-003",
+      "scalar_energy": 0.602622,
+      "uncertainty_proxy": 0.588138,
+      "uses_exact_label_reference_for_score": false,
+      "violation_expected": true,
+      "violation_localization": [
+        {
+          "branch": "answer_consistency",
+          "position": "candidate_final_answer",
+          "severity": 1.0,
+          "source": "monitor_candidate_final_answer"
+        }
+      ]
+    },
+    {
+      "categories": [
+        "repairable_drift"
+      ],
+      "contract_decision": "reject",
+      "deterministic_constraint_penalty": 1.0,
+      "difficulty_buckets": [
+        "hard",
+        "fragment_code"
+      ],
+      "energy_branches": [
+        {
+          "name": "structural_constraint",
+          "value": 0.5,
+          "weight": 0.45
+        },
+        {
+          "name": "sidecar_global_energy",
+          "value": 0.722297,
+          "weight": 0.35
+        },
+        {
+          "name": "answer_uncertainty",
+          "value": 0.568966,
+          "weight": 0.2
+        }
+      ],
+      "exact_label": "REPAIRABLE",
+      "exact_outcome": "repairable",
+      "expected_action": "reject",
+      "failure_mechanism": "no_failure",
+      "final_energy_proxy": 2.600966,
+      "fixture_family": "repairable_invalid_candidates",
+      "grounding_blocks": [],
+      "known_false_accept": false,
+      "live_decision": "reject",
+      "localization_covered": true,
+      "monitor_events": [
+        {
+          "event_index": 120,
+          "event_type": "partial_trace_state",
+          "payload": {
+            "fragment_count": 3,
+            "fragment_ids": [
+              "resyn-3084-repair-json-000:json_document",
+              "resyn-3084-repair-json-000:required_field:limit",
+              "resyn-3084-repair-json-000:required_field:mode"
+            ],
+            "fragment_status_counts": {
+              "fail": 1,
+              "non-applicable": 2
+            },
+            "partial_state": "fragment_trace_present"
+          }
+        },
+        {
+          "event_index": 121,
+          "event_type": "constraint_ledger",
+          "payload": {
+            "constraint_count": 3,
+            "constraints": [
+              {
+                "constraint_id": "resyn-3084-repair-json-000:json_document",
+                "expected_direction": "produce parseable JSON while preserving required fields",
+                "failing_constraint": "valid_json_document",
+                "solver_evidence": {
+                  "authority": "python_json_parser",
+                  "candidate": "{\"mode\": \"bounded\" \"limit\": 2}",
+                  "parse_error": "Expecting ',' delimiter: line 1 column 20 (char 19)"
+                },
+                "status": "fail"
+              },
+              {
+                "constraint_id": "resyn-3084-repair-json-000:required_field:limit",
+                "expected_direction": "fix JSON syntax before checking required fields",
+                "failing_constraint": "",
+                "solver_evidence": {
+                  "authority": "python_json_parser",
+                  "field": "limit",
+                  "json_parse_passed": false
+                },
+                "status": "non-applicable"
+              },
+              {
+                "constraint_id": "resyn-3084-repair-json-000:required_field:mode",
+                "expected_direction": "fix JSON syntax before checking required fields",
+                "failing_constraint": "",
+                "solver_evidence": {
+                  "authority": "python_json_parser",
+                  "field": "mode",
+                  "json_parse_passed": false
+                },
+                "status": "non-applicable"
+              }
+            ],
+            "ledger_action": "reject",
+            "ledger_hash": "58af0e3b05a247f8d79e646d8c19effd33c5d811beeb7cc0dcfabcbad293148f",
+            "ledger_source": "fragment_checks"
+          }
+        },
+        {
+          "event_index": 122,
+          "event_type": "exact_test_z3_result",
+          "payload": {
+            "answer_extraction_format": "repairability_token",
+            "exact_authority_available": true,
+            "exact_label": "REPAIRABLE",
+            "expected_action": "reject",
+            "label_source": "json_parser",
+            "solver_label": "repairable"
+          }
+        },
+        {
+          "event_index": 123,
+          "event_type": "candidate_final_answer",
+          "payload": {
+            "expected_action": "reject",
+            "extracted_answer": "REPAIRABLE",
+            "final_answer_consistent_with_exact": true,
+            "final_answer_consistent_with_ledger": true,
+            "has_returned_answer": true,
+            "ledger_action": "reject",
+            "live_decision": "reject",
+            "observed": true,
+            "prompt_hash": "aa50de07cb7f15bcf383976384d38c0e346f2ddcb8067de1c696422d99ec9ece",
+            "raw_output_hash": "1deed3ec0a9281a8d4950bfd4d27b62f56db8da0719064bd6804c24ea24708b6"
+          }
+        },
+        {
+          "event_index": 124,
+          "event_type": "drift_classification",
+          "payload": {
+            "exact_label": "REPAIRABLE",
+            "expected_action": "reject",
+            "failure_mechanism": "no_failure",
+            "is_monitor_violation": false,
+            "ledger_action": "reject",
+            "live_decision": "reject"
+          }
+        }
+      ],
+      "quality_proxy": 0.431034,
+      "row_id": "resyn-3084-repair-json-000",
+      "scalar_energy": 0.591597,
+      "uncertainty_proxy": 0.568966,
+      "uses_exact_label_reference_for_score": false,
+      "violation_expected": true,
+      "violation_localization": [
+        {
+          "branch": "structural_constraint",
+          "position": "resyn-3084-repair-json-000:json_document",
+          "severity": 0.5,
+          "source": "monitor_constraint_ledger"
+        }
+      ]
+    },
+    {
+      "categories": [
+        "known_false_accept",
+        "contradiction"
+      ],
+      "contract_decision": "abstain",
+      "deterministic_constraint_penalty": 2.0,
+      "difficulty_buckets": [
+        "medium",
+        "contradiction"
+      ],
+      "energy_branches": [
+        {
+          "name": "structural_constraint",
+          "value": 0.666667,
+          "weight": 0.45
+        },
+        {
+          "name": "sidecar_global_energy",
+          "value": 0.825735,
+          "weight": 0.35
+        },
+        {
+          "name": "answer_uncertainty",
+          "value": 0.702381,
+          "weight": 0.2
+        }
+      ],
+      "exact_label": "UNSAT",
+      "exact_outcome": "rejected",
+      "expected_action": "reject",
+      "failure_mechanism": "contradiction",
+      "final_energy_proxy": 4.738381,
+      "fixture_family": "smt_constraints",
+      "grounding_blocks": [
+        "canonicalization",
+        "premise_grounding",
+        "ledger_replay"
+      ],
+      "known_false_accept": true,
+      "live_decision": "accept",
+      "localization_covered": true,
+      "monitor_events": [
+        {
+          "event_index": 240,
+          "event_type": "partial_trace_state",
+          "payload": {
+            "fragment_count": 0,
+            "fragment_ids": [],
+            "fragment_status_counts": {},
+            "partial_state": "no_fragment_trace"
+          }
+        },
+        {
+          "event_index": 241,
+          "event_type": "constraint_ledger",
+          "payload": {
+            "constraint_count": 0,
+            "constraints": [],
+            "ledger_action": "reject",
+            "ledger_hash": "7c1974b6ff884697ea2527f0824b062096e58eddd80e0fc76ba23989a4e253eb",
+            "ledger_source": "exact_label_fallback"
+          }
+        },
+        {
+          "event_index": 242,
+          "event_type": "exact_test_z3_result",
+          "payload": {
+            "answer_extraction_format": "sat_token",
+            "exact_authority_available": true,
+            "exact_label": "UNSAT",
+            "expected_action": "reject",
+            "label_source": "z3_solver",
+            "solver_label": "unsat"
+          }
+        },
+        {
+          "event_index": 243,
+          "event_type": "candidate_final_answer",
+          "payload": {
+            "expected_action": "reject",
+            "extracted_answer": "VALID",
+            "final_answer_consistent_with_exact": false,
+            "final_answer_consistent_with_ledger": false,
+            "has_returned_answer": true,
+            "ledger_action": "reject",
+            "live_decision": "accept",
+            "observed": true,
+            "prompt_hash": "157c2e94f820f57a64ff6476e3276b339237382993700a6545ac09d003367687",
+            "raw_output_hash": "01a25c87e8a7d939bf8a17dedcb42b55bd2ee3ad88bff43b45383a983e258faa"
+          }
+        },
+        {
+          "event_index": 244,
+          "event_type": "drift_classification",
+          "payload": {
+            "exact_label": "UNSAT",
+            "expected_action": "reject",
+            "failure_mechanism": "contradiction",
+            "is_monitor_violation": true,
+            "ledger_action": "reject",
+            "live_decision": "accept"
+          }
+        }
+      ],
+      "quality_proxy": 0.297619,
+      "row_id": "resyn-3084-smt-000",
+      "scalar_energy": 0.729484,
+      "uncertainty_proxy": 0.702381,
+      "uses_exact_label_reference_for_score": false,
+      "violation_expected": true,
+      "violation_localization": [
+        {
+          "branch": "answer_consistency",
+          "position": "candidate_final_answer",
+          "severity": 1.0,
+          "source": "monitor_candidate_final_answer"
+        }
+      ]
+    }
+  ],
+  "duration_s": 0.00326,
+  "ebcn_energy_sidecar_calibration_v1_ready": true,
+  "exact_labeled_row_count": 6,
+  "honest_verdict": "complete: ebcn_energy_sidecar_calibration_v1_ready=true; exact_labeled_row_count=6; known_false_accept_rows_scored=2; scalar_energy_auc=1.0; live_integration_claim_allowed=false",
+  "inference_substrate": {
+    "executes_models": false,
+    "generation_performed": false,
+    "kind": "checked_in_artifact_ebcn_energy_sidecar_calibration",
+    "live_integration": false,
+    "loads_model_weights": false,
+    "new_live_model_calls": 0,
+    "offline_diagnostic_only": true,
+    "training_performed": false,
+    "upstream_exp3144_new_live_model_calls": 0,
+    "upstream_live_trace_count": 6
+  },
+  "known_false_accept_rows_scored": 2,
+  "label_leakage_audit": {
+    "excluded_fields": [
+      "exact_label",
+      "exact_outcome",
+      "false_accept",
+      "known_false_accept",
+      "approximation_gap_to_exact_binary"
+    ],
+    "row_count_with_exact_label_reference_flag": 0,
+    "uses_exact_label_for_scalar_energy": false
+  },
+  "live_integration_claim_allowed": false,
+  "readiness_checks": {
+    "clean_accept_rows_present": true,
+    "exact_labeled_rows_present": true,
+    "known_false_accept_rows_complete": true,
+    "live_integration_claim_blocked": true,
+    "no_label_leakage_into_scalar_energy": true,
+    "required_sources_present": true,
+    "scalar_energy_auc_finite": true,
+    "violation_localization_complete": true
+  },
+  "residual_blockers": [
+    "no live verifier integration implemented or exercised",
+    "EBCN branch scales are hand-bounded from sidecar proxies, not learned comparable energies",
+    "per-position localization is row/constraint-event diagnostic, not token-level live energy",
+    "exact-safe thresholds are not validated on held-out live rows",
+    "single selected-model trace confound remains",
+    "calibration panel is too small for live threshold promotion"
+  ],
+  "row_category_counts": {
+    "clean_accept": 2,
+    "contradiction": 3,
+    "known_false_accept": 2,
+    "repairable_drift": 1,
+    "satisfiable_drift": 2
+  },
+  "run_date": "20260526",
+  "scalar_energy_auc": 1.0,
+  "scalar_energy_definition": {
+    "bounded_transform": "x -> max(0, x) / (1 + max(0, x)); uncertainty is already [0,1]",
+    "branch_weights": {
+      "answer_uncertainty": 0.2,
+      "sidecar_global_energy": 0.35,
+      "structural_constraint": 0.45
+    },
+    "excluded_label_aware_fields": [
+      "exact_label",
+      "exact_outcome",
+      "false_accept",
+      "known_false_accept",
+      "approximation_gap_to_exact_binary"
+    ],
+    "score_inputs": [
+      "deterministic_constraint_penalty",
+      "final_energy_proxy",
+      "uncertainty_proxy"
+    ]
+  },
+  "scale_compatibility_notes": [
+    "bounded branch energies are mapped to [0,1] before composition; exact labels are not scalar score inputs",
+    "weights are fixed diagnostic assumptions: structural_constraint=0.45, sidecar_global_energy=0.35, answer_uncertainty=0.20",
+    "raw deterministic_constraint_penalty max=2.0 and final_energy_proxy max=4.738381 are not directly composable without calibration",
+    "localization uses monitor ledger positions or deterministic row-level fallbacks, not token-level live EBCN hidden-state energy"
+  ],
+  "schema": "carnot.ebcn_energy_sidecar_calibration.v1",
+  "source_artifacts": [
+    {
+      "exists": true,
+      "id": "agents_repo_instructions",
+      "path": "AGENTS.md",
+      "required": false,
+      "sha256": "b3d6581b04f16b85f77defb2837c98dc3b60ed51e10b347ecb36e609f318b619"
+    },
+    {
+      "exists": true,
+      "id": "codex_repo_workflow",
+      "path": "CODEX.md",
+      "required": false,
+      "sha256": "1db7ebc1009714f872db83447828a8957c3abb72061832cc1bc307735cd96bbe"
+    },
+    {
+      "exists": true,
+      "id": "claude_authenticity_rules",
+      "path": "CLAUDE.md",
+      "required": false,
+      "sha256": "cdc00581d37d1bd3c77a69b058787f74ecc71545a97c1eab31c48961637b3224"
+    },
+    {
+      "exists": true,
+      "id": "research_references",
+      "path": "research-references.md",
+      "required": false,
+      "sha256": "5cc1392a6901a4a13c796e64ba3c57100f5b1c2bea0c664875da30ae7256c79b"
+    },
+    {
+      "exists": true,
+      "id": "verification_openspec",
+      "path": "openspec/capabilities/verification/spec.md",
+      "required": false,
+      "sha256": "111051724a46f53f2b28a9c25a6e39a3b37e2956d668cc644509040c115e165b"
+    },
+    {
+      "exists": true,
+      "id": "exp3158_module",
+      "path": "python/carnot/eval/ebcn_energy_sidecar_calibration_v1.py",
+      "required": false,
+      "sha256": "37238a09dc3570318f0f20a17edca23029bf8805ecb051238beb39860a9faa5f"
+    },
+    {
+      "exists": true,
+      "id": "exp3158_tests",
+      "path": "tests/python/test_experiment_3158_ebcn_energy_sidecar_calibration_v1.py",
+      "required": false,
+      "sha256": "1344d94e69193397e58906ced193d706f6712b055aa634b8e0b586e1c3fec0bc"
+    },
+    {
+      "exists": true,
+      "id": "exp3144_false_accept_sidecar_calibration",
+      "path": "results/experiment_3144_ebt_arm_false_accept_calibration_boundary_v3.json",
+      "required": true,
+      "sha256": "479b973b5b64aea04ae3f5292b678753398bbd670aeb57cd09e2246a8d49be35"
+    },
+    {
+      "exists": true,
+      "id": "exp3136_false_accept_autopsy",
+      "path": "results/experiment_3136_false_accept_root_cause_autopsy_v1.json",
+      "required": true,
+      "sha256": "3a61c8490030b607c73f50ba2ce145dc4591621ac76f016a42811bedd670776a"
+    },
+    {
+      "exists": true,
+      "id": "exp3137_exact_safe_contract",
+      "path": "results/experiment_3137_exact_safe_accept_abstain_contract_v1.json",
+      "required": true,
+      "sha256": "c8d23896f879ceb1e912989e2ba13db0a43cd195a8ff5e8fb18a7be1b4582f2e"
+    },
+    {
+      "exists": true,
+      "id": "exp3138_canonical_grounding",
+      "path": "results/experiment_3138_canonical_answer_vericot_grounding_pilot_v1.json",
+      "required": true,
+      "sha256": "fc07294c1e4ea32bb8d174c2e99a5d70aa68a1e7e16252eea28f442812300a21"
+    }
+  ],
+  "source_checksums": {
+    "AGENTS.md": "b3d6581b04f16b85f77defb2837c98dc3b60ed51e10b347ecb36e609f318b619",
+    "CLAUDE.md": "cdc00581d37d1bd3c77a69b058787f74ecc71545a97c1eab31c48961637b3224",
+    "CODEX.md": "1db7ebc1009714f872db83447828a8957c3abb72061832cc1bc307735cd96bbe",
+    "openspec/capabilities/verification/spec.md": "111051724a46f53f2b28a9c25a6e39a3b37e2956d668cc644509040c115e165b",
+    "python/carnot/eval/ebcn_energy_sidecar_calibration_v1.py": "37238a09dc3570318f0f20a17edca23029bf8805ecb051238beb39860a9faa5f",
+    "research-references.md": "5cc1392a6901a4a13c796e64ba3c57100f5b1c2bea0c664875da30ae7256c79b",
+    "results/experiment_3136_false_accept_root_cause_autopsy_v1.json": "3a61c8490030b607c73f50ba2ce145dc4591621ac76f016a42811bedd670776a",
+    "results/experiment_3137_exact_safe_accept_abstain_contract_v1.json": "c8d23896f879ceb1e912989e2ba13db0a43cd195a8ff5e8fb18a7be1b4582f2e",
+    "results/experiment_3138_canonical_answer_vericot_grounding_pilot_v1.json": "fc07294c1e4ea32bb8d174c2e99a5d70aa68a1e7e16252eea28f442812300a21",
+    "results/experiment_3144_ebt_arm_false_accept_calibration_boundary_v3.json": "479b973b5b64aea04ae3f5292b678753398bbd670aeb57cd09e2246a8d49be35",
+    "tests/python/test_experiment_3158_ebcn_energy_sidecar_calibration_v1.py": "1344d94e69193397e58906ced193d706f6712b055aa634b8e0b586e1c3fec0bc"
+  },
+  "spec_refs": [
+    "REQ-VERIFY-3158",
+    "SCENARIO-VERIFY-3158"
+  ],
+  "tests_run": [
+    ".venv/bin/pytest tests/python/test_experiment_3158_ebcn_energy_sidecar_calibration_v1.py -q --no-cov",
+    ".venv/bin/coverage run --source=python/carnot/eval -m pytest -o addopts='' tests/python/test_experiment_3158_ebcn_energy_sidecar_calibration_v1.py -q",
+    ".venv/bin/coverage report --include='python/carnot/eval/ebcn_energy_sidecar_calibration_v1.py' --fail-under=100 --show-missing",
+    ".venv/bin/python scripts/check_spec_coverage.py tests/python/test_experiment_3158_ebcn_energy_sidecar_calibration_v1.py",
+    ".venv/bin/pytest tests/python -q"
+  ],
+  "violation_localization_coverage": 1.0
+}
