@@ -6360,3 +6360,4 @@ web search: site |
 | 2026-05-26 12:41 UTC | FR-11 constraint memory retention and drift audit | OK | 81 passed in 3.23s |
 | 2026-05-26 12:53 UTC | ARM/EBT energy-budget sidecar diagnostic v2 | OK | 81 passed in 3.33s |
 | 2026-05-26 13:06 UTC | KAN PWA/MILP verifier abstraction audit | OK | 81 passed in 2.43s |
+| 2026-05-26 13:19 UTC | Hardware evidence and sampler boundary v5 | OK | 81 passed in 2.65s |
