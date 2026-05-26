@@ -244,5 +244,23 @@
     ".venv/bin/python scripts/check_spec_coverage.py",
     ".venv/bin/pytest tests/python/test_experiment_1664_e2e.py -q --no-cov",
     ".venv/bin/pytest tests/python -q"
+  ],
+  "flagged_adversarial": true,
+  "corrigendum_pending": [
+    {
+      "kind": "IMPLAUSIBLE_PERFECT",
+      "severity": "info",
+      "detail": "repair_success_delta=0.0 (exactly zero). Confirm this is not a stub default."
+    },
+    {
+      "kind": "DURATION_TOO_SHORT",
+      "severity": "critical",
+      "detail": "duration_s=11.453653 but artifact references compute-bound markers (GGUF / CUDA / live model). Loading and running a real model takes >=60.0s minimum; this completed too fast to have invoked the model."
+    },
+    {
+      "kind": "METHODOLOGY_MISSING",
+      "severity": "warn",
+      "detail": "Compute-bound artifact missing: random_seed, reproducibility_checksum. Methodology unverifiable."
+    }
   ]
 }
