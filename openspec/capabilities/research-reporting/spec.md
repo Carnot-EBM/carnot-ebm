@@ -8982,3 +8982,74 @@ and an `honest_verdict` that starts with `complete:`.
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-REPORT-3095 | Implemented (`python/carnot/reporting/archive_v288_activate_v289_3095.py`) | Implemented (`tests/python/test_experiment_3095_archive_v288_activate_v289.py`) |
+
+### REQ-REPORT-3096: Publication Blocker Triage And Retirement Ledger For Matrix V23
+
+The repository shall provide an Exp 3096 publication blocker triage and
+retirement ledger generator that writes
+`results/experiment_3096_publication_blocker_triage_and_retirement_ledger_v2.json`
+using matrix v22 and the milestone .288 capstone as the authority artifacts.
+The generator MUST read
+`results/experiment_3093_cross_corpus_matrix_v22.json` and
+`results/experiment_3094_capstone_v288.json` before categorizing blockers. It
+MUST NOT run live model inference, verifier scoring, repair generation, solver
+execution, synthesis, board flashing, hardware readback, the conductor,
+pushes, or modify `scripts/research_conductor.py`.
+
+The ledger MUST categorize every matrix v22 publication blocker into exactly
+one non-retired category from: `verifier_repair`, `formal_feedback`,
+`repair_missing_artifact`, `fr11_boundary`, `ebt_arm_projection`,
+`hardware_evidence`, `publication_readiness`, `model_spec_gap`,
+`missing_artifact`, or `bounded_status`. Matrix v22 retired rows MUST be listed
+separately under `retired_status` so matrix v23 can keep retired claims out of
+publication-blocker counts while preserving traceability. Headline model-spec
+gaps from matrix v22 and capstone .288 MUST remain visible as `model_spec_gap`
+entries and MUST NOT be hidden inside verifier or formal-feedback rows.
+Hardware rows that depend on GateMate, SSQA, host-visible smoke, readback, or
+operator preconditions MUST be marked as requiring external operator evidence
+rather than conductor evidence. FR-11 boundary rows MAY be empty when matrix
+v22 has already reduced FR-11 to clean controller-only status, but the category
+and criteria MUST still be present for matrix v23 consumption.
+
+The terminal artifact MUST include `blocker_triage_ready`,
+`publication_blocker_count_before`, `blocker_categories`,
+`reducible_in_v289`, `operator_evidence_required`,
+`retire_or_promote_criteria`, `source_artifacts`, `inference_substrate`, and
+`honest_verdict`. `publication_blocker_count_before` MUST be derived from
+matrix v22 rather than capstone prose. `blocker_triage_ready` MUST be true only
+when matrix v22 and capstone .288 are readable, both authorities agree on the
+publication blocker count, every matrix v22 publication blocker appears in
+exactly one non-retired category, all matrix v22 retired rows appear in
+`retired_status`, every category has mechanical retire-or-promote criteria,
+hardware operator-evidence rows are separated from `.289`-reducible rows, and
+the inference substrate declares aggregation from checked-in artifacts with no
+live inference or hardware execution. `honest_verdict` MUST start with
+`complete:` when the ledger is ready; otherwise it MUST report the blocked
+precondition honestly.
+
+#### SCENARIO-REPORT-3096: V23 Triage Separates Reducible And External Blockers
+
+**Given** matrix v22 exists, reports `publication_blocker_count=36`, and lists
+publication blockers covering verifier/repair evidence, formal feedback,
+missing repair-panel evidence, hardware evidence, sidecar projection-only
+evidence, bounded publication-readiness rows, generic missing artifacts, and
+headline model-spec gaps
+**And** capstone .288 exists, reports the same publication blocker count, and
+keeps `paper_ready=false`
+**When** the Exp 3096 triage ledger generator runs
+**Then** it writes
+`results/experiment_3096_publication_blocker_triage_and_retirement_ledger_v2.json`
+with `blocker_triage_ready=true`, `publication_blocker_count_before=36`, every
+matrix v22 publication blocker assigned to exactly one non-retired category,
+retired rows assigned to `retired_status`, `.289`-reducible actions listed
+separately from external operator-evidence requirements, category-level
+retire-or-promote criteria for matrix v23, source-artifact provenance for
+matrix v22 and capstone .288, aggregation-only inference substrate metadata,
+no live model or hardware execution, and an `honest_verdict` that starts with
+`complete:`.
+
+## Implementation Status (REQ-REPORT-3096)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-3096 | Planned (`python/carnot/reporting/publication_blocker_triage_retirement_ledger_3096.py`) | Planned (`tests/python/test_experiment_3096_publication_blocker_triage_and_retirement_ledger.py`) |
