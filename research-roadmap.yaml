@@ -1,11 +1,11 @@
-milestone: "2026.05.294"
-milestone_title: "Duration-Corrected Live Verifier Recovery + Repair Materialization + FR-11 Counterexample Closure"
+milestone: "2026.05.295"
+milestone_title: "Receipt-Backed Live SOTA Clearance + Certificate Repair Gate + FR-11 Promotion Pack"
 milestone_doc: "openspec/change-proposals/research-roadmap-vNEXT.md"
 tasks:
-  - id: exp3163-archive-v293-activate-v294
-    milestone: "2026.05.294"
-    deliverable: "results/experiment_3163_archive_v293_activate_v294.json"
-    title: "Archive .293 and activate .294 planning"
+  - id: exp3177-archive-v294-activate-v295
+    milestone: "2026.05.295"
+    deliverable: "results/experiment_3177_archive_v294_activate_v295.json"
+    title: "Archive .294 and activate .295 planning"
     priority: critical
     max_turns: 20
     estimated_wall_time_min: 10
@@ -13,44 +13,45 @@ tasks:
     inference_substrate: "aggregation"
     requires_gpu: false
     prior_failures:
-      - experiment_id: exp3149-archive-v292-activate-v293
-        verdict: "complete: archive_v292_activate_v293_ready=true; prior_publication_blocker_count=55"
-        addressed_by: "Repeats only the scheduled archive scaffold for the completed .293 chain and carries forward .294-specific duration-corrected verifier blockers."
+      - experiment_id: exp3163-archive-v293-activate-v294
+        verdict: "complete: archive_v293_activate_v294_ready=true; prior_publication_blocker_count=65"
+        addressed_by: "Repeats only the scheduled archive scaffold for the completed .294 chain and carries forward .295-specific receipt-backed verifier blockers."
         retire_if_same_verdict: true
-      - experiment_id: exp3162-capstone-v293
-        verdict: "complete: capstone_v293_ready=true; paper_ready=false; publication_blocker_count=65; next_top_gap=clean_live_verifier_corrigendum_repair_gate"
-        addressed_by: "Uses the .293 capstone as authority and does not relabel any blocker as resolved during archive."
+      - experiment_id: exp3176-capstone-v294
+        verdict: "complete: capstone_v294_ready=true; paper_ready=false; publication_blocker_count=73; next_top_gap=clean_live_verifier_adversarial_flag_clearance_repair_gate_unblock"
+        addressed_by: "Uses the .294 capstone as authority and does not relabel any blocker as resolved during archive."
         retire_if_same_verdict: true
     prompt: |
       CONTEXT
-      Project root placeholder: {project_root}. Run date placeholder: {date}. Milestone 2026.05.293 has completed. The next milestone is 2026.05.294. Do not modify research-roadmap.yaml and do not modify scripts/research_conductor.py.
+      Project root placeholder: {project_root}. Run date placeholder: {date}. Milestone 2026.05.294 has completed. The next milestone is 2026.05.295. Do not modify research-roadmap.yaml and do not modify scripts/research_conductor.py.
 
       EXISTING CODE TO READ FIRST
       - CLAUDE.md
       - CODEX.md
       - research-roadmap.yaml
+      - research-roadmap-next.yaml
       - openspec/change-proposals/research-roadmap-vNEXT.md
-      - results/experiment_3161_cross_corpus_matrix_v27.json
-      - results/experiment_3162_capstone_v293.json
+      - results/experiment_3175_cross_corpus_matrix_v28.json
+      - results/experiment_3176_capstone_v294.json
       - ops/status.md
       - ops/changelog.md
 
       TASK
-      Archive the completed .293 milestone state and confirm the .294 planning artifact is ready for conductor activation without editing the active roadmap.
+      Archive the completed .294 milestone state and confirm the .295 planning artifact is ready for conductor activation without editing the active roadmap.
 
       CONCRETE STEPS
-      1. Confirm results/experiment_3162_capstone_v293.json exists and reports capstone_ready=true.
-      2. Summarize .293 status: paper_ready, publication_blocker_count, blocker_delta_from_v26, next_top_gap, live preflight status, clean verifier rerun status, repair gate status, repair ladder status, FR-11 ledger consistency, EBCN/KAN status, and hardware/sampler boundary.
-      3. Confirm research-roadmap-next.yaml targets milestone 2026.05.294 and points to openspec/change-proposals/research-roadmap-vNEXT.md if the file is present in the workspace.
-      4. Record carry-forward blockers: 65 publication blockers, blocked duration/authenticity preflight, missing/gated clean rerun artifact, thin repair-gate artifact, repair ladder missing/gated artifacts, FR-11 ledger consistency 0.857143, bounded EBCN/KAN diagnostics, and no authenticated hardware speedup.
+      1. Confirm results/experiment_3176_capstone_v294.json exists and reports capstone_v294_ready=true.
+      2. Summarize .294 status: paper_ready, publication_blocker_count, blocker_delta_from_v27, missing_artifact_count, verifier status, repair gate status, repair ladder status, FR-11 self-learning status, EBCN/KAN status, hardware boundary, and next_top_gap.
+      3. Confirm research-roadmap-next.yaml targets milestone 2026.05.295 and points to openspec/change-proposals/research-roadmap-vNEXT.md.
+      4. Record carry-forward blockers: 73 publication blockers, gated-skip clean live SOTA verifier, failed GGUF replay preflight, flagged adversarial verifier state, blocked repair gate, no live repair attempts, projection-only EBCN/KAN sidecar, no authenticated hardware speedup, and one carried-forward missing artifact.
       5. Write only the deliverable artifact; do not activate by editing research-roadmap.yaml.
 
       REQUIRED ARTIFACT FIELDS:
-      - archive_v293_activate_v294_ready: bool (principle: activation must be explicit and auditable)
+      - archive_v294_activate_v295_ready: bool (principle: activation must be explicit and auditable)
       - prior_capstone_ready: bool (principle: archive must cite the completed milestone authority)
       - prior_paper_ready: bool (principle: paper readiness must not be inferred)
       - prior_publication_blocker_count: int (principle: blocker count must carry forward exactly)
-      - blocker_delta_from_v26: int (principle: regression/progress must be visible)
+      - blocker_delta_from_v27: int (principle: regression/progress must be visible)
       - next_milestone: str (principle: roadmap handoff must be machine-readable)
       - carry_forward_blockers: list (principle: unresolved claims must stay visible)
       - source_artifacts: list (principle: archive summaries must trace to concrete files)
@@ -59,746 +60,707 @@ tasks:
 
       Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
 
-  - id: exp3164-duration-corrected-authenticity-contract-v2
-    milestone: "2026.05.294"
-    deliverable: "results/experiment_3164_duration_corrected_authenticity_contract_v2.json"
-    title: "Duration-corrected live authenticity contract v2"
+  - id: exp3178-receipt-backed-authenticity-contract-v3
+    milestone: "2026.05.295"
+    deliverable: "results/experiment_3178_receipt_backed_authenticity_contract_v3.json"
+    title: "Receipt-backed live authenticity contract v3"
     priority: critical
-    max_turns: 30
+    max_turns: 100
+    model: opus
     estimated_wall_time_min: 35
     track: "verification"
     inference_substrate: "aggregation_and_contract"
     requires_gpu: false
     prior_failures:
+      - experiment_id: exp3164-duration-corrected-authenticity-contract-v2
+        verdict: "complete: duration_corrected_authenticity_contract_v2_ready=true; old_fixed_duration_rule_retired_as_hard_gate=true"
+        addressed_by: "Extends the v2 measured-work contract with explicit model/cache/CUDA/CPU substrate classification and proof-of-execution receipts."
+        retire_if_same_verdict: true
+      - experiment_id: exp3165-live-sota-authenticity-replay-v2
+        verdict: "blocked_gpu_substrate: live_sota_authenticity_replay_v2_ready=true; preflight_passed=false; live_call_count=0"
+        addressed_by: "Defines how a replay smoke can distinguish unavailable CUDA from missing model cache and bounded CPU fallback without unblocking headline claims."
+        retire_if_same_verdict: true
       - experiment_id: exp3151-live-inference-authenticity-preflight
         verdict: "blocked_duration_too_short: preflight_passed=false; live_call_count=1; duration_s below fixed 60s floor"
-        addressed_by: "Changes the preflight contract from an arbitrary fixed duration floor to measured-work evidence with token-scaled plausibility and repeated-call controls."
-        retire_if_same_verdict: true
-      - experiment_id: exp3139-live-sota-verifier-rerun-v7
-        verdict: "flagged_adversarial: preflight said no model loaded while artifact claimed six live calls"
-        addressed_by: "Keeps model-load evidence mandatory and adds replayable transcript hashes before another rerun can unlock repair."
+        addressed_by: "Keeps the arbitrary duration floor retired and adds stronger receipt fields instead of reviving the old heuristic."
         retire_if_same_verdict: true
     prompt: |
       CONTEXT
-      Project root placeholder: {project_root}. Run date placeholder: {date}. .293 proved that a mandated local GGUF can load and answer, but the fixed 60s duration plausibility floor rejected the artifact. This task repairs the contract before any further live verifier rerun.
+      Project root placeholder: {project_root}. Run date placeholder: {date}. .294 produced a better duration-corrected contract but still blocked local SOTA replay because the substrate was unavailable. This task defines the v3 receipt contract before another live verifier attempt.
 
       EXISTING CODE TO READ FIRST
       - CLAUDE.md
       - CODEX.md
-      - research-references.md
       - scripts/experiment_template.py
-      - results/experiment_3150_adversarial_verifier_evidence_corrigendum_v1.json
-      - results/experiment_3151_live_inference_authenticity_preflight_v1.json
-      - results/experiment_3162_capstone_v293.json
+      - research-references.md
+      - results/experiment_3164_duration_corrected_authenticity_contract_v2.json
+      - results/experiment_3165_live_sota_authenticity_replay_v2.json
+      - results/experiment_3167_clean_live_sota_verifier_rerun_v9.json
+      - results/experiment_3176_capstone_v294.json
 
       TASK
-      Define a duration-corrected live-inference authenticity contract v2 that rejects fake evidence without rejecting legitimate fast local calls solely because they are under an arbitrary 60s floor.
+      Define receipt-backed live-inference authenticity contract v3 that separates HF cache availability, loader availability, CUDA availability, CPU fallback admissibility, transcript receipts, and headline eligibility.
 
       CONCRETE STEPS
-      1. Load exp3151 and extract model-load wall time, generation wall time, token counts, model path, selected model ID, command hash, worker hash, transcript hash availability, and substrate evidence.
-      2. Define v2 pass criteria: path existence, model-load proof, repeated smoke calls or token-scaled work budget, transcript hashes, prompt hashes, token counts, random_seed, reproducibility_checksum, and controlled subprocess return codes.
-      3. Define v2 rejection criteria: no model loaded, missing transcript hashes, no seed/checksum, impossible token throughput, reused stale transcript hash, mismatch between selected model and local path, and wall-clock claims not supported by command output.
-      4. Preserve the fixed 60s rule only as an optional warning for large panels, not as the sole pass/fail criterion for a one-prompt smoke.
-      5. Write a reusable contract artifact for exp3165 and exp3167.
+      1. PRECONDITIONS: Do not make a live model call in this task. Read the listed artifacts and inspect the cached_sota_pair() guidance in scripts/experiment_template.py.
+      2. Extract the v2 measured-work requirements and the exact .294 blocker reason from exp3165.
+      3. Define v3 substrate classes: model_cache_missing, loader_missing, cuda_unavailable, cuda_available_unhealthy, cpu_fallback_receipt_only, and full_local_sota_receipt.
+      4. Define required receipt fields: selected_model_id, model_path, model_file_hash when cheap, loader_name, substrate_used, prompt_hashes, transcript_hashes, token_counts, random_seed, wall_clock_s, command_hash, subprocess_return_code, stderr_tail, throughput_plausibility, and replay_count.
+      5. Define headline policy: CPU fallback and one-prompt smoke may prove receipt wiring but cannot be a headline verifier benchmark; clean verifier rerun still needs exact-authority scoring and controlled invariance.
+      6. Write the artifact for downstream exp3179 and exp3181.
 
       REQUIRED ARTIFACT FIELDS:
-      - duration_corrected_authenticity_contract_v2_ready: bool (principle: live reruns need an explicit contract)
-      - old_fixed_duration_rule_retired_as_hard_gate: bool (principle: failed heuristics must not remain load-bearing)
-      - measured_work_requirements: list (principle: authenticity should be tied to observed work)
-      - token_scaled_duration_policy: dict (principle: duration plausibility should scale with prompt and completion work)
-      - repeated_call_policy: dict (principle: replay should catch stale or fabricated transcripts)
-      - required_preflight_fields: list (principle: downstream tasks need machine-checkable fields)
+      - receipt_backed_authenticity_contract_v3_ready: bool (principle: live reruns need an explicit contract)
+      - inherited_v2_contract_fields: list (principle: new contracts must preserve valid prior evidence rules)
+      - substrate_classification_policy: dict (principle: blockers must distinguish cache, loader, CUDA, and CPU causes)
+      - required_receipt_fields: list (principle: authenticity should be tied to replayable observed work)
+      - cpu_fallback_policy: dict (principle: CPU smoke can prove wiring but not headline performance)
       - fake_evidence_rejection_criteria: list (principle: adversarial failure modes must stay explicit)
+      - clean_rerun_unlock_requirements: list (principle: verifier repair must not bypass authenticity checks)
       - headline_claim_policy: dict (principle: smoke tests should not become headline evidence)
-      - source_artifacts: list (principle: contract must trace to prior failure)
+      - source_artifacts: list (principle: contract must trace to prior failures)
       - inference_substrate: dict (principle: aggregation work must declare no live model inference)
       - honest_verdict: str (principle: terminal verdict must start with complete:/complete_/success:/success_/passed:/passed_/shipped_ unless a precondition is honestly blocked)
 
       Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
 
-  - id: exp3165-live-sota-authenticity-replay-v2
-    milestone: "2026.05.294"
-    deliverable: "results/experiment_3165_live_sota_authenticity_replay_v2.json"
-    title: "Live SOTA authenticity replay v2"
+  - id: exp3179-local-sota-receipt-smoke-v3
+    milestone: "2026.05.295"
+    deliverable: "results/experiment_3179_local_sota_receipt_smoke_v3.json"
+    title: "Local SOTA GGUF receipt smoke v3"
     priority: critical
-    model: opus
     max_turns: 100
-    estimated_wall_time_min: 90
+    model: opus
+    estimated_wall_time_min: 75
     track: "verification"
-    inference_substrate: "local_sota_preflight_or_blocked"
-    requires_gpu: true
+    inference_substrate: "live_llm_inference_or_blocked_preflight"
+    requires_gpu: false
     prior_failures:
-      - experiment_id: exp3151-live-inference-authenticity-preflight
-        verdict: "blocked_duration_too_short: preflight_passed=false; live_call_count=1"
-        addressed_by: "Replays the same preflight family under the v2 measured-work contract instead of the fixed 60s hard gate."
+      - experiment_id: exp3165-live-sota-authenticity-replay-v2
+        verdict: "blocked_gpu_substrate: preflight_passed=false; live_call_count=0; local_usable_model_ids=[unsloth/gemma-4-26B-A4B-it-GGUF]"
+        addressed_by: "Runs the v3 receipt smoke with explicit cache/CUDA/CPU classification and may use CPU fallback only as receipt wiring, not headline evidence."
         retire_if_same_verdict: true
-      - experiment_id: exp3123-sota-cache-preconditions-manifest-v2
-        verdict: "complete: cache manifest ready; only unsloth/gemma-4-26B-A4B-it-GGUF locally present among mandated SOTA models"
-        addressed_by: "Refreshes local model availability and records unavailable mandated models separately from authenticity failure."
+      - experiment_id: exp3151-live-inference-authenticity-preflight
+        verdict: "blocked_duration_too_short: preflight_passed=false; live_call_count=1; selected_model_id=unsloth/gemma-4-26B-A4B-it-GGUF"
+        addressed_by: "Uses token/work receipts and repeated calls instead of the retired fixed-duration floor."
+        retire_if_same_verdict: true
+      - experiment_id: exp3139-live-sota-verifier-rerun-v7
+        verdict: "flagged_adversarial: preflight said no model loaded while artifact claimed six live calls"
+        addressed_by: "Makes model-load and transcript receipts load-bearing before any downstream clean verifier rerun can unlock repair."
         retire_if_same_verdict: true
     prompt: |
       CONTEXT
-      Project root placeholder: {project_root}. Run date placeholder: {date}. This task may run a small local SOTA smoke if a mandated GGUF is already available. It must not download new models.
-
-      PRECONDITIONS
-      0. Read exp3164 first. If no mandated local SOTA GGUF is usable, write a complete blocked artifact with preflight_passed=false, live_call_count=0, and headline_claim_allowed=false.
+      Project root placeholder: {project_root}. Run date placeholder: {date}. This is the first .295 task that may touch a mandated local SOTA GGUF. It must produce a real receipt if possible and a classified blocked artifact otherwise.
 
       MODEL_SPECS
-      - unsloth/Qwen3.6-35B-A3B-GGUF (flagship MoE)
-      - unsloth/gemma-4-31B-it-GGUF (flagship dense)
-      - unsloth/gemma-4-26B-A4B-it-GGUF (middle MoE)
-      Legacy small models may be recorded only as CPU smoke-tests and must not headline results.
+      - unsloth/Qwen3.6-35B-A3B-GGUF
+      - unsloth/gemma-4-31B-it-GGUF
+      - unsloth/gemma-4-26B-A4B-it-GGUF
+      Legacy small models may be used only as loud CPU smoke fallbacks and must never populate headline model fields.
 
       EXISTING CODE TO READ FIRST
       - CLAUDE.md
       - CODEX.md
       - scripts/experiment_template.py
-      - results/experiment_3164_duration_corrected_authenticity_contract_v2.json
-      - results/experiment_3151_live_inference_authenticity_preflight_v1.json
-      - results/experiment_3123_sota_cache_preconditions_manifest_v2.json
+      - carnot/inference/sota_models.py
+      - results/experiment_3178_receipt_backed_authenticity_contract_v3.json
+      - results/experiment_3165_live_sota_authenticity_replay_v2.json
+      - results/experiment_3167_clean_live_sota_verifier_rerun_v9.json
 
       TASK
-      Replay the local SOTA authenticity preflight under the duration-corrected v2 contract and decide whether live verifier reruns may proceed.
+      Attempt a minimal local SOTA GGUF receipt smoke under the v3 contract. If preconditions fail, write a complete blocked artifact that classifies the exact failure without claiming live verifier evidence.
 
       CONCRETE STEPS
-      1. Inspect local HuggingFace cache paths for the three mandated SOTA GGUF IDs without downloading new models.
-      2. If a mandated model is locally usable, run the smallest safe repeated-call smoke required by exp3164, recording load command, command hash, model path, substrate, load wall time, generation wall time, prompt hashes, transcript hashes, token counts, random_seed, and reproducibility_checksum.
-      3. Apply the v2 measured-work policy, token-scaled duration policy, and fake-evidence rejection criteria.
-      4. Set preflight_passed=true only if all required evidence fields are present and internally consistent.
-      5. Write a complete blocked artifact if any precondition fails; do not leave a bootstrap-only artifact.
+      1. PRECONDITIONS: Check cached_sota_pair() and the HF cache for all three mandated GGUFs. Check llama_cpp/import loader availability. Check torch CUDA availability if torch is present. Do not assume GPU availability. Do not edit scripts/research_conductor.py.
+      2. Load the v3 contract and choose the strongest available mandated model. Prefer a CUDA path if healthy; otherwise allow a CPU fallback only for receipt wiring and label it clearly as non-headline.
+      3. If no mandated model can be located or loaded, write the artifact with preflight_passed=false, live_call_count=0, substrate_classification, and honest blocked verdict.
+      4. If a mandated model can run, execute at least two tiny deterministic prompts with fixed seed/temperature where supported. Capture prompt hashes, transcript hashes, token counts, wall-clock evidence, command/worker hash, return codes, and stderr tail.
+      5. Validate throughput plausibility under v3. Reject stale or reused transcript hashes. Keep exact rows untouched here; this task is only receipt proof.
+      6. Write the artifact and state whether exp3181 is allowed to attempt a clean verifier rerun.
 
       REQUIRED ARTIFACT FIELDS:
-      - live_sota_authenticity_replay_v2_ready: bool (principle: downstream rerun needs a completed preflight artifact)
-      - model_specs: list (principle: mandated local model policy must be visible)
-      - locally_usable_model_ids: list (principle: actual availability must be auditable)
-      - selected_model_ids: list (principle: any smoke call must identify selected models)
-      - unavailable_model_ids: list (principle: comparative gaps must stay visible)
-      - preflight_passed: bool (principle: downstream gates need one conservative field)
-      - live_call_count: int (principle: live evidence must not be inferred)
-      - model_load_evidence: dict (principle: claimed inference requires load evidence)
-      - prompt_hashes: list (principle: prompts must be replay-identifiable)
-      - transcript_hashes: list (principle: outputs must be replay-identifiable)
-      - token_counts: dict (principle: duration plausibility requires measured work)
-      - measured_work_policy_passed: bool (principle: fast calls need a principled pass criterion)
-      - fake_evidence_rejection_passed: bool (principle: authenticity checks must be adversarial)
-      - headline_claim_allowed: bool (principle: smoke tests do not create headline evidence)
-      - blocked_reason: str (principle: blocked preflights must be actionable)
-      - random_seed: int (principle: methodology completeness must be explicit)
-      - reproducibility_checksum: str (principle: rerun provenance must be checkable)
-      - source_artifacts: list (principle: preflight must trace to the v2 contract)
-      - inference_substrate: dict (principle: GPU/model/live status must be explicit)
+      - local_sota_receipt_smoke_v3_ready: bool (principle: downstream gates need a materialized artifact)
+      - preflight_passed: bool (principle: live reruns require explicit preflight status)
+      - live_call_count: int (principle: no-call blocked artifacts must not look like live evidence)
+      - mandated_model_inventory: list (principle: model availability must be auditable)
+      - selected_model_ids: list (principle: local SOTA policy must be machine-readable)
+      - substrate_classification: str (principle: blockers must distinguish cache, loader, CUDA, and CPU causes)
+      - cpu_fallback_used: bool (principle: CPU smoke must not be mistaken for headline performance)
+      - proof_receipts: list (principle: authenticity must trace to prompt and transcript hashes)
+      - throughput_plausibility_passed: bool (principle: impossible speed claims must be rejected)
+      - headline_claim_allowed: bool (principle: smoke tests should not become headline evidence)
+      - clean_rerun_allowed: bool (principle: verifier tasks need explicit unlock signal)
+      - inference_substrate: dict (principle: live or blocked preflight substrate must be declared)
       - honest_verdict: str (principle: terminal verdict must start with complete:/complete_/success:/success_/passed:/passed_/shipped_ unless a precondition is honestly blocked)
 
       Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
 
-  - id: exp3166-verifier-invariance-token-suspicion-audit
-    milestone: "2026.05.294"
-    deliverable: "results/experiment_3166_verifier_invariance_token_suspicion_audit_v1.json"
-    title: "Verifier invariance and token-suspicion audit"
-    priority: high
-    max_turns: 50
-    estimated_wall_time_min: 55
+  - id: exp3180-controlled-invariance-executor-v2
+    milestone: "2026.05.295"
+    deliverable: "results/experiment_3180_controlled_invariance_executor_v2.json"
+    title: "Controlled-invariance executor v2 for exact verifier rows"
+    priority: critical
+    max_turns: 40
+    estimated_wall_time_min: 50
     track: "verification"
-    inference_substrate: "aggregation_and_diagnostic"
+    inference_substrate: "verifier_cached_candidates_and_exact_authority"
     requires_gpu: false
     prior_failures:
-      - experiment_id: exp3150-adversarial-verifier-evidence-corrigendum
-        verdict: "complete: adversarial_corrigendum_v1_ready=true; live_verifier_evidence_trusted=False"
-        addressed_by: "Adds controlled-invariance and token-suspicion diagnostics before trusting another live verifier rerun."
+      - experiment_id: exp3166-controlled-invariance-token-suspicion-audit-v1
+        verdict: "complete: controlled_invariance_token_suspicion_audit_v1_ready=true; token suspicion fields are triage only"
+        addressed_by: "Moves from audit specification to an executor over exact authority rows and any receipt-backed transcripts from exp3179."
         retire_if_same_verdict: true
-      - experiment_id: exp3139-live-sota-verifier-rerun-v7
-        verdict: "flagged_adversarial: false_accept_rate=0.0 but live evidence failed authenticity/methodology checks"
-        addressed_by: "Checks whether metrics depend on answer artifacts or trace artifacts instead of exact authority."
+      - experiment_id: exp3167-clean-live-sota-verifier-rerun-v9
+        verdict: "complete_gated_skip_preflight_failed: controlled_invariance_passed=false; flagged_adversarial=true"
+        addressed_by: "Computes the controls independently before another clean verifier rerun can clear the adversarial flag."
         retire_if_same_verdict: true
     prompt: |
       CONTEXT
-      Project root placeholder: {project_root}. Run date placeholder: {date}. Recent hallucination-detector work recommends controlled invariance checks because detectors can read superficial answer artifacts. Token-level signals are useful triage, not acceptance authority.
+      Project root placeholder: {project_root}. Run date placeholder: {date}. .294 audited the needed controls but did not clear controlled invariance because the live SOTA rerun was gated. This task executes the controls with exact authority as the only acceptance source.
+
+      EXISTING CODE TO READ FIRST
+      - CLAUDE.md
+      - CODEX.md
+      - results/experiment_3166_controlled_invariance_token_suspicion_audit_v1.json
+      - results/experiment_3167_clean_live_sota_verifier_rerun_v9.json
+      - results/experiment_3179_local_sota_receipt_smoke_v3.json
+      - tests/
+      - scripts/
+
+      TASK
+      Execute controlled-invariance checks over exact verifier rows and any available receipt-backed transcripts, producing a machine-readable pass/fail artifact for exp3181 and exp3184.
+
+      CONCRETE STEPS
+      1. PRECONDITIONS: Do not make live model calls. Use exact rows, cached candidates, and exp3179 receipts if present.
+      2. Load the .294 control definitions: force-answer, remove-answer, shuffled-trace, answer-only, trace-only, transcript-hash, and token-suspicion triage.
+      3. Run controls against exact-authority rows and known false-accept regression rows. Exact/canonical answers remain the only authority.
+      4. Report shortcut failures separately from semantic false accepts. Token-level suspicion may prioritize rows but must not accept outputs.
+      5. Write the artifact with controlled_invariance_passed only when all load-bearing controls pass.
+
+      REQUIRED ARTIFACT FIELDS:
+      - controlled_invariance_executor_v2_ready: bool (principle: controls must be executed, not only described)
+      - exact_row_count: int (principle: denominator must be visible)
+      - receipt_backed_transcript_count: int (principle: live evidence used by controls must be counted)
+      - control_results: dict (principle: each invariance family needs explicit status)
+      - shortcut_failure_count: int (principle: trace or answer shortcuts must remain visible)
+      - known_false_accept_regression_count: int (principle: adversarial regressions must stay load-bearing)
+      - token_suspicion_used_as_triage_only: bool (principle: suspicion features cannot replace exact authority)
+      - controlled_invariance_passed: bool (principle: downstream rerun and repair gates need an explicit boolean)
+      - blocker_reasons: list (principle: failed controls must produce actionable blockers)
+      - inference_substrate: dict (principle: cached/exact work must not be mislabeled as live inference)
+      - honest_verdict: str (principle: terminal verdict must start with complete:/complete_/success:/success_/passed:/passed_/shipped_ unless a precondition is honestly blocked)
+
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+
+  - id: exp3181-clean-live-sota-verifier-rerun-v10
+    milestone: "2026.05.295"
+    deliverable: "results/experiment_3181_clean_live_sota_verifier_rerun_v10.json"
+    title: "Clean live SOTA verifier rerun v10 with receipt gate"
+    priority: critical
+    max_turns: 100
+    model: opus
+    estimated_wall_time_min: 120
+    track: "verification"
+    inference_substrate: "live_llm_inference_or_gated_skip"
+    requires_gpu: false
+    prior_failures:
+      - experiment_id: exp3167-clean-live-sota-verifier-rerun-v9
+        verdict: "complete_gated_skip_preflight_failed: clean_live_sota_verifier_rerun_v9_ready=true; live_call_count=0; flagged_adversarial=true"
+        addressed_by: "Requires exp3179 receipt-backed preflight and exp3180 controlled invariance before any live verifier rerun; otherwise writes a full gated-skip artifact."
+        retire_if_same_verdict: true
+      - experiment_id: exp3139-live-sota-verifier-rerun-v7
+        verdict: "flagged_adversarial: claimed live calls without model-load evidence"
+        addressed_by: "Makes v3 receipt fields mandatory and refuses headline claims when receipt proof is absent."
+        retire_if_same_verdict: true
+      - experiment_id: exp3124-live-sota-verifier-rerun-v6
+        verdict: "blocked_precondition: prior rerun lacked clean local SOTA evidence"
+        addressed_by: "Adds a receipt-gated clean rerun path with exact authority and full gated-skip fallback."
+        retire_if_same_verdict: true
+    prompt: |
+      CONTEXT
+      Project root placeholder: {project_root}. Run date placeholder: {date}. This is the load-bearing clean verifier attempt. It may run local SOTA only if exp3179 and exp3180 establish receipt-backed preconditions. Otherwise it must write a complete gated-skip artifact.
+
+      MODEL_SPECS
+      - unsloth/Qwen3.6-35B-A3B-GGUF
+      - unsloth/gemma-4-31B-it-GGUF
+      - unsloth/gemma-4-26B-A4B-it-GGUF
+      Legacy small models are permitted only for explicit CPU smoke diagnostics and cannot populate headline verifier metrics.
+
+      EXISTING CODE TO READ FIRST
+      - CLAUDE.md
+      - CODEX.md
+      - scripts/experiment_template.py
+      - carnot/inference/sota_models.py
+      - results/experiment_3178_receipt_backed_authenticity_contract_v3.json
+      - results/experiment_3179_local_sota_receipt_smoke_v3.json
+      - results/experiment_3180_controlled_invariance_executor_v2.json
+      - results/experiment_3167_clean_live_sota_verifier_rerun_v9.json
+
+      TASK
+      Produce the clean live SOTA verifier rerun v10 artifact. Run live local SOTA verifier calls only when v3 receipts and controlled invariance permit; otherwise materialize the blocked/gated-skip path with exact blockers.
+
+      CONCRETE STEPS
+      1. PRECONDITIONS: Check exp3179 clean_rerun_allowed and exp3180 controlled_invariance_passed. If either is false or missing, do not make live model calls and write a full gated-skip artifact.
+      2. If preconditions pass, select mandated SOTA GGUFs from MODEL_SPECS using cached_sota_pair() or equivalent local path discovery. Record exact model IDs and paths.
+      3. Run the clean verifier panel on exact authority rows plus known false-accept regression rows. Keep sample size bounded and record every prompt/transcript hash.
+      4. Score with canonical exact authority only. Report false accepts, false rejects, abstentions, controlled-invariance status, token-suspicion triage fields, and transcript receipt validity.
+      5. Set flagged_adversarial=false only if receipt proof is valid, controlled invariance passes, and known false accepts are not accepted.
+      6. Write the artifact for repair gate v4.
+
+      REQUIRED ARTIFACT FIELDS:
+      - clean_live_sota_verifier_rerun_v10_ready: bool (principle: downstream gates need a materialized artifact)
+      - gated_skip: bool (principle: skipped live work must be explicit)
+      - gate_reasons: list (principle: blocked repair needs actionable cause)
+      - live_call_count: int (principle: no-call artifacts must not imply live evidence)
+      - models_used: list (principle: SOTA policy must be auditable)
+      - proof_receipts_used: list (principle: live evidence must trace to receipts)
+      - exact_row_count: int (principle: denominator must be explicit)
+      - known_false_accept_regression_count: int (principle: adversarial rows must remain load-bearing)
+      - false_accept_rate: float (principle: headline verifier quality must report failures)
+      - false_reject_rate: float (principle: verifier rejection cost must be visible)
+      - abstention_rate: float (principle: abstention can hide failure if unreported)
+      - controlled_invariance_passed: bool (principle: shortcut checks must gate trust)
+      - flagged_adversarial: bool (principle: repair cannot proceed under adversarial evidence)
+      - headline_claim_allowed: bool (principle: smoke or gated-skip evidence must not become headline)
+      - inference_substrate: dict (principle: live or gated-skip substrate must be declared)
+      - honest_verdict: str (principle: terminal verdict must start with complete:/complete_/success:/success_/passed:/passed_/shipped_ unless a precondition is honestly blocked)
+
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+
+  - id: exp3182-distributional-ebm-exact-row-sidecar-v1
+    milestone: "2026.05.295"
+    deliverable: "results/experiment_3182_distributional_ebm_exact_row_sidecar_v1.json"
+    title: "Distributional EBM exact-row uncertainty sidecar v1"
+    priority: high
+    max_turns: 50
+    estimated_wall_time_min: 75
+    track: "verification"
+    inference_substrate: "verifier_cached_candidates_and_exact_authority"
+    requires_gpu: false
+    prior_failures:
+      - experiment_id: exp3173-ebcn-kan-exact-row-expansion-v1
+        verdict: "complete: ebcn_kan_exact_row_expansion_ready=true; deployed_verifier_claim_allowed=false; tiny denominator"
+        addressed_by: "Expands the diagnostic sidecar to distributional uncertainty over exact rows and keeps deployed verifier claims disabled."
+        retire_if_same_verdict: true
+      - experiment_id: exp3158-kan-bounded-monitor-expansion-v1
+        verdict: "complete: bounded monitor records only; no deployed verifier"
+        addressed_by: "Uses exact-row authority and distributional calibration metrics instead of promoting a bounded monitor."
+        retire_if_same_verdict: true
+    prompt: |
+      CONTEXT
+      Project root placeholder: {project_root}. Run date placeholder: {date}. The post-.294 reference sweep identified distributional EBMs and Graph Energy Matching as useful sidecar directions. This task is diagnostic only; exact authority remains load-bearing.
 
       EXISTING CODE TO READ FIRST
       - CLAUDE.md
       - CODEX.md
       - research-references.md
-      - results/experiment_3150_adversarial_verifier_evidence_corrigendum_v1.json
-      - results/experiment_3151_live_inference_authenticity_preflight_v1.json
-      - results/experiment_3165_live_sota_authenticity_replay_v2.json if present
-      - results/experiment_3136_false_accept_root_cause_autopsy_v1.json
-      - results/experiment_3137_exact_safe_accept_abstain_contract_v1.json
-      - results/experiment_3138_canonical_answer_vericot_grounding_pilot_v1.json
+      - results/experiment_3173_ebcn_kan_exact_row_expansion_v1.json
+      - results/experiment_3180_controlled_invariance_executor_v2.json
+      - carnot/
+      - tests/
 
       TASK
-      Build a controlled-invariance and token-suspicion audit for the clean verifier rerun. The audit should route exact checks, not authorize acceptance.
+      Build or simulate a small distributional EBM uncertainty sidecar over exact verifier rows and known false-accept rows. Report calibration and separation metrics without claiming deployed verifier status.
 
       CONCRETE STEPS
-      1. Collect trusted exact rows from exp3136, exp3137, and exp3138 plus any transcript hashes from exp3165.
-      2. Define Force, Remove, shuffled-trace, answer-only, and trace-only controls that can be run on available transcripts or exact rows.
-      3. Define token-level and first-token suspicion fields that are allowed to triage rows but not accept them.
-      4. Mark which diagnostics can be computed from existing artifacts and which require future live logprob/token telemetry.
-      5. Write an audit artifact with explicit downstream policy for exp3167.
+      1. PRECONDITIONS: Do not make live model calls. Use exact labels, cached candidates, known false accepts, and existing EBCN/KAN outputs.
+      2. Represent available exact rows as structured constraint features or graph-like features where practical. Keep implementation simple and reproducible.
+      3. Score row-level uncertainty and energy/separation for clean rows versus known false accepts. If data is too small for training, use deterministic scoring/proxy calibration and label it as such.
+      4. Report distributional metrics: false-accept separation AUC when computable, uncertainty ranking, calibration/ECE when meaningful, abstention threshold proposal, and coverage denominator.
+      5. Compare sidecar findings to exp3173 EBCN/KAN records and exp3180 shortcut failures.
+      6. Write the artifact with deployed_verifier_claim_allowed=false unless the task can prove a much stronger coverage gate than expected.
 
       REQUIRED ARTIFACT FIELDS:
-      - verifier_invariance_token_suspicion_audit_ready: bool (principle: rerun evidence needs artifact-sensitivity checks)
-      - controlled_invariance_checks: list (principle: detector shortcuts must be tested)
-      - computed_checks: list (principle: distinguish computed evidence from proposed checks)
-      - blocked_checks: list (principle: missing token/logprob telemetry must stay visible)
-      - token_suspicion_fields: list (principle: triage signals must be explicitly scoped)
-      - acceptance_authority_fields: list (principle: exact authority must stay separate from suspicion signals)
-      - diagnostics_allowed_to_gate_repair: list (principle: repair gates need conservative fields)
-      - diagnostics_not_allowed_to_accept: list (principle: token/trace signals must not become acceptance authority)
-      - source_artifacts: list (principle: audit must trace to exact rows and preflight evidence)
-      - inference_substrate: dict (principle: aggregation work must declare no new live model inference)
+      - distributional_ebm_exact_row_sidecar_v1_ready: bool (principle: sidecar diagnostics must be materialized)
+      - source_reference_ids: list (principle: literature-derived experiments must trace sources)
+      - exact_labeled_row_count: int (principle: denominator controls promotion risk)
+      - known_false_accept_rows_scored: int (principle: adversarial coverage must be explicit)
+      - sidecar_method: dict (principle: diagnostic method must be reproducible)
+      - false_accept_separation_auc: float|null (principle: diagnostic quality must be quantified when possible)
+      - uncertainty_calibration: dict (principle: distributional claims require calibration evidence)
+      - abstention_policy: dict (principle: uncertainty should map to actionable routing)
+      - comparison_to_ebcn_kan: dict (principle: new sidecars must reconcile with prior sidecars)
+      - deployed_verifier_claim_allowed: bool (principle: diagnostic sidecars must not become verifier claims)
+      - inference_substrate: dict (principle: cached/exact sidecar work must not be mislabeled as live inference)
       - honest_verdict: str (principle: terminal verdict must start with complete:/complete_/success:/success_/passed:/passed_/shipped_ unless a precondition is honestly blocked)
 
       Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
 
-  - id: exp3167-clean-live-sota-verifier-rerun-v9
-    milestone: "2026.05.294"
-    deliverable: "results/experiment_3167_clean_live_sota_verifier_rerun_v9.json"
-    title: "Preconditioned clean live SOTA verifier rerun v9"
+  - id: exp3183-counterexample-certificate-expansion-v3
+    milestone: "2026.05.295"
+    deliverable: "results/experiment_3183_counterexample_certificate_expansion_v3.json"
+    title: "Counterexample certificate expansion v3 for repair readiness"
     priority: critical
-    max_turns: 50
-    estimated_wall_time_min: 120
-    track: "verification"
-    inference_substrate: "local_sota_or_complete_gated_skip"
-    requires_gpu: true
-    prior_failures:
-      - experiment_id: exp3152-clean-live-sota-verifier-rerun-v8
-        verdict: "gated_skipped_missing_artifact: upstream preflight_passed=false or retired"
-        addressed_by: "Always writes a full clean-rerun or gated-skip artifact instead of relying on a structural conductor gate."
-        retire_if_same_verdict: true
-      - experiment_id: exp3139-live-sota-verifier-rerun-v7
-        verdict: "flagged_adversarial: false_accept_rate=0.0 but live evidence failed authenticity/methodology checks"
-        addressed_by: "Runs only under the v2 authenticity contract and controlled-invariance audit."
-        retire_if_same_verdict: true
-      - experiment_id: exp3124-difficulty-stratified-live-sota-verifier-panel-v6
-        verdict: "complete_blocked_false_accept: false_accept_rate=0.5; live_call_count=6; headline_claim_allowed=false"
-        addressed_by: "Keeps the known false-accept rows as mandatory regression rows under the exact-safe contract."
-        retire_if_same_verdict: true
-    prompt: |
-      CONTEXT
-      Project root placeholder: {project_root}. Run date placeholder: {date}. This task is allowed to write a full gated-skip artifact. Do not rely on structural conductor gating because matrix v27 already counted missing clean-rerun artifacts as blockers.
-
-      PRECONDITIONS
-      0. Read exp3165 and exp3166 first. If preflight_passed is false, the invariance audit is not ready, or no mandated local model is usable, write a complete gated-skip artifact with live_call_count=0, false_accept_gate_passed=false, flagged_adversarial=false, headline_claim_allowed=false, and gated_skip_reason set.
-
-      MODEL_SPECS
-      - unsloth/Qwen3.6-35B-A3B-GGUF (flagship MoE)
-      - unsloth/gemma-4-31B-it-GGUF (flagship dense)
-      - unsloth/gemma-4-26B-A4B-it-GGUF (middle MoE)
-      Legacy small models may be recorded only as CPU smoke-tests and must not headline results.
-
-      EXISTING CODE TO READ FIRST
-      - CLAUDE.md
-      - CODEX.md
-      - scripts/experiment_template.py
-      - results/experiment_3164_duration_corrected_authenticity_contract_v2.json
-      - results/experiment_3165_live_sota_authenticity_replay_v2.json
-      - results/experiment_3166_verifier_invariance_token_suspicion_audit_v1.json
-      - results/experiment_3136_false_accept_root_cause_autopsy_v1.json
-      - results/experiment_3137_exact_safe_accept_abstain_contract_v1.json
-      - results/experiment_3138_canonical_answer_vericot_grounding_pilot_v1.json
-      - results/experiment_3150_adversarial_verifier_evidence_corrigendum_v1.json
-
-      TASK
-      Produce the clean live SOTA verifier rerun v9, or a complete gated-skip artifact if the evidence preconditions are not met.
-
-      CONCRETE STEPS
-      1. Build the rerun set from known false-accept regression rows plus balanced exact fixtures across arithmetic, SMT, satisfiable drift, contradiction, and fragment-code families.
-      2. Use only mandated local SOTA GGUF models for headline evidence.
-      3. If preconditions pass, run bounded live calls and record model-load evidence, prompt hashes, transcript hashes, token counts, random_seed, and reproducibility_checksum.
-      4. Apply the exact-safe contract, canonical grounding, and controlled-invariance diagnostics.
-      5. Compute false_accept_rate, false_reject_rate, abstention_rate, verifier_gain_delta, false_accept_gate_passed, flagged_adversarial, and headline_claim_allowed.
-      6. If preconditions fail, do not call a model; write the same required fields with explicit gated-skip values.
-
-      REQUIRED ARTIFACT FIELDS:
-      - clean_live_verifier_rerun_v9_ready: bool (principle: repair gate needs a complete rerun artifact)
-      - gated_skip: bool (principle: matrix should distinguish skipped from missing)
-      - gated_skip_reason: str (principle: blocked reruns must be actionable)
-      - model_specs: list (principle: mandated local model policy must be visible)
-      - selected_model_ids: list (principle: actual model use must be auditable)
-      - unavailable_model_ids: list (principle: comparative gaps must stay visible)
-      - live_call_count: int (principle: live evidence must not be inferred)
-      - model_load_evidence: dict (principle: claimed inference requires load evidence)
-      - prompt_hashes: list (principle: prompts must be replay-identifiable)
-      - transcript_hashes: list (principle: outputs must be replay-identifiable)
-      - token_counts: dict (principle: measured-work evidence must be visible)
-      - exact_ground_truth_count: int (principle: verifier scores need exact labels)
-      - regression_rows_included: bool (principle: known failures must be retested)
-      - controlled_invariance_passed: bool (principle: artifact shortcuts must not pass as verifier gain)
-      - false_accept_rate: float (principle: false accepts are the central blocker)
-      - false_reject_rate: float (principle: over-rejection can erase utility)
-      - abstention_rate: float (principle: safety/coverage tradeoff must be visible)
-      - verifier_gain_delta: float (principle: lift must be measured against exact baselines)
-      - false_accept_gate_passed: bool (principle: downstream gate must be machine-readable)
-      - flagged_adversarial: bool (principle: downstream gate must reject tainted evidence)
-      - headline_claim_allowed: bool (principle: live claims require all evidence gates)
-      - random_seed: int (principle: methodology completeness must be explicit)
-      - reproducibility_checksum: str (principle: rerun provenance must be checkable)
-      - source_artifacts: list (principle: claims must trace to concrete files)
-      - inference_substrate: dict (principle: GPU/model/live inference status must be explicit)
-      - honest_verdict: str (principle: terminal verdict must start with complete:/complete_/success:/success_/passed:/passed_/shipped_ unless a precondition is honestly blocked)
-
-      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
-
-  - id: exp3168-repair-gate-decision-v3
-    milestone: "2026.05.294"
-    deliverable: "results/experiment_3168_repair_gate_decision_v3.json"
-    title: "Repair gate decision v3 materialized"
-    priority: critical
-    max_turns: 30
-    estimated_wall_time_min: 35
-    track: "repair"
-    inference_substrate: "aggregation_and_policy"
-    requires_gpu: false
-    prior_failures:
-      - experiment_id: exp3153-repair-gate-unlock-decision-v2
-        verdict: "blocked_gate_check_failed"
-        addressed_by: "Always writes a full decision artifact instead of being structurally skipped by the clean-rerun gate."
-        retire_if_same_verdict: true
-      - experiment_id: exp3140-repair-gate-unlock-decision
-        verdict: "blocked_other: exp3139 flagged_adversarial=true"
-        addressed_by: "Consumes the v9 rerun and v2 authenticity contract, and refuses to unlock if any adversarial evidence remains."
-        retire_if_same_verdict: true
-      - experiment_id: exp3115-explicit-repair-gate-micro-panel-v4
-        verdict: "complete: repair_success_delta=0.0; false_repair_accept_rate=0.0; intent_preservation_rate=0.0"
-        addressed_by: "Makes no repair claim; it only decides whether evidence is clean enough to spend repair calls."
-        retire_if_same_verdict: true
-    prompt: |
-      CONTEXT
-      Project root placeholder: {project_root}. Run date placeholder: {date}. .293 produced a thin blocked_gate_check_failed repair decision. This task must always write a complete repair gate decision artifact.
-
-      EXISTING CODE TO READ FIRST
-      - CLAUDE.md
-      - CODEX.md
-      - results/experiment_3167_clean_live_sota_verifier_rerun_v9.json
-      - results/experiment_3166_verifier_invariance_token_suspicion_audit_v1.json
-      - results/experiment_3137_exact_safe_accept_abstain_contract_v1.json
-      - results/experiment_3138_canonical_answer_vericot_grounding_pilot_v1.json
-      - results/experiment_3153_repair_gate_unlock_decision_v2.json
-      - results/experiment_3140_repair_gate_unlock_decision_v1.json
-
-      TASK
-      Write a conservative repair gate decision v3. It may unlock only if the clean v9 verifier artifact is complete, unflagged, exact-authority backed, and false-accept safe.
-
-      CONCRETE STEPS
-      1. Load the v9 verifier rerun if present. If missing, write a complete blocked decision with repair_gate_state=blocked_missing_clean_rerun.
-      2. Apply gate criteria: clean_live_verifier_rerun_v9_ready=true, gated_skip=false, false_accept_rate <= 0.10, false_accept_gate_passed=true, flagged_adversarial=false, regression_rows_included=true, exact labels present, controlled_invariance_passed=true, and headline_claim_allowed=true.
-      3. Set repair_gate_state to unblocked, blocked_false_accept, blocked_flagged_verifier, blocked_missing_live_model, blocked_missing_exact_labels, blocked_invariance_failure, blocked_gated_skip, blocked_missing_clean_rerun, or blocked_other.
-      4. If unblocked, list repair rows and exact authority constraints; if blocked, list exact blockers and avoid calling models.
-      5. Write only the decision artifact.
-
-      REQUIRED ARTIFACT FIELDS:
-      - repair_gate_decision_v3_ready: bool (principle: repair execution must be explicitly gated)
-      - repair_gate_state: str (principle: downstream tasks need one machine-readable field)
-      - clean_rerun_artifact_present: bool (principle: missing clean evidence must block repair)
-      - false_accept_rate: float (principle: central blocker must be carried forward)
-      - false_accept_gate_passed: bool (principle: repair cannot run if false accepts remain high)
-      - flagged_adversarial: bool (principle: tainted verifier evidence must block repair)
-      - controlled_invariance_passed: bool (principle: artifact shortcuts must block repair)
-      - exact_authority_ready: bool (principle: repair needs exact tests/solvers)
-      - selected_repair_rows: list (principle: repair denominator must be explicit)
-      - repair_blockers: list (principle: blocked decisions must be actionable)
-      - source_artifacts: list (principle: gate must trace to files)
-      - inference_substrate: dict (principle: aggregation work must declare no live inference)
-      - honest_verdict: str (principle: terminal verdict must start with complete:/complete_/success:/success_/passed:/passed_/shipped_ unless a precondition is honestly blocked)
-
-      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
-
-  - id: exp3169-repair-ladder-materializer-v4
-    milestone: "2026.05.294"
-    deliverable: "results/experiment_3169_repair_ladder_materializer_v4.json"
-    title: "Repair ladder materializer v4"
-    priority: critical
-    max_turns: 50
-    estimated_wall_time_min: 120
-    track: "repair"
-    inference_substrate: "local_sota_or_complete_gated_skip"
-    requires_gpu: true
-    prior_failures:
-      - experiment_id: exp3154-multi-turn-repair-ladder-v3
-        verdict: "gated_skipped_missing_artifact: upstream repair gate blocked/retired"
-        addressed_by: "Always writes a full repair ladder artifact with gated_skip=true when the gate is blocked."
-        retire_if_same_verdict: true
-      - experiment_id: exp3141-multi-turn-repair-ladder-v2
-        verdict: "gated_skipped_missing_artifact: upstream repair gate blocked/retired"
-        addressed_by: "Materializes the missing repair row instead of relying on conductor structural gating."
-        retire_if_same_verdict: true
-      - experiment_id: exp3115-explicit-repair-gate-micro-panel-v4
-        verdict: "complete: repair_success_delta=0.0; false_repair_accept_rate=0.0; intent_preservation_rate=0.0"
-        addressed_by: "Runs only if verifier gates are clean and otherwise records a full no-call gated skip."
-        retire_if_same_verdict: true
-    prompt: |
-      CONTEXT
-      Project root placeholder: {project_root}. Run date placeholder: {date}. This task must write a full repair ladder artifact whether or not repair is allowed. Do not call a model unless exp3168 explicitly unblocks repair.
-
-      PRECONDITIONS
-      0. Read results/experiment_3168_repair_gate_decision_v3.json first. If repair_gate_state is not unblocked or no mandated model is usable, write a complete gated-skip artifact with live_call_count=0, gated_skip=true, and headline_repair_claim_allowed=false.
-
-      MODEL_SPECS
-      - unsloth/Qwen3.6-35B-A3B-GGUF (flagship MoE)
-      - unsloth/gemma-4-31B-it-GGUF (flagship dense)
-      - unsloth/gemma-4-26B-A4B-it-GGUF (middle MoE)
-      Legacy small models may be recorded only as CPU smoke-tests and must not headline results.
-
-      EXISTING CODE TO READ FIRST
-      - CLAUDE.md
-      - CODEX.md
-      - scripts/experiment_template.py
-      - results/experiment_3168_repair_gate_decision_v3.json
-      - results/experiment_3167_clean_live_sota_verifier_rerun_v9.json
-      - results/experiment_3137_exact_safe_accept_abstain_contract_v1.json
-      - results/experiment_3138_canonical_answer_vericot_grounding_pilot_v1.json
-      - results/experiment_3115_explicit_repair_gate_micro_panel_v4.json
-
-      TASK
-      Materialize repair ladder v4. If repair is blocked, write the full gated-skip artifact. If repair is unblocked, run a tiny local SOTA repair panel under exact authority.
-
-      CONCRETE STEPS
-      1. Load the repair gate decision and selected repair rows.
-      2. If blocked, record the gate state, blockers, zero live calls, and no headline claim.
-      3. If unblocked, run bounded repair attempts on mandated local SOTA GGUF models only.
-      4. Score repair candidates with exact tests, canonical grounding, controlled-invariance checks, and monitor replay. Do not accept candidates based on model confidence or schema validity alone.
-      5. Compute repair_success_delta, false_repair_accept_rate, intent_preservation_rate, and exact_authority_accept_count.
-      6. Write a complete artifact in both run and skip paths.
-
-      REQUIRED ARTIFACT FIELDS:
-      - repair_ladder_materializer_v4_ready: bool (principle: matrix needs a full repair artifact)
-      - gated_skip: bool (principle: skipped repair must not look missing)
-      - gated_skip_reason: str (principle: skip reason must be actionable)
-      - model_specs: list (principle: mandated local model policy must be visible)
-      - selected_model_ids: list (principle: actual model use must be auditable)
-      - live_call_count: int (principle: model calls must not be inferred)
-      - selected_repair_rows: list (principle: denominator must be explicit)
-      - repair_attempt_count: int (principle: measured repair work must be visible)
-      - exact_authority_accept_count: int (principle: only exact evidence accepts repair)
-      - repair_success_delta: float (principle: headline needs lift over baseline)
-      - false_repair_accept_rate: float (principle: unsafe repair is worse than abstention)
-      - intent_preservation_rate: float (principle: repair must preserve task intent)
-      - headline_repair_claim_allowed: bool (principle: repair claims require clean gates)
-      - source_artifacts: list (principle: repair claims must trace to gate and exact rows)
-      - inference_substrate: dict (principle: live/skip status must be explicit)
-      - honest_verdict: str (principle: terminal verdict must start with complete:/complete_/success:/success_/passed:/passed_/shipped_ unless a precondition is honestly blocked)
-
-      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
-
-  - id: exp3170-counterexample-certificate-repair-pilot-v2
-    milestone: "2026.05.294"
-    deliverable: "results/experiment_3170_counterexample_certificate_repair_pilot_v2.json"
-    title: "Counterexample certificate repair pilot v2"
-    priority: high
     max_turns: 50
     estimated_wall_time_min: 70
     track: "repair"
-    inference_substrate: "exact_solver_and_aggregation"
+    inference_substrate: "verifier_cached_candidates_and_exact_authority"
     requires_gpu: false
     prior_failures:
-      - experiment_id: exp3155-tracefix-counterexample-repair-pilot
-        verdict: "blocked_gate_check_failed"
-        addressed_by: "Runs a CPU exact certificate pilot independent of repair-model execution so a full artifact exists even when live repair is blocked."
+      - experiment_id: exp3170-counterexample-certificate-repair-pilot-v1
+        verdict: "complete: counterexample_certificate_repair_pilot_ready=true; exact_row_count=5; flagged_adversarial=true"
+        addressed_by: "Expands certificate count and bounded frontier records before permitting a repair call."
+        retire_if_same_verdict: true
+      - experiment_id: exp3155-counterexample-certificate-repair-pilot-v1
+        verdict: "blocked_gate_check_failed: repair call blocked by clean verifier gate"
+        addressed_by: "Separates certificate expansion from live repair generation so the repair gate gets a complete readiness artifact."
         retire_if_same_verdict: true
       - experiment_id: exp3141-multi-turn-repair-ladder-v2
-        verdict: "gated_skipped_missing_artifact: upstream repair gate blocked/retired"
-        addressed_by: "Uses exact counterexamples and certificates rather than waiting for an unblocked repair ladder."
+        verdict: "missing_or_gated: carried-forward missing repair ladder artifact in matrix"
+        addressed_by: "Provides certificate readiness for the new v5 repair ladder without depending on the missing old deliverable."
         retire_if_same_verdict: true
     prompt: |
       CONTEXT
-      Project root placeholder: {project_root}. Run date placeholder: {date}. TraceFix and BEAVER suggest that repair evidence should start from exact counterexamples and bounded frontier certificates. This task is CPU/exact-authority only.
+      Project root placeholder: {project_root}. Run date placeholder: {date}. .294 created a small certificate pilot but repair stayed blocked under a flagged verifier. This task expands deterministic repair-readiness evidence before any generation attempt.
 
       EXISTING CODE TO READ FIRST
       - CLAUDE.md
       - CODEX.md
+      - results/experiment_3170_counterexample_certificate_repair_pilot_v1.json
+      - results/experiment_3168_repair_gate_decision_v3.json
+      - results/experiment_3169_multi_turn_repair_ladder_v4.json
       - research-references.md
-      - results/experiment_3168_repair_gate_decision_v3.json if present
-      - results/experiment_3169_repair_ladder_materializer_v4.json if present
-      - results/experiment_3137_exact_safe_accept_abstain_contract_v1.json
-      - results/experiment_3138_canonical_answer_vericot_grounding_pilot_v1.json
-      - results/experiment_3125_prefix_closed_deterministic_verifier_bound_pilot_v1.json
-      - results/experiment_3111_certified_coherence_z3_mcs_feedback_v3.json
+      - carnot/
+      - tests/
 
       TASK
-      Build a certificate-first repair pilot over exact rows and counterexamples. This task should not require local LLM inference.
+      Expand counterexample certificates and bounded frontier records for the repair gate. Do not call an LLM. Produce an exact readiness artifact that exp3184 can consume.
 
       CONCRETE STEPS
-      1. Select a tiny set of exact false-accept, satisfiable-drift, and fragment-code rows with known counterexamples or certificates.
-      2. For each row, construct a counterexample/certificate record: violated constraint, minimal failing assignment or trace, expected corrected invariant, and exact verifier to rerun.
-      3. Where a prior repair candidate exists, score it against the certificate. If no candidate exists, produce the certificate package only.
-      4. Record BEAVER-style bounded-frontier fields when available, and mark unavailable bound fields honestly.
-      5. Write a complete pilot artifact that can guide future model repair calls.
+      1. PRECONDITIONS: Do not make live model calls. Use exact authority, known false-accept rows, prior certificate artifacts, and deterministic checkers only.
+      2. Load exp3170 and identify the certificate families, exact rows, counterexamples, and flagged reasons.
+      3. Expand to a larger bounded set of exact rows and false-accept/regression rows where available. Record every row ID, canonical answer/source, checker result, and counterexample family.
+      4. Build bounded frontier records inspired by BEAVER-style deterministic verification: prefix/state, constraint, lower/upper bound or exact status when available, and stop reason.
+      5. Determine repair_call_ready only if certificates are broad enough, exact-authority scoring is complete, and no certificate evidence depends on a flagged live verifier.
+      6. Write the artifact for repair gate v4.
 
       REQUIRED ARTIFACT FIELDS:
-      - counterexample_certificate_repair_pilot_v2_ready: bool (principle: repair should start from exact counterexamples)
+      - counterexample_certificate_expansion_v3_ready: bool (principle: repair readiness must be materialized)
       - exact_row_count: int (principle: denominator must be explicit)
-      - counterexample_count: int (principle: repair input evidence must be concrete)
-      - certificate_records: list (principle: certificates must be replayable)
-      - bounded_frontier_records: list (principle: BEAVER-style bounds must be explicit when present)
-      - unavailable_certificate_fields: list (principle: missing exact evidence must stay visible)
-      - prior_repair_candidates_scored: int (principle: distinguish certificate prep from repair success)
-      - exact_accept_count: int (principle: only exact evidence accepts a repair)
-      - repair_call_required_for_next_step: bool (principle: next tasks should know if live repair is still needed)
-      - source_artifacts: list (principle: certificate claims must trace to files)
-      - inference_substrate: dict (principle: exact CPU work must declare no live model inference)
+      - counterexample_count: int (principle: repair targets must be counted)
+      - certificate_records: list (principle: certificates must trace to exact rows and checkers)
+      - bounded_frontier_records: list (principle: repair gates need deterministic frontier evidence)
+      - known_false_accept_rows_covered: int (principle: adversarial rows must remain load-bearing)
+      - flagged_adversarial: bool (principle: repair cannot proceed on flagged evidence)
+      - repair_call_ready: bool (principle: live repair attempts need an explicit readiness signal)
+      - blocker_reasons: list (principle: failed readiness must be actionable)
+      - inference_substrate: dict (principle: exact/cached certificate work must not be mislabeled as live inference)
       - honest_verdict: str (principle: terminal verdict must start with complete:/complete_/success:/success_/passed:/passed_/shipped_ unless a precondition is honestly blocked)
 
       Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
 
-  - id: exp3171-fr11-ledger-counterexample-isolation
-    milestone: "2026.05.294"
-    deliverable: "results/experiment_3171_fr11_ledger_counterexample_isolation_v1.json"
-    title: "FR-11 ledger counterexample isolation"
+  - id: exp3184-repair-gate-decision-v4
+    milestone: "2026.05.295"
+    deliverable: "results/experiment_3184_repair_gate_decision_v4.json"
+    title: "Repair gate decision v4 from receipts, invariance, and certificates"
     priority: critical
-    max_turns: 50
-    estimated_wall_time_min: 60
-    track: "self_learning"
-    inference_substrate: "controller_memory_replay"
+    max_turns: 35
+    estimated_wall_time_min: 30
+    track: "repair"
+    inference_substrate: "aggregation"
     requires_gpu: false
-    continuous_self_learning_task: true
     prior_failures:
-      - experiment_id: exp3156-fr11-ledger-consistency-closure-v1
-        verdict: "complete: ledger_consistency_rate=0.857143; promotion_recommendation=block_fr11_promotion_until_ledger_consistency_reaches_1.0"
-        addressed_by: "Isolates the failing counterexample family instead of rerunning the same aggregate replay."
+      - experiment_id: exp3168-repair-gate-decision-v3
+        verdict: "complete: repair_gate_decision_v3_ready=true; repair_gate_state=blocked_flagged_verifier"
+        addressed_by: "Adds receipt-backed verifier and expanded certificate inputs before deciding whether repair ladder v5 may run."
         retire_if_same_verdict: true
-      - experiment_id: exp3157-fr11-attractor-residual-memory-audit-v1
-        verdict: "complete: promotion_recommendation=block_fr11_promotion_until_ledger_consistency_reaches_1.0"
-        addressed_by: "Separates environment variants from controller-memory updates before any promotion attempt."
+      - experiment_id: exp3153-repair-gate-decision-v2
+        verdict: "blocked_pending_clean_rerun_gate_failed: clean verifier gate failed"
+        addressed_by: "Consumes full .295 preflight, invariance, verifier, and certificate artifacts instead of a thin blocked gate."
+        retire_if_same_verdict: true
+      - experiment_id: exp3140-repair-gate-decision-v1
+        verdict: "blocked_clean_verifier_untrusted: repair gate stayed closed"
+        addressed_by: "Keeps the gate closed unless the new explicit unblocking predicates all pass."
         retire_if_same_verdict: true
     prompt: |
       CONTEXT
-      Project root placeholder: {project_root}. Run date placeholder: {date}. FR-11 is the autonomous self-learning requirement. .293 reached ledger_consistency_rate=0.857143, so promotion remains blocked. This task must identify the specific counterexample family.
+      Project root placeholder: {project_root}. Run date placeholder: {date}. Repair remains blocked until the verifier is clean and certificates are ready. This task is an aggregation decision, not a model call.
 
       EXISTING CODE TO READ FIRST
       - CLAUDE.md
       - CODEX.md
-      - research-program.md
-      - results/experiment_3156_fr11_ledger_consistency_closure_v1.json
-      - results/experiment_3157_fr11_attractor_residual_memory_audit_v1.json
-      - results/experiment_3142_fr11_vera_evoenv_hardening_v2.json
-      - results/experiment_3143_fr11_experience_driven_verifier_memory_v1.json
-      - results/experiment_3128_fr11_evoenv_verifiable_environment_synthesis_v1.json
-      - results/experiment_3129_fr11_constraint_memory_retention_drift_audit_v1.json
+      - results/experiment_3179_local_sota_receipt_smoke_v3.json
+      - results/experiment_3180_controlled_invariance_executor_v2.json
+      - results/experiment_3181_clean_live_sota_verifier_rerun_v10.json
+      - results/experiment_3183_counterexample_certificate_expansion_v3.json
+      - results/experiment_3168_repair_gate_decision_v3.json
 
       TASK
-      Isolate the FR-11 ledger counterexample family and define an environment/variant split for a controller-only nonforgetting pilot.
+      Decide whether repair ladder v5 is allowed to run live repair calls. Keep the gate closed if any load-bearing precondition is missing, false, or flagged.
 
       CONCRETE STEPS
-      1. Load the FR-11 VeRA/EvoEnv, experience-memory, constraint-memory, ledger closure, and attractor/residual artifacts.
-      2. Reconstruct the ledger entries used in exp3156 and identify passing vs failing rows or families.
-      3. Define environment variants: training/update rows, held-out replay rows, and negative controls.
-      4. Identify whether inconsistency is due to stale memory, environment mismatch, threshold drift, missing exact label, or aggregation schema mismatch.
-      5. Write the counterexample-isolation artifact for exp3172.
+      1. PRECONDITIONS: Do not make live model calls. Read only upstream artifacts and exact gate policies.
+      2. Evaluate unblocking predicates: receipt smoke clean_rerun_allowed, controlled_invariance_passed, clean verifier flagged_adversarial=false, headline_claim_allowed=true for verifier metrics, false_accept gate acceptable, and certificate repair_call_ready=true.
+      3. If a required artifact is missing, record missing_artifacts and set repair_gate_state=blocked_missing_artifact.
+      4. If any predicate fails, record all blockers and set repair_gate_state to the most specific blocked state.
+      5. If all predicates pass, set repair_gate_state=unblocked_for_bounded_repair_ladder and specify strict repair attempt limits.
+      6. Write the artifact for exp3185.
 
       REQUIRED ARTIFACT FIELDS:
-      - fr11_ledger_counterexample_isolation_ready: bool (principle: promotion blockers must be concrete)
-      - continuous_self_learning_task: bool (principle: roadmap must mark FR-11 coverage)
-      - prior_ledger_consistency_rate: float (principle: aggregate state must carry forward)
-      - isolated_counterexample_families: list (principle: failures must be actionable)
-      - passing_families: list (principle: do not discard working memory behavior)
-      - environment_variant_split: dict (principle: learning and evaluation must be separated)
-      - negative_control_rows: list (principle: self-learning needs nonforgetting controls)
-      - suspected_failure_modes: list (principle: next pilot should target causes)
-      - promotion_allowed: bool (principle: no promotion without consistency 1.0)
-      - no_model_weight_update_claimed: bool (principle: FR-11 remains controller-only)
-      - source_artifacts: list (principle: ledger claims must trace to files)
-      - inference_substrate: dict (principle: controller replay must declare no live model inference)
+      - repair_gate_decision_v4_ready: bool (principle: repair gate must be explicit)
+      - repair_gate_state: str (principle: downstream repair must read one machine state)
+      - unblocking_predicates: dict (principle: gate logic must be auditable)
+      - blocker_reasons: list (principle: blocked repair must be actionable)
+      - missing_artifacts: list (principle: absence must not be hidden)
+      - allowed_repair_attempt_budget: dict (principle: unblocked repair must remain bounded)
+      - source_artifacts: list (principle: gate summaries must trace to files)
+      - inference_substrate: dict (principle: aggregation work must declare no live model inference)
       - honest_verdict: str (principle: terminal verdict must start with complete:/complete_/success:/success_/passed:/passed_/shipped_ unless a precondition is honestly blocked)
 
       Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
 
-  - id: exp3172-fr11-nonforgetting-self-learning-pilot
-    milestone: "2026.05.294"
-    deliverable: "results/experiment_3172_fr11_nonforgetting_self_learning_pilot_v2.json"
-    title: "FR-11 nonforgetting self-learning pilot v2"
+  - id: exp3185-multi-turn-repair-ladder-v5
+    milestone: "2026.05.295"
+    deliverable: "results/experiment_3185_multi_turn_repair_ladder_v5.json"
+    title: "Multi-turn repair ladder v5 with explicit gate materialization"
     priority: critical
-    max_turns: 50
-    estimated_wall_time_min: 75
-    track: "self_learning"
-    inference_substrate: "controller_memory_replay"
+    max_turns: 100
+    model: opus
+    estimated_wall_time_min: 150
+    track: "repair"
+    inference_substrate: "live_llm_inference_or_gated_skip"
     requires_gpu: false
-    continuous_self_learning_task: true
     prior_failures:
-      - experiment_id: exp3156-fr11-ledger-consistency-closure-v1
-        verdict: "complete: ledger_consistency_rate=0.857143; promotion blocked"
-        addressed_by: "Uses isolated counterexamples and environment splits from exp3171 instead of repeating the aggregate closure."
+      - experiment_id: exp3169-multi-turn-repair-ladder-v4
+        verdict: "complete: multi_turn_repair_ladder_v4_ready=true; gated_skip=true; repair_attempt_count=0"
+        addressed_by: "Keeps full gated-skip materialization but permits bounded live repair only if repair gate v4 explicitly unblocks."
         retire_if_same_verdict: true
-      - experiment_id: exp3157-fr11-attractor-residual-memory-audit-v1
-        verdict: "complete: promotion_recommendation=block_fr11_promotion_until_ledger_consistency_reaches_1.0"
-        addressed_by: "Measures nonforgetting and negative controls after a bounded controller-memory update."
+      - experiment_id: exp3154-multi-turn-repair-ladder-v3
+        verdict: "blocked_gate_check_failed: repair ladder skipped because clean verifier gate failed"
+        addressed_by: "Consumes the new repair gate v4 and writes semantic metrics or explicit blockers."
         retire_if_same_verdict: true
-      - experiment_id: exp3143-fr11-experience-driven-verifier-memory
-        verdict: "complete: controller routing memory only; block model-weight learning until ledger consistency is 1.0"
-        addressed_by: "Keeps model weights unchanged and evaluates only controller-memory update behavior."
+      - experiment_id: exp3141-multi-turn-repair-ladder-v2
+        verdict: "missing_or_gated: deliverable remained carried forward as missing in later matrices"
+        addressed_by: "Always writes a full v5 deliverable, including when repair calls are gated off."
         retire_if_same_verdict: true
     prompt: |
       CONTEXT
-      Project root placeholder: {project_root}. Run date placeholder: {date}. This is the mandatory continuous self-learning experiment for .294. It may update controller memory or thresholds only; it must not claim model-weight learning.
+      Project root placeholder: {project_root}. Run date placeholder: {date}. This task may attempt live repair only if exp3184 explicitly opens the gate. It must still write a complete artifact if the gate is blocked.
+
+      MODEL_SPECS
+      - unsloth/Qwen3.6-35B-A3B-GGUF
+      - unsloth/gemma-4-31B-it-GGUF
+      - unsloth/gemma-4-26B-A4B-it-GGUF
+      Legacy small models may be used only as loud CPU smoke fallbacks and cannot populate headline repair metrics.
+
+      EXISTING CODE TO READ FIRST
+      - CLAUDE.md
+      - CODEX.md
+      - scripts/experiment_template.py
+      - carnot/inference/sota_models.py
+      - results/experiment_3184_repair_gate_decision_v4.json
+      - results/experiment_3183_counterexample_certificate_expansion_v3.json
+      - results/experiment_3181_clean_live_sota_verifier_rerun_v10.json
+      - results/experiment_3169_multi_turn_repair_ladder_v4.json
+
+      TASK
+      Materialize repair ladder v5. If gate v4 is blocked, write a full gated-skip artifact. If unblocked, run a small bounded local SOTA repair panel and score semantic exactness with exact authority.
+
+      CONCRETE STEPS
+      1. PRECONDITIONS: Load exp3184. If repair_gate_state is not unblocked_for_bounded_repair_ladder, do not make live model calls and write gated_skip=true with all blockers.
+      2. If unblocked, re-check mandated GGUF availability and receipts before each repair call. Do not use non-SOTA models for headline repair metrics.
+      3. Select a bounded set of certificate-backed repair targets from exp3183.
+      4. Run a small multi-turn repair ladder: propose patch/answer, exact-check, counterexample feedback, second proposal, exact-check. Keep all attempts bounded and transcript-hashed.
+      5. Score repair success only by exact/canonical semantic checks, not JSON validity or model self-judgment.
+      6. Write the artifact with repair_success_delta and remaining blockers.
+
+      REQUIRED ARTIFACT FIELDS:
+      - multi_turn_repair_ladder_v5_ready: bool (principle: repair ladder must materialize even when gated)
+      - gated_skip: bool (principle: skipped live repair must be explicit)
+      - gate_state: str (principle: repair behavior must trace to gate decision)
+      - repair_attempt_count: int (principle: no-call artifacts must not imply live repair)
+      - models_used: list (principle: SOTA policy must be auditable)
+      - repair_targets: list (principle: repair attempts must trace to certificates)
+      - transcript_receipts: list (principle: live repair evidence must be replayable)
+      - exact_check_results: list (principle: semantic repair must be exact-scored)
+      - repair_success_delta: float (principle: repair benefit must be quantified)
+      - remaining_blockers: list (principle: incomplete repair must remain actionable)
+      - headline_claim_allowed: bool (principle: gated or smoke evidence must not become headline)
+      - inference_substrate: dict (principle: live or gated-skip substrate must be declared)
+      - honest_verdict: str (principle: terminal verdict must start with complete:/complete_/success:/success_/passed:/passed_/shipped_ unless a precondition is honestly blocked)
+
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+
+  - id: exp3186-fr11-controller-memory-promotion-pack-v1
+    milestone: "2026.05.295"
+    deliverable: "results/experiment_3186_fr11_controller_memory_promotion_pack_v1.json"
+    title: "FR-11 controller-memory promotion pack v1"
+    priority: high
+    max_turns: 45
+    estimated_wall_time_min: 55
+    track: "self_learning"
+    inference_substrate: "aggregation_and_replay"
+    requires_gpu: false
+    prior_failures:
+      - experiment_id: exp3172-fr11-nonforgetting-pilot-v1
+        verdict: "complete: fr11_nonforgetting_pilot_ready=true; controller_update_applied=true; after_consistency_rate=1.0; promotion_allowed=true"
+        addressed_by: "Packages the promotable controller-memory update with rollback, promotion manifest, and no-model-weight-update language."
+        retire_if_same_verdict: true
+      - experiment_id: exp3156-fr11-ledger-counterexample-isolation-v1
+        verdict: "complete: ledger consistency 0.857143; promotion_allowed=false"
+        addressed_by: "Uses the .294 nonforgetting fix and promotion_allowed=true state rather than re-isolating the same ledger family."
+        retire_if_same_verdict: true
+    prompt: |
+      CONTEXT
+      Project root placeholder: {project_root}. Run date placeholder: {date}. Continuous self-learning is required in this milestone. .294 produced a promotable controller-memory update but did not package operational promotion and rollback policy.
 
       EXISTING CODE TO READ FIRST
       - CLAUDE.md
       - CODEX.md
       - research-program.md
       - results/experiment_3171_fr11_ledger_counterexample_isolation_v1.json
-      - results/experiment_3156_fr11_ledger_consistency_closure_v1.json
-      - results/experiment_3157_fr11_attractor_residual_memory_audit_v1.json
-      - python/carnot/pipeline if relevant
-      - python/carnot/verify if relevant
-
-      TASK
-      Run a bounded controller-only self-learning pilot with nonforgetting controls over the isolated FR-11 counterexample split.
-
-      CONCRETE STEPS
-      1. Load exp3171 and verify the environment/variant split exists. If it is missing, write a complete blocked artifact with promotion_allowed=false.
-      2. Apply a bounded controller-memory update or threshold adjustment to the training/update rows only.
-      3. Replay held-out rows and negative controls without using them for the update.
-      4. Compute before/after ledger consistency, negative-control regression count, nonforgetting_passed, and promotion_allowed.
-      5. Preserve model-weight boundary: no finetuning, no hidden state mutation claim, no offline weight update.
-
-      REQUIRED ARTIFACT FIELDS:
-      - fr11_nonforgetting_self_learning_pilot_v2_ready: bool (principle: continuous self-learning must produce replay evidence)
-      - continuous_self_learning_task: bool (principle: roadmap must mark FR-11 coverage)
-      - controller_memory_update_applied: bool (principle: learning mechanism must be explicit)
-      - model_weight_update_claimed: bool (principle: weight-learning claims are forbidden here)
-      - before_ledger_consistency_rate: float (principle: improvement needs baseline)
-      - after_ledger_consistency_rate: float (principle: improvement must be measured)
-      - heldout_consistency_rate: float (principle: promotion needs held-out replay)
-      - negative_control_regression_count: int (principle: nonforgetting must be measured)
-      - nonforgetting_passed: bool (principle: self-learning must not regress old constraints)
-      - promotion_allowed: bool (principle: promotion requires consistency 1.0 and controls)
-      - promotion_recommendation: str (principle: FR-11 status must be machine-readable)
-      - source_artifacts: list (principle: self-learning claims must trace to files)
-      - inference_substrate: dict (principle: controller replay must declare no live model inference)
-      - honest_verdict: str (principle: terminal verdict must start with complete:/complete_/success:/success_/passed:/passed_/shipped_ unless a precondition is honestly blocked)
-
-      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
-
-  - id: exp3173-ebcn-kan-bounded-diagnostic-expansion
-    milestone: "2026.05.294"
-    deliverable: "results/experiment_3173_ebcn_kan_bounded_diagnostic_expansion_v2.json"
-    title: "EBCN and KAN bounded diagnostic expansion"
-    priority: medium
-    max_turns: 50
-    estimated_wall_time_min: 65
-    track: "architecture"
-    inference_substrate: "exact_label_diagnostic"
-    requires_gpu: false
-    prior_failures:
-      - experiment_id: exp3158-ebcn-energy-sidecar-calibration-v1
-        verdict: "complete: exact_labeled_row_count=6; scalar_energy_auc=1.0; live_integration_claim_allowed=false"
-        addressed_by: "Expands exact labeled rows and keeps the sidecar bounded instead of promoting from the tiny pilot."
-        retire_if_same_verdict: true
-      - experiment_id: exp3159-kan-proof-carrying-monitor-expansion-v1
-        verdict: "complete_kan_proof_carrying_monitor_expansion_v1_records_added_no_deployed_verifier"
-        addressed_by: "Combines EBCN and KAN diagnostics against exact rows without deploying a verifier."
-        retire_if_same_verdict: true
-      - experiment_id: exp3145-kan-proof-carrying-monitor-boundary-v2
-        verdict: "complete_kan_proof_carrying_monitor_v2_records_attached_no_deployed_claim"
-        addressed_by: "Adds rows and nonpromotion criteria rather than repeating a boundary-only note."
-        retire_if_same_verdict: true
-    prompt: |
-      CONTEXT
-      Project root placeholder: {project_root}. Run date placeholder: {date}. EBCN and KAN are promising bounded diagnostics, but they are not deployed verifiers. Keep claims narrow and exact-label grounded.
-
-      EXISTING CODE TO READ FIRST
-      - CLAUDE.md
-      - CODEX.md
-      - research-references.md
-      - results/experiment_3158_ebcn_energy_sidecar_calibration_v1.json
-      - results/experiment_3159_kan_proof_carrying_monitor_expansion_v1.json
-      - results/experiment_3145_kan_proof_carrying_monitor_boundary_v2.json
-      - results/experiment_3136_false_accept_root_cause_autopsy_v1.json
-      - results/experiment_3137_exact_safe_accept_abstain_contract_v1.json
-      - results/experiment_3138_canonical_answer_vericot_grounding_pilot_v1.json
-
-      TASK
-      Expand the exact-label EBCN/KAN bounded diagnostic panel without making live integration or deployed-verifier claims.
-
-      CONCRETE STEPS
-      1. Collect exact rows from known false accepts, exact-safe contract, canonical grounding, and any clean verifier rerun rows if present.
-      2. Score or replay EBCN energy diagnostics and KAN proof-carrying monitor records on the expanded exact set.
-      3. Report localization quality, false-accept row separation, and monitor-record coverage.
-      4. Mark all promotion blockers, especially tiny denominator, live integration absence, and no deployed verifier.
-      5. Write a bounded diagnostic artifact for matrix v28.
-
-      REQUIRED ARTIFACT FIELDS:
-      - ebcn_kan_bounded_diagnostic_expansion_v2_ready: bool (principle: sidecar diagnostics need explicit readiness)
-      - exact_labeled_row_count: int (principle: denominator must be visible)
-      - known_false_accept_rows_scored: int (principle: central regression rows must be included)
-      - ebcn_localization_metrics: dict (principle: energy diagnostics should localize violations)
-      - kan_monitor_record_count: int (principle: KAN evidence must be countable)
-      - deployed_verifier_claim_allowed: bool (principle: bounded diagnostics are not deployment)
-      - live_integration_claim_allowed: bool (principle: no live integration without evidence)
-      - promotion_blockers: list (principle: nonpromotion must be actionable)
-      - source_artifacts: list (principle: diagnostics must trace to exact labels)
-      - inference_substrate: dict (principle: diagnostic work must declare no live model inference)
-      - honest_verdict: str (principle: terminal verdict must start with complete:/complete_/success:/success_/passed:/passed_/shipped_ unless a precondition is honestly blocked)
-
-      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
-
-  - id: exp3174-hardware-tooling-boundary-v8
-    milestone: "2026.05.294"
-    deliverable: "results/experiment_3174_hardware_tooling_boundary_v8.json"
-    title: "Hardware and tooling boundary v8"
-    priority: medium
-    max_turns: 30
-    estimated_wall_time_min: 40
-    track: "hardware"
-    inference_substrate: "tooling_boundary_and_aggregation"
-    requires_gpu: false
-    prior_failures:
-      - experiment_id: exp3160-hardware-sampler-evidence-boundary-v7
-        verdict: "complete: authenticated_speedup_claim_allowed=false; no_hardware_commands_run=true"
-        addressed_by: "Refreshes ecosystem/tooling boundaries and still forbids speedup claims without authenticated transcripts."
-        retire_if_same_verdict: true
-      - experiment_id: exp3146-hardware-sampler-evidence-boundary-v6
-        verdict: "complete: speedup_claim_allowed=false; hardware_commands_run=0"
-        addressed_by: "Adds THRML/XGrammar/llguidance/Kona current boundary checks without running board commands."
-        retire_if_same_verdict: true
-      - experiment_id: exp3132-hardware-evidence-sampler-boundary-v5
-        verdict: "complete: hardware_evidence_sampler_boundary_v5_ready=true; speedup_claim_allowed=false"
-        addressed_by: "Continues the evidence-boundary ledger and records local tooling availability separately from hardware performance."
-        retire_if_same_verdict: true
-    prompt: |
-      CONTEXT
-      Project root placeholder: {project_root}. Run date placeholder: {date}. Hardware and ecosystem updates are relevant, but no new board or TSU speedup claim is allowed without authenticated local command transcripts.
-
-      EXISTING CODE TO READ FIRST
-      - CLAUDE.md
-      - CODEX.md
-      - research-references.md
-      - research-hardware-wishlist.md
-      - results/experiment_3160_hardware_sampler_evidence_boundary_v7.json
-      - results/experiment_3146_hardware_sampler_evidence_boundary_v6.json
+      - results/experiment_3172_fr11_nonforgetting_pilot_v1.json
+      - _bmad/prd.md
       - ops/status.md
 
       TASK
-      Refresh the hardware/tooling boundary ledger for CUDA, KV260, GateMate, PolarFire, THRML, XGrammar, llguidance, Extropic, and Kona without making speedup claims.
+      Create the FR-11 controller-memory promotion pack v1. This is continuous self-learning at the controller/memory layer only; do not claim model-weight updates.
 
       CONCRETE STEPS
-      1. Read the current hardware wishlist and prior boundary artifacts.
-      2. Record allowed claims for CUDA/local GGUF, KV260, GateMate, PolarFire, THRML/TSU, and Kona/Aleph.
-      3. Optionally check local Python import availability for THRML, XGrammar, or llguidance if doing so does not install packages or run hardware commands.
-      4. Do not run board commands, flash bitstreams, call remote hardware, or infer speedup from public pages.
-      5. Write a boundary artifact that separates public ecosystem references, local import/tool availability, and authenticated performance evidence.
+      1. PRECONDITIONS: Do not make live model calls and do not update local model weights. Use .294 FR-11 artifacts and existing replay ledgers.
+      2. Extract the promoted controller-memory rule/update from exp3172, including before/after consistency, heldout consistency, and negative-control results.
+      3. Build a promotion manifest with update ID, source counterexample family, activation predicate, rollback predicate, replay requirements, and owner artifact paths.
+      4. Define continuous-self-learning tier classification using research-program.md. Label this as controller-memory learning, not online weight learning.
+      5. Add a rollback and monitoring plan: regressions, stale ledger, drift failure, or exact-authority conflict.
+      6. Write the artifact for exp3187 drift replay and for ops documentation reconciliation.
 
       REQUIRED ARTIFACT FIELDS:
-      - hardware_tooling_boundary_v8_ready: bool (principle: boundary state must be explicit)
-      - authenticated_speedup_claim_allowed: bool (principle: speedup needs authenticated evidence)
-      - hardware_commands_run: list (principle: board interaction must be auditable)
-      - local_tooling_checks: dict (principle: package/import availability is not hardware performance)
-      - cuda_status: str (principle: local SOTA runtime status must be separate from sampler speedup)
-      - kv260_status: str (principle: board claims need command transcripts)
-      - gatemate_status: str (principle: GateMate claims need operator-visible evidence)
-      - polarfire_status: str (principle: PolarFire claims need workload transcript)
-      - extropic_thrml_status: str (principle: public TSU context is not local hardware access)
-      - kona_status: str (principle: public Kona context is not local interoperability)
-      - speedup_claim_made: bool (principle: matrix must detect unsupported hardware claims)
-      - source_artifacts: list (principle: boundary claims must trace to files/pages)
-      - inference_substrate: dict (principle: tooling aggregation must declare no live model inference)
+      - fr11_controller_memory_promotion_pack_v1_ready: bool (principle: self-learning promotion must be auditable)
+      - continuous_self_learning_task: bool (principle: milestone must include a self-learning experiment)
+      - learning_tier: str (principle: controller memory must not be confused with model-weight learning)
+      - no_model_weight_update_claimed: bool (principle: FR-11 claims must be technically precise)
+      - source_update_artifact: str (principle: promotion must trace to validated evidence)
+      - promotion_manifest: dict (principle: learned updates need activation and rollback metadata)
+      - replay_requirements: list (principle: learned memory must be guarded by tests)
+      - rollback_policy: dict (principle: self-learning must be reversible under regression)
+      - promotion_allowed: bool (principle: readiness must be explicit)
+      - inference_substrate: dict (principle: aggregation/replay work must declare no live model inference)
       - honest_verdict: str (principle: terminal verdict must start with complete:/complete_/success:/success_/passed:/passed_/shipped_ unless a precondition is honestly blocked)
 
       Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
 
-  - id: exp3175-cross-corpus-matrix-v28
-    milestone: "2026.05.294"
-    deliverable: "results/experiment_3175_cross_corpus_matrix_v28.json"
-    title: "Cross-corpus matrix v28"
+  - id: exp3187-fr11-cross-environment-drift-replay-v1
+    milestone: "2026.05.295"
+    deliverable: "results/experiment_3187_fr11_cross_environment_drift_replay_v1.json"
+    title: "FR-11 cross-environment drift replay v1"
+    priority: high
+    max_turns: 50
+    estimated_wall_time_min: 70
+    track: "self_learning"
+    inference_substrate: "replay_and_exact_authority"
+    requires_gpu: false
+    prior_failures:
+      - experiment_id: exp3172-fr11-nonforgetting-pilot-v1
+        verdict: "complete: heldout_consistency_rate=1.0; negative_control_regression_count=0; promotion_allowed=true"
+        addressed_by: "Extends the .294 nonforgetting pilot to cross-environment and drift replay before operational promotion."
+        retire_if_same_verdict: true
+      - experiment_id: exp3157-fr11-nonforgetting-pilot-v1
+        verdict: "blocked_promotion_not_allowed: ledger consistency remained below promotion threshold"
+        addressed_by: "Consumes the later .294 controller-memory update that reached consistency 1.0, then tests drift rather than re-running the blocked pilot."
+        retire_if_same_verdict: true
+    prompt: |
+      CONTEXT
+      Project root placeholder: {project_root}. Run date placeholder: {date}. The FR-11 update should not be promoted solely because it fixed the known ledger. It needs cross-environment drift replay and negative controls.
+
+      EXISTING CODE TO READ FIRST
+      - CLAUDE.md
+      - CODEX.md
+      - research-program.md
+      - results/experiment_3186_fr11_controller_memory_promotion_pack_v1.json
+      - results/experiment_3172_fr11_nonforgetting_pilot_v1.json
+      - results/experiment_3171_fr11_ledger_counterexample_isolation_v1.json
+      - carnot/
+      - tests/
+
+      TASK
+      Replay the FR-11 controller-memory promotion pack across heldout and cross-environment rows, reporting drift, regressions, and promotion status without updating model weights.
+
+      CONCRETE STEPS
+      1. PRECONDITIONS: Do not make live model calls and do not update model weights. Use exact/cached replay rows only.
+      2. Load the promotion manifest from exp3186. If promotion_allowed=false or manifest is missing, write blocked artifact with no replay mutation.
+      3. Select heldout, negative-control, and cross-environment rows from existing exact/replay datasets. Prefer environments that differ from the original counterexample family while still having exact authority.
+      4. Apply the controller-memory routing/update in replay mode and compare before/after consistency, heldout consistency, cross-environment consistency, and negative-control regressions.
+      5. Report drift cases and rollback triggers. Keep promotion_allowed true only if no exact-authority or negative-control regression appears.
+      6. Write the artifact for matrix v29.
+
+      REQUIRED ARTIFACT FIELDS:
+      - fr11_cross_environment_drift_replay_v1_ready: bool (principle: self-learning promotion needs drift evidence)
+      - continuous_self_learning_task: bool (principle: milestone must include self-learning coverage)
+      - replay_mode_only: bool (principle: promotion tests must not silently mutate production state)
+      - no_model_weight_update_claimed: bool (principle: controller-memory learning must be precise)
+      - heldout_row_count: int (principle: denominator must be visible)
+      - cross_environment_row_count: int (principle: transfer claims need a separate denominator)
+      - before_after_consistency: dict (principle: learning benefit must be measured)
+      - negative_control_regression_count: int (principle: nonforgetting must be explicit)
+      - drift_cases: list (principle: failed transfer cases should guide next research)
+      - rollback_triggered: bool (principle: self-learning must remain reversible)
+      - promotion_allowed: bool (principle: promotion readiness must be explicit)
+      - inference_substrate: dict (principle: replay work must declare no live model inference)
+      - honest_verdict: str (principle: terminal verdict must start with complete:/complete_/success:/success_/passed:/passed_/shipped_ unless a precondition is honestly blocked)
+
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+
+  - id: exp3188-thrml-factor-graph-api-boundary-v1
+    milestone: "2026.05.295"
+    deliverable: "results/experiment_3188_thrml_factor_graph_api_boundary_v1.json"
+    title: "THRML factor-graph API boundary v1"
+    priority: medium
+    max_turns: 50
+    estimated_wall_time_min: 60
+    track: "hardware"
+    inference_substrate: "hardware_api_smoke_or_blocked_preflight"
+    requires_gpu: false
+    prior_failures:
+      - experiment_id: exp3174-hardware-sampler-boundary-v1
+        verdict: "complete: hardware_sampler_boundary_ready=true; no_speedup_claim=true; thrml available 0.1.3"
+        addressed_by: "Narrows hardware work to a THRML API/factor-graph boundary artifact with no sampler speedup or board-performance claim."
+        retire_if_same_verdict: true
+      - experiment_id: exp3160-hardware-sampler-boundary-v1
+        verdict: "blocked_no_authenticated_speedup: no board command transcript and no speedup claim allowed"
+        addressed_by: "Avoids board speedup claims entirely and records only import/API translation readiness."
+        retire_if_same_verdict: true
+    prompt: |
+      CONTEXT
+      Project root placeholder: {project_root}. Run date placeholder: {date}. .294 found local thrml import availability but no authenticated sampler speedup. This task is an API boundary check only.
+
+      EXISTING CODE TO READ FIRST
+      - CLAUDE.md
+      - CODEX.md
+      - research-hardware-wishlist.md
+      - research-references.md
+      - results/experiment_3174_hardware_sampler_boundary_v1.json
+      - carnot/
+
+      TASK
+      Translate a tiny exact-row constraint/factor graph into THRML-compatible structures where possible and record API gaps. Do not claim hardware acceleration, TSU execution, sampler speedup, or Kona execution.
+
+      CONCRETE STEPS
+      1. PRECONDITIONS: Check whether Python can import thrml and record version/path if available. Do not run board commands. Do not use retired KV260 host storage checks. Do not report performance speedup.
+      2. Select one or two tiny exact-row constraint examples with deterministic authority.
+      3. Build a simple internal factor-graph representation and attempt to map it to THRML API concepts if the local package exposes suitable structures.
+      4. If THRML import or API mapping fails, write a blocked/preflight artifact with the missing symbols and next adapter steps.
+      5. If mapping succeeds, run only a tiny local API smoke or construction check, not a performance benchmark.
+      6. Record how this boundary might support future sampler acceleration, while explicitly denying current speedup or hardware claims.
+
+      REQUIRED ARTIFACT FIELDS:
+      - thrml_factor_graph_api_boundary_v1_ready: bool (principle: hardware boundary work must materialize)
+      - thrml_import_available: bool (principle: local tool availability must be explicit)
+      - thrml_version: str|null (principle: API evidence must be reproducible)
+      - selected_exact_rows: list (principle: factor-graph examples must trace to exact authority)
+      - factor_graph_translation_records: list (principle: adapter feasibility must be inspectable)
+      - api_gap_records: list (principle: missing hardware/software capabilities must be actionable)
+      - local_api_smoke_passed: bool (principle: construction success should be separated from performance)
+      - hardware_speedup_claim_allowed: bool (principle: speedup claims require authenticated hardware evidence)
+      - kona_or_tsu_execution_claimed: bool (principle: external architecture references must not become local execution claims)
+      - inference_substrate: dict (principle: hardware/API smoke must be distinguished from live LLM inference)
+      - honest_verdict: str (principle: terminal verdict must start with complete:/complete_/success:/success_/passed:/passed_/shipped_ unless a precondition is honestly blocked)
+
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+
+  - id: exp3189-cross-corpus-matrix-v29
+    milestone: "2026.05.295"
+    deliverable: "results/experiment_3189_cross_corpus_matrix_v29.json"
+    title: "Cross-corpus verification matrix v29 with receipt and FR-11 promotion rows"
     priority: critical
     max_turns: 50
     estimated_wall_time_min: 55
@@ -806,131 +768,128 @@ tasks:
     inference_substrate: "aggregation"
     requires_gpu: false
     prior_failures:
-      - experiment_id: exp3161-cross-corpus-matrix-v27
-        verdict: "complete: matrix_v27_ready=true; publication_blocker_count=65; inherited_adversarial_flag_count=3; missing_artifacts=4"
-        addressed_by: "Reconciles .294 materialized gated-skip artifacts and reports whether missing artifacts decreased."
+      - experiment_id: exp3175-cross-corpus-matrix-v28
+        verdict: "complete: cross_corpus_matrix_v28_ready=true; paper_ready=false; publication_blocker_count=73"
+        addressed_by: "Updates the matrix with .295 receipt, verifier, repair, FR-11, sidecar, and hardware-boundary rows while preserving unresolved blocker semantics."
         retire_if_same_verdict: true
-      - experiment_id: exp3147-cross-corpus-matrix-v26
-        verdict: "complete_flagged: matrix_v26_ready=true; publication_blocker_count=55; missing artifact exp3141; inherited adversarial flags"
-        addressed_by: "Carries forward inherited flags and separates missing artifacts from true scientific blockers."
+      - experiment_id: exp3161-cross-corpus-matrix-v27
+        verdict: "complete: cross_corpus_matrix_v27_ready=true; publication_blocker_count=65"
+        addressed_by: "Carries matrix lineage forward and distinguishes missing artifacts from gated-skip artifacts."
         retire_if_same_verdict: true
     prompt: |
       CONTEXT
-      Project root placeholder: {project_root}. Run date placeholder: {date}. Matrix v27 had 65 publication blockers, 3 inherited adversarial flags, and 4 missing artifacts. .294 is designed to reduce missing artifacts by materializing full blocked/gated-skip rows.
+      Project root placeholder: {project_root}. Run date placeholder: {date}. Matrix v28 is the authoritative publication blocker ledger before .295. This task updates it after all .295 experiments have run or honestly blocked.
 
       EXISTING CODE TO READ FIRST
       - CLAUDE.md
       - CODEX.md
-      - results/experiment_3161_cross_corpus_matrix_v27.json
-      - results/experiment_3162_capstone_v293.json
-      - results/experiment_3163_archive_v293_activate_v294.json if present
-      - results/experiment_3164_duration_corrected_authenticity_contract_v2.json if present
-      - results/experiment_3165_live_sota_authenticity_replay_v2.json if present
-      - results/experiment_3166_verifier_invariance_token_suspicion_audit_v1.json if present
-      - results/experiment_3167_clean_live_sota_verifier_rerun_v9.json if present
-      - results/experiment_3168_repair_gate_decision_v3.json if present
-      - results/experiment_3169_repair_ladder_materializer_v4.json if present
-      - results/experiment_3170_counterexample_certificate_repair_pilot_v2.json if present
-      - results/experiment_3171_fr11_ledger_counterexample_isolation_v1.json if present
-      - results/experiment_3172_fr11_nonforgetting_self_learning_pilot_v2.json if present
-      - results/experiment_3173_ebcn_kan_bounded_diagnostic_expansion_v2.json if present
-      - results/experiment_3174_hardware_tooling_boundary_v8.json if present
+      - results/experiment_3175_cross_corpus_matrix_v28.json
+      - results/experiment_3176_capstone_v294.json
+      - results/experiment_3177_archive_v294_activate_v295.json
+      - results/experiment_3178_receipt_backed_authenticity_contract_v3.json
+      - results/experiment_3179_local_sota_receipt_smoke_v3.json
+      - results/experiment_3180_controlled_invariance_executor_v2.json
+      - results/experiment_3181_clean_live_sota_verifier_rerun_v10.json
+      - results/experiment_3182_distributional_ebm_exact_row_sidecar_v1.json
+      - results/experiment_3183_counterexample_certificate_expansion_v3.json
+      - results/experiment_3184_repair_gate_decision_v4.json
+      - results/experiment_3185_multi_turn_repair_ladder_v5.json
+      - results/experiment_3186_fr11_controller_memory_promotion_pack_v1.json
+      - results/experiment_3187_fr11_cross_environment_drift_replay_v1.json
+      - results/experiment_3188_thrml_factor_graph_api_boundary_v1.json
 
       TASK
-      Build cross-corpus matrix v28 for .294, separating clean, blocked, gated-skip, flagged, diagnostic-only, projection-only, missing, and retired rows.
+      Build cross-corpus matrix v29, preserving honest blocker accounting and separating clean rows, flagged rows, blocked rows, gated skips, and diagnostic-only rows.
 
       CONCRETE STEPS
-      1. Load matrix v27, capstone v293, and all available .294 artifacts.
-      2. Count missing artifacts explicitly and compare against v27's missing_artifacts=4.
-      3. Classify each row by evidence status and claim boundary.
-      4. Compute publication_blocker_count, blocker_delta_from_v27, inherited_adversarial_flag_count, missing_artifacts, repair_status, verifier_status, fr11_status, sidecar_status, and hardware_status.
-      5. Preserve exact source artifact paths for every matrix row.
+      1. PRECONDITIONS: Do not make live model calls. Aggregate artifacts only.
+      2. Load matrix v28 and every .295 deliverable that exists. Record missing artifacts explicitly.
+      3. Add rows for receipt contract, SOTA receipt smoke, controlled invariance, clean rerun v10, distributional EBM sidecar, certificate expansion, repair gate v4, repair ladder v5, FR-11 promotion pack, FR-11 drift replay, and THRML boundary.
+      4. Recompute publication blockers conservatively. Do not mark a blocker resolved unless a .295 artifact explicitly proves it.
+      5. Preserve paper-v6 narrowing: no KV260 speedup, no TSU/Kona execution, no deployed verifier sidecar, no model-weight self-learning claim, and no paper_ready streak.
+      6. Write matrix v29 with deltas from v28 and top next gap.
 
       REQUIRED ARTIFACT FIELDS:
-      - matrix_v28_ready: bool (principle: capstone needs a complete matrix)
-      - rows_total: int (principle: matrix size must be visible)
-      - publication_blocker_count: int (principle: paper readiness needs blocker count)
-      - blocker_delta_from_v27: int (principle: regression/progress must be visible)
-      - clean_rows: int (principle: positive evidence must be countable)
-      - flagged_rows: int (principle: adversarial flags must stay visible)
-      - blocked_rows: int (principle: honest blockers must stay visible)
-      - gated_skip_rows: int (principle: skipped rows must not look missing)
-      - diagnostic_only_rows: int (principle: sidecars are not headline evidence)
-      - missing_artifacts: list (principle: absence must be explicit)
-      - inherited_adversarial_flag_count: int (principle: aggregate trust requires source trust)
-      - verifier_status: str (principle: top gap must be machine-readable)
-      - repair_status: str (principle: repair gate state must be carried forward)
-      - fr11_status: str (principle: self-learning status must be carried forward)
-      - hardware_status: str (principle: unsupported speedup claims must stay blocked)
-      - paper_ready: bool (principle: readiness must not be inferred)
-      - source_artifacts: list (principle: every row must trace to files)
+      - cross_corpus_matrix_v29_ready: bool (principle: capstone needs matrix authority)
+      - prior_matrix_version: str (principle: matrix lineage must be explicit)
+      - paper_ready: bool (principle: publication readiness must not be inferred)
+      - publication_blocker_count: int (principle: blocker accounting must be machine-readable)
+      - blocker_delta_from_v28: int (principle: progress/regression must be visible)
+      - clean_rows: int (principle: evidence quality categories must be counted)
+      - flagged_rows: int (principle: adversarial rows must remain visible)
+      - blocked_rows: int (principle: blocked work must be counted)
+      - gated_skip_rows: int (principle: skipped work must be counted separately from missing)
+      - diagnostic_only_rows: int (principle: sidecar/hardware diagnostics must not become claims)
+      - missing_artifacts: list (principle: absence must not be hidden)
+      - verifier_status: str (principle: FR-12 state must be summarized)
+      - repair_status: str (principle: repair state must be summarized)
+      - fr11_status: str (principle: self-learning state must be summarized)
+      - hardware_status: str (principle: hardware boundary must be summarized)
+      - next_top_gap: str (principle: next planning should be grounded)
       - inference_substrate: dict (principle: aggregation work must declare no live model inference)
       - honest_verdict: str (principle: terminal verdict must start with complete:/complete_/success:/success_/passed:/passed_/shipped_ unless a precondition is honestly blocked)
 
       Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
 
-  - id: exp3176-capstone-v294
-    milestone: "2026.05.294"
-    deliverable: "results/experiment_3176_capstone_v294.json"
-    title: "Capstone v294"
+  - id: exp3190-capstone-v295
+    milestone: "2026.05.295"
+    deliverable: "results/experiment_3190_capstone_v295.json"
+    title: "Capstone v295 receipt-backed verifier and FR-11 promotion summary"
     priority: critical
     max_turns: 50
-    estimated_wall_time_min: 55
+    estimated_wall_time_min: 45
     track: "ops"
     inference_substrate: "aggregation"
     requires_gpu: false
-    gated_on:
-      - upstream: exp3175-cross-corpus-matrix-v28
-        artifact_field: matrix_v28_ready
-        op: "=="
-        value: true
     prior_failures:
-      - experiment_id: exp3162-capstone-v293
-        verdict: "complete: capstone_v293_ready=true; paper_ready=false; publication_blocker_count=65; next_top_gap=clean_live_verifier_corrigendum_repair_gate"
-        addressed_by: "Uses matrix v28 to determine whether duration-corrected preflight and materialized repair artifacts reduced blockers."
+      - experiment_id: exp3176-capstone-v294
+        verdict: "complete: capstone_v294_ready=true; paper_ready=false; publication_blocker_count=73"
+        addressed_by: "Summarizes the .295 receipt-backed verifier, repair gate, FR-11 promotion, and hardware boundary outcomes against matrix v29."
         retire_if_same_verdict: true
-      - experiment_id: exp3148-capstone-v292
-        verdict: "complete: capstone_ready=true; paper_ready=false; publication_blocker_count=55; next_top_gap=false_accept_recovery_corrigendum_repair_gate"
-        addressed_by: "Compares .294 against both .293 and .292 so blocker regression remains visible."
+      - experiment_id: exp3162-capstone-v293
+        verdict: "complete: capstone_v293_ready=true; paper_ready=false; publication_blocker_count=65"
+        addressed_by: "Preserves capstone lineage while updating blocker counts and next-gap authority from v29."
         retire_if_same_verdict: true
     prompt: |
       CONTEXT
-      Project root placeholder: {project_root}. Run date placeholder: {date}. This is the .294 capstone. It must summarize outcome honestly and recommend the next top gap.
+      Project root placeholder: {project_root}. Run date placeholder: {date}. This is the .295 milestone closeout. It must use matrix v29 as authority and update ops docs without reintroducing retracted claims.
 
       EXISTING CODE TO READ FIRST
       - CLAUDE.md
       - CODEX.md
-      - openspec/change-proposals/research-roadmap-vNEXT.md
-      - results/experiment_3162_capstone_v293.json
-      - results/experiment_3175_cross_corpus_matrix_v28.json
+      - research-program.md
+      - _bmad/prd.md
+      - results/experiment_3189_cross_corpus_matrix_v29.json
+      - results/experiment_3176_capstone_v294.json
       - ops/status.md
       - ops/changelog.md
 
       TASK
-      Write the .294 capstone artifact from matrix v28 and the phase artifacts.
+      Produce the .295 capstone summary and reconcile ops/status.md and ops/changelog.md with the new milestone outcome.
 
       CONCRETE STEPS
-      1. Load matrix v28 and compare it to matrix v27 and capstone v293.
-      2. Summarize whether the duration-corrected authenticity contract passed, whether clean live verifier evidence exists, whether repair was unblocked or materialized as a gated skip, whether FR-11 reached promotion-grade consistency, whether EBCN/KAN remain bounded diagnostics, and whether hardware claims remain blocked.
-      3. Set paper_ready only if all publication blockers are actually cleared.
-      4. Identify the next top gap for milestone .295.
-      5. Write the capstone artifact without modifying research-roadmap.yaml or scripts/research_conductor.py.
+      1. PRECONDITIONS: Do not make live model calls. Use matrix v29 and upstream .295 artifacts as authority.
+      2. Summarize whether the receipt-backed local SOTA path passed, blocked, or produced CPU-only non-headline evidence.
+      3. Summarize controlled invariance, clean verifier state, repair gate v4, repair ladder v5, distributional EBM sidecar, FR-11 promotion/drift replay, and THRML boundary.
+      4. Update ops/status.md and ops/changelog.md with a concise .295 closeout entry. Do not edit research-roadmap.yaml.
+      5. Preserve paper-v6 narrowing and hardware claim boundaries. Do not say paper_ready unless matrix v29 says true.
+      6. Write the capstone artifact with next_top_gap for the following milestone.
 
       REQUIRED ARTIFACT FIELDS:
-      - capstone_v294_ready: bool (principle: milestone closeout must be explicit)
-      - capstone_ready: bool (principle: legacy consumers expect this field)
-      - paper_ready: bool (principle: readiness must not be inferred)
-      - publication_blocker_count: int (principle: blocker count must carry forward)
-      - blocker_delta_from_v27: int (principle: regression/progress must be visible)
-      - missing_artifact_count: int (principle: materialization goal must be measured)
-      - verifier_status: str (principle: FR-12 status must be explicit)
-      - repair_gate_status: str (principle: repair unlock must be explicit)
-      - repair_ladder_status: str (principle: repair outcome must be explicit)
-      - fr11_self_learning_status: str (principle: FR-11 status must be explicit)
-      - ebcn_kan_status: str (principle: sidecar diagnostics must stay bounded)
-      - hardware_sampler_status: str (principle: unsupported speedup claims must stay blocked)
-      - next_top_gap: str (principle: next planner needs a machine-readable priority)
-      - source_artifacts: list (principle: capstone must trace to matrix and phase artifacts)
+      - capstone_v295_ready: bool (principle: milestone closeout must be explicit)
+      - matrix_authority: str (principle: capstone must cite authoritative blocker ledger)
+      - paper_ready: bool (principle: publication readiness must not be inferred)
+      - publication_blocker_count: int (principle: blocker accounting must carry forward)
+      - blocker_delta_from_v28: int (principle: progress/regression must be visible)
+      - missing_artifact_count: int (principle: absence must stay visible)
+      - verifier_status: str (principle: FR-12 state must be summarized)
+      - repair_gate_status: str (principle: repair gate outcome must be summarized)
+      - repair_ladder_status: str (principle: repair execution state must be summarized)
+      - fr11_self_learning_status: str (principle: continuous self-learning state must be summarized)
+      - sidecar_status: str (principle: EBM/KAN diagnostics must be bounded)
+      - hardware_sampler_status: str (principle: hardware claims must stay bounded)
+      - ops_docs_updated: bool (principle: status/changelog must align with closeout)
+      - next_top_gap: str (principle: next planning should be grounded)
       - inference_substrate: dict (principle: aggregation work must declare no live model inference)
       - honest_verdict: str (principle: terminal verdict must start with complete:/complete_/success:/success_/passed:/passed_/shipped_ unless a precondition is honestly blocked)
 
