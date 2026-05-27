@@ -1,0 +1,834 @@
+{
+  "artifact": "experiment_3202_sparse_potts_paoa_thrml_factor_boundary_v1",
+  "authenticated_hardware_transcript_present": false,
+  "experiment_id": "exp3202",
+  "factor_record_count": 7,
+  "factor_record_schema": {
+    "properties": {
+      "coupling_entries": "non-zero sparse categorical energy entries",
+      "paoa_metadata": "adapter metadata for future PAOA update construction",
+      "q_state_count": "number of categorical Potts states",
+      "record_id": "stable factor record id",
+      "row_id": "exact row or certificate row id",
+      "source_kind": "exact_row or invariant_certificate",
+      "sparse_scope": "variables touched by this sparse factor",
+      "state_labels": "ordered categorical state vocabulary",
+      "variables": "categorical Potts variables with q and labels"
+    },
+    "required": [
+      "record_id",
+      "source_kind",
+      "row_id",
+      "q_state_count",
+      "state_labels",
+      "variables",
+      "sparse_scope",
+      "coupling_entries",
+      "paoa_metadata"
+    ],
+    "type": "object"
+  },
+  "factor_records": [
+    {
+      "coupling_entries": [],
+      "dense_energy_slot_count": 2,
+      "factor_kind": "potts_exact_alignment_and_false_accept_penalty",
+      "lineage": {
+        "source_artifact": "results/experiment_3180_controlled_invariance_executor_v2.json",
+        "thrml_boundary_artifact": "results/experiment_3188_thrml_factor_graph_api_boundary_v1.json",
+        "thrml_translation_present": true
+      },
+      "paoa_metadata": {
+        "boundary_only": true,
+        "constraint_family": "exact_authority",
+        "coupling_format": "sparse_categorical_triplets",
+        "hardware_execution": "not_run",
+        "row_id": "resyn-3084-arith-000",
+        "sampler_execution": "not_run",
+        "schedule": {
+          "executed": false,
+          "kind": "placeholder_beta_schedule",
+          "values": []
+        },
+        "source_kind": "exact_row",
+        "update_order": "row_id_then_variable_index",
+        "update_rule": "categorical_single_site_resample"
+      },
+      "q_state_count": 1,
+      "record_id": "potts-exact:resyn-3084-arith-000",
+      "row_id": "resyn-3084-arith-000",
+      "source_kind": "exact_row",
+      "sparse_nonzero_energy_entry_count": 0,
+      "sparse_scope": [
+        "candidate_label",
+        "exact_label"
+      ],
+      "state_labels": [
+        "VALID"
+      ],
+      "variables": [
+        {
+          "kind": "categorical_potts_state",
+          "name": "candidate_label",
+          "q": 1,
+          "state_labels": [
+            "VALID"
+          ]
+        },
+        {
+          "kind": "categorical_potts_state",
+          "name": "exact_label",
+          "q": 1,
+          "state_labels": [
+            "VALID"
+          ]
+        }
+      ]
+    },
+    {
+      "coupling_entries": [
+        {
+          "energy": 1.0,
+          "reason": "candidate label differs from exact authority",
+          "source_state": "INVALID",
+          "source_variable": "candidate_label",
+          "target_state": "VALID",
+          "target_variable": "exact_label"
+        },
+        {
+          "energy": 1.0,
+          "reason": "candidate label differs from exact authority",
+          "source_state": "VALID",
+          "source_variable": "candidate_label",
+          "target_state": "INVALID",
+          "target_variable": "exact_label"
+        },
+        {
+          "energy": 2.0,
+          "reason": "known false-accept candidate conflicts with exact authority",
+          "source_state": "VALID",
+          "source_variable": "candidate_label",
+          "target_state": null,
+          "target_variable": null
+        }
+      ],
+      "dense_energy_slot_count": 6,
+      "factor_kind": "potts_exact_alignment_and_false_accept_penalty",
+      "lineage": {
+        "source_artifact": "results/experiment_3180_controlled_invariance_executor_v2.json",
+        "thrml_boundary_artifact": "results/experiment_3188_thrml_factor_graph_api_boundary_v1.json",
+        "thrml_translation_present": true
+      },
+      "paoa_metadata": {
+        "boundary_only": true,
+        "constraint_family": "exact_authority",
+        "coupling_format": "sparse_categorical_triplets",
+        "hardware_execution": "not_run",
+        "row_id": "resyn-3084-arith-003",
+        "sampler_execution": "not_run",
+        "schedule": {
+          "executed": false,
+          "kind": "placeholder_beta_schedule",
+          "values": []
+        },
+        "source_kind": "exact_row",
+        "update_order": "row_id_then_variable_index",
+        "update_rule": "categorical_single_site_resample"
+      },
+      "q_state_count": 2,
+      "record_id": "potts-exact:resyn-3084-arith-003",
+      "row_id": "resyn-3084-arith-003",
+      "source_kind": "exact_row",
+      "sparse_nonzero_energy_entry_count": 3,
+      "sparse_scope": [
+        "candidate_label",
+        "exact_label"
+      ],
+      "state_labels": [
+        "INVALID",
+        "VALID"
+      ],
+      "variables": [
+        {
+          "kind": "categorical_potts_state",
+          "name": "candidate_label",
+          "q": 2,
+          "state_labels": [
+            "INVALID",
+            "VALID"
+          ]
+        },
+        {
+          "kind": "categorical_potts_state",
+          "name": "exact_label",
+          "q": 2,
+          "state_labels": [
+            "INVALID",
+            "VALID"
+          ]
+        }
+      ]
+    },
+    {
+      "coupling_entries": [
+        {
+          "energy": 1.5,
+          "reason": "candidate violates invariant guard required label",
+          "source_state": "VALID",
+          "source_variable": "candidate_label",
+          "target_state": "INVALID",
+          "target_variable": "exact_guard_label"
+        }
+      ],
+      "dense_energy_slot_count": 4,
+      "factor_kind": "potts_invariant_guard_penalty",
+      "invariant_certificate": {
+        "anti_overfit_test_id": "ANTI-OVERFIT-RESYN-3084-ARITH-003",
+        "certificate_type": "ast_execution",
+        "guard_id": "EXACT-GUARD-RESYN-3084-ARITH-003",
+        "required_exact_label": "INVALID",
+        "statement": "claimed_value == computed_value (replace claimed_value 47 \u2192 43)"
+      },
+      "lineage": {
+        "invariant_artifact": "results/experiment_3197_exverus_inductive_certificate_expansion_v1.json",
+        "invariant_record_id": "exverus-invariant:resyn-3084-arith-003",
+        "source_artifact": "exp3180.exact_rows_evaluated"
+      },
+      "paoa_metadata": {
+        "boundary_only": true,
+        "constraint_family": "known_false_accept:arithmetic_code_assertions",
+        "coupling_format": "sparse_categorical_triplets",
+        "hardware_execution": "not_run",
+        "row_id": "resyn-3084-arith-003",
+        "sampler_execution": "not_run",
+        "schedule": {
+          "executed": false,
+          "kind": "placeholder_beta_schedule",
+          "values": []
+        },
+        "source_kind": "invariant_certificate",
+        "update_order": "row_id_then_variable_index",
+        "update_rule": "categorical_single_site_resample"
+      },
+      "q_state_count": 2,
+      "record_id": "potts-invariant:exverus-invariant:resyn-3084-arith-003",
+      "row_id": "resyn-3084-arith-003",
+      "source_kind": "invariant_certificate",
+      "sparse_nonzero_energy_entry_count": 1,
+      "sparse_scope": [
+        "candidate_label",
+        "exact_guard_label"
+      ],
+      "state_labels": [
+        "INVALID",
+        "VALID"
+      ],
+      "variables": [
+        {
+          "kind": "categorical_potts_state",
+          "name": "candidate_label",
+          "q": 2,
+          "state_labels": [
+            "INVALID",
+            "VALID"
+          ]
+        },
+        {
+          "kind": "categorical_potts_state",
+          "name": "exact_guard_label",
+          "q": 2,
+          "state_labels": [
+            "INVALID",
+            "VALID"
+          ]
+        }
+      ]
+    },
+    {
+      "coupling_entries": [
+        {
+          "energy": 1.5,
+          "reason": "candidate violates invariant guard required label",
+          "source_state": "VALID",
+          "source_variable": "candidate_label",
+          "target_state": "UNSAT",
+          "target_variable": "exact_guard_label"
+        }
+      ],
+      "dense_energy_slot_count": 4,
+      "factor_kind": "potts_invariant_guard_penalty",
+      "invariant_certificate": {
+        "anti_overfit_test_id": "ANTI-OVERFIT-RESYN-3084-SMT-000",
+        "certificate_type": "z3_unsat_core",
+        "guard_id": "EXACT-GUARD-RESYN-3084-SMT-000",
+        "required_exact_label": "UNSAT",
+        "statement": "model emits 'UNSAT' when Z3 confirms unsatisfiability"
+      },
+      "lineage": {
+        "invariant_artifact": "results/experiment_3197_exverus_inductive_certificate_expansion_v1.json",
+        "invariant_record_id": "exverus-invariant:resyn-3084-smt-000",
+        "source_artifact": "exp3180.exact_rows_evaluated"
+      },
+      "paoa_metadata": {
+        "boundary_only": true,
+        "constraint_family": "known_false_accept:smt_constraints",
+        "coupling_format": "sparse_categorical_triplets",
+        "hardware_execution": "not_run",
+        "row_id": "resyn-3084-smt-000",
+        "sampler_execution": "not_run",
+        "schedule": {
+          "executed": false,
+          "kind": "placeholder_beta_schedule",
+          "values": []
+        },
+        "source_kind": "invariant_certificate",
+        "update_order": "row_id_then_variable_index",
+        "update_rule": "categorical_single_site_resample"
+      },
+      "q_state_count": 2,
+      "record_id": "potts-invariant:exverus-invariant:resyn-3084-smt-000",
+      "row_id": "resyn-3084-smt-000",
+      "source_kind": "invariant_certificate",
+      "sparse_nonzero_energy_entry_count": 1,
+      "sparse_scope": [
+        "candidate_label",
+        "exact_guard_label"
+      ],
+      "state_labels": [
+        "UNSAT",
+        "VALID"
+      ],
+      "variables": [
+        {
+          "kind": "categorical_potts_state",
+          "name": "candidate_label",
+          "q": 2,
+          "state_labels": [
+            "UNSAT",
+            "VALID"
+          ]
+        },
+        {
+          "kind": "categorical_potts_state",
+          "name": "exact_guard_label",
+          "q": 2,
+          "state_labels": [
+            "UNSAT",
+            "VALID"
+          ]
+        }
+      ]
+    },
+    {
+      "coupling_entries": [
+        {
+          "energy": 1.5,
+          "reason": "candidate violates invariant guard required label",
+          "source_state": "{\"limit\": 2, \"mode\": \"bounded\"}",
+          "source_variable": "candidate_label",
+          "target_state": "REPAIRABLE",
+          "target_variable": "exact_guard_label"
+        }
+      ],
+      "dense_energy_slot_count": 4,
+      "factor_kind": "potts_invariant_guard_penalty",
+      "invariant_certificate": {
+        "anti_overfit_test_id": "ANTI-OVERFIT-RESYN-3084-REPAIR-JSON-000",
+        "certificate_type": "solver_mcs",
+        "guard_id": "EXACT-GUARD-RESYN-3084-REPAIR-JSON-000",
+        "required_exact_label": "REPAIRABLE",
+        "statement": "JSON fragment parses without error after inserting ','"
+      },
+      "lineage": {
+        "invariant_artifact": "results/experiment_3197_exverus_inductive_certificate_expansion_v1.json",
+        "invariant_record_id": "exverus-invariant:resyn-3084-repair-json-000",
+        "source_artifact": "exp3180.exact_rows_evaluated"
+      },
+      "paoa_metadata": {
+        "boundary_only": true,
+        "constraint_family": "fragment_code:parser_repair",
+        "coupling_format": "sparse_categorical_triplets",
+        "hardware_execution": "not_run",
+        "row_id": "resyn-3084-repair-json-000",
+        "sampler_execution": "not_run",
+        "schedule": {
+          "executed": false,
+          "kind": "placeholder_beta_schedule",
+          "values": []
+        },
+        "source_kind": "invariant_certificate",
+        "update_order": "row_id_then_variable_index",
+        "update_rule": "categorical_single_site_resample"
+      },
+      "q_state_count": 2,
+      "record_id": "potts-invariant:exverus-invariant:resyn-3084-repair-json-000",
+      "row_id": "resyn-3084-repair-json-000",
+      "source_kind": "invariant_certificate",
+      "sparse_nonzero_energy_entry_count": 1,
+      "sparse_scope": [
+        "candidate_label",
+        "exact_guard_label"
+      ],
+      "state_labels": [
+        "REPAIRABLE",
+        "{\"limit\": 2, \"mode\": \"bounded\"}"
+      ],
+      "variables": [
+        {
+          "kind": "categorical_potts_state",
+          "name": "candidate_label",
+          "q": 2,
+          "state_labels": [
+            "REPAIRABLE",
+            "{\"limit\": 2, \"mode\": \"bounded\"}"
+          ]
+        },
+        {
+          "kind": "categorical_potts_state",
+          "name": "exact_guard_label",
+          "q": 2,
+          "state_labels": [
+            "REPAIRABLE",
+            "{\"limit\": 2, \"mode\": \"bounded\"}"
+          ]
+        }
+      ]
+    },
+    {
+      "coupling_entries": [
+        {
+          "energy": 1.5,
+          "reason": "candidate violates invariant guard required label",
+          "source_state": "{\"limit\": 5, \"mode\": \"bounded\"}",
+          "source_variable": "candidate_label",
+          "target_state": "REPAIRABLE",
+          "target_variable": "exact_guard_label"
+        }
+      ],
+      "dense_energy_slot_count": 4,
+      "factor_kind": "potts_invariant_guard_penalty",
+      "invariant_certificate": {
+        "anti_overfit_test_id": "ANTI-OVERFIT-RESYN-3084-REPAIR-JSON-003",
+        "certificate_type": "solver_mcs",
+        "guard_id": "EXACT-GUARD-RESYN-3084-REPAIR-JSON-003",
+        "required_exact_label": "REPAIRABLE",
+        "statement": "JSON fragment parses without error after inserting ','"
+      },
+      "lineage": {
+        "invariant_artifact": "results/experiment_3197_exverus_inductive_certificate_expansion_v1.json",
+        "invariant_record_id": "exverus-invariant:resyn-3084-repair-json-003",
+        "source_artifact": "exp3180.exact_rows_evaluated"
+      },
+      "paoa_metadata": {
+        "boundary_only": true,
+        "constraint_family": "fragment_code:parser_repair",
+        "coupling_format": "sparse_categorical_triplets",
+        "hardware_execution": "not_run",
+        "row_id": "resyn-3084-repair-json-003",
+        "sampler_execution": "not_run",
+        "schedule": {
+          "executed": false,
+          "kind": "placeholder_beta_schedule",
+          "values": []
+        },
+        "source_kind": "invariant_certificate",
+        "update_order": "row_id_then_variable_index",
+        "update_rule": "categorical_single_site_resample"
+      },
+      "q_state_count": 2,
+      "record_id": "potts-invariant:exverus-invariant:resyn-3084-repair-json-003",
+      "row_id": "resyn-3084-repair-json-003",
+      "source_kind": "invariant_certificate",
+      "sparse_nonzero_energy_entry_count": 1,
+      "sparse_scope": [
+        "candidate_label",
+        "exact_guard_label"
+      ],
+      "state_labels": [
+        "REPAIRABLE",
+        "{\"limit\": 5, \"mode\": \"bounded\"}"
+      ],
+      "variables": [
+        {
+          "kind": "categorical_potts_state",
+          "name": "candidate_label",
+          "q": 2,
+          "state_labels": [
+            "REPAIRABLE",
+            "{\"limit\": 5, \"mode\": \"bounded\"}"
+          ]
+        },
+        {
+          "kind": "categorical_potts_state",
+          "name": "exact_guard_label",
+          "q": 2,
+          "state_labels": [
+            "REPAIRABLE",
+            "{\"limit\": 5, \"mode\": \"bounded\"}"
+          ]
+        }
+      ]
+    },
+    {
+      "coupling_entries": [],
+      "dense_energy_slot_count": 1,
+      "factor_kind": "potts_invariant_guard_penalty",
+      "invariant_certificate": {
+        "anti_overfit_test_id": "ANTI-OVERFIT-RESYN-3084-SMT-001",
+        "certificate_type": "solver_mcs",
+        "guard_id": "EXACT-GUARD-RESYN-3084-SMT-001",
+        "required_exact_label": "SAT",
+        "statement": "model correctly emits 'SAT' \u2014 no repair needed"
+      },
+      "lineage": {
+        "invariant_artifact": "results/experiment_3197_exverus_inductive_certificate_expansion_v1.json",
+        "invariant_record_id": "exverus-invariant:resyn-3084-smt-001",
+        "source_artifact": "exp3180.exact_rows_evaluated"
+      },
+      "paoa_metadata": {
+        "boundary_only": true,
+        "constraint_family": "satisfiable_drift_anchor",
+        "coupling_format": "sparse_categorical_triplets",
+        "hardware_execution": "not_run",
+        "row_id": "resyn-3084-smt-001",
+        "sampler_execution": "not_run",
+        "schedule": {
+          "executed": false,
+          "kind": "placeholder_beta_schedule",
+          "values": []
+        },
+        "source_kind": "invariant_certificate",
+        "update_order": "row_id_then_variable_index",
+        "update_rule": "categorical_single_site_resample"
+      },
+      "q_state_count": 1,
+      "record_id": "potts-invariant:exverus-invariant:resyn-3084-smt-001",
+      "row_id": "resyn-3084-smt-001",
+      "source_kind": "invariant_certificate",
+      "sparse_nonzero_energy_entry_count": 0,
+      "sparse_scope": [
+        "candidate_label",
+        "exact_guard_label"
+      ],
+      "state_labels": [
+        "SAT"
+      ],
+      "variables": [
+        {
+          "kind": "categorical_potts_state",
+          "name": "candidate_label",
+          "q": 1,
+          "state_labels": [
+            "SAT"
+          ]
+        },
+        {
+          "kind": "categorical_potts_state",
+          "name": "exact_guard_label",
+          "q": 1,
+          "state_labels": [
+            "SAT"
+          ]
+        }
+      ]
+    }
+  ],
+  "graph_density_summary": {
+    "dense_energy_slot_count": 25,
+    "dense_float64_bytes_estimate": 200,
+    "factor_record_count": 7,
+    "per_record": [
+      {
+        "dense_energy_slot_count": 2,
+        "q_state_count": 1,
+        "record_id": "potts-exact:resyn-3084-arith-000",
+        "sparse_nonzero_energy_entry_count": 0
+      },
+      {
+        "dense_energy_slot_count": 6,
+        "q_state_count": 2,
+        "record_id": "potts-exact:resyn-3084-arith-003",
+        "sparse_nonzero_energy_entry_count": 3
+      },
+      {
+        "dense_energy_slot_count": 4,
+        "q_state_count": 2,
+        "record_id": "potts-invariant:exverus-invariant:resyn-3084-arith-003",
+        "sparse_nonzero_energy_entry_count": 1
+      },
+      {
+        "dense_energy_slot_count": 4,
+        "q_state_count": 2,
+        "record_id": "potts-invariant:exverus-invariant:resyn-3084-smt-000",
+        "sparse_nonzero_energy_entry_count": 1
+      },
+      {
+        "dense_energy_slot_count": 4,
+        "q_state_count": 2,
+        "record_id": "potts-invariant:exverus-invariant:resyn-3084-repair-json-000",
+        "sparse_nonzero_energy_entry_count": 1
+      },
+      {
+        "dense_energy_slot_count": 4,
+        "q_state_count": 2,
+        "record_id": "potts-invariant:exverus-invariant:resyn-3084-repair-json-003",
+        "sparse_nonzero_energy_entry_count": 1
+      },
+      {
+        "dense_energy_slot_count": 1,
+        "q_state_count": 1,
+        "record_id": "potts-invariant:exverus-invariant:resyn-3084-smt-001",
+        "sparse_nonzero_energy_entry_count": 0
+      }
+    ],
+    "sparse_density_ratio": 0.28,
+    "sparse_nonzero_energy_entry_count": 7,
+    "sparse_triplet_bytes_estimate": 168,
+    "sparse_vs_dense_slot_delta": 18,
+    "total_variable_count": 14
+  },
+  "hardware_claims_denied": [
+    {
+      "claim": "KV260",
+      "denied": true,
+      "reason": "no authenticated hardware transcript present"
+    },
+    {
+      "claim": "GateMate",
+      "denied": true,
+      "reason": "no authenticated hardware transcript present"
+    },
+    {
+      "claim": "PolarFire",
+      "denied": true,
+      "reason": "no authenticated hardware transcript present"
+    },
+    {
+      "claim": "TSU",
+      "denied": true,
+      "reason": "no authenticated hardware transcript present"
+    },
+    {
+      "claim": "Z1",
+      "denied": true,
+      "reason": "no authenticated hardware transcript present"
+    },
+    {
+      "claim": "XTR-0",
+      "denied": true,
+      "reason": "no authenticated hardware transcript present"
+    },
+    {
+      "claim": "Kona",
+      "denied": true,
+      "reason": "no authenticated hardware transcript present"
+    },
+    {
+      "claim": "speedup",
+      "denied": true,
+      "reason": "no authenticated hardware transcript present"
+    }
+  ],
+  "honest_verdict": "complete: sparse Potts/PAOA/THRML factor boundary materialized; factor_record_count=7; no_transcript; speedup_claim_allowed=false",
+  "inference_substrate": {
+    "board_commands_run": [],
+    "executes_hardware": false,
+    "executes_models": false,
+    "gatemate_execution_claimed": false,
+    "hardware_commands_run": [],
+    "installs_packages": false,
+    "kind": "local_factor_record_only_no_hardware_speedup",
+    "kv260_execution_claimed": false,
+    "local_repo_only": true,
+    "no_live_model_inference": true,
+    "polarfire_execution_claimed": false,
+    "sampler_benchmark_run": false,
+    "sampler_speedup_reported": false,
+    "thrml_boundary_source_local_api_smoke_passed": true,
+    "tsu_z1_xtr0_kona_execution_claimed": false
+  },
+  "milestone": "2026.05.296",
+  "paoa_metadata_schema": {
+    "properties": {
+      "constraint_family": "exact row or invariant family provenance",
+      "coupling_format": "sparse categorical energy triplets",
+      "hardware_execution": "must remain not_run in this artifact",
+      "sampler_execution": "must remain not_run in this artifact",
+      "schedule": "non-executed beta or annealing schedule placeholder",
+      "update_order": "deterministic adapter ordering",
+      "update_rule": "categorical single-site update metadata"
+    },
+    "required": [
+      "boundary_only",
+      "coupling_format",
+      "update_rule",
+      "update_order",
+      "schedule",
+      "sampler_execution",
+      "hardware_execution"
+    ],
+    "type": "object"
+  },
+  "q_state_count_summary": {
+    "max_q_state_count": 2,
+    "min_q_state_count": 1,
+    "record_count": 7,
+    "records_by_q_state_count": {
+      "1": 2,
+      "2": 5
+    },
+    "total_record_state_count": 12,
+    "unique_state_labels": [
+      "INVALID",
+      "REPAIRABLE",
+      "SAT",
+      "UNSAT",
+      "VALID",
+      "{\"limit\": 2, \"mode\": \"bounded\"}",
+      "{\"limit\": 5, \"mode\": \"bounded\"}"
+    ]
+  },
+  "run_date": "20260527",
+  "schema_version": "carnot.sparse_potts_paoa_thrml_factor_boundary.v1",
+  "source_artifacts": [
+    {
+      "path": "AGENTS.md",
+      "present": true,
+      "readable_structured_source": null,
+      "required": true,
+      "role": "agents_repo_instructions",
+      "sha256": "b3d6581b04f16b85f77defb2837c98dc3b60ed51e10b347ecb36e609f318b619",
+      "source_type": "text"
+    },
+    {
+      "path": "CODEX.md",
+      "present": true,
+      "readable_structured_source": null,
+      "required": true,
+      "role": "codex_repo_workflow",
+      "sha256": "1db7ebc1009714f872db83447828a8957c3abb72061832cc1bc307735cd96bbe",
+      "source_type": "text"
+    },
+    {
+      "path": "CLAUDE.md",
+      "present": true,
+      "readable_structured_source": null,
+      "required": true,
+      "role": "claude_authenticity_rules",
+      "sha256": "cdc00581d37d1bd3c77a69b058787f74ecc71545a97c1eab31c48961637b3224",
+      "source_type": "text"
+    },
+    {
+      "path": "research-references.md",
+      "present": true,
+      "readable_structured_source": null,
+      "required": true,
+      "role": "post_295_research_references",
+      "sha256": "e82444bd46370012d69edf2f2f1175ee87a7cd6016515f91adcf003a2fb45a3e",
+      "source_type": "text"
+    },
+    {
+      "path": "research-hardware-wishlist.md",
+      "present": true,
+      "readable_structured_source": null,
+      "required": true,
+      "role": "hardware_wishlist",
+      "sha256": "ca40501890c4cb5f2a3ea835bd3661976107eafc91a100e02a00c9023f7baaee",
+      "source_type": "text"
+    },
+    {
+      "path": "ops/exclusion_manifest.yaml",
+      "present": true,
+      "readable_structured_source": null,
+      "required": true,
+      "role": "hardware_exclusion_manifest",
+      "sha256": "02b7c979e2f4e5b75313d66a5f58556c3288a930d60c66c162c7ac406515d8c0",
+      "source_type": "text"
+    },
+    {
+      "path": "openspec/capabilities/fpga/spec.md",
+      "present": true,
+      "readable_structured_source": null,
+      "required": true,
+      "role": "fpga_openspec",
+      "sha256": "9202be530ebc1decfc91e2173fe181d3fa2cf9c78f5317cd75295809e10c9da5",
+      "source_type": "text"
+    },
+    {
+      "path": "results/experiment_3188_thrml_factor_graph_api_boundary_v1.json",
+      "present": true,
+      "readable_structured_source": true,
+      "required": true,
+      "role": "exp3188_thrml_factor_graph_boundary",
+      "sha256": "c9fad97c606c3444a26af28f47504650689ea38ab322dbd59729a9fc81ee754b",
+      "source_type": "json"
+    },
+    {
+      "path": "results/experiment_3197_exverus_inductive_certificate_expansion_v1.json",
+      "present": true,
+      "readable_structured_source": true,
+      "required": true,
+      "role": "exp3197_exverus_invariant_certificates",
+      "sha256": "3c3922b249d889d111f4030e603c1021f6e375e5ce785bd2c335928781fb9d1f",
+      "source_type": "json"
+    },
+    {
+      "path": "hardware/kv260/potts_sampler_v1.v",
+      "present": true,
+      "readable_structured_source": null,
+      "required": false,
+      "role": "kv260_potts_rtl_reference",
+      "sha256": "244b5dbc731efa866f4a3f5ed1aab8c46834b5fc75d26aab04a566aae1de6cbc",
+      "source_type": "verilog"
+    },
+    {
+      "path": "python/carnot/reporting/sparse_potts_paoa_thrml_factor_boundary_3202.py",
+      "present": true,
+      "readable_structured_source": null,
+      "required": false,
+      "role": "exp3202_module",
+      "sha256": "bd1f4c16bbcec74f51a710283a9370e77404597e5e7181374b5f85c5577ff0c8",
+      "source_type": "python"
+    },
+    {
+      "path": "scripts/experiment_3202_sparse_potts_paoa_thrml_factor_boundary_v1.py",
+      "present": true,
+      "readable_structured_source": null,
+      "required": false,
+      "role": "exp3202_script",
+      "sha256": "83c468c39da8f69a2c5e822b16be71c0600c4d61db62011d993467987f5bd6fe",
+      "source_type": "python"
+    },
+    {
+      "path": "tests/python/test_experiment_3202_sparse_potts_paoa_thrml_factor_boundary_v1.py",
+      "present": true,
+      "readable_structured_source": null,
+      "required": false,
+      "role": "exp3202_tests",
+      "sha256": "884763288293411acee15b558b083d97e155173057bdd17e80227a7006e18d2a",
+      "source_type": "python"
+    }
+  ],
+  "source_errors": [],
+  "spec_refs": [
+    "REQ-HW-100",
+    "SCENARIO-HW-100"
+  ],
+  "speedup_claim_allowed": false,
+  "tests_run": [
+    ".venv/bin/pytest tests/python/test_experiment_3202_sparse_potts_paoa_thrml_factor_boundary_v1.py -q -o addopts=''",
+    ".venv/bin/coverage erase",
+    ".venv/bin/coverage run --source=python/carnot/reporting/sparse_potts_paoa_thrml_factor_boundary_3202.py -m pytest -o addopts='' tests/python/test_experiment_3202_sparse_potts_paoa_thrml_factor_boundary_v1.py -q",
+    ".venv/bin/coverage report --include='python/carnot/reporting/sparse_potts_paoa_thrml_factor_boundary_3202.py' --fail-under=100 --show-missing",
+    ".venv/bin/python scripts/check_spec_coverage.py tests/python/test_experiment_3202_sparse_potts_paoa_thrml_factor_boundary_v1.py",
+    ".venv/bin/pytest tests/python -q"
+  ],
+  "thrml_local_api_checked": true,
+  "thrml_local_api_evidence": {
+    "claim_boundary": "local software API construction only; no TSU, Kona, latency, or speedup",
+    "local_api_smoke_passed": true,
+    "selected_exact_row_count": 2,
+    "source_artifact": "results/experiment_3188_thrml_factor_graph_api_boundary_v1.json",
+    "thrml_import_available": true
+  }
+}

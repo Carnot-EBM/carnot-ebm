@@ -3365,6 +3365,81 @@ missing symbols and next adapter steps rather than a fabricated success.
 
 ---
 
+### REQ-HW-100
+
+**Title:** Exp 3202 sparse Potts/PAOA/THRML factor boundary MUST materialize q-state factor records without hardware claims
+
+**Description:**
+Experiment 3202 MUST produce
+`results/experiment_3202_sparse_potts_paoa_thrml_factor_boundary_v1.json` as
+a representation-only hardware-boundary artifact. The experiment MUST load the
+checked-in Exp 3188 THRML factor-graph API boundary and Exp 3197 inductive
+certificate invariant artifact, derive sparse q-state Potts factor records
+from exact rows and invariant certificates, attach PAOA-ready coupling/update
+metadata, estimate graph density and sparse-vs-dense representation deltas, and
+optionally report whether local THRML API construction evidence is already
+available.
+
+The experiment MUST NOT execute KV260, GateMate, PolarFire, TSU, Z1, XTR-0,
+Kona, or any other hardware. It MUST NOT run synthesis, place-and-route, board
+commands, sampler benchmarks, live model calls, package installation, or
+speedup measurement. It MUST explicitly deny KV260, GateMate, PolarFire, TSU,
+Z1, XTR-0, Kona, and speedup claims unless authenticated hardware transcripts
+are present in checked-in source artifacts.
+
+**Acceptance criteria:**
+- `results/experiment_3202_sparse_potts_paoa_thrml_factor_boundary_v1.json`
+  is generated with `schema_version`, `experiment_id`, `source_artifacts`,
+  `factor_record_schema`, `factor_record_count`, `q_state_count_summary`,
+  `graph_density_summary`, `paoa_metadata_schema`,
+  `thrml_local_api_checked`, `authenticated_hardware_transcript_present`,
+  `speedup_claim_allowed`, `hardware_claims_denied`, and `honest_verdict`.
+- `factor_record_schema` documents q-state Potts factor records with stable
+  row/invariant lineage, categorical variables, sparse edge/factor scopes,
+  energy tables, and PAOA metadata attachment points.
+- `factor_record_count` equals the number of materialized sparse factor
+  records, and each record derives from an exact row or invariant certificate.
+- `q_state_count_summary` reports per-record and aggregate q-state accounting
+  without converting categorical states into binary-only claims.
+- `graph_density_summary` reports node counts, possible dense factor/edge
+  counts, actual sparse factor/edge counts, density ratios, and sparse-vs-dense
+  storage deltas.
+- `paoa_metadata_schema` documents coupling tensor shape, update order, beta or
+  annealing schedule metadata, constraint family, and boundary-only sampler
+  fields needed for a future PAOA adapter.
+- `thrml_local_api_checked` is a transparent local API evidence flag only; it
+  MUST NOT imply TSU, Kona, hardware execution, latency, or speedup.
+- `authenticated_hardware_transcript_present=false`,
+  `speedup_claim_allowed=false`, and `hardware_claims_denied` lists at least
+  KV260, GateMate, PolarFire, TSU, Z1, XTR-0, Kona, and speedup claims when no
+  authenticated hardware transcript is present.
+- `honest_verdict` begins with `complete:` when the representation artifact is
+  materialized from local artifacts, or `blocked_` when required local sources
+  are missing or malformed.
+
+**Implementation status:** Planned (Exp 3202)
+
+---
+
+### SCENARIO-HW-100
+
+**Scenario:** Sparse Potts/PAOA factor records prepare exact certificates without reviving THRML or hardware speedup claims.
+
+**Given:** Exp 3188 exposes local THRML factor-graph boundary rows, Exp 3197
+exposes invariant certificate records, and no authenticated hardware transcript
+is present.
+**When:** Exp 3202 builds sparse q-state Potts factor records and PAOA metadata
+from those checked-in artifacts only.
+**Then:** It writes the schema-versioned v1 JSON artifact with materialized
+factor records, q-state accounting, graph density and sparse-vs-dense deltas,
+PAOA-ready metadata schema, local THRML transparency, explicit denial of KV260,
+GateMate, PolarFire, TSU, Z1, XTR-0, Kona, and speedup claims, no hardware
+commands, and a terminal verdict beginning with `complete:`.
+
+**Implementation status:** Planned (Exp 3202)
+
+---
+
 ### SCENARIO-HW-099
 
 **Scenario:** THRML factor-graph boundary maps exact rows only as local API construction evidence.
