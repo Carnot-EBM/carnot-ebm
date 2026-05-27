@@ -9056,3 +9056,79 @@ blocked `honest_verdict`.
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-LEARN-3187 | Planned (`python/carnot/eval/fr11_cross_environment_drift_replay_v1.py`) | Planned (`tests/python/test_experiment_3187_fr11_cross_environment_drift_replay_v1.py`) |
+
+## REQ-LEARN-3200: FR-11 VeriFY-Style Trace-Memory Controller
+
+**Given** Exp 3186 promoted a controller-memory update and Exp 3187 replayed
+that update across held-out, cross-environment drift, and negative-control rows
+without model-weight mutation
+**When** Exp 3200 builds the `.296` continuous self-learning artifact
+**Then** it SHALL load the checked-in Exp 3186 and Exp 3187 artifacts, define a
+VeriFY-style trace record containing initial answer, verification query,
+consistency judgment, answer/abstain decision, exact label, and routing outcome,
+and materialize trace-memory records for the held-out, drift, and
+negative-control replay rows.
+**And** it SHALL add an experience-pool rule that suppresses redundant rechecks
+only when prior exact evidence for the same row/action label has remained
+consistent and unchanged.
+**And** it SHALL require zero negative-control regressions before promotion and
+SHALL NOT claim any base-model, verifier-model, KAN-model, hidden-state, or LLM
+model-weight update.
+
+The terminal artifact SHALL be
+`results/experiment_3200_fr11_verify_trace_memory_controller_v1.json` and SHALL
+include `schema_version`, `experiment_id`, `continuous_self_learning_task`,
+`source_artifacts`, `trace_schema`, `trace_count`, `heldout_row_count`,
+`drift_row_count`, `negative_control_regression_count`,
+`redundant_check_suppression_count`, `routing_accuracy_delta`,
+`model_weight_update_performed`, `promotion_allowed`, and `honest_verdict`.
+
+### REQ-LEARN-3200 Sub-requirements
+
+- REQ-LEARN-3200-1: The trace schema SHALL be machine-readable and SHALL include
+  the fields `initial_answer`, `verification_query`, `consistency_judgment`,
+  `answer_abstain_decision`, `exact_label`, and `routing_outcome`.
+- REQ-LEARN-3200-2: The replay denominator SHALL include Exp 3187 held-out
+  rows, Exp 3187 cross-environment drift rows, and Exp 3187 negative-control
+  rows, with `drift_row_count` mapped to the cross-environment replay
+  denominator.
+- REQ-LEARN-3200-3: A redundant check SHALL be suppressed only when the
+  experience pool already contains exact evidence for the same row/action label
+  with no inconsistent judgment and no observed-action change.
+- REQ-LEARN-3200-4: `promotion_allowed` SHALL be true only when Exp 3186 and
+  Exp 3187 allow promotion, held-out and drift replay denominators are nonzero,
+  `negative_control_regression_count == 0`, and
+  `model_weight_update_performed=false`.
+- REQ-LEARN-3200-5: `routing_accuracy_delta` SHALL be numeric when inherited
+  Exp 3187 source before/after routing lift is available, otherwise null, and
+  the artifact SHALL keep the held-out/drift replay delta visible separately.
+- REQ-LEARN-3200-6: The artifact SHALL declare controller-memory replay only:
+  no live inference calls, no hidden fine-tune claim, and no model-weight
+  mutation.
+
+### SCENARIO-LEARN-3200: Trace Memory Suppresses Redundant Replay Without Regressions
+
+**Given** ready Exp 3186 and Exp 3187 artifacts with nonzero held-out and
+cross-environment drift replay rows and zero negative-control regressions
+**When** Exp 3200 materializes the VeriFY-style trace-memory controller
+**Then** the artifact reports nonzero trace count, nonzero held-out and drift
+row counts, at least one experience-driven redundant-check suppression for a
+previously seen exact row, zero negative-control regressions,
+`model_weight_update_performed=false`, `promotion_allowed=true`, and an
+`honest_verdict` beginning with `complete:`.
+
+### SCENARIO-LEARN-3200-BLOCKED: Unsafe Source Or Negative Control Blocks Promotion
+
+**Given** Exp 3186 or Exp 3187 is missing, not promotion-allowed, or Exp 3187
+reports any negative-control regression
+**When** Exp 3200 runs
+**Then** it writes all required fields with controller-memory/no-live-inference
+metadata, does not claim model-weight updates, sets `promotion_allowed=false`,
+keeps the negative-control regression count visible, and emits an
+`honest_verdict` beginning with `complete:`.
+
+## Implementation Status (REQ-LEARN-3200)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-LEARN-3200 | Implemented (`python/carnot/eval/fr11_verify_trace_memory_controller_v1.py`) | Implemented (`tests/python/test_experiment_3200_fr11_verify_trace_memory_controller_v1.py`) |
