@@ -10480,3 +10480,71 @@ ops/status/traceability reconciliation performed by this task, and an
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-REPORT-3175 | Implemented (`python/carnot/reporting/cross_corpus_matrix_v28_3175.py`) | Implemented (`tests/python/test_experiment_3175_cross_corpus_matrix_v28.py`) |
+
+### REQ-REPORT-3176: Milestone .294 Capstone From Matrix V28
+
+The repository shall provide an Exp 3176 milestone .294 capstone generator
+that writes `results/experiment_3176_capstone_v294.json` by reading
+`results/experiment_3175_cross_corpus_matrix_v28.json`,
+`results/experiment_3161_cross_corpus_matrix_v27.json`,
+`results/experiment_3162_capstone_v293.json`, and the checked-in `.294`
+phase artifacts needed to explain verifier, repair, FR-11, EBCN/KAN, and
+hardware outcomes. The generator MUST compare matrix v28 against matrix v27
+and capstone v293, carry forward publication blocker count and blocker delta,
+and report the missing-artifact count after `.294` materialization.
+
+The capstone MUST explicitly report whether the duration-corrected
+authenticity contract passed, whether clean live verifier evidence exists,
+whether repair was unblocked or materialized as a gated skip, whether FR-11
+reached promotion-grade controller-memory consistency without claiming a model
+weight update, whether EBCN/KAN remain bounded diagnostics, and whether
+hardware/sampler speedup claims remain blocked. It MUST set `paper_ready` to
+true only when all publication blockers are cleared and the verifier, repair,
+sidecar, and hardware headline gates are actually clean. It MUST NOT run live
+model inference, verifier scoring, repair generation, solver execution,
+hardware commands, the conductor, pushes, modify `scripts/research_conductor.py`,
+or modify `research-roadmap.yaml`.
+
+The terminal artifact MUST include `capstone_v294_ready`, `capstone_ready`,
+`paper_ready`, `publication_blocker_count`, `blocker_delta_from_v27`,
+`missing_artifact_count`, `verifier_status`, `repair_gate_status`,
+`repair_ladder_status`, `fr11_self_learning_status`, `ebcn_kan_status`,
+`hardware_sampler_status`, `next_top_gap`, `source_artifacts`,
+`inference_substrate`, and `honest_verdict`. It MAY include phase summaries,
+matrix comparison fields, protected-file flags, source checksums, invariant
+violations, no-new-execution booleans, and measured `duration_s` as long as
+every value is derived from checked-in artifacts or file presence/checksum
+checks. `honest_verdict` MUST start with `complete:` only when matrix v28,
+matrix v27, and capstone v293 are ready and the capstone's internal invariants
+reconcile; otherwise it MUST report the blocked precondition. When a conductor
+prompt assigns ops reconciliation to a separate step, the generator MUST leave
+`ops/status.md`, `ops/changelog.md`, and `_bmad/traceability.md` unchanged.
+
+#### SCENARIO-REPORT-3176: Capstone Closes .294 Without Paper Readiness
+
+**Given** matrix v28 exists and reports `matrix_v28_ready=true`,
+`publication_blocker_count=73`, `blocker_delta_from_v27=8`,
+`paper_ready=false`, clean duration-corrected authenticity contract evidence,
+a gated-skipped clean live verifier rerun, blocked repair gate evidence, a
+materialized gated-skipped repair ladder, promotion-grade FR-11
+controller-memory consistency with no model-weight update, bounded EBCN/KAN
+diagnostics, blocked hardware speedup evidence, and one remaining missing
+artifact
+**And** matrix v27 and capstone v293 exist and are ready, with capstone v293
+reporting 65 publication blockers and four missing artifacts
+**When** the Exp 3176 capstone generator runs
+**Then** it writes `results/experiment_3176_capstone_v294.json` with
+`capstone_v294_ready=true`, all required schema fields,
+`publication_blocker_count=73`, `blocker_delta_from_v27=8`,
+`missing_artifact_count=1`, `paper_ready=false`, machine-readable verifier,
+repair, FR-11, EBCN/KAN, hardware, and next-gap statuses, aggregation-only
+inference-substrate metadata, source-artifact provenance, no
+ops/status/traceability reconciliation performed by this task, no protected
+implementation files modified, and an `honest_verdict` that starts with
+`complete:`.
+
+## Implementation Status (REQ-REPORT-3176)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-3176 | Implemented (`python/carnot/reporting/capstone_v294_3176.py`) | Implemented (`tests/python/test_experiment_3176_capstone_v294.py`) |
