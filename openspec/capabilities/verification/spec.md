@@ -2494,6 +2494,65 @@ otherwise reports exact blockers while avoiding model and repair execution.
 |---|---|---|
 | REQ-VERIFY-3168 | Implemented (`python/carnot/verify/repair_gate_decision_v3.py`) | Implemented (`tests/python/test_experiment_3168_repair_gate_decision_v3.py`) |
 
+### REQ-VERIFY-3169: Repair Ladder Materializer V4
+
+The repository shall provide an Exp 3169 repair-ladder materializer that
+writes `results/experiment_3169_repair_ladder_materializer_v4.json` whether
+repair is allowed or blocked. The builder MUST read
+`results/experiment_3168_repair_gate_decision_v3.json` before any repair
+generation and MUST NOT call a model unless Exp 3168 reports
+`repair_gate_state=unblocked`, selected repair rows are present, and at least
+one mandated local SOTA GGUF model is usable. The mandated model policy is
+exactly `unsloth/Qwen3.6-35B-A3B-GGUF`,
+`unsloth/gemma-4-31B-it-GGUF`, and
+`unsloth/gemma-4-26B-A4B-it-GGUF`; legacy small models MAY be recorded only as
+CPU smoke evidence and SHALL NOT support headline repair claims.
+
+If Exp 3168 is missing, blocked, gated-skipped, has no selected repair rows, or
+has no usable mandated model, the materializer SHALL write a complete
+gated-skip artifact with `repair_ladder_materializer_v4_ready=true`,
+`gated_skip=true`, `live_call_count=0`, `repair_attempt_count=0`,
+`exact_authority_accept_count=0`, `repair_success_delta=0.0`,
+`false_repair_accept_rate=0.0`, `intent_preservation_rate=0.0`, and
+`headline_repair_claim_allowed=false`. The skip reason SHALL include the
+actionable gate state or runtime blocker so downstream matrix tooling can
+distinguish a completed skip from a missing repair ladder.
+
+When Exp 3168 unblocks repair and a mandated local SOTA GGUF is usable, the
+materializer SHALL run only bounded repair attempts over the selected repair
+rows and SHALL score candidates with exact authority evidence, canonical
+grounding, controlled-invariance checks, and monitor replay before accepting a
+repair. It SHALL NOT accept a candidate based on model confidence or schema
+validity alone. The terminal artifact MUST include
+`repair_ladder_materializer_v4_ready`, `gated_skip`, `gated_skip_reason`,
+`model_specs`, `selected_model_ids`, `live_call_count`,
+`selected_repair_rows`, `repair_attempt_count`,
+`exact_authority_accept_count`, `repair_success_delta`,
+`false_repair_accept_rate`, `intent_preservation_rate`,
+`headline_repair_claim_allowed`, `source_artifacts`, `inference_substrate`,
+and `honest_verdict`.
+
+`headline_repair_claim_allowed` shall be true only when the gate is unblocked,
+repair attempts were actually run on mandated local SOTA GGUF evidence, at
+least one candidate is accepted by exact authority, false repair accepts are
+zero, and every accepted repair preserves intent.
+
+### SCENARIO-VERIFY-3169: Blocked Gate Produces Full No-Call Repair Ladder
+
+Given Exp 3168 has written a repair-gate decision or that artifact is missing,
+When Exp 3169 materializes the repair ladder,
+Then it first reads the gate decision, writes a complete terminal JSON artifact
+in both run and skip paths, carries forward the selected repair denominator,
+records zero live calls and no headline claim whenever the gate is blocked, and
+executes repair generation only for an unblocked gate with usable mandated
+local SOTA GGUF model evidence and exact-authority selected rows.
+
+## Implementation Status (REQ-VERIFY-3169)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-VERIFY-3169 | Implemented (`python/carnot/verify/repair_ladder_materializer_v4.py`) | Implemented (`tests/python/test_experiment_3169_repair_ladder_materializer_v4.py`) |
+
 ### REQ-VERIFY-3073: EBT/ARM-EBM Adapter Feasibility Audit
 
 The repository shall provide an Exp 3073 deterministic architecture audit that

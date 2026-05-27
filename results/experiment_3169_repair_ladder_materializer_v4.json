@@ -1,0 +1,219 @@
+{
+  "artifact": "experiment_3169_repair_ladder_materializer_v4",
+  "duration_s": 0.00151,
+  "exact_authority_accept_count": 0,
+  "false_repair_accept_rate": 0.0,
+  "gate_blockers": [
+    "gated_skip=true: exp3165 preflight_passed=false; clean rerun cannot call a model",
+    "false_accept_gate_passed is not true",
+    "flagged_adversarial=true",
+    "bounded live model rerun is missing",
+    "controlled_invariance_passed is not true",
+    "headline_claim_allowed is not true"
+  ],
+  "gate_state": "blocked_flagged_verifier",
+  "gated_skip": true,
+  "gated_skip_reason": "repair gate blocked: blocked_flagged_verifier; gated_skip=true: exp3165 preflight_passed=false; clean rerun cannot call a model",
+  "headline_repair_claim_allowed": false,
+  "honest_verdict": "blocked_repair_gate: repair gate blocked: blocked_flagged_verifier; gated_skip=true: exp3165 preflight_passed=false; clean rerun cannot call a model",
+  "inference_substrate": {
+    "executes_models": false,
+    "executes_repairs": false,
+    "executes_solvers": false,
+    "executes_verifiers": false,
+    "gate_state": "blocked_flagged_verifier",
+    "gated_skip": true,
+    "kind": "repair_ladder_materializer_v4",
+    "legacy_small_models_headline_eligible": false,
+    "live_model_calls": 0,
+    "no_live_inference": true,
+    "repair_calls": 0,
+    "repair_runner_kind": "not_configured"
+  },
+  "intent_preservation_rate": 0.0,
+  "live_call_count": 0,
+  "model_policy": [
+    "unsloth/Qwen3.6-35B-A3B-GGUF",
+    "unsloth/gemma-4-31B-it-GGUF",
+    "unsloth/gemma-4-26B-A4B-it-GGUF"
+  ],
+  "model_specs": [
+    {
+      "cache_present": false,
+      "cache_status": "cache_missing",
+      "file_size_bytes": null,
+      "headline_eligible": true,
+      "hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "legacy_small_model": false,
+      "model_path": null,
+      "name": "Qwen3.6-35B-A3B",
+      "preferred_quant": "Q4_K_M",
+      "quantization": "Q4_K_M",
+      "role": "moe",
+      "selected": false,
+      "selected_for_exp3167": false,
+      "tier": "flagship_moe",
+      "upstream_selected_for_smoke": false,
+      "usable_locally": false
+    },
+    {
+      "cache_present": false,
+      "cache_status": "cache_missing",
+      "file_size_bytes": null,
+      "headline_eligible": true,
+      "hf_id": "unsloth/gemma-4-31B-it-GGUF",
+      "legacy_small_model": false,
+      "model_path": null,
+      "name": "Gemma4-31B-it",
+      "preferred_quant": "Q4_K_M",
+      "quantization": "Q4_K_M",
+      "role": "dense",
+      "selected": false,
+      "selected_for_exp3167": false,
+      "tier": "flagship_dense",
+      "upstream_selected_for_smoke": false,
+      "usable_locally": false
+    },
+    {
+      "cache_present": true,
+      "cache_status": "cached",
+      "file_size_bytes": 16947539744,
+      "gpu": 0,
+      "headline_eligible": true,
+      "hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "legacy_small_model": false,
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+      "name": "Gemma4-26B-A4B-it",
+      "preferred_quant": "Q4_K_M",
+      "quantization": "Q4_K_M",
+      "role": "moe",
+      "selected": true,
+      "selected_for_exp3167": false,
+      "tier": "middle_moe",
+      "upstream_selected_for_smoke": false,
+      "usable_locally": true
+    }
+  ],
+  "repair_attempt_count": 0,
+  "repair_attempts": [],
+  "repair_ladder_materializer_v4_ready": true,
+  "repair_success_delta": 0.0,
+  "run_date": "20260527",
+  "schema": "carnot.repair_ladder_materializer.v4",
+  "selected_model_ids": [],
+  "selected_repair_rows": [],
+  "source_artifacts": [
+    {
+      "path": "AGENTS.md",
+      "present": true,
+      "required": false,
+      "role": "agents_repo_instructions",
+      "sha256": "b3d6581b04f16b85f77defb2837c98dc3b60ed51e10b347ecb36e609f318b619"
+    },
+    {
+      "path": "CODEX.md",
+      "present": true,
+      "required": false,
+      "role": "codex_repo_workflow",
+      "sha256": "1db7ebc1009714f872db83447828a8957c3abb72061832cc1bc307735cd96bbe"
+    },
+    {
+      "path": "CLAUDE.md",
+      "present": true,
+      "required": false,
+      "role": "claude_authenticity_rules",
+      "sha256": "cdc00581d37d1bd3c77a69b058787f74ecc71545a97c1eab31c48961637b3224"
+    },
+    {
+      "path": "scripts/experiment_template.py",
+      "present": true,
+      "required": false,
+      "role": "experiment_template_policy",
+      "sha256": "86559064fcfb0e0f06cb021609f1e82342c9d8464dc86b654d30d889f787de9f"
+    },
+    {
+      "path": "openspec/capabilities/verification/spec.md",
+      "present": true,
+      "required": true,
+      "role": "verification_openspec",
+      "sha256": "3e828e21f151e7571e3d7f17207c44199a5541bc488ec6a3073f3710540326ce"
+    },
+    {
+      "path": "results/experiment_3168_repair_gate_decision_v3.json",
+      "present": true,
+      "required": true,
+      "role": "exp3168_repair_gate_decision_v3",
+      "sha256": "041d4c341c5c0414ac94e09276b05275940f97a6088aa3edcb0831b239d787e7"
+    },
+    {
+      "path": "results/experiment_3167_clean_live_sota_verifier_rerun_v9.json",
+      "present": true,
+      "required": true,
+      "role": "exp3167_clean_live_verifier_rerun_v9",
+      "sha256": "093d07548fae5908c968ffa020b584fc5939b86e86002a4f0b4066b765b79711"
+    },
+    {
+      "path": "results/experiment_3137_exact_safe_accept_abstain_contract_v1.json",
+      "present": true,
+      "required": true,
+      "role": "exp3137_exact_safe_contract",
+      "sha256": "c8d23896f879ceb1e912989e2ba13db0a43cd195a8ff5e8fb18a7be1b4582f2e"
+    },
+    {
+      "path": "results/experiment_3138_canonical_answer_vericot_grounding_pilot_v1.json",
+      "present": true,
+      "required": true,
+      "role": "exp3138_canonical_grounding",
+      "sha256": "fc07294c1e4ea32bb8d174c2e99a5d70aa68a1e7e16252eea28f442812300a21"
+    },
+    {
+      "path": "results/experiment_3115_explicit_repair_gate_micro_panel_v4.json",
+      "present": true,
+      "required": false,
+      "role": "exp3115_micro_repair_panel",
+      "sha256": "d1acea99957f3189e8196b6bce70138bc9712215bf742f9913b51a19a360fbe5"
+    },
+    {
+      "path": "python/carnot/verify/repair_ladder_materializer_v4.py",
+      "present": true,
+      "required": false,
+      "role": "exp3169_module",
+      "sha256": "3aefe3f74499c973809d52038ee672c70da59f970a650022a70be3cebf811915"
+    },
+    {
+      "path": "tests/python/test_experiment_3169_repair_ladder_materializer_v4.py",
+      "present": true,
+      "required": false,
+      "role": "exp3169_tests",
+      "sha256": "a65548ffd52806ce903fb18d25df6a443c2d054293e7594fc3ed89ef2f00cbec"
+    }
+  ],
+  "source_artifacts_loaded": [
+    "results/experiment_3168_repair_gate_decision_v3.json",
+    "results/experiment_3167_clean_live_sota_verifier_rerun_v9.json",
+    "results/experiment_3137_exact_safe_accept_abstain_contract_v1.json",
+    "results/experiment_3138_canonical_answer_vericot_grounding_pilot_v1.json",
+    "results/experiment_3115_explicit_repair_gate_micro_panel_v4.json"
+  ],
+  "source_checksums": {
+    "AGENTS.md": "b3d6581b04f16b85f77defb2837c98dc3b60ed51e10b347ecb36e609f318b619",
+    "CLAUDE.md": "cdc00581d37d1bd3c77a69b058787f74ecc71545a97c1eab31c48961637b3224",
+    "CODEX.md": "1db7ebc1009714f872db83447828a8957c3abb72061832cc1bc307735cd96bbe",
+    "openspec/capabilities/verification/spec.md": "3e828e21f151e7571e3d7f17207c44199a5541bc488ec6a3073f3710540326ce",
+    "python/carnot/verify/repair_ladder_materializer_v4.py": "3aefe3f74499c973809d52038ee672c70da59f970a650022a70be3cebf811915",
+    "results/experiment_3115_explicit_repair_gate_micro_panel_v4.json": "d1acea99957f3189e8196b6bce70138bc9712215bf742f9913b51a19a360fbe5",
+    "results/experiment_3137_exact_safe_accept_abstain_contract_v1.json": "c8d23896f879ceb1e912989e2ba13db0a43cd195a8ff5e8fb18a7be1b4582f2e",
+    "results/experiment_3138_canonical_answer_vericot_grounding_pilot_v1.json": "fc07294c1e4ea32bb8d174c2e99a5d70aa68a1e7e16252eea28f442812300a21",
+    "results/experiment_3167_clean_live_sota_verifier_rerun_v9.json": "093d07548fae5908c968ffa020b584fc5939b86e86002a4f0b4066b765b79711",
+    "results/experiment_3168_repair_gate_decision_v3.json": "041d4c341c5c0414ac94e09276b05275940f97a6088aa3edcb0831b239d787e7",
+    "scripts/experiment_template.py": "86559064fcfb0e0f06cb021609f1e82342c9d8464dc86b654d30d889f787de9f",
+    "tests/python/test_experiment_3169_repair_ladder_materializer_v4.py": "a65548ffd52806ce903fb18d25df6a443c2d054293e7594fc3ed89ef2f00cbec"
+  },
+  "tests_run": [
+    ".venv/bin/pytest tests/python/test_experiment_3169_repair_ladder_materializer_v4.py -q --no-cov",
+    ".venv/bin/coverage erase && .venv/bin/coverage run --source=python/carnot/verify -m pytest -o addopts='' tests/python/test_experiment_3169_repair_ladder_materializer_v4.py -q",
+    ".venv/bin/coverage report --include='python/carnot/verify/repair_ladder_materializer_v4.py' --fail-under=100 --show-missing",
+    ".venv/bin/python scripts/check_spec_coverage.py",
+    ".venv/bin/pytest tests/python -q"
+  ]
+}
