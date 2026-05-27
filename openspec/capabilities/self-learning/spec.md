@@ -9205,3 +9205,81 @@ an `honest_verdict` beginning with `complete:`.
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-LEARN-3201 | Implemented (`python/carnot/eval/fr11_kan_cl_nonforgetting_sidecar_audit_v1.py`) | Implemented (`tests/python/test_experiment_3201_kan_cl_nonforgetting_sidecar_audit_v1.py`) |
+
+## REQ-LEARN-3215: FR-11 Evidence-Gated Trace Replay Controller Labels
+
+**Given** Exp 3200 materialized the `.296` FR-11 VeriFY-style trace-memory
+controller and Exp 3201 audited that trace memory without sidecar promotion
+**When** Exp 3215 extends trace replay with utility labels
+**Then** it SHALL load the checked-in Exp 3200 trace-memory artifact, reuse the
+Exp 3200 trace schema fields where possible, and label replay candidates only
+from verifier-backed trace outcomes rather than planned trajectories.
+**And** each replay utility label SHALL record the exact verifier outcome,
+controller utility of the prior route, redundant-check suppression status, and
+rollback/retraction status.
+**And** reward-weighted verifier logic SHALL be represented only as controller
+utility label metadata; it SHALL NOT fine-tune, train, mutate, or claim to
+improve any model weights.
+**And** held-out and drift rows SHALL be evaluated for routing improvement and
+redundant-check suppression while negative-control regressions and rollback
+events gate promotion.
+
+The terminal artifact SHALL be
+`results/experiment_3215_fr11_evidence_gated_trace_replay_controller_v2.json`
+and SHALL include `schema_version`, `experiment_id`, `milestone`,
+`continuous_self_learning_task`, `prior_trace_memory_artifact`, `trace_count`,
+`evidence_backed_trace_count`, `replay_utility_label_count`,
+`redundant_check_suppression_count`, `heldout_row_count`, `drift_row_count`,
+`routing_improvement_count`, `negative_control_regression_count`,
+`rollback_event_count`, `model_weight_update_claimed`, `promotion_allowed`,
+`conductor_file_modified`, `active_roadmap_modified`, and `honest_verdict`.
+
+### REQ-LEARN-3215 Sub-requirements
+
+- REQ-LEARN-3215-1: The label schema SHALL preserve Exp 3200's trace fields
+  `trace_id`, `row_id`, `replay_role`, `verification_query`,
+  `consistency_judgment`, `answer_abstain_decision`, `exact_label`, and
+  `routing_outcome`.
+- REQ-LEARN-3215-2: A trace SHALL be evidence-backed only when it has an exact
+  verifier outcome derived from checked-in trace evidence; labels SHALL NOT be
+  emitted for missing, planned-only, or unverifiable trajectories.
+- REQ-LEARN-3215-3: Reward weights SHALL be controller utility labels only:
+  positive for verifier-backed useful routes, positive with redundant-check
+  suppression metadata for repeated exact evidence, and negative/blocking for
+  rollback or retraction cases.
+- REQ-LEARN-3215-4: `routing_improvement_count` SHALL count held-out and drift
+  labels whose verifier-backed route utility is positive and not rolled back or
+  retracted.
+- REQ-LEARN-3215-5: `promotion_allowed` SHALL be true only when held-out and
+  drift denominators are nonzero, every trace has an evidence-backed utility
+  label, `negative_control_regression_count == 0`, `rollback_event_count == 0`,
+  `model_weight_update_claimed=false`, `conductor_file_modified=false`, and
+  `active_roadmap_modified=false`.
+
+### SCENARIO-LEARN-3215: Evidence-Gated Labels Promote Controller Replay Only
+
+**Given** ready Exp 3200 and Exp 3201 artifacts with verifier-backed trace
+records, nonzero held-out and drift rows, zero negative-control regressions, and
+no rollback events
+**When** Exp 3215 labels replay candidates
+**Then** the artifact reports evidence-backed trace and utility-label counts
+equal to the trace count, nonzero routing improvement over held-out/drift rows,
+the inherited redundant-check suppression count, no model-weight update claim,
+`promotion_allowed=true`, and an `honest_verdict` beginning with `complete:`.
+
+### SCENARIO-LEARN-3215-BLOCKED: Planned-Only Or Unsafe Replay Blocks Promotion
+
+**Given** Exp 3200 is missing, unsafe, contains traces without exact verifier
+outcomes, or the source artifacts report negative-control regressions or
+rollback events
+**When** Exp 3215 runs
+**Then** it writes all required fields with controller-memory/no-live-inference
+metadata, emits no utility label for planned-only rows, keeps the blocker counts
+visible, sets `promotion_allowed=false`, and emits an `honest_verdict` beginning
+with `complete:`.
+
+## Implementation Status (REQ-LEARN-3215)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-LEARN-3215 | Implemented (`python/carnot/eval/fr11_evidence_gated_trace_replay_controller_v2.py`) | Implemented (`tests/python/test_experiment_3215_fr11_evidence_gated_trace_replay_controller_v2.py`) |
