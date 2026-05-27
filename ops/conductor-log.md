@@ -6424,3 +6424,7 @@ web search: |
 | 2026-05-27 02:27 UTC | Repair gate decision v3 materialized | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_3168_repair_ |
 | 2026-05-27 03:36 UTC | Repair gate decision v3 materialized | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_3168_repair_ |
 | 2026-05-27 03:50 UTC | Repair ladder materializer v4 | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_3169_repair_ |
+| 2026-05-27 05:13 UTC | Repair ladder materializer v4 | FAIL | Codex CLI error: Hard wall-clock cap after 4802s. Last output:  S<l     01:18 |
+| 2026-05-27 05:14 UTC | Live SOTA authenticity replay v2 | OK | Deliverable already exists in repo |
+| 2026-05-27 05:14 UTC | Repair gate decision v3 materialized | OK | Deliverable already exists in repo |
+| 2026-05-27 05:14 UTC | Repair ladder materializer v4 | OK | Deliverable already exists in repo |

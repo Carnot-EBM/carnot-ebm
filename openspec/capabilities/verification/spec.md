@@ -2553,6 +2553,68 @@ local SOTA GGUF model evidence and exact-authority selected rows.
 |---|---|---|
 | REQ-VERIFY-3169 | Implemented (`python/carnot/verify/repair_ladder_materializer_v4.py`) | Implemented (`tests/python/test_experiment_3169_repair_ladder_materializer_v4.py`) |
 
+### REQ-VERIFY-3170: Counterexample-Certificate Repair Pilot V2
+
+The repository shall provide an Exp 3170 counterexample-certificate repair
+pilot that writes
+`results/experiment_3170_counterexample_certificate_repair_pilot_v2.json`
+from exact checked-in artifacts only. The builder MUST select a tiny explicit
+set of exact false-accept, satisfiable-drift, and fragment-code rows with known
+counterexamples, satisfying assignments, solver certificates, or parser
+certificates. It MUST NOT invoke live LLM inference, run repair generation,
+modify `scripts/research_conductor.py`, push commits, or accept any repair
+candidate without exact-authority evidence.
+
+For every selected row, the pilot SHALL construct a replayable certificate
+record containing the row id, row type, exact label, violated constraint or
+positive-anchor invariant, minimal failing assignment or trace when one exists,
+expected corrected invariant, exact verifier to rerun, solver authority,
+minimal correction set or unsat core when available, and prior repair scoring
+status. Satisfiable-drift rows SHALL be represented honestly as positive
+anchors and SHALL keep missing failing-assignment evidence visible rather than
+fabricating a counterexample.
+
+When Exp 3169 exposes prior repair attempts, the pilot SHALL score only those
+attempts whose row id matches a certificate and SHALL count an exact accept only
+when the candidate was accepted and its repaired label matches the certificate
+exact label. When no prior repair candidate exists, the pilot SHALL still write
+the certificate package with `prior_repair_candidates_scored=0` and
+`repair_call_required_for_next_step=true`.
+
+The pilot SHALL record BEAVER-style bounded-frontier fields from Exp 3125 when
+present, including bound width, explored mass, viable prefix counts, pruned
+prefix counts, and constraint families. Any unavailable bound fields, live
+logprob fields, missing source artifacts, or intentionally absent
+satisfiable-drift failing assignments SHALL be listed in
+`unavailable_certificate_fields`.
+
+The terminal artifact MUST include
+`counterexample_certificate_repair_pilot_v2_ready`, `exact_row_count`,
+`counterexample_count`, `certificate_records`, `bounded_frontier_records`,
+`unavailable_certificate_fields`, `prior_repair_candidates_scored`,
+`exact_accept_count`, `repair_call_required_for_next_step`,
+`source_artifacts`, `inference_substrate`, and `honest_verdict`.
+`honest_verdict` MUST begin with a terminal success prefix when the package is
+complete and MUST report that live repair is still required unless all selected
+certificates have exact accepted repairs.
+
+### SCENARIO-VERIFY-3170: Exact Counterexamples Become A Repair Package
+
+Given Exp 3111, Exp 3125, Exp 3136, Exp 3137, Exp 3138, Exp 3168, and Exp 3169
+artifacts are available or explicitly absent,
+When Exp 3170 builds the counterexample-certificate repair pilot,
+Then it writes a complete terminal JSON artifact without live model inference,
+selects the exact false-accept, satisfiable-drift, and fragment-code pilot
+rows, records replayable certificate records and bounded-frontier summaries,
+scores any available prior repair candidates against exact labels only, and
+keeps missing certificate or frontier fields visible for future repair calls.
+
+## Implementation Status (REQ-VERIFY-3170)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-VERIFY-3170 | Planned (`python/carnot/verify/counterexample_certificate_repair_pilot_v2.py`) | Planned (`tests/python/test_experiment_3170_counterexample_certificate_repair_pilot_v2.py`) |
+
 ### REQ-VERIFY-3073: EBT/ARM-EBM Adapter Feasibility Audit
 
 The repository shall provide an Exp 3073 deterministic architecture audit that
