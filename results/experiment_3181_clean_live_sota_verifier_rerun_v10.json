@@ -1,186 +1,9 @@
 {
-  "artifact": "experiment_3180_controlled_invariance_executor_v2",
-  "blocker_reasons": [],
-  "control_definitions_loaded": [
-    {
-      "can_authorize_acceptance": false,
-      "name": "force_answer",
-      "routes_to_exact_checks": true,
-      "source_experiment": "exp3166",
-      "source_name": "force"
-    },
-    {
-      "can_authorize_acceptance": false,
-      "name": "remove_answer",
-      "routes_to_exact_checks": true,
-      "source_experiment": "exp3166",
-      "source_name": "remove"
-    },
-    {
-      "can_authorize_acceptance": false,
-      "name": "shuffled_trace",
-      "routes_to_exact_checks": true,
-      "source_experiment": "exp3166",
-      "source_name": "shuffled_trace"
-    },
-    {
-      "can_authorize_acceptance": false,
-      "name": "answer_only",
-      "routes_to_exact_checks": true,
-      "source_experiment": "exp3166",
-      "source_name": "answer_only"
-    },
-    {
-      "can_authorize_acceptance": false,
-      "name": "trace_only",
-      "routes_to_exact_checks": true,
-      "source_experiment": "exp3166",
-      "source_name": "trace_only"
-    },
-    {
-      "can_authorize_acceptance": false,
-      "name": "transcript_hash",
-      "routes_to_exact_checks": true,
-      "source_experiment": "exp3180_executor_v2",
-      "source_name": "transcript_hash"
-    },
-    {
-      "can_authorize_acceptance": false,
-      "name": "token_suspicion_triage",
-      "routes_to_exact_checks": true,
-      "source_experiment": "exp3180_executor_v2",
-      "source_name": "token_suspicion_triage"
-    }
-  ],
-  "control_results": {
-    "answer_only": {
-      "can_authorize_acceptance": false,
-      "definition_source": "exp3166",
-      "details": {
-        "authority": "answer-only exposure is visible but exact authority rejects regressions",
-        "shortcut_exposure_count": 2,
-        "shortcut_exposure_row_ids": [
-          "resyn-3084-arith-003",
-          "resyn-3084-smt-000"
-        ]
-      },
-      "executed": true,
-      "load_bearing": true,
-      "name": "answer_only",
-      "passed": true,
-      "routes_to_exact_checks": true,
-      "row_count": 72,
-      "semantic_false_accept_count": 0,
-      "shortcut_failure_count": 0
-    },
-    "force_answer": {
-      "can_authorize_acceptance": false,
-      "definition_source": "exp3166",
-      "details": {
-        "authority": "exact labels override forced answer tokens",
-        "forced_values": [
-          "exact_label",
-          "counterfactual_label"
-        ]
-      },
-      "executed": true,
-      "load_bearing": true,
-      "name": "force_answer",
-      "passed": true,
-      "routes_to_exact_checks": true,
-      "row_count": 72,
-      "semantic_false_accept_count": 0,
-      "shortcut_failure_count": 0
-    },
-    "remove_answer": {
-      "can_authorize_acceptance": false,
-      "definition_source": "exp3166",
-      "details": {
-        "authority": "no row is accepted from a removed answer artifact",
-        "removed_field": "candidate_answers"
-      },
-      "executed": true,
-      "load_bearing": true,
-      "name": "remove_answer",
-      "passed": true,
-      "routes_to_exact_checks": true,
-      "row_count": 72,
-      "semantic_false_accept_count": 0,
-      "shortcut_failure_count": 0
-    },
-    "shuffled_trace": {
-      "can_authorize_acceptance": false,
-      "definition_source": "exp3166",
-      "details": {
-        "authority": "trace order does not change exact authority decisions",
-        "fingerprint_count": 72
-      },
-      "executed": true,
-      "load_bearing": true,
-      "name": "shuffled_trace",
-      "passed": true,
-      "routes_to_exact_checks": true,
-      "row_count": 72,
-      "semantic_false_accept_count": 0,
-      "shortcut_failure_count": 0
-    },
-    "token_suspicion_triage": {
-      "can_authorize_acceptance": false,
-      "definition_source": "exp3180_executor_v2",
-      "details": {
-        "authority": "token suspicion may route exact checks but cannot accept",
-        "token_suspicion_used_as_triage_only": true
-      },
-      "executed": true,
-      "load_bearing": true,
-      "name": "token_suspicion_triage",
-      "passed": true,
-      "routes_to_exact_checks": true,
-      "row_count": 1,
-      "semantic_false_accept_count": 0,
-      "shortcut_failure_count": 0
-    },
-    "trace_only": {
-      "can_authorize_acceptance": false,
-      "definition_source": "exp3166",
-      "details": {
-        "authority": "trace-only evidence can route checks but cannot accept",
-        "trace_only_accept_count": 0
-      },
-      "executed": true,
-      "load_bearing": true,
-      "name": "trace_only",
-      "passed": true,
-      "routes_to_exact_checks": true,
-      "row_count": 72,
-      "semantic_false_accept_count": 0,
-      "shortcut_failure_count": 0
-    },
-    "transcript_hash": {
-      "can_authorize_acceptance": false,
-      "definition_source": "exp3180_executor_v2",
-      "details": {
-        "authority": "transcript hashes prove receipt identity only, not correctness",
-        "duplicate_transcript_hash_count": 0,
-        "unique_transcript_hash_count": 2
-      },
-      "executed": true,
-      "load_bearing": true,
-      "name": "transcript_hash",
-      "passed": true,
-      "routes_to_exact_checks": true,
-      "row_count": 2,
-      "semantic_false_accept_count": 0,
-      "shortcut_failure_count": 0
-    }
-  },
-  "controlled_invariance_executor_v2_ready": true,
+  "abstention_rate": 0.0,
+  "artifact": "experiment_3181_clean_live_sota_verifier_rerun_v10",
+  "clean_live_sota_verifier_rerun_v10_ready": true,
   "controlled_invariance_passed": true,
-  "downstream_gate_targets": [
-    "exp3181",
-    "exp3184"
-  ],
-  "duration_s": 0.00397,
+  "duration_s": 0.002164,
   "exact_row_count": 72,
   "exact_rows_evaluated": [
     {
@@ -978,107 +801,144 @@
       "semantic_false_accept": false
     }
   ],
+  "false_accept_rate": 0.0,
+  "false_reject_rate": 0.0,
   "field_principles": {
-    "blocker_reasons": "failed controls must produce actionable blockers",
-    "control_results": "each invariance family needs explicit status",
-    "controlled_invariance_executor_v2_ready": "controls must be executed, not only described",
-    "controlled_invariance_passed": "downstream rerun and repair gates need an explicit boolean",
-    "exact_row_count": "denominator must be visible",
-    "honest_verdict": "terminal verdict must be machine-readable",
-    "inference_substrate": "cached/exact work must not be mislabeled as live inference",
-    "known_false_accept_regression_count": "adversarial regressions must stay load-bearing",
-    "receipt_backed_transcript_count": "live evidence used by controls must be counted",
-    "shortcut_failure_count": "trace or answer shortcuts must remain visible",
-    "token_suspicion_used_as_triage_only": "suspicion features cannot replace exact authority"
+    "abstention_rate": "abstention can hide failure if unreported",
+    "clean_live_sota_verifier_rerun_v10_ready": "downstream gates need a materialized artifact",
+    "controlled_invariance_passed": "shortcut checks must gate trust",
+    "exact_row_count": "denominator must be explicit",
+    "false_accept_rate": "headline verifier quality must report failures",
+    "false_reject_rate": "verifier rejection cost must be visible",
+    "flagged_adversarial": "repair cannot proceed under adversarial evidence",
+    "gate_reasons": "blocked repair needs actionable cause",
+    "gated_skip": "skipped live work must be explicit",
+    "headline_claim_allowed": "smoke or gated-skip evidence must not become headline",
+    "honest_verdict": "terminal verdict must be explicit",
+    "inference_substrate": "live or gated-skip substrate must be declared",
+    "known_false_accept_regression_count": "adversarial rows must remain load-bearing",
+    "live_call_count": "no-call artifacts must not imply live evidence",
+    "models_used": "SOTA policy must be auditable",
+    "proof_receipts_used": "live evidence must trace to receipts"
   },
-  "honest_verdict": "complete: controlled_invariance_executor_v2_ready=true; controlled_invariance_passed=true; exact_row_count=72; receipt_backed_transcript_count=2",
+  "flagged_adversarial": true,
+  "gate_reasons": [
+    "exp3179.clean_rerun_allowed=false",
+    "exp3179.substrate_classification=cpu_fallback_receipt_only"
+  ],
+  "gated_skip": true,
+  "headline_claim_allowed": false,
+  "honest_verdict": "blocked_receipt_precondition: clean_live_sota_verifier_rerun_v10_ready=true; gated_skip=True; live_call_count=0; gate_reasons=2",
   "inference_substrate": {
+    "controlled_invariance_passed": true,
     "downloads_models": false,
+    "executes_hardware": false,
     "executes_models": false,
     "executes_repairs": false,
     "executes_verifiers": false,
-    "kind": "cached_exact_authority_and_receipt_control_execution",
-    "new_live_model_calls": 0,
-    "receipt_backed_transcript_count": 2,
-    "source_receipt_live_model_calls": 2,
-    "upstream_receipt_substrate": "local_sota_receipt_smoke_v3",
-    "uses_cached_receipts": true,
-    "uses_exact_authority_rows": true
+    "gated_skip_reasons": [
+      "exp3179.clean_rerun_allowed=false",
+      "exp3179.substrate_classification=cpu_fallback_receipt_only"
+    ],
+    "kind": "clean_live_sota_verifier_rerun_v10_gated_skip",
+    "legacy_small_model_used": false,
+    "live_model_calls": 0,
+    "models_selected": [],
+    "receipt_clean_rerun_allowed": false,
+    "source_receipt_live_model_calls": 2
   },
   "known_false_accept_regression_count": 2,
-  "known_false_accept_regression_ids": [
-    "resyn-3084-arith-003",
-    "resyn-3084-smt-000"
-  ],
+  "known_false_accepts_accepted": [],
+  "known_false_accepts_rejected": [],
+  "live_call_count": 0,
+  "metrics_computed": false,
+  "models_used": [],
   "ops_docs_reconciliation_left_to_conductor": true,
-  "receipt_backed_transcript_count": 2,
-  "receipt_backed_transcripts": [
+  "panel_rows": [],
+  "preconditions_checked": [
     {
-      "acceptance_authority": false,
+      "detail": "clean_rerun_allowed=False",
+      "name": "exp3179_clean_rerun_allowed",
+      "passed": false
+    },
+    {
+      "detail": "controlled_invariance_passed=True",
+      "name": "exp3180_controlled_invariance_passed",
+      "passed": true
+    },
+    {
+      "detail": "",
+      "name": "transcript_receipt_validity",
+      "passed": true
+    }
+  ],
+  "previous_v9_summary": {
+    "clean_live_verifier_rerun_v9_ready": true,
+    "flagged_adversarial": true,
+    "gated_skip": true,
+    "headline_claim_allowed": false,
+    "honest_verdict": "complete: clean_live_verifier_rerun_v9_ready=true; gated_skip=True; live_call_count=0; reason=exp3165 preflight_passed=false; clean rerun cannot call a model",
+    "live_call_count": 0
+  },
+  "prompt_hashes": [],
+  "proof_receipts_used": [
+    {
+      "command_hash": "f2c49df543420eb94017831999691b2472a4f7a7778d7b3b9cc45494165f101c",
       "index": 0,
+      "loader_name": "llama_cpp.Llama",
+      "model_file_hash": "8ebbe6e75b5f49c469a739314771f4ce0376d6d804b8180141015add477c53ab",
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/04028bd1aa552ebf46a986375418cb92ffeae774/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
       "prompt_hash": "9196c45cb42428c01c90b00c6747cad30c83decb37cf1d0d7c9fdc971fd08791",
+      "random_seed": 20260527,
+      "replay_count": 1,
       "response_hash": "3f8e2f272eebe26338f0ad3d58254df335f8ad6d1c93d96a11ddbbdfbd0cc6e2",
       "selected_model_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
       "source_experiment": "exp3179",
+      "stderr_tail": "llama_context: n_ctx_seq (256) < n_ctx_train (262144) -- the full capacity of the model will not be utilized\nllama_kv_cache_iswa: using full-size SWA cache (ref: https://github.com/ggml-org/llama.cpp/pull/13194#issuecomment-2868343055)\nllama_kv_cache: the V embeddings have different sizes across layers and FA is not enabled - padding V cache to 2048\nllama_kv_cache: the V embeddings have different sizes across layers and FA is not enabled - padding V cache to 2048",
       "subprocess_return_code": 0,
       "substrate_used": "cpu_fallback_receipt_only",
+      "throughput_plausibility": {},
       "token_counts": {
         "completion_tokens": 4,
         "prompt_tokens": 19,
         "source": "llama_cpp_usage",
         "total_tokens": 23
       },
-      "transcript_hash": "af139d87f0d1b5522ad0e7d130499262995888c65b9cdab8a0a1da15ecd85a42"
+      "transcript_hash": "af139d87f0d1b5522ad0e7d130499262995888c65b9cdab8a0a1da15ecd85a42",
+      "used_for_live_verifier_scoring": false,
+      "wall_clock_s": 7.751198
     },
     {
-      "acceptance_authority": false,
+      "command_hash": "f2c49df543420eb94017831999691b2472a4f7a7778d7b3b9cc45494165f101c",
       "index": 1,
+      "loader_name": "llama_cpp.Llama",
+      "model_file_hash": "8ebbe6e75b5f49c469a739314771f4ce0376d6d804b8180141015add477c53ab",
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/04028bd1aa552ebf46a986375418cb92ffeae774/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
       "prompt_hash": "36e9d439812e6f5c03790eaeb52179c67f40825628a9c8d42fae7c3e93d4333c",
+      "random_seed": 20260528,
+      "replay_count": 2,
       "response_hash": "5e94bde789d9bf501ae9302e0f226e660c8ef70d8e93adab6b72b840d1912a74",
       "selected_model_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
       "source_experiment": "exp3179",
+      "stderr_tail": "llama_context: n_ctx_seq (256) < n_ctx_train (262144) -- the full capacity of the model will not be utilized\nllama_kv_cache_iswa: using full-size SWA cache (ref: https://github.com/ggml-org/llama.cpp/pull/13194#issuecomment-2868343055)\nllama_kv_cache: the V embeddings have different sizes across layers and FA is not enabled - padding V cache to 2048\nllama_kv_cache: the V embeddings have different sizes across layers and FA is not enabled - padding V cache to 2048",
       "subprocess_return_code": 0,
       "substrate_used": "cpu_fallback_receipt_only",
+      "throughput_plausibility": {},
       "token_counts": {
         "completion_tokens": 4,
         "prompt_tokens": 20,
         "source": "llama_cpp_usage",
         "total_tokens": 24
       },
-      "transcript_hash": "3adf45720f20a104bad6f09eaad31423d1325eae4e4c7f56fadf75a99c84137a"
+      "transcript_hash": "3adf45720f20a104bad6f09eaad31423d1325eae4e4c7f56fadf75a99c84137a",
+      "used_for_live_verifier_scoring": false,
+      "wall_clock_s": 7.799008
     }
   ],
-  "regression_row_results": [
-    {
-      "acceptance_authority": true,
-      "candidate_answers": [
-        "INVALID",
-        "VALID"
-      ],
-      "exact_authority_decision": "reject",
-      "exact_label": "INVALID",
-      "known_false_accept_regression": true,
-      "row_id": "resyn-3084-arith-003",
-      "semantic_false_accept": false
-    },
-    {
-      "acceptance_authority": true,
-      "candidate_answers": [
-        "UNSAT",
-        "VALID"
-      ],
-      "exact_authority_decision": "reject",
-      "exact_label": "UNSAT",
-      "known_false_accept_regression": true,
-      "row_id": "resyn-3084-smt-000",
-      "semantic_false_accept": false
-    }
-  ],
+  "receipt_contract_ready": true,
   "run_date": "20260527",
-  "schema": "carnot.controlled_invariance_executor.v2",
+  "schema": "carnot.clean_live_sota_verifier_rerun.v10",
   "scripts_research_conductor_modified": false,
-  "semantic_false_accept_count": 0,
-  "shortcut_failure_count": 0,
   "source_artifacts": [
     {
       "path": "AGENTS.md",
@@ -1122,43 +982,34 @@
       "readable_json_object": null,
       "required": true,
       "role": "verification_openspec",
-      "sha256": "497cfaffa24ac43fe58b2793286e7b1b64629d1affe89677701646025b13f6c9",
+      "sha256": "771e9732ae67c8c94db90c2a33d99ab93782a1a7d0382a4769d9a8aaa3bfe51d",
       "source_type": "text"
     },
     {
-      "path": "results/experiment_3136_false_accept_root_cause_autopsy_v1.json",
+      "path": "results/experiment_3178_receipt_backed_authenticity_contract_v3.json",
       "present": true,
       "readable_json_object": true,
       "required": true,
-      "role": "exp3136_false_accept_autopsy",
-      "sha256": "3a61c8490030b607c73f50ba2ce145dc4591621ac76f016a42811bedd670776a",
+      "role": "exp3178_receipt_contract_v3",
+      "sha256": "e2017871f81fc3254fa9ddb1683298b89f7778188eacbb0d778a6fde1658f791",
       "source_type": "json"
     },
     {
-      "path": "results/experiment_3137_exact_safe_accept_abstain_contract_v1.json",
+      "path": "results/experiment_3179_local_sota_receipt_smoke_v3.json",
       "present": true,
       "readable_json_object": true,
       "required": true,
-      "role": "exp3137_exact_safe_contract",
-      "sha256": "c8d23896f879ceb1e912989e2ba13db0a43cd195a8ff5e8fb18a7be1b4582f2e",
+      "role": "exp3179_local_sota_receipt_smoke_v3",
+      "sha256": "d3090bf2cc07a5dde0d55161721268f80c5fdc2aa532e460516f4d7520ffae35",
       "source_type": "json"
     },
     {
-      "path": "results/experiment_3138_canonical_answer_vericot_grounding_pilot_v1.json",
+      "path": "results/experiment_3180_controlled_invariance_executor_v2.json",
       "present": true,
       "readable_json_object": true,
       "required": true,
-      "role": "exp3138_canonical_grounding",
-      "sha256": "fc07294c1e4ea32bb8d174c2e99a5d70aa68a1e7e16252eea28f442812300a21",
-      "source_type": "json"
-    },
-    {
-      "path": "results/experiment_3166_verifier_invariance_token_suspicion_audit_v1.json",
-      "present": true,
-      "readable_json_object": true,
-      "required": true,
-      "role": "exp3166_control_definitions",
-      "sha256": "98b79a3b5aeeda09631dc8a5a3af512b803ecb17146339fe5fb18bfcec95f84e",
+      "role": "exp3180_controlled_invariance_executor_v2",
+      "sha256": "efe6520a3cf8dfee8216a78f342609cfa2af3f74ef905cdadc421042b54485c5",
       "source_type": "json"
     },
     {
@@ -1166,44 +1017,35 @@
       "present": true,
       "readable_json_object": true,
       "required": true,
-      "role": "exp3167_clean_rerun_gate",
+      "role": "exp3167_clean_rerun_v9",
       "sha256": "093d07548fae5908c968ffa020b584fc5939b86e86002a4f0b4066b765b79711",
       "source_type": "json"
     },
     {
-      "path": "results/experiment_3179_local_sota_receipt_smoke_v3.json",
-      "present": true,
-      "readable_json_object": true,
-      "required": false,
-      "role": "exp3179_receipt_smoke",
-      "sha256": "d3090bf2cc07a5dde0d55161721268f80c5fdc2aa532e460516f4d7520ffae35",
-      "source_type": "json"
-    },
-    {
-      "path": "python/carnot/verify/controlled_invariance_executor_v2.py",
+      "path": "python/carnot/verify/clean_live_sota_verifier_rerun_v10.py",
       "present": true,
       "readable_json_object": null,
       "required": false,
-      "role": "exp3180_module",
-      "sha256": "164917f3bc7e28550b45ca64e48eac060787bdbf7bec3e94804a359ae28b0eab",
+      "role": "exp3181_module",
+      "sha256": "e853eabe76237def7dc3848b34ca9daf37ae4de9a8278403d82a6f5d5f58019e",
       "source_type": "python"
     },
     {
-      "path": "scripts/experiment_3180_controlled_invariance_executor_v2.py",
+      "path": "scripts/experiment_3181_clean_live_sota_verifier_rerun_v10.py",
       "present": true,
       "readable_json_object": null,
       "required": false,
-      "role": "exp3180_script",
-      "sha256": "0eb27d997d79b59b1413ca39572f53547c152d67f6671f1632fe7bb18a43a058",
+      "role": "exp3181_script",
+      "sha256": "93a3d8904eb48b4b6416ba0fce4117f3c534def11329139f43285e57072eaaab",
       "source_type": "python"
     },
     {
-      "path": "tests/python/test_experiment_3180_controlled_invariance_executor_v2.py",
+      "path": "tests/python/test_experiment_3181_clean_live_sota_verifier_rerun_v10.py",
       "present": true,
       "readable_json_object": null,
       "required": false,
-      "role": "exp3180_tests",
-      "sha256": "8a113459be6295f7e5fac8418e49e7c2b6967c55a4b40d51014d30451d68348b",
+      "role": "exp3181_tests",
+      "sha256": "d847c2dddfc205859d53365b0732a20a5cf51c007d2f225ccaa86dcd2f5439c6",
       "source_type": "python"
     }
   ],
@@ -1211,38 +1053,35 @@
     "AGENTS.md": "b3d6581b04f16b85f77defb2837c98dc3b60ed51e10b347ecb36e609f318b619",
     "CLAUDE.md": "cdc00581d37d1bd3c77a69b058787f74ecc71545a97c1eab31c48961637b3224",
     "CODEX.md": "1db7ebc1009714f872db83447828a8957c3abb72061832cc1bc307735cd96bbe",
-    "openspec/capabilities/verification/spec.md": "497cfaffa24ac43fe58b2793286e7b1b64629d1affe89677701646025b13f6c9",
-    "python/carnot/verify/controlled_invariance_executor_v2.py": "164917f3bc7e28550b45ca64e48eac060787bdbf7bec3e94804a359ae28b0eab",
-    "results/experiment_3136_false_accept_root_cause_autopsy_v1.json": "3a61c8490030b607c73f50ba2ce145dc4591621ac76f016a42811bedd670776a",
-    "results/experiment_3137_exact_safe_accept_abstain_contract_v1.json": "c8d23896f879ceb1e912989e2ba13db0a43cd195a8ff5e8fb18a7be1b4582f2e",
-    "results/experiment_3138_canonical_answer_vericot_grounding_pilot_v1.json": "fc07294c1e4ea32bb8d174c2e99a5d70aa68a1e7e16252eea28f442812300a21",
-    "results/experiment_3166_verifier_invariance_token_suspicion_audit_v1.json": "98b79a3b5aeeda09631dc8a5a3af512b803ecb17146339fe5fb18bfcec95f84e",
+    "openspec/capabilities/verification/spec.md": "771e9732ae67c8c94db90c2a33d99ab93782a1a7d0382a4769d9a8aaa3bfe51d",
+    "python/carnot/verify/clean_live_sota_verifier_rerun_v10.py": "e853eabe76237def7dc3848b34ca9daf37ae4de9a8278403d82a6f5d5f58019e",
     "results/experiment_3167_clean_live_sota_verifier_rerun_v9.json": "093d07548fae5908c968ffa020b584fc5939b86e86002a4f0b4066b765b79711",
+    "results/experiment_3178_receipt_backed_authenticity_contract_v3.json": "e2017871f81fc3254fa9ddb1683298b89f7778188eacbb0d778a6fde1658f791",
     "results/experiment_3179_local_sota_receipt_smoke_v3.json": "d3090bf2cc07a5dde0d55161721268f80c5fdc2aa532e460516f4d7520ffae35",
-    "scripts/experiment_3180_controlled_invariance_executor_v2.py": "0eb27d997d79b59b1413ca39572f53547c152d67f6671f1632fe7bb18a43a058",
+    "results/experiment_3180_controlled_invariance_executor_v2.json": "efe6520a3cf8dfee8216a78f342609cfa2af3f74ef905cdadc421042b54485c5",
+    "scripts/experiment_3181_clean_live_sota_verifier_rerun_v10.py": "93a3d8904eb48b4b6416ba0fce4117f3c534def11329139f43285e57072eaaab",
     "scripts/experiment_template.py": "86559064fcfb0e0f06cb021609f1e82342c9d8464dc86b654d30d889f787de9f",
-    "tests/python/test_experiment_3180_controlled_invariance_executor_v2.py": "8a113459be6295f7e5fac8418e49e7c2b6967c55a4b40d51014d30451d68348b"
+    "tests/python/test_experiment_3181_clean_live_sota_verifier_rerun_v10.py": "d847c2dddfc205859d53365b0732a20a5cf51c007d2f225ccaa86dcd2f5439c6"
   },
   "source_errors": [],
   "tests_run": [
-    ".venv/bin/pytest tests/python/test_experiment_3180_controlled_invariance_executor_v2.py -q --no-cov",
-    ".venv/bin/coverage erase && .venv/bin/coverage run --source=python/carnot/verify -m pytest -o addopts='' tests/python/test_experiment_3180_controlled_invariance_executor_v2.py -q",
-    ".venv/bin/coverage report --include='python/carnot/verify/controlled_invariance_executor_v2.py' --fail-under=100 --show-missing",
+    ".venv/bin/pytest tests/python/test_experiment_3181_clean_live_sota_verifier_rerun_v10.py -q --no-cov",
+    ".venv/bin/coverage erase && .venv/bin/coverage run --source=python/carnot/verify -m pytest -o addopts='' tests/python/test_experiment_3181_clean_live_sota_verifier_rerun_v10.py -q",
+    ".venv/bin/coverage report --include='python/carnot/verify/clean_live_sota_verifier_rerun_v10.py' --fail-under=100 --show-missing",
     ".venv/bin/python scripts/check_spec_coverage.py",
     ".venv/bin/pytest tests/python -q"
   ],
+  "token_counts": {
+    "completion_tokens": 0,
+    "prompt_tokens": 0,
+    "source": "gated_skip_no_live_calls",
+    "total_tokens": 0
+  },
   "token_suspicion_used_as_triage_only": true,
-  "flagged_adversarial": true,
-  "corrigendum_pending": [
-    {
-      "kind": "DURATION_TOO_SHORT",
-      "severity": "critical",
-      "detail": "duration_s=0.00397 but artifact references compute-bound markers (GGUF / CUDA / live model). Loading and running a real model takes >=60.0s minimum; this completed too fast to have invoked the model."
-    },
-    {
-      "kind": "METHODOLOGY_MISSING",
-      "severity": "warn",
-      "detail": "Compute-bound artifact missing: model_specs/target_model, random_seed, reproducibility_checksum. Methodology unverifiable."
-    }
-  ]
+  "transcript_hashes": [],
+  "transcript_receipt_validity": {
+    "reasons": [],
+    "receipt_count": 2,
+    "valid": true
+  }
 }

@@ -3197,6 +3197,73 @@ false-accept regression row as load-bearing evidence, and sets
 |---|---|---|
 | REQ-VERIFY-3180 | Implemented (`python/carnot/verify/controlled_invariance_executor_v2.py`) | Implemented (`tests/python/test_experiment_3180_controlled_invariance_executor_v2.py`) |
 
+### REQ-VERIFY-3181: Clean Live SOTA Verifier Rerun V10 Receipt Gate
+
+The repository shall provide an Exp 3181 clean live SOTA verifier rerun v10
+builder that writes
+`results/experiment_3181_clean_live_sota_verifier_rerun_v10.json` for repair
+gate v4. The builder MUST consume Exp 3178 receipt-backed authenticity
+contract v3, Exp 3179 local SOTA receipt smoke v3, Exp 3180
+controlled-invariance executor v2, and Exp 3167 clean live SOTA verifier rerun
+v9 before attempting any live verifier work. It MUST NOT make live local SOTA
+model calls unless Exp 3179 has `clean_rerun_allowed=true` and Exp 3180 has
+`controlled_invariance_passed=true`. It MUST NOT use legacy small models for
+headline verifier metrics, download models, push commits, or modify
+`scripts/research_conductor.py`.
+
+When either precondition is missing or false, the builder SHALL write a
+complete gated-skip artifact rather than leaving repair gate v4 to infer status
+from a missing file. The gated-skip artifact SHALL set
+`clean_live_sota_verifier_rerun_v10_ready=true`, `gated_skip=true`,
+`live_call_count=0`, empty `models_used`, explicit `gate_reasons`, and
+`headline_claim_allowed=false`. It SHALL carry forward exact-row and known
+false-accept regression denominators from Exp 3180 when available, include the
+receipt rows inspected from Exp 3179 without treating them as verifier-score
+evidence, and set `flagged_adversarial=true` unless receipt proof is valid,
+controlled invariance passes, and every known false-accept regression row is
+rejected by exact authority.
+
+When both preconditions pass, the builder SHALL select mandated SOTA GGUFs
+from `cached_sota_pair()` or equivalent local path discovery over
+`unsloth/Qwen3.6-35B-A3B-GGUF`, `unsloth/gemma-4-31B-it-GGUF`, and
+`unsloth/gemma-4-26B-A4B-it-GGUF`, run only a bounded clean verifier panel
+over exact-authority rows plus known false-accept regression rows, and score
+the panel with canonical exact authority only. For every live row it SHALL
+record model ID, model path, prompt hash, transcript hash, exact label,
+decision, and whether the row is a known false-accept regression. Token
+suspicion and transcript receipt fields MAY triage or block promotion, but
+SHALL NOT accept verifier outputs.
+
+The terminal artifact MUST include
+`clean_live_sota_verifier_rerun_v10_ready`, `gated_skip`, `gate_reasons`,
+`live_call_count`, `models_used`, `proof_receipts_used`, `exact_row_count`,
+`known_false_accept_regression_count`, `false_accept_rate`,
+`false_reject_rate`, `abstention_rate`, `controlled_invariance_passed`,
+`flagged_adversarial`, `headline_claim_allowed`, `inference_substrate`, and
+`honest_verdict`. It SHOULD also include source provenance, prompt/transcript
+hash lists, token-suspicion triage status, transcript receipt validity,
+per-row exact scoring summaries, field-principle annotations, tests run,
+source checksums, duration, and run date.
+
+### SCENARIO-VERIFY-3181: Receipt Preconditions Gate V10 Live Verifier Work
+
+Given Exp 3179 may contain only CPU fallback receipt proof and Exp 3180 may or
+may not have passed controlled invariance,
+When Exp 3181 builds the clean live SOTA verifier rerun v10 artifact,
+Then it writes a terminal JSON artifact for repair gate v4, makes zero live
+model calls whenever `clean_rerun_allowed` or `controlled_invariance_passed`
+is false or missing, records exact gate reasons for the skipped work, preserves
+the exact-row and known false-accept denominators, keeps headline claims
+blocked, and marks the verifier evidence adversarial until full local SOTA
+receipts, controlled invariance, transcript receipt validity, and exact
+known-regression rejection all pass.
+
+## Implementation Status (REQ-VERIFY-3181)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-VERIFY-3181 | Implemented (`python/carnot/verify/clean_live_sota_verifier_rerun_v10.py`) | Implemented (`tests/python/test_experiment_3181_clean_live_sota_verifier_rerun_v10.py`) |
+
 ### REQ-VERIFY-3006: EqR Fixed-Point Energy Diagnostic Over Cached Validator Trajectories
 
 The repository shall provide a deterministic Exp 3006 fixed-point energy
