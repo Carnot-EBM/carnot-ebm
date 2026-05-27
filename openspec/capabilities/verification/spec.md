@@ -3073,6 +3073,70 @@ rerun can become headline-eligible.
 |---|---|---|
 | REQ-VERIFY-3178 | Implemented (`python/carnot/verify/receipt_backed_authenticity_contract_v3.py`) | Implemented (`tests/python/test_experiment_3178_receipt_backed_authenticity_contract_v3.py`) |
 
+### REQ-VERIFY-3179: Local SOTA Receipt Smoke V3
+
+The repository shall provide an Exp 3179 local SOTA GGUF receipt-smoke
+builder that writes `results/experiment_3179_local_sota_receipt_smoke_v3.json`
+under the Exp 3178 v3 receipt contract. The builder MUST load the checked-in
+Exp 3178 contract before attempting model work, MUST inspect
+`cached_sota_pair()` and the HuggingFace cache state for all three mandated
+GGUF IDs (`unsloth/Qwen3.6-35B-A3B-GGUF`,
+`unsloth/gemma-4-31B-it-GGUF`, and
+`unsloth/gemma-4-26B-A4B-it-GGUF`), MUST check `llama_cpp` loader import
+availability, MUST check torch CUDA availability when torch is importable, and
+MUST NOT download models, use legacy small models in headline fields, push
+commits, or modify `scripts/research_conductor.py`.
+
+The builder SHALL choose the strongest locally available mandated GGUF in this
+order: Qwen3.6-35B-A3B, Gemma4-31B-it, then Gemma4-26B-A4B-it. It SHALL prefer
+a CUDA llama.cpp path when CUDA is healthy. If CUDA is absent or unhealthy but
+the loader can run a bounded CPU smoke, the CPU smoke MAY prove receipt wiring
+only and MUST be classified as `cpu_fallback_receipt_only`; it SHALL NOT allow
+headline claims or unlock clean verifier reruns. If no mandated model can be
+located or loaded, the artifact SHALL set `preflight_passed=false`,
+`live_call_count=0`, empty `proof_receipts`, a precise substrate
+classification, and a blocked `honest_verdict` without claiming live verifier
+evidence.
+
+When a mandated GGUF can run, the builder SHALL execute at least two tiny
+deterministic prompts using a fixed seed and deterministic decoding parameters
+where supported. For every completed call it SHALL capture prompt hashes,
+transcript hashes, token counts, wall-clock evidence, command hash, worker code
+hash, subprocess return code, and stderr tail. It SHALL reject reused or stale
+transcript hashes and SHALL fail throughput plausibility when completion-token
+throughput is impossible under the v3 contract. The smoke artifact remains
+receipt proof only: `headline_claim_allowed` MUST be false even when the
+preflight passes.
+
+The terminal artifact MUST include `local_sota_receipt_smoke_v3_ready`,
+`preflight_passed`, `live_call_count`, `mandated_model_inventory`,
+`selected_model_ids`, `substrate_classification`, `cpu_fallback_used`,
+`proof_receipts`, `throughput_plausibility_passed`, `headline_claim_allowed`,
+`clean_rerun_allowed`, `inference_substrate`, and `honest_verdict`. It SHOULD
+also include the Exp 3178 contract summary, cached-pair probe, loader and CUDA
+probe evidence, prompt/transcript hash lists, source checksums, tests run,
+duration, and run date. `clean_rerun_allowed` SHALL be true only for a full
+local SOTA receipt with CUDA-backed mandated GGUF calls, at least two fresh
+receipts, passing throughput plausibility, and no stale transcript reuse.
+
+### SCENARIO-VERIFY-3179: Local Receipt Smoke Either Produces Fresh Receipts Or Blocks Honestly
+
+Given the Exp 3178 v3 contract exists and the local host may or may not have
+mandated SOTA GGUF files, `llama_cpp`, and CUDA,
+When Exp 3179 builds the local SOTA receipt-smoke artifact,
+Then it writes the terminal JSON artifact, records all three mandated model
+inventory rows, records the cached-pair and runtime substrate probes, either
+captures at least two fresh deterministic proof receipts from a mandated GGUF
+or records `live_call_count=0` with the exact cache, loader, CUDA, or runtime
+blocker, keeps `headline_claim_allowed=false`, and sets
+`clean_rerun_allowed=true` only for the `full_local_sota_receipt` substrate.
+
+## Implementation Status (REQ-VERIFY-3179)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-VERIFY-3179 | Implemented (`python/carnot/verify/local_sota_receipt_smoke_v3.py`) | Implemented (`tests/python/test_experiment_3179_local_sota_receipt_smoke_v3.py`) |
+
 ### REQ-VERIFY-3006: EqR Fixed-Point Energy Diagnostic Over Cached Validator Trajectories
 
 The repository shall provide a deterministic Exp 3006 fixed-point energy

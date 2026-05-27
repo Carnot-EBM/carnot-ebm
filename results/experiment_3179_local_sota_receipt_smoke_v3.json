@@ -1,0 +1,377 @@
+{
+  "artifact": "experiment_3179_local_sota_receipt_smoke_v3",
+  "blocked_reason": "",
+  "cached_sota_pair_probe": {
+    "called": true,
+    "error": "",
+    "model_ids": [],
+    "model_paths": [],
+    "returned_pair": false
+  },
+  "clean_rerun_allowed": false,
+  "controlled_subprocess_return_codes": [
+    {
+      "name": "llama_cpp_loader_probe",
+      "returncode": 0
+    },
+    {
+      "name": "torch_cuda_probe",
+      "returncode": 0
+    },
+    {
+      "name": "nvidia_smi_inventory",
+      "returncode": 0
+    },
+    {
+      "name": "model_smoke_worker",
+      "returncode": 0
+    }
+  ],
+  "cpu_fallback_used": true,
+  "cuda_probe": {
+    "cuda_available": false,
+    "cuda_version": "12.8",
+    "device_count": 1,
+    "error": "",
+    "returncode": 0,
+    "stderr_tail": "/home/ianblenke/github.com/ianblenke/carnot/.venv/lib/python3.14/site-packages/torch/cuda/__init__.py:180: UserWarning: CUDA initialization: CUDA unknown error - this may be due to an incorrectly set up environment, e.g. changing env variable CUDA_VISIBLE_DEVICES after program start. Setting the available devices to be zero. (Triggered internally at /pytorch/c10/cuda/CUDAFunctions.cpp:119.)\n  return torch._C._cuda_getDeviceCount() > 0",
+    "torch_import_ok": true,
+    "torch_present": true,
+    "torch_version": "2.11.0+cu128"
+  },
+  "duration_s": 36.552433,
+  "field_principles": {
+    "clean_rerun_allowed": "verifier tasks need explicit unlock signal",
+    "cpu_fallback_used": "CPU smoke must not be mistaken for headline performance",
+    "headline_claim_allowed": "smoke tests should not become headline evidence",
+    "honest_verdict": "terminal status must be success-prefixed unless honestly blocked",
+    "inference_substrate": "live or blocked preflight substrate must be declared",
+    "live_call_count": "no-call blocked artifacts must not look like live evidence",
+    "local_sota_receipt_smoke_v3_ready": "downstream gates need a materialized artifact",
+    "mandated_model_inventory": "model availability must be auditable",
+    "preflight_passed": "live reruns require explicit preflight status",
+    "proof_receipts": "authenticity must trace to prompt and transcript hashes",
+    "selected_model_ids": "local SOTA policy must be machine-readable",
+    "substrate_classification": "blockers must distinguish cache, loader, CUDA, and CPU causes",
+    "throughput_plausibility_passed": "impossible speed claims must be rejected"
+  },
+  "headline_claim_allowed": false,
+  "honest_verdict": "complete: local_sota_receipt_smoke_v3_ready=true; substrate_classification=cpu_fallback_receipt_only; live_call_count=2; clean_rerun_allowed=false",
+  "inference_substrate": {
+    "cpu_fallback_used": true,
+    "downloads_models": false,
+    "executes_models": true,
+    "executes_repairs": false,
+    "executes_verifiers": false,
+    "kind": "local_sota_receipt_smoke_v3",
+    "legacy_small_model_used": false,
+    "live_model_calls": 2,
+    "loader_available": true,
+    "loader_name": "llama_cpp.Llama",
+    "n_gpu_layers": 0,
+    "selected_model_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+    "selected_model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/04028bd1aa552ebf46a986375418cb92ffeae774/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+    "selected_python": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+    "substrate_classification": "cpu_fallback_receipt_only",
+    "torch_cuda_available": false,
+    "torch_cuda_device_count": 1,
+    "worker_timeout_s": 300
+  },
+  "live_call_count": 2,
+  "loader_probe": {
+    "available": true,
+    "error": "",
+    "loader_name": "llama_cpp.Llama",
+    "returncode": 0,
+    "stderr_tail": "",
+    "version": "0.3.23"
+  },
+  "local_sota_receipt_smoke_v3_ready": true,
+  "mandated_model_inventory": [
+    {
+      "cache_status": "missing",
+      "cached_sota_pair_member": false,
+      "candidate_count": 0,
+      "expected_quantization": "Q4_K_M",
+      "hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "legacy_small_model": false,
+      "model_file_hash": null,
+      "model_path": null,
+      "name": "Qwen3.6-35B-A3B",
+      "path_exists": false,
+      "path_size_bytes": null,
+      "role": "moe",
+      "selected_for_smoke": false,
+      "strength_rank": 1,
+      "tier": "flagship_moe"
+    },
+    {
+      "cache_status": "missing",
+      "cached_sota_pair_member": false,
+      "candidate_count": 0,
+      "expected_quantization": "Q4_K_M",
+      "hf_id": "unsloth/gemma-4-31B-it-GGUF",
+      "legacy_small_model": false,
+      "model_file_hash": null,
+      "model_path": null,
+      "name": "Gemma4-31B-it",
+      "path_exists": false,
+      "path_size_bytes": null,
+      "role": "dense",
+      "selected_for_smoke": false,
+      "strength_rank": 2,
+      "tier": "flagship_dense"
+    },
+    {
+      "cache_status": "resolved",
+      "cached_sota_pair_member": false,
+      "candidate_count": 2,
+      "expected_quantization": "Q4_K_M",
+      "hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "legacy_small_model": false,
+      "model_file_hash": "8ebbe6e75b5f49c469a739314771f4ce0376d6d804b8180141015add477c53ab",
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/04028bd1aa552ebf46a986375418cb92ffeae774/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+      "name": "Gemma4-26B-A4B-it",
+      "path_exists": true,
+      "path_size_bytes": 16868240704,
+      "role": "moe",
+      "selected_for_smoke": true,
+      "strength_rank": 3,
+      "tier": "middle_moe"
+    }
+  ],
+  "nvidia_smi_probe": {
+    "available": true,
+    "gpu_rows": [
+      "0, NVIDIA GeForce RTX 3090, 24576 MiB"
+    ],
+    "returncode": 0,
+    "stderr_tail": ""
+  },
+  "preflight_passed": true,
+  "prior_transcript_hash_count": 0,
+  "prompt_hashes": [
+    "9196c45cb42428c01c90b00c6747cad30c83decb37cf1d0d7c9fdc971fd08791",
+    "36e9d439812e6f5c03790eaeb52179c67f40825628a9c8d42fae7c3e93d4333c"
+  ],
+  "proof_receipts": [
+    {
+      "command_hash": "f2c49df543420eb94017831999691b2472a4f7a7778d7b3b9cc45494165f101c",
+      "loader_name": "llama_cpp.Llama",
+      "model_file_hash": "8ebbe6e75b5f49c469a739314771f4ce0376d6d804b8180141015add477c53ab",
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/04028bd1aa552ebf46a986375418cb92ffeae774/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+      "prompt_hash": "9196c45cb42428c01c90b00c6747cad30c83decb37cf1d0d7c9fdc971fd08791",
+      "random_seed": 20260527,
+      "replay_count": 1,
+      "response_hash": "3f8e2f272eebe26338f0ad3d58254df335f8ad6d1c93d96a11ddbbdfbd0cc6e2",
+      "selected_model_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "stderr_tail": "llama_context: n_ctx_seq (256) < n_ctx_train (262144) -- the full capacity of the model will not be utilized\nllama_kv_cache_iswa: using full-size SWA cache (ref: https://github.com/ggml-org/llama.cpp/pull/13194#issuecomment-2868343055)\nllama_kv_cache: the V embeddings have different sizes across layers and FA is not enabled - padding V cache to 2048\nllama_kv_cache: the V embeddings have different sizes across layers and FA is not enabled - padding V cache to 2048",
+      "subprocess_return_code": 0,
+      "substrate_used": "cpu_fallback_receipt_only",
+      "throughput_plausibility": true,
+      "token_counts": {
+        "completion_tokens": 4,
+        "prompt_tokens": 19,
+        "source": "llama_cpp_usage",
+        "total_tokens": 23
+      },
+      "transcript_hash": "af139d87f0d1b5522ad0e7d130499262995888c65b9cdab8a0a1da15ecd85a42",
+      "wall_clock_s": 7.751198,
+      "worker_code_sha256": "441cec2f9e7fddee7aba2ce18639827d108571832b7d1f89137c336f3e2be348"
+    },
+    {
+      "command_hash": "f2c49df543420eb94017831999691b2472a4f7a7778d7b3b9cc45494165f101c",
+      "loader_name": "llama_cpp.Llama",
+      "model_file_hash": "8ebbe6e75b5f49c469a739314771f4ce0376d6d804b8180141015add477c53ab",
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/04028bd1aa552ebf46a986375418cb92ffeae774/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+      "prompt_hash": "36e9d439812e6f5c03790eaeb52179c67f40825628a9c8d42fae7c3e93d4333c",
+      "random_seed": 20260528,
+      "replay_count": 2,
+      "response_hash": "5e94bde789d9bf501ae9302e0f226e660c8ef70d8e93adab6b72b840d1912a74",
+      "selected_model_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "stderr_tail": "llama_context: n_ctx_seq (256) < n_ctx_train (262144) -- the full capacity of the model will not be utilized\nllama_kv_cache_iswa: using full-size SWA cache (ref: https://github.com/ggml-org/llama.cpp/pull/13194#issuecomment-2868343055)\nllama_kv_cache: the V embeddings have different sizes across layers and FA is not enabled - padding V cache to 2048\nllama_kv_cache: the V embeddings have different sizes across layers and FA is not enabled - padding V cache to 2048",
+      "subprocess_return_code": 0,
+      "substrate_used": "cpu_fallback_receipt_only",
+      "throughput_plausibility": true,
+      "token_counts": {
+        "completion_tokens": 4,
+        "prompt_tokens": 20,
+        "source": "llama_cpp_usage",
+        "total_tokens": 24
+      },
+      "transcript_hash": "3adf45720f20a104bad6f09eaad31423d1325eae4e4c7f56fadf75a99c84137a",
+      "wall_clock_s": 7.799008,
+      "worker_code_sha256": "441cec2f9e7fddee7aba2ce18639827d108571832b7d1f89137c336f3e2be348"
+    }
+  ],
+  "run_date": "20260527",
+  "schema": "carnot.local_sota_receipt_smoke.v3",
+  "selected_model_ids": [
+    "unsloth/gemma-4-26B-A4B-it-GGUF"
+  ],
+  "source_artifacts": [
+    {
+      "path": "AGENTS.md",
+      "present": true,
+      "readable_json_object": null,
+      "required": true,
+      "role": "agents_repo_instructions",
+      "sha256": "b3d6581b04f16b85f77defb2837c98dc3b60ed51e10b347ecb36e609f318b619",
+      "source_type": "text"
+    },
+    {
+      "path": "CODEX.md",
+      "present": true,
+      "readable_json_object": null,
+      "required": true,
+      "role": "codex_repo_workflow",
+      "sha256": "1db7ebc1009714f872db83447828a8957c3abb72061832cc1bc307735cd96bbe",
+      "source_type": "text"
+    },
+    {
+      "path": "CLAUDE.md",
+      "present": true,
+      "readable_json_object": null,
+      "required": true,
+      "role": "claude_authenticity_rules",
+      "sha256": "cdc00581d37d1bd3c77a69b058787f74ecc71545a97c1eab31c48961637b3224",
+      "source_type": "text"
+    },
+    {
+      "path": "scripts/experiment_template.py",
+      "present": true,
+      "readable_json_object": null,
+      "required": true,
+      "role": "experiment_template_policy",
+      "sha256": "86559064fcfb0e0f06cb021609f1e82342c9d8464dc86b654d30d889f787de9f",
+      "source_type": "python"
+    },
+    {
+      "path": "openspec/capabilities/verification/spec.md",
+      "present": true,
+      "readable_json_object": null,
+      "required": true,
+      "role": "verification_openspec",
+      "sha256": "fce7d40570b26c53c9aa7501faa87f410b95219dee55a056a5c1c4a991ced958",
+      "source_type": "text"
+    },
+    {
+      "path": "results/experiment_3178_receipt_backed_authenticity_contract_v3.json",
+      "present": true,
+      "readable_json_object": true,
+      "required": true,
+      "role": "exp3178_v3_contract",
+      "sha256": "e2017871f81fc3254fa9ddb1683298b89f7778188eacbb0d778a6fde1658f791",
+      "source_type": "json"
+    },
+    {
+      "path": "python/carnot/verify/local_sota_receipt_smoke_v3.py",
+      "present": true,
+      "readable_json_object": null,
+      "required": false,
+      "role": "exp3179_module",
+      "sha256": "a63ddde448ed6bc85c7f4e0e45f8831147794b050047bb81e4c0e6f071825475",
+      "source_type": "python"
+    },
+    {
+      "path": "scripts/experiment_3179_local_sota_receipt_smoke_v3.py",
+      "present": true,
+      "readable_json_object": null,
+      "required": false,
+      "role": "exp3179_script",
+      "sha256": "784242d75e2788f932b6aaf2ae86dd40e77c7f316d92c31b1e0e528dba7893a0",
+      "source_type": "python"
+    },
+    {
+      "path": "tests/python/test_experiment_3179_local_sota_receipt_smoke_v3.py",
+      "present": true,
+      "readable_json_object": null,
+      "required": false,
+      "role": "exp3179_tests",
+      "sha256": "d5162e3000b7d75b81ffc12055e24eea5bca3531960c4631a03ec4f4b53e6655",
+      "source_type": "python"
+    }
+  ],
+  "source_checksums": {
+    "AGENTS.md": "b3d6581b04f16b85f77defb2837c98dc3b60ed51e10b347ecb36e609f318b619",
+    "CLAUDE.md": "cdc00581d37d1bd3c77a69b058787f74ecc71545a97c1eab31c48961637b3224",
+    "CODEX.md": "1db7ebc1009714f872db83447828a8957c3abb72061832cc1bc307735cd96bbe",
+    "openspec/capabilities/verification/spec.md": "fce7d40570b26c53c9aa7501faa87f410b95219dee55a056a5c1c4a991ced958",
+    "python/carnot/verify/local_sota_receipt_smoke_v3.py": "a63ddde448ed6bc85c7f4e0e45f8831147794b050047bb81e4c0e6f071825475",
+    "results/experiment_3178_receipt_backed_authenticity_contract_v3.json": "e2017871f81fc3254fa9ddb1683298b89f7778188eacbb0d778a6fde1658f791",
+    "scripts/experiment_3179_local_sota_receipt_smoke_v3.py": "784242d75e2788f932b6aaf2ae86dd40e77c7f316d92c31b1e0e528dba7893a0",
+    "scripts/experiment_template.py": "86559064fcfb0e0f06cb021609f1e82342c9d8464dc86b654d30d889f787de9f",
+    "tests/python/test_experiment_3179_local_sota_receipt_smoke_v3.py": "d5162e3000b7d75b81ffc12055e24eea5bca3531960c4631a03ec4f4b53e6655"
+  },
+  "stale_transcript_rejection_passed": true,
+  "substrate_classification": "cpu_fallback_receipt_only",
+  "tests_run": [
+    ".venv/bin/pytest tests/python/test_experiment_3179_local_sota_receipt_smoke_v3.py -q --no-cov",
+    ".venv/bin/coverage erase && .venv/bin/coverage run --source=python/carnot/verify -m pytest -o addopts='' tests/python/test_experiment_3179_local_sota_receipt_smoke_v3.py -q",
+    ".venv/bin/coverage report --include='python/carnot/verify/local_sota_receipt_smoke_v3.py' --fail-under=100 --show-missing",
+    ".venv/bin/python scripts/check_spec_coverage.py",
+    ".venv/bin/pytest tests/python -q"
+  ],
+  "throughput_plausibility": {
+    "max_completion_tokens_per_second": 500.0,
+    "passed": true,
+    "per_receipt": [
+      {
+        "completion_tokens": 4,
+        "passed": true,
+        "transcript_hash": "af139d87f0d1b5522ad0e7d130499262995888c65b9cdab8a0a1da15ecd85a42",
+        "wall_clock_s": 7.751198
+      },
+      {
+        "completion_tokens": 4,
+        "passed": true,
+        "transcript_hash": "3adf45720f20a104bad6f09eaad31423d1325eae4e4c7f56fadf75a99c84137a",
+        "wall_clock_s": 7.799008
+      }
+    ]
+  },
+  "throughput_plausibility_passed": true,
+  "token_counts": {
+    "completion_tokens": 8,
+    "per_receipt": [
+      {
+        "completion_tokens": 4,
+        "prompt_tokens": 19,
+        "source": "llama_cpp_usage",
+        "total_tokens": 23
+      },
+      {
+        "completion_tokens": 4,
+        "prompt_tokens": 20,
+        "source": "llama_cpp_usage",
+        "total_tokens": 24
+      }
+    ],
+    "prompt_tokens": 39,
+    "source": "receipt_sum",
+    "total_tokens": 47
+  },
+  "transcript_hashes": [
+    "af139d87f0d1b5522ad0e7d130499262995888c65b9cdab8a0a1da15ecd85a42",
+    "3adf45720f20a104bad6f09eaad31423d1325eae4e4c7f56fadf75a99c84137a"
+  ],
+  "v3_contract": {
+    "clean_rerun_unlock_requirements": [
+      "receipt_backed_authenticity_contract_v3_ready=true",
+      "exp3179.local_sota_receipt_smoke_v3_ready=true",
+      "exp3179.substrate_classification=full_local_sota_receipt",
+      "exp3179.preflight_passed=true",
+      "exp3179.replay_count>=2",
+      "all_required_receipt_fields_present=true",
+      "throughput_plausibility.passed=true",
+      "controlled_invariance_passed=true",
+      "exact_authority_scoring_passed=true",
+      "false_accept_gate_passed=true",
+      "headline_claim_policy_passed=true"
+    ],
+    "path": "results/experiment_3178_receipt_backed_authenticity_contract_v3.json",
+    "ready": true,
+    "required_receipt_fields_present": false,
+    "substrate_classes_present": true
+  }
+}
