@@ -9132,3 +9132,76 @@ keeps the negative-control regression count visible, and emits an
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-LEARN-3200 | Implemented (`python/carnot/eval/fr11_verify_trace_memory_controller_v1.py`) | Implemented (`tests/python/test_experiment_3200_fr11_verify_trace_memory_controller_v1.py`) |
+
+## REQ-LEARN-3201: FR-11 KAN-CL Nonforgetting Sidecar Audit
+
+**Given** Exp 3200 materialized a VeriFY-style trace-memory controller and
+Exp 3187 replayed the same controller-memory update across held-out,
+cross-environment drift, and negative-control rows
+**When** Exp 3201 audits the `.296` trace-memory controller with
+KAN-CL-style locality and nonforgetting metrics
+**Then** it SHALL load the checked-in Exp 3200 and Exp 3187 artifacts, replay
+held-out, drift, and negative-control trace rows using existing exact labels,
+and report regressions, locality violations, and rollback status.
+**And** it SHALL define an interpretable `audit_metric_schema` over trace
+features and routing bins, including exact-label consistency, routing-bin
+retention, negative-control regression, and locality-boundary checks.
+**And** it SHALL explicitly deny model-weight updates and sidecar verifier
+promotion authority.
+
+The terminal artifact SHALL be
+`results/experiment_3201_kan_cl_nonforgetting_sidecar_audit_v1.json` and SHALL
+include `schema_version`, `experiment_id`, `source_artifacts`,
+`audit_metric_schema`, `heldout_replay_count`, `drift_replay_count`,
+`negative_control_regression_count`, `locality_violation_count`,
+`rollback_triggered`, `model_weight_update_performed`,
+`sidecar_promotion_allowed`, and `honest_verdict`.
+
+### REQ-LEARN-3201 Sub-requirements
+
+- REQ-LEARN-3201-1: The audit SHALL fail closed with schema-complete fields
+  when Exp 3200 or Exp 3187 is missing, not ready, not terminal, or claims live
+  inference or model-weight mutation.
+- REQ-LEARN-3201-2: Held-out, drift, and negative-control replay counts SHALL
+  be computed from Exp 3200 trace records, with drift mapped to Exp 3200's
+  cross-environment trace role.
+- REQ-LEARN-3201-3: Exact-label replay SHALL count a regression whenever an
+  exact accepted row does not route to answer/verify, an exact rejected row does
+  not route to abstain/escalate, or a trace is inconsistent or changed.
+- REQ-LEARN-3201-4: Locality violations SHALL count any routing-bin boundary
+  where the same exact row/evidence key changes expected action, exact label,
+  answer/abstain decision, or non-control routing across held-out, drift, and
+  negative-control roles.
+- REQ-LEARN-3201-5: `rollback_triggered` SHALL be true whenever drift
+  regressions, held-out regressions, negative-control regressions, source drift
+  cases, or locality violations are present.
+- REQ-LEARN-3201-6: The artifact SHALL set
+  `model_weight_update_performed=false` and
+  `sidecar_promotion_allowed=false` even when the sidecar audit finds zero
+  regressions, because this audit is diagnostic and not verifier authority.
+
+### SCENARIO-LEARN-3201: Sidecar Audit Preserves Trace-Memory Boundaries
+
+**Given** ready Exp 3200 and Exp 3187 artifacts with exact held-out, drift, and
+negative-control replay rows and zero source regressions
+**When** Exp 3201 computes the KAN-CL-style sidecar audit
+**Then** the artifact reports nonzero held-out and drift replay counts, zero
+negative-control regressions, zero locality violations, rollback not triggered,
+no model-weight update, no sidecar promotion authority, and an
+`honest_verdict` beginning with `complete:`.
+
+### SCENARIO-LEARN-3201-BLOCKED: Unsafe Source Or Boundary Violation Fails Closed
+
+**Given** Exp 3200 or Exp 3187 is missing, unsafe, or the replay rows create a
+negative-control or locality-boundary violation
+**When** Exp 3201 runs
+**Then** it writes all required fields with controller-memory/no-live-inference
+metadata, keeps the regression and locality counts visible, sets
+`rollback_triggered=true`, keeps `sidecar_promotion_allowed=false`, and emits
+an `honest_verdict` beginning with `complete:`.
+
+## Implementation Status (REQ-LEARN-3201)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-LEARN-3201 | Implemented (`python/carnot/eval/fr11_kan_cl_nonforgetting_sidecar_audit_v1.py`) | Implemented (`tests/python/test_experiment_3201_kan_cl_nonforgetting_sidecar_audit_v1.py`) |

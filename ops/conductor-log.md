@@ -6472,3 +6472,4 @@ web search: Semantic Scholar 2507.02092 Energy |
 | 2026-05-27 17:01 UTC | Multi-turn repair ladder v6 gated on repair gate u | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp3198-repair-gate-decision-v5.repair_gat |
 | 2026-05-27 17:03 UTC | Multi-turn repair ladder v6 gated on repair gate u | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp3198-repair-gate-decision-v5.repair_gat |
 | 2026-05-27 17:05 UTC | Multi-turn repair ladder v6 gated on repair gate u | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp3198-repair-gate-decision-v5.repair_gat |
+| 2026-05-27 17:24 UTC | FR-11 VeriFY trace-memory controller with redundan | OK | 81 passed in 3.80s |
