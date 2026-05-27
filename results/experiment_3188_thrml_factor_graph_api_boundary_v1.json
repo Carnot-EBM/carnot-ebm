@@ -1,0 +1,333 @@
+{
+  "api_gap_records": [
+    {
+      "details": "THRML nodes/factors can be constructed, but exact row ids, authority labels, and state-label names remain Carnot-side metadata.",
+      "gap_id": "thrml_semantic_metadata_externalized",
+      "missing_symbols": [],
+      "next_adapter_steps": [
+        "preserve row_id, exact_label, candidate_answers, and state_labels in the Carnot adapter wrapper",
+        "add a round-trip metadata test before any sampler integration"
+      ],
+      "severity": "adapter_needed"
+    }
+  ],
+  "artifact": "experiment_3188_thrml_factor_graph_api_boundary_v1",
+  "duration_s": 0.234831,
+  "factor_graph_translation_records": [
+    {
+      "internal_factor_graph": {
+        "factors": [
+          {
+            "authority": "zero energy when candidate label equals exact label",
+            "energy_table": [
+              [
+                0.0,
+                1.0
+              ],
+              [
+                1.0,
+                0.0
+              ]
+            ],
+            "kind": "categorical_pair_energy_table",
+            "name": "exact_alignment",
+            "scope": [
+              "candidate_label",
+              "exact_label"
+            ]
+          },
+          {
+            "authority": "known false-accept rows penalize candidate labels that conflict with exact authority",
+            "energy_table": [
+              0.0,
+              0.0
+            ],
+            "kind": "categorical_unary_energy_table",
+            "name": "known_false_accept_block",
+            "scope": [
+              "candidate_label"
+            ]
+          }
+        ],
+        "graph_id": "resyn-3084-arith-000:exact_label_boundary",
+        "variables": [
+          {
+            "kind": "categorical",
+            "name": "candidate_label",
+            "observed": false,
+            "state_labels": [
+              "INVALID",
+              "VALID"
+            ]
+          },
+          {
+            "kind": "categorical",
+            "name": "exact_label",
+            "observed": true,
+            "observed_value": "VALID",
+            "state_labels": [
+              "INVALID",
+              "VALID"
+            ]
+          }
+        ]
+      },
+      "row_id": "resyn-3084-arith-000",
+      "thrml_mapping": {
+        "api_symbols": [
+          "thrml.CategoricalNode",
+          "thrml.Block",
+          "thrml.models.discrete_ebm.CategoricalEBMFactor"
+        ],
+        "attempted": true,
+        "claim_boundary": "local construction only; no sampler benchmark or hardware execution",
+        "constructed": true,
+        "constructed_objects": {
+          "block_count": 2,
+          "factor_count": 2,
+          "interaction_group_count": 3,
+          "node_count": 2
+        },
+        "construction_check": "passed",
+        "error": null
+      }
+    },
+    {
+      "internal_factor_graph": {
+        "factors": [
+          {
+            "authority": "zero energy when candidate label equals exact label",
+            "energy_table": [
+              [
+                0.0,
+                1.0
+              ],
+              [
+                1.0,
+                0.0
+              ]
+            ],
+            "kind": "categorical_pair_energy_table",
+            "name": "exact_alignment",
+            "scope": [
+              "candidate_label",
+              "exact_label"
+            ]
+          },
+          {
+            "authority": "known false-accept rows penalize candidate labels that conflict with exact authority",
+            "energy_table": [
+              0.0,
+              2.0
+            ],
+            "kind": "categorical_unary_energy_table",
+            "name": "known_false_accept_block",
+            "scope": [
+              "candidate_label"
+            ]
+          }
+        ],
+        "graph_id": "resyn-3084-arith-003:exact_label_boundary",
+        "variables": [
+          {
+            "kind": "categorical",
+            "name": "candidate_label",
+            "observed": false,
+            "state_labels": [
+              "INVALID",
+              "VALID"
+            ]
+          },
+          {
+            "kind": "categorical",
+            "name": "exact_label",
+            "observed": true,
+            "observed_value": "INVALID",
+            "state_labels": [
+              "INVALID",
+              "VALID"
+            ]
+          }
+        ]
+      },
+      "row_id": "resyn-3084-arith-003",
+      "thrml_mapping": {
+        "api_symbols": [
+          "thrml.CategoricalNode",
+          "thrml.Block",
+          "thrml.models.discrete_ebm.CategoricalEBMFactor"
+        ],
+        "attempted": true,
+        "claim_boundary": "local construction only; no sampler benchmark or hardware execution",
+        "constructed": true,
+        "constructed_objects": {
+          "block_count": 2,
+          "factor_count": 2,
+          "interaction_group_count": 3,
+          "node_count": 2
+        },
+        "construction_check": "passed",
+        "error": null
+      }
+    }
+  ],
+  "hardware_speedup_claim_allowed": false,
+  "honest_verdict": "complete: THRML factor-graph API boundary materialized; local_api_smoke_passed=true; hardware_speedup_claim_allowed=false; kona_or_tsu_execution_claimed=false",
+  "inference_substrate": {
+    "board_commands_run": [],
+    "executes_hardware": false,
+    "executes_models": false,
+    "hardware_commands_run": [],
+    "installs_packages": false,
+    "kind": "local_thrml_factor_graph_api_construction",
+    "kona_or_tsu_execution_claimed": false,
+    "local_api_smoke_only": true,
+    "local_repo_only": true,
+    "no_live_model_inference": true,
+    "retired_kv260_host_storage_checks_used": false,
+    "sampler_benchmark_run": false,
+    "sampler_speedup_reported": false,
+    "thrml_import_available": true
+  },
+  "kona_or_tsu_execution_claimed": false,
+  "local_api_smoke_passed": true,
+  "milestone": "2026.05.295",
+  "run_date": "20260527",
+  "schema": "carnot.thrml_factor_graph_api_boundary.v1",
+  "selected_exact_rows": [
+    {
+      "authority": "exact_authority_decision",
+      "candidate_answers": [
+        "VALID"
+      ],
+      "deterministic_authority": true,
+      "exact_authority_decision": "accept",
+      "exact_label": "VALID",
+      "expected_action": "accept",
+      "known_false_accept": false,
+      "row_id": "resyn-3084-arith-000",
+      "semantic_false_accept": false,
+      "source_artifact": "results/experiment_3180_controlled_invariance_executor_v2.json"
+    },
+    {
+      "authority": "exact_authority_decision",
+      "candidate_answers": [
+        "INVALID",
+        "VALID"
+      ],
+      "deterministic_authority": true,
+      "exact_authority_decision": "reject",
+      "exact_label": "INVALID",
+      "expected_action": "reject",
+      "known_false_accept": true,
+      "row_id": "resyn-3084-arith-003",
+      "semantic_false_accept": false,
+      "source_artifact": "results/experiment_3180_controlled_invariance_executor_v2.json"
+    }
+  ],
+  "source_artifacts": [
+    {
+      "path": "AGENTS.md",
+      "present": true,
+      "readable_json_object": null,
+      "required": false,
+      "role": "agents_repo_instructions",
+      "sha256": "b3d6581b04f16b85f77defb2837c98dc3b60ed51e10b347ecb36e609f318b619",
+      "source_type": "text"
+    },
+    {
+      "path": "CODEX.md",
+      "present": true,
+      "readable_json_object": null,
+      "required": false,
+      "role": "codex_repo_workflow",
+      "sha256": "1db7ebc1009714f872db83447828a8957c3abb72061832cc1bc307735cd96bbe",
+      "source_type": "text"
+    },
+    {
+      "path": "CLAUDE.md",
+      "present": true,
+      "readable_json_object": null,
+      "required": false,
+      "role": "claude_authenticity_rules",
+      "sha256": "cdc00581d37d1bd3c77a69b058787f74ecc71545a97c1eab31c48961637b3224",
+      "source_type": "text"
+    },
+    {
+      "path": "openspec/capabilities/fpga/spec.md",
+      "present": true,
+      "readable_json_object": null,
+      "required": true,
+      "role": "fpga_openspec",
+      "sha256": "332b4f2dc5a0999496b58c2efafd7149dc92fa8f3ca85ee1f94528e8c7174bfe",
+      "source_type": "text"
+    },
+    {
+      "path": "research-hardware-wishlist.md",
+      "present": true,
+      "readable_json_object": null,
+      "required": true,
+      "role": "research_hardware_wishlist",
+      "sha256": "ca40501890c4cb5f2a3ea835bd3661976107eafc91a100e02a00c9023f7baaee",
+      "source_type": "text"
+    },
+    {
+      "path": "research-references.md",
+      "present": true,
+      "readable_json_object": null,
+      "required": true,
+      "role": "research_references",
+      "sha256": "a8c0d7a3e55bc6e701da724077b282c48974078a575bf2c690edcaa5e3c5acfa",
+      "source_type": "text"
+    },
+    {
+      "path": "results/experiment_3180_controlled_invariance_executor_v2.json",
+      "present": true,
+      "readable_json_object": true,
+      "required": true,
+      "role": "exp3180_controlled_invariance_exact_rows",
+      "sha256": "efe6520a3cf8dfee8216a78f342609cfa2af3f74ef905cdadc421042b54485c5",
+      "source_type": "json"
+    },
+    {
+      "path": "python/carnot/reporting/thrml_factor_graph_api_boundary_3188.py",
+      "present": true,
+      "readable_json_object": null,
+      "required": false,
+      "role": "exp3188_module",
+      "sha256": "0e8caba40feb6de160d6f001cd118f48ca206ea2432d0ccaa3e15a559d477fa2",
+      "source_type": "python"
+    },
+    {
+      "path": "tests/python/test_experiment_3188_thrml_factor_graph_api_boundary_v1.py",
+      "present": true,
+      "readable_json_object": null,
+      "required": false,
+      "role": "exp3188_tests",
+      "sha256": "6e4225a48abc32ba793b7d6c12edd62570618b3f61df4acabc28537d473836b2",
+      "source_type": "python"
+    }
+  ],
+  "source_errors": [],
+  "spec_refs": [
+    "REQ-HW-099",
+    "SCENARIO-HW-099"
+  ],
+  "tests_run": [
+    ".venv/bin/pytest tests/python/test_experiment_3188_thrml_factor_graph_api_boundary_v1.py -q --no-cov",
+    ".venv/bin/coverage erase && .venv/bin/coverage run --source=python/carnot/reporting -m pytest -o addopts='' tests/python/test_experiment_3188_thrml_factor_graph_api_boundary_v1.py -q",
+    ".venv/bin/coverage report --include='python/carnot/reporting/thrml_factor_graph_api_boundary_3188.py' --fail-under=100 --show-missing",
+    ".venv/bin/pytest tests/python -q"
+  ],
+  "thrml_available_symbols": {
+    "thrml.Block": true,
+    "thrml.CategoricalNode": true,
+    "thrml.models.discrete_ebm.CategoricalEBMFactor": true
+  },
+  "thrml_factor_graph_api_boundary_v1_ready": true,
+  "thrml_import_available": true,
+  "thrml_import_error": null,
+  "thrml_import_path": "/home/ianblenke/github.com/ianblenke/carnot/.venv/lib/python3.14/site-packages/thrml/__init__.py",
+  "thrml_missing_symbols": [],
+  "thrml_version": "0.1.3"
+}

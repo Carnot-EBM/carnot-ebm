@@ -3317,6 +3317,73 @@ substrate metadata, and a terminal verdict beginning with `complete:`.
 
 ---
 
+### REQ-HW-099
+
+**Title:** Exp 3188 THRML factor-graph API boundary v1 MUST translate tiny exact rows without hardware claims
+
+**Description:**
+Experiment 3188 MUST produce
+`results/experiment_3188_thrml_factor_graph_api_boundary_v1.json` as a local
+API-boundary artifact for translating tiny exact-row constraints into
+THRML-compatible factor-graph structures where the installed THRML package
+exposes suitable software APIs. The experiment MUST check local `thrml` import
+availability, version, and import path, select one or two deterministic
+exact-authority rows from checked-in exact-row artifacts, build a simple
+internal factor-graph representation, and attempt a construction-only mapping
+to THRML node/block/factor concepts.
+
+The experiment MUST NOT run board commands, use retired KV260 host-storage
+checks, install packages, run synthesis/place-and-route, execute TSU/Kona
+hardware, call live models, or report sampler latency/speedup. Any THRML import
+or API mapping failure MUST materialize as a blocked/preflight artifact with
+missing symbols and next adapter steps rather than a fabricated success.
+
+**Acceptance criteria:**
+- `results/experiment_3188_thrml_factor_graph_api_boundary_v1.json` is
+  generated with `thrml_factor_graph_api_boundary_v1_ready`,
+  `thrml_import_available`, `thrml_version`, `selected_exact_rows`,
+  `factor_graph_translation_records`, `api_gap_records`,
+  `local_api_smoke_passed`, `hardware_speedup_claim_allowed`,
+  `kona_or_tsu_execution_claimed`, `inference_substrate`, and
+  `honest_verdict`.
+- `selected_exact_rows` contains deterministic exact-authority row metadata
+  from checked-in exact-row artifacts and records the row id, exact label,
+  candidate answers, known false-accept status, and source artifact.
+- `factor_graph_translation_records` exposes both the internal factor-graph
+  variables/factors and the attempted THRML API mapping for each selected row.
+- THRML import availability records the local package version and import path
+  when import succeeds, and records an import error when it does not.
+- `local_api_smoke_passed` is true only for construction-only local API checks
+  that instantiate suitable THRML software structures; it MUST NOT represent a
+  sampler benchmark or hardware run.
+- `hardware_speedup_claim_allowed=false` and
+  `kona_or_tsu_execution_claimed=false` for every outcome.
+- `inference_substrate` records no hardware commands, no live model inference,
+  no package installation, no TSU/Kona execution, and no sampler speedup claim.
+
+**Implementation status:** Planned (Exp 3188)
+
+---
+
+### SCENARIO-HW-099
+
+**Scenario:** THRML factor-graph boundary maps exact rows only as local API construction evidence.
+
+**Given:** Checked-in exact-row artifacts expose deterministic exact labels and
+known false-accept rows, and the active Python environment may or may not
+import `thrml`.
+**When:** Exp 3188 builds the THRML factor-graph API boundary from local
+artifacts and import metadata only.
+**Then:** It writes the v1 JSON artifact with selected exact rows, internal
+factor graphs, THRML construction records or actionable API gaps, a
+construction-only smoke result separated from performance, denied hardware
+speedup and TSU/Kona execution claims, no board commands, and a terminal
+verdict beginning with `complete:` or an honest blocked-precondition prefix.
+
+**Implementation status:** Planned (Exp 3188)
+
+---
+
 ### SCENARIO-HW-091
 
 **Scenario:** Matrix v21 GateMate/SSQA refresh carries forward no-rerun blockers when operator evidence is absent.
