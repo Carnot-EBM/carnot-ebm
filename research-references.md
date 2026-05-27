@@ -1,3 +1,123 @@
+## 2026-05-27 Post-.295 Planning Sweep (Milestone 2026.05.296)
+
+This sweep was run after milestone `.295` completed. `.295` closed the
+artifact-materialization gap but did not unblock headline verifier/repair
+claims: `results/experiment_3190_capstone_v295.json` reports
+`paper_ready=false`, `publication_blocker_count=80`, and
+`next_top_gap=full_local_sota_receipt_clean_rerun_allowed_repair_gate_unblock`.
+The most concrete progress was a real local
+`unsloth/gemma-4-26B-A4B-it-GGUF` receipt smoke through `llama_cpp`, but it
+ran as `cpu_fallback_receipt_only`, so `clean_rerun_allowed=false` and repair
+stayed blocked. Controlled invariance passed over exact-authority rows,
+FR-11 controller-memory promotion plus cross-environment drift replay passed
+without model-weight updates, and THRML factor-graph construction works as a
+local API boundary only.
+
+### Adaptive Verification Granularity for the Repair Gate
+
+- **Paper:** "Rethinking Optimal Verification Granularity for
+  Compute-Efficient Test-Time Scaling" (arXiv:2505.11730; NeurIPS 2025).
+- **What:** Introduces Variable Granularity Search, making verification
+  frequency a tunable policy rather than a fixed step/final-answer heuristic.
+- **Relevance to Carnot:** `.296` should use the idea as a controller policy
+  over exact rows, receipt-backed transcripts, and repair attempts: verify
+  final answers for simple rows, step chunks for known false-accept families,
+  and counterexample-triggered fragments for repair candidates. Exact solvers
+  remain authority; VG-Search is only a scheduling policy.
+- **Sources:** https://arxiv.org/abs/2505.11730 and
+  https://huggingface.co/papers/2505.11730
+
+### Constraint Propagation Before Local SOTA Generation
+
+- **Paper:** "Large Language Model Meets Constraint Propagation"
+  (arXiv:2505.24012; IJCAI 2025).
+- **What:** GenCP combines LLM predictions with constraint-programming search
+  and uses bidirectional domain preview to make sequential generation more
+  constraint-aware.
+- **Relevance to Carnot:** The useful `.296` hook is a GenCP-style domain
+  preview for exact-row repair prompts: build candidate domains from canonical
+  answers, known counterexamples, and certificate frontiers before invoking a
+  mandated GGUF. This should reduce doomed repair calls if CUDA finally works,
+  but it cannot replace exact semantic scoring.
+- **Sources:** https://arxiv.org/abs/2505.24012 and
+  https://www.ijcai.org/proceedings/2025/1115.pdf
+
+### Structured Self-Verification Traces for FR-11 Controller Memory
+
+- **Paper:** "Do I Really Know? Learning Factual Self-Verification for
+  Hallucination Reduction" (arXiv:2602.02018).
+- **What:** VeriFY trains models on structured traces containing initial
+  answer, probing verification query, consistency judgment, and answer/abstain
+  decision, with masking so hallucinated answer stages do not become positive
+  training signal.
+- **Relevance to Carnot:** `.296` should not fine-tune model weights, but the
+  trace schema is a strong FR-11 controller-memory target. Convert prior exact
+  rows into self-verification trace records and test whether the controller
+  routes/abstains better on heldout and drift rows without negative-control
+  regressions.
+- **Sources:** https://arxiv.org/abs/2602.02018 and
+  https://huggingface.co/papers?q=structured+verification+traces
+
+### Counterexample-Guided Inductive Repair
+
+- **Paper:** "ExVerus: Verus Proof Repair via Counterexample Reasoning"
+  (arXiv:2603.25810).
+- **What:** Uses validated counterexamples to guide LLM proof repair toward
+  inductive invariants rather than treating verifier failure as a generic error.
+- **Relevance to Carnot:** `.295` expanded counterexample certificates but
+  kept `repair_call_ready=false`. `.296` should add an inductive-invariant
+  certificate layer: for each exact false-accept family, record the minimal
+  counterexample, the generalized invariant, and the exact test that would
+  reject a repair that only patches the observed instance.
+- **Sources:** https://arxiv.org/abs/2603.25810
+
+### Probabilistic Hardware Needs Sparse Multi-State Constraint Graphs
+
+- **Papers:** "Restoring Sparsity in Potts Machines via Mean-Field
+  Constraints" (arXiv:2602.04200, v3 May 2026) and "Generalized Probabilistic
+  Approximate Optimization Algorithm" (arXiv:2507.07420; Nature Communications
+  2025).
+- **What:** Potts MFC replaces dense constraint couplings with dynamic
+  single-node biases and reports FPGA acceleration; PAOA provides a
+  variational/derivative-free sampling framework for present-day probabilistic
+  computers and FPGA Ising machines.
+- **Relevance to Carnot:** `.296` should keep hardware work at the boundary
+  layer: translate exact-row/repair-certificate graphs into sparse q-state
+  Potts or PAOA-ready factor records, estimate density and state counts, and
+  deny speedup claims unless a real KV260/GateMate/TSU transcript exists.
+- **Sources:** https://arxiv.org/abs/2602.04200 and
+  https://arxiv.org/abs/2507.07420
+
+### Dual-Threshold Verification Triggering for Local Receipt Work
+
+- **Paper:** "PipeSD: An Efficient Cloud-Edge Collaborative Pipeline Inference
+  Framework with Speculative Decoding" (arXiv:2605.13319; ICML 2026).
+- **What:** Uses a dual-threshold non-autoregressive verification trigger plus
+  lightweight autotuning to avoid premature verification and costly rollbacks in
+  speculative decoding.
+- **Relevance to Carnot:** The `.296` CUDA receipt runner can borrow the
+  dual-threshold trigger pattern for local GGUF work: one threshold for
+  proof-of-execution sufficiency and another for headline clean-rerun
+  eligibility. This should prevent CPU fallback receipts from accidentally
+  unlocking repair while still preserving useful smoke evidence.
+- **Sources:** https://arxiv.org/abs/2605.13319
+
+### EBT/ARM Citation Watch
+
+- **Semantic Scholar check:** Direct public API queries for `arXiv:2507.02092`
+  and `arXiv:2512.15605` returned actionable neighbors already represented in
+  the current roadmap trail: LoopUS, causal energy minimization, Distributional
+  EBMs, Graph Energy Matching, ontology-constrained reasoning, and false-first
+  step planning. No new `.296` experiment should claim EBT/ARM integration from
+  this search alone.
+- **Relevance to Carnot:** Keep EBT/ARM as citation and sidecar context until
+  a local artifact demonstrates calibrated energy correlation against exact
+  labels. The immediate blocker remains the local SOTA receipt/CUDA path, not a
+  missing EBT architecture.
+- **Sources:** https://huggingface.co/papers/2507.02092,
+  https://arxiv.org/abs/2512.15605, and Semantic Scholar API queries for both
+  arXiv IDs on 2026-05-27.
+
 ## 2026-05-27 Post-.294 Planning Sweep (Milestone 2026.05.295)
 
 This sweep was run after milestone `.294` completed. `.294` did the right
