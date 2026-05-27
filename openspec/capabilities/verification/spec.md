@@ -3137,6 +3137,77 @@ blocker, keeps `headline_claim_allowed=false`, and sets
 |---|---|---|
 | REQ-VERIFY-3179 | Implemented (`python/carnot/verify/local_sota_receipt_smoke_v3.py`) | Implemented (`tests/python/test_experiment_3179_local_sota_receipt_smoke_v3.py`) |
 
+### REQ-VERIFY-3192: Receipt And Adversarial Contract V4 Dual Thresholds
+
+The repository shall provide an Exp 3192 receipt/adversarial contract v4
+builder that writes
+`results/experiment_3192_receipt_adversarial_contract_v4.json` from checked-in
+artifacts only. The builder MUST compare the Exp 3178 v3 receipt contract, Exp
+3179 local SOTA receipt smoke, and Exp 3189 cross-corpus matrix v29 findings
+without running live model inference, verifier scoring, repairs, solver
+execution, hardware commands, the conductor, pushes, or modifying
+`scripts/research_conductor.py`.
+
+The v4 contract SHALL define two separate downstream thresholds. The
+`proof_execution_sufficient` threshold MAY be satisfied by
+`cpu_fallback_receipt_only` evidence when receipt rows contain the required
+model identity, model-file hash, loader, substrate, prompt and transcript
+hashes, token counts, random seeds, wall-clock evidence, command hash,
+subprocess return code, stderr tail, throughput plausibility, and replay count.
+The `clean_rerun_allowed` threshold SHALL require full local SOTA substrate
+evidence and SHALL NOT be satisfied by CPU fallback, missing cache, missing
+loader, unavailable CUDA, unhealthy CUDA/offload, or any diagnostic-only row.
+
+The contract SHALL define mandatory adversarial and methodology fields for
+live, gated-skip, aggregate, and diagnostic-only artifacts. Aggregate artifacts
+MUST declare inherited methodology and exact source checksums instead of
+pretending to have run a model. Gated-skip artifacts MUST remain auditable by
+recording gate reasons, upstream snapshots, preconditions, zero live calls, and
+non-headline boundaries. Diagnostic-only artifacts MUST deny headline and
+deployed-claim permissions explicitly. Live artifacts MUST record full
+methodology and receipt provenance.
+
+The contract SHALL define terminal verdict prefixes and blocked-precondition
+verdict allowances. Terminal success verdicts MUST start with `complete:`,
+`complete_`, `success:`, `success_`, `passed:`, `passed_`, `shipped:`, or
+`shipped_`. Honest precondition failures MAY start with a `blocked_` prefix
+when the verdict names the concrete failed resource or gate. The terminal Exp
+3192 artifact itself MUST use an `honest_verdict` that starts with
+`complete:`.
+
+The terminal artifact MUST include `schema_version`, `experiment_id`,
+`contract_version`, `proof_execution_required_fields`,
+`clean_rerun_required_fields`, `aggregate_required_fields`,
+`gated_skip_required_fields`, `accepted_substrate_classes`,
+`rejected_headline_substrate_classes`, `terminal_verdict_prefixes`,
+`blocked_verdict_prefixes`, `downstream_unlock_fields`, and
+`honest_verdict`. It SHOULD also include live and diagnostic-only field
+requirements, source-artifact provenance, comparison findings, current evidence
+assessment, field-principle annotations, tests run, source checksums, duration,
+run date, and explicit protected-file non-modification flags.
+
+### SCENARIO-VERIFY-3192: V4 Separates CPU Proof Receipts From Clean Rerun Eligibility
+
+Given Exp 3178 v3 exists, Exp 3179 reports real `llama_cpp` proof receipts with
+`substrate_classification=cpu_fallback_receipt_only`, and matrix v29 reports
+flagged, gated-skip, aggregate, and diagnostic-only rows that need clearer
+methodology fields,
+When Exp 3192 builds the v4 receipt/adversarial contract,
+Then it writes the terminal JSON artifact without live inference, marks the
+current CPU fallback receipts sufficient for proof-of-execution only, keeps
+`clean_rerun_allowed=false` until `full_local_sota_receipt` evidence exists,
+defines mandatory methodology and adversarial fields for live, gated-skip,
+aggregate, and diagnostic-only artifacts, rejects CPU fallback and other
+non-full substrates from headline claims, publishes explicit terminal and
+blocked verdict prefix rules, exposes machine-readable downstream unlock
+fields, and uses an `honest_verdict` that starts with `complete:`.
+
+## Implementation Status (REQ-VERIFY-3192)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-VERIFY-3192 | Implemented (`python/carnot/verify/receipt_adversarial_contract_v4.py`) | Implemented (`tests/python/test_experiment_3192_receipt_adversarial_contract_v4.py`) |
+
 ### REQ-VERIFY-3180: Controlled-Invariance Executor V2
 
 The repository shall provide an Exp 3180 controlled-invariance executor that
