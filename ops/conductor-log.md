@@ -6431,3 +6431,4 @@ web search: |
 | 2026-05-27 05:25 UTC | Counterexample certificate repair pilot v2 | OK | 121 passed in 3.86s |
 | 2026-05-27 05:39 UTC | FR-11 ledger counterexample isolation | OK | 81 passed in 3.25s |
 | 2026-05-27 05:52 UTC | FR-11 nonforgetting self-learning pilot v2 | OK | 81 passed in 3.95s |
+| 2026-05-27 06:08 UTC | EBCN and KAN bounded diagnostic expansion | OK | 81 passed in 3.72s |

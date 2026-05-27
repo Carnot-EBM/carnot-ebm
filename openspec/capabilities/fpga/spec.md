@@ -3246,6 +3246,77 @@ terminal verdict beginning with `complete:`.
 
 ---
 
+### REQ-HW-098
+
+**Title:** Exp 3174 hardware/tooling boundary v8 MUST separate public ecosystem context, local import availability, and authenticated performance evidence
+
+**Description:**
+Experiment 3174 MUST produce
+`results/experiment_3174_hardware_tooling_boundary_v8.json` as the `.294`
+hardware and tooling boundary ledger. The ledger MUST refresh CUDA/local GGUF,
+KV260, GateMate, PolarFire, THRML/Extropic TSU, XGrammar, llguidance, and
+Kona/Aleph status without running board commands, flashing bitstreams, calling
+remote hardware, running synthesis or place-and-route, performing hardware
+readback, or running live model inference.
+
+The ledger MUST separate public ecosystem references from local Python
+import/tool availability and from authenticated local performance evidence.
+Local import availability for THRML, XGrammar, or llguidance MAY be checked with
+package metadata/import-spec probes only; those checks MUST NOT install
+packages and MUST NOT be treated as hardware performance. Public Extropic,
+THRML, XGrammar, llguidance, and Kona/Aleph pages MAY be cited as bounded
+ecosystem context but MUST NOT promote TSU, Kona, board, local GGUF, sampler, or
+speedup claims. Any speedup claim MUST remain blocked unless checked-in
+authenticated local evidence records command transcripts, device identity,
+baseline comparator, artifact checksum, workload, and reproducibility notes.
+
+**Acceptance criteria:**
+- `results/experiment_3174_hardware_tooling_boundary_v8.json` is generated with
+  `hardware_tooling_boundary_v8_ready`, `authenticated_speedup_claim_allowed`,
+  `hardware_commands_run`, `local_tooling_checks`, `cuda_status`,
+  `kv260_status`, `gatemate_status`, `polarfire_status`,
+  `extropic_thrml_status`, `kona_status`, `speedup_claim_made`,
+  `source_artifacts`, `inference_substrate`, and `honest_verdict`.
+- `hardware_commands_run=[]`, `authenticated_speedup_claim_allowed=false`, and
+  `speedup_claim_made=false` for Exp 3174 itself.
+- `local_tooling_checks` records THRML, XGrammar, and llguidance package/import
+  availability separately from hardware performance and marks every check as
+  no hardware-performance evidence.
+- The ledger partitions evidence into public ecosystem references, local
+  tooling checks, and authenticated performance evidence instead of mixing
+  those classes.
+- CUDA/local GGUF readiness remains a runtime/tooling status and not a sampler
+  speedup claim.
+- KV260, GateMate, and PolarFire statuses require checked-in command
+  transcripts for any board/workload claim and do not run fresh hardware
+  commands.
+- THRML/Extropic TSU and Kona/Aleph remain public ecosystem or architecture
+  context unless authenticated local execution evidence exists.
+
+**Implementation status:** Planned (Exp 3174)
+
+---
+
+### SCENARIO-HW-098
+
+**Scenario:** Hardware/tooling boundary v8 records ecosystem and import status without promoting speedups.
+
+**Given:** The repository contains the Exp 3160 and Exp 3146 boundary ledgers,
+hardware wishlist/status documents, research references, and any checked-in
+historical KV260, GateMate, or PolarFire transcripts.
+**When:** Exp 3174 builds the v8 ledger from checked-in files and optional local
+Python import metadata probes only.
+**Then:** It writes the v8 JSON with `hardware_tooling_boundary_v8_ready=true`,
+`authenticated_speedup_claim_allowed=false`, `hardware_commands_run=[]`,
+`speedup_claim_made=false`, separate status strings for CUDA, KV260, GateMate,
+PolarFire, THRML/Extropic, and Kona/Aleph, `local_tooling_checks` for THRML,
+XGrammar, and llguidance, source-artifact/page provenance, no-live-inference
+substrate metadata, and a terminal verdict beginning with `complete:`.
+
+**Implementation status:** Planned (Exp 3174)
+
+---
+
 ### SCENARIO-HW-091
 
 **Scenario:** Matrix v21 GateMate/SSQA refresh carries forward no-rerun blockers when operator evidence is absent.
