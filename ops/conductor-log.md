@@ -6447,3 +6447,4 @@ web search: Semantic Scholar 2507.02092 Energy |
 | 2026-05-27 09:18 UTC | Local SOTA GGUF receipt smoke v3 | OK | 81 passed in 2.19s |
 | 2026-05-27 09:41 UTC | Controlled-invariance executor v2 for exact verifi | OK | 81 passed in 3.46s |
 | 2026-05-27 09:59 UTC | Clean live SOTA verifier rerun v10 with receipt ga | OK | 81 passed in 3.42s |
+| 2026-05-27 10:15 UTC | Distributional EBM exact-row uncertainty sidecar v | OK | 81 passed in 2.37s |

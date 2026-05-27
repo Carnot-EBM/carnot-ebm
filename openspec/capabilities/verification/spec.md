@@ -3322,6 +3322,63 @@ records and Exp 3180 shortcut controls, and keeps
 |---|---|---|
 | REQ-VERIFY-3182 | Implemented (`python/carnot/eval/distributional_ebm_exact_row_sidecar_v1.py`) | Implemented (`tests/python/test_experiment_3182_distributional_ebm_exact_row_sidecar_v1.py`) |
 
+### REQ-VERIFY-3183: Counterexample-Certificate Expansion V3
+
+The repository shall provide an Exp 3183 counterexample-certificate expansion
+builder that writes
+`results/experiment_3183_counterexample_certificate_expansion_v3.json` for
+repair gate v4 and downstream Exp 3184. The builder MUST consume the Exp 3170
+counterexample-certificate pilot v2, Exp 3168 repair gate decision v3, Exp 3169
+repair ladder materializer v4, Exp 3180 controlled-invariance executor v2, Exp
+3181 clean verifier rerun v10, Exp 3182 distributional sidecar v1, and exact
+authority artifacts when available. It MUST NOT call an LLM, run repair
+generation, execute live verifier scoring, download models, push commits, or
+modify `scripts/research_conductor.py`.
+
+The expansion SHALL preserve every Exp 3170 certificate row and SHALL expand
+coverage with the larger exact-row denominator from Exp 3180 or Exp 3181. Every
+certificate record SHALL include row id, canonical answer or source, exact
+label, checker result, known false-accept or regression status, counterexample
+family, source artifact, and whether the record depends on flagged live
+verifier evidence. Known false-accept rows and available regression rows SHALL
+remain load-bearing and counted explicitly.
+
+The builder SHALL also materialize BEAVER-inspired bounded frontier records
+from Exp 3170 and Exp 3125 evidence. Each frontier record SHALL include a
+prefix or state, constraint family, lower and upper bounds when bounded mass is
+available or an exact status otherwise, and a deterministic stop reason.
+
+The terminal artifact MUST include
+`counterexample_certificate_expansion_v3_ready`, `exact_row_count`,
+`counterexample_count`, `certificate_records`, `bounded_frontier_records`,
+`known_false_accept_rows_covered`, `flagged_adversarial`,
+`repair_call_ready`, `blocker_reasons`, `inference_substrate`, and
+`honest_verdict`. `repair_call_ready` SHALL be true only when certificates are
+broad enough, exact-authority scoring is complete, and no certificate evidence
+depends on a flagged live verifier. When readiness is false, blocker reasons
+MUST be actionable and `honest_verdict` MUST still start with a terminal
+success prefix if the deterministic artifact itself was materialized.
+
+### SCENARIO-VERIFY-3183: Expanded Certificates Gate Repair Calls Without Live Inference
+
+Given Exp 3170 has materialized a certificate pilot, Exp 3180 or Exp 3181
+exposes exact rows and known false-accept regressions, and Exp 3182 may provide
+offline sidecar row scores,
+When Exp 3183 builds the counterexample-certificate expansion,
+Then it writes the terminal JSON artifact without live inference, records every
+expanded exact row with canonical answer or source, checker result, and
+counterexample family, converts bounded frontier rows into deterministic
+prefix/state records with bounds or exact statuses, counts all covered known
+false-accept rows, carries forward flagged-adversarial blockers, and sets
+`repair_call_ready=true` only when exact evidence is broad, complete, and free
+of flagged live-verifier dependence.
+
+## Implementation Status (REQ-VERIFY-3183)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-VERIFY-3183 | Implemented (`python/carnot/verify/counterexample_certificate_expansion_v3.py`) | Implemented (`tests/python/test_experiment_3183_counterexample_certificate_expansion_v3.py`) |
+
 ### REQ-VERIFY-3006: EqR Fixed-Point Energy Diagnostic Over Cached Validator Trajectories
 
 The repository shall provide a deterministic Exp 3006 fixed-point energy
