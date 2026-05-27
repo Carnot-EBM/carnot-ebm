@@ -1,0 +1,269 @@
+{
+  "activation_ready": true,
+  "active_roadmap_modified": false,
+  "artifact": "experiment_3205_archive_v296_activate_v297",
+  "blocked_reasons": [],
+  "capstone_artifact": "results/experiment_3204_capstone_v296.json",
+  "changelog_mentions_milestone": true,
+  "conductor_activation_observed": true,
+  "conductor_file_modified": false,
+  "critical_path": {
+    "first_milestone_task": "exp3205-archive-v296-activate-v297",
+    "terminal_aggregation_tasks": [
+      "exp3217-cross-corpus-matrix-v31",
+      "exp3218-capstone-v297"
+    ],
+    "top_unresolved_gap": "cuda_offload_full_local_sota_receipt_clean_rerun_allowed_repair_gate_unblock",
+    "unblock_sequence": [
+      "exp3206-cuda-env-forensics-ledger-v1",
+      "exp3207-llama-cpp-cuda-rebuild-clean-subprocess-v1",
+      "exp3208-full-local-sota-receipt-v5",
+      "exp3209-clean-live-sota-verifier-rerun-v12",
+      "exp3212-structured-repair-proposal-preflight-v1",
+      "exp3213-repair-gate-decision-v6",
+      "exp3214-multi-turn-repair-ladder-v7",
+      "exp3217-cross-corpus-matrix-v31",
+      "exp3218-capstone-v297"
+    ]
+  },
+  "duration_s": 0.871988,
+  "experiment_id": "exp3205",
+  "honest_verdict": "complete: archive_v296_activate_v297_ready=true; prior_task_range=exp3191-exp3204; prior_paper_ready=false; prior_publication_blocker_count=85; prior_next_top_gap=cuda_offload_full_local_sota_receipt_clean_rerun_allowed_repair_gate_unblock; queue_path=research-roadmap.yaml",
+  "inference_substrate": {
+    "executes_conductor": false,
+    "executes_hardware": false,
+    "executes_models": false,
+    "executes_repairs": false,
+    "executes_solvers": false,
+    "executes_verifiers": false,
+    "kind": "archive_activation_aggregation_from_checked_in_artifacts",
+    "local_repo_only": true,
+    "no_live_llm_inference": true,
+    "source": "capstone_v296_matrix_v30_research_complete_roadmap_queue_and_ops_logs"
+  },
+  "matrix_artifact": "results/experiment_3203_cross_corpus_matrix_v30.json",
+  "milestone": "2026.05.297",
+  "new_milestone_document": "openspec/change-proposals/research-roadmap-vNEXT.md",
+  "no_conductor_execution": true,
+  "no_new_hardware_run": true,
+  "no_new_model_execution": true,
+  "no_new_repair_run": true,
+  "no_new_solver_run": true,
+  "no_new_verifier_run": true,
+  "no_push": true,
+  "prior_capstone_ready": true,
+  "prior_matrix_ready": true,
+  "prior_milestone": "2026.05.296",
+  "prior_next_top_gap": "cuda_offload_full_local_sota_receipt_clean_rerun_allowed_repair_gate_unblock",
+  "prior_paper_ready": false,
+  "prior_publication_blocker_count": 85,
+  "prior_task_count": 14,
+  "prior_task_range": [
+    "exp3191",
+    "exp3204"
+  ],
+  "prior_terminal_statuses": [
+    {
+      "deliverable": "results/experiment_3191_archive_v295_activate_v296.json",
+      "experiment_id": "exp3191",
+      "task_id": "exp3191-archive-v295-activate-v296",
+      "terminal": true,
+      "terminal_status": "OK (conductor)",
+      "title": "Archive .295 closeout and activate .296 planning authority"
+    },
+    {
+      "deliverable": "results/experiment_3192_receipt_adversarial_contract_v4.json",
+      "experiment_id": "exp3192",
+      "task_id": "exp3192-receipt-adversarial-contract-v4",
+      "terminal": true,
+      "terminal_status": "OK (conductor)",
+      "title": "Receipt and adversarial contract v4 with dual clean-rerun thresholds"
+    },
+    {
+      "deliverable": "results/experiment_3193_llama_cpp_cuda_offload_health_probe_v1.json",
+      "experiment_id": "exp3193",
+      "task_id": "exp3193-llama-cpp-cuda-offload-health-probe-v1",
+      "terminal": true,
+      "terminal_status": "OK (conductor)",
+      "title": "llama.cpp CUDA/offload health probe for mandated local SOTA GGUF receipts"
+    },
+    {
+      "deliverable": "results/experiment_3194_clean_live_sota_verifier_rerun_v11.json",
+      "experiment_id": "exp3194",
+      "task_id": "exp3194-clean-live-sota-verifier-rerun-v11",
+      "terminal": true,
+      "terminal_status": "OK (conductor)",
+      "title": "Clean live SOTA verifier rerun v11 gated on CUDA-backed receipt eligibility"
+    },
+    {
+      "deliverable": "results/experiment_3195_adaptive_verification_granularity_policy_v1.json",
+      "experiment_id": "exp3195",
+      "task_id": "exp3195-adaptive-verification-granularity-policy-v1",
+      "terminal": true,
+      "terminal_status": "OK (conductor)",
+      "title": "Adaptive verification granularity policy over exact rows and repair contexts"
+    },
+    {
+      "deliverable": "results/experiment_3196_gencp_domain_preview_repair_compiler_v1.json",
+      "experiment_id": "exp3196",
+      "task_id": "exp3196-gencp-domain-preview-repair-compiler-v1",
+      "terminal": true,
+      "terminal_status": "OK (conductor)",
+      "title": "GenCP-style domain preview compiler for bounded repair candidates"
+    },
+    {
+      "deliverable": "results/experiment_3197_exverus_inductive_certificate_expansion_v1.json",
+      "experiment_id": "exp3197",
+      "task_id": "exp3197-exverus-inductive-certificate-expansion-v1",
+      "terminal": true,
+      "terminal_status": "OK (conductor)",
+      "title": "ExVerus-style inductive invariant expansion from counterexample certificates"
+    },
+    {
+      "deliverable": "results/experiment_3198_repair_gate_decision_v5.json",
+      "experiment_id": "exp3198",
+      "task_id": "exp3198-repair-gate-decision-v5",
+      "terminal": true,
+      "terminal_status": "OK (conductor)",
+      "title": "Repair gate decision v5 from receipt, verifier, granularity, domain, and invariant evidence"
+    },
+    {
+      "deliverable": "results/experiment_3199_multi_turn_repair_ladder_v6.json",
+      "experiment_id": "exp3199",
+      "task_id": "exp3199-multi-turn-repair-ladder-v6",
+      "terminal": true,
+      "terminal_status": "OK (conductor)",
+      "title": "Multi-turn repair ladder v6 gated on repair gate unblocked"
+    },
+    {
+      "deliverable": "results/experiment_3200_fr11_verify_trace_memory_controller_v1.json",
+      "experiment_id": "exp3200",
+      "task_id": "exp3200-fr11-verify-trace-memory-controller-v1",
+      "terminal": true,
+      "terminal_status": "OK (conductor)",
+      "title": "FR-11 VeriFY trace-memory controller with redundant-check suppression"
+    },
+    {
+      "deliverable": "results/experiment_3201_kan_cl_nonforgetting_sidecar_audit_v1.json",
+      "experiment_id": "exp3201",
+      "task_id": "exp3201-kan-cl-nonforgetting-sidecar-audit-v1",
+      "terminal": true,
+      "terminal_status": "OK (conductor)",
+      "title": "KAN-CL nonforgetting sidecar audit for FR-11 trace-memory policy"
+    },
+    {
+      "deliverable": "results/experiment_3202_sparse_potts_paoa_thrml_factor_boundary_v1.json",
+      "experiment_id": "exp3202",
+      "task_id": "exp3202-sparse-potts-paoa-thrml-factor-boundary-v1",
+      "terminal": true,
+      "terminal_status": "OK (conductor)",
+      "title": "Sparse Potts/PAOA/THRML factor boundary from exact certificates"
+    },
+    {
+      "deliverable": "results/experiment_3203_cross_corpus_matrix_v30.json",
+      "experiment_id": "exp3203",
+      "task_id": "exp3203-cross-corpus-matrix-v30",
+      "terminal": true,
+      "terminal_status": "OK (conductor)",
+      "title": "Cross-corpus matrix v30 with receipt, repair, FR-11, and hardware boundary reconciliation"
+    },
+    {
+      "deliverable": "results/experiment_3204_capstone_v296.json",
+      "experiment_id": "exp3204",
+      "task_id": "exp3204-capstone-v296",
+      "terminal": true,
+      "terminal_status": "OK (conductor)",
+      "title": "Milestone .296 capstone and next-gap recommendation"
+    }
+  ],
+  "protected_files_modified_by_this_task": {
+    "research-roadmap.yaml": false,
+    "scripts/research_conductor.py": false
+  },
+  "queue_paths": {
+    "active_roadmap_exists": true,
+    "active_roadmap_path": "research-roadmap.yaml",
+    "milestone_doc": "openspec/change-proposals/research-roadmap-vNEXT.md",
+    "milestone_doc_exists": true,
+    "selected_queue_first_task": "exp3205-archive-v296-activate-v297",
+    "selected_queue_milestone": "2026.05.297",
+    "selected_queue_path": "research-roadmap.yaml",
+    "selected_queue_task_count": 14,
+    "staged_roadmap_exists": false,
+    "staged_roadmap_path": "research-roadmap-next.yaml"
+  },
+  "research_roadmap_next_exists": false,
+  "run_date": "20260527",
+  "schema": "carnot.archive_activation.v296_to_v297.v1",
+  "schema_version": "carnot.archive_activation.v296_to_v297.v1",
+  "source_artifacts": [
+    {
+      "path": "results/experiment_3204_capstone_v296.json",
+      "present": true,
+      "role": "capstone_v296_authority",
+      "sha256": "964f8056a270c1247a836bc84b88a8aec7f2b9d70a911be2a5ac089f037a942e"
+    },
+    {
+      "path": "results/experiment_3203_cross_corpus_matrix_v30.json",
+      "present": true,
+      "role": "matrix_v30_authority",
+      "sha256": "511aa1eeed78ac32fd1c68362c8f3fec1f27217d6a4ebb2f6c54eab53da805b3"
+    },
+    {
+      "path": "research-complete.yaml",
+      "present": true,
+      "role": "research_complete_archive",
+      "sha256": "faf5d3a2668b2e1d3a468d687979a0da93b3517a5a4c4fc02aec4e78e8043ca2"
+    },
+    {
+      "path": "research-roadmap-next.yaml",
+      "present": false,
+      "role": "staged_roadmap_queue",
+      "sha256": null
+    },
+    {
+      "path": "research-roadmap.yaml",
+      "present": true,
+      "role": "active_roadmap_queue",
+      "sha256": "3b59007f0e87b7a3ff799e1c9ca8bbc7d52d1b36649b1abe867361579fb5f8b0"
+    },
+    {
+      "path": "openspec/change-proposals/research-roadmap-vNEXT.md",
+      "present": true,
+      "role": "vnext_milestone_doc",
+      "sha256": "cfcc1becb9d8913e8cd503e40d0b417037e00b68d1029b27e9b0c20645ad2d87"
+    },
+    {
+      "path": "ops/conductor-log.md",
+      "present": true,
+      "role": "conductor_log_authority",
+      "sha256": "c5509226a6378919da912fb56ee9e8fa01991150c2da58d0070272ad75c3d741"
+    },
+    {
+      "path": "ops/changelog.md",
+      "present": true,
+      "role": "changelog_authority",
+      "sha256": "f6d7570317c7998542b763da748246223ead5999aed91df7e25f2862a74fee78"
+    },
+    {
+      "path": "scripts/research_conductor.py",
+      "present": true,
+      "role": "protected_research_conductor",
+      "sha256": "f7253130513139845fb202c44bff1e7974079c0b666f6f8837dee6df3976edff"
+    }
+  ],
+  "source_checksums": {
+    "openspec/change-proposals/research-roadmap-vNEXT.md": "cfcc1becb9d8913e8cd503e40d0b417037e00b68d1029b27e9b0c20645ad2d87",
+    "ops/changelog.md": "f6d7570317c7998542b763da748246223ead5999aed91df7e25f2862a74fee78",
+    "ops/conductor-log.md": "c5509226a6378919da912fb56ee9e8fa01991150c2da58d0070272ad75c3d741",
+    "research-complete.yaml": "faf5d3a2668b2e1d3a468d687979a0da93b3517a5a4c4fc02aec4e78e8043ca2",
+    "research-roadmap-next.yaml": null,
+    "research-roadmap.yaml": "3b59007f0e87b7a3ff799e1c9ca8bbc7d52d1b36649b1abe867361579fb5f8b0",
+    "results/experiment_3203_cross_corpus_matrix_v30.json": "511aa1eeed78ac32fd1c68362c8f3fec1f27217d6a4ebb2f6c54eab53da805b3",
+    "results/experiment_3204_capstone_v296.json": "964f8056a270c1247a836bc84b88a8aec7f2b9d70a911be2a5ac089f037a942e",
+    "scripts/research_conductor.py": "f7253130513139845fb202c44bff1e7974079c0b666f6f8837dee6df3976edff"
+  },
+  "terminal_status_counts": {
+    "OK (conductor)": 14
+  }
+}
