@@ -3414,6 +3414,68 @@ calls, reports bounded candidate-domain accounting, keeps
 |---|---|---|
 | REQ-VERIFY-3196 | Implemented (`python/carnot/verify/gencp_domain_preview_repair_compiler_v1.py`) | Implemented (`tests/python/test_experiment_3196_gencp_domain_preview_repair_compiler_v1.py`) |
 
+### REQ-VERIFY-3197: ExVerus Inductive Certificate Expansion V1
+
+The repository shall provide an Exp 3197 deterministic ExVerus-style
+inductive certificate expansion builder that writes
+`results/experiment_3197_exverus_inductive_certificate_expansion_v1.json`
+from checked-in artifacts only. The builder MUST consume the Exp 3183
+counterexample-certificate expansion v3, the Exp 3196 GenCP domain preview
+repair compiler v1, the post-.295 research references, and the repository
+workflow/spec instructions. It MUST NOT call an LLM, run repair generation,
+execute live verifier scoring, download models, push commits, or modify
+`scripts/research_conductor.py`.
+
+The builder SHALL expand a bounded set of exact certificate rows carrying
+pilot counterexample, repair-fragment, or drift-anchor evidence into inductive
+invariant records. Each invariant record SHALL include an observed
+counterexample or anchor, a generalized invariant, an exact guard, an
+anti-overfit test, source lineage, and any linked GenCP domain preview record.
+Exact guards SHALL remain authoritative and SHALL be derived from exact
+checker, canonical-answer, MCS, unsat-core, parser, or solver evidence rather
+than from model text or sidecar scores.
+
+Anti-overfit tests SHALL reject repairs that merely patch the observed failing
+instance while violating the generalized invariant. The tests SHALL include the
+exact authority to rerun, the row family, the observed patch risk, and the
+expected rejection or preservation outcome. For positive drift anchors, the
+anti-overfit test SHALL guard against over-repair by requiring the already
+accepted exact label to remain unchanged.
+
+The terminal artifact MUST include `schema_version`, `experiment_id`,
+`source_artifacts`, `invariant_schema`, `invariant_record_count`,
+`exact_guard_count`, `anti_overfit_test_count`,
+`linked_domain_preview_count`, `repair_call_ready`, and `honest_verdict`. It
+SHOULD also include invariant records, source checksums, source errors,
+limitations, no-new-execution metadata, tests run, and explicit rationale for
+why the artifact does not execute or unlock repair. `repair_call_ready` SHALL
+remain false for Exp 3197 because invariant guards prepare later repair
+evaluation only and do not clear the blocked repair gate.
+
+The honest verdict MUST start with `complete:` when the deterministic
+artifact is materialized and schema-valid, even though it keeps repair calls
+blocked.
+
+### SCENARIO-VERIFY-3197: Counterexamples Become Inductive Guards
+
+Given Exp 3183 exposes counterexample certificate records with pilot
+invariant evidence and Exp 3196 exposes matching GenCP domain preview rows,
+When Exp 3197 builds the ExVerus inductive certificate expansion artifact,
+Then it writes
+`results/experiment_3197_exverus_inductive_certificate_expansion_v1.json`
+without live inference, emits one bounded invariant record for each selected
+exact pilot row, preserves observed counterexample evidence, generalizes the
+record into an invariant-level guard, materializes an exact anti-overfit test
+for the repair gate, links matching GenCP preview domains, records limitations
+and the no-repair-execution boundary, keeps `repair_call_ready=false`, and
+emits an `honest_verdict` that starts with `complete:`.
+
+## Implementation Status (REQ-VERIFY-3197)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-VERIFY-3197 | Implemented (`python/carnot/verify/exverus_inductive_certificate_expansion_v1.py`) | Implemented (`tests/python/test_experiment_3197_exverus_inductive_certificate_expansion_v1.py`) |
+
 ### REQ-VERIFY-3180: Controlled-Invariance Executor V2
 
 The repository shall provide an Exp 3180 controlled-invariance executor that

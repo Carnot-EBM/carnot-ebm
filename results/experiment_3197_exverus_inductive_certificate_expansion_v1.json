@@ -1,0 +1,685 @@
+{
+  "anti_overfit_test_count": 5,
+  "artifact": "experiment_3197_exverus_inductive_certificate_expansion_v1",
+  "exact_guard_count": 5,
+  "experiment_id": "exp3197",
+  "honest_verdict": "complete: exverus_inductive_certificate_expansion_v1_ready=true; invariant_record_count=5; exact_guard_count=5; anti_overfit_test_count=5; linked_domain_preview_count=5; repair_call_ready=false",
+  "inference_substrate": {
+    "kind": "artifact_only_inductive_certificate_expansion",
+    "llm_called": false,
+    "new_live_model_calls": 0,
+    "new_repair_calls": 0,
+    "new_verifier_scoring_calls": 0
+  },
+  "invariant_record_count": 5,
+  "invariant_records": [
+    {
+      "anti_overfit_test": {
+        "exact_authority": "python_ast_runtime_execution",
+        "expected_outcome": "reject_overfit_patch",
+        "forbidden_candidate_patterns": [
+          "VALID"
+        ],
+        "generalization_family": "replace_claimed_value",
+        "guard_id": "EXACT-GUARD-RESYN-3084-ARITH-003",
+        "heldout_condition": "same equality invariant on changed claimed/computed values",
+        "patch_risk": "repair only patches observed instance while bypassing generalized invariant",
+        "test_id": "ANTI-OVERFIT-RESYN-3084-ARITH-003"
+      },
+      "authority_note": "artifact-only invariant guard; exact verifier remains final",
+      "checker_authority": "python_ast_runtime_execution",
+      "exact_guard": {
+        "authority": "python_ast_runtime_execution",
+        "canonical_answer": "INVALID",
+        "guard_id": "EXACT-GUARD-RESYN-3084-ARITH-003",
+        "invariant_id": "INV-RESYN-3084-ARITH-003",
+        "minimal_correction_set": {
+          "from": 47,
+          "kind": "replace_claimed_value",
+          "to": 43
+        },
+        "preview_candidate_domain": [
+          "INVALID"
+        ],
+        "preview_rejection_test_ids": [
+          "EXACT-REJECT-CANONICAL-MISMATCH",
+          "EXACT-REJECT-NONAUTHORITATIVE-PROMOTION",
+          "EXACT-REJECT-REPAIR-GATE-BLOCKED",
+          "EXACT-REJECT-FALSE-ACCEPT-CONFLICT",
+          "EXACT-REJECT-MCS-INVARIANT",
+          "EXACT-REJECT-FIXTURE-AUTHORITY-CONTRADICTION",
+          "EXACT-REJECT-FRONTIER-PRUNED-PREFIX"
+        ],
+        "reject_when": "candidate violates generalized invariant or canonical exact label",
+        "required_exact_label": "INVALID",
+        "unsat_core": [
+          "computed_value",
+          "claimed_value"
+        ],
+        "verifier_to_rerun": "python_ast_runtime_execution"
+      },
+      "exact_label": "INVALID",
+      "generalized_invariant": {
+        "authority": "python_ast_runtime_execution",
+        "evidence_keys": [
+          "minimal_failing_assignment",
+          "mcs",
+          "unsat_core"
+        ],
+        "invariant_id": "INV-RESYN-3084-ARITH-003",
+        "minimal_correction_set": {
+          "from": 47,
+          "kind": "replace_claimed_value",
+          "to": 43
+        },
+        "scope": "all arithmetic assertion rows with claimed and computed values",
+        "statement": "claimed_value == computed_value (replace claimed_value 47 \u2192 43)",
+        "unsat_core": [
+          "computed_value",
+          "claimed_value"
+        ]
+      },
+      "linked_domain_preview": {
+        "authority_note": "preview only; exact/canonical rejection tests remain final",
+        "candidate_domain": [
+          "INVALID"
+        ],
+        "exact_rejection_test_ids": [
+          "EXACT-REJECT-CANONICAL-MISMATCH",
+          "EXACT-REJECT-NONAUTHORITATIVE-PROMOTION",
+          "EXACT-REJECT-REPAIR-GATE-BLOCKED",
+          "EXACT-REJECT-FALSE-ACCEPT-CONFLICT",
+          "EXACT-REJECT-MCS-INVARIANT",
+          "EXACT-REJECT-FIXTURE-AUTHORITY-CONTRADICTION",
+          "EXACT-REJECT-FRONTIER-PRUNED-PREFIX"
+        ],
+        "record_id": "gencp-domain:resyn-3084-arith-003",
+        "row_id": "resyn-3084-arith-003"
+      },
+      "observed_counterexample": {
+        "candidate_answers": [
+          "INVALID",
+          "VALID"
+        ],
+        "canonical_answer": "INVALID",
+        "certificate_type": "ast_execution",
+        "exact_label": "INVALID",
+        "kind": "counterexample",
+        "minimal_failing_assignment": {
+          "assertion_result": "FAILS",
+          "claimed_value": 47,
+          "computed_value": 43,
+          "gap": 4
+        },
+        "violated_constraint": "arithmetic_equality: assert computed == claimed; claimed=47, computed=43, gap=4"
+      },
+      "record_id": "exverus-invariant:resyn-3084-arith-003",
+      "row_family": "known_false_accept:arithmetic_code_assertions",
+      "row_id": "resyn-3084-arith-003",
+      "source_artifact": "exp3180.exact_rows_evaluated"
+    },
+    {
+      "anti_overfit_test": {
+        "exact_authority": "z3_solver",
+        "expected_outcome": "reject_overfit_patch",
+        "forbidden_candidate_patterns": [
+          "VALID"
+        ],
+        "generalization_family": "remove_conflicting_constraint",
+        "guard_id": "EXACT-GUARD-RESYN-3084-SMT-000",
+        "heldout_condition": "same solver-label invariant on equivalent satisfiability evidence",
+        "patch_risk": "repair only patches observed instance while bypassing generalized invariant",
+        "test_id": "ANTI-OVERFIT-RESYN-3084-SMT-000"
+      },
+      "authority_note": "artifact-only invariant guard; exact verifier remains final",
+      "checker_authority": "z3_solver",
+      "exact_guard": {
+        "authority": "z3_solver",
+        "canonical_answer": "UNSAT",
+        "guard_id": "EXACT-GUARD-RESYN-3084-SMT-000",
+        "invariant_id": "INV-RESYN-3084-SMT-000",
+        "minimal_correction_set": {
+          "constraints_to_relax": [
+            "constraint_0"
+          ],
+          "kind": "remove_conflicting_constraint"
+        },
+        "preview_candidate_domain": [
+          "UNSAT"
+        ],
+        "preview_rejection_test_ids": [
+          "EXACT-REJECT-CANONICAL-MISMATCH",
+          "EXACT-REJECT-NONAUTHORITATIVE-PROMOTION",
+          "EXACT-REJECT-REPAIR-GATE-BLOCKED",
+          "EXACT-REJECT-FALSE-ACCEPT-CONFLICT",
+          "EXACT-REJECT-MCS-INVARIANT",
+          "EXACT-REJECT-FIXTURE-AUTHORITY-CONTRADICTION",
+          "EXACT-REJECT-FRONTIER-PRUNED-PREFIX"
+        ],
+        "reject_when": "candidate violates generalized invariant or canonical exact label",
+        "required_exact_label": "UNSAT",
+        "unsat_core": [
+          "constraint_0",
+          "constraint_1"
+        ],
+        "verifier_to_rerun": "z3_solver"
+      },
+      "exact_label": "UNSAT",
+      "generalized_invariant": {
+        "authority": "z3_solver",
+        "evidence_keys": [
+          "minimal_failing_assignment",
+          "mcs",
+          "unsat_core"
+        ],
+        "invariant_id": "INV-RESYN-3084-SMT-000",
+        "minimal_correction_set": {
+          "constraints_to_relax": [
+            "constraint_0"
+          ],
+          "kind": "remove_conflicting_constraint"
+        },
+        "scope": "all SMT rows with solver statuses and token-family labels",
+        "statement": "model emits 'UNSAT' when Z3 confirms unsatisfiability",
+        "unsat_core": [
+          "constraint_0",
+          "constraint_1"
+        ]
+      },
+      "linked_domain_preview": {
+        "authority_note": "preview only; exact/canonical rejection tests remain final",
+        "candidate_domain": [
+          "UNSAT"
+        ],
+        "exact_rejection_test_ids": [
+          "EXACT-REJECT-CANONICAL-MISMATCH",
+          "EXACT-REJECT-NONAUTHORITATIVE-PROMOTION",
+          "EXACT-REJECT-REPAIR-GATE-BLOCKED",
+          "EXACT-REJECT-FALSE-ACCEPT-CONFLICT",
+          "EXACT-REJECT-MCS-INVARIANT",
+          "EXACT-REJECT-FIXTURE-AUTHORITY-CONTRADICTION",
+          "EXACT-REJECT-FRONTIER-PRUNED-PREFIX"
+        ],
+        "record_id": "gencp-domain:resyn-3084-smt-000",
+        "row_id": "resyn-3084-smt-000"
+      },
+      "observed_counterexample": {
+        "candidate_answers": [
+          "UNSAT",
+          "VALID"
+        ],
+        "canonical_answer": "UNSAT",
+        "certificate_type": "z3_unsat_core",
+        "exact_label": "UNSAT",
+        "kind": "counterexample",
+        "minimal_failing_assignment": {
+          "correct_label": "UNSAT",
+          "failure_type": "sat_validity_token_confusion",
+          "model_emitted": "VALID",
+          "unsat_reason": "no assignment satisfies constraint_0 AND constraint_1"
+        },
+        "violated_constraint": "z3_satisfiability: conjunction of constraint_0 and constraint_1 is UNSAT; model emitted VALID instead of UNSAT"
+      },
+      "record_id": "exverus-invariant:resyn-3084-smt-000",
+      "row_family": "known_false_accept:smt_constraints",
+      "row_id": "resyn-3084-smt-000",
+      "source_artifact": "exp3180.exact_rows_evaluated"
+    },
+    {
+      "anti_overfit_test": {
+        "exact_authority": "python_json_parser",
+        "expected_outcome": "reject_overfit_patch",
+        "forbidden_candidate_patterns": [],
+        "generalization_family": "json_token_edit",
+        "guard_id": "EXACT-GUARD-RESYN-3084-REPAIR-JSON-000",
+        "heldout_condition": "same parser invariant on another bounded JSON fragment",
+        "patch_risk": "repair only patches observed instance while bypassing generalized invariant",
+        "test_id": "ANTI-OVERFIT-RESYN-3084-REPAIR-JSON-000"
+      },
+      "authority_note": "artifact-only invariant guard; exact verifier remains final",
+      "checker_authority": "python_json_parser",
+      "exact_guard": {
+        "authority": "python_json_parser",
+        "canonical_answer": "REPAIRABLE",
+        "guard_id": "EXACT-GUARD-RESYN-3084-REPAIR-JSON-000",
+        "invariant_id": "INV-RESYN-3084-REPAIR-JSON-000",
+        "minimal_correction_set": {
+          "edits": [
+            {
+              "operation": "insert_delimiter",
+              "token": ","
+            }
+          ],
+          "kind": "json_token_edit"
+        },
+        "preview_candidate_domain": [
+          "{\"limit\": 2, \"mode\": \"bounded\"}"
+        ],
+        "preview_rejection_test_ids": [
+          "EXACT-REJECT-CANONICAL-MISMATCH",
+          "EXACT-REJECT-NONAUTHORITATIVE-PROMOTION",
+          "EXACT-REJECT-REPAIR-GATE-BLOCKED",
+          "EXACT-REJECT-MCS-INVARIANT",
+          "EXACT-REJECT-FIXTURE-AUTHORITY-CONTRADICTION",
+          "EXACT-REJECT-FRONTIER-PRUNED-PREFIX"
+        ],
+        "reject_when": "candidate violates generalized invariant or canonical exact label",
+        "required_exact_label": "REPAIRABLE",
+        "unsat_core": [],
+        "verifier_to_rerun": "python_json_parser"
+      },
+      "exact_label": "REPAIRABLE",
+      "generalized_invariant": {
+        "authority": "python_json_parser",
+        "evidence_keys": [
+          "minimal_failing_assignment",
+          "mcs"
+        ],
+        "invariant_id": "INV-RESYN-3084-REPAIR-JSON-000",
+        "minimal_correction_set": {
+          "edits": [
+            {
+              "operation": "insert_delimiter",
+              "token": ","
+            }
+          ],
+          "kind": "json_token_edit"
+        },
+        "scope": "all JSON fragment repair rows with parser authority",
+        "statement": "JSON fragment parses without error after inserting ','",
+        "unsat_core": []
+      },
+      "linked_domain_preview": {
+        "authority_note": "preview only; exact/canonical rejection tests remain final",
+        "candidate_domain": [
+          "{\"limit\": 2, \"mode\": \"bounded\"}"
+        ],
+        "exact_rejection_test_ids": [
+          "EXACT-REJECT-CANONICAL-MISMATCH",
+          "EXACT-REJECT-NONAUTHORITATIVE-PROMOTION",
+          "EXACT-REJECT-REPAIR-GATE-BLOCKED",
+          "EXACT-REJECT-MCS-INVARIANT",
+          "EXACT-REJECT-FIXTURE-AUTHORITY-CONTRADICTION",
+          "EXACT-REJECT-FRONTIER-PRUNED-PREFIX"
+        ],
+        "record_id": "gencp-domain:resyn-3084-repair-json-000",
+        "row_id": "resyn-3084-repair-json-000"
+      },
+      "observed_counterexample": {
+        "candidate_answers": [
+          "REPAIRABLE"
+        ],
+        "canonical_answer": "REPAIRABLE",
+        "certificate_type": "solver_mcs",
+        "exact_label": "REPAIRABLE",
+        "kind": "counterexample",
+        "minimal_failing_assignment": {
+          "insert_position": "after_value_before_next_key",
+          "missing_token": ",",
+          "parse_error_type": "JSONDecodeError"
+        },
+        "violated_constraint": "json_well_formedness: JSON fragment is missing a comma delimiter; python json.loads raises json.JSONDecodeError"
+      },
+      "record_id": "exverus-invariant:resyn-3084-repair-json-000",
+      "row_family": "fragment_code:parser_repair",
+      "row_id": "resyn-3084-repair-json-000",
+      "source_artifact": "exp3180.exact_rows_evaluated"
+    },
+    {
+      "anti_overfit_test": {
+        "exact_authority": "python_json_parser",
+        "expected_outcome": "reject_overfit_patch",
+        "forbidden_candidate_patterns": [],
+        "generalization_family": "json_token_edit",
+        "guard_id": "EXACT-GUARD-RESYN-3084-REPAIR-JSON-003",
+        "heldout_condition": "same parser invariant on another bounded JSON fragment",
+        "patch_risk": "repair only patches observed instance while bypassing generalized invariant",
+        "test_id": "ANTI-OVERFIT-RESYN-3084-REPAIR-JSON-003"
+      },
+      "authority_note": "artifact-only invariant guard; exact verifier remains final",
+      "checker_authority": "python_json_parser",
+      "exact_guard": {
+        "authority": "python_json_parser",
+        "canonical_answer": "REPAIRABLE",
+        "guard_id": "EXACT-GUARD-RESYN-3084-REPAIR-JSON-003",
+        "invariant_id": "INV-RESYN-3084-REPAIR-JSON-003",
+        "minimal_correction_set": {
+          "edits": [
+            {
+              "operation": "insert_delimiter",
+              "token": ","
+            }
+          ],
+          "kind": "json_token_edit"
+        },
+        "preview_candidate_domain": [
+          "{\"limit\": 5, \"mode\": \"bounded\"}"
+        ],
+        "preview_rejection_test_ids": [
+          "EXACT-REJECT-CANONICAL-MISMATCH",
+          "EXACT-REJECT-NONAUTHORITATIVE-PROMOTION",
+          "EXACT-REJECT-REPAIR-GATE-BLOCKED",
+          "EXACT-REJECT-MCS-INVARIANT",
+          "EXACT-REJECT-FIXTURE-AUTHORITY-CONTRADICTION",
+          "EXACT-REJECT-FRONTIER-PRUNED-PREFIX"
+        ],
+        "reject_when": "candidate violates generalized invariant or canonical exact label",
+        "required_exact_label": "REPAIRABLE",
+        "unsat_core": [],
+        "verifier_to_rerun": "python_json_parser"
+      },
+      "exact_label": "REPAIRABLE",
+      "generalized_invariant": {
+        "authority": "python_json_parser",
+        "evidence_keys": [
+          "minimal_failing_assignment",
+          "mcs"
+        ],
+        "invariant_id": "INV-RESYN-3084-REPAIR-JSON-003",
+        "minimal_correction_set": {
+          "edits": [
+            {
+              "operation": "insert_delimiter",
+              "token": ","
+            }
+          ],
+          "kind": "json_token_edit"
+        },
+        "scope": "all JSON fragment repair rows with parser authority",
+        "statement": "JSON fragment parses without error after inserting ','",
+        "unsat_core": []
+      },
+      "linked_domain_preview": {
+        "authority_note": "preview only; exact/canonical rejection tests remain final",
+        "candidate_domain": [
+          "{\"limit\": 5, \"mode\": \"bounded\"}"
+        ],
+        "exact_rejection_test_ids": [
+          "EXACT-REJECT-CANONICAL-MISMATCH",
+          "EXACT-REJECT-NONAUTHORITATIVE-PROMOTION",
+          "EXACT-REJECT-REPAIR-GATE-BLOCKED",
+          "EXACT-REJECT-MCS-INVARIANT",
+          "EXACT-REJECT-FIXTURE-AUTHORITY-CONTRADICTION",
+          "EXACT-REJECT-FRONTIER-PRUNED-PREFIX"
+        ],
+        "record_id": "gencp-domain:resyn-3084-repair-json-003",
+        "row_id": "resyn-3084-repair-json-003"
+      },
+      "observed_counterexample": {
+        "candidate_answers": [
+          "REPAIRABLE"
+        ],
+        "canonical_answer": "REPAIRABLE",
+        "certificate_type": "solver_mcs",
+        "exact_label": "REPAIRABLE",
+        "kind": "counterexample",
+        "minimal_failing_assignment": {
+          "insert_position": "after_value_before_next_key",
+          "missing_token": ",",
+          "parse_error_type": "JSONDecodeError"
+        },
+        "violated_constraint": "json_well_formedness: JSON fragment is missing a comma delimiter; python json.loads raises json.JSONDecodeError"
+      },
+      "record_id": "exverus-invariant:resyn-3084-repair-json-003",
+      "row_family": "fragment_code:parser_repair",
+      "row_id": "resyn-3084-repair-json-003",
+      "source_artifact": "exp3180.exact_rows_evaluated"
+    },
+    {
+      "anti_overfit_test": {
+        "exact_authority": "z3_solver",
+        "expected_outcome": "preserve_positive_anchor",
+        "forbidden_candidate_patterns": [],
+        "generalization_family": "satisfiable_drift_anchor",
+        "guard_id": "EXACT-GUARD-RESYN-3084-SMT-001",
+        "heldout_condition": "already accepted exact anchor remains unchanged",
+        "patch_risk": "repair over-reach changes an exact accepted anchor",
+        "test_id": "ANTI-OVERFIT-RESYN-3084-SMT-001"
+      },
+      "authority_note": "artifact-only invariant guard; exact verifier remains final",
+      "checker_authority": "z3_solver",
+      "exact_guard": {
+        "authority": "z3_solver",
+        "canonical_answer": "SAT",
+        "guard_id": "EXACT-GUARD-RESYN-3084-SMT-001",
+        "invariant_id": "INV-RESYN-3084-SMT-001",
+        "minimal_correction_set": {},
+        "preview_candidate_domain": [
+          "SAT"
+        ],
+        "preview_rejection_test_ids": [
+          "EXACT-REJECT-CANONICAL-MISMATCH",
+          "EXACT-REJECT-NONAUTHORITATIVE-PROMOTION",
+          "EXACT-REJECT-REPAIR-GATE-BLOCKED",
+          "EXACT-REJECT-MCS-INVARIANT",
+          "EXACT-REJECT-FIXTURE-AUTHORITY-CONTRADICTION",
+          "EXACT-REJECT-FRONTIER-PRUNED-PREFIX"
+        ],
+        "reject_when": "candidate violates generalized invariant or canonical exact label",
+        "required_exact_label": "SAT",
+        "unsat_core": [],
+        "verifier_to_rerun": "z3_solver"
+      },
+      "exact_label": "SAT",
+      "generalized_invariant": {
+        "authority": "z3_solver",
+        "evidence_keys": [],
+        "invariant_id": "INV-RESYN-3084-SMT-001",
+        "minimal_correction_set": {},
+        "scope": "all SMT rows with solver statuses and token-family labels",
+        "statement": "model correctly emits 'SAT' \u2014 no repair needed",
+        "unsat_core": []
+      },
+      "linked_domain_preview": {
+        "authority_note": "preview only; exact/canonical rejection tests remain final",
+        "candidate_domain": [
+          "SAT"
+        ],
+        "exact_rejection_test_ids": [
+          "EXACT-REJECT-CANONICAL-MISMATCH",
+          "EXACT-REJECT-NONAUTHORITATIVE-PROMOTION",
+          "EXACT-REJECT-REPAIR-GATE-BLOCKED",
+          "EXACT-REJECT-MCS-INVARIANT",
+          "EXACT-REJECT-FIXTURE-AUTHORITY-CONTRADICTION",
+          "EXACT-REJECT-FRONTIER-PRUNED-PREFIX"
+        ],
+        "record_id": "gencp-domain:resyn-3084-smt-001",
+        "row_id": "resyn-3084-smt-001"
+      },
+      "observed_counterexample": {
+        "candidate_answers": [
+          "SAT"
+        ],
+        "canonical_answer": "SAT",
+        "certificate_type": "solver_mcs",
+        "exact_label": "SAT",
+        "kind": "positive_anchor",
+        "minimal_failing_assignment": {},
+        "violated_constraint": "none: z3 confirms SAT; no violation; row is a satisfiable-drift anchor verifying correct positive accept"
+      },
+      "record_id": "exverus-invariant:resyn-3084-smt-001",
+      "row_family": "satisfiable_drift_anchor",
+      "row_id": "resyn-3084-smt-001",
+      "source_artifact": "exp3180.exact_rows_evaluated"
+    }
+  ],
+  "invariant_schema": {
+    "properties": {
+      "anti_overfit_test": "test rejecting repairs that only patch the observed row",
+      "exact_guard": "authority-bound predicate a candidate must satisfy",
+      "generalized_invariant": "family-level invariant derived from exact evidence",
+      "linked_domain_preview": "optional Exp 3196 GenCP preview cross-reference",
+      "observed_counterexample": "minimal failing assignment or positive anchor"
+    },
+    "required": [
+      "record_id",
+      "row_id",
+      "observed_counterexample",
+      "generalized_invariant",
+      "exact_guard",
+      "anti_overfit_test",
+      "linked_domain_preview"
+    ],
+    "type": "object"
+  },
+  "limitations": {
+    "bounded_records_only": true,
+    "live_model_or_llm_called": false,
+    "repair_execution_claim_made": false,
+    "why_repair_stays_blocked": "invariant guards prepare later evaluation but do not open the repair gate"
+  },
+  "linked_domain_preview_count": 5,
+  "ops_docs_reconciliation_left_to_conductor": true,
+  "repair_call_ready": false,
+  "run_date": "20260527",
+  "schema_version": "carnot.exverus_inductive_certificate_expansion.v1",
+  "scripts_research_conductor_modified": false,
+  "source_artifacts": [
+    {
+      "path": "AGENTS.md",
+      "present": true,
+      "readable_structured_source": null,
+      "required": true,
+      "role": "agents_repo_instructions",
+      "sha256": "b3d6581b04f16b85f77defb2837c98dc3b60ed51e10b347ecb36e609f318b619",
+      "source_type": "text"
+    },
+    {
+      "path": "CODEX.md",
+      "present": true,
+      "readable_structured_source": null,
+      "required": true,
+      "role": "codex_repo_workflow",
+      "sha256": "1db7ebc1009714f872db83447828a8957c3abb72061832cc1bc307735cd96bbe",
+      "source_type": "text"
+    },
+    {
+      "path": "CLAUDE.md",
+      "present": true,
+      "readable_structured_source": null,
+      "required": true,
+      "role": "claude_authenticity_rules",
+      "sha256": "cdc00581d37d1bd3c77a69b058787f74ecc71545a97c1eab31c48961637b3224",
+      "source_type": "text"
+    },
+    {
+      "path": "research-references.md",
+      "present": true,
+      "readable_structured_source": null,
+      "required": true,
+      "role": "post_295_research_references",
+      "sha256": "6a247c66703927365510e3999fef8bed557aa2e507fe680cb19e1332eeeb6de0",
+      "source_type": "text"
+    },
+    {
+      "path": "openspec/capabilities/verification/spec.md",
+      "present": true,
+      "readable_structured_source": null,
+      "required": true,
+      "role": "verification_openspec",
+      "sha256": "c279020551389c528c72092f1c39e5376c08fd5369a842df3070227aca990bcc",
+      "source_type": "text"
+    },
+    {
+      "path": "results/experiment_3183_counterexample_certificate_expansion_v3.json",
+      "present": true,
+      "readable_structured_source": true,
+      "required": true,
+      "role": "exp3183_counterexample_certificate_expansion_v3",
+      "sha256": "b3ed5fb0b72d4369431a698ce2a08e50693b3e9366be9cf438334436834b9c71",
+      "source_type": "json"
+    },
+    {
+      "path": "results/experiment_3196_gencp_domain_preview_repair_compiler_v1.json",
+      "present": true,
+      "readable_structured_source": true,
+      "required": true,
+      "role": "exp3196_gencp_domain_preview_repair_compiler_v1",
+      "sha256": "a3317c082112150426cb3306df4b807ea321cd01a109e23c1adb68d815e4827b",
+      "source_type": "json"
+    },
+    {
+      "path": "python/carnot/verify/exverus_inductive_certificate_expansion_v1.py",
+      "present": true,
+      "readable_structured_source": null,
+      "required": false,
+      "role": "exp3197_module",
+      "sha256": "48bbe5ef2411f524c8871af5712565011a69e513599a86c50277814a454af5d9",
+      "source_type": "python"
+    },
+    {
+      "path": "scripts/experiment_3197_exverus_inductive_certificate_expansion_v1.py",
+      "present": true,
+      "readable_structured_source": null,
+      "required": false,
+      "role": "exp3197_script",
+      "sha256": "5abd8696da97d5d03d8e6264a1d5992db32abc42e0ed409fec96d348957672a9",
+      "source_type": "python"
+    },
+    {
+      "path": "tests/python/test_experiment_3197_exverus_inductive_certificate_expansion_v1.py",
+      "present": true,
+      "readable_structured_source": null,
+      "required": false,
+      "role": "exp3197_tests",
+      "sha256": "bd98a649a395f50b596c42cd206e2fb5ddfa6c473eb6e0c10978c41155570c19",
+      "source_type": "python"
+    }
+  ],
+  "source_checksums": {
+    "AGENTS.md": "b3d6581b04f16b85f77defb2837c98dc3b60ed51e10b347ecb36e609f318b619",
+    "CLAUDE.md": "cdc00581d37d1bd3c77a69b058787f74ecc71545a97c1eab31c48961637b3224",
+    "CODEX.md": "1db7ebc1009714f872db83447828a8957c3abb72061832cc1bc307735cd96bbe",
+    "openspec/capabilities/verification/spec.md": "c279020551389c528c72092f1c39e5376c08fd5369a842df3070227aca990bcc",
+    "python/carnot/verify/exverus_inductive_certificate_expansion_v1.py": "48bbe5ef2411f524c8871af5712565011a69e513599a86c50277814a454af5d9",
+    "research-references.md": "6a247c66703927365510e3999fef8bed557aa2e507fe680cb19e1332eeeb6de0",
+    "results/experiment_3183_counterexample_certificate_expansion_v3.json": "b3ed5fb0b72d4369431a698ce2a08e50693b3e9366be9cf438334436834b9c71",
+    "results/experiment_3196_gencp_domain_preview_repair_compiler_v1.json": "a3317c082112150426cb3306df4b807ea321cd01a109e23c1adb68d815e4827b",
+    "scripts/experiment_3197_exverus_inductive_certificate_expansion_v1.py": "5abd8696da97d5d03d8e6264a1d5992db32abc42e0ed409fec96d348957672a9",
+    "tests/python/test_experiment_3197_exverus_inductive_certificate_expansion_v1.py": "bd98a649a395f50b596c42cd206e2fb5ddfa6c473eb6e0c10978c41155570c19"
+  },
+  "source_errors": [],
+  "source_schema_observations": {
+    "exp3183_certificate_record_keys": [
+      "candidate_answers",
+      "canonical_answer",
+      "canonical_answer_source",
+      "checker_authority",
+      "checker_result",
+      "counterexample_family",
+      "depends_on_flagged_live_verifier",
+      "exact_authority_complete",
+      "exact_label",
+      "known_false_accept_or_regression",
+      "pilot_certificate",
+      "record_scope",
+      "row_id",
+      "sidecar_score_reference",
+      "source_artifact"
+    ],
+    "exp3196_exact_rejection_test_count": 7,
+    "exp3196_preview_record_keys": [
+      "authority_note",
+      "candidate_domain",
+      "canonical_answer",
+      "constraint_evidence",
+      "domain_size",
+      "exact_rejection_test_ids",
+      "propagation_rule_ids",
+      "propagation_trace",
+      "record_id",
+      "removed_candidates",
+      "row_family",
+      "row_id",
+      "source_artifact"
+    ]
+  },
+  "tests_run": [
+    ".venv/bin/pytest tests/python/test_experiment_3197_exverus_inductive_certificate_expansion_v1.py -q -o addopts=''",
+    ".venv/bin/coverage erase",
+    ".venv/bin/coverage run --source=python/carnot/verify/exverus_inductive_certificate_expansion_v1.py -m pytest -o addopts='' tests/python/test_experiment_3197_exverus_inductive_certificate_expansion_v1.py -q",
+    ".venv/bin/coverage report --include='python/carnot/verify/exverus_inductive_certificate_expansion_v1.py' --fail-under=100 --show-missing",
+    ".venv/bin/python scripts/check_spec_coverage.py tests/python/test_experiment_3197_exverus_inductive_certificate_expansion_v1.py",
+    ".venv/bin/pytest tests/python -q"
+  ]
+}

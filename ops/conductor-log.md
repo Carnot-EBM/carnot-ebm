@@ -6466,3 +6466,4 @@ web search: Semantic Scholar 2507.02092 Energy |
 | 2026-05-27 15:55 UTC | Clean live SOTA verifier rerun v11 gated on CUDA-b | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp3193-llama-cpp-cuda-offload-health-prob |
 | 2026-05-27 15:57 UTC | Clean live SOTA verifier rerun v11 gated on CUDA-b | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp3193-llama-cpp-cuda-offload-health-prob |
 | 2026-05-27 16:15 UTC | Adaptive verification granularity policy over exac | OK | 81 passed in 3.66s |
+| 2026-05-27 16:28 UTC | GenCP-style domain preview compiler for bounded re | OK | 81 passed in 2.20s |
