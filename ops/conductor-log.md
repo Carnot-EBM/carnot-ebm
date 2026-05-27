@@ -6494,3 +6494,5 @@ web search |
 | 2026-05-27 21:28 UTC | ConstraintBench-style feasibility and objective pi | OK | 81 passed in 3.60s |
 | 2026-05-27 21:30 UTC | Clean live SOTA verifier rerun v12 gated on exp320 | GATE_BLOCK | Pre-emptive skip: upstream retired (exp3208-full-local-sota-receipt-v5) |
 | 2026-05-27 21:30 UTC | Structured repair proposal preflight gated on exp3 | GATE_BLOCK | Pre-emptive skip: upstream retired (exp3208-full-local-sota-receipt-v5) |
+| 2026-05-27 21:43 UTC | Repair gate decision v6 with receipt, clean verifi | OK | 81 passed in 3.68s |
+| 2026-05-27 21:45 UTC | Structured repair proposal preflight gated on exp3 | GATE_BLOCK | Pre-emptive skip: upstream retired (exp3208-full-local-sota-receipt-v5) |

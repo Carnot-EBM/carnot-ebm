@@ -1,0 +1,24 @@
+{
+  "experiment": 3214,
+  "schema": "blocked_gate_check_v1",
+  "run_date": "2026-05-27",
+  "started_at": "2026-05-27T21:45:14.620188+00:00",
+  "finished_at": "2026-05-27T21:45:14.620188+00:00",
+  "duration_s": 0.0,
+  "status": "blocked",
+  "title": "Multi-turn repair ladder v7 gated on exp3213 repair_gate_state",
+  "honest_verdict": "blocked_gate_check_failed",
+  "gate_check_summary": "1 of 1 gate(s) failed; first failure: exp3213-repair-gate-decision-v6.repair_gate_state (actual='blocked' == expected='unblocked')",
+  "gates_evaluated": [
+    {
+      "upstream": "exp3213-repair-gate-decision-v6",
+      "artifact_field": "repair_gate_state",
+      "op": "==",
+      "expected": "unblocked",
+      "actual": "blocked",
+      "passed": false,
+      "reason": "actual='blocked' == expected='unblocked'"
+    }
+  ],
+  "blocked_at_layer": "conductor_pre_gate"
+}
