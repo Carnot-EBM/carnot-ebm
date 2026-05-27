@@ -179,6 +179,22 @@ repos:
         pass_filenames: true
         always_run: true
 
+      # Overdue-priority forcing function: refuses commits to
+      # research-roadmap-next.yaml or ops/known-issues.md that leave
+      # any priority at pending_count >= 3 without pickup or
+      # operator_override per CLAUDE.md "Overdue-Priority Forcing
+      # Function" (2026-04-28). Layer 1 mechanical backstop for the
+      # rule that the .294-.298 planners structurally ignored — the
+      # Prompt-Injection KAN v4 priority sat at pending_count=5
+      # across 5 milestones because the rule was design-time
+      # discipline only.
+      - id: overdue-priority-lint
+        name: Overdue-Priority Forcing Function discipline
+        entry: python3 scripts/overdue_priority_lint.py
+        language: system
+        files: '^(research-roadmap-next\.yaml|ops/known-issues\.md)$'
+        pass_filenames: false
+
       # Adversarial landing-page lint: catches fever-dream patterns
       # (bloated cards, per-milestone narrative, raw expNNNN, internal
       # acronyms, section card-count caps exceeded). Layer 1 of the
