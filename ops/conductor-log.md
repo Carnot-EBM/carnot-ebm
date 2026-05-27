@@ -6420,3 +6420,4 @@ web search: |
 | 2026-05-27 01:05 UTC | Live SOTA authenticity replay v2 | FAIL | Codex CLI error: Wall-clock+idle timeout after 1204s (390s silence). Last out |
 | 2026-05-27 01:21 UTC | Verifier invariance and token-suspicion audit | OK | 81 passed in 3.38s |
 | 2026-05-27 01:36 UTC | Preconditioned clean live SOTA verifier rerun v9 | OK | 81 passed in 3.60s |
+| 2026-05-27 01:50 UTC | Repair gate decision v3 materialized | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_3168_repair_ |
