@@ -3000,6 +3000,79 @@ with `complete:` or `complete_` when bounded diagnostic evidence is complete.
 |---|---|---|
 | REQ-VERIFY-3173 | Implemented (`python/carnot/eval/ebcn_kan_bounded_diagnostic_expansion_v2.py`) | Implemented (`tests/python/test_experiment_3173_ebcn_kan_bounded_diagnostic_expansion_v2.py`) |
 
+### REQ-VERIFY-3178: Receipt-Backed Live Authenticity Contract V3
+
+The repository shall provide an Exp 3178 receipt-backed live-inference
+authenticity contract builder that writes
+`results/experiment_3178_receipt_backed_authenticity_contract_v3.json`
+without making live model calls, executing verifier panels, running repairs,
+downloading models, pushing commits, or modifying `scripts/research_conductor.py`.
+
+The builder MUST preserve valid Exp 3164 v2 measured-work requirements,
+including local model path evidence, model-load proof, controlled subprocess
+return codes, prompt and transcript hashes, token counts, random seed,
+reproducibility checksum or equivalent command hash evidence, and wall-clock
+claims supported by command output. It MUST read Exp 3165 and record the exact
+`.294` replay blocker reason rather than collapsing it into a generic failed
+preflight. It MUST also cite Exp 3167 and Exp 3176 so downstream clean-rerun
+tasks can distinguish a completed gated skip from missing evidence.
+
+The v3 contract SHALL define substrate classes named exactly
+`model_cache_missing`, `loader_missing`, `cuda_unavailable`,
+`cuda_available_unhealthy`, `cpu_fallback_receipt_only`, and
+`full_local_sota_receipt`. The substrate classification policy MUST separate
+HuggingFace cache availability, loader/import availability, CUDA discovery,
+CUDA health, CPU fallback admissibility, receipt completeness, and headline
+eligibility. CPU fallback MAY prove receipt wiring for a bounded smoke, but it
+SHALL NOT unlock headline verifier benchmark claims or clean verifier reruns.
+
+The required receipt field policy SHALL include `selected_model_id`,
+`model_path`, `model_file_hash` when cheap, `loader_name`, `substrate_used`,
+`prompt_hashes`, `transcript_hashes`, `token_counts`, `random_seed`,
+`wall_clock_s`, `command_hash`, `subprocess_return_code`, `stderr_tail`,
+`throughput_plausibility`, and `replay_count`. Fake-evidence rejection criteria
+MUST explicitly cover missing model/cache proof, missing loader proof, missing
+CUDA health for headline claims, CPU-only evidence promoted as headline
+evidence, missing transcript or prompt hashes, stale transcript reuse, missing
+token counts or seeds, unsupported wall-clock claims, uncontrolled subprocess
+return codes, impossible throughput, and one-prompt smoke evidence promoted as
+a benchmark.
+
+The terminal artifact MUST include
+`receipt_backed_authenticity_contract_v3_ready`,
+`inherited_v2_contract_fields`, `substrate_classification_policy`,
+`required_receipt_fields`, `cpu_fallback_policy`,
+`fake_evidence_rejection_criteria`, `clean_rerun_unlock_requirements`,
+`headline_claim_policy`, `source_artifacts`, `inference_substrate`, and
+`honest_verdict`. It SHOULD also include the extracted Exp 3164 measured-work
+requirements, the exact Exp 3165 blocker reason, field-principle annotations,
+tests run, source checksums, duration, and run date. The readiness flag SHALL
+be true only when all required policy blocks are present, the v2 evidence rules
+are inherited, the six substrate classes are defined, CPU fallback remains
+non-headline, clean rerun unlocks require full local SOTA receipts plus exact
+authority scoring and controlled invariance, and the inference substrate
+declares no live model inference for Exp 3178 itself.
+
+### SCENARIO-VERIFY-3178: V3 Contract Separates Substrate Blockers From Headline Evidence
+
+Given Exp 3164 contains the duration-corrected v2 measured-work contract, Exp
+3165 reports a blocked local SOTA replay, Exp 3167 reports a clean verifier
+gated skip, and Exp 3176 closes `.294` with paper readiness still blocked,
+When Exp 3178 builds the receipt-backed authenticity contract,
+Then it writes the terminal JSON artifact without live inference, preserves the
+v2 measured-work rules, records the exact Exp 3165 blocker reason, defines the
+six required substrate classes, names all required receipt fields, allows CPU
+fallback only as receipt-wiring evidence, refuses headline claims from CPU
+fallback or one-prompt smoke evidence, and requires full local SOTA receipts,
+exact-authority scoring, and controlled invariance before any clean verifier
+rerun can become headline-eligible.
+
+## Implementation Status (REQ-VERIFY-3178)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-VERIFY-3178 | Implemented (`python/carnot/verify/receipt_backed_authenticity_contract_v3.py`) | Implemented (`tests/python/test_experiment_3178_receipt_backed_authenticity_contract_v3.py`) |
+
 ### REQ-VERIFY-3006: EqR Fixed-Point Energy Diagnostic Over Cached Validator Trajectories
 
 The repository shall provide a deterministic Exp 3006 fixed-point energy
