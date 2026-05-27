@@ -6485,3 +6485,4 @@ web search |
 | 2026-05-27 19:47 UTC | Archive .296 closeout and activate .297 planning a | OK | 81 passed in 4.07s |
 | 2026-05-27 20:01 UTC | CUDA environment forensics ledger for selected Pyt | OK | 81 passed in 4.66s |
 | 2026-05-27 20:56 UTC | llama.cpp CUDA rebuild and clean subprocess smoke  | OK | 81 passed in 2.39s |
+| 2026-05-27 20:58 UTC | Full local SOTA GGUF receipt v5 gated on exp3207 C | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp3207-llama-cpp-cuda-rebuild-clean-subpr |
