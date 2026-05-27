@@ -1,0 +1,194 @@
+{
+  "artifact": "experiment_3185_multi_turn_repair_ladder_v5",
+  "duration_s": 0.00336,
+  "exact_check_results": [],
+  "field_principles": {
+    "exact_check_results": "semantic repair must be exact-scored",
+    "gate_state": "repair behavior must trace to gate decision",
+    "gated_skip": "skipped live repair must be explicit",
+    "headline_claim_allowed": "gated or smoke evidence must not become headline",
+    "honest_verdict": "terminal verdict must honestly report blocked preconditions",
+    "inference_substrate": "live or gated-skip substrate must be declared",
+    "models_used": "SOTA policy must be auditable",
+    "multi_turn_repair_ladder_v5_ready": "repair ladder must materialize even when gated",
+    "remaining_blockers": "incomplete repair must remain actionable",
+    "repair_attempt_count": "no-call artifacts must not imply live repair",
+    "repair_success_delta": "repair benefit must be quantified",
+    "repair_targets": "repair attempts must trace to certificates",
+    "transcript_receipts": "live repair evidence must be replayable"
+  },
+  "gate_state": "blocked_receipt_precondition",
+  "gated_skip": true,
+  "headline_claim_allowed": false,
+  "honest_verdict": "blocked_repair_gate_precondition: repair gate not unblocked: blocked_receipt_precondition",
+  "inference_substrate": {
+    "exact_authority_only": true,
+    "executes_models": false,
+    "executes_repairs": false,
+    "executes_solvers": false,
+    "executes_verifiers": false,
+    "gate_state": "blocked_receipt_precondition",
+    "gated_skip": true,
+    "kind": "multi_turn_repair_ladder_v5",
+    "legacy_small_models_headline_eligible": false,
+    "live_model_calls": 0,
+    "model_policy": [
+      "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "unsloth/gemma-4-31B-it-GGUF",
+      "unsloth/gemma-4-26B-A4B-it-GGUF"
+    ],
+    "models_used": [],
+    "no_live_inference": true,
+    "repair_calls": 0,
+    "repair_target_count": 0
+  },
+  "models_used": [],
+  "multi_turn_repair_ladder_v5_ready": true,
+  "ops_docs_reconciliation_left_to_conductor": true,
+  "remaining_blockers": [
+    "repair gate not unblocked: blocked_receipt_precondition",
+    "exp3179.clean_rerun_allowed is not true",
+    "exp3181.flagged_adversarial is not false",
+    "exp3181.headline_claim_allowed is not true",
+    "clean verifier false-accept gate is not acceptable",
+    "exp3183.repair_call_ready is not true",
+    "exp3183: flagged_adversarial_evidence_present"
+  ],
+  "repair_attempt_count": 0,
+  "repair_success_delta": 0.0,
+  "repair_targets": [],
+  "run_date": "20260527",
+  "schema": "carnot.multi_turn_repair_ladder.v5",
+  "scripts_research_conductor_modified": false,
+  "source_artifacts": [
+    {
+      "path": "AGENTS.md",
+      "present": true,
+      "readable_json_object": null,
+      "required": false,
+      "role": "agents_repo_instructions",
+      "sha256": "b3d6581b04f16b85f77defb2837c98dc3b60ed51e10b347ecb36e609f318b619",
+      "source_type": "text"
+    },
+    {
+      "path": "CODEX.md",
+      "present": true,
+      "readable_json_object": null,
+      "required": false,
+      "role": "codex_repo_workflow",
+      "sha256": "1db7ebc1009714f872db83447828a8957c3abb72061832cc1bc307735cd96bbe",
+      "source_type": "text"
+    },
+    {
+      "path": "CLAUDE.md",
+      "present": true,
+      "readable_json_object": null,
+      "required": false,
+      "role": "claude_authenticity_rules",
+      "sha256": "cdc00581d37d1bd3c77a69b058787f74ecc71545a97c1eab31c48961637b3224",
+      "source_type": "text"
+    },
+    {
+      "path": "scripts/experiment_template.py",
+      "present": true,
+      "readable_json_object": null,
+      "required": false,
+      "role": "experiment_template_policy",
+      "sha256": "86559064fcfb0e0f06cb021609f1e82342c9d8464dc86b654d30d889f787de9f",
+      "source_type": "text"
+    },
+    {
+      "path": "python/carnot/inference/sota_models.py",
+      "present": true,
+      "readable_json_object": null,
+      "required": false,
+      "role": "sota_model_registry",
+      "sha256": "6974016f8fd2f8df844518a554967cf0682e63107302c22059ab3d696f645ce1",
+      "source_type": "python"
+    },
+    {
+      "path": "openspec/capabilities/verification/spec.md",
+      "present": true,
+      "readable_json_object": null,
+      "required": true,
+      "role": "verification_openspec",
+      "sha256": "7556a7cce701cf141e9b6f4d711dccb385dec7c09709529f4bc792187c2b1079",
+      "source_type": "text"
+    },
+    {
+      "path": "results/experiment_3169_repair_ladder_materializer_v4.json",
+      "present": true,
+      "readable_json_object": true,
+      "required": false,
+      "role": "exp3169_repair_ladder_v4",
+      "sha256": "6cb534407f63f88a90517ffbfeab6c820f249c7b52094633013452e1294cd619",
+      "source_type": "json"
+    },
+    {
+      "path": "results/experiment_3179_local_sota_receipt_smoke_v3.json",
+      "present": true,
+      "readable_json_object": true,
+      "required": false,
+      "role": "exp3179_receipt_smoke_v3",
+      "sha256": "d3090bf2cc07a5dde0d55161721268f80c5fdc2aa532e460516f4d7520ffae35",
+      "source_type": "json"
+    },
+    {
+      "path": "results/experiment_3181_clean_live_sota_verifier_rerun_v10.json",
+      "present": true,
+      "readable_json_object": true,
+      "required": false,
+      "role": "exp3181_clean_verifier_v10",
+      "sha256": "3ca7dbf4b70e8cb20dd7377e54e7d223da84b1150aed44d6c7debe4f6cdd9bf9",
+      "source_type": "json"
+    },
+    {
+      "path": "results/experiment_3183_counterexample_certificate_expansion_v3.json",
+      "present": true,
+      "readable_json_object": true,
+      "required": true,
+      "role": "exp3183_certificate_expansion_v3",
+      "sha256": "b3ed5fb0b72d4369431a698ce2a08e50693b3e9366be9cf438334436834b9c71",
+      "source_type": "json"
+    },
+    {
+      "path": "results/experiment_3184_repair_gate_decision_v4.json",
+      "present": true,
+      "readable_json_object": true,
+      "required": true,
+      "role": "exp3184_repair_gate_decision_v4",
+      "sha256": "6d8a83ce4fe1390f0bbef904d0f67ad5a09ea325bfabe2a1eecb392ec966bf81",
+      "source_type": "json"
+    },
+    {
+      "path": "python/carnot/verify/multi_turn_repair_ladder_v5.py",
+      "present": true,
+      "readable_json_object": null,
+      "required": false,
+      "role": "exp3185_module",
+      "sha256": "707d1483123873722eee539a4289f1a48af57bc06117da2fe3742121f993baa8",
+      "source_type": "python"
+    },
+    {
+      "path": "tests/python/test_experiment_3185_multi_turn_repair_ladder_v5.py",
+      "present": true,
+      "readable_json_object": null,
+      "required": false,
+      "role": "exp3185_tests",
+      "sha256": "ac96a38704decca91c2c35baf0da6b005aed2973d3aa41699449d17f3ff62846",
+      "source_type": "python"
+    }
+  ],
+  "spec_refs": [
+    "REQ-VERIFY-3185",
+    "SCENARIO-VERIFY-3185"
+  ],
+  "tests_run": [
+    ".venv/bin/pytest tests/python/test_experiment_3185_multi_turn_repair_ladder_v5.py -q --no-cov",
+    ".venv/bin/coverage erase && .venv/bin/coverage run --source=python/carnot/verify -m pytest -o addopts='' tests/python/test_experiment_3185_multi_turn_repair_ladder_v5.py -q",
+    ".venv/bin/coverage report --include='python/carnot/verify/multi_turn_repair_ladder_v5.py' --fail-under=100 --show-missing",
+    ".venv/bin/python scripts/check_spec_coverage.py tests/python/test_experiment_3185_multi_turn_repair_ladder_v5.py",
+    ".venv/bin/pytest tests/python -q"
+  ],
+  "transcript_receipts": []
+}

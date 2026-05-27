@@ -6449,3 +6449,4 @@ web search: Semantic Scholar 2507.02092 Energy |
 | 2026-05-27 09:59 UTC | Clean live SOTA verifier rerun v10 with receipt ga | OK | 81 passed in 3.42s |
 | 2026-05-27 10:15 UTC | Distributional EBM exact-row uncertainty sidecar v | OK | 81 passed in 2.37s |
 | 2026-05-27 10:34 UTC | Counterexample certificate expansion v3 for repair | OK | 81 passed in 4.85s |
+| 2026-05-27 11:52 UTC | Repair gate decision v4 from receipts, invariance, | OK | 81 passed in 2.23s |

@@ -3441,6 +3441,62 @@ ladder state with strict attempt limits when every predicate passes.
 |---|---|---|
 | REQ-VERIFY-3184 | Implemented (`python/carnot/verify/repair_gate_decision_v4.py`) | Implemented (`tests/python/test_experiment_3184_repair_gate_decision_v4.py`) |
 
+### REQ-VERIFY-3185: Multi-Turn Repair Ladder V5
+
+The repository shall provide an Exp 3185 multi-turn repair ladder v5 builder
+that writes `results/experiment_3185_multi_turn_repair_ladder_v5.json` whether
+the Exp 3184 repair gate opens or remains blocked. The builder MUST load
+`results/experiment_3184_repair_gate_decision_v4.json` before any repair
+attempt. If `repair_gate_state` is anything other than
+`unblocked_for_bounded_repair_ladder`, the builder MUST NOT call a live model,
+MUST set `gated_skip=true`, `repair_attempt_count=0`, empty `models_used`,
+empty `transcript_receipts`, empty `exact_check_results`,
+`repair_success_delta=0.0`, `headline_claim_allowed=false`, and MUST carry all
+gate blockers into `remaining_blockers`.
+
+When Exp 3184 unblocks repair, the builder SHALL select only a bounded set of
+certificate-backed repair targets from Exp 3183 counterexample certificate
+records. Before every repair call it SHALL re-check mandated local SOTA GGUF
+availability and receipt evidence for the exact model used. The mandated model
+policy is exactly `unsloth/Qwen3.6-35B-A3B-GGUF`,
+`unsloth/gemma-4-31B-it-GGUF`, and
+`unsloth/gemma-4-26B-A4B-it-GGUF`; legacy small models MAY be recorded only as
+loud smoke fallbacks and SHALL NOT populate headline repair metrics.
+
+For each selected repair target, the ladder SHALL run at most two bounded
+turns: an initial proposal, an exact/canonical semantic check, counterexample
+feedback when the first proposal fails, a second proposal, and a second exact
+check. It SHALL hash every repair-call transcript and SHALL score success only
+from exact/canonical semantic checks, never from JSON validity, model
+self-judgment, or schema shape alone.
+
+The terminal artifact MUST include `multi_turn_repair_ladder_v5_ready`,
+`gated_skip`, `gate_state`, `repair_attempt_count`, `models_used`,
+`repair_targets`, `transcript_receipts`, `exact_check_results`,
+`repair_success_delta`, `remaining_blockers`, `headline_claim_allowed`,
+`inference_substrate`, and `honest_verdict`. `headline_claim_allowed` may be
+true only when the gate is unblocked, mandated local SOTA GGUF evidence was
+used, every accepted repair has exact/canonical semantic acceptance, no legacy
+small model contributes to headline metrics, and all remaining blockers are
+resolved.
+
+### SCENARIO-VERIFY-3185: Blocked Gate Produces Explicit No-Call Repair Ladder
+
+Given Exp 3184 may be blocked and Exp 3183 may contain certificate-backed
+counterexample records,
+When Exp 3185 builds the repair ladder v5 artifact,
+Then it first reads the Exp 3184 gate, writes a complete terminal artifact even
+when repair is skipped, preserves gate blockers in `remaining_blockers`, records
+zero repair attempts and no headline claim for blocked gates, and performs live
+repair calls only for the exact unblocked gate state with mandated SOTA GGUF
+cache and receipt evidence re-checked before each call.
+
+## Implementation Status (REQ-VERIFY-3185)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-VERIFY-3185 | Implemented (`python/carnot/verify/multi_turn_repair_ladder_v5.py`) | Implemented (`tests/python/test_experiment_3185_multi_turn_repair_ladder_v5.py`) |
+
 ### REQ-VERIFY-3006: EqR Fixed-Point Energy Diagnostic Over Cached Validator Trajectories
 
 The repository shall provide a deterministic Exp 3006 fixed-point energy
