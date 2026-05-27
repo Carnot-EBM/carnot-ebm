@@ -1,5 +1,9 @@
 # Carnot — Changelog
 
+## 2026-05-27 (Milestone 2026.05.297 Operational Retrospective)
+
+- [outer-loop] Wrote `results/operational_retro_2026_05_297.json` (schema `carnot.operational_retro.v64`). The scoped timing ledger contains 0 total wall-time minutes, 0 completed experiments, 0 compute-bound experiments, and no slowest-experiment rows; longest compute-bound run, compute-bound GPU efficiency, and DualGPURunner coverage are no data available this milestone. GPU STATE showed GPU 0 idle, but `gpu_idle_on_compute_bound_tasks=null` because no compute-bound timing row exists, so idle GPU is not flagged as a bottleneck. Recommended tooling change: add a no-data pre-retro sentinel plus activation-to-first-commit heartbeat before drawing efficiency conclusions.
+
 ## 2026-05-27 (Milestone 2026.05.297 Research Planning)
 
 - [outer-loop] Planned milestone 2026.05.297 as "CUDA Receipt Recovery + Context-Shortcut Verification + Evidence-Gated FR-11 Replay" after the operator confirmed all `.296` tasks completed. Used `results/experiment_3204_capstone_v296.json`, `results/experiment_3203_cross_corpus_matrix_v30.json`, and `.296` experiment artifacts as authority: `.296` completed but remained `paper_ready=false` with `publication_blocker_count=85`, blocked CUDA/offload initialization for the selected Python/llama.cpp path, clean verifier and repair gated, FR-11 controller trace memory promoted without model-weight updates, and hardware claims diagnostic-only.

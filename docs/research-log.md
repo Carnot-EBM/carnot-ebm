@@ -4735,3 +4735,9 @@ The critical path for milestone .250:
 - theme: Operational closeout for a milestone with no scoped timing rows
 - key result: Authoritative timing reports no experiment commits since activation, so compute-bound runtime, GPU-efficiency, and DualGPURunner assessment have no data available this milestone.
 - acceptance: no data available this milestone
+
+### Milestone 2026.05.297
+- exp_range: no data available this milestone
+- theme: Operational review for a milestone with no post-activation experiment commits
+- key result: The scoped ledger contains 0 completed experiments; longest compute-bound task, compute-bound GPU-use, and DualGPURunner assessment are no data available this milestone.
+- acceptance: no data available this milestone

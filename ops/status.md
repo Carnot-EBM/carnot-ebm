@@ -1,6 +1,20 @@
 # Carnot — Operational Status
 
-**Last Updated:** 2026-05-27 (Milestone 2026.05.297 research planning staged)
+**Last Updated:** 2026-05-27 (Milestone 2026.05.297 operational retrospective complete)
+
+## Session 2026-05-27 - Milestone 2026.05.297 Operational Retrospective Complete
+
+The milestone 2026.05.297 timing ledger has no experiment commits after
+activation. The retrospective preserves
+`total_wall_time_minutes=0`, `experiments_completed=0`,
+`compute_bound_experiments_count=0`, `slowest_experiments=[]`, and
+`gpu_idle_on_compute_bound_tasks=null`; compute-bound duration,
+compute-bound GPU utilization, and multi-model DualGPURunner coverage have
+no data available this milestone. Updated
+`results/operational_retro_2026_05_297.json`, `ops/changelog.md`, and
+`docs/research-log.md`. Left `docs/roadmap.md`, `docs/index.html`,
+`README.md`, `scripts/research_conductor.py`, and `research-roadmap.yaml`
+untouched.
 
 ## Session 2026-05-27 - Milestone 2026.05.297 Research Planning Staged
 

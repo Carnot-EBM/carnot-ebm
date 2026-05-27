@@ -1,0 +1,27 @@
+{
+  "schema": "carnot.operational_retro.v64",
+  "milestone": "2026.05.297",
+  "generated_at": "2026-05-27T22:51:51Z",
+  "retro_type": "operational_full",
+  "total_wall_time_minutes": 0,
+  "experiments_completed": 0,
+  "compute_bound_experiments_count": 0,
+  "slowest_experiments": [],
+  "gpu_idle_on_compute_bound_tasks": null,
+  "summary": "The scoped timing ledger for milestone 2026.05.297 contains the locked counts: 0 total wall-time minutes, 0 completed experiments, and 0 compute-bound experiments. With no experiment commits after activation, there is no data available this milestone for ranking compute-bound runs, judging compute-bound GPU use, or checking DualGPURunner engagement.",
+  "bottlenecks_identified": [
+    "The operational record is empty for this activation window, so the process bottleneck is observability and dispatch absence rather than measured wall-time."
+  ],
+  "improvements_suggested": [
+    "Add a pre-retro no-data sentinel that records the milestone as pending when experiments_completed is 0.",
+    "Emit an activation-to-first-commit heartbeat so operators can distinguish an empty execution window from a normal completed milestone.",
+    "Require timing rows to preserve compute_bound and parallel_model_count fields before attempting GPU-efficiency or DualGPURunner analysis."
+  ],
+  "top_3_highest_leverage_actions": [
+    "Gate operational retros on the presence of at least one milestone-scoped experiment commit, or mark the retro as no-data without efficiency conclusions.",
+    "Add a conductor heartbeat from milestone activation to first experiment commit.",
+    "Preserve compute_bound tags and parallel model counts in timing rows so GPU and runner checks are automatically gated by evidence."
+  ],
+  "estimated_time_savings_pct": 0,
+  "meta_reflection": "This retrospective is intentionally narrow because the authoritative timing source has 0 completed experiments. The GPU snapshot showed idle hardware, but the timing ledger has 0 compute-bound rows, so that cannot be promoted into a GPU bottleneck claim."
+}
