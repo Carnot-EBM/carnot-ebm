@@ -1,0 +1,286 @@
+{
+  "active_roadmap_modified": false,
+  "auxiliary_fixture_artifacts": [
+    {
+      "invalidity": null,
+      "path": "results/experiment_3210_context_cot_clbench_parametric_shortcut_fixtures_v1.json",
+      "present": true,
+      "readable_json_object": true,
+      "ready_for_clean_verifier": true,
+      "role": "exp3210_context_cot_clbench_parametric_shortcut_fixtures_v1",
+      "summary": {
+        "clean_rerun_allowed": null,
+        "clean_verifier_state": null,
+        "experiment_id": "exp3210",
+        "honest_verdict": "complete: context_cot_clbench_parametric_shortcut_fixtures_v1 ready_for_clean_verifier=true; fixture_count=30; optional_llm_smoke=null",
+        "ready_for_repair_gate": null,
+        "repair_correctness_claimed": null,
+        "repair_gate_state": null,
+        "schema_version": "carnot.context_cot_clbench_parametric_shortcut_fixtures.v1",
+        "status": null
+      }
+    },
+    {
+      "invalidity": null,
+      "path": "results/experiment_3211_constraintbench_feasibility_objective_pilot_v1.json",
+      "present": true,
+      "readable_json_object": true,
+      "ready_for_clean_verifier": true,
+      "role": "exp3211_constraintbench_feasibility_objective_pilot_v1",
+      "summary": {
+        "clean_rerun_allowed": null,
+        "clean_verifier_state": null,
+        "experiment_id": "exp3211",
+        "honest_verdict": "complete: exact ConstraintBench-style pilot only; no full ConstraintBench coverage claimed; fixture_count=15",
+        "ready_for_repair_gate": null,
+        "repair_correctness_claimed": null,
+        "repair_gate_state": null,
+        "schema_version": "carnot.constraintbench_feasibility_objective_pilot.v1",
+        "status": null
+      }
+    }
+  ],
+  "blockers": [
+    {
+      "actual": {
+        "present": false,
+        "readable_json_object": false
+      },
+      "code": "missing_mandatory_artifact",
+      "detail": "mandatory repair-gate artifact is absent or malformed",
+      "expected": true,
+      "field": "present/readable_json_object",
+      "source_artifact": "results/experiment_3209_clean_live_sota_verifier_rerun_v12.json"
+    },
+    {
+      "actual": {
+        "present": false,
+        "readable_json_object": false
+      },
+      "code": "missing_mandatory_artifact",
+      "detail": "mandatory repair-gate artifact is absent or malformed",
+      "expected": true,
+      "field": "present/readable_json_object",
+      "source_artifact": "results/experiment_3212_structured_repair_proposal_preflight_v1.json"
+    },
+    {
+      "actual": null,
+      "code": "exp3208_clean_rerun_not_allowed",
+      "detail": "1 of 1 gate(s) failed; first failure: exp3207-llama-cpp-cuda-rebuild-clean-subprocess-v1.cuda_receipt_ready (actual=False == expected=True)",
+      "expected": true,
+      "field": "clean_rerun_allowed",
+      "source_artifact": "results/experiment_3208_full_local_sota_receipt_v5.json"
+    },
+    {
+      "actual": null,
+      "code": "exp3209_clean_verifier_state_not_clean",
+      "detail": "Exp 3209 did not report a clean verifier state",
+      "expected": "clean",
+      "field": "clean_verifier_state",
+      "source_artifact": "results/experiment_3209_clean_live_sota_verifier_rerun_v12.json"
+    },
+    {
+      "actual": null,
+      "code": "exp3212_ready_for_repair_gate_not_true",
+      "detail": "structured proposal preflight is not ready for the repair gate",
+      "expected": true,
+      "field": "ready_for_repair_gate",
+      "source_artifact": "results/experiment_3212_structured_repair_proposal_preflight_v1.json"
+    },
+    {
+      "actual": null,
+      "code": "exp3212_repair_correctness_claim_not_false",
+      "detail": "proposal preflight must not claim repair correctness",
+      "expected": false,
+      "field": "repair_correctness_claimed",
+      "source_artifact": "results/experiment_3212_structured_repair_proposal_preflight_v1.json"
+    }
+  ],
+  "clean_verifier_gate_passed": false,
+  "conductor_file_modified": false,
+  "experiment_id": "exp3213",
+  "honest_verdict": "complete: repair_gate_state=blocked; repair_ladder_allowed=false; blocker_count=6",
+  "inference_substrate": {
+    "downloads_models": false,
+    "executes_repairs": false,
+    "executes_verifiers": false,
+    "kind": "artifact_aggregation_only",
+    "live_model_calls": 0,
+    "new_live_model_calls": 0,
+    "no_llm_calls": true
+  },
+  "milestone": "2026.05.297",
+  "missing_artifacts": [
+    "results/experiment_3209_clean_live_sota_verifier_rerun_v12.json",
+    "results/experiment_3212_structured_repair_proposal_preflight_v1.json"
+  ],
+  "receipt_gate_passed": false,
+  "repair_gate_state": "blocked",
+  "repair_ladder_allowed": false,
+  "required_artifacts": [
+    {
+      "mandatory_for_gate": false,
+      "path": "AGENTS.md",
+      "present": true,
+      "readable_json_object": null,
+      "role": "agents_repo_instructions",
+      "sha256": "b3d6581b04f16b85f77defb2837c98dc3b60ed51e10b347ecb36e609f318b619",
+      "source_type": "text",
+      "summary": {}
+    },
+    {
+      "mandatory_for_gate": false,
+      "path": "CODEX.md",
+      "present": true,
+      "readable_json_object": null,
+      "role": "codex_repo_workflow",
+      "sha256": "1db7ebc1009714f872db83447828a8957c3abb72061832cc1bc307735cd96bbe",
+      "source_type": "text",
+      "summary": {}
+    },
+    {
+      "mandatory_for_gate": false,
+      "path": "CLAUDE.md",
+      "present": true,
+      "readable_json_object": null,
+      "role": "claude_authenticity_rules",
+      "sha256": "cdc00581d37d1bd3c77a69b058787f74ecc71545a97c1eab31c48961637b3224",
+      "source_type": "text",
+      "summary": {}
+    },
+    {
+      "mandatory_for_gate": false,
+      "path": "openspec/capabilities/verification/spec.md",
+      "present": true,
+      "readable_json_object": null,
+      "role": "verification_openspec",
+      "sha256": "298a97bed22edd5af1e7242982b7b370710fc964bba98cc56bc55d71db5990ce",
+      "source_type": "text",
+      "summary": {}
+    },
+    {
+      "mandatory_for_gate": true,
+      "path": "results/experiment_3208_full_local_sota_receipt_v5.json",
+      "present": true,
+      "readable_json_object": true,
+      "role": "exp3208_full_local_sota_receipt_v5",
+      "sha256": "7247a0946944361d6bd1c430daba0b9583416b3cdb7215db4f80413bc0507b27",
+      "source_type": "json",
+      "summary": {
+        "clean_rerun_allowed": null,
+        "clean_verifier_state": null,
+        "experiment_id": 3208,
+        "honest_verdict": "blocked_gate_check_failed",
+        "ready_for_repair_gate": null,
+        "repair_correctness_claimed": null,
+        "repair_gate_state": null,
+        "schema_version": "blocked_gate_check_v1",
+        "status": "blocked"
+      }
+    },
+    {
+      "mandatory_for_gate": true,
+      "path": "results/experiment_3209_clean_live_sota_verifier_rerun_v12.json",
+      "present": false,
+      "readable_json_object": false,
+      "role": "exp3209_clean_live_sota_verifier_rerun_v12",
+      "sha256": null,
+      "source_type": "json",
+      "summary": {}
+    },
+    {
+      "mandatory_for_gate": false,
+      "path": "results/experiment_3210_context_cot_clbench_parametric_shortcut_fixtures_v1.json",
+      "present": true,
+      "readable_json_object": true,
+      "role": "exp3210_context_cot_clbench_parametric_shortcut_fixtures_v1",
+      "sha256": "18725fb6c5f779c7bfe6a7df7658dda8902f7f6b2eb861338005750b5bcb0678",
+      "source_type": "json",
+      "summary": {
+        "clean_rerun_allowed": null,
+        "clean_verifier_state": null,
+        "experiment_id": "exp3210",
+        "honest_verdict": "complete: context_cot_clbench_parametric_shortcut_fixtures_v1 ready_for_clean_verifier=true; fixture_count=30; optional_llm_smoke=null",
+        "ready_for_repair_gate": null,
+        "repair_correctness_claimed": null,
+        "repair_gate_state": null,
+        "schema_version": "carnot.context_cot_clbench_parametric_shortcut_fixtures.v1",
+        "status": null
+      }
+    },
+    {
+      "mandatory_for_gate": false,
+      "path": "results/experiment_3211_constraintbench_feasibility_objective_pilot_v1.json",
+      "present": true,
+      "readable_json_object": true,
+      "role": "exp3211_constraintbench_feasibility_objective_pilot_v1",
+      "sha256": "566a3bc3549c420ad4b1f2d2ffdcdc025c3ffcdd7e62256767079c7ae105ee26",
+      "source_type": "json",
+      "summary": {
+        "clean_rerun_allowed": null,
+        "clean_verifier_state": null,
+        "experiment_id": "exp3211",
+        "honest_verdict": "complete: exact ConstraintBench-style pilot only; no full ConstraintBench coverage claimed; fixture_count=15",
+        "ready_for_repair_gate": null,
+        "repair_correctness_claimed": null,
+        "repair_gate_state": null,
+        "schema_version": "carnot.constraintbench_feasibility_objective_pilot.v1",
+        "status": null
+      }
+    },
+    {
+      "mandatory_for_gate": true,
+      "path": "results/experiment_3212_structured_repair_proposal_preflight_v1.json",
+      "present": false,
+      "readable_json_object": false,
+      "role": "exp3212_structured_repair_proposal_preflight_v1",
+      "sha256": null,
+      "source_type": "json",
+      "summary": {}
+    },
+    {
+      "mandatory_for_gate": false,
+      "path": "results/experiment_3198_repair_gate_decision_v5.json",
+      "present": true,
+      "readable_json_object": true,
+      "role": "exp3198_repair_gate_decision_v5",
+      "sha256": "8af01d6c545853407d9389fb4adc53a3010bba5eb05f86d15770b8a9ca12b396",
+      "source_type": "json",
+      "summary": {
+        "clean_rerun_allowed": null,
+        "clean_verifier_state": "blocked_gate_skipped_conductor_pre_gate",
+        "experiment_id": "exp3198",
+        "honest_verdict": "complete: repair_gate_state=blocked_clean_verifier_gate_skipped; blocker_count=8; downstream_gated_skip_expected=true",
+        "ready_for_repair_gate": null,
+        "repair_correctness_claimed": null,
+        "repair_gate_state": "blocked_clean_verifier_gate_skipped",
+        "schema_version": "carnot.repair_gate_decision.v5",
+        "status": null
+      }
+    },
+    {
+      "mandatory_for_gate": false,
+      "path": "ops/conductor-log.md",
+      "present": true,
+      "readable_json_object": null,
+      "role": "conductor_log",
+      "sha256": "45e9a11ac927300c20b0b67bc2d4c9c300afa2061918d52ab4f29a9b7724d299",
+      "source_type": "text",
+      "summary": {}
+    }
+  ],
+  "schema_version": "carnot.repair_gate_decision.v6",
+  "spec_refs": [
+    "REQ-VERIFY-3213",
+    "SCENARIO-VERIFY-3213"
+  ],
+  "structured_proposal_gate_passed": false,
+  "tests_run": [
+    ".venv/bin/pytest tests/python/test_experiment_3213_repair_gate_decision_v6.py -q -o addopts=''",
+    ".venv/bin/coverage erase",
+    ".venv/bin/coverage run -m pytest -o addopts='' tests/python/test_experiment_3213_repair_gate_decision_v6.py -q",
+    ".venv/bin/coverage report --include='*/repair_gate_decision_v6.py' --fail-under=100 --show-missing",
+    ".venv/bin/python scripts/check_spec_coverage.py",
+    ".venv/bin/pytest tests/python -q"
+  ]
+}

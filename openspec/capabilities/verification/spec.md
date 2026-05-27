@@ -3601,6 +3601,74 @@ domains and Exp 3197 invariant guards.
 |---|---|---|
 | REQ-VERIFY-3198 | Implemented (`python/carnot/verify/repair_gate_decision_v5.py`) | Implemented (`tests/python/test_experiment_3198_repair_gate_decision_v5.py`) |
 
+### REQ-VERIFY-3213: Repair Gate Decision V6 Artifact Aggregation
+
+The repository shall provide an Exp 3213 deterministic repair-gate decision
+v6 builder that writes
+`results/experiment_3213_repair_gate_decision_v6.json` from checked-in
+`.297` evidence only. The builder MUST load the listed upstream artifacts
+when present, record missing paths explicitly, and MUST NOT invoke an LLM,
+run live inference, execute repair generation, execute verifier scoring,
+download models, push commits, modify `scripts/research_conductor.py`, or
+modify the active `research-roadmap.yaml`.
+
+The gate SHALL treat Exp 3208 receipt evidence, Exp 3209 clean-verifier
+evidence, and Exp 3212 structured proposal preflight evidence as mandatory.
+It SHALL set `receipt_gate_passed=true` only when Exp 3208 reports
+`clean_rerun_allowed=true`. It SHALL set `clean_verifier_gate_passed=true`
+only when Exp 3209 reports `clean_verifier_state=clean` and carries no
+unhandled adversarial methodology flag. It SHALL set
+`structured_proposal_gate_passed=true` only when Exp 3212 reports
+`ready_for_repair_gate=true` while `repair_correctness_claimed=false`.
+
+The builder SHALL incorporate Exp 3210 and Exp 3211 as auxiliary exact fixture
+coverage, not as mandatory blockers when absent. Auxiliary fixture artifacts
+SHALL block only when present and explicitly flagged invalid. The prior Exp
+3198 repair-gate artifact and conductor log SHALL be recorded as provenance,
+not as independent authorities that can override the three mandatory gates.
+
+The terminal artifact MUST include `schema_version`, `experiment_id`,
+`milestone`, `required_artifacts`, `missing_artifacts`,
+`receipt_gate_passed`, `clean_verifier_gate_passed`,
+`structured_proposal_gate_passed`, `auxiliary_fixture_artifacts`,
+`repair_gate_state`, `repair_ladder_allowed`, `blockers`,
+`conductor_file_modified`, `active_roadmap_modified`, and `honest_verdict`.
+`repair_gate_state` SHALL be `unblocked`, `blocked`, or `diagnostic_only`.
+`repair_gate_state=unblocked` and `repair_ladder_allowed=true` SHALL occur
+only when the receipt, clean verifier, and structured proposal gates all pass
+and no present auxiliary fixture artifact is flagged invalid. Blocked and
+diagnostic-only artifacts SHALL include machine-readable blocker details and
+SHALL keep `repair_ladder_allowed=false`.
+
+The `honest_verdict` MUST start with `complete:` for all terminal decisions,
+because Exp 3213 is an evidence aggregator whose truthful result can be an
+unblocked gate, a blocked gate, or a diagnostic-only artifact.
+
+### SCENARIO-VERIFY-3213: V6 Gate Uses Only Artifact Evidence
+
+Given `.297` evidence may contain a blocked Exp 3208 receipt artifact, missing
+or gate-skipped Exp 3209 clean-verifier evidence, missing or gate-skipped Exp
+3212 structured proposal evidence, auxiliary exact fixture artifacts, and the
+prior Exp 3198 repair-gate decision,
+When Exp 3213 builds the repair-gate decision v6 artifact,
+Then it records every listed source path as present or missing, keeps Exp 3210
+and Exp 3211 auxiliary unless they are explicitly invalid, emits separate
+receipt, clean-verifier, and structured-proposal gate booleans, and sets
+`repair_gate_state=unblocked` only when those three mandatory gates pass
+without invalid auxiliary evidence.
+
+If any mandatory gate is missing, blocked, malformed, adversarially unhandled,
+or otherwise insufficient, then the builder SHALL keep
+`repair_ladder_allowed=false`, set `repair_gate_state` to `blocked` or
+`diagnostic_only`, and include stable blocker codes explaining the failed
+evidence.
+
+## Implementation Status (REQ-VERIFY-3213)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-VERIFY-3213 | Implemented (`python/carnot/verify/repair_gate_decision_v6.py`) | Implemented (`tests/python/test_experiment_3213_repair_gate_decision_v6.py`) |
+
 ### REQ-VERIFY-3180: Controlled-Invariance Executor V2
 
 The repository shall provide an Exp 3180 controlled-invariance executor that
