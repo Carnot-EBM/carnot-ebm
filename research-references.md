@@ -1,3 +1,107 @@
+## 2026-05-27 Post-.294 Planning Sweep (Milestone 2026.05.295)
+
+This sweep was run after milestone `.294` completed. `.294` did the right
+thing operationally: it materialized all planned artifacts, replaced the old
+fixed-duration authenticity gate with a measured-work contract, produced
+gated-skip repair artifacts instead of missing rows, and promoted an FR-11
+controller-memory update with nonforgetting checks. It did not clear the
+headline path. Matrix v28 reports `paper_ready=false`,
+`publication_blocker_count=73`, three inherited adversarial flags, and one
+carried-forward missing artifact. The clean SOTA verifier rerun remains blocked
+because the mandated GGUF replay preflight found only
+`unsloth/gemma-4-26B-A4B-it-GGUF` locally usable and no CUDA/GPU substrate for
+the replay smoke. The next milestone should therefore target receipt-backed
+local SOTA execution, controlled-invariance clearance, certificate repair
+readiness, and promotion packaging for the FR-11 controller-memory update.
+
+### Receipt-Backed Local SOTA Execution Before New Headline Claims
+
+- **Prior Carnot result:** `.294` established a better contract in
+  `exp3164` but `exp3165` honestly blocked with `live_call_count=0` because the
+  mandated GGUF replay substrate was unavailable.
+- **What:** The next attempt should separate three questions that `.294`
+  currently conflates: whether the model is present in the HF cache, whether a
+  CUDA path is usable, and whether a CPU fallback can produce proof-of-execution
+  receipts for a small smoke without becoming headline evidence.
+- **Relevance to Carnot:** This is the direct blocker for FR-12 verifier trust.
+  A live SOTA artifact should carry model path, loader, prompt hash, transcript
+  hash, token counts, wall-clock evidence, subprocess return code, seed, and a
+  throughput plausibility check. If no compliant run is possible, the artifact
+  must still classify the substrate failure without unblocking repair.
+- **Sources:** Internal artifacts
+  `results/experiment_3164_duration_corrected_authenticity_contract_v2.json`
+  and `results/experiment_3165_live_sota_authenticity_replay_v2.json`.
+
+### Distributional EBMs for Structured Reasoning Uncertainty
+
+- **Paper:** "Distributional Energy-Based Models for Uncertainty-Aware
+  Structured LLM Reasoning" (arXiv:2605.18871).
+- **What:** The paper combines learned quality scoring with deterministic
+  analytical constraint penalties for structured LLM outputs, using ensemble
+  uncertainty to drive targeted regeneration or abstention.
+- **Relevance to Carnot:** This maps cleanly onto Carnot's exact-row verifier
+  frontier: use deterministic exact labels as penalties/authority, train or
+  score a small distributional sidecar over exact rows, and report uncertainty
+  calibration and false-accept separation. The sidecar must remain diagnostic
+  until it covers more than the tiny `.294` EBCN/KAN denominator.
+- **Sources:** https://arxiv.org/abs/2605.18871
+
+### Graph Energy Matching Suggests Transport-Aligned Discrete Sidecars
+
+- **Paper:** "Graph Energy Matching: Transport-Aligned Energy-Based Modeling
+  for Graph Generation" (arXiv:2603.23398), found in the Semantic Scholar
+  citation neighborhood of ARM-EBM.
+- **What:** GEM learns a permutation-invariant potential energy for discrete
+  graph domains and switches from transport-style guidance into a mixing regime
+  for exploration.
+- **Relevance to Carnot:** Carnot's exact verifier rows can be represented as
+  constraint graphs. `.295` should try a diagnostic transport-aligned sidecar
+  over exact rows and known false-accept rows, not a deployed verifier. Useful
+  metrics are false-accept separation, abstention calibration, and whether the
+  sidecar highlights the same counterexample families as exact certificates.
+- **Sources:** https://arxiv.org/abs/2603.23398
+
+### Looped Latent Refinement Is a Self-Learning Design Hint, Not a Local Weight Update
+
+- **Paper/repo:** "LoopUS: Recasting Pretrained LLMs into Looped Latent
+  Refinement Models" (arXiv:2605.11011, GitHub: Thrillcrazyer/LoopUS), found
+  among Semantic Scholar citations to EBT.
+- **What:** LoopUS converts pretrained models into a looped latent refinement
+  architecture with selective gating and adaptive early exit.
+- **Relevance to Carnot:** The actionable `.295` version is not a weight update.
+  It is a controller-memory promotion pack: turn counterexample families into
+  reusable routing/early-exit rules, replay them across heldout environments,
+  and preserve rollback if negative controls regress. This keeps FR-11 progress
+  inside the currently validated controller-memory lane.
+- **Sources:** https://arxiv.org/abs/2605.11011 and
+  https://github.com/Thrillcrazyer/LoopUS
+
+### Deterministic Frontier Bounds Should Guide Repair Before Generation
+
+- **Paper/tool:** "BEAVER: An Efficient Deterministic LLM Verifier"
+  (OpenReview, ICLR 2026 VerifAI-2).
+- **What:** BEAVER uses token trie/frontier data structures to maintain sound
+  probability bounds for prefix-closed semantic constraints.
+- **Relevance to Carnot:** `.294` produced a small counterexample certificate
+  pilot, but it remained flagged because no repair-ready candidate path was
+  cleared. `.295` should expand certificates and frontier records first, then
+  let the repair gate decide whether any live SOTA repair call is allowed.
+- **Sources:** https://openreview.net/forum?id=xO3efBXHM9
+
+### THRML and Kona Stay Boundary Signals Until Local Execution Exists
+
+- **Tools/architecture:** Extropic THRML and Logical Intelligence Kona.
+- **What:** Extropic describes THRML as a JAX library for thermodynamic
+  hypergraphical/probabilistic models and TSU simulation. Kona is presented as
+  an EBM-style constraint layer beneath AI stacks.
+- **Relevance to Carnot:** `.294` found local `thrml` import availability but
+  no authenticated sampler speedup and no local Kona/TSU execution. `.295`
+  should add only an API/factor-graph boundary artifact: translate a small
+  exact-row constraint graph to THRML-compatible structures where possible,
+  record import/API gaps, and continue to forbid speedup or hardware claims.
+- **Sources:** https://extropic.ai/software and
+  https://logicalintelligence.com/kona-ebms-energy-based-models
+
 ## 2026-05-26 Post-.293 Planning Sweep (Milestone 2026.05.294)
 
 This sweep was run after milestone `.293` completed. `.293` moved the evidence

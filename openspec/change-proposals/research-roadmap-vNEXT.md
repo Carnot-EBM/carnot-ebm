@@ -1,294 +1,245 @@
-# Research Roadmap vNEXT - Milestone 2026.05.294
+# Research Roadmap vNEXT - Milestone 2026.05.295
 
-**Title:** Duration-Corrected Live Verifier Recovery + Repair Materialization + FR-11 Counterexample Closure
-**Created:** 2026-05-26
+**Title:** Receipt-Backed Live SOTA Clearance + Certificate Repair Gate + FR-11 Promotion Pack
+**Created:** 2026-05-27
 **Status:** Planned
-**Supersedes:** 2026.05.293 "Verifier Evidence Corrigendum + Repair Ladder Execution + FR-11 Ledger Closure"
+**Supersedes:** 2026.05.294 "Duration-Corrected Live Verifier Recovery + Repair Materialization + FR-11 Counterexample Closure"
 **Execution queue:** `research-roadmap-next.yaml`
 
-## What 2026.05.293 Proved
+## What 2026.05.294 Proved
 
-Milestone `.293` completed its scheduled non-gated work, but the headline path
-regressed from 55 to 65 publication blockers. The authoritative closeout is
-`results/experiment_3162_capstone_v293.json`:
+Milestone `.294` completed all planned tasks and fixed the missing-artifact
+behavior that made prior repair roadmaps hard to audit. The authoritative
+closeout is `results/experiment_3176_capstone_v294.json`:
 
-- `capstone_ready=true`
+- `capstone_v294_ready=true`
 - `paper_ready=false`
-- `publication_blocker_count=65`
-- `blocker_delta_from_v26=10`
-- `next_top_gap=clean_live_verifier_corrigendum_repair_gate`
-- `repair_gate_status=blocked_pending_clean_rerun_gate_failed`
-- `repair_ladder_status=correctly_skipped_gate_blocked_no_live_repair_attempts`
-- `kan_status=bounded_monitor_records_4_new_2_no_deployed_verifier_blockers_3`
+- `publication_blocker_count=73`
+- `blocker_delta_from_v27=8`
+- `missing_artifact_count=1`
+- `verifier_status=gated_skip_preflight_failed_flagged_adversarial_exact_authority_only`
+- `repair_gate_status=blocked_flagged_verifier`
+- `repair_ladder_status=materialized_gated_skip_repair_gate_blocked_no_live_repair_attempts`
+- `fr11_self_learning_status=controller_memory_update_promotable_nonforgetting_passed_no_model_weight_update`
+- `ebcn_kan_status=projection_only_ebcn_kan_diagnostics_no_live_integration_or_deployed_verifier`
+- `hardware_sampler_status=blocked_no_authenticated_speedup_no_hardware_commands_no_speedup_claim_made`
+- `next_top_gap=clean_live_verifier_adversarial_flag_clearance_repair_gate_unblock`
 
-The most important result was the evidence-quality correction, not a verifier
-headline:
+The most useful `.294` result is negative and operationally clean: every
+downstream task wrote an honest artifact. `exp3164` retired the arbitrary fixed
+60 second duration gate as a hard requirement and replaced it with a
+measured-work contract, but `exp3165` still blocked because the mandated GGUF
+replay substrate was unavailable. `exp3167` therefore wrote a full gated-skip
+clean verifier artifact instead of pretending a live rerun occurred. `exp3168`
+and `exp3169` correctly blocked repair until the verifier is clean.
 
-- `exp3150` produced `adversarial_corrigendum_v1_ready=true` and correctly set
-  `live_verifier_evidence_trusted=false`.
-- `exp3151` proved at least one mandated SOTA GGUF is locally callable:
-  `unsloth/gemma-4-26B-A4B-it-GGUF` loaded through `llama_cpp` and returned a
-  transcript hash, but the artifact honestly blocked because `duration_s` was
-  about 10.6 s against a fixed 60 s plausibility floor.
-- `exp3152`, `exp3154`, and `exp3155` were structurally gate-skipped or
-  produced thin `blocked_gate_check_failed` artifacts, leaving matrix v27 with
-  missing deliverable rows.
-- `exp3156` and `exp3157` kept FR-11 honest: controller/residual memory exists,
-  but `ledger_consistency_rate=0.857143`, so promotion remains blocked.
-- `exp3158` showed a promising tiny EBCN diagnostic row
-  (`scalar_energy_auc=1.0`, `exact_labeled_row_count=6`) but correctly denied a
-  live integration claim.
-- `exp3160` kept hardware/sampler claims bounded: no authenticated speedup, no
-  board command transcript, and no local TSU/Kona execution.
+`.294` also created two forward edges:
 
-The main lesson is that `.294` should not repeat `.293` with a larger duration
-constant. It should repair the authenticity contract itself: measured work,
-token counts, model-load evidence, transcript hashes, and controlled
-invariance checks must replace a single arbitrary wall-clock floor.
+- `exp3172` produced a promotable controller-memory update for FR-11:
+  before consistency `0.857143`, after consistency `1.0`, heldout consistency
+  `1.0`, no negative-control regressions, and no model-weight update claim.
+- `exp3173` found a promising but tiny EBCN/KAN diagnostic separation over
+  exact rows and known false accepts. It remained projection-only and denied a
+  deployed verifier claim.
 
-| Area | `.293` result | `.294` consequence |
+| Area | `.294` result | `.295` consequence |
 | --- | --- | --- |
-| Live preflight | One real mandated GGUF call, blocked by fixed duration floor | Define token-scaled plausibility and replay the preflight |
-| Clean verifier rerun | Gated skipped, no full deliverable | Always write a full artifact, even when internally gated |
-| Repair gate | Thin gate-failed artifact | Always write an explicit decision with blockers |
-| Repair ladder | Missing/gated artifacts persist | Always materialize gated-skip or repair metrics |
-| FR-11 | Ledger consistency 0.857143 | Isolate failing counterexample family, then test nonforgetting |
-| EBCN/KAN | Bounded diagnostics, no deployed verifier | Expand exact rows without promotion claim |
-| Hardware | No authenticated speedup | Keep evidence boundaries and tooling probes only |
+| Live SOTA preflight | Contract fixed, but GPU/CUDA substrate unavailable | Classify model/cache/CUDA/CPU failure modes and produce proof-of-execution receipts |
+| Clean verifier rerun | Full gated-skip artifact, still flagged adversarial | Re-run only after receipt-backed local SOTA smoke and controlled-invariance checks |
+| Repair gate | Correctly blocked on flagged verifier | Expand certificate frontier first, then decide whether repair calls are allowed |
+| Repair ladder | Materialized gated skip, no missing-row cascade | Run only if gate is unblocked; otherwise keep full blocked metrics |
+| FR-11 | Controller-memory update promotable, no weights changed | Package promotion, rollback, and cross-environment drift replay |
+| EBCN/KAN | Tiny diagnostic signal, no deployment | Test distributional/transport-aligned sidecars over exact rows |
+| Hardware | THRML import available, no speedup claim | Add API/factor-graph boundary only, no performance claim |
 
 ## Three Biggest Gaps To PRD Vision
 
-1. **FR-12 verifier trust is still blocked by methodology, not model access.**
-   `.293` showed local SOTA inference can run, but the contract rejected the run
-   for a coarse duration rule. The next milestone must distinguish fake
-   evidence from fast legitimate evidence without lowering the authenticity bar.
+1. **FR-12 verifier trust is still blocked by executable evidence.** Carnot has
+   exact authority rows and a corrected authenticity contract, but no current
+   receipt-backed live SOTA run under the mandated GGUF policy. The next
+   milestone must separate cache availability, CUDA availability, CPU fallback,
+   transcript receipts, and headline eligibility.
 
-2. **The repair loop still lacks a complete negative artifact path.** The PRD
-   needs verifiable repair, but the matrix is accumulating missing rows when
-   structured gates skip whole tasks. `.294` makes repair tasks write complete
-   blocked or gated-skip artifacts before any model call, so the publication
-   ledger stops growing from absence.
+2. **The repair loop is waiting on verifier clearance and certificate breadth.**
+   The PRD requires verifiable repair, not repair attempted under a flagged
+   verifier. `.295` expands counterexample certificates and bounded frontier
+   records before any generation step, then lets an explicit repair gate decide.
 
-3. **FR-11 continuous self-learning remains controller-only and inconsistent.**
-   The self-learning loop has memory and replay, but promotion requires ledger
-   consistency of 1.0 plus negative controls. `.294` targets the remaining
-   counterexample family and tests nonforgetting under environment/variant
-   separation.
+3. **FR-11 self-learning is promotable but not operationally packaged.** `.294`
+   proved controller-memory nonforgetting on the known ledger, but the PRD's
+   autonomous self-learning vision needs promotion records, rollback policy,
+   cross-environment drift replay, and clear language that no local model
+   weights were updated.
 
 ## New Research Integrated
 
-The post-`.293` sweep was appended to `research-references.md` before this
-roadmap was designed. Findings shaping `.294`:
+The post-`.294` sweep was appended to `research-references.md` before this
+roadmap was designed. It adds these experimental inputs:
 
-| Finding | Source | Milestone use |
-| --- | --- | --- |
-| Controlled-invariance hallucination sanity checks | arXiv:2605.08346 | `exp3166` adds Force/Remove/shuffled-trace style checks to verifier evidence |
-| CoT trace performativity | arXiv:2605.11746 | `exp3166` treats visible reasoning traces as suspect unless exact evidence supports them |
-| Token-level hallucination detection | arXiv:2605.12384 and HF 2605.05166 | `exp3166` records token/first-token suspicion as triage only |
-| Constrained decoding alignment tax | arXiv:2604.06066 | `exp3169` and `exp3170` score semantic repair, not only schema validity |
-| MCMC/AprAD constrained sampling | OpenReview NeurIPS 2025 | `exp3169` can propose distribution-aware repair candidates after gates pass |
-| BEAVER and TraceFix | OpenReview + arXiv:2605.07935 | `exp3170` builds certificate-first counterexample repair evidence |
-| Self-play/self-correction and KAN forgetting | arXiv:2510.27072, 2506.06923, 2511.12828 | `exp3171` and `exp3172` enforce nonforgetting before FR-11 promotion |
-| THRML/XGrammar/Kona ecosystem | Extropic, GitHub, Logical Intelligence | `exp3174` records tooling boundaries without speedup claims |
+- **Distributional Energy-Based Models** (arXiv:2605.18871) for uncertainty
+  sidecars that combine deterministic constraint penalties with learned quality
+  scores.
+- **Graph Energy Matching** (arXiv:2603.23398) for transport-aligned discrete
+  energy sidecars over constraint graphs.
+- **LoopUS** (arXiv:2605.11011) as a design hint for iterative refinement and
+  early-exit controller memory, without claiming a model-weight update.
+- **BEAVER** (OpenReview ICLR 2026 VerifAI-2) for deterministic bounded
+  frontier records before repair generation.
+- **Extropic THRML** and **Logical Intelligence Kona** as hardware/API boundary
+  signals only; no local TSU/Kona execution or speedup is claimed.
 
 ## Architecture Direction
 
-`.294` keeps exact authority at the center and adds two guardrails:
-
-1. Live authenticity becomes a measured-work contract, not a fixed-duration
-   heuristic.
-2. Repair tasks always materialize a full artifact, even when they internally
-   refuse to run a model.
+`.295` keeps exact solvers and canonical answers as authority. Local SOTA
+models may propose or repair only after a receipt-backed preflight passes.
+Diagnostic EBMs/KANs can score uncertainty and false-accept separation but
+remain sidecars until coverage and live integration are proven.
 
 ```text
-                 +---------------------------------------------+
-                 | .293 capstone                               |
-                 | paper_ready=false, blockers=65              |
-                 | top gap: clean live verifier + repair gate  |
-                 +----------------------+----------------------+
-                                        |
-                                        v
-              +-------------------------+-------------------------+
-              | exp3163 archive + exp3164 preflight contract v2  |
-              +-------------------------+-------------------------+
-                                        |
-                                        v
-              +-------------------------+-------------------------+
-              | exp3165 authenticity replay v2                  |
-              | measured work + transcript hashes + token budget |
-              +-------------------------+-------------------------+
-                                        |
-                                        v
-              +-------------------------+-------------------------+
-              | exp3166 invariance + token-suspicion audit       |
-              +-------------------------+-------------------------+
-                                        |
-                                        v
-              +-------------------------+-------------------------+
-              | exp3167 clean verifier rerun v9                 |
-              | full clean artifact OR full gated-skip artifact  |
-              +-------------------------+-------------------------+
-                                        |
-                                        v
-              +-------------------------+-------------------------+
-              | exp3168 repair gate decision v3                 |
-              | always writes repair_gate_state                  |
-              +-------------------------+-------------------------+
-                                        |
-                         unblocked only inside artifact logic
-                                        |
-                                        v
-        +-------------------------------+-------------------------------+
-        | exp3169 repair materializer + exp3170 counterexample certs   |
-        +-------------------------------+-------------------------------+
+          Exact corpora + regression rows + counterexamples
+                            |
+                            v
+                 Canonical exact authority layer
+                            |
+              +-------------+--------------+
+              |                            |
+              v                            v
+  Receipt-backed local SOTA smoke   Distributional/GEM EBM sidecars
+  - mandated GGUF cache check       - exact-row uncertainty
+  - CUDA/CPU substrate class        - false-accept separation
+  - transcript/proof receipt        - no deployed verifier claim
+              |                            |
+              v                            v
+     Controlled-invariance executor + certificate frontier
+              |                            |
+              +-------------+--------------+
+                            |
+                            v
+                   Clean verifier decision
+                            |
+                            v
+                    Repair gate v4
+                            |
+             +--------------+---------------+
+             |                              |
+             v                              v
+  Gated-skip repair artifact       Live repair ladder if clean
+  with explicit blockers           with exact semantic scoring
 
-        +--------------------------+   +-------------------------------+
-        | exp3171 FR-11 ledger     |-->| exp3172 nonforgetting pilot   |
-        | counterexample isolation |   | controller-only self-learning |
-        +--------------------------+   +-------------------------------+
+FR-11 side lane:
+  ledger counterexamples -> controller-memory promotion pack
+  -> cross-environment drift replay -> rollback/nonforgetting policy
 
-        +--------------------------+   +-------------------------------+
-        | exp3173 EBCN/KAN bounded |   | exp3174 hardware/tooling      |
-        | diagnostic expansion     |   | boundary and ecosystem probe  |
-        +-------------+------------+   +---------------+---------------+
-                      \                              /
-                       v                            v
-                  +----+----------------------------+----+
-                  | exp3175 matrix v28 -> exp3176 capstone |
-                  +----------------------------------------+
+Hardware side lane:
+  exact-row factor graph -> THRML API boundary smoke
+  -> no speedup/performance claim without authenticated board transcript
 ```
 
 ## Required SOTA Model Policy
 
-Every `.294` experiment that invokes a local LLM must include `MODEL_SPECS`
-and must attempt at least one mandated local SOTA GGUF:
+Every experiment that performs or may perform an LLM call must include at least
+one mandated local SOTA GGUF in its `MODEL_SPECS`:
 
-- `unsloth/Qwen3.6-35B-A3B-GGUF` (flagship MoE)
-- `unsloth/gemma-4-31B-it-GGUF` (flagship dense)
-- `unsloth/gemma-4-26B-A4B-it-GGUF` (middle MoE)
+- `unsloth/Qwen3.6-35B-A3B-GGUF`
+- `unsloth/gemma-4-31B-it-GGUF`
+- `unsloth/gemma-4-26B-A4B-it-GGUF`
 
-Legacy small models such as `Qwen3.5-0.8B` and `gemma-4-E4B-it` may appear
-only as CPU smoke tests. They cannot headline verifier, repair, or
-self-learning results. If a mandated model is not locally usable, the task must
-write a complete blocked or diagnostic artifact with `live_call_count=0`,
-`headline_claim_allowed=false`, and explicit precondition evidence.
+Legacy small models such as `Qwen3.5-0.8B` or `gemma-4-E4B-it` may appear only
+as loud CPU smoke fallbacks and must not become headline-result models. The
+planned LLM-touching tasks are `exp3179`, `exp3181`, and `exp3185`.
 
 ## Milestone Phases
 
-### Phase A - Evidence Contract Repair
+### Phase 1 - Archive and Receipt Contract
 
-**Goal:** fix the live-inference authenticity contract and make detector
-evidence resistant to answer-artifact and trace-artifact shortcuts.
+- `exp3177` archives the `.294` closeout and activates `.295` planning without
+  editing `research-roadmap.yaml`.
+- `exp3178` defines receipt-contract v3: cache, loader, CUDA, CPU fallback,
+  transcript hashes, token counts, wall-clock proof, throughput plausibility,
+  and headline policy.
+- `exp3179` performs the local SOTA receipt smoke if preconditions permit and
+  otherwise writes a classified blocked artifact.
 
-- `exp3163` archives `.293` exactly and stages `.294`.
-- `exp3164` converts `.293`'s fixed 60 s duration rule into a measured-work
-  contract: load evidence, prompt hashes, output token counts, repeated smoke
-  calls, transcript hashes, GPU/CPU substrate, and reproducibility checksum.
-- `exp3165` replays the local SOTA authenticity preflight under that contract.
-- `exp3166` adds controlled-invariance and token-suspicion checks. Token-level
-  signals may route exact checks but cannot authorize acceptance.
+### Phase 2 - Verifier Clearance and Sidecar Expansion
 
-### Phase B - Verifier And Repair Materialization
+- `exp3180` executes controlled-invariance checks over exact authority rows and
+  any available receipt-backed transcripts.
+- `exp3181` reruns the clean local SOTA verifier only if the receipt and control
+  gates are satisfied; otherwise it writes a complete gated-skip artifact.
+- `exp3182` tests a distributional/transport-aligned EBM sidecar over exact rows
+  and known false accepts with no deployed verifier claim.
 
-**Goal:** produce clean verifier evidence if possible, and otherwise produce
-full blocked artifacts that stop missing-row growth.
+### Phase 3 - Certificate Repair Gate
 
-- `exp3167` runs the clean local SOTA verifier rerun v9 if preconditions pass;
-  otherwise it writes a full gated-skip artifact.
-- `exp3168` writes the repair gate decision v3 regardless of verifier outcome.
-- `exp3169` writes the repair ladder materializer v4. It may call a model only
-  when `repair_gate_state=unblocked`; otherwise it writes a full gated-skip
-  artifact with no model calls.
-- `exp3170` builds certificate-first counterexample repair evidence using exact
-  rows, TLA+/Z3-style counterexamples, and BEAVER-style frontier bounds where
-  available.
+- `exp3183` expands counterexample certificates and bounded frontier records.
+- `exp3184` makes the repair-gate v4 decision from verifier, invariance, and
+  certificate artifacts.
+- `exp3185` materializes the repair ladder. If the gate is blocked it writes
+  explicit blockers; if unblocked it runs a small local SOTA repair panel and
+  scores semantic exactness.
 
-### Phase C - FR-11 Counterexample Closure
+### Phase 4 - FR-11 Promotion, Hardware Boundary, and Capstone
 
-**Goal:** advance continuous self-learning only within controller/environment
-memory boundaries.
-
-- `exp3171` isolates the remaining FR-11 ledger counterexample family from the
-  `.293` 0.857143 consistency result and defines an environment/variant split.
-- `exp3172` runs a controller-only self-learning and nonforgetting pilot. It may
-  recommend promotion only if ledger consistency reaches 1.0 and negative
-  controls pass.
-- `exp3173` expands EBCN/KAN bounded diagnostic rows against exact labels and
-  known false-accept rows, without deploying a verifier.
-
-### Phase D - Evidence Boundary And Closeout
-
-**Goal:** keep hardware/tooling context current, then close the matrix.
-
-- `exp3174` records THRML, XGrammar, llguidance, Extropic, Kona, CUDA, KV260,
-  GateMate, and PolarFire boundaries without speedup or local hardware claims.
-- `exp3175` writes cross-corpus matrix v28 and reconciles missing/gated rows.
-- `exp3176` writes the `.294` capstone and next-gap recommendation.
+- `exp3186` packages the `.294` controller-memory update for promotion with
+  rollback and no-weight-update language.
+- `exp3187` replays the promoted controller update across heldout and
+  cross-environment drift checks.
+- `exp3188` creates a THRML factor-graph API boundary artifact without speedup
+  or hardware-performance claims.
+- `exp3189` updates cross-corpus matrix v29.
+- `exp3190` writes the `.295` capstone and next-gap recommendation.
 
 ## Dependency Graph
 
 ```text
-exp3163
-  -> exp3164
-  -> exp3165
-  -> exp3166
-  -> exp3167
-  -> exp3168
-  -> exp3169
-       -> exp3170
+exp3177
+  -> exp3178
+       -> exp3179
+            -> exp3180
+                 -> exp3181
+                      -> exp3184
+                           -> exp3185
 
-exp3171
-  -> exp3172
+exp3180 -> exp3182
+exp3183 -> exp3184
 
-exp3166
-  -> exp3173
+exp3172 (.294) -> exp3186 -> exp3187
 
-exp3174
+exp3188 is independent hardware/API boundary work.
 
-exp3167, exp3168, exp3169, exp3170, exp3172, exp3173, exp3174
-  -> exp3175
-  -> exp3176
+exp3181, exp3182, exp3183, exp3185, exp3187, exp3188
+  -> exp3189
+       -> exp3190
 ```
-
-Structured conductor gates are intentionally sparse in `.294`. The previous
-milestone showed that structural gates can save model calls but leave thin or
-missing artifacts that worsen the publication ledger. The live verifier and
-repair tasks therefore use internal preconditions and write full blocked or
-gated-skip artifacts. Only the capstone structurally gates on matrix v28:
-
-- `exp3176` gates on `exp3175.matrix_v28_ready == true`.
 
 ## Hardware Requirements
 
-No new hardware claims are required for `.294`.
-
-- **GPU/local GGUF:** `exp3165`, `exp3167`, and `exp3169` may use local SOTA
-  inference. They must record model path, load evidence, transcript hashes,
-  token counts, seed, checksum, and measured-work plausibility. Legacy small
-  models are smoke tests only.
-- **Dual RTX 3090 / CUDA:** usable only when detected and recorded. No speedup
-  claim is allowed without matched baseline, command transcript, and artifact
-  checksum.
-- **KV260, GateMate, PolarFire:** evidence ingestion only unless the operator
-  has already supplied authenticated logs. Do not convert wish-list status into
-  measured sampler speedup.
-- **Extropic THRML/TSU and Kona/Aleph:** public pages and local import probes
-  are architecture references. They do not support local hardware acceleration
-  claims.
+- **Dual RTX 3090 / CUDA:** Preferred for `exp3179`, `exp3181`, and `exp3185`,
+  but not assumed. These tasks must first classify HF cache, loader, CUDA, and
+  CPU fallback status. A CPU smoke can prove receipt wiring but cannot become a
+  headline benchmark.
+- **Mandated GGUF cache:** Required for headline local SOTA claims. If only
+  `unsloth/gemma-4-26B-A4B-it-GGUF` is present, report that exactly.
+- **KV260 / GateMate / PolarFire:** No board commands are required in `.295`.
+  Do not revive retired host-SD-card checks or speedup claims.
+- **THRML:** `exp3188` may import local `thrml` and translate tiny factor-graph
+  structures. It must not report sampler speedup, TSU execution, or hardware
+  acceleration without authenticated hardware evidence.
 
 ## Success Criteria
 
-`.294` succeeds if it produces complete evidence, not necessarily a positive
-headline:
+Minimum success for `.295`:
 
-1. The authenticity preflight contract no longer depends on one arbitrary
-   duration floor and can distinguish fast legitimate local calls from fake
-   evidence.
-2. The clean verifier rerun produces either clean live evidence or a complete
-   gated-skip artifact with no missing row.
-3. The repair gate and repair ladder materializer always write full artifacts,
-   and no model repair call runs while the verifier gate is blocked.
-4. FR-11 either reaches ledger consistency 1.0 with nonforgetting controls or
-   remains explicitly controller-memory only with replayable counterexamples.
-5. Matrix v28 and the capstone reduce missing artifacts and state whether the
-   publication blocker count improved, regressed, or stayed blocked.
+1. All 14 tasks write deliverable artifacts.
+2. The live SOTA path ends in one of two honest states:
+   - receipt-backed local SOTA smoke passes, controlled invariance is executed,
+     and the clean verifier rerun reports exact-authority false-accept status; or
+   - the artifact classifies cache/CUDA/CPU blockers without unblocking repair.
+3. Repair gate v4 is explicit and repair ladder v5 materializes either semantic
+   repair metrics or a complete gated-skip artifact.
+4. FR-11 controller-memory promotion pack and cross-environment drift replay
+   exist, with no model-weight update claim.
+5. Distributional/GEM EBM sidecar and THRML boundary artifacts are diagnostic
+   only unless they meet their stated coverage gates.
+6. Matrix v29 and the capstone reconcile `ops/status.md`, `ops/changelog.md`,
+   and the publication blocker count without reintroducing retracted claims.

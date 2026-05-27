@@ -1,6 +1,23 @@
 # Carnot — Operational Status
 
-**Last Updated:** 2026-05-27 (Milestone 2026.05.294 operational retrospective recorded; timing source contained 0 completed experiments and 0 compute-bound experiments)
+**Last Updated:** 2026-05-27 (Milestone 2026.05.295 research planning staged)
+
+## Session 2026-05-27 - Milestone 2026.05.295 Research Planning Staged
+
+Planned milestone 2026.05.295 as "Receipt-Backed Live SOTA Clearance +
+Certificate Repair Gate + FR-11 Promotion Pack" after `.294` completed. Used
+`results/experiment_3176_capstone_v294.json` and
+`results/experiment_3175_cross_corpus_matrix_v28.json` as authority:
+`paper_ready=false`, `publication_blocker_count=73`, one carried-forward
+missing artifact, the verifier still flagged/gated after the failed SOTA GGUF
+replay preflight, repair blocked under the flagged verifier, FR-11
+controller-memory promotion available with no model-weight update claim, and
+hardware claims bounded to no authenticated speedup.
+
+Updated `research-references.md` with the post-`.294` research sweep and
+rewrote `openspec/change-proposals/research-roadmap-vNEXT.md` plus
+`research-roadmap-next.yaml` for 14 tasks (`exp3177`-`exp3190`). Left
+`research-roadmap.yaml` and `scripts/research_conductor.py` untouched.
 
 ## Session 2026-05-27 - Milestone 2026.05.294 Operational Retrospective Complete
 

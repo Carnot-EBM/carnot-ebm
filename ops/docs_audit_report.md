@@ -4,51 +4,45 @@
 # docs_audit_report — 2026-05-27
 
 ## TL;DR (stranger's 30-second take)
-I am closing the tab in 10 seconds. While the top-level pitch is clear, the rest of the page is a bloated, un-skimmable wall of 33 boxes filled with impenetrable internal jargon, contradictory benchmark numbers, and navel-gazing retrospective updates. It reads like a private project dashboard masquerading as a public landing page.
+A stranger would close the tab in 10 seconds. While the top-level hook is strong, the page immediately devolves into an impenetrable wall of project jargon, internal milestone history, and literal test artifact file paths leaked into the HTML, making it feel like an internal dashboard that accidentally leaked to the internet.
 
 ## TOP 3 PROBLEMS
-1. **Contradictory Claims** — Three separate cards make wildly different claims about HumanEval improvements (+3.0 points vs. 0%→36% vs. 8%→80%).
-2. **Card Bloat** — The page blasts the user with 33 individual cards (12 in Results alone), completely obliterating the ~20 card attention limit.
-3. **Impenetrable Internal Jargon** — Terms like "FoVer (5-seed dual-condition)", "CCTU", "PREM variance", and raw flag syntax like "execute-feedback-retry" mean absolutely nothing to a stranger.
+1. Build Artifacts Leaked to Production: The HTML `<head>`, CSS media queries, and the "Live benchmark" card contain raw `@.tmp-pytest/...` file paths instead of actual text or pixel values.
+2. Alphabet Soup Jargon: Rampant use of unexplained acronyms (FoVer, CCTU, SVAMP, VeriCoT, PRM-BiasBench) alienates anyone outside the core dev team.
+3. Fabrication Signals: "1.0" extraction rates and perfect "60/60" audit catches look like overfitted evaluations or marketing fabrications to a skeptical outsider.
 
 ## DETAILED FINDINGS
-
 ### Bloat
-- **Entire Page** — 33 total cards (2 Problem, 4 How, 7 Features, 12 Results, 1 Stats, 7 Blog) — Cap at ~20 maximum. No one is reading a 12-card results grid.
-- **Results Section** — 12 cards — Cut to the 3-4 most critical headline metrics.
-- **Blog/Writing Section** — 7 cards — Cap at 3 or 4 recent highlights; pushing 7 massive cards to the bottom of a landing page is overwhelming.
+- `Results Grid` + `Writing` sections — 19 cards total (12 results + 7 blog posts) — Cap at 6-8 key results and 3 recent posts. The sheer volume makes it unskimmable, guaranteeing a stranger will read none of them.
 
 ### Internal jargon
-- **Stats Bar "Recent progress" card** — `FoVer (5-seed dual-condition; architecture-only 0.8947)` — What is FoVer? What does dual-condition mean? 
-- **Results Card** — `IterativeSelfRepair (HumanEval-50, execute-feedback-retry)` — Leaking raw internal flag/script syntax to the public.
-- **Results Card** — `EstimationVerifier SVAMP AUC` and `PRM-BiasBench-style attacks` — Unexplained internal benchmark shorthand.
-- **Features Card** — `PREM variance` — Process-Reward Energy Model is defined in the acronym but the context of its "variance" is completely lost on an outsider.
-- **Results Card** — `Qwen3.6-35B-A3B` — Is A3B an official quant or an internal tag? The user doesn't know.
+- `<head> Google Fonts URL` & `CSS Media Queries` — `wght @.tmp-pytest/pytest-of-ianblenke/...` and `@.tmp-pytest/.../experiment_1260_phase5d...` — Literal test paths interpolated into UI code. 
+- `Hero Stats Bar` — "FoVer", "5-seed dual-condition" — Meaningless baseline and methodology jargon to a stranger.
+- `Results Grid` — "SVAMP", "CCTU", "VeriCoT", "PRM-BiasBench", "IterativeSelfRepair" — Unexplained niche benchmark names and internal component titles.
+- `Features (TTC & PREM)` — "Process-Reward Energy Model (PREM)" — Niche jargon introduced in a single breath.
+- `Live benchmark card` — `HumanEval pass @.tmp-pytest/pytest-of-ianblenke/.../spilled-energy-2602-18671:real.txt` — Internal file path dumped directly into a headline.
 
 ### Per-milestone narrative
-- **Hero Stats Bar** — `382 Completed milestones` and `2,635 Experiment runs` — Strangers do not care about your internal Jira tickets or CI/CD run counts. This is pure internal status reporting.
-- **Stats Bar "Recent progress" card** — `Repinned from v2 0.9857 after pre-submission adversarial audit...` — This is a retrospective commit message, not marketing copy.
-- **Preprint Section** — `The current draft anchors its claims to checked-in experiment artifacts... pending operator-initiated upload.` — Reads like a handoff note between developers, not a pitch to read the paper.
+- `Recent progress` (Hero card) — "Repinned from v2 0.9857 after pre-submission adversarial audit" — Internal project history and status reporting masquerading as a value proposition.
 
 ### Inconsistencies
-- **HumanEval pass rate claims** vs **HumanEval pass rate claims** vs **HumanEval pass rate claims** — The Features section claims "+3.0 points on pass-rate" for HumanEval. The Results section claims "8% → 80% (+72pp)" for HumanEval-50. A separate Results card claims "0% → 36%" on a 35B model. Which is the actual headline capability of the tool? 
-- **Verifier AUROC** — Stats bar says "0.9131", but the Prompt-injection classifier result card says "0.91". Are these the same metric truncated, or different models?
+- The hero stats bar boasts a "0.9131 Verifier AUROC" while simultaneously claiming to have "repinned from v2 0.9857". Presenting a downgraded number with internal justification confuses the baseline right at the top of the page.
 
 ### Missing essentials
-- **Who actually maintains this?** — The footer says "Ian Blenke · Carnot Project", but the GitHub/HF links point to the "Carnot-EBM" organization. It lacks a clear statement of primary backing/maintainership.
+- None strictly missing (pitch, installation, license, maintainer, and trust claims are present). However, the "Why trust the numbers" claim ("backed by a checked-in experiment artifact") is severely undermined by the fact that the literal artifact paths have accidentally overwritten the page's `<head>` and typography.
 
 ### Fabrication signals
-- **Results Card (Adversarial audit)** — `k=5 ensemble catches 60/60 attacks` — 100% success on a tiny, exact sample size (60) immediately signals severe overfitting or a cherry-picked toy dataset.
-- **Results Card (Math extraction)** — `GSM8K extraction TP rate: 0.5 → 1.0` — A perfect 1.0 (100%) True Positive rate without a massive disclaimer looks entirely fabricated or broken.
+- `Math extraction` card — "TP rate: 0.5 -> 1.0" — Perfect 1.0 true positive rate on GSM8K without a sample size anchor.
+- `Adversarial audit` card — "catches 60/60 attacks" — Perfect 100% defense rate looks like an overfitted test.
+- `Training` card — "2.0x speedup, identical losses" — Perfect 2.0x without variance.
 
 ## WHAT'S WORKING
-- **The Hero Hook** — "Catch the mistakes your LLM confidently makes up." and the 1-sentence explanation are excellent, punchy, and instantly understandable.
-- **The Quickstart Tabs** — The code snippets for Python and Rust are clean, realistic, and prove the tool actually exists and has an ergonomic API.
+- The hero headline ("Catch the mistakes your LLM confidently makes up") and the "1-2-3" Bento breakdown (Extract -> Check -> Repair) are incredibly strong, clear, and compelling for a stranger.
+- The dual Rust/Python Quickstart tabs clearly communicate the project's cross-language bridge capability.
 
 ## RECOMMENDED OPERATOR ACTIONS
-1. Axe the 12-card "Results" grid down to 4 cards representing the most defensible, generalized benchmarks.
-2. Reconcile the three wildly different HumanEval claims into a single, unified metric that doesn't look contradictory.
-3. Delete internal operational metrics ("382 milestones", "2,635 runs") from the hero stats bar.
-4. Scrub all internal jargon ("FoVer", "execute-feedback-retry", "A3B") and rewrite them into plain English concepts.
-5. Remove the "perfect" 1.0 TP rate and 60/60 catch rate claims, or heavily contextualize them so they don't look like evaluation bleed/fabrication.
-6. Delete the "Recent progress" card entirely; migrate its HuggingFace/PyPI links to the main hero buttons.
+1. FIX THE BUILD LEAK: Immediately remove the `.tmp-pytest` string interpolations from the HTML `<head>`, CSS media queries, and the Results grid text so the page renders properly.
+2. KILL THE JARGON: Strip out "FoVer", "CCTU", "SVAMP", and "VeriCoT" from the Results grid. Replace them with plain-English descriptions (e.g., "Math Reasoning Benchmark" instead of "SVAMP").
+3. PRUNE THE CARDS: Reduce the 12 Results cards to the 6 most impressive, credible ones. Reduce the 7 blog posts to the 3 most recent.
+4. REWRITE RECENT PROGRESS: Delete the "Repinned from v2..." historical narrative. State the current capability simply.
+5. GROUND THE PERFECT SCORES: Add "on N=100 subset" or similar context to the 1.0 and 60/60 claims so they don't look like fabricated marketing numbers.
