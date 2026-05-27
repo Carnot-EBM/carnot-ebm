@@ -4723,3 +4723,9 @@ The critical path for milestone .250:
 - theme: Operational review with no milestone-scoped timing entries
 - key result: The authorized timing data contains no completed experiment rows; compute-bound runtime, GPU efficiency, and DualGPURunner analysis have no data available this milestone.
 - acceptance: no data available this milestone
+
+### Milestone 2026.05.295
+- exp_range: no data available this milestone
+- theme: Closeout audit for a milestone without timed experiment rows
+- key result: The timing source supplies no completed runs for this milestone, so longest compute-bound task, compute-bound GPU-use, and DualGPURunner questions cannot be evaluated.
+- acceptance: no data available this milestone

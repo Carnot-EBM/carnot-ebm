@@ -1,0 +1,29 @@
+{
+  "schema": "carnot.operational_retro.v64",
+  "milestone": "2026.05.295",
+  "generated_at": "2026-05-27T13:40:13Z",
+  "retro_type": "operational_full",
+  "total_wall_time_minutes": 0,
+  "experiments_completed": 0,
+  "compute_bound_experiments_count": 0,
+  "slowest_experiments": [],
+  "gpu_idle_on_compute_bound_tasks": null,
+  "summary": "The locked timing fields show 0 wall-time minutes across 0 completed experiments, with 0 compute-bound experiments. Therefore, longest compute-bound runs, compute-bound GPU efficiency, and 2+ model runner engagement are no data available this milestone.",
+  "bottlenecks_identified": [
+    "no data available this milestone: the timing source reports no experiment commits after activation.",
+    "no data available this milestone: no compute-bound entries exist, so there is no slowest compute-bound experiment to rank.",
+    "no data available this milestone: no 2+ model compute-bound entry exists for a DualGPURunner engagement check."
+  ],
+  "improvements_suggested": [
+    "Emit an empty-milestone timing sentinel before retrospective synthesis so the writer can take the no-data path deterministically.",
+    "Preserve compute-bound tag counts in the skeleton and require at least one such row before writing GPU efficiency findings.",
+    "Add a closeout note when experiments_completed is 0 so operators can distinguish an empty activation window from a failed timing parser."
+  ],
+  "top_3_highest_leverage_actions": [
+    "Add a pre-retro no-experiment sentinel for activation windows with no experiment commits.",
+    "Keep GPU-idle recommendations gated on compute-bound timing rows.",
+    "Expose the activation-window source status in closeout logs before operator-facing retrospectives are generated."
+  ],
+  "estimated_time_savings_pct": 0,
+  "meta_reflection": "With no experiment rows, any duration ranking or root-cause claim would be fabricated. The idle GPU report is not an operational bottleneck because the milestone has no compute-bound task rows."
+}
