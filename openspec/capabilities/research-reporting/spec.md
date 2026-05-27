@@ -11005,3 +11005,78 @@ and an `honest_verdict` that starts with `complete:`.
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-REPORT-3205 | Implemented (`python/carnot/reporting/archive_v296_activate_v297_3205.py`) | Implemented (`tests/python/test_experiment_3205_archive_v296_activate_v297.py`) |
+
+### REQ-REPORT-3217: Cross-Corpus Matrix V31 From .297 Artifacts
+
+The repository shall provide an Exp 3217 cross-corpus matrix v31 generator
+that writes `results/experiment_3217_cross_corpus_matrix_v31.json` by reading
+`results/experiment_3203_cross_corpus_matrix_v30.json` as the authoritative
+prior matrix, plus every expected checked-in `.297` artifact from Exp 3205
+through Exp 3216 and the `.297` conductor log evidence. The workflow MUST
+aggregate existing artifacts only. It MUST NOT run live model inference,
+verifier scoring, repair generation, solver execution, hardware commands, the
+conductor, pushes, modify `scripts/research_conductor.py`, modify
+`research-roadmap.yaml`, or reconcile `ops/status.md`, `ops/changelog.md`, or
+`_bmad/traceability.md` when the conductor has delegated reconciliation to a
+separate step.
+
+The generator MUST load every upstream `.297` artifact that exists and record
+missing or gated-skipped artifacts explicitly, including the clean-verifier
+Exp 3209 and structured-repair-preflight Exp 3212 gate skips when their JSON
+artifacts are absent. It MUST compare against matrix v30 and calculate
+`blocker_delta_from_v30` from `publication_blocker_count -
+v30.publication_blocker_count`. It MUST report CUDA/offload receipt status
+separately from clean verifier status, repair gate state separately from repair
+ladder state, context-shortcut fixture coverage separately from ConstraintBench
+fixture coverage, FR-11 controller-memory/self-learning state with an explicit
+model-weight-update boundary, and hardware claim boundaries that deny speedup,
+TSU, or Kona claims unless a checked-in authenticated transcript supports them.
+
+The terminal artifact MUST include `schema_version`, `experiment_id`,
+`milestone`, `previous_matrix_artifact`, `upstream_artifacts`,
+`missing_artifacts`, `status_counts`, `paper_ready`,
+`publication_blocker_count`, `blocker_delta_from_v30`,
+`local_sota_receipt_status`, `clean_verifier_status`, `repair_status`,
+`context_fixture_status`, `constraintbench_fixture_status`,
+`fr11_self_learning_status`, `hardware_sampler_status`, `next_top_gap`,
+`conductor_file_modified`, `active_roadmap_modified`, and `honest_verdict`.
+It MAY include source checksums, row-level artifact classifications,
+gated-skip summaries, fixture counts, FR-11 claim-boundary details,
+publication-blocker accounting, aggregation-only substrate metadata,
+no-new-execution booleans, and measured `duration_s` as long as every value is
+derived from checked-in artifacts, conductor-log evidence, or file
+presence/checksum checks. `paper_ready` MUST be false while CUDA/offload full
+local SOTA receipt evidence is blocked or gate-skipped, clean verifier evidence
+is missing or gate-skipped, repair remains blocked or gate-skipped, FR-11 lacks
+a deployed model-free controller/sidecar claim boundary, or authenticated
+hardware transcript evidence is absent.
+
+#### SCENARIO-REPORT-3217: V31 Aggregates .297 Artifacts Without Overclaiming
+
+**Given** matrix v30 exists and reports `cross_corpus_matrix_v30_ready=true`,
+`paper_ready=false`, `publication_blocker_count=85`, and
+`next_top_gap=cuda_offload_full_local_sota_receipt_clean_rerun_allowed_repair_gate_unblock`
+**And** `.297` artifacts exist for archive activation, CUDA environment
+forensics, llama.cpp CUDA rebuild gating, full local SOTA receipt gate skip,
+context-shortcut fixtures, ConstraintBench pilot fixtures, repair gate v6,
+repair ladder v7 gate skip, FR-11 evidence-gated trace replay, and FR-11
+grounded-continuation nonforgetting queue
+**And** the Exp 3209 clean verifier and Exp 3212 structured repair preflight
+artifacts are absent because the conductor pre-gate skipped them
+**When** the Exp 3217 matrix v31 generator runs
+**Then** it writes `results/experiment_3217_cross_corpus_matrix_v31.json`
+with all required schema fields, every expected `.297` artifact accounted for,
+missing and gated-skipped artifacts visible, publication blockers recomputed
+against v30, separate CUDA/offload receipt and clean-verifier statuses,
+separate repair gate and repair ladder statuses, fixture availability for both
+context-shortcut and ConstraintBench pilots, FR-11 self-learning bounded to
+controller memory with no model-weight update claimed, hardware speedup/TSU/
+Kona claims denied without transcript evidence, `paper_ready=false`, no
+protected conductor or active-roadmap edits performed by this task, and an
+`honest_verdict` that starts with `complete:`.
+
+## Implementation Status (REQ-REPORT-3217)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-3217 | Implemented (`python/carnot/reporting/cross_corpus_matrix_v31_3217.py`) | Implemented (`tests/python/test_experiment_3217_cross_corpus_matrix_v31.py`) |

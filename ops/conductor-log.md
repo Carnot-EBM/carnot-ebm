@@ -6501,3 +6501,4 @@ web search |
 | 2026-05-27 21:47 UTC | Multi-turn repair ladder v7 gated on exp3213 repai | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp3213-repair-gate-decision-v6.repair_gat |
 | 2026-05-27 21:49 UTC | Multi-turn repair ladder v7 gated on exp3213 repai | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp3213-repair-gate-decision-v6.repair_gat |
 | 2026-05-27 22:03 UTC | FR-11 evidence-gated trace replay controller v2 fo | OK | 81 passed in 3.29s |
+| 2026-05-27 22:16 UTC | FR-11 grounded-continuation trace graph and nonfor | OK | 81 passed in 3.43s |
