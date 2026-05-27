@@ -1,0 +1,1427 @@
+{
+  "artifact": "experiment_3196_gencp_domain_preview_repair_compiler_v1",
+  "average_candidate_domain_size": 1.0,
+  "candidate_domain_accounting": {
+    "average_candidate_domain_size": 1.0,
+    "families": {
+      "exact_row:arithmetic_code_assertions": 1,
+      "exact_row:json_fragment_repair": 6,
+      "fragment_code:parser_repair": 2,
+      "known_false_accept:arithmetic_code_assertions": 1,
+      "known_false_accept:smt_constraints": 1,
+      "satisfiable_drift_anchor": 1
+    },
+    "record_count": 12
+  },
+  "compiler_version": "v1",
+  "domain_record_schema": {
+    "properties": {
+      "authority_note": "must state preview-only authority boundary",
+      "candidate_domain": "bounded list of deterministic candidate values",
+      "constraint_evidence": "canonical, fixture, MCS, unsat-core, and frontier evidence",
+      "propagation_trace": "ordered GenCP-style pruning steps applied before repair"
+    },
+    "required": [
+      "record_id",
+      "row_id",
+      "source_artifact",
+      "row_family",
+      "canonical_answer",
+      "candidate_domain",
+      "domain_size",
+      "constraint_evidence",
+      "propagation_rule_ids",
+      "exact_rejection_test_ids",
+      "authority_note"
+    ],
+    "type": "object"
+  },
+  "exact_rejection_tests": [
+    {
+      "authority_source": "Exp 3138 canonical grounding and Exp 3183 exact labels",
+      "id": "EXACT-REJECT-CANONICAL-MISMATCH",
+      "reject_when": "candidate canonical form differs from exact canonical answer"
+    },
+    {
+      "authority_source": "Exp 3183 known false-accept certificates",
+      "id": "EXACT-REJECT-FALSE-ACCEPT-CONFLICT",
+      "reject_when": "candidate repeats an observed false-accept answer family conflict"
+    },
+    {
+      "authority_source": "Exp 3170/3183 pilot certificate fields",
+      "id": "EXACT-REJECT-MCS-INVARIANT",
+      "reject_when": "candidate violates the recorded MCS, invariant, or unsat core"
+    },
+    {
+      "authority_source": "Exp 3084 fixture manifest",
+      "id": "EXACT-REJECT-FIXTURE-AUTHORITY-CONTRADICTION",
+      "reject_when": "candidate contradicts exact fixture authority payload or label source"
+    },
+    {
+      "authority_source": "Exp 3183 and Exp 3018 bounded frontier certificates",
+      "id": "EXACT-REJECT-FRONTIER-PRUNED-PREFIX",
+      "reject_when": "candidate uses a prefix or state already marked pruned"
+    },
+    {
+      "authority_source": "Carnot repair-gate authority boundary",
+      "id": "EXACT-REJECT-NONAUTHORITATIVE-PROMOTION",
+      "reject_when": "candidate treats receipts, sidecars, EBM scores, or LLM text as authority"
+    },
+    {
+      "authority_source": "Exp 3183/3184/3195 gate state",
+      "id": "EXACT-REJECT-REPAIR-GATE-BLOCKED",
+      "reject_when": "candidate is submitted while repair_call_ready is false"
+    }
+  ],
+  "experiment_id": "exp3196",
+  "honest_verdict": "complete: gencp_domain_preview_repair_compiler_v1_ready=true; preview_domain_count=12; average_candidate_domain_size=1.0; repair_call_ready=false; promotion_allowed=false",
+  "inference_substrate": {
+    "ebm_trained_or_promoted": false,
+    "kind": "artifact_only_domain_preview_compiler",
+    "llm_called": false,
+    "new_live_model_calls": 0,
+    "new_repair_calls": 0,
+    "new_verifier_scoring_calls": 0
+  },
+  "no_llm_repair_rationale": {
+    "blocked_gate_respected": true,
+    "exact_authority_final": true,
+    "llm_or_ebm_promotion_claim": false,
+    "why_no_repair_call": "domain preview only; it prepares bounded spaces for later prompts"
+  },
+  "ops_docs_reconciliation_left_to_conductor": true,
+  "preview_domain_count": 12,
+  "preview_manifest": [
+    {
+      "authority_note": "preview only; exact/canonical rejection tests remain final",
+      "candidate_domain": [
+        "INVALID"
+      ],
+      "canonical_answer": "INVALID",
+      "constraint_evidence": {
+        "canonical_blockers": [
+          "canonicalization",
+          "premise_grounding",
+          "ledger_replay"
+        ],
+        "checker_authority": "python_ast_runtime_execution",
+        "checker_result": "reject",
+        "expected_corrected_invariant": "claimed_value == computed_value (replace claimed_value 47 \u2192 43)",
+        "fixture_label_source": "python_ast_runtime_execution",
+        "frontier_summary": {
+          "beaver_certificate_count": 44,
+          "beaver_certificate_statuses": [
+            "certified_safe",
+            "certified_violating",
+            "non_prefix_closed",
+            "unresolved"
+          ],
+          "exp3183_frontier_count": 453,
+          "frontier_statuses": [
+            "bounded",
+            "pruned",
+            "viable"
+          ],
+          "pruned_frontier_count": 420
+        },
+        "minimal_correction_set": {
+          "from": 47,
+          "kind": "replace_claimed_value",
+          "to": 43
+        },
+        "policy_action": "counterexample-fragment",
+        "unsat_core": [
+          "computed_value",
+          "claimed_value"
+        ]
+      },
+      "domain_size": 1,
+      "exact_rejection_test_ids": [
+        "EXACT-REJECT-CANONICAL-MISMATCH",
+        "EXACT-REJECT-NONAUTHORITATIVE-PROMOTION",
+        "EXACT-REJECT-REPAIR-GATE-BLOCKED",
+        "EXACT-REJECT-FALSE-ACCEPT-CONFLICT",
+        "EXACT-REJECT-MCS-INVARIANT",
+        "EXACT-REJECT-FIXTURE-AUTHORITY-CONTRADICTION",
+        "EXACT-REJECT-FRONTIER-PRUNED-PREFIX"
+      ],
+      "propagation_rule_ids": [
+        "PROP-CANONICAL-ANSWER",
+        "PROP-FALSE-ACCEPT-CONFLICT",
+        "PROP-MCS-INVARIANT",
+        "PROP-FIXTURE-AUTHORITY",
+        "PROP-FRONTIER-STATUS",
+        "PROP-REPAIR-GATE-BLOCK"
+      ],
+      "propagation_trace": [
+        {
+          "action": "intersect_with_canonical_answer",
+          "authority": "deterministic_artifact",
+          "rule_id": "PROP-CANONICAL-ANSWER"
+        },
+        {
+          "action": "remove_observed_false_accept_candidates",
+          "authority": "deterministic_artifact",
+          "rule_id": "PROP-FALSE-ACCEPT-CONFLICT"
+        },
+        {
+          "action": "pin_minimal_correction_or_unsat_core",
+          "authority": "deterministic_artifact",
+          "rule_id": "PROP-MCS-INVARIANT"
+        },
+        {
+          "action": "intersect_with_exact_fixture_authority",
+          "authority": "deterministic_artifact",
+          "rule_id": "PROP-FIXTURE-AUTHORITY"
+        },
+        {
+          "action": "forbid_frontier_pruned_prefixes",
+          "authority": "deterministic_artifact",
+          "rule_id": "PROP-FRONTIER-STATUS"
+        },
+        {
+          "action": "mark_preview_only_until_repair_gate_opens",
+          "authority": "deterministic_artifact",
+          "rule_id": "PROP-REPAIR-GATE-BLOCK"
+        }
+      ],
+      "record_id": "gencp-domain:resyn-3084-arith-003",
+      "removed_candidates": [
+        "VALID"
+      ],
+      "row_family": "known_false_accept:arithmetic_code_assertions",
+      "row_id": "resyn-3084-arith-003",
+      "source_artifact": "exp3180.exact_rows_evaluated"
+    },
+    {
+      "authority_note": "preview only; exact/canonical rejection tests remain final",
+      "candidate_domain": [
+        "UNSAT"
+      ],
+      "canonical_answer": "UNSAT",
+      "constraint_evidence": {
+        "canonical_blockers": [
+          "canonicalization",
+          "premise_grounding",
+          "ledger_replay"
+        ],
+        "checker_authority": "z3_solver",
+        "checker_result": "reject",
+        "expected_corrected_invariant": "model emits 'UNSAT' when Z3 confirms unsatisfiability",
+        "fixture_label_source": "z3_solver",
+        "frontier_summary": {
+          "beaver_certificate_count": 44,
+          "beaver_certificate_statuses": [
+            "certified_safe",
+            "certified_violating",
+            "non_prefix_closed",
+            "unresolved"
+          ],
+          "exp3183_frontier_count": 453,
+          "frontier_statuses": [
+            "bounded",
+            "pruned",
+            "viable"
+          ],
+          "pruned_frontier_count": 420
+        },
+        "minimal_correction_set": {
+          "constraints_to_relax": [
+            "constraint_0"
+          ],
+          "kind": "remove_conflicting_constraint"
+        },
+        "policy_action": "counterexample-fragment",
+        "unsat_core": [
+          "constraint_0",
+          "constraint_1"
+        ]
+      },
+      "domain_size": 1,
+      "exact_rejection_test_ids": [
+        "EXACT-REJECT-CANONICAL-MISMATCH",
+        "EXACT-REJECT-NONAUTHORITATIVE-PROMOTION",
+        "EXACT-REJECT-REPAIR-GATE-BLOCKED",
+        "EXACT-REJECT-FALSE-ACCEPT-CONFLICT",
+        "EXACT-REJECT-MCS-INVARIANT",
+        "EXACT-REJECT-FIXTURE-AUTHORITY-CONTRADICTION",
+        "EXACT-REJECT-FRONTIER-PRUNED-PREFIX"
+      ],
+      "propagation_rule_ids": [
+        "PROP-CANONICAL-ANSWER",
+        "PROP-FALSE-ACCEPT-CONFLICT",
+        "PROP-MCS-INVARIANT",
+        "PROP-FIXTURE-AUTHORITY",
+        "PROP-FRONTIER-STATUS",
+        "PROP-REPAIR-GATE-BLOCK"
+      ],
+      "propagation_trace": [
+        {
+          "action": "intersect_with_canonical_answer",
+          "authority": "deterministic_artifact",
+          "rule_id": "PROP-CANONICAL-ANSWER"
+        },
+        {
+          "action": "remove_observed_false_accept_candidates",
+          "authority": "deterministic_artifact",
+          "rule_id": "PROP-FALSE-ACCEPT-CONFLICT"
+        },
+        {
+          "action": "pin_minimal_correction_or_unsat_core",
+          "authority": "deterministic_artifact",
+          "rule_id": "PROP-MCS-INVARIANT"
+        },
+        {
+          "action": "intersect_with_exact_fixture_authority",
+          "authority": "deterministic_artifact",
+          "rule_id": "PROP-FIXTURE-AUTHORITY"
+        },
+        {
+          "action": "forbid_frontier_pruned_prefixes",
+          "authority": "deterministic_artifact",
+          "rule_id": "PROP-FRONTIER-STATUS"
+        },
+        {
+          "action": "mark_preview_only_until_repair_gate_opens",
+          "authority": "deterministic_artifact",
+          "rule_id": "PROP-REPAIR-GATE-BLOCK"
+        }
+      ],
+      "record_id": "gencp-domain:resyn-3084-smt-000",
+      "removed_candidates": [
+        "VALID"
+      ],
+      "row_family": "known_false_accept:smt_constraints",
+      "row_id": "resyn-3084-smt-000",
+      "source_artifact": "exp3180.exact_rows_evaluated"
+    },
+    {
+      "authority_note": "preview only; exact/canonical rejection tests remain final",
+      "candidate_domain": [
+        "{\"limit\": 2, \"mode\": \"bounded\"}"
+      ],
+      "canonical_answer": "REPAIRABLE",
+      "constraint_evidence": {
+        "canonical_blockers": [],
+        "checker_authority": "python_json_parser",
+        "checker_result": "reject",
+        "expected_corrected_invariant": "JSON fragment parses without error after inserting ','",
+        "fixture_label_source": "json_parser",
+        "frontier_summary": {
+          "beaver_certificate_count": 44,
+          "beaver_certificate_statuses": [
+            "certified_safe",
+            "certified_violating",
+            "non_prefix_closed",
+            "unresolved"
+          ],
+          "exp3183_frontier_count": 453,
+          "frontier_statuses": [
+            "bounded",
+            "pruned",
+            "viable"
+          ],
+          "pruned_frontier_count": 420
+        },
+        "minimal_correction_set": {
+          "edits": [
+            {
+              "operation": "insert_delimiter",
+              "token": ","
+            }
+          ],
+          "kind": "json_token_edit"
+        },
+        "policy_action": "counterexample-fragment",
+        "unsat_core": []
+      },
+      "domain_size": 1,
+      "exact_rejection_test_ids": [
+        "EXACT-REJECT-CANONICAL-MISMATCH",
+        "EXACT-REJECT-NONAUTHORITATIVE-PROMOTION",
+        "EXACT-REJECT-REPAIR-GATE-BLOCKED",
+        "EXACT-REJECT-MCS-INVARIANT",
+        "EXACT-REJECT-FIXTURE-AUTHORITY-CONTRADICTION",
+        "EXACT-REJECT-FRONTIER-PRUNED-PREFIX"
+      ],
+      "propagation_rule_ids": [
+        "PROP-CANONICAL-ANSWER",
+        "PROP-MCS-INVARIANT",
+        "PROP-FIXTURE-AUTHORITY",
+        "PROP-FRONTIER-STATUS",
+        "PROP-REPAIR-GATE-BLOCK"
+      ],
+      "propagation_trace": [
+        {
+          "action": "intersect_with_canonical_answer",
+          "authority": "deterministic_artifact",
+          "rule_id": "PROP-CANONICAL-ANSWER"
+        },
+        {
+          "action": "pin_minimal_correction_or_unsat_core",
+          "authority": "deterministic_artifact",
+          "rule_id": "PROP-MCS-INVARIANT"
+        },
+        {
+          "action": "intersect_with_exact_fixture_authority",
+          "authority": "deterministic_artifact",
+          "rule_id": "PROP-FIXTURE-AUTHORITY"
+        },
+        {
+          "action": "forbid_frontier_pruned_prefixes",
+          "authority": "deterministic_artifact",
+          "rule_id": "PROP-FRONTIER-STATUS"
+        },
+        {
+          "action": "mark_preview_only_until_repair_gate_opens",
+          "authority": "deterministic_artifact",
+          "rule_id": "PROP-REPAIR-GATE-BLOCK"
+        }
+      ],
+      "record_id": "gencp-domain:resyn-3084-repair-json-000",
+      "removed_candidates": [
+        "REPAIRABLE"
+      ],
+      "row_family": "fragment_code:parser_repair",
+      "row_id": "resyn-3084-repair-json-000",
+      "source_artifact": "exp3180.exact_rows_evaluated"
+    },
+    {
+      "authority_note": "preview only; exact/canonical rejection tests remain final",
+      "candidate_domain": [
+        "{\"limit\": 5, \"mode\": \"bounded\"}"
+      ],
+      "canonical_answer": "REPAIRABLE",
+      "constraint_evidence": {
+        "canonical_blockers": [],
+        "checker_authority": "python_json_parser",
+        "checker_result": "reject",
+        "expected_corrected_invariant": "JSON fragment parses without error after inserting ','",
+        "fixture_label_source": "json_parser",
+        "frontier_summary": {
+          "beaver_certificate_count": 44,
+          "beaver_certificate_statuses": [
+            "certified_safe",
+            "certified_violating",
+            "non_prefix_closed",
+            "unresolved"
+          ],
+          "exp3183_frontier_count": 453,
+          "frontier_statuses": [
+            "bounded",
+            "pruned",
+            "viable"
+          ],
+          "pruned_frontier_count": 420
+        },
+        "minimal_correction_set": {
+          "edits": [
+            {
+              "operation": "insert_delimiter",
+              "token": ","
+            }
+          ],
+          "kind": "json_token_edit"
+        },
+        "policy_action": "counterexample-fragment",
+        "unsat_core": []
+      },
+      "domain_size": 1,
+      "exact_rejection_test_ids": [
+        "EXACT-REJECT-CANONICAL-MISMATCH",
+        "EXACT-REJECT-NONAUTHORITATIVE-PROMOTION",
+        "EXACT-REJECT-REPAIR-GATE-BLOCKED",
+        "EXACT-REJECT-MCS-INVARIANT",
+        "EXACT-REJECT-FIXTURE-AUTHORITY-CONTRADICTION",
+        "EXACT-REJECT-FRONTIER-PRUNED-PREFIX"
+      ],
+      "propagation_rule_ids": [
+        "PROP-CANONICAL-ANSWER",
+        "PROP-MCS-INVARIANT",
+        "PROP-FIXTURE-AUTHORITY",
+        "PROP-FRONTIER-STATUS",
+        "PROP-REPAIR-GATE-BLOCK"
+      ],
+      "propagation_trace": [
+        {
+          "action": "intersect_with_canonical_answer",
+          "authority": "deterministic_artifact",
+          "rule_id": "PROP-CANONICAL-ANSWER"
+        },
+        {
+          "action": "pin_minimal_correction_or_unsat_core",
+          "authority": "deterministic_artifact",
+          "rule_id": "PROP-MCS-INVARIANT"
+        },
+        {
+          "action": "intersect_with_exact_fixture_authority",
+          "authority": "deterministic_artifact",
+          "rule_id": "PROP-FIXTURE-AUTHORITY"
+        },
+        {
+          "action": "forbid_frontier_pruned_prefixes",
+          "authority": "deterministic_artifact",
+          "rule_id": "PROP-FRONTIER-STATUS"
+        },
+        {
+          "action": "mark_preview_only_until_repair_gate_opens",
+          "authority": "deterministic_artifact",
+          "rule_id": "PROP-REPAIR-GATE-BLOCK"
+        }
+      ],
+      "record_id": "gencp-domain:resyn-3084-repair-json-003",
+      "removed_candidates": [
+        "REPAIRABLE"
+      ],
+      "row_family": "fragment_code:parser_repair",
+      "row_id": "resyn-3084-repair-json-003",
+      "source_artifact": "exp3180.exact_rows_evaluated"
+    },
+    {
+      "authority_note": "preview only; exact/canonical rejection tests remain final",
+      "candidate_domain": [
+        "SAT"
+      ],
+      "canonical_answer": "SAT",
+      "constraint_evidence": {
+        "canonical_blockers": [],
+        "checker_authority": "z3_solver",
+        "checker_result": "accept",
+        "expected_corrected_invariant": "model correctly emits 'SAT' \u2014 no repair needed",
+        "fixture_label_source": "z3_solver",
+        "frontier_summary": {
+          "beaver_certificate_count": 44,
+          "beaver_certificate_statuses": [
+            "certified_safe",
+            "certified_violating",
+            "non_prefix_closed",
+            "unresolved"
+          ],
+          "exp3183_frontier_count": 453,
+          "frontier_statuses": [
+            "bounded",
+            "pruned",
+            "viable"
+          ],
+          "pruned_frontier_count": 420
+        },
+        "minimal_correction_set": {},
+        "policy_action": "counterexample-fragment",
+        "unsat_core": []
+      },
+      "domain_size": 1,
+      "exact_rejection_test_ids": [
+        "EXACT-REJECT-CANONICAL-MISMATCH",
+        "EXACT-REJECT-NONAUTHORITATIVE-PROMOTION",
+        "EXACT-REJECT-REPAIR-GATE-BLOCKED",
+        "EXACT-REJECT-MCS-INVARIANT",
+        "EXACT-REJECT-FIXTURE-AUTHORITY-CONTRADICTION",
+        "EXACT-REJECT-FRONTIER-PRUNED-PREFIX"
+      ],
+      "propagation_rule_ids": [
+        "PROP-CANONICAL-ANSWER",
+        "PROP-MCS-INVARIANT",
+        "PROP-FIXTURE-AUTHORITY",
+        "PROP-FRONTIER-STATUS",
+        "PROP-REPAIR-GATE-BLOCK"
+      ],
+      "propagation_trace": [
+        {
+          "action": "intersect_with_canonical_answer",
+          "authority": "deterministic_artifact",
+          "rule_id": "PROP-CANONICAL-ANSWER"
+        },
+        {
+          "action": "pin_minimal_correction_or_unsat_core",
+          "authority": "deterministic_artifact",
+          "rule_id": "PROP-MCS-INVARIANT"
+        },
+        {
+          "action": "intersect_with_exact_fixture_authority",
+          "authority": "deterministic_artifact",
+          "rule_id": "PROP-FIXTURE-AUTHORITY"
+        },
+        {
+          "action": "forbid_frontier_pruned_prefixes",
+          "authority": "deterministic_artifact",
+          "rule_id": "PROP-FRONTIER-STATUS"
+        },
+        {
+          "action": "mark_preview_only_until_repair_gate_opens",
+          "authority": "deterministic_artifact",
+          "rule_id": "PROP-REPAIR-GATE-BLOCK"
+        }
+      ],
+      "record_id": "gencp-domain:resyn-3084-smt-001",
+      "removed_candidates": [],
+      "row_family": "satisfiable_drift_anchor",
+      "row_id": "resyn-3084-smt-001",
+      "source_artifact": "exp3180.exact_rows_evaluated"
+    },
+    {
+      "authority_note": "preview only; exact/canonical rejection tests remain final",
+      "candidate_domain": [
+        "{\"limit\": 8, \"mode\": \"bounded\"}"
+      ],
+      "canonical_answer": "REPAIRABLE",
+      "constraint_evidence": {
+        "canonical_blockers": [],
+        "checker_authority": "exact_authority_replay",
+        "checker_result": "reject",
+        "expected_corrected_invariant": "",
+        "fixture_label_source": "json_parser",
+        "frontier_summary": {
+          "beaver_certificate_count": 44,
+          "beaver_certificate_statuses": [
+            "certified_safe",
+            "certified_violating",
+            "non_prefix_closed",
+            "unresolved"
+          ],
+          "exp3183_frontier_count": 453,
+          "frontier_statuses": [
+            "bounded",
+            "pruned",
+            "viable"
+          ],
+          "pruned_frontier_count": 420
+        },
+        "minimal_correction_set": {},
+        "policy_action": "step-chunk",
+        "unsat_core": []
+      },
+      "domain_size": 1,
+      "exact_rejection_test_ids": [
+        "EXACT-REJECT-CANONICAL-MISMATCH",
+        "EXACT-REJECT-NONAUTHORITATIVE-PROMOTION",
+        "EXACT-REJECT-REPAIR-GATE-BLOCKED",
+        "EXACT-REJECT-FIXTURE-AUTHORITY-CONTRADICTION",
+        "EXACT-REJECT-FRONTIER-PRUNED-PREFIX"
+      ],
+      "propagation_rule_ids": [
+        "PROP-CANONICAL-ANSWER",
+        "PROP-FIXTURE-AUTHORITY",
+        "PROP-FRONTIER-STATUS",
+        "PROP-REPAIR-GATE-BLOCK"
+      ],
+      "propagation_trace": [
+        {
+          "action": "intersect_with_canonical_answer",
+          "authority": "deterministic_artifact",
+          "rule_id": "PROP-CANONICAL-ANSWER"
+        },
+        {
+          "action": "intersect_with_exact_fixture_authority",
+          "authority": "deterministic_artifact",
+          "rule_id": "PROP-FIXTURE-AUTHORITY"
+        },
+        {
+          "action": "forbid_frontier_pruned_prefixes",
+          "authority": "deterministic_artifact",
+          "rule_id": "PROP-FRONTIER-STATUS"
+        },
+        {
+          "action": "mark_preview_only_until_repair_gate_opens",
+          "authority": "deterministic_artifact",
+          "rule_id": "PROP-REPAIR-GATE-BLOCK"
+        }
+      ],
+      "record_id": "gencp-domain:resyn-3084-repair-json-006",
+      "removed_candidates": [
+        "REPAIRABLE"
+      ],
+      "row_family": "exact_row:json_fragment_repair",
+      "row_id": "resyn-3084-repair-json-006",
+      "source_artifact": "exp3180.exact_rows_evaluated"
+    },
+    {
+      "authority_note": "preview only; exact/canonical rejection tests remain final",
+      "candidate_domain": [
+        "{\"limit\": 11, \"mode\": \"bounded\"}"
+      ],
+      "canonical_answer": "REPAIRABLE",
+      "constraint_evidence": {
+        "canonical_blockers": [],
+        "checker_authority": "exact_authority_replay",
+        "checker_result": "reject",
+        "expected_corrected_invariant": "",
+        "fixture_label_source": "json_parser",
+        "frontier_summary": {
+          "beaver_certificate_count": 44,
+          "beaver_certificate_statuses": [
+            "certified_safe",
+            "certified_violating",
+            "non_prefix_closed",
+            "unresolved"
+          ],
+          "exp3183_frontier_count": 453,
+          "frontier_statuses": [
+            "bounded",
+            "pruned",
+            "viable"
+          ],
+          "pruned_frontier_count": 420
+        },
+        "minimal_correction_set": {},
+        "policy_action": "step-chunk",
+        "unsat_core": []
+      },
+      "domain_size": 1,
+      "exact_rejection_test_ids": [
+        "EXACT-REJECT-CANONICAL-MISMATCH",
+        "EXACT-REJECT-NONAUTHORITATIVE-PROMOTION",
+        "EXACT-REJECT-REPAIR-GATE-BLOCKED",
+        "EXACT-REJECT-FIXTURE-AUTHORITY-CONTRADICTION",
+        "EXACT-REJECT-FRONTIER-PRUNED-PREFIX"
+      ],
+      "propagation_rule_ids": [
+        "PROP-CANONICAL-ANSWER",
+        "PROP-FIXTURE-AUTHORITY",
+        "PROP-FRONTIER-STATUS",
+        "PROP-REPAIR-GATE-BLOCK"
+      ],
+      "propagation_trace": [
+        {
+          "action": "intersect_with_canonical_answer",
+          "authority": "deterministic_artifact",
+          "rule_id": "PROP-CANONICAL-ANSWER"
+        },
+        {
+          "action": "intersect_with_exact_fixture_authority",
+          "authority": "deterministic_artifact",
+          "rule_id": "PROP-FIXTURE-AUTHORITY"
+        },
+        {
+          "action": "forbid_frontier_pruned_prefixes",
+          "authority": "deterministic_artifact",
+          "rule_id": "PROP-FRONTIER-STATUS"
+        },
+        {
+          "action": "mark_preview_only_until_repair_gate_opens",
+          "authority": "deterministic_artifact",
+          "rule_id": "PROP-REPAIR-GATE-BLOCK"
+        }
+      ],
+      "record_id": "gencp-domain:resyn-3084-repair-json-009",
+      "removed_candidates": [
+        "REPAIRABLE"
+      ],
+      "row_family": "exact_row:json_fragment_repair",
+      "row_id": "resyn-3084-repair-json-009",
+      "source_artifact": "exp3180.exact_rows_evaluated"
+    },
+    {
+      "authority_note": "preview only; exact/canonical rejection tests remain final",
+      "candidate_domain": [
+        "{\"limit\": 14, \"mode\": \"bounded\"}"
+      ],
+      "canonical_answer": "REPAIRABLE",
+      "constraint_evidence": {
+        "canonical_blockers": [],
+        "checker_authority": "exact_authority_replay",
+        "checker_result": "reject",
+        "expected_corrected_invariant": "",
+        "fixture_label_source": "json_parser",
+        "frontier_summary": {
+          "beaver_certificate_count": 44,
+          "beaver_certificate_statuses": [
+            "certified_safe",
+            "certified_violating",
+            "non_prefix_closed",
+            "unresolved"
+          ],
+          "exp3183_frontier_count": 453,
+          "frontier_statuses": [
+            "bounded",
+            "pruned",
+            "viable"
+          ],
+          "pruned_frontier_count": 420
+        },
+        "minimal_correction_set": {},
+        "policy_action": "step-chunk",
+        "unsat_core": []
+      },
+      "domain_size": 1,
+      "exact_rejection_test_ids": [
+        "EXACT-REJECT-CANONICAL-MISMATCH",
+        "EXACT-REJECT-NONAUTHORITATIVE-PROMOTION",
+        "EXACT-REJECT-REPAIR-GATE-BLOCKED",
+        "EXACT-REJECT-FIXTURE-AUTHORITY-CONTRADICTION",
+        "EXACT-REJECT-FRONTIER-PRUNED-PREFIX"
+      ],
+      "propagation_rule_ids": [
+        "PROP-CANONICAL-ANSWER",
+        "PROP-FIXTURE-AUTHORITY",
+        "PROP-FRONTIER-STATUS",
+        "PROP-REPAIR-GATE-BLOCK"
+      ],
+      "propagation_trace": [
+        {
+          "action": "intersect_with_canonical_answer",
+          "authority": "deterministic_artifact",
+          "rule_id": "PROP-CANONICAL-ANSWER"
+        },
+        {
+          "action": "intersect_with_exact_fixture_authority",
+          "authority": "deterministic_artifact",
+          "rule_id": "PROP-FIXTURE-AUTHORITY"
+        },
+        {
+          "action": "forbid_frontier_pruned_prefixes",
+          "authority": "deterministic_artifact",
+          "rule_id": "PROP-FRONTIER-STATUS"
+        },
+        {
+          "action": "mark_preview_only_until_repair_gate_opens",
+          "authority": "deterministic_artifact",
+          "rule_id": "PROP-REPAIR-GATE-BLOCK"
+        }
+      ],
+      "record_id": "gencp-domain:resyn-3084-repair-json-012",
+      "removed_candidates": [
+        "REPAIRABLE"
+      ],
+      "row_family": "exact_row:json_fragment_repair",
+      "row_id": "resyn-3084-repair-json-012",
+      "source_artifact": "exp3180.exact_rows_evaluated"
+    },
+    {
+      "authority_note": "preview only; exact/canonical rejection tests remain final",
+      "candidate_domain": [
+        "{\"limit\": 17, \"mode\": \"bounded\"}"
+      ],
+      "canonical_answer": "REPAIRABLE",
+      "constraint_evidence": {
+        "canonical_blockers": [],
+        "checker_authority": "exact_authority_replay",
+        "checker_result": "reject",
+        "expected_corrected_invariant": "",
+        "fixture_label_source": "json_parser",
+        "frontier_summary": {
+          "beaver_certificate_count": 44,
+          "beaver_certificate_statuses": [
+            "certified_safe",
+            "certified_violating",
+            "non_prefix_closed",
+            "unresolved"
+          ],
+          "exp3183_frontier_count": 453,
+          "frontier_statuses": [
+            "bounded",
+            "pruned",
+            "viable"
+          ],
+          "pruned_frontier_count": 420
+        },
+        "minimal_correction_set": {},
+        "policy_action": "step-chunk",
+        "unsat_core": []
+      },
+      "domain_size": 1,
+      "exact_rejection_test_ids": [
+        "EXACT-REJECT-CANONICAL-MISMATCH",
+        "EXACT-REJECT-NONAUTHORITATIVE-PROMOTION",
+        "EXACT-REJECT-REPAIR-GATE-BLOCKED",
+        "EXACT-REJECT-FIXTURE-AUTHORITY-CONTRADICTION",
+        "EXACT-REJECT-FRONTIER-PRUNED-PREFIX"
+      ],
+      "propagation_rule_ids": [
+        "PROP-CANONICAL-ANSWER",
+        "PROP-FIXTURE-AUTHORITY",
+        "PROP-FRONTIER-STATUS",
+        "PROP-REPAIR-GATE-BLOCK"
+      ],
+      "propagation_trace": [
+        {
+          "action": "intersect_with_canonical_answer",
+          "authority": "deterministic_artifact",
+          "rule_id": "PROP-CANONICAL-ANSWER"
+        },
+        {
+          "action": "intersect_with_exact_fixture_authority",
+          "authority": "deterministic_artifact",
+          "rule_id": "PROP-FIXTURE-AUTHORITY"
+        },
+        {
+          "action": "forbid_frontier_pruned_prefixes",
+          "authority": "deterministic_artifact",
+          "rule_id": "PROP-FRONTIER-STATUS"
+        },
+        {
+          "action": "mark_preview_only_until_repair_gate_opens",
+          "authority": "deterministic_artifact",
+          "rule_id": "PROP-REPAIR-GATE-BLOCK"
+        }
+      ],
+      "record_id": "gencp-domain:resyn-3084-repair-json-015",
+      "removed_candidates": [
+        "REPAIRABLE"
+      ],
+      "row_family": "exact_row:json_fragment_repair",
+      "row_id": "resyn-3084-repair-json-015",
+      "source_artifact": "exp3180.exact_rows_evaluated"
+    },
+    {
+      "authority_note": "preview only; exact/canonical rejection tests remain final",
+      "candidate_domain": [
+        "{\"limit\": 20, \"mode\": \"bounded\"}"
+      ],
+      "canonical_answer": "REPAIRABLE",
+      "constraint_evidence": {
+        "canonical_blockers": [],
+        "checker_authority": "exact_authority_replay",
+        "checker_result": "reject",
+        "expected_corrected_invariant": "",
+        "fixture_label_source": "json_parser",
+        "frontier_summary": {
+          "beaver_certificate_count": 44,
+          "beaver_certificate_statuses": [
+            "certified_safe",
+            "certified_violating",
+            "non_prefix_closed",
+            "unresolved"
+          ],
+          "exp3183_frontier_count": 453,
+          "frontier_statuses": [
+            "bounded",
+            "pruned",
+            "viable"
+          ],
+          "pruned_frontier_count": 420
+        },
+        "minimal_correction_set": {},
+        "policy_action": "step-chunk",
+        "unsat_core": []
+      },
+      "domain_size": 1,
+      "exact_rejection_test_ids": [
+        "EXACT-REJECT-CANONICAL-MISMATCH",
+        "EXACT-REJECT-NONAUTHORITATIVE-PROMOTION",
+        "EXACT-REJECT-REPAIR-GATE-BLOCKED",
+        "EXACT-REJECT-FIXTURE-AUTHORITY-CONTRADICTION",
+        "EXACT-REJECT-FRONTIER-PRUNED-PREFIX"
+      ],
+      "propagation_rule_ids": [
+        "PROP-CANONICAL-ANSWER",
+        "PROP-FIXTURE-AUTHORITY",
+        "PROP-FRONTIER-STATUS",
+        "PROP-REPAIR-GATE-BLOCK"
+      ],
+      "propagation_trace": [
+        {
+          "action": "intersect_with_canonical_answer",
+          "authority": "deterministic_artifact",
+          "rule_id": "PROP-CANONICAL-ANSWER"
+        },
+        {
+          "action": "intersect_with_exact_fixture_authority",
+          "authority": "deterministic_artifact",
+          "rule_id": "PROP-FIXTURE-AUTHORITY"
+        },
+        {
+          "action": "forbid_frontier_pruned_prefixes",
+          "authority": "deterministic_artifact",
+          "rule_id": "PROP-FRONTIER-STATUS"
+        },
+        {
+          "action": "mark_preview_only_until_repair_gate_opens",
+          "authority": "deterministic_artifact",
+          "rule_id": "PROP-REPAIR-GATE-BLOCK"
+        }
+      ],
+      "record_id": "gencp-domain:resyn-3084-repair-json-018",
+      "removed_candidates": [
+        "REPAIRABLE"
+      ],
+      "row_family": "exact_row:json_fragment_repair",
+      "row_id": "resyn-3084-repair-json-018",
+      "source_artifact": "exp3180.exact_rows_evaluated"
+    },
+    {
+      "authority_note": "preview only; exact/canonical rejection tests remain final",
+      "candidate_domain": [
+        "{\"limit\": 23, \"mode\": \"bounded\"}"
+      ],
+      "canonical_answer": "REPAIRABLE",
+      "constraint_evidence": {
+        "canonical_blockers": [],
+        "checker_authority": "exact_authority_replay",
+        "checker_result": "reject",
+        "expected_corrected_invariant": "",
+        "fixture_label_source": "json_parser",
+        "frontier_summary": {
+          "beaver_certificate_count": 44,
+          "beaver_certificate_statuses": [
+            "certified_safe",
+            "certified_violating",
+            "non_prefix_closed",
+            "unresolved"
+          ],
+          "exp3183_frontier_count": 453,
+          "frontier_statuses": [
+            "bounded",
+            "pruned",
+            "viable"
+          ],
+          "pruned_frontier_count": 420
+        },
+        "minimal_correction_set": {},
+        "policy_action": "step-chunk",
+        "unsat_core": []
+      },
+      "domain_size": 1,
+      "exact_rejection_test_ids": [
+        "EXACT-REJECT-CANONICAL-MISMATCH",
+        "EXACT-REJECT-NONAUTHORITATIVE-PROMOTION",
+        "EXACT-REJECT-REPAIR-GATE-BLOCKED",
+        "EXACT-REJECT-FIXTURE-AUTHORITY-CONTRADICTION",
+        "EXACT-REJECT-FRONTIER-PRUNED-PREFIX"
+      ],
+      "propagation_rule_ids": [
+        "PROP-CANONICAL-ANSWER",
+        "PROP-FIXTURE-AUTHORITY",
+        "PROP-FRONTIER-STATUS",
+        "PROP-REPAIR-GATE-BLOCK"
+      ],
+      "propagation_trace": [
+        {
+          "action": "intersect_with_canonical_answer",
+          "authority": "deterministic_artifact",
+          "rule_id": "PROP-CANONICAL-ANSWER"
+        },
+        {
+          "action": "intersect_with_exact_fixture_authority",
+          "authority": "deterministic_artifact",
+          "rule_id": "PROP-FIXTURE-AUTHORITY"
+        },
+        {
+          "action": "forbid_frontier_pruned_prefixes",
+          "authority": "deterministic_artifact",
+          "rule_id": "PROP-FRONTIER-STATUS"
+        },
+        {
+          "action": "mark_preview_only_until_repair_gate_opens",
+          "authority": "deterministic_artifact",
+          "rule_id": "PROP-REPAIR-GATE-BLOCK"
+        }
+      ],
+      "record_id": "gencp-domain:resyn-3084-repair-json-021",
+      "removed_candidates": [
+        "REPAIRABLE"
+      ],
+      "row_family": "exact_row:json_fragment_repair",
+      "row_id": "resyn-3084-repair-json-021",
+      "source_artifact": "exp3180.exact_rows_evaluated"
+    },
+    {
+      "authority_note": "preview only; exact/canonical rejection tests remain final",
+      "candidate_domain": [
+        "VALID"
+      ],
+      "canonical_answer": "VALID",
+      "constraint_evidence": {
+        "canonical_blockers": [],
+        "checker_authority": "exact_authority_replay",
+        "checker_result": "accept",
+        "expected_corrected_invariant": "",
+        "fixture_label_source": "python_ast_runtime_execution",
+        "frontier_summary": {
+          "beaver_certificate_count": 44,
+          "beaver_certificate_statuses": [
+            "certified_safe",
+            "certified_violating",
+            "non_prefix_closed",
+            "unresolved"
+          ],
+          "exp3183_frontier_count": 453,
+          "frontier_statuses": [
+            "bounded",
+            "pruned",
+            "viable"
+          ],
+          "pruned_frontier_count": 420
+        },
+        "minimal_correction_set": {},
+        "policy_action": "skip redundant recheck",
+        "unsat_core": []
+      },
+      "domain_size": 1,
+      "exact_rejection_test_ids": [
+        "EXACT-REJECT-CANONICAL-MISMATCH",
+        "EXACT-REJECT-NONAUTHORITATIVE-PROMOTION",
+        "EXACT-REJECT-REPAIR-GATE-BLOCKED",
+        "EXACT-REJECT-FRONTIER-PRUNED-PREFIX"
+      ],
+      "propagation_rule_ids": [
+        "PROP-CANONICAL-ANSWER",
+        "PROP-FRONTIER-STATUS",
+        "PROP-REPAIR-GATE-BLOCK"
+      ],
+      "propagation_trace": [
+        {
+          "action": "intersect_with_canonical_answer",
+          "authority": "deterministic_artifact",
+          "rule_id": "PROP-CANONICAL-ANSWER"
+        },
+        {
+          "action": "forbid_frontier_pruned_prefixes",
+          "authority": "deterministic_artifact",
+          "rule_id": "PROP-FRONTIER-STATUS"
+        },
+        {
+          "action": "mark_preview_only_until_repair_gate_opens",
+          "authority": "deterministic_artifact",
+          "rule_id": "PROP-REPAIR-GATE-BLOCK"
+        }
+      ],
+      "record_id": "gencp-domain:resyn-3084-arith-000",
+      "removed_candidates": [],
+      "row_family": "exact_row:arithmetic_code_assertions",
+      "row_id": "resyn-3084-arith-000",
+      "source_artifact": "exp3180.exact_rows_evaluated"
+    }
+  ],
+  "promotion_allowed": false,
+  "propagation_rules": [
+    {
+      "effect": "retain candidates equivalent to the exact canonical answer",
+      "id": "PROP-CANONICAL-ANSWER",
+      "name": "canonical answer intersection"
+    },
+    {
+      "effect": "remove observed candidates that created known false accepts",
+      "id": "PROP-FALSE-ACCEPT-CONFLICT",
+      "name": "false-accept conflict elimination"
+    },
+    {
+      "effect": "carry MCS, invariant, and unsat-core constraints into later rejection tests",
+      "id": "PROP-MCS-INVARIANT",
+      "name": "minimal correction or unsat-core preservation"
+    },
+    {
+      "effect": "intersect repair domains with exact fixture labels or repairs",
+      "id": "PROP-FIXTURE-AUTHORITY",
+      "name": "fixture authority compatibility"
+    },
+    {
+      "effect": "forbid prefixes already marked pruned by bounded frontier evidence",
+      "id": "PROP-FRONTIER-STATUS",
+      "name": "frontier status pruning"
+    },
+    {
+      "effect": "mark records preview-only until a separate repair gate opens",
+      "id": "PROP-REPAIR-GATE-BLOCK",
+      "name": "repair gate block"
+    }
+  ],
+  "repair_call_ready": false,
+  "run_date": "20260527",
+  "schema_version": "carnot.gencp_domain_preview_repair_compiler.v1",
+  "scripts_research_conductor_modified": false,
+  "source_artifacts": [
+    {
+      "path": "AGENTS.md",
+      "present": true,
+      "readable_structured_source": null,
+      "required": true,
+      "role": "agents_repo_instructions",
+      "sha256": "b3d6581b04f16b85f77defb2837c98dc3b60ed51e10b347ecb36e609f318b619",
+      "source_type": "text"
+    },
+    {
+      "path": "CODEX.md",
+      "present": true,
+      "readable_structured_source": null,
+      "required": true,
+      "role": "codex_repo_workflow",
+      "sha256": "1db7ebc1009714f872db83447828a8957c3abb72061832cc1bc307735cd96bbe",
+      "source_type": "text"
+    },
+    {
+      "path": "CLAUDE.md",
+      "present": true,
+      "readable_structured_source": null,
+      "required": true,
+      "role": "claude_authenticity_rules",
+      "sha256": "cdc00581d37d1bd3c77a69b058787f74ecc71545a97c1eab31c48961637b3224",
+      "source_type": "text"
+    },
+    {
+      "path": "research-references.md",
+      "present": true,
+      "readable_structured_source": null,
+      "required": true,
+      "role": "post_295_research_references",
+      "sha256": "6a247c66703927365510e3999fef8bed557aa2e507fe680cb19e1332eeeb6de0",
+      "source_type": "text"
+    },
+    {
+      "path": "openspec/capabilities/verification/spec.md",
+      "present": true,
+      "readable_structured_source": null,
+      "required": true,
+      "role": "verification_openspec",
+      "sha256": "54f68f25f21dd315e0f9267a9811942f9ca8b1fc6328e8a84a9589d4ee3411e7",
+      "source_type": "text"
+    },
+    {
+      "path": "results/experiment_3183_counterexample_certificate_expansion_v3.json",
+      "present": true,
+      "readable_structured_source": true,
+      "required": true,
+      "role": "exp3183_counterexample_certificate_expansion_v3",
+      "sha256": "b3ed5fb0b72d4369431a698ce2a08e50693b3e9366be9cf438334436834b9c71",
+      "source_type": "json"
+    },
+    {
+      "path": "results/experiment_3195_adaptive_verification_granularity_policy_v1.json",
+      "present": true,
+      "readable_structured_source": true,
+      "required": true,
+      "role": "exp3195_adaptive_verification_granularity_policy_v1",
+      "sha256": "172246ee7673bcdc60c905ef31fbe44d6aa67a114d92d270a9aaa3a89880e0f3",
+      "source_type": "json"
+    },
+    {
+      "path": "results/experiment_3138_canonical_answer_vericot_grounding_pilot_v1.json",
+      "present": true,
+      "readable_structured_source": true,
+      "required": true,
+      "role": "exp3138_canonical_answer_grounding_v1",
+      "sha256": "fc07294c1e4ea32bb8d174c2e99a5d70aa68a1e7e16252eea28f442812300a21",
+      "source_type": "json"
+    },
+    {
+      "path": "results/experiment_3084_resyn_exact_fixture_bank_generator_v1.json",
+      "present": true,
+      "readable_structured_source": true,
+      "required": true,
+      "role": "exp3084_exact_fixture_bank",
+      "sha256": "dfdbcccbee5bdabf7644783ba3fe248150c0087668d4086b8525e9a29030d78a",
+      "source_type": "json"
+    },
+    {
+      "path": "results/resyn_exact_fixture_bank_3084/fixture_manifest.jsonl",
+      "present": true,
+      "readable_structured_source": true,
+      "required": true,
+      "role": "exp3084_fixture_manifest",
+      "sha256": "b3de61dd3a3f197edc9d88431f46bd1fbadc5e6de0aea995d38db75c830bdab1",
+      "source_type": "jsonl"
+    },
+    {
+      "path": "results/experiment_3018_beaver_style_validator_frontier_certificate_v1.json",
+      "present": true,
+      "readable_structured_source": true,
+      "required": false,
+      "role": "exp3018_frontier_certificate",
+      "sha256": "e83c45047b82d87e595881e867d3494dc1362fd32fa88ce4d25f78d11453910e",
+      "source_type": "json"
+    },
+    {
+      "path": "results/beaver_style_validator_frontier_certificate_3018/certificate_manifest.jsonl",
+      "present": true,
+      "readable_structured_source": true,
+      "required": false,
+      "role": "exp3018_frontier_certificate_manifest",
+      "sha256": "8fc50e361ceb98bf554f7ab7739ffa3836d0eaab0f5a8459acc0cb31c01f19b8",
+      "source_type": "jsonl"
+    },
+    {
+      "path": "python/carnot/verify/gencp_domain_preview_repair_compiler_v1.py",
+      "present": true,
+      "readable_structured_source": null,
+      "required": false,
+      "role": "exp3196_module",
+      "sha256": "f67c0e7df2128552ed7039708195179d13e76ae5a4da05e91b6c542454d16b64",
+      "source_type": "python"
+    },
+    {
+      "path": "scripts/experiment_3196_gencp_domain_preview_repair_compiler_v1.py",
+      "present": true,
+      "readable_structured_source": null,
+      "required": false,
+      "role": "exp3196_script",
+      "sha256": "3760dc0d5cb818340649487cbcc7926d795116ebd443b602df6b037ce6cce64a",
+      "source_type": "python"
+    },
+    {
+      "path": "tests/python/test_experiment_3196_gencp_domain_preview_repair_compiler_v1.py",
+      "present": true,
+      "readable_structured_source": null,
+      "required": false,
+      "role": "exp3196_tests",
+      "sha256": "664fb43966d19d2835e05cc63b5534196b2f6215d3e59285a58ff92edb453efd",
+      "source_type": "python"
+    }
+  ],
+  "source_checksums": {
+    "AGENTS.md": "b3d6581b04f16b85f77defb2837c98dc3b60ed51e10b347ecb36e609f318b619",
+    "CLAUDE.md": "cdc00581d37d1bd3c77a69b058787f74ecc71545a97c1eab31c48961637b3224",
+    "CODEX.md": "1db7ebc1009714f872db83447828a8957c3abb72061832cc1bc307735cd96bbe",
+    "openspec/capabilities/verification/spec.md": "54f68f25f21dd315e0f9267a9811942f9ca8b1fc6328e8a84a9589d4ee3411e7",
+    "python/carnot/verify/gencp_domain_preview_repair_compiler_v1.py": "f67c0e7df2128552ed7039708195179d13e76ae5a4da05e91b6c542454d16b64",
+    "research-references.md": "6a247c66703927365510e3999fef8bed557aa2e507fe680cb19e1332eeeb6de0",
+    "results/beaver_style_validator_frontier_certificate_3018/certificate_manifest.jsonl": "8fc50e361ceb98bf554f7ab7739ffa3836d0eaab0f5a8459acc0cb31c01f19b8",
+    "results/experiment_3018_beaver_style_validator_frontier_certificate_v1.json": "e83c45047b82d87e595881e867d3494dc1362fd32fa88ce4d25f78d11453910e",
+    "results/experiment_3084_resyn_exact_fixture_bank_generator_v1.json": "dfdbcccbee5bdabf7644783ba3fe248150c0087668d4086b8525e9a29030d78a",
+    "results/experiment_3138_canonical_answer_vericot_grounding_pilot_v1.json": "fc07294c1e4ea32bb8d174c2e99a5d70aa68a1e7e16252eea28f442812300a21",
+    "results/experiment_3183_counterexample_certificate_expansion_v3.json": "b3ed5fb0b72d4369431a698ce2a08e50693b3e9366be9cf438334436834b9c71",
+    "results/experiment_3195_adaptive_verification_granularity_policy_v1.json": "172246ee7673bcdc60c905ef31fbe44d6aa67a114d92d270a9aaa3a89880e0f3",
+    "results/resyn_exact_fixture_bank_3084/fixture_manifest.jsonl": "b3de61dd3a3f197edc9d88431f46bd1fbadc5e6de0aea995d38db75c830bdab1",
+    "scripts/experiment_3196_gencp_domain_preview_repair_compiler_v1.py": "3760dc0d5cb818340649487cbcc7926d795116ebd443b602df6b037ce6cce64a",
+    "tests/python/test_experiment_3196_gencp_domain_preview_repair_compiler_v1.py": "664fb43966d19d2835e05cc63b5534196b2f6215d3e59285a58ff92edb453efd"
+  },
+  "source_errors": [],
+  "source_schema_observations": {
+    "beaver_manifest_row_keys": [
+      "bounded_frontier_node_kinds",
+      "candidate_role",
+      "candidate_sha256",
+      "certificate_status",
+      "deterministic_validator_outcome",
+      "enumerator_fallback_used",
+      "frontier_exploration",
+      "item_id",
+      "live_llm_evidence_used",
+      "prefix_closed_assumption_applies",
+      "prefix_closed_node_ids",
+      "probability_bound_placeholder",
+      "row_id",
+      "row_type",
+      "transcript_path",
+      "transcript_sha256"
+    ],
+    "exp3018_top_level_keys": [
+      "artifact",
+      "certificate_manifest_path",
+      "certificate_manifest_sha256",
+      "certificate_status_counts",
+      "certified_safe_count",
+      "certified_violating_count",
+      "corrigendum_pending",
+      "duration_s",
+      "enumerator_fallback_provenance",
+      "enumerator_fallback_separated",
+      "field_principles",
+      "flagged_adversarial",
+      "frontier_certificate_ready",
+      "honest_verdict",
+      "inference_substrate",
+      "invariant_violations",
+      "live_llm_evidence_used",
+      "live_llm_provenance",
+      "n_frontier_items",
+      "n_prefix_closed_items",
+      "non_prefix_closed_count",
+      "prefix_closed_constraint_kinds",
+      "probability_bound_policy",
+      "run_date",
+      "schema",
+      "source_artifacts",
+      "source_validator_manifest_path",
+      "tests_run",
+      "transcript_paths",
+      "unresolved_count"
+    ],
+    "exp3084_top_level_keys": [
+      "artifact",
+      "duration_s",
+      "exact_fixture_count",
+      "exact_label_sources",
+      "family_count",
+      "family_counts",
+      "fixture_manifest_path",
+      "fixture_manifest_sha256",
+      "honest_verdict",
+      "inference_substrate",
+      "perturbation_families",
+      "preconditions_checked",
+      "resyn_fixture_bank_ready",
+      "run_date",
+      "schema",
+      "source_artifacts",
+      "task_axes",
+      "tests_added_or_reused"
+    ],
+    "exp3138_regression_replay_keys": [
+      "answer_to_premise_consistent",
+      "blocked_by",
+      "candidate_action",
+      "candidate_answer",
+      "candidate_canonical",
+      "canonical_equivalent",
+      "canonicalization_blocked",
+      "contract_replay",
+      "exact_canonical",
+      "exact_label",
+      "expected_action",
+      "ledger_replay",
+      "ledger_replay_blocked",
+      "premise_grounding_blocked",
+      "premise_records",
+      "premise_to_answer_consistent",
+      "row_id",
+      "solver_certificate_summary"
+    ],
+    "exp3183_certificate_record_keys": [
+      "candidate_answers",
+      "canonical_answer",
+      "canonical_answer_source",
+      "checker_authority",
+      "checker_result",
+      "counterexample_family",
+      "depends_on_flagged_live_verifier",
+      "exact_authority_complete",
+      "exact_label",
+      "known_false_accept_or_regression",
+      "pilot_certificate",
+      "record_scope",
+      "row_id",
+      "sidecar_score_reference",
+      "source_artifact"
+    ],
+    "exp3183_frontier_record_keys": [
+      "constraint",
+      "constraint_families",
+      "exact_status",
+      "fixture_id",
+      "frontier_id",
+      "frontier_state",
+      "lower_bound",
+      "prefix",
+      "probability_mass",
+      "source_artifact",
+      "stop_reason",
+      "upper_bound"
+    ],
+    "exp3195_policy_row_keys": [
+      "authority_note",
+      "estimated_verifier_calls",
+      "feature_values",
+      "routing_reason",
+      "row_id",
+      "selected_action"
+    ],
+    "fixture_manifest_row_keys": [
+      "authority_payload",
+      "exact_label",
+      "family",
+      "fixture_id",
+      "label_source",
+      "leakage_safe_prompt_payload",
+      "perturbation_family",
+      "prompt_payload_sha256",
+      "schema",
+      "task_axis"
+    ]
+  },
+  "tests_run": [
+    ".venv/bin/pytest tests/python/test_experiment_3196_gencp_domain_preview_repair_compiler_v1.py -q -o addopts=''",
+    ".venv/bin/coverage erase",
+    ".venv/bin/coverage run --source=python/carnot/verify/gencp_domain_preview_repair_compiler_v1.py -m pytest -o addopts='' tests/python/test_experiment_3196_gencp_domain_preview_repair_compiler_v1.py -q",
+    ".venv/bin/coverage report --include='python/carnot/verify/gencp_domain_preview_repair_compiler_v1.py' --fail-under=100 --show-missing",
+    ".venv/bin/pytest tests/python -q"
+  ]
+}

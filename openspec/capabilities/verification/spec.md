@@ -3342,6 +3342,78 @@ non-authoritative, sets `promotion_allowed=false`, and emits an
 |---|---|---|
 | REQ-VERIFY-3195 | Implemented (`python/carnot/verify/adaptive_verification_granularity_policy_v1.py`) | Implemented (`tests/python/test_experiment_3195_adaptive_verification_granularity_policy_v1.py`) |
 
+### REQ-VERIFY-3196: GenCP Domain Preview Repair Compiler V1
+
+The repository shall provide an Exp 3196 deterministic GenCP-style domain
+preview compiler that writes
+`results/experiment_3196_gencp_domain_preview_repair_compiler_v1.json` from
+checked-in artifacts only. The compiler MUST consume the Exp 3183
+counterexample-certificate expansion v3, Exp 3195 adaptive verification
+granularity policy v1, Exp 3138 canonical-answer grounding pilot, Exp 3084
+exact fixture bank, invariant/frontier certificate artifacts when available,
+the post-.295 research references, and the repository workflow/spec
+instructions. It MUST NOT call an LLM, invoke repair generation, run live
+verifier scoring, train or promote an EBM/LLM sidecar, download models, push
+commits, or modify `scripts/research_conductor.py`.
+
+The compiler SHALL define repair-domain records from canonical answers,
+known false-accept families, exact fixture authority payloads, and bounded
+invariant/certificate frontiers. Each record SHALL include a row id, source
+artifact, row family, canonical answer, candidate domain values, domain size,
+constraint evidence, propagation trace, exact rejection test ids, and an
+authority note stating that exact/canonical checks remain final. Candidate
+domains SHALL be bounded by deterministic values already present in source
+rows, such as canonical labels, observed candidate answers, minimal correction
+set values, exact fixture labels, and frontier statuses.
+
+The compiler SHALL define explicit propagation rules that prune candidate
+domains before any later repair prompt is attempted. Rules SHALL cover
+canonical-answer equality, false-accept candidate conflict elimination,
+minimal-correction-set or unsat-core preservation, fixture-authority
+compatibility, frontier-status pruning, and repair-gate blocking. The compiler
+SHALL define exact rejection predicates that a later repair call must satisfy,
+including canonical answer mismatch, known false-accept token-family confusion,
+violated MCS/unsat-core invariant, fixture authority contradiction,
+frontier-pruned prefix use, non-authoritative receipt or sidecar promotion,
+and repair-gate blocked state.
+
+The terminal artifact MUST include `schema_version`, `experiment_id`,
+`compiler_version`, `source_artifacts`, `domain_record_schema`,
+`propagation_rules`, `exact_rejection_tests`, `preview_domain_count`,
+`average_candidate_domain_size`, `repair_call_ready`, `promotion_allowed`, and
+`honest_verdict`. It SHOULD also include a small preview manifest of bounded
+candidate spaces, source schema observations, no-new-execution metadata,
+source checksums, tests run, and explicit rationale for why the artifact does
+not invoke or promote LLM repair. `repair_call_ready` and `promotion_allowed`
+SHALL remain false for Exp 3196 because the artifact prepares domains only and
+does not clear the blocked repair gate.
+
+The honest verdict MUST start with `complete:` when the deterministic compiler
+artifact is materialized and schema-valid, even though it keeps repair calls and
+promotion blocked.
+
+### SCENARIO-VERIFY-3196: Existing Rows Compile Into Bounded Preview Domains
+
+Given Exp 3183 exposes certificate rows and bounded frontiers, Exp 3195 keeps
+promotion blocked while routing exact rows, Exp 3138 exposes canonical
+false-accept grounding, and Exp 3084 exposes exact fixture authority payloads,
+When Exp 3196 builds the GenCP domain preview compiler artifact,
+Then it writes
+`results/experiment_3196_gencp_domain_preview_repair_compiler_v1.json`
+without live inference, creates bounded domain preview records from existing
+rows, applies deterministic propagation rules that keep only candidates
+compatible with canonical answers, exact fixture authority, false-accept
+certificates, and frontier status, lists exact rejection tests for later repair
+calls, reports bounded candidate-domain accounting, keeps
+`repair_call_ready=false`, keeps `promotion_allowed=false`, and emits an
+`honest_verdict` that starts with `complete:`.
+
+## Implementation Status (REQ-VERIFY-3196)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-VERIFY-3196 | Implemented (`python/carnot/verify/gencp_domain_preview_repair_compiler_v1.py`) | Implemented (`tests/python/test_experiment_3196_gencp_domain_preview_repair_compiler_v1.py`) |
+
 ### REQ-VERIFY-3180: Controlled-Invariance Executor V2
 
 The repository shall provide an Exp 3180 controlled-invariance executor that
