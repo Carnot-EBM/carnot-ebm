@@ -3,7 +3,7 @@
   "clean_live_verifier_rerun_v9_ready": true,
   "clean_rerun_artifact_present": true,
   "controlled_invariance_passed": false,
-  "duration_s": 0.001347,
+  "duration_s": 0.002426,
   "exact_authority_ready": true,
   "false_accept_gate_passed": false,
   "false_accept_rate": 0.0,
@@ -152,9 +152,7 @@
   },
   "tests_run": [
     ".venv/bin/pytest tests/python/test_experiment_3168_repair_gate_decision_v3.py -q --no-cov",
-    ".venv/bin/coverage erase && .venv/bin/coverage run --source=python/carnot/verify -m pytest -o addopts='' tests/python/test_experiment_3168_repair_gate_decision_v3.py -q",
-    ".venv/bin/coverage report --include='python/carnot/verify/repair_gate_decision_v3.py' --fail-under=100 --show-missing",
-    ".venv/bin/python scripts/check_spec_coverage.py",
+    ".venv/bin/coverage erase && .venv/bin/coverage run --source=python/carnot/verify -m pytest -o addopts='' tests/python/test_experiment_3168_repair_gate_decision_v3.py -q && .venv/bin/coverage report --include='python/carnot/verify/repair_gate_decision_v3.py' --fail-under=100 --show-missing",
     ".venv/bin/pytest tests/python -q"
   ]
 }
