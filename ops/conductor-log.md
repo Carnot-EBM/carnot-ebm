@@ -6434,3 +6434,4 @@ web search: |
 | 2026-05-27 06:08 UTC | EBCN and KAN bounded diagnostic expansion | OK | 81 passed in 3.72s |
 | 2026-05-27 06:21 UTC | Hardware and tooling boundary v8 | OK | 81 passed in 3.52s |
 | 2026-05-27 06:39 UTC | Cross-corpus matrix v28 | OK | 81 passed in 3.32s |
+| 2026-05-27 06:53 UTC | Capstone v294 | OK | 81 passed in 4.27s |

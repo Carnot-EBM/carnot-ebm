@@ -1,0 +1,28 @@
+{
+  "schema": "carnot.operational_retro.v64",
+  "milestone": "2026.05.294",
+  "generated_at": "2026-05-27T07:01:04Z",
+  "retro_type": "operational_full",
+  "summary": "The authoritative timing block reports 0 completed experiments, 0 total wall-time minutes, and 0 compute-bound experiments for milestone 2026.05.294. Longest compute-bound tasks, compute-bound GPU efficiency, and 2+ model DualGPURunner coverage are no data available this milestone.",
+  "total_wall_time_minutes": 0,
+  "experiments_completed": 0,
+  "slowest_experiments": [],
+  "bottlenecks_identified": [
+    "No wall-time bottleneck can be identified from the timing block: no data available this milestone.",
+    "GPU idle is not flagged because the timing block contains 0 compute-bound experiments."
+  ],
+  "improvements_suggested": [
+    "Auto-generate an empty-window retrospective when experiments_completed is 0 so the milestone closes with explicit no-data answers.",
+    "Gate GPU-idle retrospective warnings on compute_bound_experiments_count greater than 0.",
+    "Make the timing collector emit a milestone-scoped data-availability status before analysis starts."
+  ],
+  "top_3_highest_leverage_actions": [
+    "Add a no-experiment timing-window fast path for operational retrospectives.",
+    "Keep GPU-idle diagnosis behind compute-bound timing evidence.",
+    "Record whether timing data was absent, empty, or filtered at milestone activation."
+  ],
+  "compute_bound_experiments_count": 0,
+  "gpu_idle_on_compute_bound_tasks": null,
+  "estimated_time_savings_pct": 0,
+  "meta_reflection": "The main operational risk this milestone is not a slow run but an empty timing basis. The retro preserves that absence rather than inferring from adjacent records or idle GPU telemetry."
+}
