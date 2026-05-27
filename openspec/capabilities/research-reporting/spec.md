@@ -10825,3 +10825,67 @@ no protected conductor or active-roadmap edits performed by this task, and an
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-REPORT-3191 | Implemented (`python/carnot/reporting/archive_v295_activate_v296_3191.py`) | Implemented (`tests/python/test_experiment_3191_archive_v295_activate_v296.py`) |
+
+### REQ-REPORT-3203: Cross-Corpus Matrix V30 From .296 Artifacts
+
+The repository shall provide an Exp 3203 cross-corpus matrix v30 generator
+that writes `results/experiment_3203_cross_corpus_matrix_v30.json` by reading
+`results/experiment_3189_cross_corpus_matrix_v29.json` as the authoritative
+prior matrix, plus all checked-in `.296` artifacts from Exp 3191 through Exp
+3202. The workflow MUST aggregate existing artifacts only. It MUST NOT run live
+model inference, verifier scoring, repair generation, solver execution,
+hardware commands, the conductor, pushes, modify `scripts/research_conductor.py`,
+or reconcile ops/status/traceability documents when the conductor has delegated
+that reconciliation to a separate step.
+
+The generator MUST classify every expected `.296` source artifact using the
+receipt adversarial contract v4 methodology and adversarial-accounting fields:
+schema identity, stable experiment identity, source lineage/checksums when
+present, inference-substrate declaration, duration/verdict presence, clean
+rerun allowance, headline-claim allowance, substrate classification,
+adversarial flag/corrigendum presence, and blocked-verdict prefixes. It MUST
+separately count clean, blocked, gated-skipped, diagnostic-only, retired, and
+missing artifact classifications. It MUST record both expected and loaded
+source-artifact lists so missing evidence cannot be hidden.
+
+The terminal artifact MUST include `schema_version`, `experiment_id`,
+`matrix_version`, `source_artifacts_expected`, `source_artifacts_loaded`,
+`missing_artifact_count`, `status_counts`, `publication_blocker_count`,
+`blocker_delta_from_v29`, `local_sota_receipt_status`,
+`clean_verifier_status`, `repair_status`, `fr11_self_learning_status`,
+`hardware_sampler_status`, `paper_ready`, `next_top_gap`, and
+`honest_verdict`. It MAY include row-level classifications, source checksums,
+contract-v4 field-gap details, publication-blocker accounting, paper-v6
+narrowing booleans, invariant violations, no-new-execution booleans, and
+measured `duration_s` as long as every value is derived from checked-in
+artifacts or file presence/checksum checks. `paper_ready` MUST be false while
+any required evidence remains blocked or missing, while clean local SOTA
+verifier evidence remains gate-skipped, while repair remains gated, while no
+deployed verifier sidecar is allowed, or while authenticated hardware speedup
+evidence is absent.
+
+#### SCENARIO-REPORT-3203: V30 Reconciles .296 Artifacts Without Overclaiming
+
+**Given** matrix v29 exists and reports `cross_corpus_matrix_v29_ready=true`,
+`paper_ready=false`, `publication_blocker_count=80`, and
+`next_top_gap=full_local_sota_receipt_clean_rerun_allowed_repair_gate_unblock`
+**And** `.296` artifacts exist for archive activation, receipt contract v4,
+CUDA/offload health probing, clean-verifier gate skip, adaptive granularity,
+GenCP domain preview, ExVerus certificates, repair gate v5, repair ladder v6
+gate skip, FR-11 trace-memory controller, KAN-CL nonforgetting sidecar audit,
+and sparse Potts/PAOA/THRML factor boundary
+**When** the Exp 3203 matrix v30 generator runs
+**Then** it writes `results/experiment_3203_cross_corpus_matrix_v30.json` with
+all required schema fields, every expected source artifact accounted for,
+clean/blocked/gated-skipped/diagnostic-only/retired/missing counts visible,
+publication blockers recomputed against v29, separate receipt/verifier/repair/
+FR-11/hardware status strings, paper-v6 narrowing preserved, `paper_ready=false`,
+the next top gap stated, aggregation-only inference-substrate metadata, no
+ops/status/traceability reconciliation performed by this task, and an
+`honest_verdict` that starts with `complete:`.
+
+## Implementation Status (REQ-REPORT-3203)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-3203 | Implemented (`python/carnot/reporting/cross_corpus_matrix_v30_3203.py`) | Implemented (`tests/python/test_experiment_3203_cross_corpus_matrix_v30.py`) |
