@@ -6429,3 +6429,4 @@ web search: |
 | 2026-05-27 05:14 UTC | Repair gate decision v3 materialized | OK | Deliverable already exists in repo |
 | 2026-05-27 05:14 UTC | Repair ladder materializer v4 | OK | Deliverable already exists in repo |
 | 2026-05-27 05:25 UTC | Counterexample certificate repair pilot v2 | OK | 121 passed in 3.86s |
+| 2026-05-27 05:39 UTC | FR-11 ledger counterexample isolation | OK | 81 passed in 3.25s |

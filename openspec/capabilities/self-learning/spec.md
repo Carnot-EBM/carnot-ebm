@@ -8819,3 +8819,84 @@ blocked `honest_verdict`.
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-LEARN-3171 | Planned (`python/carnot/eval/fr11_ledger_counterexample_isolation_v1.py`) | Planned (`tests/python/test_experiment_3171_fr11_ledger_counterexample_isolation_v1.py`) |
+
+## REQ-LEARN-3172: FR-11 Nonforgetting Self-Learning Pilot v2
+
+**Given** Exp 3171 records an isolated FR-11 environment/variant split with
+training-update rows, held-out replay rows, and negative-control rows
+**When** Exp 3172 runs the bounded nonforgetting self-learning pilot
+**Then** it SHALL load the checked-in Exp 3171 artifact and verify that the
+environment/variant split is present before applying any update.
+**And** it SHALL apply only a bounded controller-memory update or threshold
+adjustment to the `training_update_rows`; held-out rows and negative-control
+rows SHALL NOT contribute to the update.
+**And** it SHALL replay training, held-out, and negative-control rows after the
+update, measuring before/after ledger consistency, held-out consistency, and
+negative-control regressions.
+**And** it SHALL preserve the model-weight boundary: no finetuning, no hidden
+state mutation claim, no base-model/KAN/model-weight update, and zero live
+model inference calls.
+**And** it SHALL allow promotion only when after-update ledger consistency is
+1.0, held-out consistency is 1.0, no negative controls regress, and
+nonforgetting passes.
+
+The terminal artifact SHALL be
+`results/experiment_3172_fr11_nonforgetting_self_learning_pilot_v2.json` and
+SHALL include `fr11_nonforgetting_self_learning_pilot_v2_ready`,
+`continuous_self_learning_task`, `controller_memory_update_applied`,
+`model_weight_update_claimed`, `before_ledger_consistency_rate`,
+`after_ledger_consistency_rate`, `heldout_consistency_rate`,
+`negative_control_regression_count`, `nonforgetting_passed`,
+`promotion_allowed`, `promotion_recommendation`, `source_artifacts`,
+`inference_substrate`, and `honest_verdict`.
+
+### REQ-LEARN-3172 Sub-requirements
+
+- REQ-LEARN-3172-1: The pilot SHALL fail closed with a schema-complete blocked
+  artifact and `promotion_allowed=false` when Exp 3171 is missing, not ready, or
+  lacks `training_update_rows`, `held_out_replay_rows`, or negative-control
+  rows.
+- REQ-LEARN-3172-2: The controller-memory update SHALL be bounded to exact
+  training row ids and SHALL NOT read held-out or negative-control rows when
+  constructing update memory.
+- REQ-LEARN-3172-3: Before/after ledger consistency SHALL be measured over the
+  training-update plus held-out replay denominator; held-out and
+  negative-control rows SHALL be replayed after the update without contributing
+  to it.
+- REQ-LEARN-3172-4: `negative_control_regression_count` SHALL count any
+  negative-control row whose observed action changes or whose consistency
+  regresses after the controller-memory update.
+- REQ-LEARN-3172-5: `promotion_allowed` SHALL be true only when after-update
+  ledger consistency is 1.0, held-out consistency is 1.0, nonforgetting passes,
+  `negative_control_regression_count == 0`, and
+  `model_weight_update_claimed=false`.
+- REQ-LEARN-3172-6: The artifact SHALL declare zero live inference calls and no
+  base-model, KAN-model, hidden-state, or model-weight learning.
+
+### SCENARIO-LEARN-3172: Controller-Only Update Repairs Isolated Failures
+
+**Given** a ready Exp 3171 artifact whose training-update rows contain isolated
+reject-vs-accept ledger contradictions and whose held-out and negative-control
+rows are already consistent
+**When** Exp 3172 applies row-bounded controller memory only to the
+training-update rows
+**Then** the after-update ledger consistency reaches 1.0, held-out consistency
+remains 1.0, negative-control regression count is zero, promotion is allowed
+for controller memory only, `model_weight_update_claimed=false`, and
+`honest_verdict` begins with `complete:`.
+
+### SCENARIO-LEARN-3172-BLOCKED: Missing Split Fails Closed
+
+**Given** Exp 3171 is missing, not ready, or lacks the environment/variant split
+needed for nonforgetting replay
+**When** Exp 3172 runs
+**Then** it writes all required fields with zeroed rates,
+`controller_memory_update_applied=false`, `promotion_allowed=false`, no
+model-weight update claim, explicit precondition diagnostics, and a blocked
+`honest_verdict`.
+
+## Implementation Status (REQ-LEARN-3172)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-LEARN-3172 | Implemented (`python/carnot/eval/fr11_nonforgetting_self_learning_pilot_v2.py`) | Implemented (`tests/python/test_experiment_3172_fr11_nonforgetting_self_learning_pilot_v2.py`) |
