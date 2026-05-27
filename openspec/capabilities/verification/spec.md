@@ -3270,6 +3270,78 @@ reasons, and never sets `clean_rerun_allowed=true` or
 |---|---|---|
 | REQ-VERIFY-3193 | Implemented (`python/carnot/verify/llama_cpp_cuda_offload_health_probe_v1.py`) | Implemented (`tests/python/test_experiment_3193_llama_cpp_cuda_offload_health_probe_v1.py`) |
 
+### REQ-VERIFY-3195: Adaptive Verification Granularity Policy V1
+
+The repository shall provide an Exp 3195 deterministic adaptive verification
+granularity policy builder that writes
+`results/experiment_3195_adaptive_verification_granularity_policy_v1.json`
+from checked-in artifacts only. The builder MUST consume the Exp 3180
+controlled-invariance executor v2, Exp 3183 counterexample-certificate
+expansion v3, Exp 3189 cross-corpus matrix v29, the post-.295 research
+references, and the repository workflow/spec instructions. It MUST NOT call an
+LLM, score with a live verifier, execute repair generation, train or promote an
+EBM/LLM sidecar, download models, push commits, or modify
+`scripts/research_conductor.py`.
+
+The policy SHALL map interpretable row/risk features to one action from the
+explicit action space `final-answer-only`, `step-chunk`,
+`counterexample-fragment`, `abstain/escalate`, or
+`skip redundant recheck`. Policy features SHALL include row family, known
+false-accept risk, certificate depth, answer ambiguity, prior verification
+outcome, exact-authority completeness, and receipt-backed transcript context.
+Exact solvers, exact-authority replay, canonical answers, and counterexample
+certificates SHALL remain the only authority; EBM, LLM, transcript, and receipt
+fields MAY route or suppress redundant checks but SHALL NOT accept an answer or
+authorize promotion.
+
+The simulation SHALL run over existing certificate rows only, without fresh
+model or verifier calls. It SHALL identify available exact rows,
+false-accept families, counterexample certificates, bounded frontier evidence,
+and receipt-backed transcripts, then estimate verifier-call changes against a
+declared fixed-granularity baseline. It SHALL report risk tradeoffs by counting
+whether any known false-accept or ambiguous row is suppressed, skipped, or
+routed below counterexample-fragment granularity.
+
+The terminal artifact MUST include `schema_version`, `experiment_id`,
+`policy_version`, `source_artifacts`, `exact_rows_used`, `policy_features`,
+`policy_actions`, `simulated_rows`, `estimated_verifier_call_delta`,
+`false_accept_risk_increase`, `redundant_recheck_suppression_rule`,
+`promotion_allowed`, and `honest_verdict`. It SHOULD also include evidence
+inventory, policy schedule counts, verifier-call accounting, row-level
+simulation records, false-accept family summaries, no-new-execution metadata,
+source checksums, tests run, and explicit notes that ops/status, changelog, and
+traceability reconciliation are delegated when the conductor prompt says so.
+
+`promotion_allowed` SHALL always remain false for Exp 3195. The honest verdict
+MUST start with `complete:` when the deterministic policy artifact is
+materialized and schema-valid, even when the simulated policy keeps repair or
+headline promotion blocked.
+
+### SCENARIO-VERIFY-3195: Existing Rows Route To Adaptive Granularity Without New Authority
+
+Given Exp 3180 reports exact rows, known false-accept regression rows,
+controlled-invariance results, and receipt-backed transcripts; Exp 3183 reports
+expanded certificate records and bounded frontier records; and Exp 3189 reports
+the .295 matrix blocker state,
+When the Exp 3195 policy builder runs,
+Then it writes
+`results/experiment_3195_adaptive_verification_granularity_policy_v1.json`
+without live inference, routes known false-accept and ambiguous certified rows
+to counterexample-fragment checks, routes repair/fragment rows to step-chunk
+checks, escalates incomplete or unknown-family rows, permits redundant recheck
+suppression only for exact-complete low-risk accepted rows already covered by
+controlled invariance, estimates verifier-call delta against the declared
+baseline, reports zero increased known false-accept risk only when no known
+false-accept row is skipped or downgraded, keeps EBM/LLM/receipt fields
+non-authoritative, sets `promotion_allowed=false`, and emits an
+`honest_verdict` that starts with `complete:`.
+
+## Implementation Status (REQ-VERIFY-3195)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-VERIFY-3195 | Implemented (`python/carnot/verify/adaptive_verification_granularity_policy_v1.py`) | Implemented (`tests/python/test_experiment_3195_adaptive_verification_granularity_policy_v1.py`) |
+
 ### REQ-VERIFY-3180: Controlled-Invariance Executor V2
 
 The repository shall provide an Exp 3180 controlled-invariance executor that

@@ -1,0 +1,2257 @@
+{
+  "adaptive_verification_granularity_policy_v1_ready": true,
+  "artifact": "experiment_3195_adaptive_verification_granularity_policy_v1",
+  "authority_boundary": {
+    "ebm_or_llm_authority": false,
+    "exact_authority_final": true,
+    "policy_only_routes_compute": true,
+    "promotion_allowed": false,
+    "receipt_authority": false
+  },
+  "estimated_verifier_call_delta": -71,
+  "evidence_inventory": {
+    "bounded_frontier_records": 453,
+    "bounded_frontier_statuses": [
+      "bounded",
+      "pruned",
+      "viable"
+    ],
+    "counterexample_certificates": 5,
+    "exact_rows_available": 72,
+    "exact_rows_used": 72,
+    "false_accept_families": [
+      "known_false_accept:arithmetic_code_assertions",
+      "known_false_accept:smt_constraints"
+    ],
+    "known_false_accept_rows_covered": 2,
+    "matrix_v29_next_top_gap": "full_local_sota_receipt_clean_rerun_allowed_repair_gate_unblock",
+    "matrix_v29_publication_blocker_count": 80,
+    "receipt_backed_transcripts": 2
+  },
+  "exact_rows_used": 72,
+  "experiment_id": "exp3195",
+  "false_accept_risk_increase": 0.0,
+  "honest_verdict": "complete: adaptive_verification_granularity_policy_v1_ready=true; simulated_rows=72; estimated_verifier_call_delta=-71; promotion_allowed=false",
+  "inference_substrate": {
+    "ebm_trained_or_promoted": false,
+    "kind": "artifact_only_policy_simulation",
+    "llm_called": false,
+    "new_live_model_calls": 0,
+    "new_repair_calls": 0,
+    "new_verifier_scoring_calls": 0
+  },
+  "ops_docs_reconciliation_left_to_conductor": true,
+  "policy_actions": [
+    "final-answer-only",
+    "step-chunk",
+    "counterexample-fragment",
+    "abstain/escalate",
+    "skip redundant recheck"
+  ],
+  "policy_features": [
+    "row_family",
+    "known_false_accept_risk",
+    "certificate_depth",
+    "answer_ambiguity",
+    "prior_verification_outcome",
+    "exact_authority_complete",
+    "receipt_backed_transcript_context"
+  ],
+  "policy_version": "v1",
+  "promotion_allowed": false,
+  "redundant_recheck_suppression_rule": {
+    "action": "skip redundant recheck",
+    "applies_when": [
+      "controlled_invariance_passed=true",
+      "prior_verification_outcome=accept",
+      "exact_authority_complete=true",
+      "answer_ambiguity=false",
+      "known_false_accept_risk=false",
+      "depends_on_flagged_live_verifier=false"
+    ],
+    "authority_preserved": "prior exact-authority outcome remains final",
+    "excluded_when": [
+      "known_false_accept_risk=true",
+      "answer_ambiguity=true",
+      "counterexample_certificate_present=true",
+      "row_family=exact_row:unknown",
+      "exact_authority_complete=false",
+      "depends_on_flagged_live_verifier=true"
+    ],
+    "suppressed_verifier_calls_per_row_vs_uniform_step_chunk": 2
+  },
+  "risk_tradeoffs": {
+    "ambiguous_rows": 2,
+    "ambiguous_rows_below_counterexample_fragment": 0,
+    "false_accept_risk_increase": 0.0,
+    "known_false_accept_rows": 2,
+    "known_false_accept_rows_below_counterexample_fragment": 0,
+    "known_false_accept_rows_skipped": 0,
+    "risk_basis": "known false-accept rows from checked-in exact/certificate artifacts"
+  },
+  "run_date": "20260527",
+  "schedule_counts": {
+    "abstain/escalate": 8,
+    "counterexample-fragment": 5,
+    "final-answer-only": 22,
+    "skip redundant recheck": 23,
+    "step-chunk": 14
+  },
+  "schema_version": "carnot.adaptive_verification_granularity_policy.v1",
+  "scripts_research_conductor_modified": false,
+  "simulated_policy_rows": [
+    {
+      "authority_note": "route only; exact authority remains final",
+      "estimated_verifier_calls": 0,
+      "feature_values": {
+        "answer_ambiguity": false,
+        "candidate_answer_count": 1,
+        "certificate_depth": 1,
+        "checker_authority": "exact_authority_replay",
+        "depends_on_flagged_live_verifier": false,
+        "exact_authority_complete": true,
+        "exact_label": "VALID",
+        "has_counterexample_certificate": false,
+        "known_false_accept_risk": false,
+        "prior_verification_outcome": "accept",
+        "receipt_backed_transcript_context": {
+          "all_receipts_non_authoritative": true,
+          "receipt_count": 2,
+          "substrate_classes": [
+            "cpu_fallback_receipt_only"
+          ]
+        },
+        "row_family": "exact_row:arithmetic_code_assertions",
+        "row_id": "resyn-3084-arith-000"
+      },
+      "routing_reason": "exact_accept_recheck_redundant",
+      "row_id": "resyn-3084-arith-000",
+      "selected_action": "skip redundant recheck"
+    },
+    {
+      "authority_note": "route only; exact authority remains final",
+      "estimated_verifier_calls": 1,
+      "feature_values": {
+        "answer_ambiguity": false,
+        "candidate_answer_count": 1,
+        "certificate_depth": 1,
+        "checker_authority": "exact_authority_replay",
+        "depends_on_flagged_live_verifier": false,
+        "exact_authority_complete": true,
+        "exact_label": "INVALID",
+        "has_counterexample_certificate": false,
+        "known_false_accept_risk": false,
+        "prior_verification_outcome": "reject",
+        "receipt_backed_transcript_context": {
+          "all_receipts_non_authoritative": true,
+          "receipt_count": 2,
+          "substrate_classes": [
+            "cpu_fallback_receipt_only"
+          ]
+        },
+        "row_family": "exact_row:arithmetic_code_assertions",
+        "row_id": "resyn-3084-arith-001"
+      },
+      "routing_reason": "simple_exact_final_answer_check",
+      "row_id": "resyn-3084-arith-001",
+      "selected_action": "final-answer-only"
+    },
+    {
+      "authority_note": "route only; exact authority remains final",
+      "estimated_verifier_calls": 0,
+      "feature_values": {
+        "answer_ambiguity": false,
+        "candidate_answer_count": 1,
+        "certificate_depth": 1,
+        "checker_authority": "exact_authority_replay",
+        "depends_on_flagged_live_verifier": false,
+        "exact_authority_complete": true,
+        "exact_label": "VALID",
+        "has_counterexample_certificate": false,
+        "known_false_accept_risk": false,
+        "prior_verification_outcome": "accept",
+        "receipt_backed_transcript_context": {
+          "all_receipts_non_authoritative": true,
+          "receipt_count": 2,
+          "substrate_classes": [
+            "cpu_fallback_receipt_only"
+          ]
+        },
+        "row_family": "exact_row:arithmetic_code_assertions",
+        "row_id": "resyn-3084-arith-002"
+      },
+      "routing_reason": "exact_accept_recheck_redundant",
+      "row_id": "resyn-3084-arith-002",
+      "selected_action": "skip redundant recheck"
+    },
+    {
+      "authority_note": "route only; exact authority remains final",
+      "estimated_verifier_calls": 3,
+      "feature_values": {
+        "answer_ambiguity": true,
+        "candidate_answer_count": 2,
+        "certificate_depth": 5,
+        "checker_authority": "python_ast_runtime_execution",
+        "depends_on_flagged_live_verifier": false,
+        "exact_authority_complete": true,
+        "exact_label": "INVALID",
+        "has_counterexample_certificate": true,
+        "known_false_accept_risk": true,
+        "prior_verification_outcome": "reject",
+        "receipt_backed_transcript_context": {
+          "all_receipts_non_authoritative": true,
+          "receipt_count": 2,
+          "substrate_classes": [
+            "cpu_fallback_receipt_only"
+          ]
+        },
+        "row_family": "known_false_accept:arithmetic_code_assertions",
+        "row_id": "resyn-3084-arith-003"
+      },
+      "routing_reason": "known_or_certified_counterexample_risk",
+      "row_id": "resyn-3084-arith-003",
+      "selected_action": "counterexample-fragment"
+    },
+    {
+      "authority_note": "route only; exact authority remains final",
+      "estimated_verifier_calls": 0,
+      "feature_values": {
+        "answer_ambiguity": false,
+        "candidate_answer_count": 1,
+        "certificate_depth": 1,
+        "checker_authority": "exact_authority_replay",
+        "depends_on_flagged_live_verifier": false,
+        "exact_authority_complete": true,
+        "exact_label": "VALID",
+        "has_counterexample_certificate": false,
+        "known_false_accept_risk": false,
+        "prior_verification_outcome": "accept",
+        "receipt_backed_transcript_context": {
+          "all_receipts_non_authoritative": true,
+          "receipt_count": 2,
+          "substrate_classes": [
+            "cpu_fallback_receipt_only"
+          ]
+        },
+        "row_family": "exact_row:arithmetic_code_assertions",
+        "row_id": "resyn-3084-arith-004"
+      },
+      "routing_reason": "exact_accept_recheck_redundant",
+      "row_id": "resyn-3084-arith-004",
+      "selected_action": "skip redundant recheck"
+    },
+    {
+      "authority_note": "route only; exact authority remains final",
+      "estimated_verifier_calls": 1,
+      "feature_values": {
+        "answer_ambiguity": false,
+        "candidate_answer_count": 1,
+        "certificate_depth": 1,
+        "checker_authority": "exact_authority_replay",
+        "depends_on_flagged_live_verifier": false,
+        "exact_authority_complete": true,
+        "exact_label": "INVALID",
+        "has_counterexample_certificate": false,
+        "known_false_accept_risk": false,
+        "prior_verification_outcome": "reject",
+        "receipt_backed_transcript_context": {
+          "all_receipts_non_authoritative": true,
+          "receipt_count": 2,
+          "substrate_classes": [
+            "cpu_fallback_receipt_only"
+          ]
+        },
+        "row_family": "exact_row:arithmetic_code_assertions",
+        "row_id": "resyn-3084-arith-005"
+      },
+      "routing_reason": "simple_exact_final_answer_check",
+      "row_id": "resyn-3084-arith-005",
+      "selected_action": "final-answer-only"
+    },
+    {
+      "authority_note": "route only; exact authority remains final",
+      "estimated_verifier_calls": 0,
+      "feature_values": {
+        "answer_ambiguity": false,
+        "candidate_answer_count": 1,
+        "certificate_depth": 1,
+        "checker_authority": "exact_authority_replay",
+        "depends_on_flagged_live_verifier": false,
+        "exact_authority_complete": true,
+        "exact_label": "VALID",
+        "has_counterexample_certificate": false,
+        "known_false_accept_risk": false,
+        "prior_verification_outcome": "accept",
+        "receipt_backed_transcript_context": {
+          "all_receipts_non_authoritative": true,
+          "receipt_count": 2,
+          "substrate_classes": [
+            "cpu_fallback_receipt_only"
+          ]
+        },
+        "row_family": "exact_row:arithmetic_code_assertions",
+        "row_id": "resyn-3084-arith-006"
+      },
+      "routing_reason": "exact_accept_recheck_redundant",
+      "row_id": "resyn-3084-arith-006",
+      "selected_action": "skip redundant recheck"
+    },
+    {
+      "authority_note": "route only; exact authority remains final",
+      "estimated_verifier_calls": 1,
+      "feature_values": {
+        "answer_ambiguity": false,
+        "candidate_answer_count": 1,
+        "certificate_depth": 1,
+        "checker_authority": "exact_authority_replay",
+        "depends_on_flagged_live_verifier": false,
+        "exact_authority_complete": true,
+        "exact_label": "INVALID",
+        "has_counterexample_certificate": false,
+        "known_false_accept_risk": false,
+        "prior_verification_outcome": "reject",
+        "receipt_backed_transcript_context": {
+          "all_receipts_non_authoritative": true,
+          "receipt_count": 2,
+          "substrate_classes": [
+            "cpu_fallback_receipt_only"
+          ]
+        },
+        "row_family": "exact_row:arithmetic_code_assertions",
+        "row_id": "resyn-3084-arith-007"
+      },
+      "routing_reason": "simple_exact_final_answer_check",
+      "row_id": "resyn-3084-arith-007",
+      "selected_action": "final-answer-only"
+    },
+    {
+      "authority_note": "route only; exact authority remains final",
+      "estimated_verifier_calls": 0,
+      "feature_values": {
+        "answer_ambiguity": false,
+        "candidate_answer_count": 1,
+        "certificate_depth": 1,
+        "checker_authority": "exact_authority_replay",
+        "depends_on_flagged_live_verifier": false,
+        "exact_authority_complete": true,
+        "exact_label": "VALID",
+        "has_counterexample_certificate": false,
+        "known_false_accept_risk": false,
+        "prior_verification_outcome": "accept",
+        "receipt_backed_transcript_context": {
+          "all_receipts_non_authoritative": true,
+          "receipt_count": 2,
+          "substrate_classes": [
+            "cpu_fallback_receipt_only"
+          ]
+        },
+        "row_family": "exact_row:arithmetic_code_assertions",
+        "row_id": "resyn-3084-arith-008"
+      },
+      "routing_reason": "exact_accept_recheck_redundant",
+      "row_id": "resyn-3084-arith-008",
+      "selected_action": "skip redundant recheck"
+    },
+    {
+      "authority_note": "route only; exact authority remains final",
+      "estimated_verifier_calls": 1,
+      "feature_values": {
+        "answer_ambiguity": false,
+        "candidate_answer_count": 1,
+        "certificate_depth": 1,
+        "checker_authority": "exact_authority_replay",
+        "depends_on_flagged_live_verifier": false,
+        "exact_authority_complete": true,
+        "exact_label": "INVALID",
+        "has_counterexample_certificate": false,
+        "known_false_accept_risk": false,
+        "prior_verification_outcome": "reject",
+        "receipt_backed_transcript_context": {
+          "all_receipts_non_authoritative": true,
+          "receipt_count": 2,
+          "substrate_classes": [
+            "cpu_fallback_receipt_only"
+          ]
+        },
+        "row_family": "exact_row:arithmetic_code_assertions",
+        "row_id": "resyn-3084-arith-009"
+      },
+      "routing_reason": "simple_exact_final_answer_check",
+      "row_id": "resyn-3084-arith-009",
+      "selected_action": "final-answer-only"
+    },
+    {
+      "authority_note": "route only; exact authority remains final",
+      "estimated_verifier_calls": 0,
+      "feature_values": {
+        "answer_ambiguity": false,
+        "candidate_answer_count": 1,
+        "certificate_depth": 1,
+        "checker_authority": "exact_authority_replay",
+        "depends_on_flagged_live_verifier": false,
+        "exact_authority_complete": true,
+        "exact_label": "VALID",
+        "has_counterexample_certificate": false,
+        "known_false_accept_risk": false,
+        "prior_verification_outcome": "accept",
+        "receipt_backed_transcript_context": {
+          "all_receipts_non_authoritative": true,
+          "receipt_count": 2,
+          "substrate_classes": [
+            "cpu_fallback_receipt_only"
+          ]
+        },
+        "row_family": "exact_row:arithmetic_code_assertions",
+        "row_id": "resyn-3084-arith-010"
+      },
+      "routing_reason": "exact_accept_recheck_redundant",
+      "row_id": "resyn-3084-arith-010",
+      "selected_action": "skip redundant recheck"
+    },
+    {
+      "authority_note": "route only; exact authority remains final",
+      "estimated_verifier_calls": 1,
+      "feature_values": {
+        "answer_ambiguity": false,
+        "candidate_answer_count": 1,
+        "certificate_depth": 1,
+        "checker_authority": "exact_authority_replay",
+        "depends_on_flagged_live_verifier": false,
+        "exact_authority_complete": true,
+        "exact_label": "INVALID",
+        "has_counterexample_certificate": false,
+        "known_false_accept_risk": false,
+        "prior_verification_outcome": "reject",
+        "receipt_backed_transcript_context": {
+          "all_receipts_non_authoritative": true,
+          "receipt_count": 2,
+          "substrate_classes": [
+            "cpu_fallback_receipt_only"
+          ]
+        },
+        "row_family": "exact_row:arithmetic_code_assertions",
+        "row_id": "resyn-3084-arith-011"
+      },
+      "routing_reason": "simple_exact_final_answer_check",
+      "row_id": "resyn-3084-arith-011",
+      "selected_action": "final-answer-only"
+    },
+    {
+      "authority_note": "route only; exact authority remains final",
+      "estimated_verifier_calls": 0,
+      "feature_values": {
+        "answer_ambiguity": false,
+        "candidate_answer_count": 1,
+        "certificate_depth": 1,
+        "checker_authority": "exact_authority_replay",
+        "depends_on_flagged_live_verifier": false,
+        "exact_authority_complete": true,
+        "exact_label": "VALID",
+        "has_counterexample_certificate": false,
+        "known_false_accept_risk": false,
+        "prior_verification_outcome": "accept",
+        "receipt_backed_transcript_context": {
+          "all_receipts_non_authoritative": true,
+          "receipt_count": 2,
+          "substrate_classes": [
+            "cpu_fallback_receipt_only"
+          ]
+        },
+        "row_family": "exact_row:arithmetic_code_assertions",
+        "row_id": "resyn-3084-arith-012"
+      },
+      "routing_reason": "exact_accept_recheck_redundant",
+      "row_id": "resyn-3084-arith-012",
+      "selected_action": "skip redundant recheck"
+    },
+    {
+      "authority_note": "route only; exact authority remains final",
+      "estimated_verifier_calls": 1,
+      "feature_values": {
+        "answer_ambiguity": false,
+        "candidate_answer_count": 1,
+        "certificate_depth": 1,
+        "checker_authority": "exact_authority_replay",
+        "depends_on_flagged_live_verifier": false,
+        "exact_authority_complete": true,
+        "exact_label": "INVALID",
+        "has_counterexample_certificate": false,
+        "known_false_accept_risk": false,
+        "prior_verification_outcome": "reject",
+        "receipt_backed_transcript_context": {
+          "all_receipts_non_authoritative": true,
+          "receipt_count": 2,
+          "substrate_classes": [
+            "cpu_fallback_receipt_only"
+          ]
+        },
+        "row_family": "exact_row:arithmetic_code_assertions",
+        "row_id": "resyn-3084-arith-013"
+      },
+      "routing_reason": "simple_exact_final_answer_check",
+      "row_id": "resyn-3084-arith-013",
+      "selected_action": "final-answer-only"
+    },
+    {
+      "authority_note": "route only; exact authority remains final",
+      "estimated_verifier_calls": 0,
+      "feature_values": {
+        "answer_ambiguity": false,
+        "candidate_answer_count": 1,
+        "certificate_depth": 1,
+        "checker_authority": "exact_authority_replay",
+        "depends_on_flagged_live_verifier": false,
+        "exact_authority_complete": true,
+        "exact_label": "VALID",
+        "has_counterexample_certificate": false,
+        "known_false_accept_risk": false,
+        "prior_verification_outcome": "accept",
+        "receipt_backed_transcript_context": {
+          "all_receipts_non_authoritative": true,
+          "receipt_count": 2,
+          "substrate_classes": [
+            "cpu_fallback_receipt_only"
+          ]
+        },
+        "row_family": "exact_row:arithmetic_code_assertions",
+        "row_id": "resyn-3084-arith-014"
+      },
+      "routing_reason": "exact_accept_recheck_redundant",
+      "row_id": "resyn-3084-arith-014",
+      "selected_action": "skip redundant recheck"
+    },
+    {
+      "authority_note": "route only; exact authority remains final",
+      "estimated_verifier_calls": 1,
+      "feature_values": {
+        "answer_ambiguity": false,
+        "candidate_answer_count": 1,
+        "certificate_depth": 1,
+        "checker_authority": "exact_authority_replay",
+        "depends_on_flagged_live_verifier": false,
+        "exact_authority_complete": true,
+        "exact_label": "INVALID",
+        "has_counterexample_certificate": false,
+        "known_false_accept_risk": false,
+        "prior_verification_outcome": "reject",
+        "receipt_backed_transcript_context": {
+          "all_receipts_non_authoritative": true,
+          "receipt_count": 2,
+          "substrate_classes": [
+            "cpu_fallback_receipt_only"
+          ]
+        },
+        "row_family": "exact_row:arithmetic_code_assertions",
+        "row_id": "resyn-3084-arith-015"
+      },
+      "routing_reason": "simple_exact_final_answer_check",
+      "row_id": "resyn-3084-arith-015",
+      "selected_action": "final-answer-only"
+    },
+    {
+      "authority_note": "route only; exact authority remains final",
+      "estimated_verifier_calls": 0,
+      "feature_values": {
+        "answer_ambiguity": false,
+        "candidate_answer_count": 1,
+        "certificate_depth": 1,
+        "checker_authority": "exact_authority_replay",
+        "depends_on_flagged_live_verifier": false,
+        "exact_authority_complete": true,
+        "exact_label": "VALID",
+        "has_counterexample_certificate": false,
+        "known_false_accept_risk": false,
+        "prior_verification_outcome": "accept",
+        "receipt_backed_transcript_context": {
+          "all_receipts_non_authoritative": true,
+          "receipt_count": 2,
+          "substrate_classes": [
+            "cpu_fallback_receipt_only"
+          ]
+        },
+        "row_family": "exact_row:arithmetic_code_assertions",
+        "row_id": "resyn-3084-arith-016"
+      },
+      "routing_reason": "exact_accept_recheck_redundant",
+      "row_id": "resyn-3084-arith-016",
+      "selected_action": "skip redundant recheck"
+    },
+    {
+      "authority_note": "route only; exact authority remains final",
+      "estimated_verifier_calls": 1,
+      "feature_values": {
+        "answer_ambiguity": false,
+        "candidate_answer_count": 1,
+        "certificate_depth": 1,
+        "checker_authority": "exact_authority_replay",
+        "depends_on_flagged_live_verifier": false,
+        "exact_authority_complete": true,
+        "exact_label": "INVALID",
+        "has_counterexample_certificate": false,
+        "known_false_accept_risk": false,
+        "prior_verification_outcome": "reject",
+        "receipt_backed_transcript_context": {
+          "all_receipts_non_authoritative": true,
+          "receipt_count": 2,
+          "substrate_classes": [
+            "cpu_fallback_receipt_only"
+          ]
+        },
+        "row_family": "exact_row:arithmetic_code_assertions",
+        "row_id": "resyn-3084-arith-017"
+      },
+      "routing_reason": "simple_exact_final_answer_check",
+      "row_id": "resyn-3084-arith-017",
+      "selected_action": "final-answer-only"
+    },
+    {
+      "authority_note": "route only; exact authority remains final",
+      "estimated_verifier_calls": 0,
+      "feature_values": {
+        "answer_ambiguity": false,
+        "candidate_answer_count": 1,
+        "certificate_depth": 1,
+        "checker_authority": "exact_authority_replay",
+        "depends_on_flagged_live_verifier": false,
+        "exact_authority_complete": true,
+        "exact_label": "VALID",
+        "has_counterexample_certificate": false,
+        "known_false_accept_risk": false,
+        "prior_verification_outcome": "accept",
+        "receipt_backed_transcript_context": {
+          "all_receipts_non_authoritative": true,
+          "receipt_count": 2,
+          "substrate_classes": [
+            "cpu_fallback_receipt_only"
+          ]
+        },
+        "row_family": "exact_row:arithmetic_code_assertions",
+        "row_id": "resyn-3084-arith-018"
+      },
+      "routing_reason": "exact_accept_recheck_redundant",
+      "row_id": "resyn-3084-arith-018",
+      "selected_action": "skip redundant recheck"
+    },
+    {
+      "authority_note": "route only; exact authority remains final",
+      "estimated_verifier_calls": 1,
+      "feature_values": {
+        "answer_ambiguity": false,
+        "candidate_answer_count": 1,
+        "certificate_depth": 1,
+        "checker_authority": "exact_authority_replay",
+        "depends_on_flagged_live_verifier": false,
+        "exact_authority_complete": true,
+        "exact_label": "INVALID",
+        "has_counterexample_certificate": false,
+        "known_false_accept_risk": false,
+        "prior_verification_outcome": "reject",
+        "receipt_backed_transcript_context": {
+          "all_receipts_non_authoritative": true,
+          "receipt_count": 2,
+          "substrate_classes": [
+            "cpu_fallback_receipt_only"
+          ]
+        },
+        "row_family": "exact_row:arithmetic_code_assertions",
+        "row_id": "resyn-3084-arith-019"
+      },
+      "routing_reason": "simple_exact_final_answer_check",
+      "row_id": "resyn-3084-arith-019",
+      "selected_action": "final-answer-only"
+    },
+    {
+      "authority_note": "route only; exact authority remains final",
+      "estimated_verifier_calls": 0,
+      "feature_values": {
+        "answer_ambiguity": false,
+        "candidate_answer_count": 1,
+        "certificate_depth": 1,
+        "checker_authority": "exact_authority_replay",
+        "depends_on_flagged_live_verifier": false,
+        "exact_authority_complete": true,
+        "exact_label": "VALID",
+        "has_counterexample_certificate": false,
+        "known_false_accept_risk": false,
+        "prior_verification_outcome": "accept",
+        "receipt_backed_transcript_context": {
+          "all_receipts_non_authoritative": true,
+          "receipt_count": 2,
+          "substrate_classes": [
+            "cpu_fallback_receipt_only"
+          ]
+        },
+        "row_family": "exact_row:arithmetic_code_assertions",
+        "row_id": "resyn-3084-arith-020"
+      },
+      "routing_reason": "exact_accept_recheck_redundant",
+      "row_id": "resyn-3084-arith-020",
+      "selected_action": "skip redundant recheck"
+    },
+    {
+      "authority_note": "route only; exact authority remains final",
+      "estimated_verifier_calls": 1,
+      "feature_values": {
+        "answer_ambiguity": false,
+        "candidate_answer_count": 1,
+        "certificate_depth": 1,
+        "checker_authority": "exact_authority_replay",
+        "depends_on_flagged_live_verifier": false,
+        "exact_authority_complete": true,
+        "exact_label": "INVALID",
+        "has_counterexample_certificate": false,
+        "known_false_accept_risk": false,
+        "prior_verification_outcome": "reject",
+        "receipt_backed_transcript_context": {
+          "all_receipts_non_authoritative": true,
+          "receipt_count": 2,
+          "substrate_classes": [
+            "cpu_fallback_receipt_only"
+          ]
+        },
+        "row_family": "exact_row:arithmetic_code_assertions",
+        "row_id": "resyn-3084-arith-021"
+      },
+      "routing_reason": "simple_exact_final_answer_check",
+      "row_id": "resyn-3084-arith-021",
+      "selected_action": "final-answer-only"
+    },
+    {
+      "authority_note": "route only; exact authority remains final",
+      "estimated_verifier_calls": 0,
+      "feature_values": {
+        "answer_ambiguity": false,
+        "candidate_answer_count": 1,
+        "certificate_depth": 1,
+        "checker_authority": "exact_authority_replay",
+        "depends_on_flagged_live_verifier": false,
+        "exact_authority_complete": true,
+        "exact_label": "VALID",
+        "has_counterexample_certificate": false,
+        "known_false_accept_risk": false,
+        "prior_verification_outcome": "accept",
+        "receipt_backed_transcript_context": {
+          "all_receipts_non_authoritative": true,
+          "receipt_count": 2,
+          "substrate_classes": [
+            "cpu_fallback_receipt_only"
+          ]
+        },
+        "row_family": "exact_row:arithmetic_code_assertions",
+        "row_id": "resyn-3084-arith-022"
+      },
+      "routing_reason": "exact_accept_recheck_redundant",
+      "row_id": "resyn-3084-arith-022",
+      "selected_action": "skip redundant recheck"
+    },
+    {
+      "authority_note": "route only; exact authority remains final",
+      "estimated_verifier_calls": 1,
+      "feature_values": {
+        "answer_ambiguity": false,
+        "candidate_answer_count": 1,
+        "certificate_depth": 1,
+        "checker_authority": "exact_authority_replay",
+        "depends_on_flagged_live_verifier": false,
+        "exact_authority_complete": true,
+        "exact_label": "INVALID",
+        "has_counterexample_certificate": false,
+        "known_false_accept_risk": false,
+        "prior_verification_outcome": "reject",
+        "receipt_backed_transcript_context": {
+          "all_receipts_non_authoritative": true,
+          "receipt_count": 2,
+          "substrate_classes": [
+            "cpu_fallback_receipt_only"
+          ]
+        },
+        "row_family": "exact_row:arithmetic_code_assertions",
+        "row_id": "resyn-3084-arith-023"
+      },
+      "routing_reason": "simple_exact_final_answer_check",
+      "row_id": "resyn-3084-arith-023",
+      "selected_action": "final-answer-only"
+    },
+    {
+      "authority_note": "route only; exact authority remains final",
+      "estimated_verifier_calls": 3,
+      "feature_values": {
+        "answer_ambiguity": false,
+        "candidate_answer_count": 1,
+        "certificate_depth": 4,
+        "checker_authority": "python_json_parser",
+        "depends_on_flagged_live_verifier": false,
+        "exact_authority_complete": true,
+        "exact_label": "REPAIRABLE",
+        "has_counterexample_certificate": true,
+        "known_false_accept_risk": false,
+        "prior_verification_outcome": "reject",
+        "receipt_backed_transcript_context": {
+          "all_receipts_non_authoritative": true,
+          "receipt_count": 2,
+          "substrate_classes": [
+            "cpu_fallback_receipt_only"
+          ]
+        },
+        "row_family": "fragment_code:parser_repair",
+        "row_id": "resyn-3084-repair-json-000"
+      },
+      "routing_reason": "known_or_certified_counterexample_risk",
+      "row_id": "resyn-3084-repair-json-000",
+      "selected_action": "counterexample-fragment"
+    },
+    {
+      "authority_note": "route only; exact authority remains final",
+      "estimated_verifier_calls": 3,
+      "feature_values": {
+        "answer_ambiguity": false,
+        "candidate_answer_count": 1,
+        "certificate_depth": 4,
+        "checker_authority": "python_json_parser",
+        "depends_on_flagged_live_verifier": false,
+        "exact_authority_complete": true,
+        "exact_label": "REPAIRABLE",
+        "has_counterexample_certificate": true,
+        "known_false_accept_risk": false,
+        "prior_verification_outcome": "reject",
+        "receipt_backed_transcript_context": {
+          "all_receipts_non_authoritative": true,
+          "receipt_count": 2,
+          "substrate_classes": [
+            "cpu_fallback_receipt_only"
+          ]
+        },
+        "row_family": "fragment_code:parser_repair",
+        "row_id": "resyn-3084-repair-json-003"
+      },
+      "routing_reason": "known_or_certified_counterexample_risk",
+      "row_id": "resyn-3084-repair-json-003",
+      "selected_action": "counterexample-fragment"
+    },
+    {
+      "authority_note": "route only; exact authority remains final",
+      "estimated_verifier_calls": 2,
+      "feature_values": {
+        "answer_ambiguity": false,
+        "candidate_answer_count": 1,
+        "certificate_depth": 1,
+        "checker_authority": "exact_authority_replay",
+        "depends_on_flagged_live_verifier": false,
+        "exact_authority_complete": true,
+        "exact_label": "REPAIRABLE",
+        "has_counterexample_certificate": false,
+        "known_false_accept_risk": false,
+        "prior_verification_outcome": "reject",
+        "receipt_backed_transcript_context": {
+          "all_receipts_non_authoritative": true,
+          "receipt_count": 2,
+          "substrate_classes": [
+            "cpu_fallback_receipt_only"
+          ]
+        },
+        "row_family": "exact_row:json_fragment_repair",
+        "row_id": "resyn-3084-repair-json-006"
+      },
+      "routing_reason": "repair_or_fragment_row_needs_chunk_context",
+      "row_id": "resyn-3084-repair-json-006",
+      "selected_action": "step-chunk"
+    },
+    {
+      "authority_note": "route only; exact authority remains final",
+      "estimated_verifier_calls": 2,
+      "feature_values": {
+        "answer_ambiguity": false,
+        "candidate_answer_count": 1,
+        "certificate_depth": 1,
+        "checker_authority": "exact_authority_replay",
+        "depends_on_flagged_live_verifier": false,
+        "exact_authority_complete": true,
+        "exact_label": "REPAIRABLE",
+        "has_counterexample_certificate": false,
+        "known_false_accept_risk": false,
+        "prior_verification_outcome": "reject",
+        "receipt_backed_transcript_context": {
+          "all_receipts_non_authoritative": true,
+          "receipt_count": 2,
+          "substrate_classes": [
+            "cpu_fallback_receipt_only"
+          ]
+        },
+        "row_family": "exact_row:json_fragment_repair",
+        "row_id": "resyn-3084-repair-json-009"
+      },
+      "routing_reason": "repair_or_fragment_row_needs_chunk_context",
+      "row_id": "resyn-3084-repair-json-009",
+      "selected_action": "step-chunk"
+    },
+    {
+      "authority_note": "route only; exact authority remains final",
+      "estimated_verifier_calls": 2,
+      "feature_values": {
+        "answer_ambiguity": false,
+        "candidate_answer_count": 1,
+        "certificate_depth": 1,
+        "checker_authority": "exact_authority_replay",
+        "depends_on_flagged_live_verifier": false,
+        "exact_authority_complete": true,
+        "exact_label": "REPAIRABLE",
+        "has_counterexample_certificate": false,
+        "known_false_accept_risk": false,
+        "prior_verification_outcome": "reject",
+        "receipt_backed_transcript_context": {
+          "all_receipts_non_authoritative": true,
+          "receipt_count": 2,
+          "substrate_classes": [
+            "cpu_fallback_receipt_only"
+          ]
+        },
+        "row_family": "exact_row:json_fragment_repair",
+        "row_id": "resyn-3084-repair-json-012"
+      },
+      "routing_reason": "repair_or_fragment_row_needs_chunk_context",
+      "row_id": "resyn-3084-repair-json-012",
+      "selected_action": "step-chunk"
+    },
+    {
+      "authority_note": "route only; exact authority remains final",
+      "estimated_verifier_calls": 2,
+      "feature_values": {
+        "answer_ambiguity": false,
+        "candidate_answer_count": 1,
+        "certificate_depth": 1,
+        "checker_authority": "exact_authority_replay",
+        "depends_on_flagged_live_verifier": false,
+        "exact_authority_complete": true,
+        "exact_label": "REPAIRABLE",
+        "has_counterexample_certificate": false,
+        "known_false_accept_risk": false,
+        "prior_verification_outcome": "reject",
+        "receipt_backed_transcript_context": {
+          "all_receipts_non_authoritative": true,
+          "receipt_count": 2,
+          "substrate_classes": [
+            "cpu_fallback_receipt_only"
+          ]
+        },
+        "row_family": "exact_row:json_fragment_repair",
+        "row_id": "resyn-3084-repair-json-015"
+      },
+      "routing_reason": "repair_or_fragment_row_needs_chunk_context",
+      "row_id": "resyn-3084-repair-json-015",
+      "selected_action": "step-chunk"
+    },
+    {
+      "authority_note": "route only; exact authority remains final",
+      "estimated_verifier_calls": 2,
+      "feature_values": {
+        "answer_ambiguity": false,
+        "candidate_answer_count": 1,
+        "certificate_depth": 1,
+        "checker_authority": "exact_authority_replay",
+        "depends_on_flagged_live_verifier": false,
+        "exact_authority_complete": true,
+        "exact_label": "REPAIRABLE",
+        "has_counterexample_certificate": false,
+        "known_false_accept_risk": false,
+        "prior_verification_outcome": "reject",
+        "receipt_backed_transcript_context": {
+          "all_receipts_non_authoritative": true,
+          "receipt_count": 2,
+          "substrate_classes": [
+            "cpu_fallback_receipt_only"
+          ]
+        },
+        "row_family": "exact_row:json_fragment_repair",
+        "row_id": "resyn-3084-repair-json-018"
+      },
+      "routing_reason": "repair_or_fragment_row_needs_chunk_context",
+      "row_id": "resyn-3084-repair-json-018",
+      "selected_action": "step-chunk"
+    },
+    {
+      "authority_note": "route only; exact authority remains final",
+      "estimated_verifier_calls": 2,
+      "feature_values": {
+        "answer_ambiguity": false,
+        "candidate_answer_count": 1,
+        "certificate_depth": 1,
+        "checker_authority": "exact_authority_replay",
+        "depends_on_flagged_live_verifier": false,
+        "exact_authority_complete": true,
+        "exact_label": "REPAIRABLE",
+        "has_counterexample_certificate": false,
+        "known_false_accept_risk": false,
+        "prior_verification_outcome": "reject",
+        "receipt_backed_transcript_context": {
+          "all_receipts_non_authoritative": true,
+          "receipt_count": 2,
+          "substrate_classes": [
+            "cpu_fallback_receipt_only"
+          ]
+        },
+        "row_family": "exact_row:json_fragment_repair",
+        "row_id": "resyn-3084-repair-json-021"
+      },
+      "routing_reason": "repair_or_fragment_row_needs_chunk_context",
+      "row_id": "resyn-3084-repair-json-021",
+      "selected_action": "step-chunk"
+    },
+    {
+      "authority_note": "route only; exact authority remains final",
+      "estimated_verifier_calls": 1,
+      "feature_values": {
+        "answer_ambiguity": false,
+        "candidate_answer_count": 1,
+        "certificate_depth": 1,
+        "checker_authority": "exact_authority_replay",
+        "depends_on_flagged_live_verifier": false,
+        "exact_authority_complete": true,
+        "exact_label": "REPAIRABLE",
+        "has_counterexample_certificate": false,
+        "known_false_accept_risk": false,
+        "prior_verification_outcome": "reject",
+        "receipt_backed_transcript_context": {
+          "all_receipts_non_authoritative": true,
+          "receipt_count": 2,
+          "substrate_classes": [
+            "cpu_fallback_receipt_only"
+          ]
+        },
+        "row_family": "exact_row:unknown",
+        "row_id": "resyn-3084-repair-py-002"
+      },
+      "routing_reason": "incomplete_or_unknown_authority_boundary",
+      "row_id": "resyn-3084-repair-py-002",
+      "selected_action": "abstain/escalate"
+    },
+    {
+      "authority_note": "route only; exact authority remains final",
+      "estimated_verifier_calls": 1,
+      "feature_values": {
+        "answer_ambiguity": false,
+        "candidate_answer_count": 1,
+        "certificate_depth": 1,
+        "checker_authority": "exact_authority_replay",
+        "depends_on_flagged_live_verifier": false,
+        "exact_authority_complete": true,
+        "exact_label": "REPAIRABLE",
+        "has_counterexample_certificate": false,
+        "known_false_accept_risk": false,
+        "prior_verification_outcome": "reject",
+        "receipt_backed_transcript_context": {
+          "all_receipts_non_authoritative": true,
+          "receipt_count": 2,
+          "substrate_classes": [
+            "cpu_fallback_receipt_only"
+          ]
+        },
+        "row_family": "exact_row:unknown",
+        "row_id": "resyn-3084-repair-py-005"
+      },
+      "routing_reason": "incomplete_or_unknown_authority_boundary",
+      "row_id": "resyn-3084-repair-py-005",
+      "selected_action": "abstain/escalate"
+    },
+    {
+      "authority_note": "route only; exact authority remains final",
+      "estimated_verifier_calls": 1,
+      "feature_values": {
+        "answer_ambiguity": false,
+        "candidate_answer_count": 1,
+        "certificate_depth": 1,
+        "checker_authority": "exact_authority_replay",
+        "depends_on_flagged_live_verifier": false,
+        "exact_authority_complete": true,
+        "exact_label": "REPAIRABLE",
+        "has_counterexample_certificate": false,
+        "known_false_accept_risk": false,
+        "prior_verification_outcome": "reject",
+        "receipt_backed_transcript_context": {
+          "all_receipts_non_authoritative": true,
+          "receipt_count": 2,
+          "substrate_classes": [
+            "cpu_fallback_receipt_only"
+          ]
+        },
+        "row_family": "exact_row:unknown",
+        "row_id": "resyn-3084-repair-py-008"
+      },
+      "routing_reason": "incomplete_or_unknown_authority_boundary",
+      "row_id": "resyn-3084-repair-py-008",
+      "selected_action": "abstain/escalate"
+    },
+    {
+      "authority_note": "route only; exact authority remains final",
+      "estimated_verifier_calls": 1,
+      "feature_values": {
+        "answer_ambiguity": false,
+        "candidate_answer_count": 1,
+        "certificate_depth": 1,
+        "checker_authority": "exact_authority_replay",
+        "depends_on_flagged_live_verifier": false,
+        "exact_authority_complete": true,
+        "exact_label": "REPAIRABLE",
+        "has_counterexample_certificate": false,
+        "known_false_accept_risk": false,
+        "prior_verification_outcome": "reject",
+        "receipt_backed_transcript_context": {
+          "all_receipts_non_authoritative": true,
+          "receipt_count": 2,
+          "substrate_classes": [
+            "cpu_fallback_receipt_only"
+          ]
+        },
+        "row_family": "exact_row:unknown",
+        "row_id": "resyn-3084-repair-py-011"
+      },
+      "routing_reason": "incomplete_or_unknown_authority_boundary",
+      "row_id": "resyn-3084-repair-py-011",
+      "selected_action": "abstain/escalate"
+    },
+    {
+      "authority_note": "route only; exact authority remains final",
+      "estimated_verifier_calls": 1,
+      "feature_values": {
+        "answer_ambiguity": false,
+        "candidate_answer_count": 1,
+        "certificate_depth": 1,
+        "checker_authority": "exact_authority_replay",
+        "depends_on_flagged_live_verifier": false,
+        "exact_authority_complete": true,
+        "exact_label": "REPAIRABLE",
+        "has_counterexample_certificate": false,
+        "known_false_accept_risk": false,
+        "prior_verification_outcome": "reject",
+        "receipt_backed_transcript_context": {
+          "all_receipts_non_authoritative": true,
+          "receipt_count": 2,
+          "substrate_classes": [
+            "cpu_fallback_receipt_only"
+          ]
+        },
+        "row_family": "exact_row:unknown",
+        "row_id": "resyn-3084-repair-py-014"
+      },
+      "routing_reason": "incomplete_or_unknown_authority_boundary",
+      "row_id": "resyn-3084-repair-py-014",
+      "selected_action": "abstain/escalate"
+    },
+    {
+      "authority_note": "route only; exact authority remains final",
+      "estimated_verifier_calls": 1,
+      "feature_values": {
+        "answer_ambiguity": false,
+        "candidate_answer_count": 1,
+        "certificate_depth": 1,
+        "checker_authority": "exact_authority_replay",
+        "depends_on_flagged_live_verifier": false,
+        "exact_authority_complete": true,
+        "exact_label": "REPAIRABLE",
+        "has_counterexample_certificate": false,
+        "known_false_accept_risk": false,
+        "prior_verification_outcome": "reject",
+        "receipt_backed_transcript_context": {
+          "all_receipts_non_authoritative": true,
+          "receipt_count": 2,
+          "substrate_classes": [
+            "cpu_fallback_receipt_only"
+          ]
+        },
+        "row_family": "exact_row:unknown",
+        "row_id": "resyn-3084-repair-py-017"
+      },
+      "routing_reason": "incomplete_or_unknown_authority_boundary",
+      "row_id": "resyn-3084-repair-py-017",
+      "selected_action": "abstain/escalate"
+    },
+    {
+      "authority_note": "route only; exact authority remains final",
+      "estimated_verifier_calls": 1,
+      "feature_values": {
+        "answer_ambiguity": false,
+        "candidate_answer_count": 1,
+        "certificate_depth": 1,
+        "checker_authority": "exact_authority_replay",
+        "depends_on_flagged_live_verifier": false,
+        "exact_authority_complete": true,
+        "exact_label": "REPAIRABLE",
+        "has_counterexample_certificate": false,
+        "known_false_accept_risk": false,
+        "prior_verification_outcome": "reject",
+        "receipt_backed_transcript_context": {
+          "all_receipts_non_authoritative": true,
+          "receipt_count": 2,
+          "substrate_classes": [
+            "cpu_fallback_receipt_only"
+          ]
+        },
+        "row_family": "exact_row:unknown",
+        "row_id": "resyn-3084-repair-py-020"
+      },
+      "routing_reason": "incomplete_or_unknown_authority_boundary",
+      "row_id": "resyn-3084-repair-py-020",
+      "selected_action": "abstain/escalate"
+    },
+    {
+      "authority_note": "route only; exact authority remains final",
+      "estimated_verifier_calls": 1,
+      "feature_values": {
+        "answer_ambiguity": false,
+        "candidate_answer_count": 1,
+        "certificate_depth": 1,
+        "checker_authority": "exact_authority_replay",
+        "depends_on_flagged_live_verifier": false,
+        "exact_authority_complete": true,
+        "exact_label": "REPAIRABLE",
+        "has_counterexample_certificate": false,
+        "known_false_accept_risk": false,
+        "prior_verification_outcome": "reject",
+        "receipt_backed_transcript_context": {
+          "all_receipts_non_authoritative": true,
+          "receipt_count": 2,
+          "substrate_classes": [
+            "cpu_fallback_receipt_only"
+          ]
+        },
+        "row_family": "exact_row:unknown",
+        "row_id": "resyn-3084-repair-py-023"
+      },
+      "routing_reason": "incomplete_or_unknown_authority_boundary",
+      "row_id": "resyn-3084-repair-py-023",
+      "selected_action": "abstain/escalate"
+    },
+    {
+      "authority_note": "route only; exact authority remains final",
+      "estimated_verifier_calls": 2,
+      "feature_values": {
+        "answer_ambiguity": false,
+        "candidate_answer_count": 1,
+        "certificate_depth": 1,
+        "checker_authority": "exact_authority_replay",
+        "depends_on_flagged_live_verifier": false,
+        "exact_authority_complete": true,
+        "exact_label": "REPAIRABLE",
+        "has_counterexample_certificate": false,
+        "known_false_accept_risk": false,
+        "prior_verification_outcome": "reject",
+        "receipt_backed_transcript_context": {
+          "all_receipts_non_authoritative": true,
+          "receipt_count": 2,
+          "substrate_classes": [
+            "cpu_fallback_receipt_only"
+          ]
+        },
+        "row_family": "exact_row:smt_constraints",
+        "row_id": "resyn-3084-repair-smt-001"
+      },
+      "routing_reason": "repair_or_fragment_row_needs_chunk_context",
+      "row_id": "resyn-3084-repair-smt-001",
+      "selected_action": "step-chunk"
+    },
+    {
+      "authority_note": "route only; exact authority remains final",
+      "estimated_verifier_calls": 2,
+      "feature_values": {
+        "answer_ambiguity": false,
+        "candidate_answer_count": 1,
+        "certificate_depth": 1,
+        "checker_authority": "exact_authority_replay",
+        "depends_on_flagged_live_verifier": false,
+        "exact_authority_complete": true,
+        "exact_label": "REPAIRABLE",
+        "has_counterexample_certificate": false,
+        "known_false_accept_risk": false,
+        "prior_verification_outcome": "reject",
+        "receipt_backed_transcript_context": {
+          "all_receipts_non_authoritative": true,
+          "receipt_count": 2,
+          "substrate_classes": [
+            "cpu_fallback_receipt_only"
+          ]
+        },
+        "row_family": "exact_row:smt_constraints",
+        "row_id": "resyn-3084-repair-smt-004"
+      },
+      "routing_reason": "repair_or_fragment_row_needs_chunk_context",
+      "row_id": "resyn-3084-repair-smt-004",
+      "selected_action": "step-chunk"
+    },
+    {
+      "authority_note": "route only; exact authority remains final",
+      "estimated_verifier_calls": 2,
+      "feature_values": {
+        "answer_ambiguity": false,
+        "candidate_answer_count": 1,
+        "certificate_depth": 1,
+        "checker_authority": "exact_authority_replay",
+        "depends_on_flagged_live_verifier": false,
+        "exact_authority_complete": true,
+        "exact_label": "REPAIRABLE",
+        "has_counterexample_certificate": false,
+        "known_false_accept_risk": false,
+        "prior_verification_outcome": "reject",
+        "receipt_backed_transcript_context": {
+          "all_receipts_non_authoritative": true,
+          "receipt_count": 2,
+          "substrate_classes": [
+            "cpu_fallback_receipt_only"
+          ]
+        },
+        "row_family": "exact_row:smt_constraints",
+        "row_id": "resyn-3084-repair-smt-007"
+      },
+      "routing_reason": "repair_or_fragment_row_needs_chunk_context",
+      "row_id": "resyn-3084-repair-smt-007",
+      "selected_action": "step-chunk"
+    },
+    {
+      "authority_note": "route only; exact authority remains final",
+      "estimated_verifier_calls": 2,
+      "feature_values": {
+        "answer_ambiguity": false,
+        "candidate_answer_count": 1,
+        "certificate_depth": 1,
+        "checker_authority": "exact_authority_replay",
+        "depends_on_flagged_live_verifier": false,
+        "exact_authority_complete": true,
+        "exact_label": "REPAIRABLE",
+        "has_counterexample_certificate": false,
+        "known_false_accept_risk": false,
+        "prior_verification_outcome": "reject",
+        "receipt_backed_transcript_context": {
+          "all_receipts_non_authoritative": true,
+          "receipt_count": 2,
+          "substrate_classes": [
+            "cpu_fallback_receipt_only"
+          ]
+        },
+        "row_family": "exact_row:smt_constraints",
+        "row_id": "resyn-3084-repair-smt-010"
+      },
+      "routing_reason": "repair_or_fragment_row_needs_chunk_context",
+      "row_id": "resyn-3084-repair-smt-010",
+      "selected_action": "step-chunk"
+    },
+    {
+      "authority_note": "route only; exact authority remains final",
+      "estimated_verifier_calls": 2,
+      "feature_values": {
+        "answer_ambiguity": false,
+        "candidate_answer_count": 1,
+        "certificate_depth": 1,
+        "checker_authority": "exact_authority_replay",
+        "depends_on_flagged_live_verifier": false,
+        "exact_authority_complete": true,
+        "exact_label": "REPAIRABLE",
+        "has_counterexample_certificate": false,
+        "known_false_accept_risk": false,
+        "prior_verification_outcome": "reject",
+        "receipt_backed_transcript_context": {
+          "all_receipts_non_authoritative": true,
+          "receipt_count": 2,
+          "substrate_classes": [
+            "cpu_fallback_receipt_only"
+          ]
+        },
+        "row_family": "exact_row:smt_constraints",
+        "row_id": "resyn-3084-repair-smt-013"
+      },
+      "routing_reason": "repair_or_fragment_row_needs_chunk_context",
+      "row_id": "resyn-3084-repair-smt-013",
+      "selected_action": "step-chunk"
+    },
+    {
+      "authority_note": "route only; exact authority remains final",
+      "estimated_verifier_calls": 2,
+      "feature_values": {
+        "answer_ambiguity": false,
+        "candidate_answer_count": 1,
+        "certificate_depth": 1,
+        "checker_authority": "exact_authority_replay",
+        "depends_on_flagged_live_verifier": false,
+        "exact_authority_complete": true,
+        "exact_label": "REPAIRABLE",
+        "has_counterexample_certificate": false,
+        "known_false_accept_risk": false,
+        "prior_verification_outcome": "reject",
+        "receipt_backed_transcript_context": {
+          "all_receipts_non_authoritative": true,
+          "receipt_count": 2,
+          "substrate_classes": [
+            "cpu_fallback_receipt_only"
+          ]
+        },
+        "row_family": "exact_row:smt_constraints",
+        "row_id": "resyn-3084-repair-smt-016"
+      },
+      "routing_reason": "repair_or_fragment_row_needs_chunk_context",
+      "row_id": "resyn-3084-repair-smt-016",
+      "selected_action": "step-chunk"
+    },
+    {
+      "authority_note": "route only; exact authority remains final",
+      "estimated_verifier_calls": 2,
+      "feature_values": {
+        "answer_ambiguity": false,
+        "candidate_answer_count": 1,
+        "certificate_depth": 1,
+        "checker_authority": "exact_authority_replay",
+        "depends_on_flagged_live_verifier": false,
+        "exact_authority_complete": true,
+        "exact_label": "REPAIRABLE",
+        "has_counterexample_certificate": false,
+        "known_false_accept_risk": false,
+        "prior_verification_outcome": "reject",
+        "receipt_backed_transcript_context": {
+          "all_receipts_non_authoritative": true,
+          "receipt_count": 2,
+          "substrate_classes": [
+            "cpu_fallback_receipt_only"
+          ]
+        },
+        "row_family": "exact_row:smt_constraints",
+        "row_id": "resyn-3084-repair-smt-019"
+      },
+      "routing_reason": "repair_or_fragment_row_needs_chunk_context",
+      "row_id": "resyn-3084-repair-smt-019",
+      "selected_action": "step-chunk"
+    },
+    {
+      "authority_note": "route only; exact authority remains final",
+      "estimated_verifier_calls": 2,
+      "feature_values": {
+        "answer_ambiguity": false,
+        "candidate_answer_count": 1,
+        "certificate_depth": 1,
+        "checker_authority": "exact_authority_replay",
+        "depends_on_flagged_live_verifier": false,
+        "exact_authority_complete": true,
+        "exact_label": "REPAIRABLE",
+        "has_counterexample_certificate": false,
+        "known_false_accept_risk": false,
+        "prior_verification_outcome": "reject",
+        "receipt_backed_transcript_context": {
+          "all_receipts_non_authoritative": true,
+          "receipt_count": 2,
+          "substrate_classes": [
+            "cpu_fallback_receipt_only"
+          ]
+        },
+        "row_family": "exact_row:smt_constraints",
+        "row_id": "resyn-3084-repair-smt-022"
+      },
+      "routing_reason": "repair_or_fragment_row_needs_chunk_context",
+      "row_id": "resyn-3084-repair-smt-022",
+      "selected_action": "step-chunk"
+    },
+    {
+      "authority_note": "route only; exact authority remains final",
+      "estimated_verifier_calls": 3,
+      "feature_values": {
+        "answer_ambiguity": true,
+        "candidate_answer_count": 2,
+        "certificate_depth": 5,
+        "checker_authority": "z3_solver",
+        "depends_on_flagged_live_verifier": false,
+        "exact_authority_complete": true,
+        "exact_label": "UNSAT",
+        "has_counterexample_certificate": true,
+        "known_false_accept_risk": true,
+        "prior_verification_outcome": "reject",
+        "receipt_backed_transcript_context": {
+          "all_receipts_non_authoritative": true,
+          "receipt_count": 2,
+          "substrate_classes": [
+            "cpu_fallback_receipt_only"
+          ]
+        },
+        "row_family": "known_false_accept:smt_constraints",
+        "row_id": "resyn-3084-smt-000"
+      },
+      "routing_reason": "known_or_certified_counterexample_risk",
+      "row_id": "resyn-3084-smt-000",
+      "selected_action": "counterexample-fragment"
+    },
+    {
+      "authority_note": "route only; exact authority remains final",
+      "estimated_verifier_calls": 3,
+      "feature_values": {
+        "answer_ambiguity": false,
+        "candidate_answer_count": 1,
+        "certificate_depth": 2,
+        "checker_authority": "z3_solver",
+        "depends_on_flagged_live_verifier": false,
+        "exact_authority_complete": true,
+        "exact_label": "SAT",
+        "has_counterexample_certificate": true,
+        "known_false_accept_risk": false,
+        "prior_verification_outcome": "accept",
+        "receipt_backed_transcript_context": {
+          "all_receipts_non_authoritative": true,
+          "receipt_count": 2,
+          "substrate_classes": [
+            "cpu_fallback_receipt_only"
+          ]
+        },
+        "row_family": "satisfiable_drift_anchor",
+        "row_id": "resyn-3084-smt-001"
+      },
+      "routing_reason": "known_or_certified_counterexample_risk",
+      "row_id": "resyn-3084-smt-001",
+      "selected_action": "counterexample-fragment"
+    },
+    {
+      "authority_note": "route only; exact authority remains final",
+      "estimated_verifier_calls": 1,
+      "feature_values": {
+        "answer_ambiguity": false,
+        "candidate_answer_count": 1,
+        "certificate_depth": 1,
+        "checker_authority": "exact_authority_replay",
+        "depends_on_flagged_live_verifier": false,
+        "exact_authority_complete": true,
+        "exact_label": "UNSAT",
+        "has_counterexample_certificate": false,
+        "known_false_accept_risk": false,
+        "prior_verification_outcome": "reject",
+        "receipt_backed_transcript_context": {
+          "all_receipts_non_authoritative": true,
+          "receipt_count": 2,
+          "substrate_classes": [
+            "cpu_fallback_receipt_only"
+          ]
+        },
+        "row_family": "exact_row:smt_constraints",
+        "row_id": "resyn-3084-smt-002"
+      },
+      "routing_reason": "simple_exact_final_answer_check",
+      "row_id": "resyn-3084-smt-002",
+      "selected_action": "final-answer-only"
+    },
+    {
+      "authority_note": "route only; exact authority remains final",
+      "estimated_verifier_calls": 0,
+      "feature_values": {
+        "answer_ambiguity": false,
+        "candidate_answer_count": 1,
+        "certificate_depth": 1,
+        "checker_authority": "exact_authority_replay",
+        "depends_on_flagged_live_verifier": false,
+        "exact_authority_complete": true,
+        "exact_label": "SAT",
+        "has_counterexample_certificate": false,
+        "known_false_accept_risk": false,
+        "prior_verification_outcome": "accept",
+        "receipt_backed_transcript_context": {
+          "all_receipts_non_authoritative": true,
+          "receipt_count": 2,
+          "substrate_classes": [
+            "cpu_fallback_receipt_only"
+          ]
+        },
+        "row_family": "exact_row:smt_constraints",
+        "row_id": "resyn-3084-smt-003"
+      },
+      "routing_reason": "exact_accept_recheck_redundant",
+      "row_id": "resyn-3084-smt-003",
+      "selected_action": "skip redundant recheck"
+    },
+    {
+      "authority_note": "route only; exact authority remains final",
+      "estimated_verifier_calls": 1,
+      "feature_values": {
+        "answer_ambiguity": false,
+        "candidate_answer_count": 1,
+        "certificate_depth": 1,
+        "checker_authority": "exact_authority_replay",
+        "depends_on_flagged_live_verifier": false,
+        "exact_authority_complete": true,
+        "exact_label": "UNSAT",
+        "has_counterexample_certificate": false,
+        "known_false_accept_risk": false,
+        "prior_verification_outcome": "reject",
+        "receipt_backed_transcript_context": {
+          "all_receipts_non_authoritative": true,
+          "receipt_count": 2,
+          "substrate_classes": [
+            "cpu_fallback_receipt_only"
+          ]
+        },
+        "row_family": "exact_row:smt_constraints",
+        "row_id": "resyn-3084-smt-004"
+      },
+      "routing_reason": "simple_exact_final_answer_check",
+      "row_id": "resyn-3084-smt-004",
+      "selected_action": "final-answer-only"
+    },
+    {
+      "authority_note": "route only; exact authority remains final",
+      "estimated_verifier_calls": 0,
+      "feature_values": {
+        "answer_ambiguity": false,
+        "candidate_answer_count": 1,
+        "certificate_depth": 1,
+        "checker_authority": "exact_authority_replay",
+        "depends_on_flagged_live_verifier": false,
+        "exact_authority_complete": true,
+        "exact_label": "SAT",
+        "has_counterexample_certificate": false,
+        "known_false_accept_risk": false,
+        "prior_verification_outcome": "accept",
+        "receipt_backed_transcript_context": {
+          "all_receipts_non_authoritative": true,
+          "receipt_count": 2,
+          "substrate_classes": [
+            "cpu_fallback_receipt_only"
+          ]
+        },
+        "row_family": "exact_row:smt_constraints",
+        "row_id": "resyn-3084-smt-005"
+      },
+      "routing_reason": "exact_accept_recheck_redundant",
+      "row_id": "resyn-3084-smt-005",
+      "selected_action": "skip redundant recheck"
+    },
+    {
+      "authority_note": "route only; exact authority remains final",
+      "estimated_verifier_calls": 1,
+      "feature_values": {
+        "answer_ambiguity": false,
+        "candidate_answer_count": 1,
+        "certificate_depth": 1,
+        "checker_authority": "exact_authority_replay",
+        "depends_on_flagged_live_verifier": false,
+        "exact_authority_complete": true,
+        "exact_label": "UNSAT",
+        "has_counterexample_certificate": false,
+        "known_false_accept_risk": false,
+        "prior_verification_outcome": "reject",
+        "receipt_backed_transcript_context": {
+          "all_receipts_non_authoritative": true,
+          "receipt_count": 2,
+          "substrate_classes": [
+            "cpu_fallback_receipt_only"
+          ]
+        },
+        "row_family": "exact_row:smt_constraints",
+        "row_id": "resyn-3084-smt-006"
+      },
+      "routing_reason": "simple_exact_final_answer_check",
+      "row_id": "resyn-3084-smt-006",
+      "selected_action": "final-answer-only"
+    },
+    {
+      "authority_note": "route only; exact authority remains final",
+      "estimated_verifier_calls": 0,
+      "feature_values": {
+        "answer_ambiguity": false,
+        "candidate_answer_count": 1,
+        "certificate_depth": 1,
+        "checker_authority": "exact_authority_replay",
+        "depends_on_flagged_live_verifier": false,
+        "exact_authority_complete": true,
+        "exact_label": "SAT",
+        "has_counterexample_certificate": false,
+        "known_false_accept_risk": false,
+        "prior_verification_outcome": "accept",
+        "receipt_backed_transcript_context": {
+          "all_receipts_non_authoritative": true,
+          "receipt_count": 2,
+          "substrate_classes": [
+            "cpu_fallback_receipt_only"
+          ]
+        },
+        "row_family": "exact_row:smt_constraints",
+        "row_id": "resyn-3084-smt-007"
+      },
+      "routing_reason": "exact_accept_recheck_redundant",
+      "row_id": "resyn-3084-smt-007",
+      "selected_action": "skip redundant recheck"
+    },
+    {
+      "authority_note": "route only; exact authority remains final",
+      "estimated_verifier_calls": 1,
+      "feature_values": {
+        "answer_ambiguity": false,
+        "candidate_answer_count": 1,
+        "certificate_depth": 1,
+        "checker_authority": "exact_authority_replay",
+        "depends_on_flagged_live_verifier": false,
+        "exact_authority_complete": true,
+        "exact_label": "UNSAT",
+        "has_counterexample_certificate": false,
+        "known_false_accept_risk": false,
+        "prior_verification_outcome": "reject",
+        "receipt_backed_transcript_context": {
+          "all_receipts_non_authoritative": true,
+          "receipt_count": 2,
+          "substrate_classes": [
+            "cpu_fallback_receipt_only"
+          ]
+        },
+        "row_family": "exact_row:smt_constraints",
+        "row_id": "resyn-3084-smt-008"
+      },
+      "routing_reason": "simple_exact_final_answer_check",
+      "row_id": "resyn-3084-smt-008",
+      "selected_action": "final-answer-only"
+    },
+    {
+      "authority_note": "route only; exact authority remains final",
+      "estimated_verifier_calls": 0,
+      "feature_values": {
+        "answer_ambiguity": false,
+        "candidate_answer_count": 1,
+        "certificate_depth": 1,
+        "checker_authority": "exact_authority_replay",
+        "depends_on_flagged_live_verifier": false,
+        "exact_authority_complete": true,
+        "exact_label": "SAT",
+        "has_counterexample_certificate": false,
+        "known_false_accept_risk": false,
+        "prior_verification_outcome": "accept",
+        "receipt_backed_transcript_context": {
+          "all_receipts_non_authoritative": true,
+          "receipt_count": 2,
+          "substrate_classes": [
+            "cpu_fallback_receipt_only"
+          ]
+        },
+        "row_family": "exact_row:smt_constraints",
+        "row_id": "resyn-3084-smt-009"
+      },
+      "routing_reason": "exact_accept_recheck_redundant",
+      "row_id": "resyn-3084-smt-009",
+      "selected_action": "skip redundant recheck"
+    },
+    {
+      "authority_note": "route only; exact authority remains final",
+      "estimated_verifier_calls": 1,
+      "feature_values": {
+        "answer_ambiguity": false,
+        "candidate_answer_count": 1,
+        "certificate_depth": 1,
+        "checker_authority": "exact_authority_replay",
+        "depends_on_flagged_live_verifier": false,
+        "exact_authority_complete": true,
+        "exact_label": "UNSAT",
+        "has_counterexample_certificate": false,
+        "known_false_accept_risk": false,
+        "prior_verification_outcome": "reject",
+        "receipt_backed_transcript_context": {
+          "all_receipts_non_authoritative": true,
+          "receipt_count": 2,
+          "substrate_classes": [
+            "cpu_fallback_receipt_only"
+          ]
+        },
+        "row_family": "exact_row:smt_constraints",
+        "row_id": "resyn-3084-smt-010"
+      },
+      "routing_reason": "simple_exact_final_answer_check",
+      "row_id": "resyn-3084-smt-010",
+      "selected_action": "final-answer-only"
+    },
+    {
+      "authority_note": "route only; exact authority remains final",
+      "estimated_verifier_calls": 0,
+      "feature_values": {
+        "answer_ambiguity": false,
+        "candidate_answer_count": 1,
+        "certificate_depth": 1,
+        "checker_authority": "exact_authority_replay",
+        "depends_on_flagged_live_verifier": false,
+        "exact_authority_complete": true,
+        "exact_label": "SAT",
+        "has_counterexample_certificate": false,
+        "known_false_accept_risk": false,
+        "prior_verification_outcome": "accept",
+        "receipt_backed_transcript_context": {
+          "all_receipts_non_authoritative": true,
+          "receipt_count": 2,
+          "substrate_classes": [
+            "cpu_fallback_receipt_only"
+          ]
+        },
+        "row_family": "exact_row:smt_constraints",
+        "row_id": "resyn-3084-smt-011"
+      },
+      "routing_reason": "exact_accept_recheck_redundant",
+      "row_id": "resyn-3084-smt-011",
+      "selected_action": "skip redundant recheck"
+    },
+    {
+      "authority_note": "route only; exact authority remains final",
+      "estimated_verifier_calls": 1,
+      "feature_values": {
+        "answer_ambiguity": false,
+        "candidate_answer_count": 1,
+        "certificate_depth": 1,
+        "checker_authority": "exact_authority_replay",
+        "depends_on_flagged_live_verifier": false,
+        "exact_authority_complete": true,
+        "exact_label": "UNSAT",
+        "has_counterexample_certificate": false,
+        "known_false_accept_risk": false,
+        "prior_verification_outcome": "reject",
+        "receipt_backed_transcript_context": {
+          "all_receipts_non_authoritative": true,
+          "receipt_count": 2,
+          "substrate_classes": [
+            "cpu_fallback_receipt_only"
+          ]
+        },
+        "row_family": "exact_row:smt_constraints",
+        "row_id": "resyn-3084-smt-012"
+      },
+      "routing_reason": "simple_exact_final_answer_check",
+      "row_id": "resyn-3084-smt-012",
+      "selected_action": "final-answer-only"
+    },
+    {
+      "authority_note": "route only; exact authority remains final",
+      "estimated_verifier_calls": 0,
+      "feature_values": {
+        "answer_ambiguity": false,
+        "candidate_answer_count": 1,
+        "certificate_depth": 1,
+        "checker_authority": "exact_authority_replay",
+        "depends_on_flagged_live_verifier": false,
+        "exact_authority_complete": true,
+        "exact_label": "SAT",
+        "has_counterexample_certificate": false,
+        "known_false_accept_risk": false,
+        "prior_verification_outcome": "accept",
+        "receipt_backed_transcript_context": {
+          "all_receipts_non_authoritative": true,
+          "receipt_count": 2,
+          "substrate_classes": [
+            "cpu_fallback_receipt_only"
+          ]
+        },
+        "row_family": "exact_row:smt_constraints",
+        "row_id": "resyn-3084-smt-013"
+      },
+      "routing_reason": "exact_accept_recheck_redundant",
+      "row_id": "resyn-3084-smt-013",
+      "selected_action": "skip redundant recheck"
+    },
+    {
+      "authority_note": "route only; exact authority remains final",
+      "estimated_verifier_calls": 1,
+      "feature_values": {
+        "answer_ambiguity": false,
+        "candidate_answer_count": 1,
+        "certificate_depth": 1,
+        "checker_authority": "exact_authority_replay",
+        "depends_on_flagged_live_verifier": false,
+        "exact_authority_complete": true,
+        "exact_label": "UNSAT",
+        "has_counterexample_certificate": false,
+        "known_false_accept_risk": false,
+        "prior_verification_outcome": "reject",
+        "receipt_backed_transcript_context": {
+          "all_receipts_non_authoritative": true,
+          "receipt_count": 2,
+          "substrate_classes": [
+            "cpu_fallback_receipt_only"
+          ]
+        },
+        "row_family": "exact_row:smt_constraints",
+        "row_id": "resyn-3084-smt-014"
+      },
+      "routing_reason": "simple_exact_final_answer_check",
+      "row_id": "resyn-3084-smt-014",
+      "selected_action": "final-answer-only"
+    },
+    {
+      "authority_note": "route only; exact authority remains final",
+      "estimated_verifier_calls": 0,
+      "feature_values": {
+        "answer_ambiguity": false,
+        "candidate_answer_count": 1,
+        "certificate_depth": 1,
+        "checker_authority": "exact_authority_replay",
+        "depends_on_flagged_live_verifier": false,
+        "exact_authority_complete": true,
+        "exact_label": "SAT",
+        "has_counterexample_certificate": false,
+        "known_false_accept_risk": false,
+        "prior_verification_outcome": "accept",
+        "receipt_backed_transcript_context": {
+          "all_receipts_non_authoritative": true,
+          "receipt_count": 2,
+          "substrate_classes": [
+            "cpu_fallback_receipt_only"
+          ]
+        },
+        "row_family": "exact_row:smt_constraints",
+        "row_id": "resyn-3084-smt-015"
+      },
+      "routing_reason": "exact_accept_recheck_redundant",
+      "row_id": "resyn-3084-smt-015",
+      "selected_action": "skip redundant recheck"
+    },
+    {
+      "authority_note": "route only; exact authority remains final",
+      "estimated_verifier_calls": 1,
+      "feature_values": {
+        "answer_ambiguity": false,
+        "candidate_answer_count": 1,
+        "certificate_depth": 1,
+        "checker_authority": "exact_authority_replay",
+        "depends_on_flagged_live_verifier": false,
+        "exact_authority_complete": true,
+        "exact_label": "UNSAT",
+        "has_counterexample_certificate": false,
+        "known_false_accept_risk": false,
+        "prior_verification_outcome": "reject",
+        "receipt_backed_transcript_context": {
+          "all_receipts_non_authoritative": true,
+          "receipt_count": 2,
+          "substrate_classes": [
+            "cpu_fallback_receipt_only"
+          ]
+        },
+        "row_family": "exact_row:smt_constraints",
+        "row_id": "resyn-3084-smt-016"
+      },
+      "routing_reason": "simple_exact_final_answer_check",
+      "row_id": "resyn-3084-smt-016",
+      "selected_action": "final-answer-only"
+    },
+    {
+      "authority_note": "route only; exact authority remains final",
+      "estimated_verifier_calls": 0,
+      "feature_values": {
+        "answer_ambiguity": false,
+        "candidate_answer_count": 1,
+        "certificate_depth": 1,
+        "checker_authority": "exact_authority_replay",
+        "depends_on_flagged_live_verifier": false,
+        "exact_authority_complete": true,
+        "exact_label": "SAT",
+        "has_counterexample_certificate": false,
+        "known_false_accept_risk": false,
+        "prior_verification_outcome": "accept",
+        "receipt_backed_transcript_context": {
+          "all_receipts_non_authoritative": true,
+          "receipt_count": 2,
+          "substrate_classes": [
+            "cpu_fallback_receipt_only"
+          ]
+        },
+        "row_family": "exact_row:smt_constraints",
+        "row_id": "resyn-3084-smt-017"
+      },
+      "routing_reason": "exact_accept_recheck_redundant",
+      "row_id": "resyn-3084-smt-017",
+      "selected_action": "skip redundant recheck"
+    },
+    {
+      "authority_note": "route only; exact authority remains final",
+      "estimated_verifier_calls": 1,
+      "feature_values": {
+        "answer_ambiguity": false,
+        "candidate_answer_count": 1,
+        "certificate_depth": 1,
+        "checker_authority": "exact_authority_replay",
+        "depends_on_flagged_live_verifier": false,
+        "exact_authority_complete": true,
+        "exact_label": "UNSAT",
+        "has_counterexample_certificate": false,
+        "known_false_accept_risk": false,
+        "prior_verification_outcome": "reject",
+        "receipt_backed_transcript_context": {
+          "all_receipts_non_authoritative": true,
+          "receipt_count": 2,
+          "substrate_classes": [
+            "cpu_fallback_receipt_only"
+          ]
+        },
+        "row_family": "exact_row:smt_constraints",
+        "row_id": "resyn-3084-smt-018"
+      },
+      "routing_reason": "simple_exact_final_answer_check",
+      "row_id": "resyn-3084-smt-018",
+      "selected_action": "final-answer-only"
+    },
+    {
+      "authority_note": "route only; exact authority remains final",
+      "estimated_verifier_calls": 0,
+      "feature_values": {
+        "answer_ambiguity": false,
+        "candidate_answer_count": 1,
+        "certificate_depth": 1,
+        "checker_authority": "exact_authority_replay",
+        "depends_on_flagged_live_verifier": false,
+        "exact_authority_complete": true,
+        "exact_label": "SAT",
+        "has_counterexample_certificate": false,
+        "known_false_accept_risk": false,
+        "prior_verification_outcome": "accept",
+        "receipt_backed_transcript_context": {
+          "all_receipts_non_authoritative": true,
+          "receipt_count": 2,
+          "substrate_classes": [
+            "cpu_fallback_receipt_only"
+          ]
+        },
+        "row_family": "exact_row:smt_constraints",
+        "row_id": "resyn-3084-smt-019"
+      },
+      "routing_reason": "exact_accept_recheck_redundant",
+      "row_id": "resyn-3084-smt-019",
+      "selected_action": "skip redundant recheck"
+    },
+    {
+      "authority_note": "route only; exact authority remains final",
+      "estimated_verifier_calls": 1,
+      "feature_values": {
+        "answer_ambiguity": false,
+        "candidate_answer_count": 1,
+        "certificate_depth": 1,
+        "checker_authority": "exact_authority_replay",
+        "depends_on_flagged_live_verifier": false,
+        "exact_authority_complete": true,
+        "exact_label": "UNSAT",
+        "has_counterexample_certificate": false,
+        "known_false_accept_risk": false,
+        "prior_verification_outcome": "reject",
+        "receipt_backed_transcript_context": {
+          "all_receipts_non_authoritative": true,
+          "receipt_count": 2,
+          "substrate_classes": [
+            "cpu_fallback_receipt_only"
+          ]
+        },
+        "row_family": "exact_row:smt_constraints",
+        "row_id": "resyn-3084-smt-020"
+      },
+      "routing_reason": "simple_exact_final_answer_check",
+      "row_id": "resyn-3084-smt-020",
+      "selected_action": "final-answer-only"
+    },
+    {
+      "authority_note": "route only; exact authority remains final",
+      "estimated_verifier_calls": 0,
+      "feature_values": {
+        "answer_ambiguity": false,
+        "candidate_answer_count": 1,
+        "certificate_depth": 1,
+        "checker_authority": "exact_authority_replay",
+        "depends_on_flagged_live_verifier": false,
+        "exact_authority_complete": true,
+        "exact_label": "SAT",
+        "has_counterexample_certificate": false,
+        "known_false_accept_risk": false,
+        "prior_verification_outcome": "accept",
+        "receipt_backed_transcript_context": {
+          "all_receipts_non_authoritative": true,
+          "receipt_count": 2,
+          "substrate_classes": [
+            "cpu_fallback_receipt_only"
+          ]
+        },
+        "row_family": "exact_row:smt_constraints",
+        "row_id": "resyn-3084-smt-021"
+      },
+      "routing_reason": "exact_accept_recheck_redundant",
+      "row_id": "resyn-3084-smt-021",
+      "selected_action": "skip redundant recheck"
+    },
+    {
+      "authority_note": "route only; exact authority remains final",
+      "estimated_verifier_calls": 1,
+      "feature_values": {
+        "answer_ambiguity": false,
+        "candidate_answer_count": 1,
+        "certificate_depth": 1,
+        "checker_authority": "exact_authority_replay",
+        "depends_on_flagged_live_verifier": false,
+        "exact_authority_complete": true,
+        "exact_label": "UNSAT",
+        "has_counterexample_certificate": false,
+        "known_false_accept_risk": false,
+        "prior_verification_outcome": "reject",
+        "receipt_backed_transcript_context": {
+          "all_receipts_non_authoritative": true,
+          "receipt_count": 2,
+          "substrate_classes": [
+            "cpu_fallback_receipt_only"
+          ]
+        },
+        "row_family": "exact_row:smt_constraints",
+        "row_id": "resyn-3084-smt-022"
+      },
+      "routing_reason": "simple_exact_final_answer_check",
+      "row_id": "resyn-3084-smt-022",
+      "selected_action": "final-answer-only"
+    },
+    {
+      "authority_note": "route only; exact authority remains final",
+      "estimated_verifier_calls": 0,
+      "feature_values": {
+        "answer_ambiguity": false,
+        "candidate_answer_count": 1,
+        "certificate_depth": 1,
+        "checker_authority": "exact_authority_replay",
+        "depends_on_flagged_live_verifier": false,
+        "exact_authority_complete": true,
+        "exact_label": "SAT",
+        "has_counterexample_certificate": false,
+        "known_false_accept_risk": false,
+        "prior_verification_outcome": "accept",
+        "receipt_backed_transcript_context": {
+          "all_receipts_non_authoritative": true,
+          "receipt_count": 2,
+          "substrate_classes": [
+            "cpu_fallback_receipt_only"
+          ]
+        },
+        "row_family": "exact_row:smt_constraints",
+        "row_id": "resyn-3084-smt-023"
+      },
+      "routing_reason": "exact_accept_recheck_redundant",
+      "row_id": "resyn-3084-smt-023",
+      "selected_action": "skip redundant recheck"
+    }
+  ],
+  "simulated_rows": 72,
+  "source_artifacts": [
+    {
+      "path": "AGENTS.md",
+      "present": true,
+      "readable_json_object": null,
+      "required": true,
+      "role": "agents_repo_instructions",
+      "sha256": "b3d6581b04f16b85f77defb2837c98dc3b60ed51e10b347ecb36e609f318b619",
+      "source_type": "text"
+    },
+    {
+      "path": "CODEX.md",
+      "present": true,
+      "readable_json_object": null,
+      "required": true,
+      "role": "codex_repo_workflow",
+      "sha256": "1db7ebc1009714f872db83447828a8957c3abb72061832cc1bc307735cd96bbe",
+      "source_type": "text"
+    },
+    {
+      "path": "CLAUDE.md",
+      "present": true,
+      "readable_json_object": null,
+      "required": true,
+      "role": "claude_authenticity_rules",
+      "sha256": "cdc00581d37d1bd3c77a69b058787f74ecc71545a97c1eab31c48961637b3224",
+      "source_type": "text"
+    },
+    {
+      "path": "research-references.md",
+      "present": true,
+      "readable_json_object": null,
+      "required": true,
+      "role": "post_295_research_references",
+      "sha256": "6a247c66703927365510e3999fef8bed557aa2e507fe680cb19e1332eeeb6de0",
+      "source_type": "text"
+    },
+    {
+      "path": "openspec/capabilities/verification/spec.md",
+      "present": true,
+      "readable_json_object": null,
+      "required": true,
+      "role": "verification_openspec",
+      "sha256": "b4c6b199b2b368de9a77b0d4f7d251efe19c65921f62f899f6298426e41068b3",
+      "source_type": "text"
+    },
+    {
+      "path": "results/experiment_3180_controlled_invariance_executor_v2.json",
+      "present": true,
+      "readable_json_object": true,
+      "required": true,
+      "role": "exp3180_controlled_invariance_executor_v2",
+      "sha256": "efe6520a3cf8dfee8216a78f342609cfa2af3f74ef905cdadc421042b54485c5",
+      "source_type": "json"
+    },
+    {
+      "path": "results/experiment_3183_counterexample_certificate_expansion_v3.json",
+      "present": true,
+      "readable_json_object": true,
+      "required": true,
+      "role": "exp3183_counterexample_certificate_expansion_v3",
+      "sha256": "b3ed5fb0b72d4369431a698ce2a08e50693b3e9366be9cf438334436834b9c71",
+      "source_type": "json"
+    },
+    {
+      "path": "results/experiment_3189_cross_corpus_matrix_v29.json",
+      "present": true,
+      "readable_json_object": true,
+      "required": true,
+      "role": "exp3189_cross_corpus_matrix_v29",
+      "sha256": "a4755a9748e5e0af245f94b5d12a1d841c45abfa85b3d7144851d7a564da9635",
+      "source_type": "json"
+    },
+    {
+      "path": "python/carnot/verify/adaptive_verification_granularity_policy_v1.py",
+      "present": true,
+      "readable_json_object": null,
+      "required": false,
+      "role": "exp3195_module",
+      "sha256": "b8757bdc0901b74683541fdd8362bab7d5e12f7189541097ae30bc8fc1660b21",
+      "source_type": "python"
+    },
+    {
+      "path": "scripts/experiment_3195_adaptive_verification_granularity_policy_v1.py",
+      "present": true,
+      "readable_json_object": null,
+      "required": false,
+      "role": "exp3195_script",
+      "sha256": "7d5be6175949b20f9c006b87c5a665b6c37cb72a8e73f6f7141ee081d96c0eaa",
+      "source_type": "python"
+    },
+    {
+      "path": "tests/python/test_experiment_3195_adaptive_verification_granularity_policy_v1.py",
+      "present": true,
+      "readable_json_object": null,
+      "required": false,
+      "role": "exp3195_tests",
+      "sha256": "71e73b5825316c7d9d0ad75593d7a5dfa59e6e424c0942f3052d5ec192ae7a8c",
+      "source_type": "python"
+    }
+  ],
+  "source_checksums": {
+    "AGENTS.md": "b3d6581b04f16b85f77defb2837c98dc3b60ed51e10b347ecb36e609f318b619",
+    "CLAUDE.md": "cdc00581d37d1bd3c77a69b058787f74ecc71545a97c1eab31c48961637b3224",
+    "CODEX.md": "1db7ebc1009714f872db83447828a8957c3abb72061832cc1bc307735cd96bbe",
+    "openspec/capabilities/verification/spec.md": "b4c6b199b2b368de9a77b0d4f7d251efe19c65921f62f899f6298426e41068b3",
+    "python/carnot/verify/adaptive_verification_granularity_policy_v1.py": "b8757bdc0901b74683541fdd8362bab7d5e12f7189541097ae30bc8fc1660b21",
+    "research-references.md": "6a247c66703927365510e3999fef8bed557aa2e507fe680cb19e1332eeeb6de0",
+    "results/experiment_3180_controlled_invariance_executor_v2.json": "efe6520a3cf8dfee8216a78f342609cfa2af3f74ef905cdadc421042b54485c5",
+    "results/experiment_3183_counterexample_certificate_expansion_v3.json": "b3ed5fb0b72d4369431a698ce2a08e50693b3e9366be9cf438334436834b9c71",
+    "results/experiment_3189_cross_corpus_matrix_v29.json": "a4755a9748e5e0af245f94b5d12a1d841c45abfa85b3d7144851d7a564da9635",
+    "scripts/experiment_3195_adaptive_verification_granularity_policy_v1.py": "7d5be6175949b20f9c006b87c5a665b6c37cb72a8e73f6f7141ee081d96c0eaa",
+    "tests/python/test_experiment_3195_adaptive_verification_granularity_policy_v1.py": "71e73b5825316c7d9d0ad75593d7a5dfa59e6e424c0942f3052d5ec192ae7a8c"
+  },
+  "source_errors": [],
+  "tests_run": [
+    ".venv/bin/pytest tests/python/test_experiment_3195_adaptive_verification_granularity_policy_v1.py -q -o addopts=''",
+    ".venv/bin/coverage erase",
+    ".venv/bin/coverage run --source=python/carnot/verify/adaptive_verification_granularity_policy_v1.py -m pytest -o addopts='' tests/python/test_experiment_3195_adaptive_verification_granularity_policy_v1.py -q",
+    ".venv/bin/coverage report --include='python/carnot/verify/adaptive_verification_granularity_policy_v1.py' --fail-under=100 --show-missing",
+    ".venv/bin/python scripts/check_spec_coverage.py",
+    ".venv/bin/pytest tests/python -q"
+  ],
+  "verifier_call_accounting": {
+    "adaptive_verifier_calls": 73,
+    "baseline_policy": "uniform_step_chunk",
+    "baseline_verifier_calls": 144,
+    "call_weights": {
+      "abstain/escalate": 1,
+      "counterexample-fragment": 3,
+      "final-answer-only": 1,
+      "skip redundant recheck": 0,
+      "step-chunk": 2
+    },
+    "estimated_verifier_call_delta": -71
+  }
+}
