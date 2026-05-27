@@ -1,0 +1,754 @@
+{
+  "artifact": "experiment_2921_cross_corpus_matrix_v9_paper_boundary_v1",
+  "blocked_rows": [
+    "exp2914_gatemate_toolchain"
+  ],
+  "cited_upstream_artifacts": [
+    {
+      "artifact_path": "results/experiment_2902_cross_corpus_matrix_v8.json",
+      "experiment_id": "exp2902",
+      "fields_imported": [
+        "honest_verdict",
+        "inference_substrate",
+        "matrix_rows",
+        "rows_clean",
+        "rows_flagged",
+        "rows_blocked",
+        "rows_pilot_only"
+      ],
+      "present": true,
+      "row_id": "exp2902_matrix_v8",
+      "sha256": "124b7f58a12168ecb7d28ffdfa2c0b7798876006fd91540719ebbd91dffa6719"
+    },
+    {
+      "artifact_path": "results/experiment_2910_sota_code_generation_corrigendum_v2.json",
+      "experiment_id": "exp2910",
+      "fields_imported": [
+        "honest_verdict",
+        "inference_substrate",
+        "codegen_corrigendum_ready",
+        "candidate_generation_clean",
+        "aggregate_pass_at_1",
+        "aggregate_pass_at_k",
+        "pass_at_k_exceeds_pass_at_1",
+        "model_specs",
+        "random_seed",
+        "reproducibility_checksum"
+      ],
+      "present": true,
+      "row_id": "exp2910_sota_codegen",
+      "sha256": "9c7d30c4e0d7879cf92f5fb63035896b6df583cf0d0ffea5b91cb0cbb8de093f"
+    },
+    {
+      "artifact_path": "results/experiment_2911_code_hallucination_taxonomy_verifier_v1.json",
+      "experiment_id": "exp2911",
+      "fields_imported": [
+        "honest_verdict",
+        "inference_substrate",
+        "code_hallucination_verifier_ready",
+        "pass_rate_after_taxonomy_filter",
+        "syntax_error_rate",
+        "runtime_error_rate",
+        "true_test_failure_rate",
+        "undefined_name_rate",
+        "flagged_adversarial",
+        "corrigendum_pending"
+      ],
+      "present": true,
+      "row_id": "exp2911_code_hallucination_verifier",
+      "sha256": "7af4ece6b3c63435ae5c5b82f30b6891d9e28991decbc123e5f7c80080283dab"
+    },
+    {
+      "artifact_path": "results/experiment_2912_kv260_same_basis_cpu_gibbs_baseline_v1.json",
+      "experiment_id": "exp2912",
+      "fields_imported": [
+        "honest_verdict",
+        "inference_substrate",
+        "same_basis_cpu_baseline_ready",
+        "speedup_claim_made",
+        "n_spins",
+        "sample_count_sweep",
+        "random_seeds_used"
+      ],
+      "present": true,
+      "row_id": "exp2912_kv260_cpu_baseline",
+      "sha256": "6444f1545a1864e3e2b68db06f254b7427371e3b0775888cfcbe7d947254db2b"
+    },
+    {
+      "artifact_path": "results/experiment_2913_kv260_hardware_cpu_claim_boundary_v1.json",
+      "experiment_id": "exp2913",
+      "fields_imported": [
+        "honest_verdict",
+        "inference_substrate",
+        "kv260_claim_boundary_ready",
+        "same_basis_verified",
+        "hardware_speedup_claim_eligible",
+        "speedup_claim_made",
+        "matrix_row_candidate",
+        "paper_claim_boundary"
+      ],
+      "present": true,
+      "row_id": "exp2913_kv260_claim_boundary",
+      "sha256": "5f4ce23695fd3965fd91130306a6b619f7021d0657102bb617aee8ef570a3403"
+    },
+    {
+      "artifact_path": "results/experiment_2914_gatemate_toolchain_preflight_v2.json",
+      "experiment_id": "exp2914",
+      "fields_imported": [
+        "honest_verdict",
+        "inference_substrate",
+        "gatemate_toolchain_ready",
+        "missing_toolchain",
+        "constraints_present",
+        "rtl_sources_present",
+        "no_flash_attempted"
+      ],
+      "present": true,
+      "row_id": "exp2914_gatemate_toolchain",
+      "sha256": "dbdf29e93a2beab2632419fd836191d84bebbb58189852c7c55e1ca66adfbc52"
+    },
+    {
+      "artifact_path": "results/experiment_2915_gatemate_n16_ising_tile_bitstream_build_v2.json",
+      "experiment_id": "exp2915",
+      "fields_imported": [
+        "honest_verdict",
+        "inference_substrate",
+        "gatemate_bitstream_built",
+        "bitstream_path",
+        "hardware_flash_attempted"
+      ],
+      "present": false,
+      "row_id": "exp2915_gatemate_bitstream",
+      "sha256": null
+    },
+    {
+      "artifact_path": "results/experiment_2916_thrml_kv260_sampler_parity_v1.json",
+      "experiment_id": "exp2916",
+      "fields_imported": [
+        "honest_verdict",
+        "inference_substrate",
+        "thrml_kv260_parity_ready",
+        "no_tsu_hardware_claim",
+        "matched_full_n64_basis",
+        "cpu_vs_thrml_distance",
+        "kv260_vs_thrml_summary"
+      ],
+      "present": true,
+      "row_id": "exp2916_thrml_parity",
+      "sha256": "f0c10272eebad84ede8c681409ac36815a4010c94f9424ac57aff049c78e6dc4"
+    },
+    {
+      "artifact_path": "results/experiment_2917_spilled_energy_logit_detector_micro_panel_v1.json",
+      "experiment_id": "exp2917",
+      "fields_imported": [
+        "honest_verdict",
+        "inference_substrate",
+        "spilled_energy_micro_panel_ready",
+        "benchmark_claim_made",
+        "claim_boundary",
+        "separation_summary"
+      ],
+      "present": true,
+      "row_id": "exp2917_spilled_energy_micro_panel",
+      "sha256": "ee0766f1cd309f65a439984c92788f4d751abfdb2cdc849337bd13798dd10696"
+    },
+    {
+      "artifact_path": "results/experiment_2918_fr11_verifiable_process_rewards_self_learning_v1.json",
+      "experiment_id": "exp2918",
+      "fields_imported": [
+        "honest_verdict",
+        "inference_substrate",
+        "online_self_learning_ready",
+        "online_update_performed",
+        "replay_scheduler_updated",
+        "model_weights_mutated",
+        "forgetting_rate",
+        "delta_overall",
+        "hardware_replay_used"
+      ],
+      "present": true,
+      "row_id": "exp2918_fr11_process_rewards",
+      "sha256": "e07bd72c3d43110a4f48623685e07120fd6bb39cebe658366fd0b95343ffdbf0"
+    },
+    {
+      "artifact_path": "results/experiment_2919_constraintbench_mini_direct_optimization_v1.json",
+      "experiment_id": "exp2919",
+      "fields_imported": [
+        "honest_verdict",
+        "inference_substrate",
+        "constraintbench_mini_ready",
+        "syntax_valid_rate",
+        "feasibility_rate",
+        "optimality_rate",
+        "flagged_adversarial",
+        "corrigendum_pending"
+      ],
+      "present": true,
+      "row_id": "exp2919_constraintbench_mini",
+      "sha256": "4d52cc8e4cd03c23e5f36e539517ee7fc38137bbb2b1d0cbd31930c7776b5f14"
+    },
+    {
+      "artifact_path": "results/experiment_2920_opencomputer_style_state_verifier_harness_v1.json",
+      "experiment_id": "exp2920",
+      "fields_imported": [
+        "honest_verdict",
+        "inference_substrate",
+        "state_verifier_harness_ready",
+        "n_state_tasks",
+        "llm_judge_used",
+        "golden_state_pass_rate",
+        "negative_state_reject_rate"
+      ],
+      "present": true,
+      "row_id": "exp2920_state_verifier_harness",
+      "sha256": "306e11f65bf46803031958bce2aa941a15a5929cd12edb37cf9a204456b1c364"
+    }
+  ],
+  "clean_rows": [
+    "corpus:FoVer",
+    "corpus:HaluEval_FEVER",
+    "corpus:TruthfulQA",
+    "exp2890_code_structural_dependency",
+    "exp2892_vericot",
+    "exp2898_kv260_hardware",
+    "exp2910_sota_codegen",
+    "exp2913_kv260_claim_boundary",
+    "exp2918_fr11_process_rewards",
+    "exp2920_state_verifier_harness"
+  ],
+  "cross_corpus_matrix_v9_built": true,
+  "diagnostic_only_rows": [
+    "exp2916_thrml_parity",
+    "exp2917_spilled_energy_micro_panel"
+  ],
+  "duration_s": 0.25,
+  "flagged_rows": [
+    "corpus:MBPP",
+    "corpus:HumanEval",
+    "exp2911_code_hallucination_verifier",
+    "exp2919_constraintbench_mini"
+  ],
+  "gate_errors": [],
+  "headline_eligible_rows": [
+    "corpus:FoVer",
+    "corpus:HaluEval_FEVER",
+    "exp2910_sota_codegen",
+    "exp2913_kv260_claim_boundary",
+    "exp2918_fr11_process_rewards",
+    "exp2920_state_verifier_harness"
+  ],
+  "honest_verdict": "complete: cross-corpus matrix v9 and paper-v6 claim boundary built; headline_eligible=6; clean=10; flagged=4; blocked=1; pilot_only=3; diagnostic_only=2; missing=1",
+  "inference_substrate": "aggregation_from_upstream_artifacts",
+  "matrix_rows": [
+    {
+      "claim_boundary": "Carry-forward clean matrix-v8 headline row for FoVer; no new metric inferred.",
+      "flag_reasons": [],
+      "headline_eligible": true,
+      "non_headline_reason": "",
+      "original_row_status": "clean",
+      "row_id": "corpus:FoVer",
+      "row_kind": "v8_carry_forward",
+      "row_label": "FoVer",
+      "row_status": "clean",
+      "source_artifact": "results/experiment_2902_cross_corpus_matrix_v8.json",
+      "source_experiment_id": "exp2902",
+      "source_sha256": "124b7f58a12168ecb7d28ffdfa2c0b7798876006fd91540719ebbd91dffa6719",
+      "summary": {
+        "headline_eligible": true,
+        "primary_metric": {
+          "auroc": 0.913
+        }
+      }
+    },
+    {
+      "claim_boundary": "Carry-forward clean matrix-v8 headline row for HaluEval/FEVER; no new metric inferred.",
+      "flag_reasons": [],
+      "headline_eligible": true,
+      "non_headline_reason": "",
+      "original_row_status": "clean",
+      "row_id": "corpus:HaluEval_FEVER",
+      "row_kind": "v8_carry_forward",
+      "row_label": "HaluEval/FEVER",
+      "row_status": "clean",
+      "source_artifact": "results/experiment_2902_cross_corpus_matrix_v8.json",
+      "source_experiment_id": "exp2902",
+      "source_sha256": "124b7f58a12168ecb7d28ffdfa2c0b7798876006fd91540719ebbd91dffa6719",
+      "summary": {
+        "headline_eligible": true,
+        "primary_metric": {
+          "auroc": 0.553
+        }
+      }
+    },
+    {
+      "claim_boundary": "",
+      "flag_reasons": [
+        "flagged_adversarial=true"
+      ],
+      "headline_eligible": false,
+      "non_headline_reason": "excluded_from_headline_due_to_unresolved_flags_or_corrigendum",
+      "original_row_status": "pilot_only_flagged_support",
+      "row_id": "corpus:MBPP",
+      "row_kind": "v8_carry_forward",
+      "row_label": "MBPP",
+      "row_status": "flagged",
+      "source_artifact": "results/experiment_2902_cross_corpus_matrix_v8.json",
+      "source_experiment_id": "exp2902",
+      "source_sha256": "124b7f58a12168ecb7d28ffdfa2c0b7798876006fd91540719ebbd91dffa6719",
+      "summary": {
+        "pilot_only": true
+      }
+    },
+    {
+      "claim_boundary": "",
+      "flag_reasons": [
+        "flagged_adversarial=true"
+      ],
+      "headline_eligible": false,
+      "non_headline_reason": "excluded_from_headline_due_to_unresolved_flags_or_corrigendum",
+      "original_row_status": "pilot_only_flagged_support",
+      "row_id": "corpus:HumanEval",
+      "row_kind": "v8_carry_forward",
+      "row_label": "HumanEval",
+      "row_status": "flagged",
+      "source_artifact": "results/experiment_2902_cross_corpus_matrix_v8.json",
+      "source_experiment_id": "exp2902",
+      "source_sha256": "124b7f58a12168ecb7d28ffdfa2c0b7798876006fd91540719ebbd91dffa6719",
+      "summary": {
+        "pilot_only": true
+      }
+    },
+    {
+      "claim_boundary": "",
+      "flag_reasons": [],
+      "headline_eligible": false,
+      "non_headline_reason": "corpus:TruthfulQA is clean context/support but not a bounded paper-v6 headline row",
+      "original_row_status": "clean",
+      "row_id": "corpus:TruthfulQA",
+      "row_kind": "v8_carry_forward",
+      "row_label": "TruthfulQA",
+      "row_status": "clean",
+      "source_artifact": "results/experiment_2902_cross_corpus_matrix_v8.json",
+      "source_experiment_id": "exp2902",
+      "source_sha256": "124b7f58a12168ecb7d28ffdfa2c0b7798876006fd91540719ebbd91dffa6719",
+      "summary": {
+        "taxonomy_only": true
+      }
+    },
+    {
+      "claim_boundary": "",
+      "flag_reasons": [],
+      "headline_eligible": false,
+      "non_headline_reason": "exp2890_code_structural_dependency is clean context/support but not a bounded paper-v6 headline row",
+      "original_row_status": "clean",
+      "row_id": "exp2890_code_structural_dependency",
+      "row_kind": "v8_carry_forward",
+      "row_label": "Code Structural Dependency",
+      "row_status": "clean",
+      "source_artifact": "results/experiment_2902_cross_corpus_matrix_v8.json",
+      "source_experiment_id": "exp2902",
+      "source_sha256": "124b7f58a12168ecb7d28ffdfa2c0b7798876006fd91540719ebbd91dffa6719",
+      "summary": {
+        "n_rows_verified": 20
+      }
+    },
+    {
+      "claim_boundary": "",
+      "flag_reasons": [],
+      "headline_eligible": false,
+      "non_headline_reason": "excluded_from_headline_because_row_is_pilot_only",
+      "original_row_status": "pilot_only",
+      "row_id": "exp2891_cctu",
+      "row_kind": "v8_carry_forward",
+      "row_label": "CCTU executable constraint pilot",
+      "row_status": "pilot_only",
+      "source_artifact": "results/experiment_2902_cross_corpus_matrix_v8.json",
+      "source_experiment_id": "exp2902",
+      "source_sha256": "124b7f58a12168ecb7d28ffdfa2c0b7798876006fd91540719ebbd91dffa6719",
+      "summary": {
+        "n_cases": 5
+      }
+    },
+    {
+      "claim_boundary": "",
+      "flag_reasons": [],
+      "headline_eligible": false,
+      "non_headline_reason": "exp2892_vericot is clean context/support but not a bounded paper-v6 headline row",
+      "original_row_status": "clean",
+      "row_id": "exp2892_vericot",
+      "row_kind": "v8_carry_forward",
+      "row_label": "VeriCoT exact frontier",
+      "row_status": "clean",
+      "source_artifact": "results/experiment_2902_cross_corpus_matrix_v8.json",
+      "source_experiment_id": "exp2902",
+      "source_sha256": "124b7f58a12168ecb7d28ffdfa2c0b7798876006fd91540719ebbd91dffa6719",
+      "summary": {
+        "n_vericot_supported_rows": 25
+      }
+    },
+    {
+      "claim_boundary": "",
+      "flag_reasons": [],
+      "headline_eligible": false,
+      "non_headline_reason": "exp2898_kv260_hardware is clean context/support but not a bounded paper-v6 headline row",
+      "original_row_status": "clean",
+      "row_id": "exp2898_kv260_hardware",
+      "row_kind": "v8_carry_forward",
+      "row_label": "KV260 Ising hardware latency",
+      "row_status": "clean",
+      "source_artifact": "results/experiment_2902_cross_corpus_matrix_v8.json",
+      "source_experiment_id": "exp2902",
+      "source_sha256": "124b7f58a12168ecb7d28ffdfa2c0b7798876006fd91540719ebbd91dffa6719",
+      "summary": {
+        "inference_substrate": "hardware_smoke"
+      }
+    },
+    {
+      "claim_boundary": "Bounded SOTA code-generation claim: aggregate pass@1=0.075, pass@k=0.175 over the recorded local GGUF run.",
+      "flag_reasons": [],
+      "headline_eligible": true,
+      "non_headline_reason": "",
+      "row_id": "exp2910_sota_codegen",
+      "row_kind": "dot275_artifact_row",
+      "row_label": "SOTA code-generation corrigendum",
+      "row_status": "clean",
+      "source_artifact": "results/experiment_2910_sota_code_generation_corrigendum_v2.json",
+      "source_experiment_id": "exp2910",
+      "source_sha256": "9c7d30c4e0d7879cf92f5fb63035896b6df583cf0d0ffea5b91cb0cbb8de093f",
+      "summary": {
+        "aggregate_pass_at_1": 0.075,
+        "aggregate_pass_at_k": 0.175,
+        "candidate_generation_clean": true,
+        "codegen_corrigendum_ready": true,
+        "honest_verdict": "complete: SOTA code-generation corrigendum executed",
+        "inference_substrate": "live_llm_inference",
+        "model_specs": [
+          {
+            "hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF"
+          }
+        ],
+        "pass_at_k_exceeds_pass_at_1": true,
+        "random_seed": 2910,
+        "reproducibility_checksum": "abc123"
+      }
+    },
+    {
+      "claim_boundary": "",
+      "flag_reasons": [
+        "flagged_adversarial=true",
+        "DURATION_TOO_SHORT:critical"
+      ],
+      "headline_eligible": false,
+      "non_headline_reason": "excluded_from_headline_due_to_unresolved_flags_or_corrigendum",
+      "row_id": "exp2911_code_hallucination_verifier",
+      "row_kind": "dot275_artifact_row",
+      "row_label": "Code hallucination taxonomy verifier",
+      "row_status": "flagged",
+      "source_artifact": "results/experiment_2911_code_hallucination_taxonomy_verifier_v1.json",
+      "source_experiment_id": "exp2911",
+      "source_sha256": "7af4ece6b3c63435ae5c5b82f30b6891d9e28991decbc123e5f7c80080283dab",
+      "summary": {
+        "code_hallucination_verifier_ready": true,
+        "corrigendum_pending": [
+          {
+            "kind": "DURATION_TOO_SHORT",
+            "severity": "critical"
+          }
+        ],
+        "flagged_adversarial": true,
+        "honest_verdict": "complete: Exp 2910 code candidates labeled",
+        "inference_substrate": "deterministic_verifier",
+        "pass_rate_after_taxonomy_filter": 0.0967,
+        "syntax_error_rate": 0.38125
+      }
+    },
+    {
+      "claim_boundary": "Bounded n=64 KV260/CPU speedup claim only.",
+      "flag_reasons": [],
+      "headline_eligible": true,
+      "non_headline_reason": "",
+      "row_id": "exp2913_kv260_claim_boundary",
+      "row_kind": "dot275_artifact_row",
+      "row_label": "KV260 CPU claim boundary",
+      "row_status": "clean",
+      "source_artifact": "results/experiment_2913_kv260_hardware_cpu_claim_boundary_v1.json",
+      "source_experiment_id": "exp2913",
+      "source_sha256": "5f4ce23695fd3965fd91130306a6b619f7021d0657102bb617aee8ef570a3403",
+      "summary": {
+        "hardware_speedup_claim_eligible": true,
+        "honest_verdict": "complete: kv260_same_basis_hardware_cpu_speedup_claim_eligible",
+        "inference_substrate": "aggregation_from_upstream_artifacts",
+        "kv260_claim_boundary_ready": true,
+        "matrix_row_candidate": {
+          "eligible_for_matrix_v9": true,
+          "eligible_for_paper_v6": true,
+          "speedup_ratio_median_by_sample_count": {
+            "100": 19.13
+          }
+        },
+        "paper_claim_boundary": "Bounded n=64 KV260/CPU speedup claim only.",
+        "same_basis_verified": true,
+        "speedup_claim_made": true
+      }
+    },
+    {
+      "claim_boundary": "",
+      "flag_reasons": [],
+      "headline_eligible": false,
+      "non_headline_reason": "excluded_from_headline_because_source_is_blocked",
+      "row_id": "exp2914_gatemate_toolchain",
+      "row_kind": "dot275_artifact_row",
+      "row_label": "GateMate toolchain preflight",
+      "row_status": "blocked",
+      "source_artifact": "results/experiment_2914_gatemate_toolchain_preflight_v2.json",
+      "source_experiment_id": "exp2914",
+      "source_sha256": "dbdf29e93a2beab2632419fd836191d84bebbb58189852c7c55e1ca66adfbc52",
+      "summary": {
+        "gatemate_toolchain_ready": false,
+        "honest_verdict": "blocked_gatemate_toolchain_missing",
+        "inference_substrate": "hardware_preflight",
+        "missing_toolchain": [
+          "nextpnr-gatemate"
+        ],
+        "no_flash_attempted": true
+      }
+    },
+    {
+      "claim_boundary": "",
+      "flag_reasons": [],
+      "headline_eligible": false,
+      "non_headline_reason": "excluded_from_headline_because_source_artifact_is_missing",
+      "row_id": "exp2915_gatemate_bitstream",
+      "row_kind": "dot275_artifact_row",
+      "row_label": "GateMate n16 bitstream build",
+      "row_status": "missing",
+      "source_artifact": "results/experiment_2915_gatemate_n16_ising_tile_bitstream_build_v2.json",
+      "source_experiment_id": "exp2915",
+      "source_sha256": null,
+      "summary": {}
+    },
+    {
+      "claim_boundary": "",
+      "flag_reasons": [],
+      "headline_eligible": false,
+      "non_headline_reason": "excluded_from_headline_because_row_is_diagnostic_or_simulator_only",
+      "row_id": "exp2916_thrml_parity",
+      "row_kind": "dot275_artifact_row",
+      "row_label": "THRML KV260 simulator parity",
+      "row_status": "diagnostic_only",
+      "source_artifact": "results/experiment_2916_thrml_kv260_sampler_parity_v1.json",
+      "source_experiment_id": "exp2916",
+      "source_sha256": "f0c10272eebad84ede8c681409ac36815a4010c94f9424ac57aff049c78e6dc4",
+      "summary": {
+        "honest_verdict": "complete: thrml_kv260_n64_simulator_parity_ready_no_hardware_claim",
+        "inference_substrate": "simulator_parity",
+        "no_tsu_hardware_claim": true,
+        "thrml_kv260_parity_ready": true
+      }
+    },
+    {
+      "claim_boundary": "",
+      "flag_reasons": [],
+      "headline_eligible": false,
+      "non_headline_reason": "excluded_from_headline_because_row_is_diagnostic_or_simulator_only",
+      "row_id": "exp2917_spilled_energy_micro_panel",
+      "row_kind": "dot275_artifact_row",
+      "row_label": "Spilled energy micro-panel",
+      "row_status": "diagnostic_only",
+      "source_artifact": "results/experiment_2917_spilled_energy_logit_detector_micro_panel_v1.json",
+      "source_experiment_id": "exp2917",
+      "source_sha256": "ee0766f1cd309f65a439984c92788f4d751abfdb2cdc849337bd13798dd10696",
+      "summary": {
+        "benchmark_claim_made": false,
+        "claim_boundary": "diagnostic_only_no_benchmark_claim",
+        "honest_verdict": "complete: spilled_energy_micro_panel_diagnostic_ready",
+        "inference_substrate": "live_llm_inference",
+        "separation_summary": {
+          "available": true,
+          "n_examples": 24
+        },
+        "spilled_energy_micro_panel_ready": true
+      }
+    },
+    {
+      "claim_boundary": "Bounded FR-11 self-learning claim: replay scheduler/process rewards updated with forgetting_rate=0.0 and no model-weight mutation.",
+      "flag_reasons": [],
+      "headline_eligible": true,
+      "non_headline_reason": "",
+      "row_id": "exp2918_fr11_process_rewards",
+      "row_kind": "dot275_artifact_row",
+      "row_label": "FR-11 process rewards self-learning",
+      "row_status": "clean",
+      "source_artifact": "results/experiment_2918_fr11_verifiable_process_rewards_self_learning_v1.json",
+      "source_experiment_id": "exp2918",
+      "source_sha256": "e07bd72c3d43110a4f48623685e07120fd6bb39cebe658366fd0b95343ffdbf0",
+      "summary": {
+        "delta_overall": 0.8559,
+        "forgetting_rate": 0.0,
+        "hardware_replay_used": true,
+        "honest_verdict": "complete: verifier_process_rewards_updated_replay_scheduler",
+        "inference_substrate": "deterministic_verifier_plus_replay",
+        "model_weights_mutated": false,
+        "online_self_learning_ready": true,
+        "online_update_performed": true,
+        "replay_scheduler_updated": true
+      }
+    },
+    {
+      "claim_boundary": "",
+      "flag_reasons": [
+        "flagged_adversarial=true",
+        "TAUTOLOGY:critical"
+      ],
+      "headline_eligible": false,
+      "non_headline_reason": "excluded_from_headline_due_to_unresolved_flags_or_corrigendum",
+      "row_id": "exp2919_constraintbench_mini",
+      "row_kind": "dot275_artifact_row",
+      "row_label": "ConstraintBench mini direct optimization",
+      "row_status": "flagged",
+      "source_artifact": "results/experiment_2919_constraintbench_mini_direct_optimization_v1.json",
+      "source_experiment_id": "exp2919",
+      "source_sha256": "4d52cc8e4cd03c23e5f36e539517ee7fc38137bbb2b1d0cbd31930c7776b5f14",
+      "summary": {
+        "constraintbench_mini_ready": true,
+        "corrigendum_pending": [
+          {
+            "kind": "TAUTOLOGY",
+            "severity": "critical"
+          }
+        ],
+        "feasibility_rate": 0.277778,
+        "flagged_adversarial": true,
+        "honest_verdict": "complete: constraintbench mini direct optimization measured",
+        "inference_substrate": "live_llm_inference_plus_exact_verifier",
+        "optimality_rate": 0.111111,
+        "syntax_valid_rate": 0.277778
+      }
+    },
+    {
+      "claim_boundary": "Bounded state-verifier harness claim: deterministic golden and negative-state checks pass without an LLM judge; no broad benchmark generalization is implied.",
+      "flag_reasons": [],
+      "headline_eligible": true,
+      "non_headline_reason": "",
+      "row_id": "exp2920_state_verifier_harness",
+      "row_kind": "dot275_artifact_row",
+      "row_label": "OpenComputer-style state verifier harness",
+      "row_status": "clean",
+      "source_artifact": "results/experiment_2920_opencomputer_style_state_verifier_harness_v1.json",
+      "source_experiment_id": "exp2920",
+      "source_sha256": "306e11f65bf46803031958bce2aa941a15a5929cd12edb37cf9a204456b1c364",
+      "summary": {
+        "golden_state_pass_rate": 1.0,
+        "honest_verdict": "complete: deterministic OpenComputer-style state verifier harness ready",
+        "inference_substrate": "deterministic_state_verifier",
+        "llm_judge_used": false,
+        "n_state_tasks": 4,
+        "negative_state_reject_rate": 1.0,
+        "state_verifier_harness_ready": true
+      }
+    }
+  ],
+  "matrix_v9_path": "results/experiment_2921_cross_corpus_matrix_v9_paper_boundary_v1.json",
+  "missing_rows": [
+    "exp2915_gatemate_bitstream"
+  ],
+  "paper_claim_boundary_ready": true,
+  "paper_v6_claim_boundary": {
+    "boundary_rules": [
+      "Only clean rows with direct bounded claim support are headline eligible.",
+      "Flagged, blocked, pilot-only, missing, simulator-only, and diagnostic-only rows are excluded.",
+      "No row is promoted from a success boolean when unresolved flags or claim-boundary caveats exist."
+    ],
+    "headline_claims": {
+      "corpus:FoVer": "Carry-forward clean matrix-v8 headline row for FoVer; no new metric inferred.",
+      "corpus:HaluEval_FEVER": "Carry-forward clean matrix-v8 headline row for HaluEval/FEVER; no new metric inferred.",
+      "exp2910_sota_codegen": "Bounded SOTA code-generation claim: aggregate pass@1=0.075, pass@k=0.175 over the recorded local GGUF run.",
+      "exp2913_kv260_claim_boundary": "Bounded n=64 KV260/CPU speedup claim only.",
+      "exp2918_fr11_process_rewards": "Bounded FR-11 self-learning claim: replay scheduler/process rewards updated with forgetting_rate=0.0 and no model-weight mutation.",
+      "exp2920_state_verifier_harness": "Bounded state-verifier harness claim: deterministic golden and negative-state checks pass without an LLM judge; no broad benchmark generalization is implied."
+    },
+    "headline_eligible_rows": [
+      "corpus:FoVer",
+      "corpus:HaluEval_FEVER",
+      "exp2910_sota_codegen",
+      "exp2913_kv260_claim_boundary",
+      "exp2918_fr11_process_rewards",
+      "exp2920_state_verifier_harness"
+    ],
+    "non_headline_rows": {
+      "corpus:HumanEval": {
+        "reason": "excluded_from_headline_due_to_unresolved_flags_or_corrigendum",
+        "row_label": "HumanEval",
+        "status": "flagged"
+      },
+      "corpus:MBPP": {
+        "reason": "excluded_from_headline_due_to_unresolved_flags_or_corrigendum",
+        "row_label": "MBPP",
+        "status": "flagged"
+      },
+      "corpus:TruthfulQA": {
+        "reason": "corpus:TruthfulQA is clean context/support but not a bounded paper-v6 headline row",
+        "row_label": "TruthfulQA",
+        "status": "clean"
+      },
+      "exp2890_code_structural_dependency": {
+        "reason": "exp2890_code_structural_dependency is clean context/support but not a bounded paper-v6 headline row",
+        "row_label": "Code Structural Dependency",
+        "status": "clean"
+      },
+      "exp2891_cctu": {
+        "reason": "excluded_from_headline_because_row_is_pilot_only",
+        "row_label": "CCTU executable constraint pilot",
+        "status": "pilot_only"
+      },
+      "exp2892_vericot": {
+        "reason": "exp2892_vericot is clean context/support but not a bounded paper-v6 headline row",
+        "row_label": "VeriCoT exact frontier",
+        "status": "clean"
+      },
+      "exp2898_kv260_hardware": {
+        "reason": "exp2898_kv260_hardware is clean context/support but not a bounded paper-v6 headline row",
+        "row_label": "KV260 Ising hardware latency",
+        "status": "clean"
+      },
+      "exp2911_code_hallucination_verifier": {
+        "reason": "excluded_from_headline_due_to_unresolved_flags_or_corrigendum",
+        "row_label": "Code hallucination taxonomy verifier",
+        "status": "flagged"
+      },
+      "exp2914_gatemate_toolchain": {
+        "reason": "excluded_from_headline_because_source_is_blocked",
+        "row_label": "GateMate toolchain preflight",
+        "status": "blocked"
+      },
+      "exp2915_gatemate_bitstream": {
+        "reason": "excluded_from_headline_because_source_artifact_is_missing",
+        "row_label": "GateMate n16 bitstream build",
+        "status": "missing"
+      },
+      "exp2916_thrml_parity": {
+        "reason": "excluded_from_headline_because_row_is_diagnostic_or_simulator_only",
+        "row_label": "THRML KV260 simulator parity",
+        "status": "diagnostic_only"
+      },
+      "exp2917_spilled_energy_micro_panel": {
+        "reason": "excluded_from_headline_because_row_is_diagnostic_or_simulator_only",
+        "row_label": "Spilled energy micro-panel",
+        "status": "diagnostic_only"
+      },
+      "exp2919_constraintbench_mini": {
+        "reason": "excluded_from_headline_due_to_unresolved_flags_or_corrigendum",
+        "row_label": "ConstraintBench mini direct optimization",
+        "status": "flagged"
+      }
+    },
+    "ready": true
+  },
+  "pilot_only_rows": [
+    "corpus:MBPP",
+    "corpus:HumanEval",
+    "exp2891_cctu"
+  ],
+  "run_date": "20260523",
+  "schema": "carnot.cross_corpus_matrix.v9_paper_boundary.v1"
+}

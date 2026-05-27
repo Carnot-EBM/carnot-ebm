@@ -1,0 +1,81 @@
+{
+  "case_scores": [
+    {
+      "coherence_score": 1.0,
+      "component_energies": {
+        "confidence_energy": 0.0,
+        "contradiction_energy": 0.0,
+        "coverage_energy": 0.0,
+        "ordering_energy": 0.0,
+        "unsupported_energy": 0.0
+      },
+      "continuous_energy_used": true,
+      "energy": 0.0,
+      "trace_id": "inventory-consistent",
+      "violation_count": 0
+    },
+    {
+      "coherence_score": 0.030623,
+      "component_energies": {
+        "confidence_energy": 0.0,
+        "contradiction_energy": 3.486,
+        "coverage_energy": 0.0,
+        "ordering_energy": 0.0,
+        "unsupported_energy": 0.0
+      },
+      "continuous_energy_used": true,
+      "energy": 3.486,
+      "trace_id": "inventory-contradiction",
+      "violation_count": 2
+    },
+    {
+      "coherence_score": 1.0,
+      "component_energies": {
+        "confidence_energy": 0.0,
+        "contradiction_energy": 0.0,
+        "coverage_energy": 0.0,
+        "ordering_energy": 0.0,
+        "unsupported_energy": 0.0
+      },
+      "continuous_energy_used": true,
+      "energy": 0.0,
+      "trace_id": "route-consistent",
+      "violation_count": 0
+    },
+    {
+      "coherence_score": 0.118837,
+      "component_energies": {
+        "confidence_energy": 0.23,
+        "contradiction_energy": 0.0,
+        "coverage_energy": 0.65,
+        "ordering_energy": 0.0,
+        "unsupported_energy": 1.25
+      },
+      "continuous_energy_used": true,
+      "energy": 2.13,
+      "trace_id": "route-unsupported",
+      "violation_count": 1
+    }
+  ],
+  "consistent_cases": 2,
+  "consistent_mean_energy": 0.0,
+  "continuous_energy_used": true,
+  "ebrm_trace_scorer_ready": true,
+  "energy_gap": 2.808,
+  "experiment_id": 1656,
+  "honest_verdict": "complete: EBRM trace scorer separates extracted logical traces with score_accuracy=1.0",
+  "inconsistent_cases": 2,
+  "inconsistent_mean_energy": 2.808,
+  "run_date": "20260509",
+  "schema": "ebrm_trace_scorer_v1",
+  "score_accuracy": 1.0,
+  "spec_traces": [
+    "REQ-VERIFY-1656",
+    "SCENARIO-VERIFY-1656"
+  ],
+  "status": "complete",
+  "synthetic_cases_total": 4,
+  "tests_run": [
+    "tests/python/test_ebrm_scorer.py"
+  ]
+}

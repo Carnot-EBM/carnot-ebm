@@ -1,0 +1,13 @@
+milestone: 2026.04.99
+milestone_title: Autofill Fixture
+tasks:
+- id: exp2-builds-on-prior
+  title: Builds on Prior
+  prior_failures:
+    - experiment_id: "exp1-successful-upstream"
+      verdict: "complete"
+      classification: "successful_upstream"
+      addressed_by: "Autofilled by scripts/conductor_priors_autofill.py: exp1-successful-upstream is treated as a successful upstream, not a failed rerun."
+      retire_if_same_verdict: false
+  prompt: |
+    no-op

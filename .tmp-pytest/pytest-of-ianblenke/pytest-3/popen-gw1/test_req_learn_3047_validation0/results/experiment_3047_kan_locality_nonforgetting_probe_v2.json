@@ -1,0 +1,92 @@
+{
+  "anchored_prior_count": 2,
+  "artifact": "experiment_3047_kan_locality_nonforgetting_probe_v2",
+  "changed_anchor_count": 2,
+  "comparator_summary": {
+    "available": true,
+    "changed_anchor_count": 2,
+    "comparator_type": "shuffled_control_update",
+    "heldout_delta": -0.5,
+    "locality_metric": 0.75,
+    "promoted": false,
+    "reason": "measured_exp3046_shuffled_feedback_control"
+  },
+  "duration_s": 2.5,
+  "field_principles": {
+    "anchored_prior_count": "nonforgetting anchors must be counted",
+    "changed_anchor_count": "locality must identify how much changed",
+    "comparator_summary": "missing comparators must be explicit",
+    "heldout_delta": "locality must preserve or improve related cases",
+    "honest_verdict": "terminal verdict must be machine-readable",
+    "inference_substrate": "controller probe must not be confused with live LLM inference",
+    "irrelevant_control_delta": "locality must not drift unrelated cases",
+    "kan_locality_probe_ready": "matrix v19 needs a bounded locality result",
+    "locality_metric": "KAN/locality claims need a numeric locality measure",
+    "prior_retention_delta": "locality must not erase prior cases",
+    "promotion_decision": "controller/locality evidence must not imply model-weight learning"
+  },
+  "heldout_delta": 0.5,
+  "honest_verdict": "complete_kan_locality_controller_probe_ready",
+  "inference_substrate": {
+    "cached_artifacts_only": true,
+    "controller_weight_update": true,
+    "kan_model_weight_training": false,
+    "live_llm_inference": false,
+    "local_gguf_inference": false,
+    "mode": "cached_exp3046_controller_locality_probe",
+    "model_weight_mutation": false,
+    "model_weight_training": false,
+    "trace_memory_update": true,
+    "training_scope": "bounded_controller_side_locality_probe"
+  },
+  "irrelevant_control_delta": 0.0,
+  "kan_locality_probe_ready": true,
+  "locality_metric": 0.75,
+  "locality_report": {
+    "anchored_prior_keys": [
+      "prior_guard::invalid",
+      "prior_guard::valid"
+    ],
+    "changed_anchor_keys": [
+      "solver_residual::nonzero",
+      "solver_residual::zero"
+    ],
+    "changed_update_trace_count": 2,
+    "locality_metric_definition": "1 - changed_controller_anchor_count / total_anchor_count",
+    "total_anchor_count": 8
+  },
+  "prior_retention_delta": 0.0,
+  "promotion_decision": "controller_locality_evidence_only",
+  "run_date": "20260525",
+  "schema": "carnot.fr11.kan_locality_nonforgetting_probe.v2",
+  "source_artifacts": {
+    "exp3044_artifact": "results/experiment_3044_smt_sat_validator_tree_exactness_upgrade_v1.json",
+    "exp3044_ready": true,
+    "exp3045_artifact": "results/experiment_3045_fr11_governed_self_learning_boundary_v1.json",
+    "exp3045_ready": true,
+    "exp3046_artifact": "results/experiment_3046_fr11_solver_feedback_self_learning_loop_v1.json",
+    "exp3046_ready": true
+  },
+  "source_trace_counts": {
+    "exp3046_family_holdout_case_count": 4,
+    "exp3046_prior_exact_case_count": 2,
+    "exp3046_source_traced_update_count": 2,
+    "exp3046_train_update_case_count": 2
+  },
+  "split_report": {
+    "matches_exp3046_artifact": true,
+    "reused_family_holdout_ids": [
+      "heldout-related-valid-1",
+      "heldout-related-invalid-1",
+      "heldout-related-valid-2",
+      "heldout-related-invalid-2"
+    ],
+    "reused_train_update_ids": [
+      "train-exp3044-verified",
+      "train-exp3044-correction"
+    ]
+  },
+  "tests_run": [
+    "focused-req-3047"
+  ]
+}

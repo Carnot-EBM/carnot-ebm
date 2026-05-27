@@ -1,0 +1,107 @@
+{
+  "active_hardware_track_count": 3,
+  "active_hardware_tracks": [
+    {
+      "claim_boundary": "No live SOTA inference claim until a smoke run records usable_response=true on the target model/runtime.",
+      "evidence": [
+        "Exp 1442 saw two NVIDIA RTX 3090 GPUs with roughly 24 GB free each.",
+        "Exp 1442 found cached Qwen3.6-35B-A3B and Gemma4-31B GGUF models.",
+        "Exp 1442 blocked on llama.cpp CUDA library loading, not on GPU visibility."
+      ],
+      "immediate_research_value": "Unblocks headline-eligible live repair and full-pipeline benchmark evidence without adding another speculative accelerator.",
+      "label": "Dual RTX 3090 CUDA local SOTA runtime repair",
+      "readiness": "Hardware is locally visible; runtime is not ready because libcudart.so.12 was missing for llama_cpp in Exp 1442.",
+      "scope": "Local GGUF/CUDA runtime repair for cached Qwen/Gemma flagship models on the two visible RTX 3090 GPUs.",
+      "track_id": "dual_rtx3090_live_sota_runtime"
+    },
+    {
+      "claim_boundary": "No KV260 board execution, bitfile, or latency claim until Vivado synthesis, bitfile flashing, and board commands are captured.",
+      "evidence": [
+        "Exp 1451 found discrete_sb_256.v and its testbench present.",
+        "Exp 1451 completed Verilator lint and Icarus simulation.",
+        "Exp 1451 recorded Vivado unavailable and hardware_execution_performed=false."
+      ],
+      "immediate_research_value": "Preserves the FPGA sampler path with local, repeatable HDL evidence while avoiding fabricated board-latency claims.",
+      "label": "KV260/FPGA Discrete SB RTL lint and simulation",
+      "readiness": "RTL lint/simulation is ready with local Verilator/Icarus/Yosys; board execution remains blocked until Vivado and a bitfile run exist.",
+      "scope": "Keep KV260 work active only at the source-level RTL, lint, and simulator-evidence layer.",
+      "track_id": "kv260_discrete_sb_rtl_sim"
+    },
+    {
+      "claim_boundary": "No Extropic hardware access, Z1/XTR-0 execution, or TSU latency claim until an authenticated hardware run is captured.",
+      "evidence": [
+        "Research references describe THRML as the near-term public software surface.",
+        "Research references state Z1/XTR-0 remain strategic without local hardware access.",
+        "Prior THRML audits require hardware_claim_allowed=false without TSU execution."
+      ],
+      "immediate_research_value": "Maintains a portable TSU-facing sampler abstraction without blocking the milestone on unavailable external hardware.",
+      "label": "THRML/Extropic TSU compatibility simulation",
+      "readiness": "Documentation and compatibility-audit paths are available; Extropic hardware access is not locally evidenced.",
+      "scope": "Keep the Extropic path active only as THRML/JAX compatibility, sampler-interface parity, and CPU simulation accounting.",
+      "track_id": "thrml_tsu_compatibility_sim"
+    }
+  ],
+  "architecture_updated": true,
+  "decision_basis": "Immediate research value plus current readiness from Exp 1442, Exp 1451, hardware wishlist status, and Extropic/THRML notes.",
+  "decision_note_path": "docs/research-notes/hardware_portfolio_narrowing.md",
+  "deferred_hardware_tracks": [
+    {
+      "label": "KV260 board execution and latency claims",
+      "reason": "Vivado is absent, no bitfile was produced, and no board commands ran.",
+      "reopen_condition": "Reopen when Vivado synthesis produces a bitfile, CARNOT_KV260_BITFILE points to it, and a KV260/PYNQ board run records real latency.",
+      "track_id": "kv260_board_execution"
+    },
+    {
+      "label": "AMD Strix/XDNA NPU acceleration",
+      "reason": "VitisAI and IRON paths remain blocked by missing packages or wheels; no NPU kernel produced acceleration evidence.",
+      "reopen_condition": "Reopen when mlir-aie or AMD's VitisAI onnxruntime wheel is installed and a local NPU benchmark reports a real speedup.",
+      "track_id": "amd_xdna_strix_npu"
+    },
+    {
+      "label": "Extropic Z1/XTR-0 hardware execution",
+      "reason": "No local Extropic hardware or authenticated execution transcript exists.",
+      "reopen_condition": "Reopen when Carnot has early-access credentials or hardware and a THRML or SDK run records model, device, latency, and sample-quality evidence.",
+      "track_id": "extropic_z1_xtr0_hardware"
+    },
+    {
+      "label": "Photonic or optical Ising-machine substrates",
+      "reason": "The path is architectural context only; Carnot has no local optical hardware.",
+      "reopen_condition": "Reopen when a concrete photonic provider, simulator-to-hardware API, or collaborator run can evaluate Carnot Ising cases.",
+      "track_id": "photonic_ising_cluster"
+    },
+    {
+      "label": "D-Wave QPU cloud experiments",
+      "reason": "Cloud QPU access is not the current blocker for repair/runtime evidence and would add another branch during scope reduction.",
+      "reopen_condition": "Reopen when a specific Ising/QUBO benchmark cannot be answered by CPU, GPU, or KV260 simulation and a Leap token plus budget are available.",
+      "track_id": "dwave_qpu_cloud"
+    },
+    {
+      "label": "Large production FPGA boards",
+      "reason": "Production FPGA purchases do not help until the KV260 RTL path closes.",
+      "reopen_condition": "Reopen after KV260 lint, synthesis, and board execution produce a measured sampler result that justifies scaling fabric capacity.",
+      "track_id": "large_fpga_alveo_agilex"
+    },
+    {
+      "label": "RX 7900 XTX Thunderbolt eGPU path",
+      "reason": "The current local CUDA RTX 3090 pair is more ready for SOTA runtime repair.",
+      "reopen_condition": "Reopen when the RTX CUDA runtime path is exhausted or when ROCm/JAX on the eGPU is connected and verified with a real Carnot benchmark.",
+      "track_id": "rx7900xtx_egpu"
+    }
+  ],
+  "experiment_id": 1460,
+  "hardware_wishlist_updated": true,
+  "honest_verdict": "active_tracks_narrowed_to_3_with_no KV260 board, Extropic, NPU, or photonic execution claim",
+  "run_date": "20260507",
+  "schema_version": 1,
+  "sources_read": [
+    "CODEX.md",
+    "CLAUDE.md",
+    "_bmad/architecture.md",
+    "research-hardware-wishlist.md",
+    "research-references.md",
+    "results/experiment_1442_live_sota_repair_runtime_preflight.json",
+    "results/experiment_1451_discrete_sb_rtl_lint_sim_rerun.json",
+    "ops/known-issues.md"
+  ],
+  "status": "complete"
+}

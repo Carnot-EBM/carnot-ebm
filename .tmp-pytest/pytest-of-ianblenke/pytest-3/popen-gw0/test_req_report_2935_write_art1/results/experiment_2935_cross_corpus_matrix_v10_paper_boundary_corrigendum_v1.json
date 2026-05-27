@@ -1,0 +1,108 @@
+{
+  "adversarial_audit_rerun": {
+    "audit_available": false,
+    "findings": [],
+    "flagged": false,
+    "not_run_reason": "required_gate_failed"
+  },
+  "artifact": "experiment_2935_cross_corpus_matrix_v10_paper_boundary_corrigendum_v1",
+  "blocked_rows": [],
+  "clean_rows": [],
+  "diagnostic_only_rows": [],
+  "duration_s": 0.0001,
+  "flagged_rows": [],
+  "headline_eligible_rows": [],
+  "honest_verdict": "blocked_required_corrigendum_missing",
+  "inference_substrate": "aggregation_from_upstream_artifacts",
+  "matrix_rows": [],
+  "matrix_v10_paper_boundary_ready": false,
+  "matrix_v10_ready": false,
+  "missing_rows": [
+    "exp2924_aggregation_metadata_corrigendum",
+    "exp2925_taxonomy_corrigendum",
+    "exp2926_constraintbench_corrigendum",
+    "exp2933_kan_cl_self_learning",
+    "exp2921_matrix_v9"
+  ],
+  "no_new_hardware_run": true,
+  "no_new_llm_call": true,
+  "paper_claim_boundary": {
+    "boundary_rules": [
+      "Only clean rows with direct bounded support are headline eligible.",
+      "Flagged, blocked, missing, diagnostic-only, and pilot-only rows remain non-headline.",
+      "Projection-only rows are retained for planning context but are not paper-claim eligible.",
+      "A clean corrigendum can add a replacement/supporting row without laundering the older flagged row."
+    ],
+    "headline_claims": {},
+    "headline_eligible_rows": [],
+    "non_paper_claim_rows": {},
+    "ready": false,
+    "supporting_paper_claim_rows": []
+  },
+  "pilot_only_rows": [],
+  "projection_only_rows": [],
+  "required_gate_errors": [
+    {
+      "actual_value": null,
+      "artifact_path": "results/experiment_2924_aggregation_metadata_corrigendum_v1.json",
+      "experiment_id": "exp2924",
+      "required_field": "aggregation_metadata_clean",
+      "row_id": "exp2924_aggregation_metadata_corrigendum"
+    },
+    {
+      "actual_value": null,
+      "artifact_path": "results/experiment_2925_code_hallucination_taxonomy_provenance_corrigendum_v2.json",
+      "experiment_id": "exp2925",
+      "required_field": "taxonomy_corrigendum_clean",
+      "row_id": "exp2925_taxonomy_corrigendum"
+    },
+    {
+      "actual_value": null,
+      "artifact_path": "results/experiment_2926_constraintbench_constrained_output_rerun_v2.json",
+      "experiment_id": "exp2926",
+      "required_field": "constraintbench_corrigendum_ready",
+      "row_id": "exp2926_constraintbench_corrigendum"
+    },
+    {
+      "actual_value": null,
+      "artifact_path": "results/experiment_2933_kan_cl_per_knot_self_learning_v1.json",
+      "experiment_id": "exp2933",
+      "required_field": "kan_cl_self_learning_ready",
+      "row_id": "exp2933_kan_cl_self_learning"
+    },
+    {
+      "actual_value": null,
+      "artifact_path": "results/experiment_2921_cross_corpus_matrix_v9_paper_boundary_v1.json",
+      "experiment_id": "exp2921",
+      "required_field": "matrix_rows",
+      "row_id": "exp2921_matrix_v9"
+    }
+  ],
+  "row_classification_counts": {
+    "blocked": 0,
+    "clean": 0,
+    "diagnostic_only": 0,
+    "flagged": 0,
+    "missing": 5,
+    "pilot_only": 0,
+    "projection_only": 0
+  },
+  "run_date": "20260523",
+  "schema": "carnot.cross_corpus_matrix.v10_paper_boundary_corrigendum.v1",
+  "source_artifact_checksums": {
+    "results/experiment_2921_cross_corpus_matrix_v9_paper_boundary_v1.json": null,
+    "results/experiment_2924_aggregation_metadata_corrigendum_v1.json": null,
+    "results/experiment_2925_code_hallucination_taxonomy_provenance_corrigendum_v2.json": null,
+    "results/experiment_2926_constraintbench_constrained_output_rerun_v2.json": null,
+    "results/experiment_2927_gatemate_himbaechel_constraints_preflight_v3.json": null,
+    "results/experiment_2928_gatemate_n16_himbaechel_bitstream_build_v3.json": null,
+    "results/experiment_2929_gatemate_flash_timing_boundary_v1.json": null,
+    "results/experiment_2930_kv260_pbit_ssqa_scaling_projection_v1.json": null,
+    "results/experiment_2931_llmeval_logic_z3_mini_v1.json": null,
+    "results/experiment_2932_citation_fixture_v1.json": null,
+    "results/experiment_2932_citation_hallucination_field_verifier_v1.json": null,
+    "results/experiment_2933_kan_cl_per_knot_self_learning_v1.json": null,
+    "results/experiment_2934_aquaforte_beaver_reformulation_pipeline_v1.json": null
+  },
+  "upstream_flags_preserved": []
+}

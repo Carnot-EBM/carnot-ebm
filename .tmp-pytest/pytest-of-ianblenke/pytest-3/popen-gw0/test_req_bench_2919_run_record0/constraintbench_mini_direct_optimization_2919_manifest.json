@@ -1,0 +1,860 @@
+{
+  "exact_verifier_types": [
+    "bounded_integer_exhaustive",
+    "binary_subset_exhaustive",
+    "color_assignment_exhaustive"
+  ],
+  "n_tasks": 18,
+  "random_seed": 2919,
+  "run_date": "20260523",
+  "schema": "carnot.constraintbench_mini_direct_optimization.v1",
+  "tasks": [
+    {
+      "exact_verifier_type": "bounded_integer_exhaustive",
+      "feasible_count": 12,
+      "objective_sense": "max",
+      "optimal_solution": {
+        "variables": {
+          "x": 3,
+          "y": 1
+        }
+      },
+      "optimum_value": 11,
+      "payload": {
+        "constraints": [
+          {
+            "coefficients": {
+              "x": 1,
+              "y": 2
+            },
+            "op": "<=",
+            "rhs": 6
+          },
+          {
+            "coefficients": {
+              "x": 2,
+              "y": 1
+            },
+            "op": "<=",
+            "rhs": 7
+          }
+        ],
+        "objective": {
+          "x": 3,
+          "y": 2
+        },
+        "variables": {
+          "x": [
+            0,
+            4
+          ],
+          "y": [
+            0,
+            4
+          ]
+        }
+      },
+      "prompt": "Solve this direct constrained optimization task.\nTask id: cbmini-2919-linear-001\nTask type: linear_integer\nObjective sense: max\nReturn exactly one JSON object and no prose.\nThe JSON object must follow this shape: {\"solution\": {\"variables\": {\"x\": \"<integer>\", \"y\": \"<integer>\"}}}\nTask data: {\"constraints\": [{\"coefficients\": {\"x\": 1, \"y\": 2}, \"op\": \"<=\", \"rhs\": 6}, {\"coefficients\": {\"x\": 2, \"y\": 1}, \"op\": \"<=\", \"rhs\": 7}], \"objective\": {\"x\": 3, \"y\": 2}, \"variables\": {\"x\": [0, 4], \"y\": [0, 4]}}\n",
+      "task_id": "cbmini-2919-linear-001",
+      "task_type": "linear_integer"
+    },
+    {
+      "exact_verifier_type": "binary_subset_exhaustive",
+      "feasible_count": 6,
+      "objective_sense": "max",
+      "optimal_solution": {
+        "selected_items": [
+          "map",
+          "lamp",
+          "kit"
+        ]
+      },
+      "optimum_value": 15,
+      "payload": {
+        "capacity": 7,
+        "excludes": [
+          [
+            "lamp",
+            "rope"
+          ]
+        ],
+        "items": [
+          {
+            "name": "map",
+            "value": 5,
+            "weight": 2
+          },
+          {
+            "name": "rope",
+            "value": 6,
+            "weight": 3
+          },
+          {
+            "name": "lamp",
+            "value": 7,
+            "weight": 4
+          },
+          {
+            "name": "kit",
+            "value": 3,
+            "weight": 1
+          }
+        ],
+        "required_items": [
+          "kit"
+        ]
+      },
+      "prompt": "Solve this direct constrained optimization task.\nTask id: cbmini-2919-knapsack-001\nTask type: knapsack_binary\nObjective sense: max\nReturn exactly one JSON object and no prose.\nThe JSON object must follow this shape: {\"solution\": {\"selected_items\": [\"item names\"]}}\nTask data: {\"capacity\": 7, \"excludes\": [[\"lamp\", \"rope\"]], \"items\": [{\"name\": \"map\", \"value\": 5, \"weight\": 2}, {\"name\": \"rope\", \"value\": 6, \"weight\": 3}, {\"name\": \"lamp\", \"value\": 7, \"weight\": 4}, {\"name\": \"kit\", \"value\": 3, \"weight\": 1}], \"required_items\": [\"kit\"]}\n",
+      "task_id": "cbmini-2919-knapsack-001",
+      "task_type": "knapsack_binary"
+    },
+    {
+      "exact_verifier_type": "color_assignment_exhaustive",
+      "feasible_count": 24,
+      "objective_sense": "min",
+      "optimal_solution": {
+        "colors": {
+          "0": 0,
+          "1": 1,
+          "2": 0,
+          "3": 1
+        }
+      },
+      "optimum_value": 2,
+      "payload": {
+        "edges": [
+          [
+            0,
+            1
+          ],
+          [
+            1,
+            2
+          ],
+          [
+            2,
+            3
+          ]
+        ],
+        "n_colors": 3,
+        "n_nodes": 4
+      },
+      "prompt": "Solve this direct constrained optimization task.\nTask id: cbmini-2919-graph-001\nTask type: graph_coloring\nObjective sense: min\nReturn exactly one JSON object and no prose.\nThe JSON object must follow this shape: {\"solution\": {\"colors\": {\"0\": \"<integer color>\", \"1\": \"<integer color>\", \"2\": \"<integer color>\", \"3\": \"<integer color>\"}}}\nTask data: {\"edges\": [[0, 1], [1, 2], [2, 3]], \"n_colors\": 3, \"n_nodes\": 4}\n",
+      "task_id": "cbmini-2919-graph-001",
+      "task_type": "graph_coloring"
+    },
+    {
+      "exact_verifier_type": "bounded_integer_exhaustive",
+      "feasible_count": 24,
+      "objective_sense": "min",
+      "optimal_solution": {
+        "variables": {
+          "x": 4,
+          "y": 0
+        }
+      },
+      "optimum_value": 8,
+      "payload": {
+        "constraints": [
+          {
+            "coefficients": {
+              "x": 1,
+              "y": 1
+            },
+            "op": ">=",
+            "rhs": 4
+          },
+          {
+            "coefficients": {
+              "x": 1
+            },
+            "op": ">=",
+            "rhs": 1
+          }
+        ],
+        "objective": {
+          "x": 2,
+          "y": 3
+        },
+        "variables": {
+          "x": [
+            0,
+            5
+          ],
+          "y": [
+            0,
+            5
+          ]
+        }
+      },
+      "prompt": "Solve this direct constrained optimization task.\nTask id: cbmini-2919-linear-002\nTask type: linear_integer\nObjective sense: min\nReturn exactly one JSON object and no prose.\nThe JSON object must follow this shape: {\"solution\": {\"variables\": {\"x\": \"<integer>\", \"y\": \"<integer>\"}}}\nTask data: {\"constraints\": [{\"coefficients\": {\"x\": 1, \"y\": 1}, \"op\": \">=\", \"rhs\": 4}, {\"coefficients\": {\"x\": 1}, \"op\": \">=\", \"rhs\": 1}], \"objective\": {\"x\": 2, \"y\": 3}, \"variables\": {\"x\": [0, 5], \"y\": [0, 5]}}\n",
+      "task_id": "cbmini-2919-linear-002",
+      "task_type": "linear_integer"
+    },
+    {
+      "exact_verifier_type": "binary_subset_exhaustive",
+      "feasible_count": 11,
+      "objective_sense": "max",
+      "optimal_solution": {
+        "selected_items": [
+          "cpu",
+          "gpu"
+        ]
+      },
+      "optimum_value": 19,
+      "payload": {
+        "capacity": 9,
+        "excludes": [
+          [
+            "gpu",
+            "wifi"
+          ]
+        ],
+        "items": [
+          {
+            "name": "cpu",
+            "value": 8,
+            "weight": 3
+          },
+          {
+            "name": "gpu",
+            "value": 11,
+            "weight": 5
+          },
+          {
+            "name": "ssd",
+            "value": 5,
+            "weight": 2
+          },
+          {
+            "name": "wifi",
+            "value": 2,
+            "weight": 1
+          }
+        ],
+        "required_items": []
+      },
+      "prompt": "Solve this direct constrained optimization task.\nTask id: cbmini-2919-knapsack-002\nTask type: knapsack_binary\nObjective sense: max\nReturn exactly one JSON object and no prose.\nThe JSON object must follow this shape: {\"solution\": {\"selected_items\": [\"item names\"]}}\nTask data: {\"capacity\": 9, \"excludes\": [[\"gpu\", \"wifi\"]], \"items\": [{\"name\": \"cpu\", \"value\": 8, \"weight\": 3}, {\"name\": \"gpu\", \"value\": 11, \"weight\": 5}, {\"name\": \"ssd\", \"value\": 5, \"weight\": 2}, {\"name\": \"wifi\", \"value\": 2, \"weight\": 1}], \"required_items\": []}\n",
+      "task_id": "cbmini-2919-knapsack-002",
+      "task_type": "knapsack_binary"
+    },
+    {
+      "exact_verifier_type": "color_assignment_exhaustive",
+      "feasible_count": 12,
+      "objective_sense": "min",
+      "optimal_solution": {
+        "colors": {
+          "0": 0,
+          "1": 1,
+          "2": 2,
+          "3": 0
+        }
+      },
+      "optimum_value": 3,
+      "payload": {
+        "edges": [
+          [
+            0,
+            1
+          ],
+          [
+            1,
+            2
+          ],
+          [
+            2,
+            0
+          ],
+          [
+            2,
+            3
+          ]
+        ],
+        "n_colors": 3,
+        "n_nodes": 4
+      },
+      "prompt": "Solve this direct constrained optimization task.\nTask id: cbmini-2919-graph-002\nTask type: graph_coloring\nObjective sense: min\nReturn exactly one JSON object and no prose.\nThe JSON object must follow this shape: {\"solution\": {\"colors\": {\"0\": \"<integer color>\", \"1\": \"<integer color>\", \"2\": \"<integer color>\", \"3\": \"<integer color>\"}}}\nTask data: {\"edges\": [[0, 1], [1, 2], [2, 0], [2, 3]], \"n_colors\": 3, \"n_nodes\": 4}\n",
+      "task_id": "cbmini-2919-graph-002",
+      "task_type": "graph_coloring"
+    },
+    {
+      "exact_verifier_type": "bounded_integer_exhaustive",
+      "feasible_count": 20,
+      "objective_sense": "max",
+      "optimal_solution": {
+        "variables": {
+          "a": 2,
+          "b": 2,
+          "c": 1
+        }
+      },
+      "optimum_value": 19,
+      "payload": {
+        "constraints": [
+          {
+            "coefficients": {
+              "a": 2,
+              "b": 1,
+              "c": 2
+            },
+            "op": "<=",
+            "rhs": 8
+          },
+          {
+            "coefficients": {
+              "a": 1,
+              "b": -1
+            },
+            "op": ">=",
+            "rhs": 0
+          }
+        ],
+        "objective": {
+          "a": 4,
+          "b": 3,
+          "c": 5
+        },
+        "variables": {
+          "a": [
+            0,
+            3
+          ],
+          "b": [
+            0,
+            3
+          ],
+          "c": [
+            0,
+            2
+          ]
+        }
+      },
+      "prompt": "Solve this direct constrained optimization task.\nTask id: cbmini-2919-linear-003\nTask type: linear_integer\nObjective sense: max\nReturn exactly one JSON object and no prose.\nThe JSON object must follow this shape: {\"solution\": {\"variables\": {\"a\": \"<integer>\", \"b\": \"<integer>\", \"c\": \"<integer>\"}}}\nTask data: {\"constraints\": [{\"coefficients\": {\"a\": 2, \"b\": 1, \"c\": 2}, \"op\": \"<=\", \"rhs\": 8}, {\"coefficients\": {\"a\": 1, \"b\": -1}, \"op\": \">=\", \"rhs\": 0}], \"objective\": {\"a\": 4, \"b\": 3, \"c\": 5}, \"variables\": {\"a\": [0, 3], \"b\": [0, 3], \"c\": [0, 2]}}\n",
+      "task_id": "cbmini-2919-linear-003",
+      "task_type": "linear_integer"
+    },
+    {
+      "exact_verifier_type": "binary_subset_exhaustive",
+      "feasible_count": 6,
+      "objective_sense": "max",
+      "optimal_solution": {
+        "selected_items": [
+          "sensor",
+          "battery",
+          "case"
+        ]
+      },
+      "optimum_value": 13,
+      "payload": {
+        "capacity": 8,
+        "excludes": [
+          [
+            "radio",
+            "battery"
+          ]
+        ],
+        "items": [
+          {
+            "name": "sensor",
+            "value": 4,
+            "weight": 2
+          },
+          {
+            "name": "radio",
+            "value": 7,
+            "weight": 3
+          },
+          {
+            "name": "battery",
+            "value": 8,
+            "weight": 4
+          },
+          {
+            "name": "case",
+            "value": 1,
+            "weight": 1
+          }
+        ],
+        "required_items": [
+          "case"
+        ]
+      },
+      "prompt": "Solve this direct constrained optimization task.\nTask id: cbmini-2919-knapsack-003\nTask type: knapsack_binary\nObjective sense: max\nReturn exactly one JSON object and no prose.\nThe JSON object must follow this shape: {\"solution\": {\"selected_items\": [\"item names\"]}}\nTask data: {\"capacity\": 8, \"excludes\": [[\"radio\", \"battery\"]], \"items\": [{\"name\": \"sensor\", \"value\": 4, \"weight\": 2}, {\"name\": \"radio\", \"value\": 7, \"weight\": 3}, {\"name\": \"battery\", \"value\": 8, \"weight\": 4}, {\"name\": \"case\", \"value\": 1, \"weight\": 1}], \"required_items\": [\"case\"]}\n",
+      "task_id": "cbmini-2919-knapsack-003",
+      "task_type": "knapsack_binary"
+    },
+    {
+      "exact_verifier_type": "color_assignment_exhaustive",
+      "feasible_count": 48,
+      "objective_sense": "min",
+      "optimal_solution": {
+        "colors": {
+          "0": 1,
+          "1": 0,
+          "2": 0,
+          "3": 0,
+          "4": 0
+        }
+      },
+      "optimum_value": 1,
+      "payload": {
+        "edges": [
+          [
+            0,
+            1
+          ],
+          [
+            0,
+            2
+          ],
+          [
+            0,
+            3
+          ],
+          [
+            0,
+            4
+          ]
+        ],
+        "n_colors": 3,
+        "n_nodes": 5
+      },
+      "prompt": "Solve this direct constrained optimization task.\nTask id: cbmini-2919-graph-003\nTask type: graph_coloring\nObjective sense: min\nReturn exactly one JSON object and no prose.\nThe JSON object must follow this shape: {\"solution\": {\"colors\": {\"0\": \"<integer color>\", \"1\": \"<integer color>\", \"2\": \"<integer color>\", \"3\": \"<integer color>\", \"4\": \"<integer color>\"}}}\nTask data: {\"edges\": [[0, 1], [0, 2], [0, 3], [0, 4]], \"n_colors\": 3, \"n_nodes\": 5}\n",
+      "task_id": "cbmini-2919-graph-003",
+      "task_type": "graph_coloring"
+    },
+    {
+      "exact_verifier_type": "bounded_integer_exhaustive",
+      "feasible_count": 14,
+      "objective_sense": "min",
+      "optimal_solution": {
+        "variables": {
+          "p": 1,
+          "q": 3
+        }
+      },
+      "optimum_value": 8,
+      "payload": {
+        "constraints": [
+          {
+            "coefficients": {
+              "p": 2,
+              "q": 1
+            },
+            "op": ">=",
+            "rhs": 5
+          },
+          {
+            "coefficients": {
+              "q": 1
+            },
+            "op": ">=",
+            "rhs": 1
+          }
+        ],
+        "objective": {
+          "p": 5,
+          "q": 1
+        },
+        "variables": {
+          "p": [
+            0,
+            4
+          ],
+          "q": [
+            0,
+            4
+          ]
+        }
+      },
+      "prompt": "Solve this direct constrained optimization task.\nTask id: cbmini-2919-linear-004\nTask type: linear_integer\nObjective sense: min\nReturn exactly one JSON object and no prose.\nThe JSON object must follow this shape: {\"solution\": {\"variables\": {\"p\": \"<integer>\", \"q\": \"<integer>\"}}}\nTask data: {\"constraints\": [{\"coefficients\": {\"p\": 2, \"q\": 1}, \"op\": \">=\", \"rhs\": 5}, {\"coefficients\": {\"q\": 1}, \"op\": \">=\", \"rhs\": 1}], \"objective\": {\"p\": 5, \"q\": 1}, \"variables\": {\"p\": [0, 4], \"q\": [0, 4]}}\n",
+      "task_id": "cbmini-2919-linear-004",
+      "task_type": "linear_integer"
+    },
+    {
+      "exact_verifier_type": "binary_subset_exhaustive",
+      "feasible_count": 6,
+      "objective_sense": "max",
+      "optimal_solution": {
+        "selected_items": [
+          "atlas",
+          "water",
+          "med"
+        ]
+      },
+      "optimum_value": 19,
+      "payload": {
+        "capacity": 10,
+        "excludes": [
+          [
+            "atlas",
+            "guide"
+          ]
+        ],
+        "items": [
+          {
+            "name": "atlas",
+            "value": 8,
+            "weight": 4
+          },
+          {
+            "name": "guide",
+            "value": 3,
+            "weight": 2
+          },
+          {
+            "name": "water",
+            "value": 6,
+            "weight": 3
+          },
+          {
+            "name": "med",
+            "value": 5,
+            "weight": 2
+          }
+        ],
+        "required_items": [
+          "water"
+        ]
+      },
+      "prompt": "Solve this direct constrained optimization task.\nTask id: cbmini-2919-knapsack-004\nTask type: knapsack_binary\nObjective sense: max\nReturn exactly one JSON object and no prose.\nThe JSON object must follow this shape: {\"solution\": {\"selected_items\": [\"item names\"]}}\nTask data: {\"capacity\": 10, \"excludes\": [[\"atlas\", \"guide\"]], \"items\": [{\"name\": \"atlas\", \"value\": 8, \"weight\": 4}, {\"name\": \"guide\", \"value\": 3, \"weight\": 2}, {\"name\": \"water\", \"value\": 6, \"weight\": 3}, {\"name\": \"med\", \"value\": 5, \"weight\": 2}], \"required_items\": [\"water\"]}\n",
+      "task_id": "cbmini-2919-knapsack-004",
+      "task_type": "knapsack_binary"
+    },
+    {
+      "exact_verifier_type": "color_assignment_exhaustive",
+      "feasible_count": 240,
+      "objective_sense": "min",
+      "optimal_solution": {
+        "colors": {
+          "0": 0,
+          "1": 1,
+          "2": 0,
+          "3": 1,
+          "4": 2
+        }
+      },
+      "optimum_value": 4,
+      "payload": {
+        "edges": [
+          [
+            0,
+            1
+          ],
+          [
+            1,
+            2
+          ],
+          [
+            2,
+            3
+          ],
+          [
+            3,
+            4
+          ],
+          [
+            4,
+            0
+          ]
+        ],
+        "n_colors": 4,
+        "n_nodes": 5
+      },
+      "prompt": "Solve this direct constrained optimization task.\nTask id: cbmini-2919-graph-004\nTask type: graph_coloring\nObjective sense: min\nReturn exactly one JSON object and no prose.\nThe JSON object must follow this shape: {\"solution\": {\"colors\": {\"0\": \"<integer color>\", \"1\": \"<integer color>\", \"2\": \"<integer color>\", \"3\": \"<integer color>\", \"4\": \"<integer color>\"}}}\nTask data: {\"edges\": [[0, 1], [1, 2], [2, 3], [3, 4], [4, 0]], \"n_colors\": 4, \"n_nodes\": 5}\n",
+      "task_id": "cbmini-2919-graph-004",
+      "task_type": "graph_coloring"
+    },
+    {
+      "exact_verifier_type": "bounded_integer_exhaustive",
+      "feasible_count": 11,
+      "objective_sense": "max",
+      "optimal_solution": {
+        "variables": {
+          "u": 4,
+          "v": 2
+        }
+      },
+      "optimum_value": 16,
+      "payload": {
+        "constraints": [
+          {
+            "coefficients": {
+              "u": 1,
+              "v": 1
+            },
+            "op": "<=",
+            "rhs": 6
+          },
+          {
+            "coefficients": {
+              "u": 1,
+              "v": -1
+            },
+            "op": ">=",
+            "rhs": 1
+          }
+        ],
+        "objective": {
+          "u": 1,
+          "v": 6
+        },
+        "variables": {
+          "u": [
+            0,
+            5
+          ],
+          "v": [
+            0,
+            3
+          ]
+        }
+      },
+      "prompt": "Solve this direct constrained optimization task.\nTask id: cbmini-2919-linear-005\nTask type: linear_integer\nObjective sense: max\nReturn exactly one JSON object and no prose.\nThe JSON object must follow this shape: {\"solution\": {\"variables\": {\"u\": \"<integer>\", \"v\": \"<integer>\"}}}\nTask data: {\"constraints\": [{\"coefficients\": {\"u\": 1, \"v\": 1}, \"op\": \"<=\", \"rhs\": 6}, {\"coefficients\": {\"u\": 1, \"v\": -1}, \"op\": \">=\", \"rhs\": 1}], \"objective\": {\"u\": 1, \"v\": 6}, \"variables\": {\"u\": [0, 5], \"v\": [0, 3]}}\n",
+      "task_id": "cbmini-2919-linear-005",
+      "task_type": "linear_integer"
+    },
+    {
+      "exact_verifier_type": "binary_subset_exhaustive",
+      "feasible_count": 12,
+      "objective_sense": "max",
+      "optimal_solution": {
+        "selected_items": [
+          "blue",
+          "green",
+          "white"
+        ]
+      },
+      "optimum_value": 13,
+      "payload": {
+        "capacity": 6,
+        "excludes": [
+          [
+            "red",
+            "green"
+          ]
+        ],
+        "items": [
+          {
+            "name": "red",
+            "value": 5,
+            "weight": 2
+          },
+          {
+            "name": "blue",
+            "value": 4,
+            "weight": 2
+          },
+          {
+            "name": "green",
+            "value": 7,
+            "weight": 3
+          },
+          {
+            "name": "white",
+            "value": 2,
+            "weight": 1
+          }
+        ],
+        "required_items": []
+      },
+      "prompt": "Solve this direct constrained optimization task.\nTask id: cbmini-2919-knapsack-005\nTask type: knapsack_binary\nObjective sense: max\nReturn exactly one JSON object and no prose.\nThe JSON object must follow this shape: {\"solution\": {\"selected_items\": [\"item names\"]}}\nTask data: {\"capacity\": 6, \"excludes\": [[\"red\", \"green\"]], \"items\": [{\"name\": \"red\", \"value\": 5, \"weight\": 2}, {\"name\": \"blue\", \"value\": 4, \"weight\": 2}, {\"name\": \"green\", \"value\": 7, \"weight\": 3}, {\"name\": \"white\", \"value\": 2, \"weight\": 1}], \"required_items\": []}\n",
+      "task_id": "cbmini-2919-knapsack-005",
+      "task_type": "knapsack_binary"
+    },
+    {
+      "exact_verifier_type": "color_assignment_exhaustive",
+      "feasible_count": 48,
+      "objective_sense": "min",
+      "optimal_solution": {
+        "colors": {
+          "0": 1,
+          "1": 0,
+          "2": 2,
+          "3": 0
+        }
+      },
+      "optimum_value": 3,
+      "payload": {
+        "edges": [
+          [
+            0,
+            1
+          ],
+          [
+            0,
+            2
+          ],
+          [
+            0,
+            3
+          ],
+          [
+            1,
+            2
+          ],
+          [
+            2,
+            3
+          ]
+        ],
+        "n_colors": 4,
+        "n_nodes": 4
+      },
+      "prompt": "Solve this direct constrained optimization task.\nTask id: cbmini-2919-graph-005\nTask type: graph_coloring\nObjective sense: min\nReturn exactly one JSON object and no prose.\nThe JSON object must follow this shape: {\"solution\": {\"colors\": {\"0\": \"<integer color>\", \"1\": \"<integer color>\", \"2\": \"<integer color>\", \"3\": \"<integer color>\"}}}\nTask data: {\"edges\": [[0, 1], [0, 2], [0, 3], [1, 2], [2, 3]], \"n_colors\": 4, \"n_nodes\": 4}\n",
+      "task_id": "cbmini-2919-graph-005",
+      "task_type": "graph_coloring"
+    },
+    {
+      "exact_verifier_type": "bounded_integer_exhaustive",
+      "feasible_count": 49,
+      "objective_sense": "min",
+      "optimal_solution": {
+        "variables": {
+          "r": 1,
+          "s": 4,
+          "t": 0
+        }
+      },
+      "optimum_value": 10,
+      "payload": {
+        "constraints": [
+          {
+            "coefficients": {
+              "r": 1,
+              "s": 1,
+              "t": 1
+            },
+            "op": ">=",
+            "rhs": 5
+          },
+          {
+            "coefficients": {
+              "r": 1,
+              "s": -1
+            },
+            "op": "<=",
+            "rhs": 1
+          }
+        ],
+        "objective": {
+          "r": 2,
+          "s": 2,
+          "t": 4
+        },
+        "variables": {
+          "r": [
+            0,
+            4
+          ],
+          "s": [
+            0,
+            4
+          ],
+          "t": [
+            0,
+            3
+          ]
+        }
+      },
+      "prompt": "Solve this direct constrained optimization task.\nTask id: cbmini-2919-linear-006\nTask type: linear_integer\nObjective sense: min\nReturn exactly one JSON object and no prose.\nThe JSON object must follow this shape: {\"solution\": {\"variables\": {\"r\": \"<integer>\", \"s\": \"<integer>\", \"t\": \"<integer>\"}}}\nTask data: {\"constraints\": [{\"coefficients\": {\"r\": 1, \"s\": 1, \"t\": 1}, \"op\": \">=\", \"rhs\": 5}, {\"coefficients\": {\"r\": 1, \"s\": -1}, \"op\": \"<=\", \"rhs\": 1}], \"objective\": {\"r\": 2, \"s\": 2, \"t\": 4}, \"variables\": {\"r\": [0, 4], \"s\": [0, 4], \"t\": [0, 3]}}\n",
+      "task_id": "cbmini-2919-linear-006",
+      "task_type": "linear_integer"
+    },
+    {
+      "exact_verifier_type": "binary_subset_exhaustive",
+      "feasible_count": 6,
+      "objective_sense": "max",
+      "optimal_solution": {
+        "selected_items": [
+          "forge",
+          "meter",
+          "guard"
+        ]
+      },
+      "optimum_value": 19,
+      "payload": {
+        "capacity": 11,
+        "excludes": [
+          [
+            "forge",
+            "drill"
+          ]
+        ],
+        "items": [
+          {
+            "name": "forge",
+            "value": 9,
+            "weight": 5
+          },
+          {
+            "name": "drill",
+            "value": 8,
+            "weight": 4
+          },
+          {
+            "name": "meter",
+            "value": 4,
+            "weight": 2
+          },
+          {
+            "name": "guard",
+            "value": 6,
+            "weight": 3
+          }
+        ],
+        "required_items": [
+          "meter"
+        ]
+      },
+      "prompt": "Solve this direct constrained optimization task.\nTask id: cbmini-2919-knapsack-006\nTask type: knapsack_binary\nObjective sense: max\nReturn exactly one JSON object and no prose.\nThe JSON object must follow this shape: {\"solution\": {\"selected_items\": [\"item names\"]}}\nTask data: {\"capacity\": 11, \"excludes\": [[\"forge\", \"drill\"]], \"items\": [{\"name\": \"forge\", \"value\": 9, \"weight\": 5}, {\"name\": \"drill\", \"value\": 8, \"weight\": 4}, {\"name\": \"meter\", \"value\": 4, \"weight\": 2}, {\"name\": \"guard\", \"value\": 6, \"weight\": 3}], \"required_items\": [\"meter\"]}\n",
+      "task_id": "cbmini-2919-knapsack-006",
+      "task_type": "knapsack_binary"
+    },
+    {
+      "exact_verifier_type": "color_assignment_exhaustive",
+      "feasible_count": 96,
+      "objective_sense": "min",
+      "optimal_solution": {
+        "colors": {
+          "0": 0,
+          "1": 1,
+          "2": 0,
+          "3": 1,
+          "4": 0,
+          "5": 1
+        }
+      },
+      "optimum_value": 3,
+      "payload": {
+        "edges": [
+          [
+            0,
+            1
+          ],
+          [
+            1,
+            2
+          ],
+          [
+            3,
+            4
+          ],
+          [
+            4,
+            5
+          ],
+          [
+            2,
+            5
+          ]
+        ],
+        "n_colors": 3,
+        "n_nodes": 6
+      },
+      "prompt": "Solve this direct constrained optimization task.\nTask id: cbmini-2919-graph-006\nTask type: graph_coloring\nObjective sense: min\nReturn exactly one JSON object and no prose.\nThe JSON object must follow this shape: {\"solution\": {\"colors\": {\"0\": \"<integer color>\", \"1\": \"<integer color>\", \"2\": \"<integer color>\", \"3\": \"<integer color>\", \"4\": \"<integer color>\", \"5\": \"<integer color>\"}}}\nTask data: {\"edges\": [[0, 1], [1, 2], [3, 4], [4, 5], [2, 5]], \"n_colors\": 3, \"n_nodes\": 6}\n",
+      "task_id": "cbmini-2919-graph-006",
+      "task_type": "graph_coloring"
+    }
+  ]
+}

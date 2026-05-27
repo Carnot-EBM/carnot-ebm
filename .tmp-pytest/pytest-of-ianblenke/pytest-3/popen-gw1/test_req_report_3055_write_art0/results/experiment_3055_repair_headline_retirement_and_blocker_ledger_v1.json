@@ -1,0 +1,301 @@
+{
+  "artifact": "experiment_3055_repair_headline_retirement_and_blocker_ledger_v1",
+  "blocked_reasons": [],
+  "duration_s": 0.75,
+  "extracted_repair_blockers": [
+    {
+      "blocking": true,
+      "classification": "true_blocker",
+      "evidence": [
+        {
+          "detail": "fixture",
+          "kind": "TAUTOLOGY",
+          "severity": "critical"
+        }
+      ],
+      "matrix_v20_consumable": true,
+      "rationale": "repair blocker fixture",
+      "row_id": "exp3028:adversarial_flags",
+      "source_artifact": "results/experiment_3041_matrix_capstone_adversarial_flag_hygiene_v1.json",
+      "source_field": "true_blocker_rows[0]",
+      "status": "true_blocker"
+    },
+    {
+      "blocking": true,
+      "classification": "missing_metadata",
+      "evidence": [
+        {
+          "detail": "fixture",
+          "kind": "TAUTOLOGY",
+          "severity": "critical"
+        }
+      ],
+      "matrix_v20_consumable": true,
+      "rationale": "repair blocker fixture",
+      "row_id": "exp3028:methodology_missing",
+      "source_artifact": "results/experiment_3041_matrix_capstone_adversarial_flag_hygiene_v1.json",
+      "source_field": "missing_metadata_rows[0]",
+      "status": "missing_metadata"
+    },
+    {
+      "blocking": true,
+      "classification": "unresolved_bound",
+      "evidence": [
+        {
+          "detail": "fixture",
+          "kind": "TAUTOLOGY",
+          "severity": "critical"
+        }
+      ],
+      "matrix_v20_consumable": true,
+      "rationale": "repair blocker fixture",
+      "row_id": "capstone:repair_bounded",
+      "source_artifact": "results/experiment_3041_matrix_capstone_adversarial_flag_hygiene_v1.json",
+      "source_field": "unresolved_bound_rows[0]",
+      "status": "unresolved_bound"
+    },
+    {
+      "blocking": true,
+      "classification": "flagged",
+      "evidence": {
+        "evidence": {
+          "allowed_wording": "Use bounded wording only.",
+          "blockers": [
+            "matrix .285 does not support headline promotion"
+          ],
+          "claim_id": "repair_blocker",
+          "classification": "flagged",
+          "observed_support_fields": {
+            "matrix_repair_status": "bounded"
+          },
+          "proposed_repair_claim": "Repair rerun is blocked until methodology evidence exists.",
+          "required_support_fields": [
+            "matrix repair status clean"
+          ]
+        },
+        "remaining_blocker_count": 9,
+        "repair_claim_status": "bounded",
+        "repair_promotion_candidate": false
+      },
+      "matrix_v20_consumable": true,
+      "rationale": "",
+      "row_id": "v18:exp3028",
+      "source_artifact": "results/experiment_3042_repair_promotion_reconciliation_v3.json",
+      "source_field": "remaining_blockers",
+      "status": "flagged"
+    }
+  ],
+  "honest_verdict": "complete: repair_headline_retirement_ready=true; retired=2; bounded=3; rerun_prerequisites=6",
+  "inference_substrate": {
+    "executes_conductor": false,
+    "executes_hardware": false,
+    "executes_models": false,
+    "kind": "aggregation_from_upstream_artifacts",
+    "no_live_llm_inference": true,
+    "source": "checked_in_artifacts"
+  },
+  "manifest_updates": [
+    {
+      "applied": true,
+      "id": "repair_headline_wording_retired_v285",
+      "path": "ops/exclusion_manifest.yaml",
+      "reason": "CLAUDE.md failed-rerun and exclusion-manifest discipline requires retired headline scope to be traceable.",
+      "retired_by_artifact": "results/experiment_3055_repair_headline_retirement_and_blocker_ledger_v1.json"
+    }
+  ],
+  "matrix_v20_consumability_errors": [],
+  "milestone": "2026.05.285",
+  "missing_source_artifacts": [],
+  "no_historical_artifact_rewrite": true,
+  "no_new_board_flash": true,
+  "no_new_hardware_run": true,
+  "no_new_model_execution": true,
+  "no_new_solver_run": true,
+  "no_new_synthesis_run": true,
+  "no_new_verifier_run": true,
+  "ops_docs_reconciliation_left_to_conductor": true,
+  "repair_claim_status": "bounded",
+  "repair_headline_retirement_ready": true,
+  "rerun_prerequisites": [
+    {
+      "checker_authority": "checked-in fingerprint artifact with SHA-256 per transcript",
+      "exact_evidence_needed": "Stable transcript/content fingerprint for every before/after repair case.",
+      "gate": "deterministic_fingerprint",
+      "required": true
+    },
+    {
+      "checker_authority": "artifact metadata and reproducibility checksum",
+      "exact_evidence_needed": "Top-level random_seed plus per-tool seed policy used by the repair run.",
+      "gate": "seed",
+      "required": true
+    },
+    {
+      "checker_authority": "scripts/adversarial_verify.py duration and methodology checks",
+      "exact_evidence_needed": "Wall-clock duration consistent with the declared inference substrate.",
+      "gate": "duration_sanity",
+      "required": true
+    },
+    {
+      "checker_authority": "non-self-grading metric derivation with no bit-identical distinct deltas",
+      "exact_evidence_needed": "Independently derived pass@1, pass@k, false-accept, syntax, and schema deltas.",
+      "gate": "de_tautology_metrics",
+      "required": true
+    },
+    {
+      "checker_authority": "independent verifier/checker comparison against source transcripts",
+      "exact_evidence_needed": "Repair improves verifier outcome without increasing false accepts or intent drift.",
+      "gate": "verifier_gain",
+      "required": true
+    },
+    {
+      "checker_authority": "exact checker code and artifact field citations",
+      "exact_evidence_needed": "Named checker implementation, version or checksum, and source field for every pass/fail.",
+      "gate": "exact_checker_authority",
+      "required": true
+    }
+  ],
+  "retired_repair_claims": [
+    {
+      "allowed_wording": "Use bounded wording only.",
+      "blockers": [
+        "matrix .285 does not support headline promotion"
+      ],
+      "claim_id": "headline_sota_repair_clean_methodology",
+      "matrix_v20_consumable": true,
+      "observed_support_fields": {
+        "matrix_repair_status": "bounded"
+      },
+      "required_support_fields": [
+        "matrix repair status clean"
+      ],
+      "row_id": "exp3029:headline_sota_repair_clean_methodology",
+      "source_artifact": "results/experiment_3029_repair_promotion_boundary_audit_v2.json",
+      "source_field": "retired_or_blocked_claims[headline_sota_repair_clean_methodology]",
+      "status": "retired_for_headline_use",
+      "unsupported_headline_wording": "The repair result is promotable as a headline SOTA repair claim."
+    },
+    {
+      "allowed_wording": "Use bounded wording only.",
+      "blockers": [
+        "matrix .285 does not support headline promotion"
+      ],
+      "claim_id": "unsupported_exp3016_headline_repair_promotion",
+      "matrix_v20_consumable": true,
+      "observed_support_fields": {
+        "matrix_repair_status": "bounded"
+      },
+      "required_support_fields": [
+        "matrix repair status clean"
+      ],
+      "row_id": "exp3029:unsupported_exp3016_headline_repair_promotion",
+      "source_artifact": "results/experiment_3029_repair_promotion_boundary_audit_v2.json",
+      "source_field": "retired_or_blocked_claims[unsupported_exp3016_headline_repair_promotion]",
+      "status": "retired_for_headline_use",
+      "unsupported_headline_wording": "The original Exp 3016 headline repair claim is promotable without the Exp 3028 boundary."
+    }
+  ],
+  "run_date": "20260525",
+  "schema": "carnot.repair_headline_retirement.blocker_ledger.v1",
+  "source_artifacts": [
+    {
+      "experiment_id": "exp3041",
+      "path": "results/experiment_3041_matrix_capstone_adversarial_flag_hygiene_v1.json",
+      "present": true,
+      "readable": true,
+      "readable_json_object": true,
+      "required": true,
+      "role": "flag_hygiene_authority",
+      "sha256": "6ab7a5d4b8d6ddfe539df85c3a115e68e14c608a392b9e2ebb19f4767f27cff3"
+    },
+    {
+      "experiment_id": "exp3042",
+      "path": "results/experiment_3042_repair_promotion_reconciliation_v3.json",
+      "present": true,
+      "readable": true,
+      "readable_json_object": true,
+      "required": true,
+      "role": "repair_reconciliation_authority",
+      "sha256": "3df130355a63becdcccf8b498c2bee9fa4b376cef04e6310e8a9181a0b7129ef"
+    },
+    {
+      "experiment_id": "exp3052",
+      "path": "results/experiment_3052_cross_corpus_matrix_v19.json",
+      "present": true,
+      "readable": true,
+      "readable_json_object": true,
+      "required": true,
+      "role": "matrix_v19_authority",
+      "sha256": "2a2531ffb8d8a053886c94d2a3f76f6ce67b4db4067384a010f8a66e36883880"
+    },
+    {
+      "experiment_id": "exp3053",
+      "path": "results/experiment_3053_capstone_v285.json",
+      "present": true,
+      "readable": true,
+      "readable_json_object": true,
+      "required": true,
+      "role": "capstone_v285_authority",
+      "sha256": "378020b19aa0396534df0d56c9daba6785e44b2baba0f9d4880485add849d36d"
+    },
+    {
+      "experiment_id": "manifest",
+      "path": "ops/exclusion_manifest.yaml",
+      "present": true,
+      "readable": true,
+      "readable_json_object": null,
+      "required": true,
+      "role": "exclusion_manifest",
+      "sha256": "43a7b1e0a4b0d31a0ed05bdb2d3c7ff5bfdcb9430e4e0ab982600f87f240c822"
+    }
+  ],
+  "source_checksums": {
+    "ops/exclusion_manifest.yaml": "43a7b1e0a4b0d31a0ed05bdb2d3c7ff5bfdcb9430e4e0ab982600f87f240c822",
+    "results/experiment_3041_matrix_capstone_adversarial_flag_hygiene_v1.json": "6ab7a5d4b8d6ddfe539df85c3a115e68e14c608a392b9e2ebb19f4767f27cff3",
+    "results/experiment_3042_repair_promotion_reconciliation_v3.json": "3df130355a63becdcccf8b498c2bee9fa4b376cef04e6310e8a9181a0b7129ef",
+    "results/experiment_3052_cross_corpus_matrix_v19.json": "2a2531ffb8d8a053886c94d2a3f76f6ce67b4db4067384a010f8a66e36883880",
+    "results/experiment_3053_capstone_v285.json": "378020b19aa0396534df0d56c9daba6785e44b2baba0f9d4880485add849d36d"
+  },
+  "status_updates_written": false,
+  "still_bounded_repair_claims": [
+    {
+      "allowed_wording": "Use bounded wording only.",
+      "blockers": [
+        "matrix .285 does not support headline promotion"
+      ],
+      "claim_id": "repair_headline_status",
+      "matrix_v20_consumable": true,
+      "repair_claim_status": "bounded",
+      "repair_promotion_candidate": false,
+      "row_id": "repair:headline_status",
+      "source_artifact": "results/experiment_3042_repair_promotion_reconciliation_v3.json",
+      "source_field": "repair_claim_status",
+      "status": "bounded_evidence_not_headline"
+    },
+    {
+      "allowed_wording": "Use bounded wording only.",
+      "blockers": [
+        "matrix .285 does not support headline promotion"
+      ],
+      "claim_id": "exp3028_clean_repair_candidate",
+      "matrix_v20_consumable": true,
+      "repair_claim_status": "bounded",
+      "repair_promotion_candidate": false,
+      "row_id": "exp3029:exp3028_clean_repair_candidate",
+      "source_artifact": "results/experiment_3029_repair_promotion_boundary_audit_v2.json",
+      "source_field": "bounded_claims[exp3028_clean_repair_candidate]",
+      "status": "bounded_evidence_not_headline"
+    },
+    {
+      "allowed_wording": "Bounded repair evidence only; do not promote to headline wording.",
+      "blockers": [],
+      "claim_id": "repair_bounded",
+      "matrix_v20_consumable": true,
+      "repair_claim_status": "unresolved_bound",
+      "repair_promotion_candidate": false,
+      "row_id": "capstone:repair_bounded",
+      "source_artifact": "results/experiment_3041_matrix_capstone_adversarial_flag_hygiene_v1.json",
+      "source_field": "unresolved_bound_rows[0]",
+      "status": "bounded_evidence_not_headline"
+    }
+  ]
+}

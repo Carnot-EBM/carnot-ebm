@@ -1,0 +1,52 @@
+{
+  "artifact": "experiment_2946_sota_code_generation_continuation_v1",
+  "cuda_precondition": {
+    "available": true,
+    "device_count": 2
+  },
+  "duration_s": 120.0,
+  "exp2940_artifact_path": "results/experiment_2940_verifier_ensemble_auprc_code_corpora_v1.json",
+  "exp2940_recommendation_used": "retain",
+  "exp2940_sha256": "072207f48302cf1fdce94402766b04f303329652425379f53e486ff06d6e2985",
+  "failure_mode_analysis": null,
+  "honest_verdict": "complete: retain continuation executed with n_tasks=50, pass@1=0.2000, pass@k=0.4000",
+  "inference_substrate": "live_llm_inference",
+  "limitation_framing": null,
+  "pass_at_1": 0.2,
+  "pass_at_k": 0.4,
+  "protocol_artifact_path": "results/experiment_2946_nested_exp2910_protocol.json",
+  "protocol_artifact_sha256": null,
+  "protocol_executed": "exp2910_protocol_n_tasks_50_k8",
+  "protocol_plan": {
+    "k_candidates_per_task": 8,
+    "limitation_framing": null,
+    "n_tasks_per_corpus": 25,
+    "n_tasks_total": 50,
+    "protocol_executed": "exp2910_protocol_n_tasks_50_k8",
+    "recommendation": "retain"
+  },
+  "random_seeds_used": [
+    2910,
+    2911,
+    2912
+  ],
+  "raw_response_dir": "results/raw/experiment_2946_sota_code_generation_continuation_v1",
+  "reproducibility_checksum": "ab6716d8cc5465c128b7e3841bf0eff8315de17d095a597e95939587d9559183",
+  "required_artifact_fields": [
+    "honest_verdict",
+    "inference_substrate",
+    "exp2940_recommendation_used",
+    "protocol_executed",
+    "pass_at_1",
+    "pass_at_k",
+    "failure_mode_analysis",
+    "random_seeds_used",
+    "reproducibility_checksum",
+    "duration_s"
+  ],
+  "run_date": "20260523",
+  "schema": "carnot.sota_code_generation_continuation.v1",
+  "tests_run": [
+    "focused-pytest"
+  ]
+}

@@ -1,0 +1,331 @@
+{
+  "blockers": [
+    {
+      "error": "tool unavailable",
+      "error_class": "no_verilator",
+      "returncode": null,
+      "stage": "verilator_property_lint",
+      "stderr_summary": "tool unavailable",
+      "stdout_summary": ""
+    },
+    {
+      "error": "tool unavailable",
+      "error_class": "no_iverilog",
+      "returncode": null,
+      "stage": "iverilog_property_parse",
+      "stderr_summary": "tool unavailable",
+      "stdout_summary": ""
+    },
+    {
+      "error": "tool unavailable",
+      "error_class": "no_iverilog",
+      "returncode": null,
+      "stage": "icarus_property_simulation",
+      "stderr_summary": "tool unavailable",
+      "stdout_summary": ""
+    },
+    {
+      "error": "No local source-level lint, parse, or simulation command executed.",
+      "error_class": "no_source_level_command_executed",
+      "returncode": null,
+      "stage": "source_checks",
+      "stderr_summary": "No local source-level lint, parse, or simulation command executed.",
+      "stdout_summary": ""
+    }
+  ],
+  "claim_boundaries": {
+    "hardware_latency_measurement": "not_run",
+    "kv260_board_programming": "not_run",
+    "vivado_bitfile_generation": "not_run"
+  },
+  "experiment_id": 1517,
+  "lint_or_parse_results": [
+    {
+      "command": [],
+      "command_string": "",
+      "error": "no_verilator",
+      "error_class": "no_verilator",
+      "returncode": null,
+      "stage": "verilator_property_lint",
+      "stderr_summary": "",
+      "stdout_summary": ""
+    },
+    {
+      "command": [],
+      "command_string": "",
+      "error": "no_iverilog",
+      "error_class": "no_iverilog",
+      "returncode": null,
+      "stage": "iverilog_property_parse",
+      "stderr_summary": "",
+      "stdout_summary": ""
+    }
+  ],
+  "no_bitstream_claim": true,
+  "no_board_execution": true,
+  "path_mismatches": [
+    {
+      "actual": "results/experiment_1460_hardware_portfolio_narrowing.json",
+      "requested": "results/experiment_1460_hardware_track_priority_retro.json"
+    }
+  ],
+  "prior_artifacts": {
+    "exp1460": {
+      "kv260_source_only_boundary": true,
+      "path": "results/experiment_1460_hardware_portfolio_narrowing.json"
+    },
+    "exp1506": {
+      "path": "results/experiment_1506_115_completion_archive_116_activation.json",
+      "prior_kv260_source_track_active": true
+    }
+  },
+  "properties_defined": [
+    {
+      "category": "bounded_behavior",
+      "checks": [
+        {
+          "passed": true,
+          "path": "hardware/kv260/discrete_sb_256.v",
+          "token": "STATE_ROW"
+        },
+        {
+          "passed": true,
+          "path": "hardware/kv260/discrete_sb_256.v",
+          "token": "STATE_COMMIT"
+        },
+        {
+          "passed": true,
+          "path": "hardware/kv260/discrete_sb_256.v",
+          "token": "(step_count + 16'd1) >= max_steps_active"
+        },
+        {
+          "passed": true,
+          "path": "hardware/kv260/discrete_sb_256_property_tb.sv",
+          "token": "PROP_BOUNDED_ONE_STEP_DONE"
+        }
+      ],
+      "description": "A bounded one-step run must reach DONE after row 255.",
+      "id": "KV260-DSB-PROP-BOUNDED-001",
+      "passed": true,
+      "spec_refs": [
+        "REQ-ISING-028",
+        "SCENARIO-ISING-038"
+      ]
+    },
+    {
+      "category": "reset_behavior",
+      "checks": [
+        {
+          "passed": true,
+          "path": "hardware/kv260/discrete_sb_256.v",
+          "token": "if (rst) begin"
+        },
+        {
+          "passed": true,
+          "path": "hardware/kv260/discrete_sb_256.v",
+          "token": "state <= STATE_IDLE;"
+        },
+        {
+          "passed": true,
+          "path": "hardware/kv260/discrete_sb_256.v",
+          "token": "busy <= 1'b0;"
+        },
+        {
+          "passed": true,
+          "path": "hardware/kv260/discrete_sb_256.v",
+          "token": "step_count <= 16'd0;"
+        },
+        {
+          "passed": true,
+          "path": "hardware/kv260/discrete_sb_256_property_tb.sv",
+          "token": "PROP_RESET_KNOWN_STATE"
+        }
+      ],
+      "description": "Reset must drive IDLE, clear counters, and expose known spins.",
+      "id": "KV260-DSB-PROP-RESET-001",
+      "passed": true,
+      "spec_refs": [
+        "REQ-ISING-028",
+        "SCENARIO-ISING-038"
+      ]
+    },
+    {
+      "category": "deterministic_update_ordering",
+      "checks": [
+        {
+          "passed": true,
+          "path": "hardware/kv260/discrete_sb_256.v",
+          "token": "spin_snapshot <= spin_cur;"
+        },
+        {
+          "passed": true,
+          "path": "hardware/kv260/discrete_sb_256.v",
+          "token": "spin_next[row_idx]"
+        },
+        {
+          "passed": true,
+          "path": "hardware/kv260/discrete_sb_256.v",
+          "token": "spin_cur <= spin_next;"
+        },
+        {
+          "passed": true,
+          "path": "hardware/kv260/discrete_sb_256.v",
+          "token": "spin_out <= spin_next;"
+        },
+        {
+          "passed": true,
+          "path": "hardware/kv260/discrete_sb_256_property_tb.sv",
+          "token": "PROP_SNAPSHOT_STABLE_DURING_ROW_UPDATE"
+        }
+      ],
+      "description": "Rows must read spin_snapshot and commit spin_next only after a sweep.",
+      "id": "KV260-DSB-PROP-ORDER-001",
+      "passed": true,
+      "spec_refs": [
+        "REQ-ISING-028",
+        "SCENARIO-ISING-038"
+      ]
+    },
+    {
+      "category": "shape_width_assumptions",
+      "checks": [
+        {
+          "passed": true,
+          "path": "hardware/kv260/discrete_sb_256.v",
+          "token": "parameter integer N_VARIABLES = 256"
+        },
+        {
+          "passed": true,
+          "path": "hardware/kv260/discrete_sb_256.v",
+          "token": "parameter integer COUPLING_BITS = 8"
+        },
+        {
+          "passed": true,
+          "path": "hardware/kv260/discrete_sb_256.v",
+          "token": "COUPLING_COUNT = N_VARIABLES * N_VARIABLES"
+        },
+        {
+          "passed": true,
+          "path": "hardware/kv260/discrete_sb_256.v",
+          "token": "[15:0]"
+        },
+        {
+          "passed": true,
+          "path": "hardware/kv260/discrete_sb_256.v",
+          "token": "[4:0]"
+        },
+        {
+          "passed": true,
+          "path": "hardware/kv260/discrete_sb_256.v",
+          "token": "output reg [N_VARIABLES-1:0]"
+        },
+        {
+          "passed": true,
+          "path": "hardware/kv260/discrete_sb_256_property_tb.sv",
+          "token": "PROP_SHAPE_WIDTH_DEFAULTS"
+        }
+      ],
+      "description": "The source must preserve 256 variables and int8 dense couplings.",
+      "id": "KV260-DSB-PROP-SHAPE-001",
+      "passed": true,
+      "spec_refs": [
+        "REQ-ISING-028",
+        "SCENARIO-ISING-038"
+      ]
+    }
+  ],
+  "rtl_files_checked": [
+    {
+      "exists": true,
+      "kind": "rtl_source",
+      "path": "hardware/kv260/discrete_sb_256.v"
+    },
+    {
+      "exists": true,
+      "kind": "smoke_testbench",
+      "path": "hardware/kv260/discrete_sb_256_tb.v"
+    },
+    {
+      "exists": true,
+      "kind": "property_testbench",
+      "path": "hardware/kv260/discrete_sb_256_property_tb.sv"
+    },
+    {
+      "exists": true,
+      "kind": "existing_regression_manifest",
+      "path": "hardware/kv260/discrete_sb_regression_manifest.md"
+    },
+    {
+      "exists": false,
+      "kind": "python_helper",
+      "path": "python/carnot/hardware/discrete_sb_regression_pack.py"
+    },
+    {
+      "exists": false,
+      "kind": "python_helper",
+      "path": "python/carnot/hardware/discrete_sb_rtl_lint_sim_rerun.py"
+    }
+  ],
+  "run_date": "20260508",
+  "simulations_run": [
+    {
+      "command": [],
+      "command_string": "",
+      "error": "no_iverilog",
+      "error_class": "no_iverilog",
+      "returncode": null,
+      "stage": "icarus_property_simulation",
+      "stderr_summary": "",
+      "stdout_summary": ""
+    }
+  ],
+  "source_level_only": true,
+  "status": "complete",
+  "tool_probe_results": {
+    "iverilog": {
+      "available": false,
+      "probe": {
+        "command": [
+          "iverilog",
+          "-V"
+        ],
+        "command_string": "iverilog -V",
+        "error": "iverilog",
+        "error_class": "not_found",
+        "returncode": null,
+        "stderr_summary": "",
+        "stdout_summary": ""
+      }
+    },
+    "verilator": {
+      "available": false,
+      "probe": {
+        "command": [
+          "verilator",
+          "--version"
+        ],
+        "command_string": "verilator --version",
+        "error": "verilator",
+        "error_class": "not_found",
+        "returncode": null,
+        "stderr_summary": "",
+        "stdout_summary": ""
+      }
+    },
+    "yosys": {
+      "available": false,
+      "probe": {
+        "command": [
+          "yosys",
+          "--version"
+        ],
+        "command_string": "yosys --version",
+        "error": "yosys",
+        "error_class": "not_found",
+        "returncode": null,
+        "stderr_summary": "",
+        "stdout_summary": ""
+      }
+    }
+  }
+}

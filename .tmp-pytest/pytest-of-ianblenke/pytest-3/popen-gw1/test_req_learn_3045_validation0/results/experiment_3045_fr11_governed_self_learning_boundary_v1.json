@@ -1,0 +1,176 @@
+{
+  "allowed_edit_targets": [
+    {
+      "name": "controller_weights",
+      "principle": "bounded verifier-feedback controllers may update inspectable weights",
+      "requires_actual_training_experiment": false,
+      "scope": "allowed_controller_side"
+    },
+    {
+      "name": "trace_memory",
+      "principle": "source-traced memories may be added only with replay evidence",
+      "requires_actual_training_experiment": false,
+      "scope": "allowed_controller_side"
+    },
+    {
+      "name": "validator_thresholds",
+      "principle": "threshold changes require held-out and negative-control deltas",
+      "requires_actual_training_experiment": false,
+      "scope": "allowed_controller_side"
+    },
+    {
+      "name": "kan_locality_anchors",
+      "principle": "locality anchors may govern update locality without native KAN retraining",
+      "requires_actual_training_experiment": false,
+      "scope": "allowed_controller_side"
+    },
+    {
+      "name": "model_weights",
+      "principle": "model-weight learning must be separated from controller-side learning",
+      "requires_actual_training_experiment": true,
+      "scope": "out_of_scope"
+    }
+  ],
+  "artifact": "experiment_3045_fr11_governed_self_learning_boundary_v1",
+  "continuous_self_learning_scope": "controller-only cached-artifact self-learning governance for .285; model weights remain out of scope until a later experiment actually trains them.",
+  "duration_s": 2.5,
+  "field_principles": {
+    "allowed_edit_targets": "controller-side and model-weight learning must be separated",
+    "continuous_self_learning_scope": "FR-11 scope must be explicit",
+    "forbidden_claims": "capstone wording must not outrun evidence",
+    "fr11_governance_ready": "self-learning experiments must gate on explicit promotion rules",
+    "honest_verdict": "terminal verdict must be machine-readable",
+    "inference_substrate": "aggregation work must declare no live model inference",
+    "non_promotion_criteria": "failure modes must be predeclared",
+    "prior_evidence_summary": "governance must trace to exp3032/exp3033",
+    "required_metrics": "downstream self-learning must be measurable"
+  },
+  "forbidden_claims": [
+    "native model-weight learning or model-weight learning from Exp 3032/3033",
+    "live LLM inference, live model adaptation, or live model retraining",
+    "broad autonomous self-learning beyond controller-only cached replay",
+    "KAN retraining or KAN structural learning from an existing locality probe",
+    "unconditional FR-11 promotion without Exp 3046 metric and rollback gates"
+  ],
+  "fr11_governance_ready": true,
+  "honest_verdict": "complete_fr11_governance_ready_for_exp3046",
+  "inference_substrate": {
+    "aggregation_only": true,
+    "cached_artifacts_only": true,
+    "controller_weight_training": false,
+    "live_llm_inference": false,
+    "local_gguf_inference": false,
+    "mode": "cached_artifact_governance_aggregation",
+    "model_weight_mutation": false,
+    "model_weight_training": false
+  },
+  "non_promotion_criteria": [
+    {
+      "automatic": true,
+      "criterion": "deny promotion if the scoring channel can grade its own update path",
+      "name": "tautology"
+    },
+    {
+      "automatic": true,
+      "criterion": "deny promotion if generated labels are accepted without independent checks",
+      "name": "self_confirming_labels"
+    },
+    {
+      "automatic": true,
+      "criterion": "deny promotion if train/update families overlap the held-out family",
+      "name": "family_leakage"
+    },
+    {
+      "automatic": true,
+      "criterion": "deny promotion if no-feedback and shuffled controls are absent",
+      "name": "missing_negative_controls"
+    }
+  ],
+  "prior_evidence_summary": {
+    "exp3032": {
+      "artifact": "experiment_3032_fr11_heldout_dvi_replay_v2",
+      "evidence_type": "heldout_cached_exact_trace_replay",
+      "false_negative_delta": 0.0,
+      "false_positive_delta": -1.0,
+      "feasible_infeasible_auc_delta": 0.5,
+      "heldout_trace_count": 8,
+      "limits": {
+        "cached_artifacts_only": true,
+        "controller_only": true,
+        "live_llm_inference": false,
+        "model_weight_mutation": false,
+        "model_weight_training": false
+      },
+      "ready": true,
+      "shuffled_feedback_delta": -0.5,
+      "tautology_risk_cleared": true
+    },
+    "exp3033": {
+      "artifact": "experiment_3033_fr11_nonforgetting_negative_control_stress_v1",
+      "evidence_type": "controller_only_nonforgetting_stress",
+      "heldout_delta_after_update": 0.875,
+      "kan_locality_probe_available": true,
+      "limits": {
+        "cached_artifacts_only": true,
+        "controller_only": true,
+        "live_llm_inference": false,
+        "model_weight_mutation": false,
+        "model_weight_training": false
+      },
+      "no_feedback_delta": 0.0,
+      "prior_retention_delta": 0.0,
+      "promotable": true,
+      "ready": true,
+      "rollback_count_observed": 0,
+      "shuffled_control_delta": -2.125
+    },
+    "limits": "The prior evidence is controller-only cached replay. It supports a gated Exp 3046 protocol, but not native model-weight learning, broad continuous self-learning, or live inference claims."
+  },
+  "required_metrics": [
+    {
+      "measurement_rule": "held-out family utility must improve after update",
+      "name": "family_holdout_delta",
+      "required_for_exp3046": true
+    },
+    {
+      "measurement_rule": "previous exact traces must not regress",
+      "name": "prior_retention_delta",
+      "required_for_exp3046": true
+    },
+    {
+      "measurement_rule": "replay without feedback must not improve",
+      "name": "no_feedback_delta",
+      "required_for_exp3046": true
+    },
+    {
+      "measurement_rule": "shuffled labels must not improve the controller",
+      "name": "shuffled_control_delta",
+      "required_for_exp3046": true
+    },
+    {
+      "measurement_rule": "graph size and contradiction rate must be logged",
+      "name": "contradiction_graph_size_rate",
+      "required_for_exp3046": true
+    },
+    {
+      "measurement_rule": "all automatic rollbacks must be counted",
+      "name": "rollback_count",
+      "required_for_exp3046": true
+    },
+    {
+      "measurement_rule": "delayed replay must expose late regressions",
+      "name": "delayed_regression_delta",
+      "required_for_exp3046": true
+    },
+    {
+      "measurement_rule": "every promoted update needs source-trace coverage",
+      "name": "source_trace_completeness",
+      "required_for_exp3046": true
+    }
+  ],
+  "run_date": "20260525",
+  "schema": "carnot.fr11.governed_self_learning_boundary.v1",
+  "tests_run": [
+    "focused-req-3045"
+  ]
+}

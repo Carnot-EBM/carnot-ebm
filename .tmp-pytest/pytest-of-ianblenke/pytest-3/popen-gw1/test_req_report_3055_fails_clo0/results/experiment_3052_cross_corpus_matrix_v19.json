@@ -1,0 +1,95 @@
+{
+  "artifact": "experiment_3052_cross_corpus_matrix_v19",
+  "honest_verdict": "complete: matrix_v19_ready=true",
+  "matrix_v19_ready": true,
+  "repair_claim_status": "bounded",
+  "rows": [
+    {
+      "blocker_class": "bounded_claim",
+      "claim_scope": "repair_headline_boundary",
+      "evidence_class": "repair_reconciliation",
+      "row_id": "repair:headline_status",
+      "source_artifact": "results/experiment_3042_repair_promotion_reconciliation_v3.json",
+      "source_field": "repair_claim_status",
+      "status": "bounded",
+      "summary": {
+        "evidence": {
+          "allowed_wording": "Use bounded wording only.",
+          "blockers": [
+            "matrix .285 does not support headline promotion"
+          ],
+          "claim_id": "repair_headline_status",
+          "classification": "bounded",
+          "observed_support_fields": {
+            "matrix_repair_status": "bounded"
+          },
+          "proposed_repair_claim": "Repair headline status remains bounded.",
+          "required_support_fields": [
+            "matrix repair status clean"
+          ]
+        },
+        "remaining_blocker_count": 9,
+        "repair_claim_status": "bounded",
+        "repair_promotion_candidate": false
+      }
+    },
+    {
+      "blocker_class": "retired_claim",
+      "claim_scope": "retired_repair_claim",
+      "evidence_class": "repair_retirement_boundary",
+      "row_id": "exp3029:headline_sota_repair_clean_methodology",
+      "source_artifact": "results/experiment_3029_repair_promotion_boundary_audit_v2.json",
+      "status": "retired",
+      "summary": {
+        "evidence": {
+          "allowed_wording": "Use bounded wording only.",
+          "blockers": [
+            "matrix .285 does not support headline promotion"
+          ],
+          "claim_id": "headline_sota_repair_clean_methodology",
+          "classification": "retired",
+          "observed_support_fields": {
+            "matrix_repair_status": "bounded"
+          },
+          "proposed_repair_claim": "The repair result is promotable as a headline SOTA repair claim.",
+          "required_support_fields": [
+            "matrix repair status clean"
+          ]
+        },
+        "remaining_blocker_count": 9,
+        "repair_claim_status": "bounded",
+        "repair_promotion_candidate": false
+      }
+    },
+    {
+      "blocker_class": "retired_claim",
+      "claim_scope": "retired_repair_claim",
+      "evidence_class": "repair_retirement_boundary",
+      "row_id": "exp3029:unsupported_exp3016_headline_repair_promotion",
+      "source_artifact": "results/experiment_3029_repair_promotion_boundary_audit_v2.json",
+      "source_field": "retired_or_blocked_claims[unsupported_exp3016_headline_repair_promotion]",
+      "status": "retired",
+      "summary": {
+        "evidence": {
+          "allowed_wording": "Use bounded wording only.",
+          "blockers": [
+            "matrix .285 does not support headline promotion"
+          ],
+          "claim_id": "unsupported_exp3016_headline_repair_promotion",
+          "classification": "retired",
+          "observed_support_fields": {
+            "matrix_repair_status": "bounded"
+          },
+          "proposed_repair_claim": "The original Exp 3016 headline repair claim is promotable without the Exp 3028 boundary.",
+          "required_support_fields": [
+            "matrix repair status clean"
+          ]
+        },
+        "remaining_blocker_count": 9,
+        "repair_claim_status": "bounded",
+        "repair_promotion_candidate": false
+      }
+    }
+  ],
+  "rows_total": 3
+}

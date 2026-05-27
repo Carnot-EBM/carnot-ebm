@@ -1,0 +1,275 @@
+{
+  "artifact": "experiment_2922_capstone_v275",
+  "blocked_artifacts": [
+    "exp2914"
+  ],
+  "cited_upstream_artifacts": [
+    {
+      "artifact_path": "results/experiment_2909_archive_v274_activate_v275.json",
+      "experiment_id": "exp2909",
+      "present": true,
+      "sha256": "9f7dddbd271f18f94e9a3943dc449ff63df8ede523b7fe58fb938f263520f03a"
+    },
+    {
+      "artifact_path": "results/experiment_2910_sota_code_generation_corrigendum_v2.json",
+      "experiment_id": "exp2910",
+      "present": true,
+      "sha256": "a34cb0e6296a0b73174214b9e8f23ba8831a18543f8c9531e29a44d99e3710a0"
+    },
+    {
+      "artifact_path": "results/experiment_2911_code_hallucination_taxonomy_verifier_v1.json",
+      "experiment_id": "exp2911",
+      "present": true,
+      "sha256": "f846f8c21d03a101857aec3243ac057f60bbe0270f3c7fa6e0de12d9e9074fdd"
+    },
+    {
+      "artifact_path": "results/experiment_2912_kv260_same_basis_cpu_gibbs_baseline_v1.json",
+      "experiment_id": "exp2912",
+      "present": true,
+      "sha256": "501da9370e2cca257e1f5332d283f023955d2cbd5b39689a9fb1a741d4a312fb"
+    },
+    {
+      "artifact_path": "results/experiment_2913_kv260_hardware_cpu_claim_boundary_v1.json",
+      "experiment_id": "exp2913",
+      "present": true,
+      "sha256": "99fec83ace7a806d3665f40b443c6a0f6fa98d9b7ee790591ad287ec38912c7d"
+    },
+    {
+      "artifact_path": "results/experiment_2914_gatemate_toolchain_preflight_v2.json",
+      "experiment_id": "exp2914",
+      "present": true,
+      "sha256": "4b6ca2d83eb7a7b99b03347d029b2aff148edfcee53132051994181c6161d692"
+    },
+    {
+      "artifact_path": "results/experiment_2915_gatemate_n16_ising_tile_bitstream_build_v2.json",
+      "experiment_id": "exp2915",
+      "present": false,
+      "sha256": null
+    },
+    {
+      "artifact_path": "results/experiment_2916_thrml_kv260_sampler_parity_v1.json",
+      "experiment_id": "exp2916",
+      "present": true,
+      "sha256": "429236d7a5a6c9413b52c339a53b2bec3ed05a101a5dfb1ec7d8e6c9f6473cc3"
+    },
+    {
+      "artifact_path": "results/experiment_2917_spilled_energy_logit_detector_micro_panel_v1.json",
+      "experiment_id": "exp2917",
+      "present": true,
+      "sha256": "fba95b2f98db1d01944ac5af9ca23d6b3881ca41f90c645df84603eac8edb9c7"
+    },
+    {
+      "artifact_path": "results/experiment_2918_fr11_verifiable_process_rewards_self_learning_v1.json",
+      "experiment_id": "exp2918",
+      "present": true,
+      "sha256": "8cc438f73de4569b901ff26b06fa8789afd20db2c4c11109fcbcbe0f7f1d56c6"
+    },
+    {
+      "artifact_path": "results/experiment_2919_constraintbench_mini_direct_optimization_v1.json",
+      "experiment_id": "exp2919",
+      "present": true,
+      "sha256": "781fcdb4237d7e5828f67fdcdad9f3c8c1284b6bac7b2adcd787a55640d84a2c"
+    },
+    {
+      "artifact_path": "results/experiment_2920_opencomputer_style_state_verifier_harness_v1.json",
+      "experiment_id": "exp2920",
+      "present": true,
+      "sha256": "baee666eb525d832b3b98fd9725fb2869568a8f240c56e1435c2fc98ddb9bb25"
+    },
+    {
+      "artifact_path": "results/experiment_2921_cross_corpus_matrix_v9_paper_boundary_v1.json",
+      "experiment_id": "exp2921",
+      "present": true,
+      "sha256": "82168ca082ce4f90073aabef816701bd51fa199db113e5229151c3e66be2aea7"
+    }
+  ],
+  "clean_artifacts": [
+    "exp2909",
+    "exp2910",
+    "exp2912",
+    "exp2913",
+    "exp2918",
+    "exp2920",
+    "exp2921"
+  ],
+  "code_hallucination_verifier_ready": true,
+  "codegen_claim_boundary": {
+    "aggregate_pass_at_1": 0.075,
+    "aggregate_pass_at_k": 0.175,
+    "candidate_generation_clean": true,
+    "claim_boundary": "The SOTA code row is repaired only for Exp 2910's bounded pass@1 and pass@k metrics. Flagged taxonomy or ConstraintBench evidence remains non-headline until its own methodology flags are cleared.",
+    "code_hallucination_verifier_ready": true,
+    "codegen_corrigendum_ready": true,
+    "constraintbench_mini_ready": true,
+    "pass_at_k_exceeds_pass_at_1": true,
+    "remaining_methodology_risks": [
+      "exp2911:DURATION_TOO_SHORT:critical",
+      "exp2919:TAUTOLOGY:critical"
+    ],
+    "sota_code_row_repaired": true
+  },
+  "codegen_corrigendum_ready": true,
+  "constraintbench_mini_ready": true,
+  "cross_corpus_matrix_v9_built": true,
+  "diagnostic_only_artifacts": [
+    "exp2916",
+    "exp2917"
+  ],
+  "duration_s": 0.25,
+  "files_not_modified": [
+    "scripts/research_conductor.py",
+    "ops/status.md",
+    "ops/changelog.md",
+    "_bmad/traceability.md"
+  ],
+  "flagged_artifacts": [
+    "exp2911",
+    "exp2919"
+  ],
+  "fr11_claim_boundary": {
+    "claim_boundary": "FR-11 has a clean continuous self-learning row when verifier process rewards update the online replay/scheduler state, report delta and forgetting metrics, and do not mutate model weights.",
+    "delta_energy_proxy": 0.148821213249,
+    "delta_overall": 0.85590778098,
+    "forgetting_rate": 0.0,
+    "fr11_self_learning_clean": true,
+    "hardware_replay_used": true,
+    "model_weights_mutated": false,
+    "online_self_learning_ready": true,
+    "online_update_performed": true,
+    "replay_scheduler_updated": true
+  },
+  "fr11_self_learning_clean": true,
+  "gatemate_bitstream_built": false,
+  "gatemate_toolchain_ready": false,
+  "hardware_baselines_ready": true,
+  "hardware_claim_boundary": {
+    "claim_boundary": "A numeric KV260/CPU speedup claim is eligible only for the matched n=64 sparse Ising workload. GateMate remains non-claimable until a bitstream artifact exists, and THRML remains simulator-only with no TSU hardware claim.",
+    "gatemate_bitstream_built": false,
+    "gatemate_toolchain_ready": false,
+    "hardware_baselines_ready": true,
+    "hardware_speedup_claim_eligible": true,
+    "kv260_claim_boundary_ready": true,
+    "no_tsu_hardware_claim": true,
+    "paper_claim_boundary": "Bounded n=64 KV260/CPU speedup claim only.",
+    "same_basis_cpu_baseline_ready": true,
+    "same_basis_verified": true,
+    "speedup_claim_made": true,
+    "speedup_ratio_median_by_sample_count": {
+      "100": 19.13
+    },
+    "thrml_kv260_parity_ready": true
+  },
+  "hardware_speedup_claim_eligible": true,
+  "headline_eligible_rows": [
+    "corpus:FoVer",
+    "corpus:HaluEval_FEVER",
+    "exp2910_sota_codegen",
+    "exp2913_kv260_claim_boundary",
+    "exp2918_fr11_process_rewards",
+    "exp2920_state_verifier_harness"
+  ],
+  "honest_verdict": "complete: .275 capstone synthesized; paper_ready=true; hardware_speedup_claim_eligible=true; sota_code_row_repaired=true; fr11_self_learning_clean=true; clean_artifacts=7; flagged_artifacts=2; blocked_artifacts=1; missing_artifacts=1; diagnostic_only_artifacts=2",
+  "inference_substrate": "aggregation_from_upstream_artifacts",
+  "kv260_claim_boundary_ready": true,
+  "milestone": "2026.05.275",
+  "missing_artifacts": [
+    "exp2915"
+  ],
+  "no_tsu_hardware_claim": true,
+  "online_self_learning_ready": true,
+  "paper_claim_boundary_ready": true,
+  "paper_ready": true,
+  "pilot_only_artifacts": [],
+  "run_date": "20260523",
+  "same_basis_cpu_baseline_ready": true,
+  "schema": "carnot.milestone_capstone.v275",
+  "sota_code_row_repaired": true,
+  "source_artifact_status": {
+    "exp2909": {
+      "honest_verdict": "complete: archive_ready=true; archived_milestone=2026.05.274; activated_milestone=2026.05.275",
+      "path": "results/experiment_2909_archive_v274_activate_v275.json",
+      "present": true,
+      "status": "clean"
+    },
+    "exp2910": {
+      "honest_verdict": "complete: SOTA code-generation corrigendum executed",
+      "path": "results/experiment_2910_sota_code_generation_corrigendum_v2.json",
+      "present": true,
+      "status": "clean"
+    },
+    "exp2911": {
+      "honest_verdict": "complete: Exp 2910 code candidates labeled",
+      "path": "results/experiment_2911_code_hallucination_taxonomy_verifier_v1.json",
+      "present": true,
+      "status": "flagged"
+    },
+    "exp2912": {
+      "honest_verdict": "complete: same_basis_cpu_gibbs_baseline_ready_no_speedup_claim",
+      "path": "results/experiment_2912_kv260_same_basis_cpu_gibbs_baseline_v1.json",
+      "present": true,
+      "status": "clean"
+    },
+    "exp2913": {
+      "honest_verdict": "complete: kv260_same_basis_hardware_cpu_speedup_claim_eligible",
+      "path": "results/experiment_2913_kv260_hardware_cpu_claim_boundary_v1.json",
+      "present": true,
+      "status": "clean"
+    },
+    "exp2914": {
+      "honest_verdict": "blocked_gatemate_toolchain_missing",
+      "path": "results/experiment_2914_gatemate_toolchain_preflight_v2.json",
+      "present": true,
+      "status": "blocked"
+    },
+    "exp2915": {
+      "honest_verdict": null,
+      "path": "results/experiment_2915_gatemate_n16_ising_tile_bitstream_build_v2.json",
+      "present": false,
+      "status": "missing"
+    },
+    "exp2916": {
+      "honest_verdict": "complete: thrml_kv260_n64_simulator_parity_ready_no_hardware_claim",
+      "path": "results/experiment_2916_thrml_kv260_sampler_parity_v1.json",
+      "present": true,
+      "status": "diagnostic_only"
+    },
+    "exp2917": {
+      "honest_verdict": "complete: spilled_energy_micro_panel_diagnostic_ready",
+      "path": "results/experiment_2917_spilled_energy_logit_detector_micro_panel_v1.json",
+      "present": true,
+      "status": "diagnostic_only"
+    },
+    "exp2918": {
+      "honest_verdict": "complete: verifier_process_rewards_updated_replay_scheduler",
+      "path": "results/experiment_2918_fr11_verifiable_process_rewards_self_learning_v1.json",
+      "present": true,
+      "status": "clean"
+    },
+    "exp2919": {
+      "honest_verdict": "complete: constraintbench mini direct optimization measured",
+      "path": "results/experiment_2919_constraintbench_mini_direct_optimization_v1.json",
+      "present": true,
+      "status": "flagged"
+    },
+    "exp2920": {
+      "honest_verdict": "complete: deterministic OpenComputer-style state verifier harness ready",
+      "path": "results/experiment_2920_opencomputer_style_state_verifier_harness_v1.json",
+      "present": true,
+      "status": "clean"
+    },
+    "exp2921": {
+      "honest_verdict": "complete: cross-corpus matrix v9 and paper-v6 claim boundary built",
+      "path": "results/experiment_2921_cross_corpus_matrix_v9_paper_boundary_v1.json",
+      "present": true,
+      "status": "clean"
+    }
+  },
+  "spilled_energy_micro_panel_ready": true,
+  "state_verifier_harness_ready": true,
+  "thrml_kv260_parity_ready": true,
+  "top_3_next_actions": [
+    "Clear the code hallucination taxonomy verifier methodology flags or rerun it with explicit deterministic-verifier provenance so its ready boolean can become headline-supporting evidence.",
+    "Rerun ConstraintBench mini with reproducibility checksum, non-tautological feasibility/syntax metrics, and live-inference duration/provenance that passes adversarial verification.",
+    "Provision the GateMate toolchain, rerun the n=16 Ising tile build, and produce a bitstream SHA before any flash or hardware claim."
+  ]
+}

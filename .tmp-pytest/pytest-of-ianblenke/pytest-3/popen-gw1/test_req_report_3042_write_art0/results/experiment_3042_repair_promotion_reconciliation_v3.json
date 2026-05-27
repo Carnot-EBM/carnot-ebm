@@ -1,0 +1,233 @@
+{
+  "accepted_source_artifacts": [
+    {
+      "experiment_id": "exp3028",
+      "path": "results/experiment_3028_sota_repair_clean_methodology_rerun_v2.json",
+      "present": true,
+      "readable_json_object": true,
+      "required": true,
+      "role": "clean_repair_evidence",
+      "sha256": "a206136b1779837f4d4ed91e0cc5b33de8bd0f679764fdc0603bd1790ef1aaac"
+    },
+    {
+      "experiment_id": "exp3029",
+      "path": "results/experiment_3029_repair_promotion_boundary_audit_v2.json",
+      "present": true,
+      "readable_json_object": true,
+      "required": true,
+      "role": "prior_repair_boundary",
+      "sha256": "9bab634f796a8cbdf28a53dc0378d0d0f525b0aefabfb97221c651cb84b7538f"
+    },
+    {
+      "experiment_id": "exp3038",
+      "path": "results/experiment_3038_cross_corpus_matrix_v18.json",
+      "present": true,
+      "readable_json_object": true,
+      "required": true,
+      "role": "matrix_v18_context",
+      "sha256": "7513e55699459332af7669f712e083d374ab33d3854a579d1ac6ab1094dd872f"
+    },
+    {
+      "experiment_id": "exp3039",
+      "path": "results/experiment_3039_capstone_v284.json",
+      "present": true,
+      "readable_json_object": true,
+      "required": true,
+      "role": "capstone_v284_context",
+      "sha256": "e6bbf3b7270badf6a31fdd8a99c07141a273b9c525849667218c2f89d50afd35"
+    },
+    {
+      "experiment_id": "exp3041",
+      "path": "results/experiment_3041_matrix_capstone_adversarial_flag_hygiene_v1.json",
+      "present": true,
+      "readable_json_object": true,
+      "required": true,
+      "role": "flag_hygiene_authority",
+      "sha256": "83fbb017ed959b5832185641b1a255f7678a9af0ecdefc19dfbdc7fbeb00bfb2"
+    }
+  ],
+  "aggregation_false_positives_removed": [
+    {
+      "blocking": false,
+      "classification": "aggregation_false_positive",
+      "evidence": {
+        "flags": [
+          {
+            "detail": "DURATION_TOO_SHORT fixture detail",
+            "kind": "DURATION_TOO_SHORT",
+            "severity": "critical"
+          }
+        ]
+      },
+      "experiment_id": "exp3029",
+      "rationale": "repair fixture blocker",
+      "row_id": "exp3029:top_level_aggregation_flags",
+      "source_artifact": "results/experiment_3029_repair_promotion_boundary_audit_v2.json",
+      "source_field": "corrigendum_pending"
+    },
+    {
+      "blocking": false,
+      "classification": "aggregation_false_positive",
+      "evidence": {
+        "flags": [
+          {
+            "detail": "METHODOLOGY_MISSING fixture detail",
+            "kind": "METHODOLOGY_MISSING",
+            "severity": "warn"
+          }
+        ]
+      },
+      "experiment_id": "exp3038",
+      "rationale": "repair fixture blocker",
+      "row_id": "exp3038:top_level_aggregation_flags",
+      "source_artifact": "results/experiment_3038_cross_corpus_matrix_v18.json",
+      "source_field": "corrigendum_pending"
+    }
+  ],
+  "artifact": "experiment_3042_repair_promotion_reconciliation_v3",
+  "duration_s": 0.5,
+  "exp3028_evidence_checks": {
+    "acceptance_controller_evidence_present": true,
+    "clean_repair_claim_promotable_candidate": true,
+    "clean_repair_rerun_ready": true,
+    "deltas_present": true,
+    "false_accept_nonregression": true,
+    "intent_drift_clean": true,
+    "legacy_smoke_only_absent": true,
+    "model_specs_have_identity": true,
+    "model_specs_present": true,
+    "nonnegative_pass_at_k_delta": true,
+    "positive_pass_at_1_delta": true,
+    "repair_controller_clean": true,
+    "reproducibility_checksum_present": true,
+    "syntax_schema_nonregression": true,
+    "tautology_gate_clean": true,
+    "transcript_counts_present": true,
+    "transcript_counts_sufficient": true
+  },
+  "honest_verdict": "complete: repair_claim_status=bounded; repair_reconciliation_ready=true; repair_promotion_candidate=false; remaining_blockers=5; aggregation_false_positives_removed=2",
+  "inference_substrate": {
+    "executes_conductor": false,
+    "executes_hardware": false,
+    "executes_models": false,
+    "kind": "aggregation_from_upstream_artifacts",
+    "no_live_llm_inference": true,
+    "source": "checked_in_artifacts"
+  },
+  "milestone": "2026.05.285",
+  "missing_source_artifacts": [],
+  "no_historical_artifact_rewrite": true,
+  "no_new_board_flash": true,
+  "no_new_hardware_run": true,
+  "no_new_model_execution": true,
+  "no_new_solver_run": true,
+  "no_new_synthesis_run": true,
+  "no_new_verifier_run": true,
+  "ops_docs_reconciliation_left_to_conductor": true,
+  "prior_repair_status": {
+    "capstone_paper_ready": false,
+    "capstone_repair_claim_status": "bounded",
+    "exp3029_repair_claim_status": "bounded",
+    "matrix_v18_exp3028_status": "flagged",
+    "matrix_v18_exp3029_status": "flagged"
+  },
+  "remaining_blockers": [
+    {
+      "blocking": true,
+      "classification": "true_blocker",
+      "evidence": [
+        {
+          "detail": "TAUTOLOGY fixture detail",
+          "kind": "TAUTOLOGY",
+          "severity": "critical"
+        },
+        {
+          "detail": "DURATION_TOO_SHORT fixture detail",
+          "kind": "DURATION_TOO_SHORT",
+          "severity": "critical"
+        }
+      ],
+      "experiment_id": "exp3028",
+      "rationale": "repair fixture blocker",
+      "row_id": "exp3028:adversarial_flags",
+      "source_artifact": "results/experiment_3028_sota_repair_clean_methodology_rerun_v2.json",
+      "source_field": "corrigendum_pending"
+    },
+    {
+      "blocking": true,
+      "classification": "missing_metadata",
+      "evidence": [
+        {
+          "detail": "METHODOLOGY_MISSING fixture detail",
+          "kind": "METHODOLOGY_MISSING",
+          "severity": "warn"
+        }
+      ],
+      "experiment_id": "exp3028",
+      "rationale": "repair fixture blocker",
+      "row_id": "exp3028:methodology_missing",
+      "source_artifact": "results/experiment_3028_sota_repair_clean_methodology_rerun_v2.json",
+      "source_field": "corrigendum_pending[METHODOLOGY_MISSING]"
+    },
+    {
+      "blocking": true,
+      "classification": "unresolved_bound",
+      "evidence": {
+        "fixture": "exp3029:exp3028_clean_repair_candidate"
+      },
+      "experiment_id": "exp3029",
+      "rationale": "repair fixture blocker",
+      "row_id": "exp3029:exp3028_clean_repair_candidate",
+      "source_artifact": "results/experiment_3029_repair_promotion_boundary_audit_v2.json",
+      "source_field": "bounded_claims[exp3028_clean_repair_candidate]"
+    },
+    {
+      "blocking": true,
+      "classification": "unresolved_bound",
+      "evidence": {
+        "fixture": "capstone:repair_bounded"
+      },
+      "experiment_id": "exp3039",
+      "rationale": "Capstone repair status remains bounded.",
+      "row_id": "capstone:repair_bounded",
+      "source_artifact": "results/experiment_3039_capstone_v284.json",
+      "source_field": "blockers_remaining[repair]"
+    },
+    {
+      "blocking": true,
+      "classification": "unresolved_bound",
+      "evidence": {
+        "fixture": "capstone:repair_promotable_check_failed"
+      },
+      "experiment_id": "exp3039",
+      "rationale": "repair fixture blocker",
+      "row_id": "capstone:repair_promotable_check_failed",
+      "source_artifact": "results/experiment_3039_capstone_v284.json",
+      "source_field": "paper_ready_checks[repair_promotable]"
+    }
+  ],
+  "repair_claim_status": "bounded",
+  "repair_delta_summary": {
+    "candidate_intent_drift_count": 14,
+    "false_accept_delta": 0.0,
+    "intent_drift_count": 0,
+    "n_live_transcripts": 24,
+    "n_tasks": 24,
+    "pass_at_1_delta": 0.375,
+    "pass_at_k_delta": 0.375,
+    "schema_failure_rate_delta": 0.0,
+    "syntax_failure_rate_delta": 0.0
+  },
+  "repair_promotion_candidate": false,
+  "repair_reconciliation_ready": true,
+  "run_date": "20260525",
+  "schema": "carnot.repair_promotion.reconciliation.v3",
+  "source_checksums": {
+    "results/experiment_3028_sota_repair_clean_methodology_rerun_v2.json": "a206136b1779837f4d4ed91e0cc5b33de8bd0f679764fdc0603bd1790ef1aaac",
+    "results/experiment_3029_repair_promotion_boundary_audit_v2.json": "9bab634f796a8cbdf28a53dc0378d0d0f525b0aefabfb97221c651cb84b7538f",
+    "results/experiment_3038_cross_corpus_matrix_v18.json": "7513e55699459332af7669f712e083d374ab33d3854a579d1ac6ab1094dd872f",
+    "results/experiment_3039_capstone_v284.json": "e6bbf3b7270badf6a31fdd8a99c07141a273b9c525849667218c2f89d50afd35",
+    "results/experiment_3041_matrix_capstone_adversarial_flag_hygiene_v1.json": "83fbb017ed959b5832185641b1a255f7678a9af0ecdefc19dfbdc7fbeb00bfb2"
+  },
+  "status_updates_written": false
+}

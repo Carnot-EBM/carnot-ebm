@@ -1,0 +1,148 @@
+{
+  "activation_performed_by_this_task": false,
+  "archive_v284_activate_v285_ready": true,
+  "artifact": "experiment_3040_archive_v284_activate_v285",
+  "blocked_reasons": [],
+  "carry_forward_blockers": [
+    {
+      "expected_carry_forward_value": "bounded",
+      "field": "repair_claim_status",
+      "matches_expected": true,
+      "source": "results/experiment_3039_capstone_v284.json",
+      "value": "bounded"
+    },
+    {
+      "expected_carry_forward_value": "controller_only_promotable",
+      "field": "fr11_self_learning_status",
+      "matches_expected": true,
+      "source": "results/experiment_3039_capstone_v284.json",
+      "value": "controller_only_promotable"
+    },
+    {
+      "expected_carry_forward_value": "blocked_pinout_missing_bounded",
+      "field": "gatemate_status",
+      "matches_expected": true,
+      "source": "results/experiment_3039_capstone_v284.json",
+      "value": "blocked_pinout_missing_bounded"
+    }
+  ],
+  "duration_s": 0.125,
+  "honest_verdict": "complete: archive_v284_activate_v285_ready=true; prior_capstone_ready=true; prior_paper_ready=false; next_milestone=2026.05.285; roadmap_source=research-roadmap-next.yaml",
+  "inference_substrate": {
+    "executes_conductor": false,
+    "executes_hardware": false,
+    "executes_models": false,
+    "kind": "aggregation_from_upstream_artifacts",
+    "source": "checked_in_artifacts"
+  },
+  "missing_source_artifacts": [],
+  "next_milestone": "2026.05.285",
+  "no_new_board_flash": true,
+  "no_new_model_execution": true,
+  "no_new_solver_run": true,
+  "no_new_synthesis_run": true,
+  "no_new_verifier_run": true,
+  "no_push": true,
+  "ops_changelog_updated": false,
+  "ops_docs_reconciliation_left_to_conductor": true,
+  "ops_status_updated": false,
+  "prior_capstone_ready": true,
+  "prior_milestone": "2026.05.284",
+  "prior_paper_ready": false,
+  "prior_paper_ready_source_field_present": true,
+  "research_roadmap_yaml_modified": false,
+  "roadmap_handoff": {
+    "active_roadmap_milestone": "2026.05.285",
+    "expected_milestone": "2026.05.285",
+    "expected_milestone_doc": "openspec/change-proposals/research-roadmap-vNEXT.md",
+    "milestone_doc_matches": true,
+    "milestone_matches": true,
+    "non_empty_tasks": true,
+    "observed_milestone": "2026.05.285",
+    "observed_milestone_doc": "openspec/change-proposals/research-roadmap-vNEXT.md",
+    "requested_staged_roadmap_path": "research-roadmap-next.yaml",
+    "requested_staged_roadmap_present": true,
+    "source_path": "research-roadmap-next.yaml",
+    "source_present": true,
+    "task_ids": [
+      "exp3040-archive-v284-activate-v285"
+    ],
+    "used_active_roadmap_fallback": false
+  },
+  "run_date": "20260525",
+  "schema": "carnot.archive_activation.v284_to_v285.v1",
+  "scripts_research_conductor_modified": false,
+  "source_artifacts": [
+    {
+      "path": "results/experiment_3038_cross_corpus_matrix_v18.json",
+      "present": true,
+      "role": "matrix_v18",
+      "sha256": "acf227736a0eb7bee58717372626f67672a3f3067e83c9f4d9fc44496390d0f2"
+    },
+    {
+      "path": "results/experiment_3039_capstone_v284.json",
+      "present": true,
+      "role": "capstone_v284",
+      "sha256": "b4430b76d603d1f6e4f2bb828ed7e86bc32569f6afcbf6047ab46fda3d9ab5bb"
+    },
+    {
+      "path": "research-roadmap-next.yaml",
+      "present": true,
+      "role": "staged_roadmap",
+      "sha256": "619188f38870ede23353f263a4114e78240bde9c9105c604a5aa7def920506a4"
+    },
+    {
+      "path": "research-roadmap.yaml",
+      "present": true,
+      "role": "active_roadmap",
+      "sha256": "619188f38870ede23353f263a4114e78240bde9c9105c604a5aa7def920506a4"
+    },
+    {
+      "path": "openspec/change-proposals/research-roadmap-vNEXT.md",
+      "present": true,
+      "role": "vnext_doc",
+      "sha256": "cd6b0ea5bc07b791ec2e8fed8020f3cb203c955a2320f7c15ac81c6236d6bcdb"
+    },
+    {
+      "path": "scripts/research_conductor.py",
+      "present": true,
+      "role": "research_conductor",
+      "sha256": "65b4c225a375fd5671af37d69057246b42512efe5e668d58e2010bd518e2f007"
+    },
+    {
+      "path": "ops/status.md",
+      "present": true,
+      "role": "ops_status",
+      "sha256": "72db0c8249fc36439b3b9a2a034e11dbca2b4c1341e1055d279d50f51ddc63a3"
+    },
+    {
+      "path": "ops/changelog.md",
+      "present": true,
+      "role": "ops_changelog",
+      "sha256": "3a5a356304d296ad0106632b9660cb13188debe483af721a17002308f95fec4a"
+    }
+  ],
+  "source_checksums": {
+    "openspec/change-proposals/research-roadmap-vNEXT.md": "cd6b0ea5bc07b791ec2e8fed8020f3cb203c955a2320f7c15ac81c6236d6bcdb",
+    "ops/changelog.md": "3a5a356304d296ad0106632b9660cb13188debe483af721a17002308f95fec4a",
+    "ops/status.md": "72db0c8249fc36439b3b9a2a034e11dbca2b4c1341e1055d279d50f51ddc63a3",
+    "research-roadmap-next.yaml": "619188f38870ede23353f263a4114e78240bde9c9105c604a5aa7def920506a4",
+    "research-roadmap.yaml": "619188f38870ede23353f263a4114e78240bde9c9105c604a5aa7def920506a4",
+    "results/experiment_3038_cross_corpus_matrix_v18.json": "acf227736a0eb7bee58717372626f67672a3f3067e83c9f4d9fc44496390d0f2",
+    "results/experiment_3039_capstone_v284.json": "b4430b76d603d1f6e4f2bb828ed7e86bc32569f6afcbf6047ab46fda3d9ab5bb",
+    "scripts/research_conductor.py": "65b4c225a375fd5671af37d69057246b42512efe5e668d58e2010bd518e2f007"
+  },
+  "status_summary_284": {
+    "blocked": 1,
+    "bounded": {
+      "fr11_self_learning_status": "controller_only_promotable",
+      "gatemate_status": "blocked_pinout_missing_bounded",
+      "repair_claim_status": "bounded"
+    },
+    "clean": 4,
+    "flagged": 4,
+    "gated_skipped": 3,
+    "missing": 1,
+    "paper_ready": false
+  }
+}

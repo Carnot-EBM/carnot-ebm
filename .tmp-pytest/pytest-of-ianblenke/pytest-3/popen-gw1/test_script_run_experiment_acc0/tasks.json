@@ -1,0 +1,1702 @@
+[
+  {
+    "available_tools": [
+      "historical_event_finder",
+      "calculate"
+    ],
+    "constraints": [
+      {
+        "description": "The response must include SCORE in the inclusive range [10, 100].",
+        "id": "cctu-micro-000-numeric-score",
+        "type": "numeric",
+        "validator": {
+          "max": 100,
+          "min": 10,
+          "name": "numeric_score_range"
+        }
+      },
+      {
+        "description": "The final answer must mention the expected CCTU target answer.",
+        "id": "cctu-micro-000-semantic-answer",
+        "type": "semantic",
+        "validator": {
+          "name": "contains_expected_answer"
+        }
+      },
+      {
+        "description": "The transcript must use exactly 1 tool call(s), including `historical_event_finder`.",
+        "id": "cctu-micro-000-resource-tools",
+        "type": "resource",
+        "validator": {
+          "count": 1,
+          "name": "tool_call_protocol",
+          "required_tool": "historical_event_finder"
+        }
+      },
+      {
+        "description": "The final response must satisfy the `markdown_bold` format.",
+        "id": "cctu-micro-000-format-markdown_bold",
+        "type": "format",
+        "validator": {
+          "name": "format_style",
+          "style": "markdown_bold"
+        }
+      },
+      {
+        "description": "The full response must be at most 90 whitespace-delimited words.",
+        "id": "cctu-micro-000-length",
+        "type": "length",
+        "validator": {
+          "max": 90,
+          "name": "word_count_max"
+        }
+      }
+    ],
+    "expected_answer": "2007-11-7",
+    "format_style": "markdown_bold",
+    "score_value": 20,
+    "source": {
+      "adapter_derivation": "public-row answer plus local executable constraints",
+      "data_source": "Single-Hop",
+      "dataset": "Junjie-Ye/CCTU",
+      "license": "cc-by-4.0",
+      "source_row_id": "0",
+      "url": "https://huggingface.co/datasets/Junjie-Ye/CCTU"
+    },
+    "system_prompt": "You are a constrained tool-use agent. Available tools are `historical_event_finder` for source lookup and `calculate` for arithmetic checks. Emit tool calls as `TOOL_CALL name {json}` lines or as a JSON `tool_calls` array, then provide the final answer. Obey every explicit constraint.",
+    "task_id": "cctu-micro-000",
+    "user_request": "Answer representative public CCTU source task 0. Use 1 tool call(s), include a numeric SCORE between 10 and 100, and return the final target answer `2007-11-7` in the required format."
+  },
+  {
+    "available_tools": [
+      "political_successor_finder",
+      "calculate"
+    ],
+    "constraints": [
+      {
+        "description": "The response must include SCORE in the inclusive range [10, 100].",
+        "id": "cctu-micro-001-numeric-score",
+        "type": "numeric",
+        "validator": {
+          "max": 100,
+          "min": 10,
+          "name": "numeric_score_range"
+        }
+      },
+      {
+        "description": "The final answer must mention the expected CCTU target answer.",
+        "id": "cctu-micro-001-semantic-answer",
+        "type": "semantic",
+        "validator": {
+          "name": "contains_expected_answer"
+        }
+      },
+      {
+        "description": "The transcript must use exactly 2 tool call(s), including `political_successor_finder`.",
+        "id": "cctu-micro-001-resource-tools",
+        "type": "resource",
+        "validator": {
+          "count": 2,
+          "name": "tool_call_protocol",
+          "required_tool": "political_successor_finder"
+        }
+      },
+      {
+        "description": "The final response must satisfy the `json_answer` format.",
+        "id": "cctu-micro-001-format-json_answer",
+        "type": "format",
+        "validator": {
+          "name": "format_style",
+          "style": "json_answer"
+        }
+      },
+      {
+        "description": "The full response must be at most 90 whitespace-delimited words.",
+        "id": "cctu-micro-001-length",
+        "type": "length",
+        "validator": {
+          "max": 90,
+          "name": "word_count_max"
+        }
+      }
+    ],
+    "expected_answer": "Mishal Al-Ahmad Al-Jaber Al-Sabah.",
+    "format_style": "json_answer",
+    "score_value": 21,
+    "source": {
+      "adapter_derivation": "public-row answer plus local executable constraints",
+      "data_source": "Single-Hop",
+      "dataset": "Junjie-Ye/CCTU",
+      "license": "cc-by-4.0",
+      "source_row_id": "1",
+      "url": "https://huggingface.co/datasets/Junjie-Ye/CCTU"
+    },
+    "system_prompt": "You are a constrained tool-use agent. Available tools are `political_successor_finder` for source lookup and `calculate` for arithmetic checks. Emit tool calls as `TOOL_CALL name {json}` lines or as a JSON `tool_calls` array, then provide the final answer. Obey every explicit constraint.",
+    "task_id": "cctu-micro-001",
+    "user_request": "Answer representative public CCTU source task 1. Use 2 tool call(s), include a numeric SCORE between 10 and 100, and return the final target answer `Mishal Al-Ahmad Al-Jaber Al-Sabah.` in the required format."
+  },
+  {
+    "available_tools": [
+      "game_release_date_finder",
+      "calculate"
+    ],
+    "constraints": [
+      {
+        "description": "The response must include SCORE in the inclusive range [10, 100].",
+        "id": "cctu-micro-002-numeric-score",
+        "type": "numeric",
+        "validator": {
+          "max": 100,
+          "min": 10,
+          "name": "numeric_score_range"
+        }
+      },
+      {
+        "description": "The final answer must mention the expected CCTU target answer.",
+        "id": "cctu-micro-002-semantic-answer",
+        "type": "semantic",
+        "validator": {
+          "name": "contains_expected_answer"
+        }
+      },
+      {
+        "description": "The transcript must use exactly 2 tool call(s), including `game_release_date_finder`.",
+        "id": "cctu-micro-002-resource-tools",
+        "type": "resource",
+        "validator": {
+          "count": 2,
+          "name": "tool_call_protocol",
+          "required_tool": "game_release_date_finder"
+        }
+      },
+      {
+        "description": "The final response must satisfy the `python_code` format.",
+        "id": "cctu-micro-002-format-python_code",
+        "type": "format",
+        "validator": {
+          "name": "format_style",
+          "style": "python_code"
+        }
+      },
+      {
+        "description": "The full response must be at most 90 whitespace-delimited words.",
+        "id": "cctu-micro-002-length",
+        "type": "length",
+        "validator": {
+          "max": 90,
+          "name": "word_count_max"
+        }
+      }
+    ],
+    "expected_answer": "2007-10-10",
+    "format_style": "python_code",
+    "score_value": 22,
+    "source": {
+      "adapter_derivation": "public-row answer plus local executable constraints",
+      "data_source": "Single-Hop",
+      "dataset": "Junjie-Ye/CCTU",
+      "license": "cc-by-4.0",
+      "source_row_id": "2",
+      "url": "https://huggingface.co/datasets/Junjie-Ye/CCTU"
+    },
+    "system_prompt": "You are a constrained tool-use agent. Available tools are `game_release_date_finder` for source lookup and `calculate` for arithmetic checks. Emit tool calls as `TOOL_CALL name {json}` lines or as a JSON `tool_calls` array, then provide the final answer. Obey every explicit constraint.",
+    "task_id": "cctu-micro-002",
+    "user_request": "Answer representative public CCTU source task 2. Use 2 tool call(s), include a numeric SCORE between 10 and 100, and return the final target answer `2007-10-10` in the required format."
+  },
+  {
+    "available_tools": [
+      "election_results_analyzer",
+      "calculate"
+    ],
+    "constraints": [
+      {
+        "description": "The response must include SCORE in the inclusive range [10, 100].",
+        "id": "cctu-micro-003-numeric-score",
+        "type": "numeric",
+        "validator": {
+          "max": 100,
+          "min": 10,
+          "name": "numeric_score_range"
+        }
+      },
+      {
+        "description": "The final answer must mention the expected CCTU target answer.",
+        "id": "cctu-micro-003-semantic-answer",
+        "type": "semantic",
+        "validator": {
+          "name": "contains_expected_answer"
+        }
+      },
+      {
+        "description": "The transcript must use exactly 1 tool call(s), including `election_results_analyzer`.",
+        "id": "cctu-micro-003-resource-tools",
+        "type": "resource",
+        "validator": {
+          "count": 1,
+          "name": "tool_call_protocol",
+          "required_tool": "election_results_analyzer"
+        }
+      },
+      {
+        "description": "The final response must satisfy the `answer_prefix` format.",
+        "id": "cctu-micro-003-format-answer_prefix",
+        "type": "format",
+        "validator": {
+          "name": "format_style",
+          "style": "answer_prefix"
+        }
+      },
+      {
+        "description": "The full response must be at most 90 whitespace-delimited words.",
+        "id": "cctu-micro-003-length",
+        "type": "length",
+        "validator": {
+          "max": 90,
+          "name": "word_count_max"
+        }
+      }
+    ],
+    "expected_answer": "128",
+    "format_style": "answer_prefix",
+    "score_value": 23,
+    "source": {
+      "adapter_derivation": "public-row answer plus local executable constraints",
+      "data_source": "Single-Hop",
+      "dataset": "Junjie-Ye/CCTU",
+      "license": "cc-by-4.0",
+      "source_row_id": "3",
+      "url": "https://huggingface.co/datasets/Junjie-Ye/CCTU"
+    },
+    "system_prompt": "You are a constrained tool-use agent. Available tools are `election_results_analyzer` for source lookup and `calculate` for arithmetic checks. Emit tool calls as `TOOL_CALL name {json}` lines or as a JSON `tool_calls` array, then provide the final answer. Obey every explicit constraint.",
+    "task_id": "cctu-micro-003",
+    "user_request": "Answer representative public CCTU source task 3. Use 1 tool call(s), include a numeric SCORE between 10 and 100, and return the final target answer `128` in the required format."
+  },
+  {
+    "available_tools": [
+      "event_locator",
+      "calculate"
+    ],
+    "constraints": [
+      {
+        "description": "The response must include SCORE in the inclusive range [10, 100].",
+        "id": "cctu-micro-004-numeric-score",
+        "type": "numeric",
+        "validator": {
+          "max": 100,
+          "min": 10,
+          "name": "numeric_score_range"
+        }
+      },
+      {
+        "description": "The final answer must mention the expected CCTU target answer.",
+        "id": "cctu-micro-004-semantic-answer",
+        "type": "semantic",
+        "validator": {
+          "name": "contains_expected_answer"
+        }
+      },
+      {
+        "description": "The transcript must use exactly 2 tool call(s), including `event_locator`.",
+        "id": "cctu-micro-004-resource-tools",
+        "type": "resource",
+        "validator": {
+          "count": 2,
+          "name": "tool_call_protocol",
+          "required_tool": "event_locator"
+        }
+      },
+      {
+        "description": "The final response must satisfy the `table` format.",
+        "id": "cctu-micro-004-format-table",
+        "type": "format",
+        "validator": {
+          "name": "format_style",
+          "style": "table"
+        }
+      },
+      {
+        "description": "The full response must be at most 90 whitespace-delimited words.",
+        "id": "cctu-micro-004-length",
+        "type": "length",
+        "validator": {
+          "max": 90,
+          "name": "word_count_max"
+        }
+      }
+    ],
+    "expected_answer": "Al-Aqsa Mosque",
+    "format_style": "table",
+    "score_value": 24,
+    "source": {
+      "adapter_derivation": "public-row answer plus local executable constraints",
+      "data_source": "Single-Hop",
+      "dataset": "Junjie-Ye/CCTU",
+      "license": "cc-by-4.0",
+      "source_row_id": "4",
+      "url": "https://huggingface.co/datasets/Junjie-Ye/CCTU"
+    },
+    "system_prompt": "You are a constrained tool-use agent. Available tools are `event_locator` for source lookup and `calculate` for arithmetic checks. Emit tool calls as `TOOL_CALL name {json}` lines or as a JSON `tool_calls` array, then provide the final answer. Obey every explicit constraint.",
+    "task_id": "cctu-micro-004",
+    "user_request": "Answer representative public CCTU source task 4. Use 2 tool call(s), include a numeric SCORE between 10 and 100, and return the final target answer `Al-Aqsa Mosque` in the required format."
+  },
+  {
+    "available_tools": [
+      "event_outcome_retriever",
+      "calculate"
+    ],
+    "constraints": [
+      {
+        "description": "The response must include SCORE in the inclusive range [10, 100].",
+        "id": "cctu-micro-005-numeric-score",
+        "type": "numeric",
+        "validator": {
+          "max": 100,
+          "min": 10,
+          "name": "numeric_score_range"
+        }
+      },
+      {
+        "description": "The final answer must mention the expected CCTU target answer.",
+        "id": "cctu-micro-005-semantic-answer",
+        "type": "semantic",
+        "validator": {
+          "name": "contains_expected_answer"
+        }
+      },
+      {
+        "description": "The transcript must use exactly 2 tool call(s), including `event_outcome_retriever`.",
+        "id": "cctu-micro-005-resource-tools",
+        "type": "resource",
+        "validator": {
+          "count": 2,
+          "name": "tool_call_protocol",
+          "required_tool": "event_outcome_retriever"
+        }
+      },
+      {
+        "description": "The final response must satisfy the `markdown_bold` format.",
+        "id": "cctu-micro-005-format-markdown_bold",
+        "type": "format",
+        "validator": {
+          "name": "format_style",
+          "style": "markdown_bold"
+        }
+      },
+      {
+        "description": "The full response must be at most 90 whitespace-delimited words.",
+        "id": "cctu-micro-005-length",
+        "type": "length",
+        "validator": {
+          "max": 90,
+          "name": "word_count_max"
+        }
+      }
+    ],
+    "expected_answer": "Abdel Fattah el-Sisi.",
+    "format_style": "markdown_bold",
+    "score_value": 25,
+    "source": {
+      "adapter_derivation": "public-row answer plus local executable constraints",
+      "data_source": "Single-Hop",
+      "dataset": "Junjie-Ye/CCTU",
+      "license": "cc-by-4.0",
+      "source_row_id": "5",
+      "url": "https://huggingface.co/datasets/Junjie-Ye/CCTU"
+    },
+    "system_prompt": "You are a constrained tool-use agent. Available tools are `event_outcome_retriever` for source lookup and `calculate` for arithmetic checks. Emit tool calls as `TOOL_CALL name {json}` lines or as a JSON `tool_calls` array, then provide the final answer. Obey every explicit constraint.",
+    "task_id": "cctu-micro-005",
+    "user_request": "Answer representative public CCTU source task 5. Use 2 tool call(s), include a numeric SCORE between 10 and 100, and return the final target answer `Abdel Fattah el-Sisi.` in the required format."
+  },
+  {
+    "available_tools": [
+      "political_event_search",
+      "calculate"
+    ],
+    "constraints": [
+      {
+        "description": "The response must include SCORE in the inclusive range [10, 100].",
+        "id": "cctu-micro-006-numeric-score",
+        "type": "numeric",
+        "validator": {
+          "max": 100,
+          "min": 10,
+          "name": "numeric_score_range"
+        }
+      },
+      {
+        "description": "The final answer must mention the expected CCTU target answer.",
+        "id": "cctu-micro-006-semantic-answer",
+        "type": "semantic",
+        "validator": {
+          "name": "contains_expected_answer"
+        }
+      },
+      {
+        "description": "The transcript must use exactly 1 tool call(s), including `political_event_search`.",
+        "id": "cctu-micro-006-resource-tools",
+        "type": "resource",
+        "validator": {
+          "count": 1,
+          "name": "tool_call_protocol",
+          "required_tool": "political_event_search"
+        }
+      },
+      {
+        "description": "The final response must satisfy the `json_answer` format.",
+        "id": "cctu-micro-006-format-json_answer",
+        "type": "format",
+        "validator": {
+          "name": "format_style",
+          "style": "json_answer"
+        }
+      },
+      {
+        "description": "The full response must be at most 90 whitespace-delimited words.",
+        "id": "cctu-micro-006-length",
+        "type": "length",
+        "validator": {
+          "max": 90,
+          "name": "word_count_max"
+        }
+      }
+    ],
+    "expected_answer": "Michel Barnier",
+    "format_style": "json_answer",
+    "score_value": 26,
+    "source": {
+      "adapter_derivation": "public-row answer plus local executable constraints",
+      "data_source": "Single-Hop",
+      "dataset": "Junjie-Ye/CCTU",
+      "license": "cc-by-4.0",
+      "source_row_id": "6",
+      "url": "https://huggingface.co/datasets/Junjie-Ye/CCTU"
+    },
+    "system_prompt": "You are a constrained tool-use agent. Available tools are `political_event_search` for source lookup and `calculate` for arithmetic checks. Emit tool calls as `TOOL_CALL name {json}` lines or as a JSON `tool_calls` array, then provide the final answer. Obey every explicit constraint.",
+    "task_id": "cctu-micro-006",
+    "user_request": "Answer representative public CCTU source task 6. Use 1 tool call(s), include a numeric SCORE between 10 and 100, and return the final target answer `Michel Barnier` in the required format."
+  },
+  {
+    "available_tools": [
+      "international_agreement_finder",
+      "calculate"
+    ],
+    "constraints": [
+      {
+        "description": "The response must include SCORE in the inclusive range [10, 100].",
+        "id": "cctu-micro-007-numeric-score",
+        "type": "numeric",
+        "validator": {
+          "max": 100,
+          "min": 10,
+          "name": "numeric_score_range"
+        }
+      },
+      {
+        "description": "The final answer must mention the expected CCTU target answer.",
+        "id": "cctu-micro-007-semantic-answer",
+        "type": "semantic",
+        "validator": {
+          "name": "contains_expected_answer"
+        }
+      },
+      {
+        "description": "The transcript must use exactly 2 tool call(s), including `international_agreement_finder`.",
+        "id": "cctu-micro-007-resource-tools",
+        "type": "resource",
+        "validator": {
+          "count": 2,
+          "name": "tool_call_protocol",
+          "required_tool": "international_agreement_finder"
+        }
+      },
+      {
+        "description": "The final response must satisfy the `python_code` format.",
+        "id": "cctu-micro-007-format-python_code",
+        "type": "format",
+        "validator": {
+          "name": "format_style",
+          "style": "python_code"
+        }
+      },
+      {
+        "description": "The full response must be at most 90 whitespace-delimited words.",
+        "id": "cctu-micro-007-length",
+        "type": "length",
+        "validator": {
+          "max": 90,
+          "name": "word_count_max"
+        }
+      }
+    ],
+    "expected_answer": "Brazil, China",
+    "format_style": "python_code",
+    "score_value": 27,
+    "source": {
+      "adapter_derivation": "public-row answer plus local executable constraints",
+      "data_source": "Single-Hop",
+      "dataset": "Junjie-Ye/CCTU",
+      "license": "cc-by-4.0",
+      "source_row_id": "7",
+      "url": "https://huggingface.co/datasets/Junjie-Ye/CCTU"
+    },
+    "system_prompt": "You are a constrained tool-use agent. Available tools are `international_agreement_finder` for source lookup and `calculate` for arithmetic checks. Emit tool calls as `TOOL_CALL name {json}` lines or as a JSON `tool_calls` array, then provide the final answer. Obey every explicit constraint.",
+    "task_id": "cctu-micro-007",
+    "user_request": "Answer representative public CCTU source task 7. Use 2 tool call(s), include a numeric SCORE between 10 and 100, and return the final target answer `Brazil, China` in the required format."
+  },
+  {
+    "available_tools": [
+      "event_personnel_identifier",
+      "calculate"
+    ],
+    "constraints": [
+      {
+        "description": "The response must include SCORE in the inclusive range [10, 100].",
+        "id": "cctu-micro-008-numeric-score",
+        "type": "numeric",
+        "validator": {
+          "max": 100,
+          "min": 10,
+          "name": "numeric_score_range"
+        }
+      },
+      {
+        "description": "The final answer must mention the expected CCTU target answer.",
+        "id": "cctu-micro-008-semantic-answer",
+        "type": "semantic",
+        "validator": {
+          "name": "contains_expected_answer"
+        }
+      },
+      {
+        "description": "The transcript must use exactly 2 tool call(s), including `event_personnel_identifier`.",
+        "id": "cctu-micro-008-resource-tools",
+        "type": "resource",
+        "validator": {
+          "count": 2,
+          "name": "tool_call_protocol",
+          "required_tool": "event_personnel_identifier"
+        }
+      },
+      {
+        "description": "The final response must satisfy the `answer_prefix` format.",
+        "id": "cctu-micro-008-format-answer_prefix",
+        "type": "format",
+        "validator": {
+          "name": "format_style",
+          "style": "answer_prefix"
+        }
+      },
+      {
+        "description": "The full response must be at most 90 whitespace-delimited words.",
+        "id": "cctu-micro-008-length",
+        "type": "length",
+        "validator": {
+          "max": 90,
+          "name": "word_count_max"
+        }
+      }
+    ],
+    "expected_answer": "Fuad Shukr",
+    "format_style": "answer_prefix",
+    "score_value": 28,
+    "source": {
+      "adapter_derivation": "public-row answer plus local executable constraints",
+      "data_source": "Single-Hop",
+      "dataset": "Junjie-Ye/CCTU",
+      "license": "cc-by-4.0",
+      "source_row_id": "8",
+      "url": "https://huggingface.co/datasets/Junjie-Ye/CCTU"
+    },
+    "system_prompt": "You are a constrained tool-use agent. Available tools are `event_personnel_identifier` for source lookup and `calculate` for arithmetic checks. Emit tool calls as `TOOL_CALL name {json}` lines or as a JSON `tool_calls` array, then provide the final answer. Obey every explicit constraint.",
+    "task_id": "cctu-micro-008",
+    "user_request": "Answer representative public CCTU source task 8. Use 2 tool call(s), include a numeric SCORE between 10 and 100, and return the final target answer `Fuad Shukr` in the required format."
+  },
+  {
+    "available_tools": [
+      "historical_event_finder",
+      "calculate"
+    ],
+    "constraints": [
+      {
+        "description": "The response must include SCORE in the inclusive range [10, 100].",
+        "id": "cctu-micro-009-numeric-score",
+        "type": "numeric",
+        "validator": {
+          "max": 100,
+          "min": 10,
+          "name": "numeric_score_range"
+        }
+      },
+      {
+        "description": "The final answer must mention the expected CCTU target answer.",
+        "id": "cctu-micro-009-semantic-answer",
+        "type": "semantic",
+        "validator": {
+          "name": "contains_expected_answer"
+        }
+      },
+      {
+        "description": "The transcript must use exactly 1 tool call(s), including `historical_event_finder`.",
+        "id": "cctu-micro-009-resource-tools",
+        "type": "resource",
+        "validator": {
+          "count": 1,
+          "name": "tool_call_protocol",
+          "required_tool": "historical_event_finder"
+        }
+      },
+      {
+        "description": "The final response must satisfy the `table` format.",
+        "id": "cctu-micro-009-format-table",
+        "type": "format",
+        "validator": {
+          "name": "format_style",
+          "style": "table"
+        }
+      },
+      {
+        "description": "The full response must be at most 90 whitespace-delimited words.",
+        "id": "cctu-micro-009-length",
+        "type": "length",
+        "validator": {
+          "max": 90,
+          "name": "word_count_max"
+        }
+      }
+    ],
+    "expected_answer": "2007-09-13",
+    "format_style": "table",
+    "score_value": 29,
+    "source": {
+      "adapter_derivation": "public-row answer plus local executable constraints",
+      "data_source": "Single-Hop",
+      "dataset": "Junjie-Ye/CCTU",
+      "license": "cc-by-4.0",
+      "source_row_id": "9",
+      "url": "https://huggingface.co/datasets/Junjie-Ye/CCTU"
+    },
+    "system_prompt": "You are a constrained tool-use agent. Available tools are `historical_event_finder` for source lookup and `calculate` for arithmetic checks. Emit tool calls as `TOOL_CALL name {json}` lines or as a JSON `tool_calls` array, then provide the final answer. Obey every explicit constraint.",
+    "task_id": "cctu-micro-009",
+    "user_request": "Answer representative public CCTU source task 9. Use 1 tool call(s), include a numeric SCORE between 10 and 100, and return the final target answer `2007-09-13` in the required format."
+  },
+  {
+    "available_tools": [
+      "event_location_finder",
+      "calculate"
+    ],
+    "constraints": [
+      {
+        "description": "The response must include SCORE in the inclusive range [10, 100].",
+        "id": "cctu-micro-010-numeric-score",
+        "type": "numeric",
+        "validator": {
+          "max": 100,
+          "min": 10,
+          "name": "numeric_score_range"
+        }
+      },
+      {
+        "description": "The final answer must mention the expected CCTU target answer.",
+        "id": "cctu-micro-010-semantic-answer",
+        "type": "semantic",
+        "validator": {
+          "name": "contains_expected_answer"
+        }
+      },
+      {
+        "description": "The transcript must use exactly 2 tool call(s), including `event_location_finder`.",
+        "id": "cctu-micro-010-resource-tools",
+        "type": "resource",
+        "validator": {
+          "count": 2,
+          "name": "tool_call_protocol",
+          "required_tool": "event_location_finder"
+        }
+      },
+      {
+        "description": "The final response must satisfy the `markdown_bold` format.",
+        "id": "cctu-micro-010-format-markdown_bold",
+        "type": "format",
+        "validator": {
+          "name": "format_style",
+          "style": "markdown_bold"
+        }
+      },
+      {
+        "description": "The full response must be at most 90 whitespace-delimited words.",
+        "id": "cctu-micro-010-length",
+        "type": "length",
+        "validator": {
+          "max": 90,
+          "name": "word_count_max"
+        }
+      }
+    ],
+    "expected_answer": "United Kingdom",
+    "format_style": "markdown_bold",
+    "score_value": 30,
+    "source": {
+      "adapter_derivation": "public-row answer plus local executable constraints",
+      "data_source": "Single-Hop",
+      "dataset": "Junjie-Ye/CCTU",
+      "license": "cc-by-4.0",
+      "source_row_id": "10",
+      "url": "https://huggingface.co/datasets/Junjie-Ye/CCTU"
+    },
+    "system_prompt": "You are a constrained tool-use agent. Available tools are `event_location_finder` for source lookup and `calculate` for arithmetic checks. Emit tool calls as `TOOL_CALL name {json}` lines or as a JSON `tool_calls` array, then provide the final answer. Obey every explicit constraint.",
+    "task_id": "cctu-micro-010",
+    "user_request": "Answer representative public CCTU source task 10. Use 2 tool call(s), include a numeric SCORE between 10 and 100, and return the final target answer `United Kingdom` in the required format."
+  },
+  {
+    "available_tools": [
+      "historical_event_search",
+      "calculate"
+    ],
+    "constraints": [
+      {
+        "description": "The response must include SCORE in the inclusive range [10, 100].",
+        "id": "cctu-micro-011-numeric-score",
+        "type": "numeric",
+        "validator": {
+          "max": 100,
+          "min": 10,
+          "name": "numeric_score_range"
+        }
+      },
+      {
+        "description": "The final answer must mention the expected CCTU target answer.",
+        "id": "cctu-micro-011-semantic-answer",
+        "type": "semantic",
+        "validator": {
+          "name": "contains_expected_answer"
+        }
+      },
+      {
+        "description": "The transcript must use exactly 2 tool call(s), including `historical_event_search`.",
+        "id": "cctu-micro-011-resource-tools",
+        "type": "resource",
+        "validator": {
+          "count": 2,
+          "name": "tool_call_protocol",
+          "required_tool": "historical_event_search"
+        }
+      },
+      {
+        "description": "The final response must satisfy the `json_answer` format.",
+        "id": "cctu-micro-011-format-json_answer",
+        "type": "format",
+        "validator": {
+          "name": "format_style",
+          "style": "json_answer"
+        }
+      },
+      {
+        "description": "The full response must be at most 90 whitespace-delimited words.",
+        "id": "cctu-micro-011-length",
+        "type": "length",
+        "validator": {
+          "max": 90,
+          "name": "word_count_max"
+        }
+      }
+    ],
+    "expected_answer": "2001-9-17",
+    "format_style": "json_answer",
+    "score_value": 31,
+    "source": {
+      "adapter_derivation": "public-row answer plus local executable constraints",
+      "data_source": "Single-Hop",
+      "dataset": "Junjie-Ye/CCTU",
+      "license": "cc-by-4.0",
+      "source_row_id": "11",
+      "url": "https://huggingface.co/datasets/Junjie-Ye/CCTU"
+    },
+    "system_prompt": "You are a constrained tool-use agent. Available tools are `historical_event_search` for source lookup and `calculate` for arithmetic checks. Emit tool calls as `TOOL_CALL name {json}` lines or as a JSON `tool_calls` array, then provide the final answer. Obey every explicit constraint.",
+    "task_id": "cctu-micro-011",
+    "user_request": "Answer representative public CCTU source task 11. Use 2 tool call(s), include a numeric SCORE between 10 and 100, and return the final target answer `2001-9-17` in the required format."
+  },
+  {
+    "available_tools": [
+      "corporate_event_finder",
+      "calculate"
+    ],
+    "constraints": [
+      {
+        "description": "The response must include SCORE in the inclusive range [10, 100].",
+        "id": "cctu-micro-012-numeric-score",
+        "type": "numeric",
+        "validator": {
+          "max": 100,
+          "min": 10,
+          "name": "numeric_score_range"
+        }
+      },
+      {
+        "description": "The final answer must mention the expected CCTU target answer.",
+        "id": "cctu-micro-012-semantic-answer",
+        "type": "semantic",
+        "validator": {
+          "name": "contains_expected_answer"
+        }
+      },
+      {
+        "description": "The transcript must use exactly 1 tool call(s), including `corporate_event_finder`.",
+        "id": "cctu-micro-012-resource-tools",
+        "type": "resource",
+        "validator": {
+          "count": 1,
+          "name": "tool_call_protocol",
+          "required_tool": "corporate_event_finder"
+        }
+      },
+      {
+        "description": "The final response must satisfy the `python_code` format.",
+        "id": "cctu-micro-012-format-python_code",
+        "type": "format",
+        "validator": {
+          "name": "format_style",
+          "style": "python_code"
+        }
+      },
+      {
+        "description": "The full response must be at most 90 whitespace-delimited words.",
+        "id": "cctu-micro-012-length",
+        "type": "length",
+        "validator": {
+          "max": 90,
+          "name": "word_count_max"
+        }
+      }
+    ],
+    "expected_answer": "2023-10-13",
+    "format_style": "python_code",
+    "score_value": 32,
+    "source": {
+      "adapter_derivation": "public-row answer plus local executable constraints",
+      "data_source": "Single-Hop",
+      "dataset": "Junjie-Ye/CCTU",
+      "license": "cc-by-4.0",
+      "source_row_id": "12",
+      "url": "https://huggingface.co/datasets/Junjie-Ye/CCTU"
+    },
+    "system_prompt": "You are a constrained tool-use agent. Available tools are `corporate_event_finder` for source lookup and `calculate` for arithmetic checks. Emit tool calls as `TOOL_CALL name {json}` lines or as a JSON `tool_calls` array, then provide the final answer. Obey every explicit constraint.",
+    "task_id": "cctu-micro-012",
+    "user_request": "Answer representative public CCTU source task 12. Use 1 tool call(s), include a numeric SCORE between 10 and 100, and return the final target answer `2023-10-13` in the required format."
+  },
+  {
+    "available_tools": [
+      "historical_event_retriever",
+      "calculate"
+    ],
+    "constraints": [
+      {
+        "description": "The response must include SCORE in the inclusive range [10, 100].",
+        "id": "cctu-micro-013-numeric-score",
+        "type": "numeric",
+        "validator": {
+          "max": 100,
+          "min": 10,
+          "name": "numeric_score_range"
+        }
+      },
+      {
+        "description": "The final answer must mention the expected CCTU target answer.",
+        "id": "cctu-micro-013-semantic-answer",
+        "type": "semantic",
+        "validator": {
+          "name": "contains_expected_answer"
+        }
+      },
+      {
+        "description": "The transcript must use exactly 2 tool call(s), including `historical_event_retriever`.",
+        "id": "cctu-micro-013-resource-tools",
+        "type": "resource",
+        "validator": {
+          "count": 2,
+          "name": "tool_call_protocol",
+          "required_tool": "historical_event_retriever"
+        }
+      },
+      {
+        "description": "The final response must satisfy the `answer_prefix` format.",
+        "id": "cctu-micro-013-format-answer_prefix",
+        "type": "format",
+        "validator": {
+          "name": "format_style",
+          "style": "answer_prefix"
+        }
+      },
+      {
+        "description": "The full response must be at most 90 whitespace-delimited words.",
+        "id": "cctu-micro-013-length",
+        "type": "length",
+        "validator": {
+          "max": 90,
+          "name": "word_count_max"
+        }
+      }
+    ],
+    "expected_answer": "2001-04-01",
+    "format_style": "answer_prefix",
+    "score_value": 33,
+    "source": {
+      "adapter_derivation": "public-row answer plus local executable constraints",
+      "data_source": "Single-Hop",
+      "dataset": "Junjie-Ye/CCTU",
+      "license": "cc-by-4.0",
+      "source_row_id": "13",
+      "url": "https://huggingface.co/datasets/Junjie-Ye/CCTU"
+    },
+    "system_prompt": "You are a constrained tool-use agent. Available tools are `historical_event_retriever` for source lookup and `calculate` for arithmetic checks. Emit tool calls as `TOOL_CALL name {json}` lines or as a JSON `tool_calls` array, then provide the final answer. Obey every explicit constraint.",
+    "task_id": "cctu-micro-013",
+    "user_request": "Answer representative public CCTU source task 13. Use 2 tool call(s), include a numeric SCORE between 10 and 100, and return the final target answer `2001-04-01` in the required format."
+  },
+  {
+    "available_tools": [
+      "historical_event_date_finder",
+      "calculate"
+    ],
+    "constraints": [
+      {
+        "description": "The response must include SCORE in the inclusive range [10, 100].",
+        "id": "cctu-micro-014-numeric-score",
+        "type": "numeric",
+        "validator": {
+          "max": 100,
+          "min": 10,
+          "name": "numeric_score_range"
+        }
+      },
+      {
+        "description": "The final answer must mention the expected CCTU target answer.",
+        "id": "cctu-micro-014-semantic-answer",
+        "type": "semantic",
+        "validator": {
+          "name": "contains_expected_answer"
+        }
+      },
+      {
+        "description": "The transcript must use exactly 2 tool call(s), including `historical_event_date_finder`.",
+        "id": "cctu-micro-014-resource-tools",
+        "type": "resource",
+        "validator": {
+          "count": 2,
+          "name": "tool_call_protocol",
+          "required_tool": "historical_event_date_finder"
+        }
+      },
+      {
+        "description": "The final response must satisfy the `table` format.",
+        "id": "cctu-micro-014-format-table",
+        "type": "format",
+        "validator": {
+          "name": "format_style",
+          "style": "table"
+        }
+      },
+      {
+        "description": "The full response must be at most 90 whitespace-delimited words.",
+        "id": "cctu-micro-014-length",
+        "type": "length",
+        "validator": {
+          "max": 90,
+          "name": "word_count_max"
+        }
+      }
+    ],
+    "expected_answer": "2023-10-22",
+    "format_style": "table",
+    "score_value": 34,
+    "source": {
+      "adapter_derivation": "public-row answer plus local executable constraints",
+      "data_source": "Single-Hop",
+      "dataset": "Junjie-Ye/CCTU",
+      "license": "cc-by-4.0",
+      "source_row_id": "14",
+      "url": "https://huggingface.co/datasets/Junjie-Ye/CCTU"
+    },
+    "system_prompt": "You are a constrained tool-use agent. Available tools are `historical_event_date_finder` for source lookup and `calculate` for arithmetic checks. Emit tool calls as `TOOL_CALL name {json}` lines or as a JSON `tool_calls` array, then provide the final answer. Obey every explicit constraint.",
+    "task_id": "cctu-micro-014",
+    "user_request": "Answer representative public CCTU source task 14. Use 2 tool call(s), include a numeric SCORE between 10 and 100, and return the final target answer `2023-10-22` in the required format."
+  },
+  {
+    "available_tools": [
+      "historical_event_finder",
+      "calculate"
+    ],
+    "constraints": [
+      {
+        "description": "The response must include SCORE in the inclusive range [10, 100].",
+        "id": "cctu-micro-015-numeric-score",
+        "type": "numeric",
+        "validator": {
+          "max": 100,
+          "min": 10,
+          "name": "numeric_score_range"
+        }
+      },
+      {
+        "description": "The final answer must mention the expected CCTU target answer.",
+        "id": "cctu-micro-015-semantic-answer",
+        "type": "semantic",
+        "validator": {
+          "name": "contains_expected_answer"
+        }
+      },
+      {
+        "description": "The transcript must use exactly 1 tool call(s), including `historical_event_finder`.",
+        "id": "cctu-micro-015-resource-tools",
+        "type": "resource",
+        "validator": {
+          "count": 1,
+          "name": "tool_call_protocol",
+          "required_tool": "historical_event_finder"
+        }
+      },
+      {
+        "description": "The final response must satisfy the `markdown_bold` format.",
+        "id": "cctu-micro-015-format-markdown_bold",
+        "type": "format",
+        "validator": {
+          "name": "format_style",
+          "style": "markdown_bold"
+        }
+      },
+      {
+        "description": "The full response must be at most 90 whitespace-delimited words.",
+        "id": "cctu-micro-015-length",
+        "type": "length",
+        "validator": {
+          "max": 90,
+          "name": "word_count_max"
+        }
+      }
+    ],
+    "expected_answer": "2024-6-23",
+    "format_style": "markdown_bold",
+    "score_value": 35,
+    "source": {
+      "adapter_derivation": "public-row answer plus local executable constraints",
+      "data_source": "Single-Hop",
+      "dataset": "Junjie-Ye/CCTU",
+      "license": "cc-by-4.0",
+      "source_row_id": "15",
+      "url": "https://huggingface.co/datasets/Junjie-Ye/CCTU"
+    },
+    "system_prompt": "You are a constrained tool-use agent. Available tools are `historical_event_finder` for source lookup and `calculate` for arithmetic checks. Emit tool calls as `TOOL_CALL name {json}` lines or as a JSON `tool_calls` array, then provide the final answer. Obey every explicit constraint.",
+    "task_id": "cctu-micro-015",
+    "user_request": "Answer representative public CCTU source task 15. Use 1 tool call(s), include a numeric SCORE between 10 and 100, and return the final target answer `2024-6-23` in the required format."
+  },
+  {
+    "available_tools": [
+      "military_event_search",
+      "calculate"
+    ],
+    "constraints": [
+      {
+        "description": "The response must include SCORE in the inclusive range [10, 100].",
+        "id": "cctu-micro-016-numeric-score",
+        "type": "numeric",
+        "validator": {
+          "max": 100,
+          "min": 10,
+          "name": "numeric_score_range"
+        }
+      },
+      {
+        "description": "The final answer must mention the expected CCTU target answer.",
+        "id": "cctu-micro-016-semantic-answer",
+        "type": "semantic",
+        "validator": {
+          "name": "contains_expected_answer"
+        }
+      },
+      {
+        "description": "The transcript must use exactly 2 tool call(s), including `military_event_search`.",
+        "id": "cctu-micro-016-resource-tools",
+        "type": "resource",
+        "validator": {
+          "count": 2,
+          "name": "tool_call_protocol",
+          "required_tool": "military_event_search"
+        }
+      },
+      {
+        "description": "The final response must satisfy the `json_answer` format.",
+        "id": "cctu-micro-016-format-json_answer",
+        "type": "format",
+        "validator": {
+          "name": "format_style",
+          "style": "json_answer"
+        }
+      },
+      {
+        "description": "The full response must be at most 90 whitespace-delimited words.",
+        "id": "cctu-micro-016-length",
+        "type": "length",
+        "validator": {
+          "max": 90,
+          "name": "word_count_max"
+        }
+      }
+    ],
+    "expected_answer": "2023-10-31",
+    "format_style": "json_answer",
+    "score_value": 36,
+    "source": {
+      "adapter_derivation": "public-row answer plus local executable constraints",
+      "data_source": "Single-Hop",
+      "dataset": "Junjie-Ye/CCTU",
+      "license": "cc-by-4.0",
+      "source_row_id": "16",
+      "url": "https://huggingface.co/datasets/Junjie-Ye/CCTU"
+    },
+    "system_prompt": "You are a constrained tool-use agent. Available tools are `military_event_search` for source lookup and `calculate` for arithmetic checks. Emit tool calls as `TOOL_CALL name {json}` lines or as a JSON `tool_calls` array, then provide the final answer. Obey every explicit constraint.",
+    "task_id": "cctu-micro-016",
+    "user_request": "Answer representative public CCTU source task 16. Use 2 tool call(s), include a numeric SCORE between 10 and 100, and return the final target answer `2023-10-31` in the required format."
+  },
+  {
+    "available_tools": [
+      "historical_weather_data_retriever",
+      "calculate"
+    ],
+    "constraints": [
+      {
+        "description": "The response must include SCORE in the inclusive range [10, 100].",
+        "id": "cctu-micro-017-numeric-score",
+        "type": "numeric",
+        "validator": {
+          "max": 100,
+          "min": 10,
+          "name": "numeric_score_range"
+        }
+      },
+      {
+        "description": "The final answer must mention the expected CCTU target answer.",
+        "id": "cctu-micro-017-semantic-answer",
+        "type": "semantic",
+        "validator": {
+          "name": "contains_expected_answer"
+        }
+      },
+      {
+        "description": "The transcript must use exactly 2 tool call(s), including `historical_weather_data_retriever`.",
+        "id": "cctu-micro-017-resource-tools",
+        "type": "resource",
+        "validator": {
+          "count": 2,
+          "name": "tool_call_protocol",
+          "required_tool": "historical_weather_data_retriever"
+        }
+      },
+      {
+        "description": "The final response must satisfy the `python_code` format.",
+        "id": "cctu-micro-017-format-python_code",
+        "type": "format",
+        "validator": {
+          "name": "format_style",
+          "style": "python_code"
+        }
+      },
+      {
+        "description": "The full response must be at most 90 whitespace-delimited words.",
+        "id": "cctu-micro-017-length",
+        "type": "length",
+        "validator": {
+          "max": 90,
+          "name": "word_count_max"
+        }
+      }
+    ],
+    "expected_answer": "165",
+    "format_style": "python_code",
+    "score_value": 37,
+    "source": {
+      "adapter_derivation": "public-row answer plus local executable constraints",
+      "data_source": "Single-Hop",
+      "dataset": "Junjie-Ye/CCTU",
+      "license": "cc-by-4.0",
+      "source_row_id": "17",
+      "url": "https://huggingface.co/datasets/Junjie-Ye/CCTU"
+    },
+    "system_prompt": "You are a constrained tool-use agent. Available tools are `historical_weather_data_retriever` for source lookup and `calculate` for arithmetic checks. Emit tool calls as `TOOL_CALL name {json}` lines or as a JSON `tool_calls` array, then provide the final answer. Obey every explicit constraint.",
+    "task_id": "cctu-micro-017",
+    "user_request": "Answer representative public CCTU source task 17. Use 2 tool call(s), include a numeric SCORE between 10 and 100, and return the final target answer `165` in the required format."
+  },
+  {
+    "available_tools": [
+      "historical_event_finder",
+      "calculate"
+    ],
+    "constraints": [
+      {
+        "description": "The response must include SCORE in the inclusive range [10, 100].",
+        "id": "cctu-micro-018-numeric-score",
+        "type": "numeric",
+        "validator": {
+          "max": 100,
+          "min": 10,
+          "name": "numeric_score_range"
+        }
+      },
+      {
+        "description": "The final answer must mention the expected CCTU target answer.",
+        "id": "cctu-micro-018-semantic-answer",
+        "type": "semantic",
+        "validator": {
+          "name": "contains_expected_answer"
+        }
+      },
+      {
+        "description": "The transcript must use exactly 1 tool call(s), including `historical_event_finder`.",
+        "id": "cctu-micro-018-resource-tools",
+        "type": "resource",
+        "validator": {
+          "count": 1,
+          "name": "tool_call_protocol",
+          "required_tool": "historical_event_finder"
+        }
+      },
+      {
+        "description": "The final response must satisfy the `answer_prefix` format.",
+        "id": "cctu-micro-018-format-answer_prefix",
+        "type": "format",
+        "validator": {
+          "name": "format_style",
+          "style": "answer_prefix"
+        }
+      },
+      {
+        "description": "The full response must be at most 90 whitespace-delimited words.",
+        "id": "cctu-micro-018-length",
+        "type": "length",
+        "validator": {
+          "max": 90,
+          "name": "word_count_max"
+        }
+      }
+    ],
+    "expected_answer": "2023-10-8",
+    "format_style": "answer_prefix",
+    "score_value": 38,
+    "source": {
+      "adapter_derivation": "public-row answer plus local executable constraints",
+      "data_source": "Single-Hop",
+      "dataset": "Junjie-Ye/CCTU",
+      "license": "cc-by-4.0",
+      "source_row_id": "18",
+      "url": "https://huggingface.co/datasets/Junjie-Ye/CCTU"
+    },
+    "system_prompt": "You are a constrained tool-use agent. Available tools are `historical_event_finder` for source lookup and `calculate` for arithmetic checks. Emit tool calls as `TOOL_CALL name {json}` lines or as a JSON `tool_calls` array, then provide the final answer. Obey every explicit constraint.",
+    "task_id": "cctu-micro-018",
+    "user_request": "Answer representative public CCTU source task 18. Use 1 tool call(s), include a numeric SCORE between 10 and 100, and return the final target answer `2023-10-8` in the required format."
+  },
+  {
+    "available_tools": [
+      "historical_event_data_retriever",
+      "calculate"
+    ],
+    "constraints": [
+      {
+        "description": "The response must include SCORE in the inclusive range [10, 100].",
+        "id": "cctu-micro-019-numeric-score",
+        "type": "numeric",
+        "validator": {
+          "max": 100,
+          "min": 10,
+          "name": "numeric_score_range"
+        }
+      },
+      {
+        "description": "The final answer must mention the expected CCTU target answer.",
+        "id": "cctu-micro-019-semantic-answer",
+        "type": "semantic",
+        "validator": {
+          "name": "contains_expected_answer"
+        }
+      },
+      {
+        "description": "The transcript must use exactly 2 tool call(s), including `historical_event_data_retriever`.",
+        "id": "cctu-micro-019-resource-tools",
+        "type": "resource",
+        "validator": {
+          "count": 2,
+          "name": "tool_call_protocol",
+          "required_tool": "historical_event_data_retriever"
+        }
+      },
+      {
+        "description": "The final response must satisfy the `table` format.",
+        "id": "cctu-micro-019-format-table",
+        "type": "format",
+        "validator": {
+          "name": "format_style",
+          "style": "table"
+        }
+      },
+      {
+        "description": "The full response must be at most 90 whitespace-delimited words.",
+        "id": "cctu-micro-019-length",
+        "type": "length",
+        "validator": {
+          "max": 90,
+          "name": "word_count_max"
+        }
+      }
+    ],
+    "expected_answer": "75",
+    "format_style": "table",
+    "score_value": 39,
+    "source": {
+      "adapter_derivation": "public-row answer plus local executable constraints",
+      "data_source": "Single-Hop",
+      "dataset": "Junjie-Ye/CCTU",
+      "license": "cc-by-4.0",
+      "source_row_id": "19",
+      "url": "https://huggingface.co/datasets/Junjie-Ye/CCTU"
+    },
+    "system_prompt": "You are a constrained tool-use agent. Available tools are `historical_event_data_retriever` for source lookup and `calculate` for arithmetic checks. Emit tool calls as `TOOL_CALL name {json}` lines or as a JSON `tool_calls` array, then provide the final answer. Obey every explicit constraint.",
+    "task_id": "cctu-micro-019",
+    "user_request": "Answer representative public CCTU source task 19. Use 2 tool call(s), include a numeric SCORE between 10 and 100, and return the final target answer `75` in the required format."
+  },
+  {
+    "available_tools": [
+      "individual_movement_tracker",
+      "calculate"
+    ],
+    "constraints": [
+      {
+        "description": "The response must include SCORE in the inclusive range [10, 100].",
+        "id": "cctu-micro-020-numeric-score",
+        "type": "numeric",
+        "validator": {
+          "max": 100,
+          "min": 10,
+          "name": "numeric_score_range"
+        }
+      },
+      {
+        "description": "The final answer must mention the expected CCTU target answer.",
+        "id": "cctu-micro-020-semantic-answer",
+        "type": "semantic",
+        "validator": {
+          "name": "contains_expected_answer"
+        }
+      },
+      {
+        "description": "The transcript must use exactly 2 tool call(s), including `individual_movement_tracker`.",
+        "id": "cctu-micro-020-resource-tools",
+        "type": "resource",
+        "validator": {
+          "count": 2,
+          "name": "tool_call_protocol",
+          "required_tool": "individual_movement_tracker"
+        }
+      },
+      {
+        "description": "The final response must satisfy the `markdown_bold` format.",
+        "id": "cctu-micro-020-format-markdown_bold",
+        "type": "format",
+        "validator": {
+          "name": "format_style",
+          "style": "markdown_bold"
+        }
+      },
+      {
+        "description": "The full response must be at most 90 whitespace-delimited words.",
+        "id": "cctu-micro-020-length",
+        "type": "length",
+        "validator": {
+          "max": 90,
+          "name": "word_count_max"
+        }
+      }
+    ],
+    "expected_answer": "Australia",
+    "format_style": "markdown_bold",
+    "score_value": 40,
+    "source": {
+      "adapter_derivation": "public-row answer plus local executable constraints",
+      "data_source": "Single-Hop",
+      "dataset": "Junjie-Ye/CCTU",
+      "license": "cc-by-4.0",
+      "source_row_id": "20",
+      "url": "https://huggingface.co/datasets/Junjie-Ye/CCTU"
+    },
+    "system_prompt": "You are a constrained tool-use agent. Available tools are `individual_movement_tracker` for source lookup and `calculate` for arithmetic checks. Emit tool calls as `TOOL_CALL name {json}` lines or as a JSON `tool_calls` array, then provide the final answer. Obey every explicit constraint.",
+    "task_id": "cctu-micro-020",
+    "user_request": "Answer representative public CCTU source task 20. Use 2 tool call(s), include a numeric SCORE between 10 and 100, and return the final target answer `Australia` in the required format."
+  },
+  {
+    "available_tools": [
+      "historical_agreement_finder",
+      "calculate"
+    ],
+    "constraints": [
+      {
+        "description": "The response must include SCORE in the inclusive range [10, 100].",
+        "id": "cctu-micro-021-numeric-score",
+        "type": "numeric",
+        "validator": {
+          "max": 100,
+          "min": 10,
+          "name": "numeric_score_range"
+        }
+      },
+      {
+        "description": "The final answer must mention the expected CCTU target answer.",
+        "id": "cctu-micro-021-semantic-answer",
+        "type": "semantic",
+        "validator": {
+          "name": "contains_expected_answer"
+        }
+      },
+      {
+        "description": "The transcript must use exactly 1 tool call(s), including `historical_agreement_finder`.",
+        "id": "cctu-micro-021-resource-tools",
+        "type": "resource",
+        "validator": {
+          "count": 1,
+          "name": "tool_call_protocol",
+          "required_tool": "historical_agreement_finder"
+        }
+      },
+      {
+        "description": "The final response must satisfy the `json_answer` format.",
+        "id": "cctu-micro-021-format-json_answer",
+        "type": "format",
+        "validator": {
+          "name": "format_style",
+          "style": "json_answer"
+        }
+      },
+      {
+        "description": "The full response must be at most 90 whitespace-delimited words.",
+        "id": "cctu-micro-021-length",
+        "type": "length",
+        "validator": {
+          "max": 90,
+          "name": "word_count_max"
+        }
+      }
+    ],
+    "expected_answer": "The Ohrid Agreement",
+    "format_style": "json_answer",
+    "score_value": 41,
+    "source": {
+      "adapter_derivation": "public-row answer plus local executable constraints",
+      "data_source": "Single-Hop",
+      "dataset": "Junjie-Ye/CCTU",
+      "license": "cc-by-4.0",
+      "source_row_id": "21",
+      "url": "https://huggingface.co/datasets/Junjie-Ye/CCTU"
+    },
+    "system_prompt": "You are a constrained tool-use agent. Available tools are `historical_agreement_finder` for source lookup and `calculate` for arithmetic checks. Emit tool calls as `TOOL_CALL name {json}` lines or as a JSON `tool_calls` array, then provide the final answer. Obey every explicit constraint.",
+    "task_id": "cctu-micro-021",
+    "user_request": "Answer representative public CCTU source task 21. Use 1 tool call(s), include a numeric SCORE between 10 and 100, and return the final target answer `The Ohrid Agreement` in the required format."
+  },
+  {
+    "available_tools": [
+      "political_term_tracker",
+      "calculate"
+    ],
+    "constraints": [
+      {
+        "description": "The response must include SCORE in the inclusive range [10, 100].",
+        "id": "cctu-micro-022-numeric-score",
+        "type": "numeric",
+        "validator": {
+          "max": 100,
+          "min": 10,
+          "name": "numeric_score_range"
+        }
+      },
+      {
+        "description": "The final answer must mention the expected CCTU target answer.",
+        "id": "cctu-micro-022-semantic-answer",
+        "type": "semantic",
+        "validator": {
+          "name": "contains_expected_answer"
+        }
+      },
+      {
+        "description": "The transcript must use exactly 2 tool call(s), including `political_term_tracker`.",
+        "id": "cctu-micro-022-resource-tools",
+        "type": "resource",
+        "validator": {
+          "count": 2,
+          "name": "tool_call_protocol",
+          "required_tool": "political_term_tracker"
+        }
+      },
+      {
+        "description": "The final response must satisfy the `python_code` format.",
+        "id": "cctu-micro-022-format-python_code",
+        "type": "format",
+        "validator": {
+          "name": "format_style",
+          "style": "python_code"
+        }
+      },
+      {
+        "description": "The full response must be at most 90 whitespace-delimited words.",
+        "id": "cctu-micro-022-length",
+        "type": "length",
+        "validator": {
+          "max": 90,
+          "name": "word_count_max"
+        }
+      }
+    ],
+    "expected_answer": "3",
+    "format_style": "python_code",
+    "score_value": 42,
+    "source": {
+      "adapter_derivation": "public-row answer plus local executable constraints",
+      "data_source": "Single-Hop",
+      "dataset": "Junjie-Ye/CCTU",
+      "license": "cc-by-4.0",
+      "source_row_id": "22",
+      "url": "https://huggingface.co/datasets/Junjie-Ye/CCTU"
+    },
+    "system_prompt": "You are a constrained tool-use agent. Available tools are `political_term_tracker` for source lookup and `calculate` for arithmetic checks. Emit tool calls as `TOOL_CALL name {json}` lines or as a JSON `tool_calls` array, then provide the final answer. Obey every explicit constraint.",
+    "task_id": "cctu-micro-022",
+    "user_request": "Answer representative public CCTU source task 22. Use 2 tool call(s), include a numeric SCORE between 10 and 100, and return the final target answer `3` in the required format."
+  },
+  {
+    "available_tools": [
+      "geopolitical_event_finder",
+      "calculate"
+    ],
+    "constraints": [
+      {
+        "description": "The response must include SCORE in the inclusive range [10, 100].",
+        "id": "cctu-micro-023-numeric-score",
+        "type": "numeric",
+        "validator": {
+          "max": 100,
+          "min": 10,
+          "name": "numeric_score_range"
+        }
+      },
+      {
+        "description": "The final answer must mention the expected CCTU target answer.",
+        "id": "cctu-micro-023-semantic-answer",
+        "type": "semantic",
+        "validator": {
+          "name": "contains_expected_answer"
+        }
+      },
+      {
+        "description": "The transcript must use exactly 2 tool call(s), including `geopolitical_event_finder`.",
+        "id": "cctu-micro-023-resource-tools",
+        "type": "resource",
+        "validator": {
+          "count": 2,
+          "name": "tool_call_protocol",
+          "required_tool": "geopolitical_event_finder"
+        }
+      },
+      {
+        "description": "The final response must satisfy the `answer_prefix` format.",
+        "id": "cctu-micro-023-format-answer_prefix",
+        "type": "format",
+        "validator": {
+          "name": "format_style",
+          "style": "answer_prefix"
+        }
+      },
+      {
+        "description": "The full response must be at most 90 whitespace-delimited words.",
+        "id": "cctu-micro-023-length",
+        "type": "length",
+        "validator": {
+          "max": 90,
+          "name": "word_count_max"
+        }
+      }
+    ],
+    "expected_answer": "Israel",
+    "format_style": "answer_prefix",
+    "score_value": 43,
+    "source": {
+      "adapter_derivation": "public-row answer plus local executable constraints",
+      "data_source": "Single-Hop",
+      "dataset": "Junjie-Ye/CCTU",
+      "license": "cc-by-4.0",
+      "source_row_id": "23",
+      "url": "https://huggingface.co/datasets/Junjie-Ye/CCTU"
+    },
+    "system_prompt": "You are a constrained tool-use agent. Available tools are `geopolitical_event_finder` for source lookup and `calculate` for arithmetic checks. Emit tool calls as `TOOL_CALL name {json}` lines or as a JSON `tool_calls` array, then provide the final answer. Obey every explicit constraint.",
+    "task_id": "cctu-micro-023",
+    "user_request": "Answer representative public CCTU source task 23. Use 2 tool call(s), include a numeric SCORE between 10 and 100, and return the final target answer `Israel` in the required format."
+  },
+  {
+    "available_tools": [
+      "historical_event_finder",
+      "calculate"
+    ],
+    "constraints": [
+      {
+        "description": "The response must include SCORE in the inclusive range [10, 100].",
+        "id": "cctu-micro-024-numeric-score",
+        "type": "numeric",
+        "validator": {
+          "max": 100,
+          "min": 10,
+          "name": "numeric_score_range"
+        }
+      },
+      {
+        "description": "The final answer must mention the expected CCTU target answer.",
+        "id": "cctu-micro-024-semantic-answer",
+        "type": "semantic",
+        "validator": {
+          "name": "contains_expected_answer"
+        }
+      },
+      {
+        "description": "The transcript must use exactly 1 tool call(s), including `historical_event_finder`.",
+        "id": "cctu-micro-024-resource-tools",
+        "type": "resource",
+        "validator": {
+          "count": 1,
+          "name": "tool_call_protocol",
+          "required_tool": "historical_event_finder"
+        }
+      },
+      {
+        "description": "The final response must satisfy the `table` format.",
+        "id": "cctu-micro-024-format-table",
+        "type": "format",
+        "validator": {
+          "name": "format_style",
+          "style": "table"
+        }
+      },
+      {
+        "description": "The full response must be at most 90 whitespace-delimited words.",
+        "id": "cctu-micro-024-length",
+        "type": "length",
+        "validator": {
+          "max": 90,
+          "name": "word_count_max"
+        }
+      }
+    ],
+    "expected_answer": "2007-07-24",
+    "format_style": "table",
+    "score_value": 44,
+    "source": {
+      "adapter_derivation": "public-row answer plus local executable constraints",
+      "data_source": "Single-Hop",
+      "dataset": "Junjie-Ye/CCTU",
+      "license": "cc-by-4.0",
+      "source_row_id": "24",
+      "url": "https://huggingface.co/datasets/Junjie-Ye/CCTU"
+    },
+    "system_prompt": "You are a constrained tool-use agent. Available tools are `historical_event_finder` for source lookup and `calculate` for arithmetic checks. Emit tool calls as `TOOL_CALL name {json}` lines or as a JSON `tool_calls` array, then provide the final answer. Obey every explicit constraint.",
+    "task_id": "cctu-micro-024",
+    "user_request": "Answer representative public CCTU source task 24. Use 1 tool call(s), include a numeric SCORE between 10 and 100, and return the final target answer `2007-07-24` in the required format."
+  }
+]

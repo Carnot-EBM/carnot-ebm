@@ -1,0 +1,190 @@
+{
+  "best_inertia_alpha": 0.0,
+  "constraint_problems_tested": [
+    "fover_156_row0",
+    "fover_159_row1",
+    "fover_160_row2"
+  ],
+  "fpga_mapping_estimate": {
+    "board_executed": false,
+    "dense_pimi_n128_lut_estimate": 290000,
+    "estimate_basis": [
+      "hardware/kv260/ising_sampler_v4_spec.md LUT breakdown",
+      "research-hardware-wishlist.md KV260 v4 sparse-inertia plan",
+      "arXiv:2604.17109 PIMI fully synchronous update architecture; no local synthesis"
+    ],
+    "fit_assessment": "dense fully unrolled PIMI does not fit KV260; sparse K=16 v4 estimate fits",
+    "kv260_sparse_neighbors": 16,
+    "kv260_v4_sparse_lut_estimate": 35872,
+    "n_spins": 128,
+    "synthesis_performed": false,
+    "target": "KV260 v4 RTL estimate for N=128 fully synchronous inertia path",
+    "xck26_lut_budget": 117120
+  },
+  "hardware_claim_allowed": false,
+  "honest_verdict": "cpu_only_inertia_no_checkerboard_speedup_no_hardware_claim",
+  "inertia_alpha_sweep": [
+    {
+      "alpha": 0.0,
+      "mean_sweeps": 1.6666666666666667,
+      "parallel_update_stability": 1.0,
+      "per_problem": [
+        {
+          "mean_sweeps": 2.0,
+          "problem": "fover_156_row0",
+          "stability": 1.0
+        },
+        {
+          "mean_sweeps": 2.0,
+          "problem": "fover_159_row1",
+          "stability": 1.0
+        },
+        {
+          "mean_sweeps": 1.0,
+          "problem": "fover_160_row2",
+          "stability": 1.0
+        }
+      ],
+      "speedup_vs_checkerboard": 0.6
+    },
+    {
+      "alpha": 0.25,
+      "mean_sweeps": 1.6666666666666667,
+      "parallel_update_stability": 1.0,
+      "per_problem": [
+        {
+          "mean_sweeps": 2.0,
+          "problem": "fover_156_row0",
+          "stability": 1.0
+        },
+        {
+          "mean_sweeps": 2.0,
+          "problem": "fover_159_row1",
+          "stability": 1.0
+        },
+        {
+          "mean_sweeps": 1.0,
+          "problem": "fover_160_row2",
+          "stability": 1.0
+        }
+      ],
+      "speedup_vs_checkerboard": 0.6
+    }
+  ],
+  "inertia_convergence_speedup": 0.6,
+  "kv260_claim_allowed": false,
+  "metadata": {
+    "arxiv_reference": "https://arxiv.org/abs/2604.17109",
+    "arxiv_update_rule_identified": "s_i(t+1)=sign(tanh(beta(t) I_i(t)) + xi s_i(t) + eta(t) N(0,1)); Carnot CPU validation uses EMA-smoothed local field in the Bernoulli probability path.",
+    "beta": 2.0,
+    "cpu_only": true,
+    "experiment_id": 1373,
+    "fover_source": "/home/ianblenke/github.com/ianblenke/carnot/data/fover_corpus.jsonl",
+    "max_sweeps": 8,
+    "n_spins_per_problem": 8,
+    "problem_summaries": [
+      {
+        "ground_energy": -1.3750214530547988,
+        "label": "incorrect",
+        "n_spins": 8,
+        "name": "fover_156_row0",
+        "question_id": "156"
+      },
+      {
+        "ground_energy": -2.210116833155494,
+        "label": "correct",
+        "n_spins": 8,
+        "name": "fover_159_row1",
+        "question_id": "159"
+      },
+      {
+        "ground_energy": -5.230654881938273,
+        "label": "incorrect",
+        "n_spins": 8,
+        "name": "fover_160_row2",
+        "question_id": "160"
+      }
+    ],
+    "project_root": "/home/ianblenke/github.com/ianblenke/carnot",
+    "run_date": "20260505",
+    "seeds": [
+      0
+    ]
+  },
+  "parallel_update_stability": 1.0,
+  "status": "complete",
+  "steps_to_convergence_baseline": {
+    "mean_sweeps": 1.0,
+    "per_problem": [
+      {
+        "ground_energy": -1.3750214530547988,
+        "mean_sweeps": 1.0,
+        "problem": "fover_156_row0"
+      },
+      {
+        "ground_energy": -2.210116833155494,
+        "mean_sweeps": 1.0,
+        "problem": "fover_159_row1"
+      },
+      {
+        "ground_energy": -5.230654881938273,
+        "mean_sweeps": 1.0,
+        "problem": "fover_160_row2"
+      }
+    ],
+    "sampler": "ParallelIsingSampler checkerboard update loop"
+  },
+  "steps_to_convergence_inertia": {
+    "best_alpha": 0.0,
+    "mean_sweeps": 1.6666666666666667,
+    "per_alpha": [
+      {
+        "alpha": 0.0,
+        "mean_sweeps": 1.6666666666666667,
+        "parallel_update_stability": 1.0,
+        "per_problem": [
+          {
+            "mean_sweeps": 2.0,
+            "problem": "fover_156_row0",
+            "stability": 1.0
+          },
+          {
+            "mean_sweeps": 2.0,
+            "problem": "fover_159_row1",
+            "stability": 1.0
+          },
+          {
+            "mean_sweeps": 1.0,
+            "problem": "fover_160_row2",
+            "stability": 1.0
+          }
+        ],
+        "speedup_vs_checkerboard": 0.6
+      },
+      {
+        "alpha": 0.25,
+        "mean_sweeps": 1.6666666666666667,
+        "parallel_update_stability": 1.0,
+        "per_problem": [
+          {
+            "mean_sweeps": 2.0,
+            "problem": "fover_156_row0",
+            "stability": 1.0
+          },
+          {
+            "mean_sweeps": 2.0,
+            "problem": "fover_159_row1",
+            "stability": 1.0
+          },
+          {
+            "mean_sweeps": 1.0,
+            "problem": "fover_160_row2",
+            "stability": 1.0
+          }
+        ],
+        "speedup_vs_checkerboard": 0.6
+      }
+    ],
+    "sampler": "InertiaIsingSampler fully synchronous EMA update loop"
+  }
+}

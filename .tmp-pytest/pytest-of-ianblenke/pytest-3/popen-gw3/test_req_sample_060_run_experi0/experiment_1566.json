@@ -1,0 +1,117 @@
+{
+  "acceptance_gates_passed": true,
+  "cached_state_worse_than_cold_start": true,
+  "candidate_warm_start_validated": true,
+  "cold_start_accuracy_drop_percent_at_k100": 51.052632,
+  "honest_verdict": "complete: candidate_warm_start_validated_cold_and_cached_state_rejected",
+  "measurements_by_policy": {
+    "cached_state_warm_start": {
+      "10": {
+        "accuracy": 0.305,
+        "mean_energy": -0.28,
+        "p95_latency_ms_10ms_granularity": 10.0
+      },
+      "100": {
+        "accuracy": 0.45,
+        "mean_energy": -1.44,
+        "p95_latency_ms_10ms_granularity": 10.0
+      },
+      "1000": {
+        "accuracy": 0.965,
+        "mean_energy": -3.28,
+        "p95_latency_ms_10ms_granularity": 10.0
+      },
+      "50": {
+        "accuracy": 0.395,
+        "mean_energy": -1.04,
+        "p95_latency_ms_10ms_granularity": 10.0
+      },
+      "500": {
+        "accuracy": 0.835,
+        "mean_energy": -3.32,
+        "p95_latency_ms_10ms_granularity": 10.0
+      }
+    },
+    "candidate_warm_start": {
+      "10": {
+        "accuracy": 1.0,
+        "mean_energy": -5.52,
+        "p95_latency_ms_10ms_granularity": 10.0
+      },
+      "100": {
+        "accuracy": 1.0,
+        "mean_energy": -5.04,
+        "p95_latency_ms_10ms_granularity": 10.0
+      },
+      "1000": {
+        "accuracy": 1.0,
+        "mean_energy": -3.04,
+        "p95_latency_ms_10ms_granularity": 10.0
+      },
+      "50": {
+        "accuracy": 1.0,
+        "mean_energy": -5.04,
+        "p95_latency_ms_10ms_granularity": 10.0
+      },
+      "500": {
+        "accuracy": 1.0,
+        "mean_energy": -3.56,
+        "p95_latency_ms_10ms_granularity": 10.0
+      }
+    },
+    "cold_start": {
+      "10": {
+        "accuracy": 0.315,
+        "mean_energy": -0.12,
+        "p95_latency_ms_10ms_granularity": 10.0
+      },
+      "100": {
+        "accuracy": 0.465,
+        "mean_energy": -1.76,
+        "p95_latency_ms_10ms_granularity": 10.0
+      },
+      "1000": {
+        "accuracy": 0.95,
+        "mean_energy": -3.48,
+        "p95_latency_ms_10ms_granularity": 10.0
+      },
+      "50": {
+        "accuracy": 0.44,
+        "mean_energy": -1.4,
+        "p95_latency_ms_10ms_granularity": 10.0
+      },
+      "500": {
+        "accuracy": 0.84,
+        "mean_energy": -3.6,
+        "p95_latency_ms_10ms_granularity": 10.0
+      }
+    }
+  },
+  "metadata": {
+    "block_size": 12,
+    "corpus_case_counts": {
+      "correct": 140,
+      "edge": 20,
+      "incorrect": 40
+    },
+    "corpus_size": 200,
+    "experiment_id": 1566,
+    "k_values": [
+      10,
+      50,
+      100,
+      500,
+      1000
+    ],
+    "sampler": "vendored_thrml_block_gibbs_graph_color_semantics",
+    "schema": "candidate_warm_start_vs_cold_start_benchmark_v1",
+    "seed": 1400,
+    "spec_refs": [
+      "REQ-SAMPLE-060",
+      "SCENARIO-SAMPLE-088"
+    ],
+    "target_reward": 8.0
+  },
+  "recommended_deployment_policy": "candidate_warm_start",
+  "status": "complete"
+}

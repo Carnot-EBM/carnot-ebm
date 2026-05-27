@@ -2365,6 +2365,76 @@ checks or conservatively block repair promotion.
 |---|---|---|
 | REQ-VERIFY-3166 | Implemented (`python/carnot/verify/verifier_invariance_token_suspicion_audit_v1.py`) | Implemented (`tests/python/test_experiment_3166_verifier_invariance_token_suspicion_audit_v1.py`) |
 
+### REQ-VERIFY-3167: Clean Live SOTA Verifier Rerun V9 Gate Artifact
+
+The repository shall provide an Exp 3167 clean live SOTA verifier rerun v9
+builder that writes `results/experiment_3167_clean_live_sota_verifier_rerun_v9.json`.
+The builder MUST read Exp 3165 and Exp 3166 before any live model call. It
+MUST also consume the Exp 3136 false-accept autopsy, Exp 3137 exact-safe
+accept/abstain contract, Exp 3138 canonical grounding pilot, and Exp 3150
+adversarial verifier-evidence corrigendum so the rerun set and gate decision
+trace to exact labels rather than prior untrusted verifier metrics.
+
+If Exp 3165 reports `preflight_passed=false`, Exp 3166 is absent or not ready,
+or no mandated local SOTA GGUF can be used for the rerun, the builder SHALL NOT
+call a model. It SHALL instead write a complete gated-skip artifact with
+`clean_live_verifier_rerun_v9_ready=true`, `gated_skip=true`,
+`live_call_count=0`, `controlled_invariance_passed=false`,
+`false_accept_gate_passed=false`, `flagged_adversarial=false`, and
+`headline_claim_allowed=false`. The gated-skip artifact MUST still include the
+mandated model policy, selected and unavailable model IDs, upstream model-load
+evidence, empty prompt/transcript hashes, zero token counts, exact-row count,
+regression-row inclusion status, deterministic seed, reproducibility checksum,
+source-artifact provenance, and explicit inference-substrate metadata.
+
+When all preconditions pass, the builder SHALL build the rerun set from known
+false-accept regression rows plus balanced exact fixtures across arithmetic,
+SMT, satisfiable-drift, contradiction, and fragment-code families; use only
+the mandated local SOTA GGUF model IDs for headline evidence; record model-load
+evidence, prompt hashes, transcript hashes, token counts, random seed, and
+reproducibility checksum; apply exact-safe, canonical-grounding, and
+controlled-invariance diagnostics; and compute `false_accept_rate`,
+`false_reject_rate`, `abstention_rate`, `verifier_gain_delta`,
+`false_accept_gate_passed`, `flagged_adversarial`, and
+`headline_claim_allowed` from the exact authority rows. Legacy small models MAY
+be recorded only as CPU smoke tests and SHALL NOT populate headline fields.
+
+The terminal artifact MUST include `clean_live_verifier_rerun_v9_ready`,
+`gated_skip`, `gated_skip_reason`, `model_specs`, `selected_model_ids`,
+`unavailable_model_ids`, `live_call_count`, `model_load_evidence`,
+`prompt_hashes`, `transcript_hashes`, `token_counts`,
+`exact_ground_truth_count`, `regression_rows_included`,
+`controlled_invariance_passed`, `false_accept_rate`, `false_reject_rate`,
+`abstention_rate`, `verifier_gain_delta`, `false_accept_gate_passed`,
+`flagged_adversarial`, `headline_claim_allowed`, `random_seed`,
+`reproducibility_checksum`, `source_artifacts`, `inference_substrate`, and
+`honest_verdict`. It SHOULD also include planned rerun-set family counts,
+precondition checks, field-principle annotations, source checksums, tests run,
+duration, run date, and an explicit statement that ops/status, changelog, and
+traceability reconciliation are left to the conductor when the task prompt says
+so.
+
+### SCENARIO-VERIFY-3167: Failed Preconditions Produce Complete Gated Skip
+
+Given Exp 3165 reports `preflight_passed=false` and Exp 3166 reports a ready
+invariance/token-suspicion audit,
+When Exp 3167 builds the clean live SOTA verifier rerun v9 artifact,
+Then it reads the exact false-accept and canonical-grounding source artifacts,
+constructs a planned rerun-set summary that includes the known false-accept
+regression row IDs and balanced exact-family buckets, does not call a model,
+emits `live_call_count=0`, empty prompt and transcript hashes, zero token
+counts, `gated_skip=true` with an actionable reason,
+`false_accept_gate_passed=false`, `flagged_adversarial=false`,
+`headline_claim_allowed=false`, and an `honest_verdict` that starts with
+`complete:` so downstream matrix tooling can distinguish a completed gated skip
+from a missing rerun artifact.
+
+## Implementation Status (REQ-VERIFY-3167)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-VERIFY-3167 | Implemented (`python/carnot/verify/clean_live_sota_verifier_rerun_v9.py`) | Implemented (`tests/python/test_experiment_3167_clean_live_sota_verifier_rerun_v9.py`) |
+
 ### REQ-VERIFY-3073: EBT/ARM-EBM Adapter Feasibility Audit
 
 The repository shall provide an Exp 3073 deterministic architecture audit that

@@ -1,0 +1,16 @@
+{
+  "decoder_status": {
+    "backend_name": "prompt_schema",
+    "constrained_decoder_available": false
+  },
+  "gpu_index": 1,
+  "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+  "model_name": "Gemma4-26B-A4B-it",
+  "model_path": "/tmp/gemma.gguf",
+  "per_task_seed": 2926,
+  "prompt": "Solve this ConstraintBench-style direct constrained optimization task.\nTask id: cbmini-2926-linear-001\nTask type: linear_integer\nObjective sense: max\nReturn exactly one JSON object and no prose or Markdown.\nJSON schema: {\"properties\":{\"solution\":{\"properties\":{\"variables\":{\"properties\":{\"x\":{\"type\":\"integer\"},\"y\":{\"type\":\"integer\"}},\"required\":[\"x\",\"y\"],\"type\":\"object\"}},\"required\":[\"variables\"],\"type\":\"object\"}},\"required\":[\"solution\"],\"type\":\"object\"}\nTask data: {\"constraints\":[{\"coefficients\":{\"x\":1,\"y\":2},\"op\":\"<=\",\"rhs\":6},{\"coefficients\":{\"x\":2,\"y\":1},\"op\":\"<=\",\"rhs\":7}],\"objective\":{\"x\":3,\"y\":2},\"variables\":{\"x\":[0,4],\"y\":[0,4]}}\n",
+  "prompt_hash": "4789b2b9a0588ddfc315a4ec0221dc4d2f174bebccdef7c744c39b973032534c",
+  "raw_response": "{\"solution\": {\"variables\": {\"x\": 3, \"y\": 1}}}",
+  "raw_response_sha256": "e7e4c5ed35ecb653abf0c2b8b9ecf1536e71c17d2f2a2bca7f1335d8fe6e64ad",
+  "task_id": "cbmini-2926-linear-001"
+}

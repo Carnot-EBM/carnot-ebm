@@ -1,0 +1,98 @@
+{
+  "artifact": "experiment_3038_cross_corpus_matrix_v18",
+  "blocked": 1,
+  "corrigendum_pending": [
+    {
+      "detail": "DURATION_TOO_SHORT fixture detail",
+      "kind": "DURATION_TOO_SHORT",
+      "severity": "critical"
+    },
+    {
+      "detail": "METHODOLOGY_MISSING fixture detail",
+      "kind": "METHODOLOGY_MISSING",
+      "severity": "warn"
+    }
+  ],
+  "flagged": 4,
+  "flagged_adversarial": true,
+  "gated_skipped": 3,
+  "honest_verdict": "complete: matrix_v18_ready=true",
+  "inference_substrate": {
+    "executes_models": false,
+    "kind": "aggregation_from_upstream_artifacts"
+  },
+  "matrix_rows": [
+    {
+      "experiment_id": "exp3027",
+      "status": "flagged",
+      "upstream_flags": [
+        "flagged_adversarial=true"
+      ]
+    },
+    {
+      "experiment_id": "exp3028",
+      "status": "flagged",
+      "upstream_flags": [
+        "TAUTOLOGY:critical",
+        "METHODOLOGY_MISSING:warn"
+      ]
+    },
+    {
+      "experiment_id": "exp3029",
+      "repair_claim_status": "bounded",
+      "status": "flagged",
+      "upstream_flags": [
+        "DURATION_TOO_SHORT:critical"
+      ]
+    },
+    {
+      "experiment_id": "exp3031",
+      "status": "flagged",
+      "upstream_flags": [
+        "DURATION_TOO_SHORT:critical"
+      ]
+    },
+    {
+      "experiment_id": "exp3034",
+      "gatemate_output_contract_ready": false,
+      "host_visible_output_observed": false,
+      "status": "blocked",
+      "summary": {
+        "selected_output_path": "explicit_no_ready_contract"
+      },
+      "task_class": "gatemate_output_contract"
+    },
+    {
+      "experiment_id": "exp3035",
+      "status": "gated_skipped",
+      "summary": {
+        "gate_check_summary": "exp3034 gate failed"
+      },
+      "task_class": "gatemate_output_shim"
+    },
+    {
+      "actual_path_present": false,
+      "experiment_id": "exp3036",
+      "status": "gated_skipped",
+      "summary": {
+        "gate_source": "exp3035"
+      },
+      "task_class": "gatemate_host_visible_flash_smoke"
+    },
+    {
+      "experiment_id": "exp3037",
+      "ssqa_gate_status": "gate_skipped",
+      "status": "gated_skipped",
+      "task_class": "ssqa_boundary"
+    },
+    {
+      "actual_path_present": false,
+      "experiment_id": "exp3039",
+      "status": "missing",
+      "task_class": "capstone"
+    }
+  ],
+  "matrix_v18_ready": true,
+  "missing": 1,
+  "rows_total": 14
+}

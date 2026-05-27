@@ -1,0 +1,83 @@
+{
+  "artifact": "experiment_2947_fr11_continuation_replay_curriculum_v1",
+  "cited_upstream_artifacts": [
+    {
+      "experiment_id": "exp2918",
+      "fields_imported": [
+        "honest_verdict",
+        "online_self_learning_ready",
+        "replay_scheduler_updated",
+        "delta_energy_proxy",
+        "pdi_proxy",
+        "forgetting_rate",
+        "replay_corpus_summary"
+      ],
+      "path": "results/experiment_2918_fr11_verifiable_process_rewards_self_learning_v1.json",
+      "sha256": "399528423555ab16c4a95067be79218b281ab5873eddeeaec08c2d380fb6c043"
+    },
+    {
+      "experiment_id": "exp2933",
+      "fields_imported": [
+        "honest_verdict",
+        "kan_cl_self_learning_ready",
+        "utility_delta_vs_replay_only",
+        "energy_proxy_delta",
+        "forgetting_rate",
+        "updated_knot_or_rbf_count",
+        "dataset_manifest"
+      ],
+      "path": "results/experiment_2933_kan_cl_per_knot_self_learning_v1.json",
+      "sha256": "ef041c155e13f3f62b92e66f9cbda706f8f70fef0117468195ba032071947b42"
+    },
+    {
+      "experiment_id": "exp2942",
+      "fields_imported": [
+        "honest_verdict",
+        "inference_substrate",
+        "measured_n_values",
+        "unsupported_n_values",
+        "per_n_results",
+        "bitstream_supports_variable_n"
+      ],
+      "path": "results/experiment_2942_kv260_continuation_n_scaling_v1.json",
+      "sha256": "de18443aaca3aa7767fd5d7afa05788960aecd0625d57bcddbfe3b91a6247b82"
+    }
+  ],
+  "curriculum_schedule_used": "fr11_continuation_curriculum_v1",
+  "curriculum_signal_scores": {
+    "continuation_boundary_replay": 0.37,
+    "process_reward_replay": 0.6,
+    "retention_guard_replay": 0.5,
+    "structural_memory_bootstrap": 0.95
+  },
+  "duration_s": 2.25,
+  "failed_gates": [],
+  "flat_uniform_sampling_used": false,
+  "gate_results": [
+    {
+      "name": "exp2918_ready",
+      "passed": true
+    },
+    {
+      "name": "exp2933_ready",
+      "passed": true
+    },
+    {
+      "name": "exp2942_ready",
+      "passed": true
+    }
+  ],
+  "honest_verdict": "complete: nonuniform_continuation_replay_curriculum_piloted",
+  "inference_substrate": "aggregation_from_upstream_artifacts",
+  "live_model_invoked": false,
+  "model_weights_mutated": false,
+  "replay_budget": 64,
+  "replay_count_distribution": {
+    "continuation_boundary_replay": 10,
+    "process_reward_replay": 16,
+    "retention_guard_replay": 13,
+    "structural_memory_bootstrap": 25
+  },
+  "run_date": "20260523",
+  "schema": "carnot.fr11.continuation_replay_curriculum.v1"
+}

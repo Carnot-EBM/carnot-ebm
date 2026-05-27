@@ -1,0 +1,246 @@
+{
+  "benchmark_family": "BEAVER-style deterministic bounds",
+  "bound_is_sound": true,
+  "bound_violations": [],
+  "broad_benchmark_deferred": true,
+  "calibration_tightness_summary": {
+    "max_slack": 0.0748406542556836,
+    "p50_slack": 0.0748406542556836,
+    "p90_slack": 0.0748406542556836
+  },
+  "constraints_evaluated": 14,
+  "empirical_violation_rates": [
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0
+  ],
+  "experiment": "1482_beaver_lite_live_prefix_bound_calibration",
+  "honest_verdict": "sound_bound_live_exp1480_calibrated",
+  "mock_or_live_logprobs": "live_exp1480",
+  "model_specs": [
+    {
+      "hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "role": "preferred_live_prefix_logprob_source"
+    },
+    {
+      "hf_id": "unsloth/gemma-4-31B-it-GGUF",
+      "role": "optional_live_prefix_logprob_source"
+    },
+    {
+      "hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "role": "optional_live_prefix_logprob_source"
+    }
+  ],
+  "models_used": [
+    "unsloth/Qwen3.6-35B-A3B-GGUF"
+  ],
+  "n_live_topk_alternatives": [
+    5,
+    5,
+    5,
+    5,
+    5,
+    5,
+    5,
+    4,
+    5,
+    5,
+    5,
+    5,
+    5,
+    5
+  ],
+  "prefix_closed_constraints": [
+    {
+      "constraint_id": "exp1482_case_001",
+      "constraint_type": "certificate",
+      "description": "terminal live prefix must end with an integer in [0, 9999]",
+      "expected_answer": "0",
+      "prefix_closed": true,
+      "prompt": "Prompt for case-000. Return the final integer only.",
+      "source_case_id": "case-000",
+      "source_family": "fover_claim",
+      "terminal_only": true
+    },
+    {
+      "constraint_id": "exp1482_case_002",
+      "constraint_type": "arithmetic",
+      "description": "terminal live prefix must end with an integer in [0, 9999]",
+      "expected_answer": "1",
+      "prefix_closed": true,
+      "prompt": "Prompt for case-001. Return the final integer only.",
+      "source_case_id": "case-001",
+      "source_family": "arithmetic_word_problem",
+      "terminal_only": true
+    },
+    {
+      "constraint_id": "exp1482_case_003",
+      "constraint_type": "certificate",
+      "description": "terminal live prefix must end with an integer in [0, 9999]",
+      "expected_answer": "2",
+      "prefix_closed": true,
+      "prompt": "Prompt for case-002. Return the final integer only.",
+      "source_case_id": "case-002",
+      "source_family": "constraint_check",
+      "terminal_only": true
+    },
+    {
+      "constraint_id": "exp1482_case_004",
+      "constraint_type": "certificate",
+      "description": "terminal live prefix must end with an integer in [0, 9999]",
+      "expected_answer": "3",
+      "prefix_closed": true,
+      "prompt": "Prompt for case-003. Return the final integer only.",
+      "source_case_id": "case-003",
+      "source_family": "fover_claim",
+      "terminal_only": true
+    },
+    {
+      "constraint_id": "exp1482_case_005",
+      "constraint_type": "arithmetic",
+      "description": "terminal live prefix must end with an integer in [0, 9999]",
+      "expected_answer": "4",
+      "prefix_closed": true,
+      "prompt": "Prompt for case-004. Return the final integer only.",
+      "source_case_id": "case-004",
+      "source_family": "arithmetic_word_problem",
+      "terminal_only": true
+    },
+    {
+      "constraint_id": "exp1482_case_006",
+      "constraint_type": "certificate",
+      "description": "terminal live prefix must end with an integer in [0, 9999]",
+      "expected_answer": "5",
+      "prefix_closed": true,
+      "prompt": "Prompt for case-005. Return the final integer only.",
+      "source_case_id": "case-005",
+      "source_family": "constraint_check",
+      "terminal_only": true
+    },
+    {
+      "constraint_id": "exp1482_case_007",
+      "constraint_type": "certificate",
+      "description": "terminal live prefix must end with an integer in [0, 9999]",
+      "expected_answer": "6",
+      "prefix_closed": true,
+      "prompt": "Prompt for case-006. Return the final integer only.",
+      "source_case_id": "case-006",
+      "source_family": "fover_claim",
+      "terminal_only": true
+    },
+    {
+      "constraint_id": "exp1482_case_008",
+      "constraint_type": "arithmetic",
+      "description": "terminal live prefix must end with an integer in [0, 9999]",
+      "expected_answer": "7",
+      "prefix_closed": true,
+      "prompt": "Prompt for case-007. Return the final integer only.",
+      "source_case_id": "case-007",
+      "source_family": "arithmetic_word_problem",
+      "terminal_only": true
+    },
+    {
+      "constraint_id": "exp1482_case_009",
+      "constraint_type": "certificate",
+      "description": "terminal live prefix must end with an integer in [0, 9999]",
+      "expected_answer": "8",
+      "prefix_closed": true,
+      "prompt": "Prompt for case-008. Return the final integer only.",
+      "source_case_id": "case-008",
+      "source_family": "constraint_check",
+      "terminal_only": true
+    },
+    {
+      "constraint_id": "exp1482_case_010",
+      "constraint_type": "certificate",
+      "description": "terminal live prefix must end with an integer in [0, 9999]",
+      "expected_answer": "9",
+      "prefix_closed": true,
+      "prompt": "Prompt for case-009. Return the final integer only.",
+      "source_case_id": "case-009",
+      "source_family": "fover_claim",
+      "terminal_only": true
+    },
+    {
+      "constraint_id": "exp1482_case_011",
+      "constraint_type": "arithmetic",
+      "description": "terminal live prefix must end with an integer in [0, 9999]",
+      "expected_answer": "0",
+      "prefix_closed": true,
+      "prompt": "Prompt for case-010. Return the final integer only.",
+      "source_case_id": "case-010",
+      "source_family": "arithmetic_word_problem",
+      "terminal_only": true
+    },
+    {
+      "constraint_id": "exp1482_case_012",
+      "constraint_type": "certificate",
+      "description": "terminal live prefix must end with an integer in [0, 9999]",
+      "expected_answer": "1",
+      "prefix_closed": true,
+      "prompt": "Prompt for case-011. Return the final integer only.",
+      "source_case_id": "case-011",
+      "source_family": "constraint_check",
+      "terminal_only": true
+    },
+    {
+      "constraint_id": "exp1482_case_013",
+      "constraint_type": "certificate",
+      "description": "terminal live prefix must end with an integer in [0, 9999]",
+      "expected_answer": "2",
+      "prefix_closed": true,
+      "prompt": "Prompt for case-012. Return the final integer only.",
+      "source_case_id": "case-012",
+      "source_family": "fover_claim",
+      "terminal_only": true
+    },
+    {
+      "constraint_id": "exp1482_case_014",
+      "constraint_type": "arithmetic",
+      "description": "terminal live prefix must end with an integer in [0, 9999]",
+      "expected_answer": "3",
+      "prefix_closed": true,
+      "prompt": "Prompt for case-013. Return the final integer only.",
+      "source_case_id": "case-013",
+      "source_family": "arithmetic_word_problem",
+      "terminal_only": true
+    }
+  ],
+  "run_date": "20260507",
+  "schema": "beaver_lite_live_prefix_bound_calibration_v1",
+  "source_artifacts": [
+    "results/experiment_1480_live_sota_balanced_telemetry_v2.json"
+  ],
+  "spec": [
+    "REQ-VERIFY-1482",
+    "SCENARIO-VERIFY-1482"
+  ],
+  "status": "complete",
+  "unsafe_mass_bounds": [
+    0.0748406542556836,
+    0.0748406542556836,
+    0.0748406542556836,
+    0.0748406542556836,
+    0.0748406542556836,
+    0.0748406542556836,
+    0.0748406542556836,
+    0.0748406542556836,
+    0.0748406542556836,
+    0.0748406542556836,
+    0.0748406542556836,
+    0.0748406542556836,
+    0.0748406542556836,
+    0.0748406542556836
+  ]
+}

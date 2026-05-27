@@ -1,0 +1,18 @@
+{
+  "corrigendum_pending": [
+    {
+      "detail": "experiment_id == random_seed == 2939 (known false positive)",
+      "kind": "TAUTOLOGY",
+      "severity": "critical"
+    }
+  ],
+  "cpu_synchronous_parallel_per_sample_us_median": 23.574,
+  "flagged_adversarial": true,
+  "honest_verdict": "complete: kv260_slower_than_same_schedule_cpu_at_n64",
+  "kv260_per_sample_us_cited": 24.0,
+  "kv260_speedup_vs_same_schedule_cpu": {
+    "unit": "cpu_synchronous_parallel_us_median / kv260_us_per_sample",
+    "value": 0.98225
+  },
+  "paper_v6_recommendation": "retract: KV260 is slower than the same-schedule CPU baseline at n=64; paper-v6 must retract the current speedup claim."
+}

@@ -1,0 +1,1 @@
+export CARNOT_N_SPINS=99

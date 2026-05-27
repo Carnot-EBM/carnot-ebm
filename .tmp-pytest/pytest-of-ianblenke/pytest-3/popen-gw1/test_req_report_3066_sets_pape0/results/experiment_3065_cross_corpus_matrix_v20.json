@@ -1,0 +1,183 @@
+{
+  "artifact": "experiment_3065_cross_corpus_matrix_v20",
+  "blocked_rows": [],
+  "bounded_rows": [],
+  "clean_rows": [
+    {
+      "blocker_class": "none",
+      "claim_scope": "repair_claim_boundary",
+      "evidence_class": "repair_claim_boundary",
+      "row_id": "repair:headline_status",
+      "source_artifact": "results/repair_headline_status.json",
+      "source_field": "status",
+      "status": "clean",
+      "summary": {
+        "status": "clean"
+      }
+    },
+    {
+      "blocker_class": "none",
+      "claim_scope": "solver_grounded",
+      "evidence_class": "solver_grounded",
+      "row_id": "solver:local_sota_solution_verifier_gain_panel",
+      "source_artifact": "results/solver_local_sota_solution_verifier_gain_panel.json",
+      "source_field": "status",
+      "status": "clean",
+      "summary": {
+        "status": "clean"
+      }
+    },
+    {
+      "blocker_class": "none",
+      "claim_scope": "fr11_controller_self_learning",
+      "evidence_class": "fr11_controller_self_learning",
+      "row_id": "fr11:delayed_regression",
+      "source_artifact": "results/fr11_delayed_regression.json",
+      "source_field": "status",
+      "status": "clean",
+      "summary": {
+        "model_weight_mutation": false,
+        "model_weight_training": false
+      }
+    },
+    {
+      "blocker_class": "none",
+      "claim_scope": "kan_pwa_controller_anchor_audit",
+      "evidence_class": "kan_pwa_controller_anchor_audit",
+      "row_id": "kan:pwa_locality_audit",
+      "source_artifact": "results/kan_pwa_locality_audit.json",
+      "source_field": "status",
+      "status": "clean",
+      "summary": {
+        "status": "clean"
+      }
+    },
+    {
+      "blocker_class": "none",
+      "claim_scope": "gatemate_output_contract",
+      "evidence_class": "gatemate_output_contract",
+      "row_id": "gatemate:host_visible_output",
+      "source_artifact": "results/gatemate_host_visible_output.json",
+      "source_field": "status",
+      "status": "clean",
+      "summary": {
+        "host_visible_output_evidence": true
+      }
+    },
+    {
+      "blocker_class": "none",
+      "claim_scope": "ssqa_readback_boundary",
+      "evidence_class": "ssqa_readback_boundary",
+      "row_id": "ssqa:host_visible_readback",
+      "source_artifact": "results/ssqa_host_visible_readback.json",
+      "source_field": "status",
+      "status": "clean",
+      "summary": {
+        "host_visible_smoke_present": true
+      }
+    }
+  ],
+  "flagged_rows": [],
+  "gated_skipped_rows": [],
+  "honest_verdict": "complete: matrix_v20_ready=true",
+  "matrix_v20_ready": true,
+  "missing_rows": [],
+  "paper_ready": true,
+  "projection_only_rows": [],
+  "publication_blocker_count": 0,
+  "publication_blockers": [],
+  "required_source_errors": [],
+  "retired_rows": [],
+  "rows_total": 6,
+  "source_artifacts": [
+    {
+      "experiment_id": "exp3053",
+      "path": "results/experiment_3053_capstone_v285.json",
+      "present": true,
+      "readable_json_object": true,
+      "required": true,
+      "role": "exp3053_role",
+      "sha256": "upstream-exp3053"
+    },
+    {
+      "experiment_id": "exp3057",
+      "path": "results/experiment_3057_local_sota_solution_verifier_gain_panel_v1.json",
+      "present": true,
+      "readable_json_object": true,
+      "required": false,
+      "role": "exp3057_role",
+      "sha256": "upstream-exp3057"
+    },
+    {
+      "experiment_id": "exp3058",
+      "path": "results/experiment_3058_aquaforte_style_llm_guided_smt_pilot_v1.json",
+      "present": true,
+      "readable_json_object": true,
+      "required": false,
+      "role": "exp3058_role",
+      "sha256": "upstream-exp3058"
+    },
+    {
+      "experiment_id": "exp3061",
+      "path": "results/experiment_3061_fr11_delayed_regression_solver_self_model_pilot_v1.json",
+      "present": true,
+      "readable_json_object": true,
+      "required": false,
+      "role": "exp3061_role",
+      "sha256": "upstream-exp3061"
+    },
+    {
+      "experiment_id": "exp3062",
+      "path": "results/experiment_3062_kan_pwa_locality_verification_audit_v1.json",
+      "present": true,
+      "readable_json_object": true,
+      "required": false,
+      "role": "exp3062_role",
+      "sha256": "upstream-exp3062"
+    },
+    {
+      "experiment_id": "exp3063",
+      "path": "results/experiment_3063_gatemate_no_rerun_operator_action_ledger_v1.json",
+      "present": true,
+      "readable_json_object": true,
+      "required": false,
+      "role": "exp3063_role",
+      "sha256": "upstream-exp3063"
+    },
+    {
+      "experiment_id": "exp3064",
+      "path": "results/experiment_3064_ssqa_host_visible_readback_boundary_ledger_v1.json",
+      "present": true,
+      "readable_json_object": true,
+      "required": false,
+      "role": "exp3064_role",
+      "sha256": "upstream-exp3064"
+    }
+  ],
+  "status_summaries": {
+    "fr11": {
+      "citations": [],
+      "status": "controller_only_clean"
+    },
+    "gatemate": {
+      "citations": [],
+      "status": "host_visible_output_ready"
+    },
+    "kan_pwa": {
+      "citations": [],
+      "status": "clean_controller_anchor"
+    },
+    "repair": {
+      "citations": [],
+      "status": "clean_promotable"
+    },
+    "solver_grounded_verification": {
+      "citations": [],
+      "status": "clean_solver_authority"
+    },
+    "ssqa": {
+      "citations": [],
+      "status": "host_visible_readback_ready"
+    }
+  }
+}

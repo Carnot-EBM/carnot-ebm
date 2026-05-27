@@ -1,0 +1,29 @@
+milestone: 2026.04.101
+milestone_title: Synthetic .101
+milestone_doc: openspec/change-proposals/synthetic.md
+tasks:
+- id: exp1296-prior-failures-activation-audit
+  milestone: 2026.04.101
+  deliverable: results/exp1296-prior-failures-activation-audit.json
+  title: Fresh Activation Audit
+  prompt: 'REQUIRED ARTIFACT FIELDS:
+
+    - prior_failures_coverage_ok
+
+    - exp1283_grammar_backend_available
+
+    '
+- id: exp1297-cache-preflight
+  milestone: 2026.04.101
+  deliverable: results/exp1297-cache-preflight.json
+  title: Fresh Cache Preflight
+  prompt: 'REQUIRED ARTIFACT FIELDS:
+
+    - audit_ok
+
+    '
+  gated_on:
+  - upstream: exp1296-prior-failures-activation-audit
+    artifact_field: prior_failures_coverage_ok
+    op: ==
+    value: true

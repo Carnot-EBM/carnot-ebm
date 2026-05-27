@@ -1,0 +1,70 @@
+{
+  "cases_attempted": [
+    {
+      "case_type": "ising",
+      "edge_count": 6,
+      "edge_pairs": [
+        [
+          0,
+          1
+        ],
+        [
+          0,
+          2
+        ],
+        [
+          0,
+          3
+        ],
+        [
+          1,
+          2
+        ],
+        [
+          1,
+          3
+        ],
+        [
+          2,
+          3
+        ]
+      ],
+      "energy_convention": "THRML beta set to 1.0; Carnot beta applied only in distribution proxy.",
+      "max_abs_energy_error": 0.0,
+      "n_spins": 4,
+      "name": "n4_signed_ring_chord",
+      "state_count": 16,
+      "status": "parity_measured"
+    },
+    {
+      "case_type": "kan",
+      "local_reference": "python/carnot/models/kan.py::KANEnergyFunction.energy",
+      "name": "tiny_local_kan_spline_energy",
+      "notes": "Current local KAN energy uses spline edge and bias functions; the checked THRML Ising API represents linear spin biases and pairwise spin products, so this audit records KAN mapping notes only.",
+      "status": "mapping_notes_only"
+    }
+  ],
+  "energy_parity_max_abs_error": 0.0,
+  "hardware_claim_allowed": true,
+  "honest_verdict": "thrml_energy_parity_measured_no_tsu_hardware_execution",
+  "metadata": {
+    "experiment_id": 1347,
+    "local_thrml_package_path": null,
+    "project_root": "/home/ianblenke/github.com/Carnot-EBM/carnot-ebm",
+    "run_date": "20260505",
+    "schema": "thrml_compatibility_parity_audit_v1",
+    "thrml_import_source": "test_fake_thrml",
+    "thrml_version": "fake-local",
+    "tsu_hardware_execution": false
+  },
+  "missing_api_or_dependency": null,
+  "sample_quality_proxy": {
+    "kl_to_local_exact": -0.0,
+    "proxy": "exact_boltzmann_kl_from_energy_parity",
+    "sampling_executed": false,
+    "state_count": 16
+  },
+  "status": "complete",
+  "thrml_import_available": true,
+  "tsu_mapping_notes": "Tiny Ising energy parity was measured through a local THRML-compatible Python API. No Extropic TSU hardware execution occurred; this supports API compatibility only, not a hardware-acceleration claim. Tiny KAN spline terms still need a THRML hypergraph/spline representation."
+}

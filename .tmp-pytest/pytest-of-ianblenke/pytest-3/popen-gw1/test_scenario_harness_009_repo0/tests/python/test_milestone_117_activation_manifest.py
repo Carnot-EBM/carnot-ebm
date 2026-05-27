@@ -1,0 +1,1 @@
+from carnot.reporting.milestone_117_activation_manifest import build_manifest
