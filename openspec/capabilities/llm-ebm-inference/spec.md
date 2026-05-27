@@ -1325,6 +1325,75 @@ repair rather than a full receipt rerun.
 **And** `clean_subprocess_stderr_tail` preserves the stderr line
 **And** `cuda_init_clean=false`.
 
+### REQ-INFER-SOTA-025: Exp 3207 llama.cpp CUDA Rebuild Clean Subprocess Gate
+
+The system SHALL provide an Exp 3207 runtime gate that reads the Exp 3206 CUDA
+environment ledger before attempting any llama.cpp rebuild.  The gate SHALL
+write `results/experiment_3207_llama_cpp_cuda_rebuild_clean_subprocess_v1.json`,
+SHALL preserve Exp 3206's `recommended_next_action`, and SHALL NOT modify
+`scripts/research_conductor.py` or `research-roadmap.yaml`.
+
+If the selected Python clean subprocess still cannot initialize torch CUDA or
+reports zero CUDA devices, Exp 3207 SHALL NOT rebuild llama.cpp blindly.  It
+SHALL record `rebuild_attempted=false`, `torch_cuda_available_after=false`, a
+human-readable blocker containing the torch/CUDA stderr, and SHALL keep
+`cpu_fallback_only=true`, `cuda_receipt_ready=false`, and
+`clean_rerun_allowed_candidate=false`.
+
+If torch CUDA is available and the ledger indicates that llama.cpp CUDA support
+or initialization is the remaining blocker, Exp 3207 MAY attempt the minimum
+safe project-local rebuild or alternate binary path.  The rebuild command SHALL
+use the selected interpreter's dependency-management path and the llama.cpp CUDA
+configuration (`CMAKE_ARGS=-DGGML_CUDA=ON` with `FORCE_CMAKE=1`, or an
+equivalent CUDA-enabled llama-cpp-python install path).  The artifact SHALL
+record a bounded command summary and rebuild log tail.
+
+After any justified rebuild or alternate binary selection, Exp 3207 SHALL run a
+clean subprocess smoke probe that imports `llama_cpp`, detects CUDA-capable
+llama.cpp build evidence, and verifies that GPU offload support can be queried
+without an immediate `ggml_cuda_init` failure.  CPU fallback SHALL never count
+as success.
+
+The artifact SHALL expose `schema_version`, `experiment_id`, `milestone`,
+`env_ledger_artifact`, `rebuild_attempted`, `rebuild_command_summary`,
+`rebuild_log_tail`, `torch_cuda_available_after`,
+`llama_cpp_cuda_build_detected_after`,
+`clean_subprocess_gpu_offload_probe_passed`, `cpu_fallback_only`,
+`cuda_receipt_ready`, `clean_rerun_allowed_candidate`, `blocker`,
+`conductor_file_modified`, `active_roadmap_modified`, and `honest_verdict`.
+
+### SCENARIO-INFER-SOTA-025-001: Torch CUDA Blocker Stops Blind Rebuild
+
+**Given** the Exp 3206 ledger recommends selected-Python torch CUDA repair
+**And** the current clean torch subprocess still reports
+`torch.cuda.is_available() == false`
+**When** Exp 3207 runs
+**Then** it does not invoke a llama.cpp rebuild command
+**And** the artifact records the exact torch/CUDA blocker
+**And** `cuda_receipt_ready=false`.
+
+### SCENARIO-INFER-SOTA-025-002: Rebuild Is Justified Only After Torch CUDA Works
+
+**Given** the current clean torch subprocess reports CUDA available with at
+least one device
+**And** llama.cpp imports but lacks GPU offload support or emits a CUDA init
+blocker
+**When** Exp 3207 runs
+**Then** it records a CUDA-enabled llama-cpp-python rebuild or alternate binary
+command summary
+**And** preserves the rebuild log tail.
+
+### SCENARIO-INFER-SOTA-025-003: Clean GPU Offload Probe Opens Receipt Candidate
+
+**Given** torch CUDA is available after the rebuild decision
+**And** the clean llama.cpp subprocess detects CUDA build evidence and no
+`ggml_cuda_init` failure
+**When** Exp 3207 completes
+**Then** `clean_subprocess_gpu_offload_probe_passed=true`
+**And** `cpu_fallback_only=false`
+**And** `cuda_receipt_ready=true`
+**And** `clean_rerun_allowed_candidate=true`.
+
 ### REQ-INFER-018: EBT Abstraction Layer
 
 The system SHALL provide an Energy-Based Transformer (EBT) abstraction layer that bridges autoregressive LLMs (like the mandated SOTA GGUF models) to an EBT formulation. This enables System-2 gradient refinement at inference time by providing a way to calculate sequence energy.
@@ -1414,6 +1483,7 @@ instead of silently producing invalid EBM energies.
 | REQ-INFER-SOTA-022 | Implemented (`python/carnot/experiment_3043_verified_speculation_transcript_fingerprint.py`) | Implemented (`tests/python/test_experiment_3043_verified_speculation_transcript_fingerprint.py`) |
 | REQ-INFER-SOTA-023 | Implemented (`python/carnot/reporting/sota_cache_preconditions_manifest_v2.py`) | Implemented (`tests/python/test_experiment_3123_sota_cache_preconditions_manifest_v2.py`) |
 | REQ-INFER-SOTA-024 | Planned (`python/carnot/reporting/cuda_env_forensics_ledger_3206.py`) | Planned (`tests/python/test_experiment_3206_cuda_env_forensics_ledger.py`) |
+| REQ-INFER-SOTA-025 | Implemented (`python/carnot/reporting/llama_cpp_cuda_rebuild_clean_subprocess_3207.py`) | Implemented (`tests/python/test_experiment_3207_llama_cpp_cuda_rebuild_clean_subprocess.py`) |
 | REQ-INFER-2041 | Proposed | Proposed |
 | REQ-INFER-2056 | Implemented (`crates/carnot-boltzmann/src/lib.rs`, `crates/carnot-python/src/lib.rs`) | Implemented (`crates/carnot-boltzmann/tests/soft_bellman.rs`, `tests/python/test_soft_bellman_pyo3.py`) |
 

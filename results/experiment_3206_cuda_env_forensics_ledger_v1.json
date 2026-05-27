@@ -193,5 +193,18 @@
   "torch_cuda_device_count_clean_subprocess": 0,
   "torch_cuda_version": "12.8",
   "torch_version": "2.11.0+cu128",
-  "virtualenv": "/home/ianblenke/github.com/ianblenke/carnot/.venv"
+  "virtualenv": "/home/ianblenke/github.com/ianblenke/carnot/.venv",
+  "flagged_adversarial": true,
+  "corrigendum_pending": [
+    {
+      "kind": "DURATION_TOO_SHORT",
+      "severity": "critical",
+      "detail": "duration_s=2.403732 but artifact references compute-bound markers (GGUF / CUDA / live model). Loading and running a real model takes >=60.0s minimum; this completed too fast to have invoked the model."
+    },
+    {
+      "kind": "METHODOLOGY_MISSING",
+      "severity": "warn",
+      "detail": "Compute-bound artifact missing: model_specs/target_model, random_seed, reproducibility_checksum. Methodology unverifiable."
+    }
+  ]
 }
