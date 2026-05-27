@@ -286,5 +286,18 @@
     "prior_repair_candidates: exp3169 gate was blocked (gated_skip=true); no repair attempts to score \u2014 expected, not an error",
     "live_model_logprobs: this task is CPU/exact-authority only \u2014 no live LLM inference; first-token entropy and calibration curves absent",
     "minimal_failing_assignment_for_satisfiable_drift: satisfiable-drift rows have no failing assignment by definition; the field is intentionally empty for row_type=satisfiable_drift"
+  ],
+  "flagged_adversarial": true,
+  "corrigendum_pending": [
+    {
+      "kind": "DURATION_TOO_SHORT",
+      "severity": "critical",
+      "detail": "duration_s=0.002159 but artifact references compute-bound markers (GGUF / CUDA / live model). Loading and running a real model takes >=60.0s minimum; this completed too fast to have invoked the model."
+    },
+    {
+      "kind": "METHODOLOGY_MISSING",
+      "severity": "warn",
+      "detail": "Compute-bound artifact missing: model_specs/target_model, random_seed, reproducibility_checksum. Methodology unverifiable."
+    }
   ]
 }

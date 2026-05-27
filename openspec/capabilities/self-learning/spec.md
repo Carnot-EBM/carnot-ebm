@@ -8746,3 +8746,76 @@ mutation claim, explicit failed-precondition diagnostics, and a blocked
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-LEARN-3157 | Implemented (`python/carnot/eval/fr11_attractor_residual_memory_audit_v1.py`) | Implemented (`tests/python/test_experiment_3157_fr11_attractor_residual_memory_audit_v1.py`) |
+
+## REQ-LEARN-3171: FR-11 Ledger Counterexample Isolation
+
+**Given** Exp 3156 reports a non-perfect FR-11 ledger closure rate and Exp 3157
+blocks promotion while preserving controller-only residual memory evidence
+**When** Exp 3171 isolates the ledger blocker
+**Then** it SHALL reconstruct the Exp 3156 replay panel from checked-in source
+artifacts, separate passing rows from failing rows, and identify concrete
+counterexample families rather than reporting only an aggregate rate.
+**And** it SHALL define a controller-only environment/variant split with
+training-update rows, held-out replay rows, and negative-control rows so the
+next FR-11 pilot can evaluate nonforgetting separately from memory updates.
+**And** it SHALL classify whether the observed inconsistency is explained by
+stale memory, environment mismatch, threshold drift, missing exact labels,
+aggregation schema mismatch, or a direct controller-observation contradiction.
+**And** it SHALL block promotion whenever the prior ledger consistency rate is
+below 1.0 and SHALL preserve `no_model_weight_update_claimed=true`.
+
+The terminal artifact SHALL be
+`results/experiment_3171_fr11_ledger_counterexample_isolation_v1.json` and
+SHALL include `fr11_ledger_counterexample_isolation_ready`,
+`continuous_self_learning_task`, `prior_ledger_consistency_rate`,
+`isolated_counterexample_families`, `passing_families`,
+`environment_variant_split`, `negative_control_rows`,
+`suspected_failure_modes`, `promotion_allowed`,
+`no_model_weight_update_claimed`, `source_artifacts`, `inference_substrate`,
+and `honest_verdict`.
+
+### REQ-LEARN-3171 Sub-requirements
+
+- REQ-LEARN-3171-1: The isolation denominator SHALL equal Exp 3156's
+  `replay_panel_rows` count, and the carried-forward consistency rate SHALL
+  equal Exp 3156's `ledger_consistency_rate`.
+- REQ-LEARN-3171-2: `isolated_counterexample_families` SHALL include every
+  non-consistent Exp 3156 row grouped by fixture family, including row id,
+  exact expected action, ledger action, observed action, mismatch class,
+  panel category, routing decision, and source artifact.
+- REQ-LEARN-3171-3: `passing_families` SHALL preserve working behavior by
+  grouping consistent rows by fixture family and panel category.
+- REQ-LEARN-3171-4: `environment_variant_split.training_update_rows` SHALL
+  include only failing counterexample rows, while held-out replay and negative
+  controls SHALL include non-failing rows and SHALL NOT duplicate training
+  update row ids.
+- REQ-LEARN-3171-5: Failure-mode classification SHALL explicitly mark stale
+  memory, environment mismatch, threshold drift, missing exact label, and
+  aggregation schema mismatch as supported or rejected by row-level evidence.
+- REQ-LEARN-3171-6: The artifact SHALL declare zero live inference calls, no
+  base-model/KAN/model-weight mutation, and controller replay only.
+
+### SCENARIO-LEARN-3171: Isolated Counterexamples Feed A Nonforgetting Pilot
+
+**Given** ready Exp 3128, 3129, 3142, 3143, 3156, and 3157 artifacts
+**When** Exp 3171 reconstructs the ledger blocker
+**Then** it writes a complete artifact where the failing rows are isolated as
+controller-observation contradictions, passing environment and variant families
+remain visible, training rows are separated from held-out replay rows and
+negative controls, promotion remains blocked, and `honest_verdict` begins with
+`complete:`.
+
+### SCENARIO-LEARN-3171-BLOCKED: Missing Isolation Sources Fail Closed
+
+**Given** missing Exp 3156 or missing replay panel evidence
+**When** Exp 3171 runs
+**Then** it writes schema-complete fields with no training-update rows,
+`fr11_ledger_counterexample_isolation_ready=false`, promotion blocked, no
+model-weight mutation claim, explicit failed-precondition diagnostics, and a
+blocked `honest_verdict`.
+
+## Implementation Status (REQ-LEARN-3171)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-LEARN-3171 | Planned (`python/carnot/eval/fr11_ledger_counterexample_isolation_v1.py`) | Planned (`tests/python/test_experiment_3171_fr11_ledger_counterexample_isolation_v1.py`) |
