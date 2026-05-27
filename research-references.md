@@ -58,6 +58,33 @@ local API boundary only.
 - **Sources:** https://arxiv.org/abs/2602.02018 and
   https://huggingface.co/papers?q=structured+verification+traces
 
+### Experience-Driven Verification Suppression for Trace Memory
+
+- **Paper:** "Self-Verification Dilemma: Experience-Driven Suppression of
+  Overused Checking in LLM Reasoning" (arXiv:2602.03485).
+- **What:** Finds that many LRM self-checking steps are confirmatory rather
+  than corrective, then uses an experience pool of historical verification
+  outcomes to suppress unnecessary rechecks while preserving accuracy.
+- **Relevance to Carnot:** Pair this with VeriFY in `.296`: the FR-11
+  controller-memory experiment should learn when to verify or abstain, but it
+  should also learn when an extra verification pass is likely redundant. Exact
+  solver labels remain authority; the experience pool is only a routing and
+  compute-efficiency policy.
+- **Sources:** https://arxiv.org/abs/2602.03485
+
+### Self-Verification Capability Asymmetry
+
+- **Paper:** "Learning to Self-Verify Makes Language Models Better Reasoners"
+  (arXiv:2602.07594).
+- **What:** Reports an asymmetry where improving generation does not
+  automatically improve self-verification, while explicit self-verification
+  training can improve both verification and generation traces.
+- **Relevance to Carnot:** `.296` should not fine-tune model weights, but the
+  result supports separating FR-11 controller-memory trace policy from local
+  SOTA generation. Artifact fields should report verification-routing gains
+  independently from any answer-generation metric.
+- **Sources:** https://arxiv.org/abs/2602.07594
+
 ### Counterexample-Guided Inductive Repair
 
 - **Paper:** "ExVerus: Verus Proof Repair via Counterexample Reasoning"
@@ -101,6 +128,18 @@ local API boundary only.
   eligibility. This should prevent CPU fallback receipts from accidentally
   unlocking repair while still preserving useful smoke evidence.
 - **Sources:** https://arxiv.org/abs/2605.13319
+
+### Extropic Hardware Boundary Check
+
+- **Source:** Extropic hardware page, checked during `.296` planning.
+- **What:** Public positioning lists X0 as a Q1 2025 silicon prototype, XTR-0
+  as a Q3 2025 experimental testing and research platform, and Z1 as early
+  access in 2026.
+- **Relevance to Carnot:** This is current enough to keep THRML/TSU/Z1/Kona
+  work in the architecture notes, but it does not authorize any Carnot speedup
+  or execution claim. `.296` should stay at sparse factor-record preparation
+  unless authenticated hardware access and transcripts are available.
+- **Sources:** https://extropic.ai/hardware
 
 ### EBT/ARM Citation Watch
 

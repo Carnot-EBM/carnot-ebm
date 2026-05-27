@@ -87,6 +87,12 @@ roadmap was designed. The experiments below incorporate the strongest findings:
   local SOTA generation.
 - **VeriFY self-verification traces** (arXiv:2602.02018) motivates `exp3200`,
   the mandatory continuous self-learning experiment.
+- **Self-verification dilemma / verification-suppression experience pools**
+  (arXiv:2602.03485) refine `exp3195` and `exp3200`: controller memory should
+  learn when verification is useful, not just add more checks.
+- **Self-verification capability asymmetry** (arXiv:2602.07594) supports
+  keeping `.296` FR-11 learning as controller-memory routing evidence rather
+  than a hidden model-weight update or generation-quality claim.
 - **ExVerus counterexample reasoning** (arXiv:2603.25810) motivates `exp3197`,
   extending certificates into inductive invariants before repair.
 - **Potts MFC and PAOA** (arXiv:2602.04200, arXiv:2507.07420) motivate
@@ -94,6 +100,9 @@ roadmap was designed. The experiments below incorporate the strongest findings:
 - **PipeSD dual-threshold verification triggering** (arXiv:2605.13319)
   motivates the `.296` receipt contract: one threshold proves execution, a
   stricter threshold unlocks clean verifier and repair claims.
+- **Extropic hardware status** (public X0/XTR-0/Z1 page) keeps TSU/Z1 in the
+  long-horizon architecture, but `.296` still cannot claim hardware execution
+  without authenticated access and transcripts.
 
 ## v296 Architecture: Receipt-First Verifier With Adaptive Repair Control
 
@@ -198,7 +207,7 @@ Planned LLM-touching tasks: `exp3193`, `exp3194`, and `exp3199`.
 
 - `exp3200` is the mandatory continuous self-learning experiment: a VeriFY-style
   self-verification trace-memory controller with heldout, drift, and
-  negative-control replay.
+  negative-control replay plus experience-pool suppression for redundant checks.
 - `exp3201` audits KAN-CL-style per-knot/nonforgetting sidecar behavior against
   exact rows and the new trace-memory controller.
 - `exp3202` translates exact-row/certificate graphs into sparse q-state Potts

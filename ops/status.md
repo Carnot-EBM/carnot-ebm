@@ -1,6 +1,25 @@
 # Carnot — Operational Status
 
-**Last Updated:** 2026-05-27 (Milestone 2026.05.295 research planning staged)
+**Last Updated:** 2026-05-27 (Milestone 2026.05.296 research planning staged)
+
+## Session 2026-05-27 - Milestone 2026.05.296 Research Planning Staged
+
+Planned milestone 2026.05.296 as "CUDA-Backed SOTA Receipt Recovery +
+Adaptive Verification Granularity + FR-11 Trace Memory" after `.295`
+completed. Used `results/experiment_3190_capstone_v295.json` and
+`results/experiment_3189_cross_corpus_matrix_v29.json` as authority:
+`paper_ready=false`, `publication_blocker_count=80`,
+`missing_artifact_count=1`, the next top gap is
+`full_local_sota_receipt_clean_rerun_allowed_repair_gate_unblock`, local SOTA
+receipt evidence remains CPU fallback only, repair remains blocked, FR-11
+controller-memory promotion passed without model-weight updates, and THRML
+remains a local API/factor-boundary claim only.
+
+Updated `research-references.md` with the post-`.295` planning sweep and
+second-pass source checks, updated
+`openspec/change-proposals/research-roadmap-vNEXT.md`, and created
+`research-roadmap-next.yaml` with 14 tasks (`exp3191`-`exp3204`). Left
+`research-roadmap.yaml` and `scripts/research_conductor.py` untouched.
 
 ## Session 2026-05-27 - Milestone 2026.05.295 Research Planning Staged
 
