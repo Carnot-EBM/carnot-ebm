@@ -10766,3 +10766,62 @@ implementation files modified, and an `honest_verdict` that starts with
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-REPORT-3190 | Implemented (`python/carnot/reporting/capstone_v295_3190.py`) | Implemented (`tests/python/test_experiment_3190_capstone_v295.py`) |
+
+### REQ-REPORT-3191: Archive .295 And Confirm .296 Activation Authority
+
+The repository shall provide an Exp 3191 archive/activation generator that
+writes `results/experiment_3191_archive_v295_activate_v296.json` by reading
+`results/experiment_3190_capstone_v295.json` and
+`results/experiment_3189_cross_corpus_matrix_v29.json` as authority, plus the
+current `.296` roadmap queue state, `research-complete.yaml`, and
+`ops/conductor-log.md`. The workflow MUST aggregate existing artifacts only. It
+MUST NOT run live model inference, verifier scoring, repair generation, solver
+execution, hardware commands, the conductor, pushes, modify
+`scripts/research_conductor.py`, or modify `research-roadmap.yaml`.
+
+The artifact MUST record the exact prior task range `exp3177` through
+`exp3190`, terminal statuses for every `.295` task, the prior paper-readiness
+and publication-blocker state, and the top unresolved gap
+`full_local_sota_receipt_clean_rerun_allowed_repair_gate_unblock`. It MUST
+confirm `2026.05.296` is the next CalVer sequence after `2026.05.295`, confirm
+the new milestone document path, and report whether the conductor queue is
+materialized in `research-roadmap-next.yaml` or already active in
+`research-roadmap.yaml`.
+
+The terminal artifact MUST include `schema_version`, `experiment_id`,
+`milestone`, `prior_milestone`, `prior_task_range`, `capstone_artifact`,
+`matrix_artifact`, `prior_paper_ready`, `prior_publication_blocker_count`,
+`prior_next_top_gap`, `activation_ready`, `research_roadmap_next_exists`,
+`conductor_file_modified`, `active_roadmap_modified`, and `honest_verdict`.
+It MAY include source checksums, terminal-status rows, task-count summaries,
+queue-path metadata, critical-path details, no-new-execution booleans, and
+measured `duration_s` as long as every value is derived from checked-in
+artifacts or file presence/checksum checks.
+
+#### SCENARIO-REPORT-3191: Archive .295 And Activate .296 Critical Path
+
+**Given** capstone v295 exists and reports `capstone_v295_ready=true`,
+`paper_ready=false`, `publication_blocker_count=80`, and
+`next_top_gap=full_local_sota_receipt_clean_rerun_allowed_repair_gate_unblock`
+**And** matrix v29 exists and reports `cross_corpus_matrix_v29_ready=true`
+with the same blocker count and next gap
+**And** `research-complete.yaml` records `.295` tasks `exp3177` through
+`exp3190` as terminal
+**And** either `research-roadmap-next.yaml` or `research-roadmap.yaml` declares
+milestone `2026.05.296`, first task
+`exp3191-archive-v295-activate-v296`, and milestone document
+`openspec/change-proposals/research-roadmap-vNEXT.md`
+**When** the Exp 3191 archive/activation generator runs
+**Then** it writes `results/experiment_3191_archive_v295_activate_v296.json`
+with all required schema fields, `activation_ready=true`,
+`prior_task_range=["exp3177", "exp3190"]`, complete terminal-status accounting
+for the 14 `.295` tasks, queue-path metadata for the staged or active
+conductor queue, a critical path rooted at the full local SOTA receipt unblock,
+no protected conductor or active-roadmap edits performed by this task, and an
+`honest_verdict` that starts with `complete:`.
+
+## Implementation Status (REQ-REPORT-3191)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-3191 | Implemented (`python/carnot/reporting/archive_v295_activate_v296_3191.py`) | Implemented (`tests/python/test_experiment_3191_archive_v295_activate_v296.py`) |
