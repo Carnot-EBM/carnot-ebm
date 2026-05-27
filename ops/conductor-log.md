@@ -6461,3 +6461,4 @@ web search: Semantic Scholar 2507.02092 Energy |
 | 2026-05-27 14:59 UTC | Milestone 2026.05.296 activated | OK | 14 tasks queued |
 | 2026-05-27 15:16 UTC | Archive .295 closeout and activate .296 planning a | OK | 81 passed in 3.56s |
 | 2026-05-27 15:32 UTC | Receipt and adversarial contract v4 with dual clea | OK | 81 passed in 3.63s |
+| 2026-05-27 15:51 UTC | llama.cpp CUDA/offload health probe for mandated l | OK | 124 passed in 5.55s |
