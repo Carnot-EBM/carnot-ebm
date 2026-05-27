@@ -1394,6 +1394,78 @@ command summary
 **And** `cuda_receipt_ready=true`
 **And** `clean_rerun_allowed_candidate=true`.
 
+### REQ-INFER-SOTA-026: Exp 3220 Hermetic CUDA Runtime Repair Ledger
+
+The system SHALL provide an Exp 3220 hermetic CUDA runtime repair ledger that
+writes `results/experiment_3220_hermetic_cuda_runtime_repair_ledger_v1.json`
+without loading a SOTA GGUF model or claiming model receipt.  The ledger SHALL
+probe the selected repository Python in clean subprocesses with
+`CUDA_VISIBLE_DEVICES=0`, SHALL record PyTorch CUDA availability, device count,
+stderr, and import order, and SHALL rerun the selected-Python probe under a
+sanitized CUDA environment that strips ROCm/XDNA path pollution without
+mutating the parent process.
+
+The ledger SHALL record `nvidia-smi` availability, NVIDIA driver version, CUDA
+version, visible devices, and GPU memory state.  It SHALL record the tracked
+environment variables `PATH`, `LD_LIBRARY_PATH`, `CUDA_HOME`,
+`CUDA_VISIBLE_DEVICES`, `PYTHONPATH`, `CMAKE_ARGS`, and `FORCE_CMAKE`, and
+SHALL summarize ROCm, XDNA/Vitis/Xilinx, CUDA, Python path, and CMake pollution
+findings as machine-readable entries.
+
+When safe under the repository dependency workflow, Exp 3220 SHALL compare the
+selected `.venv` against a temporary CUDA-only Python environment outside
+protected source paths.  If the temporary environment is created, the artifact
+SHALL record the exact creation/install/probe commands and CUDA package
+versions.  If it is not created or cannot be created, the artifact SHALL record
+the skip/failure as a repair-action entry instead of silently treating the
+comparison as successful.
+
+The artifact SHALL expose at least `schema_version`, `experiment_id`,
+`milestone`, `selected_python`, `selected_python_cuda_ok_before`,
+`selected_python_cuda_ok_after`, `isolated_cuda_venv_created`,
+`isolated_cuda_venv_cuda_ok`, `cuda_visible_devices`,
+`nvidia_smi_available`, `gpu_count_nvidia_smi`, `driver_version`,
+`torch_version_selected`, `torch_cuda_version_selected`,
+`environment_pollution_findings`, `repair_actions_attempted`,
+`cuda_receipt_ready_candidate`, `recommended_next_action`,
+`inference_substrate`, `conductor_file_modified`, `active_roadmap_modified`,
+and `honest_verdict`.  `cuda_receipt_ready_candidate` SHALL be true only when a
+clean selected-Python subprocess can initialize CUDA and identify at least one
+GPU through PyTorch or an equivalent CUDA runtime probe.
+
+### SCENARIO-INFER-SOTA-026-001: Sanitized Selected Python Identifies CUDA
+
+**Given** `nvidia-smi` reports at least one NVIDIA GPU
+**And** the selected Python probe with `CUDA_VISIBLE_DEVICES=0` reports
+PyTorch CUDA available or an equivalent CUDA runtime device count greater than
+zero after environment sanitization
+**When** Exp 3220 builds the repair ledger
+**Then** `selected_python_cuda_ok_after=true`
+**And** `cuda_receipt_ready_candidate=true`
+**And** the artifact keeps `inference_substrate` on a no-model CUDA-runtime
+forensics value.
+
+### SCENARIO-INFER-SOTA-026-002: Isolated CUDA Venv Separates Venv From System Boundary
+
+**Given** the selected Python probe still cannot initialize CUDA
+**And** a temporary CUDA-only Python environment is safely created outside the
+repository source tree
+**When** the isolated CUDA runtime probe identifies a GPU
+**Then** `isolated_cuda_venv_created=true`
+**And** `isolated_cuda_venv_cuda_ok=true`
+**And** `recommended_next_action` identifies selected-venv CUDA repair rather
+than system driver repair.
+
+### SCENARIO-INFER-SOTA-026-003: Environment Pollution Is Explicit And Non-Successful
+
+**Given** the tracked environment contains ROCm, XDNA/Vitis/Xilinx, Python path,
+or CMake CUDA build variables
+**When** Exp 3220 builds the repair ledger
+**Then** `environment_pollution_findings` records each polluted variable class
+**And** a successful `nvidia-smi` result alone does not set
+`cuda_receipt_ready_candidate=true`
+**And** the artifact never claims SOTA model receipt.
+
 ### REQ-INFER-018: EBT Abstraction Layer
 
 The system SHALL provide an Energy-Based Transformer (EBT) abstraction layer that bridges autoregressive LLMs (like the mandated SOTA GGUF models) to an EBT formulation. This enables System-2 gradient refinement at inference time by providing a way to calculate sequence energy.
@@ -1484,6 +1556,7 @@ instead of silently producing invalid EBM energies.
 | REQ-INFER-SOTA-023 | Implemented (`python/carnot/reporting/sota_cache_preconditions_manifest_v2.py`) | Implemented (`tests/python/test_experiment_3123_sota_cache_preconditions_manifest_v2.py`) |
 | REQ-INFER-SOTA-024 | Planned (`python/carnot/reporting/cuda_env_forensics_ledger_3206.py`) | Planned (`tests/python/test_experiment_3206_cuda_env_forensics_ledger.py`) |
 | REQ-INFER-SOTA-025 | Implemented (`python/carnot/reporting/llama_cpp_cuda_rebuild_clean_subprocess_3207.py`) | Implemented (`tests/python/test_experiment_3207_llama_cpp_cuda_rebuild_clean_subprocess.py`) |
+| REQ-INFER-SOTA-026 | Implemented (`python/carnot/reporting/hermetic_cuda_runtime_repair_ledger_3220.py`) | Implemented (`tests/python/test_experiment_3220_hermetic_cuda_runtime_repair_ledger.py`) |
 | REQ-INFER-2041 | Proposed | Proposed |
 | REQ-INFER-2056 | Implemented (`crates/carnot-boltzmann/src/lib.rs`, `crates/carnot-python/src/lib.rs`) | Implemented (`crates/carnot-boltzmann/tests/soft_bellman.rs`, `tests/python/test_soft_bellman_pyo3.py`) |
 
