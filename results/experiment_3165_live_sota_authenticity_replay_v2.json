@@ -1,0 +1,347 @@
+{
+  "artifact": "experiment_3165_live_sota_authenticity_replay_v2",
+  "blocked_reason": "CUDA/GPU substrate unavailable for mandated GGUF replay smoke",
+  "controlled_subprocess_return_codes": [
+    {
+      "name": "torch_cuda_probe",
+      "returncode": 0
+    },
+    {
+      "name": "nvidia_smi_inventory",
+      "returncode": 0
+    },
+    {
+      "name": "model_load_smoke_worker",
+      "returncode": null
+    }
+  ],
+  "duration_s": 1.036063,
+  "fake_evidence_rejection_criteria": [
+    "reject no model loaded: load_attempted false, path proof absent, or load wall time missing",
+    "reject missing transcript hashes: every live call needs transcript_sha256 and response_hash",
+    "reject no seed/checksum: random_seed and reproducibility_checksum are mandatory",
+    "reject impossible token throughput: completion tokens per generation second above the declared ceiling",
+    "reject reused stale transcript hash: repeated calls must have fresh transcript hashes unless declared replay",
+    "reject mismatch between selected model and local path: selected model ID must match the selected model-spec path",
+    "reject wall-clock claims not supported by command output: duration fields must match worker stdout JSON",
+    "reject uncontrolled subprocess outcomes: model load, CUDA probe, and GPU inventory return codes must be recorded"
+  ],
+  "fake_evidence_rejection_passed": true,
+  "fake_evidence_rejection_violations": [],
+  "field_principles": {
+    "blocked_reason": "blocked preflights must be actionable",
+    "fake_evidence_rejection_passed": "authenticity checks must be adversarial",
+    "headline_claim_allowed": "smoke tests do not create headline evidence",
+    "honest_verdict": "terminal verdict must expose complete or blocked state",
+    "inference_substrate": "GPU/model/live status must be explicit",
+    "live_call_count": "live evidence must not be inferred",
+    "live_sota_authenticity_replay_v2_ready": "downstream rerun needs a completed preflight artifact",
+    "locally_usable_model_ids": "actual availability must be auditable",
+    "measured_work_policy_passed": "fast calls need a principled pass criterion",
+    "model_load_evidence": "claimed inference requires load evidence",
+    "model_specs": "mandated local model policy must be visible",
+    "preflight_passed": "downstream gates need one conservative field",
+    "prompt_hashes": "prompts must be replay-identifiable",
+    "random_seed": "methodology completeness must be explicit",
+    "reproducibility_checksum": "rerun provenance must be checkable",
+    "selected_model_ids": "any smoke call must identify selected models",
+    "source_artifacts": "preflight must trace to the v2 contract",
+    "token_counts": "duration plausibility requires measured work",
+    "transcript_hashes": "outputs must be replay-identifiable",
+    "unavailable_model_ids": "comparative gaps must stay visible"
+  },
+  "headline_claim_allowed": false,
+  "honest_verdict": "blocked_gpu_substrate: preflight_passed=false; live_call_count=0; detail=CUDA/GPU substrate unavailable for mandated GGUF replay smoke",
+  "inference_substrate": {
+    "contract_ready": true,
+    "cpu_probe": {
+      "platform": "Linux-7.0.4-1-cachyos-x86_64-with-glibc2.43",
+      "python_version": "3.14.4"
+    },
+    "downloads_models": false,
+    "executes_models": false,
+    "executes_repairs": false,
+    "executes_solvers": false,
+    "executes_verifiers": false,
+    "gpu_probe": {
+      "cuda_available": false,
+      "gpu_count": 1,
+      "nvidia_smi_inventory": {
+        "available": true,
+        "command": [
+          "nvidia-smi",
+          "--query-gpu=index,name,memory.total,memory.used,memory.free,driver_version",
+          "--format=csv,noheader,nounits"
+        ],
+        "gpus": [
+          {
+            "driver_version": "595.71.05",
+            "index": 0,
+            "memory_free_mib": 24123,
+            "memory_total_mib": 24576,
+            "memory_used_mib": 4,
+            "name": "NVIDIA GeForce RTX 3090"
+          }
+        ],
+        "returncode": 0,
+        "stderr_summary": "",
+        "stdout_summary": "0, NVIDIA GeForce RTX 3090, 24576, 4, 24123, 595.71.05\n"
+      },
+      "torch_cuda_probe": {
+        "command": [
+          "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+          "-c",
+          "import torch; print(torch.__version__, torch.cuda.is_available(), torch.cuda.device_count())"
+        ],
+        "cuda_available": false,
+        "cuda_device_count": 1,
+        "returncode": 0,
+        "stderr_summary": "/home/ianblenke/github.com/ianblenke/carnot/.venv/lib/python3.14/site-packages/torch/cuda/__init__.py:180: UserWarning: CUDA initialization: Unexpected error from cudaGetDeviceCount(). Did you run some cuda functions before calling NumCudaDevices() that might have already set an error? Error 101: invalid device ordinal (Triggered internally at /pytorch/c10/cuda/CUDAFunctions.cpp:119.)\n  return torch._C._cuda_getDeviceCount() > 0\n",
+        "stdout_summary": "2.11.0+cu128 False 1\n",
+        "torch_version": "2.11.0+cu128"
+      }
+    },
+    "kind": "live_sota_authenticity_replay_v2",
+    "legacy_small_model_used": false,
+    "live_model_calls": 0,
+    "model_load_attempted": false,
+    "no_verifier_panel_scored": true,
+    "runtime": "llama_cpp",
+    "selected_model_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+    "selected_model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+    "selected_python": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python"
+  },
+  "live_call_count": 0,
+  "live_sota_authenticity_replay_v2_ready": true,
+  "locally_usable_model_ids": [
+    "unsloth/gemma-4-26B-A4B-it-GGUF"
+  ],
+  "measured_work_policy_passed": false,
+  "model_load_evidence": {
+    "generation_wall_time_s": null,
+    "load_attempted": false,
+    "load_command": [],
+    "load_command_sha256": "",
+    "load_wall_time_s": null,
+    "path_exists": true,
+    "per_call_generation_wall_time_s": [],
+    "returncode": null,
+    "runtime": "llama_cpp",
+    "runtime_error": null,
+    "selected_model_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+    "selected_model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+    "stderr_summary": "",
+    "stdout_summary": "",
+    "total_worker_wall_time_s": null,
+    "worker_code_sha256": "e998982200bcebd9de8e8fc5ea30d5ec82b388bfaed0af64d6a37093dd94b378"
+  },
+  "model_specs": [
+    {
+      "cache_status": "missing",
+      "expected_quantization": "Q4_K_M",
+      "hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "legacy_small_model": false,
+      "manifest_present": false,
+      "model_path": null,
+      "name": "Qwen3.6-35B-A3B",
+      "path_exists": false,
+      "path_sha256_bounded": null,
+      "path_size_bytes": null,
+      "policy_order": 0,
+      "role": "moe",
+      "selected_for_smoke": false,
+      "tier": "flagship_moe",
+      "usable_locally": false
+    },
+    {
+      "cache_status": "missing",
+      "expected_quantization": "Q4_K_M",
+      "hf_id": "unsloth/gemma-4-31B-it-GGUF",
+      "legacy_small_model": false,
+      "manifest_present": false,
+      "model_path": null,
+      "name": "Gemma4-31B-it",
+      "path_exists": false,
+      "path_sha256_bounded": null,
+      "path_size_bytes": null,
+      "policy_order": 1,
+      "role": "dense",
+      "selected_for_smoke": false,
+      "tier": "flagship_dense",
+      "usable_locally": false
+    },
+    {
+      "cache_status": "resolved",
+      "expected_quantization": "Q4_K_M",
+      "hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "legacy_small_model": false,
+      "manifest_present": true,
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+      "name": "Gemma4-26B-A4B-it",
+      "path_exists": true,
+      "path_sha256_bounded": "7b42e1402003cd09ae1ba4afc532a93eec670a1787da9ef81a1f53da2ae5d306",
+      "path_size_bytes": 16947539744,
+      "policy_order": 2,
+      "role": "moe",
+      "selected_for_smoke": false,
+      "tier": "middle_moe",
+      "usable_locally": true
+    }
+  ],
+  "preflight_passed": false,
+  "prompt_hashes": [],
+  "random_seed": 20260527,
+  "repeated_call_policy": {
+    "all_calls_must_reference_same_selected_model_or_declared_model_rotation": true,
+    "minimum_distinct_smoke_calls": 2,
+    "require_distinct_prompt_hashes": true,
+    "require_distinct_response_hashes_or_seeded_prompt_variants": true,
+    "require_distinct_transcript_sha256": true
+  },
+  "repeated_call_policy_passed": false,
+  "reproducibility_checksum": "43995af2ecc0811c4c9b5aa6a7998586bef5939203e178a290ea4448071b27b8",
+  "run_date": "20260527",
+  "schema": "carnot.live_sota_authenticity_replay.v2",
+  "selected_model_ids": [],
+  "source_artifacts": [
+    {
+      "path": "results/experiment_3164_duration_corrected_authenticity_contract_v2.json",
+      "present": true,
+      "readable_json_object": true,
+      "required": true,
+      "role": "exp3164_v2_contract",
+      "sha256": "1fa6fabb68461c00e4ac182f2f38ad12be5f5df4d0ba1c8120f97574a1236c83",
+      "source_type": "json"
+    },
+    {
+      "path": "AGENTS.md",
+      "present": true,
+      "readable_json_object": null,
+      "required": true,
+      "role": "agents_repo_instructions",
+      "sha256": "b3d6581b04f16b85f77defb2837c98dc3b60ed51e10b347ecb36e609f318b619",
+      "source_type": "text"
+    },
+    {
+      "path": "CODEX.md",
+      "present": true,
+      "readable_json_object": null,
+      "required": true,
+      "role": "codex_repo_workflow",
+      "sha256": "1db7ebc1009714f872db83447828a8957c3abb72061832cc1bc307735cd96bbe",
+      "source_type": "text"
+    },
+    {
+      "path": "CLAUDE.md",
+      "present": true,
+      "readable_json_object": null,
+      "required": true,
+      "role": "claude_authenticity_rules",
+      "sha256": "cdc00581d37d1bd3c77a69b058787f74ecc71545a97c1eab31c48961637b3224",
+      "source_type": "text"
+    },
+    {
+      "path": "scripts/experiment_template.py",
+      "present": true,
+      "readable_json_object": null,
+      "required": true,
+      "role": "experiment_template_policy",
+      "sha256": "86559064fcfb0e0f06cb021609f1e82342c9d8464dc86b654d30d889f787de9f",
+      "source_type": "python"
+    },
+    {
+      "path": "openspec/capabilities/verification/spec.md",
+      "present": true,
+      "readable_json_object": null,
+      "required": true,
+      "role": "verification_openspec",
+      "sha256": "dc1ab6d38d5c9a3ed4d080adf9a948a002d2ff7f31c44d23929cb0b3e7a49a13",
+      "source_type": "text"
+    },
+    {
+      "path": "results/experiment_3151_live_inference_authenticity_preflight_v1.json",
+      "present": true,
+      "readable_json_object": true,
+      "required": true,
+      "role": "exp3151_duration_failed_preflight",
+      "sha256": "3ad9237f6351c8d18f385bf661f26d17bbe2594945befdd08b302a4024f49893",
+      "source_type": "json"
+    },
+    {
+      "path": "results/experiment_3123_sota_cache_preconditions_manifest_v2.json",
+      "present": true,
+      "readable_json_object": true,
+      "required": true,
+      "role": "exp3123_sota_cache_manifest",
+      "sha256": "93701a360f686883fa035e96be0a32f93acafa151f9245bd37bf7d4a92a20950",
+      "source_type": "json"
+    },
+    {
+      "path": "python/carnot/verify/live_sota_authenticity_replay_v2.py",
+      "present": true,
+      "readable_json_object": null,
+      "required": false,
+      "role": "exp3165_module",
+      "sha256": "dfb129394b8a1ee3e1ede2d0ad4942132a6d679b215bd9c547288c817471616c",
+      "source_type": "python"
+    },
+    {
+      "path": "scripts/experiment_3165_live_sota_authenticity_replay_v2.py",
+      "present": true,
+      "readable_json_object": null,
+      "required": false,
+      "role": "exp3165_script",
+      "sha256": "e4e6cf51f86959b8b71d44f9df7855ee21e8f0ace61aa1460db47b9fae372e6c",
+      "source_type": "python"
+    },
+    {
+      "path": "tests/python/test_experiment_3165_live_sota_authenticity_replay_v2.py",
+      "present": true,
+      "readable_json_object": null,
+      "required": false,
+      "role": "exp3165_tests",
+      "sha256": "85dd913c8d54f83e696d7e79069bce550ecb23ce58b207b0f45c0a6f8d934bfe",
+      "source_type": "python"
+    }
+  ],
+  "source_checksums": {
+    "AGENTS.md": "b3d6581b04f16b85f77defb2837c98dc3b60ed51e10b347ecb36e609f318b619",
+    "CLAUDE.md": "cdc00581d37d1bd3c77a69b058787f74ecc71545a97c1eab31c48961637b3224",
+    "CODEX.md": "1db7ebc1009714f872db83447828a8957c3abb72061832cc1bc307735cd96bbe",
+    "openspec/capabilities/verification/spec.md": "dc1ab6d38d5c9a3ed4d080adf9a948a002d2ff7f31c44d23929cb0b3e7a49a13",
+    "python/carnot/verify/live_sota_authenticity_replay_v2.py": "dfb129394b8a1ee3e1ede2d0ad4942132a6d679b215bd9c547288c817471616c",
+    "results/experiment_3123_sota_cache_preconditions_manifest_v2.json": "93701a360f686883fa035e96be0a32f93acafa151f9245bd37bf7d4a92a20950",
+    "results/experiment_3151_live_inference_authenticity_preflight_v1.json": "3ad9237f6351c8d18f385bf661f26d17bbe2594945befdd08b302a4024f49893",
+    "results/experiment_3164_duration_corrected_authenticity_contract_v2.json": "1fa6fabb68461c00e4ac182f2f38ad12be5f5df4d0ba1c8120f97574a1236c83",
+    "scripts/experiment_3165_live_sota_authenticity_replay_v2.py": "e4e6cf51f86959b8b71d44f9df7855ee21e8f0ace61aa1460db47b9fae372e6c",
+    "scripts/experiment_template.py": "86559064fcfb0e0f06cb021609f1e82342c9d8464dc86b654d30d889f787de9f",
+    "tests/python/test_experiment_3165_live_sota_authenticity_replay_v2.py": "85dd913c8d54f83e696d7e79069bce550ecb23ce58b207b0f45c0a6f8d934bfe"
+  },
+  "tests_run": [
+    ".venv/bin/pytest tests/python/test_experiment_3165_live_sota_authenticity_replay_v2.py -q --no-cov",
+    ".venv/bin/coverage erase && .venv/bin/coverage run --source=python/carnot/verify -m pytest -o addopts='' tests/python/test_experiment_3165_live_sota_authenticity_replay_v2.py -q",
+    ".venv/bin/coverage report --include='python/carnot/verify/live_sota_authenticity_replay_v2.py' --fail-under=100 --show-missing",
+    ".venv/bin/python scripts/check_spec_coverage.py",
+    ".venv/bin/pytest tests/python -q"
+  ],
+  "token_counts": {
+    "completion_tokens": 0,
+    "per_call": [],
+    "prompt_tokens": 0,
+    "source": "none",
+    "total_tokens": 0
+  },
+  "token_scaled_duration_policy": {
+    "fixed_60s_floor_hard_gate": false,
+    "minimum_distinct_smoke_calls": 2,
+    "pass_fail_basis": "measured work evidence plus bounded token throughput",
+    "policy_version": "v2",
+    "reject_if_completion_tokens_per_second_gt": 500.0
+  },
+  "token_scaled_duration_policy_passed": false,
+  "transcript_hashes": [],
+  "unavailable_model_ids": [
+    "unsloth/Qwen3.6-35B-A3B-GGUF",
+    "unsloth/gemma-4-31B-it-GGUF"
+  ]
+}

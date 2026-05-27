@@ -2237,6 +2237,64 @@ running fresh live inference.
 |---|---|---|
 | REQ-VERIFY-3164 | Implemented (`python/carnot/verify/duration_corrected_authenticity_contract_v2.py`) | Implemented (`tests/python/test_experiment_3164_duration_corrected_authenticity_contract_v2.py`) |
 
+### REQ-VERIFY-3165: Live SOTA Authenticity Replay V2
+
+The repository shall provide an Exp 3165 duration-corrected local SOTA
+authenticity replay builder that writes
+`results/experiment_3165_live_sota_authenticity_replay_v2.json` and decides
+whether downstream live verifier reruns may proceed under the Exp 3164 v2
+contract. The builder MUST read the Exp 3164 contract first, inspect local
+HuggingFace cache paths for the three mandated SOTA GGUF model IDs without
+downloading models, and MUST NOT score verifier panels, execute repairs,
+modify `scripts/research_conductor.py`, or use legacy small models as headline
+evidence.
+
+The replay SHALL select only a locally usable mandated SOTA GGUF. If one is
+available and the local CUDA/runtime substrate is safe to invoke, it SHALL run
+the smallest safe repeated-call smoke required by Exp 3164: at least two
+distinct smoke prompts on the selected model, or a predeclared longer
+token-scaled single call. It SHALL record load command and command hash, worker
+code hash, selected model path, substrate evidence, load wall time, per-call
+generation wall times, prompt hashes, response hashes, transcript hashes, token
+counts, `random_seed`, and `reproducibility_checksum`. If no mandated model is
+usable, runtime preconditions fail, the smoke call fails, repeated-call
+controls fail, or any required evidence is missing or internally inconsistent,
+it SHALL write a complete blocked artifact rather than a bootstrap-only
+artifact.
+
+The terminal artifact MUST include
+`live_sota_authenticity_replay_v2_ready`, `model_specs`,
+`locally_usable_model_ids`, `selected_model_ids`, `unavailable_model_ids`,
+`preflight_passed`, `live_call_count`, `model_load_evidence`,
+`prompt_hashes`, `transcript_hashes`, `token_counts`,
+`measured_work_policy_passed`, `fake_evidence_rejection_passed`,
+`headline_claim_allowed`, `blocked_reason`, `random_seed`,
+`reproducibility_checksum`, `source_artifacts`, `inference_substrate`, and
+`honest_verdict`. `preflight_passed` shall be true only when the completed
+artifact satisfies all required v2 evidence fields, the measured-work policy,
+the token-scaled duration policy, and fake-evidence rejection criteria.
+`headline_claim_allowed` SHALL remain false because a smoke replay only gates a
+later live verifier rerun; it is not itself headline verifier evidence.
+
+### SCENARIO-VERIFY-3165: Replay Either Passes With Two Fresh Smoke Calls Or Blocks
+
+Given Exp 3164 exposes a v2 replay contract and the local HuggingFace cache may
+contain zero or more mandated SOTA GGUFs,
+When Exp 3165 builds the live SOTA authenticity replay artifact,
+Then it records the mandated model policy and current cache availability,
+attempts the smallest safe repeated-call smoke only for a locally usable
+mandated model, records distinct prompt/transcript/response hashes and token
+counts for each completed call, applies measured-work and fake-evidence
+rejection checks, keeps `headline_claim_allowed=false`, and emits either
+`preflight_passed=true` with `live_call_count>=2` or a complete blocked
+artifact with `preflight_passed=false` and an actionable `blocked_reason`.
+
+## Implementation Status (REQ-VERIFY-3165)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-VERIFY-3165 | Implemented (`python/carnot/verify/live_sota_authenticity_replay_v2.py`) | Implemented (`tests/python/test_experiment_3165_live_sota_authenticity_replay_v2.py`) |
+
 ### REQ-VERIFY-3073: EBT/ARM-EBM Adapter Feasibility Audit
 
 The repository shall provide an Exp 3073 deterministic architecture audit that

@@ -550,5 +550,18 @@
       "minimum_prompt_tokens": 1,
       "prompt_tokens_observed": 19
     }
-  }
+  },
+  "flagged_adversarial": true,
+  "corrigendum_pending": [
+    {
+      "kind": "DURATION_TOO_SHORT",
+      "severity": "critical",
+      "detail": "duration_s=0.001849 but artifact references compute-bound markers (GGUF / CUDA / live model). Loading and running a real model takes >=60.0s minimum; this completed too fast to have invoked the model."
+    },
+    {
+      "kind": "METHODOLOGY_MISSING",
+      "severity": "warn",
+      "detail": "Compute-bound artifact missing: model_specs/target_model, random_seed, reproducibility_checksum. Methodology unverifiable."
+    }
+  ]
 }
