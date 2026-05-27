@@ -1,0 +1,1235 @@
+{
+  "artifact": "experiment_3180_controlled_invariance_executor_v2",
+  "blocker_reasons": [],
+  "control_definitions_loaded": [
+    {
+      "can_authorize_acceptance": false,
+      "name": "force_answer",
+      "routes_to_exact_checks": true,
+      "source_experiment": "exp3166",
+      "source_name": "force"
+    },
+    {
+      "can_authorize_acceptance": false,
+      "name": "remove_answer",
+      "routes_to_exact_checks": true,
+      "source_experiment": "exp3166",
+      "source_name": "remove"
+    },
+    {
+      "can_authorize_acceptance": false,
+      "name": "shuffled_trace",
+      "routes_to_exact_checks": true,
+      "source_experiment": "exp3166",
+      "source_name": "shuffled_trace"
+    },
+    {
+      "can_authorize_acceptance": false,
+      "name": "answer_only",
+      "routes_to_exact_checks": true,
+      "source_experiment": "exp3166",
+      "source_name": "answer_only"
+    },
+    {
+      "can_authorize_acceptance": false,
+      "name": "trace_only",
+      "routes_to_exact_checks": true,
+      "source_experiment": "exp3166",
+      "source_name": "trace_only"
+    },
+    {
+      "can_authorize_acceptance": false,
+      "name": "transcript_hash",
+      "routes_to_exact_checks": true,
+      "source_experiment": "exp3180_executor_v2",
+      "source_name": "transcript_hash"
+    },
+    {
+      "can_authorize_acceptance": false,
+      "name": "token_suspicion_triage",
+      "routes_to_exact_checks": true,
+      "source_experiment": "exp3180_executor_v2",
+      "source_name": "token_suspicion_triage"
+    }
+  ],
+  "control_results": {
+    "answer_only": {
+      "can_authorize_acceptance": false,
+      "definition_source": "exp3166",
+      "details": {
+        "authority": "answer-only exposure is visible but exact authority rejects regressions",
+        "shortcut_exposure_count": 2,
+        "shortcut_exposure_row_ids": [
+          "resyn-3084-arith-003",
+          "resyn-3084-smt-000"
+        ]
+      },
+      "executed": true,
+      "load_bearing": true,
+      "name": "answer_only",
+      "passed": true,
+      "routes_to_exact_checks": true,
+      "row_count": 72,
+      "semantic_false_accept_count": 0,
+      "shortcut_failure_count": 0
+    },
+    "force_answer": {
+      "can_authorize_acceptance": false,
+      "definition_source": "exp3166",
+      "details": {
+        "authority": "exact labels override forced answer tokens",
+        "forced_values": [
+          "exact_label",
+          "counterfactual_label"
+        ]
+      },
+      "executed": true,
+      "load_bearing": true,
+      "name": "force_answer",
+      "passed": true,
+      "routes_to_exact_checks": true,
+      "row_count": 72,
+      "semantic_false_accept_count": 0,
+      "shortcut_failure_count": 0
+    },
+    "remove_answer": {
+      "can_authorize_acceptance": false,
+      "definition_source": "exp3166",
+      "details": {
+        "authority": "no row is accepted from a removed answer artifact",
+        "removed_field": "candidate_answers"
+      },
+      "executed": true,
+      "load_bearing": true,
+      "name": "remove_answer",
+      "passed": true,
+      "routes_to_exact_checks": true,
+      "row_count": 72,
+      "semantic_false_accept_count": 0,
+      "shortcut_failure_count": 0
+    },
+    "shuffled_trace": {
+      "can_authorize_acceptance": false,
+      "definition_source": "exp3166",
+      "details": {
+        "authority": "trace order does not change exact authority decisions",
+        "fingerprint_count": 72
+      },
+      "executed": true,
+      "load_bearing": true,
+      "name": "shuffled_trace",
+      "passed": true,
+      "routes_to_exact_checks": true,
+      "row_count": 72,
+      "semantic_false_accept_count": 0,
+      "shortcut_failure_count": 0
+    },
+    "token_suspicion_triage": {
+      "can_authorize_acceptance": false,
+      "definition_source": "exp3180_executor_v2",
+      "details": {
+        "authority": "token suspicion may route exact checks but cannot accept",
+        "token_suspicion_used_as_triage_only": true
+      },
+      "executed": true,
+      "load_bearing": true,
+      "name": "token_suspicion_triage",
+      "passed": true,
+      "routes_to_exact_checks": true,
+      "row_count": 1,
+      "semantic_false_accept_count": 0,
+      "shortcut_failure_count": 0
+    },
+    "trace_only": {
+      "can_authorize_acceptance": false,
+      "definition_source": "exp3166",
+      "details": {
+        "authority": "trace-only evidence can route checks but cannot accept",
+        "trace_only_accept_count": 0
+      },
+      "executed": true,
+      "load_bearing": true,
+      "name": "trace_only",
+      "passed": true,
+      "routes_to_exact_checks": true,
+      "row_count": 72,
+      "semantic_false_accept_count": 0,
+      "shortcut_failure_count": 0
+    },
+    "transcript_hash": {
+      "can_authorize_acceptance": false,
+      "definition_source": "exp3180_executor_v2",
+      "details": {
+        "authority": "transcript hashes prove receipt identity only, not correctness",
+        "duplicate_transcript_hash_count": 0,
+        "unique_transcript_hash_count": 2
+      },
+      "executed": true,
+      "load_bearing": true,
+      "name": "transcript_hash",
+      "passed": true,
+      "routes_to_exact_checks": true,
+      "row_count": 2,
+      "semantic_false_accept_count": 0,
+      "shortcut_failure_count": 0
+    }
+  },
+  "controlled_invariance_executor_v2_ready": true,
+  "controlled_invariance_passed": true,
+  "downstream_gate_targets": [
+    "exp3181",
+    "exp3184"
+  ],
+  "duration_s": 0.00397,
+  "exact_row_count": 72,
+  "exact_rows_evaluated": [
+    {
+      "acceptance_authority": true,
+      "candidate_answers": [
+        "VALID"
+      ],
+      "exact_authority_decision": "accept",
+      "exact_label": "VALID",
+      "known_false_accept_regression": false,
+      "row_id": "resyn-3084-arith-000",
+      "semantic_false_accept": false
+    },
+    {
+      "acceptance_authority": true,
+      "candidate_answers": [
+        "INVALID"
+      ],
+      "exact_authority_decision": "reject",
+      "exact_label": "INVALID",
+      "known_false_accept_regression": false,
+      "row_id": "resyn-3084-arith-001",
+      "semantic_false_accept": false
+    },
+    {
+      "acceptance_authority": true,
+      "candidate_answers": [
+        "VALID"
+      ],
+      "exact_authority_decision": "accept",
+      "exact_label": "VALID",
+      "known_false_accept_regression": false,
+      "row_id": "resyn-3084-arith-002",
+      "semantic_false_accept": false
+    },
+    {
+      "acceptance_authority": true,
+      "candidate_answers": [
+        "INVALID",
+        "VALID"
+      ],
+      "exact_authority_decision": "reject",
+      "exact_label": "INVALID",
+      "known_false_accept_regression": true,
+      "row_id": "resyn-3084-arith-003",
+      "semantic_false_accept": false
+    },
+    {
+      "acceptance_authority": true,
+      "candidate_answers": [
+        "VALID"
+      ],
+      "exact_authority_decision": "accept",
+      "exact_label": "VALID",
+      "known_false_accept_regression": false,
+      "row_id": "resyn-3084-arith-004",
+      "semantic_false_accept": false
+    },
+    {
+      "acceptance_authority": true,
+      "candidate_answers": [
+        "INVALID"
+      ],
+      "exact_authority_decision": "reject",
+      "exact_label": "INVALID",
+      "known_false_accept_regression": false,
+      "row_id": "resyn-3084-arith-005",
+      "semantic_false_accept": false
+    },
+    {
+      "acceptance_authority": true,
+      "candidate_answers": [
+        "VALID"
+      ],
+      "exact_authority_decision": "accept",
+      "exact_label": "VALID",
+      "known_false_accept_regression": false,
+      "row_id": "resyn-3084-arith-006",
+      "semantic_false_accept": false
+    },
+    {
+      "acceptance_authority": true,
+      "candidate_answers": [
+        "INVALID"
+      ],
+      "exact_authority_decision": "reject",
+      "exact_label": "INVALID",
+      "known_false_accept_regression": false,
+      "row_id": "resyn-3084-arith-007",
+      "semantic_false_accept": false
+    },
+    {
+      "acceptance_authority": true,
+      "candidate_answers": [
+        "VALID"
+      ],
+      "exact_authority_decision": "accept",
+      "exact_label": "VALID",
+      "known_false_accept_regression": false,
+      "row_id": "resyn-3084-arith-008",
+      "semantic_false_accept": false
+    },
+    {
+      "acceptance_authority": true,
+      "candidate_answers": [
+        "INVALID"
+      ],
+      "exact_authority_decision": "reject",
+      "exact_label": "INVALID",
+      "known_false_accept_regression": false,
+      "row_id": "resyn-3084-arith-009",
+      "semantic_false_accept": false
+    },
+    {
+      "acceptance_authority": true,
+      "candidate_answers": [
+        "VALID"
+      ],
+      "exact_authority_decision": "accept",
+      "exact_label": "VALID",
+      "known_false_accept_regression": false,
+      "row_id": "resyn-3084-arith-010",
+      "semantic_false_accept": false
+    },
+    {
+      "acceptance_authority": true,
+      "candidate_answers": [
+        "INVALID"
+      ],
+      "exact_authority_decision": "reject",
+      "exact_label": "INVALID",
+      "known_false_accept_regression": false,
+      "row_id": "resyn-3084-arith-011",
+      "semantic_false_accept": false
+    },
+    {
+      "acceptance_authority": true,
+      "candidate_answers": [
+        "VALID"
+      ],
+      "exact_authority_decision": "accept",
+      "exact_label": "VALID",
+      "known_false_accept_regression": false,
+      "row_id": "resyn-3084-arith-012",
+      "semantic_false_accept": false
+    },
+    {
+      "acceptance_authority": true,
+      "candidate_answers": [
+        "INVALID"
+      ],
+      "exact_authority_decision": "reject",
+      "exact_label": "INVALID",
+      "known_false_accept_regression": false,
+      "row_id": "resyn-3084-arith-013",
+      "semantic_false_accept": false
+    },
+    {
+      "acceptance_authority": true,
+      "candidate_answers": [
+        "VALID"
+      ],
+      "exact_authority_decision": "accept",
+      "exact_label": "VALID",
+      "known_false_accept_regression": false,
+      "row_id": "resyn-3084-arith-014",
+      "semantic_false_accept": false
+    },
+    {
+      "acceptance_authority": true,
+      "candidate_answers": [
+        "INVALID"
+      ],
+      "exact_authority_decision": "reject",
+      "exact_label": "INVALID",
+      "known_false_accept_regression": false,
+      "row_id": "resyn-3084-arith-015",
+      "semantic_false_accept": false
+    },
+    {
+      "acceptance_authority": true,
+      "candidate_answers": [
+        "VALID"
+      ],
+      "exact_authority_decision": "accept",
+      "exact_label": "VALID",
+      "known_false_accept_regression": false,
+      "row_id": "resyn-3084-arith-016",
+      "semantic_false_accept": false
+    },
+    {
+      "acceptance_authority": true,
+      "candidate_answers": [
+        "INVALID"
+      ],
+      "exact_authority_decision": "reject",
+      "exact_label": "INVALID",
+      "known_false_accept_regression": false,
+      "row_id": "resyn-3084-arith-017",
+      "semantic_false_accept": false
+    },
+    {
+      "acceptance_authority": true,
+      "candidate_answers": [
+        "VALID"
+      ],
+      "exact_authority_decision": "accept",
+      "exact_label": "VALID",
+      "known_false_accept_regression": false,
+      "row_id": "resyn-3084-arith-018",
+      "semantic_false_accept": false
+    },
+    {
+      "acceptance_authority": true,
+      "candidate_answers": [
+        "INVALID"
+      ],
+      "exact_authority_decision": "reject",
+      "exact_label": "INVALID",
+      "known_false_accept_regression": false,
+      "row_id": "resyn-3084-arith-019",
+      "semantic_false_accept": false
+    },
+    {
+      "acceptance_authority": true,
+      "candidate_answers": [
+        "VALID"
+      ],
+      "exact_authority_decision": "accept",
+      "exact_label": "VALID",
+      "known_false_accept_regression": false,
+      "row_id": "resyn-3084-arith-020",
+      "semantic_false_accept": false
+    },
+    {
+      "acceptance_authority": true,
+      "candidate_answers": [
+        "INVALID"
+      ],
+      "exact_authority_decision": "reject",
+      "exact_label": "INVALID",
+      "known_false_accept_regression": false,
+      "row_id": "resyn-3084-arith-021",
+      "semantic_false_accept": false
+    },
+    {
+      "acceptance_authority": true,
+      "candidate_answers": [
+        "VALID"
+      ],
+      "exact_authority_decision": "accept",
+      "exact_label": "VALID",
+      "known_false_accept_regression": false,
+      "row_id": "resyn-3084-arith-022",
+      "semantic_false_accept": false
+    },
+    {
+      "acceptance_authority": true,
+      "candidate_answers": [
+        "INVALID"
+      ],
+      "exact_authority_decision": "reject",
+      "exact_label": "INVALID",
+      "known_false_accept_regression": false,
+      "row_id": "resyn-3084-arith-023",
+      "semantic_false_accept": false
+    },
+    {
+      "acceptance_authority": true,
+      "candidate_answers": [
+        "REPAIRABLE"
+      ],
+      "exact_authority_decision": "reject",
+      "exact_label": "REPAIRABLE",
+      "known_false_accept_regression": false,
+      "row_id": "resyn-3084-repair-json-000",
+      "semantic_false_accept": false
+    },
+    {
+      "acceptance_authority": true,
+      "candidate_answers": [
+        "REPAIRABLE"
+      ],
+      "exact_authority_decision": "reject",
+      "exact_label": "REPAIRABLE",
+      "known_false_accept_regression": false,
+      "row_id": "resyn-3084-repair-json-003",
+      "semantic_false_accept": false
+    },
+    {
+      "acceptance_authority": true,
+      "candidate_answers": [
+        "REPAIRABLE"
+      ],
+      "exact_authority_decision": "reject",
+      "exact_label": "REPAIRABLE",
+      "known_false_accept_regression": false,
+      "row_id": "resyn-3084-repair-json-006",
+      "semantic_false_accept": false
+    },
+    {
+      "acceptance_authority": true,
+      "candidate_answers": [
+        "REPAIRABLE"
+      ],
+      "exact_authority_decision": "reject",
+      "exact_label": "REPAIRABLE",
+      "known_false_accept_regression": false,
+      "row_id": "resyn-3084-repair-json-009",
+      "semantic_false_accept": false
+    },
+    {
+      "acceptance_authority": true,
+      "candidate_answers": [
+        "REPAIRABLE"
+      ],
+      "exact_authority_decision": "reject",
+      "exact_label": "REPAIRABLE",
+      "known_false_accept_regression": false,
+      "row_id": "resyn-3084-repair-json-012",
+      "semantic_false_accept": false
+    },
+    {
+      "acceptance_authority": true,
+      "candidate_answers": [
+        "REPAIRABLE"
+      ],
+      "exact_authority_decision": "reject",
+      "exact_label": "REPAIRABLE",
+      "known_false_accept_regression": false,
+      "row_id": "resyn-3084-repair-json-015",
+      "semantic_false_accept": false
+    },
+    {
+      "acceptance_authority": true,
+      "candidate_answers": [
+        "REPAIRABLE"
+      ],
+      "exact_authority_decision": "reject",
+      "exact_label": "REPAIRABLE",
+      "known_false_accept_regression": false,
+      "row_id": "resyn-3084-repair-json-018",
+      "semantic_false_accept": false
+    },
+    {
+      "acceptance_authority": true,
+      "candidate_answers": [
+        "REPAIRABLE"
+      ],
+      "exact_authority_decision": "reject",
+      "exact_label": "REPAIRABLE",
+      "known_false_accept_regression": false,
+      "row_id": "resyn-3084-repair-json-021",
+      "semantic_false_accept": false
+    },
+    {
+      "acceptance_authority": true,
+      "candidate_answers": [
+        "REPAIRABLE"
+      ],
+      "exact_authority_decision": "reject",
+      "exact_label": "REPAIRABLE",
+      "known_false_accept_regression": false,
+      "row_id": "resyn-3084-repair-py-002",
+      "semantic_false_accept": false
+    },
+    {
+      "acceptance_authority": true,
+      "candidate_answers": [
+        "REPAIRABLE"
+      ],
+      "exact_authority_decision": "reject",
+      "exact_label": "REPAIRABLE",
+      "known_false_accept_regression": false,
+      "row_id": "resyn-3084-repair-py-005",
+      "semantic_false_accept": false
+    },
+    {
+      "acceptance_authority": true,
+      "candidate_answers": [
+        "REPAIRABLE"
+      ],
+      "exact_authority_decision": "reject",
+      "exact_label": "REPAIRABLE",
+      "known_false_accept_regression": false,
+      "row_id": "resyn-3084-repair-py-008",
+      "semantic_false_accept": false
+    },
+    {
+      "acceptance_authority": true,
+      "candidate_answers": [
+        "REPAIRABLE"
+      ],
+      "exact_authority_decision": "reject",
+      "exact_label": "REPAIRABLE",
+      "known_false_accept_regression": false,
+      "row_id": "resyn-3084-repair-py-011",
+      "semantic_false_accept": false
+    },
+    {
+      "acceptance_authority": true,
+      "candidate_answers": [
+        "REPAIRABLE"
+      ],
+      "exact_authority_decision": "reject",
+      "exact_label": "REPAIRABLE",
+      "known_false_accept_regression": false,
+      "row_id": "resyn-3084-repair-py-014",
+      "semantic_false_accept": false
+    },
+    {
+      "acceptance_authority": true,
+      "candidate_answers": [
+        "REPAIRABLE"
+      ],
+      "exact_authority_decision": "reject",
+      "exact_label": "REPAIRABLE",
+      "known_false_accept_regression": false,
+      "row_id": "resyn-3084-repair-py-017",
+      "semantic_false_accept": false
+    },
+    {
+      "acceptance_authority": true,
+      "candidate_answers": [
+        "REPAIRABLE"
+      ],
+      "exact_authority_decision": "reject",
+      "exact_label": "REPAIRABLE",
+      "known_false_accept_regression": false,
+      "row_id": "resyn-3084-repair-py-020",
+      "semantic_false_accept": false
+    },
+    {
+      "acceptance_authority": true,
+      "candidate_answers": [
+        "REPAIRABLE"
+      ],
+      "exact_authority_decision": "reject",
+      "exact_label": "REPAIRABLE",
+      "known_false_accept_regression": false,
+      "row_id": "resyn-3084-repair-py-023",
+      "semantic_false_accept": false
+    },
+    {
+      "acceptance_authority": true,
+      "candidate_answers": [
+        "REPAIRABLE"
+      ],
+      "exact_authority_decision": "reject",
+      "exact_label": "REPAIRABLE",
+      "known_false_accept_regression": false,
+      "row_id": "resyn-3084-repair-smt-001",
+      "semantic_false_accept": false
+    },
+    {
+      "acceptance_authority": true,
+      "candidate_answers": [
+        "REPAIRABLE"
+      ],
+      "exact_authority_decision": "reject",
+      "exact_label": "REPAIRABLE",
+      "known_false_accept_regression": false,
+      "row_id": "resyn-3084-repair-smt-004",
+      "semantic_false_accept": false
+    },
+    {
+      "acceptance_authority": true,
+      "candidate_answers": [
+        "REPAIRABLE"
+      ],
+      "exact_authority_decision": "reject",
+      "exact_label": "REPAIRABLE",
+      "known_false_accept_regression": false,
+      "row_id": "resyn-3084-repair-smt-007",
+      "semantic_false_accept": false
+    },
+    {
+      "acceptance_authority": true,
+      "candidate_answers": [
+        "REPAIRABLE"
+      ],
+      "exact_authority_decision": "reject",
+      "exact_label": "REPAIRABLE",
+      "known_false_accept_regression": false,
+      "row_id": "resyn-3084-repair-smt-010",
+      "semantic_false_accept": false
+    },
+    {
+      "acceptance_authority": true,
+      "candidate_answers": [
+        "REPAIRABLE"
+      ],
+      "exact_authority_decision": "reject",
+      "exact_label": "REPAIRABLE",
+      "known_false_accept_regression": false,
+      "row_id": "resyn-3084-repair-smt-013",
+      "semantic_false_accept": false
+    },
+    {
+      "acceptance_authority": true,
+      "candidate_answers": [
+        "REPAIRABLE"
+      ],
+      "exact_authority_decision": "reject",
+      "exact_label": "REPAIRABLE",
+      "known_false_accept_regression": false,
+      "row_id": "resyn-3084-repair-smt-016",
+      "semantic_false_accept": false
+    },
+    {
+      "acceptance_authority": true,
+      "candidate_answers": [
+        "REPAIRABLE"
+      ],
+      "exact_authority_decision": "reject",
+      "exact_label": "REPAIRABLE",
+      "known_false_accept_regression": false,
+      "row_id": "resyn-3084-repair-smt-019",
+      "semantic_false_accept": false
+    },
+    {
+      "acceptance_authority": true,
+      "candidate_answers": [
+        "REPAIRABLE"
+      ],
+      "exact_authority_decision": "reject",
+      "exact_label": "REPAIRABLE",
+      "known_false_accept_regression": false,
+      "row_id": "resyn-3084-repair-smt-022",
+      "semantic_false_accept": false
+    },
+    {
+      "acceptance_authority": true,
+      "candidate_answers": [
+        "UNSAT",
+        "VALID"
+      ],
+      "exact_authority_decision": "reject",
+      "exact_label": "UNSAT",
+      "known_false_accept_regression": true,
+      "row_id": "resyn-3084-smt-000",
+      "semantic_false_accept": false
+    },
+    {
+      "acceptance_authority": true,
+      "candidate_answers": [
+        "SAT"
+      ],
+      "exact_authority_decision": "accept",
+      "exact_label": "SAT",
+      "known_false_accept_regression": false,
+      "row_id": "resyn-3084-smt-001",
+      "semantic_false_accept": false
+    },
+    {
+      "acceptance_authority": true,
+      "candidate_answers": [
+        "UNSAT"
+      ],
+      "exact_authority_decision": "reject",
+      "exact_label": "UNSAT",
+      "known_false_accept_regression": false,
+      "row_id": "resyn-3084-smt-002",
+      "semantic_false_accept": false
+    },
+    {
+      "acceptance_authority": true,
+      "candidate_answers": [
+        "SAT"
+      ],
+      "exact_authority_decision": "accept",
+      "exact_label": "SAT",
+      "known_false_accept_regression": false,
+      "row_id": "resyn-3084-smt-003",
+      "semantic_false_accept": false
+    },
+    {
+      "acceptance_authority": true,
+      "candidate_answers": [
+        "UNSAT"
+      ],
+      "exact_authority_decision": "reject",
+      "exact_label": "UNSAT",
+      "known_false_accept_regression": false,
+      "row_id": "resyn-3084-smt-004",
+      "semantic_false_accept": false
+    },
+    {
+      "acceptance_authority": true,
+      "candidate_answers": [
+        "SAT"
+      ],
+      "exact_authority_decision": "accept",
+      "exact_label": "SAT",
+      "known_false_accept_regression": false,
+      "row_id": "resyn-3084-smt-005",
+      "semantic_false_accept": false
+    },
+    {
+      "acceptance_authority": true,
+      "candidate_answers": [
+        "UNSAT"
+      ],
+      "exact_authority_decision": "reject",
+      "exact_label": "UNSAT",
+      "known_false_accept_regression": false,
+      "row_id": "resyn-3084-smt-006",
+      "semantic_false_accept": false
+    },
+    {
+      "acceptance_authority": true,
+      "candidate_answers": [
+        "SAT"
+      ],
+      "exact_authority_decision": "accept",
+      "exact_label": "SAT",
+      "known_false_accept_regression": false,
+      "row_id": "resyn-3084-smt-007",
+      "semantic_false_accept": false
+    },
+    {
+      "acceptance_authority": true,
+      "candidate_answers": [
+        "UNSAT"
+      ],
+      "exact_authority_decision": "reject",
+      "exact_label": "UNSAT",
+      "known_false_accept_regression": false,
+      "row_id": "resyn-3084-smt-008",
+      "semantic_false_accept": false
+    },
+    {
+      "acceptance_authority": true,
+      "candidate_answers": [
+        "SAT"
+      ],
+      "exact_authority_decision": "accept",
+      "exact_label": "SAT",
+      "known_false_accept_regression": false,
+      "row_id": "resyn-3084-smt-009",
+      "semantic_false_accept": false
+    },
+    {
+      "acceptance_authority": true,
+      "candidate_answers": [
+        "UNSAT"
+      ],
+      "exact_authority_decision": "reject",
+      "exact_label": "UNSAT",
+      "known_false_accept_regression": false,
+      "row_id": "resyn-3084-smt-010",
+      "semantic_false_accept": false
+    },
+    {
+      "acceptance_authority": true,
+      "candidate_answers": [
+        "SAT"
+      ],
+      "exact_authority_decision": "accept",
+      "exact_label": "SAT",
+      "known_false_accept_regression": false,
+      "row_id": "resyn-3084-smt-011",
+      "semantic_false_accept": false
+    },
+    {
+      "acceptance_authority": true,
+      "candidate_answers": [
+        "UNSAT"
+      ],
+      "exact_authority_decision": "reject",
+      "exact_label": "UNSAT",
+      "known_false_accept_regression": false,
+      "row_id": "resyn-3084-smt-012",
+      "semantic_false_accept": false
+    },
+    {
+      "acceptance_authority": true,
+      "candidate_answers": [
+        "SAT"
+      ],
+      "exact_authority_decision": "accept",
+      "exact_label": "SAT",
+      "known_false_accept_regression": false,
+      "row_id": "resyn-3084-smt-013",
+      "semantic_false_accept": false
+    },
+    {
+      "acceptance_authority": true,
+      "candidate_answers": [
+        "UNSAT"
+      ],
+      "exact_authority_decision": "reject",
+      "exact_label": "UNSAT",
+      "known_false_accept_regression": false,
+      "row_id": "resyn-3084-smt-014",
+      "semantic_false_accept": false
+    },
+    {
+      "acceptance_authority": true,
+      "candidate_answers": [
+        "SAT"
+      ],
+      "exact_authority_decision": "accept",
+      "exact_label": "SAT",
+      "known_false_accept_regression": false,
+      "row_id": "resyn-3084-smt-015",
+      "semantic_false_accept": false
+    },
+    {
+      "acceptance_authority": true,
+      "candidate_answers": [
+        "UNSAT"
+      ],
+      "exact_authority_decision": "reject",
+      "exact_label": "UNSAT",
+      "known_false_accept_regression": false,
+      "row_id": "resyn-3084-smt-016",
+      "semantic_false_accept": false
+    },
+    {
+      "acceptance_authority": true,
+      "candidate_answers": [
+        "SAT"
+      ],
+      "exact_authority_decision": "accept",
+      "exact_label": "SAT",
+      "known_false_accept_regression": false,
+      "row_id": "resyn-3084-smt-017",
+      "semantic_false_accept": false
+    },
+    {
+      "acceptance_authority": true,
+      "candidate_answers": [
+        "UNSAT"
+      ],
+      "exact_authority_decision": "reject",
+      "exact_label": "UNSAT",
+      "known_false_accept_regression": false,
+      "row_id": "resyn-3084-smt-018",
+      "semantic_false_accept": false
+    },
+    {
+      "acceptance_authority": true,
+      "candidate_answers": [
+        "SAT"
+      ],
+      "exact_authority_decision": "accept",
+      "exact_label": "SAT",
+      "known_false_accept_regression": false,
+      "row_id": "resyn-3084-smt-019",
+      "semantic_false_accept": false
+    },
+    {
+      "acceptance_authority": true,
+      "candidate_answers": [
+        "UNSAT"
+      ],
+      "exact_authority_decision": "reject",
+      "exact_label": "UNSAT",
+      "known_false_accept_regression": false,
+      "row_id": "resyn-3084-smt-020",
+      "semantic_false_accept": false
+    },
+    {
+      "acceptance_authority": true,
+      "candidate_answers": [
+        "SAT"
+      ],
+      "exact_authority_decision": "accept",
+      "exact_label": "SAT",
+      "known_false_accept_regression": false,
+      "row_id": "resyn-3084-smt-021",
+      "semantic_false_accept": false
+    },
+    {
+      "acceptance_authority": true,
+      "candidate_answers": [
+        "UNSAT"
+      ],
+      "exact_authority_decision": "reject",
+      "exact_label": "UNSAT",
+      "known_false_accept_regression": false,
+      "row_id": "resyn-3084-smt-022",
+      "semantic_false_accept": false
+    },
+    {
+      "acceptance_authority": true,
+      "candidate_answers": [
+        "SAT"
+      ],
+      "exact_authority_decision": "accept",
+      "exact_label": "SAT",
+      "known_false_accept_regression": false,
+      "row_id": "resyn-3084-smt-023",
+      "semantic_false_accept": false
+    }
+  ],
+  "field_principles": {
+    "blocker_reasons": "failed controls must produce actionable blockers",
+    "control_results": "each invariance family needs explicit status",
+    "controlled_invariance_executor_v2_ready": "controls must be executed, not only described",
+    "controlled_invariance_passed": "downstream rerun and repair gates need an explicit boolean",
+    "exact_row_count": "denominator must be visible",
+    "honest_verdict": "terminal verdict must be machine-readable",
+    "inference_substrate": "cached/exact work must not be mislabeled as live inference",
+    "known_false_accept_regression_count": "adversarial regressions must stay load-bearing",
+    "receipt_backed_transcript_count": "live evidence used by controls must be counted",
+    "shortcut_failure_count": "trace or answer shortcuts must remain visible",
+    "token_suspicion_used_as_triage_only": "suspicion features cannot replace exact authority"
+  },
+  "honest_verdict": "complete: controlled_invariance_executor_v2_ready=true; controlled_invariance_passed=true; exact_row_count=72; receipt_backed_transcript_count=2",
+  "inference_substrate": {
+    "downloads_models": false,
+    "executes_models": false,
+    "executes_repairs": false,
+    "executes_verifiers": false,
+    "kind": "cached_exact_authority_and_receipt_control_execution",
+    "new_live_model_calls": 0,
+    "receipt_backed_transcript_count": 2,
+    "source_receipt_live_model_calls": 2,
+    "upstream_receipt_substrate": "local_sota_receipt_smoke_v3",
+    "uses_cached_receipts": true,
+    "uses_exact_authority_rows": true
+  },
+  "known_false_accept_regression_count": 2,
+  "known_false_accept_regression_ids": [
+    "resyn-3084-arith-003",
+    "resyn-3084-smt-000"
+  ],
+  "ops_docs_reconciliation_left_to_conductor": true,
+  "receipt_backed_transcript_count": 2,
+  "receipt_backed_transcripts": [
+    {
+      "acceptance_authority": false,
+      "index": 0,
+      "prompt_hash": "9196c45cb42428c01c90b00c6747cad30c83decb37cf1d0d7c9fdc971fd08791",
+      "response_hash": "3f8e2f272eebe26338f0ad3d58254df335f8ad6d1c93d96a11ddbbdfbd0cc6e2",
+      "selected_model_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "source_experiment": "exp3179",
+      "subprocess_return_code": 0,
+      "substrate_used": "cpu_fallback_receipt_only",
+      "token_counts": {
+        "completion_tokens": 4,
+        "prompt_tokens": 19,
+        "source": "llama_cpp_usage",
+        "total_tokens": 23
+      },
+      "transcript_hash": "af139d87f0d1b5522ad0e7d130499262995888c65b9cdab8a0a1da15ecd85a42"
+    },
+    {
+      "acceptance_authority": false,
+      "index": 1,
+      "prompt_hash": "36e9d439812e6f5c03790eaeb52179c67f40825628a9c8d42fae7c3e93d4333c",
+      "response_hash": "5e94bde789d9bf501ae9302e0f226e660c8ef70d8e93adab6b72b840d1912a74",
+      "selected_model_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "source_experiment": "exp3179",
+      "subprocess_return_code": 0,
+      "substrate_used": "cpu_fallback_receipt_only",
+      "token_counts": {
+        "completion_tokens": 4,
+        "prompt_tokens": 20,
+        "source": "llama_cpp_usage",
+        "total_tokens": 24
+      },
+      "transcript_hash": "3adf45720f20a104bad6f09eaad31423d1325eae4e4c7f56fadf75a99c84137a"
+    }
+  ],
+  "regression_row_results": [
+    {
+      "acceptance_authority": true,
+      "candidate_answers": [
+        "INVALID",
+        "VALID"
+      ],
+      "exact_authority_decision": "reject",
+      "exact_label": "INVALID",
+      "known_false_accept_regression": true,
+      "row_id": "resyn-3084-arith-003",
+      "semantic_false_accept": false
+    },
+    {
+      "acceptance_authority": true,
+      "candidate_answers": [
+        "UNSAT",
+        "VALID"
+      ],
+      "exact_authority_decision": "reject",
+      "exact_label": "UNSAT",
+      "known_false_accept_regression": true,
+      "row_id": "resyn-3084-smt-000",
+      "semantic_false_accept": false
+    }
+  ],
+  "run_date": "20260527",
+  "schema": "carnot.controlled_invariance_executor.v2",
+  "scripts_research_conductor_modified": false,
+  "semantic_false_accept_count": 0,
+  "shortcut_failure_count": 0,
+  "source_artifacts": [
+    {
+      "path": "AGENTS.md",
+      "present": true,
+      "readable_json_object": null,
+      "required": true,
+      "role": "agents_repo_instructions",
+      "sha256": "b3d6581b04f16b85f77defb2837c98dc3b60ed51e10b347ecb36e609f318b619",
+      "source_type": "text"
+    },
+    {
+      "path": "CODEX.md",
+      "present": true,
+      "readable_json_object": null,
+      "required": true,
+      "role": "codex_repo_workflow",
+      "sha256": "1db7ebc1009714f872db83447828a8957c3abb72061832cc1bc307735cd96bbe",
+      "source_type": "text"
+    },
+    {
+      "path": "CLAUDE.md",
+      "present": true,
+      "readable_json_object": null,
+      "required": true,
+      "role": "claude_authenticity_rules",
+      "sha256": "cdc00581d37d1bd3c77a69b058787f74ecc71545a97c1eab31c48961637b3224",
+      "source_type": "text"
+    },
+    {
+      "path": "scripts/experiment_template.py",
+      "present": true,
+      "readable_json_object": null,
+      "required": true,
+      "role": "experiment_template_policy",
+      "sha256": "86559064fcfb0e0f06cb021609f1e82342c9d8464dc86b654d30d889f787de9f",
+      "source_type": "python"
+    },
+    {
+      "path": "openspec/capabilities/verification/spec.md",
+      "present": true,
+      "readable_json_object": null,
+      "required": true,
+      "role": "verification_openspec",
+      "sha256": "497cfaffa24ac43fe58b2793286e7b1b64629d1affe89677701646025b13f6c9",
+      "source_type": "text"
+    },
+    {
+      "path": "results/experiment_3136_false_accept_root_cause_autopsy_v1.json",
+      "present": true,
+      "readable_json_object": true,
+      "required": true,
+      "role": "exp3136_false_accept_autopsy",
+      "sha256": "3a61c8490030b607c73f50ba2ce145dc4591621ac76f016a42811bedd670776a",
+      "source_type": "json"
+    },
+    {
+      "path": "results/experiment_3137_exact_safe_accept_abstain_contract_v1.json",
+      "present": true,
+      "readable_json_object": true,
+      "required": true,
+      "role": "exp3137_exact_safe_contract",
+      "sha256": "c8d23896f879ceb1e912989e2ba13db0a43cd195a8ff5e8fb18a7be1b4582f2e",
+      "source_type": "json"
+    },
+    {
+      "path": "results/experiment_3138_canonical_answer_vericot_grounding_pilot_v1.json",
+      "present": true,
+      "readable_json_object": true,
+      "required": true,
+      "role": "exp3138_canonical_grounding",
+      "sha256": "fc07294c1e4ea32bb8d174c2e99a5d70aa68a1e7e16252eea28f442812300a21",
+      "source_type": "json"
+    },
+    {
+      "path": "results/experiment_3166_verifier_invariance_token_suspicion_audit_v1.json",
+      "present": true,
+      "readable_json_object": true,
+      "required": true,
+      "role": "exp3166_control_definitions",
+      "sha256": "98b79a3b5aeeda09631dc8a5a3af512b803ecb17146339fe5fb18bfcec95f84e",
+      "source_type": "json"
+    },
+    {
+      "path": "results/experiment_3167_clean_live_sota_verifier_rerun_v9.json",
+      "present": true,
+      "readable_json_object": true,
+      "required": true,
+      "role": "exp3167_clean_rerun_gate",
+      "sha256": "093d07548fae5908c968ffa020b584fc5939b86e86002a4f0b4066b765b79711",
+      "source_type": "json"
+    },
+    {
+      "path": "results/experiment_3179_local_sota_receipt_smoke_v3.json",
+      "present": true,
+      "readable_json_object": true,
+      "required": false,
+      "role": "exp3179_receipt_smoke",
+      "sha256": "d3090bf2cc07a5dde0d55161721268f80c5fdc2aa532e460516f4d7520ffae35",
+      "source_type": "json"
+    },
+    {
+      "path": "python/carnot/verify/controlled_invariance_executor_v2.py",
+      "present": true,
+      "readable_json_object": null,
+      "required": false,
+      "role": "exp3180_module",
+      "sha256": "164917f3bc7e28550b45ca64e48eac060787bdbf7bec3e94804a359ae28b0eab",
+      "source_type": "python"
+    },
+    {
+      "path": "scripts/experiment_3180_controlled_invariance_executor_v2.py",
+      "present": true,
+      "readable_json_object": null,
+      "required": false,
+      "role": "exp3180_script",
+      "sha256": "0eb27d997d79b59b1413ca39572f53547c152d67f6671f1632fe7bb18a43a058",
+      "source_type": "python"
+    },
+    {
+      "path": "tests/python/test_experiment_3180_controlled_invariance_executor_v2.py",
+      "present": true,
+      "readable_json_object": null,
+      "required": false,
+      "role": "exp3180_tests",
+      "sha256": "8a113459be6295f7e5fac8418e49e7c2b6967c55a4b40d51014d30451d68348b",
+      "source_type": "python"
+    }
+  ],
+  "source_checksums": {
+    "AGENTS.md": "b3d6581b04f16b85f77defb2837c98dc3b60ed51e10b347ecb36e609f318b619",
+    "CLAUDE.md": "cdc00581d37d1bd3c77a69b058787f74ecc71545a97c1eab31c48961637b3224",
+    "CODEX.md": "1db7ebc1009714f872db83447828a8957c3abb72061832cc1bc307735cd96bbe",
+    "openspec/capabilities/verification/spec.md": "497cfaffa24ac43fe58b2793286e7b1b64629d1affe89677701646025b13f6c9",
+    "python/carnot/verify/controlled_invariance_executor_v2.py": "164917f3bc7e28550b45ca64e48eac060787bdbf7bec3e94804a359ae28b0eab",
+    "results/experiment_3136_false_accept_root_cause_autopsy_v1.json": "3a61c8490030b607c73f50ba2ce145dc4591621ac76f016a42811bedd670776a",
+    "results/experiment_3137_exact_safe_accept_abstain_contract_v1.json": "c8d23896f879ceb1e912989e2ba13db0a43cd195a8ff5e8fb18a7be1b4582f2e",
+    "results/experiment_3138_canonical_answer_vericot_grounding_pilot_v1.json": "fc07294c1e4ea32bb8d174c2e99a5d70aa68a1e7e16252eea28f442812300a21",
+    "results/experiment_3166_verifier_invariance_token_suspicion_audit_v1.json": "98b79a3b5aeeda09631dc8a5a3af512b803ecb17146339fe5fb18bfcec95f84e",
+    "results/experiment_3167_clean_live_sota_verifier_rerun_v9.json": "093d07548fae5908c968ffa020b584fc5939b86e86002a4f0b4066b765b79711",
+    "results/experiment_3179_local_sota_receipt_smoke_v3.json": "d3090bf2cc07a5dde0d55161721268f80c5fdc2aa532e460516f4d7520ffae35",
+    "scripts/experiment_3180_controlled_invariance_executor_v2.py": "0eb27d997d79b59b1413ca39572f53547c152d67f6671f1632fe7bb18a43a058",
+    "scripts/experiment_template.py": "86559064fcfb0e0f06cb021609f1e82342c9d8464dc86b654d30d889f787de9f",
+    "tests/python/test_experiment_3180_controlled_invariance_executor_v2.py": "8a113459be6295f7e5fac8418e49e7c2b6967c55a4b40d51014d30451d68348b"
+  },
+  "source_errors": [],
+  "tests_run": [
+    ".venv/bin/pytest tests/python/test_experiment_3180_controlled_invariance_executor_v2.py -q --no-cov",
+    ".venv/bin/coverage erase && .venv/bin/coverage run --source=python/carnot/verify -m pytest -o addopts='' tests/python/test_experiment_3180_controlled_invariance_executor_v2.py -q",
+    ".venv/bin/coverage report --include='python/carnot/verify/controlled_invariance_executor_v2.py' --fail-under=100 --show-missing",
+    ".venv/bin/python scripts/check_spec_coverage.py",
+    ".venv/bin/pytest tests/python -q"
+  ],
+  "token_suspicion_used_as_triage_only": true
+}

@@ -3137,6 +3137,66 @@ blocker, keeps `headline_claim_allowed=false`, and sets
 |---|---|---|
 | REQ-VERIFY-3179 | Implemented (`python/carnot/verify/local_sota_receipt_smoke_v3.py`) | Implemented (`tests/python/test_experiment_3179_local_sota_receipt_smoke_v3.py`) |
 
+### REQ-VERIFY-3180: Controlled-Invariance Executor V2
+
+The repository shall provide an Exp 3180 controlled-invariance executor that
+writes `results/experiment_3180_controlled_invariance_executor_v2.json` from
+checked-in exact-authority evidence and receipt-backed transcripts only. The
+executor MUST consume the Exp 3166 invariance/token-suspicion audit, Exp 3167
+clean live SOTA verifier rerun gate artifact, Exp 3179 local SOTA receipt
+smoke artifact when present, and the Exp 3136/3137/3138 exact false-accept and
+canonical authority artifacts. It MUST NOT make live model calls, download
+models, execute repairs, execute verifier scoring, modify
+`scripts/research_conductor.py`, or push commits.
+
+The executor SHALL load the .294 control definitions for force-answer,
+remove-answer, shuffled-trace, answer-only, trace-only, transcript-hash, and
+token-suspicion triage, then execute those controls against exact-authority
+rows and known false-accept regression rows. Exact labels, canonical
+equivalence, exact-safe replay, solver/test authority, and monitor-ledger
+consistency SHALL remain the only acceptance authority. Token-suspicion,
+transcript-hash, answer-only, trace-only, and shuffled-trace signals MAY route
+rows to exact checks or block promotion, but SHALL NOT accept outputs.
+
+The terminal artifact MUST include
+`controlled_invariance_executor_v2_ready`, `exact_row_count`,
+`receipt_backed_transcript_count`, `control_results`,
+`shortcut_failure_count`, `known_false_accept_regression_count`,
+`token_suspicion_used_as_triage_only`, `controlled_invariance_passed`,
+`blocker_reasons`, `inference_substrate`, and `honest_verdict`. It SHOULD also
+include semantic false-accept counts, executed-row summaries, source artifact
+provenance, tests run, source checksums, duration, run date, and an explicit
+statement that ops/status, changelog, and traceability reconciliation are left
+to the conductor when the task prompt says so.
+
+`controlled_invariance_passed` shall be true only when every load-bearing
+control is executed and passes, at least one exact row is evaluated, every
+known false-accept regression row is included and rejected by exact authority,
+receipt-backed transcript hashes are unique when receipts are present, no
+shortcut control accepts a row without exact authority, token-suspicion fields
+remain triage-only, semantic false accepts are zero, and the inference
+substrate declares zero new live model calls.
+
+### SCENARIO-VERIFY-3180: Exact Authority Executes Controls Without Live Calls
+
+Given Exp 3166 defines the controlled-invariance and token-suspicion controls,
+Exp 3167 exposes exact-row and regression-row provenance, and Exp 3179 may
+contain receipt-backed transcript hashes,
+When Exp 3180 builds the controlled-invariance executor artifact,
+Then it writes the terminal JSON artifact without live inference, executes
+force-answer, remove-answer, shuffled-trace, answer-only, trace-only,
+transcript-hash, and token-suspicion triage controls over the exact rows and
+available receipts, reports shortcut failures separately from semantic false
+accepts, keeps token suspicion as non-authority triage, includes every known
+false-accept regression row as load-bearing evidence, and sets
+`controlled_invariance_passed=true` only when all load-bearing controls pass.
+
+## Implementation Status (REQ-VERIFY-3180)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-VERIFY-3180 | Implemented (`python/carnot/verify/controlled_invariance_executor_v2.py`) | Implemented (`tests/python/test_experiment_3180_controlled_invariance_executor_v2.py`) |
+
 ### REQ-VERIFY-3006: EqR Fixed-Point Energy Diagnostic Over Cached Validator Trajectories
 
 The repository shall provide a deterministic Exp 3006 fixed-point energy
