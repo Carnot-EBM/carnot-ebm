@@ -1155,3 +1155,58 @@ separate sets
 row unless the run is honestly blocked.
 
 **Spec traces:** REQ-BENCH-2926, SCENARIO-BENCH-2926
+
+### REQ-BENCH-3211: ConstraintBench Feasibility/Objective Exact Pilot
+
+Carnot MUST provide a small ConstraintBench-style exact pilot that separates
+hard-constraint feasibility from objective quality without claiming full
+ConstraintBench coverage. The pilot MUST write a JSONL fixture at
+`data/research/constraintbench_feasibility_objective_pilot_v1.jsonl` and a
+terminal artifact at
+`results/experiment_3211_constraintbench_feasibility_objective_pilot_v1.json`.
+
+The fixture MUST contain at least 15 deterministic rows spanning two or more
+small optimization families that are natural for Carnot's existing verification
+surface, such as knapsack, assignment, scheduling, or graph coloring. Every row
+MUST include instance data, human-readable constraints, an exact optimum or
+feasible reference, and the checker backend used to validate candidates. Exact
+references MUST come from local exhaustive enumeration or an equivalent exact
+bounded solver, not from an LLM.
+
+The checker MUST score response quality with separate fields for valid format,
+hallucinated entity or variable, missing or violated constraint,
+feasibility pass, objective value, and objective gap. If an optional LLM smoke
+path is recorded, its model specs MUST include at least one mandated local SOTA
+GGUF from `unsloth/Qwen3.6-35B-A3B-GGUF`,
+`unsloth/gemma-4-31B-it-GGUF`, or
+`unsloth/gemma-4-26B-A4B-it-GGUF`; legacy small models may be labeled
+smoke-only but MUST NOT become headline evidence.
+
+The terminal artifact MUST include `schema_version`, `experiment_id`,
+`milestone`, `reference_papers`, `fixture_path`, `fixture_count`,
+`optimization_families`, `exact_solver_backends`,
+`feasibility_metric_defined`, `objective_gap_metric_defined`,
+`hallucinated_entity_metric_defined`, `optional_llm_smoke`,
+`ready_for_clean_verifier`, `conductor_file_modified`,
+`active_roadmap_modified`, and `honest_verdict`.
+
+### SCENARIO-BENCH-3211: Feasibility And Objective Gap Are Scored Separately
+
+**Given** the Exp 3211 exact pilot fixture
+**When** Carnot builds the terminal artifact
+**Then** every fixture row has an exact bounded reference and checker backend
+**And** the checker can distinguish invalid JSON, hallucinated entities,
+constraint violations, feasible-but-suboptimal answers, and exact optimum
+answers
+**And** the artifact reports feasibility, objective gap, hallucinated-entity,
+missing-constraint, and invalid-format metrics as separate quantities while
+leaving `optional_llm_smoke` null unless a mandated local SOTA GGUF smoke run is
+actually invoked.
+
+**Spec traces:** REQ-BENCH-3211, SCENARIO-BENCH-3211
+
+## Implementation Status (REQ-BENCH-3211)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-BENCH-3211 | Implemented (`python/carnot/eval/constraintbench_feasibility_objective_pilot_v1.py`) | Implemented (`tests/python/test_experiment_3211_constraintbench_feasibility_objective_pilot_v1.py`) |
