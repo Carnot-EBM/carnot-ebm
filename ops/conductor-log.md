@@ -6469,3 +6469,4 @@ web search: Semantic Scholar 2507.02092 Energy |
 | 2026-05-27 16:28 UTC | GenCP-style domain preview compiler for bounded re | OK | 81 passed in 2.20s |
 | 2026-05-27 16:43 UTC | ExVerus-style inductive invariant expansion from c | OK | 81 passed in 3.18s |
 | 2026-05-27 16:59 UTC | Repair gate decision v5 from receipt, verifier, gr | OK | 81 passed in 4.23s |
+| 2026-05-27 17:01 UTC | Multi-turn repair ladder v6 gated on repair gate u | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp3198-repair-gate-decision-v5.repair_gat |
