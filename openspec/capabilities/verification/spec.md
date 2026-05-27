@@ -3379,6 +3379,68 @@ of flagged live-verifier dependence.
 |---|---|---|
 | REQ-VERIFY-3183 | Implemented (`python/carnot/verify/counterexample_certificate_expansion_v3.py`) | Implemented (`tests/python/test_experiment_3183_counterexample_certificate_expansion_v3.py`) |
 
+### REQ-VERIFY-3184: Repair Gate Decision V4 Aggregation
+
+The repository shall provide an Exp 3184 deterministic repair-gate decision
+builder that writes `results/experiment_3184_repair_gate_decision_v4.json`
+from checked-in upstream artifacts and exact gate policies only. The builder
+MUST consume Exp 3179 local SOTA receipt smoke v3, Exp 3180 controlled
+invariance executor v2, Exp 3181 clean live SOTA verifier rerun v10, Exp 3183
+counterexample-certificate expansion v3, and the prior Exp 3168 repair-gate
+decision v3 for provenance. It MUST NOT make live model calls, execute repair
+generation, execute verifier scoring, download models, push commits, or modify
+`scripts/research_conductor.py`.
+
+The gate SHALL evaluate these load-bearing unblocking predicates explicitly:
+`exp3179.clean_rerun_allowed=true`, `exp3180.controlled_invariance_passed=true`,
+`exp3181.flagged_adversarial=false`, `exp3181.headline_claim_allowed=true` for
+verifier metrics, an acceptable false-accept gate from computed clean verifier
+metrics, and `exp3183.repair_call_ready=true`. If any required artifact or gate
+policy source is missing or malformed, the builder SHALL list it in
+`missing_artifacts` and set `repair_gate_state=blocked_missing_artifact`. If any
+predicate is false or flagged, the builder SHALL list every failed predicate in
+`blocker_reasons` and choose the most specific blocked state rather than
+collapsing failures into a generic skip.
+
+The terminal artifact MUST include `repair_gate_decision_v4_ready`,
+`repair_gate_state`, `unblocking_predicates`, `blocker_reasons`,
+`missing_artifacts`, `allowed_repair_attempt_budget`, `source_artifacts`,
+`inference_substrate`, and `honest_verdict`. The state SHALL be exactly one of
+`blocked_missing_artifact`, `blocked_receipt_precondition`,
+`blocked_controlled_invariance`, `blocked_clean_verifier_flagged`,
+`blocked_headline_claim_blocked`, `blocked_false_accept_gate`,
+`blocked_certificate_not_ready`, `blocked_other`, or
+`unblocked_for_bounded_repair_ladder`.
+
+`repair_gate_state=unblocked_for_bounded_repair_ladder` SHALL be allowed only
+when every unblocking predicate passes, no required artifact is missing, and
+the artifact specifies a strict repair attempt budget with finite limits,
+mandated local-SOTA model policy, exact-authority acceptance, and a no-headline
+claim boundary. Blocked states SHALL set the repair-attempt budget to disabled
+with zero attempts and an actionable disabled reason. The inference substrate
+SHALL declare zero new live model calls, zero repair calls, and aggregation-only
+execution.
+
+### SCENARIO-VERIFY-3184: V4 Gate Blocks Until Receipts, Verifier Metrics, And Certificates Pass
+
+Given Exp 3179, Exp 3180, Exp 3181, Exp 3183, and Exp 3168 artifacts may be
+present, missing, blocked, or flagged,
+When Exp 3184 builds the repair-gate decision v4 artifact,
+Then it writes the terminal JSON artifact without live inference, records each
+unblocking predicate with source path, expected value, actual value, and pass
+status, exposes missing artifacts separately from failed predicates, keeps
+repair blocked whenever receipt smoke does not allow clean rerun, controlled
+invariance fails, the clean verifier is flagged, headline verifier metrics are
+not allowed, the false-accept gate is not backed by computed clean metrics, or
+certificates are not repair-call ready, and opens only the bounded repair
+ladder state with strict attempt limits when every predicate passes.
+
+## Implementation Status (REQ-VERIFY-3184)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-VERIFY-3184 | Implemented (`python/carnot/verify/repair_gate_decision_v4.py`) | Implemented (`tests/python/test_experiment_3184_repair_gate_decision_v4.py`) |
+
 ### REQ-VERIFY-3006: EqR Fixed-Point Energy Diagnostic Over Cached Validator Trajectories
 
 The repository shall provide a deterministic Exp 3006 fixed-point energy

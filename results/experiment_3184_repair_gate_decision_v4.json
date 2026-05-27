@@ -1,0 +1,251 @@
+{
+  "allowed_repair_attempt_budget": {
+    "disabled_reason": "blocked_receipt_precondition",
+    "enabled": false,
+    "max_attempts_per_row": 0,
+    "max_distinct_rows": 0,
+    "max_total_repair_attempts": 0,
+    "no_headline_claim_from_gate_alone": true,
+    "requires_certificate_repair_call_ready": true,
+    "requires_exact_authority_acceptance": true,
+    "requires_mandated_local_sota": true,
+    "stop_on_first_exact_accept_per_row": true
+  },
+  "artifact": "experiment_3184_repair_gate_decision_v4",
+  "blocker_reasons": [
+    "exp3179.clean_rerun_allowed is not true",
+    "exp3181.flagged_adversarial is not false",
+    "exp3181.headline_claim_allowed is not true",
+    "clean verifier false-accept gate is not acceptable",
+    "exp3183.repair_call_ready is not true"
+  ],
+  "duration_s": 0.003664,
+  "field_principles": {
+    "allowed_repair_attempt_budget": "unblocked repair must remain bounded",
+    "blocker_reasons": "blocked repair must be actionable",
+    "honest_verdict": "terminal verdict must honestly reflect blocked preconditions",
+    "inference_substrate": "aggregation work must declare no live model inference",
+    "missing_artifacts": "absence must not be hidden",
+    "repair_gate_decision_v4_ready": "repair gate must be explicit",
+    "repair_gate_state": "downstream repair must read one machine state",
+    "source_artifacts": "gate summaries must trace to files",
+    "unblocking_predicates": "gate logic must be auditable"
+  },
+  "honest_verdict": "blocked_receipt_precondition: exp3179.clean_rerun_allowed is not true",
+  "inference_substrate": {
+    "aggregation_only": true,
+    "downloads_models": false,
+    "executes_models": false,
+    "executes_repairs": false,
+    "executes_solvers": false,
+    "executes_verifiers": false,
+    "kind": "deterministic_repair_gate_decision_v4",
+    "live_model_calls": 0,
+    "new_live_model_calls": 0,
+    "no_live_inference": true,
+    "no_llm_calls": true,
+    "repair_calls": 0,
+    "source_certificate_live_model_calls": 0,
+    "source_clean_verifier_live_model_calls": 0,
+    "source_receipt_live_model_calls": 2
+  },
+  "missing_artifacts": [],
+  "ops_docs_reconciliation_left_to_conductor": true,
+  "repair_gate_decision_v4_ready": true,
+  "repair_gate_state": "blocked_receipt_precondition",
+  "run_date": "20260527",
+  "schema": "carnot.repair_gate_decision.v4",
+  "scripts_research_conductor_modified": false,
+  "source_artifacts": [
+    {
+      "path": "AGENTS.md",
+      "present": true,
+      "readable_json_object": null,
+      "required": false,
+      "role": "agents_repo_instructions",
+      "sha256": "b3d6581b04f16b85f77defb2837c98dc3b60ed51e10b347ecb36e609f318b619",
+      "source_type": "text"
+    },
+    {
+      "path": "CODEX.md",
+      "present": true,
+      "readable_json_object": null,
+      "required": false,
+      "role": "codex_repo_workflow",
+      "sha256": "1db7ebc1009714f872db83447828a8957c3abb72061832cc1bc307735cd96bbe",
+      "source_type": "text"
+    },
+    {
+      "path": "CLAUDE.md",
+      "present": true,
+      "readable_json_object": null,
+      "required": false,
+      "role": "claude_authenticity_rules",
+      "sha256": "cdc00581d37d1bd3c77a69b058787f74ecc71545a97c1eab31c48961637b3224",
+      "source_type": "text"
+    },
+    {
+      "path": "openspec/capabilities/verification/spec.md",
+      "present": true,
+      "readable_json_object": null,
+      "required": true,
+      "role": "verification_openspec_gate_policy",
+      "sha256": "f29e1d709101a090982f9c6588c3feba110ab4d93d7b40a1ba8b8f4a796a5279",
+      "source_type": "text"
+    },
+    {
+      "path": "results/experiment_3168_repair_gate_decision_v3.json",
+      "present": true,
+      "readable_json_object": true,
+      "required": true,
+      "role": "exp3168_prior_repair_gate_v3",
+      "sha256": "041d4c341c5c0414ac94e09276b05275940f97a6088aa3edcb0831b239d787e7",
+      "source_type": "json"
+    },
+    {
+      "path": "results/experiment_3179_local_sota_receipt_smoke_v3.json",
+      "present": true,
+      "readable_json_object": true,
+      "required": true,
+      "role": "exp3179_receipt_smoke_v3",
+      "sha256": "d3090bf2cc07a5dde0d55161721268f80c5fdc2aa532e460516f4d7520ffae35",
+      "source_type": "json"
+    },
+    {
+      "path": "results/experiment_3180_controlled_invariance_executor_v2.json",
+      "present": true,
+      "readable_json_object": true,
+      "required": true,
+      "role": "exp3180_controlled_invariance_v2",
+      "sha256": "efe6520a3cf8dfee8216a78f342609cfa2af3f74ef905cdadc421042b54485c5",
+      "source_type": "json"
+    },
+    {
+      "path": "results/experiment_3181_clean_live_sota_verifier_rerun_v10.json",
+      "present": true,
+      "readable_json_object": true,
+      "required": true,
+      "role": "exp3181_clean_verifier_v10",
+      "sha256": "3ca7dbf4b70e8cb20dd7377e54e7d223da84b1150aed44d6c7debe4f6cdd9bf9",
+      "source_type": "json"
+    },
+    {
+      "path": "results/experiment_3183_counterexample_certificate_expansion_v3.json",
+      "present": true,
+      "readable_json_object": true,
+      "required": true,
+      "role": "exp3183_certificate_expansion_v3",
+      "sha256": "b3ed5fb0b72d4369431a698ce2a08e50693b3e9366be9cf438334436834b9c71",
+      "source_type": "json"
+    },
+    {
+      "path": "python/carnot/verify/repair_gate_decision_v4.py",
+      "present": true,
+      "readable_json_object": null,
+      "required": false,
+      "role": "exp3184_module",
+      "sha256": "275de7c577b497b372a4376ecfe5116bab84ba10ede979dc9c41947e744b890e",
+      "source_type": "python"
+    },
+    {
+      "path": "tests/python/test_experiment_3184_repair_gate_decision_v4.py",
+      "present": true,
+      "readable_json_object": null,
+      "required": false,
+      "role": "exp3184_tests",
+      "sha256": "c7568235cce7951e39aa69f4d83c2f67bb67743794e848d2f1651c45c071816b",
+      "source_type": "python"
+    }
+  ],
+  "source_checksums": {
+    "AGENTS.md": "b3d6581b04f16b85f77defb2837c98dc3b60ed51e10b347ecb36e609f318b619",
+    "CLAUDE.md": "cdc00581d37d1bd3c77a69b058787f74ecc71545a97c1eab31c48961637b3224",
+    "CODEX.md": "1db7ebc1009714f872db83447828a8957c3abb72061832cc1bc307735cd96bbe",
+    "openspec/capabilities/verification/spec.md": "f29e1d709101a090982f9c6588c3feba110ab4d93d7b40a1ba8b8f4a796a5279",
+    "python/carnot/verify/repair_gate_decision_v4.py": "275de7c577b497b372a4376ecfe5116bab84ba10ede979dc9c41947e744b890e",
+    "results/experiment_3168_repair_gate_decision_v3.json": "041d4c341c5c0414ac94e09276b05275940f97a6088aa3edcb0831b239d787e7",
+    "results/experiment_3179_local_sota_receipt_smoke_v3.json": "d3090bf2cc07a5dde0d55161721268f80c5fdc2aa532e460516f4d7520ffae35",
+    "results/experiment_3180_controlled_invariance_executor_v2.json": "efe6520a3cf8dfee8216a78f342609cfa2af3f74ef905cdadc421042b54485c5",
+    "results/experiment_3181_clean_live_sota_verifier_rerun_v10.json": "3ca7dbf4b70e8cb20dd7377e54e7d223da84b1150aed44d6c7debe4f6cdd9bf9",
+    "results/experiment_3183_counterexample_certificate_expansion_v3.json": "b3ed5fb0b72d4369431a698ce2a08e50693b3e9366be9cf438334436834b9c71",
+    "tests/python/test_experiment_3184_repair_gate_decision_v4.py": "c7568235cce7951e39aa69f4d83c2f67bb67743794e848d2f1651c45c071816b"
+  },
+  "source_gate_summary": {
+    "exp3168_repair_gate_state": "blocked_flagged_verifier",
+    "exp3179_clean_rerun_allowed": false,
+    "exp3179_substrate_classification": "cpu_fallback_receipt_only",
+    "exp3180_controlled_invariance_passed": true,
+    "exp3181_false_accept_rate": 0.0,
+    "exp3181_flagged_adversarial": true,
+    "exp3181_gated_skip": true,
+    "exp3181_headline_claim_allowed": false,
+    "exp3181_metrics_computed": false,
+    "exp3183_repair_call_ready": false
+  },
+  "spec_refs": [
+    "REQ-VERIFY-3184",
+    "SCENARIO-VERIFY-3184"
+  ],
+  "tests_run": [
+    ".venv/bin/pytest tests/python/test_experiment_3184_repair_gate_decision_v4.py -q --no-cov",
+    ".venv/bin/coverage erase && .venv/bin/coverage run -m pytest -o addopts='' tests/python/test_experiment_3184_repair_gate_decision_v4.py -q",
+    ".venv/bin/coverage report --include='python/carnot/verify/repair_gate_decision_v4.py' --fail-under=100 --show-missing",
+    ".venv/bin/python scripts/check_spec_coverage.py tests/python/test_experiment_3184_repair_gate_decision_v4.py",
+    ".venv/bin/pytest tests/python -q"
+  ],
+  "unblocking_predicates": {
+    "certificate_repair_call_ready": {
+      "actual": false,
+      "blocker_reason": "exp3183.repair_call_ready is not true",
+      "expected": true,
+      "field": "repair_call_ready",
+      "passed": false,
+      "source_artifact": "results/experiment_3183_counterexample_certificate_expansion_v3.json"
+    },
+    "clean_verifier_not_flagged_adversarial": {
+      "actual": true,
+      "blocker_reason": "exp3181.flagged_adversarial is not false",
+      "expected": false,
+      "field": "flagged_adversarial",
+      "passed": false,
+      "source_artifact": "results/experiment_3181_clean_live_sota_verifier_rerun_v10.json"
+    },
+    "controlled_invariance_passed": {
+      "actual": true,
+      "blocker_reason": "",
+      "expected": true,
+      "field": "controlled_invariance_passed",
+      "passed": true,
+      "source_artifact": "results/experiment_3180_controlled_invariance_executor_v2.json"
+    },
+    "false_accept_gate_acceptable": {
+      "actual": {
+        "false_accept_rate": 0.0,
+        "gated_skip": true,
+        "known_false_accepts_accepted": [],
+        "metrics_computed": false
+      },
+      "blocker_reason": "clean verifier false-accept gate is not acceptable",
+      "expected": "finite <= 0.1 from computed clean verifier metrics",
+      "field": "false_accept_rate",
+      "passed": false,
+      "source_artifact": "results/experiment_3181_clean_live_sota_verifier_rerun_v10.json"
+    },
+    "headline_claim_allowed_for_verifier_metrics": {
+      "actual": false,
+      "blocker_reason": "exp3181.headline_claim_allowed is not true",
+      "expected": true,
+      "field": "headline_claim_allowed",
+      "passed": false,
+      "source_artifact": "results/experiment_3181_clean_live_sota_verifier_rerun_v10.json"
+    },
+    "receipt_smoke_clean_rerun_allowed": {
+      "actual": false,
+      "blocker_reason": "exp3179.clean_rerun_allowed is not true",
+      "expected": true,
+      "field": "clean_rerun_allowed",
+      "passed": false,
+      "source_artifact": "results/experiment_3179_local_sota_receipt_smoke_v3.json"
+    }
+  }
+}
