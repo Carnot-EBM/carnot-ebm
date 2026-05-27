@@ -9283,3 +9283,86 @@ with `complete:`.
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-LEARN-3215 | Implemented (`python/carnot/eval/fr11_evidence_gated_trace_replay_controller_v2.py`) | Implemented (`tests/python/test_experiment_3215_fr11_evidence_gated_trace_replay_controller_v2.py`) |
+
+## REQ-LEARN-3216: FR-11 Grounded Continuation Trace Graph Nonforgetting Queue
+
+**Given** Exp 3215 materialized evidence-gated FR-11 trace replay labels, or
+Exp 3200 materialized verifier-backed trace records when Exp 3215 is
+unavailable
+**When** Exp 3216 builds a small grounded-continuation trace graph
+**Then** it SHALL load Exp 3215 first, fall back to Exp 3200 only when Exp 3215
+is missing or not terminal, and record the chosen source artifact and fallback
+status.
+**And** it SHALL convert a bounded trace set into graph records for claims,
+evidence, retractions, and repairs with dependency edges that make stale
+premise propagation auditable.
+**And** stale-premise invalidations SHALL propagate from retraction nodes to
+dependent claim and repair nodes, and the artifact SHALL report the affected
+routes.
+**And** it SHALL define a virtual nonforgetting queue for held-out and drift
+regression pressure, evaluate proposed controller-memory changes against that
+budget, and keep the run controller-memory only.
+**And** it SHALL NOT update model weights, SHALL NOT promote KAN sidecars, and
+SHALL NOT modify `scripts/research_conductor.py` or the active roadmap.
+
+The terminal artifact SHALL be
+`results/experiment_3216_fr11_grounded_continuation_nonforgetting_queue_v1.json`
+and SHALL include `schema_version`, `experiment_id`, `milestone`,
+`continuous_self_learning_task`, `source_trace_artifact`,
+`trace_graph_node_count`, `trace_graph_edge_count`,
+`stale_premise_invalidations`, `affected_route_count`,
+`nonforgetting_queue_defined`, `nonforgetting_queue_value`,
+`nonforgetting_budget_exceeded`, `model_weight_update_claimed`,
+`controller_memory_promotion_allowed`, `conductor_file_modified`,
+`active_roadmap_modified`, and `honest_verdict`.
+
+### REQ-LEARN-3216 Sub-requirements
+
+- REQ-LEARN-3216-1: Source selection SHALL prefer
+  `results/experiment_3215_fr11_evidence_gated_trace_replay_controller_v2.json`
+  and SHALL fall back to
+  `results/experiment_3200_fr11_verify_trace_memory_controller_v1.json` only
+  when Exp 3215 is missing or not terminal.
+- REQ-LEARN-3216-2: Each selected trace SHALL emit graph records for at least a
+  claim node and an evidence node, and traces with rollback, retraction, or
+  failed exact replay SHALL emit a retraction node and a repair node.
+- REQ-LEARN-3216-3: Graph edges SHALL connect claims to evidence, claims to
+  route nodes, retractions to stale premises, and repairs to retractions so
+  stale-premise invalidations can be propagated without replaying the full
+  transcript.
+- REQ-LEARN-3216-4: The virtual nonforgetting queue SHALL accumulate held-out,
+  drift, negative-control, and stale-route regression pressure, SHALL expose a
+  numeric queue value, and SHALL set `nonforgetting_budget_exceeded=true` only
+  when that queue exceeds the configured budget.
+- REQ-LEARN-3216-5: The artifact SHALL set
+  `model_weight_update_claimed=false`,
+  `controller_memory_promotion_allowed=false`,
+  `conductor_file_modified=false`, and `active_roadmap_modified=false`
+  regardless of queue outcome because Exp 3216 is an audit/reporting artifact.
+
+### SCENARIO-LEARN-3216: Grounded Graph And Queue Stay Inside Budget
+
+**Given** a terminal Exp 3215 artifact with held-out and drift replay labels,
+including one explicit retraction or failed exact replay
+**When** Exp 3216 builds the trace graph and evaluates the virtual
+nonforgetting queue
+**Then** the artifact reports nonzero graph node and edge counts, propagates at
+least one stale-premise invalidation to an affected route, defines a numeric
+queue value, keeps the nonforgetting budget unexceeded when regression pressure
+is within budget, denies controller-memory promotion, and emits an
+`honest_verdict` beginning with `complete:`.
+
+### SCENARIO-LEARN-3216-FALLBACK: Missing Exp 3215 Falls Back To Exp 3200
+
+**Given** Exp 3215 is unavailable or not terminal but Exp 3200 is terminal
+**When** Exp 3216 runs
+**Then** it records Exp 3200 as `source_trace_artifact`, records that the
+fallback was used, builds graph records from Exp 3200 trace records, defines
+the queue, keeps model-weight update claims false, and emits an
+`honest_verdict` beginning with `complete:`.
+
+## Implementation Status (REQ-LEARN-3216)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-LEARN-3216 | Pending (`python/carnot/eval/fr11_grounded_continuation_nonforgetting_queue_v1.py`) | Pending (`tests/python/test_experiment_3216_fr11_grounded_continuation_nonforgetting_queue_v1.py`) |
