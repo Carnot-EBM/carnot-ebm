@@ -2435,6 +2435,65 @@ from a missing rerun artifact.
 |---|---|---|
 | REQ-VERIFY-3167 | Implemented (`python/carnot/verify/clean_live_sota_verifier_rerun_v9.py`) | Implemented (`tests/python/test_experiment_3167_clean_live_sota_verifier_rerun_v9.py`) |
 
+### REQ-VERIFY-3168: Conservative Repair Gate Decision V3
+
+The repository shall provide an Exp 3168 conservative repair-gate decision
+builder that writes `results/experiment_3168_repair_gate_decision_v3.json`
+from checked-in artifacts only. The builder MUST consume the Exp 3167 clean
+live SOTA verifier rerun v9 artifact when present, plus the Exp 3166
+invariance/token-suspicion audit, Exp 3137 exact-safe accept/abstain contract,
+Exp 3138 canonical grounding pilot, and the prior Exp 3153 and Exp 3140 repair
+gate decisions for provenance. It MUST NOT call live models, execute repair
+generation, modify `scripts/research_conductor.py`, push commits, or treat a
+missing clean rerun artifact as an implicit gate result.
+
+If the clean v9 verifier artifact is missing, the builder SHALL write a
+complete blocked decision with `repair_gate_state=blocked_missing_clean_rerun`
+and actionable blockers. If the clean v9 artifact is present, the gate SHALL
+permit `repair_gate_state=unblocked` only when all of these criteria hold:
+`clean_live_verifier_rerun_v9_ready=true`, `gated_skip=false`,
+`false_accept_rate <= 0.10`, `false_accept_gate_passed=true`,
+`flagged_adversarial=false`, `regression_rows_included=true`, exact labels are
+present through exact-authority rows, `controlled_invariance_passed=true`, and
+`headline_claim_allowed=true`. Any failed criterion SHALL block repair and
+SHALL keep `selected_repair_rows=[]`.
+
+The decision state SHALL be exactly one of `unblocked`,
+`blocked_false_accept`, `blocked_flagged_verifier`,
+`blocked_missing_live_model`, `blocked_missing_exact_labels`,
+`blocked_invariance_failure`, `blocked_gated_skip`,
+`blocked_missing_clean_rerun`, or `blocked_other`. The terminal artifact MUST
+include `repair_gate_decision_v3_ready`, `repair_gate_state`,
+`clean_rerun_artifact_present`, `false_accept_rate`,
+`false_accept_gate_passed`, `flagged_adversarial`,
+`controlled_invariance_passed`, `exact_authority_ready`,
+`selected_repair_rows`, `repair_blockers`, `source_artifacts`,
+`inference_substrate`, and `honest_verdict`.
+
+`repair_gate_decision_v3_ready` shall be true when the artifact reaches one of
+the allowed terminal gate states with source provenance, no live inference, and
+an honest verdict. For `repair_gate_state=unblocked`, `honest_verdict` MUST
+start with a terminal success prefix and `selected_repair_rows` MUST list the
+bounded repair denominator with exact-authority constraints. For blocked
+states, `repair_blockers` MUST be non-empty and list the exact failed criteria.
+
+### SCENARIO-VERIFY-3168: Tainted Or Skipped Clean Rerun Blocks Repair
+
+Given Exp 3167 has written a clean-live-verifier v9 artifact or that artifact
+is missing,
+When Exp 3168 builds the repair-gate decision,
+Then it writes a complete terminal JSON decision without live inference,
+copies the false-accept, adversarial-flag, exact-authority, invariance, gated
+skip, regression-row, and headline-claim gate results into machine-readable
+fields, selects repair rows only for a fully unblocked clean rerun, and
+otherwise reports exact blockers while avoiding model and repair execution.
+
+## Implementation Status (REQ-VERIFY-3168)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-VERIFY-3168 | Implemented (`python/carnot/verify/repair_gate_decision_v3.py`) | Implemented (`tests/python/test_experiment_3168_repair_gate_decision_v3.py`) |
+
 ### REQ-VERIFY-3073: EBT/ARM-EBM Adapter Feasibility Audit
 
 The repository shall provide an Exp 3073 deterministic architecture audit that

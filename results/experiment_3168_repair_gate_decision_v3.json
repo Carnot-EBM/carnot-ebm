@@ -1,0 +1,160 @@
+{
+  "artifact": "experiment_3168_repair_gate_decision_v3",
+  "clean_live_verifier_rerun_v9_ready": true,
+  "clean_rerun_artifact_present": true,
+  "controlled_invariance_passed": false,
+  "duration_s": 0.001347,
+  "exact_authority_ready": true,
+  "false_accept_gate_passed": false,
+  "false_accept_rate": 0.0,
+  "flagged_adversarial": true,
+  "gate_criteria": {
+    "clean_live_verifier_rerun_v9_ready": true,
+    "controlled_invariance_passed": true,
+    "exact_labels_present": true,
+    "false_accept_gate_passed": true,
+    "flagged_adversarial": false,
+    "gated_skip": false,
+    "headline_claim_allowed": true,
+    "max_false_accept_rate": 0.1,
+    "regression_rows_included": true
+  },
+  "gated_skip": true,
+  "headline_claim_allowed": false,
+  "honest_verdict": "blocked_flagged_verifier: gated_skip=true: exp3165 preflight_passed=false; clean rerun cannot call a model",
+  "inference_substrate": {
+    "aggregation_only": true,
+    "executes_models": false,
+    "executes_repairs": false,
+    "executes_solvers": false,
+    "executes_verifiers": false,
+    "kind": "deterministic_repair_gate_decision_v3",
+    "live_model_calls": 0,
+    "no_live_inference": true,
+    "repair_calls": 0,
+    "source_executes_models": false,
+    "source_live_model_calls_reused": 0
+  },
+  "live_model_ready": false,
+  "regression_rows_included": true,
+  "repair_blockers": [
+    "gated_skip=true: exp3165 preflight_passed=false; clean rerun cannot call a model",
+    "false_accept_gate_passed is not true",
+    "flagged_adversarial=true",
+    "bounded live model rerun is missing",
+    "controlled_invariance_passed is not true",
+    "headline_claim_allowed is not true"
+  ],
+  "repair_gate_decision_v3_ready": true,
+  "repair_gate_state": "blocked_flagged_verifier",
+  "run_date": "20260527",
+  "schema": "carnot.repair_gate_decision.v3",
+  "selected_repair_rows": [],
+  "source_artifacts": [
+    {
+      "path": "AGENTS.md",
+      "present": true,
+      "required": false,
+      "role": "agents_repo_instructions",
+      "sha256": "b3d6581b04f16b85f77defb2837c98dc3b60ed51e10b347ecb36e609f318b619"
+    },
+    {
+      "path": "CODEX.md",
+      "present": true,
+      "required": false,
+      "role": "codex_repo_workflow",
+      "sha256": "1db7ebc1009714f872db83447828a8957c3abb72061832cc1bc307735cd96bbe"
+    },
+    {
+      "path": "CLAUDE.md",
+      "present": true,
+      "required": false,
+      "role": "claude_authenticity_rules",
+      "sha256": "cdc00581d37d1bd3c77a69b058787f74ecc71545a97c1eab31c48961637b3224"
+    },
+    {
+      "path": "openspec/capabilities/verification/spec.md",
+      "present": true,
+      "required": true,
+      "role": "verification_openspec",
+      "sha256": "ae806fc50d8b9eea870e623f60cf272d6ab9fb798504e143eea836f0c4b00018"
+    },
+    {
+      "path": "results/experiment_3167_clean_live_sota_verifier_rerun_v9.json",
+      "present": true,
+      "required": true,
+      "role": "exp3167_clean_live_verifier_rerun_v9",
+      "sha256": "093d07548fae5908c968ffa020b584fc5939b86e86002a4f0b4066b765b79711"
+    },
+    {
+      "path": "results/experiment_3166_verifier_invariance_token_suspicion_audit_v1.json",
+      "present": true,
+      "required": true,
+      "role": "exp3166_invariance_token_suspicion_audit",
+      "sha256": "98b79a3b5aeeda09631dc8a5a3af512b803ecb17146339fe5fb18bfcec95f84e"
+    },
+    {
+      "path": "results/experiment_3137_exact_safe_accept_abstain_contract_v1.json",
+      "present": true,
+      "required": true,
+      "role": "exp3137_exact_safe_contract",
+      "sha256": "c8d23896f879ceb1e912989e2ba13db0a43cd195a8ff5e8fb18a7be1b4582f2e"
+    },
+    {
+      "path": "results/experiment_3138_canonical_answer_vericot_grounding_pilot_v1.json",
+      "present": true,
+      "required": true,
+      "role": "exp3138_canonical_grounding",
+      "sha256": "fc07294c1e4ea32bb8d174c2e99a5d70aa68a1e7e16252eea28f442812300a21"
+    },
+    {
+      "path": "results/experiment_3153_repair_gate_unlock_decision_v2.json",
+      "present": true,
+      "required": false,
+      "role": "exp3153_thin_gate_decision_v2",
+      "sha256": "5695617c86d6a7682ba40415953a2f75ac4f5b7ced5916d3ad05e15133ee9cb8"
+    },
+    {
+      "path": "results/experiment_3140_repair_gate_unlock_decision_v1.json",
+      "present": true,
+      "required": false,
+      "role": "exp3140_repair_gate_decision_v1",
+      "sha256": "64dc645c27d3532d899f933983f79ecd84ce4166837a7b974f38d4d5f09e4835"
+    },
+    {
+      "path": "python/carnot/verify/repair_gate_decision_v3.py",
+      "present": true,
+      "required": false,
+      "role": "exp3168_module",
+      "sha256": "d804eecd6e9d5924a6a3590c603549837695a1b3f3f89c34980363c9d142a00b"
+    },
+    {
+      "path": "tests/python/test_experiment_3168_repair_gate_decision_v3.py",
+      "present": true,
+      "required": false,
+      "role": "exp3168_tests",
+      "sha256": "77714d4056968da2925250f57818368823becf39a5481dc0dc267e4bde0a70c6"
+    }
+  ],
+  "source_checksums": {
+    "AGENTS.md": "b3d6581b04f16b85f77defb2837c98dc3b60ed51e10b347ecb36e609f318b619",
+    "CLAUDE.md": "cdc00581d37d1bd3c77a69b058787f74ecc71545a97c1eab31c48961637b3224",
+    "CODEX.md": "1db7ebc1009714f872db83447828a8957c3abb72061832cc1bc307735cd96bbe",
+    "openspec/capabilities/verification/spec.md": "ae806fc50d8b9eea870e623f60cf272d6ab9fb798504e143eea836f0c4b00018",
+    "python/carnot/verify/repair_gate_decision_v3.py": "d804eecd6e9d5924a6a3590c603549837695a1b3f3f89c34980363c9d142a00b",
+    "results/experiment_3137_exact_safe_accept_abstain_contract_v1.json": "c8d23896f879ceb1e912989e2ba13db0a43cd195a8ff5e8fb18a7be1b4582f2e",
+    "results/experiment_3138_canonical_answer_vericot_grounding_pilot_v1.json": "fc07294c1e4ea32bb8d174c2e99a5d70aa68a1e7e16252eea28f442812300a21",
+    "results/experiment_3140_repair_gate_unlock_decision_v1.json": "64dc645c27d3532d899f933983f79ecd84ce4166837a7b974f38d4d5f09e4835",
+    "results/experiment_3153_repair_gate_unlock_decision_v2.json": "5695617c86d6a7682ba40415953a2f75ac4f5b7ced5916d3ad05e15133ee9cb8",
+    "results/experiment_3166_verifier_invariance_token_suspicion_audit_v1.json": "98b79a3b5aeeda09631dc8a5a3af512b803ecb17146339fe5fb18bfcec95f84e",
+    "results/experiment_3167_clean_live_sota_verifier_rerun_v9.json": "093d07548fae5908c968ffa020b584fc5939b86e86002a4f0b4066b765b79711",
+    "tests/python/test_experiment_3168_repair_gate_decision_v3.py": "77714d4056968da2925250f57818368823becf39a5481dc0dc267e4bde0a70c6"
+  },
+  "tests_run": [
+    ".venv/bin/pytest tests/python/test_experiment_3168_repair_gate_decision_v3.py -q --no-cov",
+    ".venv/bin/coverage erase && .venv/bin/coverage run --source=python/carnot/verify -m pytest -o addopts='' tests/python/test_experiment_3168_repair_gate_decision_v3.py -q",
+    ".venv/bin/coverage report --include='python/carnot/verify/repair_gate_decision_v3.py' --fail-under=100 --show-missing",
+    ".venv/bin/python scripts/check_spec_coverage.py",
+    ".venv/bin/pytest tests/python -q"
+  ]
+}

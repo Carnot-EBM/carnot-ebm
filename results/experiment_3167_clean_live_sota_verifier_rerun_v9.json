@@ -36,7 +36,7 @@
     "unavailable_model_ids": "comparative gaps must stay visible",
     "verifier_gain_delta": "lift must be measured against exact baselines"
   },
-  "flagged_adversarial": false,
+  "flagged_adversarial": true,
   "gated_skip": true,
   "gated_skip_reason": "exp3165 preflight_passed=false; clean rerun cannot call a model",
   "headline_claim_allowed": false,
@@ -492,5 +492,17 @@
     "unsloth/Qwen3.6-35B-A3B-GGUF",
     "unsloth/gemma-4-31B-it-GGUF"
   ],
-  "verifier_gain_delta": 0.0
+  "verifier_gain_delta": 0.0,
+  "corrigendum_pending": [
+    {
+      "kind": "IMPLAUSIBLE_PERFECT",
+      "severity": "info",
+      "detail": "verifier_gain_delta=0.0 (exactly zero). Confirm this is not a stub default."
+    },
+    {
+      "kind": "DURATION_TOO_SHORT",
+      "severity": "critical",
+      "detail": "duration_s=0.002544 but artifact references compute-bound markers (GGUF / CUDA / live model). Loading and running a real model takes >=60.0s minimum; this completed too fast to have invoked the model."
+    }
+  ]
 }
