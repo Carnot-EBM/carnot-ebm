@@ -1,3 +1,180 @@
+## 2026-05-27 Post-.296 Planning Sweep (Milestone 2026.05.297)
+
+This sweep was run after milestone `.296` completed. `.296` narrowed the
+critical path rather than clearing it: the llama.cpp CUDA/offload probe found
+`nvidia-smi` and an RTX 3090, but the selected Python/runtime reported
+`torch.cuda.is_available() == false` and `llama_cpp` emitted
+`ggml_cuda_init: failed to initialize CUDA: unknown error`. Consequently,
+`clean_rerun_allowed=false`, clean live verifier v11 was gate-skipped, repair
+gate v5 stayed blocked, and the repair ladder v6 was gate-skipped. The useful
+positive result was FR-11 controller trace memory promotion without model
+weight updates; KAN-CL stayed sidecar-only, and Sparse Potts/PAOA/THRML stayed
+diagnostic-only with no authenticated speedup.
+
+### CUDA Receipt Recovery Must Become an Environment Forensics Task
+
+- **Sources:** llama.cpp build documentation and the `.296`
+  `exp3193` artifact.
+- **What:** llama.cpp documents CUDA as a separate build path requiring a CUDA
+  toolkit and `cmake -B build -DGGML_CUDA=ON`; it also documents runtime CUDA
+  environment handling such as `CUDA_VISIBLE_DEVICES`.
+- **Relevance to Carnot:** `.297` should stop treating the CUDA receipt as a
+  generic model-smoke task. The next attempt needs an environment ledger:
+  selected Python, `LD_LIBRARY_PATH`, `CUDA_VISIBLE_DEVICES`, import order,
+  `torch` CUDA init, `llama_cpp` shared-library origin, CMake flags, and a clean
+  subprocess run before any CUDA env mutation. Repair and clean verifier work
+  should remain gated until this yields a full local SOTA receipt.
+- **Sources:** https://github.com/ggml-org/llama.cpp/blob/master/docs/build.md
+  and `results/experiment_3193_llama_cpp_cuda_offload_health_probe_v1.json`
+
+### Context Learning Is a Verification Gap, Not Just a Prompting Gap
+
+- **Paper:** "Context-CoT: Enhancing Context Learning via High-Quality
+  Reasoning Synthesis" (arXiv:2605.25354; submitted 2026-05-25).
+- **What:** Reports that frontier models still struggle with context learning,
+  citing CL-Bench results where frontier models solve only 17.2% of
+  context-dependent tasks on average.
+- **Relevance to Carnot:** Add a parametric-shortcut fixture bank where the
+  context intentionally contradicts common pretraining priors. Exact
+  constraint checks should score whether a local SOTA answer followed the
+  supplied context rather than world priors. If CUDA remains blocked, the
+  fixture bank should still be materialized as a non-headline artifact.
+- **Sources:** https://arxiv.org/abs/2605.25354
+
+### Direct Constraint Optimization Needs Feasibility-First Scoring
+
+- **Paper:** "ConstraintBench: Benchmarking LLM Constraint Reasoning on Direct
+  Optimization" (arXiv:2602.22465; v2 2026-02-27).
+- **What:** Evaluates direct constrained optimization across 10 OR domains with
+  solver-verified references. It separates feasibility from objective
+  optimality and reports feasibility as the primary bottleneck.
+- **Relevance to Carnot:** `.297` should add a small ConstraintBench-style
+  pilot that reports feasibility, objective gap, entity hallucination, and
+  duration/constraint misunderstanding separately. This maps directly to the
+  PRD's verifiable reasoning requirements and keeps solver authority outside
+  the LLM.
+- **Sources:** https://arxiv.org/abs/2602.22465
+
+### Verifier-Rewarded Distillation Suggests Trace Utility Labels
+
+- **Paper:** "Reward-Weighted On-Policy Distillation with an Open
+  Property-Equivalence Verifier for NL-to-SVA Generation" (arXiv:2605.13501;
+  submitted 2026-05-13).
+- **What:** Samples student rollouts, scores them with an open
+  SymbiYosys+Z3 property-equivalence checker, and applies verifier-rewarded
+  token-level supervision from a frozen teacher on verifier-passable rollouts.
+- **Relevance to Carnot:** This is not a mandate to fine-tune in `.297`, but it
+  is a strong pattern for FR-11 controller memory: label replay traces by exact
+  verifier utility and promote only routing/policy changes that improve heldout
+  utility without model-weight updates.
+- **Sources:** https://arxiv.org/abs/2605.13501
+
+### Evidence-Verified Trajectories Are Stronger Than Prior Plans
+
+- **Paper:** "Evidence Over Plans: Online Trajectory Verification for Skill
+  Distillation" (arXiv:2605.09192; submitted 2026-05-09).
+- **What:** Introduces a trajectory-level Posterior Distillation Index and a
+  SPARK pipeline that uses environment-verified trajectories as online
+  diagnostic and intervention signals for skill formation.
+- **Relevance to Carnot:** The continuous self-learning task in `.297` should
+  require evidence-backed trace outcomes, not just plausible plans. For Carnot
+  this means FR-11 promotion candidates need exact verifier results,
+  retraction/rollback metadata, and negative-control checks before a controller
+  route is promoted.
+- **Sources:** https://arxiv.org/abs/2605.09192
+
+### Runtime Grounding Graphs Fit Multi-Turn Verification
+
+- **Paper:** "Grounded Continuation: A Linear-Time Runtime Verifier for LLM
+  Conversations" (arXiv:2605.14175; submitted 2026-05-13).
+- **What:** Maintains an explicit dependency graph over conversational claims
+  and evidence; continuation support reduces to a graph walk while retractions
+  propagate through the same graph.
+- **Relevance to Carnot:** This supplies a clean design target for multi-turn
+  exact-row verification: represent claims, evidence, abandoned premises, and
+  repairs as graph nodes so stale-premise failures are visible without replaying
+  the full transcript.
+- **Sources:** https://arxiv.org/abs/2605.14175
+
+### KAN Verification Has a Better Abstraction Target
+
+- **Paper:** "Optimal Abstractions for Verifying Properties of
+  Kolmogorov-Arnold Networks (KANs)" (arXiv:2602.06737; submitted
+  2026-02-06).
+- **What:** Replaces KAN units with piecewise-affine abstractions, uses local
+  and global error estimates, and encodes property checks as MILP. The key
+  tradeoff is the number of pieces versus verification tractability.
+- **Relevance to Carnot:** `.297` should keep KAN-CL as sidecar-only unless a
+  bounded abstraction certificate is available. The practical next step is a
+  small audit of whether existing KAN sidecars can emit PWA/MILP-style
+  certificates rather than only empirical nonforgetting metrics.
+- **Sources:** https://arxiv.org/abs/2602.06737
+
+### Deterministic LLM Frontier Bounds Remain a Useful Sidecar
+
+- **Paper:** "Beaver: An Efficient Deterministic LLM Verifier" (OpenReview,
+  ICLR 2026 Workshop VerifAI-2; published 2026-03-02).
+- **What:** Computes deterministic probability bounds on prefix-closed
+  semantic constraint satisfaction using token tries/frontiers, reporting
+  tighter bounds and more high-risk-instance identification than baselines.
+- **Relevance to Carnot:** This is too broad to replace exact verifiers, but
+  it supports a future frontier-bound sidecar once the local SOTA runtime is
+  healthy. For `.297`, keep it as a reference for bounded risk certificates,
+  not a headline experiment.
+- **Sources:** https://openreview.net/forum?id=xO3efBXHM9
+
+### Structured Decoding Can Remove Syntax Failures But Not Semantic Errors
+
+- **Sources:** `guidance-ai/llguidance` and MLC XGrammar-2.
+- **What:** llguidance enforces context-free grammars/JSON schemas with
+  low per-token CPU masking overhead and integrates with llama.cpp, SGLang, and
+  vLLM. XGrammar-2 reports 100% structural correctness with near-zero overhead
+  for tool-calling and structured-agent formats.
+- **Relevance to Carnot:** If CUDA/full local SOTA receipt is recovered, `.297`
+  should add a constrained repair-proposal preflight. The expected claim is
+  narrower than repair correctness: valid JSON/schema and fewer parser/syntax
+  failures. Exact verifiers must still score semantics.
+- **Sources:** https://github.com/guidance-ai/llguidance and
+  https://blog.mlc.ai/2026/05/04/xgrammar-2-fast-customizable-structured-generation
+
+### Continual Learning Should Regulate Forgetting Explicitly
+
+- **Paper:** "Theoretical Foundations of Continual Learning via
+  Drift-Plus-Penalty" (OpenReview/TMLR under review; modified 2026-05-16).
+- **What:** Frames continual learning as a controlled process with finite
+  replay memory, virtual queues, and explicit stability-plasticity regulation.
+- **Relevance to Carnot:** FR-11 controller memory should report a virtual
+  forgetting queue or equivalent nonforgetting budget, not only aggregate
+  heldout pass/fail counts. This is a good control-theoretic wrapper around
+  `.296` trace memory promotion.
+- **Sources:** https://openreview.net/forum?id=QhxNMdhhBy
+
+### Extropic/Kona Remain Strategic Signals, Not Executed Carnot Claims
+
+- **Sources:** Extropic's TSU/THRML writing and Logical Intelligence's Kona
+  architecture notes.
+- **What:** Extropic describes TSUs as sampling units for EBMs/PGMs and
+  positions THRML as the open simulation layer. Logical Intelligence describes
+  Kona as a non-autoregressive, globally scored energy-based reasoning model
+  that can evaluate partial and complete reasoning traces.
+- **Relevance to Carnot:** Both strengthen Carnot's architecture thesis, but
+  neither authorizes local speedup or execution claims. `.297` should cite
+  them only in hardware/architecture boundaries unless a real board/API
+  transcript is captured.
+- **Sources:** https://extropic.ai/writing/thermodynamic-computing-from-zero-to-one
+  and https://logicalintelligence.com/blog/energy-based-models-for-reasoning
+
+### Semantic Scholar Citation Watch Was Rate-Limited
+
+- **Source:** Semantic Scholar Academic Graph API endpoint checked on
+  2026-05-27 for EBT `2507.02092` and ARM-EBM `2512.15605`.
+- **What:** The unauthenticated API returned HTTP 429 during planning, so no
+  new citation-derived follow-on was admitted into `.297`.
+- **Relevance to Carnot:** Keep EBT/ARM-EBM as architecture-side references
+  already covered in prior sweeps. Do not design a citation-derived experiment
+  without a successful citation graph artifact.
+- **Sources:** https://www.semanticscholar.org/product/api
+
 ## 2026-05-27 Post-.295 Planning Sweep (Milestone 2026.05.296)
 
 This sweep was run after milestone `.295` completed. `.295` closed the

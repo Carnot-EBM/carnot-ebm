@@ -1,6 +1,26 @@
 # Carnot — Operational Status
 
-**Last Updated:** 2026-05-27 (Milestone 2026.05.296 operational retrospective complete)
+**Last Updated:** 2026-05-27 (Milestone 2026.05.297 research planning staged)
+
+## Session 2026-05-27 - Milestone 2026.05.297 Research Planning Staged
+
+Planned milestone 2026.05.297 as "CUDA Receipt Recovery +
+Context-Shortcut Verification + Evidence-Gated FR-11 Replay" after `.296`
+completed. Used `results/experiment_3204_capstone_v296.json`,
+`results/experiment_3203_cross_corpus_matrix_v30.json`,
+`ops/conductor-log.md`, and `.296` experiment artifacts as authority:
+`paper_ready=false`, `publication_blocker_count=85`, the next top gap is
+`cuda_offload_full_local_sota_receipt_clean_rerun_allowed_repair_gate_unblock`,
+local SOTA execution is blocked by CUDA/offload initialization in the selected
+Python/llama.cpp path, clean verifier and repair remain gated, FR-11 controller
+trace memory promoted without model-weight updates, and hardware sampling
+claims remain diagnostic-only.
+
+Updated `research-references.md` with the post-`.296` research sweep before
+experiment design, rewrote
+`openspec/change-proposals/research-roadmap-vNEXT.md`, and created
+`research-roadmap-next.yaml` with 14 tasks (`exp3205`-`exp3218`). Left
+`research-roadmap.yaml` and `scripts/research_conductor.py` untouched.
 
 ## Session 2026-05-27 - Milestone 2026.05.296 Operational Retrospective Complete
 

@@ -4,42 +4,50 @@
 # docs_audit_report — 2026-05-27
 
 ## TL;DR (stranger's 30-second take)
-I'm bouncing immediately. While the core pitch is clear, the page is visibly broken (with raw test paths injected into the text and CSS), flooded with 33 separate cards, and dense with unexplained internal jargon. It looks like an unpolished internal test dump rather than a public product landing page.
+I would bounce in 15 seconds. While the hero section has a fantastic hook, the page is broken by leaked local file paths in the copy and CSS, overloaded with an impenetrable soup of internal acronyms, and filled with suspicious "perfect" benchmark numbers that make it feel like an internal dashboard.
 
 ## TOP 3 PROBLEMS
-1. Page Generation Errors: Raw file paths (`@.tmp-pytest/...`) are injected directly into CSS links, media queries, and the "Live benchmark" result card.
-2. Massive Card Bloat: The page contains 33 distinct cards (Bento, Results, Blog), guaranteeing a stranger will experience cognitive overload and skim none of them.
-3. Inpenetrable Internal Jargon: Widespread use of acronyms and internal benchmark names (FoVer, SVAMP, PREM, CCTU) without context.
+1. Leaked Internal Test Paths & Broken Code — The "Live benchmark" card text and hidden HTML/CSS (font links, `@media` queries) contain massive injected `@.tmp-pytest/...` file paths.
+2. Opaque Acronym Soup — The "Features" and "Results" sections are loaded with undefined jargon (FoVer, CCTU, SVAMP, PREM, VeriCoT) that alienate new visitors.
+3. Suspiciously Perfect Numbers — Claims like "1.0 TP rate", "60/60 attacks", and "identical losses" read as either fabricated, heavily overfit, or tested on tiny datasets.
 
 ## DETAILED FINDINGS
 ### Bloat
-- Entire Page — 33 cards total — Cap at ~12-15 cards max across the entire page (ruthlessly reduce Results and Blog posts).
+- `Recent progress` card — 61 words — Cap at 60 words. It reads like a dense internal status update rather than a punchy feature highlight.
+- `Why "Energy-Based"?` bento card — 66 words — Cap at 40 words. It is a dense wall of text compared to the other quick, actionable bento cards.
+- `Results` grid — 12 cards — Cap at 6-8 cards. 12 cards create visual fatigue and dilute the impact of your most important metrics.
 
 ### Internal jargon
-- Hero / Recent Progress Card — "FoVer", "5-seed dual-condition" — A stranger doesn't know your internal datasets or experimental setups.
-- Features / TTC card — "PREM", "TTC" — Undefined acronyms dropped with no explanation.
-- Results Grid — "EstimationVerifier SVAMP AUC", "PRM-BiasBench-style", "CCTU constrained micro-benchmark" — Hyper-specific benchmark jargon that alienates readers who just want to know if it works.
+- `Live benchmark` result card — `@.tmp-pytest/pytest-of-ianblenke/.../spilled-energy-2602-18671:real.txt` — A raw local file path leaked directly into the public benchmark claim.
+- `Test-Time Compute (TTC) & PREM` bento card — "Process-Reward Energy Model (PREM) variance" — Impenetrable internal terminology.
+- `Features` & `Results` sections — "CCTU", "PREM", "HumanEval-50", "SVAMP AUC", "VeriCoT", "PRM-BiasBench", "FoVer" — A stranger has no idea what these specific datasets, benchmarks, or models are without definitions.
 
 ### Per-milestone narrative
-- Recent Progress Card — "Repinned from v2 0.9857 after pre-submission adversarial audit..." — Reads exactly like an internal retrospective or commit message, not a value proposition for a new user.
+- `Recent progress` card — "Repinned from v2 0.9857 after pre-submission adversarial audit" — Reads exactly like an internal Slack update, PR description, or milestone retrospective.
+- `Results` section intro — "synthetic-pilot, and adversarial-audit rows are labeled by provenance. Synthetic pilots are included only when the card says so" — Defensive, internal-facing methodology disclaimers that belong in a technical paper, not on a landing page.
 
 ### Inconsistencies
-- HumanEval repair claims vs HumanEval repair claims — The "Code" Bento card claims repair pushes pass-rate "up by 3 points", while the "Code repair" result card claims "8% &rarr; 80% pass rate (+72pp)" on HumanEval-50.
-- Progress bar semantics vs accuracy metrics — "100%" bars are used for binary states ("Ising sampler live on silicon") and non-percentage metrics ("2.0x speedup"), breaking the visual logic established by the AUROC/accuracy metrics.
+- "Carnot is the second pair of eyes" (implies a single, simple verifier) vs "The production verifier is an ensemble of complementary checks" (implies a complex multi-model stack).
+- The Stats bar claims "0.9131 Verifier AUROC" while the Safety result card claims "0.91 AUROC". The sudden change in precision for seemingly related top-level metrics is confusing.
 
 ### Missing essentials
-- None missing. The core questions (what it does, install, license, maintainer) are successfully addressed, though they risk being buried by the sheer volume of cards and broken formatting.
+- Context for improvements: "+3.0 points on pass-rate" and "+4.9 points on compliance" lack baseline numbers. An improvement from what to what? 
+- Who maintains it: Beyond a solitary "Ian Blenke" in the copyright footer, there is no "About" section, organizational context, or team to establish trust in the framework's longevity.
 
 ### Fabrication signals
-- Results Grid (Adversarial audit) — "60/60 attacks" — A perfect 100% defense rate against adversarial attacks looks suspiciously perfect for a 30-second reader without a credibility anchor.
-- Results Grid (Math extraction) — "TP rate: 0.5 &rarr; 1.0" — A perfect 1.0 True Positive rate is a massive red flag for empirical ML systems.
+- `Math extraction` card — "GSM8K extraction TP rate: 0.5 → 1.0" — A 1.0 (100%) true positive rate is a suspiciously perfect number that screams overfitting or a tiny sample size.
+- `Adversarial audit` card — "k=5 ensemble catches 60/60 attacks" — 60/60 is perfect, which invites heavy skepticism without a credibility anchor explaining the constraints.
+- `Training` card — "2.0× speedup, identical losses" — "Identical" is practically impossible in floating-point math across parallel GPU topologies, making it look fabricated.
+- `Stats bar` — "0.9131" — Four decimal places of precision is unnecessary for a landing page and implies an unrealistic level of confidence in the metric.
 
 ## WHAT'S WORKING
-- The one-sentence pitch ("Catch the mistakes your LLM confidently makes up.") is strong, punchy, and immediately understandable.
-- The Quickstart section with side-by-side Python and Rust tabs clearly communicates the dual-language nature of the framework.
+- The hero section is fantastic: "Catch the mistakes your LLM confidently makes up" is a perfect, instantly understandable value proposition.
+- The Quick Start section with the Python/Rust code toggle is exactly what a developer needs to see to grasp the integration experience immediately.
 
 ## RECOMMENDED OPERATOR ACTIONS
-1. Fix the template injection bug that is rendering `@.tmp-pytest/...` paths into the HTML `<head>` and the 35B model result card.
-2. Ruthlessly cull the Bento and Results grids. Pick the top 3 capabilities and top 4 metrics; delete the rest to fix the >20 card bloat problem.
-3. Rewrite the "Recent progress" card to focus solely on PyPI/HF availability, deleting the "Repinned from v2..." history lesson.
-4. Replace internal benchmark names (FoVer, SVAMP, CCTU) with descriptive general terms, and remove exact seed counts from the hero section.
+1. Immediately fix the templating/regex error that injected `@.tmp-pytest/...` file paths into the HTML text, CSS `@media` queries, and font `<link>` tags.
+2. Rewrite the "Recent progress" card to remove internal timeline jargon ("Repinned from v2") and focus purely on what a user gets today.
+3. Scrub the acronyms (CCTU, PREM, FoVer, SVAMP) or replace them with plain-English descriptive text (e.g., "Math reasoning benchmark").
+4. Add baselines to all "+X points" claims so the improvements have meaningful context.
+5. Round "0.9131" to "0.91" and temper the "1.0" and "60/60" claims by mentioning the sample size or softening the absolute nature of the language.
+6. Drop the defensive "provenance" disclaimers from the Results intro paragraph.
