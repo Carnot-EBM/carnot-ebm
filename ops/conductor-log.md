@@ -6411,3 +6411,5 @@ web search: |
 | 2026-05-26 22:37 UTC | Hardware and sampler evidence boundary v7 | OK | 81 passed in 3.60s |
 | 2026-05-26 22:57 UTC | Cross-corpus matrix v27 | OK | 81 passed in 3.17s |
 | 2026-05-26 23:10 UTC | Milestone .293 capstone | OK | 81 passed in 3.54s |
+| 2026-05-26 23:46 UTC | Plan milestone 2026.05.294 | OK | 14 tasks proposed |
+| 2026-05-26 23:48 UTC | Milestone 2026.05.294 activated | OK | 14 tasks queued |

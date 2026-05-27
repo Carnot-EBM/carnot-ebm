@@ -10312,3 +10312,87 @@ with `complete:`.
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-REPORT-3162 | Implemented (`python/carnot/reporting/capstone_v293_3162.py`) | Implemented (`tests/python/test_experiment_3162_capstone_v293.py`) |
+
+### REQ-REPORT-3163: Archive .293 And Confirm .294 Roadmap Handoff
+
+The repository shall provide an Exp 3163 archive/handoff generator that writes
+`results/experiment_3163_archive_v293_activate_v294.json` using only
+checked-in `.293` matrix/capstone artifacts, roadmap YAML/Markdown files, and
+file presence/checksum evidence. It MUST treat
+`results/experiment_3162_capstone_v293.json` as the completed `.293`
+authority artifact and MUST set `prior_capstone_ready` directly from that
+artifact's `capstone_ready` field. It MUST set `prior_paper_ready` directly
+from that artifact's `paper_ready` field, `prior_publication_blocker_count`
+directly from that artifact's `publication_blocker_count` field, and
+`blocker_delta_from_v26` directly from that artifact's
+`blocker_delta_from_v26` field rather than inferring paper readiness, blocker
+count, or blocker movement from roadmap state, capstone completion, or matrix
+readiness.
+
+The generator MUST summarize `.293` status fields from the capstone authority:
+`paper_ready`, `publication_blocker_count`, `blocker_delta_from_v26`,
+`next_top_gap`, live preflight status, clean verifier rerun status,
+`repair_gate_status`, `repair_ladder_status`, FR-11 ledger consistency,
+EBCN/KAN status, and hardware/sampler boundary. Its carry-forward blocker
+list MUST preserve the unresolved `.293` blockers: 65 publication blockers,
+blocked duration/authenticity preflight, missing or gated clean rerun artifact,
+thin repair-gate artifact, missing or gated repair-ladder artifacts, FR-11
+ledger consistency 0.857143, bounded EBCN/KAN diagnostics, and no
+authenticated hardware speedup.
+
+The generator MUST verify the `.294` roadmap handoff without modifying
+`research-roadmap.yaml`, `research-roadmap-next.yaml`, or
+`scripts/research_conductor.py`. It MUST prefer `research-roadmap-next.yaml`
+when that staged file exists and otherwise MAY use the already-active
+`research-roadmap.yaml` as a read-only fallback, provided the artifact records
+that the requested staged roadmap is absent. Whichever roadmap source is used
+MUST target milestone `2026.05.294`, point `milestone_doc` to
+`openspec/change-proposals/research-roadmap-vNEXT.md`, and contain at least
+one task. The workflow MUST NOT activate the roadmap itself, run the
+conductor, push commits, rewrite historical result artifacts, run live model
+inference, run verifier scoring, run repair generation, run solvers, run
+synthesis, flash hardware, or collect hardware readback.
+
+The terminal artifact MUST include `archive_v293_activate_v294_ready`,
+`prior_capstone_ready`, `prior_paper_ready`,
+`prior_publication_blocker_count`, `blocker_delta_from_v26`,
+`next_milestone`, `carry_forward_blockers`, `source_artifacts`,
+`inference_substrate`, and `honest_verdict`. It MAY include `.293` status
+summaries, roadmap handoff metadata, no-new-execution booleans, protected-file
+modification flags, missing source artifacts, source checksums, and measured
+`duration_s` as long as every value is derived from checked-in artifacts or
+file presence/checksum checks. When a conductor prompt assigns ops
+reconciliation to a separate step, the generator MUST leave `ops/status.md`,
+`ops/changelog.md`, and `_bmad/traceability.md` unchanged. `honest_verdict`
+MUST start with `complete:` only when the prior capstone is ready and the
+`.294` roadmap handoff evidence is valid; otherwise it MUST report the
+blocked precondition.
+
+#### SCENARIO-REPORT-3163: Archive .293 Without Activating Roadmap
+
+**Given** `results/experiment_3162_capstone_v293.json` exists and reports
+`capstone_ready=true`
+**And** the capstone reports `paper_ready=false`, 65 publication blockers,
+`blocker_delta_from_v26=10`, `next_top_gap` naming the clean live verifier
+corrigendum repair gate, blocked duration/authenticity preflight evidence, a
+missing or gated clean rerun artifact, a thin blocked repair-gate artifact, a
+missing or gated repair ladder, FR-11 ledger consistency 0.857143, bounded
+EBCN/KAN diagnostics, and no authenticated hardware speedup
+**And** the `.294` roadmap source, either staged or already active, targets
+`2026.05.294` and points `milestone_doc` to
+`openspec/change-proposals/research-roadmap-vNEXT.md`
+**When** the Exp 3163 archive/handoff generator runs
+**Then** it writes `results/experiment_3163_archive_v293_activate_v294.json`
+with `archive_v293_activate_v294_ready=true`, `prior_capstone_ready=true`,
+`prior_paper_ready=false`, `prior_publication_blocker_count=65`,
+`blocker_delta_from_v26=10`, `next_milestone="2026.05.294"`, the `.293`
+capstone status summary preserved, the eight carry-forward blocker classes
+visible, aggregation-only inference-substrate metadata, no roadmap activation
+performed by this task, no ops/status/traceability reconciliation performed by
+this task, and an `honest_verdict` that starts with `complete:`.
+
+## Implementation Status (REQ-REPORT-3163)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-3163 | Implemented (`python/carnot/reporting/archive_v293_activate_v294_3163.py`) | Implemented (`tests/python/test_experiment_3163_archive_v293_activate_v294.py`) |

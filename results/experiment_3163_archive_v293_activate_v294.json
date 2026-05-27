@@ -1,0 +1,547 @@
+{
+  "activation_performed_by_this_task": false,
+  "archive_v293_activate_v294_ready": true,
+  "artifact": "experiment_3163_archive_v293_activate_v294",
+  "blocked_reasons": [],
+  "blocker_delta_from_v26": 10,
+  "blocker_delta_from_v26_source": "capstone_blocker_delta_from_v26",
+  "carry_forward_blockers": [
+    {
+      "blocker_id": "publication_blockers_65",
+      "description": "65 publication blockers",
+      "expected_carry_forward_value": 65,
+      "matches_expected": true,
+      "source": "results/experiment_3162_capstone_v293.json",
+      "source_field": "publication_blocker_count",
+      "value": 65
+    },
+    {
+      "blocker_id": "duration_authenticity_preflight_blocked",
+      "description": "blocked duration/authenticity preflight",
+      "expected_carry_forward_value": "blocked",
+      "matches_expected": true,
+      "source": "results/experiment_3151_live_inference_authenticity_preflight_v1.json",
+      "source_field": "live_preflight_status",
+      "value": "blocked"
+    },
+    {
+      "blocker_id": "clean_rerun_missing_gated",
+      "description": "missing or gated clean verifier rerun artifact",
+      "expected_carry_forward_value": "gated_skipped_or_missing",
+      "matches_expected": true,
+      "source": "results/experiment_3152_clean_live_sota_verifier_rerun_v8.json",
+      "source_field": "clean_verifier_rerun_status",
+      "value": "gated_skipped"
+    },
+    {
+      "blocker_id": "thin_repair_gate_artifact",
+      "description": "thin repair-gate artifact",
+      "expected_carry_forward_value": "blocked_gate_check_failed",
+      "matches_expected": true,
+      "source": "results/experiment_3153_repair_gate_unlock_decision_v2.json",
+      "source_field": "repair_gate_artifact_status",
+      "value": "blocked_gate_check_failed"
+    },
+    {
+      "blocker_id": "repair_ladder_missing_gated",
+      "description": "missing or gated repair-ladder artifacts",
+      "expected_carry_forward_value": "contains:skipped_or_gated",
+      "matches_expected": true,
+      "source": "results/experiment_3154_multi_turn_repair_ladder_v3.json",
+      "source_field": "repair_ladder_status",
+      "value": "correctly_skipped_gate_blocked_no_live_repair_attempts"
+    },
+    {
+      "blocker_id": "fr11_ledger_consistency_0_857143",
+      "description": "FR-11 ledger consistency 0.857143",
+      "expected_carry_forward_value": 0.857143,
+      "matches_expected": true,
+      "source": "results/experiment_3156_fr11_ledger_consistency_closure_v1.json",
+      "source_field": "fr11_ledger_consistency",
+      "value": 0.857143
+    },
+    {
+      "blocker_id": "bounded_ebcn_kan_diagnostics",
+      "description": "bounded EBCN/KAN diagnostics",
+      "expected_carry_forward_value": "ebcn_projection_only_and_kan_bounded",
+      "matches_expected": true,
+      "source": "results/experiment_3158_ebcn_energy_sidecar_calibration_v1.json",
+      "source_field": "ebcn_status_and_kan_status",
+      "value": {
+        "ebcn_status": "projection_only_scalar_auc_1.0_exact_rows_6_no_live_integration_blockers_6",
+        "kan_status": "bounded_monitor_records_4_new_2_no_deployed_verifier_blockers_3"
+      }
+    },
+    {
+      "blocker_id": "no_authenticated_hardware_speedup",
+      "description": "no authenticated hardware speedup",
+      "expected_carry_forward_value": "contains:no_authenticated_speedup",
+      "matches_expected": true,
+      "source": "results/experiment_3160_hardware_sampler_evidence_boundary_v7.json",
+      "source_field": "hardware_sampler_boundary",
+      "value": "blocked_no_authenticated_speedup_no_hardware_commands_missing_operator_evidence_8"
+    }
+  ],
+  "duration_s": 0.026762,
+  "honest_verdict": "complete: archive_v293_activate_v294_ready=true; prior_capstone_ready=true; prior_paper_ready=false; prior_publication_blocker_count=65; blocker_delta_from_v26=10; next_milestone=2026.05.294; roadmap_source=research-roadmap.yaml",
+  "inference_substrate": {
+    "executes_conductor": false,
+    "executes_hardware": false,
+    "executes_models": false,
+    "executes_repairs": false,
+    "executes_solvers": false,
+    "executes_verifiers": false,
+    "hardware_commands_run": [],
+    "kind": "aggregation_from_upstream_artifacts",
+    "live_model_calls": 0,
+    "local_repo_only": true,
+    "no_live_llm_inference": true,
+    "source": "checked_in_artifacts"
+  },
+  "missing_source_artifacts": [
+    "results/experiment_3152_clean_live_sota_verifier_rerun_v8.json",
+    "results/experiment_3154_multi_turn_repair_ladder_v3.json",
+    "results/experiment_3155_tracefix_counterexample_repair_pilot_v1.json",
+    "research-roadmap-next.yaml"
+  ],
+  "next_milestone": "2026.05.294",
+  "no_historical_artifact_rewrite": true,
+  "no_live_repair_rerun": true,
+  "no_new_board_flash": true,
+  "no_new_hardware_run": true,
+  "no_new_model_execution": true,
+  "no_new_solver_run": true,
+  "no_new_synthesis_run": true,
+  "no_new_verifier_run": true,
+  "no_push": true,
+  "ops_changelog_updated": false,
+  "ops_docs_reconciliation_left_to_conductor": true,
+  "ops_status_updated": false,
+  "prior_capstone_ready": true,
+  "prior_milestone": "2026.05.293",
+  "prior_paper_ready": false,
+  "prior_paper_ready_source_field_present": true,
+  "prior_publication_blocker_count": 65,
+  "prior_publication_blocker_count_source": "capstone_publication_blocker_count",
+  "research_roadmap_next_yaml_modified": false,
+  "research_roadmap_yaml_modified": false,
+  "roadmap_handoff": {
+    "active_roadmap_milestone": "2026.05.294",
+    "expected_milestone": "2026.05.294",
+    "expected_milestone_doc": "openspec/change-proposals/research-roadmap-vNEXT.md",
+    "milestone_doc_matches": true,
+    "milestone_matches": true,
+    "non_empty_tasks": true,
+    "observed_milestone": "2026.05.294",
+    "observed_milestone_doc": "openspec/change-proposals/research-roadmap-vNEXT.md",
+    "requested_staged_roadmap_path": "research-roadmap-next.yaml",
+    "requested_staged_roadmap_present": false,
+    "source_path": "research-roadmap.yaml",
+    "source_present": true,
+    "task_ids": [
+      "exp3163-archive-v293-activate-v294",
+      "exp3164-duration-corrected-authenticity-contract-v2",
+      "exp3165-live-sota-authenticity-replay-v2",
+      "exp3166-verifier-invariance-token-suspicion-audit",
+      "exp3167-clean-live-sota-verifier-rerun-v9",
+      "exp3168-repair-gate-decision-v3",
+      "exp3169-repair-ladder-materializer-v4",
+      "exp3170-counterexample-certificate-repair-pilot-v2",
+      "exp3171-fr11-ledger-counterexample-isolation",
+      "exp3172-fr11-nonforgetting-self-learning-pilot",
+      "exp3173-ebcn-kan-bounded-diagnostic-expansion",
+      "exp3174-hardware-tooling-boundary-v8",
+      "exp3175-cross-corpus-matrix-v28",
+      "exp3176-capstone-v294"
+    ],
+    "used_active_roadmap_fallback": true
+  },
+  "run_date": "20260526",
+  "schema": "carnot.archive_activation.v293_to_v294.v1",
+  "scripts_research_conductor_modified": false,
+  "source_artifacts": [
+    {
+      "path": "results/experiment_3161_cross_corpus_matrix_v27.json",
+      "present": true,
+      "role": "matrix_v27",
+      "sha256": "040681c000d1ab40b177e80a101644ac53a718b13b4fb9c42205fa8133c9c76d"
+    },
+    {
+      "path": "results/experiment_3162_capstone_v293.json",
+      "present": true,
+      "role": "capstone_v293",
+      "sha256": "3bccfbfba33950253f85213c4b032838dc679100dfa21f2ef1e582cc12cad16a"
+    },
+    {
+      "path": "results/experiment_3151_live_inference_authenticity_preflight_v1.json",
+      "present": true,
+      "role": "duration_authenticity_preflight",
+      "sha256": "3ad9237f6351c8d18f385bf661f26d17bbe2594945befdd08b302a4024f49893"
+    },
+    {
+      "path": "results/experiment_3152_clean_live_sota_verifier_rerun_v8.json",
+      "present": false,
+      "role": "clean_live_verifier_rerun",
+      "sha256": null
+    },
+    {
+      "path": "results/experiment_3153_repair_gate_unlock_decision_v2.json",
+      "present": true,
+      "role": "repair_gate",
+      "sha256": "5695617c86d6a7682ba40415953a2f75ac4f5b7ced5916d3ad05e15133ee9cb8"
+    },
+    {
+      "path": "results/experiment_3154_multi_turn_repair_ladder_v3.json",
+      "present": false,
+      "role": "repair_ladder",
+      "sha256": null
+    },
+    {
+      "path": "results/experiment_3155_tracefix_counterexample_repair_pilot_v1.json",
+      "present": false,
+      "role": "tracefix_counterexample_repair",
+      "sha256": null
+    },
+    {
+      "path": "results/experiment_3156_fr11_ledger_consistency_closure_v1.json",
+      "present": true,
+      "role": "fr11_ledger_consistency",
+      "sha256": "2178e83f0ff3d09849017e246a5333ec929a7eb8678ca7443b1cf147212cd3db"
+    },
+    {
+      "path": "results/experiment_3158_ebcn_energy_sidecar_calibration_v1.json",
+      "present": true,
+      "role": "ebcn_energy_sidecar",
+      "sha256": "b8df749e2f3a471079584550e50d191960d9f01673918a6e9d80e1b4bbd2c706"
+    },
+    {
+      "path": "results/experiment_3159_kan_proof_carrying_monitor_expansion_v1.json",
+      "present": true,
+      "role": "kan_monitor",
+      "sha256": "ab9d5d5fae878314b0f3b7e1c6e357254a24b91f5d7069eb0e040c86888aa08a"
+    },
+    {
+      "path": "results/experiment_3160_hardware_sampler_evidence_boundary_v7.json",
+      "present": true,
+      "role": "hardware_sampler_boundary",
+      "sha256": "19a9b04df9fef152856a8ea32fed4b487fa2c73befc1bf6da5bf6bcb6d42c549"
+    },
+    {
+      "path": "research-roadmap-next.yaml",
+      "present": false,
+      "role": "staged_roadmap",
+      "sha256": null
+    },
+    {
+      "path": "research-roadmap.yaml",
+      "present": true,
+      "role": "active_roadmap",
+      "sha256": "76c202e5160a9257cfc722dcb31e4d9a6e36a8e1269e0a1b7f8a8eb031a23569"
+    },
+    {
+      "path": "openspec/change-proposals/research-roadmap-vNEXT.md",
+      "present": true,
+      "role": "vnext_doc",
+      "sha256": "0ef5e2ce41ada9f4711cedcbad082541920081043c2903dcba002437223d77f9"
+    },
+    {
+      "path": "AGENTS.md",
+      "present": true,
+      "role": "agents_instructions",
+      "sha256": "b3d6581b04f16b85f77defb2837c98dc3b60ed51e10b347ecb36e609f318b619"
+    },
+    {
+      "path": "CODEX.md",
+      "present": true,
+      "role": "codex_instructions",
+      "sha256": "1db7ebc1009714f872db83447828a8957c3abb72061832cc1bc307735cd96bbe"
+    },
+    {
+      "path": "CLAUDE.md",
+      "present": true,
+      "role": "claude_instructions",
+      "sha256": "cdc00581d37d1bd3c77a69b058787f74ecc71545a97c1eab31c48961637b3224"
+    },
+    {
+      "path": "scripts/research_conductor.py",
+      "present": true,
+      "role": "research_conductor",
+      "sha256": "293d09f47a3aa965a1a4785f8db278db4364f8d93c11ebbf465c99448e20c5e2"
+    },
+    {
+      "path": "ops/status.md",
+      "present": true,
+      "role": "ops_status",
+      "sha256": "68c1b0718f3634f6947d64c9b419aecedc8b31841f9ee8e3ac6ae80fb60436dd"
+    },
+    {
+      "path": "ops/changelog.md",
+      "present": true,
+      "role": "ops_changelog",
+      "sha256": "03ad2d219de67be55e2fcf826ed9f7798b2c6626ad9635a7cc48b2c0f897f2bd"
+    },
+    {
+      "path": "_bmad/traceability.md",
+      "present": true,
+      "role": "traceability",
+      "sha256": "7cb816027fe6978ff861a799d83de610c1a10d5efeab36f07cd18904485fe2a9"
+    }
+  ],
+  "source_checksums": {
+    "AGENTS.md": "b3d6581b04f16b85f77defb2837c98dc3b60ed51e10b347ecb36e609f318b619",
+    "CLAUDE.md": "cdc00581d37d1bd3c77a69b058787f74ecc71545a97c1eab31c48961637b3224",
+    "CODEX.md": "1db7ebc1009714f872db83447828a8957c3abb72061832cc1bc307735cd96bbe",
+    "_bmad/traceability.md": "7cb816027fe6978ff861a799d83de610c1a10d5efeab36f07cd18904485fe2a9",
+    "openspec/change-proposals/research-roadmap-vNEXT.md": "0ef5e2ce41ada9f4711cedcbad082541920081043c2903dcba002437223d77f9",
+    "ops/changelog.md": "03ad2d219de67be55e2fcf826ed9f7798b2c6626ad9635a7cc48b2c0f897f2bd",
+    "ops/status.md": "68c1b0718f3634f6947d64c9b419aecedc8b31841f9ee8e3ac6ae80fb60436dd",
+    "research-roadmap-next.yaml": null,
+    "research-roadmap.yaml": "76c202e5160a9257cfc722dcb31e4d9a6e36a8e1269e0a1b7f8a8eb031a23569",
+    "results/experiment_3151_live_inference_authenticity_preflight_v1.json": "3ad9237f6351c8d18f385bf661f26d17bbe2594945befdd08b302a4024f49893",
+    "results/experiment_3152_clean_live_sota_verifier_rerun_v8.json": null,
+    "results/experiment_3153_repair_gate_unlock_decision_v2.json": "5695617c86d6a7682ba40415953a2f75ac4f5b7ced5916d3ad05e15133ee9cb8",
+    "results/experiment_3154_multi_turn_repair_ladder_v3.json": null,
+    "results/experiment_3155_tracefix_counterexample_repair_pilot_v1.json": null,
+    "results/experiment_3156_fr11_ledger_consistency_closure_v1.json": "2178e83f0ff3d09849017e246a5333ec929a7eb8678ca7443b1cf147212cd3db",
+    "results/experiment_3158_ebcn_energy_sidecar_calibration_v1.json": "b8df749e2f3a471079584550e50d191960d9f01673918a6e9d80e1b4bbd2c706",
+    "results/experiment_3159_kan_proof_carrying_monitor_expansion_v1.json": "ab9d5d5fae878314b0f3b7e1c6e357254a24b91f5d7069eb0e040c86888aa08a",
+    "results/experiment_3160_hardware_sampler_evidence_boundary_v7.json": "19a9b04df9fef152856a8ea32fed4b487fa2c73befc1bf6da5bf6bcb6d42c549",
+    "results/experiment_3161_cross_corpus_matrix_v27.json": "040681c000d1ab40b177e80a101644ac53a718b13b4fb9c42205fa8133c9c76d",
+    "results/experiment_3162_capstone_v293.json": "3bccfbfba33950253f85213c4b032838dc679100dfa21f2ef1e582cc12cad16a",
+    "scripts/research_conductor.py": "293d09f47a3aa965a1a4785f8db278db4364f8d93c11ebbf465c99448e20c5e2"
+  },
+  "status_summary_293": {
+    "blocker_delta_from_v26": 10,
+    "blocker_delta_source": "capstone_blocker_delta_from_v26",
+    "capstone_ready": true,
+    "clean_verifier_rerun_status": "gated_skipped",
+    "ebcn_status": "projection_only_scalar_auc_1.0_exact_rows_6_no_live_integration_blockers_6",
+    "fr11_ledger_consistency": 0.857143,
+    "fr11_self_learning_status": "improved_to_0.857143_but_promotion_blocked_controller_memory_only_no_weight_update",
+    "hardware_sampler_boundary": "blocked_no_authenticated_speedup_no_hardware_commands_missing_operator_evidence_8",
+    "kan_status": "bounded_monitor_records_4_new_2_no_deployed_verifier_blockers_3",
+    "live_preflight_status": "blocked",
+    "matrix_v27_ready": true,
+    "next_top_gap": "clean_live_verifier_corrigendum_repair_gate",
+    "paper_ready": false,
+    "preflight_blocked_reason": "duration_s=10.590346 is shorter than minimum plausible duration 60.0",
+    "publication_blocker_count": 65,
+    "publication_blocker_count_source": "capstone_publication_blocker_count",
+    "repair_gate_status": "blocked_pending_clean_rerun_gate_failed",
+    "repair_ladder_status": "correctly_skipped_gate_blocked_no_live_repair_attempts",
+    "source_artifacts": [
+      {
+        "alias_loaded": false,
+        "experiment_id": "exp3161",
+        "loaded_path": "results/experiment_3161_cross_corpus_matrix_v27.json",
+        "path": "results/experiment_3161_cross_corpus_matrix_v27.json",
+        "present": true,
+        "primary_present": true,
+        "readable_json_object": true,
+        "ready_field": "matrix_v27_ready",
+        "required": true,
+        "role": "matrix_v27_authority",
+        "sha256": "040681c000d1ab40b177e80a101644ac53a718b13b4fb9c42205fa8133c9c76d",
+        "source_type": "json"
+      },
+      {
+        "alias_loaded": false,
+        "experiment_id": "exp3147",
+        "loaded_path": "results/experiment_3147_cross_corpus_matrix_v26.json",
+        "path": "results/experiment_3147_cross_corpus_matrix_v26.json",
+        "present": true,
+        "primary_present": true,
+        "readable_json_object": true,
+        "ready_field": "matrix_v26_ready",
+        "required": true,
+        "role": "matrix_v26_authority",
+        "sha256": "717b1b5157fecef098d2eb9dad0f41a5f18b45b93bbbf01875ade7f7fa73f2e5",
+        "source_type": "json"
+      },
+      {
+        "alias_loaded": false,
+        "experiment_id": "exp3148",
+        "loaded_path": "results/experiment_3148_capstone_v292.json",
+        "path": "results/experiment_3148_capstone_v292.json",
+        "present": true,
+        "primary_present": true,
+        "readable_json_object": true,
+        "ready_field": "capstone_ready",
+        "required": true,
+        "role": "capstone_v292_authority",
+        "sha256": "96d8daf928feff7224887fa9ffce5160445f265f7650525295b989f4e67d8276",
+        "source_type": "json"
+      },
+      {
+        "alias_loaded": false,
+        "experiment_id": "exp3149",
+        "loaded_path": "results/experiment_3149_archive_v292_activate_v293.json",
+        "path": "results/experiment_3149_archive_v292_activate_v293.json",
+        "present": true,
+        "primary_present": true,
+        "readable_json_object": true,
+        "ready_field": "archive_v292_activate_v293_ready",
+        "required": false,
+        "role": "archive_v292_activate_v293",
+        "sha256": "c3bc9a9806acf7594f4e66deafc4b16fa437d00b38bbbaea795ccf7fca879202",
+        "source_type": "json"
+      },
+      {
+        "alias_loaded": false,
+        "experiment_id": "exp3150",
+        "loaded_path": "results/experiment_3150_adversarial_verifier_evidence_corrigendum_v1.json",
+        "path": "results/experiment_3150_adversarial_verifier_evidence_corrigendum_v1.json",
+        "present": true,
+        "primary_present": true,
+        "readable_json_object": true,
+        "ready_field": "adversarial_corrigendum_v1_ready",
+        "required": false,
+        "role": "adversarial_corrigendum",
+        "sha256": "8ed4c24bfb562e56d37265d6cab02a60adba416bba3d9c7026714d714cf6eb57",
+        "source_type": "json"
+      },
+      {
+        "alias_loaded": false,
+        "experiment_id": "exp3151",
+        "loaded_path": "results/experiment_3151_live_inference_authenticity_preflight_v1.json",
+        "path": "results/experiment_3151_live_inference_authenticity_preflight_v1.json",
+        "present": true,
+        "primary_present": true,
+        "readable_json_object": true,
+        "ready_field": "live_inference_authenticity_preflight_ready",
+        "required": false,
+        "role": "live_inference_authenticity_preflight",
+        "sha256": "3ad9237f6351c8d18f385bf661f26d17bbe2594945befdd08b302a4024f49893",
+        "source_type": "json"
+      },
+      {
+        "alias_loaded": false,
+        "experiment_id": "exp3152",
+        "loaded_path": "results/experiment_3152_clean_live_sota_verifier_rerun_v8.json",
+        "path": "results/experiment_3152_clean_live_sota_verifier_rerun_v8.json",
+        "present": false,
+        "primary_present": false,
+        "readable_json_object": false,
+        "ready_field": "clean_live_verifier_rerun_v8_ready",
+        "required": false,
+        "role": "clean_live_verifier_rerun",
+        "sha256": null,
+        "source_type": "json"
+      },
+      {
+        "alias_loaded": false,
+        "experiment_id": "exp3153",
+        "loaded_path": "results/experiment_3153_repair_gate_unlock_decision_v2.json",
+        "path": "results/experiment_3153_repair_gate_unlock_decision_v2.json",
+        "present": true,
+        "primary_present": true,
+        "readable_json_object": true,
+        "ready_field": "repair_gate_decision_v2_ready",
+        "required": false,
+        "role": "repair_gate_v2",
+        "sha256": "5695617c86d6a7682ba40415953a2f75ac4f5b7ced5916d3ad05e15133ee9cb8",
+        "source_type": "json"
+      },
+      {
+        "alias_loaded": false,
+        "experiment_id": "exp3154",
+        "loaded_path": "results/experiment_3154_multi_turn_repair_ladder_v3.json",
+        "path": "results/experiment_3154_multi_turn_repair_ladder_v3.json",
+        "present": false,
+        "primary_present": false,
+        "readable_json_object": false,
+        "ready_field": "multi_turn_repair_ladder_v3_ready",
+        "required": false,
+        "role": "repair_ladder_v3",
+        "sha256": null,
+        "source_type": "json"
+      },
+      {
+        "alias_loaded": true,
+        "experiment_id": "exp3155",
+        "loaded_path": "results/experiment_3155_tracefix_counterexample_repair_pilot.json",
+        "path": "results/experiment_3155_tracefix_counterexample_repair_pilot_v1.json",
+        "present": true,
+        "primary_present": false,
+        "readable_json_object": true,
+        "ready_field": "tracefix_counterexample_repair_pilot_v1_ready",
+        "required": false,
+        "role": "tracefix_counterexample_repair",
+        "sha256": "4432db4ebde43215efebe710d2e286fe46baaaf9a9c6ccb862dd65b7bc971faf",
+        "source_type": "json"
+      },
+      {
+        "alias_loaded": false,
+        "experiment_id": "exp3156",
+        "loaded_path": "results/experiment_3156_fr11_ledger_consistency_closure_v1.json",
+        "path": "results/experiment_3156_fr11_ledger_consistency_closure_v1.json",
+        "present": true,
+        "primary_present": true,
+        "readable_json_object": true,
+        "ready_field": "fr11_ledger_consistency_closure_v1_ready",
+        "required": false,
+        "role": "fr11_ledger_consistency_closure",
+        "sha256": "2178e83f0ff3d09849017e246a5333ec929a7eb8678ca7443b1cf147212cd3db",
+        "source_type": "json"
+      },
+      {
+        "alias_loaded": false,
+        "experiment_id": "exp3157",
+        "loaded_path": "results/experiment_3157_fr11_attractor_residual_memory_audit_v1.json",
+        "path": "results/experiment_3157_fr11_attractor_residual_memory_audit_v1.json",
+        "present": true,
+        "primary_present": true,
+        "readable_json_object": true,
+        "ready_field": "fr11_attractor_residual_memory_audit_v1_ready",
+        "required": false,
+        "role": "fr11_attractor_residual_memory",
+        "sha256": "235a650d2ac2d33650bda18044ade4c4c2d37ea299d9aca10e7597306c24bc24",
+        "source_type": "json"
+      },
+      {
+        "alias_loaded": false,
+        "experiment_id": "exp3158",
+        "loaded_path": "results/experiment_3158_ebcn_energy_sidecar_calibration_v1.json",
+        "path": "results/experiment_3158_ebcn_energy_sidecar_calibration_v1.json",
+        "present": true,
+        "primary_present": true,
+        "readable_json_object": true,
+        "ready_field": "ebcn_energy_sidecar_calibration_v1_ready",
+        "required": false,
+        "role": "ebcn_energy_sidecar_calibration",
+        "sha256": "b8df749e2f3a471079584550e50d191960d9f01673918a6e9d80e1b4bbd2c706",
+        "source_type": "json"
+      },
+      {
+        "alias_loaded": false,
+        "experiment_id": "exp3159",
+        "loaded_path": "results/experiment_3159_kan_proof_carrying_monitor_expansion_v1.json",
+        "path": "results/experiment_3159_kan_proof_carrying_monitor_expansion_v1.json",
+        "present": true,
+        "primary_present": true,
+        "readable_json_object": true,
+        "ready_field": "kan_proof_carrying_monitor_expansion_v1_ready",
+        "required": false,
+        "role": "kan_monitor_expansion",
+        "sha256": "ab9d5d5fae878314b0f3b7e1c6e357254a24b91f5d7069eb0e040c86888aa08a",
+        "source_type": "json"
+      },
+      {
+        "alias_loaded": false,
+        "experiment_id": "exp3160",
+        "loaded_path": "results/experiment_3160_hardware_sampler_evidence_boundary_v7.json",
+        "path": "results/experiment_3160_hardware_sampler_evidence_boundary_v7.json",
+        "present": true,
+        "primary_present": true,
+        "readable_json_object": true,
+        "ready_field": "hardware_sampler_evidence_boundary_v7_ready",
+        "required": false,
+        "role": "hardware_sampler_boundary",
+        "sha256": "19a9b04df9fef152856a8ea32fed4b487fa2c73befc1bf6da5bf6bcb6d42c549",
+        "source_type": "json"
+      }
+    ],
+    "verifier_evidence_status": "corrigendum_preserved_exact_replay_but_did_not_unblock_repair_live_evidence_untrusted"
+  },
+  "traceability_updated": false
+}
