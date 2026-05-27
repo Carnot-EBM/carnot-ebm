@@ -3208,6 +3208,68 @@ fields, and uses an `honest_verdict` that starts with `complete:`.
 |---|---|---|
 | REQ-VERIFY-3192 | Implemented (`python/carnot/verify/receipt_adversarial_contract_v4.py`) | Implemented (`tests/python/test_experiment_3192_receipt_adversarial_contract_v4.py`) |
 
+### REQ-VERIFY-3193: Llama.cpp CUDA Offload Health Probe V1
+
+The repository shall provide an Exp 3193 llama.cpp CUDA/offload health probe
+that writes
+`results/experiment_3193_llama_cpp_cuda_offload_health_probe_v1.json`. The
+probe MUST inspect local preconditions before attempting model work, including
+`nvidia-smi` visibility, Python torch CUDA availability, `llama_cpp` import and
+backend metadata, and the local HuggingFace cache inventory for all three
+mandated GGUF model families:
+`unsloth/Qwen3.6-35B-A3B-GGUF`,
+`unsloth/gemma-4-31B-it-GGUF`, and
+`unsloth/gemma-4-26B-A4B-it-GGUF`. The probe MUST NOT download large files,
+use legacy small models for headline fields, push commits, or modify
+`scripts/research_conductor.py`.
+
+When `llama_cpp` reports GPU offload support, CUDA hardware is visible, and at
+least one mandated GGUF candidate exists locally, the probe SHALL attempt one
+tiny deterministic receipt call against the strongest available mandated
+candidate with explicit `n_gpu_layers` intent. For that call it SHALL record
+wall-clock duration, token counts, prompt hash, response hash, transcript hash,
+model-file hash, stderr/backend tail, GPU memory observations before and after
+the attempt, and whether GPU layers were actually evidenced by backend metadata
+or GPU memory deltas. A compliant result SHALL set
+`substrate_classification=full_local_sota_receipt`,
+`clean_rerun_allowed=true`, and `headline_claim_allowed=true` only when the
+receipt completed on a mandated GGUF with offload evidence and no CPU fallback.
+
+When CUDA, `llama_cpp` GPU offload, the mandated cache, or the live receipt
+attempt is unavailable or unhealthy, the probe SHALL write a terminal blocked
+artifact instead of claiming clean verifier eligibility. CPU fallback MAY be
+recorded only as non-headline diagnostic evidence and SHALL keep both
+`clean_rerun_allowed=false` and `headline_claim_allowed=false`.
+
+The terminal artifact MUST include `schema_version`, `experiment_id`,
+`model_specs`, `preconditions_checked`, `cache_inventory`, `selected_model`,
+`selected_model_file_hash`, `llama_cpp_backend_metadata`,
+`n_gpu_layers_requested`, `n_gpu_layers_effective`, `gpu_observations`,
+`receipt_count`, `receipts`, `substrate_classification`,
+`clean_rerun_allowed`, `headline_claim_allowed`, `blocker_reasons`, and
+`honest_verdict`. The `honest_verdict` MUST start with `complete:` for a
+compliant offload receipt or `blocked_` for a precise blocked precondition.
+
+### SCENARIO-VERIFY-3193: CUDA Offload Receipt Or Precise Blocked Substrate
+
+Given the Exp 3192 v4 contract allows clean reruns only for full local SOTA
+receipt evidence, and the local host may have mandated GGUF cache files,
+`llama_cpp`, CUDA hardware, or only CPU fallback,
+When Exp 3193 builds the llama.cpp CUDA/offload health probe artifact,
+Then it writes the terminal JSON artifact with all required fields, records all
+three mandated model families and available quant files, records CUDA and
+`llama_cpp` backend preconditions, either captures one deterministic offload
+receipt with hashes, token counts, model-file hash, stderr/backend tail, and
+GPU memory evidence or records zero headline receipts with exact blocker
+reasons, and never sets `clean_rerun_allowed=true` or
+`headline_claim_allowed=true` for CPU fallback or blocked substrate states.
+
+## Implementation Status (REQ-VERIFY-3193)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-VERIFY-3193 | Implemented (`python/carnot/verify/llama_cpp_cuda_offload_health_probe_v1.py`) | Implemented (`tests/python/test_experiment_3193_llama_cpp_cuda_offload_health_probe_v1.py`) |
+
 ### REQ-VERIFY-3180: Controlled-Invariance Executor V2
 
 The repository shall provide an Exp 3180 controlled-invariance executor that
