@@ -6487,3 +6487,5 @@ web search |
 | 2026-05-27 20:56 UTC | llama.cpp CUDA rebuild and clean subprocess smoke  | OK | 81 passed in 2.39s |
 | 2026-05-27 20:58 UTC | Full local SOTA GGUF receipt v5 gated on exp3207 C | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp3207-llama-cpp-cuda-rebuild-clean-subpr |
 | 2026-05-27 21:00 UTC | Full local SOTA GGUF receipt v5 gated on exp3207 C | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp3207-llama-cpp-cuda-rebuild-clean-subpr |
+| 2026-05-27 21:02 UTC | Full local SOTA GGUF receipt v5 gated on exp3207 C | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp3207-llama-cpp-cuda-rebuild-clean-subpr |
+| 2026-05-27 21:04 UTC | Clean live SOTA verifier rerun v12 gated on exp320 | GATE_BLOCK | Pre-emptive skip: upstream retired (exp3208-full-local-sota-receipt-v5) |

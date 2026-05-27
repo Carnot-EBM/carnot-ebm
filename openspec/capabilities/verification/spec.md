@@ -3342,6 +3342,66 @@ non-authoritative, sets `promotion_allowed=false`, and emits an
 |---|---|---|
 | REQ-VERIFY-3195 | Implemented (`python/carnot/verify/adaptive_verification_granularity_policy_v1.py`) | Implemented (`tests/python/test_experiment_3195_adaptive_verification_granularity_policy_v1.py`) |
 
+### REQ-VERIFY-3210: Context-CoT/CL-Bench Parametric-Shortcut Fixture Bank V1
+
+The repository shall provide an Exp 3210 deterministic fixture-bank builder
+that writes
+`data/research/context_cot_clbench_parametric_shortcut_v1.jsonl` and
+`results/experiment_3210_context_cot_clbench_parametric_shortcut_fixtures_v1.json`
+without invoking an LLM, running GPU inference, downloading models, pushing
+commits, modifying `scripts/research_conductor.py`, or modifying the active
+`research-roadmap.yaml`.
+
+The fixture bank SHALL contain 20 to 40 rows spanning at least the symbolic
+aliases, local arithmetic rules, and context-defined entity facts families.
+Every row SHALL include a stable fixture id, family, context, question,
+expected answer, prior-bait answer, exact checker type, and minimal
+counterexample. The context SHALL define a local rule or fact that intentionally
+contradicts a likely pretrained prior, and the expected answer SHALL follow the
+local context while the prior-bait answer SHALL be rejected by the exact
+checker.
+
+The builder SHALL expose deterministic exact checking helpers that accept the
+expected answer and reject each row's prior-bait answer. It MAY expose a score
+helper for candidate answers, but any optional LLM smoke evaluation SHALL remain
+null unless it records at least one mandated local SOTA GGUF model spec:
+`unsloth/Qwen3.6-35B-A3B-GGUF`, `unsloth/gemma-4-31B-it-GGUF`, or
+`unsloth/gemma-4-26B-A4B-it-GGUF`; legacy small models SHALL be smoke-only and
+SHALL NOT create headline context-following claims.
+
+The terminal artifact MUST include `schema_version`, `experiment_id`,
+`milestone`, `reference_papers`, `fixture_path`, `fixture_count`,
+`fixture_families`, `exact_checker_types`, `prior_bait_row_count`,
+`context_following_score_available`, `optional_llm_smoke`,
+`ready_for_clean_verifier`, `conductor_file_modified`,
+`active_roadmap_modified`, and `honest_verdict`.
+
+`ready_for_clean_verifier` SHALL be true only when the JSONL fixture exists,
+the fixture count is between 20 and 40, all three required families are covered,
+all rows have prior-bait counterexamples, every expected answer passes its
+checker, and every prior-bait answer fails its checker. The honest verdict MUST
+start with `complete:` when the deterministic fixture bank and schema-valid
+artifact are materialized.
+
+### SCENARIO-VERIFY-3210: Parametric Shortcuts Are Exact-Checkable
+
+Given the post-.296 Context-CoT/CL-Bench research references identify
+parametric shortcuts as a context-learning failure mode,
+When the Exp 3210 fixture builder runs,
+Then it writes the JSONL fixture bank and terminal result artifact, covers the
+symbolic aliases, local arithmetic rules, and context-defined entity facts
+families, records a prior-bait answer and minimal counterexample for every row,
+confirms exact checkers accept context-following answers and reject likely
+prior answers, keeps optional LLM smoke evaluation null, sets
+`ready_for_clean_verifier=true`, and records that neither the conductor file nor
+the active roadmap was modified.
+
+## Implementation Status (REQ-VERIFY-3210)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-VERIFY-3210 | Implemented (`python/carnot/verify/context_cot_clbench_parametric_shortcut_fixtures_v1.py`) | Implemented (`tests/python/test_experiment_3210_context_cot_clbench_parametric_shortcut_fixtures_v1.py`) |
+
 ### REQ-VERIFY-3196: GenCP Domain Preview Repair Compiler V1
 
 The repository shall provide an Exp 3196 deterministic GenCP-style domain
