@@ -11080,3 +11080,72 @@ protected conductor or active-roadmap edits performed by this task, and an
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-REPORT-3217 | Implemented (`python/carnot/reporting/cross_corpus_matrix_v31_3217.py`) | Implemented (`tests/python/test_experiment_3217_cross_corpus_matrix_v31.py`) |
+
+### REQ-REPORT-3218: Milestone .297 Capstone From Matrix V31
+
+The repository shall provide an Exp 3218 milestone `.297` capstone generator
+that writes `results/experiment_3218_capstone_v297.json` by reading
+`results/experiment_3217_cross_corpus_matrix_v31.json` as the authoritative
+matrix and every available checked-in `.297` artifact from Exp 3205 through Exp
+3217. The workflow MUST be terminal aggregation only. It MUST NOT run live
+model inference, verifier scoring, repair generation, solver execution,
+hardware commands, the conductor, pushes, modify `scripts/research_conductor.py`,
+modify `research-roadmap.yaml`, or reconcile `ops/status.md`,
+`ops/changelog.md`, or `_bmad/traceability.md` when a conductor reconciliation
+step owns those files.
+
+The capstone MUST summarize `.297` phase outcomes for CUDA receipt recovery,
+clean verifier recovery, context and constraint fixture readiness, structured
+repair gating, repair ladder execution, FR-11 self-learning, and the hardware
+claim boundary. `paper_ready` MUST be copied from matrix v31 only. The
+capstone MUST NOT infer paper readiness from capstone completion, fixture
+availability, FR-11 controller-memory progress, or any operational document.
+The capstone MUST preserve matrix v31 claim boundaries: no paper-ready claim,
+repair claim, hardware speedup claim, TSU/Kona execution claim, or model-weight
+self-learning claim may be made unless matrix v31 explicitly proves that claim.
+
+The terminal artifact MUST include `schema_version`, `experiment_id`,
+`milestone`, `matrix_artifact`, `capstone_v297_ready`, `paper_ready`,
+`publication_blocker_count`, `blocker_delta_from_v30`,
+`local_sota_receipt_status`, `clean_verifier_status`, `repair_gate_status`,
+`repair_ladder_status`, `context_fixture_status`,
+`constraintbench_fixture_status`, `fr11_self_learning_status`,
+`hardware_sampler_status`, `next_top_gap`,
+`recommended_next_milestone_theme`, `ops_status_updated`,
+`ops_changelog_updated`, `conductor_file_modified`, `active_roadmap_modified`,
+and `honest_verdict`. It MAY include phase-outcome summaries, source checksums,
+claim-boundary booleans, matrix summaries, no-new-execution booleans,
+invariant violations, and measured `duration_s`, provided every value is
+derived from checked-in matrix/artifact evidence or file presence checks.
+
+`capstone_v297_ready` MUST be true only when matrix v31 exists, reports
+`cross_corpus_matrix_v31_ready=true`, every required schema field is populated
+with a type-compatible value, and the capstone's claim-boundary invariants hold.
+The recommended next milestone theme MUST be derived from matrix v31
+`next_top_gap`, with the CUDA/offload receipt gap mapped to a CUDA environment
+repair and clean local SOTA receipt theme.
+
+#### SCENARIO-REPORT-3218: V297 Capstone Preserves Matrix Boundaries
+
+**Given** matrix v31 exists and reports `cross_corpus_matrix_v31_ready=true`,
+`paper_ready=false`, `publication_blocker_count=92`,
+`blocker_delta_from_v30=7`, blocked CUDA receipt recovery, a gated-skipped
+clean verifier, a blocked repair gate, a gated-skipped repair ladder, available
+context and ConstraintBench fixture pilots, FR-11 controller trace replay with
+no model-weight update claim, no authenticated hardware transcript, and
+`next_top_gap=cuda_offload_full_local_sota_receipt_clean_rerun_allowed_repair_gate_unblock`
+**When** the Exp 3218 capstone generator runs
+**Then** it writes `results/experiment_3218_capstone_v297.json` with all
+required schema fields, `capstone_v297_ready=true`, `paper_ready=false`,
+`publication_blocker_count=92`, `blocker_delta_from_v30=7`, status strings
+copied or summarized from matrix v31, a next-milestone theme focused on CUDA
+environment repair and clean local SOTA receipt recovery, no ops/status or
+ops/changelog update claim, no protected conductor or active-roadmap edits, no
+paper-ready/repair/hardware-speedup/TSU/Kona/model-weight-learning overclaim,
+and an `honest_verdict` that starts with `complete:`.
+
+## Implementation Status (REQ-REPORT-3218)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-3218 | Implemented (`python/carnot/reporting/capstone_v297_3218.py`) | Implemented (`tests/python/test_experiment_3218_capstone_v297.py`) |
