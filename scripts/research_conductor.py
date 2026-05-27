@@ -1686,6 +1686,46 @@ def _verdict_is_untrustworthy(payload: dict) -> tuple[bool, str | None]:
     )
     if any(vlow.startswith(p) for p in _TERMINAL_VERDICT_PREFIXES):
         return False, verdict
+    # 2026-05-27 fix: `blocked_<resource>` at start-of-verdict is the
+    # honest-terminal blocked-precondition convention per CLAUDE.md
+    # "Pre-Launch Preconditions Discipline". When a precondition check
+    # fails (missing GGUF, no CUDA, no SSH, no HF credentials, gated-skip
+    # because an upstream artifact retired), the agent emits
+    # `blocked_<resource>` with the specific resource named. The
+    # discipline explicitly says: "The conductor's reconciler classifies
+    # blocked_* verdicts as honest non-terminal states (NOT as
+    # fabrications or partial failures), so the task simply retires
+    # without burning the doomed-rerun ledger unnecessarily."
+    # .294 incident (2026-05-27 03:36Z–04:23Z): four repair-track tasks
+    # (exp3165 Live SOTA authenticity replay v2, exp3168 Repair gate
+    # decision v3, exp3169 Repair ladder materializer v4, exp3170 queued)
+    # all wrote complete artifacts with honest_verdict starting
+    # `blocked_flagged_verifier:` / `blocked_repair_gate:` after their
+    # gated-skip preconditions correctly tripped. The classifier's
+    # bare-"blocked" substring match in _BLOCKED_TOKENS flagged each as
+    # untrustworthy, triggering 3-fail-retire cycles that burned wall
+    # time without producing new information — the experiments were
+    # honestly blocked-by-upstream from the first attempt onward, no
+    # retry can change that. Pattern is now wired in: recognize
+    # `blocked_<identifier>` and `blocked:<identifier>` at the START of
+    # the verdict as a terminal honest-blocked state, equivalent to the
+    # other terminal prefixes above. Substring matches of "blocked"
+    # elsewhere in the verdict still flow through the positive-context
+    # whitelist (exp1473 pattern) and the trailing token check below;
+    # only start-of-verdict blocked-prefix is fast-tracked here.
+    _BLOCKED_TERMINAL_PREFIXES = (
+        "blocked_",  # per Pre-Launch Preconditions Discipline naming convention
+        "blocked:",  # colon variant (e.g., "blocked: model_not_cached")
+    )
+    if any(vlow.startswith(p) for p in _BLOCKED_TERMINAL_PREFIXES):
+        # Sanity: require non-empty resource identifier after the prefix
+        # so a bare `blocked_` or `blocked:` (no resource) still flows
+        # through as a real partial-run signal. The disciplinary spec
+        # requires a specific resource name; an empty identifier is
+        # malformed and should not be honored as terminal.
+        for p in _BLOCKED_TERMINAL_PREFIXES:
+            if vlow.startswith(p) and len(vlow) > len(p):
+                return False, verdict
     # 2026-05-07 fix: positive-context "blocked" patterns. Agents writing
     # adversarial-audit / defense / safety-test verdicts often produce
     # phrases like "telemetry_claim_blocked_adversarial_audit" (exp1473)

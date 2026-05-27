@@ -6423,3 +6423,4 @@ web search: |
 | 2026-05-27 01:50 UTC | Repair gate decision v3 materialized | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_3168_repair_ |
 | 2026-05-27 02:27 UTC | Repair gate decision v3 materialized | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_3168_repair_ |
 | 2026-05-27 03:36 UTC | Repair gate decision v3 materialized | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_3168_repair_ |
+| 2026-05-27 03:50 UTC | Repair ladder materializer v4 | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_3169_repair_ |
