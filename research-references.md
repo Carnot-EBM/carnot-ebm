@@ -1,3 +1,144 @@
+## 2026-05-27 Post-.297 Planning Sweep (Milestone 2026.05.298)
+
+This sweep was run after milestone `.297` completed. `.297` made the
+blocker mechanical: an RTX 3090 is visible to `nvidia-smi`, `nvcc` is present,
+and the installed `llama_cpp` library reports CUDA build metadata, but the
+selected Python runtime still reports `torch.cuda.is_available() == false` and
+`llama_cpp` emits `ggml_cuda_init: failed to initialize CUDA: unknown error`.
+Consequently, the full local SOTA receipt gate skipped, clean verifier v12 did
+not run, structured repair preflight did not run, repair gate v6 stayed
+blocked, and repair ladder v7 skipped. Positive `.297` outcomes are reusable:
+Context-CoT/CL-Bench fixtures, ConstraintBench-style exact fixtures, FR-11
+evidence-gated controller trace labels, and a grounded-continuation
+nonforgetting queue.
+
+### CUDA Repair Should Isolate the Selected Python Path Before Rebuilding
+
+- **Sources:** `.297` artifacts and official PyTorch/llama.cpp installation
+  guidance.
+- **What:** The selected `.venv` uses Python 3.14, PyTorch `2.11.0+cu128`, and
+  llama-cpp-python `0.3.23`. `nvidia-smi` sees one RTX 3090 and driver
+  `595.71.05`, but clean subprocess probes fail at CUDA initialization before
+  model loading.
+- **Relevance to Carnot:** `.298` should not repeat a full GGUF receipt attempt
+  until a clean, isolated CUDA runtime receipt passes outside the project import
+  path. The natural next experiment is a hermetic CUDA repair ledger: explicit
+  `CUDA_VISIBLE_DEVICES=0`, no ROCm-path pollution, selected Python comparison
+  against a fresh CUDA-only venv, PyTorch CUDA init, then llama.cpp GPU-offload
+  smoke. Only after that should full local SOTA receipts run.
+- **Sources:** `results/experiment_3206_cuda_env_forensics_ledger_v1.json`,
+  `results/experiment_3207_llama_cpp_cuda_rebuild_clean_subprocess_v1.json`,
+  https://pytorch.org/get-started/ and
+  https://llama-cpp-python.readthedocs.io/en/latest/
+
+### Distributional EBMs Fit Carnot's Exact-Row Uncertainty Gap
+
+- **Paper:** "Distributional Energy-Based Models for Uncertainty-Aware
+  Structured LLM Reasoning" (arXiv:2605.18871; submitted 2026-05-15).
+- **What:** Combines learned quality scores with deterministic analytical
+  penalties for structured LLM outputs. Ensemble mean ranks candidates while
+  ensemble uncertainty drives abstention or targeted regeneration. The paper
+  also calls out model-identity shortcuts on code and mitigates them with
+  retraining.
+- **Relevance to Carnot:** Use this as a bounded sidecar over `.297` exact
+  context and ConstraintBench fixtures: report uncertainty, abstention, and
+  model-identity shortcut diagnostics without claiming repair success. If CUDA
+  clears, the same sidecar can triage clean verifier rows before repair.
+- **Sources:** https://arxiv.org/abs/2605.18871
+
+### Natural-Language Text Constraints Are a Bridge Between Solver Exactness and Coverage
+
+- **Paper:** "Neurosymbolic Language Reasoning as Satisfiability Modulo
+  Theory" / Logitext (arXiv:2602.18095; submitted 2026-02-20).
+- **What:** Represents documents as natural-language text constraints and
+  integrates LLM-based constraint evaluation with SMT solving, extending
+  solver-backed reasoning beyond fully formalizable math and code.
+- **Relevance to Carnot:** `.298` should add a Logitext-style partial
+  formalization artifact over context-shortcut fixtures: exact Z3/SMT where
+  possible, natural-language theory calls only as typed constraints, and clear
+  coverage accounting. This directly addresses the PRD gap between exact
+  checkable rows and broad natural-language verification.
+- **Sources:** https://arxiv.org/abs/2602.18095
+
+### KAN-CL Is Promising Only With Explicit Nonforgetting and Certificate Boundaries
+
+- **Paper:** "KAN-CL: Per-Knot Importance Regularization for Continual Learning
+  with Kolmogorov-Arnold Networks" (arXiv:2605.12306; submitted 2026-05-12).
+- **What:** Uses KAN spline locality for per-knot importance anchoring and
+  reports large forgetting reductions versus a head-only KAN baseline. The
+  paper's NTK analysis argues that spline locality reduces cross-task
+  interference.
+- **Relevance to Carnot:** Pair `.297`'s nonforgetting queue with a
+  KAN-CL-inspired controller-side audit: per-knot or per-template locality can
+  become an FR-11 sidecar only if it emits explicit nonforgetting pressure,
+  heldout/drift budgets, and no hidden model-weight update claim. This is a
+  natural self-learning experiment, but not yet a foundation-model learning
+  claim.
+- **Sources:** https://arxiv.org/abs/2605.12306 and
+  `results/experiment_3216_fr11_grounded_continuation_nonforgetting_queue_v1.json`
+
+### Fully Parallel P-Bit Ising With Inertia Supports Hardware-Diagnostic Work, Not New Speedup Claims
+
+- **Paper:** "A fully parallel densely connected probabilistic Ising machine
+  with inertia for real-time applications" (arXiv:2604.17109; submitted
+  2026-04-18).
+- **What:** Adds an inertia term that permits fully parallel synchronous p-bit
+  updates while preserving or improving solution quality in simulation, FPGA
+  emulation, and FPGA experiments.
+- **Relevance to Carnot:** Prior PIMI-style attempts were retired for Carnot's
+  easy N=8/N=64 scopes. The useful `.298` move is not a rerun of the retired
+  scope; it is a hardware-boundary diagnostic that checks whether Carnot's
+  existing exact fixtures are hard/frustrated enough to justify future inertia
+  experiments. Do not claim KV260/GateMate speedup without local transcript
+  evidence.
+- **Sources:** https://arxiv.org/abs/2604.17109 and
+  `ops/exclusion_manifest.yaml`
+
+### Semantic Scholar EBT Citation Watch: Relevant, But Not Yet a Critical-Path Task
+
+- **Source:** Semantic Scholar page for EBT arXiv:2507.02092, checked
+  2026-05-27.
+- **What:** Semantic Scholar lists 14 citations and surfaces several relevant
+  follow-ons, including "Transformers as Intrinsic Optimizers", "NRGPT: An
+  Energy-based Alternative for GPT", "A Pipeline for Assessing Metacognitive
+  Reasoning in Energy-Based Transformers while Generating Code", and
+  "EBT-Policy: Energy Unlocks Emergent Physical Reasoning Capabilities".
+- **Relevance to Carnot:** These strengthen the Phase-3/EBT watch but should
+  not displace the immediate CUDA/verifier/repair critical path. A future
+  literature-synthesis task is justified once local SOTA receipts stop blocking
+  empirical work. ARM-EBM arXiv:2512.15605 was discoverable through secondary
+  indexes, but no clean citation-derived experiment was admitted from it in
+  this sweep.
+- **Sources:** https://www.semanticscholar.org/paper/Energy-Based-Transformers-are-Scalable-Learners-and-Gladstone-Nanduru/2da9163730998a4368c609972ccff0582518b36b
+  and https://arxiv.org/abs/2512.15605
+
+### Structured Decoding Libraries Are Ready for Schema-Valid Repair Proposals
+
+- **Sources:** guidance-ai/llguidance and MLC-AI XGrammar.
+- **What:** llguidance enforces context-free grammars and JSON schemas with
+  low CPU masking overhead. XGrammar-2 reports a 2026 structured-generation
+  release with Python, C++, and JavaScript APIs.
+- **Relevance to Carnot:** `.298` should keep structured repair as a proposal
+  preflight, not a repair-success claim: produce schema-valid repair candidates
+  only after the local SOTA receipt gate clears, then let exact verifiers score
+  semantics.
+- **Sources:** https://github.com/guidance-ai/llguidance and
+  https://github.com/mlc-ai/xgrammar
+
+### Extropic And Kona Remain Architecture Signals Behind Local Evidence Gates
+
+- **Sources:** Extropic's October 2025 TSU/THRML launch writing and Logical
+  Intelligence's January 2026 Kona reasoning post.
+- **What:** Extropic publicly positions TSUs as sampling hardware for EBMs and
+  PGMs with THRML as the simulation layer. Logical Intelligence describes Kona
+  as a globally scored, non-autoregressive energy-based reasoning model over
+  partial and complete traces.
+- **Relevance to Carnot:** Both support Carnot's strategic direction, but `.298`
+  should keep them as boundary references. No TSU, Kona, FPGA, or hardware
+  speedup claim is allowed without an authenticated local transcript.
+- **Sources:** https://extropic.ai/writing/thermodynamic-computing-from-zero-to-one
+  and https://logicalintelligence.com/blog/energy-based-models-for-reasoning
+
 ## 2026-05-27 Post-.296 Planning Sweep (Milestone 2026.05.297)
 
 This sweep was run after milestone `.296` completed. `.296` narrowed the

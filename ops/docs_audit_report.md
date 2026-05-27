@@ -4,50 +4,44 @@
 # docs_audit_report — 2026-05-27
 
 ## TL;DR (stranger's 30-second take)
-I would bounce in 15 seconds. While the hero section has a fantastic hook, the page is broken by leaked local file paths in the copy and CSS, overloaded with an impenetrable soup of internal acronyms, and filled with suspicious "perfect" benchmark numbers that make it feel like an internal dashboard.
+A stranger would likely bounce after the hero section. While the core value proposition is strong and clear, the page quickly devolves into a wall of dense internal acronyms and suspiciously perfect benchmark scores that erode technical trust.
 
 ## TOP 3 PROBLEMS
-1. Leaked Internal Test Paths & Broken Code — The "Live benchmark" card text and hidden HTML/CSS (font links, `@media` queries) contain massive injected `@.tmp-pytest/...` file paths.
-2. Opaque Acronym Soup — The "Features" and "Results" sections are loaded with undefined jargon (FoVer, CCTU, SVAMP, PREM, VeriCoT) that alienate new visitors.
-3. Suspiciously Perfect Numbers — Claims like "1.0 TP rate", "60/60 attacks", and "identical losses" read as either fabricated, heavily overfit, or tested on tiny datasets.
+1. INTERNAL JARGON — "Evidence" and "Features" sections are packed with unexplained terms (FoVer, SVAMP, CCTU, VeriCoT).
+2. FABRICATION SIGNALS — Multiple claims of 1.0, 100%, and exactly 2.0x without adequate caveats look too good to be true.
+3. PER-MILESTONE NARRATIVE — The "Recent progress" card reads like an internal retrospective or commit message, not marketing copy.
 
 ## DETAILED FINDINGS
 ### Bloat
-- `Recent progress` card — 61 words — Cap at 60 words. It reads like a dense internal status update rather than a punchy feature highlight.
-- `Why "Energy-Based"?` bento card — 66 words — Cap at 40 words. It is a dense wall of text compared to the other quick, actionable bento cards.
-- `Results` grid — 12 cards — Cap at 6-8 cards. 12 cards create visual fatigue and dilute the impact of your most important metrics.
+- "What we measured" section — 12 results cards — cap at 6-8 of the most impactful, universally understandable metrics.
+- "From the blog" section — 7 blog cards — cap at 3-4 most recent or relevant posts to avoid overwhelming the user.
+- Global Navigation — 12 links — cap at 5-6 essential links to keep the header clean.
 
 ### Internal jargon
-- `Live benchmark` result card — `@.tmp-pytest/pytest-of-ianblenke/.../spilled-energy-2602-18671:real.txt` — A raw local file path leaked directly into the public benchmark claim.
-- `Test-Time Compute (TTC) & PREM` bento card — "Process-Reward Energy Model (PREM) variance" — Impenetrable internal terminology.
-- `Features` & `Results` sections — "CCTU", "PREM", "HumanEval-50", "SVAMP AUC", "VeriCoT", "PRM-BiasBench", "FoVer" — A stranger has no idea what these specific datasets, benchmarks, or models are without definitions.
+- "Recent progress" card — `FoVer`, `5-seed dual-condition`, `architecture-only` — A stranger doesn't know these internal benchmark names or specific conditions.
+- "What we measured" section — `IterativeSelfRepair`, `execute-feedback-retry`, `EstimationVerifier SVAMP`, `VeriCoT`, `PRM-BiasBench-style attacks`, `CCTU`, `HalluGuard v3` — These read like internal project codenames and obscure benchmarks.
+- "Seven capabilities" section — `TTC & PREM` — Even expanded, "Process-Reward Energy Model variance" is dense insider theory.
 
 ### Per-milestone narrative
-- `Recent progress` card — "Repinned from v2 0.9857 after pre-submission adversarial audit" — Reads exactly like an internal Slack update, PR description, or milestone retrospective.
-- `Results` section intro — "synthetic-pilot, and adversarial-audit rows are labeled by provenance. Synthetic pilots are included only when the card says so" — Defensive, internal-facing methodology disclaimers that belong in a technical paper, not on a landing page.
+- "Recent progress" card — "Repinned from v2 0.9857 after pre-submission adversarial audit; see Why We Report Two AUROCs Now." — This is internal status reporting and retro copy, not landing page material.
 
 ### Inconsistencies
-- "Carnot is the second pair of eyes" (implies a single, simple verifier) vs "The production verifier is an ensemble of complementary checks" (implies a complex multi-model stack).
-- The Stats bar claims "0.9131 Verifier AUROC" while the Safety result card claims "0.91 AUROC". The sudden change in precision for seemingly related top-level metrics is confusing.
+- Claimed AUROC/AUC: "0.9131 AUROC" (hero stats) vs "0.91 AUROC" (Prompt-injection) vs "0.90 AUC" (Math reasoning). Mixing AUROC and AUC is confusing, and it's unclear what the primary metric is.
 
 ### Missing essentials
-- Context for improvements: "+3.0 points on pass-rate" and "+4.9 points on compliance" lack baseline numbers. An improvement from what to what? 
-- Who maintains it: Beyond a solitary "Ian Blenke" in the copyright footer, there is no "About" section, organizational context, or team to establish trust in the framework's longevity.
+- All essential requirements (What it does, trust anchors, installation, license, maintainer) are technically present on the page.
 
 ### Fabrication signals
-- `Math extraction` card — "GSM8K extraction TP rate: 0.5 → 1.0" — A 1.0 (100%) true positive rate is a suspiciously perfect number that screams overfitting or a tiny sample size.
-- `Adversarial audit` card — "k=5 ensemble catches 60/60 attacks" — 60/60 is perfect, which invites heavy skepticism without a credibility anchor explaining the constraints.
-- `Training` card — "2.0× speedup, identical losses" — "Identical" is practically impossible in floating-point math across parallel GPU topologies, making it look fabricated.
-- `Stats bar` — "0.9131" — Four decimal places of precision is unnecessary for a landing page and implies an unrealistic level of confidence in the metric.
+- "Training" card — "2.0x speedup, identical losses" (Exactly 2.0x is suspiciously perfect scaling).
+- "Math extraction" card — "GSM8K extraction TP rate: 0.5 -> 1.0" (A perfect 1.0 true positive rate is an immediate red flag).
+- "Adversarial audit" card — "k=5 ensemble catches 60/60 attacks" (100% success rate on 60 attacks looks heavily overfitted or fabricated without deep context).
 
 ## WHAT'S WORKING
-- The hero section is fantastic: "Catch the mistakes your LLM confidently makes up" is a perfect, instantly understandable value proposition.
-- The Quick Start section with the Python/Rust code toggle is exactly what a developer needs to see to grasp the integration experience immediately.
+- The hero section is excellent: "Catch the mistakes your LLM confidently makes up." is a great, plain-English hook.
+- The "Quickstart" tabbed Python/Rust code blocks provide an immediate, concrete understanding of the developer experience.
 
 ## RECOMMENDED OPERATOR ACTIONS
-1. Immediately fix the templating/regex error that injected `@.tmp-pytest/...` file paths into the HTML text, CSS `@media` queries, and font `<link>` tags.
-2. Rewrite the "Recent progress" card to remove internal timeline jargon ("Repinned from v2") and focus purely on what a user gets today.
-3. Scrub the acronyms (CCTU, PREM, FoVer, SVAMP) or replace them with plain-English descriptive text (e.g., "Math reasoning benchmark").
-4. Add baselines to all "+X points" claims so the improvements have meaningful context.
-5. Round "0.9131" to "0.91" and temper the "1.0" and "60/60" claims by mentioning the sample size or softening the absolute nature of the language.
-6. Drop the defensive "provenance" disclaimers from the Results intro paragraph.
+1. Rewrite the "Recent progress" card to focus entirely on current capabilities, removing the benchmark history and audit drama.
+2. Cull the "Results" section from 12 to 6 cards, translating internal codenames (e.g., "CCTU") into plain English ("tool use constraints").
+3. Remove or heavily contextualize the "1.0", "60/60", and "2.0x" claims in the Results section, as they trigger immediate skepticism in technical readers.
+4. Standardize AUROC reporting across the page so the reader isn't confused by slight variations and different acronyms.

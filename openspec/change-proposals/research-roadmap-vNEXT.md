@@ -1,283 +1,305 @@
-# Research Roadmap vNEXT - Milestone 2026.05.297
+# Research Roadmap vNEXT - Milestone 2026.05.298
 
-**Title:** CUDA Receipt Recovery + Context-Shortcut Verification + Evidence-Gated FR-11 Replay
+**Title:** Hermetic CUDA Receipt Repair + Distributional Exact-Row Triage + FR-11 Nonforgetting Promotion
 
 **Created:** 2026-05-27
 **Status:** Proposed, staged in `research-roadmap-next.yaml`
-**Supersedes:** Milestone 2026.05.296
-**Execution queue:** `exp3205` through `exp3218`
+**Supersedes:** Milestone 2026.05.297
+**Execution queue:** `exp3219` through `exp3232`
 
-## What Milestone 2026.05.296 Proved
+## What Milestone 2026.05.297 Proved
 
-Milestone `.296` did not unblock headline verifier or repair claims. It did
-make the critical path much sharper:
+Milestone `.297` completed the conductor queue, but the terminal state is still
+not paper-ready. Its useful result is a sharper failure boundary:
 
-- `exp3193` proved the local SOTA runtime blocker is no longer "model file
-  missing" in the abstract. The machine had an RTX 3090 visible to
-  `nvidia-smi`, but the selected Python/runtime path reported
-  `torch.cuda.is_available() == false`, `llama_cpp` did not expose usable GPU
-  offload, and stderr contained `ggml_cuda_init: failed to initialize CUDA:
-  unknown error`.
-- `exp3194` clean live SOTA verifier v11 correctly gate-skipped because
-  `clean_rerun_allowed=false`.
-- `exp3198` repair gate v5 remained blocked on the skipped clean verifier,
-  and `exp3199` repair ladder v6 gate-skipped behind the blocked repair gate.
-- `exp3200` promoted FR-11 VeriFY-style trace memory as a controller policy
-  without model-weight updates, with no negative-control regression.
-- `exp3201` kept KAN-CL as a non-promoted sidecar; `exp3202` kept
-  Sparse Potts/PAOA/THRML as a diagnostic factor boundary with no authenticated
-  speedup claim.
-- `exp3203`/`exp3204` reported `paper_ready=false`,
-  `publication_blocker_count=85`, and
+- `exp3205` archived `.296` and activated `.297` without modifying the
+  protected conductor or active roadmap.
+- `exp3206` produced the key CUDA ledger: the selected Python was the repo
+  `.venv` Python 3.14 path, `nvidia-smi` saw an RTX 3090, PyTorch reported
+  `2.11.0+cu128`, but a clean subprocess still returned
+  `torch.cuda.is_available() == false`, while `llama_cpp` emitted
+  `ggml_cuda_init: failed to initialize CUDA: unknown error`.
+- `exp3207` correctly refused a blind rebuild. `cuda_receipt_ready=false`,
+  `clean_rerun_allowed_candidate=false`, and the selected Python CUDA failure
+  remained the blocker.
+- `exp3208`, `exp3209`, and `exp3212` were gate-blocked or skipped behind the
+  missing CUDA/offload receipt. No clean local SOTA verifier or structured
+  repair headline result exists for `.297`.
+- `exp3210` and `exp3211` created useful exact fixture banks: 30 context
+  shortcut fixtures and 15 ConstraintBench-style feasibility/objective pilot
+  fixtures.
+- `exp3213` kept the repair gate blocked, and `exp3214` correctly skipped the
+  repair ladder.
+- `exp3215` promoted verifier-backed FR-11 trace replay only as a controller
+  policy, with no model-weight update claim.
+- `exp3216` materialized a grounded-continuation trace graph and a
+  nonforgetting queue, but kept promotion audit-only.
+- `exp3217` and `exp3218` reported `paper_ready=false`,
+  `publication_blocker_count=92`, and
   `next_top_gap=cuda_offload_full_local_sota_receipt_clean_rerun_allowed_repair_gate_unblock`.
 
-The next milestone should therefore avoid another expensive ungated repair
-rerun. It should first turn CUDA/offload failure into an environment receipt,
-then run clean verifier and repair only behind structured gates. In parallel it
-should add exact context-shortcut and constraint-optimization fixtures so the
-eventual clean SOTA rerun is more diagnostic than a raw benchmark replay.
+The next milestone should therefore spend its first phase on a hermetic CUDA
+repair/receipt path rather than another ungated verifier rerun. Exact fixture
+work and FR-11 governance can progress in parallel because they do not require
+the full local SOTA receipt.
 
 ## Three Biggest Gaps To PRD Vision
 
-1. **Local SOTA verifier authority is still missing.** The PRD requires
-   reproducible, verifiable reasoning claims over current strong local models.
-   Carnot currently has CPU-fallback smoke evidence for a mandated GGUF family,
-   not a full CUDA/offload receipt that can unlock clean verifier and repair
-   claims.
+1. **Local SOTA authority is still blocked at the selected Python runtime.**
+   The PRD requires reproducible verifier claims over current local SOTA GGUF
+   models. Carnot currently has a visible RTX 3090 and model-cache discipline,
+   but no selected-runtime CUDA receipt that can unlock clean verifier and
+   repair claims.
 
-2. **The verifier/repair loop is gated but not yet recovered.** Exact fixtures,
-   counterexamples, adaptive granularity, GenCP preview, and ExVerus-style
-   invariant expansion exist as supporting artifacts, but the headline loop is
-   still blocked behind `clean_rerun_allowed=false`.
+2. **Exact fixtures exist, but the clean verifier and repair loop remain
+   gated.** `.297` added context and constrained-optimization fixtures, yet the
+   headline live-SOTA verifier, schema-constrained repair preflight, repair
+   gate, and repair ladder are still blocked behind `clean_rerun_allowed=false`.
 
-3. **FR-11 self-learning is controller memory, not a full governed learning
-   loop.** `.296` promoted trace memory without model-weight updates. The PRD
-   vision needs ongoing self-learning that admits evidence-backed traces,
-   suppresses redundant checks, regulates forgetting, and remains rollback-safe.
+3. **Continuous self-learning remains controller-local and audit-heavy.**
+   FR-11 now has trace replay and a nonforgetting queue, but not a governed
+   promotion/rollback policy or a certified KAN sidecar boundary that can
+   safely admit new evidence over time.
 
 ## New Research Integrated
 
-The post-`.296` sweep was added to `research-references.md` before this design.
-The most relevant additions are:
+The 2026-05-27 external sweep was added to `research-references.md` before this
+roadmap was designed. The most relevant findings are:
 
-- llama.cpp CUDA build/runtime documentation: CUDA receipt recovery must become
-  environment forensics, not another generic smoke test.
-- Context-CoT / CL-Bench: add context-dependent, parametric-shortcut fixtures
-  that distinguish following supplied context from relying on pretrained priors.
-- ConstraintBench: report feasibility, objective gap, and hallucinated entities
-  separately for direct constrained optimization.
-- Reward-Weighted On-Policy Distillation with an open property-equivalence
-  verifier: use verifier utility as FR-11 replay labels without fine-tuning.
-- Evidence Over Plans / SPARK: admit only environment- or verifier-backed
-  trajectories into self-learning promotion.
-- Grounded Continuation: model multi-turn stale-premise handling as an explicit
-  dependency graph.
-- KAN PWA/MILP verification: keep KAN sidecars bounded unless they emit
-  abstraction certificates.
-- llguidance and XGrammar-2: constrained decoding can remove repair syntax
-  failures, but exact verifiers must still score semantics.
-- Extropic TSU/THRML and Logical Intelligence Kona: strategic architecture
-  signals only; no Carnot speedup or execution claim without local receipts.
+- Distributional EBMs for structured LLM reasoning
+  (`https://arxiv.org/abs/2605.18871`): useful as an uncertainty and
+  abstention sidecar over exact rows, not as a replacement for exact scoring.
+- Logitext / neurosymbolic language reasoning as SMT
+  (`https://arxiv.org/abs/2602.18095`): motivates a partial SMT coverage pilot
+  that measures which natural-language constraints can be formalized exactly.
+- KAN-CL (`https://arxiv.org/abs/2605.12306`): relevant for continual learning
+  only if Carnot keeps explicit certificate, nonforgetting, and rollback
+  boundaries.
+- Fully parallel p-bit Ising with inertia
+  (`https://arxiv.org/abs/2604.17109`): a future hardware-boundary signal, but
+  not enough to justify rerunning retired PIMI-style hardware claims in `.298`.
+- EBT/ARM-EBM citation watch
+  (`https://www.semanticscholar.org/paper/Energy-Based-Transformers-are-Scalable-Learners-and-Gladstone-Nanduru/2da9163730998a4368c609972ccff0582518b36b`,
+  `https://arxiv.org/abs/2512.15605`): keep monitoring for verifier-style
+  EBM uses, but local receipt and exact rows are the immediate bottleneck.
+- Structured decoding libraries (`https://github.com/guidance-ai/llguidance`,
+  `https://github.com/mlc-ai/xgrammar`): good candidates for schema-valid
+  repair proposals once clean SOTA receipt is unblocked; they do not certify
+  semantic correctness.
+- Extropic TSU and Logical Intelligence Kona
+  (`https://extropic.ai/writing/thermodynamic-computing-from-zero-to-one`,
+  `https://logicalintelligence.com/blog/energy-based-models-for-reasoning`):
+  strategic architecture signals only. `.298` makes no thermodynamic or Kona
+  hardware speedup claim.
+
+## SOTA Local GGUF Policy
+
+Any `.298` task that invokes an LLM for headline evidence must include at least
+one mandated local SOTA GGUF in `MODEL_SPECS`:
+
+- `unsloth/Qwen3.6-35B-A3B-GGUF`
+- `unsloth/gemma-4-31B-it-GGUF`
+- `unsloth/gemma-4-26B-A4B-it-GGUF`
+
+Legacy small models may appear only as fast CPU smoke tests. They cannot
+populate headline result fields and cannot unblock clean verifier, repair, or
+publication-readiness claims.
 
 ## Architecture Diagram
 
 ```text
-                 research-complete.yaml / conductor-log
-                               |
-                               v
-                  exp3205 archive + activate .297
-                               |
-                               v
-          +---------------- exp3206 ----------------+
-          | CUDA env forensics + import/order ledger |
-          +---------------------+-------------------+
-                                |
-                                v
-          +---------------- exp3207 ----------------+
-          | llama.cpp CUDA rebuild / clean subprocess |
-          +---------------------+-------------------+
-                                |
-                 cuda_receipt_ready == true
-                                |
-                                v
-          +---------------- exp3208 ----------------+
-          | full local SOTA GGUF receipt v5          |
-          | Qwen3.6-35B-A3B / Gemma-31B / Gemma-26B |
-          +---------------------+-------------------+
-                                |
-                 clean_rerun_allowed == true
-                                |
-             +------------------+------------------+
-             v                                     v
-       exp3209 clean verifier v12          exp3212 structured
-       exact rows + SOTA calls             repair proposal preflight
-             |                                     |
-             +------------------+------------------+
-                                v
-          +---------------- exp3213 ----------------+
-          | repair gate v6                          |
-          +---------------------+-------------------+
-                                |
-                 repair_gate_state == unblocked
-                                |
-                                v
-          +---------------- exp3214 ----------------+
-          | multi-turn repair ladder v7             |
-          +-----------------------------------------+
+                    .297 terminal artifacts
+     exp3218 capstone / exp3217 matrix / conductor-log / references
+                                  |
+                                  v
+                    exp3219 archive + activate .298
+                                  |
+                                  v
+         +------------------- exp3220 -------------------+
+         | Hermetic CUDA runtime repair ledger            |
+         | selected .venv vs CUDA-only isolated runtime   |
+         +------------------------+-----------------------+
+                                  |
+              cuda_receipt_ready_candidate == true
+                                  |
+                                  v
+         +------------------- exp3221 -------------------+
+         | llama.cpp CUDA/offload receipt smoke           |
+         +------------------------+-----------------------+
+                                  |
+                    cuda_receipt_ready == true
+                                  |
+                                  v
+         +------------------- exp3222 -------------------+
+         | Full local SOTA GGUF receipt v6                |
+         | Qwen3.6-35B-A3B / Gemma-31B / Gemma-26B        |
+         +------------------------+-----------------------+
+                                  |
+                    clean_rerun_allowed == true
+                                  |
+              +-------------------+-------------------+
+              v                                       v
+      exp3225 clean live SOTA verifier       exp3226 structured repair
+      exact rows + mandated GGUFs            proposal preflight
+              |                                       |
+              +-------------------+-------------------+
+                                  v
+                         exp3227 repair gate
+                                  |
+                    repair_gate_state == unblocked
+                                  |
+                                  v
+                         exp3228 repair ladder
 
- Parallel exact-fixture and FR-11 tracks:
+ Parallel exact-row and FR-11 tracks:
 
-   exp3210 Context-CoT/CL-Bench fixture bank
-   exp3211 ConstraintBench feasibility/objective pilot
-   exp3215 evidence-gated FR-11 replay controller
-   exp3216 grounded-continuation trace graph and nonforgetting queue
-                  \              |              /
-                   \             v             /
-                    +------ exp3217 matrix v31
-                                   |
-                                   v
-                            exp3218 capstone
+   exp3223 distributional EBM uncertainty sidecar over exact rows
+   exp3224 Logitext-style partial SMT coverage pilot
+   exp3229 FR-11 nonforgetting promotion/rollback controller
+   exp3230 KAN-CL certificate boundary audit
+            \              |                 /
+             \             v                /
+              +------ exp3231 matrix v32 ---+
+                              |
+                              v
+                       exp3232 capstone .298
 ```
 
 ## Phase Plan
 
-### Phase 1 - CUDA Receipt Recovery And Gate Hygiene
+### Phase 1 - Hermetic CUDA Receipt Repair
 
-Goal: convert the `.296` CUDA failure into a reproducible environment ledger
-and only then attempt a full local SOTA receipt.
+Goal: isolate whether CUDA failure is specific to the selected `.venv` Python,
+the system driver/runtime boundary, llama.cpp linkage, import order, or an
+environment variable conflict.
 
-- `exp3205-archive-v296-activate-v297`
-- `exp3206-cuda-env-forensics-ledger-v1`
-- `exp3207-llama-cpp-cuda-rebuild-clean-subprocess-v1`
-- `exp3208-full-local-sota-receipt-v5`
+- `exp3219-archive-v297-activate-v298`
+- `exp3220-hermetic-cuda-runtime-repair-ledger-v1`
+- `exp3221-llama-cpp-cuda-offload-receipt-smoke-v1`
+- `exp3222-full-local-sota-receipt-v6`
 
-Success means `exp3208` emits `clean_rerun_allowed=true` with a full local SOTA
-receipt. If not, downstream clean verifier and repair tasks must gate-skip
-without spending an LLM call.
+Success means `exp3222` emits `clean_rerun_allowed=true` with a non-CPU CUDA or
+GPU-offload receipt for at least one mandated local SOTA GGUF. If the selected
+runtime remains blocked, downstream clean verifier and repair tasks should skip
+through structured gates without burning synthesis time.
 
-### Phase 2 - Context/Constraint Fixtures, Clean Verifier, Repair Gate
+### Phase 2 - Exact-Row Triage, Clean Verifier, And Repair Gate
 
-Goal: make the verifier rerun more diagnostic while preserving exact authority.
+Goal: improve the evidence quality of the eventual live-SOTA rerun, then run
+the verifier and repair tasks only when the receipt gate is satisfied.
 
-- `exp3209-clean-live-sota-verifier-rerun-v12`
-- `exp3210-context-cot-clbench-parametric-shortcut-fixtures-v1`
-- `exp3211-constraintbench-feasibility-objective-pilot-v1`
-- `exp3212-structured-repair-proposal-preflight-v1`
-- `exp3213-repair-gate-decision-v6`
-- `exp3214-multi-turn-repair-ladder-v7`
+- `exp3223-distributional-ebm-exact-row-uncertainty-sidecar-v2`
+- `exp3224-logitext-partial-smt-context-coverage-pilot-v1`
+- `exp3225-clean-live-sota-verifier-rerun-v13`
+- `exp3226-structured-repair-proposal-preflight-v2`
+- `exp3227-repair-gate-decision-v7`
+- `exp3228-multi-turn-repair-ladder-v8`
 
-Success means either the repair ladder is honestly unblocked and executed, or
-the artifact chain cleanly reports which gate still blocks it. Context and
-ConstraintBench fixtures should be useful even when CUDA remains blocked.
+Success means the clean verifier either reports a real local SOTA delta over
+exact rows or a blocked artifact with the precise runtime gate. Structured
+repair may claim schema validity and proposal hygiene, but not semantic repair
+success unless the exact verifier scores it.
 
-### Phase 3 - Continuous Self-Learning Without Weight Updates
+### Phase 3 - Continuous Self-Learning Governance
 
-Goal: advance FR-11 from trace-memory promotion to evidence-gated replay with
-forgetting regulation and stale-premise handling.
+Goal: advance FR-11 from trace replay and audit queues into a governed
+controller-level promotion loop with rollback metadata and explicit
+nonforgetting budgets.
 
-- `exp3215-fr11-evidence-gated-trace-replay-controller-v2`
-- `exp3216-fr11-grounded-continuation-nonforgetting-queue-v1`
+- `exp3229-fr11-nonforgetting-promotion-controller-v3`
+- `exp3230-kan-cl-certificate-boundary-audit-v2`
 
-Success means FR-11 reports verifier-backed replay utility, redundant-check
-suppression, negative-control stability, rollback metadata, and a virtual
-forgetting/nonforgetting queue. No task may claim model-weight updates.
+Success means Carnot can admit evidence-backed traces to controller memory,
+reject stale-premise regressions, define rollback, and keep KAN-CL sidecars
+non-promoted unless they provide certificate-ready boundaries. No task may
+claim model-weight updates.
 
-### Phase 4 - Aggregation And Claim Boundaries
+### Phase 4 - Matrix And Capstone
 
-Goal: reconcile all artifacts into the matrix and capstone without inflating
-claims.
+Goal: reconcile runtime, verifier, repair, self-learning, hardware, and
+publication claims without inflating blocked paths.
 
-- `exp3217-cross-corpus-matrix-v31`
-- `exp3218-capstone-v297`
+- `exp3231-cross-corpus-matrix-v32`
+- `exp3232-capstone-v298`
 
-Success means the matrix reports all blocker deltas, gate skips, SOTA receipt
-state, FR-11 promotion state, and hardware claim boundary. The capstone must
-name the next top gap.
+Success means the matrix and capstone report `paper_ready`, publication
+blocker deltas, SOTA receipt state, repair gate state, FR-11 promotion state,
+and the next top gap from actual artifacts.
 
 ## Dependency Graph
 
 ```text
-exp3205
-  -> exp3206
-      -> exp3207
-          -> exp3208 [gated on exp3207.cuda_receipt_ready == true]
-              -> exp3209 [gated on exp3208.clean_rerun_allowed == true]
-              -> exp3212 [gated on exp3208.clean_rerun_allowed == true]
-                  -> exp3213
-                      -> exp3214 [gated on exp3213.repair_gate_state == unblocked]
+exp3219
+  -> exp3220
+      -> exp3221 [gated on exp3220.cuda_receipt_ready_candidate == true]
+          -> exp3222 [gated on exp3221.cuda_receipt_ready == true]
+              -> exp3225 [gated on exp3222.clean_rerun_allowed == true]
+              -> exp3226 [gated on exp3222.clean_rerun_allowed == true]
+                  -> exp3227
+                      -> exp3228 [gated on exp3227.repair_gate_state == unblocked]
 
-exp3210 -> exp3213 -> exp3217
-exp3211 -> exp3213 -> exp3217
-exp3215 -> exp3217
-exp3216 -> exp3217
-exp3217 -> exp3218
+exp3223 -> exp3225 -> exp3231
+exp3224 -> exp3225 -> exp3231
+exp3226 -> exp3227 -> exp3231
+exp3228 -> exp3231
+exp3229 -> exp3231
+exp3230 -> exp3231
+exp3231 -> exp3232
 ```
 
 ## Hardware Requirements
 
 ### Required For Headline Local SOTA Claims
 
-- One or both local RTX 3090 GPUs visible to `nvidia-smi`.
-- A CUDA-capable PyTorch/runtime path that reports nonzero device count in a
-  clean subprocess.
-- A CUDA-built `llama_cpp` or `llama.cpp` binary with GPU offload support.
-- Local GGUF cache for at least one mandated SOTA model:
-  - `unsloth/Qwen3.6-35B-A3B-GGUF`
-  - `unsloth/gemma-4-31B-it-GGUF`
-  - `unsloth/gemma-4-26B-A4B-it-GGUF`
+- RTX 3090 visible to `nvidia-smi`.
+- Selected Python runtime with PyTorch CUDA initialization working in a clean
+  subprocess, or an isolated CUDA-only runtime with an explicit handoff path.
+- llama.cpp or llama-cpp-python build with CUDA/GPU offload metadata and a
+  clean subprocess smoke receipt.
+- Local access to at least one mandated SOTA GGUF:
+  `unsloth/Qwen3.6-35B-A3B-GGUF`,
+  `unsloth/gemma-4-31B-it-GGUF`, or
+  `unsloth/gemma-4-26B-A4B-it-GGUF`.
 
-### Allowed Diagnostic-Only Hardware Work
+### Not Required For `.298`
 
-- KV260, GateMate A1, PolarFire, THRML, Extropic TSU, and Kona references may
-  appear only as boundary or architecture diagnostics unless a local transcript
-  proves execution. No speedup or board-execution claim may be made from
-  simulation or vendor writing alone.
+- KV260, GateMate, PolarFire, AMD XDNA, TSU, or Kona hardware is not required
+  for this milestone.
+- `.298` makes no FPGA, thermodynamic, p-bit, or Kona speedup claim. Hardware
+  references remain architecture guidance unless an authenticated local
+  transcript exists.
 
-## SOTA Local GGUF Policy
+## Claim Boundaries
 
-Any `.297` experiment that invokes an LLM must include at least one mandated
-model in its `MODEL_SPECS`:
+- A visible GPU is not a local SOTA receipt.
+- CPU fallback is not headline evidence.
+- Schema-valid repair proposals are not semantic repair success.
+- Distributional EBM uncertainty is triage, not exact verification.
+- Logitext-style SMT coverage is partial coverage, not full natural-language
+  understanding.
+- FR-11 controller-memory promotion is not model-weight training.
+- KAN-CL remains a bounded sidecar unless certificate boundaries are emitted.
 
-- `unsloth/Qwen3.6-35B-A3B-GGUF` as the flagship MoE model.
-- `unsloth/gemma-4-31B-it-GGUF` as the flagship dense model.
-- `unsloth/gemma-4-26B-A4B-it-GGUF` as the middle MoE model.
+## Expected Terminal Outcomes
 
-Legacy small models may be used only as fast CPU smoke tests and must not
-populate headline result fields. Prompts should reference
-`scripts/experiment_template.py` and the `cached_sota_pair()` pattern.
+At the end of `.298`, one of these should be true:
 
-## Failed-Rerun Discipline
-
-Every task whose scope matches a prior failed or blocked chain includes a
-`prior_failures` entry with:
-
-- `experiment_id`
-- `verdict`
-- `addressed_by`
-- `retire_if_same_verdict: true`
-
-The gating chain avoids references to retired upstream experiment IDs and uses
-structured `gated_on` entries for expensive downstream tasks.
-
-## Success Criteria
-
-- `research-roadmap-next.yaml` validates under roadmap schema,
-  prior-failure lint, exclusion-manifest lint, and gate audit.
-- `research-roadmap.yaml` and `scripts/research_conductor.py` remain untouched.
-- `research-references.md` records the post-`.296` sweep before experiment
-  design.
-- At least one continuous self-learning task is included and explicitly avoids
-  model-weight-update claims.
-- If CUDA remains blocked, the milestone still yields a precise environment
-  ledger, exact fixture artifacts, FR-11 replay/nonforgetting artifacts, and an
-  honest capstone with no inflated SOTA or repair claims.
+1. **Receipt recovered:** `exp3222.clean_rerun_allowed=true`; clean verifier and
+   repair preflight run with mandated local SOTA models; the capstone reports
+   the next blocker after live SOTA evidence.
+2. **Runtime still blocked, but isolated:** `exp3220` or `exp3221` identifies a
+   precise selected-runtime or driver/toolchain blocker; exact-row and FR-11
+   work still improves the next retry.
+3. **Repair remains blocked by evidence, not planning:** clean verifier, repair
+   proposal, gate, and ladder statuses are all structured and auditable, with
+   no wasted ungated rerun.
 
 ## Out Of Scope
 
-- Pushing commits.
+- Pushing changes.
 - Modifying `scripts/research_conductor.py`.
-- Replacing `research-roadmap.yaml` during planning.
-- Claiming local SOTA verifier success from CPU fallback, partial offload, or
-  missing transcript evidence.
-- Claiming FPGA/TSU/Kona execution or speedup without a local authenticated
-  transcript.
+- Modifying the active `research-roadmap.yaml`.
+- Retrying retired PIMI, WOPR, KV260 SD-card, or wrong-mechanism hardware
+  scopes.
+- Claiming publication readiness without the capstone artifact setting
+  `paper_ready=true`.
