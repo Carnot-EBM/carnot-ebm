@@ -11149,3 +11149,70 @@ and an `honest_verdict` that starts with `complete:`.
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-REPORT-3218 | Implemented (`python/carnot/reporting/capstone_v297_3218.py`) | Implemented (`tests/python/test_experiment_3218_capstone_v297.py`) |
+
+### REQ-REPORT-3219: Archive .297 And Confirm .298 Activation Authority
+
+The repository shall provide an Exp 3219 archive/activation generator that
+writes `results/experiment_3219_archive_v297_activate_v298.json` by reading
+`results/experiment_3218_capstone_v297.json` and
+`results/experiment_3217_cross_corpus_matrix_v31.json` as authority, plus the
+current `.298` roadmap queue state, `ops/changelog.md`, and
+`ops/conductor-log.md`. The workflow MUST aggregate existing artifacts only. It
+MUST NOT run live model inference, verifier scoring, repair generation, solver
+execution, hardware commands, the conductor, pushes, modify
+`scripts/research_conductor.py`, or modify `research-roadmap.yaml`.
+
+The artifact MUST record the exact prior task range `exp3205` through
+`exp3218`, terminal artifact statuses for every `.297` task, and gate-blocked
+tasks even when the corresponding deliverable artifact is absent. It MUST
+copy the prior paper-readiness and publication-blocker state from the `.297`
+capstone/matrix authority and summarize the top unresolved gap as
+`cuda_offload_full_local_sota_receipt_clean_rerun_allowed_repair_gate_unblock`.
+It MUST confirm `2026.05.298` is the next CalVer sequence after
+`2026.05.297`, confirm the new milestone document path, and report whether the
+conductor queue is materialized in `research-roadmap-next.yaml` or already
+active in `research-roadmap.yaml`.
+
+The terminal artifact MUST include `schema_version`, `experiment_id`,
+`milestone`, `prior_milestone`, `prior_task_range`, `capstone_artifact`,
+`matrix_artifact`, `prior_paper_ready`, `prior_publication_blocker_count`,
+`prior_next_top_gap`, `activation_ready`, `research_roadmap_next_exists`,
+`inference_substrate`, `conductor_file_modified`, `active_roadmap_modified`,
+and `honest_verdict`. `inference_substrate` MUST be a string identifying the
+artifact as non-inference aggregation. `honest_verdict` MUST start with either
+`complete:` or `blocked_`. The artifact MAY include source checksums,
+terminal-status rows, queue-path metadata, critical-path details, no-new-
+execution booleans, and measured `duration_s` as long as every value is derived
+from checked-in artifacts or file presence/checksum checks.
+
+#### SCENARIO-REPORT-3219: Archive .297 And Activate .298 Critical Path
+
+**Given** capstone v297 exists and reports `capstone_v297_ready=true`,
+`paper_ready=false`, `publication_blocker_count=92`, and
+`next_top_gap=cuda_offload_full_local_sota_receipt_clean_rerun_allowed_repair_gate_unblock`
+**And** matrix v31 exists and reports `cross_corpus_matrix_v31_ready=true`
+with the same blocker count and next gap
+**And** matrix v31 accounts for `.297` tasks `exp3205` through `exp3216`,
+including gated-skipped or missing gate-blocked tasks
+**And** capstone v297 and matrix v31 provide terminal aggregation evidence for
+`exp3217` and `exp3218`
+**And** either `research-roadmap-next.yaml` or `research-roadmap.yaml` declares
+milestone `2026.05.298`, first task
+`exp3219-archive-v297-activate-v298`, and milestone document
+`openspec/change-proposals/research-roadmap-vNEXT.md`
+**When** the Exp 3219 archive/activation generator runs
+**Then** it writes `results/experiment_3219_archive_v297_activate_v298.json`
+with all required schema fields, `activation_ready=true`,
+`prior_task_range=["exp3205", "exp3218"]`, complete terminal-status accounting
+for the 14 `.297` tasks, explicit gate-blocked task accounting for the CUDA
+receipt, clean verifier, structured repair preflight, and repair ladder gates,
+queue-path metadata for the staged or active conductor queue, a critical path
+rooted at the CUDA/offload local-SOTA receipt unblock, no protected conductor
+or active-roadmap edits performed by this task, and an `honest_verdict` that
+starts with `complete:`.
+
+## Implementation Status (REQ-REPORT-3219)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-3219 | Implemented (`python/carnot/reporting/archive_v297_activate_v298_3219.py`) | Implemented (`tests/python/test_experiment_3219_archive_v297_activate_v298.py`) |

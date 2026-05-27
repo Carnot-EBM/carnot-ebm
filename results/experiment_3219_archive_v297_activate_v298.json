@@ -1,0 +1,435 @@
+{
+  "activation_ready": true,
+  "active_roadmap_modified": false,
+  "artifact": "experiment_3219_archive_v297_activate_v298",
+  "blocked_reasons": [],
+  "capstone_artifact": "results/experiment_3218_capstone_v297.json",
+  "conductor_activation_observed": true,
+  "conductor_file_modified": false,
+  "critical_path": {
+    "first_milestone_task": "exp3219-archive-v297-activate-v298",
+    "parallel_support_tracks": [
+      "exp3223-distributional-ebm-exact-row-uncertainty-sidecar-v2",
+      "exp3224-logitext-partial-smt-context-coverage-pilot-v1",
+      "exp3229-fr11-nonforgetting-promotion-controller-v3",
+      "exp3230-kan-cl-certificate-boundary-audit-v2"
+    ],
+    "terminal_aggregation_tasks": [
+      "exp3231-cross-corpus-matrix-v32",
+      "exp3232-capstone-v298"
+    ],
+    "top_unresolved_gap": "cuda_offload_full_local_sota_receipt_clean_rerun_allowed_repair_gate_unblock",
+    "unblock_sequence": [
+      "exp3220-hermetic-cuda-runtime-repair-ledger-v1",
+      "exp3221-llama-cpp-cuda-offload-receipt-smoke-v1",
+      "exp3222-full-local-sota-receipt-v6",
+      "exp3225-clean-live-sota-verifier-rerun-v13",
+      "exp3226-structured-repair-proposal-preflight-v2",
+      "exp3227-repair-gate-decision-v7",
+      "exp3228-multi-turn-repair-ladder-v8",
+      "exp3231-cross-corpus-matrix-v32",
+      "exp3232-capstone-v298"
+    ]
+  },
+  "duration_s": 0.885473,
+  "experiment_id": "exp3219",
+  "gate_blocked_prior_tasks": [
+    "exp3208",
+    "exp3209",
+    "exp3212",
+    "exp3214"
+  ],
+  "honest_verdict": "complete: archive_v297_activate_v298_ready=true; prior_task_range=exp3205-exp3218; prior_paper_ready=false; prior_publication_blocker_count=92; prior_next_top_gap=cuda_offload_full_local_sota_receipt_clean_rerun_allowed_repair_gate_unblock; queue_path=research-roadmap.yaml",
+  "inference_substrate": "artifact_aggregation_only",
+  "inference_substrate_details": {
+    "executes_conductor": false,
+    "executes_hardware": false,
+    "executes_models": false,
+    "executes_repairs": false,
+    "executes_solvers": false,
+    "executes_verifiers": false,
+    "kind": "archive_activation_aggregation_from_checked_in_artifacts",
+    "local_repo_only": true,
+    "no_live_llm_inference": true,
+    "source": "capstone_v297_matrix_v31_roadmap_queue_and_ops_logs"
+  },
+  "matrix_artifact": "results/experiment_3217_cross_corpus_matrix_v31.json",
+  "milestone": "2026.05.298",
+  "new_milestone_document": "openspec/change-proposals/research-roadmap-vNEXT.md",
+  "new_milestone_document_exists": true,
+  "no_conductor_execution": true,
+  "no_new_hardware_run": true,
+  "no_new_model_execution": true,
+  "no_new_repair_run": true,
+  "no_new_solver_run": true,
+  "no_new_verifier_run": true,
+  "no_push": true,
+  "prior_capstone_ready": true,
+  "prior_matrix_ready": true,
+  "prior_milestone": "2026.05.297",
+  "prior_next_top_gap": "cuda_offload_full_local_sota_receipt_clean_rerun_allowed_repair_gate_unblock",
+  "prior_paper_ready": false,
+  "prior_publication_blocker_count": 92,
+  "prior_task_count": 14,
+  "prior_task_range": [
+    "exp3205",
+    "exp3218"
+  ],
+  "prior_task_range_expanded": [
+    "exp3205",
+    "exp3206",
+    "exp3207",
+    "exp3208",
+    "exp3209",
+    "exp3210",
+    "exp3211",
+    "exp3212",
+    "exp3213",
+    "exp3214",
+    "exp3215",
+    "exp3216",
+    "exp3217",
+    "exp3218"
+  ],
+  "prior_terminal_statuses": [
+    {
+      "artifact_status": "clean",
+      "conductor_terminal_status": "OK (conductor)",
+      "deliverable": "results/experiment_3205_archive_v296_activate_v297.json",
+      "experiment_id": "exp3205",
+      "gate_blocked": false,
+      "gated_skip_evidence": {
+        "status": "absent"
+      },
+      "honest_verdict": "complete: archive_v296_activate_v297_ready=true; prior_task_range=exp3191-exp3204; prior_paper_ready=false; prior_publication_blocker_count=85; prior_next_top_gap=cuda_offload_full_local_sota_receipt_clean_rerun_allowed_repair_gate_unblock; queue_path=research-roadmap.yaml",
+      "role": "archive_v296_activate_v297",
+      "status_rationale": "archive activation confirmed",
+      "task_id": "exp3205-archive-v296-activate-v297",
+      "terminal": true,
+      "terminal_status": "clean",
+      "title": "Archive .296 closeout and activate .297 planning authority"
+    },
+    {
+      "artifact_status": "blocked",
+      "conductor_terminal_status": "OK (conductor)",
+      "deliverable": "results/experiment_3206_cuda_env_forensics_ledger_v1.json",
+      "experiment_id": "exp3206",
+      "gate_blocked": false,
+      "gated_skip_evidence": {
+        "status": "absent"
+      },
+      "honest_verdict": "blocked_selected_python_torch_cuda: cuda_env_diagnosed=true; cuda_init_clean=false; recommended_next_action=repair_selected_python_torch_cuda_before_full_receipt",
+      "role": "cuda_environment_forensics",
+      "status_rationale": "selected Python CUDA initialization remains blocked",
+      "task_id": "exp3206-cuda-env-forensics-ledger-v1",
+      "terminal": true,
+      "terminal_status": "blocked",
+      "title": "CUDA environment forensics ledger for selected Python and llama.cpp"
+    },
+    {
+      "artifact_status": "blocked",
+      "conductor_terminal_status": "OK (conductor)",
+      "deliverable": "results/experiment_3207_llama_cpp_cuda_rebuild_clean_subprocess_v1.json",
+      "experiment_id": "exp3207",
+      "gate_blocked": false,
+      "gated_skip_evidence": {
+        "status": "absent"
+      },
+      "honest_verdict": "blocked_selected_python_torch_cuda: selected_python_torch_cuda_unavailable: cuda_available=False; device_count=0; stderr=/home/ianblenke/github.com/ianblenke/carnot/.venv/lib/python3.14/site-packages/torch/cuda/__init__.py:180: UserWarning: CUDA initialization: CUDA unknown error - this may be due to an incorrectly set up environment, e.g. changing env variable CUDA_VISIBLE_DEVICES after program start. Setting the available devices to be zero. (Triggered internally at /pytorch/c10/cuda/CUDAFunctions.cpp:119.)\n  return torch._C._cuda_getDeviceCount() > 0; ledger_recommended_next_action=repair_selected_python_torch_cuda_before_full_receipt",
+      "role": "llama_cpp_cuda_rebuild_gate",
+      "status_rationale": "CUDA receipt gate is blocked",
+      "task_id": "exp3207-llama-cpp-cuda-rebuild-clean-subprocess-v1",
+      "terminal": true,
+      "terminal_status": "blocked",
+      "title": "llama.cpp CUDA rebuild and clean subprocess smoke for full local receipt"
+    },
+    {
+      "artifact_status": "gated_skipped",
+      "conductor_terminal_status": "OK (conductor)",
+      "deliverable": "results/experiment_3208_full_local_sota_receipt_v5.json",
+      "experiment_id": "exp3208",
+      "gate_blocked": true,
+      "gated_skip_evidence": {
+        "status": "absent"
+      },
+      "honest_verdict": "blocked_gate_check_failed",
+      "role": "full_local_sota_receipt_v5",
+      "status_rationale": "full local SOTA receipt was skipped by conductor gate",
+      "task_id": "exp3208-full-local-sota-receipt-v5",
+      "terminal": true,
+      "terminal_status": "gated_skipped",
+      "title": "Full local SOTA GGUF receipt v5 gated on exp3207 CUDA readiness"
+    },
+    {
+      "artifact_status": "missing",
+      "conductor_terminal_status": "OK (conductor)",
+      "deliverable": "results/experiment_3209_clean_live_sota_verifier_rerun_v12.json",
+      "experiment_id": "exp3209",
+      "gate_blocked": true,
+      "gated_skip_evidence": {
+        "line": "| 2026-05-27 21:04 UTC | Clean live SOTA verifier rerun v12 gated on exp320 | GATE_BLOCK | Pre-emptive skip: upstream retired (exp3208-full-local-sota-receipt-v5) |",
+        "source": "ops/conductor-log.md",
+        "status": "gated_skipped"
+      },
+      "honest_verdict": "",
+      "role": "clean_live_sota_verifier_v12",
+      "status_rationale": "expected `.297` artifact is absent or malformed",
+      "task_id": "exp3209-clean-live-sota-verifier-rerun-v12",
+      "terminal": true,
+      "terminal_status": "missing",
+      "title": "Clean live SOTA verifier rerun v12 gated on exp3208 clean_rerun_allowed"
+    },
+    {
+      "artifact_status": "clean",
+      "conductor_terminal_status": "OK (conductor)",
+      "deliverable": "results/experiment_3210_context_cot_clbench_parametric_shortcut_fixtures_v1.json",
+      "experiment_id": "exp3210",
+      "gate_blocked": false,
+      "gated_skip_evidence": {
+        "status": "absent"
+      },
+      "honest_verdict": "complete: context_cot_clbench_parametric_shortcut_fixtures_v1 ready_for_clean_verifier=true; fixture_count=30; optional_llm_smoke=null",
+      "role": "context_shortcut_fixtures",
+      "status_rationale": "context-shortcut fixtures are ready for clean verifier use",
+      "task_id": "exp3210-context-cot-clbench-parametric-shortcut-fixtures-v1",
+      "terminal": true,
+      "terminal_status": "clean",
+      "title": "Context-CoT and CL-Bench parametric shortcut fixture bank"
+    },
+    {
+      "artifact_status": "clean",
+      "conductor_terminal_status": "OK (conductor)",
+      "deliverable": "results/experiment_3211_constraintbench_feasibility_objective_pilot_v1.json",
+      "experiment_id": "exp3211",
+      "gate_blocked": false,
+      "gated_skip_evidence": {
+        "status": "absent"
+      },
+      "honest_verdict": "complete: exact ConstraintBench-style pilot only; no full ConstraintBench coverage claimed; fixture_count=15",
+      "role": "constraintbench_fixture_pilot",
+      "status_rationale": "ConstraintBench pilot fixtures are ready for clean verifier use",
+      "task_id": "exp3211-constraintbench-feasibility-objective-pilot-v1",
+      "terminal": true,
+      "terminal_status": "clean",
+      "title": "ConstraintBench-style feasibility and objective pilot for direct optimization"
+    },
+    {
+      "artifact_status": "missing",
+      "conductor_terminal_status": "OK (conductor)",
+      "deliverable": "results/experiment_3212_structured_repair_proposal_preflight_v1.json",
+      "experiment_id": "exp3212",
+      "gate_blocked": true,
+      "gated_skip_evidence": {
+        "line": "| 2026-05-27 21:30 UTC | Structured repair proposal preflight gated on exp3 | GATE_BLOCK | Pre-emptive skip: upstream retired (exp3208-full-local-sota-receipt-v5) |",
+        "source": "ops/conductor-log.md",
+        "status": "gated_skipped"
+      },
+      "honest_verdict": "",
+      "role": "structured_repair_preflight",
+      "status_rationale": "expected `.297` artifact is absent or malformed",
+      "task_id": "exp3212-structured-repair-proposal-preflight-v1",
+      "terminal": true,
+      "terminal_status": "missing",
+      "title": "Structured repair proposal preflight gated on exp3208 clean_rerun_allowed"
+    },
+    {
+      "artifact_status": "blocked",
+      "conductor_terminal_status": "OK (conductor)",
+      "deliverable": "results/experiment_3213_repair_gate_decision_v6.json",
+      "experiment_id": "exp3213",
+      "gate_blocked": false,
+      "gated_skip_evidence": {
+        "status": "absent"
+      },
+      "honest_verdict": "complete: repair_gate_state=blocked; repair_ladder_allowed=false; blocker_count=6",
+      "role": "repair_gate_decision_v6",
+      "status_rationale": "repair gate remains blocked",
+      "task_id": "exp3213-repair-gate-decision-v6",
+      "terminal": true,
+      "terminal_status": "blocked",
+      "title": "Repair gate decision v6 with receipt, clean verifier, context, and constraint fixtures"
+    },
+    {
+      "artifact_status": "gated_skipped",
+      "conductor_terminal_status": "OK (conductor)",
+      "deliverable": "results/experiment_3214_multi_turn_repair_ladder_v7.json",
+      "experiment_id": "exp3214",
+      "gate_blocked": true,
+      "gated_skip_evidence": {
+        "status": "absent"
+      },
+      "honest_verdict": "blocked_gate_check_failed",
+      "role": "multi_turn_repair_ladder_v7",
+      "status_rationale": "repair ladder was skipped by conductor gate",
+      "task_id": "exp3214-multi-turn-repair-ladder-v7",
+      "terminal": true,
+      "terminal_status": "gated_skipped",
+      "title": "Multi-turn repair ladder v7 gated on exp3213 repair_gate_state"
+    },
+    {
+      "artifact_status": "clean",
+      "conductor_terminal_status": "OK (conductor)",
+      "deliverable": "results/experiment_3215_fr11_evidence_gated_trace_replay_controller_v2.json",
+      "experiment_id": "exp3215",
+      "gate_blocked": false,
+      "gated_skip_evidence": {
+        "status": "absent"
+      },
+      "honest_verdict": "complete: fr11 evidence-gated trace replay controller v2 materialized; promotion_allowed=true; replay_utility_label_count=30; routing_improvement_count=21; negative_control_regression_count=0; rollback_event_count=0; model_weight_update_claimed=false; controller_utility_labels_only=true",
+      "role": "fr11_trace_replay_controller_v2",
+      "status_rationale": "FR-11 trace replay controller promotion is allowed",
+      "task_id": "exp3215-fr11-evidence-gated-trace-replay-controller-v2",
+      "terminal": true,
+      "terminal_status": "clean",
+      "title": "FR-11 evidence-gated trace replay controller v2 for continuous self-learning"
+    },
+    {
+      "artifact_status": "diagnostic_only",
+      "conductor_terminal_status": "OK (conductor)",
+      "deliverable": "results/experiment_3216_fr11_grounded_continuation_nonforgetting_queue_v1.json",
+      "experiment_id": "exp3216",
+      "gate_blocked": false,
+      "gated_skip_evidence": {
+        "status": "absent"
+      },
+      "honest_verdict": "complete: fr11 grounded-continuation trace graph and virtual nonforgetting queue materialized; source=exp3215; fallback_used=false; budget_within_limit; model_weight_update_claimed=false; controller_memory_promotion_allowed=false; kan_sidecar_promotion_allowed=false",
+      "role": "fr11_grounded_continuation_queue",
+      "status_rationale": "FR-11 continuation queue is audit-only",
+      "task_id": "exp3216-fr11-grounded-continuation-nonforgetting-queue-v1",
+      "terminal": true,
+      "terminal_status": "diagnostic_only",
+      "title": "FR-11 grounded-continuation trace graph and nonforgetting queue"
+    },
+    {
+      "artifact_status": "clean",
+      "conductor_terminal_status": "OK (conductor)",
+      "deliverable": "results/experiment_3217_cross_corpus_matrix_v31.json",
+      "experiment_id": "exp3217",
+      "gate_blocked": false,
+      "gated_skip_evidence": {},
+      "honest_verdict": "complete: cross_corpus_matrix_v31_ready=true; previous_matrix_artifact=results/experiment_3203_cross_corpus_matrix_v30.json; paper_ready=false; publication_blocker_count=92; blocker_delta_from_v30=7; next_top_gap=cuda_offload_full_local_sota_receipt_clean_rerun_allowed_repair_gate_unblock",
+      "role": "cross_corpus_matrix_v31",
+      "status_rationale": "",
+      "task_id": "exp3217-cross-corpus-matrix-v31",
+      "terminal": true,
+      "terminal_status": "clean",
+      "title": "Cross-corpus matrix v31 with CUDA receipt, context fixtures, repair gate, and FR-11 replay"
+    },
+    {
+      "artifact_status": "clean",
+      "conductor_terminal_status": "OK (conductor)",
+      "deliverable": "results/experiment_3218_capstone_v297.json",
+      "experiment_id": "exp3218",
+      "gate_blocked": false,
+      "gated_skip_evidence": {},
+      "honest_verdict": "complete: capstone_v297_ready=true; paper_ready=false; publication_blocker_count=92; blocker_delta_from_v30=7; next_top_gap=cuda_offload_full_local_sota_receipt_clean_rerun_allowed_repair_gate_unblock",
+      "role": "capstone_v297",
+      "status_rationale": "",
+      "task_id": "exp3218-capstone-v297",
+      "terminal": true,
+      "terminal_status": "clean",
+      "title": "Milestone .297 capstone and next-gap recommendation"
+    }
+  ],
+  "protected_files_modified_by_this_task": {
+    "research-roadmap.yaml": false,
+    "scripts/research_conductor.py": false
+  },
+  "queue_paths": {
+    "active_roadmap_exists": true,
+    "active_roadmap_path": "research-roadmap.yaml",
+    "milestone_doc": "openspec/change-proposals/research-roadmap-vNEXT.md",
+    "milestone_doc_exists": true,
+    "selected_queue_first_task": "exp3219-archive-v297-activate-v298",
+    "selected_queue_milestone": "2026.05.298",
+    "selected_queue_path": "research-roadmap.yaml",
+    "selected_queue_task_count": 14,
+    "staged_roadmap_exists": false,
+    "staged_roadmap_path": "research-roadmap-next.yaml"
+  },
+  "research_roadmap_next_exists": false,
+  "run_date": "20260527",
+  "schema": "carnot.archive_activation.v297_to_v298.v1",
+  "schema_version": "carnot.archive_activation.v297_to_v298.v1",
+  "source_artifacts": [
+    {
+      "path": "results/experiment_3218_capstone_v297.json",
+      "present": true,
+      "role": "capstone_v297_authority",
+      "sha256": "15de41e428d2b247f00baf8d35519c37f8c41f707d4b4c7050226c5d4f8451f3"
+    },
+    {
+      "path": "results/experiment_3217_cross_corpus_matrix_v31.json",
+      "present": true,
+      "role": "matrix_v31_authority",
+      "sha256": "9d70b9d7d5dcd74eda2fe7438313745a5759fc5d0eb9b0fe552994e73a9bfff7"
+    },
+    {
+      "path": "research-complete.yaml",
+      "present": true,
+      "role": "research_complete_archive",
+      "sha256": "ffb717b1fd692ed051daee27e0f42c0f0a65f69b89d2f8e2a1e492d61e436daf"
+    },
+    {
+      "path": "research-roadmap-next.yaml",
+      "present": false,
+      "role": "staged_roadmap_queue",
+      "sha256": null
+    },
+    {
+      "path": "research-roadmap.yaml",
+      "present": true,
+      "role": "active_roadmap_queue",
+      "sha256": "ddefad5de2f1b720a510055e69b1e24dca49604d827167a4ace0ad69bd7cdaca"
+    },
+    {
+      "path": "openspec/change-proposals/research-roadmap-vNEXT.md",
+      "present": true,
+      "role": "vnext_milestone_doc",
+      "sha256": "676c9f0692d12f9a73f6a2021659d62ec3ec08336f8f96a33adc8959c2a593fd"
+    },
+    {
+      "path": "ops/conductor-log.md",
+      "present": true,
+      "role": "conductor_log_authority",
+      "sha256": "b644b72c606d0901155d146c0b8cbd8ac1af5cb7e65a93d3b50f348b93b24186"
+    },
+    {
+      "path": "ops/changelog.md",
+      "present": true,
+      "role": "changelog_authority",
+      "sha256": "a784c5d24243c7e3fd255dddd70c1ea18f1b06fb2ae173baf9519d32c4b0f42a"
+    },
+    {
+      "path": "ops/status.md",
+      "present": true,
+      "role": "status_authority",
+      "sha256": "931b187f30c680e4e77f2701e582619881adf69bc3d8f8287fe6fcb1331439b3"
+    },
+    {
+      "path": "scripts/research_conductor.py",
+      "present": true,
+      "role": "protected_research_conductor",
+      "sha256": "f7253130513139845fb202c44bff1e7974079c0b666f6f8837dee6df3976edff"
+    }
+  ],
+  "source_checksums": {
+    "openspec/change-proposals/research-roadmap-vNEXT.md": "676c9f0692d12f9a73f6a2021659d62ec3ec08336f8f96a33adc8959c2a593fd",
+    "ops/changelog.md": "a784c5d24243c7e3fd255dddd70c1ea18f1b06fb2ae173baf9519d32c4b0f42a",
+    "ops/conductor-log.md": "b644b72c606d0901155d146c0b8cbd8ac1af5cb7e65a93d3b50f348b93b24186",
+    "ops/status.md": "931b187f30c680e4e77f2701e582619881adf69bc3d8f8287fe6fcb1331439b3",
+    "research-complete.yaml": "ffb717b1fd692ed051daee27e0f42c0f0a65f69b89d2f8e2a1e492d61e436daf",
+    "research-roadmap-next.yaml": null,
+    "research-roadmap.yaml": "ddefad5de2f1b720a510055e69b1e24dca49604d827167a4ace0ad69bd7cdaca",
+    "results/experiment_3217_cross_corpus_matrix_v31.json": "9d70b9d7d5dcd74eda2fe7438313745a5759fc5d0eb9b0fe552994e73a9bfff7",
+    "results/experiment_3218_capstone_v297.json": "15de41e428d2b247f00baf8d35519c37f8c41f707d4b4c7050226c5d4f8451f3",
+    "scripts/research_conductor.py": "f7253130513139845fb202c44bff1e7974079c0b666f6f8837dee6df3976edff"
+  },
+  "terminal_status_counts": {
+    "blocked": 3,
+    "clean": 6,
+    "diagnostic_only": 1,
+    "gated_skipped": 2,
+    "missing": 2
+  }
+}
