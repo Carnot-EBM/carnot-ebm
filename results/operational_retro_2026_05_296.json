@@ -1,0 +1,28 @@
+{
+  "schema": "carnot.operational_retro.v64",
+  "milestone": "2026.05.296",
+  "generated_at": "2026-05-27T18:27:36Z",
+  "retro_type": "operational_full",
+  "total_wall_time_minutes": 0,
+  "experiments_completed": 0,
+  "compute_bound_experiments_count": 0,
+  "slowest_experiments": [],
+  "gpu_idle_on_compute_bound_tasks": null,
+  "summary": "Authoritative timing data reports 0 completed experiments, 0 total wall-time minutes, and 0 compute-bound experiments for milestone 2026.05.296. No compute-bound slowest-run, GPU-efficiency, or DualGPURunner conclusion can be drawn from this milestone scope.",
+  "bottlenecks_identified": [
+    "no data available this milestone for compute-bound runtime bottlenecks",
+    "no data available this milestone for compute-bound GPU-efficiency bottlenecks"
+  ],
+  "improvements_suggested": [
+    "Add a no-data closeout branch that detects experiments_completed=0 and emits the operational retrospective without attempting compute-bound ranking.",
+    "Surface activation-boundary diagnostics alongside the timing block so operators can distinguish an intentionally empty scope from a timing-capture gap.",
+    "Keep GPU-idle and DualGPURunner checks gated on compute-bound timing rows with explicit GGUF/CUDA/requires_gpu and parallel-model markers."
+  ],
+  "top_3_highest_leverage_actions": [
+    "Implement an empty-scope retrospective fast path for milestones with experiments_completed=0.",
+    "Record the activation anchor used to collect milestone-scoped timing data in the retrospective artifact.",
+    "Require compute-bound metadata before reporting GPU idle or DualGPURunner engagement as an operational issue."
+  ],
+  "estimated_time_savings_pct": 0,
+  "meta_reflection": "This retrospective is intentionally conservative: the timing block contains no experiment rows, so runtime rankings and efficiency judgments would be fabricated. The GPU report is available, but with 0 compute-bound experiments it is only ambient state for this synthesis-only closeout."
+}
