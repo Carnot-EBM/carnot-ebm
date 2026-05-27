@@ -10889,3 +10889,59 @@ ops/status/traceability reconciliation performed by this task, and an
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-REPORT-3203 | Implemented (`python/carnot/reporting/cross_corpus_matrix_v30_3203.py`) | Implemented (`tests/python/test_experiment_3203_cross_corpus_matrix_v30.py`) |
+
+### REQ-REPORT-3204: Milestone .296 Capstone From Matrix V30
+
+The repository shall provide an Exp 3204 milestone .296 capstone generator
+that writes `results/experiment_3204_capstone_v296.json` by reading
+`results/experiment_3203_cross_corpus_matrix_v30.json` as the authoritative
+aggregation ledger and loading the checked-in `.296` source artifacts recorded
+by that matrix. The workflow MUST aggregate existing artifacts only. It MUST
+NOT run live model inference, verifier scoring, repair generation, solver
+execution, hardware commands, the conductor, pushes, modify
+`research-roadmap.yaml`, modify `scripts/research_conductor.py`, or reconcile
+`ops/status.md`, `ops/changelog.md`, or `_bmad/traceability.md` when the
+conductor has delegated that reconciliation to a separate step.
+
+The capstone MUST summarize the terminal `.296` phase outcomes for receipt/CUDA
+evidence, clean verifier gating, adaptive repair control, FR-11 self-learning,
+and hardware sampler boundaries. It MUST determine `paper_ready` directly from
+matrix v30 only and MUST preserve the matrix's claim boundaries: no
+paper-ready, repair, hardware speedup, TSU/Kona, or model-weight self-learning
+claim may be promoted unless matrix v30 already proves it.
+
+The terminal artifact MUST include `schema_version`, `experiment_id`,
+`milestone`, `matrix_artifact`, `capstone_v296_ready`, `paper_ready`,
+`publication_blocker_count`, `blocker_delta_from_v29`,
+`local_sota_receipt_status`, `clean_verifier_status`, `repair_gate_status`,
+`repair_ladder_status`, `fr11_self_learning_status`,
+`hardware_sampler_status`, `next_top_gap`, `ops_docs_updated`,
+`active_roadmap_modified`, `conductor_file_modified`, and `honest_verdict`.
+It MAY include source checksums, loaded-artifact summaries, phase outcome
+narrative, paper-readiness blockers, next milestone theme, invariant
+violations, and measured `duration_s` as long as every value is derived from
+checked-in artifacts or file presence/checksum checks.
+
+#### SCENARIO-REPORT-3204: V296 Capstone Closes Without Overclaiming
+
+**Given** matrix v30 exists and reports `cross_corpus_matrix_v30_ready=true`,
+`paper_ready=false`, `publication_blocker_count=85`,
+`blocker_delta_from_v29=5`, receipt/CUDA blocked, clean verifier gated
+skipped, repair blocked, FR-11 controller memory promoted without model-weight
+updates but sidecar promotion blocked, and hardware speedup denied
+**And** the checked-in `.296` artifacts from Exp 3191 through Exp 3202 are
+loadable
+**When** the Exp 3204 capstone generator runs
+**Then** it writes `results/experiment_3204_capstone_v296.json` with all
+required schema fields, `capstone_v296_ready=true`, `paper_ready=false`
+copied from matrix v30, publication blocker accounting copied from matrix v30,
+separate repair gate and repair ladder statuses, next top gap and next
+milestone theme focused on the CUDA/offload full-local-SOTA receipt blocker,
+no ops/status/changelog/traceability reconciliation, no active roadmap or
+conductor modification, and an `honest_verdict` that starts with `complete:`.
+
+## Implementation Status (REQ-REPORT-3204)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-3204 | Implemented (`python/carnot/reporting/capstone_v296_3204.py`) | Implemented (`tests/python/test_experiment_3204_capstone_v296.py`) |
