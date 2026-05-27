@@ -6462,3 +6462,4 @@ web search: Semantic Scholar 2507.02092 Energy |
 | 2026-05-27 15:16 UTC | Archive .295 closeout and activate .296 planning a | OK | 81 passed in 3.56s |
 | 2026-05-27 15:32 UTC | Receipt and adversarial contract v4 with dual clea | OK | 81 passed in 3.63s |
 | 2026-05-27 15:51 UTC | llama.cpp CUDA/offload health probe for mandated l | OK | 124 passed in 5.55s |
+| 2026-05-27 15:53 UTC | Clean live SOTA verifier rerun v11 gated on CUDA-b | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp3193-llama-cpp-cuda-offload-health-prob |
