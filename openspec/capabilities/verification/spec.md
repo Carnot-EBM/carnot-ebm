@@ -2939,6 +2939,67 @@ required source evidence is missing.
 |---|---|---|
 | REQ-VERIFY-3158 | Implemented (`python/carnot/eval/ebcn_energy_sidecar_calibration_v1.py`) | Implemented (`tests/python/test_experiment_3158_ebcn_energy_sidecar_calibration_v1.py`) |
 
+### REQ-VERIFY-3173: EBCN/KAN Bounded Diagnostic Expansion V2
+
+The repository shall provide an Exp 3173 bounded diagnostic panel that expands
+the exact-label EBCN/KAN evidence for matrix v28 without making live
+integration or deployed-verifier claims. The builder MUST read only checked-in
+artifacts, including the Exp 3136 known false-accept autopsy, Exp 3137
+exact-safe accept/abstain contract, Exp 3138 canonical grounding pilot, Exp
+3158 EBCN energy sidecar calibration, Exp 3159 KAN proof-carrying monitor
+expansion, and any clean live verifier rerun artifact when present. It MUST
+NOT run live model inference, train or mutate model weights, integrate EBCN or
+KAN evidence into generation, push commits, or modify
+`scripts/research_conductor.py`.
+
+The panel MUST collect exact-labeled rows from known false accepts,
+exact-safe contract replay rows, canonical grounding rows, EBCN sidecar rows,
+KAN monitor records, and present clean-rerun rows. It MUST deduplicate rows by
+stable row ID while preserving per-source provenance, score or replay EBCN
+energy diagnostics and KAN proof-carrying monitor records on the expanded exact
+set, report localization quality, false-accept row separation, and
+monitor-record coverage, and name all blockers that prevent promotion beyond a
+bounded diagnostic.
+
+The terminal artifact MUST be written to
+`results/experiment_3173_ebcn_kan_bounded_diagnostic_expansion_v2.json` and
+include `ebcn_kan_bounded_diagnostic_expansion_v2_ready`,
+`exact_labeled_row_count`, `known_false_accept_rows_scored`,
+`ebcn_localization_metrics`, `kan_monitor_record_count`,
+`deployed_verifier_claim_allowed`, `live_integration_claim_allowed`,
+`promotion_blockers`, `source_artifacts`, `inference_substrate`, and
+`honest_verdict`. `deployed_verifier_claim_allowed` and
+`live_integration_claim_allowed` MUST remain false unless a real deployed
+verifier and live generation-path integration are implemented and tested in the
+same change.
+
+`ebcn_kan_bounded_diagnostic_expansion_v2_ready` may be true only when required
+source artifacts are present, at least one exact-labeled row is collected, every
+known false-accept row from Exp 3136 is scored, EBCN localization metrics are
+finite, KAN monitor-record coverage is countable, inference substrate declares
+zero new live model calls, and promotion blockers explicitly include the tiny
+denominator, missing live integration, and missing deployed verifier.
+
+### SCENARIO-VERIFY-3173: Matrix v28 Receives A Bounded EBCN/KAN Panel
+
+Given the checked-in Exp 3136, Exp 3137, Exp 3138, Exp 3158, and Exp 3159
+artifacts are present, and a clean live verifier rerun artifact may or may not
+be present,
+When the Exp 3173 diagnostic builder runs,
+Then it writes the terminal JSON artifact, aggregates exact-labeled rows with
+source provenance, includes every known false-accept row, reports EBCN
+localization and false-accept separation metrics, reports KAN monitor-record
+coverage, includes clean-rerun status without treating a gated skip as live
+evidence, keeps `deployed_verifier_claim_allowed=false` and
+`live_integration_claim_allowed=false`, and uses an `honest_verdict` beginning
+with `complete:` or `complete_` when bounded diagnostic evidence is complete.
+
+## Implementation Status (REQ-VERIFY-3173)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-VERIFY-3173 | Implemented (`python/carnot/eval/ebcn_kan_bounded_diagnostic_expansion_v2.py`) | Implemented (`tests/python/test_experiment_3173_ebcn_kan_bounded_diagnostic_expansion_v2.py`) |
+
 ### REQ-VERIFY-3006: EqR Fixed-Point Energy Diagnostic Over Cached Validator Trajectories
 
 The repository shall provide a deterministic Exp 3006 fixed-point energy
