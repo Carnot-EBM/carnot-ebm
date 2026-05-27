@@ -3264,6 +3264,64 @@ known-regression rejection all pass.
 |---|---|---|
 | REQ-VERIFY-3181 | Implemented (`python/carnot/verify/clean_live_sota_verifier_rerun_v10.py`) | Implemented (`tests/python/test_experiment_3181_clean_live_sota_verifier_rerun_v10.py`) |
 
+### REQ-VERIFY-3182: Distributional EBM Exact-Row Sidecar V1
+
+The repository shall provide an Exp 3182 distributional EBM uncertainty
+sidecar builder that writes
+`results/experiment_3182_distributional_ebm_exact_row_sidecar_v1.json` from
+checked-in exact verifier rows, known false-accept rows, cached candidate
+evidence, Exp 3173 EBCN/KAN diagnostics, Exp 3180 controlled-invariance
+results, and the post-.294 reference sweep. It MUST NOT make live model calls,
+train a network, download models, modify `scripts/research_conductor.py`, push
+commits, or present the sidecar as deployed verifier authority.
+
+The sidecar SHALL represent each available exact row with deterministic
+structured constraint features or graph-like features where practical. The
+method MAY use deterministic proxy scoring when the available false-accept
+denominator is too small for training, but it MUST label the method as a
+proxy diagnostic and keep exact labels, exact-safe replay, canonical grounding,
+and controlled-invariance checks as the only acceptance authority.
+
+The terminal artifact MUST include
+`distributional_ebm_exact_row_sidecar_v1_ready`, `source_reference_ids`,
+`exact_labeled_row_count`, `known_false_accept_rows_scored`,
+`sidecar_method`, `false_accept_separation_auc`,
+`uncertainty_calibration`, `abstention_policy`,
+`comparison_to_ebcn_kan`, `deployed_verifier_claim_allowed`,
+`inference_substrate`, and `honest_verdict`. It SHOULD also include row-level
+scores, an uncertainty ranking, calibration-bin details, coverage denominators,
+source checksums, tests run, duration, run date, and explicit comparison to
+Exp 3180 shortcut/controlled-invariance findings.
+
+`distributional_ebm_exact_row_sidecar_v1_ready` shall be true only when the
+Exp 3173 and Exp 3180 source artifacts are present, at least one exact row is
+scored, every known false-accept regression row available from those sources
+is included, calibration is computed or honestly marked unavailable, the
+abstention policy names its threshold and coverage denominator, the inference
+substrate records zero new live model calls, and
+`deployed_verifier_claim_allowed=false`.
+
+### SCENARIO-VERIFY-3182: Deterministic Sidecar Scores Exact Rows Without Promotion
+
+Given Exp 3173 provides exact labeled rows with EBCN/KAN diagnostic records,
+Exp 3180 provides controlled-invariance row outcomes and shortcut-exposure
+evidence, and the post-.294 reference sweep cites distributional EBMs and
+Graph Energy Matching as diagnostic sidecar directions,
+When Exp 3182 builds the distributional exact-row sidecar,
+Then it writes the terminal JSON artifact without live inference, computes
+row-level proxy energy and uncertainty over the exact-row denominator, reports
+false-accept separation AUROC when both clean and known false-accept rows are
+scored, reports ECE or an explicit calibration-unavailable reason, proposes an
+abstention threshold with coverage, compares the findings to Exp 3173 EBCN/KAN
+records and Exp 3180 shortcut controls, and keeps
+`deployed_verifier_claim_allowed=false`.
+
+## Implementation Status (REQ-VERIFY-3182)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-VERIFY-3182 | Implemented (`python/carnot/eval/distributional_ebm_exact_row_sidecar_v1.py`) | Implemented (`tests/python/test_experiment_3182_distributional_ebm_exact_row_sidecar_v1.py`) |
+
 ### REQ-VERIFY-3006: EqR Fixed-Point Energy Diagnostic Over Cached Validator Trajectories
 
 The repository shall provide a deterministic Exp 3006 fixed-point energy
