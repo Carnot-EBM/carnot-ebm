@@ -1,0 +1,24 @@
+{
+  "experiment": 3199,
+  "schema": "blocked_gate_check_v1",
+  "run_date": "2026-05-27",
+  "started_at": "2026-05-27T17:01:38.895361+00:00",
+  "finished_at": "2026-05-27T17:01:38.895361+00:00",
+  "duration_s": 0.0,
+  "status": "blocked",
+  "title": "Multi-turn repair ladder v6 gated on repair gate unblocked",
+  "honest_verdict": "blocked_gate_check_failed",
+  "gate_check_summary": "1 of 1 gate(s) failed; first failure: exp3198-repair-gate-decision-v5.repair_gate_state (actual='blocked_clean_verifier_gate_skipped' == expected='unblocked_for_bounded_repair_ladder')",
+  "gates_evaluated": [
+    {
+      "upstream": "exp3198-repair-gate-decision-v5",
+      "artifact_field": "repair_gate_state",
+      "op": "==",
+      "expected": "unblocked_for_bounded_repair_ladder",
+      "actual": "blocked_clean_verifier_gate_skipped",
+      "passed": false,
+      "reason": "actual='blocked_clean_verifier_gate_skipped' == expected='unblocked_for_bounded_repair_ladder'"
+    }
+  ],
+  "blocked_at_layer": "conductor_pre_gate"
+}
