@@ -6416,3 +6416,5 @@ web search: |
 | 2026-05-27 00:05 UTC | Archive .293 and activate .294 planning | OK | 81 passed in 3.38s |
 | 2026-05-27 00:19 UTC | Duration-corrected live authenticity contract v2 | OK | 81 passed in 3.55s |
 | 2026-05-27 00:35 UTC | Live SOTA authenticity replay v2 | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_3165_live_so |
+| 2026-05-27 00:42 UTC | Live SOTA authenticity replay v2 | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_3165_live_so |
+| 2026-05-27 01:05 UTC | Live SOTA authenticity replay v2 | FAIL | Codex CLI error: Wall-clock+idle timeout after 1204s (390s silence). Last out |

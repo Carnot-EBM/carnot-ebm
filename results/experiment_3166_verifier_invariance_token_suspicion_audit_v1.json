@@ -1,0 +1,2168 @@
+{
+  "acceptance_authority_fields": [
+    {
+      "acceptance_authority": true,
+      "description": "trusted exact solver/test/canonical label for the row",
+      "name": "exact_label",
+      "principle": "exact authority must stay separate from suspicion signals",
+      "requires_exact_check": true,
+      "source_kind": "exact_authority"
+    },
+    {
+      "acceptance_authority": true,
+      "description": "Exp 3137 accept/abstain/reject decision",
+      "name": "exact_safe_replay_decision",
+      "principle": "exact authority must stay separate from suspicion signals",
+      "requires_exact_check": true,
+      "source_kind": "exact_authority"
+    },
+    {
+      "acceptance_authority": true,
+      "description": "Exp 3138 canonical answer equivalence",
+      "name": "canonical_equivalence",
+      "principle": "exact authority must stay separate from suspicion signals",
+      "requires_exact_check": true,
+      "source_kind": "exact_authority"
+    },
+    {
+      "acceptance_authority": true,
+      "description": "Z3/Python/runtime exact authority label source",
+      "name": "solver_or_test_authority",
+      "principle": "exact authority must stay separate from suspicion signals",
+      "requires_exact_check": true,
+      "source_kind": "exact_authority"
+    },
+    {
+      "acceptance_authority": true,
+      "description": "monitor ledger and final answer consistency",
+      "name": "monitor_ledger_consistency",
+      "principle": "exact authority must stay separate from suspicion signals",
+      "requires_exact_check": true,
+      "source_kind": "exact_authority"
+    }
+  ],
+  "artifact": "experiment_3166_verifier_invariance_token_suspicion_audit_v1",
+  "blocked_checks": [
+    {
+      "acceptance_authority": false,
+      "blocked_reason": "first-token logprob/entropy telemetry is absent or null in the checked-in exact rows",
+      "name": "future_first_token_logprob_telemetry",
+      "principle": "missing token/logprob telemetry must stay visible",
+      "requires_future_live_logprob_or_token_telemetry": true
+    },
+    {
+      "acceptance_authority": false,
+      "blocked_reason": "full token-level logprob curves are not present in Exp 3165 transcripts",
+      "name": "future_token_level_logprob_curve",
+      "principle": "missing token/logprob telemetry must stay visible",
+      "requires_future_live_logprob_or_token_telemetry": true
+    },
+    {
+      "acceptance_authority": false,
+      "blocked_reason": "Exp 3165 contains no replay transcript hashes, so transcript-level shuffled/answer-only/trace-only controls are defined but not executable from Exp 3165.",
+      "name": "exp3165_transcript_level_controls",
+      "principle": "distinguish computed evidence from proposed checks",
+      "requires_future_live_logprob_or_token_telemetry": false,
+      "requires_future_transcript_text": true
+    },
+    {
+      "acceptance_authority": false,
+      "blocked_reason": "first-token logprob is absent from existing Exp 3165 evidence",
+      "name": "missing_first_token_logprob",
+      "principle": "missing token/logprob telemetry must stay visible",
+      "requires_future_live_logprob_or_token_telemetry": true
+    },
+    {
+      "acceptance_authority": false,
+      "blocked_reason": "first-token entropy is absent or null in existing rows",
+      "name": "missing_first_token_entropy",
+      "principle": "missing token/logprob telemetry must stay visible",
+      "requires_future_live_logprob_or_token_telemetry": true
+    },
+    {
+      "acceptance_authority": false,
+      "blocked_reason": "token-level logprob curves were not logged",
+      "name": "missing_token_level_logprob_curve",
+      "principle": "missing token/logprob telemetry must stay visible",
+      "requires_future_live_logprob_or_token_telemetry": true
+    }
+  ],
+  "computed_checks": [
+    {
+      "acceptance_authority": true,
+      "computed_from_existing_artifacts": true,
+      "name": "trusted_exact_row_inventory",
+      "principle": "distinguish computed evidence from proposed checks",
+      "row_count": 72,
+      "row_ids": [
+        "resyn-3084-arith-000",
+        "resyn-3084-arith-001",
+        "resyn-3084-arith-002",
+        "resyn-3084-arith-003",
+        "resyn-3084-arith-004",
+        "resyn-3084-arith-005",
+        "resyn-3084-arith-006",
+        "resyn-3084-arith-007",
+        "resyn-3084-arith-008",
+        "resyn-3084-arith-009",
+        "resyn-3084-arith-010",
+        "resyn-3084-arith-011",
+        "resyn-3084-arith-012",
+        "resyn-3084-arith-013",
+        "resyn-3084-arith-014",
+        "resyn-3084-arith-015",
+        "resyn-3084-arith-016",
+        "resyn-3084-arith-017",
+        "resyn-3084-arith-018",
+        "resyn-3084-arith-019",
+        "resyn-3084-arith-020",
+        "resyn-3084-arith-021",
+        "resyn-3084-arith-022",
+        "resyn-3084-arith-023",
+        "resyn-3084-repair-json-000",
+        "resyn-3084-repair-json-003",
+        "resyn-3084-repair-json-006",
+        "resyn-3084-repair-json-009",
+        "resyn-3084-repair-json-012",
+        "resyn-3084-repair-json-015",
+        "resyn-3084-repair-json-018",
+        "resyn-3084-repair-json-021",
+        "resyn-3084-repair-py-002",
+        "resyn-3084-repair-py-005",
+        "resyn-3084-repair-py-008",
+        "resyn-3084-repair-py-011",
+        "resyn-3084-repair-py-014",
+        "resyn-3084-repair-py-017",
+        "resyn-3084-repair-py-020",
+        "resyn-3084-repair-py-023",
+        "resyn-3084-repair-smt-001",
+        "resyn-3084-repair-smt-004",
+        "resyn-3084-repair-smt-007",
+        "resyn-3084-repair-smt-010",
+        "resyn-3084-repair-smt-013",
+        "resyn-3084-repair-smt-016",
+        "resyn-3084-repair-smt-019",
+        "resyn-3084-repair-smt-022",
+        "resyn-3084-smt-000",
+        "resyn-3084-smt-001",
+        "resyn-3084-smt-002",
+        "resyn-3084-smt-003",
+        "resyn-3084-smt-004",
+        "resyn-3084-smt-005",
+        "resyn-3084-smt-006",
+        "resyn-3084-smt-007",
+        "resyn-3084-smt-008",
+        "resyn-3084-smt-009",
+        "resyn-3084-smt-010",
+        "resyn-3084-smt-011",
+        "resyn-3084-smt-012",
+        "resyn-3084-smt-013",
+        "resyn-3084-smt-014",
+        "resyn-3084-smt-015",
+        "resyn-3084-smt-016",
+        "resyn-3084-smt-017",
+        "resyn-3084-smt-018",
+        "resyn-3084-smt-019",
+        "resyn-3084-smt-020",
+        "resyn-3084-smt-021",
+        "resyn-3084-smt-022",
+        "resyn-3084-smt-023"
+      ],
+      "source_experiments": [
+        "exp3136",
+        "exp3137",
+        "exp3138"
+      ]
+    },
+    {
+      "computed_from_existing_artifacts": true,
+      "known_false_accept_rows_blocked": true,
+      "name": "exact_safe_replay_gate_inventory",
+      "principle": "exact authority must stay separate from suspicion signals",
+      "replay_abstention_rate": 0.025641,
+      "replay_false_accept_rate": 0.0,
+      "replay_false_reject_rate": 0.0
+    },
+    {
+      "computed_from_existing_artifacts": true,
+      "false_accept_rows_blocked": 2,
+      "name": "canonical_grounding_inventory",
+      "principle": "exact authority must stay separate from suspicion signals",
+      "regression_rows_evaluated": 2,
+      "residual_false_accept_rows": []
+    },
+    {
+      "acceptance_authority": false,
+      "computed_from_existing_artifacts": true,
+      "name": "exp3165_transcript_hash_inventory",
+      "principle": "audit must trace to exact rows and preflight evidence",
+      "prompt_hashes": [],
+      "transcript_hash_count": 0,
+      "transcript_hashes": []
+    },
+    {
+      "acceptance_authority": false,
+      "available_fields": [
+        "prompt_token_count",
+        "completion_token_count",
+        "response_hash_reuse",
+        "answer_token_family_mismatch",
+        "trace_presence_or_length"
+      ],
+      "blocked_fields": [
+        "first_token_logprob",
+        "first_token_entropy",
+        "token_level_logprob_curve"
+      ],
+      "computed_from_existing_artifacts": true,
+      "name": "token_suspicion_field_availability",
+      "principle": "triage signals must be explicitly scoped"
+    }
+  ],
+  "controlled_invariance_checks": [
+    {
+      "available_exact_row_count": 72,
+      "available_exp3165_transcript_hash_count": 0,
+      "can_authorize_acceptance": false,
+      "can_define_from_existing_artifacts": true,
+      "description": "Force the candidate answer token to an exact or counterfactual label and require exact replay to decide.",
+      "exp3167_required_action": "run transformed rows through exact-safe/canonical/monitor authority before any acceptance claim",
+      "fully_computable_without_future_rerun": false,
+      "name": "force",
+      "principle": "detector shortcuts must be tested",
+      "routes_to_exact_checks": true
+    },
+    {
+      "available_exact_row_count": 72,
+      "available_exp3165_transcript_hash_count": 0,
+      "can_authorize_acceptance": false,
+      "can_define_from_existing_artifacts": true,
+      "description": "Remove final-answer artifacts and require abstain/repair routing rather than answer-artifact acceptance.",
+      "exp3167_required_action": "run transformed rows through exact-safe/canonical/monitor authority before any acceptance claim",
+      "fully_computable_without_future_rerun": false,
+      "name": "remove",
+      "principle": "detector shortcuts must be tested",
+      "routes_to_exact_checks": true
+    },
+    {
+      "available_exact_row_count": 72,
+      "available_exp3165_transcript_hash_count": 0,
+      "can_authorize_acceptance": false,
+      "can_define_from_existing_artifacts": true,
+      "description": "Shuffle available trace or monitor-event order and require exact labels to remain the gate.",
+      "exp3167_required_action": "run transformed rows through exact-safe/canonical/monitor authority before any acceptance claim",
+      "fully_computable_without_future_rerun": false,
+      "name": "shuffled_trace",
+      "principle": "detector shortcuts must be tested",
+      "routes_to_exact_checks": true
+    },
+    {
+      "available_exact_row_count": 72,
+      "available_exp3165_transcript_hash_count": 0,
+      "can_authorize_acceptance": false,
+      "can_define_from_existing_artifacts": true,
+      "description": "Strip trace context while keeping the answer; this may triage shortcut risk but cannot accept.",
+      "exp3167_required_action": "run transformed rows through exact-safe/canonical/monitor authority before any acceptance claim",
+      "fully_computable_without_future_rerun": false,
+      "name": "answer_only",
+      "principle": "detector shortcuts must be tested",
+      "routes_to_exact_checks": true
+    },
+    {
+      "available_exact_row_count": 72,
+      "available_exp3165_transcript_hash_count": 0,
+      "can_authorize_acceptance": false,
+      "can_define_from_existing_artifacts": true,
+      "description": "Strip the final answer while keeping trace evidence; this may route repair but cannot accept.",
+      "exp3167_required_action": "run transformed rows through exact-safe/canonical/monitor authority before any acceptance claim",
+      "fully_computable_without_future_rerun": false,
+      "name": "trace_only",
+      "principle": "detector shortcuts must be tested",
+      "routes_to_exact_checks": true
+    }
+  ],
+  "diagnostics_allowed_to_gate_repair": [
+    {
+      "allowed_gate_use": "required true before repair promotion",
+      "can_authorize_acceptance": false,
+      "name": "known_false_accept_rows_blocked",
+      "principle": "repair gates need conservative fields",
+      "source": "exp3137/exp3138"
+    },
+    {
+      "allowed_gate_use": "must be empty before repair promotion",
+      "can_authorize_acceptance": false,
+      "name": "residual_false_accept_rows",
+      "principle": "repair gates need conservative fields",
+      "source": "exp3138"
+    },
+    {
+      "allowed_gate_use": "may block repair or require exact reroute when a detector shortcut is exposed",
+      "can_authorize_acceptance": false,
+      "name": "controlled_invariance_failures",
+      "principle": "repair gates need conservative fields",
+      "source": "exp3166/exp3167"
+    },
+    {
+      "allowed_gate_use": "may block live rerun promotion when required replay evidence is absent",
+      "can_authorize_acceptance": false,
+      "name": "authenticity_transcript_hash_presence",
+      "principle": "repair gates need conservative fields",
+      "source": "exp3165"
+    }
+  ],
+  "diagnostics_not_allowed_to_accept": [
+    {
+      "name": "token_suspicion_fields",
+      "principle": "token/trace signals must not become acceptance authority",
+      "reason": "token counts, logprobs, entropy, and hash reuse can triage only"
+    },
+    {
+      "name": "answer_only_control_score",
+      "principle": "token/trace signals must not become acceptance authority",
+      "reason": "answer-only survival can reveal shortcuts but exact labels still decide"
+    },
+    {
+      "name": "trace_only_control_score",
+      "principle": "token/trace signals must not become acceptance authority",
+      "reason": "trace-only evidence can route repair but cannot prove final-answer correctness"
+    },
+    {
+      "name": "shuffled_trace_stability",
+      "principle": "token/trace signals must not become acceptance authority",
+      "reason": "invariance under shuffled traces is a diagnostic, not proof of exact correctness"
+    }
+  ],
+  "downstream_policy_for_exp3167": {
+    "acceptance_requires_exact_authority": true,
+    "controlled_invariance_checks_required": [
+      "force",
+      "remove",
+      "shuffled_trace",
+      "answer_only",
+      "trace_only"
+    ],
+    "repair_gate_policy": "Repair promotion may be blocked by missing or failed diagnostics, but acceptance remains exact-authority-only.",
+    "required_acceptance_authority_fields": [
+      "exact_label",
+      "exact_safe_replay_decision",
+      "canonical_equivalence",
+      "solver_or_test_authority",
+      "monitor_ledger_consistency"
+    ],
+    "reroute_policy": "Any suspicious token, answer-artifact, or trace-artifact signal routes to exact-safe replay, canonical grounding, and monitor-ledger checks.",
+    "target_experiment": "exp3167",
+    "token_suspicion_may_accept": false,
+    "trace_or_control_diagnostics_may_accept": false,
+    "triage_only_suspicion_fields": [
+      "prompt_token_count",
+      "completion_token_count",
+      "first_token_logprob",
+      "first_token_entropy",
+      "token_level_logprob_curve",
+      "response_hash_reuse",
+      "answer_token_family_mismatch",
+      "trace_presence_or_length"
+    ]
+  },
+  "duration_s": 0.003174,
+  "exp3165_transcript_hash_inventory": [],
+  "field_principles": {
+    "acceptance_authority_fields": "exact authority must stay separate from suspicion signals",
+    "blocked_checks": "missing token/logprob telemetry must stay visible",
+    "computed_checks": "distinguish computed evidence from proposed checks",
+    "controlled_invariance_checks": "detector shortcuts must be tested",
+    "diagnostics_allowed_to_gate_repair": "repair gates need conservative fields",
+    "diagnostics_not_allowed_to_accept": "token/trace signals must not become acceptance authority",
+    "honest_verdict": "terminal verdict must be honest about preconditions",
+    "inference_substrate": "aggregation work must declare no new live model inference",
+    "source_artifacts": "audit must trace to exact rows and preflight evidence",
+    "token_suspicion_fields": "triage signals must be explicitly scoped",
+    "verifier_invariance_token_suspicion_audit_ready": "rerun evidence needs artifact-sensitivity checks"
+  },
+  "honest_verdict": "complete: verifier_invariance_token_suspicion_audit_ready=true; trusted_exact_rows=72; blocked_future_checks=6; exp3167_policy=exact_authority_only",
+  "inference_substrate": {
+    "declares_no_new_live_model_inference": true,
+    "downloads_models": false,
+    "executes_models": false,
+    "executes_repairs": false,
+    "executes_solvers": false,
+    "executes_verifiers": false,
+    "kind": "artifact_only_verifier_invariance_token_suspicion_audit",
+    "modifies_research_conductor": false,
+    "new_live_model_call_count": 0,
+    "no_new_live_model_inference": true,
+    "uses_checked_in_artifacts_only": true
+  },
+  "ops_docs_reconciliation_left_to_conductor": true,
+  "run_date": "20260527",
+  "schema": "carnot.verifier_invariance_token_suspicion_audit.v1",
+  "scripts_research_conductor_modified": false,
+  "source_artifacts": [
+    {
+      "experiment_id": "agents_repo_instructions",
+      "path": "AGENTS.md",
+      "present": true,
+      "readable_json_object": null,
+      "required": true,
+      "role": "repo_instructions",
+      "sha256": "b3d6581b04f16b85f77defb2837c98dc3b60ed51e10b347ecb36e609f318b619",
+      "source_type": "md"
+    },
+    {
+      "experiment_id": "codex_repo_workflow",
+      "path": "CODEX.md",
+      "present": true,
+      "readable_json_object": null,
+      "required": true,
+      "role": "codex_workflow",
+      "sha256": "1db7ebc1009714f872db83447828a8957c3abb72061832cc1bc307735cd96bbe",
+      "source_type": "md"
+    },
+    {
+      "experiment_id": "claude_authenticity_rules",
+      "path": "CLAUDE.md",
+      "present": true,
+      "readable_json_object": null,
+      "required": true,
+      "role": "authenticity_rules",
+      "sha256": "cdc00581d37d1bd3c77a69b058787f74ecc71545a97c1eab31c48961637b3224",
+      "source_type": "md"
+    },
+    {
+      "experiment_id": "research_references",
+      "path": "research-references.md",
+      "present": true,
+      "readable_json_object": null,
+      "required": true,
+      "role": "research_context",
+      "sha256": "24c443f4e2d5250c18527552863a7b2d9993bb05b24db4329c591caf222480df",
+      "source_type": "md"
+    },
+    {
+      "experiment_id": "verification_openspec",
+      "path": "openspec/capabilities/verification/spec.md",
+      "present": true,
+      "readable_json_object": null,
+      "required": true,
+      "role": "verification_spec",
+      "sha256": "1fe031cd70ca66596a9858f98e376674cc233027cbdaf2d7bdbc9917c9ccf5ca",
+      "source_type": "md"
+    },
+    {
+      "experiment_id": "exp3136",
+      "path": "results/experiment_3136_false_accept_root_cause_autopsy_v1.json",
+      "present": true,
+      "readable_json_object": true,
+      "required": true,
+      "role": "false_accept_autopsy_exact_rows",
+      "sha256": "3a61c8490030b607c73f50ba2ce145dc4591621ac76f016a42811bedd670776a",
+      "source_type": "json"
+    },
+    {
+      "experiment_id": "exp3137",
+      "path": "results/experiment_3137_exact_safe_accept_abstain_contract_v1.json",
+      "present": true,
+      "readable_json_object": true,
+      "required": true,
+      "role": "exact_safe_contract_replay",
+      "sha256": "c8d23896f879ceb1e912989e2ba13db0a43cd195a8ff5e8fb18a7be1b4582f2e",
+      "source_type": "json"
+    },
+    {
+      "experiment_id": "exp3138",
+      "path": "results/experiment_3138_canonical_answer_vericot_grounding_pilot_v1.json",
+      "present": true,
+      "readable_json_object": true,
+      "required": true,
+      "role": "canonical_grounding_replay",
+      "sha256": "fc07294c1e4ea32bb8d174c2e99a5d70aa68a1e7e16252eea28f442812300a21",
+      "source_type": "json"
+    },
+    {
+      "experiment_id": "exp3150",
+      "path": "results/experiment_3150_adversarial_verifier_evidence_corrigendum_v1.json",
+      "present": true,
+      "readable_json_object": true,
+      "required": true,
+      "role": "adversarial_corrigendum_policy",
+      "sha256": "8ed4c24bfb562e56d37265d6cab02a60adba416bba3d9c7026714d714cf6eb57",
+      "source_type": "json"
+    },
+    {
+      "experiment_id": "exp3151",
+      "path": "results/experiment_3151_live_inference_authenticity_preflight_v1.json",
+      "present": true,
+      "readable_json_object": true,
+      "required": true,
+      "role": "live_authenticity_preflight_evidence",
+      "sha256": "3ad9237f6351c8d18f385bf661f26d17bbe2594945befdd08b302a4024f49893",
+      "source_type": "json"
+    },
+    {
+      "experiment_id": "exp3165",
+      "path": "results/experiment_3165_live_sota_authenticity_replay_v2.json",
+      "present": true,
+      "readable_json_object": true,
+      "required": true,
+      "role": "authenticity_replay_transcript_hashes",
+      "sha256": "d90b5d16dc4a5b8d2d6076a68257f1a8fa0d84a8d644aba641472a8c41a9be63",
+      "source_type": "json"
+    },
+    {
+      "experiment_id": "exp3166_module",
+      "path": "python/carnot/verify/verifier_invariance_token_suspicion_audit_v1.py",
+      "present": true,
+      "readable_json_object": null,
+      "required": false,
+      "role": "audit_module",
+      "sha256": "916449b17a19199c448ff84c9b87aecd3fa8ced627579eb7512e51fb3d5b54ec",
+      "source_type": "py"
+    },
+    {
+      "experiment_id": "exp3166_script",
+      "path": "scripts/experiment_3166_verifier_invariance_token_suspicion_audit_v1.py",
+      "present": true,
+      "readable_json_object": null,
+      "required": false,
+      "role": "audit_script",
+      "sha256": "1146146077a625f6afcb9e4f7532f04fe55f750fc1f7dfecf09b0c3510a89574",
+      "source_type": "py"
+    },
+    {
+      "experiment_id": "exp3166_tests",
+      "path": "tests/python/test_experiment_3166_verifier_invariance_token_suspicion_audit_v1.py",
+      "present": true,
+      "readable_json_object": null,
+      "required": false,
+      "role": "audit_tests",
+      "sha256": "0e8cdf58a90e3f5957c74fbf6d817340ff32c79b135949c2ed27387e856a942d",
+      "source_type": "py"
+    }
+  ],
+  "source_checksums": {
+    "AGENTS.md": "b3d6581b04f16b85f77defb2837c98dc3b60ed51e10b347ecb36e609f318b619",
+    "CLAUDE.md": "cdc00581d37d1bd3c77a69b058787f74ecc71545a97c1eab31c48961637b3224",
+    "CODEX.md": "1db7ebc1009714f872db83447828a8957c3abb72061832cc1bc307735cd96bbe",
+    "openspec/capabilities/verification/spec.md": "1fe031cd70ca66596a9858f98e376674cc233027cbdaf2d7bdbc9917c9ccf5ca",
+    "python/carnot/verify/verifier_invariance_token_suspicion_audit_v1.py": "916449b17a19199c448ff84c9b87aecd3fa8ced627579eb7512e51fb3d5b54ec",
+    "research-references.md": "24c443f4e2d5250c18527552863a7b2d9993bb05b24db4329c591caf222480df",
+    "results/experiment_3136_false_accept_root_cause_autopsy_v1.json": "3a61c8490030b607c73f50ba2ce145dc4591621ac76f016a42811bedd670776a",
+    "results/experiment_3137_exact_safe_accept_abstain_contract_v1.json": "c8d23896f879ceb1e912989e2ba13db0a43cd195a8ff5e8fb18a7be1b4582f2e",
+    "results/experiment_3138_canonical_answer_vericot_grounding_pilot_v1.json": "fc07294c1e4ea32bb8d174c2e99a5d70aa68a1e7e16252eea28f442812300a21",
+    "results/experiment_3150_adversarial_verifier_evidence_corrigendum_v1.json": "8ed4c24bfb562e56d37265d6cab02a60adba416bba3d9c7026714d714cf6eb57",
+    "results/experiment_3151_live_inference_authenticity_preflight_v1.json": "3ad9237f6351c8d18f385bf661f26d17bbe2594945befdd08b302a4024f49893",
+    "results/experiment_3165_live_sota_authenticity_replay_v2.json": "d90b5d16dc4a5b8d2d6076a68257f1a8fa0d84a8d644aba641472a8c41a9be63",
+    "scripts/experiment_3166_verifier_invariance_token_suspicion_audit_v1.py": "1146146077a625f6afcb9e4f7532f04fe55f750fc1f7dfecf09b0c3510a89574",
+    "tests/python/test_experiment_3166_verifier_invariance_token_suspicion_audit_v1.py": "0e8cdf58a90e3f5957c74fbf6d817340ff32c79b135949c2ed27387e856a942d"
+  },
+  "source_errors": [],
+  "tests_run": [
+    ".venv/bin/pytest tests/python/test_experiment_3166_verifier_invariance_token_suspicion_audit_v1.py -q --no-cov",
+    ".venv/bin/coverage erase && .venv/bin/coverage run --source=python/carnot/verify -m pytest -o addopts='' tests/python/test_experiment_3166_verifier_invariance_token_suspicion_audit_v1.py -q",
+    ".venv/bin/coverage report --include='python/carnot/verify/verifier_invariance_token_suspicion_audit_v1.py' --fail-under=100 --show-missing",
+    ".venv/bin/python scripts/check_spec_coverage.py",
+    ".venv/bin/pytest tests/python -q"
+  ],
+  "token_suspicion_fields": [
+    {
+      "acceptance_authority": false,
+      "allowed_use": "route unusually tiny or huge prompts to exact replay inspection",
+      "available_in_existing_artifacts": true,
+      "may_accept": false,
+      "may_route_exact_checks": true,
+      "missing_reason": "",
+      "name": "prompt_token_count",
+      "principle": "triage signals must be explicitly scoped",
+      "requires_future_live_logprob_or_token_telemetry": false,
+      "source": "existing Exp 3151/3165 token count aggregates"
+    },
+    {
+      "acceptance_authority": false,
+      "allowed_use": "route empty or implausibly short completions to exact replay inspection",
+      "available_in_existing_artifacts": true,
+      "may_accept": false,
+      "may_route_exact_checks": true,
+      "missing_reason": "",
+      "name": "completion_token_count",
+      "principle": "triage signals must be explicitly scoped",
+      "requires_future_live_logprob_or_token_telemetry": false,
+      "source": "existing Exp 3151/3165 token count aggregates"
+    },
+    {
+      "acceptance_authority": false,
+      "allowed_use": "prioritize low-confidence rows for exact checks",
+      "available_in_existing_artifacts": false,
+      "may_accept": false,
+      "may_route_exact_checks": true,
+      "missing_reason": "first-token logprob is absent from existing Exp 3165 evidence",
+      "name": "first_token_logprob",
+      "principle": "triage signals must be explicitly scoped",
+      "requires_future_live_logprob_or_token_telemetry": true,
+      "source": "future live logprob telemetry"
+    },
+    {
+      "acceptance_authority": false,
+      "allowed_use": "prioritize high-entropy first-token rows for exact checks",
+      "available_in_existing_artifacts": false,
+      "may_accept": false,
+      "may_route_exact_checks": true,
+      "missing_reason": "first-token entropy is absent or null in existing rows",
+      "name": "first_token_entropy",
+      "principle": "triage signals must be explicitly scoped",
+      "requires_future_live_logprob_or_token_telemetry": true,
+      "source": "future live first-token entropy telemetry"
+    },
+    {
+      "acceptance_authority": false,
+      "allowed_use": "prioritize local token-suspicion spans for exact checks",
+      "available_in_existing_artifacts": false,
+      "may_accept": false,
+      "may_route_exact_checks": true,
+      "missing_reason": "token-level logprob curves were not logged",
+      "name": "token_level_logprob_curve",
+      "principle": "triage signals must be explicitly scoped",
+      "requires_future_live_logprob_or_token_telemetry": true,
+      "source": "future live per-token telemetry"
+    },
+    {
+      "acceptance_authority": false,
+      "allowed_use": "route reused or stale-looking responses to exact replay inspection",
+      "available_in_existing_artifacts": true,
+      "may_accept": false,
+      "may_route_exact_checks": true,
+      "missing_reason": "",
+      "name": "response_hash_reuse",
+      "principle": "triage signals must be explicitly scoped",
+      "requires_future_live_logprob_or_token_telemetry": false,
+      "source": "existing raw response or transcript hash evidence"
+    },
+    {
+      "acceptance_authority": false,
+      "allowed_use": "route SAT/validity/repairability family mismatches to exact checks",
+      "available_in_existing_artifacts": true,
+      "may_accept": false,
+      "may_route_exact_checks": true,
+      "missing_reason": "",
+      "name": "answer_token_family_mismatch",
+      "principle": "triage signals must be explicitly scoped",
+      "requires_future_live_logprob_or_token_telemetry": false,
+      "source": "existing exact row answer-extraction format evidence"
+    },
+    {
+      "acceptance_authority": false,
+      "allowed_use": "route trace-only or missing-trace rows to canonical/monitor checks",
+      "available_in_existing_artifacts": true,
+      "may_accept": false,
+      "may_route_exact_checks": true,
+      "missing_reason": "",
+      "name": "trace_presence_or_length",
+      "principle": "triage signals must be explicitly scoped",
+      "requires_future_live_logprob_or_token_telemetry": false,
+      "source": "existing monitor-event and premise-grounding row evidence"
+    }
+  ],
+  "trusted_exact_rows": [
+    {
+      "acceptance_authority": true,
+      "answer_extraction_formats": [
+        "validity_token"
+      ],
+      "candidate_answers": [
+        "VALID"
+      ],
+      "exact_label": "VALID",
+      "expected_action": "accept",
+      "matched_rule_ids": [
+        "ACCEPT_EXACT_COVERED_CONSISTENT"
+      ],
+      "prompt_hashes": [
+        "7e82d3fd8011419dc0894ec1d4e79a0756ec05867e86e981219033db53e22b17",
+        "b39e2bc6a0c741ba935f99737ef5fa41df1987daf2c5be35c5473391e37dffe3"
+      ],
+      "raw_output_hashes": [
+        "01a25c87e8a7d939bf8a17dedcb42b55bd2ee3ad88bff43b45383a983e258faa",
+        "9e5550e24957782f48c5cc9fce5035ae7afedc7950e03f54c4143943c8b2d1c8"
+      ],
+      "row_fingerprint": "f502619f991a12b949d5076e026682f1051879dabbf11b217affeed1024edc1b",
+      "row_id": "resyn-3084-arith-000",
+      "source_experiments": [
+        "exp3136",
+        "exp3137"
+      ],
+      "trusted_exact_authority": true
+    },
+    {
+      "acceptance_authority": true,
+      "answer_extraction_formats": [
+        "validity_token"
+      ],
+      "candidate_answers": [
+        "INVALID"
+      ],
+      "exact_label": "INVALID",
+      "expected_action": "reject",
+      "matched_rule_ids": [
+        "REJECT_EXACT_REJECT_MATCH"
+      ],
+      "prompt_hashes": [
+        "5ed1807ffc115b8986aab297c0b0987297a8b355a2e9b5502fc2412866b58470",
+        "7546c4787f2c80192a5a7ca44d139bc8ad7f4f20810b1f0ecea53e64952b2a09"
+      ],
+      "raw_output_hashes": [
+        "a368c09c5437a5f33ca8e5a0c926b436caa5253642292fb5585cf4a66da9ef45",
+        "ab8020e6872c8df11fa370725aa1f96a2eea144faf112e511e0f3390051ec441"
+      ],
+      "row_fingerprint": "f924e86e795df4dd92d8a6cd15ba187cf148e0fc1064ddd5a882a8d1b9268f70",
+      "row_id": "resyn-3084-arith-001",
+      "source_experiments": [
+        "exp3136",
+        "exp3137"
+      ],
+      "trusted_exact_authority": true
+    },
+    {
+      "acceptance_authority": true,
+      "answer_extraction_formats": [
+        "validity_token"
+      ],
+      "candidate_answers": [
+        "VALID"
+      ],
+      "exact_label": "VALID",
+      "expected_action": "accept",
+      "matched_rule_ids": [
+        "ACCEPT_EXACT_COVERED_CONSISTENT"
+      ],
+      "prompt_hashes": [
+        "368f32e55520d7b686f41addc1a72751a6d31f03ed077fb9de8ab1fd54b93fad",
+        "8ccbbc7526005f1ccfa226e39f474a6d453860fc92038292f21a5be445c6fb25"
+      ],
+      "raw_output_hashes": [
+        "01a25c87e8a7d939bf8a17dedcb42b55bd2ee3ad88bff43b45383a983e258faa",
+        "037957bedab63ef462a37da585e4ec905ab101494c13aa1d8a3ebba85ccbc00e"
+      ],
+      "row_fingerprint": "d45140a75594ac09c7e4fe158703e642d834a16415e17f14f85078d7d4472d98",
+      "row_id": "resyn-3084-arith-002",
+      "source_experiments": [
+        "exp3136",
+        "exp3137"
+      ],
+      "trusted_exact_authority": true
+    },
+    {
+      "acceptance_authority": true,
+      "answer_extraction_formats": [
+        "validity_token"
+      ],
+      "candidate_answers": [
+        "INVALID",
+        "VALID"
+      ],
+      "exact_label": "INVALID",
+      "expected_action": "reject",
+      "matched_rule_ids": [
+        "ABSTAIN_KNOWN_FALSE_ACCEPT_REGRESSION",
+        "REJECT_EXACT_REJECT_MATCH"
+      ],
+      "prompt_hashes": [
+        "7a726516254046b59f9f74ed1ce9e8e68596565170d9b2d7eea39ab904d4b178",
+        "9269b55735106c7636b4d05ac7d92f84a98e4242df96c9cb504adf21c73194d8"
+      ],
+      "raw_output_hashes": [
+        "01a25c87e8a7d939bf8a17dedcb42b55bd2ee3ad88bff43b45383a983e258faa",
+        "96b774e1992cd8d1ad964d06a64b611eb9bae2ac651c3732aca964475fdc91a6"
+      ],
+      "row_fingerprint": "49148c26daaec6fbfb1348907e816bec270f79592fc4a7b0fcc8b30b98bc5405",
+      "row_id": "resyn-3084-arith-003",
+      "source_experiments": [
+        "exp3136",
+        "exp3137",
+        "exp3138"
+      ],
+      "trusted_exact_authority": true
+    },
+    {
+      "acceptance_authority": true,
+      "answer_extraction_formats": [],
+      "candidate_answers": [
+        "VALID"
+      ],
+      "exact_label": "VALID",
+      "expected_action": "accept",
+      "matched_rule_ids": [
+        "ACCEPT_EXACT_COVERED_CONSISTENT"
+      ],
+      "prompt_hashes": [],
+      "raw_output_hashes": [],
+      "row_fingerprint": "730eac74e8e4200fed24169b932b7cd9f37547fb9b96f1aa69e269afb3a50fda",
+      "row_id": "resyn-3084-arith-004",
+      "source_experiments": [
+        "exp3137"
+      ],
+      "trusted_exact_authority": true
+    },
+    {
+      "acceptance_authority": true,
+      "answer_extraction_formats": [],
+      "candidate_answers": [
+        "INVALID"
+      ],
+      "exact_label": "INVALID",
+      "expected_action": "reject",
+      "matched_rule_ids": [
+        "REJECT_EXACT_REJECT_MATCH"
+      ],
+      "prompt_hashes": [],
+      "raw_output_hashes": [],
+      "row_fingerprint": "9dfbefa57720b4230d53dd8e4e902c46479c4e408d8b8a7b078cd88f8f502910",
+      "row_id": "resyn-3084-arith-005",
+      "source_experiments": [
+        "exp3137"
+      ],
+      "trusted_exact_authority": true
+    },
+    {
+      "acceptance_authority": true,
+      "answer_extraction_formats": [],
+      "candidate_answers": [
+        "VALID"
+      ],
+      "exact_label": "VALID",
+      "expected_action": "accept",
+      "matched_rule_ids": [
+        "ACCEPT_EXACT_COVERED_CONSISTENT"
+      ],
+      "prompt_hashes": [],
+      "raw_output_hashes": [],
+      "row_fingerprint": "27569ef75770f56f7f5e19c28e888702979292fabd1956b5ed1535fb95ad2b31",
+      "row_id": "resyn-3084-arith-006",
+      "source_experiments": [
+        "exp3137"
+      ],
+      "trusted_exact_authority": true
+    },
+    {
+      "acceptance_authority": true,
+      "answer_extraction_formats": [],
+      "candidate_answers": [
+        "INVALID"
+      ],
+      "exact_label": "INVALID",
+      "expected_action": "reject",
+      "matched_rule_ids": [
+        "REJECT_EXACT_REJECT_MATCH"
+      ],
+      "prompt_hashes": [],
+      "raw_output_hashes": [],
+      "row_fingerprint": "63f41c35df0ca08614c0cb1051af9a2476c469d721b44e06c64bd48fe8d15483",
+      "row_id": "resyn-3084-arith-007",
+      "source_experiments": [
+        "exp3137"
+      ],
+      "trusted_exact_authority": true
+    },
+    {
+      "acceptance_authority": true,
+      "answer_extraction_formats": [],
+      "candidate_answers": [
+        "VALID"
+      ],
+      "exact_label": "VALID",
+      "expected_action": "accept",
+      "matched_rule_ids": [
+        "ACCEPT_EXACT_COVERED_CONSISTENT"
+      ],
+      "prompt_hashes": [],
+      "raw_output_hashes": [],
+      "row_fingerprint": "fc799737df0762695c3453b36cfca9fc9b8f9fea055dce6cef9d8762f364ffdb",
+      "row_id": "resyn-3084-arith-008",
+      "source_experiments": [
+        "exp3137"
+      ],
+      "trusted_exact_authority": true
+    },
+    {
+      "acceptance_authority": true,
+      "answer_extraction_formats": [],
+      "candidate_answers": [
+        "INVALID"
+      ],
+      "exact_label": "INVALID",
+      "expected_action": "reject",
+      "matched_rule_ids": [
+        "REJECT_EXACT_REJECT_MATCH"
+      ],
+      "prompt_hashes": [],
+      "raw_output_hashes": [],
+      "row_fingerprint": "5b3fd6024eafd7f1c09f636af2a31d21ab5536d0df7339a8926982c277e31591",
+      "row_id": "resyn-3084-arith-009",
+      "source_experiments": [
+        "exp3137"
+      ],
+      "trusted_exact_authority": true
+    },
+    {
+      "acceptance_authority": true,
+      "answer_extraction_formats": [],
+      "candidate_answers": [
+        "VALID"
+      ],
+      "exact_label": "VALID",
+      "expected_action": "accept",
+      "matched_rule_ids": [
+        "ACCEPT_EXACT_COVERED_CONSISTENT"
+      ],
+      "prompt_hashes": [],
+      "raw_output_hashes": [],
+      "row_fingerprint": "e6ede6d8d6387536736492412ccc95e05eec134c9be4a8a47f88d4ea04c67d8b",
+      "row_id": "resyn-3084-arith-010",
+      "source_experiments": [
+        "exp3137"
+      ],
+      "trusted_exact_authority": true
+    },
+    {
+      "acceptance_authority": true,
+      "answer_extraction_formats": [],
+      "candidate_answers": [
+        "INVALID"
+      ],
+      "exact_label": "INVALID",
+      "expected_action": "reject",
+      "matched_rule_ids": [
+        "REJECT_EXACT_REJECT_MATCH"
+      ],
+      "prompt_hashes": [],
+      "raw_output_hashes": [],
+      "row_fingerprint": "fcafbc3453b30f4691548c2dbcc6c2d780bf16b3053757716942a5baf78f143e",
+      "row_id": "resyn-3084-arith-011",
+      "source_experiments": [
+        "exp3137"
+      ],
+      "trusted_exact_authority": true
+    },
+    {
+      "acceptance_authority": true,
+      "answer_extraction_formats": [],
+      "candidate_answers": [
+        "VALID"
+      ],
+      "exact_label": "VALID",
+      "expected_action": "accept",
+      "matched_rule_ids": [
+        "ACCEPT_EXACT_COVERED_CONSISTENT"
+      ],
+      "prompt_hashes": [],
+      "raw_output_hashes": [],
+      "row_fingerprint": "e95cc68113f868bd3cc14a1bb7bf4b46216b61b3a0eb62f52a8ec891f0cf77d0",
+      "row_id": "resyn-3084-arith-012",
+      "source_experiments": [
+        "exp3137"
+      ],
+      "trusted_exact_authority": true
+    },
+    {
+      "acceptance_authority": true,
+      "answer_extraction_formats": [],
+      "candidate_answers": [
+        "INVALID"
+      ],
+      "exact_label": "INVALID",
+      "expected_action": "reject",
+      "matched_rule_ids": [
+        "REJECT_EXACT_REJECT_MATCH"
+      ],
+      "prompt_hashes": [],
+      "raw_output_hashes": [],
+      "row_fingerprint": "a2264627eb11cfd53dbbc11bdf51f0a39973cff68545f028a5c34bb242604347",
+      "row_id": "resyn-3084-arith-013",
+      "source_experiments": [
+        "exp3137"
+      ],
+      "trusted_exact_authority": true
+    },
+    {
+      "acceptance_authority": true,
+      "answer_extraction_formats": [],
+      "candidate_answers": [
+        "VALID"
+      ],
+      "exact_label": "VALID",
+      "expected_action": "accept",
+      "matched_rule_ids": [
+        "ACCEPT_EXACT_COVERED_CONSISTENT"
+      ],
+      "prompt_hashes": [],
+      "raw_output_hashes": [],
+      "row_fingerprint": "d13e34f9135aebc3df5dabc9f700be6fb90320c8438e6be705e90d1f07a97785",
+      "row_id": "resyn-3084-arith-014",
+      "source_experiments": [
+        "exp3137"
+      ],
+      "trusted_exact_authority": true
+    },
+    {
+      "acceptance_authority": true,
+      "answer_extraction_formats": [],
+      "candidate_answers": [
+        "INVALID"
+      ],
+      "exact_label": "INVALID",
+      "expected_action": "reject",
+      "matched_rule_ids": [
+        "REJECT_EXACT_REJECT_MATCH"
+      ],
+      "prompt_hashes": [],
+      "raw_output_hashes": [],
+      "row_fingerprint": "86622ac3aaff77ef12ecff2e2157867cce55bb819e839a9af750f67074e6a039",
+      "row_id": "resyn-3084-arith-015",
+      "source_experiments": [
+        "exp3137"
+      ],
+      "trusted_exact_authority": true
+    },
+    {
+      "acceptance_authority": true,
+      "answer_extraction_formats": [],
+      "candidate_answers": [
+        "VALID"
+      ],
+      "exact_label": "VALID",
+      "expected_action": "accept",
+      "matched_rule_ids": [
+        "ACCEPT_EXACT_COVERED_CONSISTENT"
+      ],
+      "prompt_hashes": [],
+      "raw_output_hashes": [],
+      "row_fingerprint": "bbed04744062ab6292d7f18a2e11f72e4c184b66276a994afabadc6e61337059",
+      "row_id": "resyn-3084-arith-016",
+      "source_experiments": [
+        "exp3137"
+      ],
+      "trusted_exact_authority": true
+    },
+    {
+      "acceptance_authority": true,
+      "answer_extraction_formats": [],
+      "candidate_answers": [
+        "INVALID"
+      ],
+      "exact_label": "INVALID",
+      "expected_action": "reject",
+      "matched_rule_ids": [
+        "REJECT_EXACT_REJECT_MATCH"
+      ],
+      "prompt_hashes": [],
+      "raw_output_hashes": [],
+      "row_fingerprint": "f1e1b87f65a238e04d9d15845ff0208799015358ebb7642bbdda00fb25c5ed69",
+      "row_id": "resyn-3084-arith-017",
+      "source_experiments": [
+        "exp3137"
+      ],
+      "trusted_exact_authority": true
+    },
+    {
+      "acceptance_authority": true,
+      "answer_extraction_formats": [],
+      "candidate_answers": [
+        "VALID"
+      ],
+      "exact_label": "VALID",
+      "expected_action": "accept",
+      "matched_rule_ids": [
+        "ACCEPT_EXACT_COVERED_CONSISTENT"
+      ],
+      "prompt_hashes": [],
+      "raw_output_hashes": [],
+      "row_fingerprint": "0f175745f76aae94fc9af59c9bb2e89e926b8c496eb0d2bb40af42c36a2e66ad",
+      "row_id": "resyn-3084-arith-018",
+      "source_experiments": [
+        "exp3137"
+      ],
+      "trusted_exact_authority": true
+    },
+    {
+      "acceptance_authority": true,
+      "answer_extraction_formats": [],
+      "candidate_answers": [
+        "INVALID"
+      ],
+      "exact_label": "INVALID",
+      "expected_action": "reject",
+      "matched_rule_ids": [
+        "REJECT_EXACT_REJECT_MATCH"
+      ],
+      "prompt_hashes": [],
+      "raw_output_hashes": [],
+      "row_fingerprint": "99790d0171261db47b899e88cfc9cf3670f4dc839d711a7b9a891ee93cbb3dfd",
+      "row_id": "resyn-3084-arith-019",
+      "source_experiments": [
+        "exp3137"
+      ],
+      "trusted_exact_authority": true
+    },
+    {
+      "acceptance_authority": true,
+      "answer_extraction_formats": [],
+      "candidate_answers": [
+        "VALID"
+      ],
+      "exact_label": "VALID",
+      "expected_action": "accept",
+      "matched_rule_ids": [
+        "ACCEPT_EXACT_COVERED_CONSISTENT"
+      ],
+      "prompt_hashes": [],
+      "raw_output_hashes": [],
+      "row_fingerprint": "a84d9f60dedaa7a96703faa4dbf51a3fcc4e74f6d95822b20a3807dcdd48044f",
+      "row_id": "resyn-3084-arith-020",
+      "source_experiments": [
+        "exp3137"
+      ],
+      "trusted_exact_authority": true
+    },
+    {
+      "acceptance_authority": true,
+      "answer_extraction_formats": [],
+      "candidate_answers": [
+        "INVALID"
+      ],
+      "exact_label": "INVALID",
+      "expected_action": "reject",
+      "matched_rule_ids": [
+        "REJECT_EXACT_REJECT_MATCH"
+      ],
+      "prompt_hashes": [],
+      "raw_output_hashes": [],
+      "row_fingerprint": "a86605d79f3b804224a35404112df752ac627f175e293ce3163c74f642ed9526",
+      "row_id": "resyn-3084-arith-021",
+      "source_experiments": [
+        "exp3137"
+      ],
+      "trusted_exact_authority": true
+    },
+    {
+      "acceptance_authority": true,
+      "answer_extraction_formats": [],
+      "candidate_answers": [
+        "VALID"
+      ],
+      "exact_label": "VALID",
+      "expected_action": "accept",
+      "matched_rule_ids": [
+        "ACCEPT_EXACT_COVERED_CONSISTENT"
+      ],
+      "prompt_hashes": [],
+      "raw_output_hashes": [],
+      "row_fingerprint": "0a36d9d8c89ea6e91acc65064cd8126ba8d81a5559ed970e57538a9e81021cb6",
+      "row_id": "resyn-3084-arith-022",
+      "source_experiments": [
+        "exp3137"
+      ],
+      "trusted_exact_authority": true
+    },
+    {
+      "acceptance_authority": true,
+      "answer_extraction_formats": [],
+      "candidate_answers": [
+        "INVALID"
+      ],
+      "exact_label": "INVALID",
+      "expected_action": "reject",
+      "matched_rule_ids": [
+        "REJECT_EXACT_REJECT_MATCH"
+      ],
+      "prompt_hashes": [],
+      "raw_output_hashes": [],
+      "row_fingerprint": "58ece50e8c25a0669c80ab9d447777c6d37aaa89e6fbc4702b10535da33bafec",
+      "row_id": "resyn-3084-arith-023",
+      "source_experiments": [
+        "exp3137"
+      ],
+      "trusted_exact_authority": true
+    },
+    {
+      "acceptance_authority": true,
+      "answer_extraction_formats": [
+        "repairability_token"
+      ],
+      "candidate_answers": [
+        "REPAIRABLE"
+      ],
+      "exact_label": "REPAIRABLE",
+      "expected_action": "reject",
+      "matched_rule_ids": [
+        "REJECT_EXACT_REJECT_MATCH"
+      ],
+      "prompt_hashes": [
+        "aa50de07cb7f15bcf383976384d38c0e346f2ddcb8067de1c696422d99ec9ece",
+        "c638d4e70174b8d6290698e9ecbf98e48071ce5bb7778b97a0c714a816c97a24"
+      ],
+      "raw_output_hashes": [
+        "1deed3ec0a9281a8d4950bfd4d27b62f56db8da0719064bd6804c24ea24708b6",
+        "5e097e0a99c1080451c91ffdc1407c901d27791157f8320dfd2841b3aa3a90a5"
+      ],
+      "row_fingerprint": "ba672847ea388c5b8005d1a13d3d41a7f1527da2b169a641c70c0811ab522db0",
+      "row_id": "resyn-3084-repair-json-000",
+      "source_experiments": [
+        "exp3136",
+        "exp3137"
+      ],
+      "trusted_exact_authority": true
+    },
+    {
+      "acceptance_authority": true,
+      "answer_extraction_formats": [],
+      "candidate_answers": [
+        "REPAIRABLE"
+      ],
+      "exact_label": "REPAIRABLE",
+      "expected_action": "reject",
+      "matched_rule_ids": [
+        "REJECT_EXACT_REJECT_MATCH"
+      ],
+      "prompt_hashes": [],
+      "raw_output_hashes": [],
+      "row_fingerprint": "d5233fbf211b6ee7174fda763cea525e1b5a8e17a97d9839f43d5f5dda2246c6",
+      "row_id": "resyn-3084-repair-json-003",
+      "source_experiments": [
+        "exp3137"
+      ],
+      "trusted_exact_authority": true
+    },
+    {
+      "acceptance_authority": true,
+      "answer_extraction_formats": [],
+      "candidate_answers": [
+        "REPAIRABLE"
+      ],
+      "exact_label": "REPAIRABLE",
+      "expected_action": "reject",
+      "matched_rule_ids": [
+        "REJECT_EXACT_REJECT_MATCH"
+      ],
+      "prompt_hashes": [],
+      "raw_output_hashes": [],
+      "row_fingerprint": "453ec63450be84ebe0b5767437ad797112fe0cb2f105a9ba3e4f70e882918053",
+      "row_id": "resyn-3084-repair-json-006",
+      "source_experiments": [
+        "exp3137"
+      ],
+      "trusted_exact_authority": true
+    },
+    {
+      "acceptance_authority": true,
+      "answer_extraction_formats": [],
+      "candidate_answers": [
+        "REPAIRABLE"
+      ],
+      "exact_label": "REPAIRABLE",
+      "expected_action": "reject",
+      "matched_rule_ids": [
+        "REJECT_EXACT_REJECT_MATCH"
+      ],
+      "prompt_hashes": [],
+      "raw_output_hashes": [],
+      "row_fingerprint": "ed8af63bd6681798ab597f63faf89c0976e328573f86318485395f0c7036c09f",
+      "row_id": "resyn-3084-repair-json-009",
+      "source_experiments": [
+        "exp3137"
+      ],
+      "trusted_exact_authority": true
+    },
+    {
+      "acceptance_authority": true,
+      "answer_extraction_formats": [],
+      "candidate_answers": [
+        "REPAIRABLE"
+      ],
+      "exact_label": "REPAIRABLE",
+      "expected_action": "reject",
+      "matched_rule_ids": [
+        "REJECT_EXACT_REJECT_MATCH"
+      ],
+      "prompt_hashes": [],
+      "raw_output_hashes": [],
+      "row_fingerprint": "926c6a41e5b1d3f9cfbc4c9e29a9d17e92b44775d3ad6401bb8cb3e1b4d1a5a0",
+      "row_id": "resyn-3084-repair-json-012",
+      "source_experiments": [
+        "exp3137"
+      ],
+      "trusted_exact_authority": true
+    },
+    {
+      "acceptance_authority": true,
+      "answer_extraction_formats": [],
+      "candidate_answers": [
+        "REPAIRABLE"
+      ],
+      "exact_label": "REPAIRABLE",
+      "expected_action": "reject",
+      "matched_rule_ids": [
+        "REJECT_EXACT_REJECT_MATCH"
+      ],
+      "prompt_hashes": [],
+      "raw_output_hashes": [],
+      "row_fingerprint": "c2f4ae37a8dcddd63ede4fb8aa1b45cafc7999108b3545af475311433a737f37",
+      "row_id": "resyn-3084-repair-json-015",
+      "source_experiments": [
+        "exp3137"
+      ],
+      "trusted_exact_authority": true
+    },
+    {
+      "acceptance_authority": true,
+      "answer_extraction_formats": [],
+      "candidate_answers": [
+        "REPAIRABLE"
+      ],
+      "exact_label": "REPAIRABLE",
+      "expected_action": "reject",
+      "matched_rule_ids": [
+        "REJECT_EXACT_REJECT_MATCH"
+      ],
+      "prompt_hashes": [],
+      "raw_output_hashes": [],
+      "row_fingerprint": "0926ced27763d694b350df51a116b07b52c502cccfb9cc7d9e2ba3e0b769dfc5",
+      "row_id": "resyn-3084-repair-json-018",
+      "source_experiments": [
+        "exp3137"
+      ],
+      "trusted_exact_authority": true
+    },
+    {
+      "acceptance_authority": true,
+      "answer_extraction_formats": [],
+      "candidate_answers": [
+        "REPAIRABLE"
+      ],
+      "exact_label": "REPAIRABLE",
+      "expected_action": "reject",
+      "matched_rule_ids": [
+        "REJECT_EXACT_REJECT_MATCH"
+      ],
+      "prompt_hashes": [],
+      "raw_output_hashes": [],
+      "row_fingerprint": "30882ad18867c3cf8d8f4857326d1b805fcc229a66d386ac4c16fa7a91b91864",
+      "row_id": "resyn-3084-repair-json-021",
+      "source_experiments": [
+        "exp3137"
+      ],
+      "trusted_exact_authority": true
+    },
+    {
+      "acceptance_authority": true,
+      "answer_extraction_formats": [],
+      "candidate_answers": [
+        "REPAIRABLE"
+      ],
+      "exact_label": "REPAIRABLE",
+      "expected_action": "reject",
+      "matched_rule_ids": [
+        "REJECT_EXACT_REJECT_MATCH"
+      ],
+      "prompt_hashes": [],
+      "raw_output_hashes": [],
+      "row_fingerprint": "493e1e1bf189135d3c8260a0e56d52750795b57ba9b6faba613c5a74c2ce74a0",
+      "row_id": "resyn-3084-repair-py-002",
+      "source_experiments": [
+        "exp3137"
+      ],
+      "trusted_exact_authority": true
+    },
+    {
+      "acceptance_authority": true,
+      "answer_extraction_formats": [],
+      "candidate_answers": [
+        "REPAIRABLE"
+      ],
+      "exact_label": "REPAIRABLE",
+      "expected_action": "reject",
+      "matched_rule_ids": [
+        "REJECT_EXACT_REJECT_MATCH"
+      ],
+      "prompt_hashes": [],
+      "raw_output_hashes": [],
+      "row_fingerprint": "9daaebe0c5de74c240712bdb411fd65f4fd016d34eb101e5d6879b116be6b0b5",
+      "row_id": "resyn-3084-repair-py-005",
+      "source_experiments": [
+        "exp3137"
+      ],
+      "trusted_exact_authority": true
+    },
+    {
+      "acceptance_authority": true,
+      "answer_extraction_formats": [],
+      "candidate_answers": [
+        "REPAIRABLE"
+      ],
+      "exact_label": "REPAIRABLE",
+      "expected_action": "reject",
+      "matched_rule_ids": [
+        "REJECT_EXACT_REJECT_MATCH"
+      ],
+      "prompt_hashes": [],
+      "raw_output_hashes": [],
+      "row_fingerprint": "29c196c63becb0f78daecbbfbad98943fcb422433de8431d92b5d3b70b88509c",
+      "row_id": "resyn-3084-repair-py-008",
+      "source_experiments": [
+        "exp3137"
+      ],
+      "trusted_exact_authority": true
+    },
+    {
+      "acceptance_authority": true,
+      "answer_extraction_formats": [],
+      "candidate_answers": [
+        "REPAIRABLE"
+      ],
+      "exact_label": "REPAIRABLE",
+      "expected_action": "reject",
+      "matched_rule_ids": [
+        "REJECT_EXACT_REJECT_MATCH"
+      ],
+      "prompt_hashes": [],
+      "raw_output_hashes": [],
+      "row_fingerprint": "64506bec72b465b93576d563ae9abacded33ce787d1daaab1f2db6dc7445a295",
+      "row_id": "resyn-3084-repair-py-011",
+      "source_experiments": [
+        "exp3137"
+      ],
+      "trusted_exact_authority": true
+    },
+    {
+      "acceptance_authority": true,
+      "answer_extraction_formats": [],
+      "candidate_answers": [
+        "REPAIRABLE"
+      ],
+      "exact_label": "REPAIRABLE",
+      "expected_action": "reject",
+      "matched_rule_ids": [
+        "REJECT_EXACT_REJECT_MATCH"
+      ],
+      "prompt_hashes": [],
+      "raw_output_hashes": [],
+      "row_fingerprint": "21b756dfc16060386846c1908183b1276fa6477f8ac4f18e36a99f8d0f42d0bf",
+      "row_id": "resyn-3084-repair-py-014",
+      "source_experiments": [
+        "exp3137"
+      ],
+      "trusted_exact_authority": true
+    },
+    {
+      "acceptance_authority": true,
+      "answer_extraction_formats": [],
+      "candidate_answers": [
+        "REPAIRABLE"
+      ],
+      "exact_label": "REPAIRABLE",
+      "expected_action": "reject",
+      "matched_rule_ids": [
+        "REJECT_EXACT_REJECT_MATCH"
+      ],
+      "prompt_hashes": [],
+      "raw_output_hashes": [],
+      "row_fingerprint": "903394d711910b9a43abd38cd9ce7bf370a7a8389df051ce87bbf6ea942b32a3",
+      "row_id": "resyn-3084-repair-py-017",
+      "source_experiments": [
+        "exp3137"
+      ],
+      "trusted_exact_authority": true
+    },
+    {
+      "acceptance_authority": true,
+      "answer_extraction_formats": [],
+      "candidate_answers": [
+        "REPAIRABLE"
+      ],
+      "exact_label": "REPAIRABLE",
+      "expected_action": "reject",
+      "matched_rule_ids": [
+        "REJECT_EXACT_REJECT_MATCH"
+      ],
+      "prompt_hashes": [],
+      "raw_output_hashes": [],
+      "row_fingerprint": "5c6a4c5ca17ea83139747057a5f0bbcb4913fa173c220d648c31383583c1ed00",
+      "row_id": "resyn-3084-repair-py-020",
+      "source_experiments": [
+        "exp3137"
+      ],
+      "trusted_exact_authority": true
+    },
+    {
+      "acceptance_authority": true,
+      "answer_extraction_formats": [],
+      "candidate_answers": [
+        "REPAIRABLE"
+      ],
+      "exact_label": "REPAIRABLE",
+      "expected_action": "reject",
+      "matched_rule_ids": [
+        "REJECT_EXACT_REJECT_MATCH"
+      ],
+      "prompt_hashes": [],
+      "raw_output_hashes": [],
+      "row_fingerprint": "e7ead0c8cd56dd3e73c342dee608289f9114d0fdf5f027c5a485928e932f4644",
+      "row_id": "resyn-3084-repair-py-023",
+      "source_experiments": [
+        "exp3137"
+      ],
+      "trusted_exact_authority": true
+    },
+    {
+      "acceptance_authority": true,
+      "answer_extraction_formats": [],
+      "candidate_answers": [
+        "REPAIRABLE"
+      ],
+      "exact_label": "REPAIRABLE",
+      "expected_action": "reject",
+      "matched_rule_ids": [
+        "REJECT_EXACT_REJECT_MATCH"
+      ],
+      "prompt_hashes": [],
+      "raw_output_hashes": [],
+      "row_fingerprint": "dcb2948db9d2a5c6d224b58806f90a700ed56f49c6c3eeb6be917996f10ff571",
+      "row_id": "resyn-3084-repair-smt-001",
+      "source_experiments": [
+        "exp3137"
+      ],
+      "trusted_exact_authority": true
+    },
+    {
+      "acceptance_authority": true,
+      "answer_extraction_formats": [],
+      "candidate_answers": [
+        "REPAIRABLE"
+      ],
+      "exact_label": "REPAIRABLE",
+      "expected_action": "reject",
+      "matched_rule_ids": [
+        "REJECT_EXACT_REJECT_MATCH"
+      ],
+      "prompt_hashes": [],
+      "raw_output_hashes": [],
+      "row_fingerprint": "28c985cdfbbcfdf9ea04c79b28457306de420230e948192cd0fcb9ba76a659ab",
+      "row_id": "resyn-3084-repair-smt-004",
+      "source_experiments": [
+        "exp3137"
+      ],
+      "trusted_exact_authority": true
+    },
+    {
+      "acceptance_authority": true,
+      "answer_extraction_formats": [],
+      "candidate_answers": [
+        "REPAIRABLE"
+      ],
+      "exact_label": "REPAIRABLE",
+      "expected_action": "reject",
+      "matched_rule_ids": [
+        "REJECT_EXACT_REJECT_MATCH"
+      ],
+      "prompt_hashes": [],
+      "raw_output_hashes": [],
+      "row_fingerprint": "0c757b493fd7de337749553cf34db9adf6c04084340aa4e218d192a951a8ec78",
+      "row_id": "resyn-3084-repair-smt-007",
+      "source_experiments": [
+        "exp3137"
+      ],
+      "trusted_exact_authority": true
+    },
+    {
+      "acceptance_authority": true,
+      "answer_extraction_formats": [],
+      "candidate_answers": [
+        "REPAIRABLE"
+      ],
+      "exact_label": "REPAIRABLE",
+      "expected_action": "reject",
+      "matched_rule_ids": [
+        "REJECT_EXACT_REJECT_MATCH"
+      ],
+      "prompt_hashes": [],
+      "raw_output_hashes": [],
+      "row_fingerprint": "af5477ecc472ebb5b3c4087f94089b84f96d625d848548a99a035752dc2e1bb6",
+      "row_id": "resyn-3084-repair-smt-010",
+      "source_experiments": [
+        "exp3137"
+      ],
+      "trusted_exact_authority": true
+    },
+    {
+      "acceptance_authority": true,
+      "answer_extraction_formats": [],
+      "candidate_answers": [
+        "REPAIRABLE"
+      ],
+      "exact_label": "REPAIRABLE",
+      "expected_action": "reject",
+      "matched_rule_ids": [
+        "REJECT_EXACT_REJECT_MATCH"
+      ],
+      "prompt_hashes": [],
+      "raw_output_hashes": [],
+      "row_fingerprint": "c036f5ba091af72ff3f5389bf1b74a2a1c71b6143e0bf6e92a79a6d2fd0d454a",
+      "row_id": "resyn-3084-repair-smt-013",
+      "source_experiments": [
+        "exp3137"
+      ],
+      "trusted_exact_authority": true
+    },
+    {
+      "acceptance_authority": true,
+      "answer_extraction_formats": [],
+      "candidate_answers": [
+        "REPAIRABLE"
+      ],
+      "exact_label": "REPAIRABLE",
+      "expected_action": "reject",
+      "matched_rule_ids": [
+        "REJECT_EXACT_REJECT_MATCH"
+      ],
+      "prompt_hashes": [],
+      "raw_output_hashes": [],
+      "row_fingerprint": "d0480660fe847455596af5c623d72acd125b22198fe453d5dfd5cf1580a6c8ae",
+      "row_id": "resyn-3084-repair-smt-016",
+      "source_experiments": [
+        "exp3137"
+      ],
+      "trusted_exact_authority": true
+    },
+    {
+      "acceptance_authority": true,
+      "answer_extraction_formats": [],
+      "candidate_answers": [
+        "REPAIRABLE"
+      ],
+      "exact_label": "REPAIRABLE",
+      "expected_action": "reject",
+      "matched_rule_ids": [
+        "REJECT_EXACT_REJECT_MATCH"
+      ],
+      "prompt_hashes": [],
+      "raw_output_hashes": [],
+      "row_fingerprint": "f6fdc3c9ad84beedb8ca689a8c0cd99329f249befe15c4f4c0a5245ab3901227",
+      "row_id": "resyn-3084-repair-smt-019",
+      "source_experiments": [
+        "exp3137"
+      ],
+      "trusted_exact_authority": true
+    },
+    {
+      "acceptance_authority": true,
+      "answer_extraction_formats": [],
+      "candidate_answers": [
+        "REPAIRABLE"
+      ],
+      "exact_label": "REPAIRABLE",
+      "expected_action": "reject",
+      "matched_rule_ids": [
+        "REJECT_EXACT_REJECT_MATCH"
+      ],
+      "prompt_hashes": [],
+      "raw_output_hashes": [],
+      "row_fingerprint": "c034e6dc53c13eccf51946946f361db918007504595eb8a092e38c7d3b86200e",
+      "row_id": "resyn-3084-repair-smt-022",
+      "source_experiments": [
+        "exp3137"
+      ],
+      "trusted_exact_authority": true
+    },
+    {
+      "acceptance_authority": true,
+      "answer_extraction_formats": [
+        "sat_token"
+      ],
+      "candidate_answers": [
+        "UNSAT",
+        "VALID"
+      ],
+      "exact_label": "UNSAT",
+      "expected_action": "reject",
+      "matched_rule_ids": [
+        "ABSTAIN_KNOWN_FALSE_ACCEPT_REGRESSION",
+        "REJECT_EXACT_REJECT_MATCH"
+      ],
+      "prompt_hashes": [
+        "157c2e94f820f57a64ff6476e3276b339237382993700a6545ac09d003367687",
+        "eb3a348301c25e73776b733eb5014423bfae60ea16b977c4425d579b339a6ad9"
+      ],
+      "raw_output_hashes": [
+        "01a25c87e8a7d939bf8a17dedcb42b55bd2ee3ad88bff43b45383a983e258faa",
+        "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      ],
+      "row_fingerprint": "6dc9ec4d3ef1a96ce4fe5f9565ddb5a4dd9087a024b1bbf4d0619c3df96e48d8",
+      "row_id": "resyn-3084-smt-000",
+      "source_experiments": [
+        "exp3136",
+        "exp3137",
+        "exp3138"
+      ],
+      "trusted_exact_authority": true
+    },
+    {
+      "acceptance_authority": true,
+      "answer_extraction_formats": [],
+      "candidate_answers": [
+        "SAT"
+      ],
+      "exact_label": "SAT",
+      "expected_action": "accept",
+      "matched_rule_ids": [
+        "ACCEPT_EXACT_COVERED_CONSISTENT"
+      ],
+      "prompt_hashes": [],
+      "raw_output_hashes": [],
+      "row_fingerprint": "74a8059ef81fcc94c53177923b3aa45f63ce98586a3e2b61540d8982261d6525",
+      "row_id": "resyn-3084-smt-001",
+      "source_experiments": [
+        "exp3137"
+      ],
+      "trusted_exact_authority": true
+    },
+    {
+      "acceptance_authority": true,
+      "answer_extraction_formats": [],
+      "candidate_answers": [
+        "UNSAT"
+      ],
+      "exact_label": "UNSAT",
+      "expected_action": "reject",
+      "matched_rule_ids": [
+        "REJECT_EXACT_REJECT_MATCH"
+      ],
+      "prompt_hashes": [],
+      "raw_output_hashes": [],
+      "row_fingerprint": "e5f1c67bd54d62518454d077c7042bede69d2618eb6dfb9f8ac80c92e0e96115",
+      "row_id": "resyn-3084-smt-002",
+      "source_experiments": [
+        "exp3137"
+      ],
+      "trusted_exact_authority": true
+    },
+    {
+      "acceptance_authority": true,
+      "answer_extraction_formats": [],
+      "candidate_answers": [
+        "SAT"
+      ],
+      "exact_label": "SAT",
+      "expected_action": "accept",
+      "matched_rule_ids": [
+        "ACCEPT_EXACT_COVERED_CONSISTENT"
+      ],
+      "prompt_hashes": [],
+      "raw_output_hashes": [],
+      "row_fingerprint": "63f16253bd832570e4f24924d3ef6f5efdbcaec159167dd63bdb154945e44d54",
+      "row_id": "resyn-3084-smt-003",
+      "source_experiments": [
+        "exp3137"
+      ],
+      "trusted_exact_authority": true
+    },
+    {
+      "acceptance_authority": true,
+      "answer_extraction_formats": [],
+      "candidate_answers": [
+        "UNSAT"
+      ],
+      "exact_label": "UNSAT",
+      "expected_action": "reject",
+      "matched_rule_ids": [
+        "REJECT_EXACT_REJECT_MATCH"
+      ],
+      "prompt_hashes": [],
+      "raw_output_hashes": [],
+      "row_fingerprint": "c800b6a6d19e811a28beb85c84ed36c05b06d2ffab2ae679924307502d7ca3c3",
+      "row_id": "resyn-3084-smt-004",
+      "source_experiments": [
+        "exp3137"
+      ],
+      "trusted_exact_authority": true
+    },
+    {
+      "acceptance_authority": true,
+      "answer_extraction_formats": [],
+      "candidate_answers": [
+        "SAT"
+      ],
+      "exact_label": "SAT",
+      "expected_action": "accept",
+      "matched_rule_ids": [
+        "ACCEPT_EXACT_COVERED_CONSISTENT"
+      ],
+      "prompt_hashes": [],
+      "raw_output_hashes": [],
+      "row_fingerprint": "1b3c99e15c3b06361b53b888761cc6f65f634500a821959504bcc86cf35db191",
+      "row_id": "resyn-3084-smt-005",
+      "source_experiments": [
+        "exp3137"
+      ],
+      "trusted_exact_authority": true
+    },
+    {
+      "acceptance_authority": true,
+      "answer_extraction_formats": [],
+      "candidate_answers": [
+        "UNSAT"
+      ],
+      "exact_label": "UNSAT",
+      "expected_action": "reject",
+      "matched_rule_ids": [
+        "REJECT_EXACT_REJECT_MATCH"
+      ],
+      "prompt_hashes": [],
+      "raw_output_hashes": [],
+      "row_fingerprint": "9f9a556dd925fe0125009961dec7b1195528fbad1e9dbe116b4e45a78342e33e",
+      "row_id": "resyn-3084-smt-006",
+      "source_experiments": [
+        "exp3137"
+      ],
+      "trusted_exact_authority": true
+    },
+    {
+      "acceptance_authority": true,
+      "answer_extraction_formats": [],
+      "candidate_answers": [
+        "SAT"
+      ],
+      "exact_label": "SAT",
+      "expected_action": "accept",
+      "matched_rule_ids": [
+        "ACCEPT_EXACT_COVERED_CONSISTENT"
+      ],
+      "prompt_hashes": [],
+      "raw_output_hashes": [],
+      "row_fingerprint": "d6eef89ecb83c667e756fdba26e202dce4986550ee61da05b2ce65784f034be5",
+      "row_id": "resyn-3084-smt-007",
+      "source_experiments": [
+        "exp3137"
+      ],
+      "trusted_exact_authority": true
+    },
+    {
+      "acceptance_authority": true,
+      "answer_extraction_formats": [],
+      "candidate_answers": [
+        "UNSAT"
+      ],
+      "exact_label": "UNSAT",
+      "expected_action": "reject",
+      "matched_rule_ids": [
+        "REJECT_EXACT_REJECT_MATCH"
+      ],
+      "prompt_hashes": [],
+      "raw_output_hashes": [],
+      "row_fingerprint": "1d8ce9942e2df455dea2690a944d1a71f4b8b24d2fb64e9c4f08d4962d851c3a",
+      "row_id": "resyn-3084-smt-008",
+      "source_experiments": [
+        "exp3137"
+      ],
+      "trusted_exact_authority": true
+    },
+    {
+      "acceptance_authority": true,
+      "answer_extraction_formats": [],
+      "candidate_answers": [
+        "SAT"
+      ],
+      "exact_label": "SAT",
+      "expected_action": "accept",
+      "matched_rule_ids": [
+        "ACCEPT_EXACT_COVERED_CONSISTENT"
+      ],
+      "prompt_hashes": [],
+      "raw_output_hashes": [],
+      "row_fingerprint": "44248658f4b6ebeb697001a928073dd5d1667fd987225d600ed4e87d1cccc55e",
+      "row_id": "resyn-3084-smt-009",
+      "source_experiments": [
+        "exp3137"
+      ],
+      "trusted_exact_authority": true
+    },
+    {
+      "acceptance_authority": true,
+      "answer_extraction_formats": [],
+      "candidate_answers": [
+        "UNSAT"
+      ],
+      "exact_label": "UNSAT",
+      "expected_action": "reject",
+      "matched_rule_ids": [
+        "REJECT_EXACT_REJECT_MATCH"
+      ],
+      "prompt_hashes": [],
+      "raw_output_hashes": [],
+      "row_fingerprint": "50a1e7e5e4b85131410d46a5412becb21b6a21a2ea8ac2c230038dbe13f717f5",
+      "row_id": "resyn-3084-smt-010",
+      "source_experiments": [
+        "exp3137"
+      ],
+      "trusted_exact_authority": true
+    },
+    {
+      "acceptance_authority": true,
+      "answer_extraction_formats": [],
+      "candidate_answers": [
+        "SAT"
+      ],
+      "exact_label": "SAT",
+      "expected_action": "accept",
+      "matched_rule_ids": [
+        "ACCEPT_EXACT_COVERED_CONSISTENT"
+      ],
+      "prompt_hashes": [],
+      "raw_output_hashes": [],
+      "row_fingerprint": "5590587746d27e5639cf20b324204b69e03d78564ab0f794fb896a336ceca74e",
+      "row_id": "resyn-3084-smt-011",
+      "source_experiments": [
+        "exp3137"
+      ],
+      "trusted_exact_authority": true
+    },
+    {
+      "acceptance_authority": true,
+      "answer_extraction_formats": [],
+      "candidate_answers": [
+        "UNSAT"
+      ],
+      "exact_label": "UNSAT",
+      "expected_action": "reject",
+      "matched_rule_ids": [
+        "REJECT_EXACT_REJECT_MATCH"
+      ],
+      "prompt_hashes": [],
+      "raw_output_hashes": [],
+      "row_fingerprint": "e3b38ca0a6b979f0b18239b199ff78110457ae88c363d804a19ac881333a73a4",
+      "row_id": "resyn-3084-smt-012",
+      "source_experiments": [
+        "exp3137"
+      ],
+      "trusted_exact_authority": true
+    },
+    {
+      "acceptance_authority": true,
+      "answer_extraction_formats": [],
+      "candidate_answers": [
+        "SAT"
+      ],
+      "exact_label": "SAT",
+      "expected_action": "accept",
+      "matched_rule_ids": [
+        "ACCEPT_EXACT_COVERED_CONSISTENT"
+      ],
+      "prompt_hashes": [],
+      "raw_output_hashes": [],
+      "row_fingerprint": "1407ef7f2ec8ca3e1b79aae1a14a4bcb1a6da44dd50403877711a9fd1b1bdd5e",
+      "row_id": "resyn-3084-smt-013",
+      "source_experiments": [
+        "exp3137"
+      ],
+      "trusted_exact_authority": true
+    },
+    {
+      "acceptance_authority": true,
+      "answer_extraction_formats": [],
+      "candidate_answers": [
+        "UNSAT"
+      ],
+      "exact_label": "UNSAT",
+      "expected_action": "reject",
+      "matched_rule_ids": [
+        "REJECT_EXACT_REJECT_MATCH"
+      ],
+      "prompt_hashes": [],
+      "raw_output_hashes": [],
+      "row_fingerprint": "da0162a36e5b7506dabc8df88d71589908e3f266f247d499ba6a39d87d60b890",
+      "row_id": "resyn-3084-smt-014",
+      "source_experiments": [
+        "exp3137"
+      ],
+      "trusted_exact_authority": true
+    },
+    {
+      "acceptance_authority": true,
+      "answer_extraction_formats": [],
+      "candidate_answers": [
+        "SAT"
+      ],
+      "exact_label": "SAT",
+      "expected_action": "accept",
+      "matched_rule_ids": [
+        "ACCEPT_EXACT_COVERED_CONSISTENT"
+      ],
+      "prompt_hashes": [],
+      "raw_output_hashes": [],
+      "row_fingerprint": "15098c38c5d466bd2c1a9e8418c593f510322bb234255d9b15652dffc2881f71",
+      "row_id": "resyn-3084-smt-015",
+      "source_experiments": [
+        "exp3137"
+      ],
+      "trusted_exact_authority": true
+    },
+    {
+      "acceptance_authority": true,
+      "answer_extraction_formats": [],
+      "candidate_answers": [
+        "UNSAT"
+      ],
+      "exact_label": "UNSAT",
+      "expected_action": "reject",
+      "matched_rule_ids": [
+        "REJECT_EXACT_REJECT_MATCH"
+      ],
+      "prompt_hashes": [],
+      "raw_output_hashes": [],
+      "row_fingerprint": "d00a68daddfdae9f996cf33b9e846fcf82fdba631441223f5972f35f5ca3331d",
+      "row_id": "resyn-3084-smt-016",
+      "source_experiments": [
+        "exp3137"
+      ],
+      "trusted_exact_authority": true
+    },
+    {
+      "acceptance_authority": true,
+      "answer_extraction_formats": [],
+      "candidate_answers": [
+        "SAT"
+      ],
+      "exact_label": "SAT",
+      "expected_action": "accept",
+      "matched_rule_ids": [
+        "ACCEPT_EXACT_COVERED_CONSISTENT"
+      ],
+      "prompt_hashes": [],
+      "raw_output_hashes": [],
+      "row_fingerprint": "64350eaba62dba938067dc93a5220bd4f0d8f0eaed92be5d5460a1ca99110019",
+      "row_id": "resyn-3084-smt-017",
+      "source_experiments": [
+        "exp3137"
+      ],
+      "trusted_exact_authority": true
+    },
+    {
+      "acceptance_authority": true,
+      "answer_extraction_formats": [],
+      "candidate_answers": [
+        "UNSAT"
+      ],
+      "exact_label": "UNSAT",
+      "expected_action": "reject",
+      "matched_rule_ids": [
+        "REJECT_EXACT_REJECT_MATCH"
+      ],
+      "prompt_hashes": [],
+      "raw_output_hashes": [],
+      "row_fingerprint": "05ba1a3db2d403888743f101112d61f86b9cbec35f3709e4c0fb85489f373f48",
+      "row_id": "resyn-3084-smt-018",
+      "source_experiments": [
+        "exp3137"
+      ],
+      "trusted_exact_authority": true
+    },
+    {
+      "acceptance_authority": true,
+      "answer_extraction_formats": [],
+      "candidate_answers": [
+        "SAT"
+      ],
+      "exact_label": "SAT",
+      "expected_action": "accept",
+      "matched_rule_ids": [
+        "ACCEPT_EXACT_COVERED_CONSISTENT"
+      ],
+      "prompt_hashes": [],
+      "raw_output_hashes": [],
+      "row_fingerprint": "68237b27758334c01051dd1fa6190b0c3054433aa30ce6b738ecd76c8d5dfaec",
+      "row_id": "resyn-3084-smt-019",
+      "source_experiments": [
+        "exp3137"
+      ],
+      "trusted_exact_authority": true
+    },
+    {
+      "acceptance_authority": true,
+      "answer_extraction_formats": [],
+      "candidate_answers": [
+        "UNSAT"
+      ],
+      "exact_label": "UNSAT",
+      "expected_action": "reject",
+      "matched_rule_ids": [
+        "REJECT_EXACT_REJECT_MATCH"
+      ],
+      "prompt_hashes": [],
+      "raw_output_hashes": [],
+      "row_fingerprint": "781f6e7bc66f85393af9c824d64da2855445b0b583c88859118a0cf9e46c3d50",
+      "row_id": "resyn-3084-smt-020",
+      "source_experiments": [
+        "exp3137"
+      ],
+      "trusted_exact_authority": true
+    },
+    {
+      "acceptance_authority": true,
+      "answer_extraction_formats": [],
+      "candidate_answers": [
+        "SAT"
+      ],
+      "exact_label": "SAT",
+      "expected_action": "accept",
+      "matched_rule_ids": [
+        "ACCEPT_EXACT_COVERED_CONSISTENT"
+      ],
+      "prompt_hashes": [],
+      "raw_output_hashes": [],
+      "row_fingerprint": "85a25ab2c2560e1e86159b5f40d57212eeb26e12e4698095fa464659de1e61bb",
+      "row_id": "resyn-3084-smt-021",
+      "source_experiments": [
+        "exp3137"
+      ],
+      "trusted_exact_authority": true
+    },
+    {
+      "acceptance_authority": true,
+      "answer_extraction_formats": [],
+      "candidate_answers": [
+        "UNSAT"
+      ],
+      "exact_label": "UNSAT",
+      "expected_action": "reject",
+      "matched_rule_ids": [
+        "REJECT_EXACT_REJECT_MATCH"
+      ],
+      "prompt_hashes": [],
+      "raw_output_hashes": [],
+      "row_fingerprint": "f245d40a9f462ca0d0cfc28cdaa2644f56cbd6e0899a6b3b86b57885e28d9e62",
+      "row_id": "resyn-3084-smt-022",
+      "source_experiments": [
+        "exp3137"
+      ],
+      "trusted_exact_authority": true
+    },
+    {
+      "acceptance_authority": true,
+      "answer_extraction_formats": [],
+      "candidate_answers": [
+        "SAT"
+      ],
+      "exact_label": "SAT",
+      "expected_action": "accept",
+      "matched_rule_ids": [
+        "ACCEPT_EXACT_COVERED_CONSISTENT"
+      ],
+      "prompt_hashes": [],
+      "raw_output_hashes": [],
+      "row_fingerprint": "3e0b7e31caff1557176d4fbf90f851a3f733c9664378b963dc632e8d3e5e1c40",
+      "row_id": "resyn-3084-smt-023",
+      "source_experiments": [
+        "exp3137"
+      ],
+      "trusted_exact_authority": true
+    }
+  ],
+  "verifier_invariance_token_suspicion_audit_ready": true
+}

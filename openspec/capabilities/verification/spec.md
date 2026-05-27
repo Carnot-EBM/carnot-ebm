@@ -2295,6 +2295,76 @@ artifact with `preflight_passed=false` and an actionable `blocked_reason`.
 |---|---|---|
 | REQ-VERIFY-3165 | Implemented (`python/carnot/verify/live_sota_authenticity_replay_v2.py`) | Implemented (`tests/python/test_experiment_3165_live_sota_authenticity_replay_v2.py`) |
 
+### REQ-VERIFY-3166: Verifier Invariance Token Suspicion Audit V1
+
+The repository shall provide an Exp 3166 controlled-invariance and
+token-suspicion audit builder that writes
+`results/experiment_3166_verifier_invariance_token_suspicion_audit_v1.json`
+from checked-in artifacts only. The builder MUST consume the Exp 3136
+false-accept autopsy, Exp 3137 exact-safe accept/abstain/reject contract, Exp
+3138 canonical grounding pilot, Exp 3150 adversarial verifier-evidence
+corrigendum, Exp 3151 live-inference authenticity preflight, and Exp 3165 live
+SOTA authenticity replay. It MUST NOT run fresh live model inference, execute
+verifiers, execute repair generation, modify `scripts/research_conductor.py`,
+or push commits.
+
+The audit shall collect trusted exact rows from Exp 3136, Exp 3137, and Exp
+3138, plus any transcript hashes present in Exp 3165. It shall define
+controlled-invariance checks for Force, Remove, shuffled-trace, answer-only,
+and trace-only controls. Each control SHALL route transformed rows back to
+exact authority checks and SHALL NOT authorize acceptance by itself. The audit
+shall distinguish diagnostics that are computable from existing artifacts from
+diagnostics blocked on future live token/logprob telemetry.
+
+The audit shall define token-level and first-token suspicion fields for
+triage, including token counts, response/transcript hash reuse, first-token
+entropy or negative logprob when available, token-family mismatch, and
+answer/trace artifact-only signals. These fields may prioritize rows for exact
+checking or conservatively block repair promotion when evidence is missing or
+suspicious, but they SHALL NOT become acceptance authority. Exact labels,
+exact-safe replay decisions, canonical equivalence, solver/test authority, and
+monitor-ledger consistency SHALL remain separate acceptance-authority fields.
+
+The terminal artifact MUST include
+`verifier_invariance_token_suspicion_audit_ready`,
+`controlled_invariance_checks`, `computed_checks`, `blocked_checks`,
+`token_suspicion_fields`, `acceptance_authority_fields`,
+`diagnostics_allowed_to_gate_repair`, `diagnostics_not_allowed_to_accept`,
+`source_artifacts`, `inference_substrate`, and `honest_verdict`. It SHOULD
+also include trusted exact-row summaries, transcript-hash inventory,
+downstream Exp 3167 policy, field-principle annotations, tests run, source
+checksums, duration, and run date.
+
+`verifier_invariance_token_suspicion_audit_ready` shall be true only when the
+required checked-in source artifacts are readable, at least one trusted exact
+row is collected, all five controlled-invariance check definitions are
+present, missing token/logprob telemetry remains visible in
+`blocked_checks`, token suspicion fields are explicitly marked as non-authority
+triage, acceptance-authority fields are exact-only, the Exp 3167 downstream
+policy requires exact checks for acceptance, and the inference substrate
+declares no new live model inference.
+
+### SCENARIO-VERIFY-3166: Suspicion Routes Exact Checks But Cannot Accept
+
+Given Exp 3136, Exp 3137, and Exp 3138 expose exact false-accept recovery rows,
+Exp 3150 blocks untrusted live verifier evidence pending a clean rerun, and
+Exp 3165 may or may not contain transcript hashes,
+When Exp 3166 builds the invariance and token-suspicion audit,
+Then it writes the required terminal JSON artifact without live inference,
+lists Force, Remove, shuffled-trace, answer-only, and trace-only controls,
+separates computed exact-row and transcript-hash inventories from proposed
+future logprob/token checks, records blocked first-token and token-level
+telemetry when unavailable, marks token and trace diagnostics as triage-only,
+and exposes an Exp 3167 policy that permits acceptance only from exact
+authority fields while allowing suspicion diagnostics to route rows to exact
+checks or conservatively block repair promotion.
+
+## Implementation Status (REQ-VERIFY-3166)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-VERIFY-3166 | Implemented (`python/carnot/verify/verifier_invariance_token_suspicion_audit_v1.py`) | Implemented (`tests/python/test_experiment_3166_verifier_invariance_token_suspicion_audit_v1.py`) |
+
 ### REQ-VERIFY-3073: EBT/ARM-EBM Adapter Feasibility Audit
 
 The repository shall provide an Exp 3073 deterministic architecture audit that
