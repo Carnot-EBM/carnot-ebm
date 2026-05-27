@@ -8975,3 +8975,84 @@ metadata, explicit failed-precondition diagnostics, and a blocked
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-LEARN-3186 | Implemented (`python/carnot/eval/fr11_controller_memory_promotion_pack_v1.py`) | Implemented (`tests/python/test_experiment_3186_fr11_controller_memory_promotion_pack_v1.py`) |
+
+## REQ-LEARN-3187: FR-11 Cross-Environment Drift Replay v1
+
+**Given** Exp 3186 packaged a promotion-allowed FR-11 controller-memory update
+with an exact-row activation predicate and rollback triggers
+**When** Exp 3187 replays that update for matrix v29
+**Then** it SHALL load the checked-in Exp 3186 promotion manifest and fail
+closed without replay mutation when the manifest is missing, not ready, or not
+promotion-allowed.
+**And** it SHALL select held-out, negative-control, and cross-environment rows
+from checked-in exact/replay artifacts, preferring environments whose fixture
+families differ from the original counterexample families while preserving
+exact authority.
+**And** it SHALL apply the controller-memory routing/update in replay mode only
+and compare before/after consistency, held-out consistency, cross-environment
+consistency, and negative-control regressions without making live model calls
+or updating model weights.
+**And** it SHALL report drift cases and rollback triggers, allowing promotion
+only when no exact-authority or negative-control regression appears.
+
+The terminal artifact SHALL be
+`results/experiment_3187_fr11_cross_environment_drift_replay_v1.json` and
+SHALL include `fr11_cross_environment_drift_replay_v1_ready`,
+`continuous_self_learning_task`, `replay_mode_only`,
+`no_model_weight_update_claimed`, `heldout_row_count`,
+`cross_environment_row_count`, `before_after_consistency`,
+`negative_control_regression_count`, `drift_cases`, `rollback_triggered`,
+`promotion_allowed`, `inference_substrate`, and `honest_verdict`.
+
+### REQ-LEARN-3187 Sub-requirements
+
+- REQ-LEARN-3187-1: The replay SHALL write a schema-complete blocked artifact
+  with `promotion_allowed=false`, `replay_mode_only=true`, and no replay
+  mutation when Exp 3186 is missing, not ready, not promotion-allowed, or lacks
+  a usable promotion manifest.
+- REQ-LEARN-3187-2: Cross-environment row selection SHALL exclude the source
+  counterexample families listed in the Exp 3186 manifest and SHALL use rows
+  whose expected action, ledger action, and observed action provide exact replay
+  authority.
+- REQ-LEARN-3187-3: The controller update SHALL be applied only as an in-memory
+  exact row-id override during replay, and the artifact SHALL declare zero live
+  inference calls and no base-model, KAN-model, hidden-state, or model-weight
+  learning.
+- REQ-LEARN-3187-4: `before_after_consistency` SHALL expose denominators and
+  rates for the source before/after panel, held-out rows, cross-environment
+  rows, and negative-control rows.
+- REQ-LEARN-3187-5: `drift_cases` SHALL list every held-out or
+  cross-environment row whose consistency regresses, whose observed action
+  changes unexpectedly, or whose exact authority conflicts with the replayed
+  controller-memory update.
+- REQ-LEARN-3187-6: `rollback_triggered` SHALL be true and
+  `promotion_allowed` SHALL be false whenever any drift case or negative-control
+  regression is present.
+
+### SCENARIO-LEARN-3187: Cross-Environment Replay Preserves Promotion
+
+**Given** a ready Exp 3186 promotion pack with exact row-id overrides and a
+ready Exp 3171/3172 replay split containing held-out, negative-control, and
+cross-environment rows from non-counterexample families
+**When** Exp 3187 replays the controller-memory update without mutating
+production state
+**Then** the artifact reports nonzero held-out and cross-environment
+denominators, no drift cases, zero negative-control regressions, promotion
+allowed, no model-weight update claim, and an `honest_verdict` beginning with
+`complete:`.
+
+### SCENARIO-LEARN-3187-BLOCKED: Missing Or Unsafe Promotion Manifest Fails Closed
+
+**Given** Exp 3186 is missing, not ready, not promotion-allowed, or lacks a
+usable promotion manifest
+**When** Exp 3187 runs
+**Then** it writes all required fields with zeroed replay denominators,
+`rollback_triggered=true`, `promotion_allowed=false`, controller-only/no-live
+inference substrate metadata, explicit failed-precondition diagnostics, and a
+blocked `honest_verdict`.
+
+## Implementation Status (REQ-LEARN-3187)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-LEARN-3187 | Planned (`python/carnot/eval/fr11_cross_environment_drift_replay_v1.py`) | Planned (`tests/python/test_experiment_3187_fr11_cross_environment_drift_replay_v1.py`) |
