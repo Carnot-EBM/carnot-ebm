@@ -10634,3 +10634,67 @@ ops/status/traceability reconciliation performed by this task, and an
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-REPORT-3177 | Implemented (`python/carnot/reporting/archive_v294_activate_v295_3177.py`) | Implemented (`tests/python/test_experiment_3177_archive_v294_activate_v295.py`) |
+
+### REQ-REPORT-3189: Cross-Corpus Matrix V29 From .295 Artifacts
+
+The repository shall provide an Exp 3189 cross-corpus matrix v29 generator
+that writes `results/experiment_3189_cross_corpus_matrix_v29.json` by reading
+`results/experiment_3175_cross_corpus_matrix_v28.json` as the authoritative
+prior matrix, plus the checked-in `.295` receipt, verifier, sidecar, repair,
+FR-11, and THRML boundary artifacts. The workflow MUST aggregate existing
+artifacts only. It MUST NOT run live model inference, verifier scoring,
+repair generation, solver execution, hardware commands, the conductor, pushes,
+or modify `scripts/research_conductor.py`.
+
+The generator MUST append rows for receipt contract, SOTA receipt smoke,
+controlled invariance, clean rerun v10, distributional EBM sidecar,
+certificate expansion, repair gate v4, repair ladder v5, FR-11 promotion pack,
+FR-11 drift replay, and THRML boundary. It MUST preserve v28 rows and
+recompute `publication_blocker_count` from row statuses conservatively. It
+MUST NOT mark a v28 blocker resolved unless a `.295` source artifact explicitly
+proves the corresponding gate is clean. It MUST separately count clean,
+flagged, blocked, gated-skip, and diagnostic-only evidence rows, and it MUST
+record missing `.295` artifacts separately from gated skips.
+
+The terminal artifact MUST include `cross_corpus_matrix_v29_ready`,
+`prior_matrix_version`, `paper_ready`, `publication_blocker_count`,
+`blocker_delta_from_v28`, `clean_rows`, `flagged_rows`, `blocked_rows`,
+`gated_skip_rows`, `diagnostic_only_rows`, `missing_artifacts`,
+`verifier_status`, `repair_status`, `fr11_status`, `hardware_status`,
+`next_top_gap`, `inference_substrate`, and `honest_verdict`. It MAY include
+full rows, source checksums, source-artifact records, invariant violations,
+paper-v6 narrowing booleans, and measured `duration_s` as long as every value
+is derived from checked-in artifacts or file presence/checksum checks.
+`paper_ready` MUST remain false while any publication blocker remains or while
+the `.295` evidence still lacks full local SOTA verifier clearance, live repair
+execution, deployed verifier-sidecar evidence, authenticated hardware speedup,
+or broad self-learning evidence beyond controller memory. The generator MUST
+preserve paper-v6 narrowing: no KV260 speedup claim, no TSU/Kona execution
+claim, no deployed verifier sidecar claim, no model-weight self-learning claim,
+and no paper-ready streak claim.
+
+#### SCENARIO-REPORT-3189: V29 Materializes .295 Rows Without Overclaiming
+
+**Given** matrix v28 exists and reports `matrix_v28_ready=true`, `paper_ready=false`,
+and 73 publication blockers
+**And** the `.295` artifacts include a receipt contract, CPU-fallback SOTA
+receipt smoke, controlled invariance executor, gated-skipped clean rerun v10,
+offline distributional sidecar, flagged certificate expansion, blocked repair
+gate v4, gated-skipped repair ladder v5, FR-11 controller-memory promotion and
+drift replay, and a THRML local API boundary with no speedup or TSU/Kona
+execution claim
+**When** the Exp 3189 matrix v29 generator runs
+**Then** it writes `results/experiment_3189_cross_corpus_matrix_v29.json` with
+`cross_corpus_matrix_v29_ready=true`, all required schema fields, v28 rows
+carried forward, `.295` rows appended with clean/flagged/blocked/gated-skip/
+diagnostic-only categories visible, missing artifacts explicitly recorded,
+publication blockers recomputed from row statuses, blocker delta measured
+against v28, paper-v6 narrowing preserved, aggregation-only inference-substrate
+metadata, no ops/status/traceability reconciliation performed by this task,
+and an `honest_verdict` that starts with `complete:`.
+
+## Implementation Status (REQ-REPORT-3189)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-3189 | Implemented (`python/carnot/reporting/cross_corpus_matrix_v29_3189.py`) | Implemented (`tests/python/test_experiment_3189_cross_corpus_matrix_v29.py`) |
