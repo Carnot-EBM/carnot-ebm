@@ -1,0 +1,24 @@
+{
+  "experiment": 3221,
+  "schema": "blocked_gate_check_v1",
+  "run_date": "2026-05-27",
+  "started_at": "2026-05-27T23:56:09.781476+00:00",
+  "finished_at": "2026-05-27T23:56:09.781476+00:00",
+  "duration_s": 0.0,
+  "status": "blocked",
+  "title": "llama.cpp CUDA offload receipt smoke gated on hermetic runtime repair",
+  "honest_verdict": "blocked_gate_check_failed",
+  "gate_check_summary": "1 of 1 gate(s) failed; first failure: exp3220-hermetic-cuda-runtime-repair-ledger-v1.cuda_receipt_ready_candidate (actual=False == expected=True)",
+  "gates_evaluated": [
+    {
+      "upstream": "exp3220-hermetic-cuda-runtime-repair-ledger-v1",
+      "artifact_field": "cuda_receipt_ready_candidate",
+      "op": "==",
+      "expected": true,
+      "actual": false,
+      "passed": false,
+      "reason": "actual=False == expected=True"
+    }
+  ],
+  "blocked_at_layer": "conductor_pre_gate"
+}

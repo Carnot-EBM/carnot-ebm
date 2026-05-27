@@ -279,5 +279,18 @@
     ".venv/bin/coverage run --include='*/hermetic_cuda_runtime_repair_ledger_3220.py' -m pytest tests/python/test_experiment_3220_hermetic_cuda_runtime_repair_ledger.py -q -o addopts='' && .venv/bin/coverage report --include='*/hermetic_cuda_runtime_repair_ledger_3220.py' --fail-under=100 --show-missing"
   ],
   "torch_cuda_version_selected": "12.8",
-  "torch_version_selected": "2.11.0+cu128"
+  "torch_version_selected": "2.11.0+cu128",
+  "flagged_adversarial": true,
+  "corrigendum_pending": [
+    {
+      "kind": "DURATION_TOO_SHORT",
+      "severity": "critical",
+      "detail": "duration_s=6.235034 but artifact references compute-bound markers (GGUF / CUDA / live model). Loading and running a real model takes >=60.0s minimum; this completed too fast to have invoked the model."
+    },
+    {
+      "kind": "METHODOLOGY_MISSING",
+      "severity": "warn",
+      "detail": "Compute-bound artifact missing: model_specs/target_model, random_seed, reproducibility_checksum. Methodology unverifiable."
+    }
+  ]
 }
