@@ -10396,3 +10396,87 @@ this task, and an `honest_verdict` that starts with `complete:`.
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-REPORT-3163 | Implemented (`python/carnot/reporting/archive_v293_activate_v294_3163.py`) | Implemented (`tests/python/test_experiment_3163_archive_v293_activate_v294.py`) |
+
+### REQ-REPORT-3175: Cross-Corpus Matrix V28 From .294 Artifacts
+
+The repository shall provide an Exp 3175 cross-corpus matrix v28 generator
+that writes `results/experiment_3175_cross_corpus_matrix_v28.json` using
+`results/experiment_3161_cross_corpus_matrix_v27.json`,
+`results/experiment_3162_capstone_v293.json`, and all available `.294`
+artifacts from Exp 3163 through Exp 3174. The generator MUST preserve exact
+source artifact paths for every row, materialize blocked and gated-skip
+outcomes as rows instead of treating them as absent evidence, and compare the
+new missing-artifact list against matrix v27's `missing_artifacts` count.
+
+The matrix MUST classify each row as one of `clean`, `blocked`,
+`gated_skipped`, `flagged`, `diagnostic_only`, `projection_only`, `missing`,
+or `retired`. It MUST carry forward matrix v27 rows without smoothing their
+claim boundary, normalize prior `bounded` rows into either `blocked` or
+`projection_only` according to whether they block a headline claim, and append
+`.294` rows for archive handoff, duration-corrected authenticity contract,
+live SOTA replay, verifier-invariance audit, clean live verifier rerun v9,
+repair gate v3, repair ladder materializer v4, counterexample-certificate
+repair pilot, FR-11 ledger counterexample isolation, FR-11 nonforgetting
+self-learning pilot, EBCN/KAN bounded diagnostics, and hardware/tooling
+boundary v8.
+
+The generator MUST compute `publication_blocker_count`,
+`blocker_delta_from_v27`, `inherited_adversarial_flag_count`,
+`missing_artifacts`, `repair_status`, `verifier_status`, `fr11_status`,
+`sidecar_status`, and `hardware_status` directly from checked-in artifacts.
+It MUST NOT run live model inference, verifier scoring, repair generation,
+solver execution, hardware commands, the conductor, pushes, or modify
+`scripts/research_conductor.py`. `paper_ready` MUST be an explicit boolean
+and MUST remain false while publication blockers, flagged verifier evidence,
+blocked repair execution, or unsupported hardware speedup claims remain.
+
+The terminal artifact MUST include `matrix_v28_ready`, `rows_total`,
+`publication_blocker_count`, `blocker_delta_from_v27`, `clean_rows`,
+`flagged_rows`, `blocked_rows`, `gated_skip_rows`, `diagnostic_only_rows`,
+`missing_artifacts`, `inherited_adversarial_flag_count`, `verifier_status`,
+`repair_status`, `fr11_status`, `hardware_status`, `paper_ready`,
+`source_artifacts`, `inference_substrate`, and `honest_verdict`. It MAY
+include full rows, status counts, publication blocker rows, source checksums,
+required source errors, invariant violations, missing-artifact deltas,
+`sidecar_status`, and measured `duration_s` as long as every value is derived
+from checked-in artifacts or file presence/checksum checks. `matrix_v28_ready`
+MUST be true only when the matrix v27 and capstone v293 authorities are ready,
+status counts reconcile with rows, publication blockers reconcile with row
+statuses, required sources are present, and the matrix builder declares
+aggregation-only work with no live inference. When a conductor prompt assigns
+ops reconciliation to a separate step, the generator MUST leave
+`ops/status.md`, `ops/changelog.md`, and `_bmad/traceability.md` unchanged.
+
+#### SCENARIO-REPORT-3175: V28 Materializes .294 Gated Rows
+
+**Given** matrix v27 exists and reports `matrix_v27_ready=true`,
+65 publication blockers, three inherited adversarial flags, and four missing
+artifacts
+**And** capstone v293 exists and reports `capstone_ready=true` and
+`paper_ready=false`
+**And** the `.294` artifacts include a complete archive handoff, a complete
+duration-corrected authenticity contract, a blocked live SOTA replay, a
+complete verifier-invariance diagnostic audit, a complete but gated skipped
+clean live verifier rerun, a blocked repair gate, a gated skipped repair
+ladder, a bounded counterexample-certificate repair pilot, FR-11 isolation and
+nonforgetting artifacts, bounded EBCN/KAN diagnostics, and hardware/tooling
+boundary evidence with no authenticated speedup claim
+**When** the Exp 3175 matrix v28 generator runs
+**Then** it writes `results/experiment_3175_cross_corpus_matrix_v28.json`
+with `matrix_v28_ready=true`, all required schema fields, v27 rows carried
+forward with exact source-artifact provenance, `.294` rows appended with
+blocked/gated/flagged/diagnostic/projection statuses visible, missing
+artifacts reduced relative to v27 when full blocked or gated-skip artifacts
+exist, publication blockers derived from row statuses, blocker delta measured
+against v27, inherited adversarial flag count preserved, verifier and repair
+statuses machine-readable, FR-11 controller-memory promotion state carried
+forward without model-weight-update overclaim, sidecar and hardware claims
+kept bounded, aggregation-only inference-substrate metadata, no
+ops/status/traceability reconciliation performed by this task, and an
+`honest_verdict` that starts with `complete:`.
+
+## Implementation Status (REQ-REPORT-3175)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-3175 | Implemented (`python/carnot/reporting/cross_corpus_matrix_v28_3175.py`) | Implemented (`tests/python/test_experiment_3175_cross_corpus_matrix_v28.py`) |
