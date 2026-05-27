@@ -157,6 +157,55 @@ local API boundary only.
   https://arxiv.org/abs/2512.15605, and Semantic Scholar API queries for both
   arXiv IDs on 2026-05-27.
 
+### Context-CoT and CL-Bench as Parametric-Shortcut Evaluation Anchors
+
+- **Paper:** "Context-CoT: Enhancing Context Learning via High-Quality
+  Reasoning Synthesis" (arXiv:2605.25354v1; Peking, Xiamen, Tsinghua).
+- **What:** Three-stage CoT-distillation pipeline -- (1) multi-stage CoT
+  sampling that extracts context-relevant rules before reasoning, (2)
+  rubrics-based minimum-leakage filtering that hides reference answers and
+  only exposes failed rubrics to the student, (3) student-aware trajectory
+  selection using step-alignment + reasoning-gain scores. Builds 4,179
+  training samples from 25,060 initial candidates and reports +3.79pp
+  (Qwen3.5-4B) / +4.53pp (Llama3.2-3B) on CL-Bench.
+- **What CL-Bench measures:** 1,899 context-learning tasks where the model
+  must derive new rules from a provided context rather than from parametric
+  prior knowledge. Frontier models solve 17.2% on average -- the failure
+  mode is *parametric shortcuts*: models guess from training data instead
+  of integrating the prompt's stated facts.
+- **Relevance to Carnot (three pieces):**
+  1. *Methodology lift for the queued Prompt-Injection v4 task* -- the
+     rubrics-based minimum-leakage filtering pattern is directly
+     transferable. Instead of giving the student all `gpt-oss-safeguard:20b`
+     labels, expose only the failed-rubric cases. Should improve OOD
+     generalization beyond raw corpus expansion. Tradeoff: ~2-3x teacher
+     inference cost, so 15k corpus budget would shrink to ~8-10k examples.
+  2. *Third-party evaluation anchor for the verifier ensemble* -- run the
+     k=15 verifier ensemble over teacher outputs on CL-Bench and measure
+     what fraction of the wrong-but-confident 82.8% the verifiers catch.
+     Direct test of the "Carnot verifies output without ground-truth
+     access" claim against an externally-defined benchmark.
+  3. *Supporting evidence for Phase 4 active inference* -- variational
+     free energy is precisely high when the posterior diverges from the
+     context-conditioned prior. CL-Bench's empirical demonstration that
+     parametric-shortcut failure is real and frontier-pervasive is
+     external support for the Phase 4 hypothesis Carnot is already
+     committed to.
+- **What it is NOT:** not a verifier, not an EBM, not a hallucination
+  detector. It's a corpus-construction methodology. Don't mistake for a
+  direct drop-in technique.
+- **Acknowledged limitations:** high construction cost (multi-pass teacher
+  sampling), offline framework (no student-environment interaction),
+  judge-LLM dependency for rubric selection. The judge-LLM dependency is
+  also a CLAUDE.md "Verifier Authenticity Discipline" concern if Carnot
+  adopts the pattern -- the judge model must be locally-hosted open-weight,
+  not a closed frontier model.
+- **Status:** citation watch only. No `.296` task should claim Context-CoT
+  integration; the methodology lift is queued for consideration alongside
+  the Prompt-Injection v4 task's `.297` activation.
+- **Sources:** https://arxiv.org/abs/2605.25354 and
+  https://arxiv.org/html/2605.25354v1.
+
 ## 2026-05-27 Post-.294 Planning Sweep (Milestone 2026.05.295)
 
 This sweep was run after milestone `.294` completed. `.294` did the right
