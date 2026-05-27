@@ -6454,3 +6454,4 @@ web search: Semantic Scholar 2507.02092 Energy |
 | 2026-05-27 12:26 UTC | FR-11 controller-memory promotion pack v1 | OK | 81 passed in 3.98s |
 | 2026-05-27 12:42 UTC | FR-11 cross-environment drift replay v1 | OK | 81 passed in 3.39s |
 | 2026-05-27 12:58 UTC | THRML factor-graph API boundary v1 | OK | 81 passed in 3.24s |
+| 2026-05-27 13:19 UTC | Cross-corpus verification matrix v29 with receipt  | OK | 81 passed in 2.22s |

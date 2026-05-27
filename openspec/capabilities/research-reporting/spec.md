@@ -10698,3 +10698,71 @@ and an `honest_verdict` that starts with `complete:`.
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-REPORT-3189 | Implemented (`python/carnot/reporting/cross_corpus_matrix_v29_3189.py`) | Implemented (`tests/python/test_experiment_3189_cross_corpus_matrix_v29.py`) |
+
+### REQ-REPORT-3190: Milestone .295 Capstone From Matrix V29
+
+The repository shall provide an Exp 3190 milestone .295 capstone generator
+that writes `results/experiment_3190_capstone_v295.json` by reading
+`results/experiment_3189_cross_corpus_matrix_v29.json` as the authoritative
+blocker ledger, plus the prior `.294` capstone and the checked-in `.295`
+receipt, verifier, repair, FR-11, sidecar, and THRML boundary artifacts needed
+to explain the closeout outcome. The workflow MUST aggregate existing
+artifacts only. It MUST NOT run live model inference, verifier scoring, repair
+generation, solver execution, hardware commands, the conductor, pushes, modify
+`scripts/research_conductor.py`, or modify `research-roadmap.yaml`.
+
+The capstone MUST summarize whether the receipt-backed local SOTA path passed,
+blocked, or produced CPU-only non-headline evidence; whether controlled
+invariance passed; whether the clean verifier state is still gated or flagged;
+whether repair gate v4 and repair ladder v5 are blocked or materialized only as
+gated skips; whether the distributional EBM sidecar remains diagnostic-only;
+whether FR-11 controller-memory promotion and drift replay passed without a
+model-weight update claim; and whether the THRML factor-graph boundary remains
+a local API smoke with no hardware speedup or TSU/Kona execution claim. It MUST
+preserve paper-v6 narrowing and hardware claim boundaries, and MUST NOT set
+`paper_ready=true` unless matrix v29 reports `paper_ready=true`.
+
+The terminal artifact MUST include `capstone_v295_ready`, `matrix_authority`,
+`paper_ready`, `publication_blocker_count`, `blocker_delta_from_v28`,
+`missing_artifact_count`, `verifier_status`, `repair_gate_status`,
+`repair_ladder_status`, `fr11_self_learning_status`, `sidecar_status`,
+`hardware_sampler_status`, `ops_docs_updated`, `next_top_gap`,
+`inference_substrate`, and `honest_verdict`. It MAY include local SOTA receipt
+status, controlled-invariance status, THRML boundary status, source artifact
+records, source checksums, phase summaries, invariant violations,
+no-new-execution booleans, protected-file flags, and measured `duration_s` as
+long as every value is derived from checked-in artifacts or file
+presence/checksum checks. When a conductor prompt assigns ops reconciliation to
+a separate step, the generator MUST leave `ops/status.md`,
+`ops/changelog.md`, and `_bmad/traceability.md` unchanged and MUST report
+`ops_docs_updated=false` with a delegated-reconciliation note.
+
+#### SCENARIO-REPORT-3190: Capstone Closes .295 Without Paper Readiness
+
+**Given** matrix v29 exists and reports `cross_corpus_matrix_v29_ready=true`,
+`paper_ready=false`, `publication_blocker_count=80`,
+`blocker_delta_from_v28=7`, one carried-forward missing artifact, CPU-fallback
+receipt-only local SOTA evidence, controlled invariance passed, a gated-skipped
+clean live verifier rerun v10, blocked repair gate v4, gated-skipped repair
+ladder v5, diagnostic-only distributional EBM sidecar evidence, FR-11
+controller-memory promotion plus drift replay without model-weight updates, and
+a THRML local API boundary with no speedup or TSU/Kona execution claim
+**And** capstone v294 exists and reports `capstone_v294_ready=true` and
+`paper_ready=false`
+**When** the Exp 3190 capstone generator runs
+**Then** it writes `results/experiment_3190_capstone_v295.json` with
+`capstone_v295_ready=true`, all required schema fields,
+`matrix_authority="results/experiment_3189_cross_corpus_matrix_v29.json"`,
+`publication_blocker_count=80`, `blocker_delta_from_v28=7`,
+`missing_artifact_count=1`, `paper_ready=false`, machine-readable verifier,
+repair, FR-11, sidecar, hardware, THRML, and next-gap statuses,
+aggregation-only inference-substrate metadata, source-artifact provenance, no
+ops/status/traceability reconciliation performed by this task, no protected
+implementation files modified, and an `honest_verdict` that starts with
+`complete:`.
+
+## Implementation Status (REQ-REPORT-3190)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-3190 | Implemented (`python/carnot/reporting/capstone_v295_3190.py`) | Implemented (`tests/python/test_experiment_3190_capstone_v295.py`) |
