@@ -3,27 +3,27 @@
   "milestone": "2026.05.294",
   "generated_at": "2026-05-27T07:27:33Z",
   "retro_type": "operational_in_progress",
-  "summary": "No milestone-scoped experiment commits were found after activation. With 0 completed experiments and 0 compute-bound experiments, compute-bound runtime ranking, compute-bound GPU efficiency, and DualGPURunner assessment are no data available this milestone.",
+  "summary": "The milestone timing source reports 0 completed experiments and 0 compute-bound experiments. As a result, compute-bound duration ranking, compute-bound GPU efficiency, and multi-model DualGPURunner assessment are no data available this milestone.",
   "total_wall_time_minutes": 0,
   "experiments_completed": 0,
   "slowest_experiments": [],
   "bottlenecks_identified": [
-    "No completed experiment timing rows were available after milestone activation, so operational bottlenecks could not be attributed to specific experiments.",
-    "Compute-bound slowest-experiment analysis is no data available this milestone.",
-    "GPU-idle diagnosis is no data available this milestone because the timing data contains no compute-bound task rows."
+    "no data available this milestone: the timing block contains no completed experiment rows.",
+    "no data available this milestone: no compute-bound experiment rows were present for longest-task analysis.",
+    "no data available this milestone: no multi-model compute-bound rows were present for runner analysis."
   ],
   "improvements_suggested": [
-    "Add a pre-retro timing sentinel that stops full efficiency analysis when experiments_completed is 0 and writes an explicit no-data artifact.",
-    "Add an activation-to-first-experiment heartbeat so an empty milestone window is detected before retrospective generation.",
-    "Require the retro generator to preserve the distinction between idle synthesis-only GPU state and idle compute-bound GPU state."
+    "Add an activation-window timing sentinel that records whether the milestone has any experiment commit before retrospective synthesis starts.",
+    "Have the retrospective writer emit an explicit empty-window branch when experiments_completed is 0, including no-data answers for compute-bound and runner questions.",
+    "Keep GPU-idle handling gated on compute-bound timing tags so synthesis-only retrospective work does not become a false bottleneck."
   ],
   "top_3_highest_leverage_actions": [
-    "Wire the retro preflight to fail closed into a no-data operational summary when the milestone-scoped timing query returns no experiment commits.",
-    "Emit an activation-window heartbeat artifact as soon as the first experiment commit lands, and surface its absence before closeout.",
-    "Keep the GPU-idle alert gated on compute-bound timing rows so synthesis-only closeouts do not create false bottlenecks."
+    "Surface an empty timing-window warning before closeout instead of discovering it during retrospective writing.",
+    "Preserve locked timing fields from the authoritative skeleton and restrict later edits to interpretive fields.",
+    "Require compute-bound tags before making any GPU efficiency or DualGPURunner recommendation."
   ],
   "compute_bound_experiments_count": 0,
   "gpu_idle_on_compute_bound_tasks": null,
   "estimated_time_savings_pct": 0,
-  "meta_reflection": "The retrospective has to stay empty where the timing source is empty: there are no slow compute-bound experiments to rank, no compute-bound GPU utilization to judge, and no parallel multi-model runner decision to audit. The only useful operational lesson is to detect the empty activation window earlier."
+  "meta_reflection": "The only defensible operational conclusion is that the timing window is empty: there are no completed experiments, no compute-bound tasks, and no multi-model compute-bound rows to inspect. The observed idle GPU state should remain informational for this synthesis-only retrospective."
 }

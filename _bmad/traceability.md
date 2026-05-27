@@ -1,6 +1,8 @@
 # Carnot — Traceability Matrix
 
-**Last Updated:** 2026-05-25 (Milestone 2026.05.287 research planning staged; roadmap/reference/ops docs only, no new REQ-/SCENARIO-* items or implementation status changes)
+**Last Updated:** 2026-05-27 (Milestone 2026.05.294 operational retrospective recorded; artifact/status-only update, no new REQ-/SCENARIO-* items or implementation status changes)
+
+**Operational Note:** 2026-05-27 milestone 2026.05.294 operational retrospective updated `results/operational_retro_2026_05_294.json` and `ops/status.md`; `ops/changelog.md` and `docs/research-log.md` already contained matching milestone entries. Authoritative TIMING DATA reported 0 total wall-time minutes, 0 completed experiments, and 0 compute-bound experiments, so no new REQ-/SCENARIO-* items or implementation status changes were introduced.
 
 **Planning Note:** 2026-05-25 milestone 2026.05.287 research planning updated `research-references.md`, `openspec/change-proposals/research-roadmap-vNEXT.md`, `research-roadmap-next.yaml`, `ops/status.md`, `ops/changelog.md`, and `ops/metrics.md` only; no new REQ-/SCENARIO-* items or implementation status changes were introduced.
 

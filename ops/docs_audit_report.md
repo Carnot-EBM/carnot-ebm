@@ -4,52 +4,51 @@
 # docs_audit_report — 2026-05-27
 
 ## TL;DR (stranger's 30-second take)
-I am closing this tab in 10 seconds. The page reads like an internal lab notebook that leaked onto the internet, complete with impenetrable jargon ("FoVer 5-seed dual-condition"), literal broken file paths in the HTML, and a wall of 12 unverified metric cards claiming near-perfect results. 
+I am closing the tab in 10 seconds. While the top-level pitch is clear, the rest of the page is a bloated, un-skimmable wall of 33 boxes filled with impenetrable internal jargon, contradictory benchmark numbers, and navel-gazing retrospective updates. It reads like a private project dashboard masquerading as a public landing page.
 
 ## TOP 3 PROBLEMS
-1. **Unreadable Jargon in Hero:** The "Recent progress" card hits the user with "FoVer", "5-seed dual-condition", and "repinned from v2 0.9857" before they even know what the product does.
-2. **Text Corruption / Broken Build:** There are literal pytest file paths (`@.tmp-pytest/.../spilled-energy...`) injected directly into the CSS imports and the text of the "Live benchmark" results card. 
-3. **Metric Card Bloat & Fabrication Signals:** Twelve results cards is absurd. Claiming "60/60 attacks" caught and "99.3%" wrong code flagged without immediate, clickable proof screams "made up".
+1. **Contradictory Claims** — Three separate cards make wildly different claims about HumanEval improvements (+3.0 points vs. 0%→36% vs. 8%→80%).
+2. **Card Bloat** — The page blasts the user with 33 individual cards (12 in Results alone), completely obliterating the ~20 card attention limit.
+3. **Impenetrable Internal Jargon** — Terms like "FoVer (5-seed dual-condition)", "CCTU", "PREM variance", and raw flag syntax like "execute-feedback-retry" mean absolutely nothing to a stranger.
 
 ## DETAILED FINDINGS
 
 ### Bloat
-- **Results Grid** — 12 cards — Cap at 3 or 4 maximum. A stranger will not read a dozen micro-benchmarks.
-- **Hero "Recent Progress" Card** — 66 words — Cap at 40 words. It's too dense and reads like a Git commit.
-- **Features / Bento Grid** — 7 cards (including internal "Research operations" and "TTC/PREM") — Cap at 4. Strangers don't care about your autonomous research loop or intrinsic motivation frameworks.
+- **Entire Page** — 33 total cards (2 Problem, 4 How, 7 Features, 12 Results, 1 Stats, 7 Blog) — Cap at ~20 maximum. No one is reading a 12-card results grid.
+- **Results Section** — 12 cards — Cut to the 3-4 most critical headline metrics.
+- **Blog/Writing Section** — 7 cards — Cap at 3 or 4 recent highlights; pushing 7 massive cards to the bottom of a landing page is overwhelming.
 
 ### Internal jargon
-- **Hero "Recent Progress"** — `FoVer`, `5-seed dual-condition`, `architecture-only 0.8947` — A stranger has no idea what FoVer is or why they should care about your dual-conditions.
-- **Features: Typed constraints** — `CCTU constrained tool-use micro-benchmark` — Niche acronym soup.
-- **Features: Test-Time Compute** — `PREM variance`, `intrinsic motivation` — Reads like a desperate attempt to stuff every 2026 AI buzzword into one box.
-- **Results Grid** — `publication gate`, `IterativeSelfRepair`, `EstimationVerifier SVAMP AUC`, `HalluGuard v3` — Nobody outside the project knows what these internal module names mean.
-- **Blog Section** — `NTK Costume`, `Deep Think Rounds` — Extremely insular terminology.
+- **Stats Bar "Recent progress" card** — `FoVer (5-seed dual-condition; architecture-only 0.8947)` — What is FoVer? What does dual-condition mean? 
+- **Results Card** — `IterativeSelfRepair (HumanEval-50, execute-feedback-retry)` — Leaking raw internal flag/script syntax to the public.
+- **Results Card** — `EstimationVerifier SVAMP AUC` and `PRM-BiasBench-style attacks` — Unexplained internal benchmark shorthand.
+- **Features Card** — `PREM variance` — Process-Reward Energy Model is defined in the acronym but the context of its "variance" is completely lost on an outsider.
+- **Results Card** — `Qwen3.6-35B-A3B` — Is A3B an official quant or an internal tag? The user doesn't know.
 
 ### Per-milestone narrative
-- **Hero "Recent Progress"** — "Repinned from v2 0.9857 after pre-submission adversarial audit..." — This is internal project history, not a value proposition for a new user.
-- **Preprint Section** — "...pending operator-initiated upload." — The user does not care about your upload queue or operator permissions. Just link the paper or don't.
-- **Hero Stats Bar** — "382 Completed milestones" — Irrelevant to a user deciding if the tool works. 
+- **Hero Stats Bar** — `382 Completed milestones` and `2,635 Experiment runs` — Strangers do not care about your internal Jira tickets or CI/CD run counts. This is pure internal status reporting.
+- **Stats Bar "Recent progress" card** — `Repinned from v2 0.9857 after pre-submission adversarial audit...` — This is a retrospective commit message, not marketing copy.
+- **Preprint Section** — `The current draft anchors its claims to checked-in experiment artifacts... pending operator-initiated upload.` — Reads like a handoff note between developers, not a pitch to read the paper.
 
 ### Inconsistencies
-- **AUROC Claims** — The hero stats bar says `0.9131`. The paragraph right next to it says `0.9131` and `0.8947`. The Results section says `0.91`. Pick the one true number.
-- **Code Benchmarks** — Features section claims "99.3% of wrong code flagged" on a 164-problem HumanEval. The Results section claims "8% -> 80%" on "HumanEval-50". Are you using the full set or a subset? 
+- **HumanEval pass rate claims** vs **HumanEval pass rate claims** vs **HumanEval pass rate claims** — The Features section claims "+3.0 points on pass-rate" for HumanEval. The Results section claims "8% → 80% (+72pp)" for HumanEval-50. A separate Results card claims "0% → 36%" on a 35B model. Which is the actual headline capability of the tool? 
+- **Verifier AUROC** — Stats bar says "0.9131", but the Prompt-injection classifier result card says "0.91". Are these the same metric truncated, or different models?
 
 ### Missing essentials
-- **Who maintains it?** — The footer says "Ian Blenke", but the hero says "Open Source" and HuggingFace says "Carnot-EBM". Is this a company? A solo dev? A university project? Establish trust.
-- **Why should I trust the numbers?** — You claim "backed by a checked-in experiment artifact" but none of the cards actually link to the artifact. It's just a wall of bold assertions.
+- **Who actually maintains this?** — The footer says "Ian Blenke · Carnot Project", but the GitHub/HF links point to the "Carnot-EBM" organization. It lacks a clear statement of primary backing/maintainership.
 
 ### Fabrication signals
-- **Adversarial Audit Card:** "k=5 ensemble catches 60/60 attacks" — 100% success rates in adversarial LLM evaluations look fabricated unless immediately anchored to a reproducible test.
-- **Features Code Card:** "99.3% of wrong code flagged" — Suspiciously high.
-- **Cascade Routing Card:** "0.0pp accuracy delta" — Exactly zero degradation while saving costs looks like a rounding error masquerading as a perfect result.
+- **Results Card (Adversarial audit)** — `k=5 ensemble catches 60/60 attacks` — 100% success on a tiny, exact sample size (60) immediately signals severe overfitting or a cherry-picked toy dataset.
+- **Results Card (Math extraction)** — `GSM8K extraction TP rate: 0.5 → 1.0` — A perfect 1.0 (100%) True Positive rate without a massive disclaimer looks entirely fabricated or broken.
 
 ## WHAT'S WORKING
-- The "Extract -> Check -> Repair" 3-step explanation in the "How it works" section is actually clear, concise, and easy to grasp.
-- The Python Quickstart code block is clean, realistic, and clearly demonstrates the API's value in just a few lines.
+- **The Hero Hook** — "Catch the mistakes your LLM confidently makes up." and the 1-sentence explanation are excellent, punchy, and instantly understandable.
+- **The Quickstart Tabs** — The code snippets for Python and Rust are clean, realistic, and prove the tool actually exists and has an ergonomic API.
 
 ## RECOMMENDED OPERATOR ACTIONS
-1. **Fix HTML Corruption:** Immediately remove the `@.tmp-pytest/...` file path injections from the Google Fonts `<link>` tag and the "Live benchmark" results card.
-2. **Rewrite the Hero:** Delete the "Recent progress" card entirely. Replace the 4 stats with 3 meaningful ones (e.g., Downloads, Tests, Core AUROC). 
-3. **Purge Internal Jargon:** Scrub `FoVer`, `PREM`, `CCTU`, and module names like `EstimationVerifier` from the page. Speak in generic capabilities (e.g., "Math reasoning benchmark", "Tool use benchmark").
-4. **Decimate the Results Section:** Cut the 12 result cards down to the 4 strongest, most defensible metrics. Link the headers of those 4 cards directly to their proof/artifacts.
-5. **Delete Internal Processes:** Remove the "Research operations", "Test-Time Compute", and "Preprint" sections. Keep the page focused strictly on what the end-user gets when they run `pip install`.
+1. Axe the 12-card "Results" grid down to 4 cards representing the most defensible, generalized benchmarks.
+2. Reconcile the three wildly different HumanEval claims into a single, unified metric that doesn't look contradictory.
+3. Delete internal operational metrics ("382 milestones", "2,635 runs") from the hero stats bar.
+4. Scrub all internal jargon ("FoVer", "execute-feedback-retry", "A3B") and rewrite them into plain English concepts.
+5. Remove the "perfect" 1.0 TP rate and 60/60 catch rate claims, or heavily contextualize them so they don't look like evaluation bleed/fabrication.
+6. Delete the "Recent progress" card entirely; migrate its HuggingFace/PyPI links to the main hero buttons.
