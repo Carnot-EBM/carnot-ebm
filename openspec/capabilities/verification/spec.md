@@ -2176,6 +2176,67 @@ headline results.
 |---|---|---|
 | REQ-VERIFY-3151 | Implemented (`python/carnot/verify/live_inference_authenticity_preflight_v1.py`) | Implemented (`tests/python/test_experiment_3151_live_inference_authenticity_preflight_v1.py`) |
 
+### REQ-VERIFY-3164: Duration-Corrected Live Inference Authenticity Contract V2
+
+The repository shall provide an Exp 3164 duration-corrected live-inference
+authenticity contract builder that writes
+`results/experiment_3164_duration_corrected_authenticity_contract_v2.json`
+without running live model inference, verifier panels, repairs, solvers,
+hardware commands, or modifying `scripts/research_conductor.py`.
+
+The builder MUST read Exp 3151 and extract the measured model-load wall time,
+generation wall time, token counts, selected model ID, selected local model
+path, load command hash, worker code hash, transcript-hash availability, prompt
+hashes, random seed, reproducibility checksum, subprocess return codes, and
+GPU/CPU substrate evidence. It MUST trace the contract to the prior Exp 3151
+duration failure, Exp 3150 adversarial methodology requirements, and Exp 3162
+capstone blocker summary. Missing, malformed, or internally inconsistent source
+evidence MUST remain explicit rejection criteria rather than being inferred.
+
+The v2 contract SHALL retire the old fixed 60-second duration rule as a hard
+gate. Duration plausibility MUST instead be tied to observed work: local model
+path existence, successful model-load proof, controlled subprocess return
+codes, transcript hashes, prompt hashes, nonzero token counts, seed/checksum
+evidence, repeated smoke calls or a token-scaled work budget, and wall-clock
+claims supported by command output. The old 60-second floor MAY remain only as
+an optional warning for large panels, never as the sole pass/fail criterion for
+a one-prompt smoke call.
+
+The terminal artifact MUST include
+`duration_corrected_authenticity_contract_v2_ready`,
+`old_fixed_duration_rule_retired_as_hard_gate`,
+`measured_work_requirements`, `token_scaled_duration_policy`,
+`repeated_call_policy`, `required_preflight_fields`,
+`fake_evidence_rejection_criteria`, `headline_claim_policy`,
+`source_artifacts`, `inference_substrate`, and `honest_verdict`. It SHOULD also
+include extracted Exp 3151 measurements, reusable contract blocks for Exp 3165
+and Exp 3167, field-principle annotations, tests run, source checksums,
+duration, and run date. The readiness flag shall be true only when the fixed
+duration rule is not load-bearing, observed-work requirements are present, fake
+evidence rejection criteria are explicit, required machine-checkable preflight
+fields cover transcripts, prompts, tokens, seed, checksum, model-load evidence,
+and controlled return codes, and the inference substrate declares no live model
+inference for Exp 3164 itself.
+
+### SCENARIO-VERIFY-3164: Fast Smoke Is Accepted Only With Measured Work Evidence
+
+Given Exp 3151 contains a real local GGUF model load and one smoke call that
+was blocked solely by a fixed 60-second floor,
+When Exp 3164 builds the duration-corrected authenticity contract,
+Then it records the measured Exp 3151 work, retires the fixed duration rule as
+a hard gate, defines token-scaled duration and repeated-call policies, names
+fake-evidence rejection criteria for missing model loads, transcript hashes,
+seed/checksum, impossible throughput, stale transcript reuse, selected
+model/path mismatch, and unsupported wall-clock claims, and emits reusable
+machine-checkable contract requirements for Exp 3165 and Exp 3167 without
+running fresh live inference.
+
+## Implementation Status (REQ-VERIFY-3164)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-VERIFY-3164 | Implemented (`python/carnot/verify/duration_corrected_authenticity_contract_v2.py`) | Implemented (`tests/python/test_experiment_3164_duration_corrected_authenticity_contract_v2.py`) |
+
 ### REQ-VERIFY-3073: EBT/ARM-EBM Adapter Feasibility Audit
 
 The repository shall provide an Exp 3073 deterministic architecture audit that
