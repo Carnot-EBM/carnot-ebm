@@ -8900,3 +8900,78 @@ model-weight update claim, explicit precondition diagnostics, and a blocked
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-LEARN-3172 | Implemented (`python/carnot/eval/fr11_nonforgetting_self_learning_pilot_v2.py`) | Implemented (`tests/python/test_experiment_3172_fr11_nonforgetting_self_learning_pilot_v2.py`) |
+
+## REQ-LEARN-3186: FR-11 Controller-Memory Promotion Pack v1
+
+**Given** Exp 3172 produced a promotable FR-11 controller-memory update with
+before/after ledger consistency, held-out replay, and negative-control replay
+evidence
+**When** Exp 3186 packages the update for promotion
+**Then** it SHALL write an auditable promotion pack that traces the exact
+controller-memory rule to Exp 3172 and SHALL NOT claim model-weight learning,
+model-weight mutation, hidden-state mutation, KAN training, or live model
+inference.
+**And** it SHALL classify the learning tier using `research-program.md` as
+controller-memory learning, not online model-weight learning.
+**And** it SHALL include a promotion manifest with update ID, source
+counterexample families, activation predicate, rollback predicate, replay
+requirements, and owner artifact paths for the source update, pack, tests,
+module, Exp 3187 drift replay, and ops reconciliation.
+**And** it SHALL include a rollback and monitoring policy for regressions,
+stale ledger evidence, drift failure, and exact-authority conflict.
+
+The terminal artifact SHALL be
+`results/experiment_3186_fr11_controller_memory_promotion_pack_v1.json` and
+SHALL include `fr11_controller_memory_promotion_pack_v1_ready`,
+`continuous_self_learning_task`, `learning_tier`,
+`no_model_weight_update_claimed`, `source_update_artifact`,
+`promotion_manifest`, `replay_requirements`, `rollback_policy`,
+`promotion_allowed`, `inference_substrate`, and `honest_verdict`.
+
+### REQ-LEARN-3186 Sub-requirements
+
+- REQ-LEARN-3186-1: The pack SHALL fail closed with schema-complete fields
+  when Exp 3172 is missing, not ready, not promotion-allowed, or claims a
+  model-weight update.
+- REQ-LEARN-3186-2: The promoted update SHALL be extracted from
+  `controller_memory_update.updated_rows` and `row_action_overrides`, including
+  before/after ledger consistency, held-out consistency, and negative-control
+  regression results.
+- REQ-LEARN-3186-3: The promotion manifest SHALL expose a deterministic update
+  ID, source counterexample families, exact-row activation predicate, rollback
+  predicate, replay requirements, and owner artifact paths.
+- REQ-LEARN-3186-4: The learning tier SHALL be derived from
+  `research-program.md` and SHALL identify Tier 2 controller-memory /
+  constraint-memory learning, not online weight learning.
+- REQ-LEARN-3186-5: The rollback policy SHALL make promotion reversible on
+  negative-control regression, stale ledger evidence, drift replay failure, or
+  exact-authority conflict.
+- REQ-LEARN-3186-6: The artifact SHALL declare zero live inference calls and no
+  base-model, KAN-model, hidden-state, or model-weight learning.
+
+### SCENARIO-LEARN-3186: Promotable Controller-Memory Update Is Packaged
+
+**Given** a ready Exp 3172 artifact whose controller update is promotion
+allowed, reaches after-update ledger consistency 1.0, preserves held-out
+consistency 1.0, and reports zero negative-control regressions
+**When** Exp 3186 builds the promotion pack
+**Then** the pack is ready, promotion remains allowed for controller memory
+only, the manifest lists the exact row-id override rule and rollback metadata,
+the replay requirements are ready for Exp 3187 drift replay, no model-weight
+update is claimed, and `honest_verdict` begins with `complete:`.
+
+### SCENARIO-LEARN-3186-BLOCKED: Missing Or Unsafe Source Fails Closed
+
+**Given** Exp 3172 is missing, not ready, not promotion-allowed, regresses a
+negative control, or claims model-weight learning
+**When** Exp 3186 runs
+**Then** it writes all required fields with `promotion_allowed=false`, a
+blocked promotion manifest, controller-only/no-live-inference substrate
+metadata, explicit failed-precondition diagnostics, and a blocked
+`honest_verdict`.
+
+## Implementation Status (REQ-LEARN-3186)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-LEARN-3186 | Implemented (`python/carnot/eval/fr11_controller_memory_promotion_pack_v1.py`) | Implemented (`tests/python/test_experiment_3186_fr11_controller_memory_promotion_pack_v1.py`) |

@@ -6450,3 +6450,4 @@ web search: Semantic Scholar 2507.02092 Energy |
 | 2026-05-27 10:15 UTC | Distributional EBM exact-row uncertainty sidecar v | OK | 81 passed in 2.37s |
 | 2026-05-27 10:34 UTC | Counterexample certificate expansion v3 for repair | OK | 81 passed in 4.85s |
 | 2026-05-27 11:52 UTC | Repair gate decision v4 from receipts, invariance, | OK | 81 passed in 2.23s |
+| 2026-05-27 12:12 UTC | Multi-turn repair ladder v5 with explicit gate mat | OK | 81 passed in 3.87s |

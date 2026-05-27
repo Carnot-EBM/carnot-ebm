@@ -1,0 +1,299 @@
+{
+  "artifact": "experiment_3186_fr11_controller_memory_promotion_pack_v1",
+  "continuous_self_learning_task": true,
+  "drift_replay_contract": {
+    "ready_for_drift_replay": true,
+    "required_replay_ids": [
+      "exp3172_training_and_heldout_replay",
+      "negative_control_replay",
+      "exp3187_cross_environment_drift_replay",
+      "ops_documentation_reconciliation"
+    ],
+    "rollback_triggers": [
+      "negative_control_regression",
+      "stale_ledger_evidence",
+      "drift_replay_failure",
+      "exact_authority_conflict"
+    ],
+    "target_artifact": "results/experiment_3187_fr11_cross_environment_drift_replay_v1.json"
+  },
+  "duration_s": 0.002317,
+  "fr11_controller_memory_promotion_pack_v1_ready": true,
+  "honest_verdict": "complete: fr11 controller-memory promotion pack v1 ready; promotion_allowed=true; learning_tier=controller_memory_tier2; no model-weight update claimed",
+  "inference_substrate": {
+    "aggregation_and_replay_only": true,
+    "base_model_weights_updated": false,
+    "controller_memory_replay_only": true,
+    "executes_live_model_inference": false,
+    "fresh_live_inference_calls": 0,
+    "hidden_state_mutation_claimed": false,
+    "kan_model_weight_training": false,
+    "mode": "controller_memory_promotion_pack_replay",
+    "model_weight_learning": false,
+    "model_weight_mutation": false,
+    "model_weight_training": false,
+    "uses_checked_in_artifacts_only": true
+  },
+  "learning_tier": "Tier 2: Constraint Memory / Trace2Skill controller-memory learning",
+  "no_model_weight_update_claimed": true,
+  "ops_reconciliation": {
+    "claim_boundary": "controller_memory_learning_only_no_model_weight_update",
+    "paths": [
+      "ops/status.md",
+      "ops/changelog.md",
+      "_bmad/traceability.md"
+    ],
+    "status": "pending_conductor_reconciliation"
+  },
+  "precondition_checks": {
+    "exp3171_present": true,
+    "exp3172_model_weight_update_claimed": false,
+    "exp3172_present": true,
+    "exp3172_promotion_allowed": true,
+    "exp3172_ready": true,
+    "research_program_present": true,
+    "source_live_inference_calls": 0
+  },
+  "promotion_allowed": true,
+  "promotion_manifest": {
+    "activation_predicate": {
+      "allowed_row_ids": [
+        "resyn-3084-arith-003",
+        "resyn-3084-smt-000"
+      ],
+      "mode": "exact_row_id_controller_memory_override",
+      "requires_exact_authority_consensus": true,
+      "requires_exp3187_drift_replay_before_broadening": true,
+      "row_action_overrides": {
+        "resyn-3084-arith-003": "reject",
+        "resyn-3084-smt-000": "reject"
+      },
+      "scope": "training_row_ids_only"
+    },
+    "evidence": {
+      "after_ledger_consistency_rate": 1.0,
+      "before_ledger_consistency_rate": 0.857143,
+      "heldout_consistency_rate": 1.0,
+      "negative_control_regression_count": 0,
+      "negative_control_regressions": [],
+      "nonforgetting_passed": true,
+      "updated_row_count": 2,
+      "updated_rows": [
+        {
+          "after_observed_action": "reject",
+          "before_observed_action": "accept",
+          "bounded_to_training_row_id": true,
+          "fixture_family": "arithmetic_code_assertions",
+          "model_weight_update": false,
+          "row_id": "resyn-3084-arith-003",
+          "update_type": "row_exact_action_override"
+        },
+        {
+          "after_observed_action": "reject",
+          "before_observed_action": "accept",
+          "bounded_to_training_row_id": true,
+          "fixture_family": "smt_constraints",
+          "model_weight_update": false,
+          "row_id": "resyn-3084-smt-000",
+          "update_type": "row_exact_action_override"
+        }
+      ]
+    },
+    "learning_tier": "Tier 2: Constraint Memory / Trace2Skill controller-memory learning",
+    "owner_artifact_paths": {
+      "drift_replay_artifact": "results/experiment_3187_fr11_cross_environment_drift_replay_v1.json",
+      "module": "python/carnot/eval/fr11_controller_memory_promotion_pack_v1.py",
+      "ops_changelog": "ops/changelog.md",
+      "ops_status": "ops/status.md",
+      "promotion_pack_artifact": "results/experiment_3186_fr11_controller_memory_promotion_pack_v1.json",
+      "source_counterexample_artifact": "results/experiment_3171_fr11_ledger_counterexample_isolation_v1.json",
+      "source_update_artifact": "results/experiment_3172_fr11_nonforgetting_self_learning_pilot_v2.json",
+      "spec": "openspec/capabilities/self-learning/spec.md",
+      "tests": "tests/python/test_experiment_3186_fr11_controller_memory_promotion_pack_v1.py"
+    },
+    "promotion_decision": "promote_controller_memory_only",
+    "replay_requirements": [
+      {
+        "gate": "after_ledger_consistency_rate == 1.0 and heldout_consistency_rate == 1.0",
+        "id": "exp3172_training_and_heldout_replay",
+        "source_artifact": "results/experiment_3172_fr11_nonforgetting_self_learning_pilot_v2.json",
+        "status": "required"
+      },
+      {
+        "gate": "negative_control_regression_count == 0",
+        "id": "negative_control_replay",
+        "source_artifact": "results/experiment_3172_fr11_nonforgetting_self_learning_pilot_v2.json",
+        "status": "required"
+      },
+      {
+        "gate": "cross_environment_drift_failure_count == 0",
+        "id": "exp3187_cross_environment_drift_replay",
+        "source_artifact": "results/experiment_3187_fr11_cross_environment_drift_replay_v1.json",
+        "status": "required"
+      },
+      {
+        "gate": "conductor reconciliation records controller-memory-only promotion",
+        "id": "ops_documentation_reconciliation",
+        "source_artifact": "ops/status.md",
+        "status": "required"
+      }
+    ],
+    "rollback_predicate": {
+      "rollback_if_any": [
+        "negative_control_regression_count > 0",
+        "heldout_consistency_rate < 1.0",
+        "cross_environment_drift_failure_count > 0",
+        "exact_authority_conflict_count > 0",
+        "source_ledger_stale == true"
+      ]
+    },
+    "source_counterexample_artifact": "results/experiment_3171_fr11_ledger_counterexample_isolation_v1.json",
+    "source_counterexample_families": [
+      "arithmetic_code_assertions",
+      "smt_constraints"
+    ],
+    "source_update_artifact": "results/experiment_3172_fr11_nonforgetting_self_learning_pilot_v2.json",
+    "update_id": "fr11-controller-memory-exp3172-row-exact-v1",
+    "update_type": "controller_memory_exact_row_action_override"
+  },
+  "replay_requirements": [
+    {
+      "gate": "after_ledger_consistency_rate == 1.0 and heldout_consistency_rate == 1.0",
+      "id": "exp3172_training_and_heldout_replay",
+      "source_artifact": "results/experiment_3172_fr11_nonforgetting_self_learning_pilot_v2.json",
+      "status": "required"
+    },
+    {
+      "gate": "negative_control_regression_count == 0",
+      "id": "negative_control_replay",
+      "source_artifact": "results/experiment_3172_fr11_nonforgetting_self_learning_pilot_v2.json",
+      "status": "required"
+    },
+    {
+      "gate": "cross_environment_drift_failure_count == 0",
+      "id": "exp3187_cross_environment_drift_replay",
+      "source_artifact": "results/experiment_3187_fr11_cross_environment_drift_replay_v1.json",
+      "status": "required"
+    },
+    {
+      "gate": "conductor reconciliation records controller-memory-only promotion",
+      "id": "ops_documentation_reconciliation",
+      "source_artifact": "ops/status.md",
+      "status": "required"
+    }
+  ],
+  "rollback_policy": {
+    "monitoring_plan": {
+      "check_frequency": "every_exp3187_or_matrix_replay",
+      "metrics": [
+        "after_ledger_consistency_rate",
+        "heldout_consistency_rate",
+        "negative_control_regression_count",
+        "cross_environment_drift_failure_count",
+        "source_artifact_sha256"
+      ]
+    },
+    "owner_update_id": "fr11-controller-memory-exp3172-row-exact-v1",
+    "rollback_action": "remove_exact_row_overrides",
+    "triggers": [
+      {
+        "predicate": "negative_control_regression_count > 0",
+        "trigger": "negative_control_regression"
+      },
+      {
+        "predicate": "source_artifact_sha256 changes without replay refresh",
+        "trigger": "stale_ledger_evidence"
+      },
+      {
+        "predicate": "exp3187 reports any cross-environment consistency regression",
+        "trigger": "drift_replay_failure"
+      },
+      {
+        "predicate": "exact authority rejects an activated override action",
+        "trigger": "exact_authority_conflict"
+      }
+    ]
+  },
+  "run_date": "20260527",
+  "schema": "carnot.fr11.controller_memory_promotion_pack.v1",
+  "source_artifacts": [
+    {
+      "exists": true,
+      "id": "agents_repo_instructions",
+      "path": "AGENTS.md",
+      "required": true,
+      "sha256": "b3d6581b04f16b85f77defb2837c98dc3b60ed51e10b347ecb36e609f318b619"
+    },
+    {
+      "exists": true,
+      "id": "codex_repo_workflow",
+      "path": "CODEX.md",
+      "required": true,
+      "sha256": "1db7ebc1009714f872db83447828a8957c3abb72061832cc1bc307735cd96bbe"
+    },
+    {
+      "exists": true,
+      "id": "research_program",
+      "path": "research-program.md",
+      "required": true,
+      "sha256": "53ed14d8257e92794b841f3959dc3337cafe56adce714fe3447fd62977e4d9f9"
+    },
+    {
+      "exists": true,
+      "id": "self_learning_openspec",
+      "path": "openspec/capabilities/self-learning/spec.md",
+      "required": true,
+      "sha256": "63c25dcd2d057d732c83e355d1853c761b49d10749a212ad89319e97416e73cf"
+    },
+    {
+      "exists": true,
+      "id": "exp3171_counterexample_isolation",
+      "path": "results/experiment_3171_fr11_ledger_counterexample_isolation_v1.json",
+      "required": true,
+      "sha256": "5fc54ae30444cbbf8fcc5c214a9a16be1ed4c65f513d1fe83c968e492574ebb5"
+    },
+    {
+      "exists": true,
+      "id": "exp3172_controller_memory_update",
+      "path": "results/experiment_3172_fr11_nonforgetting_self_learning_pilot_v2.json",
+      "required": true,
+      "sha256": "f3f601f1f03c43999977808d2905480e0e3fcd9d14c482b529358b16d25e6197"
+    },
+    {
+      "exists": true,
+      "id": "exp3175_matrix_v28",
+      "path": "results/experiment_3175_cross_corpus_matrix_v28.json",
+      "required": false,
+      "sha256": "fc4b6bef198820c28d4b08199ad9543d273f54ff9031ed86e9c2fcbb10714512"
+    },
+    {
+      "exists": true,
+      "id": "exp3176_capstone_v294",
+      "path": "results/experiment_3176_capstone_v294.json",
+      "required": false,
+      "sha256": "1bb488910df1ddaf22d8938169226d7d1af93a4e368535e26727edd7b1d9cdf8"
+    },
+    {
+      "exists": true,
+      "id": "exp3186_module",
+      "path": "python/carnot/eval/fr11_controller_memory_promotion_pack_v1.py",
+      "required": false,
+      "sha256": "a9fe115703ad07a02a949b5d85fc00e3bdcf694d280556300eb2977a50528e94"
+    },
+    {
+      "exists": true,
+      "id": "exp3186_tests",
+      "path": "tests/python/test_experiment_3186_fr11_controller_memory_promotion_pack_v1.py",
+      "required": false,
+      "sha256": "65f6638cd44091a0b1621ccaadf99f0748c47cce27bce7d8cc20a315b87ab640"
+    }
+  ],
+  "source_update_artifact": "results/experiment_3172_fr11_nonforgetting_self_learning_pilot_v2.json",
+  "tests_run": [
+    ".venv/bin/pytest -o addopts='' tests/python/test_experiment_3186_fr11_controller_memory_promotion_pack_v1.py -q",
+    ".venv/bin/coverage run --source=python/carnot/eval/fr11_controller_memory_promotion_pack_v1.py -m pytest -o addopts='' tests/python/test_experiment_3186_fr11_controller_memory_promotion_pack_v1.py -q",
+    ".venv/bin/coverage report --include='python/carnot/eval/fr11_controller_memory_promotion_pack_v1.py' --fail-under=100 --show-missing",
+    ".venv/bin/python scripts/check_spec_coverage.py tests/python/test_experiment_3186_fr11_controller_memory_promotion_pack_v1.py",
+    ".venv/bin/pytest tests/python -q"
+  ]
+}
