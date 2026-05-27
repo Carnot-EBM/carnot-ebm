@@ -1263,6 +1263,68 @@ while live-LLM downstream rules require a blocked/diagnostic artifact.
 **And** they SHALL NOT appear in `present_model_ids`,
 `selected_headline_model_ids`, or any headline-claim allowance rule.
 
+### REQ-INFER-SOTA-024: Exp 3206 CUDA Environment Forensics Ledger
+
+The system SHALL provide an Exp 3206 CUDA environment ledger before any
+downstream llama.cpp rebuild or full local SOTA receipt rerun.  The ledger
+SHALL run clean subprocess probes with the selected Python interpreter, SHALL
+import `torch` before any project imports in one clean subprocess, SHALL import
+`llama_cpp` in a separate clean subprocess, and SHALL avoid loading a large
+GGUF model while probing llama.cpp GPU-offload support.
+
+The artifact SHALL be written to
+`results/experiment_3206_cuda_env_forensics_ledger_v1.json` and SHALL record
+`nvidia-smi`, `nvcc --version` when present, NVIDIA driver/device/memory
+state, selected Python executable, virtualenv, selected interpreter `sys.path`,
+`pip show torch`, `pip show llama-cpp-python`, `llama_cpp` filesystem origin,
+`CUDA_VISIBLE_DEVICES`, `LD_LIBRARY_PATH`, `PATH`, `CMAKE_ARGS`,
+`FORCE_CMAKE`, and llama.cpp/ggml/CUDA-related environment variables.
+
+The artifact SHALL expose at least `schema_version`, `experiment_id`,
+`milestone`, `selected_python`, `virtualenv`, `nvidia_smi_available`,
+`gpu_count_nvidia_smi`, `torch_version`, `torch_cuda_version`,
+`torch_cuda_available_clean_subprocess`,
+`torch_cuda_device_count_clean_subprocess`, `llama_cpp_version`,
+`llama_cpp_origin`, `llama_cpp_cuda_build_detected`,
+`clean_subprocess_stderr_tail`, `cuda_env_vars`, `cuda_env_diagnosed`,
+`cuda_init_clean`, `recommended_next_action`, `conductor_file_modified`,
+`active_roadmap_modified`, and `honest_verdict`.  `cuda_init_clean` SHALL be
+true only when the selected Python can initialize torch CUDA, sees at least one
+CUDA device, llama_cpp imports, llama.cpp reports GPU offload support, and the
+clean subprocess stderr does not report a CUDA initialization failure.
+
+### SCENARIO-INFER-SOTA-024-001: Clean CUDA Stack Allows Receipt Rerun
+
+**Given** `nvidia-smi` reports at least one NVIDIA GPU
+**And** the selected Python clean torch subprocess reports CUDA available and a
+nonzero device count
+**And** the clean llama_cpp subprocess imports and reports GPU offload support
+without CUDA initialization errors
+**When** Exp 3206 builds the CUDA environment ledger
+**Then** `cuda_env_diagnosed=true`
+**And** `cuda_init_clean=true`
+**And** `recommended_next_action` allows a full local SOTA receipt rerun.
+
+### SCENARIO-INFER-SOTA-024-002: Torch CUDA Failure Blocks Full Receipt
+
+**Given** `nvidia-smi` reports at least one NVIDIA GPU
+**But** the selected Python clean torch subprocess reports
+`torch.cuda.is_available() == false`
+**When** Exp 3206 builds the CUDA environment ledger
+**Then** `cuda_env_diagnosed=true`
+**And** `cuda_init_clean=false`
+**And** `recommended_next_action` keeps the next step on selected-Python CUDA
+repair rather than a full receipt rerun.
+
+### SCENARIO-INFER-SOTA-024-003: llama.cpp CUDA Init Failure Is Preserved
+
+**Given** the clean llama_cpp subprocess emits
+`ggml_cuda_init: failed to initialize CUDA`
+**When** Exp 3206 builds the CUDA environment ledger
+**Then** `llama_cpp_cuda_build_detected=true`
+**And** `clean_subprocess_stderr_tail` preserves the stderr line
+**And** `cuda_init_clean=false`.
+
 ### REQ-INFER-018: EBT Abstraction Layer
 
 The system SHALL provide an Energy-Based Transformer (EBT) abstraction layer that bridges autoregressive LLMs (like the mandated SOTA GGUF models) to an EBT formulation. This enables System-2 gradient refinement at inference time by providing a way to calculate sequence energy.
@@ -1351,6 +1413,7 @@ instead of silently producing invalid EBM energies.
 | REQ-INFER-SOTA-021 | Implemented (`scripts/experiment_3013_sota_gguf_logprob_telemetry_preflight_v1.py`) | Implemented (`tests/python/test_experiment_3013_sota_gguf_logprob_telemetry_preflight.py`) |
 | REQ-INFER-SOTA-022 | Implemented (`python/carnot/experiment_3043_verified_speculation_transcript_fingerprint.py`) | Implemented (`tests/python/test_experiment_3043_verified_speculation_transcript_fingerprint.py`) |
 | REQ-INFER-SOTA-023 | Implemented (`python/carnot/reporting/sota_cache_preconditions_manifest_v2.py`) | Implemented (`tests/python/test_experiment_3123_sota_cache_preconditions_manifest_v2.py`) |
+| REQ-INFER-SOTA-024 | Planned (`python/carnot/reporting/cuda_env_forensics_ledger_3206.py`) | Planned (`tests/python/test_experiment_3206_cuda_env_forensics_ledger.py`) |
 | REQ-INFER-2041 | Proposed | Proposed |
 | REQ-INFER-2056 | Implemented (`crates/carnot-boltzmann/src/lib.rs`, `crates/carnot-python/src/lib.rs`) | Implemented (`crates/carnot-boltzmann/tests/soft_bellman.rs`, `tests/python/test_soft_bellman_pyo3.py`) |
 
