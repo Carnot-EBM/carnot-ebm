@@ -1,0 +1,321 @@
+{
+  "adaptive_policy_state": "ready_adaptive_schedule",
+  "artifact": "experiment_3198_repair_gate_decision_v5",
+  "blocker_reasons": [
+    {
+      "actual": "cpu_fallback_receipt_only",
+      "code": "exp3192_current_evidence_cpu_fallback_only",
+      "detail": "CPU fallback proves wiring only and cannot unlock repair",
+      "expected": "full_local_sota_receipt",
+      "field": "current_evidence_assessment.substrate_classification",
+      "source_artifact": "results/experiment_3192_receipt_adversarial_contract_v4.json"
+    },
+    {
+      "actual": false,
+      "code": "exp3192_clean_rerun_not_allowed",
+      "detail": "receipt contract assessment does not allow clean rerun",
+      "expected": true,
+      "field": "current_evidence_assessment.clean_rerun_allowed",
+      "source_artifact": "results/experiment_3192_receipt_adversarial_contract_v4.json"
+    },
+    {
+      "actual": false,
+      "code": "exp3193_clean_rerun_not_allowed",
+      "detail": [
+        "selected Python torch.cuda.is_available() is false",
+        "llama_cpp backend did not report GPU offload support: ggml_cuda_init: failed to initialize CUDA: unknown error"
+      ],
+      "expected": true,
+      "field": "clean_rerun_allowed",
+      "source_artifact": "results/experiment_3193_llama_cpp_cuda_offload_health_probe_v1.json"
+    },
+    {
+      "actual": false,
+      "code": "exp3193_headline_claim_not_allowed",
+      "detail": "headline verifier metrics are not allowed from this substrate",
+      "expected": true,
+      "field": "headline_claim_allowed",
+      "source_artifact": "results/experiment_3193_llama_cpp_cuda_offload_health_probe_v1.json"
+    },
+    {
+      "actual": "cuda_unavailable",
+      "code": "exp3193_nonfull_substrate",
+      "detail": "repair requires full local SOTA CUDA/offload receipt evidence",
+      "expected": "full_local_sota_receipt",
+      "field": "substrate_classification",
+      "source_artifact": "results/experiment_3193_llama_cpp_cuda_offload_health_probe_v1.json"
+    },
+    {
+      "actual": 0,
+      "code": "exp3193_no_offload_receipt",
+      "detail": "no CUDA/offload receipt exists",
+      "expected": "positive",
+      "field": "receipt_count",
+      "source_artifact": "results/experiment_3193_llama_cpp_cuda_offload_health_probe_v1.json"
+    },
+    {
+      "actual": true,
+      "code": "exp3193_adversarially_flagged",
+      "detail": "offload probe is adversarially flagged and cannot unlock repair",
+      "expected": false,
+      "field": "flagged_adversarial",
+      "source_artifact": "results/experiment_3193_llama_cpp_cuda_offload_health_probe_v1.json"
+    },
+    {
+      "actual": "blocked",
+      "code": "exp3194_gate_skipped",
+      "detail": "1 of 1 gate(s) failed; first failure: exp3193-llama-cpp-cuda-offload-health-probe-v1.clean_rerun_allowed (actual=False == expected=True)",
+      "expected": "eligible clean verifier artifact",
+      "field": "status",
+      "source_artifact": "results/experiment_3194_clean_live_sota_verifier_rerun_v11.json"
+    }
+  ],
+  "clean_verifier_state": "blocked_gate_skipped_conductor_pre_gate",
+  "domain_preview_state": "ready_bounded_domain_preview",
+  "downstream_gated_skip_expected": true,
+  "experiment_id": "exp3198",
+  "honest_verdict": "complete: repair_gate_state=blocked_clean_verifier_gate_skipped; blocker_count=8; downstream_gated_skip_expected=true",
+  "inference_substrate": {
+    "aggregation_only": true,
+    "downloads_models": false,
+    "executes_models": false,
+    "executes_repairs": false,
+    "executes_verifiers": false,
+    "kind": "deterministic_repair_gate_decision_v5",
+    "live_model_calls": 0,
+    "new_live_model_calls": 0,
+    "no_live_inference": true,
+    "no_llm_calls": true,
+    "repair_calls": 0,
+    "source_exp3193_receipt_count": 0,
+    "source_exp3194_live_call_count": 0
+  },
+  "invariant_certificate_state": "ready_exact_guard_coverage",
+  "ops_docs_reconciliation_left_to_conductor": true,
+  "receipt_gate_state": "blocked_cuda_unavailable",
+  "repair_allowed_scope": null,
+  "repair_gate_state": "blocked_clean_verifier_gate_skipped",
+  "run_date": "20260527",
+  "schema_version": "carnot.repair_gate_decision.v5",
+  "scripts_research_conductor_modified": false,
+  "source_artifacts": [
+    {
+      "path": "AGENTS.md",
+      "present": true,
+      "readable_json_object": null,
+      "required": true,
+      "role": "agents_repo_instructions",
+      "sha256": "b3d6581b04f16b85f77defb2837c98dc3b60ed51e10b347ecb36e609f318b619",
+      "source_type": "text",
+      "summary": {}
+    },
+    {
+      "path": "CODEX.md",
+      "present": true,
+      "readable_json_object": null,
+      "required": true,
+      "role": "codex_repo_workflow",
+      "sha256": "1db7ebc1009714f872db83447828a8957c3abb72061832cc1bc307735cd96bbe",
+      "source_type": "text",
+      "summary": {}
+    },
+    {
+      "path": "CLAUDE.md",
+      "present": true,
+      "readable_json_object": null,
+      "required": true,
+      "role": "claude_authenticity_rules",
+      "sha256": "cdc00581d37d1bd3c77a69b058787f74ecc71545a97c1eab31c48961637b3224",
+      "source_type": "text",
+      "summary": {}
+    },
+    {
+      "path": "openspec/capabilities/verification/spec.md",
+      "present": true,
+      "readable_json_object": null,
+      "required": true,
+      "role": "verification_openspec",
+      "sha256": "9dbaa0d9cb4d62e4e7acfe13d94b2692074ae427accbe463bba43dc5488ebf2a",
+      "source_type": "text",
+      "summary": {}
+    },
+    {
+      "path": "results/experiment_3192_receipt_adversarial_contract_v4.json",
+      "present": true,
+      "readable_json_object": true,
+      "required": true,
+      "role": "exp3192_receipt_adversarial_contract_v4",
+      "sha256": "1acc8b08fd51c75b6836f7f305dfd5a66fcca5cf6be8ad6f2739f7805afd3cb4",
+      "source_type": "json",
+      "summary": {
+        "clean_rerun_allowed": null,
+        "experiment_id": "exp3192",
+        "flagged_adversarial": null,
+        "honest_verdict": "complete: receipt_adversarial_contract_v4_ready=true; proof_execution_sufficient=true; clean_rerun_allowed=false",
+        "repair_call_ready": null,
+        "schema": "carnot.receipt_adversarial_contract.v4",
+        "status": null
+      }
+    },
+    {
+      "path": "results/experiment_3193_llama_cpp_cuda_offload_health_probe_v1.json",
+      "present": true,
+      "readable_json_object": true,
+      "required": true,
+      "role": "exp3193_llama_cpp_cuda_offload_health_probe_v1",
+      "sha256": "671beaee5d0b6a6ee176318f4312d30566fd5a59f55625a6eff850d761ddb94d",
+      "source_type": "json",
+      "summary": {
+        "clean_rerun_allowed": false,
+        "experiment_id": "exp3193",
+        "flagged_adversarial": true,
+        "honest_verdict": "blocked_cuda_unavailable: llama_cpp_cuda_offload_health_probe_v1_ready=true; clean_rerun_allowed=false; detail=selected Python torch.cuda.is_available() is false; llama_cpp backend did not report GPU offload support: ggml_cuda_init: failed to initialize CUDA: unknown error",
+        "repair_call_ready": null,
+        "schema": "carnot.llama_cpp_cuda_offload_health_probe.v1",
+        "status": null
+      }
+    },
+    {
+      "path": "results/experiment_3194_clean_live_sota_verifier_rerun_v11.json",
+      "present": true,
+      "readable_json_object": true,
+      "required": true,
+      "role": "exp3194_clean_live_sota_verifier_rerun_v11",
+      "sha256": "156463538ab08f2d22a5582b5fe5fbb138d6cd34b4fafe1ae2f6ffe4f2d90332",
+      "source_type": "json",
+      "summary": {
+        "clean_rerun_allowed": null,
+        "experiment_id": 3194,
+        "flagged_adversarial": null,
+        "honest_verdict": "blocked_gate_check_failed",
+        "repair_call_ready": null,
+        "schema": "blocked_gate_check_v1",
+        "status": "blocked"
+      }
+    },
+    {
+      "path": "results/experiment_3195_adaptive_verification_granularity_policy_v1.json",
+      "present": true,
+      "readable_json_object": true,
+      "required": true,
+      "role": "exp3195_adaptive_verification_granularity_policy_v1",
+      "sha256": "172246ee7673bcdc60c905ef31fbe44d6aa67a114d92d270a9aaa3a89880e0f3",
+      "source_type": "json",
+      "summary": {
+        "clean_rerun_allowed": null,
+        "experiment_id": "exp3195",
+        "flagged_adversarial": null,
+        "honest_verdict": "complete: adaptive_verification_granularity_policy_v1_ready=true; simulated_rows=72; estimated_verifier_call_delta=-71; promotion_allowed=false",
+        "repair_call_ready": null,
+        "schema": "carnot.adaptive_verification_granularity_policy.v1",
+        "status": null
+      }
+    },
+    {
+      "path": "results/experiment_3196_gencp_domain_preview_repair_compiler_v1.json",
+      "present": true,
+      "readable_json_object": true,
+      "required": true,
+      "role": "exp3196_gencp_domain_preview_repair_compiler_v1",
+      "sha256": "a3317c082112150426cb3306df4b807ea321cd01a109e23c1adb68d815e4827b",
+      "source_type": "json",
+      "summary": {
+        "clean_rerun_allowed": null,
+        "experiment_id": "exp3196",
+        "flagged_adversarial": null,
+        "honest_verdict": "complete: gencp_domain_preview_repair_compiler_v1_ready=true; preview_domain_count=12; average_candidate_domain_size=1.0; repair_call_ready=false; promotion_allowed=false",
+        "repair_call_ready": false,
+        "schema": "carnot.gencp_domain_preview_repair_compiler.v1",
+        "status": null
+      }
+    },
+    {
+      "path": "results/experiment_3197_exverus_inductive_certificate_expansion_v1.json",
+      "present": true,
+      "readable_json_object": true,
+      "required": true,
+      "role": "exp3197_exverus_inductive_certificate_expansion_v1",
+      "sha256": "3c3922b249d889d111f4030e603c1021f6e375e5ce785bd2c335928781fb9d1f",
+      "source_type": "json",
+      "summary": {
+        "clean_rerun_allowed": null,
+        "experiment_id": "exp3197",
+        "flagged_adversarial": null,
+        "honest_verdict": "complete: exverus_inductive_certificate_expansion_v1_ready=true; invariant_record_count=5; exact_guard_count=5; anti_overfit_test_count=5; linked_domain_preview_count=5; repair_call_ready=false",
+        "repair_call_ready": false,
+        "schema": "carnot.exverus_inductive_certificate_expansion.v1",
+        "status": null
+      }
+    },
+    {
+      "path": "python/carnot/verify/repair_gate_decision_v5.py",
+      "present": true,
+      "readable_json_object": null,
+      "required": false,
+      "role": "exp3198_module",
+      "sha256": "8d84b91f25cde0a9938c2d4c5d1d30f798e94be6662c6d0811ec4073031ad392",
+      "source_type": "python",
+      "summary": {}
+    },
+    {
+      "path": "scripts/experiment_3198_repair_gate_decision_v5.py",
+      "present": true,
+      "readable_json_object": null,
+      "required": false,
+      "role": "exp3198_script",
+      "sha256": "aa95a7ea829e5aa257b32c1485db0e6ff50c2730e28970e1a48d8a38962ddc17",
+      "source_type": "python",
+      "summary": {}
+    },
+    {
+      "path": "tests/python/test_experiment_3198_repair_gate_decision_v5.py",
+      "present": true,
+      "readable_json_object": null,
+      "required": false,
+      "role": "exp3198_tests",
+      "sha256": "c7819f01c56f2e4e5cd2a9b287ca6cf4a88d3f4752911872acb5f9503ad83393",
+      "source_type": "python",
+      "summary": {}
+    }
+  ],
+  "source_checksums": {
+    "AGENTS.md": "b3d6581b04f16b85f77defb2837c98dc3b60ed51e10b347ecb36e609f318b619",
+    "CLAUDE.md": "cdc00581d37d1bd3c77a69b058787f74ecc71545a97c1eab31c48961637b3224",
+    "CODEX.md": "1db7ebc1009714f872db83447828a8957c3abb72061832cc1bc307735cd96bbe",
+    "openspec/capabilities/verification/spec.md": "9dbaa0d9cb4d62e4e7acfe13d94b2692074ae427accbe463bba43dc5488ebf2a",
+    "python/carnot/verify/repair_gate_decision_v5.py": "8d84b91f25cde0a9938c2d4c5d1d30f798e94be6662c6d0811ec4073031ad392",
+    "results/experiment_3192_receipt_adversarial_contract_v4.json": "1acc8b08fd51c75b6836f7f305dfd5a66fcca5cf6be8ad6f2739f7805afd3cb4",
+    "results/experiment_3193_llama_cpp_cuda_offload_health_probe_v1.json": "671beaee5d0b6a6ee176318f4312d30566fd5a59f55625a6eff850d761ddb94d",
+    "results/experiment_3194_clean_live_sota_verifier_rerun_v11.json": "156463538ab08f2d22a5582b5fe5fbb138d6cd34b4fafe1ae2f6ffe4f2d90332",
+    "results/experiment_3195_adaptive_verification_granularity_policy_v1.json": "172246ee7673bcdc60c905ef31fbe44d6aa67a114d92d270a9aaa3a89880e0f3",
+    "results/experiment_3196_gencp_domain_preview_repair_compiler_v1.json": "a3317c082112150426cb3306df4b807ea321cd01a109e23c1adb68d815e4827b",
+    "results/experiment_3197_exverus_inductive_certificate_expansion_v1.json": "3c3922b249d889d111f4030e603c1021f6e375e5ce785bd2c335928781fb9d1f",
+    "scripts/experiment_3198_repair_gate_decision_v5.py": "aa95a7ea829e5aa257b32c1485db0e6ff50c2730e28970e1a48d8a38962ddc17",
+    "tests/python/test_experiment_3198_repair_gate_decision_v5.py": "c7819f01c56f2e4e5cd2a9b287ca6cf4a88d3f4752911872acb5f9503ad83393"
+  },
+  "source_gate_summary": {
+    "exp3192_clean_rerun_allowed": false,
+    "exp3192_substrate_classification": "cpu_fallback_receipt_only",
+    "exp3193_clean_rerun_allowed": false,
+    "exp3193_flagged_adversarial": true,
+    "exp3193_substrate_classification": "cuda_unavailable",
+    "exp3194_flagged_adversarial": null,
+    "exp3194_schema": "blocked_gate_check_v1",
+    "exp3194_status": "blocked",
+    "exp3195_false_accept_risk_increase": 0.0,
+    "exp3196_preview_domain_count": 12,
+    "exp3197_invariant_record_count": 5
+  },
+  "spec_refs": [
+    "REQ-VERIFY-3198",
+    "SCENARIO-VERIFY-3198"
+  ],
+  "tests_run": [
+    ".venv/bin/pytest tests/python/test_experiment_3198_repair_gate_decision_v5.py -q -o addopts=''",
+    ".venv/bin/coverage erase",
+    ".venv/bin/coverage run --source=python/carnot/verify/repair_gate_decision_v5.py -m pytest -o addopts='' tests/python/test_experiment_3198_repair_gate_decision_v5.py -q",
+    ".venv/bin/coverage report --include='python/carnot/verify/repair_gate_decision_v5.py' --fail-under=100 --show-missing",
+    ".venv/bin/python scripts/check_spec_coverage.py tests/python/test_experiment_3198_repair_gate_decision_v5.py",
+    ".venv/bin/pytest tests/python -q"
+  ]
+}

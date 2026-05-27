@@ -3476,6 +3476,71 @@ emits an `honest_verdict` that starts with `complete:`.
 |---|---|---|
 | REQ-VERIFY-3197 | Implemented (`python/carnot/verify/exverus_inductive_certificate_expansion_v1.py`) | Implemented (`tests/python/test_experiment_3197_exverus_inductive_certificate_expansion_v1.py`) |
 
+### REQ-VERIFY-3198: Repair Gate Decision V5 Aggregation
+
+The repository shall provide an Exp 3198 deterministic repair-gate decision v5
+builder that writes `results/experiment_3198_repair_gate_decision_v5.json`
+from checked-in `.296` upstream artifacts only. The builder MUST consume Exp
+3192 receipt/adversarial contract v4, Exp 3193 llama.cpp CUDA/offload health
+probe v1, Exp 3194 clean live SOTA verifier rerun v11, Exp 3195 adaptive
+verification granularity policy v1, Exp 3196 GenCP domain preview repair
+compiler v1, and Exp 3197 ExVerus inductive certificate expansion v1. It MUST
+NOT run live inference, invoke repair generation, execute verifier scoring,
+download models, push commits, or modify `scripts/research_conductor.py`.
+
+The gate SHALL fail closed if any required upstream artifact is missing,
+malformed, blocked, gate-skipped, CPU-fallback-only, or adversarially flagged.
+It SHALL evaluate receipt eligibility, clean-verifier readiness, adversarial
+flags, adaptive scheduling readiness, bounded domain-preview readiness, and
+invariant-certificate coverage as separate machine-readable states. Clean
+repair SHALL be unblocked only when the receipt/offload evidence is full local
+SOTA and unflagged, the clean local SOTA verifier artifact is eligible and
+unflagged with computed false-accept evidence, the adaptive policy has
+zero known false-accept risk increase, the GenCP domain preview has bounded
+candidate domains, and ExVerus invariant records provide exact guards and
+anti-overfit tests linked to those domains.
+
+The terminal artifact MUST include `schema_version`, `experiment_id`,
+`source_artifacts`, `receipt_gate_state`, `clean_verifier_state`,
+`adaptive_policy_state`, `domain_preview_state`,
+`invariant_certificate_state`, `repair_gate_state`, `repair_allowed_scope`,
+`blocker_reasons`, `downstream_gated_skip_expected`, and `honest_verdict`.
+`repair_gate_state` SHALL be either `unblocked_for_bounded_repair_ladder` or a
+precise blocked state. Blocked states SHALL set `repair_allowed_scope=null`,
+include machine-readable blocker reasons, and set
+`downstream_gated_skip_expected=true`. The unblocked state SHALL include an
+exact bounded repair scope with finite row and attempt budgets, mandated local
+SOTA model policy, domain-preview and invariant-source requirements,
+exact-authority acceptance, and a no-headline-claim boundary.
+
+The `honest_verdict` MUST start with `complete:` for both blocked and
+unblocked terminal artifacts, because Exp 3198 is an aggregation decision whose
+truthful completion can still decide that downstream repair must be skipped.
+
+### SCENARIO-VERIFY-3198: V5 Gate Blocks On Skipped Or Flagged Clean Verifier
+
+Given the `.296` Exp 3192 through Exp 3197 artifacts may be present, blocked,
+gate-skipped, CPU fallback only, or adversarially flagged,
+When Exp 3198 builds the repair-gate decision v5 artifact,
+Then it writes the terminal JSON artifact without live inference, records each
+upstream artifact in `source_artifacts`, reports receipt, clean-verifier,
+adaptive-policy, domain-preview, and invariant-certificate states separately,
+keeps repair blocked whenever the clean local SOTA verifier is not eligible or
+is adversarially flagged, carries precise machine-readable blocker reasons for
+missing, blocked, gate-skipped, CPU-fallback-only, or flagged upstreams, and
+sets `downstream_gated_skip_expected=true` for the downstream repair ladder.
+
+If every upstream precondition is clean, unflagged, and ready, then the same
+builder SHALL set `repair_gate_state=unblocked_for_bounded_repair_ladder` and
+publish only a bounded repair scope over the intersection of Exp 3196 preview
+domains and Exp 3197 invariant guards.
+
+## Implementation Status (REQ-VERIFY-3198)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-VERIFY-3198 | Implemented (`python/carnot/verify/repair_gate_decision_v5.py`) | Implemented (`tests/python/test_experiment_3198_repair_gate_decision_v5.py`) |
+
 ### REQ-VERIFY-3180: Controlled-Invariance Executor V2
 
 The repository shall provide an Exp 3180 controlled-invariance executor that
