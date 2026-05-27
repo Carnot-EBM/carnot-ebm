@@ -1,28 +1,29 @@
 {
   "schema": "carnot.operational_retro.v64",
   "milestone": "2026.05.294",
-  "generated_at": "2026-05-27T07:01:04Z",
-  "retro_type": "operational_full",
-  "summary": "The authoritative timing block reports 0 completed experiments, 0 total wall-time minutes, and 0 compute-bound experiments for milestone 2026.05.294. Longest compute-bound tasks, compute-bound GPU efficiency, and 2+ model DualGPURunner coverage are no data available this milestone.",
+  "generated_at": "2026-05-27T07:27:33Z",
+  "retro_type": "operational_in_progress",
+  "summary": "No milestone-scoped experiment commits were found after activation. With 0 completed experiments and 0 compute-bound experiments, compute-bound runtime ranking, compute-bound GPU efficiency, and DualGPURunner assessment are no data available this milestone.",
   "total_wall_time_minutes": 0,
   "experiments_completed": 0,
   "slowest_experiments": [],
   "bottlenecks_identified": [
-    "No wall-time bottleneck can be identified from the timing block: no data available this milestone.",
-    "GPU idle is not flagged because the timing block contains 0 compute-bound experiments."
+    "No completed experiment timing rows were available after milestone activation, so operational bottlenecks could not be attributed to specific experiments.",
+    "Compute-bound slowest-experiment analysis is no data available this milestone.",
+    "GPU-idle diagnosis is no data available this milestone because the timing data contains no compute-bound task rows."
   ],
   "improvements_suggested": [
-    "Auto-generate an empty-window retrospective when experiments_completed is 0 so the milestone closes with explicit no-data answers.",
-    "Gate GPU-idle retrospective warnings on compute_bound_experiments_count greater than 0.",
-    "Make the timing collector emit a milestone-scoped data-availability status before analysis starts."
+    "Add a pre-retro timing sentinel that stops full efficiency analysis when experiments_completed is 0 and writes an explicit no-data artifact.",
+    "Add an activation-to-first-experiment heartbeat so an empty milestone window is detected before retrospective generation.",
+    "Require the retro generator to preserve the distinction between idle synthesis-only GPU state and idle compute-bound GPU state."
   ],
   "top_3_highest_leverage_actions": [
-    "Add a no-experiment timing-window fast path for operational retrospectives.",
-    "Keep GPU-idle diagnosis behind compute-bound timing evidence.",
-    "Record whether timing data was absent, empty, or filtered at milestone activation."
+    "Wire the retro preflight to fail closed into a no-data operational summary when the milestone-scoped timing query returns no experiment commits.",
+    "Emit an activation-window heartbeat artifact as soon as the first experiment commit lands, and surface its absence before closeout.",
+    "Keep the GPU-idle alert gated on compute-bound timing rows so synthesis-only closeouts do not create false bottlenecks."
   ],
   "compute_bound_experiments_count": 0,
   "gpu_idle_on_compute_bound_tasks": null,
   "estimated_time_savings_pct": 0,
-  "meta_reflection": "The main operational risk this milestone is not a slow run but an empty timing basis. The retro preserves that absence rather than inferring from adjacent records or idle GPU telemetry."
+  "meta_reflection": "The retrospective has to stay empty where the timing source is empty: there are no slow compute-bound experiments to rank, no compute-bound GPU utilization to judge, and no parallel multi-model runner decision to audit. The only useful operational lesson is to detect the empty activation window earlier."
 }
