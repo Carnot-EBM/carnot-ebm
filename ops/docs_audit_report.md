@@ -4,44 +4,49 @@
 # docs_audit_report — 2026-05-27
 
 ## TL;DR (stranger's 30-second take)
-A stranger would likely bounce after the hero section. While the core value proposition is strong and clear, the page quickly devolves into a wall of dense internal acronyms and suspiciously perfect benchmark scores that erode technical trust.
+I would close the tab immediately. While the hero headline is compelling, the page is riddled with leaked internal file paths, impenetrable project jargon, and an overwhelming number of result cards that make it look like a broken internal status board rather than a polished open-source tool.
 
 ## TOP 3 PROBLEMS
-1. INTERNAL JARGON — "Evidence" and "Features" sections are packed with unexplained terms (FoVer, SVAMP, CCTU, VeriCoT).
-2. FABRICATION SIGNALS — Multiple claims of 1.0, 100%, and exactly 2.0x without adequate caveats look too good to be true.
-3. PER-MILESTONE NARRATIVE — The "Recent progress" card reads like an internal retrospective or commit message, not marketing copy.
+1. Broken HTML/CSS and leaked internal test paths in the "Live benchmark" card and `<head>`.
+2. Extreme card bloat in the "What we measured" results grid.
+3. Heavy internal jargon ("FoVer", "PREM") in the "Recent progress" and "TTC & PREM" cards.
 
 ## DETAILED FINDINGS
 ### Bloat
-- "What we measured" section — 12 results cards — cap at 6-8 of the most impactful, universally understandable metrics.
-- "From the blog" section — 7 blog cards — cap at 3-4 most recent or relevant posts to avoid overwhelming the user.
-- Global Navigation — 12 links — cap at 5-6 essential links to keep the header clean.
+- "What we measured" results grid — 12 cards — cap to 4 cards
+- "From the blog" section — 7 cards — cap to 3 cards
+- "Seven capabilities" bento grid — 7 cards — cap to 4 cards
 
 ### Internal jargon
-- "Recent progress" card — `FoVer`, `5-seed dual-condition`, `architecture-only` — A stranger doesn't know these internal benchmark names or specific conditions.
-- "What we measured" section — `IterativeSelfRepair`, `execute-feedback-retry`, `EstimationVerifier SVAMP`, `VeriCoT`, `PRM-BiasBench-style attacks`, `CCTU`, `HalluGuard v3` — These read like internal project codenames and obscure benchmarks.
-- "Seven capabilities" section — `TTC & PREM` — Even expanded, "Process-Reward Energy Model variance" is dense insider theory.
+- Results/Live benchmark — "@.tmp-pytest/pytest-of-ianblenke/pytest-3/popen-gw0/test_req_verify_2932_run_uses_0/citation_hallucination_field_verifier_2932_raw/spilled-energy-2602-18671:real.txt" — looks like a literal leaked internal test path.
+- HTML `<head>` and `<style>` — "@.tmp-pytest/..." paths replaced font weights and CSS media queries.
+- Features/TTC & PREM — "Test-Time Compute (TTC)", "Process-Reward Energy Model (PREM)" — acronyms dropped with zero contextual explanation.
+- Hero Recent Progress — "FoVer", "5-seed dual-condition" — internal benchmark names and experiment parameters that mean nothing to an outsider.
+- Results/Code repair — "IterativeSelfRepair", "(HumanEval-50, execute-feedback-retry)" — reads like internal class names and test parameters.
+- Results/Math reasoning — "EstimationVerifier", "SVAMP AUC", "FoVer baseline" — dense internal components and dataset acronyms.
+- Results/Cascade routing — "HalluGuard v3" — undefined internal project or reference.
 
 ### Per-milestone narrative
-- "Recent progress" card — "Repinned from v2 0.9857 after pre-submission adversarial audit; see Why We Report Two AUROCs Now." — This is internal status reporting and retro copy, not landing page material.
+- Hero Recent progress card — "Repinned from v2 0.9857 after pre-submission adversarial audit..."
+- Preprint section — "The arXiv submission is prepared but pending operator-initiated upload."
 
 ### Inconsistencies
-- Claimed AUROC/AUC: "0.9131 AUROC" (hero stats) vs "0.91 AUROC" (Prompt-injection) vs "0.90 AUC" (Math reasoning). Mixing AUROC and AUC is confusing, and it's unclear what the primary metric is.
+- The hero stats bar claiming "0.9131 Verifier AUROC" vs the Safety result card claiming "0.91 AUROC (publication gate)" vs the recent progress card mentioning "0.9857" and "0.8947".
 
 ### Missing essentials
-- All essential requirements (What it does, trust anchors, installation, license, maintainer) are technically present on the page.
+- None of the core essentials are missing. (The pitch, installation instructions, license, maintainer, and trust anchors are all present).
 
 ### Fabrication signals
-- "Training" card — "2.0x speedup, identical losses" (Exactly 2.0x is suspiciously perfect scaling).
-- "Math extraction" card — "GSM8K extraction TP rate: 0.5 -> 1.0" (A perfect 1.0 true positive rate is an immediate red flag).
-- "Adversarial audit" card — "k=5 ensemble catches 60/60 attacks" (100% success rate on 60 attacks looks heavily overfitted or fabricated without deep context).
+- "1.0" true positive rate in Results/Math extraction card.
+- "60/60 attacks" perfect score in Results/Adversarial audit card.
 
 ## WHAT'S WORKING
-- The hero section is excellent: "Catch the mistakes your LLM confidently makes up." is a great, plain-English hook.
-- The "Quickstart" tabbed Python/Rust code blocks provide an immediate, concrete understanding of the developer experience.
+- The hero copy ("Catch the mistakes your LLM confidently makes up") and the "Extract -> Check -> Repair" bento layout clearly explain the value proposition.
+- The Quickstart tabs (Python/Rust) successfully demonstrate the ease of integration.
 
 ## RECOMMENDED OPERATOR ACTIONS
-1. Rewrite the "Recent progress" card to focus entirely on current capabilities, removing the benchmark history and audit drama.
-2. Cull the "Results" section from 12 to 6 cards, translating internal codenames (e.g., "CCTU") into plain English ("tool use constraints").
-3. Remove or heavily contextualize the "1.0", "60/60", and "2.0x" claims in the Results section, as they trigger immediate skepticism in technical readers.
-4. Standardize AUROC reporting across the page so the reader isn't confused by slight variations and different acronyms.
+1. Revert or fix the broken template substitution that injected `@.tmp-pytest/...` into the CSS `@media` queries, Google Fonts URL, and the "Live benchmark" card.
+2. Prune the "What we measured" results grid from 12 cards down to the 4 most defensible claims (removing the perfect 1.0 / 100% cards).
+3. Rewrite the "Recent progress" card to focus on user value instead of internal milestone repinning and "FoVer" test conditions.
+4. Remove or heavily rewrite the "TTC & PREM" bento card to explain the underlying concepts without relying on acronyms.
+5. Limit the "From the blog" section to the 3 most relevant introductory posts to reduce visual bloat.

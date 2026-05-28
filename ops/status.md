@@ -1,6 +1,23 @@
 # Carnot — Operational Status
 
-**Last Updated:** 2026-05-27 (Milestone 2026.05.297 operational retrospective complete)
+**Last Updated:** 2026-05-28 (Milestone 2026.05.300 research planning staged)
+
+## Session 2026-05-28 - Milestone 2026.05.300 Research Planning Staged
+
+Planned milestone 2026.05.300 as "Runtime Receipt Recovery +
+Prompt-Injection KAN Split-Run + FR-11 Failure Memory" after `.299`
+completed. Used `results/experiment_3223_capstone_v299.json`,
+`results/experiment_3232_capstone_v298.json`, `ops/conductor-log.md`, and
+recent CUDA/KAN/FR-11 artifacts as authority: `paper_ready=false`,
+`publication_blocker_count=100`, `.299` Prompt-Injection KAN v4 did not
+produce its artifact after three CLI failures, and the next top gap remains
+local SOTA CUDA/GGUF receipt recovery.
+
+Updated `research-references.md` with the post-`.299` research sweep, rewrote
+`openspec/change-proposals/research-roadmap-vNEXT.md`, and created
+`research-roadmap-next.yaml` with 13 tasks (`exp3233`-`exp3245`). Validation
+passed for roadmap schema/prior failures, exclusion manifest, and gate audit.
+Left `research-roadmap.yaml` and `scripts/research_conductor.py` untouched.
 
 ## Session 2026-05-27 - Milestone 2026.05.297 Operational Retrospective Complete
 

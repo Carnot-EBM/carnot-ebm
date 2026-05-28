@@ -1,3 +1,119 @@
+## 2026-05-28 Post-.299 Planning Sweep (Milestone 2026.05.300)
+
+This sweep was run after milestone `.299` completed. `.299` proved a narrow
+but important negative result: the one-shot Prompt-Injection KAN v4 15k
+distillation task did not produce its artifact after three conductor attempts,
+and the capstone reported `paper_ready=false`, `publication_blocker_count=100`,
+`v4_outcome=blocked_missing_exp3222_result`, and
+`next_top_gap=cuda_chain_for_full_local_sota_receipts`. The next milestone
+therefore should not retry the 15k KAN task as a monolith. It should split
+runtime recovery, prompt-injection corpus/teacher/sidecar work, and FR-11
+self-learning into explicit gated artifacts.
+
+### Distributional EBMs Remain the Right Shape for Exact-Row Triage
+
+- **Paper:** "Distributional Energy-Based Models for Uncertainty-Aware
+  Structured LLM Reasoning" (arXiv:2605.18871; submitted 2026-05-15).
+- **What:** The paper combines learned quality scoring with deterministic
+  analytical penalties, uses ensemble uncertainty for abstention/regeneration,
+  and reports that structural verification is strongest where constraints are
+  checkable.
+- **Relevance to Carnot:** Keep the distributional scorer as a bounded
+  sidecar over exact rows. Do not promote it to a repair claim until the
+  local-SOTA receipt and clean verifier rerun pass. This supports a `.300`
+  repair-preflight experiment only behind a `clean_rerun_allowed` gate.
+- **Sources:** https://arxiv.org/abs/2605.18871
+
+### Draft-Conditioned Constrained Decoding Fits Repair-Preflight, Not Certification
+
+- **Paper:** "Draft-Conditioned Constrained Decoding for Structured Generation
+  in LLMs" (arXiv:2603.03305; submitted 2026-02-08).
+- **What:** DCCD separates semantic drafting from hard structural enforcement:
+  generate an unconstrained draft, then apply constrained decoding conditioned
+  on the draft. The paper frames the method as reducing the KL "projection tax"
+  from hard constraints.
+- **Relevance to Carnot:** Use DCCD-style repair preflight only to generate
+  schema-valid candidate repairs. The exact row verifier remains the authority
+  for semantic correctness. This is a better `.300` direction than another
+  prompt-only structured repair attempt.
+- **Sources:** https://arxiv.org/abs/2603.03305
+
+### Accelerator-Friendly Constrained Decoding Is Becoming Practical
+
+- **Paper:** "Vectorizing the Trie: Efficient Constrained Decoding for
+  LLM-based Generative Retrieval on Accelerators" (arXiv:2602.22647;
+  submitted 2026-02-26).
+- **What:** STATIC flattens prefix tries into sparse matrix operations for
+  accelerator-friendly constrained decoding, avoiding pointer-heavy CPU trie
+  traversal.
+- **Relevance to Carnot:** If schema constraints become a throughput bottleneck
+  in clean local-SOTA repair runs, represent constraint automata as vectorized
+  structures rather than Python token filters. This is not a `.300` headline
+  experiment, but it informs the repair-preflight implementation notes.
+- **Sources:** https://arxiv.org/abs/2602.22647
+
+### Citation Hallucination Work Suggests Field-Level Evidence Artifacts
+
+- **Papers:** "Source or It Didn't Happen" (arXiv:2605.08583; submitted
+  2026-05-09) and "LLM hallucinations in the wild" (arXiv:2605.07723;
+  submitted 2026-05-08).
+- **What:** CiteTracer uses structured citation extraction, retrieval, field
+  matching, and class-specialist adjudication. The large-scale citation audit
+  uses scientific references as a uniquely verifiable hallucination object and
+  reports widespread non-existent citations in 2025.
+- **Relevance to Carnot:** Add field-level evidence discipline to any future
+  paper-writing or source-verification agent: extracted object, deterministic
+  retrieval/match fields, ambiguous-route handling, and no binary
+  found/not-found shortcut.
+- **Sources:** https://arxiv.org/abs/2605.08583 and
+  https://arxiv.org/abs/2605.07723
+
+### KAN Continual-Learning Evidence Supports Sidecars With Guardrails
+
+- **Papers:** KAN-CL (arXiv:2605.12306; submitted 2026-05-12) and KAC
+  (arXiv:2503.21076; submitted 2025-03-27).
+- **What:** KAN-CL argues for per-knot importance anchoring and reports large
+  forgetting reductions in vision continual-learning settings. KAC replaces
+  linear classifiers with KAN-style heads for continual classifiers.
+- **Relevance to Carnot:** The useful lesson is locality-aware anchoring, not a
+  blanket claim that KANs solve continual learning. `.300` should keep KAN work
+  as a prompt-injection sidecar and FR-11 evidence-memory controller, with
+  nonforgetting budgets and rollback fields.
+- **Sources:** https://arxiv.org/abs/2605.12306 and
+  https://arxiv.org/abs/2503.21076
+
+### P-Bit Ising Guidance Looks Useful Only With Exact Fallbacks
+
+- **Papers:** "A fully parallel densely connected probabilistic Ising machine
+  with inertia" (arXiv:2604.17109; submitted 2026-04-18) and
+  "Probabilistic-bit Guided CDCL for SAT Solving using Ising Consensus
+  Assumptions" (arXiv:2605.04033; submitted 2026-05-05).
+- **What:** The inertia work reports fully parallel p-bit updates for dense
+  problems. The CDCL hybrid uses p-bit samples as assumptions while retaining
+  CDCL fallback, with distribution-sensitive gains and a learned gate to avoid
+  unproductive hybrid calls.
+- **Relevance to Carnot:** Hardware and Ising samplers should be guidance
+  layers, not correctness authorities. Future hardware experiments should
+  preserve exact CDCL/SMT fallback and learned "when to call the sampler"
+  gates. Do not reopen retired PIMI or THRML scaling sweeps in `.300`.
+- **Sources:** https://arxiv.org/abs/2604.17109 and
+  https://arxiv.org/abs/2605.04033
+
+### Extropic THRML and Kona Are Strategic Signals, Not .300 Claims
+
+- **Sources:** Extropic THRML / hardware pages and Logical Intelligence Kona.
+- **What:** Extropic now describes THRML as a JAX library for simulating and
+  training probabilistic graphical models and EBMs for TSU-style hardware, and
+  lists XTR-0/Z1 as the hardware path. Logical Intelligence presents Kona as
+  an EBM layer that enforces constraints below LLM interfaces.
+- **Relevance to Carnot:** Keep these as architecture alignment signals. `.300`
+  should not make TSU, Kona, or thermodynamic speedup claims; it should keep
+  local GPU receipt recovery and exact verifier authority as the immediate
+  path.
+- **Sources:** https://extropic.ai/software,
+  https://extropic.ai/hardware, and
+  https://logicalintelligence.com/kona-ebms-energy-based-models
+
 ## 2026-05-27 Post-.297 Planning Sweep (Milestone 2026.05.298)
 
 This sweep was run after milestone `.297` completed. `.297` made the
