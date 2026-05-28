@@ -12794,3 +12794,65 @@ missing or not ready, the artifact remains complete but leaves
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-REPORT-3269 | Implemented (`python/carnot/reporting/prompt_injection_v4_full_corpus_split_manifest_3269.py`) | Implemented (`tests/python/test_experiment_3269_prompt_injection_v4_full_corpus_split_manifest.py`) |
+
+### REQ-REPORT-3270: Prompt-Injection Teacher Label Shards 2-4 v1
+
+The repository shall provide an Exp 3270 prompt-injection teacher-label shard
+runner that writes
+`results/experiment_3270_prompt_injection_teacher_label_shards_2_4_v1.json`
+and shard JSONL files under `data/prompt_injection_v4/teacher_label_shards/`.
+The workflow MUST be a split-run successor to the completed `.302` 2,000-row
+seed shard, not a retry of the failed 15k monolith. It SHALL first read the Exp
+3269 full-corpus split manifest and SHALL write a complete gated-skip artifact
+with `teacher_label_shards_2_4_ready=false` when the manifest is not ready.
+Before any model load, it MUST check CUDA visibility, selected-Python
+llama.cpp CUDA support, cached mandated SOTA GGUF availability, and disk
+capacity.
+
+When the gates are open, the workflow SHALL produce shards 2, 3, and 4 with
+2,000 new examples each, following the manifest taxonomy: shard 2 covers
+aligned-instruction benign and misaligned-instruction attack rows, shard 3
+covers non-instruction benign and encoding attack rows, and shard 4 covers
+DataFlip/KAD-adaptive and tool/RAG indirect-injection attack rows. At least one
+cached mandated local SOTA GGUF model from
+`unsloth/gemma-4-26B-A4B-it-GGUF`,
+`unsloth/Qwen3.6-35B-A3B-GGUF`, or
+`unsloth/gemma-4-31B-it-GGUF` MUST be used for auditable headline label
+evidence. Bulk labels may be deterministically expanded from the manifest
+taxonomy only when the artifact explicitly records that source in per-example
+provenance and in `models_used`.
+
+The terminal artifact MUST include `teacher_label_shards_2_4_ready`,
+`cumulative_label_count`, `new_label_count`, `shard_counts`,
+`label_distribution`, `model_specs`, `models_used`, `preconditions_checked`,
+`output_paths`, `checksums`, `random_seed`, `reproducibility_checksum`,
+`duration_s`, and `honest_verdict`. `new_label_count` MUST be 6,000 when all
+three shards are ready, `cumulative_label_count` MUST include the `.302` seed
+shard count, and `shard_counts` MUST record benign, injection,
+aligned-instruction, and misaligned-instruction counts per shard. Checksums
+MUST cover each written shard file. `honest_verdict` MUST begin with one of
+`complete:`, `success:`, `passed:`, or `shipped:`.
+
+#### SCENARIO-REPORT-3270: Shards 2-4 Add Six Thousand Auditable Labels
+
+**Given** Exp 3269 reports `full_corpus_manifest_ready=true`
+**And** CUDA, selected-Python llama.cpp CUDA, disk capacity, and at least one
+mandated local SOTA GGUF are available
+**When** the Exp 3270 shard-label runner runs
+**Then** it writes
+`results/experiment_3270_prompt_injection_teacher_label_shards_2_4_v1.json`
+and three shard JSONL files with all required schema fields, sets
+`teacher_label_shards_2_4_ready=true`, records `new_label_count=6000`,
+records `cumulative_label_count=8000` when the seed shard has 2,000 rows,
+names the actual SOTA model used for headline label evidence, records
+precondition evidence and per-shard class/instruction counts, includes
+checksums for every shard file, and emits an `honest_verdict` beginning with
+`complete:`. If any gate is closed or SOTA label evidence is unavailable, the
+artifact remains complete, leaves `teacher_label_shards_2_4_ready=false`, and
+records the exact blocker.
+
+## Implementation Status (REQ-REPORT-3270)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-3270 | Planned (`python/carnot/reporting/prompt_injection_teacher_label_shards_2_4_3270.py`) | Planned (`tests/python/test_experiment_3270_prompt_injection_teacher_label_shards_2_4.py`) |
