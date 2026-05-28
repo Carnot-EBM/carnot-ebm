@@ -9543,3 +9543,83 @@ sidecar promotion, and emits an `honest_verdict` beginning with `complete:`.
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-LEARN-3230 | Pending (`python/carnot/eval/fr11_kan_cl_certificate_boundary_audit_v2.py`) | Pending (`tests/python/test_experiment_3230_kan_cl_certificate_boundary_audit_v2.py`) |
+
+## REQ-LEARN-3243: FR-11 Failure-Memory Controller Update
+
+**Given** recent conductor-log entries and result artifacts expose missing
+artifacts, repeated gate blocks, stale premises, certificate misses, and backend
+failures
+**When** Exp 3243 builds the FR-11 failure-memory controller update
+**Then** it SHALL aggregate evidence from checked-in upstream artifacts and
+`ops/conductor-log.md`, define a failure-memory schema with keys for
+prerequisite, failure signature, stale premise, accepted next action, and
+retirement risk, and score at least one heldout replay slice where the
+controller avoids a doomed rerun or forces a gate.
+**And** it SHALL record nonforgetting checks against prior FR-11 accepted and
+rejected traces, reject stale premises, avoid repeated doomed reruns, and keep
+controller-memory updates separate from model training.
+**And** it SHALL set `model_weight_update_claimed=false` and
+`controller_memory_updates_are_not_training=true`; no foundation-model,
+KAN-sidecar, hidden-state, conductor-file, or active-roadmap mutation may be
+claimed.
+
+The terminal artifact SHALL be
+`results/experiment_3243_fr11_failure_memory_controller_v1.json` and SHALL
+include `experiment_id="exp3243"`,
+`task_id="exp3243-fr11-failure-memory-controller-v1"`,
+`milestone="2026.05.300"`,
+`inference_substrate="aggregation_from_upstream_artifacts"`,
+`principle_annotations`, `continuous_self_learning_task`,
+`failure_memory_schema_ready`, `failure_trace_count`,
+`heldout_replay_count`, `heldout_replay_delta`, `nonforgetting_delta`,
+`stale_premise_rejection_count`, `doomed_rerun_avoidance_count`,
+`model_weight_update_claimed`,
+`controller_memory_updates_are_not_training`,
+`fr11_controller_update_ready`, and `honest_verdict`.
+
+### REQ-LEARN-3243 Sub-requirements
+
+- REQ-LEARN-3243-1: The failure-memory schema SHALL expose the stable keys
+  `prerequisite`, `failure_signature`, `stale_premise`,
+  `accepted_next_action`, and `retirement_risk`.
+- REQ-LEARN-3243-2: Failure traces SHALL include at least one missing-artifact
+  trace, one repeated-gate-block trace, one stale-premise trace, and one backend
+  failure trace extracted from the named upstream artifacts or conductor log.
+- REQ-LEARN-3243-3: Heldout replay scoring SHALL count controller decisions
+  that avoid a doomed rerun or force a prerequisite gate as positive deltas and
+  SHALL expose `heldout_replay_delta > 0` when any doomed rerun is avoided.
+- REQ-LEARN-3243-4: Nonforgetting checks SHALL cite prior FR-11 accepted and
+  rejected traces and SHALL keep accepted-route retention nonnegative while
+  preserving stale-premise rejections.
+- REQ-LEARN-3243-5: `fr11_controller_update_ready` SHALL be true only when the
+  schema is ready, failure traces and heldout replays are nonzero, stale
+  premises were rejected, at least one doomed rerun was avoided, nonforgetting
+  delta is nonnegative, and both no-training flags are set.
+- REQ-LEARN-3243-6: `honest_verdict` SHALL begin with `complete:` and SHALL
+  explicitly state that no model weights were updated.
+
+### SCENARIO-LEARN-3243: Failure Memory Avoids Doomed Reruns
+
+**Given** recent milestones contain repeated pre-gate failures for missing SOTA
+receipt artifacts, repair-gate blockers, and CUDA backend smoke failures
+**When** Exp 3243 scores a heldout replay slice for the controller memory
+**Then** it records a positive heldout replay delta, avoids at least one doomed
+rerun, forces a gate or accepted repair action for unsafe prerequisites,
+preserves stale-premise rejections, keeps `model_weight_update_claimed=false`,
+keeps `controller_memory_updates_are_not_training=true`, and emits an
+`honest_verdict` beginning with `complete:` that says no model weights were
+updated.
+
+### SCENARIO-LEARN-3243-BLOCKED: Missing Evidence Fails Closed
+
+**Given** the conductor log and upstream artifacts are missing or unreadable
+**When** Exp 3243 builds the failure-memory update
+**Then** it still writes the required schema fields, reports zero failure traces
+and heldout replays, keeps readiness false, makes no training or model-weight
+claim, and emits an `honest_verdict` beginning with `complete:`.
+
+## Implementation Status (REQ-LEARN-3243)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-LEARN-3243 | Pending (`python/carnot/eval/fr11_failure_memory_controller_v1.py`) | Pending (`tests/python/test_experiment_3243_fr11_failure_memory_controller_v1.py`) |

@@ -6575,3 +6575,6 @@ web search |
 | 2026-05-28 05:09 UTC | Mandated local SOTA GGUF receipt v7 gated on llama | GATE_BLOCK | Pre-emptive skip: upstream retired (exp3237-llama-cpp-cuda-receipt-smoke-v2) |
 | 2026-05-28 05:09 UTC | Prompt-injection KAN v4 teacher-label shard gated  | GATE_BLOCK | 1 of 2 gate(s) failed; first failure: exp3238-sota-gguf-receipt-v7.sota_gguf_rec |
 | 2026-05-28 05:11 UTC | Prompt-injection KAN v4 teacher-label shard gated | GATE_BLOCK | Pre-emptive skip: upstream retired (exp3238-sota-gguf-receipt-v7) |
+| 2026-05-28 05:11 UTC | Prompt-injection KAN v4 shard train/eval with non- | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp3240-prompt-injection-kan-teacher-label |
+| 2026-05-28 05:13 UTC | Prompt-injection KAN v4 shard train/eval with non- | GATE_BLOCK | Pre-emptive skip: upstream retired (exp3240-prompt-injection-kan-teacher-label-s |
+| 2026-05-28 05:13 UTC | DCCD exact-row structured proposal preflight gated | GATE_BLOCK | Pre-emptive skip: upstream retired (exp3238-sota-gguf-receipt-v7) |

@@ -1,0 +1,1123 @@
+{
+  "artifact": "experiment_3243_fr11_failure_memory_controller_v1",
+  "continuous_self_learning_task": true,
+  "controller_memory_updates_are_not_training": true,
+  "doomed_rerun_avoidance_count": 27,
+  "duration_s": 0.008767,
+  "experiment_id": "exp3243",
+  "failure_memory_schema": {
+    "keys": [
+      {
+        "key": "prerequisite",
+        "meaning": "upstream condition that must hold before a rerun is useful"
+      },
+      {
+        "key": "failure_signature",
+        "meaning": "stable gate, artifact, stale-premise, or backend failure pattern"
+      },
+      {
+        "key": "stale_premise",
+        "meaning": "whether the memory row invalidates a prior controller premise"
+      },
+      {
+        "key": "accepted_next_action",
+        "meaning": "controller action admitted by current evidence"
+      },
+      {
+        "key": "retirement_risk",
+        "meaning": "risk that repeating this route without new evidence is wasteful"
+      }
+    ],
+    "schema_ready": true
+  },
+  "failure_memory_schema_ready": true,
+  "failure_trace_count": 28,
+  "failure_traces": [
+    {
+      "accepted_next_action": "force_prerequisite_gate",
+      "category": "repeated_gate_block",
+      "evidence": {
+        "count": 3,
+        "first_timestamp": "2026-05-27 15:53 UTC",
+        "last_timestamp": "2026-05-27 15:57 UTC",
+        "signature": "exp3193-llama-cpp-cuda-offload-health-prob",
+        "title": "Clean live SOTA verifier rerun v11 gated on CUDA-b"
+      },
+      "failure_signature": "exp3193-llama-cpp-cuda-offload-health-prob repeated 3 times",
+      "impact_count": 3,
+      "prerequisite": "unknown_prerequisite",
+      "retirement_risk": "high",
+      "source": "ops/conductor-log.md",
+      "stale_premise": false,
+      "trace_id": "repeated_gate_block-1a22fa3085b6"
+    },
+    {
+      "accepted_next_action": "force_prerequisite_gate",
+      "category": "repeated_gate_block",
+      "evidence": {
+        "count": 3,
+        "first_timestamp": "2026-05-27 17:01 UTC",
+        "last_timestamp": "2026-05-27 17:05 UTC",
+        "signature": "exp3198-repair-gate-decision-v5.repair_gat",
+        "title": "Multi-turn repair ladder v6 gated on repair gate u"
+      },
+      "failure_signature": "exp3198-repair-gate-decision-v5.repair_gat repeated 3 times",
+      "impact_count": 3,
+      "prerequisite": "exp3198-repair-gate-decision-v5",
+      "retirement_risk": "high",
+      "source": "ops/conductor-log.md",
+      "stale_premise": false,
+      "trace_id": "repeated_gate_block-00558b19c089"
+    },
+    {
+      "accepted_next_action": "force_prerequisite_gate",
+      "category": "repeated_gate_block",
+      "evidence": {
+        "count": 3,
+        "first_timestamp": "2026-05-27 20:58 UTC",
+        "last_timestamp": "2026-05-27 21:02 UTC",
+        "signature": "exp3207-llama-cpp-cuda-rebuild-clean-subpr",
+        "title": "Full local SOTA GGUF receipt v5 gated on exp3207 C"
+      },
+      "failure_signature": "exp3207-llama-cpp-cuda-rebuild-clean-subpr repeated 3 times",
+      "impact_count": 3,
+      "prerequisite": "unknown_prerequisite",
+      "retirement_risk": "high",
+      "source": "ops/conductor-log.md",
+      "stale_premise": false,
+      "trace_id": "repeated_gate_block-698aadca2451"
+    },
+    {
+      "accepted_next_action": "force_prerequisite_gate",
+      "category": "repeated_gate_block",
+      "evidence": {
+        "count": 3,
+        "first_timestamp": "2026-05-27 21:04 UTC",
+        "last_timestamp": "2026-05-27 21:30 UTC",
+        "signature": "upstream_retired:exp3208-full-local-sota-receipt-v5",
+        "title": "Clean live SOTA verifier rerun v12 gated on exp320"
+      },
+      "failure_signature": "upstream_retired:exp3208-full-local-sota-receipt-v5 repeated 3 times",
+      "impact_count": 3,
+      "prerequisite": "exp3208-full-local-sota-receipt-v5",
+      "retirement_risk": "high",
+      "source": "ops/conductor-log.md",
+      "stale_premise": false,
+      "trace_id": "repeated_gate_block-a28dce4db3d9"
+    },
+    {
+      "accepted_next_action": "force_prerequisite_gate",
+      "category": "repeated_gate_block",
+      "evidence": {
+        "count": 3,
+        "first_timestamp": "2026-05-27 21:30 UTC",
+        "last_timestamp": "2026-05-27 21:47 UTC",
+        "signature": "upstream_retired:exp3208-full-local-sota-receipt-v5",
+        "title": "Structured repair proposal preflight gated on exp3"
+      },
+      "failure_signature": "upstream_retired:exp3208-full-local-sota-receipt-v5 repeated 3 times",
+      "impact_count": 3,
+      "prerequisite": "exp3208-full-local-sota-receipt-v5",
+      "retirement_risk": "high",
+      "source": "ops/conductor-log.md",
+      "stale_premise": false,
+      "trace_id": "repeated_gate_block-a28dce4db3d9"
+    },
+    {
+      "accepted_next_action": "force_prerequisite_gate",
+      "category": "repeated_gate_block",
+      "evidence": {
+        "count": 3,
+        "first_timestamp": "2026-05-27 21:45 UTC",
+        "last_timestamp": "2026-05-27 21:49 UTC",
+        "signature": "exp3213-repair-gate-decision-v6.repair_gat",
+        "title": "Multi-turn repair ladder v7 gated on exp3213 repai"
+      },
+      "failure_signature": "exp3213-repair-gate-decision-v6.repair_gat repeated 3 times",
+      "impact_count": 3,
+      "prerequisite": "exp3213-repair-gate-decision-v6",
+      "retirement_risk": "high",
+      "source": "ops/conductor-log.md",
+      "stale_premise": false,
+      "trace_id": "repeated_gate_block-ba698815a725"
+    },
+    {
+      "accepted_next_action": "force_prerequisite_gate",
+      "category": "repeated_gate_block",
+      "evidence": {
+        "count": 3,
+        "first_timestamp": "2026-05-27 23:56 UTC",
+        "last_timestamp": "2026-05-28 00:00 UTC",
+        "signature": "exp3220-hermetic-cuda-runtime-repair-ledge",
+        "title": "llama.cpp CUDA offload receipt smoke gated on herm"
+      },
+      "failure_signature": "exp3220-hermetic-cuda-runtime-repair-ledge repeated 3 times",
+      "impact_count": 3,
+      "prerequisite": "unknown_prerequisite",
+      "retirement_risk": "high",
+      "source": "ops/conductor-log.md",
+      "stale_premise": false,
+      "trace_id": "repeated_gate_block-19114d637f0a"
+    },
+    {
+      "accepted_next_action": "force_prerequisite_gate",
+      "category": "repeated_gate_block",
+      "evidence": {
+        "count": 3,
+        "first_timestamp": "2026-05-28 00:02 UTC",
+        "last_timestamp": "2026-05-28 00:29 UTC",
+        "signature": "Pre-emptive skip: upstream retired (exp3221-llama-cpp-cuda-offload-receipt-smoke",
+        "title": "Full local SOTA GGUF receipt v6 gated on llama.cpp"
+      },
+      "failure_signature": "Pre-emptive skip: upstream retired (exp3221-llama-cpp-cuda-offload-receipt-smoke repeated 3 times",
+      "impact_count": 3,
+      "prerequisite": "unknown_prerequisite",
+      "retirement_risk": "high",
+      "source": "ops/conductor-log.md",
+      "stale_premise": false,
+      "trace_id": "repeated_gate_block-58ffa72d7aa7"
+    },
+    {
+      "accepted_next_action": "force_prerequisite_gate",
+      "category": "repeated_gate_block",
+      "evidence": {
+        "count": 2,
+        "first_timestamp": "2026-05-28 00:31 UTC",
+        "last_timestamp": "2026-05-28 00:45 UTC",
+        "signature": "upstream_retired:exp3222-full-local-sota-receipt-v6",
+        "title": "Clean live SOTA verifier rerun v13 using exact-row"
+      },
+      "failure_signature": "upstream_retired:exp3222-full-local-sota-receipt-v6 repeated 2 times",
+      "impact_count": 2,
+      "prerequisite": "exp3222-full-local-sota-receipt-v6",
+      "retirement_risk": "medium",
+      "source": "ops/conductor-log.md",
+      "stale_premise": false,
+      "trace_id": "repeated_gate_block-0cd877c4e488"
+    },
+    {
+      "accepted_next_action": "force_prerequisite_gate",
+      "category": "repeated_gate_block",
+      "evidence": {
+        "count": 3,
+        "first_timestamp": "2026-05-28 00:31 UTC",
+        "last_timestamp": "2026-05-28 00:47 UTC",
+        "signature": "upstream_retired:exp3222-full-local-sota-receipt-v6",
+        "title": "Structured repair proposal preflight v2 with schem"
+      },
+      "failure_signature": "upstream_retired:exp3222-full-local-sota-receipt-v6 repeated 3 times",
+      "impact_count": 3,
+      "prerequisite": "exp3222-full-local-sota-receipt-v6",
+      "retirement_risk": "high",
+      "source": "ops/conductor-log.md",
+      "stale_premise": false,
+      "trace_id": "repeated_gate_block-836e605af3dd"
+    },
+    {
+      "accepted_next_action": "force_prerequisite_gate",
+      "category": "repeated_gate_block",
+      "evidence": {
+        "count": 3,
+        "first_timestamp": "2026-05-28 00:45 UTC",
+        "last_timestamp": "2026-05-28 00:49 UTC",
+        "signature": "exp3227-repair-gate-decision-v7.repair_gat",
+        "title": "Multi-turn repair ladder v8 gated on repair gate u"
+      },
+      "failure_signature": "exp3227-repair-gate-decision-v7.repair_gat repeated 3 times",
+      "impact_count": 3,
+      "prerequisite": "exp3227-repair-gate-decision-v7",
+      "retirement_risk": "high",
+      "source": "ops/conductor-log.md",
+      "stale_premise": false,
+      "trace_id": "repeated_gate_block-25aa3d252fdb"
+    },
+    {
+      "accepted_next_action": "force_prerequisite_gate",
+      "category": "repeated_gate_block",
+      "evidence": {
+        "count": 3,
+        "first_timestamp": "2026-05-28 04:46 UTC",
+        "last_timestamp": "2026-05-28 04:50 UTC",
+        "signature": "exp3236-isolated-cuda-python-smoke-v1.cuda",
+        "title": "llama.cpp CUDA receipt smoke v2 gated on selected-"
+      },
+      "failure_signature": "exp3236-isolated-cuda-python-smoke-v1.cuda repeated 3 times",
+      "impact_count": 3,
+      "prerequisite": "exp3236-isolated-cuda-python-smoke-v1",
+      "retirement_risk": "high",
+      "source": "ops/conductor-log.md",
+      "stale_premise": false,
+      "trace_id": "repeated_gate_block-cbfc184bee63"
+    },
+    {
+      "accepted_next_action": "force_prerequisite_gate",
+      "category": "repeated_gate_block",
+      "evidence": {
+        "count": 3,
+        "first_timestamp": "2026-05-28 04:52 UTC",
+        "last_timestamp": "2026-05-28 05:09 UTC",
+        "signature": "upstream_retired:exp3237-llama-cpp-cuda-receipt-smoke-v2",
+        "title": "Mandated local SOTA GGUF receipt v7 gated on llama"
+      },
+      "failure_signature": "upstream_retired:exp3237-llama-cpp-cuda-receipt-smoke-v2 repeated 3 times",
+      "impact_count": 3,
+      "prerequisite": "exp3237-llama-cpp-cuda-receipt-smoke-v2",
+      "retirement_risk": "high",
+      "source": "ops/conductor-log.md",
+      "stale_premise": false,
+      "trace_id": "repeated_gate_block-a54c9e12f2f7"
+    },
+    {
+      "accepted_next_action": "force_prerequisite_gate",
+      "category": "repeated_gate_block",
+      "evidence": {
+        "count": 2,
+        "first_timestamp": "2026-05-28 05:07 UTC",
+        "last_timestamp": "2026-05-28 05:09 UTC",
+        "signature": "exp3238-sota-gguf-receipt-v7.sota_gguf_rec",
+        "title": "Prompt-injection KAN v4 teacher-label shard gated"
+      },
+      "failure_signature": "exp3238-sota-gguf-receipt-v7.sota_gguf_rec repeated 2 times",
+      "impact_count": 2,
+      "prerequisite": "exp3238-sota-gguf-receipt-v7",
+      "retirement_risk": "medium",
+      "source": "ops/conductor-log.md",
+      "stale_premise": false,
+      "trace_id": "repeated_gate_block-cc65a8018f53"
+    },
+    {
+      "accepted_next_action": "force_prerequisite_gate",
+      "category": "gate_block",
+      "evidence": {
+        "experiment_id": "exp3220",
+        "path": "results/experiment_3220_hermetic_cuda_runtime_repair_ledger_v1.json",
+        "role": "hermetic_cuda_runtime_repair",
+        "source_field": "cuda_receipt_ready_candidate",
+        "status": "blocked",
+        "status_rationale": "hermetic CUDA runtime remains blocked"
+      },
+      "failure_signature": "exp3220: hermetic CUDA runtime remains blocked",
+      "impact_count": 1,
+      "prerequisite": "cuda_receipt_ready_candidate",
+      "retirement_risk": "high",
+      "source": "results/experiment_3232_capstone_v298.json",
+      "stale_premise": false,
+      "trace_id": "gate_block-866d5c31e756"
+    },
+    {
+      "accepted_next_action": "force_prerequisite_gate",
+      "category": "gate_block",
+      "evidence": {
+        "experiment_id": "exp3221",
+        "gated_skip_evidence": {
+          "source": "artifact",
+          "status": "gate_blocked",
+          "summary": "1 of 1 gate(s) failed; first failure: exp3220-hermetic-cuda-runtime-repair-ledger-v1.cuda_receipt_ready_candidate (actual=False == expected=True)"
+        },
+        "path": "results/experiment_3221_llama_cpp_cuda_offload_receipt_smoke_v1.json",
+        "role": "llama_cpp_cuda_offload_receipt_smoke",
+        "source_field": "cuda_receipt_ready",
+        "status": "gate_blocked",
+        "status_rationale": "artifact was blocked by a conductor pre-gate"
+      },
+      "failure_signature": "exp3221: artifact was blocked by a conductor pre-gate",
+      "impact_count": 1,
+      "prerequisite": "cuda_receipt_ready",
+      "retirement_risk": "high",
+      "source": "results/experiment_3232_capstone_v298.json",
+      "stale_premise": false,
+      "trace_id": "gate_block-ac0e1ae4b94e"
+    },
+    {
+      "accepted_next_action": "repair_missing_artifact_before_rerun",
+      "category": "missing_artifact",
+      "evidence": {
+        "experiment_id": "exp3222",
+        "gated_skip_evidence": {
+          "line": "| 2026-05-28 00:02 UTC | Full local SOTA GGUF receipt v6 gated on llama.cpp | GATE_BLOCK | Pre-emptive skip: upstream retired (exp3221-llama-cpp-cuda-offload-receipt-smoke |",
+          "source": "ops/conductor-log.md",
+          "status": "gate_blocked"
+        },
+        "path": "results/experiment_3222_full_local_sota_receipt_v6.json",
+        "role": "full_local_sota_receipt_v6",
+        "source_field": "clean_rerun_allowed",
+        "status": "missing",
+        "status_rationale": "expected `.298` artifact is absent or malformed"
+      },
+      "failure_signature": "exp3222: expected `.298` artifact is absent or malformed",
+      "impact_count": 1,
+      "prerequisite": "clean_rerun_allowed",
+      "retirement_risk": "high",
+      "source": "results/experiment_3232_capstone_v298.json",
+      "stale_premise": false,
+      "trace_id": "missing_artifact-73630d340eb1"
+    },
+    {
+      "accepted_next_action": "force_prerequisite_gate",
+      "category": "gate_block",
+      "evidence": {
+        "experiment_id": "exp3225",
+        "gated_skip_evidence": {
+          "source": "artifact",
+          "status": "gate_blocked",
+          "summary": "1 of 1 gate(s) failed; first failure: exp3222-full-local-sota-receipt-v6.clean_rerun_allowed (upstream artifact not found for task id 'exp3222-full-local-sota-receipt-v6')"
+        },
+        "path": "results/experiment_3225_clean_live_sota_verifier_rerun_v13.json",
+        "role": "clean_live_sota_verifier_v13",
+        "source_field": "clean_verifier_ready",
+        "status": "gate_blocked",
+        "status_rationale": "artifact was blocked by a conductor pre-gate"
+      },
+      "failure_signature": "exp3225: artifact was blocked by a conductor pre-gate",
+      "impact_count": 1,
+      "prerequisite": "clean_verifier_ready",
+      "retirement_risk": "high",
+      "source": "results/experiment_3232_capstone_v298.json",
+      "stale_premise": false,
+      "trace_id": "gate_block-1648a051b643"
+    },
+    {
+      "accepted_next_action": "repair_missing_artifact_before_rerun",
+      "category": "missing_artifact",
+      "evidence": {
+        "experiment_id": "exp3226",
+        "gated_skip_evidence": {
+          "line": "| 2026-05-28 00:31 UTC | Structured repair proposal preflight v2 with schem | GATE_BLOCK | Pre-emptive skip: upstream retired (exp3222-full-local-sota-receipt-v6) |",
+          "source": "ops/conductor-log.md",
+          "status": "gate_blocked"
+        },
+        "path": "results/experiment_3226_structured_repair_proposal_preflight_v2.json",
+        "role": "structured_repair_proposal_preflight_v2",
+        "source_field": "ready_for_repair_gate",
+        "status": "missing",
+        "status_rationale": "expected `.298` artifact is absent or malformed"
+      },
+      "failure_signature": "exp3226: expected `.298` artifact is absent or malformed",
+      "impact_count": 1,
+      "prerequisite": "ready_for_repair_gate",
+      "retirement_risk": "high",
+      "source": "results/experiment_3232_capstone_v298.json",
+      "stale_premise": false,
+      "trace_id": "missing_artifact-cdbf6ab3b2f0"
+    },
+    {
+      "accepted_next_action": "force_prerequisite_gate",
+      "category": "gate_block",
+      "evidence": {
+        "experiment_id": "exp3227",
+        "path": "results/experiment_3227_repair_gate_decision_v7.json",
+        "role": "repair_gate_decision_v7",
+        "source_field": "repair_gate_state",
+        "status": "blocked",
+        "status_rationale": "repair gate remains blocked"
+      },
+      "failure_signature": "exp3227: repair gate remains blocked",
+      "impact_count": 1,
+      "prerequisite": "repair_gate_state",
+      "retirement_risk": "high",
+      "source": "results/experiment_3232_capstone_v298.json",
+      "stale_premise": false,
+      "trace_id": "gate_block-b3dc0881e810"
+    },
+    {
+      "accepted_next_action": "force_prerequisite_gate",
+      "category": "gate_block",
+      "evidence": {
+        "experiment_id": "exp3228",
+        "gated_skip_evidence": {
+          "source": "artifact",
+          "status": "gate_blocked",
+          "summary": "1 of 1 gate(s) failed; first failure: exp3227-repair-gate-decision-v7.repair_gate_state (actual='blocked' == expected='unblocked')"
+        },
+        "path": "results/experiment_3228_multi_turn_repair_ladder_v8.json",
+        "role": "multi_turn_repair_ladder_v8",
+        "source_field": "repair_ladder_complete",
+        "status": "gate_blocked",
+        "status_rationale": "artifact was blocked by a conductor pre-gate"
+      },
+      "failure_signature": "exp3228: artifact was blocked by a conductor pre-gate",
+      "impact_count": 1,
+      "prerequisite": "repair_ladder_complete",
+      "retirement_risk": "high",
+      "source": "results/experiment_3232_capstone_v298.json",
+      "stale_premise": false,
+      "trace_id": "gate_block-d43b95d3abba"
+    },
+    {
+      "accepted_next_action": "cuda_chain_for_full_local_sota_receipts",
+      "category": "missing_artifact",
+      "evidence": {
+        "experiment_id": "",
+        "honest_verdict": "",
+        "path": "results/experiment_3222_prompt_injection_kan_distill_v4_15k.json",
+        "present": false,
+        "readable_json_object": false,
+        "role": "prompt_injection_kan_v4",
+        "schema_version": "",
+        "sha256": null
+      },
+      "failure_signature": "blocked_missing_exp3222_result",
+      "impact_count": 1,
+      "prerequisite": "results/experiment_3222_prompt_injection_kan_distill_v4_15k.json",
+      "retirement_risk": "high",
+      "source": "results/experiment_3223_capstone_v299.json",
+      "stale_premise": false,
+      "trace_id": "missing_artifact-543ed2f05fd7"
+    },
+    {
+      "accepted_next_action": "reject_stale_controller_memory_trace",
+      "category": "stale_premise",
+      "evidence": {
+        "affected_route_count": 2,
+        "affected_routes": [
+          {
+            "replay_role": "drift",
+            "route_node_id": "route:trace-drift-interval_order-3128-0-caf78d58",
+            "routing_outcome": "skip_redundant_recheck",
+            "row_id": "interval_order-3128-0"
+          },
+          {
+            "replay_role": "drift",
+            "route_node_id": "route:trace-drift-modular_balance-3128-0-b05d5db8",
+            "routing_outcome": "skip_redundant_recheck",
+            "row_id": "modular_balance-3128-0"
+          }
+        ],
+        "affected_trace_ids": [
+          "trace-drift-interval_order-3128-0-caf78d58",
+          "trace-drift-modular_balance-3128-0-b05d5db8"
+        ],
+        "stale_premise_invalidations": 4
+      },
+      "failure_signature": "stale_premise_rejection_count=2",
+      "impact_count": 2,
+      "prerequisite": "Exp 3216 grounded-continuation affected routes",
+      "retirement_risk": "medium",
+      "source": "results/experiment_3229_fr11_nonforgetting_promotion_controller_v3.json",
+      "stale_premise": true,
+      "trace_id": "stale_premise-0d6e28d5498d"
+    },
+    {
+      "accepted_next_action": "force_certificate_gate",
+      "category": "missing_certificate",
+      "evidence": {
+        "requirement_evidence_matrix": [
+          {
+            "description": "Every KAN-CL sidecar input feature must have a bounded domain.",
+            "evidence_key": "certificate_boundary.bounded_input_domains",
+            "evidence_status": "missing",
+            "evidence_summary": "no bounded sidecar input domains",
+            "missing_evidence": "bounded numeric or categorical domain limits for every sidecar input feature",
+            "promotion_critical": true,
+            "requirement_id": "bounded_input_domains",
+            "source_artifacts": [
+              "results/experiment_3201_kan_cl_nonforgetting_sidecar_audit_v1.json"
+            ]
+          },
+          {
+            "description": "Each knot or template anchor needs an explicit nonforgetting budget.",
+            "evidence_key": "certificate_boundary.per_knot_budget",
+            "evidence_status": "missing",
+            "evidence_summary": "only aggregate queue evidence is present",
+            "missing_evidence": "per-knot or per-template nonforgetting budget",
+            "promotion_critical": true,
+            "requirement_id": "per_knot_budget",
+            "source_artifacts": [
+              "results/experiment_3201_kan_cl_nonforgetting_sidecar_audit_v1.json"
+            ]
+          },
+          {
+            "description": "Each promoted knot needs monotonicity or local Lipschitz evidence.",
+            "evidence_key": "certificate_boundary.monotonicity_lipschitz_evidence",
+            "evidence_status": "missing",
+            "evidence_summary": "no per-knot monotonicity or Lipschitz checks",
+            "missing_evidence": "per-knot monotonicity or local Lipschitz evidence",
+            "promotion_critical": true,
+            "requirement_id": "monotonicity_or_lipschitz_evidence",
+            "source_artifacts": [
+              "results/experiment_3201_kan_cl_nonforgetting_sidecar_audit_v1.json"
+            ]
+          },
+          {
+            "description": "The sidecar must expose PWA segments, error bounds, and MILP checks.",
+            "evidence_key": "certificate_boundary.pwa_milp_abstraction",
+            "evidence_status": "missing",
+            "evidence_summary": "no sidecar-linked PWA/MILP abstraction certificate",
+            "missing_evidence": "PWA segments, error bounds, and MILP-compatible property checks",
+            "promotion_critical": true,
+            "requirement_id": "pwa_milp_abstraction",
+            "source_artifacts": [
+              "results/experiment_3201_kan_cl_nonforgetting_sidecar_audit_v1.json"
+            ]
+          },
+          {
+            "description": "Aggregate held-out, drift, and negative-control budget checks must pass.",
+            "evidence_key": "exp3201 metrics plus exp3216 nonforgetting_queue",
+            "evidence_status": "present",
+            "evidence_summary": "aggregate nonforgetting replay and queue checks pass",
+            "missing_evidence": "",
+            "promotion_critical": true,
+            "requirement_id": "nonforgetting_budget_check",
+            "source_artifacts": [
+              "results/experiment_3201_kan_cl_nonforgetting_sidecar_audit_v1.json",
+              "results/experiment_3216_fr11_grounded_continuation_nonforgetting_queue_v1.json"
+            ]
+          },
+          {
+            "description": "The audit must claim no KAN, controller, or base-model weight update.",
+            "evidence_key": "inference_substrate and model_weight_update flags",
+            "evidence_status": "present",
+            "evidence_summary": "sources deny live inference, KAN training, and model-weight updates",
+            "missing_evidence": "",
+            "promotion_critical": true,
+            "requirement_id": "model_weight_immutability",
+            "source_artifacts": [
+              "results/experiment_3201_kan_cl_nonforgetting_sidecar_audit_v1.json",
+              "results/experiment_3216_fr11_grounded_continuation_nonforgetting_queue_v1.json"
+            ]
+          }
+        ]
+      },
+      "failure_signature": "missing_certificate_count=4",
+      "impact_count": 4,
+      "prerequisite": "KAN-CL sidecar promotion certificates",
+      "retirement_risk": "medium",
+      "source": "results/experiment_3230_kan_cl_certificate_boundary_audit_v2.json",
+      "stale_premise": false,
+      "trace_id": "missing_certificate-ed74808186b0"
+    },
+    {
+      "accepted_next_action": "repair_selected_python_torch_cuda_before_exp3237",
+      "category": "backend_failure",
+      "evidence": {
+        "cuda_bindings_runtime_ok": false,
+        "selected_python_torch_cuda_available": false,
+        "smoke_block_reasons": [
+          "selected_python_torch_cuda_unavailable",
+          "cuda_bindings_runtime_no_devices"
+        ]
+      },
+      "failure_signature": "selected_python_torch_cuda_unavailable,cuda_bindings_runtime_no_devices",
+      "impact_count": 1,
+      "prerequisite": "selected Python CUDA runtime",
+      "retirement_risk": "high",
+      "source": "results/experiment_3236_isolated_cuda_python_smoke_v1.json",
+      "stale_premise": false,
+      "trace_id": "backend_failure-b5402788eb39"
+    },
+    {
+      "accepted_next_action": "force_prerequisite_gate",
+      "category": "gate_block",
+      "evidence": {
+        "actual": false,
+        "artifact_field": "cuda_python_smoke_passed",
+        "expected": true,
+        "op": "==",
+        "passed": false,
+        "reason": "actual=False == expected=True",
+        "upstream": "exp3236-isolated-cuda-python-smoke-v1"
+      },
+      "failure_signature": "1 of 1 gate(s) failed; first failure: exp3236-isolated-cuda-python-smoke-v1.cuda_python_smoke_passed (actual=False == expected=True)",
+      "impact_count": 1,
+      "prerequisite": "exp3236-isolated-cuda-python-smoke-v1.cuda_python_smoke_passed",
+      "retirement_risk": "high",
+      "source": "results/experiment_3237_llama_cpp_cuda_receipt_smoke_v2.json",
+      "stale_premise": false,
+      "trace_id": "gate_block-507f087fe879"
+    },
+    {
+      "accepted_next_action": "force_prerequisite_gate",
+      "category": "missing_artifact",
+      "evidence": {
+        "actual": null,
+        "artifact_field": "sota_gguf_receipt_ready",
+        "expected": true,
+        "op": "==",
+        "passed": false,
+        "reason": "upstream artifact not found for task id 'exp3238-sota-gguf-receipt-v7'",
+        "upstream": "exp3238-sota-gguf-receipt-v7"
+      },
+      "failure_signature": "1 of 2 gate(s) failed; first failure: exp3238-sota-gguf-receipt-v7.sota_gguf_receipt_ready (upstream artifact not found for task id 'exp3238-sota-gguf-receipt-v7')",
+      "impact_count": 1,
+      "prerequisite": "exp3238-sota-gguf-receipt-v7.sota_gguf_receipt_ready",
+      "retirement_risk": "high",
+      "source": "results/experiment_3240_prompt_injection_kan_teacher_label_shard_v1.json",
+      "stale_premise": false,
+      "trace_id": "missing_artifact-e2c2b219df2f"
+    },
+    {
+      "accepted_next_action": "force_prerequisite_gate",
+      "category": "missing_artifact",
+      "evidence": {
+        "actual": null,
+        "artifact_field": "teacher_label_shard_ready",
+        "expected": true,
+        "op": "==",
+        "passed": false,
+        "reason": "actual=None == expected=True",
+        "upstream": "exp3240-prompt-injection-kan-teacher-label-shard-v1"
+      },
+      "failure_signature": "1 of 1 gate(s) failed; first failure: exp3240-prompt-injection-kan-teacher-label-shard-v1.teacher_label_shard_ready (actual=None == expected=True)",
+      "impact_count": 1,
+      "prerequisite": "exp3240-prompt-injection-kan-teacher-label-shard-v1.teacher_label_shard_ready",
+      "retirement_risk": "high",
+      "source": "results/experiment_3241_prompt_injection_kan_train_eval_shard_v1.json",
+      "stale_premise": false,
+      "trace_id": "missing_artifact-ee87b1451b21"
+    }
+  ],
+  "fr11_controller_update_ready": true,
+  "heldout_replay_count": 28,
+  "heldout_replay_delta": 28,
+  "heldout_replays": [
+    {
+      "accepted_next_action": "force_prerequisite_gate",
+      "avoided_doomed_rerun": true,
+      "baseline_action": "rerun_without_failure_memory",
+      "controller_decision": "force_prerequisite_gate",
+      "failure_signature": "exp3193-llama-cpp-cuda-offload-health-prob repeated 3 times",
+      "force_gate": true,
+      "replay_delta": 1,
+      "replay_id": "heldout-001",
+      "source_trace_id": "repeated_gate_block-1a22fa3085b6"
+    },
+    {
+      "accepted_next_action": "force_prerequisite_gate",
+      "avoided_doomed_rerun": true,
+      "baseline_action": "rerun_without_failure_memory",
+      "controller_decision": "force_prerequisite_gate",
+      "failure_signature": "exp3198-repair-gate-decision-v5.repair_gat repeated 3 times",
+      "force_gate": true,
+      "replay_delta": 1,
+      "replay_id": "heldout-002",
+      "source_trace_id": "repeated_gate_block-00558b19c089"
+    },
+    {
+      "accepted_next_action": "force_prerequisite_gate",
+      "avoided_doomed_rerun": true,
+      "baseline_action": "rerun_without_failure_memory",
+      "controller_decision": "force_prerequisite_gate",
+      "failure_signature": "exp3207-llama-cpp-cuda-rebuild-clean-subpr repeated 3 times",
+      "force_gate": true,
+      "replay_delta": 1,
+      "replay_id": "heldout-003",
+      "source_trace_id": "repeated_gate_block-698aadca2451"
+    },
+    {
+      "accepted_next_action": "force_prerequisite_gate",
+      "avoided_doomed_rerun": true,
+      "baseline_action": "rerun_without_failure_memory",
+      "controller_decision": "force_prerequisite_gate",
+      "failure_signature": "upstream_retired:exp3208-full-local-sota-receipt-v5 repeated 3 times",
+      "force_gate": true,
+      "replay_delta": 1,
+      "replay_id": "heldout-004",
+      "source_trace_id": "repeated_gate_block-a28dce4db3d9"
+    },
+    {
+      "accepted_next_action": "force_prerequisite_gate",
+      "avoided_doomed_rerun": true,
+      "baseline_action": "rerun_without_failure_memory",
+      "controller_decision": "force_prerequisite_gate",
+      "failure_signature": "upstream_retired:exp3208-full-local-sota-receipt-v5 repeated 3 times",
+      "force_gate": true,
+      "replay_delta": 1,
+      "replay_id": "heldout-005",
+      "source_trace_id": "repeated_gate_block-a28dce4db3d9"
+    },
+    {
+      "accepted_next_action": "force_prerequisite_gate",
+      "avoided_doomed_rerun": true,
+      "baseline_action": "rerun_without_failure_memory",
+      "controller_decision": "force_prerequisite_gate",
+      "failure_signature": "exp3213-repair-gate-decision-v6.repair_gat repeated 3 times",
+      "force_gate": true,
+      "replay_delta": 1,
+      "replay_id": "heldout-006",
+      "source_trace_id": "repeated_gate_block-ba698815a725"
+    },
+    {
+      "accepted_next_action": "force_prerequisite_gate",
+      "avoided_doomed_rerun": true,
+      "baseline_action": "rerun_without_failure_memory",
+      "controller_decision": "force_prerequisite_gate",
+      "failure_signature": "exp3220-hermetic-cuda-runtime-repair-ledge repeated 3 times",
+      "force_gate": true,
+      "replay_delta": 1,
+      "replay_id": "heldout-007",
+      "source_trace_id": "repeated_gate_block-19114d637f0a"
+    },
+    {
+      "accepted_next_action": "force_prerequisite_gate",
+      "avoided_doomed_rerun": true,
+      "baseline_action": "rerun_without_failure_memory",
+      "controller_decision": "force_prerequisite_gate",
+      "failure_signature": "Pre-emptive skip: upstream retired (exp3221-llama-cpp-cuda-offload-receipt-smoke repeated 3 times",
+      "force_gate": true,
+      "replay_delta": 1,
+      "replay_id": "heldout-008",
+      "source_trace_id": "repeated_gate_block-58ffa72d7aa7"
+    },
+    {
+      "accepted_next_action": "force_prerequisite_gate",
+      "avoided_doomed_rerun": true,
+      "baseline_action": "rerun_without_failure_memory",
+      "controller_decision": "force_prerequisite_gate",
+      "failure_signature": "upstream_retired:exp3222-full-local-sota-receipt-v6 repeated 2 times",
+      "force_gate": true,
+      "replay_delta": 1,
+      "replay_id": "heldout-009",
+      "source_trace_id": "repeated_gate_block-0cd877c4e488"
+    },
+    {
+      "accepted_next_action": "force_prerequisite_gate",
+      "avoided_doomed_rerun": true,
+      "baseline_action": "rerun_without_failure_memory",
+      "controller_decision": "force_prerequisite_gate",
+      "failure_signature": "upstream_retired:exp3222-full-local-sota-receipt-v6 repeated 3 times",
+      "force_gate": true,
+      "replay_delta": 1,
+      "replay_id": "heldout-010",
+      "source_trace_id": "repeated_gate_block-836e605af3dd"
+    },
+    {
+      "accepted_next_action": "force_prerequisite_gate",
+      "avoided_doomed_rerun": true,
+      "baseline_action": "rerun_without_failure_memory",
+      "controller_decision": "force_prerequisite_gate",
+      "failure_signature": "exp3227-repair-gate-decision-v7.repair_gat repeated 3 times",
+      "force_gate": true,
+      "replay_delta": 1,
+      "replay_id": "heldout-011",
+      "source_trace_id": "repeated_gate_block-25aa3d252fdb"
+    },
+    {
+      "accepted_next_action": "force_prerequisite_gate",
+      "avoided_doomed_rerun": true,
+      "baseline_action": "rerun_without_failure_memory",
+      "controller_decision": "force_prerequisite_gate",
+      "failure_signature": "exp3236-isolated-cuda-python-smoke-v1.cuda repeated 3 times",
+      "force_gate": true,
+      "replay_delta": 1,
+      "replay_id": "heldout-012",
+      "source_trace_id": "repeated_gate_block-cbfc184bee63"
+    },
+    {
+      "accepted_next_action": "force_prerequisite_gate",
+      "avoided_doomed_rerun": true,
+      "baseline_action": "rerun_without_failure_memory",
+      "controller_decision": "force_prerequisite_gate",
+      "failure_signature": "upstream_retired:exp3237-llama-cpp-cuda-receipt-smoke-v2 repeated 3 times",
+      "force_gate": true,
+      "replay_delta": 1,
+      "replay_id": "heldout-013",
+      "source_trace_id": "repeated_gate_block-a54c9e12f2f7"
+    },
+    {
+      "accepted_next_action": "force_prerequisite_gate",
+      "avoided_doomed_rerun": true,
+      "baseline_action": "rerun_without_failure_memory",
+      "controller_decision": "force_prerequisite_gate",
+      "failure_signature": "exp3238-sota-gguf-receipt-v7.sota_gguf_rec repeated 2 times",
+      "force_gate": true,
+      "replay_delta": 1,
+      "replay_id": "heldout-014",
+      "source_trace_id": "repeated_gate_block-cc65a8018f53"
+    },
+    {
+      "accepted_next_action": "force_prerequisite_gate",
+      "avoided_doomed_rerun": true,
+      "baseline_action": "rerun_without_failure_memory",
+      "controller_decision": "force_prerequisite_gate",
+      "failure_signature": "exp3220: hermetic CUDA runtime remains blocked",
+      "force_gate": true,
+      "replay_delta": 1,
+      "replay_id": "heldout-015",
+      "source_trace_id": "gate_block-866d5c31e756"
+    },
+    {
+      "accepted_next_action": "force_prerequisite_gate",
+      "avoided_doomed_rerun": true,
+      "baseline_action": "rerun_without_failure_memory",
+      "controller_decision": "force_prerequisite_gate",
+      "failure_signature": "exp3221: artifact was blocked by a conductor pre-gate",
+      "force_gate": true,
+      "replay_delta": 1,
+      "replay_id": "heldout-016",
+      "source_trace_id": "gate_block-ac0e1ae4b94e"
+    },
+    {
+      "accepted_next_action": "repair_missing_artifact_before_rerun",
+      "avoided_doomed_rerun": true,
+      "baseline_action": "rerun_without_failure_memory",
+      "controller_decision": "force_prerequisite_gate",
+      "failure_signature": "exp3222: expected `.298` artifact is absent or malformed",
+      "force_gate": true,
+      "replay_delta": 1,
+      "replay_id": "heldout-017",
+      "source_trace_id": "missing_artifact-73630d340eb1"
+    },
+    {
+      "accepted_next_action": "force_prerequisite_gate",
+      "avoided_doomed_rerun": true,
+      "baseline_action": "rerun_without_failure_memory",
+      "controller_decision": "force_prerequisite_gate",
+      "failure_signature": "exp3225: artifact was blocked by a conductor pre-gate",
+      "force_gate": true,
+      "replay_delta": 1,
+      "replay_id": "heldout-018",
+      "source_trace_id": "gate_block-1648a051b643"
+    },
+    {
+      "accepted_next_action": "repair_missing_artifact_before_rerun",
+      "avoided_doomed_rerun": true,
+      "baseline_action": "rerun_without_failure_memory",
+      "controller_decision": "force_prerequisite_gate",
+      "failure_signature": "exp3226: expected `.298` artifact is absent or malformed",
+      "force_gate": true,
+      "replay_delta": 1,
+      "replay_id": "heldout-019",
+      "source_trace_id": "missing_artifact-cdbf6ab3b2f0"
+    },
+    {
+      "accepted_next_action": "force_prerequisite_gate",
+      "avoided_doomed_rerun": true,
+      "baseline_action": "rerun_without_failure_memory",
+      "controller_decision": "force_prerequisite_gate",
+      "failure_signature": "exp3227: repair gate remains blocked",
+      "force_gate": true,
+      "replay_delta": 1,
+      "replay_id": "heldout-020",
+      "source_trace_id": "gate_block-b3dc0881e810"
+    },
+    {
+      "accepted_next_action": "force_prerequisite_gate",
+      "avoided_doomed_rerun": true,
+      "baseline_action": "rerun_without_failure_memory",
+      "controller_decision": "force_prerequisite_gate",
+      "failure_signature": "exp3228: artifact was blocked by a conductor pre-gate",
+      "force_gate": true,
+      "replay_delta": 1,
+      "replay_id": "heldout-021",
+      "source_trace_id": "gate_block-d43b95d3abba"
+    },
+    {
+      "accepted_next_action": "cuda_chain_for_full_local_sota_receipts",
+      "avoided_doomed_rerun": true,
+      "baseline_action": "rerun_without_failure_memory",
+      "controller_decision": "force_prerequisite_gate",
+      "failure_signature": "blocked_missing_exp3222_result",
+      "force_gate": true,
+      "replay_delta": 1,
+      "replay_id": "heldout-022",
+      "source_trace_id": "missing_artifact-543ed2f05fd7"
+    },
+    {
+      "accepted_next_action": "reject_stale_controller_memory_trace",
+      "avoided_doomed_rerun": false,
+      "baseline_action": "rerun_without_failure_memory",
+      "controller_decision": "reject_stale_premise",
+      "failure_signature": "stale_premise_rejection_count=2",
+      "force_gate": false,
+      "replay_delta": 1,
+      "replay_id": "heldout-023",
+      "source_trace_id": "stale_premise-0d6e28d5498d"
+    },
+    {
+      "accepted_next_action": "force_certificate_gate",
+      "avoided_doomed_rerun": true,
+      "baseline_action": "rerun_without_failure_memory",
+      "controller_decision": "force_prerequisite_gate",
+      "failure_signature": "missing_certificate_count=4",
+      "force_gate": true,
+      "replay_delta": 1,
+      "replay_id": "heldout-024",
+      "source_trace_id": "missing_certificate-ed74808186b0"
+    },
+    {
+      "accepted_next_action": "repair_selected_python_torch_cuda_before_exp3237",
+      "avoided_doomed_rerun": true,
+      "baseline_action": "rerun_without_failure_memory",
+      "controller_decision": "repair_backend_before_rerun",
+      "failure_signature": "selected_python_torch_cuda_unavailable,cuda_bindings_runtime_no_devices",
+      "force_gate": false,
+      "replay_delta": 1,
+      "replay_id": "heldout-025",
+      "source_trace_id": "backend_failure-b5402788eb39"
+    },
+    {
+      "accepted_next_action": "force_prerequisite_gate",
+      "avoided_doomed_rerun": true,
+      "baseline_action": "rerun_without_failure_memory",
+      "controller_decision": "force_prerequisite_gate",
+      "failure_signature": "1 of 1 gate(s) failed; first failure: exp3236-isolated-cuda-python-smoke-v1.cuda_python_smoke_passed (actual=False == expected=True)",
+      "force_gate": true,
+      "replay_delta": 1,
+      "replay_id": "heldout-026",
+      "source_trace_id": "gate_block-507f087fe879"
+    },
+    {
+      "accepted_next_action": "force_prerequisite_gate",
+      "avoided_doomed_rerun": true,
+      "baseline_action": "rerun_without_failure_memory",
+      "controller_decision": "force_prerequisite_gate",
+      "failure_signature": "1 of 2 gate(s) failed; first failure: exp3238-sota-gguf-receipt-v7.sota_gguf_receipt_ready (upstream artifact not found for task id 'exp3238-sota-gguf-receipt-v7')",
+      "force_gate": true,
+      "replay_delta": 1,
+      "replay_id": "heldout-027",
+      "source_trace_id": "missing_artifact-e2c2b219df2f"
+    },
+    {
+      "accepted_next_action": "force_prerequisite_gate",
+      "avoided_doomed_rerun": true,
+      "baseline_action": "rerun_without_failure_memory",
+      "controller_decision": "force_prerequisite_gate",
+      "failure_signature": "1 of 1 gate(s) failed; first failure: exp3240-prompt-injection-kan-teacher-label-shard-v1.teacher_label_shard_ready (actual=None == expected=True)",
+      "force_gate": true,
+      "replay_delta": 1,
+      "replay_id": "heldout-028",
+      "source_trace_id": "missing_artifact-ee87b1451b21"
+    }
+  ],
+  "honest_verdict": "complete: fr11 failure-memory controller update ready=true; failure_trace_count=28; heldout_replay_count=28; heldout_replay_delta=28; doomed_rerun_avoidance_count=27; model_weight_update_claimed=false; no model weights were updated; controller_memory_updates_are_not_training=true",
+  "inference_substrate": "aggregation_from_upstream_artifacts",
+  "milestone": "2026.05.300",
+  "model_weight_update_claimed": false,
+  "nonforgetting_checks": [
+    {
+      "after": 28,
+      "before": 28,
+      "check_id": "accepted_trace_retention",
+      "delta": 0,
+      "passed": true,
+      "source": "results/experiment_3229_fr11_nonforgetting_promotion_controller_v3.json"
+    },
+    {
+      "after": 2,
+      "before": 2,
+      "check_id": "stale_rejection_retention",
+      "delta": 0,
+      "passed": true,
+      "source": "results/experiment_3229_fr11_nonforgetting_promotion_controller_v3.json"
+    },
+    {
+      "after": 0,
+      "before": 0,
+      "check_id": "negative_control_regression_guard",
+      "delta": 0,
+      "passed": true,
+      "source": "results/experiment_3229_fr11_nonforgetting_promotion_controller_v3.json"
+    }
+  ],
+  "nonforgetting_delta": 0,
+  "principle_annotations": {
+    "controller_memory_not_training": "The update records gate/failure metadata only; no model weights were updated.",
+    "failure_memory_scope": "Missing artifacts, repeated gate blocks, stale premises, and backend failures become controller prerequisites.",
+    "heldout_replay_rule": "A positive replay delta requires avoiding a doomed rerun or forcing a gate.",
+    "nonforgetting_rule": "Prior accepted FR-11 traces are retained and stale rejected traces stay rejected."
+  },
+  "run_date": "20260528",
+  "schema_version": "carnot.fr11.failure_memory_controller.v1",
+  "source_artifacts": [
+    {
+      "exists": true,
+      "id": "conductor_log",
+      "path": "ops/conductor-log.md",
+      "required": true,
+      "sha256": "934cc4a994586513fe3bf1a564be75005625e9f4977b843f37619683127d7307"
+    },
+    {
+      "exists": true,
+      "id": "self_learning_openspec",
+      "path": "openspec/capabilities/self-learning/spec.md",
+      "required": false,
+      "sha256": "def707e68bd567e7ea79d56b317a6389c8ba367f7503fef8795c1d23659eee42"
+    },
+    {
+      "exists": true,
+      "id": "exp3229_nonforgetting_controller",
+      "path": "results/experiment_3229_fr11_nonforgetting_promotion_controller_v3.json",
+      "required": true,
+      "sha256": "3b4fb8df0d65d08b27b28121e9364b961ee9204dc98df2d3b4d382afe3a46b0a"
+    },
+    {
+      "exists": true,
+      "id": "exp3230_kan_cl_certificate_boundary",
+      "path": "results/experiment_3230_kan_cl_certificate_boundary_audit_v2.json",
+      "required": true,
+      "sha256": "8626fa0d871dccc8a5d470da2867e45ddfd23d122502f43e1b6656b00ad844f1"
+    },
+    {
+      "exists": true,
+      "id": "exp3232_capstone_v298",
+      "path": "results/experiment_3232_capstone_v298.json",
+      "required": true,
+      "sha256": "062339d225683b55bdf3e4065295a82a7fcb407705d85f468063c3ee4ea6a8c4"
+    },
+    {
+      "exists": true,
+      "id": "exp3223_capstone_v299",
+      "path": "results/experiment_3223_capstone_v299.json",
+      "required": true,
+      "sha256": "8a1f1590466301b281d743c26b684029e386fd5372cc93365c71aa4ca84c5295"
+    },
+    {
+      "exists": true,
+      "id": "exp3234_cli_backend_failure_ledger",
+      "path": "results/experiment_3234_cli_backend_failure_root_cause_ledger_v1.json",
+      "required": false,
+      "sha256": "07c61b0c57695359d290ab322020675dd7da6877ef46b4e1c27252a92a5ae923"
+    },
+    {
+      "exists": true,
+      "id": "exp3236_cuda_python_smoke",
+      "path": "results/experiment_3236_isolated_cuda_python_smoke_v1.json",
+      "required": false,
+      "sha256": "748a97a31e5b475a702df4d6e0c9f2ef031abf8730079b18d732e1ec3e9c37e2"
+    },
+    {
+      "exists": true,
+      "id": "exp3237_llama_cpp_cuda_receipt_gate",
+      "path": "results/experiment_3237_llama_cpp_cuda_receipt_smoke_v2.json",
+      "required": false,
+      "sha256": "352532ba1ea83d07f732e7b90523513c7bdc72fafd8b4dbd67b13e0d180a01b2"
+    },
+    {
+      "exists": true,
+      "id": "exp3240_teacher_label_shard_gate",
+      "path": "results/experiment_3240_prompt_injection_kan_teacher_label_shard_v1.json",
+      "required": false,
+      "sha256": "e1eee7c21df1cf3cca578cb20a00e45ea8a4049b810de595c750d43486957d8a"
+    },
+    {
+      "exists": true,
+      "id": "exp3241_train_eval_shard_gate",
+      "path": "results/experiment_3241_prompt_injection_kan_train_eval_shard_v1.json",
+      "required": false,
+      "sha256": "fbb3238258de9f5377ea07629769fb43bb0b213395cd6f121dd77c7999830e9e"
+    },
+    {
+      "exists": true,
+      "id": "exp3243_module",
+      "path": "python/carnot/eval/fr11_failure_memory_controller_v1.py",
+      "required": false,
+      "sha256": "98b90f99936e47bf391a90d581b8891a68f77a7fa0c646094dd206eb1380f56e"
+    },
+    {
+      "exists": true,
+      "id": "exp3243_tests",
+      "path": "tests/python/test_experiment_3243_fr11_failure_memory_controller_v1.py",
+      "required": false,
+      "sha256": "3422da508f2f99893ebac8e2c14e68b714dd1714d808318414f448f29a80652f"
+    }
+  ],
+  "stale_premise_rejection_count": 2,
+  "task_id": "exp3243-fr11-failure-memory-controller-v1",
+  "tests_run": [
+    ".venv/bin/pytest -o addopts='' tests/python/test_experiment_3243_fr11_failure_memory_controller_v1.py -q",
+    ".venv/bin/coverage run -m pytest -o addopts='' tests/python/test_experiment_3243_fr11_failure_memory_controller_v1.py -q",
+    ".venv/bin/coverage report --include='python/carnot/eval/fr11_failure_memory_controller_v1.py' --fail-under=100 --show-missing",
+    ".venv/bin/python scripts/check_spec_coverage.py tests/python/test_experiment_3243_fr11_failure_memory_controller_v1.py",
+    ".venv/bin/pytest tests/python -q"
+  ]
+}
