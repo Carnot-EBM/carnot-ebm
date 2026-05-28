@@ -9712,3 +9712,80 @@ control regressions
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-LEARN-3255 | Implemented (`python/carnot/eval/fr11_lifelong_failure_memory_retention_audit_v1.py`) | Implemented (`tests/python/test_experiment_3255_fr11_lifelong_failure_memory_retention_audit_v1.py`) |
+
+## REQ-LEARN-3278: FR-11 Full-Corpus Continual Self-Learning Audit
+
+**Given** Exp 3272 has assembled the prompt-injection v4 full 15k corpus,
+Garak/adaptive rows may be available in frozen splits, and legacy FR-11
+failure-memory artifacts contain repair/SOTA gate-block traces
+**When** Exp 3278 audits continual self-learning over those sources
+**Then** it SHALL first check `full_15k_corpus_ready`; if that precondition is
+false or absent, it SHALL write a complete gated-skip artifact without claiming
+learning readiness.
+**And** when ready, it SHALL build a controller-memory stream from prompt-
+injection failure rows, Garak/adaptive rows when present, and legacy gate-block
+traces; evaluate before/after controller-memory decisions on held-out traces;
+and report retention, adaptation, forgetting, and negative transfer without
+updating or claiming updates to foundation-model weights.
+
+The terminal artifact SHALL be
+`results/experiment_3278_fr11_full_corpus_continual_self_learning_audit_v1.json`
+and SHALL include `continuous_self_learning_task`,
+`fr11_full_corpus_audit_ready`, `controller_memory_only`,
+`foundation_weight_updates_performed`, `retention_score`,
+`adaptation_score`, `forgetting_rate`, `negative_transfer_rate`,
+`heldout_trace_count`, `rollback_policy`, `output_paths`, `random_seed`,
+`reproducibility_checksum`, `duration_s`, and `honest_verdict`.
+
+### REQ-LEARN-3278 Sub-requirements
+
+- REQ-LEARN-3278-1: The audit SHALL treat
+  `results/experiment_3272_prompt_injection_v4_full_corpus_assembly_leakage_audit_v1.json`
+  as the readiness gate and SHALL fail closed when `full_15k_corpus_ready` is
+  not true.
+- REQ-LEARN-3278-2: The failure stream SHALL include prompt-injection rows from
+  frozen v4 train/eval data, Garak/adaptive rows when available, and legacy
+  FR-11 repair/SOTA gate-block traces from Exp 3243 and/or Exp 3255 artifacts.
+- REQ-LEARN-3278-3: The before/after evaluation SHALL use held-out prompt-
+  injection rows and held-out legacy controller-memory traces, not training-
+  eligible rows only.
+- REQ-LEARN-3278-4: `retention_score` SHALL measure preservation of older
+  gate-block controller behavior, `adaptation_score` SHALL measure improved
+  handling of new prompt-injection failures, `forgetting_rate` SHALL equal
+  `1.0 - retention_score`, and `negative_transfer_rate` SHALL measure held-out
+  benign prompt rows newly overblocked by the controller-memory update.
+- REQ-LEARN-3278-5: The artifact SHALL include a `rollback_policy` with metric
+  thresholds and a `rollback_required` boolean, and unsafe updates SHALL be
+  rollback-required if retention drops, adaptation is too low, or negative
+  transfer exceeds the threshold.
+- REQ-LEARN-3278-6: `controller_memory_only` SHALL be true,
+  `foundation_weight_updates_performed` SHALL be false, and
+  `honest_verdict` SHALL begin with `complete:`, `success:`, `passed:`, or
+  `shipped:` while attesting that no foundation-model weights were updated.
+
+### SCENARIO-LEARN-3278: Full-Corpus Controller Memory Retains And Adapts
+
+**Given** Exp 3272 is ready, frozen v4 splits are present, Garak/adaptive rows
+are available, and legacy FR-11 memory artifacts contain held-out gate traces
+**When** Exp 3278 builds the continual self-learning audit
+**Then** it writes the required schema fields, sets
+`continuous_self_learning_task=true`, sets `controller_memory_only=true`, keeps
+`foundation_weight_updates_performed=false`, reports nonzero
+`heldout_trace_count`, computes retention/adaptation/forgetting/negative-
+transfer metrics, emits rollback criteria, and writes an `honest_verdict`
+beginning with `complete:`.
+
+### SCENARIO-LEARN-3278-BLOCKED: Missing Full Corpus Writes Complete Gated Skip
+
+**Given** Exp 3272 is absent or `full_15k_corpus_ready` is not true
+**When** Exp 3278 runs
+**Then** it writes a schema-complete gated-skip artifact with
+`fr11_full_corpus_audit_ready=false`, `controller_memory_only=true`,
+`foundation_weight_updates_performed=false`, zero held-out traces, a rollback
+policy, and an `honest_verdict` beginning with `complete:`.
+
+## Implementation Status (REQ-LEARN-3278)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-LEARN-3278 | Implemented (`python/carnot/eval/fr11_full_corpus_continual_self_learning_audit_v1.py`) | Implemented (`tests/python/test_experiment_3278_fr11_full_corpus_continual_self_learning_audit_v1.py`) |

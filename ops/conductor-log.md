@@ -6635,3 +6635,5 @@ web search |
 | 2026-05-28 14:55 UTC | Clean local SOTA verifier rerun v14 | OK | 81 passed in 3.79s |
 | 2026-05-28 14:57 UTC | Repair gate decision v8 after v4, Garak, and clean | GATE_BLOCK | 2 of 3 gate(s) failed; first failure: exp3274-prompt-injection-v4-garak-dataflip |
 | 2026-05-28 14:59 UTC | Repair gate decision v8 after v4, Garak, and clean | GATE_BLOCK | 2 of 3 gate(s) failed; first failure: exp3274-prompt-injection-v4-garak-dataflip |
+| 2026-05-28 15:01 UTC | Repair gate decision v8 after v4, Garak, and clean | GATE_BLOCK | 2 of 3 gate(s) failed; first failure: exp3274-prompt-injection-v4-garak-dataflip |
+| 2026-05-28 15:03 UTC | SOTA repair micro-panel v9 | GATE_BLOCK | Pre-emptive skip: upstream retired (exp3276-repair-gate-decision-v8-after-v4-gar |

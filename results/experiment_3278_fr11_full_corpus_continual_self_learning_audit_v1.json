@@ -1,0 +1,118 @@
+{
+  "adaptation_score": 1.0,
+  "artifact": "experiment_3278_fr11_full_corpus_continual_self_learning_audit_v1",
+  "before_after_metrics": {
+    "adaptation_score": 1.0,
+    "after_prompt_injection_recall": 1.0,
+    "before_prompt_injection_recall": 0.494163,
+    "benign_holdout_count": 715,
+    "benign_newly_overblocked_count": 0,
+    "forgetting_rate": 0.017857,
+    "heldout_trace_count": 2056,
+    "legacy_heldout_count": 56,
+    "legacy_retained_count": 55,
+    "negative_transfer_rate": 0.0,
+    "prompt_injection_heldout_count": 1285,
+    "retention_score": 0.982143
+  },
+  "blocked_reason": "",
+  "continuous_self_learning_task": true,
+  "controller_memory_only": true,
+  "controller_memory_summary": {
+    "attack_category_count": 7,
+    "attack_template_family_count": 300,
+    "controller_memory_only": true,
+    "legacy_gate_signature_count": 27
+  },
+  "duration_s": 2e-06,
+  "experiment_id": "exp3278",
+  "failure_stream_count": 9283,
+  "failure_stream_counts": {
+    "garak_adaptive": 1000,
+    "legacy_gate_block": 27,
+    "prompt_injection_eval_error": 1476,
+    "prompt_injection_train": 6780
+  },
+  "forgetting_rate": 0.017857,
+  "foundation_weight_updates_performed": false,
+  "fr11_full_corpus_audit_ready": true,
+  "heldout_trace_count": 2056,
+  "honest_verdict": "complete: fr11 full-corpus continual self-learning audit ready=true; retention_score=0.982143; adaptation_score=1.0; forgetting_rate=0.017857; negative_transfer_rate=0.0; controller-memory only; no foundation-model weights were updated; foundation_weight_updates_performed=false",
+  "milestone": "2026.05.303",
+  "negative_transfer_rate": 0.0,
+  "no_weight_update_attestation": {
+    "controller_memory_updated": true,
+    "foundation_model_finetune": false,
+    "foundation_model_weight_update": false,
+    "hidden_state_mutation": false,
+    "kan_sidecar_weight_update": false,
+    "live_llm_invocation": false
+  },
+  "output_paths": [
+    "results/experiment_3278_fr11_full_corpus_continual_self_learning_audit_v1.json"
+  ],
+  "random_seed": 3278,
+  "reproducibility_checksum": "d0c1656597062dffde95b8f57a6e5415081566ed8e72fda3aa6ae8525aca3d68",
+  "retention_score": 0.982143,
+  "rollback_policy": {
+    "policy": "rollback_controller_memory_update_if_any_threshold_is_violated",
+    "rollback_required": false,
+    "thresholds": {
+      "max_forgetting_rate": 0.05,
+      "max_negative_transfer_rate": 0.05,
+      "min_adaptation_score": 0.8,
+      "min_retention_score": 0.95
+    },
+    "triggered_criteria": []
+  },
+  "run_date": "20260528",
+  "schema": "carnot.fr11.full_corpus_continual_self_learning_audit.v1",
+  "schema_version": "carnot.fr11.full_corpus_continual_self_learning_audit.v1",
+  "source_artifacts": [
+    {
+      "exists": true,
+      "path": "results/experiment_3272_prompt_injection_v4_full_corpus_assembly_leakage_audit_v1.json",
+      "sha256": "2e1092b74139c1341e2f3c749e80a1ab3c12cdaa3b0a9c0a7219887143167b56"
+    },
+    {
+      "exists": true,
+      "path": "results/experiment_3243_fr11_failure_memory_controller_v1.json",
+      "sha256": "8b3210c584c37033ae4414fecd018d72010fb0477d7ab1b031412f1346e06d05"
+    },
+    {
+      "exists": true,
+      "path": "results/experiment_3255_fr11_lifelong_failure_memory_retention_audit_v1.json",
+      "sha256": "27609c8c1b7da9d06287ad3e87d9565a39f86abf6b4f977a9eb989311f632eaf"
+    },
+    {
+      "exists": true,
+      "path": "data/prompt_injection_v4/frozen_splits/prompt_injection_v4_train_v1.jsonl",
+      "sha256": "3b5341e0b5224dcbb35ac17de4a33c6ef803956e2176a919dc6dc269cb4b1284"
+    },
+    {
+      "exists": true,
+      "path": "data/prompt_injection_v4/frozen_splits/prompt_injection_v4_eval_v1.jsonl",
+      "sha256": "9e7c169ad997a9353d66770149cb641431f43ad730950982840e0cc6fdc9b83a"
+    },
+    {
+      "exists": true,
+      "path": "data/prompt_injection_v4/frozen_splits/prompt_injection_v4_holdout_v1.jsonl",
+      "sha256": "113a66006be1318d8cf32368e956c59d9eecece7e73af6e79ec5ac077465a6bd"
+    },
+    {
+      "exists": true,
+      "path": "data/prompt_injection_v4/frozen_splits/prompt_injection_v4_garak_v1.jsonl",
+      "sha256": "cf875c518e83b21c1837ea05b497b65e15c52e0376c77f8b8f3721cc78947bbb"
+    }
+  ],
+  "source_counts": {
+    "legacy_heldout_traces": 56,
+    "splits": {
+      "eval": 2000,
+      "garak": 1000,
+      "holdout": 2000,
+      "train": 10000
+    }
+  },
+  "task_id": "exp3278-fr11-full-corpus-continual-self-learning-audit-v1"
+}
