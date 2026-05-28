@@ -1,0 +1,108 @@
+{
+  "artifact": "experiment_3263_sota_gguf_receipt_v9",
+  "blocked_reason": "",
+  "cache_roots": [
+    "/home/ianblenke/.cache/huggingface/hub",
+    "/home/ianblenke/github.com/ianblenke/carnot/models"
+  ],
+  "cached_model_ids": [
+    "unsloth/gemma-4-26B-A4B-it-GGUF"
+  ],
+  "duration_s": 19.250433,
+  "exp3262_gate": {
+    "llama_cpp_cuda_receipt_ready": true,
+    "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_3262_llama_cpp_cuda_receipt_smoke_v4.json"
+  },
+  "experiment_id": "exp3263",
+  "gpu_mem_used_mib": 8568,
+  "honest_verdict": "complete: sota_gguf_receipt_v9_ready=true; sota_gguf_receipt_ready=true; per_model_receipts_passed=1",
+  "milestone": "2026.05.302",
+  "missing_model_ids": [
+    "unsloth/Qwen3.6-35B-A3B-GGUF",
+    "unsloth/gemma-4-31B-it-GGUF"
+  ],
+  "model_specs": {
+    "headline_model_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+    "headline_model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+    "mandated_model_ids": [
+      "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "unsloth/gemma-4-31B-it-GGUF",
+      "unsloth/gemma-4-26B-A4B-it-GGUF"
+    ],
+    "mandated_models": {
+      "unsloth/Qwen3.6-35B-A3B-GGUF": {
+        "cached": false,
+        "expected_quantization": "Q4_K_M",
+        "model_path": null,
+        "name": "Qwen3.6-35B-A3B",
+        "role": "moe",
+        "size_bytes": 0
+      },
+      "unsloth/gemma-4-26B-A4B-it-GGUF": {
+        "cached": true,
+        "expected_quantization": "Q4_K_M",
+        "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+        "name": "Gemma4-26B-A4B-it",
+        "role": "moe",
+        "size_bytes": 16947539744
+      },
+      "unsloth/gemma-4-31B-it-GGUF": {
+        "cached": false,
+        "expected_quantization": "Q4_K_M",
+        "model_path": null,
+        "name": "Gemma4-31B-it",
+        "role": "dense",
+        "size_bytes": 0
+      }
+    },
+    "n_gpu_layers_requested": -1,
+    "preferred_quantization": "Q4_K_M",
+    "prompt": "Exp 3263 SOTA GGUF CUDA receipt. Reply with READY and one short clause.",
+    "runtime": "llama_cpp"
+  },
+  "per_model_receipts": [
+    {
+      "filename": "gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+      "generation_evidence": {
+        "generation_status": "generated",
+        "output_nonempty": true,
+        "output_preview": "1<|channel>thoughtthought00000000000",
+        "tokens_generated": 16,
+        "usage": {
+          "completion_tokens": 16,
+          "prompt_tokens": 23,
+          "total_tokens": 39
+        }
+      },
+      "gpu_evidence": {
+        "gpu_layers_offloaded": 31,
+        "gpu_mem_baseline_mib": 4,
+        "gpu_mem_delta_mib": 8564,
+        "gpu_mem_used_mib": 8568
+      },
+      "model_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "model_load_evidence": {
+        "duration_s": 18.761407,
+        "load_status": "loaded",
+        "n_gpu_layers_requested": -1,
+        "runtime": "llama_cpp"
+      },
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+      "receipt_passed": true,
+      "size_bytes": 16947539744,
+      "worker_attempt": {
+        "attempted": true,
+        "command_hash": "a9679e3512f842e7e8474e92c82a8893cfed0a37ce1f73005673d46177a3f745",
+        "returncode": 0,
+        "stderr_summary": "se -%}\n                            {{- format_tool_response_block(ns_tname.name, tool_body) -}}\n                        {%- endif -%}\n                        {%- set ns_tr_out.flag = true -%}\n                        {%- set ns.prev_message_type = 'tool_response' -%}\n                    {%- endif -%}\n                {%- endfor -%}\n            {%- endif -%}\n\n            {%- set captured_content -%}\n            {%- if message['content'] is string -%}\n                {%- if role == 'model' -%}\n                    {{- strip_thinking(message['content']) -}}\n                {%- else -%}\n                    {{- message['content'] | trim -}}\n                {%- endif -%}\n            {%- elif message['content'] is sequence -%}\n                {%- for item in message['content'] -%}\n                    {%- if item['type'] == 'text' -%}\n                        {%- if role == 'model' -%}\n                            {{- strip_thinking(item['text']) -}}\n                        {%- else -%}\n                            {{- item['text'] | trim -}}\n                        {%- endif -%}\n                    {%- elif item['type'] == 'image' -%}\n                        {{- '<|image|>' -}}\n                        {%- set ns.prev_message_type = 'image' -%}\n                    {%- elif item['type'] == 'audio' -%}\n                        {{- '<|audio|>' -}}\n                        {%- set ns.prev_message_type = 'audio' -%}\n                    {%- elif item['type'] == 'video' -%}\n                        {{- '<|video|>' -}}\n                        {%- set ns.prev_message_type = 'video' -%}\n                    {%- endif -%}\n                {%- endfor -%}\n            {%- endif -%}\n            {%- endset -%}\n\n            {{- captured_content -}}\n            {%- set has_content = captured_content | trim | length > 0 -%}\n\n        {%- if ns.prev_message_type == 'tool_call' and not ns_tr_out.flag -%}\n            {{- '<|tool_response>' -}}\n        {%- elif not (ns_tr_out.flag and not has_content) -%}\n            {{- '<turn|>\\n' -}}\n        {%- endif -%}\n    {%- endif -%}\n{%- endfor -%}\n\n{%- if add_generation_prompt -%}\n    {%- if ns.prev_message_type != 'tool_response' and ns.prev_message_type != 'tool_call' -%}\n        {{- '<|turn>model\\n' -}}\n        {%- if not enable_thinking | default(false) -%}\n            {{- '<|channel>thought\\n<channel|>' -}}\n        {%- endif -%}\n    {%- endif -%}\n{%- endif -%}\nUsing chat eos_token: <turn|>\nUsing chat bos_token: <bos>\nCUDA Graph id 27 reused\nggml_backend_cuda_graph_compute: CUDA graph warmup complete\nCUDA Graph id 28 reused\nggml_backend_cuda_graph_compute: CUDA graph warmup complete\nCUDA Graph id 27 reused\nCUDA Graph id 28 reused\nCUDA Graph id 27 reused\nCUDA Graph id 28 reused\nCUDA Graph id 27 reused\nCUDA Graph id 28 reused\nCUDA Graph id 27 reused\nCUDA Graph id 28 reused\nCUDA Graph id 27 reused\nCUDA Graph id 28 reused\nCUDA Graph id 27 reused\nCUDA Graph id 28 reused\nCUDA Graph id 27 reused\nCUDA Graph id 28 reused\nCUDA Graph id 27 reused\nCUDA Graph id 28 reused\nCUDA Graph id 27 reused\nCUDA Graph id 28 reused\nCUDA Graph id 27 reused\nCUDA Graph id 28 reused\nCUDA Graph id 27 reused\nCUDA Graph id 28 reused\nCUDA Graph id 27 reused\nCUDA Graph id 28 reused\nCUDA Graph id 27 reused\nCUDA Graph id 28 reused\nllama_perf_context_print:        load time =     422.11 ms\nllama_perf_context_print: prompt eval time =     422.00 ms /    23 tokens (   18.35 ms per token,    54.50 tokens per second)\nllama_perf_context_print:        eval time =     377.54 ms /    15 runs   (   25.17 ms per token,    39.73 tokens per second)\nllama_perf_context_print:       total time =     805.17 ms /    38 tokens\nllama_perf_context_print:    graphs reused =         14\n~llama_context:      CUDA0 compute buffer size is  23.4424 MiB, matches expectation of  23.4424 MiB\n~llama_context:      CUDA1 compute buffer size is  78.3340 MiB, matches expectation of  78.3340 MiB\n~llama_context:  CUDA_Host compute buffer size is  10.3818 MiB, matches expectation of  10.3818 MiB\n"
+      }
+    }
+  ],
+  "random_seed": 3263,
+  "reproducibility_checksum": "937722da83325a798bf6fc0bf8c967718bee158f861dbdf224470f941ec3750a",
+  "schema_version": "carnot.sota_gguf_receipt.v9",
+  "selected_python": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+  "sota_gguf_receipt_ready": true,
+  "sota_gguf_receipt_v9_ready": true,
+  "task_id": "exp3263-sota-gguf-receipt-v9"
+}

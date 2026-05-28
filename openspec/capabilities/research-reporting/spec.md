@@ -12448,3 +12448,51 @@ blocked reason, and leaves both receipt booleans false.
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-REPORT-3262 | Implemented (`python/carnot/reporting/llama_cpp_cuda_receipt_smoke_3262.py`) | Implemented (`tests/python/test_experiment_3262_llama_cpp_cuda_receipt_smoke_v4.py`) |
+
+### REQ-REPORT-3263: SOTA GGUF Receipt v9
+
+The repository shall provide an Exp 3263 SOTA GGUF receipt generator that
+writes `results/experiment_3263_sota_gguf_receipt_v9.json`. The workflow
+SHALL first read `results/experiment_3262_llama_cpp_cuda_receipt_smoke_v4.json`
+and SHALL write a complete gated-skip artifact with
+`sota_gguf_receipt_ready=false` when `llama_cpp_cuda_receipt_ready` is not true.
+When Exp 3262 opens the gate, the workflow SHALL inspect only local cache roots
+for the mandated SOTA GGUF model IDs:
+`unsloth/Qwen3.6-35B-A3B-GGUF`, `unsloth/gemma-4-31B-it-GGUF`, and
+`unsloth/gemma-4-26B-A4B-it-GGUF`. If no mandated GGUF is cached, it SHALL write
+`blocked_sota_gguf_not_cached`, record the missing model IDs, and keep
+`sota_gguf_receipt_ready=false`.
+
+For each cached mandated GGUF, the successful workflow SHALL load the model
+through llama.cpp with CUDA offload, run a short deterministic verification
+generation, and record per-model evidence including load status, generated
+text presence, generated token count, duration, requested/effective GPU-layer
+offload, and observed GPU memory. The terminal artifact MUST include
+`sota_gguf_receipt_v9_ready`, `sota_gguf_receipt_ready`, `model_specs`,
+`per_model_receipts`, `gpu_mem_used_mib`, `random_seed`,
+`reproducibility_checksum`, `duration_s`, and `honest_verdict`.
+`model_specs` MUST name all three mandated models and identify the headline
+model when at least one cached receipt succeeds. `sota_gguf_receipt_ready` MUST
+be true only when at least one mandated cached GGUF completes generation with
+non-empty output, `tokens_generated > 0`, CUDA/offload evidence, and positive
+GPU memory evidence. `honest_verdict` MUST begin with one of `complete:`,
+`complete_`, `success:`, `success_`, `passed:`, `passed_`, or `shipped_`.
+
+#### SCENARIO-REPORT-3263: Cached Mandated GGUF Produces A CUDA Receipt
+
+**Given** Exp 3262 reports `llama_cpp_cuda_receipt_ready=true`
+**And** at least one of the mandated SOTA GGUF models is cached locally
+**When** the Exp 3263 SOTA GGUF receipt generator runs
+**Then** it writes `results/experiment_3263_sota_gguf_receipt_v9.json` with all
+required schema fields, attempts each cached mandated GGUF with CUDA offload,
+records per-model load and generation evidence, sets
+`sota_gguf_receipt_ready=true` when at least one per-model receipt passes, and
+records an `honest_verdict` beginning with `complete:`. If Exp 3262 is not
+ready or no mandated GGUF is cached, the artifact remains complete, records the
+exact blocked reason, and leaves `sota_gguf_receipt_ready=false`.
+
+## Implementation Status (REQ-REPORT-3263)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-3263 | Implemented (`python/carnot/reporting/sota_gguf_receipt_3263.py`) | Implemented (`tests/python/test_experiment_3263_sota_gguf_receipt_v9.py`) |
