@@ -1,0 +1,27 @@
+{
+  "schema": "carnot.operational_retro.v64",
+  "milestone": "2026.05.300",
+  "generated_at": "2026-05-28T05:59:23.974389Z",
+  "retro_type": "operational_full",
+  "total_wall_time_minutes": 0,
+  "experiments_completed": 0,
+  "compute_bound_experiments_count": 0,
+  "slowest_experiments": [],
+  "gpu_idle_on_compute_bound_tasks": null,
+  "summary": "The timing block records 0 completed experiments, 0 compute-bound experiments, and 0 total wall-time minutes for milestone 2026.05.300. Longest compute-bound runs, compute-bound GPU efficiency, and 2+ model runner behavior are no data available this milestone.",
+  "bottlenecks_identified": [
+    "no data available this milestone"
+  ],
+  "improvements_suggested": [
+    "Add an early closeout notice when the milestone timing source has no post-activation experiment commits, so operators can distinguish an intentional empty window from a collection failure.",
+    "Keep GPU-idle warnings behind the compute_bound timing marker before they enter operational retrospectives.",
+    "Have the retro generator emit a compact no-data template for slowest-experiment and DualGPURunner sections when the bounded timing set is empty."
+  ],
+  "top_3_highest_leverage_actions": [
+    "Add a zero-row timing sentinel before retrospective drafting.",
+    "Gate GPU-idle bottleneck text on at least one compute-bound timing row.",
+    "Record why the timing ledger is empty in the closeout artifact."
+  ],
+  "estimated_time_savings_pct": 0,
+  "meta_reflection": "The GPU snapshot alone is insufficient to infer wasted compute because the timing block lists no compute-bound work. This retrospective therefore makes no duration, metric, experiment-ID, or DualGPURunner claim beyond the locked zero-count fields."
+}
