@@ -12205,3 +12205,69 @@ beginning with `complete:`.
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-REPORT-3257 | Planned (`python/carnot/reporting/cross_corpus_matrix_v34_3257.py`) | Planned (`tests/python/test_experiment_3257_cross_corpus_matrix_v34.py`) |
+
+### REQ-REPORT-3258: Capstone V301 Publication-Blocker Closeout
+
+The repository shall provide an Exp 3258 milestone capstone generator that
+writes `results/experiment_3258_capstone_v301.json` by reading
+`results/experiment_3257_cross_corpus_matrix_v34.json`,
+`results/experiment_3245_capstone_v300.json`, every available `.301`
+artifact from Exp 3246 through Exp 3257, and `ops/conductor-log.md`. The
+workflow MUST be aggregation only. It MUST NOT run live model inference, CUDA
+probes, llama.cpp, GGUF receipts, teacher labeling, KAN training, Garak,
+repair proposal generation, verifier scoring, solver execution, hardware
+commands, the conductor, pushes, modify `research-roadmap.yaml`, or modify
+`scripts/research_conductor.py`.
+
+The generator MUST compare the `.301` `publication_blocker_count` from matrix
+v34 against the `.300` capstone baseline of 106 blockers and report the
+blocker delta without fabricating reductions. It MUST report statuses for
+selected-Python CUDA, llama.cpp CUDA, SOTA GGUF receipt, prompt-injection
+teacher labels, Prompt-Injection KAN shard, DCCD/SEVerA preflight, FR-11
+lifelong retention, and p-dit/Potts diagnostics. It MUST set `paper_ready=true`
+only when matrix v34 reports zero blockers and all required runtime,
+prompt-injection, DCCD/SEVerA, FR-11, and p-dit/Potts evidence exists. It MUST
+select `next_top_gap` only from observed incomplete or blocked artifacts or
+conductor-log gate evidence.
+
+The terminal artifact MUST include `experiment_id`, `task_id`, `milestone`,
+`inference_substrate`, `principle_annotations`, `capstone_v301_ready`,
+`paper_ready`, `publication_blocker_count`, `blocker_delta_from_v300`,
+`local_sota_receipt_status`, `prompt_injection_v4_status`,
+`dccd_severa_preflight_status`, `fr11_lifelong_retention_status`,
+`pdit_potts_status`, `next_top_gap`, `recommended_next_milestone_theme`,
+`protected_files_untouched`, and `honest_verdict`. It SHALL include source
+artifact inventories, checksums, no-new-execution booleans, operator-safe
+notes, measured `duration_s`, and a reproducibility checksum. `honest_verdict`
+MUST begin with `complete:` and MUST NOT claim `paper_ready=true` unless
+`publication_blocker_count` is zero.
+
+#### SCENARIO-REPORT-3258: Capstone V301 Selects Next Observed Gap
+
+**Given** matrix v34 reports `matrix_v34_ready=true`, `paper_ready=false`,
+`publication_blocker_count=106`, selected-Python CUDA still blocked with
+`next_smoke_allowed=false`, llama.cpp CUDA and SOTA GGUF receipts
+gate-blocked, prompt-injection teacher labels, KAN shard, and DCCD/SEVerA
+preflight unavailable, FR-11 lifelong retention ready without model-weight
+updates, and p-dit/Potts diagnostics ready with exact fallback and no hardware
+speedup claim
+**And** the `.300` capstone reports `publication_blocker_count=106`
+**When** the Exp 3258 capstone generator runs
+**Then** it writes `results/experiment_3258_capstone_v301.json` with all
+required schema fields, `capstone_v301_ready=true`, `paper_ready=false`,
+`publication_blocker_count=106`, `blocker_delta_from_v300=0`, local SOTA
+receipt status showing selected-Python CUDA, llama.cpp CUDA, and SOTA GGUF
+receipts incomplete, prompt-injection status showing the constraint-tax plan
+advanced but teacher labels and KAN shard stayed gated, DCCD/SEVerA preflight
+gate-blocked, FR-11 lifelong retention complete and controller-only,
+p-dit/Potts diagnostics complete without hardware-speedup claims,
+`next_top_gap` selected from the observed selected-Python CUDA runtime block,
+protected-file untouched constraints for `research-roadmap.yaml` and
+`scripts/research_conductor.py`, and an `honest_verdict` beginning with
+`complete:` without claiming paper readiness.
+
+## Implementation Status (REQ-REPORT-3258)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-3258 | Implemented (`python/carnot/reporting/capstone_v301_3258.py`) | Implemented (`tests/python/test_experiment_3258_capstone_v301.py`) |
