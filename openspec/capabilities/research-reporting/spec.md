@@ -13332,3 +13332,60 @@ installation or invocation fails, and emits an `honest_verdict` beginning with
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-REPORT-3282 | Implemented (`python/carnot/reporting/garak_install_probe_manifest_3282.py`) | Implemented (`tests/python/test_experiment_3282_garak_install_probe_manifest.py`) |
+
+### REQ-REPORT-3283: Prompt-Injection Corrigendum Duration And Provenance Audit
+
+The repository shall provide an Exp 3283 prompt-injection corrigendum workflow
+that writes
+`results/experiment_3283_prompt_injection_corrigendum_duration_audit_v1.json`
+by reading the `.303` prompt-injection teacher-label shard artifacts, full
+corpus assembly/leakage audit, and evidence matrix. The workflow MUST be a
+corrigendum and evidence-boundary artifact only. It MUST NOT relabel corpus
+examples, run model inference, train or score KAN, run Garak, run the clean
+verifier, run repair, push, or modify `scripts/research_conductor.py`,
+`ops/status.md`, `ops/changelog.md`, or `_bmad/traceability.md`.
+
+The audit MUST classify each relevant source artifact as `live-LLM`, `cached`,
+`template-backed`, `aggregation-only`, or `blocked` without conflating small
+cached model evidence panels with deterministic bulk label expansion. It SHALL
+carry forward every `DURATION_TOO_SHORT`, `TAUTOLOGY`, leakage, blocked-gate,
+sidecar, missing, and provenance flag that affects downstream paper or
+benchmark headline eligibility. It SHALL include a correction ledger that
+states which metrics are headline eligible and which metrics are provisional or
+sidecar only.
+
+The terminal artifact MUST include `corrigendum_ready`, `audited_artifacts`,
+`provenance_by_artifact`, `duration_flags`, `tautology_flags`,
+`headline_eligible_metrics`, `provisional_or_sidecar_metrics`,
+`downstream_usage_rules`, `random_seed`, `reproducibility_checksum`,
+`duration_s`, and `honest_verdict`. `corrigendum_ready` MUST be true only when
+all required source artifacts are read, their flags are preserved, and the
+downstream usage rules explicitly bound Garak, KAN, clean-verifier, repair, and
+paper-claim usage. `honest_verdict` MUST begin with one of `complete:`,
+`success:`, `passed:`, or `shipped:`.
+
+#### SCENARIO-REPORT-3283: Corrigendum Bounds .303 Prompt-Injection Corpus Claims
+
+**Given** Exp 3270 and Exp 3271 report ready teacher-label shard artifacts with
+tiny mandated GGUF evidence panels, deterministic taxonomy expansion for most
+new rows, and `DURATION_TOO_SHORT` flags
+**And** Exp 3272 reports a full 15k corpus assembly with leakage audit outputs
+and `TAUTOLOGY` flags on count equality metrics
+**And** Exp 3279 reports the .303 evidence matrix with blocked Garak,
+blocked clean-verifier, blocked repair gate, missing repair micro-panel,
+sidecar-only KAN full-corpus evidence, and publication readiness false
+**When** the Exp 3283 corrigendum workflow runs
+**Then** it writes
+`results/experiment_3283_prompt_injection_corrigendum_duration_audit_v1.json`
+with all required schema fields, marks the teacher-label shard artifacts as
+cached/template-backed instead of fully live-LLM, marks the assembly and matrix
+artifacts as aggregation-only, preserves the duration and tautology flags,
+keeps KAN/Garak/clean-verifier/repair metrics out of headline use, allows only
+bounded artifact-integrity, leakage-boundary, and blocker-state claims as clean
+headline evidence, and emits an `honest_verdict` beginning with `complete:`.
+
+## Implementation Status (REQ-REPORT-3283)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-3283 | Implemented (`python/carnot/reporting/prompt_injection_corrigendum_duration_audit_3283.py`) | Implemented (`tests/python/test_experiment_3283_prompt_injection_corrigendum_duration_audit.py`) |
