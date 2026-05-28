@@ -1,0 +1,29 @@
+{
+  "schema": "carnot.operational_retro.v64",
+  "milestone": "2026.05.299",
+  "generated_at": "2026-05-28T03:15:15Z",
+  "retro_type": "operational_full",
+  "total_wall_time_minutes": 0,
+  "experiments_completed": 0,
+  "compute_bound_experiments_count": 0,
+  "slowest_experiments": [],
+  "gpu_idle_on_compute_bound_tasks": null,
+  "summary": "The authoritative timing input records 0 total wall-time minutes, 0 completed experiments, and 0 compute-bound experiments for milestone 2026.05.299. Compute-bound duration ranking, GPU efficiency on compute-bound work, and 2+ model DualGPURunner coverage are no data available this milestone.",
+  "bottlenecks_identified": [
+    "No compute-bound experiment rows are present in the TIMING DATA, so slowest compute-bound experiments and their causes are no data available this milestone.",
+    "The GPU report shows an idle device, but the TIMING DATA contains no compute-bound task marker; under the milestone rule this is not a compute-bound GPU bottleneck.",
+    "No 2+ model compute-bound task appears in the TIMING DATA, so DualGPURunner engagement is no data available this milestone."
+  ],
+  "improvements_suggested": [
+    "Have the conductor emit an explicit empty-milestone timing summary at closeout when no experiment commits are found since activation.",
+    "Add a pre-retro guard that distinguishes synthesis-only idle GPU state from compute-bound idle GPU state before drafting bottleneck text.",
+    "Surface the absence of milestone-scoped experiment rows before capstone closeout so operators can decide whether to run work or intentionally archive an empty window."
+  ],
+  "top_3_highest_leverage_actions": [
+    "Add a timing-presence check before operational retro generation.",
+    "Keep GPU-idle warnings gated on compute_bound timing rows.",
+    "Record an explicit no-data reason in the milestone timing artifact when the activation window has no experiment commits."
+  ],
+  "estimated_time_savings_pct": 0,
+  "meta_reflection": "This retrospective intentionally does not infer operational performance from prior milestones or from the idle GPU snapshot. With 0 completed experiments and 0 compute-bound rows, the honest finding is that compute-bound efficiency is no data available this milestone."
+}

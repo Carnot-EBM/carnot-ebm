@@ -6558,3 +6558,4 @@ web search |
 | 2026-05-28 02:53 UTC | Prompt-Injection KAN Distillation v4 — 15k Corpus  | FAIL | Codex CLI error: you finish the real work inside 10 minutes, that is correct  |
 | 2026-05-28 02:55 UTC | Prompt-Injection KAN Distillation v4 — 15k Corpus  | FAIL | Codex CLI error: you finish the real work inside 10 minutes, that is correct  |
 | 2026-05-28 02:57 UTC | Prompt-Injection KAN Distillation v4 — 15k Corpus  | FAIL | Codex CLI error: you finish the real work inside 10 minutes, that is correct  |
+| 2026-05-28 03:09 UTC | Capstone .299 publication readiness + next-gap rec | OK | 81 passed in 3.98s |
