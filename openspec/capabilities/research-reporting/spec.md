@@ -13574,3 +13574,68 @@ bounded offline downstream uses, and emits an `honest_verdict` beginning with
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-REPORT-3288 | Implemented (`python/carnot/reporting/kan_sidecar_failure_autopsy_boundary_3288.py`) | Implemented (`tests/python/test_experiment_3288_kan_sidecar_failure_autopsy_boundary.py`) |
+
+### REQ-REPORT-3292: Evidence Matrix V36 From .304 Artifacts
+
+The repository shall provide an Exp 3292 evidence-matrix v36 generator that
+writes `results/experiment_3292_evidence_matrix_v36.json` by reading the
+available `.304` artifact ledger from Exp 3281 through Exp 3291 and the prior
+Exp 3279 evidence matrix v35. The workflow MUST be aggregation only. It MUST
+NOT run model inference, CUDA probes, teacher labeling, KAN training, Garak,
+repair, verifier scoring, hardware commands, the conductor, pushes, or modify
+`scripts/research_conductor.py`, `ops/status.md`, `ops/changelog.md`, or
+`_bmad/traceability.md`.
+
+The matrix MUST account for the `.304` handoff, Garak toolchain manifest,
+corrigendum, Garak smoke, full Garak/DataFlip red-team result, clean-verifier
+abstention root cause, calibrated clean-verifier rerun, KAN boundary decision,
+repair gate, repair micro-panel, and FR-11 memory replay artifacts. Each `.304`
+artifact row MUST be marked as one of `clean`, `blocked`, `flagged`,
+`sidecar-only`, `missing`, or `paper-blocking`. Missing artifact files MUST
+remain `missing`; failed or blocked gates MUST preserve exact blocker strings
+from `blocked_reason`, `blocked_reasons`, `gate_reasons`,
+`gate_check_summary`, failed gate reasons, and false gate booleans without
+inferring downstream success. Methodology flags and sidecar/provisional
+boundaries MUST remain visible even when a later gate opens.
+
+The terminal artifact MUST include `matrix_v36_ready`,
+`artifact_count_scanned`, `clean_evidence_count`, `blocked_evidence_count`,
+`flagged_evidence_count`, `sidecar_only_count`, `missing_evidence_count`,
+`paper_blocker_count`, `top_gaps`, `gate_summary`, `random_seed`,
+`reproducibility_checksum`, `duration_s`, and `honest_verdict`. It SHALL also
+include source checksums, primary status counts, evidence rows, carried-forward
+`.303` blockers, blocker resolution records, paper-readiness state, and
+no-new-execution booleans. `matrix_v36_ready` describes whether the capstone
+has a complete aggregation matrix to read, not whether publication is ready.
+`paper_ready` MUST remain false whenever any required Garak, clean-verifier,
+KAN-boundary, repair, repair-panel, FR-11, or methodology evidence is blocked,
+flagged, missing, sidecar-only, or paper-blocking. `honest_verdict` MUST begin
+with one of `complete:`, `success:`, `passed:`, or `shipped:`.
+
+#### SCENARIO-REPORT-3292: Matrix V36 Preserves .304 Gates And .303 Carry-Forward
+
+**Given** matrix v35 reports `paper_ready=false`, `.303` methodology flags,
+sidecar-only KAN evidence, blocked Garak and clean-verifier gates, a blocked
+repair gate, and a missing repair micro-panel
+**And** Exp 3281 through Exp 3291 report that the Garak toolchain is available,
+Garak smoke and full red-team evaluation ran, the full red-team Garak gate
+failed, the clean-verifier abstention blocker was fixed, the KAN detector was
+retired from prompt-injection headline use, the repair gate opened, the repair
+micro-panel ran but remains diagnostic/flagged, and FR-11 replay is
+controller-memory-only
+**When** the Exp 3292 matrix generator runs
+**Then** it writes `results/experiment_3292_evidence_matrix_v36.json` with all
+required schema fields, `matrix_v36_ready=true`, `artifact_count_scanned=11`,
+row statuses that distinguish clean, blocked, flagged, sidecar-only,
+paper-blocking, and missing evidence, exact blocker strings preserved in
+affected rows, source checksums for present artifacts, gate-summary entries for
+Garak, verifier, KAN, repair, and FR-11 evidence, carried-forward `.303`
+methodology blockers that `.304` did not resolve, ranked top gaps led by the
+failed Garak red-team gate, `paper_ready=false`, and an `honest_verdict`
+beginning with `complete:` without claiming publication readiness.
+
+## Implementation Status (REQ-REPORT-3292)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-3292 | Implemented (`python/carnot/reporting/evidence_matrix_v36_3292.py`) | Implemented (`tests/python/test_experiment_3292_evidence_matrix_v36.py`) |

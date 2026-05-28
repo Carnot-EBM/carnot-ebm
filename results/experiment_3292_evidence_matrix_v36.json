@@ -1,0 +1,1325 @@
+{
+  "artifact": "experiment_3292_evidence_matrix_v36",
+  "artifact_count_scanned": 11,
+  "artifacts_expected": [
+    {
+      "experiment_id": "exp3281",
+      "path": "results/experiment_3281_archive_v303_activate_v304.json",
+      "ready_field": "v303_closed_v304_opened",
+      "role": "v303_archive_v304_handoff",
+      "task_id": "exp3281-archive-v303-activate-v304"
+    },
+    {
+      "experiment_id": "exp3282",
+      "path": "results/experiment_3282_garak_install_and_probe_manifest_v1.json",
+      "ready_field": "garak_install_probe_manifest_ready",
+      "role": "garak_toolchain_manifest",
+      "task_id": "exp3282-garak-install-and-probe-manifest-v1"
+    },
+    {
+      "experiment_id": "exp3283",
+      "path": "results/experiment_3283_prompt_injection_corrigendum_duration_audit_v1.json",
+      "ready_field": "corrigendum_ready",
+      "role": "prompt_injection_corrigendum",
+      "task_id": "exp3283-prompt-injection-corrigendum-duration-audit-v1"
+    },
+    {
+      "experiment_id": "exp3284",
+      "path": "results/experiment_3284_garak_local_smoke_sota_gguf_v1.json",
+      "ready_field": "garak_local_smoke_v1_ready",
+      "role": "garak_local_smoke",
+      "task_id": "exp3284-garak-local-smoke-sota-gguf-v1"
+    },
+    {
+      "experiment_id": "exp3285",
+      "path": "results/experiment_3285_full_garak_dataflip_redteam_eval_v2.json",
+      "ready_field": "garak_dataflip_redteam_eval_v2_ready",
+      "role": "full_garak_dataflip_redteam",
+      "task_id": "exp3285-full-garak-dataflip-redteam-eval-v2"
+    },
+    {
+      "experiment_id": "exp3286",
+      "path": "results/experiment_3286_clean_verifier_abstention_root_cause_v1.json",
+      "ready_field": "abstention_root_cause_audit_ready",
+      "role": "clean_verifier_abstention_root_cause",
+      "task_id": "exp3286-clean-verifier-abstention-root-cause-v1"
+    },
+    {
+      "experiment_id": "exp3287",
+      "path": "results/experiment_3287_abstention_calibrated_clean_verifier_v15.json",
+      "ready_field": "abstention_calibrated_clean_verifier_v15_ready",
+      "role": "abstention_calibrated_clean_verifier",
+      "task_id": "exp3287-abstention-calibrated-clean-verifier-v15"
+    },
+    {
+      "experiment_id": "exp3288",
+      "path": "results/experiment_3288_kan_sidecar_failure_autopsy_boundary_v1.json",
+      "ready_field": "kan_failure_autopsy_ready",
+      "role": "kan_sidecar_failure_boundary",
+      "task_id": "exp3288-kan-sidecar-failure-autopsy-boundary-v1"
+    },
+    {
+      "experiment_id": "exp3289",
+      "path": "results/experiment_3289_repair_gate_decision_v9_after_garak_abstention.json",
+      "ready_field": "repair_gate_decision_v9_ready",
+      "role": "repair_gate_decision_v9",
+      "task_id": "exp3289-repair-gate-decision-v9-after-garak-abstention"
+    },
+    {
+      "experiment_id": "exp3290",
+      "path": "results/experiment_3290_gated_sota_repair_micro_panel_v10.json",
+      "ready_field": "sota_repair_micro_panel_v10_ready",
+      "role": "gated_sota_repair_micro_panel",
+      "task_id": "exp3290-gated-sota-repair-micro-panel-v10"
+    },
+    {
+      "experiment_id": "exp3291",
+      "path": "results/experiment_3291_fr11_garak_abstention_memory_replay_v1.json",
+      "ready_field": "fr11_garak_abstention_memory_replay_ready",
+      "role": "fr11_garak_abstention_memory_replay",
+      "task_id": "exp3291-fr11-garak-abstention-memory-replay-v1"
+    }
+  ],
+  "artifacts_missing": [],
+  "blocked_evidence_count": 1,
+  "carried_forward_blockers": [
+    {
+      "current_source_experiment_id": "exp3283",
+      "prior_blocker_reasons": [],
+      "prior_bounded_claims": [],
+      "prior_experiment_id": "exp3270",
+      "prior_quality_flags": [
+        {
+          "detail": "duration_s=11.875108 but artifact references compute-bound markers (GGUF / CUDA / live model). Loading and running a real model takes >=60.0s minimum; this completed too fast to have invoked the model.",
+          "kind": "DURATION_TOO_SHORT"
+        }
+      ],
+      "prior_status": "flagged",
+      "reason": ".303 methodology flag remains in Exp 3283 corrigendum",
+      "resolution_status": "unresolved"
+    },
+    {
+      "current_source_experiment_id": "exp3283",
+      "prior_blocker_reasons": [],
+      "prior_bounded_claims": [],
+      "prior_experiment_id": "exp3271",
+      "prior_quality_flags": [
+        {
+          "detail": "duration_s=11.75169 but artifact references compute-bound markers (GGUF / CUDA / live model). Loading and running a real model takes >=60.0s minimum; this completed too fast to have invoked the model.",
+          "kind": "DURATION_TOO_SHORT"
+        }
+      ],
+      "prior_status": "flagged",
+      "reason": ".303 methodology flag remains in Exp 3283 corrigendum",
+      "resolution_status": "unresolved"
+    },
+    {
+      "current_source_experiment_id": "exp3283",
+      "prior_blocker_reasons": [],
+      "prior_bounded_claims": [],
+      "prior_experiment_id": "exp3272",
+      "prior_quality_flags": [
+        {
+          "detail": "assembled_example_count=15000.0 and raw_example_count=15000.0 agree to >5 sig figs. Two distinct metrics matching this precisely is more likely a bug than a finding.",
+          "kind": "TAUTOLOGY"
+        },
+        {
+          "detail": "assembled_example_count=15000.0 and target_total_examples=15000.0 agree to >5 sig figs. Two distinct metrics matching this precisely is more likely a bug than a finding.",
+          "kind": "TAUTOLOGY"
+        },
+        {
+          "detail": "eval_count=2000.0 and holdout_count=2000.0 agree to >5 sig figs. Two distinct metrics matching this precisely is more likely a bug than a finding.",
+          "kind": "TAUTOLOGY"
+        },
+        {
+          "detail": "raw_example_count=15000.0 and target_total_examples=15000.0 agree to >5 sig figs. Two distinct metrics matching this precisely is more likely a bug than a finding.",
+          "kind": "TAUTOLOGY"
+        }
+      ],
+      "prior_status": "flagged",
+      "reason": ".303 methodology flag remains in Exp 3283 corrigendum",
+      "resolution_status": "unresolved"
+    }
+  ],
+  "clean_evidence_count": 1,
+  "duration_s": 0.002827,
+  "evidence_rows": [
+    {
+      "blocker_reasons": [],
+      "bounded_claims": [],
+      "experiment_id": "exp3281",
+      "honest_verdict": "complete: v303_closed_v304_opened=true; paper_ready=false; publication_blocker_count=105; publication_blocker_delta=0; next_top_gap=unblock_garak_redteam_eval; full_15k_corpus_materialized=true; garak_blocker=blocked_garak_unavailable; clean_verifier_abstention_rate=1.0; kan_noninferiority_passed=false; repair_gate_open=false",
+      "paper_blocking": true,
+      "path": "results/experiment_3281_archive_v303_activate_v304.json",
+      "present": true,
+      "quality_flags": [],
+      "ready": true,
+      "ready_field": "v303_closed_v304_opened",
+      "reported_experiment_id": "exp3281",
+      "role": "v303_archive_v304_handoff",
+      "schema_version": "carnot.archive_activation.v303_to_v304_blocker_queue.v1",
+      "sha256": "64986d3983d5cf8354d6a06c28160a5ca962524f95cc80a6b69296feafa550d3",
+      "status": "paper-blocking",
+      "summary": {
+        "clean_verifier_abstention_rate": 1.0,
+        "full_15k_corpus_materialized": true,
+        "garak_blocker": "blocked_garak_unavailable",
+        "kan_noninferiority_passed": false,
+        "prior_next_top_gap": "unblock_garak_redteam_eval",
+        "prior_paper_ready": false,
+        "prior_publication_blocker_count": 105,
+        "repair_gate_open": false,
+        "v303_closed_v304_opened": true
+      },
+      "task_id": "exp3281-archive-v303-activate-v304"
+    },
+    {
+      "blocker_reasons": [],
+      "bounded_claims": [],
+      "experiment_id": "exp3282",
+      "honest_verdict": "complete: garak_install_probe_manifest_ready=true; garak_runner_ready=true; promptinject_probe_count=6",
+      "paper_blocking": true,
+      "path": "results/experiment_3282_garak_install_and_probe_manifest_v1.json",
+      "present": true,
+      "quality_flags": [
+        {
+          "detail": "duration_s=0.841639 but artifact references compute-bound markers (GGUF / CUDA / live model). Loading and running a real model takes >=60.0s minimum; this completed too fast to have invoked the model.",
+          "kind": "DURATION_TOO_SHORT"
+        },
+        {
+          "detail": "Compute-bound artifact missing: model_specs/target_model. Methodology unverifiable.",
+          "kind": "METHODOLOGY_MISSING"
+        }
+      ],
+      "ready": true,
+      "ready_field": "garak_install_probe_manifest_ready",
+      "reported_experiment_id": "exp3282",
+      "role": "garak_toolchain_manifest",
+      "schema_version": "carnot.garak_install_probe_manifest.v1",
+      "sha256": "302b797cf0ea65b32272e1c7d4bd676d29dc3b801c70b215423dc9f48f1982f0",
+      "status": "flagged",
+      "summary": {
+        "garak_available": true,
+        "garak_install_probe_manifest_ready": true,
+        "garak_runner_ready": true,
+        "garak_version": "0.15.0",
+        "promptinject_probe_count": 6
+      },
+      "task_id": "exp3282-garak-install-and-probe-manifest-v1"
+    },
+    {
+      "blocker_reasons": [],
+      "bounded_claims": [],
+      "experiment_id": "exp3283",
+      "honest_verdict": "complete: corrigendum_ready=true; duration_flags=5; tautology_flags=6; headline_performance_metrics_allowed=false",
+      "paper_blocking": true,
+      "path": "results/experiment_3283_prompt_injection_corrigendum_duration_audit_v1.json",
+      "present": true,
+      "quality_flags": [
+        {
+          "detail": "duration_s=0.018732 but artifact references compute-bound markers (GGUF / CUDA / live model). Loading and running a real model takes >=60.0s minimum; this completed too fast to have invoked the model.",
+          "kind": "DURATION_TOO_SHORT"
+        },
+        {
+          "detail": "Compute-bound artifact missing: model_specs/target_model. Methodology unverifiable.",
+          "kind": "METHODOLOGY_MISSING"
+        },
+        {
+          "detail": "duration_s=11.875108 but artifact references compute-bound markers (GGUF / CUDA / live model). Loading and running a real model takes >=60.0s minimum; this completed too fast to have invoked the model.",
+          "kind": "DURATION_TOO_SHORT"
+        },
+        {
+          "detail": "duration_s=11.75169 but artifact references compute-bound markers (GGUF / CUDA / live model). Loading and running a real model takes >=60.0s minimum; this completed too fast to have invoked the model.",
+          "kind": "DURATION_TOO_SHORT"
+        },
+        {
+          "detail": "duration_s=1.138554 but artifact references compute-bound markers (GGUF / CUDA / live model). Loading and running a real model takes >=60.0s minimum; this completed too fast to have invoked the model.",
+          "kind": "DURATION_TOO_SHORT"
+        },
+        {
+          "detail": "duration_s=9.73802 but artifact references compute-bound markers (GGUF / CUDA / live model). Loading and running a real model takes >=60.0s minimum; this completed too fast to have invoked the model.",
+          "kind": "DURATION_TOO_SHORT"
+        },
+        {
+          "detail": "duration_s=0.002001 but artifact references compute-bound markers (GGUF / CUDA / live model). Loading and running a real model takes >=60.0s minimum; this completed too fast to have invoked the model.",
+          "kind": "DURATION_TOO_SHORT"
+        },
+        {
+          "detail": "selected_source_row_count=2000.0 and shard_size=2000.0 agree to >5 sig figs. Two distinct metrics matching this precisely is more likely a bug than a finding.",
+          "kind": "TAUTOLOGY"
+        },
+        {
+          "detail": "assembled_example_count=15000.0 and raw_example_count=15000.0 agree to >5 sig figs. Two distinct metrics matching this precisely is more likely a bug than a finding.",
+          "kind": "TAUTOLOGY"
+        },
+        {
+          "detail": "assembled_example_count=15000.0 and target_total_examples=15000.0 agree to >5 sig figs. Two distinct metrics matching this precisely is more likely a bug than a finding.",
+          "kind": "TAUTOLOGY"
+        },
+        {
+          "detail": "eval_count=2000.0 and holdout_count=2000.0 agree to >5 sig figs. Two distinct metrics matching this precisely is more likely a bug than a finding.",
+          "kind": "TAUTOLOGY"
+        },
+        {
+          "detail": "raw_example_count=15000.0 and target_total_examples=15000.0 agree to >5 sig figs. Two distinct metrics matching this precisely is more likely a bug than a finding.",
+          "kind": "TAUTOLOGY"
+        },
+        {
+          "detail": "publication_blocker_delta_from_v302=0.0 (exactly zero). Confirm this is not a stub default.",
+          "kind": "IMPLAUSIBLE_PERFECT"
+        }
+      ],
+      "ready": true,
+      "ready_field": "corrigendum_ready",
+      "reported_experiment_id": "exp3283",
+      "role": "prompt_injection_corrigendum",
+      "schema_version": "carnot.prompt_injection_corrigendum_duration_audit.v1",
+      "sha256": "d5ebebb114d5ab4cf85be5e0606aba25c216484bf43b4b99cc3ec75c0e8d93bc",
+      "status": "flagged",
+      "summary": {
+        "corrigendum_ready": true
+      },
+      "task_id": "exp3283-prompt-injection-corrigendum-duration-audit-v1"
+    },
+    {
+      "blocker_reasons": [],
+      "bounded_claims": [],
+      "experiment_id": "exp3284",
+      "honest_verdict": "complete: garak_local_smoke_v1_ready=true; garak_smoke_ready=true; garak_probe_count=20; attack_success_rate=0.25",
+      "paper_blocking": true,
+      "path": "results/experiment_3284_garak_local_smoke_sota_gguf_v1.json",
+      "present": true,
+      "quality_flags": [
+        {
+          "detail": "duration_s=23.966474 but artifact references compute-bound markers (GGUF / CUDA / live model). Loading and running a real model takes >=60.0s minimum; this completed too fast to have invoked the model.",
+          "kind": "DURATION_TOO_SHORT"
+        }
+      ],
+      "ready": true,
+      "ready_field": "garak_local_smoke_v1_ready",
+      "reported_experiment_id": "exp3284",
+      "role": "garak_local_smoke",
+      "schema_version": "carnot.garak_local_smoke_sota_gguf.v1",
+      "sha256": "59327fea02b5a708554f970d5c690d8a1f4b48a1ada6b43f80440b329769bcba",
+      "status": "flagged",
+      "summary": {
+        "attack_success_rate": 0.25,
+        "garak_local_smoke_v1_ready": true,
+        "garak_probe_count": 20,
+        "garak_smoke_ready": true
+      },
+      "task_id": "exp3284-garak-local-smoke-sota-gguf-v1"
+    },
+    {
+      "blocker_reasons": [
+        "garak_attack_success_or_error_gate_failed",
+        "garak_gate_passed=false"
+      ],
+      "bounded_claims": [],
+      "experiment_id": "exp3285",
+      "honest_verdict": "complete: garak_dataflip_redteam_eval_v2_ready=true; garak_redteam_eval_ready=true; garak_gate_passed=false; dataflip_gate_passed=true; attack_success_rate=0.311111",
+      "paper_blocking": true,
+      "path": "results/experiment_3285_full_garak_dataflip_redteam_eval_v2.json",
+      "present": true,
+      "quality_flags": [],
+      "ready": true,
+      "ready_field": "garak_dataflip_redteam_eval_v2_ready",
+      "reported_experiment_id": "exp3285",
+      "role": "full_garak_dataflip_redteam",
+      "schema_version": "carnot.full_garak_dataflip_redteam_eval.v2",
+      "sha256": "61c35ab600d2ebb07727f414b5096a821a5824c982a3392b67e6800f696e392e",
+      "status": "blocked",
+      "summary": {
+        "attack_success_rate": 0.311111,
+        "dataflip_gate_passed": true,
+        "garak_dataflip_redteam_eval_v2_ready": true,
+        "garak_gate_passed": false,
+        "garak_probe_count": 90,
+        "garak_redteam_eval_ready": true
+      },
+      "task_id": "exp3285-full-garak-dataflip-redteam-eval-v2"
+    },
+    {
+      "blocker_reasons": [],
+      "bounded_claims": [],
+      "experiment_id": "exp3286",
+      "honest_verdict": "complete: clean verifier abstention root cause identified",
+      "paper_blocking": true,
+      "path": "results/experiment_3286_clean_verifier_abstention_root_cause_v1.json",
+      "present": true,
+      "quality_flags": [
+        {
+          "detail": "duration_s=0.000746 but artifact references compute-bound markers (GGUF / CUDA / live model). Loading and running a real model takes >=60.0s minimum; this completed too fast to have invoked the model.",
+          "kind": "DURATION_TOO_SHORT"
+        },
+        {
+          "detail": "Compute-bound artifact missing: model_specs/target_model. Methodology unverifiable.",
+          "kind": "METHODOLOGY_MISSING"
+        }
+      ],
+      "ready": true,
+      "ready_field": "abstention_root_cause_audit_ready",
+      "reported_experiment_id": "exp3286",
+      "role": "clean_verifier_abstention_root_cause",
+      "schema_version": "carnot.clean_verifier_abstention_root_cause.v1",
+      "sha256": "2813efdf112d97b24e564bff5af69b9ef500c12f794827cbd2c834c99a23c59e",
+      "status": "flagged",
+      "summary": {
+        "abstention_root_cause_audit_ready": true,
+        "abstention_root_cause_identified": true,
+        "dominant_root_cause": "model_output_parser_contract_mismatch",
+        "prior_abstention_rate": 1.0
+      },
+      "task_id": "exp3286-clean-verifier-abstention-root-cause-v1"
+    },
+    {
+      "blocker_reasons": [],
+      "bounded_claims": [],
+      "experiment_id": "exp3287",
+      "honest_verdict": "complete: abstention-calibrated clean verifier v15 ready for repair gate",
+      "paper_blocking": true,
+      "path": "results/experiment_3287_abstention_calibrated_clean_verifier_v15.json",
+      "present": true,
+      "quality_flags": [
+        {
+          "detail": "duration_s=12.590483 but artifact references compute-bound markers (GGUF / CUDA / live model). Loading and running a real model takes >=60.0s minimum; this completed too fast to have invoked the model.",
+          "kind": "DURATION_TOO_SHORT"
+        }
+      ],
+      "ready": true,
+      "ready_field": "abstention_calibrated_clean_verifier_v15_ready",
+      "reported_experiment_id": "exp3287",
+      "role": "abstention_calibrated_clean_verifier",
+      "schema_version": "carnot.abstention_calibrated_clean_verifier.v15",
+      "sha256": "42d7c4bf2bf56128781efc860ec38bb908303f549a15ee46c9dda4c7c822184b",
+      "status": "flagged",
+      "summary": {
+        "abstention_calibrated_clean_verifier_v15_ready": true,
+        "abstention_count": 0,
+        "abstention_rate": 0.0,
+        "clean_verifier_rerun_ready": true,
+        "coverage_rate": 1.0,
+        "false_accept_count": 0,
+        "false_accept_rate": 0.0,
+        "false_reject_rate": 0.0,
+        "repair_gate_input_clean_enough": true
+      },
+      "task_id": "exp3287-abstention-calibrated-clean-verifier-v15"
+    },
+    {
+      "blocker_reasons": [],
+      "bounded_claims": [
+        "kan_boundary_decision=retire_from_prompt_injection_headline",
+        "prior_delong_noninferiority_passed=false"
+      ],
+      "experiment_id": "exp3288",
+      "honest_verdict": "complete: kan_failure_autopsy_ready=true; prior_full_corpus_auroc=0.475326; prior_delong_noninferiority_passed=false; kan_boundary_decision=retire_from_prompt_injection_headline",
+      "paper_blocking": true,
+      "path": "results/experiment_3288_kan_sidecar_failure_autopsy_boundary_v1.json",
+      "present": true,
+      "quality_flags": [],
+      "ready": true,
+      "ready_field": "kan_failure_autopsy_ready",
+      "reported_experiment_id": "exp3288",
+      "role": "kan_sidecar_failure_boundary",
+      "schema_version": "carnot.kan_sidecar_failure_autopsy_boundary.v1",
+      "sha256": "a32056db550cb60882f718d2e7d990c6baa8ff0b5989c262877a2a0ea4a62131",
+      "status": "sidecar-only",
+      "summary": {
+        "kan_boundary_decision": "retire_from_prompt_injection_headline",
+        "kan_boundary_decision_ready": true,
+        "kan_failure_autopsy_ready": true,
+        "prior_delong_noninferiority_passed": false,
+        "prior_full_corpus_auroc": 0.475326
+      },
+      "task_id": "exp3288-kan-sidecar-failure-autopsy-boundary-v1"
+    },
+    {
+      "blocker_reasons": [],
+      "bounded_claims": [],
+      "experiment_id": "exp3289",
+      "honest_verdict": "complete: repair_gate_open=true; blocked_reason_count=0; exp3290_scope_defined=true",
+      "paper_blocking": true,
+      "path": "results/experiment_3289_repair_gate_decision_v9_after_garak_abstention.json",
+      "present": true,
+      "quality_flags": [
+        {
+          "detail": "duration_s=0.001078 but artifact references compute-bound markers (GGUF / CUDA / live model). Loading and running a real model takes >=60.0s minimum; this completed too fast to have invoked the model.",
+          "kind": "DURATION_TOO_SHORT"
+        },
+        {
+          "detail": "Compute-bound artifact missing: model_specs/target_model. Methodology unverifiable.",
+          "kind": "METHODOLOGY_MISSING"
+        }
+      ],
+      "ready": true,
+      "ready_field": "repair_gate_decision_v9_ready",
+      "reported_experiment_id": "exp3289",
+      "role": "repair_gate_decision_v9",
+      "schema_version": "carnot.repair_gate_decision.v9",
+      "sha256": "afb36daa5bbb7a9bd74cbcafcfa9893d25c4897cab58e1b504b9635b170ba9e5",
+      "status": "flagged",
+      "summary": {
+        "clean_verifier_rerun_ready": true,
+        "garak_redteam_eval_ready": true,
+        "kan_boundary_decision_ready": true,
+        "repair_gate_decision_v9_ready": true,
+        "repair_gate_input_clean_enough": true,
+        "repair_gate_open": true
+      },
+      "task_id": "exp3289-repair-gate-decision-v9-after-garak-abstention"
+    },
+    {
+      "blocker_reasons": [],
+      "bounded_claims": [
+        "headline_claim_allowed=false"
+      ],
+      "experiment_id": "exp3290",
+      "honest_verdict": "complete: repair_panel_ran=true; panel_case_count=4; verified_success_count=4; false_accept_count=0; abstention_count=0; headline_claim_allowed=false",
+      "paper_blocking": true,
+      "path": "results/experiment_3290_gated_sota_repair_micro_panel_v10.json",
+      "present": true,
+      "quality_flags": [
+        {
+          "detail": "duration_s=10.893664 but artifact references compute-bound markers (GGUF / CUDA / live model). Loading and running a real model takes >=60.0s minimum; this completed too fast to have invoked the model.",
+          "kind": "DURATION_TOO_SHORT"
+        }
+      ],
+      "ready": true,
+      "ready_field": "sota_repair_micro_panel_v10_ready",
+      "reported_experiment_id": "exp3290",
+      "role": "gated_sota_repair_micro_panel",
+      "schema_version": "carnot.gated_sota_repair_micro_panel.v10",
+      "sha256": "a1b677e1cdfa48044c92636cf925fe301385b61c20a14c7c408c14306aa21b21",
+      "status": "flagged",
+      "summary": {
+        "abstention_count": 0,
+        "false_accept_count": 0,
+        "headline_claim_allowed": false,
+        "panel_case_count": 4,
+        "repair_panel_ran": true,
+        "repair_success_rate": 1.0,
+        "sota_repair_micro_panel_v10_ready": true,
+        "verified_success_count": 4
+      },
+      "task_id": "exp3290-gated-sota-repair-micro-panel-v10"
+    },
+    {
+      "blocker_reasons": [],
+      "bounded_claims": [
+        "controller_memory_only=true",
+        "foundation_weight_updates_performed=false"
+      ],
+      "experiment_id": "exp3291",
+      "honest_verdict": "complete: fr11 garak-abstention controller-memory replay ready=true; new_episode_count=5; heldout_trace_count=2056; retention_score=0.982143; adaptation_score=1.0; forgetting_rate=0.017857; negative_transfer_rate=0.0; controller_memory_only=true; foundation_weight_updates_performed=false",
+      "paper_blocking": false,
+      "path": "results/experiment_3291_fr11_garak_abstention_memory_replay_v1.json",
+      "present": true,
+      "quality_flags": [],
+      "ready": true,
+      "ready_field": "fr11_garak_abstention_memory_replay_ready",
+      "reported_experiment_id": "exp3291",
+      "role": "fr11_garak_abstention_memory_replay",
+      "schema_version": "carnot.fr11.garak_abstention_memory_replay.v1",
+      "sha256": "80b5c83a135bc8d59b2148d5c8a40dc07dd092e842145c3705041b165790ed74",
+      "status": "clean",
+      "summary": {
+        "adaptation_score": 1.0,
+        "controller_memory_only": true,
+        "forgetting_rate": 0.017857,
+        "foundation_weight_updates_performed": false,
+        "fr11_garak_abstention_memory_replay_ready": true,
+        "heldout_trace_count": 2056,
+        "negative_transfer_rate": 0.0,
+        "raw_episodes_preserved": true,
+        "retention_score": 0.982143
+      },
+      "task_id": "exp3291-fr11-garak-abstention-memory-replay-v1"
+    }
+  ],
+  "expected_artifact_count": 11,
+  "experiment_id": "exp3292",
+  "flagged_evidence_count": 7,
+  "gate_summary": {
+    "clean_verifier": {
+      "abstention_rate": 0.0,
+      "blocker_reasons": [],
+      "clean_verifier_rerun_ready": true,
+      "honest_verdict": "complete: abstention-calibrated clean verifier v15 ready for repair gate",
+      "present": true,
+      "ready": true,
+      "repair_gate_input_clean_enough": true,
+      "root_cause_source_experiment_id": "exp3286",
+      "source_experiment_id": "exp3287",
+      "status": "flagged"
+    },
+    "fr11": {
+      "blocker_reasons": [],
+      "controller_memory_only": true,
+      "foundation_weight_updates_performed": false,
+      "honest_verdict": "complete: fr11 garak-abstention controller-memory replay ready=true; new_episode_count=5; heldout_trace_count=2056; retention_score=0.982143; adaptation_score=1.0; forgetting_rate=0.017857; negative_transfer_rate=0.0; controller_memory_only=true; foundation_weight_updates_performed=false",
+      "present": true,
+      "ready": true,
+      "source_experiment_id": "exp3291",
+      "status": "clean"
+    },
+    "garak_redteam": {
+      "blocker_reasons": [
+        "garak_attack_success_or_error_gate_failed",
+        "garak_gate_passed=false"
+      ],
+      "dataflip_gate_passed": true,
+      "garak_gate_passed": false,
+      "garak_redteam_eval_ready": true,
+      "honest_verdict": "complete: garak_dataflip_redteam_eval_v2_ready=true; garak_redteam_eval_ready=true; garak_gate_passed=false; dataflip_gate_passed=true; attack_success_rate=0.311111",
+      "present": true,
+      "ready": true,
+      "source_experiment_id": "exp3285",
+      "status": "blocked"
+    },
+    "garak_toolchain": {
+      "blocker_reasons": [],
+      "garak_available": true,
+      "garak_runner_ready": true,
+      "honest_verdict": "complete: garak_install_probe_manifest_ready=true; garak_runner_ready=true; promptinject_probe_count=6",
+      "present": true,
+      "ready": true,
+      "source_experiment_id": "exp3282",
+      "status": "flagged"
+    },
+    "kan_boundary": {
+      "blocker_reasons": [],
+      "honest_verdict": "complete: kan_failure_autopsy_ready=true; prior_full_corpus_auroc=0.475326; prior_delong_noninferiority_passed=false; kan_boundary_decision=retire_from_prompt_injection_headline",
+      "kan_boundary_decision": "retire_from_prompt_injection_headline",
+      "kan_boundary_decision_ready": true,
+      "present": true,
+      "ready": true,
+      "source_experiment_id": "exp3288",
+      "status": "sidecar-only"
+    },
+    "prior_dot303": {
+      "carried_forward_count": 3,
+      "matrix_v35_ready": true,
+      "paper_ready": false,
+      "source_experiment_id": "exp3279",
+      "status": "paper-blocking"
+    },
+    "repair_gate": {
+      "blocker_reasons": [],
+      "honest_verdict": "complete: repair_gate_open=true; blocked_reason_count=0; exp3290_scope_defined=true",
+      "present": true,
+      "ready": true,
+      "repair_gate_open": true,
+      "source_experiment_id": "exp3289",
+      "status": "flagged"
+    },
+    "repair_panel": {
+      "blocker_reasons": [],
+      "headline_claim_allowed": false,
+      "honest_verdict": "complete: repair_panel_ran=true; panel_case_count=4; verified_success_count=4; false_accept_count=0; abstention_count=0; headline_claim_allowed=false",
+      "present": true,
+      "ready": true,
+      "repair_panel_ran": true,
+      "source_experiment_id": "exp3290",
+      "status": "flagged"
+    }
+  },
+  "honest_verdict": "complete: matrix_v36_ready=true; paper_ready=false; artifact_count_scanned=11; clean=1; blocked=1; flagged=7; sidecar_only=1; missing=0; paper_blockers=10; next_top_gap=pass_garak_redteam_gate",
+  "inference_substrate": "artifact_aggregation_only",
+  "invariant_violations": [],
+  "loaded_artifact_paths": [
+    "results/experiment_3281_archive_v303_activate_v304.json",
+    "results/experiment_3282_garak_install_and_probe_manifest_v1.json",
+    "results/experiment_3283_prompt_injection_corrigendum_duration_audit_v1.json",
+    "results/experiment_3284_garak_local_smoke_sota_gguf_v1.json",
+    "results/experiment_3285_full_garak_dataflip_redteam_eval_v2.json",
+    "results/experiment_3286_clean_verifier_abstention_root_cause_v1.json",
+    "results/experiment_3287_abstention_calibrated_clean_verifier_v15.json",
+    "results/experiment_3288_kan_sidecar_failure_autopsy_boundary_v1.json",
+    "results/experiment_3289_repair_gate_decision_v9_after_garak_abstention.json",
+    "results/experiment_3290_gated_sota_repair_micro_panel_v10.json",
+    "results/experiment_3291_fr11_garak_abstention_memory_replay_v1.json"
+  ],
+  "matrix_v36_ready": true,
+  "milestone": "2026.05.304",
+  "missing_evidence_count": 0,
+  "no_conductor_execution": true,
+  "no_new_cuda_probe": true,
+  "no_new_garak_run": true,
+  "no_new_hardware_run": true,
+  "no_new_kan_training": true,
+  "no_new_model_execution": true,
+  "no_new_repair_run": true,
+  "no_new_teacher_labeling": true,
+  "no_new_verifier_run": true,
+  "no_push": true,
+  "paper_blocker_count": 10,
+  "paper_blockers": [
+    {
+      "reason": "paper-blocking",
+      "source_experiment_id": "exp3281",
+      "status": "paper-blocking"
+    },
+    {
+      "reason": "DURATION_TOO_SHORT",
+      "source_experiment_id": "exp3282",
+      "status": "flagged"
+    },
+    {
+      "reason": "DURATION_TOO_SHORT",
+      "source_experiment_id": "exp3283",
+      "status": "flagged"
+    },
+    {
+      "reason": "DURATION_TOO_SHORT",
+      "source_experiment_id": "exp3284",
+      "status": "flagged"
+    },
+    {
+      "reason": "garak_attack_success_or_error_gate_failed",
+      "source_experiment_id": "exp3285",
+      "status": "blocked"
+    },
+    {
+      "reason": "DURATION_TOO_SHORT",
+      "source_experiment_id": "exp3286",
+      "status": "flagged"
+    },
+    {
+      "reason": "DURATION_TOO_SHORT",
+      "source_experiment_id": "exp3287",
+      "status": "flagged"
+    },
+    {
+      "reason": "kan_boundary_decision=retire_from_prompt_injection_headline",
+      "source_experiment_id": "exp3288",
+      "status": "sidecar-only"
+    },
+    {
+      "reason": "DURATION_TOO_SHORT",
+      "source_experiment_id": "exp3289",
+      "status": "flagged"
+    },
+    {
+      "reason": "DURATION_TOO_SHORT",
+      "source_experiment_id": "exp3290",
+      "status": "flagged"
+    }
+  ],
+  "paper_ready": false,
+  "primary_status_counts": {
+    "blocked": 1,
+    "clean": 1,
+    "flagged": 7,
+    "missing": 0,
+    "paper-blocking": 1,
+    "sidecar-only": 1
+  },
+  "principle_annotations": {
+    "aggregation_only": "Matrix v36 reads checked-in .304 artifacts and v35 only.",
+    "blocked_gates_visible": "Failed gates preserve exact blockers and false gate booleans.",
+    "flags_visible": "Methodology flags remain counted even when downstream gates open.",
+    "missing_is_not_failed": "Absent artifacts stay missing instead of becoming failed gates.",
+    "paper_ready_rule": "Publication readiness requires zero current blockers and no carried .303 blockers.",
+    "sidecar_bounded": "KAN and controller-memory-only evidence stays explicitly bounded."
+  },
+  "prior_blocker_resolution": [
+    {
+      "current_source_experiment_id": "exp3283",
+      "prior_blocker_reasons": [],
+      "prior_bounded_claims": [],
+      "prior_experiment_id": "exp3270",
+      "prior_quality_flags": [
+        {
+          "detail": "duration_s=11.875108 but artifact references compute-bound markers (GGUF / CUDA / live model). Loading and running a real model takes >=60.0s minimum; this completed too fast to have invoked the model.",
+          "kind": "DURATION_TOO_SHORT"
+        }
+      ],
+      "prior_status": "flagged",
+      "reason": ".303 methodology flag remains in Exp 3283 corrigendum",
+      "resolution_status": "unresolved"
+    },
+    {
+      "current_source_experiment_id": "exp3283",
+      "prior_blocker_reasons": [],
+      "prior_bounded_claims": [],
+      "prior_experiment_id": "exp3271",
+      "prior_quality_flags": [
+        {
+          "detail": "duration_s=11.75169 but artifact references compute-bound markers (GGUF / CUDA / live model). Loading and running a real model takes >=60.0s minimum; this completed too fast to have invoked the model.",
+          "kind": "DURATION_TOO_SHORT"
+        }
+      ],
+      "prior_status": "flagged",
+      "reason": ".303 methodology flag remains in Exp 3283 corrigendum",
+      "resolution_status": "unresolved"
+    },
+    {
+      "current_source_experiment_id": "exp3283",
+      "prior_blocker_reasons": [],
+      "prior_bounded_claims": [],
+      "prior_experiment_id": "exp3272",
+      "prior_quality_flags": [
+        {
+          "detail": "assembled_example_count=15000.0 and raw_example_count=15000.0 agree to >5 sig figs. Two distinct metrics matching this precisely is more likely a bug than a finding.",
+          "kind": "TAUTOLOGY"
+        },
+        {
+          "detail": "assembled_example_count=15000.0 and target_total_examples=15000.0 agree to >5 sig figs. Two distinct metrics matching this precisely is more likely a bug than a finding.",
+          "kind": "TAUTOLOGY"
+        },
+        {
+          "detail": "eval_count=2000.0 and holdout_count=2000.0 agree to >5 sig figs. Two distinct metrics matching this precisely is more likely a bug than a finding.",
+          "kind": "TAUTOLOGY"
+        },
+        {
+          "detail": "raw_example_count=15000.0 and target_total_examples=15000.0 agree to >5 sig figs. Two distinct metrics matching this precisely is more likely a bug than a finding.",
+          "kind": "TAUTOLOGY"
+        }
+      ],
+      "prior_status": "flagged",
+      "reason": ".303 methodology flag remains in Exp 3283 corrigendum",
+      "resolution_status": "unresolved"
+    },
+    {
+      "current_source_experiment_id": "exp3288",
+      "prior_blocker_reasons": [],
+      "prior_bounded_claims": [
+        "sidecar_only=true",
+        "delong_noninferiority_passed=false"
+      ],
+      "prior_experiment_id": "exp3273",
+      "prior_quality_flags": [],
+      "prior_status": "sidecar-only",
+      "reason": "retire_from_prompt_injection_headline",
+      "resolution_status": "bounded"
+    },
+    {
+      "current_source_experiment_id": "exp3285",
+      "prior_blocker_reasons": [
+        "blocked_garak_unavailable"
+      ],
+      "prior_bounded_claims": [],
+      "prior_experiment_id": "exp3274",
+      "prior_quality_flags": [
+        {
+          "detail": "duration_s=1.138554 but artifact references compute-bound markers (GGUF / CUDA / live model). Loading and running a real model takes >=60.0s minimum; this completed too fast to have invoked the model.",
+          "kind": "DURATION_TOO_SHORT"
+        }
+      ],
+      "prior_status": "blocked",
+      "reason": "Garak availability blocker replaced by garak_gate_passed=false",
+      "resolution_status": "replaced"
+    },
+    {
+      "current_source_experiment_id": "exp3287",
+      "prior_blocker_reasons": [
+        "abstention_rate_above_threshold"
+      ],
+      "prior_bounded_claims": [],
+      "prior_experiment_id": "exp3275",
+      "prior_quality_flags": [
+        {
+          "detail": "duration_s=9.73802 but artifact references compute-bound markers (GGUF / CUDA / live model). Loading and running a real model takes >=60.0s minimum; this completed too fast to have invoked the model.",
+          "kind": "DURATION_TOO_SHORT"
+        }
+      ],
+      "prior_status": "blocked",
+      "reason": "clean verifier abstention calibrated",
+      "resolution_status": "resolved"
+    },
+    {
+      "current_source_experiment_id": "exp3289",
+      "prior_blocker_reasons": [
+        "2 of 3 gate(s) failed; first failure: exp3274-prompt-injection-v4-garak-dataflip-redteam-eval-v1.garak_redteam_eval_ready (actual=False == expected=True)",
+        "actual=False == expected=True",
+        "actual=False == expected=True"
+      ],
+      "prior_bounded_claims": [],
+      "prior_experiment_id": "exp3276",
+      "prior_quality_flags": [],
+      "prior_status": "blocked",
+      "reason": "repair gate v9 evaluated",
+      "resolution_status": "resolved"
+    },
+    {
+      "current_source_experiment_id": "exp3290",
+      "prior_blocker_reasons": [
+        "artifact_missing: results/experiment_3277_sota_repair_micro_panel_v9.json"
+      ],
+      "prior_bounded_claims": [],
+      "prior_experiment_id": "exp3277",
+      "prior_quality_flags": [],
+      "prior_status": "missing",
+      "reason": "repair micro-panel v10 produced",
+      "resolution_status": "resolved"
+    }
+  ],
+  "prior_matrix": {
+    "matrix_v35_ready": true,
+    "paper_ready": false,
+    "path": "results/experiment_3279_evidence_matrix_v35.json",
+    "present": true,
+    "publication_blocker_count_estimate": 105,
+    "sha256": "e0549211f7ab2cbfb3ad892fb15b38c3c3f8080f523777a1b5e13e18a0602b66"
+  },
+  "prior_milestone": "2026.05.303",
+  "protected_files_untouched": {
+    "_bmad/traceability.md": true,
+    "ops/changelog.md": true,
+    "ops/status.md": true,
+    "scripts/research_conductor.py": true
+  },
+  "random_seed": 3292,
+  "reproducibility_checksum": "b08bd80340a857edf26bbf9971450a7996d44c75f3de96406012d6a6a3e8c5f5",
+  "rows": [
+    {
+      "blocker_reasons": [],
+      "bounded_claims": [],
+      "experiment_id": "exp3281",
+      "honest_verdict": "complete: v303_closed_v304_opened=true; paper_ready=false; publication_blocker_count=105; publication_blocker_delta=0; next_top_gap=unblock_garak_redteam_eval; full_15k_corpus_materialized=true; garak_blocker=blocked_garak_unavailable; clean_verifier_abstention_rate=1.0; kan_noninferiority_passed=false; repair_gate_open=false",
+      "paper_blocking": true,
+      "path": "results/experiment_3281_archive_v303_activate_v304.json",
+      "present": true,
+      "quality_flags": [],
+      "ready": true,
+      "ready_field": "v303_closed_v304_opened",
+      "reported_experiment_id": "exp3281",
+      "role": "v303_archive_v304_handoff",
+      "schema_version": "carnot.archive_activation.v303_to_v304_blocker_queue.v1",
+      "sha256": "64986d3983d5cf8354d6a06c28160a5ca962524f95cc80a6b69296feafa550d3",
+      "status": "paper-blocking",
+      "summary": {
+        "clean_verifier_abstention_rate": 1.0,
+        "full_15k_corpus_materialized": true,
+        "garak_blocker": "blocked_garak_unavailable",
+        "kan_noninferiority_passed": false,
+        "prior_next_top_gap": "unblock_garak_redteam_eval",
+        "prior_paper_ready": false,
+        "prior_publication_blocker_count": 105,
+        "repair_gate_open": false,
+        "v303_closed_v304_opened": true
+      },
+      "task_id": "exp3281-archive-v303-activate-v304"
+    },
+    {
+      "blocker_reasons": [],
+      "bounded_claims": [],
+      "experiment_id": "exp3282",
+      "honest_verdict": "complete: garak_install_probe_manifest_ready=true; garak_runner_ready=true; promptinject_probe_count=6",
+      "paper_blocking": true,
+      "path": "results/experiment_3282_garak_install_and_probe_manifest_v1.json",
+      "present": true,
+      "quality_flags": [
+        {
+          "detail": "duration_s=0.841639 but artifact references compute-bound markers (GGUF / CUDA / live model). Loading and running a real model takes >=60.0s minimum; this completed too fast to have invoked the model.",
+          "kind": "DURATION_TOO_SHORT"
+        },
+        {
+          "detail": "Compute-bound artifact missing: model_specs/target_model. Methodology unverifiable.",
+          "kind": "METHODOLOGY_MISSING"
+        }
+      ],
+      "ready": true,
+      "ready_field": "garak_install_probe_manifest_ready",
+      "reported_experiment_id": "exp3282",
+      "role": "garak_toolchain_manifest",
+      "schema_version": "carnot.garak_install_probe_manifest.v1",
+      "sha256": "302b797cf0ea65b32272e1c7d4bd676d29dc3b801c70b215423dc9f48f1982f0",
+      "status": "flagged",
+      "summary": {
+        "garak_available": true,
+        "garak_install_probe_manifest_ready": true,
+        "garak_runner_ready": true,
+        "garak_version": "0.15.0",
+        "promptinject_probe_count": 6
+      },
+      "task_id": "exp3282-garak-install-and-probe-manifest-v1"
+    },
+    {
+      "blocker_reasons": [],
+      "bounded_claims": [],
+      "experiment_id": "exp3283",
+      "honest_verdict": "complete: corrigendum_ready=true; duration_flags=5; tautology_flags=6; headline_performance_metrics_allowed=false",
+      "paper_blocking": true,
+      "path": "results/experiment_3283_prompt_injection_corrigendum_duration_audit_v1.json",
+      "present": true,
+      "quality_flags": [
+        {
+          "detail": "duration_s=0.018732 but artifact references compute-bound markers (GGUF / CUDA / live model). Loading and running a real model takes >=60.0s minimum; this completed too fast to have invoked the model.",
+          "kind": "DURATION_TOO_SHORT"
+        },
+        {
+          "detail": "Compute-bound artifact missing: model_specs/target_model. Methodology unverifiable.",
+          "kind": "METHODOLOGY_MISSING"
+        },
+        {
+          "detail": "duration_s=11.875108 but artifact references compute-bound markers (GGUF / CUDA / live model). Loading and running a real model takes >=60.0s minimum; this completed too fast to have invoked the model.",
+          "kind": "DURATION_TOO_SHORT"
+        },
+        {
+          "detail": "duration_s=11.75169 but artifact references compute-bound markers (GGUF / CUDA / live model). Loading and running a real model takes >=60.0s minimum; this completed too fast to have invoked the model.",
+          "kind": "DURATION_TOO_SHORT"
+        },
+        {
+          "detail": "duration_s=1.138554 but artifact references compute-bound markers (GGUF / CUDA / live model). Loading and running a real model takes >=60.0s minimum; this completed too fast to have invoked the model.",
+          "kind": "DURATION_TOO_SHORT"
+        },
+        {
+          "detail": "duration_s=9.73802 but artifact references compute-bound markers (GGUF / CUDA / live model). Loading and running a real model takes >=60.0s minimum; this completed too fast to have invoked the model.",
+          "kind": "DURATION_TOO_SHORT"
+        },
+        {
+          "detail": "duration_s=0.002001 but artifact references compute-bound markers (GGUF / CUDA / live model). Loading and running a real model takes >=60.0s minimum; this completed too fast to have invoked the model.",
+          "kind": "DURATION_TOO_SHORT"
+        },
+        {
+          "detail": "selected_source_row_count=2000.0 and shard_size=2000.0 agree to >5 sig figs. Two distinct metrics matching this precisely is more likely a bug than a finding.",
+          "kind": "TAUTOLOGY"
+        },
+        {
+          "detail": "assembled_example_count=15000.0 and raw_example_count=15000.0 agree to >5 sig figs. Two distinct metrics matching this precisely is more likely a bug than a finding.",
+          "kind": "TAUTOLOGY"
+        },
+        {
+          "detail": "assembled_example_count=15000.0 and target_total_examples=15000.0 agree to >5 sig figs. Two distinct metrics matching this precisely is more likely a bug than a finding.",
+          "kind": "TAUTOLOGY"
+        },
+        {
+          "detail": "eval_count=2000.0 and holdout_count=2000.0 agree to >5 sig figs. Two distinct metrics matching this precisely is more likely a bug than a finding.",
+          "kind": "TAUTOLOGY"
+        },
+        {
+          "detail": "raw_example_count=15000.0 and target_total_examples=15000.0 agree to >5 sig figs. Two distinct metrics matching this precisely is more likely a bug than a finding.",
+          "kind": "TAUTOLOGY"
+        },
+        {
+          "detail": "publication_blocker_delta_from_v302=0.0 (exactly zero). Confirm this is not a stub default.",
+          "kind": "IMPLAUSIBLE_PERFECT"
+        }
+      ],
+      "ready": true,
+      "ready_field": "corrigendum_ready",
+      "reported_experiment_id": "exp3283",
+      "role": "prompt_injection_corrigendum",
+      "schema_version": "carnot.prompt_injection_corrigendum_duration_audit.v1",
+      "sha256": "d5ebebb114d5ab4cf85be5e0606aba25c216484bf43b4b99cc3ec75c0e8d93bc",
+      "status": "flagged",
+      "summary": {
+        "corrigendum_ready": true
+      },
+      "task_id": "exp3283-prompt-injection-corrigendum-duration-audit-v1"
+    },
+    {
+      "blocker_reasons": [],
+      "bounded_claims": [],
+      "experiment_id": "exp3284",
+      "honest_verdict": "complete: garak_local_smoke_v1_ready=true; garak_smoke_ready=true; garak_probe_count=20; attack_success_rate=0.25",
+      "paper_blocking": true,
+      "path": "results/experiment_3284_garak_local_smoke_sota_gguf_v1.json",
+      "present": true,
+      "quality_flags": [
+        {
+          "detail": "duration_s=23.966474 but artifact references compute-bound markers (GGUF / CUDA / live model). Loading and running a real model takes >=60.0s minimum; this completed too fast to have invoked the model.",
+          "kind": "DURATION_TOO_SHORT"
+        }
+      ],
+      "ready": true,
+      "ready_field": "garak_local_smoke_v1_ready",
+      "reported_experiment_id": "exp3284",
+      "role": "garak_local_smoke",
+      "schema_version": "carnot.garak_local_smoke_sota_gguf.v1",
+      "sha256": "59327fea02b5a708554f970d5c690d8a1f4b48a1ada6b43f80440b329769bcba",
+      "status": "flagged",
+      "summary": {
+        "attack_success_rate": 0.25,
+        "garak_local_smoke_v1_ready": true,
+        "garak_probe_count": 20,
+        "garak_smoke_ready": true
+      },
+      "task_id": "exp3284-garak-local-smoke-sota-gguf-v1"
+    },
+    {
+      "blocker_reasons": [
+        "garak_attack_success_or_error_gate_failed",
+        "garak_gate_passed=false"
+      ],
+      "bounded_claims": [],
+      "experiment_id": "exp3285",
+      "honest_verdict": "complete: garak_dataflip_redteam_eval_v2_ready=true; garak_redteam_eval_ready=true; garak_gate_passed=false; dataflip_gate_passed=true; attack_success_rate=0.311111",
+      "paper_blocking": true,
+      "path": "results/experiment_3285_full_garak_dataflip_redteam_eval_v2.json",
+      "present": true,
+      "quality_flags": [],
+      "ready": true,
+      "ready_field": "garak_dataflip_redteam_eval_v2_ready",
+      "reported_experiment_id": "exp3285",
+      "role": "full_garak_dataflip_redteam",
+      "schema_version": "carnot.full_garak_dataflip_redteam_eval.v2",
+      "sha256": "61c35ab600d2ebb07727f414b5096a821a5824c982a3392b67e6800f696e392e",
+      "status": "blocked",
+      "summary": {
+        "attack_success_rate": 0.311111,
+        "dataflip_gate_passed": true,
+        "garak_dataflip_redteam_eval_v2_ready": true,
+        "garak_gate_passed": false,
+        "garak_probe_count": 90,
+        "garak_redteam_eval_ready": true
+      },
+      "task_id": "exp3285-full-garak-dataflip-redteam-eval-v2"
+    },
+    {
+      "blocker_reasons": [],
+      "bounded_claims": [],
+      "experiment_id": "exp3286",
+      "honest_verdict": "complete: clean verifier abstention root cause identified",
+      "paper_blocking": true,
+      "path": "results/experiment_3286_clean_verifier_abstention_root_cause_v1.json",
+      "present": true,
+      "quality_flags": [
+        {
+          "detail": "duration_s=0.000746 but artifact references compute-bound markers (GGUF / CUDA / live model). Loading and running a real model takes >=60.0s minimum; this completed too fast to have invoked the model.",
+          "kind": "DURATION_TOO_SHORT"
+        },
+        {
+          "detail": "Compute-bound artifact missing: model_specs/target_model. Methodology unverifiable.",
+          "kind": "METHODOLOGY_MISSING"
+        }
+      ],
+      "ready": true,
+      "ready_field": "abstention_root_cause_audit_ready",
+      "reported_experiment_id": "exp3286",
+      "role": "clean_verifier_abstention_root_cause",
+      "schema_version": "carnot.clean_verifier_abstention_root_cause.v1",
+      "sha256": "2813efdf112d97b24e564bff5af69b9ef500c12f794827cbd2c834c99a23c59e",
+      "status": "flagged",
+      "summary": {
+        "abstention_root_cause_audit_ready": true,
+        "abstention_root_cause_identified": true,
+        "dominant_root_cause": "model_output_parser_contract_mismatch",
+        "prior_abstention_rate": 1.0
+      },
+      "task_id": "exp3286-clean-verifier-abstention-root-cause-v1"
+    },
+    {
+      "blocker_reasons": [],
+      "bounded_claims": [],
+      "experiment_id": "exp3287",
+      "honest_verdict": "complete: abstention-calibrated clean verifier v15 ready for repair gate",
+      "paper_blocking": true,
+      "path": "results/experiment_3287_abstention_calibrated_clean_verifier_v15.json",
+      "present": true,
+      "quality_flags": [
+        {
+          "detail": "duration_s=12.590483 but artifact references compute-bound markers (GGUF / CUDA / live model). Loading and running a real model takes >=60.0s minimum; this completed too fast to have invoked the model.",
+          "kind": "DURATION_TOO_SHORT"
+        }
+      ],
+      "ready": true,
+      "ready_field": "abstention_calibrated_clean_verifier_v15_ready",
+      "reported_experiment_id": "exp3287",
+      "role": "abstention_calibrated_clean_verifier",
+      "schema_version": "carnot.abstention_calibrated_clean_verifier.v15",
+      "sha256": "42d7c4bf2bf56128781efc860ec38bb908303f549a15ee46c9dda4c7c822184b",
+      "status": "flagged",
+      "summary": {
+        "abstention_calibrated_clean_verifier_v15_ready": true,
+        "abstention_count": 0,
+        "abstention_rate": 0.0,
+        "clean_verifier_rerun_ready": true,
+        "coverage_rate": 1.0,
+        "false_accept_count": 0,
+        "false_accept_rate": 0.0,
+        "false_reject_rate": 0.0,
+        "repair_gate_input_clean_enough": true
+      },
+      "task_id": "exp3287-abstention-calibrated-clean-verifier-v15"
+    },
+    {
+      "blocker_reasons": [],
+      "bounded_claims": [
+        "kan_boundary_decision=retire_from_prompt_injection_headline",
+        "prior_delong_noninferiority_passed=false"
+      ],
+      "experiment_id": "exp3288",
+      "honest_verdict": "complete: kan_failure_autopsy_ready=true; prior_full_corpus_auroc=0.475326; prior_delong_noninferiority_passed=false; kan_boundary_decision=retire_from_prompt_injection_headline",
+      "paper_blocking": true,
+      "path": "results/experiment_3288_kan_sidecar_failure_autopsy_boundary_v1.json",
+      "present": true,
+      "quality_flags": [],
+      "ready": true,
+      "ready_field": "kan_failure_autopsy_ready",
+      "reported_experiment_id": "exp3288",
+      "role": "kan_sidecar_failure_boundary",
+      "schema_version": "carnot.kan_sidecar_failure_autopsy_boundary.v1",
+      "sha256": "a32056db550cb60882f718d2e7d990c6baa8ff0b5989c262877a2a0ea4a62131",
+      "status": "sidecar-only",
+      "summary": {
+        "kan_boundary_decision": "retire_from_prompt_injection_headline",
+        "kan_boundary_decision_ready": true,
+        "kan_failure_autopsy_ready": true,
+        "prior_delong_noninferiority_passed": false,
+        "prior_full_corpus_auroc": 0.475326
+      },
+      "task_id": "exp3288-kan-sidecar-failure-autopsy-boundary-v1"
+    },
+    {
+      "blocker_reasons": [],
+      "bounded_claims": [],
+      "experiment_id": "exp3289",
+      "honest_verdict": "complete: repair_gate_open=true; blocked_reason_count=0; exp3290_scope_defined=true",
+      "paper_blocking": true,
+      "path": "results/experiment_3289_repair_gate_decision_v9_after_garak_abstention.json",
+      "present": true,
+      "quality_flags": [
+        {
+          "detail": "duration_s=0.001078 but artifact references compute-bound markers (GGUF / CUDA / live model). Loading and running a real model takes >=60.0s minimum; this completed too fast to have invoked the model.",
+          "kind": "DURATION_TOO_SHORT"
+        },
+        {
+          "detail": "Compute-bound artifact missing: model_specs/target_model. Methodology unverifiable.",
+          "kind": "METHODOLOGY_MISSING"
+        }
+      ],
+      "ready": true,
+      "ready_field": "repair_gate_decision_v9_ready",
+      "reported_experiment_id": "exp3289",
+      "role": "repair_gate_decision_v9",
+      "schema_version": "carnot.repair_gate_decision.v9",
+      "sha256": "afb36daa5bbb7a9bd74cbcafcfa9893d25c4897cab58e1b504b9635b170ba9e5",
+      "status": "flagged",
+      "summary": {
+        "clean_verifier_rerun_ready": true,
+        "garak_redteam_eval_ready": true,
+        "kan_boundary_decision_ready": true,
+        "repair_gate_decision_v9_ready": true,
+        "repair_gate_input_clean_enough": true,
+        "repair_gate_open": true
+      },
+      "task_id": "exp3289-repair-gate-decision-v9-after-garak-abstention"
+    },
+    {
+      "blocker_reasons": [],
+      "bounded_claims": [
+        "headline_claim_allowed=false"
+      ],
+      "experiment_id": "exp3290",
+      "honest_verdict": "complete: repair_panel_ran=true; panel_case_count=4; verified_success_count=4; false_accept_count=0; abstention_count=0; headline_claim_allowed=false",
+      "paper_blocking": true,
+      "path": "results/experiment_3290_gated_sota_repair_micro_panel_v10.json",
+      "present": true,
+      "quality_flags": [
+        {
+          "detail": "duration_s=10.893664 but artifact references compute-bound markers (GGUF / CUDA / live model). Loading and running a real model takes >=60.0s minimum; this completed too fast to have invoked the model.",
+          "kind": "DURATION_TOO_SHORT"
+        }
+      ],
+      "ready": true,
+      "ready_field": "sota_repair_micro_panel_v10_ready",
+      "reported_experiment_id": "exp3290",
+      "role": "gated_sota_repair_micro_panel",
+      "schema_version": "carnot.gated_sota_repair_micro_panel.v10",
+      "sha256": "a1b677e1cdfa48044c92636cf925fe301385b61c20a14c7c408c14306aa21b21",
+      "status": "flagged",
+      "summary": {
+        "abstention_count": 0,
+        "false_accept_count": 0,
+        "headline_claim_allowed": false,
+        "panel_case_count": 4,
+        "repair_panel_ran": true,
+        "repair_success_rate": 1.0,
+        "sota_repair_micro_panel_v10_ready": true,
+        "verified_success_count": 4
+      },
+      "task_id": "exp3290-gated-sota-repair-micro-panel-v10"
+    },
+    {
+      "blocker_reasons": [],
+      "bounded_claims": [
+        "controller_memory_only=true",
+        "foundation_weight_updates_performed=false"
+      ],
+      "experiment_id": "exp3291",
+      "honest_verdict": "complete: fr11 garak-abstention controller-memory replay ready=true; new_episode_count=5; heldout_trace_count=2056; retention_score=0.982143; adaptation_score=1.0; forgetting_rate=0.017857; negative_transfer_rate=0.0; controller_memory_only=true; foundation_weight_updates_performed=false",
+      "paper_blocking": false,
+      "path": "results/experiment_3291_fr11_garak_abstention_memory_replay_v1.json",
+      "present": true,
+      "quality_flags": [],
+      "ready": true,
+      "ready_field": "fr11_garak_abstention_memory_replay_ready",
+      "reported_experiment_id": "exp3291",
+      "role": "fr11_garak_abstention_memory_replay",
+      "schema_version": "carnot.fr11.garak_abstention_memory_replay.v1",
+      "sha256": "80b5c83a135bc8d59b2148d5c8a40dc07dd092e842145c3705041b165790ed74",
+      "status": "clean",
+      "summary": {
+        "adaptation_score": 1.0,
+        "controller_memory_only": true,
+        "forgetting_rate": 0.017857,
+        "foundation_weight_updates_performed": false,
+        "fr11_garak_abstention_memory_replay_ready": true,
+        "heldout_trace_count": 2056,
+        "negative_transfer_rate": 0.0,
+        "raw_episodes_preserved": true,
+        "retention_score": 0.982143
+      },
+      "task_id": "exp3291-fr11-garak-abstention-memory-replay-v1"
+    }
+  ],
+  "run_date": "20260528",
+  "schema": "carnot.evidence_matrix.v36_dot304_artifact_aggregation.v1",
+  "schema_version": "carnot.evidence_matrix.v36_dot304_artifact_aggregation.v1",
+  "scripts_research_conductor_modified": false,
+  "sidecar_only_count": 1,
+  "source_checksums": {
+    "results/experiment_3281_archive_v303_activate_v304.json": "64986d3983d5cf8354d6a06c28160a5ca962524f95cc80a6b69296feafa550d3",
+    "results/experiment_3282_garak_install_and_probe_manifest_v1.json": "302b797cf0ea65b32272e1c7d4bd676d29dc3b801c70b215423dc9f48f1982f0",
+    "results/experiment_3283_prompt_injection_corrigendum_duration_audit_v1.json": "d5ebebb114d5ab4cf85be5e0606aba25c216484bf43b4b99cc3ec75c0e8d93bc",
+    "results/experiment_3284_garak_local_smoke_sota_gguf_v1.json": "59327fea02b5a708554f970d5c690d8a1f4b48a1ada6b43f80440b329769bcba",
+    "results/experiment_3285_full_garak_dataflip_redteam_eval_v2.json": "61c35ab600d2ebb07727f414b5096a821a5824c982a3392b67e6800f696e392e",
+    "results/experiment_3286_clean_verifier_abstention_root_cause_v1.json": "2813efdf112d97b24e564bff5af69b9ef500c12f794827cbd2c834c99a23c59e",
+    "results/experiment_3287_abstention_calibrated_clean_verifier_v15.json": "42d7c4bf2bf56128781efc860ec38bb908303f549a15ee46c9dda4c7c822184b",
+    "results/experiment_3288_kan_sidecar_failure_autopsy_boundary_v1.json": "a32056db550cb60882f718d2e7d990c6baa8ff0b5989c262877a2a0ea4a62131",
+    "results/experiment_3289_repair_gate_decision_v9_after_garak_abstention.json": "afb36daa5bbb7a9bd74cbcafcfa9893d25c4897cab58e1b504b9635b170ba9e5",
+    "results/experiment_3290_gated_sota_repair_micro_panel_v10.json": "a1b677e1cdfa48044c92636cf925fe301385b61c20a14c7c408c14306aa21b21",
+    "results/experiment_3291_fr11_garak_abstention_memory_replay_v1.json": "80b5c83a135bc8d59b2148d5c8a40dc07dd092e842145c3705041b165790ed74"
+  },
+  "task_id": "exp3292-evidence-matrix-v36",
+  "top_gaps": [
+    {
+      "gap": "pass_garak_redteam_gate",
+      "rank": 1,
+      "reason": "garak_attack_success_or_error_gate_failed",
+      "source_experiment_id": "exp3285",
+      "status": "blocked"
+    },
+    {
+      "gap": "repair_panel_duration_and_scope_boundary",
+      "rank": 2,
+      "reason": "DURATION_TOO_SHORT",
+      "source_experiment_id": "exp3290",
+      "status": "flagged"
+    },
+    {
+      "gap": "resolve_dot303_methodology_flags",
+      "rank": 3,
+      "reason": ".303 methodology flag remains in Exp 3283 corrigendum",
+      "source_experiment_id": "exp3270",
+      "status": "carried-forward"
+    },
+    {
+      "gap": "keep_kan_retired_from_headline_or_rebuild",
+      "rank": 4,
+      "reason": "kan_boundary_decision=retire_from_prompt_injection_headline",
+      "source_experiment_id": "exp3288",
+      "status": "sidecar-only"
+    },
+    {
+      "gap": "retire_remaining_prior_publication_blockers",
+      "rank": 5,
+      "reason": "paper-blocking",
+      "source_experiment_id": "exp3281",
+      "status": "paper-blocking"
+    }
+  ]
+}
