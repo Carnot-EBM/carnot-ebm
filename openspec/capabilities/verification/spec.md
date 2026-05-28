@@ -8690,3 +8690,53 @@ precondition diagnostics, and no headline claim.
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-VERIFY-3290 | Implemented (`python/carnot/verify/gated_sota_repair_micro_panel_v10.py`) | Implemented (`tests/python/test_experiment_3290_gated_sota_repair_micro_panel_v10.py`) |
+
+### REQ-VERIFY-3297: Prefix-Closed Garak Rogue-String Text Guard V1
+
+The repository shall provide an Exp 3297 deterministic text guard that reads
+`results/experiment_3295_garak_failure_mode_autopsy_v1.json` and the cached
+`.304` response previews in
+`results/experiment_3285_full_garak_dataflip_redteam_eval_v2.json`, builds a
+small reusable policy from the Exp 3295 `target_phrase_inventory` and
+`target_prefix_inventory`, evaluates only cached previews plus deterministic
+synthetic benign controls, and writes
+`results/experiment_3297_prefix_closed_garak_guard_v1.json`.
+
+The implementation MUST disclose that it is a normalized text-prefix and exact
+target-phrase guard, not a true BEAVER token-probability bound. It MUST NOT run
+Garak, live model inference, repair generation, KAN training, CUDA probes, the
+research conductor, or modify `scripts/research_conductor.py`. The policy
+SHALL normalize text with casefolding, whitespace collapse, and punctuation
+trimming before matching exact target phrases or monitored target prefixes.
+The guard SHALL expose a stable policy contract that downstream Exp 3299 can
+consume without re-reading the source artifacts.
+
+The terminal artifact MUST include `prefix_guard_policy_ready`, `guard_kind`,
+`target_phrase_count`, `target_prefix_count`, `cached_trace_count`,
+`benign_control_count`, `cached_attack_detection_rate`,
+`cached_benign_false_positive_rate`, `guard_policy`,
+`implementation_files_touched`, `tests_run`, `inference_substrate`,
+`random_seed`, `reproducibility_checksum`, `duration_s`, and
+`honest_verdict`. `guard_kind` MUST make the text-prefix limitation explicit,
+`inference_substrate` MUST state cached response-preview evaluation rather than
+live inference, and `honest_verdict` MUST begin with one of `complete:`,
+`success:`, `passed:`, or `shipped:`.
+
+### SCENARIO-VERIFY-3297: Cached Garak Previews Produce A Consumable Text Policy
+
+Given Exp 3295 contains PromptInject and jailbreak/encoding target phrases plus
+prefixes and Exp 3285 contains cached `.304` response previews,
+When the Exp 3297 guard builder runs,
+Then it writes `results/experiment_3297_prefix_closed_garak_guard_v1.json`
+with a stable `guard_policy`, counts the target phrases, target prefixes,
+cached previews, and benign controls, computes cached attack detection and
+benign false-positive rates from local artifacts only, records every touched
+implementation/test file, exposes the test commands run, and reports
+`prefix_guard_policy_ready=true` without claiming live Garak benchmark
+performance or true BEAVER probability bounds.
+
+## Implementation Status (REQ-VERIFY-3297)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-VERIFY-3297 | Implemented (`python/carnot/verify/prefix_closed_garak_guard_v1.py`) | Implemented (`tests/python/test_experiment_3297_prefix_closed_garak_guard.py`) |
