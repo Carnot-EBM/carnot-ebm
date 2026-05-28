@@ -6659,3 +6659,5 @@ web search: https://docs.garak.ai/garak/examples/pr |
 | 2026-05-28 20:26 UTC | FR-11 Garak and abstention memory replay v1 | OK | 81 passed in 2.67s |
 | 2026-05-28 20:43 UTC | Evidence matrix v36 | OK | 81 passed in 3.64s |
 | 2026-05-28 20:59 UTC | Capstone v304 | OK | 81 passed in 3.93s |
+| 2026-05-28 21:45 UTC | Plan milestone 2026.05.305 | OK | 13 tasks proposed |
+| 2026-05-28 21:47 UTC | Milestone 2026.05.305 activated | OK | 13 tasks queued |
