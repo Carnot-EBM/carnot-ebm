@@ -1,6 +1,34 @@
 # Carnot — Operational Status
 
-**Last Updated:** 2026-05-28 (Milestone 2026.05.304 research planning staged)
+**Last Updated:** 2026-05-28 (Milestone 2026.05.305 research planning staged)
+
+## Session 2026-05-28 - Milestone 2026.05.305 Research Planning Staged
+
+Planned milestone 2026.05.305 as "Garak Red-Team Gate Pass +
+Headline-Eligible Repair Evidence" after all `.304` tasks completed. Used
+`results/experiment_3293_capstone_v304.json`,
+`results/experiment_3285_full_garak_dataflip_redteam_eval_v2.json`,
+`results/experiment_3290_gated_sota_repair_micro_panel_v10.json`,
+`results/experiment_3288_kan_sidecar_failure_autopsy_boundary_v1.json`,
+`ops/conductor-log.md`, `research-complete.yaml`, `research-roadmap.yaml`, and
+the post-`.304` research sweep as authority: `.304` made Garak runnable and
+unblocked clean-verifier abstention, but remained `paper_ready=false` with
+`publication_blocker_count=10`; Garak/DataFlip failed the headline gate with
+attack success rate `0.311111` against the `0.20` ceiling, KAN was retired from
+prompt-injection headline claims, and the repair micro-panel was correct but
+not headline-eligible at `n=4`.
+
+Updated `research-references.md` with the post-`.304` sweep, rewrote
+`openspec/change-proposals/research-roadmap-vNEXT.md`, and created
+`research-roadmap-next.yaml` with 13 tasks (`exp3294`-`exp3306`). The plan
+archives `.304`, analyzes Garak failure modes, adds a prefix-closed guard and
+red-team energy telemetry, runs gated defense ablations and a full
+Garak/DataFlip gate rerun, scales exact repair evidence, includes `exp3304` as
+the required FR-11 continuous self-learning replay, and closes with evidence
+matrix v37 plus capstone v305. Validation passed for roadmap schema,
+prior-failure discipline, exclusion-manifest lint, gate audit, prompt sections,
+prompt final-line checks, and protected-file diffs. Left `research-roadmap.yaml`
+and `scripts/research_conductor.py` untouched.
 
 ## Session 2026-05-28 - Milestone 2026.05.304 Research Planning Staged
 

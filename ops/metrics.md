@@ -1,5 +1,15 @@
 # Carnot — Session Metrics
 
+## Session: 2026-05-28 Milestone 2026.05.305 Research Planning
+
+### Turn Log
+
+| Turn | Start | End | Description | Tokens (est) |
+|------|-------|-----|-------------|------|
+| 1 | 2026-05-28T21:29:26Z | 2026-05-28T21:43:25Z | Planned milestone 2026.05.305 after reading required project context, `.304` capstone/red-team/repair/KAN artifacts, conductor logs, prior roadmap docs, hardware notes, and current references. Added Post-.304 research sweep to `research-references.md` (Garak PromptInject, BEAVER prefix-closed verification, LLM-as-verifier caveats, entropy/energy telemetry, XGrammar/constrained-generation boundaries, KAN limitations, Ising sampling watch items, EBT/ARM, Extropic, Kona). Rewrote `openspec/change-proposals/research-roadmap-vNEXT.md` and created `research-roadmap-next.yaml` with 13 tasks exp3294-exp3306, including Garak failure autopsy, prefix-closed guard, energy telemetry router, gated defense ablation, full Garak/DataFlip gate rerun, headline repair panel, FR-11 continuous self-learning replay, matrix v37, and capstone. Validation: roadmap schema OK; prior-failure validator OK; exclusion-manifest lint OK; roadmap gate audit OK with 11 gate checks and 0 failures; prompt checks OK; protected-file diff clean. | ~150k |
+
+---
+
 ## Session: 2026-05-26 Milestone 2026.05.289 Research Planning
 
 ### Turn Log

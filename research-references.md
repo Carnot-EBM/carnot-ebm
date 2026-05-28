@@ -1,3 +1,149 @@
+## 2026-05-28 Post-.304 Planning Sweep (Milestone 2026.05.305)
+
+This sweep was run after milestone `.304` completed. `.304` fixed the Garak
+availability blocker and clean-verifier abstain-all blocker, opened the repair
+gate, and preserved FR-11 controller-memory safety. It did not reach paper
+readiness: `results/experiment_3293_capstone_v304.json` reports
+`paper_ready=false`, `publication_blocker_count=10`,
+`garak_gate_passed=false`, `attack_success_rate=0.311111`, and
+`next_top_gap=pass_garak_redteam_gate`. The repair micro-panel ran but remained
+`headline_claim_allowed=false` because the evidence was only a 4-case symbolic
+panel.
+
+### Garak Is Now Runnable; The Next Problem Is Passing The Gate
+
+- **Sources:** Garak PromptInject docs, HuggingFace HalluScan, and prompt
+  injection defense literature already cited in prior sweeps.
+- **What:** The current blocker is no longer import/install readiness. `.304`
+  ran a 90-probe local SOTA GGUF Garak/DataFlip eval on
+  `unsloth/gemma-4-26B-A4B-it-GGUF`, with `dataflip_gate_passed=true` but
+  `garak_gate_passed=false` because prompt-injection/jailbreak attack success
+  was `0.311111` against a `0.20` gate. HalluScan's adaptive detection routing
+  framing is useful here: a single global detector score is weaker than
+  family-aware routing with domain-specific failure decomposition.
+- **Relevance to Carnot:** `.305` should treat Garak as a live adversarial
+  pressure source and optimize a bounded defense/routing layer against the
+  exact failure families observed in `.304`, not revisit installation.
+- **Sources:** https://docs.garak.ai/garak/examples/prompt-injection,
+  https://reference.garak.ai/en/latest/probes/promptinject.html, and
+  https://huggingface.co/papers/2605.02443
+
+### Deterministic Prefix-Closed Verification Is Directly Relevant To Prompt Injection
+
+- **Paper:** "BEAVER: An Efficient Deterministic LLM Verifier" (arXiv:
+  2512.05439; ICLR 2026 VerifAI workshop).
+- **What:** BEAVER computes deterministic sound probability bounds for
+  prefix-closed semantic constraints by exploring generation space with token
+  tries and frontier structures, reporting tighter bounds than sampling-based
+  baselines.
+- **Relevance to Carnot:** PromptInject rogue strings and jailbreak target
+  phrases are prefix-closed enough for a Carnot pilot: stop or reroute when a
+  forbidden target prefix becomes high-risk. This is more principled than only
+  scoring completed outputs and maps to Carnot's exact verifier/repair gate.
+- **Sources:** https://huggingface.co/papers/2512.05439 and
+  https://openreview.net/forum?id=xO3efBXHM9
+
+### Do Not Promote LLM-As-Verifier Without Exact Checks
+
+- **Paper:** "Rethinking LLMs as Verifiers: When Verification is Harder Than
+  Solving" (ICLR 2026 Logical Reasoning workshop).
+- **What:** The workshop result challenges the assumption that judging a
+  candidate is always easier than solving; LLM judges can be less reliable than
+  direct solving on several reasoning settings.
+- **Relevance to Carnot:** `.305` repair promotion must stay exact-check-first.
+  The calibrated clean verifier can emit ACCEPT/REJECT/ABSTAIN, but headline
+  repair success should require exact fixture checks, no false accepts, and
+  enough cases for a confidence interval. LLM-as-judge output can be advisory
+  only.
+- **Sources:** https://openreview.net/pdf?id=4jnJjSgQC1 and
+  https://openreview.net/submissions?venue=ICLR.cc%2F2026%2FWorkshop%2FLLM_Reasoning
+
+### Energy Telemetry Can Triage Red-Team Outputs Before Repair
+
+- **Papers:** "Spilled Energy in Large Language Models" (arXiv:2602.18671),
+  "Semantic Energy: Detecting LLM Hallucination Beyond Entropy" (arXiv:
+  2508.14496), and HalluGuard (arXiv:2601.18753).
+- **What:** Recent hallucination detectors increasingly expose inference-time
+  instability signals: energy spills in logits, semantic-cluster energy, and
+  decomposed data-driven vs reasoning-driven risk. These are useful routing
+  signals but not correctness authorities.
+- **Relevance to Carnot:** `.305` can add red-team energy telemetry to explain
+  which Garak probes are brittle and route high-risk generations to refusal or
+  localized repair. The artifact must disclose whether it used real logits,
+  text proxies, or cached outputs to avoid verifier-authenticity violations.
+- **Sources:** https://arxiv.org/abs/2602.18671,
+  https://arxiv.org/abs/2508.14496, and
+  https://huggingface.co/papers/2601.18753
+
+### Structured Generation Is Useful For Interfaces, Not Semantic Safety
+
+- **Sources:** XGrammar 2, CRANE, constrained diffusion decoding, and the
+  GitHub constrained-decoding topic.
+- **What:** XGrammar 2 has current production integrations and a 2026 release,
+  while CRANE and constrained-diffusion work show grammar-constrained
+  generation can preserve syntax. Prior sweeps already flagged schema wording
+  as an instruction channel, so grammar validity must not be mistaken for
+  semantic safety.
+- **Relevance to Carnot:** `.305` repair tasks should use schemas or grammars
+  only to make repair proposals parseable. The acceptance gate remains exact
+  verification plus Garak pressure, not JSON validity.
+- **Sources:** https://github.com/mlc-ai/xgrammar,
+  https://huggingface.co/papers/2502.09061,
+  https://github.com/eth-sri/constrained-diffusion, and
+  https://github.com/topics/constrained-decoding
+
+### KAN Should Stay Retired From Prompt-Injection Headline Claims
+
+- **Paper:** "Optimal Abstractions for Verifying Properties of
+  Kolmogorov-Arnold Networks (KANs)" (arXiv:2602.06737).
+- **What:** KAN verification is advancing through PWA abstractions and MILP
+  encodings with explicit error bounds, but these methods certify a trained KAN
+  against a property; they do not repair a KAN that is below random on a
+  prompt-injection corpus.
+- **Relevance to Carnot:** `.304` correctly retired the KAN sidecar from
+  prompt-injection headline claims after `auroc=0.475326` and
+  `aligned_instruction_false_positive_rate=1.0`. `.305` should not retrain the
+  same sidecar. If KAN appears, it should be a retirement/boundary ledger or a
+  property-checking feasibility note, not a promotion attempt.
+- **Sources:** https://arxiv.org/abs/2602.06737
+
+### Sampling Research Supports Future Hardware, But Not This Publication Gate
+
+- **Papers:** "Two-dimensional Parallel Tempering for Constrained
+  Optimization" (arXiv:2506.14781) and "A Generative Sampler for distributions
+  with possible discrete parameter based on Reversibility" (arXiv:2603.09251).
+- **What:** 2D parallel tempering interpolates both temperature and penalty
+  strength to improve constrained Ising mixing; reversibility-based neural
+  samplers learn from energy evaluations and transition kernels without target
+  gradients.
+- **Relevance to Carnot:** These are strong Phase 2 sampler directions,
+  especially for penalty-heavy verifier energies and future FPGA/TSU work. They
+  should be preserved as follow-up research but should not displace `.305`'s
+  immediate Garak and repair-evidence gates.
+- **Sources:** https://arxiv.org/abs/2506.14781 and
+  https://arxiv.org/abs/2603.09251
+
+### EBT, ARM-EBM, Extropic, And Kona Continue To Support The Long Arc
+
+- **Sources:** EBT ICLR 2026/OpenReview, ARM-as-EBM arXiv, Semantic Scholar
+  source records, Extropic hardware/software pages, and Logical Intelligence
+  Kona pages.
+- **What:** Energy-Based Transformers were accepted as an ICLR 2026 oral, NRGPT
+  was accepted as an ICLR 2026 poster, ARM-as-EBM theory remains a useful
+  distillation bridge, Extropic lists XTR-0 plus Z1 early access in 2026, and
+  Logical Intelligence continues to position Kona as an EBM constraint layer
+  for critical systems.
+- **Relevance to Carnot:** These findings reinforce Carnot's PRD direction:
+  verifier energy should become a local-first, hardware-portable reasoning
+  substrate. `.305` should still make no TSU, Kona, or foundation-EBT access
+  claim; its contribution is to make the local evidence chain publishable.
+- **Sources:** https://openreview.net/forum?id=ZBj3Qp1bYg,
+  https://openreview.net/forum?id=B3Muyi2zgo,
+  https://arxiv.org/abs/2512.15605,
+  https://www.semanticscholar.org/paper/Energy-Based-Transformers-are-Scalable-Learners-and-Gladstone-Nanduru/2da9163730998a4368c609972ccff0582518b36b,
+  https://extropic.ai/hardware, https://extropic.ai/software, and
+  https://logicalintelligence.com/kona-ebms-energy-based-models
+
 ## 2026-05-28 Post-.303 Planning Sweep (Milestone 2026.05.304)
 
 This sweep was run after milestone `.303` completed. `.303` proved the
