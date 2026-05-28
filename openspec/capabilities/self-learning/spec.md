@@ -9789,3 +9789,83 @@ policy, and an `honest_verdict` beginning with `complete:`.
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-LEARN-3278 | Implemented (`python/carnot/eval/fr11_full_corpus_continual_self_learning_audit_v1.py`) | Implemented (`tests/python/test_experiment_3278_fr11_full_corpus_continual_self_learning_audit_v1.py`) |
+
+## REQ-LEARN-3291: FR-11 Garak And Abstention Memory Replay
+
+**Given** Exp 3278 produced a controller-memory-only FR-11 full-corpus
+baseline, and milestone .304 may contain Garak/toolchain blockers, Garak
+red-team evidence, clean-verifier abstention root-cause evidence, KAN boundary
+decisions, and repair-gate outcomes
+**When** Exp 3291 replays controller routing over prior held-out routes and the
+new .304 blocker/evidence traces
+**Then** it SHALL preserve raw learning episodes before any summary memory,
+SHALL evaluate retention, adaptation, forgetting, and negative transfer, and
+SHALL NOT update or claim updates to foundation-model weights.
+**And** missing or gate-blocked .304 artifacts SHALL be converted into raw
+learning episodes instead of silently dropping the category.
+
+The terminal artifact SHALL be
+`results/experiment_3291_fr11_garak_abstention_memory_replay_v1.json` and SHALL
+include `continuous_self_learning_task`,
+`fr11_garak_abstention_memory_replay_ready`, `controller_memory_only`,
+`foundation_weight_updates_performed`, `raw_episodes_preserved`,
+`new_episode_count`, `heldout_trace_count`, `retention_score`,
+`adaptation_score`, `forgetting_rate`, `negative_transfer_rate`,
+`memory_update_policy`, `blocked_trace_categories`, `random_seed`,
+`reproducibility_checksum`, `duration_s`, and `honest_verdict`.
+
+### REQ-LEARN-3291 Sub-requirements
+
+- REQ-LEARN-3291-1: The replay SHALL load
+  `results/experiment_3278_fr11_full_corpus_continual_self_learning_audit_v1.json`
+  as the baseline and SHALL fail closed when it is missing, not
+  controller-memory-only, or claims foundation-weight updates.
+- REQ-LEARN-3291-2: The raw episode set SHALL include at least the .304
+  categories `garak_toolchain`, `garak_redteam`, `clean_verifier_abstention`,
+  `kan_boundary`, and `repair_gate` whenever their source artifacts or
+  gate-block records are present; absent categories SHALL produce
+  `missing_artifact` episodes.
+- REQ-LEARN-3291-3: `raw_episodes_preserved` SHALL be true only when the
+  artifact includes one JSON-safe raw episode per learned .304 blocker or
+  evidence row before any consolidated summary memory is admitted.
+- REQ-LEARN-3291-4: `memory_update_policy` SHALL explicitly allow only
+  controller-route keys derived from raw artifacts, require replay gates before
+  consolidation, and forbid foundation-model, hidden-state, and KAN sidecar
+  weight updates.
+- REQ-LEARN-3291-5: `retention_score` SHALL measure replay preservation for the
+  Exp 3278 prior held-out denominator, `adaptation_score` SHALL measure the
+  fraction of new .304 episodes routed to their expected controller action,
+  `forgetting_rate` SHALL equal `1.0 - retention_score`, and
+  `negative_transfer_rate` SHALL remain zero unless new memory would alter an
+  unrelated prior route.
+- REQ-LEARN-3291-6: `fr11_garak_abstention_memory_replay_ready` SHALL be true
+  only when raw episodes are preserved, at least one new episode and one prior
+  held-out trace are replayed, the update remains controller-memory-only,
+  adaptation is nonzero, and negative transfer remains within policy.
+
+### SCENARIO-LEARN-3291: .304 Blockers Become Safe Controller Memory
+
+**Given** Exp 3278 is a valid controller-memory-only baseline and .304 Garak,
+abstention, KAN boundary, and repair-gate artifacts are available
+**When** Exp 3291 builds the replay artifact
+**Then** it writes the required schema fields, preserves raw episodes for every
+new category, keeps `foundation_weight_updates_performed=false`, reports
+nonzero `new_episode_count` and `heldout_trace_count`, computes retention,
+adaptation, forgetting, and negative-transfer metrics, and emits an
+`honest_verdict` beginning with `complete:`.
+
+### SCENARIO-LEARN-3291-BLOCKED: Missing Baseline Fails Closed
+
+**Given** the Exp 3278 baseline is absent or unsafe
+**When** Exp 3291 runs
+**Then** it writes a schema-complete artifact with
+`fr11_garak_abstention_memory_replay_ready=false`, preserves any raw .304
+episodes that can be loaded, keeps `controller_memory_only=true`,
+`foundation_weight_updates_performed=false`, zero prior held-out traces, and an
+`honest_verdict` beginning with `complete:`.
+
+## Implementation Status (REQ-LEARN-3291)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-LEARN-3291 | Implemented (`python/carnot/eval/fr11_garak_abstention_memory_replay_v1.py`) | Implemented (`tests/python/test_experiment_3291_fr11_garak_abstention_memory_replay_v1.py`) |
