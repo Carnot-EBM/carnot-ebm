@@ -11733,3 +11733,69 @@ the all-green driver, torch CUDA, and runtime-bindings case
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-REPORT-3236 | Implemented (`python/carnot/reporting/isolated_cuda_python_smoke_3236.py`) | Implemented (`tests/python/test_experiment_3236_isolated_cuda_python_smoke.py`) |
+
+### REQ-REPORT-3239: Prompt-Injection KAN V4 Resource Manifest
+
+The repository shall provide an Exp 3239 resource-manifest generator that
+writes
+`results/experiment_3239_prompt_injection_kan_v4_resource_manifest_v1.json`
+by reading only checked-in upstream artifacts and source files:
+`CLAUDE.md`, `research-references.md`,
+`results/experiment_3234_cli_backend_failure_root_cause_ledger_v1.json`,
+`results/prompt_injection_kan_v2.json`,
+`results/prompt_injection_teacher_labels_v2.json`,
+prior prompt-injection experiment result JSONs, existing
+`data/prompt_injection_distill/*` corpus/cache files, and
+`scripts/experiment_template.py`. The workflow MUST be aggregation only. It
+MUST NOT call an LLM, create teacher labels, train a KAN, run DeLong
+statistics, run Garak, run the conductor, push, or modify
+`scripts/research_conductor.py`.
+
+The terminal artifact MUST include `experiment_id`,
+`task_id`, `milestone`, `inference_substrate`, `principle_annotations`,
+`v4_manifest_ready`, `corpus_input_paths`, `shard_plan`,
+`downstream_MODEL_SPECS_required`, `teacher_label_plan_ready`,
+`delong_plan_ready`, `garak_config_ready`, `no_llm_invoked`, and
+`honest_verdict`. It SHALL inventory existing prompt-injection datasets and
+artifacts without generating labels, define smoke, pilot, and full shard
+sizes, make the first teacher-label shard no more than 16 prompts for a
+bounded reliable run, define downstream live-LLM `MODEL_SPECS` requirements that include at
+least one mandated local SOTA GGUF model from
+`unsloth/Qwen3.6-35B-A3B-GGUF`, `unsloth/gemma-4-31B-it-GGUF`, or
+`unsloth/gemma-4-26B-A4B-it-GGUF`, define a paired DeLong/non-inferiority
+plan, and define concrete Garak config and receipt paths.
+
+`v4_manifest_ready` MUST be true only when the artifact names concrete
+present corpus input paths and concrete downstream deliverable paths for the
+teacher-label shard, KAN train/eval shard, DeLong/non-inferiority receipt, and
+Garak/config receipt. `honest_verdict` MUST start with `complete:` and MUST
+NOT claim that v4 teacher labels, v4 trained KAN metrics, or a successful
+15k monolithic run exist.
+
+#### SCENARIO-REPORT-3239: Manifest Splits The Failed 15k Prompt-Injection Run
+
+**Given** Exp 3234 reports that the Prompt-Injection KAN v4 15k monolith is
+absent after repeated CLI failures
+**And** prior prompt-injection v2 corpus, teacher-cache, KAN, and
+cross-dataset artifacts exist on disk
+**And** `scripts/experiment_template.py` documents the mandatory
+`cached_sota_pair()` / `MODEL_SPECS` local SOTA GGUF discipline
+**When** the Exp 3239 manifest generator runs
+**Then** it writes
+`results/experiment_3239_prompt_injection_kan_v4_resource_manifest_v1.json`
+with all required schema fields, `inference_substrate` set to
+`aggregation_from_upstream_artifacts`, concrete corpus input paths, a shard
+plan with smoke, pilot, and full phases, a first teacher-label shard of no
+more than 16 prompts, downstream `MODEL_SPECS` that include a mandated local
+SOTA GGUF, ready teacher-label, DeLong/non-inferiority, and Garak/config
+plans, protected-file untouched constraints for
+`scripts/research_conductor.py`, no LLM, teacher-label, KAN-training,
+DeLong-execution, Garak-execution, conductor, or push work performed by this
+task, `v4_manifest_ready=true`, and an `honest_verdict` beginning with
+`complete:` without claiming v4 labels or trained KAN metrics exist.
+
+## Implementation Status (REQ-REPORT-3239)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-3239 | Implemented (`python/carnot/reporting/prompt_injection_kan_v4_resource_manifest_3239.py`) | Implemented (`tests/python/test_experiment_3239_prompt_injection_kan_v4_resource_manifest.py`) |
