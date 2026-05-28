@@ -6509,3 +6509,4 @@ web search |
 | 2026-05-27 23:38 UTC | Archive .297 closeout and activate .298 planning a | OK | 81 passed in 3.73s |
 | 2026-05-27 23:54 UTC | Hermetic CUDA runtime repair ledger for selected P | OK | 81 passed in 3.44s |
 | 2026-05-27 23:56 UTC | llama.cpp CUDA offload receipt smoke gated on herm | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp3220-hermetic-cuda-runtime-repair-ledge |
+| 2026-05-27 23:58 UTC | llama.cpp CUDA offload receipt smoke gated on herm | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp3220-hermetic-cuda-runtime-repair-ledge |

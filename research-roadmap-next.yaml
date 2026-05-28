@@ -1,0 +1,390 @@
+milestone: "2026.05.299"
+milestone_title: "Prompt-Injection v4 + Continued CUDA Receipt Recovery + Context-CoT Methodology Pilot"
+milestone_doc: "openspec/change-proposals/research-roadmap-vNEXT.md"
+milestone_provenance: "Pre-staged 2026-05-27 23:50Z by outer-loop session per CLAUDE.md Pre-Staged Roadmap Convention. The .294-.298 planners structurally skipped the Prompt-Injection KAN v4 priority (pending_count=10 per scripts/overdue_priority_lint.py); .299 is operator-authorized to land it explicitly. Six other overdue priorities are addressed via operator_override below with per-priority rationale; they remain queued in ops/known-issues.md for future milestones."
+
+operator_override:
+  authorization: "Operator directive 2026-05-27 (conversation): pre-stage .299 to bypass planner carry-forward bias; ship the v4 task and continue the CUDA chain. Deferred priorities below remain in known-issues.md for .300+."
+  deferred_priorities:
+    - slug: verifier_ensemble_multi_axis_composition_v1
+      rationale: "Depends on a working verifier evaluation harness, which depends on local SOTA receipts, which depend on CUDA. Deferred until CUDA chain unblocks (post-.298 capstone)."
+    - slug: verifier_ensemble_multi_violation_degradation_curve_v1
+      rationale: "Same dependency chain as multi-axis composition. Sibling experiment; both deferred together."
+    - slug: gatemate_n16_flash_timing_smoke_v3
+      rationale: "Requires operator-side hardware action (board reattach + flash). Cannot be addressed from autonomous loop without operator presence."
+    - slug: aquaforte_beaver_pipeline_honest_substrate_corrigendum_v1
+      rationale: "Paper-prep corrigendum work; queued behind v4 because v4 has stronger publication-cadence value (Polygraf-class comparison). Pulled forward in .300 if .299 closes clean."
+    - slug: kv260_mmd_vs_cpu_sequential_gibbs_v1
+      rationale: "Phase-3 Deep Think corrigendum requiring KV260 board-side measurement. Operator-side hardware action prerequisite (board state check); deferred to .301+ once v4 + CUDA close."
+    - slug: gatemate_a1_n16_ising_tile_bitstream_build_v2
+      rationale: "Hardware-specific; requires operator-side toolchain action (gmpack flow on the gatemate board). Deferred to operator's next hardware-bench session."
+
+tasks:
+
+  - id: exp3221-archive-v298-activate-v299
+    milestone: "2026.05.299"
+    deliverable: "results/experiment_3221_archive_v298_activate_v299.json"
+    title: "Archive .298 closeout and activate .299 planning authority"
+    priority: critical
+    max_turns: 20
+    estimated_wall_time_min: 10
+    track: "ops"
+    inference_substrate: "artifact_aggregation_only"
+    requires_gpu: false
+    prompt: |
+      CONTEXT
+      Project root placeholder: {project_root}. Run date placeholder: {date}.
+      This task archives .298's completed artifacts into research-complete.yaml
+      and confirms .299 activation authority. It is the standard
+      milestone-boundary handoff task.
+
+      CONCRETE STEPS
+      1. Read .298's capstone and operational retrospective if present.
+      2. Append .298's task summary to research-complete.yaml.
+      3. Emit the activation manifest artifact.
+
+      REQUIRED ARTIFACT FIELDS:
+      - archive_v298_activate_v299_ready: bool (principle: milestone handoff must be machine-readable)
+      - prior_paper_ready: bool (principle: carry the .298 publication-readiness signal)
+      - prior_publication_blocker_count: int (principle: track blocker count over time)
+      - random_seed: int
+      - reproducibility_checksum: str
+      - duration_s: float
+      - honest_verdict: str (principle: must start with complete:/complete_/success:/success_/passed:/passed_/shipped_)
+
+  - id: exp3222-prompt-injection-kan-distill-v4-15k
+    milestone: "2026.05.299"
+    deliverable: "results/experiment_3222_prompt_injection_kan_distill_v4_15k.json"
+    title: "Prompt-Injection KAN Distillation v4 — 15k Corpus + DeLong Non-Inferiority + Garak"
+    priority: critical
+    agent_type: gemini
+    model: gemini-3.1-pro-preview
+    max_turns: 60
+    estimated_wall_time_min: 90
+    track: "evidence"
+    inference_substrate: "live_llm_inference"
+    requires_gpu: true
+    prior_failures:
+      - experiment_id: exp652-prompt-injection-kan
+        verdict: "complete: v1 KAN trained, AUROC 0.7995"
+        addressed_by: "v4 uses 15k stratified corpus with 2.5k paired test + 1k cross-dataset; the v1 corpus was insufficient for non-inferiority claims."
+        retire_if_same_verdict: false
+      - experiment_id: exp710-prompt-injection-kan-distill-v2
+        verdict: "complete: distillation_improved_below_gate (AUROC 0.8747)"
+        addressed_by: "v2 used 1091 training examples; v4 uses 10k training, which empirically broke the 0.90 gate in v3."
+        retire_if_same_verdict: false
+      - experiment_id: exp724-kan-distill-v3
+        verdict: "complete: kan_gate_passed (AUROC 0.9078 on 3000 examples)"
+        addressed_by: "v3 passed the publication gate but 600 test examples gives 95% CI ±0.024 — too loose for non-inferiority at Δ=0.01. v4 uses 2.5k paired test (±0.012 CI) enabling a DeLong test the v3 sample size structurally cannot support."
+        retire_if_same_verdict: true
+    prompt: |
+      CONTEXT
+      Project root placeholder: {project_root}. Run date placeholder: {date}.
+      Operator authorization: 2026-05-26 + 2026-05-27 conversations. Priority
+      was pending_count=10 in known-issues.md before this milestone pre-stage.
+      The goal is to determine whether Carnot's prompt-injection KAN can
+      statistically replace gpt-oss-safeguard:20b with non-inferiority at
+      Δ=0.01 AUROC, on a defensibly-sized corpus.
+
+      PRECONDITIONS
+      0. Check BEFORE any inference call:
+         a. ls ~/.cache/huggingface/hub/models--unsloth--gpt-oss-safeguard-20b-GGUF/ returns non-empty AND find ... -name 'gpt-oss-safeguard-20b-Q4_K_M.gguf' succeeds. If missing, write honest_verdict blocked_teacher_model_not_cached and exit.
+         b. ls ~/.cache/huggingface/hub/models--Qwen--Qwen3.5-0.8B/ returns non-empty. If missing, blocked_student_model_not_cached.
+         c. python -c "import torch; assert torch.cuda.is_available()" exit 0. If not, blocked_cuda_unavailable.
+         d. command -v garak returns a path AND garak --version succeeds. If missing, blocked_garak_unavailable.
+         e. huggingface-cli whoami returns non-anonymous user. If anonymous, blocked_huggingface_credentials.
+
+      MODEL_SPECS
+      - Teacher: unsloth/gpt-oss-safeguard-20b-GGUF (Q4_K_M) -- mandated SOTA
+      - Student: Qwen/Qwen3.5-0.8B (activation source, hidden_dim=1024)
+      - Classifier: 16-knot KAN (carry forward exp724 v3 architecture)
+
+      CONCRETE STEPS
+
+      1. CORPUS ASSEMBLY (target: 15,000 total examples)
+         a. Train (10,000): HackAPrompt-2.0 + BIPIA + AdvBench + synthetic
+            augmentation; stratify across ~10 attack categories (~1000/cat).
+         b. Paired test (2,500): held-out subset, stratified, never in training.
+            Both teacher AND student score these for DeLong.
+         c. Cross-dataset (1,000): JailbreakBench-v2 OR prompts published
+            after the teacher's training cutoff.
+         d. Garak adversarial (1,500): garak --probes covering at least 10
+            probe classes (PromptInjection, DAN family, EncodingAttack,
+            GoodSide bypass, etc.) at 150/class.
+         e. Emit corpus_composition with per-source/per-category/per-split counts.
+
+      2. TEACHER LABELING
+         Run gpt-oss-safeguard:20b on all 15k examples. Estimated ~75 min.
+
+      3. STUDENT TRAINING
+         Distill Qwen3.5-0.8B-activation -> 16-knot KAN on the 10k training
+         subset. 100 epochs, AdamW, weight_decay=1e-4, seed-fixed.
+
+      4. EVALUATION
+         a. Student scores all four test splits (paired, cross-dataset, garak).
+         b. Teacher scores the paired test (cached from step 2).
+         c. Compute DeLong test on (student paired vs teacher paired) for
+            non-inferiority at Δ=0.01.
+         d. Compute cross_dataset_auroc.
+         e. Compute per-Garak-probe AUROC (group by probe class); median +
+            worst-case + full distribution.
+
+      5. EMIT RESULTS with all REQUIRED ARTIFACT FIELDS. Set honest_verdict
+         per the ACCEPTANCE GATES:
+         - All three gates pass -> "complete: prompt_injection_v4_replacement_grade"
+         - Gates 1+2 pass, gate 3 fails -> "complete: prompt_injection_v4_publication_grade_garak_partial"
+         - Gate 1 passes, gate 2 fails -> "complete: prompt_injection_v4_overfit_to_training_distribution"
+         - Gate 1 fails -> "complete: prompt_injection_v4_below_replacement_threshold"
+
+      REQUIRED ARTIFACT FIELDS (each with principle annotation):
+      - honest_verdict: str (principle: terminal verdict must start with complete:/success:/passed:/shipped_)
+      - inference_substrate: "live_llm_inference"
+      - random_seed: int (principle: determinism is the precondition for reproducibility)
+      - reproducibility_checksum: str (principle: catches silent corpus/teacher-version drift)
+      - model_specs: dict (principle: must name teacher GGUF + Q-level + sha256, student model + D)
+      - preconditions_checked: list (principle: catches the silent-resource-missing fabrication mode)
+      - duration_s: float (principle: expected ~5400s+; sub-60s is DURATION_TOO_SHORT)
+      - corpus_composition: dict (principle: sample-size claim requires per-category enumeration)
+      - auroc_paired_test: float (principle: 95% DeLong CI computed; 2.5k sample gives ~±0.012)
+      - delong_pvalue_vs_teacher: float (principle: paired non-inferiority at Δ=0.01)
+      - cross_dataset_auroc: float (principle: OOD generalization indicator)
+      - garak_auroc_per_probe: dict (principle: per-probe class + median + worst-case)
+
+      ACCEPTANCE GATES:
+      - condition: "auroc_paired_test >= 0.90 AND delong_pvalue_vs_teacher < 0.05"
+        principle: "G1 replacement-grade: paired AUROC clears publication threshold AND DeLong non-inferiority at Δ=0.01."
+      - condition: "cross_dataset_auroc >= 0.85"
+        principle: "G2 OOD floor: >5pp degradation vs paired means overfit; not replacement-ready."
+      - condition: "garak_auroc_per_probe.worst_case >= 0.75"
+        principle: "G3 adversarial floor: worst-case probe class must clear a defensible minimum."
+
+  - id: exp3223-cuda-hermetic-runtime-repair-v2
+    milestone: "2026.05.299"
+    deliverable: "results/experiment_3223_cuda_hermetic_runtime_repair_v2.json"
+    title: "CUDA hermetic runtime repair v2 — carry-forward from .298 if blocked"
+    priority: high
+    max_turns: 30
+    estimated_wall_time_min: 30
+    track: "hardware"
+    inference_substrate: "hermetic_environment_audit"
+    requires_gpu: false
+    prompt: |
+      Continue the CUDA hermetic-runtime repair work started in .298's
+      hermetic_cuda_runtime_repair_ledger if it did not fully resolve.
+      Specifically: confirm that `python -c "import torch; torch.cuda.is_available()"`
+      returns True in the hermetic venv AND that llama.cpp's CUDA build
+      can offload a Q4_K_M GGUF inference call. If .298's task closed
+      clean, write a gated-skip artifact pointing at the .298 result.
+
+      REQUIRED ARTIFACT FIELDS:
+      - cuda_hermetic_runtime_v2_ready: bool
+      - cuda_available_in_venv: bool
+      - llama_cpp_cuda_offload_works: bool
+      - random_seed: int
+      - reproducibility_checksum: str
+      - duration_s: float
+      - honest_verdict: str (principle: complete:/success:/passed:/shipped_ prefix)
+
+  - id: exp3224-full-local-sota-receipt-v7
+    milestone: "2026.05.299"
+    deliverable: "results/experiment_3224_full_local_sota_receipt_v7.json"
+    title: "Full local SOTA GGUF receipt v7 — gated on exp3223 CUDA readiness"
+    priority: high
+    max_turns: 40
+    estimated_wall_time_min: 60
+    track: "evidence"
+    inference_substrate: "live_llm_inference"
+    requires_gpu: true
+    prompt: |
+      Generate a clean full local SOTA receipt for the three mandated GGUFs
+      (Qwen3.6-35B-A3B, Gemma-4-31B-it, Gemma-4-26B-A4B-it) using the
+      hermetic CUDA runtime from exp3223. If exp3223 reports CUDA unavailable,
+      write a gated-skip artifact.
+
+      REQUIRED ARTIFACT FIELDS:
+      - full_local_sota_receipt_v7_ready: bool
+      - gated_skip: bool
+      - gated_skip_reason: str
+      - model_specs: dict
+      - random_seed: int
+      - reproducibility_checksum: str
+      - duration_s: float
+      - honest_verdict: str (principle: complete:/success:/passed:/shipped_ prefix)
+
+  - id: exp3225-clean-live-sota-verifier-rerun-v14
+    milestone: "2026.05.299"
+    deliverable: "results/experiment_3225_clean_live_sota_verifier_rerun_v14.json"
+    title: "Clean live SOTA verifier rerun v14 — gated on exp3224 receipt"
+    priority: critical
+    max_turns: 50
+    estimated_wall_time_min: 120
+    track: "verification"
+    inference_substrate: "live_llm_inference"
+    requires_gpu: true
+    prompt: |
+      Run the clean verifier rerun against the mandated SOTA GGUFs once
+      exp3224 provides a real receipt. Apply the exact-safe contract,
+      controlled invariance, and canonical grounding. If gated, write a
+      complete gated-skip.
+
+      REQUIRED ARTIFACT FIELDS:
+      - clean_live_verifier_rerun_v14_ready: bool
+      - gated_skip: bool
+      - false_accept_rate: float
+      - false_accept_gate_passed: bool
+      - flagged_adversarial: bool
+      - headline_claim_allowed: bool
+      - random_seed: int
+      - reproducibility_checksum: str
+      - duration_s: float
+      - honest_verdict: str (principle: complete:/success:/passed:/shipped_ prefix)
+
+  - id: exp3226-repair-gate-decision-v8
+    milestone: "2026.05.299"
+    deliverable: "results/experiment_3226_repair_gate_decision_v8.json"
+    title: "Repair gate decision v8 from receipt + clean verifier + v4 safety evidence"
+    priority: critical
+    max_turns: 30
+    estimated_wall_time_min: 15
+    track: "verification"
+    inference_substrate: "aggregation_from_upstream_artifacts"
+    requires_gpu: false
+    prompt: |
+      Aggregate exp3222 (v4 safety classifier), exp3224 (receipt), exp3225
+      (clean verifier rerun). Decide repair_gate_state: unblocked / blocked.
+
+      REQUIRED ARTIFACT FIELDS:
+      - repair_gate_decision_v8_ready: bool
+      - repair_gate_state: str
+      - random_seed: int
+      - reproducibility_checksum: str
+      - duration_s: float
+      - honest_verdict: str (principle: complete:/success:/passed:/shipped_ prefix)
+
+  - id: exp3227-multi-turn-repair-ladder-v9
+    milestone: "2026.05.299"
+    deliverable: "results/experiment_3227_multi_turn_repair_ladder_v9.json"
+    title: "Multi-turn repair ladder v9 — gated on exp3226 repair_gate_state"
+    priority: high
+    max_turns: 50
+    estimated_wall_time_min: 90
+    track: "repair"
+    inference_substrate: "live_llm_inference"
+    requires_gpu: true
+    prompt: |
+      Materialize the repair ladder if exp3226 unblocked. Otherwise write a
+      complete gated-skip. Standard rules: exact authority, no model-confidence
+      acceptance, intent preservation, monitor replay.
+
+      REQUIRED ARTIFACT FIELDS:
+      - multi_turn_repair_ladder_v9_ready: bool
+      - gated_skip: bool
+      - repair_success_delta: float
+      - false_repair_accept_rate: float
+      - headline_repair_claim_allowed: bool
+      - random_seed: int
+      - reproducibility_checksum: str
+      - duration_s: float
+      - honest_verdict: str (principle: complete:/success:/passed:/shipped_ prefix)
+
+  - id: exp3228-context-cot-minimum-leakage-filter-pilot
+    milestone: "2026.05.299"
+    deliverable: "results/experiment_3228_context_cot_minimum_leakage_filter_pilot.json"
+    title: "Context-CoT minimum-leakage filtering pilot for verifier-corpus distillation"
+    priority: medium
+    max_turns: 40
+    estimated_wall_time_min: 60
+    track: "research"
+    inference_substrate: "live_llm_inference"
+    requires_gpu: true
+    prompt: |
+      Implement the rubrics-based minimum-leakage filtering pattern from
+      arXiv:2605.25354 (Context-CoT) on a small subset of FoVer (~500 pairs).
+      Compare student AUROC on a held-out 100-pair test with vs without
+      the minimum-leakage filter. The judge model must be a locally-hosted
+      open-weight GGUF (Qwen3.5-0.8B or Gemma-4-E4B-it), not closed.
+
+      REQUIRED ARTIFACT FIELDS:
+      - context_cot_minimum_leakage_filter_pilot_ready: bool
+      - student_auroc_with_filter: float
+      - student_auroc_without_filter: float
+      - delta_auroc: float
+      - judge_model_id: str (must be local open-weight)
+      - random_seed: int
+      - reproducibility_checksum: str
+      - duration_s: float
+      - honest_verdict: str (principle: complete:/success:/passed:/shipped_ prefix)
+
+  - id: exp3229-fr11-nonforgetting-promotion-v3-rollback-policy
+    milestone: "2026.05.299"
+    deliverable: "results/experiment_3229_fr11_nonforgetting_promotion_v3_rollback_policy.json"
+    title: "FR-11 nonforgetting promotion controller v3 with rollback policy"
+    priority: medium
+    max_turns: 30
+    estimated_wall_time_min: 20
+    track: "fr11"
+    inference_substrate: "verifier_ensemble_against_cached_candidates"
+    requires_gpu: false
+    prompt: |
+      Carry forward .298's FR-11 nonforgetting promotion controller work
+      with an explicit rollback policy: if a promoted skill's downstream
+      accuracy drops by >2pp on the regression set, automatically demote.
+
+      REQUIRED ARTIFACT FIELDS:
+      - fr11_nonforgetting_promotion_v3_ready: bool
+      - rollback_triggered_count: int
+      - regression_set_size: int
+      - regression_accuracy_baseline: float
+      - regression_accuracy_after_promotion: float
+      - random_seed: int
+      - reproducibility_checksum: str
+      - duration_s: float
+      - honest_verdict: str (principle: complete:/success:/passed:/shipped_ prefix)
+
+  - id: exp3230-cross-corpus-matrix-v33
+    milestone: "2026.05.299"
+    deliverable: "results/experiment_3230_cross_corpus_matrix_v33.json"
+    title: "Cross-corpus verification matrix v33 with v4 safety + .299 evidence rollup"
+    priority: medium
+    max_turns: 30
+    estimated_wall_time_min: 25
+    track: "evidence"
+    inference_substrate: "aggregation_from_upstream_artifacts"
+    requires_gpu: false
+    prompt: |
+      Aggregate .299's evidence into a cross-corpus matrix update. Include
+      exp3222 (v4 safety), exp3225 (clean rerun if produced), exp3228
+      (context-cot pilot). Mark per-corpus pass/fail.
+
+      REQUIRED ARTIFACT FIELDS:
+      - cross_corpus_matrix_v33_ready: bool
+      - corpora_passed: list
+      - corpora_failed: list
+      - random_seed: int
+      - reproducibility_checksum: str
+      - duration_s: float
+      - honest_verdict: str (principle: complete:/success:/passed:/shipped_ prefix)
+
+  - id: exp3231-capstone-v299
+    milestone: "2026.05.299"
+    deliverable: "results/experiment_3231_capstone_v299.json"
+    title: "Capstone .299 publication readiness and next-gap decision"
+    priority: critical
+    max_turns: 30
+    estimated_wall_time_min: 15
+    track: "ops"
+    inference_substrate: "aggregation_from_upstream_artifacts"
+    requires_gpu: false
+    prompt: |
+      Aggregate .299 results into the capstone artifact. Update
+      publication_blocker_count + next_top_gap.
+
+      REQUIRED ARTIFACT FIELDS:
+      - capstone_v299_ready: bool
+      - paper_ready: bool
+      - publication_blocker_count: int
+      - next_top_gap: str
+      - random_seed: int
+      - reproducibility_checksum: str
+      - duration_s: float
+      - honest_verdict: str (principle: complete:/success:/passed:/shipped_ prefix)
