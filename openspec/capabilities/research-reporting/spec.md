@@ -12400,3 +12400,51 @@ both downstream gate booleans false.
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-REPORT-3261 | Implemented (`python/carnot/reporting/cuda_recovery_confirmation_smoke_3261.py`) | Implemented (`tests/python/test_experiment_3261_cuda_recovery_confirmation_smoke.py`) |
+
+### REQ-REPORT-3262: llama.cpp CUDA Receipt Smoke v4
+
+The repository shall provide an Exp 3262 llama.cpp CUDA receipt smoke generator
+that writes
+`results/experiment_3262_llama_cpp_cuda_receipt_smoke_v4.json`. The workflow
+SHALL first read `results/experiment_3261_cuda_recovery_confirmation_smoke_v1.json`
+and SHALL write a complete gated-skip artifact with
+`llama_cpp_cuda_receipt_ready=false` when `cuda_python_smoke_passed` is not true.
+When Exp 3261 opens the gate, the workflow SHALL confirm the selected project
+Python can import `llama_cpp`, that `llama_cpp.llama_supports_gpu_offload()`
+reports CUDA/GPU offload support, and that at least one small non-empty cached
+GGUF exists locally before attempting inference. If those preconditions fail,
+the artifact SHALL use `blocked_llama_cpp_cuda_missing` and SHALL keep both
+receipt booleans false.
+
+The successful workflow SHALL load the selected small cached GGUF through
+llama.cpp with `n_gpu_layers > 0`, run a short deterministic generation, and
+confirm that `nvidia-smi` memory usage increased above the pre-call baseline
+while the generation call was active. The artifact SHALL include
+`llama_cpp_cuda_receipt_smoke_v4_ready`, `llama_cpp_cuda_receipt_ready`,
+`gpu_layers_offloaded`, `gpu_mem_used_during_call_mib`, `tokens_generated`,
+`model_specs`, `random_seed`, `reproducibility_checksum`, `duration_s`, and
+`honest_verdict`. `llama_cpp_cuda_receipt_ready` MUST be true only when the
+generation output is non-empty, `gpu_layers_offloaded > 0`,
+`tokens_generated > 0`, and observed GPU memory during the call exceeds the
+baseline. `honest_verdict` MUST begin with one of `complete:`, `complete_`,
+`success:`, `success_`, `passed:`, `passed_`, or `shipped_`.
+
+#### SCENARIO-REPORT-3262: CUDA-Offloaded llama.cpp Generation Produces A Receipt
+
+**Given** Exp 3261 reports `cuda_python_smoke_passed=true`
+**And** the selected project Python has a CUDA-enabled llama.cpp build
+**And** a small GGUF is cached locally
+**When** the Exp 3262 llama.cpp CUDA receipt smoke generator runs
+**Then** it writes
+`results/experiment_3262_llama_cpp_cuda_receipt_smoke_v4.json` with all
+required schema fields, loads the GGUF with `n_gpu_layers > 0`, records a
+positive GPU memory increase during generation, records a non-zero generated
+token count, and sets both receipt booleans true. If the gate or runtime
+preconditions are not met, the artifact remains complete, records the exact
+blocked reason, and leaves both receipt booleans false.
+
+## Implementation Status (REQ-REPORT-3262)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-3262 | Implemented (`python/carnot/reporting/llama_cpp_cuda_receipt_smoke_3262.py`) | Implemented (`tests/python/test_experiment_3262_llama_cpp_cuda_receipt_smoke_v4.py`) |

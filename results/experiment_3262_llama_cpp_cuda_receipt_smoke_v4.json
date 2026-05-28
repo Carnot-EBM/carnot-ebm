@@ -1,0 +1,60 @@
+{
+  "artifact": "experiment_3262_llama_cpp_cuda_receipt_smoke_v4",
+  "blocked_reason": "",
+  "duration_s": 2.819856,
+  "exp3261_gate": {
+    "cuda_python_smoke_passed": true,
+    "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_3261_cuda_recovery_confirmation_smoke_v1.json"
+  },
+  "experiment_id": "exp3262",
+  "generation_output_nonempty": true,
+  "generation_output_preview": "<think>\n\n</think>\n\nThis smoke test verifies that the CUDA driver correctly handles the",
+  "gpu_layers_offloaded": 24,
+  "gpu_mem_baseline_mib": 4,
+  "gpu_mem_delta_during_call_mib": 720,
+  "gpu_mem_used_during_call_mib": 724,
+  "honest_verdict": "complete: llama_cpp_cuda_receipt_smoke_v4_ready=true; llama_cpp_cuda_receipt_ready=true; gpu_layers_offloaded=24; tokens_generated=16",
+  "llama_cpp_backend": {
+    "backend_error": "",
+    "llama_cpp_import_ok": true,
+    "llama_cpp_origin": "/home/ianblenke/github.com/ianblenke/carnot/.venv/lib/python3.14/site-packages/llama_cpp/__init__.py",
+    "llama_cpp_supports_gpu_offload": true,
+    "llama_cpp_system_info": "CUDA : ARCHS = 860 | USE_GRAPHS = 1 | PEER_MAX_BATCH_SIZE = 128 | CPU : SSE3 = 1 | SSSE3 = 1 | AVX = 1 | AVX_VNNI = 1 | AVX2 = 1 | F16C = 1 | FMA = 1 | BMI2 = 1 | AVX512 = 1 | AVX512_VBMI = 1 | AVX512_VNNI = 1 | AVX512_BF16 = 1 | LLAMAFILE = 1 | OPENMP = 1 | REPACK = 1 | ",
+    "llama_cpp_version": "0.3.23",
+    "returncode": 0,
+    "stderr_summary": "ggml_cuda_init: found 2 CUDA devices (Total VRAM: 48252 MiB):\n  Device 0: NVIDIA GeForce RTX 3090, compute capability 8.6, VMM: yes, VRAM: 24126 MiB\n  Device 1: NVIDIA GeForce RTX 3090, compute capability 8.6, VMM: yes, VRAM: 24126 MiB\n"
+  },
+  "llama_cpp_cuda_receipt_ready": true,
+  "llama_cpp_cuda_receipt_smoke_v4_ready": true,
+  "milestone": "2026.05.302",
+  "model_specs": {
+    "filename": "Qwen3.5-0.8B-Q4_K_M.gguf",
+    "model_id": "unsloth/Qwen3.5-0.8B-GGUF",
+    "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.5-0.8B-GGUF/snapshots/6ab461498e2023f6e3c1baea90a8f0fe38ab64d0/Qwen3.5-0.8B-Q4_K_M.gguf",
+    "n_gpu_layers_requested": 24,
+    "prompt": "Exp 3262 CUDA receipt smoke. Reply with one short sentence containing the word CUDA.",
+    "runtime": "llama_cpp",
+    "size_bytes": 532517120
+  },
+  "random_seed": 3262,
+  "reproducibility_checksum": "a270e40cc30619223444a58b95278193b4667581a842746b8c2d320faa3247d3",
+  "schema_version": "carnot.llama_cpp_cuda_receipt_smoke.v4",
+  "selected_model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.5-0.8B-GGUF/snapshots/6ab461498e2023f6e3c1baea90a8f0fe38ab64d0/Qwen3.5-0.8B-Q4_K_M.gguf",
+  "selected_python": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+  "small_gguf_cache": {
+    "cache_roots": [
+      "/home/ianblenke/.cache/huggingface/hub",
+      "/home/ianblenke/github.com/ianblenke/carnot/models"
+    ],
+    "selected_model_id": "unsloth/Qwen3.5-0.8B-GGUF",
+    "selected_model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.5-0.8B-GGUF/snapshots/6ab461498e2023f6e3c1baea90a8f0fe38ab64d0/Qwen3.5-0.8B-Q4_K_M.gguf"
+  },
+  "task_id": "exp3262-llama-cpp-cuda-receipt-smoke-v4",
+  "tokens_generated": 16,
+  "worker_attempt": {
+    "attempted": true,
+    "command_hash": "39f537e262911ef858a188052820626bb4d7ed73d2800a85cd22221070d26e83",
+    "returncode": 0,
+    "stderr_summary": "}}\n        {%- else %}\n            {{- '<|im_start|>' + message.role + '\\n' + content }}\n        {%- endif %}\n        {%- if message.tool_calls and message.tool_calls is iterable and message.tool_calls is not mapping %}\n            {%- for tool_call in message.tool_calls %}\n                {%- if tool_call.function is defined %}\n                    {%- set tool_call = tool_call.function %}\n                {%- endif %}\n                {%- if loop.first %}\n                    {%- if content|trim %}\n                        {{- '\\n\\n<tool_call>\\n<function=' + tool_call.name + '>\\n' }}\n                    {%- else %}\n                        {{- '<tool_call>\\n<function=' + tool_call.name + '>\\n' }}\n                    {%- endif %}\n                {%- else %}\n                    {{- '\\n<tool_call>\\n<function=' + tool_call.name + '>\\n' }}\n                {%- endif %}\n                {%- if tool_call.arguments is mapping %}\n                    {%- for args_name in tool_call.arguments %}\n                        {%- set args_value = tool_call.arguments[args_name] %}\n                        {{- '<parameter=' + args_name + '>\\n' }}\n                        {%- set args_value = args_value | tojson | safe if args_value is mapping or (args_value is sequence and args_value is not string) else args_value | string %}\n                        {{- args_value }}\n                        {{- '\\n</parameter>\\n' }}\n                    {%- endfor %}\n                {%- endif %}\n                {{- '</function>\\n</tool_call>' }}\n            {%- endfor %}\n        {%- endif %}\n        {{- '<|im_end|>\\n' }}\n    {%- elif message.role == \"tool\" %}\n        {%- if loop.previtem and loop.previtem.role != \"tool\" %}\n            {{- '<|im_start|>user' }}\n        {%- endif %}\n        {{- '\\n<tool_response>\\n' }}\n        {{- content }}\n        {{- '\\n</tool_response>' }}\n        {%- if not loop.last and loop.nextitem.role != \"tool\" %}\n            {{- '<|im_end|>\\n' }}\n        {%- elif loop.last %}\n            {{- '<|im_end|>\\n' }}\n        {%- endif %}\n    {%- else %}\n        {{- raise_exception('Unexpected message role.') }}\n    {%- endif %}\n{%- endfor %}\n{%- if add_generation_prompt %}\n    {{- '<|im_start|>assistant\\n' }}\n    {%- if enable_thinking is defined and enable_thinking is true %}\n        {{- '<think>\\n' }}\n    {%- else %}\n        {{- '<think>\\n\\n</think>\\n\\n' }}\n    {%- endif %}\n{%- endif %}\nUsing chat eos_token: <|im_end|>\nUsing chat bos_token: ,\nCUDA Graph id 65 reused\nggml_backend_cuda_graph_compute: CUDA graph warmup complete\nCUDA Graph id 66 reused\nggml_backend_cuda_graph_compute: CUDA graph warmup complete\nCUDA Graph id 65 reused\nCUDA Graph id 66 reused\nCUDA Graph id 65 reused\nCUDA Graph id 66 reused\nCUDA Graph id 65 reused\nCUDA Graph id 66 reused\nCUDA Graph id 65 reused\nCUDA Graph id 66 reused\nCUDA Graph id 65 reused\nCUDA Graph id 66 reused\nCUDA Graph id 65 reused\nCUDA Graph id 66 reused\nCUDA Graph id 65 reused\nCUDA Graph id 66 reused\nCUDA Graph id 65 reused\nCUDA Graph id 66 reused\nCUDA Graph id 65 reused\nCUDA Graph id 66 reused\nCUDA Graph id 65 reused\nCUDA Graph id 66 reused\nCUDA Graph id 65 reused\nCUDA Graph id 66 reused\nCUDA Graph id 65 reused\nCUDA Graph id 66 reused\nCUDA Graph id 65 reused\nCUDA Graph id 66 reused\nllama_perf_context_print:        load time =     226.76 ms\nllama_perf_context_print: prompt eval time =     226.66 ms /    20 tokens (   11.33 ms per token,    88.24 tokens per second)\nllama_perf_context_print:        eval time =     141.75 ms /    15 runs   (    9.45 ms per token,   105.82 tokens per second)\nllama_perf_context_print:       total time =     373.04 ms /    35 tokens\nllama_perf_context_print:    graphs reused =         14\n~llama_context:      CUDA0 compute buffer size is   6.3102 MiB, matches expectation of   6.3102 MiB\n~llama_context:      CUDA1 compute buffer size is  60.8750 MiB, matches expectation of  60.8750 MiB\n~llama_context:  CUDA_Host compute buffer size of   3.5670 MiB, does not match expectation of   2.2121 MiB\n"
+  }
+}
