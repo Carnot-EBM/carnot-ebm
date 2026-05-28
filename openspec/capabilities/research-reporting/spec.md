@@ -12009,3 +12009,63 @@ ops-status, ops-changelog, or traceability work performed by this task, and an
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-REPORT-3246 | Implemented (`python/carnot/reporting/archive_v300_activate_v301_3246.py`) | Implemented (`tests/python/test_experiment_3246_archive_v300_activate_v301.py`) |
+
+### REQ-REPORT-3247: Selected-Python CUDA Root-Cause Surgery
+
+The repository shall provide an Exp 3247 selected-Python CUDA root-cause
+surgery generator that writes
+`results/experiment_3247_selected_python_cuda_root_cause_surgery_v1.json` by
+running only lightweight hardware/runtime probes and optional non-destructive
+subprocess-only repair probes. The workflow SHALL record precondition evidence
+before classification: `nvidia-smi` visibility, selected Python path, Python
+version, torch version, torch CUDA build, `cuda.bindings` import status,
+`CUDA_VISIBLE_DEVICES`, `LD_LIBRARY_PATH`, and any active virtual environment.
+`preconditions_checked` MUST be true only after those fields have been captured.
+
+The generator MUST compare the Exp 3236 selected-Python CUDA smoke failure
+fields against the live environment and classify the blocking root cause as one
+of `driver_absent`, `selected_python_env_mismatch`,
+`torch_cuda_build_mismatch`, `cuda_bindings_runtime_failure`,
+`permission/device_visibility_failure`, or `unresolved`. Safe repair attempts
+MUST be limited to the selected project environment or an explicitly named
+throwaway environment, MUST NOT uninstall system drivers, and MUST NOT perform
+destructive package operations. If a repair candidate is found, the generator
+MUST run the smallest torch CUDA and `cuda.bindings` subprocess probes needed to
+justify `next_smoke_allowed=true`.
+
+The terminal artifact MUST include `experiment_id`, `task_id`, `milestone`,
+`inference_substrate`, `principle_annotations`, `preconditions_checked`,
+`cuda_root_cause_class`, `selected_python_path`,
+`selected_python_torch_cuda_available_before`,
+`cuda_bindings_device_count_before`, `repair_actions_attempted`,
+`selected_python_torch_cuda_available_after`,
+`cuda_bindings_device_count_after`, `selected_python_cuda_repaired_candidate`,
+`next_smoke_allowed`, `random_seed`, `reproducibility_checksum`,
+`protected_files_untouched`, and `honest_verdict`. It SHALL include exact
+commands, return codes, and bounded stdout/stderr excerpts for each probe.
+`honest_verdict` MUST begin with `complete:` even when
+`next_smoke_allowed=false`.
+
+#### SCENARIO-REPORT-3247: Root-Cause Surgery Gates Exp 3248 Honestly
+
+**Given** Exp 3236 exists and records driver visibility while selected-Python
+torch CUDA and `cuda.bindings` runtime device-count probes failed
+**And** the live environment may preserve, repair, or change that failure shape
+**When** the Exp 3247 root-cause surgery generator runs
+**Then** it writes
+`results/experiment_3247_selected_python_cuda_root_cause_surgery_v1.json` with
+all required schema fields, `inference_substrate="hardware_smoke"`,
+precondition commands and excerpts captured, a root-cause class drawn from the
+allowed classification set, repair attempts limited to non-destructive
+subprocess probes, protected-file untouched constraints for
+`scripts/research_conductor.py`, and `next_smoke_allowed=true` only when the
+post-repair selected-Python torch CUDA probe and `cuda.bindings` device-count
+probe both pass.
+**And** blocked outcomes still use an `honest_verdict` beginning with
+`complete:` and preserve the exact blocking fields for Exp 3248.
+
+## Implementation Status (REQ-REPORT-3247)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-3247 | Implemented (`python/carnot/reporting/selected_python_cuda_root_cause_surgery_3247.py`) | Implemented (`tests/python/test_experiment_3247_selected_python_cuda_root_cause_surgery.py`) |

@@ -1,0 +1,250 @@
+{
+  "artifact": "experiment_3247_selected_python_cuda_root_cause_surgery_v1",
+  "commands_run": [
+    {
+      "command": [
+        "nvidia-smi",
+        "--query-gpu=index,uuid,name,driver_version,memory.total,memory.used,memory.free,utilization.gpu,temperature.gpu",
+        "--format=csv,noheader,nounits"
+      ],
+      "returncode": 0,
+      "stderr_excerpt": "",
+      "stdout_excerpt": "0, GPU-7971baff-9583-eaa6-2292-393f930a28f9, NVIDIA GeForce RTX 3090, 595.71.05, 24576, 2, 24126, 0, 44\n"
+    },
+    {
+      "command": [
+        "nvidia-smi"
+      ],
+      "returncode": 0,
+      "stderr_excerpt": "",
+      "stdout_excerpt": "Thu May 28 03:07:17 2026       \n+-----------------------------------------------------------------------------------------+\n| NVIDIA-SMI 595.71.05              Driver Version: 595.71.05      CUDA Version: 13.2     |\n+-----------------------------------------+------------------------+----------------------+\n| GPU  Name                 Persistence-M | Bus-Id          Disp.A | Volatile Uncorr. ECC |\n| Fan  Temp   Perf          Pwr:Usage/Cap |           Memory-Usage | GPU-Util  Compute M. |\n|                                         |                        |               MIG M. |\n|=========================================+========================+======================|\n|   0  NVIDIA GeForce RTX 3090        Off |   00000000:62:00.0 Off |                  N/A |\n|  0%   44C    P8              7W /  370W |       2MiB /  24576MiB |      0%      Default |\n|                                         |                        |                  N/A |\n+-----------------------------------------+------------------------+----------------------+\n\n+-----------------------------------------------------------------------------------------+\n| Processes:                                                                              |\n|  GPU   GI   CI              PID   Type   Process name                        GPU Memory |\n|        ID   ID                                                               Usage      |\n|=========================================================================================|\n|  No running processes found                                                             |\n+-----------------------------------------------------------------------------------------+\n"
+    },
+    {
+      "command": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-I",
+        "-c",
+        "import json, sys\npayload = {'probe': 'exp3247_torch_cuda_probe', 'python_version': sys.version}\ntry:\n    import torch\nexcept Exception as exc:\n    payload.update({'selected_python_torch_import_ok': False, 'torch_version': None, 'selected_python_torch_cuda_version': None, 'selected_python_torch_cuda_available': False, 'selected_python_device_count': 0, 'selected_python_raw_device_count': 0, 'selected_python_device_names': [], 'selected_python_cuda_error': f'{type(exc).__name__}: {exc}'})\nelse:\n    cuda_error = None\n    try:\n        available = bool(torch.cuda.is_available())\n        raw_count = int(torch.cuda.device_count())\n        count = raw_count if available else 0\n        names = [torch.cuda.get_device_name(i) for i in range(count)]\n    except Exception as exc:\n        available = False\n        raw_count = 0\n        count = 0\n        names = []\n        cuda_error = f'{type(exc).__name__}: {exc}'\n    payload.update({'selected_python_torch_import_ok': True, 'torch_version': getattr(torch, '__version__', None), 'selected_python_torch_cuda_version': getattr(torch.version, 'cuda', None), 'selected_python_torch_cuda_available': available, 'selected_python_device_count': count, 'selected_python_raw_device_count': raw_count, 'selected_python_device_names': names, 'selected_python_cuda_error': cuda_error})\nprint(json.dumps(payload, sort_keys=True))\n"
+      ],
+      "returncode": 0,
+      "stderr_excerpt": "/home/ianblenke/github.com/ianblenke/carnot/.venv/lib/python3.14/site-packages/torch/cuda/__init__.py:180: UserWarning: CUDA initialization: CUDA unknown error - this may be due to an incorrectly set up environment, e.g. changing env variable CUDA_VISIBLE_DEVICES after program start. Setting the available devices to be zero. (Triggered internally at /pytorch/c10/cuda/CUDAFunctions.cpp:119.)\n  return torch._C._cuda_getDeviceCount() > 0\n",
+      "stdout_excerpt": "{\"probe\": \"exp3247_torch_cuda_probe\", \"python_version\": \"3.14.4 (main, May  3 2026, 17:15:39) [GCC 16.1.1 20260430]\", \"selected_python_cuda_error\": null, \"selected_python_device_count\": 0, \"selected_python_device_names\": [], \"selected_python_raw_device_count\": 1, \"selected_python_torch_cuda_available\": false, \"selected_python_torch_cuda_version\": \"12.8\", \"selected_python_torch_import_ok\": true, \"torch_version\": \"2.11.0+cu128\"}\n"
+    },
+    {
+      "command": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-I",
+        "-c",
+        "import json, sys\npayload = {'probe': 'exp3247_cuda_bindings_probe', 'python_version': sys.version}\ntry:\n    import cuda.bindings.runtime as rt\n    err, count = rt.cudaGetDeviceCount()\n    runtime_err, runtime_version = rt.cudaRuntimeGetVersion()\n    driver_err, driver_version = rt.cudaDriverGetVersion()\n    ok = str(err).endswith('cudaSuccess') and bool(count and count > 0)\n    names = []\n    if ok:\n        for idx in range(int(count)):\n            prop_err, prop = rt.cudaGetDeviceProperties(idx)\n            if str(prop_err).endswith('cudaSuccess'):\n                raw_name = getattr(prop, 'name', b'')\n                name = raw_name.decode('utf-8', 'replace').rstrip('\\x00') if isinstance(raw_name, bytes) else str(raw_name)\n                names.append(name)\n    payload.update({'cuda_bindings_import_ok': True, 'cuda_bindings_runtime_ok': ok, 'cuda_bindings_device_count': int(count or 0) if ok else 0, 'cuda_bindings_raw_device_count': int(count or 0), 'cuda_bindings_device_names': names, 'cuda_bindings_cuda_error': str(err), 'cuda_bindings_runtime_version': runtime_version if str(runtime_err).endswith('cudaSuccess') else None, 'cuda_bindings_driver_version': driver_version if str(driver_err).endswith('cudaSuccess') else None})\nexcept Exception as exc:\n    payload.update({'cuda_bindings_import_ok': False, 'cuda_bindings_runtime_ok': False, 'cuda_bindings_device_count': 0, 'cuda_bindings_raw_device_count': 0, 'cuda_bindings_device_names': [], 'cuda_bindings_cuda_error': f'{type(exc).__name__}: {exc}', 'cuda_bindings_runtime_version': None, 'cuda_bindings_driver_version': None})\nprint(json.dumps(payload, sort_keys=True))\n"
+      ],
+      "returncode": 0,
+      "stderr_excerpt": "",
+      "stdout_excerpt": "{\"cuda_bindings_cuda_error\": \"999\", \"cuda_bindings_device_count\": 0, \"cuda_bindings_device_names\": [], \"cuda_bindings_driver_version\": null, \"cuda_bindings_import_ok\": true, \"cuda_bindings_raw_device_count\": 0, \"cuda_bindings_runtime_ok\": false, \"cuda_bindings_runtime_version\": null, \"probe\": \"exp3247_cuda_bindings_probe\", \"python_version\": \"3.14.4 (main, May  3 2026, 17:15:39) [GCC 16.1.1 20260430]\"}\n"
+    },
+    {
+      "command": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-I",
+        "-c",
+        "import json, sys\npayload = {'probe': 'exp3247_torch_cuda_probe', 'python_version': sys.version}\ntry:\n    import torch\nexcept Exception as exc:\n    payload.update({'selected_python_torch_import_ok': False, 'torch_version': None, 'selected_python_torch_cuda_version': None, 'selected_python_torch_cuda_available': False, 'selected_python_device_count': 0, 'selected_python_raw_device_count': 0, 'selected_python_device_names': [], 'selected_python_cuda_error': f'{type(exc).__name__}: {exc}'})\nelse:\n    cuda_error = None\n    try:\n        available = bool(torch.cuda.is_available())\n        raw_count = int(torch.cuda.device_count())\n        count = raw_count if available else 0\n        names = [torch.cuda.get_device_name(i) for i in range(count)]\n    except Exception as exc:\n        available = False\n        raw_count = 0\n        count = 0\n        names = []\n        cuda_error = f'{type(exc).__name__}: {exc}'\n    payload.update({'selected_python_torch_import_ok': True, 'torch_version': getattr(torch, '__version__', None), 'selected_python_torch_cuda_version': getattr(torch.version, 'cuda', None), 'selected_python_torch_cuda_available': available, 'selected_python_device_count': count, 'selected_python_raw_device_count': raw_count, 'selected_python_device_names': names, 'selected_python_cuda_error': cuda_error})\nprint(json.dumps(payload, sort_keys=True))\n"
+      ],
+      "returncode": 0,
+      "stderr_excerpt": "/home/ianblenke/github.com/ianblenke/carnot/.venv/lib/python3.14/site-packages/torch/cuda/__init__.py:180: UserWarning: CUDA initialization: CUDA unknown error - this may be due to an incorrectly set up environment, e.g. changing env variable CUDA_VISIBLE_DEVICES after program start. Setting the available devices to be zero. (Triggered internally at /pytorch/c10/cuda/CUDAFunctions.cpp:119.)\n  return torch._C._cuda_getDeviceCount() > 0\n",
+      "stdout_excerpt": "{\"probe\": \"exp3247_torch_cuda_probe\", \"python_version\": \"3.14.4 (main, May  3 2026, 17:15:39) [GCC 16.1.1 20260430]\", \"selected_python_cuda_error\": null, \"selected_python_device_count\": 0, \"selected_python_device_names\": [], \"selected_python_raw_device_count\": 1, \"selected_python_torch_cuda_available\": false, \"selected_python_torch_cuda_version\": \"12.8\", \"selected_python_torch_import_ok\": true, \"torch_version\": \"2.11.0+cu128\"}\n"
+    },
+    {
+      "command": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-I",
+        "-c",
+        "import json, sys\npayload = {'probe': 'exp3247_cuda_bindings_probe', 'python_version': sys.version}\ntry:\n    import cuda.bindings.runtime as rt\n    err, count = rt.cudaGetDeviceCount()\n    runtime_err, runtime_version = rt.cudaRuntimeGetVersion()\n    driver_err, driver_version = rt.cudaDriverGetVersion()\n    ok = str(err).endswith('cudaSuccess') and bool(count and count > 0)\n    names = []\n    if ok:\n        for idx in range(int(count)):\n            prop_err, prop = rt.cudaGetDeviceProperties(idx)\n            if str(prop_err).endswith('cudaSuccess'):\n                raw_name = getattr(prop, 'name', b'')\n                name = raw_name.decode('utf-8', 'replace').rstrip('\\x00') if isinstance(raw_name, bytes) else str(raw_name)\n                names.append(name)\n    payload.update({'cuda_bindings_import_ok': True, 'cuda_bindings_runtime_ok': ok, 'cuda_bindings_device_count': int(count or 0) if ok else 0, 'cuda_bindings_raw_device_count': int(count or 0), 'cuda_bindings_device_names': names, 'cuda_bindings_cuda_error': str(err), 'cuda_bindings_runtime_version': runtime_version if str(runtime_err).endswith('cudaSuccess') else None, 'cuda_bindings_driver_version': driver_version if str(driver_err).endswith('cudaSuccess') else None})\nexcept Exception as exc:\n    payload.update({'cuda_bindings_import_ok': False, 'cuda_bindings_runtime_ok': False, 'cuda_bindings_device_count': 0, 'cuda_bindings_raw_device_count': 0, 'cuda_bindings_device_names': [], 'cuda_bindings_cuda_error': f'{type(exc).__name__}: {exc}', 'cuda_bindings_runtime_version': None, 'cuda_bindings_driver_version': None})\nprint(json.dumps(payload, sort_keys=True))\n"
+      ],
+      "returncode": 0,
+      "stderr_excerpt": "",
+      "stdout_excerpt": "{\"cuda_bindings_cuda_error\": \"999\", \"cuda_bindings_device_count\": 0, \"cuda_bindings_device_names\": [], \"cuda_bindings_driver_version\": null, \"cuda_bindings_import_ok\": true, \"cuda_bindings_raw_device_count\": 0, \"cuda_bindings_runtime_ok\": false, \"cuda_bindings_runtime_version\": null, \"probe\": \"exp3247_cuda_bindings_probe\", \"python_version\": \"3.14.4 (main, May  3 2026, 17:15:39) [GCC 16.1.1 20260430]\"}\n"
+    }
+  ],
+  "cuda_bindings_device_count_after": 0,
+  "cuda_bindings_device_count_before": 0,
+  "cuda_bindings_import_ok_before": true,
+  "cuda_bindings_probe_after": {
+    "command": [
+      "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+      "-I",
+      "-c",
+      "import json, sys\npayload = {'probe': 'exp3247_cuda_bindings_probe', 'python_version': sys.version}\ntry:\n    import cuda.bindings.runtime as rt\n    err, count = rt.cudaGetDeviceCount()\n    runtime_err, runtime_version = rt.cudaRuntimeGetVersion()\n    driver_err, driver_version = rt.cudaDriverGetVersion()\n    ok = str(err).endswith('cudaSuccess') and bool(count and count > 0)\n    names = []\n    if ok:\n        for idx in range(int(count)):\n            prop_err, prop = rt.cudaGetDeviceProperties(idx)\n            if str(prop_err).endswith('cudaSuccess'):\n                raw_name = getattr(prop, 'name', b'')\n                name = raw_name.decode('utf-8', 'replace').rstrip('\\x00') if isinstance(raw_name, bytes) else str(raw_name)\n                names.append(name)\n    payload.update({'cuda_bindings_import_ok': True, 'cuda_bindings_runtime_ok': ok, 'cuda_bindings_device_count': int(count or 0) if ok else 0, 'cuda_bindings_raw_device_count': int(count or 0), 'cuda_bindings_device_names': names, 'cuda_bindings_cuda_error': str(err), 'cuda_bindings_runtime_version': runtime_version if str(runtime_err).endswith('cudaSuccess') else None, 'cuda_bindings_driver_version': driver_version if str(driver_err).endswith('cudaSuccess') else None})\nexcept Exception as exc:\n    payload.update({'cuda_bindings_import_ok': False, 'cuda_bindings_runtime_ok': False, 'cuda_bindings_device_count': 0, 'cuda_bindings_raw_device_count': 0, 'cuda_bindings_device_names': [], 'cuda_bindings_cuda_error': f'{type(exc).__name__}: {exc}', 'cuda_bindings_runtime_version': None, 'cuda_bindings_driver_version': None})\nprint(json.dumps(payload, sort_keys=True))\n"
+    ],
+    "cuda_bindings_cuda_error": "999",
+    "cuda_bindings_device_count": 0,
+    "cuda_bindings_device_names": [],
+    "cuda_bindings_driver_version": null,
+    "cuda_bindings_import_ok": true,
+    "cuda_bindings_raw_device_count": 0,
+    "cuda_bindings_runtime_ok": false,
+    "cuda_bindings_runtime_version": null,
+    "probe": "exp3247_cuda_bindings_probe",
+    "python_version": "3.14.4 (main, May  3 2026, 17:15:39) [GCC 16.1.1 20260430]",
+    "returncode": 0,
+    "stderr_excerpt": "",
+    "stdout_excerpt": "{\"cuda_bindings_cuda_error\": \"999\", \"cuda_bindings_device_count\": 0, \"cuda_bindings_device_names\": [], \"cuda_bindings_driver_version\": null, \"cuda_bindings_import_ok\": true, \"cuda_bindings_raw_device_count\": 0, \"cuda_bindings_runtime_ok\": false, \"cuda_bindings_runtime_version\": null, \"probe\": \"exp3247_cuda_bindings_probe\", \"python_version\": \"3.14.4 (main, May  3 2026, 17:15:39) [GCC 16.1.1 20260430]\"}\n"
+  },
+  "cuda_bindings_probe_before": {
+    "command": [
+      "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+      "-I",
+      "-c",
+      "import json, sys\npayload = {'probe': 'exp3247_cuda_bindings_probe', 'python_version': sys.version}\ntry:\n    import cuda.bindings.runtime as rt\n    err, count = rt.cudaGetDeviceCount()\n    runtime_err, runtime_version = rt.cudaRuntimeGetVersion()\n    driver_err, driver_version = rt.cudaDriverGetVersion()\n    ok = str(err).endswith('cudaSuccess') and bool(count and count > 0)\n    names = []\n    if ok:\n        for idx in range(int(count)):\n            prop_err, prop = rt.cudaGetDeviceProperties(idx)\n            if str(prop_err).endswith('cudaSuccess'):\n                raw_name = getattr(prop, 'name', b'')\n                name = raw_name.decode('utf-8', 'replace').rstrip('\\x00') if isinstance(raw_name, bytes) else str(raw_name)\n                names.append(name)\n    payload.update({'cuda_bindings_import_ok': True, 'cuda_bindings_runtime_ok': ok, 'cuda_bindings_device_count': int(count or 0) if ok else 0, 'cuda_bindings_raw_device_count': int(count or 0), 'cuda_bindings_device_names': names, 'cuda_bindings_cuda_error': str(err), 'cuda_bindings_runtime_version': runtime_version if str(runtime_err).endswith('cudaSuccess') else None, 'cuda_bindings_driver_version': driver_version if str(driver_err).endswith('cudaSuccess') else None})\nexcept Exception as exc:\n    payload.update({'cuda_bindings_import_ok': False, 'cuda_bindings_runtime_ok': False, 'cuda_bindings_device_count': 0, 'cuda_bindings_raw_device_count': 0, 'cuda_bindings_device_names': [], 'cuda_bindings_cuda_error': f'{type(exc).__name__}: {exc}', 'cuda_bindings_runtime_version': None, 'cuda_bindings_driver_version': None})\nprint(json.dumps(payload, sort_keys=True))\n"
+    ],
+    "cuda_bindings_cuda_error": "999",
+    "cuda_bindings_device_count": 0,
+    "cuda_bindings_device_names": [],
+    "cuda_bindings_driver_version": null,
+    "cuda_bindings_import_ok": true,
+    "cuda_bindings_raw_device_count": 0,
+    "cuda_bindings_runtime_ok": false,
+    "cuda_bindings_runtime_version": null,
+    "probe": "exp3247_cuda_bindings_probe",
+    "python_version": "3.14.4 (main, May  3 2026, 17:15:39) [GCC 16.1.1 20260430]",
+    "returncode": 0,
+    "stderr_excerpt": "",
+    "stdout_excerpt": "{\"cuda_bindings_cuda_error\": \"999\", \"cuda_bindings_device_count\": 0, \"cuda_bindings_device_names\": [], \"cuda_bindings_driver_version\": null, \"cuda_bindings_import_ok\": true, \"cuda_bindings_raw_device_count\": 0, \"cuda_bindings_runtime_ok\": false, \"cuda_bindings_runtime_version\": null, \"probe\": \"exp3247_cuda_bindings_probe\", \"python_version\": \"3.14.4 (main, May  3 2026, 17:15:39) [GCC 16.1.1 20260430]\"}\n"
+  },
+  "cuda_root_cause_class": "cuda_bindings_runtime_failure",
+  "device_nodes_world_accessible": true,
+  "duration_s": 3.165651,
+  "environment_snapshot": {
+    "CONDA_PREFIX": "",
+    "CUDA_VISIBLE_DEVICES": "",
+    "LD_LIBRARY_PATH": "",
+    "VIRTUAL_ENV": "",
+    "active_virtual_environment": ""
+  },
+  "exp3236_comparison": {
+    "exp3236_present": true,
+    "failure_shape_still_matches_exp3236": true,
+    "live_cuda_bindings_device_count_before": 0,
+    "live_selected_python": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+    "live_torch_cuda_available_before": false,
+    "live_torch_cuda_build": "12.8",
+    "live_torch_version": "2.11.0+cu128",
+    "prior_cuda_bindings_device_count": 0,
+    "prior_selected_python": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+    "prior_torch_cuda_available": false,
+    "prior_torch_cuda_build": "12.8",
+    "prior_torch_version": "2.11.0+cu128",
+    "safe_subprocess_repair_changed_outcome": false,
+    "selected_python_same_resolved": true
+  },
+  "experiment_id": "exp3247",
+  "honest_verdict": "complete: cuda_root_cause_class=cuda_bindings_runtime_failure; selected_python_cuda_repaired_candidate=false; next_smoke_allowed=false; recommended_next_task=keep_exp3248_blocked_repair_cuda_runtime",
+  "inference_substrate": "hardware_smoke",
+  "milestone": "2026.05.301",
+  "next_smoke_allowed": false,
+  "no_conductor_execution": true,
+  "no_destructive_package_operation": true,
+  "no_push": true,
+  "no_system_driver_uninstall": true,
+  "nvidia_smi": {
+    "available": true,
+    "cuda_version": "13.2",
+    "driver_version": "595.71.05",
+    "gpu_count": 1,
+    "gpus": [
+      {
+        "driver_version": "595.71.05",
+        "index": 0,
+        "memory_free_mib": 24126,
+        "memory_total_mib": 24576,
+        "memory_used_mib": 2,
+        "name": "NVIDIA GeForce RTX 3090",
+        "temperature_gpu_c": 44,
+        "utilization_gpu_pct": 0,
+        "uuid": "GPU-7971baff-9583-eaa6-2292-393f930a28f9"
+      }
+    ]
+  },
+  "preconditions_checked": true,
+  "principle_annotations": {
+    "gate_rule": "Exp 3248 may run only when torch CUDA and cuda.bindings both see a device.",
+    "hardware_smoke_only": "Only nvidia-smi, torch CUDA, and cuda.bindings probes run.",
+    "protected_conductor": "scripts/research_conductor.py is not modified.",
+    "safe_repair_scope": "Repair attempts are subprocess-only environment probes."
+  },
+  "protected_file_checksums": {
+    "scripts/research_conductor.py": "f7253130513139845fb202c44bff1e7974079c0b666f6f8837dee6df3976edff"
+  },
+  "protected_files_untouched": {
+    "scripts/research_conductor.py": true
+  },
+  "random_seed": 3247,
+  "recommended_next_task": "keep_exp3248_blocked_repair_cuda_runtime",
+  "repair_actions_attempted": [
+    {
+      "action": "subprocess_only_normalize_cuda_visible_devices",
+      "cuda_visible_devices_after": "0",
+      "destructive_package_operation": false,
+      "persistent_changes": false,
+      "result": "failed",
+      "safe": true,
+      "scope": "selected_project_environment"
+    }
+  ],
+  "reproducibility_checksum": "d8563f11f23cd337949405ab971c258c5ee6acadf89178a6e162a791434d125f",
+  "run_date": "20260528",
+  "schema": "carnot.selected_python_cuda_root_cause_surgery.v1",
+  "schema_version": "carnot.selected_python_cuda_root_cause_surgery.v1",
+  "selected_python_cuda_repaired_candidate": false,
+  "selected_python_path": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+  "selected_python_resolved_path": "/usr/bin/python3.14",
+  "selected_python_torch_cuda_available_after": false,
+  "selected_python_torch_cuda_available_before": false,
+  "selected_python_torch_probe_after": {
+    "command": [
+      "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+      "-I",
+      "-c",
+      "import json, sys\npayload = {'probe': 'exp3247_torch_cuda_probe', 'python_version': sys.version}\ntry:\n    import torch\nexcept Exception as exc:\n    payload.update({'selected_python_torch_import_ok': False, 'torch_version': None, 'selected_python_torch_cuda_version': None, 'selected_python_torch_cuda_available': False, 'selected_python_device_count': 0, 'selected_python_raw_device_count': 0, 'selected_python_device_names': [], 'selected_python_cuda_error': f'{type(exc).__name__}: {exc}'})\nelse:\n    cuda_error = None\n    try:\n        available = bool(torch.cuda.is_available())\n        raw_count = int(torch.cuda.device_count())\n        count = raw_count if available else 0\n        names = [torch.cuda.get_device_name(i) for i in range(count)]\n    except Exception as exc:\n        available = False\n        raw_count = 0\n        count = 0\n        names = []\n        cuda_error = f'{type(exc).__name__}: {exc}'\n    payload.update({'selected_python_torch_import_ok': True, 'torch_version': getattr(torch, '__version__', None), 'selected_python_torch_cuda_version': getattr(torch.version, 'cuda', None), 'selected_python_torch_cuda_available': available, 'selected_python_device_count': count, 'selected_python_raw_device_count': raw_count, 'selected_python_device_names': names, 'selected_python_cuda_error': cuda_error})\nprint(json.dumps(payload, sort_keys=True))\n"
+    ],
+    "probe": "exp3247_torch_cuda_probe",
+    "python_version": "3.14.4 (main, May  3 2026, 17:15:39) [GCC 16.1.1 20260430]",
+    "returncode": 0,
+    "selected_python_cuda_error": null,
+    "selected_python_device_count": 0,
+    "selected_python_device_names": [],
+    "selected_python_raw_device_count": 1,
+    "selected_python_torch_cuda_available": false,
+    "selected_python_torch_cuda_version": "12.8",
+    "selected_python_torch_import_ok": true,
+    "stderr_excerpt": "/home/ianblenke/github.com/ianblenke/carnot/.venv/lib/python3.14/site-packages/torch/cuda/__init__.py:180: UserWarning: CUDA initialization: CUDA unknown error - this may be due to an incorrectly set up environment, e.g. changing env variable CUDA_VISIBLE_DEVICES after program start. Setting the available devices to be zero. (Triggered internally at /pytorch/c10/cuda/CUDAFunctions.cpp:119.)\n  return torch._C._cuda_getDeviceCount() > 0\n",
+    "stdout_excerpt": "{\"probe\": \"exp3247_torch_cuda_probe\", \"python_version\": \"3.14.4 (main, May  3 2026, 17:15:39) [GCC 16.1.1 20260430]\", \"selected_python_cuda_error\": null, \"selected_python_device_count\": 0, \"selected_python_device_names\": [], \"selected_python_raw_device_count\": 1, \"selected_python_torch_cuda_available\": false, \"selected_python_torch_cuda_version\": \"12.8\", \"selected_python_torch_import_ok\": true, \"torch_version\": \"2.11.0+cu128\"}\n",
+    "torch_version": "2.11.0+cu128"
+  },
+  "selected_python_torch_probe_before": {
+    "command": [
+      "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+      "-I",
+      "-c",
+      "import json, sys\npayload = {'probe': 'exp3247_torch_cuda_probe', 'python_version': sys.version}\ntry:\n    import torch\nexcept Exception as exc:\n    payload.update({'selected_python_torch_import_ok': False, 'torch_version': None, 'selected_python_torch_cuda_version': None, 'selected_python_torch_cuda_available': False, 'selected_python_device_count': 0, 'selected_python_raw_device_count': 0, 'selected_python_device_names': [], 'selected_python_cuda_error': f'{type(exc).__name__}: {exc}'})\nelse:\n    cuda_error = None\n    try:\n        available = bool(torch.cuda.is_available())\n        raw_count = int(torch.cuda.device_count())\n        count = raw_count if available else 0\n        names = [torch.cuda.get_device_name(i) for i in range(count)]\n    except Exception as exc:\n        available = False\n        raw_count = 0\n        count = 0\n        names = []\n        cuda_error = f'{type(exc).__name__}: {exc}'\n    payload.update({'selected_python_torch_import_ok': True, 'torch_version': getattr(torch, '__version__', None), 'selected_python_torch_cuda_version': getattr(torch.version, 'cuda', None), 'selected_python_torch_cuda_available': available, 'selected_python_device_count': count, 'selected_python_raw_device_count': raw_count, 'selected_python_device_names': names, 'selected_python_cuda_error': cuda_error})\nprint(json.dumps(payload, sort_keys=True))\n"
+    ],
+    "probe": "exp3247_torch_cuda_probe",
+    "python_version": "3.14.4 (main, May  3 2026, 17:15:39) [GCC 16.1.1 20260430]",
+    "returncode": 0,
+    "selected_python_cuda_error": null,
+    "selected_python_device_count": 0,
+    "selected_python_device_names": [],
+    "selected_python_raw_device_count": 1,
+    "selected_python_torch_cuda_available": false,
+    "selected_python_torch_cuda_version": "12.8",
+    "selected_python_torch_import_ok": true,
+    "stderr_excerpt": "/home/ianblenke/github.com/ianblenke/carnot/.venv/lib/python3.14/site-packages/torch/cuda/__init__.py:180: UserWarning: CUDA initialization: CUDA unknown error - this may be due to an incorrectly set up environment, e.g. changing env variable CUDA_VISIBLE_DEVICES after program start. Setting the available devices to be zero. (Triggered internally at /pytorch/c10/cuda/CUDAFunctions.cpp:119.)\n  return torch._C._cuda_getDeviceCount() > 0\n",
+    "stdout_excerpt": "{\"probe\": \"exp3247_torch_cuda_probe\", \"python_version\": \"3.14.4 (main, May  3 2026, 17:15:39) [GCC 16.1.1 20260430]\", \"selected_python_cuda_error\": null, \"selected_python_device_count\": 0, \"selected_python_device_names\": [], \"selected_python_raw_device_count\": 1, \"selected_python_torch_cuda_available\": false, \"selected_python_torch_cuda_version\": \"12.8\", \"selected_python_torch_import_ok\": true, \"torch_version\": \"2.11.0+cu128\"}\n",
+    "torch_version": "2.11.0+cu128"
+  },
+  "selected_python_version": "3.14.4 (main, May  3 2026, 17:15:39) [GCC 16.1.1 20260430]",
+  "task_id": "exp3247-selected-python-cuda-root-cause-surgery-v1",
+  "tests_run": [
+    "tests/python/test_experiment_3247_selected_python_cuda_root_cause_surgery.py coverage 100pct"
+  ],
+  "torch_cuda_build_before": "12.8",
+  "torch_version_before": "2.11.0+cu128"
+}
