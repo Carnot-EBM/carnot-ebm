@@ -1,0 +1,204 @@
+{
+  "artifact": "experiment_3267_close_v302_open_v303_corpus_queue",
+  "blocked_reasons": [],
+  "duration_s": 2.556735,
+  "experiment_id": "exp3267",
+  "honest_verdict": "complete: v302_closed_v303_opened=true; prior_paper_ready=false; prior_publication_blocker_count=105; prior_next_top_gap=full_15k_v4_corpus_across_shards_plus_repair_and_garak_gates; v4_shard_label_count=2000; v4_shard_auroc=0.791096; protected_files_untouched=true",
+  "inference_substrate": "artifact_aggregation_only",
+  "milestone": "2026.05.303",
+  "no_conductor_execution": true,
+  "no_new_cuda_probe": true,
+  "no_new_garak_run": true,
+  "no_new_kan_training": true,
+  "no_new_model_execution": true,
+  "no_new_repair_run": true,
+  "no_new_teacher_labeling": true,
+  "no_push": true,
+  "principle_annotations": {
+    "duration_s": "Retain timing evidence for ops retrospectives.",
+    "honest_verdict": "Use a terminal prefix without claiming paper readiness.",
+    "prior_next_top_gap": "Keep the next queue anchored to the capstone.",
+    "prior_paper_ready": "Preserve the publication-readiness signal.",
+    "prior_publication_blocker_count": "Track blocker movement across milestones.",
+    "protected_files_untouched": "Enforce operator constraints.",
+    "random_seed": "Keep aggregation reproducible.",
+    "reproducibility_checksum": "Provide a deterministic audit trail.",
+    "v302_closed_v303_opened": "Milestone boundaries must be machine-readable.",
+    "v4_shard_auroc": "Carry non-headline pilot evidence without inflating it.",
+    "v4_shard_label_count": "Preserve the corpus-scale starting point."
+  },
+  "prior_capstone_honest_verdict": "complete: capstone_v302_ready=true; paper_ready=false; publication_blocker_count=105; publication_blocker_delta=-1; cuda_recovery_unblocked_sota_receipt=true; next_top_gap=full_15k_v4_corpus_across_shards_plus_repair_and_garak_gates",
+  "prior_capstone_ready": true,
+  "prior_cuda_recovery_unblocked_sota_receipt": true,
+  "prior_milestone": "2026.05.302",
+  "prior_next_top_gap": "full_15k_v4_corpus_across_shards_plus_repair_and_garak_gates",
+  "prior_paper_ready": false,
+  "prior_publication_blocker_count": 105,
+  "protected_file_checksums": {
+    "research-roadmap.yaml": {
+      "after": "2bfb12a7117fac14739beabe1001936e313ee570733664758be6f85da94ed29e",
+      "before": "2bfb12a7117fac14739beabe1001936e313ee570733664758be6f85da94ed29e",
+      "unchanged": true
+    },
+    "scripts/research_conductor.py": {
+      "after": "f7253130513139845fb202c44bff1e7974079c0b666f6f8837dee6df3976edff",
+      "before": "f7253130513139845fb202c44bff1e7974079c0b666f6f8837dee6df3976edff",
+      "unchanged": true
+    }
+  },
+  "protected_files": [
+    "research-roadmap.yaml",
+    "scripts/research_conductor.py"
+  ],
+  "protected_files_untouched": true,
+  "random_seed": 3267,
+  "reproducibility_checksum": "14aa2601ef00b7d5e604f75295c8e06faad8d2f5fec72d34535dc7d07d984615",
+  "research_complete_prior_summary": {
+    "completed": "2026-05-28",
+    "first_task": "exp3260-archive-v301-activate-v302",
+    "last_task": "exp3266-capstone-v302",
+    "milestone": "2026.05.302",
+    "result_counts": {
+      "OK (conductor)": 7
+    },
+    "task_count": 7,
+    "task_ids": [
+      "exp3260-archive-v301-activate-v302",
+      "exp3261-cuda-recovery-confirmation-smoke-v1",
+      "exp3262-llama-cpp-cuda-receipt-smoke-v4",
+      "exp3263-sota-gguf-receipt-v9",
+      "exp3264-prompt-injection-teacher-label-shard-v3",
+      "exp3265-prompt-injection-kan-train-eval-shard-v3",
+      "exp3266-capstone-v302"
+    ],
+    "title": "CUDA-Recovered SOTA Receipt + v4 Teacher-Label Shard + Capstone"
+  },
+  "research_complete_update": {
+    "already_present": true,
+    "appended": false,
+    "path": "research-complete.yaml"
+  },
+  "run_date": "20260528",
+  "schema": "carnot.archive_activation.v302_to_v303_corpus_queue.v1",
+  "schema_version": "carnot.archive_activation.v302_to_v303_corpus_queue.v1",
+  "source_artifacts": [
+    {
+      "path": "results/experiment_3266_capstone_v302.json",
+      "present": true,
+      "readable": true,
+      "ready": true,
+      "role": "capstone_v302",
+      "sha256": "63d1c636ff7ea3f06232dcb361ae5925dc860a8ece429b55f60f757c26ca028e"
+    },
+    {
+      "path": "results/experiment_3264_prompt_injection_teacher_label_shard_v3.json",
+      "present": true,
+      "readable": true,
+      "ready": true,
+      "role": "teacher_label_shard_v3",
+      "sha256": "429c62f4940f97652dc5e2307316525a8ebcec234b14122197e5ec8e362e7d6a"
+    },
+    {
+      "path": "results/experiment_3265_prompt_injection_kan_train_eval_shard_v3.json",
+      "present": true,
+      "readable": true,
+      "ready": true,
+      "role": "kan_train_eval_shard_v3",
+      "sha256": "e149cef704055fdd38308db98284ff06ce3fd46cf13e6214da67082dd6dc46cd"
+    },
+    {
+      "path": "research-complete.yaml",
+      "present": true,
+      "readable": true,
+      "ready": true,
+      "role": "research_complete_archive",
+      "sha256": "d61da366a2eca915e18c68d7329c8ee685e58310ed5ebbd8acbd2831afa5e694"
+    },
+    {
+      "path": "research-roadmap.yaml",
+      "present": true,
+      "readable": true,
+      "ready": true,
+      "role": "active_v303_roadmap",
+      "sha256": "2bfb12a7117fac14739beabe1001936e313ee570733664758be6f85da94ed29e"
+    },
+    {
+      "path": "ops/conductor-log.md",
+      "present": true,
+      "readable": true,
+      "ready": true,
+      "role": "conductor_log_authority",
+      "sha256": "cc45ef856597fe1b5b043f3d51b523c7b641aff556b0c00c9336f06bf512c0c1"
+    },
+    {
+      "path": "scripts/research_conductor.py",
+      "present": true,
+      "readable": true,
+      "ready": true,
+      "role": "protected_research_conductor",
+      "sha256": "f7253130513139845fb202c44bff1e7974079c0b666f6f8837dee6df3976edff"
+    }
+  ],
+  "source_checksums": {
+    "ops/conductor-log.md": "cc45ef856597fe1b5b043f3d51b523c7b641aff556b0c00c9336f06bf512c0c1",
+    "research-complete.yaml": "d61da366a2eca915e18c68d7329c8ee685e58310ed5ebbd8acbd2831afa5e694",
+    "research-roadmap.yaml": "2bfb12a7117fac14739beabe1001936e313ee570733664758be6f85da94ed29e",
+    "results/experiment_3264_prompt_injection_teacher_label_shard_v3.json": "429c62f4940f97652dc5e2307316525a8ebcec234b14122197e5ec8e362e7d6a",
+    "results/experiment_3265_prompt_injection_kan_train_eval_shard_v3.json": "e149cef704055fdd38308db98284ff06ce3fd46cf13e6214da67082dd6dc46cd",
+    "results/experiment_3266_capstone_v302.json": "63d1c636ff7ea3f06232dcb361ae5925dc860a8ece429b55f60f757c26ca028e",
+    "scripts/research_conductor.py": "f7253130513139845fb202c44bff1e7974079c0b666f6f8837dee6df3976edff"
+  },
+  "task_id": "exp3267-close-v302-open-v303-corpus-queue",
+  "terminal_evidence": {
+    "capstone_v302_ready": true,
+    "cuda_recovery_unblocked_sota_receipt": true,
+    "honest_verdict": "complete: capstone_v302_ready=true; paper_ready=false; publication_blocker_count=105; publication_blocker_delta=-1; cuda_recovery_unblocked_sota_receipt=true; next_top_gap=full_15k_v4_corpus_across_shards_plus_repair_and_garak_gates",
+    "next_top_gap": "full_15k_v4_corpus_across_shards_plus_repair_and_garak_gates",
+    "paper_ready": false,
+    "publication_blocker_count": 105
+  },
+  "v302_closed_v303_opened": true,
+  "v303_activation_observed": true,
+  "v303_queue": {
+    "active_roadmap_exists": true,
+    "active_roadmap_path": "research-roadmap.yaml",
+    "milestone_doc": "openspec/change-proposals/research-roadmap-vNEXT.md",
+    "milestone_provenance": "Staged 2026-05-28 after milestone 2026.05.302 completed. Authority: results/experiment_3266_capstone_v302.json reports paper_ready=false, publication_blocker_count=105, cuda_recovery_unblocked_sota_receipt=true, v4 shard AUROC=0.791096, and next_top_gap=full_15k_v4_corpus_across_shards_plus_repair_and_garak_gates.",
+    "queue_first_task": "exp3267-close-v302-open-v303-corpus-queue",
+    "queue_task_count": 14,
+    "queue_task_ids": [
+      "exp3267-close-v302-open-v303-corpus-queue",
+      "exp3268-sota-receipt-methodology-supplement-v1",
+      "exp3269-prompt-injection-v4-full-corpus-split-manifest-v1",
+      "exp3270-prompt-injection-teacher-label-shards-2-4-v1",
+      "exp3271-prompt-injection-teacher-label-shards-5-7-garak-seed-v1",
+      "exp3272-prompt-injection-v4-full-corpus-assembly-leakage-audit-v1",
+      "exp3273-prompt-injection-kan-full-corpus-delong-eval-v1",
+      "exp3274-prompt-injection-v4-garak-dataflip-redteam-eval-v1",
+      "exp3275-clean-local-sota-verifier-rerun-v14",
+      "exp3276-repair-gate-decision-v8-after-v4-garak-clean-verifier",
+      "exp3277-sota-repair-micro-panel-v9",
+      "exp3278-fr11-full-corpus-continual-self-learning-audit-v1",
+      "exp3279-evidence-matrix-v35",
+      "exp3280-capstone-v303"
+    ],
+    "selected_queue_milestone": "2026.05.303"
+  },
+  "v4_shard_auroc": 0.791096,
+  "v4_shard_evidence": {
+    "kan_train_eval_shard_ready": true,
+    "kan_train_eval_shard_v3_ready": true,
+    "label_count_total": 2000,
+    "label_counts": {
+      "benign": 1459,
+      "injection": 541
+    },
+    "n_eval": 400,
+    "n_train": 1600,
+    "non_headline_note": "single-shard AUROC is a viability check only; it is not replacement-grade and cannot replace the full multi-shard 15k corpus plus DeLong non-inferiority plus Garak acceptance gates.",
+    "shard_auroc": 0.791096,
+    "teacher_label_shard_ready": true,
+    "teacher_label_shard_v3_ready": true
+  },
+  "v4_shard_label_count": 2000
+}

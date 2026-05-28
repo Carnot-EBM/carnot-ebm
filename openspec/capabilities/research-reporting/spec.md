@@ -12641,3 +12641,50 @@ readiness.
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-REPORT-3266 | Implemented (`python/carnot/reporting/capstone_v302_3266.py`) | Implemented (`tests/python/test_experiment_3266_capstone_v302.py`) |
+
+### REQ-REPORT-3267: Close V302 And Open V303 Corpus Queue Handoff
+
+The repository shall provide an Exp 3267 milestone-boundary handoff generator
+that writes `results/experiment_3267_close_v302_open_v303_corpus_queue.json`
+by reading the authoritative Exp 3266 capstone, the Exp 3264 teacher-label
+shard, the Exp 3265 KAN train/eval shard, `research-complete.yaml`, and the
+operator-protected files `research-roadmap.yaml` and
+`scripts/research_conductor.py`. The workflow MUST be aggregation only. It
+MUST append the `.302` milestone entry to `research-complete.yaml` only when
+that entry is missing, and it MUST NOT modify `research-roadmap.yaml` or
+`scripts/research_conductor.py`.
+
+The terminal artifact MUST include `v302_closed_v303_opened`,
+`prior_paper_ready`, `prior_publication_blocker_count`,
+`prior_next_top_gap`, `v4_shard_label_count`, `v4_shard_auroc`,
+`protected_files_untouched`, `random_seed`, `reproducibility_checksum`,
+`duration_s`, and `honest_verdict`. It SHALL also include compact source
+checksums, the `.302` archive update result, and a blocked/gap explanation.
+`prior_paper_ready`, `prior_publication_blocker_count`, and
+`prior_next_top_gap` MUST be copied from the Exp 3266 capstone without
+inflating publication readiness. `v4_shard_label_count` MUST preserve the
+Exp 3264 corpus-scale starting point, and `v4_shard_auroc` MUST preserve the
+Exp 3265 non-headline pilot evidence. `honest_verdict` MUST begin with one of
+`complete:`, `success:`, `passed:`, or `shipped:`.
+
+#### SCENARIO-REPORT-3267: Close V302 Opens V303 Full-Corpus Queue Anchor
+
+**Given** Exp 3266 reports `paper_ready=false`,
+`publication_blocker_count=105`, and
+`next_top_gap=full_15k_v4_corpus_across_shards_plus_repair_and_garak_gates`
+with ready Exp 3264 and Exp 3265 shard evidence
+**When** the Exp 3267 handoff generator runs
+**Then** it writes
+`results/experiment_3267_close_v302_open_v303_corpus_queue.json` with all
+required schema fields, sets `v302_closed_v303_opened=true`, carries forward
+the paper-readiness, blocker-count, next-gap, label-count, and AUROC evidence,
+reports protected files untouched, and emits an `honest_verdict` beginning
+with `complete:`. If the `.302` research-complete entry is already present,
+the workflow records that no append occurred and does not duplicate the
+milestone entry.
+
+## Implementation Status (REQ-REPORT-3267)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-3267 | Planned (`python/carnot/reporting/close_v302_open_v303_3267.py`) | Planned (`tests/python/test_experiment_3267_close_v302_open_v303.py`) |
