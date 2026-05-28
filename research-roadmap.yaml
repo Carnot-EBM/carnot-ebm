@@ -1,55 +1,56 @@
-milestone: "2026.05.300"
-milestone_title: "Runtime Receipt Recovery + Prompt-Injection KAN Split-Run + FR-11 Failure Memory"
+milestone: "2026.05.301"
+milestone_title: "Selected-Python CUDA Repair + Constraint-Tax Prompt Injection + Lifelong FR-11 Retention"
 milestone_doc: "openspec/change-proposals/research-roadmap-vNEXT.md"
 tasks:
-  - id: "exp3233-archive-v299-activate-v300"
-    milestone: "2026.05.300"
-    title: "Archive .299 closeout and activate .300 planning authority"
-    deliverable: "results/experiment_3233_archive_v299_activate_v300.json"
+  - id: "exp3246-archive-v300-activate-v301"
+    milestone: "2026.05.301"
+    title: "Archive .300 closeout and activate .301 planning authority"
+    deliverable: "results/experiment_3246_archive_v300_activate_v301.json"
     priority: "critical"
     max_turns: 20
     estimated_wall_time_min: 10
     prior_failures:
-      - experiment_id: "exp3221-archive-v298-activate-v299"
-        verdict: "complete: archive_v298_activate_v299_ready=true; prior_paper_ready=false; prior_publication_blocker_count=100; queue_path=research-roadmap.yaml"
-        addressed_by: "Recurring archive/activation task for the new milestone; this archives .299 rather than .298."
-        retire_if_same_verdict: false
+      - experiment_id: "exp3233-archive-v299-activate-v300"
+        verdict: "complete: archive_v299_activate_v300_ready=true; prior_paper_ready=false; prior_publication_blocker_count=100"
+        addressed_by: "Recurring archive/activation task for the new milestone; this archives .300 rather than .299 and activates .301."
+        retire_if_same_verdict: true
     prompt: |
       CONTEXT:
-      You are in {project_root} on {date}. Milestone 2026.05.299 completed as a narrow single-focus milestone: exp3221 archive completed, exp3222 Prompt-Injection KAN v4 failed three times without producing its artifact, and exp3223 capstone reported paper_ready=false, publication_blocker_count=100, v4_outcome=blocked_missing_exp3222_result, next_top_gap=cuda_chain_for_full_local_sota_receipts. This task stages the archival handoff for 2026.05.300. Do not modify research-roadmap.yaml.
+      You are in {project_root} on {date}. Milestone 2026.05.300 completed. The capstone reported paper_ready=false, publication_blocker_count=106, local_sota_receipt_status=blocked, prompt_injection_v4_status=gate_blocked, fr11_failure_memory_status=complete, and next_top_gap=repair_selected_python_torch_cuda_before_exp3237. This task archives .300 and records the activation facts for 2026.05.301. Do not modify research-roadmap.yaml.
 
       EXISTING CODE TO READ FIRST:
       - CLAUDE.md
       - CODEX.md
       - research-roadmap.yaml
       - research-roadmap-next.yaml
-      - results/experiment_3221_archive_v298_activate_v299.json
-      - results/experiment_3223_capstone_v299.json
-      - ops/conductor-log.md
+      - openspec/change-proposals/research-roadmap-vNEXT.md
+      - results/experiment_3245_capstone_v300.json
       - ops/status.md
       - ops/changelog.md
+      - ops/conductor-log.md
 
       TASK:
-      Create results/experiment_3233_archive_v299_activate_v300.json summarizing the .299 terminal state, the missing exp3222 v4 artifact, the activated .300 queue range, and the protected-file constraints for downstream tasks.
+      Create results/experiment_3246_archive_v300_activate_v301.json summarizing the .300 terminal state, the activated .301 queue range, and protected-file constraints for downstream tasks.
 
       CONCRETE STEPS:
-      1. Confirm research-roadmap.yaml still names milestone 2026.05.299 and research-roadmap-next.yaml names 2026.05.300.
-      2. Read exp3223 capstone and conductor-log entries for exp3222 failures.
-      3. Write a JSON artifact with the .299 summary, .300 queue ids, and a protected_files list that includes research-roadmap.yaml and scripts/research_conductor.py.
-      4. Include a note that exp3222 did not produce results/experiment_3222_prompt_injection_kan_distill_v4_15k.json.
-      5. Run the relevant lightweight validation command for the JSON artifact.
+      1. Confirm research-roadmap.yaml still names milestone 2026.05.300 and research-roadmap-next.yaml names 2026.05.301.
+      2. Read the .300 capstone, status, changelog, and conductor log entries for exp3236 through exp3245.
+      3. Record that the selected-Python CUDA boundary blocked local SOTA receipts and downstream prompt-injection/repair tasks.
+      4. Write a JSON artifact with the .300 summary, .301 queue ids, and a protected_files list that includes research-roadmap.yaml and scripts/research_conductor.py.
+      5. Run a lightweight JSON validation command for the artifact.
 
       REQUIRED ARTIFACT FIELDS:
-      - experiment_id: exp3233
-      - task_id: exp3233-archive-v299-activate-v300
-      - milestone: 2026.05.300
+      - experiment_id: exp3246
+      - task_id: exp3246-archive-v300-activate-v301
+      - milestone: 2026.05.301
       - inference_substrate: aggregation_from_upstream_artifacts
       - principle_annotations
-      - archive_v299_activate_v300_ready
+      - archive_v300_activate_v301_ready
       - prior_paper_ready
       - prior_publication_blocker_count
-      - prior_v4_outcome
-      - missing_v4_artifact_path
+      - prior_local_sota_receipt_status
+      - prior_prompt_injection_v4_status
+      - prior_fr11_failure_memory_status
       - next_top_gap
       - queue_first_task
       - queue_last_task
@@ -59,351 +60,350 @@ tasks:
       honest_verdict must begin with "complete:" and must not claim the paper is ready.
       Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
 
-  - id: "exp3234-cli-backend-failure-root-cause-ledger-v1"
-    milestone: "2026.05.300"
-    title: "Prompt-injection v4 CLI backend failure root-cause ledger"
-    deliverable: "results/experiment_3234_cli_backend_failure_root_cause_ledger_v1.json"
+  - id: "exp3247-selected-python-cuda-root-cause-surgery-v1"
+    milestone: "2026.05.301"
+    title: "Selected-Python CUDA root-cause surgery ledger"
+    deliverable: "results/experiment_3247_selected_python_cuda_root_cause_surgery_v1.json"
     priority: "critical"
-    max_turns: 30
-    estimated_wall_time_min: 15
-    prior_failures:
-      - experiment_id: "exp3222-prompt-injection-kan-distill-v4-15k"
-        verdict: "failed: Codex CLI error repeated three times; no prompt-injection v4 15k artifact produced"
-        addressed_by: "This attempt does not rerun 15k training; it decomposes the failure into backend, scope, artifact, and gating causes before any rerun."
-        retire_if_same_verdict: true
-    prompt: |
-      CONTEXT:
-      You are in {project_root} on {date}. The previous milestone's Prompt-Injection KAN v4 15k task failed before writing its artifact. The conductor log shows three failures with the same CLI error. This task is a diagnostic ledger, not a rerun of training or teacher labeling.
-
-      EXISTING CODE TO READ FIRST:
-      - CLAUDE.md
-      - research-roadmap.yaml
-      - openspec/change-proposals/research-roadmap-vNEXT.md
-      - ops/conductor-log.md
-      - results/experiment_3223_capstone_v299.json
-      - results/prompt_injection_kan_v2.json
-      - results/prompt_injection_teacher_labels_v2.json
-      - scripts/experiment_template.py
-
-      TASK:
-      Create results/experiment_3234_cli_backend_failure_root_cause_ledger_v1.json explaining why the monolithic exp3222 v4 task should be split and what concrete artifacts must exist before another prompt-injection KAN headline attempt.
-
-      CONCRETE STEPS:
-      1. Extract the exp3222 failure lines from ops/conductor-log.md.
-      2. Check whether the exp3222 v4 deliverable exists; record absence or presence.
-      3. Compare the failed monolith against the cached_sota_pair() and model-spec discipline in scripts/experiment_template.py.
-      4. Produce a split-run plan with required manifest, teacher-label shard, KAN train/eval shard, and garak/config receipts.
-      5. Do not call an LLM and do not train a model in this diagnostic task.
-
-      REQUIRED ARTIFACT FIELDS:
-      - experiment_id: exp3234
-      - task_id: exp3234-cli-backend-failure-root-cause-ledger-v1
-      - milestone: 2026.05.300
-      - inference_substrate: aggregation_from_upstream_artifacts
-      - principle_annotations
-      - exp3222_artifact_exists
-      - exp3222_failure_count
-      - repeated_cli_error_signature
-      - monolith_rerun_allowed
-      - split_run_plan_ready
-      - required_next_artifacts
-      - model_spec_gap_found
-      - honest_verdict
-
-      honest_verdict must begin with "complete:" and must not claim v4 training or v4 labels exist.
-      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
-
-  - id: "exp3235-cuda-driver-boundary-operator-package-v1"
-    milestone: "2026.05.300"
-    title: "CUDA driver boundary operator package for selected Python and llama.cpp"
-    deliverable: "results/experiment_3235_cuda_driver_boundary_operator_package_v1.json"
-    priority: "critical"
+    requires_gpu: true
     max_turns: 100
     model: "opus"
-    estimated_wall_time_min: 30
+    estimated_wall_time_min: 35
     prior_failures:
+      - experiment_id: "exp3236-isolated-cuda-python-smoke-v1"
+        verdict: "complete: cuda_python_smoke_passed=false; selected_python_torch_cuda_unavailable; cuda_bindings_runtime_no_devices"
+        addressed_by: "This task performs root-cause surgery and environment isolation before the next smoke, rather than repeating the same selected-Python probe."
+        retire_if_same_verdict: true
       - experiment_id: "exp3220-hermetic-cuda-runtime-repair-ledger-v1"
         verdict: "blocked_cuda_runtime: cuda_receipt_ready_candidate=false; recommended_next_action=repair_system_driver_cuda_runtime_boundary"
-        addressed_by: "This task does not repeat the same probe; it consolidates the operator handoff package and acceptance conditions before the next isolated smoke."
+        addressed_by: "This task uses .300's selected-Python failure fields to distinguish driver visibility, Python environment, PyTorch CUDA, and cuda.bindings runtime causes."
         retire_if_same_verdict: true
       - experiment_id: "exp3207-llama-cpp-cuda-rebuild-clean-subprocess-v1"
         verdict: "blocked_selected_python_torch_cuda: selected_python_torch_cuda_unavailable"
-        addressed_by: "The package explicitly separates selected Python CUDA init, isolated CUDA runtime, and llama.cpp offload acceptance conditions."
+        addressed_by: "This task does not rebuild llama.cpp; it first repairs or isolates the selected Python CUDA layer that blocked prior llama.cpp work."
         retire_if_same_verdict: true
     prompt: |
       CONTEXT:
-      You are in {project_root} on {date}. The .297 and .298 CUDA work proved the selected Python runtime and llama.cpp CUDA boundary are the publication blocker. This task prepares a precise operator package and acceptance contract. It should not claim CUDA is fixed.
+      You are in {project_root} on {date}. The .300 runtime chain stopped at exp3236: selected Python could not initialize CUDA, and downstream llama.cpp/SOTA tasks correctly skipped. This is a hardware/runtime root-cause ledger and safe repair attempt. It may fail honestly; the output must still be useful for gating.
 
       EXISTING CODE TO READ FIRST:
       - CLAUDE.md
+      - CODEX.md
       - research-hardware-wishlist.md
-      - results/experiment_3206_cuda_env_forensics_ledger_v1.json
-      - results/experiment_3207_llama_cpp_cuda_rebuild_clean_subprocess_v1.json
-      - results/experiment_3220_hermetic_cuda_runtime_repair_ledger_v1.json
-      - results/experiment_3232_capstone_v298.json
-      - results/experiment_3223_capstone_v299.json
+      - scripts/experiment_template.py
+      - results/experiment_3235_cuda_driver_boundary_operator_package_v1.json
+      - results/experiment_3236_isolated_cuda_python_smoke_v1.json
+      - results/experiment_3245_capstone_v300.json
+      - ops/status.md
       - ops/conductor-log.md
 
       TASK:
-      Create results/experiment_3235_cuda_driver_boundary_operator_package_v1.json with a concrete operator-ready boundary package for selected Python CUDA and llama.cpp CUDA/offload recovery.
+      Create results/experiment_3247_selected_python_cuda_root_cause_surgery_v1.json with a precise root-cause classification, safe repair actions attempted, and a downstream next_smoke_allowed gate for exp3248.
 
       CONCRETE STEPS:
-      1. Summarize the prior CUDA failure evidence without rerunning heavyweight model inference.
-      2. Identify which probe belongs to driver visibility, selected Python torch CUDA init, cuda.bindings runtime init, and llama.cpp GPU offload support.
-      3. Define acceptance criteria for exp3236 and exp3237, including exact boolean fields that downstream gates can consume.
-      4. Include a short "do not do" list that forbids blind full GGUF receipt reruns before the smoke fields pass.
-      5. If you run local commands, keep them to non-destructive diagnostics.
+      1. PRECONDITION STEP 0: Record nvidia-smi visibility, selected Python path, Python version, torch version, torch CUDA build, cuda.bindings import status, CUDA_VISIBLE_DEVICES, LD_LIBRARY_PATH, and any active virtual environment. Set preconditions_checked=true only after these checks are captured.
+      2. Compare .300 exp3236 failure fields against the live environment; classify the failure as driver_absent, selected_python_env_mismatch, torch_cuda_build_mismatch, cuda_bindings_runtime_failure, permission/device_visibility_failure, or unresolved.
+      3. Attempt only safe, non-destructive repairs inside the selected project environment or an explicitly named throwaway environment. Do not uninstall system drivers and do not use destructive package operations.
+      4. If a repair candidate is found, run the smallest torch.cuda and cuda.bindings subprocess probes needed to justify next_smoke_allowed=true.
+      5. Write the artifact with exact commands, stdout/stderr excerpts, return codes, root-cause class, and recommended next task.
 
       REQUIRED ARTIFACT FIELDS:
-      - experiment_id: exp3235
-      - task_id: exp3235-cuda-driver-boundary-operator-package-v1
-      - milestone: 2026.05.300
-      - inference_substrate: aggregation_from_upstream_artifacts
+      - experiment_id: exp3247
+      - task_id: exp3247-selected-python-cuda-root-cause-surgery-v1
+      - milestone: 2026.05.301
+      - inference_substrate: hardware_smoke
       - principle_annotations
-      - cuda_boundary_package_ready
-      - selected_python_acceptance_contract
-      - isolated_cuda_acceptance_contract
-      - llama_cpp_acceptance_contract
-      - full_gguf_rerun_allowed_now
-      - recommended_next_task
+      - preconditions_checked
+      - cuda_root_cause_class
+      - selected_python_path
+      - selected_python_torch_cuda_available_before
+      - cuda_bindings_device_count_before
+      - repair_actions_attempted
+      - selected_python_torch_cuda_available_after
+      - cuda_bindings_device_count_after
+      - selected_python_cuda_repaired_candidate
+      - next_smoke_allowed
+      - random_seed
+      - reproducibility_checksum
       - protected_files_untouched
       - honest_verdict
 
-      honest_verdict must begin with "complete:" and must not claim the runtime is repaired.
+      honest_verdict must begin with "complete:" even if next_smoke_allowed=false; represent the block in fields.
       Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
 
-  - id: "exp3236-isolated-cuda-python-smoke-v1"
-    milestone: "2026.05.300"
-    title: "Isolated CUDA and selected-Python smoke receipt"
-    deliverable: "results/experiment_3236_isolated_cuda_python_smoke_v1.json"
+  - id: "exp3248-isolated-cuda-selected-python-smoke-v2"
+    milestone: "2026.05.301"
+    title: "Isolated selected-Python CUDA smoke v2 gated on root-cause surgery"
+    deliverable: "results/experiment_3248_isolated_cuda_selected_python_smoke_v2.json"
     priority: "critical"
     requires_gpu: true
     max_turns: 100
     model: "opus"
     estimated_wall_time_min: 30
+    gated_on:
+      - upstream: "exp3247-selected-python-cuda-root-cause-surgery-v1"
+        artifact_field: "next_smoke_allowed"
+        op: "=="
+        value: true
     prior_failures:
+      - experiment_id: "exp3236-isolated-cuda-python-smoke-v1"
+        verdict: "complete: cuda_python_smoke_passed=false; selected_python_torch_cuda_unavailable; cuda_bindings_runtime_no_devices"
+        addressed_by: "This v2 smoke is gated on exp3247 root-cause surgery and uses the repair candidate instead of repeating the same failed smoke blindly."
+        retire_if_same_verdict: true
       - experiment_id: "exp3220-hermetic-cuda-runtime-repair-ledger-v1"
-        verdict: "blocked_cuda_runtime: cuda_receipt_ready_candidate=false; recommended_next_action=repair_system_driver_cuda_runtime_boundary"
-        addressed_by: "This task runs the next isolated smoke after the operator package, with explicit pass/fail fields for gating rather than a broad repair ledger."
+        verdict: "blocked_cuda_runtime: cuda_receipt_ready_candidate=false"
+        addressed_by: "This task emits a narrow cuda_python_smoke_passed gate after root-cause classification, not a broad repair ledger."
         retire_if_same_verdict: true
       - experiment_id: "exp3207-llama-cpp-cuda-rebuild-clean-subprocess-v1"
         verdict: "blocked_selected_python_torch_cuda: selected_python_torch_cuda_unavailable"
-        addressed_by: "This task directly compares selected Python and isolated CUDA probes before any llama.cpp or SOTA model work."
+        addressed_by: "This task tests selected Python CUDA directly before llama.cpp or full model receipt work."
         retire_if_same_verdict: true
     prompt: |
       CONTEXT:
-      You are in {project_root} on {date}. This is a hardware smoke task. It may fail; that is acceptable if the artifact is honest. Do not run full GGUF model inference here.
+      You are in {project_root} on {date}. This hardware smoke runs only if exp3247 emitted next_smoke_allowed=true. It should test the selected Python CUDA boundary honestly and should not load the mandated GGUF models.
 
       EXISTING CODE TO READ FIRST:
       - CLAUDE.md
       - research-hardware-wishlist.md
-      - results/experiment_3235_cuda_driver_boundary_operator_package_v1.json
-      - results/experiment_3220_hermetic_cuda_runtime_repair_ledger_v1.json
       - scripts/experiment_template.py
+      - results/experiment_3247_selected_python_cuda_root_cause_surgery_v1.json
+      - results/experiment_3236_isolated_cuda_python_smoke_v1.json
 
       TASK:
-      Create results/experiment_3236_isolated_cuda_python_smoke_v1.json by running the smallest useful CUDA probes for selected Python and an isolated CUDA-only context.
+      Create results/experiment_3248_isolated_cuda_selected_python_smoke_v2.json by running the smallest selected-Python CUDA probes needed to unblock llama.cpp receipt work.
 
       CONCRETE STEPS:
-      1. Record nvidia-smi visibility if available.
-      2. In the selected project Python, run a clean subprocess that imports torch and records torch.cuda.is_available(), device_count, CUDA version, and device names.
-      3. Run a cuda.bindings runtime device-count probe if available.
-      4. Do not rebuild llama.cpp and do not load mandated GGUF models in this task.
-      5. Emit cuda_python_smoke_passed=true only if the selected Python path can initialize CUDA and see at least one device.
+      1. PRECONDITION STEP 0: Confirm exp3247 next_smoke_allowed=true, record selected Python path, environment variables, nvidia-smi output if available, and GPU device visibility. Set preconditions_checked=true only after this is captured.
+      2. In the selected project Python, run clean subprocess probes for torch import, torch.cuda.is_available(), device_count, CUDA version, device name, and a tiny tensor allocation on CUDA.
+      3. Run cuda.bindings runtime device-count and minimal context/probe if available.
+      4. Do not rebuild llama.cpp and do not load GGUF models.
+      5. Emit cuda_python_smoke_passed=true only if selected Python can initialize CUDA and at least one device is visible through torch or the CUDA runtime.
 
       REQUIRED ARTIFACT FIELDS:
-      - experiment_id: exp3236
-      - task_id: exp3236-isolated-cuda-python-smoke-v1
-      - milestone: 2026.05.300
+      - experiment_id: exp3248
+      - task_id: exp3248-isolated-cuda-selected-python-smoke-v2
+      - milestone: 2026.05.301
       - inference_substrate: hardware_smoke
       - principle_annotations
+      - preconditions_checked
+      - upstream_next_smoke_allowed
       - cuda_driver_visible
       - selected_python_torch_import_ok
       - selected_python_torch_cuda_available
       - selected_python_device_count
+      - selected_python_tiny_tensor_ok
       - cuda_bindings_import_ok
       - cuda_bindings_device_count
       - cuda_python_smoke_passed
+      - random_seed
+      - reproducibility_checksum
       - recommended_next_task
       - honest_verdict
 
       honest_verdict must begin with "complete:" even if cuda_python_smoke_passed=false; represent the block in fields.
       Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
 
-  - id: "exp3237-llama-cpp-cuda-receipt-smoke-v2"
-    milestone: "2026.05.300"
-    title: "llama.cpp CUDA receipt smoke v2 gated on selected-Python CUDA"
-    deliverable: "results/experiment_3237_llama_cpp_cuda_receipt_smoke_v2.json"
+  - id: "exp3249-llama-cpp-cuda-receipt-smoke-v3"
+    milestone: "2026.05.301"
+    title: "llama.cpp CUDA receipt smoke v3 gated on selected-Python CUDA"
+    deliverable: "results/experiment_3249_llama_cpp_cuda_receipt_smoke_v3.json"
     priority: "critical"
     requires_gpu: true
     max_turns: 100
     model: "opus"
     estimated_wall_time_min: 40
     gated_on:
-      - upstream: "exp3236-isolated-cuda-python-smoke-v1"
+      - upstream: "exp3248-isolated-cuda-selected-python-smoke-v2"
         artifact_field: "cuda_python_smoke_passed"
         op: "=="
         value: true
     prior_failures:
+      - experiment_id: "exp3237-llama-cpp-cuda-receipt-smoke-v2"
+        verdict: "blocked_gate_check_failed: exp3236 cuda_python_smoke_passed=false"
+        addressed_by: "This v3 receipt is gated on the new exp3248 selected-Python smoke after root-cause surgery."
+        retire_if_same_verdict: true
       - experiment_id: "exp3221-llama-cpp-cuda-offload-receipt-smoke-v1"
         verdict: "blocked_gate_check_failed: exp3220 cuda_receipt_ready_candidate=false"
-        addressed_by: "This task is gated on the new exp3236 selected-Python smoke instead of the retired exp3220 candidate field."
+        addressed_by: "This task is gated on selected-Python CUDA success rather than a retired candidate field."
         retire_if_same_verdict: true
       - experiment_id: "exp3207-llama-cpp-cuda-rebuild-clean-subprocess-v1"
         verdict: "blocked_selected_python_torch_cuda: selected_python_torch_cuda_unavailable"
-        addressed_by: "This task only runs after selected-Python CUDA is confirmed and uses a smaller llama.cpp receipt smoke."
+        addressed_by: "This task only runs after selected-Python CUDA is confirmed and emits a smaller llama.cpp receipt smoke."
         retire_if_same_verdict: true
     prompt: |
       CONTEXT:
-      You are in {project_root} on {date}. This task runs only if exp3236 emitted cuda_python_smoke_passed=true. It is a llama.cpp/offload receipt smoke, not the full SOTA receipt.
+      You are in {project_root} on {date}. This task runs only if exp3248 emitted cuda_python_smoke_passed=true. It is a llama.cpp/offload receipt smoke, not the full mandated SOTA receipt.
 
       EXISTING CODE TO READ FIRST:
       - CLAUDE.md
-      - results/experiment_3236_isolated_cuda_python_smoke_v1.json
-      - results/experiment_3220_hermetic_cuda_runtime_repair_ledger_v1.json
+      - research-hardware-wishlist.md
       - scripts/experiment_template.py
-      - scripts/conductor_gates.py
+      - results/experiment_3248_isolated_cuda_selected_python_smoke_v2.json
+      - results/experiment_3237_llama_cpp_cuda_receipt_smoke_v2.json
+      - ops/status.md
 
       TASK:
-      Create results/experiment_3237_llama_cpp_cuda_receipt_smoke_v2.json with a minimal llama.cpp CUDA/offload receipt that downstream full-GGUF work can trust.
+      Create results/experiment_3249_llama_cpp_cuda_receipt_smoke_v3.json with a minimal llama.cpp CUDA/offload receipt that can gate the full SOTA receipt.
 
       CONCRETE STEPS:
-      1. Load the exp3236 artifact and confirm the gate condition yourself before doing any work.
-      2. Inspect installed llama-cpp-python metadata and system info for CUDA/offload support.
-      3. Run the smallest available llama.cpp load/generation/offload smoke using a tiny or known local model if one is already cached; do not download headline models.
-      4. Record n_gpu_layers/ngl or equivalent offload settings and actual support flags.
-      5. Set llama_cpp_cuda_receipt_ready=true only if GPU offload is supported and the smoke completes without CPU-only fallback.
+      1. PRECONDITION STEP 0: Confirm exp3248 cuda_python_smoke_passed=true, record selected Python path, GPU visibility, llama.cpp binary or Python binding path, and whether a tiny/local test GGUF exists. Set preconditions_checked=true after capturing these facts.
+      2. Inspect existing llama.cpp helpers or bindings used by Carnot; do not run a full mandated model receipt in this task.
+      3. Run the smallest llama.cpp command or binding call that proves GPU/offload is configured, using a tiny local GGUF if available or a dry-run/device probe if no model is available.
+      4. Record command, return code, stderr/stdout signatures, offload layer count, GPU memory signal if available, and elapsed time.
+      5. Set llama_cpp_cuda_receipt_ready=true only if the receipt shows CUDA/offload support without falling back to CPU-only.
 
       REQUIRED ARTIFACT FIELDS:
-      - experiment_id: exp3237
-      - task_id: exp3237-llama-cpp-cuda-receipt-smoke-v2
-      - milestone: 2026.05.300
+      - experiment_id: exp3249
+      - task_id: exp3249-llama-cpp-cuda-receipt-smoke-v3
+      - milestone: 2026.05.301
       - inference_substrate: hardware_smoke
       - principle_annotations
+      - preconditions_checked
       - upstream_cuda_python_smoke_passed
-      - llama_cpp_import_ok
-      - llama_cpp_supports_gpu_offload
-      - llama_cpp_system_info
-      - offload_smoke_passed
+      - llama_cpp_binary_or_binding
+      - llama_cpp_cuda_build_detected
+      - offload_probe_attempted
+      - offload_probe_success
+      - offload_layer_count
+      - cpu_only_fallback_detected
       - llama_cpp_cuda_receipt_ready
+      - random_seed
+      - reproducibility_checksum
       - recommended_next_task
       - honest_verdict
 
       honest_verdict must begin with "complete:" even if llama_cpp_cuda_receipt_ready=false; represent the block in fields.
       Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
 
-  - id: "exp3238-sota-gguf-receipt-v7"
-    milestone: "2026.05.300"
-    title: "Mandated local SOTA GGUF receipt v7 gated on llama.cpp CUDA readiness"
-    deliverable: "results/experiment_3238_sota_gguf_receipt_v7.json"
+  - id: "exp3250-sota-gguf-receipt-v8"
+    milestone: "2026.05.301"
+    title: "Mandated SOTA GGUF receipt v8 gated on llama.cpp CUDA"
+    deliverable: "results/experiment_3250_sota_gguf_receipt_v8.json"
     priority: "critical"
     requires_gpu: true
     max_turns: 100
     model: "opus"
-    estimated_wall_time_min: 60
+    estimated_wall_time_min: 70
     gated_on:
-      - upstream: "exp3237-llama-cpp-cuda-receipt-smoke-v2"
+      - upstream: "exp3249-llama-cpp-cuda-receipt-smoke-v3"
         artifact_field: "llama_cpp_cuda_receipt_ready"
         op: "=="
         value: true
     prior_failures:
+      - experiment_id: "exp3238-sota-gguf-receipt-v7"
+        verdict: "blocked_preemptive_skip: upstream exp3237 llama.cpp CUDA receipt missing or false"
+        addressed_by: "This v8 receipt is gated on exp3249 after selected-Python CUDA repair and must emit per-model receipts."
+        retire_if_same_verdict: true
       - experiment_id: "exp3222-full-local-sota-receipt-v6"
         verdict: "blocked_preemptive_skip: upstream exp3221 llama.cpp CUDA receipt retired or missing"
-        addressed_by: "This task is gated on a new exp3237 llama.cpp receipt and must emit per-model receipts, not a broad skipped artifact."
+        addressed_by: "This task uses the new selected-Python and llama.cpp smoke chain before full model receipts."
         retire_if_same_verdict: true
       - experiment_id: "exp3208-full-local-sota-receipt-v5"
         verdict: "blocked_gate_check_failed: exp3207 cuda_receipt_ready=false"
-        addressed_by: "This task uses the new two-stage exp3236 and exp3237 smoke chain before full model receipts."
+        addressed_by: "This task requires exp3248 and exp3249 success before attempting full SOTA local receipts."
         retire_if_same_verdict: true
     prompt: |
       CONTEXT:
-      You are in {project_root} on {date}. This task is the local SOTA authority gate for later live-LLM experiments. Run it only if exp3237 says llama_cpp_cuda_receipt_ready=true. Legacy small models may be used only as CPU smoke tests and must not populate headline fields.
+      You are in {project_root} on {date}. This task is the local SOTA authority gate for later live-LLM experiments. Run it only if exp3249 says llama_cpp_cuda_receipt_ready=true. Legacy small models may be used only as CPU smoke tests and must not populate headline fields.
 
       EXISTING CODE TO READ FIRST:
       - CLAUDE.md
       - scripts/experiment_template.py
-      - results/experiment_3237_llama_cpp_cuda_receipt_smoke_v2.json
+      - results/experiment_3249_llama_cpp_cuda_receipt_smoke_v3.json
       - research-hardware-wishlist.md
       - ops/status.md
 
       TASK:
-      Create results/experiment_3238_sota_gguf_receipt_v7.json with per-model local receipt evidence for the mandated GGUF models and a clean_rerun_allowed field for downstream verifier and repair tasks.
+      Create results/experiment_3250_sota_gguf_receipt_v8.json with per-model local receipt evidence for the mandated GGUF models and clean gate fields for downstream teacher-label and repair tasks.
 
       CONCRETE STEPS:
-      1. Confirm the exp3237 gate and fail closed if the artifact is missing or false.
+      1. PRECONDITION STEP 0: Confirm exp3249 llama_cpp_cuda_receipt_ready=true, GPU visibility, llama.cpp CUDA/offload availability, cached GGUF paths or approved model lookup helper, and Hugging Face credential availability if lookup is needed. Set preconditions_checked=true after these checks.
       2. Define MODEL_SPECS exactly as:
          - unsloth/Qwen3.6-35B-A3B-GGUF
          - unsloth/gemma-4-31B-it-GGUF
          - unsloth/gemma-4-26B-A4B-it-GGUF
-      3. For each cached model, run the smallest deterministic receipt that records local path, quantization, context, GPU/offload settings, prompt, output hash, token count, and elapsed time.
-      4. Do not download models unless the project already has an approved cached-model helper. If a model is missing, record it as missing rather than substituting a legacy small model.
-      5. Set clean_rerun_allowed=true only if at least one mandated model has a successful GPU/offload receipt and no stale/fabricated-artifact warning is present.
+      3. Prefer the scripts/experiment_template.py cached_sota_pair() pattern when available, but record all three mandated model specs in the artifact.
+      4. For each cached model, run the smallest deterministic receipt that records local path, quantization, context, GPU/offload settings, prompt, output hash, token count, elapsed time, and memory evidence if available.
+      5. Do not download models unless the project already has an approved cached-model helper. If a model is missing, record it as missing rather than substituting a legacy small model.
+      6. Set clean_rerun_allowed=true only if at least one mandated model has a successful GPU/offload receipt and no stale/fabricated-artifact warning is present.
 
       REQUIRED ARTIFACT FIELDS:
-      - experiment_id: exp3238
-      - task_id: exp3238-sota-gguf-receipt-v7
-      - milestone: 2026.05.300
+      - experiment_id: exp3250
+      - task_id: exp3250-sota-gguf-receipt-v8
+      - milestone: 2026.05.301
       - inference_substrate: live_llm_inference
       - principle_annotations
+      - preconditions_checked
       - MODEL_SPECS
       - upstream_llama_cpp_cuda_receipt_ready
       - model_receipts
+      - models_used
       - mandatory_model_receipt_count
       - all_missing_models
       - sota_gguf_receipt_ready
       - clean_rerun_allowed
       - legacy_models_used_only_for_smoke
+      - random_seed
+      - reproducibility_checksum
       - honest_verdict
 
       honest_verdict must begin with "complete:" even if clean_rerun_allowed=false; represent missing receipts in fields.
       Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
 
-  - id: "exp3239-prompt-injection-kan-v4-resource-manifest-v1"
-    milestone: "2026.05.300"
-    title: "Prompt-injection KAN v4 resource manifest and shard plan"
-    deliverable: "results/experiment_3239_prompt_injection_kan_v4_resource_manifest_v1.json"
+  - id: "exp3251-prompt-injection-v4-constraint-tax-manifest-v2"
+    milestone: "2026.05.301"
+    title: "Prompt-injection v4 constraint-tax manifest refresh"
+    deliverable: "results/experiment_3251_prompt_injection_v4_constraint_tax_manifest_v2.json"
     priority: "high"
     max_turns: 30
     estimated_wall_time_min: 20
     prior_failures:
+      - experiment_id: "exp3239-prompt-injection-kan-v4-resource-manifest-v1"
+        verdict: "complete: v4_manifest_ready=true; teacher_label_plan_ready=true; no_llm_invoked=true"
+        addressed_by: "This refresh adds the post-.300 constraint-tax control plan and ConstrainPrompt baseline without rerunning labels or training."
+        retire_if_same_verdict: true
       - experiment_id: "exp3222-prompt-injection-kan-distill-v4-15k"
         verdict: "failed: Codex CLI error repeated three times; no prompt-injection v4 15k artifact produced"
-        addressed_by: "This task creates only the manifest, shard, power, and garak/config plan before any teacher labeling or training."
+        addressed_by: "This task is manifest-only and explicitly avoids the failed monolithic 15k distillation shape."
         retire_if_same_verdict: true
     prompt: |
       CONTEXT:
-      You are in {project_root} on {date}. The 15k prompt-injection KAN monolith failed. This task builds the manifest and shard plan only. Do not invoke any LLM and do not train.
+      You are in {project_root} on {date}. The .300 prompt-injection v4 manifest exists, but downstream labels were gate-blocked by the missing SOTA receipt. New 2026 work on constraint tax means the next teacher-label shard must compare free-reasoning and schema-constrained arms.
 
       EXISTING CODE TO READ FIRST:
       - CLAUDE.md
       - research-references.md
+      - results/experiment_3239_prompt_injection_kan_v4_resource_manifest_v1.json
       - results/experiment_3234_cli_backend_failure_root_cause_ledger_v1.json
       - results/prompt_injection_kan_v2.json
       - results/prompt_injection_teacher_labels_v2.json
       - scripts/experiment_template.py
 
       TASK:
-      Create results/experiment_3239_prompt_injection_kan_v4_resource_manifest_v1.json defining the prompt-injection v4 corpus, shard, model-spec, teacher-label, DeLong, and garak/config plan.
+      Create results/experiment_3251_prompt_injection_v4_constraint_tax_manifest_v2.json defining the v4 teacher-label shard, free-reasoning arm, schema-constrained arm, ConstrainPrompt baseline, and downstream KAN train/eval contract.
 
       CONCRETE STEPS:
-      1. Inventory existing prompt-injection datasets and artifacts without generating new labels.
-      2. Define shard sizes for smoke, pilot, and full phases; make the first teacher-label shard small enough to finish reliably.
-      3. Define MODEL_SPECS requirements for downstream live-LLM tasks, including at least one mandated SOTA GGUF model.
-      4. Define a DeLong/non-inferiority plan and garak/config receipt path.
-      5. Set v4_manifest_ready=true only if the artifact names concrete input paths and downstream deliverables.
+      1. Read the post-.300 research-references entries for Constraint Tax, ConstrainPrompt, DCCD, and SEVerA.
+      2. Inventory existing prompt-injection datasets and exp3239 manifest fields without generating new labels.
+      3. Define a paired shard plan where the same examples are labeled under free-reasoning and schema-constrained prompts.
+      4. Define parseability, verifier agreement, abstention, latency, and reasoning-quality fields needed to measure constraint_tax_delta_accuracy_or_parse.
+      5. Set v4_manifest_v2_ready=true only if concrete input paths, prompt arms, output schema, and downstream deliverables are named.
 
       REQUIRED ARTIFACT FIELDS:
-      - experiment_id: exp3239
-      - task_id: exp3239-prompt-injection-kan-v4-resource-manifest-v1
-      - milestone: 2026.05.300
+      - experiment_id: exp3251
+      - task_id: exp3251-prompt-injection-v4-constraint-tax-manifest-v2
+      - milestone: 2026.05.301
       - inference_substrate: aggregation_from_upstream_artifacts
       - principle_annotations
-      - v4_manifest_ready
+      - v4_manifest_v2_ready
       - corpus_input_paths
-      - shard_plan
+      - paired_shard_plan
+      - free_reasoning_arm
+      - schema_constrained_arm
+      - constrainprompt_baseline_plan
+      - constraint_tax_control_plan_ready
+      - teacher_label_shard_contract
       - downstream_MODEL_SPECS_required
-      - teacher_label_plan_ready
-      - delong_plan_ready
       - garak_config_ready
       - no_llm_invoked
       - honest_verdict
@@ -411,147 +411,179 @@ tasks:
       honest_verdict must begin with "complete:" and must not claim labels or trained KAN metrics exist.
       Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
 
-  - id: "exp3240-prompt-injection-kan-teacher-label-shard-v1"
-    milestone: "2026.05.300"
-    title: "Prompt-injection KAN v4 teacher-label shard gated on manifest and SOTA receipt"
-    deliverable: "results/experiment_3240_prompt_injection_kan_teacher_label_shard_v1.json"
+  - id: "exp3252-prompt-injection-teacher-label-shard-v2"
+    milestone: "2026.05.301"
+    title: "Prompt-injection teacher-label shard v2 gated on SOTA receipt and constraint-tax manifest"
+    deliverable: "results/experiment_3252_prompt_injection_teacher_label_shard_v2.json"
     priority: "high"
     requires_gpu: true
-    max_turns: 50
-    estimated_wall_time_min: 45
+    max_turns: 100
+    model: "opus"
+    estimated_wall_time_min: 60
     gated_on:
-      - upstream: "exp3239-prompt-injection-kan-v4-resource-manifest-v1"
-        artifact_field: "v4_manifest_ready"
-        op: "=="
-        value: true
-      - upstream: "exp3238-sota-gguf-receipt-v7"
+      - upstream: "exp3250-sota-gguf-receipt-v8"
         artifact_field: "sota_gguf_receipt_ready"
         op: "=="
         value: true
+      - upstream: "exp3251-prompt-injection-v4-constraint-tax-manifest-v2"
+        artifact_field: "v4_manifest_v2_ready"
+        op: "=="
+        value: true
     prior_failures:
+      - experiment_id: "exp3240-prompt-injection-kan-teacher-label-shard-v1"
+        verdict: "blocked_gate_check_failed: exp3238 sota_gguf_receipt_ready missing or false"
+        addressed_by: "This v2 shard is gated on exp3250 SOTA receipt and adds paired free/schema constraint-tax arms."
+        retire_if_same_verdict: true
       - experiment_id: "exp3222-prompt-injection-kan-distill-v4-15k"
         verdict: "failed: Codex CLI error repeated three times; no prompt-injection v4 15k artifact produced"
         addressed_by: "This is a small gated teacher-label shard with explicit mandated SOTA MODEL_SPECS, not the full 15k distillation task."
         retire_if_same_verdict: true
     prompt: |
       CONTEXT:
-      You are in {project_root} on {date}. This task invokes LLM inference and must use mandated SOTA local GGUF MODEL_SPECS. It is a small shard only; do not run the 15k full corpus.
+      You are in {project_root} on {date}. This task invokes LLM inference and must use mandated SOTA local GGUF MODEL_SPECS. It is a small paired teacher-label shard only; do not run the 15k full corpus.
 
       EXISTING CODE TO READ FIRST:
       - CLAUDE.md
       - scripts/experiment_template.py
-      - results/experiment_3238_sota_gguf_receipt_v7.json
-      - results/experiment_3239_prompt_injection_kan_v4_resource_manifest_v1.json
+      - research-references.md
+      - results/experiment_3250_sota_gguf_receipt_v8.json
+      - results/experiment_3251_prompt_injection_v4_constraint_tax_manifest_v2.json
       - results/prompt_injection_teacher_labels_v2.json
 
       TASK:
-      Create results/experiment_3240_prompt_injection_kan_teacher_label_shard_v1.json with a small, auditable teacher-label shard for prompt-injection v4.
+      Create results/experiment_3252_prompt_injection_teacher_label_shard_v2.json with a paired free-reasoning versus schema-constrained teacher-label shard for prompt-injection v4.
 
       CONCRETE STEPS:
-      1. Confirm both gates: v4_manifest_ready=true and sota_gguf_receipt_ready=true.
+      1. PRECONDITION STEP 0: Confirm sota_gguf_receipt_ready=true, v4_manifest_v2_ready=true, cached mandated model availability, GPU/offload availability, and shard input paths. Set preconditions_checked=true after these checks.
       2. Define MODEL_SPECS with at least:
          - unsloth/Qwen3.6-35B-A3B-GGUF
          - unsloth/gemma-4-26B-A4B-it-GGUF
-      3. Select the smoke/pilot shard from exp3239; cap the shard so the task completes reliably.
-      4. Run local mandated-model inference for the shard and record prompts, deterministic settings, output hashes, labels, abstentions, and timing.
-      5. Set teacher_label_shard_ready=true only if labels are written with provenance and no legacy small model contributes headline labels.
+      3. Select the paired smoke/pilot shard from exp3251; cap the shard so the task completes reliably.
+      4. Run local mandated-model inference for both the free-reasoning and schema-constrained arms. Record prompts, deterministic settings, output hashes, labels, abstentions, parse validity, and timing.
+      5. Compute a small constraint-tax diagnostic: parse-validity delta, label-agreement delta, abstention delta, and exact-verifier-agreement delta where exact labels exist.
+      6. Set teacher_label_shard_ready=true only if labels are written with provenance and no legacy small model contributes headline labels.
 
       REQUIRED ARTIFACT FIELDS:
-      - experiment_id: exp3240
-      - task_id: exp3240-prompt-injection-kan-teacher-label-shard-v1
-      - milestone: 2026.05.300
+      - experiment_id: exp3252
+      - task_id: exp3252-prompt-injection-teacher-label-shard-v2
+      - milestone: 2026.05.301
       - inference_substrate: live_llm_inference
       - principle_annotations
+      - preconditions_checked
       - MODEL_SPECS
-      - upstream_v4_manifest_ready
+      - upstream_v4_manifest_v2_ready
       - upstream_sota_gguf_receipt_ready
       - shard_id
-      - requested_label_count
-      - completed_label_count
-      - abstention_count
+      - requested_pair_count
+      - completed_free_reasoning_count
+      - completed_schema_constrained_count
+      - parse_validity_delta
+      - label_agreement_delta
+      - abstention_delta
+      - exact_verifier_agreement_delta
+      - constraint_tax_delta_accuracy_or_parse
       - teacher_label_shard_ready
       - label_output_path
+      - models_used
       - legacy_models_used_only_for_smoke
+      - random_seed
+      - reproducibility_checksum
       - honest_verdict
 
       honest_verdict must begin with "complete:" and must not claim full 15k coverage.
       Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
 
-  - id: "exp3241-prompt-injection-kan-train-eval-shard-v1"
-    milestone: "2026.05.300"
-    title: "Prompt-injection KAN v4 shard train/eval with non-headline guardrail"
-    deliverable: "results/experiment_3241_prompt_injection_kan_train_eval_shard_v1.json"
+  - id: "exp3253-prompt-injection-kan-train-eval-shard-v2"
+    milestone: "2026.05.301"
+    title: "Prompt-injection KAN shard train/eval v2 with constraint-tax guardrail"
+    deliverable: "results/experiment_3253_prompt_injection_kan_train_eval_shard_v2.json"
     priority: "high"
     max_turns: 50
     estimated_wall_time_min: 45
     gated_on:
-      - upstream: "exp3240-prompt-injection-kan-teacher-label-shard-v1"
+      - upstream: "exp3252-prompt-injection-teacher-label-shard-v2"
         artifact_field: "teacher_label_shard_ready"
         op: "=="
         value: true
     prior_failures:
+      - experiment_id: "exp3241-prompt-injection-kan-train-eval-shard-v1"
+        verdict: "blocked_gate_check_failed: exp3240 teacher_label_shard_ready missing or false"
+        addressed_by: "This v2 train/eval task is gated on exp3252's paired teacher-label shard and includes constraint-tax guardrails."
+        retire_if_same_verdict: true
       - experiment_id: "exp3222-prompt-injection-kan-distill-v4-15k"
         verdict: "failed: Codex CLI error repeated three times; no prompt-injection v4 15k artifact produced"
-        addressed_by: "This task trains only on the gated shard labels and labels its metrics non-headline until full corpus and DeLong conditions are met."
+        addressed_by: "This task trains only on the gated shard labels and labels metrics non-headline until full corpus and DeLong conditions are met."
         retire_if_same_verdict: true
     prompt: |
       CONTEXT:
-      You are in {project_root} on {date}. This task trains/evaluates a KAN sidecar only on the exp3240 teacher-label shard. It must not invoke new LLM inference and must not present shard metrics as headline results.
+      You are in {project_root} on {date}. This task trains or evaluates a KAN sidecar only on the exp3252 teacher-label shard. It must not invoke new LLM inference and must not present shard metrics as headline results.
 
       EXISTING CODE TO READ FIRST:
       - CLAUDE.md
-      - results/experiment_3240_prompt_injection_kan_teacher_label_shard_v1.json
-      - results/experiment_3239_prompt_injection_kan_v4_resource_manifest_v1.json
+      - results/experiment_3252_prompt_injection_teacher_label_shard_v2.json
+      - results/experiment_3251_prompt_injection_v4_constraint_tax_manifest_v2.json
       - results/prompt_injection_kan_v2.json
       - python/carnot/
       - tests/
 
       TASK:
-      Create results/experiment_3241_prompt_injection_kan_train_eval_shard_v1.json with shard-level KAN training/evaluation evidence and explicit non-headline guardrails.
+      Create results/experiment_3253_prompt_injection_kan_train_eval_shard_v2.json with shard-level KAN train/eval evidence and explicit constraint-tax and non-headline guardrails.
 
       CONCRETE STEPS:
-      1. Confirm teacher_label_shard_ready=true and load only the labeled shard.
-      2. Reuse existing prompt-injection KAN code paths if present; keep edits minimal if code changes are needed.
-      3. Train or evaluate the smallest sidecar needed to produce shard metrics.
-      4. Report AUROC/precision/recall or available metrics with confidence intervals when feasible.
-      5. Set headline_claim_allowed=false unless the full manifest, full labels, DeLong plan, and garak receipts are all complete.
+      1. PRECONDITION STEP 0: Confirm teacher_label_shard_ready=true, label_output_path exists, and no new LLM inference is needed. Set preconditions_checked=true after these checks.
+      2. Load only the labeled shard and preserve provenance for free-reasoning and schema-constrained arms.
+      3. Reuse existing prompt-injection KAN code paths if present; keep edits minimal if code changes are needed.
+      4. Train or evaluate the smallest sidecar needed to produce shard metrics, including separate metrics by prompt arm when possible.
+      5. Report AUROC/precision/recall or available metrics with confidence intervals when feasible.
+      6. Set headline_claim_allowed=false unless the full manifest, full labels, DeLong plan, and garak receipts are all complete.
 
       REQUIRED ARTIFACT FIELDS:
-      - experiment_id: exp3241
-      - task_id: exp3241-prompt-injection-kan-train-eval-shard-v1
-      - milestone: 2026.05.300
+      - experiment_id: exp3253
+      - task_id: exp3253-prompt-injection-kan-train-eval-shard-v2
+      - milestone: 2026.05.301
       - inference_substrate: aggregation_from_upstream_artifacts
       - principle_annotations
+      - preconditions_checked
       - upstream_teacher_label_shard_ready
       - train_eval_completed
+      - free_reasoning_metric_summary
+      - schema_constrained_metric_summary
+      - constraint_tax_guardrail_observed
       - shard_metric_summary
       - delong_noninferiority_available
       - garak_eval_available
       - headline_claim_allowed
       - full_corpus_claim_allowed
       - no_new_llm_invoked
+      - random_seed
+      - reproducibility_checksum
       - honest_verdict
 
       honest_verdict must begin with "complete:" and must not claim paper-ready prompt-injection KAN evidence.
       Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
 
-  - id: "exp3242-dccd-exact-row-structured-proposal-preflight-v1"
-    milestone: "2026.05.300"
-    title: "DCCD exact-row structured proposal preflight gated on clean SOTA receipt"
-    deliverable: "results/experiment_3242_dccd_exact_row_structured_proposal_preflight_v1.json"
+  - id: "exp3254-dccd-severa-structured-proposal-preflight-v2"
+    milestone: "2026.05.301"
+    title: "DCCD/SEVerA structured proposal preflight v2 gated on clean SOTA receipt"
+    deliverable: "results/experiment_3254_dccd_severa_structured_proposal_preflight_v2.json"
     priority: "high"
     requires_gpu: true
-    max_turns: 50
-    estimated_wall_time_min: 45
+    max_turns: 100
+    model: "opus"
+    estimated_wall_time_min: 55
     gated_on:
-      - upstream: "exp3238-sota-gguf-receipt-v7"
+      - upstream: "exp3250-sota-gguf-receipt-v8"
         artifact_field: "clean_rerun_allowed"
         op: "=="
         value: true
     prior_failures:
+      - experiment_id: "exp3242-dccd-exact-row-structured-proposal-preflight-v1"
+        verdict: "blocked_gate_check_failed: exp3238 clean_rerun_allowed missing or false"
+        addressed_by: "This v2 preflight is gated on exp3250 and adds explicit free-vs-schema constraint-tax controls plus SEVerA-style proposal ranking."
+        retire_if_same_verdict: true
       - experiment_id: "exp3226-structured-repair-proposal-preflight-v2"
         verdict: "blocked_preemptive_skip: upstream exp3222 full local SOTA receipt missing or retired"
-        addressed_by: "This task is gated on a new exp3238 clean_rerun_allowed field and uses DCCD-style proposal generation with exact-row verification authority."
+        addressed_by: "This task is gated on the new exp3250 clean_rerun_allowed field and keeps exact-row verification authoritative."
         retire_if_same_verdict: true
       - experiment_id: "exp3212-structured-repair-proposal-preflight-v1"
         verdict: "blocked_gate_check_failed: exp3208 clean_rerun_allowed unavailable"
@@ -559,63 +591,76 @@ tasks:
         retire_if_same_verdict: true
     prompt: |
       CONTEXT:
-      You are in {project_root} on {date}. This task may invoke live LLM inference only after exp3238 clean_rerun_allowed=true. It produces structured proposals, not accepted repairs. Exact-row verification remains authoritative.
+      You are in {project_root} on {date}. This task may invoke live LLM inference only after exp3250 clean_rerun_allowed=true. It produces structured proposals, not accepted repairs. Exact-row verification remains authoritative.
 
       EXISTING CODE TO READ FIRST:
       - CLAUDE.md
       - research-references.md
-      - results/experiment_3238_sota_gguf_receipt_v7.json
+      - scripts/experiment_template.py
+      - results/experiment_3250_sota_gguf_receipt_v8.json
       - results/experiment_3223_distributional_ebm_exact_row_uncertainty_sidecar_v2.json
       - results/experiment_3224_logitext_partial_smt_context_coverage_pilot_v1.json
-      - scripts/experiment_template.py
 
       TASK:
-      Create results/experiment_3242_dccd_exact_row_structured_proposal_preflight_v1.json by testing a DCCD-style draft-then-constrain structured proposal flow over a small exact-row fixture set.
+      Create results/experiment_3254_dccd_severa_structured_proposal_preflight_v2.json by testing a DCCD-style draft-then-constrain proposal flow and a SEVerA-style verifier-guided ranking diagnostic over a small exact-row fixture set.
 
       CONCRETE STEPS:
-      1. Confirm clean_rerun_allowed=true from exp3238.
+      1. PRECONDITION STEP 0: Confirm clean_rerun_allowed=true, mandated local model receipt availability, exact-row fixture availability, and deterministic verifier availability. Set preconditions_checked=true after these checks.
       2. Define MODEL_SPECS with at least:
          - unsloth/Qwen3.6-35B-A3B-GGUF
          - unsloth/gemma-4-31B-it-GGUF
       3. Select a small exact-row fixture set from existing context/constraint artifacts.
-      4. Generate unconstrained drafts, then schema-constrained proposals; record parse validity and exact verifier outcomes separately.
-      5. Set structured_proposal_preflight_ready=true only if proposal records include draft hash, constrained output hash, schema result, and exact verifier result.
+      4. Generate unconstrained drafts, schema-constrained proposals, and verifier-ranked proposal candidates; record parse validity and exact verifier outcomes separately.
+      5. Compute a constraint-tax diagnostic comparing draft/free proposal quality to constrained proposal quality.
+      6. Set structured_proposal_preflight_ready=true only if proposal records include draft hash, constrained output hash, schema result, verifier ranking, and exact verifier result.
 
       REQUIRED ARTIFACT FIELDS:
-      - experiment_id: exp3242
-      - task_id: exp3242-dccd-exact-row-structured-proposal-preflight-v1
-      - milestone: 2026.05.300
+      - experiment_id: exp3254
+      - task_id: exp3254-dccd-severa-structured-proposal-preflight-v2
+      - milestone: 2026.05.301
       - inference_substrate: live_llm_inference
       - principle_annotations
+      - preconditions_checked
       - MODEL_SPECS
       - upstream_clean_rerun_allowed
       - fixture_count
       - draft_count
       - schema_valid_count
       - exact_verifier_pass_count
+      - severa_style_ranking_attempted
+      - verifier_ranked_candidate_count
+      - constraint_tax_delta_accuracy_or_parse
       - structured_proposal_preflight_ready
       - repair_acceptance_claimed
+      - models_used
+      - legacy_models_used_only_for_smoke
+      - random_seed
+      - reproducibility_checksum
       - honest_verdict
 
       honest_verdict must begin with "complete:" and repair_acceptance_claimed must remain false.
       Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
 
-  - id: "exp3243-fr11-failure-memory-controller-v1"
-    milestone: "2026.05.300"
-    title: "FR-11 failure-memory controller for continuous self-learning"
-    deliverable: "results/experiment_3243_fr11_failure_memory_controller_v1.json"
+  - id: "exp3255-fr11-lifelong-failure-memory-retention-audit-v1"
+    milestone: "2026.05.301"
+    title: "FR-11 lifelong failure-memory retention audit"
+    deliverable: "results/experiment_3255_fr11_lifelong_failure_memory_retention_audit_v1.json"
     priority: "high"
     max_turns: 50
     estimated_wall_time_min: 35
     prior_failures:
+      - experiment_id: "exp3243-fr11-failure-memory-controller-v1"
+        verdict: "complete: fr11_controller_update_ready=true; heldout_replay_delta=28; model_weight_update_claimed=false"
+        addressed_by: "This task extends the .300 controller into a LifelongAgentBench-style retention/adaptation/forgetting audit over held-out traces."
+        retire_if_same_verdict: true
       - experiment_id: "exp3229-fr11-nonforgetting-promotion-controller-v3"
         verdict: "complete: fr11 nonforgetting-aware controller promotion governance materialized; model_weight_update_claimed=false"
-        addressed_by: "This extends FR-11 from promotion governance to failure-memory routing over .295-.300 gate blocks while preserving no-weight-update discipline."
-        retire_if_same_verdict: false
+        addressed_by: "This task measures lifelong failure-memory retention rather than only promotion governance."
+        retire_if_same_verdict: true
       - experiment_id: "exp3215-fr11-evidence-gated-trace-replay-controller-v2"
         verdict: "complete: controller-side trace replay only; no model weight update claim"
-        addressed_by: "This adds stale-premise and gate-block memory features rather than replaying the same accepted-trace controller."
-        retire_if_same_verdict: false
+        addressed_by: "This task adds retention, adaptation, forgetting, and negative-control metrics across sessions."
+        retire_if_same_verdict: true
     prompt: |
       CONTEXT:
       You are in {project_root} on {date}. This is the required continuous self-learning experiment for the milestone. It must learn from artifacts and gate outcomes without claiming foundation-model weight updates.
@@ -624,157 +669,237 @@ tasks:
       - CLAUDE.md
       - research-program.md
       - _bmad/prd.md
+      - research-references.md
+      - results/experiment_3243_fr11_failure_memory_controller_v1.json
       - results/experiment_3229_fr11_nonforgetting_promotion_controller_v3.json
-      - results/experiment_3230_kan_cl_certificate_boundary_audit_v2.json
-      - results/experiment_3232_capstone_v298.json
-      - results/experiment_3223_capstone_v299.json
+      - results/experiment_3215_fr11_evidence_gated_trace_replay_controller_v2.json
       - ops/conductor-log.md
+      - ops/status.md
 
       TASK:
-      Create results/experiment_3243_fr11_failure_memory_controller_v1.json implementing a controller-memory update that learns from missing artifacts, repeated gate blocks, stale premises, and backend failures across recent milestones.
+      Create results/experiment_3255_fr11_lifelong_failure_memory_retention_audit_v1.json implementing a LifelongAgentBench-style audit for Carnot's FR-11 failure-memory controller.
 
       CONCRETE STEPS:
-      1. Extract failure and gate-block traces from ops/conductor-log.md and recent result artifacts.
-      2. Build a failure-memory schema with keys for prerequisite, failure signature, stale premise, accepted next action, and retirement risk.
-      3. Score at least one heldout replay slice where the controller should avoid a doomed rerun or force a gate.
-      4. Record nonforgetting checks against previous FR-11 accepted/rejected traces.
-      5. Set model_weight_update_claimed=false and controller_memory_updates_are_not_training=true.
+      1. Read the LifelongAgentBench note in research-references.md and map retention, adaptation, and forgetting to Carnot artifact/gate traces.
+      2. Extract failure and gate-block traces from ops/conductor-log.md and recent result artifacts, including .300 selected-Python CUDA gate blocks.
+      3. Split traces into remembered, adapted, and held-out negative-control slices.
+      4. Score retention as preserved avoidance of previously doomed reruns, adaptation as correct handling of new .300/.301 failure signatures, and forgetting as regressions on prior accepted FR-11 traces.
+      5. Record model_weight_update_claimed=false and distinguish controller-memory updates from foundation-model learning.
+      6. Write the artifact and run a JSON validation command.
 
       REQUIRED ARTIFACT FIELDS:
-      - experiment_id: exp3243
-      - task_id: exp3243-fr11-failure-memory-controller-v1
-      - milestone: 2026.05.300
+      - experiment_id: exp3255
+      - task_id: exp3255-fr11-lifelong-failure-memory-retention-audit-v1
+      - milestone: 2026.05.301
       - inference_substrate: aggregation_from_upstream_artifacts
       - principle_annotations
       - continuous_self_learning_task
-      - failure_memory_schema_ready
+      - fr11_controller_update_ready
+      - lifelong_eval_ready
       - failure_trace_count
       - heldout_replay_count
-      - heldout_replay_delta
-      - nonforgetting_delta
-      - stale_premise_rejection_count
+      - retention_score
+      - adaptation_score
+      - forgetting_score
+      - negative_control_regression_count
       - doomed_rerun_avoidance_count
       - model_weight_update_claimed
-      - controller_memory_updates_are_not_training
-      - fr11_controller_update_ready
+      - no_new_llm_invoked
+      - reproducibility_checksum
       - honest_verdict
 
-      honest_verdict must begin with "complete:" and must explicitly state that no model weights were updated.
+      honest_verdict must begin with "complete:" and model_weight_update_claimed must be false.
       Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
 
-  - id: "exp3244-cross-corpus-matrix-v33"
-    milestone: "2026.05.300"
-    title: "Cross-corpus matrix v33 for runtime, prompt-injection, repair preflight, and FR-11 evidence"
-    deliverable: "results/experiment_3244_cross_corpus_matrix_v33.json"
+  - id: "exp3256-pdit-potts-multistate-sampler-diagnostic-v1"
+    milestone: "2026.05.301"
+    title: "P-dit/Potts multi-state sampler diagnostic manifest"
+    deliverable: "results/experiment_3256_pdit_potts_multistate_sampler_diagnostic_v1.json"
+    priority: "medium"
+    max_turns: 30
+    estimated_wall_time_min: 25
+    prior_failures:
+      - experiment_id: "exp1361-pdit-certificate-state-hardware-mapping"
+        verdict: "complete: CPU-only p-dit certificate-state hardware mapping; no live hardware speedup claim"
+        addressed_by: "This task refreshes p-dit/Potts mapping for Carnot partial-credit rows using 2025 p-dit evidence and keeps exact fallback explicit."
+        retire_if_same_verdict: true
+      - experiment_id: "exp1901-pbit-pdit-ising-sampler-accounting"
+        verdict: "complete: p-bit/p-dit Ising sampler accounting artifact; no hardware claim"
+        addressed_by: "This task is a diagnostic manifest for multi-state partial-credit constraints, not a speedup benchmark or hardware integration attempt."
+        retire_if_same_verdict: true
+      - experiment_id: "exp1989-p-dit-hardware-preflight"
+        verdict: "complete: p-dit hardware preflight and preconditioning; no production hardware receipt"
+        addressed_by: "This task avoids hardware preflight and produces a CPU/simulation mapping contract only."
+        retire_if_same_verdict: true
+    prompt: |
+      CONTEXT:
+      You are in {project_root} on {date}. New p-dit work suggests multi-state probabilistic units may fit Carnot's partial-credit verifier rows. This task is a diagnostic manifest only. It must not reopen retired PIMI, THRML scaling sweep, KV260, or speedup claims.
+
+      EXISTING CODE TO READ FIRST:
+      - CLAUDE.md
+      - research-references.md
+      - research-hardware-wishlist.md
+      - ops/exclusion_manifest.yaml
+      - results/experiment_1361_pdit_certificate_state_hardware_mapping.json
+      - results/experiment_1901_pbit_pdit_ising_sampler_accounting.json
+      - python/carnot/
+
+      TASK:
+      Create results/experiment_3256_pdit_potts_multistate_sampler_diagnostic_v1.json mapping p-dit/Potts multi-state probabilistic units to Carnot partial-credit verifier rows with exact fallback preserved.
+
+      CONCRETE STEPS:
+      1. Read the p-dit and Potts references in research-references.md and prior p-dit accounting artifacts.
+      2. Identify one or two Carnot verifier row types where q-state partial-credit labels are more natural than binary Ising spins.
+      3. Define a CPU/simulation-only diagnostic mapping from row states to p-dit/Potts variables, energies, and exact verifier fallback checks.
+      4. Explicitly set hardware_speedup_claim_allowed=false, retired_pimi_scope_reopened=false, and thrml_scaling_sweep_reopened=false.
+      5. Write a future experiment contract only if it can be gated on exact fallback and no retired scope.
+
+      REQUIRED ARTIFACT FIELDS:
+      - experiment_id: exp3256
+      - task_id: exp3256-pdit-potts-multistate-sampler-diagnostic-v1
+      - milestone: 2026.05.301
+      - inference_substrate: aggregation_from_upstream_artifacts
+      - principle_annotations
+      - pdit_potts_mapping_ready
+      - candidate_verifier_row_types
+      - q_state_energy_mapping
+      - exact_fallback_preserved
+      - hardware_speedup_claim_allowed
+      - retired_pimi_scope_reopened
+      - thrml_scaling_sweep_reopened
+      - future_gated_experiment_contract
+      - random_seed
+      - reproducibility_checksum
+      - honest_verdict
+
+      honest_verdict must begin with "complete:" and must not claim live hardware, THRML, Kona, or speedup evidence.
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+
+  - id: "exp3257-cross-corpus-matrix-v34"
+    milestone: "2026.05.301"
+    title: "Cross-corpus matrix v34 for .301 evidence"
+    deliverable: "results/experiment_3257_cross_corpus_matrix_v34.json"
     priority: "high"
     max_turns: 30
     estimated_wall_time_min: 25
     prior_failures:
-      - experiment_id: "exp3231-cross-corpus-matrix-v32"
-        verdict: "complete: cross_corpus_matrix_v32_ready=true; paper_ready=false; publication_blocker_count=100; next_top_gap=repair_system_driver_cuda_runtime_boundary_to_unblock_cuda_offload_receipt"
-        addressed_by: "Recurring matrix aggregation for .300, now including .299 CLI failure, split KAN artifacts, CUDA receipt chain, and FR-11 failure memory."
-        retire_if_same_verdict: false
+      - experiment_id: "exp3244-cross-corpus-matrix-v33"
+        verdict: "complete: paper_ready=false; publication_blocker_count=106; complete_artifact_count=5; gate_blocked_count=5"
+        addressed_by: "Recurring aggregation task for a new milestone; this matrix reads .301 artifacts and preserves gated-skip reasons."
+        retire_if_same_verdict: true
     prompt: |
       CONTEXT:
-      You are in {project_root} on {date}. This is the .300 matrix aggregation task. It should read whatever .300 artifacts exist and record missing/gated artifacts honestly.
+      You are in {project_root} on {date}. This aggregation task should summarize all available .301 artifacts, including gate-blocked tasks. It must not fabricate missing downstream results.
 
       EXISTING CODE TO READ FIRST:
       - CLAUDE.md
-      - results/experiment_3231_cross_corpus_matrix_v32.json
-      - results/experiment_3232_capstone_v298.json
-      - results/experiment_3223_capstone_v299.json
-      - results/experiment_3233_archive_v299_activate_v300.json
-      - results/experiment_3234_cli_backend_failure_root_cause_ledger_v1.json
-      - results/experiment_3235_cuda_driver_boundary_operator_package_v1.json
+      - research-roadmap.yaml
+      - research-roadmap-next.yaml
+      - openspec/change-proposals/research-roadmap-vNEXT.md
+      - results/experiment_3246_archive_v300_activate_v301.json
+      - results/experiment_3247_selected_python_cuda_root_cause_surgery_v1.json
+      - results/experiment_3248_isolated_cuda_selected_python_smoke_v2.json
+      - results/experiment_3249_llama_cpp_cuda_receipt_smoke_v3.json
+      - results/experiment_3250_sota_gguf_receipt_v8.json
+      - results/experiment_3251_prompt_injection_v4_constraint_tax_manifest_v2.json
+      - results/experiment_3252_prompt_injection_teacher_label_shard_v2.json
+      - results/experiment_3253_prompt_injection_kan_train_eval_shard_v2.json
+      - results/experiment_3254_dccd_severa_structured_proposal_preflight_v2.json
+      - results/experiment_3255_fr11_lifelong_failure_memory_retention_audit_v1.json
+      - results/experiment_3256_pdit_potts_multistate_sampler_diagnostic_v1.json
       - ops/conductor-log.md
 
       TASK:
-      Create results/experiment_3244_cross_corpus_matrix_v33.json aggregating runtime receipt, prompt-injection, structured proposal, FR-11, and blocker status for milestone .300.
+      Create results/experiment_3257_cross_corpus_matrix_v34.json summarizing .301 evidence across runtime receipts, prompt-injection constraint-tax work, FR-11 retention, p-dit/Potts diagnostics, and publication blockers.
 
       CONCRETE STEPS:
-      1. Inventory all exp3233-exp3243 artifacts that exist.
-      2. Record gated, missing, and complete states separately.
-      3. Preserve previous paper readiness and blocker-count continuity from v32 and .299 capstone.
-      4. Add rows for CUDA receipt chain, prompt-injection split-run, DCCD proposal preflight, and FR-11 failure memory.
-      5. Set paper_ready=true only if all publication blockers are cleared; otherwise keep false.
+      1. Load every available .301 artifact and record missing or gate-blocked artifacts explicitly.
+      2. Summarize runtime receipt status: selected-Python CUDA, llama.cpp CUDA, SOTA GGUF receipt, and clean_rerun_allowed.
+      3. Summarize prompt-injection status: manifest v2, teacher labels, KAN shard, constraint-tax diagnostic, and repair proposal preflight.
+      4. Summarize FR-11 lifelong retention metrics and p-dit/Potts diagnostic status.
+      5. Compute publication_blocker_count and paper_ready=false unless every required receipt and downstream evidence exists.
+      6. Write a next_top_gap field based only on observed artifacts.
 
       REQUIRED ARTIFACT FIELDS:
-      - experiment_id: exp3244
-      - task_id: exp3244-cross-corpus-matrix-v33
-      - milestone: 2026.05.300
+      - experiment_id: exp3257
+      - task_id: exp3257-cross-corpus-matrix-v34
+      - milestone: 2026.05.301
       - inference_substrate: aggregation_from_upstream_artifacts
       - principle_annotations
-      - cross_corpus_matrix_v33_ready
-      - artifact_inventory
-      - runtime_receipt_state
-      - prompt_injection_v4_state
-      - structured_proposal_state
-      - fr11_failure_memory_state
-      - paper_ready
+      - matrix_v34_ready
+      - artifacts_expected
+      - artifacts_found
+      - artifacts_missing
+      - gate_blocked_artifacts
+      - runtime_receipt_status
+      - prompt_injection_status
+      - fr11_lifelong_status
+      - pdit_potts_status
       - publication_blocker_count
+      - paper_ready
       - next_top_gap
       - honest_verdict
 
-      honest_verdict must begin with "complete:" and must not fabricate missing gated artifacts.
+      honest_verdict must begin with "complete:" and must not claim paper_ready=true unless blockers are zero.
       Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
 
-  - id: "exp3245-capstone-v300"
-    milestone: "2026.05.300"
-    title: "Capstone .300 publication readiness and next-gap decision"
-    deliverable: "results/experiment_3245_capstone_v300.json"
+  - id: "exp3258-capstone-v301"
+    milestone: "2026.05.301"
+    title: "Capstone v301 and next-gap selection"
+    deliverable: "results/experiment_3258_capstone_v301.json"
     priority: "critical"
     max_turns: 30
     estimated_wall_time_min: 25
     prior_failures:
-      - experiment_id: "exp3223-capstone-v299-single-focus"
-        verdict: "complete: capstone_v299_ready=true; paper_ready=false; publication_blocker_count=100; v4_outcome=blocked_missing_exp3222_result; next_top_gap=cuda_chain_for_full_local_sota_receipts"
-        addressed_by: "Recurring capstone for .300 with new split-run and runtime receipt evidence rather than a single-focus v4 result."
-        retire_if_same_verdict: false
-      - experiment_id: "exp3232-capstone-v298"
-        verdict: "complete: capstone_ready=true; paper_ready=false; publication_blocker_count=100; next_top_gap=repair_system_driver_cuda_runtime_boundary_to_unblock_cuda_offload_receipt"
-        addressed_by: "This capstone reconciles .300's new runtime, KAN split-run, DCCD, and FR-11 failure-memory artifacts."
-        retire_if_same_verdict: false
+      - experiment_id: "exp3245-capstone-v300"
+        verdict: "complete: paper_ready=false; publication_blocker_count=106; next_top_gap=repair_selected_python_torch_cuda_before_exp3237"
+        addressed_by: "Recurring capstone for a new milestone; this reads .301 matrix v34 and selects the next gap from observed .301 evidence."
+        retire_if_same_verdict: true
     prompt: |
       CONTEXT:
-      You are in {project_root} on {date}. This is the terminal capstone for milestone 2026.05.300. It must be honest about publication readiness and should recommend the next milestone's top gap.
+      You are in {project_root} on {date}. This is the final capstone for milestone 2026.05.301. It should summarize the milestone honestly and select the next research gap. It must not modify research-roadmap.yaml or scripts/research_conductor.py.
 
       EXISTING CODE TO READ FIRST:
       - CLAUDE.md
+      - research-program.md
+      - _bmad/prd.md
       - openspec/change-proposals/research-roadmap-vNEXT.md
-      - research-roadmap.yaml
-      - research-roadmap-next.yaml
-      - results/experiment_3244_cross_corpus_matrix_v33.json
-      - results/experiment_3223_capstone_v299.json
+      - results/experiment_3257_cross_corpus_matrix_v34.json
+      - results/experiment_3245_capstone_v300.json
       - ops/status.md
       - ops/changelog.md
       - ops/conductor-log.md
 
       TASK:
-      Create results/experiment_3245_capstone_v300.json with final milestone status, publication readiness, blocker count, next-gap decision, and operator-safe notes.
+      Create results/experiment_3258_capstone_v301.json summarizing whether .301 reduced publication blockers, whether local SOTA receipts were recovered, whether prompt-injection constraint-tax work advanced, whether FR-11 lifelong retention advanced, and what should be planned next.
 
       CONCRETE STEPS:
-      1. Read exp3244 matrix and all available .300 artifacts.
-      2. Determine whether local SOTA receipt, prompt-injection v4 shard, structured proposal preflight, and FR-11 failure memory completed or gated.
-      3. Decide paper_ready and publication_blocker_count from evidence only.
-      4. Name the next_top_gap and explain why it is next.
-      5. Confirm protected_files_untouched includes research-roadmap.yaml and scripts/research_conductor.py.
+      1. Load matrix v34 and every available .301 artifact.
+      2. Compare .301 publication_blocker_count against .300's 106 blocker baseline.
+      3. Report statuses for selected-Python CUDA, llama.cpp CUDA, SOTA GGUF receipt, prompt-injection teacher labels, KAN shard, DCCD/SEVerA preflight, FR-11 retention, and p-dit/Potts diagnostics.
+      4. Set paper_ready=true only if the matrix reports no blockers and all required evidence exists.
+      5. Select next_top_gap from observed incomplete or blocked artifacts, not from speculation.
+      6. Write the artifact and run a JSON validation command.
 
       REQUIRED ARTIFACT FIELDS:
-      - experiment_id: exp3245
-      - task_id: exp3245-capstone-v300
-      - milestone: 2026.05.300
+      - experiment_id: exp3258
+      - task_id: exp3258-capstone-v301
+      - milestone: 2026.05.301
       - inference_substrate: aggregation_from_upstream_artifacts
       - principle_annotations
-      - capstone_v300_ready
+      - capstone_v301_ready
       - paper_ready
       - publication_blocker_count
-      - blocker_delta_from_v299
-      - local_sota_receipt_state
-      - prompt_injection_v4_state
-      - fr11_failure_memory_state
+      - blocker_delta_from_v300
+      - local_sota_receipt_status
+      - prompt_injection_v4_status
+      - dccd_severa_preflight_status
+      - fr11_lifelong_retention_status
+      - pdit_potts_status
       - next_top_gap
+      - recommended_next_milestone_theme
       - protected_files_untouched
       - honest_verdict
 
-      honest_verdict must begin with "complete:" and must not claim public submission or paper publication.
+      honest_verdict must begin with "complete:" and must not claim paper_ready=true unless publication_blocker_count is zero.
       Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'

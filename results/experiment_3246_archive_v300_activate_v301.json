@@ -1,0 +1,272 @@
+{
+  "activation_already_observed": true,
+  "active_roadmap_modified_by_this_task": false,
+  "archive_v300_activate_v301_ready": true,
+  "artifact": "experiment_3246_archive_v300_activate_v301",
+  "blocked_reasons": [],
+  "changelog_evidence": [
+    "## 2026-05-28 (Milestone 2026.05.301 Research Planning)",
+    "- [outer-loop] Planned milestone 2026.05.301 as \"Selected-Python CUDA Repair + Constraint-Tax Prompt Injection + Lifelong FR-11 Retention\" after the operator confirmed all `.300` tasks completed. Used `results/experiment_3245_capstone_v300.json` and recent ops artifacts as authority: `.300` remained `paper_ready=false` with `publication_blocker_count=106`, `local_sota_receipt_status=blocked`, prompt-injection v4 and DCCD work gate-blocked behind the missing local SOTA receipt, FR-11 failure memory completed controller-side, and `next_top_gap=repair_selected_python_torch_cuda_before_exp3237`.",
+    "- 2026-05-28: Cross-corpus matrix v33 for runtime, prompt-injection, repair preflight, and FR-11 evidence (\u26a0\ufe0f Blocked) \u2014 honest_verdict=complete: cross_corpus_matrix_v33_ready=true; paper_ready=false; publication_blocker_count=106; complete_artifacts=5; gate_blocked_artifacts=5; missing_artifacts=2; next_top_gap=repair_selected_python_torch_cuda_before_exp3237; results/experiment_3244_cross_corpus_matrix_v33.json",
+    "- 2026-05-28: Capstone .300 publication readiness and next-gap decision (\u26a0\ufe0f Blocked) \u2014 honest_verdict=complete: capstone_v300_ready=true; paper_ready=false; publication_blocker_count=106; blocker_delta_from_v299=6; local_sota_receipt_status=blocked; prompt_injection_v4_status=gate_blocked; fr11_failure_memory_status=complete; next_top_gap=repair_selected_python_torch_cuda_before_exp3237; results/experiment_3245_capstone_v300.json"
+  ],
+  "duration_s": 0.042889,
+  "experiment_id": "exp3246",
+  "honest_verdict": "complete: archive_v300_activate_v301_ready=true; prior_paper_ready=false; prior_publication_blocker_count=106; prior_local_sota_receipt_status=blocked; prior_prompt_injection_v4_status=gate_blocked; prior_fr11_failure_memory_status=complete; next_top_gap=repair_selected_python_torch_cuda_before_exp3237; queue_range=exp3246-archive-v300-activate-v301..exp3258-capstone-v301",
+  "inference_substrate": "aggregation_from_upstream_artifacts",
+  "milestone": "2026.05.301",
+  "milestone_300_log_evidence": [
+    "| 2026-05-28 04:44 UTC | Isolated CUDA and selected-Python smoke receipt | OK | 81 passed in 4.32s |",
+    "| 2026-05-28 04:46 UTC | llama.cpp CUDA receipt smoke v2 gated on selected- | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp3236-isolated-cuda-python-smoke-v1.cuda |",
+    "| 2026-05-28 04:48 UTC | llama.cpp CUDA receipt smoke v2 gated on selected- | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp3236-isolated-cuda-python-smoke-v1.cuda |",
+    "| 2026-05-28 04:50 UTC | llama.cpp CUDA receipt smoke v2 gated on selected- | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp3236-isolated-cuda-python-smoke-v1.cuda |",
+    "| 2026-05-28 04:52 UTC | Mandated local SOTA GGUF receipt v7 gated on llama | GATE_BLOCK | Pre-emptive skip: upstream retired (exp3237-llama-cpp-cuda-receipt-smoke-v2) |",
+    "| 2026-05-28 05:05 UTC | Prompt-injection KAN v4 resource manifest and shar | OK | 81 passed in 3.02s |",
+    "| 2026-05-28 05:07 UTC | Mandated local SOTA GGUF receipt v7 gated on llama | GATE_BLOCK | Pre-emptive skip: upstream retired (exp3237-llama-cpp-cuda-receipt-smoke-v2) |",
+    "| 2026-05-28 05:07 UTC | Prompt-injection KAN v4 teacher-label shard gated  | GATE_BLOCK | 1 of 2 gate(s) failed; first failure: exp3238-sota-gguf-receipt-v7.sota_gguf_rec |",
+    "| 2026-05-28 05:09 UTC | Mandated local SOTA GGUF receipt v7 gated on llama | GATE_BLOCK | Pre-emptive skip: upstream retired (exp3237-llama-cpp-cuda-receipt-smoke-v2) |",
+    "| 2026-05-28 05:09 UTC | Prompt-injection KAN v4 teacher-label shard gated  | GATE_BLOCK | 1 of 2 gate(s) failed; first failure: exp3238-sota-gguf-receipt-v7.sota_gguf_rec |",
+    "| 2026-05-28 05:11 UTC | Prompt-injection KAN v4 teacher-label shard gated | GATE_BLOCK | Pre-emptive skip: upstream retired (exp3238-sota-gguf-receipt-v7) |",
+    "| 2026-05-28 05:11 UTC | Prompt-injection KAN v4 shard train/eval with non- | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp3240-prompt-injection-kan-teacher-label |",
+    "| 2026-05-28 05:13 UTC | Prompt-injection KAN v4 shard train/eval with non- | GATE_BLOCK | Pre-emptive skip: upstream retired (exp3240-prompt-injection-kan-teacher-label-s |",
+    "| 2026-05-28 05:13 UTC | DCCD exact-row structured proposal preflight gated | GATE_BLOCK | Pre-emptive skip: upstream retired (exp3238-sota-gguf-receipt-v7) |",
+    "| 2026-05-28 05:25 UTC | FR-11 failure-memory controller for continuous sel | OK | 81 passed in 4.18s |",
+    "| 2026-05-28 05:27 UTC | Prompt-injection KAN v4 shard train/eval with non- | GATE_BLOCK | Pre-emptive skip: upstream retired (exp3240-prompt-injection-kan-teacher-label-s |",
+    "| 2026-05-28 05:27 UTC | DCCD exact-row structured proposal preflight gated | GATE_BLOCK | Pre-emptive skip: upstream retired (exp3238-sota-gguf-receipt-v7) |",
+    "| 2026-05-28 05:40 UTC | Cross-corpus matrix v33 for runtime, prompt-inject | OK | 81 passed in 3.33s |",
+    "| 2026-05-28 05:42 UTC | DCCD exact-row structured proposal preflight gated | GATE_BLOCK | Pre-emptive skip: upstream retired (exp3238-sota-gguf-receipt-v7) |",
+    "| 2026-05-28 05:53 UTC | Capstone .300 publication readiness and next-gap d | OK | 81 passed in 4.65s |"
+  ],
+  "next_top_gap": "repair_selected_python_torch_cuda_before_exp3237",
+  "no_conductor_execution": true,
+  "no_new_delong_run": true,
+  "no_new_garak_run": true,
+  "no_new_hardware_run": true,
+  "no_new_kan_training": true,
+  "no_new_model_execution": true,
+  "no_new_repair_run": true,
+  "no_new_solver_run": true,
+  "no_new_teacher_labeling": true,
+  "no_new_verifier_run": true,
+  "no_push": true,
+  "ops_changelog_modified_by_this_task": false,
+  "ops_status_modified_by_this_task": false,
+  "principle_annotations": {
+    "archive_v300_activate_v301_ready": "True only when the capstone, activation queue, and ops evidence agree.",
+    "honest_verdict": "Terminal prefix keeps conductor reconciliation from treating a complete handoff as partial.",
+    "inference_substrate": "Declares aggregation-only work so no live model, hardware, or repair run is implied.",
+    "prior_fr11_failure_memory_status": "Records controller-memory completion without claiming model-weight learning.",
+    "prior_local_sota_receipt_status": "Keeps selected-Python CUDA failure visible as the local SOTA blocker.",
+    "prior_paper_ready": "Carries forward the capstone paper-readiness value without promoting the paper.",
+    "prior_prompt_injection_v4_status": "Keeps teacher-label and KAN shard gate blocks separate from manifest readiness.",
+    "prior_publication_blocker_count": "Preserves the blocker count from the .300 capstone for .301 planning.",
+    "protected_files_untouched": "Documents that this handoff does not edit protected conductor or roadmap files.",
+    "queue_first_task": "Anchors the activated .301 queue to the expected handoff task.",
+    "queue_last_task": "Records the downstream queue boundary for capstone planning."
+  },
+  "prior_capstone_artifact": "results/experiment_3245_capstone_v300.json",
+  "prior_capstone_ready": true,
+  "prior_fr11_failure_memory_state": {
+    "completed": true,
+    "controller_memory_updates_are_not_training": true,
+    "doomed_rerun_avoidance_count": 27,
+    "failure_trace_count": 28,
+    "fr11_controller_update_ready": true,
+    "heldout_replay_count": 28,
+    "heldout_replay_delta": 28,
+    "model_weight_update_claimed": false,
+    "operator_safe_note": "FR-11 is complete for controller failure memory only; it is not a model-weight learning or publication-readiness claim.",
+    "state": "ready_controller_memory_update_no_model_weight_training",
+    "status": "complete"
+  },
+  "prior_fr11_failure_memory_status": "complete",
+  "prior_local_sota_receipt_state": {
+    "blocking_artifacts": [
+      "exp3236",
+      "exp3237",
+      "exp3238"
+    ],
+    "completed": false,
+    "cuda_driver_visible": true,
+    "cuda_python_smoke_passed": false,
+    "llama_cpp_cuda_receipt_ready": false,
+    "next_action": "repair_selected_python_torch_cuda_before_exp3237",
+    "operator_safe_note": "Do not rerun full GGUF receipt until selected Python CUDA, llama.cpp CUDA, and SOTA receipt gates are green.",
+    "receipt_chain_ready": false,
+    "selected_python_torch_cuda_available": false,
+    "sota_gguf_receipt_ready": false,
+    "state": "blocked_selected_python_cuda_smoke_failed",
+    "status": "blocked"
+  },
+  "prior_local_sota_receipt_status": "blocked",
+  "prior_milestone": "2026.05.300",
+  "prior_paper_ready": false,
+  "prior_prompt_injection_v4_state": {
+    "blocking_artifacts": [
+      "exp3240",
+      "exp3241"
+    ],
+    "completed": false,
+    "manifest_ready": true,
+    "operator_safe_note": "The manifest is useful, but v4 labels and KAN train/eval metrics remain nonexistent until gated shard artifacts complete.",
+    "publication_evidence_ready": false,
+    "state": "blocked_after_manifest_teacher_label_shard_gate_blocked",
+    "status": "gate_blocked",
+    "teacher_label_plan_ready": true,
+    "teacher_label_shard_status": "gate_blocked",
+    "train_eval_shard_status": "gate_blocked"
+  },
+  "prior_prompt_injection_v4_status": "gate_blocked",
+  "prior_publication_blocker_count": 106,
+  "protected_file_checksums": {
+    "research-roadmap.yaml": "9ce1cfbe9a2c4b9bb833d51f35681b2e4ff9b5673db205a58457f20cd64677c4",
+    "scripts/research_conductor.py": "f7253130513139845fb202c44bff1e7974079c0b666f6f8837dee6df3976edff"
+  },
+  "protected_files": [
+    "research-roadmap.yaml",
+    "scripts/research_conductor.py"
+  ],
+  "protected_files_untouched": {
+    "research-roadmap.yaml": true,
+    "scripts/research_conductor.py": true
+  },
+  "queue_first_task": "exp3246-archive-v300-activate-v301",
+  "queue_last_task": "exp3258-capstone-v301",
+  "queue_paths": {
+    "active_roadmap_exists": true,
+    "active_roadmap_milestone": "2026.05.301",
+    "active_roadmap_path": "research-roadmap.yaml",
+    "milestone_doc": "openspec/change-proposals/research-roadmap-vNEXT.md",
+    "queue_first_task": "exp3246-archive-v300-activate-v301",
+    "queue_last_task": "exp3258-capstone-v301",
+    "queue_task_count": 13,
+    "queue_task_ids": [
+      "exp3246-archive-v300-activate-v301",
+      "exp3247-selected-python-cuda-root-cause-surgery-v1",
+      "exp3248-isolated-cuda-selected-python-smoke-v2",
+      "exp3249-llama-cpp-cuda-receipt-smoke-v3",
+      "exp3250-sota-gguf-receipt-v8",
+      "exp3251-prompt-injection-v4-constraint-tax-manifest-v2",
+      "exp3252-prompt-injection-teacher-label-shard-v2",
+      "exp3253-prompt-injection-kan-train-eval-shard-v2",
+      "exp3254-dccd-severa-structured-proposal-preflight-v2",
+      "exp3255-fr11-lifelong-failure-memory-retention-audit-v1",
+      "exp3256-pdit-potts-multistate-sampler-diagnostic-v1",
+      "exp3257-cross-corpus-matrix-v34",
+      "exp3258-capstone-v301"
+    ],
+    "selected_queue_milestone": "2026.05.301",
+    "selected_queue_path": "research-roadmap.yaml",
+    "staged_roadmap_exists": false,
+    "staged_roadmap_milestone": "",
+    "staged_roadmap_path": "research-roadmap-next.yaml"
+  },
+  "queue_task_count": 13,
+  "random_seed": 3246,
+  "reproducibility_checksum": "383236658c8a92d431f22eee509339e8b325bcbc11c25c6c230d349f5a3d2f9d",
+  "roadmap_activation_observation": "already_activated: active=.301, staged roadmap absent",
+  "roadmap_pre_activation_shape_observed": false,
+  "run_date": "20260528",
+  "schema": "carnot.archive_activation.v300_to_v301.v1",
+  "schema_version": "carnot.archive_activation.v300_to_v301.v1",
+  "scripts_research_conductor_modified_by_this_task": false,
+  "selected_python_cuda_boundary_summary": {
+    "blocked_downstream_prompt_injection_tasks": true,
+    "blocked_downstream_structured_repair_tasks": true,
+    "blocked_local_sota_receipts": true,
+    "blocking_artifacts": [
+      "exp3236",
+      "exp3237",
+      "exp3238"
+    ],
+    "boundary": "selected_python_torch_cuda",
+    "downstream_blocked_tasks": [
+      "exp3237",
+      "exp3238",
+      "exp3240",
+      "exp3241",
+      "exp3242"
+    ],
+    "evidence_line_count": 20,
+    "operator_safe_note": "Do not rerun local SOTA receipts, prompt-injection teacher labels, KAN train/eval, or structured repair preflight until selected Python CUDA is repaired and the receipt gates pass.",
+    "recommended_next_task": "repair_selected_python_torch_cuda_before_exp3237"
+  },
+  "source_artifacts": [
+    {
+      "path": "results/experiment_3245_capstone_v300.json",
+      "present": true,
+      "readable": true,
+      "role": "capstone_v300",
+      "sha256": "e0f3bcb7808061872ecee6efad35816bfd9342ff685bf900c16a41fbd6f64d0c"
+    },
+    {
+      "path": "research-roadmap.yaml",
+      "present": true,
+      "readable": true,
+      "role": "active_roadmap_queue",
+      "sha256": "9ce1cfbe9a2c4b9bb833d51f35681b2e4ff9b5673db205a58457f20cd64677c4"
+    },
+    {
+      "path": "research-roadmap-next.yaml",
+      "present": false,
+      "readable": false,
+      "role": "staged_roadmap_queue",
+      "sha256": null
+    },
+    {
+      "path": "openspec/change-proposals/research-roadmap-vNEXT.md",
+      "present": true,
+      "readable": true,
+      "role": "vnext_milestone_doc",
+      "sha256": "52e3530524199a26bf67dcf046fbb319bb6247661ae357d3afbb6c695b7060b4"
+    },
+    {
+      "path": "ops/status.md",
+      "present": true,
+      "readable": true,
+      "role": "ops_status_authority",
+      "sha256": "66cc2a01205e356f59eb4d18854f8507e9ac8df95e4b136c91e49e6f0cf4a897"
+    },
+    {
+      "path": "ops/changelog.md",
+      "present": true,
+      "readable": true,
+      "role": "ops_changelog_authority",
+      "sha256": "78375fe468f4efad65248cc0d97fb59f98a14dacca657576528cc40abecce6e0"
+    },
+    {
+      "path": "ops/conductor-log.md",
+      "present": true,
+      "readable": true,
+      "role": "conductor_log_authority",
+      "sha256": "09152113c0f5e6dfd1dd0dd9a6b973245840c84cece60e38c769a397917215f0"
+    },
+    {
+      "path": "scripts/research_conductor.py",
+      "present": true,
+      "readable": true,
+      "role": "protected_research_conductor",
+      "sha256": "f7253130513139845fb202c44bff1e7974079c0b666f6f8837dee6df3976edff"
+    }
+  ],
+  "source_checksums": {
+    "openspec/change-proposals/research-roadmap-vNEXT.md": "52e3530524199a26bf67dcf046fbb319bb6247661ae357d3afbb6c695b7060b4",
+    "ops/changelog.md": "78375fe468f4efad65248cc0d97fb59f98a14dacca657576528cc40abecce6e0",
+    "ops/conductor-log.md": "09152113c0f5e6dfd1dd0dd9a6b973245840c84cece60e38c769a397917215f0",
+    "ops/status.md": "66cc2a01205e356f59eb4d18854f8507e9ac8df95e4b136c91e49e6f0cf4a897",
+    "research-roadmap-next.yaml": null,
+    "research-roadmap.yaml": "9ce1cfbe9a2c4b9bb833d51f35681b2e4ff9b5673db205a58457f20cd64677c4",
+    "results/experiment_3245_capstone_v300.json": "e0f3bcb7808061872ecee6efad35816bfd9342ff685bf900c16a41fbd6f64d0c",
+    "scripts/research_conductor.py": "f7253130513139845fb202c44bff1e7974079c0b666f6f8837dee6df3976edff"
+  },
+  "staged_roadmap_modified_by_this_task": false,
+  "status_evidence": [
+    "**Last Updated:** 2026-05-28 (Milestone 2026.05.301 research planning staged)",
+    "## Session 2026-05-28 - Milestone 2026.05.301 Research Planning Staged",
+    "Planned milestone 2026.05.301 as \"Selected-Python CUDA Repair +",
+    "`paper_ready=false`, `publication_blocker_count=106`,",
+    "`repair_selected_python_torch_cuda_before_exp3237`."
+  ],
+  "task_id": "exp3246-archive-v300-activate-v301",
+  "traceability_modified_by_this_task": false
+}

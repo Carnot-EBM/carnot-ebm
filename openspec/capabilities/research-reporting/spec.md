@@ -11928,3 +11928,84 @@ file untouched constraints for `research-roadmap.yaml` and
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-REPORT-3245 | Implemented (`python/carnot/reporting/capstone_v300_3245.py`) | Implemented (`tests/python/test_experiment_3245_capstone_v300.py`) |
+
+### REQ-REPORT-3246: Archive .300 And Confirm .301 Activation Authority
+
+The repository shall provide an Exp 3246 archive/activation generator that
+writes `results/experiment_3246_archive_v300_activate_v301.json` by reading
+only checked-in authority artifacts and operational logs:
+`results/experiment_3245_capstone_v300.json`, `ops/status.md`,
+`ops/changelog.md`, `ops/conductor-log.md`,
+`openspec/change-proposals/research-roadmap-vNEXT.md`, and the current
+roadmap queue state. The workflow MUST be aggregation only. It MUST NOT run
+live model inference, teacher labeling, KAN training, DeLong statistics, Garak,
+verifier scoring, repair generation, solver execution, hardware commands, the
+conductor, pushes, modify `research-roadmap.yaml`, modify
+`research-roadmap-next.yaml`, modify `scripts/research_conductor.py`, or
+reconcile `ops/status.md`, `ops/changelog.md`, or `_bmad/traceability.md`
+when the conductor has delegated reconciliation to a separate step.
+
+The artifact MUST summarize the `.300` terminal state from the capstone:
+`prior_paper_ready` MUST equal capstone `paper_ready`,
+`prior_publication_blocker_count` MUST equal capstone
+`publication_blocker_count`, `prior_local_sota_receipt_status` MUST equal the
+capstone local SOTA receipt status, `prior_prompt_injection_v4_status` MUST
+equal the capstone Prompt-Injection KAN v4 status,
+`prior_fr11_failure_memory_status` MUST equal the capstone FR-11 failure-memory
+status, and `next_top_gap` MUST equal capstone `next_top_gap`. It MUST record
+that the selected-Python CUDA boundary blocked local SOTA receipts and the
+downstream prompt-injection and structured-repair/preflight tasks. It MUST
+extract the `.301` queue first and last task IDs from either
+`research-roadmap-next.yaml` if still staged or `research-roadmap.yaml` if
+already activated, and it MUST record whether the expected pre-activation
+roadmap shape was observed or activation had already completed. It MUST include
+protected-file constraints for downstream tasks, including
+`research-roadmap.yaml` and `scripts/research_conductor.py`.
+
+The terminal artifact MUST include `experiment_id`, `task_id`, `milestone`,
+`inference_substrate`, `principle_annotations`,
+`archive_v300_activate_v301_ready`, `prior_paper_ready`,
+`prior_publication_blocker_count`, `prior_local_sota_receipt_status`,
+`prior_prompt_injection_v4_status`, `prior_fr11_failure_memory_status`,
+`next_top_gap`, `queue_first_task`, `queue_last_task`,
+`protected_files_untouched`, and `honest_verdict`. It MAY include source
+checksums, conductor-log excerpts for Exp 3236 through Exp 3245, queue
+metadata, roadmap-shape observations, protected file checksums,
+no-new-execution booleans, random seed, reproducibility checksum, and measured
+`duration_s`, provided every value is derived from checked-in artifacts,
+operational logs, or file presence/checksum checks. `honest_verdict` MUST
+start with `complete:` and MUST NOT claim the paper is ready.
+
+#### SCENARIO-REPORT-3246: Archive .300 And Activate .301 Manifest
+
+**Given** capstone v300 exists and reports `capstone_v300_ready=true`,
+`paper_ready=false`, `publication_blocker_count=106`,
+`local_sota_receipt_status=blocked`,
+`prompt_injection_v4_status=gate_blocked`,
+`fr11_failure_memory_status=complete`, and
+`next_top_gap=repair_selected_python_torch_cuda_before_exp3237`
+**And** `ops/conductor-log.md`, `ops/status.md`, and `ops/changelog.md` record
+Exp 3236 through Exp 3245 evidence showing selected-Python CUDA blocked the
+local SOTA receipt chain and downstream prompt-injection/structured-repair
+work
+**And** either `research-roadmap-next.yaml` or `research-roadmap.yaml`
+declares milestone `2026.05.301`, first task
+`exp3246-archive-v300-activate-v301`, last task `exp3258-capstone-v301`, and
+milestone document `openspec/change-proposals/research-roadmap-vNEXT.md`
+**When** the Exp 3246 archive/activation generator runs
+**Then** it writes `results/experiment_3246_archive_v300_activate_v301.json`
+with all required schema fields, `archive_v300_activate_v301_ready=true`,
+`prior_paper_ready=false`, `prior_publication_blocker_count=106`, prior local
+SOTA, prompt-injection, and FR-11 statuses copied from the capstone, the next
+top gap focused on selected-Python CUDA repair before exp3237, queue first/last
+task IDs, protected-file untouched constraints for `research-roadmap.yaml` and
+`scripts/research_conductor.py`, no new model, teacher-labeling, KAN-training,
+DeLong, Garak, verifier, repair, solver, hardware, conductor, push, roadmap,
+ops-status, ops-changelog, or traceability work performed by this task, and an
+`honest_verdict` that starts with `complete:` without claiming paper readiness.
+
+## Implementation Status (REQ-REPORT-3246)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-3246 | Implemented (`python/carnot/reporting/archive_v300_activate_v301_3246.py`) | Implemented (`tests/python/test_experiment_3246_archive_v300_activate_v301.py`) |
