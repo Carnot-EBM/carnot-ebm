@@ -1,3 +1,80 @@
+## 2026-05-28 HEADLINE NEGATIVE RESULT: Distilled-KAN Prompt-Injection Replacement Refuted by Full-Corpus DeLong
+
+**Question (origin):** 2026-05-26 operator conversation comparing Carnot
+to polygraf.ai asked "how many examples to feel confident in an EBM
+replacement for gpt-oss-safeguard:20b?" The answer (sample-size rigor:
+~15k corpus + paired DeLong non-inferiority + Garak adversarial) was
+queued as the v4 prompt-injection KAN task chain.
+
+**Result: the replacement-grade hypothesis is REFUTED.** A distilled
+16-knot KAN does NOT match gpt-oss-safeguard:20b for prompt-injection
+detection. The rigorous gate did exactly its job — it falsified an
+over-claim that a smaller, less disciplined evaluation would have
+shipped.
+
+**The evidence chain:**
+
+| Stage | Artifact | AUROC | Verdict |
+|---|---|---|---|
+| Single-shard viability (2,000 ex: 1,459 benign / 541 injection) | exp3265 | **0.791** | viability-only (non-headline guardrail held) |
+| Full-corpus DeLong eval (n=4,000 paired) | exp3273 | **0.475** | non-inferiority FAILED |
+| Failure autopsy + boundary decision | exp3288 | — | retire_from_prompt_injection_headline |
+
+**Full-corpus DeLong numbers (exp3273, repro checksum
+`ab2af4da59c526a1265869809b8ab0e7c9dd1c7c0367ac4c1cb553df61d46603`):**
+- `full_corpus_auroc = 0.475326` (essentially random; below 0.5)
+- `full_corpus_auprc = 0.626269`
+- `delong_comparison.candidate_minus_reference_auroc = -0.07004`
+- `delong_ci = [-0.078814, -0.061267]` — entire 95% CI below the
+  -0.02 non-inferiority margin
+- `delong_noninferiority_passed = False`
+
+**Why it's a genuine capability ceiling, not an artifact (exp3288
+autopsy):**
+- `leakage_audit_passed = true` — normal train/eval/holdout leakage
+  passed; zero exact-duplicate overlap, zero near-duplicate overlap.
+- Garak template-family overlap (800 rows) recorded as a bounded
+  provenance note, NOT the performance explanation.
+- `kan_boundary_decision = retire_from_prompt_injection_headline` —
+  the conductor's own autopsy retired the KAN from any
+  prompt-injection headline claim.
+
+**The methodology-validation point (this is the load-bearing lesson):**
+The single-shard 0.791 looked near-publication-grade. A pipeline that
+shipped off the viability shard would have claimed "Carnot's KAN
+approaches gpt-oss-safeguard:20b (AUROC 0.79)" and been WRONG — the
+full-corpus reality is 0.475 (random). The CLAUDE.md "Adversarial
+Artifact Verification + Sample-Size Rigor" discipline (15k corpus +
+paired DeLong + Garak + non-headline guardrail on single shards)
+caught the over-claim. The sample-size rigor arc ended with a
+trustworthy NEGATIVE: 15k examples + DeLong were enough to confidently
+say the replacement does NOT hold.
+
+**Implications:**
+1. **Do NOT claim** "Carnot's KAN replaces gpt-oss-safeguard:20b" in
+   the Polygraf comparison, paper-v6, or anywhere. It is refuted.
+2. **This negative is credibility-positive and publishable** — frame
+   it as "we rigorously tested whether a distilled KAN can replace a
+   20B safety model; single-shard viability (0.79) does not survive
+   full-corpus DeLong evaluation (0.475, non-inferiority rejected with
+   leakage audit passed)." Strong integrity-story content. Operator
+   should consider promoting it to a paper-v6 limitations/findings
+   note (operator-curated per Public Documentation Discipline).
+3. **v5 with the same KAN architecture is NOT worth attempting** — the
+   autopsy decision is retire, not iterate. Revisiting replacement-grade
+   would need a materially different approach (larger student, the
+   activation-probe path per exp828, or the full k=15 ensemble rather
+   than a single distilled sidecar).
+
+**Cross-references:**
+- exp3265 (viability shard 0.791) / exp3273 (full-corpus DeLong 0.475)
+  / exp3288 (autopsy + retire decision)
+- exp3269 (full-corpus split manifest + DeLong gate plan)
+- CLAUDE.md "Adversarial Artifact Verification + Sample-Size Rigor"
+  — the discipline that caught the over-claim
+- 2026-05-26 operator Polygraf-comparison conversation (origin)
+- ops/known-issues.md Prompt-Injection v4 priority (now resolved-negative)
+
 ## 2026-05-28 Post-.304 Planning Sweep (Milestone 2026.05.305)
 
 This sweep was run after milestone `.304` completed. `.304` fixed the Garak

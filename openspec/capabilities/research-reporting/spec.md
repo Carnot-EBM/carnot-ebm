@@ -13705,3 +13705,66 @@ publication readiness.
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-REPORT-3293 | Implemented (`python/carnot/reporting/capstone_v304_3293.py`) | Implemented (`tests/python/test_experiment_3293_capstone_v304.py`) |
+
+### REQ-REPORT-3294: Archive V304 And Activate V305 Handoff
+
+The repository shall provide an Exp 3294 milestone-boundary handoff workflow
+that writes `results/experiment_3294_archive_v304_activate_v305.json` by
+reading the Exp 3293 `.304` capstone, Exp 3292 evidence matrix v36,
+`ops/conductor-log.md`, `research-complete.yaml`, and the active
+`research-roadmap.yaml`. The workflow MUST be aggregation only. It MUST NOT
+run model inference, CUDA probes, teacher labeling, KAN training, Garak,
+repair, verifier scoring, hardware commands, the conductor, pushes, or modify
+`research-roadmap.yaml` or `scripts/research_conductor.py`.
+
+The workflow SHALL append a minimal completed `2026.05.304` milestone entry to
+`research-complete.yaml` only when that archive entry is missing. If the entry
+is already present, the workflow SHALL leave it byte-for-byte unchanged. The
+workflow SHALL record conductor-log terminal evidence for Exp 3281 through Exp
+3293 and SHALL verify that the active roadmap is `2026.05.305` without editing
+it.
+
+The terminal artifact MUST include `v304_closed_v305_opened`,
+`prior_paper_ready`, `prior_publication_blocker_count`,
+`prior_next_top_gap`, `garak_unblocked`, `prior_garak_gate_passed`,
+`prior_attack_success_rate`, `clean_verifier_abstention_unblocked`,
+`kan_headline_retired`, `repair_gate_open`,
+`repair_micro_panel_headline_eligible`, `protected_files_untouched`,
+`inference_substrate`, `random_seed`, `reproducibility_checksum`,
+`duration_s`, and `honest_verdict`. It SHALL also include source checksums,
+protected-file checksum comparisons, archive update status, conductor-log
+evidence rows, and a plain reason that `.305` starts with Garak gate pass and
+headline repair evidence rather than another installation, corpus, or KAN
+milestone. `v304_closed_v305_opened` MUST be true only when the `.304`
+capstone is ready, `.304` is archived, the `.305` roadmap is active, the
+protected files are unchanged during the run, Garak is unblocked but the prior
+Garak gate failed with a quantitative attack-success rate, clean-verifier
+abstention is unblocked, KAN is retired from prompt-injection headline use, the
+repair gate is open, and the repair micro-panel is not headline eligible.
+`honest_verdict` MUST begin with one of `complete:`, `success:`, `passed:`, or
+`shipped:`.
+
+#### SCENARIO-REPORT-3294: V304 Archive Opens Garak-Gate V305 Queue
+
+**Given** Exp 3293 reports `paper_ready=false`,
+`publication_blocker_count=10`, `next_top_gap=pass_garak_redteam_gate`,
+`garak_unblocked=true`, `garak_gate_passed=false`,
+`attack_success_rate=0.311111`, `clean_verifier_abstention_unblocked=true`,
+`kan_boundary_decision=retire_from_prompt_injection_headline`,
+`repair_gate_open=true`, and `repair_micro_panel_headline_eligible=false`
+**And** `research-complete.yaml` already contains completed `2026.05.304`
+tasks for Exp 3281 through Exp 3293
+**And** `research-roadmap.yaml` is active for `2026.05.305`
+**When** the Exp 3294 handoff workflow runs
+**Then** it writes `results/experiment_3294_archive_v304_activate_v305.json`
+with all required schema fields, leaves the archive and protected files
+unchanged, records `.304` terminal evidence from the capstone, matrix, and
+conductor log, explains that `.305` targets Garak gate pass and
+headline-eligible repair evidence rather than another installation, corpus, or
+KAN promotion retry, and emits an `honest_verdict` beginning with `complete:`.
+
+## Implementation Status (REQ-REPORT-3294)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-3294 | Implemented (`python/carnot/reporting/archive_v304_activate_v305_3294.py`) | Implemented (`tests/python/test_experiment_3294_archive_v304_activate_v305.py`) |
