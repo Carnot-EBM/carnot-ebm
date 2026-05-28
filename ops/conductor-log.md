@@ -6571,3 +6571,5 @@ web search |
 | 2026-05-28 04:52 UTC | Mandated local SOTA GGUF receipt v7 gated on llama | GATE_BLOCK | Pre-emptive skip: upstream retired (exp3237-llama-cpp-cuda-receipt-smoke-v2) |
 | 2026-05-28 05:05 UTC | Prompt-injection KAN v4 resource manifest and shar | OK | 81 passed in 3.02s |
 | 2026-05-28 05:07 UTC | Mandated local SOTA GGUF receipt v7 gated on llama | GATE_BLOCK | Pre-emptive skip: upstream retired (exp3237-llama-cpp-cuda-receipt-smoke-v2) |
+| 2026-05-28 05:07 UTC | Prompt-injection KAN v4 teacher-label shard gated  | GATE_BLOCK | 1 of 2 gate(s) failed; first failure: exp3238-sota-gguf-receipt-v7.sota_gguf_rec |
+| 2026-05-28 05:09 UTC | Mandated local SOTA GGUF receipt v7 gated on llama | GATE_BLOCK | Pre-emptive skip: upstream retired (exp3237-llama-cpp-cuda-receipt-smoke-v2) |
