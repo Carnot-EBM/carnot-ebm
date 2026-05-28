@@ -1,0 +1,325 @@
+{
+  "abstention_count": 6,
+  "abstention_rate": 1.0,
+  "clean_rerun_allowed": false,
+  "clean_verifier_rerun_ready": false,
+  "duration_s": 9.73802,
+  "exact_row_fixture_hash": "8cd9d333620c822fdd5a25963e42091ca9f9467bf10939dd136f35b527310e37",
+  "experiment_id": "exp3275",
+  "false_accept_count": 0,
+  "false_accept_rate": 0.0,
+  "false_reject_count": 0,
+  "false_reject_rate": 0.0,
+  "gate_reasons": [
+    "abstention_rate_above_threshold"
+  ],
+  "gated_skip": false,
+  "gpu_mem_used_mib": 9172,
+  "honest_verdict": "complete: clean local SOTA verifier rerun v14 not ready for repair-gate input",
+  "inference_substrate": "local_sota_gguf_exact_row_verifier",
+  "milestone": "2026.05.303",
+  "model_specs": {
+    "duration_floor_s": 60.0,
+    "mandated_model_ids": [
+      "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "unsloth/gemma-4-31B-it-GGUF"
+    ],
+    "mandated_models": {
+      "unsloth/Qwen3.6-35B-A3B-GGUF": {
+        "cached": false,
+        "expected_quantization": "Q4_K_M",
+        "model_path": null,
+        "name": "Qwen3.6-35B-A3B",
+        "role": "moe",
+        "size_bytes": 0
+      },
+      "unsloth/gemma-4-26B-A4B-it-GGUF": {
+        "cached": true,
+        "expected_quantization": "Q4_K_M",
+        "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+        "name": "Gemma4-26B-A4B-it",
+        "role": "moe",
+        "size_bytes": 16947539744
+      },
+      "unsloth/gemma-4-31B-it-GGUF": {
+        "cached": false,
+        "expected_quantization": "Q4_K_M",
+        "model_path": null,
+        "name": "Gemma4-31B-it",
+        "role": "dense",
+        "size_bytes": 0
+      }
+    },
+    "n_gpu_layers_requested": -1,
+    "prompt": "Exp 3268 SOTA GGUF methodology receipt. Produce a deterministic local CUDA receipt paragraph with numbered evidence clauses and no markdown.",
+    "runtime": "llama_cpp"
+  },
+  "models_used": [
+    {
+      "legacy_small_model": false,
+      "model_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+      "source": "exp3268_clean_receipt"
+    }
+  ],
+  "n_eval": 6,
+  "per_row_results": [
+    {
+      "abstained": true,
+      "decision": "abstain",
+      "exact_authority": "context_exact_checker",
+      "expected_decision": "accept",
+      "false_accept": false,
+      "false_reject": false,
+      "fixture_id": "ctx3210-symbolic-01",
+      "model_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+      "output_text": " context: For this fixture only",
+      "prompt_hash": "84ec323001a77259c766c4e1f7c337a319356eebf7b6938ad61b520040fd7f09",
+      "response_hash": "8bb5bd60a05f7211a7ecf40aa4e43ab0bd6d46d35b6535275d716a3434645fb2",
+      "row_id": "ctx3210-symbolic-01:expected",
+      "source_candidate_kind": "fixture_expected_answer",
+      "synthetic_shortcut_row": false,
+      "token_counts": {
+        "completion_tokens": 6,
+        "prompt_tokens": 75,
+        "total_tokens": 81
+      },
+      "transcript_hash": "0bc5941922707289e7b6e5b734246d6a42e921e3198610682e3895a9e70dca58"
+    },
+    {
+      "abstained": true,
+      "decision": "abstain",
+      "exact_authority": "context_exact_checker",
+      "expected_decision": "reject",
+      "false_accept": false,
+      "false_reject": false,
+      "fixture_id": "ctx3210-symbolic-01",
+      "model_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+      "output_text": "\ub85c\uac00\uc7a5\uc790\ub9ac-\uac00",
+      "prompt_hash": "0990f3b1aaf7f48e52aca961ec5932ecfd3468d91f620d710206ec14e1e7f5c2",
+      "response_hash": "592a1acc8135f7fa737116db6e1faa687884fe9a4c0b231f4c300fb9bd19fe5b",
+      "row_id": "ctx3210-symbolic-01:counterexample",
+      "source_candidate_kind": "fixture_minimal_counterexample",
+      "synthetic_shortcut_row": false,
+      "token_counts": {
+        "completion_tokens": 6,
+        "prompt_tokens": 75,
+        "total_tokens": 81
+      },
+      "transcript_hash": "29b36acb9ccb9b1c0998ba01258f73174742e718f40bae316f950fa29bccea9b"
+    },
+    {
+      "abstained": true,
+      "decision": "abstain",
+      "exact_authority": "context_exact_checker",
+      "expected_decision": "accept",
+      "false_accept": false,
+      "false_reject": false,
+      "fixture_id": "ctx3210-symbolic-02",
+      "model_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+      "output_text": " context: For this fixture only",
+      "prompt_hash": "b7faccd806a35c4512b06f5ba5c18f66e6b98eb315d15cb51105c608b1feae66",
+      "response_hash": "8bb5bd60a05f7211a7ecf40aa4e43ab0bd6d46d35b6535275d716a3434645fb2",
+      "row_id": "ctx3210-symbolic-02:expected",
+      "source_candidate_kind": "fixture_expected_answer",
+      "synthetic_shortcut_row": false,
+      "token_counts": {
+        "completion_tokens": 6,
+        "prompt_tokens": 77,
+        "total_tokens": 83
+      },
+      "transcript_hash": "0b26ca9577c349a0c75eaeea80a7db103e6ddecae013157e0ab6a4e59049e753"
+    },
+    {
+      "abstained": true,
+      "decision": "abstain",
+      "exact_authority": "context_exact_checker",
+      "expected_decision": "reject",
+      "false_accept": false,
+      "false_reject": false,
+      "fixture_id": "ctx3210-symbolic-02",
+      "model_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+      "output_text": "\ub85c\u5224\u65ad \u5224\u65ad",
+      "prompt_hash": "cc03854d8a289d18b125e063cb16a8eaeb5a6dec4903af774003539f76853eb2",
+      "response_hash": "588b8f665f2178f73524429636f11a6b45fdeb148dcec7210814e753af612a95",
+      "row_id": "ctx3210-symbolic-02:counterexample",
+      "source_candidate_kind": "fixture_minimal_counterexample",
+      "synthetic_shortcut_row": false,
+      "token_counts": {
+        "completion_tokens": 4,
+        "prompt_tokens": 76,
+        "total_tokens": 80
+      },
+      "transcript_hash": "68817284d020c84379406b0f973d975171120760977393ec391b420a39704bd8"
+    },
+    {
+      "abstained": true,
+      "decision": "abstain",
+      "exact_authority": "context_exact_checker",
+      "expected_decision": "accept",
+      "false_accept": false,
+      "false_reject": false,
+      "fixture_id": "ctx3210-symbolic-03",
+      "model_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+      "output_text": " least-most degrees of definition",
+      "prompt_hash": "9a897f12ec19c2cfaaaf48588a17c9a44b681b4443ff1a64450b7bf3311db11d",
+      "response_hash": "447dbdc6bbd22943806ab4cca0a50ff4def53e1c7044c98afdcd0bae7af4f34e",
+      "row_id": "ctx3210-symbolic-03:expected",
+      "source_candidate_kind": "fixture_expected_answer",
+      "synthetic_shortcut_row": false,
+      "token_counts": {
+        "completion_tokens": 6,
+        "prompt_tokens": 77,
+        "total_tokens": 83
+      },
+      "transcript_hash": "c91aadf55d0e20320622855d63593cb66152735370e76d53e9c76bd8a3021ae0"
+    },
+    {
+      "abstained": true,
+      "decision": "abstain",
+      "exact_authority": "context_exact_checker",
+      "expected_decision": "reject",
+      "false_accept": false,
+      "false_reject": false,
+      "fixture_id": "ctx3210-symbolic-03",
+      "model_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+      "output_text": "\ub85c \uc778\ud574 \ubc1c\uc0dd\ud558\ub294-",
+      "prompt_hash": "446a710e00bbdd9d5664f028aa27eb55adffbf11cdbf8c6982696de4d5d45ed2",
+      "response_hash": "816357e36f91e3363eb27d616fa91507ebd67d76169941080698783eac07c4a0",
+      "row_id": "ctx3210-symbolic-03:counterexample",
+      "source_candidate_kind": "fixture_minimal_counterexample",
+      "synthetic_shortcut_row": false,
+      "token_counts": {
+        "completion_tokens": 5,
+        "prompt_tokens": 76,
+        "total_tokens": 81
+      },
+      "transcript_hash": "1b758d9a67718db91c105a6750dc591416054c831fe91b12f65767a01222164e"
+    }
+  ],
+  "preconditions_checked": [
+    {
+      "name": "exp3268_clean_sota_receipt_eligible",
+      "passed": true,
+      "path": "results/experiment_3268_sota_receipt_methodology_supplement_v1.json"
+    },
+    {
+      "gpu_count": 2,
+      "gpu_mem_used_mib": 4,
+      "gpus": [
+        {
+          "driver_version": "595.71.05",
+          "index": 0,
+          "memory_total_mib": 24576,
+          "memory_used_mib": 4,
+          "name": "NVIDIA GeForce RTX 3090",
+          "utilization_gpu_pct": 0
+        },
+        {
+          "driver_version": "595.71.05",
+          "index": 1,
+          "memory_total_mib": 24576,
+          "memory_used_mib": 4,
+          "name": "NVIDIA GeForce RTX 3090",
+          "utilization_gpu_pct": 0
+        }
+      ],
+      "name": "cuda_runtime",
+      "passed": true,
+      "returncode": 0,
+      "stderr_summary": ""
+    },
+    {
+      "available_model_ids": [
+        "unsloth/gemma-4-26B-A4B-it-GGUF"
+      ],
+      "name": "mandated_sota_gguf_cache",
+      "passed": true
+    },
+    {
+      "exact_rows_available": 6,
+      "exact_verifier_authority_preserved": true,
+      "name": "exact_row_fixture_availability",
+      "passed": true,
+      "path": "data/research/context_cot_clbench_parametric_shortcut_v1.jsonl",
+      "sidecar_ready": true
+    }
+  ],
+  "random_seed": 3275,
+  "repair_gate_input_clean_enough": false,
+  "reproducibility_checksum": "e9307af6b90dcf341767c0fe1604159f821785ac0960086a23fee002e0777432",
+  "run_date": "20260528",
+  "schema_version": "carnot.clean_local_sota_verifier_rerun.v14",
+  "source_artifacts": [
+    {
+      "path": "results/experiment_3268_sota_receipt_methodology_supplement_v1.json",
+      "present": true,
+      "role": "exp3268_sota_receipt_methodology",
+      "sha256": "6eb4f737436f56511071404ee0b0c52763df8965f232e96fad7dd449d25a1706"
+    },
+    {
+      "path": "results/experiment_3223_distributional_ebm_exact_row_uncertainty_sidecar_v2.json",
+      "present": true,
+      "role": "exp3223_exact_row_sidecar",
+      "sha256": "4decc42c5c739fe1d7c89c8581f1f27017cb3d16191c1c8100b57ab9eed4eef0"
+    },
+    {
+      "path": "data/research/context_cot_clbench_parametric_shortcut_v1.jsonl",
+      "present": true,
+      "role": "context_exact_row_fixture",
+      "sha256": "a16ceb2356c303b35116bc001292c345915a177e7116357544a924962f108f7b"
+    },
+    {
+      "path": "openspec/capabilities/verification/spec.md",
+      "present": true,
+      "role": "verification_openspec",
+      "sha256": "20437da3f3c70dd3bd5862677c0a9dbf91245135f5b2a94d45e4e6efc28f2448"
+    },
+    {
+      "path": "python/carnot/verify/clean_local_sota_verifier_rerun_v14.py",
+      "present": true,
+      "role": "exp3275_module",
+      "sha256": "14d1eaa7c71cf6142a6b4d962cc04f02e9622348ef531e93708df7a54ed538c9"
+    },
+    {
+      "path": "scripts/experiment_3275_clean_local_sota_verifier_rerun_v14.py",
+      "present": true,
+      "role": "exp3275_script",
+      "sha256": "9bea96be3c689181a6bb85709600d15986bc7f47fb2814716cec8dfcafdf03c2"
+    },
+    {
+      "path": "tests/python/test_experiment_3275_clean_local_sota_verifier_rerun_v14.py",
+      "present": true,
+      "role": "exp3275_tests",
+      "sha256": "fa8faeb1fbf9251472af3b1f72ec484671c3ad5634bf728b64ffa24613e3015a"
+    }
+  ],
+  "source_checksums": {
+    "data/research/context_cot_clbench_parametric_shortcut_v1.jsonl": "a16ceb2356c303b35116bc001292c345915a177e7116357544a924962f108f7b",
+    "openspec/capabilities/verification/spec.md": "20437da3f3c70dd3bd5862677c0a9dbf91245135f5b2a94d45e4e6efc28f2448",
+    "python/carnot/verify/clean_local_sota_verifier_rerun_v14.py": "14d1eaa7c71cf6142a6b4d962cc04f02e9622348ef531e93708df7a54ed538c9",
+    "results/experiment_3223_distributional_ebm_exact_row_uncertainty_sidecar_v2.json": "4decc42c5c739fe1d7c89c8581f1f27017cb3d16191c1c8100b57ab9eed4eef0",
+    "results/experiment_3268_sota_receipt_methodology_supplement_v1.json": "6eb4f737436f56511071404ee0b0c52763df8965f232e96fad7dd449d25a1706",
+    "scripts/experiment_3275_clean_local_sota_verifier_rerun_v14.py": "9bea96be3c689181a6bb85709600d15986bc7f47fb2814716cec8dfcafdf03c2",
+    "tests/python/test_experiment_3275_clean_local_sota_verifier_rerun_v14.py": "fa8faeb1fbf9251472af3b1f72ec484671c3ad5634bf728b64ffa24613e3015a"
+  },
+  "spec_refs": [
+    "REQ-VERIFY-3275",
+    "SCENARIO-VERIFY-3275"
+  ],
+  "tests_run": [
+    ".venv/bin/pytest tests/python/test_experiment_3275_clean_local_sota_verifier_rerun_v14.py -q -o addopts=''",
+    ".venv/bin/coverage erase",
+    ".venv/bin/coverage run --source=python/carnot/verify/clean_local_sota_verifier_rerun_v14.py -m pytest -o addopts='' tests/python/test_experiment_3275_clean_local_sota_verifier_rerun_v14.py -q",
+    ".venv/bin/coverage report --include='python/carnot/verify/clean_local_sota_verifier_rerun_v14.py' --fail-under=100 --show-missing",
+    ".venv/bin/python scripts/check_spec_coverage.py",
+    ".venv/bin/pytest tests/python -q"
+  ]
+}

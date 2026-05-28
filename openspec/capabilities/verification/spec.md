@@ -8401,3 +8401,58 @@ check results without any live model call, reports a latency estimate and
 false-positive notes, and sets `partial_monitor_harness_ready=true` only when
 all fixture traces pass the deterministic checks while
 `full_streaming_verification_claim` remains false.
+
+### REQ-VERIFY-3275: Clean Local SOTA Verifier Rerun V14
+
+The repository shall provide an Exp 3275 clean local SOTA verifier rerun v14
+builder that writes
+`results/experiment_3275_clean_local_sota_verifier_rerun_v14.json` from the
+Exp 3268 clean SOTA receipt methodology supplement and checked-in exact-row
+fixtures. The builder MUST first read
+`results/experiment_3268_sota_receipt_methodology_supplement_v1.json`; if
+`clean_sota_receipt_eligible` is not true, it SHALL write a complete gated-skip
+artifact instead of attempting verifier work. It MUST check CUDA availability,
+mandated GGUF cache availability, and exact-row fixture availability before
+local inference. It MUST NOT use synthetic shortcut rows, CPU fallback headline
+claims, downloads, remote APIs, repair generation, `scripts/research_conductor.py`,
+or active-roadmap edits.
+
+When the gate is open, the builder SHALL use at least one locally cached
+mandated SOTA GGUF from `unsloth/gemma-4-26B-A4B-it-GGUF`,
+`unsloth/Qwen3.6-35B-A3B-GGUF`, or `unsloth/gemma-4-31B-it-GGUF`. It SHALL
+score model verifier decisions only against exact-row authority from existing
+fixtures, normalize uncertain or unparsable model responses to abstentions,
+and compute conservative `false_accept_rate`, `false_reject_rate`, and
+`abstention_rate` over the scored denominator. Exact fixture hashes and
+per-row provenance SHALL make every evaluated row auditable.
+
+The terminal artifact MUST include `clean_verifier_rerun_ready`,
+`clean_rerun_allowed`, `false_accept_rate`, `false_reject_rate`,
+`abstention_rate`, `n_eval`, `exact_row_fixture_hash`, `model_specs`,
+`models_used`, `preconditions_checked`, `gpu_mem_used_mib`, `random_seed`,
+`reproducibility_checksum`, `duration_s`, and `honest_verdict`. `honest_verdict`
+MUST start with `complete:`, `success:`, `passed:`, or `shipped:` for terminal
+complete artifacts, including gated skips.
+
+### SCENARIO-VERIFY-3275: V14 Fails Closed Or Scores Exact Rows With Local GGUF
+
+Given Exp 3268 may be missing, ineligible, or eligible with a cached mandated
+local GGUF and the exact-row fixtures may be present or missing,
+When Exp 3275 builds the clean local SOTA verifier rerun v14 artifact,
+Then it emits a terminal JSON artifact in all cases, performs zero model calls
+when the clean SOTA receipt gate or preconditions fail, records precondition
+evidence and a compatibility `clean_rerun_allowed` signal, and only reports
+repair-gate metrics from local GGUF decisions scored by exact fixture authority.
+
+If the Exp 3268 gate is eligible, CUDA and at least one mandated GGUF are
+available, and exact-row fixtures are present, then the builder SHALL run the
+bounded local verifier evaluation, record actual models used and GPU memory
+evidence, compute false accepts, false rejects, abstentions, sample size, and
+checksum fields, and report whether the clean rerun is ready as repair-gate
+input without promoting CPU fallback or synthetic rows.
+
+## Implementation Status (REQ-VERIFY-3275)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-VERIFY-3275 | Implemented (`python/carnot/verify/clean_local_sota_verifier_rerun_v14.py`) | Implemented (`tests/python/test_experiment_3275_clean_local_sota_verifier_rerun_v14.py`) |
