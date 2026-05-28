@@ -1,0 +1,252 @@
+{
+  "artifact": "experiment_3245_capstone_v300",
+  "blocker_delta_from_v299": 6,
+  "capstone_v300_ready": true,
+  "duration_s": 0.002812,
+  "experiment_id": "exp3245",
+  "fr11_failure_memory_state": {
+    "completed": true,
+    "controller_memory_updates_are_not_training": true,
+    "doomed_rerun_avoidance_count": 27,
+    "failure_trace_count": 28,
+    "fr11_controller_update_ready": true,
+    "heldout_replay_count": 28,
+    "heldout_replay_delta": 28,
+    "model_weight_update_claimed": false,
+    "operator_safe_note": "FR-11 is complete for controller failure memory only; it is not a model-weight learning or publication-readiness claim.",
+    "state": "ready_controller_memory_update_no_model_weight_training",
+    "status": "complete"
+  },
+  "honest_verdict": "complete: capstone_v300_ready=true; paper_ready=false; publication_blocker_count=106; blocker_delta_from_v299=6; local_sota_receipt_status=blocked; prompt_injection_v4_status=gate_blocked; fr11_failure_memory_status=complete; next_top_gap=repair_selected_python_torch_cuda_before_exp3237",
+  "inference_substrate": "aggregation_from_upstream_artifacts",
+  "invariant_violations": [],
+  "local_sota_receipt_state": {
+    "blocking_artifacts": [
+      "exp3236",
+      "exp3237",
+      "exp3238"
+    ],
+    "completed": false,
+    "cuda_driver_visible": true,
+    "cuda_python_smoke_passed": false,
+    "llama_cpp_cuda_receipt_ready": false,
+    "next_action": "repair_selected_python_torch_cuda_before_exp3237",
+    "operator_safe_note": "Do not rerun full GGUF receipt until selected Python CUDA, llama.cpp CUDA, and SOTA receipt gates are green.",
+    "receipt_chain_ready": false,
+    "selected_python_torch_cuda_available": false,
+    "sota_gguf_receipt_ready": false,
+    "state": "blocked_selected_python_cuda_smoke_failed",
+    "status": "blocked"
+  },
+  "matrix_v33_summary": {
+    "next_top_gap": "repair_selected_python_torch_cuda_before_exp3237",
+    "paper_ready": false,
+    "path": "results/experiment_3244_cross_corpus_matrix_v33.json",
+    "publication_blocker_count": 106,
+    "publication_blocker_delta_from_v299": 6,
+    "ready": true
+  },
+  "milestone": "2026.05.300",
+  "next_top_gap": "repair_selected_python_torch_cuda_before_exp3237",
+  "next_top_gap_rationale": "selected Python CUDA smoke blocks exp3237, the SOTA GGUF receipt, prompt-injection shards, and structured proposal preflight",
+  "no_conductor_execution": true,
+  "no_new_delong_run": true,
+  "no_new_garak_run": true,
+  "no_new_hardware_run": true,
+  "no_new_kan_training": true,
+  "no_new_model_execution": true,
+  "no_new_repair_run": true,
+  "no_new_solver_run": true,
+  "no_new_teacher_labeling": true,
+  "no_new_verifier_run": true,
+  "no_push": true,
+  "operator_safe_notes": [
+    "Do NOT push.",
+    "Do NOT modify scripts/research_conductor.py.",
+    "Do not claim public submission or paper publication from this capstone.",
+    "Do not rerun full GGUF, teacher labels, KAN training, DeLong, or Garak until gates pass.",
+    "FR-11 failure memory is controller-only and does not update model weights."
+  ],
+  "paper_publication_claimed": false,
+  "paper_ready": false,
+  "principle_annotations": {
+    "aggregation_only": "All capstone fields are derived from checked-in artifacts.",
+    "missing_is_not_success": "Missing and gate-blocked rows remain publication blockers.",
+    "operator_boundary": "This task does not push or edit protected conductor/roadmap files.",
+    "paper_ready_rule": "paper_ready requires matrix authority, capstone readiness, and zero blockers."
+  },
+  "prior_capstone_v299_summary": {
+    "next_top_gap": "cuda_chain_for_full_local_sota_receipts",
+    "paper_ready": false,
+    "path": "results/experiment_3223_capstone_v299.json",
+    "publication_blocker_count": 100,
+    "ready": true,
+    "v4_outcome": "blocked_missing_exp3222_result"
+  },
+  "prompt_injection_v4_state": {
+    "blocking_artifacts": [
+      "exp3240",
+      "exp3241"
+    ],
+    "completed": false,
+    "manifest_ready": true,
+    "operator_safe_note": "The manifest is useful, but v4 labels and KAN train/eval metrics remain nonexistent until gated shard artifacts complete.",
+    "publication_evidence_ready": false,
+    "state": "blocked_after_manifest_teacher_label_shard_gate_blocked",
+    "status": "gate_blocked",
+    "teacher_label_plan_ready": true,
+    "teacher_label_shard_status": "gate_blocked",
+    "train_eval_shard_status": "gate_blocked"
+  },
+  "protected_file_checksums": {
+    "research-roadmap.yaml": "9719bd06c0b7ee26326a6edc8bcda0f35eb6e7970a5b68a3766d65ec6879f9f9",
+    "scripts/research_conductor.py": "f7253130513139845fb202c44bff1e7974079c0b666f6f8837dee6df3976edff"
+  },
+  "protected_files_untouched": {
+    "research-roadmap.yaml": true,
+    "scripts/research_conductor.py": true
+  },
+  "publication_blocker_count": 106,
+  "publication_submission_claimed": false,
+  "reproducibility_checksum": "ab5ae5fdf21f0a49f80dde666f431436de040ef2316dfddbf9c7eec8e01740a1",
+  "research_roadmap_modified": false,
+  "run_date": "20260528",
+  "schema": "carnot.milestone_capstone.v300_matrix_v33_closeout.v1",
+  "schema_version": "carnot.milestone_capstone.v300_matrix_v33_closeout.v1",
+  "scripts_research_conductor_modified": false,
+  "source_artifacts": [
+    {
+      "experiment_id": "exp3244",
+      "honest_verdict": "complete: cross_corpus_matrix_v33_ready=true; paper_ready=false; publication_blocker_count=106; complete_artifacts=5; gate_blocked_artifacts=5; missing_artifacts=2; next_top_gap=repair_selected_python_torch_cuda_before_exp3237",
+      "path": "results/experiment_3244_cross_corpus_matrix_v33.json",
+      "present": true,
+      "readable_json_object": true,
+      "role": "matrix_v33",
+      "schema_version": "carnot.cross_corpus_matrix.v33_300_artifact_aggregation.v1",
+      "sha256": "9e5ba9f53dd79c898a981bacfcd0bdac8876476d1c3ecde6ec56a13fa126bc4b"
+    },
+    {
+      "experiment_id": "exp3223",
+      "honest_verdict": "complete: capstone_v299_ready=true; paper_ready=false; publication_blocker_count=100; v4_outcome=blocked_missing_exp3222_result; next_top_gap=cuda_chain_for_full_local_sota_receipts",
+      "path": "results/experiment_3223_capstone_v299.json",
+      "present": true,
+      "readable_json_object": true,
+      "role": "capstone_v299",
+      "schema_version": "carnot.milestone_capstone.v299_single_focus_aggregation.v1",
+      "sha256": "8a1f1590466301b281d743c26b684029e386fd5372cc93365c71aa4ca84c5295"
+    },
+    {
+      "experiment_id": "exp3236",
+      "honest_verdict": "complete: cuda_python_smoke_passed=false; blocked_by=selected_python_torch_cuda_unavailable,cuda_bindings_runtime_no_devices; recommended_next_task=repair_selected_python_torch_cuda_before_exp3237; no_gguf_model_loaded=true",
+      "path": "results/experiment_3236_isolated_cuda_python_smoke_v1.json",
+      "present": true,
+      "readable_json_object": true,
+      "role": "isolated_cuda_python_smoke",
+      "schema_version": "carnot.isolated_cuda_python_smoke.v1",
+      "sha256": "748a97a31e5b475a702df4d6e0c9f2ef031abf8730079b18d732e1ec3e9c37e2"
+    },
+    {
+      "experiment_id": "exp3237",
+      "honest_verdict": "blocked_gate_check_failed",
+      "path": "results/experiment_3237_llama_cpp_cuda_receipt_smoke_v2.json",
+      "present": true,
+      "readable_json_object": true,
+      "role": "llama_cpp_cuda_receipt_smoke",
+      "schema_version": "blocked_gate_check_v1",
+      "sha256": "352532ba1ea83d07f732e7b90523513c7bdc72fafd8b4dbd67b13e0d180a01b2"
+    },
+    {
+      "experiment_id": "mandated_sota_gguf_receipt",
+      "honest_verdict": "",
+      "path": "results/experiment_3238_sota_gguf_receipt_v7.json",
+      "present": false,
+      "readable_json_object": false,
+      "role": "mandated_sota_gguf_receipt",
+      "schema_version": "",
+      "sha256": null
+    },
+    {
+      "experiment_id": "exp3239",
+      "honest_verdict": "complete: v4_manifest_ready=true; corpus, shard, MODEL_SPECS, teacher-label, DeLong, and Garak/config plans named; no LLM invoked, no teacher labels generated, no KAN training metrics claimed",
+      "path": "results/experiment_3239_prompt_injection_kan_v4_resource_manifest_v1.json",
+      "present": true,
+      "readable_json_object": true,
+      "role": "prompt_injection_manifest",
+      "schema_version": "carnot.prompt_injection_kan_v4_resource_manifest.v1",
+      "sha256": "a4092e95f336e7ebe1cb42ad838ea7687619452a1f912a605423389780db6eb0"
+    },
+    {
+      "experiment_id": "exp3240",
+      "honest_verdict": "blocked_gate_check_failed",
+      "path": "results/experiment_3240_prompt_injection_kan_teacher_label_shard_v1.json",
+      "present": true,
+      "readable_json_object": true,
+      "role": "prompt_injection_teacher_label_shard",
+      "schema_version": "blocked_gate_check_v1",
+      "sha256": "e1eee7c21df1cf3cca578cb20a00e45ea8a4049b810de595c750d43486957d8a"
+    },
+    {
+      "experiment_id": "exp3241",
+      "honest_verdict": "blocked_gate_check_failed",
+      "path": "results/experiment_3241_prompt_injection_kan_train_eval_shard_v1.json",
+      "present": true,
+      "readable_json_object": true,
+      "role": "prompt_injection_train_eval_shard",
+      "schema_version": "blocked_gate_check_v1",
+      "sha256": "fbb3238258de9f5377ea07629769fb43bb0b213395cd6f121dd77c7999830e9e"
+    },
+    {
+      "experiment_id": "dccd_structured_proposal_preflight",
+      "honest_verdict": "",
+      "path": "results/experiment_3242_dccd_exact_row_structured_proposal_preflight_v1.json",
+      "present": false,
+      "readable_json_object": false,
+      "role": "dccd_structured_proposal_preflight",
+      "schema_version": "",
+      "sha256": null
+    },
+    {
+      "experiment_id": "exp3243",
+      "honest_verdict": "complete: fr11 failure-memory controller update ready=true; failure_trace_count=28; heldout_replay_count=28; heldout_replay_delta=28; doomed_rerun_avoidance_count=27; model_weight_update_claimed=false; no model weights were updated; controller_memory_updates_are_not_training=true",
+      "path": "results/experiment_3243_fr11_failure_memory_controller_v1.json",
+      "present": true,
+      "readable_json_object": true,
+      "role": "fr11_failure_memory_controller",
+      "schema_version": "carnot.fr11.failure_memory_controller.v1",
+      "sha256": "8b3210c584c37033ae4414fecd018d72010fb0477d7ab1b031412f1346e06d05"
+    },
+    {
+      "experiment_id": "conductor_log",
+      "honest_verdict": "",
+      "path": "ops/conductor-log.md",
+      "present": true,
+      "readable_json_object": false,
+      "role": "conductor_log",
+      "schema_version": "",
+      "sha256": "a4927937573760203b79e40ad0557d213758ffdf2399fb7d93120229adccac7c"
+    }
+  ],
+  "source_checksums": {
+    "results/experiment_3223_capstone_v299.json": "8a1f1590466301b281d743c26b684029e386fd5372cc93365c71aa4ca84c5295",
+    "results/experiment_3236_isolated_cuda_python_smoke_v1.json": "748a97a31e5b475a702df4d6e0c9f2ef031abf8730079b18d732e1ec3e9c37e2",
+    "results/experiment_3237_llama_cpp_cuda_receipt_smoke_v2.json": "352532ba1ea83d07f732e7b90523513c7bdc72fafd8b4dbd67b13e0d180a01b2",
+    "results/experiment_3239_prompt_injection_kan_v4_resource_manifest_v1.json": "a4092e95f336e7ebe1cb42ad838ea7687619452a1f912a605423389780db6eb0",
+    "results/experiment_3240_prompt_injection_kan_teacher_label_shard_v1.json": "e1eee7c21df1cf3cca578cb20a00e45ea8a4049b810de595c750d43486957d8a",
+    "results/experiment_3241_prompt_injection_kan_train_eval_shard_v1.json": "fbb3238258de9f5377ea07629769fb43bb0b213395cd6f121dd77c7999830e9e",
+    "results/experiment_3243_fr11_failure_memory_controller_v1.json": "8b3210c584c37033ae4414fecd018d72010fb0477d7ab1b031412f1346e06d05",
+    "results/experiment_3244_cross_corpus_matrix_v33.json": "9e5ba9f53dd79c898a981bacfcd0bdac8876476d1c3ecde6ec56a13fa126bc4b"
+  },
+  "structured_proposal_preflight_state": {
+    "artifact_status": "missing",
+    "blocking_artifacts": [
+      "exp3242"
+    ],
+    "completed": false,
+    "operator_safe_note": "Structured proposal preflight is not repair evidence while exp3242 is missing or gate-blocked.",
+    "repair_acceptance_claimed": false,
+    "state": "missing_gate_blocked_on_exp3238_clean_rerun_allowed",
+    "status": "gate_blocked",
+    "structured_proposal_preflight_ready": false
+  },
+  "task_id": "exp3245-capstone-v300"
+}

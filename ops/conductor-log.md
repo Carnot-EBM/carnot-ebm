@@ -6581,3 +6581,5 @@ web search |
 | 2026-05-28 05:25 UTC | FR-11 failure-memory controller for continuous sel | OK | 81 passed in 4.18s |
 | 2026-05-28 05:27 UTC | Prompt-injection KAN v4 shard train/eval with non- | GATE_BLOCK | Pre-emptive skip: upstream retired (exp3240-prompt-injection-kan-teacher-label-s |
 | 2026-05-28 05:27 UTC | DCCD exact-row structured proposal preflight gated | GATE_BLOCK | Pre-emptive skip: upstream retired (exp3238-sota-gguf-receipt-v7) |
+| 2026-05-28 05:40 UTC | Cross-corpus matrix v33 for runtime, prompt-inject | OK | 81 passed in 3.33s |
+| 2026-05-28 05:42 UTC | DCCD exact-row structured proposal preflight gated | GATE_BLOCK | Pre-emptive skip: upstream retired (exp3238-sota-gguf-receipt-v7) |

@@ -11868,3 +11868,63 @@ Python/CUDA runtime chain, protected-file untouched constraints for
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-REPORT-3244 | Implemented (`python/carnot/reporting/cross_corpus_matrix_v33_3244.py`) | Implemented (`tests/python/test_experiment_3244_cross_corpus_matrix_v33.py`) |
+
+### REQ-REPORT-3245: Capstone V300 Publication-Readiness Closeout
+
+The repository shall provide an Exp 3245 milestone capstone generator that
+writes `results/experiment_3245_capstone_v300.json` by reading only checked-in
+upstream `.300` artifacts, especially
+`results/experiment_3244_cross_corpus_matrix_v33.json`,
+`results/experiment_3223_capstone_v299.json`,
+`results/experiment_3236_isolated_cuda_python_smoke_v1.json`,
+`results/experiment_3237_llama_cpp_cuda_receipt_smoke_v2.json`,
+`results/experiment_3239_prompt_injection_kan_v4_resource_manifest_v1.json`,
+`results/experiment_3240_prompt_injection_kan_teacher_label_shard_v1.json`,
+`results/experiment_3241_prompt_injection_kan_train_eval_shard_v1.json`,
+`results/experiment_3243_fr11_failure_memory_controller_v1.json`, and
+`ops/conductor-log.md`. The workflow MUST be aggregation only. It MUST NOT run
+live model inference, teacher labeling, KAN training, DeLong statistics, Garak,
+verifier scoring, repair generation, solver execution, hardware commands, the
+conductor, pushes, or modify `scripts/research_conductor.py`.
+
+The generator MUST determine from evidence only whether the local SOTA receipt,
+Prompt-Injection KAN v4 shard, structured proposal preflight, and FR-11 failure
+memory are complete, blocked, missing, or gate-blocked. It MUST decide
+`paper_ready` and `publication_blocker_count` from matrix v33 and the prior
+`.299` capstone, preserving missing and gated evidence as blockers rather than
+success. It MUST name the next top gap and explain why that gap is next. The
+terminal artifact MUST include `experiment_id`, `task_id`, `milestone`,
+`inference_substrate`, `principle_annotations`, `capstone_v300_ready`,
+`paper_ready`, `publication_blocker_count`, `blocker_delta_from_v299`,
+`local_sota_receipt_state`, `prompt_injection_v4_state`,
+`fr11_failure_memory_state`, `next_top_gap`, `protected_files_untouched`, and
+`honest_verdict`. It SHALL also preserve whether
+`research-roadmap.yaml` and `scripts/research_conductor.py` were left untouched.
+`honest_verdict` MUST begin with `complete:` and MUST NOT claim public
+submission or paper publication.
+
+#### SCENARIO-REPORT-3245: Capstone V300 Closes Honest Non-Ready Milestone
+
+**Given** matrix v33 reports `paper_ready=false`,
+`publication_blocker_count=106`, runtime receipt blocked by
+`cuda_python_smoke_passed=false`, Prompt-Injection KAN v4 teacher-label and
+train/eval shards gate-blocked, DCCD structured proposal preflight missing and
+gate-blocked, and FR-11 failure memory ready without model-weight updates
+**And** the `.299` capstone reports `paper_ready=false` and
+`publication_blocker_count=100`
+**When** the Exp 3245 capstone generator runs
+**Then** it writes `results/experiment_3245_capstone_v300.json` with all
+required schema fields, `capstone_v300_ready=true`, `paper_ready=false`,
+`publication_blocker_count=106`, `blocker_delta_from_v299=6`, local SOTA
+receipt and Prompt-Injection KAN v4 states marked blocked/gate-blocked,
+FR-11 failure memory marked complete and controller-only, `next_top_gap`
+focused on repairing the selected Python CUDA runtime before exp3237, protected
+file untouched constraints for `research-roadmap.yaml` and
+`scripts/research_conductor.py`, and an `honest_verdict` beginning with
+`complete:` without claiming public submission or paper publication.
+
+## Implementation Status (REQ-REPORT-3245)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-3245 | Implemented (`python/carnot/reporting/capstone_v300_3245.py`) | Implemented (`tests/python/test_experiment_3245_capstone_v300.py`) |
