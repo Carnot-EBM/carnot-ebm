@@ -6637,3 +6637,5 @@ web search |
 | 2026-05-28 14:59 UTC | Repair gate decision v8 after v4, Garak, and clean | GATE_BLOCK | 2 of 3 gate(s) failed; first failure: exp3274-prompt-injection-v4-garak-dataflip |
 | 2026-05-28 15:01 UTC | Repair gate decision v8 after v4, Garak, and clean | GATE_BLOCK | 2 of 3 gate(s) failed; first failure: exp3274-prompt-injection-v4-garak-dataflip |
 | 2026-05-28 15:03 UTC | SOTA repair micro-panel v9 | GATE_BLOCK | Pre-emptive skip: upstream retired (exp3276-repair-gate-decision-v8-after-v4-gar |
+| 2026-05-28 15:15 UTC | FR-11 full-corpus continual self-learning audit | OK | 81 passed in 3.77s |
+| 2026-05-28 15:17 UTC | SOTA repair micro-panel v9 | GATE_BLOCK | Pre-emptive skip: upstream retired (exp3276-repair-gate-decision-v8-after-v4-gar |

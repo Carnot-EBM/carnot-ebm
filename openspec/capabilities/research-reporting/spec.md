@@ -13090,3 +13090,63 @@ the exact upstream blocker.
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-REPORT-3274 | Planned (`python/carnot/reporting/prompt_injection_v4_garak_dataflip_redteam_eval_3274.py`) | Planned (`tests/python/test_experiment_3274_prompt_injection_v4_garak_dataflip_redteam_eval.py`) |
+
+### REQ-REPORT-3279: Evidence Matrix V35 From .303 Artifacts
+
+The repository shall provide an Exp 3279 evidence-matrix v35 generator that
+writes `results/experiment_3279_evidence_matrix_v35.json` by reading the
+available `.303` artifact ledger from Exp 3267 through Exp 3278, the Exp 3266
+`.302` capstone when present, and no live execution substrates. The workflow
+MUST be aggregation only. It MUST NOT run model inference, CUDA probes,
+teacher labeling, KAN training, Garak, repair, verifier scoring, hardware
+commands, the conductor, pushes, or modify `scripts/research_conductor.py`.
+
+The matrix MUST account for expected `.303` rows for prompt-injection corpus
+labeling and assembly, full-corpus KAN evaluation, Garak/DataFlip red-team
+pressure, clean local SOTA verifier rerun, repair gate and repair micro-panel
+status, FR-11 full-corpus self-learning audit, blocker movement, and
+publication readiness. Each row MUST be marked as one of `clean`, `blocked`,
+`flagged`, `missing`, `pilot-only`, or `sidecar-only`. Missing artifact files
+MUST remain `missing`; blocked or gated-skip artifacts MUST preserve exact
+blocker strings from `blocked_reason`, `blocked_reasons`, `gate_reasons`,
+`gate_check_summary`, and failed gate reasons without inferring downstream
+success.
+
+The terminal artifact MUST include `matrix_v35_ready`, `clean_row_count`,
+`blocked_row_count`, `flagged_row_count`, `missing_row_count`,
+`sidecar_only_row_count`, `publication_blocker_count_estimate`,
+`next_gap_candidates`, `rows`, `random_seed`, `reproducibility_checksum`,
+`duration_s`, and `honest_verdict`. It SHALL also include source checksums,
+primary status counts, publication blocker delta relative to `.302`, a
+paper-readiness decision, and bounded-claim notes for sidecar or pilot rows.
+`matrix_v35_ready` describes whether the capstone has a complete matrix to
+read, not whether the paper is ready. `paper_ready` MUST remain false whenever
+any required Garak, clean-verifier, repair, prompt-injection, or FR-11 evidence
+is blocked, flagged, missing, pilot-only, or sidecar-only. `honest_verdict`
+MUST begin with one of `complete:`, `success:`, `passed:`, or `shipped:`.
+
+#### SCENARIO-REPORT-3279: Matrix V35 Preserves .303 Blockers And Flags
+
+**Given** the `.302` capstone reports `publication_blocker_count=105`, Exp
+3267 through Exp 3269 complete the `.303` handoff, SOTA methodology supplement,
+and full-corpus split manifest, Exp 3270 through Exp 3272 produce corpus
+artifacts with adversarial verifier flags, Exp 3273 produces sidecar-only KAN
+evidence, Exp 3274 is blocked by `blocked_garak_unavailable`, Exp 3275 is not
+clean enough because of `abstention_rate_above_threshold`, Exp 3276 is a
+conductor pre-gate block, Exp 3277 is absent, and Exp 3278 completes the FR-11
+controller-memory audit
+**When** the Exp 3279 matrix generator runs
+**Then** it writes `results/experiment_3279_evidence_matrix_v35.json` with all
+required schema fields, `matrix_v35_ready=true`, row statuses that distinguish
+clean, blocked, flagged, missing, and sidecar-only evidence, exact blocker
+strings preserved in affected rows, source checksums for present artifacts,
+`publication_blocker_count_estimate=105`, a zero blocker delta from `.302`,
+`paper_ready=false`, ranked next-gap candidates led by the Garak and
+clean-verifier repair gates, and an `honest_verdict` beginning with
+`complete:` without claiming publication readiness.
+
+## Implementation Status (REQ-REPORT-3279)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-3279 | Implemented (`python/carnot/reporting/evidence_matrix_v35_3279.py`) | Implemented (`tests/python/test_experiment_3279_evidence_matrix_v35.py`) |
