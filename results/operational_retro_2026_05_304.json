@@ -1,0 +1,28 @@
+{
+  "schema": "carnot.operational_retro.v64",
+  "milestone": "2026.05.304",
+  "generated_at": "2026-05-28T21:05:48.361026+00:00",
+  "retro_type": "operational_full",
+  "summary": "Authoritative timing for milestone 2026.05.304 reports 0 total wall-time minutes, 0 completed experiments, and 0 compute-bound experiments. Compute-bound runtime ranking, GPU efficiency on compute-bound work, and parallel runner engagement have no data available this milestone.",
+  "total_wall_time_minutes": 0,
+  "experiments_completed": 0,
+  "slowest_experiments": [],
+  "bottlenecks_identified": [
+    "Compute-bound runtime bottlenecks have no data available this milestone because the milestone-scoped timing source has no experiment rows.",
+    "The idle GPU snapshot is not treated as an operational bottleneck because compute-bound GPU utilization has no data available this milestone."
+  ],
+  "improvements_suggested": [
+    "Emit an explicit empty-milestone timing sentinel at closeout so the retrospective can distinguish a genuine no-data window from missing telemetry.",
+    "Keep GPU-idle alerts gated behind compute-bound timing tags before converting monitor suggestions into retrospective bottlenecks.",
+    "Add a closeout sanity check that reports activation-boundary and timing-ingestion status before retrospective generation."
+  ],
+  "top_3_highest_leverage_actions": [
+    "Add an empty-timing sentinel artifact for milestones with no scoped experiment commits.",
+    "Preserve the compute-bound gate for GPU-idle interpretation.",
+    "Surface timing-ingestion status before generating the operational retrospective."
+  ],
+  "compute_bound_experiments_count": 0,
+  "gpu_idle_on_compute_bound_tasks": null,
+  "estimated_time_savings_pct": 0,
+  "meta_reflection": "This retrospective intentionally avoids inferring performance from the idle GPU monitor because the timing authority has no compute-bound rows. The operational lesson is to make empty timing windows explicit, not to diagnose compute inefficiency from synthesis-only evidence."
+}
