@@ -11481,3 +11481,77 @@ ops-status, ops-changelog, or traceability work performed by this task, and an
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-REPORT-3223 | Implemented (`python/carnot/reporting/capstone_v299_3223.py`) | Implemented (`tests/python/test_experiment_3223_capstone_v299.py`) |
+
+### REQ-REPORT-3233: Archive .299 And Confirm .300 Activation Authority
+
+The repository shall provide an Exp 3233 archive/activation generator that
+writes `results/experiment_3233_archive_v299_activate_v300.json` by reading
+`results/experiment_3221_archive_v298_activate_v299.json`,
+`results/experiment_3223_capstone_v299.json`, the current `.300` roadmap queue
+state, and `ops/conductor-log.md`. The workflow MUST aggregate existing
+artifacts only. It MUST NOT run live model inference, teacher labeling, KAN
+training, Garak probes, verifier scoring, repair generation, solver execution,
+hardware commands, the conductor, pushes, modify
+`scripts/research_conductor.py`, modify `research-roadmap.yaml`, modify
+`research-roadmap-next.yaml`, or reconcile `ops/status.md`,
+`ops/changelog.md`, or `_bmad/traceability.md` when the conductor has delegated
+reconciliation to a separate step.
+
+The artifact MUST summarize the `.299` terminal state from the capstone:
+`prior_paper_ready` MUST equal capstone `paper_ready`,
+`prior_publication_blocker_count` MUST equal capstone
+`publication_blocker_count`, `prior_v4_outcome` MUST equal capstone
+`v4_outcome`, and `next_top_gap` MUST equal capstone `next_top_gap`. It MUST
+record that `results/experiment_3222_prompt_injection_kan_distill_v4_15k.json`
+is absent when the prior capstone reports
+`blocked_missing_exp3222_result`. It MUST extract the `.300` queue first and
+last task IDs from either `research-roadmap-next.yaml` if staged or
+`research-roadmap.yaml` if already activated, and it MUST record whether the
+expected pre-activation roadmap shape was observed or whether activation had
+already completed. It MUST include protected-file constraints for downstream
+tasks, including `research-roadmap.yaml` and `scripts/research_conductor.py`.
+
+The terminal artifact MUST include `experiment_id`, `task_id`, `milestone`,
+`inference_substrate`, `principle_annotations`,
+`archive_v299_activate_v300_ready`, `prior_paper_ready`,
+`prior_publication_blocker_count`, `prior_v4_outcome`,
+`missing_v4_artifact_path`, `next_top_gap`, `queue_first_task`,
+`queue_last_task`, `protected_files_untouched`, and `honest_verdict`. It MAY
+include source checksums, conductor-log failure excerpts, queue metadata,
+roadmap-shape observations, no-new-execution booleans, random seed,
+reproducibility checksum, and measured `duration_s`, provided every value is
+derived from checked-in artifacts, conductor-log evidence, or file
+presence/checksum checks. `honest_verdict` MUST start with `complete:` and MUST
+NOT claim the paper is ready.
+
+#### SCENARIO-REPORT-3233: Archive .299 And Activate .300 Manifest
+
+**Given** capstone v299 exists and reports `capstone_v299_ready=true`,
+`paper_ready=false`, `publication_blocker_count=100`,
+`v4_outcome=blocked_missing_exp3222_result`, and
+`next_top_gap=cuda_chain_for_full_local_sota_receipts`
+**And** `results/experiment_3222_prompt_injection_kan_distill_v4_15k.json` is
+absent
+**And** `ops/conductor-log.md` records three Exp 3222 Prompt-Injection KAN v4
+failures and milestone `2026.05.300` activation
+**And** either `research-roadmap-next.yaml` or `research-roadmap.yaml` declares
+milestone `2026.05.300`, first task
+`exp3233-archive-v299-activate-v300`, last task `exp3245-capstone-v300`, and
+milestone document `openspec/change-proposals/research-roadmap-vNEXT.md`
+**When** the Exp 3233 archive/activation generator runs
+**Then** it writes `results/experiment_3233_archive_v299_activate_v300.json`
+with all required schema fields, `archive_v299_activate_v300_ready=true`,
+`prior_paper_ready=false`, `prior_publication_blocker_count=100`,
+`prior_v4_outcome=blocked_missing_exp3222_result`, the missing v4 artifact path
+and note, queue first/last task IDs, protected-file untouched constraints for
+`research-roadmap.yaml` and `scripts/research_conductor.py`, no new model,
+teacher-labeling, KAN-training, Garak, verifier, repair, solver, hardware,
+conductor, push, roadmap, ops-status, ops-changelog, or traceability work
+performed by this task, and an `honest_verdict` that starts with `complete:`
+without claiming paper readiness.
+
+## Implementation Status (REQ-REPORT-3233)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-3233 | Implemented (`python/carnot/reporting/archive_v299_activate_v300_3233.py`) | Implemented (`tests/python/test_experiment_3233_archive_v299_activate_v300.py`) |

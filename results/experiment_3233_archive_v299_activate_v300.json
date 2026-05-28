@@ -1,0 +1,170 @@
+{
+  "activation_already_observed": true,
+  "active_roadmap_modified_by_this_task": false,
+  "archive_v299_activate_v300_ready": true,
+  "artifact": "experiment_3233_archive_v299_activate_v300",
+  "blocked_reasons": [],
+  "conductor_file_modified_by_this_task": false,
+  "duration_s": 0.019387,
+  "exp3222_failure_count": 3,
+  "exp3222_failure_evidence": [
+    "| 2026-05-28 02:53 UTC | Prompt-Injection KAN Distillation v4 \u2014 15k Corpus  | FAIL | Codex CLI error: you finish the real work inside 10 minutes, that is correct  |",
+    "| 2026-05-28 02:55 UTC | Prompt-Injection KAN Distillation v4 \u2014 15k Corpus  | FAIL | Codex CLI error: you finish the real work inside 10 minutes, that is correct  |",
+    "| 2026-05-28 02:57 UTC | Prompt-Injection KAN Distillation v4 \u2014 15k Corpus  | FAIL | Codex CLI error: you finish the real work inside 10 minutes, that is correct  |"
+  ],
+  "experiment_id": "exp3233",
+  "honest_verdict": "complete: archive_v299_activate_v300_ready=true; prior_paper_ready=false; prior_publication_blocker_count=100; prior_v4_outcome=blocked_missing_exp3222_result; queue_range=exp3233-archive-v299-activate-v300..exp3245-capstone-v300",
+  "inference_substrate": "aggregation_from_upstream_artifacts",
+  "milestone": "2026.05.300",
+  "missing_v4_artifact_exists": false,
+  "missing_v4_artifact_note": "exp3222 did not produce results/experiment_3222_prompt_injection_kan_distill_v4_15k.json",
+  "missing_v4_artifact_path": "results/experiment_3222_prompt_injection_kan_distill_v4_15k.json",
+  "next_top_gap": "cuda_chain_for_full_local_sota_receipts",
+  "no_conductor_execution": true,
+  "no_new_garak_run": true,
+  "no_new_hardware_run": true,
+  "no_new_kan_training": true,
+  "no_new_model_execution": true,
+  "no_new_repair_run": true,
+  "no_new_solver_run": true,
+  "no_new_teacher_labeling": true,
+  "no_new_verifier_run": true,
+  "no_push": true,
+  "ops_changelog_modified_by_this_task": false,
+  "ops_status_modified_by_this_task": false,
+  "principle_annotations": {
+    "archive_v299_activate_v300_ready": "Summarizes whether the prior capstone, missing artifact, and queue evidence agree.",
+    "honest_verdict": "Terminal prefix keeps conductor reconciliation from treating a complete handoff as partial.",
+    "inference_substrate": "Declares aggregation-only work so downstream auditors do not expect live inference.",
+    "missing_v4_artifact_path": "Preserves the exact absent artifact that blocked the .299 single-focus task.",
+    "prior_paper_ready": "Carries forward the prior capstone readiness signal without promoting the paper.",
+    "protected_files_untouched": "Documents that this handoff does not edit protected conductor or roadmap files.",
+    "queue_first_task": "Anchors the activated .300 queue to the expected handoff task.",
+    "queue_last_task": "Records the downstream queue boundary for capstone planning."
+  },
+  "prior_archive_artifact": "results/experiment_3221_archive_v298_activate_v299.json",
+  "prior_archive_ready": true,
+  "prior_capstone_artifact": "results/experiment_3223_capstone_v299.json",
+  "prior_capstone_ready": true,
+  "prior_milestone": "2026.05.299",
+  "prior_paper_ready": false,
+  "prior_publication_blocker_count": 100,
+  "prior_v4_outcome": "blocked_missing_exp3222_result",
+  "protected_files": [
+    "research-roadmap.yaml",
+    "scripts/research_conductor.py"
+  ],
+  "protected_files_untouched": {
+    "research-roadmap.yaml": true,
+    "scripts/research_conductor.py": true
+  },
+  "queue_first_task": "exp3233-archive-v299-activate-v300",
+  "queue_last_task": "exp3245-capstone-v300",
+  "queue_paths": {
+    "active_roadmap_exists": true,
+    "active_roadmap_milestone": "2026.05.300",
+    "active_roadmap_path": "research-roadmap.yaml",
+    "milestone_doc": "openspec/change-proposals/research-roadmap-vNEXT.md",
+    "queue_first_task": "exp3233-archive-v299-activate-v300",
+    "queue_last_task": "exp3245-capstone-v300",
+    "queue_task_count": 13,
+    "queue_task_ids": [
+      "exp3233-archive-v299-activate-v300",
+      "exp3234-cli-backend-failure-root-cause-ledger-v1",
+      "exp3235-cuda-driver-boundary-operator-package-v1",
+      "exp3236-isolated-cuda-python-smoke-v1",
+      "exp3237-llama-cpp-cuda-receipt-smoke-v2",
+      "exp3238-sota-gguf-receipt-v7",
+      "exp3239-prompt-injection-kan-v4-resource-manifest-v1",
+      "exp3240-prompt-injection-kan-teacher-label-shard-v1",
+      "exp3241-prompt-injection-kan-train-eval-shard-v1",
+      "exp3242-dccd-exact-row-structured-proposal-preflight-v1",
+      "exp3243-fr11-failure-memory-controller-v1",
+      "exp3244-cross-corpus-matrix-v33",
+      "exp3245-capstone-v300"
+    ],
+    "selected_queue_milestone": "2026.05.300",
+    "selected_queue_path": "research-roadmap.yaml",
+    "staged_roadmap_exists": false,
+    "staged_roadmap_milestone": "",
+    "staged_roadmap_path": "research-roadmap-next.yaml"
+  },
+  "queue_task_count": 13,
+  "random_seed": 3233,
+  "reproducibility_checksum": "e753fbff02217f61387026e5b99eea7c3402f658639b8eb42ca8873349a7a480",
+  "roadmap_pre_activation_shape_observed": false,
+  "run_date": "20260528",
+  "schema": "carnot.archive_activation.v299_to_v300.v1",
+  "schema_version": "carnot.archive_activation.v299_to_v300.v1",
+  "source_artifacts": [
+    {
+      "path": "results/experiment_3221_archive_v298_activate_v299.json",
+      "present": true,
+      "readable": true,
+      "role": "archive_v298_activate_v299",
+      "sha256": "2f31a766c0841ddd298771d5b728fb6528bbc75615838b3c60bcb849d60a6fe0"
+    },
+    {
+      "path": "results/experiment_3223_capstone_v299.json",
+      "present": true,
+      "readable": true,
+      "role": "capstone_v299",
+      "sha256": "8a1f1590466301b281d743c26b684029e386fd5372cc93365c71aa4ca84c5295"
+    },
+    {
+      "path": "results/experiment_3222_prompt_injection_kan_distill_v4_15k.json",
+      "present": false,
+      "readable": false,
+      "role": "missing_prompt_injection_kan_v4",
+      "sha256": null
+    },
+    {
+      "path": "research-roadmap.yaml",
+      "present": true,
+      "readable": true,
+      "role": "active_roadmap_queue",
+      "sha256": "9719bd06c0b7ee26326a6edc8bcda0f35eb6e7970a5b68a3766d65ec6879f9f9"
+    },
+    {
+      "path": "research-roadmap-next.yaml",
+      "present": false,
+      "readable": false,
+      "role": "staged_roadmap_queue",
+      "sha256": null
+    },
+    {
+      "path": "openspec/change-proposals/research-roadmap-vNEXT.md",
+      "present": true,
+      "readable": true,
+      "role": "vnext_milestone_doc",
+      "sha256": "36c022cc7b2296ec04437443fb5a9a11ee91d33dd1c7026918365ffac63e01c0"
+    },
+    {
+      "path": "ops/conductor-log.md",
+      "present": true,
+      "readable": true,
+      "role": "conductor_log_authority",
+      "sha256": "de33b9982a217c17ed00733126d02590acc1d4303688df0bc2874ffbbc0baabc"
+    },
+    {
+      "path": "scripts/research_conductor.py",
+      "present": true,
+      "readable": true,
+      "role": "protected_research_conductor",
+      "sha256": "f7253130513139845fb202c44bff1e7974079c0b666f6f8837dee6df3976edff"
+    }
+  ],
+  "source_checksums": {
+    "openspec/change-proposals/research-roadmap-vNEXT.md": "36c022cc7b2296ec04437443fb5a9a11ee91d33dd1c7026918365ffac63e01c0",
+    "ops/conductor-log.md": "de33b9982a217c17ed00733126d02590acc1d4303688df0bc2874ffbbc0baabc",
+    "research-roadmap-next.yaml": null,
+    "research-roadmap.yaml": "9719bd06c0b7ee26326a6edc8bcda0f35eb6e7970a5b68a3766d65ec6879f9f9",
+    "results/experiment_3221_archive_v298_activate_v299.json": "2f31a766c0841ddd298771d5b728fb6528bbc75615838b3c60bcb849d60a6fe0",
+    "results/experiment_3222_prompt_injection_kan_distill_v4_15k.json": null,
+    "results/experiment_3223_capstone_v299.json": "8a1f1590466301b281d743c26b684029e386fd5372cc93365c71aa4ca84c5295",
+    "scripts/research_conductor.py": "f7253130513139845fb202c44bff1e7974079c0b666f6f8837dee6df3976edff"
+  },
+  "staged_roadmap_modified_by_this_task": false,
+  "task_id": "exp3233-archive-v299-activate-v300",
+  "traceability_modified_by_this_task": false
+}
