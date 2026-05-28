@@ -11686,3 +11686,50 @@ repair.
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-REPORT-3235 | Implemented (`python/carnot/reporting/cuda_driver_boundary_operator_package_3235.py`) | Implemented (`tests/python/test_experiment_3235_cuda_driver_boundary_operator_package.py`) |
+
+### REQ-REPORT-3236: Isolated CUDA Python Smoke Receipt
+
+The repository shall provide an Exp 3236 CUDA Python smoke generator that
+writes `results/experiment_3236_isolated_cuda_python_smoke_v1.json` by running
+only lightweight CUDA probes. The workflow SHALL record `nvidia-smi` visibility
+when available, SHALL run the selected project Python in a clean subprocess
+that imports `torch` before any project modules and records
+`torch.cuda.is_available()`, CUDA device count, torch CUDA version, and device
+names, and SHALL run a `cuda.bindings.runtime` device-count probe in a separate
+clean CUDA-only subprocess when that package is importable.
+
+The workflow MUST NOT rebuild llama.cpp, load mandated GGUF models, run full
+model inference, run the conductor, push, or modify
+`scripts/research_conductor.py`. The terminal artifact MUST include
+`experiment_id`, `task_id`, `milestone`, `inference_substrate`,
+`principle_annotations`, `cuda_driver_visible`,
+`selected_python_torch_import_ok`, `selected_python_torch_cuda_available`,
+`selected_python_device_count`, `cuda_bindings_import_ok`,
+`cuda_bindings_device_count`, `cuda_python_smoke_passed`,
+`recommended_next_task`, and `honest_verdict`. It MAY include bounded command
+summaries, device names, CUDA/runtime versions, selected Python path, block
+reasons, and no-heavywork booleans. `cuda_python_smoke_passed` MUST be true
+only when the selected Python torch probe initializes CUDA and reports at least
+one device, the NVIDIA driver is visible, and the CUDA runtime bindings probe
+also reports at least one device. `honest_verdict` MUST start with
+`complete:` even when the smoke blocks downstream work.
+
+#### SCENARIO-REPORT-3236: CUDA Smoke Emits Honest Gate Artifact
+
+**Given** the selected project Python can import torch in an isolated
+subprocess
+**And** `nvidia-smi` and `cuda.bindings.runtime` may independently pass or fail
+**When** the Exp 3236 smoke generator runs
+**Then** it writes
+`results/experiment_3236_isolated_cuda_python_smoke_v1.json` with
+`inference_substrate="hardware_smoke"`, the required gate fields, no GGUF load
+or llama.cpp rebuild evidence, and `cuda_python_smoke_passed=true` only for
+the all-green driver, torch CUDA, and runtime-bindings case
+**And** blocked outcomes still use an `honest_verdict` beginning with
+`complete:` and preserve the blocking fields for the next task.
+
+## Implementation Status (REQ-REPORT-3236)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-3236 | Implemented (`python/carnot/reporting/isolated_cuda_python_smoke_3236.py`) | Implemented (`tests/python/test_experiment_3236_isolated_cuda_python_smoke.py`) |
