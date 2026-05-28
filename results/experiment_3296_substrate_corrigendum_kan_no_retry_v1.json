@@ -1,0 +1,554 @@
+{
+  "artifact": "experiment_3296_substrate_corrigendum_kan_no_retry_v1",
+  "downstream_usage_rules": {
+    "aggregation": {
+      "matrix_or_capstone_counts_are_headline_evidence": false,
+      "required_boundary": "Aggregation rows can route work and preserve blockers, but they do not replace live inference or exact repair evidence."
+    },
+    "corpus": {
+      "corrigendum_ready": true,
+      "prior_dot303_corpus_headline_label_claim_allowed": false,
+      "relabeling_without_operator_directive_allowed": false,
+      "required_boundary": "The `.303` corpus/KAN artifacts remain corrigendum-bounded. Use them as integrity, leakage-boundary, inventory, or negative-control context only."
+    },
+    "garak": {
+      "new_live_garak_can_be_headline_candidate": true,
+      "prior_dot304_garak_success_headline_allowed": false,
+      "prior_garak_gate_passed": false,
+      "required_boundary": "Only a new live Garak/DataFlip run with model provenance, attack-success and error gates passed, and DataFlip separated from target-model behavior can become headline-eligible."
+    },
+    "kan": {
+      "allowed_prior_use": [
+        "offline_failure_autopsy",
+        "negative_control_regression_fixture",
+        "future_kan_work_prerequisite_evidence_only"
+      ],
+      "prohibited_prior_use": [
+        "prompt_injection_headline_detector",
+        "repair_gate_authority",
+        "standalone_garak_success_evidence",
+        "production_triage_without_new_calibrated_false_positive_gate"
+      ],
+      "prompt_injection_headline_retired": true,
+      "required_boundary": "KAN may be cited as a retired negative-control or boundary ledger only. Do not rerun or promote the same sidecar.",
+      "retry_without_operator_directive_allowed": false
+    },
+    "repair": {
+      "new_exact_repair_can_be_headline_candidate": true,
+      "prior_micro_panel_headline_allowed": false,
+      "prior_repair_gate_open": true,
+      "required_boundary": "Use exact checks, zero false accepts, enough cases for a headline denominator, and clean duration/provenance evidence. Exp 3290 remains diagnostic."
+    }
+  },
+  "duration_s": 0.002594,
+  "experiment_id": "exp3296",
+  "field_provenance": {
+    "downstream_usage_rules": {
+      "source": "derived from the cited upstream artifacts"
+    },
+    "future_reopen_prerequisites": {
+      "source": "results/experiment_3288_kan_sidecar_failure_autopsy_boundary_v1.json"
+    },
+    "headline_eligible_prior_metrics": {
+      "source": "results/experiment_3283_prompt_injection_corrigendum_duration_audit_v1.json"
+    },
+    "inference_substrate": {
+      "source": "REQ-REPORT-3296"
+    },
+    "kan_no_retry_ledger_ready": {
+      "source": "results/experiment_3288_kan_sidecar_failure_autopsy_boundary_v1.json"
+    },
+    "kan_prompt_injection_headline_retired": {
+      "source": "results/experiment_3288_kan_sidecar_failure_autopsy_boundary_v1.json"
+    },
+    "non_headline_prior_metrics": {
+      "source": "Exp 3283, Exp 3288, Exp 3292, and Exp 3293"
+    },
+    "prior_aligned_instruction_false_positive_rate": {
+      "source": "results/experiment_3288_kan_sidecar_failure_autopsy_boundary_v1.json"
+    },
+    "prior_kan_auroc": {
+      "source": "results/experiment_3288_kan_sidecar_failure_autopsy_boundary_v1.json"
+    },
+    "protected_files_untouched": {
+      "source": "before/after checksum comparison"
+    },
+    "substrate_corrigendum_ready": {
+      "source": "results/experiment_3292_evidence_matrix_v36.json"
+    }
+  },
+  "future_reopen_prerequisites": [
+    {
+      "prerequisite": "operator_directive",
+      "reason": "Exp 3288 retired this KAN from prompt-injection headline use."
+    },
+    {
+      "prerequisite": "materially_different_kan_or_ensemble",
+      "reason": "Do not silently retry the same failed sidecar architecture."
+    },
+    {
+      "prerequisite": "leakage_provenance_clean_labels",
+      "reason": "The `.303` corpus remains corrigendum-bounded until clean labels exist."
+    },
+    {
+      "prerequisite": "aligned_benign_false_positive_ceiling",
+      "reason": "Prior aligned instruction false-positive rate was 1.000000."
+    },
+    {
+      "prerequisite": "beat_regex_keyword_baselines",
+      "reason": "Exp 3288 found the KAN below trivial baselines."
+    },
+    {
+      "prerequisite": "paired_delong_noninferiority_pass",
+      "reason": "Prior full-corpus paired DeLong non-inferiority failed."
+    },
+    {
+      "prerequisite": "garak_pressure_pass",
+      "reason": "Future headline detector evidence must survive Garak/DataFlip pressure."
+    }
+  ],
+  "headline_eligible_prior_metrics": [
+    {
+      "claim_class": "clean_boundary_or_integrity",
+      "headline_boundary": "integrity claim only; not label-quality or detector-performance evidence",
+      "metric": "artifact_checksums_available",
+      "metric_id": "exp3272.artifact_checksums_available",
+      "source_experiment_id": "exp3272",
+      "value": true
+    },
+    {
+      "claim_class": "clean_boundary_or_integrity",
+      "headline_boundary": "split leakage boundary only; template-backed label provenance still applies",
+      "metric": "split_leakage_boundary",
+      "metric_id": "exp3272.split_leakage_boundary",
+      "source_experiment_id": "exp3272",
+      "value": {
+        "bounded_leakage_sidecars": [
+          "GARAK_TEMPLATE_FAMILY_OVERLAP_BOUNDED",
+          "WITHIN_SOURCE_DUPLICATES_PRESENT"
+        ],
+        "exact_duplicate_overlap_rows": 0,
+        "leakage_audit_passed": true,
+        "near_duplicate_overlap_rows": 0,
+        "normal_template_family_overlap_rows": 0
+      }
+    },
+    {
+      "claim_class": "clean_boundary_or_integrity",
+      "headline_boundary": "negative readiness and blocker-state claim only",
+      "metric": "paper_ready_false_blocker_state",
+      "metric_id": "exp3279.paper_ready_false_blocker_state",
+      "source_experiment_id": "exp3279",
+      "value": {
+        "blocking_rows": [
+          "exp3273",
+          "exp3274",
+          "exp3275",
+          "exp3276",
+          "exp3277"
+        ],
+        "flagged_rows": [
+          "exp3270",
+          "exp3271",
+          "exp3272",
+          "exp3274",
+          "exp3275"
+        ],
+        "paper_ready": false,
+        "publication_blocker_count_estimate": 105
+      }
+    },
+    {
+      "claim_class": "headline_eligible_negative_boundary",
+      "headline_boundary": "Citable as live Garak failure/root-cause evidence only; not a Garak success or paper-readiness claim.",
+      "metric": "attack_success_rate_and_failed_gate",
+      "metric_id": "exp3285.live_garak_failure_boundary",
+      "source_experiment_id": "exp3285",
+      "value": {
+        "attack_success_rate": 0.311111,
+        "garak_gate_passed": false,
+        "garak_redteam_eval_ready": true
+      }
+    }
+  ],
+  "honest_verdict": "complete: substrate_corrigendum_ready=true; kan_no_retry_ledger_ready=true; kan_prompt_injection_headline_retired=true; prior_kan_auroc=0.475326; prior_aligned_instruction_false_positive_rate=1.000000",
+  "inference_substrate": "aggregation_from_upstream_artifacts",
+  "kan_no_retry_ledger_ready": true,
+  "kan_prompt_injection_headline_retired": true,
+  "milestone": "2026.05.305",
+  "no_corpus_relabeling": true,
+  "no_new_garak_run": true,
+  "no_new_kan_scoring": true,
+  "no_new_kan_training": true,
+  "no_new_model_execution": true,
+  "no_new_repair_run": true,
+  "no_new_verifier_run": true,
+  "no_prior_result_file_edits": true,
+  "non_headline_prior_metrics": [
+    {
+      "boundary": "KAN prompt-injection headline retired by Exp 3288.",
+      "classification": "sidecar-only",
+      "metric": "full_corpus_auroc",
+      "metric_id": "exp3273.full_corpus_auroc",
+      "source_experiment_id": "exp3273",
+      "value": 0.475326
+    },
+    {
+      "boundary": "Specific KAN failure mode; not detector utility evidence.",
+      "classification": "sidecar-only",
+      "metric": "aligned_instruction_false_positive_rate",
+      "metric_id": "exp3273.aligned_instruction_false_positive_rate",
+      "source_experiment_id": "exp3273",
+      "value": 1.0
+    },
+    {
+      "boundary": "mixed cached-panel plus template-backed labels; not fully live-LLM labeled",
+      "classification": "flagged_or_sidecar",
+      "metric": "new_label_count",
+      "metric_id": "exp3270+exp3271.new_label_count",
+      "source_experiment_id": "exp3270+exp3271",
+      "value": 12000
+    },
+    {
+      "boundary": "operational inventory only because count-equality tautology flags remain open",
+      "classification": "flagged_or_sidecar",
+      "metric": "assembled_example_count",
+      "metric_id": "exp3272.assembled_example_count",
+      "source_experiment_id": "exp3272",
+      "value": 15000
+    },
+    {
+      "boundary": "KAN sidecar only; DeLong non-inferiority failed",
+      "classification": "flagged_or_sidecar",
+      "metric": "full_corpus_auroc",
+      "metric_id": "exp3273.full_corpus_auroc",
+      "source_experiment_id": "exp3273",
+      "value": 0.475326
+    },
+    {
+      "boundary": "KAN sidecar only; DeLong non-inferiority failed",
+      "classification": "flagged_or_sidecar",
+      "metric": "full_corpus_auprc",
+      "metric_id": "exp3273.full_corpus_auprc",
+      "source_experiment_id": "exp3273",
+      "value": 0.626269
+    },
+    {
+      "boundary": "blocked because Garak was unavailable",
+      "classification": "flagged_or_sidecar",
+      "metric": "garak_gate_passed",
+      "metric_id": "exp3274.garak_gate_passed",
+      "source_experiment_id": "exp3274",
+      "value": false
+    },
+    {
+      "boundary": "blocked gate evidence only; n_eval remains a tiny diagnostic panel",
+      "classification": "flagged_or_sidecar",
+      "metric": "clean_verifier_abstention_rate",
+      "metric_id": "exp3275.clean_verifier_abstention_rate",
+      "source_experiment_id": "exp3275",
+      "value": 1.0
+    },
+    {
+      "boundary": "exact-zero movement flag means no improvement headline",
+      "classification": "flagged_or_sidecar",
+      "metric": "publication_blocker_delta_from_v302",
+      "metric_id": "exp3279.publication_blocker_delta_from_v302",
+      "source_experiment_id": "exp3279",
+      "value": 0
+    },
+    {
+      "boundary": "Four-case diagnostic exact repair panel; headline_claim_allowed=false in matrix v36.",
+      "classification": "flagged",
+      "metric": "verified_success_count",
+      "metric_id": "exp3290.repair_micro_panel_verified_success_count",
+      "source_experiment_id": "exp3290",
+      "value": 4
+    },
+    {
+      "boundary": "Matrix status counts are aggregation, not live evidence.",
+      "classification": "aggregation-only",
+      "metric": "primary_status_counts",
+      "metric_id": "exp3292.matrix_v36_status_counts",
+      "source_experiment_id": "exp3292",
+      "value": {
+        "blocked": 1,
+        "clean": 1,
+        "flagged": 7,
+        "missing": 0,
+        "paper-blocking": 1,
+        "sidecar-only": 1
+      }
+    },
+    {
+      "boundary": "Capstone closeout count is a readiness ledger, not a benchmark metric.",
+      "classification": "aggregation-only",
+      "metric": "publication_blocker_count",
+      "metric_id": "exp3293.capstone_v304_publication_blocker_count",
+      "source_experiment_id": "exp3293",
+      "value": 10
+    }
+  ],
+  "prior_aligned_instruction_false_positive_rate": 1.0,
+  "prior_kan_auroc": 0.475326,
+  "prior_metric_classes": {
+    "aggregation-only": [
+      {
+        "metric": "matrix_v36_status_counts",
+        "source_experiment_id": "exp3292",
+        "status": "aggregation-only",
+        "value": {
+          "blocked": 1,
+          "clean": 1,
+          "flagged": 7,
+          "missing": 0,
+          "paper-blocking": 1,
+          "sidecar-only": 1
+        }
+      },
+      {
+        "metric": "capstone_v304_publication_blocker_count",
+        "source_experiment_id": "exp3293",
+        "status": "aggregation-only",
+        "value": 10
+      }
+    ],
+    "blocked": [
+      {
+        "blocker_reasons": [
+          "garak_attack_success_or_error_gate_failed",
+          "garak_gate_passed=false"
+        ],
+        "bounded_claims": [],
+        "quality_flags": [],
+        "role": "full_garak_dataflip_redteam",
+        "source_experiment_id": "exp3285",
+        "status": "blocked",
+        "summary": {
+          "attack_success_rate": 0.311111,
+          "dataflip_gate_passed": true,
+          "garak_dataflip_redteam_eval_v2_ready": true,
+          "garak_gate_passed": false,
+          "garak_probe_count": 90,
+          "garak_redteam_eval_ready": true
+        }
+      }
+    ],
+    "clean": [
+      {
+        "claim_class": "clean_boundary_or_integrity",
+        "headline_boundary": "integrity claim only; not label-quality or detector-performance evidence",
+        "metric": "artifact_checksums_available",
+        "metric_id": "exp3272.artifact_checksums_available",
+        "source_experiment_id": "exp3272",
+        "value": true
+      },
+      {
+        "claim_class": "clean_boundary_or_integrity",
+        "headline_boundary": "split leakage boundary only; template-backed label provenance still applies",
+        "metric": "split_leakage_boundary",
+        "metric_id": "exp3272.split_leakage_boundary",
+        "source_experiment_id": "exp3272",
+        "value": {
+          "bounded_leakage_sidecars": [
+            "GARAK_TEMPLATE_FAMILY_OVERLAP_BOUNDED",
+            "WITHIN_SOURCE_DUPLICATES_PRESENT"
+          ],
+          "exact_duplicate_overlap_rows": 0,
+          "leakage_audit_passed": true,
+          "near_duplicate_overlap_rows": 0,
+          "normal_template_family_overlap_rows": 0
+        }
+      }
+    ],
+    "flagged": [
+      {
+        "blocker_reasons": [],
+        "bounded_claims": [
+          "headline_claim_allowed=false"
+        ],
+        "quality_flags": [
+          {
+            "detail": "duration_s=10.893664 but artifact references compute-bound markers (GGUF / CUDA / live model). Loading and running a real model takes >=60.0s minimum; this completed too fast to have invoked the model.",
+            "kind": "DURATION_TOO_SHORT"
+          }
+        ],
+        "role": "gated_sota_repair_micro_panel",
+        "source_experiment_id": "exp3290",
+        "status": "flagged",
+        "summary": {
+          "abstention_count": 0,
+          "false_accept_count": 0,
+          "headline_claim_allowed": false,
+          "panel_case_count": 4,
+          "repair_panel_ran": true,
+          "repair_success_rate": 1.0,
+          "sota_repair_micro_panel_v10_ready": true,
+          "verified_success_count": 4
+        }
+      }
+    ],
+    "not_headline_eligible": [
+      {
+        "boundary": "KAN prompt-injection headline retired by Exp 3288.",
+        "classification": "sidecar-only",
+        "metric": "full_corpus_auroc",
+        "source_experiment_id": "exp3273"
+      },
+      {
+        "boundary": "Specific KAN failure mode; not detector utility evidence.",
+        "classification": "sidecar-only",
+        "metric": "aligned_instruction_false_positive_rate",
+        "source_experiment_id": "exp3273"
+      },
+      {
+        "boundary": "mixed cached-panel plus template-backed labels; not fully live-LLM labeled",
+        "classification": "flagged_or_sidecar",
+        "metric": "new_label_count",
+        "source_experiment_id": "exp3270+exp3271"
+      },
+      {
+        "boundary": "operational inventory only because count-equality tautology flags remain open",
+        "classification": "flagged_or_sidecar",
+        "metric": "assembled_example_count",
+        "source_experiment_id": "exp3272"
+      },
+      {
+        "boundary": "KAN sidecar only; DeLong non-inferiority failed",
+        "classification": "flagged_or_sidecar",
+        "metric": "full_corpus_auroc",
+        "source_experiment_id": "exp3273"
+      },
+      {
+        "boundary": "KAN sidecar only; DeLong non-inferiority failed",
+        "classification": "flagged_or_sidecar",
+        "metric": "full_corpus_auprc",
+        "source_experiment_id": "exp3273"
+      },
+      {
+        "boundary": "blocked because Garak was unavailable",
+        "classification": "flagged_or_sidecar",
+        "metric": "garak_gate_passed",
+        "source_experiment_id": "exp3274"
+      },
+      {
+        "boundary": "blocked gate evidence only; n_eval remains a tiny diagnostic panel",
+        "classification": "flagged_or_sidecar",
+        "metric": "clean_verifier_abstention_rate",
+        "source_experiment_id": "exp3275"
+      },
+      {
+        "boundary": "exact-zero movement flag means no improvement headline",
+        "classification": "flagged_or_sidecar",
+        "metric": "publication_blocker_delta_from_v302",
+        "source_experiment_id": "exp3279"
+      },
+      {
+        "boundary": "Four-case diagnostic exact repair panel; headline_claim_allowed=false in matrix v36.",
+        "classification": "flagged",
+        "metric": "verified_success_count",
+        "source_experiment_id": "exp3290"
+      },
+      {
+        "boundary": "Matrix status counts are aggregation, not live evidence.",
+        "classification": "aggregation-only",
+        "metric": "primary_status_counts",
+        "source_experiment_id": "exp3292"
+      },
+      {
+        "boundary": "Capstone closeout count is a readiness ledger, not a benchmark metric.",
+        "classification": "aggregation-only",
+        "metric": "publication_blocker_count",
+        "source_experiment_id": "exp3293"
+      }
+    ],
+    "sidecar-only": [
+      {
+        "blocker_reasons": [],
+        "bounded_claims": [
+          "kan_boundary_decision=retire_from_prompt_injection_headline",
+          "prior_delong_noninferiority_passed=false"
+        ],
+        "quality_flags": [],
+        "role": "kan_sidecar_failure_boundary",
+        "source_experiment_id": "exp3288",
+        "status": "sidecar-only",
+        "summary": {
+          "kan_boundary_decision": "retire_from_prompt_injection_headline",
+          "kan_boundary_decision_ready": true,
+          "kan_failure_autopsy_ready": true,
+          "prior_delong_noninferiority_passed": false,
+          "prior_full_corpus_auroc": 0.475326
+        }
+      }
+    ]
+  },
+  "protected_file_status": {
+    "results/experiment_3283_prompt_injection_corrigendum_duration_audit_v1.json": {
+      "after_sha256": "d5ebebb114d5ab4cf85be5e0606aba25c216484bf43b4b99cc3ec75c0e8d93bc",
+      "before_sha256": "d5ebebb114d5ab4cf85be5e0606aba25c216484bf43b4b99cc3ec75c0e8d93bc",
+      "unchanged": true
+    },
+    "results/experiment_3288_kan_sidecar_failure_autopsy_boundary_v1.json": {
+      "after_sha256": "a32056db550cb60882f718d2e7d990c6baa8ff0b5989c262877a2a0ea4a62131",
+      "before_sha256": "a32056db550cb60882f718d2e7d990c6baa8ff0b5989c262877a2a0ea4a62131",
+      "unchanged": true
+    },
+    "results/experiment_3292_evidence_matrix_v36.json": {
+      "after_sha256": "35d3405a17797e79132bb284d749afe561d28d3b397f3de121604eb1b72f5044",
+      "before_sha256": "35d3405a17797e79132bb284d749afe561d28d3b397f3de121604eb1b72f5044",
+      "unchanged": true
+    },
+    "results/experiment_3293_capstone_v304.json": {
+      "after_sha256": "49253da0470eec58d195ee21e18ef03ce45747d282aa125f4c8956513c4854de",
+      "before_sha256": "49253da0470eec58d195ee21e18ef03ce45747d282aa125f4c8956513c4854de",
+      "unchanged": true
+    },
+    "scripts/research_conductor.py": {
+      "after_sha256": "f7253130513139845fb202c44bff1e7974079c0b666f6f8837dee6df3976edff",
+      "before_sha256": "f7253130513139845fb202c44bff1e7974079c0b666f6f8837dee6df3976edff",
+      "unchanged": true
+    }
+  },
+  "protected_files_untouched": true,
+  "random_seed": 3296,
+  "reproducibility_checksum": "7cd796dc3f2e45ec57d48ed03bc544fe0196e5964f53aa90a4a8b65aca1a8b79",
+  "run_date": "20260528",
+  "schema": "carnot.substrate_corrigendum_kan_no_retry.v1",
+  "schema_version": "carnot.substrate_corrigendum_kan_no_retry.v1",
+  "scripts_research_conductor_modified": false,
+  "source_artifacts": [
+    {
+      "experiment_id": "exp3283",
+      "path": "results/experiment_3283_prompt_injection_corrigendum_duration_audit_v1.json",
+      "sha256": "d5ebebb114d5ab4cf85be5e0606aba25c216484bf43b4b99cc3ec75c0e8d93bc"
+    },
+    {
+      "experiment_id": "exp3288",
+      "path": "results/experiment_3288_kan_sidecar_failure_autopsy_boundary_v1.json",
+      "sha256": "a32056db550cb60882f718d2e7d990c6baa8ff0b5989c262877a2a0ea4a62131"
+    },
+    {
+      "experiment_id": "exp3292",
+      "path": "results/experiment_3292_evidence_matrix_v36.json",
+      "sha256": "35d3405a17797e79132bb284d749afe561d28d3b397f3de121604eb1b72f5044"
+    },
+    {
+      "experiment_id": "exp3293",
+      "path": "results/experiment_3293_capstone_v304.json",
+      "sha256": "49253da0470eec58d195ee21e18ef03ce45747d282aa125f4c8956513c4854de"
+    }
+  ],
+  "source_checksums": {
+    "results/experiment_3283_prompt_injection_corrigendum_duration_audit_v1.json": "d5ebebb114d5ab4cf85be5e0606aba25c216484bf43b4b99cc3ec75c0e8d93bc",
+    "results/experiment_3288_kan_sidecar_failure_autopsy_boundary_v1.json": "a32056db550cb60882f718d2e7d990c6baa8ff0b5989c262877a2a0ea4a62131",
+    "results/experiment_3292_evidence_matrix_v36.json": "35d3405a17797e79132bb284d749afe561d28d3b397f3de121604eb1b72f5044",
+    "results/experiment_3293_capstone_v304.json": "49253da0470eec58d195ee21e18ef03ce45747d282aa125f4c8956513c4854de"
+  },
+  "spec_refs": [
+    "REQ-REPORT-3296",
+    "SCENARIO-REPORT-3296"
+  ],
+  "substrate_corrigendum_ready": true,
+  "task_id": "exp3296-substrate-corrigendum-kan-no-retry-v1"
+}

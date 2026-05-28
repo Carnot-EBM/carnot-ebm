@@ -13843,3 +13843,70 @@ benchmark result.
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-REPORT-3295 | Implemented (`python/carnot/reporting/garak_failure_mode_autopsy_3295.py`) | Implemented (`tests/python/test_experiment_3295_garak_failure_mode_autopsy.py`) |
+
+### REQ-REPORT-3296: Substrate Corrigendum And KAN No-Retry Ledger V1
+
+The repository shall provide an Exp 3296 substrate/corrigendum and KAN
+no-retry ledger that writes
+`results/experiment_3296_substrate_corrigendum_kan_no_retry_v1.json` by
+reading Exp 3283, Exp 3288, evidence matrix v36, and capstone v304. The
+workflow MUST be aggregation only. It MUST NOT train KAN, rerun KAN, relabel
+corpus shards, run Garak, run repair, run verifier scoring, push, modify
+`scripts/research_conductor.py`, or alter the prior source result files.
+
+The ledger MUST classify prior metrics as clean, flagged, sidecar-only,
+blocked, aggregation-only, or not headline eligible. It SHALL distinguish
+live inference evidence from aggregation evidence so downstream `.305` matrix
+tasks do not count matrix rows, capstones, flagged methodology rows, or
+sidecar-only rows as headline evidence. It SHALL preserve the Exp 3288
+decision that the prompt-injection KAN sidecar is retired from headline use
+and SHALL keep the retirement grounded in `prior_kan_auroc=0.475326` and
+`prior_aligned_instruction_false_positive_rate=1.0`.
+
+The terminal artifact MUST include `substrate_corrigendum_ready`,
+`kan_no_retry_ledger_ready`, `kan_prompt_injection_headline_retired`,
+`prior_kan_auroc`, `prior_aligned_instruction_false_positive_rate`,
+`headline_eligible_prior_metrics`, `non_headline_prior_metrics`,
+`downstream_usage_rules`, `future_reopen_prerequisites`,
+`protected_files_untouched`, `inference_substrate`, `random_seed`,
+`reproducibility_checksum`, `duration_s`, and `honest_verdict`. It SHOULD also
+include source checksums, protected-file checksum comparisons,
+prior-metric-class buckets, and field-provenance annotations. `honest_verdict`
+MUST begin with one of `complete:`, `success:`, `passed:`, or `shipped:`.
+
+`substrate_corrigendum_ready` shall be true only when the artifact records
+that downstream matrices must separate live Garak or exact repair evidence
+from aggregation-only evidence. `kan_no_retry_ledger_ready` shall be true only
+when the artifact records KAN no-retry rules and future reopening
+prerequisites. `protected_files_untouched` shall be true only when the source
+artifacts and `scripts/research_conductor.py` are unchanged during the run.
+
+#### SCENARIO-REPORT-3296: V305 Claim Boundary Keeps KAN Retired
+
+**Given** Exp 3283 reports a corrigendum that keeps `.303` corpus and KAN
+metrics bounded away from headline performance claims
+**And** Exp 3288 reports
+`kan_boundary_decision=retire_from_prompt_injection_headline`,
+`prior_full_corpus_auroc=0.475326`, and
+`aligned_instruction_false_positive_rate=1.0`
+**And** evidence matrix v36 reports clean, flagged, blocked, sidecar-only, and
+paper-blocking rows
+**And** capstone v304 reports `paper_ready=false`,
+`garak_gate_passed=false`, `repair_gate_open=true`, and
+`repair_micro_panel_headline_eligible=false`
+**When** the Exp 3296 ledger runs
+**Then** it writes
+`results/experiment_3296_substrate_corrigendum_kan_no_retry_v1.json` with all
+required schema fields, classifies prior metrics by claim boundary, emits
+downstream usage rules for Garak, repair, KAN, and corpus references, states
+the operator-authorized prerequisites for any future KAN reopening, confirms
+protected files were not modified, sets
+`inference_substrate=aggregation_from_upstream_artifacts`, and emits an
+`honest_verdict` beginning with `complete:` without rerunning KAN or promoting
+sidecar-only evidence.
+
+## Implementation Status (REQ-REPORT-3296)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-3296 | Implemented (`python/carnot/reporting/substrate_corrigendum_kan_no_retry_3296.py`) | Implemented (`tests/python/test_experiment_3296_substrate_corrigendum_kan_no_retry.py`) |
