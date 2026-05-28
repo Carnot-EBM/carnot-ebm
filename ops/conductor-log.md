@@ -6588,3 +6588,4 @@ web search |
 | 2026-05-28 06:40 UTC | Milestone 2026.05.301 activated | OK | 13 tasks queued |
 | 2026-05-28 06:54 UTC | Archive .300 closeout and activate .301 planning a | OK | 81 passed in 3.33s |
 | 2026-05-28 07:09 UTC | Selected-Python CUDA root-cause surgery ledger | OK | 81 passed in 3.35s |
+| 2026-05-28 07:11 UTC | Isolated selected-Python CUDA smoke v2 gated on ro | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp3247-selected-python-cuda-root-cause-su |
