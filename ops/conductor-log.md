@@ -6661,3 +6661,4 @@ web search: https://docs.garak.ai/garak/examples/pr |
 | 2026-05-28 20:59 UTC | Capstone v304 | OK | 81 passed in 3.93s |
 | 2026-05-28 21:45 UTC | Plan milestone 2026.05.305 | OK | 13 tasks proposed |
 | 2026-05-28 21:47 UTC | Milestone 2026.05.305 activated | OK | 13 tasks queued |
+| 2026-05-28 22:02 UTC | Close .304 ledger and open .305 Garak gate queue | OK | 81 passed in 3.96s |

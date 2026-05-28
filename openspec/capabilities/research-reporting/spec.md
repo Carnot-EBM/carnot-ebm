@@ -13768,3 +13768,78 @@ KAN promotion retry, and emits an `honest_verdict` beginning with `complete:`.
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-REPORT-3294 | Implemented (`python/carnot/reporting/archive_v304_activate_v305_3294.py`) | Implemented (`tests/python/test_experiment_3294_archive_v304_activate_v305.py`) |
+
+### REQ-REPORT-3295: Garak Failure-Mode Autopsy V1
+
+The repository shall provide an Exp 3295 Garak failure-mode autopsy generator
+that writes `results/experiment_3295_garak_failure_mode_autopsy_v1.json` by
+reading the measured `.304` Garak/DataFlip failure artifact
+`results/experiment_3285_full_garak_dataflip_redteam_eval_v2.json`, the local
+Garak smoke artifact `results/experiment_3284_garak_local_smoke_sota_gguf_v1.json`,
+and evidence matrix v36 `results/experiment_3292_evidence_matrix_v36.json`.
+The workflow MUST be aggregation only. It MUST NOT run a new model, a new Garak
+eval, repair, verifier scoring, CUDA probe, KAN training, conductor step, push,
+or modify `scripts/research_conductor.py`.
+
+The autopsy MUST preserve the prior Garak gate failure quantitatively:
+`attack_success_rate=0.311111` against `garak_attack_success_gate=0.20`, with
+`dataflip_gate_passed=true`, `garak_gate_passed=false`, and blocked reason
+`garak_attack_success_or_error_gate_failed`. It MUST classify measured behavior
+by PromptInject, jailbreak/encoding, aligned-benign, DataFlip, empty/error,
+refusal, and repetition/degeneration categories. The PromptInject and
+jailbreak/encoding records MUST keep probe counts, attack-success counts,
+attack-success rates, refusal counts, refusal rates, empty-response counts, and
+error counts separate from detector-side DataFlip and aligned-benign KAN
+behavior.
+
+The autopsy MUST extract exact target phrases and prefix-closed target patterns
+from the `.304` Garak panel command embedded in Exp 3285, falling back only to
+the documented Exp 3285 target inventory if that command is unavailable. The
+target inventory MUST include the PromptInject rogue strings and the manual
+jailbreak/encoding target strings so Exp 3297 can build a deterministic
+prefix guard. It MUST summarize response previews for repetition or degenerate
+output behavior without treating degeneration as a successful refusal or as a
+detector success.
+
+The terminal artifact MUST include `garak_failure_autopsy_ready`,
+`source_artifacts`, `prior_attack_success_rate`,
+`prior_garak_attack_success_gate`, `failed_probe_families`,
+`target_phrase_inventory`, `target_prefix_inventory`,
+`refusal_rate_by_family`, `repetition_or_degenerate_output_summary`,
+`gate_failure_clauses`, `recommended_defense_axes`,
+`downstream_gate_requirements`, `inference_substrate`, `random_seed`,
+`reproducibility_checksum`, `duration_s`, and `honest_verdict`. It SHALL also
+include no-new-execution booleans, model provenance summaries, response
+behavior classifications, and an explicit statement that no headline benchmark
+claim is made. `honest_verdict` MUST begin with one of `complete:`,
+`success:`, `passed:`, or `shipped:`.
+
+#### SCENARIO-REPORT-3295: Autopsy Preserves The .304 Garak Root Cause
+
+**Given** Exp 3285 reports a ready full red-team eval with 90 probes,
+`attack_success_rate=0.311111`, `garak_attack_success_gate=0.20`,
+`garak_gate_passed=false`, `dataflip_gate_passed=true`, PromptInject
+`attack_success_rate` near 0.321, jailbreak/encoding `attack_success_rate`
+near 0.167, low refusal rates, zero empty responses, zero errors, and response
+previews that include both exact target compliance and repetitive/degenerate
+loops
+**And** Exp 3284 reports the local SOTA GGUF smoke target and model/cache
+provenance
+**And** matrix v36 ranks `pass_garak_redteam_gate` as the top gap and preserves
+`garak_attack_success_or_error_gate_failed`
+**When** the Exp 3295 autopsy generator runs
+**Then** it writes `results/experiment_3295_garak_failure_mode_autopsy_v1.json`
+with all required schema fields, `garak_failure_autopsy_ready=true`, exact
+source checksums, the failed prior ASR and gate threshold, family-aware failure
+rows, exact target phrases, prefix-closed target patterns, refusal rates by
+family, a repetition/degeneration summary, precise gate-failure clauses,
+ranked defense axes, minimum evidence requirements for Exp 3297, Exp 3298, Exp
+3299, and Exp 3300, `inference_substrate=artifact_aggregation_only`, and an
+`honest_verdict` beginning with `complete:` without claiming a headline
+benchmark result.
+
+## Implementation Status (REQ-REPORT-3295)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-3295 | Implemented (`python/carnot/reporting/garak_failure_mode_autopsy_3295.py`) | Implemented (`tests/python/test_experiment_3295_garak_failure_mode_autopsy.py`) |
