@@ -8562,3 +8562,65 @@ and `repair_gate_input_clean_enough` SHALL be false.
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-VERIFY-3287 | Implemented (`python/carnot/verify/abstention_calibrated_clean_verifier_v15.py`) | Implemented (`tests/python/test_experiment_3287_abstention_calibrated_clean_verifier_v15.py`) |
+
+### REQ-VERIFY-3289: Repair Gate Decision V9 After Garak And Abstention
+
+The repository shall provide an Exp 3289 deterministic repair-gate decision
+builder that reads
+`results/experiment_3285_full_garak_dataflip_redteam_eval_v2.json`,
+`results/experiment_3287_abstention_calibrated_clean_verifier_v15.json`,
+`results/experiment_3288_kan_sidecar_failure_autopsy_boundary_v1.json`, and
+the prior Exp 3276 repair-gate decision if present, then writes
+`results/experiment_3289_repair_gate_decision_v9_after_garak_abstention.json`.
+The builder MUST be an aggregation-only decision and MUST NOT run repair,
+rerun Garak, rerun clean verification, retrain or promote KAN, push, or modify
+`scripts/research_conductor.py`.
+
+The gate SHALL open only when all mandatory conditions pass: Exp 3285 reports
+`garak_redteam_eval_ready=true`, Exp 3287 reports
+`clean_verifier_rerun_ready=true`, Exp 3287 reports
+`repair_gate_input_clean_enough=true`, Exp 3287 preserves a zero false-accept
+rate and non-abstain coverage, and Exp 3288 reports
+`kan_boundary_decision_ready=true` with downstream KAN use bounded away from
+repair-gate authority or headline detector promotion. Exp 3285
+`garak_gate_passed` and `blocked_reasons` SHALL remain visible in
+`gate_inputs`, but the repair decision is gated on Garak evidence readiness,
+not on converting target-model red-team behavior into repair success.
+
+The terminal artifact MUST include `repair_gate_decision_v9_ready`,
+`repair_gate_open`, `garak_redteam_eval_ready`, `clean_verifier_rerun_ready`,
+`repair_gate_input_clean_enough`, `kan_boundary_decision_ready`,
+`gate_inputs`, `blocked_reasons`, `permitted_repair_scope`, `random_seed`,
+`reproducibility_checksum`, `duration_s`, and `honest_verdict`.
+`blocked_reasons` SHALL contain precise source-field failures whenever the
+gate is closed. `permitted_repair_scope` SHALL bound Exp 3290 when the gate is
+open by naming a small sample size, mandated local SOTA GGUF model specs,
+permitted case families, exact-verification requirements, false-accept and
+abstention constraints, KAN-use restrictions, and the explicit no-headline
+claim boundary. `honest_verdict` MUST begin with one of `complete:`,
+`success:`, `passed:`, or `shipped:` whenever the decision artifact is
+written.
+
+### SCENARIO-VERIFY-3289: Conservative Aggregation Opens Only With Ready Evidence
+
+Given the Exp 3285 full Garak/DataFlip red-team artifact, Exp 3287
+abstention-calibrated clean verifier artifact, and Exp 3288 KAN boundary
+artifact are present,
+When Exp 3289 builds the repair-gate decision,
+Then it writes the required terminal JSON artifact, traces every decision to
+the upstream gate fields in `gate_inputs`, keeps Garak attack-success and KAN
+failure metrics visible without promoting either as repair authority, opens
+the repair gate only when the required ready/clean/bounded conditions hold,
+and defines the bounded Exp 3290 micro-panel scope when `repair_gate_open=true`.
+
+If any upstream artifact is missing or malformed, if Garak evidence is not
+ready, if the clean verifier is not ready, if the clean verifier is abstain-all
+or has any false accept, or if KAN downstream use is unbounded, then Exp 3289
+still writes a terminal artifact with `repair_gate_open=false`, an empty or
+non-executable `permitted_repair_scope`, and precise `blocked_reasons`.
+
+## Implementation Status (REQ-VERIFY-3289)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-VERIFY-3289 | Implemented (`python/carnot/verify/repair_gate_decision_v9.py`) | Implemented (`tests/python/test_experiment_3289_repair_gate_decision_v9.py`) |

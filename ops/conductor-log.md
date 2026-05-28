@@ -6653,3 +6653,4 @@ web search: https://docs.garak.ai/garak/examples/pr |
 | 2026-05-28 18:33 UTC | Gated full Garak/DataFlip red-team eval v2 | OK | 81 passed in 4.51s |
 | 2026-05-28 19:13 UTC | Clean verifier abstention root-cause audit v1 | OK | 81 passed in 2.72s |
 | 2026-05-28 19:31 UTC | Gated abstention-calibrated clean verifier v15 | OK | 81 passed in 3.66s |
+| 2026-05-28 19:46 UTC | Gated KAN sidecar failure autopsy and boundary dec | OK | 81 passed in 4.29s |
