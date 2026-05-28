@@ -12545,3 +12545,48 @@ complete and leaves `teacher_label_shard_ready=false`.
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-REPORT-3264 | Planned (`python/carnot/reporting/prompt_injection_teacher_label_shard_v3_3264.py`) | Planned (`tests/python/test_experiment_3264_prompt_injection_teacher_label_shard_v3.py`) |
+
+### REQ-REPORT-3265: Prompt-Injection KAN Train/Eval Shard V3
+
+The repository shall provide an Exp 3265 prompt-injection KAN train/eval shard
+runner that first reads
+`results/experiment_3264_prompt_injection_teacher_label_shard_v3.json`. If
+`teacher_label_shard_ready` is not true, the runner SHALL write a complete
+gated-skip artifact at
+`results/experiment_3265_prompt_injection_kan_train_eval_shard_v3.json` with
+`kan_train_eval_shard_v3_ready=false`,
+`kan_train_eval_shard_ready=false`, and the exact blocked reason.
+
+When Exp 3264 is ready, the runner SHALL train a 16-knot
+`PromptInjectionEnergyCheckerV3` KAN on a deterministic train split of the
+labeled shard and evaluate AUROC on a deterministic held-out slice. The
+terminal artifact MUST include `kan_train_eval_shard_v3_ready`,
+`kan_train_eval_shard_ready`, `shard_auroc`, `non_headline_note`, `n_train`,
+`n_eval`, `random_seed`, `reproducibility_checksum`, `duration_s`, and
+`honest_verdict`. The `non_headline_note` MUST state that a single-shard AUROC
+is only a viability check and is not replacement-grade; replacement-grade
+evidence still requires the full multi-shard 15k corpus, DeLong
+non-inferiority, and Garak gates. `honest_verdict` MUST begin with one of
+`complete:`, `complete_`, `success:`, `success_`, `passed:`, `passed_`, or
+`shipped_`.
+
+#### SCENARIO-REPORT-3265: Ready Teacher Labels Produce Non-Headline AUROC
+
+**Given** Exp 3264 reports `teacher_label_shard_ready=true`
+**And** the labeled shard contains both benign and injection labels
+**When** the Exp 3265 train/eval runner trains the 16-knot KAN and evaluates
+the held-out slice
+**Then** it writes
+`results/experiment_3265_prompt_injection_kan_train_eval_shard_v3.json` with
+all required schema fields, records `n_train`, `n_eval`, and `shard_auroc`,
+sets `kan_train_eval_shard_v3_ready=true`, and records a non-headline note that
+prevents the single-shard AUROC from being treated as a replacement-grade
+claim. If Exp 3264 is missing, not ready, lacks parseable labels, or lacks both
+classes after splitting, the artifact remains complete and leaves
+`kan_train_eval_shard_ready=false`.
+
+## Implementation Status (REQ-REPORT-3265)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-3265 | Planned (`python/carnot/reporting/prompt_injection_kan_train_eval_shard_v3_3265.py`) | Planned (`tests/python/test_experiment_3265_prompt_injection_kan_train_eval_shard_v3.py`) |

@@ -6618,3 +6618,4 @@ web search |
 | 2026-05-28 09:24 UTC | CUDA recovery confirmation smoke — post-reboot GPU | OK | 81 passed in 3.59s |
 | 2026-05-28 09:37 UTC | llama.cpp CUDA receipt smoke v4 gated on CUDA reco | OK | 81 passed in 4.29s |
 | 2026-05-28 09:52 UTC | Mandated SOTA GGUF receipt v9 gated on llama.cpp C | OK | 81 passed in 3.71s |
+| 2026-05-28 10:13 UTC | Prompt-injection v4 teacher-label shard v3 gated o | OK | 81 passed in 4.09s |
