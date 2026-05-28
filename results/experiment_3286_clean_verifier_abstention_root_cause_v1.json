@@ -1,0 +1,299 @@
+{
+  "abstention_reason_counts": {
+    "model_output_unparseable": 6
+  },
+  "abstention_root_cause_audit_ready": true,
+  "abstention_root_cause_identified": true,
+  "answerability_fields": [
+    "expected_decision",
+    "exact_authority",
+    "source_candidate_kind",
+    "fixture_id"
+  ],
+  "answerable_row_count": 6,
+  "audited_exact_row_count": 6,
+  "calibrated_rerun_plan": {
+    "acceptance_criteria": {
+      "max_false_accept_count": 0,
+      "minimum_answerable_rows": 6,
+      "minimum_audited_exact_rows": 6,
+      "minimum_decision_coverage": 0.5,
+      "requires_no_synthetic_rows": true,
+      "requires_parser_contract_evidence": true,
+      "target_false_accept_rate": 0.0,
+      "target_max_abstention_rate": 0.5
+    },
+    "experiment_id": "exp3287",
+    "measurement_fields": [
+      "n_eval",
+      "answerable_row_count",
+      "parseable_decision_count",
+      "abstention_rate",
+      "false_accept_rate",
+      "false_accept_count",
+      "exact_row_fixture_hash",
+      "reproducibility_checksum"
+    ],
+    "pre_gpu_smoke_gate": {
+      "abort_if_false_accept_count_gt": 0,
+      "abort_if_parseable_decision_count_lt": 1,
+      "rows": 2
+    },
+    "prior_blocker": {
+      "abstention_rate": 1.0,
+      "failure_mode": "all exact rows normalized to abstain"
+    },
+    "purpose": "rerun the clean verifier only after fixing the output contract",
+    "required_controls": [
+      "Use the model-native chat template or a grammar constrained decoder for ACCEPT|REJECT|ABSTAIN.",
+      "Keep the strict leading-token parser; non-leading or verbose answers still count as abstain.",
+      "Use only checked-in exact fixtures with canonical answers and minimal counterexamples.",
+      "Abort before a larger GPU rerun when the smoke rows do not produce parseable decisions."
+    ],
+    "root_cause_to_address": "model_output_parser_contract_mismatch"
+  },
+  "dominant_root_cause": "model_output_parser_contract_mismatch",
+  "duration_s": 0.000746,
+  "evaluated_row_ids": [
+    "ctx3210-symbolic-01:expected",
+    "ctx3210-symbolic-01:counterexample",
+    "ctx3210-symbolic-02:expected",
+    "ctx3210-symbolic-02:counterexample",
+    "ctx3210-symbolic-03:expected",
+    "ctx3210-symbolic-03:counterexample"
+  ],
+  "exact_answer_fields": [
+    "expected_answer",
+    "minimal_counterexample.candidate_answer",
+    "prior_bait_answer"
+  ],
+  "exact_row_audit_table": [
+    {
+      "abstention_reason": "model_output_unparseable",
+      "answerability": "answerable",
+      "candidate_answer_present": true,
+      "exact_authority": "context_exact_checker",
+      "exact_checker_type": "exact_alias_string",
+      "expected_answer_present": true,
+      "expected_decision": "accept",
+      "fixture_id": "ctx3210-symbolic-01",
+      "output_preview": " context: For this fixture only",
+      "output_text": " context: For this fixture only",
+      "parsed_output_decision": null,
+      "reported_decision": "abstain",
+      "row_id": "ctx3210-symbolic-01:expected",
+      "source_candidate_kind": "fixture_expected_answer"
+    },
+    {
+      "abstention_reason": "model_output_unparseable",
+      "answerability": "answerable",
+      "candidate_answer_present": true,
+      "exact_authority": "context_exact_checker",
+      "exact_checker_type": "exact_alias_string",
+      "expected_answer_present": true,
+      "expected_decision": "reject",
+      "fixture_id": "ctx3210-symbolic-01",
+      "output_preview": "\ub85c\uac00\uc7a5\uc790\ub9ac-\uac00",
+      "output_text": "\ub85c\uac00\uc7a5\uc790\ub9ac-\uac00",
+      "parsed_output_decision": null,
+      "reported_decision": "abstain",
+      "row_id": "ctx3210-symbolic-01:counterexample",
+      "source_candidate_kind": "fixture_minimal_counterexample"
+    },
+    {
+      "abstention_reason": "model_output_unparseable",
+      "answerability": "answerable",
+      "candidate_answer_present": true,
+      "exact_authority": "context_exact_checker",
+      "exact_checker_type": "exact_alias_string",
+      "expected_answer_present": true,
+      "expected_decision": "accept",
+      "fixture_id": "ctx3210-symbolic-02",
+      "output_preview": " context: For this fixture only",
+      "output_text": " context: For this fixture only",
+      "parsed_output_decision": null,
+      "reported_decision": "abstain",
+      "row_id": "ctx3210-symbolic-02:expected",
+      "source_candidate_kind": "fixture_expected_answer"
+    },
+    {
+      "abstention_reason": "model_output_unparseable",
+      "answerability": "answerable",
+      "candidate_answer_present": true,
+      "exact_authority": "context_exact_checker",
+      "exact_checker_type": "exact_alias_string",
+      "expected_answer_present": true,
+      "expected_decision": "reject",
+      "fixture_id": "ctx3210-symbolic-02",
+      "output_preview": "\ub85c\u5224\u65ad \u5224\u65ad",
+      "output_text": "\ub85c\u5224\u65ad \u5224\u65ad",
+      "parsed_output_decision": null,
+      "reported_decision": "abstain",
+      "row_id": "ctx3210-symbolic-02:counterexample",
+      "source_candidate_kind": "fixture_minimal_counterexample"
+    },
+    {
+      "abstention_reason": "model_output_unparseable",
+      "answerability": "answerable",
+      "candidate_answer_present": true,
+      "exact_authority": "context_exact_checker",
+      "exact_checker_type": "exact_alias_string",
+      "expected_answer_present": true,
+      "expected_decision": "accept",
+      "fixture_id": "ctx3210-symbolic-03",
+      "output_preview": " least-most degrees of definition",
+      "output_text": " least-most degrees of definition",
+      "parsed_output_decision": null,
+      "reported_decision": "abstain",
+      "row_id": "ctx3210-symbolic-03:expected",
+      "source_candidate_kind": "fixture_expected_answer"
+    },
+    {
+      "abstention_reason": "model_output_unparseable",
+      "answerability": "answerable",
+      "candidate_answer_present": true,
+      "exact_authority": "context_exact_checker",
+      "exact_checker_type": "exact_alias_string",
+      "expected_answer_present": true,
+      "expected_decision": "reject",
+      "fixture_id": "ctx3210-symbolic-03",
+      "output_preview": "\ub85c \uc778\ud574 \ubc1c\uc0dd\ud558\ub294-",
+      "output_text": "\ub85c \uc778\ud574 \ubc1c\uc0dd\ud558\ub294-",
+      "parsed_output_decision": null,
+      "reported_decision": "abstain",
+      "row_id": "ctx3210-symbolic-03:counterexample",
+      "source_candidate_kind": "fixture_minimal_counterexample"
+    }
+  ],
+  "experiment_id": "exp3286",
+  "honest_verdict": "complete: clean verifier abstention root cause identified",
+  "malformed_or_missing_answer_count": 0,
+  "milestone": "2026.05.303",
+  "parser_or_extraction_findings": [
+    {
+      "category": "row_extraction",
+      "declared_n_eval": 6,
+      "finding": "row_extraction_ok",
+      "per_row_results_count": 6
+    },
+    {
+      "category": "fixture_join",
+      "finding": "fixture_authority_available",
+      "fixture_rows_available": 30,
+      "malformed_or_missing_answer_count": 0
+    },
+    {
+      "category": "model_output_contract_mismatch",
+      "finding": "dominant_parser_contract_failure",
+      "missing_output_count": 0,
+      "unparseable_abstention_count": 6
+    }
+  ],
+  "prior_abstention_rate": 1.0,
+  "random_seed": 3286,
+  "reproducibility_checksum": "05ee7dd5faf97c0f5f9ab6a6be774052b7f9cc5a6fcbd7ce2f1f7f9f01409acb",
+  "row_class_counts": {
+    "answerable": 6,
+    "malformed_or_missing_answer": 0,
+    "unanswerable": 0,
+    "unknown": 0
+  },
+  "run_date": "20260528",
+  "schema_version": "carnot.clean_verifier_abstention_root_cause.v1",
+  "source_artifacts": [
+    {
+      "path": "results/experiment_3275_clean_local_sota_verifier_rerun_v14.json",
+      "present": true,
+      "role": "exp3275_clean_verifier_rerun",
+      "sha256": "82da1d6ce86510112edab1b9f61d70cd4bc1828a739267cbe9e8598f10f15d54"
+    },
+    {
+      "path": "results/experiment_3268_sota_receipt_methodology_supplement_v1.json",
+      "present": true,
+      "role": "exp3268_sota_receipt_methodology",
+      "sha256": "6eb4f737436f56511071404ee0b0c52763df8965f232e96fad7dd449d25a1706"
+    },
+    {
+      "path": "results/experiment_3223_distributional_ebm_exact_row_uncertainty_sidecar_v2.json",
+      "present": true,
+      "role": "exp3223_exact_row_sidecar",
+      "sha256": "4decc42c5c739fe1d7c89c8581f1f27017cb3d16191c1c8100b57ab9eed4eef0"
+    },
+    {
+      "path": "data/research/context_cot_clbench_parametric_shortcut_v1.jsonl",
+      "present": true,
+      "role": "context_exact_row_fixture",
+      "sha256": "a16ceb2356c303b35116bc001292c345915a177e7116357544a924962f108f7b"
+    },
+    {
+      "path": "ops/verifier_authenticity_audit_report.md",
+      "present": true,
+      "role": "verifier_authenticity_audit_report",
+      "sha256": "51ce502d76a5f463f8b58f2237975857694c398253d598210636d5236e76df36"
+    },
+    {
+      "path": "openspec/capabilities/verification/spec.md",
+      "present": true,
+      "role": "verification_openspec",
+      "sha256": "a47dfe7f724dcbc6b0ab40a80389b53f9e0c8af3dfac134a9444640649ec9205"
+    },
+    {
+      "path": "python/carnot/verify/clean_verifier_abstention_root_cause_v1.py",
+      "present": true,
+      "role": "exp3286_module",
+      "sha256": "d190c746fd553315c7d07a619fcca54e1f75429f8f4910485960b078f0534f14"
+    },
+    {
+      "path": "tests/python/test_experiment_3286_clean_verifier_abstention_root_cause_v1.py",
+      "present": true,
+      "role": "exp3286_tests",
+      "sha256": "4d216fbacf0d5850bf4455da4280b6382e379fff2fe5b2393c126b8f444bc870"
+    }
+  ],
+  "spec_refs": [
+    "REQ-VERIFY-3286",
+    "SCENARIO-VERIFY-3286"
+  ],
+  "target_false_accept_rate": 0.0,
+  "target_max_abstention_rate": 0.5,
+  "tests_run": [
+    ".venv/bin/pytest tests/python/test_experiment_3286_clean_verifier_abstention_root_cause_v1.py -q -o addopts=''",
+    ".venv/bin/coverage erase",
+    ".venv/bin/coverage run --source=python/carnot/verify/clean_verifier_abstention_root_cause_v1.py -m pytest -o addopts='' tests/python/test_experiment_3286_clean_verifier_abstention_root_cause_v1.py -q",
+    ".venv/bin/coverage report --include='python/carnot/verify/clean_verifier_abstention_root_cause_v1.py' --fail-under=100 --show-missing",
+    ".venv/bin/python scripts/check_spec_coverage.py",
+    ".venv/bin/pytest tests/python -q"
+  ],
+  "threshold_fields": {
+    "abstention_threshold": 0.5,
+    "false_accept_threshold": 0.1,
+    "target_false_accept_rate": 0.0,
+    "target_max_abstention_rate": 0.5
+  },
+  "threshold_or_policy_findings": [
+    {
+      "blocked": true,
+      "category": "abstention_threshold",
+      "finding": "threshold_blocked_after_parser_abstentions",
+      "observed_abstention_rate": 1.0,
+      "threshold": 0.5
+    },
+    {
+      "category": "false_accept_policy",
+      "finding": "no_false_accepts_observed_in_prior_run",
+      "observed_false_accept_rate": 0.0,
+      "target_false_accept_rate": 0.0
+    },
+    {
+      "category": "safety_policy",
+      "finding": "not_implicated",
+      "policy_refusal_row_count": 0
+    }
+  ],
+  "upstream_receipt_summary": {
+    "clean_sota_receipt_eligible": true,
+    "models_used": [
+      "unsloth/gemma-4-26B-A4B-it-GGUF"
+    ]
+  }
+}

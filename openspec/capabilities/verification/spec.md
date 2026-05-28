@@ -8456,3 +8456,53 @@ input without promoting CPU fallback or synthetic rows.
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-VERIFY-3275 | Implemented (`python/carnot/verify/clean_local_sota_verifier_rerun_v14.py`) | Implemented (`tests/python/test_experiment_3275_clean_local_sota_verifier_rerun_v14.py`) |
+
+### REQ-VERIFY-3286: Clean Verifier Abstention Root-Cause Audit V1
+
+The repository shall provide an Exp 3286 deterministic root-cause audit that
+reads `results/experiment_3275_clean_local_sota_verifier_rerun_v14.json`, the
+Exp 3268 receipt supplement, and the checked-in exact-row fixtures, then writes
+`results/experiment_3286_clean_verifier_abstention_root_cause_v1.json`.
+
+The audit MUST NOT run live model inference, modify
+`scripts/research_conductor.py`, push, or spend GPU time. It SHALL identify the
+Exp 3275 evaluated rows, answerability fields, exact-answer fields, thresholds,
+and abstention reasons. It SHALL separate missing canonical answers, fixture
+mismatch, row extraction failure, score thresholds, model-output parsing, and
+safety-policy causes instead of merging them into one abstention bucket.
+
+The terminal artifact MUST include
+`abstention_root_cause_audit_ready`, `abstention_root_cause_identified`,
+`prior_abstention_rate`, `audited_exact_row_count`, `answerable_row_count`,
+`malformed_or_missing_answer_count`, `threshold_or_policy_findings`,
+`parser_or_extraction_findings`, `calibrated_rerun_plan`,
+`target_max_abstention_rate`, `target_false_accept_rate`, `random_seed`,
+`reproducibility_checksum`, `duration_s`, and `honest_verdict`.
+`honest_verdict` MUST start with `complete:`, `success:`, `passed:`, or
+`shipped:`.
+
+`abstention_root_cause_identified` shall be true only when the audit has a
+visible exact-row denominator, every malformed or missing-answer row is counted,
+and the dominant abstention cause is assigned to data quality, extraction,
+parser/model-output contract, threshold, or policy. The calibrated rerun plan
+for Exp 3287 SHALL require zero false accepts, a non-trivial non-abstain
+coverage target over answerable exact rows, explicit parser-output-contract
+evidence, and a short smoke gate that aborts before a larger GPU rerun when the
+model still does not emit parseable verifier decisions.
+
+### SCENARIO-VERIFY-3286: Abstain-All V14 Becomes A Calibrated Rerun Plan
+
+Given Exp 3275 scored exact fixture rows but reported `abstention_rate=1.0`,
+When the Exp 3286 audit runs,
+Then it emits a terminal JSON artifact showing the exact denominator,
+classifies answerable, unanswerable, malformed, and unknown rows, distinguishes
+strict-threshold blocking from parser/model-output contract failure, records
+that missing canonical answers or row extraction were not the dominant cause
+when the fixtures are present, and defines Exp 3287 acceptance criteria with
+`target_false_accept_rate=0.0` and `target_max_abstention_rate<1.0`.
+
+## Implementation Status (REQ-VERIFY-3286)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-VERIFY-3286 | Implemented (`python/carnot/verify/clean_verifier_abstention_root_cause_v1.py`) | Implemented (`tests/python/test_experiment_3286_clean_verifier_abstention_root_cause_v1.py`) |
