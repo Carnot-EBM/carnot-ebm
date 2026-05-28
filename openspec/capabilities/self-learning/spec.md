@@ -9623,3 +9623,92 @@ claim, and emits an `honest_verdict` beginning with `complete:`.
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-LEARN-3243 | Pending (`python/carnot/eval/fr11_failure_memory_controller_v1.py`) | Pending (`tests/python/test_experiment_3243_fr11_failure_memory_controller_v1.py`) |
+
+## REQ-LEARN-3255: FR-11 Lifelong Failure-Memory Retention Audit
+
+**Given** Exp 3243 materialized a controller-only FR-11 failure-memory update,
+Exp 3229 materialized nonforgetting-aware controller promotion governance, Exp
+3215 materialized evidence-gated replay labels, and recent conductor-log rows
+contain `.300` and `.301` gate outcomes
+**When** Exp 3255 runs a LifelongAgentBench-style audit over those existing
+artifacts and log rows
+**Then** it SHALL map retention to preserved avoidance of previously doomed
+reruns, adaptation to correct controller handling of new `.300` and `.301`
+failure signatures, and forgetting to regressions on prior accepted FR-11
+controller traces.
+**And** it SHALL split the evidence into remembered, adapted, and held-out
+negative-control slices with auditable trace IDs and source paths.
+**And** it SHALL aggregate only checked-in artifact/log evidence, SHALL NOT call
+a live LLM, and SHALL NOT train, fine-tune, mutate, or claim any
+foundation-model, KAN-sidecar, hidden-state, conductor-file, or active-roadmap
+update.
+
+The terminal artifact SHALL be
+`results/experiment_3255_fr11_lifelong_failure_memory_retention_audit_v1.json`
+and SHALL include `experiment_id="exp3255"`,
+`task_id="exp3255-fr11-lifelong-failure-memory-retention-audit-v1"`,
+`milestone="2026.05.301"`,
+`inference_substrate="aggregation_from_upstream_artifacts"`,
+`principle_annotations`, `continuous_self_learning_task`,
+`fr11_controller_update_ready`, `lifelong_eval_ready`,
+`failure_trace_count`, `heldout_replay_count`, `retention_score`,
+`adaptation_score`, `forgetting_score`,
+`negative_control_regression_count`, `doomed_rerun_avoidance_count`,
+`model_weight_update_claimed`, `no_new_llm_invoked`,
+`reproducibility_checksum`, and `honest_verdict`.
+
+### REQ-LEARN-3255 Sub-requirements
+
+- REQ-LEARN-3255-1: The audit SHALL cite the LifelongAgentBench planning note
+  and expose a mapping from retention, adaptation, and forgetting to Carnot
+  artifact/gate traces.
+- REQ-LEARN-3255-2: Failure traces SHALL include Exp 3243 controller-memory
+  traces plus new `.300` selected-Python CUDA gate blocks and `.301`
+  selected-Python/SOTA/prompt-injection gate signatures from checked-in
+  artifacts or `ops/conductor-log.md`.
+- REQ-LEARN-3255-3: The remembered slice SHALL be scored by preserved positive
+  controller replay deltas on previously doomed reruns, while the adapted slice
+  SHALL be scored by correct force-gate, repair-backend, or reject-stale actions
+  for new `.300`/`.301` signatures.
+- REQ-LEARN-3255-4: The held-out negative-control slice SHALL be sourced from
+  prior FR-11 replay labels and SHALL contribute to
+  `negative_control_regression_count`; regressions SHALL block
+  `lifelong_eval_ready`.
+- REQ-LEARN-3255-5: `forgetting_score` SHALL be one minus prior accepted-trace
+  regression rate, using Exp 3229 accepted traces as the prior accepted FR-11
+  slice; missing accepted traces SHALL fail closed with score `0.0`.
+- REQ-LEARN-3255-6: `lifelong_eval_ready` SHALL be true only when the FR-11
+  controller update is ready, remembered/adapted/negative-control slices are
+  nonempty, retention/adaptation/forgetting scores are all `1.0`, no negative
+  control regression exists, `model_weight_update_claimed=false`, and
+  `no_new_llm_invoked=true`.
+- REQ-LEARN-3255-7: `honest_verdict` SHALL begin with `complete:` and SHALL
+  distinguish controller-memory updates from foundation-model learning.
+
+### SCENARIO-LEARN-3255: Lifelong Audit Retains And Adapts Without Weight Updates
+
+**Given** Exp 3243 reports ready failure-memory replay, Exp 3229 reports zero
+negative-control regressions, Exp 3215 contains held-out negative-control
+labels, and conductor-log rows expose `.300` and `.301` gate blocks
+**When** Exp 3255 builds the lifelong audit
+**Then** remembered, adapted, and held-out negative-control slices are nonempty,
+retention, adaptation, and forgetting scores equal `1.0`,
+`negative_control_regression_count=0`, `model_weight_update_claimed=false`,
+`no_new_llm_invoked=true`, `lifelong_eval_ready=true`, and `honest_verdict`
+begins with `complete:`.
+
+### SCENARIO-LEARN-3255-BLOCKED: Missing Or Regressive Evidence Fails Closed
+
+**Given** the upstream artifacts are missing, nonterminal, or contain negative
+control regressions
+**When** Exp 3255 builds the lifelong audit
+**Then** it still writes all required schema fields, keeps
+`model_weight_update_claimed=false`, keeps `no_new_llm_invoked=true`, sets
+`lifelong_eval_ready=false`, and emits an `honest_verdict` beginning with
+`complete:`.
+
+## Implementation Status (REQ-LEARN-3255)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-LEARN-3255 | Implemented (`python/carnot/eval/fr11_lifelong_failure_memory_retention_audit_v1.py`) | Implemented (`tests/python/test_experiment_3255_fr11_lifelong_failure_memory_retention_audit_v1.py`) |
