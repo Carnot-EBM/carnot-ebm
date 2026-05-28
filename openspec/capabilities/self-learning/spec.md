@@ -9453,3 +9453,93 @@ false, and the artifact emits an `honest_verdict` beginning with `complete:`.
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-LEARN-3229 | Pending (`python/carnot/eval/fr11_nonforgetting_promotion_controller_v3.py`) | Pending (`tests/python/test_experiment_3229_fr11_nonforgetting_promotion_controller_v3.py`) |
+
+## REQ-LEARN-3230: FR-11 KAN-CL Certificate Boundary Audit V2
+
+**Given** Exp 3201 audited a KAN-CL-style FR-11 sidecar without granting
+promotion authority and Exp 3216 materialized a grounded-continuation
+nonforgetting queue
+**When** Exp 3230 defines certificate boundaries for any future KAN-CL sidecar
+promotion
+**Then** it SHALL load both checked-in artifacts, enumerate the certificate
+requirements needed before promotion, and map each requirement to current
+artifact evidence or explicit missing evidence.
+**And** the certificate requirements SHALL include bounded sidecar input
+domains, per-knot nonforgetting budgets, per-knot monotonicity or Lipschitz
+evidence, PWA/MILP abstraction readiness, nonforgetting budget checks, and
+model-weight immutability.
+**And** `kan_sidecar_promotion_allowed` SHALL be false unless every certificate
+requirement is present, `per_knot_budget_defined=true`,
+`pwa_milp_abstraction_ready=true`, `certificate_boundary_ready=true`, and no
+model-weight, conductor-file, or active-roadmap mutation is claimed.
+**And** the audit SHALL NOT train, fine-tune, update KAN weights, update base
+model weights, or modify `scripts/research_conductor.py` or the active
+roadmap.
+
+The terminal artifact SHALL be
+`results/experiment_3230_kan_cl_certificate_boundary_audit_v2.json` and SHALL
+include `schema_version`, `experiment_id`, `milestone`,
+`continuous_self_learning_task`, `source_artifacts`,
+`certificate_requirements`, `requirement_evidence_matrix`,
+`missing_certificate_count`, `per_knot_budget_defined`,
+`pwa_milp_abstraction_ready`, `certificate_boundary_ready`,
+`kan_sidecar_promotion_allowed`, `model_weight_update_claimed`,
+`inference_substrate`, `conductor_file_modified`, `active_roadmap_modified`,
+and `honest_verdict`.
+
+### REQ-LEARN-3230 Sub-requirements
+
+- REQ-LEARN-3230-1: Source selection SHALL require terminal, checked-in Exp
+  3201 and Exp 3216 artifacts and SHALL fail closed when either artifact is
+  missing, non-terminal, or claims live inference, model-weight mutation,
+  conductor-file mutation, or active-roadmap mutation.
+- REQ-LEARN-3230-2: `certificate_requirements` SHALL be a deterministic list
+  of sidecar-promotion requirements with stable requirement IDs, descriptions,
+  evidence keys, and promotion-critical flags.
+- REQ-LEARN-3230-3: `requirement_evidence_matrix` SHALL include one row per
+  certificate requirement with `evidence_status` equal to `present` or
+  `missing`, concrete source artifact references, and an `evidence_summary`
+  explaining the current artifact evidence.
+- REQ-LEARN-3230-4: `missing_certificate_count` SHALL equal the number of
+  evidence-matrix rows whose `evidence_status` is `missing`.
+- REQ-LEARN-3230-5: `per_knot_budget_defined` SHALL be true only when the
+  current artifacts expose a per-knot or per-template budget, not merely an
+  aggregate nonforgetting queue.
+- REQ-LEARN-3230-6: `pwa_milp_abstraction_ready` SHALL be true only when the
+  current KAN sidecar artifact links bounded input domains, spline/PWA
+  segments, error bounds, and MILP-compatible property checks for the sidecar.
+- REQ-LEARN-3230-7: `certificate_boundary_ready` SHALL be true only when there
+  are zero missing promotion-critical requirements and both
+  `per_knot_budget_defined` and `pwa_milp_abstraction_ready` are true.
+- REQ-LEARN-3230-8: The artifact SHALL set
+  `model_weight_update_claimed=false`, `conductor_file_modified=false`,
+  `active_roadmap_modified=false`, and
+  `kan_sidecar_promotion_allowed=false` when certificate evidence is missing.
+
+### SCENARIO-LEARN-3230: Missing Certificates Block KAN Sidecar Promotion
+
+**Given** terminal Exp 3201 and Exp 3216 artifacts where aggregate
+nonforgetting checks exist but bounded KAN input domains, per-knot budgets,
+monotonicity/Lipschitz evidence, and sidecar-specific PWA/MILP abstractions are
+not present
+**When** Exp 3230 builds the certificate boundary audit
+**Then** the artifact records the missing certificate rows, reports
+`per_knot_budget_defined=false`, `pwa_milp_abstraction_ready=false`,
+`certificate_boundary_ready=false`, keeps
+`kan_sidecar_promotion_allowed=false`, and emits an `honest_verdict` beginning
+with `complete:`.
+
+### SCENARIO-LEARN-3230-BLOCKED: Unsafe Or Missing Sources Fail Closed
+
+**Given** Exp 3201 or Exp 3216 is missing, non-terminal, or claims unsafe live
+inference or mutation
+**When** Exp 3230 runs
+**Then** it writes all required fields, treats every promotion-critical
+certificate as missing, keeps model-weight update claims false, blocks KAN
+sidecar promotion, and emits an `honest_verdict` beginning with `complete:`.
+
+## Implementation Status (REQ-LEARN-3230)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-LEARN-3230 | Pending (`python/carnot/eval/fr11_kan_cl_certificate_boundary_audit_v2.py`) | Pending (`tests/python/test_experiment_3230_kan_cl_certificate_boundary_audit_v2.py`) |

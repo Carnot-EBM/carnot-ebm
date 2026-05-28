@@ -6526,3 +6526,4 @@ web search |
 | 2026-05-28 00:47 UTC | Structured repair proposal preflight v2 with schem | GATE_BLOCK | Pre-emptive skip: upstream retired (exp3222-full-local-sota-receipt-v6) |
 | 2026-05-28 00:47 UTC | Multi-turn repair ladder v8 gated on repair gate u | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp3227-repair-gate-decision-v7.repair_gat |
 | 2026-05-28 00:49 UTC | Multi-turn repair ladder v8 gated on repair gate u | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp3227-repair-gate-decision-v7.repair_gat |
+| 2026-05-28 01:03 UTC | FR-11 nonforgetting promotion controller v3 with r | OK | 81 passed in 3.84s |
