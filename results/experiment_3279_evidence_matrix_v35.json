@@ -866,5 +866,23 @@
     "results/experiment_3276_repair_gate_decision_v8_after_v4_garak_clean_verifier.json": "7071be50ade727ca0abfb537579368cc32504e48b68c68a0d63aa69a57bb5484",
     "results/experiment_3278_fr11_full_corpus_continual_self_learning_audit_v1.json": "3818f1f5585c9e8ee8bd0a497f8fc92d286cadc3b72d82b389ce5207016aa0e3"
   },
-  "task_id": "exp3279-evidence-matrix-v35"
+  "task_id": "exp3279-evidence-matrix-v35",
+  "flagged_adversarial": true,
+  "corrigendum_pending": [
+    {
+      "kind": "IMPLAUSIBLE_PERFECT",
+      "severity": "info",
+      "detail": "publication_blocker_delta_from_v302=0.0 (exactly zero). Confirm this is not a stub default."
+    },
+    {
+      "kind": "DURATION_TOO_SHORT",
+      "severity": "critical",
+      "detail": "duration_s=0.002001 but artifact references compute-bound markers (GGUF / CUDA / live model). Loading and running a real model takes >=60.0s minimum; this completed too fast to have invoked the model."
+    },
+    {
+      "kind": "METHODOLOGY_MISSING",
+      "severity": "warn",
+      "detail": "Compute-bound artifact missing: model_specs/target_model. Methodology unverifiable."
+    }
+  ]
 }

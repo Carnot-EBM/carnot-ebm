@@ -13150,3 +13150,66 @@ clean-verifier repair gates, and an `honest_verdict` beginning with
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-REPORT-3279 | Implemented (`python/carnot/reporting/evidence_matrix_v35_3279.py`) | Implemented (`tests/python/test_experiment_3279_evidence_matrix_v35.py`) |
+
+### REQ-REPORT-3280: Capstone V303 Publication Readiness Closeout
+
+The repository shall provide an Exp 3280 milestone .303 capstone generator
+that writes `results/experiment_3280_capstone_v303.json` by reading
+`results/experiment_3279_evidence_matrix_v35.json`, the Exp 3266 `.302`
+capstone, and every available `.303` source artifact from Exp 3267 through Exp
+3278. The workflow MUST be aggregation only. It MUST NOT run model inference,
+CUDA probes, teacher labeling, KAN training, Garak, repair, verifier scoring,
+hardware commands, the conductor, pushes, external publishing/submission, or
+modify `scripts/research_conductor.py`, `ops/status.md`, `ops/changelog.md`,
+or `_bmad/traceability.md`.
+
+The capstone MUST answer whether the `.302` next top gap
+`full_15k_v4_corpus_across_shards_plus_repair_and_garak_gates` was cleared.
+It SHALL mark the gap only partially cleared when the full 15k v4 corpus or
+FR-11 audit completes but the Garak gate, clean-verifier gate, repair gate,
+repair micro-panel, sidecar/non-inferiority boundary, or adversarial flags
+remain open. If matrix v35 is missing or `matrix_v35_ready` is not true, the
+capstone SHALL still write a complete gated-skip artifact that preserves the
+matrix blocker reason and keeps publication readiness false.
+
+The terminal artifact MUST include `capstone_v303_ready`, `paper_ready`,
+`publication_blocker_count`, `publication_blocker_delta`,
+`v4_full_corpus_status`, `garak_gate_status`, `repair_gate_status`,
+`fr11_status`, `next_top_gap`, `recommended_next_milestone_title`,
+`random_seed`, `reproducibility_checksum`, `duration_s`, and
+`honest_verdict`. It SHALL also include source checksums, a summary of what
+changed since `.302`, what stayed blocked, whether the `.302` next top gap was
+cleared, a conservative blocker trend, and no-new-execution booleans.
+`paper_ready` MUST remain false unless the matrix reports paper readiness, the
+publication blocker count is zero, all required gates are ready, no blocking
+rows remain, no flagged rows remain, and no sidecar-only or missing repair row
+remains. `honest_verdict` MUST begin with one of `complete:`, `success:`,
+`passed:`, or `shipped:`.
+
+#### SCENARIO-REPORT-3280: Capstone V303 Narrows But Does Not Clear The Top Gap
+
+**Given** Exp 3266 reports `publication_blocker_count=105` and the next gap
+`full_15k_v4_corpus_across_shards_plus_repair_and_garak_gates`
+**And** matrix v35 reports `matrix_v35_ready=true`,
+`publication_blocker_count_estimate=105`,
+`publication_blocker_delta_from_v302=0`, `paper_ready=false`,
+`full_15k_corpus=true`, `garak_redteam=false`, `clean_verifier=false`,
+`repair_gate=false`, `repair_micro_panel=false`, and `fr11_full_corpus=true`
+**When** the Exp 3280 capstone generator runs
+**Then** it writes `results/experiment_3280_capstone_v303.json` with all
+required schema fields, `capstone_v303_ready=true`, `paper_ready=false`,
+`publication_blocker_count=105`, `publication_blocker_delta=0`,
+`v4_full_corpus_status` indicating the full corpus exists but remains flagged
+and sidecar/non-inferiority bounded, `garak_gate_status` indicating Garak is
+blocked unavailable, `repair_gate_status` indicating repair remains blocked by
+Garak and clean-verifier gates, `fr11_status` indicating controller-memory-only
+FR-11 audit completion, `next_top_gap=unblock_garak_redteam_eval`, a
+recommended next milestone title centered on Garak plus clean-verifier repair
+gate reopen, and an `honest_verdict` beginning with `complete:` without
+claiming publication readiness.
+
+## Implementation Status (REQ-REPORT-3280)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-3280 | Implemented (`python/carnot/reporting/capstone_v303_3280.py`) | Implemented (`tests/python/test_experiment_3280_capstone_v303.py`) |
