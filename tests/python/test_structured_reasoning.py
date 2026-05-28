@@ -152,7 +152,7 @@ def test_emit_retries_until_a_clean_structured_response_validates() -> None:
     tokenizer = MagicMock()
 
     with patch(
-        "carnot.pipeline.structured_reasoning.generate",
+        "carnot.inference.model_loader.generate",
         side_effect=[
             read_fixture("malformed_missing_final_answer.json"),
             read_fixture("clean_qwen.json"),
@@ -184,7 +184,7 @@ def test_emit_falls_back_when_policy_does_not_request_structured_reasoning() -> 
     """SCENARIO-VERIFY-024: Non-structured task slices skip structured generation entirely."""
     controller = StructuredReasoningController(policy=policy_with_modes())
 
-    with patch("carnot.pipeline.structured_reasoning.generate") as mock_generate:
+    with patch("carnot.inference.model_loader.generate") as mock_generate:
         emission = controller.emit(
             question="Return two bullets naming the project owners.",
             task_slice="instruction_surface_only",
@@ -210,7 +210,7 @@ def test_emit_falls_back_after_exhausting_structured_attempts_and_handles_missin
     controller = StructuredReasoningController(policy=policy_with_modes())
 
     with patch(
-        "carnot.pipeline.structured_reasoning.generate",
+        "carnot.inference.model_loader.generate",
         side_effect=[
             read_fixture("malformed_not_json.txt"),
             read_fixture("malformed_wrong_steps_type.json"),
