@@ -3471,6 +3471,71 @@ as the only authority for accept/reject decisions.
 |---|---|---|
 | REQ-VERIFY-3223 | Implemented (`python/carnot/eval/distributional_ebm_exact_row_uncertainty_sidecar_v2.py`) | Implemented (`tests/python/test_experiment_3223_distributional_ebm_exact_row_uncertainty_sidecar_v2.py`) |
 
+### REQ-VERIFY-3224: Logitext Partial SMT Context Coverage Pilot V1
+
+The repository shall provide an Exp 3224 deterministic partial SMT coverage
+builder that writes
+`results/experiment_3224_logitext_partial_smt_context_coverage_pilot_v1.json`
+from the `.297` context-shortcut and ConstraintBench-style exact fixture
+artifacts:
+`results/experiment_3210_context_cot_clbench_parametric_shortcut_fixtures_v1.json`,
+`data/research/context_cot_clbench_parametric_shortcut_v1.jsonl`,
+`results/experiment_3211_constraintbench_feasibility_objective_pilot_v1.json`,
+and `data/research/constraintbench_feasibility_objective_pilot_v1.jsonl`.
+It MUST NOT invoke an LLM, train a model, download models, push commits,
+modify `scripts/research_conductor.py`, or modify the active roadmap.
+
+The builder SHALL define a small typed constraint taxonomy covering at least
+`boolean`, `string_equality`, `arithmetic_interval`, `all_different`,
+`graph_relation`, `feasibility`, and `objective_bound` fragments. It SHALL inspect every loaded
+fixture row and mark the row as `fully_formalizable`,
+`partially_formalizable`, or `not_formalizable_without_extraction`. Context
+rows SHALL preserve the boundary between exact answer-check fragments already
+present in the fixture and natural-language local-rule extraction that is not
+being claimed. ConstraintBench rows SHALL map their structured instances to
+solver-ready fragments or to the existing exact solver backend label.
+
+For each formalizable row, the builder SHALL record either a deterministic
+solver-ready representation or a pointer to the existing exact checker/solver
+label. It SHALL report coverage by fixture family and identify high-value rows
+for Exp 3225 clean verifier scoring, while preserving exact solver/checker
+authority and treating any Logitext-style natural-language layer as future
+extraction work rather than current solver evidence.
+
+The terminal artifact MUST include `schema_version`, `experiment_id`,
+`milestone`, `source_fixture_artifacts`, `fixture_row_count`,
+`fully_formalizable_count`, `partially_formalizable_count`,
+`not_formalizable_count`, `constraint_taxonomy`, `smt_rows`,
+`partial_smt_coverage`, `exact_solver_row_count`, `coverage_ready`,
+`inference_substrate`, `conductor_file_modified`,
+`active_roadmap_modified`, and `honest_verdict`.
+
+`coverage_ready` SHALL be true only when all four source fixture artifacts are
+present, at least one context row and one ConstraintBench row are loaded, every
+loaded row receives exactly one formalizability label, every fully or partially
+formalizable row has a solver-ready fragment or exact solver pointer, the
+coverage counts add up to the fixture-row denominator, and the inference
+substrate records deterministic artifact replay with zero model calls.
+
+### SCENARIO-VERIFY-3224: Context And Constraint Rows Receive SMT Coverage Labels
+
+Given Exp 3210 and Exp 3211 have materialized deterministic `.297` exact
+fixture artifacts,
+When the Exp 3224 coverage builder runs,
+Then it loads both fixture banks without live inference, emits a typed
+constraint taxonomy, assigns one formalizability status to every context and
+ConstraintBench row, records exact answer-check or solver-backend pointers for
+formalizable rows, summarizes coverage by fixture family, lists the
+highest-value rows for Exp 3225 clean verifier scoring, sets
+`coverage_ready=true`, and records that neither the conductor file nor the
+active roadmap was modified.
+
+## Implementation Status (REQ-VERIFY-3224)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-VERIFY-3224 | Implemented (`python/carnot/verify/logitext_partial_smt_context_coverage_pilot_v1.py`) | Implemented (`tests/python/test_experiment_3224_logitext_partial_smt_context_coverage_pilot_v1.py`) |
+
 ### REQ-VERIFY-3196: GenCP Domain Preview Repair Compiler V1
 
 The repository shall provide an Exp 3196 deterministic GenCP-style domain
