@@ -6522,3 +6522,5 @@ web search |
 | 2026-05-28 00:43 UTC | Repair gate decision v7 after receipt, clean verif | OK | 81 passed in 3.36s |
 | 2026-05-28 00:45 UTC | Clean live SOTA verifier rerun v13 using exact-row | GATE_BLOCK | Pre-emptive skip: upstream retired (exp3222-full-local-sota-receipt-v6) |
 | 2026-05-28 00:45 UTC | Structured repair proposal preflight v2 with schem | GATE_BLOCK | Pre-emptive skip: upstream retired (exp3222-full-local-sota-receipt-v6) |
+| 2026-05-28 00:45 UTC | Multi-turn repair ladder v8 gated on repair gate u | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp3227-repair-gate-decision-v7.repair_gat |
+| 2026-05-28 00:47 UTC | Structured repair proposal preflight v2 with schem | GATE_BLOCK | Pre-emptive skip: upstream retired (exp3222-full-local-sota-receipt-v6) |
