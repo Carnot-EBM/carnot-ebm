@@ -6612,3 +6612,5 @@ web search |
 | 2026-05-28 08:22 UTC | P-dit/Potts multi-state sampler diagnostic manifes | OK | 81 passed in 3.34s |
 | 2026-05-28 08:24 UTC | DCCD/SEVerA structured proposal preflight v2 gated | GATE_BLOCK | Pre-emptive skip: upstream retired (exp3250-sota-gguf-receipt-v8) |
 | 2026-05-28 08:36 UTC | Cross-corpus matrix v34 for .301 evidence | OK | 81 passed in 3.90s |
+| 2026-05-28 08:51 UTC | Capstone v301 and next-gap selection | OK | 81 passed in 3.47s |
+| 2026-05-28 08:53 UTC | Milestone 2026.05.302 activated | OK | 7 tasks queued |

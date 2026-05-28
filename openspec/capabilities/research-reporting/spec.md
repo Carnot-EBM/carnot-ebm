@@ -12271,3 +12271,83 @@ protected-file untouched constraints for `research-roadmap.yaml` and
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-REPORT-3258 | Implemented (`python/carnot/reporting/capstone_v301_3258.py`) | Implemented (`tests/python/test_experiment_3258_capstone_v301.py`) |
+
+### REQ-REPORT-3260: Archive .301 And Confirm .302 Activation Authority
+
+The repository shall provide an Exp 3260 archive/activation generator that
+writes `results/experiment_3260_archive_v301_activate_v302.json` by reading
+only checked-in authority artifacts and operational records:
+`results/experiment_3258_capstone_v301.json`,
+`results/operational_retro_2026_05_301.json` when present,
+`research-complete.yaml`, `research-roadmap.yaml`,
+`research-roadmap-next.yaml` when present, `ops/conductor-log.md`, and
+`openspec/change-proposals/research-roadmap-vNEXT.md`. The workflow MUST be
+aggregation only. It MUST NOT run live model inference, CUDA probes,
+llama.cpp, GGUF receipts, teacher labeling, KAN training, Garak, verifier
+scoring, repair generation, solver execution, hardware commands, the
+conductor, pushes, modify `research-roadmap.yaml`, modify
+`research-roadmap-next.yaml`, modify `scripts/research_conductor.py`, or
+reconcile `ops/status.md`, `ops/changelog.md`, or `_bmad/traceability.md`
+when the conductor has delegated reconciliation to a separate step.
+
+The workflow MUST ensure the `.301` task summary is represented in
+`research-complete.yaml` and MUST append that summary exactly once when it is
+absent. The summary MUST list the planned `.301` task IDs from
+`exp3246-archive-v300-activate-v301` through `exp3258-capstone-v301`, their
+deliverable paths, and conductor result labels without deleting historical
+milestone entries. Re-running the workflow MUST be idempotent and MUST NOT
+duplicate the `.301` archive entry.
+
+The artifact MUST carry the `.301` publication-readiness state from the
+capstone: `prior_paper_ready` MUST equal capstone `paper_ready`,
+`prior_publication_blocker_count` MUST equal capstone
+`publication_blocker_count`, and `next_top_gap` MUST equal capstone
+`next_top_gap`. It MUST record the `.301` capstone readiness signal, the
+presence and compact summary of the `.301` operational retrospective when that
+artifact exists, the presence of the `.301` research-complete summary, the
+`.302` queue first and last task IDs, and whether `.302` activation is already
+observed from roadmap state or conductor-log evidence.
+
+The terminal artifact MUST include `experiment_id`, `task_id`, `milestone`,
+`inference_substrate`, `principle_annotations`,
+`archive_v301_activate_v302_ready`, `prior_paper_ready`,
+`prior_publication_blocker_count`, `random_seed`,
+`reproducibility_checksum`, `duration_s`, and `honest_verdict`. It SHALL
+include source checksums, protected-file checksums, no-new-execution booleans,
+research-complete update metadata, queue metadata, operational-retro summary,
+and blocked reasons. `honest_verdict` MUST begin with one of
+`complete:`, `complete_`, `success:`, `success_`, `passed:`, `passed_`, or
+`shipped_`; for this workflow it SHOULD begin with `complete:` and MUST NOT
+claim paper readiness unless the capstone itself does.
+
+#### SCENARIO-REPORT-3260: Archive .301 And Activate .302 Manifest
+
+**Given** capstone v301 exists and reports `capstone_v301_ready=true`,
+`paper_ready=false`, `publication_blocker_count=106`, and
+`next_top_gap=keep_exp3248_blocked_repair_cuda_runtime`
+**And** `research-complete.yaml` either already contains or can receive a
+single `.301` task summary for Exp 3246 through Exp 3258
+**And** `research-roadmap.yaml` or `research-roadmap-next.yaml` declares
+milestone `2026.05.302`, first task
+`exp3260-archive-v301-activate-v302`, last task `exp3266-capstone-v302`, and
+milestone document `openspec/change-proposals/research-roadmap-vNEXT.md`
+**And** `ops/conductor-log.md` or active roadmap state records milestone
+`2026.05.302` activation
+**When** the Exp 3260 archive/activation generator runs
+**Then** it writes `results/experiment_3260_archive_v301_activate_v302.json`
+with all required schema fields, `archive_v301_activate_v302_ready=true`,
+`prior_paper_ready=false`, `prior_publication_blocker_count=106`, the
+capstone next gap preserved, `.301` research-complete summary represented
+exactly once, `.302` queue first/last task IDs recorded, protected-file
+untouched constraints for `research-roadmap.yaml` and
+`scripts/research_conductor.py`, no new model, CUDA, llama.cpp, GGUF,
+teacher-labeling, KAN-training, Garak, verifier, repair, solver, hardware,
+conductor, push, ops-status, ops-changelog, or traceability work performed by
+this task, and an `honest_verdict` that starts with `complete:` without
+claiming paper readiness.
+
+## Implementation Status (REQ-REPORT-3260)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-3260 | Implemented (`python/carnot/reporting/archive_v301_activate_v302_3260.py`) | Implemented (`tests/python/test_experiment_3260_archive_v301_activate_v302.py`) |
