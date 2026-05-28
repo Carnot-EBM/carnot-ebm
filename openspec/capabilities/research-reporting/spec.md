@@ -11217,6 +11217,71 @@ starts with `complete:`.
 |---|---|---|
 | REQ-REPORT-3219 | Implemented (`python/carnot/reporting/archive_v297_activate_v298_3219.py`) | Implemented (`tests/python/test_experiment_3219_archive_v297_activate_v298.py`) |
 
+### REQ-REPORT-3221: Archive .298 And Confirm .299 Activation Authority
+
+The repository shall provide an Exp 3221 archive/activation generator that
+writes `results/experiment_3221_archive_v298_activate_v299.json` by reading
+`results/experiment_3232_capstone_v298.json` as the prior milestone capstone,
+the `.298` operational retrospective when present, `research-complete.yaml`,
+the current `.299` roadmap queue state, and `ops/conductor-log.md`. The
+workflow MUST aggregate existing artifacts only. It MUST NOT run live model
+inference, verifier scoring, repair generation, solver execution, hardware
+commands, the conductor, pushes, modify `scripts/research_conductor.py`, or
+reconcile `ops/status.md`, `ops/changelog.md`, or `_bmad/traceability.md`.
+
+The artifact MUST carry forward the `.298` publication-readiness signal from
+the capstone: `prior_paper_ready` MUST equal capstone `paper_ready`, and
+`prior_publication_blocker_count` MUST equal capstone
+`publication_blocker_count`. The workflow MUST ensure the `.298` task summary
+is represented in `research-complete.yaml` without duplicating an already
+present milestone entry. It MUST confirm `2026.05.299` is the next CalVer
+sequence after `2026.05.298`, confirm the active or staged roadmap queue first
+task is `exp3221-archive-v298-activate-v299`, and record conductor-log
+evidence for `.299` activation when available. If the expected `.298`
+operational retrospective artifact is absent, the artifact MUST report that
+absence explicitly rather than fabricating retrospective metrics.
+
+The terminal artifact MUST include
+`archive_v298_activate_v299_ready`, `prior_paper_ready`,
+`prior_publication_blocker_count`, `random_seed`,
+`reproducibility_checksum`, `duration_s`, and `honest_verdict`.
+`archive_v298_activate_v299_ready` MUST be true only when the prior capstone is
+ready, the `.298` research-complete summary is present, the `.299` queue is
+materialized, and the CalVer sequence is valid. `honest_verdict` MUST start
+with `complete:` and summarize the ready flag, prior paper-ready flag,
+publication blocker count, and selected queue path. The artifact MAY include
+source checksums, queue metadata, operational retrospective presence, blocked
+reasons, no-new-execution booleans, and source summaries as long as every
+value is derived from checked-in artifacts or file presence/checksum checks.
+
+#### SCENARIO-REPORT-3221: Archive .298 And Activate .299 Manifest
+
+**Given** capstone v298 exists and reports `capstone_ready=true`,
+`paper_ready=false`, `publication_blocker_count=100`, and
+`next_top_gap=repair_system_driver_cuda_runtime_boundary_to_unblock_cuda_offload_receipt`
+**And** `research-complete.yaml` contains the `.298` tasks from
+`exp3219-archive-v297-activate-v298` through `exp3232-capstone-v298`
+**And** either `research-roadmap-next.yaml` or `research-roadmap.yaml` declares
+milestone `2026.05.299`, first task
+`exp3221-archive-v298-activate-v299`, and milestone document
+`openspec/change-proposals/research-roadmap-vNEXT.md`
+**And** `ops/conductor-log.md` records that milestone `2026.05.299` activated
+**When** the Exp 3221 archive/activation generator runs
+**Then** it writes `results/experiment_3221_archive_v298_activate_v299.json`
+with all required schema fields, `archive_v298_activate_v299_ready=true`,
+`prior_paper_ready=false`, `prior_publication_blocker_count=100`, deterministic
+`random_seed` and `reproducibility_checksum`, source evidence for the capstone
+and operational retrospective presence or absence, no protected conductor,
+ops-status, ops-changelog, traceability, model, verifier, repair, solver, or
+hardware work performed by this task, and an `honest_verdict` that starts with
+`complete:`.
+
+## Implementation Status (REQ-REPORT-3221)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-3221 | Implemented (`python/carnot/reporting/archive_v298_activate_v299_3221.py`) | Implemented (`tests/python/test_experiment_3221_archive_v298_activate_v299.py`) |
+
 ### REQ-REPORT-3231: Cross-Corpus Matrix V32 From .298 Artifacts
 
 The repository shall provide an Exp 3231 cross-corpus matrix v32 generator
