@@ -11616,3 +11616,73 @@ claiming v4 labels or v4 training exist.
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-REPORT-3234 | Implemented (`python/carnot/reporting/cli_backend_failure_root_cause_ledger_3234.py`) | Implemented (`tests/python/test_experiment_3234_cli_backend_failure_root_cause_ledger_v1.py`) |
+
+### REQ-REPORT-3235: CUDA Driver Boundary Operator Package
+
+The repository shall provide an Exp 3235 CUDA driver-boundary operator package
+generator that writes
+`results/experiment_3235_cuda_driver_boundary_operator_package_v1.json` by
+reading only checked-in upstream artifacts and operator-visible notes:
+`CLAUDE.md`, `research-hardware-wishlist.md`,
+`results/experiment_3206_cuda_env_forensics_ledger_v1.json`,
+`results/experiment_3207_llama_cpp_cuda_rebuild_clean_subprocess_v1.json`,
+`results/experiment_3220_hermetic_cuda_runtime_repair_ledger_v1.json`,
+`results/experiment_3232_capstone_v298.json`,
+`results/experiment_3223_capstone_v299.json`, and
+`ops/conductor-log.md`. The workflow MUST NOT rerun heavyweight model
+inference, load a full mandated GGUF, rebuild llama.cpp, run the conductor,
+push, modify `scripts/research_conductor.py`, or claim that CUDA/offload has
+been repaired.
+
+The package MUST summarize the prior failure evidence across driver
+visibility, selected Python torch CUDA initialization, `cuda.bindings` runtime
+initialization, and llama.cpp GPU offload support. It MUST identify the probe
+owned by each boundary and MUST define exact boolean acceptance fields for the
+next two staged tasks: Exp 3236 selected-Python CUDA smoke and Exp 3237
+llama.cpp CUDA receipt smoke. Full mandated GGUF reruns MUST remain forbidden
+until the staged smoke booleans pass.
+
+The terminal artifact MUST include `experiment_id`, `task_id`, `milestone`,
+`inference_substrate`, `principle_annotations`,
+`cuda_boundary_package_ready`, `selected_python_acceptance_contract`,
+`isolated_cuda_acceptance_contract`, `llama_cpp_acceptance_contract`,
+`full_gguf_rerun_allowed_now`, `recommended_next_task`,
+`protected_files_untouched`, and `honest_verdict`. It MAY include source
+checksums, a probe-boundary map, prior-failure summaries, a short do-not-do
+list, downstream gate fields, no-new-execution booleans, random seed,
+reproducibility checksum, and measured `duration_s`, provided every value is
+derived from checked-in artifacts, logs, or file presence/checksum checks.
+`honest_verdict` MUST start with `complete:` and MUST NOT claim that the
+runtime is repaired.
+
+#### SCENARIO-REPORT-3235: CUDA Boundary Package Blocks Blind Full GGUF Rerun
+
+**Given** Exp 3206 reports `nvidia_smi_available=true`,
+`torch_cuda_available_clean_subprocess=false`, `cuda_init_clean=false`, and a
+llama.cpp CUDA initialization failure
+**And** Exp 3207 reports `rebuild_attempted=false`,
+`torch_cuda_available_after=false`, `cuda_receipt_ready=false`, and
+`clean_rerun_allowed_candidate=false`
+**And** Exp 3220 reports `selected_python_cuda_ok_after=false`,
+`isolated_cuda_venv_cuda_ok=false`, `cuda_receipt_ready_candidate=false`, and
+`recommended_next_action=repair_system_driver_cuda_runtime_boundary`
+**And** the .298 and .299 capstones preserve the CUDA/offload receipt blocker
+as the top publication gap
+**When** the Exp 3235 package generator runs
+**Then** it writes
+`results/experiment_3235_cuda_driver_boundary_operator_package_v1.json` with
+all required schema fields, `cuda_boundary_package_ready=true`,
+`full_gguf_rerun_allowed_now=false`, `recommended_next_task` set to
+`exp3236-isolated-cuda-python-smoke-v1`, probe ownership separated across
+driver, selected Python torch CUDA, `cuda.bindings`, and llama.cpp offload
+boundaries, exact downstream gate booleans including
+`cuda_python_smoke_passed` and `llama_cpp_cuda_receipt_ready`, protected-file
+untouched constraints for `scripts/research_conductor.py`, and an
+`honest_verdict` that starts with `complete:` without claiming CUDA/offload
+repair.
+
+## Implementation Status (REQ-REPORT-3235)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-3235 | Implemented (`python/carnot/reporting/cuda_driver_boundary_operator_package_3235.py`) | Implemented (`tests/python/test_experiment_3235_cuda_driver_boundary_operator_package.py`) |

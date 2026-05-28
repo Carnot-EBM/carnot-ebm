@@ -1,0 +1,246 @@
+{
+  "artifact": "experiment_3235_cuda_driver_boundary_operator_package_v1",
+  "cuda_boundary_package_ready": true,
+  "do_not_do": [
+    "Do not run a blind full mandated GGUF receipt rerun before cuda_python_smoke_passed=true.",
+    "Do not rebuild llama.cpp until selected Python CUDA is known-good in a clean subprocess.",
+    "Do not treat CPU fallback, import-only success, or nvidia-smi visibility as CUDA receipt.",
+    "Do not claim the runtime is repaired from this aggregation-only package."
+  ],
+  "downstream_gate_fields": [
+    "cuda_python_smoke_passed",
+    "llama_cpp_cuda_receipt_ready",
+    "clean_rerun_allowed"
+  ],
+  "duration_s": 0.002551,
+  "experiment_id": "exp3235",
+  "full_gguf_rerun_allowed_now": false,
+  "honest_verdict": "complete: cuda_boundary_package_ready=true; full_gguf_rerun_allowed_now=false; next=exp3236-isolated-cuda-python-smoke-v1; runtime remains blocked pending smoke fields",
+  "inference_substrate": "aggregation_from_upstream_artifacts",
+  "isolated_cuda_acceptance_contract": {
+    "acceptance_rule": "Treat cuda.bindings as the runtime-driver boundary check. It must import, cudaGetDeviceCount() must return success, and device count must be nonzero.",
+    "downstream_task_id": "exp3236-isolated-cuda-python-smoke-v1",
+    "gate_field": "cuda_python_smoke_passed",
+    "observed_prior_fields": {
+      "exp3220.isolated_cuda_venv_cuda_ok": false,
+      "exp3220.isolated_cuda_venv_device_count": 0,
+      "exp3220.selected_python_cuda_runtime_device_count": 0,
+      "exp3220.selected_python_cuda_runtime_ok": false
+    },
+    "probe_family": "cuda.bindings.runtime",
+    "required_boolean_fields": {
+      "cuda_bindings_device_count_gt_zero": true,
+      "cuda_bindings_import_ok": true,
+      "cuda_bindings_runtime_init_ok": true
+    },
+    "required_numeric_fields": {
+      "cuda_bindings_device_count": "> 0"
+    }
+  },
+  "llama_cpp_acceptance_contract": {
+    "acceptance_rule": "Run Exp 3237 only after cuda_python_smoke_passed=true. Set llama_cpp_cuda_receipt_ready=true only when llama.cpp imports, reports GPU offload support, completes the smallest smoke without CPU-only fallback, and does not emit ggml_cuda_init failure.",
+    "downstream_task_id": "exp3237-llama-cpp-cuda-receipt-smoke-v2",
+    "gate_field": "llama_cpp_cuda_receipt_ready",
+    "observed_prior_fields": {
+      "exp3207.clean_subprocess_gpu_offload_probe_passed": false,
+      "exp3207.cpu_fallback_only": true,
+      "exp3207.cuda_receipt_ready": false,
+      "exp3220.llama_cpp_import_ok": true,
+      "exp3220.llama_cpp_supports_gpu_offload": false
+    },
+    "probe_family": "llama.cpp GPU offload support and minimal receipt smoke",
+    "required_boolean_fields": {
+      "llama_cpp_cpu_fallback_used": false,
+      "llama_cpp_cuda_init_error_seen": false,
+      "llama_cpp_import_ok": true,
+      "llama_cpp_smoke_completed": true,
+      "llama_cpp_supports_gpu_offload": true,
+      "upstream_cuda_python_smoke_passed": true
+    },
+    "upstream_gate_field": "cuda_python_smoke_passed"
+  },
+  "milestone": "2026.05.300",
+  "missing_required_sources": [],
+  "no_conductor_execution": true,
+  "no_full_gguf_load": true,
+  "no_llama_cpp_rebuild": true,
+  "no_new_heavyweight_model_inference": true,
+  "no_push": true,
+  "principle_annotations": {
+    "aggregation_only": "Reads upstream artifacts and logs; performs no live model inference.",
+    "full_receipt_block": "full_gguf_rerun_allowed_now remains false until staged smokes pass.",
+    "gate_order": "exp3236 cuda_python_smoke_passed before exp3237 llama_cpp_cuda_receipt_ready.",
+    "probe_ownership": "Driver visibility, selected Python torch CUDA init, cuda.bindings runtime init, and llama.cpp offload are separate acceptance boundaries."
+  },
+  "prior_cuda_failure_evidence": {
+    "capstone_top_gaps": [
+      "repair_system_driver_cuda_runtime_boundary_to_unblock_cuda_offload_receipt",
+      "cuda_chain_for_full_local_sota_receipts"
+    ],
+    "driver_visible": true,
+    "failure_summary": "Driver visibility exists, but selected Python torch CUDA init, cuda.bindings runtime init, and llama.cpp/offload readiness did not pass. This keeps full mandated GGUF receipts blocked.",
+    "full_receipt_gate_blocked": true,
+    "isolated_cuda_runtime_failed": true,
+    "llama_cpp_offload_failed": true,
+    "selected_python": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+    "selected_python_cuda_failed": true,
+    "upstream_recommended_actions": [
+      "repair_selected_python_torch_cuda_before_full_receipt",
+      "repair_system_driver_cuda_runtime_boundary"
+    ]
+  },
+  "probe_boundary_map": {
+    "cuda_bindings_runtime_init": {
+      "observed_fields": {
+        "exp3220.isolated_cuda_bindings_device_count": 0,
+        "exp3220.isolated_cuda_bindings_import_ok": true,
+        "exp3220.isolated_cuda_runtime_ok": false,
+        "exp3220.selected_python_cuda_bindings_device_count": 0,
+        "exp3220.selected_python_cuda_bindings_import_ok": true,
+        "exp3220.selected_python_cuda_runtime_ok": false
+      },
+      "observed_passed": false,
+      "owned_by": [
+        "exp3220.selected_python_cuda_runtime_probe_after",
+        "exp3220.isolated_cuda_venv.probe"
+      ],
+      "probe": "cuda.bindings.runtime clean subprocess: cudaGetDeviceCount()"
+    },
+    "driver_visibility": {
+      "observed_fields": {
+        "exp3206.nvidia_smi_available": true,
+        "exp3220.driver_version": "595.71.05",
+        "exp3220.gpu_count_nvidia_smi": 1,
+        "exp3220.nvidia_smi_available": true
+      },
+      "observed_passed": true,
+      "owned_by": [
+        "exp3206.nvidia_smi",
+        "exp3220.nvidia_smi"
+      ],
+      "probe": "nvidia-smi"
+    },
+    "llama_cpp_gpu_offload_support": {
+      "observed_fields": {
+        "exp3207.clean_subprocess_gpu_offload_probe_passed": false,
+        "exp3207.cpu_fallback_only": true,
+        "exp3220.llama_cpp_stderr_summary": "ggml_cuda_init: failed to initialize CUDA: unknown error\n",
+        "exp3220.llama_cpp_supports_gpu_offload": false
+      },
+      "observed_passed": false,
+      "owned_by": [
+        "exp3206.llama_cpp_clean_subprocess",
+        "exp3207.llama_cpp_clean_subprocess_after",
+        "exp3220.llama_cpp_linkage_probe"
+      ],
+      "probe": "llama_cpp clean subprocess: import llama_cpp; llama_supports_gpu_offload(); llama_system_info"
+    },
+    "selected_python_torch_cuda_init": {
+      "observed_fields": {
+        "exp3206.torch_cuda_available_clean_subprocess": false,
+        "exp3206.torch_cuda_device_count_clean_subprocess": 0,
+        "exp3220.selected_python_cuda_ok_after": false
+      },
+      "observed_passed": false,
+      "owned_by": [
+        "exp3206.torch_clean_subprocess",
+        "exp3220.selected_python_probe_after"
+      ],
+      "probe": "selected_python clean subprocess: import torch; torch.cuda.is_available(); torch.cuda.device_count()"
+    }
+  },
+  "protected_files_untouched": {
+    "_bmad/traceability.md": true,
+    "ops/changelog.md": true,
+    "ops/status.md": true,
+    "research-roadmap-next.yaml": true,
+    "research-roadmap.yaml": true,
+    "scripts/research_conductor.py": true
+  },
+  "random_seed": 3235,
+  "recommended_next_task": "exp3236-isolated-cuda-python-smoke-v1",
+  "reproducibility_checksum": "135a85474a0fd58084ccf425154dc2447cf8ee6fad6791e829d61d8f7f39bada",
+  "run_date": "20260528",
+  "schema": "carnot.cuda_driver_boundary_operator_package.v1",
+  "schema_version": "carnot.cuda_driver_boundary_operator_package.v1",
+  "selected_python_acceptance_contract": {
+    "acceptance_rule": "Set cuda_python_smoke_passed=true only when nvidia-smi is visible, the selected project Python imports torch in a clean subprocess, torch.cuda.is_available() is true, and torch sees at least one CUDA device.",
+    "blocked_by_prior_fields": {
+      "exp3206.torch_cuda_available_clean_subprocess": false,
+      "exp3206.torch_cuda_device_count_clean_subprocess": 0,
+      "exp3220.selected_python_cuda_ok_after": false
+    },
+    "downstream_task_id": "exp3236-isolated-cuda-python-smoke-v1",
+    "gate_field": "cuda_python_smoke_passed",
+    "probe_family": "selected Python torch CUDA init",
+    "required_boolean_fields": {
+      "cuda_driver_visible": true,
+      "selected_python_torch_cuda_available": true,
+      "selected_python_torch_device_count_gt_zero": true
+    },
+    "required_numeric_fields": {
+      "selected_python_torch_device_count": "> 0"
+    }
+  },
+  "source_artifacts": [
+    {
+      "path": "CLAUDE.md",
+      "present": true,
+      "role": "claude_guidance",
+      "sha256": "cdc00581d37d1bd3c77a69b058787f74ecc71545a97c1eab31c48961637b3224"
+    },
+    {
+      "path": "research-hardware-wishlist.md",
+      "present": true,
+      "role": "hardware_wishlist",
+      "sha256": "ca40501890c4cb5f2a3ea835bd3661976107eafc91a100e02a00c9023f7baaee"
+    },
+    {
+      "path": "results/experiment_3206_cuda_env_forensics_ledger_v1.json",
+      "present": true,
+      "role": "cuda_env_forensics_3206",
+      "sha256": "e91c8f1f88afb0100af7c547dac5821cc065953e4429ec4e5ff98f9c5b3049b3"
+    },
+    {
+      "path": "results/experiment_3207_llama_cpp_cuda_rebuild_clean_subprocess_v1.json",
+      "present": true,
+      "role": "llama_cpp_rebuild_gate_3207",
+      "sha256": "e5a6d09c44634ece19df80af56cdac0fb8f424f7324cef4521413fd6abc7bb7f"
+    },
+    {
+      "path": "results/experiment_3220_hermetic_cuda_runtime_repair_ledger_v1.json",
+      "present": true,
+      "role": "hermetic_cuda_runtime_3220",
+      "sha256": "9ded61b48cc825d7c645e2de2570198fee3a9eab48b4f1ebbb9e53332fbe3e76"
+    },
+    {
+      "path": "results/experiment_3232_capstone_v298.json",
+      "present": true,
+      "role": "capstone_v298",
+      "sha256": "062339d225683b55bdf3e4065295a82a7fcb407705d85f468063c3ee4ea6a8c4"
+    },
+    {
+      "path": "results/experiment_3223_capstone_v299.json",
+      "present": true,
+      "role": "capstone_v299",
+      "sha256": "8a1f1590466301b281d743c26b684029e386fd5372cc93365c71aa4ca84c5295"
+    },
+    {
+      "path": "ops/conductor-log.md",
+      "present": true,
+      "role": "conductor_log",
+      "sha256": "c35224152aa1767c7f8900d4e85c9b8d46b6265a85f53cb7b454aa6d1798fd62"
+    }
+  ],
+  "source_checksums": {
+    "CLAUDE.md": "cdc00581d37d1bd3c77a69b058787f74ecc71545a97c1eab31c48961637b3224",
+    "ops/conductor-log.md": "c35224152aa1767c7f8900d4e85c9b8d46b6265a85f53cb7b454aa6d1798fd62",
+    "research-hardware-wishlist.md": "ca40501890c4cb5f2a3ea835bd3661976107eafc91a100e02a00c9023f7baaee",
+    "results/experiment_3206_cuda_env_forensics_ledger_v1.json": "e91c8f1f88afb0100af7c547dac5821cc065953e4429ec4e5ff98f9c5b3049b3",
+    "results/experiment_3207_llama_cpp_cuda_rebuild_clean_subprocess_v1.json": "e5a6d09c44634ece19df80af56cdac0fb8f424f7324cef4521413fd6abc7bb7f",
+    "results/experiment_3220_hermetic_cuda_runtime_repair_ledger_v1.json": "9ded61b48cc825d7c645e2de2570198fee3a9eab48b4f1ebbb9e53332fbe3e76",
+    "results/experiment_3223_capstone_v299.json": "8a1f1590466301b281d743c26b684029e386fd5372cc93365c71aa4ca84c5295",
+    "results/experiment_3232_capstone_v298.json": "062339d225683b55bdf3e4065295a82a7fcb407705d85f468063c3ee4ea6a8c4"
+  },
+  "task_id": "exp3235-cuda-driver-boundary-operator-package-v1"
+}
