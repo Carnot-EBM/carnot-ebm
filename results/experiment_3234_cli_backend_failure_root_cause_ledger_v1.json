@@ -1,0 +1,169 @@
+{
+  "artifact": "experiment_3234_cli_backend_failure_root_cause_ledger_v1",
+  "blocked_reasons": [],
+  "capstone_paper_ready": false,
+  "capstone_v4_outcome": "blocked_missing_exp3222_result",
+  "conductor_file_modified_by_this_task": false,
+  "duration_s": 0.004101,
+  "exp3222_artifact_exists": false,
+  "exp3222_artifact_path": "results/experiment_3222_prompt_injection_kan_distill_v4_15k.json",
+  "exp3222_failure_count": 3,
+  "exp3222_failure_lines": [
+    "| 2026-05-28 02:53 UTC | Prompt-Injection KAN Distillation v4 \u2014 15k Corpus  | FAIL | Codex CLI error: you finish the real work inside 10 minutes, that is correct  |",
+    "| 2026-05-28 02:55 UTC | Prompt-Injection KAN Distillation v4 \u2014 15k Corpus  | FAIL | Codex CLI error: you finish the real work inside 10 minutes, that is correct  |",
+    "| 2026-05-28 02:57 UTC | Prompt-Injection KAN Distillation v4 \u2014 15k Corpus  | FAIL | Codex CLI error: you finish the real work inside 10 minutes, that is correct  |"
+  ],
+  "experiment_id": "exp3234",
+  "experiment_template_model_spec_discipline": {
+    "cached_sota_pair_mentioned": true,
+    "discipline_ready": true,
+    "mandated_sota_model_count": 3,
+    "mandated_sota_models": [
+      "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "unsloth/gemma-4-31B-it-GGUF"
+    ],
+    "model_specs_mentioned": true,
+    "models_used_record_required": true
+  },
+  "honest_verdict": "complete: split_run_plan_ready=true; exp3222_artifact_exists=false; exp3222_failure_count=3; monolith_rerun_allowed=false; model_spec_gap_found=true",
+  "inference_substrate": "aggregation_from_upstream_artifacts",
+  "milestone": "2026.05.300",
+  "model_spec_gap_found": true,
+  "model_spec_gap_reason": "missing_exp3222_artifact_prevents_model_specs_audit",
+  "monolith_rerun_allowed": false,
+  "no_conductor_execution": true,
+  "no_new_garak_run": true,
+  "no_new_hardware_run": true,
+  "no_new_kan_training": true,
+  "no_new_model_execution": true,
+  "no_new_repair_run": true,
+  "no_new_solver_run": true,
+  "no_new_teacher_labeling": true,
+  "no_new_verifier_run": true,
+  "no_push": true,
+  "principle_annotations": {
+    "exp3222_artifact_exists": "Records the exact missing or present v4 deliverable.",
+    "exp3222_failure_count": "Counts only failed Prompt-Injection KAN v4 conductor rows.",
+    "honest_verdict": "Terminal complete verdict without claiming v4 labels or trained metrics.",
+    "inference_substrate": "Aggregation-only diagnostic from checked-in logs and artifacts.",
+    "model_spec_gap_found": "Flags that model-spec use cannot be audited from the absent v4 result.",
+    "monolith_rerun_allowed": "False until manifest, teacher-label shard, KAN shard, and Garak receipts exist.",
+    "repeated_cli_error_signature": "Collapses the repeated backend error into one audit key.",
+    "split_run_plan_ready": "True only when the diagnostic evidence supports staged rerun work."
+  },
+  "prior_prompt_injection_evidence": {
+    "kan_v2_path": "results/prompt_injection_kan_v2.json",
+    "kan_v2_present": true,
+    "status": "older_v2_evidence_only_not_v4_labels",
+    "teacher_labels_v2_count": 64,
+    "teacher_labels_v2_path": "results/prompt_injection_teacher_labels_v2.json",
+    "teacher_labels_v2_present": true
+  },
+  "protected_files_untouched": {
+    "scripts/research_conductor.py": true
+  },
+  "random_seed": 3234,
+  "repeated_cli_error_signature": "Codex CLI error: you finish the real work inside 10 minutes, that is correct",
+  "repeated_cli_error_signature_count": 3,
+  "reproducibility_checksum": "92666355dbac8d18b936ce3ce0c86c28674eb64417c9e3aec133c0d518961d5d",
+  "required_next_artifacts": [
+    {
+      "path": "results/experiment_3239_prompt_injection_kan_v4_resource_manifest_v1.json",
+      "required_before": "teacher_label_shard",
+      "role": "resource_manifest_and_shard_plan",
+      "task_id": "exp3239-prompt-injection-kan-v4-resource-manifest-v1"
+    },
+    {
+      "path": "results/experiment_3240_prompt_injection_kan_teacher_label_shard_v1.json",
+      "required_before": "kan_train_eval_shard",
+      "role": "teacher_label_shard",
+      "task_id": "exp3240-prompt-injection-kan-teacher-label-shard-v1"
+    },
+    {
+      "path": "results/experiment_3241_prompt_injection_kan_train_eval_shard_v1.json",
+      "required_before": "headline_attempt",
+      "role": "kan_train_eval_shard_non_headline",
+      "task_id": "exp3241-prompt-injection-kan-train-eval-shard-v1"
+    },
+    {
+      "path": "results/experiment_3241_prompt_injection_kan_garak_config_receipts_v1.json",
+      "required_before": "headline_attempt",
+      "role": "garak_config_receipts",
+      "task_id": "exp3241-prompt-injection-kan-train-eval-shard-v1"
+    }
+  ],
+  "root_cause_summary": "exp3222 recorded 3 CLI failure(s) with repeated signature 'Codex CLI error: you finish the real work inside 10 minutes, that is correct'; v4 deliverable is absent; split before rerun.",
+  "run_date": "20260528",
+  "schema": "carnot.prompt_injection_kan_v4_failure_ledger.v1",
+  "schema_version": "carnot.prompt_injection_kan_v4_failure_ledger.v1",
+  "source_artifacts": [
+    {
+      "path": "ops/conductor-log.md",
+      "present": true,
+      "role": "conductor_log",
+      "sha256": "9ce9153825624209974aeae3d45a561f5ef8c6fc837a180ce12844593692c3a8"
+    },
+    {
+      "path": "results/experiment_3222_prompt_injection_kan_distill_v4_15k.json",
+      "present": false,
+      "role": "exp3222_v4_deliverable",
+      "sha256": null
+    },
+    {
+      "path": "results/experiment_3223_capstone_v299.json",
+      "present": true,
+      "role": "capstone_v299",
+      "sha256": "8a1f1590466301b281d743c26b684029e386fd5372cc93365c71aa4ca84c5295"
+    },
+    {
+      "path": "results/prompt_injection_kan_v2.json",
+      "present": true,
+      "role": "prompt_injection_kan_v2",
+      "sha256": "5f7caa36c65a3af2e5c7dbc45401b5d7ccb441b5fe9eedd4f13e1a4d60df70b2"
+    },
+    {
+      "path": "results/prompt_injection_teacher_labels_v2.json",
+      "present": true,
+      "role": "prompt_injection_teacher_labels_v2",
+      "sha256": "51c59ade837108e79ff3d9f5a8ba4dcd6c255bf172aa0c09793405517458044c"
+    },
+    {
+      "path": "scripts/experiment_template.py",
+      "present": true,
+      "role": "experiment_template",
+      "sha256": "86559064fcfb0e0f06cb021609f1e82342c9d8464dc86b654d30d889f787de9f"
+    },
+    {
+      "path": "research-roadmap.yaml",
+      "present": true,
+      "role": "roadmap",
+      "sha256": "9719bd06c0b7ee26326a6edc8bcda0f35eb6e7970a5b68a3766d65ec6879f9f9"
+    },
+    {
+      "path": "openspec/change-proposals/research-roadmap-vNEXT.md",
+      "present": true,
+      "role": "vnext_change_proposal",
+      "sha256": "36c022cc7b2296ec04437443fb5a9a11ee91d33dd1c7026918365ffac63e01c0"
+    },
+    {
+      "path": "scripts/research_conductor.py",
+      "present": true,
+      "role": "protected_research_conductor",
+      "sha256": "f7253130513139845fb202c44bff1e7974079c0b666f6f8837dee6df3976edff"
+    }
+  ],
+  "source_checksums": {
+    "openspec/change-proposals/research-roadmap-vNEXT.md": "36c022cc7b2296ec04437443fb5a9a11ee91d33dd1c7026918365ffac63e01c0",
+    "ops/conductor-log.md": "9ce9153825624209974aeae3d45a561f5ef8c6fc837a180ce12844593692c3a8",
+    "research-roadmap.yaml": "9719bd06c0b7ee26326a6edc8bcda0f35eb6e7970a5b68a3766d65ec6879f9f9",
+    "results/experiment_3222_prompt_injection_kan_distill_v4_15k.json": null,
+    "results/experiment_3223_capstone_v299.json": "8a1f1590466301b281d743c26b684029e386fd5372cc93365c71aa4ca84c5295",
+    "results/prompt_injection_kan_v2.json": "5f7caa36c65a3af2e5c7dbc45401b5d7ccb441b5fe9eedd4f13e1a4d60df70b2",
+    "results/prompt_injection_teacher_labels_v2.json": "51c59ade837108e79ff3d9f5a8ba4dcd6c255bf172aa0c09793405517458044c",
+    "scripts/experiment_template.py": "86559064fcfb0e0f06cb021609f1e82342c9d8464dc86b654d30d889f787de9f",
+    "scripts/research_conductor.py": "f7253130513139845fb202c44bff1e7974079c0b666f6f8837dee6df3976edff"
+  },
+  "split_run_plan_ready": true,
+  "task_id": "exp3234-cli-backend-failure-root-cause-ledger-v1"
+}

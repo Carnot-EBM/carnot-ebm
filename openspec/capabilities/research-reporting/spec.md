@@ -11555,3 +11555,64 @@ without claiming paper readiness.
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-REPORT-3233 | Implemented (`python/carnot/reporting/archive_v299_activate_v300_3233.py`) | Implemented (`tests/python/test_experiment_3233_archive_v299_activate_v300.py`) |
+
+### REQ-REPORT-3234: Prompt-Injection KAN V4 CLI Backend Failure Ledger
+
+The repository shall provide an Exp 3234 root-cause ledger generator that writes
+`results/experiment_3234_cli_backend_failure_root_cause_ledger_v1.json` by
+reading the Exp 3222 failure rows from `ops/conductor-log.md`, the Exp 3223
+capstone, prior prompt-injection KAN v2 artifacts, the milestone `.300`
+roadmap/change proposal, and the model-selection guidance in
+`scripts/experiment_template.py`. The workflow MUST be aggregation only. It
+MUST NOT call an LLM, create teacher labels, train a KAN, run Garak, run a
+verifier, execute hardware commands, run the conductor, push, modify
+`scripts/research_conductor.py`, or claim that v4 labels or v4 training exist.
+
+The ledger MUST record whether
+`results/experiment_3222_prompt_injection_kan_distill_v4_15k.json` exists,
+extract the three repeated Exp 3222 CLI failure rows, summarize their repeated
+CLI error signature, and mark `monolith_rerun_allowed=false` until staged
+receipt artifacts exist. It MUST compare the failed monolithic 15k task against
+the `cached_sota_pair()` / `MODEL_SPECS` discipline in
+`scripts/experiment_template.py`; if the missing Exp 3222 artifact prevents
+auditing mandated SOTA model use, it MUST set `model_spec_gap_found=true`.
+
+The terminal artifact MUST include `experiment_id`, `task_id`, `milestone`,
+`inference_substrate`, `principle_annotations`, `exp3222_artifact_exists`,
+`exp3222_failure_count`, `repeated_cli_error_signature`,
+`monolith_rerun_allowed`, `split_run_plan_ready`, `required_next_artifacts`,
+`model_spec_gap_found`, and `honest_verdict`. It MAY include failure excerpts,
+source checksums, no-new-execution booleans, split-run dependency details,
+random seed, reproducibility checksum, and measured `duration_s`, provided all
+claims are derived from checked-in artifacts, logs, or source text.
+`honest_verdict` MUST start with `complete:` and MUST NOT claim that v4
+training, v4 labels, or headline prompt-injection KAN evidence exists.
+
+#### SCENARIO-REPORT-3234: Exp 3222 Failure Is Split Before Any Headline Rerun
+
+**Given** `ops/conductor-log.md` records exactly three Exp 3222
+Prompt-Injection KAN v4 CLI failures with the same CLI error text
+**And** `results/experiment_3222_prompt_injection_kan_distill_v4_15k.json` is
+absent
+**And** the Exp 3223 capstone reports
+`v4_outcome=blocked_missing_exp3222_result`
+**And** `scripts/experiment_template.py` documents the mandatory
+`cached_sota_pair()` / `MODEL_SPECS` path for live-data or verify-repair
+experiments
+**When** the Exp 3234 ledger generator runs
+**Then** it writes
+`results/experiment_3234_cli_backend_failure_root_cause_ledger_v1.json` with
+all required schema fields, `exp3222_artifact_exists=false`,
+`exp3222_failure_count=3`, a repeated CLI error signature, a ready split-run
+plan naming manifest, teacher-label shard, KAN train/eval shard, and
+garak/config receipt artifacts, `monolith_rerun_allowed=false`,
+`model_spec_gap_found=true`, no LLM, teacher-label, KAN-training, Garak,
+verifier, hardware, conductor, push, or protected-conductor work performed by
+this task, and an `honest_verdict` that starts with `complete:` without
+claiming v4 labels or v4 training exist.
+
+## Implementation Status (REQ-REPORT-3234)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-3234 | Implemented (`python/carnot/reporting/cli_backend_failure_root_cause_ledger_3234.py`) | Implemented (`tests/python/test_experiment_3234_cli_backend_failure_root_cause_ledger_v1.py`) |
