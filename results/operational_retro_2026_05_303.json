@@ -1,28 +1,28 @@
 {
   "schema": "carnot.operational_retro.v64",
   "milestone": "2026.05.303",
-  "generated_at": "2026-05-28T15:51:08Z",
+  "generated_at": "2026-05-28T16:21:49Z",
   "retro_type": "operational_full",
   "total_wall_time_minutes": 0,
   "experiments_completed": 0,
-  "summary": "Milestone 2026.05.303 has 0 total wall-time minutes, 0 completed experiments, and 0 compute-bound experiments in the authoritative timing block. Compute-bound duration ranking, GPU efficiency on compute-bound work, and 2+ model DualGPURunner assessment are no data available this milestone.",
+  "compute_bound_experiments_count": 0,
   "slowest_experiments": [],
+  "gpu_idle_on_compute_bound_tasks": null,
+  "summary": "The milestone timing authority records 0 total wall-time minutes, 0 completed experiments, and 0 compute-bound experiments, so compute-bound duration ranking has no data available this milestone. The idle GPU snapshot is non-actionable for this retrospective because there are 0 compute-bound rows.",
   "bottlenecks_identified": [
-    "No experiment commits were found since activation, so there is no milestone-scoped wall-time bottleneck to rank.",
-    "The idle GPU snapshot is not classified as wasted compute because the timing block contains 0 compute-bound experiments."
+    "No compute-bound experiment bottleneck can be identified because the milestone timing data contains 0 completed experiments.",
+    "GPU idle is not flagged as a bottleneck because compute_bound_experiments_count is 0."
   ],
   "improvements_suggested": [
-    "Add an explicit empty-timing-window sentinel to the retrospective generator before narrative drafting begins.",
-    "Record activation-to-first-experiment status so operators can distinguish dispatch inactivity from retrospective collection failure.",
-    "Keep GPU-idle and DualGPURunner recommendations gated on compute_bound rows and parallel-model evidence."
+    "Have the conductor emit an explicit no-data timing reason at milestone closeout when no post-activation experiment commits are found.",
+    "Keep GPU-idle recommendations gated on compute-bound timing rows before escalating them into operational bottlenecks.",
+    "Add a closeout check that distinguishes an intentionally empty execution window from missing timing telemetry."
   ],
   "top_3_highest_leverage_actions": [
-    "Emit a no-experiment-commit sentinel for empty milestone windows.",
-    "Add activation-to-first-experiment status to milestone closeout artifacts.",
-    "Require compute_bound and parallel-model fields before GPU-efficiency or DualGPURunner claims."
+    "Add a no-data timing closeout marker for empty milestone windows.",
+    "Preserve the compute-bound gate for GPU-idle interpretation.",
+    "Surface an activation-to-closeout telemetry sanity check before retrospective generation."
   ],
-  "compute_bound_experiments_count": 0,
-  "gpu_idle_on_compute_bound_tasks": null,
   "estimated_time_savings_pct": 0,
-  "meta_reflection": "The GPU monitor reported idle devices, but the timing block has no compute-bound work, so GPU idleness is not an operational bottleneck for this milestone. The useful next improvement is clearer empty-window instrumentation rather than runner enforcement."
+  "meta_reflection": "Because the timing block contains 0 completed experiments, the compute-bound slowest-run, GPU-efficiency, and DualGPURunner questions have no data available this milestone. The retrospective therefore reports absence of evidence rather than inferring performance from the idle GPU snapshot."
 }

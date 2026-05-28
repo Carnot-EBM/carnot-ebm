@@ -4,48 +4,43 @@
 # docs_audit_report — 2026-05-28
 
 ## TL;DR (stranger's 30-second take)
-I'm closing the tab after ten seconds. The headline and core value prop are genuinely great, but the site is visibly broken (local hard drive paths are leaking into the public text) and drowns me in an impenetrable soup of internal acronyms and perfect metrics that scream "synthetic overfit." 
+I'm bouncing in 15 seconds. The page starts with a great hook, but instantly devolves into an incomprehensible alphabet soup of internal acronyms and suspiciously perfect benchmark scores that scream "we graded our own homework."
 
 ## TOP 3 PROBLEMS
-1. **Broken Build/Leaked Paths** — Literal `.tmp-pytest` system paths are injected directly into the HTML, breaking the CSS imports, media queries, and the "Live benchmark" Evidence card.
-2. **Impenetrable Internal Jargon** — I am bombarded with terms like "FoVer", "PREM", "CCTU", "VeriCoT", and "PRM-BiasBench-style". A stranger has zero context for any of this.
-3. **Internal Status as Marketing** — The hero section highlights "382 Completed milestones" and "2,717 Experiment runs", which means absolutely nothing to a user trying to evaluate the tool.
+1. Impenetrable internal jargon across the Results and Capabilities sections.
+2. Absurd, mathematically perfect-looking benchmark numbers without immediate proof.
+3. The "Recent progress" card reads like an internal sprint retrospective, not user-facing copy.
 
 ## DETAILED FINDINGS
-
 ### Bloat
-- **"Recent progress" card (Hero)** — 66 words — Cap at 60 words. This card is a dense block of text describing an internal audit history, not a user-facing update.
-- **Card Overload (Global)** — ~28 total cards across the page (7 Bento + 12 Evidence + 7 Blog) — Cap the total number of cards. A stranger will just stop reading and start scrolling past the walls of identical boxes.
+- Results grid — 12 cards — Cap it at 6. Nobody will read 12 different benchmark results; they'll just skim and ignore all of them.
+- Blog section ("From the blog") — 7 cards — Cap it at 3 or 4. It overwhelms the bottom of the page.
 
 ### Internal jargon
-- **CSS / Head / Evidence Cards** — `@.tmp-pytest/pytest-of-ianblenke/pytest-3/popen-gw0/...` — Local temporary file paths have somehow been injected into the Google Fonts URL, the CSS `@media` queries, and the text of the SOTA 35B Live Benchmark card. 
-- **Hero Stats Bar / Recent Progress** — `FoVer`, `5-seed dual-condition`, `architecture-only` — No stranger knows what your internal dataset or ablation conditions are called.
-- **Capabilities (Tool use / TTC)** — `CCTU`, `PREM` — Undefined acronyms introduced as if they are industry standards.
-- **Evidence Grid** — `VeriCoT`, `SVAMP AUC`, `PRM-BiasBench-style attacks` — Alphabet soup that obscures whatever the actual metric is trying to prove.
+- Stats bar / Recent progress — `FoVer`, `5-seed dual-condition` — A stranger has no idea what FoVer is or what this condition means.
+- Capabilities Section — `Process-Reward Energy Model (PREM)`, `Test-Time Compute (TTC)` — Thrown in without explaining what they actually mean in practice.
+- Results Section — `CCTU constrained micro-benchmark`, `EstimationVerifier SVAMP AUC`, `VeriCoT`, `PRM-BiasBench`, `HalluGuard v3`, `Qwen3.6-35B-A3B` — Reads like an internal lab notebook; means absolutely nothing to a casual visitor.
 
 ### Per-milestone narrative
-- **Stats Bar** — `2,717 Experiment runs`, `382 Completed milestones` — This is project management telemetry, not a reason for a user to adopt the framework.
-- **"Recent progress" card** — `Repinned from v2 0.9857 after pre-submission adversarial audit` — Reads like a copy-pasted pull request comment or retrospective note. 
+- Recent progress card — "Repinned from v2 0.9857 after pre-submission adversarial audit..." — This is a project status update or commit message, entirely out of place in a hero section.
 
 ### Inconsistencies
-- **AUROC claims** vs **AUROC claims** — The hero stats claim "0.9131 Verifier AUROC", the recent progress card complains about repinning from "0.9857", and the Safety card claims "0.91 AUROC". It looks like you're throwing random numbers at the wall depending on the feature.
+- The hero stats claim `0.9131 Verifier AUROC`, but the recent progress text immediately throws around `v2 0.9857` and `architecture-only 0.8947`. It's confusing which number represents the actual capability.
 
 ### Missing essentials
-- Nothing critical is missing. The headline tells me exactly what it does, the installation command is clear, the license is prominently displayed, and the maintainer is in the footer.
+- Proof of trust: You claim "Every number below is backed by a checked-in experiment artifact", but there are no links to these artifacts. A stranger cannot easily verify the claims and must take your word for it.
 
 ### Fabrication signals
-- **Math extraction Evidence card** — `TP rate: 0.5 -> 1.0` — A mathematically perfect 1.0 True Positive rate on an extraction task looks highly suspicious and fabricated without a massive asterisk.
-- **Adversarial audit Evidence card** — `catches 60/60 attacks` — A 100% catch rate on adversarial attacks sets off immediate credibility alarms.
-- **Training Evidence card** — `2.0× speedup, identical losses` — Perfect linear scaling on dual GPUs is practically a myth. 
+- `GSM8K extraction TP rate: 0.5 -> 1.0` in the Results section — A 1.0 (100%) true positive rate is suspiciously perfect.
+- `k=5 ensemble catches 60/60 attacks` in the Results section — A perfect 100% success rate against adversarial attacks sets off immediate bullshit detectors.
+- `2.0× speedup, identical losses` — Exactly 2.0× and perfectly identical? Looks highly idealized or cherry-picked.
 
 ## WHAT'S WORKING
-- The headline ("Catch the mistakes your LLM confidently makes up.") and problem statement ("LLMs predict. They don't check.") are phenomenal.
-- The 1-2-3 "Extract -> Check -> Repair" mental model is incredibly clear and persuasive.
-- The dual Python/Rust code quickstart window is clean, practical, and visually appealing.
+- The hero headline ("Catch the mistakes your LLM confidently makes up.") is a fantastic, immediately clear value proposition.
+- The Quickstart section is excellent; showing Python and Rust side-by-side with 5 lines of code is exactly what developers want to see.
 
 ## RECOMMENDED OPERATOR ACTIONS
-1. **Fix the build script:** Immediately remove the broken string replacements injecting `.tmp-pytest/...` into the Google Fonts `<link>`, the CSS `@media` queries, and the "Live benchmark" card.
-2. **Purge the internal telemetry:** Remove "Completed milestones" and "Experiment runs" from the Hero stats bar. Replace them with user-facing metrics (e.g., supported model count, average latency overhead).
-3. **Rewrite the "Recent progress" card:** Cut the internal narrative about the "adversarial audit" and "repinned AUROCs". Tell the user what the latest release enables them to do in under 50 words.
-4. **De-jargon the Evidence grid:** Replace internal benchmark names (FoVer, CCTU, VeriCoT) with plain-English descriptions (e.g., "Internal math reasoning dataset", "Tool-use benchmark").
-5. **Caveat the perfect metrics:** Tone down or add context to the "1.0", "60/60", and "2.0x" claims in the Evidence section so they don't trigger "synthetic overfit" alarms for seasoned ML practitioners.
+1. Nuke the internal acronyms from the Results and Capabilities cards. Translate them into plain English (e.g., "Math extraction" instead of "VeriCoT equation-style CoT fix").
+2. Cut the Results grid down from 12 cards to the 6 most impressive, externally-understandable claims.
+3. Rewrite or remove the "Recent progress" card in the hero to eliminate the internal sprint narrative.
+4. Add direct hyperlinks from the perfect `1.0` and `60/60` scores to their respective checked-in experiment artifacts to build trust.
