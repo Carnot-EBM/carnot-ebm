@@ -12688,3 +12688,60 @@ milestone entry.
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-REPORT-3267 | Planned (`python/carnot/reporting/close_v302_open_v303_3267.py`) | Planned (`tests/python/test_experiment_3267_close_v302_open_v303.py`) |
+
+### REQ-REPORT-3268: SOTA Receipt Methodology Supplement v1
+
+The repository shall provide an Exp 3268 SOTA receipt methodology supplement
+builder that writes
+`results/experiment_3268_sota_receipt_methodology_supplement_v1.json`. The
+workflow MUST check `nvidia-smi` and selected-Python CUDA health before loading
+any model. It MUST inspect the three mandated SOTA GGUF model IDs:
+`unsloth/gemma-4-26B-A4B-it-GGUF`,
+`unsloth/Qwen3.6-35B-A3B-GGUF`, and
+`unsloth/gemma-4-31B-it-GGUF`, and MUST explicitly separate cached or
+immediately resolvable GGUF files from missing model specs.
+
+When at least one mandated GGUF is cached or immediately resolvable, the
+workflow SHALL attempt a live local llama.cpp generation for each available
+mandated model with CUDA offload requested. The live receipt attempt SHALL use
+real generation work, not wall-time padding, to target a total receipt duration
+of at least 60 seconds. For every attempted model, it SHALL record model-load
+status, generated token count, output presence, wall-clock duration,
+requested/effective GPU offload, and observed GPU memory evidence. If no fresh
+methodology-clean live receipt is available, the workflow SHALL write a complete
+non-eligible supplement that cites the prior `.302` receipt boundary and records
+the exact blocker instead of reusing the flagged receipt as clean evidence.
+
+The terminal artifact MUST include
+`sota_receipt_methodology_supplement_v1_ready`, `clean_sota_receipt_eligible`,
+`model_specs`, `models_used`, `missing_model_specs`,
+`preconditions_checked`, `gpu_mem_used_mib`, `tokens_generated`,
+`receipt_duration_floor_met`, `methodology_findings`, `random_seed`,
+`reproducibility_checksum`, `duration_s`, and `honest_verdict`. It MUST also
+declare `inference_substrate`. `clean_sota_receipt_eligible` MUST be true only
+when at least one receipt row is fresh, live, local, CUDA/offload-backed,
+non-empty, token-generating, and the total receipt duration floor is met.
+`honest_verdict` MUST begin with one of `complete:`, `success:`, `passed:`, or
+`shipped:`.
+
+#### SCENARIO-REPORT-3268: Methodology-Clean Receipt Opens Downstream Evidence Boundary
+
+**Given** selected-Python CUDA and `nvidia-smi` are healthy
+**And** at least one mandated SOTA GGUF is cached or immediately resolvable
+**When** the Exp 3268 supplement builder runs
+**Then** it writes
+`results/experiment_3268_sota_receipt_methodology_supplement_v1.json` with all
+required schema fields, attempts each available mandated model with CUDA
+offload, records model load, GPU memory, token, and duration evidence, sets
+`receipt_duration_floor_met=true` only when total live receipt duration is at
+least 60 seconds, and sets `clean_sota_receipt_eligible=true` only when the
+evidence is methodology-clean. If no mandated GGUF is available, CUDA/offload is
+unhealthy, generation is empty, or the duration floor is not met, the artifact
+remains complete, `clean_sota_receipt_eligible=false`, and
+`methodology_findings` names the precise blocker.
+
+## Implementation Status (REQ-REPORT-3268)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-3268 | Implemented (`python/carnot/reporting/sota_receipt_methodology_supplement_3268.py`) | Implemented (`tests/python/test_experiment_3268_sota_receipt_methodology_supplement.py`) |
