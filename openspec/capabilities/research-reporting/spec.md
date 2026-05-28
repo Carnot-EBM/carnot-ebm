@@ -12982,3 +12982,56 @@ exact blocker.
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-REPORT-3272 | Implemented (`python/carnot/reporting/prompt_injection_v4_full_corpus_assembly_leakage_audit_3272.py`) | Implemented (`tests/python/test_experiment_3272_prompt_injection_v4_full_corpus_assembly_leakage_audit.py`) |
+
+### REQ-REPORT-3273: Prompt-Injection KAN Full-Corpus DeLong Eval v1
+
+The repository shall provide an Exp 3273 prompt-injection KAN full-corpus
+evaluation runner that writes
+`results/experiment_3273_prompt_injection_kan_full_corpus_delong_eval_v1.json`.
+The workflow SHALL first read
+`results/experiment_3272_prompt_injection_v4_full_corpus_assembly_leakage_audit_v1.json`
+and SHALL write a complete gated-skip artifact with `v4_full_eval_ready=false`
+when `full_15k_corpus_ready` is not true.
+
+When the full corpus gate is open, the workflow SHALL train a 16-knot
+`PromptInjectionEnergyCheckerV3` on the frozen train split only, evaluate on
+the frozen eval, holdout, and Garak splits, and confirm that the frozen splits
+do not leak exact, near-duplicate, or normal-corpus template-family signatures
+from train into eval or holdout. Garak rows SHALL remain evaluation-only and
+SHALL NOT be used for training or threshold selection.
+
+The terminal artifact MUST include `v4_full_eval_ready`, `full_corpus_auroc`,
+`full_corpus_auprc`, `delong_ci`, `delong_noninferiority_passed`,
+`calibration_ece`, `per_slice_metrics`, `garak_split_preliminary_metrics`,
+`sidecar_only`, `output_paths`, `random_seed`, `reproducibility_checksum`,
+`duration_s`, and `honest_verdict`. It SHALL also compare the KAN against
+text-only baseline detectors, a teacher-label exact upper-bound reference, and
+the `.302` shard AUROC from Exp 3265. `delong_noninferiority_passed` MUST be
+derived from a paired DeLong confidence interval against the strongest
+deployable text-only baseline detector with the non-inferiority margin declared
+in the artifact. `sidecar_only` MUST remain true because the KAN score is not
+an exact verifier authority. `honest_verdict` MUST begin with one of
+`complete:`, `success:`, `passed:`, or `shipped:`.
+
+#### SCENARIO-REPORT-3273: Ready Full Corpus Produces Sidecar-Only Statistical Eval
+
+**Given** Exp 3272 reports `full_15k_corpus_ready=true`
+**And** the frozen train, eval, holdout, and Garak JSONL split files exist
+**When** the Exp 3273 full-corpus KAN evaluator runs
+**Then** it trains only on frozen train rows, scores eval, holdout, and Garak
+rows, writes
+`results/experiment_3273_prompt_injection_kan_full_corpus_delong_eval_v1.json`
+with all required schema fields, reports AUROC/AUPRC/F1/calibration metrics on
+the eval-plus-holdout full-corpus evaluation scope, reports preliminary Garak
+metrics separately, records per-category and per-alignment slices, compares
+against baseline detectors and the `.302` shard AUROC, and leaves every claim
+marked `sidecar_only=true`. If Exp 3272 is missing, not ready, split files are
+missing, split leakage is detected, or either train/eval evidence lacks both
+classes, the artifact remains complete and leaves `v4_full_eval_ready=false`
+with the exact blocker.
+
+## Implementation Status (REQ-REPORT-3273)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-3273 | Planned (`python/carnot/reporting/prompt_injection_kan_full_corpus_delong_eval_3273.py`) | Planned (`tests/python/test_experiment_3273_prompt_injection_kan_full_corpus_delong_eval.py`) |

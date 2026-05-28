@@ -6629,3 +6629,4 @@ web search |
 | 2026-05-28 12:38 UTC | Prompt-injection v4 full-corpus split manifest | OK | 81 passed in 4.39s |
 | 2026-05-28 12:56 UTC | Prompt-injection teacher-label shards 2-4 | OK | 81 passed in 3.60s |
 | 2026-05-28 13:13 UTC | Prompt-injection teacher-label shards 5-7 plus Gar | OK | 81 passed in 4.16s |
+| 2026-05-28 13:32 UTC | Prompt-injection v4 full-corpus assembly and leaka | OK | 81 passed in 3.80s |

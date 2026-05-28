@@ -195,5 +195,28 @@
   "target_total_examples": 15000,
   "task_id": "exp3272-prompt-injection-v4-full-corpus-assembly-leakage-audit-v1",
   "train_count": 10000,
-  "within_source_duplicate_count": 1196
+  "within_source_duplicate_count": 1196,
+  "flagged_adversarial": true,
+  "corrigendum_pending": [
+    {
+      "kind": "TAUTOLOGY",
+      "severity": "critical",
+      "detail": "assembled_example_count=15000.0 and raw_example_count=15000.0 agree to >5 sig figs. Two distinct metrics matching this precisely is more likely a bug than a finding."
+    },
+    {
+      "kind": "TAUTOLOGY",
+      "severity": "critical",
+      "detail": "assembled_example_count=15000.0 and target_total_examples=15000.0 agree to >5 sig figs. Two distinct metrics matching this precisely is more likely a bug than a finding."
+    },
+    {
+      "kind": "TAUTOLOGY",
+      "severity": "critical",
+      "detail": "eval_count=2000.0 and holdout_count=2000.0 agree to >5 sig figs. Two distinct metrics matching this precisely is more likely a bug than a finding."
+    },
+    {
+      "kind": "TAUTOLOGY",
+      "severity": "critical",
+      "detail": "raw_example_count=15000.0 and target_total_examples=15000.0 agree to >5 sig figs. Two distinct metrics matching this precisely is more likely a bug than a finding."
+    }
+  ]
 }
