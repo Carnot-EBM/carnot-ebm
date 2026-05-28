@@ -12927,3 +12927,58 @@ blocker.
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-REPORT-3271 | Implemented (`python/carnot/reporting/prompt_injection_teacher_label_shards_5_7_garak_seed_3271.py`) | Implemented (`tests/python/test_experiment_3271_prompt_injection_teacher_label_shards_5_7_garak_seed.py`) |
+
+### REQ-REPORT-3272: Prompt-Injection V4 Full Corpus Assembly And Leakage Audit v1
+
+The repository shall provide an Exp 3272 prompt-injection v4 corpus assembly
+and split freezer that writes
+`results/experiment_3272_prompt_injection_v4_full_corpus_assembly_leakage_audit_v1.json`,
+a canonical full-corpus JSONL, and frozen train/eval/holdout/Garak JSONL
+splits under `data/prompt_injection_v4/`. The workflow MUST read the `.302`
+2,000-example seed shard from Exp 3264, the Exp 3270 shard files for shards 2
+through 4, the Exp 3271 shard files for shards 5 through 7, the Exp 3271
+Garak/adaptive seed file, and the Exp 3269 split manifest. It SHALL write a
+complete gated-skip artifact with `full_15k_corpus_ready=false` when the
+teacher-label or Garak/adaptive seed gates are not satisfied.
+
+When the gates are open, the workflow SHALL normalize row schema, preserve
+source provenance, freeze train/eval/holdout/Garak splits with target counts
+10,000/2,000/2,000/1,000, and keep the Garak/adaptive rows evaluation-only.
+The leakage audit MUST prevent exact duplicate, conservative near-duplicate,
+and normal-corpus template-family signatures from spanning train, eval, and
+holdout splits; exact or near-duplicate overlap between Garak and any normal
+split MUST fail the audit. Cross-source exact or near-duplicate rows may be
+removed before splitting, but within-source repeated seed prompts may be kept
+only when their leakage signatures remain confined to one frozen split.
+
+The terminal artifact MUST include `full_15k_corpus_ready`,
+`assembled_example_count`, `train_count`, `eval_count`, `holdout_count`,
+`garak_count`, `leakage_audit_passed`, `duplicate_count_removed`,
+`split_distribution`, `output_paths`, `checksums`, `random_seed`,
+`reproducibility_checksum`, `duration_s`, and `honest_verdict`.
+`honest_verdict` MUST begin with one of `complete:`, `success:`, `passed:`, or
+`shipped:`. Checksums MUST cover every written corpus/split file and every
+upstream source artifact consumed by the assembly.
+
+#### SCENARIO-REPORT-3272: Full Corpus Freezes Clean Splits
+
+**Given** Exp 3264 reports a ready 2,000-example seed shard, Exp 3270 reports
+`cumulative_label_count >= 8000`, Exp 3271 reports
+`cumulative_label_count >= 14000` and `garak_seed_count >= 1000`, and the Exp
+3269 manifest target is 15,000 examples
+**When** the Exp 3272 assembly and leakage-audit runner executes
+**Then** it writes the result artifact, canonical full-corpus JSONL, and frozen
+train/eval/holdout/Garak split JSONL files, records
+`assembled_example_count=15000`, `train_count=10000`, `eval_count=2000`,
+`holdout_count=2000`, `garak_count=1000`, records class balance in
+`split_distribution`, includes checksums for all written and source files, and
+sets `full_15k_corpus_ready=true` only when the leakage audit passes. If any
+upstream label or Garak gate is closed, the artifact remains complete, writes
+no downstream split files, leaves `full_15k_corpus_ready=false`, and records the
+exact blocker.
+
+## Implementation Status (REQ-REPORT-3272)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-3272 | Implemented (`python/carnot/reporting/prompt_injection_v4_full_corpus_assembly_leakage_audit_3272.py`) | Implemented (`tests/python/test_experiment_3272_prompt_injection_v4_full_corpus_assembly_leakage_audit.py`) |

@@ -489,5 +489,13 @@
     }
   },
   "task_id": "exp3271-prompt-injection-teacher-label-shards-5-7-garak-seed-v1",
-  "teacher_label_shards_5_7_garak_seed_ready": true
+  "teacher_label_shards_5_7_garak_seed_ready": true,
+  "flagged_adversarial": true,
+  "corrigendum_pending": [
+    {
+      "kind": "DURATION_TOO_SHORT",
+      "severity": "critical",
+      "detail": "duration_s=11.75169 but artifact references compute-bound markers (GGUF / CUDA / live model). Loading and running a real model takes >=60.0s minimum; this completed too fast to have invoked the model."
+    }
+  ]
 }
