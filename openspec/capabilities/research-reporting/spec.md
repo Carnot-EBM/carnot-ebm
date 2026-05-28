@@ -13910,3 +13910,62 @@ sidecar-only evidence.
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-REPORT-3296 | Implemented (`python/carnot/reporting/substrate_corrigendum_kan_no_retry_3296.py`) | Implemented (`tests/python/test_experiment_3296_substrate_corrigendum_kan_no_retry.py`) |
+
+### REQ-REPORT-3298: Red-Team Energy Telemetry Router V1
+
+The repository shall provide an Exp 3298 live SOTA GGUF telemetry-panel
+runner that writes
+`results/experiment_3298_redteam_energy_telemetry_router_v1.json` by reading
+Exp 3295's Garak failure-family autopsy, checking local GPU/llama.cpp/cache
+preconditions before model loading, resolving mandated GGUF models through the
+shared `cached_sota_pair()`/local-cache pattern, and running a bounded live
+panel of 30-45 representative prompts across PromptInject,
+jailbreak/encoding, and aligned-benign slices. The runner MUST NOT modify
+`scripts/research_conductor.py` and MUST NOT use legacy tiny models as
+headline telemetry evidence.
+
+The runner SHALL capture real llama.cpp token logprob, top-k logprob, or final
+logit energy telemetry when the local runtime exposes it. If no real logits or
+logprobs are available, it SHALL compute deterministic text-statistical
+proxies and set `telemetry_substrate` to a proxy-labeled value so downstream
+ablation code cannot conflate proxy evidence with real model logits. The
+artifact SHALL keep attack success, refusal, degenerate output, target-prefix,
+and telemetry metrics separated by family. It SHALL produce a stable
+`routing_policy` with thresholds for Exp 3299 while explicitly stating that
+telemetry alone is not a safety proof.
+
+The terminal artifact MUST include `redteam_telemetry_policy_ready`,
+`model_specs`, `models_used`, `missing_model_specs`,
+`preconditions_checked`, `telemetry_substrate`, `live_probe_count`,
+`probe_family_counts`, `attack_success_rate`, `refusal_rate`,
+`telemetry_metrics_by_family`, `routing_policy`, `gpu_mem_used_mib`,
+`tokens_generated`, `inference_substrate`, `random_seed`,
+`reproducibility_checksum`, `duration_s`, and `honest_verdict`.
+`redteam_telemetry_policy_ready` SHALL be true only when a mandated SOTA GGUF
+produces live responses for 30-45 probes, the family counts include
+PromptInject, jailbreak/encoding, and aligned-benign rows, and the routing
+policy is emitted. `honest_verdict` MUST begin with one of `complete:`,
+`success:`, `passed:`, or `shipped:`.
+
+#### SCENARIO-REPORT-3298: Live Panel Emits Family-Aware Routing Policy
+
+**Given** Exp 3295 reports PromptInject, jailbreak/encoding, and aligned-benign
+failure-family context
+**And** the selected Python, nvidia-smi, llama.cpp GPU offload support, and
+mandated GGUF cache checks pass before model loading
+**When** the Exp 3298 runner completes 30-45 live SOTA GGUF probes
+**Then** it writes
+`results/experiment_3298_redteam_energy_telemetry_router_v1.json` with all
+required schema fields, names the mandated model(s) used, lists missing
+mandated model specs, labels the telemetry substrate as real-logit/logprob or
+text-statistical proxy, reports live probe and family counts, preserves
+attack-success and refusal rates separately, emits auditable telemetry metrics
+by family, provides a stable thresholded routing policy for Exp 3299, records
+GPU memory and generated-token evidence, and emits an `honest_verdict`
+beginning with `complete:` without claiming telemetry alone proves safety.
+
+## Implementation Status (REQ-REPORT-3298)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-3298 | Implemented (`python/carnot/reporting/redteam_energy_telemetry_router_3298.py`) | Implemented (`tests/python/test_experiment_3298_redteam_energy_telemetry_router.py`) |
