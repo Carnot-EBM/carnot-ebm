@@ -647,6 +647,7 @@ def _build_source_artifacts(repo_root: Path) -> list[JsonDict]:
         ("AGENTS.md", False, "agents_repo_instructions"),
         ("CODEX.md", False, "codex_repo_workflow"),
         ("CLAUDE.md", False, "claude_authenticity_rules"),
+        ("openspec/capabilities/verification/spec.md", True, "verification_openspec"),
         (str(EXP3111_REL_PATH), True, "exp3111_certified_coherence_mcs"),
         (str(EXP3125_REL_PATH), True, "exp3125_prefix_closed_deterministic_bound"),
         (str(EXP3136_REL_PATH), True, "exp3136_false_accept_autopsy"),
@@ -658,6 +659,11 @@ def _build_source_artifacts(repo_root: Path) -> list[JsonDict]:
             "python/carnot/verify/counterexample_certificate_repair_pilot_v2.py",
             False,
             "exp3170_module",
+        ),
+        (
+            "tests/python/test_experiment_3170_counterexample_certificate_repair_pilot_v2.py",
+            True,
+            "exp3170_tests",
         ),
     ]
     result = []
@@ -797,10 +803,15 @@ def build_artifact(
         if c.minimal_failing_assignment  # non-empty = concrete counterexample
     )
     # Exact accept count: how many certificates confirm a repair was accepted
+    # AND the repaired label exactly matches the row's ground-truth label.
+    # A repair that was "accepted" but produced the wrong label is NOT an
+    # exact accept — counting it would let a label-flipping repair masquerade
+    # as a correct one (REQ-VERIFY-3170).
     exact_accept_count = sum(
         1 for c in cert_records
         if c.prior_repair_scored and c.prior_repair_score is not None
         and c.prior_repair_score.get("repair_accepted") is True
+        and c.prior_repair_score.get("exact_label_matches") is True
     )
 
     # Repair is still needed: if no repairs have been accepted and the gate
@@ -872,13 +883,17 @@ def _build_verdict(
     'no_improvement', 'marginal' against verdicts.  The terminal-prefix
     discipline requires verdicts start with complete:/success:/passed:/shipped_.
     """
+    # Recomputed from the same inputs the build_artifact field uses
+    # (exact_accept_count < exact_row_count) so the verdict string and the
+    # artifact's repair_call_required_for_next_step field can never disagree.
+    repair_call_required = exact_accept_count < exact_row_count
     return (
         f"complete: counterexample_certificate_repair_pilot_v2_ready=true; "
         f"exact_row_count={exact_row_count}; "
         f"counterexample_count={counterexample_count}; "
         f"prior_repair_candidates_scored={scored_count}; "
         f"exact_accept_count={exact_accept_count}; "
-        f"repair_call_required_for_next_step=true"
+        f"repair_call_required_for_next_step={str(repair_call_required).lower()}"
     )
 
 
