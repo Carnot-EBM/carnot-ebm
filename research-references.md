@@ -1,3 +1,157 @@
+## 2026-05-28 Post-.302 Planning Sweep (Milestone 2026.05.303)
+
+This sweep was run after milestone `.302` completed. `.302` proved the
+runtime blocker is no longer the main problem: CUDA recovery allowed a
+llama.cpp CUDA smoke, one mandated SOTA GGUF receipt, and a v4
+prompt-injection teacher-label shard. The capstone remained
+`paper_ready=false` with `publication_blocker_count=105` and
+`next_top_gap=full_15k_v4_corpus_across_shards_plus_repair_and_garak_gates`.
+The next milestone should therefore scale v4 prompt-injection evidence,
+separate receipt-methodology cleanup from repair claims, and promote FR-11
+memory with retention and negative-transfer checks.
+
+### Distributional EBMs Support Two-Pass Regeneration and Abstention
+
+- **Paper:** "Distributional Energy-Based Models for Uncertainty-Aware
+  Structured LLM Reasoning" (arXiv:2605.18871; submitted 2026-05-15).
+- **What:** The paper combines a learned quality scorer with deterministic
+  analytical constraint penalties and uses ensemble uncertainty for targeted
+  regeneration or abstention. It reports strong gains where constraints are
+  checkable.
+- **Relevance to Carnot:** Use uncertainty as a bounded routing signal for
+  prompt-injection repair and abstention, not as correctness authority. `.303`
+  should keep exact verifier/Garak evidence as the promotion gate.
+- **Sources:** https://arxiv.org/abs/2605.18871
+
+### ARM and EBM Sequence Models Now Have a Useful Lookahead Theory
+
+- **Paper:** "Autoregressive Language Models are Secretly Energy-Based
+  Models: Insights into the Lookahead Capabilities of Next-Token Prediction"
+  (arXiv:2512.15605; v4 revised 2026-05-25).
+- **What:** The paper establishes a function-space bijection between
+  autoregressive language models and EBMs, connects the mapping to the soft
+  Bellman equation, and derives error bounds for distilling EBMs into ARMs.
+- **Relevance to Carnot:** This supports verifier-to-generator distillation as
+  a research direction, but `.303` should stay empirical: full corpus labels,
+  DeLong comparison, and Garak pressure before any ARM/EBM planning claim.
+- **Sources:** https://arxiv.org/abs/2512.15605 and
+  https://www.semanticscholar.org/paper/Energy-Based-Transformers-are-Scalable-Learners-and-Gladstone-Nanduru/2da9163730998a4368c609972ccff0582518b36b
+
+### Energy-Based Reasoning Still Needs Drift and Failure-Mode Audits
+
+- **Paper:** "Reasoning as Energy Minimization over Structured Latent
+  Trajectories" (arXiv:2603.28248; submitted 2026-03-30, surfaced via
+  Hugging Face Papers).
+- **What:** The paper models multi-step reasoning as latent-trajectory energy
+  minimization and explicitly reports a negative result on CNF logic
+  satisfaction when planner outputs drift from decoder training regions.
+- **Relevance to Carnot:** Any future latent or KAN sidecar must report drift,
+  per-slice ablations, and negative controls. `.303` applies this lesson by
+  treating the KAN as a detector sidecar with DeLong/Garak gates, not a
+  standalone verifier.
+- **Sources:** https://arxiv.org/abs/2603.28248 and
+  https://huggingface.co/papers/2603.28248
+
+### Prompt-Injection Defenses Need Aligned-Instruction and Adaptive-Attack Arms
+
+- **Papers:** "AlignSentinel: Alignment-Aware Detection of Prompt Injection
+  Attacks" (OpenReview ICLR 2026 submission), "How Not to Detect Prompt
+  Injections with an LLM" (arXiv:2507.05630), and "A Systematic Literature
+  Review on LLM Defenses Against Prompt Injection and Jailbreaking" (arXiv:
+  2601.22240).
+- **What:** AlignSentinel separates aligned instructions, misaligned
+  instructions, and non-instruction inputs. DataFlip shows KAD-style defenses
+  can be evaded with near-zero detection while still inducing malicious
+  behavior. The 2026 survey catalogues defense families across 88 studies.
+- **Relevance to Carnot:** The v4 15k corpus must include aligned-instruction
+  benign examples and adaptive attacks. Garak/DataFlip-style pressure should be
+  a gate before repair claims, not an afterthought.
+- **Sources:** https://openreview.net/forum?id=yPgbdOdOPG,
+  https://arxiv.org/abs/2507.05630, and https://arxiv.org/abs/2601.22240
+
+### Prompt-Injection Risk Varies By Model Family and Task Surface
+
+- **Papers:** "Analysis of LLMs Against Prompt Injection and Jailbreak
+  Attacks" (arXiv:2602.22242) and "The Vulnerability of LLM Rankers to Prompt
+  Injection Attacks" (arXiv:2602.16752).
+- **What:** The first paper compares open models including Qwen and Gemma and
+  finds lightweight defenses are bypassed by long reasoning-heavy prompts. The
+  ranker paper shows prompt injections can alter ranking decisions across
+  pairwise, listwise, and setwise rankers, with architecture-sensitive
+  resilience.
+- **Relevance to Carnot:** `.303` should not report a single global detector
+  metric. It should stratify by attack type, model family, and aligned-vs-
+  misaligned instruction class.
+- **Sources:** https://arxiv.org/abs/2602.22242 and
+  https://arxiv.org/abs/2602.16752
+
+### KANs Remain Attractive Only With Interpretability and Leakage Controls
+
+- **Papers:** "A Kolmogorov-Arnold Network for Explainable Detection of
+  Cyberattacks on EV Chargers" (arXiv:2503.02281) and "A Kolmogorov-Arnold
+  Network for Interpretable Cyberattack Detection in AGC Systems" (arXiv:
+  2509.05259).
+- **What:** Both papers use KANs for cybersecurity detection and emphasize
+  symbolic formula extraction or interpretable nonlinear detection.
+- **Relevance to Carnot:** KAN is still plausible for prompt-injection
+  detection if `.303` includes leakage/de-dup audits, symbolic/explanation
+  records where available, and a strict non-headline sidecar boundary until
+  full-corpus and Garak gates pass.
+- **Sources:** https://arxiv.org/abs/2503.02281 and
+  https://arxiv.org/abs/2509.05259
+
+### Constraint Propagation and Differentiable Combinatorial Layers Inform Future Repair
+
+- **Papers:** "Large Language Model Meets Constraint Propagation" (arXiv:
+  2505.24012), "Differentiable Knapsack and Top-k Operators via Dynamic
+  Programming" (arXiv:2601.21775), and "Learning with Local Search MCMC
+  Layers" (arXiv:2505.14240).
+- **What:** GenCP formulates constrained generation as a CSP with bidirectional
+  domain preview. The DP paper smooths discrete operators for differentiable
+  selection. The local-search MCMC work turns neighborhood heuristics into
+  proposal distributions with theoretical grounding.
+- **Relevance to Carnot:** These are stronger repair and sampler directions
+  after `.303`. They should not displace the immediate v4 full-corpus and
+  repair-gate recovery work.
+- **Sources:** https://arxiv.org/abs/2505.24012,
+  https://arxiv.org/abs/2601.21775, and https://arxiv.org/abs/2505.14240
+
+### Continuous Self-Learning Must Separate System Memory, Personal Memory, and Forgetting
+
+- **Papers:** "Benchmarking Continual Agent Memory for Online Learning,
+  Transfer, and Forgetting" (OpenReview LLA 2026), "When Continual Learning
+  Moves to Memory" (arXiv:2604.27003), "Memory for Autonomous LLM Agents:
+  Mechanisms, Evaluation, and Emerging Frontiers" (arXiv:2603.07670),
+  "EvoMemBench" (arXiv:2605.18421), and "SkillLearnBench" (arXiv:2604.20087).
+- **What:** Recent work converges on the same warning: external memory moves
+  the stability-plasticity problem into retrieval, representation, write-path
+  filtering, and forgetting. Self-feedback alone can drift, and no one memory
+  form wins across settings.
+- **Relevance to Carnot:** `.303` FR-11 should promote only controller-memory
+  behavior that improves held-out failure routing while preserving old gates
+  and avoiding negative transfer. No foundation-weight update claim.
+- **Sources:** https://openreview.net/forum?id=MSXbrNExax,
+  https://arxiv.org/abs/2604.27003, https://arxiv.org/abs/2603.07670,
+  https://arxiv.org/abs/2605.18421, and https://arxiv.org/abs/2604.20087
+
+### Garak and Current EBM Hardware Updates Remain Boundary Signals
+
+- **Sources:** NVIDIA garak docs/GitHub, Extropic TSU/XTR-0 writing, and
+  Logical Intelligence public Kona/Aleph updates.
+- **What:** Garak provides structured prompt-injection, jailbreak, leakage,
+  and hallucination probing, including GGUF/llama.cpp support in current
+  documentation. Extropic continues to position TSU hardware as native
+  probabilistic/EBM sampling. Logical Intelligence positions Kona/Aleph around
+  energy-based reasoning and verified critical systems.
+- **Relevance to Carnot:** `.303` should use Garak as a red-team gate where
+  available. It should keep TSU/Kona as strategic architecture signals and
+  make no hardware access or speedup claim.
+- **Sources:** https://github.com/NVIDIA/garak,
+  https://docs.garak.ai/garak/examples/prompt-injection,
+  https://extropic.ai/writing/tsu-101-an-entirely-new-type-of-computing-hardware,
+  https://extropic.ai/writing/inside-x0-and-xtr-0, and
+  https://logicalintelligence.com/
+
 ## 2026-05-28 Post-.300 Planning Sweep (Milestone 2026.05.301)
 
 This sweep was run after milestone `.300` completed. `.300` proved that the

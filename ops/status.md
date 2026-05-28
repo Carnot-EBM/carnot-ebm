@@ -1,6 +1,28 @@
 # Carnot — Operational Status
 
-**Last Updated:** 2026-05-28 (Milestone 2026.05.302 operational retrospective complete)
+**Last Updated:** 2026-05-28 (Milestone 2026.05.303 research planning staged)
+
+## Session 2026-05-28 - Milestone 2026.05.303 Research Planning Staged
+
+Planned milestone 2026.05.303 as "Prompt-Injection v4 Full Corpus +
+Garak Gate + Repair Reopen" after all `.302` tasks completed. Used
+`results/experiment_3266_capstone_v302.json`, `.302` prompt-injection
+artifacts, `ops/conductor-log.md`, `research-complete.yaml`,
+`research-roadmap.yaml`, and the post-`.302` research sweep as authority:
+`paper_ready=false`, `publication_blocker_count=105`,
+`cuda_recovery_unblocked_sota_receipt=true`, v4 shard AUROC `0.791096`,
+and the next top gap is
+`full_15k_v4_corpus_across_shards_plus_repair_and_garak_gates`.
+
+Updated `research-references.md` with the post-`.302` research sweep,
+rewrote `openspec/change-proposals/research-roadmap-vNEXT.md`, and created
+`research-roadmap-next.yaml` with 14 tasks (`exp3267`-`exp3280`). The plan
+keeps KAN as a sidecar until full-corpus DeLong and Garak gates pass, reopens
+repair only through `repair_gate_open`, and includes `exp3278` as the required
+FR-11 continuous self-learning audit. Validation passed for roadmap schema,
+prior-failure discipline, exclusion-manifest lint, gate audit, prompt sections,
+prompt final-line checks, and live-LLM `MODEL_SPECS` checks. Left
+`research-roadmap.yaml` and `scripts/research_conductor.py` untouched.
 
 ## Session 2026-05-28 - Milestone 2026.05.302 Operational Retrospective Complete
 

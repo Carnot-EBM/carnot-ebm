@@ -4,46 +4,48 @@
 # docs_audit_report — 2026-05-28
 
 ## TL;DR (stranger's 30-second take)
-I'm closing the tab because I'm drowning in a wall of inside-baseball metrics, acronyms, and twelve dense result cards. It feels like I stumbled into an internal lab notebook rather than a product designed for me to use.
+I'm closing the tab after ten seconds. The headline and core value prop are genuinely great, but the site is visibly broken (local hard drive paths are leaking into the public text) and drowns me in an impenetrable soup of internal acronyms and perfect metrics that scream "synthetic overfit." 
 
 ## TOP 3 PROBLEMS
-1. Absurdly long "Evidence" section (12 cards) filled with literal test file paths and internal benchmark names.
-2. The "Recent progress" card reads like a defensive commit message, not a landing page value prop.
-3. Unbelievably perfect "100%" metrics mixed with hyper-specific decimal scores destroy credibility.
+1. **Broken Build/Leaked Paths** — Literal `.tmp-pytest` system paths are injected directly into the HTML, breaking the CSS imports, media queries, and the "Live benchmark" Evidence card.
+2. **Impenetrable Internal Jargon** — I am bombarded with terms like "FoVer", "PREM", "CCTU", "VeriCoT", and "PRM-BiasBench-style". A stranger has zero context for any of this.
+3. **Internal Status as Marketing** — The hero section highlights "382 Completed milestones" and "2,717 Experiment runs", which means absolutely nothing to a user trying to evaluate the tool.
 
 ## DETAILED FINDINGS
+
 ### Bloat
-- "What you can check" (Features bento grid) — 7 cards (bodies up to 61 words) — Cut to 4 essential cards, cap at 30 words each.
-- "Evidence" (Results grid) — 12 cards — Strangers won't read 12 distinct metrics. Cap at 4-6 max.
-- "Writing" (Blog grid) — 7 cards — Too many choices for a landing page. Cap at 3 recent/major posts.
+- **"Recent progress" card (Hero)** — 66 words — Cap at 60 words. This card is a dense block of text describing an internal audit history, not a user-facing update.
+- **Card Overload (Global)** — ~28 total cards across the page (7 Bento + 12 Evidence + 7 Blog) — Cap the total number of cards. A stranger will just stop reading and start scrolling past the walls of identical boxes.
 
 ### Internal jargon
-- "Stats bar" & "Recent progress" card — "5-seed dual-condition", "FoVer", "architecture-only" — A stranger doesn't know your internal dataset names or eval setups.
-- "Evidence" section (Live benchmark card) — "@.tmp-pytest/pytest-of-ianblenke/.../spilled-energy-2602-18671:real.txt" — You leaked a literal pytest artifact path into your public headline copy.
-- "Evidence" section — "IterativeSelfRepair", "EstimationVerifier", "SVAMP AUC", "VeriCoT", "CCTU", "PRM-BiasBench-style" — Internal module names and niche benchmarks mean nothing to an outsider.
-- "Features" section (TTC card) — "PREM" — Dropping an unexplained acronym for an internal component.
+- **CSS / Head / Evidence Cards** — `@.tmp-pytest/pytest-of-ianblenke/pytest-3/popen-gw0/...` — Local temporary file paths have somehow been injected into the Google Fonts URL, the CSS `@media` queries, and the text of the SOTA 35B Live Benchmark card. 
+- **Hero Stats Bar / Recent Progress** — `FoVer`, `5-seed dual-condition`, `architecture-only` — No stranger knows what your internal dataset or ablation conditions are called.
+- **Capabilities (Tool use / TTC)** — `CCTU`, `PREM` — Undefined acronyms introduced as if they are industry standards.
+- **Evidence Grid** — `VeriCoT`, `SVAMP AUC`, `PRM-BiasBench-style attacks` — Alphabet soup that obscures whatever the actual metric is trying to prove.
 
 ### Per-milestone narrative
-- "Recent progress" card — "Repinned from v2 0.9857 after pre-submission adversarial audit; see Why We Report Two AUROCs Now." — This is internal status reporting and retrospective defense, not introductory marketing copy.
+- **Stats Bar** — `2,717 Experiment runs`, `382 Completed milestones` — This is project management telemetry, not a reason for a user to adopt the framework.
+- **"Recent progress" card** — `Repinned from v2 0.9857 after pre-submission adversarial audit` — Reads like a copy-pasted pull request comment or retrospective note. 
 
 ### Inconsistencies
-- The hero stats bar claims "0.9131 AUROC (5-seed dual-condition)", but the Results cards claim "0.91 AUROC" for safety and "0.90 AUC" for math. A stranger has no idea what the canonical metric actually represents across the framework.
+- **AUROC claims** vs **AUROC claims** — The hero stats claim "0.9131 Verifier AUROC", the recent progress card complains about repinning from "0.9857", and the Safety card claims "0.91 AUROC". It looks like you're throwing random numbers at the wall depending on the feature.
 
 ### Missing essentials
-- Who maintains this? The footer says "Ian Blenke / Carnot Project", but there's no context on whether this is an academic lab, an open-source collective, or a solo project. Why should I trust the long-term maintenance of this tool?
+- Nothing critical is missing. The headline tells me exactly what it does, the installation command is clear, the license is prominently displayed, and the maintainer is in the footer.
 
 ### Fabrication signals
-- Results: "Two-GPU parallel retrain — 2.0x speedup" (perfect linear scaling is highly suspect).
-- Results: "Math extraction — GSM8K extraction TP rate: 0.5 -> 1.0" (perfect 100% extraction rate).
-- Results: "Adversarial audit — k=5 ensemble catches 60/60 attacks" (perfect 100% catch rate without a credibility anchor).
+- **Math extraction Evidence card** — `TP rate: 0.5 -> 1.0` — A mathematically perfect 1.0 True Positive rate on an extraction task looks highly suspicious and fabricated without a massive asterisk.
+- **Adversarial audit Evidence card** — `catches 60/60 attacks` — A 100% catch rate on adversarial attacks sets off immediate credibility alarms.
+- **Training Evidence card** — `2.0× speedup, identical losses` — Perfect linear scaling on dual GPUs is practically a myth. 
 
 ## WHAT'S WORKING
-- The "Extract -> Check -> Repair" 3-step explanation is clear, concise, and immediately understandable.
-- The Python Quickstart code block effectively proves that this is a real, usable library with a simple API.
+- The headline ("Catch the mistakes your LLM confidently makes up.") and problem statement ("LLMs predict. They don't check.") are phenomenal.
+- The 1-2-3 "Extract -> Check -> Repair" mental model is incredibly clear and persuasive.
+- The dual Python/Rust code quickstart window is clean, practical, and visually appealing.
 
 ## RECOMMENDED OPERATOR ACTIONS
-1. Delete the "Recent progress" card from the hero section entirely; it belongs in release notes or a blog post.
-2. Purge the leaked test artifact path (`@.tmp-pytest/...`) from the "Live benchmark" results card immediately.
-3. Prune the "Evidence" grid from 12 cards down to the 4-6 most impressive, universally understandable metrics.
-4. Rewrite the retained Results cards to remove internal component names (e.g., change "IterativeSelfRepair" to "Auto-repair").
-5. Soften or anchor the perfect "100%" claims in the Results section so they don't look fabricated.
+1. **Fix the build script:** Immediately remove the broken string replacements injecting `.tmp-pytest/...` into the Google Fonts `<link>`, the CSS `@media` queries, and the "Live benchmark" card.
+2. **Purge the internal telemetry:** Remove "Completed milestones" and "Experiment runs" from the Hero stats bar. Replace them with user-facing metrics (e.g., supported model count, average latency overhead).
+3. **Rewrite the "Recent progress" card:** Cut the internal narrative about the "adversarial audit" and "repinned AUROCs". Tell the user what the latest release enables them to do in under 50 words.
+4. **De-jargon the Evidence grid:** Replace internal benchmark names (FoVer, CCTU, VeriCoT) with plain-English descriptions (e.g., "Internal math reasoning dataset", "Tool-use benchmark").
+5. **Caveat the perfect metrics:** Tone down or add context to the "1.0", "60/60", and "2.0x" claims in the Evidence section so they don't trigger "synthetic overfit" alarms for seasoned ML practitioners.

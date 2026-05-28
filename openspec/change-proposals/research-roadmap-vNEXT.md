@@ -1,84 +1,102 @@
-# Research Roadmap vNEXT - Milestone 2026.05.301
+# Research Roadmap vNEXT - Milestone 2026.05.303
 
-**Title:** Selected-Python CUDA Repair + Constraint-Tax Prompt Injection + Lifelong FR-11 Retention
+**Title:** Prompt-Injection v4 Full Corpus + Garak Gate + Repair Reopen
 
 **Created:** 2026-05-28
 **Status:** Proposed, staged in `research-roadmap-next.yaml`
-**Supersedes:** Milestone 2026.05.300
-**Execution queue:** `exp3246` through `exp3258`
+**Supersedes:** Milestone 2026.05.302
+**Execution queue:** `exp3267` through `exp3280`
 
-## What Milestone 2026.05.300 Proved
+## What Milestone 2026.05.302 Proved
 
-Milestone `.300` completed and narrowed Carnot's next blocker:
+Milestone `.302` completed the reboot recovery path and moved the top blocker
+from runtime bring-up to scientific evidence:
 
-- `exp3233` archived `.299` and activated `.300`.
-- `exp3234` produced the CLI backend root-cause ledger and confirmed the
-  failed prompt-injection monolith should stay split into smaller artifacts.
-- `exp3235` produced the CUDA boundary package, but `exp3236` reported
-  `cuda_python_smoke_passed=false` with
-  `selected_python_torch_cuda_unavailable` and
-  `cuda_bindings_runtime_no_devices`.
-- `exp3237`, `exp3238`, `exp3240`, `exp3241`, and `exp3242` were correctly
-  gate-blocked or skipped because the local SOTA receipt chain was not ready.
-- `exp3239` produced the Prompt-Injection KAN v4 resource manifest.
-- `exp3243` produced the FR-11 failure-memory controller artifact with held-out
-  replay and doomed-rerun avoidance evidence, while preserving the
-  no-foundation-weight-update boundary.
-- `exp3245` reported `paper_ready=false`, `publication_blocker_count=106`,
-  `local_sota_receipt_status=blocked`, and
-  `next_top_gap=repair_selected_python_torch_cuda_before_exp3237`.
+- `exp3260` archived `.301` and activated `.302`.
+- `exp3261` confirmed CUDA recovery after the operator reboot: both RTX 3090s
+  enumerated and selected-Python CUDA was usable.
+- `exp3262` produced a llama.cpp CUDA receipt smoke.
+- `exp3263` produced a mandated SOTA GGUF receipt with
+  `sota_gguf_receipt_ready=true`; the cached mandated model was
+  `unsloth/gemma-4-26B-A4B-it-GGUF`. The receipt was still flagged by
+  methodology hygiene because the duration was too short for a clean headline
+  evidence row.
+- `exp3264` produced the first v4 prompt-injection teacher-label shard
+  (`n=2000`, benign=1459, injection=541).
+- `exp3265` trained/evaluated the v4 KAN sidecar on the shard
+  (`n_train=1600`, `n_eval=400`, `shard_auroc=0.791096`). This is useful as
+  a pilot, not a headline result.
+- `exp3266` reported `paper_ready=false`, `publication_blocker_count=105`,
+  `cuda_recovery_unblocked_sota_receipt=true`, and
+  `next_top_gap=full_15k_v4_corpus_across_shards_plus_repair_and_garak_gates`.
 
-The next milestone should therefore focus on a selected-Python CUDA repair
-attempt, then reopen local SOTA receipts and downstream prompt-injection work
-only through structured gates. It should also convert FR-11 memory from a
-single controller artifact into a lifelong retention/adaptation/forgetting
-audit.
+The natural next milestone is therefore not another CUDA repair milestone. It
+is a corpus-scale evidence milestone: finish the v4 15k prompt-injection
+corpus across shards, evaluate the KAN sidecar with real split and DeLong
+controls, add Garak/adaptive red-team pressure, clean up SOTA receipt
+methodology for downstream repair eligibility, and reopen repair only through
+explicit gates.
 
 ## Three Biggest Gaps To PRD Vision
 
-1. **Local SOTA authority is still blocked at the selected-Python CUDA layer.**
-   The PRD requires current local GGUF model evidence, but Carnot cannot yet
-   make a trustworthy headline claim because selected Python cannot initialize
-   CUDA consistently. This blocks live SOTA receipts, teacher labels, and
-   structured repair evaluation.
+1. **Prompt-injection evidence is still a pilot shard, not a publication-grade
+   verifier result.** The PRD vision requires verifiable reasoning and robust
+   mitigation evidence. `.302` produced only a 2k shard and a non-headline KAN
+   AUROC. Carnot still needs the full 15k corpus, leakage checks, class
+   balance, aligned-instruction controls, adaptive attacks, DeLong
+   non-inferiority, and Garak red-team gates.
 
-2. **Prompt-injection KAN work has a manifest but no current teacher labels or
-   constraint-tax control.** `.300` proved the manifest can be built, but
-   downstream labeling and training were skipped. New 2026 work on constraint
-   tax means `.301` must compare free-reasoning and schema-constrained arms
-   before trusting structured labels or DCCD-style proposals.
+2. **SOTA local evidence is available but not clean enough to reopen repair
+   claims.** CUDA and llama.cpp are working, but the SOTA receipt has a
+   duration/methodology flag and only one mandated SOTA model is currently
+   cached. Repair and clean-verifier claims should not resume until a
+   methodology supplement or long-duration receipt confirms the evidence row is
+   headline-eligible.
 
-3. **Continuous self-learning is controller-memory only.** `.300` showed that
-   failure memory can avoid doomed reruns, but PRD FR-11 needs longer-lived
-   evidence: retention across sessions, adaptation to new gate blocks, and
-   negative-control checks for forgetting without claiming foundation-model
-   weight updates.
+3. **Continuous self-learning is still controller-memory evidence, not a
+   retention-tested learning loop.** FR-11 requires autonomous self-learning
+   without foundation-weight update claims. Recent memory benchmarks show that
+   external memory can create negative transfer and forgetting. Carnot needs a
+   held-out failure-memory audit over full-corpus prompt-injection failures and
+   legacy gate-block traces before promoting the loop.
 
 ## External Research Integrated
 
-The 2026-05-28 post-`.300` sweep was added to `research-references.md` before
+The 2026-05-28 post-`.302` sweep was added to `research-references.md` before
 this roadmap was designed. The most relevant updates are:
 
-- Constraint Tax (`https://arxiv.org/abs/2605.26128`) warns that formalized
-  output constraints can reduce reasoning accuracy even while improving
-  parseability.
-- ConstrainPrompt (`https://huggingface.co/papers/2603.25111`) gives a cheap
-  prompt-only constraint baseline for format, lexical, structural, and
-  syntactic controls.
-- SEVerA (`https://arxiv.org/abs/2603.22471`) supports verifier-guided
-  adaptive test-time search as a proposal-ranking idea, not a correctness
-  authority.
-- LifelongAgentBench (`https://arxiv.org/abs/2605.05135`) motivates explicit
-  retention, adaptation, and forgetting metrics for FR-11.
-- P-Dit probabilistic units (`https://arxiv.org/abs/2506.00269`) suggest a
-  multi-state probabilistic computing diagnostic path for partial-credit rows.
-- Extropic and Kona updates remain strategic alignment signals for
-  energy-based inference and hardware-accelerated sampling, but `.301` makes
-  no TSU, Kona, or hardware speedup claim.
+- Distributional EBMs (`https://arxiv.org/abs/2605.18871`) support a two-pass
+  uncertainty/regeneration loop, but only as routing over exact constraints.
+- ARM/EBM lookahead theory (`https://arxiv.org/abs/2512.15605`) clarifies
+  verifier-to-generator distillation, but `.303` stays empirical and does not
+  claim an ARM/EBM foundation-model result.
+- Energy-based latent reasoning (`https://arxiv.org/abs/2603.28248`) reports a
+  CNF failure mode from latent drift, reinforcing the need for drift and
+  leakage audits before KAN promotion.
+- AlignSentinel, DataFlip, and the 2026 prompt-injection survey
+  (`https://openreview.net/forum?id=yPgbdOdOPG`,
+  `https://arxiv.org/abs/2507.05630`,
+  `https://arxiv.org/abs/2601.22240`) motivate aligned-instruction benign
+  examples and adaptive-attack arms in the v4 corpus.
+- Prompt-injection vulnerability work across Qwen/Gemma and ranker surfaces
+  (`https://arxiv.org/abs/2602.22242`,
+  `https://arxiv.org/abs/2602.16752`) motivates stratifying results by model
+  family, task surface, and attack type.
+- KAN cybersecurity papers (`https://arxiv.org/abs/2503.02281`,
+  `https://arxiv.org/abs/2509.05259`) support KAN as an interpretable detector
+  sidecar only when leakage and explanation controls exist.
+- Agent-memory and continual-learning work (`https://openreview.net/forum?id=MSXbrNExax`,
+  `https://arxiv.org/abs/2604.27003`, `https://arxiv.org/abs/2603.07670`,
+  `https://arxiv.org/abs/2605.18421`, `https://arxiv.org/abs/2604.20087`)
+  motivates FR-11 retention, transfer, and forgetting metrics.
+- Garak (`https://github.com/NVIDIA/garak`) is the practical red-team gate for
+  prompt injection and jailbreak probes. Extropic TSU and Logical Intelligence
+  Kona remain strategic signals only; `.303` makes no hardware access or
+  speedup claim.
 
 ## SOTA Local GGUF Policy
 
-Any `.301` experiment that invokes an LLM for evidence must include at least
+Any `.303` experiment that invokes an LLM for evidence must include at least
 one mandated local SOTA GGUF model in `MODEL_SPECS`:
 
 - `unsloth/Qwen3.6-35B-A3B-GGUF`
@@ -92,139 +110,155 @@ publication-readiness claims.
 ## Architecture Diagram
 
 ```text
-                 .300 terminal state
-  capstone_v300: paper_ready=false, blockers=106,
-  local_sota_receipt_status=blocked,
-  next_top_gap=repair_selected_python_torch_cuda_before_exp3237
+                 .302 terminal state
+  CUDA recovered, llama.cpp receipt passed, one SOTA GGUF receipt landed,
+  v4 prompt-injection shard n=2000, KAN shard AUROC=0.791096,
+  paper_ready=false, blockers=105,
+  next_top_gap=full_15k_v4_corpus_across_shards_plus_repair_and_garak_gates
                               |
                               v
-              exp3246 archive + activate .301
+             exp3267 close .302 and open .303 corpus queue
+                              |
+                +-------------+--------------+
+                |                            |
+                v                            v
+ exp3268 SOTA receipt methodology      exp3269 full-corpus
+ supplement / clean eligibility        split manifest
+                |                            |
+                +-------------+--------------+
                               |
                               v
-              exp3247 selected-Python CUDA root-cause surgery
+               exp3270 teacher-label shards 2-4
                               |
                               v
-              exp3248 isolated selected-Python CUDA smoke
+               exp3271 teacher-label shards 5-7
+                    plus Garak/adaptive seed
                               |
                               v
-              exp3249 llama.cpp CUDA receipt smoke
+               exp3272 full 15k assembly and leakage audit
                               |
-                              v
-              exp3250 mandated SOTA GGUF receipt v8
-                              |
-        +---------------------+----------------------+
-        |                                            |
-        v                                            v
- exp3252 teacher-label shard                 exp3254 DCCD/SEVerA
-    ^        |                                structured proposal preflight
-    |        v
- exp3251 -> exp3253 prompt-injection
- constraint  KAN train/eval shard
- tax plan
+                    +---------+----------+
+                    |                    |
+                    v                    v
+          exp3273 KAN DeLong       exp3278 FR-11 retention,
+          full-corpus eval          transfer, forgetting audit
+                    |
+                    v
+          exp3274 Garak/DataFlip red-team gate
 
- exp3255 FR-11 lifelong failure-memory retention audit
- exp3256 p-dit/Potts multi-state sampler diagnostic manifest
- exp3257 matrix v34 -> exp3258 capstone v301
+ exp3268 -> exp3275 clean SOTA verifier rerun
+ exp3273 + exp3274 + exp3275 -> exp3276 repair gate decision
+ exp3276.repair_gate_open -> exp3277 SOTA repair micro-panel
+
+ exp3279 matrix v35 -> exp3280 capstone v303
 ```
 
 ## Phase Plan
 
-### Phase 1 - Archive and Selected-Python CUDA Repair
+### Phase 1 - Handoff and Evidence Hygiene
 
-- `exp3246` archives `.300`, records the capstone blockers, and activates
-  `.301`.
-- `exp3247` performs selected-Python CUDA root-cause surgery using current
-  artifacts and live environment probes, then emits a repair ledger and
-  `next_smoke_allowed`.
-- `exp3248` runs only if `exp3247` allows it and tests the selected Python,
-  PyTorch CUDA, CUDA bindings, and minimal kernel/runtime boundary.
+- `exp3267` closes `.302`, records the actual `.302` artifacts in the archive
+  handoff, and activates the `.303` corpus-scale queue.
+- `exp3268` turns the short `.302` SOTA receipt into a methodology supplement
+  and, where feasible, a longer-duration receipt over cached mandated GGUFs. It
+  emits `clean_sota_receipt_eligible` for downstream labels and repair.
+- `exp3269` builds the v4 full-corpus split manifest: shard boundaries,
+  sample-size ledger, aligned-instruction benign controls, adaptive attacks,
+  constraint-tax arms, train/eval/holdout/Garak splits, and DeLong gates.
 
-### Phase 2 - Runtime Receipt Chain
+### Phase 2 - Full 15k Prompt-Injection Corpus
 
-- `exp3249` runs only if `exp3248` reports `cuda_python_smoke_passed=true` and
-  produces a llama.cpp CUDA/offload receipt.
-- `exp3250` runs only if `exp3249` reports
-  `llama_cpp_cuda_receipt_ready=true` and attempts the mandated SOTA GGUF
-  receipt over the three required local models.
+- `exp3270` labels shards 2-4 using a mandated local SOTA GGUF model and the
+  `.302` shard as prior context.
+- `exp3271` labels shards 5-7, adds the Garak/adaptive seed set, and reports
+  cumulative label counts.
+- `exp3272` assembles the full corpus, deduplicates, checks leakage, freezes
+  train/eval/holdout/Garak splits, and emits `full_15k_corpus_ready`.
 
-### Phase 3 - Prompt-Injection Constraint-Tax Split-Runs
+### Phase 3 - Detector, Garak, and Repair Reopen
 
-- `exp3251` refreshes the Prompt-Injection KAN v4 manifest with a
-  constraint-tax control plan and ConstrainPrompt baseline.
-- `exp3252` runs only if the SOTA receipt and refreshed manifest are ready. It
-  creates a small teacher-label shard with free-reasoning and
-  schema-constrained arms.
-- `exp3253` trains and evaluates the KAN sidecar only if teacher labels exist,
-  and explicitly marks the result as a shard-level, non-headline metric.
-- `exp3254` runs DCCD/SEVerA-style structured proposal preflight only behind
-  the clean SOTA receipt gate, with exact verifier authority preserved.
+- `exp3273` trains/evaluates the prompt-injection KAN sidecar on the full
+  corpus and runs DeLong non-inferiority against exact and baseline detectors.
+- `exp3274` applies Garak/DataFlip/adaptive red-team probes against the KAN and
+  local SOTA target where available, recording pass/fail gates separately from
+  AUROC.
+- `exp3275` performs the clean local SOTA verifier rerun v14 only after the
+  receipt methodology gate is clean.
+- `exp3276` decides whether the repair gate can reopen based on full-corpus
+  KAN evidence, Garak evidence, and clean verifier metrics.
+- `exp3277` runs a small SOTA repair micro-panel only if `repair_gate_open` is
+  true.
 
-### Phase 4 - Continuous Self-Learning and Hardware-Aligned Diagnostics
+### Phase 4 - FR-11 and Aggregation
 
-- `exp3255` is the required continuous self-learning experiment. It converts
-  the FR-11 failure-memory controller into a LifelongAgentBench-style
-  retention/adaptation/forgetting audit over held-out traces.
-- `exp3256` maps p-dit/Potts multi-state probabilistic units to Carnot
-  partial-credit rows as a diagnostic manifest. It keeps exact fallback and
-  makes no hardware speedup claim.
-
-### Phase 5 - Aggregation and Capstone
-
-- `exp3257` aggregates all available `.301` artifacts into cross-corpus matrix
-  v34, including gated skips and publication blockers.
-- `exp3258` produces the `.301` capstone, determines whether blockers
-  decreased, and names the next top gap.
+- `exp3278` is the required continuous self-learning experiment. It audits
+  controller-memory retention, adaptation, forgetting, and negative transfer
+  across full-corpus prompt-injection failures and older gate-block traces.
+- `exp3279` builds evidence matrix v35 with shard, KAN, Garak, clean verifier,
+  repair, and FR-11 fields.
+- `exp3280` produces the `.303` capstone and names the next top gap.
 
 ## Dependency Graph
 
 ```text
-exp3246
-  -> exp3247
-      -> exp3248 [gate: next_smoke_allowed == true]
-          -> exp3249 [gate: cuda_python_smoke_passed == true]
-              -> exp3250 [gate: llama_cpp_cuda_receipt_ready == true]
-                  -> exp3252 [also requires exp3251.v4_manifest_v2_ready == true]
-                  -> exp3254 [gate: clean_rerun_allowed == true]
+exp3267
+  -> exp3268
+  -> exp3269
 
-exp3251 -> exp3252 -> exp3253
-exp3255 reads exp3243 and .295-.301 failure traces
-exp3256 independent diagnostic manifest after exp3246
-exp3257 reads all available .301 artifacts
-exp3258 reads exp3257 and all available .301 artifacts
+exp3268.clean_sota_receipt_eligible
+  -> exp3270
+  -> exp3275
+
+exp3269.full_corpus_manifest_ready
+  -> exp3270
+      -> exp3271 [gate: cumulative_label_count >= 8000]
+          -> exp3272 [gate: cumulative_label_count >= 14000
+                             and garak_seed_count >= 1000]
+              -> exp3273 [gate: full_15k_corpus_ready == true]
+                  -> exp3274 [gate: v4_full_eval_ready == true]
+              -> exp3278 [gate: full_15k_corpus_ready == true]
+
+exp3273.v4_full_eval_ready + exp3274.garak_redteam_eval_ready
+  + exp3275.clean_verifier_rerun_ready
+  -> exp3276
+      -> exp3277 [gate: repair_gate_open == true]
+
+exp3279 reads all available .303 artifacts
+exp3280 reads exp3279 and all available .303 artifacts
 ```
 
 ## Hardware Requirements
 
-- **Required for Phase 1 and Phase 2 success:** one visible NVIDIA GPU,
-  selected Python CUDA initialization, PyTorch CUDA visibility, CUDA bindings
-  runtime visibility, and llama.cpp CUDA/offload support. If any of these fail,
-  downstream live SOTA tasks skip through structured gates.
-- **Required for live LLM tasks:** cached local GGUF files or resolvable
-  Hugging Face access for `unsloth/Qwen3.6-35B-A3B-GGUF`,
-  `unsloth/gemma-4-31B-it-GGUF`, and
-  `unsloth/gemma-4-26B-A4B-it-GGUF`. Any task that invokes an LLM must record
-  `MODEL_SPECS`, `preconditions_checked`, and `models_used`.
-- **Allowed diagnostics:** CPU-only p-dit/Potts mapping and THRML/Kona
-  literature alignment notes with no hardware access or speedup claim.
-- **Not required for `.301`:** KV260, GateMate, PolarFire, Extropic TSU, or
-  Kona hardware. Do not use a host `/dev/mmcblk*` KV260 precondition; any future
-  KV260 work uses SSH reachability and board-side `xmutil`.
+- **Required for live LLM tasks:** at least one visible NVIDIA GPU with CUDA,
+  llama.cpp CUDA/offload support, and at least one cached or resolvable
+  mandated SOTA GGUF. Every live LLM task must record `MODEL_SPECS`,
+  `preconditions_checked`, `models_used`, GPU memory evidence, duration, and
+  cache status.
+- **Recommended for label throughput:** dual RTX 3090 availability. If only
+  one GPU is usable, shard tasks should reduce batch size and record throughput
+  rather than failing silently.
+- **Allowed CPU-only tasks:** corpus assembly, leakage/de-dup audits, DeLong
+  statistics after labels exist, FR-11 memory audits, matrix, and capstone.
+- **Not required for `.303`:** KV260, GateMate, PolarFire, Extropic TSU, or
+  Kona hardware. `.303` must not claim TSU/Kona access, thermodynamic speedup,
+  or FPGA acceleration. Do not use host `/dev/mmcblk*` KV260 preconditions.
 
 ## Experiment Queue
 
-1. `exp3246-archive-v300-activate-v301`
-2. `exp3247-selected-python-cuda-root-cause-surgery-v1`
-3. `exp3248-isolated-cuda-selected-python-smoke-v2`
-4. `exp3249-llama-cpp-cuda-receipt-smoke-v3`
-5. `exp3250-sota-gguf-receipt-v8`
-6. `exp3251-prompt-injection-v4-constraint-tax-manifest-v2`
-7. `exp3252-prompt-injection-teacher-label-shard-v2`
-8. `exp3253-prompt-injection-kan-train-eval-shard-v2`
-9. `exp3254-dccd-severa-structured-proposal-preflight-v2`
-10. `exp3255-fr11-lifelong-failure-memory-retention-audit-v1`
-11. `exp3256-pdit-potts-multistate-sampler-diagnostic-v1`
-12. `exp3257-cross-corpus-matrix-v34`
-13. `exp3258-capstone-v301`
+1. `exp3267-close-v302-open-v303-corpus-queue`
+2. `exp3268-sota-receipt-methodology-supplement-v1`
+3. `exp3269-prompt-injection-v4-full-corpus-split-manifest-v1`
+4. `exp3270-prompt-injection-teacher-label-shards-2-4-v1`
+5. `exp3271-prompt-injection-teacher-label-shards-5-7-garak-seed-v1`
+6. `exp3272-prompt-injection-v4-full-corpus-assembly-leakage-audit-v1`
+7. `exp3273-prompt-injection-kan-full-corpus-delong-eval-v1`
+8. `exp3274-prompt-injection-v4-garak-dataflip-redteam-eval-v1`
+9. `exp3275-clean-local-sota-verifier-rerun-v14`
+10. `exp3276-repair-gate-decision-v8-after-v4-garak-clean-verifier`
+11. `exp3277-sota-repair-micro-panel-v9`
+12. `exp3278-fr11-full-corpus-continual-self-learning-audit-v1`
+13. `exp3279-evidence-matrix-v35`
+14. `exp3280-capstone-v303`
 
 ## Done Criteria
 
@@ -232,11 +266,13 @@ exp3258 reads exp3257 and all available .301 artifacts
   prior-failure discipline, exclusion-manifest lint, and gate audit.
 - Every live-LLM task includes `MODEL_SPECS` with at least one mandated SOTA
   GGUF model.
-- Every gated task includes matching `gated_on` metadata and upstream required
-  artifact fields.
-- Every compute-bound task records `preconditions_checked`,
-  `inference_substrate`, `random_seed`, and `reproducibility_checksum`.
-- At least one experiment (`exp3255`) directly advances continuous
+- Every gated task includes matching `gated_on` metadata and the upstream
+  prompt lists the gated artifact field under `REQUIRED ARTIFACT FIELDS`.
+- The prompt-injection v4 corpus reaches the 15k target through split shards or
+  honestly reports the precise blocker and remaining count.
+- KAN claims remain sidecar-only unless full-corpus DeLong and Garak gates pass.
+- Repair runs only through `repair_gate_open == true`.
+- At least one experiment (`exp3278`) directly advances continuous
   self-learning under FR-11 without claiming foundation-model weight updates.
 - No task modifies `scripts/research_conductor.py`, no task modifies
   `research-roadmap.yaml`, and no task pushes.
