@@ -13271,3 +13271,64 @@ blockers because the full 15k corpus is already materialized, and emits an
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-REPORT-3281 | Implemented (`python/carnot/reporting/archive_v303_activate_v304_3281.py`) | Implemented (`tests/python/test_experiment_3281_archive_v303_activate_v304.py`) |
+
+### REQ-REPORT-3282: Garak Install And Probe Manifest v1
+
+The repository shall provide an Exp 3282 Garak toolchain manifest workflow
+that writes
+`results/experiment_3282_garak_install_and_probe_manifest_v1.json` without
+running a full Garak red-team benchmark, without spending a hosted model call,
+and without modifying `scripts/research_conductor.py`, `ops/status.md`,
+`ops/changelog.md`, or `_bmad/traceability.md`. The workflow SHALL check
+whether Garak can be imported by Python and whether a Garak CLI can be invoked.
+If the project environment does not expose Garak, it SHALL record a least
+invasive isolated command path such as `uvx --from garak ...` when available,
+including the exact command, return code, and stderr summary for any failed
+install, import, CLI, or probe-list attempt.
+
+The workflow SHALL inventory PromptInject, jailbreak, encoding, leakage, and
+hallucination probe classes relevant to prompt-injection evaluation. It SHALL
+prefer live Garak probe introspection when import succeeds, and it SHALL
+otherwise emit a blocked manifest that records the static probe families the
+downstream red-team task must re-check after installation. The workflow SHALL
+also identify the local generator adapter plan for mandated GGUF models by
+describing the llama.cpp server command shape, the OpenAI-compatible REST
+generator shape Garak can target, model path placeholders, and smoke/full-eval
+handoff commands. It MUST NOT load or run a GGUF model.
+
+The terminal artifact MUST include `garak_install_probe_manifest_ready`,
+`garak_runner_ready`, `garak_available`, `garak_version`,
+`garak_import_command`, `garak_cli_command`, `probe_inventory`,
+`promptinject_probe_count`, `local_target_adapter_plan`, `install_blockers`,
+`preconditions_checked`, `random_seed`, `reproducibility_checksum`,
+`duration_s`, and `honest_verdict`. `garak_available` MUST preserve the Exp
+3274 blocker field semantics. `garak_runner_ready` MUST be true only when the
+same command path can import Garak, invoke the CLI, and produce a probe
+inventory. `garak_install_probe_manifest_ready` MUST be true whenever this
+toolchain contract is written and validates, even if the runner is blocked.
+`honest_verdict` MUST begin with one of `complete:`, `success:`, `passed:`, or
+`shipped:`.
+
+#### SCENARIO-REPORT-3282: Missing Garak Becomes A Precise Toolchain Artifact
+
+**Given** Exp 3274 preserved `garak_available=false` and
+`blocked_garak_unavailable`
+**And** a downstream milestone needs a stable Garak smoke-eval contract before
+running any full red-team benchmark
+**When** the Exp 3282 manifest workflow runs
+**Then** it writes
+`results/experiment_3282_garak_install_and_probe_manifest_v1.json` with all
+required schema fields, records the exact import and CLI commands attempted,
+records whether the project environment or isolated command path can import and
+invoke Garak, inventories PromptInject-style probes plus relevant jailbreak,
+encoding, leakage, and hallucination families, reports
+`promptinject_probe_count`, describes the llama.cpp/OpenAI-compatible REST
+adapter plan for mandated local GGUF targets, preserves exact blockers when
+installation or invocation fails, and emits an `honest_verdict` beginning with
+`complete:` without claiming that a full Garak benchmark ran.
+
+## Implementation Status (REQ-REPORT-3282)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-3282 | Implemented (`python/carnot/reporting/garak_install_probe_manifest_3282.py`) | Implemented (`tests/python/test_experiment_3282_garak_install_probe_manifest.py`) |

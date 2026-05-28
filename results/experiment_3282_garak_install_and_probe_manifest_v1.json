@@ -1,0 +1,887 @@
+{
+  "artifact": "experiment_3282_garak_install_and_probe_manifest_v1",
+  "duration_s": 0.841639,
+  "experiment_id": "exp3282",
+  "garak_available": true,
+  "garak_cli_command": "uv run --no-project --with garak garak --version",
+  "garak_import_command": "uv run --no-project --with garak python -c 'import json, importlib.metadata; import garak; print(json.dumps({'\"'\"'marker'\"'\"': '\"'\"'GARAK_IMPORT_PROBE_V1'\"'\"', '\"'\"'version'\"'\"': importlib.metadata.version('\"'\"'garak'\"'\"')}))'",
+  "garak_install_probe_manifest_ready": true,
+  "garak_runner_ready": true,
+  "garak_version": "0.15.0",
+  "honest_verdict": "complete: garak_install_probe_manifest_ready=true; garak_runner_ready=true; promptinject_probe_count=6",
+  "install_blockers": [],
+  "local_target_adapter_plan": {
+    "adapter_kind": "llama_cpp_openai_compatible_rest",
+    "does_not_run_model": true,
+    "full_eval_handoff": "reuse the same target_type/target_name/options contract, then expand probes and generations only after the smoke artifact passes",
+    "garak_generator_command": "garak --target_type openai.OpenAICompatible --target_name <MODEL_ID> --generator_options '{\"openai\":{\"OpenAICompatible\":{\"max_tokens\":256,\"temperature\":0.0,\"uri\":\"http://127.0.0.1:8080/v1\"}}}' --probes promptinject,dan,encoding,leakreplay,snowball,packagehallucination",
+    "garak_probe_spec": "promptinject,dan,encoding,leakreplay,snowball,packagehallucination",
+    "generator_options_json": {
+      "openai": {
+        "OpenAICompatible": {
+          "max_tokens": 256,
+          "temperature": 0.0,
+          "uri": "http://127.0.0.1:8080/v1"
+        }
+      }
+    },
+    "llama_cpp_server_command": [
+      "llama-server",
+      "--model",
+      "<GGUF_PATH>",
+      "--host",
+      "127.0.0.1",
+      "--port",
+      "8080",
+      "--ctx-size",
+      "8192",
+      "--n-gpu-layers",
+      "-1"
+    ],
+    "llama_cpp_server_healthcheck": "curl -fsS http://127.0.0.1:8080/v1/models",
+    "mandated_targets": [
+      "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "unsloth/gemma-4-31B-it-GGUF"
+    ],
+    "openai_compatible_base_url": "http://127.0.0.1:8080/v1",
+    "openai_compatible_env": {
+      "OPENAICOMPATIBLE_API_KEY": "garak-local-placeholder"
+    },
+    "probe_family_to_garak_modules": {
+      "encoding": [
+        "encoding"
+      ],
+      "hallucination": [
+        "snowball",
+        "packagehallucination"
+      ],
+      "jailbreak": [
+        "dan",
+        "visual_jailbreak"
+      ],
+      "leakage": [
+        "leakreplay"
+      ],
+      "promptinject": [
+        "promptinject"
+      ]
+    },
+    "smoke_eval_handoff": "run one low-generation promptinject probe against the llama.cpp OpenAI-compatible server before any full red-team sweep"
+  },
+  "milestone": "2026.05.304",
+  "no_full_garak_benchmark_run": true,
+  "output_paths": [
+    "results/experiment_3282_garak_install_and_probe_manifest_v1.json",
+    "results/experiment_3274_prompt_injection_v4_garak_dataflip_redteam_eval_v1.json"
+  ],
+  "preconditions_checked": [
+    {
+      "blocked_reasons": [
+        "blocked_garak_unavailable"
+      ],
+      "exists": true,
+      "garak_available": false,
+      "name": "prior_exp3274_garak_available",
+      "passed": false,
+      "path": "results/experiment_3274_prompt_injection_v4_garak_dataflip_redteam_eval_v1.json"
+    },
+    {
+      "blocked_reason": "blocked_garak_import_unavailable",
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -c 'import json, importlib.metadata; import garak; print(json.dumps({'\"'\"'marker'\"'\"': '\"'\"'GARAK_IMPORT_PROBE_V1'\"'\"', '\"'\"'version'\"'\"': importlib.metadata.version('\"'\"'garak'\"'\"')}))'",
+      "name": "project_garak_import",
+      "passed": false,
+      "returncode": 1,
+      "stderr_summary": "Traceback (most recent call last): File \"<string>\", line 1, in <module> import json, importlib.metadata; import garak; print(json.dumps({'marker': 'GARAK_IMPORT_PROBE_V1', 'version': importlib.metadata.version('garak')})) ^^^^^^^^^^^^ ModuleNotFoundError: No module named 'garak'",
+      "stdout_summary": "",
+      "version": ""
+    },
+    {
+      "blocked_reason": "blocked_garak_cli_unavailable",
+      "command": "garak --version",
+      "name": "project_garak_cli",
+      "passed": false,
+      "returncode": 127,
+      "stderr_summary": "FileNotFoundError: [Errno 2] No such file or directory: 'garak'",
+      "stdout_summary": "",
+      "version": ""
+    },
+    {
+      "blocked_reason": "",
+      "command": "uv run --no-project --with garak python -c 'import json, importlib.metadata; import garak; print(json.dumps({'\"'\"'marker'\"'\"': '\"'\"'GARAK_IMPORT_PROBE_V1'\"'\"', '\"'\"'version'\"'\"': importlib.metadata.version('\"'\"'garak'\"'\"')}))'",
+      "name": "isolated_uv_garak_import",
+      "passed": true,
+      "returncode": 0,
+      "stderr_summary": "",
+      "stdout_summary": "{\"marker\": \"GARAK_IMPORT_PROBE_V1\", \"version\": \"0.15.0\"}",
+      "version": "0.15.0"
+    },
+    {
+      "blocked_reason": "",
+      "command": "uv run --no-project --with garak garak --version",
+      "name": "isolated_uv_garak_cli",
+      "passed": true,
+      "returncode": 0,
+      "stderr_summary": "",
+      "stdout_summary": "garak LLM vulnerability scanner v0.15.0 ( https://github.com/NVIDIA/garak ) at 2026-05-28T13:34:15.449222",
+      "version": "garak LLM vulnerability scanner v0.15.0 ( https://github.com/NVIDIA/garak ) at 2026-05-28T13:34:15.449222"
+    },
+    {
+      "blocked_reason": "",
+      "command": "uv run --no-project --with garak python -c 'import importlib\nimport inspect\nimport json\nimport pkgutil\n\nimport garak.probes as probes\n\nINTERESTING = (\"promptinject\", \"jailbreak\", \"dan\", \"encoding\", \"leak\", \"hallucination\", \"snowball\")\ninventory = []\nfor module_info in pkgutil.walk_packages(probes.__path__, probes.__name__ + \".\"):\n    module_name = module_info.name\n    if not any(token in module_name.lower() for token in INTERESTING):\n        continue\n    try:\n        module = importlib.import_module(module_name)\n    except Exception:\n        inventory.append({\"module\": module_name, \"classes\": []})\n        continue\n    classes = [\n        name\n        for name, obj in inspect.getmembers(module, inspect.isclass)\n        if getattr(obj, \"__module__\", \"\") == module.__name__\n    ]\n    inventory.append({\"module\": module_name, \"classes\": sorted(classes)})\nprint(json.dumps(inventory, sort_keys=True))\n# GARAK_PROBE_INVENTORY_V1'",
+      "name": "garak_probe_inventory",
+      "passed": true,
+      "returncode": 0,
+      "stderr_summary": "",
+      "stdout_summary": "[{\"classes\": [\"Ablation_Dan_11_0\", \"AntiDAN\", \"AutoDAN\", \"AutoDANCached\", \"ChatGPT_Developer_Mode_RANTI\", \"ChatGPT_Developer_Mode_v2\", \"ChatGPT_Image_Markdown\", \"DANProbeMeta\", \"DAN_Jailbreak\", \"DUDE\", \"DanInTheWild\", \"DanInTheWildFull\", \"Dan_10_0\", \"Dan_11_0\", \"Dan_6_0\", \"Dan_6_2\", \"Dan_7_0\", \"Dan_8_0\", \"Dan_9_0\", \"STAN\"], \"module\": \"garak.probes.dan\"}, {\"classes\": [\"EncodingMixin\", \"InjectAsc...",
+      "version": ""
+    }
+  ],
+  "probe_inventory": [
+    {
+      "available": true,
+      "class_name": "EncodingMixin",
+      "family": "encoding",
+      "module": "garak.probes.encoding",
+      "probe": "garak.probes.encoding.EncodingMixin",
+      "relevance": "obfuscated instruction probes for encoded prompt injection",
+      "source": "live_garak_inventory"
+    },
+    {
+      "available": true,
+      "class_name": "InjectAscii85",
+      "family": "encoding",
+      "module": "garak.probes.encoding",
+      "probe": "garak.probes.encoding.InjectAscii85",
+      "relevance": "obfuscated instruction probes for encoded prompt injection",
+      "source": "live_garak_inventory"
+    },
+    {
+      "available": true,
+      "class_name": "InjectAtbash",
+      "family": "encoding",
+      "module": "garak.probes.encoding",
+      "probe": "garak.probes.encoding.InjectAtbash",
+      "relevance": "obfuscated instruction probes for encoded prompt injection",
+      "source": "live_garak_inventory"
+    },
+    {
+      "available": true,
+      "class_name": "InjectBase16",
+      "family": "encoding",
+      "module": "garak.probes.encoding",
+      "probe": "garak.probes.encoding.InjectBase16",
+      "relevance": "obfuscated instruction probes for encoded prompt injection",
+      "source": "live_garak_inventory"
+    },
+    {
+      "available": true,
+      "class_name": "InjectBase2048",
+      "family": "encoding",
+      "module": "garak.probes.encoding",
+      "probe": "garak.probes.encoding.InjectBase2048",
+      "relevance": "obfuscated instruction probes for encoded prompt injection",
+      "source": "live_garak_inventory"
+    },
+    {
+      "available": true,
+      "class_name": "InjectBase32",
+      "family": "encoding",
+      "module": "garak.probes.encoding",
+      "probe": "garak.probes.encoding.InjectBase32",
+      "relevance": "obfuscated instruction probes for encoded prompt injection",
+      "source": "live_garak_inventory"
+    },
+    {
+      "available": true,
+      "class_name": "InjectBase64",
+      "family": "encoding",
+      "module": "garak.probes.encoding",
+      "probe": "garak.probes.encoding.InjectBase64",
+      "relevance": "obfuscated instruction probes for encoded prompt injection",
+      "source": "live_garak_inventory"
+    },
+    {
+      "available": true,
+      "class_name": "InjectBraille",
+      "family": "encoding",
+      "module": "garak.probes.encoding",
+      "probe": "garak.probes.encoding.InjectBraille",
+      "relevance": "obfuscated instruction probes for encoded prompt injection",
+      "source": "live_garak_inventory"
+    },
+    {
+      "available": true,
+      "class_name": "InjectEcoji",
+      "family": "encoding",
+      "module": "garak.probes.encoding",
+      "probe": "garak.probes.encoding.InjectEcoji",
+      "relevance": "obfuscated instruction probes for encoded prompt injection",
+      "source": "live_garak_inventory"
+    },
+    {
+      "available": true,
+      "class_name": "InjectHex",
+      "family": "encoding",
+      "module": "garak.probes.encoding",
+      "probe": "garak.probes.encoding.InjectHex",
+      "relevance": "obfuscated instruction probes for encoded prompt injection",
+      "source": "live_garak_inventory"
+    },
+    {
+      "available": true,
+      "class_name": "InjectLeet",
+      "family": "encoding",
+      "module": "garak.probes.encoding",
+      "probe": "garak.probes.encoding.InjectLeet",
+      "relevance": "obfuscated instruction probes for encoded prompt injection",
+      "source": "live_garak_inventory"
+    },
+    {
+      "available": true,
+      "class_name": "InjectMime",
+      "family": "encoding",
+      "module": "garak.probes.encoding",
+      "probe": "garak.probes.encoding.InjectMime",
+      "relevance": "obfuscated instruction probes for encoded prompt injection",
+      "source": "live_garak_inventory"
+    },
+    {
+      "available": true,
+      "class_name": "InjectMorse",
+      "family": "encoding",
+      "module": "garak.probes.encoding",
+      "probe": "garak.probes.encoding.InjectMorse",
+      "relevance": "obfuscated instruction probes for encoded prompt injection",
+      "source": "live_garak_inventory"
+    },
+    {
+      "available": true,
+      "class_name": "InjectNato",
+      "family": "encoding",
+      "module": "garak.probes.encoding",
+      "probe": "garak.probes.encoding.InjectNato",
+      "relevance": "obfuscated instruction probes for encoded prompt injection",
+      "source": "live_garak_inventory"
+    },
+    {
+      "available": true,
+      "class_name": "InjectQP",
+      "family": "encoding",
+      "module": "garak.probes.encoding",
+      "probe": "garak.probes.encoding.InjectQP",
+      "relevance": "obfuscated instruction probes for encoded prompt injection",
+      "source": "live_garak_inventory"
+    },
+    {
+      "available": true,
+      "class_name": "InjectROT13",
+      "family": "encoding",
+      "module": "garak.probes.encoding",
+      "probe": "garak.probes.encoding.InjectROT13",
+      "relevance": "obfuscated instruction probes for encoded prompt injection",
+      "source": "live_garak_inventory"
+    },
+    {
+      "available": true,
+      "class_name": "InjectSneakyBits",
+      "family": "encoding",
+      "module": "garak.probes.encoding",
+      "probe": "garak.probes.encoding.InjectSneakyBits",
+      "relevance": "obfuscated instruction probes for encoded prompt injection",
+      "source": "live_garak_inventory"
+    },
+    {
+      "available": true,
+      "class_name": "InjectUU",
+      "family": "encoding",
+      "module": "garak.probes.encoding",
+      "probe": "garak.probes.encoding.InjectUU",
+      "relevance": "obfuscated instruction probes for encoded prompt injection",
+      "source": "live_garak_inventory"
+    },
+    {
+      "available": true,
+      "class_name": "InjectUnicodeTagChars",
+      "family": "encoding",
+      "module": "garak.probes.encoding",
+      "probe": "garak.probes.encoding.InjectUnicodeTagChars",
+      "relevance": "obfuscated instruction probes for encoded prompt injection",
+      "source": "live_garak_inventory"
+    },
+    {
+      "available": true,
+      "class_name": "InjectUnicodeVariantSelectors",
+      "family": "encoding",
+      "module": "garak.probes.encoding",
+      "probe": "garak.probes.encoding.InjectUnicodeVariantSelectors",
+      "relevance": "obfuscated instruction probes for encoded prompt injection",
+      "source": "live_garak_inventory"
+    },
+    {
+      "available": true,
+      "class_name": "InjectZalgo",
+      "family": "encoding",
+      "module": "garak.probes.encoding",
+      "probe": "garak.probes.encoding.InjectZalgo",
+      "relevance": "obfuscated instruction probes for encoded prompt injection",
+      "source": "live_garak_inventory"
+    },
+    {
+      "available": true,
+      "class_name": "Dart",
+      "family": "hallucination",
+      "module": "garak.probes.packagehallucination",
+      "probe": "garak.probes.packagehallucination.Dart",
+      "relevance": "false-claim probes that expose unsafe compliance under attack",
+      "source": "live_garak_inventory"
+    },
+    {
+      "available": true,
+      "class_name": "JavaScript",
+      "family": "hallucination",
+      "module": "garak.probes.packagehallucination",
+      "probe": "garak.probes.packagehallucination.JavaScript",
+      "relevance": "false-claim probes that expose unsafe compliance under attack",
+      "source": "live_garak_inventory"
+    },
+    {
+      "available": true,
+      "class_name": "PackageHallucinationProbe",
+      "family": "hallucination",
+      "module": "garak.probes.packagehallucination",
+      "probe": "garak.probes.packagehallucination.PackageHallucinationProbe",
+      "relevance": "false-claim probes that expose unsafe compliance under attack",
+      "source": "live_garak_inventory"
+    },
+    {
+      "available": true,
+      "class_name": "Perl",
+      "family": "hallucination",
+      "module": "garak.probes.packagehallucination",
+      "probe": "garak.probes.packagehallucination.Perl",
+      "relevance": "false-claim probes that expose unsafe compliance under attack",
+      "source": "live_garak_inventory"
+    },
+    {
+      "available": true,
+      "class_name": "Python",
+      "family": "hallucination",
+      "module": "garak.probes.packagehallucination",
+      "probe": "garak.probes.packagehallucination.Python",
+      "relevance": "false-claim probes that expose unsafe compliance under attack",
+      "source": "live_garak_inventory"
+    },
+    {
+      "available": true,
+      "class_name": "RakuLand",
+      "family": "hallucination",
+      "module": "garak.probes.packagehallucination",
+      "probe": "garak.probes.packagehallucination.RakuLand",
+      "relevance": "false-claim probes that expose unsafe compliance under attack",
+      "source": "live_garak_inventory"
+    },
+    {
+      "available": true,
+      "class_name": "Ruby",
+      "family": "hallucination",
+      "module": "garak.probes.packagehallucination",
+      "probe": "garak.probes.packagehallucination.Ruby",
+      "relevance": "false-claim probes that expose unsafe compliance under attack",
+      "source": "live_garak_inventory"
+    },
+    {
+      "available": true,
+      "class_name": "Rust",
+      "family": "hallucination",
+      "module": "garak.probes.packagehallucination",
+      "probe": "garak.probes.packagehallucination.Rust",
+      "relevance": "false-claim probes that expose unsafe compliance under attack",
+      "source": "live_garak_inventory"
+    },
+    {
+      "available": true,
+      "class_name": "GraphConnectivity",
+      "family": "hallucination",
+      "module": "garak.probes.snowball",
+      "probe": "garak.probes.snowball.GraphConnectivity",
+      "relevance": "false-claim probes that expose unsafe compliance under attack",
+      "source": "live_garak_inventory"
+    },
+    {
+      "available": true,
+      "class_name": "GraphConnectivityFull",
+      "family": "hallucination",
+      "module": "garak.probes.snowball",
+      "probe": "garak.probes.snowball.GraphConnectivityFull",
+      "relevance": "false-claim probes that expose unsafe compliance under attack",
+      "source": "live_garak_inventory"
+    },
+    {
+      "available": true,
+      "class_name": "Primes",
+      "family": "hallucination",
+      "module": "garak.probes.snowball",
+      "probe": "garak.probes.snowball.Primes",
+      "relevance": "false-claim probes that expose unsafe compliance under attack",
+      "source": "live_garak_inventory"
+    },
+    {
+      "available": true,
+      "class_name": "PrimesFull",
+      "family": "hallucination",
+      "module": "garak.probes.snowball",
+      "probe": "garak.probes.snowball.PrimesFull",
+      "relevance": "false-claim probes that expose unsafe compliance under attack",
+      "source": "live_garak_inventory"
+    },
+    {
+      "available": true,
+      "class_name": "Senators",
+      "family": "hallucination",
+      "module": "garak.probes.snowball",
+      "probe": "garak.probes.snowball.Senators",
+      "relevance": "false-claim probes that expose unsafe compliance under attack",
+      "source": "live_garak_inventory"
+    },
+    {
+      "available": true,
+      "class_name": "SenatorsFull",
+      "family": "hallucination",
+      "module": "garak.probes.snowball",
+      "probe": "garak.probes.snowball.SenatorsFull",
+      "relevance": "false-claim probes that expose unsafe compliance under attack",
+      "source": "live_garak_inventory"
+    },
+    {
+      "available": true,
+      "class_name": "Ablation_Dan_11_0",
+      "family": "jailbreak",
+      "module": "garak.probes.dan",
+      "probe": "garak.probes.dan.Ablation_Dan_11_0",
+      "relevance": "policy-override probes that pressure instruction hierarchy",
+      "source": "live_garak_inventory"
+    },
+    {
+      "available": true,
+      "class_name": "AntiDAN",
+      "family": "jailbreak",
+      "module": "garak.probes.dan",
+      "probe": "garak.probes.dan.AntiDAN",
+      "relevance": "policy-override probes that pressure instruction hierarchy",
+      "source": "live_garak_inventory"
+    },
+    {
+      "available": true,
+      "class_name": "AutoDAN",
+      "family": "jailbreak",
+      "module": "garak.probes.dan",
+      "probe": "garak.probes.dan.AutoDAN",
+      "relevance": "policy-override probes that pressure instruction hierarchy",
+      "source": "live_garak_inventory"
+    },
+    {
+      "available": true,
+      "class_name": "AutoDANCached",
+      "family": "jailbreak",
+      "module": "garak.probes.dan",
+      "probe": "garak.probes.dan.AutoDANCached",
+      "relevance": "policy-override probes that pressure instruction hierarchy",
+      "source": "live_garak_inventory"
+    },
+    {
+      "available": true,
+      "class_name": "ChatGPT_Developer_Mode_RANTI",
+      "family": "jailbreak",
+      "module": "garak.probes.dan",
+      "probe": "garak.probes.dan.ChatGPT_Developer_Mode_RANTI",
+      "relevance": "policy-override probes that pressure instruction hierarchy",
+      "source": "live_garak_inventory"
+    },
+    {
+      "available": true,
+      "class_name": "ChatGPT_Developer_Mode_v2",
+      "family": "jailbreak",
+      "module": "garak.probes.dan",
+      "probe": "garak.probes.dan.ChatGPT_Developer_Mode_v2",
+      "relevance": "policy-override probes that pressure instruction hierarchy",
+      "source": "live_garak_inventory"
+    },
+    {
+      "available": true,
+      "class_name": "ChatGPT_Image_Markdown",
+      "family": "jailbreak",
+      "module": "garak.probes.dan",
+      "probe": "garak.probes.dan.ChatGPT_Image_Markdown",
+      "relevance": "policy-override probes that pressure instruction hierarchy",
+      "source": "live_garak_inventory"
+    },
+    {
+      "available": true,
+      "class_name": "DANProbeMeta",
+      "family": "jailbreak",
+      "module": "garak.probes.dan",
+      "probe": "garak.probes.dan.DANProbeMeta",
+      "relevance": "policy-override probes that pressure instruction hierarchy",
+      "source": "live_garak_inventory"
+    },
+    {
+      "available": true,
+      "class_name": "DAN_Jailbreak",
+      "family": "jailbreak",
+      "module": "garak.probes.dan",
+      "probe": "garak.probes.dan.DAN_Jailbreak",
+      "relevance": "policy-override probes that pressure instruction hierarchy",
+      "source": "live_garak_inventory"
+    },
+    {
+      "available": true,
+      "class_name": "DUDE",
+      "family": "jailbreak",
+      "module": "garak.probes.dan",
+      "probe": "garak.probes.dan.DUDE",
+      "relevance": "policy-override probes that pressure instruction hierarchy",
+      "source": "live_garak_inventory"
+    },
+    {
+      "available": true,
+      "class_name": "DanInTheWild",
+      "family": "jailbreak",
+      "module": "garak.probes.dan",
+      "probe": "garak.probes.dan.DanInTheWild",
+      "relevance": "policy-override probes that pressure instruction hierarchy",
+      "source": "live_garak_inventory"
+    },
+    {
+      "available": true,
+      "class_name": "DanInTheWildFull",
+      "family": "jailbreak",
+      "module": "garak.probes.dan",
+      "probe": "garak.probes.dan.DanInTheWildFull",
+      "relevance": "policy-override probes that pressure instruction hierarchy",
+      "source": "live_garak_inventory"
+    },
+    {
+      "available": true,
+      "class_name": "Dan_10_0",
+      "family": "jailbreak",
+      "module": "garak.probes.dan",
+      "probe": "garak.probes.dan.Dan_10_0",
+      "relevance": "policy-override probes that pressure instruction hierarchy",
+      "source": "live_garak_inventory"
+    },
+    {
+      "available": true,
+      "class_name": "Dan_11_0",
+      "family": "jailbreak",
+      "module": "garak.probes.dan",
+      "probe": "garak.probes.dan.Dan_11_0",
+      "relevance": "policy-override probes that pressure instruction hierarchy",
+      "source": "live_garak_inventory"
+    },
+    {
+      "available": true,
+      "class_name": "Dan_6_0",
+      "family": "jailbreak",
+      "module": "garak.probes.dan",
+      "probe": "garak.probes.dan.Dan_6_0",
+      "relevance": "policy-override probes that pressure instruction hierarchy",
+      "source": "live_garak_inventory"
+    },
+    {
+      "available": true,
+      "class_name": "Dan_6_2",
+      "family": "jailbreak",
+      "module": "garak.probes.dan",
+      "probe": "garak.probes.dan.Dan_6_2",
+      "relevance": "policy-override probes that pressure instruction hierarchy",
+      "source": "live_garak_inventory"
+    },
+    {
+      "available": true,
+      "class_name": "Dan_7_0",
+      "family": "jailbreak",
+      "module": "garak.probes.dan",
+      "probe": "garak.probes.dan.Dan_7_0",
+      "relevance": "policy-override probes that pressure instruction hierarchy",
+      "source": "live_garak_inventory"
+    },
+    {
+      "available": true,
+      "class_name": "Dan_8_0",
+      "family": "jailbreak",
+      "module": "garak.probes.dan",
+      "probe": "garak.probes.dan.Dan_8_0",
+      "relevance": "policy-override probes that pressure instruction hierarchy",
+      "source": "live_garak_inventory"
+    },
+    {
+      "available": true,
+      "class_name": "Dan_9_0",
+      "family": "jailbreak",
+      "module": "garak.probes.dan",
+      "probe": "garak.probes.dan.Dan_9_0",
+      "relevance": "policy-override probes that pressure instruction hierarchy",
+      "source": "live_garak_inventory"
+    },
+    {
+      "available": true,
+      "class_name": "STAN",
+      "family": "jailbreak",
+      "module": "garak.probes.dan",
+      "probe": "garak.probes.dan.STAN",
+      "relevance": "policy-override probes that pressure instruction hierarchy",
+      "source": "live_garak_inventory"
+    },
+    {
+      "available": true,
+      "class_name": "FigStep",
+      "family": "jailbreak",
+      "module": "garak.probes.visual_jailbreak",
+      "probe": "garak.probes.visual_jailbreak.FigStep",
+      "relevance": "policy-override probes that pressure instruction hierarchy",
+      "source": "live_garak_inventory"
+    },
+    {
+      "available": true,
+      "class_name": "FigStepFull",
+      "family": "jailbreak",
+      "module": "garak.probes.visual_jailbreak",
+      "probe": "garak.probes.visual_jailbreak.FigStepFull",
+      "relevance": "policy-override probes that pressure instruction hierarchy",
+      "source": "live_garak_inventory"
+    },
+    {
+      "available": true,
+      "class_name": "ClozeProbeMixin",
+      "family": "leakage",
+      "module": "garak.probes.leakreplay",
+      "probe": "garak.probes.leakreplay.ClozeProbeMixin",
+      "relevance": "secret/system-prompt leakage probes triggered by hostile instructions",
+      "source": "live_garak_inventory"
+    },
+    {
+      "available": true,
+      "class_name": "CompleteProbeMixin",
+      "family": "leakage",
+      "module": "garak.probes.leakreplay",
+      "probe": "garak.probes.leakreplay.CompleteProbeMixin",
+      "relevance": "secret/system-prompt leakage probes triggered by hostile instructions",
+      "source": "live_garak_inventory"
+    },
+    {
+      "available": true,
+      "class_name": "GuardianCloze",
+      "family": "leakage",
+      "module": "garak.probes.leakreplay",
+      "probe": "garak.probes.leakreplay.GuardianCloze",
+      "relevance": "secret/system-prompt leakage probes triggered by hostile instructions",
+      "source": "live_garak_inventory"
+    },
+    {
+      "available": true,
+      "class_name": "GuardianClozeFull",
+      "family": "leakage",
+      "module": "garak.probes.leakreplay",
+      "probe": "garak.probes.leakreplay.GuardianClozeFull",
+      "relevance": "secret/system-prompt leakage probes triggered by hostile instructions",
+      "source": "live_garak_inventory"
+    },
+    {
+      "available": true,
+      "class_name": "GuardianComplete",
+      "family": "leakage",
+      "module": "garak.probes.leakreplay",
+      "probe": "garak.probes.leakreplay.GuardianComplete",
+      "relevance": "secret/system-prompt leakage probes triggered by hostile instructions",
+      "source": "live_garak_inventory"
+    },
+    {
+      "available": true,
+      "class_name": "GuardianCompleteFull",
+      "family": "leakage",
+      "module": "garak.probes.leakreplay",
+      "probe": "garak.probes.leakreplay.GuardianCompleteFull",
+      "relevance": "secret/system-prompt leakage probes triggered by hostile instructions",
+      "source": "live_garak_inventory"
+    },
+    {
+      "available": true,
+      "class_name": "LiteratureCloze",
+      "family": "leakage",
+      "module": "garak.probes.leakreplay",
+      "probe": "garak.probes.leakreplay.LiteratureCloze",
+      "relevance": "secret/system-prompt leakage probes triggered by hostile instructions",
+      "source": "live_garak_inventory"
+    },
+    {
+      "available": true,
+      "class_name": "LiteratureClozeFull",
+      "family": "leakage",
+      "module": "garak.probes.leakreplay",
+      "probe": "garak.probes.leakreplay.LiteratureClozeFull",
+      "relevance": "secret/system-prompt leakage probes triggered by hostile instructions",
+      "source": "live_garak_inventory"
+    },
+    {
+      "available": true,
+      "class_name": "LiteratureComplete",
+      "family": "leakage",
+      "module": "garak.probes.leakreplay",
+      "probe": "garak.probes.leakreplay.LiteratureComplete",
+      "relevance": "secret/system-prompt leakage probes triggered by hostile instructions",
+      "source": "live_garak_inventory"
+    },
+    {
+      "available": true,
+      "class_name": "LiteratureCompleteFull",
+      "family": "leakage",
+      "module": "garak.probes.leakreplay",
+      "probe": "garak.probes.leakreplay.LiteratureCompleteFull",
+      "relevance": "secret/system-prompt leakage probes triggered by hostile instructions",
+      "source": "live_garak_inventory"
+    },
+    {
+      "available": true,
+      "class_name": "NYTCloze",
+      "family": "leakage",
+      "module": "garak.probes.leakreplay",
+      "probe": "garak.probes.leakreplay.NYTCloze",
+      "relevance": "secret/system-prompt leakage probes triggered by hostile instructions",
+      "source": "live_garak_inventory"
+    },
+    {
+      "available": true,
+      "class_name": "NYTClozeFull",
+      "family": "leakage",
+      "module": "garak.probes.leakreplay",
+      "probe": "garak.probes.leakreplay.NYTClozeFull",
+      "relevance": "secret/system-prompt leakage probes triggered by hostile instructions",
+      "source": "live_garak_inventory"
+    },
+    {
+      "available": true,
+      "class_name": "NYTComplete",
+      "family": "leakage",
+      "module": "garak.probes.leakreplay",
+      "probe": "garak.probes.leakreplay.NYTComplete",
+      "relevance": "secret/system-prompt leakage probes triggered by hostile instructions",
+      "source": "live_garak_inventory"
+    },
+    {
+      "available": true,
+      "class_name": "NYTCompleteFull",
+      "family": "leakage",
+      "module": "garak.probes.leakreplay",
+      "probe": "garak.probes.leakreplay.NYTCompleteFull",
+      "relevance": "secret/system-prompt leakage probes triggered by hostile instructions",
+      "source": "live_garak_inventory"
+    },
+    {
+      "available": true,
+      "class_name": "NonFullMixin",
+      "family": "leakage",
+      "module": "garak.probes.leakreplay",
+      "probe": "garak.probes.leakreplay.NonFullMixin",
+      "relevance": "secret/system-prompt leakage probes triggered by hostile instructions",
+      "source": "live_garak_inventory"
+    },
+    {
+      "available": true,
+      "class_name": "PotterCloze",
+      "family": "leakage",
+      "module": "garak.probes.leakreplay",
+      "probe": "garak.probes.leakreplay.PotterCloze",
+      "relevance": "secret/system-prompt leakage probes triggered by hostile instructions",
+      "source": "live_garak_inventory"
+    },
+    {
+      "available": true,
+      "class_name": "PotterClozeFull",
+      "family": "leakage",
+      "module": "garak.probes.leakreplay",
+      "probe": "garak.probes.leakreplay.PotterClozeFull",
+      "relevance": "secret/system-prompt leakage probes triggered by hostile instructions",
+      "source": "live_garak_inventory"
+    },
+    {
+      "available": true,
+      "class_name": "PotterComplete",
+      "family": "leakage",
+      "module": "garak.probes.leakreplay",
+      "probe": "garak.probes.leakreplay.PotterComplete",
+      "relevance": "secret/system-prompt leakage probes triggered by hostile instructions",
+      "source": "live_garak_inventory"
+    },
+    {
+      "available": true,
+      "class_name": "PotterCompleteFull",
+      "family": "leakage",
+      "module": "garak.probes.leakreplay",
+      "probe": "garak.probes.leakreplay.PotterCompleteFull",
+      "relevance": "secret/system-prompt leakage probes triggered by hostile instructions",
+      "source": "live_garak_inventory"
+    },
+    {
+      "available": true,
+      "class_name": "HijackHateHumans",
+      "family": "promptinject",
+      "module": "garak.probes.promptinject",
+      "probe": "garak.probes.promptinject.HijackHateHumans",
+      "relevance": "direct prompt-injection and instruction-hijack probes",
+      "source": "live_garak_inventory"
+    },
+    {
+      "available": true,
+      "class_name": "HijackHateHumansFull",
+      "family": "promptinject",
+      "module": "garak.probes.promptinject",
+      "probe": "garak.probes.promptinject.HijackHateHumansFull",
+      "relevance": "direct prompt-injection and instruction-hijack probes",
+      "source": "live_garak_inventory"
+    },
+    {
+      "available": true,
+      "class_name": "HijackKillHumans",
+      "family": "promptinject",
+      "module": "garak.probes.promptinject",
+      "probe": "garak.probes.promptinject.HijackKillHumans",
+      "relevance": "direct prompt-injection and instruction-hijack probes",
+      "source": "live_garak_inventory"
+    },
+    {
+      "available": true,
+      "class_name": "HijackKillHumansFull",
+      "family": "promptinject",
+      "module": "garak.probes.promptinject",
+      "probe": "garak.probes.promptinject.HijackKillHumansFull",
+      "relevance": "direct prompt-injection and instruction-hijack probes",
+      "source": "live_garak_inventory"
+    },
+    {
+      "available": true,
+      "class_name": "HijackLongPrompt",
+      "family": "promptinject",
+      "module": "garak.probes.promptinject",
+      "probe": "garak.probes.promptinject.HijackLongPrompt",
+      "relevance": "direct prompt-injection and instruction-hijack probes",
+      "source": "live_garak_inventory"
+    },
+    {
+      "available": true,
+      "class_name": "HijackLongPromptFull",
+      "family": "promptinject",
+      "module": "garak.probes.promptinject",
+      "probe": "garak.probes.promptinject.HijackLongPromptFull",
+      "relevance": "direct prompt-injection and instruction-hijack probes",
+      "source": "live_garak_inventory"
+    }
+  ],
+  "promptinject_probe_count": 6,
+  "random_seed": 3282,
+  "reproducibility_checksum": "d263fca00b4c49f98a1df4d8b2159999d7587be6846d54cb138dceef4592a80d",
+  "run_date": "20260528",
+  "schema": "carnot.garak_install_probe_manifest.v1",
+  "schema_version": "carnot.garak_install_probe_manifest.v1",
+  "task_id": "exp3282-garak-install-and-probe-manifest-v1"
+}
