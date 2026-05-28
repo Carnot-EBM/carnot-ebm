@@ -13389,3 +13389,59 @@ headline evidence, and emits an `honest_verdict` beginning with `complete:`.
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-REPORT-3283 | Implemented (`python/carnot/reporting/prompt_injection_corrigendum_duration_audit_3283.py`) | Implemented (`tests/python/test_experiment_3283_prompt_injection_corrigendum_duration_audit.py`) |
+
+### REQ-REPORT-3284: Garak Local Smoke SOTA GGUF v1
+
+The repository shall provide an Exp 3284 local Garak smoke workflow that writes
+`results/experiment_3284_garak_local_smoke_sota_gguf_v1.json` after checking
+`nvidia-smi`, selected-Python CUDA/llama.cpp support, and the local GGUF cache
+before any model launch. The workflow SHALL resolve the mandated SOTA GGUF
+targets using the same cache semantics as `cached_sota_pair(gpu_indices=(0, 1))`
+when two models are available, and SHALL still allow a one-model smoke when at
+least one mandated SOTA GGUF is cached. The mandated targets are
+`unsloth/Qwen3.6-35B-A3B-GGUF`, `unsloth/gemma-4-31B-it-GGUF`, and
+`unsloth/gemma-4-26B-A4B-it-GGUF`.
+
+The workflow SHALL start the Exp 3282 llama.cpp OpenAI-compatible local-target
+adapter when possible, run a bounded 20-50 promptinject-style smoke against the
+local target, and record attack-success, refusal/defense behavior, adapter
+errors, GPU memory, tokens, duration, and seed evidence. If no mandated SOTA
+GGUF is cached, CUDA/llama.cpp support is unavailable, Garak is unavailable, or
+the local adapter cannot start, the workflow SHALL write a complete blocked
+artifact with exact missing-model or adapter evidence. Legacy tiny models MAY be
+used only for adapter-path proof rows and MUST NOT set `garak_smoke_ready=true`.
+The workflow MUST NOT modify `scripts/research_conductor.py`, `ops/status.md`,
+`ops/changelog.md`, or `_bmad/traceability.md`.
+
+The terminal artifact MUST include `garak_local_smoke_v1_ready`,
+`garak_smoke_ready`, `model_specs`, `models_used`, `missing_model_specs`,
+`preconditions_checked`, `local_target_adapter_started`, `garak_probe_count`,
+`attack_success_rate`, `detector_or_defense_response_summary`,
+`gpu_mem_used_mib`, `tokens_generated`, `random_seed`,
+`reproducibility_checksum`, `duration_s`, and `honest_verdict`.
+`garak_local_smoke_v1_ready` MUST be true whenever the artifact validates.
+`garak_smoke_ready` MUST be true only when at least one mandated SOTA GGUF model
+actually produced non-empty local-target responses through the Garak smoke path.
+`honest_verdict` MUST begin with one of `complete:`, `success:`, `passed:`, or
+`shipped:` even for blocked smoke artifacts.
+
+#### SCENARIO-REPORT-3284: Local Garak Smoke Uses Mandated GGUF Evidence
+
+**Given** Exp 3282 reports a runnable Garak command path and local-target adapter
+plan
+**And** at least one mandated SOTA GGUF is present in the local cache
+**When** the Exp 3284 local smoke workflow runs
+**Then** it writes
+`results/experiment_3284_garak_local_smoke_sota_gguf_v1.json` with all required
+schema fields, records preflight rows for `nvidia-smi`, selected-Python CUDA,
+and model-cache resolution, starts or precisely blocks the Exp 3282 local target
+adapter, runs 20-50 promptinject-style probes only when the adapter is live,
+records quantitative attack-success, defense/refusal, GPU-memory, token, and
+duration evidence, marks missing mandated GGUFs explicitly, and emits an
+`honest_verdict` beginning with `complete:`.
+
+## Implementation Status (REQ-REPORT-3284)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-3284 | Implemented (`python/carnot/reporting/garak_local_smoke_sota_gguf_3284.py`) | Implemented (`tests/python/test_experiment_3284_garak_local_smoke_sota_gguf.py`) |
