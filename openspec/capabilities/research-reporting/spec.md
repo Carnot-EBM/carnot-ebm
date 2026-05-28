@@ -12133,3 +12133,75 @@ trained KAN metrics exist.
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-REPORT-3251 | Planned (`python/carnot/reporting/prompt_injection_v4_constraint_tax_manifest_3251.py`) | Planned (`tests/python/test_experiment_3251_prompt_injection_v4_constraint_tax_manifest.py`) |
+
+### REQ-REPORT-3257: Cross-Corpus Matrix V34 From .301 Artifacts
+
+The repository shall provide an Exp 3257 cross-corpus matrix v34 generator
+that writes `results/experiment_3257_cross_corpus_matrix_v34.json` by reading
+only checked-in `.301` artifacts, the active roadmap, the staged roadmap when
+present, the `.301` roadmap proposal, and `ops/conductor-log.md`. The workflow
+MUST be aggregation only. It MUST NOT run live model inference, CUDA probes,
+llama.cpp, GGUF receipts, teacher labeling, KAN training, Garak, repair
+proposal generation, verifier scoring, solver execution, hardware commands,
+the conductor, pushes, or modify `scripts/research_conductor.py`.
+
+The matrix MUST account for every planned `.301` upstream artifact from
+Exp 3246 through Exp 3256. Missing artifact files MUST be recorded in
+`artifacts_missing`. Artifacts with `blocked_gate_check_v1`, conductor
+pre-gate fields, or matching `GATE_BLOCK` conductor-log evidence MUST be
+recorded in `gate_blocked_artifacts`, including gate-blocked tasks whose JSON
+deliverable is absent. Missing or gate-blocked runtime, teacher-label, KAN, or
+DCCD/SEVerA evidence MUST NOT be fabricated from downstream expectations.
+
+The terminal artifact MUST include `experiment_id`, `task_id`, `milestone`,
+`inference_substrate`, `principle_annotations`, `matrix_v34_ready`,
+`artifacts_expected`, `artifacts_found`, `artifacts_missing`,
+`gate_blocked_artifacts`, `runtime_receipt_status`,
+`prompt_injection_status`, `fr11_lifelong_status`, `pdit_potts_status`,
+`publication_blocker_count`, `paper_ready`, `next_top_gap`, and
+`honest_verdict`. `runtime_receipt_status` MUST summarize selected-Python
+CUDA, llama.cpp CUDA, SOTA GGUF receipt, and `clean_rerun_allowed`.
+`prompt_injection_status` MUST summarize the v2 manifest, teacher-label
+shard, KAN shard, constraint-tax diagnostic, and DCCD/SEVerA repair proposal
+preflight. `fr11_lifelong_status` MUST preserve retention, adaptation,
+forgetting, negative-control, and no-model-weight-update evidence.
+`pdit_potts_status` MUST preserve CPU/simulation-only mapping, exact fallback,
+and no hardware-speedup claim boundaries.
+
+`paper_ready` MUST be true only when every required runtime receipt and
+downstream prompt-injection/DCCD evidence exists and the
+`publication_blocker_count` is zero. When any required receipt or downstream
+evidence is missing or gate-blocked, `paper_ready` MUST be false and
+`next_top_gap` MUST be selected only from observed artifact fields or
+conductor-log gate evidence. `honest_verdict` MUST begin with `complete:` and
+MUST NOT claim `paper_ready=true` unless blockers are zero.
+
+#### SCENARIO-REPORT-3257: Matrix V34 Preserves .301 Gate Blocks
+
+**Given** Exp 3246 and Exp 3247 completed, Exp 3248 was blocked because
+`next_smoke_allowed=false`, Exp 3249 is absent with conductor-log gate-block
+evidence, Exp 3250 is blocked on the absent llama.cpp CUDA receipt, Exp 3251
+completed the constraint-tax manifest, Exp 3252 is absent with conductor-log
+gate-block evidence, Exp 3253 is blocked on absent teacher labels, Exp 3254 is
+absent with conductor-log gate-block evidence, and Exp 3255 and Exp 3256
+completed bounded FR-11 and p-dit/Potts diagnostic artifacts
+**When** the Exp 3257 matrix generator runs
+**Then** it writes
+`results/experiment_3257_cross_corpus_matrix_v34.json` with all required
+schema fields, `matrix_v34_ready=true`, the found and missing artifact sets
+reported separately, gate-blocked artifacts including absent gate-blocked
+tasks, runtime status showing selected-Python CUDA not repaired, llama.cpp CUDA
+and SOTA GGUF receipts unavailable, `clean_rerun_allowed=false`, prompt
+injection status showing the manifest and constraint-tax diagnostic complete
+but teacher labels, KAN shard, and DCCD/SEVerA preflight unavailable, FR-11
+lifelong retention metrics preserved with no model-weight update claim,
+p-dit/Potts diagnostic status preserved with exact fallback and no hardware
+speedup claim, `paper_ready=false`, a nonzero `publication_blocker_count`, a
+`next_top_gap` based on the observed runtime block, and an `honest_verdict`
+beginning with `complete:`.
+
+## Implementation Status (REQ-REPORT-3257)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-3257 | Planned (`python/carnot/reporting/cross_corpus_matrix_v34_3257.py`) | Planned (`tests/python/test_experiment_3257_cross_corpus_matrix_v34.py`) |

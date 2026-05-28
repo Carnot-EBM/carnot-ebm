@@ -6609,3 +6609,5 @@ web search |
 | 2026-05-28 07:57 UTC | DCCD/SEVerA structured proposal preflight v2 gated | GATE_BLOCK | Pre-emptive skip: upstream retired (exp3250-sota-gguf-receipt-v8) |
 | 2026-05-28 08:11 UTC | FR-11 lifelong failure-memory retention audit | OK | 81 passed in 4.50s |
 | 2026-05-28 08:13 UTC | DCCD/SEVerA structured proposal preflight v2 gated | GATE_BLOCK | Pre-emptive skip: upstream retired (exp3250-sota-gguf-receipt-v8) |
+| 2026-05-28 08:22 UTC | P-dit/Potts multi-state sampler diagnostic manifes | OK | 81 passed in 3.34s |
+| 2026-05-28 08:24 UTC | DCCD/SEVerA structured proposal preflight v2 gated | GATE_BLOCK | Pre-emptive skip: upstream retired (exp3250-sota-gguf-receipt-v8) |
