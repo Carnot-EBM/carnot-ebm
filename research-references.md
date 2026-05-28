@@ -1,3 +1,132 @@
+## 2026-05-28 Post-.303 Planning Sweep (Milestone 2026.05.304)
+
+This sweep was run after milestone `.303` completed. `.303` proved the
+v4 prompt-injection corpus and FR-11 controller-memory path can run at
+full-corpus scale, but the capstone stayed `paper_ready=false` with
+`publication_blocker_count=105`. The blockers moved from data scale to
+toolchain and calibration: Garak was unavailable, the clean verifier
+abstained on every exact row, the KAN sidecar failed full-corpus
+non-inferiority, and the repair gate stayed closed.
+
+### Garak Is A Toolchain Gate Before It Is A Benchmark Result
+
+- **Sources:** NVIDIA garak GitHub and prompt-injection documentation.
+- **What:** Current garak documentation exposes PromptInject-style probes and
+  lists local-model pathways, including GGUF/llama.cpp support in the public
+  repository. This makes Garak a practical red-team harness, but only after
+  the local install, probe inventory, generator adapter, and detector outputs
+  are captured in a machine-readable artifact.
+- **Relevance to Carnot:** `.304` should first ship a Garak install/probe
+  manifest, then run a smoke eval, then run a full red-team eval. The `.303`
+  failure `blocked_garak_unavailable` should not be papered over by DataFlip
+  or cached detector metrics.
+- **Sources:** https://github.com/NVIDIA/garak,
+  https://docs.garak.ai/garak/examples/prompt-injection, and
+  https://reference.garak.ai/en/latest/probes/promptinject.html
+
+### Abstention Needs Selective-Verification Calibration, Not Another Judge
+
+- **Papers:** "I-CALM: Incentivizing Confidence-Aware Abstention for LLM
+  Hallucination Mitigation" (arXiv:2604.03904), "Learning Conformal
+  Abstention Policies for Adaptive Risk Management in Large Language and
+  Vision-Language Models" (arXiv:2502.06884), and "Hallucination as
+  Misclassification: A Composite Abstention Architecture for Language Model
+  Output Control" (OpenReview ICLR 2026 Workshop).
+- **What:** Recent abstention work treats abstention as a calibrated selective
+  prediction problem. The useful signal is not "abstain more"; it is bounded
+  risk with measurable coverage, known answerability, and over-abstention
+  controls.
+- **Relevance to Carnot:** `.303` clean verifier v14 abstained on 6/6 exact
+  rows. `.304` should root-cause that abstain-all behavior and reopen the
+  clean-verifier gate only when exact-checkable rows can be accepted/rejected
+  without false accepts and with bounded abstention.
+- **Sources:** https://arxiv.org/abs/2604.03904,
+  https://arxiv.org/abs/2502.06884, and
+  https://openreview.net/forum?id=HId1PNRzeB
+
+### Verification-Guided Repair Should Localize Errors Before Regeneration
+
+- **Paper:** "VERGE: Formal Refinement and Guidance Engine for Verifiable LLM
+  Reasoning" (arXiv:2601.20055; submitted 2026-01-27).
+- **What:** VERGE decomposes outputs into claims, routes formalizable claims to
+  solvers, and uses minimal correction subsets to turn binary verification
+  failures into localized repair feedback.
+- **Relevance to Carnot:** This supports `.304` repair-gate discipline: do not
+  run a repair micro-panel until Garak and the clean verifier are unblocked;
+  once open, record localized failure classes and exact verifier feedback
+  instead of treating repair as free-form regeneration.
+- **Sources:** https://arxiv.org/abs/2601.20055 and
+  https://huggingface.co/papers/2601.20055
+
+### KAN Sidecars Need Autopsy After Full-Corpus Non-Inferiority Failure
+
+- **Papers:** "KAN-LSTM: Benchmarking Kolmogorov-Arnold Networks for Cyber
+  Security Threat Detection in IoT Networks" (arXiv:2603.28985), "A
+  Kolmogorov-Arnold Network for Explainable Detection of Cyberattacks on EV
+  Chargers" (arXiv:2503.02281), and "A Kolmogorov-Arnold Network for
+  Interpretable Cyberattack Detection in AGC Systems" (arXiv:2509.05259).
+- **What:** KAN cybersecurity work continues to emphasize interpretability and
+  anomaly/security detection, but the useful claim depends on leakage controls,
+  balanced slices, and calibrated false-positive behavior.
+- **Relevance to Carnot:** `.303` KAN sidecar reported full-corpus
+  `auroc=0.475326` and failed DeLong non-inferiority. `.304` should diagnose
+  the failure, bound KAN to a high-recall triage role if appropriate, or retire
+  it from the prompt-injection headline path.
+- **Sources:** https://arxiv.org/abs/2603.28985,
+  https://arxiv.org/abs/2503.02281, and https://arxiv.org/abs/2509.05259
+
+### Constrained Generation Helps Interfaces, But Can Hide Semantic Risk
+
+- **Papers:** "TruncProof: A Guardrail for LLM-based JSON Generation under
+  Token-Length Constraints" (arXiv:2605.13076), "Schema Key Wording as an
+  Instruction Channel in Structured Generation under Constrained Decoding"
+  (arXiv:2604.14862), and "XGrammar 2: Dynamic and Efficient Structured
+  Generation Engine for Agentic LLMs" (arXiv:2601.04426).
+- **What:** Grammar-constrained generation is maturing quickly, but 2026 work
+  also shows schema text itself can act as an instruction channel. Structured
+  validity is therefore an interface guarantee, not a semantic verifier.
+- **Relevance to Carnot:** `.304` should use schemas for artifacts and
+  repeatability, but keep exact verifier and Garak gates as correctness
+  authorities. Repair output should not be promoted because it parses.
+- **Sources:** https://arxiv.org/abs/2605.13076,
+  https://arxiv.org/abs/2604.14862, and https://arxiv.org/abs/2601.04426
+
+### Continuous Self-Learning Should Preserve Raw Episodes Before Consolidation
+
+- **Papers:** "When Continual Learning Moves to Memory" (arXiv:2604.27003),
+  "Useful Memories Become Faulty When Continuously Updated by LLMs" (arXiv:
+  2605.12978), and "Continual Knowledge Updating in LLM Systems: Learning
+  Through Multi-Timescale Memory Dynamics" (arXiv:2605.05097).
+- **What:** Recent memory work agrees that external memory moves the
+  stability-plasticity problem into representation, retrieval, consolidation,
+  and forgetting. Forced consolidation can degrade performance; raw episodes
+  remain first-class evidence.
+- **Relevance to Carnot:** `.304` should extend the `.303` FR-11 audit with
+  Garak and abstention blocker traces, retain raw episodes, gate
+  consolidation, and report retention/adaptation/forgetting/negative transfer.
+  It should still make no foundation-weight-update claim.
+- **Sources:** https://arxiv.org/abs/2604.27003,
+  https://arxiv.org/abs/2605.12978, and https://arxiv.org/abs/2605.05097
+
+### EBT, ARM-EBM, Extropic, And Kona Stay Strategic Signals
+
+- **Sources:** Energy-Based Transformers (arXiv:2507.02092), ARM-as-EBM
+  theory (arXiv:2512.15605), Extropic TSU/XTR-0/Z1 public materials, and
+  Logical Intelligence Kona public pages.
+- **What:** EBT and ARM-as-EBM keep strengthening the "prediction as
+  optimization/verifier" direction. Extropic continues to position TSUs as
+  native samplers for EBMs, and Logical Intelligence publicly positions Kona
+  as an EBM reasoning layer for critical systems.
+- **Relevance to Carnot:** These findings justify the long-term Carnot
+  architecture, but `.304` should not claim TSU/Kona access or EBT-scale model
+  results. The immediate research value is to repair the local evidence chain:
+  Garak, calibrated clean verification, KAN boundary, and repair gate reopen.
+- **Sources:** https://arxiv.org/abs/2507.02092,
+  https://arxiv.org/abs/2512.15605,
+  https://extropic.ai/writing/thermodynamic-computing-from-zero-to-one,
+  https://extropic.ai/hardware, https://extropic.ai/software, and
+  https://logicalintelligence.com/kona-ebms-energy-based-models
+
 ## 2026-05-28 Post-.302 Planning Sweep (Milestone 2026.05.303)
 
 This sweep was run after milestone `.302` completed. `.302` proved the

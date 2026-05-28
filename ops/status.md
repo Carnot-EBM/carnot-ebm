@@ -1,6 +1,31 @@
 # Carnot — Operational Status
 
-**Last Updated:** 2026-05-28 (Milestone 2026.05.303 research planning staged)
+**Last Updated:** 2026-05-28 (Milestone 2026.05.304 research planning staged)
+
+## Session 2026-05-28 - Milestone 2026.05.304 Research Planning Staged
+
+Planned milestone 2026.05.304 as "Garak Availability +
+Abstention-Calibrated Verifier + Repair Gate Reopen" after all `.303` tasks
+completed. Used `results/experiment_3280_capstone_v303.json`,
+`results/experiment_3279_evidence_matrix_v35.json`, `.303` Garak, clean
+verifier, KAN, FR-11 artifacts, `ops/conductor-log.md`,
+`research-complete.yaml`, `research-roadmap.yaml`, and the post-`.303`
+research sweep as authority: `paper_ready=false`,
+`publication_blocker_count=105`, the full 15k v4 corpus exists, FR-11
+controller-memory replay passed, Garak was unavailable, clean verifier
+abstention was `1.0`, KAN full-corpus non-inferiority failed, repair stayed
+blocked, and the next top gap is `unblock_garak_redteam_eval`.
+
+Updated `research-references.md` with the post-`.303` sweep, rewrote
+`openspec/change-proposals/research-roadmap-vNEXT.md`, and created
+`research-roadmap-next.yaml` with 13 tasks (`exp3281`-`exp3293`). The plan
+first makes Garak executable, then calibrates clean-verifier abstention,
+bounds or retires the KAN sidecar, reopens repair only through explicit gates,
+and includes `exp3291` as the required continuous self-learning replay over
+Garak/abstention blocker traces. Validation passed for roadmap schema,
+prior-failure discipline, exclusion-manifest lint, gate audit, prompt sections,
+prompt final-line checks, and live-LLM `MODEL_SPECS` checks. Left
+`research-roadmap.yaml` and `scripts/research_conductor.py` untouched.
 
 ## Session 2026-05-28 - Milestone 2026.05.303 Research Planning Staged
 
