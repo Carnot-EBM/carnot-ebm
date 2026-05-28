@@ -12496,3 +12496,52 @@ exact blocked reason, and leaves `sota_gguf_receipt_ready=false`.
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-REPORT-3263 | Implemented (`python/carnot/reporting/sota_gguf_receipt_3263.py`) | Implemented (`tests/python/test_experiment_3263_sota_gguf_receipt_v9.py`) |
+
+### REQ-REPORT-3264: Prompt-Injection Teacher Label Shard V3
+
+The repository shall provide an Exp 3264 prompt-injection teacher-label shard
+generator that writes
+`results/experiment_3264_prompt_injection_teacher_label_shard_v3.json`. The
+workflow SHALL first read `results/experiment_3263_sota_gguf_receipt_v9.json`
+and SHALL write a complete gated-skip artifact with
+`teacher_label_shard_ready=false` when `sota_gguf_receipt_ready` is not true.
+It SHALL also confirm that
+`results/experiment_3251_prompt_injection_v4_constraint_tax_manifest_v2.json`
+is present and ready before labeling.
+
+When both gates are open, the workflow SHALL select one bounded corpus shard
+from the prompt-injection v4 corpus inputs, label each example with
+`gpt-oss-safeguard-20b` when cached locally or otherwise the mandated SOTA GGUF
+model that opened Exp 3263, and record per-example label provenance. The
+terminal artifact MUST include `teacher_label_shard_v3_ready`,
+`teacher_label_shard_ready`, `shard_size`, `label_counts`, `model_specs`,
+`random_seed`, `reproducibility_checksum`, `duration_s`, and
+`honest_verdict`. It MUST also include per-example label rows with source path,
+source index, prompt hash, source label, teacher label, parser status, latency,
+prompt-template checksum, and model identity. `teacher_label_shard_ready` MUST
+be true only when every selected shard row has a parsed label in the allowed
+label set and `label_counts` sums to `shard_size`. `honest_verdict` MUST begin
+with one of `complete:`, `complete_`, `success:`, `success_`, `passed:`,
+`passed_`, or `shipped_`.
+
+#### SCENARIO-REPORT-3264: Gated Teacher Labels Open The Train/Eval Shard
+
+**Given** Exp 3263 reports `sota_gguf_receipt_ready=true`
+**And** Exp 3251 reports a ready constraint-tax manifest
+**And** a cached teacher GGUF is available
+**When** the Exp 3264 teacher-label shard generator runs
+**Then** it writes
+`results/experiment_3264_prompt_injection_teacher_label_shard_v3.json` with all
+required schema fields, labels the selected prompt-injection corpus shard,
+records per-example label provenance, sets `teacher_label_shard_ready=true`
+when every label is parsed, emits `shard_size` and `label_counts`, and records
+an `honest_verdict` beginning with `complete:`. If Exp 3263 is not ready, Exp
+3251 is missing or not ready, the teacher model is unavailable, the corpus is
+missing, or any selected row is unlabeled or unparseable, the artifact remains
+complete and leaves `teacher_label_shard_ready=false`.
+
+## Implementation Status (REQ-REPORT-3264)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-3264 | Planned (`python/carnot/reporting/prompt_injection_teacher_label_shard_v3_3264.py`) | Planned (`tests/python/test_experiment_3264_prompt_injection_teacher_label_shard_v3.py`) |
