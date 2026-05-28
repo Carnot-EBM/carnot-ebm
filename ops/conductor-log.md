@@ -6651,3 +6651,4 @@ web search: https://docs.garak.ai/garak/examples/pr |
 | 2026-05-28 17:52 UTC | Prompt-injection corrigendum and duration audit v1 | OK | 81 passed in 4.12s |
 | 2026-05-28 18:13 UTC | Gated Garak local smoke against mandated SOTA GGUF | OK | 81 passed in 3.03s |
 | 2026-05-28 18:33 UTC | Gated full Garak/DataFlip red-team eval v2 | OK | 81 passed in 4.51s |
+| 2026-05-28 19:13 UTC | Clean verifier abstention root-cause audit v1 | OK | 81 passed in 2.72s |

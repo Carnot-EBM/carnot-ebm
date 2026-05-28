@@ -8506,3 +8506,59 @@ when the fixtures are present, and defines Exp 3287 acceptance criteria with
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-VERIFY-3286 | Implemented (`python/carnot/verify/clean_verifier_abstention_root_cause_v1.py`) | Implemented (`tests/python/test_experiment_3286_clean_verifier_abstention_root_cause_v1.py`) |
+
+### REQ-VERIFY-3287: Abstention-Calibrated Clean Verifier Rerun V15
+
+The repository shall provide an Exp 3287 abstention-calibrated clean verifier
+rerun that reads the Exp 3286 calibrated rerun plan, checks CUDA and mandated
+GGUF cache preconditions, evaluates exact-checkable rows from the checked-in
+context fixture bank, and writes
+`results/experiment_3287_abstention_calibrated_clean_verifier_v15.json`.
+
+The builder MUST call `cached_sota_pair(gpu_indices=(0, 1))` when resolving
+local SOTA GGUFs, SHALL record every missing mandated model from
+`unsloth/Qwen3.6-35B-A3B-GGUF`, `unsloth/gemma-4-31B-it-GGUF`, and
+`unsloth/gemma-4-26B-A4B-it-GGUF`, and MAY run with a single cached mandated
+GGUF only when the cached pair is unavailable. It MUST check `nvidia-smi`,
+selected-Python CUDA/llama.cpp readiness, Exp 3286 root-cause readiness, and
+exact-row fixture availability before inference. It MUST NOT push, modify
+`scripts/research_conductor.py`, use remote APIs, fabricate fallback rows, or
+open the repair gate when `abstention_rate=1.0`.
+
+When at least 20 exact-checkable rows are available, the builder SHALL evaluate
+at least 20 such rows. The calibrated abstention policy SHALL preserve the Exp
+3286 strict leading-token contract (`ACCEPT`, `REJECT`, `ABSTAIN`), normalize
+uncertain or unparsable outputs to abstentions, and require zero false accepts
+plus non-trivial coverage before setting any repair-gate-ready flag.
+
+The terminal artifact MUST include
+`abstention_calibrated_clean_verifier_v15_ready`, `clean_verifier_rerun_ready`,
+`repair_gate_input_clean_enough`, `model_specs`, `models_used`,
+`missing_model_specs`, `preconditions_checked`, `n_eval`,
+`exact_checkable_row_count`, `false_accept_rate`, `false_reject_rate`,
+`abstention_rate`, `coverage_rate`, `abstention_reason_counts`,
+`random_seed`, `reproducibility_checksum`, `duration_s`, and
+`honest_verdict`. `honest_verdict` MUST start with `complete:`, `success:`,
+`passed:`, or `shipped:` whenever the rerun artifact is written.
+
+### SCENARIO-VERIFY-3287: Calibrated V15 Opens Repair Only On Zero False Accepts
+
+Given Exp 3286 identifies parser/model-output contract mismatch as the
+actionable abstention root cause and at least one mandated GGUF is locally
+cached,
+When Exp 3287 runs the calibrated clean verifier over exact-checkable rows,
+Then the artifact records model/cache/runtime provenance, exact-row coverage,
+false accepts, false rejects, abstentions, and per-class reasons, and sets
+`repair_gate_input_clean_enough=true` only when false accepts remain zero and
+coverage is non-trivial.
+
+If the model still abstains on every row, if no mandated GGUF is cached, if
+CUDA/llama.cpp readiness fails, or if any false accept appears, then the
+artifact remains terminal and machine-readable but `clean_verifier_rerun_ready`
+and `repair_gate_input_clean_enough` SHALL be false.
+
+## Implementation Status (REQ-VERIFY-3287)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-VERIFY-3287 | Implemented (`python/carnot/verify/abstention_calibrated_clean_verifier_v15.py`) | Implemented (`tests/python/test_experiment_3287_abstention_calibrated_clean_verifier_v15.py`) |
