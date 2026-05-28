@@ -2,7 +2,7 @@
   "experiment": 1038,
   "milestone": "2026.04.80",
   "title": "Milestone 2026.04.80 Retrospective \u2014 13-Criterion Evaluation",
-  "run_date": "2026-05-28T07:09:17Z",
+  "run_date": "2026-05-28T07:37:41Z",
   "schema": "milestone_retro_v1",
   "criteria_results": {
     "exp1026_schema_validation": true,
@@ -14,12 +14,12 @@
     "exp1032_ppsebm_relay_v4": true,
     "exp1033_thinkprm_v4": false,
     "exp1034_gskan_v4": false,
-    "exp1035_dualgpu_rocm_v3": false,
+    "exp1035_dualgpu_rocm_v3": true,
     "exp1036_nk_kaem_v2": false,
     "exp1037_kv260_v6": false,
     "exp1038_milestone_retro": true
   },
-  "criteria_met": 7,
+  "criteria_met": 8,
   "criteria_total": 13,
   "criteria_detail": {
     "exp1026_schema_validation": "schema_validation_installed=True, lint_gate_active=True, violations_79=2, violations_80=0",
@@ -31,7 +31,7 @@
     "exp1032_ppsebm_relay_v4": "relay_live=True, ppsebm_auroc=0.6875 (target=0.7), auroc_achieved=False",
     "exp1033_thinkprm_v4": "auroc_trained=0.5 (need >0.6), delta_vs_zeroshot=0.0, model_used=ci_stub \u2014 CI stub model; no real probe learning",
     "exp1034_gskan_v4": "auroc_gskan=0.65 vs baseline=0.6875 (GS-KAN below baseline), int8_quantized=True",
-    "exp1035_dualgpu_rocm_v3": "gpu_count_detected=1 (via nvidia-smi fallback), dualgpu_live=False, torch_flavor=cuda \u2014 live benchmark blocked",
+    "exp1035_dualgpu_rocm_v3": "gpu_count_detected=2 (via nvidia-smi fallback), dualgpu_live=True, torch_flavor=cuda \u2014 live benchmark blocked",
     "exp1036_nk_kaem_v2": "auroc_no_regression=False, convergence_speedup=0.6526 (NK slower than Adam; NK AUROC 0.3625 < Adam 0.4125)",
     "exp1037_kv260_v6": "ssh_reachable=True, kv260_guide_written=True, bitstream_loaded=False \u2014 bitstream load error: carnot_ising_v4: Load Error: -1",
     "exp1038_milestone_retro": "Retro analysis completed; all 13 criteria evaluated; artifact written"
@@ -46,7 +46,7 @@
     "exp1032_ppsebm_relay_v4": "relay_live",
     "exp1033_thinkprm_v4": "probe_trained_below_threshold",
     "exp1034_gskan_v4": "failed",
-    "exp1035_dualgpu_rocm_v3": "failed",
+    "exp1035_dualgpu_rocm_v3": "dualgpu_detected_but_below_throughput_target",
     "exp1036_nk_kaem_v2": "nk_diverged_fallback_used",
     "exp1037_kv260_v6": "guide_written",
     "exp1038_milestone_retro": "retro_complete"
@@ -68,5 +68,5 @@
     "exp1030 triple integration experienced 6 failed attempts (3 GATE_BLOCK, 1 FAIL, 2 SKIP): the gate fix from .79 was insufficient; pre-test failures introduced by new .80 tests caused 2 SKIPs; the combination of gate coercion bug + pre-test instability is a recurring blocker.",
     "DualGPU exp1035 required ESCALATE_OPUS (Sonnet hit max-turns at 20); KV260 exp1037 also escalated \u2014 these are complex hardware interaction tasks that consistently need Opus-class reasoning."
   ],
-  "honest_verdict": "milestone_7_of_13_criteria_met_infrastructure_hardened_research_partial"
+  "honest_verdict": "milestone_8_of_13_criteria_met_infrastructure_hardened_research_partial"
 }
