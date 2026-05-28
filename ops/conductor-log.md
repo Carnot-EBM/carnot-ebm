@@ -6514,3 +6514,5 @@ web search |
 | 2026-05-28 00:02 UTC | Full local SOTA GGUF receipt v6 gated on llama.cpp | GATE_BLOCK | Pre-emptive skip: upstream retired (exp3221-llama-cpp-cuda-offload-receipt-smoke |
 | 2026-05-28 00:13 UTC | Distributional EBM exact-row uncertainty sidecar f | OK | 81 passed in 3.53s |
 | 2026-05-28 00:15 UTC | Full local SOTA GGUF receipt v6 gated on llama.cpp | GATE_BLOCK | Pre-emptive skip: upstream retired (exp3221-llama-cpp-cuda-offload-receipt-smoke |
+| 2026-05-28 00:27 UTC | Logitext-style partial SMT coverage pilot for cont | OK | 81 passed in 3.80s |
+| 2026-05-28 00:29 UTC | Full local SOTA GGUF receipt v6 gated on llama.cpp | GATE_BLOCK | Pre-emptive skip: upstream retired (exp3221-llama-cpp-cuda-offload-receipt-smoke |

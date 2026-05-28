@@ -1,0 +1,24 @@
+{
+  "experiment": 3225,
+  "schema": "blocked_gate_check_v1",
+  "run_date": "2026-05-28",
+  "started_at": "2026-05-28T00:29:56.253401+00:00",
+  "finished_at": "2026-05-28T00:29:56.253401+00:00",
+  "duration_s": 0.0,
+  "status": "blocked",
+  "title": "Clean live SOTA verifier rerun v13 using exact-row triage",
+  "honest_verdict": "blocked_gate_check_failed",
+  "gate_check_summary": "1 of 1 gate(s) failed; first failure: exp3222-full-local-sota-receipt-v6.clean_rerun_allowed (upstream artifact not found for task id 'exp3222-full-local-sota-receipt-v6')",
+  "gates_evaluated": [
+    {
+      "upstream": "exp3222-full-local-sota-receipt-v6",
+      "artifact_field": "clean_rerun_allowed",
+      "op": "==",
+      "expected": true,
+      "actual": null,
+      "passed": false,
+      "reason": "upstream artifact not found for task id 'exp3222-full-local-sota-receipt-v6'"
+    }
+  ],
+  "blocked_at_layer": "conductor_pre_gate"
+}
