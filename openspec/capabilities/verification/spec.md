@@ -3402,6 +3402,75 @@ the active roadmap was modified.
 |---|---|---|
 | REQ-VERIFY-3210 | Implemented (`python/carnot/verify/context_cot_clbench_parametric_shortcut_fixtures_v1.py`) | Implemented (`tests/python/test_experiment_3210_context_cot_clbench_parametric_shortcut_fixtures_v1.py`) |
 
+### REQ-VERIFY-3223: Distributional Exact-Row Uncertainty Sidecar V2
+
+The repository shall provide an Exp 3223 deterministic uncertainty sidecar
+builder that writes
+`results/experiment_3223_distributional_ebm_exact_row_uncertainty_sidecar_v2.json`
+from the `.297` context-shortcut and ConstraintBench-style exact fixture
+artifacts:
+`results/experiment_3210_context_cot_clbench_parametric_shortcut_fixtures_v1.json`,
+`data/research/context_cot_clbench_parametric_shortcut_v1.jsonl`,
+`results/experiment_3211_constraintbench_feasibility_objective_pilot_v1.json`,
+and `data/research/constraintbench_feasibility_objective_pilot_v1.jsonl`.
+It MUST NOT invoke an LLM, train a model, download models, push commits,
+modify `scripts/research_conductor.py`, or modify the active roadmap.
+
+The sidecar SHALL score every loaded exact fixture row using deterministic
+features already present in the source artifacts. Context rows SHALL expose
+context-dependency and prior-bait shortcut features. ConstraintBench rows SHALL
+expose satisfiability or feasibility, objective-gap, contradiction or
+constraint-violation, and checker-backend metadata features. The sidecar SHALL
+emit row-level uncertainty, abstention risk, shortcut risk, and
+solver-disagreement risk fields, but those fields SHALL be triage metadata
+only and SHALL NOT replace exact checker or solver authority.
+
+The builder SHALL run a negative-control audit that checks whether sidecar risk
+is dominated by model identity or artifact source rather than row difficulty.
+Because these `.297` fixtures are deterministic and do not contain live model
+responses, absent model identity SHALL be recorded explicitly rather than
+imputed. Artifact-source effects SHALL be measured separately from difficulty
+features, and any domination finding SHALL block
+`uncertainty_sidecar_ready`.
+
+The terminal artifact MUST include `schema_version`, `experiment_id`,
+`milestone`, `source_fixture_artifacts`, `exact_row_count`,
+`uncertainty_sidecar_ready`, `abstention_threshold_defined`,
+`shortcut_risk_rows`, `solver_disagreement_risk_rows`,
+`model_identity_shortcut_audit`, `clean_verifier_consumption_plan`,
+`exact_verifier_authority_preserved`, `inference_substrate`,
+`conductor_file_modified`, `active_roadmap_modified`, and `honest_verdict`.
+It SHOULD also include all row scores, sidecar method details, source
+checksums, tests run, run date, and a plan for Exp 3225 to consume the sidecar
+as triage metadata while preserving exact verifier scoring.
+
+`uncertainty_sidecar_ready` SHALL be true only when the required source
+fixture artifacts are present, at least one context row and one ConstraintBench
+row are scored, `exact_row_count` equals the row-score denominator, an
+abstention threshold is defined over row-level abstention risk, the negative
+control audit is not model-identity-dominated or artifact-source-dominated,
+`exact_verifier_authority_preserved=true`, and the inference substrate records
+deterministic artifact replay with zero model calls.
+
+### SCENARIO-VERIFY-3223: Exact Fixture Rows Get Triage Metadata Only
+
+Given Exp 3210 and Exp 3211 have materialized deterministic `.297` exact
+fixture artifacts,
+When the Exp 3223 sidecar builder runs,
+Then it loads both fixture banks, scores every exact row without live
+inference, emits uncertainty, abstention, shortcut-risk, and
+solver-disagreement-risk fields per row, reports high-priority shortcut and
+solver-disagreement rows as triage lists, records a negative-control audit for
+model identity and artifact-source shortcut domination, defines how Exp 3225
+may consume the sidecar as routing metadata, and keeps exact verifier scoring
+as the only authority for accept/reject decisions.
+
+## Implementation Status (REQ-VERIFY-3223)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-VERIFY-3223 | Implemented (`python/carnot/eval/distributional_ebm_exact_row_uncertainty_sidecar_v2.py`) | Implemented (`tests/python/test_experiment_3223_distributional_ebm_exact_row_uncertainty_sidecar_v2.py`) |
+
 ### REQ-VERIFY-3196: GenCP Domain Preview Repair Compiler V1
 
 The repository shall provide an Exp 3196 deterministic GenCP-style domain
