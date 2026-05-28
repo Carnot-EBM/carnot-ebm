@@ -323,12 +323,12 @@ tasks are not.
 ### NEW 2026-05-26 (20:50Z): Prompt-Injection EBM Distillation v4 — 15k Corpus + Garak Red-Team + DeLong Non-Inferiority (.294+ MANDATORY)
 
 **Origin:** 2026-05-26 operator conversation comparing Carnot to
-polygraf.ai's AiBC gateway. Polygraf's prompt-injection control is the
+a commercial AiBC-style LLM-safety gateway. The gateway's prompt-injection control is the
 one place where Carnot has both a shipped module
 (`python/carnot/pipeline/jailbreak_detection_kan.py`, Tier 0h,
 deployed per exp735) and measured numbers (exp724 AUROC 0.9078 real,
 exp735 AUROC 1.0 synthetic). To support a "replace gpt-oss-safeguard:20b
-with the Carnot KAN" claim externally — for the Polygraf-class comparison,
+with the Carnot KAN" claim externally — for the external-safety-comparator evaluation,
 the paper-v6 safety chapter, or any sales-grade conversation —
 exp724's 3k corpus is structurally too small. At 600 held-out examples
 the 95% AUROC CI is ±0.024, which cannot statistically distinguish
@@ -521,14 +521,14 @@ integration.md` proposal as the red-team probe source.
 
 **Why this is critical, not high:**
 
-The Polygraf comparison surfaces that prompt-injection detection is
+The safety-gateway comparison surfaces that prompt-injection detection is
 the *one* output-side control where Carnot has both a shipped module
-and a clear external comparator. Every other Polygraf control
+and a clear external comparator. Every other gateway control
 (PII anonymization, deepfake detection, AI-content classifiers,
-toxicity, etc.) is genuine Polygraf-only territory; if we can ship
+toxicity, etc.) is genuine gateway-only territory; if we can ship
 the safety-classifier headline at replacement-grade confidence,
-the Carnot-vs-Polygraf framing changes from "we cover different
-problems" to "we cover correctness *and* match Polygraf's
+the Carnot-vs-gateway framing changes from "we cover different
+problems" to "we cover correctness *and* match the gateway's
 prompt-injection control with measured statistical confidence." That
 is materially different positioning for the Phase 1 ship-out
 narrative.
@@ -568,7 +568,7 @@ any inference call. If any precondition fails, exits with
   Tier 0h module that this experiment will retrain)
 - `openspec/capabilities/safety/spec.md` (REQ-SAFE-004 +
   REQ-SAFETY-001/002 — the spec contract the experiment satisfies)
-- 2026-05-26 operator conversation (Polygraf comparison; sample-size
+- 2026-05-26 operator conversation (safety-gateway comparison; sample-size
   question) — origin
 
 ### NEW 2026-05-24 (16:30Z): Verifier-Ensemble Multi-Axis Composition Robustness (.282+ MANDATORY)

@@ -1,7 +1,7 @@
 ## 2026-05-28 HEADLINE NEGATIVE RESULT: Distilled-KAN Prompt-Injection Replacement Refuted by Full-Corpus DeLong
 
 **Question (origin):** 2026-05-26 operator conversation comparing Carnot
-to polygraf.ai asked "how many examples to feel confident in an EBM
+to a commercial LLM-safety gateway product asked "how many examples to feel confident in an EBM
 replacement for gpt-oss-safeguard:20b?" The answer (sample-size rigor:
 ~15k corpus + paired DeLong non-inferiority + Garak adversarial) was
 queued as the v4 prompt-injection KAN task chain.
@@ -52,7 +52,7 @@ say the replacement does NOT hold.
 
 **Implications:**
 1. **Do NOT claim** "Carnot's KAN replaces gpt-oss-safeguard:20b" in
-   the Polygraf comparison, paper-v6, or anywhere. It is refuted.
+   the safety-gateway comparison, paper-v6, or anywhere. It is refuted.
 2. **This negative is credibility-positive and publishable** — frame
    it as "we rigorously tested whether a distilled KAN can replace a
    20B safety model; single-shard viability (0.79) does not survive
@@ -72,7 +72,7 @@ say the replacement does NOT hold.
 - exp3269 (full-corpus split manifest + DeLong gate plan)
 - CLAUDE.md "Adversarial Artifact Verification + Sample-Size Rigor"
   — the discipline that caught the over-claim
-- 2026-05-26 operator Polygraf-comparison conversation (origin)
+- 2026-05-26 operator safety-gateway-comparison conversation (origin)
 - ops/known-issues.md Prompt-Injection v4 priority (now resolved-negative)
 
 ## 2026-05-28 Post-.304 Planning Sweep (Milestone 2026.05.305)
