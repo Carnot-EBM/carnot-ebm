@@ -6620,3 +6620,4 @@ web search |
 | 2026-05-28 09:52 UTC | Mandated SOTA GGUF receipt v9 gated on llama.cpp C | OK | 81 passed in 3.71s |
 | 2026-05-28 10:13 UTC | Prompt-injection v4 teacher-label shard v3 gated o | OK | 81 passed in 4.09s |
 | 2026-05-28 10:27 UTC | Prompt-injection KAN train/eval shard v3 gated on  | OK | 81 passed in 3.99s |
+| 2026-05-28 10:39 UTC | Capstone .302 — CUDA recovery + SOTA receipt + v4  | OK | 81 passed in 3.89s |

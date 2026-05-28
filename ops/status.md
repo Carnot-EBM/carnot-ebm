@@ -1,6 +1,21 @@
 # Carnot — Operational Status
 
-**Last Updated:** 2026-05-28 (Milestone 2026.05.301 research planning staged)
+**Last Updated:** 2026-05-28 (Milestone 2026.05.302 operational retrospective complete)
+
+## Session 2026-05-28 - Milestone 2026.05.302 Operational Retrospective Complete
+
+Authoritative TIMING DATA reports no experiment commits after activation for
+milestone 2026.05.302. The retrospective preserves the locked numeric fields:
+`total_wall_time_minutes=0`, `experiments_completed=0`,
+`compute_bound_experiments_count=0`, `slowest_experiments=[]`, and
+`gpu_idle_on_compute_bound_tasks=null`. The GPU snapshot showed both RTX 3090s
+idle, but no GPU-idle bottleneck was recorded because there were 0 compute-bound
+timing rows.
+
+Updated `results/operational_retro_2026_05_302.json`, `ops/changelog.md`, and
+`docs/research-log.md`. Left `docs/roadmap.md`, `docs/index.html`,
+`README.md`, `scripts/research_conductor.py`, and `research-roadmap.yaml`
+untouched.
 
 ## Session 2026-05-28 - Milestone 2026.05.301 Research Planning Staged
 

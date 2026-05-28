@@ -1,0 +1,29 @@
+{
+  "schema": "carnot.operational_retro.v64",
+  "milestone": "2026.05.302",
+  "generated_at": "2026-05-28T10:44:19Z",
+  "retro_type": "operational_full",
+  "total_wall_time_minutes": 0,
+  "experiments_completed": 0,
+  "compute_bound_experiments_count": 0,
+  "slowest_experiments": [],
+  "gpu_idle_on_compute_bound_tasks": null,
+  "summary": "Milestone 2026.05.302 has 0 completed experiments, 0 compute-bound experiments, and 0 total wall-time minutes in the locked timing fields. Slowest compute-bound runs, compute-bound GPU efficiency, and parallel multi-model runner behavior are no data available this milestone.",
+  "bottlenecks_identified": [
+    "no data available this milestone for slowest compute-bound experiments or wall-time causes because the TIMING DATA reports no experiment commits after activation.",
+    "GPU idleness is not a compute-bound bottleneck claim for this retrospective because compute_bound_experiments_count is 0 and gpu_idle_on_compute_bound_tasks is null.",
+    "DualGPURunner engagement is no data available this milestone because no parallel multi-model compute-bound timing rows are present."
+  ],
+  "improvements_suggested": [
+    "Add an activation-to-first-experiment heartbeat that alerts before retrospective generation when the milestone-scoped timing ledger is empty.",
+    "Have the retrospective writer switch to a compact no-data template when experiments_completed is 0, rather than drafting efficiency analysis from GPU state alone.",
+    "Persist compute_bound and parallel_model_count fields on every future timing row so GPU-idle and DualGPURunner conclusions remain evidence-gated."
+  ],
+  "top_3_highest_leverage_actions": [
+    "Create a no-commit timing sentinel at milestone closeout.",
+    "Alert operators when activation has occurred but no experiment commit has landed before the retro task.",
+    "Keep GPU and DualGPURunner checks gated on compute_bound timing rows with model-count metadata."
+  ],
+  "estimated_time_savings_pct": 0,
+  "meta_reflection": "The idle RTX 3090 snapshot is not enough to infer wasted compute because the timing data contains 0 compute-bound experiments. I did not import experiment IDs, durations, or performance metrics from any prior milestone."
+}

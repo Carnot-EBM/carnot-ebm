@@ -1,5 +1,9 @@
 # Carnot — Changelog
 
+## 2026-05-28 (Milestone 2026.05.302 Operational Retrospective)
+
+- [outer-loop] Wrote `results/operational_retro_2026_05_302.json` (schema `carnot.operational_retro.v64`). The authoritative timing source reports no experiment commits since activation, leaving `total_wall_time_minutes=0`, `experiments_completed=0`, `compute_bound_experiments_count=0`, `slowest_experiments=[]`, and `gpu_idle_on_compute_bound_tasks=null`. Both RTX 3090s were idle in the GPU snapshot, but no GPU-idle bottleneck was recorded because there were 0 compute-bound timing rows. Longest compute-bound run, compute-bound GPU efficiency, and parallel multi-model DualGPURunner coverage are no data available this milestone. Recommended tooling change: emit an activation-to-first-experiment heartbeat plus a no-commit timing sentinel before retrospective drafting.
+
 ## 2026-05-28 (Milestone 2026.05.301 Research Planning)
 
 - [outer-loop] Planned milestone 2026.05.301 as "Selected-Python CUDA Repair + Constraint-Tax Prompt Injection + Lifelong FR-11 Retention" after the operator confirmed all `.300` tasks completed. Used `results/experiment_3245_capstone_v300.json` and recent ops artifacts as authority: `.300` remained `paper_ready=false` with `publication_blocker_count=106`, `local_sota_receipt_status=blocked`, prompt-injection v4 and DCCD work gate-blocked behind the missing local SOTA receipt, FR-11 failure memory completed controller-side, and `next_top_gap=repair_selected_python_torch_cuda_before_exp3237`.
