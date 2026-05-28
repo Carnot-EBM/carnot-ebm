@@ -6633,3 +6633,4 @@ web search |
 | 2026-05-28 13:53 UTC | Prompt-injection KAN full-corpus DeLong eval | OK | 81 passed in 3.69s |
 | 2026-05-28 14:13 UTC | Prompt-injection v4 Garak and DataFlip red-team ev | OK | 81 passed in 4.67s |
 | 2026-05-28 14:55 UTC | Clean local SOTA verifier rerun v14 | OK | 81 passed in 3.79s |
+| 2026-05-28 14:57 UTC | Repair gate decision v8 after v4, Garak, and clean | GATE_BLOCK | 2 of 3 gate(s) failed; first failure: exp3274-prompt-injection-v4-garak-dataflip |
