@@ -126,14 +126,29 @@ def _parse_priorities(known_issues_text: str) -> list[Priority]:
 def _count_milestones_completed_since(
     research_complete_text: str, filed: date
 ) -> int:
-    """Count milestone-completion records dated >= the priority's filed date."""
+    """Count milestone-completion records dated STRICTLY AFTER the filed date.
+
+    Why strictly-after (>) and not on-or-after (>=): the conductor closes
+    ~30 milestones per day, so a priority filed *today* would otherwise
+    inherit every same-day completion as "pending" and be flagged overdue
+    the moment it is filed. pending_count is meant to measure how many
+    *subsequent* planning cycles skipped the priority, so only milestones
+    that completed on a later calendar day count. A priority filed today
+    has pending_count 0 today and begins accruing tomorrow — giving it a
+    fair grace window before the >=3 forcing threshold can fire.
+
+    Date granularity is coarse (it can't distinguish two milestones on the
+    same later day), but milestone IDs are sequential and the conductor
+    advances multiple per day, so a genuinely-stale priority (filed days
+    ago) still crosses the threshold reliably.
+    """
     n = 0
     for m in COMPLETED_PATTERN.finditer(research_complete_text):
         try:
             ts = datetime.strptime(m.group(1), "%Y-%m-%d").date()
         except ValueError:
             continue
-        if ts >= filed:
+        if ts > filed:
             n += 1
     return n
 

@@ -320,7 +320,147 @@ tasks are not.
 
 ## MANDATORY-NEXT-MILESTONE PRIORITIES (.86 planner — hard pickup per CLAUDE.md)
 
-### NEW 2026-05-26 (20:50Z): Prompt-Injection EBM Distillation v4 — 15k Corpus + Garak Red-Team + DeLong Non-Inferiority (.294+ MANDATORY)
+### NEW 2026-05-28: Verifier-Ensemble vs Adaptive Prompt-Injection Corpus — does AND-composition beat the single-KAN 0.475?
+
+**Origin:** 2026-05-28 follow-up to the v4 negative result (see
+research-references.md "HEADLINE NEGATIVE RESULT: Distilled-KAN
+Prompt-Injection Replacement Refuted"). A SINGLE distilled 16-knot KAN
+sidecar collapsed to AUROC 0.475 (random) on the full 15k adaptive
+prompt-injection corpus (exp3273), DeLong non-inferiority rejected,
+leakage audit passed → genuine capability ceiling, not an artifact.
+
+The autopsy retired the single-KAN-sidecar path. But the sidecar was
+never Carnot's actual thesis — the thesis is the **k=15 cross-mechanism
+verifier ensemble** where AND-composition shrinks the joint null space
+exponentially (Spera Theorem 9.2 / Welch-ceiling work). The single KAN
+failed precisely because adaptive attacks (DataFlip-KAD, encoding,
+tool/RAG indirect injection, long-reasoning) perturb the surface
+features a lone distilled verifier learns. The open question this task
+answers: **does the full ensemble beat a single verifier on the SAME
+adaptive corpus, where any one mechanism fails?**
+
+This is the architecturally-honest test of Carnot's premise on the
+prompt-injection domain. It reuses the exp3273 held-out corpus + DeLong
+harness that are already built — no new corpus assembly or teacher
+labeling needed.
+
+**The task to queue:**
+
+```yaml
+- id: exp<next>
+  milestone: "2026.05.<NNN>"
+  deliverable: "results/experiment_<next>_verifier_ensemble_vs_adaptive_injection_corpus_v1.json"
+  title: "Verifier-Ensemble vs Adaptive Prompt-Injection Corpus v1"
+  priority: high
+  agent_type: gemini
+  model: gemini-3.1-pro-preview
+  max_turns: 50
+  estimated_wall_time_min: 60
+  track: evidence
+  inference_substrate: verifier_ensemble_against_cached_candidates
+  requires_gpu: true
+  prior_failures:
+    - experiment_id: exp3273-prompt-injection-kan-full-corpus-delong-eval-v1
+      verdict: "complete: full_corpus_auroc=0.475326; delong_noninferiority_passed=false; retire_from_prompt_injection_headline"
+      addressed_by: "exp3273 tested a SINGLE distilled KAN sidecar, which collapsed to random (0.475) on the adaptive corpus. This task tests the FULL k=15 cross-mechanism verifier ensemble (AND-composition + energy-rank scoring) on the SAME held-out corpus — a structurally different approach (ensemble vs lone sidecar) per CLAUDE.md Spera/Welch joint-null-space theory. The hypothesis: cross-mechanism diversity covers the surface-feature null space a single KAN falls into. retire_if_same_verdict: if the ensemble also lands ~0.475, the single-axis stall extends to the ensemble on the injection domain and the ensemble-replacement path retires too."
+      retire_if_same_verdict: true
+
+  PRECONDITIONS (step 0, before any scoring):
+    a. exp3273 corpus + candidate scores present:
+       ls results/experiment_3273_prompt_injection_kan_full_corpus_delong_eval_v1.json
+       AND results/experiment_3269_prompt_injection_v4_full_corpus_split_manifest_v1.json
+       — if absent, honest_verdict blocked_adaptive_corpus_missing.
+    b. The k=15 verifier ensemble callable in batch mode over cached
+       candidates. If not, blocked_ensemble_not_callable.
+    c. CUDA available for the model-based ensemble verifiers (semantic,
+       ThinkPRM): python -c "import torch; assert torch.cuda.is_available()".
+       If not, blocked_cuda_unavailable.
+
+  CONCRETE STEPS:
+    1. Load the exp3273 held-out adaptive corpus (n=4000 paired rows,
+       same eval set the single KAN scored 0.475 on).
+    2. Score every candidate with the FULL k=15 ensemble: per-verifier
+       decision + AND-composed ensemble decision + energy-rank scalar.
+    3. Compute ensemble AUROC + AUPRC on the paired rows.
+    4. DeLong paired comparison, two references:
+       (a) vs the single KAN (exp3273, 0.475) — does the ensemble beat it?
+       (b) vs gpt-oss-safeguard:20b teacher labels — replacement-grade?
+    5. Break down ensemble accuracy by attack category (dataflip_kad,
+       encoding, tool_rag_indirect, long_reasoning, static) — which
+       categories does cross-mechanism diversity help on, which not?
+    6. (secondary, non-gating) per-verifier AUROC on the adaptive corpus
+       to identify which mechanisms carry signal vs share the null space.
+
+  REQUIRED ARTIFACT FIELDS:
+    honest_verdict:
+      principle: "Terminal verdict must start with complete:/success:/passed:/shipped_ per Verdict Terminal-Prefix Discipline."
+    inference_substrate:
+      value: verifier_ensemble_against_cached_candidates
+      principle: "Scores the k=15 ensemble against the cached exp3273 candidates; no new LLM generation. Model-based verifiers still need GPU, hence requires_gpu."
+    ensemble_auroc_adaptive_corpus:
+      principle: "The headline: full-ensemble AUROC on the same corpus where the single KAN scored 0.475. > 0.475 means the ensemble covers null space the sidecar missed."
+    ensemble_auprc_adaptive_corpus:
+      principle: "AUPRC complements AUROC under the corpus's class imbalance (2761 pos / 1239 neg in exp3273)."
+    delong_vs_single_kan:
+      principle: "Paired DeLong: ensemble minus single-KAN AUROC + 95% CI. Confirms whether the ensemble is significantly better than the lone sidecar."
+    delong_vs_teacher_20b:
+      principle: "Paired DeLong non-inferiority vs gpt-oss-safeguard:20b at margin -0.02. This is the replacement-grade test."
+    per_category_auroc:
+      principle: "Adaptive-attack categories are where the single KAN failed; per-category breakdown shows whether the ensemble's diversity helps on adaptive attacks specifically or only on static patterns."
+    per_verifier_auroc:
+      principle: "Identifies which of the k=15 mechanisms carry injection signal vs share the joint null space (Spera/orthogonality diagnostic)."
+    random_seed:
+      principle: "Determinism precondition for reproducibility."
+    reproducibility_checksum:
+      principle: "Content hash of (corpus + ensemble config + seed) for replay."
+    duration_s:
+      principle: "Real verifier scoring takes wall time; the 1s floor for verifier-ensemble-against-cached-candidates applies."
+
+  ACCEPTANCE GATES:
+    - condition: "ensemble_auroc_adaptive_corpus > 0.55 AND delong_vs_single_kan lower-CI > 0"
+      principle: "G1 beats-the-sidecar: the ensemble is meaningfully above the 0.475 random floor AND significantly better than the single KAN. Below this, cross-mechanism diversity did not help on injection — confirms the orthogonality-stall extends to the ensemble (retire_if_same_verdict fires)."
+    - condition: "delong_vs_teacher_20b non-inferiority passes (lower-CI > -0.02)"
+      principle: "G2 replacement-grade: the ensemble statistically matches the 20B teacher on the adaptive corpus. This is the bar the single KAN failed; clearing it would reopen the (ensemble-based, not sidecar-based) replacement claim."
+
+  TERMINAL VERDICTS (all start with complete:):
+    - All gates pass -> "complete: ensemble_replacement_grade_on_adaptive_injection"
+    - G1 passes, G2 fails -> "complete: ensemble_beats_sidecar_but_below_replacement_grade"
+    - G1 fails -> "complete: ensemble_no_better_than_single_verifier_injection_stall_confirmed" (retire_if_same_verdict)
+```
+
+**Why this is the right next experiment (not another sidecar):** the v4
+result + CLAUDE.md project_orthogonality_stall + project_null_space_mimicry_attack
+all converge — a lone distilled verifier has a compute-immune ceiling
+on adversarial inputs. The ensemble + AND-composition is the project's
+actual answer to that. This task either validates the thesis on the
+injection domain (ensemble beats the sidecar) or falsifies it
+(ensemble shares the null space too), and both are publishable. It is
+cheap because it reuses the exp3273 corpus + DeLong harness.
+
+**Cross-references:**
+- research-references.md "HEADLINE NEGATIVE RESULT" (the v4 refutation)
+- exp3273 (single-KAN 0.475) / exp3269 (corpus manifest)
+- CLAUDE.md project_orthogonality_stall, project_null_space_mimicry_attack,
+  Spera Theorem 9.2 reference
+- reference_anthropic_teaching_why (principle-grounded co-training as a
+  follow-on if the ensemble also stalls)
+
+### RESOLVED-NEGATIVE (was NEW 2026-05-26 20:50Z): Prompt-Injection EBM Distillation v4 — REFUTED by full-corpus DeLong
+
+**Resolution (2026-05-28):** This priority is CLOSED with a negative
+result. The single distilled 16-knot KAN does NOT reach replacement
+grade — full-corpus AUROC 0.475326 (random), DeLong non-inferiority
+rejected (CI [-0.078814, -0.061267]), leakage audit passed, autopsy
+decision retire_from_prompt_injection_headline. Full writeup in
+research-references.md "HEADLINE NEGATIVE RESULT: Distilled-KAN
+Prompt-Injection Replacement Refuted". The single-sidecar path is
+retired; the ensemble-vs-adaptive-corpus follow-up (above) is the
+architecturally-honest successor. The original task spec is preserved
+below for the historical record (the methodology — 15k corpus + DeLong
++ Garak — was correct and is what produced the trustworthy negative).
+
+(header renamed from "### NEW" so the overdue-priority lint no longer
+treats this as an open pending priority — the work is done.)
 
 **Origin:** 2026-05-26 operator conversation comparing Carnot to
 a commercial AiBC-style LLM-safety gateway. The gateway's prompt-injection control is the

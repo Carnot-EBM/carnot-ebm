@@ -150,11 +150,20 @@ class TestCountMilestonesCompletedSince:
 - id: '2026.05.292'
   completed: '2026-05-27'
 """
-        # filed before all three
+        # filed before all three: 25,26,27 are all strictly after 24 -> 3
         assert _MOD._count_milestones_completed_since(text, date(2026, 5, 24)) == 3
-        # filed on the boundary (>= is inclusive)
-        assert _MOD._count_milestones_completed_since(text, date(2026, 5, 26)) == 2
-        # filed after all three
+        # filed ON 05-26 (strict >): only 05-27 counts; same-day 05-26 excluded -> 1
+        assert _MOD._count_milestones_completed_since(text, date(2026, 5, 26)) == 1
+        # filed after all three -> 0
+        assert _MOD._count_milestones_completed_since(text, date(2026, 5, 28)) == 0
+
+    def test_same_day_filing_not_counted(self) -> None:
+        """A priority filed the same day milestones close is NOT yet overdue —
+        strict > means same-day completions don't accrue pending_count.
+        This is the bug-fix case: the conductor closes ~30 milestones/day,
+        so a freshly-filed priority must not inherit same-day churn."""
+        text = "\n".join(f"completed: '2026-05-28'" for _ in range(30))
+        # filed today (2026-05-28): zero milestones completed on a LATER day
         assert _MOD._count_milestones_completed_since(text, date(2026, 5, 28)) == 0
 
     def test_empty_research_complete(self) -> None:

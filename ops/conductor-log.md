@@ -6666,3 +6666,4 @@ web search: https://docs.garak.ai/garak/examples/pr |
 | 2026-05-28 22:28 UTC | Evidence substrate corrigendum and KAN no-retry le | OK | 81 passed in 3.12s |
 | 2026-05-28 22:40 UTC | Prefix-closed Garak rogue-string guard pilot v1 | OK | 81 passed in 3.52s |
 | 2026-05-28 23:11 UTC | Red-team energy telemetry and routing policy v1 | OK | 81 passed in 3.22s |
+| 2026-05-28 23:42 UTC | Garak defense ablation v1 | OK | 81 passed in 3.43s |
