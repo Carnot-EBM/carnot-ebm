@@ -12745,3 +12745,52 @@ remains complete, `clean_sota_receipt_eligible=false`, and
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-REPORT-3268 | Implemented (`python/carnot/reporting/sota_receipt_methodology_supplement_3268.py`) | Implemented (`tests/python/test_experiment_3268_sota_receipt_methodology_supplement.py`) |
+
+### REQ-REPORT-3269: Prompt-Injection V4 Full-Corpus Split Manifest v1
+
+The repository shall provide an Exp 3269 prompt-injection v4 full-corpus split
+manifest builder that writes
+`results/experiment_3269_prompt_injection_v4_full_corpus_split_manifest_v1.json`.
+The workflow MUST be aggregation and planning only: it SHALL reuse the `.302`
+2,000-example shard as shard 1, define shards 2 through 7 at 2,000 target
+examples each, define a 1,000-example Garak/adaptive seed set, and make the
+15,000-example target explicit without running teacher labeling, KAN training,
+DeLong statistics, Garak, repair, the conductor, pushes, or the failed
+monolithic Exp 3222 shape.
+
+The manifest MUST include `full_corpus_manifest_ready`, `target_total_examples`,
+`completed_seed_examples`, `planned_new_examples`, `shard_plan`,
+`garak_seed_target`, `class_taxonomy`, `leakage_audit_plan`,
+`delong_gate_plan`, `downstream_deliverables`, `random_seed`,
+`reproducibility_checksum`, `duration_s`, and `honest_verdict`. The shard plan
+MUST include aligned-instruction benign examples, misaligned instruction
+attacks, non-instruction benign examples, DataFlip/KAD-adaptive patterns, long
+reasoning-heavy attacks, encoding attacks, and tool/RAG-style indirect
+injection cases. The split ledger MUST define train/eval/holdout/Garak splits,
+reserve Garak/adaptive rows from training, and require paired DeLong AUROC
+comparison with a non-inferiority margin before any replacement-grade KAN or
+repair-gate claim. `honest_verdict` MUST begin with one of `complete:`,
+`success:`, `passed:`, or `shipped:`.
+
+#### SCENARIO-REPORT-3269: Full-Corpus Split Manifest Gates Remaining Labels
+
+**Given** Exp 3264 reports a ready 2,000-example teacher-label shard and Exp
+3265 reports a ready non-headline shard KAN viability result
+**When** the Exp 3269 manifest builder runs
+**Then** it writes
+`results/experiment_3269_prompt_injection_v4_full_corpus_split_manifest_v1.json`
+with all required schema fields, sets `full_corpus_manifest_ready=true`,
+records `target_total_examples=15000`, `completed_seed_examples=2000`,
+`planned_new_examples=13000`, defines shards 1 through 7 plus a 1,000-example
+Garak/adaptive seed set, names concrete downstream deliverable paths for
+teacher labeling, assembly/leakage audit, full-corpus KAN DeLong evaluation,
+Garak/DataFlip red-team evaluation, and repair-gate decision tasks, and emits
+an `honest_verdict` beginning with `complete:`. If the `.302` seed shard is
+missing or not ready, the artifact remains complete but leaves
+`full_corpus_manifest_ready=false` with the exact blocker.
+
+## Implementation Status (REQ-REPORT-3269)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-3269 | Implemented (`python/carnot/reporting/prompt_injection_v4_full_corpus_split_manifest_3269.py`) | Implemented (`tests/python/test_experiment_3269_prompt_injection_v4_full_corpus_split_manifest.py`) |

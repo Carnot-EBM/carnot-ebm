@@ -6625,3 +6625,4 @@ web search |
 | 2026-05-28 11:53 UTC | Plan milestone 2026.05.303 | OK | 14 tasks proposed |
 | 2026-05-28 11:55 UTC | Milestone 2026.05.303 activated | OK | 14 tasks queued |
 | 2026-05-28 12:07 UTC | Close .302 ledger and open .303 corpus queue | OK | 81 passed in 3.36s |
+| 2026-05-28 12:22 UTC | SOTA receipt methodology supplement v1 | OK | 81 passed in 3.45s |
