@@ -1,0 +1,24 @@
+{
+  "experiment": 3253,
+  "schema": "blocked_gate_check_v1",
+  "run_date": "2026-05-28",
+  "started_at": "2026-05-28T07:51:06.851431+00:00",
+  "finished_at": "2026-05-28T07:51:06.851431+00:00",
+  "duration_s": 0.0,
+  "status": "blocked",
+  "title": "Prompt-injection KAN shard train/eval v2 with constraint-tax guardrail",
+  "honest_verdict": "blocked_gate_check_failed",
+  "gate_check_summary": "1 of 1 gate(s) failed; first failure: exp3252-prompt-injection-teacher-label-shard-v2.teacher_label_shard_ready (upstream artifact not found for task id 'exp3252-prompt-injection-teacher-label-shard-v2')",
+  "gates_evaluated": [
+    {
+      "upstream": "exp3252-prompt-injection-teacher-label-shard-v2",
+      "artifact_field": "teacher_label_shard_ready",
+      "op": "==",
+      "expected": true,
+      "actual": null,
+      "passed": false,
+      "reason": "upstream artifact not found for task id 'exp3252-prompt-injection-teacher-label-shard-v2'"
+    }
+  ],
+  "blocked_at_layer": "conductor_pre_gate"
+}
