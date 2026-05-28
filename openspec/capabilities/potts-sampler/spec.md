@@ -92,4 +92,39 @@ Sub-requirements:
 - REQ-POTTS-008-4: `carnot-python` SHALL expose the KV260 Potts sampler through PyO3 without requiring KV260 hardware at import time.
 - REQ-POTTS-008-5: The Exp 1704 artifact SHALL record the Rust binding path, Python binding name, driver interface, register map, spec traces, tests run, and whether the binding is ready.
 
+## REQ-POTTS-009: Experiment 3256 P-Dit/Potts Partial-Credit Diagnostic
+
+Experiment 3256 MUST write
+`results/experiment_3256_pdit_potts_multistate_sampler_diagnostic_v1.json` as
+a CPU/simulation-only diagnostic manifest mapping p-dit/Potts multi-state
+variables to Carnot partial-credit verifier rows while preserving exact
+fallback authority.
+
+Sub-requirements:
+- REQ-POTTS-009-1: The artifact SHALL include `experiment_id`, `task_id`,
+  `milestone`, `inference_substrate`, `principle_annotations`,
+  `pdit_potts_mapping_ready`, `candidate_verifier_row_types`,
+  `q_state_energy_mapping`, `exact_fallback_preserved`,
+  `hardware_speedup_claim_allowed`, `retired_pimi_scope_reopened`,
+  `thrml_scaling_sweep_reopened`, `future_gated_experiment_contract`,
+  `random_seed`, `reproducibility_checksum`, and `honest_verdict`.
+- REQ-POTTS-009-2: The selected verifier row types SHALL include q-state
+  partial-credit labels that are more natural than binary Ising spins and SHALL
+  define Potts/p-dit variables, state labels, and deterministic energy tables.
+- REQ-POTTS-009-3: The diagnostic SHALL set
+  `hardware_speedup_claim_allowed=false`, `retired_pimi_scope_reopened=false`,
+  and `thrml_scaling_sweep_reopened=false`.
+- REQ-POTTS-009-4: Exact fallback SHALL be preserved for every candidate row
+  type through explicit verifier checks, and any future experiment contract
+  SHALL be gated on exact fallback plus no retired-scope reopening.
+
+### SCENARIO-POTTS-009
+
+**Given** the p-dit and Potts references plus prior p-dit accounting artifacts
+are available in the repository
+**When** the Exp 3256 diagnostic manifest builder runs
+**Then** it writes the required JSON artifact with q-state partial-credit row
+mappings, exact fallback gates, denied hardware/speedup/retired-scope claims,
+a stable reproducibility checksum, and an `honest_verdict` beginning with
+`complete:` that does not claim live hardware, THRML, Kona, or speedup evidence.
 
