@@ -4,42 +4,46 @@
 # docs_audit_report — 2026-05-28
 
 ## TL;DR (stranger's 30-second take)
-I would close the tab immediately. The page appears to be corrupted by a broken build script that injected raw temporary testing file paths directly into the CSS and HTML text, and the remaining copy is completely buried in internal acronyms.
+I'm closing the tab because I'm drowning in a wall of inside-baseball metrics, acronyms, and twelve dense result cards. It feels like I stumbled into an internal lab notebook rather than a product designed for me to use.
 
 ## TOP 3 PROBLEMS
-1. Build corruption/injection: Raw testing paths (`@.tmp-pytest/...`) are hardcoded into fonts, CSS media queries, and the "Live benchmark" result card.
-2. Extreme Internal Jargon: The text is dense with undefined internal terms (FoVer, CCTU, PREM, VeriCoT).
-3. Fabrication Signals: Perfect evaluation scores (1.0 TP rate, 60/60 attacks) are presented without external credibility anchors or links to the claimed artifacts.
+1. Absurdly long "Evidence" section (12 cards) filled with literal test file paths and internal benchmark names.
+2. The "Recent progress" card reads like a defensive commit message, not a landing page value prop.
+3. Unbelievably perfect "100%" metrics mixed with hyper-specific decimal scores destroy credibility.
 
 ## DETAILED FINDINGS
 ### Bloat
-- Results grid — 12 cards — Cap at 6. A stranger will skip this entire wall of stats.
-- Blog list — 7 cards — Cap at 3. Four posts published on the exact same day (2026-05-22) looks like a raw documentation dump rather than a curated blog.
+- "What you can check" (Features bento grid) — 7 cards (bodies up to 61 words) — Cut to 4 essential cards, cap at 30 words each.
+- "Evidence" (Results grid) — 12 cards — Strangers won't read 12 distinct metrics. Cap at 4-6 max.
+- "Writing" (Blog grid) — 7 cards — Too many choices for a landing page. Cap at 3 recent/major posts.
 
 ### Internal jargon
-- Results grid (Live benchmark) — `Qwen3.6-35B-A3B` and the injected `spilled-energy-2602-18671:real.txt` path — A stranger has no idea what this is.
-- Features (TTC & PREM) — `Test-Time Compute (TTC)` & `Process-Reward Energy Model (PREM)` — Dropped as acronyms with zero context on what they mean for the user.
-- Recent progress card — `FoVer`, `5-seed dual-condition`, `architecture-only` — Sounds like internal lab notes, not a value proposition.
+- "Stats bar" & "Recent progress" card — "5-seed dual-condition", "FoVer", "architecture-only" — A stranger doesn't know your internal dataset names or eval setups.
+- "Evidence" section (Live benchmark card) — "@.tmp-pytest/pytest-of-ianblenke/.../spilled-energy-2602-18671:real.txt" — You leaked a literal pytest artifact path into your public headline copy.
+- "Evidence" section — "IterativeSelfRepair", "EstimationVerifier", "SVAMP AUC", "VeriCoT", "CCTU", "PRM-BiasBench-style" — Internal module names and niche benchmarks mean nothing to an outsider.
+- "Features" section (TTC card) — "PREM" — Dropping an unexplained acronym for an internal component.
 
 ### Per-milestone narrative
-- Stats bar — "382 Completed milestones" and "2,700 Experiment runs" — Reads like an internal status dashboard rather than a reason to adopt the framework.
+- "Recent progress" card — "Repinned from v2 0.9857 after pre-submission adversarial audit; see Why We Report Two AUROCs Now." — This is internal status reporting and retrospective defense, not introductory marketing copy.
 
 ### Inconsistencies
-- AUROC claims — The hero stat claims `0.9131`, the Recent Progress card mentions `0.9857` (v2), the Safety card claims `0.91`, and Math Reasoning claims `0.90`. This is confusing and dilutes the main headline metric.
+- The hero stats bar claims "0.9131 AUROC (5-seed dual-condition)", but the Results cards claim "0.91 AUROC" for safety and "0.90 AUC" for math. A stranger has no idea what the canonical metric actually represents across the framework.
 
 ### Missing essentials
-- Verifiable trust — The intro to the Results section says "Every number below is backed by a checked-in experiment artifact", but none of the result cards actually link to these artifacts. A stranger has no reason to trust the perfect scores.
+- Who maintains this? The footer says "Ian Blenke / Carnot Project", but there's no context on whether this is an academic lab, an open-source collective, or a solo project. Why should I trust the long-term maintenance of this tool?
 
 ### Fabrication signals
-- Results: Math extraction — "GSM8K extraction TP rate: 0.5 → 1.0" (A perfect 1.0 score sets off bullshit detectors).
-- Results: Adversarial audit — "k=5 ensemble catches 60/60 attacks" (100% success rate on exactly 60 samples looks artificially perfect).
+- Results: "Two-GPU parallel retrain — 2.0x speedup" (perfect linear scaling is highly suspect).
+- Results: "Math extraction — GSM8K extraction TP rate: 0.5 -> 1.0" (perfect 100% extraction rate).
+- Results: "Adversarial audit — k=5 ensemble catches 60/60 attacks" (perfect 100% catch rate without a credibility anchor).
 
 ## WHAT'S WORKING
-- The one-sentence pitch ("Catch the mistakes your LLM confidently makes up.") is excellent, clear, and punchy.
-- The Quickstart section is highly effective at showing exactly how easy the API is to integrate.
+- The "Extract -> Check -> Repair" 3-step explanation is clear, concise, and immediately understandable.
+- The Python Quickstart code block effectively proves that this is a real, usable library with a simple API.
 
 ## RECOMMENDED OPERATOR ACTIONS
-1. Remove all injected `@.tmp-pytest/...` string paths from the HTML head (fonts, CSS media queries) and the "Live benchmark" result card immediately.
-2. Cut the Results grid from 12 cards down to the 6 most impactful ones, and add explicit links to the experiment artifacts for the "1.0" and "60/60" claims.
-3. Purge the internal acronyms (FoVer, CCTU, PREM, VeriCoT) and replace them with plain-English descriptions of what was tested.
-4. Consolidate the AUROC claims so the stranger understands which one is the definitive headline metric.
+1. Delete the "Recent progress" card from the hero section entirely; it belongs in release notes or a blog post.
+2. Purge the leaked test artifact path (`@.tmp-pytest/...`) from the "Live benchmark" results card immediately.
+3. Prune the "Evidence" grid from 12 cards down to the 4-6 most impressive, universally understandable metrics.
+4. Rewrite the retained Results cards to remove internal component names (e.g., change "IterativeSelfRepair" to "Auto-repair").
+5. Soften or anchor the perfect "100%" claims in the Results section so they don't look fabricated.
