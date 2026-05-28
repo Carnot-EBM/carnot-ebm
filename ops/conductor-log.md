@@ -6657,3 +6657,4 @@ web search: https://docs.garak.ai/garak/examples/pr |
 | 2026-05-28 20:00 UTC | Gated repair gate decision v9 after Garak and abst | OK | 81 passed in 3.34s |
 | 2026-05-28 20:14 UTC | Gated SOTA repair micro-panel v10 | OK | 81 passed in 3.08s |
 | 2026-05-28 20:26 UTC | FR-11 Garak and abstention memory replay v1 | OK | 81 passed in 2.67s |
+| 2026-05-28 20:43 UTC | Evidence matrix v36 | OK | 81 passed in 3.64s |

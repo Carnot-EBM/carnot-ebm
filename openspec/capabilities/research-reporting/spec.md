@@ -13639,3 +13639,69 @@ beginning with `complete:` without claiming publication readiness.
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-REPORT-3292 | Implemented (`python/carnot/reporting/evidence_matrix_v36_3292.py`) | Implemented (`tests/python/test_experiment_3292_evidence_matrix_v36.py`) |
+
+### REQ-REPORT-3293: Capstone V304 Publication Gate Closeout
+
+The repository shall provide an Exp 3293 milestone `.304` capstone generator
+that writes `results/experiment_3293_capstone_v304.json` by reading
+`results/experiment_3292_evidence_matrix_v36.json` as the authoritative `.304`
+matrix and `results/experiment_3280_capstone_v303.json` as the prior capstone.
+The workflow MUST be aggregation only. It MUST NOT run model inference, CUDA
+probes, teacher labeling, KAN training, Garak, repair, verifier scoring,
+hardware commands, the conductor, pushes, activate the next milestone, modify
+`research-roadmap.yaml`, modify `scripts/research_conductor.py`, or reconcile
+`ops/status.md`, `ops/changelog.md`, or `_bmad/traceability.md` when the
+conductor delegates reconciliation to a separate step.
+
+The capstone MUST decide `paper_ready` using only clean, unblocked,
+headline-eligible evidence from matrix v36. It MUST NOT treat Garak
+availability alone, abstention calibration alone, a bounded or retired KAN
+sidecar, a reopened repair gate, a diagnostic repair micro-panel, or
+controller-memory FR-11 replay as publication readiness while matrix v36 still
+reports blocked, flagged, sidecar-only, carried-forward, or paper-blocking
+evidence. It MUST record whether Garak was made runnable, whether clean
+verifier abstention was calibrated for repair-gate input, whether the KAN
+sidecar boundary was resolved, whether the repair gate reopened, whether the
+repair micro-panel exists, and whether FR-11 controller-memory replay remained
+safe without foundation-weight updates.
+
+The terminal artifact MUST include `capstone_v304_ready`, `paper_ready`,
+`publication_blocker_count`, `blocker_delta_from_v303`, `garak_unblocked`,
+`clean_verifier_abstention_unblocked`, `kan_boundary_resolved`,
+`repair_gate_open`, `repair_micro_panel_ready`, `fr11_memory_replay_safe`,
+`next_top_gap`, `recommended_next_milestone_title`,
+`protected_files_untouched`, `random_seed`, `reproducibility_checksum`,
+`duration_s`, and `honest_verdict`. It SHALL also include source checksums,
+source summaries, gate status details, no-new-execution booleans, and protected
+file status. `publication_blocker_count` MUST be derived from matrix v36's
+paper-blocker ledger when present, and `blocker_delta_from_v303` MUST compare
+that count to the `.303` capstone's `publication_blocker_count`. `honest_verdict`
+MUST begin with one of `complete:`, `success:`, `passed:`, or `shipped:`.
+
+#### SCENARIO-REPORT-3293: Capstone V304 Closes Milestone Without Overclaiming
+
+**Given** capstone v303 reports `paper_ready=false`,
+`publication_blocker_count=105`, and `next_top_gap=unblock_garak_redteam_eval`
+**And** matrix v36 reports `matrix_v36_ready=true`, `paper_ready=false`,
+`paper_blocker_count=10`, ranked top gaps led by `pass_garak_redteam_gate`,
+Garak toolchain and full red-team evaluation availability, a failed Garak gate,
+clean-verifier abstention calibrated to zero, KAN retired from
+prompt-injection headline use, an open repair gate, a diagnostic/flagged repair
+micro-panel, and safe FR-11 controller-memory-only replay
+**When** the Exp 3293 capstone generator runs
+**Then** it writes `results/experiment_3293_capstone_v304.json` with all
+required schema fields, `capstone_v304_ready=true`, `paper_ready=false`,
+`publication_blocker_count=10`, `blocker_delta_from_v303=-95`,
+`garak_unblocked=true`, `clean_verifier_abstention_unblocked=true`,
+`kan_boundary_resolved=true`, `repair_gate_open=true`,
+`repair_micro_panel_ready=true`, `fr11_memory_replay_safe=true`,
+`next_top_gap=pass_garak_redteam_gate`, protected files untouched, no next
+milestone activation, no conductor or roadmap edits, no new model/Garak/repair
+execution, and an `honest_verdict` beginning with `complete:` without claiming
+publication readiness.
+
+## Implementation Status (REQ-REPORT-3293)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-3293 | Implemented (`python/carnot/reporting/capstone_v304_3293.py`) | Implemented (`tests/python/test_experiment_3293_capstone_v304.py`) |
