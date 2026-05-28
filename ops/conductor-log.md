@@ -6565,3 +6565,4 @@ web search |
 | 2026-05-28 04:15 UTC | Prompt-injection v4 CLI backend failure root-cause | OK | 81 passed in 3.45s |
 | 2026-05-28 04:30 UTC | CUDA driver boundary operator package for selected | OK | 81 passed in 4.56s |
 | 2026-05-28 04:44 UTC | Isolated CUDA and selected-Python smoke receipt | OK | 81 passed in 4.32s |
+| 2026-05-28 04:46 UTC | llama.cpp CUDA receipt smoke v2 gated on selected- | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp3236-isolated-cuda-python-smoke-v1.cuda |
