@@ -6590,3 +6590,5 @@ web search |
 | 2026-05-28 07:09 UTC | Selected-Python CUDA root-cause surgery ledger | OK | 81 passed in 3.35s |
 | 2026-05-28 07:11 UTC | Isolated selected-Python CUDA smoke v2 gated on ro | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp3247-selected-python-cuda-root-cause-su |
 | 2026-05-28 07:14 UTC | Isolated selected-Python CUDA smoke v2 gated on ro | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp3247-selected-python-cuda-root-cause-su |
+| 2026-05-28 07:16 UTC | Isolated selected-Python CUDA smoke v2 gated on ro | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp3247-selected-python-cuda-root-cause-su |
+| 2026-05-28 07:18 UTC | llama.cpp CUDA receipt smoke v3 gated on selected- | GATE_BLOCK | Pre-emptive skip: upstream retired (exp3248-isolated-cuda-selected-python-smoke- |

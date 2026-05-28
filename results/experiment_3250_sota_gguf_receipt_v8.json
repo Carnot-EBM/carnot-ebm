@@ -1,0 +1,24 @@
+{
+  "experiment": 3250,
+  "schema": "blocked_gate_check_v1",
+  "run_date": "2026-05-28",
+  "started_at": "2026-05-28T07:18:03.363229+00:00",
+  "finished_at": "2026-05-28T07:18:03.363229+00:00",
+  "duration_s": 0.0,
+  "status": "blocked",
+  "title": "Mandated SOTA GGUF receipt v8 gated on llama.cpp CUDA",
+  "honest_verdict": "blocked_gate_check_failed",
+  "gate_check_summary": "1 of 1 gate(s) failed; first failure: exp3249-llama-cpp-cuda-receipt-smoke-v3.llama_cpp_cuda_receipt_ready (upstream artifact not found for task id 'exp3249-llama-cpp-cuda-receipt-smoke-v3')",
+  "gates_evaluated": [
+    {
+      "upstream": "exp3249-llama-cpp-cuda-receipt-smoke-v3",
+      "artifact_field": "llama_cpp_cuda_receipt_ready",
+      "op": "==",
+      "expected": true,
+      "actual": null,
+      "passed": false,
+      "reason": "upstream artifact not found for task id 'exp3249-llama-cpp-cuda-receipt-smoke-v3'"
+    }
+  ],
+  "blocked_at_layer": "conductor_pre_gate"
+}
