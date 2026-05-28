@@ -13213,3 +13213,61 @@ claiming publication readiness.
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-REPORT-3280 | Implemented (`python/carnot/reporting/capstone_v303_3280.py`) | Implemented (`tests/python/test_experiment_3280_capstone_v303.py`) |
+
+### REQ-REPORT-3281: Archive V303 And Activate V304 Handoff
+
+The repository shall provide an Exp 3281 milestone-boundary handoff workflow
+that writes `results/experiment_3281_archive_v303_activate_v304.json` by
+reading the Exp 3280 `.303` capstone, Exp 3279 evidence matrix v35,
+`ops/conductor-log.md`, `research-complete.yaml`, and the active
+`research-roadmap.yaml`. The workflow MUST be aggregation only. It MUST NOT
+run model inference, CUDA probes, teacher labeling, KAN training, Garak,
+repair, verifier scoring, hardware commands, the conductor, pushes, or modify
+`research-roadmap.yaml` or `scripts/research_conductor.py`.
+
+The workflow SHALL append a minimal completed `2026.05.303` milestone entry to
+`research-complete.yaml` only when that archive entry is missing. If the entry
+is already present, the workflow SHALL leave it byte-for-byte unchanged. The
+workflow SHALL record conductor-log terminal evidence for Exp 3267 through Exp
+3280 and SHALL verify that the active roadmap is `2026.05.304` without editing
+it.
+
+The terminal artifact MUST include `v303_closed_v304_opened`,
+`prior_paper_ready`, `prior_publication_blocker_count`,
+`prior_next_top_gap`, `full_15k_corpus_materialized`, `garak_blocker`,
+`clean_verifier_abstention_rate`, `kan_noninferiority_passed`,
+`repair_gate_open`, `protected_files_untouched`, `random_seed`,
+`reproducibility_checksum`, `duration_s`, and `honest_verdict`. It SHALL also
+include source checksums, protected-file checksum comparisons, archive update
+status, conductor-log evidence rows, blocker movement, and a plain reason that
+`.304` starts with Garak/toolchain and clean-verifier abstention calibration
+rather than another corpus milestone. `v303_closed_v304_opened` MUST be true
+only when the `.303` capstone is ready, `.303` is archived, the `.304` roadmap
+is active, the protected files are unchanged during the run, and the terminal
+handoff fields preserve the capstone and matrix blockers. `honest_verdict`
+MUST begin with one of `complete:`, `success:`, `passed:`, or `shipped:`.
+
+#### SCENARIO-REPORT-3281: V303 Archive Opens Garak-First V304 Queue
+
+**Given** Exp 3280 reports `paper_ready=false`,
+`publication_blocker_count=105`, `next_top_gap=unblock_garak_redteam_eval`,
+full 15k corpus materialization, `blocked_garak_unavailable`, KAN
+non-inferiority failure, clean-verifier abstention rate `1.0`, and a blocked
+repair gate
+**And** `research-complete.yaml` already contains completed `2026.05.303`
+tasks for Exp 3267 through Exp 3280
+**And** `research-roadmap.yaml` is active for `2026.05.304`
+**When** the Exp 3281 handoff workflow runs
+**Then** it writes `results/experiment_3281_archive_v303_activate_v304.json`
+with all required schema fields, leaves the archive and protected files
+unchanged, records `.303` terminal evidence from the capstone, matrix, and
+conductor log, reports zero blocker-count movement from `.302/.303`, explains
+that Garak/toolchain and clean-verifier abstention are the first `.304`
+blockers because the full 15k corpus is already materialized, and emits an
+`honest_verdict` beginning with `complete:`.
+
+## Implementation Status (REQ-REPORT-3281)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-3281 | Implemented (`python/carnot/reporting/archive_v303_activate_v304_3281.py`) | Implemented (`tests/python/test_experiment_3281_archive_v303_activate_v304.py`) |

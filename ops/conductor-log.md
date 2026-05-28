@@ -6644,3 +6644,5 @@ web search |
 | 2026-05-28 15:45 UTC | Capstone v303 and next-gap decision | OK | 81 passed in 2.78s |
 | 2026-05-28 16:16 UTC | Plan next milestone | FAIL | Codex CLI error: search: 
 web search: https://docs.garak.ai/garak/examples/pr |
+| 2026-05-28 17:04 UTC | Plan milestone 2026.05.304 | OK | 13 tasks proposed |
+| 2026-05-28 17:06 UTC | Milestone 2026.05.304 activated | OK | 13 tasks queued |

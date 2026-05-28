@@ -1,13 +1,13 @@
-milestone: "2026.05.303"
-milestone_title: "Prompt-Injection v4 Full Corpus + Garak Gate + Repair Reopen"
+milestone: "2026.05.304"
+milestone_title: "Garak Availability + Abstention-Calibrated Verifier + Repair Gate Reopen"
 milestone_doc: "openspec/change-proposals/research-roadmap-vNEXT.md"
-milestone_provenance: "Staged 2026-05-28 after milestone 2026.05.302 completed. Authority: results/experiment_3266_capstone_v302.json reports paper_ready=false, publication_blocker_count=105, cuda_recovery_unblocked_sota_receipt=true, v4 shard AUROC=0.791096, and next_top_gap=full_15k_v4_corpus_across_shards_plus_repair_and_garak_gates."
+milestone_provenance: "Staged 2026-05-28 after milestone 2026.05.303 completed. Authority: results/experiment_3280_capstone_v303.json reports paper_ready=false, publication_blocker_count=105, full 15k v4 corpus materialized, FR-11 controller-memory audit passed, Garak unavailable, clean verifier abstention_rate=1.0, KAN non-inferiority failed, repair gate blocked, and next_top_gap=unblock_garak_redteam_eval."
 
 tasks:
-  - id: exp3267-close-v302-open-v303-corpus-queue
-    milestone: "2026.05.303"
-    deliverable: "results/experiment_3267_close_v302_open_v303_corpus_queue.json"
-    title: "Close .302 ledger and open .303 corpus queue"
+  - id: exp3281-archive-v303-activate-v304
+    milestone: "2026.05.304"
+    deliverable: "results/experiment_3281_archive_v303_activate_v304.json"
+    title: "Close .303 ledger and open .304 blocker queue"
     priority: critical
     max_turns: 20
     estimated_wall_time_min: 10
@@ -15,40 +15,43 @@ tasks:
     inference_substrate: "artifact_aggregation_only"
     requires_gpu: false
     prior_failures:
-      - experiment_id: exp3260-archive-v301-activate-v302
-        verdict: "complete: archive_v301_activate_v302_ready=true"
-        addressed_by: "This is the next milestone-boundary handoff, with a different source milestone (.302) and different target milestone (.303). It archives completed .302 evidence before opening the corpus-scale queue."
+      - experiment_id: exp3267-close-v302-open-v303-corpus-queue
+        verdict: "complete: v302_closed_v303_opened=true"
+        addressed_by: "This is the next milestone-boundary handoff, with a different source milestone (.303) and different target milestone (.304). It archives completed .303 evidence before opening the blocker-removal queue."
         retire_if_same_verdict: true
     prompt: |
       CONTEXT
       Project root placeholder: {project_root}. Run date placeholder: {date}.
-      Milestone .302 is complete. The authoritative closeout is results/experiment_3266_capstone_v302.json: paper_ready=false, publication_blocker_count=105, cuda_recovery_unblocked_sota_receipt=true, and next_top_gap=full_15k_v4_corpus_across_shards_plus_repair_and_garak_gates.
+      Milestone .303 is complete. The authoritative closeout is results/experiment_3280_capstone_v303.json: paper_ready=false, publication_blocker_count=105, full_15k corpus evidence exists, FR-11 controller-memory audit passed, Garak was unavailable, the clean verifier abstained on every exact row, KAN full-corpus non-inferiority failed, repair stayed blocked, and next_top_gap=unblock_garak_redteam_eval.
 
       EXISTING CODE TO READ FIRST
       - CLAUDE.md
       - CODEX.md
-      - results/experiment_3266_capstone_v302.json
-      - results/experiment_3264_prompt_injection_teacher_label_shard_v3.json
-      - results/experiment_3265_prompt_injection_kan_train_eval_shard_v3.json
+      - results/experiment_3280_capstone_v303.json
+      - results/experiment_3279_evidence_matrix_v35.json
       - ops/conductor-log.md
       - research-complete.yaml
+      - research-roadmap-next.yaml
 
       TASK
-      Archive .302 into research-complete.yaml if it is not already present, record the .302 terminal evidence, and emit a machine-readable .303 activation/handoff artifact.
+      Archive .303 into research-complete.yaml if it is not already present, record the .303 terminal evidence, and emit a machine-readable .304 activation/handoff artifact.
 
       CONCRETE STEPS
-      1. Read the .302 capstone and the .302 result artifacts.
-      2. Append a .302 milestone entry to research-complete.yaml only if missing.
-      3. Record the next top gap, blocker count, and shard evidence in the artifact.
+      1. Read the .303 capstone, evidence matrix, and conductor log rows for exp3267 through exp3280.
+      2. Append a .303 milestone entry to research-complete.yaml only if missing.
+      3. Record the blocker movement and the exact reason .304 starts with Garak/toolchain and abstention calibration rather than another corpus milestone.
       4. Confirm protected files were not modified: research-roadmap.yaml and scripts/research_conductor.py.
 
       REQUIRED ARTIFACT FIELDS:
-      - v302_closed_v303_opened: bool (principle: milestone boundaries must be machine-readable)
+      - v303_closed_v304_opened: bool (principle: milestone boundaries must be machine-readable)
       - prior_paper_ready: bool (principle: preserve the publication-readiness signal)
       - prior_publication_blocker_count: int (principle: track blocker movement across milestones)
       - prior_next_top_gap: str (principle: keep the next queue anchored to the capstone)
-      - v4_shard_label_count: int (principle: preserve corpus-scale starting point)
-      - v4_shard_auroc: float (principle: carry non-headline pilot evidence without inflating it)
+      - full_15k_corpus_materialized: bool (principle: separate data-scale completion from promotion readiness)
+      - garak_blocker: str (principle: record the toolchain gate explicitly)
+      - clean_verifier_abstention_rate: float (principle: abstention-all is the clean-verifier blocker)
+      - kan_noninferiority_passed: bool (principle: KAN must remain bounded when it fails)
+      - repair_gate_open: bool (principle: repair stays gated by evidence)
       - protected_files_untouched: bool (principle: enforce operator constraints)
       - random_seed: int (principle: reproducibility even for aggregation)
       - reproducibility_checksum: str (principle: deterministic audit trail)
@@ -56,855 +59,763 @@ tasks:
       - honest_verdict: str (principle: must start with complete:/success:/passed:/shipped:)
       Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
 
-  - id: exp3268-sota-receipt-methodology-supplement-v1
-    milestone: "2026.05.303"
-    deliverable: "results/experiment_3268_sota_receipt_methodology_supplement_v1.json"
-    title: "SOTA receipt methodology supplement v1"
+  - id: exp3282-garak-install-and-probe-manifest-v1
+    milestone: "2026.05.304"
+    deliverable: "results/experiment_3282_garak_install_and_probe_manifest_v1.json"
+    title: "Garak install and probe manifest v1"
     priority: critical
     max_turns: 50
-    estimated_wall_time_min: 70
-    track: "evidence"
-    inference_substrate: "live_llm_inference"
-    requires_gpu: true
+    estimated_wall_time_min: 45
+    track: "redteam"
+    inference_substrate: "toolchain_probe_only"
+    requires_gpu: false
     prior_failures:
-      - experiment_id: exp3263-sota-gguf-receipt-v9
-        verdict: "complete: sota_gguf_receipt_ready=true; adversarial flag DURATION_TOO_SHORT"
-        addressed_by: "This task is not another CUDA recovery attempt. CUDA already recovered; the new work is a methodology supplement and longer-duration receipt floor so downstream repair gates do not rely on a too-short SOTA evidence row."
-        retire_if_same_verdict: true
-      - experiment_id: exp3250-sota-gguf-receipt-v8
-        verdict: "gate_block / retired: sota_gguf_receipt_ready=false while CUDA was broken"
-        addressed_by: "The broken-CUDA blocker was resolved in .302. This task starts from the successful .302 receipt and repairs the remaining methodology/duration weakness."
+      - experiment_id: exp3274-garak-dataflip-redteam-v1
+        verdict: "complete: garak_available=false; garak_redteam_eval_ready=false; blocked_reasons=['blocked_garak_unavailable']"
+        addressed_by: "This task does not attempt the red-team eval again. It first creates an isolated Garak install/probe manifest and records exact command-level readiness or blocker reasons."
         retire_if_same_verdict: true
     prompt: |
       CONTEXT
       Project root placeholder: {project_root}. Run date placeholder: {date}.
-      .302 produced a SOTA GGUF receipt, but the artifact was flagged because duration_s was too short for a clean headline evidence row. Downstream v4 labels and repair work need a clean receipt methodology boundary.
-
-      MODEL_SPECS
-      - unsloth/gemma-4-26B-A4B-it-GGUF
-      - unsloth/Qwen3.6-35B-A3B-GGUF
-      - unsloth/gemma-4-31B-it-GGUF
+      .303 did not run Garak because results/experiment_3274_garak_dataflip_redteam_v1.json reported garak_available=false. The next milestone must convert this from an ambiguous missing-tool condition into a precise toolchain artifact.
 
       EXISTING CODE TO READ FIRST
       - CLAUDE.md
-      - scripts/experiment_template.py
-      - results/experiment_3263_sota_gguf_receipt_v9.json
-      - results/experiment_3262_llama_cpp_cuda_receipt_smoke_v4.json
-      - ops/verifier_authenticity_audit_report.md
+      - CODEX.md
+      - results/experiment_3274_garak_dataflip_redteam_v1.json
+      - research-references.md
+      - ops/e2e-test-plan.md
+      - pyproject.toml
+      - requirements.txt if present
 
       TASK
-      Produce a SOTA receipt methodology supplement. If at least one mandated GGUF is cached, run a longer live receipt with CUDA offload and duration >= 60 seconds. If only the .302 receipt can be used, write a complete but non-eligible supplement that explains the blocker precisely.
+      Build a Garak install/probe manifest without running the full red-team benchmark. The artifact must state whether Garak can be imported and invoked, which PromptInject-style probes exist, and how a local GGUF/llama.cpp target will be connected in downstream tasks.
 
       CONCRETE STEPS
-      1. Check nvidia-smi and selected Python CUDA before loading any model.
-      2. Determine which mandated GGUFs are cached or immediately resolvable.
-      3. Run a live CUDA/offload generation for each available mandated model, targeting duration >= 60 seconds total.
-      4. Record model load, GPU memory, tokens, duration, and whether the row is clean enough for downstream gates.
-      5. Emit clean_sota_receipt_eligible only if the evidence is live, local, offloaded, non-empty, and methodology-clean.
+      1. Check whether garak is importable and whether a garak CLI is available.
+      2. If unavailable, try the least invasive isolated path allowed by the repo, such as a local virtual environment or documented package command. Do not alter scripts/research_conductor.py.
+      3. Inventory PromptInject, jailbreak, encoding, leakage, and hallucination probes that are relevant to prompt-injection evaluation.
+      4. Identify the local generator adapter path for mandated GGUF models, including llama.cpp or REST command shape.
+      5. Emit a blocked artifact if install or invocation fails, including exact commands, stderr summaries, and next action.
 
       REQUIRED ARTIFACT FIELDS:
-      - sota_receipt_methodology_supplement_v1_ready: bool (principle: downstream tasks need a stable evidence contract)
-      - clean_sota_receipt_eligible: bool (principle: gates live-label and clean-verifier work)
-      - model_specs: dict (principle: mandated SOTA GGUFs must be named)
-      - models_used: list (principle: distinguish cached models from missing models)
-      - missing_model_specs: list (principle: absence must be explicit, not inferred)
-      - preconditions_checked: list (principle: compute-bound work must fail fast)
-      - gpu_mem_used_mib: int (principle: prove GPU offload rather than CPU fallback)
-      - tokens_generated: int (principle: prove real inference occurred)
-      - receipt_duration_floor_met: bool (principle: directly resolves the DURATION_TOO_SHORT flag)
-      - methodology_findings: list (principle: separate evidence hygiene from model quality)
+      - garak_install_probe_manifest_ready: bool (principle: downstream tasks need a stable toolchain contract)
+      - garak_runner_ready: bool (principle: gates Garak smoke without spending a Sonnet call)
+      - garak_available: bool (principle: preserve the .303 blocker field)
+      - garak_version: str (principle: toolchain evidence must be versioned)
+      - garak_import_command: str (principle: reproduce import status)
+      - garak_cli_command: str (principle: reproduce CLI status)
+      - probe_inventory: list (principle: full eval must know which probes exist)
+      - promptinject_probe_count: int (principle: prompt-injection readiness must be explicit)
+      - local_target_adapter_plan: dict (principle: smoke/full eval must know how to call local GGUFs)
+      - install_blockers: list (principle: unavailable tools must fail precisely)
+      - preconditions_checked: list (principle: toolchain work must fail fast)
       - random_seed: int (principle: reproducibility)
       - reproducibility_checksum: str (principle: artifact integrity)
-      - duration_s: float (principle: timing evidence for adversarial checks)
-      - honest_verdict: str (principle: must start with complete:/success:/passed:/shipped:)
+      - duration_s: float (principle: timing evidence)
+      - honest_verdict: str (principle: must start with complete:/success:/passed:/shipped: when manifest is written)
       Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
 
-  - id: exp3269-prompt-injection-v4-full-corpus-split-manifest-v1
-    milestone: "2026.05.303"
-    deliverable: "results/experiment_3269_prompt_injection_v4_full_corpus_split_manifest_v1.json"
-    title: "Prompt-injection v4 full-corpus split manifest"
+  - id: exp3283-prompt-injection-corrigendum-duration-audit-v1
+    milestone: "2026.05.304"
+    deliverable: "results/experiment_3283_prompt_injection_corrigendum_duration_audit_v1.json"
+    title: "Prompt-injection corrigendum and duration audit v1"
     priority: critical
     max_turns: 30
     estimated_wall_time_min: 25
-    track: "dataset"
+    track: "evidence"
     inference_substrate: "artifact_aggregation_only"
     requires_gpu: false
     prior_failures:
-      - experiment_id: exp3222-prompt-injection-kan-distill-v4-15k
-        verdict: "complete: missing v4 artifact; monolithic 15k task failed to produce the expected result after repeated CLI failures"
-        addressed_by: "The monolith is not retried. This task only writes the split manifest and gate ledger for smaller shard tasks, using .302's 2k shard as seed evidence."
+      - experiment_id: exp3270-teacher-label-shards-2-4-v1
+        verdict: "complete: shard labels written with adversarial duration/methodology flags"
+        addressed_by: "This task does not relabel shards. It audits provenance, duration, and headline eligibility so later results do not overstate .303 teacher-label evidence."
         retire_if_same_verdict: true
-      - experiment_id: exp3251-prompt-injection-v4-constraint-tax-manifest-v2
-        verdict: "complete: v4_manifest_v2_ready=true"
-        addressed_by: "The .301 manifest was a pre-label plan. This .303 manifest extends it to the full 15k execution ledger after .302 proved one shard can be labeled and trained."
+      - experiment_id: exp3272-full-corpus-assembly-leakage-audit-v1
+        verdict: "complete: full corpus assembled with TAUTOLOGY/metadata flags requiring corrigendum"
+        addressed_by: "This task adds the missing corrigendum layer and separates corpus availability from headline label authority."
         retire_if_same_verdict: true
     prompt: |
       CONTEXT
       Project root placeholder: {project_root}. Run date placeholder: {date}.
-      .302 labeled the first 2k prompt-injection v4 shard and trained a pilot KAN. The next top gap is full 15k corpus across shards plus repair and Garak gates. Do not rerun the failed monolithic exp3222 shape.
+      .303 materialized the full v4 prompt-injection corpus, but the evidence matrix still flagged duration/provenance and tautology risks. The next milestone must carry a corrigendum before using the corpus in Garak, KAN, clean-verifier, or repair claims.
 
       EXISTING CODE TO READ FIRST
       - CLAUDE.md
-      - research-program.md
+      - CODEX.md
+      - results/experiment_3270_teacher_label_shards_2_4_v1.json
+      - results/experiment_3271_teacher_label_shards_5_7_garak_seed_v1.json
+      - results/experiment_3272_full_corpus_assembly_leakage_audit_v1.json
+      - results/experiment_3279_evidence_matrix_v35.json
       - research-references.md
-      - results/experiment_3239_prompt_injection_kan_v4_resource_manifest_v1.json
-      - results/experiment_3264_prompt_injection_teacher_label_shard_v3.json
-      - results/experiment_3265_prompt_injection_kan_train_eval_shard_v3.json
-      - data/README.md if present
 
       TASK
-      Build the full v4 corpus split manifest and sample-size ledger for the remaining .303 label and evaluation tasks.
+      Audit .303 prompt-injection label provenance, duration flags, tautology/leakage flags, and headline eligibility. Do not relabel unless a tiny diagnostic sample is needed to classify provenance; this task is primarily a corrigendum and evidence-boundary artifact.
 
       CONCRETE STEPS
-      1. Reuse the .302 2k shard as shard 1.
-      2. Define shards 2-7, each with target size 2000, plus a 1000-example Garak/adaptive seed set to reach 15k total.
-      3. Include aligned-instruction benign examples, misaligned instruction attacks, non-instruction benign examples, DataFlip/KAD-adaptive patterns, long reasoning-heavy attacks, encoding attacks, and tool/RAG-style indirect injection cases.
-      4. Define train/eval/holdout/Garak splits and DeLong comparison requirements.
-      5. Record exact deliverable paths for downstream shards and assembled corpus.
+      1. Read the .303 shard, assembly, and evidence-matrix artifacts.
+      2. Classify each relevant artifact as live-LLM, cached, template-backed, aggregation-only, or blocked.
+      3. Identify any DURATION_TOO_SHORT, TAUTOLOGY, leakage, or provenance flags that affect headline claims.
+      4. Produce a correction ledger that downstream tasks can cite when they use the corpus.
+      5. State which metrics are eligible for headline use and which are sidecar/provisional only.
 
       REQUIRED ARTIFACT FIELDS:
-      - full_corpus_manifest_ready: bool (principle: gates shard labeling)
-      - target_total_examples: int (principle: sample-size target must be explicit)
-      - completed_seed_examples: int (principle: separates existing .302 labels from new work)
-      - planned_new_examples: int (principle: downstream wall-time depends on remaining labels)
-      - shard_plan: list (principle: split-runs prevent monolithic failure)
-      - garak_seed_target: int (principle: Garak/adaptive pressure is a first-class split)
-      - class_taxonomy: list (principle: aligned and misaligned instructions must not be conflated)
-      - leakage_audit_plan: dict (principle: detector claims need de-dup and split hygiene)
-      - delong_gate_plan: dict (principle: non-inferiority must be statistical, not narrative)
-      - downstream_deliverables: list (principle: conductor tasks need concrete paths)
+      - corrigendum_ready: bool (principle: downstream Garak/KAN tasks need a provenance boundary)
+      - audited_artifacts: list (principle: every claim must trace to source artifacts)
+      - provenance_by_artifact: dict (principle: live, cached, template, and aggregation rows must not be conflated)
+      - duration_flags: list (principle: adversarial checks must be explicit)
+      - tautology_flags: list (principle: leakage and tautology risks must be carried forward)
+      - headline_eligible_metrics: list (principle: only clean evidence can support paper claims)
+      - provisional_or_sidecar_metrics: list (principle: useful evidence can be bounded instead of discarded)
+      - downstream_usage_rules: dict (principle: later tasks need precise constraints)
       - random_seed: int (principle: reproducibility)
       - reproducibility_checksum: str (principle: artifact integrity)
       - duration_s: float (principle: timing evidence)
       - honest_verdict: str (principle: must start with complete:/success:/passed:/shipped:)
       Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
 
-  - id: exp3270-prompt-injection-teacher-label-shards-2-4-v1
-    milestone: "2026.05.303"
-    deliverable: "results/experiment_3270_prompt_injection_teacher_label_shards_2_4_v1.json"
-    title: "Prompt-injection teacher-label shards 2-4"
+  - id: exp3284-garak-local-smoke-sota-gguf-v1
+    milestone: "2026.05.304"
+    deliverable: "results/experiment_3284_garak_local_smoke_sota_gguf_v1.json"
+    title: "Gated Garak local smoke against mandated SOTA GGUF v1"
+    priority: critical
+    max_turns: 50
+    estimated_wall_time_min: 75
+    track: "redteam"
+    inference_substrate: "live_llm_inference"
+    requires_gpu: true
+    gated_on:
+      - upstream: exp3282-garak-install-and-probe-manifest-v1
+        artifact_field: garak_runner_ready
+        op: "=="
+        value: true
+    prior_failures:
+      - experiment_id: exp3274-garak-dataflip-redteam-v1
+        verdict: "complete: garak_available=false; garak_redteam_eval_ready=false; blocked_garak_unavailable"
+        addressed_by: "The prerequisite Garak install/probe manifest must now pass before this task runs, so this is a small smoke test against a real local target rather than a full eval blocked by missing tooling."
+        retire_if_same_verdict: true
+    prompt: |
+      CONTEXT
+      Project root placeholder: {project_root}. Run date placeholder: {date}.
+      This task runs only after exp3282 proves Garak is runnable. Its goal is a small local smoke, not a headline benchmark. If the mandated SOTA GGUF target is unavailable, write a blocked artifact with exact missing-model evidence.
+
+      MODEL_SPECS
+      - unsloth/Qwen3.6-35B-A3B-GGUF
+      - unsloth/gemma-4-31B-it-GGUF
+      - unsloth/gemma-4-26B-A4B-it-GGUF
+
+      EXISTING CODE TO READ FIRST
+      - CLAUDE.md
+      - CODEX.md
+      - scripts/experiment_template.py
+      - results/experiment_3282_garak_install_and_probe_manifest_v1.json
+      - results/experiment_3268_sota_receipt_methodology_supplement_v1.json if present
+      - carnot/inference/sota_models.py
+
+      TASK
+      Run a small Garak PromptInject/local-target smoke against at least one available mandated SOTA GGUF model. Use cached_sota_pair(gpu_indices=(0, 1)) when possible. Legacy tiny models may be used only to prove the adapter path and must not set garak_smoke_ready.
+
+      CONCRETE STEPS
+      1. Check nvidia-smi, selected-Python CUDA, and the local GGUF cache before launching a model.
+      2. Resolve mandated GGUF model paths with the cached_sota_pair pattern.
+      3. Start the local target adapter identified by exp3282, or record why it cannot start.
+      4. Run a small bounded Garak smoke, such as 20-50 PromptInject-style probes, against the local target.
+      5. Record attack success, refusal/defense behavior, adapter errors, GPU memory, tokens, and duration.
+
+      REQUIRED ARTIFACT FIELDS:
+      - garak_local_smoke_v1_ready: bool (principle: smoke status must be machine-readable)
+      - garak_smoke_ready: bool (principle: gates the full Garak eval)
+      - model_specs: dict (principle: mandated SOTA GGUFs must be named)
+      - models_used: list (principle: distinguish real SOTA evidence from fallback smoke)
+      - missing_model_specs: list (principle: missing mandated models must be explicit)
+      - preconditions_checked: list (principle: compute-bound work must fail fast)
+      - local_target_adapter_started: bool (principle: Garak needs a real generator target)
+      - garak_probe_count: int (principle: smoke size must be explicit)
+      - attack_success_rate: float (principle: red-team pressure is quantitative)
+      - detector_or_defense_response_summary: dict (principle: smoke must expose failure modes)
+      - gpu_mem_used_mib: int (principle: prove GPU offload rather than CPU fallback)
+      - tokens_generated: int (principle: prove real inference occurred)
+      - random_seed: int (principle: reproducibility)
+      - reproducibility_checksum: str (principle: artifact integrity)
+      - duration_s: float (principle: timing evidence)
+      - honest_verdict: str (principle: must start with complete:/success:/passed:/shipped: when smoke artifact is written)
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+
+  - id: exp3285-full-garak-dataflip-redteam-eval-v2
+    milestone: "2026.05.304"
+    deliverable: "results/experiment_3285_full_garak_dataflip_redteam_eval_v2.json"
+    title: "Gated full Garak/DataFlip red-team eval v2"
     priority: critical
     max_turns: 50
     estimated_wall_time_min: 120
-    track: "dataset"
+    track: "redteam"
     inference_substrate: "live_llm_inference"
     requires_gpu: true
     gated_on:
-      - upstream: exp3268-sota-receipt-methodology-supplement-v1
-        artifact_field: clean_sota_receipt_eligible
+      - upstream: exp3284-garak-local-smoke-sota-gguf-v1
+        artifact_field: garak_smoke_ready
         op: "=="
         value: true
-      - upstream: exp3269-prompt-injection-v4-full-corpus-split-manifest-v1
-        artifact_field: full_corpus_manifest_ready
+      - upstream: exp3283-prompt-injection-corrigendum-duration-audit-v1
+        artifact_field: corrigendum_ready
         op: "=="
         value: true
     prior_failures:
-      - experiment_id: exp3252-prompt-injection-teacher-label-shard-v2
-        verdict: "gate_block / retired: upstream SOTA receipt unavailable while CUDA was broken"
-        addressed_by: "This task is gated on exp3268 clean_sota_receipt_eligible after .302 recovered CUDA and produced a SOTA receipt. It also labels shards 2-4 rather than only a small preflight shard."
-        retire_if_same_verdict: true
-      - experiment_id: exp3264-prompt-injection-teacher-label-shard-v3
-        verdict: "complete: teacher_label_shard_ready=true; n=2000"
-        addressed_by: "The .302 shard succeeded and becomes seed data. This task extends the same split-run method to shards 2-4 with the full-corpus manifest and clean receipt gate."
+      - experiment_id: exp3274-garak-dataflip-redteam-v1
+        verdict: "complete: garak_redteam_eval_ready=false; blocked_reasons=['blocked_garak_unavailable']"
+        addressed_by: "This task is gated on a successful Garak local smoke and corpus corrigendum, so it reattempts the red-team evaluation only after the missing-tool and provenance blockers are addressed."
         retire_if_same_verdict: true
     prompt: |
       CONTEXT
       Project root placeholder: {project_root}. Run date placeholder: {date}.
-      Label shards 2-4 of the v4 prompt-injection corpus. This task should be a split-run successor to the successful .302 2k shard, not a rerun of the failed 15k monolith.
+      The full Garak/DataFlip red-team eval can run only after a real Garak smoke and the prompt-injection corrigendum are ready. This task must keep Garak, DataFlip, aligned-benign, and adaptive attack metrics separate.
 
       MODEL_SPECS
-      - unsloth/gemma-4-26B-A4B-it-GGUF
       - unsloth/Qwen3.6-35B-A3B-GGUF
       - unsloth/gemma-4-31B-it-GGUF
+      - unsloth/gemma-4-26B-A4B-it-GGUF
 
       EXISTING CODE TO READ FIRST
       - CLAUDE.md
+      - CODEX.md
       - scripts/experiment_template.py
-      - results/experiment_3268_sota_receipt_methodology_supplement_v1.json
-      - results/experiment_3269_prompt_injection_v4_full_corpus_split_manifest_v1.json
-      - results/experiment_3264_prompt_injection_teacher_label_shard_v3.json
-      - existing prompt-injection dataset/labeling scripts found via rg "prompt.*injection|teacher_label|KAN"
+      - results/experiment_3284_garak_local_smoke_sota_gguf_v1.json
+      - results/experiment_3283_prompt_injection_corrigendum_duration_audit_v1.json
+      - results/experiment_3272_full_corpus_assembly_leakage_audit_v1.json
+      - results/experiment_3273_prompt_injection_kan_full_corpus_eval_v1.json
 
       TASK
-      Generate teacher labels for shards 2-4, targeting 6000 new examples, using at least one mandated local SOTA GGUF for headline label evidence.
+      Run the full v4 Garak/DataFlip/adaptive red-team evaluation against the available mandated SOTA GGUF target and the prompt-injection detector stack. Emit clear gates for red-team readiness, attack success, aligned-instruction false positives, and detector/repair readiness.
 
       CONCRETE STEPS
-      1. If gated_on is not satisfied, write a complete gated-skip artifact.
-      2. Check CUDA, cached GGUF availability, and disk capacity before loading a model.
-      3. Label shards 2-4 according to the manifest taxonomy.
-      4. Record benign/injection/aligned-instruction/misaligned-instruction counts per shard.
-      5. Save shard files under a concrete data path and include checksums.
+      1. Recheck GPU and model preconditions, then reuse the local target adapter from the smoke task.
+      2. Run Garak PromptInject-style probes and any available jailbreak/encoding probes relevant to prompt injection.
+      3. Run DataFlip/KAD-adaptive and aligned-instruction benign controls from the .303 corpus where available.
+      4. Score detector behavior and target behavior separately; do not treat target refusal as detector success unless the artifact explicitly justifies it.
+      5. Produce per-slice metrics and gate fields for downstream repair.
 
       REQUIRED ARTIFACT FIELDS:
-      - teacher_label_shards_2_4_ready: bool (principle: downstream assembly needs a clear shard signal)
-      - cumulative_label_count: int (principle: gates the next label tranche)
-      - new_label_count: int (principle: separates new work from .302 seed data)
-      - shard_counts: dict (principle: per-shard accounting prevents hidden imbalance)
-      - label_distribution: dict (principle: class balance must be visible)
-      - model_specs: dict (principle: mandated SOTA models must be named)
-      - models_used: list (principle: actual label source must be auditable)
-      - preconditions_checked: list (principle: compute-bound tasks fail fast)
-      - output_paths: list (principle: deliverables must be reusable by downstream tasks)
-      - checksums: dict (principle: dataset integrity)
-      - random_seed: int (principle: reproducibility)
-      - reproducibility_checksum: str (principle: artifact integrity)
-      - duration_s: float (principle: timing evidence)
-      - honest_verdict: str (principle: must start with complete:/success:/passed:/shipped:)
-      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
-
-  - id: exp3271-prompt-injection-teacher-label-shards-5-7-garak-seed-v1
-    milestone: "2026.05.303"
-    deliverable: "results/experiment_3271_prompt_injection_teacher_label_shards_5_7_garak_seed_v1.json"
-    title: "Prompt-injection teacher-label shards 5-7 plus Garak seed"
-    priority: critical
-    max_turns: 50
-    estimated_wall_time_min: 130
-    track: "dataset"
-    inference_substrate: "live_llm_inference"
-    requires_gpu: true
-    gated_on:
-      - upstream: exp3270-prompt-injection-teacher-label-shards-2-4-v1
-        artifact_field: cumulative_label_count
-        op: ">="
-        value: 8000
-    prior_failures:
-      - experiment_id: exp3222-prompt-injection-kan-distill-v4-15k
-        verdict: "complete: missing v4 artifact; monolithic 15k task did not produce the expected corpus/eval artifact"
-        addressed_by: "This task continues the split-run shard strategy after exp3270 reaches 8k cumulative labels, and it adds a separate Garak/adaptive seed rather than bundling all work into one monolith."
-        retire_if_same_verdict: true
-      - experiment_id: exp3264-prompt-injection-teacher-label-shard-v3
-        verdict: "complete: teacher_label_shard_ready=true; n=2000"
-        addressed_by: "The .302 shard is reused as seed data; this task labels later shards and adds the Garak seed set."
-        retire_if_same_verdict: true
-    prompt: |
-      CONTEXT
-      Project root placeholder: {project_root}. Run date placeholder: {date}.
-      Continue v4 labeling after shards 2-4. The target is 6000 more normal corpus examples plus a 1000-example Garak/adaptive seed, bringing the full corpus to 15k with the .302 seed.
-
-      MODEL_SPECS
-      - unsloth/gemma-4-26B-A4B-it-GGUF
-      - unsloth/Qwen3.6-35B-A3B-GGUF
-      - unsloth/gemma-4-31B-it-GGUF
-
-      EXISTING CODE TO READ FIRST
-      - CLAUDE.md
-      - results/experiment_3270_prompt_injection_teacher_label_shards_2_4_v1.json
-      - results/experiment_3269_prompt_injection_v4_full_corpus_split_manifest_v1.json
-      - garak docs or local garak config if installed
-      - existing prompt-injection dataset/labeling scripts found via rg "prompt.*injection|garak|DataFlip|teacher_label"
-
-      TASK
-      Label shards 5-7 and produce the Garak/adaptive seed split. Use at least one mandated local SOTA GGUF for any LLM-generated labels or target-model evidence.
-
-      CONCRETE STEPS
-      1. If cumulative_label_count from exp3270 is below 8000, write a complete gated-skip artifact.
-      2. Check CUDA/model preconditions.
-      3. Label shards 5-7 according to the manifest.
-      4. Build a 1000-example Garak/adaptive seed with promptinject, encoding, DataFlip/KAD-adaptive, long reasoning-heavy, and indirect/tool/RAG-style cases where available.
-      5. Save outputs and checksums for assembly.
-
-      REQUIRED ARTIFACT FIELDS:
-      - teacher_label_shards_5_7_garak_seed_ready: bool (principle: downstream assembly needs a clear completion signal)
-      - cumulative_label_count: int (principle: gates full corpus assembly)
-      - new_label_count: int (principle: distinguishes this tranche)
-      - garak_seed_count: int (principle: gates red-team seed availability)
-      - shard_counts: dict (principle: per-shard accounting)
-      - label_distribution: dict (principle: balance and taxonomy visibility)
-      - model_specs: dict (principle: mandated SOTA models must be named)
-      - models_used: list (principle: actual evidence source must be auditable)
-      - preconditions_checked: list (principle: compute-bound tasks fail fast)
-      - output_paths: list (principle: downstream tasks need concrete files)
-      - checksums: dict (principle: dataset integrity)
-      - random_seed: int (principle: reproducibility)
-      - reproducibility_checksum: str (principle: artifact integrity)
-      - duration_s: float (principle: timing evidence)
-      - honest_verdict: str (principle: must start with complete:/success:/passed:/shipped:)
-      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
-
-  - id: exp3272-prompt-injection-v4-full-corpus-assembly-leakage-audit-v1
-    milestone: "2026.05.303"
-    deliverable: "results/experiment_3272_prompt_injection_v4_full_corpus_assembly_leakage_audit_v1.json"
-    title: "Prompt-injection v4 full-corpus assembly and leakage audit"
-    priority: critical
-    max_turns: 30
-    estimated_wall_time_min: 45
-    track: "dataset"
-    inference_substrate: "artifact_aggregation_only"
-    requires_gpu: false
-    gated_on:
-      - upstream: exp3271-prompt-injection-teacher-label-shards-5-7-garak-seed-v1
-        artifact_field: cumulative_label_count
-        op: ">="
-        value: 14000
-      - upstream: exp3271-prompt-injection-teacher-label-shards-5-7-garak-seed-v1
-        artifact_field: garak_seed_count
-        op: ">="
-        value: 1000
-    prior_failures:
-      - experiment_id: exp3222-prompt-injection-kan-distill-v4-15k
-        verdict: "complete: blocked_missing_exp3222_result; full 15k artifact absent"
-        addressed_by: "Assembly runs only after split-run shard gates produce enough labels and a Garak seed. It writes the corpus and leakage audit as a separate artifact."
-        retire_if_same_verdict: true
-      - experiment_id: exp3265-prompt-injection-kan-train-eval-shard-v3
-        verdict: "complete: shard_auroc=0.791096; non-headline 2k shard only"
-        addressed_by: "This task does not train the KAN. It turns the pilot shard plus new shard outputs into a full 15k corpus with leakage controls before any headline evaluation."
-        retire_if_same_verdict: true
-    prompt: |
-      CONTEXT
-      Project root placeholder: {project_root}. Run date placeholder: {date}.
-      Assemble the full v4 prompt-injection corpus from the .302 seed shard, shards 2-7, and the Garak/adaptive seed. This is the data hygiene gate before full KAN evaluation.
-
-      EXISTING CODE TO READ FIRST
-      - CLAUDE.md
-      - results/experiment_3264_prompt_injection_teacher_label_shard_v3.json
-      - results/experiment_3270_prompt_injection_teacher_label_shards_2_4_v1.json
-      - results/experiment_3271_prompt_injection_teacher_label_shards_5_7_garak_seed_v1.json
-      - results/experiment_3269_prompt_injection_v4_full_corpus_split_manifest_v1.json
-      - existing dataset utilities found via rg "dedup|leakage|split|prompt.*injection"
-
-      TASK
-      Build the canonical full 15k v4 corpus and freeze train/eval/holdout/Garak splits with de-duplication and leakage checks.
-
-      CONCRETE STEPS
-      1. If the label and Garak seed gates are not satisfied, write a complete gated-skip artifact.
-      2. Load all shard outputs and normalize schema.
-      3. Deduplicate exact, near-duplicate, and template-derived overlaps across splits.
-      4. Freeze train/eval/holdout/Garak splits and record class balance.
-      5. Save the assembled corpus and split manifests with checksums.
-
-      REQUIRED ARTIFACT FIELDS:
-      - full_15k_corpus_ready: bool (principle: gates full KAN and FR-11 work)
-      - assembled_example_count: int (principle: sample size must be explicit)
-      - train_count: int (principle: split accounting)
-      - eval_count: int (principle: split accounting)
-      - holdout_count: int (principle: split accounting)
-      - garak_count: int (principle: red-team split must be distinct)
-      - leakage_audit_passed: bool (principle: headline metrics need split hygiene)
-      - duplicate_count_removed: int (principle: data cleaning must be auditable)
-      - split_distribution: dict (principle: class balance visibility)
-      - output_paths: list (principle: concrete downstream deliverables)
-      - checksums: dict (principle: corpus integrity)
-      - random_seed: int (principle: reproducibility)
-      - reproducibility_checksum: str (principle: artifact integrity)
-      - duration_s: float (principle: timing evidence)
-      - honest_verdict: str (principle: must start with complete:/success:/passed:/shipped:)
-      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
-
-  - id: exp3273-prompt-injection-kan-full-corpus-delong-eval-v1
-    milestone: "2026.05.303"
-    deliverable: "results/experiment_3273_prompt_injection_kan_full_corpus_delong_eval_v1.json"
-    title: "Prompt-injection KAN full-corpus DeLong eval"
-    priority: high
-    max_turns: 50
-    estimated_wall_time_min: 75
-    track: "evaluation"
-    inference_substrate: "verifier_ensemble_against_cached_candidates"
-    requires_gpu: false
-    gated_on:
-      - upstream: exp3272-prompt-injection-v4-full-corpus-assembly-leakage-audit-v1
-        artifact_field: full_15k_corpus_ready
-        op: "=="
-        value: true
-    prior_failures:
-      - experiment_id: exp3222-prompt-injection-kan-distill-v4-15k
-        verdict: "complete: full 15k KAN/Garak artifact missing after monolithic attempt"
-        addressed_by: "This task evaluates only after the split corpus exists. It uses the .302 pilot as a starting point but computes full-corpus DeLong statistics and does not bundle labeling or Garak generation."
-        retire_if_same_verdict: true
-      - experiment_id: exp3265-prompt-injection-kan-train-eval-shard-v3
-        verdict: "complete: shard_auroc=0.791096; n_train=1600; n_eval=400; non-headline"
-        addressed_by: "The previous result was a 2k pilot. This task uses the full frozen 15k split and reports DeLong confidence intervals/non-inferiority."
-        retire_if_same_verdict: true
-    prompt: |
-      CONTEXT
-      Project root placeholder: {project_root}. Run date placeholder: {date}.
-      The KAN sidecar has only a shard-level AUROC. Evaluate it on the full v4 corpus with leakage-audited splits and statistical comparison against exact/baseline detectors.
-
-      EXISTING CODE TO READ FIRST
-      - CLAUDE.md
-      - results/experiment_3265_prompt_injection_kan_train_eval_shard_v3.json
-      - results/experiment_3272_prompt_injection_v4_full_corpus_assembly_leakage_audit_v1.json
-      - scripts or modules found via rg "KAN|PromptInjectionEnergyChecker|DeLong|auroc|prompt.*injection"
-
-      TASK
-      Train/evaluate the prompt-injection KAN sidecar on the full v4 corpus and report DeLong non-inferiority, calibration, and per-taxonomy slices.
-
-      CONCRETE STEPS
-      1. If full_15k_corpus_ready is not true, write a complete gated-skip artifact.
-      2. Train using the frozen train split and evaluate on eval/holdout/Garak splits without leakage.
-      3. Compare against baseline detectors and the .302 shard result.
-      4. Compute AUROC, AUPRC, F1 at selected thresholds, calibration, and DeLong CI/non-inferiority.
-      5. Mark all claims sidecar-only unless gates pass.
-
-      REQUIRED ARTIFACT FIELDS:
-      - v4_full_eval_ready: bool (principle: gates Garak and repair decisions)
-      - full_corpus_auroc: float (principle: headline metric must be numeric)
-      - full_corpus_auprc: float (principle: class imbalance needs precision-recall evidence)
-      - delong_ci: list (principle: uncertainty must be statistical)
-      - delong_noninferiority_passed: bool (principle: promotion cannot rely on point estimate only)
-      - calibration_ece: float (principle: threshold gates need calibration)
-      - per_slice_metrics: dict (principle: aligned and adaptive attacks must be visible)
-      - garak_split_preliminary_metrics: dict (principle: red-team split must not be hidden)
-      - sidecar_only: bool (principle: KAN is not exact verifier authority)
-      - output_paths: list (principle: downstream tasks need concrete artifacts)
-      - random_seed: int (principle: reproducibility)
-      - reproducibility_checksum: str (principle: artifact integrity)
-      - duration_s: float (principle: timing evidence)
-      - honest_verdict: str (principle: must start with complete:/success:/passed:/shipped:)
-      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
-
-  - id: exp3274-prompt-injection-v4-garak-dataflip-redteam-eval-v1
-    milestone: "2026.05.303"
-    deliverable: "results/experiment_3274_prompt_injection_v4_garak_dataflip_redteam_eval_v1.json"
-    title: "Prompt-injection v4 Garak and DataFlip red-team eval"
-    priority: high
-    max_turns: 50
-    estimated_wall_time_min: 90
-    track: "evaluation"
-    inference_substrate: "live_llm_inference"
-    requires_gpu: true
-    gated_on:
-      - upstream: exp3273-prompt-injection-kan-full-corpus-delong-eval-v1
-        artifact_field: v4_full_eval_ready
-        op: "=="
-        value: true
-    prior_failures:
-      - experiment_id: exp3222-prompt-injection-kan-distill-v4-15k
-        verdict: "complete: monolithic 15k + DeLong + Garak deliverable missing"
-        addressed_by: "Garak/DataFlip pressure is split into its own task after the full KAN evaluation exists, so a red-team failure cannot erase corpus or KAN artifacts."
-        retire_if_same_verdict: true
-      - experiment_id: exp3265-prompt-injection-kan-train-eval-shard-v3
-        verdict: "complete: shard KAN trained/evaluated without Garak gate"
-        addressed_by: "This task adds the missing Garak/adaptive attack gate against the full-corpus sidecar and local SOTA target where available."
-        retire_if_same_verdict: true
-    prompt: |
-      CONTEXT
-      Project root placeholder: {project_root}. Run date placeholder: {date}.
-      Run prompt-injection red-team pressure after full KAN evaluation. Garak should be used if installed; otherwise write a complete artifact with blocked_garak_unavailable and still run deterministic DataFlip/KAD-adaptive fixtures if available.
-
-      MODEL_SPECS
-      - unsloth/gemma-4-26B-A4B-it-GGUF
-      - unsloth/Qwen3.6-35B-A3B-GGUF
-      - unsloth/gemma-4-31B-it-GGUF
-
-      EXISTING CODE TO READ FIRST
-      - CLAUDE.md
-      - results/experiment_3273_prompt_injection_kan_full_corpus_delong_eval_v1.json
-      - results/experiment_3272_prompt_injection_v4_full_corpus_assembly_leakage_audit_v1.json
-      - garak local docs/config if installed
-      - existing red-team utilities found via rg "garak|DataFlip|promptinject|jailbreak|encoding"
-
-      TASK
-      Evaluate the v4 KAN sidecar and local SOTA target against Garak prompt-injection probes and DataFlip/KAD-adaptive fixtures. This task determines whether red-team pressure is sufficient for repair-gate consideration.
-
-      CONCRETE STEPS
-      1. If v4_full_eval_ready is not true, write a complete gated-skip artifact.
-      2. Check for garak availability and GGUF/CUDA availability.
-      3. Run garak promptinject/encoding/jailbreak-relevant probes when available.
-      4. Run deterministic DataFlip/KAD-adaptive fixtures independent of Garak.
-      5. Report KAN detection, target-model attack success, false positives on aligned instructions, and a conservative garak_gate_passed boolean.
-
-      REQUIRED ARTIFACT FIELDS:
-      - garak_redteam_eval_ready: bool (principle: gates repair decision input completeness)
-      - garak_available: bool (principle: tool absence must be explicit)
-      - garak_gate_passed: bool (principle: repair decisions need a conservative red-team gate)
-      - dataflip_gate_passed: bool (principle: adaptive KAD failures must be checked)
-      - attack_success_rate: float (principle: vulnerability must be quantified)
-      - kan_detection_rate: float (principle: detector performance under attack)
-      - aligned_instruction_false_positive_rate: float (principle: benign aligned instructions must not be overblocked)
-      - model_specs: dict (principle: mandated SOTA models must be named for LLM calls)
-      - models_used: list (principle: actual target/evaluator models must be auditable)
+      - garak_dataflip_redteam_eval_v2_ready: bool (principle: full eval status must be machine-readable)
+      - garak_redteam_eval_ready: bool (principle: gates repair decision)
+      - model_specs: dict (principle: mandated SOTA GGUFs must be named)
+      - models_used: list (principle: distinguish real SOTA evidence from fallback)
+      - missing_model_specs: list (principle: absence must be explicit)
       - preconditions_checked: list (principle: compute-bound work must fail fast)
-      - output_paths: list (principle: downstream matrix needs concrete evidence)
+      - garak_probe_count: int (principle: red-team sample size must be explicit)
+      - dataflip_case_count: int (principle: adaptive pressure size must be explicit)
+      - aligned_instruction_case_count: int (principle: benign aligned instructions are a required control)
+      - attack_success_rate: float (principle: red-team outcome must be quantitative)
+      - kan_detection_rate: float (principle: sidecar detector performance must remain visible)
+      - aligned_instruction_false_positive_rate: float (principle: detector usefulness depends on benign controls)
+      - garak_gate_passed: bool (principle: downstream repair should gate on red-team pressure)
+      - dataflip_gate_passed: bool (principle: adaptive attacks must have their own gate)
+      - blocked_reasons: list (principle: failure must be diagnosable)
+      - random_seed: int (principle: reproducibility)
+      - reproducibility_checksum: str (principle: artifact integrity)
+      - duration_s: float (principle: timing evidence)
+      - honest_verdict: str (principle: must start with complete:/success:/passed:/shipped: when eval artifact is written)
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+
+  - id: exp3286-clean-verifier-abstention-root-cause-v1
+    milestone: "2026.05.304"
+    deliverable: "results/experiment_3286_clean_verifier_abstention_root_cause_v1.json"
+    title: "Clean verifier abstention root-cause audit v1"
+    priority: high
+    max_turns: 30
+    estimated_wall_time_min: 30
+    track: "verification"
+    inference_substrate: "artifact_and_fixture_analysis_only"
+    requires_gpu: false
+    prior_failures:
+      - experiment_id: exp3275-clean-sota-verifier-rerun-v14
+        verdict: "complete: clean_verifier_rerun_ready=false; abstention_rate=1.0; false_accept_rate=0.0; false_reject_rate=0.0"
+        addressed_by: "This task does not rerun the verifier. It diagnoses the abstain-all root cause in fixtures, exact-answer coverage, thresholds, and row extraction before any calibrated verifier attempt."
+        retire_if_same_verdict: true
+    prompt: |
+      CONTEXT
+      Project root placeholder: {project_root}. Run date placeholder: {date}.
+      .303 clean verifier v14 did not fail by accepting wrong answers. It failed by abstaining on every exact-check row. Carnot needs a root-cause audit before spending GPU time on another live verifier rerun.
+
+      EXISTING CODE TO READ FIRST
+      - CLAUDE.md
+      - CODEX.md
+      - results/experiment_3275_clean_sota_verifier_rerun_v14.json
+      - results/experiment_3268_sota_receipt_methodology_supplement_v1.json if present
+      - ops/verifier_authenticity_audit_report.md
+      - carnot/verifiers/ if present
+      - tests/ if verifier tests exist
+
+      TASK
+      Diagnose why the clean verifier abstained on every exact row and produce a calibrated rerun plan with measurable coverage and false-accept constraints.
+
+      CONCRETE STEPS
+      1. Read the clean verifier artifact and identify the evaluated rows, answerability fields, exact-answer fields, thresholds, and abstention reasons.
+      2. Check whether abstentions come from missing canonical answers, fixture mismatch, row extraction failure, score thresholds, model output parsing, or safety policy.
+      3. Build a minimal exact-row audit table that separates answerable, unanswerable, malformed, and unknown rows.
+      4. Define rerun acceptance criteria for exp3287, including no false accepts and a non-trivial coverage target.
+      5. Do not modify the conductor.
+
+      REQUIRED ARTIFACT FIELDS:
+      - abstention_root_cause_audit_ready: bool (principle: diagnosis must be machine-readable)
+      - abstention_root_cause_identified: bool (principle: gates calibrated rerun)
+      - prior_abstention_rate: float (principle: carry the .303 blocker)
+      - audited_exact_row_count: int (principle: coverage denominator must be visible)
+      - answerable_row_count: int (principle: abstention depends on answerability)
+      - malformed_or_missing_answer_count: int (principle: fixture failures must not be blamed on verifier policy)
+      - threshold_or_policy_findings: list (principle: distinguish calibration from data quality)
+      - parser_or_extraction_findings: list (principle: extraction bugs can mimic abstention)
+      - calibrated_rerun_plan: dict (principle: downstream rerun needs explicit criteria)
+      - target_max_abstention_rate: float (principle: abstain-all cannot pass)
+      - target_false_accept_rate: float (principle: exact verifier must protect correctness)
       - random_seed: int (principle: reproducibility)
       - reproducibility_checksum: str (principle: artifact integrity)
       - duration_s: float (principle: timing evidence)
       - honest_verdict: str (principle: must start with complete:/success:/passed:/shipped:)
       Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
 
-  - id: exp3275-clean-local-sota-verifier-rerun-v14
-    milestone: "2026.05.303"
-    deliverable: "results/experiment_3275_clean_local_sota_verifier_rerun_v14.json"
-    title: "Clean local SOTA verifier rerun v14"
-    priority: high
+  - id: exp3287-abstention-calibrated-clean-verifier-v15
+    milestone: "2026.05.304"
+    deliverable: "results/experiment_3287_abstention_calibrated_clean_verifier_v15.json"
+    title: "Gated abstention-calibrated clean verifier v15"
+    priority: critical
     max_turns: 50
     estimated_wall_time_min: 90
     track: "verification"
     inference_substrate: "live_llm_inference"
     requires_gpu: true
     gated_on:
-      - upstream: exp3268-sota-receipt-methodology-supplement-v1
-        artifact_field: clean_sota_receipt_eligible
+      - upstream: exp3286-clean-verifier-abstention-root-cause-v1
+        artifact_field: abstention_root_cause_identified
         op: "=="
         value: true
     prior_failures:
-      - experiment_id: exp3225-clean-live-sota-verifier-rerun-v13
-        verdict: "gate_block: upstream exp3222-full-local-sota-receipt-v6 missing/retired"
-        addressed_by: "This rerun is gated on the .303 clean SOTA receipt methodology supplement, not the missing old exp3222 receipt artifact."
-        retire_if_same_verdict: true
-      - experiment_id: exp3254-dccd-severa-structured-proposal-preflight-v2
-        verdict: "gate_block / retired: upstream SOTA receipt unavailable while CUDA was broken"
-        addressed_by: "CUDA and SOTA receipt evidence recovered in .302. This task reopens the clean-verifier input separately from structured repair preflight."
+      - experiment_id: exp3275-clean-sota-verifier-rerun-v14
+        verdict: "complete: clean_verifier_rerun_ready=false; abstention_rate=1.0"
+        addressed_by: "The rerun is now gated on a root-cause audit and must use an abstention-calibrated policy with exact-row coverage targets, not the abstain-all v14 settings."
         retire_if_same_verdict: true
     prompt: |
       CONTEXT
       Project root placeholder: {project_root}. Run date placeholder: {date}.
-      The clean live verifier rerun was blocked for many milestones by missing or tainted SOTA receipts. .302 recovered local SOTA inference, and exp3268 should determine whether the methodology row is clean enough.
+      Run this only after exp3286 identifies an actionable abstention root cause. The goal is a clean verifier rerun that keeps false accepts at zero while achieving non-trivial coverage on exact-checkable rows.
 
       MODEL_SPECS
-      - unsloth/gemma-4-26B-A4B-it-GGUF
       - unsloth/Qwen3.6-35B-A3B-GGUF
       - unsloth/gemma-4-31B-it-GGUF
+      - unsloth/gemma-4-26B-A4B-it-GGUF
 
       EXISTING CODE TO READ FIRST
       - CLAUDE.md
-      - results/experiment_3268_sota_receipt_methodology_supplement_v1.json
-      - results/experiment_3225_clean_live_sota_verifier_rerun_v13.json if present
-      - current verifier/eval code found via rg "clean.*sota|exact-row|verifier|false_accept|false_reject"
+      - CODEX.md
+      - scripts/experiment_template.py
+      - results/experiment_3286_clean_verifier_abstention_root_cause_v1.json
+      - results/experiment_3275_clean_sota_verifier_rerun_v14.json
+      - results/experiment_3268_sota_receipt_methodology_supplement_v1.json if present
+      - ops/verifier_authenticity_audit_report.md
 
       TASK
-      Run the clean local SOTA verifier rerun v14 on exact-row fixtures using at least one mandated local SOTA GGUF and produce conservative false-accept/false-reject metrics for the repair gate.
+      Implement or configure the abstention-calibrated clean verifier rerun v15 and emit a repair-gate-ready artifact only if exact-row coverage is non-trivial and false accepts remain zero.
 
       CONCRETE STEPS
-      1. If clean_sota_receipt_eligible is not true, write a complete gated-skip artifact.
-      2. Check CUDA, GGUF cache, and exact-row fixture availability.
-      3. Run the clean verifier evaluation with no synthetic shortcut rows or CPU fallback headline claims.
-      4. Report false accepts, false rejects, abstentions, and whether the rerun is clean enough for repair-gate input.
+      1. Check nvidia-smi, selected-Python CUDA, and mandated GGUF cache readiness.
+      2. Use cached_sota_pair(gpu_indices=(0, 1)) where possible and record every missing mandated model.
+      3. Build the exact-row evaluation set from exp3286's plan, with at least 20 exact-checkable rows when available.
+      4. Apply the calibrated abstention policy from exp3286.
+      5. Report false accepts, false rejects, abstentions, coverage, and per-class reasons. Do not open repair if abstention is still 1.0.
 
       REQUIRED ARTIFACT FIELDS:
+      - abstention_calibrated_clean_verifier_v15_ready: bool (principle: rerun status must be machine-readable)
       - clean_verifier_rerun_ready: bool (principle: gates repair decision)
-      - clean_rerun_allowed: bool (principle: legacy downstream tasks need compatibility signal)
-      - false_accept_rate: float (principle: repair cannot open with unsafe accepts)
-      - false_reject_rate: float (principle: overblocking must be visible)
-      - abstention_rate: float (principle: abstention can hide failures)
-      - n_eval: int (principle: sample size must be explicit)
-      - exact_row_fixture_hash: str (principle: verifier rows must be auditable)
-      - model_specs: dict (principle: mandated SOTA models must be named)
-      - models_used: list (principle: actual local model source must be auditable)
+      - repair_gate_input_clean_enough: bool (principle: repair cannot rely on abstain-all verification)
+      - model_specs: dict (principle: mandated SOTA GGUFs must be named)
+      - models_used: list (principle: distinguish real SOTA evidence from fallback)
+      - missing_model_specs: list (principle: absence must be explicit)
       - preconditions_checked: list (principle: compute-bound work must fail fast)
-      - gpu_mem_used_mib: int (principle: prove local GPU/offload path)
+      - n_eval: int (principle: denominator must be visible)
+      - exact_checkable_row_count: int (principle: exact verification coverage must be explicit)
+      - false_accept_rate: float (principle: correctness gate)
+      - false_reject_rate: float (principle: utility gate)
+      - abstention_rate: float (principle: resolves the .303 abstain-all blocker)
+      - coverage_rate: float (principle: selective verification must report coverage)
+      - abstention_reason_counts: dict (principle: remaining abstentions must be diagnosable)
+      - random_seed: int (principle: reproducibility)
+      - reproducibility_checksum: str (principle: artifact integrity)
+      - duration_s: float (principle: timing evidence)
+      - honest_verdict: str (principle: must start with complete:/success:/passed:/shipped: when rerun artifact is written)
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+
+  - id: exp3288-kan-sidecar-failure-autopsy-boundary-v1
+    milestone: "2026.05.304"
+    deliverable: "results/experiment_3288_kan_sidecar_failure_autopsy_boundary_v1.json"
+    title: "Gated KAN sidecar failure autopsy and boundary decision v1"
+    priority: high
+    max_turns: 30
+    estimated_wall_time_min: 40
+    track: "detector"
+    inference_substrate: "artifact_aggregation_and_eval_only"
+    requires_gpu: false
+    gated_on:
+      - upstream: exp3283-prompt-injection-corrigendum-duration-audit-v1
+        artifact_field: corrigendum_ready
+        op: "=="
+        value: true
+    prior_failures:
+      - experiment_id: exp3273-kan-full-corpus-delong-eval-v1
+        verdict: "complete: full_corpus_auroc=0.475326; delong_noninferiority_passed=false; sidecar_only=true"
+        addressed_by: "This task does not promote the KAN. It diagnoses why the full-corpus sidecar failed and emits an explicit boundary or retirement decision."
+        retire_if_same_verdict: true
+    prompt: |
+      CONTEXT
+      Project root placeholder: {project_root}. Run date placeholder: {date}.
+      The .303 KAN sidecar failed full-corpus non-inferiority and must not be promoted. The useful next step is an autopsy: class balance, slice failures, leakage/provenance effects, thresholding, and whether the sidecar has any bounded triage role.
+
+      EXISTING CODE TO READ FIRST
+      - CLAUDE.md
+      - CODEX.md
+      - results/experiment_3273_prompt_injection_kan_full_corpus_eval_v1.json
+      - results/experiment_3272_full_corpus_assembly_leakage_audit_v1.json
+      - results/experiment_3283_prompt_injection_corrigendum_duration_audit_v1.json
+      - research-references.md
+      - carnot/kan/ if present
+
+      TASK
+      Perform a failure autopsy for the KAN sidecar and emit a boundary decision: retain only as bounded triage, retire from prompt-injection headline path, or specify a narrow prerequisite for future work.
+
+      CONCRETE STEPS
+      1. Read the .303 KAN full-corpus artifact and corpus/corrigendum artifacts.
+      2. Inspect per-slice metrics, single-class slices, aligned benign false positives, threshold choices, and train/eval leakage indicators.
+      3. Compare the sidecar to trivial baselines and exact/verifier baselines where available.
+      4. Decide whether KAN can be used as high-recall triage only, must be retired for this domain, or needs a specific prerequisite before reattempt.
+      5. Do not retrain a new headline KAN in this task.
+
+      REQUIRED ARTIFACT FIELDS:
+      - kan_failure_autopsy_ready: bool (principle: autopsy status must be machine-readable)
+      - kan_boundary_decision_ready: bool (principle: gates repair decision)
+      - prior_full_corpus_auroc: float (principle: carry the failed metric)
+      - prior_delong_noninferiority_passed: bool (principle: promotion failure must remain visible)
+      - per_slice_failure_summary: dict (principle: failure mode must be localized)
+      - aligned_instruction_false_positive_summary: dict (principle: benign aligned controls drive utility)
+      - leakage_or_provenance_findings: list (principle: data hygiene may explain apparent signal)
+      - baseline_comparison_summary: dict (principle: sidecar must beat trivial baselines to matter)
+      - kan_boundary_decision: str (principle: must be one of retain_sidecar_only, retire_from_prompt_injection_headline, or prerequisite_required)
+      - permitted_downstream_use: list (principle: downstream tasks need exact boundaries)
       - random_seed: int (principle: reproducibility)
       - reproducibility_checksum: str (principle: artifact integrity)
       - duration_s: float (principle: timing evidence)
       - honest_verdict: str (principle: must start with complete:/success:/passed:/shipped:)
       Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
 
-  - id: exp3276-repair-gate-decision-v8-after-v4-garak-clean-verifier
-    milestone: "2026.05.303"
-    deliverable: "results/experiment_3276_repair_gate_decision_v8_after_v4_garak_clean_verifier.json"
-    title: "Repair gate decision v8 after v4, Garak, and clean verifier"
-    priority: high
+  - id: exp3289-repair-gate-decision-v9-after-garak-abstention
+    milestone: "2026.05.304"
+    deliverable: "results/experiment_3289_repair_gate_decision_v9_after_garak_abstention.json"
+    title: "Gated repair gate decision v9 after Garak and abstention"
+    priority: critical
     max_turns: 30
     estimated_wall_time_min: 25
     track: "repair"
     inference_substrate: "artifact_aggregation_only"
     requires_gpu: false
     gated_on:
-      - upstream: exp3273-prompt-injection-kan-full-corpus-delong-eval-v1
-        artifact_field: v4_full_eval_ready
-        op: "=="
-        value: true
-      - upstream: exp3274-prompt-injection-v4-garak-dataflip-redteam-eval-v1
+      - upstream: exp3285-full-garak-dataflip-redteam-eval-v2
         artifact_field: garak_redteam_eval_ready
         op: "=="
         value: true
-      - upstream: exp3275-clean-local-sota-verifier-rerun-v14
+      - upstream: exp3287-abstention-calibrated-clean-verifier-v15
         artifact_field: clean_verifier_rerun_ready
         op: "=="
         value: true
+      - upstream: exp3288-kan-sidecar-failure-autopsy-boundary-v1
+        artifact_field: kan_boundary_decision_ready
+        op: "=="
+        value: true
     prior_failures:
-      - experiment_id: exp3227-repair-gate-decision-v7
-        verdict: "complete: repair gate remained blocked because receipt/clean verifier/structured preflight were unavailable or tainted"
-        addressed_by: "This v8 decision reads new full-corpus KAN, Garak/DataFlip, and clean-verifier artifacts rather than old missing receipt gates."
-        retire_if_same_verdict: true
-      - experiment_id: exp3198-repair-gate-decision-v5
-        verdict: "complete: repair_gate_open=false; blocked_receipt_precondition"
-        addressed_by: "The receipt precondition is now represented by exp3268 clean_sota_receipt_eligible and exp3275 clean_verifier_rerun_ready."
+      - experiment_id: exp3276-repair-gate-decision-v8
+        verdict: "gate_blocked: repair gate blocked because Garak redteam and clean verifier gates failed"
+        addressed_by: "This task is structurally gated on the new Garak eval, calibrated clean verifier, and KAN boundary decision, so it cannot spend an agent call when those prerequisites remain blocked."
         retire_if_same_verdict: true
     prompt: |
       CONTEXT
       Project root placeholder: {project_root}. Run date placeholder: {date}.
-      Decide whether repair can reopen after full prompt-injection v4 KAN evaluation, Garak/DataFlip pressure, and the clean local SOTA verifier rerun. This task must not run repair itself.
+      Repair must remain closed unless Garak, clean verifier, and KAN-boundary evidence all exist. This task is an aggregation decision, not a repair run.
 
       EXISTING CODE TO READ FIRST
       - CLAUDE.md
-      - results/experiment_3273_prompt_injection_kan_full_corpus_delong_eval_v1.json
-      - results/experiment_3274_prompt_injection_v4_garak_dataflip_redteam_eval_v1.json
-      - results/experiment_3275_clean_local_sota_verifier_rerun_v14.json
-      - prior repair gate artifacts found via rg "repair_gate_decision|repair_gate_open"
+      - CODEX.md
+      - results/experiment_3285_full_garak_dataflip_redteam_eval_v2.json
+      - results/experiment_3287_abstention_calibrated_clean_verifier_v15.json
+      - results/experiment_3288_kan_sidecar_failure_autopsy_boundary_v1.json
+      - results/experiment_3276_repair_gate_decision_v8.json if present
+      - ops/e2e-test-plan.md
 
       TASK
-      Produce a conservative repair-gate decision artifact with explicit blocker reasons. Open the gate only if KAN, Garak/DataFlip, and clean verifier metrics all satisfy their thresholds.
+      Decide whether the SOTA repair micro-panel can reopen. Use conservative gates: no Garak ambiguity, no abstain-all clean verifier, no unbounded KAN promotion, and no false-accept relaxation.
 
       CONCRETE STEPS
-      1. If any gated_on artifact is missing, write a complete gated-skip artifact.
-      2. Read full KAN metrics, Garak/DataFlip metrics, and clean verifier metrics.
-      3. Apply thresholds conservatively: no unsafe false-accept regression, Garak/DataFlip gate passed, DeLong non-inferiority passed or explicitly bounded as sidecar-only.
-      4. Emit repair_gate_open and blocker reasons.
+      1. Read the three upstream artifacts and extract their gate fields.
+      2. Apply a conservative gate policy: Garak eval ready, clean verifier ready, repair_gate_input_clean_enough true, and KAN downstream use bounded.
+      3. If any condition fails, emit repair_gate_open=false with precise blocked reasons.
+      4. If all pass, define the micro-panel scope, sample size, model specs, and exact-verification requirements for exp3290.
 
       REQUIRED ARTIFACT FIELDS:
-      - repair_gate_decision_v8_ready: bool (principle: downstream repair needs a stable decision)
-      - repair_gate_open: bool (principle: gates repair micro-panel)
-      - blocker_reasons: list (principle: blocked gates must be actionable)
-      - kan_gate_passed: bool (principle: full-corpus detector evidence must be represented)
-      - garak_gate_passed: bool (principle: red-team pressure must gate repair)
-      - clean_verifier_gate_passed: bool (principle: exact verifier safety must gate repair)
-      - false_accept_rate: float (principle: unsafe accepts are the main repair risk)
-      - decision_thresholds: dict (principle: gate math must be auditable)
+      - repair_gate_decision_v9_ready: bool (principle: gate decision must be machine-readable)
+      - repair_gate_open: bool (principle: downstream micro-panel must be structurally gated)
+      - garak_redteam_eval_ready: bool (principle: red-team evidence is mandatory)
+      - clean_verifier_rerun_ready: bool (principle: clean verification is mandatory)
+      - repair_gate_input_clean_enough: bool (principle: abstain-all cannot unblock repair)
+      - kan_boundary_decision_ready: bool (principle: KAN cannot be promoted implicitly)
+      - gate_inputs: dict (principle: every decision must trace to upstream fields)
+      - blocked_reasons: list (principle: closed gates must be diagnosable)
+      - permitted_repair_scope: dict (principle: open gates must bound the panel)
       - random_seed: int (principle: reproducibility)
       - reproducibility_checksum: str (principle: artifact integrity)
       - duration_s: float (principle: timing evidence)
-      - honest_verdict: str (principle: must start with complete:/success:/passed:/shipped:)
+      - honest_verdict: str (principle: must start with complete:/success:/passed:/shipped: when decision artifact is written)
       Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
 
-  - id: exp3277-sota-repair-micro-panel-v9
-    milestone: "2026.05.303"
-    deliverable: "results/experiment_3277_sota_repair_micro_panel_v9.json"
-    title: "SOTA repair micro-panel v9"
-    priority: medium
+  - id: exp3290-gated-sota-repair-micro-panel-v10
+    milestone: "2026.05.304"
+    deliverable: "results/experiment_3290_gated_sota_repair_micro_panel_v10.json"
+    title: "Gated SOTA repair micro-panel v10"
+    priority: high
     max_turns: 50
-    estimated_wall_time_min: 90
+    estimated_wall_time_min: 100
     track: "repair"
     inference_substrate: "live_llm_inference"
     requires_gpu: true
     gated_on:
-      - upstream: exp3276-repair-gate-decision-v8-after-v4-garak-clean-verifier
+      - upstream: exp3289-repair-gate-decision-v9-after-garak-abstention
         artifact_field: repair_gate_open
         op: "=="
         value: true
     prior_failures:
-      - experiment_id: exp3228-multi-turn-repair-ladder-v8
-        verdict: "gate_block: repair_gate_open=false after receipt/clean-verifier chain remained blocked"
-        addressed_by: "This micro-panel runs only if exp3276 opens the repair gate using new .303 full-corpus, Garak, and clean-verifier evidence. It is a small panel, not a multi-turn ladder rerun."
-        retire_if_same_verdict: true
-      - experiment_id: exp3185-multi-turn-repair-ladder-v5
-        verdict: "blocked_repair_gate_precondition: repair gate not unblocked"
-        addressed_by: "The gate precondition is redefined by .303 artifacts and the task stays gated on repair_gate_open."
+      - experiment_id: exp3277-sota-repair-micro-panel-v9
+        verdict: "gate_blocked: upstream repair gate did not open; repair micro-panel artifact missing"
+        addressed_by: "This micro-panel is structurally gated on exp3289.repair_gate_open and must use exact verifier feedback plus mandated SOTA GGUF models."
         retire_if_same_verdict: true
     prompt: |
       CONTEXT
       Project root placeholder: {project_root}. Run date placeholder: {date}.
-      Run a small repair micro-panel only if the .303 repair gate opens. This task must use local SOTA GGUF evidence and exact verifier checks; it must not claim general repair success from a tiny panel.
+      Run this only if exp3289 opens the repair gate. This is a small repair micro-panel, not a headline repair benchmark. It must use mandated local SOTA GGUF models and exact verifier feedback.
 
       MODEL_SPECS
-      - unsloth/gemma-4-26B-A4B-it-GGUF
       - unsloth/Qwen3.6-35B-A3B-GGUF
       - unsloth/gemma-4-31B-it-GGUF
+      - unsloth/gemma-4-26B-A4B-it-GGUF
 
       EXISTING CODE TO READ FIRST
       - CLAUDE.md
-      - results/experiment_3276_repair_gate_decision_v8_after_v4_garak_clean_verifier.json
-      - current repair pipeline code found via rg "repair|micro_panel|verify_repair|candidate"
-      - exact verifier fixture code found via rg "exact-row|false_accept|false_reject"
+      - CODEX.md
+      - scripts/experiment_template.py
+      - results/experiment_3289_repair_gate_decision_v9_after_garak_abstention.json
+      - results/experiment_3287_abstention_calibrated_clean_verifier_v15.json
+      - results/experiment_3285_full_garak_dataflip_redteam_eval_v2.json
+      - carnot/repair/ if present
 
       TASK
-      Execute a bounded SOTA repair micro-panel with exact verification. The output is a pilot repair artifact and cannot become a headline claim unless the exact verifier passes every accepted repair.
+      Run a bounded SOTA repair micro-panel on the permitted repair scope from exp3289. Use exact verification and localized failure feedback. Do not generalize beyond the panel.
 
       CONCRETE STEPS
-      1. If repair_gate_open is not true, write a complete gated-skip artifact.
-      2. Check CUDA, mandated GGUF cache, and exact verifier fixture availability.
-      3. Select a small stratified panel of failures from the v4 corpus and legacy repair rows.
-      4. Generate repair candidates with a mandated local SOTA GGUF.
-      5. Run exact verifier checks on every accepted repair and report deltas.
+      1. Check GPU/model preconditions and resolve mandated GGUF paths with cached_sota_pair.
+      2. Build the micro-panel from exp3289's permitted_repair_scope.
+      3. Generate repair candidates with at least one mandated SOTA GGUF model.
+      4. Verify candidates with the calibrated clean verifier and exact checks; record abstentions separately.
+      5. Report repair success, false accepts, abstentions, and localized repair feedback.
 
       REQUIRED ARTIFACT FIELDS:
-      - repair_micro_panel_v9_ready: bool (principle: downstream matrix needs a stable signal)
-      - repair_panel_ran: bool (principle: distinguish gated skip from execution)
-      - n_cases: int (principle: pilot sample size must be explicit)
-      - repair_success_delta: float (principle: repair lift must be numeric)
-      - exact_verifier_pass_rate: float (principle: correctness authority is exact verification)
-      - unsafe_accept_count: int (principle: repair cannot hide unsafe accepts)
-      - model_specs: dict (principle: mandated SOTA models must be named)
-      - models_used: list (principle: actual generator must be auditable)
+      - sota_repair_micro_panel_v10_ready: bool (principle: repair artifact status must be machine-readable)
+      - repair_panel_ran: bool (principle: distinguish skipped/gated from executed)
+      - model_specs: dict (principle: mandated SOTA GGUFs must be named)
+      - models_used: list (principle: distinguish real SOTA evidence from fallback)
+      - missing_model_specs: list (principle: absence must be explicit)
       - preconditions_checked: list (principle: compute-bound work must fail fast)
-      - output_paths: list (principle: evidence must be reusable)
+      - panel_case_count: int (principle: denominator must be visible)
+      - repair_success_rate: float (principle: repair utility metric)
+      - verified_success_count: int (principle: successes must pass verification)
+      - false_accept_count: int (principle: correctness cannot be traded away)
+      - abstention_count: int (principle: selective verifier behavior must be visible)
+      - localized_failure_feedback: list (principle: repair should learn from precise failures)
+      - headline_claim_allowed: bool (principle: micro-panel should not become an overclaim)
       - random_seed: int (principle: reproducibility)
       - reproducibility_checksum: str (principle: artifact integrity)
       - duration_s: float (principle: timing evidence)
-      - honest_verdict: str (principle: must start with complete:/success:/passed:/shipped:)
+      - honest_verdict: str (principle: must start with complete:/success:/passed:/shipped: when panel artifact is written)
       Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
 
-  - id: exp3278-fr11-full-corpus-continual-self-learning-audit-v1
-    milestone: "2026.05.303"
-    deliverable: "results/experiment_3278_fr11_full_corpus_continual_self_learning_audit_v1.json"
-    title: "FR-11 full-corpus continual self-learning audit"
-    priority: high
-    max_turns: 50
-    estimated_wall_time_min: 55
-    track: "fr11"
-    inference_substrate: "artifact_aggregation_only"
-    requires_gpu: false
-    gated_on:
-      - upstream: exp3272-prompt-injection-v4-full-corpus-assembly-leakage-audit-v1
-        artifact_field: full_15k_corpus_ready
-        op: "=="
-        value: true
-    prior_failures:
-      - experiment_id: exp3255-fr11-lifelong-failure-memory-retention-audit-v1
-        verdict: "complete: FR-11 retention audit completed against pre-full-corpus traces"
-        addressed_by: "This task repeats the retention/adaptation/forgetting audit after the full 15k prompt-injection corpus exists and adds negative-transfer checks from recent memory benchmarks."
-        retire_if_same_verdict: true
-      - experiment_id: exp3243-fr11-failure-memory-controller-v1
-        verdict: "complete: controller-side failure memory completed without foundation-weight updates"
-        addressed_by: "The .303 task tests that controller memory on the new corpus improves held-out routing without forgetting older gate-block patterns."
-        retire_if_same_verdict: true
-    prompt: |
-      CONTEXT
-      Project root placeholder: {project_root}. Run date placeholder: {date}.
-      This is the mandatory continuous self-learning experiment for .303. It must stay controller-memory only: no foundation-model weight updates and no claim that the base LLM learned.
-
-      EXISTING CODE TO READ FIRST
-      - CLAUDE.md
-      - research-program.md
-      - results/experiment_3272_prompt_injection_v4_full_corpus_assembly_leakage_audit_v1.json
-      - results/experiment_3255_fr11_lifelong_failure_memory_retention_audit_v1.json
-      - results/experiment_3243_fr11_failure_memory_controller_v1.json
-      - controller/memory code found via rg "FR-11|failure-memory|retention|forgetting|controller"
-
-      TASK
-      Audit continuous self-learning over full-corpus prompt-injection failures and legacy gate-block traces. Measure retention, adaptation, forgetting, and negative transfer using controller memory only.
-
-      CONCRETE STEPS
-      1. If full_15k_corpus_ready is not true, write a complete gated-skip artifact.
-      2. Build a stream of failure traces from v4 full-corpus errors, Garak/adaptive rows if available, and legacy repair/SOTA gate-block traces.
-      3. Evaluate before/after controller-memory updates on held-out traces.
-      4. Measure retention of older gate-block behavior, adaptation to new prompt-injection failures, and negative transfer.
-      5. Emit rollback criteria and a no-weight-update attestation.
-
-      REQUIRED ARTIFACT FIELDS:
-      - continuous_self_learning_task: bool (principle: FR-11 milestone mandate must be explicit)
-      - fr11_full_corpus_audit_ready: bool (principle: matrix needs a stable FR-11 signal)
-      - controller_memory_only: bool (principle: no foundation-weight update claim)
-      - foundation_weight_updates_performed: bool (principle: must remain false for this experiment)
-      - retention_score: float (principle: old behavior preservation must be measured)
-      - adaptation_score: float (principle: new failure learning must be measured)
-      - forgetting_rate: float (principle: stability-plasticity risk must be visible)
-      - negative_transfer_rate: float (principle: memory can harm hard cases)
-      - heldout_trace_count: int (principle: sample size must be explicit)
-      - rollback_policy: dict (principle: unsafe memory updates need rollback)
-      - output_paths: list (principle: downstream tasks need concrete artifacts)
-      - random_seed: int (principle: reproducibility)
-      - reproducibility_checksum: str (principle: artifact integrity)
-      - duration_s: float (principle: timing evidence)
-      - honest_verdict: str (principle: must start with complete:/success:/passed:/shipped:)
-      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
-
-  - id: exp3279-evidence-matrix-v35
-    milestone: "2026.05.303"
-    deliverable: "results/experiment_3279_evidence_matrix_v35.json"
-    title: "Evidence matrix v35 for .303 corpus, Garak, repair, and FR-11"
+  - id: exp3291-fr11-garak-abstention-memory-replay-v1
+    milestone: "2026.05.304"
+    deliverable: "results/experiment_3291_fr11_garak_abstention_memory_replay_v1.json"
+    title: "FR-11 Garak and abstention memory replay v1"
     priority: high
     max_turns: 30
     estimated_wall_time_min: 35
-    track: "ops"
-    inference_substrate: "artifact_aggregation_only"
+    track: "self_learning"
+    inference_substrate: "controller_memory_replay_only"
     requires_gpu: false
     prior_failures:
-      - experiment_id: exp3257-cross-corpus-matrix-v34
-        verdict: "complete: cross-corpus matrix v34 for .301 evidence"
-        addressed_by: "This matrix version aggregates the new .303 full-corpus, Garak, repair, and FR-11 artifacts. It is a normal matrix successor with different artifact inputs."
-        retire_if_same_verdict: true
-      - experiment_id: exp3244-cross-corpus-matrix-v33
-        verdict: "complete: cross-corpus matrix v33 for runtime, prompt-injection, repair preflight, and FR-11 evidence"
-        addressed_by: "This version updates the evidence table after .302/.303 corpus-scale artifacts, not the older runtime recovery state."
+      - experiment_id: exp3278-fr11-full-corpus-continual-self-learning-audit-v1
+        verdict: "complete: continuous_self_learning_task=true; retention_score=0.982143; adaptation_score=1.0; forgetting_rate=0.017857; negative_transfer_rate=0.0"
+        addressed_by: "This replay extends the successful .303 FR-11 audit to new Garak, abstention, KAN-boundary, and repair-gate blocker traces while preserving the controller-memory-only boundary."
         retire_if_same_verdict: true
     prompt: |
       CONTEXT
       Project root placeholder: {project_root}. Run date placeholder: {date}.
-      Aggregate all available .303 artifacts into evidence matrix v35. This task should run even if some upstream experiments were gated-skip or blocked, and it must record missing/blocker status honestly.
+      research-program.md requires at least one continuous self-learning experiment. .303 passed controller-memory FR-11 on full-corpus traces. .304 must test whether the controller can ingest Garak/toolchain blockers, abstention root causes, KAN boundary decisions, and repair-gate outcomes without forgetting prior routing behavior.
 
       EXISTING CODE TO READ FIRST
       - CLAUDE.md
-      - results/experiment_3267_close_v302_open_v303_corpus_queue.json
-      - results/experiment_3268_sota_receipt_methodology_supplement_v1.json
-      - results/experiment_3269_prompt_injection_v4_full_corpus_split_manifest_v1.json
-      - all results/experiment_327*.json artifacts that exist
-      - prior matrix artifacts found via rg "matrix_v3|cross_corpus|evidence_matrix"
+      - CODEX.md
+      - research-program.md
+      - results/experiment_3278_fr11_full_corpus_continual_self_learning_audit_v1.json
+      - results/experiment_3282_garak_install_and_probe_manifest_v1.json if present
+      - results/experiment_3285_full_garak_dataflip_redteam_eval_v2.json if present
+      - results/experiment_3286_clean_verifier_abstention_root_cause_v1.json if present
+      - results/experiment_3289_repair_gate_decision_v9_after_garak_abstention.json if present
 
       TASK
-      Build evidence matrix v35 with prompt-injection corpus, KAN, Garak, clean verifier, repair, FR-11, blocker, and publication-readiness fields.
+      Run a controller-memory-only FR-11 replay over .304 blocker traces and prior held-out routes. Preserve raw episodes before any consolidation and report retention, adaptation, forgetting, and negative transfer.
 
       CONCRETE STEPS
-      1. Load all .303 artifacts that exist.
-      2. Mark each row clean, blocked, flagged, missing, pilot-only, or sidecar-only.
-      3. Preserve exact blocker reasons and do not infer success from missing artifacts.
-      4. Report publication blocker movement relative to .302.
-      5. Write the matrix artifact with checksums and next-gap candidates.
+      1. Load the .303 FR-11 memory audit as the baseline.
+      2. Collect available .304 blocker/evidence traces. If some upstream tasks are gate-blocked, include their blocked artifacts as learning episodes rather than skipping the category.
+      3. Replay routing decisions for prior held-out traces and new Garak/abstention/KAN/repair traces.
+      4. Preserve raw episodes and gate any consolidated summary memory.
+      5. Report whether controller memory improved routing without negative transfer or foundation-weight updates.
 
       REQUIRED ARTIFACT FIELDS:
-      - matrix_v35_ready: bool (principle: gates capstone summary)
-      - clean_row_count: int (principle: evidence quality must be counted)
-      - blocked_row_count: int (principle: blocked work must be visible)
-      - flagged_row_count: int (principle: adversarial/methodology flags must be visible)
-      - missing_row_count: int (principle: absent artifacts must not be inferred)
-      - sidecar_only_row_count: int (principle: bounded claims must stay bounded)
-      - publication_blocker_count_estimate: int (principle: capstone needs blocker movement)
-      - next_gap_candidates: list (principle: next milestone planning needs ranked gaps)
-      - rows: list (principle: matrix must be inspectable)
+      - continuous_self_learning_task: bool (principle: marks the required FR-11 milestone experiment)
+      - fr11_garak_abstention_memory_replay_ready: bool (principle: replay status must be machine-readable)
+      - controller_memory_only: bool (principle: no foundation-weight update claim)
+      - foundation_weight_updates_performed: bool (principle: must remain false)
+      - raw_episodes_preserved: bool (principle: memory research warns against premature consolidation)
+      - new_episode_count: int (principle: adaptation denominator must be visible)
+      - heldout_trace_count: int (principle: retention denominator must be visible)
+      - retention_score: float (principle: old behavior must be preserved)
+      - adaptation_score: float (principle: new blocker handling must improve)
+      - forgetting_rate: float (principle: FR-11 must track forgetting)
+      - negative_transfer_rate: float (principle: new memory must not degrade old gates)
+      - memory_update_policy: dict (principle: write-path filtering must be explicit)
+      - blocked_trace_categories: list (principle: gate-block artifacts are learning data)
       - random_seed: int (principle: reproducibility)
       - reproducibility_checksum: str (principle: artifact integrity)
       - duration_s: float (principle: timing evidence)
       - honest_verdict: str (principle: must start with complete:/success:/passed:/shipped:)
       Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
 
-  - id: exp3280-capstone-v303
-    milestone: "2026.05.303"
-    deliverable: "results/experiment_3280_capstone_v303.json"
-    title: "Capstone v303 and next-gap decision"
+  - id: exp3292-evidence-matrix-v36
+    milestone: "2026.05.304"
+    deliverable: "results/experiment_3292_evidence_matrix_v36.json"
+    title: "Evidence matrix v36"
     priority: critical
-    max_turns: 50
-    estimated_wall_time_min: 45
-    track: "ops"
+    max_turns: 20
+    estimated_wall_time_min: 15
+    track: "evidence"
     inference_substrate: "artifact_aggregation_only"
     requires_gpu: false
-    gated_on:
-      - upstream: exp3279-evidence-matrix-v35
-        artifact_field: matrix_v35_ready
-        op: "=="
-        value: true
     prior_failures:
-      - experiment_id: exp3258-capstone-v301
-        verdict: "complete: capstone_v301_ready=true; paper_ready=false"
-        addressed_by: "This capstone closes .303 using new corpus/Garak/repair/FR-11 evidence, not the .301 CUDA-broken state."
-        retire_if_same_verdict: true
-      - experiment_id: exp3266-capstone-v302
-        verdict: "complete: capstone_v302_ready=true; paper_ready=false; publication_blocker_count=105; next_top_gap=full_15k_v4_corpus_across_shards_plus_repair_and_garak_gates"
-        addressed_by: "This capstone determines whether .303 cleared the gap named by .302, with matrix v35 as evidence."
+      - experiment_id: exp3279-evidence-matrix-v35
+        verdict: "complete: matrix_v35_ready=true; top gaps include unblock_garak_redteam_eval and reduce_clean_verifier_abstention_rate"
+        addressed_by: "This matrix version aggregates .304 blocker-removal artifacts and carries forward .303 unresolved gates instead of restating the .303 matrix."
         retire_if_same_verdict: true
     prompt: |
       CONTEXT
       Project root placeholder: {project_root}. Run date placeholder: {date}.
-      Close milestone .303 after the matrix is written. The key question is whether the full 15k v4 corpus, Garak gate, repair gate, and FR-11 self-learning audit reduced publication blockers and changed the top gap.
+      Build the .304 evidence matrix after the Garak/toolchain, abstention, KAN-boundary, repair-gate, repair-panel, and FR-11 tasks have run or gate-blocked. The matrix must not hide blocked gates.
 
       EXISTING CODE TO READ FIRST
       - CLAUDE.md
-      - results/experiment_3266_capstone_v302.json
+      - CODEX.md
       - results/experiment_3279_evidence_matrix_v35.json
-      - all available .303 result artifacts
-      - ops/status.md
-      - ops/changelog.md
+      - results/experiment_3281_archive_v303_activate_v304.json if present
+      - results/experiment_3282_garak_install_and_probe_manifest_v1.json if present
+      - results/experiment_3285_full_garak_dataflip_redteam_eval_v2.json if present
+      - results/experiment_3287_abstention_calibrated_clean_verifier_v15.json if present
+      - results/experiment_3288_kan_sidecar_failure_autopsy_boundary_v1.json if present
+      - results/experiment_3291_fr11_garak_abstention_memory_replay_v1.json if present
 
       TASK
-      Produce the .303 capstone. Report paper_ready, publication blockers, what changed since .302, what stayed blocked, and the next top gap. Do not submit or publish anything externally.
+      Aggregate .304 evidence into matrix v36 with clear status classes: clean, blocked, flagged, sidecar-only, missing, and paper-blocking.
 
       CONCRETE STEPS
-      1. If matrix_v35_ready is not true, write a complete gated-skip capstone with blocker reason.
-      2. Read matrix v35 and every available .303 artifact.
-      3. Determine whether the .302 next top gap was cleared.
-      4. Compute publication blocker count and paper_ready conservatively.
-      5. Name the next top gap and recommended next milestone theme.
-      6. Update ops/status.md and ops/changelog.md only if the task's normal conductor workflow requires it.
+      1. Scan results/experiment_3281 through results/experiment_3291 artifacts that exist.
+      2. Record key gate fields and blocked reasons.
+      3. Carry forward unresolved .303 blockers where .304 did not resolve them.
+      4. Compute blocker counts and the top gap ordering.
+      5. Emit a machine-readable evidence matrix that the capstone can consume.
 
       REQUIRED ARTIFACT FIELDS:
-      - capstone_v303_ready: bool (principle: milestone closeout must be machine-readable)
-      - paper_ready: bool (principle: publication readiness must remain conservative)
-      - publication_blocker_count: int (principle: blocker count is the main trend metric)
-      - publication_blocker_delta: int (principle: show movement relative to .302)
-      - v4_full_corpus_status: str (principle: .302 top gap must be resolved or carried)
-      - garak_gate_status: str (principle: red-team result must be explicit)
-      - repair_gate_status: str (principle: repair can only reopen through the gate)
-      - fr11_status: str (principle: continuous self-learning status must be explicit)
-      - next_top_gap: str (principle: next milestone planning must be anchored)
-      - recommended_next_milestone_title: str (principle: carry forward actionable direction)
+      - matrix_v36_ready: bool (principle: capstone gate)
+      - artifact_count_scanned: int (principle: aggregation denominator must be visible)
+      - clean_evidence_count: int (principle: distinguish clean from flagged evidence)
+      - blocked_evidence_count: int (principle: blocked gates must remain visible)
+      - flagged_evidence_count: int (principle: methodology flags must remain visible)
+      - sidecar_only_count: int (principle: KAN and provisional evidence must stay bounded)
+      - missing_evidence_count: int (principle: absent artifacts are different from failed artifacts)
+      - paper_blocker_count: int (principle: publication readiness must be quantitative)
+      - top_gaps: list (principle: next milestone planning needs ranked blockers)
+      - gate_summary: dict (principle: Garak, verifier, KAN, repair, and FR-11 gates must be visible)
+      - random_seed: int (principle: reproducibility)
+      - reproducibility_checksum: str (principle: artifact integrity)
+      - duration_s: float (principle: timing evidence)
+      - honest_verdict: str (principle: must start with complete:/success:/passed:/shipped:)
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+
+  - id: exp3293-capstone-v304
+    milestone: "2026.05.304"
+    deliverable: "results/experiment_3293_capstone_v304.json"
+    title: "Capstone v304"
+    priority: critical
+    max_turns: 20
+    estimated_wall_time_min: 15
+    track: "capstone"
+    inference_substrate: "artifact_aggregation_only"
+    requires_gpu: false
+    gated_on:
+      - upstream: exp3292-evidence-matrix-v36
+        artifact_field: matrix_v36_ready
+        op: "=="
+        value: true
+    prior_failures:
+      - experiment_id: exp3280-capstone-v303
+        verdict: "complete: paper_ready=false; publication_blocker_count=105; next_top_gap=unblock_garak_redteam_eval"
+        addressed_by: "This capstone summarizes the .304 blocker-removal queue and identifies the next top gap after Garak, abstention, KAN, repair, and FR-11 evidence has been updated."
+        retire_if_same_verdict: true
+    prompt: |
+      CONTEXT
+      Project root placeholder: {project_root}. Run date placeholder: {date}.
+      The .304 capstone must summarize whether Garak was made runnable, whether clean verifier abstention was calibrated, whether the KAN sidecar was bounded or retired, whether repair reopened, and whether FR-11 controller-memory replay remained safe.
+
+      EXISTING CODE TO READ FIRST
+      - CLAUDE.md
+      - CODEX.md
+      - results/experiment_3292_evidence_matrix_v36.json
+      - results/experiment_3280_capstone_v303.json
+      - ops/status.md
+      - ops/changelog.md
+      - research-complete.yaml
+
+      TASK
+      Produce the .304 capstone artifact and reconcile lightweight ops docs. Do not activate the next milestone and do not modify research-roadmap.yaml.
+
+      CONCRETE STEPS
+      1. Read matrix v36 and the .303 capstone.
+      2. Decide paper_ready using only clean, unblocked, headline-eligible evidence.
+      3. Record publication_blocker_count, blocker delta from .303, and the next_top_gap.
+      4. Update ops/status.md and ops/changelog.md with a concise .304 closeout entry if the run is complete.
+      5. Confirm protected files were not modified: research-roadmap.yaml and scripts/research_conductor.py.
+
+      REQUIRED ARTIFACT FIELDS:
+      - capstone_v304_ready: bool (principle: milestone closeout status)
+      - paper_ready: bool (principle: publication gate)
+      - publication_blocker_count: int (principle: track blocker movement)
+      - blocker_delta_from_v303: int (principle: measure milestone impact)
+      - garak_unblocked: bool (principle: top .303 gap)
+      - clean_verifier_abstention_unblocked: bool (principle: repair gate input)
+      - kan_boundary_resolved: bool (principle: sidecar evidence must be bounded)
+      - repair_gate_open: bool (principle: repair status)
+      - repair_micro_panel_ready: bool (principle: repair evidence status)
+      - fr11_memory_replay_safe: bool (principle: continuous self-learning status)
+      - next_top_gap: str (principle: next milestone seed)
+      - recommended_next_milestone_title: str (principle: planning handoff)
+      - protected_files_untouched: bool (principle: enforce operator constraints)
       - random_seed: int (principle: reproducibility)
       - reproducibility_checksum: str (principle: artifact integrity)
       - duration_s: float (principle: timing evidence)
