@@ -6627,3 +6627,4 @@ web search |
 | 2026-05-28 12:07 UTC | Close .302 ledger and open .303 corpus queue | OK | 81 passed in 3.36s |
 | 2026-05-28 12:22 UTC | SOTA receipt methodology supplement v1 | OK | 81 passed in 3.45s |
 | 2026-05-28 12:38 UTC | Prompt-injection v4 full-corpus split manifest | OK | 81 passed in 4.39s |
+| 2026-05-28 12:56 UTC | Prompt-injection teacher-label shards 2-4 | OK | 81 passed in 3.60s |

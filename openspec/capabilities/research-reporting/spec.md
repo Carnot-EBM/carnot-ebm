@@ -12856,3 +12856,74 @@ records the exact blocker.
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-REPORT-3270 | Planned (`python/carnot/reporting/prompt_injection_teacher_label_shards_2_4_3270.py`) | Planned (`tests/python/test_experiment_3270_prompt_injection_teacher_label_shards_2_4.py`) |
+
+### REQ-REPORT-3271: Prompt-Injection Teacher Label Shards 5-7 Plus Garak Seed v1
+
+The repository shall provide an Exp 3271 prompt-injection teacher-label runner
+that writes
+`results/experiment_3271_prompt_injection_teacher_label_shards_5_7_garak_seed_v1.json`,
+three shard JSONL files under `data/prompt_injection_v4/teacher_label_shards/`,
+and the 1,000-example Garak/adaptive seed split at
+`data/prompt_injection_v4/splits/garak_adaptive_seed_v1.jsonl`. The workflow
+MUST continue the v4 split-run lineage after Exp 3270 and SHALL write a
+complete gated-skip artifact with
+`teacher_label_shards_5_7_garak_seed_ready=false` when Exp 3270 reports
+`cumulative_label_count < 8000`. Before any model load, it MUST check CUDA
+visibility, selected-Python llama.cpp CUDA support, cached mandated SOTA GGUF
+availability, disk capacity, and whether local Garak is installed or a
+deterministic Garak/adaptive seed fallback is being used.
+
+When the gates are open, the workflow SHALL produce shards 5, 6, and 7 with
+2,000 new normal-corpus examples each, following the Exp 3269 manifest
+taxonomy: shard 5 covers long reasoning-heavy and misaligned-instruction attack
+rows, shard 6 covers aligned-instruction benign and DataFlip/KAD-adaptive rows,
+and shard 7 covers tool/RAG indirect-injection and encoding attack rows. It
+SHALL also produce a 1,000-example evaluation-only Garak/adaptive seed covering
+promptinject-style, encoding, DataFlip/KAD-adaptive, long reasoning-heavy, and
+indirect/tool/RAG-style attack cases. At least one cached mandated local SOTA
+GGUF model from `unsloth/gemma-4-26B-A4B-it-GGUF`,
+`unsloth/Qwen3.6-35B-A3B-GGUF`, or `unsloth/gemma-4-31B-it-GGUF` MUST be used
+for auditable headline label evidence. Bulk labels may be deterministically
+expanded from the manifest taxonomy only when the artifact explicitly records
+that source in per-example provenance and in `models_used`.
+
+The terminal artifact MUST include
+`teacher_label_shards_5_7_garak_seed_ready`, `cumulative_label_count`,
+`new_label_count`, `garak_seed_count`, `shard_counts`, `label_distribution`,
+`model_specs`, `models_used`, `preconditions_checked`, `output_paths`,
+`checksums`, `random_seed`, `reproducibility_checksum`, `duration_s`, and
+`honest_verdict`. `new_label_count` MUST be 6,000 when all three normal shards
+are ready, `cumulative_label_count` MUST include Exp 3270's cumulative count,
+`garak_seed_count` MUST be 1,000, and `shard_counts` MUST record benign,
+injection, aligned-instruction, misaligned-instruction, non-instruction, and
+category counts for every normal shard and the Garak/adaptive seed. Checksums
+MUST cover each written shard file and the Garak/adaptive seed file.
+`honest_verdict` MUST begin with one of `complete:`, `success:`, `passed:`, or
+`shipped:`.
+
+#### SCENARIO-REPORT-3271: Shards 5-7 And Garak Seed Complete The Split Inputs
+
+**Given** Exp 3270 reports `cumulative_label_count >= 8000`
+**And** CUDA, selected-Python llama.cpp CUDA, disk capacity, and at least one
+mandated local SOTA GGUF are available
+**When** the Exp 3271 shard-label and Garak-seed runner runs
+**Then** it writes
+`results/experiment_3271_prompt_injection_teacher_label_shards_5_7_garak_seed_v1.json`,
+three normal shard JSONL files, and
+`data/prompt_injection_v4/splits/garak_adaptive_seed_v1.jsonl` with all
+required schema fields, sets `teacher_label_shards_5_7_garak_seed_ready=true`,
+records `new_label_count=6000`, records `cumulative_label_count=14000` when Exp
+3270 supplied 8,000 labels, records `garak_seed_count=1000`, names the actual
+SOTA model used for headline label evidence, records precondition evidence and
+per-shard class/instruction/taxonomy counts, includes checksums for every
+written output file, and emits an `honest_verdict` beginning with `complete:`.
+If Exp 3270 is below the 8,000-label gate, any compute precondition is closed,
+or SOTA label evidence is unavailable, the artifact remains complete, leaves
+`teacher_label_shards_5_7_garak_seed_ready=false`, and records the exact
+blocker.
+
+## Implementation Status (REQ-REPORT-3271)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-3271 | Implemented (`python/carnot/reporting/prompt_injection_teacher_label_shards_5_7_garak_seed_3271.py`) | Implemented (`tests/python/test_experiment_3271_prompt_injection_teacher_label_shards_5_7_garak_seed.py`) |

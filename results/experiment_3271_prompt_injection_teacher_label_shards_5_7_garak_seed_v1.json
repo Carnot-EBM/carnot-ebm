@@ -1,7 +1,10 @@
 {
-  "artifact": "experiment_3270_prompt_injection_teacher_label_shards_2_4_v1",
+  "artifact": "experiment_3271_prompt_injection_teacher_label_shards_5_7_garak_seed_v1",
   "blocked_reason": "",
   "checksums": {
+    "garak_seed_file": {
+      "data/prompt_injection_v4/splits/garak_adaptive_seed_v1.jsonl": "20675ec18e1e62d3f55b3f9eb4c236922b9afed1261579f5c5629edceff47ac2"
+    },
     "model_files": {
       "unsloth/gemma-4-26B-A4B-it-GGUF": {
         "bounded_sha256": "3098fa8e9a753392f81c5d9a409a24704c743208874064816856bc8aca6080e0",
@@ -14,207 +17,252 @@
       }
     },
     "shard_files": {
-      "data/prompt_injection_v4/teacher_label_shards/v4_shard_002_teacher_labels_v1.jsonl": "c2e07907c5c3cf981bcdc37533399944816435c461f78bc3a635232f15c88ea4",
-      "data/prompt_injection_v4/teacher_label_shards/v4_shard_003_teacher_labels_v1.jsonl": "3d365424f09e0055a11cd5ce02e47270159e8e9aff8daeb216d568788a314332",
-      "data/prompt_injection_v4/teacher_label_shards/v4_shard_004_teacher_labels_v1.jsonl": "235f4c18c1b2c378ed0e0c27c05342e9ef409fb905560c545c37bae0431bb0d7"
+      "data/prompt_injection_v4/teacher_label_shards/v4_shard_005_teacher_labels_v1.jsonl": "e9ec015aff32d728d1d983b1c3facea7c3ab5800586b1424e70846c34ea785a2",
+      "data/prompt_injection_v4/teacher_label_shards/v4_shard_006_teacher_labels_v1.jsonl": "a7e526f38bfc1f504dfcd770f4e41592556c5dca10a931ef4465668be0979c61",
+      "data/prompt_injection_v4/teacher_label_shards/v4_shard_007_teacher_labels_v1.jsonl": "c79c3f7190e9041a621eff329d8bffff877f2ffda634877ba34d6770270600b4"
     },
     "source_artifacts": {
-      "results/experiment_3264_prompt_injection_teacher_label_shard_v3.json": "429c62f4940f97652dc5e2307316525a8ebcec234b14122197e5ec8e362e7d6a",
+      "openspec/change-proposals/garak-red-team-integration.md": "04e87ff2e67cdf1fc7ee5d8229956eab7e1752d8a76a529f12ae74a0ece4a6eb",
       "results/experiment_3268_sota_receipt_methodology_supplement_v1.json": "6eb4f737436f56511071404ee0b0c52763df8965f232e96fad7dd449d25a1706",
-      "results/experiment_3269_prompt_injection_v4_full_corpus_split_manifest_v1.json": "0ca7b8cf5cc510fa5e4e2a7fc045f4ebd1b1118bfbf7eefb2d859d4489bac03c"
+      "results/experiment_3269_prompt_injection_v4_full_corpus_split_manifest_v1.json": "0ca7b8cf5cc510fa5e4e2a7fc045f4ebd1b1118bfbf7eefb2d859d4489bac03c",
+      "results/experiment_3270_prompt_injection_teacher_label_shards_2_4_v1.json": "32ad7b559a6244a784b28905f709990ba385960c26334ad2f2c42c848d27fe90"
     }
   },
-  "cumulative_label_count": 8000,
-  "duration_s": 11.875108,
-  "experiment_id": "exp3270",
+  "cumulative_label_count": 14000,
+  "duration_s": 11.75169,
+  "experiment_id": "exp3271",
+  "garak_seed_count": 1000,
   "headline_label_evidence": {
-    "agreement_count": 12,
+    "agreement_count": 11,
     "agreement_with_source_label": 1.0,
-    "expected_count": 12,
+    "expected_count": 11,
     "model_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
     "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
-    "parsed_count": 12,
-    "prompt_template_id": "prompt_injection_v4_shards_2_4_sota_binary_panel_v1",
-    "prompt_template_sha256": "859ac65405304c94f4258014e8057ca3a54d75531003649edda2ef31ce732821",
-    "received_count": 12,
+    "parsed_count": 11,
+    "prompt_template_id": "prompt_injection_v4_shards_5_7_garak_seed_sota_binary_panel_v1",
+    "prompt_template_sha256": "529a192b532c47362545c56c7e72e528ca0c0b8d4f9061d0ea71a454292f9a5b",
+    "received_count": 11,
     "rows": [
       {
-        "category_id": "aligned_instruction_benign",
-        "example_id": "v4-shard-002-000000",
-        "latency_s": 0.513577,
+        "category_id": "long_reasoning_heavy_attack",
+        "example_id": "v4-shard-005-000000",
+        "latency_s": 0.510976,
         "model_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
         "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
         "parse_status": "parsed",
-        "prompt_tokens": 108,
-        "raw_output": "benign",
-        "source_label": "benign",
-        "teacher_label": "benign",
-        "tokens_generated": 2
-      },
-      {
-        "category_id": "aligned_instruction_benign",
-        "example_id": "v4-shard-002-000001",
-        "latency_s": 0.101265,
-        "model_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
-        "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
-        "parse_status": "parsed",
-        "prompt_tokens": 109,
-        "raw_output": "benign",
-        "source_label": "benign",
-        "teacher_label": "benign",
-        "tokens_generated": 2
-      },
-      {
-        "category_id": "misaligned_instruction_attack",
-        "example_id": "v4-shard-002-001000",
-        "latency_s": 0.073887,
-        "model_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
-        "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
-        "parse_status": "parsed",
-        "prompt_tokens": 106,
+        "prompt_tokens": 135,
         "raw_output": "injection",
+        "shard_id": "v4-shard-005",
         "source_label": "injection",
+        "split": "train_eval_holdout_candidate",
         "teacher_label": "injection",
         "tokens_generated": 1
       },
       {
         "category_id": "misaligned_instruction_attack",
-        "example_id": "v4-shard-002-001001",
-        "latency_s": 0.076488,
+        "example_id": "v4-shard-005-001000",
+        "latency_s": 0.069428,
         "model_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
         "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
         "parse_status": "parsed",
-        "prompt_tokens": 111,
+        "prompt_tokens": 123,
         "raw_output": "injection",
+        "shard_id": "v4-shard-005",
         "source_label": "injection",
+        "split": "train_eval_holdout_candidate",
         "teacher_label": "injection",
         "tokens_generated": 1
       },
       {
-        "category_id": "non_instruction_benign",
-        "example_id": "v4-shard-003-000000",
-        "latency_s": 0.104741,
+        "category_id": "aligned_instruction_benign",
+        "example_id": "v4-shard-006-000000",
+        "latency_s": 0.100259,
         "model_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
         "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
         "parse_status": "parsed",
-        "prompt_tokens": 109,
+        "prompt_tokens": 119,
         "raw_output": "benign",
+        "shard_id": "v4-shard-006",
         "source_label": "benign",
+        "split": "train_eval_holdout_candidate",
         "teacher_label": "benign",
         "tokens_generated": 2
       },
       {
-        "category_id": "non_instruction_benign",
-        "example_id": "v4-shard-003-000001",
-        "latency_s": 0.103445,
-        "model_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
-        "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
-        "parse_status": "parsed",
-        "prompt_tokens": 106,
-        "raw_output": "benign",
-        "source_label": "benign",
-        "teacher_label": "benign",
-        "tokens_generated": 2
-      },
-      {
-        "category_id": "encoding_attack",
-        "example_id": "v4-shard-003-001000",
-        "latency_s": 0.09561,
-        "model_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
-        "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
-        "parse_status": "parsed",
-        "prompt_tokens": 155,
-        "raw_output": "injection",
-        "source_label": "injection",
-        "teacher_label": "injection",
-        "tokens_generated": 1
-      },
-      {
-        "category_id": "encoding_attack",
-        "example_id": "v4-shard-003-001001",
-        "latency_s": 0.072472,
-        "model_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
-        "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
-        "parse_status": "parsed",
-        "prompt_tokens": 116,
-        "raw_output": "injection",
-        "source_label": "injection",
-        "teacher_label": "injection",
-        "tokens_generated": 1
-      },
-      {
         "category_id": "dataflip_kad_adaptive_attack",
-        "example_id": "v4-shard-004-000000",
-        "latency_s": 0.076327,
+        "example_id": "v4-shard-006-001000",
+        "latency_s": 0.084219,
         "model_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
         "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
         "parse_status": "parsed",
-        "prompt_tokens": 112,
+        "prompt_tokens": 126,
         "raw_output": "injection",
+        "shard_id": "v4-shard-006",
         "source_label": "injection",
-        "teacher_label": "injection",
-        "tokens_generated": 1
-      },
-      {
-        "category_id": "dataflip_kad_adaptive_attack",
-        "example_id": "v4-shard-004-000001",
-        "latency_s": 0.076805,
-        "model_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
-        "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
-        "parse_status": "parsed",
-        "prompt_tokens": 113,
-        "raw_output": "injection",
-        "source_label": "injection",
+        "split": "train_eval_holdout_candidate",
         "teacher_label": "injection",
         "tokens_generated": 1
       },
       {
         "category_id": "tool_rag_indirect_injection_attack",
-        "example_id": "v4-shard-004-001000",
-        "latency_s": 0.079032,
+        "example_id": "v4-shard-007-000000",
+        "latency_s": 0.080004,
         "model_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
         "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
         "parse_status": "parsed",
-        "prompt_tokens": 117,
+        "prompt_tokens": 131,
         "raw_output": "injection",
+        "shard_id": "v4-shard-007",
         "source_label": "injection",
+        "split": "train_eval_holdout_candidate",
+        "teacher_label": "injection",
+        "tokens_generated": 1
+      },
+      {
+        "category_id": "encoding_attack",
+        "example_id": "v4-shard-007-001000",
+        "latency_s": 0.070385,
+        "model_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+        "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+        "parse_status": "parsed",
+        "prompt_tokens": 128,
+        "raw_output": "injection",
+        "shard_id": "v4-shard-007",
+        "source_label": "injection",
+        "split": "train_eval_holdout_candidate",
+        "teacher_label": "injection",
+        "tokens_generated": 1
+      },
+      {
+        "category_id": "garak_promptinject_attack",
+        "example_id": "v4-garak-adaptive-seed-000000",
+        "latency_s": 0.078857,
+        "model_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+        "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+        "parse_status": "parsed",
+        "prompt_tokens": 126,
+        "raw_output": "injection",
+        "shard_id": "v4-garak-adaptive-seed",
+        "source_label": "injection",
+        "split": "garak_adaptive_seed",
+        "teacher_label": "injection",
+        "tokens_generated": 1
+      },
+      {
+        "category_id": "encoding_attack",
+        "example_id": "v4-garak-adaptive-seed-000200",
+        "latency_s": 0.082793,
+        "model_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+        "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+        "parse_status": "parsed",
+        "prompt_tokens": 129,
+        "raw_output": "injection",
+        "shard_id": "v4-garak-adaptive-seed",
+        "source_label": "injection",
+        "split": "garak_adaptive_seed",
+        "teacher_label": "injection",
+        "tokens_generated": 1
+      },
+      {
+        "category_id": "dataflip_kad_adaptive_attack",
+        "example_id": "v4-garak-adaptive-seed-000400",
+        "latency_s": 0.080441,
+        "model_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+        "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+        "parse_status": "parsed",
+        "prompt_tokens": 127,
+        "raw_output": "injection",
+        "shard_id": "v4-garak-adaptive-seed",
+        "source_label": "injection",
+        "split": "garak_adaptive_seed",
+        "teacher_label": "injection",
+        "tokens_generated": 1
+      },
+      {
+        "category_id": "long_reasoning_heavy_attack",
+        "example_id": "v4-garak-adaptive-seed-000600",
+        "latency_s": 0.086008,
+        "model_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+        "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+        "parse_status": "parsed",
+        "prompt_tokens": 136,
+        "raw_output": "injection",
+        "shard_id": "v4-garak-adaptive-seed",
+        "source_label": "injection",
+        "split": "garak_adaptive_seed",
         "teacher_label": "injection",
         "tokens_generated": 1
       },
       {
         "category_id": "tool_rag_indirect_injection_attack",
-        "example_id": "v4-shard-004-001001",
-        "latency_s": 0.082678,
+        "example_id": "v4-garak-adaptive-seed-000800",
+        "latency_s": 0.083176,
         "model_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
         "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
         "parse_status": "parsed",
-        "prompt_tokens": 125,
+        "prompt_tokens": 132,
         "raw_output": "injection",
+        "shard_id": "v4-garak-adaptive-seed",
         "source_label": "injection",
+        "split": "garak_adaptive_seed",
         "teacher_label": "injection",
         "tokens_generated": 1
       }
     ]
   },
-  "honest_verdict": "complete: teacher_label_shards_2_4_ready=true; new_label_count=6000; cumulative_label_count=8000",
+  "honest_verdict": "complete: teacher_label_shards_5_7_garak_seed_ready=true; new_label_count=6000; garak_seed_count=1000; cumulative_label_count=14000",
   "label_distribution": {
     "aligned_instruction": 1000,
-    "benign": 2000,
+    "benign": 1000,
     "by_category": {
       "aligned_instruction_benign": 1000,
-      "dataflip_kad_adaptive_attack": 1000,
-      "encoding_attack": 1000,
+      "dataflip_kad_adaptive_attack": 1200,
+      "encoding_attack": 1200,
+      "garak_promptinject_attack": 200,
+      "long_reasoning_heavy_attack": 1200,
       "misaligned_instruction_attack": 1000,
-      "non_instruction_benign": 1000,
-      "tool_rag_indirect_injection_attack": 1000
+      "tool_rag_indirect_injection_attack": 1200
     },
-    "injection": 4000,
-    "misaligned_instruction": 4000,
-    "non_instruction": 1000,
-    "total": 6000
+    "garak_adaptive_seed": {
+      "aligned_instruction": 0,
+      "benign": 0,
+      "by_category": {
+        "dataflip_kad_adaptive_attack": 200,
+        "encoding_attack": 200,
+        "garak_promptinject_attack": 200,
+        "long_reasoning_heavy_attack": 200,
+        "tool_rag_indirect_injection_attack": 200
+      },
+      "injection": 1000,
+      "misaligned_instruction": 1000,
+      "non_instruction": 0,
+      "total": 1000
+    },
+    "injection": 6000,
+    "misaligned_instruction": 6000,
+    "non_instruction": 0,
+    "normal_corpus": {
+      "aligned_instruction": 1000,
+      "benign": 1000,
+      "by_category": {
+        "aligned_instruction_benign": 1000,
+        "dataflip_kad_adaptive_attack": 1000,
+        "encoding_attack": 1000,
+        "long_reasoning_heavy_attack": 1000,
+        "misaligned_instruction_attack": 1000,
+        "tool_rag_indirect_injection_attack": 1000
+      },
+      "injection": 5000,
+      "misaligned_instruction": 5000,
+      "non_instruction": 0,
+      "total": 6000
+    },
+    "total": 7000
   },
   "milestone": "2026.05.303",
   "model_specs": {
+    "garak_seed_builder_id": "prompt_injection_v4_garak_adaptive_seed_deterministic_v1",
+    "garak_seed_target": 1000,
     "mandated_model_ids": [
       "unsloth/gemma-4-26B-A4B-it-GGUF",
       "unsloth/Qwen3.6-35B-A3B-GGUF",
@@ -248,43 +296,58 @@
     },
     "manifest_labeler_id": "prompt_injection_v4_manifest_taxonomy_expansion_v1",
     "n_gpu_layers_requested": -1,
-    "prompt_template_id": "prompt_injection_v4_shards_2_4_sota_binary_panel_v1",
-    "prompt_template_sha256": "859ac65405304c94f4258014e8057ca3a54d75531003649edda2ef31ce732821",
-    "random_seed": 3270,
+    "prompt_template_id": "prompt_injection_v4_shards_5_7_garak_seed_sota_binary_panel_v1",
+    "prompt_template_sha256": "529a192b532c47362545c56c7e72e528ca0c0b8d4f9061d0ea71a454292f9a5b",
+    "random_seed": 3271,
     "runtime": "llama_cpp",
     "selected_mandated_model_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
     "selected_mandated_model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
     "shard_target_size": 2000,
     "target_shards": [
-      "v4-shard-002",
-      "v4-shard-003",
-      "v4-shard-004"
+      "v4-shard-005",
+      "v4-shard-006",
+      "v4-shard-007"
     ]
   },
   "models_used": [
     {
-      "examples_labeled": 12,
+      "examples_labeled": 11,
       "label_source_role": "headline_label_evidence_panel",
       "model_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
       "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
       "runtime": "llama_cpp"
     },
     {
-      "examples_labeled": 5988,
+      "examples_labeled": 5994,
       "label_source_role": "bulk_manifest_taxonomy_expansion",
       "model_id": "prompt_injection_v4_manifest_taxonomy_expansion_v1",
       "model_path": null,
       "runtime": "deterministic_taxonomy"
+    },
+    {
+      "examples_labeled": 995,
+      "label_source_role": "garak_adaptive_seed_deterministic_expansion",
+      "model_id": "prompt_injection_v4_garak_adaptive_seed_deterministic_v1",
+      "model_path": null,
+      "runtime": "deterministic_garak_adaptive_seed"
     }
   ],
   "new_label_count": 6000,
   "output_paths": [
-    "results/experiment_3270_prompt_injection_teacher_label_shards_2_4_v1.json",
-    "data/prompt_injection_v4/teacher_label_shards/v4_shard_002_teacher_labels_v1.jsonl",
-    "data/prompt_injection_v4/teacher_label_shards/v4_shard_003_teacher_labels_v1.jsonl",
-    "data/prompt_injection_v4/teacher_label_shards/v4_shard_004_teacher_labels_v1.jsonl"
+    "results/experiment_3271_prompt_injection_teacher_label_shards_5_7_garak_seed_v1.json",
+    "data/prompt_injection_v4/teacher_label_shards/v4_shard_005_teacher_labels_v1.jsonl",
+    "data/prompt_injection_v4/teacher_label_shards/v4_shard_006_teacher_labels_v1.jsonl",
+    "data/prompt_injection_v4/teacher_label_shards/v4_shard_007_teacher_labels_v1.jsonl",
+    "data/prompt_injection_v4/splits/garak_adaptive_seed_v1.jsonl"
   ],
   "preconditions_checked": [
+    {
+      "cumulative_label_count": 8000,
+      "name": "exp3270_cumulative_label_count",
+      "passed": true,
+      "path": "results/experiment_3270_prompt_injection_teacher_label_shards_2_4_v1.json",
+      "required_min_count": 8000
+    },
     {
       "name": "exp3269_full_corpus_manifest",
       "passed": true,
@@ -294,12 +357,6 @@
       "name": "exp3268_clean_sota_receipt",
       "passed": true,
       "path": "results/experiment_3268_sota_receipt_methodology_supplement_v1.json"
-    },
-    {
-      "completed_seed_count": 2000,
-      "name": "exp3264_seed_shard",
-      "passed": true,
-      "path": "results/experiment_3264_prompt_injection_teacher_label_shard_v3.json"
     },
     {
       "command_hash": "040e6e45a16e2ee7682efa79f2d20e2b19b0228ce069eca60f8be146e6642d32",
@@ -358,48 +415,71 @@
       "passed": true
     },
     {
-      "free_bytes": 1836940849152,
+      "deterministic_seed_fallback": true,
+      "garak_available": false,
+      "garak_module_origin": "",
+      "name": "garak_or_deterministic_seed_source",
+      "passed": true,
+      "seed_source": "prompt_injection_v4_garak_adaptive_seed_deterministic_v1"
+    },
+    {
+      "free_bytes": 1836824346624,
       "name": "disk_capacity",
       "passed": true,
       "path": "/home/ianblenke/github.com/ianblenke/carnot",
       "required_free_bytes": 104857600
     }
   ],
-  "random_seed": 3270,
-  "reproducibility_checksum": "59eb2a609f86c8f090cd95929f0733f166438e0d5e7ce56c183ae5c2d1511c4d",
+  "random_seed": 3271,
+  "reproducibility_checksum": "9eec1ec0721cbabd3b441cb013326acff90e72b5242632d8a274e0ad3147a258",
   "run_date": "20260528",
-  "schema": "carnot.prompt_injection_teacher_label_shards_2_4.v1",
-  "schema_version": "carnot.prompt_injection_teacher_label_shards_2_4.v1",
+  "schema": "carnot.prompt_injection_teacher_label_shards_5_7_garak_seed.v1",
+  "schema_version": "carnot.prompt_injection_teacher_label_shards_5_7_garak_seed.v1",
   "shard_counts": {
-    "v4-shard-002": {
+    "v4-garak-adaptive-seed": {
+      "aligned_instruction": 0,
+      "benign": 0,
+      "category_counts": {
+        "dataflip_kad_adaptive_attack": 200,
+        "encoding_attack": 200,
+        "garak_promptinject_attack": 200,
+        "long_reasoning_heavy_attack": 200,
+        "tool_rag_indirect_injection_attack": 200
+      },
+      "injection": 1000,
+      "misaligned_instruction": 1000,
+      "non_instruction": 0,
+      "total": 1000
+    },
+    "v4-shard-005": {
+      "aligned_instruction": 0,
+      "benign": 0,
+      "category_counts": {
+        "long_reasoning_heavy_attack": 1000,
+        "misaligned_instruction_attack": 1000
+      },
+      "injection": 2000,
+      "misaligned_instruction": 2000,
+      "non_instruction": 0,
+      "total": 2000
+    },
+    "v4-shard-006": {
       "aligned_instruction": 1000,
       "benign": 1000,
       "category_counts": {
         "aligned_instruction_benign": 1000,
-        "misaligned_instruction_attack": 1000
+        "dataflip_kad_adaptive_attack": 1000
       },
       "injection": 1000,
       "misaligned_instruction": 1000,
       "non_instruction": 0,
       "total": 2000
     },
-    "v4-shard-003": {
-      "aligned_instruction": 0,
-      "benign": 1000,
-      "category_counts": {
-        "encoding_attack": 1000,
-        "non_instruction_benign": 1000
-      },
-      "injection": 1000,
-      "misaligned_instruction": 1000,
-      "non_instruction": 1000,
-      "total": 2000
-    },
-    "v4-shard-004": {
+    "v4-shard-007": {
       "aligned_instruction": 0,
       "benign": 0,
       "category_counts": {
-        "dataflip_kad_adaptive_attack": 1000,
+        "encoding_attack": 1000,
         "tool_rag_indirect_injection_attack": 1000
       },
       "injection": 2000,
@@ -408,14 +488,6 @@
       "total": 2000
     }
   },
-  "task_id": "exp3270-prompt-injection-teacher-label-shards-2-4-v1",
-  "teacher_label_shards_2_4_ready": true,
-  "flagged_adversarial": true,
-  "corrigendum_pending": [
-    {
-      "kind": "DURATION_TOO_SHORT",
-      "severity": "critical",
-      "detail": "duration_s=11.875108 but artifact references compute-bound markers (GGUF / CUDA / live model). Loading and running a real model takes >=60.0s minimum; this completed too fast to have invoked the model."
-    }
-  ]
+  "task_id": "exp3271-prompt-injection-teacher-label-shards-5-7-garak-seed-v1",
+  "teacher_label_shards_5_7_garak_seed_ready": true
 }
