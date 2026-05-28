@@ -6554,3 +6554,7 @@ web search |
 | 2026-05-28 02:31 UTC | Activation REFUSED: milestone 2026.05.299 | BLOCK | exclusion-manifest: 9 HARD violation(s); first: SCOPE_MATCHED_PRIOR_FAILURE on e |
 | 2026-05-28 02:33 UTC | Activation REFUSED: milestone 2026.05.299 | BLOCK | exclusion-manifest: 9 HARD violation(s); first: SCOPE_MATCHED_PRIOR_FAILURE on e |
 | 2026-05-28 02:35 UTC | Milestone 2026.05.299 activated | OK | 3 tasks queued |
+| 2026-05-28 02:51 UTC | Archive .298 closeout and activate .299 planning a | OK | 81 passed in 3.72s |
+| 2026-05-28 02:53 UTC | Prompt-Injection KAN Distillation v4 — 15k Corpus  | FAIL | Codex CLI error: you finish the real work inside 10 minutes, that is correct  |
+| 2026-05-28 02:55 UTC | Prompt-Injection KAN Distillation v4 — 15k Corpus  | FAIL | Codex CLI error: you finish the real work inside 10 minutes, that is correct  |
+| 2026-05-28 02:57 UTC | Prompt-Injection KAN Distillation v4 — 15k Corpus  | FAIL | Codex CLI error: you finish the real work inside 10 minutes, that is correct  |

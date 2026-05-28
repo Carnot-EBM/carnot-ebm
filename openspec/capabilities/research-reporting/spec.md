@@ -11423,3 +11423,61 @@ hardware-speedup, TSU/Kona, or model-weight-learning overclaim, and an
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-REPORT-3232 | Implemented (`python/carnot/reporting/capstone_v298_3232.py`) | Implemented (`tests/python/test_experiment_3232_capstone_v298.py`) |
+
+### REQ-REPORT-3223: Milestone .299 Single-Focus Capstone From Prompt-Injection KAN v4
+
+The repository shall provide an Exp 3223 milestone `.299` capstone generator
+that writes `results/experiment_3223_capstone_v299.json` by reading
+`results/experiment_3222_prompt_injection_kan_distill_v4_15k.json` as the
+single-focus v4 result and `results/experiment_3232_capstone_v298.json` as the
+prior capstone authority. The workflow MUST be aggregation only. It MUST NOT
+run live model inference, teacher labeling, KAN training, Garak probes,
+verifier scoring, repair generation, solver execution, hardware commands, the
+conductor, pushes, modify `scripts/research_conductor.py`, modify
+`research-roadmap.yaml`, or reconcile `ops/status.md`, `ops/changelog.md`, or
+`_bmad/traceability.md` when the conductor has delegated reconciliation to a
+separate step.
+
+The artifact MUST include `capstone_v299_ready`, `paper_ready`,
+`publication_blocker_count`, `next_top_gap`, `v4_outcome`, `random_seed`,
+`reproducibility_checksum`, `duration_s`, and `honest_verdict`. The
+`v4_outcome` field MUST be one of `replacement_grade`,
+`publication_grade_garak_partial`, `overfit_to_training`,
+`below_replacement_threshold`, or `blocked_<resource>`. The generator MUST map
+the v4 headline outcome to blocker deltas as follows: `replacement_grade`
+decrements the prior blocker count by 3, `publication_grade_garak_partial`
+decrements it by 1, `overfit_to_training` and `below_replacement_threshold`
+leave it unchanged, and any `blocked_<resource>` outcome leaves it unchanged.
+The blocker count MUST never be negative.
+
+The generator MUST derive `next_top_gap` from the same evidence. The default
+gap MUST be `cuda_chain_for_full_local_sota_receipts`, preserving the `.298`
+CUDA-chain priority. If Gates 1 and 2 pass while Gate 3 is partial, the next
+gap MUST be `v4_garak_adversarial_expansion`. The artifact MUST remain
+`paper_ready=false` unless the prior capstone is already paper-ready, all
+remaining publication blockers are closed, and the v4 outcome is
+`replacement_grade`; this prevents a single safety-classifier improvement from
+overriding unrelated publication blockers.
+
+#### SCENARIO-REPORT-3223: V299 Capstone Updates Blocker Count From V4 Outcome
+
+**Given** capstone v298 exists and reports `capstone_ready=true`,
+`paper_ready=false`, `publication_blocker_count=100`, and a CUDA-chain
+`next_top_gap`
+**And** exp3222 v4 exists and reports `honest_verdict=complete:
+prompt_injection_v4_publication_grade_garak_partial` with Gates 1 and 2 passing
+and Gate 3 failing or partial
+**When** the Exp 3223 capstone generator runs
+**Then** it writes `results/experiment_3223_capstone_v299.json` with all
+required schema fields, `capstone_v299_ready=true`, `paper_ready=false`,
+`publication_blocker_count=99`, `v4_outcome=publication_grade_garak_partial`,
+`next_top_gap=v4_garak_adversarial_expansion`, no new model, teacher-labeling,
+KAN-training, Garak, verifier, repair, solver, hardware, conductor,
+ops-status, ops-changelog, or traceability work performed by this task, and an
+`honest_verdict` that starts with `complete:`.
+
+## Implementation Status (REQ-REPORT-3223)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-3223 | Implemented (`python/carnot/reporting/capstone_v299_3223.py`) | Implemented (`tests/python/test_experiment_3223_capstone_v299.py`) |
