@@ -13511,3 +13511,66 @@ evidence when available.
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-REPORT-3285 | Implemented (`python/carnot/reporting/full_garak_dataflip_redteam_eval_3285.py`) | Implemented (`tests/python/test_experiment_3285_full_garak_dataflip_redteam_eval.py`) |
+
+### REQ-REPORT-3288: KAN Sidecar Failure Autopsy And Boundary Decision V1
+
+The repository shall provide an Exp 3288 KAN sidecar failure-autopsy workflow
+that writes
+`results/experiment_3288_kan_sidecar_failure_autopsy_boundary_v1.json` by
+reading the Exp 3273 KAN full-corpus DeLong evaluation, the Exp 3272 full-corpus
+assembly/leakage audit, and the Exp 3283 prompt-injection corrigendum. The
+workflow MUST be an offline autopsy only. It MUST NOT retrain a headline KAN,
+run new model inference, rerun Garak, run repair, push, or modify
+`scripts/research_conductor.py`, `ops/status.md`, `ops/changelog.md`, or
+`_bmad/traceability.md`.
+
+The autopsy MUST localize the KAN failure by carrying forward the prior
+full-corpus AUROC, DeLong non-inferiority result, per-slice single-class
+metrics, aligned-instruction benign false positives, threshold behavior,
+baseline comparisons, and leakage/provenance findings. It SHALL compare the
+KAN sidecar against trivial text-only baselines, the exact-label upper-bound
+reference when available, random-AUROC behavior, and the prior `.302` shard
+AUROC. It SHALL emit an explicit boundary decision of exactly one of
+`retain_sidecar_only`, `retire_from_prompt_injection_headline`, or
+`prerequisite_required`.
+
+The terminal artifact MUST include `kan_failure_autopsy_ready`,
+`kan_boundary_decision_ready`, `prior_full_corpus_auroc`,
+`prior_delong_noninferiority_passed`, `per_slice_failure_summary`,
+`aligned_instruction_false_positive_summary`,
+`leakage_or_provenance_findings`, `baseline_comparison_summary`,
+`kan_boundary_decision`, `permitted_downstream_use`, `random_seed`,
+`reproducibility_checksum`, `duration_s`, and `honest_verdict`.
+`kan_failure_autopsy_ready` MUST be true only when the autopsy has read and
+preserved the prior KAN failure evidence. `kan_boundary_decision_ready` MUST be
+true only when the decision is one of the allowed values and downstream use is
+bounded explicitly. `honest_verdict` MUST begin with one of `complete:`,
+`success:`, `passed:`, or `shipped:`.
+
+#### SCENARIO-REPORT-3288: Failed Full-Corpus KAN Produces Retire-From-Headline Boundary
+
+**Given** Exp 3273 reports `full_corpus_auroc=0.475326`,
+`delong_noninferiority_passed=false`, sidecar-only KAN evidence, single-class
+per-slice metrics, and a max-F1 threshold that predicts nearly every
+eval-plus-holdout row positive
+**And** Exp 3272 reports a leakage-passed full corpus with aligned benign,
+misaligned attack, non-instruction, and Garak-only slices
+**And** Exp 3283 reports that KAN metrics are sidecar/provisional and not
+headline-eligible
+**When** the Exp 3288 autopsy workflow runs
+**Then** it writes
+`results/experiment_3288_kan_sidecar_failure_autopsy_boundary_v1.json` with all
+required schema fields, records the below-random AUROC and failed
+non-inferiority gate, identifies single-class slice metrics and aligned benign
+false positives as utility blockers, compares KAN AUROC/AUPRC against regex,
+keyword, exact-label, random, and prior-shard baselines, preserves leakage and
+provenance findings from the corpus/corrigendum artifacts, sets
+`kan_boundary_decision=retire_from_prompt_injection_headline`, lists only
+bounded offline downstream uses, and emits an `honest_verdict` beginning with
+`complete:` without retraining or promoting KAN.
+
+## Implementation Status (REQ-REPORT-3288)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-3288 | Implemented (`python/carnot/reporting/kan_sidecar_failure_autopsy_boundary_3288.py`) | Implemented (`tests/python/test_experiment_3288_kan_sidecar_failure_autopsy_boundary.py`) |
