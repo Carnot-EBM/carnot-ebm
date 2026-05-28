@@ -321,5 +321,13 @@
     ".venv/bin/coverage report --include='python/carnot/verify/clean_local_sota_verifier_rerun_v14.py' --fail-under=100 --show-missing",
     ".venv/bin/python scripts/check_spec_coverage.py",
     ".venv/bin/pytest tests/python -q"
+  ],
+  "flagged_adversarial": true,
+  "corrigendum_pending": [
+    {
+      "kind": "DURATION_TOO_SHORT",
+      "severity": "critical",
+      "detail": "duration_s=9.73802 but artifact references compute-bound markers (GGUF / CUDA / live model). Loading and running a real model takes >=60.0s minimum; this completed too fast to have invoked the model."
+    }
   ]
 }

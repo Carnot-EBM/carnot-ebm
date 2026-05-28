@@ -6632,3 +6632,4 @@ web search |
 | 2026-05-28 13:32 UTC | Prompt-injection v4 full-corpus assembly and leaka | OK | 81 passed in 3.80s |
 | 2026-05-28 13:53 UTC | Prompt-injection KAN full-corpus DeLong eval | OK | 81 passed in 3.69s |
 | 2026-05-28 14:13 UTC | Prompt-injection v4 Garak and DataFlip red-team ev | OK | 81 passed in 4.67s |
+| 2026-05-28 14:55 UTC | Clean local SOTA verifier rerun v14 | OK | 81 passed in 3.79s |

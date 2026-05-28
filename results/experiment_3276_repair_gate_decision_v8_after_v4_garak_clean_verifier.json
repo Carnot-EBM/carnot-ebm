@@ -1,0 +1,42 @@
+{
+  "experiment": 3276,
+  "schema": "blocked_gate_check_v1",
+  "run_date": "2026-05-28",
+  "started_at": "2026-05-28T14:57:46.083032+00:00",
+  "finished_at": "2026-05-28T14:57:46.083032+00:00",
+  "duration_s": 0.0,
+  "status": "blocked",
+  "title": "Repair gate decision v8 after v4, Garak, and clean verifier",
+  "honest_verdict": "blocked_gate_check_failed",
+  "gate_check_summary": "2 of 3 gate(s) failed; first failure: exp3274-prompt-injection-v4-garak-dataflip-redteam-eval-v1.garak_redteam_eval_ready (actual=False == expected=True)",
+  "gates_evaluated": [
+    {
+      "upstream": "exp3273-prompt-injection-kan-full-corpus-delong-eval-v1",
+      "artifact_field": "v4_full_eval_ready",
+      "op": "==",
+      "expected": true,
+      "actual": true,
+      "passed": true,
+      "reason": "actual=True == expected=True"
+    },
+    {
+      "upstream": "exp3274-prompt-injection-v4-garak-dataflip-redteam-eval-v1",
+      "artifact_field": "garak_redteam_eval_ready",
+      "op": "==",
+      "expected": true,
+      "actual": false,
+      "passed": false,
+      "reason": "actual=False == expected=True"
+    },
+    {
+      "upstream": "exp3275-clean-local-sota-verifier-rerun-v14",
+      "artifact_field": "clean_verifier_rerun_ready",
+      "op": "==",
+      "expected": true,
+      "actual": false,
+      "passed": false,
+      "reason": "actual=False == expected=True"
+    }
+  ],
+  "blocked_at_layer": "conductor_pre_gate"
+}
