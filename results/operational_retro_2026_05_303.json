@@ -1,0 +1,28 @@
+{
+  "schema": "carnot.operational_retro.v64",
+  "milestone": "2026.05.303",
+  "generated_at": "2026-05-28T15:51:08Z",
+  "retro_type": "operational_full",
+  "total_wall_time_minutes": 0,
+  "experiments_completed": 0,
+  "summary": "Milestone 2026.05.303 has 0 total wall-time minutes, 0 completed experiments, and 0 compute-bound experiments in the authoritative timing block. Compute-bound duration ranking, GPU efficiency on compute-bound work, and 2+ model DualGPURunner assessment are no data available this milestone.",
+  "slowest_experiments": [],
+  "bottlenecks_identified": [
+    "No experiment commits were found since activation, so there is no milestone-scoped wall-time bottleneck to rank.",
+    "The idle GPU snapshot is not classified as wasted compute because the timing block contains 0 compute-bound experiments."
+  ],
+  "improvements_suggested": [
+    "Add an explicit empty-timing-window sentinel to the retrospective generator before narrative drafting begins.",
+    "Record activation-to-first-experiment status so operators can distinguish dispatch inactivity from retrospective collection failure.",
+    "Keep GPU-idle and DualGPURunner recommendations gated on compute_bound rows and parallel-model evidence."
+  ],
+  "top_3_highest_leverage_actions": [
+    "Emit a no-experiment-commit sentinel for empty milestone windows.",
+    "Add activation-to-first-experiment status to milestone closeout artifacts.",
+    "Require compute_bound and parallel-model fields before GPU-efficiency or DualGPURunner claims."
+  ],
+  "compute_bound_experiments_count": 0,
+  "gpu_idle_on_compute_bound_tasks": null,
+  "estimated_time_savings_pct": 0,
+  "meta_reflection": "The GPU monitor reported idle devices, but the timing block has no compute-bound work, so GPU idleness is not an operational bottleneck for this milestone. The useful next improvement is clearer empty-window instrumentation rather than runner enforcement."
+}

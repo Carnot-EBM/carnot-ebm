@@ -6641,3 +6641,4 @@ web search |
 | 2026-05-28 15:17 UTC | SOTA repair micro-panel v9 | GATE_BLOCK | Pre-emptive skip: upstream retired (exp3276-repair-gate-decision-v8-after-v4-gar |
 | 2026-05-28 15:31 UTC | Evidence matrix v35 for .303 corpus, Garak, repair | OK | 81 passed in 2.98s |
 | 2026-05-28 15:33 UTC | SOTA repair micro-panel v9 | GATE_BLOCK | Pre-emptive skip: upstream retired (exp3276-repair-gate-decision-v8-after-v4-gar |
+| 2026-05-28 15:45 UTC | Capstone v303 and next-gap decision | OK | 81 passed in 2.78s |
