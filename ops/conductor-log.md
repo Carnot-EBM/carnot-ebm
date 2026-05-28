@@ -6605,3 +6605,5 @@ web search |
 | 2026-05-28 07:53 UTC | Prompt-injection teacher-label shard v2 gated on S | GATE_BLOCK | Pre-emptive skip: upstream retired (exp3250-sota-gguf-receipt-v8) |
 | 2026-05-28 07:53 UTC | Prompt-injection KAN shard train/eval v2 with cons | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp3252-prompt-injection-teacher-label-sha |
 | 2026-05-28 07:55 UTC | Prompt-injection teacher-label shard v2 gated on S | GATE_BLOCK | Pre-emptive skip: upstream retired (exp3250-sota-gguf-receipt-v8) |
+| 2026-05-28 07:55 UTC | Prompt-injection KAN shard train/eval v2 with cons | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp3252-prompt-injection-teacher-label-sha |
+| 2026-05-28 07:57 UTC | DCCD/SEVerA structured proposal preflight v2 gated | GATE_BLOCK | Pre-emptive skip: upstream retired (exp3250-sota-gguf-receipt-v8) |
