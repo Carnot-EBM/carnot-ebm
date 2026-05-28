@@ -6654,3 +6654,4 @@ web search: https://docs.garak.ai/garak/examples/pr |
 | 2026-05-28 19:13 UTC | Clean verifier abstention root-cause audit v1 | OK | 81 passed in 2.72s |
 | 2026-05-28 19:31 UTC | Gated abstention-calibrated clean verifier v15 | OK | 81 passed in 3.66s |
 | 2026-05-28 19:46 UTC | Gated KAN sidecar failure autopsy and boundary dec | OK | 81 passed in 4.29s |
+| 2026-05-28 20:00 UTC | Gated repair gate decision v9 after Garak and abst | OK | 81 passed in 3.34s |

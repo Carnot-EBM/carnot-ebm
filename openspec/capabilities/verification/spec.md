@@ -8624,3 +8624,69 @@ non-executable `permitted_repair_scope`, and precise `blocked_reasons`.
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-VERIFY-3289 | Implemented (`python/carnot/verify/repair_gate_decision_v9.py`) | Implemented (`tests/python/test_experiment_3289_repair_gate_decision_v9.py`) |
+
+### REQ-VERIFY-3290: Gated SOTA Repair Micro-Panel V10
+
+The repository shall provide an Exp 3290 gated SOTA repair micro-panel runner
+that reads
+`results/experiment_3289_repair_gate_decision_v9_after_garak_abstention.json`,
+runs only when `repair_gate_open=true`, builds a bounded panel from
+`permitted_repair_scope`, generates repair candidates with at least one locally
+cached mandated SOTA GGUF when available, verifies each candidate with the
+Exp 3287 calibrated clean-verifier decision contract plus exact fixture checks,
+and writes
+`results/experiment_3290_gated_sota_repair_micro_panel_v10.json`.
+
+The runner MUST call `cached_sota_pair(gpu_indices=(0, 1))` while resolving
+mandated local SOTA GGUFs and MUST record all three mandated model ids:
+`unsloth/Qwen3.6-35B-A3B-GGUF`, `unsloth/gemma-4-31B-it-GGUF`, and
+`unsloth/gemma-4-26B-A4B-it-GGUF`. If the pair is unavailable but one
+mandated GGUF is cached, the panel MAY run as a single-model diagnostic
+micro-panel, provided `models_used` names that model and missing mandated
+models remain explicit. If the repair gate is closed or no mandated GGUF is
+available, the runner SHALL write a terminal machine-readable skipped or
+blocked artifact and SHALL NOT fabricate repair rows or use legacy fallback
+models.
+
+The panel SHALL select between `permitted_repair_scope.sample_size.min_cases`
+and `permitted_repair_scope.max_panel_cases` cases from permitted exact context
+fixture counterexamples, SHALL preserve the failing candidate and localized
+failure mode for each case, and SHALL not generalize beyond the panel. A repair
+candidate SHALL count as a verified success only when the calibrated clean
+verifier emits `ACCEPT` and the exact fixture check passes. A calibrated
+verifier `ACCEPT` on an exact-check failure SHALL count as a false accept.
+`ABSTAIN`, unparsable verifier output, or missing candidate output SHALL be
+recorded as an abstention rather than a success.
+
+The terminal artifact MUST include `sota_repair_micro_panel_v10_ready`,
+`repair_panel_ran`, `model_specs`, `models_used`, `missing_model_specs`,
+`preconditions_checked`, `panel_case_count`, `repair_success_rate`,
+`verified_success_count`, `false_accept_count`, `abstention_count`,
+`localized_failure_feedback`, `headline_claim_allowed`, `random_seed`,
+`reproducibility_checksum`, `duration_s`, and `honest_verdict`.
+`honest_verdict` MUST begin with one of `complete:`, `success:`, `passed:`, or
+`shipped:` whenever the panel artifact is written.
+
+### SCENARIO-VERIFY-3290: Open Repair Gate Produces Bounded Exact-Verified Panel
+
+Given Exp 3289 reports `repair_gate_open=true` and its
+`permitted_repair_scope` allows a bounded exact fixture repair micro-panel,
+When Exp 3290 resolves at least one mandated local SOTA GGUF and runs the panel,
+Then it writes the required terminal JSON artifact, records GPU/model/cache
+preconditions, keeps `headline_claim_allowed=false`, names the exact models
+used and missing mandated models, reports repair successes only for candidates
+accepted by the calibrated clean verifier and passing exact checks, counts
+false accepts separately, records abstentions separately, and emits localized
+failure feedback for every non-successful case.
+
+If Exp 3289 closes the gate, the exact fixture bank cannot provide the minimum
+bounded panel, or no mandated GGUF is cached, then Exp 3290 still writes the
+required terminal artifact with `repair_panel_ran=false`,
+`sota_repair_micro_panel_v10_ready=false`, zero panel denominators, explicit
+precondition diagnostics, and no headline claim.
+
+## Implementation Status (REQ-VERIFY-3290)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-VERIFY-3290 | Implemented (`python/carnot/verify/gated_sota_repair_micro_panel_v10.py`) | Implemented (`tests/python/test_experiment_3290_gated_sota_repair_micro_panel_v10.py`) |
