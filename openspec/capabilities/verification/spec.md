@@ -3803,6 +3803,73 @@ evidence.
 |---|---|---|
 | REQ-VERIFY-3213 | Implemented (`python/carnot/verify/repair_gate_decision_v6.py`) | Implemented (`tests/python/test_experiment_3213_repair_gate_decision_v6.py`) |
 
+### REQ-VERIFY-3227: Repair Gate Decision V7 Artifact Aggregation
+
+The repository shall provide an Exp 3227 deterministic repair-gate decision
+v7 builder that writes
+`results/experiment_3227_repair_gate_decision_v7.json` from checked-in `.298`
+upstream artifacts only. The builder MUST load Exp 3222 full local SOTA
+receipt v6, Exp 3225 clean live SOTA verifier rerun v13, and Exp 3226
+structured repair proposal preflight v2 when present. It SHOULD also record
+Exp 3213 repair gate decision v6, the repository workflow instructions, and
+the conductor gate helper as provenance. It MUST NOT invoke an LLM, run live
+inference, execute repair generation, execute verifier scoring, download
+models, push commits, modify `scripts/research_conductor.py`, or modify the
+active `research-roadmap.yaml`.
+
+The gate SHALL set `receipt_ok=true` only when Exp 3222 reports
+`clean_rerun_allowed=true`, is readable, is not a conductor pre-gate skip, and
+does not record CPU fallback as receipt evidence. It SHALL set
+`clean_verifier_ok=true` only when Exp 3225 reports `clean_verifier_ready=true`,
+is readable, is not a conductor pre-gate skip, does not record CPU fallback,
+and preserves exact verifier authority through exact labels or exact verifier
+metadata. It SHALL set `structured_preflight_ok=true` only when Exp 3226
+reports `ready_for_repair_gate=true`, `exact_verifier_handoff_ready=true`, and
+`repair_correctness_claimed=false`, with no schema-only repair limitation.
+
+The terminal artifact MUST include `schema_version`, `experiment_id`,
+`milestone`, `input_artifacts`, `receipt_ok`, `clean_verifier_ok`,
+`structured_preflight_ok`, `blocker_list`, `blocker_count`,
+`repair_gate_state`, `repair_ladder_allowed`, `inference_substrate`,
+`conductor_file_modified`, `active_roadmap_modified`, and `honest_verdict`.
+`repair_gate_state` SHALL be `unblocked`, `blocked`, or `diagnostic_only`.
+`repair_gate_state=unblocked` and `repair_ladder_allowed=true` SHALL occur
+only when the receipt, clean verifier, and structured preflight gates all pass
+and `blocker_list` is empty. Missing artifacts, malformed artifacts,
+conductor pre-gate skips, CPU fallback evidence, absent exact verifier
+authority, and schema-only repair limitations SHALL be preserved as stable
+machine-readable blockers. Blocked and diagnostic-only artifacts SHALL set
+`repair_ladder_allowed=false`.
+
+The `honest_verdict` MUST start with `complete:` for every terminal decision,
+because Exp 3227 is an aggregation decision whose truthful result can still
+decide that the downstream repair ladder must remain blocked.
+
+### SCENARIO-VERIFY-3227: V7 Gate Fails Closed Until Receipt, Verifier, And Preflight Pass
+
+Given Exp 3222, Exp 3225, and Exp 3226 evidence may be present, missing,
+malformed, gate-skipped, CPU-fallback-only, exact-verifier-incomplete, or
+schema-only,
+When Exp 3227 builds the repair-gate decision v7 artifact,
+Then it records every input source as present or missing, emits separate
+receipt, clean-verifier, and structured-preflight booleans, preserves blockers
+for each insufficient upstream condition, keeps `repair_ladder_allowed=false`
+unless all three mandatory gates are genuinely ready, and records that neither
+the conductor file nor the active roadmap was modified.
+
+If all three upstream artifacts are readable and clean, Exp 3222 has
+`clean_rerun_allowed=true` without CPU fallback, Exp 3225 has
+`clean_verifier_ready=true` with exact verifier authority, and Exp 3226 has
+`ready_for_repair_gate=true` plus exact-verifier handoff without claiming
+repair correctness, then the builder SHALL set `repair_gate_state=unblocked`,
+`repair_ladder_allowed=true`, and an empty blocker list.
+
+## Implementation Status (REQ-VERIFY-3227)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-VERIFY-3227 | Implemented (`python/carnot/verify/repair_gate_decision_v7.py`) | Implemented (`tests/python/test_experiment_3227_repair_gate_decision_v7.py`) |
+
 ### REQ-VERIFY-3180: Controlled-Invariance Executor V2
 
 The repository shall provide an Exp 3180 controlled-invariance executor that

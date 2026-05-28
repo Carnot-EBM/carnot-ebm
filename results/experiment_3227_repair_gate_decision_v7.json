@@ -1,0 +1,234 @@
+{
+  "active_roadmap_modified": false,
+  "blocker_count": 9,
+  "blocker_list": [
+    {
+      "actual": false,
+      "code": "missing_artifact",
+      "detail": "mandatory repair-gate input artifact is absent",
+      "expected": true,
+      "field": "present",
+      "source_artifact": "results/experiment_3222_full_local_sota_receipt_v6.json"
+    },
+    {
+      "actual": {
+        "blocked_at_layer": "conductor_pre_gate",
+        "schema": "blocked_gate_check_v1",
+        "status": "blocked"
+      },
+      "code": "gate_skipped_artifact",
+      "detail": "1 of 1 gate(s) failed; first failure: exp3222-full-local-sota-receipt-v6.clean_rerun_allowed (upstream artifact not found for task id 'exp3222-full-local-sota-receipt-v6')",
+      "expected": "not gate skipped",
+      "field": "blocked_at_layer/status",
+      "source_artifact": "results/experiment_3225_clean_live_sota_verifier_rerun_v13.json"
+    },
+    {
+      "actual": false,
+      "code": "missing_artifact",
+      "detail": "mandatory repair-gate input artifact is absent",
+      "expected": true,
+      "field": "present",
+      "source_artifact": "results/experiment_3226_structured_repair_proposal_preflight_v2.json"
+    },
+    {
+      "actual": null,
+      "code": "clean_rerun_not_allowed",
+      "detail": "full local SOTA receipt did not explicitly allow clean reruns",
+      "expected": true,
+      "field": "clean_rerun_allowed",
+      "source_artifact": "results/experiment_3222_full_local_sota_receipt_v6.json"
+    },
+    {
+      "actual": null,
+      "code": "clean_verifier_not_ready",
+      "detail": "clean verifier artifact did not report clean_verifier_ready=true",
+      "expected": true,
+      "field": "clean_verifier_ready",
+      "source_artifact": "results/experiment_3225_clean_live_sota_verifier_rerun_v13.json"
+    },
+    {
+      "actual": {
+        "exact_labels_authoritative": null,
+        "exact_verifier_invocation_count": null,
+        "exact_verifier_types": null
+      },
+      "code": "absent_exact_verifier",
+      "detail": "clean verifier evidence lacks exact verifier authority metadata",
+      "expected": "exact labels or exact verifier metadata",
+      "field": "exact_verifier",
+      "source_artifact": "results/experiment_3225_clean_live_sota_verifier_rerun_v13.json"
+    },
+    {
+      "actual": null,
+      "code": "structured_preflight_not_ready",
+      "detail": "structured proposal preflight is not ready for the repair gate",
+      "expected": true,
+      "field": "ready_for_repair_gate",
+      "source_artifact": "results/experiment_3226_structured_repair_proposal_preflight_v2.json"
+    },
+    {
+      "actual": null,
+      "code": "exact_verifier_handoff_not_ready",
+      "detail": "structured proposal preflight lacks exact-verifier handoff readiness",
+      "expected": true,
+      "field": "exact_verifier_handoff_ready",
+      "source_artifact": "results/experiment_3226_structured_repair_proposal_preflight_v2.json"
+    },
+    {
+      "actual": null,
+      "code": "repair_correctness_claimed",
+      "detail": "proposal preflight must not claim repair correctness",
+      "expected": false,
+      "field": "repair_correctness_claimed",
+      "source_artifact": "results/experiment_3226_structured_repair_proposal_preflight_v2.json"
+    }
+  ],
+  "clean_verifier_ok": false,
+  "conductor_file_modified": false,
+  "experiment_id": "exp3227",
+  "honest_verdict": "complete: repair_gate_state=blocked; repair_ladder_allowed=false; blocker_count=9",
+  "inference_substrate": "artifact_gate_aggregation",
+  "input_artifacts": [
+    {
+      "error": null,
+      "mandatory_for_gate": false,
+      "path": "AGENTS.md",
+      "present": true,
+      "readable_json_object": null,
+      "role": "agents_repo_instructions",
+      "sha256": "b3d6581b04f16b85f77defb2837c98dc3b60ed51e10b347ecb36e609f318b619",
+      "source_type": "text",
+      "summary": {}
+    },
+    {
+      "error": null,
+      "mandatory_for_gate": false,
+      "path": "CODEX.md",
+      "present": true,
+      "readable_json_object": null,
+      "role": "codex_repo_workflow",
+      "sha256": "1db7ebc1009714f872db83447828a8957c3abb72061832cc1bc307735cd96bbe",
+      "source_type": "text",
+      "summary": {}
+    },
+    {
+      "error": null,
+      "mandatory_for_gate": false,
+      "path": "CLAUDE.md",
+      "present": true,
+      "readable_json_object": null,
+      "role": "claude_authenticity_rules",
+      "sha256": "cdc00581d37d1bd3c77a69b058787f74ecc71545a97c1eab31c48961637b3224",
+      "source_type": "text",
+      "summary": {}
+    },
+    {
+      "error": null,
+      "mandatory_for_gate": false,
+      "path": "openspec/capabilities/verification/spec.md",
+      "present": true,
+      "readable_json_object": null,
+      "role": "verification_openspec",
+      "sha256": "841be4e301de10d89b8a46aeb9da959e5d01fd0da1daf7eb7737c03e75e78cd0",
+      "source_type": "text",
+      "summary": {}
+    },
+    {
+      "error": null,
+      "mandatory_for_gate": false,
+      "path": "scripts/conductor_gates.py",
+      "present": true,
+      "readable_json_object": null,
+      "role": "conductor_gate_helper",
+      "sha256": "87282b99c6492224f27212ad898a83e428c78b72150e07fa576611507e75817d",
+      "source_type": "text",
+      "summary": {}
+    },
+    {
+      "error": null,
+      "mandatory_for_gate": false,
+      "path": "results/experiment_3213_repair_gate_decision_v6.json",
+      "present": true,
+      "readable_json_object": true,
+      "role": "exp3213_repair_gate_decision_v6",
+      "sha256": "6c8119ff89988fb7404221a62cdc6581684829262c1667239756fe793d2b7dd6",
+      "source_type": "json",
+      "summary": {
+        "blocked_at_layer": null,
+        "clean_rerun_allowed": null,
+        "clean_verifier_ready": null,
+        "exact_verifier_handoff_ready": null,
+        "experiment_id": "exp3213",
+        "gate_check_summary": null,
+        "honest_verdict": "complete: repair_gate_state=blocked; repair_ladder_allowed=false; blocker_count=6",
+        "ready_for_repair_gate": null,
+        "repair_correctness_claimed": null,
+        "schema_version": "carnot.repair_gate_decision.v6",
+        "status": null
+      }
+    },
+    {
+      "error": "missing",
+      "mandatory_for_gate": true,
+      "path": "results/experiment_3222_full_local_sota_receipt_v6.json",
+      "present": false,
+      "readable_json_object": false,
+      "role": "exp3222_full_local_sota_receipt_v6",
+      "sha256": null,
+      "source_type": "json",
+      "summary": {}
+    },
+    {
+      "error": null,
+      "mandatory_for_gate": true,
+      "path": "results/experiment_3225_clean_live_sota_verifier_rerun_v13.json",
+      "present": true,
+      "readable_json_object": true,
+      "role": "exp3225_clean_live_sota_verifier_rerun_v13",
+      "sha256": "68bc7f69a827ea3eaebf4a3158deee9078347b545eeafbc27c010b1f96f9b5f4",
+      "source_type": "json",
+      "summary": {
+        "blocked_at_layer": "conductor_pre_gate",
+        "clean_rerun_allowed": null,
+        "clean_verifier_ready": null,
+        "exact_verifier_handoff_ready": null,
+        "experiment_id": 3225,
+        "gate_check_summary": "1 of 1 gate(s) failed; first failure: exp3222-full-local-sota-receipt-v6.clean_rerun_allowed (upstream artifact not found for task id 'exp3222-full-local-sota-receipt-v6')",
+        "honest_verdict": "blocked_gate_check_failed",
+        "ready_for_repair_gate": null,
+        "repair_correctness_claimed": null,
+        "schema_version": "blocked_gate_check_v1",
+        "status": "blocked"
+      }
+    },
+    {
+      "error": "missing",
+      "mandatory_for_gate": true,
+      "path": "results/experiment_3226_structured_repair_proposal_preflight_v2.json",
+      "present": false,
+      "readable_json_object": false,
+      "role": "exp3226_structured_repair_proposal_preflight_v2",
+      "sha256": null,
+      "source_type": "json",
+      "summary": {}
+    }
+  ],
+  "milestone": "2026.05.298",
+  "receipt_ok": false,
+  "repair_gate_state": "blocked",
+  "repair_ladder_allowed": false,
+  "schema_version": "carnot.repair_gate_decision.v7",
+  "spec_refs": [
+    "REQ-VERIFY-3227",
+    "SCENARIO-VERIFY-3227"
+  ],
+  "structured_preflight_ok": false,
+  "tests_run": [
+    ".venv/bin/pytest tests/python/test_experiment_3227_repair_gate_decision_v7.py -q -o addopts=''",
+    ".venv/bin/coverage erase",
+    ".venv/bin/coverage run -m pytest -o addopts='' tests/python/test_experiment_3227_repair_gate_decision_v7.py -q",
+    ".venv/bin/coverage report --include='*/repair_gate_decision_v7.py' --fail-under=100 --show-missing",
+    ".venv/bin/python scripts/check_spec_coverage.py",
+    ".venv/bin/pytest tests/python -q"
+  ]
+}
