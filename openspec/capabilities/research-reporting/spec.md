@@ -13035,3 +13035,58 @@ with the exact blocker.
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-REPORT-3273 | Planned (`python/carnot/reporting/prompt_injection_kan_full_corpus_delong_eval_3273.py`) | Planned (`tests/python/test_experiment_3273_prompt_injection_kan_full_corpus_delong_eval.py`) |
+
+### REQ-REPORT-3274: Prompt-Injection v4 Garak/DataFlip Red-Team Eval v1
+
+The repository shall provide an Exp 3274 prompt-injection red-team evaluator
+that writes
+`results/experiment_3274_prompt_injection_v4_garak_dataflip_redteam_eval_v1.json`.
+The workflow SHALL first read
+`results/experiment_3273_prompt_injection_kan_full_corpus_delong_eval_v1.json`
+and SHALL write a complete gated-skip artifact when `v4_full_eval_ready` is not
+true.
+
+When the full KAN evaluation gate is open, the workflow SHALL check Garak CLI
+availability, CUDA availability, local GGUF availability for the mandated SOTA
+target model specs, deterministic DataFlip/KAD-adaptive fixture availability,
+and aligned-instruction benign fixture availability before making any red-team
+gate decision. If Garak is unavailable, the artifact MUST report
+`blocked_garak_unavailable`, MUST set `garak_available=false` and
+`garak_gate_passed=false`, and MUST still evaluate the deterministic
+DataFlip/KAD-adaptive fixtures from the frozen v4 Garak split when they are
+available.
+
+The terminal artifact MUST include `garak_redteam_eval_ready`,
+`garak_available`, `garak_gate_passed`, `dataflip_gate_passed`,
+`attack_success_rate`, `kan_detection_rate`,
+`aligned_instruction_false_positive_rate`, `model_specs`, `models_used`,
+`preconditions_checked`, `output_paths`, `random_seed`,
+`reproducibility_checksum`, `duration_s`, and `honest_verdict`.
+`model_specs` MUST name the mandated SOTA targets
+`unsloth/gemma-4-26B-A4B-it-GGUF`, `unsloth/Qwen3.6-35B-A3B-GGUF`, and
+`unsloth/gemma-4-31B-it-GGUF`. `models_used` MUST distinguish actual model
+calls from source-artifact reuse. `attack_success_rate` MUST fail closed when
+no target model call is auditable. `honest_verdict` MUST begin with one of
+`complete:`, `success:`, `passed:`, or `shipped:`.
+
+#### SCENARIO-REPORT-3274: Garak Absence Still Runs DataFlip Fixtures
+
+**Given** Exp 3273 reports `v4_full_eval_ready=true`
+**And** the frozen v4 Garak split contains `dataflip_kad_adaptive_attack` rows
+**And** Garak is not installed
+**When** the Exp 3274 red-team evaluator runs
+**Then** it writes
+`results/experiment_3274_prompt_injection_v4_garak_dataflip_redteam_eval_v1.json`
+with all required schema fields, records `garak_available=false`, records
+`garak_gate_passed=false`, records `blocked_garak_unavailable`, reports the
+KAN sidecar detection rate on deterministic DataFlip/KAD fixtures, reports the
+false-positive rate on aligned benign instructions, names the mandated model
+specs, and emits a terminal honest verdict. If Exp 3273 is missing or not
+ready, the artifact remains complete with `garak_redteam_eval_ready=false` and
+the exact upstream blocker.
+
+## Implementation Status (REQ-REPORT-3274)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-3274 | Planned (`python/carnot/reporting/prompt_injection_v4_garak_dataflip_redteam_eval_3274.py`) | Planned (`tests/python/test_experiment_3274_prompt_injection_v4_garak_dataflip_redteam_eval.py`) |
