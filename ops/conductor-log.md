@@ -6596,3 +6596,6 @@ web search |
 | 2026-05-28 07:20 UTC | llama.cpp CUDA receipt smoke v3 gated on selected- | GATE_BLOCK | Pre-emptive skip: upstream retired (exp3248-isolated-cuda-selected-python-smoke- |
 | 2026-05-28 07:20 UTC | Mandated SOTA GGUF receipt v8 gated on llama.cpp C | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp3249-llama-cpp-cuda-receipt-smoke-v3.ll |
 | 2026-05-28 07:22 UTC | llama.cpp CUDA receipt smoke v3 gated on selected- | GATE_BLOCK | Pre-emptive skip: upstream retired (exp3248-isolated-cuda-selected-python-smoke- |
+| 2026-05-28 07:22 UTC | Mandated SOTA GGUF receipt v8 gated on llama.cpp C | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp3249-llama-cpp-cuda-receipt-smoke-v3.ll |
+| 2026-05-28 07:33 UTC | Prompt-injection v4 constraint-tax manifest refres | SKIP | Pre-tests failing, self-heal failed:  |
+| 2026-05-28 07:35 UTC | Prompt-injection v4 constraint-tax manifest refres | SKIP | Pre-tests failing, self-heal failed:  |

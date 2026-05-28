@@ -12069,3 +12069,67 @@ probe both pass.
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-REPORT-3247 | Implemented (`python/carnot/reporting/selected_python_cuda_root_cause_surgery_3247.py`) | Implemented (`tests/python/test_experiment_3247_selected_python_cuda_root_cause_surgery.py`) |
+
+### REQ-REPORT-3251: Prompt-Injection V4 Constraint-Tax Manifest V2
+
+The repository shall provide an Exp 3251 constraint-tax manifest generator that
+writes
+`results/experiment_3251_prompt_injection_v4_constraint_tax_manifest_v2.json`
+by reading only checked-in upstream artifacts and source files:
+`CLAUDE.md`, `research-references.md`,
+`results/experiment_3239_prompt_injection_kan_v4_resource_manifest_v1.json`,
+`results/experiment_3234_cli_backend_failure_root_cause_ledger_v1.json`,
+`results/prompt_injection_kan_v2.json`,
+`results/prompt_injection_teacher_labels_v2.json`, existing
+`data/prompt_injection_distill/*` corpus/cache files, and
+`scripts/experiment_template.py`. The workflow MUST be aggregation only. It
+MUST NOT invoke an LLM, create teacher labels, train a KAN, run Garak, run the
+conductor, push, or modify `scripts/research_conductor.py`.
+
+The terminal artifact MUST include `experiment_id`, `task_id`, `milestone`,
+`inference_substrate`, `principle_annotations`, `v4_manifest_v2_ready`,
+`corpus_input_paths`, `paired_shard_plan`, `free_reasoning_arm`,
+`schema_constrained_arm`, `constrainprompt_baseline_plan`,
+`constraint_tax_control_plan_ready`, `teacher_label_shard_contract`,
+`downstream_MODEL_SPECS_required`, `garak_config_ready`, `no_llm_invoked`, and
+`honest_verdict`. It SHALL inventory existing prompt-injection datasets and
+the Exp 3239 manifest without generating labels, define a paired shard where
+the same examples are labeled under free-reasoning and schema-constrained
+prompts, and define parseability, verifier-agreement, abstention, latency, and
+reasoning-quality fields sufficient to compute
+`constraint_tax_delta_accuracy_or_parse`.
+
+`v4_manifest_v2_ready` MUST be true only when concrete input paths, both prompt
+arms, an output schema, and downstream deliverable paths are named.
+`constraint_tax_control_plan_ready` MUST be true only when the artifact names
+the paired free-reasoning arm, schema-constrained arm, ConstrainPrompt baseline,
+and metric formulas without treating schema validity as reasoning quality.
+`honest_verdict` MUST begin with `complete:` and MUST NOT claim that v4 teacher
+labels, trained KAN metrics, or full 15k prompt-injection coverage exist.
+
+#### SCENARIO-REPORT-3251: Constraint-Tax Manifest Refreshes Prompt-Injection V4
+
+**Given** Exp 3239 exists and the downstream Exp 3240/3241 labels and
+train/eval shards were gate-blocked before producing live labels or KAN metrics
+**And** post-.300 research references require a free-reasoning versus
+schema-constrained control plus a ConstrainPrompt baseline
+**When** the Exp 3251 constraint-tax manifest generator runs
+**Then** it writes
+`results/experiment_3251_prompt_injection_v4_constraint_tax_manifest_v2.json`
+with all required schema fields, `inference_substrate` set to
+`aggregation_from_upstream_artifacts`, concrete corpus input paths inherited
+from Exp 3239, paired free-reasoning and schema-constrained prompt-arm
+contracts over the same example IDs, a ConstrainPrompt baseline plan,
+parseability/verifier-agreement/abstention/latency/reasoning-quality metric
+fields, downstream Exp 3252 teacher-label and Exp 3253 KAN train/eval
+deliverable contracts, protected-file untouched constraints for
+`scripts/research_conductor.py`, no LLM, teacher-label, KAN-training, Garak,
+conductor, or push work performed by this task, `v4_manifest_v2_ready=true`,
+and an `honest_verdict` beginning with `complete:` without claiming labels or
+trained KAN metrics exist.
+
+## Implementation Status (REQ-REPORT-3251)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-3251 | Planned (`python/carnot/reporting/prompt_injection_v4_constraint_tax_manifest_3251.py`) | Planned (`tests/python/test_experiment_3251_prompt_injection_v4_constraint_tax_manifest.py`) |
