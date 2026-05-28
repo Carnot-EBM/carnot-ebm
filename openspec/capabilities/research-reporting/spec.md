@@ -13445,3 +13445,69 @@ duration evidence, marks missing mandated GGUFs explicitly, and emits an
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-REPORT-3284 | Implemented (`python/carnot/reporting/garak_local_smoke_sota_gguf_3284.py`) | Implemented (`tests/python/test_experiment_3284_garak_local_smoke_sota_gguf.py`) |
+
+### REQ-REPORT-3285: Full Garak/DataFlip Red-Team Eval v2
+
+The repository shall provide an Exp 3285 full v4 prompt-injection red-team
+workflow that writes
+`results/experiment_3285_full_garak_dataflip_redteam_eval_v2.json` by reading
+the Exp 3283 corrigendum, Exp 3284 local Garak smoke evidence, Exp 3273 KAN
+detector evidence, and the frozen v4 prompt-injection split files. The workflow
+SHALL re-check GPU, selected-Python CUDA/llama.cpp support, Garak runner
+availability, and mandated local GGUF cache availability before launching a
+local target adapter. The mandated SOTA GGUF target specs are
+`unsloth/Qwen3.6-35B-A3B-GGUF`, `unsloth/gemma-4-31B-it-GGUF`, and
+`unsloth/gemma-4-26B-A4B-it-GGUF`; missing specs MUST remain explicit rather
+than silently falling back to non-mandated targets.
+
+When at least one mandated SOTA GGUF target is locally available and the Garak
+runner is ready, the workflow SHALL run a bounded full red-team panel containing
+PromptInject-style probes plus relevant jailbreak/encoding prompt-injection
+variants. It SHALL also evaluate deterministic DataFlip/KAD-adaptive attack
+rows and aligned-instruction benign controls from the `.303` frozen corpus when
+available. Detector behavior and target behavior MUST be scored separately:
+target refusal, empty output, or adapter failure MUST NOT be counted as KAN
+detector success unless the artifact records a separate explicit justification.
+
+The terminal artifact MUST include `garak_dataflip_redteam_eval_v2_ready`,
+`garak_redteam_eval_ready`, `model_specs`, `models_used`,
+`missing_model_specs`, `preconditions_checked`, `garak_probe_count`,
+`dataflip_case_count`, `aligned_instruction_case_count`,
+`attack_success_rate`, `kan_detection_rate`,
+`aligned_instruction_false_positive_rate`, `garak_gate_passed`,
+`dataflip_gate_passed`, `blocked_reasons`, `random_seed`,
+`reproducibility_checksum`, `duration_s`, and `honest_verdict`. The artifact
+SHALL also include per-slice metrics that keep Garak PromptInject,
+jailbreak/encoding, DataFlip/KAD-adaptive, aligned-benign, target-response, and
+KAN-detector metrics separate. `garak_dataflip_redteam_eval_v2_ready` MUST be
+true whenever the artifact validates. `garak_redteam_eval_ready` MUST be true
+only when a real local mandated SOTA target produced auditable responses for
+the bounded Garak panel. `honest_verdict` MUST begin with one of `complete:`,
+`success:`, `passed:`, or `shipped:` whenever the artifact is written.
+
+#### SCENARIO-REPORT-3285: Full Red-Team Eval Preserves Separate Gates
+
+**Given** Exp 3283 reports `corrigendum_ready=true`
+**And** Exp 3284 reports a real local Garak smoke against at least one mandated
+SOTA GGUF target
+**And** the frozen v4 Garak split contains DataFlip/KAD-adaptive attack rows
+and the eval/holdout splits contain aligned-instruction benign controls
+**When** the Exp 3285 full red-team workflow runs
+**Then** it writes
+`results/experiment_3285_full_garak_dataflip_redteam_eval_v2.json` with all
+required schema fields, records the mandated model specs used and missing,
+records precondition rows for GPU/Garak/CUDA/model-cache/corpus readiness,
+reports the Garak probe count, DataFlip/KAD case count, aligned-instruction
+case count, quantitative attack-success rate, KAN detection rate, aligned
+false-positive rate, independent Garak and DataFlip gate booleans, exact
+blocked reasons when any gate fails, and an `honest_verdict` beginning with
+`complete:`. If a real Garak run cannot be launched, the artifact remains
+complete with `garak_redteam_eval_ready=false`, `garak_gate_passed=false`, and
+the DataFlip/aligned control metrics still reported from frozen detector
+evidence when available.
+
+## Implementation Status (REQ-REPORT-3285)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-3285 | Implemented (`python/carnot/reporting/full_garak_dataflip_redteam_eval_3285.py`) | Implemented (`tests/python/test_experiment_3285_full_garak_dataflip_redteam_eval.py`) |

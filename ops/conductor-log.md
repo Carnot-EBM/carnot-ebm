@@ -6649,3 +6649,4 @@ web search: https://docs.garak.ai/garak/examples/pr |
 | 2026-05-28 17:23 UTC | Close .303 ledger and open .304 blocker queue | OK | 81 passed in 4.19s |
 | 2026-05-28 17:36 UTC | Garak install and probe manifest v1 | OK | 81 passed in 3.40s |
 | 2026-05-28 17:52 UTC | Prompt-injection corrigendum and duration audit v1 | OK | 81 passed in 4.12s |
+| 2026-05-28 18:13 UTC | Gated Garak local smoke against mandated SOTA GGUF | OK | 81 passed in 3.03s |

@@ -240,5 +240,13 @@
   "schema": "carnot.garak_local_smoke_sota_gguf.v1",
   "schema_version": "carnot.garak_local_smoke_sota_gguf.v1",
   "task_id": "exp3284-garak-local-smoke-sota-gguf-v1",
-  "tokens_generated": 1221
+  "tokens_generated": 1221,
+  "flagged_adversarial": true,
+  "corrigendum_pending": [
+    {
+      "kind": "DURATION_TOO_SHORT",
+      "severity": "critical",
+      "detail": "duration_s=23.966474 but artifact references compute-bound markers (GGUF / CUDA / live model). Loading and running a real model takes >=60.0s minimum; this completed too fast to have invoked the model."
+    }
+  ]
 }
