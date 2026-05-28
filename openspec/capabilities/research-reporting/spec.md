@@ -11216,3 +11216,70 @@ starts with `complete:`.
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-REPORT-3219 | Implemented (`python/carnot/reporting/archive_v297_activate_v298_3219.py`) | Implemented (`tests/python/test_experiment_3219_archive_v297_activate_v298.py`) |
+
+### REQ-REPORT-3231: Cross-Corpus Matrix V32 From .298 Artifacts
+
+The repository shall provide an Exp 3231 cross-corpus matrix v32 generator
+that writes `results/experiment_3231_cross_corpus_matrix_v32.json` by reading
+`results/experiment_3217_cross_corpus_matrix_v31.json` as the authoritative
+prior matrix, plus every available checked-in `.298` artifact from Exp 3219
+through Exp 3230 and the `.298` conductor-log gate evidence. The workflow MUST
+aggregate existing artifacts only. It MUST NOT run live model inference,
+verifier scoring, repair generation, solver execution, hardware commands, the
+conductor, pushes, modify `scripts/research_conductor.py`, modify
+`research-roadmap.yaml`, or reconcile `ops/status.md`, `ops/changelog.md`, or
+`_bmad/traceability.md` when the conductor has delegated reconciliation to a
+separate step.
+
+The generator MUST classify `.298` inputs distinctly as missing,
+gate-blocked, blocked, complete, or partial. It MUST not infer success from a
+missing artifact, but it MAY attach conductor-log evidence showing that an
+absent artifact was pre-gate skipped. It MUST compare the publication blocker
+count against matrix v31 and explain each delta from actual `.298` evidence.
+It MUST report local SOTA receipt state, clean verifier state, repair gate
+state, repair ladder state, continuous self-learning state, and hardware claim
+boundary. `paper_ready` MUST be true only when the local SOTA receipt, clean
+verifier, repair gate/ladder, FR-11 controller-memory or sidecar, and
+claim-boundary evidence all meet the roadmap criteria.
+
+The terminal artifact MUST include `schema_version`, `experiment_id`,
+`milestone`, `matrix_version`, `input_artifacts`, `missing_artifacts`,
+`gate_blocked_artifacts`, `local_sota_receipt_state`,
+`clean_verifier_state`, `repair_gate_state`, `repair_ladder_state`,
+`continuous_self_learning_state`, `hardware_claim_boundary`, `paper_ready`,
+`publication_blocker_count`, `blocker_delta_from_v31`, `next_top_gap`,
+`inference_substrate`, `conductor_file_modified`, `active_roadmap_modified`,
+and `honest_verdict`. It MAY include status counts, row-level classifications,
+source checksums, blocker-delta explanations, protected-file policy, and
+measured `duration_s` as long as every value is derived from checked-in
+artifacts, conductor-log evidence, or file presence/checksum checks.
+
+#### SCENARIO-REPORT-3231: V32 Aggregates .298 Evidence Without Overclaiming
+
+**Given** matrix v31 exists and reports `cross_corpus_matrix_v31_ready=true`,
+`paper_ready=false`, and `publication_blocker_count=92`
+**And** `.298` artifacts exist for archive activation, hermetic CUDA runtime
+repair, llama.cpp CUDA offload gate check, exact-row uncertainty sidecar,
+partial SMT coverage, clean verifier gate check, repair gate v7, repair ladder
+gate check, FR-11 nonforgetting promotion controller, and KAN-CL certificate
+boundary audit
+**And** the Exp 3222 full local SOTA receipt and Exp 3226 structured repair
+preflight artifacts are absent because the conductor pre-gate skipped them
+**When** the Exp 3231 matrix v32 generator runs
+**Then** it writes `results/experiment_3231_cross_corpus_matrix_v32.json`
+with all required schema fields, every expected `.298` artifact accounted for,
+missing and gate-blocked artifacts visible, partial SMT/certificate-boundary
+evidence distinguished from complete evidence, publication blockers recomputed
+against v31 with each delta explained, local SOTA receipt and clean verifier
+still blocked by the CUDA/offload receipt gap, repair gate and ladder still
+blocked, continuous self-learning bounded to controller memory with no model
+weight update claim and no KAN-CL sidecar promotion, hardware speedup/TSU/Kona
+claims denied without transcript evidence, `paper_ready=false`, no protected
+conductor or active-roadmap edits performed by this task, and an
+`honest_verdict` that starts with `complete:`.
+
+## Implementation Status (REQ-REPORT-3231)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-3231 | Implemented (`python/carnot/reporting/cross_corpus_matrix_v32_3231.py`) | Implemented (`tests/python/test_experiment_3231_cross_corpus_matrix_v32.py`) |
