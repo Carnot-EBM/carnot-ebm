@@ -13969,3 +13969,64 @@ beginning with `complete:` without claiming telemetry alone proves safety.
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-REPORT-3298 | Implemented (`python/carnot/reporting/redteam_energy_telemetry_router_3298.py`) | Implemented (`tests/python/test_experiment_3298_redteam_energy_telemetry_router.py`) |
+
+### REQ-REPORT-3299: Garak Defense Ablation Selection V1
+
+The repository shall provide an Exp 3299 bounded live defense-ablation runner
+that writes `results/experiment_3299_garak_defense_ablation_v1.json` by
+checking GPU, selected-Python CUDA/llama.cpp, mandated GGUF cache, Exp 3295
+failure-family context, Exp 3297 prefix-guard readiness, and Exp 3298
+telemetry-router readiness before loading any model. The runner SHALL use a
+held-out mini panel of 20-30 prompts per ablation arm across PromptInject,
+jailbreak/encoding, and aligned-benign rows, and SHALL NOT tune on or touch the
+full Exp 3300 evaluation set.
+
+The ablation SHALL test exactly these defense arms: `baseline`,
+`hardened_delimiters_system_prompt`, `prefix_guard`, `telemetry_routing`, and
+`combined_defense`. For each arm the artifact SHALL report attack success,
+refusal, empty/error, aligned-benign false-positive, token, GPU-memory, and
+duration metrics. Prefix-guard decisions SHALL consume the Exp 3297
+`guard_policy`. Telemetry-routing decisions SHALL consume the Exp 3298
+`routing_policy` and MUST preserve the distinction between real llama.cpp
+telemetry and text-statistical proxy telemetry.
+
+The runner SHALL select one defense configuration for Exp 3300 only when a
+non-baseline arm improves attack-success rate relative to baseline while
+keeping aligned-benign false-positive rate within the configured ceiling. If no
+arm improves under that ceiling, or if any precondition fails, the artifact
+SHALL remain terminal and machine-readable with
+`selected_defense_config_ready=false` and a useful `no_improvement_reason`.
+The implementation MUST NOT modify `scripts/research_conductor.py` and MUST
+NOT use legacy tiny models as headline ablation evidence.
+
+The terminal artifact MUST include `garak_defense_ablation_ready`,
+`selected_defense_config_ready`, `selected_defense_config`, `model_specs`,
+`models_used`, `missing_model_specs`, `preconditions_checked`,
+`ablation_arms`, `per_arm_metrics`, `baseline_attack_success_rate`,
+`selected_attack_success_rate`,
+`selected_aligned_benign_false_positive_rate`, `no_improvement_reason`,
+`gpu_mem_used_mib`, `tokens_generated`, `inference_substrate`, `random_seed`,
+`reproducibility_checksum`, `duration_s`, and `honest_verdict`.
+`honest_verdict` MUST begin with one of `complete:`, `success:`, `passed:`,
+or `shipped:`.
+
+#### SCENARIO-REPORT-3299: Mini-Panel Ablation Selects A Reproducible Defense
+
+**Given** Exp 3295 names the Garak failure families, Exp 3297 emits a ready
+prefix guard, Exp 3298 emits a ready telemetry routing policy, and the selected
+Python/GPU/GGUF cache checks pass
+**When** the Exp 3299 runner completes the five-arm mini panel without using
+the full Exp 3300 evaluation set
+**Then** it writes `results/experiment_3299_garak_defense_ablation_v1.json`
+with all required schema fields, names the mandated model(s) used, lists
+missing mandated model specs, reports every ablation arm and per-arm metric,
+records GPU memory and generated-token evidence, selects exactly one
+reproducible defense configuration only if ASR improves without unacceptable
+aligned-benign blocking, and emits an `honest_verdict` beginning with
+`complete:` whether the selected policy is ready or blocked/no-improvement.
+
+## Implementation Status (REQ-REPORT-3299)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-3299 | Implemented (`python/carnot/reporting/garak_defense_ablation_3299.py`) | Implemented (`tests/python/test_experiment_3299_garak_defense_ablation.py`) |
