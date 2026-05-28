@@ -12351,3 +12351,52 @@ claiming paper readiness.
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-REPORT-3260 | Implemented (`python/carnot/reporting/archive_v301_activate_v302_3260.py`) | Implemented (`tests/python/test_experiment_3260_archive_v301_activate_v302.py`) |
+
+### REQ-REPORT-3261: CUDA Recovery Confirmation Smoke
+
+The repository shall provide an Exp 3261 CUDA recovery confirmation smoke
+generator that writes
+`results/experiment_3261_cuda_recovery_confirmation_smoke_v1.json` after the
+operator reboot intended to recover the CUDA stack. The workflow SHALL use the
+selected project Python from the conductor virtualenv when present, SHALL first
+check that `nvidia-smi` enumerates at least one RTX 3090, SHALL then check
+that the selected Python can run
+`python -c "import torch; assert torch.cuda.is_available()"`, and SHALL stop
+with `blocked_no_gpu` or `blocked_cuda_unavailable` respectively when either
+precondition fails.
+
+When the preconditions pass, the workflow MUST run a real selected-Python GPU
+operation by allocating deterministic tensors on `cuda:0`, multiplying them,
+copying the result back to CPU, and verifying it against the expected CPU
+result. If two or more GPUs are enumerated, it MUST repeat the operation on
+`cuda:1`. The terminal artifact MUST include
+`cuda_recovery_confirmation_smoke_v1_ready`, `next_smoke_allowed`,
+`cuda_python_smoke_passed`, `gpu_count`, `gpu_names`, `driver_version`,
+`matmul_verified`, `random_seed`, `reproducibility_checksum`, `duration_s`,
+and `honest_verdict`. `next_smoke_allowed` and
+`cuda_python_smoke_passed` MUST be true only when the selected-Python CUDA
+precondition passes and every required GPU matmul verifies. `honest_verdict`
+MUST begin with one of `complete:`, `complete_`, `success:`, `success_`,
+`passed:`, `passed_`, or `shipped_`.
+
+#### SCENARIO-REPORT-3261: Recovered CUDA Opens The Next Smoke Gate
+
+**Given** the post-reboot host enumerates one or more RTX 3090 GPUs through
+`nvidia-smi`
+**And** the selected project Python reports `torch.cuda.is_available()`
+**When** the Exp 3261 CUDA recovery confirmation smoke generator runs
+**Then** it writes
+`results/experiment_3261_cuda_recovery_confirmation_smoke_v1.json` with all
+required schema fields, the NVIDIA driver version and GPU names recorded,
+`matmul_verified=true` only after the selected Python completes and verifies a
+CUDA matmul on `cuda:0` and on `cuda:1` when a second GPU is present,
+`cuda_python_smoke_passed=true`, `next_smoke_allowed=true`, and an
+`honest_verdict` beginning with `complete:`. If either precondition fails, the
+artifact remains complete but records the specific blocked reason and leaves
+both downstream gate booleans false.
+
+## Implementation Status (REQ-REPORT-3261)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-3261 | Implemented (`python/carnot/reporting/cuda_recovery_confirmation_smoke_3261.py`) | Implemented (`tests/python/test_experiment_3261_cuda_recovery_confirmation_smoke.py`) |
