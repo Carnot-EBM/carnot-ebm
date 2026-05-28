@@ -6601,3 +6601,5 @@ web search |
 | 2026-05-28 07:35 UTC | Prompt-injection v4 constraint-tax manifest refres | SKIP | Pre-tests failing, self-heal failed:  |
 | 2026-05-28 07:49 UTC | Prompt-injection v4 constraint-tax manifest refres | OK | 81 passed in 3.86s |
 | 2026-05-28 07:51 UTC | Prompt-injection teacher-label shard v2 gated on S | GATE_BLOCK | Pre-emptive skip: upstream retired (exp3250-sota-gguf-receipt-v8) |
+| 2026-05-28 07:51 UTC | Prompt-injection KAN shard train/eval v2 with cons | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp3252-prompt-injection-teacher-label-sha |
+| 2026-05-28 07:53 UTC | Prompt-injection teacher-label shard v2 gated on S | GATE_BLOCK | Pre-emptive skip: upstream retired (exp3250-sota-gguf-receipt-v8) |
