@@ -12590,3 +12590,54 @@ classes after splitting, the artifact remains complete and leaves
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-REPORT-3265 | Planned (`python/carnot/reporting/prompt_injection_kan_train_eval_shard_v3_3265.py`) | Planned (`tests/python/test_experiment_3265_prompt_injection_kan_train_eval_shard_v3.py`) |
+
+### REQ-REPORT-3266: Capstone V302 CUDA Recovery Readout
+
+The repository shall provide an Exp 3266 milestone .302 capstone generator
+that writes `results/experiment_3266_capstone_v302.json` by reading the .302
+source artifacts from Exp 3261 through Exp 3265 and the prior .301 blocker
+authority from Exp 3260 when available. The workflow MUST be aggregation only.
+It MUST NOT run live model inference, CUDA probes, llama.cpp, GGUF receipts,
+teacher labeling, KAN training, Garak, repair proposal generation, verifier
+scoring, solver execution, hardware commands, the conductor, pushes, or
+ops/status/changelog/traceability reconciliation.
+
+The generator MUST set `cuda_recovery_unblocked_sota_receipt=true` only when
+Exp 3261 reports `cuda_python_smoke_passed=true`, Exp 3262 reports
+`llama_cpp_cuda_receipt_ready=true`, and Exp 3263 reports
+`sota_gguf_receipt_ready=true`. When that is true, it MUST decrement the
+prior publication blocker count by exactly one CUDA-receipt blocker tier and
+MUST NOT decrement below zero. It MUST keep `paper_ready=false` while any
+publication blocker remains or while Exp 3264/3265 only provide single-shard
+v4 evidence rather than full 15k multi-shard, DeLong, Garak, and repair-gate
+evidence.
+
+The terminal artifact MUST include `capstone_v302_ready`, `paper_ready`,
+`publication_blocker_count`, `next_top_gap`,
+`cuda_recovery_unblocked_sota_receipt`, `random_seed`,
+`reproducibility_checksum`, `duration_s`, and `honest_verdict`. It SHALL also
+include compact source summaries, source checksums, no-new-execution booleans,
+and a blocked/gap explanation. `honest_verdict` MUST begin with one of
+`complete:`, `complete_`, `success:`, `success_`, `passed:`, `passed_`, or
+`shipped_`.
+
+#### SCENARIO-REPORT-3266: Recovered CUDA Retires Only The Receipt Blocker
+
+**Given** Exp 3261 reports CUDA recovery, Exp 3262 reports a llama.cpp CUDA
+receipt, Exp 3263 reports a SOTA GGUF receipt, Exp 3264 reports a ready
+teacher-label shard, Exp 3265 reports a ready non-headline KAN train/eval
+shard, and Exp 3260 carries forward 106 prior publication blockers
+**When** the Exp 3266 capstone generator runs
+**Then** it writes `results/experiment_3266_capstone_v302.json` with all
+required schema fields, `capstone_v302_ready=true`,
+`cuda_recovery_unblocked_sota_receipt=true`,
+`publication_blocker_count=105`, `paper_ready=false`, `next_top_gap`
+identifying the full 15k v4 corpus across shards plus repair/Garak gates, and
+an `honest_verdict` beginning with `complete:` without claiming paper
+readiness.
+
+## Implementation Status (REQ-REPORT-3266)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-3266 | Implemented (`python/carnot/reporting/capstone_v302_3266.py`) | Implemented (`tests/python/test_experiment_3266_capstone_v302.py`) |
