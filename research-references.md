@@ -1,3 +1,88 @@
+## 2026-05-28 Post-.300 Planning Sweep (Milestone 2026.05.301)
+
+This sweep was run after milestone `.300` completed. `.300` proved that the
+runtime receipt chain remains the top blocker: the capstone reported
+`paper_ready=false`, `publication_blocker_count=106`,
+`local_sota_receipt_status=blocked`, and
+`next_top_gap=repair_selected_python_torch_cuda_before_exp3237`. The next
+milestone should repair or isolate the selected-Python CUDA boundary before it
+spends more work on local-SOTA teacher labels or repair claims.
+
+### Structured Constraints Need a Constraint-Tax Control
+
+- **Paper:** "The Constraint Tax: A Structural Limitation of LLM Reasoning
+  Under Formalized Output Constraints" (arXiv:2605.26128; submitted
+  2026-05-27).
+- **What:** The paper reports that structured-output constraints can improve
+  parseability while imposing a reasoning accuracy cost, with a reported 25%
+  relative degradation on complex math tasks.
+- **Relevance to Carnot:** Prompt-injection teacher labeling and DCCD repair
+  preflight should compare a free-reasoning arm against a schema-constrained
+  arm. Carnot should not treat schema validity as reasoning quality.
+- **Sources:** https://arxiv.org/abs/2605.26128
+
+### Prompt-Only Constraints Are a Cheap Baseline, Not an Authority
+
+- **Paper:** "ConstrainPrompt: Zero-shot LLM Response Constraint" (arXiv:
+  2603.25111; surfaced via Hugging Face Papers).
+- **What:** ConstrainPrompt frames format, lexical, structural, and syntactic
+  controls as prompt-only constraints and compares against constrained-decoding
+  systems such as OpenAI Structured Output, XGrammar, and Guidance.
+- **Relevance to Carnot:** Use prompt-only constraints as a low-cost baseline
+  for parseability, but keep exact verifier checks and local SOTA receipts as
+  the authority for correctness.
+- **Sources:** https://huggingface.co/papers/2603.25111
+
+### Self-Improving Verifier Search Fits FR-11 Only Behind Exact Verification
+
+- **Paper:** "SEVerA: Self-Improving Verifier Guided Adaptive LLM Test-time
+  Search" (arXiv:2603.22471; submitted 2026-03-26, revised 2026-04-09).
+- **What:** SEVerA uses a verifier to guide adaptive test-time search and
+  improve future search behavior.
+- **Relevance to Carnot:** The idea is promising for repair proposal ranking
+  and FR-11, but only after the local SOTA receipt and exact verifier rerun are
+  available. It should inform candidate ordering, not certify answers.
+- **Sources:** https://arxiv.org/abs/2603.22471
+
+### Lifelong Agent Evaluation Suggests Retention and Forgetting Metrics
+
+- **Paper:** "LifelongAgentBench: Evaluating LLM Agents as Lifelong Learners"
+  (arXiv:2605.05135; submitted 2026-05-06).
+- **What:** The benchmark evaluates lifelong learning behavior across repeated
+  agent sessions, including retention, adaptation, and forgetting.
+- **Relevance to Carnot:** FR-11 controller-memory work should report
+  retention/adaptation/forgetting over held-out failure traces, not only
+  same-slice improvement. This is the mandatory continuous self-learning target
+  for `.301`.
+- **Sources:** https://arxiv.org/abs/2605.05135
+
+### Multi-State Probabilistic Units May Match Partial-Credit Constraints
+
+- **Paper:** "Probabilistic Computing with P-Dit Units" (arXiv:2506.00269;
+  submitted 2025-05-31).
+- **What:** The paper generalizes binary p-bit probabilistic computing toward
+  multi-state variables, closer to Potts-style discrete optimization.
+- **Relevance to Carnot:** Multi-state probabilistic units are a natural
+  diagnostic path for q-state partial-credit verifier rows. Treat this as a
+  CPU or simulation mapping experiment with exact fallback, not a hardware
+  speedup claim.
+- **Sources:** https://arxiv.org/abs/2506.00269
+
+### EBT, Extropic, and Kona Remain Strategic Alignment Signals
+
+- **Papers and updates:** EBT open-review discussions around `arXiv:2507.02092`,
+  Extropic TSU/hardware writing, and Logical Intelligence Kona updates.
+- **What:** These sources continue to point toward energy-based inference,
+  thermodynamic or probabilistic hardware, and reasoning architectures that use
+  search or energy landscapes rather than next-token likelihood alone.
+- **Relevance to Carnot:** Keep the architecture aligned with exact-verifier
+  energy surfaces and hardware-accelerated sampling, while avoiding claims of
+  access to TSU or Kona hardware.
+- **Sources:** https://openreview.net/forum?id=ZBj3Qp1bYg,
+  https://extropic.ai/software, https://extropic.ai/hardware,
+  https://extropic.ai/writing/thermodynamic-computing-from-zero-to-one,
+  https://logicalintelligence.com/kona-ebms-energy-based-models
+
 ## 2026-05-28 Post-.299 Planning Sweep (Milestone 2026.05.300)
 
 This sweep was run after milestone `.299` completed. `.299` proved a narrow

@@ -1,81 +1,84 @@
-# Research Roadmap vNEXT - Milestone 2026.05.300
+# Research Roadmap vNEXT - Milestone 2026.05.301
 
-**Title:** Runtime Receipt Recovery + Prompt-Injection KAN Split-Run + FR-11 Failure Memory
+**Title:** Selected-Python CUDA Repair + Constraint-Tax Prompt Injection + Lifelong FR-11 Retention
 
 **Created:** 2026-05-28
 **Status:** Proposed, staged in `research-roadmap-next.yaml`
-**Supersedes:** Milestone 2026.05.299
-**Execution queue:** `exp3233` through `exp3245`
+**Supersedes:** Milestone 2026.05.300
+**Execution queue:** `exp3246` through `exp3258`
 
-## What Milestone 2026.05.299 Proved
+## What Milestone 2026.05.300 Proved
 
-Milestone `.299` was intentionally narrow. It proved that the single-focus
-Prompt-Injection KAN v4 plan is not ready to run as one large task:
+Milestone `.300` completed and narrowed Carnot's next blocker:
 
-- `exp3221` archived `.298` and activated `.299`.
-- `exp3222` attempted Prompt-Injection KAN Distillation v4 three times and did
-  not produce `results/experiment_3222_prompt_injection_kan_distill_v4_15k.json`.
-  The conductor log records three CLI failures.
-- `exp3223` completed the capstone and reported
-  `paper_ready=false`, `publication_blocker_count=100`,
-  `v4_outcome=blocked_missing_exp3222_result`, and
-  `next_top_gap=cuda_chain_for_full_local_sota_receipts`.
-- No new KAN corpus, teacher-label shard, verifier rerun, repair preflight,
-  or hardware receipt was produced in `.299`.
+- `exp3233` archived `.299` and activated `.300`.
+- `exp3234` produced the CLI backend root-cause ledger and confirmed the
+  failed prompt-injection monolith should stay split into smaller artifacts.
+- `exp3235` produced the CUDA boundary package, but `exp3236` reported
+  `cuda_python_smoke_passed=false` with
+  `selected_python_torch_cuda_unavailable` and
+  `cuda_bindings_runtime_no_devices`.
+- `exp3237`, `exp3238`, `exp3240`, `exp3241`, and `exp3242` were correctly
+  gate-blocked or skipped because the local SOTA receipt chain was not ready.
+- `exp3239` produced the Prompt-Injection KAN v4 resource manifest.
+- `exp3243` produced the FR-11 failure-memory controller artifact with held-out
+  replay and doomed-rerun avoidance evidence, while preserving the
+  no-foundation-weight-update boundary.
+- `exp3245` reported `paper_ready=false`, `publication_blocker_count=106`,
+  `local_sota_receipt_status=blocked`, and
+  `next_top_gap=repair_selected_python_torch_cuda_before_exp3237`.
 
-The next milestone should therefore split the failed monolith into receipt,
-manifest, teacher-label, training, and aggregation artifacts. It should also
-resume the real blocker identified by `.298` and `.299`: the selected Python /
-CUDA / llama.cpp boundary that prevents trustworthy local SOTA GGUF receipts.
+The next milestone should therefore focus on a selected-Python CUDA repair
+attempt, then reopen local SOTA receipts and downstream prompt-injection work
+only through structured gates. It should also convert FR-11 memory from a
+single controller artifact into a lifelong retention/adaptation/forgetting
+audit.
 
 ## Three Biggest Gaps To PRD Vision
 
-1. **Local SOTA authority is still missing.** The PRD requires reproducible
-   verifier evidence over current local GGUF models. Carnot has GPU-visible
-   host evidence in prior artifacts, but selected Python still reported CUDA
-   unavailable and the llama.cpp/offload chain did not produce a clean receipt.
+1. **Local SOTA authority is still blocked at the selected-Python CUDA layer.**
+   The PRD requires current local GGUF model evidence, but Carnot cannot yet
+   make a trustworthy headline claim because selected Python cannot initialize
+   CUDA consistently. This blocks live SOTA receipts, teacher labels, and
+   structured repair evaluation.
 
-2. **Prompt-injection KAN work lacks staged, auditable artifacts.** Existing
-   prompt-injection KAN artifacts are older and smaller. `.299` attempted a
-   15k v4 distillation directly, but failed before producing even a manifest.
-   The next attempt must start with corpus, teacher, model-spec, power-analysis,
-   and garak/config receipts before any headline metric.
+2. **Prompt-injection KAN work has a manifest but no current teacher labels or
+   constraint-tax control.** `.300` proved the manifest can be built, but
+   downstream labeling and training were skipped. New 2026 work on constraint
+   tax means `.301` must compare free-reasoning and schema-constrained arms
+   before trusting structured labels or DCCD-style proposals.
 
-3. **FR-11 is still controller-memory only.** `.298` established useful
-   nonforgetting governance, but Carnot still lacks a continuous self-learning
-   loop that learns from failed runs, gate blocks, and stale premises without
-   claiming foundation-model weight updates.
+3. **Continuous self-learning is controller-memory only.** `.300` showed that
+   failure memory can avoid doomed reruns, but PRD FR-11 needs longer-lived
+   evidence: retention across sessions, adaptation to new gate blocks, and
+   negative-control checks for forgetting without claiming foundation-model
+   weight updates.
 
 ## External Research Integrated
 
-The 2026-05-28 external sweep was added to `research-references.md` before this
-roadmap was designed. The most relevant updates are:
+The 2026-05-28 post-`.300` sweep was added to `research-references.md` before
+this roadmap was designed. The most relevant updates are:
 
-- Distributional EBMs for structured reasoning (`https://arxiv.org/abs/2605.18871`)
-  support uncertainty and abstention sidecars over exact rows.
-- Draft-Conditioned Constrained Decoding (`https://arxiv.org/abs/2603.03305`)
-  motivates repair preflight that drafts freely but validates structure under
-  constraints.
-- Vectorized constrained decoding (`https://arxiv.org/abs/2602.22647`) suggests
-  accelerator-friendly schema constraints if repair decoding becomes a latency
-  bottleneck.
-- CiteTracer and large-scale citation hallucination audits
-  (`https://arxiv.org/abs/2605.08583`, `https://arxiv.org/abs/2605.07723`)
-  reinforce field-level evidence artifacts and deterministic matching.
-- KAN-CL and KAC (`https://arxiv.org/abs/2605.12306`,
-  `https://arxiv.org/abs/2503.21076`) support locality-aware continual-learning
-  sidecars only when nonforgetting and rollback fields are explicit.
-- P-bit Ising guidance (`https://arxiv.org/abs/2604.17109`,
-  `https://arxiv.org/abs/2605.04033`) should remain guidance with exact fallback,
-  not a correctness authority.
-- Extropic THRML and Logical Intelligence Kona are strategic alignment signals
-  (`https://extropic.ai/software`,
-  `https://logicalintelligence.com/kona-ebms-energy-based-models`), not `.300`
-  speedup or certification claims.
+- Constraint Tax (`https://arxiv.org/abs/2605.26128`) warns that formalized
+  output constraints can reduce reasoning accuracy even while improving
+  parseability.
+- ConstrainPrompt (`https://huggingface.co/papers/2603.25111`) gives a cheap
+  prompt-only constraint baseline for format, lexical, structural, and
+  syntactic controls.
+- SEVerA (`https://arxiv.org/abs/2603.22471`) supports verifier-guided
+  adaptive test-time search as a proposal-ranking idea, not a correctness
+  authority.
+- LifelongAgentBench (`https://arxiv.org/abs/2605.05135`) motivates explicit
+  retention, adaptation, and forgetting metrics for FR-11.
+- P-Dit probabilistic units (`https://arxiv.org/abs/2506.00269`) suggest a
+  multi-state probabilistic computing diagnostic path for partial-credit rows.
+- Extropic and Kona updates remain strategic alignment signals for
+  energy-based inference and hardware-accelerated sampling, but `.301` makes
+  no TSU, Kona, or hardware speedup claim.
 
 ## SOTA Local GGUF Policy
 
-Any `.300` experiment that invokes an LLM for evidence must include at least
+Any `.301` experiment that invokes an LLM for evidence must include at least
 one mandated local SOTA GGUF model in `MODEL_SPECS`:
 
 - `unsloth/Qwen3.6-35B-A3B-GGUF`
@@ -89,133 +92,139 @@ publication-readiness claims.
 ## Architecture Diagram
 
 ```text
-                 .299 terminal state
-  capstone_v299: paper_ready=false, blockers=100,
-  v4_outcome=blocked_missing_exp3222_result,
-  next_top_gap=cuda_chain_for_full_local_sota_receipts
+                 .300 terminal state
+  capstone_v300: paper_ready=false, blockers=106,
+  local_sota_receipt_status=blocked,
+  next_top_gap=repair_selected_python_torch_cuda_before_exp3237
                               |
                               v
-              exp3233 archive + activate .300
-                              |
-              +---------------+----------------+
-              |                                |
-              v                                v
-  exp3234 backend failure ledger      exp3235 runtime boundary package
-              |                                |
-              +---------------+----------------+
+              exp3246 archive + activate .301
                               |
                               v
-              exp3236 isolated CUDA/Python smoke
+              exp3247 selected-Python CUDA root-cause surgery
                               |
                               v
-              exp3237 llama.cpp CUDA receipt smoke
+              exp3248 isolated selected-Python CUDA smoke
                               |
                               v
-              exp3238 mandated SOTA GGUF receipt
+              exp3249 llama.cpp CUDA receipt smoke
+                              |
+                              v
+              exp3250 mandated SOTA GGUF receipt v8
                               |
         +---------------------+----------------------+
         |                                            |
         v                                            v
- exp3240 teacher-label shard                 exp3242 DCCD exact-row
+ exp3252 teacher-label shard                 exp3254 DCCD/SEVerA
     ^        |                                structured proposal preflight
     |        v
- exp3239 -> exp3241 prompt-injection
- manifest    KAN shard train/eval
+ exp3251 -> exp3253 prompt-injection
+ constraint  KAN train/eval shard
+ tax plan
 
- exp3243 FR-11 failure-memory controller
-          learns from .295-.300 gate and failure traces
-          without model-weight update claims
-
- exp3244 matrix -> exp3245 capstone
+ exp3255 FR-11 lifelong failure-memory retention audit
+ exp3256 p-dit/Potts multi-state sampler diagnostic manifest
+ exp3257 matrix v34 -> exp3258 capstone v301
 ```
 
 ## Phase Plan
 
-### Phase 1 - Milestone Hygiene and Failure Decomposition
+### Phase 1 - Archive and Selected-Python CUDA Repair
 
-- `exp3233` archives `.299`, records the missing v4 artifact, and activates
-  `.300`.
-- `exp3234` turns the `.299` CLI failure into a structured root-cause ledger so
-  the prompt-injection work is split before rerun.
-- `exp3235` writes the runtime-boundary operator package from `.296-.299`
-  evidence and names the exact handoff conditions for CUDA, selected Python,
-  and llama.cpp.
+- `exp3246` archives `.300`, records the capstone blockers, and activates
+  `.301`.
+- `exp3247` performs selected-Python CUDA root-cause surgery using current
+  artifacts and live environment probes, then emits a repair ledger and
+  `next_smoke_allowed`.
+- `exp3248` runs only if `exp3247` allows it and tests the selected Python,
+  PyTorch CUDA, CUDA bindings, and minimal kernel/runtime boundary.
 
 ### Phase 2 - Runtime Receipt Chain
 
-- `exp3236` runs isolated selected-Python and CUDA smoke probes and emits
-  `cuda_python_smoke_passed`.
-- `exp3237` runs only if `exp3236` passes and emits
-  `llama_cpp_cuda_receipt_ready`.
-- `exp3238` runs only if `exp3237` passes and attempts the mandated SOTA GGUF
-  receipt over the three required local GGUF models.
+- `exp3249` runs only if `exp3248` reports `cuda_python_smoke_passed=true` and
+  produces a llama.cpp CUDA/offload receipt.
+- `exp3250` runs only if `exp3249` reports
+  `llama_cpp_cuda_receipt_ready=true` and attempts the mandated SOTA GGUF
+  receipt over the three required local models.
 
-### Phase 3 - Prompt-Injection and Structured Repair Split-Runs
+### Phase 3 - Prompt-Injection Constraint-Tax Split-Runs
 
-- `exp3239` builds the prompt-injection v4 manifest, shard plan, power plan,
-  and garak/config receipts without invoking an LLM.
-- `exp3240` runs a small teacher-label shard only if the manifest and SOTA
-  receipt are present.
-- `exp3241` trains/evaluates the KAN sidecar on the shard only if teacher
-  labels exist, and explicitly marks results as non-headline.
-- `exp3242` runs a DCCD-style structured proposal preflight only if the clean
-  SOTA rerun gate is open; exact-row verification remains the authority.
+- `exp3251` refreshes the Prompt-Injection KAN v4 manifest with a
+  constraint-tax control plan and ConstrainPrompt baseline.
+- `exp3252` runs only if the SOTA receipt and refreshed manifest are ready. It
+  creates a small teacher-label shard with free-reasoning and
+  schema-constrained arms.
+- `exp3253` trains and evaluates the KAN sidecar only if teacher labels exist,
+  and explicitly marks the result as a shard-level, non-headline metric.
+- `exp3254` runs DCCD/SEVerA-style structured proposal preflight only behind
+  the clean SOTA receipt gate, with exact verifier authority preserved.
 
-### Phase 4 - Continuous Self-Learning and Aggregation
+### Phase 4 - Continuous Self-Learning and Hardware-Aligned Diagnostics
 
-- `exp3243` implements the required continuous self-learning task: a
-  failure-memory controller that learns from gate blocks, stale premises, and
-  missing artifacts while preserving no-weight-update governance.
-- `exp3244` aggregates `.300` evidence into cross-corpus matrix v33.
-- `exp3245` produces the `.300` capstone and names the next top gap.
+- `exp3255` is the required continuous self-learning experiment. It converts
+  the FR-11 failure-memory controller into a LifelongAgentBench-style
+  retention/adaptation/forgetting audit over held-out traces.
+- `exp3256` maps p-dit/Potts multi-state probabilistic units to Carnot
+  partial-credit rows as a diagnostic manifest. It keeps exact fallback and
+  makes no hardware speedup claim.
+
+### Phase 5 - Aggregation and Capstone
+
+- `exp3257` aggregates all available `.301` artifacts into cross-corpus matrix
+  v34, including gated skips and publication blockers.
+- `exp3258` produces the `.301` capstone, determines whether blockers
+  decreased, and names the next top gap.
 
 ## Dependency Graph
 
 ```text
-exp3233
-  -> exp3234
-  -> exp3235
-      -> exp3236
-          -> exp3237 [gate: cuda_python_smoke_passed == true]
-              -> exp3238 [gate: llama_cpp_cuda_receipt_ready == true]
-                  -> exp3240 [also requires exp3239.v4_manifest_ready == true]
-                  -> exp3242 [gate: clean_rerun_allowed == true]
+exp3246
+  -> exp3247
+      -> exp3248 [gate: next_smoke_allowed == true]
+          -> exp3249 [gate: cuda_python_smoke_passed == true]
+              -> exp3250 [gate: llama_cpp_cuda_receipt_ready == true]
+                  -> exp3252 [also requires exp3251.v4_manifest_v2_ready == true]
+                  -> exp3254 [gate: clean_rerun_allowed == true]
 
-exp3239 -> exp3240 -> exp3241
-exp3243 independent after exp3233, reads .295-.300 traces
-exp3244 reads all available .300 artifacts
-exp3245 reads exp3244 and all available .300 artifacts
+exp3251 -> exp3252 -> exp3253
+exp3255 reads exp3243 and .295-.301 failure traces
+exp3256 independent diagnostic manifest after exp3246
+exp3257 reads all available .301 artifacts
+exp3258 reads exp3257 and all available .301 artifacts
 ```
 
 ## Hardware Requirements
 
-- **Required for Phase 2 success:** one visible NVIDIA GPU, selected Python
-  CUDA initialization, and llama.cpp CUDA/offload support. If these fail, the
-  milestone still produces a useful boundary artifact and skips downstream live
-  SOTA tasks through structured gates.
-- **Required for Phase 3 live LLM tasks:** local cached GGUF models from the
-  mandated model list. If the full SOTA receipt is unavailable, prompt-injection
-  teacher labeling and structured proposal preflight skip rather than falling
-  back to legacy small headline models.
-- **Not required for `.300`:** KV260, GateMate, PolarFire, Extropic TSU, or
-  Kona hardware. Do not use a host `/dev/mmcblk*` KV260 precondition; the KV260
-  path, if reopened later, uses SSH and `xmutil`.
+- **Required for Phase 1 and Phase 2 success:** one visible NVIDIA GPU,
+  selected Python CUDA initialization, PyTorch CUDA visibility, CUDA bindings
+  runtime visibility, and llama.cpp CUDA/offload support. If any of these fail,
+  downstream live SOTA tasks skip through structured gates.
+- **Required for live LLM tasks:** cached local GGUF files or resolvable
+  Hugging Face access for `unsloth/Qwen3.6-35B-A3B-GGUF`,
+  `unsloth/gemma-4-31B-it-GGUF`, and
+  `unsloth/gemma-4-26B-A4B-it-GGUF`. Any task that invokes an LLM must record
+  `MODEL_SPECS`, `preconditions_checked`, and `models_used`.
+- **Allowed diagnostics:** CPU-only p-dit/Potts mapping and THRML/Kona
+  literature alignment notes with no hardware access or speedup claim.
+- **Not required for `.301`:** KV260, GateMate, PolarFire, Extropic TSU, or
+  Kona hardware. Do not use a host `/dev/mmcblk*` KV260 precondition; any future
+  KV260 work uses SSH reachability and board-side `xmutil`.
 
 ## Experiment Queue
 
-1. `exp3233-archive-v299-activate-v300`
-2. `exp3234-cli-backend-failure-root-cause-ledger-v1`
-3. `exp3235-cuda-driver-boundary-operator-package-v1`
-4. `exp3236-isolated-cuda-python-smoke-v1`
-5. `exp3237-llama-cpp-cuda-receipt-smoke-v2`
-6. `exp3238-sota-gguf-receipt-v7`
-7. `exp3239-prompt-injection-kan-v4-resource-manifest-v1`
-8. `exp3240-prompt-injection-kan-teacher-label-shard-v1`
-9. `exp3241-prompt-injection-kan-train-eval-shard-v1`
-10. `exp3242-dccd-exact-row-structured-proposal-preflight-v1`
-11. `exp3243-fr11-failure-memory-controller-v1`
-12. `exp3244-cross-corpus-matrix-v33`
-13. `exp3245-capstone-v300`
+1. `exp3246-archive-v300-activate-v301`
+2. `exp3247-selected-python-cuda-root-cause-surgery-v1`
+3. `exp3248-isolated-cuda-selected-python-smoke-v2`
+4. `exp3249-llama-cpp-cuda-receipt-smoke-v3`
+5. `exp3250-sota-gguf-receipt-v8`
+6. `exp3251-prompt-injection-v4-constraint-tax-manifest-v2`
+7. `exp3252-prompt-injection-teacher-label-shard-v2`
+8. `exp3253-prompt-injection-kan-train-eval-shard-v2`
+9. `exp3254-dccd-severa-structured-proposal-preflight-v2`
+10. `exp3255-fr11-lifelong-failure-memory-retention-audit-v1`
+11. `exp3256-pdit-potts-multistate-sampler-diagnostic-v1`
+12. `exp3257-cross-corpus-matrix-v34`
+13. `exp3258-capstone-v301`
 
 ## Done Criteria
 
@@ -225,7 +234,9 @@ exp3245 reads exp3244 and all available .300 artifacts
   GGUF model.
 - Every gated task includes matching `gated_on` metadata and upstream required
   artifact fields.
-- At least one experiment (`exp3243`) directly advances continuous
+- Every compute-bound task records `preconditions_checked`,
+  `inference_substrate`, `random_seed`, and `reproducibility_checksum`.
+- At least one experiment (`exp3255`) directly advances continuous
   self-learning under FR-11 without claiming foundation-model weight updates.
 - No task modifies `scripts/research_conductor.py`, no task modifies
   `research-roadmap.yaml`, and no task pushes.

@@ -1,6 +1,24 @@
 # Carnot — Operational Status
 
-**Last Updated:** 2026-05-28 (Milestone 2026.05.300 operational retrospective complete)
+**Last Updated:** 2026-05-28 (Milestone 2026.05.301 research planning staged)
+
+## Session 2026-05-28 - Milestone 2026.05.301 Research Planning Staged
+
+Planned milestone 2026.05.301 as "Selected-Python CUDA Repair +
+Constraint-Tax Prompt Injection + Lifelong FR-11 Retention" after all `.300`
+tasks completed. Used `results/experiment_3245_capstone_v300.json`,
+`ops/status.md`, `ops/changelog.md`, `research-complete.yaml`,
+`research-roadmap.yaml`, and `ops/conductor-log.md` as authority:
+`paper_ready=false`, `publication_blocker_count=106`,
+`local_sota_receipt_status=blocked`, and the next top gap is
+`repair_selected_python_torch_cuda_before_exp3237`.
+
+Updated `research-references.md` with the post-`.300` research sweep, rewrote
+`openspec/change-proposals/research-roadmap-vNEXT.md`, and created
+`research-roadmap-next.yaml` with 13 tasks (`exp3246`-`exp3258`). Validation
+passed for roadmap schema/prior failures, exclusion manifest, gate audit, and
+prompt-section/end-line checks. Left `research-roadmap.yaml` and
+`scripts/research_conductor.py` untouched.
 
 ## Session 2026-05-28 - Milestone 2026.05.300 Operational Retrospective Complete
 
