@@ -9366,3 +9366,90 @@ the queue, keeps model-weight update claims false, and emits an
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-LEARN-3216 | Pending (`python/carnot/eval/fr11_grounded_continuation_nonforgetting_queue_v1.py`) | Pending (`tests/python/test_experiment_3216_fr11_grounded_continuation_nonforgetting_queue_v1.py`) |
+
+## REQ-LEARN-3229: FR-11 Nonforgetting-Aware Controller Promotion Governance
+
+**Given** Exp 3215 materialized evidence-gated FR-11 controller replay labels
+and Exp 3216 materialized a grounded-continuation nonforgetting queue
+**When** Exp 3229 simulates controller-memory promotion
+**Then** it SHALL load both checked-in artifacts, identify all candidate replay
+traces from Exp 3215, identify stale-premise invalidations and nonforgetting
+queue pressure from Exp 3216, and run the replay simulation from those existing
+artifacts only.
+**And** it SHALL admit only evidence-backed traces that pass held-out/drift
+coverage checks, negative-control checks, stale-premise checks, and the
+nonforgetting queue budget.
+**And** it SHALL reject stale-premise regressions and negative-control
+regressions, defer otherwise useful traces when the nonforgetting queue budget
+is exceeded, and report accepted, rejected, and deferred trace records.
+**And** it SHALL define rollback triggers for negative-control regressions,
+stale-premise failures, and contradiction graph updates.
+**And** it SHALL keep controller-memory promotion separate from model training:
+controller-memory updates may be allowed for admitted traces, but
+`model_weight_update_claimed=false` and no training, fine-tuning, hidden weight
+mutation, or conductor/roadmap mutation may be claimed.
+
+The terminal artifact SHALL be
+`results/experiment_3229_fr11_nonforgetting_promotion_controller_v3.json`
+and SHALL include `schema_version`, `experiment_id`, `milestone`,
+`continuous_self_learning_task`, `source_trace_artifacts`,
+`candidate_trace_count`, `accepted_trace_count`, `rejected_trace_count`,
+`deferred_trace_count`, `promotion_allowed`,
+`controller_memory_promotion_allowed`, `nonforgetting_budget_exceeded`,
+`rollback_policy_defined`, `rollback_trigger_count`,
+`negative_control_regression_count`, `stale_premise_rejection_count`,
+`model_weight_update_claimed`, `inference_substrate`,
+`conductor_file_modified`, `active_roadmap_modified`, and `honest_verdict`.
+
+### REQ-LEARN-3229 Sub-requirements
+
+- REQ-LEARN-3229-1: Source selection SHALL require terminal, safe Exp 3215 and
+  Exp 3216 artifacts and SHALL fail closed when either source is missing,
+  non-terminal, or claims live inference or model-weight mutation.
+- REQ-LEARN-3229-2: Candidate traces SHALL be the Exp 3215
+  `replay_utility_labels`; each accepted trace SHALL preserve evidence label,
+  replay role, reward weight, and route utility metadata.
+- REQ-LEARN-3229-3: A trace SHALL be rejected when its route is named by Exp
+  3216's affected routes, when it carries rollback/retraction status, when its
+  reward weight is negative, or when negative-control regression pressure is
+  nonzero.
+- REQ-LEARN-3229-4: A trace that otherwise passes admission SHALL be deferred
+  when the Exp 3216 nonforgetting queue exceeds budget; queue deferral SHALL
+  NOT be reported as accepted promotion.
+- REQ-LEARN-3229-5: `promotion_allowed` and
+  `controller_memory_promotion_allowed` SHALL be true exactly when at least one
+  trace is accepted, no negative-control regression is present, the
+  nonforgetting budget is not exceeded, rollback policy is defined, and no
+  model-weight update, conductor-file mutation, or active-roadmap mutation is
+  claimed.
+- REQ-LEARN-3229-6: The artifact SHALL expose rollback triggers named
+  `negative_control_regression`, `stale_premise_failure`, and
+  `contradiction_graph_update`, with `rollback_policy_defined=true` and
+  `rollback_trigger_count=3`.
+
+### SCENARIO-LEARN-3229: Accepted Promotion Excludes Stale Premises
+
+**Given** terminal Exp 3215 and Exp 3216 artifacts where Exp 3215 contains
+evidence-backed replay labels and Exp 3216 names stale affected routes while
+keeping the nonforgetting queue within budget
+**When** Exp 3229 runs the replay simulation
+**Then** stale affected routes are rejected, the remaining admissible
+evidence-backed traces are accepted, no trace is deferred, controller-memory
+promotion is allowed for the accepted subset, model-weight update claims remain
+false, and the artifact emits an `honest_verdict` beginning with `complete:`.
+
+### SCENARIO-LEARN-3229-DEFERRED: Queue Budget Blocks Promotion Without Training
+
+**Given** terminal Exp 3215 and Exp 3216 artifacts where admissible
+evidence-backed traces exist but the Exp 3216 nonforgetting queue exceeds its
+budget
+**When** Exp 3229 runs the replay simulation
+**Then** otherwise admissible traces are deferred, promotion is not allowed,
+controller-memory promotion is not allowed, model-weight update claims remain
+false, and the artifact emits an `honest_verdict` beginning with `complete:`.
+
+## Implementation Status (REQ-LEARN-3229)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-LEARN-3229 | Pending (`python/carnot/eval/fr11_nonforgetting_promotion_controller_v3.py`) | Pending (`tests/python/test_experiment_3229_fr11_nonforgetting_promotion_controller_v3.py`) |
