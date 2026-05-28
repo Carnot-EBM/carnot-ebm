@@ -11799,3 +11799,72 @@ task, `v4_manifest_ready=true`, and an `honest_verdict` beginning with
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-REPORT-3239 | Implemented (`python/carnot/reporting/prompt_injection_kan_v4_resource_manifest_3239.py`) | Implemented (`tests/python/test_experiment_3239_prompt_injection_kan_v4_resource_manifest.py`) |
+
+### REQ-REPORT-3244: Cross-Corpus Matrix V33 From .300 Artifacts
+
+The repository shall provide an Exp 3244 cross-corpus matrix v33 generator
+that writes `results/experiment_3244_cross_corpus_matrix_v33.json` by reading
+only checked-in `.300` artifacts for Exp 3233 through Exp 3243, the prior
+matrix v32, the `.299` capstone, and `ops/conductor-log.md`. The workflow
+MUST be aggregation only. It MUST NOT run live model inference, teacher
+labeling, KAN training, DeLong statistics, Garak, verifier scoring, repair
+generation, solver execution, hardware commands, the conductor, pushes, or
+modify `scripts/research_conductor.py`.
+
+The generator MUST inventory every planned Exp 3233 through Exp 3243
+deliverable, including the planned DCCD preflight path
+`results/experiment_3242_dccd_exact_row_structured_proposal_preflight_v1.json`,
+and including missing, gate-blocked, blocked, complete, and partial states as
+separate classes. It MUST preserve paper-readiness and publication-blocker
+continuity from
+`results/experiment_3231_cross_corpus_matrix_v32.json` and
+`results/experiment_3223_capstone_v299.json`; missing or gated `.300`
+artifacts MUST NOT be fabricated as successful evidence. It MUST add matrix
+rows for the CUDA receipt chain, prompt-injection split-run,
+DCCD exact-row structured proposal preflight, and FR-11 failure memory.
+`paper_ready` MUST be true only when all publication blockers are cleared and
+the prior capstone was already paper-ready.
+
+The terminal artifact MUST include `experiment_id`, `task_id`, `milestone`,
+`inference_substrate`, `principle_annotations`,
+`cross_corpus_matrix_v33_ready`, `artifact_inventory`,
+`runtime_receipt_state`, `prompt_injection_v4_state`,
+`structured_proposal_state`, `fr11_failure_memory_state`, `paper_ready`,
+`publication_blocker_count`, `next_top_gap`, and `honest_verdict`. It MAY
+include prior-authority summaries, matrix rows, source checksums, status
+counts, no-new-execution booleans, random seed, reproducibility checksum, and
+measured `duration_s`, provided every value is derived from checked-in
+artifacts, conductor-log evidence, or file presence/checksum checks.
+`honest_verdict` MUST begin with `complete:` and MUST NOT fabricate missing or
+gated artifacts.
+
+#### SCENARIO-REPORT-3244: Matrix V33 Accounts For .300 Missing And Gated Evidence
+
+**Given** matrix v32 exists and reports `paper_ready=false` and
+`publication_blocker_count=100`
+**And** the `.299` capstone exists and reports `paper_ready=false`,
+`publication_blocker_count=100`, and
+`v4_outcome=blocked_missing_exp3222_result`
+**And** `.300` artifacts exist for Exp 3233, 3234, 3235, 3236, 3237, 3239,
+3240, 3241, and 3243
+**And** Exp 3238 and Exp 3242 artifacts are missing while conductor-log gate
+evidence shows they were skipped behind failed CUDA/SOTA prerequisites
+**When** the Exp 3244 matrix v33 generator runs
+**Then** it writes `results/experiment_3244_cross_corpus_matrix_v33.json`
+with all required schema fields, separate complete/gated/missing inventory
+lists, runtime receipt state blocked by `cuda_python_smoke_passed=false`, a
+prompt-injection split-run state that preserves the manifest but records the
+teacher-label and train/eval shards as gate-blocked, a DCCD proposal state
+that is missing/gate-blocked rather than successful, FR-11 failure memory
+ready without any model-weight update claim, `paper_ready=false`,
+`publication_blocker_count` carried forward at or above the `.299` capstone
+count while `.300` blockers remain, the next top gap focused on the selected
+Python/CUDA runtime chain, protected-file untouched constraints for
+`scripts/research_conductor.py`, and an `honest_verdict` that starts with
+`complete:` without claiming missing or gated artifacts exist.
+
+## Implementation Status (REQ-REPORT-3244)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-3244 | Implemented (`python/carnot/reporting/cross_corpus_matrix_v33_3244.py`) | Implemented (`tests/python/test_experiment_3244_cross_corpus_matrix_v33.py`) |
