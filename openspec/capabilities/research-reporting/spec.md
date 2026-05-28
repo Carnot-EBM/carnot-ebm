@@ -11283,3 +11283,78 @@ conductor or active-roadmap edits performed by this task, and an
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-REPORT-3231 | Implemented (`python/carnot/reporting/cross_corpus_matrix_v32_3231.py`) | Implemented (`tests/python/test_experiment_3231_cross_corpus_matrix_v32.py`) |
+
+### REQ-REPORT-3232: Milestone .298 Capstone From Matrix V32
+
+The repository shall provide an Exp 3232 milestone `.298` capstone generator
+that writes `results/experiment_3232_capstone_v298.json` by reading
+`results/experiment_3231_cross_corpus_matrix_v32.json` as the authoritative
+matrix, `results/experiment_3218_capstone_v297.json` as the prior capstone,
+and every checked-in `.298` artifact referenced by matrix v32 `input_artifacts`.
+The workflow MUST be terminal aggregation only. It MUST NOT run live model
+inference, verifier scoring, repair generation, solver execution, hardware
+commands, the conductor, pushes, modify `scripts/research_conductor.py`, modify
+`research-roadmap.yaml`, or reconcile `ops/status.md`, `ops/changelog.md`, or
+`_bmad/traceability.md` when the conductor has delegated reconciliation to a
+separate step.
+
+The capstone MUST decide `paper_ready` from evidence only. It MUST NOT treat
+planned tasks, missing artifacts, gate-blocked artifacts, partial SMT coverage,
+blocked certificate boundaries, FR-11 controller-memory progress, or capstone
+completion as publication success. It MUST summarize what `.298` proved about
+CUDA receipt recovery, clean live SOTA verification, structured repair, repair
+ladder execution, continuous self-learning, and hardware claim boundaries. It
+MUST record publication blockers and the blocker delta from matrix v31. If
+`paper_ready=false`, it MUST name the single most important next gap and map
+that gap to a recommended next milestone theme.
+
+The terminal artifact MUST include `schema_version`, `experiment_id`,
+`milestone`, `matrix_artifact`, `prior_capstone_artifact`, `capstone_ready`,
+`paper_ready`, `publication_blocker_count`, `blocker_delta_from_v31`,
+`local_sota_receipt_status`, `clean_verifier_status`, `repair_gate_status`,
+`repair_ladder_status`, `continuous_self_learning_status`,
+`hardware_claim_status`, `what_this_milestone_proved`, `next_top_gap`,
+`recommended_next_milestone_theme`, `inference_substrate`,
+`conductor_file_modified`, `active_roadmap_modified`, and `honest_verdict`.
+It MAY include source checksums, source-artifact summaries, publication
+blocker rows, readiness criteria, invariant violations, no-new-execution
+booleans, and measured `duration_s`, provided every value is derived from
+checked-in matrix/artifact evidence or file presence/checksum checks.
+
+`capstone_ready` MUST be true only when matrix v32 exists and reports
+`cross_corpus_matrix_v32_ready=true`, the prior `.297` capstone exists and
+reports `capstone_v297_ready=true`, all required schema fields are populated
+with type-compatible values, every matrix-referenced `.298` artifact is
+accounted for, and the capstone's claim-boundary invariants hold. The
+recommended next milestone theme MUST be derived from `next_top_gap`, with the
+system-driver/CUDA runtime boundary gap mapped to a hermetic CUDA/offload
+receipt repair theme.
+
+#### SCENARIO-REPORT-3232: V298 Capstone Preserves Matrix V32 Boundaries
+
+**Given** matrix v32 exists and reports `cross_corpus_matrix_v32_ready=true`,
+`paper_ready=false`, `publication_blocker_count=100`,
+`blocker_delta_from_v31=8`, blocked CUDA receipt recovery, a gate-blocked clean
+verifier, a blocked repair gate, a gate-blocked repair ladder, FR-11
+controller-memory promotion without model-weight updates, blocked KAN-CL
+certificate sidecar promotion, no authenticated hardware speedup/TSU/Kona
+claim, and
+`next_top_gap=repair_system_driver_cuda_runtime_boundary_to_unblock_cuda_offload_receipt`
+**And** the prior `.297` capstone exists and reports
+`capstone_v297_ready=true` and `publication_blocker_count=92`
+**When** the Exp 3232 capstone generator runs
+**Then** it writes `results/experiment_3232_capstone_v298.json` with all
+required schema fields, `capstone_ready=true`, `paper_ready=false`,
+`publication_blocker_count=100`, `blocker_delta_from_v31=8`, status strings
+copied or summarized from matrix v32, a milestone-proof list grounded in
+matrix/input-artifact evidence, the same single next top gap from matrix v32,
+a next-milestone theme focused on hermetic CUDA/offload receipt repair, no
+protected conductor or active-roadmap edits, no paper-ready, repair-success,
+hardware-speedup, TSU/Kona, or model-weight-learning overclaim, and an
+`honest_verdict` that starts with `complete:`.
+
+## Implementation Status (REQ-REPORT-3232)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-3232 | Implemented (`python/carnot/reporting/capstone_v298_3232.py`) | Implemented (`tests/python/test_experiment_3232_capstone_v298.py`) |

@@ -6528,3 +6528,4 @@ web search |
 | 2026-05-28 00:49 UTC | Multi-turn repair ladder v8 gated on repair gate u | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp3227-repair-gate-decision-v7.repair_gat |
 | 2026-05-28 01:03 UTC | FR-11 nonforgetting promotion controller v3 with r | OK | 81 passed in 3.84s |
 | 2026-05-28 01:14 UTC | KAN-CL certificate boundary audit v2 for FR-11 sid | OK | 81 passed in 5.12s |
+| 2026-05-28 01:33 UTC | Cross-corpus matrix v32 for .298 runtime, verifier | OK | 81 passed in 3.72s |

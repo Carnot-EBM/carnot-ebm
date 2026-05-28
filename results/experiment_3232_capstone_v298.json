@@ -1,0 +1,395 @@
+{
+  "active_roadmap_modified": false,
+  "artifact": "experiment_3232_capstone_v298",
+  "blocker_delta_from_v31": 8,
+  "capstone_ready": true,
+  "claim_boundaries_preserved": {
+    "hardware_speedup_claim_allowed": false,
+    "model_weight_learning_claim_allowed": false,
+    "paper_ready_claim_allowed": false,
+    "repair_success_claim_allowed": false,
+    "tsu_or_kona_claim_allowed": false
+  },
+  "clean_verifier_status": "gate_blocked_on_missing_full_local_sota_receipt_v6_no_clean_verifier_evidence",
+  "conductor_file_modified": false,
+  "continuous_self_learning_status": "controller_memory_promotion_allowed_28_accepted_no_model_weight_update_kan_sidecar_blocked_missing_certificates_4",
+  "duration_s": 0.001977,
+  "experiment_id": "exp3232",
+  "hardware_claim_status": "cuda_runtime_visible_but_not_usable_no_llama_cpp_offload_receipt_no_hardware_speedup_tsu_or_kona_claim_allowed",
+  "honest_verdict": "complete: capstone_ready=true; paper_ready=false; publication_blocker_count=100; blocker_delta_from_v31=8; next_top_gap=repair_system_driver_cuda_runtime_boundary_to_unblock_cuda_offload_receipt",
+  "inference_substrate": "terminal_aggregation_from_checked_in_matrix_v32_prior_capstone_and_referenced_artifacts",
+  "invariant_violations": [],
+  "local_sota_receipt_status": "missing_full_local_sota_receipt_v6_after_exp3221_gate_blocked",
+  "matrix_artifact": "results/experiment_3231_cross_corpus_matrix_v32.json",
+  "matrix_summary": {
+    "blocker_delta_from_v31": 8,
+    "cross_corpus_matrix_v32_ready": true,
+    "honest_verdict": "complete: cross_corpus_matrix_v32_ready=true; previous_matrix_artifact=results/experiment_3217_cross_corpus_matrix_v31.json; paper_ready=false; publication_blocker_count=100; blocker_delta_from_v31=8; next_top_gap=repair_system_driver_cuda_runtime_boundary_to_unblock_cuda_offload_receipt",
+    "next_top_gap": "repair_system_driver_cuda_runtime_boundary_to_unblock_cuda_offload_receipt",
+    "paper_ready": false,
+    "publication_blocker_count": 100
+  },
+  "milestone": "2026.05.298",
+  "next_top_gap": "repair_system_driver_cuda_runtime_boundary_to_unblock_cuda_offload_receipt",
+  "no_conductor_execution": true,
+  "no_new_hardware_run": true,
+  "no_new_model_execution": true,
+  "no_new_repair_run": true,
+  "no_new_solver_run": true,
+  "no_new_verifier_run": true,
+  "ops_docs_reconciliation_left_to_conductor": true,
+  "paper_ready": false,
+  "prior_capstone_artifact": "results/experiment_3218_capstone_v297.json",
+  "prior_capstone_summary": {
+    "capstone_v297_ready": true,
+    "honest_verdict": "complete: capstone_v297_ready=true; paper_ready=false; publication_blocker_count=92; blocker_delta_from_v30=7; next_top_gap=cuda_offload_full_local_sota_receipt_clean_rerun_allowed_repair_gate_unblock",
+    "next_top_gap": "cuda_offload_full_local_sota_receipt_clean_rerun_allowed_repair_gate_unblock",
+    "paper_ready": false,
+    "publication_blocker_count": 92
+  },
+  "publication_blocker_count": 100,
+  "publication_blockers": [
+    {
+      "experiment_id": "exp3220",
+      "path": "results/experiment_3220_hermetic_cuda_runtime_repair_ledger_v1.json",
+      "role": "hermetic_cuda_runtime_repair",
+      "source_field": "cuda_receipt_ready_candidate",
+      "status": "blocked",
+      "status_rationale": "hermetic CUDA runtime remains blocked"
+    },
+    {
+      "experiment_id": "exp3221",
+      "gated_skip_evidence": {
+        "source": "artifact",
+        "status": "gate_blocked",
+        "summary": "1 of 1 gate(s) failed; first failure: exp3220-hermetic-cuda-runtime-repair-ledger-v1.cuda_receipt_ready_candidate (actual=False == expected=True)"
+      },
+      "path": "results/experiment_3221_llama_cpp_cuda_offload_receipt_smoke_v1.json",
+      "role": "llama_cpp_cuda_offload_receipt_smoke",
+      "source_field": "cuda_receipt_ready",
+      "status": "gate_blocked",
+      "status_rationale": "artifact was blocked by a conductor pre-gate"
+    },
+    {
+      "experiment_id": "exp3222",
+      "gated_skip_evidence": {
+        "line": "| 2026-05-28 00:02 UTC | Full local SOTA GGUF receipt v6 gated on llama.cpp | GATE_BLOCK | Pre-emptive skip: upstream retired (exp3221-llama-cpp-cuda-offload-receipt-smoke |",
+        "source": "ops/conductor-log.md",
+        "status": "gate_blocked"
+      },
+      "path": "results/experiment_3222_full_local_sota_receipt_v6.json",
+      "role": "full_local_sota_receipt_v6",
+      "source_field": "clean_rerun_allowed",
+      "status": "missing",
+      "status_rationale": "expected `.298` artifact is absent or malformed"
+    },
+    {
+      "experiment_id": "exp3225",
+      "gated_skip_evidence": {
+        "source": "artifact",
+        "status": "gate_blocked",
+        "summary": "1 of 1 gate(s) failed; first failure: exp3222-full-local-sota-receipt-v6.clean_rerun_allowed (upstream artifact not found for task id 'exp3222-full-local-sota-receipt-v6')"
+      },
+      "path": "results/experiment_3225_clean_live_sota_verifier_rerun_v13.json",
+      "role": "clean_live_sota_verifier_v13",
+      "source_field": "clean_verifier_ready",
+      "status": "gate_blocked",
+      "status_rationale": "artifact was blocked by a conductor pre-gate"
+    },
+    {
+      "experiment_id": "exp3226",
+      "gated_skip_evidence": {
+        "line": "| 2026-05-28 00:31 UTC | Structured repair proposal preflight v2 with schem | GATE_BLOCK | Pre-emptive skip: upstream retired (exp3222-full-local-sota-receipt-v6) |",
+        "source": "ops/conductor-log.md",
+        "status": "gate_blocked"
+      },
+      "path": "results/experiment_3226_structured_repair_proposal_preflight_v2.json",
+      "role": "structured_repair_proposal_preflight_v2",
+      "source_field": "ready_for_repair_gate",
+      "status": "missing",
+      "status_rationale": "expected `.298` artifact is absent or malformed"
+    },
+    {
+      "experiment_id": "exp3227",
+      "path": "results/experiment_3227_repair_gate_decision_v7.json",
+      "role": "repair_gate_decision_v7",
+      "source_field": "repair_gate_state",
+      "status": "blocked",
+      "status_rationale": "repair gate remains blocked"
+    },
+    {
+      "experiment_id": "exp3228",
+      "gated_skip_evidence": {
+        "source": "artifact",
+        "status": "gate_blocked",
+        "summary": "1 of 1 gate(s) failed; first failure: exp3227-repair-gate-decision-v7.repair_gate_state (actual='blocked' == expected='unblocked')"
+      },
+      "path": "results/experiment_3228_multi_turn_repair_ladder_v8.json",
+      "role": "multi_turn_repair_ladder_v8",
+      "source_field": "repair_ladder_complete",
+      "status": "gate_blocked",
+      "status_rationale": "artifact was blocked by a conductor pre-gate"
+    },
+    {
+      "experiment_id": "exp3230",
+      "path": "results/experiment_3230_kan_cl_certificate_boundary_audit_v2.json",
+      "role": "kan_cl_certificate_boundary_audit_v2",
+      "source_field": "certificate_boundary_ready",
+      "status": "complete",
+      "status_rationale": "certificate boundary audit complete; sidecar promotion may still be blocked"
+    }
+  ],
+  "readiness_criteria": {
+    "claim_boundary": false,
+    "clean_verifier": false,
+    "fr11": true,
+    "local_sota_receipt": false,
+    "repair": false
+  },
+  "recommended_next_milestone_theme": "hermetic_cuda_offload_receipt_repair_for_clean_local_sota",
+  "repair_gate_status": "blocked_v7_blocker_count_9",
+  "repair_ladder_status": "gate_blocked_repair_gate_v7_blocked",
+  "run_date": "20260528",
+  "schema": "carnot.milestone_capstone.v298_matrix_v32_terminal_aggregation.v1",
+  "schema_version": "carnot.milestone_capstone.v298_matrix_v32_terminal_aggregation.v1",
+  "source_artifacts": [
+    {
+      "experiment_id": "matrix_v32",
+      "honest_verdict": "complete: cross_corpus_matrix_v32_ready=true; previous_matrix_artifact=results/experiment_3217_cross_corpus_matrix_v31.json; paper_ready=false; publication_blocker_count=100; blocker_delta_from_v31=8; next_top_gap=repair_system_driver_cuda_runtime_boundary_to_unblock_cuda_offload_receipt",
+      "path": "results/experiment_3231_cross_corpus_matrix_v32.json",
+      "present": true,
+      "readable_json_object": true,
+      "schema_version": "carnot.cross_corpus_matrix.v32_298_artifact_aggregation.v1",
+      "sha256": "bddc078c4a2458ac5c90c70ea189ce7adbe889185e756eb059c1e9fa7c7f33c0"
+    },
+    {
+      "experiment_id": "prior_capstone_v297",
+      "honest_verdict": "complete: capstone_v297_ready=true; paper_ready=false; publication_blocker_count=92; blocker_delta_from_v30=7; next_top_gap=cuda_offload_full_local_sota_receipt_clean_rerun_allowed_repair_gate_unblock",
+      "path": "results/experiment_3218_capstone_v297.json",
+      "present": true,
+      "readable_json_object": true,
+      "schema_version": "carnot.milestone_capstone.v297_matrix_v31_terminal_aggregation.v1",
+      "sha256": "15de41e428d2b247f00baf8d35519c37f8c41f707d4b4c7050226c5d4f8451f3"
+    },
+    {
+      "experiment_id": "exp3219",
+      "honest_verdict": "complete: archive_v297_activate_v298_ready=true; prior_task_range=exp3205-exp3218; prior_paper_ready=false; prior_publication_blocker_count=92; prior_next_top_gap=cuda_offload_full_local_sota_receipt_clean_rerun_allowed_repair_gate_unblock; queue_path=research-roadmap.yaml",
+      "matrix_present": true,
+      "matrix_role": "archive_v297_activate_v298",
+      "matrix_status": "complete",
+      "matrix_status_rationale": "archive activation confirmed",
+      "path": "results/experiment_3219_archive_v297_activate_v298.json",
+      "present": true,
+      "readable_json_object": true,
+      "reported_experiment_id": "exp3219",
+      "schema_version": "carnot.archive_activation.v297_to_v298.v1",
+      "sha256": "c0c873b7752b76338ab69d31e0272aef26b0a5e6f24131aec7b15a6af8dd6cf8"
+    },
+    {
+      "experiment_id": "exp3220",
+      "honest_verdict": "blocked_cuda_runtime: cuda_receipt_ready_candidate=false; recommended_next_action=repair_system_driver_cuda_runtime_boundary",
+      "matrix_present": true,
+      "matrix_role": "hermetic_cuda_runtime_repair",
+      "matrix_status": "blocked",
+      "matrix_status_rationale": "hermetic CUDA runtime remains blocked",
+      "path": "results/experiment_3220_hermetic_cuda_runtime_repair_ledger_v1.json",
+      "present": true,
+      "readable_json_object": true,
+      "reported_experiment_id": "exp3220",
+      "schema_version": "carnot.hermetic_cuda_runtime_repair_ledger.v1",
+      "sha256": "9ded61b48cc825d7c645e2de2570198fee3a9eab48b4f1ebbb9e53332fbe3e76"
+    },
+    {
+      "experiment_id": "exp3221",
+      "honest_verdict": "blocked_gate_check_failed",
+      "matrix_present": true,
+      "matrix_role": "llama_cpp_cuda_offload_receipt_smoke",
+      "matrix_status": "gate_blocked",
+      "matrix_status_rationale": "artifact was blocked by a conductor pre-gate",
+      "path": "results/experiment_3221_llama_cpp_cuda_offload_receipt_smoke_v1.json",
+      "present": true,
+      "readable_json_object": true,
+      "reported_experiment_id": "exp3221",
+      "schema_version": "blocked_gate_check_v1",
+      "sha256": "bfdd747c356c4be19d301926bfe1103d9254bb12a9fd41dd9dd66bae79a6f8dd"
+    },
+    {
+      "experiment_id": "exp3222",
+      "honest_verdict": "",
+      "matrix_present": false,
+      "matrix_role": "full_local_sota_receipt_v6",
+      "matrix_status": "missing",
+      "matrix_status_rationale": "expected `.298` artifact is absent or malformed",
+      "path": "results/experiment_3222_full_local_sota_receipt_v6.json",
+      "present": false,
+      "readable_json_object": false,
+      "reported_experiment_id": "exp3222",
+      "schema_version": "",
+      "sha256": null
+    },
+    {
+      "experiment_id": "exp3223",
+      "honest_verdict": "complete: exact-row uncertainty sidecar materialized as triage metadata; exact verifier authority preserved",
+      "matrix_present": true,
+      "matrix_role": "exact_row_uncertainty_sidecar",
+      "matrix_status": "complete",
+      "matrix_status_rationale": "exact-row uncertainty sidecar is ready as triage metadata",
+      "path": "results/experiment_3223_distributional_ebm_exact_row_uncertainty_sidecar_v2.json",
+      "present": true,
+      "readable_json_object": true,
+      "reported_experiment_id": "exp3223",
+      "schema_version": "carnot.distributional_ebm_exact_row_uncertainty_sidecar.v2",
+      "sha256": "4decc42c5c739fe1d7c89c8581f1f27017cb3d16191c1c8100b57ab9eed4eef0"
+    },
+    {
+      "experiment_id": "exp3224",
+      "honest_verdict": "complete: partial SMT coverage ready; rows=45 full=35 partial=10",
+      "matrix_present": true,
+      "matrix_role": "partial_smt_context_coverage",
+      "matrix_status": "partial",
+      "matrix_status_rationale": "partial SMT coverage ready without full extraction claim",
+      "path": "results/experiment_3224_logitext_partial_smt_context_coverage_pilot_v1.json",
+      "present": true,
+      "readable_json_object": true,
+      "reported_experiment_id": "exp3224",
+      "schema_version": "carnot.logitext_partial_smt_context_coverage_pilot.v1",
+      "sha256": "59f6e91dfba2b1f735354448b4f610367394ff52d11e3623d52f3b96e116e07c"
+    },
+    {
+      "experiment_id": "exp3225",
+      "honest_verdict": "blocked_gate_check_failed",
+      "matrix_present": true,
+      "matrix_role": "clean_live_sota_verifier_v13",
+      "matrix_status": "gate_blocked",
+      "matrix_status_rationale": "artifact was blocked by a conductor pre-gate",
+      "path": "results/experiment_3225_clean_live_sota_verifier_rerun_v13.json",
+      "present": true,
+      "readable_json_object": true,
+      "reported_experiment_id": "exp3225",
+      "schema_version": "blocked_gate_check_v1",
+      "sha256": "68bc7f69a827ea3eaebf4a3158deee9078347b545eeafbc27c010b1f96f9b5f4"
+    },
+    {
+      "experiment_id": "exp3226",
+      "honest_verdict": "",
+      "matrix_present": false,
+      "matrix_role": "structured_repair_proposal_preflight_v2",
+      "matrix_status": "missing",
+      "matrix_status_rationale": "expected `.298` artifact is absent or malformed",
+      "path": "results/experiment_3226_structured_repair_proposal_preflight_v2.json",
+      "present": false,
+      "readable_json_object": false,
+      "reported_experiment_id": "exp3226",
+      "schema_version": "",
+      "sha256": null
+    },
+    {
+      "experiment_id": "exp3227",
+      "honest_verdict": "complete: repair_gate_state=blocked; repair_ladder_allowed=false; blocker_count=9",
+      "matrix_present": true,
+      "matrix_role": "repair_gate_decision_v7",
+      "matrix_status": "blocked",
+      "matrix_status_rationale": "repair gate remains blocked",
+      "path": "results/experiment_3227_repair_gate_decision_v7.json",
+      "present": true,
+      "readable_json_object": true,
+      "reported_experiment_id": "exp3227",
+      "schema_version": "carnot.repair_gate_decision.v7",
+      "sha256": "cb92954a221be9a9e342eb85e1e5075f9e7dd188f8f796965255780fc5920520"
+    },
+    {
+      "experiment_id": "exp3228",
+      "honest_verdict": "blocked_gate_check_failed",
+      "matrix_present": true,
+      "matrix_role": "multi_turn_repair_ladder_v8",
+      "matrix_status": "gate_blocked",
+      "matrix_status_rationale": "artifact was blocked by a conductor pre-gate",
+      "path": "results/experiment_3228_multi_turn_repair_ladder_v8.json",
+      "present": true,
+      "readable_json_object": true,
+      "reported_experiment_id": "exp3228",
+      "schema_version": "blocked_gate_check_v1",
+      "sha256": "703c806cebb394e7d3a32e9e73c317b0314f863d967333266cf744fcfd58a52d"
+    },
+    {
+      "experiment_id": "exp3229",
+      "honest_verdict": "complete: fr11 nonforgetting-aware controller promotion governance materialized; promotion_allowed=true; accepted_trace_count=28; rejected_trace_count=2; deferred_trace_count=0; nonforgetting_budget_exceeded=false; negative_control_regression_count=0; stale_premise_rejection_count=2; model_weight_update_claimed=false; controller_memory_updates_are_not_training",
+      "matrix_present": true,
+      "matrix_role": "fr11_nonforgetting_promotion_controller_v3",
+      "matrix_status": "complete",
+      "matrix_status_rationale": "FR-11 controller-memory promotion is allowed without training",
+      "path": "results/experiment_3229_fr11_nonforgetting_promotion_controller_v3.json",
+      "present": true,
+      "readable_json_object": true,
+      "reported_experiment_id": "experiment_3229_fr11_nonforgetting_promotion_controller_v3",
+      "schema_version": "1.0",
+      "sha256": "3b4fb8df0d65d08b27b28121e9364b961ee9204dc98df2d3b4d382afe3a46b0a"
+    },
+    {
+      "experiment_id": "exp3230",
+      "honest_verdict": "complete: kan-cl certificate boundary audit; missing_certificate_count=4; per_knot_budget_defined=false; pwa_milp_abstraction_ready=false; certificate_boundary_ready=false; kan_sidecar_promotion_allowed=false; model_weight_update_claimed=false",
+      "matrix_present": true,
+      "matrix_role": "kan_cl_certificate_boundary_audit_v2",
+      "matrix_status": "complete",
+      "matrix_status_rationale": "certificate boundary audit complete; sidecar promotion may still be blocked",
+      "path": "results/experiment_3230_kan_cl_certificate_boundary_audit_v2.json",
+      "present": true,
+      "readable_json_object": true,
+      "reported_experiment_id": "experiment_3230_kan_cl_certificate_boundary_audit_v2",
+      "schema_version": "1.0",
+      "sha256": "8626fa0d871dccc8a5d470da2867e45ddfd23d122502f43e1b6656b00ad844f1"
+    }
+  ],
+  "source_checksums": {
+    "results/experiment_3218_capstone_v297.json": "15de41e428d2b247f00baf8d35519c37f8c41f707d4b4c7050226c5d4f8451f3",
+    "results/experiment_3219_archive_v297_activate_v298.json": "c0c873b7752b76338ab69d31e0272aef26b0a5e6f24131aec7b15a6af8dd6cf8",
+    "results/experiment_3220_hermetic_cuda_runtime_repair_ledger_v1.json": "9ded61b48cc825d7c645e2de2570198fee3a9eab48b4f1ebbb9e53332fbe3e76",
+    "results/experiment_3221_llama_cpp_cuda_offload_receipt_smoke_v1.json": "bfdd747c356c4be19d301926bfe1103d9254bb12a9fd41dd9dd66bae79a6f8dd",
+    "results/experiment_3223_distributional_ebm_exact_row_uncertainty_sidecar_v2.json": "4decc42c5c739fe1d7c89c8581f1f27017cb3d16191c1c8100b57ab9eed4eef0",
+    "results/experiment_3224_logitext_partial_smt_context_coverage_pilot_v1.json": "59f6e91dfba2b1f735354448b4f610367394ff52d11e3623d52f3b96e116e07c",
+    "results/experiment_3225_clean_live_sota_verifier_rerun_v13.json": "68bc7f69a827ea3eaebf4a3158deee9078347b545eeafbc27c010b1f96f9b5f4",
+    "results/experiment_3227_repair_gate_decision_v7.json": "cb92954a221be9a9e342eb85e1e5075f9e7dd188f8f796965255780fc5920520",
+    "results/experiment_3228_multi_turn_repair_ladder_v8.json": "703c806cebb394e7d3a32e9e73c317b0314f863d967333266cf744fcfd58a52d",
+    "results/experiment_3229_fr11_nonforgetting_promotion_controller_v3.json": "3b4fb8df0d65d08b27b28121e9364b961ee9204dc98df2d3b4d382afe3a46b0a",
+    "results/experiment_3230_kan_cl_certificate_boundary_audit_v2.json": "8626fa0d871dccc8a5d470da2867e45ddfd23d122502f43e1b6656b00ad844f1",
+    "results/experiment_3231_cross_corpus_matrix_v32.json": "bddc078c4a2458ac5c90c70ea189ce7adbe889185e756eb059c1e9fa7c7f33c0"
+  },
+  "what_this_milestone_proved": [
+    {
+      "conclusion": "CUDA was visible to the host, but the selected receipt path did not unlock clean local SOTA execution.",
+      "domain": "cuda_receipt",
+      "evidence": "exp3220=blocked; exp3221=gate_blocked; exp3222=missing",
+      "status": "blocked"
+    },
+    {
+      "conclusion": "The clean live SOTA verifier did not produce headline evidence because the full local SOTA receipt gate remained blocked or absent.",
+      "domain": "live_sota_verification",
+      "evidence": "exp3225=gate_blocked; exp3222=missing",
+      "status": "gate_blocked"
+    },
+    {
+      "conclusion": "Structured repair remained blocked; missing preflight and failed gate evidence cannot be counted as semantic repair success.",
+      "domain": "repair",
+      "evidence": "exp3226=missing; exp3227=blocked",
+      "status": "blocked"
+    },
+    {
+      "conclusion": "The repair ladder did not run as a success path because the repair gate did not unblock.",
+      "domain": "repair_ladder",
+      "evidence": "exp3228=gate_blocked; exp3227=blocked",
+      "status": "gate_blocked"
+    },
+    {
+      "conclusion": "FR-11 advanced at the controller-memory governance layer with no model-weight update claim; KAN-CL sidecar promotion stayed certificate-blocked.",
+      "domain": "continuous_self_learning",
+      "evidence": "exp3229=complete; exp3230=complete",
+      "status": "controller_only"
+    },
+    {
+      "conclusion": "No authenticated hardware speedup, TSU execution, or Kona execution claim is supported by this milestone.",
+      "domain": "hardware_boundary",
+      "evidence": "exp3220=blocked; exp3221=gate_blocked",
+      "status": "claim_denied"
+    }
+  ]
+}
