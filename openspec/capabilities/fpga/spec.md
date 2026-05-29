@@ -3562,3 +3562,72 @@ any board step fails, it instead records the blocked reason and the transcript
 and emits a `blocked_<resource>` verdict.
 
 **Implementation status:** Implemented (Exp 3346)
+
+---
+
+### REQ-HW-102
+
+**Title:** Exp 3347 GateMate n=16 Ising tile build + detect smoke v2 MUST use the himbaechel flow and never fabricate a host-visible readback
+
+**Description:**
+Experiment 3347 resumes the operator-deferred GateMate A1-EVB-2M n=16 Ising
+tile build/detect smoke. It MUST build the `ising_n16_gatemate` tile through the
+current open-source GateMate flow — yosys `synth_gatemate`, then
+`nextpnr-himbaechel --device CCGM1A1`, then `gmpack` — reusing the deterministic
+Exp 2955 constraints package and the established Exp 2956 build module. The
+experiment MUST NOT invoke the obsolete `nextpnr-gatemate` binary, which does
+not exist in the current OSS CAD Suite.
+
+The DirtyJTAG board detect (`openFPGALoader -c dirtyJtag --detect`) gates only
+the optional flash/detect smoke, not the build itself: a build tool that is
+missing blocks the build, while an unreachable board only skips the smoke. The
+experiment MUST NOT program the board's SRAM with the build-only,
+pin-unconstrained bitstream, and MUST NOT claim any host-visible readback that
+the captured transcript does not prove. The DirtyJTAG IDCODE returned by
+`--detect` is the only board-side readback this experiment may claim. If a build
+tool is missing or any build stage fails, the experiment MUST write an honest
+blocked artifact with the command transcript and the precise blocked reason
+rather than fabricate a passing result.
+
+**Acceptance criteria:**
+- `results/experiment_3347_gatemate_n16_ising_tile_bitstream_build_smoke_v2.json`
+  is written with `inference_substrate="hardware_build"` and an `honest_verdict`
+  beginning with a terminal prefix (`complete:`) on a successful build or a
+  `blocked_` prefix when a build precondition fails.
+- The artifact includes `honest_verdict`, `inference_substrate`, `random_seed`,
+  `reproducibility_checksum`, `duration_s`, `files_updated`, and the hardware
+  evidence fields `yosys_version`, `nextpnr_himbaechel_version`,
+  `gmpack_version`, `dirtyjtag_detected`, `build_succeeded`, `bitstream_path`,
+  `bitstream_checksum`, `resource_summary`, `flash_smoke_status`,
+  `command_transcript`, and `blocked_reasons`.
+- The place-and-route command references `nextpnr-himbaechel --device CCGM1A1`
+  and never `nextpnr-gatemate`.
+- `flash_smoke_status` reflects detect-only board evidence (IDCODE readback)
+  when the board is detected and a skipped status when it is not; it never
+  records an SRAM programming or host-visible readback claim.
+- A blocked build leaves `build_succeeded=false`, sets `blocked_reasons` to a
+  non-empty list, and preserves the command transcript for audit.
+
+**Implementation status:** Implemented (Exp 3347)
+
+---
+
+### SCENARIO-HW-102
+
+**Scenario:** GateMate n=16 Ising tile builds through the himbaechel flow and records a detect-only board smoke without a fabricated readback.
+
+**Given:** The Exp 2955 constraints package is ready, the OSS CAD Suite provides
+yosys, `nextpnr-himbaechel`, `gmpack`, and `openFPGALoader`, and the DirtyJTAG
+adapter may or may not expose the GateMate IDCODE.
+**When:** Exp 3347 builds the `ising_n16_gatemate` tile through the
+synth_gatemate → nextpnr-himbaechel → gmpack flow and then runs the smallest
+board detect.
+**Then:** It writes the v2 artifact with the toolchain version fields, a hashed
+bitstream, the synthesis/pnr/pack command transcript, a detect-only
+`flash_smoke_status` when the board IDCODE is read (or a skipped status when it
+is not), an empty `blocked_reasons`, and a terminal `honest_verdict` beginning
+with `complete:`. If a build tool is missing or any build stage fails, it
+instead records the blocked reason and the transcript and emits a `blocked_`
+verdict.
+
+**Implementation status:** Implemented (Exp 3347)
