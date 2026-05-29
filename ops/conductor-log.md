@@ -6850,3 +6850,4 @@ web search: https://docs.garak.ai/garak/examples/pr |
 | 2026-05-29 16:12 UTC | FR-11 counterexample-guided repair pilot using Z3  | OK | 81 passed in 3.46s |
 | 2026-05-29 16:14 UTC | Energy-Based Transformer (EBT) sidecar integration | GATE_BLOCK | Pre-emptive skip: upstream retired (exp3352-live-sota-constrained-generation-pil |
 | 2026-05-29 16:15 UTC | FR-11 persistent belief vault for cross-query cons | FAIL | No file changes produced |
+| 2026-05-29 16:21 UTC | FR-11 persistent belief vault for cross-query cons | OK | 81 passed in 3.79s |
