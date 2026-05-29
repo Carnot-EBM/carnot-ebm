@@ -6857,3 +6857,4 @@ web search: https://docs.garak.ai/garak/examples/pr |
 | 2026-05-29 16:29 UTC | Capstone v310: Hardware latency, Energy-descent ga | GATE_BLOCK | 2 of 2 gate(s) failed; first failure: exp3350-kv260-hardware-latency-benchmark.s |
 | 2026-05-29 16:31 UTC | Capstone v310: Hardware latency, Energy-descent ga | GATE_BLOCK | 2 of 2 gate(s) failed; first failure: exp3350-kv260-hardware-latency-benchmark.s |
 | 2026-05-29 16:33 UTC | Capstone v310: Hardware latency, Energy-descent ga | GATE_BLOCK | 2 of 2 gate(s) failed; first failure: exp3350-kv260-hardware-latency-benchmark.s |
+| 2026-05-29 16:43 UTC | Plan milestone 2026.05.311 | OK | 81 passed in 4.16s |
