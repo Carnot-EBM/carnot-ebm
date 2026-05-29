@@ -3691,3 +3691,32 @@ Experiment 3365 MUST diagnose and attempt to restore network/SSH connectivity to
 **Then:** It checks the routing and ARP, attempts SSH, falls back to serial if needed, and writes `results/experiment_3365_kv260_ssh_recovery.json` detailing the connectivity status.
 
 **Implementation status:** Pending (Exp 3365)
+
+### REQ-HW-105
+
+**Title:** GateMate n=16 RTL must expose a basic AXI or UIO compatible interface
+
+**Description:**
+Experiment 3366 MUST add a memory-mapped interface (such as AXI4-Lite) to the GateMate n=16 Ising tile RTL.
+The previous experiment (Exp 3351) was blocked because the RTL lacked a host communication interface.
+The AXI4-Lite interface must allow reading and writing the `h` vector and `spins` vector via memory-mapped registers.
+The artifact MUST include the synthesis status of this updated RTL.
+
+**Acceptance criteria:**
+- `rtl/gatemate_ising_n16.v` contains an AXI4-Lite interface.
+- Python mock driver or tests verify the synthesis and interface behavior.
+- `results/experiment_3366_gatemate_axi_uio.json` is generated containing the synthesis result.
+
+**Implementation status:** Pending (Exp 3366)
+
+---
+
+### SCENARIO-HW-105
+
+**Scenario:** GateMate n=16 RTL synthesizes successfully with AXI4-Lite interface.
+
+**Given:** The `rtl/gatemate_ising_n16.v` contains an AXI4-Lite wrapper for the Ising core.
+**When:** Experiment 3366 executes.
+**Then:** It performs yosys synthesis and writes the artifact with the synthesis success status and resource usage.
+
+**Implementation status:** Pending (Exp 3366)
