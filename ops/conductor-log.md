@@ -6933,3 +6933,4 @@ web search: https://docs.garak.ai/garak/examples/pr |
 | 2026-05-29 19:35 UTC | GateMate AXI/UIO Interface Implementation | OK | 81 passed in 3.45s |
 | 2026-05-29 19:46 UTC | Refactor VGB repair ladder and LogicVault for gate | OK | 81 passed in 3.66s |
 | 2026-05-29 19:53 UTC | Capstone v311 | OK | 81 passed in 2.88s |
+| 2026-05-29 20:02 UTC | FR-11 Z3 Counterexample repair scaling | OK | 81 passed in 3.80s |
