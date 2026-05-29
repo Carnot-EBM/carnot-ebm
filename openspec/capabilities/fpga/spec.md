@@ -3631,3 +3631,34 @@ instead records the blocked reason and the transcript and emits a `blocked_`
 verdict.
 
 **Implementation status:** Implemented (Exp 3347)
+
+---
+
+### REQ-HW-103
+
+**Title:** Exp 3351 GateMate n=16 Ising tile latency benchmark MUST record a blocked artifact if hardware is unreachable or lacks a host communication interface
+
+**Description:**
+Experiment 3351 MUST measure the live GateMate n=16 Ising tile sampling latency.
+However, because the current GateMate RTL lacks a host communication interface (e.g. AXI, UIO, or dedicated USB/JTAG endpoints), the experiment MUST record a blocked artifact and preserve physical-board evidence without attempting to fabricate samples.
+The artifact MUST include the fields `honest_verdict`, `gatemate_latency_us`, `speedup_vs_cpu`, and `blocked_reasons`. If the board lacks a communication interface, the verdict MUST reflect this state (e.g. `blocked_no_io_interface_in_rtl`) and both latency and speedup MUST be `null`.
+
+**Acceptance criteria:**
+- `results/experiment_3351_gatemate_latency_benchmark.json` is written with `inference_substrate="hardware_smoke"` and `honest_verdict` beginning with a terminal prefix (`blocked_` if no IO).
+- The artifact includes `honest_verdict`, `gatemate_latency_us`, `speedup_vs_cpu`, `blocked_reasons`, and `duration_s`.
+- Both latency and speedup are `null` if the benchmark cannot be executed.
+- `blocked_reasons` contains a clear description of the blocker.
+
+**Implementation status:** Implemented (Exp 3351)
+
+---
+
+### SCENARIO-HW-103
+
+**Scenario:** GateMate n=16 latency benchmark blocks on missing communication interface.
+
+**Given:** The GateMate A1-EVB-2M n=16 Ising tile RTL exists but has no host-visible read/write data interface over USB/JTAG.
+**When:** Experiment 3351 executes to measure real sampling latency.
+**Then:** It correctly identifies the missing IO constraint, skips polling, writes the artifact with `gatemate_latency_us=null`, and assigns the verdict `blocked_no_io_interface_in_rtl`.
+
+**Implementation status:** Implemented (Exp 3351)
