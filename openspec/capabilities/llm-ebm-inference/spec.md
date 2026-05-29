@@ -1522,6 +1522,22 @@ instead of silently producing invalid EBM energies.
 **Then** `exp(-sequence_energy)` for all paths sums to one
 **And** lower ARM likelihood paths receive higher EBM energy.
 
+### REQ-INFER-SOTA-3327: Exp 3327 Energy Descent Substrate Bootstrap Smoke
+
+The system SHALL provide a bootstrap smoke test for energy-descent versus autoregressive generation using local SOTA GGUF inference in `scripts/experiment_3327_energy_descent_substrate_bootstrap_v1.py`.
+The script SHALL write `results/experiment_3327_energy_descent_substrate_bootstrap_v1.json` and decide whether `exp3328` may run.
+The script SHALL use `cached_sota_pair(gpu_indices=(0, 1))` to require at least one of `unsloth/Qwen3.6-35B-A3B-GGUF`, `unsloth/gemma-4-31B-it-GGUF`, or `unsloth/gemma-4-26B-A4B-it-GGUF`.
+It SHALL preflight cache paths, GPU visibility, and runtime loader health, writing a blocked artifact if preconditions fail.
+It SHALL run a tiny deterministic smoke of 8-16 arithmetic or constraint prompts, recording energy trajectory, verifier score trajectory, candidate text fingerprints, model_specs, batch timing, and whether any exact verifier score improves.
+It SHALL NOT claim a scientific delta, and SHALL set `energy_descent_bootstrap_ready=true` only if live inference, telemetry, and duration/provenance checks are clean.
+
+### SCENARIO-INFER-SOTA-3327-001: Bootstrap Smoke Opens Gate
+
+**Given** SOTA GGUF cache is available and GPU preconditions are met
+**When** the energy-descent bootstrap smoke runs
+**Then** it runs a tiny deterministic smoke and writes telemetry
+**And** the artifact sets `energy_descent_bootstrap_ready=true` only if all checks pass.
+
 ## Implementation Status
 
 | Requirement | Python | Tests |
