@@ -19734,3 +19734,15 @@ The axis shall:
 - Emit a deliverable artifact in `results/experiment_3342_monitor_provenance_verifier_axis_v1.json` with required provenance fields (e.g., honest_verdict, inference_substrate, duration_s, random_seed) and axis metrics (axis_name, axis_coverage, monitor_provenance_axis_ready, etc.).
 
 
+
+## REQ-VERIFY-080: FR-11 Online Verifier-Memory Nonforgetting v5
+**Given** a verifiable reasoning pipeline emitting exact verifier outcomes
+**When** these outcomes are fed to an online self-learning memory controller
+**Then** soundness and completeness errors must be explicitly accounted for and monitored
+**And** false positives must not materially increase.
+
+### SCENARIO-VERIFY-120: Verifier Outcomes Update Memory Safely
+**Given** exact verifier outcomes containing soundness/completeness metrics
+**When** used for continuous self-learning
+**Then** the updates are applied
+**And** soundness_error_delta and completeness_error_delta are measured.

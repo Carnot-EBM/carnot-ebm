@@ -9962,3 +9962,16 @@ episodes that can be loaded, keeps `controller_memory_only=true`,
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-LEARN-3334 | Implemented (`python/carnot/eval/fr11_online_verifier_memory_nonforgetting_v4.py`) | Implemented (`tests/python/test_experiment_3334_fr11_online_verifier_memory_nonforgetting_v4.py`) |
+
+## REQ-LEARN-080: FR-11 Online Verifier-Memory Nonforgetting v5
+**Given** a continuous self-learning stream with verifier outcomes
+**When** memory controller applies online updates from exact verifier outcomes
+**Then** the experiment must measure new_task_delta, old_task_delta, false_positive_delta, soundness_error_delta, completeness_error_delta, rollback_count, and rollback_recovered_count
+**And** it must rollback harmful updates preserving old-task retention
+**And** fr11_nonforgetting_ready must only be true if new-task improves or preserves, old-task degradation stays in bounds, false positives don't increase, and rollback works on harmful updates.
+
+### SCENARIO-LEARN-120: Rollback Prevents Old-Task Catastrophic Forgetting
+**Given** an online update that degrades old-task performance beyond planned bounds
+**When** the controller detects the harmful update
+**Then** it reverts the memory state
+**And** increments rollback_count and rollback_recovered_count.
