@@ -6706,3 +6706,4 @@ web search: https://docs.garak.ai/garak/examples/pr |
 | 2026-05-29 05:33 UTC | Verifier-Ensemble Joint-Null-Space / lambda_min(Si | FAIL | Codex CLI error: you finish the real work inside 10 minutes, that is correct  |
 | 2026-05-29 05:35 UTC | Verifier-Ensemble Joint-Null-Space / lambda_min(Si | FAIL | Codex CLI error: you finish the real work inside 10 minutes, that is correct  |
 | 2026-05-29 05:37 UTC | Verifier-Ensemble Joint-Null-Space / lambda_min(Si | FAIL | Codex CLI error: you finish the real work inside 10 minutes, that is correct  |
+| 2026-05-29 05:50 UTC | Capstone .307 — Phase-3 path de-risking readout +  | OK | 81 passed in 3.10s |
