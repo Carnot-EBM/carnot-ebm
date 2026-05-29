@@ -6815,3 +6815,4 @@ web search: https://docs.garak.ai/garak/examples/pr |
 | 2026-05-29 13:28 UTC | KV260 MMD vs CPU sequential Gibbs board-local cont | OK | 81 passed in 3.19s |
 | 2026-05-29 13:43 UTC | GateMate n16 Ising tile bitstream build and detect | OK | 81 passed in 3.30s |
 | 2026-05-29 13:50 UTC | Independent reproducer pack and evidence matrix v4 | OK | 81 passed in 2.59s |
+| 2026-05-29 13:55 UTC | Capstone v309: runtime, diversity, FR-11, hardware | OK | 81 passed in 3.28s |
