@@ -14100,3 +14100,63 @@ appropriate and preserves precise `blocked_reasons`.
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-REPORT-3300 | Implemented (`python/carnot/reporting/full_garak_dataflip_gate_rerun_3300.py`) | Implemented (`tests/python/test_experiment_3300_full_garak_dataflip_gate_rerun.py`) |
+
+### REQ-REPORT-3305: Evidence Matrix V37 From .305 Artifacts
+
+The repository shall provide an Exp 3305 evidence-matrix v37 generator that
+writes `results/experiment_3305_evidence_matrix_v37.json` by reading the
+available `.305` evidence chain from Exp 3293 through Exp 3304. The workflow
+MUST be aggregation only. It MUST NOT run model inference, CUDA probes, teacher
+labeling, KAN training, Garak, repair, verifier scoring, FR-11 updates,
+hardware commands, the conductor, pushes, or modify
+`scripts/research_conductor.py`, `ops/status.md`, `ops/changelog.md`, or
+`_bmad/traceability.md`.
+
+The matrix MUST scan the expected `.305` result artifacts and record whether
+each file is present, missing, readable JSON, and ready according to its
+artifact-specific ready field. It MUST preserve skipped or gated tasks as
+explicit rows rather than treating them as missing. Each row SHALL classify the
+evidence as one of `clean-live`, `gated-skipped`, `historical-corrigendum`,
+`sidecar-only`, `headline-repair`, `blocked`, `flagged`, or `missing`. The
+matrix SHALL extract ready fields, `honest_verdict`, substrate declarations,
+gates, blockers, quality flags, and sidecar or historical boundaries so later
+capstones cannot promote bounded evidence into headline claims by omission.
+
+The terminal artifact MUST include `matrix_v37_ready`,
+`artifact_count_scanned`, `artifacts_missing`, `clean_evidence_count`,
+`blocked_evidence_count`, `flagged_evidence_count`,
+`sidecar_only_evidence_count`, `garak_gate_passed`,
+`repair_headline_claim_allowed`, `fr11_replay_safe`, `paper_ready`,
+`paper_blocker_count`, `top_gap`, `cited_upstream_artifacts`,
+`inference_substrate`, `random_seed`, `reproducibility_checksum`,
+`duration_s`, and `honest_verdict`. `paper_ready` MUST be true only when the
+current Garak gate passed, the repair headline audit passed or is not required
+by scope, no current critical blockers remain, and historical flagged evidence
+is bounded. `honest_verdict` MUST begin with one of `complete:`, `success:`,
+`passed:`, or `shipped:`.
+
+#### SCENARIO-REPORT-3305: Matrix V37 Preserves V305 Claim Eligibility
+
+**Given** Exp 3293 through Exp 3304 artifacts are available, Exp 3300 passes
+the Garak attack-success gate but fails the DataFlip gate and carries critical
+quality flags, Exp 3302 repair evidence exists but sets
+`headline_claim_allowed=false`, Exp 3303 audits that repair evidence and keeps
+headline promotion blocked, Exp 3296 keeps KAN sidecar/corrigendum evidence out
+of headlines, and Exp 3304 reports safe controller-memory-only FR-11 replay
+**When** the Exp 3305 matrix generator runs
+**Then** it writes `results/experiment_3305_evidence_matrix_v37.json` with all
+required schema fields, `matrix_v37_ready=true`, explicit rows for clean live
+evidence, gated/skipped evidence, historical corrigendum rows, sidecar-only
+rows, and headline-eligible repair evidence, exact blockers and critical flags
+preserved, `garak_gate_passed=true`, `repair_headline_claim_allowed=false`,
+`fr11_replay_safe=true`, `paper_ready=false`, a positive
+`paper_blocker_count`, `top_gap` set to the highest-priority unresolved `.305`
+gap, `inference_substrate=aggregation_from_upstream_artifacts`, and an
+`honest_verdict` beginning with `complete:` without claiming publication
+readiness.
+
+## Implementation Status (REQ-REPORT-3305)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-3305 | Implemented (`python/carnot/reporting/evidence_matrix_v37_3305.py`) | Implemented (`tests/python/test_experiment_3305_evidence_matrix_v37.py`) |
