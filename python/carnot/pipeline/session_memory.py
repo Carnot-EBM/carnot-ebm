@@ -105,6 +105,9 @@ class SessionMemory:
         self._ledger_consistency_rates: dict[str, float] = {}
         self._vault_totals: dict[str, int] = {}
         self._vault_accepteds: dict[str, int] = {}
+        self._learned_clauses: dict[str, list[Any]] = {}
+        self._search_steps_total: dict[str, int] = {}
+        self._last_search_steps: dict[str, int] = {}
 
     @property
     def ledger_consistency_rate(self) -> float:
@@ -123,6 +126,9 @@ class SessionMemory:
         self._ledger_consistency_rates[agent_id] = 1.0
         self._vault_totals[agent_id] = 0
         self._vault_accepteds[agent_id] = 0
+        self._learned_clauses[agent_id] = []
+        self._search_steps_total[agent_id] = 0
+        self._last_search_steps[agent_id] = 0
 
     def add_axiom(self, expr: Any, agent_id: str = "default") -> None:
         """Commit a base axiom to the vault for a specific agent."""
@@ -140,9 +146,19 @@ class SessionMemory:
 
         self._vault_totals[agent_id] += 1
         solver = self._z3_solvers[agent_id]
+        
+        stats_before = solver.statistics()
+        rlimit_before = stats_before.get_key_value('rlimit count') if 'rlimit count' in stats_before.keys() else 0
+
         solver.push()
         solver.add(expr)
         result = solver.check()
+
+        stats_after = solver.statistics()
+        rlimit_after = stats_after.get_key_value('rlimit count') if 'rlimit count' in stats_after.keys() else 0
+        steps = rlimit_after - rlimit_before
+        self._last_search_steps[agent_id] = steps
+        self._search_steps_total[agent_id] += steps
 
         if result == z3.sat:
             solver.pop()
@@ -152,6 +168,12 @@ class SessionMemory:
             return True
         else:
             solver.pop()
+            # CDCL-inspired constraint learning:
+            # We hit a contradiction. We learn z3.Not(expr) and add it as a blocking clause.
+            learned_clause = z3.Not(expr)
+            self._learned_clauses[agent_id].append(learned_clause)
+            solver.add(learned_clause)
+            
             self._ledger_consistency_rates[agent_id] = self._vault_accepteds[agent_id] / self._vault_totals[agent_id]
             return False
 
