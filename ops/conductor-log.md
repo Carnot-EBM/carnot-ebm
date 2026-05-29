@@ -6699,3 +6699,4 @@ web search: https://docs.garak.ai/garak/examples/pr |
 | 2026-05-29 05:07 UTC | Evidence matrix v38 | GATE_BLOCK | Pre-emptive skip: upstream retired (exp3317-repair-headline-evidence-audit-v2) |
 | 2026-05-29 05:07 UTC | Capstone v306 | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp3319-evidence-matrix-v38.matrix_v38_rea |
 | 2026-05-29 05:09 UTC | Milestone 2026.05.307 activated | OK | 4 tasks queued |
+| 2026-05-29 05:24 UTC | Archive .306 closeout and activate .307 planning a | OK | 81 passed in 3.67s |
