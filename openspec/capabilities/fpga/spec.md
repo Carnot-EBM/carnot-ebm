@@ -3497,3 +3497,68 @@ actions, no hardware or speedup claims, and a terminal verdict beginning with
 `complete:`.
 
 **Implementation status:** Implemented (Exp 3048)
+
+---
+
+### REQ-HW-101
+
+**Title:** Exp 3346 KV260 MMD-vs-CPU continuity rerun MUST use the live SSH board path and never the retired host SD-card check
+
+**Description:**
+Experiment 3346 is the deferred continuity rerun of the Exp 2938 MMD-vs-CPU
+sequential-Gibbs comparison, executed against the *current* KV260 board access
+path. It MUST establish board reachability with
+`ssh -o ConnectTimeout=5 -o BatchMode=yes kria true` as its sole hardware
+precondition and MUST NOT reference any host block device (for example
+`/dev/mmcblk*`) — the host SD-card branch is permanently retired per the
+CLAUDE.md "KV260 SSH-Not-SD-Card Discipline". When the board is reachable it
+MUST collect board-local evidence (`uname`, `xmutil` overlay status, and the
+visible `/dev/uio*` device list), reproduce the same Exp 2898 dense n=64 Ising
+problems for seeds 42, 137, and 271, exercise the existing KV260 synchronous
+Glauber sampler over UIO without modifying the bitstream, and run a matched CPU
+sequential-Gibbs baseline on the same problem distribution. It MUST compute the
+repo's established energy-distribution distance (RBF MMD² plus the
+Kolmogorov-Smirnov statistic) per seed and summarise whether the board and CPU
+energy distributions are distinguishable. If any board step cannot execute, it
+MUST preserve the command transcript and the precise blocked reason rather than
+fabricate a result. The continuity smoke MAY use a reduced sample count (the
+"smallest available sampler path"); the count actually used MUST be recorded.
+
+**Acceptance criteria:**
+- `results/experiment_3346_kv260_mmd_vs_cpu_sequential_gibbs_v1.json` is written
+  with `inference_substrate="hardware_smoke"` and `honest_verdict` beginning with
+  a terminal prefix (`complete:`/`success:`) on a successful board run or with a
+  `blocked_<resource>` prefix when a board step fails.
+- The artifact includes `honest_verdict`, `inference_substrate`, `random_seed`,
+  `reproducibility_checksum`, `duration_s`, `files_updated`, and the hardware
+  evidence fields `ssh_reachable`, `board_uname`, `xmutil_status`, `uio_status`,
+  `cpu_baseline_summary`, `kv260_summary`, `mmd_vs_cpu`, `sample_count_cpu`,
+  `sample_count_kv260`, `command_transcript`, and `blocked_reasons`.
+- The hardware precondition is SSH reachability; no host block-device check
+  appears anywhere in the experiment.
+- On a successful run `mmd_vs_cpu` records exactly three per-seed MMD² and KS
+  results and `sample_count_cpu == sample_count_kv260`.
+- A blocked run leaves `mmd_vs_cpu` empty, sets `blocked_reasons` to a non-empty
+  list, and keeps the command transcript for audit.
+
+**Implementation status:** Implemented (Exp 3346)
+
+---
+
+### SCENARIO-HW-101
+
+**Scenario:** KV260 continuity rerun compares board synchronous Glauber energies to a matched CPU sequential-Gibbs baseline over the live SSH path.
+
+**Given:** `ssh kria` is reachable, Exp 2898 is present and its three dense Ising
+problems reproduce from seeds 42, 137, and 271, and the KV260 sampler overlay is
+loaded with a readable UIO device.
+**When:** Exp 3346 collects board evidence, runs the KV260 synchronous Glauber
+sampler and a matched CPU sequential-Gibbs baseline at the continuity sample
+count, and compares the two energy distributions.
+**Then:** It writes the v1 artifact with the board evidence fields populated, the
+three per-seed MMD²/KS results in `mmd_vs_cpu`, equal CPU and KV260 sample
+counts, an empty `blocked_reasons`, and a terminal `honest_verdict`. If SSH or
+any board step fails, it instead records the blocked reason and the transcript
+and emits a `blocked_<resource>` verdict.
+
+**Implementation status:** Implemented (Exp 3346)
