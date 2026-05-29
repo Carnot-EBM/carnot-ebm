@@ -1,5 +1,9 @@
 # Carnot — Changelog
 
+## 2026-05-29 (Milestone 2026.05.309 Operational Retrospective)
+
+- [outer-loop] Wrote `results/operational_retro_2026_05_309.json` (schema `carnot.operational_retro.v64`). The authoritative timing source reports no experiment commits since activation, leaving `total_wall_time_minutes=0`, `experiments_completed=0`, `compute_bound_experiments_count=0`, `slowest_experiments=[]`, and `gpu_idle_on_compute_bound_tasks=null`. Both RTX 3090s were idle in the GPU snapshot, but no GPU-idle bottleneck was recorded because there were 0 compute-bound timing rows.
+
 ## 2026-05-28 (Milestone 2026.05.305 Operational Retrospective)
 
 - [outer-loop] Wrote `results/operational_retro_2026_05_305.json` (schema `carnot.operational_retro.v64`). The authoritative milestone timing source reports `total_wall_time_minutes=0`, `experiments_completed=0`, `compute_bound_experiments_count=0`, `slowest_experiments=[]`, and `gpu_idle_on_compute_bound_tasks=null`; longest compute-bound runtime, compute-bound GPU efficiency, and 2+ model DualGPURunner coverage are no data available this milestone. The idle GPU snapshot was not recorded as a bottleneck because no compute-bound timing rows exist. Recommended tooling focus: add an empty-window pre-retro sentinel plus an activation-to-first-experiment heartbeat.
