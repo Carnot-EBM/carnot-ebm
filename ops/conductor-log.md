@@ -6845,3 +6845,5 @@ web search: https://docs.garak.ai/garak/examples/pr |
 | 2026-05-29 15:57 UTC | Live SOTA constrained generation using grammar-mas | FAIL | Gemini CLI error: Stalled after 600s silence. Last output: Warning: 256-color  |
 | 2026-05-29 15:59 UTC | Deterministic prefix-closed bounds pilot for live | OK | Deliverable already exists in repo |
 | 2026-05-29 15:59 UTC | Energy-Based Transformer (EBT) sidecar integration | GATE_BLOCK | Pre-emptive skip: upstream retired (exp3352-live-sota-constrained-generation-pil |
+| 2026-05-29 16:05 UTC | Verifier-guided backtracking (VGB) repair ladder f | OK | 84 passed in 5.79s |
+| 2026-05-29 16:07 UTC | Energy-Based Transformer (EBT) sidecar integration | GATE_BLOCK | Pre-emptive skip: upstream retired (exp3352-live-sota-constrained-generation-pil |
