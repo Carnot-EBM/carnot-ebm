@@ -9165,3 +9165,17 @@ mandated model was used, `headline_claim_allowed=false`, and an
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-VERIFY-3329 | Implemented (`scripts/experiment_3329_verifier_ensemble_diversity_audit_v2.py`) | Implemented (`tests/python/test_experiment_3329_verifier_ensemble_diversity_audit_v2.py`) |
+
+### REQ-VERIFY-3353: Deterministic Bounds on Constraint Satisfaction
+
+- REQ-VERIFY-3353-1: Implement a Token Trie and Frontier data structure (`PrefixClosedBoundVerifier`) to maintain prefix-closed bounds over constraint evaluations.
+- REQ-VERIFY-3353-2: Evaluate a synthetic problem space where prefixes deterministically violate constraints.
+- REQ-VERIFY-3353-3: Compute sound probability bounds and compare against loose sampling bounds.
+- REQ-VERIFY-3353-4: Validate that the bound is monotonic and tighter than sampling.
+- REQ-VERIFY-3353-5: The workflow SHALL write `results/experiment_3353_deterministic_bounds.json` with the required schema fields.
+
+## Implementation Status (REQ-VERIFY-3353)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-VERIFY-3353 | Implemented (`python/carnot/cascade/tier2_verifier.py`) | Implemented (`tests/python/test_tier2_verifier.py`) |
