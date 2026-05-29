@@ -1210,3 +1210,12 @@ actually invoked.
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-BENCH-3211 | Implemented (`python/carnot/eval/constraintbench_feasibility_objective_pilot_v1.py`) | Implemented (`tests/python/test_experiment_3211_constraintbench_feasibility_objective_pilot_v1.py`) |
+
+### REQ-BENCH-3389: ConstraintBench AR vs VGB Repair Evaluation
+
+Carnot MUST provide an evaluation script that runs a subset of ConstraintBench tasks (at least 10) through standard autoregressive generation on unsloth/Qwen3.6-35B-A3B-GGUF and compares the validity ratio against candidates repaired by the VGB repair ladder.
+
+#### SCENARIO-BENCH-3389-1: Run Evaluation
+**Given** the script `scripts/experiment_3389_constraintbench.py` is executed
+**When** the evaluation completes
+**Then** it MUST write an artifact to `results/experiment_3389_constraintbench.json` containing the evaluation metrics for both AR and VGB repair loops.
