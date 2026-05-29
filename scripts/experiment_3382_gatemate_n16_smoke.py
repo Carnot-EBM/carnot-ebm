@@ -7,6 +7,11 @@ References: REQ-HW-106, SCENARIO-HW-106.
 import json
 import subprocess
 import os
+import sys
+
+# Ensure the root directory is in the Python path
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
+
 from scripts.experiment_template import ExperimentTemplate
 
 def run_subprocess(cmd, cwd="rtl"):
