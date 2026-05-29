@@ -75,6 +75,149 @@ say the replacement does NOT hold.
 - 2026-05-26 operator safety-gateway-comparison conversation (origin)
 - ops/known-issues.md Prompt-Injection v4 priority (now resolved-negative)
 
+## 2026-05-29 Post-.305 Planning Sweep (Milestone 2026.05.306)
+
+This sweep was run after milestone `.305` completed. `.305` passed the Garak
+attack-success gate (`attack_success_rate=0.0`) but did not reach paper
+readiness: `results/experiment_3306_capstone_v305.json` reports
+`paper_ready=false`, `publication_blocker_count=8`,
+`dataflip_gate_passed=false`, `repair_headline_claim_allowed=false`, and
+`next_top_gap=clear_garak_dataflip_and_quality_flags`. Matrix v37 names the
+active blockers: DataFlip failed, `exp3300` has quality flags
+(`TAUTOLOGY`, `DURATION_TOO_SHORT`), and the repair headline artifacts are
+blocked by provenance/substrate consistency and a too-short live-model
+duration flag.
+
+### DataFlip Means Output-Only Prompt-Injection Detection Is Not Enough
+
+- **Paper:** "How Not to Detect Prompt Injections with an LLM" (arXiv:
+  2507.05630; v3 Dec 2025).
+- **What:** The paper formalizes known-answer detection (KAD), identifies a
+  structural vulnerability, and introduces DataFlip, an adaptive attack that
+  can make KAD detection collapse while still inducing malicious behavior.
+- **Relevance to Carnot:** `.305` failed DataFlip despite passing Garak ASR.
+  `.306` should stop treating target-string suppression as sufficient and add a
+  KAD-specific challenge manifest plus provenance/decision auditing before any
+  publication gate rerun.
+- **Source:** https://arxiv.org/abs/2507.05630
+
+### Prompt-Injection Defenses Need Provenance And Priority, Not Flat Filters
+
+- **Papers:** Prompt Control-Flow Integrity (PCFI, arXiv:2603.18433), ARGUS
+  (arXiv:2605.03378), and PromptArmor (arXiv:2507.15219).
+- **What:** PCFI models prompts as structured segments with role priorities
+  rather than flat strings. ARGUS builds influence provenance graphs for agent
+  decisions and verifies whether each decision is justified by trusted evidence.
+  PromptArmor reports simple layered defenses that preserve utility under
+  adaptive attacks.
+- **Relevance to Carnot:** `.306` should test a provenance-aware DataFlip
+  mitigation: track which text segment or retrieved context influenced the
+  final answer, require trusted evidence for sensitive outputs, and report
+  benign utility separately from attack success.
+- **Sources:** https://arxiv.org/abs/2603.18433,
+  https://arxiv.org/abs/2605.03378, and https://arxiv.org/abs/2507.15219
+
+### Distributional EBMs Match Carnot's Current Evidence Gap
+
+- **Paper:** "Distributional Energy-Based Models for Uncertainty-Aware
+  Structured LLM Reasoning" (arXiv:2605.18871; May 2026).
+- **What:** A decomposed energy function combines learned quality scoring with
+  deterministic analytical constraint penalties; ensemble variance drives
+  targeted regeneration or abstention. The paper also reports a model-identity
+  shortcut on code and mitigates it by retraining the last layer.
+- **Relevance to Carnot:** This is directly relevant to the `.305` repair
+  blocker: exact constraints can accept or reject candidates, while uncertainty
+  and provenance flags decide whether a headline claim is clean. `.306` should
+  add a small distributional-EBM audit over the 30-case repair panel to separate
+  exact success, uncertainty, model-identity confounds, and substrate flags.
+- **Source:** https://arxiv.org/abs/2605.18871
+
+### Backtracking Helps When Process Verifiers Are Imperfect
+
+- **Paper:** "Taming Imperfect Process Verifiers: A Sampling Perspective on
+  Backtracking" (ICLR 2026 Poster).
+- **What:** Value-guided backtracking treats generation as a random walk over a
+  partial-completion tree and explicitly addresses verifier error amplification
+  instead of assuming process rewards are clean.
+- **Relevance to Carnot:** The `.305` repair panel had 27/30 exact successes
+  but failed the headline audit because provenance/substrate evidence was not
+  clean. `.306` should use verifier-guided backtracking as proposal machinery:
+  repair candidates may backtrack when uncertainty or exact checks fail, but
+  exact fixtures remain the only acceptance authority.
+- **Source:** https://openreview.net/forum?id=MFDkLbcydi
+
+### Cross-Family Verification Is Stronger Than Self-Verification Alone
+
+- **Papers:** "Beyond Solving: A Closer Look at LLMs as Solution Verifiers"
+  (ICLR 2026 Workshop RSI) and "Variation in Verification" (ICLR 2026).
+- **What:** Verifier gain depends on solver/verifier family, post-training, and
+  task type; verification benefits shrink when solver and verifier are too
+  similar. Larger models do not automatically make verification better.
+- **Relevance to Carnot:** `.306` should not rely on the same local model both
+  proposing and verifying repairs. The repair rerun should use exact checkers
+  plus, when LLM proposals are needed, a cross-family proposal/audit layout
+  using the mandated GGUF models that are actually cached.
+- **Sources:** https://openreview.net/forum?id=Hv5hDfbhuB and
+  https://openreview.net/forum?id=DcEuBwrWnB
+
+### Continuous Self-Learning Should Use Failure-Targeted Curriculum, Not Raw Replays
+
+- **Papers:** TTSR (arXiv:2603.03297), TTCS (arXiv:2601.22628), and VDS-TTT
+  (arXiv:2505.19475).
+- **What:** Recent self-evolving/test-time-training work synthesizes variants
+  targeted at current reasoning weaknesses, filters pseudo-labels through
+  verifier confidence, and stabilizes online learning with curriculum control.
+- **Relevance to Carnot:** `.305` FR-11 replay stayed controller-memory-only
+  and had negative_transfer_rate=0.033333. `.306` should build a failure-targeted
+  curriculum from DataFlip misses, duration/substrate flags, and repair audit
+  failures, then prove retention/adaptation without weight-update claims.
+- **Sources:** https://arxiv.org/abs/2603.03297,
+  https://arxiv.org/abs/2601.22628, and https://arxiv.org/abs/2505.19475
+
+### Hardware Sampling Watch Item: P-Bit Variability And P-Dits
+
+- **Papers:** GPU-accelerated simulated annealing based on p-bits
+  (arXiv:2601.14476) and Extended-variable probabilistic computing with p-dits
+  (arXiv:2506.00269).
+- **What:** The p-bit work reports CUDA simulations with timing/intensity/offset
+  variability and large speedups on MAX-CUT. The p-dit work generalizes p-bits
+  to categorical/integer variables and reports FPGA/ASIC implementations for
+  non-binary optimization.
+- **Relevance to Carnot:** This supports the long hardware thesis and the
+  partial-credit Potts/q-state path, but `.306` should keep it as a watch item
+  unless local board/TSU evidence is produced. Do not spend the next milestone
+  on new hardware claims while DataFlip and quality flags are the top blockers.
+- **Sources:** https://arxiv.org/abs/2601.14476 and
+  https://arxiv.org/abs/2506.00269
+
+### EBT, ARM-EBM, Extropic, GitHub, And Kona Status
+
+- **EBT:** OpenReview lists "Energy-Based Transformers are Scalable Learners and
+  Thinkers" as an ICLR 2026 Oral, with energy minimization over candidate
+  predictions and explicit verification-as-optimization framing. It remains
+  architecture context, not a local artifact.
+- **ARM-EBM citation check:** Semantic Scholar API calls for arXiv:2507.02092
+  and arXiv:2512.15605 returned HTTP 429 during this sweep, so citation-count
+  claims were not updated. Public search still surfaces ARM-as-EBM and related
+  EBT follow-ons, but `.306` should cite them as motivation only.
+- **Extropic:** The hardware page still positions XTR-0 as a Q3 2025 research
+  platform and Z1 as early-access 2026; the software page says THRML uses JAX
+  to simulate probabilistic graphical models and train EBMs.
+- **GitHub:** `microsoft/interwhen`, `XMUDeepLIT/TTCS`, GitHub's
+  `latent-reasoning` topic, and `awesome-ebm` are active watch items. They
+  support trace-time monitors, self-evolving curricula, and latent reasoning
+  exploration, but none replaces Carnot's exact-check gates.
+- **Kona:** Logical Intelligence continues to present Kona 1.0 as a constraint
+  enforcing EBM layer, with public Sudoku claims. Treat these as strategic
+  context only; local Carnot publication claims still require local artifacts.
+- **Sources:** https://openreview.net/forum?id=ZBj3Qp1bYg,
+  https://arxiv.org/abs/2512.15605, https://extropic.ai/hardware,
+  https://extropic.ai/software, https://github.com/microsoft/interwhen,
+  https://github.com/XMUDeepLIT/TTCS,
+  https://github.com/topics/latent-reasoning,
+  https://github.com/yataobian/awesome-ebm, and
+  https://logicalintelligence.com/kona-ebms-energy-based-models
+
 ## 2026-05-28 Post-.304 Planning Sweep (Milestone 2026.05.305)
 
 This sweep was run after milestone `.304` completed. `.304` fixed the Garak
