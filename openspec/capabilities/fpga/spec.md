@@ -3662,3 +3662,32 @@ The artifact MUST include the fields `honest_verdict`, `gatemate_latency_us`, `s
 **Then:** It correctly identifies the missing IO constraint, skips polling, writes the artifact with `gatemate_latency_us=null`, and assigns the verdict `blocked_no_io_interface_in_rtl`.
 
 **Implementation status:** Implemented (Exp 3351)
+
+---
+
+### REQ-HW-104
+
+**Title:** KV260 SSH recovery and connectivity diagnosis
+
+**Description:**
+Experiment 3365 MUST diagnose and attempt to restore network/SSH connectivity to the KV260 board, which was unreachable in milestone 310 (exp3350). The script MUST check local network routes and the ARP cache, attempt a serial console connection if SSH fails, and verify simple command execution upon restoring SSH access. The diagnostic findings MUST be emitted in a JSON artifact.
+
+**Acceptance criteria:**
+- `results/experiment_3365_kv260_ssh_recovery.json` is generated with `inference_substrate="hardware_smoke"`.
+- The artifact includes `honest_verdict`, `ssh_reachable`, `routes_checked`, `arp_cache_checked`, `serial_connection_attempted`, `connectivity_restored`, `command_execution_verified`, and `duration_s`.
+- The script checks local routing and ARP.
+- `honest_verdict` reflects the final state (e.g., `complete: ssh_restored` or `blocked: ssh_and_serial_failed`).
+
+**Implementation status:** Pending (Exp 3365)
+
+---
+
+### SCENARIO-HW-104
+
+**Scenario:** KV260 SSH connectivity is diagnosed and an artifact is written.
+
+**Given:** The KV260 board may or may not be reachable via SSH or serial console.
+**When:** Experiment 3365 executes.
+**Then:** It checks the routing and ARP, attempts SSH, falls back to serial if needed, and writes `results/experiment_3365_kv260_ssh_recovery.json` detailing the connectivity status.
+
+**Implementation status:** Pending (Exp 3365)
