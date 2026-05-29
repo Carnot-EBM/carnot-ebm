@@ -7781,3 +7781,4 @@ ModuleNotFoundError: No module named 'torch'; results/experiment_2828_fover_memo
 - 2026-05-29: Parallel Energy Minimization for Constraint Composition (⚠️ Research Finding) — honest_verdict=unspecified; results/experiment_3384_pem_composition.json
 - 2026-05-29: CAffNet Differentiable Constraint Layer Prototype (⚠️ Research Finding) — honest_verdict=success; results/experiment_3385_caffnet_layer.json
 - 2026-05-29: FR-11 Locality-Aware Nonforgetting Memory (✅ Complete) — honest_verdict=complete: rollback_successful; results/experiment_3386_fr11_nonforgetting.json
+- 2026-05-29: KANELÉ-style LUT Quantization for KAN Sidecar (⚠️ Research Finding) — honest_verdict=kanele_qat_evaluated; results/experiment_3387_kanele_quantization.json
