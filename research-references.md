@@ -1,3 +1,103 @@
+## 2026-05-29 Post-.307 Planning Sweep (Milestone 2026.05.308)
+
+This sweep was run after milestone `.307` closed operationally. The recorded
+capstone (`results/experiment_3324_capstone_v307.json`) does not contain the
+two scientific upstream artifacts it needed: `exp3322` (energy-descent versus
+autoregressive premise) and `exp3323` (verifier-ensemble diversity/lambda_min).
+`ops/conductor-log.md` records both as repeated Codex CLI failures, not negative
+scientific outcomes. The next milestone should therefore recover the Phase-3
+path tests with smaller preflighted tasks before adding new claims.
+
+### Energy-Based Transformers Are Now Implementation-Relevant
+
+- **Paper/code:** Energy-Based Transformers (EBT; arXiv:2507.02092) plus the
+  public implementation `alexiglad/EBT`, updated 2026-05-28.
+- **What:** The work moves energy-based sequence reasoning from an architectural
+  sketch toward runnable code with iterative energy minimization as the primary
+  inference primitive.
+- **Relevance to Carnot:** This is the closest external artifact to the missing
+  `exp3322` premise test. `.308` should not claim foundation-model parity, but it
+  should add an EBT sidecar smoke that verifies whether a small continuous-energy
+  adapter can be run, checksummed, and compared against existing exact verifier
+  scores.
+- **Sources:** https://arxiv.org/abs/2507.02092 and
+  https://github.com/alexiglad/EBT
+
+### Verifiable-Reasoning Monitors Are Becoming Concrete Frameworks
+
+- **Code:** Microsoft's Interwhen framework for verifiable reasoning with
+  language models, created 2026-02-05 and updated 2026-05-23.
+- **What:** Interwhen packages language-model reasoning behind explicit
+  verification monitors instead of treating free-form chain-of-thought as the
+  authority.
+- **Relevance to Carnot:** The missing `exp3323` diversity audit should be
+  paired with a monitor-integration pilot: exact monitors score intermediate
+  candidates, and energy descent is only trusted when monitor disagreement and
+  covariance are measured rather than assumed.
+- **Source:** https://github.com/microsoft/interwhen
+
+### Hallucination Work Points To Commitment Telemetry, Not Just Final Accuracy
+
+- **Papers:** "Hallucination as Commitment Failure" (arXiv:2605.22007) and
+  HalluScan (arXiv:2605.02443).
+- **What:** Recent hallucination-mitigation work emphasizes when a model
+  prematurely commits to unsupported content and how hallucination risk can be
+  detected before the final answer.
+- **Relevance to Carnot:** `.308` live SOTA panels should log commitment-like
+  telemetry: energy trajectory, verifier disagreement over iterations, repair
+  acceptance, abstention, and whether late iterations increase unsupported
+  claims. This prevents a false "energy went down, therefore truth improved"
+  conclusion.
+- **Sources:** https://arxiv.org/abs/2605.22007 and
+  https://arxiv.org/abs/2605.02443
+
+### Continuous Self-Learning Should Be Nonforgetting-Aware
+
+- **Papers:** Online learnability of chain-of-thought verifiers (arXiv:2603.03538),
+  KAN-CL (arXiv:2605.12306), and property verification for KAN abstractions
+  (arXiv:2602.06737).
+- **What:** The relevant thread is not "train a bigger verifier" but maintain an
+  online verifier/memory system whose updates improve future constraint handling
+  without degrading older verified cases.
+- **Relevance to Carnot:** The required `.308` FR-11 experiment should test
+  constraint-memory updates against a nonforgetting gate: new verified
+  violations must improve or preserve holdout verifier accuracy, must not
+  increase false positives on older accepted cases, and must emit a rollback
+  plan when the update is harmful.
+- **Sources:** https://arxiv.org/abs/2603.03538,
+  https://arxiv.org/abs/2605.12306, and https://arxiv.org/abs/2602.06737
+
+### Energy-Guided Decoding Belongs In Candidate Proposal, Not Authority
+
+- **Paper family:** Energy-guided test-time scaling and constrained/guided
+  generation papers surfaced in the 2025-2026 search sweep, including
+  energy-guided RL alignment (arXiv:2601.21484).
+- **What:** Energy functions can guide decoding or candidate selection without
+  retraining the base model.
+- **Relevance to Carnot:** `.308` should test this as a proposal mechanism only:
+  SOTA GGUF models produce candidates, energy ranks them, exact verifiers accept
+  or reject them. The headline authority remains the verifier ensemble, not a
+  learned energy score.
+- **Source:** https://arxiv.org/abs/2601.21484
+
+### Hardware And Ecosystem Watch Items
+
+- **Extropic:** Public TSU/software pages remain relevant for the long-term
+  thermodynamic-sampling target, but no local Carnot latency/speedup claim is
+  justified without owned hardware transcripts.
+- **Kona:** Logical Intelligence's public Kona/Aleph pages continue to motivate
+  the Phase-3 target, but `.308` should treat Kona as an architectural premise
+  to test, not as an achieved parity claim.
+- **Semantic Scholar:** Direct citation-cluster lookup for EBT (2507.02092) and
+  ARM-as-EBM (2512.15605) returned rate-limit responses during this sweep, so no
+  new citation-following claim is recorded here.
+- **GitHub trending/search:** The strongest implementation lead was EBT; other
+  surfaced EBM/constraint/KAN repos were either small watch-list items or survey
+  material and do not justify immediate milestone tasks.
+- **Sources:** https://extropic.ai/software, https://extropic.ai/hardware,
+  https://logicalintelligence.com/kona-ebms-energy-based-models, and
+  https://logicalintelligence.com/blog/aleph-leading-benchmarks
+
 ## 2026-05-28 HEADLINE NEGATIVE RESULT: Distilled-KAN Prompt-Injection Replacement Refuted by Full-Corpus DeLong
 
 **Question (origin):** 2026-05-26 operator conversation comparing Carnot

@@ -1,307 +1,269 @@
-# Research Roadmap vNEXT - Milestone 2026.05.306
+# Research Roadmap vNEXT: Milestone 2026.05.308
 
-**Title:** DataFlip + Quality-Flag Cleanup For Publication-Ready Evidence
+**Title:** Phase-3 Path Recovery, Verifier Grounding, and FR-11 Nonforgetting
 
 **Created:** 2026-05-29
-**Status:** Proposed, staged in `research-roadmap-next.yaml`
-**Supersedes:** Milestone 2026.05.305
-**Execution queue:** `exp3307` through `exp3320`
+**Status:** Proposed next milestone
+**Supersedes:** 2026.05.307
+**Milestone YAML:** `research-roadmap-next.yaml`
+**Primary references:** `research-program.md`, `_bmad/prd.md`,
+`_bmad/architecture.md`, `ops/status.md`, `ops/changelog.md`,
+`ops/conductor-log.md`, `research-complete.yaml`, `research-roadmap.yaml`,
+`research-references.md`, `research-hardware-wishlist.md`
 
-## What Milestone 2026.05.305 Proved
+## What Previous Milestone Proved
 
-Milestone `.305` reduced the publication blocker count but did not make the
-paper ready. It proved:
+Milestone `2026.05.307` completed operationally, but it did not produce the two
+scientific upstream artifacts it was designed to test:
 
-- `exp3300` got the Garak gate itself to pass:
-  `garak_gate_passed=true` and `attack_success_rate=0.0`.
-- The same artifact did not pass the DataFlip gate:
-  `dataflip_gate_passed=false`.
-- Evidence matrix v37 and capstone v305 blocked promotion because the Garak
-  row carried current critical quality flags: `TAUTOLOGY` and
-  `DURATION_TOO_SHORT`.
-- `exp3302` ran a 30-case SOTA repair panel with
-  `verified_success_count=27`, `repair_success_rate=0.9`, and
-  `false_accept_count=0`, but `headline_claim_allowed=false`.
-- `exp3303` confirmed the repair headline remained blocked:
-  `headline_claim_allowed_after_audit=false`,
-  `source_provenance_clean=false`, and
-  `substrate_consistency_passed=false`.
-- `exp3304` kept the FR-11 controller-memory replay safe:
-  `retention_score=0.982143`, `adaptation_score=1.0`,
-  `forgetting_rate=0.017857`, `negative_transfer_rate=0.033333`, and
-  `foundation_weight_updates_performed=false`.
-- `exp3305` and `exp3306` closed `.305` with `paper_ready=false`,
-  `publication_blocker_count=8`, and
-  `next_top_gap=clear_garak_dataflip_and_quality_flags`.
+- `exp3322-energy-descent-vs-autoregressive-premise-v1` failed repeatedly in the
+  conductor with a Codex CLI error before writing an artifact.
+- `exp3323-verifier-ensemble-diversity-audit-v1` failed the same way.
+- `exp3324-capstone-v307` therefore reported a blocked Phase-3 path rather than
+  a scientific verdict.
 
-The next milestone should not add a new benchmark family before the current
-evidence is clean. `.306` must make the adversarial evidence provenance
-publication-grade, rerun the repair evidence under the same runtime discipline,
-and convert the observed failures into a controlled continuous self-learning
-curriculum.
+The key result is procedural but important: the next top gap is not a new
+theory. It is a conductor-runnable recovery of the two Phase-3 link tests with
+smaller bootstrap tasks, explicit preconditions, and structured artifacts.
+
+Milestone `.306` remains the most recent source of clean quality-gate progress:
+Garak is unblocked, the repair headline remains blocked by provenance/runtime
+rules, and the prompt-injection KAN replacement path is retired as a headline
+claim. That forces `.308` to keep claims narrow and exact-verifier anchored.
 
 ## Three Biggest Gaps To PRD Vision
 
-1. **Adversarial verification still fails DataFlip and evidence hygiene.**
-   The PRD requires verifiable reasoning under adversarial pressure. `.305`
-   passed Garak attack-success rate but failed DataFlip and produced critical
-   quality flags. The gap is no longer "can Garak run"; it is "can Carnot prove
-   its prompt-injection defense works without tautological metrics or suspect
-   runtime provenance."
+1. **Phase-3/Kona premise is still unmeasured on real SOTA local inference.**
+   The PRD wants verifiable energy-based reasoning and a path toward
+   continuous-latent self-correction. The missing `.307` energy-descent versus
+   autoregressive panel means Carnot still lacks evidence that an energy
+   refinement loop improves verified outcomes over normal autoregressive
+   generation.
 
-2. **Headline repair evidence is blocked by substrate/provenance, not exact
-   success count.** `.305` achieved a useful 30-case repair panel and zero false
-   accepts, but the audit blocked headline use because runtime provenance and
-   substrate consistency were not clean. The gap is a runtime receipt contract,
-   an uncertainty-aware repair audit, and a repair rerun whose evidence can be
-   promoted without special pleading.
+2. **Verifier grounding and diversity are not quantified at the current stack.**
+   The Phase-3 and publication arguments depend on independent-ish verifier
+   signals. The missing `.307` lambda_min/effective-k audit means Carnot does not
+   yet know whether the ensemble is a real committee or a correlated wrapper
+   around one failure mode.
 
-3. **FR-11 still learns from replayed outcomes rather than a failure-targeted
-   curriculum.** The controller-memory loop is safe, but it is not yet using
-   DataFlip misses, quality-flag root causes, and repair audit failures as a
-   directed curriculum. The PRD vision needs autonomous self-learning that
-   targets verified weaknesses while preserving raw episodes and preventing
-   negative transfer.
+3. **FR-11 continuous self-learning is not yet nonforgetting-validated.**
+   The PRD's autonomous self-learning loop requires updates that improve future
+   behavior without human curation. Recent milestones have controller-memory and
+   repair-audit work, but the next self-learning experiment must bind updates to
+   exact verifier outcomes, measure negative transfer, and emit rollback logic.
+
+Publication G2 remains a downstream readiness gate, not the core research gap.
+However, `.308` includes a reproducer/evidence-matrix task so clean upstreams can
+be handed to an independent runner without another planning cycle.
 
 ## External Research Integrated
 
-The 2026-05-29 post-`.305` sweep was added to `research-references.md` before
-this roadmap was designed. The most relevant findings are:
+The post-`.307` sweep added a new section to `research-references.md` before this
+roadmap was designed. The actionable findings are:
 
-- **DataFlip / KAD** (`arXiv:2507.05630`) warns that output-only LLM prompt
-  injection detectors can be defeated by simple data transformations. `.306`
-  adds an explicit KAD/DataFlip challenge manifest and a provenance-aware guard
-  before any live rerun.
-- **PCFI** (`arXiv:2603.18433`), **ARGUS** (`arXiv:2605.03378`), and
-  **PromptArmor** (`arXiv:2507.15219`) motivate structured prompt segments,
-  authority/provenance checks, and priority-aware guard policies rather than a
-  flat refusal heuristic.
-- **Distributional EBMs** (`arXiv:2605.18871`) match the repair evidence gap:
-  exact checks can remain the authority while a distributional energy sidecar
-  represents uncertainty, abstention, and row-level provenance risk.
-- **Verifier-Guided Backtracking** (OpenReview 2025) motivates a repair policy
-  that backtracks when process-verifier confidence is low, while exact
-  acceptance checks remain the final gate.
-- **Variation in Verification** (OpenReview 2025) supports cross-family
-  verification and motivates keeping Qwen/Gemma-family evidence separate
-  instead of relying on one self-verification loop.
-- **TTSR**, **TTCS**, and **VDS-TTT** motivate a failure-targeted curriculum for
-  FR-11: train or update only from verified failures and keep controller memory
-  separate from foundation weights.
-- **P-bit GPU simulated annealing** and **p-dits** are promising for future
-  hardware sampling work, but `.306` should only record a hardware path. It
-  should make no FPGA, TSU, Kona, or proprietary-hardware speedup claim.
-- **EBT**, **ARM-EBM**, **Extropic**, **Kona**, GitHub, HuggingFace Papers, and
-  OpenReview checks produced watch-list items, not immediate `.306` blockers.
-  Semantic Scholar citation checks for EBT (`2507.02092`) and ARM-EBM
-  (`2512.15605`) were rate-limited during planning and should be retried in a
-  future literature sweep.
+- **Energy-Based Transformers (EBT, arXiv:2507.02092; `alexiglad/EBT`):**
+  implementation-relevant sidecar for iterative energy minimization. `.308`
+  tests a small adapter smoke only; it does not claim foundation-model parity.
+- **Interwhen verifiable-reasoning framework:** concrete monitor pattern for
+  scoring intermediate candidates and measuring monitor disagreement.
+- **Hallucination as Commitment Failure and HalluScan:** live panels should log
+  commitment/abstention/unsupported-claim telemetry, not only final accuracy.
+- **Online learnability of CoT verifiers, KAN-CL, and KAN abstraction
+  verification:** FR-11 should be framed as nonforgetting online verifier memory.
+- **Energy-guided test-time scaling:** use energy for candidate proposal and
+  ranking, while exact verifiers remain the authority.
+- **Extropic TSU and Kona public updates:** useful long-term architecture
+  targets, but no local speedup or parity claim is permitted without measured
+  transcripts.
 
 ## SOTA Local GGUF Policy
 
-Any `.306` experiment that invokes an LLM for evidence must include at least
-one mandated local SOTA GGUF model in `MODEL_SPECS`:
+Every `.308` task that performs live LLM inference must declare `MODEL_SPECS`
+using at least one mandated local SOTA GGUF:
 
 - `unsloth/Qwen3.6-35B-A3B-GGUF`
 - `unsloth/gemma-4-31B-it-GGUF`
 - `unsloth/gemma-4-26B-A4B-it-GGUF`
 
-The preferred implementation pattern is `cached_sota_pair(gpu_indices=(0, 1))`
-from `scripts/experiment_template.py`, extended only when the task can safely
-load the third model. Legacy small models may appear only as CPU smoke-test
-fallbacks. They cannot populate headline result fields and cannot unblock
-DataFlip, repair, or publication-readiness gates.
+The expected implementation pattern is `cached_sota_pair(gpu_indices=(0, 1))`
+from `scripts/experiment_template.py`. Legacy tiny models are allowed only as
+explicit CPU smoke-test fallbacks and must not be used for headline metrics.
+Live-inference artifacts must use `inference_substrate=live_llm_inference`,
+record the exact `model_specs`, and satisfy the duration/provenance rules in
+`CLAUDE.md`.
 
-## Architecture Diagram
+## Architecture
 
 ```text
-                    .305 terminal state
- paper_ready=false; publication_blocker_count=8;
- Garak gate passed but DataFlip failed;
- current critical quality flags on Garak and repair rows;
- repair N=30 has zero false accepts but no headline permission;
- FR-11 controller memory safe but not failure-targeted
-                             |
-                             v
-             exp3307 archive .305 and activate .306
-                             |
-        +--------------------+---------------------+
-        |                                          |
-        v                                          v
- exp3308 quality-flag                    exp3310 DataFlip/KAD
- root-cause autopsy                      challenge manifest
-        |                                          |
-        v                                          v
- exp3309 runtime/provenance       exp3311 PCFI/ARGUS guard pilot
- contract                         [gated on manifest]
-        |                                          |
-        +--------------------+---------------------+
-                             v
-        exp3312 live Garak/DataFlip clean rerun v4
-        [gated on runtime contract + guard policy]
-                             |
-                             v
-             +---------------+---------------+
-             |                               |
-             v                               v
- exp3313 repair substrate          exp3318 FR-11 failure-targeted
- autopsy                           curriculum replay
-             |
-             v
- exp3314 distributional EBM
- repair uncertainty audit
-             |
-             v
- exp3315 VGB repair backtracking policy
-             |
-             v
- exp3316 live SOTA repair rerun v12
- [gated on clean DataFlip + audit + policy]
-             |
-             v
- exp3317 repair headline audit v2
-             |
-             v
- exp3319 evidence matrix v38 -> exp3320 capstone v306
+                         Milestone 2026.05.308
+
+   ops/conductor-log.md + .307 artifacts
+                  |
+                  v
+   Phase 0: preflight and failure manifest
+                  |
+                  v
+   +---------------------------+       +----------------------------+
+   | SOTA GGUF candidate panel |       | Cached verifier corpus     |
+   | Qwen3.6 / Gemma4 local    |       | exact labels + candidates  |
+   +-------------+-------------+       +--------------+-------------+
+                 |                                    |
+                 v                                    v
+   +---------------------------+       +----------------------------+
+   | energy descent vs AR      |       | lambda_min / effective-k   |
+   | commitment telemetry      |       | verifier diversity audit   |
+   +-------------+-------------+       +--------------+-------------+
+                 |                                    |
+                 +----------------+-------------------+
+                                  |
+                                  v
+       +--------------------------+--------------------------+
+       | monitor-anchored proposal layer                    |
+       | EBT sidecar smoke + Interwhen-style monitors +     |
+       | energy-guided candidate ranking                    |
+       +--------------------------+--------------------------+
+                                  |
+                                  v
+       +--------------------------+--------------------------+
+       | FR-11 online verifier memory                       |
+       | nonforgetting gate + rollback + reproducibility     |
+       +--------------------------+--------------------------+
+                                  |
+                                  v
+                 evidence matrix v39 + capstone v308
 ```
 
 ## Phase Plan
 
-### Phase 1 - Close .305 And Define Evidence Hygiene
+### Phase 0 - Evidence Sanitation And Activation
 
-- `exp3307` archives `.305`, opens `.306`, and records the eight remaining
-  publication blockers.
-- `exp3308` performs a root-cause autopsy of `TAUTOLOGY`, `DURATION_TOO_SHORT`,
-  and repair substrate/provenance failures without launching new model runs.
-- `exp3309` creates an executable runtime/provenance contract for live GGUF
-  artifacts: model identity, cache provenance, load timing, token counts,
-  command records, duration floor, and metric-independence checks.
+Goal: convert `.307` from a missing-upstream state into a clean `.308` queue with
+explicit failure context.
 
-### Phase 2 - DataFlip And Prompt-Injection Quality Cleanup
+- `exp3325` archives `.307` honestly and activates `.308`.
+- `exp3326` writes the preflight manifest that explains why `exp3322` and
+  `exp3323` failed, checks required specs/resources, and defines the run-ready
+  preconditions for the recovered tests.
 
-- `exp3310` creates the DataFlip/KAD challenge manifest from `.305` failures
-  and the 2025 DataFlip paper.
-- `exp3311` implements a PCFI/ARGUS-style prompt provenance guard over cached
-  challenge cases before any expensive live rerun.
-- `exp3312` reruns the live Garak/DataFlip evaluation only when the guard and
-  runtime contract are ready. This task is the milestone's primary
-  adversarial-evidence promotion gate.
+### Phase 1 - Recover The Two Existential Link Tests
 
-### Phase 3 - Repair Evidence Cleanup
+Goal: produce the missing Phase-3 evidence in smaller, conductor-runnable pieces.
 
-- `exp3313` performs a repair-substrate autopsy of the `.305` panel and audit.
-- `exp3314` adds a Distributional-EBM-inspired repair uncertainty audit sidecar
-  that separates exact constraint success, learned/proxy quality, abstention,
-  model identity, and provenance risk.
-- `exp3315` adds a verifier-guided backtracking repair policy with exact
-  acceptance authority.
-- `exp3316` reruns the 30-case SOTA repair panel under the runtime contract,
-  using the Distributional EBM sidecar and backtracking policy.
-- `exp3317` audits the rerun for headline eligibility: provenance, duration,
-  substrate consistency, confidence intervals, and false accepts.
+- `exp3327` performs a live SOTA bootstrap smoke for the energy-descent substrate.
+- `exp3328` runs the full SOTA GGUF energy-descent versus autoregressive panel,
+  gated on the bootstrap.
+- `exp3329` runs the cached verifier-ensemble diversity audit at sufficient
+  sample size for covariance claims.
+- `exp3330` writes a diversity-remediation plan only if the audit confirms
+  low lambda_min.
 
-### Phase 4 - Continuous Self-Learning And Closeout
+### Phase 2 - Literature-Propelled Prototypes
 
-- `exp3318` is the required continuous self-learning experiment. It turns
-  DataFlip misses, quality-flag root causes, and repair audit results into a
-  failure-targeted FR-11 controller-memory curriculum. It preserves raw
-  episodes, reports retention/adaptation/forgetting/negative transfer, and
-  performs no foundation weight updates.
-- `exp3319` builds evidence matrix v38 from `.306` artifacts.
-- `exp3320` closes `.306`, reports whether `paper_ready` changed, and names
-  the next top gap.
+Goal: integrate new external ideas without inflating claims.
+
+- `exp3331` adds an EBT sidecar adapter smoke against exact verifier scores.
+- `exp3332` pilots Interwhen-style monitors for intermediate candidate scoring.
+- `exp3333` tests energy-guided test-time scaling as candidate proposal/ranking
+  with exact verifier acceptance.
+
+### Phase 3 - Continuous Self-Learning And Reproducibility
+
+Goal: move FR-11 beyond static memory while packaging evidence for G2.
+
+- `exp3334` runs online verifier-memory updates with nonforgetting and rollback
+  gates.
+- `exp3335` creates the independent reproducer pack and evidence matrix v39.
+- `exp3336` writes the capstone, publication-gate status, and next-top-gap
+  decision.
+
+## Task Summary
+
+| Exp | Title | Substrate | Main deliverable |
+|---|---|---|---|
+| 3325 | Archive `.307`, activate `.308` | aggregation | `results/experiment_3325_archive_v307_activate_v308.json` |
+| 3326 | Phase-3 path preflight manifest | aggregation | `results/experiment_3326_phase3_path_preflight_manifest_v1.json` |
+| 3327 | Energy-descent substrate bootstrap | live LLM | `results/experiment_3327_energy_descent_substrate_bootstrap_v1.json` |
+| 3328 | Energy-descent vs AR SOTA panel | live LLM | `results/experiment_3328_energy_descent_vs_ar_sota_panel_v2.json` |
+| 3329 | Verifier diversity audit v2 | verifier ensemble | `results/experiment_3329_verifier_ensemble_diversity_audit_v2.json` |
+| 3330 | Diversity remediation plan | aggregation | `results/experiment_3330_verifier_diversity_remediation_plan_v1.json` |
+| 3331 | EBT sidecar adapter smoke | cached verifier | `results/experiment_3331_ebt_sidecar_adapter_smoke_v2.json` |
+| 3332 | Interwhen monitor pilot | cached verifier | `results/experiment_3332_interwhen_monitor_pilot_v1.json` |
+| 3333 | Energy-guided TT scaling ablation | live LLM | `results/experiment_3333_energy_guided_ttscaling_sota_ablation_v1.json` |
+| 3334 | FR-11 online memory nonforgetting | cached verifier | `results/experiment_3334_fr11_online_verifier_memory_nonforgetting_v4.json` |
+| 3335 | Reproducer pack and matrix v39 | aggregation | `results/experiment_3335_reproducer_pack_and_evidence_matrix_v39.json` |
+| 3336 | Capstone v308 | aggregation | `results/experiment_3336_capstone_v308.json` |
 
 ## Dependency Graph
 
 ```text
-exp3307
-  -> exp3308
-      -> exp3309 [gate: quality_flag_autopsy_ready == true]
+exp3325
+  -> exp3326
+      -> exp3327
+          -> exp3328
+      -> exp3329
+          -> exp3330 (structured gate: lambda_min_sigma <= 0.1)
 
-exp3307
-  -> exp3310
-      -> exp3311 [gate: dataflip_manifest_ready == true]
-
-exp3309.runtime_contract_ready == true
-  + exp3311.dataflip_guard_policy_ready == true
-      -> exp3312
-
-exp3307
-  -> exp3313
-      -> exp3314 [gate: repair_substrate_autopsy_ready == true]
-          -> exp3316 [gate: distributional_repair_audit_ready == true]
-      -> exp3315
-          -> exp3316 [gate: vgb_repair_policy_ready == true]
-
-exp3312.dataflip_gate_passed == true
-  + exp3312.quality_flags_cleared == true
-  + exp3309.runtime_contract_ready == true
-  + exp3314.distributional_repair_audit_ready == true
-  + exp3315.vgb_repair_policy_ready == true
-      -> exp3316
-          -> exp3317 [gate: repair_rerun_v12_ready == true]
-
-exp3312.garak_dataflip_eval_v4_ready == true
-  + exp3317.repair_headline_evidence_audit_v2_ready == true
-      -> exp3318
-
-exp3312.garak_dataflip_eval_v4_ready == true
-  + exp3317.repair_headline_evidence_audit_v2_ready == true
-  + exp3318.fr11_failure_targeted_curriculum_ready == true
-      -> exp3319
-          -> exp3320 [gate: matrix_v38_ready == true]
+exp3331 reads exp3326/3329 when available but is not hard-gated.
+exp3332 reads exp3329 when available but is not hard-gated.
+exp3333 reads exp3328/3329 when available but is not hard-gated.
+exp3334 reads any clean .308 upstreams plus stable .305-.306 cached evidence.
+exp3335 aggregates all available .308 artifacts.
+exp3336 aggregates all available .308 artifacts and records blocked states honestly.
 ```
+
+Only `exp3328` and `exp3330` use conductor `gated_on` fields:
+
+- `exp3328` runs only if `exp3327.energy_descent_bootstrap_ready == true`.
+- `exp3330` runs only if `exp3329.lambda_min_sigma <= 0.1`.
+
+The capstone is deliberately ungated so the milestone always emits a terminal
+artifact even if an upstream task blocks.
 
 ## Hardware Requirements
 
-- **Dual RTX 3090 local host:** Required for `exp3312` and `exp3316`. These
-  tasks must check `nvidia-smi`, selected-Python CUDA visibility, llama.cpp or
-  GGUF runtime identity, model IDs, GPU memory, generated tokens, wall-clock
-  duration, and cache provenance. They must include the mandated SOTA GGUF
-  model specs.
-- **CPU-only path:** Acceptable for archive, autopsy, manifest, guard pilot,
-  runtime contract, repair policy, FR-11 controller-memory replay, evidence
-  matrix, and capstone tasks.
-- **Network/package access:** Not required as a blocker. If a task needs a
-  package or model that is unavailable, it must write a blocked artifact with
-  exact command, environment, and stderr summaries.
-- **KV260/GateMate/PolarFire:** Out of scope for `.306` execution. The FR-11
-  task must name a hardware path but should not claim FPGA measurements.
-- **THRML/Extropic/Kona:** Watch-list only for `.306`. No TSU, Kona, D-Wave, or
-  proprietary thermodynamic hardware access claim is allowed.
+| Requirement | Tasks | Status and rule |
+|---|---|---|
+| Dual RTX 3090 local GGUF runtime | 3327, 3328, 3333 | Required for live SOTA panels. Use `cached_sota_pair()` and write blocked artifacts if cache/GPU checks fail. |
+| CPU/JAX verifier scoring | 3329, 3331, 3332, 3334 | Required. Claims must include sample size, random seed, checksum, and timing. |
+| KV260 / GateMate / PolarFire | none as required | Mention only as future hardware path. No latency/speedup claim in `.308` without board transcripts. |
+| Extropic TSU / Kona hardware | none | Literature/architecture reference only. No local hardware claim. |
 
-## Experiment Queue
+## Evidence And Artifact Rules
 
-| ID | Title | Primary Deliverable | Phase |
-| --- | --- | --- | --- |
-| `exp3307` | Close .305 ledger and open .306 quality-cleanup queue | `results/experiment_3307_archive_v305_activate_v306.json` | 1 |
-| `exp3308` | Quality-flag root-cause autopsy v1 | `results/experiment_3308_quality_flag_root_cause_autopsy_v1.json` | 1 |
-| `exp3309` | Live runtime provenance contract v1 | `results/experiment_3309_live_runtime_provenance_contract_v1.json` | 1 |
-| `exp3310` | DataFlip/KAD challenge manifest v1 | `results/experiment_3310_dataflip_kad_challenge_manifest_v1.json` | 2 |
-| `exp3311` | PCFI/ARGUS DataFlip guard pilot v1 | `results/experiment_3311_pcfi_argus_dataflip_guard_pilot_v1.json` | 2 |
-| `exp3312` | Gated DataFlip/Garak quality-clean rerun v4 | `results/experiment_3312_dataflip_garak_quality_clean_rerun_v4.json` | 2 |
-| `exp3313` | Repair substrate root-cause autopsy v1 | `results/experiment_3313_repair_substrate_root_cause_autopsy_v1.json` | 3 |
-| `exp3314` | Distributional EBM repair uncertainty audit v1 | `results/experiment_3314_distributional_ebm_repair_uncertainty_audit_v1.json` | 3 |
-| `exp3315` | VGB repair backtracking policy v1 | `results/experiment_3315_vgb_backtracking_repair_policy_v1.json` | 3 |
-| `exp3316` | Gated SOTA repair rerun v12 runtime-clean | `results/experiment_3316_sota_repair_rerun_v12_runtime_clean.json` | 3 |
-| `exp3317` | Repair headline evidence audit v2 | `results/experiment_3317_repair_headline_evidence_audit_v2.json` | 3 |
-| `exp3318` | FR-11 failure-targeted curriculum replay v3 | `results/experiment_3318_fr11_failure_targeted_curriculum_replay_v3.json` | 4 |
-| `exp3319` | Evidence matrix v38 | `results/experiment_3319_evidence_matrix_v38.json` | 4 |
-| `exp3320` | Capstone v306 | `results/experiment_3320_capstone_v306.json` | 4 |
+Every task artifact must include:
 
-## Done Criteria
+- `honest_verdict` with a prefix such as `complete:`, `success:`,
+  `blocked:`, or `failed:`.
+- `inference_substrate`.
+- `random_seed`.
+- `reproducibility_checksum`.
+- `duration_s`.
+- Deliverable-specific readiness booleans, for example
+  `energy_descent_bootstrap_ready`, `energy_descent_vs_ar_panel_v2_ready`,
+  `verifier_diversity_audit_v2_ready`, and `fr11_nonforgetting_ready`.
 
-- Garak/DataFlip has a clean v4 artifact: `garak_gate_passed=true`,
-  `dataflip_gate_passed=true`, `quality_flags_cleared=true`,
-  `runtime_provenance_clean=true`, and no current critical adversarial
-  verification flags.
-- The DataFlip defense is based on prompt provenance/priority and KAD
-  transformations, not just output-only refusal scoring.
-- Repair evidence is headline-eligible only if the rerun has clean runtime
-  provenance, substrate consistency, confidence intervals, zero false accepts,
-  and a passing audit.
-- FR-11 replay uses a failure-targeted curriculum from `.306` artifacts,
-  preserves raw traces, reports retention/adaptation/forgetting/negative
-  transfer, and keeps the controller-memory-only boundary.
-- `research-roadmap.yaml` and `scripts/research_conductor.py` remain untouched
-  by planning.
+Statistical claims must satisfy CLAUDE.md sample-size rigor. In particular,
+covariance/eigenvalue claims should use at least 1000 scored cases or state that
+they are diagnostic-only. Live accuracy deltas should avoid exact-1.0 language
+unless the artifact records the exact methodology and confidence interval.
+
+## Exit Criteria
+
+Milestone `.308` is successful if it produces:
+
+1. A conductor-runnable explanation and recovery of the missing `.307` upstreams.
+2. Either a clean `exp3328` energy-descent versus AR verdict or a blocked artifact
+   whose root cause is narrower than the `.307` CLI failure.
+3. A clean `exp3329` verifier-diversity/lambda_min verdict or an actionable
+   remediation plan.
+4. At least one completed FR-11 continuous self-learning artifact with a
+   nonforgetting/rollback gate.
+5. A terminal capstone stating the publication-gate status and next top gap.
+
+## Non-Goals
+
+- No claim that Carnot has reached Kona parity.
+- No claim that EBT sidecars are a production foundation-model replacement.
+- No prompt-injection KAN replacement headline.
+- No hardware latency or speedup claim without measured hardware transcripts.
+- No modification to `research-roadmap.yaml` or `scripts/research_conductor.py`.
