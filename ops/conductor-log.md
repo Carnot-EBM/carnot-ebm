@@ -6855,3 +6855,4 @@ web search: https://docs.garak.ai/garak/examples/pr |
 | 2026-05-29 16:25 UTC | Continuous learning stress test: 5-session curricu | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp3357-fr11-logicvault-belief-states.stat |
 | 2026-05-29 16:27 UTC | Continuous learning stress test: 5-session curricu | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp3357-fr11-logicvault-belief-states.stat |
 | 2026-05-29 16:29 UTC | Capstone v310: Hardware latency, Energy-descent ga | GATE_BLOCK | 2 of 2 gate(s) failed; first failure: exp3350-kv260-hardware-latency-benchmark.s |
+| 2026-05-29 16:31 UTC | Capstone v310: Hardware latency, Energy-descent ga | GATE_BLOCK | 2 of 2 gate(s) failed; first failure: exp3350-kv260-hardware-latency-benchmark.s |
