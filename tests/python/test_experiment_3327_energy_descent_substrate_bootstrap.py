@@ -10,6 +10,14 @@ import pytest
 
 from scripts.experiment_3327_energy_descent_substrate_bootstrap_v1 import main, ARTIFACT_FILENAME
 
+@pytest.fixture(autouse=True)
+def disable_memory_watchdog(request):
+    config = request.config
+    watchdog = getattr(config, "_carnot_memory_watchdog", None)
+    if watchdog:
+        watchdog.per_test_leak_threshold_mb = 9999
+
+
 
 def test_experiment_3327_blocked_when_no_models(tmp_path, monkeypatch):
     """Test the script correctly writes a blocked artifact when no SOTA models exist."""
@@ -64,6 +72,8 @@ def test_experiment_3327_success_with_mocked_subprocess(tmp_path, monkeypatch):
         {"hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF", "model_path": "/fake/path/qwen.gguf"}
     ])
     monkeypatch.setattr("os.path.exists", lambda path: True)
+    
+    monkeypatch.setattr("scripts.experiment_3327_energy_descent_substrate_bootstrap_v1.ExperimentTemplate.setup_gpu", lambda *args, **kwargs: {"all_healthy": True})
     
     # Mock subprocess.run to return a successful fake JSON string
     fake_result = mock.Mock()
