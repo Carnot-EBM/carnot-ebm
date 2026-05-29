@@ -14224,3 +14224,71 @@ model/Garak/repair execution, and an `honest_verdict` beginning with
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-REPORT-3306 | Implemented (`python/carnot/reporting/capstone_v305_3306.py`) | Implemented (`tests/python/test_experiment_3306_capstone_v305.py`) |
+
+### REQ-REPORT-3307: Archive V305 And Activate V306 Handoff
+
+The repository shall provide an Exp 3307 milestone-boundary handoff workflow
+that writes `results/experiment_3307_archive_v305_activate_v306.json` by
+reading the Exp 3306 `.305` capstone, Exp 3305 evidence matrix v37,
+`ops/conductor-log.md`, `research-complete.yaml`, the active
+`research-roadmap.yaml`, and the staged `.306` roadmap context when available.
+The workflow MUST be aggregation only. It MUST NOT run model inference, CUDA
+probes, teacher labeling, KAN training, Garak, DataFlip, repair, verifier
+scoring, FR-11 updates, hardware commands, the conductor, pushes, submit
+externally, modify `research-roadmap.yaml`, modify
+`scripts/research_conductor.py`, or reconcile `ops/status.md`,
+`ops/changelog.md`, or `_bmad/traceability.md` when the conductor delegates
+reconciliation to a separate step.
+
+The workflow SHALL append a completed `2026.05.305` milestone entry to
+`research-complete.yaml` only when that archive entry is missing. If the entry
+is already present, the workflow SHALL leave the archive byte-for-byte
+unchanged. The workflow SHALL record conductor-log terminal evidence for Exp
+3294 through Exp 3306 and SHALL verify that the active roadmap is
+`2026.05.306` without editing it. Protected files SHALL be checked by
+before/after checksums so pre-existing staged roadmap activation does not get
+misreported as an edit by this handoff.
+
+The terminal artifact MUST include `archive_v305_activate_v306_ready`,
+`v305_closed_v306_opened`, `source_milestone`, `target_milestone`,
+`publication_blocker_count`, `inherited_top_gap`,
+`protected_files_unchanged`, and `honest_verdict`. It SHALL also include the
+terminal `.305` blockers inherited by `.306`: DataFlip failure, current
+critical quality flags, repair-headline provenance/substrate failure, and
+FR-11 controller-memory safety. `v305_closed_v306_opened` MUST be true only
+when the `.305` capstone and matrix are ready, `.305` is archived, `.306` is
+active, the protected files are unchanged during the handoff, the publication
+blocker count remains eight, the inherited top gap is
+`clear_garak_dataflip_and_quality_flags`, DataFlip remains failed, repair
+headline promotion remains disallowed, and FR-11 controller-memory replay
+remains safe. `honest_verdict` MUST begin with one of `complete:`,
+`success:`, `passed:`, or `shipped:`.
+
+#### SCENARIO-REPORT-3307: V305 Archive Opens DataFlip Quality-Cleanup V306 Queue
+
+**Given** Exp 3306 reports `capstone_v305_ready=true`, `paper_ready=false`,
+`publication_blocker_count=8`, `garak_gate_passed=true`,
+`garak_attack_success_rate=0.0`, `repair_headline_claim_allowed=false`,
+`fr11_memory_replay_safe=true`, and
+`next_top_gap=clear_garak_dataflip_and_quality_flags`
+**And** matrix v37 reports `matrix_v37_ready=true`,
+`dataflip_gate_passed=false`, current critical quality flags on the Garak and
+repair rows, repair headline provenance/substrate blockers, and safe
+controller-memory-only FR-11 replay
+**And** `research-complete.yaml` already contains completed `2026.05.305`
+tasks for Exp 3294 through Exp 3306
+**And** `research-roadmap.yaml` is active for `2026.05.306`
+**When** the Exp 3307 handoff workflow runs
+**Then** it writes `results/experiment_3307_archive_v305_activate_v306.json`
+with all required schema fields, leaves the archive and protected files
+unchanged, records `.305` terminal evidence from the capstone, matrix, and
+conductor log, explains that `.306` starts from DataFlip failure, quality
+flags, repair headline provenance failure, and FR-11 controller-memory safety,
+and emits an `honest_verdict` beginning with `complete:` without claiming
+publication readiness.
+
+## Implementation Status (REQ-REPORT-3307)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-3307 | Implemented (`python/carnot/reporting/archive_v305_activate_v306_3307.py`) | Implemented (`tests/python/test_experiment_3307_archive_v305_activate_v306.py`) |

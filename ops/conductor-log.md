@@ -6674,3 +6674,5 @@ web search: https://docs.garak.ai/garak/examples/pr |
 | 2026-05-29 01:02 UTC | FR-11 red-team and repair memory replay v2 | OK | 81 passed in 3.31s |
 | 2026-05-29 01:17 UTC | Evidence matrix v37 | OK | 81 passed in 3.19s |
 | 2026-05-29 01:30 UTC | Capstone v305 | OK | 81 passed in 3.38s |
+| 2026-05-29 02:06 UTC | Plan milestone 2026.05.306 | OK | 14 tasks proposed |
+| 2026-05-29 02:08 UTC | Milestone 2026.05.306 activated | OK | 14 tasks queued |
