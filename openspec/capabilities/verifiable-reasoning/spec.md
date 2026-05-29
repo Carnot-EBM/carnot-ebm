@@ -19722,3 +19722,15 @@ The system shall support a verifier diversity remediation plan that:
 - Explicitly avoids retired strategies such as diversity-maximizing greedy selection.
 - Establishes acceptance criteria for subsequent re-audits.
 
+### REQ-VERIFY-3342: Monitor/Provenance Verifier Axis
+
+The system shall provide an Exp 3342 cached, batchable verifier axis that evaluates
+provenance-integrity, structured-output parse validity, commitment consistency,
+or trajectory-derived features over cached candidates.
+The axis shall:
+- Avoid live LLM calls, using only cached candidate artifacts.
+- Be evaluated against existing exact, symbolic, or model verifier columns from Exp 3329.
+- Provide a summary of axis coverage, max duplication correlation, and readiness.
+- Emit a deliverable artifact in `results/experiment_3342_monitor_provenance_verifier_axis_v1.json` with required provenance fields (e.g., honest_verdict, inference_substrate, duration_s, random_seed) and axis metrics (axis_name, axis_coverage, monitor_provenance_axis_ready, etc.).
+
+
