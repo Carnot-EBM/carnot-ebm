@@ -6931,3 +6931,4 @@ web search: https://docs.garak.ai/garak/examples/pr |
 | 2026-05-29 19:18 UTC | Milestone 2026.05.311 activated | OK | 10 tasks queued |
 | 2026-05-29 19:26 UTC | KV260 SSH and Network Recovery | OK | 81 passed in 3.74s |
 | 2026-05-29 19:35 UTC | GateMate AXI/UIO Interface Implementation | OK | 81 passed in 3.45s |
+| 2026-05-29 19:46 UTC | Refactor VGB repair ladder and LogicVault for gate | OK | 81 passed in 3.66s |
