@@ -6688,3 +6688,6 @@ web search: https://docs.garak.ai/garak/examples/pr |
 | 2026-05-29 04:55 UTC | Gated SOTA repair rerun v12 runtime-clean | OK | 81 passed in 3.31s |
 | 2026-05-29 04:57 UTC | Repair headline evidence audit v2 | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp3316-gated-sota-repair-rerun-v12-runtim |
 | 2026-05-29 04:59 UTC | Repair headline evidence audit v2 | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp3316-gated-sota-repair-rerun-v12-runtim |
+| 2026-05-29 05:01 UTC | Repair headline evidence audit v2 | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp3316-gated-sota-repair-rerun-v12-runtim |
+| 2026-05-29 05:03 UTC | FR-11 failure-targeted curriculum replay v3 | GATE_BLOCK | Pre-emptive skip: upstream retired (exp3317-repair-headline-evidence-audit-v2) |
+| 2026-05-29 05:03 UTC | Evidence matrix v38 | GATE_BLOCK | Pre-emptive skip: upstream retired (exp3317-repair-headline-evidence-audit-v2) |
