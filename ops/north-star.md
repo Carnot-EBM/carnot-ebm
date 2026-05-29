@@ -32,17 +32,36 @@ Source: exp2837 (dual-condition rescue), confirmed in capstone exp2948.
 Status: live-GPU, adequate n, 5-seed, adversarial-verify clean, not
 contradicted by any later experiment, not on the retraction list.
 
-### Product headline (most compelling, NEEDS PRIMARY-ARTIFACT CONFIRMATION)
-> **Carnot's verify-repair loop lifts HumanEval pass-rate from 8% to 80%
-> (IterativeSelfRepair, n=50) and recovers 0%→36% pass@1 on a code-repair
-> cohort (n=50), on live dual-RTX-3090 inference.**
+### Product headline — DEMOTED 2026-05-29: prose numbers do NOT trace to artifacts (G4 catch)
 
-Source: technical-report trajectory prose citing exp227 + IterativeSelfRepair.
-**ACTION REQUIRED before this becomes the headline:** these numbers are
-currently quoted from prose. Confirm each against its primary artifact
-(`results/experiment_227_*.json` etc.) with `random_seed` +
-`reproducibility_checksum` present, per Adversarial Artifact Verification
-discipline. Until confirmed, the FoVer methods headline above is THE claim.
+The originally-drafted product headline ("HumanEval 8%→80%", "0%→36% pass@1")
+was reconstructed from the technical-report *trajectory prose*. G4 verification
+against primary artifacts (2026-05-29) **refuted it**:
+
+- `results/experiment_227_results.json` (the cited source): n=30, model
+  Qwen3.5-0.8B (CPU-smoke tier, not 35B), baseline pass@1 0.233 →
+  verify_repair pass@1 **0.233**, **improvement delta = 0.0, n_repaired = 0**.
+- `results/experiment_226_results.json` (Gemma4-E4B-it, 164q): baseline 11.6%,
+  verify_only *degrades* to 5.5%.
+- Recent full-ensemble HumanEval evals (exp2830/2838) were CUDA/GGUF-blocked
+  (AUROC None, 0 labeled candidates) — no numbers.
+
+**No artifact supports "8%→80%" or "0%→36%". Baselines are 11–66%, never 0%.**
+The technical-report trajectory paragraph overstates the code-repair result.
+
+The **genuine surviving** positive code results (more modest, differently
+framed, still need full n + seed + checksum confirmation before headlining):
+- exp1999 (code_verification_humaneval): baseline 0.66 → repair **0.84** (+18pp)
+- exp2090 (CRANE constrained decoding, n=50): rigid 0.70 → CRANE **0.85** (+15pp)
+
+Until those are fully provenance-confirmed, **the FoVer methods headline
+(0.9131) is the SOLE defensible headline.** Do not cite the 8%→80% / 0%→36%
+numbers anywhere.
+
+**OPERATOR ACTION (technical report is operator-curated — flagged, not
+auto-edited):** correct the technical-report trajectory paragraph to replace
+"8%→80%"/"0%→36%"/"+3.0pp" with the real exp1999/exp2090 numbers, or remove
+the code-repair claim until a clean live-GPU full-HumanEval repair run lands.
 
 ### The rule
 Every milestone either advances the headline claim (tightens the CI, raises
@@ -68,7 +87,7 @@ show progress; redefining the gate is the failure mode this replaces.**
 | **G1 — Headline measured** | The headline claim's metric, on a NAMED FROZEN eval set, replicated ≥5 seeds, CI reported, live-GPU, adversarial-verify clean | ✅ MET (FoVer 0.9131, exp2837) |
 | **G2 — Independently reproduced** | ≥1 reproducer who is not the operator re-runs the headline experiment and lands within the CI | ❌ UNMET (external) |
 | **G3 — Prose is narrowing-clean** | Paper draft states ONLY surviving claims; passes a narrowing lint; zero retracted phrasings | ❌ UNMET (no narrowing lint exists yet) |
-| **G4 — Numbers trace to primary artifacts** | Every headline number resolves to a `results/experiment_*.json` carrying `random_seed` + `reproducibility_checksum` (not prose) | ⚠️ PARTIAL (FoVer yes; product numbers prose-only) |
+| **G4 — Numbers trace to primary artifacts** | Every headline number resolves to a `results/experiment_*.json` carrying `random_seed` + `reproducibility_checksum` (not prose) | ⚠️ PARTIAL — FoVer ✅; **product numbers FAILED G4 2026-05-29** (cited exp227 shows delta=0.0; "8%→80%"/"0%→36%" trace to no artifact — demoted, see §1) |
 
 `paper_ready := G1 ∧ G2 ∧ G3 ∧ G4`. The capstone should report **which of
 G1–G4 are unmet**, not a count. Three of four gates are now well-defined and
