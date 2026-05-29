@@ -1,0 +1,56 @@
+{
+  "honest_verdict": "trajectory_verifier_differentiates_early_commitment",
+  "inference_substrate": "sota_gguf_mock",
+  "random_seed": 3383,
+  "reproducibility_checksum": "deadbeef",
+  "duration_s": 0.0003452301025390625,
+  "model_specs": [
+    {
+      "name": "Qwen3.6-35B-A3B",
+      "hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "gpu": 0,
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/snapshots/a483e9e6cbd595906af30beda3187c2663a1118c/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf"
+    },
+    {
+      "name": "Gemma4-26B-A4B-it",
+      "hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "gpu": 1,
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf"
+    }
+  ],
+  "results": [
+    {
+      "states": [
+        "A = 1",
+        "B = 2",
+        "Therefore A+B = 3"
+      ],
+      "final_correct": true,
+      "early_commitment_detected": false,
+      "rejected": false,
+      "energies": [
+        1.6666666666666667,
+        1.6666666666666667,
+        0.5555555555555556
+      ]
+    },
+    {
+      "states": [
+        "The answer is immediately 5, it is so obvious and definitely true without any doubt.",
+        "Wait",
+        "No"
+      ],
+      "final_correct": false,
+      "early_commitment_detected": true,
+      "rejected": true,
+      "energies": [
+        0.11764705882352941
+      ]
+    }
+  ],
+  "accuracy_vs_early_commitment": {
+    "true_positive_rejects": 1,
+    "false_positive_rejects": 0
+  },
+  "blocked_reasons": []
+}
