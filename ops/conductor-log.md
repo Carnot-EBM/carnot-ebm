@@ -6788,3 +6788,4 @@ web search: https://docs.garak.ai/garak/examples/pr |
 | 2026-05-29 09:45 UTC | Energy-descent versus autoregressive SOTA panel v2 | GATE_BLOCK | Pre-emptive skip: upstream retired (exp3327-energy-descent-substrate-bootstrap-v |
 | 2026-05-29 09:45 UTC | Verifier diversity remediation plan (gated on exp3 | FAIL | Codex CLI error: ERROR: {"type":"error","status":400,"error":{"type":"invalid |
 | 2026-05-29 09:47 UTC | Energy-descent versus autoregressive SOTA panel v2 | GATE_BLOCK | Pre-emptive skip: upstream retired (exp3327-energy-descent-substrate-bootstrap-v |
+| 2026-05-29 09:47 UTC | Verifier diversity remediation plan (gated on exp3 | FAIL | Codex CLI error: ERROR: {"type":"error","status":400,"error":{"type":"invalid |
