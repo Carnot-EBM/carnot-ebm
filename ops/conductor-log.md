@@ -6839,3 +6839,4 @@ web search: https://docs.garak.ai/garak/examples/pr |
 | 2026-05-29 15:03 UTC | Deterministic prefix-closed bounds pilot for live  | OK | 81 passed in 3.07s |
 | 2026-05-29 15:05 UTC | Milestone 2026.05.310 re-activated (outer-loop: operator_override now clears doomed-rerun guard; fail-window reset for exp3350/3351/3352) | OK | fail-count reset |
 | 2026-05-29 15:13 UTC | KV260 board-local Ising sampling latency benchmark | OK | 81 passed in 3.19s |
+| 2026-05-29 15:20 UTC | GateMate A1-EVB-2M board-local n16 latency benchma | OK | 81 passed in 2.69s |
