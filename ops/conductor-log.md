@@ -6800,3 +6800,5 @@ web search: https://docs.garak.ai/garak/examples/pr |
 | 2026-05-29 10:43 UTC | Milestone .308 capstone and next-gap decision | FAIL | Codex CLI error: ERROR: {"type":"error","status":400,"error":{"type":"invalid |
 | 2026-05-29 10:45 UTC | Milestone .308 capstone and next-gap decision | FAIL | Codex CLI error: ERROR: {"type":"error","status":400,"error":{"type":"invalid |
 | 2026-05-29 10:47 UTC | Milestone .308 capstone and next-gap decision | FAIL | Codex CLI error: ERROR: {"type":"error","status":400,"error":{"type":"invalid |
+| 2026-05-29 11:27 UTC | Plan milestone 2026.05.309 | OK | 13 tasks proposed |
+| 2026-05-29 11:29 UTC | Milestone 2026.05.309 activated | OK | 13 tasks queued |
