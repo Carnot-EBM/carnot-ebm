@@ -7726,3 +7726,4 @@ ModuleNotFoundError: No module named 'torch'; results/experiment_2828_fover_memo
 - 2026-05-29: EBT sidecar adapter smoke against exact verifier scores (✅ Complete) — honest_verdict=sidecar_ready; results/experiment_3331_ebt_sidecar_adapter_smoke_v2.json
 - 2026-05-29: Interwhen-style monitor pilot for intermediate candidate scoring (⚠️ Research Finding) — honest_verdict=monitor_pilot_provides_useful_trajectory_signal; results/experiment_3332_interwhen_monitor_pilot_v1.json
 - 2026-05-29: Energy-guided test-time scaling SOTA ablation under exact verifier authority (⚠️ Research Finding) — honest_verdict=ttscaling_evaluated; results/experiment_3333_energy_guided_ttscaling_sota_ablation_v1.json
+- 2026-05-29: FR-11 online verifier memory nonforgetting v4 (✅ Complete) — honest_verdict=complete: online verifier memory nonforgetting confirmed; results/experiment_3334_fr11_online_verifier_memory_nonforgetting_v4.json
