@@ -1,845 +1,259 @@
-milestone: "2026.05.306"
-milestone_title: "DataFlip + Quality-Flag Cleanup For Publication-Ready Evidence"
+milestone: "2026.05.307"
+milestone_title: "Phase-3 Path De-Risking — the two existential link tests"
 milestone_doc: "openspec/change-proposals/research-roadmap-vNEXT.md"
+milestone_provenance: "Pre-staged 2026-05-29 by outer-loop session (Opus 4.8) per CLAUDE.md Pre-Staged Roadmap Convention, on operator directive, to GUARANTEE the two existential Phase-3 link tests run next milestone rather than waiting for the overdue-priority forcing function. These two experiments (P0.1 energy-descent-vs-AR, P0.2 verifier-diversity-audit) were the conclusion of the 2026-05-29 architecture review: they test whether the Phase-1 foundation composes toward the Kona endgame. Their de-risking predecessors were queued at .82/.83 and .94-.97 and never run; the loop spent 200+ milestones re-measuring Phase 1 instead. This milestone deliberately preempts Phase-1 re-measurement. Full task specs + rationale in ops/known-issues.md 'PHASE-3 PATH DE-RISKING ROADMAP' and ops/north-star.md."
+
+operator_override:
+  authorization: "Operator directive 2026-05-29 (conversation): pre-stage .307 with the two Phase-3 path de-risking experiments to guarantee execution; defer the aging non-path-de-risking priorities below to .308+."
+  deferred_priorities:
+    - slug: verifier_ensemble_multi_axis_composition_v1
+      rationale: "Related verifier-robustness work; P0.2 (lambda_min diversity audit) is the more fundamental version and runs this milestone. Multi-axis composition graduates to .308+ after the diversity keystone is measured."
+    - slug: verifier_ensemble_multi_violation_degradation_curve_v1
+      rationale: "Sibling of multi-axis; same dependency on the diversity-audit result. Deferred to .308+."
+    - slug: gatemate_n16_flash_timing_smoke_v3
+      rationale: "Operator-side hardware action (board flash). Not a path-de-risking experiment; deferred."
+    - slug: gatemate_a1_n16_ising_tile_bitstream_build_v2
+      rationale: "Operator-side gatemate toolchain action. Deferred."
+    - slug: kv260_mmd_vs_cpu_sequential_gibbs_v1
+      rationale: "Operator-side KV260 board measurement. Deferred."
+    - slug: aquaforte_beaver_pipeline_honest_substrate_corrigendum_v1
+      rationale: "Paper-prep corrigendum; queued behind the path-de-risking critical path. Deferred to .308+."
+
 tasks:
-  - id: exp3307-archive-v305-activate-v306
-    milestone: "2026.05.306"
-    deliverable: results/experiment_3307_archive_v305_activate_v306.json
-    title: "Close .305 ledger and open .306 quality-cleanup queue"
+
+  - id: exp3321-archive-v306-activate-v307
+    milestone: "2026.05.307"
+    deliverable: "results/experiment_3321_archive_v306_activate_v307.json"
+    title: "Archive .306 closeout and activate .307 planning authority"
     priority: critical
-    requires_gpu: false
     max_turns: 20
-    estimated_wall_time_min: 20
+    estimated_wall_time_min: 10
+    track: "ops"
+    inference_substrate: "artifact_aggregation_only"
+    requires_gpu: false
     prior_failures:
-      - experiment_id: exp3294-archive-v304-activate-v305
-        verdict: "complete: v304_closed_v305_opened=true"
-        addressed_by: "This is the next milestone-boundary handoff, with a different source milestone (.305) and different target milestone (.306). It archives completed .305 evidence before opening the DataFlip and quality-flag cleanup queue."
-        retire_if_same_verdict: true
-      - experiment_id: exp3306-capstone-v305
-        verdict: "complete: capstone_v305_ready=true; paper_ready=false; publication_blocker_count=8; blocker_delta_from_v304=-2; garak_gate_passed=true; garak_attack_success_rate=0.0; repair_headline_claim_allowed=false; fr11_memory_replay_safe=true; kan_headline_retired=true; next_top_gap=clear_garak_dataflip_and_quality_flags"
-        addressed_by: "This task does not rerun the capstone; it uses the .305 capstone as the source closeout and opens a new milestone targeting the named next_top_gap."
-        retire_if_same_verdict: true
+      - experiment_id: exp3260-archive-v301-activate-v302
+        verdict: "complete: archive cycle (standard recurring milestone-boundary handoff)"
+        addressed_by: "Standard recurring handoff. The matched prior 'failures' are previous archive cycles, all of which completed successfully. Not a retry of a failure; the next iteration of the standard transition."
+        retire_if_same_verdict: false
     prompt: |
       CONTEXT
       Project root placeholder: {project_root}. Run date placeholder: {date}.
-      Milestone .305 is complete. The authoritative closeout is results/experiment_3306_capstone_v305.json: paper_ready=false, publication_blocker_count=8, garak_gate_passed=true, garak_attack_success_rate=0.0, dataflip_gate_passed=false in the upstream matrix, repair_headline_claim_allowed=false, fr11_memory_replay_safe=true, and next_top_gap=clear_garak_dataflip_and_quality_flags.
-
-      EXISTING CODE TO READ FIRST
-      - CLAUDE.md
-      - CODEX.md
-      - research-roadmap-next.yaml
-      - openspec/change-proposals/research-roadmap-vNEXT.md
-      - results/experiment_3306_capstone_v305.json
-      - results/experiment_3305_evidence_matrix_v37.json
-      - ops/conductor-log.md
-      - research-complete.yaml
-
-      TASK
-      Archive .305 into research-complete.yaml if it is not already present, record the terminal .305 blockers, and emit a machine-readable .306 activation artifact.
+      Standard milestone-boundary handoff: archive .306's completed artifacts
+      into research-complete.yaml and emit the .307 activation manifest.
 
       CONCRETE STEPS
-      1. Read the .305 capstone, evidence matrix, and conductor log rows for exp3294 through exp3306.
-      2. Append a .305 milestone entry to research-complete.yaml only if it is missing.
-      3. Record that .306 starts from DataFlip failure, current quality flags, repair headline provenance failure, and FR-11 controller-memory safety.
-      4. Confirm protected files were not modified: research-roadmap.yaml and scripts/research_conductor.py.
+      1. Read .306's capstone and operational retrospective.
+      2. Append .306's task summary to research-complete.yaml.
+      3. Emit the activation manifest artifact.
 
       REQUIRED ARTIFACT FIELDS:
-      - archive_v305_activate_v306_ready
-      - v305_closed_v306_opened
-      - source_milestone
-      - target_milestone
-      - publication_blocker_count
-      - inherited_top_gap
-      - protected_files_unchanged
-      - honest_verdict
+      - archive_v306_activate_v307_ready: bool (principle: milestone handoff must be machine-readable)
+      - prior_paper_ready: bool (principle: carry the .306 publication-readiness signal)
+      - prior_publication_blocker_count: int (principle: legacy field; see ops/north-star.md for the G1-G4 successor)
+      - random_seed: int
+      - reproducibility_checksum: str
+      - duration_s: float
+      - honest_verdict: str (principle: must start with complete:/success:/passed:/shipped_)
 
-      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
-
-  - id: exp3308-quality-flag-root-cause-autopsy-v1
-    milestone: "2026.05.306"
-    deliverable: results/experiment_3308_quality_flag_root_cause_autopsy_v1.json
-    title: "Quality-flag root-cause autopsy v1"
+  - id: exp3322-energy-descent-vs-autoregressive-premise-v1
+    milestone: "2026.05.307"
+    deliverable: "results/experiment_3322_energy_descent_vs_autoregressive_premise_v1.json"
+    title: "Energy-Descent Reasoning vs Autoregressive Baseline — the Kona premise test"
     priority: critical
-    requires_gpu: false
-    max_turns: 30
-    estimated_wall_time_min: 30
-    prior_failures:
-      - experiment_id: exp3300-full-garak-dataflip-gate-rerun-v3
-        verdict: "complete: garak_redteam_eval_v3_ready=true; garak_gate_passed=true; dataflip_gate_passed=false; attack_success_rate=0.000000; error_count=0"
-        addressed_by: "This task is an autopsy only: it explains DataFlip failure and current quality flags before any rerun, rather than repeating the same live evaluation."
-        retire_if_same_verdict: true
-      - experiment_id: exp3302-headline-sota-repair-panel-v11
-        verdict: "complete: repair_panel_ran=true; headline_repair_panel_ready=true; panel_case_count=30; verified_success_count=27; false_accept_count=0; abstention_count=0; headline_claim_allowed=false"
-        addressed_by: "This task traces why the panel could not be promoted, focusing on quality/provenance blockers instead of rerunning the panel."
-        retire_if_same_verdict: true
-      - experiment_id: exp3303-repair-headline-evidence-audit-v1
-        verdict: "complete: repair_headline_evidence_audit_ready=true; headline_claim_allowed_after_audit=false; panel_case_count=30; exact_successes_audited=27; false_accept_count=0; adversarial_verify_flags=1"
-        addressed_by: "This task converts the audit's blocking flags into explicit rerun requirements for .306."
-        retire_if_same_verdict: true
-    prompt: |
-      CONTEXT
-      Project root placeholder: {project_root}. Run date placeholder: {date}.
-      The .305 matrix and capstone blocked promotion because exp3300 had dataflip_gate_passed=false plus critical TAUTOLOGY and DURATION_TOO_SHORT flags, while the repair row had DURATION_TOO_SHORT and substrate/provenance blockers. This task must not launch a new model run; it is a root-cause audit for the next reruns.
-
-      EXISTING CODE TO READ FIRST
-      - CLAUDE.md
-      - CODEX.md
-      - results/experiment_3300_full_garak_dataflip_gate_rerun_v3.json
-      - results/experiment_3302_headline_sota_repair_panel_v11.json
-      - results/experiment_3303_repair_headline_evidence_audit_v1.json
-      - results/experiment_3305_evidence_matrix_v37.json
-      - results/experiment_3306_capstone_v305.json
-      - scripts/experiment_template.py
-      - ops/conductor-log.md
-
-      TASK
-      Diagnose the exact root causes behind the current critical quality flags and repair provenance blockers, then emit rerun requirements for .306.
-
-      CONCRETE STEPS
-      1. Enumerate all current quality flags on exp3300, exp3302, and exp3303.
-      2. For TAUTOLOGY, determine whether the artifact conflated refusal rate, aligned false-positive rate, or derived metrics.
-      3. For DURATION_TOO_SHORT, identify the referenced live-model markers and the evidence missing from runtime provenance.
-      4. For repair substrate inconsistency, identify which fields disagree between the panel and audit.
-      5. Write concrete acceptance requirements for exp3309, exp3312, and exp3316.
-
-      REQUIRED ARTIFACT FIELDS:
-      - quality_flag_autopsy_ready
-      - analyzed_artifacts
-      - garak_quality_flags
-      - repair_quality_flags
-      - root_cause_hypotheses
-      - rerun_requirements
-      - no_new_model_execution
-      - honest_verdict
-
-      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
-
-  - id: exp3309-live-runtime-provenance-contract-v1
-    milestone: "2026.05.306"
-    deliverable: results/experiment_3309_live_runtime_provenance_contract_v1.json
-    title: "Live runtime provenance contract v1"
-    priority: critical
-    requires_gpu: false
-    max_turns: 30
-    estimated_wall_time_min: 35
-    agent_type: codex
-    model: gpt-5.5
-    gated_on:
-      - upstream: exp3308-quality-flag-root-cause-autopsy-v1
-        artifact_field: quality_flag_autopsy_ready
-        op: "=="
-        value: true
-    prior_failures:
-      - experiment_id: exp3300-full-garak-dataflip-gate-rerun-v3
-        verdict: "complete: garak_redteam_eval_v3_ready=true; garak_gate_passed=true; dataflip_gate_passed=false; attack_success_rate=0.000000; error_count=0"
-        addressed_by: "The new deliverable is a reusable runtime/provenance contract and checker to prevent the prior DURATION_TOO_SHORT and TAUTOLOGY failure modes before rerunning."
-        retire_if_same_verdict: true
-      - experiment_id: exp3303-repair-headline-evidence-audit-v1
-        verdict: "complete: repair_headline_evidence_audit_ready=true; headline_claim_allowed_after_audit=false; panel_case_count=30; exact_successes_audited=27; false_accept_count=0; adversarial_verify_flags=1"
-        addressed_by: "The contract explicitly covers repair substrate and provenance fields that the previous audit found missing or inconsistent."
-        retire_if_same_verdict: true
-    prompt: |
-      CONTEXT
-      Project root placeholder: {project_root}. Run date placeholder: {date}.
-      .305 produced useful but non-promotable live evidence because runtime duration, model provenance, and metric-independence signals were not strong enough for headline use. .306 live tasks need a shared contract before expensive reruns.
-
-      EXISTING CODE TO READ FIRST
-      - CLAUDE.md
-      - CODEX.md
-      - scripts/experiment_template.py
-      - carnot/inference/sota_models.py
-      - results/experiment_3308_quality_flag_root_cause_autopsy_v1.json
-      - results/experiment_3300_full_garak_dataflip_gate_rerun_v3.json
-      - results/experiment_3303_repair_headline_evidence_audit_v1.json
-      - ops/status.md
-
-      TASK
-      Define an executable live-runtime provenance contract for .306 SOTA GGUF evidence. Prefer a small checker or schema file if the repo has an obvious place for it; otherwise emit the contract inside the artifact with enough detail for downstream tasks to implement the checks.
-
-      CONCRETE STEPS
-      1. Specify required fields for model identity, cache path, model size, load timing, wall-clock duration, generated token count, command, CUDA visibility, GPU memory, and exact checker versions.
-      2. Define duration floors and exceptions for CPU smoke tests versus headline live evidence.
-      3. Define TAUTOLOGY guards for metrics that should be independently computed.
-      4. Define repair substrate consistency rules shared by the repair panel and audit.
-      5. Record the checker path if you create code; otherwise record the contract version and downstream implementation steps.
-
-      REQUIRED ARTIFACT FIELDS:
-      - runtime_contract_ready
-      - contract_version
-      - minimum_live_duration_s
-      - required_provenance_fields
-      - tautology_guard_rules
-      - duration_guard_rules
-      - repair_substrate_rules
-      - executable_checker_path
-      - honest_verdict
-
-      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
-
-  - id: exp3310-dataflip-kad-challenge-manifest-v1
-    milestone: "2026.05.306"
-    deliverable: results/experiment_3310_dataflip_kad_challenge_manifest_v1.json
-    title: "DataFlip/KAD challenge manifest v1"
-    priority: high
-    requires_gpu: false
-    max_turns: 30
-    estimated_wall_time_min: 35
-    agent_type: codex
-    model: gpt-5.5
-    prior_failures:
-      - experiment_id: exp3300-full-garak-dataflip-gate-rerun-v3
-        verdict: "complete: garak_redteam_eval_v3_ready=true; garak_gate_passed=true; dataflip_gate_passed=false; attack_success_rate=0.000000; error_count=0"
-        addressed_by: "This task creates a stronger DataFlip/KAD manifest from the failure instead of repeating the same evaluation inputs."
-        retire_if_same_verdict: true
-    prompt: |
-      CONTEXT
-      Project root placeholder: {project_root}. Run date placeholder: {date}.
-      The .305 Garak attack-success gate passed but DataFlip failed. The planning sweep added arXiv:2507.05630 to research-references.md: KAD/DataFlip attacks show that output-only prompt-injection detection is insufficient.
-
-      EXISTING CODE TO READ FIRST
-      - CLAUDE.md
-      - CODEX.md
-      - research-references.md
-      - results/experiment_3300_full_garak_dataflip_gate_rerun_v3.json
-      - results/experiment_3305_evidence_matrix_v37.json
-      - ops/conductor-log.md
-
-      TASK
-      Build a DataFlip/KAD challenge manifest for .306 reruns using .305 failures and the documented DataFlip/KAD threat model. This task should not run an LLM.
-
-      CONCRETE STEPS
-      1. Extract DataFlip-related rows, metrics, and blockers from exp3300 and matrix v37.
-      2. Define challenge families for data transformations, authority confusion, aligned benign controls, and KAD-style adversarial transformations.
-      3. Include enough cases for exp3311 and exp3312 to evaluate detection rate and false-positive rate separately.
-      4. Preserve source/provenance references for every challenge case.
-
-      REQUIRED ARTIFACT FIELDS:
-      - dataflip_manifest_ready
-      - challenge_case_count
-      - kad_failure_taxonomy
-      - source_artifacts
-      - dataflip_reference
-      - no_new_model_execution
-      - honest_verdict
-
-      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
-
-  - id: exp3311-pcfi-argus-dataflip-guard-pilot-v1
-    milestone: "2026.05.306"
-    deliverable: results/experiment_3311_pcfi_argus_dataflip_guard_pilot_v1.json
-    title: "PCFI/ARGUS DataFlip guard pilot v1"
-    priority: high
-    requires_gpu: false
-    max_turns: 30
-    estimated_wall_time_min: 40
-    agent_type: codex
-    model: gpt-5.5
-    gated_on:
-      - upstream: exp3310-dataflip-kad-challenge-manifest-v1
-        artifact_field: dataflip_manifest_ready
-        op: "=="
-        value: true
-    prior_failures:
-      - experiment_id: exp3300-full-garak-dataflip-gate-rerun-v3
-        verdict: "complete: garak_redteam_eval_v3_ready=true; garak_gate_passed=true; dataflip_gate_passed=false; attack_success_rate=0.000000; error_count=0"
-        addressed_by: "The guard pilot adds provenance and priority checks inspired by PCFI/ARGUS/PromptArmor before the live DataFlip rerun."
-        retire_if_same_verdict: true
-    prompt: |
-      CONTEXT
-      Project root placeholder: {project_root}. Run date placeholder: {date}.
-      .306 must avoid another output-only prompt-injection detector. The literature sweep added PCFI, ARGUS, and PromptArmor as motivation for prompt segmentation, provenance, and priority-aware guard policy.
-
-      EXISTING CODE TO READ FIRST
-      - CLAUDE.md
-      - CODEX.md
-      - research-references.md
-      - results/experiment_3310_dataflip_kad_challenge_manifest_v1.json
-      - results/experiment_3300_full_garak_dataflip_gate_rerun_v3.json
-      - scripts/experiment_template.py
-
-      TASK
-      Implement or specify a cached-data PCFI/ARGUS-style guard pilot over the DataFlip/KAD manifest. The output should be a concrete guard policy for exp3312, not a paper summary.
-
-      CONCRETE STEPS
-      1. Define prompt segment roles, provenance labels, and priority rules.
-      2. Apply the guard policy to the cached challenge manifest without launching a live LLM.
-      3. Report DataFlip detection and benign false-positive rates separately.
-      4. Emit a guard policy path or inline policy that exp3312 can apply.
-
-      REQUIRED ARTIFACT FIELDS:
-      - dataflip_guard_policy_ready
-      - pcfi_segment_schema
-      - argus_provenance_policy
-      - promptarmor_priority_rules
-      - challenge_case_count
-      - cached_dataflip_detection_rate
-      - cached_benign_false_positive_rate
-      - guard_policy_path
-      - honest_verdict
-
-      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
-
-  - id: exp3312-gated-dataflip-garak-quality-clean-rerun-v4
-    milestone: "2026.05.306"
-    deliverable: results/experiment_3312_dataflip_garak_quality_clean_rerun_v4.json
-    title: "Gated DataFlip/Garak quality-clean rerun v4"
-    priority: critical
+    agent_type: gemini
+    model: gemini-3.1-pro-preview
+    max_turns: 60
+    estimated_wall_time_min: 120
+    track: "evidence"
+    inference_substrate: "live_llm_inference"
     requires_gpu: true
-    max_turns: 50
-    estimated_wall_time_min: 90
-    gated_on:
-      - upstream: exp3309-live-runtime-provenance-contract-v1
-        artifact_field: runtime_contract_ready
-        op: "=="
-        value: true
-      - upstream: exp3311-pcfi-argus-dataflip-guard-pilot-v1
-        artifact_field: dataflip_guard_policy_ready
-        op: "=="
-        value: true
     prior_failures:
-      - experiment_id: exp3300-full-garak-dataflip-gate-rerun-v3
-        verdict: "complete: garak_redteam_eval_v3_ready=true; garak_gate_passed=true; dataflip_gate_passed=false; attack_success_rate=0.000000; error_count=0"
-        addressed_by: "This rerun is gated on a runtime/provenance contract and a PCFI/ARGUS DataFlip guard, and it must clear the prior DataFlip and quality-flag blockers."
+      - experiment_id: exp1222-phase5a-insitu-prototype
+        verdict: "complete: toy 5x5 synthetic puzzle prototype; stability gates passed"
+        addressed_by: "exp1222 ran energy-descent on toy 5x5 synthetic puzzles and only measured stability, never head-to-head accuracy vs an autoregressive baseline on a REAL task. This runs the head-to-head on a real reasoning benchmark (GSM8K subset / ARC-AGI-1) — the only test of the premise the Phase-3 endgame rests on."
+        retire_if_same_verdict: false
+      - experiment_id: exp1210-phase4-bfs-intractable-puzzles-v2
+        verdict: "complete: BFS tie (downgraded); synthetic advantage only"
+        addressed_by: "exp1210 produced a BFS tie on synthetic puzzles. This uses a REAL task with an apples-to-apples AR baseline of comparable parameter count, paired per-problem, with a falsifiable superiority/non-inferiority gate."
+        retire_if_same_verdict: true
+      - experiment_id: exp1165-phase4-active-inference-pilot-v1
+        verdict: "complete: ARC-AGI-3-CLASS on 5x5 synthetic"
+        addressed_by: "exp1165 was a synthetic 5x5 toy, not a real benchmark and not vs an AR baseline. This is real-task, AR-compared, paired-significance."
         retire_if_same_verdict: true
     prompt: |
       CONTEXT
       Project root placeholder: {project_root}. Run date placeholder: {date}.
-      This is the primary .306 adversarial-evidence gate. It may run only after the runtime contract and DataFlip guard are ready. Passing Garak ASR alone is insufficient: this artifact must also pass DataFlip and clear current critical quality flags.
+      THE KONA PREMISE TEST — the single most important experiment in the
+      project. The entire Phase-3 / foundation-model endgame assumes energy-
+      descent reasoning on continuous latents BEATS autoregressive token
+      sampling. That has never been tested on a real task vs a real AR baseline
+      (only toy 5x5 puzzles + a downgraded BFS tie). Either outcome is high
+      value: validation greenlights Phase 3; refutation honestly retires it.
+      CUDA recovered 2026-05-28 (both RTX 3090s), so there is no compute reason
+      not to run this.
 
-      MODEL_SPECS
-      - unsloth/Qwen3.6-35B-A3B-GGUF
-      - unsloth/gemma-4-31B-it-GGUF
-      - unsloth/gemma-4-26B-A4B-it-GGUF
+      PRECONDITIONS (step 0, before any inference):
+        a. CUDA available: python -c "import torch; assert torch.cuda.is_available()".
+           If not, honest_verdict blocked_cuda_unavailable.
+        b. The continuous-latent refinement substrate (Boltzmann-GPT lineage,
+           carnot.phase3.boltzmann_gpt / exp1237/exp1248) is trainable.
+           If not, blocked_energy_descent_substrate_unavailable.
+        c. A real reasoning corpus with ground-truth labels present (GSM8K
+           subset >= 200, OR ARC-AGI-1 train). If not, blocked_real_task_corpus_missing.
+        d. An autoregressive baseline of comparable param count is runnable on
+           the same corpus. If not, blocked_ar_baseline_unavailable.
 
-      EXISTING CODE TO READ FIRST
-      - CLAUDE.md
-      - CODEX.md
-      - scripts/experiment_template.py
-      - carnot/inference/sota_models.py
-      - results/experiment_3309_live_runtime_provenance_contract_v1.json
-      - results/experiment_3311_pcfi_argus_dataflip_guard_pilot_v1.json
-      - results/experiment_3310_dataflip_kad_challenge_manifest_v1.json
-      - results/experiment_3300_full_garak_dataflip_gate_rerun_v3.json
-
-      TASK
-      Rerun the full Garak/DataFlip gate with the .306 guard policy and runtime/provenance contract against available mandated SOTA GGUF model(s). The artifact must be promotion-safe or honestly blocked.
-
-      CONCRETE STEPS
-      1. Check nvidia-smi, selected-Python CUDA, mandated GGUF cache availability, llama.cpp/GGUF loadability, and runtime contract prerequisites.
-      2. Use the guard policy from exp3311 and include DataFlip/KAD challenge rows from exp3310.
-      3. Compute Garak attack success, DataFlip detection, aligned benign false positives, refusal rate, errors, and independent metric checks.
-      4. Enforce the runtime contract from exp3309 and record whether duration/provenance checks passed.
-      5. If any required model is unavailable, run the strongest available mandated SOTA GGUF and mark missing models explicitly; do not substitute a small model for headline evidence.
-
-      REQUIRED ARTIFACT FIELDS:
-      - garak_dataflip_eval_v4_ready
-      - garak_gate_passed
-      - dataflip_gate_passed
-      - quality_flags_cleared
-      - attack_success_rate
-      - dataflip_detection_rate
-      - aligned_instruction_false_positive_rate
-      - refusal_rate
-      - error_count
-      - duration_contract_passed
-      - runtime_provenance_clean
-      - adversarial_verify_flags
-      - model_specs_used
-      - honest_verdict
-
-      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
-
-  - id: exp3313-repair-substrate-root-cause-autopsy-v1
-    milestone: "2026.05.306"
-    deliverable: results/experiment_3313_repair_substrate_root_cause_autopsy_v1.json
-    title: "Repair substrate root-cause autopsy v1"
-    priority: high
-    requires_gpu: false
-    max_turns: 30
-    estimated_wall_time_min: 30
-    prior_failures:
-      - experiment_id: exp3302-headline-sota-repair-panel-v11
-        verdict: "complete: repair_panel_ran=true; headline_repair_panel_ready=true; panel_case_count=30; verified_success_count=27; false_accept_count=0; abstention_count=0; headline_claim_allowed=false"
-        addressed_by: "This task diagnoses why the repair panel was non-promotable instead of rerunning the same panel shape."
-        retire_if_same_verdict: true
-      - experiment_id: exp3303-repair-headline-evidence-audit-v1
-        verdict: "complete: repair_headline_evidence_audit_ready=true; headline_claim_allowed_after_audit=false; panel_case_count=30; exact_successes_audited=27; false_accept_count=0; adversarial_verify_flags=1"
-        addressed_by: "The autopsy converts prior audit blockers into a rerun contract for the next repair experiment."
-        retire_if_same_verdict: true
-    prompt: |
-      CONTEXT
-      Project root placeholder: {project_root}. Run date placeholder: {date}.
-      .305 repair evidence was promising but blocked: the 30-case panel had zero false accepts, but the audit found headline_claim_allowed_after_audit=false, source_provenance_clean=false, substrate_consistency_passed=false, and a current duration flag.
-
-      EXISTING CODE TO READ FIRST
-      - CLAUDE.md
-      - CODEX.md
-      - results/experiment_3302_headline_sota_repair_panel_v11.json
-      - results/experiment_3303_repair_headline_evidence_audit_v1.json
-      - results/experiment_3308_quality_flag_root_cause_autopsy_v1.json
-      - results/experiment_3309_live_runtime_provenance_contract_v1.json
-      - ops/conductor-log.md
-
-      TASK
-      Diagnose repair substrate and provenance blockers and specify the rerun contract for exp3316.
-
-      CONCRETE STEPS
-      1. Compare the repair panel artifact and repair audit artifact field by field.
-      2. Identify missing or inconsistent source provenance, runtime, model identity, and substrate fields.
-      3. Identify whether any blocker is a true repair failure versus evidence hygiene failure.
-      4. Emit exact rerun requirements that exp3314, exp3315, and exp3316 must satisfy.
+      CONCRETE STEPS:
+        1. Pick a real reasoning task with binary pass/fail (recommend GSM8K
+           subset, n>=200, held-out). Document the exact split + seed.
+        2. AR condition: base model answers each problem autoregressively;
+           record per-problem pass/fail.
+        3. Energy-descent condition: the continuous-latent refinement substrate
+           solves each problem via bounded-depth iterative refinement on the
+           latent guided by the verifier energy (REQ-KONA-001/002), decoding to
+           an answer only at the coda. Same problems (paired), comparable compute.
+        4. Compute accuracy per condition + paired delta with McNemar or paired
+           bootstrap CI.
+        5. Emit results with all REQUIRED ARTIFACT FIELDS.
 
       REQUIRED ARTIFACT FIELDS:
-      - repair_substrate_autopsy_ready
-      - analyzed_artifacts
-      - source_provenance_failure_modes
-      - substrate_consistency_failure_modes
-      - rerun_contract
-      - no_new_model_execution
-      - honest_verdict
+      - energy_descent_vs_autoregressive_premise_v1_ready: bool (principle: deliverable completion marker)
+      - task_name: str (principle: name the real benchmark + split; toy/synthetic is NOT acceptable)
+      - n_problems: int (principle: >=200 for a CLT-valid accuracy delta)
+      - ar_baseline_accuracy: float (principle: the autoregressive control; same problems, comparable compute)
+      - energy_descent_accuracy: float (principle: the non-AR condition; the premise under test)
+      - accuracy_delta: float (principle: energy_descent minus AR — the headline)
+      - paired_significance: dict (principle: McNemar/bootstrap p-value or CI; unpaired or n<200 is gameable)
+      - compute_parity_note: str (principle: state each condition's param count + inference compute so it is apples-to-apples, not a bigger-model win)
+      - model_specs: dict (principle: name the substrate + AR base model)
+      - preconditions_checked: list (principle: records resource verification; pre-empts silent-fabrication)
+      - inference_substrate: str (value: live_llm_inference)
+      - random_seed: int
+      - reproducibility_checksum: str
+      - duration_s: float (principle: real training+inference takes wall time; 60s floor)
+      - honest_verdict: str (principle: complete:/success:/passed:/shipped_ prefix)
 
-      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+      ACCEPTANCE GATES:
+      - condition: "energy_descent_accuracy >= ar_baseline_accuracy AND paired_significance favors non-inferiority"
+        principle: "G1 PREMISE-VIABLE: energy-descent at least matches AR on a real task."
+      - condition: "accuracy_delta > 0 with paired p < 0.05"
+        principle: "G2 PREMISE-VALIDATED: energy-descent significantly beats AR — justifies the foundation-model endgame."
 
-  - id: exp3314-distributional-ebm-repair-uncertainty-audit-v1
-    milestone: "2026.05.306"
-    deliverable: results/experiment_3314_distributional_ebm_repair_uncertainty_audit_v1.json
-    title: "Distributional EBM repair uncertainty audit v1"
-    priority: high
-    requires_gpu: false
-    max_turns: 50
+      TERMINAL VERDICTS (all start with complete:):
+        - G2 passes -> "complete: energy_descent_beats_ar_premise_validated"
+        - G1 passes, G2 fails -> "complete: energy_descent_viable_not_superior_at_scale"
+        - G1 fails -> "complete: energy_descent_below_ar_premise_unsupported_at_scale"
+
+  - id: exp3323-verifier-ensemble-lambda-min-diversity-audit-v1
+    milestone: "2026.05.307"
+    deliverable: "results/experiment_3323_verifier_ensemble_lambda_min_diversity_audit_v1.json"
+    title: "Verifier-Ensemble Joint-Null-Space / lambda_min(Sigma) Diversity Audit"
+    priority: critical
+    agent_type: gemini
+    model: gemini-3.1-pro-preview
+    max_turns: 40
     estimated_wall_time_min: 45
-    gated_on:
-      - upstream: exp3313-repair-substrate-root-cause-autopsy-v1
-        artifact_field: repair_substrate_autopsy_ready
-        op: "=="
-        value: true
-    prior_failures:
-      - experiment_id: exp3302-headline-sota-repair-panel-v11
-        verdict: "complete: repair_panel_ran=true; headline_repair_panel_ready=true; panel_case_count=30; verified_success_count=27; false_accept_count=0; abstention_count=0; headline_claim_allowed=false"
-        addressed_by: "This task adds an uncertainty/provenance audit sidecar rather than treating exact success count alone as headline evidence."
-        retire_if_same_verdict: true
-      - experiment_id: exp3303-repair-headline-evidence-audit-v1
-        verdict: "complete: repair_headline_evidence_audit_ready=true; headline_claim_allowed_after_audit=false; panel_case_count=30; exact_successes_audited=27; false_accept_count=0; adversarial_verify_flags=1"
-        addressed_by: "The Distributional EBM sidecar separates exact acceptance, uncertainty, abstention, and provenance risk to address the audit blockers."
-        retire_if_same_verdict: true
-    prompt: |
-      CONTEXT
-      Project root placeholder: {project_root}. Run date placeholder: {date}.
-      The literature sweep added Distributional EBMs as a way to represent uncertainty over structured energy rows without replacing exact checks. In Carnot, exact verification remains the authority; this task should only add an audit sidecar and policy.
-
-      EXISTING CODE TO READ FIRST
-      - CLAUDE.md
-      - CODEX.md
-      - research-references.md
-      - results/experiment_3313_repair_substrate_root_cause_autopsy_v1.json
-      - results/experiment_3302_headline_sota_repair_panel_v11.json
-      - results/experiment_3303_repair_headline_evidence_audit_v1.json
-      - carnot/
-
-      TASK
-      Design and, where practical, implement a Distributional-EBM-inspired repair uncertainty audit over the .305 repair panel rows. Do not make it an acceptance authority; exact checks remain final.
-
-      CONCRETE STEPS
-      1. Define a row schema that separates deterministic constraint penalty, learned/proxy quality, provenance risk, model identity, uncertainty, and abstention.
-      2. Apply the schema to existing .305 repair rows if available.
-      3. Define an abstention policy for exp3316 that blocks headline promotion when uncertainty or provenance risk is too high.
-      4. Record any model-family confounds and how exp3316 should report them.
-
-      REQUIRED ARTIFACT FIELDS:
-      - distributional_repair_audit_ready
-      - uncertainty_abstention_policy
-      - distributional_energy_schema
-      - model_identity_confound_check
-      - provenance_risk_features
-      - repair_case_count
-      - no_new_model_execution
-      - honest_verdict
-
-      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
-
-  - id: exp3315-vgb-backtracking-repair-policy-v1
-    milestone: "2026.05.306"
-    deliverable: results/experiment_3315_vgb_backtracking_repair_policy_v1.json
-    title: "VGB repair backtracking policy v1"
-    priority: high
-    requires_gpu: false
-    max_turns: 30
-    estimated_wall_time_min: 35
-    agent_type: codex
-    model: gpt-5.5
-    prior_failures:
-      - experiment_id: exp3302-headline-sota-repair-panel-v11
-        verdict: "complete: repair_panel_ran=true; headline_repair_panel_ready=true; panel_case_count=30; verified_success_count=27; false_accept_count=0; abstention_count=0; headline_claim_allowed=false"
-        addressed_by: "This task adds verifier-guided backtracking and exact acceptance rules before the next repair rerun instead of repeating the same proposal policy."
-        retire_if_same_verdict: true
-      - experiment_id: exp3303-repair-headline-evidence-audit-v1
-        verdict: "complete: repair_headline_evidence_audit_ready=true; headline_claim_allowed_after_audit=false; panel_case_count=30; exact_successes_audited=27; false_accept_count=0; adversarial_verify_flags=1"
-        addressed_by: "The policy uses the audit blockers to decide when to backtrack, abstain, or request another exact repair candidate."
-        retire_if_same_verdict: true
-    prompt: |
-      CONTEXT
-      Project root placeholder: {project_root}. Run date placeholder: {date}.
-      OpenReview VGB-style verifier-guided backtracking suggests that imperfect process verifiers should route the solver to backtrack rather than accept weak reasoning. Carnot must keep exact acceptance checks as final authority.
-
-      EXISTING CODE TO READ FIRST
-      - CLAUDE.md
-      - CODEX.md
-      - research-references.md
-      - results/experiment_3313_repair_substrate_root_cause_autopsy_v1.json
-      - results/experiment_3314_distributional_ebm_repair_uncertainty_audit_v1.json
-      - results/experiment_3302_headline_sota_repair_panel_v11.json
-      - carnot/
-
-      TASK
-      Define a verifier-guided backtracking repair policy for exp3316. Implement it if there is an obvious local policy hook; otherwise emit a precise executable policy description.
-
-      CONCRETE STEPS
-      1. Define when a repair candidate is accepted, rejected, backtracked, or abstained.
-      2. Set a proposal budget and stop conditions.
-      3. Ensure exact verifiers, not LLM judges, decide final acceptance.
-      4. Specify how exp3316 must log candidate attempts, verifier confidence, exact outcomes, and abstentions.
-
-      REQUIRED ARTIFACT FIELDS:
-      - vgb_repair_policy_ready
-      - backtracking_policy
-      - proposal_budget
-      - exact_acceptance_rules
-      - verifier_confidence_thresholds
-      - no_new_model_execution
-      - honest_verdict
-
-      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
-
-  - id: exp3316-gated-sota-repair-rerun-v12-runtime-clean
-    milestone: "2026.05.306"
-    deliverable: results/experiment_3316_sota_repair_rerun_v12_runtime_clean.json
-    title: "Gated SOTA repair rerun v12 runtime-clean"
-    priority: critical
+    track: "evidence"
+    inference_substrate: "verifier_ensemble_against_cached_candidates"
     requires_gpu: true
-    max_turns: 50
-    estimated_wall_time_min: 100
-    gated_on:
-      - upstream: exp3312-gated-dataflip-garak-quality-clean-rerun-v4
-        artifact_field: dataflip_gate_passed
-        op: "=="
-        value: true
-      - upstream: exp3312-gated-dataflip-garak-quality-clean-rerun-v4
-        artifact_field: quality_flags_cleared
-        op: "=="
-        value: true
-      - upstream: exp3314-distributional-ebm-repair-uncertainty-audit-v1
-        artifact_field: distributional_repair_audit_ready
-        op: "=="
-        value: true
-      - upstream: exp3315-vgb-backtracking-repair-policy-v1
-        artifact_field: vgb_repair_policy_ready
-        op: "=="
-        value: true
-      - upstream: exp3309-live-runtime-provenance-contract-v1
-        artifact_field: runtime_contract_ready
-        op: "=="
-        value: true
     prior_failures:
-      - experiment_id: exp3302-headline-sota-repair-panel-v11
-        verdict: "complete: repair_panel_ran=true; headline_repair_panel_ready=true; panel_case_count=30; verified_success_count=27; false_accept_count=0; abstention_count=0; headline_claim_allowed=false"
-        addressed_by: "This rerun is gated on clean DataFlip evidence, a runtime contract, a Distributional EBM uncertainty audit, and a VGB backtracking policy."
-        retire_if_same_verdict: true
-      - experiment_id: exp3303-repair-headline-evidence-audit-v1
-        verdict: "complete: repair_headline_evidence_audit_ready=true; headline_claim_allowed_after_audit=false; panel_case_count=30; exact_successes_audited=27; false_accept_count=0; adversarial_verify_flags=1"
-        addressed_by: "The rerun must satisfy the substrate/provenance blockers identified by the prior audit and produce audit-ready fields."
+      - experiment_id: exp1224-phase5c-adversarial-probe
+        verdict: "complete: k=3 ensemble pairwise_max_correlation=1.0 — effective ensemble collapsed k=3 -> k=1"
+        addressed_by: "exp1224 showed a k=3 ensemble collapsed to effective k=1 (verifiers perfectly correlated via the shared decoder). This measures lambda_min(Sigma) + participation-ratio effective-k on a DELIBERATELY disjoint-kernel suite at larger k, to test whether real diversity is recoverable or the collapse is intrinsic. The FoVer headline (exp2837) corroborates: 3 of its 4 verifiers showed ZERO learning contribution."
         retire_if_same_verdict: true
     prompt: |
       CONTEXT
       Project root placeholder: {project_root}. Run date placeholder: {date}.
-      This task is the .306 headline repair rerun. It is allowed only after DataFlip/quality cleanup, runtime contract, Distributional EBM sidecar, and VGB backtracking policy are ready. It must use mandated SOTA local GGUF models for any headline evidence.
+      Tests the alpha_t-grounding KEYSTONE: does the verifier ensemble keep real
+      diversity (small joint null space) at production k, or collapse like
+      exp1224 (k=3 -> effective k=1)? The whole self-improvement thesis depends
+      on this. Cheap: verifier scoring against the cached FoVer corpus.
 
-      MODEL_SPECS
-      - unsloth/Qwen3.6-35B-A3B-GGUF
-      - unsloth/gemma-4-31B-it-GGUF
-      - unsloth/gemma-4-26B-A4B-it-GGUF
+      PRECONDITIONS (step 0):
+        a. FoVer corpus present (data/fover_corpus.jsonl) + an adversarial/OOD
+           slice. If not, blocked_corpus_missing.
+        b. The verifier suite is callable in batch over cached candidates with a
+           configurable verifier set. If not, blocked_verifier_suite_uncallable.
+        c. CUDA available for model-based verifiers; if not, run CPU-only
+           verifiers and RECORD which were skipped (do not silently drop them).
 
-      EXISTING CODE TO READ FIRST
-      - CLAUDE.md
-      - CODEX.md
-      - scripts/experiment_template.py
-      - carnot/inference/sota_models.py
-      - results/experiment_3312_dataflip_garak_quality_clean_rerun_v4.json
-      - results/experiment_3309_live_runtime_provenance_contract_v1.json
-      - results/experiment_3314_distributional_ebm_repair_uncertainty_audit_v1.json
-      - results/experiment_3315_vgb_backtracking_repair_policy_v1.json
-      - results/experiment_3302_headline_sota_repair_panel_v11.json
-
-      TASK
-      Rerun the 30-case SOTA repair panel under the .306 runtime contract, Distributional EBM uncertainty audit, and VGB backtracking policy. The artifact must either be headline-audit-ready or honestly blocked.
-
-      CONCRETE STEPS
-      1. Check nvidia-smi, CUDA visibility, mandated GGUF cache availability, model load timing, token generation, and runtime contract fields.
-      2. Run the exact repair panel with at least the .305 case count and same exact acceptance authority.
-      3. Apply the VGB policy for candidate backtracking and the Distributional EBM audit sidecar for uncertainty/abstention.
-      4. Report exact successes, false accepts, abstentions, confidence interval, model specs used, and provenance/substrate checks.
-      5. Do not use a legacy small model for headline evidence; if only smoke-test models are available, write a blocked artifact.
+      CONCRETE STEPS:
+        1. Assemble the broadest available verifier set, labeled by kernel class
+           (structural: Z3/AST; empirical: PBT/execution; semantic: ThinkPRM/
+           semantic-cosine; anti-vacuity: liveness/coverage; memory: fr11).
+        2. Score every verifier on FoVer + the adversarial slice; build the
+           k x k verifier-DECISION covariance matrix Sigma.
+        3. Compute lambda_min(Sigma); full pairwise-correlation matrix;
+           effective-k via participation ratio (sum(lambda)^2 / sum(lambda^2));
+           per-verifier drop-one-out AUROC delta.
+        4. Identify which verifiers share a null space (high pairwise corr, zero
+           drop-one-out contribution — the exp2837 "3-of-4 contribute zero" pattern).
+        5. Emit results with all REQUIRED ARTIFACT FIELDS.
 
       REQUIRED ARTIFACT FIELDS:
-      - repair_rerun_v12_ready
-      - repair_panel_ran
-      - headline_repair_panel_ready
-      - headline_claim_allowed
-      - runtime_provenance_clean
-      - duration_contract_passed
-      - substrate_consistency_passed
-      - panel_case_count
-      - verified_success_count
-      - false_accept_count
-      - abstention_count
-      - repair_success_rate
-      - confidence_interval
-      - model_specs_used
-      - honest_verdict
+      - verifier_ensemble_lambda_min_diversity_audit_v1_ready: bool (principle: deliverable marker)
+      - k_verifiers: int (principle: how many verifiers in the audited suite)
+      - lambda_min_sigma: float (principle: smallest eigenvalue of the decision covariance; joint-null-space proxy; Zenil-stack threshold >0.1)
+      - pairwise_max_correlation: float (principle: the exp1224 collapse signature; near-1.0 means redundancy)
+      - effective_k_participation_ratio: float (principle: how many verifiers ACTUALLY contribute independent signal vs nominal k)
+      - per_verifier_dropout_contribution: dict (principle: drop-one-out AUROC delta per verifier; zero means null)
+      - n_examples: int (principle: >=1000 for a stable covariance estimate)
+      - inference_substrate: str (value: verifier_ensemble_against_cached_candidates)
+      - random_seed: int
+      - reproducibility_checksum: str
+      - duration_s: float (principle: verifier scoring; 1s floor)
+      - honest_verdict: str (principle: complete:/success:/passed:/shipped_ prefix)
 
-      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+      ACCEPTANCE GATES:
+      - condition: "lambda_min_sigma > 0.1 AND effective_k_participation_ratio >= 3"
+        principle: "G1 GROUNDING-HOLDS: the ensemble has real diversity, so the alpha_t grounding signal survives at production k — the keystone precondition of the self-improvement thesis."
 
-  - id: exp3317-repair-headline-evidence-audit-v2
-    milestone: "2026.05.306"
-    deliverable: results/experiment_3317_repair_headline_evidence_audit_v2.json
-    title: "Repair headline evidence audit v2"
+      TERMINAL VERDICTS (all start with complete:):
+        - G1 passes -> "complete: verifier_ensemble_diversity_sufficient_grounding_holds"
+        - G1 fails -> "complete: verifier_ensemble_null_space_collapse_confirmed_grounding_at_risk"
+
+  - id: exp3324-capstone-v307
+    milestone: "2026.05.307"
+    deliverable: "results/experiment_3324_capstone_v307.json"
+    title: "Capstone .307 — Phase-3 path de-risking readout + next-gap decision"
     priority: critical
-    requires_gpu: false
     max_turns: 30
-    estimated_wall_time_min: 35
-    gated_on:
-      - upstream: exp3316-gated-sota-repair-rerun-v12-runtime-clean
-        artifact_field: repair_rerun_v12_ready
-        op: "=="
-        value: true
-    prior_failures:
-      - experiment_id: exp3303-repair-headline-evidence-audit-v1
-        verdict: "complete: repair_headline_evidence_audit_ready=true; headline_claim_allowed_after_audit=false; panel_case_count=30; exact_successes_audited=27; false_accept_count=0; adversarial_verify_flags=1"
-        addressed_by: "This audit evaluates the new runtime-clean repair rerun and applies the .306 contract instead of re-auditing the blocked .305 panel."
-        retire_if_same_verdict: true
-    prompt: |
-      CONTEXT
-      Project root placeholder: {project_root}. Run date placeholder: {date}.
-      The previous repair audit blocked headline promotion despite zero false accepts because provenance and substrate consistency were not clean. This audit should promote only if exp3316 satisfies the .306 runtime/provenance contract.
-
-      EXISTING CODE TO READ FIRST
-      - CLAUDE.md
-      - CODEX.md
-      - results/experiment_3316_sota_repair_rerun_v12_runtime_clean.json
-      - results/experiment_3309_live_runtime_provenance_contract_v1.json
-      - results/experiment_3314_distributional_ebm_repair_uncertainty_audit_v1.json
-      - results/experiment_3315_vgb_backtracking_repair_policy_v1.json
-      - results/experiment_3303_repair_headline_evidence_audit_v1.json
-      - ops/status.md
-
-      TASK
-      Audit the runtime-clean repair rerun for headline eligibility. Exact checks, provenance, substrate consistency, and confidence intervals must all be explicit.
-
-      CONCRETE STEPS
-      1. Verify that exp3316 is readable and contains all required runtime, substrate, model, and exact outcome fields.
-      2. Recompute or validate exact successes, false accepts, abstentions, and confidence interval.
-      3. Apply the Distributional EBM uncertainty/abstention policy as a blocker, not as final acceptance authority.
-      4. Decide headline_claim_allowed_after_audit with concrete blocker reasons if false.
-
-      REQUIRED ARTIFACT FIELDS:
-      - repair_headline_evidence_audit_v2_ready
-      - headline_claim_allowed_after_audit
-      - substrate_consistency_passed
-      - source_provenance_clean
-      - adversarial_verify_flags
-      - confidence_interval
-      - panel_case_count
-      - exact_successes_audited
-      - false_accept_count
-      - honest_verdict
-
-      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
-
-  - id: exp3318-fr11-failure-targeted-curriculum-replay-v3
-    milestone: "2026.05.306"
-    deliverable: results/experiment_3318_fr11_failure_targeted_curriculum_replay_v3.json
-    title: "FR-11 failure-targeted curriculum replay v3"
-    priority: critical
+    estimated_wall_time_min: 15
+    track: "ops"
+    inference_substrate: "aggregation_from_upstream_artifacts"
     requires_gpu: false
-    max_turns: 50
-    estimated_wall_time_min: 55
-    gated_on:
-      - upstream: exp3312-gated-dataflip-garak-quality-clean-rerun-v4
-        artifact_field: garak_dataflip_eval_v4_ready
-        op: "=="
-        value: true
-      - upstream: exp3317-repair-headline-evidence-audit-v2
-        artifact_field: repair_headline_evidence_audit_v2_ready
-        op: "=="
-        value: true
     prior_failures:
-      - experiment_id: exp3304-fr11-redteam-repair-memory-replay-v2
-        verdict: "complete: fr11 redteam/repair controller-memory replay ready=true; new_episode_count=11; heldout_trace_count=2056; retention_score=0.982143; adaptation_score=1.0; forgetting_rate=0.017857; negative_transfer_rate=0.033333; controller_memory_only=true; foundation_weight_updates_performed=false"
-        addressed_by: "This task changes the learning signal from generic replay to a failure-targeted curriculum built from DataFlip, quality-flag, and repair-audit outcomes."
-        retire_if_same_verdict: true
+      - experiment_id: exp3266-capstone-v302
+        verdict: "complete: capstone (standard recurring milestone-close rollup)"
+        addressed_by: "Standard recurring milestone-close task. The matched prior 'failures' are previous capstones, all of which completed successfully. Not a retry; the next close."
+        retire_if_same_verdict: false
     prompt: |
       CONTEXT
       Project root placeholder: {project_root}. Run date placeholder: {date}.
-      research-program.md requires continuous self-learning. The .305 FR-11 replay was safe but had negative_transfer_rate=0.033333 and did not explicitly target DataFlip/quality/repair failures as a curriculum. .306 should keep controller memory only and no foundation weight updates.
+      Aggregate the two path-de-risking results (exp3322 Kona premise test,
+      exp3323 verifier diversity audit) into a capstone. This is the headline
+      readout of whether the Phase-3 foundation composes toward the endgame.
 
-      EXISTING CODE TO READ FIRST
-      - CLAUDE.md
-      - CODEX.md
-      - research-program.md
-      - _bmad/prd.md
-      - results/experiment_3312_dataflip_garak_quality_clean_rerun_v4.json
-      - results/experiment_3317_repair_headline_evidence_audit_v2.json
-      - results/experiment_3304_fr11_redteam_repair_memory_replay_v2.json
-      - research-references.md
-
-      TASK
-      Run or simulate the FR-11 controller-memory replay with a failure-targeted curriculum derived from .306 DataFlip, quality-flag, and repair audit outcomes. Preserve raw episodes and make no foundation-weight-update claim.
-
-      CONCRETE STEPS
-      1. Build curriculum episodes from DataFlip misses, quality flags, guard decisions, repair abstentions, and exact repair successes/failures.
-      2. Preserve raw episodes before consolidation and record source artifacts.
-      3. Run the existing FR-11 controller-memory replay path or a faithful artifact-level simulation if the runtime path is unavailable.
-      4. Report retention, adaptation, forgetting, negative transfer, controller-memory-only status, foundation-weight-update status, and hardware path.
-      5. State whether the curriculum improved or worsened the .305 replay profile.
+      CONCRETE STEPS:
+        1. Read exp3322 + exp3323.
+        2. Report the Kona-premise outcome (validated / viable-not-superior /
+           unsupported) and the grounding-keystone outcome (holds / at-risk).
+        3. Set next_top_gap based on the combination: if premise validated AND
+           grounding holds -> "scale_substrate_intermediate (exp_NEXT_E 100-300M)";
+           if premise unsupported -> "reconsider_foundation_model_endgame";
+           if grounding at-risk -> "redesign_verifier_grounding_source".
+        4. Emit the standard capstone fields + the G1-G4 publication gate
+           (run scripts/publication_gate.py --json).
 
       REQUIRED ARTIFACT FIELDS:
-      - fr11_failure_targeted_curriculum_ready
-      - continuous_self_learning_task
-      - curriculum_source_artifacts
-      - new_episode_count
-      - heldout_trace_count
-      - retention_score
-      - adaptation_score
-      - forgetting_rate
-      - negative_transfer_rate
-      - controller_memory_only
-      - foundation_weight_updates_performed
-      - raw_episodes_preserved
-      - hardware_path
-      - honest_verdict
-
-      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
-
-  - id: exp3319-evidence-matrix-v38
-    milestone: "2026.05.306"
-    deliverable: results/experiment_3319_evidence_matrix_v38.json
-    title: "Evidence matrix v38"
-    priority: critical
-    requires_gpu: false
-    max_turns: 30
-    estimated_wall_time_min: 35
-    gated_on:
-      - upstream: exp3312-gated-dataflip-garak-quality-clean-rerun-v4
-        artifact_field: garak_dataflip_eval_v4_ready
-        op: "=="
-        value: true
-      - upstream: exp3317-repair-headline-evidence-audit-v2
-        artifact_field: repair_headline_evidence_audit_v2_ready
-        op: "=="
-        value: true
-      - upstream: exp3318-fr11-failure-targeted-curriculum-replay-v3
-        artifact_field: fr11_failure_targeted_curriculum_ready
-        op: "=="
-        value: true
-    prior_failures:
-      - experiment_id: exp3305-evidence-matrix-v37
-        verdict: "complete: matrix_v37_ready=true; paper_ready=false; artifact_count_scanned=12; clean=2; blocked=3; flagged=4; sidecar_only=2; garak_gate_passed=true; repair_headline_claim_allowed=false; fr11_replay_safe=true; paper_blockers=8; top_gap=clear_garak_dataflip_and_quality_flags"
-        addressed_by: "Matrix v38 aggregates the new .306 DataFlip, repair audit, and FR-11 curriculum artifacts instead of reclassifying the same .305 evidence."
-        retire_if_same_verdict: true
-    prompt: |
-      CONTEXT
-      Project root placeholder: {project_root}. Run date placeholder: {date}.
-      Matrix v37 closed .305 with paper_ready=false, paper_blockers=8, blocked=3, flagged=4, dataflip_gate_passed=false, and repair_headline_claim_allowed=false. Matrix v38 must classify the new .306 evidence honestly.
-
-      EXISTING CODE TO READ FIRST
-      - CLAUDE.md
-      - CODEX.md
-      - results/experiment_3305_evidence_matrix_v37.json
-      - results/experiment_3312_dataflip_garak_quality_clean_rerun_v4.json
-      - results/experiment_3317_repair_headline_evidence_audit_v2.json
-      - results/experiment_3318_fr11_failure_targeted_curriculum_replay_v3.json
-      - ops/status.md
-      - ops/changelog.md
-
-      TASK
-      Build evidence matrix v38 for .306. Distinguish clean-live, blocked, flagged, sidecar-only, gated-skipped, and historical-corrigendum rows.
-
-      CONCRETE STEPS
-      1. Scan the expected .306 artifacts from exp3307 through exp3318.
-      2. Classify each row by evidence class and record blocker reasons.
-      3. Determine paper_ready using DataFlip, quality flags, repair headline audit, and FR-11 curriculum safety.
-      4. Keep historical .305 flags bounded; do not promote old blocked rows as new evidence.
-
-      REQUIRED ARTIFACT FIELDS:
-      - matrix_v38_ready
-      - paper_ready
-      - artifact_count_scanned
-      - clean_evidence_count
-      - blocked_evidence_count
-      - flagged_evidence_count
-      - garak_gate_passed
-      - dataflip_gate_passed
-      - repair_headline_claim_allowed
-      - fr11_replay_safe
-      - paper_blocker_count
-      - top_gap
-      - honest_verdict
-
-      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
-
-  - id: exp3320-capstone-v306
-    milestone: "2026.05.306"
-    deliverable: results/experiment_3320_capstone_v306.json
-    title: "Capstone v306"
-    priority: critical
-    requires_gpu: false
-    max_turns: 30
-    estimated_wall_time_min: 30
-    gated_on:
-      - upstream: exp3319-evidence-matrix-v38
-        artifact_field: matrix_v38_ready
-        op: "=="
-        value: true
-    prior_failures:
-      - experiment_id: exp3306-capstone-v305
-        verdict: "complete: capstone_v305_ready=true; paper_ready=false; publication_blocker_count=8; blocker_delta_from_v304=-2; garak_gate_passed=true; garak_attack_success_rate=0.0; repair_headline_claim_allowed=false; fr11_memory_replay_safe=true; kan_headline_retired=true; next_top_gap=clear_garak_dataflip_and_quality_flags"
-        addressed_by: "Capstone v306 closes a different milestone with new DataFlip, repair, and FR-11 curriculum evidence; it should retire or preserve the .305 blocker based on matrix v38."
-        retire_if_same_verdict: true
-    prompt: |
-      CONTEXT
-      Project root placeholder: {project_root}. Run date placeholder: {date}.
-      This is the .306 closeout. The capstone must summarize whether the DataFlip and quality-flag cleanup milestone actually changed paper readiness relative to .305.
-
-      EXISTING CODE TO READ FIRST
-      - CLAUDE.md
-      - CODEX.md
-      - results/experiment_3319_evidence_matrix_v38.json
-      - results/experiment_3306_capstone_v305.json
-      - openspec/change-proposals/research-roadmap-vNEXT.md
-      - research-roadmap-next.yaml
-      - ops/status.md
-      - ops/changelog.md
-
-      TASK
-      Produce the .306 capstone artifact from matrix v38 and the .305 capstone. Do not activate the next milestone.
-
-      CONCRETE STEPS
-      1. Read matrix v38 and capstone v305.
-      2. Report paper_ready, publication_blocker_count, blocker_delta_from_v305, Garak/DataFlip status, repair headline status, and FR-11 curriculum safety.
-      3. Name the next_top_gap if paper_ready remains false.
-      4. Confirm no push and no modifications to research-roadmap.yaml or scripts/research_conductor.py.
-
-      REQUIRED ARTIFACT FIELDS:
-      - capstone_v306_ready
-      - paper_ready
-      - publication_blocker_count
-      - blocker_delta_from_v305
-      - garak_gate_passed
-      - dataflip_gate_passed
-      - quality_flags_cleared
-      - repair_headline_claim_allowed
-      - fr11_curriculum_safe
-      - next_top_gap
-      - no_push
-      - honest_verdict
-
-      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+      - capstone_v307_ready: bool
+      - kona_premise_outcome: str (one of: validated / viable_not_superior / unsupported / blocked_*)
+      - grounding_keystone_outcome: str (one of: holds / at_risk / blocked_*)
+      - next_top_gap: str
+      - paper_ready: bool (principle: from scripts/publication_gate.py, not a count)
+      - publication_gate_unmet: list (principle: which of G1-G4 are unmet)
+      - random_seed: int
+      - reproducibility_checksum: str
+      - duration_s: float
+      - honest_verdict: str (principle: complete:/success:/passed:/shipped_ prefix)
