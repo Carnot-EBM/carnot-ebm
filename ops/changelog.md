@@ -7746,3 +7746,4 @@ ModuleNotFoundError: No module named 'torch'; results/experiment_2828_fover_memo
 - 2026-05-29: GateMate n16 Ising tile bitstream build and detect smoke v2 (✅ Complete) — honest_verdict=complete: gatemate_n16_bitstream_built_board_detected; results/experiment_3347_gatemate_n16_ising_tile_bitstream_build_smoke_v2.json
 - 2026-05-29: Independent reproducer pack and evidence matrix v40 (⚠️ Blocked) — honest_verdict=blocked_evidence_missing_or_blocked: missing=0, blocked=2; results/experiment_3348_independent_reproducer_pack_evidence_matrix_v40.json
 - 2026-05-29: Capstone v309: runtime, diversity, FR-11, hardware, and next-top-gap decision (✅ Complete) — honest_verdict=complete: capstone_v309_synthesis_ready=true; results/experiment_3349_capstone_v309.json
+- 2026-05-29: Deterministic prefix-closed bounds pilot for live LLM sampling (✅ Complete) — honest_verdict=complete_deterministic_bounds_calculated; results/experiment_3353_deterministic_bounds.json
