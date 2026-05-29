@@ -6667,3 +6667,4 @@ web search: https://docs.garak.ai/garak/examples/pr |
 | 2026-05-28 22:40 UTC | Prefix-closed Garak rogue-string guard pilot v1 | OK | 81 passed in 3.52s |
 | 2026-05-28 23:11 UTC | Red-team energy telemetry and routing policy v1 | OK | 81 passed in 3.22s |
 | 2026-05-28 23:42 UTC | Garak defense ablation v1 | OK | 81 passed in 3.43s |
+| 2026-05-29 00:03 UTC | Full Garak/DataFlip gate rerun v3 | OK | 101 passed in 4.03s |

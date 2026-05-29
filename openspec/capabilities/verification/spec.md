@@ -8740,3 +8740,58 @@ performance or true BEAVER probability bounds.
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-VERIFY-3297 | Implemented (`python/carnot/verify/prefix_closed_garak_guard_v1.py`) | Implemented (`tests/python/test_experiment_3297_prefix_closed_garak_guard.py`) |
+
+### REQ-VERIFY-3301: Stratified Exact Repair Panel Manifest V11
+
+The repository shall provide an Exp 3301 deterministic manifest builder that
+preserves the Exp 3289 open repair gate and the Exp 3287 exact verifier
+contract before any live repair rerun, and writes
+`results/experiment_3301_exact_repair_panel_manifest_v11.json`. The builder
+MUST NOT invoke an LLM, start a local model server, run live repair generation,
+push, or modify `scripts/research_conductor.py`.
+
+The builder SHALL emit a stable panel cases manifest at
+`data/research/exact_repair_panel_v11.jsonl` with at least 30 repair cases
+stratified across multiple exact-checkable families, including symbolic
+aliases, arithmetic exact rows, context shortcuts, simple code/output checks,
+and bounded logical consistency. Every case SHALL include `context`,
+`question`, `failing_candidate`, `expected_answer`, `exact_checker_type`,
+`localized_repair_feedback`, and `case_hash`; every known failing candidate
+MUST fail its exact checker while the expected answer passes. Any case that
+requires an LLM judge to decide correctness MUST be excluded.
+
+The terminal artifact MUST include `repair_panel_manifest_ready`,
+`panel_case_count`, `case_family_counts`, `exact_checker_types`,
+`llm_judge_required_count`, `panel_cases_path`, `case_hashes`,
+`localized_feedback_coverage`, `known_failing_candidate_count`,
+`validation_commands`, `inference_substrate`, `random_seed`,
+`reproducibility_checksum`, `duration_s`, and `honest_verdict`.
+`repair_panel_manifest_ready` MUST be true only when the stable manifest has at
+least 30 cases, at least five represented families, exact checker coverage is
+complete, all case hashes are unique, localized feedback coverage is 1.0, and
+`llm_judge_required_count=0`. `honest_verdict` MUST begin with one of
+`complete:`, `success:`, `passed:`, or `shipped:` whenever the manifest
+artifact is written.
+
+### SCENARIO-VERIFY-3301: Fixed Exact Panel Gates The Live Repair Rerun
+
+Given Exp 3289 has reopened the repair gate and Exp 3290 showed only a
+four-case diagnostic repair smoke,
+When Exp 3301 builds the fixed exact panel manifest,
+Then it writes the required terminal JSON artifact and stable JSONL case
+manifest without live inference, reports at least 30 case hashes across
+symbolic, arithmetic, context shortcut, code/output, and bounded logic
+families, records exact checker types only, reports zero LLM-judge-required
+cases, confirms each case starts from a known failing candidate, and exposes
+the validation commands used to parse and test the manifest.
+
+If any case lacks localized repair feedback, has a duplicate case hash, passes
+the exact checker with its failing candidate, fails the exact checker with its
+expected answer, or requires an LLM judge, then Exp 3301 SHALL fail validation
+instead of marking `repair_panel_manifest_ready=true`.
+
+## Implementation Status (REQ-VERIFY-3301)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-VERIFY-3301 | Implemented (`python/carnot/verify/exact_repair_panel_manifest_v11.py`) | Implemented (`tests/python/test_experiment_3301_exact_repair_panel_manifest_v11.py`) |
