@@ -6805,3 +6805,4 @@ web search: https://docs.garak.ai/garak/examples/pr |
 | 2026-05-29 11:45 UTC | Archive milestone .308 honestly and activate .309 | OK | 81 passed in 3.36s |
 | 2026-05-29 12:04 UTC | SOTA GGUF tokenizer and runtime receipt for live i | OK | cache hit: 85 passed in 4.08s |
 | 2026-05-29 12:14 UTC | Energy-descent bootstrap v2 gated on clean SOTA GG | OK | 81 passed in 3.24s |
+| 2026-05-29 12:29 UTC | Energy-descent versus autoregressive SOTA panel v3 | OK | 81 passed in 3.44s |

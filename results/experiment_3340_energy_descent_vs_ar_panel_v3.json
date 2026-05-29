@@ -277,5 +277,13 @@
   "n_cases": 30,
   "n_headline_eligible": 30,
   "random_seed": 3340,
-  "reproducibility_checksum": "682c8490ad03ac07"
+  "reproducibility_checksum": "682c8490ad03ac07",
+  "flagged_adversarial": true,
+  "corrigendum_pending": [
+    {
+      "kind": "DURATION_TOO_SHORT",
+      "severity": "critical",
+      "detail": "duration_s=25.957309 but artifact references compute-bound markers (GGUF / CUDA / live model). Loading and running a real model takes >=60.0s minimum; this completed too fast to have invoked the model."
+    }
+  ]
 }
