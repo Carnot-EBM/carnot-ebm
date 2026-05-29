@@ -1,0 +1,29 @@
+{
+  "schema": "carnot.operational_retro.v64",
+  "milestone": "2026.05.308",
+  "generated_at": "2026-05-29T10:52:34Z",
+  "retro_type": "operational_full",
+  "total_wall_time_minutes": 0,
+  "experiments_completed": 0,
+  "compute_bound_experiments_count": 0,
+  "slowest_experiments": [],
+  "gpu_idle_on_compute_bound_tasks": null,
+  "summary": "The milestone-scoped timing source reports 0 completed experiments, 0 total wall-time minutes, and 0 compute-bound experiments. Slowest compute-bound experiments, compute-bound GPU efficiency, and 2+ model DualGPURunner behavior have no data available this milestone.",
+  "bottlenecks_identified": [
+    "No compute-bound runtime bottleneck can be identified: no data available this milestone.",
+    "GPU idle on compute-bound tasks has no data available this milestone because compute_bound_experiments_count is 0.",
+    "DualGPURunner engagement for 2+ model compute-bound tasks has no data available this milestone because no such task appears in the timing data."
+  ],
+  "improvements_suggested": [
+    "Emit an explicit milestone-scoped zero-row timing manifest before retrospective generation when activation produced no experiment commits.",
+    "Add a retrospective preflight that rejects experiment IDs, durations, and metrics outside the active milestone timing block.",
+    "Add a closeout prompt that asks the operator to confirm whether a zero-experiment milestone was intentional before planning the next queue."
+  ],
+  "top_3_highest_leverage_actions": [
+    "Make empty milestone timing windows explicit in the conductor output.",
+    "Keep operational retrospectives gated to the active milestone timing source only.",
+    "Alert at milestone closeout when no experiment commit landed after activation."
+  ],
+  "estimated_time_savings_pct": 0,
+  "meta_reflection": "With 0 experiment rows, the retrospective cannot rank slow runs or diagnose compute-bound GPU utilization. The GPU idle snapshot is therefore non-actionable for this milestone; the useful operational lesson is to make empty timing windows explicit and prevent prior-milestone leakage."
+}
