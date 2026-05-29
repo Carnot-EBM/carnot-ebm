@@ -6793,3 +6793,4 @@ web search: https://docs.garak.ai/garak/examples/pr |
 | 2026-05-29 09:57 UTC | EBT sidecar adapter smoke against exact verifier s | OK | 81 passed in 3.00s |
 | 2026-05-29 10:03 UTC | Interwhen-style monitor pilot for intermediate can | OK | 83 passed in 4.13s |
 | 2026-05-29 10:24 UTC | Energy-guided test-time scaling SOTA ablation unde | OK | 81 passed in 3.69s |
+| 2026-05-29 10:35 UTC | FR-11 online verifier memory nonforgetting v4 | OK | 81 passed in 3.76s |
