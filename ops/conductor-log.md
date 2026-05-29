@@ -6776,3 +6776,4 @@ web search: https://docs.garak.ai/garak/examples/pr |
 | 2026-05-29 08:47 UTC | Milestone 2026.05.308 activated | OK | 12 tasks queued |
 | 2026-05-29 08:49 UTC | Archive milestone .307 honestly and activate .308 | FAIL | Codex CLI error: you finish the real work inside 10 minutes, that is correct  |
 | 2026-05-29 08:51 UTC | Archive milestone .307 honestly and activate .308 | FAIL | Codex CLI error: you finish the real work inside 10 minutes, that is correct  |
+| 2026-05-29 08:53 UTC | Archive milestone .307 honestly and activate .308 | FAIL | Codex CLI error: you finish the real work inside 10 minutes, that is correct  |
