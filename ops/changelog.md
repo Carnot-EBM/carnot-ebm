@@ -7722,3 +7722,4 @@ ModuleNotFoundError: No module named 'torch'; results/experiment_2828_fover_memo
 - 2026-05-29: Energy-descent substrate bootstrap smoke for SOTA GGUF recovery (⚠️ Blocked) — honest_verdict=blocked_no_sota_models; results/experiment_3327_energy_descent_substrate_bootstrap_v1.json
 - 2026-05-29: Energy-descent substrate bootstrap smoke for SOTA GGUF recovery (⚠️ Blocked) — honest_verdict=blocked_gpu_setup; results/experiment_3327_energy_descent_substrate_bootstrap_v1.json
 - 2026-05-29: Energy-descent substrate bootstrap smoke for SOTA GGUF recovery (⚠️ Blocked) — honest_verdict=blocked_gpu_setup; results/experiment_3327_energy_descent_substrate_bootstrap_v1.json
+- 2026-05-29: Verifier ensemble diversity and lambda_min audit v2 (⚠️ Research Finding) — honest_verdict=usable for Phase-3 authority; results/experiment_3329_verifier_ensemble_diversity_audit_v2.json
