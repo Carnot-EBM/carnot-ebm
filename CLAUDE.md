@@ -2,6 +2,41 @@
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
+## Rule Index (navigational aid — added 2026-05-29, additive only)
+
+This file has ~29 distinct MANDATORY rules accreted one-per-incident. Not all
+require active reading: many are now enforced by a pre-commit lint or conductor
+guard, so the prose is reference-only. Use this index to find the load-bearing
+rules fast. **No rule prose was removed — this is a map, not a deletion.**
+The project north star (headline claim + stable publication gate + hardware
+focus) lives at `ops/north-star.md`.
+
+**MECHANICALLY-ENFORCED (a script enforces these regardless of the prose —
+read only if debugging the enforcer):**
+- Canonical Repository URL Discipline → `scripts/canonical_url_lint.py`
+- Calendar-Month Prefix Rollover → `_expected_next_milestone()`
+- Overdue-Priority Forcing Function → `scripts/overdue_priority_lint.py`
+- Public Documentation Discipline → `scripts/operator_curated_docs_lint.py`
+- Verifier Authenticity (Layer 1) → `scripts/verifier_authenticity_lint.py`
+- Adversarial Landing-Page (Layer 1) → `scripts/pages_fever_dream_lint.py`
+- Verdict Terminal-Prefix → `_verdict_is_untrustworthy()` classifier
+- Exclusion-Manifest Cross-Check → `_ensure_exclusion_manifest_loaded()`
+
+**HISTORICAL / SUPERSEDED (preserved per never-prune; not active guidance):**
+- Codex-Default for Experiments → superseded by Gemini-Default (2026-05-20)
+- Paper-v6 Narrowing Discipline → forward-only; retires when the 3 Deep Think
+  corrigenda land + paper rewritten
+
+**ACTIVE — require judgment, read these when planning/executing:**
+Gemini-Default · Failed-Experiment Rerun · Pre-Launch Preconditions ·
+Adversarial Artifact Verification + Sample-Size Rigor · Inference-Substrate
+Declaration · Principle-Annotated Artifact Fields · Phase Prototype+Validation ·
+Scope-Reduction-When-Flagged · Hardware-Task Continuity (see north-star §3 for
+the recommended KV260-focus relaxation) · KV260 SSH-Not-SD-Card ·
+Operator-Only External Publication · Never-Stash-Commit-First ·
+Decentralization-Respecting Design Constraints · Pre-Staged Roadmap Convention ·
+Documentation Update Rules · Tests Must Run and Assert.
+
 ## Claude Code Guidelines
 If you notice the user's request is based on a misconception, say so.
 Never claim 'all tests pass' when output shows failures.

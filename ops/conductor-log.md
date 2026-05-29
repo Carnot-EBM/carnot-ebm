@@ -6677,3 +6677,4 @@ web search: https://docs.garak.ai/garak/examples/pr |
 | 2026-05-29 02:06 UTC | Plan milestone 2026.05.306 | OK | 14 tasks proposed |
 | 2026-05-29 02:08 UTC | Milestone 2026.05.306 activated | OK | 14 tasks queued |
 | 2026-05-29 02:26 UTC | Close .305 ledger and open .306 quality-cleanup qu | OK | 81 passed in 3.04s |
+| 2026-05-29 02:41 UTC | Quality-flag root-cause autopsy v1 | OK | 81 passed in 3.72s |
