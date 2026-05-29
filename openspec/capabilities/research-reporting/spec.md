@@ -14641,3 +14641,87 @@ the blocking reason.
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-REPORT-3312 | Planned (`python/carnot/reporting/dataflip_garak_quality_clean_rerun_3312.py`) | Planned (`tests/python/test_experiment_3312_dataflip_garak_quality_clean_rerun.py`) |
+
+### REQ-REPORT-3313: Repair Substrate Root-Cause Autopsy V1
+
+The repository shall provide an Exp 3313 repair-substrate root-cause autopsy
+generator that writes
+`results/experiment_3313_repair_substrate_root_cause_autopsy_v1.json` by
+reading `results/experiment_3302_headline_sota_repair_panel_v11.json`,
+`results/experiment_3303_repair_headline_evidence_audit_v1.json`,
+`results/experiment_3308_quality_flag_root_cause_autopsy_v1.json`,
+`results/experiment_3309_live_runtime_provenance_contract_v1.json`, and
+`ops/conductor-log.md`. The workflow MUST be aggregation only. It MUST NOT run
+model inference, CUDA probes, Garak, DataFlip, repair generation, verifier
+scoring, the conductor, pushes, or modify `scripts/research_conductor.py`,
+`ops/status.md`, `ops/changelog.md`, or `_bmad/traceability.md` when the
+conductor delegates reconciliation to a separate step.
+
+The autopsy MUST compare the Exp 3302 repair panel and Exp 3303 repair audit
+field by field. The comparison MUST identify source-provenance, runtime,
+model-identity, and substrate fields that are missing, inconsistent, or
+promotion-blocking. Expected panel/audit boundary differences, including the
+panel's live repair substrate and the audit's
+`aggregation_from_upstream_artifacts` substrate, MUST be distinguished from
+true evidence failures. The autopsy MUST state whether each blocker is a true
+repair failure, a bounded repair-performance limitation, or an evidence
+hygiene failure. It SHALL treat the zero false accepts and exact-check
+provenance as bounded positive evidence while preserving the 27/30 verified
+success rate and the clean-verifier-rejected exact successes as non-headline
+limitations.
+
+The rerun contract MUST use exact keys `exp3314`, `exp3315`, and `exp3316`,
+and MUST name exact acceptance requirements for Exp 3314, Exp 3315, and Exp
+3316. Exp 3314 SHALL separate deterministic exact-check result, clean-verifier
+decision, provenance risk, model identity, uncertainty, and abstention features
+without making uncertainty the final acceptance authority. Exp 3315 SHALL
+define verifier-guided backtracking rules with exact verifiers, not LLM
+judges, as the final acceptance authority. Exp 3316 SHALL require the
+Exp 3309 runtime contract, clean DataFlip/quality gates from Exp 3312,
+Distributional-EBM audit readiness from Exp 3314, VGB policy readiness from
+Exp 3315, at least the `.305` 30-case denominator, no legacy small-model
+substitution, exact success/false-accept/abstention accounting, confidence
+intervals, source artifact hashes, runtime provenance, model identity/cache/
+size/quantization/load/generation/GPU/checker-version fields, clean
+substrate consistency, no critical adversarial flags, and honest blocking
+instead of headline promotion if any gate fails.
+
+The terminal artifact MUST include `repair_substrate_autopsy_ready`,
+`analyzed_artifacts`, `source_provenance_failure_modes`,
+`substrate_consistency_failure_modes`, `rerun_contract`,
+`no_new_model_execution`, and `honest_verdict`. It SHALL also include field
+comparison rows, blocker classifications, no-new-execution booleans, random
+seed, reproducibility checksum, duration, and
+`inference_substrate="aggregation_from_upstream_artifacts"`. `honest_verdict`
+MUST begin with one of `complete:`, `success:`, `passed:`, or `shipped:`.
+
+#### SCENARIO-REPORT-3313: Autopsy Converts Repair Audit Blockers Into Rerun Contract
+
+**Given** Exp 3302 reports a 30-case repair panel with
+`verified_success_count=27`, `false_accept_count=0`,
+`headline_claim_allowed=false`, `provenance_clean=false`, one used mandated
+GGUF model, two missing mandated GGUF models, and a critical
+DURATION_TOO_SHORT flag
+**And** Exp 3303 reports `headline_claim_allowed_after_audit=false`,
+`source_provenance_clean=false`, `substrate_consistency_passed=false`,
+`no_new_model_execution=true`, exact-check provenance for the claimed
+successes, and aggregation-only audit substrate
+**And** Exp 3309 defines the live runtime/provenance contract and shared repair
+substrate rules
+**When** the Exp 3313 autopsy generator runs without launching model or repair
+execution
+**Then** it writes
+`results/experiment_3313_repair_substrate_root_cause_autopsy_v1.json` with all
+required schema fields, `repair_substrate_autopsy_ready=true`, explicit
+field-by-field panel/audit comparison, source-provenance failure modes,
+substrate-consistency failure modes, blocker classification that separates
+true repair limitations from evidence hygiene failures, and exact Exp 3314,
+Exp 3315, and Exp 3316 rerun-contract requirements that block headline
+promotion until runtime provenance, model identity, exact acceptance, and
+substrate consistency are clean.
+
+## Implementation Status (REQ-REPORT-3313)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-3313 | Planned (`python/carnot/reporting/repair_substrate_root_cause_autopsy_3313.py`) | Planned (`tests/python/test_experiment_3313_repair_substrate_root_cause_autopsy.py`) |
