@@ -6803,3 +6803,4 @@ web search: https://docs.garak.ai/garak/examples/pr |
 | 2026-05-29 11:27 UTC | Plan milestone 2026.05.309 | OK | 13 tasks proposed |
 | 2026-05-29 11:29 UTC | Milestone 2026.05.309 activated | OK | 13 tasks queued |
 | 2026-05-29 11:45 UTC | Archive milestone .308 honestly and activate .309 | OK | 81 passed in 3.36s |
+| 2026-05-29 12:04 UTC | SOTA GGUF tokenizer and runtime receipt for live i | OK | cache hit: 85 passed in 4.08s |
