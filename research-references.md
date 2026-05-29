@@ -18745,3 +18745,18 @@ false accepts and ledger inconsistency before any broader paper claim.
   vendor pages or stale wish-list entries.
   Sources: https://extropic.ai/software, https://extropic.ai/hardware, and
   https://logicalintelligence.com/kona-ebms-energy-based-models
+
+
+## 2026-05-29 External Research Refresh (Milestone 2026.05.310)
+
+This refresh introduces recent 2026 findings at the intersection of Energy-Based Models, constraint satisfaction, and Formal Verification, driving the Phase-3 and FR-11 direction for milestone `.310`.
+
+- **Distributional Energy-Based Models for Uncertainty-Aware Structured LLM Reasoning (arXiv:2605.18871)**: Proposes a decomposed energy function $E = \mu_{quality} + \lambda \cdot E_{constraint}$. It combines a learned quality scorer with deterministic analytical constraint penalties, allowing targeted regeneration or abstention when limits are crossed. Relevance to Carnot: Guides `.310` EBT scoring strategies where constraint violations carry hard scalar penalties separate from soft sequence-level quality scoring.
+
+- **BEAVER: An Efficient Deterministic LLM Verifier (arXiv:2512.05439, v2 May 2026)**: Computes deterministic, sound probability bounds on constraint satisfaction. Uses Token Trie and Frontier data structures to explore generation space, proving formal guarantees over sampling limits. Relevance to Carnot: Direct architectural inspiration for the `.310` prefix-closed bounding pilot (exp3353), demonstrating that verifiable constraints should be maintained explicitly during sequence completion.
+
+- **Exact-Rational Kolmogorov-Arnold Networks (RKAN) with Formal Verification in Lean 4 (Preprint, April 2026)**: Implements KANs using exact rational arithmetic ($\mathbb{Q}$) and formally verifies the training dynamics in Lean 4, proving numerical stability and bit-identical reproducibility. Relevance to Carnot: Strengthens the Phase-2 exact verifier posture, treating KAN architectures as formally bounded artifacts rather than purely empirical curve-fitters.
+
+- **TraceFix: Repairing Agent Coordination Protocols with TLA+ Counterexamples (arXiv:2605.07935)**: Repairs coordination protocols by treating TLA+ counterexamples as minimal repair prompts. Relevance to Carnot: Supports the `.310` FR-11 pilot that consumes exact Z3 Unsat Cores to automatically patch environment constraint-schemas.
+
+- **LogicVault: Persistent Symbolic Belief States for Cross-Query Logical Consistency in LLMs (ICLR 2026)**: Converts query responses into first-order logic, storing them in a vault, and runs Z3 to detect logical drifts over long multi-turn sessions. Relevance to Carnot: Inspires the FR-11 multi-session memory logic. We need cross-query persistence of axiomatic constraints evaluated against an exact solver, moving beyond naive prompt-replay.
