@@ -2,6 +2,28 @@ milestone: "2026.05.308"
 milestone_title: "Phase-3 Path Recovery, Verifier Grounding, and FR-11 Nonforgetting"
 milestone_doc: "openspec/change-proposals/research-roadmap-vNEXT.md"
 
+# Outer-loop edits 2026-05-29 (operator-authorized, option 1): (a) requires_gemini:true
+# added to the 7 experiment tasks so CODEX_FORCE_EXPERIMENTS=1 does NOT coerce them
+# to codex — codex hit the "10-minute bail" failing exp3322/3323 (+v4) 9x this session;
+# (b) operator_override + prior_failures added so this conductor-auto-staged roadmap
+# passes its own activation guard (it had 4 exclusion-manifest HARD violations + no
+# override and would have refuse-looped at activation, like .299 v1).
+operator_override:
+  authorization: "Operator directive 2026-05-29 (conversation): unblock the auto-staged .308 recovery roadmap so the Phase-3 path-de-risking experiments actually run on gemini. Aging non-path priorities deferred to .309+."
+  deferred_priorities:
+    - slug: verifier_ensemble_multi_axis_composition_v1
+      rationale: "Superseded for now by exp3329 (diversity audit v2), the more fundamental version, which runs this milestone. Deferred to .309+."
+    - slug: verifier_ensemble_multi_violation_degradation_curve_v1
+      rationale: "Sibling of multi-axis; same dependency on the diversity-audit result. Deferred."
+    - slug: gatemate_n16_flash_timing_smoke_v3
+      rationale: "Operator-side hardware action. Deferred."
+    - slug: gatemate_a1_n16_ising_tile_bitstream_build_v2
+      rationale: "Operator-side gatemate toolchain action. Deferred."
+    - slug: kv260_mmd_vs_cpu_sequential_gibbs_v1
+      rationale: "Operator-side KV260 board measurement. Deferred."
+    - slug: aquaforte_beaver_pipeline_honest_substrate_corrigendum_v1
+      rationale: "Paper-prep corrigendum; behind the path-de-risking critical path. Deferred."
+
 tasks:
   - id: exp3325-archive-v307-activate-v308
     milestone: "2026.05.308"
@@ -15,6 +37,11 @@ tasks:
     inference_substrate: aggregation_from_upstream_artifacts
     requires_gpu: false
     deliverable: "results/experiment_3325_archive_v307_activate_v308.json"
+    prior_failures:
+      - experiment_id: exp3260-archive-v301-activate-v302
+        verdict: "complete: archive cycle (standard recurring milestone-boundary handoff)"
+        addressed_by: "Standard recurring handoff; matched priors are previous archive cycles, all completed successfully. Not a retry of a failure — the next iteration of the standard transition."
+        retire_if_same_verdict: false
     prompt: |
       CONTEXT
       Milestone 2026.05.307 has completed operationally. The capstone reports that the two scientific upstreams, exp3322 and exp3323, did not produce artifacts because the conductor hit Codex CLI failures. This task must archive .307 honestly and activate .308 without pretending the missing upstreams were scientific negative results.
@@ -110,6 +137,7 @@ tasks:
     track: phase3-kona
     inference_substrate: live_llm_inference
     requires_gpu: true
+    requires_gemini: true  # codex 10-min-bail failed exp3322/3323 (+v4) 9x this session; bypass CODEX_FORCE_EXPERIMENTS gemini->codex coercion
     deliverable: "results/experiment_3327_energy_descent_substrate_bootstrap_v1.json"
     prior_failures:
       - experiment_id: exp3322-energy-descent-vs-autoregressive-premise-v1
@@ -156,6 +184,7 @@ tasks:
     track: phase3-kona
     inference_substrate: live_llm_inference
     requires_gpu: true
+    requires_gemini: true  # codex 10-min-bail failed exp3322/3323 (+v4) 9x this session; bypass CODEX_FORCE_EXPERIMENTS gemini->codex coercion
     deliverable: "results/experiment_3328_energy_descent_vs_ar_sota_panel_v2.json"
     gated_on:
       - upstream: exp3327-energy-descent-substrate-bootstrap-v1
@@ -209,6 +238,7 @@ tasks:
     track: verifiable-reasoning
     inference_substrate: verifier_ensemble_against_cached_candidates
     requires_gpu: false
+    requires_gemini: true  # codex 10-min-bail failed exp3322/3323 (+v4) 9x this session; bypass CODEX_FORCE_EXPERIMENTS gemini->codex coercion
     deliverable: "results/experiment_3329_verifier_ensemble_diversity_audit_v2.json"
     prior_failures:
       - experiment_id: exp3323-verifier-ensemble-diversity-audit-v1
@@ -304,6 +334,7 @@ tasks:
     track: llm-ebm-inference
     inference_substrate: verifier_ensemble_against_cached_candidates
     requires_gpu: false
+    requires_gemini: true  # codex 10-min-bail failed exp3322/3323 (+v4) 9x this session; bypass CODEX_FORCE_EXPERIMENTS gemini->codex coercion
     deliverable: "results/experiment_3331_ebt_sidecar_adapter_smoke_v2.json"
     prompt: |
       CONTEXT
@@ -345,7 +376,13 @@ tasks:
     track: verifiable-reasoning
     inference_substrate: verifier_ensemble_against_cached_candidates
     requires_gpu: false
+    requires_gemini: true  # codex 10-min-bail failed exp3322/3323 (+v4) 9x this session; bypass CODEX_FORCE_EXPERIMENTS gemini->codex coercion
     deliverable: "results/experiment_3332_interwhen_monitor_pilot_v1.json"
+    prior_failures:
+      - experiment_id: exp841-interwhen-monitor
+        verdict: "complete: interwhen monitor evidence (prior iteration)"
+        addressed_by: "Prior interwhen monitor work was a different milestone's scope; this pilot scores intermediate candidates against cached corpora with the current verifier set and a falsifiable readiness gate. Different corpus + gate than the matched prior."
+        retire_if_same_verdict: true
     prompt: |
       CONTEXT
       Interwhen-style verifiable reasoning frameworks suggest that monitors should score intermediate candidates, not only final answers. Carnot needs this if energy descent is to be trusted as a refinement process rather than a final-answer reranker.
@@ -385,7 +422,13 @@ tasks:
     track: llm-ebm-inference
     inference_substrate: live_llm_inference
     requires_gpu: true
+    requires_gemini: true  # codex 10-min-bail failed exp3322/3323 (+v4) 9x this session; bypass CODEX_FORCE_EXPERIMENTS gemini->codex coercion
     deliverable: "results/experiment_3333_energy_guided_ttscaling_sota_ablation_v1.json"
+    prior_failures:
+      - experiment_id: exp3322-energy-descent-vs-autoregressive-premise-v1
+        verdict: "failed_operationally: Codex CLI 10-min bail before artifact; no scientific verdict"
+        addressed_by: "exp3322 failed operationally on the codex coercion (now fixed via requires_gemini:true on this task). This ablation is gated on the exp3327 bootstrap smoke proving the substrate runs, and uses energy-guided test-time scaling as a distinct condition from the bare premise test."
+        retire_if_same_verdict: true
     prompt: |
       CONTEXT
       Recent energy-guided decoding/test-time scaling work is promising, but Carnot must treat energy as a proposal/ranking signal and exact verifiers as the authority. This task tests that pattern on local SOTA GGUFs without claiming model training progress.
@@ -426,6 +469,7 @@ tasks:
     track: self-learning
     inference_substrate: verifier_ensemble_against_cached_candidates
     requires_gpu: false
+    requires_gemini: true  # codex 10-min-bail failed exp3322/3323 (+v4) 9x this session; bypass CODEX_FORCE_EXPERIMENTS gemini->codex coercion
     deliverable: "results/experiment_3334_fr11_online_verifier_memory_nonforgetting_v4.json"
     prior_failures:
       - experiment_id: exp3318-fr11-failure-targeted-curriculum-replay-v3
@@ -476,6 +520,11 @@ tasks:
     inference_substrate: aggregation_from_upstream_artifacts
     requires_gpu: false
     deliverable: "results/experiment_3335_reproducer_pack_and_evidence_matrix_v39.json"
+    prior_failures:
+      - experiment_id: exp3305-evidence-matrix-v37
+        verdict: "complete: evidence matrix (prior recurring rollup)"
+        addressed_by: "Standard recurring evidence-matrix rollup; matched priors (v35/v36/v37) all completed successfully. v39 aggregates the new .308 path-de-risking evidence (exp3327-3334) — different inputs than the matched priors. Not a retry of a failure."
+        retire_if_same_verdict: false
     prompt: |
       CONTEXT
       Publication G2 remains the stable readiness blocker. This task cannot satisfy independent reproduction by itself, but it can produce a clean pack that an independent runner can execute or audit without chasing conductor history.
