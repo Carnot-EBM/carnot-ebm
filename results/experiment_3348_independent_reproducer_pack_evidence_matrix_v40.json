@@ -1,0 +1,117 @@
+{
+  "artifact_inventory": {
+    "exp3337": {
+      "classification": "gate-blocked",
+      "verdict": "complete: archive_v308_activate_v309_ready=true; completed=5; blocked=1; gate_blocked=1; missing=5; duration_flagged=1; next_top_gap=recover_sota_gguf_tokenizer_runtime_then_rerun_energy_descent_bootstrap"
+    },
+    "exp3338": {
+      "classification": "clean",
+      "verdict": "complete: sota_gguf_tokenizer_runtime_receipt_v1_ready=true; runtime_receipt_clean=true; clean_mandated_model_ids=unsloth/Qwen3.6-35B-A3B-GGUF"
+    },
+    "exp3339": {
+      "classification": "clean",
+      "verdict": "complete: energy_descent_bootstrap_ready=true"
+    },
+    "exp3340": {
+      "classification": "clean",
+      "verdict": "complete: delta_overall=-0.30"
+    },
+    "exp3341": {
+      "classification": "clean",
+      "verdict": "complete: Remediation plan generated avoiding retired scopes and targeting trajectory consistency."
+    },
+    "exp3342": {
+      "classification": "clean",
+      "verdict": "complete: Monitor provenance axis implemented and evaluated."
+    },
+    "exp3343": {
+      "classification": "clean",
+      "verdict": "complete: Diversity re-audit passed after applying monitor provenance axis and removing collapsed pair."
+    },
+    "exp3344": {
+      "classification": "blocked",
+      "verdict": "blocked: Missing required grammar/schema constraint dependencies (neither llguidance nor xgrammar is installed)"
+    },
+    "exp3345": {
+      "classification": "clean",
+      "verdict": "complete: online verifier memory nonforgetting v5 confirmed"
+    },
+    "exp3346": {
+      "classification": "clean",
+      "verdict": "complete: kv260_mmd_vs_cpu_sequential_gibbs_continuity_recorded"
+    },
+    "exp3347": {
+      "classification": "clean",
+      "verdict": "complete: gatemate_n16_bitstream_built_board_detected"
+    }
+  },
+  "blocked_artifacts": [
+    "exp3337",
+    "exp3344"
+  ],
+  "clean_artifacts": [
+    "exp3338",
+    "exp3339",
+    "exp3340",
+    "exp3341",
+    "exp3342",
+    "exp3343",
+    "exp3345",
+    "exp3346",
+    "exp3347"
+  ],
+  "duration_flagged_artifacts": [],
+  "duration_s": 0.149,
+  "files_updated": [
+    "results/experiment_3348_independent_reproducer_pack_evidence_matrix_v40.json"
+  ],
+  "honest_verdict": "blocked_evidence_missing_or_blocked: missing=0, blocked=2",
+  "inference_substrate": "aggregation_from_upstream_artifacts",
+  "milestone": "2026.05.309",
+  "missing_artifacts": [],
+  "next_pack_actions": [
+    "Unblock exp3337: check upstream dependencies or logs.",
+    "Unblock exp3344: check upstream dependencies or logs."
+  ],
+  "publication_gate_result": {
+    "gates": {
+      "G1": {
+        "detail": "FoVer dual-condition AUROC artifact present (experiment_2850_fover_dual_condition_integrity_v4.json); CI reported=True",
+        "pass": true,
+        "source": "experiment_2850_fover_dual_condition_integrity_v4.json"
+      },
+      "G2": {
+        "detail": "no independent reproducer recorded in ops/publication_gate_state.json (set g2_independent_reproducer + g2_evidence when one lands)",
+        "pass": false
+      },
+      "G3": {
+        "detail": "no retracted phrasings asserted as live claims",
+        "hits": [],
+        "pass": true
+      },
+      "G4": {
+        "detail": "experiment_2850_fover_dual_condition_integrity_v4.json: random_seed/seeds=True, reproducibility_checksum=True",
+        "pass": true,
+        "source": "experiment_2850_fover_dual_condition_integrity_v4.json"
+      }
+    },
+    "note": "Stable 4-condition gate (ops/north-star.md \u00a72). Replaces the redefinable publication_blocker_count. Report unmet_gates, not a count.",
+    "paper_ready": false,
+    "unmet_gates": [
+      "G2"
+    ]
+  },
+  "random_seed": 42,
+  "reproducer_commands": [
+    "JAX_PLATFORMS=cpu .venv/bin/python scripts/experiment_3338_sota_gguf_tokenizer_runtime_receipt_v1.py",
+    "JAX_PLATFORMS=cpu .venv/bin/python scripts/experiment_3339_energy_descent_bootstrap_v2_runtime_clean.py",
+    "JAX_PLATFORMS=cpu .venv/bin/python scripts/experiment_3340_energy_descent_vs_ar_panel_v3.py",
+    "JAX_PLATFORMS=cpu .venv/bin/python scripts/experiment_3341_verifier_diversity_remediation_plan_v2.py",
+    "JAX_PLATFORMS=cpu .venv/bin/python scripts/experiment_3342_monitor_provenance_verifier_axis_v1.py",
+    "JAX_PLATFORMS=cpu .venv/bin/python scripts/experiment_3343_verifier_diversity_reaudit_after_axis_v3.py",
+    "JAX_PLATFORMS=cpu .venv/bin/python scripts/experiment_3345_fr11_online_memory_nonforgetting_v5.py",
+    "JAX_PLATFORMS=cpu .venv/bin/python scripts/experiment_3346_kv260_mmd_vs_cpu_sequential_gibbs_v1.py",
+    "JAX_PLATFORMS=cpu .venv/bin/python scripts/experiment_3347_gatemate_n16_ising_tile_bitstream_build_smoke_v2.py"
+  ],
+  "reproducibility_checksum": "ffc7f9dc8bd4cd51"
+}
