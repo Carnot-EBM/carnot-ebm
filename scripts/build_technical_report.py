@@ -108,8 +108,12 @@ def regenerate_html(md_path: Path = MD_PATH, html_path: Path = HTML_PATH) -> str
     # 1. Replace the content between <article>...</article> with the freshly
     #    rendered body.  Use a non-greedy regex so nested <article>-like
     #    substrings (unlikely but cheap insurance) do not cause over-match.
+    #    The opening tag may carry attributes (the live template uses
+    #    `<article class="markdown-body">`), so match `<article ...>` and
+    #    preserve the whole opening tag verbatim via group(1) — a bare
+    #    `(<article>)` pattern silently matched 0 blocks and refused to build.
     new_html, n_replacements = re.subn(
-        r"(<article>)(.*?)(</article>)",
+        r"(<article\b[^>]*>)(.*?)(</article>)",
         lambda m: m.group(1) + "\n" + body_html + "\n" + m.group(3),
         current_html,
         count=1,
