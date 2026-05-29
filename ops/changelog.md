@@ -7777,3 +7777,4 @@ ModuleNotFoundError: No module named 'torch'; results/experiment_2828_fover_memo
 - 2026-05-29: GateMate N16 Bitstream Flash and Smoke (⚠️ Research Finding) — honest_verdict=unspecified; results/experiment_3382_gatemate_n16_smoke.json
 - 2026-05-29: GateMate N16 Bitstream Flash and Smoke (⚠️ Research Finding) — honest_verdict=unspecified; results/experiment_3382_gatemate_n16_smoke.json
 - 2026-05-29: GateMate N16 Bitstream Flash and Smoke (⚠️ Research Finding) — honest_verdict=unspecified; results/experiment_3382_gatemate_n16_smoke.json
+- 2026-05-29: EBM-CoT Trajectory Monitor with SOTA Models (⚠️ Research Finding) — honest_verdict=trajectory_verifier_differentiates_early_commitment; results/experiment_3383_ebm_cot_trajectory.json
