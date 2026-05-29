@@ -9,5 +9,23 @@
   "tighter_than_sampling": true,
   "bound_width": 0.0,
   "tests_run": true,
-  "source_artifacts": []
+  "source_artifacts": [],
+  "flagged_adversarial": true,
+  "corrigendum_pending": [
+    {
+      "kind": "TAUTOLOGY",
+      "severity": "critical",
+      "detail": "lower_bound=0.6 and upper_bound=0.6 agree to >5 sig figs. Two distinct metrics matching this precisely is more likely a bug than a finding."
+    },
+    {
+      "kind": "TAUTOLOGY",
+      "severity": "critical",
+      "detail": "lower_bound=0.6 and sampling_bound=0.6 agree to >5 sig figs. Two distinct metrics matching this precisely is more likely a bug than a finding."
+    },
+    {
+      "kind": "TAUTOLOGY",
+      "severity": "critical",
+      "detail": "upper_bound=0.6 and sampling_bound=0.6 agree to >5 sig figs. Two distinct metrics matching this precisely is more likely a bug than a finding."
+    }
+  ]
 }
