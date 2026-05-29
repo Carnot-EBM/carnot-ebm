@@ -8795,3 +8795,70 @@ instead of marking `repair_panel_manifest_ready=true`.
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-VERIFY-3301 | Implemented (`python/carnot/verify/exact_repair_panel_manifest_v11.py`) | Implemented (`tests/python/test_experiment_3301_exact_repair_panel_manifest_v11.py`) |
+
+### REQ-VERIFY-3302: Headline SOTA Repair Panel V11
+
+The repository shall provide an Exp 3302 headline-scale SOTA repair panel
+runner that reads the fixed Exp 3301 exact manifest without changing the case
+list after model output is observed, checks the Exp 3300 Garak gate before any
+model load, checks the Exp 3287 abstention-calibrated clean verifier contract,
+checks visible CUDA/GPU and mandated GGUF cache preconditions, generates one
+repair per manifest case with localized verifier feedback using an available
+mandated SOTA GGUF, verifies every candidate with both the calibrated clean
+verifier decision contract and the deterministic exact checker, and writes
+`results/experiment_3302_headline_sota_repair_panel_v11.json`.
+
+The runner MUST record every mandated model id:
+`unsloth/Qwen3.6-35B-A3B-GGUF`, `unsloth/gemma-4-31B-it-GGUF`, and
+`unsloth/gemma-4-26B-A4B-it-GGUF`. Missing mandated GGUFs MUST be explicit in
+`missing_model_specs`; legacy fallback models MUST NOT be used. The panel SHALL
+run only when Exp 3300 reports `garak_gate_passed=true` and Exp 3301 reports
+`repair_panel_manifest_ready=true` with at least 30 exact-checkable cases. A
+candidate SHALL count as a verified success only when the calibrated clean
+verifier emits `ACCEPT` and the exact checker passes. A calibrated verifier
+`ACCEPT` on an exact-check failure SHALL count as a false accept. `ABSTAIN`,
+unparsable verifier output, verifier rejection, or missing candidate output
+SHALL be recorded as a non-success with abstentions counted separately.
+
+The terminal artifact MUST include `headline_repair_panel_ready`,
+`repair_panel_ran`, `headline_claim_allowed`, `model_specs`, `models_used`,
+`missing_model_specs`, `preconditions_checked`, `panel_case_count`,
+`verified_success_count`, `repair_success_rate`, `repair_success_ci95`,
+`false_accept_count`, `false_accept_rate_ci95`, `abstention_count`,
+`per_family_metrics`, `candidate_results`, `gpu_mem_used_mib`,
+`tokens_generated`, `inference_substrate`, `random_seed`,
+`reproducibility_checksum`, `duration_s`, and `honest_verdict`.
+`headline_claim_allowed` MUST be true only when `panel_case_count>=30`,
+`false_accept_count=0`, at least one mandated model was actually used, all
+preconditions passed, source provenance is clean, and the panel case hashes
+match the fixed Exp 3301 manifest. `honest_verdict` MUST begin with one of
+`complete:`, `success:`, `passed:`, or `shipped:` whenever the panel artifact
+is written.
+
+### SCENARIO-VERIFY-3302: Fixed Manifest Produces Auditable Headline Repair Evidence
+
+Given Exp 3300 reports `garak_gate_passed=true`, Exp 3301 provides a ready
+fixed exact repair panel manifest with at least 30 cases, Exp 3287 preserves a
+zero-false-accept calibrated clean verifier contract, CUDA/GPU checks pass, and
+at least one mandated GGUF is cached,
+When Exp 3302 runs the repair panel,
+Then it writes the required terminal JSON artifact, records the unchanged
+manifest case hashes, names used and missing mandated models, records GPU
+memory and generated token evidence, reports one candidate result per manifest
+case, accepts repairs only when the calibrated clean verifier accepts and the
+exact checker passes, counts false accepts and abstentions separately,
+stratifies outcomes in `per_family_metrics`, and computes 95% confidence
+intervals for repair success and false-accept risk.
+
+If the Garak gate is not passed, the fixed manifest is not ready, the clean
+verifier contract is not ready, CUDA/GPU preconditions fail, or no mandated
+GGUF is cached, then Exp 3302 SHALL still write the required terminal artifact
+with `repair_panel_ran=false`, `headline_repair_panel_ready=false`, zero panel
+denominators, explicit precondition diagnostics, and
+`headline_claim_allowed=false`.
+
+## Implementation Status (REQ-VERIFY-3302)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-VERIFY-3302 | Implemented (`python/carnot/verify/headline_sota_repair_panel_v11.py`) | Implemented (`tests/python/test_experiment_3302_headline_sota_repair_panel_v11.py`) |
