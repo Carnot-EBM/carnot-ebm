@@ -6701,3 +6701,4 @@ web search: https://docs.garak.ai/garak/examples/pr |
 | 2026-05-29 05:09 UTC | Milestone 2026.05.307 activated | OK | 4 tasks queued |
 | 2026-05-29 05:24 UTC | Archive .306 closeout and activate .307 planning a | OK | 81 passed in 3.67s |
 | 2026-05-29 05:26 UTC | Energy-Descent Reasoning vs Autoregressive Baselin | FAIL | Codex CLI error: you finish the real work inside 10 minutes, that is correct  |
+| 2026-05-29 05:28 UTC | Energy-Descent Reasoning vs Autoregressive Baselin | FAIL | Codex CLI error: you finish the real work inside 10 minutes, that is correct  |
