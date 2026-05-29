@@ -1,0 +1,33 @@
+{
+  "experiment": 3359,
+  "schema": "blocked_gate_check_v1",
+  "run_date": "2026-05-29",
+  "started_at": "2026-05-29T16:29:42.084032+00:00",
+  "finished_at": "2026-05-29T16:29:42.084032+00:00",
+  "duration_s": 0.0,
+  "status": "blocked",
+  "title": "Capstone v310: Hardware latency, Energy-descent gains, FR-11 scalability",
+  "honest_verdict": "blocked_gate_check_failed",
+  "gate_check_summary": "2 of 2 gate(s) failed; first failure: exp3350-kv260-hardware-latency-benchmark.status (actual=None == expected='success')",
+  "gates_evaluated": [
+    {
+      "upstream": "exp3350-kv260-hardware-latency-benchmark",
+      "artifact_field": "status",
+      "op": "==",
+      "expected": "success",
+      "actual": null,
+      "passed": false,
+      "reason": "actual=None == expected='success'"
+    },
+    {
+      "upstream": "exp3355-verifier-guided-backtracking-ladder",
+      "artifact_field": "status",
+      "op": "==",
+      "expected": "success",
+      "actual": "complete",
+      "passed": false,
+      "reason": "actual='complete' == expected='success'"
+    }
+  ],
+  "blocked_at_layer": "conductor_pre_gate"
+}

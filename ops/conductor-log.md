@@ -6853,3 +6853,4 @@ web search: https://docs.garak.ai/garak/examples/pr |
 | 2026-05-29 16:21 UTC | FR-11 persistent belief vault for cross-query cons | OK | 81 passed in 3.79s |
 | 2026-05-29 16:23 UTC | Continuous learning stress test: 5-session curricu | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp3357-fr11-logicvault-belief-states.stat |
 | 2026-05-29 16:25 UTC | Continuous learning stress test: 5-session curricu | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp3357-fr11-logicvault-belief-states.stat |
+| 2026-05-29 16:27 UTC | Continuous learning stress test: 5-session curricu | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp3357-fr11-logicvault-belief-states.stat |
