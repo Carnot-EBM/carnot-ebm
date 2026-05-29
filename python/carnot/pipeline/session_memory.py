@@ -100,48 +100,59 @@ class SessionMemory:
     def __init__(self, storage_dir: str, model_id: str) -> None:
         self.storage_dir = storage_dir
         self.model_id = model_id
-        # LogicVault properties
-        self._z3_solver = None
-        self.ledger_consistency_rate = 1.0
-        self._vault_total = 0
-        self._vault_accepted = 0
+        # LogicVault properties per agent
+        self._z3_solvers: dict[str, Any] = {}
+        self._ledger_consistency_rates: dict[str, float] = {}
+        self._vault_totals: dict[str, int] = {}
+        self._vault_accepteds: dict[str, int] = {}
 
-    def init_logic_vault(self) -> None:
-        """Initialize the Z3 LogicVault for FR-11."""
+    @property
+    def ledger_consistency_rate(self) -> float:
+        """Backward-compatible property for the default agent's consistency rate."""
+        return self._ledger_consistency_rates.get("default", 1.0)
+
+    @ledger_consistency_rate.setter
+    def ledger_consistency_rate(self, value: float) -> None:
+        """Backward-compatible setter for the default agent's consistency rate."""
+        self._ledger_consistency_rates["default"] = value
+
+    def init_logic_vault(self, agent_id: str = "default") -> None:
+        """Initialize the Z3 LogicVault for FR-11 for a specific agent."""
         import z3
-        self._z3_solver = z3.Solver()
-        self.ledger_consistency_rate = 1.0
-        self._vault_total = 0
-        self._vault_accepted = 0
+        self._z3_solvers[agent_id] = z3.Solver()
+        self._ledger_consistency_rates[agent_id] = 1.0
+        self._vault_totals[agent_id] = 0
+        self._vault_accepteds[agent_id] = 0
 
-    def add_axiom(self, expr: Any) -> None:
-        """Commit a base axiom to the vault."""
-        if self._z3_solver is None:
-            self.init_logic_vault()
-        self._z3_solver.add(expr)
+    def add_axiom(self, expr: Any, agent_id: str = "default") -> None:
+        """Commit a base axiom to the vault for a specific agent."""
+        if agent_id not in self._z3_solvers:
+            self.init_logic_vault(agent_id)
+        self._z3_solvers[agent_id].add(expr)
 
-    def check_and_admit(self, expr: Any) -> bool:
+    def check_and_admit(self, expr: Any, agent_id: str = "default") -> bool:
         """Check if `expr` is consistent with historical beliefs using Z3.
         If it is, admit it and update ledger_consistency_rate.
         """
         import z3
-        if self._z3_solver is None:
-            self.init_logic_vault()
+        if agent_id not in self._z3_solvers:
+            self.init_logic_vault(agent_id)
 
-        self._vault_total += 1
-        self._z3_solver.push()
-        self._z3_solver.add(expr)
-        result = self._z3_solver.check()
+        self._vault_totals[agent_id] += 1
+        solver = self._z3_solvers[agent_id]
+        solver.push()
+        solver.add(expr)
+        result = solver.check()
 
         if result == z3.sat:
-            self._z3_solver.pop()
-            self._z3_solver.add(expr)
-            self._vault_accepted += 1
-            self.ledger_consistency_rate = self._vault_accepted / self._vault_total
+            solver.pop()
+            solver.add(expr)
+            self._vault_accepteds[agent_id] += 1
+            self._ledger_consistency_rates[agent_id] = self._vault_accepteds[agent_id] / self._vault_totals[agent_id]
             return True
         else:
-            self._z3_solver.pop()
-            self.ledger_consistency_rate = self._vault_accepted / self._vault_total
+            solver.pop()
+            self._ledger_consistency_rates[agent_id] = self._vault_accepteds[agent_id] / self._vault_totals[agent_id]
             return False
 
     # ------------------------------------------------------------------

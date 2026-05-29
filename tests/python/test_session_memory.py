@@ -406,3 +406,45 @@ class TestVerifyRepairPipelineSessionMemory:
 
         pipeline = VerifyRepairPipeline()
         assert pipeline._session_memory is None
+
+# ---------------------------------------------------------------------------
+# LogicVault: concurrent agents (REQ-LEARN-3373)
+# ---------------------------------------------------------------------------
+
+class TestLogicVaultConcurrentAgents:
+    """REQ-LEARN-3373: LogicVault concurrent agent beliefs."""
+
+    def test_concurrent_agents_independent_beliefs(self, tmp_path):
+        import z3
+        # Spec: REQ-LEARN-3373, SCENARIO-LEARN-3373
+        sm = SessionMemory(str(tmp_path), "test-model")
+        
+        agent_A = "agent_A"
+        agent_B = "agent_B"
+        
+        # Test implicit init_logic_vault
+        x = z3.Int('x')
+        y = z3.Int('y')
+        
+        sm.add_axiom(x > 0, agent_A)
+        sm.add_axiom(y < 0, agent_B)
+        
+        # A accepts x > 5, rejects x < 0
+        assert sm.check_and_admit(x > 5, agent_A) is True
+        assert sm.check_and_admit(x < 0, agent_A) is False
+        
+        # B accepts y < -5, rejects y > 0
+        assert sm.check_and_admit(y < -5, agent_B) is True
+        assert sm.check_and_admit(y > 0, agent_B) is False
+        
+        # Check implicit init_logic_vault in check_and_admit
+        assert sm.check_and_admit(x == 1, "agent_C") is True
+        
+        # Check rates
+        assert sm._ledger_consistency_rates[agent_A] == 0.5
+        assert sm._ledger_consistency_rates[agent_B] == 0.5
+        assert sm._ledger_consistency_rates["agent_C"] == 1.0
+        
+        # Check defaults via property
+        sm.ledger_consistency_rate = 0.99
+        assert sm.ledger_consistency_rate == 0.99

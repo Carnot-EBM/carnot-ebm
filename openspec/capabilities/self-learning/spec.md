@@ -9996,3 +9996,22 @@ episodes that can be loaded, keeps `controller_memory_only=true`,
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-LEARN-3357 | Implemented (`python/carnot/pipeline/session_memory.py`, `scripts/experiment_3357_fr11_logicvault.py`) | Implemented (`tests/python/test_experiment_3357_fr11_logicvault.py`) |
+
+## REQ-LEARN-3373: FR-11 LogicVault Concurrent Agent Beliefs
+**Given** multiple agents processing facts simultaneously
+**When** the vault processes incoming facts from different agents
+**Then** it MUST maintain separate Z3 solvers and belief states for each agent via an `agent_id` parameter
+**And** track `ledger_consistency_rate` per agent independently.
+
+### SCENARIO-LEARN-3373: Concurrent Independent Beliefs
+**Given** two agents, "agent_A" and "agent_B"
+**When** "agent_A" adds `x > 0` and checks `x > 5`
+**And** "agent_B" adds `y < 0` and checks `y < -5`
+**Then** both facts are admitted in their respective vaults without interfering
+**And** `ledger_consistency_rate` is tracked correctly per agent.
+
+## Implementation Status (REQ-LEARN-3373)
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-LEARN-3373 | Pending | Pending |
+
