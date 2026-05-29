@@ -19713,3 +19713,12 @@ The pilot shall:
 - Write `results/experiment_3332_interwhen_monitor_pilot_v1.json` with the following fields: `honest_verdict`, `inference_substrate`, `random_seed`, `reproducibility_checksum`, `duration_s`, `n_cases`, `monitor_names`, `trajectory_signal_summary`, `monitor_pilot_ready`, `recommended_integration_points`, and `blocked_reasons`.
 
 **Spec traces:** REQ-VERIFY-3004, SCENARIO-VERIFY-3004, Exp 3004
+
+### REQ-VERIFY-3341: Verifier Diversity Remediation Plan
+
+The system shall support a verifier diversity remediation plan that:
+- Captures the prior audit metrics including lambda min sigma and effective k.
+- Proposes a new independent monitor or provenance axis (e.g., trajectory consistency).
+- Explicitly avoids retired strategies such as diversity-maximizing greedy selection.
+- Establishes acceptance criteria for subsequent re-audits.
+
