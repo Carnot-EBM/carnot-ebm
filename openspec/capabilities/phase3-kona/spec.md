@@ -2149,3 +2149,16 @@ The Exp 2102 artifact MUST be written to `results/experiment_2102_eqm_memory.jso
 **Then** the parameters are successfully serialized and retrieved
 **And** the artifact is written to `results/experiment_2102_eqm_memory.json` with `memory_promotion_successful=true`.
 
+### REQ-KONA-3338: SOTA GGUF Tokenizer Runtime Receipt
+
+Carnot MUST verify a standalone runtime receipt for SOTA GGUF models (Qwen3.6-35B-A3B, Gemma4-26B-A4B-it, Gemma4-31B-it) and ensure they load locally.
+The artifact MUST be written to `results/experiment_3338_sota_gguf_tokenizer_runtime_receipt_v1.json`.
+
+### SCENARIO-KONA-3338: Exp 3338 Generates SOTA GGUF Runtime Receipt
+
+**Given** the SOTA GGUF models are defined in the mandated list
+**When** the artifact script `scripts/experiment_3338_sota_gguf_tokenizer_runtime_receipt_v1.py` is executed
+**Then** it writes the receipt with REQUIRED ARTIFACT FIELDS and Phase-3 precondition RUNTIME FIELDS
+**And** `runtime_receipt_clean` is true if at least one mandated model loads cleanly.
+
+

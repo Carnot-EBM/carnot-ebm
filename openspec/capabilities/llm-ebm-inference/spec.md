@@ -711,6 +711,57 @@ CPU-only load as headline runtime evidence.
 **And** the artifact still records the exact missing mandated model IDs and
 does not use legacy small models to satisfy the pair or runtime gate.
 
+### REQ-INFER-SOTA-3338: Exp 3338 SOTA GGUF Tokenizer Runtime Receipt
+
+The system SHALL provide a standalone Exp 3338 preflight receipt before energy
+descent reruns spend local SOTA inference. The receipt SHALL write
+`results/experiment_3338_sota_gguf_tokenizer_runtime_receipt_v1.json`; SHALL
+define `MODEL_SPECS` through `cached_sota_pair(gpu_indices=(0, 1))` when that
+resolver can produce a pair; SHALL still include all three mandated model IDs
+`unsloth/Qwen3.6-35B-A3B-GGUF`, `unsloth/gemma-4-31B-it-GGUF`, and
+`unsloth/gemma-4-26B-A4B-it-GGUF`; and SHALL NOT modify
+`scripts/research_conductor.py`.
+
+The receipt SHALL inspect local cache paths, file sizes, and checksum evidence
+when files are present; SHALL record tokenizer dependency availability,
+`llama_cpp` loader import metadata, and GPU visibility through the selected
+Python's `torch.cuda` rather than relying only on `nvidia-smi`; and SHALL
+attempt the smallest practical load/tokenize/generate smoke for each locally
+available mandated GGUF. If a model cannot load, tokenize, or generate, the
+receipt SHALL record the exact exception and continue to the next available
+mandated model.
+
+The artifact SHALL expose `honest_verdict`, `inference_substrate`,
+`random_seed`, `reproducibility_checksum`, `duration_s`, `files_updated`,
+`model_specs`, `cache_status`, `tokenizer_status`, `loader_status`,
+`gpu_status`, `smoke_generation_status`, `runtime_receipt_clean`, and
+`blocked_reasons`. `runtime_receipt_clean` SHALL be true only when at least one
+mandated local SOTA GGUF completes a non-empty local load/tokenize/generate
+smoke. Legacy small models MAY be used only as CPU loader controls, SHALL be
+labeled non-headline, and SHALL never set `runtime_receipt_clean=true`.
+
+### SCENARIO-INFER-SOTA-3338-001: Mandated Runtime Receipt Opens Gate
+
+**Given** at least one mandated SOTA GGUF resolves from local cache
+**And** the selected Python can import `llama_cpp` and sees CUDA through
+`torch.cuda`
+**When** Exp 3338 runs a bounded load/tokenize/generate smoke
+**Then** `runtime_receipt_clean` is true only if a mandated model emits a
+non-empty response
+**And** the artifact records cache, tokenizer, loader, GPU, checksum, and
+per-model smoke evidence for all mandated IDs.
+
+### SCENARIO-INFER-SOTA-3338-002: Runtime Failures Block Precisely
+
+**Given** mandated GGUF cache paths may exist locally
+**But** every available mandated model fails tokenizer, loader, or generation
+smoke
+**When** Exp 3338 runs
+**Then** `runtime_receipt_clean` is false
+**And** `blocked_reasons` preserves the exact failure for each attempted
+mandated model
+**And** any legacy CPU smoke control remains non-headline.
+
 ### REQ-INFER-SOTA-014: Exp 2870 SOTA Energy Baseline Micro-Panel
 
 The system SHALL provide an Exp 2870 live SOTA GGUF micro-panel artifact that
