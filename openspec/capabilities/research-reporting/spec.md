@@ -14160,3 +14160,67 @@ readiness.
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-REPORT-3305 | Implemented (`python/carnot/reporting/evidence_matrix_v37_3305.py`) | Implemented (`tests/python/test_experiment_3305_evidence_matrix_v37.py`) |
+
+### REQ-REPORT-3306: Capstone V305 Publication Gate Closeout
+
+The repository shall provide an Exp 3306 milestone `.305` capstone generator
+that writes `results/experiment_3306_capstone_v305.json` by reading
+`results/experiment_3305_evidence_matrix_v37.json` as the authoritative `.305`
+matrix and `results/experiment_3293_capstone_v304.json` as the prior closeout.
+The workflow MUST be aggregation only. It MUST NOT run model inference, CUDA
+probes, teacher labeling, KAN training, Garak, repair, verifier scoring,
+FR-11 updates, hardware commands, the conductor, pushes, submit externally,
+activate the next milestone, modify `research-roadmap.yaml`, modify
+`scripts/research_conductor.py`, or reconcile `ops/status.md`,
+`ops/changelog.md`, or `_bmad/traceability.md` when the conductor delegates
+reconciliation to a separate step.
+
+The capstone MUST decide `paper_ready` and blocker movement using only matrix
+v37 and capstone v304 fields. It MUST compare matrix v37's
+`paper_blocker_count` to capstone v304's `publication_blocker_count`. It MUST
+state whether the `.305` Garak attack-success gate passed, preserve the
+measured Garak `attack_success_rate`, state whether repair evidence became
+headline-eligible, state whether FR-11 replay remains controller-memory safe,
+state whether the KAN prompt-injection headline remains retired, and recommend
+the next milestone title from matrix v37's measured `top_gap` without opening
+or planning that milestone.
+
+The terminal artifact MUST include `capstone_v305_ready`, `paper_ready`,
+`publication_blocker_count`, `blocker_delta_from_v304`,
+`garak_gate_passed`, `garak_attack_success_rate`,
+`repair_headline_claim_allowed`, `fr11_memory_replay_safe`,
+`kan_headline_retired`, `next_top_gap`,
+`recommended_next_milestone_title`, `protected_files_untouched`, `no_push`,
+`no_next_milestone_activation`, `source_artifacts`, `inference_substrate`,
+`random_seed`, `reproducibility_checksum`, `duration_s`, and
+`honest_verdict`. It SHALL also include source checksums, source summaries,
+gate status details, no-new-execution booleans, and protected file status.
+`honest_verdict` MUST begin with one of `complete:`, `success:`, `passed:`, or
+`shipped:`.
+
+#### SCENARIO-REPORT-3306: Capstone V305 Closes Garak Gate Without Repair Overclaiming
+
+**Given** capstone v304 reports `paper_ready=false`,
+`publication_blocker_count=10`, `next_top_gap=pass_garak_redteam_gate`, and
+`garak_gate_passed=false`
+**And** matrix v37 reports `matrix_v37_ready=true`, `paper_ready=false`,
+`paper_blocker_count=8`, `garak_gate_passed=true`,
+`attack_success_rate=0.0`, `repair_headline_claim_allowed=false`,
+`fr11_replay_safe=true`, KAN retired from prompt-injection headline use, and
+`top_gap=clear_garak_dataflip_and_quality_flags`
+**When** the Exp 3306 capstone generator runs
+**Then** it writes `results/experiment_3306_capstone_v305.json` with all
+required schema fields, `capstone_v305_ready=true`, `paper_ready=false`,
+`publication_blocker_count=8`, `blocker_delta_from_v304=-2`,
+`garak_gate_passed=true`, `garak_attack_success_rate=0.0`,
+`repair_headline_claim_allowed=false`, `fr11_memory_replay_safe=true`,
+`kan_headline_retired=true`, `next_top_gap` copied from matrix v37, protected
+files untouched, no push, no next milestone activation, no new
+model/Garak/repair execution, and an `honest_verdict` beginning with
+`complete:` without claiming publication readiness.
+
+## Implementation Status (REQ-REPORT-3306)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-3306 | Implemented (`python/carnot/reporting/capstone_v305_3306.py`) | Implemented (`tests/python/test_experiment_3306_capstone_v305.py`) |

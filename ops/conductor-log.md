@@ -6672,3 +6672,4 @@ web search: https://docs.garak.ai/garak/examples/pr |
 | 2026-05-29 00:36 UTC | Headline SOTA repair panel v11 | OK | 81 passed in 3.12s |
 | 2026-05-29 00:49 UTC | Repair headline evidence audit v1 | OK | 81 passed in 3.35s |
 | 2026-05-29 01:02 UTC | FR-11 red-team and repair memory replay v2 | OK | 81 passed in 3.31s |
+| 2026-05-29 01:17 UTC | Evidence matrix v37 | OK | 81 passed in 3.19s |
