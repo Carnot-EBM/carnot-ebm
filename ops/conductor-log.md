@@ -6799,3 +6799,4 @@ web search: https://docs.garak.ai/garak/examples/pr |
 | 2026-05-29 10:41 UTC | Independent reproducer pack and evidence matrix v3 | FAIL | Codex CLI error: ERROR: {"type":"error","status":400,"error":{"type":"invalid |
 | 2026-05-29 10:43 UTC | Milestone .308 capstone and next-gap decision | FAIL | Codex CLI error: ERROR: {"type":"error","status":400,"error":{"type":"invalid |
 | 2026-05-29 10:45 UTC | Milestone .308 capstone and next-gap decision | FAIL | Codex CLI error: ERROR: {"type":"error","status":400,"error":{"type":"invalid |
+| 2026-05-29 10:47 UTC | Milestone .308 capstone and next-gap decision | FAIL | Codex CLI error: ERROR: {"type":"error","status":400,"error":{"type":"invalid |
