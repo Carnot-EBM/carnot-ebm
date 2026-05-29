@@ -6816,3 +6816,14 @@ web search: https://docs.garak.ai/garak/examples/pr |
 | 2026-05-29 13:43 UTC | GateMate n16 Ising tile bitstream build and detect | OK | 81 passed in 3.30s |
 | 2026-05-29 13:50 UTC | Independent reproducer pack and evidence matrix v4 | OK | 81 passed in 2.59s |
 | 2026-05-29 13:55 UTC | Capstone v309: runtime, diversity, FR-11, hardware | OK | 81 passed in 3.28s |
+| 2026-05-29 14:16 UTC | Plan milestone 2026.05.310 | OK | 12 tasks proposed |
+| 2026-05-29 14:18 UTC | Activation REFUSED: milestone 2026.05.310 | BLOCK | exclusion-manifest: 6 HARD violation(s); first: SCOPE_MATCHED_PRIOR_FAILURE on e |
+| 2026-05-29 14:20 UTC | Activation REFUSED: milestone 2026.05.310 | BLOCK | exclusion-manifest: 6 HARD violation(s); first: SCOPE_MATCHED_PRIOR_FAILURE on e |
+| 2026-05-29 14:22 UTC | Activation REFUSED: milestone 2026.05.310 | BLOCK | exclusion-manifest: 6 HARD violation(s); first: SCOPE_MATCHED_PRIOR_FAILURE on e |
+| 2026-05-29 14:24 UTC | Activation REFUSED: milestone 2026.05.310 | BLOCK | exclusion-manifest: 6 HARD violation(s); first: SCOPE_MATCHED_PRIOR_FAILURE on e |
+| 2026-05-29 14:26 UTC | Activation REFUSED: milestone 2026.05.310 | BLOCK | exclusion-manifest: 6 HARD violation(s); first: SCOPE_MATCHED_PRIOR_FAILURE on e |
+| 2026-05-29 14:28 UTC | Activation REFUSED: milestone 2026.05.310 | BLOCK | exclusion-manifest: 6 HARD violation(s); first: SCOPE_MATCHED_PRIOR_FAILURE on e |
+| 2026-05-29 14:31 UTC | Activation REFUSED: milestone 2026.05.310 | BLOCK | exclusion-manifest: 6 HARD violation(s); first: SCOPE_MATCHED_PRIOR_FAILURE on e |
+| 2026-05-29 14:33 UTC | Activation REFUSED: milestone 2026.05.310 | BLOCK | exclusion-manifest: 6 HARD violation(s); first: SCOPE_MATCHED_PRIOR_FAILURE on e |
+| 2026-05-29 14:35 UTC | Activation REFUSED: milestone 2026.05.310 | BLOCK | exclusion-manifest: 4 HARD violation(s); first: SCOPE_MATCHED_PRIOR_FAILURE on e |
+| 2026-05-29 14:37 UTC | Milestone 2026.05.310 activated | OK | 12 tasks queued |
