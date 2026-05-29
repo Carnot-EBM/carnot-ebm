@@ -19746,3 +19746,18 @@ The axis shall:
 **When** used for continuous self-learning
 **Then** the updates are applied
 **And** soundness_error_delta and completeness_error_delta are measured.
+
+### REQ-VERIFY-3356: FR-11 Constraint Repair Loop using Z3 Unsat Cores
+
+The system shall support a repair loop for FR-11 constraint templates, where:
+- Flawed constraints are fed to a synthetic agent.
+- Z3 extracts an unsat core counterexample.
+- The counterexample is used to structurally correct the constraint template in memory.
+- The repaired constraint is verified to be SAT.
+- This process achieves a target `repair_success_rate` across synthetic constraints, generating an experiment artifact.
+
+### SCENARIO-VERIFY-3356: Synthetic Agent Repairs Flawed Template
+
+**Given** a synthetic flawed constraint template with an inherent contradiction
+**When** the template is passed to the Z3ConstraintRepairAgent
+**Then** the agent extracts the unsat core, drops the conflicting constraint, verifies the remainder is SAT, and successfully returns the repaired constraints.
