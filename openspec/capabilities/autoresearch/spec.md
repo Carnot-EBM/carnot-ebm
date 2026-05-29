@@ -3297,3 +3297,12 @@ Spec: SCENARIO-RETRO-200
 
 ### REQ-AUTO-SWEEP-2013: Routine Citation Sweep
 The system shall execute a routine citation sweep to discover relevant papers and deduplicate against the known research queue.
+
+### REQ-AUTO-3391: Milestone 313 Planning
+The system shall generate a planning artifact for milestone 313 containing tasks proposed based on milestone 312.
+
+### SCENARIO-AUTO-3391: Generation of Milestone 313 Plan
+**Given** milestone 312 results,
+**When** the milestone 313 planning task runs,
+**Then** it outputs `results/experiment_3391_plan_milestone_313.json` with required schema fields.
+
