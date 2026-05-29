@@ -762,6 +762,25 @@ smoke
 mandated model
 **And** any legacy CPU smoke control remains non-headline.
 
+### REQ-INFER-SOTA-3344: Exp 3344 Constrained Output Extractor llguidance Smoke
+
+The system SHALL provide an Exp 3344 constrained structured-output extraction smoke for local SOTA GGUF outputs.
+The artifact SHALL write `results/experiment_3344_constrained_output_extractor_llguidance_smoke_v1.json`.
+The runner SHALL use `cached_sota_pair(gpu_indices=(0, 1))` to define `MODEL_SPECS`, requiring at least one mandated model.
+It SHALL check for `llguidance` or `xgrammar` and implement a blocked artifact with exact missing dependency information if neither is available.
+If available, it SHALL run a live extraction smoke on prompts requiring structured claims/constraints, comparing unconstrained to constrained output.
+It SHALL measure `parse_failure_rate`, `schema_valid_rate`, `exact_verifier_accept_rate`, and `semantic_false_accept_count`.
+Formatting success alone SHALL NOT be counted as correctness.
+The artifact SHALL expose `honest_verdict`, `inference_substrate`, `random_seed`, `reproducibility_checksum`, `duration_s`, `files_updated`, `model_specs`, `constrained_tool`, `n_cases`, `parse_failure_rate_unconstrained`, `parse_failure_rate_constrained`, `exact_verifier_accept_rate_unconstrained`, `exact_verifier_accept_rate_constrained`, `semantic_false_accept_count`, `constrained_extractor_ready`, and `blocked_reasons`.
+
+### SCENARIO-INFER-SOTA-3344-001: Missing Dependencies Block Precisely
+
+**Given** neither llguidance nor xgrammar is installed
+**When** the smoke test is run
+**Then** it writes a blocked artifact rather than silently falling back to ad hoc parsing
+**And** the output includes missing dependency reasons in `blocked_reasons`
+**And** `constrained_extractor_ready` is false.
+
 ### REQ-INFER-SOTA-014: Exp 2870 SOTA Energy Baseline Micro-Panel
 
 The system SHALL provide an Exp 2870 live SOTA GGUF micro-panel artifact that
