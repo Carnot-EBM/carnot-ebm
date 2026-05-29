@@ -6812,3 +6812,4 @@ web search: https://docs.garak.ai/garak/examples/pr |
 | 2026-05-29 13:01 UTC | Verifier diversity reaudit v3 gated on monitor/pro | OK | 81 passed in 2.55s |
 | 2026-05-29 13:07 UTC | Constrained structured-output extractor smoke on S | OK | 81 passed in 2.71s |
 | 2026-05-29 13:14 UTC | FR-11 online verifier-memory nonforgetting v5 with | OK | 81 passed in 3.03s |
+| 2026-05-29 13:28 UTC | KV260 MMD vs CPU sequential Gibbs board-local cont | OK | 81 passed in 3.19s |
