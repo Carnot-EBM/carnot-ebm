@@ -6982,3 +6982,4 @@ web search: https://docs.garak.ai/garak/examples/pr |
 | 2026-05-29 23:25 UTC | LogicVault CDCL-inspired Conflict Resolution | OK | 81 passed in 3.87s |
 | 2026-05-29 23:33 UTC | ConstraintBench EBM vs AR Baseline | OK | 81 passed in 4.74s |
 | 2026-05-29 23:38 UTC | Capstone v312 | OK | 81 passed in 3.45s |
+| 2026-05-29 23:43 UTC | Plan milestone 2026.05.313 | OK | 81 passed in 3.56s |
