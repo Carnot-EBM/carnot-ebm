@@ -1,279 +1,146 @@
-milestone: "2026.05.310"
-milestone_title: "Hardware Execution Receipts, Energy-Descent Refinement, and Deep FR-11"
-milestone_doc: "openspec/change-proposals/research-roadmap-vNEXT.md"
+milestone: "2026.05.311"
+milestone_title: "Hardware Fixes, Gate Resiliency, and Scaled Continuous Learning"
+milestone_doc: "openspec/change-proposals/research-roadmap-v311.md"
 
 tasks:
-  - id: exp3350-kv260-hardware-latency-benchmark
-    operator_override: "2026-05-29 operator directive (outer-loop session): authorized. KV260 latency benchmark is the hardware-continuity terminal-state task; false-positive scope-match vs retired exp2742/585/661. Not a doomed rerun."
-    milestone: "2026.05.310"
-    title: "KV260 board-local Ising sampling latency benchmark vs CPU"
+  - id: exp3365-kv260-ssh-recovery
+    milestone: "2026.05.311"
+    title: "KV260 SSH and Network Recovery"
     priority: critical
-    max_turns: 100
+    max_turns: 50
     model: opus
     estimated_wall_time_min: 15
     track: hardware
     inference_substrate: hardware_smoke
     requires_gpu: false
-    deliverable: "results/experiment_3350_kv260_latency_benchmark.json"
+    deliverable: "results/experiment_3365_kv260_ssh_recovery.json"
     prompt: |
-      CONTEXT: The KV260 board is booted and accessible, and `.309` completed the MMD vs CPU smoke test. We now need real hardware execution receipts.
-      EXISTING CODE TO READ FIRST:
-        - `hardware/kv260/ising_sampler_v4_spec.md`
-        - `research-hardware-wishlist.md` (Active tracks: KV260)
-        - `scripts/experiment_3345_kv260_mmd_smoke.py` (for the `.309` smoke template)
-      TASK: Implement an end-to-end latency benchmark for the KV260 Ising sampler. Measure the wall-clock per-sample time via `/dev/uio*` register access on the board and compare it directly to the CPU sequential Gibbs baseline.
+      CONTEXT: The KV260 board was unreachable via SSH in milestone .310 (exp3350).
+      TASK: Diagnose and restore network/SSH connectivity to the KV260.
       CONCRETE STEPS:
-        1. Connect to the board or simulate the board interaction via subprocess to `ssh kria` or direct `/dev/uio0` access if running on the device.
-        2. Time the register writes, sampling loop, and read-backs for 100 random problems.
-        3. Compare latency vs `carnot.samplers.GibbsSampler` running locally.
-        4. Assert `hardware_latency_us` and `speedup_vs_cpu`.
-        5. Emit artifact.
-      CRITICAL: write artifact FIRST if hardware is blocked to prevent cascade blocking.
+        1. Check local network routes and ARP cache.
+        2. Attempt serial console connection if SSH fails.
+        3. Restore SSH access and verify simple command execution.
+        4. Emit artifact with connectivity status.
+      Run command: cd {project_root} && JAX_PLATFORMS=cpu .venv/bin/python scripts/experiment_3365_kv260_ssh_recovery.py.
 
-      Run command: cd {project_root} && JAX_PLATFORMS=cpu .venv/bin/python scripts/experiment_3350_kv260_latency_benchmark.py. Do NOT push. Do NOT modify scripts/research_conductor.py.
-
-  - id: exp3351-gatemate-n16-hardware-latency-benchmark
-    operator_override: "2026-05-29 operator directive (outer-loop session): authorized. GateMate n16 latency benchmark is a hardware-continuity task; false-positive scope-match vs exp2899 (prior bitstream-build step). Forward continuation."
-    milestone: "2026.05.310"
-    title: "GateMate A1-EVB-2M board-local n16 latency benchmark via dirtyJtag"
+  - id: exp3366-gatemate-axi-uio-rtl
+    operator_override: "2026-05-29 operator directive (outer-loop, '1 then 2'): authorized. Active hardware-continuity task (adds the AXI/UIO host interface exp3351 lacked); false-positive scope-match vs retired exp3021/3035/3049. Forward fix, not a rerun."
+    milestone: "2026.05.311"
+    title: "GateMate AXI/UIO Interface Implementation"
     priority: high
-    max_turns: 100
-    model: opus
-    estimated_wall_time_min: 15
+    max_turns: 50
+    estimated_wall_time_min: 20
     track: hardware
     inference_substrate: hardware_smoke
     requires_gpu: false
-    deliverable: "results/experiment_3351_gatemate_latency_benchmark.json"
+    deliverable: "results/experiment_3366_gatemate_axi_uio.json"
     prompt: |
-      CONTEXT: The GateMate n16 Ising tile bitstream was successfully built and detected via dirtyJtag in `.309`. We now need to measure its sampling latency.
-      EXISTING CODE TO READ FIRST:
-        - `research-hardware-wishlist.md` (Active tracks: GateMate)
-        - `scripts/experiment_3346_gatemate_n16_smoke.py`
-      TASK: Execute a real latency benchmark on the GateMate n16 Ising tile using `openFPGALoader -c dirtyJtag`.
+      CONTEXT: exp3351 was blocked because GateMate n=16 RTL lacks a host communication interface.
+      TASK: Add a basic AXI or UIO compatible interface to the GateMate RTL.
       CONCRETE STEPS:
-        1. Dispatch n=16 Ising problems to the GateMate tile.
-        2. Record the sample-level timing.
-        3. Compare against CPU Gibbs baseline.
-        4. Record `gatemate_latency_us` and `speedup_vs_cpu` in the artifact.
-      CRITICAL: write artifact FIRST if hardware is blocked.
+        1. Modify the RTL to include memory-mapped registers.
+        2. Verify synthesis and write a mock driver.
+        3. Emit artifact with synthesis status.
+      Run command: cd {project_root} && JAX_PLATFORMS=cpu .venv/bin/python scripts/experiment_3366_gatemate_axi_uio.py.
 
-      Run command: cd {project_root} && JAX_PLATFORMS=cpu .venv/bin/python scripts/experiment_3351_gatemate_latency_benchmark.py. Do NOT push. Do NOT modify scripts/research_conductor.py.
-
-  - id: exp3352-live-sota-constrained-generation-pilot
-    operator_override: "2026-05-29 operator directive (outer-loop session): authorized. Grammar-masked constrained-generation continuation; false-positive scope-match vs exp1758/1759/1959. New approach (grammar-masked extraction)."
-    milestone: "2026.05.310"
-    title: "Live SOTA constrained generation using grammar-masked extraction"
+  - id: exp3367-fix-gate-status-emissions
+    milestone: "2026.05.311"
+    title: "Refactor VGB repair ladder and LogicVault for gate compatibility"
     priority: high
-    max_turns: 50
+    max_turns: 30
     estimated_wall_time_min: 10
-    track: live-model
-    inference_substrate: live_generation
-    requires_gpu: true
-    deliverable: "results/experiment_3352_constrained_generation.json"
-    prompt: |
-      CONTEXT: `.309` created a constrained structured-output extractor. We must now apply it to live SOTA generation to evaluate its impact on formatting consistency vs autoregressive free generation.
-      EXISTING CODE TO READ FIRST:
-        - `scripts/experiment_template.py` (for SOTA GGUF loading)
-        - `python/carnot/pipeline/structured_equation_forcer.py`
-      TASK: Implement grammar-masked (e.g., using `llguidance` or regex-based constraint masking) generation for a local SOTA GGUF model (`unsloth/gemma-4-26B-A4B-it-GGUF` or `unsloth/Qwen3.6-35B-A3B-GGUF`).
-      CONCRETE STEPS:
-        1. Load a SOTA GGUF model.
-        2. Generate responses for 20 GSM8K problems using standard autoregressive decoding.
-        3. Generate responses using constrained generation (enforcing strict structural output formats).
-        4. Measure the malformed extraction rate and solver acceptance rate for both.
-        5. Emit comparative metrics in the artifact.
-
-      Run command: cd {project_root} && .venv/bin/python scripts/experiment_3352_constrained_generation.py. Do NOT push. Do NOT modify scripts/research_conductor.py.
-
-  - id: exp3353-deterministic-prefix-closed-bounds
-    milestone: "2026.05.310"
-    title: "Deterministic prefix-closed bounds pilot for live LLM sampling"
-    priority: normal
-    max_turns: 50
-    agent_type: codex
-    estimated_wall_time_min: 10
-    track: verification
+    track: validation
     inference_substrate: synthetic
     requires_gpu: false
-    deliverable: "results/experiment_3353_deterministic_bounds.json"
+    deliverable: "results/experiment_3367_fix_gate_status.json"
     prompt: |
-      CONTEXT: Based on 2026 BEAVER research (arXiv:2512.05439), deterministic bounds on constraint satisfaction outperform probabilistic sampling.
-      EXISTING CODE TO READ FIRST:
-        - `python/carnot/cascade/tier2_verifier.py`
-      TASK: Implement a Token Trie and Frontier data structure to maintain prefix-closed bounds over constraint evaluations.
+      CONTEXT: exp3355 and exp3357 failed downstream gates because they emitted status="complete" or omitted status entirely, whereas "success" was expected.
+      TASK: Refactor those modules and their outputs to conform to strict gate status contracts.
       CONCRETE STEPS:
-        1. Create a `PrefixClosedBoundVerifier` that explores a generation space tree.
-        2. Evaluate a synthetic problem space where prefixes deterministically violate constraints.
-        3. Compute sound probability bounds and compare against loose sampling bounds.
-        4. Validate that the bound is monotonic and tighter than sampling.
+        1. Update `experiment_3355_vgb_repair_ladder.py` and `experiment_3357_fr11_logicvault.py`.
+        2. Rerun both to overwrite artifacts.
+        3. Assert "status": "success".
+      Run command: cd {project_root} && JAX_PLATFORMS=cpu .venv/bin/python scripts/experiment_3367_fix_gate_status.py.
 
-      Run command: cd {project_root} && JAX_PLATFORMS=cpu .venv/bin/python scripts/experiment_3353_deterministic_bounds.py. Do NOT push. Do NOT modify scripts/research_conductor.py.
-
-  - id: exp3354-ebt-sidecar-scoring
-    milestone: "2026.05.310"
-    title: "Energy-Based Transformer (EBT) sidecar integration for sequence scoring"
-    priority: normal
-    max_turns: 50
-    estimated_wall_time_min: 10
-    track: verification
-    inference_substrate: live_generation
-    requires_gpu: true
-    gated_on:
-      - upstream: exp3352-live-sota-constrained-generation-pilot
-        artifact_field: status
-        op: "=="
-        value: "success"
-    deliverable: "results/experiment_3354_ebt_sidecar.json"
-    prompt: |
-      CONTEXT: The ARM-as-EBM premise (arXiv:2512.15605) requires comparing EBT sequence-level energy scoring vs AR logits.
-      EXISTING CODE TO READ FIRST:
-        - `python/carnot/pipeline/energy_descent.py`
-      TASK: Implement an auditable energy-budget diagnostic over exact fixtures.
-      CONCRETE STEPS:
-        1. Parse the outputs from the live constrained generation.
-        2. Score the generated traces using an energy formulation ($E = -\log P$).
-        3. Correlate the prefix energy with the final exact verdict from Z3/sympy.
-        4. Report the bound/approximation gap in the artifact.
-
-      Run command: cd {project_root} && .venv/bin/python scripts/experiment_3354_ebt_sidecar.py. Do NOT push. Do NOT modify scripts/research_conductor.py.
-
-  - id: exp3355-verifier-guided-backtracking-ladder
-    milestone: "2026.05.310"
-    title: "Verifier-guided backtracking (VGB) repair ladder for GSM8K"
-    priority: high
-    max_turns: 50
-    estimated_wall_time_min: 15
-    track: live-model
-    inference_substrate: live_generation
-    requires_gpu: true
-    deliverable: "results/experiment_3355_vgb_repair_ladder.json"
-    prompt: |
-      CONTEXT: Repair should not be a single candidate pass. We need a multi-turn code/constraint repair ladder (like ReVeal/TraceFix) where tests are the only authority.
-      EXISTING CODE TO READ FIRST:
-        - `python/carnot/pipeline/verify_repair.py`
-      TASK: Create a multi-turn generation-verification repair loop.
-      CONCRETE STEPS:
-        1. Load a SOTA GGUF model.
-        2. Pick 10 failed GSM8K examples from the baseline.
-        3. Feed the exact solver counterexamples back into the model prompt and retry generation.
-        4. Loop up to 3 times per problem.
-        5. Measure the repair lift (how many are fixed) and the satisfiable drift.
-
-      Run command: cd {project_root} && .venv/bin/python scripts/experiment_3355_vgb_repair_ladder.py. Do NOT push. Do NOT modify scripts/research_conductor.py.
-
-  - id: exp3356-fr11-counterexample-repair-pilot
-    operator_override: "2026-05-29 operator directive (outer-loop session): authorized. FR-11 counterexample-repair continuation (Z3 unsat cores); false-positive scope-match vs exp3155/3304. Forward lineage step."
-    milestone: "2026.05.310"
-    title: "FR-11 counterexample-guided repair pilot using Z3 unsat cores"
-    priority: high
-    max_turns: 50
-    agent_type: codex
-    estimated_wall_time_min: 10
-    track: self-learning
-    inference_substrate: synthetic
-    requires_gpu: false
-    deliverable: "results/experiment_3356_fr11_cx_repair.json"
-    prompt: |
-      CONTEXT: Inspired by TraceFix (arXiv:2605.07935), FR-11 should repair coordination protocols/constraints using exact Z3/SMT counterexamples.
-      EXISTING CODE TO READ FIRST:
-        - `python/carnot/pipeline/constraint_template_library.py`
-      TASK: Synthesize a repair loop for FR-11 that uses Z3 unsat cores to refine its constraint templates.
-      CONCRETE STEPS:
-        1. Provide a flawed constraint set to a synthetic agent.
-        2. Run Z3 to extract an unsat core counterexample.
-        3. Use the counterexample to structurally correct the constraint template in memory.
-        4. Verify the repaired constraint is SAT.
-        5. Measure `repair_success_rate` across 20 synthetic constraints.
-
-      Run command: cd {project_root} && JAX_PLATFORMS=cpu .venv/bin/python scripts/experiment_3356_fr11_cx_repair.py. Do NOT push. Do NOT modify scripts/research_conductor.py.
-
-  - id: exp3357-fr11-logicvault-belief-states
-    milestone: "2026.05.310"
-    title: "FR-11 persistent belief vault for cross-query consistency"
-    priority: normal
-    max_turns: 50
-    estimated_wall_time_min: 10
-    track: self-learning
-    inference_substrate: synthetic
-    requires_gpu: false
-    deliverable: "results/experiment_3357_fr11_logicvault.json"
-    prompt: |
-      CONTEXT: Based on LogicVault (ICLR 2026), FR-11 needs persistent symbolic belief states to enforce cross-query logical consistency.
-      EXISTING CODE TO READ FIRST:
-        - `python/carnot/pipeline/session_memory.py`
-      TASK: Extend the `SessionMemory` to act as a formal belief vault that checks new incoming facts against historically verified beliefs using Z3.
-      CONCRETE STEPS:
-        1. Define a set of base axioms and commit them to memory.
-        2. Introduce new queries that either logically follow or contradict the vault.
-        3. Use Z3 to decide admission of the new queries.
-        4. Track the `ledger_consistency_rate`.
-
-      Run command: cd {project_root} && JAX_PLATFORMS=cpu .venv/bin/python scripts/experiment_3357_fr11_logicvault.py. Do NOT push. Do NOT modify scripts/research_conductor.py.
-
-  - id: exp3358-fr11-continuous-learning-stress-test
-    operator_override: "2026-05-29 operator directive (outer-loop session): authorized. FR-11 continuous-learning continuation; false-positive scope-match vs exp1388/1395/1645/1661/1757. Forward lineage step (5-session drift stress test)."
-    milestone: "2026.05.310"
-    title: "Continuous learning stress test: 5-session curriculum with drift checks"
-    priority: high
-    max_turns: 50
-    estimated_wall_time_min: 10
-    track: self-learning
-    inference_substrate: synthetic
-    requires_gpu: false
-    gated_on:
-      - upstream: exp3357-fr11-logicvault-belief-states
-        artifact_field: status
-        op: "=="
-        value: "success"
-    deliverable: "results/experiment_3358_fr11_cl_stress_test.json"
-    prompt: |
-      CONTEXT: FR-11 must prove scalability across multiple loops without soundness regression (forgetting).
-      EXISTING CODE TO READ FIRST:
-        - `scripts/experiment_738_step_probe_tier2_memory.py` (for multi-session scaffolding)
-      TASK: Run a 5-session curriculum that sequentially introduces constraints, tracks retention, and performs drift-satisfiability checks.
-      CONCRETE STEPS:
-        1. Loop over 5 distinct sessions of problems.
-        2. Replay constraint memory from previous sessions into the current one.
-        3. Ensure precision does not degrade (`is_monotonic=true`).
-        4. Record `drift_satisfiable_rate`.
-
-      Run command: cd {project_root} && JAX_PLATFORMS=cpu .venv/bin/python scripts/experiment_3358_fr11_cl_stress_test.py. Do NOT push. Do NOT modify scripts/research_conductor.py.
-
-  - id: exp3359-capstone-v310
-    milestone: "2026.05.310"
-    title: "Capstone v310: Hardware latency, Energy-descent gains, FR-11 scalability"
+  - id: exp3371-capstone-v311
+    milestone: "2026.05.311"
+    title: "Capstone v311"
     priority: critical
     max_turns: 30
     estimated_wall_time_min: 5
     track: validation
     inference_substrate: aggregation_from_upstream_artifacts
     requires_gpu: false
-    gated_on:
-      - upstream: exp3350-kv260-hardware-latency-benchmark
-        artifact_field: status
-        op: "=="
-        value: "success"
-      - upstream: exp3355-verifier-guided-backtracking-ladder
-        artifact_field: status
-        op: "=="
-        value: "success"
-    deliverable: "results/experiment_3359_capstone_v310.json"
+    deliverable: "results/experiment_3371_capstone_v311.json"
     prompt: |
-      CONTEXT: We must verify that all 3 major tracks (Hardware Execution, Energy-Descent Refinement, FR-11 Formal Belief States) successfully integrated.
-      EXISTING CODE TO READ FIRST:
-        - `results/` (for prior experiment artifacts)
-      TASK: Write a capstone aggregator that parses the key metrics from `.310` experiments.
-      CONCRETE STEPS:
-        1. Read results from exp3350/exp3351 for hardware latency proofs.
-        2. Read results from exp3355 for repair ladder success rate.
-        3. Read results from exp3358 for continuous learning monotonicity.
-        4. Synthesize a unified `honest_verdict`.
+      CONTEXT: Aggregate results of v311.
+      TASK: Capstone.
+      Run command: cd {project_root} && JAX_PLATFORMS=cpu .venv/bin/python scripts/experiment_3371_capstone_v311.py.
 
-      Run command: cd {project_root} && JAX_PLATFORMS=cpu .venv/bin/python scripts/experiment_3359_capstone_v310.py. Do NOT push. Do NOT modify scripts/research_conductor.py.
+  - id: exp3372-fr11-cx-repair-scale
+    operator_override: "2026-05-29 operator directive (outer-loop, '1 then 2'): authorized. Scaling continuation of exp3356 (20→100 cases); false-positive scope-match vs exp3304/3356. Forward lineage step with a stated scale-up."
+    milestone: "2026.05.311"
+    title: "FR-11 Z3 Counterexample repair scaling"
+    priority: normal
+    max_turns: 50
+    estimated_wall_time_min: 15
+    track: self-learning
+    inference_substrate: synthetic
+    requires_gpu: false
+    deliverable: "results/experiment_3372_fr11_cx_repair_scale.json"
+    prompt: |
+      CONTEXT: exp3356 had 100% success on 20 cases. Scale to 100 cases.
+      Run command: cd {project_root} && JAX_PLATFORMS=cpu .venv/bin/python scripts/experiment_3372_fr11_cx_repair_scale.py.
 
-  - id: exp3360-plan-milestone-2026-05-311
-    milestone: "2026.05.310"
-    title: "Plan milestone 2026.05.311"
+  - id: exp3373-logicvault-multi-agent
+    operator_override: "2026-05-29 operator directive (outer-loop, '1 then 2'): authorized. New multi-agent extension of LogicVault; false-positive scope-match vs retired multi-agent exps (exp1755/1756/1757/1794/1948). New scope (concurrent agent beliefs)."
+    milestone: "2026.05.311"
+    title: "LogicVault Multi-Agent Synchronization"
+    priority: normal
+    max_turns: 50
+    estimated_wall_time_min: 15
+    track: self-learning
+    inference_substrate: synthetic
+    requires_gpu: false
+    deliverable: "results/experiment_3373_logicvault_multi_agent.json"
+    prompt: |
+      CONTEXT: Extend LogicVault to support concurrent agent beliefs.
+      Run command: cd {project_root} && JAX_PLATFORMS=cpu .venv/bin/python scripts/experiment_3373_logicvault_multi_agent.py.
+
+  - id: exp3374-ebt-sidecar-kan-integration
+    operator_override: "2026-05-29 operator directive (outer-loop, '1 then 2'): authorized. New KAN-energy integration for sidecar scoring; false-positive scope-match vs exp3201. New technique (KAN formulation)."
+    milestone: "2026.05.311"
+    title: "EBT sidecar scoring with KAN"
+    priority: normal
+    max_turns: 50
+    estimated_wall_time_min: 15
+    track: verification
+    inference_substrate: live_generation
+    requires_gpu: true
+    deliverable: "results/experiment_3374_ebt_kan_integration.json"
+    prompt: |
+      CONTEXT: Integrate KAN energy formulation with sidecar scoring.
+      Run command: cd {project_root} && .venv/bin/python scripts/experiment_3374_ebt_kan_integration.py.
+
+  - id: exp3375-vgb-repair-ladder-open-models
+    operator_override: "2026-05-29 operator directive (outer-loop, '1 then 2'): authorized. Repair ladder on a NEW model family (Llama-3); false-positive scope-match vs retired repair-ladder exps (exp3127/3169/3185/3199/3214). New substrate, not a rerun."
+    milestone: "2026.05.311"
+    title: "VGB Repair Ladder on Llama-3"
+    priority: normal
+    max_turns: 50
+    estimated_wall_time_min: 20
+    track: live-model
+    inference_substrate: live_generation
+    requires_gpu: true
+    deliverable: "results/experiment_3375_vgb_llama3.json"
+    prompt: |
+      CONTEXT: Test repair ladder on a different model family.
+      Run command: cd {project_root} && .venv/bin/python scripts/experiment_3375_vgb_llama3.py.
+
+  - id: exp3376-plan-milestone-2026-05-312
+    milestone: "2026.05.311"
+    title: "Plan milestone 2026.05.312"
     priority: normal
     max_turns: 50
     agent_type: gemini
@@ -281,25 +148,15 @@ tasks:
     track: ops
     inference_substrate: text_generation
     requires_gpu: false
-    deliverable: "results/experiment_3360_plan_milestone_311.json"
+    deliverable: "results/experiment_3376_plan_milestone_312.json"
     prompt: |
-      CONTEXT: The current milestone (.310) is winding down. We need to plan the next one based on what succeeded or failed.
-      EXISTING CODE TO READ FIRST:
-        - `ops/status.md`
-        - `research-program.md`
-      TASK: Generate `research-roadmap-next.yaml` and `openspec/change-proposals/research-roadmap-v311.md`.
-      CONCRETE STEPS:
-        1. Audit the findings of `.310`.
-        2. Identify the gaps for `.311`.
-        3. Draft 10-14 new experiments.
-        4. Save them locally, then write a simple script that emits `status=success` and the number of tasks proposed.
+      CONTEXT: Plan .312.
+      Run command: cd {project_root} && JAX_PLATFORMS=cpu .venv/bin/python scripts/experiment_3376_plan_milestone_312.py.
 
-      Run command: cd {project_root} && JAX_PLATFORMS=cpu .venv/bin/python scripts/experiment_3360_plan_milestone_311.py. Do NOT push. Do NOT modify scripts/research_conductor.py.
-
-  - id: exp3361-archive-v309-activate-v310
-    operator_override: "2026-05-29 operator directive (outer-loop session): authorized. Routine milestone-transition task; false-positive scope-match vs prior archive tasks (exp2847/2861/2873/2885/2897). Never a doomed rerun."
-    milestone: "2026.05.310"
-    title: "Archive milestone .309 honestly and activate .310"
+  - id: exp3377-archive-v310-activate-v311
+    operator_override: "2026-05-29 operator directive (outer-loop, '1 then 2'): authorized. Routine milestone-transition task; false-positive scope-match vs prior archive tasks (exp2847/2861/2873/2885/2897). Never a doomed rerun."
+    milestone: "2026.05.311"
+    title: "Archive milestone .310 honestly and activate .311"
     priority: critical
     max_turns: 20
     model: opus
@@ -307,17 +164,7 @@ tasks:
     track: ops
     inference_substrate: aggregation_from_upstream_artifacts
     requires_gpu: false
-    deliverable: "results/experiment_3361_archive_v309_activate_v310.json"
+    deliverable: "results/experiment_3377_archive_v310_activate_v311.json"
     prompt: |
-      CONTEXT: Operational handoff from `.309` to `.310`.
-      EXISTING CODE TO READ FIRST:
-        - `ops/status.md`
-        - `research-roadmap-next.yaml`
-      TASK: Perform the administrative archive and activation.
-      CONCRETE STEPS:
-        1. Parse the JSON artifacts from `.309` tasks.
-        2. Update `ops/changelog.md` and `ops/status.md`.
-        3. Ensure the YAML structure for `.310` is valid.
-        4. Emit an artifact confirming the number of tasks queued.
-
-      Run command: cd {project_root} && JAX_PLATFORMS=cpu .venv/bin/python scripts/experiment_3361_archive_v309_activate_v310.py. Do NOT push. Do NOT modify scripts/research_conductor.py.
+      CONTEXT: Operational handoff.
+      Run command: cd {project_root} && JAX_PLATFORMS=cpu .venv/bin/python scripts/experiment_3377_archive_v310_activate_v311.py.
