@@ -6679,3 +6679,4 @@ web search: https://docs.garak.ai/garak/examples/pr |
 | 2026-05-29 02:26 UTC | Close .305 ledger and open .306 quality-cleanup qu | OK | 81 passed in 3.04s |
 | 2026-05-29 02:41 UTC | Quality-flag root-cause autopsy v1 | OK | 81 passed in 3.72s |
 | 2026-05-29 02:53 UTC | Live runtime provenance contract v1 | OK | 81 passed in 3.61s |
+| 2026-05-29 03:08 UTC | DataFlip/KAD challenge manifest v1 | OK | 84 passed in 4.09s |
