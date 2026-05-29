@@ -6828,3 +6828,4 @@ web search: https://docs.garak.ai/garak/examples/pr |
 | 2026-05-29 14:35 UTC | Activation REFUSED: milestone 2026.05.310 | BLOCK | exclusion-manifest: 4 HARD violation(s); first: SCOPE_MATCHED_PRIOR_FAILURE on e |
 | 2026-05-29 14:37 UTC | Milestone 2026.05.310 activated | OK | 12 tasks queued |
 | 2026-05-29 14:39 UTC | KV260 board-local Ising sampling latency benchmark | DOOMED_RERUN_BLOCK | 3 prior failure(s) match this task's scope but prior_failures field is missing o |
+| 2026-05-29 14:41 UTC | KV260 board-local Ising sampling latency benchmark | DOOMED_RERUN_BLOCK | 3 prior failure(s) match this task's scope but prior_failures field is missing o |
