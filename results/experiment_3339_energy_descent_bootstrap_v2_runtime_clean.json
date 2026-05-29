@@ -1,0 +1,105 @@
+{
+  "blocked_reasons": [],
+  "duration_flagged": false,
+  "duration_s": 161.400422,
+  "energy_descent_bootstrap_ready": true,
+  "files_updated": [
+    "python/carnot/reporting/energy_descent_bootstrap_v2_runtime_clean_3339.py",
+    "scripts/experiment_3339_energy_descent_bootstrap_v2_runtime_clean.py",
+    "tests/python/test_experiment_3339_energy_descent_bootstrap_v2_runtime_clean.py",
+    "results/experiment_3339_energy_descent_bootstrap_v2_runtime_clean.json"
+  ],
+  "gpu_status": {
+    "available": true,
+    "gpus": [
+      "NVIDIA GeForce RTX 3090",
+      "NVIDIA GeForce RTX 3090"
+    ]
+  },
+  "honest_verdict": "complete: energy_descent_bootstrap_ready=true",
+  "inference_substrate": "live_llm_inference",
+  "model_specs": [
+    {
+      "gpu": 0,
+      "hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/snapshots/a483e9e6cbd595906af30beda3187c2663a1118c/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf",
+      "name": "Qwen3.6-35B-A3B"
+    },
+    {
+      "gpu": 1,
+      "hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+      "name": "Gemma4-26B-A4B-it"
+    }
+  ],
+  "n_prompts": 8,
+  "random_seed": 3339,
+  "reproducibility_checksum": "28d81e60131c7386",
+  "smoke_improvement_count": 5,
+  "trajectory_summary": [
+    {
+      "baseline_output": "To find the sum of 15 and",
+      "baseline_score": false,
+      "expected": "42",
+      "prompt": "What is 15 + 27?",
+      "refinement_output": "<think>\n\n</think>\n\nNo, 42",
+      "refinement_score": true
+    },
+    {
+      "baseline_output": "8 * 9 = 72.",
+      "baseline_score": true,
+      "expected": "72",
+      "prompt": "What is 8 * 9?",
+      "refinement_output": "<think>\n\n</think>\n\nYes, 72",
+      "refinement_score": true
+    },
+    {
+      "baseline_output": "To solve 100 - 3",
+      "baseline_score": false,
+      "expected": "66",
+      "prompt": "What is 100 - 34?",
+      "refinement_output": "<think>\n\n</think>\n\nNo, 66",
+      "refinement_score": true
+    },
+    {
+      "baseline_output": "56 / 8 = 7.",
+      "baseline_score": true,
+      "expected": "7",
+      "prompt": "What is 56 / 8?",
+      "refinement_output": "<think>\n\n</think>\n\nYes, 7.",
+      "refinement_score": true
+    },
+    {
+      "baseline_output": "To find the sum of 12 and",
+      "baseline_score": false,
+      "expected": "31",
+      "prompt": "What is 12 + 19?",
+      "refinement_output": "<think>\n\n</think>\n\nNo, 31",
+      "refinement_score": true
+    },
+    {
+      "baseline_output": "11 * 11 = 1",
+      "baseline_score": false,
+      "expected": "121",
+      "prompt": "What is 11 * 11?",
+      "refinement_output": "<think>\n\n</think>\n\nNo, 12",
+      "refinement_score": false
+    },
+    {
+      "baseline_output": "To solve 45 - 12",
+      "baseline_score": false,
+      "expected": "33",
+      "prompt": "What is 45 - 12?",
+      "refinement_output": "<think>\n\n</think>\n\nYes, 33",
+      "refinement_score": true
+    },
+    {
+      "baseline_output": "To solve 64 / 4,",
+      "baseline_score": false,
+      "expected": "16",
+      "prompt": "What is 64 / 4?",
+      "refinement_output": "<think>\n\n</think>\n\nNo, 16",
+      "refinement_score": true
+    }
+  ]
+}
