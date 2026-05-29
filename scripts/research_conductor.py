@@ -4120,7 +4120,25 @@ def research_step(
 
         ledger = _FailureLedger.load_from_artifacts(PROJECT_ROOT)
         rerun_check = ledger.is_doomed_rerun(task)
-        if rerun_check.blocked:
+        # operator_override bypass (2026-05-29 operator directive): a non-empty
+        # (>=10 char) operator_override string is the operator's authorization
+        # that this scope-match is a legit continuation (routine archive/capstone
+        # transition tasks, active hardware-continuity tasks, versioned lineage
+        # continuations), NOT a doomed rerun. This MIRRORS the bypass the
+        # exclusion-manifest activation guard already honors
+        # (exclusion_manifest_lint.py:_has_operator_override), so a single
+        # operator_override field clears BOTH guards. prior_failures: remains the
+        # other satisfier (with addressed_by + retire_if_same_verdict). Without
+        # this, operator-cleared tasks pass milestone activation but still get
+        # DOOMED_RERUN_BLOCK-skipped at launch (the .310 hardware/live tasks did).
+        _oo_val = task.get("operator_override")
+        _has_operator_override = isinstance(_oo_val, str) and len(_oo_val.strip()) >= 10
+        if rerun_check.blocked and _has_operator_override:
+            logger.info(
+                "Doomed-rerun check bypassed by operator_override: %s",
+                _oo_val.strip()[:120],
+            )
+        if rerun_check.blocked and not _has_operator_override:
             logger.warning(
                 "Failed-experiment rerun-discipline check FAILED: %s",
                 rerun_check.reason,

@@ -903,6 +903,18 @@ scope-match vs <exp ids>; <one-line forward rationale>."`
 The 6 overrides applied to the `.310 roadmap (commit `2cf7940f5`) are
 the canonical examples.
 
+**A single `operator_override:` clears BOTH guards (2026-05-29).** It
+satisfies the milestone-activation exclusion-manifest guard AND the
+per-task doomed-rerun pre-launch guard
+(`research_conductor.py:research_step` → `ledger.is_doomed_rerun`). The
+planner therefore does NOT need to add both `operator_override:` and
+`prior_failures:` to a legit continuation — `operator_override:` alone
+is sufficient. (`prior_failures:` remains the alternative satisfier for
+genuine reruns that address a root cause.) This was discovered when the
+`.310 tasks passed activation on `operator_override:` but were then
+`DOOMED_RERUN_BLOCK`-skipped at launch; the doomed-rerun guard was
+extended to honor `operator_override:` so the two guards are consistent.
+
 **Mechanical enforcement (lives in `scripts/research_conductor.py`).**
 The conductor's `_ensure_exclusion_manifest_loaded` check already
 GATE_BLOCKs retired experiment_ids at activation time. A future
