@@ -23,14 +23,24 @@ walk-backs (FoVer 0.9857→0.9131, hardware speedup retracted, replacement-grade
 refuted, Spera-generalization retracted, thermalization retracted):
 
 ### Methods headline (most rigorous)
-> **Carnot's k=15 verifier ensemble reaches AUROC 0.9131 on the FoVer
-> step-error corpus (n=1,000, 5 seeds, dual-condition, live RTX 3090,
-> CI95 [0.9027, 0.9235]), and an isolated memory-ablation shows the FR-11
-> self-learning component contributes +0.0185 AUROC (CI95 [0.0125, 0.0245]).**
+> **Carnot's verifier ensemble reaches AUROC 0.9131 on the FoVer
+> step-error corpus (n=1,000, 5 seeds, dual-condition, CI95 [0.9027, 0.9235]),
+> and an isolated memory-ablation shows the FR-11 self-learning component
+> contributes +0.0185 AUROC (CI95 [0.0125, 0.0245]).**
 
-Source: exp2837 (dual-condition rescue), confirmed in capstone exp2948.
-Status: live-GPU, adequate n, 5-seed, adversarial-verify clean, not
+Source: exp2837 (`results/experiment_2837_fover_memory_leakage_v3.json`),
+re-run as exp2850. Adequate n, 5-seed, adversarial-verify clean, not
 contradicted by any later experiment, not on the retraction list.
+
+**Precision corrections (surfaced 2026-05-29 while scoping the G2 runbook —
+the earlier draft overstated this):**
+- It is a **4-verifier** score (`fr11_session_memory`, `tier0r_curry_howard`,
+  `tier0s_arithmetic_gap`, `tier0u_logical_consistency`), NOT "k=15". The
+  broader ensemble is larger; only these four score FoVer.
+- It is **verifier-scoring against the labeled corpus on CPU**
+  (`live_model_invoked: False`, ~16s), NOT "live RTX 3090 inference". This is
+  a *strength* for G2: the headline is cheaply, externally reproducible with
+  no GPU or 35B model. See `ops/reproduction-runbook-fover-headline.md`.
 
 ### Product headline — DEMOTED 2026-05-29: prose numbers do NOT trace to artifacts (G4 catch)
 
