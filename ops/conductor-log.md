@@ -6936,3 +6936,4 @@ web search: https://docs.garak.ai/garak/examples/pr |
 | 2026-05-29 20:02 UTC | FR-11 Z3 Counterexample repair scaling | OK | 81 passed in 3.80s |
 | 2026-05-29 20:15 UTC | LogicVault Multi-Agent Synchronization | FAIL | Gemini CLI error: Stalled after 600s silence. Last output: t: 'Too Many Reques |
 | 2026-05-29 20:21 UTC | LogicVault Multi-Agent Synchronization | OK | 119 passed in 4.64s |
+| 2026-05-29 20:29 UTC | EBT sidecar scoring with KAN | OK | 81 passed in 4.34s |
