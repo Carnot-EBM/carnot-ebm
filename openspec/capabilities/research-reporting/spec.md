@@ -14353,3 +14353,84 @@ DataFlip detection, and repair substrate consistency are clean.
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-REPORT-3308 | Implemented (`python/carnot/reporting/quality_flag_root_cause_autopsy_3308.py`) | Implemented (`tests/python/test_experiment_3308_quality_flag_root_cause_autopsy.py`) |
+
+### REQ-REPORT-3309: Live Runtime Provenance Contract V1
+
+The repository shall provide an executable Exp 3309 live-runtime provenance
+contract for `.306` SOTA GGUF evidence and write
+`results/experiment_3309_live_runtime_provenance_contract_v1.json`. The
+contract SHALL be defined before any expensive live rerun that attempts to
+clear the `.305` GGUF/CUDA duration, metric-independence, or repair-substrate
+quality flags. The workflow MUST NOT run model inference, CUDA probes, Garak,
+DataFlip, repair generation, verifier scoring, the conductor, pushes, or
+modify `scripts/research_conductor.py`, `ops/status.md`, `ops/changelog.md`,
+or `_bmad/traceability.md` when the conductor delegates reconciliation to a
+separate step.
+
+The contract MUST name the executable checker path
+`python/carnot/reporting/live_runtime_provenance_contract_3309.py` and define
+`contract_version="carnot.live_runtime_provenance_contract.v1"`. It MUST
+require downstream headline live evidence to record model identity, model cache
+path, observed model size, quantization, model load timing, wall-clock
+duration, per-case generated token count, command/argv/cwd/pid, CUDA
+visibility, GPU memory samples, and exact checker versions. Exact checker
+versions MUST include the runtime contract version, checker path, checker file
+hash, and the versions or file hashes for adversarial verification,
+spec-coverage, `llama_cpp`, and selected Python/CUDA probes used by the rerun.
+
+The contract MUST define duration floors and exceptions. Headline live GGUF
+evidence SHALL require `minimum_live_duration_s >= 60.0` and must not clear a
+runtime gate when GGUF/CUDA/live markers appear below that floor. CPU smoke
+tests MAY run below the headline floor only when the artifact explicitly sets a
+smoke tier, disables headline promotion, records the smoke command, and labels
+the evidence as non-headline. Aggregation-only audits MAY run below the
+headline floor only when they execute no new model calls and point at a source
+artifact that carries its own runtime-contract result.
+
+The contract MUST define TAUTOLOGY guard rules for independently computed
+metrics. Distinct metrics such as top-level refusal rate, aligned-benign
+false-positive rate, DataFlip detection rate, repair success rate, and false
+accept rate MUST include metric-lineage records with independent numerator,
+denominator, source filter, source row count, calculation function, and source
+artifact hash. Equal values across distinct metrics SHALL be accepted only when
+the checker can recompute both rates from independent lineages or when the
+artifact declares an explicit alias relationship.
+
+The contract MUST define repair substrate consistency rules shared by the
+repair panel and audit. The panel and audit SHALL preserve matching source
+artifact hashes, panel case counts, manifest case hashes, exact checker types,
+used model IDs, missing mandated model IDs, and runtime-contract verdicts. The
+audit MAY report `inference_substrate="aggregation_from_upstream_artifacts"`
+without being treated as a live rerun, but `substrate_consistency_passed` SHALL
+be true only when the source panel's runtime contract is clean, critical
+adversarial flags are absent, exact acceptance authority is preserved, and no
+legacy small-model substitution is present.
+
+The terminal artifact MUST include `runtime_contract_ready`,
+`contract_version`, `minimum_live_duration_s`, `required_provenance_fields`,
+`tautology_guard_rules`, `duration_guard_rules`,
+`repair_substrate_rules`, `executable_checker_path`, and `honest_verdict`.
+`honest_verdict` MUST begin with one of `complete:`, `success:`, `passed:`, or
+`shipped:`.
+
+#### SCENARIO-REPORT-3309: Runtime Contract Blocks Non-Promotable Live Evidence
+
+**Given** Exp 3308 identified `.305` artifacts with GGUF/CUDA/live markers but
+insufficient runtime duration, missing load/generation provenance,
+metric-lineage TAUTOLOGY risk, and repair substrate inconsistency
+**When** the Exp 3309 contract builder runs without launching live inference
+**Then** it writes
+`results/experiment_3309_live_runtime_provenance_contract_v1.json` with all
+required schema fields, `runtime_contract_ready=true`,
+`minimum_live_duration_s=60.0`, an executable checker path, required
+provenance fields for model identity/cache/size/load/wall-clock/tokens/command/
+CUDA/GPU/checker versions, duration guard rules separating CPU smoke from
+headline live evidence, TAUTOLOGY guard rules for independent metric lineage,
+and repair substrate rules that the repair panel and audit can share before
+Exp 3312 or Exp 3316 reruns.
+
+## Implementation Status (REQ-REPORT-3309)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-3309 | Implemented (`python/carnot/reporting/live_runtime_provenance_contract_3309.py`) | Implemented (`tests/python/test_experiment_3309_live_runtime_provenance_contract.py`) |
