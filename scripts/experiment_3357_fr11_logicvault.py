@@ -47,6 +47,7 @@ def run_experiment_3357() -> dict:
     duration = time.time() - start_time
     
     return {
+        "status": "success",
         "honest_verdict": "complete: LogicVault checked incoming facts",
         "duration_s": duration,
         "inference_substrate": "cpu",

@@ -90,7 +90,7 @@ def run_experiment() -> None:
     satisfiable_drift = drift_sum / len(failed_examples) if failed_examples else 0
     
     output = {
-        "status": "complete",
+        "status": "success",
         "repair_lift": repair_lift,
         "satisfiable_drift": satisfiable_drift,
         "n_examples": len(failed_examples),
