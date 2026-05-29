@@ -1,0 +1,1163 @@
+{
+  "artifact": "experiment_3314_distributional_ebm_repair_uncertainty_audit_v1",
+  "distributional_energy_schema": {
+    "row_components": {
+      "abstention": {
+        "authority": "advisory_policy_only",
+        "formula": "block headline promotion when uncertainty or provenance/model risk is above threshold",
+        "source_fields": [
+          "uncertainty",
+          "provenance_risk",
+          "model_identity"
+        ]
+      },
+      "deterministic_constraint_penalty": {
+        "authority": "final_exact_checker",
+        "formula": "0.0 when exact_check_passed is true, else 1.0",
+        "source_fields": [
+          "exact_check_passed",
+          "exact_checker_type",
+          "false_accept"
+        ]
+      },
+      "learned_proxy_quality": {
+        "authority": "diagnostic_proxy_only",
+        "formula": "deterministic proxy over recorded clean-verifier output and answer-shape evidence",
+        "source_fields": [
+          "calibrated_clean_verifier_decision",
+          "candidate_answer",
+          "token_counts"
+        ]
+      },
+      "model_identity": {
+        "authority": "confound_diagnostic_only",
+        "formula": "used and missing mandated model families are reported without imputation",
+        "source_fields": [
+          "models_used",
+          "missing_model_specs",
+          "model_invocation_summary"
+        ]
+      },
+      "provenance_risk": {
+        "authority": "headline_promotion_guard",
+        "formula": "bounded max-risk score from source hygiene and runtime evidence",
+        "source_fields": [
+          "provenance_clean",
+          "adversarial_verify_flags",
+          "runtime_contract_reference",
+          "substrate_consistency_failure_modes"
+        ]
+      },
+      "uncertainty": {
+        "authority": "triage_metadata_only",
+        "formula": "high when exact checks and clean verifier disagree or the row lacks usable evidence",
+        "source_fields": [
+          "exact_check_passed",
+          "calibrated_clean_verifier_decision",
+          "false_accept",
+          "candidate_answer"
+        ]
+      }
+    },
+    "schema_kind": "distributional_ebm_inspired_sidecar_not_acceptance_authority"
+  },
+  "distributional_repair_audit_ready": true,
+  "duration_s": 0.000701,
+  "exact_acceptance_authority_preserved": true,
+  "experiment_id": "exp3314",
+  "honest_verdict": "complete: distributional repair audit ready; Exp3316 headline promotion blocked by advisory risk policy",
+  "inference_substrate": "deterministic_artifact_replay_no_model_calls",
+  "milestone": "2026.05.306",
+  "model_identity_confound_check": {
+    "confound_detected": true,
+    "exp3316_report_required_fields": [
+      "model_id",
+      "hf_id",
+      "model_path",
+      "size_bytes",
+      "quantization",
+      "cache_root",
+      "snapshot_revision",
+      "model_family",
+      "role"
+    ],
+    "mandated_model_families": [
+      "gemma",
+      "qwen"
+    ],
+    "mandated_model_ids": [
+      "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "unsloth/gemma-4-31B-it-GGUF"
+    ],
+    "missing_mandated_model_ids": [
+      "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "unsloth/gemma-4-31B-it-GGUF"
+    ],
+    "missing_model_families": [
+      "gemma",
+      "qwen"
+    ],
+    "model_family_confounds": [
+      "All scored repair rows came from one used model family; Exp3316 must not report cross-family repair evidence from this audit.",
+      "Missing mandated model ids must be reported beside any headline repair metric: unsloth/Qwen3.6-35B-A3B-GGUF, unsloth/gemma-4-31B-it-GGUF"
+    ],
+    "model_identity_coverage_risk": 0.666667,
+    "single_used_family_slice": true,
+    "used_model_families": [
+      "gemma"
+    ],
+    "used_model_ids": [
+      "unsloth/gemma-4-26B-A4B-it-GGUF"
+    ]
+  },
+  "no_new_model_execution": true,
+  "no_new_repair_generation": true,
+  "no_new_verifier_run": true,
+  "provenance_risk_features": {
+    "critical_adversarial_flag_count": 1,
+    "critical_adversarial_flags": [
+      {
+        "detail": "duration_s=15.496424 but artifact references compute-bound markers (GGUF / CUDA / live model). Loading and running a real model takes >=60.0s minimum; this completed too fast to have invoked the model.",
+        "kind": "DURATION_TOO_SHORT",
+        "severity": "critical"
+      }
+    ],
+    "live_duration_floor_s": 60.0,
+    "provenance_risk_score": 1.0,
+    "runtime_contract_ready": true,
+    "source_artifacts_readable": true,
+    "source_duration_below_live_floor": true,
+    "source_duration_s": 15.496424,
+    "source_provenance_clean": false,
+    "substrate_blocker_modes": [
+      "source_duration_below_live_floor",
+      "source_panel_runtime_contract_absent",
+      "critical_adversarial_flag_present",
+      "audit_substrate_consistency_gate_false"
+    ],
+    "substrate_consistency_passed": false
+  },
+  "random_seed": 3314,
+  "repair_case_count": 30,
+  "repair_row_scores": [
+    {
+      "abstention": {
+        "policy_blocked": true,
+        "reason_codes": [
+          "source_provenance_risk",
+          "model_identity_coverage_risk"
+        ]
+      },
+      "calibrated_clean_verifier_decision": "accept",
+      "case_hash": "1453d866716df1a430a429c61fbca486dac50c022bc59963bebf77d901e24fef",
+      "case_id": "exp3301-symbolic-01",
+      "deterministic_constraint_penalty": 0.0,
+      "exact_acceptance_authority": true,
+      "exact_check_passed": true,
+      "exact_checker_type": "exact_alias_string",
+      "false_accept": false,
+      "family": "symbolic_aliases",
+      "learned_proxy_quality_score": 1.0,
+      "model_identity": {
+        "model_family": "gemma",
+        "model_id": "unsloth/gemma-4-26B-A4B-it-GGUF"
+      },
+      "provenance_risk_score": 1.0,
+      "uncertainty": {
+        "answer_present": true,
+        "exact_clean_disagreement": false,
+        "token_count_present": true,
+        "unknown_clean_verifier_decision": false
+      },
+      "uncertainty_score": 0.1,
+      "verified_success": true
+    },
+    {
+      "abstention": {
+        "policy_blocked": true,
+        "reason_codes": [
+          "source_provenance_risk",
+          "model_identity_coverage_risk"
+        ]
+      },
+      "calibrated_clean_verifier_decision": "accept",
+      "case_hash": "29e8d47cc2dc97ff9b98664c11fb9d10eb864741f0c5d59c1f118973a2b4d9f4",
+      "case_id": "exp3301-symbolic-02",
+      "deterministic_constraint_penalty": 0.0,
+      "exact_acceptance_authority": true,
+      "exact_check_passed": true,
+      "exact_checker_type": "exact_alias_string",
+      "false_accept": false,
+      "family": "symbolic_aliases",
+      "learned_proxy_quality_score": 1.0,
+      "model_identity": {
+        "model_family": "gemma",
+        "model_id": "unsloth/gemma-4-26B-A4B-it-GGUF"
+      },
+      "provenance_risk_score": 1.0,
+      "uncertainty": {
+        "answer_present": true,
+        "exact_clean_disagreement": false,
+        "token_count_present": true,
+        "unknown_clean_verifier_decision": false
+      },
+      "uncertainty_score": 0.1,
+      "verified_success": true
+    },
+    {
+      "abstention": {
+        "policy_blocked": true,
+        "reason_codes": [
+          "source_provenance_risk",
+          "model_identity_coverage_risk"
+        ]
+      },
+      "calibrated_clean_verifier_decision": "accept",
+      "case_hash": "1b3a4717153104092908906d5a2f2bf34bef513ba6a792d2262ef4421bccd641",
+      "case_id": "exp3301-symbolic-03",
+      "deterministic_constraint_penalty": 0.0,
+      "exact_acceptance_authority": true,
+      "exact_check_passed": true,
+      "exact_checker_type": "exact_alias_string",
+      "false_accept": false,
+      "family": "symbolic_aliases",
+      "learned_proxy_quality_score": 1.0,
+      "model_identity": {
+        "model_family": "gemma",
+        "model_id": "unsloth/gemma-4-26B-A4B-it-GGUF"
+      },
+      "provenance_risk_score": 1.0,
+      "uncertainty": {
+        "answer_present": true,
+        "exact_clean_disagreement": false,
+        "token_count_present": true,
+        "unknown_clean_verifier_decision": false
+      },
+      "uncertainty_score": 0.1,
+      "verified_success": true
+    },
+    {
+      "abstention": {
+        "policy_blocked": true,
+        "reason_codes": [
+          "source_provenance_risk",
+          "model_identity_coverage_risk"
+        ]
+      },
+      "calibrated_clean_verifier_decision": "accept",
+      "case_hash": "daa7fb540e0b967ce407129a2d544a06b560d057b85acfe64778a5d19ba29280",
+      "case_id": "exp3301-symbolic-04",
+      "deterministic_constraint_penalty": 0.0,
+      "exact_acceptance_authority": true,
+      "exact_check_passed": true,
+      "exact_checker_type": "exact_alias_string",
+      "false_accept": false,
+      "family": "symbolic_aliases",
+      "learned_proxy_quality_score": 1.0,
+      "model_identity": {
+        "model_family": "gemma",
+        "model_id": "unsloth/gemma-4-26B-A4B-it-GGUF"
+      },
+      "provenance_risk_score": 1.0,
+      "uncertainty": {
+        "answer_present": true,
+        "exact_clean_disagreement": false,
+        "token_count_present": true,
+        "unknown_clean_verifier_decision": false
+      },
+      "uncertainty_score": 0.1,
+      "verified_success": true
+    },
+    {
+      "abstention": {
+        "policy_blocked": true,
+        "reason_codes": [
+          "source_provenance_risk",
+          "model_identity_coverage_risk"
+        ]
+      },
+      "calibrated_clean_verifier_decision": "accept",
+      "case_hash": "1a6276d31aa71b6f2c6e0eede59f38418bdcdf02ae45ac0cdc3ba095751e4124",
+      "case_id": "exp3301-symbolic-05",
+      "deterministic_constraint_penalty": 0.0,
+      "exact_acceptance_authority": true,
+      "exact_check_passed": true,
+      "exact_checker_type": "exact_alias_string",
+      "false_accept": false,
+      "family": "symbolic_aliases",
+      "learned_proxy_quality_score": 1.0,
+      "model_identity": {
+        "model_family": "gemma",
+        "model_id": "unsloth/gemma-4-26B-A4B-it-GGUF"
+      },
+      "provenance_risk_score": 1.0,
+      "uncertainty": {
+        "answer_present": true,
+        "exact_clean_disagreement": false,
+        "token_count_present": true,
+        "unknown_clean_verifier_decision": false
+      },
+      "uncertainty_score": 0.1,
+      "verified_success": true
+    },
+    {
+      "abstention": {
+        "policy_blocked": true,
+        "reason_codes": [
+          "source_provenance_risk",
+          "model_identity_coverage_risk"
+        ]
+      },
+      "calibrated_clean_verifier_decision": "accept",
+      "case_hash": "9db32056bc164d6bdb69c0976e28976639f4818b8e769f6f068662fa5647e135",
+      "case_id": "exp3301-symbolic-06",
+      "deterministic_constraint_penalty": 0.0,
+      "exact_acceptance_authority": true,
+      "exact_check_passed": true,
+      "exact_checker_type": "exact_alias_string",
+      "false_accept": false,
+      "family": "symbolic_aliases",
+      "learned_proxy_quality_score": 1.0,
+      "model_identity": {
+        "model_family": "gemma",
+        "model_id": "unsloth/gemma-4-26B-A4B-it-GGUF"
+      },
+      "provenance_risk_score": 1.0,
+      "uncertainty": {
+        "answer_present": true,
+        "exact_clean_disagreement": false,
+        "token_count_present": true,
+        "unknown_clean_verifier_decision": false
+      },
+      "uncertainty_score": 0.1,
+      "verified_success": true
+    },
+    {
+      "abstention": {
+        "policy_blocked": true,
+        "reason_codes": [
+          "source_provenance_risk",
+          "model_identity_coverage_risk"
+        ]
+      },
+      "calibrated_clean_verifier_decision": "accept",
+      "case_hash": "37daa06a98028d0a3698310d81c8209a8a015814d9f642ddc22e21f80613b73b",
+      "case_id": "exp3301-arithmetic-01",
+      "deterministic_constraint_penalty": 0.0,
+      "exact_acceptance_authority": true,
+      "exact_check_passed": true,
+      "exact_checker_type": "exact_integer_string",
+      "false_accept": false,
+      "family": "arithmetic_exact_rows",
+      "learned_proxy_quality_score": 1.0,
+      "model_identity": {
+        "model_family": "gemma",
+        "model_id": "unsloth/gemma-4-26B-A4B-it-GGUF"
+      },
+      "provenance_risk_score": 1.0,
+      "uncertainty": {
+        "answer_present": true,
+        "exact_clean_disagreement": false,
+        "token_count_present": true,
+        "unknown_clean_verifier_decision": false
+      },
+      "uncertainty_score": 0.1,
+      "verified_success": true
+    },
+    {
+      "abstention": {
+        "policy_blocked": true,
+        "reason_codes": [
+          "exact_clean_disagreement",
+          "source_provenance_risk",
+          "model_identity_coverage_risk"
+        ]
+      },
+      "calibrated_clean_verifier_decision": "reject",
+      "case_hash": "5ea9397004a12c4da392e58b475faf0fcd6bdc6038bd4386c935619e2976cd5e",
+      "case_id": "exp3301-arithmetic-02",
+      "deterministic_constraint_penalty": 0.0,
+      "exact_acceptance_authority": true,
+      "exact_check_passed": true,
+      "exact_checker_type": "exact_integer_string",
+      "false_accept": false,
+      "family": "arithmetic_exact_rows",
+      "learned_proxy_quality_score": 0.75,
+      "model_identity": {
+        "model_family": "gemma",
+        "model_id": "unsloth/gemma-4-26B-A4B-it-GGUF"
+      },
+      "provenance_risk_score": 1.0,
+      "uncertainty": {
+        "answer_present": true,
+        "exact_clean_disagreement": true,
+        "token_count_present": true,
+        "unknown_clean_verifier_decision": false
+      },
+      "uncertainty_score": 0.7,
+      "verified_success": false
+    },
+    {
+      "abstention": {
+        "policy_blocked": true,
+        "reason_codes": [
+          "source_provenance_risk",
+          "model_identity_coverage_risk"
+        ]
+      },
+      "calibrated_clean_verifier_decision": "accept",
+      "case_hash": "d61985993cdf730779086d90ae94284cd99ffe8e2620b505a75964715d84e8e7",
+      "case_id": "exp3301-arithmetic-03",
+      "deterministic_constraint_penalty": 0.0,
+      "exact_acceptance_authority": true,
+      "exact_check_passed": true,
+      "exact_checker_type": "exact_integer_string",
+      "false_accept": false,
+      "family": "arithmetic_exact_rows",
+      "learned_proxy_quality_score": 1.0,
+      "model_identity": {
+        "model_family": "gemma",
+        "model_id": "unsloth/gemma-4-26B-A4B-it-GGUF"
+      },
+      "provenance_risk_score": 1.0,
+      "uncertainty": {
+        "answer_present": true,
+        "exact_clean_disagreement": false,
+        "token_count_present": true,
+        "unknown_clean_verifier_decision": false
+      },
+      "uncertainty_score": 0.1,
+      "verified_success": true
+    },
+    {
+      "abstention": {
+        "policy_blocked": true,
+        "reason_codes": [
+          "source_provenance_risk",
+          "model_identity_coverage_risk"
+        ]
+      },
+      "calibrated_clean_verifier_decision": "accept",
+      "case_hash": "8d0bb0598125f10975c4b7011562a3517f98a63ec9b96155294f3cc6643c094b",
+      "case_id": "exp3301-arithmetic-04",
+      "deterministic_constraint_penalty": 0.0,
+      "exact_acceptance_authority": true,
+      "exact_check_passed": true,
+      "exact_checker_type": "exact_integer_string",
+      "false_accept": false,
+      "family": "arithmetic_exact_rows",
+      "learned_proxy_quality_score": 1.0,
+      "model_identity": {
+        "model_family": "gemma",
+        "model_id": "unsloth/gemma-4-26B-A4B-it-GGUF"
+      },
+      "provenance_risk_score": 1.0,
+      "uncertainty": {
+        "answer_present": true,
+        "exact_clean_disagreement": false,
+        "token_count_present": true,
+        "unknown_clean_verifier_decision": false
+      },
+      "uncertainty_score": 0.1,
+      "verified_success": true
+    },
+    {
+      "abstention": {
+        "policy_blocked": true,
+        "reason_codes": [
+          "source_provenance_risk",
+          "model_identity_coverage_risk"
+        ]
+      },
+      "calibrated_clean_verifier_decision": "accept",
+      "case_hash": "1b1c21335c93b19e04f99c85f2d34efac7efdea8a637fa48b22457fe6fc4466b",
+      "case_id": "exp3301-arithmetic-05",
+      "deterministic_constraint_penalty": 0.0,
+      "exact_acceptance_authority": true,
+      "exact_check_passed": true,
+      "exact_checker_type": "exact_integer_string",
+      "false_accept": false,
+      "family": "arithmetic_exact_rows",
+      "learned_proxy_quality_score": 1.0,
+      "model_identity": {
+        "model_family": "gemma",
+        "model_id": "unsloth/gemma-4-26B-A4B-it-GGUF"
+      },
+      "provenance_risk_score": 1.0,
+      "uncertainty": {
+        "answer_present": true,
+        "exact_clean_disagreement": false,
+        "token_count_present": true,
+        "unknown_clean_verifier_decision": false
+      },
+      "uncertainty_score": 0.1,
+      "verified_success": true
+    },
+    {
+      "abstention": {
+        "policy_blocked": true,
+        "reason_codes": [
+          "exact_clean_disagreement",
+          "source_provenance_risk",
+          "model_identity_coverage_risk"
+        ]
+      },
+      "calibrated_clean_verifier_decision": "reject",
+      "case_hash": "efec6965f04f20a1dbcf2146df42ac80670b8d586aec828d31f48d4d78f58389",
+      "case_id": "exp3301-arithmetic-06",
+      "deterministic_constraint_penalty": 0.0,
+      "exact_acceptance_authority": true,
+      "exact_check_passed": true,
+      "exact_checker_type": "exact_integer_string",
+      "false_accept": false,
+      "family": "arithmetic_exact_rows",
+      "learned_proxy_quality_score": 0.75,
+      "model_identity": {
+        "model_family": "gemma",
+        "model_id": "unsloth/gemma-4-26B-A4B-it-GGUF"
+      },
+      "provenance_risk_score": 1.0,
+      "uncertainty": {
+        "answer_present": true,
+        "exact_clean_disagreement": true,
+        "token_count_present": true,
+        "unknown_clean_verifier_decision": false
+      },
+      "uncertainty_score": 0.7,
+      "verified_success": false
+    },
+    {
+      "abstention": {
+        "policy_blocked": true,
+        "reason_codes": [
+          "source_provenance_risk",
+          "model_identity_coverage_risk"
+        ]
+      },
+      "calibrated_clean_verifier_decision": "accept",
+      "case_hash": "0fe020d53c37fc739997ec05a22a96b368a333863162cb6da50d53efba15ac06",
+      "case_id": "exp3301-context-01",
+      "deterministic_constraint_penalty": 0.0,
+      "exact_acceptance_authority": true,
+      "exact_check_passed": true,
+      "exact_checker_type": "exact_context_string",
+      "false_accept": false,
+      "family": "context_shortcuts",
+      "learned_proxy_quality_score": 1.0,
+      "model_identity": {
+        "model_family": "gemma",
+        "model_id": "unsloth/gemma-4-26B-A4B-it-GGUF"
+      },
+      "provenance_risk_score": 1.0,
+      "uncertainty": {
+        "answer_present": true,
+        "exact_clean_disagreement": false,
+        "token_count_present": true,
+        "unknown_clean_verifier_decision": false
+      },
+      "uncertainty_score": 0.1,
+      "verified_success": true
+    },
+    {
+      "abstention": {
+        "policy_blocked": true,
+        "reason_codes": [
+          "source_provenance_risk",
+          "model_identity_coverage_risk"
+        ]
+      },
+      "calibrated_clean_verifier_decision": "accept",
+      "case_hash": "95fe71c1b63b7ca93130c81827ff5e56f0dd3addeae55b141e0d247683c5fcd0",
+      "case_id": "exp3301-context-02",
+      "deterministic_constraint_penalty": 0.0,
+      "exact_acceptance_authority": true,
+      "exact_check_passed": true,
+      "exact_checker_type": "exact_context_string",
+      "false_accept": false,
+      "family": "context_shortcuts",
+      "learned_proxy_quality_score": 1.0,
+      "model_identity": {
+        "model_family": "gemma",
+        "model_id": "unsloth/gemma-4-26B-A4B-it-GGUF"
+      },
+      "provenance_risk_score": 1.0,
+      "uncertainty": {
+        "answer_present": true,
+        "exact_clean_disagreement": false,
+        "token_count_present": true,
+        "unknown_clean_verifier_decision": false
+      },
+      "uncertainty_score": 0.1,
+      "verified_success": true
+    },
+    {
+      "abstention": {
+        "policy_blocked": true,
+        "reason_codes": [
+          "source_provenance_risk",
+          "model_identity_coverage_risk"
+        ]
+      },
+      "calibrated_clean_verifier_decision": "accept",
+      "case_hash": "b63cd5dc40b45afbc68e0ee4020870304eb74d78f7d4d031f8f843b70d84f532",
+      "case_id": "exp3301-context-03",
+      "deterministic_constraint_penalty": 0.0,
+      "exact_acceptance_authority": true,
+      "exact_check_passed": true,
+      "exact_checker_type": "exact_context_string",
+      "false_accept": false,
+      "family": "context_shortcuts",
+      "learned_proxy_quality_score": 1.0,
+      "model_identity": {
+        "model_family": "gemma",
+        "model_id": "unsloth/gemma-4-26B-A4B-it-GGUF"
+      },
+      "provenance_risk_score": 1.0,
+      "uncertainty": {
+        "answer_present": true,
+        "exact_clean_disagreement": false,
+        "token_count_present": true,
+        "unknown_clean_verifier_decision": false
+      },
+      "uncertainty_score": 0.1,
+      "verified_success": true
+    },
+    {
+      "abstention": {
+        "policy_blocked": true,
+        "reason_codes": [
+          "source_provenance_risk",
+          "model_identity_coverage_risk"
+        ]
+      },
+      "calibrated_clean_verifier_decision": "accept",
+      "case_hash": "6abc3fda7ec753c5e4595e6ffe1703349c18d7563b7d68a80e2d64e5ff3bd638",
+      "case_id": "exp3301-context-04",
+      "deterministic_constraint_penalty": 0.0,
+      "exact_acceptance_authority": true,
+      "exact_check_passed": true,
+      "exact_checker_type": "exact_context_string",
+      "false_accept": false,
+      "family": "context_shortcuts",
+      "learned_proxy_quality_score": 1.0,
+      "model_identity": {
+        "model_family": "gemma",
+        "model_id": "unsloth/gemma-4-26B-A4B-it-GGUF"
+      },
+      "provenance_risk_score": 1.0,
+      "uncertainty": {
+        "answer_present": true,
+        "exact_clean_disagreement": false,
+        "token_count_present": true,
+        "unknown_clean_verifier_decision": false
+      },
+      "uncertainty_score": 0.1,
+      "verified_success": true
+    },
+    {
+      "abstention": {
+        "policy_blocked": true,
+        "reason_codes": [
+          "source_provenance_risk",
+          "model_identity_coverage_risk"
+        ]
+      },
+      "calibrated_clean_verifier_decision": "accept",
+      "case_hash": "9c2b4da9299cf7a209e42f791a0f09d379ce70989b18fcebd7d889ce32ccfd0c",
+      "case_id": "exp3301-context-05",
+      "deterministic_constraint_penalty": 0.0,
+      "exact_acceptance_authority": true,
+      "exact_check_passed": true,
+      "exact_checker_type": "exact_context_string",
+      "false_accept": false,
+      "family": "context_shortcuts",
+      "learned_proxy_quality_score": 1.0,
+      "model_identity": {
+        "model_family": "gemma",
+        "model_id": "unsloth/gemma-4-26B-A4B-it-GGUF"
+      },
+      "provenance_risk_score": 1.0,
+      "uncertainty": {
+        "answer_present": true,
+        "exact_clean_disagreement": false,
+        "token_count_present": true,
+        "unknown_clean_verifier_decision": false
+      },
+      "uncertainty_score": 0.1,
+      "verified_success": true
+    },
+    {
+      "abstention": {
+        "policy_blocked": true,
+        "reason_codes": [
+          "source_provenance_risk",
+          "model_identity_coverage_risk"
+        ]
+      },
+      "calibrated_clean_verifier_decision": "accept",
+      "case_hash": "17c7b5c3363279181706d896e0e955ad10a8bdbe838dec333e1cd62318762f46",
+      "case_id": "exp3301-context-06",
+      "deterministic_constraint_penalty": 0.0,
+      "exact_acceptance_authority": true,
+      "exact_check_passed": true,
+      "exact_checker_type": "exact_context_string",
+      "false_accept": false,
+      "family": "context_shortcuts",
+      "learned_proxy_quality_score": 1.0,
+      "model_identity": {
+        "model_family": "gemma",
+        "model_id": "unsloth/gemma-4-26B-A4B-it-GGUF"
+      },
+      "provenance_risk_score": 1.0,
+      "uncertainty": {
+        "answer_present": true,
+        "exact_clean_disagreement": false,
+        "token_count_present": true,
+        "unknown_clean_verifier_decision": false
+      },
+      "uncertainty_score": 0.1,
+      "verified_success": true
+    },
+    {
+      "abstention": {
+        "policy_blocked": true,
+        "reason_codes": [
+          "source_provenance_risk",
+          "model_identity_coverage_risk"
+        ]
+      },
+      "calibrated_clean_verifier_decision": "accept",
+      "case_hash": "a9b5154e72d3eaa7e46fdb7eeb2c9464c623738fc499594c72597f4f03448762",
+      "case_id": "exp3301-code-01",
+      "deterministic_constraint_penalty": 0.0,
+      "exact_acceptance_authority": true,
+      "exact_check_passed": true,
+      "exact_checker_type": "exact_stdout_string",
+      "false_accept": false,
+      "family": "code_output_checks",
+      "learned_proxy_quality_score": 1.0,
+      "model_identity": {
+        "model_family": "gemma",
+        "model_id": "unsloth/gemma-4-26B-A4B-it-GGUF"
+      },
+      "provenance_risk_score": 1.0,
+      "uncertainty": {
+        "answer_present": true,
+        "exact_clean_disagreement": false,
+        "token_count_present": true,
+        "unknown_clean_verifier_decision": false
+      },
+      "uncertainty_score": 0.1,
+      "verified_success": true
+    },
+    {
+      "abstention": {
+        "policy_blocked": true,
+        "reason_codes": [
+          "source_provenance_risk",
+          "model_identity_coverage_risk"
+        ]
+      },
+      "calibrated_clean_verifier_decision": "accept",
+      "case_hash": "e7c7bd84d88cea8aa44deab327ed4b6f5edce7f27b77b7d39d14aeb50e251506",
+      "case_id": "exp3301-code-02",
+      "deterministic_constraint_penalty": 0.0,
+      "exact_acceptance_authority": true,
+      "exact_check_passed": true,
+      "exact_checker_type": "exact_stdout_string",
+      "false_accept": false,
+      "family": "code_output_checks",
+      "learned_proxy_quality_score": 1.0,
+      "model_identity": {
+        "model_family": "gemma",
+        "model_id": "unsloth/gemma-4-26B-A4B-it-GGUF"
+      },
+      "provenance_risk_score": 1.0,
+      "uncertainty": {
+        "answer_present": true,
+        "exact_clean_disagreement": false,
+        "token_count_present": true,
+        "unknown_clean_verifier_decision": false
+      },
+      "uncertainty_score": 0.1,
+      "verified_success": true
+    },
+    {
+      "abstention": {
+        "policy_blocked": true,
+        "reason_codes": [
+          "source_provenance_risk",
+          "model_identity_coverage_risk"
+        ]
+      },
+      "calibrated_clean_verifier_decision": "accept",
+      "case_hash": "f4e785655d5cfea517b28e0cb7c06c920bd33a9d9aa2752b2f22fc61a9ce6a82",
+      "case_id": "exp3301-code-03",
+      "deterministic_constraint_penalty": 0.0,
+      "exact_acceptance_authority": true,
+      "exact_check_passed": true,
+      "exact_checker_type": "exact_stdout_string",
+      "false_accept": false,
+      "family": "code_output_checks",
+      "learned_proxy_quality_score": 1.0,
+      "model_identity": {
+        "model_family": "gemma",
+        "model_id": "unsloth/gemma-4-26B-A4B-it-GGUF"
+      },
+      "provenance_risk_score": 1.0,
+      "uncertainty": {
+        "answer_present": true,
+        "exact_clean_disagreement": false,
+        "token_count_present": true,
+        "unknown_clean_verifier_decision": false
+      },
+      "uncertainty_score": 0.1,
+      "verified_success": true
+    },
+    {
+      "abstention": {
+        "policy_blocked": true,
+        "reason_codes": [
+          "source_provenance_risk",
+          "model_identity_coverage_risk"
+        ]
+      },
+      "calibrated_clean_verifier_decision": "accept",
+      "case_hash": "82afac7485866bda8389b19b5823095ed52f53490846f908fdb9c2ae1b7ca96e",
+      "case_id": "exp3301-code-04",
+      "deterministic_constraint_penalty": 0.0,
+      "exact_acceptance_authority": true,
+      "exact_check_passed": true,
+      "exact_checker_type": "exact_stdout_string",
+      "false_accept": false,
+      "family": "code_output_checks",
+      "learned_proxy_quality_score": 1.0,
+      "model_identity": {
+        "model_family": "gemma",
+        "model_id": "unsloth/gemma-4-26B-A4B-it-GGUF"
+      },
+      "provenance_risk_score": 1.0,
+      "uncertainty": {
+        "answer_present": true,
+        "exact_clean_disagreement": false,
+        "token_count_present": true,
+        "unknown_clean_verifier_decision": false
+      },
+      "uncertainty_score": 0.1,
+      "verified_success": true
+    },
+    {
+      "abstention": {
+        "policy_blocked": true,
+        "reason_codes": [
+          "source_provenance_risk",
+          "model_identity_coverage_risk"
+        ]
+      },
+      "calibrated_clean_verifier_decision": "accept",
+      "case_hash": "a12d3a52629cd87a9a68d4b8e701f8791acbd99912c91d3df75425850f5b7099",
+      "case_id": "exp3301-code-05",
+      "deterministic_constraint_penalty": 0.0,
+      "exact_acceptance_authority": true,
+      "exact_check_passed": true,
+      "exact_checker_type": "exact_stdout_string",
+      "false_accept": false,
+      "family": "code_output_checks",
+      "learned_proxy_quality_score": 1.0,
+      "model_identity": {
+        "model_family": "gemma",
+        "model_id": "unsloth/gemma-4-26B-A4B-it-GGUF"
+      },
+      "provenance_risk_score": 1.0,
+      "uncertainty": {
+        "answer_present": true,
+        "exact_clean_disagreement": false,
+        "token_count_present": true,
+        "unknown_clean_verifier_decision": false
+      },
+      "uncertainty_score": 0.1,
+      "verified_success": true
+    },
+    {
+      "abstention": {
+        "policy_blocked": true,
+        "reason_codes": [
+          "exact_clean_disagreement",
+          "source_provenance_risk",
+          "model_identity_coverage_risk"
+        ]
+      },
+      "calibrated_clean_verifier_decision": "reject",
+      "case_hash": "3b482fc880daa95601b1260f46182db36e7de545ea6d1cf837437bdeac7721dd",
+      "case_id": "exp3301-code-06",
+      "deterministic_constraint_penalty": 0.0,
+      "exact_acceptance_authority": true,
+      "exact_check_passed": true,
+      "exact_checker_type": "exact_stdout_string",
+      "false_accept": false,
+      "family": "code_output_checks",
+      "learned_proxy_quality_score": 0.75,
+      "model_identity": {
+        "model_family": "gemma",
+        "model_id": "unsloth/gemma-4-26B-A4B-it-GGUF"
+      },
+      "provenance_risk_score": 1.0,
+      "uncertainty": {
+        "answer_present": true,
+        "exact_clean_disagreement": true,
+        "token_count_present": true,
+        "unknown_clean_verifier_decision": false
+      },
+      "uncertainty_score": 0.7,
+      "verified_success": false
+    },
+    {
+      "abstention": {
+        "policy_blocked": true,
+        "reason_codes": [
+          "source_provenance_risk",
+          "model_identity_coverage_risk"
+        ]
+      },
+      "calibrated_clean_verifier_decision": "accept",
+      "case_hash": "38520b38a354f868a367a34b43d85d18a4d3e91db506760c48032717651eeade",
+      "case_id": "exp3301-logic-01",
+      "deterministic_constraint_penalty": 0.0,
+      "exact_acceptance_authority": true,
+      "exact_check_passed": true,
+      "exact_checker_type": "exact_bool_string",
+      "false_accept": false,
+      "family": "bounded_logical_consistency",
+      "learned_proxy_quality_score": 1.0,
+      "model_identity": {
+        "model_family": "gemma",
+        "model_id": "unsloth/gemma-4-26B-A4B-it-GGUF"
+      },
+      "provenance_risk_score": 1.0,
+      "uncertainty": {
+        "answer_present": true,
+        "exact_clean_disagreement": false,
+        "token_count_present": true,
+        "unknown_clean_verifier_decision": false
+      },
+      "uncertainty_score": 0.1,
+      "verified_success": true
+    },
+    {
+      "abstention": {
+        "policy_blocked": true,
+        "reason_codes": [
+          "source_provenance_risk",
+          "model_identity_coverage_risk"
+        ]
+      },
+      "calibrated_clean_verifier_decision": "accept",
+      "case_hash": "c9169de436a84e6a71aa01192d7e87a8dc489b1f71cffca3f2c1039fd31c1a4b",
+      "case_id": "exp3301-logic-02",
+      "deterministic_constraint_penalty": 0.0,
+      "exact_acceptance_authority": true,
+      "exact_check_passed": true,
+      "exact_checker_type": "exact_bool_string",
+      "false_accept": false,
+      "family": "bounded_logical_consistency",
+      "learned_proxy_quality_score": 1.0,
+      "model_identity": {
+        "model_family": "gemma",
+        "model_id": "unsloth/gemma-4-26B-A4B-it-GGUF"
+      },
+      "provenance_risk_score": 1.0,
+      "uncertainty": {
+        "answer_present": true,
+        "exact_clean_disagreement": false,
+        "token_count_present": true,
+        "unknown_clean_verifier_decision": false
+      },
+      "uncertainty_score": 0.1,
+      "verified_success": true
+    },
+    {
+      "abstention": {
+        "policy_blocked": true,
+        "reason_codes": [
+          "source_provenance_risk",
+          "model_identity_coverage_risk"
+        ]
+      },
+      "calibrated_clean_verifier_decision": "accept",
+      "case_hash": "719050655e08725bef4f5605d957f3149dfc4a56b245b5703dde7cdc6a8df435",
+      "case_id": "exp3301-logic-03",
+      "deterministic_constraint_penalty": 0.0,
+      "exact_acceptance_authority": true,
+      "exact_check_passed": true,
+      "exact_checker_type": "exact_bool_string",
+      "false_accept": false,
+      "family": "bounded_logical_consistency",
+      "learned_proxy_quality_score": 1.0,
+      "model_identity": {
+        "model_family": "gemma",
+        "model_id": "unsloth/gemma-4-26B-A4B-it-GGUF"
+      },
+      "provenance_risk_score": 1.0,
+      "uncertainty": {
+        "answer_present": true,
+        "exact_clean_disagreement": false,
+        "token_count_present": true,
+        "unknown_clean_verifier_decision": false
+      },
+      "uncertainty_score": 0.1,
+      "verified_success": true
+    },
+    {
+      "abstention": {
+        "policy_blocked": true,
+        "reason_codes": [
+          "source_provenance_risk",
+          "model_identity_coverage_risk"
+        ]
+      },
+      "calibrated_clean_verifier_decision": "accept",
+      "case_hash": "190e69ab412a4fa81f74a3562191ce74b934c1bd42c94ec2f059f6489568255a",
+      "case_id": "exp3301-logic-04",
+      "deterministic_constraint_penalty": 0.0,
+      "exact_acceptance_authority": true,
+      "exact_check_passed": true,
+      "exact_checker_type": "exact_bool_string",
+      "false_accept": false,
+      "family": "bounded_logical_consistency",
+      "learned_proxy_quality_score": 1.0,
+      "model_identity": {
+        "model_family": "gemma",
+        "model_id": "unsloth/gemma-4-26B-A4B-it-GGUF"
+      },
+      "provenance_risk_score": 1.0,
+      "uncertainty": {
+        "answer_present": true,
+        "exact_clean_disagreement": false,
+        "token_count_present": true,
+        "unknown_clean_verifier_decision": false
+      },
+      "uncertainty_score": 0.1,
+      "verified_success": true
+    },
+    {
+      "abstention": {
+        "policy_blocked": true,
+        "reason_codes": [
+          "source_provenance_risk",
+          "model_identity_coverage_risk"
+        ]
+      },
+      "calibrated_clean_verifier_decision": "accept",
+      "case_hash": "fd0b245efc84d7d0b723956f4c23e85e5bd0bb62fdd8dd2c6a31e339767e77b5",
+      "case_id": "exp3301-logic-05",
+      "deterministic_constraint_penalty": 0.0,
+      "exact_acceptance_authority": true,
+      "exact_check_passed": true,
+      "exact_checker_type": "exact_bool_string",
+      "false_accept": false,
+      "family": "bounded_logical_consistency",
+      "learned_proxy_quality_score": 1.0,
+      "model_identity": {
+        "model_family": "gemma",
+        "model_id": "unsloth/gemma-4-26B-A4B-it-GGUF"
+      },
+      "provenance_risk_score": 1.0,
+      "uncertainty": {
+        "answer_present": true,
+        "exact_clean_disagreement": false,
+        "token_count_present": true,
+        "unknown_clean_verifier_decision": false
+      },
+      "uncertainty_score": 0.1,
+      "verified_success": true
+    },
+    {
+      "abstention": {
+        "policy_blocked": true,
+        "reason_codes": [
+          "source_provenance_risk",
+          "model_identity_coverage_risk"
+        ]
+      },
+      "calibrated_clean_verifier_decision": "accept",
+      "case_hash": "5d3d1dd6e46ce95ba7cd1f366a32f4b9462c826ecf3b67be155049a1fbd9979c",
+      "case_id": "exp3301-logic-06",
+      "deterministic_constraint_penalty": 0.0,
+      "exact_acceptance_authority": true,
+      "exact_check_passed": true,
+      "exact_checker_type": "exact_bool_string",
+      "false_accept": false,
+      "family": "bounded_logical_consistency",
+      "learned_proxy_quality_score": 1.0,
+      "model_identity": {
+        "model_family": "gemma",
+        "model_id": "unsloth/gemma-4-26B-A4B-it-GGUF"
+      },
+      "provenance_risk_score": 1.0,
+      "uncertainty": {
+        "answer_present": true,
+        "exact_clean_disagreement": false,
+        "token_count_present": true,
+        "unknown_clean_verifier_decision": false
+      },
+      "uncertainty_score": 0.1,
+      "verified_success": true
+    }
+  ],
+  "reproducibility_checksum": "45b4734ba4d020810047d64e885b42beb125118fd41c2ba13635946604eeb491",
+  "run_date": "20260529",
+  "schema": "carnot.distributional_ebm_repair_uncertainty_audit.v1",
+  "schema_version": "carnot.distributional_ebm_repair_uncertainty_audit.v1",
+  "source_artifacts": {
+    "exp3302": {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_3302_headline_sota_repair_panel_v11.json",
+      "present": true,
+      "readable": true,
+      "sha256": "ce217fdba4ff8456deef6a89ff602d7f0d2f155d1f47ba8411ebc45efdf6079b"
+    },
+    "exp3303": {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_3303_repair_headline_evidence_audit_v1.json",
+      "present": true,
+      "readable": true,
+      "sha256": "62409db89891a5fbdf8bb1c14515f2b239f3df0d68bea4492308bc94d68e1838"
+    },
+    "exp3313": {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_3313_repair_substrate_root_cause_autopsy_v1.json",
+      "present": true,
+      "readable": true,
+      "sha256": "786837ec6cd6e4cc5dd2d4eb8ccbdc3a72edcea6e4421740f319866ccae128cf"
+    }
+  },
+  "spec_refs": [
+    "REQ-VERIFY-3314",
+    "SCENARIO-VERIFY-3314"
+  ],
+  "task_id": "exp3314-distributional-ebm-repair-uncertainty-audit-v1",
+  "uncertainty_abstention_policy": {
+    "exact_acceptance_remains_final_authority": true,
+    "exp3316_reporting_rule": "Exp3316 may promote a repair headline only when exact checks pass, false_accept_count=0, critical flags are zero, provenance/model risk are below threshold, and no row exceeds the uncertainty threshold.",
+    "exp3316_required_fields": [
+      "uncertainty_abstention_policy",
+      "distributional_energy_schema",
+      "model_identity_confound_check",
+      "provenance_risk_features",
+      "row_abstention_count",
+      "critical_adversarial_flag_count"
+    ],
+    "headline_promotion_blocked": true,
+    "high_uncertainty_case_count": 3,
+    "high_uncertainty_case_ids": [
+      "exp3301-arithmetic-02",
+      "exp3301-arithmetic-06",
+      "exp3301-code-06"
+    ],
+    "model_identity_coverage_risk_block_threshold": 0.5,
+    "model_identity_risk_blocks_headline": true,
+    "policy_name": "exp3316_headline_promotion_abstention_policy_v1",
+    "provenance_risk_blocks_headline": true,
+    "provenance_risk_score_block_threshold": 0.5,
+    "row_abstention_count": 30,
+    "uncertainty_score_block_threshold": 0.6
+  }
+}

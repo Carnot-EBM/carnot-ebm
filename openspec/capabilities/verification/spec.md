@@ -8932,3 +8932,73 @@ in `claim_boundaries`.
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-VERIFY-3303 | Implemented (`python/carnot/verify/repair_headline_evidence_audit_v1.py`) | Implemented (`tests/python/test_experiment_3303_repair_headline_evidence_audit_v1.py`) |
+
+### REQ-VERIFY-3314: Distributional EBM Repair Uncertainty Audit V1
+
+The repository shall provide an Exp 3314 aggregation-only Distributional-EBM-inspired
+repair uncertainty audit that reads
+`results/experiment_3302_headline_sota_repair_panel_v11.json`,
+`results/experiment_3303_repair_headline_evidence_audit_v1.json`, and
+`results/experiment_3313_repair_substrate_root_cause_autopsy_v1.json`, applies
+a deterministic sidecar schema to the `.305` repair panel rows when those rows
+are available, and writes
+`results/experiment_3314_distributional_ebm_repair_uncertainty_audit_v1.json`.
+The workflow MUST NOT invoke a model, rerun repair generation, rerun exact
+verification, train a learned EBM, push, or modify `scripts/research_conductor.py`.
+
+The audit SHALL define `distributional_energy_schema` as row-level metadata that
+separates deterministic constraint penalty, learned/proxy quality,
+provenance risk, model identity, uncertainty, and abstention. Deterministic
+constraint penalty SHALL be derived from recorded exact-check outcomes only;
+learned/proxy quality SHALL be derived from recorded clean-verifier decisions
+and token/answer-shape proxies only; provenance risk SHALL preserve source
+provenance, runtime-contract, adversarial-flag, and mandated-model-coverage
+features; model identity SHALL record used and missing mandated model families
+without imputing absent runs; uncertainty SHALL be a deterministic proxy over
+clean-verifier disagreement, provenance risk, missing model coverage, and row
+quality ambiguity; abstention SHALL be advisory only and SHALL NOT replace
+exact checker authority.
+
+The terminal artifact MUST include `distributional_repair_audit_ready`,
+`uncertainty_abstention_policy`, `distributional_energy_schema`,
+`model_identity_confound_check`, `provenance_risk_features`,
+`repair_case_count`, `no_new_model_execution`, and `honest_verdict`. It SHOULD
+also include row-level sidecar scores, source artifact checksums, a summary of
+exact-pass/clean-verifier-disagreement rows, the Exp 3316 policy handoff, run
+date, duration, random seed, and reproducibility checksum.
+`distributional_repair_audit_ready` MUST be true only when the source artifacts
+are readable, at least 30 repair rows are scored, every row score preserves the
+exact-check authority field, the abstention policy is defined, the model-identity
+confound check reports both used and missing mandated models, provenance-risk
+features include runtime-contract and adversarial-flag inputs, and
+`no_new_model_execution=true`.
+
+### SCENARIO-VERIFY-3314: Repair Rows Receive Triage Metadata Only
+
+Given Exp 3302 reports a 30-case `.305` repair panel with 30 exact-check
+passes, 27 clean-verifier accepted successes, 3 clean-verifier rejections of
+exact-passing rows, one used mandated Gemma GGUF model, two missing mandated
+models, and Exp 3303/3313 carry a critical duration/substrate provenance flag,
+When Exp 3314 builds the distributional repair uncertainty audit,
+Then it writes the required terminal JSON artifact without rerunning repair or
+verification, records `repair_case_count=30`, emits one row-level sidecar score
+per repair row, keeps exact checker outcomes as the final correctness authority,
+marks clean-verifier/exact-check disagreements as uncertainty-abstain rows,
+records provenance risk features from the source audit and substrate autopsy,
+reports the model-family confound caused by one used model family and missing
+mandated models, and defines an Exp 3316 policy that blocks headline promotion
+when row uncertainty, provenance risk, critical adversarial flags, or
+model-identity coverage risk exceed the stated thresholds.
+
+If the source panel lacks rows, has fewer than 30 repair cases, omits exact
+authority fields, omits provenance-risk inputs, omits model identity coverage,
+or any source artifact cannot be read, then Exp 3314 SHALL still write an
+honest audit artifact when possible but SHALL set
+`distributional_repair_audit_ready=false`, keep `no_new_model_execution=true`,
+and require Exp 3316 headline promotion to remain blocked.
+
+## Implementation Status (REQ-VERIFY-3314)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-VERIFY-3314 | Planned (`python/carnot/verify/distributional_ebm_repair_uncertainty_audit_v1.py`) | Planned (`tests/python/test_experiment_3314_distributional_ebm_repair_uncertainty_audit_v1.py`) |
