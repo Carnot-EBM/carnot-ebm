@@ -859,6 +859,50 @@ planner MUST:
   experiment_id referenced is on the exclusion manifest. If any
   is, rewrite the chain — don't propose dead dependencies.
 
+**Auto-override for known-legit continuations (MANDATORY — 2026-05-29
+operator directive).** The scope-matcher substring-matches a draft
+task's name/scope against retired experiment names. This generates
+*false positives* on routine forward work: the `.310 roadmap tripped
+6 HARD violations, all legitimate — including the routine
+`archive-v309-activate-v310` task (which scope-matches every prior
+`archive-v*` task and can never be a doomed rerun). The operator's
+chosen fix (over a linter carve-out) is: **keep the linter strict,
+and have the planner auto-add `operator_override:` to known-legit
+continuations** instead of dropping them.
+
+When a draft task scope-matches a retired experiment_id BUT belongs
+to one of the three classes below, the planner MUST add an
+`operator_override:` string (citing the standing 2026-05-29
+authorization + the false-matched exp ids + a one-line rationale)
+rather than dropping the task:
+
+1. **Routine milestone-transition tasks** — `archive-vN-activate-vN+1`,
+   `capstone-vN`, `plan-milestone-*`. These always scope-match prior
+   transition tasks and are structurally never doomed reruns.
+2. **Active hardware-continuity tasks** (KV260 / GateMate / PolarFire)
+   mandated by the Hardware-Task Continuity Discipline, until the
+   board reaches its terminal state. They scope-match retired hardware
+   exps but are required forward work.
+3. **Versioned lineage continuations** (FR-11 vN+1, constrained-
+   generation vN+1, etc.) that carry a STATED forward difference from
+   the retired predecessor (new technique / corpus / gate). The
+   override string MUST name the difference.
+
+**GUARDRAIL (do not abuse the auto-override).** It applies ONLY to
+the three false-positive classes above. It does NOT apply to a
+genuine doomed rerun — same scope + same prior-failure verdict + no
+new approach. Those must still be DROPPED per the Failed-Experiment
+Rerun Discipline, or carry a real `prior_failures:` block with
+`retire_if_same_verdict: true`. An `operator_override:` is an
+assertion that the task is a legit continuation, NOT an escape hatch
+for re-running a failed approach.
+
+**Override string format** — non-empty, ≥10 chars, auditable:
+`"2026-05-29 operator directive (standing): <class> — false-positive
+scope-match vs <exp ids>; <one-line forward rationale>."`
+The 6 overrides applied to the `.310 roadmap (commit `2cf7940f5`) are
+the canonical examples.
+
 **Mechanical enforcement (lives in `scripts/research_conductor.py`).**
 The conductor's `_ensure_exclusion_manifest_loaded` check already
 GATE_BLOCKs retired experiment_ids at activation time. A future

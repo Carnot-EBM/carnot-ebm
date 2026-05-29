@@ -3005,6 +3005,25 @@ IMPORTANT:
 - CalVer milestones: increment the seq number (e.g., 2026.04.3 -> 2026.04.4, or 2026.05.1 if month changes)
 - Each experiment must have a clear deliverable file path
 - Experiments should be ordered so dependencies are met (earlier experiments first)
+
+EXCLUSION-MANIFEST / SCOPE-MATCH DISCIPLINE (see CLAUDE.md
+"Exclusion-Manifest Cross-Check" — "Auto-override for known-legit
+continuations", 2026-05-29):
+- The activation guard scope-matches each task name against retired
+  experiments and HARD-blocks the whole milestone on any match that
+  lacks an override. This false-positives on routine forward work.
+- For a task that scope-matches a retired exp BUT is a known-legit
+  continuation — (1) routine transition tasks (archive-vN-activate-vN+1,
+  capstone-vN, plan-milestone-*); (2) active hardware-continuity tasks
+  (KV260/GateMate/PolarFire) until terminal; (3) versioned lineage
+  continuations with a STATED forward difference — add an
+  `operator_override:` string of the form:
+  "2026-05-29 operator directive (standing): <class> — false-positive
+   scope-match vs <exp ids>; <one-line forward rationale>."
+- Do NOT use operator_override for a genuine doomed rerun (same scope +
+  same prior failure + no new approach) — DROP those instead, or give a
+  real prior_failures: block. The override asserts legit-continuation,
+  not an escape hatch.
 """
 
     # Planner benefits from Opus-class synthesis (big-context design of 12-13
