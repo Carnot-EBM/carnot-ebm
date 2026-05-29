@@ -14890,3 +14890,18 @@ emits an `honest_verdict` beginning with `complete:`.
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-REPORT-3337 | Implemented (`python/carnot/reporting/archive_v308_activate_v309_3337.py`) | Implemented (`tests/python/test_experiment_3337_archive_v308_activate_v309.py`) |
+
+### REQ-REPORT-3377: Archive V310 And Activate V311 Handoff
+
+The repository shall provide an Exp 3377 milestone-boundary archive workflow
+that writes `results/experiment_3377_archive_v310_activate_v311.json`.
+The workflow MUST be aggregation only. It MUST NOT run model inference, CUDA
+probes, verifier scoring, FR-11 updates, hardware commands, the conductor,
+pushes, or modify `research-roadmap.yaml`, `scripts/research_conductor.py`,
+`ops/status.md`, `ops/changelog.md`, or `_bmad/traceability.md`.
+
+## Implementation Status (REQ-REPORT-3377)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-3377 | Implemented (`python/carnot/reporting/archive_v310_activate_v311_3377.py`) | Implemented (`tests/python/test_experiment_3377_archive_v310_activate_v311.py`) |
