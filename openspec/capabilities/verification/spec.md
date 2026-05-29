@@ -9179,3 +9179,17 @@ mandated model was used, `headline_claim_allowed=false`, and an
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-VERIFY-3353 | Implemented (`python/carnot/cascade/tier2_verifier.py`) | Implemented (`tests/python/test_tier2_verifier.py`) |
+
+### REQ-VERIFY-3375: VGB Repair Ladder on Llama-3
+
+- REQ-VERIFY-3375-1: The repository shall provide an Exp 3375 multi-turn repair ladder test targeting the Llama-3 model family to ensure generalizability beyond previously validated substrates.
+- REQ-VERIFY-3375-2: When Exp 3375 is run, it MUST produce a valid JSON artifact `results/experiment_3375_vgb_llama3.json` containing the standard schema fields.
+
+### SCENARIO-VERIFY-3375: Test VGB Repair Ladder on Llama-3
+When Exp 3375 builds the repair ladder artifact, it produces all required schema fields on the exit path.
+
+## Implementation Status (REQ-VERIFY-3375)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-VERIFY-3375 | Implemented (`scripts/experiment_3375_vgb_llama3.py`) | Implemented (`tests/python/test_experiment_3375_vgb_llama3.py`) |
