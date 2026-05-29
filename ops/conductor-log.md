@@ -6971,3 +6971,4 @@ web search: https://docs.garak.ai/garak/examples/pr |
 | 2026-05-29 22:20 UTC | Activation REFUSED: milestone 2026.05.312 | BLOCK | exclusion-manifest: 2 HARD violation(s); first: SCOPE_MATCHED_PRIOR_FAILURE on e |
 | 2026-05-29 22:22 UTC | Milestone 2026.05.312 activated | OK | 12 tasks queued |
 | 2026-05-29 22:32 UTC | KV260 Hardware Latency Baseline | OK | 81 passed in 4.34s |
+| 2026-05-29 22:40 UTC | GateMate N16 Bitstream Flash and Smoke | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_3382_gatemat |
