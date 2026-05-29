@@ -54,5 +54,18 @@
     "title",
     "ttscaling_ablation_ready"
   ],
-  "invariant_violations": []
+  "invariant_violations": [],
+  "flagged_adversarial": true,
+  "corrigendum_pending": [
+    {
+      "kind": "IMPLAUSIBLE_PERFECT",
+      "severity": "info",
+      "detail": "ci95_delta_energy_rank_vs_first=0.0 (exactly zero). Confirm this is not a stub default."
+    },
+    {
+      "kind": "DURATION_TOO_SHORT",
+      "severity": "critical",
+      "detail": "duration_s=43.882 but artifact references compute-bound markers (GGUF / CUDA / live model). Loading and running a real model takes >=60.0s minimum; this completed too fast to have invoked the model."
+    }
+  ]
 }
