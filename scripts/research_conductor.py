@@ -3277,6 +3277,83 @@ def _activate_next_roadmap(push: bool = True) -> bool:
                 lint as _exclusion_lint,
             )
 
+            # Mechanical post-planner auto-stamp (2026-05-29 operator directive
+            # "1 then 2"). The exclusion guard scope-matches task NAMES against
+            # retired exps and HARD-blocks the milestone on any unoverridden
+            # match. Two task classes are STRUCTURAL false positives that recur
+            # every milestone and are never doomed reruns:
+            #   (1) routine transition tasks: archive-v*/capstone-v*/plan-milestone-*
+            #   (2) active hardware-continuity tasks (track: hardware)
+            # The gemini planner cannot be trusted to add operator_override to
+            # these (it added ZERO on both .310 and .311, stalling activation
+            # each time). So we stamp operator_override on exactly those classes
+            # here, deterministically, BEFORE the lint. Versioned lineage
+            # continuations and genuine reruns are intentionally NOT stamped —
+            # they stay judgment calls (operator_override / prior_failures /
+            # drop), so the guard still catches real doomed reruns.
+            try:
+                import re as _re_stamp
+
+                _pre_risks = _exclusion_lint(NEXT_ROADMAP_FILE)
+                _flagged = {
+                    r.task_id
+                    for r in _pre_risks
+                    if r.severity == "HARD"
+                    and r.violation_class == "SCOPE_MATCHED_PRIOR_FAILURE"
+                }
+                if _flagged:
+                    _rdata = yaml.safe_load(NEXT_ROADMAP_FILE.read_text()) or {}
+                    _by_id = {t.get("id", ""): t for t in _rdata.get("tasks", [])}
+                    _txt = NEXT_ROADMAP_FILE.read_text()
+                    _stamped = 0
+                    for _tid in _flagged:
+                        _t = _by_id.get(_tid)
+                        if _t is None:
+                            continue
+                        _is_transition = bool(
+                            _re_stamp.search(
+                                r"(archive-v\d|capstone-v\d|plan-milestone-)", _tid
+                            )
+                        )
+                        _is_hw = (
+                            str(_t.get("track", "")).strip().lower() == "hardware"
+                        )
+                        if not (_is_transition or _is_hw):
+                            continue  # lineage/rerun → leave for judgment
+                        _oo = _t.get("operator_override")
+                        if isinstance(_oo, str) and len(_oo.strip()) >= 10:
+                            continue  # already overridden (e.g. by operator)
+                        _anchor = f"  - id: {_tid}\n"
+                        _i = _txt.find(_anchor)
+                        if _i < 0:
+                            continue
+                        _kind = (
+                            "routine milestone-transition task"
+                            if _is_transition
+                            else "active hardware-continuity task"
+                        )
+                        _line = (
+                            f'    operator_override: "2026-05-29 operator '
+                            f"directive (standing, mechanical auto-stamp): "
+                            f"structural false-positive — {_kind} scope-matched "
+                            f'a retired exp; not a doomed rerun."\n'
+                        )
+                        _ins = _i + len(_anchor)
+                        _txt = _txt[:_ins] + _line + _txt[_ins:]
+                        _stamped += 1
+                    if _stamped:
+                        NEXT_ROADMAP_FILE.write_text(_txt)
+                        logger.info(
+                            "Auto-stamped operator_override on %d structural "
+                            "false-positive task(s) (transition/hardware) before "
+                            "activation lint",
+                            _stamped,
+                        )
+            except Exception as _se:
+                logger.warning(
+                    "Structural override auto-stamp skipped (%s)", _se
+                )
+
             ex_risks = _exclusion_lint(NEXT_ROADMAP_FILE)
             hard = [r for r in ex_risks if r.severity == "HARD"]
             warn = [r for r in ex_risks if r.severity == "WARNING"]
