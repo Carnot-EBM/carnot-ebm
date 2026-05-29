@@ -9946,3 +9946,19 @@ episodes that can be loaded, keeps `controller_memory_only=true`,
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-LEARN-3304 | Implemented (`python/carnot/eval/fr11_redteam_repair_memory_replay_v2.py`) | Implemented (`tests/python/test_experiment_3304_fr11_redteam_repair_memory_replay_v2.py`) |
+
+## REQ-LEARN-3334: FR-11 Online Verifier Memory Nonforgetting
+
+### REQ-LEARN-3334 Sub-requirements
+- REQ-LEARN-3334-1: The experiment SHALL load verified cases from clean .308 artifacts when available, with fallback to stable .305-.306 cached verifier evidence.
+- REQ-LEARN-3334-2: The data SHALL be split into update stream, new-task evaluation, and old-task holdout.
+- REQ-LEARN-3334-3: The artifact SHALL record every accepted update, rejected update, and rollback trigger.
+- REQ-LEARN-3334-4: The artifact SHALL measure `new_task_delta`, `old_task_delta`, `false_positive_delta`, and `rollback_count`.
+- REQ-LEARN-3334-5: `fr11_nonforgetting_ready` SHALL be true only if updates improve or preserve new-task performance while old-task degradation stays within tolerance.
+- REQ-LEARN-3334-6: The artifact SHALL write fields: `honest_verdict`, `inference_substrate`, `random_seed`, `reproducibility_checksum`, `duration_s`, `n_update_cases`, `n_new_eval_cases`, `n_old_holdout_cases`, `new_task_delta`, `old_task_delta`, `false_positive_delta`, `rollback_count`, `fr11_nonforgetting_ready`, `blocked_reasons`.
+
+## Implementation Status (REQ-LEARN-3334)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-LEARN-3334 | Implemented (`python/carnot/eval/fr11_online_verifier_memory_nonforgetting_v4.py`) | Implemented (`tests/python/test_experiment_3334_fr11_online_verifier_memory_nonforgetting_v4.py`) |
