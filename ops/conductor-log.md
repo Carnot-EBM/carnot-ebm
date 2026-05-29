@@ -6807,3 +6807,4 @@ web search: https://docs.garak.ai/garak/examples/pr |
 | 2026-05-29 12:14 UTC | Energy-descent bootstrap v2 gated on clean SOTA GG | OK | 81 passed in 3.24s |
 | 2026-05-29 12:29 UTC | Energy-descent versus autoregressive SOTA panel v3 | OK | 81 passed in 3.44s |
 | 2026-05-29 12:34 UTC | Verifier diversity remediation plan v2 from .308 a | OK | 81 passed in 3.47s |
+| 2026-05-29 12:41 UTC | Monitor/provenance verifier axis v1 for diversity  | OK | 81 passed in 3.70s |
