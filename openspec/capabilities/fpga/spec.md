@@ -3720,3 +3720,33 @@ The artifact MUST include the synthesis status of this updated RTL.
 **Then:** It performs yosys synthesis and writes the artifact with the synthesis success status and resource usage.
 
 **Implementation status:** Pending (Exp 3366)
+
+
+### REQ-HW-106
+
+**Title:** Synthesize, flash, and run a simple test on GateMate board via dirtyJtag
+
+**Description:**
+Experiment 3382 MUST use yosys and nextpnr-himbaechel to build the N=16 GateMate design,
+flash the resulting bitstream using openFPGALoader -c dirtyJtag, and attempt to
+execute a basic test vector across the new host interface to verify hardware connectivity.
+
+**Acceptance criteria:**
+- Script scripts/experiment_3382_gatemate_n16_smoke.py attempts synthesis, routing, and flashing.
+- Script writes results/experiment_3382_gatemate_n16_smoke.json with hardware verification status.
+- Test tests/python/test_experiment_3382_gatemate_n16_smoke.py covers the script.
+
+**Implementation status:** Pending (Exp 3382)
+
+---
+
+### SCENARIO-HW-106
+
+**Scenario:** GateMate n=16 design is flashed and basic test executed.
+
+**Given:** An experiment script that drives yosys, nextpnr-himbaechel, and openFPGALoader.
+**When:** The script is executed.
+**Then:** It logs the build/flash/test attempts and emits the artifact JSON with the final success or blocked status.
+
+**Implementation status:** Pending (Exp 3382)
+
