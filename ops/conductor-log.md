@@ -6697,3 +6697,5 @@ web search: https://docs.garak.ai/garak/examples/pr |
 | 2026-05-29 05:05 UTC | Capstone v306 | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp3319-evidence-matrix-v38.matrix_v38_rea |
 | 2026-05-29 05:07 UTC | FR-11 failure-targeted curriculum replay v3 | GATE_BLOCK | Pre-emptive skip: upstream retired (exp3317-repair-headline-evidence-audit-v2) |
 | 2026-05-29 05:07 UTC | Evidence matrix v38 | GATE_BLOCK | Pre-emptive skip: upstream retired (exp3317-repair-headline-evidence-audit-v2) |
+| 2026-05-29 05:07 UTC | Capstone v306 | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp3319-evidence-matrix-v38.matrix_v38_rea |
+| 2026-05-29 05:09 UTC | Milestone 2026.05.307 activated | OK | 4 tasks queued |
