@@ -4,48 +4,50 @@
 # docs_audit_report — 2026-05-29
 
 ## TL;DR (stranger's 30-second take)
-I would close the tab in 10 seconds. The page is visibly broken with raw test file paths bleeding into the headings and CSS, its performance claims blatantly contradict each other, and the "perfect" 100% metrics scream fabrication. It reads like a dumped internal wiki rather than a professional product page.
+I would close the tab in 10 seconds. The page is literally broken—a botched find-and-replace script has injected local machine file paths directly into the CSS, font links, and text. Even if it rendered properly, it reads like an internal developer dashboard full of alphabet-soup acronyms and contradictory performance claims rather than a public-facing product. 
 
 ## TOP 3 PROBLEMS
-1. Template injection failures leaking raw file paths into the UI (e.g., `@.tmp-pytest/...`) — Live benchmark result card and CSS.
-2. Blatant contradiction in code repair claims (+3.0 points vs +72pp) — Features Code card vs Results Code repair card.
-3. Highly suspicious, too-perfect metrics (60/60 attacks, exactly 2.0x speedup, 1.0 TP rate) — Multiple Results cards.
+1. **Catastrophic template injection** — There are local file paths (`@.tmp-pytest/...`) injected into your Google Fonts `<link>`, destroying your CSS media queries (`@results/experiment_3341...`), and leaking directly into the text of the "Live benchmark" card. The site is visually broken.
+2. **Massive inconsistency in hero claims** — You claim a humble "+3.0 points" for Code repair on the HumanEval feature card, but a completely contradictory "+72pp (8% -> 80%)" on the IterativeSelfRepair results card. A stranger will assume your numbers are made up.
+3. **Drowning in internal alphabet soup** — CCTU, FoVer, SVAMP, PREM, TTC, VeriCoT, PRM-BiasBench... You are talking to yourselves. A stranger has no idea what these datasets, internal frameworks, or abbreviations mean.
 
 ## DETAILED FINDINGS
+
 ### Bloat
-- Results grid — 12 cards — cap at 6-8 cards. A stranger will gloss over this wall of stats.
+- **Results Grid** — 12 cards — Cap it at 6. Nobody is going to read 12 different benchmark cards. It looks defensive and desperate, not authoritative. 
+- **Blog / Writing Section** — 7 cards — Cap it at 3-4 recent/relevant posts. The current grid is a wall of text that fatigues the reader before they hit the footer.
 
 ### Internal jargon
-- HTML Head & CSS — `@.tmp-pytest/...`, `@results/experiment_3341_...` — Bizarre path injections leaking raw internal test paths into font imports and media queries. A stranger will think the site is hacked.
-- Live benchmark result card — `@.tmp-pytest/pytest-of-ianblenke/.../spilled-energy-2602-18671:real.txt` — Literal file path displayed in the headline.
-- Hero stat card — `FoVer`, `5-seed dual-condition` — Unexplained internal benchmark names and experiment criteria.
-- Result cards — `Qwen3.6-35B-A3B`, `EstimationVerifier SVAMP AUC`, `PRM-BiasBench-style attacks`, `IterativeSelfRepair`, `CCTU` — Dense model names and internal benchmark acronyms provide zero context.
-- Features (TTC & PREM card) — `Process-Reward Energy Model (PREM)` — Academic terminology dropped without explanation.
+- **Google Fonts `<link>` & CSS Media Queries** — `@.tmp-pytest/pytest-of-ianblenke/.../experiment_400.json` and `@results/experiment_3341_verifier_diversity_remediation_plan_v2.json (max-width: 1024px)` — You ran a bad regex replacement script that dumped test outputs into your code. 
+- **Live benchmark Result Card** — `@.tmp-pytest/pytest-of-ianblenke/pytest-3/popen-gw0/test_req_verify_2932_run_uses_0/citation_hallucination_field_verifier_2932_raw/spilled-energy-2602-18671:real.txt` — Injected directly into the benchmark description.
+- **Stats Bar / Recent Progress** — `FoVer`, `5-seed dual-condition` — Unexplained internal benchmark and methodology names.
+- **Features: Test-Time Compute** — `TTC`, `PREM` — Dropped with zero context.
+- **Results Grid** — `SVAMP`, `VeriCoT`, `CCTU`, `HumanEval-50`, `HalluGuard v3` — Stop citing internal framework versions and niche datasets without explaining what they are.
 
 ### Per-milestone narrative
-- Hero stat card — "Repinned from v2 0.9857 after pre-submission adversarial audit; see Why We Report Two AUROCs Now."
+- **Recent Progress Card** — *"Repinned from v2 0.9857 after pre-submission adversarial audit..."* — This is a git commit message or an internal Slack update. It means absolutely nothing to a stranger and makes the project look disorganized.
+- **Writing / Blog Cards** — *"639 experiments self-verified. 65 brace bugs auto-fixed."*, *"We paid for a hostile audit..."* — These read like internal sprint retrospectives and post-mortems, not public thought leadership.
 
 ### Inconsistencies
-- Code repair pass-rate: +3.0 points on pass-rate (Features Code card) vs 8% -> 80% pass rate / +72pp (Code repair results card).
-- Safety AUROC: 0.9131 AUROC (Hero stat card) vs 0.91 AUROC (Safety results card).
-- FoVer context: "0.9131 AUROC on FoVer" implying it's a dataset (Hero stat card) vs "0.125 FoVer baseline" implying it's a model (Math reasoning results card).
+- **HumanEval Code Repair** vs **IterativeSelfRepair** — The *Code* bento card and first Result card claim repair pushes pass-rates up by "+3.0 points". Four cards later, you claim an "8% -> 80% (+72pp)" pass rate jump. Which is it?
+- **AUROC Claims** — The hero stats claim `0.9131`, the Recent Progress card claims `0.8947` (and complains about a `0.9857` repin), and the Prompt-injection card claims `0.91`. Pick the one true headline number.
 
 ### Missing essentials
-- None. The core questions (what it does, install, license, maintainer, why trust numbers) are all technically addressed.
+- **What is an Energy-Based Model?** — You define it halfway down the page in the 4th Bento card. If it's your core differentiator, explain the concept in plain English in the Hero section, not buried in a sub-grid.
+- **Who maintains this?** — The footer says "Ian Blenke", but the language uses "We" throughout. For a framework this complex, a stranger needs to know if this is a lone weekend hacker, an academic lab, or a startup.
 
 ### Fabrication signals
-- 2.0x speedup, identical losses — Training result card. Exactly 2.0x speedup with perfectly identical losses in a distributed retrain is virtually impossible.
-- GSM8K extraction TP rate: 0.5 -> 1.0 — Math extraction result card. A perfect 1.0 true positive rate is suspiciously perfect.
-- k=5 ensemble catches 60/60 attacks — Adversarial audit result card. Catching a perfect 60 out of 60 attacks destroys credibility.
+- **Math extraction result card** — "TP rate: 0.5 -> 1.0" — 1.0 is suspiciously perfect. 
+- **Adversarial audit result card** — "ensemble catches 60/60 attacks" — 100% catch rate on adversarial prompts triggers immediate BS detectors.
+- **Blog: Dogfooding by the numbers** — "Zero false positives." — Never claim 0 false positives in a probabilistic AI tool unless you want researchers to instantly dismiss you.
 
 ## WHAT'S WORKING
-- The one-sentence summary "Catch the mistakes your LLM confidently makes up." is punchy and immediately understandable.
-- The Quickstart section is fantastic: it shows a clear, multi-language (Python/Rust) example of the tool's actual API in just a few lines.
+- **The Hero Hook:** "Catch the mistakes your LLM confidently makes up." is a fantastic, punchy, 1-sentence value proposition that immediately registers with anyone building AI.
+- **The Quickstart UI:** Side-by-side Python and Rust code tabs showing a 3-line pipeline implementation proves it's actually usable.
 
 ## RECOMMENDED OPERATOR ACTIONS
-1. Fix the critical template injection bugs leaking pytest paths into the HTML fonts, media queries, and the Live Benchmark card.
-2. Reconcile the Code repair pass-rate claims: choose either +3.0 points or +72pp, but eliminate the contradiction.
-3. Remove internal jargon (FoVer, PRM-BiasBench, 5-seed dual-condition) and replace with plain-English descriptions of the tests.
-4. Replace the "perfect" 100% metrics (60/60 attacks, 1.0 TP rate, exactly 2.0x speedup) with realistic, un-rounded numbers, or provide immediate context explaining why they reached 100%.
-5. Delete the "Repinned from v2 0.9857..." milestone-speak from the hero section to keep the focus on the user value proposition.
-6. Prune the Results grid from 12 cards down to the 6 most believable and impactful metrics.
+1. Roll back or fix the broken template replacement immediately to remove local `.tmp-pytest` paths from the font imports, CSS media queries, and Live Benchmark card text.
+2. Strip out internal acronyms (FoVer, CCTU, SVAMP) and replace them with generic descriptors (e.g., "internal logic benchmark", "tool-use dataset").
+3. Reconcile the HumanEval pass-rate contradiction (+3 points vs +72 points). 
+4. Prune the Results grid from 12 cards to your top 4-6 most defensible metrics.
+5. Soften "100%" and "1.0" benchmark claims, or explicitly state the exact sample size in the card so it doesn't look fabricated.
