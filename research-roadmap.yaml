@@ -1,152 +1,124 @@
-milestone: "2026.05.308"
-milestone_title: "Phase-3 Path Recovery, Verifier Grounding, and FR-11 Nonforgetting"
+milestone: "2026.05.309"
+milestone_title: "Runtime-Proven Energy Descent, Diversity Remediation, and Hardware Continuity"
 milestone_doc: "openspec/change-proposals/research-roadmap-vNEXT.md"
 
-# Outer-loop edits 2026-05-29 (operator-authorized, option 1): (a) requires_gemini:true
-# added to the 7 experiment tasks so CODEX_FORCE_EXPERIMENTS=1 does NOT coerce them
-# to codex — codex hit the "10-minute bail" failing exp3322/3323 (+v4) 9x this session;
-# (b) operator_override + prior_failures added so this conductor-auto-staged roadmap
-# passes its own activation guard (it had 4 exclusion-manifest HARD violations + no
-# override and would have refuse-looped at activation, like .299 v1).
-operator_override:
-  authorization: "Operator directive 2026-05-29 (conversation): unblock the auto-staged .308 recovery roadmap so the Phase-3 path-de-risking experiments actually run on gemini. Aging non-path priorities deferred to .309+."
-  deferred_priorities:
-    - slug: verifier_ensemble_multi_axis_composition_v1
-      rationale: "Superseded for now by exp3329 (diversity audit v2), the more fundamental version, which runs this milestone. Deferred to .309+."
-    - slug: verifier_ensemble_multi_violation_degradation_curve_v1
-      rationale: "Sibling of multi-axis; same dependency on the diversity-audit result. Deferred."
-    - slug: gatemate_n16_flash_timing_smoke_v3
-      rationale: "Operator-side hardware action. Deferred."
-    - slug: gatemate_a1_n16_ising_tile_bitstream_build_v2
-      rationale: "Operator-side gatemate toolchain action. Deferred."
-    - slug: kv260_mmd_vs_cpu_sequential_gibbs_v1
-      rationale: "Operator-side KV260 board measurement. Deferred."
-    - slug: aquaforte_beaver_pipeline_honest_substrate_corrigendum_v1
-      rationale: "Paper-prep corrigendum; behind the path-de-risking critical path. Deferred."
-
 tasks:
-  - id: exp3325-archive-v307-activate-v308
-    milestone: "2026.05.308"
-    title: "Archive milestone .307 honestly and activate .308"
+  - id: exp3337-archive-v308-activate-v309
+    milestone: "2026.05.309"
+    title: "Archive milestone .308 honestly and activate .309"
     priority: critical
-    agent_type: gemini
-    model: gemini-3.1-pro-preview
     max_turns: 20
     estimated_wall_time_min: 10
     track: ops
     inference_substrate: aggregation_from_upstream_artifacts
     requires_gpu: false
-    deliverable: "results/experiment_3325_archive_v307_activate_v308.json"
+    deliverable: "results/experiment_3337_archive_v308_activate_v309.json"
     prior_failures:
-      - experiment_id: exp3260-archive-v301-activate-v302
-        verdict: "complete: archive cycle (standard recurring milestone-boundary handoff)"
-        addressed_by: "Standard recurring handoff; matched priors are previous archive cycles, all completed successfully. Not a retry of a failure — the next iteration of the standard transition."
-        retire_if_same_verdict: false
+      - experiment_id: exp3325-archive-v307-activate-v308
+        verdict: "failed_operationally: archive artifact absent after Codex/Gemini invalid-request failures; no scientific verdict"
+        addressed_by: "This archive reads the completed .308 artifacts and conductor log directly, records missing artifacts explicitly, and activates .309 without rerunning .308 science tasks."
+        retire_if_same_verdict: true
     prompt: |
       CONTEXT
-      Milestone 2026.05.307 has completed operationally. The capstone reports that the two scientific upstreams, exp3322 and exp3323, did not produce artifacts because the conductor hit Codex CLI failures. This task must archive .307 honestly and activate .308 without pretending the missing upstreams were scientific negative results.
+      Work from {project_root} on {date}. Milestone 2026.05.308 has completed operationally. The next milestone is 2026.05.309. The archive must be honest: exp3327 blocked on SOTA GGUF tokenizer/runtime setup, exp3328 was gate-blocked, exp3330/exp3335/exp3336 did not land usable artifacts, and exp3329/exp3331-exp3334 provide the usable evidence.
 
       EXISTING CODE TO READ FIRST
       - CLAUDE.md
       - CODEX.md
       - research-roadmap.yaml
-      - research-complete.yaml
+      - research-roadmap-next.yaml
       - openspec/change-proposals/research-roadmap-vNEXT.md
+      - research-complete.yaml
       - ops/status.md
       - ops/changelog.md
       - ops/conductor-log.md
-      - results/experiment_3324_capstone_v307.json
-      - scripts/in_process_doc_reconcile.py
+      - results/experiment_3327_energy_descent_substrate_bootstrap_v1.json
+      - results/experiment_3329_verifier_ensemble_diversity_audit_v2.json
+      - results/experiment_3331_ebt_sidecar_adapter_smoke_v2.json
+      - results/experiment_3332_interwhen_monitor_pilot_v1.json
+      - results/experiment_3333_energy_guided_ttscaling_sota_ablation_v1.json
+      - results/experiment_3334_fr11_online_verifier_memory_nonforgetting_v4.json
       - scripts/experiment_template.py
 
       TASK
-      Create an archive/activation artifact for the transition from .307 to .308. Do not edit research-roadmap.yaml and do not edit scripts/research_conductor.py. If research-complete.yaml already contains .307, do not duplicate it; otherwise append the minimal honest .307 completion record following the existing format.
+      Create the .308 archive/.309 activation artifact. Do not edit research-roadmap.yaml. Do not modify scripts/research_conductor.py. If research-complete.yaml already has .308, do not duplicate it; otherwise append the smallest honest completion record following the existing format.
 
       CONCRETE STEPS
-      1. Inspect exp3321-exp3324 artifacts and ops/conductor-log.md for the .307 closeout status.
-      2. Record that exp3322 and exp3323 are missing/failed-operationally, not refuted scientifically.
-      3. Confirm the next milestone is 2026.05.308 and that research-roadmap-next.yaml points to openspec/change-proposals/research-roadmap-vNEXT.md.
-      4. Update ops/status.md and ops/changelog.md with a concise .308 activation entry if they are not already current.
-      5. Write results/experiment_3325_archive_v307_activate_v308.json with fields: honest_verdict, inference_substrate, random_seed, reproducibility_checksum, duration_s, archived_milestone, activated_milestone, missing_upstream_artifacts, next_top_gap, files_updated.
-      6. Run lightweight validation: YAML parse for research-roadmap-next.yaml and JSON parse for the artifact.
+      1. Inspect .308 artifacts and ops/conductor-log.md for exp3325-exp3336 status.
+      2. Record completed, blocked, gate-blocked, duration-flagged, and missing artifacts separately.
+      3. Confirm the milestone increment is 2026.05.309 and research-roadmap-next.yaml points to openspec/change-proposals/research-roadmap-vNEXT.md.
+      4. Update ops/status.md and ops/changelog.md with a concise .309 activation entry if they are stale.
+      5. Write results/experiment_3337_archive_v308_activate_v309.json with REQUIRED ARTIFACT FIELDS: honest_verdict with terminal prefix, inference_substrate, random_seed, reproducibility_checksum, duration_s, files_updated; ARCHIVE FIELDS (traceability): archived_milestone, activated_milestone, completed_artifacts, blocked_artifacts, missing_artifacts, duration_flagged_artifacts, next_top_gap.
+      6. Validate JSON parse for the artifact and YAML parse for research-roadmap-next.yaml.
 
-      Run command: JAX_PLATFORMS=cpu .venv/bin/python scripts/experiment_3325_archive_v307_activate_v308.py. Do NOT push. Do NOT modify scripts/research_conductor.py.
+      Run command: cd {project_root} && JAX_PLATFORMS=cpu .venv/bin/python scripts/experiment_3337_archive_v308_activate_v309.py. Do NOT push. Do NOT modify scripts/research_conductor.py.
 
-  - id: exp3326-phase3-path-preflight-manifest-v1
-    milestone: "2026.05.308"
-    title: "Phase-3 path preflight manifest for recovered upstream tests"
+  - id: exp3338-sota-gguf-tokenizer-runtime-receipt-v1
+    milestone: "2026.05.309"
+    title: "SOTA GGUF tokenizer and runtime receipt for live inference recovery"
     priority: critical
-    agent_type: gemini
-    model: gemini-3.1-pro-preview
-    max_turns: 30
-    estimated_wall_time_min: 20
-    track: phase3-kona
-    inference_substrate: aggregation_from_upstream_artifacts
-    requires_gpu: false
-    deliverable: "results/experiment_3326_phase3_path_preflight_manifest_v1.json"
+    max_turns: 50
+    estimated_wall_time_min: 45
+    track: live-sota-runtime
+    inference_substrate: live_llm_inference_preflight
+    requires_gpu: true
+    deliverable: "results/experiment_3338_sota_gguf_tokenizer_runtime_receipt_v1.json"
     prior_failures:
-      - experiment_id: exp3322-energy-descent-vs-autoregressive-premise-v1
-        verdict: "failed_operationally: Codex CLI error before artifact creation; no scientific verdict"
-        addressed_by: "This preflight splits the monolithic failed task into explicit resource/spec checks and conductor-runnable downstream tasks before any full live SOTA panel."
-        retire_if_same_verdict: true
-      - experiment_id: exp3323-verifier-ensemble-diversity-audit-v1
-        verdict: "failed_operationally: Codex CLI error before artifact creation; no scientific verdict"
-        addressed_by: "This preflight records cached-corpus, sample-size, and covariance requirements before the diversity audit rerun."
+      - experiment_id: exp3327-energy-descent-substrate-bootstrap-v1
+        verdict: "blocked_gpu_setup: unsloth/Qwen3.6-35B-A3B-GGUF failed to instantiate backend tokenizer; sentencepiece or tiktoken dependency required"
+        addressed_by: "This task isolates tokenizer/runtime loading before any science panel, checks the mandated SOTA GGUF cache paths, and emits a runtime receipt or precise blocked root cause."
         retire_if_same_verdict: true
     prompt: |
       CONTEXT
-      The .307 capstone says the Phase-3 path is blocked because exp3322 and exp3323 did not emit artifacts. Before rerunning either test, build a manifest that proves the required specs, data, model caches, scripts, and artifact fields are in place.
+      Work from {project_root} on {date}. The .308 live SOTA bootstrap reached cached GGUF paths but blocked when Qwen3.6 could not instantiate the backend tokenizer. Before rerunning energy descent, Carnot needs a standalone runtime receipt.
 
       EXISTING CODE TO READ FIRST
-      - CLAUDE.md, especially SOTA Local Models, Failed-Experiment Rerun Discipline, inference_substrate, precondition, and sample-size sections
+      - CLAUDE.md, especially SOTA Local Models, inference_substrate, precondition checks, and duration rules
       - CODEX.md
-      - research-program.md
-      - _bmad/prd.md
-      - _bmad/architecture.md
-      - openspec/capabilities/phase3-kona/spec.md
-      - openspec/capabilities/verifiable-reasoning/spec.md
-      - openspec/capabilities/llm-ebm-inference/spec.md
-      - openspec/change-proposals/research-roadmap-vNEXT.md
-      - research-roadmap.yaml
-      - ops/conductor-log.md
       - scripts/experiment_template.py
       - carnot/inference/sota_models.py
+      - openspec/capabilities/llm-ebm-inference/spec.md
+      - openspec/capabilities/phase3-kona/spec.md
+      - results/experiment_3327_energy_descent_substrate_bootstrap_v1.json
+      - research-references.md, section "2026-05-29 Post-.308 Planning Sweep"
 
       TASK
-      Produce a Phase-3 recovery preflight manifest that downstream tasks can use to fail fast. Do not run a long live LLM panel here. This is a diagnostic and readiness artifact.
+      Implement and run a SOTA GGUF tokenizer/runtime receipt. This is a preflight artifact, not a science panel. It must either prove clean local loading for at least one mandated GGUF or produce a precise blocked artifact.
 
       CONCRETE STEPS
-      1. Verify that relevant OpenSpec capability specs exist and contain REQ-* requirements; if a required .308 planning requirement is missing, add the smallest spec delta before implementation code.
-      2. Check whether local SOTA GGUF cache entries exist for at least one of the mandated models: unsloth/Qwen3.6-35B-A3B-GGUF, unsloth/gemma-4-31B-it-GGUF, unsloth/gemma-4-26B-A4B-it-GGUF.
-      3. Check GPU visibility without assuming nvidia-smi is available; use torch.cuda, existing runtime helpers, and cache-path probes.
-      4. Check for reusable cached candidate/verifier corpora large enough for n>=1000 covariance/eigenvalue claims.
-      5. Define the exact readiness booleans required by exp3327, exp3328, and exp3329.
-      6. Write results/experiment_3326_phase3_path_preflight_manifest_v1.json with fields: honest_verdict, inference_substrate, random_seed, reproducibility_checksum, duration_s, sota_cache_status, gpu_runtime_status, cached_corpus_status, phase3_specs_present, downstream_ready_map, blocked_reasons.
-      7. Update ops/status.md and ops/changelog.md with a concise preflight note.
+      1. If implementation code changes are required, first confirm the relevant OpenSpec capability spec exists and has REQ-* requirements; add only the smallest spec delta needed.
+      2. Define MODEL_SPECS using the cached_sota_pair(gpu_indices=(0, 1)) pattern where possible. Include all three mandated model identifiers in the receipt: unsloth/Qwen3.6-35B-A3B-GGUF, unsloth/gemma-4-31B-it-GGUF, unsloth/gemma-4-26B-A4B-it-GGUF.
+      3. Check local cache paths, file sizes/checksums when available, tokenizer dependencies, llama-cpp/loader imports, and GPU visibility through torch.cuda or existing repo helpers. Do not rely only on nvidia-smi.
+      4. Attempt the smallest possible load/tokenize/generate smoke for each available mandated model. If a model cannot load, record the exact exception and continue to the next model.
+      5. Legacy small models may be used only as CPU loader smoke controls; they must be labeled non-headline and excluded from runtime_receipt_clean.
+      6. Write results/experiment_3338_sota_gguf_tokenizer_runtime_receipt_v1.json with REQUIRED ARTIFACT FIELDS: honest_verdict with terminal prefix, inference_substrate, random_seed, reproducibility_checksum, duration_s, files_updated; RUNTIME FIELDS (Phase-3 precondition): model_specs, cache_status, tokenizer_status, loader_status, gpu_status, smoke_generation_status, runtime_receipt_clean, blocked_reasons.
+      7. Run focused tests for any touched runtime helper and JSON parse for the artifact.
 
-      Run command: JAX_PLATFORMS=cpu .venv/bin/python scripts/experiment_3326_phase3_path_preflight_manifest_v1.py. Do NOT push. Do NOT modify scripts/research_conductor.py.
+      Run command: cd {project_root} && CARNOT_FORCE_LIVE=1 .venv/bin/python scripts/experiment_3338_sota_gguf_tokenizer_runtime_receipt_v1.py. Do NOT push. Do NOT modify scripts/research_conductor.py.
 
-  - id: exp3327-energy-descent-substrate-bootstrap-v1
-    milestone: "2026.05.308"
-    title: "Energy-descent substrate bootstrap smoke for SOTA GGUF recovery"
+  - id: exp3339-energy-descent-bootstrap-v2-runtime-clean
+    milestone: "2026.05.309"
+    title: "Energy-descent bootstrap v2 gated on clean SOTA GGUF runtime"
     priority: critical
-    agent_type: gemini
-    model: gemini-3.1-pro-preview
-    max_turns: 60
-    estimated_wall_time_min: 45
+    max_turns: 50
+    estimated_wall_time_min: 60
     track: phase3-kona
     inference_substrate: live_llm_inference
     requires_gpu: true
-    requires_gemini: true  # codex 10-min-bail failed exp3322/3323 (+v4) 9x this session; bypass CODEX_FORCE_EXPERIMENTS gemini->codex coercion
-    deliverable: "results/experiment_3327_energy_descent_substrate_bootstrap_v1.json"
+    deliverable: "results/experiment_3339_energy_descent_bootstrap_v2_runtime_clean.json"
+    gated_on:
+      - upstream: exp3338-sota-gguf-tokenizer-runtime-receipt-v1
+        artifact_field: runtime_receipt_clean
+        op: "=="
+        value: true
     prior_failures:
-      - experiment_id: exp3322-energy-descent-vs-autoregressive-premise-v1
-        verdict: "failed_operationally: Codex CLI error before artifact creation; no scientific verdict"
-        addressed_by: "This attempt is a smaller bootstrap-only smoke with explicit preconditions, SOTA cache checks, and a readiness artifact before the full panel."
+      - experiment_id: exp3327-energy-descent-substrate-bootstrap-v1
+        verdict: "blocked_gpu_setup: SOTA GGUF bootstrap blocked by tokenizer/runtime setup before valid live telemetry"
+        addressed_by: "This v2 bootstrap is gated on an explicit runtime receipt and uses the verified loader path before collecting any energy-descent telemetry."
         retire_if_same_verdict: true
     prompt: |
       CONTEXT
-      The full exp3322 premise test failed operationally before producing an artifact. This task must prove that the live SOTA GGUF inference substrate can run a tiny energy-descent smoke and write valid telemetry before the full panel is attempted.
+      Work from {project_root} on {date}. exp3338 must prove a clean SOTA GGUF runtime before this task runs. This task is a small bootstrap that verifies live inference telemetry and exact-verifier scoring before the full panel.
 
       EXISTING CODE TO READ FIRST
       - CLAUDE.md, especially SOTA Local Models, DURATION_TOO_SHORT, inference_substrate, and precondition guidance
@@ -155,444 +127,533 @@ tasks:
       - carnot/inference/sota_models.py
       - openspec/capabilities/phase3-kona/spec.md
       - openspec/capabilities/llm-ebm-inference/spec.md
-      - results/experiment_3326_phase3_path_preflight_manifest_v1.json
-      - research-references.md, section "2026-05-29 Post-.307 Planning Sweep"
+      - results/experiment_3338_sota_gguf_tokenizer_runtime_receipt_v1.json
+      - research-references.md, section "2026-05-29 Post-.308 Planning Sweep"
 
       TASK
-      Implement and run a small bootstrap smoke for energy-descent versus autoregressive generation using local SOTA GGUF inference. The deliverable must decide whether exp3328 may run. This is not a headline accuracy task.
+      Run a tiny, deterministic live SOTA energy-descent bootstrap. This is not a headline delta experiment. Its only downstream decision is whether the full panel may run.
 
       CONCRETE STEPS
-      1. Add or confirm the smallest OpenSpec requirement delta needed for the bootstrap if implementation code changes are required.
-      2. Define MODEL_SPECS using cached_sota_pair(gpu_indices=(0, 1)) and require at least one of: unsloth/Qwen3.6-35B-A3B-GGUF, unsloth/gemma-4-31B-it-GGUF, unsloth/gemma-4-26B-A4B-it-GGUF.
-      3. Preflight cache paths, GPU visibility, and runtime loader health before any generation. If preconditions fail, write a blocked artifact with exact root cause and stop.
-      4. Run a tiny deterministic smoke, for example 8-16 arithmetic or constraint prompts, comparing baseline autoregressive candidates against a bounded energy-guided refinement/reranking loop.
-      5. Record energy trajectory, verifier score trajectory, candidate text fingerprints, model_specs, batch timing, and whether any exact verifier score improves.
-      6. Do not claim a scientific delta from this smoke. Set energy_descent_bootstrap_ready true only if live inference, telemetry, and duration/provenance checks are clean.
-      7. Write results/experiment_3327_energy_descent_substrate_bootstrap_v1.json with fields: honest_verdict, inference_substrate, random_seed, reproducibility_checksum, duration_s, model_specs, gpu_status, n_prompts, energy_descent_bootstrap_ready, smoke_improvement_count, blocked_reasons.
-      8. Run JSON parse and the relevant focused tests for touched code.
+      1. Confirm the structured gate artifact has runtime_receipt_clean=true.
+      2. Define MODEL_SPECS using cached_sota_pair(gpu_indices=(0, 1)) and include at least one mandated model in live rows: unsloth/Qwen3.6-35B-A3B-GGUF, unsloth/gemma-4-31B-it-GGUF, or unsloth/gemma-4-26B-A4B-it-GGUF.
+      3. Use 8-16 deterministic arithmetic/constraint prompts and compare baseline autoregressive candidates to a bounded energy-guided refinement or reranking loop.
+      4. Score every candidate with exact verifiers. Energy may propose or rank; exact verifiers decide correctness.
+      5. Record energy trajectories, verifier score trajectories, candidate fingerprints, model_specs, GPU status, and wall-clock timing. Mark duration/provenance flags explicitly.
+      6. Set energy_descent_bootstrap_ready=true only if live inference, telemetry, exact-verifier scoring, and duration/provenance are clean.
+      7. Write results/experiment_3339_energy_descent_bootstrap_v2_runtime_clean.json with REQUIRED ARTIFACT FIELDS: honest_verdict with terminal prefix, inference_substrate, random_seed, reproducibility_checksum, duration_s, files_updated; BOOTSTRAP FIELDS (Phase-3 gate): model_specs, gpu_status, n_prompts, energy_descent_bootstrap_ready, smoke_improvement_count, trajectory_summary, duration_flagged, blocked_reasons.
+      8. Run JSON parse and focused tests for touched code.
 
-      Run command: JAX_PLATFORMS=cpu .venv/bin/python scripts/experiment_3327_energy_descent_substrate_bootstrap_v1.py. Do NOT push. Do NOT modify scripts/research_conductor.py.
+      Run command: cd {project_root} && CARNOT_FORCE_LIVE=1 .venv/bin/python scripts/experiment_3339_energy_descent_bootstrap_v2_runtime_clean.py. Do NOT push. Do NOT modify scripts/research_conductor.py.
 
-  - id: exp3328-energy-descent-vs-ar-sota-panel-v2
-    milestone: "2026.05.308"
-    title: "Energy-descent versus autoregressive SOTA panel v2 (gated on exp3327 bootstrap)"
+  - id: exp3340-energy-descent-vs-ar-sota-panel-v3
+    milestone: "2026.05.309"
+    title: "Energy-descent versus autoregressive SOTA panel v3 gated on bootstrap"
     priority: critical
-    agent_type: gemini
-    model: gemini-3.1-pro-preview
-    max_turns: 80
-    estimated_wall_time_min: 120
+    max_turns: 50
+    estimated_wall_time_min: 150
     track: phase3-kona
     inference_substrate: live_llm_inference
     requires_gpu: true
-    requires_gemini: true  # codex 10-min-bail failed exp3322/3323 (+v4) 9x this session; bypass CODEX_FORCE_EXPERIMENTS gemini->codex coercion
-    deliverable: "results/experiment_3328_energy_descent_vs_ar_sota_panel_v2.json"
+    deliverable: "results/experiment_3340_energy_descent_vs_ar_panel_v3.json"
     gated_on:
-      - upstream: exp3327-energy-descent-substrate-bootstrap-v1
+      - upstream: exp3339-energy-descent-bootstrap-v2-runtime-clean
         artifact_field: energy_descent_bootstrap_ready
         op: "=="
         value: true
     prior_failures:
+      - experiment_id: exp3328-energy-descent-vs-ar-sota-panel-v2
+        verdict: "gate_blocked: upstream exp3327 bootstrap was retired/blocked, so the live SOTA panel did not run"
+        addressed_by: "This v3 panel is gated on a clean v2 bootstrap and uses the runtime receipt rather than the blocked .308 loader path."
+        retire_if_same_verdict: true
       - experiment_id: exp3322-energy-descent-vs-autoregressive-premise-v1
         verdict: "failed_operationally: Codex CLI error before artifact creation; no scientific verdict"
-        addressed_by: "This v2 panel is gated on a bootstrap-ready artifact, reuses the proven smoke path, and limits scope to verifier-anchored SOTA panel evidence."
+        addressed_by: "This task narrows the original monolithic premise test to a gated, duration-clean SOTA panel with explicit exact-verifier authority."
         retire_if_same_verdict: true
     prompt: |
       CONTEXT
-      This is the recovered version of the missing .307 Phase-3 premise test. The question is narrow: does an energy-descent/refinement loop improve exact verifier outcomes over baseline autoregressive generation on the same local SOTA GGUF models?
+      Work from {project_root} on {date}. This is the recovered Phase-3 premise panel. The question is narrow: with local mandated SOTA GGUF inference, does energy-guided refinement improve exact verifier outcomes over baseline autoregressive generation on the same prompts and models?
 
       EXISTING CODE TO READ FIRST
-      - CLAUDE.md, especially SOTA Local Models, live inference duration, and sample-size rigor
+      - CLAUDE.md, especially SOTA Local Models, sample-size rigor, duration rules, and exact-verifier authority
       - CODEX.md
       - scripts/experiment_template.py
       - carnot/inference/sota_models.py
       - openspec/capabilities/phase3-kona/spec.md
       - openspec/capabilities/verifiable-reasoning/spec.md
       - openspec/capabilities/llm-ebm-inference/spec.md
-      - results/experiment_3326_phase3_path_preflight_manifest_v1.json
-      - results/experiment_3327_energy_descent_substrate_bootstrap_v1.json
-      - research-references.md, especially EBT, hallucination commitment, and energy-guided decoding notes
+      - results/experiment_3338_sota_gguf_tokenizer_runtime_receipt_v1.json
+      - results/experiment_3339_energy_descent_bootstrap_v2_runtime_clean.json
+      - research-references.md, especially EBT, ARM-as-EBM, LoopUS, CEM, and ETS notes
 
       TASK
-      Run a statistically honest live SOTA panel comparing baseline autoregressive generation to energy-guided refinement/reranking under exact verifier authority. The result may be positive, negative, or blocked; do not overclaim.
+      Run the SOTA energy-descent-vs-autoregressive panel v3. The result may be positive, negative, or blocked. Do not overclaim from small n, duration-flagged rows, or legacy smoke models.
 
       CONCRETE STEPS
-      1. Confirm the exp3327 gate artifact says energy_descent_bootstrap_ready=true.
-      2. Define MODEL_SPECS using cached_sota_pair(gpu_indices=(0, 1)); include at least one mandated SOTA GGUF in the artifact: unsloth/Qwen3.6-35B-A3B-GGUF, unsloth/gemma-4-31B-it-GGUF, or unsloth/gemma-4-26B-A4B-it-GGUF.
-      3. Preflight GPU/cache/runtime. If preconditions fail, write a blocked artifact with exact root cause and stop.
-      4. Build or reuse a balanced benchmark of at least n=200 scored cases unless runtime constraints force a diagnostic-only run. Include arithmetic/constraint tasks with exact labels and no prompt-injection headline reuse.
-      5. For each case, collect baseline autoregressive output, energy-guided/refined output, exact verifier verdicts, energy trajectory, commitment/abstention telemetry, and unsupported-claim flags when available.
-      6. Compute paired deltas, confidence intervals, refusal/abstention deltas, and failure slices. If n<200, mark the result diagnostic-only.
-      7. Write results/experiment_3328_energy_descent_vs_ar_sota_panel_v2.json with fields: honest_verdict, inference_substrate, random_seed, reproducibility_checksum, duration_s, model_specs, n_cases, panel_scale, delta_verified_accuracy, ci95_delta_verified_accuracy, energy_descent_vs_ar_panel_v2_ready, commitment_telemetry_summary, blocked_reasons.
-      8. Update ops/status.md and ops/changelog.md with the verdict and whether the Phase-3 premise remains blocked.
+      1. Confirm the structured gate artifact has energy_descent_bootstrap_ready=true.
+      2. Define MODEL_SPECS using cached_sota_pair(gpu_indices=(0, 1)); include at least one mandated model in headline rows: unsloth/Qwen3.6-35B-A3B-GGUF, unsloth/gemma-4-31B-it-GGUF, or unsloth/gemma-4-26B-A4B-it-GGUF.
+      3. Build a panel with n>=30 for diagnostic claims. Only call a result headline-ready if n>=200, duration/provenance is clean, and exact-verifier confidence intervals support it.
+      4. For each prompt, collect baseline autoregressive output and energy-guided refinement/reranking output under the same model and decoding budget where feasible.
+      5. Score every output with exact verifiers and log commitment/provenance telemetry: energy trajectory, verifier disagreement, abstention/repair events, unsupported-claim flags when applicable.
+      6. Compute paired deltas, confidence intervals, duration flags, and model-by-model breakdowns. Label blocked or partial rows honestly.
+      7. Write results/experiment_3340_energy_descent_vs_ar_panel_v3.json with REQUIRED ARTIFACT FIELDS: honest_verdict with terminal prefix, inference_substrate, random_seed, reproducibility_checksum, duration_s, files_updated; PANEL FIELDS (Phase-3 evidence): model_specs, n_cases, n_headline_eligible, delta_overall, ci95_delta, exact_verifier_accept_rate_baseline, exact_verifier_accept_rate_energy, commitment_telemetry_summary, duration_flagged, headline_ready, blocked_reasons.
+      8. Run focused tests, JSON parse, and any relevant spec-coverage command used by nearby experiment scripts.
 
-      Run command: JAX_PLATFORMS=cpu .venv/bin/python scripts/experiment_3328_energy_descent_vs_ar_sota_panel_v2.py. Do NOT push. Do NOT modify scripts/research_conductor.py.
+      Run command: cd {project_root} && CARNOT_FORCE_LIVE=1 .venv/bin/python scripts/experiment_3340_energy_descent_vs_ar_panel_v3.py. Do NOT push. Do NOT modify scripts/research_conductor.py.
 
-  - id: exp3329-verifier-ensemble-diversity-audit-v2
-    milestone: "2026.05.308"
-    title: "Verifier ensemble diversity and lambda_min audit v2"
-    priority: critical
-    agent_type: gemini
-    model: gemini-3.1-pro-preview
-    max_turns: 50
-    estimated_wall_time_min: 60
-    track: verifiable-reasoning
-    inference_substrate: verifier_ensemble_against_cached_candidates
-    requires_gpu: false
-    requires_gemini: true  # codex 10-min-bail failed exp3322/3323 (+v4) 9x this session; bypass CODEX_FORCE_EXPERIMENTS gemini->codex coercion
-    deliverable: "results/experiment_3329_verifier_ensemble_diversity_audit_v2.json"
-    prior_failures:
-      - experiment_id: exp3323-verifier-ensemble-diversity-audit-v1
-        verdict: "failed_operationally: Codex CLI error before artifact creation; no scientific verdict"
-        addressed_by: "This v2 audit is cached-corpus only, uses explicit n>=1000 covariance requirements, and writes a standalone artifact before any downstream remediation."
-        retire_if_same_verdict: true
-    prompt: |
-      CONTEXT
-      The .307 verifier diversity audit failed operationally. Carnot needs to know whether the verifier ensemble has meaningful independent signal before Phase-3 or publication claims can rely on ensemble agreement.
-
-      EXISTING CODE TO READ FIRST
-      - CLAUDE.md, especially covariance sample-size rigor and inference_substrate rules
-      - CODEX.md
-      - openspec/capabilities/verifiable-reasoning/spec.md
-      - openspec/capabilities/verification/spec.md
-      - openspec/capabilities/publication/spec.md
-      - scripts/experiment_template.py
-      - scripts/conductor_gates.py
-      - results/experiment_3326_phase3_path_preflight_manifest_v1.json
-      - ops/exclusion_manifest.yaml, especially retired diversity-selection lineage
-      - research-complete.yaml
-
-      TASK
-      Run a cached-candidate verifier ensemble diversity audit. Measure verifier covariance, lambda_min, effective_k, pairwise agreement, and failure slices. Do not require live LLM inference.
-
-      CONCRETE STEPS
-      1. Confirm relevant specs exist and contain REQ-* requirements before changing implementation code.
-      2. Find or build a cached candidate matrix with at least n=1000 cases if making covariance/eigenvalue claims. If n<1000, mark results diagnostic-only.
-      3. Score candidates with the available exact/verifier ensemble members; include at least symbolic/exact checks where available.
-      4. Compute pairwise agreement, covariance/correlation matrices, lambda_min_sigma, condition number, effective_k, and per-domain verifier collapse modes.
-      5. Explicitly state whether the ensemble is usable for Phase-3 authority, usable only as diagnostics, or collapsed.
-      6. Write results/experiment_3329_verifier_ensemble_diversity_audit_v2.json with fields: honest_verdict, inference_substrate, random_seed, reproducibility_checksum, duration_s, n_cases, verifier_names, covariance_methodology, lambda_min_sigma, effective_k, diversity_gate_passed, verifier_diversity_audit_v2_ready, collapsed_pairs, blocked_reasons.
-      7. Update ops/status.md and ops/changelog.md with the diversity verdict.
-
-      Run command: JAX_PLATFORMS=cpu .venv/bin/python scripts/experiment_3329_verifier_ensemble_diversity_audit_v2.py. Do NOT push. Do NOT modify scripts/research_conductor.py.
-
-  - id: exp3330-verifier-diversity-remediation-plan-v1
-    milestone: "2026.05.308"
-    title: "Verifier diversity remediation plan (gated on exp3329 lambda_min_sigma <= 0.1)"
+  - id: exp3341-verifier-diversity-remediation-plan-v2
+    milestone: "2026.05.309"
+    title: "Verifier diversity remediation plan v2 from .308 audit"
     priority: high
-    agent_type: gemini
-    model: gemini-3.1-pro-preview
     max_turns: 20
     estimated_wall_time_min: 15
-    track: verifiable-reasoning
+    track: verifier-diversity
     inference_substrate: aggregation_from_upstream_artifacts
     requires_gpu: false
-    deliverable: "results/experiment_3330_verifier_diversity_remediation_plan_v1.json"
-    gated_on:
-      - upstream: exp3329-verifier-ensemble-diversity-audit-v2
-        artifact_field: lambda_min_sigma
-        op: "<="
-        value: 0.1
+    deliverable: "results/experiment_3341_verifier_diversity_remediation_plan_v2.json"
     prior_failures:
-      - experiment_id: exp1224-phase5c-adversarial-probe
-        verdict: "partial_attack_success_revision_needed"
-        addressed_by: "This task only runs after a fresh .308 low-lambda diversity signal and produces a remediation plan instead of rerunning the same collapsed k=3 in-situ ensemble design."
+      - experiment_id: exp3330-verifier-diversity-remediation-plan-v1
+        verdict: "failed_operationally: Codex/Gemini invalid request before remediation artifact creation"
+        addressed_by: "This v2 task is a small no-new-source remediation plan using the existing exp3329 audit and explicitly avoids retired diversity-maximizing greedy selection."
         retire_if_same_verdict: true
     prompt: |
       CONTEXT
-      This task should run only if exp3329 reports low verifier diversity. It exists to prevent another milestone from reusing a collapsed ensemble without a redesign.
+      Work from {project_root} on {date}. exp3329 produced a usable verifier-diversity audit with lambda_min_sigma=0.0179188 and effective_k=4.66. The .308 remediation task did not land. The next step is a focused remediation plan, not another broad selection algorithm.
 
       EXISTING CODE TO READ FIRST
-      - CLAUDE.md, especially Failed-Experiment Rerun Discipline
+      - CLAUDE.md, especially Failed-Experiment Rerun Discipline and exclusion-manifest rules
       - CODEX.md
-      - results/experiment_3329_verifier_ensemble_diversity_audit_v2.json
       - ops/exclusion_manifest.yaml
       - openspec/capabilities/verifiable-reasoning/spec.md
-      - research-complete.yaml
-      - ops/status.md
+      - results/experiment_3329_verifier_ensemble_diversity_audit_v2.json
+      - research-references.md, section "2026-05-29 Post-.308 Planning Sweep"
+      - carnot/verify/
+      - tests/
 
       TASK
-      Write an actionable verifier diversity remediation plan. Do not implement a new verifier here unless a tiny smoke is needed to validate the plan. The deliverable must specify what to add, what to retire, and what gate proves improvement.
+      Produce a verifier-diversity remediation plan that proposes a new independent monitor/provenance axis and the next reaudit, without implementing greedy diversity-maximizing verifier selection or any retired scope.
 
       CONCRETE STEPS
-      1. Read exp3329 and identify the exact collapsed verifier pairs or domains.
-      2. Propose 2-4 materially different verifier additions or decompositions, prioritizing exact solvers, monitor provenance, and independent feature families.
-      3. For each proposal, define the expected diversity signal, required corpus, sample size, and acceptance gate.
-      4. Mark any old scopes that should not be rerun without new evidence.
-      5. Write results/experiment_3330_verifier_diversity_remediation_plan_v1.json with fields: honest_verdict, inference_substrate, random_seed, reproducibility_checksum, duration_s, upstream_lambda_min_sigma, remediation_required, proposed_verifiers, retired_reuse_risks, next_gate.
-      6. Update ops/status.md and ops/changelog.md with the plan.
+      1. Read the exp3329 artifact and identify the correlated verifier pairs and weak axes.
+      2. Cross-check ops/exclusion_manifest.yaml and explicitly avoid retired diversity-maximizing greedy selection.
+      3. Propose the smallest monitor/provenance axis that could add independent information: trajectory consistency, commitment/abstention events, parser/provenance integrity, or external deterministic verifier results.
+      4. Define acceptance criteria for exp3342 and exp3343, including lambda_min_sigma and effective_k reporting.
+      5. Write results/experiment_3341_verifier_diversity_remediation_plan_v2.json with REQUIRED ARTIFACT FIELDS: honest_verdict with terminal prefix, inference_substrate, random_seed, reproducibility_checksum, duration_s, files_updated; PLAN FIELDS (diversity remediation): source_audit, lambda_min_sigma_before, effective_k_before, collapsed_pairs, proposed_axis, retired_scopes_avoided, acceptance_criteria, downstream_tasks.
+      6. Run JSON parse for the artifact.
 
-      Run command: JAX_PLATFORMS=cpu .venv/bin/python scripts/experiment_3330_verifier_diversity_remediation_plan_v1.py. Do NOT push. Do NOT modify scripts/research_conductor.py.
+      Run command: cd {project_root} && JAX_PLATFORMS=cpu .venv/bin/python scripts/experiment_3341_verifier_diversity_remediation_plan_v2.py. Do NOT push. Do NOT modify scripts/research_conductor.py.
 
-  - id: exp3331-ebt-sidecar-adapter-smoke-v2
-    milestone: "2026.05.308"
-    title: "EBT sidecar adapter smoke against exact verifier scores"
+  - id: exp3342-monitor-provenance-verifier-axis-v1
+    milestone: "2026.05.309"
+    title: "Monitor/provenance verifier axis v1 for diversity remediation"
     priority: high
-    agent_type: gemini
-    model: gemini-3.1-pro-preview
     max_turns: 50
-    estimated_wall_time_min: 60
-    track: llm-ebm-inference
-    inference_substrate: verifier_ensemble_against_cached_candidates
+    estimated_wall_time_min: 45
+    track: verifier-diversity
+    inference_substrate: cached_verifier_corpus
     requires_gpu: false
-    requires_gemini: true  # codex 10-min-bail failed exp3322/3323 (+v4) 9x this session; bypass CODEX_FORCE_EXPERIMENTS gemini->codex coercion
-    deliverable: "results/experiment_3331_ebt_sidecar_adapter_smoke_v2.json"
-    prompt: |
-      CONTEXT
-      The post-.307 literature sweep found the public Energy-Based Transformers implementation as the strongest external implementation lead for Carnot's Phase-3 path. This task must remain a sidecar smoke, not a foundation-model parity claim.
-
-      EXISTING CODE TO READ FIRST
-      - CLAUDE.md, especially External Research and claim-boundary guidance
-      - CODEX.md
-      - research-references.md, EBT section in the 2026-05-29 Post-.307 sweep
-      - openspec/capabilities/llm-ebm-inference/spec.md
-      - openspec/capabilities/phase3-kona/spec.md
-      - openspec/capabilities/verifiable-reasoning/spec.md
-      - _bmad/architecture.md, Phase-3/Kona and EBT sections
-      - scripts/experiment_template.py
-      - research-hardware-wishlist.md
-
-      TASK
-      Build a minimal EBT sidecar adapter smoke that maps cached candidate/verifier examples into an energy-scoring interface. Prefer local vendored or optional dependency handling; do not require network at runtime. If the EBT package cannot be installed or imported cleanly, write a blocked artifact with exact root cause.
-
-      CONCRETE STEPS
-      1. Confirm or add the smallest spec delta for an EBT sidecar adapter if implementation code is changed.
-      2. Check whether the EBT code is already vendored or installable in the environment. Do not silently fetch uncontrolled dependencies.
-      3. Build a tiny adapter that accepts cached candidate features and emits an energy score or a blocked reason.
-      4. Compare sidecar energy ordering against exact verifier labels on a small diagnostic set, reporting AUROC/rank correlation only as diagnostic if n is small.
-      5. Record whether this sidecar is useful for exp3328-style proposal ranking, FR-11 memory, neither, or blocked.
-      6. Write results/experiment_3331_ebt_sidecar_adapter_smoke_v2.json with fields: honest_verdict, inference_substrate, random_seed, reproducibility_checksum, duration_s, ebt_source_status, n_cases, diagnostic_rank_metric, adapter_ready, claim_boundary, blocked_reasons.
-      7. Run focused tests for any touched adapter code.
-
-      Run command: JAX_PLATFORMS=cpu .venv/bin/python scripts/experiment_3331_ebt_sidecar_adapter_smoke_v2.py. Do NOT push. Do NOT modify scripts/research_conductor.py.
-
-  - id: exp3332-interwhen-monitor-pilot-v1
-    milestone: "2026.05.308"
-    title: "Interwhen-style monitor pilot for intermediate candidate scoring"
-    priority: high
-    agent_type: gemini
-    model: gemini-3.1-pro-preview
-    max_turns: 50
-    estimated_wall_time_min: 50
-    track: verifiable-reasoning
-    inference_substrate: verifier_ensemble_against_cached_candidates
-    requires_gpu: false
-    requires_gemini: true  # codex 10-min-bail failed exp3322/3323 (+v4) 9x this session; bypass CODEX_FORCE_EXPERIMENTS gemini->codex coercion
-    deliverable: "results/experiment_3332_interwhen_monitor_pilot_v1.json"
+    deliverable: "results/experiment_3342_monitor_provenance_verifier_axis_v1.json"
     prior_failures:
-      - experiment_id: exp841-interwhen-monitor
-        verdict: "complete: interwhen monitor evidence (prior iteration)"
-        addressed_by: "Prior interwhen monitor work was a different milestone's scope; this pilot scores intermediate candidates against cached corpora with the current verifier set and a falsifiable readiness gate. Different corpus + gate than the matched prior."
+      - experiment_id: exp627-interwhen-mid-generation-monitor
+        verdict: "retired: interwhen mid-generation serial monitor loop superseded by paragraph-boundary batching in exp841"
+        addressed_by: "This task does not run a serial mid-generation loop; it adds a cached monitor/provenance feature axis over existing candidates for diversity remediation."
         retire_if_same_verdict: true
     prompt: |
       CONTEXT
-      Interwhen-style verifiable reasoning frameworks suggest that monitors should score intermediate candidates, not only final answers. Carnot needs this if energy descent is to be trusted as a refinement process rather than a final-answer reranker.
+      Work from {project_root} on {date}. The .308 Interwhen pilot was tiny, and the older serial mid-generation monitor scope is retired. This task must add a cached, batchable verifier axis that improves diversity measurement without reviving retired serial monitoring.
 
       EXISTING CODE TO READ FIRST
-      - CLAUDE.md
+      - CLAUDE.md, especially exclusion-manifest and inference_substrate rules
       - CODEX.md
-      - research-references.md, Interwhen and hallucination commitment sections
+      - ops/exclusion_manifest.yaml
+      - results/experiment_3329_verifier_ensemble_diversity_audit_v2.json
+      - results/experiment_3332_interwhen_monitor_pilot_v1.json
+      - results/experiment_3341_verifier_diversity_remediation_plan_v2.json
       - openspec/capabilities/verifiable-reasoning/spec.md
-      - openspec/capabilities/verification/spec.md
-      - openspec/capabilities/phase3-kona/spec.md
-      - scripts/experiment_template.py
-      - results/experiment_3329_verifier_ensemble_diversity_audit_v2.json if present
+      - carnot/verify/
+      - tests/
 
       TASK
-      Implement a small monitor-pilot artifact that scores intermediate candidates using exact or structured monitors. The goal is to test whether monitor trajectories add signal beyond final verifier pass/fail.
+      Implement or assemble a monitor/provenance verifier axis over cached candidates. The axis should be independent enough to test whether it improves lambda_min/effective-k in exp3343.
 
       CONCRETE STEPS
-      1. Confirm relevant spec requirements before changing implementation code.
-      2. Select cached examples with multiple candidate states per problem, or synthesize a deterministic fixture with known intermediate errors.
-      3. Implement monitor outputs for at least three signals: exact constraint satisfaction, evidence/provenance presence, and unsupported commitment risk where applicable.
-      4. Compare monitor trajectory features against final exact correctness and exp3329 diversity signals if available.
-      5. Report whether monitor features should be added to exp3328-style panels and FR-11 memory updates.
-      6. Write results/experiment_3332_interwhen_monitor_pilot_v1.json with fields: honest_verdict, inference_substrate, random_seed, reproducibility_checksum, duration_s, n_cases, monitor_names, trajectory_signal_summary, monitor_pilot_ready, recommended_integration_points, blocked_reasons.
-      7. Run focused tests for any touched monitor code.
+      1. If code changes are required, confirm the relevant OpenSpec requirements first and add the smallest spec delta if missing.
+      2. Use cached candidates and verifier labels; do not call live LLMs.
+      3. Implement a batchable axis such as provenance-integrity score, structured-output/claim parse validity, commitment/abstention consistency, or trajectory-derived violation features available in existing artifacts.
+      4. Measure correlation of the new axis against existing exact/symbolic/model verifier columns on the exp3329-style corpus.
+      5. Set monitor_provenance_axis_ready=true only if the axis emits for enough rows and is not a duplicate of an existing verifier column.
+      6. Write results/experiment_3342_monitor_provenance_verifier_axis_v1.json with REQUIRED ARTIFACT FIELDS: honest_verdict with terminal prefix, inference_substrate, random_seed, reproducibility_checksum, duration_s, files_updated; AXIS FIELDS (diversity evidence): n_cases, axis_name, axis_coverage, axis_duplicate_max_corr, monitor_provenance_axis_ready, retired_scopes_avoided, blocked_reasons.
+      7. Run focused tests and JSON parse for the artifact.
 
-      Run command: JAX_PLATFORMS=cpu .venv/bin/python scripts/experiment_3332_interwhen_monitor_pilot_v1.py. Do NOT push. Do NOT modify scripts/research_conductor.py.
+      Run command: cd {project_root} && JAX_PLATFORMS=cpu .venv/bin/python scripts/experiment_3342_monitor_provenance_verifier_axis_v1.py. Do NOT push. Do NOT modify scripts/research_conductor.py.
 
-  - id: exp3333-energy-guided-ttscaling-sota-ablation-v1
-    milestone: "2026.05.308"
-    title: "Energy-guided test-time scaling SOTA ablation under exact verifier authority"
+  - id: exp3343-verifier-diversity-reaudit-after-axis-v3
+    milestone: "2026.05.309"
+    title: "Verifier diversity reaudit v3 gated on monitor/provenance axis"
     priority: high
-    agent_type: gemini
-    model: gemini-3.1-pro-preview
-    max_turns: 60
-    estimated_wall_time_min: 90
-    track: llm-ebm-inference
+    max_turns: 40
+    estimated_wall_time_min: 35
+    track: verifier-diversity
+    inference_substrate: cached_verifier_corpus
+    requires_gpu: false
+    deliverable: "results/experiment_3343_verifier_diversity_reaudit_after_axis_v3.json"
+    gated_on:
+      - upstream: exp3342-monitor-provenance-verifier-axis-v1
+        artifact_field: monitor_provenance_axis_ready
+        op: "=="
+        value: true
+    prior_failures:
+      - experiment_id: exp3276-repair-gate-decision-v8-after-v4-garak-clean-verifier
+        verdict: "scope_match_prior_failure: verifier-gate/diversity follow-up required stronger downstream evidence"
+        addressed_by: "This task is a reaudit after adding a new monitor/provenance axis, not another unchanged verifier-gate decision."
+        retire_if_same_verdict: true
+      - experiment_id: exp3329-verifier-ensemble-diversity-audit-v2
+        verdict: "usable_measurement_but_unremediated: lambda_min_sigma=0.0179188 and exact/symbolic pair remained correlated"
+        addressed_by: "This v3 reaudit is gated on exp3342 adding a new independent axis before recomputing lambda_min/effective-k."
+        retire_if_same_verdict: true
+    prompt: |
+      CONTEXT
+      Work from {project_root} on {date}. exp3329 measured verifier diversity before remediation. exp3342 should add a new monitor/provenance axis. This task reruns the diversity audit with that axis and reports whether the remediation actually helps.
+
+      EXISTING CODE TO READ FIRST
+      - CLAUDE.md, especially sample-size and artifact rules
+      - CODEX.md
+      - results/experiment_3329_verifier_ensemble_diversity_audit_v2.json
+      - results/experiment_3341_verifier_diversity_remediation_plan_v2.json
+      - results/experiment_3342_monitor_provenance_verifier_axis_v1.json
+      - openspec/capabilities/verifiable-reasoning/spec.md
+      - carnot/verify/
+      - tests/
+
+      TASK
+      Recompute verifier diversity metrics after adding the monitor/provenance axis. Use the same or larger cached corpus as exp3329 and report deltas honestly.
+
+      CONCRETE STEPS
+      1. Confirm the structured gate artifact has monitor_provenance_axis_ready=true.
+      2. Reuse the exp3329 covariance/eigenvalue/effective-k methodology unless a bug is found; if changed, explain the change in the artifact.
+      3. Compute lambda_min_sigma, effective_k, pairwise correlations/agreement, duplicate-axis risk, and deltas versus exp3329.
+      4. Decide whether diversity_remediation_passed is true using the acceptance criteria from exp3341.
+      5. Write results/experiment_3343_verifier_diversity_reaudit_after_axis_v3.json with REQUIRED ARTIFACT FIELDS: honest_verdict with terminal prefix, inference_substrate, random_seed, reproducibility_checksum, duration_s, files_updated; REAUDIT FIELDS (diversity evidence): n_cases, lambda_min_sigma_before, lambda_min_sigma_after, effective_k_before, effective_k_after, delta_lambda_min_sigma, delta_effective_k, collapsed_pairs_after, diversity_remediation_passed, blocked_reasons.
+      6. Run focused tests and JSON parse for the artifact.
+
+      Run command: cd {project_root} && JAX_PLATFORMS=cpu .venv/bin/python scripts/experiment_3343_verifier_diversity_reaudit_after_axis_v3.py. Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  - id: exp3344-constrained-output-extractor-llguidance-smoke-v1
+    milestone: "2026.05.309"
+    title: "Constrained structured-output extractor smoke on SOTA GGUF outputs"
+    priority: high
+    max_turns: 40
+    estimated_wall_time_min: 50
+    track: structured-extraction
     inference_substrate: live_llm_inference
     requires_gpu: true
-    requires_gemini: true  # codex 10-min-bail failed exp3322/3323 (+v4) 9x this session; bypass CODEX_FORCE_EXPERIMENTS gemini->codex coercion
-    deliverable: "results/experiment_3333_energy_guided_ttscaling_sota_ablation_v1.json"
+    deliverable: "results/experiment_3344_constrained_output_extractor_llguidance_smoke_v1.json"
+    gated_on:
+      - upstream: exp3338-sota-gguf-tokenizer-runtime-receipt-v1
+        artifact_field: runtime_receipt_clean
+        op: "=="
+        value: true
     prior_failures:
-      - experiment_id: exp3322-energy-descent-vs-autoregressive-premise-v1
-        verdict: "failed_operationally: Codex CLI 10-min bail before artifact; no scientific verdict"
-        addressed_by: "exp3322 failed operationally on the codex coercion (now fixed via requires_gemini:true on this task). This ablation is gated on the exp3327 bootstrap smoke proving the substrate runs, and uses energy-guided test-time scaling as a distinct condition from the bare premise test."
+      - experiment_id: exp1580-dccd-jsonschemabench-sota-structured-output-smoke
+        verdict: "prior_structured_output_scope: structured-output smoke did not become semantic verifier authority"
+        addressed_by: "This task is explicitly parser/formatting-only and reports exact-verifier semantic false accepts separately."
+        retire_if_same_verdict: true
+      - experiment_id: exp2630
+        verdict: "prior_structured_extraction_scope: extractor work needed stronger local SOTA and verifier-boundary evidence"
+        addressed_by: "This attempt is gated on a clean SOTA GGUF runtime receipt and cannot count schema validity as semantic correctness."
+        retire_if_same_verdict: true
+      - experiment_id: exp769-sota-gguf-code-repair
+        verdict: "retired: GGUF code-repair CLI/download lineage is retired"
+        addressed_by: "This task is not code repair or model download; it only tests constrained JSON/schema extraction on already-cached mandated GGUF models."
         retire_if_same_verdict: true
     prompt: |
       CONTEXT
-      Recent energy-guided decoding/test-time scaling work is promising, but Carnot must treat energy as a proposal/ranking signal and exact verifiers as the authority. This task tests that pattern on local SOTA GGUFs without claiming model training progress.
+      Work from {project_root} on {date}. Recent llguidance/XGrammar work makes local structured output practical. Carnot should test this only as a way to reduce malformed extraction from SOTA GGUF outputs; exact verifiers remain semantic authority.
 
       EXISTING CODE TO READ FIRST
-      - CLAUDE.md, especially SOTA Local Models and live inference artifact rules
+      - CLAUDE.md, especially SOTA Local Models and inference_substrate rules
       - CODEX.md
       - scripts/experiment_template.py
       - carnot/inference/sota_models.py
+      - carnot/verify/
       - openspec/capabilities/llm-ebm-inference/spec.md
       - openspec/capabilities/verifiable-reasoning/spec.md
-      - research-references.md, energy-guided decoding and hallucination commitment sections
-      - results/experiment_3328_energy_descent_vs_ar_sota_panel_v2.json if present
-      - results/experiment_3329_verifier_ensemble_diversity_audit_v2.json if present
+      - results/experiment_3338_sota_gguf_tokenizer_runtime_receipt_v1.json
+      - research-references.md, llguidance/XGrammar section
 
       TASK
-      Run a live SOTA ablation where the local GGUF model proposes multiple candidates, an energy score ranks or filters them, and exact verifiers decide correctness. Compare against simple majority/best-of-n baselines.
+      Add a small constrained structured-output extraction smoke for local SOTA GGUF outputs. The task should compare malformed/parse-failure rates with and without constraints and must not claim semantic correctness from formatting alone.
 
       CONCRETE STEPS
-      1. Define MODEL_SPECS using cached_sota_pair(gpu_indices=(0, 1)); include at least one mandated SOTA GGUF in the artifact: unsloth/Qwen3.6-35B-A3B-GGUF, unsloth/gemma-4-31B-it-GGUF, or unsloth/gemma-4-26B-A4B-it-GGUF.
-      2. Preflight cache, GPU, loader, and duration expectations. If preconditions fail, write a blocked artifact and stop.
-      3. Use at least n=100 cases for a useful diagnostic panel; prefer n>=200 if runtime allows. Mark n<200 as diagnostic-only.
-      4. Generate k candidates per case, score with energy features and exact verifiers, and compare: first sample, best-of-k by logprob if available, energy-ranked, and exact-oracle upper bound.
-      5. Record verifier acceptance, abstention, energy/verifier disagreement, and failure slices.
-      6. Write results/experiment_3333_energy_guided_ttscaling_sota_ablation_v1.json with fields: honest_verdict, inference_substrate, random_seed, reproducibility_checksum, duration_s, model_specs, n_cases, k_candidates, delta_energy_rank_vs_first, ci95_delta_energy_rank_vs_first, exact_oracle_gap, ttscaling_ablation_ready, blocked_reasons.
-      7. Update ops/status.md and ops/changelog.md with the verdict.
+      1. Confirm the structured gate artifact has runtime_receipt_clean=true.
+      2. Define MODEL_SPECS using cached_sota_pair(gpu_indices=(0, 1)) and include at least one mandated model in live rows: unsloth/Qwen3.6-35B-A3B-GGUF, unsloth/gemma-4-31B-it-GGUF, or unsloth/gemma-4-26B-A4B-it-GGUF.
+      3. Check whether llguidance or xgrammar is installed. If neither is available, implement a blocked/diagnostic artifact with exact missing dependency information rather than silently falling back to ad hoc parsing.
+      4. Run a small live extraction smoke on prompts that require structured claims/constraints, comparing unconstrained output to grammar/schema-constrained output when tooling is available.
+      5. Measure parse_failure_rate, schema_valid_rate, exact_verifier_accept_rate, and semantic_false_accept_count. Formatting success alone must not be counted as correctness.
+      6. Write results/experiment_3344_constrained_output_extractor_llguidance_smoke_v1.json with REQUIRED ARTIFACT FIELDS: honest_verdict with terminal prefix, inference_substrate, random_seed, reproducibility_checksum, duration_s, files_updated; EXTRACTOR FIELDS (structured output): model_specs, constrained_tool, n_cases, parse_failure_rate_unconstrained, parse_failure_rate_constrained, exact_verifier_accept_rate_unconstrained, exact_verifier_accept_rate_constrained, semantic_false_accept_count, constrained_extractor_ready, blocked_reasons.
+      7. Run focused tests and JSON parse for the artifact.
 
-      Run command: JAX_PLATFORMS=cpu .venv/bin/python scripts/experiment_3333_energy_guided_ttscaling_sota_ablation_v1.py. Do NOT push. Do NOT modify scripts/research_conductor.py.
+      Run command: cd {project_root} && CARNOT_FORCE_LIVE=1 .venv/bin/python scripts/experiment_3344_constrained_output_extractor_llguidance_smoke_v1.py. Do NOT push. Do NOT modify scripts/research_conductor.py.
 
-  - id: exp3334-fr11-online-verifier-memory-nonforgetting-v4
-    milestone: "2026.05.308"
-    title: "FR-11 online verifier memory nonforgetting v4"
+  - id: exp3345-fr11-online-memory-nonforgetting-v5
+    milestone: "2026.05.309"
+    title: "FR-11 online verifier-memory nonforgetting v5 with rollback and soundness/completeness costs"
     priority: critical
-    agent_type: gemini
-    model: gemini-3.1-pro-preview
     max_turns: 50
     estimated_wall_time_min: 60
-    track: self-learning
-    inference_substrate: verifier_ensemble_against_cached_candidates
+    track: continuous-self-learning
+    inference_substrate: cached_verifier_corpus
     requires_gpu: false
-    requires_gemini: true  # codex 10-min-bail failed exp3322/3323 (+v4) 9x this session; bypass CODEX_FORCE_EXPERIMENTS gemini->codex coercion
-    deliverable: "results/experiment_3334_fr11_online_verifier_memory_nonforgetting_v4.json"
+    continuous_self_learning_task: true
+    deliverable: "results/experiment_3345_fr11_online_memory_nonforgetting_v5.json"
     prior_failures:
-      - experiment_id: exp3318-fr11-failure-targeted-curriculum-replay-v3
-        verdict: "GATE_BLOCK: Pre-emptive skip: upstream retired (exp3317-repair-headline-evidence-audit-v2)"
-        addressed_by: "This v4 task removes the retired repair-headline dependency and uses exact verifier outcomes plus any clean .308 upstreams, with an explicit nonforgetting and rollback gate."
+      - experiment_id: exp3076-fr11-online-soundness-completeness-budget
+        verdict: "prior_budget_scope: FR-11 online verifier soundness/completeness budget required a larger nonforgetting follow-up"
+        addressed_by: "This v5 task makes soundness/completeness deltas first-class artifact fields and pairs them with rollback and holdout gates."
+        retire_if_same_verdict: true
+      - experiment_id: exp1484-fr11-v9-query-time-memory-policy
+        verdict: "prior_fr11_memory_scope: query-time memory policy did not close durable nonforgetting evidence"
+        addressed_by: "This task updates memory from exact verifier outcomes and measures old-task retention plus false-positive guard deltas."
+        retire_if_same_verdict: true
+      - experiment_id: exp2003-tier2-constraint-memory-fr11
+        verdict: "prior_fr11_constraint_memory_scope: Tier-2 constraint memory needed stronger rollback and holdout evidence"
+        addressed_by: "This v5 task requires separate update/new/old/false-positive sets and explicit rollback_recovered_count."
+        retire_if_same_verdict: true
+      - experiment_id: exp3200-fr11-verify-trace-memory-controller-v1
+        verdict: "prior_fr11_controller_scope: verify-trace memory controller remained pre-nonforgetting"
+        addressed_by: "This task extends the controller path with nonforgetting, soundness/completeness, and rollback acceptance gates."
+        retire_if_same_verdict: true
+      - experiment_id: exp3255-fr11-lifelong-failure-memory-retention-audit-v1
+        verdict: "prior_retention_scope: lifelong failure-memory retention audit needed online update evidence"
+        addressed_by: "This task performs online updates from exact verifier outcomes rather than only auditing retained memory."
         retire_if_same_verdict: true
     prompt: |
       CONTEXT
-      research-program.md requires at least one continuous self-learning experiment. Recent FR-11 work is not enough unless it shows online updates that improve or preserve future verifier behavior without depending on retired repair-headline artifacts.
+      Work from {project_root} on {date}. research-program.md requires each milestone to include continuous self-learning. exp3334 showed a small online verifier-memory nonforgetting result. v5 must scale the evidence, add soundness/completeness cost accounting, and keep rollback explicit.
 
       EXISTING CODE TO READ FIRST
-      - CLAUDE.md, especially Failed-Experiment Rerun Discipline and sample-size rigor
+      - CLAUDE.md, especially inference_substrate, artifact, and sample-size guidance
       - CODEX.md
-      - research-program.md, Continuous Self-Learning section
+      - research-program.md, section "Continuous Self-Learning"
       - _bmad/prd.md, FR-11 and FR-12
       - openspec/capabilities/self-learning/spec.md
       - openspec/capabilities/verifiable-reasoning/spec.md
-      - research-references.md, online verifier learnability and KAN-CL sections
-      - research-complete.yaml
-      - results/experiment_3328_energy_descent_vs_ar_sota_panel_v2.json if present
-      - results/experiment_3329_verifier_ensemble_diversity_audit_v2.json if present
-      - results/experiment_3332_interwhen_monitor_pilot_v1.json if present
+      - results/experiment_3334_fr11_online_verifier_memory_nonforgetting_v4.json
+      - research-references.md, FR-11 / online verifier learnability / KAN-CL section
+      - carnot/
+      - tests/
 
       TASK
-      Implement and run a continuous self-learning experiment for online verifier memory. The update may be lightweight and controller-level, but it must be real, replayable, and nonforgetting-gated.
+      Run FR-11 online verifier-memory nonforgetting v5. This must be a real self-learning experiment: update memory/controller state from verifier outcomes, evaluate new-task improvement, evaluate old-task retention, account for soundness/completeness mistakes, and rollback harmful updates.
 
       CONCRETE STEPS
-      1. Confirm or add the smallest OpenSpec requirement delta for online verifier-memory nonforgetting before changing code.
-      2. Build a stream of verified cases from clean .308 artifacts when available, with fallback to stable .305-.306 cached verifier evidence. Do not depend on retired exp3317.
-      3. Split data into update stream, new-task evaluation, and old-task holdout. Use enough cases to avoid exact-1.0 overclaims; if small, mark diagnostic-only.
-      4. Update a constraint memory or verifier-memory structure online. Record every accepted update, rejected update, and rollback trigger.
-      5. Measure new-task improvement, old-task degradation, false-positive change, and rollback frequency.
-      6. Set fr11_nonforgetting_ready true only if updates improve or preserve new-task performance while old-task degradation stays within the predeclared tolerance.
-      7. Write results/experiment_3334_fr11_online_verifier_memory_nonforgetting_v4.json with fields: honest_verdict, inference_substrate, random_seed, reproducibility_checksum, duration_s, n_update_cases, n_new_eval_cases, n_old_holdout_cases, new_task_delta, old_task_delta, false_positive_delta, rollback_count, fr11_nonforgetting_ready, blocked_reasons.
-      8. Update ops/status.md, ops/changelog.md, and _bmad/traceability.md if the requirement status changes.
+      1. Confirm the relevant self-learning and verifiable-reasoning specs have REQ-* requirements before implementation code changes.
+      2. Build or reuse a cached verifier corpus with separate update, new-task holdout, old-task holdout, and false-positive guard sets. Target substantially larger sets than exp3334 where local data allows.
+      3. Apply online updates from exact verifier outcomes only. Optional locality anchoring may be inspired by KAN-CL, but do not introduce a headline KAN replacement claim.
+      4. Measure new_task_delta, old_task_delta, false_positive_delta, soundness_error_delta, completeness_error_delta, rollback_count, and rollback_recovered_count.
+      5. Set fr11_nonforgetting_ready=true only if new-task performance improves or is preserved, old-task degradation stays within the planned bound, false positives do not materially increase, and rollback works on harmful updates.
+      6. Write results/experiment_3345_fr11_online_memory_nonforgetting_v5.json with REQUIRED ARTIFACT FIELDS: honest_verdict with terminal prefix, inference_substrate, random_seed, reproducibility_checksum, duration_s, files_updated; FR-11 FIELDS (continuous self-learning): n_update, n_new_eval, n_old_eval, n_false_positive_guard, new_task_delta, old_task_delta, false_positive_delta, soundness_error_delta, completeness_error_delta, rollback_count, rollback_recovered_count, fr11_nonforgetting_ready, blocked_reasons.
+      7. Run focused unit tests, JSON parse, and any available spec-coverage command for self-learning/verifiable-reasoning.
 
-      Run command: JAX_PLATFORMS=cpu .venv/bin/python scripts/experiment_3334_fr11_online_verifier_memory_nonforgetting_v4.py. Do NOT push. Do NOT modify scripts/research_conductor.py.
+      Run command: cd {project_root} && JAX_PLATFORMS=cpu .venv/bin/python scripts/experiment_3345_fr11_online_memory_nonforgetting_v5.py. Do NOT push. Do NOT modify scripts/research_conductor.py.
 
-  - id: exp3335-reproducer-pack-and-evidence-matrix-v39
-    milestone: "2026.05.308"
-    title: "Independent reproducer pack and evidence matrix v39"
+  - id: exp3346-kv260-mmd-vs-cpu-sequential-gibbs-v1
+    milestone: "2026.05.309"
+    title: "KV260 MMD vs CPU sequential Gibbs board-local continuity"
     priority: high
-    agent_type: gemini
-    model: gemini-3.1-pro-preview
-    max_turns: 30
-    estimated_wall_time_min: 35
-    track: publication
-    inference_substrate: aggregation_from_upstream_artifacts
+    agent_type: claude
+    model: opus
+    requires_claude: true
+    max_turns: 100
+    estimated_wall_time_min: 90
+    track: hardware-kv260
+    inference_substrate: hardware_board_measurement
     requires_gpu: false
-    deliverable: "results/experiment_3335_reproducer_pack_and_evidence_matrix_v39.json"
+    deliverable: "results/experiment_3346_kv260_mmd_vs_cpu_sequential_gibbs_v1.json"
     prior_failures:
-      - experiment_id: exp3305-evidence-matrix-v37
-        verdict: "complete: evidence matrix (prior recurring rollup)"
-        addressed_by: "Standard recurring evidence-matrix rollup; matched priors (v35/v36/v37) all completed successfully. v39 aggregates the new .308 path-de-risking evidence (exp3327-3334) — different inputs than the matched priors. Not a retry of a failure."
-        retire_if_same_verdict: false
+      - experiment_id: exp2722-kv260-continuity-258
+        verdict: "non_terminal_sd_card_branch_retired: KV260 host SD-card precondition scope is retired"
+        addressed_by: "This task uses ssh kria plus on-board xmutil/uio checks and explicitly avoids host SD-card preconditions."
+        retire_if_same_verdict: true
     prompt: |
       CONTEXT
-      Publication G2 remains the stable readiness blocker. This task cannot satisfy independent reproduction by itself, but it can produce a clean pack that an independent runner can execute or audit without chasing conductor history.
+      Work from {project_root} on {date}. The KV260 board track is active again, but the host SD-card branch is retired. This task must either measure KV260 MMD vs CPU sequential Gibbs with board-local evidence or write a precise blocked artifact.
 
       EXISTING CODE TO READ FIRST
-      - CLAUDE.md, especially Public Documentation Discipline and artifact verification guidance
+      - CLAUDE.md, especially KV260 preconditions and hardware task routing
       - CODEX.md
-      - openspec/capabilities/publication/spec.md
-      - ops/status.md
-      - ops/changelog.md
-      - research-complete.yaml
-      - results/experiment_3325_archive_v307_activate_v308.json
-      - results/experiment_3326_phase3_path_preflight_manifest_v1.json
-      - all available results/experiment_3327_*.json through results/experiment_3334_*.json
-      - scripts/publication_gate.py if present
+      - research-hardware-wishlist.md
+      - _bmad/architecture.md, hardware sections
+      - ops/exclusion_manifest.yaml
+      - results/experiment_2938_kv260_mmd_vs_cpu_sequential_gibbs_v1.json
+      - hardware/kv260/
+      - carnot/samplers/
+      - tests/
 
       TASK
-      Build an independent reproducer pack and evidence matrix v39 for milestone .308. Include both successes and blocked states. Do not mark G2 as passed unless there is actual independent reproducer evidence.
+      Run the deferred KV260 MMD-vs-CPU sequential Gibbs continuity task using the current board access path. Do not resurrect retired SD-card checks. Do not modify scripts/research_conductor.py.
 
       CONCRETE STEPS
-      1. Collect every available .308 artifact and validate JSON parse plus required fields.
-      2. Create a concise reproducer manifest listing commands, input artifacts, expected output artifacts, hardware requirements, and known blocked paths.
-      3. Create or update the evidence matrix v39 with columns for claim, artifact, substrate, sample size, status, and publication eligibility.
-      4. Run scripts/publication_gate.py --json if available and record the result.
-      5. Write results/experiment_3335_reproducer_pack_and_evidence_matrix_v39.json with fields: honest_verdict, inference_substrate, random_seed, reproducibility_checksum, duration_s, artifacts_audited, reproducer_pack_path, evidence_matrix_path, publication_gate_status, g2_independent_reproducer_status, blocked_reasons.
-      6. Update ops/status.md and ops/changelog.md with the reproducer-pack status.
+      1. Preflight `ssh -o ConnectTimeout=5 -o BatchMode=yes kria 'true'`. If it fails, write a blocked artifact with the exact SSH error.
+      2. On the board, collect uname, relevant xmutil/uio/device visibility, and any required tool versions. Do not require host block-device.
+      3. Run or prepare the smallest available KV260 sampler path needed to compare against a CPU sequential Gibbs baseline on the same problem distribution.
+      4. Compute MMD or the repo's established distribution-distance metric, elapsed time, and sample counts. If the board path cannot execute, preserve command transcripts and blocked reason.
+      5. Write results/experiment_3346_kv260_mmd_vs_cpu_sequential_gibbs_v1.json with REQUIRED ARTIFACT FIELDS: honest_verdict with terminal prefix, inference_substrate, random_seed, reproducibility_checksum, duration_s, files_updated; HARDWARE FIELDS (board evidence): ssh_reachable, board_uname, xmutil_status, uio_status, cpu_baseline_summary, kv260_summary, mmd_vs_cpu, sample_count_cpu, sample_count_kv260, command_transcript, blocked_reasons.
+      6. Run JSON parse and any focused tests that do not require unavailable board state.
 
-      Run command: JAX_PLATFORMS=cpu .venv/bin/python scripts/experiment_3335_reproducer_pack_and_evidence_matrix_v39.py. Do NOT push. Do NOT modify scripts/research_conductor.py.
+      Run command: cd {project_root} && .venv/bin/python scripts/experiment_3346_kv260_mmd_vs_cpu_sequential_gibbs_v1.py. Do NOT push. Do NOT modify scripts/research_conductor.py.
 
-  - id: exp3336-capstone-v308
-    milestone: "2026.05.308"
-    title: "Milestone .308 capstone and next-gap decision"
-    priority: critical
-    agent_type: gemini
-    model: gemini-3.1-pro-preview
-    max_turns: 30
-    estimated_wall_time_min: 30
-    track: ops
-    inference_substrate: aggregation_from_upstream_artifacts
+  - id: exp3347-gatemate-n16-ising-tile-bitstream-build-smoke-v2
+    milestone: "2026.05.309"
+    title: "GateMate n16 Ising tile bitstream build and detect smoke v2"
+    priority: high
+    agent_type: claude
+    model: opus
+    requires_claude: true
+    max_turns: 100
+    estimated_wall_time_min: 90
+    track: hardware-gatemate
+    inference_substrate: hardware_toolchain_measurement
     requires_gpu: false
-    deliverable: "results/experiment_3336_capstone_v308.json"
+    deliverable: "results/experiment_3347_gatemate_n16_ising_tile_bitstream_build_smoke_v2.json"
+    prior_failures:
+      - experiment_id: exp2105-gatemate-smoke
+        verdict: "prior_gatemate_smoke_scope: GateMate smoke required clearer toolchain and board-detect preconditions"
+        addressed_by: "This task preflights yosys, nextpnr-himbaechel, gmpack, and DirtyJTAG detection before any build or flash step."
+        retire_if_same_verdict: true
+      - experiment_id: exp2453-gatemate-ising-synthesis-v2
+        verdict: "prior_gatemate_ising_synthesis_scope: synthesis lineage needed updated himbaechel flow and transcript discipline"
+        addressed_by: "This v2 task uses the current yosys/nextpnr-himbaechel/gmpack flow and records command transcripts and checksums."
+        retire_if_same_verdict: true
+      - experiment_id: exp2899-gatemate-a1-n16-ising-tile-bitstream-build-v1
+        verdict: "prior_n16_bitstream_scope: n16 bitstream build existed but needs current detect/flash-smoke continuity"
+        addressed_by: "This task resumes n16 build with current board-detect preconditions and no host-visible readback overclaim."
+        retire_if_same_verdict: true
+      - experiment_id: exp2915-gatemate-n16-ising-tile-bitstream-build-v2
+        verdict: "prior_n16_bitstream_scope: earlier v2 build needs current .309 board-local continuity evidence"
+        addressed_by: "This task refreshes the n16 bitstream smoke under the current toolchain and hardware wishlist state."
+        retire_if_same_verdict: true
+      - experiment_id: exp2957-gatemate-flash-timing-smoke-v2
+        verdict: "prior_flash_timing_scope: flash timing smoke needed stricter preconditions and transcript capture"
+        addressed_by: "This task only runs flash-smoke if detection/build preconditions pass and otherwise emits a blocked transcript artifact."
+        retire_if_same_verdict: true
     prompt: |
       CONTEXT
-      This is the terminal capstone for milestone 2026.05.308. It must run even if upstream tasks are blocked and must state the next top gap honestly.
+      Work from {project_root} on {date}. GateMate A1 is active via DirtyJTAG and the correct OSS flow is yosys + nextpnr-himbaechel + gmpack + openFPGALoader. This task resumes the operator-deferred n16 Ising tile build/detect smoke.
+
+      EXISTING CODE TO READ FIRST
+      - CLAUDE.md, especially GateMate preconditions and the warning to use nextpnr-himbaechel
+      - CODEX.md
+      - research-hardware-wishlist.md
+      - _bmad/architecture.md, hardware sections
+      - ops/exclusion_manifest.yaml
+      - results/experiment_2899_gatemate_a1_n16_ising_tile_bitstream_build_v1.json
+      - results/experiment_2915_gatemate_n16_ising_tile_bitstream_build_v2.json
+      - hardware/gatemate/
+      - tests/
+
+      TASK
+      Build and, if preconditions allow, detect/flash-smoke the GateMate n16 Ising tile bitstream. Use nextpnr-himbaechel, not obsolete nextpnr-gatemate. If hardware or tools are missing, write an honest blocked artifact with command transcripts.
+
+      CONCRETE STEPS
+      1. Preflight `command -v yosys`, `command -v nextpnr-himbaechel`, `command -v gmpack`, and `openFPGALoader -c dirtyJtag --detect`.
+      2. If a precondition fails, write the blocked artifact and stop before changing hardware state.
+      3. Build the n16 Ising tile through the established GateMate flow and capture tool versions, commands, stdout/stderr summaries, resource utilization, timing, and generated file checksums.
+      4. If board detection passes and the repo flow supports it, run the smallest flash/detect smoke. Do not invent a host-visible readback claim unless the transcript proves it.
+      5. Write results/experiment_3347_gatemate_n16_ising_tile_bitstream_build_smoke_v2.json with REQUIRED ARTIFACT FIELDS: honest_verdict with terminal prefix, inference_substrate, random_seed, reproducibility_checksum, duration_s, files_updated; HARDWARE FIELDS (toolchain evidence): yosys_version, nextpnr_himbaechel_version, gmpack_version, dirtyjtag_detected, build_succeeded, bitstream_path, bitstream_checksum, resource_summary, flash_smoke_status, command_transcript, blocked_reasons.
+      6. Run JSON parse and any focused non-hardware tests for touched files.
+
+      Run command: cd {project_root} && .venv/bin/python scripts/experiment_3347_gatemate_n16_ising_tile_bitstream_build_smoke_v2.py. Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  - id: exp3348-independent-reproducer-pack-evidence-matrix-v40
+    milestone: "2026.05.309"
+    title: "Independent reproducer pack and evidence matrix v40"
+    priority: critical
+    max_turns: 30
+    estimated_wall_time_min: 30
+    track: evidence-packaging
+    inference_substrate: aggregation_from_upstream_artifacts
+    requires_gpu: false
+    deliverable: "results/experiment_3348_independent_reproducer_pack_evidence_matrix_v40.json"
+    prior_failures:
+      - experiment_id: exp3335-reproducer-pack-and-evidence-matrix-v39
+        verdict: "failed_operationally: Codex/Gemini invalid request before reproducer/evidence artifact creation"
+        addressed_by: "This v40 task aggregates .309 artifacts and records missing upstreams instead of depending on the absent .308 matrix."
+        retire_if_same_verdict: true
+    prompt: |
+      CONTEXT
+      Work from {project_root} on {date}. The .308 reproducer/evidence matrix did not land. .309 needs an independent runner package that records which evidence is clean, blocked, duration-flagged, or missing.
+
+      EXISTING CODE TO READ FIRST
+      - CLAUDE.md, especially artifact and public-doc discipline
+      - CODEX.md
+      - openspec/change-proposals/research-roadmap-vNEXT.md
+      - research-roadmap-next.yaml
+      - ops/status.md
+      - ops/changelog.md
+      - ops/conductor-log.md
+      - scripts/publication_gate.py
+      - scripts/experiment_template.py
+      - results/experiment_3337_archive_v308_activate_v309.json
+      - all available results/experiment_3338*.json through results/experiment_3347*.json
+
+      TASK
+      Build the independent reproducer pack and evidence matrix v40. This is an aggregation task. It must not inflate blocked or diagnostic tasks into scientific wins.
+
+      CONCRETE STEPS
+      1. Inventory all .309 artifacts that exist at the time of execution, plus the relevant .308 artifacts.
+      2. Classify each row as clean, blocked, gate-blocked, duration-flagged, diagnostic-only, or missing.
+      3. Run `scripts/publication_gate.py --json` if available and record the exact result.
+      4. Produce a reproducer command list for clean artifacts only, and a separate blocked-action list for missing or blocked artifacts.
+      5. Update ops/status.md and ops/changelog.md with a concise evidence-matrix note if stale. Do not edit public docs.
+      6. Write results/experiment_3348_independent_reproducer_pack_evidence_matrix_v40.json with REQUIRED ARTIFACT FIELDS: honest_verdict with terminal prefix, inference_substrate, random_seed, reproducibility_checksum, duration_s, files_updated; MATRIX FIELDS (reproducibility): milestone, artifact_inventory, clean_artifacts, blocked_artifacts, missing_artifacts, duration_flagged_artifacts, reproducer_commands, publication_gate_result, next_pack_actions.
+      7. Run JSON parse, YAML parse for research-roadmap-next.yaml, and the publication gate command if available.
+
+      Run command: cd {project_root} && JAX_PLATFORMS=cpu .venv/bin/python scripts/experiment_3348_independent_reproducer_pack_evidence_matrix_v40.py. Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  - id: exp3349-capstone-v309
+    milestone: "2026.05.309"
+    title: "Capstone v309: runtime, diversity, FR-11, hardware, and next-top-gap decision"
+    priority: critical
+    max_turns: 30
+    estimated_wall_time_min: 30
+    track: capstone
+    inference_substrate: aggregation_from_upstream_artifacts
+    requires_gpu: false
+    deliverable: "results/experiment_3349_capstone_v309.json"
+    prior_failures:
+      - experiment_id: exp3336-capstone-v308
+        verdict: "failed_operationally: Codex/Gemini invalid request before capstone artifact creation"
+        addressed_by: "This v309 capstone is ungated, records blocked upstreams honestly, and uses the v40 evidence matrix instead of the missing .308 capstone."
+        retire_if_same_verdict: true
+    prompt: |
+      CONTEXT
+      Work from {project_root} on {date}. This capstone closes milestone 2026.05.309. It must synthesize runtime recovery, energy-descent evidence, verifier diversity remediation, FR-11 self-learning, hardware continuity, and reproducer status without inflating claims.
 
       EXISTING CODE TO READ FIRST
       - CLAUDE.md
       - CODEX.md
+      - research-program.md
+      - _bmad/prd.md
+      - _bmad/architecture.md
       - openspec/change-proposals/research-roadmap-vNEXT.md
       - research-roadmap-next.yaml
-      - research-complete.yaml
+      - research-references.md
+      - research-hardware-wishlist.md
       - ops/status.md
       - ops/changelog.md
       - ops/conductor-log.md
-      - results/experiment_3325_archive_v307_activate_v308.json
-      - all available results/experiment_3326_*.json through results/experiment_3335_*.json
-      - scripts/publication_gate.py if present
+      - results/experiment_3348_independent_reproducer_pack_evidence_matrix_v40.json
+      - all available results/experiment_3337*.json through results/experiment_3347*.json
 
       TASK
-      Produce the .308 capstone. Summarize what was proven, what failed operationally, what was scientifically refuted, and what remains blocked. Do not hide missing artifacts.
+      Write the .309 capstone artifact and update ops docs. This task is deliberately ungated so the milestone always leaves a terminal decision even if upstreams block.
 
       CONCRETE STEPS
-      1. Parse every available .308 artifact and list missing artifacts separately.
-      2. Determine whether the Phase-3 path recovery succeeded, remained blocked, or produced a negative scientific result.
-      3. Determine whether verifier diversity is adequate or requires remediation.
-      4. Determine whether FR-11 nonforgetting advanced.
-      5. Run the publication gate if available and record G1-G4 status, especially G2.
-      6. Update ops/status.md and ops/changelog.md with the capstone summary.
-      7. Write results/experiment_3336_capstone_v308.json with fields: honest_verdict, inference_substrate, random_seed, reproducibility_checksum, duration_s, milestone, tasks_seen, missing_artifacts, phase3_path_status, verifier_diversity_status, fr11_status, publication_gate_status, paper_ready, next_top_gap.
+      1. Inventory all .309 artifacts and read exp3348 if present.
+      2. Summarize what .309 proved, what remains blocked, what was diagnostic-only, and which claims are headline-ineligible.
+      3. Decide the next top gap for .310 using the PRD and research-program priorities.
+      4. Update ops/status.md and ops/changelog.md with the capstone summary if stale. Do not edit public docs.
+      5. Write results/experiment_3349_capstone_v309.json with REQUIRED ARTIFACT FIELDS: honest_verdict with terminal prefix, inference_substrate, random_seed, reproducibility_checksum, duration_s, files_updated; CAPSTONE FIELDS (planning): milestone, clean_upstreams, blocked_upstreams, missing_upstreams, phase3_status, verifier_diversity_status, fr11_status, hardware_status, publication_gate_status, next_top_gap, recommended_next_milestone_shape.
+      6. Run JSON parse for the artifact and YAML parse for research-roadmap-next.yaml.
 
-      Run command: JAX_PLATFORMS=cpu .venv/bin/python scripts/experiment_3336_capstone_v308.py. Do NOT push. Do NOT modify scripts/research_conductor.py.
+      Run command: cd {project_root} && JAX_PLATFORMS=cpu .venv/bin/python scripts/experiment_3349_capstone_v309.py. Do NOT push. Do NOT modify scripts/research_conductor.py.
