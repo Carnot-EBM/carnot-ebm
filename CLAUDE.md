@@ -2799,6 +2799,35 @@ Use the llama.cpp loader path (already wired — Exp 450 closed the Gemma 4
 tokenizer bugs). Keep Qwen3.5-0.8B / Gemma4-E4B only for cheap CPU smoke-tests
 or reproduction runs; they are not acceptable as headline-result models.
 
+**GGUF tokenizer rule (MANDATORY — 2026-05-29).** These `unsloth/*-GGUF`
+repos ship **no HuggingFace tokenizer files** (no `tokenizer.json` /
+`tokenizer.model` / `tokenizer_config.json` — only the `.gguf` weights +
+README + imatrix). The tokenizer is **embedded inside the GGUF** and is read
+by llama.cpp. Therefore:
+
+- **Load via the `.gguf` path, not the repo id.** Use
+  `cached_sota_pair()` (returns each model's `model_path`) +
+  `Gemma4QuantizedLoader(model_path=...)` or `llama_cpp.Llama(model_path=...)`.
+  The embedded tokenizer "just works" — verified 2026-05-29 for
+  `Qwen3.6-35B-A3B-UD-Q4_K_M.gguf` (tokenize/detokenize correct).
+- **NEVER call `AutoTokenizer.from_pretrained(hf_id)` / `transformers`
+  `from_pretrained` on a GGUF repo id.** It fails with `ValueError:
+  Couldn't instantiate the backend tokenizer ...` (no `sentencepiece`/
+  `tiktoken` conversion is possible because the source files aren't in the
+  repo). This — NOT any model defect — is what blocked Qwen3.6 in `.310/`.311
+  (exp3327/exp3352): the experiment scripts ran an `AutoTokenizer`
+  loadability check that can't work for a GGUF-only repo. gemma-4 happened
+  to skip it because it loaded straight through `Gemma4QuantizedLoader`.
+- **For a preflight loadability check, use llama.cpp, not transformers:**
+  `llama_cpp.Llama(model_path=..., vocab_only=True)` then `.tokenize(b"...")`
+  — fast (vocab only, no weights), and it exercises the exact tokenizer the
+  real run uses. Set `model_loadable`/`tokenizer_status` from THIS, never
+  from `AutoTokenizer`.
+- If a task genuinely needs the HF (transformers) tokenizer for a SOTA model
+  (rare — e.g. logit-level work outside llama.cpp), point it at the
+  corresponding **base** repo (`Qwen/Qwen3.6-35B-A3B`, etc.), not the
+  `-GGUF` repo, and download it explicitly in a PRECONDITIONS step.
+
 ## Model Tiers
 
 | Tier | Name | Crate | Python Module |

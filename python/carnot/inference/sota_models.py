@@ -280,6 +280,40 @@ def cached_sota_pair(
     ]
 
 
+def gguf_tokenizer_loadable(model_path: str | None) -> tuple[bool, str]:
+    """Preflight that a GGUF's EMBEDDED tokenizer loads — the CORRECT check.
+
+    SOTA ``unsloth/*-GGUF`` repos ship NO HuggingFace tokenizer files; the
+    tokenizer lives inside the ``.gguf`` and is read by llama.cpp. Experiments
+    that need a loadability / ``tokenizer_status`` preflight MUST use this
+    helper, NOT ``transformers.AutoTokenizer.from_pretrained(hf_id)`` — the
+    latter raises ``ValueError: Couldn't instantiate the backend tokenizer``
+    on a GGUF-only repo (no sentencepiece/tiktoken source files to convert).
+    That AutoTokenizer misuse — not any model defect — is what blocked
+    Qwen3.6-35B in milestones .310/.311 (exp3327/exp3352). See CLAUDE.md
+    "SOTA Local Models" → "GGUF tokenizer rule".
+
+    Loads vocab-only (no weights → seconds, low memory) and round-trips a
+    probe string through the embedded tokenizer. Returns ``(ok, detail)``.
+    """
+    import os
+
+    if not model_path or not os.path.exists(model_path):
+        return False, f"model_path missing or not on disk: {model_path!r}"
+    try:
+        from llama_cpp import Llama
+    except Exception as e:  # pragma: no cover - environment-dependent
+        return False, f"llama_cpp unavailable: {e}"
+    try:
+        llm = Llama(model_path=model_path, vocab_only=True, verbose=False)
+        toks = llm.tokenize(b"What is 2+2?")
+        if not toks:
+            return False, "embedded tokenizer returned no tokens"
+        return True, f"embedded GGUF tokenizer OK ({len(toks)} tokens on probe)"
+    except Exception as e:
+        return False, f"llama.cpp GGUF tokenizer load failed: {e}"
+
+
 def default_pair(gpu_indices: tuple[int, int] = (0, 1)) -> list[dict]:
     """Return a sensible two-model ``MODEL_SPECS`` list for headline runs.
 
