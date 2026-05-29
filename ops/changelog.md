@@ -7752,3 +7752,4 @@ ModuleNotFoundError: No module named 'torch'; results/experiment_2828_fover_memo
 - 2026-05-29: Verifier-guided backtracking (VGB) repair ladder for GSM8K (⚠️ Research Finding) — honest_verdict=unspecified; results/experiment_3355_vgb_repair_ladder.json
 - 2026-05-29: FR-11 counterexample-guided repair pilot using Z3 unsat cores (⚠️ Research Finding) — honest_verdict=success; results/experiment_3356_fr11_cx_repair.json
 - 2026-05-29: FR-11 persistent belief vault for cross-query consistency (✅ Complete) — honest_verdict=complete: LogicVault checked incoming facts; results/experiment_3357_fr11_logicvault.json
+- 2026-05-29: Plan milestone 2026.05.311 (⚠️ Research Finding) — honest_verdict=success; results/experiment_3360_plan_milestone_311.json
