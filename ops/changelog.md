@@ -7757,3 +7757,4 @@ ModuleNotFoundError: No module named 'torch'; results/experiment_2828_fover_memo
 - 2026-05-29: KV260 SSH and Network Recovery (✅ Complete) — honest_verdict=complete: ssh_restored; results/experiment_3365_kv260_ssh_recovery.json
 - 2026-05-29: GateMate AXI/UIO Interface Implementation (⚠️ Research Finding) — honest_verdict=unspecified; results/experiment_3366_gatemate_axi_uio.json
 - 2026-05-29: Refactor VGB repair ladder and LogicVault for gate compatibility (⚠️ Research Finding) — honest_verdict=Verified that exp3355 and exp3357 have status set to success; results/experiment_3367_fix_gate_status.json
+- 2026-05-29: Capstone v311 (✅ Complete) — honest_verdict=complete: capstone_v311_ready=true; results/experiment_3371_capstone_v311.json
