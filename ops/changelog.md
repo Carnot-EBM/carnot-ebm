@@ -7748,3 +7748,4 @@ ModuleNotFoundError: No module named 'torch'; results/experiment_2828_fover_memo
 - 2026-05-29: Capstone v309: runtime, diversity, FR-11, hardware, and next-top-gap decision (✅ Complete) — honest_verdict=complete: capstone_v309_synthesis_ready=true; results/experiment_3349_capstone_v309.json
 - 2026-05-29: Deterministic prefix-closed bounds pilot for live LLM sampling (✅ Complete) — honest_verdict=complete_deterministic_bounds_calculated; results/experiment_3353_deterministic_bounds.json
 - 2026-05-29: KV260 board-local Ising sampling latency benchmark vs CPU (⚠️ Blocked) — honest_verdict=blocked_kv260_ssh_unreachable; results/experiment_3350_kv260_latency_benchmark.json
+- 2026-05-29: GateMate A1-EVB-2M board-local n16 latency benchmark via dirtyJtag (⚠️ Blocked) — honest_verdict=blocked_no_io_interface_in_rtl; results/experiment_3351_gatemate_latency_benchmark.json
