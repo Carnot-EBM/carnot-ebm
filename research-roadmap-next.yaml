@@ -4,6 +4,7 @@ milestone_doc: "openspec/change-proposals/research-roadmap-vNEXT.md"
 
 tasks:
   - id: exp3350-kv260-hardware-latency-benchmark
+    operator_override: "2026-05-29 operator directive (outer-loop session): authorized. KV260 latency benchmark is the hardware-continuity terminal-state task; false-positive scope-match vs retired exp2742/585/661. Not a doomed rerun."
     milestone: "2026.05.310"
     title: "KV260 board-local Ising sampling latency benchmark vs CPU"
     priority: critical
@@ -32,6 +33,7 @@ tasks:
       Run command: cd {project_root} && JAX_PLATFORMS=cpu .venv/bin/python scripts/experiment_3350_kv260_latency_benchmark.py. Do NOT push. Do NOT modify scripts/research_conductor.py.
 
   - id: exp3351-gatemate-n16-hardware-latency-benchmark
+    operator_override: "2026-05-29 operator directive (outer-loop session): authorized. GateMate n16 latency benchmark is a hardware-continuity task; false-positive scope-match vs exp2899 (prior bitstream-build step). Forward continuation."
     milestone: "2026.05.310"
     title: "GateMate A1-EVB-2M board-local n16 latency benchmark via dirtyJtag"
     priority: high
@@ -58,6 +60,7 @@ tasks:
       Run command: cd {project_root} && JAX_PLATFORMS=cpu .venv/bin/python scripts/experiment_3351_gatemate_latency_benchmark.py. Do NOT push. Do NOT modify scripts/research_conductor.py.
 
   - id: exp3352-live-sota-constrained-generation-pilot
+    operator_override: "2026-05-29 operator directive (outer-loop session): authorized. Grammar-masked constrained-generation continuation; false-positive scope-match vs exp1758/1759/1959. New approach (grammar-masked extraction)."
     milestone: "2026.05.310"
     title: "Live SOTA constrained generation using grammar-masked extraction"
     priority: high
@@ -159,6 +162,7 @@ tasks:
       Run command: cd {project_root} && .venv/bin/python scripts/experiment_3355_vgb_repair_ladder.py. Do NOT push. Do NOT modify scripts/research_conductor.py.
 
   - id: exp3356-fr11-counterexample-repair-pilot
+    operator_override: "2026-05-29 operator directive (outer-loop session): authorized. FR-11 counterexample-repair continuation (Z3 unsat cores); false-positive scope-match vs exp3155/3304. Forward lineage step."
     milestone: "2026.05.310"
     title: "FR-11 counterexample-guided repair pilot using Z3 unsat cores"
     priority: high
@@ -207,6 +211,7 @@ tasks:
       Run command: cd {project_root} && JAX_PLATFORMS=cpu .venv/bin/python scripts/experiment_3357_fr11_logicvault.py. Do NOT push. Do NOT modify scripts/research_conductor.py.
 
   - id: exp3358-fr11-continuous-learning-stress-test
+    operator_override: "2026-05-29 operator directive (outer-loop session): authorized. FR-11 continuous-learning continuation; false-positive scope-match vs exp1388/1395/1645/1661/1757. Forward lineage step (5-session drift stress test)."
     milestone: "2026.05.310"
     title: "Continuous learning stress test: 5-session curriculum with drift checks"
     priority: high
@@ -292,6 +297,7 @@ tasks:
       Run command: cd {project_root} && JAX_PLATFORMS=cpu .venv/bin/python scripts/experiment_3360_plan_milestone_311.py. Do NOT push. Do NOT modify scripts/research_conductor.py.
 
   - id: exp3361-archive-v309-activate-v310
+    operator_override: "2026-05-29 operator directive (outer-loop session): authorized. Routine milestone-transition task; false-positive scope-match vs prior archive tasks (exp2847/2861/2873/2885/2897). Never a doomed rerun."
     milestone: "2026.05.310"
     title: "Archive milestone .309 honestly and activate .310"
     priority: critical
