@@ -9076,3 +9076,78 @@ remain blocked.
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-VERIFY-3315 | Implemented (`python/carnot/verify/vgb_backtracking_repair_policy_v1.py`) | Implemented (`tests/python/test_experiment_3315_vgb_backtracking_repair_policy_v1.py`) |
+
+### REQ-VERIFY-3316: SOTA Repair Rerun V12 Runtime-Clean
+
+The repository shall provide an Exp 3316 gated SOTA repair rerun that writes
+`results/experiment_3316_sota_repair_rerun_v12_runtime_clean.json` only after
+checking the `.306` prerequisite artifacts:
+`results/experiment_3312_dataflip_garak_quality_clean_rerun_v4.json`,
+`results/experiment_3309_live_runtime_provenance_contract_v1.json`,
+`results/experiment_3314_distributional_ebm_repair_uncertainty_audit_v1.json`,
+`results/experiment_3315_vgb_backtracking_repair_policy_v1.json`, and the
+`.305` source panel
+`results/experiment_3302_headline_sota_repair_panel_v11.json`. The rerun MUST
+also preserve the fixed exact manifest and calibrated clean-verifier acceptance
+authority used by REQ-VERIFY-3302. The workflow MUST NOT push, MUST NOT modify
+`scripts/research_conductor.py`, and MUST NOT use legacy small models as repair
+evidence.
+
+The rerun SHALL check `nvidia-smi`, selected-Python CUDA visibility, mandated
+GGUF cache availability for `unsloth/Qwen3.6-35B-A3B-GGUF`,
+`unsloth/gemma-4-31B-it-GGUF`, and `unsloth/gemma-4-26B-A4B-it-GGUF`, model
+load timing, generated-token counts, runtime-provenance fields, checker-version
+fields, GPU-memory evidence, manifest case hashes, and exact checker types
+before any headline promotion. If the live SOTA substrate is unavailable, or if
+only smoke-test/legacy models are available, the workflow SHALL write an honest
+blocked artifact rather than fabricating a panel. If the panel runs, it SHALL
+evaluate at least the `.305` case count, record the same or a superset of the
+`.305` manifest case hashes, and count a candidate as accepted only when the
+deterministic exact checker passes under the VGB policy. Process verifiers,
+Distributional-EBM sidecar scores, and clean-verifier confidence MAY route
+backtracking or abstention but SHALL NOT override exact acceptance authority.
+
+The terminal artifact MUST include `repair_rerun_v12_ready`,
+`repair_panel_ran`, `headline_repair_panel_ready`,
+`headline_claim_allowed`, `runtime_provenance_clean`,
+`duration_contract_passed`, `substrate_consistency_passed`,
+`panel_case_count`, `verified_success_count`, `false_accept_count`,
+`abstention_count`, `repair_success_rate`, `confidence_interval`,
+`model_specs_used`, and `honest_verdict`. It SHOULD also include source
+artifact hashes, runtime provenance, checker versions, model cache/load
+provenance, candidate attempts, exact outcome summaries, Distributional-EBM
+sidecar rows, VGB policy routing, blocked reasons, run date, duration, random
+seed, and reproducibility checksum. `headline_claim_allowed` MUST be true only
+when the runtime contract passes, duration contract passes, substrate
+consistency passes, no legacy model is substituted, false accepts are zero,
+critical adversarial flags are absent, exact acceptance authority is preserved,
+and the Distributional-EBM/VGB policies do not require abstention.
+
+### SCENARIO-VERIFY-3316: Runtime-Clean Repair Rerun Either Promotes or Blocks Honestly
+
+Given Exp 3312 reports DataFlip and quality cleanup ready, Exp 3309 provides a
+ready runtime contract, Exp 3314 provides a ready Distributional-EBM repair
+uncertainty audit, Exp 3315 provides a ready verifier-guided backtracking
+policy, and the `.305` repair panel provides a 30-case exact manifest baseline,
+When Exp 3316 runs with visible CUDA and cached mandated GGUF models,
+Then it writes the required terminal JSON artifact, records runtime provenance
+and checker versions, runs at least 30 fixed-manifest cases, logs candidate
+attempts and VGB routing decisions, computes exact successes, false accepts,
+abstentions, repair success rate, and a confidence interval, applies the
+Distributional-EBM sidecar only as uncertainty/abstention metadata, and allows
+headline repair claims only when the exact-authority, runtime, substrate,
+model-provenance, false-accept, and advisory-policy gates all pass.
+
+If `nvidia-smi`, CUDA visibility, mandated GGUF cache, model load, token
+generation, runtime-provenance, duration, substrate, Distributional-EBM policy,
+or VGB policy checks fail, then Exp 3316 SHALL still write the required JSON
+artifact with `repair_panel_ran=false` when no live panel ran, explicit
+`blocked_reasons`, zero panel denominators, empty `model_specs_used` when no
+mandated model was used, `headline_claim_allowed=false`, and an
+`honest_verdict` that states the rerun is blocked rather than headline-ready.
+
+## Implementation Status (REQ-VERIFY-3316)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-VERIFY-3316 | Implemented (`python/carnot/verify/sota_repair_rerun_v12_runtime_clean.py`) | Implemented (`tests/python/test_experiment_3316_sota_repair_rerun_v12_runtime_clean.py`) |

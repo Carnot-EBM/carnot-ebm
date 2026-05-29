@@ -1,0 +1,487 @@
+{
+  "abstention_count": 0,
+  "artifact": "experiment_3316_sota_repair_rerun_v12_runtime_clean",
+  "blocked_reasons": [
+    "distributional_or_vgb_policy_blocks_headline",
+    "duration_contract_not_passed",
+    "missing_mandated_gguf_specs",
+    "nvidia_smi_unavailable",
+    "repair_panel_not_run",
+    "runtime_provenance_not_clean",
+    "substrate_consistency_not_passed"
+  ],
+  "candidate_attempts": [],
+  "candidate_results": [],
+  "checker_versions": {
+    "adversarial_verify": "scripts/adversarial_verify.py@sha256:7cadab45b0f6bd7c2f673fbbac4933f370a28c647a5d221e6e11fce0980237e9",
+    "checker_file_sha256": "c5f48aafb1b206b79c21a5b1467d6e0770148fcf014bf7a67f7909ee48dbbe75",
+    "executable_checker_path": "python/carnot/reporting/live_runtime_provenance_contract_3309.py",
+    "live_runtime_provenance_contract": "carnot.live_runtime_provenance_contract.v1",
+    "llama_cpp_python": "0.3.23",
+    "selected_python_cuda_probe": "f7cc6a859f78c8b419479ee1206238165c836ae01bbe883e96bf10462f7437f5",
+    "spec_coverage": "scripts/check_spec_coverage.py@sha256:635c6d60d02ae561f1aa3af43ee35319c013f8928dae8a490c0766200f0c9559"
+  },
+  "confidence_interval": [
+    0.0,
+    0.0
+  ],
+  "distributional_ebm_sidecar": {
+    "headline_promotion_blocked": true,
+    "model_identity_confound_check": {
+      "confound_detected": true,
+      "mandated_model_ids": [
+        "unsloth/Qwen3.6-35B-A3B-GGUF",
+        "unsloth/gemma-4-31B-it-GGUF",
+        "unsloth/gemma-4-26B-A4B-it-GGUF"
+      ],
+      "missing_mandated_model_ids": [
+        "unsloth/Qwen3.6-35B-A3B-GGUF",
+        "unsloth/gemma-4-31B-it-GGUF",
+        "unsloth/gemma-4-26B-A4B-it-GGUF"
+      ],
+      "missing_model_families": [
+        "gemma",
+        "qwen"
+      ],
+      "model_identity_coverage_risk": 1.0,
+      "used_model_families": [],
+      "used_model_ids": []
+    },
+    "provenance_risk_features": {
+      "critical_adversarial_flag_count": 0,
+      "critical_adversarial_flags": [],
+      "live_duration_floor_s": 60.0,
+      "provenance_risk_score": 0.5,
+      "runtime_contract_ready": true,
+      "source_artifacts_readable": true,
+      "source_duration_below_live_floor": false,
+      "source_duration_s": 0.0,
+      "source_provenance_clean": true,
+      "substrate_blocker_modes": [
+        "missing_mandated_gguf_specs",
+        "nvidia_smi_unavailable"
+      ],
+      "substrate_consistency_passed": false
+    },
+    "repair_row_scores": [],
+    "uncertainty_abstention_policy": {
+      "exact_acceptance_remains_final_authority": true,
+      "exp3316_reporting_rule": "Exp3316 may promote a repair headline only when exact checks pass, false_accept_count=0, critical flags are zero, provenance/model risk are below threshold, and no row exceeds the uncertainty threshold.",
+      "exp3316_required_fields": [
+        "uncertainty_abstention_policy",
+        "distributional_energy_schema",
+        "model_identity_confound_check",
+        "provenance_risk_features",
+        "row_abstention_count",
+        "critical_adversarial_flag_count"
+      ],
+      "headline_promotion_blocked": true,
+      "high_uncertainty_case_count": 0,
+      "high_uncertainty_case_ids": [],
+      "model_identity_coverage_risk_block_threshold": 0.5,
+      "model_identity_risk_blocks_headline": true,
+      "policy_name": "exp3316_headline_promotion_abstention_policy_v1",
+      "provenance_risk_blocks_headline": true,
+      "provenance_risk_score_block_threshold": 0.5,
+      "row_abstention_count": 0,
+      "uncertainty_score_block_threshold": 0.6
+    }
+  },
+  "duration_contract_passed": false,
+  "duration_s": 0.944078,
+  "evidence_tier": "blocked_preflight",
+  "exact_acceptance_authority_preserved": false,
+  "exact_checker_types": [],
+  "exact_outcome_summary": {
+    "abstention_count": 0,
+    "candidate_attempt_count": 0,
+    "candidate_result_count": 0,
+    "exact_check_passed_count": 0,
+    "false_accept_count": 0,
+    "final_acceptance_authority": "exact_verifier_only",
+    "llm_judge_dependency_count": 0,
+    "verified_success_count": 0
+  },
+  "experiment_id": "exp3316",
+  "false_accept_count": 0,
+  "false_accept_rate": 0.0,
+  "gpu_mem_used_mib": 0,
+  "headline_claim_allowed": false,
+  "headline_repair_panel_ready": false,
+  "honest_verdict": "complete: honestly_blocked_no_live_panel; blocked_reasons=distributional_or_vgb_policy_blocks_headline,duration_contract_not_passed,missing_mandated_gguf_specs,nvidia_smi_unavailable,repair_panel_not_run,runtime_provenance_not_clean,substrate_consistency_not_passed",
+  "inference_substrate": "blocked_preflight_no_model_calls",
+  "manifest_case_hashes": [],
+  "metric_lineage": {
+    "false_accept_rate": {
+      "calculation_function": "false_accept_count/panel_case_count",
+      "denominator": 0,
+      "numerator": 0,
+      "source_artifact_sha256": "current_exp3316_candidate_attempts",
+      "source_filter": "any_attempt clean_verifier_accepts and exact_check_passed=false",
+      "source_row_count": 0
+    },
+    "repair_success_rate": {
+      "calculation_function": "verified_success_count/panel_case_count",
+      "denominator": 0,
+      "numerator": 0,
+      "source_artifact_sha256": "current_exp3316_candidate_results",
+      "source_filter": "final_policy_action=accepted and exact_check_passed=true",
+      "source_row_count": 0
+    }
+  },
+  "milestone": "2026.05.306",
+  "missing_model_specs": [
+    {
+      "cached": false,
+      "expected_quantization": "Q4_K_M",
+      "hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "model_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "model_path": null,
+      "name": "Qwen3.6-35B-A3B",
+      "reason": "not_cached",
+      "role": "moe"
+    },
+    {
+      "cached": false,
+      "expected_quantization": "Q4_K_M",
+      "hf_id": "unsloth/gemma-4-31B-it-GGUF",
+      "model_id": "unsloth/gemma-4-31B-it-GGUF",
+      "model_path": null,
+      "name": "Gemma4-31B-it",
+      "reason": "not_cached",
+      "role": "dense"
+    }
+  ],
+  "model_specs": {
+    "available_model_count": 1,
+    "cached_sota_pair_attempted": true,
+    "cached_sota_pair_available": false,
+    "legacy_small_model_policy": "disallowed_for_headline_evidence",
+    "mandated_model_ids": [
+      "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "unsloth/gemma-4-31B-it-GGUF",
+      "unsloth/gemma-4-26B-A4B-it-GGUF"
+    ],
+    "mandated_models": {
+      "unsloth/Qwen3.6-35B-A3B-GGUF": {
+        "cached": false,
+        "expected_quantization": "Q4_K_M",
+        "hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+        "model_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+        "model_path": null,
+        "name": "Qwen3.6-35B-A3B",
+        "role": "moe",
+        "size_bytes": 0
+      },
+      "unsloth/gemma-4-26B-A4B-it-GGUF": {
+        "cached": true,
+        "expected_quantization": "Q4_K_M",
+        "hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+        "model_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+        "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+        "name": "Gemma4-26B-A4B-it",
+        "role": "moe",
+        "size_bytes": 16947539744
+      },
+      "unsloth/gemma-4-31B-it-GGUF": {
+        "cached": false,
+        "expected_quantization": "Q4_K_M",
+        "hf_id": "unsloth/gemma-4-31B-it-GGUF",
+        "model_id": "unsloth/gemma-4-31B-it-GGUF",
+        "model_path": null,
+        "name": "Gemma4-31B-it",
+        "role": "dense",
+        "size_bytes": 0
+      }
+    },
+    "missing_model_count": 2,
+    "runtime": "llama_cpp_local_gguf_only"
+  },
+  "model_specs_used": [],
+  "models_used": [],
+  "no_legacy_small_model_substitution": true,
+  "no_push": true,
+  "panel_case_count": 0,
+  "preconditions_checked": {
+    "exp3287_clean_verifier": {
+      "passed": true,
+      "policy": {
+        "allowed_decisions": [
+          "accept",
+          "reject",
+          "abstain"
+        ],
+        "grammar": "ACCEPT|REJECT|ABSTAIN",
+        "grammar_constrained_decoding": true,
+        "minimum_decision_coverage": 0.5,
+        "policy_name": "exp3286_strict_leading_token_calibrated_v1",
+        "source_experiment_id": "exp3287",
+        "strict_leading_token": true,
+        "target_false_accept_rate": 0.0,
+        "target_max_abstention_rate": 0.5
+      },
+      "ready": true
+    },
+    "exp3301_fixed_manifest": {
+      "case_hashes_match": true,
+      "expected_pass_count": 30,
+      "known_failing_candidate_count": 30,
+      "localized_feedback_count": 30,
+      "passed": true,
+      "valid": true
+    },
+    "exp3309_runtime_contract": {
+      "contract_version": "carnot.live_runtime_provenance_contract.v1",
+      "minimum_live_duration_s": 60.0,
+      "passed": true,
+      "runtime_contract_ready": true
+    },
+    "exp3312_quality_cleanup": {
+      "dataflip_gate_passed": true,
+      "passed": true,
+      "quality_flags_cleared": true,
+      "runtime_provenance_clean": true
+    },
+    "exp3314_distributional_audit": {
+      "distributional_repair_audit_ready": true,
+      "exact_acceptance_remains_final_authority": true,
+      "passed": true
+    },
+    "exp3315_vgb_policy": {
+      "final_acceptance_authority": "exact_verifier_only",
+      "llm_judge_final_acceptance_allowed": false,
+      "passed": true,
+      "vgb_repair_policy_ready": true
+    },
+    "mandated_gguf_cache": {
+      "available_model_ids": [
+        "unsloth/gemma-4-26B-A4B-it-GGUF"
+      ],
+      "cached_sota_pair_attempted": true,
+      "cached_sota_pair_available": false,
+      "legacy_small_model_used": false,
+      "missing_model_ids": [
+        "unsloth/Qwen3.6-35B-A3B-GGUF",
+        "unsloth/gemma-4-31B-it-GGUF"
+      ],
+      "passed": true
+    },
+    "nvidia_smi": {
+      "error": "",
+      "gpu_count": 2,
+      "name": "nvidia_smi",
+      "passed": false,
+      "returncode": 18,
+      "stderr": "",
+      "stdout": "Failed to initialize NVML: Driver/library version mismatch\nNVML library version: 610.43"
+    },
+    "selected_python_cuda": {
+      "cuda_available": true,
+      "cuda_device_count": 2,
+      "error": "",
+      "llama_cpp_import_ok": true,
+      "llama_cpp_supports_gpu_offload": true,
+      "name": "selected_python_cuda",
+      "passed": true,
+      "selected_python": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+      "torch_import_ok": true
+    }
+  },
+  "random_seed": 3316,
+  "repair_panel_ran": false,
+  "repair_rerun_v12_ready": false,
+  "repair_success_rate": 0.0,
+  "reproducibility_checksum": "ff670dc3ef59128338bf734fcfbbeab28243226ae582cad4f208bcf21748e54f",
+  "run_date": "20260529",
+  "runner_error": "",
+  "runtime_contract_check": {
+    "contract_version": "carnot.live_runtime_provenance_contract.v1",
+    "duration_contract_passed": true,
+    "evidence_tier": "blocked_preflight",
+    "headline_promotion_allowed": false,
+    "repair_substrate_passed": true,
+    "runtime_contract_passed": true,
+    "tautology_guard_passed": true,
+    "violations": [],
+    "warnings": []
+  },
+  "runtime_provenance": {
+    "argv": [
+      ".venv/bin/python",
+      "scripts/experiment_3316_sota_repair_rerun_v12_runtime_clean.py"
+    ],
+    "command": [
+      ".venv/bin/python",
+      "scripts/experiment_3316_sota_repair_rerun_v12_runtime_clean.py"
+    ],
+    "cuda_visible_devices": "",
+    "cwd": "/home/ianblenke/github.com/ianblenke/carnot",
+    "pid": 814037,
+    "wall_clock_duration_s": 0.0
+  },
+  "runtime_provenance_clean": false,
+  "same_or_superset_manifest_case_hashes_recorded": false,
+  "schema": "carnot.sota_repair_rerun_v12_runtime_clean.v1",
+  "schema_version": "carnot.sota_repair_rerun_v12_runtime_clean.v1",
+  "scripts_research_conductor_modified": false,
+  "source_artifacts": {
+    "exp3287": {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_3287_abstention_calibrated_clean_verifier_v15.json",
+      "present": true,
+      "readable": true,
+      "sha256": "42d7c4bf2bf56128781efc860ec38bb908303f549a15ee46c9dda4c7c822184b"
+    },
+    "exp3301": {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_3301_exact_repair_panel_manifest_v11.json",
+      "present": true,
+      "readable": true,
+      "sha256": "bcf5f875fbead533abdd8c81f0d321c14f2688a7f91b6905f6836435e003078d"
+    },
+    "exp3302": {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_3302_headline_sota_repair_panel_v11.json",
+      "present": true,
+      "readable": true,
+      "sha256": "ce217fdba4ff8456deef6a89ff602d7f0d2f155d1f47ba8411ebc45efdf6079b"
+    },
+    "exp3309": {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_3309_live_runtime_provenance_contract_v1.json",
+      "present": true,
+      "readable": true,
+      "sha256": "9fb9335306ef19c69004708c22cdc7bfff556c78c8d429f8e012b6149db82410"
+    },
+    "exp3312": {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_3312_dataflip_garak_quality_clean_rerun_v4.json",
+      "present": true,
+      "readable": true,
+      "sha256": "7b9a7b4b24c87fcac96e27b193fcf1a1cae83ffbb3c6dda7fb6fd4e7c990ead3"
+    },
+    "exp3314": {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_3314_distributional_ebm_repair_uncertainty_audit_v1.json",
+      "present": true,
+      "readable": true,
+      "sha256": "aa0efd97adde190c483f373ec0c9e5516f96a0ce41a3184eac104a11262cc149"
+    },
+    "exp3315": {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_3315_vgb_backtracking_repair_policy_v1.json",
+      "present": true,
+      "readable": true,
+      "sha256": "5f23d9fdf12f406eafb478e00a74bc7d1cbddb7b1b295f502d380b88757b0502"
+    },
+    "fixed_panel_cases_jsonl": {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/data/research/exact_repair_panel_v11.jsonl",
+      "present": true,
+      "readable": true,
+      "sha256": "b0667e432027b1bb66dada964f484cce31dd251d7d3819e3f8d432dc6f0316c0"
+    }
+  },
+  "source_manifest_case_hashes": [
+    "1453d866716df1a430a429c61fbca486dac50c022bc59963bebf77d901e24fef",
+    "29e8d47cc2dc97ff9b98664c11fb9d10eb864741f0c5d59c1f118973a2b4d9f4",
+    "1b3a4717153104092908906d5a2f2bf34bef513ba6a792d2262ef4421bccd641",
+    "daa7fb540e0b967ce407129a2d544a06b560d057b85acfe64778a5d19ba29280",
+    "1a6276d31aa71b6f2c6e0eede59f38418bdcdf02ae45ac0cdc3ba095751e4124",
+    "9db32056bc164d6bdb69c0976e28976639f4818b8e769f6f068662fa5647e135",
+    "37daa06a98028d0a3698310d81c8209a8a015814d9f642ddc22e21f80613b73b",
+    "5ea9397004a12c4da392e58b475faf0fcd6bdc6038bd4386c935619e2976cd5e",
+    "d61985993cdf730779086d90ae94284cd99ffe8e2620b505a75964715d84e8e7",
+    "8d0bb0598125f10975c4b7011562a3517f98a63ec9b96155294f3cc6643c094b",
+    "1b1c21335c93b19e04f99c85f2d34efac7efdea8a637fa48b22457fe6fc4466b",
+    "efec6965f04f20a1dbcf2146df42ac80670b8d586aec828d31f48d4d78f58389",
+    "0fe020d53c37fc739997ec05a22a96b368a333863162cb6da50d53efba15ac06",
+    "95fe71c1b63b7ca93130c81827ff5e56f0dd3addeae55b141e0d247683c5fcd0",
+    "b63cd5dc40b45afbc68e0ee4020870304eb74d78f7d4d031f8f843b70d84f532",
+    "6abc3fda7ec753c5e4595e6ffe1703349c18d7563b7d68a80e2d64e5ff3bd638",
+    "9c2b4da9299cf7a209e42f791a0f09d379ce70989b18fcebd7d889ce32ccfd0c",
+    "17c7b5c3363279181706d896e0e955ad10a8bdbe838dec333e1cd62318762f46",
+    "a9b5154e72d3eaa7e46fdb7eeb2c9464c623738fc499594c72597f4f03448762",
+    "e7c7bd84d88cea8aa44deab327ed4b6f5edce7f27b77b7d39d14aeb50e251506",
+    "f4e785655d5cfea517b28e0cb7c06c920bd33a9d9aa2752b2f22fc61a9ce6a82",
+    "82afac7485866bda8389b19b5823095ed52f53490846f908fdb9c2ae1b7ca96e",
+    "a12d3a52629cd87a9a68d4b8e701f8791acbd99912c91d3df75425850f5b7099",
+    "3b482fc880daa95601b1260f46182db36e7de545ea6d1cf837437bdeac7721dd",
+    "38520b38a354f868a367a34b43d85d18a4d3e91db506760c48032717651eeade",
+    "c9169de436a84e6a71aa01192d7e87a8dc489b1f71cffca3f2c1039fd31c1a4b",
+    "719050655e08725bef4f5605d957f3149dfc4a56b245b5703dde7cdc6a8df435",
+    "190e69ab412a4fa81f74a3562191ce74b934c1bd42c94ec2f059f6489568255a",
+    "fd0b245efc84d7d0b723956f4c23e85e5bd0bb62fdd8dd2c6a31e339767e77b5",
+    "5d3d1dd6e46ce95ba7cd1f366a32f4b9462c826ecf3b67be155049a1fbd9979c"
+  ],
+  "spec_refs": [
+    "REQ-VERIFY-3316",
+    "SCENARIO-VERIFY-3316"
+  ],
+  "substrate_consistency_passed": false,
+  "task_id": "exp3316-gated-sota-repair-rerun-v12-runtime-clean",
+  "tests_run": [
+    ".venv/bin/pytest tests/python/test_experiment_3316_sota_repair_rerun_v12_runtime_clean.py -q -o addopts=''",
+    ".venv/bin/coverage erase",
+    ".venv/bin/coverage run --source=python/carnot/verify/sota_repair_rerun_v12_runtime_clean.py -m pytest -o addopts='' tests/python/test_experiment_3316_sota_repair_rerun_v12_runtime_clean.py -q",
+    ".venv/bin/coverage report --include='python/carnot/verify/sota_repair_rerun_v12_runtime_clean.py' --fail-under=100 --show-missing",
+    ".venv/bin/python scripts/check_spec_coverage.py",
+    ".venv/bin/pytest tests/python -q"
+  ],
+  "tokens_generated": 0,
+  "verified_success_count": 0,
+  "vgb_policy_summary": {
+    "exact_acceptance_rules": {
+      "acceptance_disallowed_when": [
+        "exact_check_passed=false",
+        "exact_checker_type_missing",
+        "false_accept=true",
+        "llm_judge_is_only_positive_signal",
+        "source_provenance_or_uncertainty_policy_blocks"
+      ],
+      "authority_note": "Process verifiers may route search, but only an exact checker can turn a candidate into an accepted repair.",
+      "clean_process_verifier_final_acceptance_allowed": false,
+      "final_acceptance_authority": "exact_verifier_only",
+      "llm_judge_final_acceptance_allowed": false,
+      "required_acceptance_conditions": [
+        "exact_check_passed=true",
+        "exact_checker_type_present",
+        "false_accept=false",
+        "candidate_answer_present",
+        "candidate_attempt_logged"
+      ]
+    },
+    "exp3316_handoff": {
+      "acceptance_rule": "Exp3316 may accept a candidate only through exact verifier success; process verifiers guide backtracking and abstention only.",
+      "attempt_logging_rule": "Every candidate attempt must record verifier confidence and exact outcome before the policy action is applied.",
+      "headline_promotion_blocked_until_policy_clears": true,
+      "required_artifact_fields": [
+        "vgb_repair_policy_ready",
+        "candidate_attempts",
+        "proposal_budget",
+        "exact_acceptance_rules",
+        "verifier_confidence_thresholds",
+        "exact_outcome_summary",
+        "abstention_count",
+        "abstention_reason_codes"
+      ]
+    },
+    "proposal_budget": {
+      "budget_scope": "per_manifest_case_plus_global_panel_cap",
+      "max_attempts_per_case": 4,
+      "max_backtracks_per_case": 3,
+      "max_total_attempts": 120,
+      "stop_conditions": [
+        "stop_on_exact_acceptance",
+        "stop_on_proposal_budget_exhausted",
+        "stop_on_false_accept_hard_failure",
+        "stop_on_advisory_gate_closed_before_generation",
+        "stop_on_missing_exact_checker",
+        "stop_on_global_attempt_cap"
+      ]
+    },
+    "verifier_confidence_thresholds": {
+      "critical_adversarial_flag_count_max": 0,
+      "exact_acceptance_required": 1.0,
+      "llm_judge_acceptance_confidence": "not_applicable_llm_judges_are_never_final",
+      "model_identity_coverage_risk_abstain_threshold": 0.5,
+      "process_accept_confidence_min": 0.8,
+      "process_backtrack_confidence_floor": 0.6,
+      "provenance_risk_abstain_threshold": 0.5,
+      "row_uncertainty_abstain_threshold": 0.6
+    },
+    "vgb_repair_policy_ready": true
+  }
+}
