@@ -6809,3 +6809,4 @@ web search: https://docs.garak.ai/garak/examples/pr |
 | 2026-05-29 12:34 UTC | Verifier diversity remediation plan v2 from .308 a | OK | 81 passed in 3.47s |
 | 2026-05-29 12:41 UTC | Monitor/provenance verifier axis v1 for diversity  | OK | 81 passed in 3.70s |
 | 2026-05-29 12:54 UTC | Verifier diversity reaudit v3 gated on monitor/pro | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_3343_verifie |
+| 2026-05-29 13:01 UTC | Verifier diversity reaudit v3 gated on monitor/pro | OK | 81 passed in 2.55s |
