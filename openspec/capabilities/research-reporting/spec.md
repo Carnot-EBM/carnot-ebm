@@ -14292,3 +14292,64 @@ publication readiness.
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-REPORT-3307 | Implemented (`python/carnot/reporting/archive_v305_activate_v306_3307.py`) | Implemented (`tests/python/test_experiment_3307_archive_v305_activate_v306.py`) |
+
+### REQ-REPORT-3308: Quality-Flag Root-Cause Autopsy V1
+
+The repository shall provide an Exp 3308 quality-flag root-cause autopsy
+generator that writes
+`results/experiment_3308_quality_flag_root_cause_autopsy_v1.json` by reading
+the `.305` quality-blocking artifacts:
+`results/experiment_3300_full_garak_dataflip_gate_rerun_v3.json`,
+`results/experiment_3302_headline_sota_repair_panel_v11.json`,
+`results/experiment_3303_repair_headline_evidence_audit_v1.json`,
+`results/experiment_3305_evidence_matrix_v37.json`, and
+`results/experiment_3306_capstone_v305.json`. The workflow MUST be
+aggregation only. It MUST NOT run model inference, CUDA probes, Garak,
+DataFlip, repair generation, verifier scoring, the conductor, pushes, or
+modify `scripts/research_conductor.py`, `ops/status.md`, `ops/changelog.md`,
+or `_bmad/traceability.md` when the conductor delegates reconciliation to a
+separate step.
+
+The autopsy MUST enumerate every current quality flag carried by Exp 3300,
+Exp 3302, and Exp 3303. It MUST distinguish Garak/DataFlip flags from repair
+headline flags. For the Exp 3300 TAUTOLOGY flag, it MUST determine whether the
+artifact conflated top-level refusal rate, aligned-benign false-positive rate,
+or a derived metric coincidence, and it MUST cite the relevant numerator and
+denominator evidence. For DURATION_TOO_SHORT flags, it MUST identify the live
+model markers that triggered the flag and the missing runtime-provenance
+evidence needed to clear the flag on rerun. For the repair substrate blocker,
+it MUST compare the Exp 3302 panel and Exp 3303 audit fields and name the
+fields that disagree or fail to support promotion.
+
+The terminal artifact MUST include `quality_flag_autopsy_ready`,
+`analyzed_artifacts`, `garak_quality_flags`, `repair_quality_flags`,
+`root_cause_hypotheses`, `rerun_requirements`, `no_new_model_execution`, and
+`honest_verdict`. It SHALL include concrete acceptance requirements for Exp
+3309, Exp 3312, and Exp 3316. `honest_verdict` MUST begin with one of
+`complete:`, `success:`, `passed:`, or `shipped:`.
+
+#### SCENARIO-REPORT-3308: Autopsy Converts V305 Flags Into V306 Rerun Gates
+
+**Given** matrix v37 reports Exp 3300 with DataFlip failure and current
+critical TAUTOLOGY and DURATION_TOO_SHORT quality flags, Exp 3302 with a
+critical DURATION_TOO_SHORT repair flag and dirty provenance, and Exp 3303
+with `substrate_consistency_passed=false`
+**And** capstone v305 reports `paper_ready=false`,
+`publication_blocker_count=8`, and
+`next_top_gap=clear_garak_dataflip_and_quality_flags`
+**When** the Exp 3308 autopsy generator runs without launching model or repair
+execution
+**Then** it writes
+`results/experiment_3308_quality_flag_root_cause_autopsy_v1.json` with all
+required schema fields, `quality_flag_autopsy_ready=true`, exact Garak and
+repair quality-flag lists, root-cause hypotheses for TAUTOLOGY,
+DURATION_TOO_SHORT, DataFlip failure, and repair substrate/provenance failure,
+and concrete Exp 3309, Exp 3312, and Exp 3316 acceptance requirements that
+block headline promotion until runtime provenance, metric independence,
+DataFlip detection, and repair substrate consistency are clean.
+
+## Implementation Status (REQ-REPORT-3308)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-3308 | Implemented (`python/carnot/reporting/quality_flag_root_cause_autopsy_3308.py`) | Implemented (`tests/python/test_experiment_3308_quality_flag_root_cause_autopsy.py`) |
