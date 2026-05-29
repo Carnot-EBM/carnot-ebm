@@ -9151,3 +9151,17 @@ mandated model was used, `headline_claim_allowed=false`, and an
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-VERIFY-3316 | Implemented (`python/carnot/verify/sota_repair_rerun_v12_runtime_clean.py`) | Implemented (`tests/python/test_experiment_3316_sota_repair_rerun_v12_runtime_clean.py`) |
+
+### REQ-VERIFY-3329: Cached-Candidate Verifier Ensemble Diversity Audit V2
+
+- REQ-VERIFY-3329-1: The workflow SHALL evaluate the verifier ensemble diversity on a cached candidate matrix.
+- REQ-VERIFY-3329-2: The workflow SHALL NOT require live LLM inference.
+- REQ-VERIFY-3329-3: The workflow SHALL require a cached candidate matrix of at least 1000 cases to make covariance or eigenvalue claims. If `n < 1000`, the workflow MUST explicitly mark the results as diagnostic-only.
+- REQ-VERIFY-3329-4: The workflow SHALL compute pairwise agreement, covariance/correlation matrices, `lambda_min_sigma`, condition number, `effective_k`, and per-domain verifier collapse modes.
+- REQ-VERIFY-3329-5: The workflow SHALL write `results/experiment_3329_verifier_ensemble_diversity_audit_v2.json` with the required fields: `honest_verdict`, `inference_substrate`, `random_seed`, `reproducibility_checksum`, `duration_s`, `n_cases`, `verifier_names`, `covariance_methodology`, `lambda_min_sigma`, `effective_k`, `diversity_gate_passed`, `verifier_diversity_audit_v2_ready`, `collapsed_pairs`, `blocked_reasons`.
+
+## Implementation Status (REQ-VERIFY-3329)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-VERIFY-3329 | Implemented (`scripts/experiment_3329_verifier_ensemble_diversity_audit_v2.py`) | Implemented (`tests/python/test_experiment_3329_verifier_ensemble_diversity_audit_v2.py`) |
