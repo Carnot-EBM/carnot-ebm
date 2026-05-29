@@ -6840,3 +6840,8 @@ web search: https://docs.garak.ai/garak/examples/pr |
 | 2026-05-29 15:05 UTC | Milestone 2026.05.310 re-activated (outer-loop: operator_override now clears doomed-rerun guard; fail-window reset for exp3350/3351/3352) | OK | fail-count reset |
 | 2026-05-29 15:13 UTC | KV260 board-local Ising sampling latency benchmark | OK | 81 passed in 3.19s |
 | 2026-05-29 15:20 UTC | GateMate A1-EVB-2M board-local n16 latency benchma | OK | 81 passed in 2.69s |
+| 2026-05-29 15:33 UTC | Live SOTA constrained generation using grammar-mas | FAIL | Gemini CLI error: Stalled after 600s silence. Last output: Warning: 256-color  |
+| 2026-05-29 15:45 UTC | Live SOTA constrained generation using grammar-mas | FAIL | Gemini CLI error: Stalled after 600s silence. Last output: Warning: 256-color  |
+| 2026-05-29 15:57 UTC | Live SOTA constrained generation using grammar-mas | FAIL | Gemini CLI error: Stalled after 600s silence. Last output: Warning: 256-color  |
+| 2026-05-29 15:59 UTC | Deterministic prefix-closed bounds pilot for live | OK | Deliverable already exists in repo |
+| 2026-05-29 15:59 UTC | Energy-Based Transformer (EBT) sidecar integration | GATE_BLOCK | Pre-emptive skip: upstream retired (exp3352-live-sota-constrained-generation-pil |

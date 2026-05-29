@@ -245,7 +245,7 @@ class Gemma4QuantizedLoader:
         _log.info("Gemma4QuantizedLoader: model loaded successfully")
         return True
 
-    def generate(self, prompt: str) -> str:
+    def generate(self, prompt: str, grammar_string: str | None = None) -> str:
         """Generate text from the given prompt.
 
         In stub mode: returns a fixed "42" response (a valid GSM8K numeric answer)
@@ -257,16 +257,22 @@ class Gemma4QuantizedLoader:
         """
         if self._stub_mode:
             # Return a dummy numeric answer for CI testing
+            if grammar_string and "COMPUTE:" in grammar_string:
+                return "Let's calculate. COMPUTE: 20 + 22 = 42. The answer is 42."
             return "The answer is 42."
 
         if self._llm is None:
             raise RuntimeError("Model not loaded. Call Gemma4QuantizedLoader.load() first.")
+
+        from llama_cpp import LlamaGrammar
+        grammar = LlamaGrammar.from_string(grammar_string) if grammar_string else None
 
         result = self._llm(  # type: ignore[operator]
             prompt,
             max_tokens=self.max_tokens,
             stop=["</s>", "<eos>"],
             echo=False,
+            grammar=grammar,
         )
         return result["choices"][0]["text"]  # type: ignore[index]
 

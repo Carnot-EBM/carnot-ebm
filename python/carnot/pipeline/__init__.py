@@ -610,6 +610,10 @@ from carnot.pipeline.verdict_record import (
     calibrated_confidence_from_energy,
     fit_verdict_calibration,
 )
+from carnot.pipeline.repair_ladder import (
+    RepairLadder,
+    RepairLadderResult,
+)
 from carnot.pipeline.verify_stream import (
     VerifyStreamCandidate,
     collect_verify_stream,
@@ -689,6 +693,8 @@ __all__ = [
     "PropertyCodeVerificationResult",
     "PropertyCodeVerifier",
     "PropertyFailure",
+    "RepairLadder",
+    "RepairLadderResult",
     "RepairPromptPatch",
     "DerivedProperty",
     "QuestionProfile",
