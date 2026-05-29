@@ -6929,3 +6929,4 @@ web search: https://docs.garak.ai/garak/examples/pr |
 | 2026-05-29 19:14 UTC | Activation REFUSED: milestone 2026.05.311 | BLOCK | exclusion-manifest: 8 HARD violation(s); first: SCOPE_MATCHED_PRIOR_FAILURE on e |
 | 2026-05-29 19:16 UTC | Activation REFUSED: milestone 2026.05.311 | BLOCK | exclusion-manifest: 2 HARD violation(s); first: SCOPE_MATCHED_PRIOR_FAILURE on e |
 | 2026-05-29 19:18 UTC | Milestone 2026.05.311 activated | OK | 10 tasks queued |
+| 2026-05-29 19:26 UTC | KV260 SSH and Network Recovery | OK | 81 passed in 3.74s |
