@@ -9002,3 +9002,77 @@ and require Exp 3316 headline promotion to remain blocked.
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-VERIFY-3314 | Planned (`python/carnot/verify/distributional_ebm_repair_uncertainty_audit_v1.py`) | Planned (`tests/python/test_experiment_3314_distributional_ebm_repair_uncertainty_audit_v1.py`) |
+
+### REQ-VERIFY-3315: Verifier-Guided Backtracking Repair Policy V1
+
+The repository shall provide an Exp 3315 aggregation-only verifier-guided
+backtracking repair policy that reads
+`results/experiment_3313_repair_substrate_root_cause_autopsy_v1.json` and
+`results/experiment_3314_distributional_ebm_repair_uncertainty_audit_v1.json`,
+then writes
+`results/experiment_3315_vgb_backtracking_repair_policy_v1.json`. The
+workflow MUST NOT invoke model inference, generate new repair candidates,
+rerun exact verification, rerun LLM judges, push, or modify
+`scripts/research_conductor.py`.
+
+The policy SHALL define deterministic rules for `accepted`, `rejected`,
+`backtracked`, and `abstained` repair candidates. Exact verifiers SHALL be the
+only final acceptance authority: a candidate cannot be accepted unless the
+recorded exact checker passes, no false accept is recorded, and the exact
+checker type is present. LLM judges and clean/process verifiers MAY guide
+proposal routing but SHALL NOT override exact verifier outcomes. Exact-check
+failures and false accepts SHALL reject the candidate and trigger backtracking
+only while budget remains. Exact-passing candidates with clean/process-verifier
+rejection, abstention, or insufficient confidence SHALL backtrack while budget
+remains and abstain when the per-case budget is exhausted. Provenance,
+model-identity, critical adversarial, or uncertainty blocks from Exp 3314 SHALL
+force abstention rather than headline acceptance.
+
+The proposal budget SHALL define at least `max_attempts_per_case`,
+`max_backtracks_per_case`, `max_total_attempts`, and stop conditions for
+accepted candidates, exhausted per-case budget, critical false-accept evidence,
+closed upstream gates, and global budget exhaustion. The policy SHALL define
+verifier confidence thresholds for exact acceptance, clean/process-verifier
+routing, row uncertainty, provenance risk, and model-identity coverage risk.
+
+The terminal artifact MUST include `vgb_repair_policy_ready`,
+`backtracking_policy`, `proposal_budget`, `exact_acceptance_rules`,
+`verifier_confidence_thresholds`, `no_new_model_execution`, and
+`honest_verdict`. It SHOULD also include source artifact checksums,
+candidate-attempt logging requirements, Exp 3316 handoff fields, run date,
+duration, random seed, reproducibility checksum, and
+`inference_substrate="deterministic_policy_artifact_no_model_calls"`.
+`vgb_repair_policy_ready` MUST be true only when the source artifacts are
+readable, Exp 3314 is ready, all required action rules are present, the budget
+and stop conditions are finite and deterministic, exact acceptance rules
+exclude LLM judges as final authority, candidate-attempt logging includes
+attempt identity, verifier confidence, exact outcomes, policy action, and
+abstention reason fields, and `no_new_model_execution=true`.
+
+### SCENARIO-VERIFY-3315: VGB Policy Backtracks Without Weak Acceptance
+
+Given Exp 3314 reports a ready distributional repair audit with exact-row
+metadata, clean-verifier disagreements, uncertainty thresholds, provenance risk
+thresholds, and model-identity thresholds,
+When Exp 3315 builds the verifier-guided backtracking policy,
+Then it writes the required terminal JSON artifact without model execution,
+defines accept/reject/backtrack/abstain rules, sets a finite proposal budget,
+requires exact verifiers as final acceptance authority, logs candidate
+attempts with verifier confidence and exact outcomes, and directs Exp 3316 to
+abstain rather than accept whenever exact checks are missing, exact checks
+fail, false accepts appear, advisory risk gates are closed, or process
+verifier confidence is below the acceptance threshold after the budget is
+exhausted.
+
+If Exp 3313 or Exp 3314 cannot be read, Exp 3314 is not ready, required
+thresholds are missing, or the policy cannot prove that exact verifiers remain
+final authority, then Exp 3315 SHALL still write an honest policy artifact when
+possible but SHALL set `vgb_repair_policy_ready=false`, keep
+`no_new_model_execution=true`, and require Exp 3316 headline promotion to
+remain blocked.
+
+## Implementation Status (REQ-VERIFY-3315)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-VERIFY-3315 | Implemented (`python/carnot/verify/vgb_backtracking_repair_policy_v1.py`) | Implemented (`tests/python/test_experiment_3315_vgb_backtracking_repair_policy_v1.py`) |
