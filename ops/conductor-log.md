@@ -6703,3 +6703,4 @@ web search: https://docs.garak.ai/garak/examples/pr |
 | 2026-05-29 05:26 UTC | Energy-Descent Reasoning vs Autoregressive Baselin | FAIL | Codex CLI error: you finish the real work inside 10 minutes, that is correct  |
 | 2026-05-29 05:28 UTC | Energy-Descent Reasoning vs Autoregressive Baselin | FAIL | Codex CLI error: you finish the real work inside 10 minutes, that is correct  |
 | 2026-05-29 05:30 UTC | Energy-Descent Reasoning vs Autoregressive Baselin | FAIL | Codex CLI error: you finish the real work inside 10 minutes, that is correct  |
+| 2026-05-29 05:33 UTC | Verifier-Ensemble Joint-Null-Space / lambda_min(Si | FAIL | Codex CLI error: you finish the real work inside 10 minutes, that is correct  |
