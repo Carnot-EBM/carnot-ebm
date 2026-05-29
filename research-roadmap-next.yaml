@@ -1,0 +1,259 @@
+milestone: "2026.05.307"
+milestone_title: "Phase-3 Path De-Risking — the two existential link tests"
+milestone_doc: "openspec/change-proposals/research-roadmap-vNEXT.md"
+milestone_provenance: "Pre-staged 2026-05-29 by outer-loop session (Opus 4.8) per CLAUDE.md Pre-Staged Roadmap Convention, on operator directive, to GUARANTEE the two existential Phase-3 link tests run next milestone rather than waiting for the overdue-priority forcing function. These two experiments (P0.1 energy-descent-vs-AR, P0.2 verifier-diversity-audit) were the conclusion of the 2026-05-29 architecture review: they test whether the Phase-1 foundation composes toward the Kona endgame. Their de-risking predecessors were queued at .82/.83 and .94-.97 and never run; the loop spent 200+ milestones re-measuring Phase 1 instead. This milestone deliberately preempts Phase-1 re-measurement. Full task specs + rationale in ops/known-issues.md 'PHASE-3 PATH DE-RISKING ROADMAP' and ops/north-star.md."
+
+operator_override:
+  authorization: "Operator directive 2026-05-29 (conversation): pre-stage .307 with the two Phase-3 path de-risking experiments to guarantee execution; defer the aging non-path-de-risking priorities below to .308+."
+  deferred_priorities:
+    - slug: verifier_ensemble_multi_axis_composition_v1
+      rationale: "Related verifier-robustness work; P0.2 (lambda_min diversity audit) is the more fundamental version and runs this milestone. Multi-axis composition graduates to .308+ after the diversity keystone is measured."
+    - slug: verifier_ensemble_multi_violation_degradation_curve_v1
+      rationale: "Sibling of multi-axis; same dependency on the diversity-audit result. Deferred to .308+."
+    - slug: gatemate_n16_flash_timing_smoke_v3
+      rationale: "Operator-side hardware action (board flash). Not a path-de-risking experiment; deferred."
+    - slug: gatemate_a1_n16_ising_tile_bitstream_build_v2
+      rationale: "Operator-side gatemate toolchain action. Deferred."
+    - slug: kv260_mmd_vs_cpu_sequential_gibbs_v1
+      rationale: "Operator-side KV260 board measurement. Deferred."
+    - slug: aquaforte_beaver_pipeline_honest_substrate_corrigendum_v1
+      rationale: "Paper-prep corrigendum; queued behind the path-de-risking critical path. Deferred to .308+."
+
+tasks:
+
+  - id: exp3321-archive-v306-activate-v307
+    milestone: "2026.05.307"
+    deliverable: "results/experiment_3321_archive_v306_activate_v307.json"
+    title: "Archive .306 closeout and activate .307 planning authority"
+    priority: critical
+    max_turns: 20
+    estimated_wall_time_min: 10
+    track: "ops"
+    inference_substrate: "artifact_aggregation_only"
+    requires_gpu: false
+    prior_failures:
+      - experiment_id: exp3260-archive-v301-activate-v302
+        verdict: "complete: archive cycle (standard recurring milestone-boundary handoff)"
+        addressed_by: "Standard recurring handoff. The matched prior 'failures' are previous archive cycles, all of which completed successfully. Not a retry of a failure; the next iteration of the standard transition."
+        retire_if_same_verdict: false
+    prompt: |
+      CONTEXT
+      Project root placeholder: {project_root}. Run date placeholder: {date}.
+      Standard milestone-boundary handoff: archive .306's completed artifacts
+      into research-complete.yaml and emit the .307 activation manifest.
+
+      CONCRETE STEPS
+      1. Read .306's capstone and operational retrospective.
+      2. Append .306's task summary to research-complete.yaml.
+      3. Emit the activation manifest artifact.
+
+      REQUIRED ARTIFACT FIELDS:
+      - archive_v306_activate_v307_ready: bool (principle: milestone handoff must be machine-readable)
+      - prior_paper_ready: bool (principle: carry the .306 publication-readiness signal)
+      - prior_publication_blocker_count: int (principle: legacy field; see ops/north-star.md for the G1-G4 successor)
+      - random_seed: int
+      - reproducibility_checksum: str
+      - duration_s: float
+      - honest_verdict: str (principle: must start with complete:/success:/passed:/shipped_)
+
+  - id: exp3322-energy-descent-vs-autoregressive-premise-v1
+    milestone: "2026.05.307"
+    deliverable: "results/experiment_3322_energy_descent_vs_autoregressive_premise_v1.json"
+    title: "Energy-Descent Reasoning vs Autoregressive Baseline — the Kona premise test"
+    priority: critical
+    agent_type: gemini
+    model: gemini-3.1-pro-preview
+    max_turns: 60
+    estimated_wall_time_min: 120
+    track: "evidence"
+    inference_substrate: "live_llm_inference"
+    requires_gpu: true
+    prior_failures:
+      - experiment_id: exp1222-phase5a-insitu-prototype
+        verdict: "complete: toy 5x5 synthetic puzzle prototype; stability gates passed"
+        addressed_by: "exp1222 ran energy-descent on toy 5x5 synthetic puzzles and only measured stability, never head-to-head accuracy vs an autoregressive baseline on a REAL task. This runs the head-to-head on a real reasoning benchmark (GSM8K subset / ARC-AGI-1) — the only test of the premise the Phase-3 endgame rests on."
+        retire_if_same_verdict: false
+      - experiment_id: exp1210-phase4-bfs-intractable-puzzles-v2
+        verdict: "complete: BFS tie (downgraded); synthetic advantage only"
+        addressed_by: "exp1210 produced a BFS tie on synthetic puzzles. This uses a REAL task with an apples-to-apples AR baseline of comparable parameter count, paired per-problem, with a falsifiable superiority/non-inferiority gate."
+        retire_if_same_verdict: true
+      - experiment_id: exp1165-phase4-active-inference-pilot-v1
+        verdict: "complete: ARC-AGI-3-CLASS on 5x5 synthetic"
+        addressed_by: "exp1165 was a synthetic 5x5 toy, not a real benchmark and not vs an AR baseline. This is real-task, AR-compared, paired-significance."
+        retire_if_same_verdict: true
+    prompt: |
+      CONTEXT
+      Project root placeholder: {project_root}. Run date placeholder: {date}.
+      THE KONA PREMISE TEST — the single most important experiment in the
+      project. The entire Phase-3 / foundation-model endgame assumes energy-
+      descent reasoning on continuous latents BEATS autoregressive token
+      sampling. That has never been tested on a real task vs a real AR baseline
+      (only toy 5x5 puzzles + a downgraded BFS tie). Either outcome is high
+      value: validation greenlights Phase 3; refutation honestly retires it.
+      CUDA recovered 2026-05-28 (both RTX 3090s), so there is no compute reason
+      not to run this.
+
+      PRECONDITIONS (step 0, before any inference):
+        a. CUDA available: python -c "import torch; assert torch.cuda.is_available()".
+           If not, honest_verdict blocked_cuda_unavailable.
+        b. The continuous-latent refinement substrate (Boltzmann-GPT lineage,
+           carnot.phase3.boltzmann_gpt / exp1237/exp1248) is trainable.
+           If not, blocked_energy_descent_substrate_unavailable.
+        c. A real reasoning corpus with ground-truth labels present (GSM8K
+           subset >= 200, OR ARC-AGI-1 train). If not, blocked_real_task_corpus_missing.
+        d. An autoregressive baseline of comparable param count is runnable on
+           the same corpus. If not, blocked_ar_baseline_unavailable.
+
+      CONCRETE STEPS:
+        1. Pick a real reasoning task with binary pass/fail (recommend GSM8K
+           subset, n>=200, held-out). Document the exact split + seed.
+        2. AR condition: base model answers each problem autoregressively;
+           record per-problem pass/fail.
+        3. Energy-descent condition: the continuous-latent refinement substrate
+           solves each problem via bounded-depth iterative refinement on the
+           latent guided by the verifier energy (REQ-KONA-001/002), decoding to
+           an answer only at the coda. Same problems (paired), comparable compute.
+        4. Compute accuracy per condition + paired delta with McNemar or paired
+           bootstrap CI.
+        5. Emit results with all REQUIRED ARTIFACT FIELDS.
+
+      REQUIRED ARTIFACT FIELDS:
+      - energy_descent_vs_autoregressive_premise_v1_ready: bool (principle: deliverable completion marker)
+      - task_name: str (principle: name the real benchmark + split; toy/synthetic is NOT acceptable)
+      - n_problems: int (principle: >=200 for a CLT-valid accuracy delta)
+      - ar_baseline_accuracy: float (principle: the autoregressive control; same problems, comparable compute)
+      - energy_descent_accuracy: float (principle: the non-AR condition; the premise under test)
+      - accuracy_delta: float (principle: energy_descent minus AR — the headline)
+      - paired_significance: dict (principle: McNemar/bootstrap p-value or CI; unpaired or n<200 is gameable)
+      - compute_parity_note: str (principle: state each condition's param count + inference compute so it is apples-to-apples, not a bigger-model win)
+      - model_specs: dict (principle: name the substrate + AR base model)
+      - preconditions_checked: list (principle: records resource verification; pre-empts silent-fabrication)
+      - inference_substrate: str (value: live_llm_inference)
+      - random_seed: int
+      - reproducibility_checksum: str
+      - duration_s: float (principle: real training+inference takes wall time; 60s floor)
+      - honest_verdict: str (principle: complete:/success:/passed:/shipped_ prefix)
+
+      ACCEPTANCE GATES:
+      - condition: "energy_descent_accuracy >= ar_baseline_accuracy AND paired_significance favors non-inferiority"
+        principle: "G1 PREMISE-VIABLE: energy-descent at least matches AR on a real task."
+      - condition: "accuracy_delta > 0 with paired p < 0.05"
+        principle: "G2 PREMISE-VALIDATED: energy-descent significantly beats AR — justifies the foundation-model endgame."
+
+      TERMINAL VERDICTS (all start with complete:):
+        - G2 passes -> "complete: energy_descent_beats_ar_premise_validated"
+        - G1 passes, G2 fails -> "complete: energy_descent_viable_not_superior_at_scale"
+        - G1 fails -> "complete: energy_descent_below_ar_premise_unsupported_at_scale"
+
+  - id: exp3323-verifier-ensemble-lambda-min-diversity-audit-v1
+    milestone: "2026.05.307"
+    deliverable: "results/experiment_3323_verifier_ensemble_lambda_min_diversity_audit_v1.json"
+    title: "Verifier-Ensemble Joint-Null-Space / lambda_min(Sigma) Diversity Audit"
+    priority: critical
+    agent_type: gemini
+    model: gemini-3.1-pro-preview
+    max_turns: 40
+    estimated_wall_time_min: 45
+    track: "evidence"
+    inference_substrate: "verifier_ensemble_against_cached_candidates"
+    requires_gpu: true
+    prior_failures:
+      - experiment_id: exp1224-phase5c-adversarial-probe
+        verdict: "complete: k=3 ensemble pairwise_max_correlation=1.0 — effective ensemble collapsed k=3 -> k=1"
+        addressed_by: "exp1224 showed a k=3 ensemble collapsed to effective k=1 (verifiers perfectly correlated via the shared decoder). This measures lambda_min(Sigma) + participation-ratio effective-k on a DELIBERATELY disjoint-kernel suite at larger k, to test whether real diversity is recoverable or the collapse is intrinsic. The FoVer headline (exp2837) corroborates: 3 of its 4 verifiers showed ZERO learning contribution."
+        retire_if_same_verdict: true
+    prompt: |
+      CONTEXT
+      Project root placeholder: {project_root}. Run date placeholder: {date}.
+      Tests the alpha_t-grounding KEYSTONE: does the verifier ensemble keep real
+      diversity (small joint null space) at production k, or collapse like
+      exp1224 (k=3 -> effective k=1)? The whole self-improvement thesis depends
+      on this. Cheap: verifier scoring against the cached FoVer corpus.
+
+      PRECONDITIONS (step 0):
+        a. FoVer corpus present (data/fover_corpus.jsonl) + an adversarial/OOD
+           slice. If not, blocked_corpus_missing.
+        b. The verifier suite is callable in batch over cached candidates with a
+           configurable verifier set. If not, blocked_verifier_suite_uncallable.
+        c. CUDA available for model-based verifiers; if not, run CPU-only
+           verifiers and RECORD which were skipped (do not silently drop them).
+
+      CONCRETE STEPS:
+        1. Assemble the broadest available verifier set, labeled by kernel class
+           (structural: Z3/AST; empirical: PBT/execution; semantic: ThinkPRM/
+           semantic-cosine; anti-vacuity: liveness/coverage; memory: fr11).
+        2. Score every verifier on FoVer + the adversarial slice; build the
+           k x k verifier-DECISION covariance matrix Sigma.
+        3. Compute lambda_min(Sigma); full pairwise-correlation matrix;
+           effective-k via participation ratio (sum(lambda)^2 / sum(lambda^2));
+           per-verifier drop-one-out AUROC delta.
+        4. Identify which verifiers share a null space (high pairwise corr, zero
+           drop-one-out contribution — the exp2837 "3-of-4 contribute zero" pattern).
+        5. Emit results with all REQUIRED ARTIFACT FIELDS.
+
+      REQUIRED ARTIFACT FIELDS:
+      - verifier_ensemble_lambda_min_diversity_audit_v1_ready: bool (principle: deliverable marker)
+      - k_verifiers: int (principle: how many verifiers in the audited suite)
+      - lambda_min_sigma: float (principle: smallest eigenvalue of the decision covariance; joint-null-space proxy; Zenil-stack threshold >0.1)
+      - pairwise_max_correlation: float (principle: the exp1224 collapse signature; near-1.0 means redundancy)
+      - effective_k_participation_ratio: float (principle: how many verifiers ACTUALLY contribute independent signal vs nominal k)
+      - per_verifier_dropout_contribution: dict (principle: drop-one-out AUROC delta per verifier; zero means null)
+      - n_examples: int (principle: >=1000 for a stable covariance estimate)
+      - inference_substrate: str (value: verifier_ensemble_against_cached_candidates)
+      - random_seed: int
+      - reproducibility_checksum: str
+      - duration_s: float (principle: verifier scoring; 1s floor)
+      - honest_verdict: str (principle: complete:/success:/passed:/shipped_ prefix)
+
+      ACCEPTANCE GATES:
+      - condition: "lambda_min_sigma > 0.1 AND effective_k_participation_ratio >= 3"
+        principle: "G1 GROUNDING-HOLDS: the ensemble has real diversity, so the alpha_t grounding signal survives at production k — the keystone precondition of the self-improvement thesis."
+
+      TERMINAL VERDICTS (all start with complete:):
+        - G1 passes -> "complete: verifier_ensemble_diversity_sufficient_grounding_holds"
+        - G1 fails -> "complete: verifier_ensemble_null_space_collapse_confirmed_grounding_at_risk"
+
+  - id: exp3324-capstone-v307
+    milestone: "2026.05.307"
+    deliverable: "results/experiment_3324_capstone_v307.json"
+    title: "Capstone .307 — Phase-3 path de-risking readout + next-gap decision"
+    priority: critical
+    max_turns: 30
+    estimated_wall_time_min: 15
+    track: "ops"
+    inference_substrate: "aggregation_from_upstream_artifacts"
+    requires_gpu: false
+    prior_failures:
+      - experiment_id: exp3266-capstone-v302
+        verdict: "complete: capstone (standard recurring milestone-close rollup)"
+        addressed_by: "Standard recurring milestone-close task. The matched prior 'failures' are previous capstones, all of which completed successfully. Not a retry; the next close."
+        retire_if_same_verdict: false
+    prompt: |
+      CONTEXT
+      Project root placeholder: {project_root}. Run date placeholder: {date}.
+      Aggregate the two path-de-risking results (exp3322 Kona premise test,
+      exp3323 verifier diversity audit) into a capstone. This is the headline
+      readout of whether the Phase-3 foundation composes toward the endgame.
+
+      CONCRETE STEPS:
+        1. Read exp3322 + exp3323.
+        2. Report the Kona-premise outcome (validated / viable-not-superior /
+           unsupported) and the grounding-keystone outcome (holds / at-risk).
+        3. Set next_top_gap based on the combination: if premise validated AND
+           grounding holds -> "scale_substrate_intermediate (exp_NEXT_E 100-300M)";
+           if premise unsupported -> "reconsider_foundation_model_endgame";
+           if grounding at-risk -> "redesign_verifier_grounding_source".
+        4. Emit the standard capstone fields + the G1-G4 publication gate
+           (run scripts/publication_gate.py --json).
+
+      REQUIRED ARTIFACT FIELDS:
+      - capstone_v307_ready: bool
+      - kona_premise_outcome: str (one of: validated / viable_not_superior / unsupported / blocked_*)
+      - grounding_keystone_outcome: str (one of: holds / at_risk / blocked_*)
+      - next_top_gap: str
+      - paper_ready: bool (principle: from scripts/publication_gate.py, not a count)
+      - publication_gate_unmet: list (principle: which of G1-G4 are unmet)
+      - random_seed: int
+      - reproducibility_checksum: str
+      - duration_s: float
+      - honest_verdict: str (principle: complete:/success:/passed:/shipped_ prefix)
