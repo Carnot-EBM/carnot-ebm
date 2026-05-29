@@ -4466,7 +4466,21 @@ def research_step(
         if file_refs:
             outlines: list[str] = []
             total_symbols = 0
+            seen_refs: set[str] = set()
             for ref in file_refs[:6]:  # Limit to 6 files
+                # Skip the conductor's own file. Every task prompt ends with
+                # "Do NOT modify scripts/research_conductor.py", so this regex
+                # ALWAYS matched it and dumped its ~50 top-level signatures into
+                # every prompt — pure bloat the agent never needs (it is the
+                # forbidden-to-edit file, not something to read). 2026-05-29:
+                # confirmed the main prompt-bloat source. (Not a 400 cause —
+                # codex handles 57K-token prompts fine — but wasteful for every
+                # agent, gemini included.)
+                if ref.endswith("research_conductor.py"):
+                    continue
+                if ref in seen_refs:  # dedupe repeated mentions
+                    continue
+                seen_refs.add(ref)
                 path = PROJECT_ROOT / ref
                 if not path.exists():
                     continue
