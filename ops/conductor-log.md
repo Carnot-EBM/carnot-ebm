@@ -6681,3 +6681,4 @@ web search: https://docs.garak.ai/garak/examples/pr |
 | 2026-05-29 02:53 UTC | Live runtime provenance contract v1 | OK | 81 passed in 3.61s |
 | 2026-05-29 03:08 UTC | DataFlip/KAD challenge manifest v1 | OK | 84 passed in 4.09s |
 | 2026-05-29 03:22 UTC | PCFI/ARGUS DataFlip guard pilot v1 | OK | 81 passed in 3.20s |
+| 2026-05-29 03:53 UTC | Gated DataFlip/Garak quality-clean rerun v4 | OK | 81 passed in 3.28s |
