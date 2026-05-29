@@ -2,22 +2,41 @@
   "experiment": 3327,
   "title": "Energy Descent Substrate Bootstrap Smoke",
   "run_date": "20260529",
-  "started_at": "2026-05-29T09:05:24Z",
-  "finished_at": "2026-05-29T09:05:25Z",
-  "duration_s": 0.0,
+  "started_at": "2026-05-29T09:19:27Z",
+  "finished_at": "2026-05-29T09:19:32Z",
+  "duration_s": 4.767,
   "status": "blocked",
-  "random_seed": 3327,
-  "reproducibility_checksum": "a6bb133cb1e3638a",
+  "random_seed": 42,
+  "reproducibility_checksum": "15829975d9f5a7cb",
   "metrics_used": "unknown",
-  "honest_verdict": "blocked_no_sota_models",
-  "inference_substrate": "local_gguf",
-  "model_specs": [],
-  "gpu_status": "unknown",
-  "n_prompts": 0,
+  "honest_verdict": "blocked_gpu_setup",
+  "inference_substrate": "sota_gguf",
   "energy_descent_bootstrap_ready": false,
-  "smoke_improvement_count": 0,
   "blocked_reasons": [
-    "No models available from cached_sota_pair"
+    "gpu_setup_failed: Live GPU required but unavailable: model_loadable: unsloth/Qwen3.6-35B-A3B-GGUF failed to load \u2014 ValueError: Couldn't instantiate the backend tokenizer from one of: \n(1) a `tokenizers` library serialization file, \n(2) a slow tokenizer instance to convert or \n(3) an equivalent slow tokenizer class to instantiate and convert. \nYou need to have sentencepiece or tiktoken installed to convert a slow tokenizer to a fast one."
+  ],
+  "smoke_improvement_count": 0,
+  "n_prompts": 0,
+  "gpu_status": {},
+  "model_specs": [
+    {
+      "name": "Qwen3.6-35B-A3B",
+      "hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "gpu": 0,
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/snapshots/a483e9e6cbd595906af30beda3187c2663a1118c/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf",
+      "device_map": {
+        "": "cuda:0"
+      }
+    },
+    {
+      "name": "Gemma4-26B-A4B-it",
+      "hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "gpu": 1,
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+      "device_map": {
+        "": "cuda:1"
+      }
+    }
   ],
   "schema": [
     "blocked_reasons",
