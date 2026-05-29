@@ -15,7 +15,7 @@ Large language models generate fluent text by predicting one token at a time. Th
 
 The framework is built in Rust plus Python/JAX and installs via `pip install carnot-ebm`, with model weights mirrored on HuggingFace. Four energy-model tiers (KAN, Ising, Gibbs, Boltzmann) can be selected by task; the production verify-repair API is a handful of lines of Python. Headline benchmark numbers come from live GPU inference on real public models (Qwen 3.5, Gemma 4, Qwen3.6-35B-A3B), never simulated runs; hardware, ensemble, and adversarial-audit results are labeled by artifact provenance.
 
-This report describes the framework architecture, the verify-repair pipeline, and the production results. On HumanEval the production pipeline lifts pass@1 from 0% to 36% on a SOTA 35B model after Carnot correction; an IterativeSelfRepair loop lifts an 8% baseline to 80% (+72pp); EstimationVerifier reaches 0.90 AUC on SVAMP versus a 0.125 FoVer baseline; and the production verifier ensemble reaches AUROC 0.9131 on the FoVer step-error corpus, measured under a 5-seed dual-condition protocol (production AUROC 0.9131, architecture-only AUROC 0.8947, delta +0.0185). This number repins the earlier v2 headline of 0.9857 downward after a pre-submission adversarial audit; the dual-condition methodology is what produces the defensible figure (see `docs/blog/why-two-aurocs.html` and `docs/blog/two-retractions-and-a-rescue.html`). A KV260 FPGA prototype runs an Ising sampler on real silicon as a POC functional simulator (same-schedule apples-to-apples speedup at n=64 is 0.98x; the prior 12,788x speedup framing was retracted in the same audit). The full per-milestone development record lives in `docs/research-log.md` so this report can stay focused on the framework.
+This report describes the framework architecture, the verify-repair pipeline, and the production results. On HumanEval an IterativeSelfRepair loop lifts an 8% baseline to 80% (+72pp) on gemma-4-E4B-it (n=50, Exp 906), and verify-and-repair adds +3.0pp on the full 164-problem set (11.6% → 14.6%, Exp 226); EstimationVerifier reaches 0.90 AUC on SVAMP versus a 0.125 FoVer baseline; and the production verifier ensemble reaches AUROC 0.9131 on the FoVer step-error corpus, measured under a 5-seed dual-condition protocol (production AUROC 0.9131, architecture-only AUROC 0.8947, delta +0.0185). This number repins the earlier v2 headline of 0.9857 downward after a pre-submission adversarial audit; the dual-condition methodology is what produces the defensible figure (see `docs/blog/why-two-aurocs.html` and `docs/blog/two-retractions-and-a-rescue.html`). A KV260 FPGA prototype runs an Ising sampler on real silicon as a POC functional simulator (same-schedule apples-to-apples speedup at n=64 is 0.98x; the prior 12,788x speedup framing was retracted in the same audit). The full per-milestone development record lives in `docs/research-log.md` so this report can stay focused on the framework.
 
 ## What this report is (and isn't)
 
@@ -38,9 +38,9 @@ Each number below is backed by a checked-in experiment artifact. Model-generatio
 
 ### Code generation
 
-- **HumanEval pass@1 lifts 0% → 36%** after Carnot correction on Qwen3.6-35B-A3B (dual RTX 3090, live GPU inference).
-- **Verify-and-repair on HumanEval: +3.0 points on pass-rate** versus the raw model.
-- **IterativeSelfRepair on HumanEval-50** (execute-feedback-retry pipeline): 8% → 80% pass rate (+72pp).
+- **IterativeSelfRepair on HumanEval-50** (execute-feedback-retry pipeline): 8% → 80% pass rate (+72pp) on gemma-4-E4B-it, n=50, live GPU (Exp 906).
+- **Verify-and-repair on full 164-problem HumanEval: +3.0 points on pass-rate** (11.6% → 14.6%, 5 of 164 repaired) on Gemma4-E4B-it, live GPU (Exp 226).
+- A live Qwen3.6-35B-A3B HumanEval repair run is pending — prior 35B attempts (Exp 2830/2838) were CUDA/GGUF-cache blocked and produced no result; do not cite a 35B HumanEval number until a completed artifact exists.
 
 ### Math reasoning
 
@@ -101,7 +101,7 @@ This work began as an investigation of activation-based hallucination detection:
 
 This negative result forced a fundamental rethinking. Instead of asking "is this output correct?" (detection), we pivoted to asking "does this output satisfy known constraints?" (verification). The tool for constraint satisfaction is the Ising model — a pairwise energy function where constraints are encoded as spin couplings. Ising models can be solved via parallel Gibbs sampling (CPU), continuous relaxation (gradient descent), or eventually thermodynamic hardware (Extropic TSU).
 
-The resulting architecture — LLM proposes, Ising verifies, repair loop fixes — works as a live end-to-end pattern with measurable improvements on code verification (+3.0pp HumanEval, Exp 227) and typed constraint verification (+4.9pp, Exp 221). Tracker-gated replay first reduced false positives materially on Exp 223, and the richer case-memory follow-on keeps held-out success flat at **34.48%** while improving retrieval specificity on mixed semantic-plus-code traces (Exp 241). All headline numbers are from live GPU inference.
+The resulting architecture — LLM proposes, Ising verifies, repair loop fixes — works as a live end-to-end pattern with measurable improvements on code verification (+3.0pp HumanEval, Exp 226) and typed constraint verification (+4.9pp, Exp 221). Tracker-gated replay first reduced false positives materially on Exp 223, and the richer case-memory follow-on keeps held-out success flat at **34.48%** while improving retrieval specificity on mixed semantic-plus-code traces (Exp 241). All headline numbers are from live GPU inference.
 
 The narrative arc of this report is: tried activation approaches -> learned 14 principles about what doesn't work -> pivoted to constraint verification -> discovered early results were simulation artifacts -> rebuilt extraction for real models -> proved it works on live benchmarks -> shipped it as a product.
 
@@ -603,7 +603,7 @@ The 14 systematic negative results documented across 38 experiments are the proj
 
 ### Part 2: Constraint-based verification works (live GPU results)
 
-- **Full HumanEval 164 + PBT (Exp 227):** 11.6% -> 14.6% (+3.0pp, 95% CI [+0.6, +6.1])
+- **Full HumanEval 164 + PBT (Exp 226):** 11.6% -> 14.6% (+3.0pp, 95% CI [+0.6, +6.1])
 - **PBT bug detection (Exp 220):** 99.3% of wrong code detected (144/145)
 - **Seeded Qwen cohort (Exp 227):** 23.3% -> 23.3%; PBT still catches 2 official-test misses and detects 17/23 wrong baselines
 - **Typed IR constraints (Exp 221):** Gemma4 61.7% -> 66.7% (+4.9pp)
@@ -667,7 +667,7 @@ The energy function serves as the objective judge — no human evaluation or LLM
 
 3. **Historical simulation artifacts.** Early milestones (Exp 39-184) used simulated inference calibrated to instruction-tuned benchmarks while loading base models. All headline numbers in this report are from live GPU inference; simulated results are documented only as negative findings.
 
-4. **Statistical power.** The full 164-problem HumanEval benchmark (Exp 227) includes bootstrap 95% CI: +3.0pp [+0.6, +6.1], excluding zero. Smaller benchmarks (30-50 questions) lack formal significance testing.
+4. **Statistical power.** The full 164-problem HumanEval benchmark (Exp 226) includes bootstrap 95% CI: +3.0pp [+0.6, +6.1], excluding zero. Smaller benchmarks (30-50 questions) lack formal significance testing.
 
 5. **Composite scoring requires test cases.** The code verification pipeline assumes the existence of test cases. For open-ended generation without structural ground truth, only the logprob signal and NL constraint extraction are available.
 
