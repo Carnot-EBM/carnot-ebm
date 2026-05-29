@@ -1,5 +1,9 @@
 # Carnot — Changelog
 
+## 2026-05-28 (Milestone 2026.05.305 Operational Retrospective)
+
+- [outer-loop] Wrote `results/operational_retro_2026_05_305.json` (schema `carnot.operational_retro.v64`). The authoritative milestone timing source reports `total_wall_time_minutes=0`, `experiments_completed=0`, `compute_bound_experiments_count=0`, `slowest_experiments=[]`, and `gpu_idle_on_compute_bound_tasks=null`; longest compute-bound runtime, compute-bound GPU efficiency, and 2+ model DualGPURunner coverage are no data available this milestone. The idle GPU snapshot was not recorded as a bottleneck because no compute-bound timing rows exist. Recommended tooling focus: add an empty-window pre-retro sentinel plus an activation-to-first-experiment heartbeat.
+
 ## 2026-05-28 (Milestone 2026.05.305 Research Planning)
 
 - [outer-loop] Planned milestone 2026.05.305 as "Garak Red-Team Gate Pass + Headline-Eligible Repair Evidence" after the operator stated all `.304` tasks completed. Used `results/experiment_3293_capstone_v304.json`, `results/experiment_3285_full_garak_dataflip_redteam_eval_v2.json`, `results/experiment_3290_gated_sota_repair_micro_panel_v10.json`, and `results/experiment_3288_kan_sidecar_failure_autopsy_boundary_v1.json` as authority: `.304` made Garak runnable, lowered blockers from 105 to 10, unblocked clean-verifier abstention, retired KAN from prompt-injection headline claims, and reopened repair, but remained `paper_ready=false` because Garak/DataFlip attack success rate was `0.311111` against the `0.20` ceiling and repair evidence was only `n=4`.

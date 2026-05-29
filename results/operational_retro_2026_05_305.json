@@ -1,0 +1,28 @@
+{
+  "schema": "carnot.operational_retro.v64",
+  "milestone": "2026.05.305",
+  "generated_at": "2026-05-29T01:35:56Z",
+  "retro_type": "operational_full",
+  "total_wall_time_minutes": 0,
+  "experiments_completed": 0,
+  "compute_bound_experiments_count": 0,
+  "slowest_experiments": [],
+  "gpu_idle_on_compute_bound_tasks": null,
+  "summary": "Authoritative timing for milestone 2026.05.305 reports 0 completed experiments across 0 total wall-time minutes, with 0 compute-bound experiments and no slowest-experiment rows. Longest compute-bound runtime, compute-bound GPU efficiency, and 2+ model DualGPURunner coverage are no data available this milestone.",
+  "bottlenecks_identified": [
+    "no data available this milestone",
+    "No GPU-idle bottleneck is supported because compute_bound_experiments_count is 0 and gpu_idle_on_compute_bound_tasks is null."
+  ],
+  "improvements_suggested": [
+    "Add a pre-retro no-commit sentinel that reports an empty timing window before runtime ranking begins.",
+    "Emit an activation-to-first-experiment heartbeat so missing post-activation experiment commits surface before closeout.",
+    "Keep GPU-idle bottleneck checks gated on compute-bound timing rows before proposing GPU scheduling changes."
+  ],
+  "top_3_highest_leverage_actions": [
+    "Wire the retrospective generator to short-circuit slowest-experiment analysis when experiments_completed is 0.",
+    "Add a milestone activation heartbeat that records whether the first experiment commit has landed.",
+    "Preserve the compute-bound gate for GPU-idle and DualGPURunner recommendations."
+  ],
+  "estimated_time_savings_pct": 0,
+  "meta_reflection": "The GPU snapshot alone is not evidence of inefficient compute-bound execution because the timing block contains 0 compute-bound tasks. The operational lesson is to detect an empty activation window earlier, before a retrospective can only report no data available this milestone."
+}

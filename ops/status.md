@@ -1,6 +1,21 @@
 # Carnot — Operational Status
 
-**Last Updated:** 2026-05-28 (Milestone 2026.05.305 research planning staged)
+**Last Updated:** 2026-05-28 (Milestone 2026.05.305 operational retrospective complete)
+
+## Session 2026-05-28 - Milestone 2026.05.305 Operational Retrospective Complete
+
+Authoritative TIMING DATA reports no experiment commits after activation for
+milestone 2026.05.305. The retrospective leaves the locked fields at
+`total_wall_time_minutes=0`, `experiments_completed=0`,
+`compute_bound_experiments_count=0`, `slowest_experiments=[]`, and
+`gpu_idle_on_compute_bound_tasks=null`; compute-bound duration, compute-bound
+GPU efficiency, and 2+ model runner coverage have no data available this
+milestone.
+
+Updated `results/operational_retro_2026_05_305.json`, `ops/changelog.md`,
+`docs/research-log.md`, and this status note. Left `docs/roadmap.md`,
+`docs/index.html`, `README.md`, `scripts/research_conductor.py`, and
+`research-roadmap.yaml` untouched.
 
 ## Session 2026-05-28 - Milestone 2026.05.305 Research Planning Staged
 
