@@ -14725,3 +14725,58 @@ substrate consistency are clean.
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-REPORT-3313 | Planned (`python/carnot/reporting/repair_substrate_root_cause_autopsy_3313.py`) | Planned (`tests/python/test_experiment_3313_repair_substrate_root_cause_autopsy.py`) |
+
+### REQ-REPORT-3321: Archive V306 And Activate V307 Handoff
+
+The repository shall provide an Exp 3321 milestone-boundary handoff workflow
+that writes `results/experiment_3321_archive_v306_activate_v307.json` by
+reading the Exp 3320 `.306` capstone, the `.306` operational retrospective
+when present, `research-complete.yaml`, `research-roadmap.yaml`,
+`ops/conductor-log.md`, and `ops/north-star.md`. The workflow MUST be
+aggregation only. It MUST NOT run model inference, CUDA probes, teacher
+labeling, KAN training, Garak, DataFlip, repair, verifier scoring, FR-11
+updates, hardware commands, the conductor, pushes, submit externally, or
+reconcile `ops/status.md`, `ops/changelog.md`, or `_bmad/traceability.md` when
+the conductor delegates reconciliation to a separate step.
+
+The workflow SHALL append a completed `2026.05.306` milestone entry to
+`research-complete.yaml` only when that archive entry is missing. If the entry
+is already present, the workflow SHALL leave the archive byte-for-byte
+unchanged. The workflow SHALL record the `.306` capstone status, including
+blocked gate-check evidence when the capstone was gate-blocked, and SHALL carry
+the prior publication signal forward without converting a blocked capstone into
+publication readiness. The legacy blocker count SHALL be derived from
+`publication_blocker_count` when present, and otherwise from the failed
+capstone gates; the artifact SHALL also cite the G1-G4 successor gate in
+`ops/north-star.md`.
+
+The terminal artifact MUST include `archive_v306_activate_v307_ready`,
+`prior_paper_ready`, `prior_publication_blocker_count`, `random_seed`,
+`reproducibility_checksum`, `duration_s`, and `honest_verdict`. It SHALL also
+include `source_milestone`, `target_milestone`, the `.307` activation queue,
+source artifact checksums, conductor-log terminal rows for Exp 3307 through
+Exp 3320, and the `research-complete.yaml` append status. `honest_verdict`
+MUST begin with one of `complete:`, `success:`, `passed:`, or `shipped:`.
+
+#### SCENARIO-REPORT-3321: V306 Archive Opens Phase-3 Path-De-Risking V307 Queue
+
+**Given** Exp 3320 records a `.306` capstone result, including a blocked
+gate-check artifact when evidence matrix v38 is absent or retired
+**And** the `.306` operational retrospective is read when present and recorded
+as unavailable when absent
+**And** `research-complete.yaml` either already contains or can be appended
+with completed `2026.05.306` tasks for Exp 3307 through Exp 3320
+**And** `research-roadmap.yaml` is active for `2026.05.307` with Exp 3321 as
+the first activation task
+**When** the Exp 3321 handoff workflow runs
+**Then** it writes `results/experiment_3321_archive_v306_activate_v307.json`
+with all required schema fields, records `.306` terminal evidence without
+claiming publication readiness, carries the legacy publication blocker count,
+points to the G1-G4 successor gate, and emits an `honest_verdict` beginning
+with `complete:`.
+
+## Implementation Status (REQ-REPORT-3321)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-3321 | Implemented (`python/carnot/reporting/archive_v306_activate_v307_3321.py`) | Implemented (`tests/python/test_experiment_3321_archive_v306_activate_v307.py`) |
