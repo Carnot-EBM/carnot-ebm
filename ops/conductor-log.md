@@ -6774,3 +6774,4 @@ web search: https://docs.garak.ai/garak/examples/pr |
 | 2026-05-29 08:43 UTC | Activation REFUSED: milestone 2026.05.308 | BLOCK | exclusion-manifest: 4 HARD violation(s); first: SCOPE_MATCHED_PRIOR_FAILURE on e |
 | 2026-05-29 08:45 UTC | Activation REFUSED: milestone 2026.05.308 | BLOCK | exclusion-manifest: 4 HARD violation(s); first: SCOPE_MATCHED_PRIOR_FAILURE on e |
 | 2026-05-29 08:47 UTC | Milestone 2026.05.308 activated | OK | 12 tasks queued |
+| 2026-05-29 08:49 UTC | Archive milestone .307 honestly and activate .308 | FAIL | Codex CLI error: you finish the real work inside 10 minutes, that is correct  |
