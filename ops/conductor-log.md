@@ -6977,3 +6977,4 @@ web search: https://docs.garak.ai/garak/examples/pr |
 | 2026-05-29 22:56 UTC | EBM-CoT Trajectory Monitor with SOTA Models | OK | 81 passed in 3.30s |
 | 2026-05-29 23:02 UTC | Parallel Energy Minimization for Constraint Compos | OK | 81 passed in 3.62s |
 | 2026-05-29 23:07 UTC | CAffNet Differentiable Constraint Layer Prototype | OK | 81 passed in 3.05s |
+| 2026-05-29 23:14 UTC | FR-11 Locality-Aware Nonforgetting Memory | OK | 81 passed in 3.56s |
