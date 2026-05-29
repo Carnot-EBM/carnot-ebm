@@ -6780,3 +6780,4 @@ web search: https://docs.garak.ai/garak/examples/pr |
 | 2026-05-29 08:55 UTC | Phase-3 path preflight manifest for recovered upst | FAIL | Codex CLI error: you finish the real work inside 10 minutes, that is correct  |
 | 2026-05-29 08:57 UTC | Phase-3 path preflight manifest for recovered upst | FAIL | Codex CLI error: you finish the real work inside 10 minutes, that is correct  |
 | 2026-05-29 08:59 UTC | Phase-3 path preflight manifest for recovered upst | FAIL | Codex CLI error: ERROR: {"type":"error","status":400,"error":{"type":"invalid |
+| 2026-05-29 09:08 UTC | Energy-descent substrate bootstrap smoke for SOTA  | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_3327_energy_ |
