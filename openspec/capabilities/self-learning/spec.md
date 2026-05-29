@@ -9869,3 +9869,80 @@ episodes that can be loaded, keeps `controller_memory_only=true`,
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-LEARN-3291 | Implemented (`python/carnot/eval/fr11_garak_abstention_memory_replay_v1.py`) | Implemented (`tests/python/test_experiment_3291_fr11_garak_abstention_memory_replay_v1.py`) |
+
+## REQ-LEARN-3304: FR-11 Red-Team Defense Repair Memory Replay
+
+**Given** Exp 3291 produced a controller-memory-only FR-11 baseline, milestone
+.305 contains Garak red-team/defense evidence from Exp 3299 and Exp 3300, and
+the Exp 3302 repair panel may exist
+**When** Exp 3304 replays those red-team, defense, and repair episodes through
+the FR-11 controller-memory loop
+**Then** it SHALL preserve raw episodes, gate consolidation on held-out replay
+and negative-transfer checks, report retention, adaptation, forgetting, and
+negative transfer, and SHALL NOT update or claim updates to foundation-model
+weights.
+
+The terminal artifact SHALL be
+`results/experiment_3304_fr11_redteam_repair_memory_replay_v2.json` and SHALL
+include `fr11_redteam_repair_memory_replay_ready`,
+`continuous_self_learning_task`, `new_episode_count`,
+`raw_episode_preservation_path`, `heldout_trace_count`, `retention_score`,
+`adaptation_score`, `forgetting_rate`, `negative_transfer_rate`,
+`consolidation_gate_passed`, `controller_memory_only`,
+`foundation_weight_updates_performed`, `learned_policy_updates`,
+`inference_substrate`, `random_seed`, `reproducibility_checksum`,
+`duration_s`, and `honest_verdict`.
+
+### REQ-LEARN-3304 Sub-requirements
+
+- REQ-LEARN-3304-1: The replay SHALL load
+  `results/experiment_3291_fr11_garak_abstention_memory_replay_v1.json` as the
+  baseline and SHALL fail closed when it is missing, not controller-memory-only,
+  or claims foundation-weight updates.
+- REQ-LEARN-3304-2: The raw episode set SHALL include Garak family pass/fail
+  rows from Exp 3300, the selected defense policy from Exp 3299, the Exp 3302
+  repair manifest when present, and Exp 3302 repair outcome rows when present.
+- REQ-LEARN-3304-3: `raw_episode_preservation_path` SHALL identify the artifact
+  path that embeds the complete raw episode list before summary memory is
+  consolidated.
+- REQ-LEARN-3304-4: `learned_policy_updates` SHALL be derived only from raw
+  episodes, SHALL be inspectable as controller-policy updates, and SHALL forbid
+  foundation-model, hidden-state, and KAN sidecar weight updates.
+- REQ-LEARN-3304-5: `retention_score` SHALL preserve the Exp 3291 held-out
+  replay denominator, `adaptation_score` SHALL measure routing coverage over
+  new .305 episodes, `forgetting_rate` SHALL equal `1.0 - retention_score`, and
+  `negative_transfer_rate` SHALL reflect unrelated aligned-benign false
+  positives introduced by the new memory.
+- REQ-LEARN-3304-6: `consolidation_gate_passed` and
+  `fr11_redteam_repair_memory_replay_ready` SHALL be true only when raw
+  episodes are preserved, held-out and new replay are non-empty,
+  `retention_score >= 0.95`, `adaptation_score > 0`, negative transfer is at
+  most `0.05`, and `foundation_weight_updates_performed=false`.
+
+### SCENARIO-LEARN-3304: .305 Evidence Becomes Controller Memory
+
+**Given** Exp 3291 is a valid controller-memory-only baseline and Exp 3299,
+Exp 3300, and Exp 3302 artifacts are available
+**When** Exp 3304 builds the replay artifact
+**Then** it writes the required schema fields, preserves raw Garak family,
+selected defense, repair manifest, and repair outcome episodes, keeps
+`foundation_weight_updates_performed=false`, reports nonzero
+`new_episode_count` and `heldout_trace_count`, computes retention, adaptation,
+forgetting, and negative-transfer metrics, and emits an `honest_verdict`
+beginning with `complete:`.
+
+### SCENARIO-LEARN-3304-BLOCKED: Missing Baseline Fails Closed
+
+**Given** the Exp 3291 baseline is absent or unsafe
+**When** Exp 3304 runs
+**Then** it writes a schema-complete artifact with
+`fr11_redteam_repair_memory_replay_ready=false`, preserves any .305 raw
+episodes that can be loaded, keeps `controller_memory_only=true`,
+`foundation_weight_updates_performed=false`, zero prior held-out traces, and an
+`honest_verdict` beginning with `complete:`.
+
+## Implementation Status (REQ-LEARN-3304)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-LEARN-3304 | Implemented (`python/carnot/eval/fr11_redteam_repair_memory_replay_v2.py`) | Implemented (`tests/python/test_experiment_3304_fr11_redteam_repair_memory_replay_v2.py`) |
