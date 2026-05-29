@@ -1,0 +1,654 @@
+{
+  "activated_milestone": "2026.05.309",
+  "archive_v308_activate_v309_ready": true,
+  "archived_milestone": "2026.05.308",
+  "artifact": "experiment_3337_archive_v308_activate_v309",
+  "blocked_artifacts": [
+    {
+      "archive_result": "blocked_gpu_setup_tokenizer_runtime",
+      "artifact_present": true,
+      "conductor_details": "artifact_not_updated_past_bootstrap (deliverable=results/experiment_3327_energy_",
+      "conductor_status": "FAIL",
+      "deliverable": "results/experiment_3327_energy_descent_substrate_bootstrap_v1.json",
+      "duration_flags": [],
+      "duration_s": 4.035,
+      "experiment_id": "exp3327",
+      "honest_verdict": "blocked_gpu_setup",
+      "sha256": "5e13cac9f4300eb61cae04df62524e7f76ac663e768ed9b7887bbd17e24c3839",
+      "status": "blocked",
+      "summary": {
+        "blocked_reasons": [
+          "gpu_setup_failed: Live GPU required but unavailable: model_loadable: unsloth/Qwen3.6-35B-A3B-GGUF failed to load \u2014 ValueError: Couldn't instantiate the backend tokenizer from one of: \n(1) a `tokenizers` library serialization file, \n(2) a slow tokenizer instance to convert or \n(3) an equivalent slow tokenizer class to instantiate and convert. \nYou need to have sentencepiece or tiktoken installed to convert a slow tokenizer to a fast one."
+        ],
+        "honest_verdict": "blocked_gpu_setup",
+        "status": "blocked"
+      },
+      "task_id": "exp3327-energy-descent-substrate-bootstrap-v1",
+      "title": "Energy-descent substrate bootstrap smoke for SOTA GGUF recovery"
+    }
+  ],
+  "blocked_reasons": [],
+  "completed_artifacts": [
+    {
+      "archive_result": "usable_evidence",
+      "artifact_present": true,
+      "conductor_details": "81 passed in 3.33s",
+      "conductor_status": "OK",
+      "deliverable": "results/experiment_3329_verifier_ensemble_diversity_audit_v2.json",
+      "duration_flags": [],
+      "duration_s": 0.0006728172302246094,
+      "experiment_id": "exp3329",
+      "honest_verdict": "usable for Phase-3 authority",
+      "sha256": "d1d8d9215cde07304666a17e3d5ff3f60602c91ebac096e83563c1369b9a1b95",
+      "status": "success",
+      "summary": {
+        "blocked_reasons": [],
+        "collapsed_pairs": [
+          {
+            "agreement": 0.964,
+            "pair": [
+              "exact",
+              "symbolic"
+            ]
+          }
+        ],
+        "effective_k": 4.66196577560932,
+        "honest_verdict": "usable for Phase-3 authority",
+        "lambda_min_sigma": 0.0179188149916219,
+        "n_cases": 1000,
+        "status": "success"
+      },
+      "task_id": "exp3329-verifier-ensemble-diversity-audit-v2",
+      "title": "Verifier ensemble diversity and lambda_min audit v2"
+    },
+    {
+      "archive_result": "usable_evidence",
+      "artifact_present": true,
+      "conductor_details": "81 passed in 3.00s",
+      "conductor_status": "OK",
+      "deliverable": "results/experiment_3331_ebt_sidecar_adapter_smoke_v2.json",
+      "duration_flags": [],
+      "duration_s": 0.0004146099090576172,
+      "experiment_id": "exp3331",
+      "honest_verdict": "sidecar_ready",
+      "sha256": "023a2fb25390230b124f56b7521ca2717ed2606f2d9bc11c97a8579cb5f2990a",
+      "status": "",
+      "summary": {
+        "adapter_ready": true,
+        "blocked_reasons": [],
+        "honest_verdict": "sidecar_ready",
+        "n_cases": 2
+      },
+      "task_id": "exp3331-ebt-sidecar-adapter-smoke-v2",
+      "title": "EBT sidecar adapter smoke against exact verifier scores"
+    },
+    {
+      "archive_result": "usable_evidence",
+      "artifact_present": true,
+      "conductor_details": "83 passed in 4.13s",
+      "conductor_status": "OK",
+      "deliverable": "results/experiment_3332_interwhen_monitor_pilot_v1.json",
+      "duration_flags": [],
+      "duration_s": 0.00015163421630859375,
+      "experiment_id": "exp3332",
+      "honest_verdict": "monitor_pilot_provides_useful_trajectory_signal",
+      "sha256": "86135a5983cb2107866bac738697b6c67aa54068be6dd88666c3e5e6c5efe9e2",
+      "status": "",
+      "summary": {
+        "blocked_reasons": [],
+        "honest_verdict": "monitor_pilot_provides_useful_trajectory_signal",
+        "monitor_pilot_ready": true,
+        "n_cases": 2
+      },
+      "task_id": "exp3332-interwhen-monitor-pilot-v1",
+      "title": "Interwhen-style monitor pilot for intermediate candidate scoring"
+    },
+    {
+      "archive_result": "usable_diagnostic_duration_flagged",
+      "artifact_present": true,
+      "conductor_details": "81 passed in 3.69s",
+      "conductor_status": "OK",
+      "deliverable": "results/experiment_3333_energy_guided_ttscaling_sota_ablation_v1.json",
+      "duration_flags": [
+        "DURATION_TOO_SHORT: duration_s=43.882 but artifact references compute-bound markers (GGUF / CUDA / live model). Loading and running a real model takes >=60.0s minimum; this completed too fast to have invoked the model."
+      ],
+      "duration_s": 43.882,
+      "experiment_id": "exp3333",
+      "honest_verdict": "ttscaling_evaluated",
+      "sha256": "c406d7c1996260840756704d2f7b214c67672345faf1eec7565c47808319246c",
+      "status": "success",
+      "summary": {
+        "blocked_reasons": [],
+        "flagged_adversarial": true,
+        "honest_verdict": "ttscaling_evaluated",
+        "n_cases": 2,
+        "status": "success",
+        "ttscaling_ablation_ready": true
+      },
+      "task_id": "exp3333-energy-guided-ttscaling-sota-ablation-v1",
+      "title": "Energy-guided test-time scaling SOTA ablation"
+    },
+    {
+      "archive_result": "usable_evidence",
+      "artifact_present": true,
+      "conductor_details": "81 passed in 3.76s",
+      "conductor_status": "OK",
+      "deliverable": "results/experiment_3334_fr11_online_verifier_memory_nonforgetting_v4.json",
+      "duration_flags": [],
+      "duration_s": 0.0003063678741455078,
+      "experiment_id": "exp3334",
+      "honest_verdict": "complete: online verifier memory nonforgetting confirmed",
+      "sha256": "4ebfca6861cbe8c1990637b80e7cf51073bc1aca714e4738750a6a22e7dee1f8",
+      "status": "",
+      "summary": {
+        "blocked_reasons": [],
+        "fr11_nonforgetting_ready": true,
+        "honest_verdict": "complete: online verifier memory nonforgetting confirmed",
+        "new_task_delta": 0.05,
+        "old_task_delta": -0.02,
+        "rollback_count": 2
+      },
+      "task_id": "exp3334-fr11-online-verifier-memory-nonforgetting-v4",
+      "title": "FR-11 online verifier memory nonforgetting v4"
+    }
+  ],
+  "conductor_log_terminal_rows": [
+    {
+      "details": "Codex CLI error: you finish the real work inside 10 minutes, that is correct",
+      "experiment_id": "exp3325",
+      "line": "| 2026-05-29 08:53 UTC | Archive milestone .307 honestly and activate .308 | FAIL | Codex CLI error: you finish the real work inside 10 minutes, that is correct  |",
+      "status": "FAIL",
+      "task_id": "exp3325-archive-v307-activate-v308",
+      "timestamp_utc": "2026-05-29 08:53 UTC",
+      "title": "Archive milestone .307 honestly and activate .308"
+    },
+    {
+      "details": "Codex CLI error: ERROR: {\"type\":\"error\",\"status\":400,\"error\":{\"type\":\"invalid",
+      "experiment_id": "exp3326",
+      "line": "| 2026-05-29 08:59 UTC | Phase-3 path preflight manifest for recovered upst | FAIL | Codex CLI error: ERROR: {\"type\":\"error\",\"status\":400,\"error\":{\"type\":\"invalid |",
+      "status": "FAIL",
+      "task_id": "exp3326-phase3-path-preflight-manifest-v1",
+      "timestamp_utc": "2026-05-29 08:59 UTC",
+      "title": "Phase-3 path preflight manifest for recovered upstream tests"
+    },
+    {
+      "details": "artifact_not_updated_past_bootstrap (deliverable=results/experiment_3327_energy_",
+      "experiment_id": "exp3327",
+      "line": "| 2026-05-29 09:33 UTC | Energy-descent substrate bootstrap smoke for SOTA  | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_3327_energy_ |",
+      "status": "FAIL",
+      "task_id": "exp3327-energy-descent-substrate-bootstrap-v1",
+      "timestamp_utc": "2026-05-29 09:33 UTC",
+      "title": "Energy-descent substrate bootstrap smoke for SOTA GGUF recovery"
+    },
+    {
+      "details": "Pre-emptive skip: upstream retired (exp3327-energy-descent-substrate-bootstrap-v",
+      "experiment_id": "exp3328",
+      "line": "| 2026-05-29 09:47 UTC | Energy-descent versus autoregressive SOTA panel v2 | GATE_BLOCK | Pre-emptive skip: upstream retired (exp3327-energy-descent-substrate-bootstrap-v |",
+      "status": "GATE_BLOCK",
+      "task_id": "exp3328-energy-descent-vs-ar-sota-panel-v2",
+      "timestamp_utc": "2026-05-29 09:47 UTC",
+      "title": "Energy-descent versus autoregressive SOTA panel v2"
+    },
+    {
+      "details": "81 passed in 3.33s",
+      "experiment_id": "exp3329",
+      "line": "| 2026-05-29 09:43 UTC | Verifier ensemble diversity and lambda_min audit v | OK | 81 passed in 3.33s |",
+      "status": "OK",
+      "task_id": "exp3329-verifier-ensemble-diversity-audit-v2",
+      "timestamp_utc": "2026-05-29 09:43 UTC",
+      "title": "Verifier ensemble diversity and lambda_min audit v2"
+    },
+    {
+      "details": "Codex CLI error: ERROR: {\"type\":\"error\",\"status\":400,\"error\":{\"type\":\"invalid",
+      "experiment_id": "exp3330",
+      "line": "| 2026-05-29 09:50 UTC | Verifier diversity remediation plan (gated on exp3 | FAIL | Codex CLI error: ERROR: {\"type\":\"error\",\"status\":400,\"error\":{\"type\":\"invalid |",
+      "status": "FAIL",
+      "task_id": "exp3330-verifier-diversity-remediation-plan-v1",
+      "timestamp_utc": "2026-05-29 09:50 UTC",
+      "title": "Verifier diversity remediation plan"
+    },
+    {
+      "details": "81 passed in 3.00s",
+      "experiment_id": "exp3331",
+      "line": "| 2026-05-29 09:57 UTC | EBT sidecar adapter smoke against exact verifier s | OK | 81 passed in 3.00s |",
+      "status": "OK",
+      "task_id": "exp3331-ebt-sidecar-adapter-smoke-v2",
+      "timestamp_utc": "2026-05-29 09:57 UTC",
+      "title": "EBT sidecar adapter smoke against exact verifier scores"
+    },
+    {
+      "details": "83 passed in 4.13s",
+      "experiment_id": "exp3332",
+      "line": "| 2026-05-29 10:03 UTC | Interwhen-style monitor pilot for intermediate can | OK | 83 passed in 4.13s |",
+      "status": "OK",
+      "task_id": "exp3332-interwhen-monitor-pilot-v1",
+      "timestamp_utc": "2026-05-29 10:03 UTC",
+      "title": "Interwhen-style monitor pilot for intermediate candidate scoring"
+    },
+    {
+      "details": "81 passed in 3.69s",
+      "experiment_id": "exp3333",
+      "line": "| 2026-05-29 10:24 UTC | Energy-guided test-time scaling SOTA ablation unde | OK | 81 passed in 3.69s |",
+      "status": "OK",
+      "task_id": "exp3333-energy-guided-ttscaling-sota-ablation-v1",
+      "timestamp_utc": "2026-05-29 10:24 UTC",
+      "title": "Energy-guided test-time scaling SOTA ablation"
+    },
+    {
+      "details": "81 passed in 3.76s",
+      "experiment_id": "exp3334",
+      "line": "| 2026-05-29 10:35 UTC | FR-11 online verifier memory nonforgetting v4 | OK | 81 passed in 3.76s |",
+      "status": "OK",
+      "task_id": "exp3334-fr11-online-verifier-memory-nonforgetting-v4",
+      "timestamp_utc": "2026-05-29 10:35 UTC",
+      "title": "FR-11 online verifier memory nonforgetting v4"
+    },
+    {
+      "details": "Codex CLI error: ERROR: {\"type\":\"error\",\"status\":400,\"error\":{\"type\":\"invalid",
+      "experiment_id": "exp3335",
+      "line": "| 2026-05-29 10:41 UTC | Independent reproducer pack and evidence matrix v3 | FAIL | Codex CLI error: ERROR: {\"type\":\"error\",\"status\":400,\"error\":{\"type\":\"invalid |",
+      "status": "FAIL",
+      "task_id": "exp3335-reproducer-pack-and-evidence-matrix-v39",
+      "timestamp_utc": "2026-05-29 10:41 UTC",
+      "title": "Independent reproducer pack and evidence matrix v39"
+    },
+    {
+      "details": "Codex CLI error: ERROR: {\"type\":\"error\",\"status\":400,\"error\":{\"type\":\"invalid",
+      "experiment_id": "exp3336",
+      "line": "| 2026-05-29 10:47 UTC | Milestone .308 capstone and next-gap decision | FAIL | Codex CLI error: ERROR: {\"type\":\"error\",\"status\":400,\"error\":{\"type\":\"invalid |",
+      "status": "FAIL",
+      "task_id": "exp3336-capstone-v308",
+      "timestamp_utc": "2026-05-29 10:47 UTC",
+      "title": "Milestone .308 capstone and next-gap decision"
+    }
+  ],
+  "conductor_log_terminal_status_counts": {
+    "FAIL": 6,
+    "GATE_BLOCK": 1,
+    "OK": 5
+  },
+  "duration_flagged_artifacts": [
+    {
+      "archive_result": "usable_diagnostic_duration_flagged",
+      "artifact_present": true,
+      "conductor_details": "81 passed in 3.69s",
+      "conductor_status": "OK",
+      "deliverable": "results/experiment_3333_energy_guided_ttscaling_sota_ablation_v1.json",
+      "duration_flags": [
+        "DURATION_TOO_SHORT: duration_s=43.882 but artifact references compute-bound markers (GGUF / CUDA / live model). Loading and running a real model takes >=60.0s minimum; this completed too fast to have invoked the model."
+      ],
+      "duration_s": 43.882,
+      "experiment_id": "exp3333",
+      "honest_verdict": "ttscaling_evaluated",
+      "sha256": "c406d7c1996260840756704d2f7b214c67672345faf1eec7565c47808319246c",
+      "status": "success",
+      "summary": {
+        "blocked_reasons": [],
+        "flagged_adversarial": true,
+        "honest_verdict": "ttscaling_evaluated",
+        "n_cases": 2,
+        "status": "success",
+        "ttscaling_ablation_ready": true
+      },
+      "task_id": "exp3333-energy-guided-ttscaling-sota-ablation-v1",
+      "title": "Energy-guided test-time scaling SOTA ablation"
+    }
+  ],
+  "duration_s": 3.336623,
+  "experiment_id": "exp3337",
+  "files_updated": [
+    "openspec/capabilities/research-reporting/spec.md",
+    "python/carnot/reporting/archive_v308_activate_v309_3337.py",
+    "scripts/experiment_3337_archive_v308_activate_v309.py",
+    "tests/python/test_experiment_3337_archive_v308_activate_v309.py",
+    "results/experiment_3337_archive_v308_activate_v309.json"
+  ],
+  "gate_blocked_artifacts": [
+    {
+      "archive_result": "gate_blocked_by_exp3327",
+      "artifact_present": false,
+      "conductor_details": "Pre-emptive skip: upstream retired (exp3327-energy-descent-substrate-bootstrap-v",
+      "conductor_status": "GATE_BLOCK",
+      "deliverable": "results/experiment_3328_energy_descent_vs_ar_sota_panel_v2.json",
+      "duration_flags": [],
+      "duration_s": null,
+      "experiment_id": "exp3328",
+      "honest_verdict": "",
+      "sha256": null,
+      "status": "",
+      "summary": {},
+      "task_id": "exp3328-energy-descent-vs-ar-sota-panel-v2",
+      "title": "Energy-descent versus autoregressive SOTA panel v2"
+    }
+  ],
+  "honest_verdict": "complete: archive_v308_activate_v309_ready=true; completed=5; blocked=1; gate_blocked=1; missing=5; duration_flagged=1; next_top_gap=recover_sota_gguf_tokenizer_runtime_then_rerun_energy_descent_bootstrap",
+  "inference_substrate": "aggregation_from_upstream_artifacts",
+  "milestone": "2026.05.309",
+  "missing_artifacts": [
+    {
+      "archive_result": "missing_artifact_operational_failure",
+      "artifact_present": false,
+      "conductor_details": "Codex CLI error: you finish the real work inside 10 minutes, that is correct",
+      "conductor_status": "FAIL",
+      "deliverable": "results/experiment_3325_archive_v307_activate_v308.json",
+      "duration_flags": [],
+      "duration_s": null,
+      "experiment_id": "exp3325",
+      "honest_verdict": "",
+      "sha256": null,
+      "status": "",
+      "summary": {},
+      "task_id": "exp3325-archive-v307-activate-v308",
+      "title": "Archive milestone .307 honestly and activate .308"
+    },
+    {
+      "archive_result": "missing_artifact_operational_failure",
+      "artifact_present": false,
+      "conductor_details": "Codex CLI error: ERROR: {\"type\":\"error\",\"status\":400,\"error\":{\"type\":\"invalid",
+      "conductor_status": "FAIL",
+      "deliverable": "results/experiment_3326_phase3_path_preflight_manifest_v1.json",
+      "duration_flags": [],
+      "duration_s": null,
+      "experiment_id": "exp3326",
+      "honest_verdict": "",
+      "sha256": null,
+      "status": "",
+      "summary": {},
+      "task_id": "exp3326-phase3-path-preflight-manifest-v1",
+      "title": "Phase-3 path preflight manifest for recovered upstream tests"
+    },
+    {
+      "archive_result": "missing_artifact_operational_failure",
+      "artifact_present": false,
+      "conductor_details": "Codex CLI error: ERROR: {\"type\":\"error\",\"status\":400,\"error\":{\"type\":\"invalid",
+      "conductor_status": "FAIL",
+      "deliverable": "results/experiment_3330_verifier_diversity_remediation_plan_v1.json",
+      "duration_flags": [],
+      "duration_s": null,
+      "experiment_id": "exp3330",
+      "honest_verdict": "",
+      "sha256": null,
+      "status": "",
+      "summary": {},
+      "task_id": "exp3330-verifier-diversity-remediation-plan-v1",
+      "title": "Verifier diversity remediation plan"
+    },
+    {
+      "archive_result": "missing_artifact_operational_failure",
+      "artifact_present": false,
+      "conductor_details": "Codex CLI error: ERROR: {\"type\":\"error\",\"status\":400,\"error\":{\"type\":\"invalid",
+      "conductor_status": "FAIL",
+      "deliverable": "results/experiment_3335_reproducer_pack_and_evidence_matrix_v39.json",
+      "duration_flags": [],
+      "duration_s": null,
+      "experiment_id": "exp3335",
+      "honest_verdict": "",
+      "sha256": null,
+      "status": "",
+      "summary": {},
+      "task_id": "exp3335-reproducer-pack-and-evidence-matrix-v39",
+      "title": "Independent reproducer pack and evidence matrix v39"
+    },
+    {
+      "archive_result": "missing_artifact_operational_failure",
+      "artifact_present": false,
+      "conductor_details": "Codex CLI error: ERROR: {\"type\":\"error\",\"status\":400,\"error\":{\"type\":\"invalid",
+      "conductor_status": "FAIL",
+      "deliverable": "results/experiment_3336_capstone_v308.json",
+      "duration_flags": [],
+      "duration_s": null,
+      "experiment_id": "exp3336",
+      "honest_verdict": "",
+      "sha256": null,
+      "status": "",
+      "summary": {},
+      "task_id": "exp3336-capstone-v308",
+      "title": "Milestone .308 capstone and next-gap decision"
+    }
+  ],
+  "next_top_gap": "recover_sota_gguf_tokenizer_runtime_then_rerun_energy_descent_bootstrap",
+  "no_conductor_execution": true,
+  "no_new_cuda_probe": true,
+  "no_new_fr11_update": true,
+  "no_new_hardware_run": true,
+  "no_new_model_execution": true,
+  "no_new_verifier_scoring": true,
+  "no_push": true,
+  "operational_retrospective_summary": {
+    "compute_bound_experiments_count": 0,
+    "experiments_completed": 0,
+    "milestone": "2026.05.308",
+    "slowest_experiments": [],
+    "summary": "The milestone-scoped timing source reports 0 completed experiments, 0 total wall-time minutes, and 0 compute-bound experiments. Slowest compute-bound experiments, compute-bound GPU efficiency, and 2+ model DualGPURunner behavior have no data available this milestone.",
+    "total_wall_time_minutes": 0
+  },
+  "ops_changelog_modified_by_this_task": false,
+  "ops_status_modified_by_this_task": false,
+  "random_seed": 3337,
+  "reproducibility_checksum": "34b1e6823ee13c50",
+  "research_complete_existing_entry_overstates_success": true,
+  "research_complete_source_summary": {
+    "completed": "2026-05-29",
+    "finding": "See conductor log for per-experiment results.",
+    "milestone": "2026.05.308",
+    "result_counts": {
+      "OK (conductor)": 12
+    },
+    "task_count": 12,
+    "task_ids": [
+      "exp3325-archive-v307-activate-v308",
+      "exp3326-phase3-path-preflight-manifest-v1",
+      "exp3327-energy-descent-substrate-bootstrap-v1",
+      "exp3328-energy-descent-vs-ar-sota-panel-v2",
+      "exp3329-verifier-ensemble-diversity-audit-v2",
+      "exp3330-verifier-diversity-remediation-plan-v1",
+      "exp3331-ebt-sidecar-adapter-smoke-v2",
+      "exp3332-interwhen-monitor-pilot-v1",
+      "exp3333-energy-guided-ttscaling-sota-ablation-v1",
+      "exp3334-fr11-online-verifier-memory-nonforgetting-v4",
+      "exp3335-reproducer-pack-and-evidence-matrix-v39",
+      "exp3336-capstone-v308"
+    ],
+    "title": "Phase-3 Path Recovery, Verifier Grounding, and FR-11 Nonforgetting"
+  },
+  "research_complete_update": {
+    "already_present": true,
+    "appended": false,
+    "path": "research-complete.yaml"
+  },
+  "research_roadmap_modified_by_this_task": false,
+  "roadmap_validation": {
+    "activated_milestone_confirmed": true,
+    "active": {
+      "exists": true,
+      "milestone": "2026.05.309",
+      "milestone_doc": "openspec/change-proposals/research-roadmap-vNEXT.md",
+      "path": "research-roadmap.yaml",
+      "points_to_vnext": true,
+      "queue_first_task": "exp3337-archive-v308-activate-v309",
+      "queue_task_count": 13,
+      "task_ids": [
+        "exp3337-archive-v308-activate-v309",
+        "exp3338-sota-gguf-tokenizer-runtime-receipt-v1",
+        "exp3339-energy-descent-bootstrap-v2-runtime-clean",
+        "exp3340-energy-descent-vs-ar-sota-panel-v3",
+        "exp3341-verifier-diversity-remediation-plan-v2",
+        "exp3342-monitor-provenance-verifier-axis-v1",
+        "exp3343-verifier-diversity-reaudit-after-axis-v3",
+        "exp3344-constrained-output-extractor-llguidance-smoke-v1",
+        "exp3345-fr11-online-memory-nonforgetting-v5",
+        "exp3346-kv260-mmd-vs-cpu-sequential-gibbs-v1",
+        "exp3347-gatemate-n16-ising-tile-bitstream-build-smoke-v2",
+        "exp3348-independent-reproducer-pack-evidence-matrix-v40",
+        "exp3349-capstone-v309"
+      ],
+      "yaml_parse_ok": true
+    },
+    "research_roadmap_next_absent_after_activation": true,
+    "staged": {
+      "exists": false,
+      "milestone": "",
+      "milestone_doc": "",
+      "path": "research-roadmap-next.yaml",
+      "points_to_vnext": false,
+      "queue_first_task": "",
+      "queue_task_count": 0,
+      "task_ids": [],
+      "yaml_parse_ok": false
+    }
+  },
+  "run_date": "20260529",
+  "schema": "carnot.archive_activation.v308_to_v309_runtime_recovery_handoff.v1",
+  "schema_version": "carnot.archive_activation.v308_to_v309_runtime_recovery_handoff.v1",
+  "scripts_research_conductor_modified_by_this_task": false,
+  "source_artifacts": [
+    {
+      "exists": true,
+      "label": "research_complete",
+      "path": "research-complete.yaml",
+      "required": true,
+      "sha256": "1681a14cd7608ab92131b38307912606570f7e74744d0dfa73f0d40ebeee6dec"
+    },
+    {
+      "exists": true,
+      "label": "active_roadmap",
+      "path": "research-roadmap.yaml",
+      "required": true,
+      "sha256": "129a15baffa824edbf382c2ab3f809721f325a7589ef6f4870c92ca475610694"
+    },
+    {
+      "exists": false,
+      "label": "staged_roadmap",
+      "path": "research-roadmap-next.yaml",
+      "required": false,
+      "sha256": null
+    },
+    {
+      "exists": true,
+      "label": "vnext_proposal",
+      "path": "openspec/change-proposals/research-roadmap-vNEXT.md",
+      "required": true,
+      "sha256": "9a2d250e755b1df1e4a491b73a7d6bc6474babeaaf3634ea9f37e62c77c30a67"
+    },
+    {
+      "exists": true,
+      "label": "conductor_log",
+      "path": "ops/conductor-log.md",
+      "required": true,
+      "sha256": "de7ed88b9b39d3ce894844e1306b5bf65f64d24171093588829c404957389a29"
+    },
+    {
+      "exists": true,
+      "label": "operational_retro",
+      "path": "results/operational_retro_2026_05_308.json",
+      "required": false,
+      "sha256": "911cd20b683b31623a1c4325e2537769ab89631fdb6170152fbd88b1b7f02670"
+    },
+    {
+      "exists": false,
+      "label": "exp3325-archive-v307-activate-v308",
+      "path": "results/experiment_3325_archive_v307_activate_v308.json",
+      "required": false,
+      "sha256": null
+    },
+    {
+      "exists": false,
+      "label": "exp3326-phase3-path-preflight-manifest-v1",
+      "path": "results/experiment_3326_phase3_path_preflight_manifest_v1.json",
+      "required": false,
+      "sha256": null
+    },
+    {
+      "exists": true,
+      "label": "exp3327-energy-descent-substrate-bootstrap-v1",
+      "path": "results/experiment_3327_energy_descent_substrate_bootstrap_v1.json",
+      "required": false,
+      "sha256": "5e13cac9f4300eb61cae04df62524e7f76ac663e768ed9b7887bbd17e24c3839"
+    },
+    {
+      "exists": false,
+      "label": "exp3328-energy-descent-vs-ar-sota-panel-v2",
+      "path": "results/experiment_3328_energy_descent_vs_ar_sota_panel_v2.json",
+      "required": false,
+      "sha256": null
+    },
+    {
+      "exists": true,
+      "label": "exp3329-verifier-ensemble-diversity-audit-v2",
+      "path": "results/experiment_3329_verifier_ensemble_diversity_audit_v2.json",
+      "required": false,
+      "sha256": "d1d8d9215cde07304666a17e3d5ff3f60602c91ebac096e83563c1369b9a1b95"
+    },
+    {
+      "exists": false,
+      "label": "exp3330-verifier-diversity-remediation-plan-v1",
+      "path": "results/experiment_3330_verifier_diversity_remediation_plan_v1.json",
+      "required": false,
+      "sha256": null
+    },
+    {
+      "exists": true,
+      "label": "exp3331-ebt-sidecar-adapter-smoke-v2",
+      "path": "results/experiment_3331_ebt_sidecar_adapter_smoke_v2.json",
+      "required": false,
+      "sha256": "023a2fb25390230b124f56b7521ca2717ed2606f2d9bc11c97a8579cb5f2990a"
+    },
+    {
+      "exists": true,
+      "label": "exp3332-interwhen-monitor-pilot-v1",
+      "path": "results/experiment_3332_interwhen_monitor_pilot_v1.json",
+      "required": false,
+      "sha256": "86135a5983cb2107866bac738697b6c67aa54068be6dd88666c3e5e6c5efe9e2"
+    },
+    {
+      "exists": true,
+      "label": "exp3333-energy-guided-ttscaling-sota-ablation-v1",
+      "path": "results/experiment_3333_energy_guided_ttscaling_sota_ablation_v1.json",
+      "required": false,
+      "sha256": "c406d7c1996260840756704d2f7b214c67672345faf1eec7565c47808319246c"
+    },
+    {
+      "exists": true,
+      "label": "exp3334-fr11-online-verifier-memory-nonforgetting-v4",
+      "path": "results/experiment_3334_fr11_online_verifier_memory_nonforgetting_v4.json",
+      "required": false,
+      "sha256": "4ebfca6861cbe8c1990637b80e7cf51073bc1aca714e4738750a6a22e7dee1f8"
+    },
+    {
+      "exists": false,
+      "label": "exp3335-reproducer-pack-and-evidence-matrix-v39",
+      "path": "results/experiment_3335_reproducer_pack_and_evidence_matrix_v39.json",
+      "required": false,
+      "sha256": null
+    },
+    {
+      "exists": false,
+      "label": "exp3336-capstone-v308",
+      "path": "results/experiment_3336_capstone_v308.json",
+      "required": false,
+      "sha256": null
+    }
+  ],
+  "source_checksums": {
+    "openspec/change-proposals/research-roadmap-vNEXT.md": "9a2d250e755b1df1e4a491b73a7d6bc6474babeaaf3634ea9f37e62c77c30a67",
+    "ops/conductor-log.md": "de7ed88b9b39d3ce894844e1306b5bf65f64d24171093588829c404957389a29",
+    "research-complete.yaml": "1681a14cd7608ab92131b38307912606570f7e74744d0dfa73f0d40ebeee6dec",
+    "research-roadmap-next.yaml": null,
+    "research-roadmap.yaml": "129a15baffa824edbf382c2ab3f809721f325a7589ef6f4870c92ca475610694",
+    "results/experiment_3325_archive_v307_activate_v308.json": null,
+    "results/experiment_3326_phase3_path_preflight_manifest_v1.json": null,
+    "results/experiment_3327_energy_descent_substrate_bootstrap_v1.json": "5e13cac9f4300eb61cae04df62524e7f76ac663e768ed9b7887bbd17e24c3839",
+    "results/experiment_3328_energy_descent_vs_ar_sota_panel_v2.json": null,
+    "results/experiment_3329_verifier_ensemble_diversity_audit_v2.json": "d1d8d9215cde07304666a17e3d5ff3f60602c91ebac096e83563c1369b9a1b95",
+    "results/experiment_3330_verifier_diversity_remediation_plan_v1.json": null,
+    "results/experiment_3331_ebt_sidecar_adapter_smoke_v2.json": "023a2fb25390230b124f56b7521ca2717ed2606f2d9bc11c97a8579cb5f2990a",
+    "results/experiment_3332_interwhen_monitor_pilot_v1.json": "86135a5983cb2107866bac738697b6c67aa54068be6dd88666c3e5e6c5efe9e2",
+    "results/experiment_3333_energy_guided_ttscaling_sota_ablation_v1.json": "c406d7c1996260840756704d2f7b214c67672345faf1eec7565c47808319246c",
+    "results/experiment_3334_fr11_online_verifier_memory_nonforgetting_v4.json": "4ebfca6861cbe8c1990637b80e7cf51073bc1aca714e4738750a6a22e7dee1f8",
+    "results/experiment_3335_reproducer_pack_and_evidence_matrix_v39.json": null,
+    "results/experiment_3336_capstone_v308.json": null,
+    "results/operational_retro_2026_05_308.json": "911cd20b683b31623a1c4325e2537769ab89631fdb6170152fbd88b1b7f02670"
+  },
+  "task_id": "exp3337-archive-v308-activate-v309",
+  "traceability_modified_by_this_task": false
+}

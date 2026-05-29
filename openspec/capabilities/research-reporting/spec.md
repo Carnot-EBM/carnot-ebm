@@ -14828,3 +14828,65 @@ state, a decisive `next_top_gap`, and an `honest_verdict` beginning with
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-REPORT-3324 | Implemented (`python/carnot/reporting/capstone_v307_3324.py`) | Implemented (`tests/python/test_experiment_3324_capstone_v307.py`) |
+
+### REQ-REPORT-3337: Archive V308 And Activate V309 Handoff
+
+The repository shall provide an Exp 3337 milestone-boundary archive workflow
+that writes `results/experiment_3337_archive_v308_activate_v309.json` by
+reading the `.308` experiment artifacts for Exp 3327, Exp 3329, and
+Exp 3331 through Exp 3334, `research-complete.yaml`, `research-roadmap.yaml`,
+`research-roadmap-next.yaml` when present, the vNEXT roadmap proposal,
+`results/operational_retro_2026_05_308.json`, and `ops/conductor-log.md`.
+The workflow MUST be aggregation only. It MUST NOT run model inference, CUDA
+probes, verifier scoring, FR-11 updates, hardware commands, the conductor,
+pushes, or modify `research-roadmap.yaml`, `scripts/research_conductor.py`,
+`ops/status.md`, `ops/changelog.md`, or `_bmad/traceability.md` when the
+conductor delegates reconciliation to a separate step.
+
+The workflow SHALL append a completed `2026.05.308` milestone entry to
+`research-complete.yaml` only when that archive entry is missing. If the entry
+is already present, the workflow SHALL leave the archive byte-for-byte
+unchanged even when the existing entry overstates conductor success. The
+workflow SHALL classify Exp 3325 through Exp 3336 into separate completed,
+blocked, gate-blocked, missing, and duration-flagged artifact lists. It SHALL
+preserve the specific `.308` evidence boundary: Exp 3327 blocked on SOTA GGUF
+tokenizer/runtime setup, Exp 3328 was gate-blocked, Exp 3330/3335/3336 did not
+land usable artifacts, Exp 3329 and Exp 3331 through Exp 3334 provide usable
+evidence, and Exp 3333 remains duration/provenance flagged diagnostic evidence
+rather than headline live-inference evidence.
+
+The workflow SHALL confirm the active milestone increment is `2026.05.309` and
+that the active roadmap points to
+`openspec/change-proposals/research-roadmap-vNEXT.md`. If
+`research-roadmap-next.yaml` is absent after activation, the workflow SHALL
+record that absence explicitly instead of fabricating a staged roadmap parse.
+The terminal artifact MUST include `honest_verdict`, `inference_substrate`,
+`random_seed`, `reproducibility_checksum`, `duration_s`, and `files_updated`.
+It SHALL also include `archived_milestone`, `activated_milestone`,
+`completed_artifacts`, `blocked_artifacts`, `gate_blocked_artifacts`,
+`missing_artifacts`, `duration_flagged_artifacts`, `next_top_gap`,
+roadmap/YAML parse validation, source checksums, research-complete append
+status, no-push/no-conductor/protected-file booleans, and an `honest_verdict`
+beginning with one of `complete:`, `success:`, `passed:`, or `shipped:`.
+
+#### SCENARIO-REPORT-3337: V308 Archive Opens Runtime-Proven V309 Queue
+
+**Given** `.308` has completed operationally, Exp 3327 is a blocked SOTA GGUF
+tokenizer/runtime artifact, Exp 3328 is gate-blocked, Exp 3329 and Exp 3331
+through Exp 3334 have usable source artifacts, and Exp 3330/3335/3336 are
+missing or unusable
+**And** `research-roadmap.yaml` is active for `2026.05.309` and points to
+`openspec/change-proposals/research-roadmap-vNEXT.md`
+**When** the Exp 3337 archive workflow runs without modifying the active
+roadmap, conductor, ops status, changelog, or traceability files
+**Then** it writes `results/experiment_3337_archive_v308_activate_v309.json`
+with all required schema fields, records completed, blocked, gate-blocked,
+missing, and duration-flagged `.308` artifacts separately, leaves an existing
+`.308` research-complete entry untouched, validates JSON/YAML parse state, and
+emits an `honest_verdict` beginning with `complete:`.
+
+## Implementation Status (REQ-REPORT-3337)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-3337 | Implemented (`python/carnot/reporting/archive_v308_activate_v309_3337.py`) | Implemented (`tests/python/test_experiment_3337_archive_v308_activate_v309.py`) |
