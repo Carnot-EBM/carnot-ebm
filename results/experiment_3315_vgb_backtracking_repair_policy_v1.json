@@ -353,5 +353,18 @@
     "provenance_risk_abstain_threshold": 0.5,
     "row_uncertainty_abstain_threshold": 0.6
   },
-  "vgb_repair_policy_ready": true
+  "vgb_repair_policy_ready": true,
+  "flagged_adversarial": true,
+  "corrigendum_pending": [
+    {
+      "kind": "DURATION_TOO_SHORT",
+      "severity": "critical",
+      "detail": "duration_s=0.000708 but artifact references compute-bound markers (GGUF / CUDA / live model). Loading and running a real model takes >=60.0s minimum; this completed too fast to have invoked the model."
+    },
+    {
+      "kind": "METHODOLOGY_MISSING",
+      "severity": "warn",
+      "detail": "Compute-bound artifact missing: model_specs/target_model. Methodology unverifiable."
+    }
+  ]
 }

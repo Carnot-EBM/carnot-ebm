@@ -6684,3 +6684,4 @@ web search: https://docs.garak.ai/garak/examples/pr |
 | 2026-05-29 03:53 UTC | Gated DataFlip/Garak quality-clean rerun v4 | OK | 81 passed in 3.28s |
 | 2026-05-29 04:08 UTC | Repair substrate root-cause autopsy v1 | OK | 81 passed in 3.95s |
 | 2026-05-29 04:20 UTC | Distributional EBM repair uncertainty audit v1 | OK | 81 passed in 3.18s |
+| 2026-05-29 04:34 UTC | VGB repair backtracking policy v1 | OK | 81 passed in 2.98s |
