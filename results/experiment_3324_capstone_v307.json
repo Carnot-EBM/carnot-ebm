@@ -1,0 +1,107 @@
+{
+  "artifact": "experiment_3324_capstone_v307",
+  "capstone_v307_ready": false,
+  "duration_s": 0.13474,
+  "experiment_id": "exp3324",
+  "grounding_keystone_outcome": "blocked_exp3323_missing",
+  "grounding_keystone_summary": {
+    "effective_k_participation_ratio": 0.0,
+    "honest_verdict": "",
+    "k_verifiers": 0,
+    "lambda_min_sigma": 0.0,
+    "pairwise_max_correlation": 0.0,
+    "present": false,
+    "reproducibility_checksum": ""
+  },
+  "honest_verdict": "complete: capstone_v307_ready=false; kona=blocked_exp3322_missing; grounding=blocked_exp3323_missing; paper_ready=false; publication_gate_unmet=['G2']; next_top_gap=complete_phase3_path_derisking_upstreams",
+  "inference_substrate": "aggregation_from_upstream_artifacts",
+  "kona_premise_outcome": "blocked_exp3322_missing",
+  "kona_premise_summary": {
+    "accuracy_delta": 0.0,
+    "ar_baseline_accuracy": 0.0,
+    "energy_descent_accuracy": 0.0,
+    "honest_verdict": "",
+    "n_problems": 0,
+    "present": false,
+    "reproducibility_checksum": "",
+    "task_name": ""
+  },
+  "milestone": "2026.05.307",
+  "next_top_gap": "complete_phase3_path_derisking_upstreams",
+  "no_conductor_execution": true,
+  "no_external_submission_or_publication": true,
+  "no_new_cuda_probe": true,
+  "no_new_dataflip_run": true,
+  "no_new_fr11_weight_update": true,
+  "no_new_garak_run": true,
+  "no_new_hardware_run": true,
+  "no_new_kan_training": true,
+  "no_new_model_execution": true,
+  "no_new_repair_run": true,
+  "no_new_teacher_labeling": true,
+  "no_new_verifier_run": true,
+  "no_push": true,
+  "ops_changelog_modified_by_this_task": false,
+  "ops_status_modified_by_this_task": false,
+  "paper_ready": false,
+  "publication_gate": {
+    "gates": {
+      "G1": {
+        "detail": "FoVer dual-condition AUROC artifact present (experiment_2850_fover_dual_condition_integrity_v4.json); CI reported=True",
+        "pass": true,
+        "source": "experiment_2850_fover_dual_condition_integrity_v4.json"
+      },
+      "G2": {
+        "detail": "no independent reproducer recorded in ops/publication_gate_state.json (set g2_independent_reproducer + g2_evidence when one lands)",
+        "pass": false
+      },
+      "G3": {
+        "detail": "no retracted phrasings asserted as live claims",
+        "hits": [],
+        "pass": true
+      },
+      "G4": {
+        "detail": "experiment_2850_fover_dual_condition_integrity_v4.json: random_seed/seeds=True, reproducibility_checksum=True",
+        "pass": true,
+        "source": "experiment_2850_fover_dual_condition_integrity_v4.json"
+      }
+    },
+    "note": "Stable 4-condition gate (ops/north-star.md \u00a72). Replaces the redefinable publication_blocker_count. Report unmet_gates, not a count.",
+    "paper_ready": false,
+    "unmet_gates": [
+      "G2"
+    ]
+  },
+  "publication_gate_source": "scripts/publication_gate.py --json",
+  "publication_gate_unmet": [
+    "G2"
+  ],
+  "random_seed": 3324,
+  "reproducibility_checksum": "6b898c567e3d03d6dc311f212299959be5bc76123c4c19e029c5fa88d98c324a",
+  "run_date": "20260529",
+  "schema": "carnot.milestone_capstone.v307_phase3_path_derisking.v1",
+  "schema_version": "carnot.milestone_capstone.v307_phase3_path_derisking.v1",
+  "source_artifacts": [
+    {
+      "honest_verdict": "",
+      "path": "results/experiment_3322_energy_descent_vs_autoregressive_premise_v1.json",
+      "present": false,
+      "readable_json_object": false,
+      "reported_experiment_id": "",
+      "role": "exp3322_kona_premise",
+      "sha256": null
+    },
+    {
+      "honest_verdict": "",
+      "path": "results/experiment_3323_verifier_ensemble_lambda_min_diversity_audit_v1.json",
+      "present": false,
+      "readable_json_object": false,
+      "reported_experiment_id": "",
+      "role": "exp3323_grounding_keystone",
+      "sha256": null
+    }
+  ],
+  "source_checksums": {},
+  "task_id": "exp3324-capstone-v307",
+  "traceability_modified_by_this_task": false
+}

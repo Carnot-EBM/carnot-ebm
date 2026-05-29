@@ -14780,3 +14780,51 @@ with `complete:`.
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-REPORT-3321 | Implemented (`python/carnot/reporting/archive_v306_activate_v307_3321.py`) | Implemented (`tests/python/test_experiment_3321_archive_v306_activate_v307.py`) |
+
+### REQ-REPORT-3324: Capstone V307 Phase-3 Path De-Risking Readout
+
+The repository shall provide an Exp 3324 capstone workflow that writes
+`results/experiment_3324_capstone_v307.json` by aggregating the Exp 3322
+Kona-premise test artifact and the Exp 3323 verifier-diversity audit artifact.
+The workflow MUST be aggregation only. It MUST NOT run model inference, CUDA
+probes, verifier scoring, training, hardware commands, the conductor, external
+publication, pushes, or ops/status/traceability reconciliation when the
+conductor delegates reconciliation to a separate step.
+
+The workflow SHALL classify the Kona-premise outcome as `validated`,
+`viable_not_superior`, `unsupported`, or `blocked_*` from the Exp 3322 terminal
+verdict and evidence fields. It SHALL classify the grounding-keystone outcome
+as `holds`, `at_risk`, or `blocked_*` from the Exp 3323 terminal verdict and
+evidence fields. It SHALL set `next_top_gap` from the joint outcome:
+`scale_substrate_intermediate (exp_NEXT_E 100-300M)` only when the premise is
+validated and grounding holds; `reconsider_foundation_model_endgame` when the
+premise is unsupported; `redesign_verifier_grounding_source` when grounding is
+at risk; and an explicit upstream-unblock or superiority-gap string when the
+joint result is not one of those decisive cases.
+
+The workflow MUST run `scripts/publication_gate.py --json` for the stable G1-G4
+publication gate and SHALL copy `paper_ready` and the unmet G1-G4 list into
+`paper_ready` and `publication_gate_unmet`. The terminal artifact MUST include
+`capstone_v307_ready`, `kona_premise_outcome`,
+`grounding_keystone_outcome`, `next_top_gap`, `paper_ready`,
+`publication_gate_unmet`, `random_seed`, `reproducibility_checksum`,
+`duration_s`, and `honest_verdict`. `honest_verdict` MUST begin with one of
+`complete:`, `success:`, `passed:`, or `shipped:`.
+
+#### SCENARIO-REPORT-3324: V307 Capstone Chooses The Next Phase-3 Gap
+
+**Given** Exp 3322 reports the energy-descent-vs-autoregressive premise result
+as validated, viable-not-superior, unsupported, or blocked
+**And** Exp 3323 reports verifier grounding as holding, at risk, or blocked
+**And** the stable publication gate emits G1-G4 readiness JSON
+**When** the Exp 3324 capstone workflow runs
+**Then** it writes `results/experiment_3324_capstone_v307.json` with all
+required fields, exact source checksums, the copied G1-G4 publication-gate
+state, a decisive `next_top_gap`, and an `honest_verdict` beginning with
+`complete:` without claiming new model or verifier execution.
+
+## Implementation Status (REQ-REPORT-3324)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-3324 | Implemented (`python/carnot/reporting/capstone_v307_3324.py`) | Implemented (`tests/python/test_experiment_3324_capstone_v307.py`) |
