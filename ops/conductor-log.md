@@ -6834,3 +6834,4 @@ web search: https://docs.garak.ai/garak/examples/pr |
 | 2026-05-29 14:47 UTC | GateMate A1-EVB-2M board-local n16 latency benchma | DOOMED_RERUN_BLOCK | 2 prior failure(s) match this task's scope but prior_failures field is missing o |
 | 2026-05-29 14:49 UTC | GateMate A1-EVB-2M board-local n16 latency benchma | DOOMED_RERUN_BLOCK | 2 prior failure(s) match this task's scope but prior_failures field is missing o |
 | 2026-05-29 14:51 UTC | Live SOTA constrained generation using grammar-mas | DOOMED_RERUN_BLOCK | 3 prior failure(s) match this task's scope but prior_failures field is missing o |
+| 2026-05-29 14:53 UTC | Live SOTA constrained generation using grammar-mas | DOOMED_RERUN_BLOCK | 3 prior failure(s) match this task's scope but prior_failures field is missing o |
