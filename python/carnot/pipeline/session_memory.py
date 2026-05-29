@@ -100,6 +100,49 @@ class SessionMemory:
     def __init__(self, storage_dir: str, model_id: str) -> None:
         self.storage_dir = storage_dir
         self.model_id = model_id
+        # LogicVault properties
+        self._z3_solver = None
+        self.ledger_consistency_rate = 1.0
+        self._vault_total = 0
+        self._vault_accepted = 0
+
+    def init_logic_vault(self) -> None:
+        """Initialize the Z3 LogicVault for FR-11."""
+        import z3
+        self._z3_solver = z3.Solver()
+        self.ledger_consistency_rate = 1.0
+        self._vault_total = 0
+        self._vault_accepted = 0
+
+    def add_axiom(self, expr: Any) -> None:
+        """Commit a base axiom to the vault."""
+        if self._z3_solver is None:
+            self.init_logic_vault()
+        self._z3_solver.add(expr)
+
+    def check_and_admit(self, expr: Any) -> bool:
+        """Check if `expr` is consistent with historical beliefs using Z3.
+        If it is, admit it and update ledger_consistency_rate.
+        """
+        import z3
+        if self._z3_solver is None:
+            self.init_logic_vault()
+
+        self._vault_total += 1
+        self._z3_solver.push()
+        self._z3_solver.add(expr)
+        result = self._z3_solver.check()
+
+        if result == z3.sat:
+            self._z3_solver.pop()
+            self._z3_solver.add(expr)
+            self._vault_accepted += 1
+            self.ledger_consistency_rate = self._vault_accepted / self._vault_total
+            return True
+        else:
+            self._z3_solver.pop()
+            self.ledger_consistency_rate = self._vault_accepted / self._vault_total
+            return False
 
     # ------------------------------------------------------------------
     # Path helpers

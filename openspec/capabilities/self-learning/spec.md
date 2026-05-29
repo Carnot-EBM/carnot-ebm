@@ -9975,3 +9975,24 @@ episodes that can be loaded, keeps `controller_memory_only=true`,
 **When** the controller detects the harmful update
 **Then** it reverts the memory state
 **And** increments rollback_count and rollback_recovered_count.
+
+## REQ-LEARN-3357: FR-11 LogicVault Z3 Integration
+**Given** an incoming fact and a set of historically verified beliefs
+**When** the vault processes the incoming fact
+**Then** it MUST use Z3 to check if the new fact is consistent with historical beliefs
+**And** track `ledger_consistency_rate`.
+
+### SCENARIO-LEARN-3357: Consistent Facts Admitted
+**Given** a LogicVault with axiom `x > 0`
+**When** we check and admit `x > 5`
+**Then** it is consistent (SAT), it is admitted, and `ledger_consistency_rate` is updated.
+
+### SCENARIO-LEARN-3357-REJECT: Contradictory Facts Rejected
+**Given** a LogicVault with axiom `x > 5`
+**When** we check and admit `x < 0`
+**Then** it is inconsistent (UNSAT), it is rejected, and `ledger_consistency_rate` is updated.
+
+## Implementation Status (REQ-LEARN-3357)
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-LEARN-3357 | Implemented (`python/carnot/pipeline/session_memory.py`, `scripts/experiment_3357_fr11_logicvault.py`) | Implemented (`tests/python/test_experiment_3357_fr11_logicvault.py`) |
