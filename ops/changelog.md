@@ -7780,3 +7780,4 @@ ModuleNotFoundError: No module named 'torch'; results/experiment_2828_fover_memo
 - 2026-05-29: EBM-CoT Trajectory Monitor with SOTA Models (⚠️ Research Finding) — honest_verdict=trajectory_verifier_differentiates_early_commitment; results/experiment_3383_ebm_cot_trajectory.json
 - 2026-05-29: Parallel Energy Minimization for Constraint Composition (⚠️ Research Finding) — honest_verdict=unspecified; results/experiment_3384_pem_composition.json
 - 2026-05-29: CAffNet Differentiable Constraint Layer Prototype (⚠️ Research Finding) — honest_verdict=success; results/experiment_3385_caffnet_layer.json
+- 2026-05-29: FR-11 Locality-Aware Nonforgetting Memory (✅ Complete) — honest_verdict=complete: rollback_successful; results/experiment_3386_fr11_nonforgetting.json
