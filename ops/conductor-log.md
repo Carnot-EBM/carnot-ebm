@@ -6685,3 +6685,4 @@ web search: https://docs.garak.ai/garak/examples/pr |
 | 2026-05-29 04:08 UTC | Repair substrate root-cause autopsy v1 | OK | 81 passed in 3.95s |
 | 2026-05-29 04:20 UTC | Distributional EBM repair uncertainty audit v1 | OK | 81 passed in 3.18s |
 | 2026-05-29 04:34 UTC | VGB repair backtracking policy v1 | OK | 81 passed in 2.98s |
+| 2026-05-29 04:55 UTC | Gated SOTA repair rerun v12 runtime-clean | OK | 81 passed in 3.31s |
