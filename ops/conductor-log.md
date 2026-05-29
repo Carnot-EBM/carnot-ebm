@@ -6779,3 +6779,4 @@ web search: https://docs.garak.ai/garak/examples/pr |
 | 2026-05-29 08:53 UTC | Archive milestone .307 honestly and activate .308 | FAIL | Codex CLI error: you finish the real work inside 10 minutes, that is correct  |
 | 2026-05-29 08:55 UTC | Phase-3 path preflight manifest for recovered upst | FAIL | Codex CLI error: you finish the real work inside 10 minutes, that is correct  |
 | 2026-05-29 08:57 UTC | Phase-3 path preflight manifest for recovered upst | FAIL | Codex CLI error: you finish the real work inside 10 minutes, that is correct  |
+| 2026-05-29 08:59 UTC | Phase-3 path preflight manifest for recovered upst | FAIL | Codex CLI error: ERROR: {"type":"error","status":400,"error":{"type":"invalid |
