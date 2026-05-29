@@ -6838,3 +6838,4 @@ web search: https://docs.garak.ai/garak/examples/pr |
 | 2026-05-29 14:55 UTC | Live SOTA constrained generation using grammar-mas | DOOMED_RERUN_BLOCK | 3 prior failure(s) match this task's scope but prior_failures field is missing o |
 | 2026-05-29 15:03 UTC | Deterministic prefix-closed bounds pilot for live  | OK | 81 passed in 3.07s |
 | 2026-05-29 15:05 UTC | Milestone 2026.05.310 re-activated (outer-loop: operator_override now clears doomed-rerun guard; fail-window reset for exp3350/3351/3352) | OK | fail-count reset |
+| 2026-05-29 15:13 UTC | KV260 board-local Ising sampling latency benchmark | OK | 81 passed in 3.19s |
