@@ -4777,3 +4777,9 @@ The critical path for milestone .250:
 - theme: Operational retrospective with no post-activation experiment commits
 - key result: The timing input reports 0 completed experiments and 0 compute-bound rows; compute-bound duration, GPU efficiency, and DualGPURunner coverage have no data available this milestone.
 - acceptance: no data available this milestone
+
+### Milestone 2026.05.307
+- exp_range: no data available this milestone
+- theme: Empty milestone timing scope operational review
+- key result: The supplied timing source has no post-activation experiment commits, so compute-bound runtime, GPU-on-compute behavior, and multi-model runner use have no data available this milestone.
+- acceptance: no data available this milestone

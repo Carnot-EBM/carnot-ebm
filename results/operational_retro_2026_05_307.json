@@ -1,0 +1,29 @@
+{
+  "schema": "carnot.operational_retro.v64",
+  "milestone": "2026.05.307",
+  "generated_at": "2026-05-29T05:55:09Z",
+  "retro_type": "operational_full",
+  "total_wall_time_minutes": 0,
+  "experiments_completed": 0,
+  "compute_bound_experiments_count": 0,
+  "slowest_experiments": [],
+  "gpu_idle_on_compute_bound_tasks": null,
+  "summary": "The milestone timing authority records 0 completed experiments across 0 total wall-time minutes, with 0 compute-bound experiments. Slowest-run analysis, compute-bound GPU utilization, and 2+ model runner assessment have no data available this milestone.",
+  "bottlenecks_identified": [
+    "No timed experiment rows were available to identify wall-time bottlenecks.",
+    "No compute-bound experiment rows were available, so GPU-idle-on-compute assessment has no data available this milestone.",
+    "No 2+ model compute-bound task was present in the timing data, so DualGPURunner engagement has no data available this milestone."
+  ],
+  "improvements_suggested": [
+    "Add an explicit zero-row timing manifest at milestone closeout so retrospectives can distinguish an intentionally empty execution window from missing telemetry.",
+    "Add a pre-retro check that refuses to import experiment IDs, durations, or metrics from outside the active milestone timing scope.",
+    "Surface a closeout prompt when experiments_completed is 0 so the operator can either run the intended upstream tasks or mark the milestone as intentionally empty."
+  ],
+  "top_3_highest_leverage_actions": [
+    "Automate empty-window timing manifests before the retrospective task starts.",
+    "Gate retrospective generation on milestone-scoped timing data only.",
+    "Warn at closeout when no experiment commits have landed since activation."
+  ],
+  "estimated_time_savings_pct": 0,
+  "meta_reflection": "A zero-row timing source cannot support operational throughput conclusions. The useful next move is instrumentation discipline: make empty execution windows explicit and prevent prior-milestone metrics from leaking into the report."
+}
