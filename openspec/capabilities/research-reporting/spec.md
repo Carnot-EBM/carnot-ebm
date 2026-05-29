@@ -14567,3 +14567,77 @@ cached guard-policy pilot rather than a live rerun.
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-REPORT-3311 | Implemented (`python/carnot/reporting/pcfi_argus_dataflip_guard_pilot_3311.py`) | Implemented (`tests/python/test_experiment_3311_pcfi_argus_dataflip_guard_pilot.py`) |
+
+### REQ-REPORT-3312: DataFlip/Garak Quality-Clean Rerun V4
+
+The repository shall provide an Exp 3312 full Garak/DataFlip quality-clean
+rerun that writes
+`results/experiment_3312_dataflip_garak_quality_clean_rerun_v4.json` after
+Exp 3309 has provided the live runtime/provenance contract and Exp 3311 has
+provided the PCFI/ARGUS DataFlip guard policy. The workflow MUST check
+`nvidia-smi`, selected-Python CUDA visibility, llama.cpp CUDA support,
+mandated GGUF cache availability, strongest-available mandated GGUF
+loadability, Exp 3309 runtime-contract readiness, Exp 3311 guard-policy
+readiness, and Exp 3310 DataFlip/KAD challenge-case readiness before claiming
+promotion-safe evidence. It MUST NOT substitute a legacy or small model for a
+missing mandated SOTA GGUF; if only a subset of the mandated GGUFs is cached,
+it SHALL run the strongest available mandated model and explicitly list every
+missing mandated model.
+
+The rerun SHALL apply the Exp 3311 guard policy to Exp 3310 DataFlip/KAD
+challenge rows while preserving Garak-style PromptInject and
+jailbreak/encoding probe families from the `.305` gate contract. It SHALL
+compute Garak attack success, DataFlip detection, aligned-instruction benign
+false positives, refusal rate, error count, and independent metric-lineage
+checks from raw probe rows rather than copying top-level rates. It SHALL call
+the Exp 3309 checker
+`carnot.reporting.live_runtime_provenance_contract_3309.check_runtime_evidence_artifact`
+before setting `duration_contract_passed` or `runtime_provenance_clean`, and
+it SHALL record the checker result in the terminal artifact. `quality_flags_cleared`
+is true only when the runtime contract passes and the artifact has no critical
+adversarial-verify flags. `garak_dataflip_eval_v4_ready` is true only when the
+Garak gate, DataFlip gate, runtime/provenance contract, and current critical
+quality-flag checks all pass.
+
+The terminal artifact MUST include `garak_dataflip_eval_v4_ready`,
+`garak_gate_passed`, `dataflip_gate_passed`, `quality_flags_cleared`,
+`attack_success_rate`, `dataflip_detection_rate`,
+`aligned_instruction_false_positive_rate`, `refusal_rate`, `error_count`,
+`duration_contract_passed`, `runtime_provenance_clean`,
+`adversarial_verify_flags`, `model_specs_used`, and `honest_verdict`. It SHALL
+also include raw probe rows, metric lineage, independent metric checks,
+precondition checks, runtime provenance, checker versions, used and missing
+mandated model specs, source artifact checksums, random seed, reproducibility
+checksum, duration, no-push/conductor booleans, and an honest verdict beginning
+with one of `complete:`, `success:`, `passed:`, or `shipped:` that states
+whether the result is promotion-safe or honestly blocked.
+
+#### SCENARIO-REPORT-3312: Guarded Rerun Clears DataFlip And Runtime Flags Or Blocks Honestly
+
+**Given** Exp 3309 provides a ready runtime contract, Exp 3311 provides a ready
+PCFI/ARGUS guard policy, Exp 3310 provides DataFlip/KAD challenge rows, and at
+least one mandated SOTA GGUF is cached and loadable
+**When** the Exp 3312 runner evaluates Garak attack probes, DataFlip/KAD
+challenge rows, and aligned benign controls using the strongest available
+mandated GGUF without substituting a legacy model
+**Then** it writes
+`results/experiment_3312_dataflip_garak_quality_clean_rerun_v4.json` with all
+required schema fields, records used and missing mandated model specs, reports
+Garak ASR, DataFlip detection, aligned benign false positives, refusal rate,
+error count, independent metric lineage, Exp 3309 checker results, and
+adversarial-verify flags
+**And** `garak_dataflip_eval_v4_ready=true` only when `garak_gate_passed=true`,
+`dataflip_gate_passed=true`, `duration_contract_passed=true`,
+`runtime_provenance_clean=true`, and `quality_flags_cleared=true`.
+
+If no mandated SOTA GGUF is cached or loadable, or if the runtime contract or
+quality checks fail, the runner SHALL still write the same terminal artifact
+with explicit blockers, `garak_dataflip_eval_v4_ready=false`, no legacy model
+substitution, and an `honest_verdict` that begins with `complete:` and states
+the blocking reason.
+
+## Implementation Status (REQ-REPORT-3312)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-3312 | Planned (`python/carnot/reporting/dataflip_garak_quality_clean_rerun_3312.py`) | Planned (`tests/python/test_experiment_3312_dataflip_garak_quality_clean_rerun.py`) |
