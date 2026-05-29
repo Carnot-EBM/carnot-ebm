@@ -6976,3 +6976,4 @@ web search: https://docs.garak.ai/garak/examples/pr |
 | 2026-05-29 22:49 UTC | GateMate N16 Bitstream Flash and Smoke | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_3382_gatemat |
 | 2026-05-29 22:56 UTC | EBM-CoT Trajectory Monitor with SOTA Models | OK | 81 passed in 3.30s |
 | 2026-05-29 23:02 UTC | Parallel Energy Minimization for Constraint Compos | OK | 81 passed in 3.62s |
+| 2026-05-29 23:07 UTC | CAffNet Differentiable Constraint Layer Prototype | OK | 81 passed in 3.05s |
