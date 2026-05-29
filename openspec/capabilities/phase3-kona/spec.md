@@ -2161,4 +2161,16 @@ The artifact MUST be written to `results/experiment_3338_sota_gguf_tokenizer_run
 **Then** it writes the receipt with REQUIRED ARTIFACT FIELDS and Phase-3 precondition RUNTIME FIELDS
 **And** `runtime_receipt_clean` is true if at least one mandated model loads cleanly.
 
+### REQ-KONA-3384: Parallel Energy Minimization (PEM) Composition
+
+Carnot MUST provide a Parallel Energy Minimization (PEM) solver that decomposes a monolithic constraint satisfaction problem into smaller, composed subproblems (e.g., sub-graphs) and runs PEM inference by combining local energy models.
+The artifact MUST be written to `results/experiment_3384_pem_composition.json` and MUST include `pem_composition_ready` set to `true`, and record metrics such as local energy improvements.
+
+### SCENARIO-KONA-3384: Exp 3384 Evaluates PEM Composition
+
+**Given** a synthetic modular constraint problem and local energy models for its sub-graphs
+**When** the PEM solver optimizes the composed energy landscapes
+**Then** the solver successfully escapes local minima by minimizing the sub-problem energies in parallel
+**And** the artifact is written to `results/experiment_3384_pem_composition.json` with `pem_composition_ready=true`.
+
 
