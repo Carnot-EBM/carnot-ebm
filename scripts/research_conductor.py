@@ -310,6 +310,40 @@ def _build_agent_command(
     )
 
 
+def _meaningful_error_tail(full_output: str, prompt: str, n: int = 500) -> str:
+    """Return the agent's REAL post-prompt output for failure logging.
+
+    WHY: codex (and any agent that echoes its input) prints the entire prompt
+    to stdout before doing work. On failure we log full_output[-n:], so for a
+    long experiment prompt that tail is just the END OF THE ECHOED PROMPT — not
+    the agent's error. Every "Codex CLI error: <prompt tail>" log this session
+    (e.g. "...you finish the real work inside 10 minutes, that is correct",
+    which is the verbatim last line of the stop_postamble) was undiagnosable
+    for exactly this reason: the real error was masked by the echoed prompt.
+
+    This strips the echoed prompt (matched by its last ~200 chars) and returns
+    only what the agent emitted AFTER ingesting it. If nothing meaningful
+    follows, it says so explicitly so the operator knows the agent exited
+    without generating output (the signature of an upstream model/API error
+    during prompt ingestion) rather than seeing a confusing prompt fragment.
+    """
+    if not full_output:
+        return "(no output captured)"
+    tail_marker = prompt[-200:] if prompt and len(prompt) >= 40 else prompt
+    post = full_output
+    if tail_marker and tail_marker in full_output:
+        post = full_output[full_output.rindex(tail_marker) + len(tail_marker):]
+    post = post.strip()
+    if not post:
+        return (
+            "agent exited with NO generated output after prompt ingestion "
+            "(echoed prompt stripped) — signature of an upstream model/API error "
+            "during ingestion (rate-limit / model-unavailable / content-filter). "
+            f"Raw tail before strip: {full_output[-180:].strip()!r}"
+        )
+    return post[-n:]
+
+
 def run_agent(
     prompt: str,
     max_turns: int = 20,
@@ -774,7 +808,7 @@ def run_agent(
                 full_output = "".join(output_lines)
                 return False, (
                     f"Hard wall-clock cap after {int(elapsed_total)}s. "
-                    f"Last output: {full_output[-300:]}"
+                    f"Last output: {_meaningful_error_tail(full_output, prompt, 300)}"
                 )
             elif soft_cap_hit and elapsed_silence > IDLE_GRACE:
                 # Past the soft cap and the subagent has gone quiet — kill.
@@ -796,7 +830,7 @@ def run_agent(
                 return False, (
                     f"Wall-clock+idle timeout after {int(elapsed_total)}s "
                     f"({int(elapsed_silence)}s silence). "
-                    f"Last output: {full_output[-300:]}"
+                    f"Last output: {_meaningful_error_tail(full_output, prompt, 300)}"
                 )
             # else: either still within soft cap, or past it but actively
             # producing output. Let the run continue.
@@ -810,7 +844,7 @@ def run_agent(
 
         if proc.returncode != 0:
             logger.error("%s failed (exit %d)", AGENT_DISPLAY, proc.returncode)
-            return False, full_output[-500:]
+            return False, _meaningful_error_tail(full_output, prompt, 500)
 
         logger.info("%s completed (exit 0)", AGENT_DISPLAY)
         return True, full_output[-2000:]
