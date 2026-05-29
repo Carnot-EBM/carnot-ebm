@@ -7786,3 +7786,4 @@ ModuleNotFoundError: No module named 'torch'; results/experiment_2828_fover_memo
 - 2026-05-29: ConstraintBench EBM vs AR Baseline (✅ Complete) — honest_verdict=Completed successfully for ConstraintBench AR vs VGB repair ladder comparison.; results/experiment_3389_constraintbench.json
 - 2026-05-29: Capstone v312 (✅ Complete) — honest_verdict=complete: capstone_v312_ready=true; results/experiment_3390_capstone_v312.json
 - 2026-05-29: Plan milestone 2026.05.313 (⚠️ Research Finding) — honest_verdict=success; results/experiment_3391_plan_milestone_313.json
+- 2026-05-29: Archive milestone .311 honestly and activate .312 (✅ Complete) — honest_verdict=archive complete; results/experiment_3392_archive_v311_activate_v312.json
