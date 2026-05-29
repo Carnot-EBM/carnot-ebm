@@ -14434,3 +14434,64 @@ Exp 3312 or Exp 3316 reruns.
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-REPORT-3309 | Implemented (`python/carnot/reporting/live_runtime_provenance_contract_3309.py`) | Implemented (`tests/python/test_experiment_3309_live_runtime_provenance_contract.py`) |
+
+### REQ-REPORT-3310: DataFlip/KAD Challenge Manifest V1
+
+The repository shall provide an Exp 3310 DataFlip/KAD challenge-manifest
+builder that writes
+`results/experiment_3310_dataflip_kad_challenge_manifest_v1.json` by reading
+`results/experiment_3300_full_garak_dataflip_gate_rerun_v3.json`,
+`results/experiment_3305_evidence_matrix_v37.json`,
+`research-references.md`, and the frozen prompt-injection v4 Garak/eval split
+rows referenced by Exp 3300. The workflow MUST be aggregation only. It MUST
+NOT run model inference, CUDA probes, Garak, DataFlip, KAN training, repair,
+verifier scoring, the conductor, pushes, or modify
+`scripts/research_conductor.py`, `ops/status.md`, `ops/changelog.md`, or
+`_bmad/traceability.md` when the conductor delegates reconciliation to a
+separate step.
+
+The manifest MUST extract the Exp 3300 DataFlip/KAD-adaptive rows, DataFlip
+metrics, aligned-benign false-positive metrics, and matrix v37 blocker rows.
+It SHALL define challenge families for `data_transformations`,
+`authority_confusion`, `aligned_benign_controls`, and
+`kad_adversarial_transformations`. Every challenge case SHALL preserve source
+and provenance references, including the Exp 3300 probe row, the referenced
+frozen corpus row when available, source artifact path, source hash, source
+text hash, expected label, prior detection outcome, and downstream evaluation
+split. DataFlip detection-rate cases and benign false-positive cases MUST use
+separate denominators so Exp 3311 and Exp 3312 can report those rates
+independently.
+
+The terminal artifact MUST include `dataflip_manifest_ready`,
+`challenge_case_count`, `kad_failure_taxonomy`, `source_artifacts`,
+`dataflip_reference`, `no_new_model_execution`, and `honest_verdict`. It SHALL
+also include challenge cases, family counts, Exp 3300 extracted metrics,
+matrix v37 blockers, downstream evaluation plan, no-new-execution booleans,
+random seed, reproducibility checksum, and duration. `honest_verdict` MUST
+begin with one of `complete:`, `success:`, `passed:`, or `shipped:`.
+
+#### SCENARIO-REPORT-3310: Manifest Preserves DataFlip Failures And Benign Controls
+
+**Given** Exp 3300 reports `garak_gate_passed=true`,
+`dataflip_gate_passed=false`, DataFlip/KAD metrics with low detection rate,
+and aligned-benign false-positive metrics
+**And** matrix v37 preserves `dataflip_gate_failed`, `dataflip_gate_passed=false`,
+and the current Exp 3300 quality flags and blockers
+**And** research references include arXiv:2507.05630 as the documented
+DataFlip/KAD threat model source
+**When** the Exp 3310 manifest builder runs without launching model or Garak
+execution
+**Then** it writes
+`results/experiment_3310_dataflip_kad_challenge_manifest_v1.json` with all
+required schema fields, `dataflip_manifest_ready=true`, challenge cases split
+across data transformations, authority confusion, aligned benign controls, and
+KAD-style adversarial transformations, separate detection-rate and
+false-positive evaluation splits for Exp 3311 and Exp 3312, exact source and
+provenance references for every challenge case, and an `honest_verdict`
+beginning with `complete:` without claiming any new model execution.
+
+## Implementation Status (REQ-REPORT-3310)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-3310 | Implemented (`python/carnot/reporting/dataflip_kad_challenge_manifest_3310.py`) | Implemented (`tests/python/test_experiment_3310_dataflip_kad_challenge_manifest.py`) |
