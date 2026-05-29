@@ -18760,3 +18760,15 @@ This refresh introduces recent 2026 findings at the intersection of Energy-Based
 - **TraceFix: Repairing Agent Coordination Protocols with TLA+ Counterexamples (arXiv:2605.07935)**: Repairs coordination protocols by treating TLA+ counterexamples as minimal repair prompts. Relevance to Carnot: Supports the `.310` FR-11 pilot that consumes exact Z3 Unsat Cores to automatically patch environment constraint-schemas.
 
 - **LogicVault: Persistent Symbolic Belief States for Cross-Query Logical Consistency in LLMs (ICLR 2026)**: Converts query responses into first-order logic, storing them in a vault, and runs Z3 to detect logical drifts over long multi-turn sessions. Relevance to Carnot: Inspires the FR-11 multi-session memory logic. We need cross-query persistence of axiomatic constraints evaluated against an exact solver, moving beyond naive prompt-replay.
+
+## 2026-05-29 External Research Refresh (Milestone 2026.05.312)
+
+This refresh captures the latest late-2025 and 2026 findings on Energy-Based Models for reasoning, hard-constrained architectures, and Kolmogorov-Arnold Network hardware optimization. These directly influence the .312 milestone.
+
+- **Energy-Based Calibration (EBM-CoT) & Parallel Energy Minimization (PEM) (Oarga & Du 2025, Chen et al. 2025)**: Frames reasoning traces as an optimization problem where EBMs act as verifiers/calibrators for LLM CoT. Hallucinations are viewed as premature commitment failures that cause energy spikes in intermediate tokens. Relevance to Carnot: Guides Phase-3 live EBM generation, integrating Interwhen-style verifier monitors to detect hallucination before final sequence generation.
+
+- **HardNet++ & CAffNet: Differentiable Constraint Enforcement (arXiv:2604.19669 / arXiv:2605.23...)**: Replaces soft penalty constraints with differentiable layers that strictly guarantee affine/nonlinear constraints by projecting logits onto constrained sub-spaces in the forward pass. Relevance to Carnot: Introduces Tier-1 differentiable exact constraint components rather than relying solely on post-hoc filtering.
+
+- **KANELÉ: KANs for Efficient LUT-based Evaluation (arXiv:2512.12850)**: A hardware-aware KAN framework that uses Quantization Aware Training (QAT) to map B-splines into FPGA Look-Up Tables (LUTs), achieving up to a 2700x speedup over previous KAN implementations. Relevance to Carnot: Provides a concrete path for the EBT sidecar (KAN formulation) to be efficiently deployed to the GateMate and KV260 hardware targets.
+
+- **Online Learnability of CoT Verifiers (arXiv:2603.03538) & KAN-CL (arXiv:2605.12306)**: Emphasizes per-knot locality to avoid catastrophic forgetting during online updates. Relevance to Carnot: Direct architectural inspiration for the FR-11 nonforgetting memory update step.

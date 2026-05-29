@@ -1,0 +1,252 @@
+milestone: "2026.05.312"
+milestone_title: "Hardware Execution, EBM-CoT Calibration, and Nonforgetting Continuous Learning"
+milestone_doc: "openspec/change-proposals/research-roadmap-vNEXT.md"
+
+tasks:
+  - id: exp3381-kv260-latency-benchmark
+    milestone: "2026.05.312"
+    title: "KV260 Hardware Latency Baseline"
+    priority: critical
+    max_turns: 100
+    model: opus
+    estimated_wall_time_min: 20
+    track: hardware
+    inference_substrate: hardware_smoke
+    requires_gpu: false
+    deliverable: "results/experiment_3381_kv260_latency_benchmark.json"
+    prompt: |
+      CONTEXT: The KV260 board SSH connectivity was restored in exp3365, and the `carnot_ising_v4` bitstream is present.
+      EXISTING CODE TO READ FIRST: hardware/kv260/synth_ising.tcl, scripts/experiment_568_kv260_bringup_v2.py
+      TASK: Execute an Ising sampling run on the KV260 using the hardware bitstream via `/dev/uio0` and measure true hardware latency versus CPU.
+      CONCRETE STEPS:
+        1. Write a Python script to memory-map the KV260 UIO registers.
+        2. Upload a small Ising problem, trigger synthesis/sampling, and poll for completion.
+        3. Record the latency and compare against a CPU baseline.
+        4. Emit an artifact with the measured `hardware_latency_us`.
+      Run command: cd {project_root} && JAX_PLATFORMS=cpu .venv/bin/python scripts/experiment_3381_kv260_latency_benchmark.py. Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  - id: exp3382-gatemate-n16-flash-and-smoke
+    milestone: "2026.05.312"
+    title: "GateMate N16 Bitstream Flash and Smoke"
+    priority: high
+    max_turns: 100
+    model: opus
+    estimated_wall_time_min: 20
+    track: hardware
+    inference_substrate: hardware_smoke
+    requires_gpu: false
+    deliverable: "results/experiment_3382_gatemate_n16_smoke.json"
+    prompt: |
+      CONTEXT: exp3366 added the AXI/UIO interface to the GateMate N=16 Ising tile RTL.
+      EXISTING CODE TO READ FIRST: scripts/experiment_3366_gatemate_axi_uio.py
+      TASK: Synthesize, flash, and run a simple test on the GateMate board via dirtyJtag.
+      CONCRETE STEPS:
+        1. Use yosys/nextpnr-himbaechel to build the N=16 GateMate design.
+        2. Flash the bitstream using `openFPGALoader -c dirtyJtag`.
+        3. Execute a basic test vector across the new host interface.
+        4. Emit artifact with hardware verification status.
+      Run command: cd {project_root} && JAX_PLATFORMS=cpu .venv/bin/python scripts/experiment_3382_gatemate_n16_smoke.py. Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  - id: exp3383-ebm-cot-trajectory-monitor
+    milestone: "2026.05.312"
+    title: "EBM-CoT Trajectory Monitor with SOTA Models"
+    priority: critical
+    max_turns: 50
+    estimated_wall_time_min: 25
+    track: live-model
+    inference_substrate: live_generation
+    requires_gpu: true
+    deliverable: "results/experiment_3383_ebm_cot_trajectory.json"
+    prompt: |
+      CONTEXT: Recent 2025/2026 literature highlights EBM-CoT, where scalar energy functions calibrate reasoning traces. Hallucinations represent premature commitment failures.
+      EXISTING CODE TO READ FIRST: python/carnot/pipeline/three_tier_pipeline.py
+      TASK: Implement an Interwhen-style verifier monitor that scores intermediate trajectory steps using SOTA GGUF models.
+      CONCRETE STEPS:
+        1. Setup inference pipeline for `unsloth/Qwen3.6-35B-A3B-GGUF` and `unsloth/gemma-4-31B-it-GGUF` (use cached_sota_pair()).
+        2. Implement a step-wise exact verifier that scores reasoning partials.
+        3. Reject paths where verifier confidence drops (energy spike) before completion.
+        4. Emit artifact comparing final answer accuracy vs. early-commitment detection.
+      Run command: cd {project_root} && .venv/bin/python scripts/experiment_3383_ebm_cot_trajectory.py. Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  - id: exp3384-parallel-energy-minimization
+    milestone: "2026.05.312"
+    title: "Parallel Energy Minimization for Constraint Composition"
+    priority: high
+    max_turns: 50
+    estimated_wall_time_min: 20
+    track: validation
+    inference_substrate: synthetic
+    requires_gpu: true
+    deliverable: "results/experiment_3384_pem_composition.json"
+    prompt: |
+      CONTEXT: The 2025 Oarga & Du paper demonstrated Parallel Energy Minimization (PEM) over composed subproblems.
+      EXISTING CODE TO READ FIRST: python/carnot/pipeline/three_tier_pipeline.py
+      TASK: Decompose a constraint satisfaction problem into local energy landscapes and solve via PEM.
+      CONCRETE STEPS:
+        1. Create a synthetic modular constraint problem (e.g. graph coloring).
+        2. Define local energy models for sub-graphs.
+        3. Run PEM inference combining local models.
+        4. Use `unsloth/gemma-4-26B-A4B-it-GGUF` as a baseline reference solver for the same problem.
+      Run command: cd {project_root} && .venv/bin/python scripts/experiment_3384_pem_composition.py. Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  - id: exp3385-caffnet-differentiable-layer
+    milestone: "2026.05.312"
+    title: "CAffNet Differentiable Constraint Layer Prototype"
+    priority: normal
+    max_turns: 50
+    agent_type: codex
+    estimated_wall_time_min: 15
+    track: research
+    inference_substrate: synthetic
+    requires_gpu: false
+    deliverable: "results/experiment_3385_caffnet_layer.json"
+    prompt: |
+      CONTEXT: 2026 research like CAffNet introduces differentiable layers that strictly guarantee affine constraints.
+      EXISTING CODE TO READ FIRST: scripts/experiment_template.py
+      TASK: Implement a toy differentiable constraint layer using JAX for Tier-1 EBM filtering.
+      CONCRETE STEPS:
+        1. Write a JAX layer that projects unconstrained logits onto a constrained affine subspace.
+        2. Train a small network to map inputs to outputs satisfying linear inequalities.
+        3. Assert 100% hard constraint satisfaction at inference time.
+      Run command: cd {project_root} && JAX_PLATFORMS=cpu .venv/bin/python scripts/experiment_3385_caffnet_layer.py. Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  - id: exp3386-fr11-locality-aware-memory
+    milestone: "2026.05.312"
+    title: "FR-11 Locality-Aware Nonforgetting Memory"
+    priority: high
+    max_turns: 50
+    estimated_wall_time_min: 20
+    track: self-learning
+    inference_substrate: synthetic
+    requires_gpu: false
+    deliverable: "results/experiment_3386_fr11_nonforgetting.json"
+    prompt: |
+      CONTEXT: KAN-CL (2026) emphasizes per-knot locality to avoid catastrophic forgetting. FR-11 must not forget old constraints.
+      EXISTING CODE TO READ FIRST: data/test_fr11_tier2_memory.db
+      TASK: Add locality anchoring or holdout-bounds to the FR-11 constraint memory updates.
+      CONCRETE STEPS:
+        1. Load `exp3372` artifacts as baseline memory.
+        2. Introduce new constraint conflicts, and apply localized memory updates.
+        3. Evaluate on a holdout set to measure nonforgetting (zero regression on past cases).
+        4. If regression > 0, implement a rollback mechanism.
+      Run command: cd {project_root} && JAX_PLATFORMS=cpu .venv/bin/python scripts/experiment_3386_fr11_nonforgetting.py. Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  - id: exp3387-kanele-fpga-quantization
+    milestone: "2026.05.312"
+    title: "KANELÉ-style LUT Quantization for KAN Sidecar"
+    priority: normal
+    max_turns: 50
+    agent_type: codex
+    estimated_wall_time_min: 15
+    track: research
+    inference_substrate: synthetic
+    requires_gpu: false
+    deliverable: "results/experiment_3387_kanele_quantization.json"
+    prompt: |
+      CONTEXT: KANELÉ (arXiv:2512.12850) shows 2700x speedup by mapping KAN splines to FPGA LUTs via quantization.
+      EXISTING CODE TO READ FIRST: scripts/experiment_3374_ebt_kan_integration.py
+      TASK: Implement a quantization aware training (QAT) simulation for the KAN energy sidecar built in exp3374.
+      CONCRETE STEPS:
+        1. Take the KAN sidecar from exp3374.
+        2. Apply 8-bit quantization to the spline coefficients and activations.
+        3. Evaluate performance degradation vs full precision.
+      Run command: cd {project_root} && JAX_PLATFORMS=cpu .venv/bin/python scripts/experiment_3387_kanele_quantization.py. Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  - id: exp3388-logicvault-cdcl-resolution
+    milestone: "2026.05.312"
+    title: "LogicVault CDCL-inspired Conflict Resolution"
+    priority: normal
+    max_turns: 50
+    estimated_wall_time_min: 15
+    track: self-learning
+    inference_substrate: synthetic
+    requires_gpu: false
+    deliverable: "results/experiment_3388_logicvault_cdcl.json"
+    prompt: |
+      CONTEXT: ML-assisted CSP solvers increasingly use Conflict-Driven Clause Learning (CDCL).
+      EXISTING CODE TO READ FIRST: scripts/experiment_3373_logicvault_multi_agent.py
+      TASK: Enhance LogicVault multi-agent synchronization (exp3373) with CDCL.
+      CONCRETE STEPS:
+        1. When agents hit a contradiction, learn a blocking clause/constraint to prevent future visitation of the invalid state.
+        2. Store the learned clause in the LogicVault.
+        3. Measure the reduction in search steps for subsequent agent queries.
+      Run command: cd {project_root} && JAX_PLATFORMS=cpu .venv/bin/python scripts/experiment_3388_logicvault_cdcl.py. Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  - id: exp3389-constraintbench-baseline
+    milestone: "2026.05.312"
+    title: "ConstraintBench EBM vs AR Baseline"
+    priority: normal
+    max_turns: 50
+    estimated_wall_time_min: 25
+    track: live-model
+    inference_substrate: live_generation
+    requires_gpu: true
+    deliverable: "results/experiment_3389_constraintbench.json"
+    prompt: |
+      CONTEXT: ConstraintBench (2026) shows frontier models struggle with feasibility under full constraint specification.
+      EXISTING CODE TO READ FIRST: scripts/experiment_3375_vgb_llama3.py
+      TASK: Evaluate `unsloth/Qwen3.6-35B-A3B-GGUF` on a subset of ConstraintBench tasks, comparing standard AR against an EBM repair loop.
+      CONCRETE STEPS:
+        1. Implement 10 tasks reflecting constraint satisfaction.
+        2. Generate candidates purely AR using `unsloth/Qwen3.6-35B-A3B-GGUF`.
+        3. Run the VGB repair ladder on failed candidates.
+        4. Compare valid solution ratios.
+      Run command: cd {project_root} && .venv/bin/python scripts/experiment_3389_constraintbench.py. Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  - id: exp3390-capstone-v312
+    milestone: "2026.05.312"
+    title: "Capstone v312"
+    priority: critical
+    max_turns: 30
+    estimated_wall_time_min: 5
+    track: validation
+    inference_substrate: aggregation_from_upstream_artifacts
+    requires_gpu: false
+    deliverable: "results/experiment_3390_capstone_v312.json"
+    prompt: |
+      CONTEXT: Aggregate results of v312.
+      EXISTING CODE TO READ FIRST: scripts/experiment_3371_capstone_v311.py
+      TASK: Capstone compilation.
+      CONCRETE STEPS:
+        1. Aggregate results from v312 experiments.
+        2. Emit capstone artifact.
+      Run command: cd {project_root} && JAX_PLATFORMS=cpu .venv/bin/python scripts/experiment_3390_capstone_v312.py. Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  - id: exp3391-plan-milestone-2026-05-313
+    milestone: "2026.05.312"
+    title: "Plan milestone 2026.05.313"
+    priority: normal
+    max_turns: 50
+    agent_type: gemini
+    estimated_wall_time_min: 15
+    track: ops
+    inference_substrate: text_generation
+    requires_gpu: false
+    deliverable: "results/experiment_3391_plan_milestone_313.json"
+    prompt: |
+      CONTEXT: Plan .313.
+      EXISTING CODE TO READ FIRST: scripts/experiment_3376_plan_milestone_312.py
+      TASK: Plan the next milestone.
+      CONCRETE STEPS:
+        1. Analyze .312 results.
+        2. Draft .313 roadmap.
+      Run command: cd {project_root} && JAX_PLATFORMS=cpu .venv/bin/python scripts/experiment_3391_plan_milestone_313.py. Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  - id: exp3392-archive-v311-activate-v312
+    milestone: "2026.05.312"
+    title: "Archive milestone .311 honestly and activate .312"
+    priority: critical
+    max_turns: 20
+    model: opus
+    estimated_wall_time_min: 10
+    track: ops
+    inference_substrate: aggregation_from_upstream_artifacts
+    requires_gpu: false
+    deliverable: "results/experiment_3392_archive_v311_activate_v312.json"
+    prompt: |
+      CONTEXT: Operational handoff.
+      EXISTING CODE TO READ FIRST: scripts/experiment_3377_archive_v310_activate_v311.py
+      TASK: Archive .311 and activate .312.
+      CONCRETE STEPS:
+        1. Perform archive operations.
+      Run command: cd {project_root} && JAX_PLATFORMS=cpu .venv/bin/python scripts/experiment_3392_archive_v311_activate_v312.py. Do NOT push. Do NOT modify scripts/research_conductor.py.
