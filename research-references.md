@@ -1,3 +1,135 @@
+## 2026-05-29 Post-.308 Planning Sweep (Milestone 2026.05.309)
+
+Milestone `.308` completed operationally, but the evidence chain is still
+uneven. The usable outputs are a cached verifier-diversity audit
+(`results/experiment_3329_verifier_ensemble_diversity_audit_v2.json`), small
+EBT/Interwhen diagnostics (`exp3331`, `exp3332`), a flagged live SOTA
+energy-guided TT-scaling diagnostic (`exp3333`), and a small FR-11 online-memory
+nonforgetting result (`exp3334`). The intended Phase-3 live bootstrap
+(`exp3327`) blocked on SOTA GGUF tokenizer/runtime setup, the full
+energy-descent-vs-AR panel (`exp3328`) did not run, the diversity-remediation
+plan (`exp3330`) did not land, and the reproducer/capstone artifacts
+(`exp3335`, `exp3336`) are absent. `.309` should therefore prioritize clean
+runtime receipts, diversity remediation, larger nonforgetting evidence, and the
+deferred hardware continuity tasks.
+
+### EBT, ARM-as-EBM, LoopUS, And CEM Keep The Phase-3 Premise Live
+
+- **Energy-Based Transformers (EBT; arXiv:2507.02092 / ICLR 2026 oral):**
+  EBTs frame prediction as minimizing a learned energy assigned to
+  input/candidate pairs, with inference-time optimization as the "thinking"
+  mechanism. This remains the closest external fit to Carnot's Phase-3
+  energy-descent premise, but Carnot should keep EBT as a sidecar until local
+  SOTA GGUF runtime and verifier-anchored panels are duration-clean.
+- **ARM-as-EBM (arXiv:2512.15605):** Autoregressive language models can be
+  analyzed as EBMs in function space. This supports comparing energy-descent
+  refinement against autoregressive decoding without claiming they are wholly
+  unrelated model classes.
+- **LoopUS (arXiv:2605.11011) and Causal Energy Minimization
+  (arXiv:2605.07588):** 2026 latent-refinement and transformer-layer
+  energy-minimization work strengthens the idea that looped internal
+  refinement is a natural next experiment, not a speculative detour.
+- **Carnot action:** `.309` should first produce a SOTA GGUF runtime receipt,
+  then rerun the energy-descent bootstrap and panel with exact verifier
+  authority and clean duration/provenance fields.
+- **Sources:** https://openreview.net/forum?id=ZBj3Qp1bYg,
+  https://arxiv.org/abs/2507.02092, https://arxiv.org/abs/2512.15605,
+  https://huggingface.co/papers/2605.11011, and
+  https://arxiv.org/abs/2605.07588
+
+### Verification Work Converges On External, Deterministic Authority
+
+- **Interwhen (Microsoft Research, arXiv:2602.11202):** Test-time monitors
+  enforce verifiable properties during generation and can steer intermediate
+  reasoning rather than only score final answers.
+- **ConstraintBench (arXiv:2602.22465):** Frontier models struggle primarily
+  with feasibility under fully specified constrained optimization, even when
+  feasible outputs are often near-optimal. This reinforces Carnot's exact
+  verifier-first posture.
+- **BEAVER (arXiv:2512.05439):** Deterministic, sound probability bounds over
+  LLM constraint satisfaction are now a concrete direction for tail-risk
+  characterization.
+- **HIVE (arXiv:2604.26139):** Hallucination detection is moving toward
+  trajectory/evidence signals, not just final-answer uncertainty. Carnot should
+  collect trajectory/provenance features as independent verifier axes.
+- **Carnot action:** `.309` should add a monitor/provenance verifier axis and
+  rerun the verifier-diversity covariance audit, rather than selecting more
+  correlated wrappers around the same exact/symbolic signal.
+- **Sources:** https://www.microsoft.com/en-us/research/publication/interwhen-a-generalizable-framework-for-verifiable-reasoning-with-test-time-monitors/,
+  https://arxiv.org/abs/2602.11202, https://arxiv.org/abs/2602.22465,
+  https://arxiv.org/abs/2512.05439, and https://arxiv.org/abs/2604.26139
+
+### Constrained Generation Should Reduce Malformed Extraction, Not Replace Semantics
+
+- **llguidance:** Mature constrained-output tooling can compute token masks for
+  context-free grammars/JSON schemas with very low CPU overhead and little
+  startup cost.
+- **XGrammar-2:** The 2026 release emphasizes portable structured generation
+  across engines and models, including Qwen and Gemma families.
+- **Cactus constrained speculative sampling:** Recent Hugging Face/arXiv work
+  frames decoding acceleration through constrained optimization and bounded
+  divergence from a verifier distribution.
+- **Carnot action:** `.309` should test constrained structured extraction for
+  SOTA GGUF outputs to reduce malformed JSON/claim extraction. This is a
+  formatting and proposal-layer improvement only; exact verifiers remain the
+  semantic authority.
+- **Sources:** https://github.com/guidance-ai/llguidance,
+  https://github.com/mlc-ai/xgrammar, and
+  https://huggingface.co/papers/2604.04987
+
+### FR-11 Should Adopt Online Mistake Bounds And Locality-Aware Memory
+
+- **Online learnability of CoT verifiers (arXiv:2603.03538):** The relevant
+  theory distinguishes soundness errors from completeness errors under
+  generator/verifier feedback loops and distribution shift.
+- **KAN-CL (arXiv:2605.12306):** Per-knot locality/importance anchoring gives a
+  concrete nonforgetting idea for compact memories or sidecar heads, even if
+  KANs are not headline replacement models in Carnot.
+- **KAN property verification (arXiv:2602.06737):** Piecewise-affine
+  abstractions plus MILP verification are relevant if Carnot later exposes KAN
+  memory heads to formal checks.
+- **Carnot action:** `.309` should run FR-11 v5 with larger holdouts, explicit
+  soundness/completeness cost accounting, rollback, and optional locality
+  anchoring. The result should be self-learning evidence, not another static
+  memory replay.
+- **Sources:** https://arxiv.org/abs/2603.03538,
+  https://arxiv.org/abs/2605.12306, and https://arxiv.org/abs/2602.06737
+
+### Hardware Watch: TSU Direction Is Clear, Local Evidence Must Be Board-Local
+
+- **Extropic TSU / THRML:** Extropic's TSU story now explicitly targets EBMs
+  through Gibbs-style sampling cores, and THRML is available for thermodynamic
+  hypergraphical model simulation. This supports Carnot's long-term
+  hardware-accelerated sampling direction but does not justify local speedup
+  claims without owned transcripts.
+- **Logical Intelligence Kona/Aleph:** Kona is publicly positioned as an EBM
+  constraint layer beneath AI stacks, and Aleph's May 2026 post reports strong
+  formal-reasoning benchmark progress. Treat this as competitive pressure and
+  architecture motivation, not as reproducible evidence for Carnot.
+- **Carnot action:** `.309` should pick up the operator-deferred hardware tasks:
+  KV260 MMD-vs-CPU sequential Gibbs and GateMate n16 Ising tile build/flash
+  smoke. Both must emit board-local command transcripts and blocked artifacts if
+  preconditions fail.
+- **Sources:** https://extropic.ai/writing/thermodynamic-computing-from-zero-to-one,
+  https://extropic.ai/software,
+  https://logicalintelligence.com/kona-ebms-energy-based-models, and
+  https://logicalintelligence.com/blog/aleph-leading-benchmarks
+
+### Semantic Scholar And GitHub Check
+
+- **Semantic Scholar:** Direct citation lookup for EBT and ARM-as-EBM surfaced
+  the EBT paper page/API metadata but did not reveal a clean new citation-led
+  experiment beyond the already identified 2026 EBT/ARM/latent-refinement
+  cluster. No citation-count or citation-graph claim should be made from this
+  sweep.
+- **GitHub/Hugging Face:** The strongest implementation leads are still
+  `alexiglad/EBT`, `microsoft/interwhen`, `guidance-ai/llguidance`, and
+  `mlc-ai/xgrammar`. `.309` should use them as pattern references only and keep
+  local exact-verifier artifacts as the evidence source.
+- **Sources:** https://www.semanticscholar.org/paper/Energy-Based-Transformers-are-Scalable-Learners-and-Gladstone-Nanduru/2da9163730998a4368c609972ccff0582518b36b,
+  https://github.com/alexiglad/EBT, https://github.com/microsoft/interwhen,
+  https://github.com/guidance-ai/llguidance, and https://github.com/mlc-ai/xgrammar
+
 ## 2026-05-29 Post-.307 Planning Sweep (Milestone 2026.05.308)
 
 This sweep was run after milestone `.307` closed operationally. The recorded

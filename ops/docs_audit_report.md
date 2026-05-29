@@ -4,49 +4,47 @@
 # docs_audit_report — 2026-05-29
 
 ## TL;DR (stranger's 30-second take)
-I would close this tab in 10 seconds. The page is overwhelmed with inside-baseball metrics, three contradictory claims about HumanEval improvements, and literal test-suite file paths bleeding into the visible text and CSS. It reads like an internal CI report masquerading as a landing page.
+A stranger would close the tab almost immediately. While the hero section is strong, the page is severely compromised by raw test suite paths leaking into the text, an alphabet soup of internal acronyms, and wildly contradictory benchmark claims that destroy credibility.
 
 ## TOP 3 PROBLEMS
-1. LEAKED FILE PATHS IN UI: The "Live benchmark" card displays a raw pytest file path, and CSS/fonts are broken by template injection errors (`@.tmp-pytest...`).
-2. CONTRADICTORY CLAIMS: The page lists three completely different pass-rate improvements for HumanEval (+3 points, +72pp, and +36pp).
-3. ALPHABET SOUP JARGON: The text is flooded with unexplained acronyms (FoVer, CCTU, SVAMP, PRM-BiasBench) that mean nothing to an outsider.
+1. Leaked Test Paths — Raw temporary file paths (`@.tmp-pytest/...`) and experiment IDs have leaked directly into the CSS and result cards, making the site look broken.
+2. Contradictory Claims — Code verification shows both a +3.0 point and +72 point improvement on HumanEval in different cards.
+3. Extreme Internal Jargon — The Evidence section is unreadable due to unexplained acronyms (FoVer, SVAMP, VeriCoT, PREM).
 
 ## DETAILED FINDINGS
 ### Bloat
-- Entire Page — 28 cards total (7 bento, 12 results, 7 blog) — Cap the page at ~12 cards total; nobody is reading all of these.
-- Results section — 12 cards — Cap at 4-6 most impressive, understandable metrics.
-- Blog section — 7 cards — Cap at 3 recent/relevant posts.
+- Evidence section — 12 result cards — Suggested cap: 6 most impactful cards
+- From the blog section — 7 blog post cards — Suggested cap: 3 recent/highlighted posts
 
 ### Internal jargon
-- "Recent progress" card — "FoVer (5-seed dual-condition)", "architecture-only" — A stranger doesn't know the FoVer dataset or these internal test conditions.
-- "Features: Typed constraints" bento card — "CCTU constrained tool-use micro-benchmark" — Highly specific, unexplained internal benchmark.
-- "Results: Math reasoning" card — "EstimationVerifier SVAMP AUC" — Three unexplained terms in four words.
-- "Results: Adversarial audit" card — "PRM-BiasBench-style attacks" — Obscure reference to a specific internal/external benchmark style.
-- "Results: Code repair" card — "IterativeSelfRepair (HumanEval-50, execute-feedback-retry)" — Reads like internal CLI flags or run configurations.
+- CSS and Result Cards — `@.tmp-pytest/...`, `experiment_1238_phase5d_intermediate_scale.json`, `spilled-energy-2602-18671:real.txt` — These are raw internal test paths and experiment IDs that have leaked into the page, looking like broken rendering logic to a stranger.
+- Recent progress card — `FoVer (5-seed dual-condition; architecture-only 0.8947)` — A stranger doesn't know what the FoVer dataset is or what these condition strings mean.
+- Evidence section cards — `SVAMP`, `VeriCoT`, `CCTU`, `PRM-BiasBench`, `HalluGuard v3` — Unexplained benchmark and model acronyms that obscure the actual value being measured.
+- Test-Time Compute (TTC) & PREM card — `PREM variance` — Undefined acronym (Process-Reward Energy Model) used as if it's common knowledge.
 
 ### Per-milestone narrative
-- "Recent progress" card — "Repinned from v2 0.9857 after pre-submission adversarial audit"
-- "Preprint" section — "The arXiv submission is prepared but pending operator-initiated upload."
-- "Writing: Two Retractions and a Rescue" card — "The narrower paper we ended up with is one we can actually defend." (Reads like an internal retrospective rather than marketing copy).
+- Hero stats bar — `382 Completed milestones` and `2,776 Experiment runs` — References internal development tracking rather than product value.
+- Research operations card — Mentions the internal "autonomous research loop" and how "every experiment artifact is stored" — Reads like an internal retrospective rather than user-facing capabilities.
 
 ### Inconsistencies
-- HumanEval performance: The "Code" bento card claims "+3 points on pass-rate", the "Code repair" results card claims "8% -> 80% pass rate (+72pp)", and the "Live benchmark" results card claims "0% -> 36%".
-- Metric terminology: Uses "AUROC" (0.9131) in the hero and safety cards, but randomly switches to "AUC" (0.90) in the math reasoning card.
+- HumanEval pass rate delta vs HumanEval pass rate delta — "Code" feature card claims "+3.0 points on pass-rate" vs "Code repair" result card claims "8% -> 80% pass rate (+72pp)".
+- AUROC reporting vs AUROC reporting — Hero stat bar claims "0.9131" while Safety card claims "0.91".
 
 ### Missing essentials
-- None structurally, but the core "What does it do" message risks getting buried under the sheer volume of "Evidence" cards and "Seven capabilities".
+- Who maintains it? — Beyond a footer copyright line ("Ian Blenke / Carnot Project"), there is no context on who is backing this framework, making it hard to trust the SOTA claims.
 
 ### Fabrication signals
-- "Results: Adversarial audit" card — "catches 60/60 attacks" — A 100% success rate on adversarial attacks looks suspiciously perfect and overfitted without a credibility anchor.
-- "Results: Math extraction" card — "GSM8K extraction TP rate: 0.5 -> 1.0" — A 1.0 (100%) True Positive rate is highly suspicious.
+- 1.0 — Math extraction card claims "1.0" true positive rate for GSM8K extraction, which is perfectly 100% and highly suspect for LLM text extraction.
+- 60/60 — Adversarial audit card claims "60/60 attacks" caught, a 100% success rate that looks like over-fitting or snake oil.
+- Zero — Dogfooding blog card claims "Zero false positives" over 26 days of automated constraint checking, which is statistically unbelievable.
 
 ## WHAT'S WORKING
-- The hero section's H1 and subtitle ("Catch the mistakes your LLM confidently makes up") clearly and concisely define the product's value proposition.
-- The quickstart tabs are excellent, showing clean, readable Python and Rust code that makes the framework look approachable and easy to use.
+- The hero hook ("Catch the mistakes your LLM confidently makes up.") and the "How it works" 3-step explanation are incredibly clear and instantly communicate the value prop.
+- The Quick Start tabbed code blocks (Python vs Rust) effectively prove the framework is real, installable, and easy to use.
 
 ## RECOMMENDED OPERATOR ACTIONS
-1. Fix the severe template injection bugs replacing font weights, media queries, and the "Live benchmark" H3 text with `.tmp-pytest` file paths.
-2. Reconcile the three contradictory HumanEval performance claims into a single, defensible metric.
-3. Trim the results grid from 12 cards to the 4 most compelling, stripping out all internal jargon like "CCTU" and "SVAMP".
-4. Delete the "Recent progress" card in the hero entirely; it is pure internal status reporting.
-5. Cap the blog post list to the 3 most relevant posts to reduce bloat and scrolling fatigue.
+1. Revert or fix the broken template injections/file paths (`@.tmp-pytest/...`) leaking into the CSS and result cards.
+2. Reconcile the conflicting HumanEval pass-rate claims (+3.0 vs +72pp); pick the most defensible number and use it consistently.
+3. Purge or define all benchmark and internal jargon (FoVer, SVAMP, PREM, CCTU) across all cards.
+4. Trim the Evidence section down to a maximum of 6 high-impact, credible metrics.
+5. Add credibility anchors or caveats to the suspiciously perfect numbers (1.0 TP rate, 60/60 caught, 0 false positives).
