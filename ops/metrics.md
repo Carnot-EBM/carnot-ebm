@@ -3122,3 +3122,11 @@ Note: `scripts/session-metrics.py` referenced by `CLAUDE.md` is not present in t
 | 1 | 2026-05-20T18:00:00Z | 2026-05-20T19:17:00Z | Plan milestone 2026.05.259: read 10+ project files (.258 capstone + key experiment results), arxiv sweep (4 new papers: arXiv:2508.14496 Semantic Energy, arXiv:2603.01025 OTV, arXiv:2602.01090 FALCON, arXiv:2506.03723 Verbalized Confidence), updated research-references.md, wrote openspec/change-proposals/research-roadmap-v259.md and research-roadmap-next.yaml (13 tasks exp2725-exp2737). CRITICAL GAP: verifier energy all-zero on live GGUF (exp2715). All CLAUDE.md mandatory disciplines applied: Codex-Default (12/13 codex), prior_failures (exp2729/2732/2733/2734/2735/2737), PRECONDITIONS blocks, principle-annotated artifact fields, terminal-prefix verdicts, hardware-task continuity (exp2735 KV260 5th Branch B). | TBD |
 | 2 | 2026-05-20T23:20:23Z | 2026-05-20T23:20:33Z | Context compaction continuation: verified both milestone files exist, completed ops/metrics.md and ops/changelog.md updates. | TBD |
 2026-05-21T06:39:22Z
+
+## Session: 2026-05-29 Milestone 2026.05.312 Operational Retrospective
+
+### Turn Log
+
+| Turn | Start | End | Description | Tokens (est) |
+|------|-------|-----|-------------|------|
+| 1 | 2026-05-29T23:52:51Z | 2026-05-29T23:53:52Z | Wrote operational retrospective skeleton JSON, appended updates to ops/changelog.md and docs/research-log.md noting zero experiments completed. | TBD |
