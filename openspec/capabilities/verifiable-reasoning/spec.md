@@ -19699,6 +19699,17 @@ paths and labels
 clean, at least one headline model was used, fallback evidence is separated,
 and no impossible duration is flagged.
 
-**Implementation Status:** Proposed (Exp 3004)
+Implementation Status: Proposed (Exp 3004)
+
+### REQ-VERIFY-3332: Interwhen-Style Monitor Pilot
+
+The repository shall provide an Exp 3332 deterministic monitor pilot in `scripts/experiment_3332_interwhen_monitor_pilot_v1.py` that evaluates intermediate reasoning candidates using exact or structured monitors.
+
+The pilot shall:
+- Select cached examples with multiple candidate states per problem or synthesize deterministic fixtures with known intermediate errors.
+- Implement monitor outputs for at least three signals: exact constraint satisfaction, evidence/provenance presence, and unsupported commitment risk.
+- Compare monitor trajectory features against final exact correctness.
+- Report whether monitor features should be added to exp3328-style panels and FR-11 memory updates.
+- Write `results/experiment_3332_interwhen_monitor_pilot_v1.json` with the following fields: `honest_verdict`, `inference_substrate`, `random_seed`, `reproducibility_checksum`, `duration_s`, `n_cases`, `monitor_names`, `trajectory_signal_summary`, `monitor_pilot_ready`, `recommended_integration_points`, and `blocked_reasons`.
 
 **Spec traces:** REQ-VERIFY-3004, SCENARIO-VERIFY-3004, Exp 3004
