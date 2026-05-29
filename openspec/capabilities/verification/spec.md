@@ -8862,3 +8862,73 @@ denominators, explicit precondition diagnostics, and
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-VERIFY-3302 | Implemented (`python/carnot/verify/headline_sota_repair_panel_v11.py`) | Implemented (`tests/python/test_experiment_3302_headline_sota_repair_panel_v11.py`) |
+
+### REQ-VERIFY-3303: Repair Headline Evidence Audit V1
+
+The repository shall provide an Exp 3303 independent audit workflow that reads
+`results/experiment_3302_headline_sota_repair_panel_v11.json` and
+`results/experiment_3301_exact_repair_panel_manifest_v11.json`, runs or invokes
+the available adversarial artifact checks for the Exp 3302 result when
+feasible, and writes
+`results/experiment_3303_repair_headline_evidence_audit_v1.json`. The workflow
+MUST be aggregation only. It MUST NOT rerun repair generation, rerun any model,
+alter Exp 3302, push, or modify `scripts/research_conductor.py`.
+
+The audit SHALL confirm that every claimed repair success in Exp 3302 has a
+deterministic exact checker pass and that no success depends on an LLM judge.
+It SHALL verify `panel_case_count>=30`, confidence interval fields are present,
+`false_accept_count=0`, manifest hashes match the Exp 3301 fixed case list, and
+model declarations identify the actual invoked model while keeping missing
+mandated models explicit. The audit SHALL preserve any adversarial verification
+flags and SHALL fail headline promotion when duration, substrate, provenance,
+or adversarial flags make the source artifact unsafe to cite as a headline
+repair claim.
+
+The terminal artifact MUST include `repair_headline_evidence_audit_ready`,
+`headline_claim_allowed_after_audit`, `audited_artifact`, `panel_case_count`,
+`exact_successes_audited`, `false_accept_count`,
+`llm_judge_dependency_count`, `adversarial_verify_flags`,
+`substrate_consistency_passed`, `confidence_interval_present`,
+`claim_boundaries`, `inference_substrate`, `random_seed`,
+`reproducibility_checksum`, `duration_s`, and `honest_verdict`. It SHOULD also
+include source checksums, model invocation summaries, exact-check provenance,
+and field-provenance annotations. `repair_headline_evidence_audit_ready` MUST
+be true only when Exp 3302 and Exp 3301 are readable, the fixed manifest
+denominator is checked, the exact-check and LLM-judge dependency counts are
+computed, adversarial verification results are preserved, and all required
+audit fields validate. `headline_claim_allowed_after_audit` MUST be true only
+when the source artifact already allows a headline claim, all claimed successes
+have exact checker passes, no LLM judge dependency exists, `false_accept_count`
+is zero, confidence intervals are present, `panel_case_count>=30`, source
+provenance is clean, model/substrate declarations are coherent, and no
+critical adversarial verification flag remains. `honest_verdict` MUST begin
+with one of `complete:`, `success:`, `passed:`, or `shipped:`.
+
+### SCENARIO-VERIFY-3303: Audit Bounds Exp 3302 Headline Repair Evidence
+
+Given Exp 3302 reports a ready 30-case repair panel over the fixed Exp 3301
+manifest, 27 verified successes, `false_accept_count=0`, confidence intervals,
+one actually used mandated GGUF model, two missing mandated GGUF models, and an
+adversarial verification `DURATION_TOO_SHORT` flag,
+When Exp 3303 runs the audit workflow,
+Then it writes the required terminal JSON artifact without rerunning repair or
+changing Exp 3302, records the audited source path, preserves the adversarial
+flag list, confirms the claimed successes are exact-checker-backed with zero
+LLM-judge dependencies, records `substrate_consistency_passed=false`, records
+`headline_claim_allowed_after_audit=false`, and lists claim boundaries that
+allow bounded exact-check/no-false-accept evidence while forbidding headline
+repair promotion until the duration/substrate flag is independently resolved.
+
+If Exp 3302 has any claimed success without an exact checker pass, any LLM
+judge dependency, missing confidence intervals, fewer than 30 panel cases, a
+nonzero false accept count, mismatched manifest hashes, missing actual model
+declarations, dirty provenance, or critical adversarial flags, then Exp 3303
+SHALL still write a complete audit artifact but SHALL set
+`headline_claim_allowed_after_audit=false` and include the relevant restriction
+in `claim_boundaries`.
+
+## Implementation Status (REQ-VERIFY-3303)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-VERIFY-3303 | Implemented (`python/carnot/verify/repair_headline_evidence_audit_v1.py`) | Implemented (`tests/python/test_experiment_3303_repair_headline_evidence_audit_v1.py`) |
