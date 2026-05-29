@@ -320,6 +320,205 @@ tasks are not.
 
 ## MANDATORY-NEXT-MILESTONE PRIORITIES (.86 planner — hard pickup per CLAUDE.md)
 
+### NEW 2026-05-29: PHASE-3 PATH DE-RISKING ROADMAP — the two existential link tests (run these INSTEAD OF Phase-1 re-measurement)
+
+**Origin:** 2026-05-29 Opus 4.8 architecture review (with two Explore audits of
+the Phase-1→Kona theory-of-path). Finding: the path to the self-correcting
+energy-based foundation model is coherent and theory-grounded (α_t grounding
+keystone), and the de-risking experiments are even written down — but they were
+queued at milestones .82/.83 (Zenil stack) and .94–.97 (Phase-5 derisking) and
+**never run.** The loop ran 200+ milestones past them, re-measuring the Phase-1
+foundation (FoVer matrix v36, repair panel v11) instead of testing the links
+that determine whether the foundation composes toward the endgame.
+
+Three links are load-bearing-unproven. The two cheapest-and-most-existential
+are queued here as a forcing priority. **These should preempt routine Phase-1
+re-measurement** until at least P0.1 has a verdict, because P0.1 either
+justifies the entire foundation-model endgame or honestly retires it.
+
+The CUDA recovery of 2026-05-28 (both RTX 3090s back) lifts the compute blocker
+that justified deferring P0.1. There is now no resource reason not to run it.
+
+---
+
+#### exp3312 — P0.1: Energy-Descent Reasoning vs Autoregressive Baseline (THE KONA PREMISE TEST)
+
+```yaml
+- id: exp3312-energy-descent-vs-autoregressive-premise-v1
+  milestone: "2026.05.<NNN>"
+  deliverable: "results/experiment_3312_energy_descent_vs_autoregressive_premise_v1.json"
+  title: "Energy-Descent Reasoning vs Autoregressive Baseline — the Kona premise test"
+  priority: critical
+  agent_type: gemini
+  model: gemini-3.1-pro-preview
+  max_turns: 60
+  estimated_wall_time_min: 120
+  track: evidence
+  inference_substrate: live_llm_inference
+  requires_gpu: true
+  prior_failures:
+    - experiment_id: exp1222-phase5a-insitu-prototype
+      verdict: "complete: toy 5x5 synthetic puzzle prototype; stability gates passed"
+      addressed_by: "exp1222 ran energy-descent on toy 5x5 synthetic puzzles and only measured stability, never head-to-head accuracy vs an autoregressive baseline on a REAL task. This task runs the head-to-head on a real reasoning benchmark (GSM8K subset or ARC-AGI-1) — the only test of the premise the Phase-3 endgame rests on."
+      retire_if_same_verdict: false
+    - experiment_id: exp1210-phase4-bfs-intractable-puzzles-v2
+      verdict: "complete: BFS tie (downgraded); synthetic advantage only on BFS-intractable puzzles"
+      addressed_by: "exp1210 produced a BFS tie on synthetic puzzles. This task uses a REAL reasoning task with an apples-to-apples AR baseline of comparable parameter count, paired per-problem, with a falsifiable superiority/non-inferiority gate."
+      retire_if_same_verdict: true
+    - experiment_id: exp1165-phase4-active-inference-pilot-v1
+      verdict: "complete: ARC-AGI-3-CLASS result on 5x5 synthetic (74.7% action reduction)"
+      addressed_by: "exp1165 was a synthetic 5x5 toy, not a real benchmark and not vs an AR baseline. This task is real-task, AR-compared, paired-significance."
+      retire_if_same_verdict: true
+
+  PRECONDITIONS (step 0, before any inference):
+    a. CUDA available: python -c "import torch; assert torch.cuda.is_available()"
+       (recovered 2026-05-28). If not, honest_verdict blocked_cuda_unavailable.
+    b. The continuous-latent refinement substrate (Boltzmann-GPT lineage,
+       carnot.phase3.boltzmann_gpt / exp1237/exp1248) is trainable. If not,
+       blocked_energy_descent_substrate_unavailable.
+    c. A real reasoning corpus with ground-truth labels is present (GSM8K subset
+       >= 200 problems, OR ARC-AGI-1 train). If not, blocked_real_task_corpus_missing.
+    d. An autoregressive baseline of comparable parameter count is runnable on
+       the same corpus. If not, blocked_ar_baseline_unavailable.
+
+  CONCRETE STEPS:
+    1. Pick a real reasoning task with binary pass/fail (recommend a GSM8K
+       subset, n>=200, held-out). Document the exact split + seed.
+    2. AR condition: the base model answers each problem autoregressively
+       (greedy or fixed-temp). Record per-problem pass/fail.
+    3. Energy-descent condition: the continuous-latent refinement substrate
+       solves each problem via bounded-depth iterative refinement on the
+       latent guided by the verifier energy (REQ-KONA-001/002 reasoning mode),
+       decoding to an answer only at the coda. Record per-problem pass/fail.
+       Both conditions use the SAME problems (paired) and comparable compute.
+    4. Compute accuracy for each condition + the paired delta with a
+       significance test (McNemar or paired bootstrap CI).
+    5. Emit results with all REQUIRED ARTIFACT FIELDS.
+
+  REQUIRED ARTIFACT FIELDS:
+    honest_verdict:
+      principle: "Terminal verdict must start with complete:/success:/passed:/shipped_."
+    inference_substrate: { value: live_llm_inference }
+    task_name: { principle: "name the real benchmark + split; toy/synthetic is not acceptable for this test." }
+    n_problems: { principle: ">=200 for a CLT-valid accuracy delta." }
+    ar_baseline_accuracy: { principle: "the autoregressive control; same problems, comparable compute." }
+    energy_descent_accuracy: { principle: "the non-AR condition; the premise under test." }
+    accuracy_delta: { principle: "energy_descent minus AR — the headline." }
+    paired_significance: { principle: "McNemar/bootstrap p-value or CI; an unpaired or n<200 delta is gameable." }
+    compute_parity_note: { principle: "state the param-count + inference-compute of each condition so the comparison is apples-to-apples, not a bigger-model win." }
+    random_seed: { principle: "determinism precondition for reproducibility." }
+    reproducibility_checksum: { principle: "content hash of corpus+substrate+seed." }
+    duration_s: { principle: "real training+inference takes wall time; 60s floor." }
+
+  ACCEPTANCE GATES:
+    - condition: "energy_descent_accuracy >= ar_baseline_accuracy AND paired_significance favors non-inferiority"
+      principle: "G1 PREMISE-VIABLE: energy-descent at least matches AR on a real task. Below this, the non-AR reasoning mode is not even competitive at this scale."
+    - condition: "accuracy_delta > 0 with paired p < 0.05"
+      principle: "G2 PREMISE-VALIDATED: energy-descent SIGNIFICANTLY beats AR — the justification for the entire foundation-model endgame."
+
+  TERMINAL VERDICTS (all start with complete:):
+    - G2 passes -> "complete: energy_descent_beats_ar_premise_validated"
+    - G1 passes, G2 fails -> "complete: energy_descent_viable_not_superior_at_scale"
+    - G1 fails -> "complete: energy_descent_below_ar_premise_unsupported_at_scale" (retire_if_same_verdict after one substrate-redesign attempt)
+```
+
+**Why P0.1 is the single most important experiment in the project:** the entire
+Phase-3 / Kona endgame assumes energy-descent reasoning on continuous latents is
+*better* than token sampling. That has never been tested on a real task vs a
+real AR baseline — only toy 5x5 puzzles and a downgraded BFS tie. If it can't
+beat (or at least match) AR on one real task, the foundation-model endgame has
+no justification and the honest move is to retire it. Either outcome is
+high-value: validation greenlights Phase 3, refutation saves years.
+
+---
+
+#### exp3313 — P0.2: Verifier-Ensemble Joint-Null-Space / λ_min(Σ) Diversity Audit
+
+```yaml
+- id: exp3313-verifier-ensemble-lambda-min-diversity-audit-v1
+  milestone: "2026.05.<NNN>"
+  deliverable: "results/experiment_3313_verifier_ensemble_lambda_min_diversity_audit_v1.json"
+  title: "Verifier-Ensemble Joint-Null-Space / lambda_min(Sigma) Diversity Audit"
+  priority: critical
+  agent_type: gemini
+  model: gemini-3.1-pro-preview
+  max_turns: 40
+  estimated_wall_time_min: 45
+  track: evidence
+  inference_substrate: verifier_ensemble_against_cached_candidates
+  requires_gpu: true
+  prior_failures:
+    - experiment_id: exp1224-phase5c-adversarial-probe
+      verdict: "complete: k=3 ensemble pairwise_max_correlation=1.0 — effective ensemble collapsed k=3 -> k=1"
+      addressed_by: "exp1224 showed a k=3 ensemble collapsed to effective k=1 (verifiers perfectly correlated via the shared decoder). This task measures lambda_min(Sigma) + participation-ratio effective-k on a DELIBERATELY disjoint-kernel suite (structural / empirical / semantic / anti-vacuity classes) at larger k, to test whether real diversity is recoverable or the collapse is intrinsic. The FoVer headline (exp2837) corroborates the risk: 3 of its 4 verifiers showed ZERO learning contribution."
+      retire_if_same_verdict: true
+
+  PRECONDITIONS (step 0):
+    a. FoVer corpus present (data/fover_corpus.jsonl) + an adversarial/OOD
+       slice. If not, blocked_corpus_missing.
+    b. The verifier suite is callable in batch over cached candidates with a
+       configurable verifier set. If not, blocked_verifier_suite_uncallable.
+    c. CUDA available for any model-based verifiers. If not, run CPU-only
+       verifiers and record which were skipped (do not silently drop them).
+
+  CONCRETE STEPS:
+    1. Assemble the broadest available verifier set, labeled by kernel class
+       (structural: Z3/AST; empirical: PBT/execution; semantic: ThinkPRM/
+       semantic-cosine; anti-vacuity: liveness/coverage; memory: fr11).
+    2. Score every verifier on FoVer + the adversarial slice; build the
+       k x k verifier-DECISION covariance matrix Sigma.
+    3. Compute: lambda_min(Sigma); the full pairwise-correlation matrix;
+       effective-k via participation ratio (sum(lambda)^2 / sum(lambda^2));
+       per-verifier marginal contribution (drop-one-out AUROC delta).
+    4. Identify which verifiers share a null space (high pairwise correlation,
+       zero drop-one-out contribution — the exp2837 "3-of-4 contribute zero"
+       pattern).
+    5. Emit results with all REQUIRED ARTIFACT FIELDS.
+
+  REQUIRED ARTIFACT FIELDS:
+    honest_verdict: { principle: "complete:/success:/passed:/shipped_ prefix." }
+    inference_substrate: { value: verifier_ensemble_against_cached_candidates }
+    k_verifiers: { principle: "how many verifiers in the audited suite." }
+    lambda_min_sigma: { principle: "smallest eigenvalue of the decision covariance; the joint-null-space proxy. Zenil-stack threshold is >0.1." }
+    pairwise_max_correlation: { principle: "the exp1224 collapse signature; near-1.0 means redundancy." }
+    effective_k_participation_ratio: { principle: "how many verifiers ACTUALLY contribute independent signal vs nominal k." }
+    per_verifier_dropout_contribution: { principle: "drop-one-out AUROC delta per verifier; zero means that verifier is null." }
+    n_examples: { principle: ">=1000 for a stable covariance estimate." }
+    random_seed: { principle: "determinism." }
+    reproducibility_checksum: { principle: "content hash." }
+    duration_s: { principle: "verifier scoring; 1s floor." }
+
+  ACCEPTANCE GATES:
+    - condition: "lambda_min_sigma > 0.1 AND effective_k_participation_ratio >= 3"
+      principle: "G1 GROUNDING-HOLDS: the ensemble has real diversity, so the alpha_t grounding signal that prevents self-distillation collapse survives at production k. This is the keystone precondition of the entire self-improvement thesis."
+
+  TERMINAL VERDICTS (all start with complete:):
+    - G1 passes -> "complete: verifier_ensemble_diversity_sufficient_grounding_holds"
+    - G1 fails -> "complete: verifier_ensemble_null_space_collapse_confirmed_grounding_at_risk" (retire_if_same_verdict — if even a disjoint-kernel suite collapses, the self-improvement path needs a fundamentally different grounding source, not more verifiers)
+```
+
+**Why P0.2 matters:** α_t grounding — the keystone that lets a self-correcting
+model avoid collapse — only works if the verifier ensemble has real diversity
+(small joint null space). exp1224 showed k=3 collapsing to effective k=1, and
+the FoVer headline showed 3 of 4 verifiers contributing zero. If a deliberately
+disjoint-kernel suite ALSO collapses, the grounding precondition fails and the
+self-improvement thesis needs a different foundation. Cheap (verifier scoring,
+reuses the FoVer corpus) and directly tests the keystone.
+
+---
+
+**Cross-references for both:**
+- ops/north-star.md (the convergence anchor; these are its natural Phase-3 contents)
+- docs/research-notes/phase-prototype-and-validation-framework.md
+- openspec/change-proposals/zenil-grounded-self-distillation-deployable-stack.md
+  (the .82/.83 Exp A-F stack that was never run; P0.2 is its Exp E/F core)
+- openspec/change-proposals/in-situ-training-phase5-derisking.md
+  (the .94-.97 derisking that was never run; P0.1 is its exp_NEXT_E comparator core)
+- CLAUDE.md project_orthogonality_stall, project_null_space_mimicry_attack,
+  project_zenil_alpha_grounding (the theory P0.2 tests)
+- exp2837 (FoVer headline; 3-of-4-verifiers-contribute-zero corroborates P0.2)
+- exp1222/1210/1165 (the toy predecessors P0.1 supersedes)
+
 ### NEW 2026-05-28: Verifier-Ensemble vs Adaptive Prompt-Injection Corpus — does AND-composition beat the single-KAN 0.475?
 
 **Origin:** 2026-05-28 follow-up to the v4 negative result (see
