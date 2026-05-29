@@ -1755,3 +1755,14 @@ The KAN capability MUST implement ASP-KAN-HAQ (arXiv:2509.07xxx) grid-alignment 
 Given a set of B-spline knots and control points,
 When ASP-KAN-HAQ grid alignment and symmetry sharing are applied,
 Then the knots align to the quantization grid, symmetry is enforced, and the quantized forward pass is evaluated, successfully logging to `results/experiment_2104_asp_kan.json`.
+
+## REQ-KAN-3374: EBT Sidecar Scoring with KAN Energy
+
+The sidecar scoring pipeline MUST support a KAN energy formulation that computes
+an additional energy term for candidate scoring.
+
+### SCENARIO-KAN-3374: Integrate KAN energy formulation
+
+Given a sidecar record with KAN energy features,
+When the sidecar replay scorer evaluates the candidate,
+Then the KAN energy formulation is correctly integrated, and the test succeeds, logging to `results/experiment_3374_ebt_kan_integration.json`.
