@@ -6784,3 +6784,5 @@ web search: https://docs.garak.ai/garak/examples/pr |
 | 2026-05-29 09:20 UTC | Energy-descent substrate bootstrap smoke for SOTA  | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_3327_energy_ |
 | 2026-05-29 09:33 UTC | Energy-descent substrate bootstrap smoke for SOTA  | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_3327_energy_ |
 | 2026-05-29 09:35 UTC | Energy-descent versus autoregressive SOTA panel v2 | GATE_BLOCK | Pre-emptive skip: upstream retired (exp3327-energy-descent-substrate-bootstrap-v |
+| 2026-05-29 09:43 UTC | Verifier ensemble diversity and lambda_min audit v | OK | 81 passed in 3.33s |
+| 2026-05-29 09:45 UTC | Energy-descent versus autoregressive SOTA panel v2 | GATE_BLOCK | Pre-emptive skip: upstream retired (exp3327-energy-descent-substrate-bootstrap-v |
