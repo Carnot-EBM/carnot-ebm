@@ -6847,3 +6847,5 @@ web search: https://docs.garak.ai/garak/examples/pr |
 | 2026-05-29 15:59 UTC | Energy-Based Transformer (EBT) sidecar integration | GATE_BLOCK | Pre-emptive skip: upstream retired (exp3352-live-sota-constrained-generation-pil |
 | 2026-05-29 16:05 UTC | Verifier-guided backtracking (VGB) repair ladder f | OK | 84 passed in 5.79s |
 | 2026-05-29 16:07 UTC | Energy-Based Transformer (EBT) sidecar integration | GATE_BLOCK | Pre-emptive skip: upstream retired (exp3352-live-sota-constrained-generation-pil |
+| 2026-05-29 16:12 UTC | FR-11 counterexample-guided repair pilot using Z3  | OK | 81 passed in 3.46s |
+| 2026-05-29 16:14 UTC | Energy-Based Transformer (EBT) sidecar integration | GATE_BLOCK | Pre-emptive skip: upstream retired (exp3352-live-sota-constrained-generation-pil |
