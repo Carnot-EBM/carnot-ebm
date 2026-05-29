@@ -6832,3 +6832,4 @@ web search: https://docs.garak.ai/garak/examples/pr |
 | 2026-05-29 14:43 UTC | KV260 board-local Ising sampling latency benchmark | DOOMED_RERUN_BLOCK | 3 prior failure(s) match this task's scope but prior_failures field is missing o |
 | 2026-05-29 14:45 UTC | GateMate A1-EVB-2M board-local n16 latency benchma | DOOMED_RERUN_BLOCK | 2 prior failure(s) match this task's scope but prior_failures field is missing o |
 | 2026-05-29 14:47 UTC | GateMate A1-EVB-2M board-local n16 latency benchma | DOOMED_RERUN_BLOCK | 2 prior failure(s) match this task's scope but prior_failures field is missing o |
+| 2026-05-29 14:49 UTC | GateMate A1-EVB-2M board-local n16 latency benchma | DOOMED_RERUN_BLOCK | 2 prior failure(s) match this task's scope but prior_failures field is missing o |
