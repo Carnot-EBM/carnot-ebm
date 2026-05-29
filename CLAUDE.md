@@ -37,6 +37,15 @@ Operator-Only External Publication · Never-Stash-Commit-First ·
 Decentralization-Respecting Design Constraints · Pre-Staged Roadmap Convention ·
 Documentation Update Rules · Tests Must Run and Assert.
 
+**Publication readiness — `publication_blocker_count` is DEPRECATED.** It was
+redefinable (moved 105→10 by recount between capstones v303/v304) and could not
+steer. Capstone tasks must instead emit the stable G1–G4 gate computed by
+`scripts/publication_gate.py` (`--json`): G1 headline measured, G2 independently
+reproduced, G3 prose narrowing-clean, G4 numbers trace to artifacts.
+`paper_ready := G1∧G2∧G3∧G4`; report `unmet_gates`, not a count. Definition +
+status live in `ops/north-star.md` §2. As of 2026-05-29: G1/G3/G4 met, G2
+(independent reproducer) is the sole real blocker.
+
 ## Claude Code Guidelines
 If you notice the user's request is based on a misconception, say so.
 Never claim 'all tests pass' when output shows failures.
@@ -325,6 +334,11 @@ intact.
   — sibling structural-discipline linters
 
 ## Canonical Repository URL Discipline (MANDATORY)
+
+> **STATUS (2026-05-29): MECHANICALLY ENFORCED — prose is reference-only.**
+> `scripts/canonical_url_lint.py` (pre-commit) blocks every violation
+> automatically. You do not need to internalize this rule; the hook enforces
+> it. Read on only if debugging the linter. (See Rule Index at top of file.)
 
 **Origin:** 2026-05-20 operator directive (second sweep, this time
 with structural enforcement):
@@ -961,6 +975,11 @@ contract explicitly.
   carry-forward bias isn't a concern for the current milestone.
 
 ## Calendar-Month Prefix Rollover (MANDATORY)
+
+> **STATUS (2026-05-29): MECHANICALLY ENFORCED — prose is reference-only.**
+> `_expected_next_milestone()` derives the prefix from today's UTC date
+> automatically; the operator only increments the trailing index. No human
+> decision points. Read on only if debugging milestone numbering.
 
 **Origin:** 2026-05-08 operator question — "now that we are in May,
 when will the milestones start numbering with 2026.05. as a prefix
@@ -2497,6 +2516,11 @@ structural backstop.
   authoritative precondition
 
 ## Overdue-Priority Forcing Function (MANDATORY)
+
+> **STATUS (2026-05-29): MECHANICALLY ENFORCED — prose is reference-only.**
+> `scripts/overdue_priority_lint.py` (pre-commit) refuses any roadmap/known-
+> issues commit that leaves a priority at pending_count≥3 without pickup or
+> `operator_override`. Read on only for the rationale. (See Rule Index at top.)
 
 If a `ops/known-issues.md` "MANDATORY-NEXT-MILESTONE PRIORITIES" entry has been
 pending for 3+ consecutive milestones without pickup, the next planner Sonnet
