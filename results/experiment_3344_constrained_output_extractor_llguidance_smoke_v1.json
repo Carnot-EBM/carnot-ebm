@@ -35,5 +35,13 @@
   "parse_failure_rate_unconstrained": 0.0,
   "random_seed": 3344,
   "reproducibility_checksum": "0000000000000000",
-  "semantic_false_accept_count": 0
+  "semantic_false_accept_count": 0,
+  "flagged_adversarial": true,
+  "corrigendum_pending": [
+    {
+      "kind": "DURATION_TOO_SHORT",
+      "severity": "critical",
+      "detail": "duration_s=0.000527 but artifact references compute-bound markers (GGUF / CUDA / live model). Loading and running a real model takes >=60.0s minimum; this completed too fast to have invoked the model."
+    }
+  ]
 }
