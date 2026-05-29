@@ -6979,3 +6979,4 @@ web search: https://docs.garak.ai/garak/examples/pr |
 | 2026-05-29 23:07 UTC | CAffNet Differentiable Constraint Layer Prototype | OK | 81 passed in 3.05s |
 | 2026-05-29 23:14 UTC | FR-11 Locality-Aware Nonforgetting Memory | OK | 81 passed in 3.56s |
 | 2026-05-29 23:19 UTC | KANELÉ-style LUT Quantization for KAN Sidecar | OK | 81 passed in 4.38s |
+| 2026-05-29 23:25 UTC | LogicVault CDCL-inspired Conflict Resolution | OK | 81 passed in 3.87s |
