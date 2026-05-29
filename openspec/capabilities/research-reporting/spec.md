@@ -14905,3 +14905,18 @@ pushes, or modify `research-roadmap.yaml`, `scripts/research_conductor.py`,
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-REPORT-3377 | Implemented (`python/carnot/reporting/archive_v310_activate_v311_3377.py`) | Implemented (`tests/python/test_experiment_3377_archive_v310_activate_v311.py`) |
+
+### REQ-REPORT-3392: Archive V311 And Activate V312 Handoff
+
+The repository shall provide an Exp 3392 milestone-boundary archive workflow
+that writes `results/experiment_3392_archive_v311_activate_v312.json`.
+The workflow MUST be aggregation only. It MUST NOT run model inference, CUDA
+probes, verifier scoring, FR-11 updates, hardware commands, the conductor,
+pushes, or modify `research-roadmap.yaml`, `scripts/research_conductor.py`,
+`ops/status.md`, `ops/changelog.md`, or `_bmad/traceability.md`.
+
+## Implementation Status (REQ-REPORT-3392)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-3392 | Implemented (`python/carnot/reporting/archive_v311_activate_v312_3392.py`) | Implemented (`tests/python/test_experiment_3392_archive_v311_activate_v312.py`) |
