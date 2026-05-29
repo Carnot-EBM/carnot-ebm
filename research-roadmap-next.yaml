@@ -25,6 +25,7 @@ tasks:
       Run command: cd {project_root} && JAX_PLATFORMS=cpu .venv/bin/python scripts/experiment_3365_kv260_ssh_recovery.py.
 
   - id: exp3366-gatemate-axi-uio-rtl
+    operator_override: "2026-05-29 operator directive (outer-loop, '1 then 2'): authorized. Active hardware-continuity task (adds the AXI/UIO host interface exp3351 lacked); false-positive scope-match vs retired exp3021/3035/3049. Forward fix, not a rerun."
     milestone: "2026.05.311"
     title: "GateMate AXI/UIO Interface Implementation"
     priority: high
@@ -62,65 +63,6 @@ tasks:
         3. Assert "status": "success".
       Run command: cd {project_root} && JAX_PLATFORMS=cpu .venv/bin/python scripts/experiment_3367_fix_gate_status.py.
 
-  - id: exp3368-live-sota-constrained-generation-retry
-    milestone: "2026.05.311"
-    title: "Retry: Live SOTA constrained generation"
-    priority: normal
-    max_turns: 50
-    estimated_wall_time_min: 15
-    track: live-model
-    inference_substrate: live_generation
-    requires_gpu: true
-    deliverable: "results/experiment_3368_constrained_generation.json"
-    prompt: |
-      CONTEXT: exp3352 artifact was missing. Retrying grammar-masked generation.
-      TASK: Run live constrained generation on a SOTA GGUF.
-      CONCRETE STEPS:
-        1. Implement grammar-masked generation.
-        2. Evaluate GSM8K metrics.
-        3. Ensure artifact is properly written.
-      Run command: cd {project_root} && .venv/bin/python scripts/experiment_3368_constrained_generation.py.
-
-  - id: exp3369-ebt-sidecar-scoring-retry
-    milestone: "2026.05.311"
-    title: "Retry: EBT sidecar sequence scoring"
-    priority: normal
-    max_turns: 50
-    estimated_wall_time_min: 10
-    track: verification
-    inference_substrate: live_generation
-    requires_gpu: true
-    gated_on:
-      - upstream: exp3368-live-sota-constrained-generation-retry
-        artifact_field: status
-        op: "=="
-        value: "success"
-    deliverable: "results/experiment_3369_ebt_sidecar.json"
-    prompt: |
-      CONTEXT: exp3354 artifact was missing.
-      TASK: Integrate EBT sidecar scoring.
-      Run command: cd {project_root} && .venv/bin/python scripts/experiment_3369_ebt_sidecar.py.
-
-  - id: exp3370-fr11-continuous-learning-stress-test-retry
-    milestone: "2026.05.311"
-    title: "Retry: Continuous learning stress test"
-    priority: high
-    max_turns: 50
-    estimated_wall_time_min: 15
-    track: self-learning
-    inference_substrate: synthetic
-    requires_gpu: false
-    gated_on:
-      - upstream: exp3367-fix-gate-status-emissions
-        artifact_field: status
-        op: "=="
-        value: "success"
-    deliverable: "results/experiment_3370_fr11_cl_stress_test.json"
-    prompt: |
-      CONTEXT: exp3358 was blocked by a gate failure from exp3357.
-      TASK: Run the 5-session curriculum.
-      Run command: cd {project_root} && JAX_PLATFORMS=cpu .venv/bin/python scripts/experiment_3370_fr11_cl_stress_test.py.
-
   - id: exp3371-capstone-v311
     milestone: "2026.05.311"
     title: "Capstone v311"
@@ -137,6 +79,7 @@ tasks:
       Run command: cd {project_root} && JAX_PLATFORMS=cpu .venv/bin/python scripts/experiment_3371_capstone_v311.py.
 
   - id: exp3372-fr11-cx-repair-scale
+    operator_override: "2026-05-29 operator directive (outer-loop, '1 then 2'): authorized. Scaling continuation of exp3356 (20→100 cases); false-positive scope-match vs exp3304/3356. Forward lineage step with a stated scale-up."
     milestone: "2026.05.311"
     title: "FR-11 Z3 Counterexample repair scaling"
     priority: normal
@@ -151,6 +94,7 @@ tasks:
       Run command: cd {project_root} && JAX_PLATFORMS=cpu .venv/bin/python scripts/experiment_3372_fr11_cx_repair_scale.py.
 
   - id: exp3373-logicvault-multi-agent
+    operator_override: "2026-05-29 operator directive (outer-loop, '1 then 2'): authorized. New multi-agent extension of LogicVault; false-positive scope-match vs retired multi-agent exps (exp1755/1756/1757/1794/1948). New scope (concurrent agent beliefs)."
     milestone: "2026.05.311"
     title: "LogicVault Multi-Agent Synchronization"
     priority: normal
@@ -165,6 +109,7 @@ tasks:
       Run command: cd {project_root} && JAX_PLATFORMS=cpu .venv/bin/python scripts/experiment_3373_logicvault_multi_agent.py.
 
   - id: exp3374-ebt-sidecar-kan-integration
+    operator_override: "2026-05-29 operator directive (outer-loop, '1 then 2'): authorized. New KAN-energy integration for sidecar scoring; false-positive scope-match vs exp3201. New technique (KAN formulation)."
     milestone: "2026.05.311"
     title: "EBT sidecar scoring with KAN"
     priority: normal
@@ -179,6 +124,7 @@ tasks:
       Run command: cd {project_root} && .venv/bin/python scripts/experiment_3374_ebt_kan_integration.py.
 
   - id: exp3375-vgb-repair-ladder-open-models
+    operator_override: "2026-05-29 operator directive (outer-loop, '1 then 2'): authorized. Repair ladder on a NEW model family (Llama-3); false-positive scope-match vs retired repair-ladder exps (exp3127/3169/3185/3199/3214). New substrate, not a rerun."
     milestone: "2026.05.311"
     title: "VGB Repair Ladder on Llama-3"
     priority: normal
@@ -208,6 +154,7 @@ tasks:
       Run command: cd {project_root} && JAX_PLATFORMS=cpu .venv/bin/python scripts/experiment_3376_plan_milestone_312.py.
 
   - id: exp3377-archive-v310-activate-v311
+    operator_override: "2026-05-29 operator directive (outer-loop, '1 then 2'): authorized. Routine milestone-transition task; false-positive scope-match vs prior archive tasks (exp2847/2861/2873/2885/2897). Never a doomed rerun."
     milestone: "2026.05.311"
     title: "Archive milestone .310 honestly and activate .311"
     priority: critical
