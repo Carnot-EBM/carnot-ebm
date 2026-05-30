@@ -7851,3 +7851,4 @@ ModuleNotFoundError: No module named 'torch'; results/experiment_2828_fover_memo
 - 2026-05-30: PolarFire opportunistic reachability + continuity audit (no terminal mandate) (✅ Complete) — honest_verdict=complete: polarfire reachable and continuity confirmed; results/experiment_3444_polarfire_reachability_audit_v3.json
 
 - 2026-05-30: Operational Retrospective (✅ Complete) — honest_verdict=complete: Milestone 2026.05.317 resulted in no experiments being processed.
+- 2026-05-30: Archive milestones .316 and .317 honestly and activate .318 (✅ Complete) — honest_verdict=complete: archive_v316_v317_activate_v318_ready=true; results/experiment_3447_archive_v316_v317_activate_v318.json
