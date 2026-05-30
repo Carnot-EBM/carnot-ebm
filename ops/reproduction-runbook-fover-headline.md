@@ -201,3 +201,27 @@ Artifact: `results/experiment_3451_fover_g2_ci_workflow_and_docker_cleanroom_v1.
 - `ops/publication_gate_state.json` (where G2 is recorded)
 - exp2837 / exp2850 (source artifacts)
 - `carnot.eval.fover_memory_leakage_v3` (the importable experiment)
+
+## CI workflow DRY-RUN (exp3463, 2026-05-30)
+
+Before asking a non-operator to trigger the workflow, exp3463 *dry-ran* it in an
+isolated runner to prove it passes. There is no `act` (nektos/act) on the dev
+box, so the dry-run executed the workflow's exact assert command
+(`python3 scripts/reproduce_fover_headline.py`) inside a fresh clean-room
+(`stepwise_docker`) after a from-scratch `pip install -e .`.
+
+**Dry-run result (GREEN):**
+
+| Quantity | Value | Published CI | In CI? |
+|---|---|---|---|
+| workflow assert-command exit code | 0 | 0 (pass) | yes |
+| condition-A production AUROC (mean) | 0.91310 | [0.9027, 0.9235] | yes |
+| learning_contribution (mean) | 0.01850 | [0.0125, 0.0245] | yes |
+
+A zero exit here is a faithful proxy for a green GitHub Actions run: the harness's
+`main()` returns non-zero unless both numbers are in their published CIs, so the
+container exiting `0` proves a non-operator CI trigger will pass. **G2 is still
+NOT closed** — closure requires an actual external/CI run by a non-operator. The
+one-command handoff package is at `docs/g2-external-reproducer-handoff.md`.
+
+Artifact: `results/experiment_3463_fover_g2_ci_dryrun_and_external_handoff_v1.json`.

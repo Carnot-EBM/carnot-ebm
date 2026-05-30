@@ -1220,6 +1220,78 @@ AND records `docker_available == false` with an honest `g2_status` of
 `still_failing_<cause>` string otherwise
 AND never sets `g2_independent_reproducer == true`.
 
+### REQ-PUBLISH-037: Exp 3463 FoVer G2 CI Dry-Run + External-Reproducer Handoff
+
+The Exp 3463 G2 dry-run builder MUST prove the
+`.github/workflows/reproduce-fover-headline.yml` workflow (authored by Exp 3451)
+runs green in a non-operator environment, and MUST assemble a one-command
+external-reproducer handoff package — bringing gate G2 as close to
+closeable-by-a-non-operator as autonomous work allows, without itself claiming
+G2 is met.
+
+It MUST STATICALLY VALIDATE the workflow: parse the YAML, and assert it pins a
+Python version, installs `pip install -e .`, runs
+`scripts/reproduce_fover_headline.py`, and (transitively, via that harness)
+asserts condition-A mean AUROC in `[0.9027, 0.9235]` AND learning_contribution
+mean in `[0.0125, 0.0245]` with a non-zero exit on failure. The static-validation
+result is recorded in `ci_workflow_validated`.
+
+It MUST DRY-RUN the workflow in an isolated runner. When `act` (nektos/act) is
+available it MAY use it; otherwise it MUST execute the workflow's steps inside a
+fresh Docker container (a clean Python base image, NOT the operator's venv) when
+Docker is available, or a fresh venv when Docker is unavailable. The dry-run MUST
+run the exact assertion command the workflow runs
+(`python3 scripts/reproduce_fover_headline.py`) and capture its exit code; a
+zero exit with both numbers in their published CIs sets `g2_ci_dryrun_green=true`.
+The method used is recorded in `ci_dryrun_method`
+(`act` | `stepwise_docker` | `stepwise_venv`).
+
+It MUST write a NEW (non-operator-curated) external-reproducer handoff document
+at `docs/g2-external-reproducer-handoff.md` containing a one-command
+reproduction, the expected CI assertions, the corpus checksum, and the exact
+steps a non-operator must take to close G2; and it MUST append (never delete) the
+dry-run result to `ops/reproduction-runbook-fover-headline.md`.
+
+The builder MUST NOT push, MUST NOT set `g2_independent_reproducer=true` (only an
+actual external/CI run by a non-operator may flip that), and MUST NOT modify
+`scripts/research_conductor.py`. It MUST write
+`results/experiment_3463_fover_g2_ci_dryrun_and_external_handoff_v1.json` with
+`honest_verdict` (terminal `complete:` prefix),
+`inference_substrate="verifier_ensemble_against_cached_candidates"`,
+`ci_workflow_validated`, `ci_dryrun_method`, `g2_ci_dryrun_green`,
+`condition_a_auroc_isolated`, `learning_contribution_isolated`,
+`g2_handoff_package_ready`, `handoff_doc_path`, `g2_status`,
+`g2_independent_reproducer` (always false), `reproducibility_checksum`,
+`random_seed`, and `duration_s`.
+
+### SCENARIO-PUBLISH-037: CI Dry-Run Green And Handoff Package Ready
+
+**Given** the workflow, reproducer harness, and FoVer corpus are present and
+Docker is available
+**When** the Exp 3463 dry-run builder runs
+**Then** it statically validates the workflow asserts both published CIs
+(`ci_workflow_validated == true`)
+AND dry-runs the workflow's assertion command inside a clean-room container that
+exits zero with condition-A AUROC in `[0.9027, 0.9235]` and learning_contribution
+in `[0.0125, 0.0245]` (`g2_ci_dryrun_green == true`,
+`ci_dryrun_method == "stepwise_docker"`)
+AND writes `docs/g2-external-reproducer-handoff.md`
+(`g2_handoff_package_ready == true`)
+AND writes the Exp 3463 JSON artifact with a `complete:` verdict and
+`g2_independent_reproducer == false`.
+
+### SCENARIO-PUBLISH-037B: No Isolated Runner Falls Back To Validation Only
+
+**Given** the workflow and harness are present but neither `act` nor Docker is
+available
+**When** the Exp 3463 dry-run builder runs
+**Then** it still statically validates the workflow (`ci_workflow_validated`)
+AND falls back to a `stepwise_venv` dry-run (or records the dry-run as
+unavailable) rather than failing the task
+AND still writes the handoff package (`g2_handoff_package_ready == true`)
+AND reports an honest `g2_status` and never sets
+`g2_independent_reproducer == true`.
+
 
 ## Implementation Status
 
@@ -1257,6 +1329,7 @@ AND never sets `g2_independent_reproducer == true`.
 | REQ-PUBLISH-034 | Planned | Exp 2841 paper-v6 multi-corpus table v3 |
 | REQ-PUBLISH-035 | Planned | Exp 2903 paper-v6 hardware-validation snippet |
 | REQ-PUBLISH-036 | Implemented | Exp 3451 FoVer G2 CI workflow + Docker clean-room |
+| REQ-PUBLISH-037 | Implemented | Exp 3463 FoVer G2 CI dry-run + external-reproducer handoff |
 
 ### REQ-PUBLISH-026: HuggingFace Publish Retry
 The experiment 1750 huggingface retry runner MUST attempt to upload the smallest model in models/ with a no-emoji model card. If credentials pass, it MUST upload and record hf_upload_succeeded = True. If blocked, it MUST emit an honest verdict of "blocked_credentials".
