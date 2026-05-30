@@ -7002,3 +7002,4 @@ web search: https://docs.garak.ai/garak/examples/pr |
 | 2026-05-30 01:17 UTC | Kona-Style Global Optimization Reasoning Benchmark | OK | Deliverable already exists in repo |
 | 2026-05-30 01:23 UTC | Energy-Based Replay Selection for FR-11 Continual  | OK | 83 passed in 35.51s |
 | 2026-05-30 01:32 UTC | Compress-Add-Smooth (CAS) Diffusion for Constraint | OK | 81 passed in 3.82s |
+| 2026-05-30 01:40 UTC | EBM-CoT Verification Pipeline on Live GGUFs | OK | 85 passed in 3.30s |

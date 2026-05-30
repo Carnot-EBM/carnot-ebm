@@ -1722,5 +1722,18 @@
       "max_spike": 3.4135802469135803
     }
   ],
-  "blocked_reasons": []
+  "blocked_reasons": [],
+  "flagged_adversarial": true,
+  "corrigendum_pending": [
+    {
+      "kind": "IMPLAUSIBLE_PERFECT",
+      "severity": "warn",
+      "detail": "auroc_intermediate_spikes=1.0 on 100 samples is implausibly clean. Real classifiers exhibit non-zero error at small N."
+    },
+    {
+      "kind": "DURATION_TOO_SHORT",
+      "severity": "critical",
+      "detail": "duration_s=2.056203842163086 but artifact references compute-bound markers (GGUF / CUDA / live model). Loading and running a real model takes >=60.0s minimum; this completed too fast to have invoked the model."
+    }
+  ]
 }
