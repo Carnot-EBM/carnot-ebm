@@ -1566,10 +1566,24 @@ CRITICAL flags:
 - Do NOT auto-retire — the task ran, the data is preserved; the
   flag is a signal for human/outer-loop review
 
+**Fabrication gate (MANDATORY — 2026-05-30 operator directive).** A CRITICAL
+adversarial flag now MECHANICALLY downgrades the conductor verdict: the task is
+logged `FLAGGED` (not `OK`) in `_log_experiment_completion`
+(`scripts/research_conductor.py`), so a fabricated result (e.g. exp3397:
+`duration_s=2.06` declaring a live 35B GGUF, `inference_substrate=sota_gguf_mock`,
+`auroc=1.0`) does NOT count as a clean milestone success. `pick_next_task` treats
+`FLAGGED` as completed-but-quarantined (no wasteful re-run, but not a clean
+success). **Capstone, evidence-table, paper-v6, and any headline-aggregation task
+MUST skip artifacts carrying `flagged_adversarial: true`** — never aggregate a
+flagged artifact's numbers into a milestone result or a forward-facing claim.
+This was added after exp3397/exp3405 (both `flagged_adversarial` per the
+2026-05-30 corrigendum in `ops/known-issues.md`) logged clean OK and reached the
+record before being caught manually.
+
 CRITICAL flags do not block downstream gates from firing; the
 gate-check layer is upstream of the verify layer. The verify
 output is for paper-v6 disclosure discipline + future-task
-prior_failures tracking.
+prior_failures tracking + the fabrication gate above.
 
 **Cross-check surprising results.** When an experiment produces a
 result outside the expected range (e.g., a TPR lift > 4-5x the
@@ -2570,6 +2584,57 @@ structural backstop.
   the bitstream-update mechanism
 - CLAUDE.md "Pre-Launch Preconditions Discipline" table — KV260 row
   authoritative precondition
+
+## Depth-Over-Breadth Forcing Function (MANDATORY — 2026-05-30)
+
+**Origin:** 2026-05-30 operator directive after a session audit. The loop runs
+~30 milestones/day but produces mostly **breadth churn** — `vN+1` re-measurement
+of already-measured artifacts (cross-corpus matrix v38, telemetry v39, repair
+panel vN, SOTA receipt vN, clean verifier rerun vN) — while the 1–2 questions
+that actually decide the foundation-model endgame go unrun. The P0.1 existential
+test (energy-descent-vs-autoregressive, exp3312) was queued at `.82` and never
+run across 200+ milestones. This is *iteration without convergence* (see
+`ops/north-star.md`): the same version numbers climb in lockstep and
+`paper_ready` stays False throughout.
+
+**The rule.** Until P0.1 (exp3312 / the Kona global-opt solve-rate gate in
+`ops/known-issues.md`) has a recorded verdict — positive OR honest-negative —
+the planner MUST:
+
+1. **Reserve the majority of each milestone for depth, not breadth.** Allocate
+   tasks toward the existential link tests (P0.1 energy-descent-vs-AR, P0.2
+   verifier-diversity, the transpilation round-trip) and toward **closing G2**
+   (one independent reproducer of the FoVer 0.9131 headline — the SOLE unmet
+   publication gate per `ops/north-star.md` §2). These advance the headline or
+   the finish line; everything else is candidate churn.
+
+2. **Do NOT propose a `vN+1` re-measurement of an already-measured artifact**
+   unless the new version answers a question the prior version did not (a NEW
+   corpus, a NEW seed regime that changes a CI, a NEW gate). "v39 because v38
+   exists" is forbidden. A re-measurement that does not move the headline claim
+   or a G-gate is churn (per `ops/north-star.md` §1: a milestone that produces a
+   new version of an existing artifact without moving the headline is noise).
+
+3. **Every milestone answers: does this milestone advance the headline claim,
+   close a G-gate, or test a load-bearing-unproven link?** If the honest answer
+   for a task is "no, it re-measures something we already know," drop it and
+   propose depth instead.
+
+**How to apply (planner-side).** When drafting `research-roadmap-next.yaml`,
+audit each task against the three points above. A typical milestone should now
+be weighted toward the P0.1/Kona/G2 work, not breadth sweeps. The planner is
+Claude Opus 4.8 as of 2026-05-30 (highest-leverage call, switched off gemini
+precisely so this prose discipline is followed reliably).
+
+**Retirement.** This forcing function relaxes once P0.1 has a verdict AND G2 is
+either met or has a concrete in-flight reproducer. Until then it preempts
+routine breadth.
+
+**Cross-references:**
+- `ops/north-star.md` — the headline claim (§1), the G1–G4 gate (§2)
+- `ops/known-issues.md` — P0.1 (exp3312) + Kona solve-rate gate + the corrigendum trail
+- CLAUDE.md "Scope-Reduction-When-Flagged" — the sibling rule for explicit
+  scope-reduction directives; this one is the standing depth-vs-breadth default
 
 ## Overdue-Priority Forcing Function (MANDATORY)
 

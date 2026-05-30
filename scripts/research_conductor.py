@@ -2100,7 +2100,13 @@ def pick_next_task(completed_log: str) -> dict | None:
         title = parts[2].strip()
         status = parts[3].strip()
 
-        if status == "OK":
+        if status in ("OK", "FLAGGED"):
+            # FLAGGED (2026-05-30 fabrication gate) = the task ran and produced an
+            # artifact, but adversarial_verify quarantined it (critical flag).
+            # Treat as completed-but-quarantined: do NOT re-run (re-running a
+            # fabrication-prone task just re-fabricates), but it is NOT a clean
+            # success — the artifact carries flagged_adversarial and is excluded
+            # from headline/capstone aggregation.
             completed_titles.add(title)
             fail_counts[title] = 0  # Reset on success
         elif status in ("FAIL", "REVERT", "SKIP", "NOOP", "GATE_BLOCK", "DOOMED_RERUN_BLOCK"):
@@ -5162,6 +5168,8 @@ def _log_experiment_completion(task: dict, test_summary: str) -> None:
     # to the artifact so paper-v6 disclosure discipline + future
     # prior_failures tracking can pick it up. Does NOT block the OK
     # log_step — the data is preserved; the flag is a review signal.
+    _adversarial_critical = False
+    _adversarial_kinds: list[str] = []
     try:
         from pathlib import Path as _PathAV
 
@@ -5176,15 +5184,21 @@ def _log_experiment_completion(task: dict, test_summary: str) -> None:
                 flags = report.get("flags") or []
                 if flags:
                     critical = [
-                        f for f in flags if f.get("severity") == "critical"
+                        f
+                        for f in flags
+                        if str(f.get("severity", "")).lower() == "critical"
                     ]
                     if critical:
+                        _adversarial_critical = True
+                        _adversarial_kinds = [
+                            str(f.get("kind", "?")) for f in critical
+                        ]
                         logger.warning(
                             "Adversarial-verify flagged %s with %d critical "
                             "flag(s): %s",
                             task.get("id", "?"),
                             len(critical),
-                            ", ".join(f.get("kind", "?") for f in critical),
+                            ", ".join(_adversarial_kinds),
                         )
                         # Append flagged_adversarial field to the artifact
                         # (preserving all original fields).
@@ -5204,11 +5218,46 @@ def _log_experiment_completion(task: dict, test_summary: str) -> None:
                                 deliverable_path.name,
                                 _e,
                             )
+                # Fallback: honor an already-present flagged_adversarial field
+                # (e.g. operator-stamped corrigendum) even if this run's verify
+                # somehow missed it — defence in depth for the fabrication gate.
+                if not _adversarial_critical:
+                    try:
+                        with open(deliverable_path) as _af:
+                            _existing = json.load(_af)
+                        if isinstance(_existing, dict) and _existing.get(
+                            "flagged_adversarial"
+                        ):
+                            _adversarial_critical = True
+                            _adversarial_kinds = ["preexisting_flagged_adversarial"]
+                    except Exception:
+                        pass
     except Exception as exc:
         logger.warning(
             "Adversarial-verify pass failed for %s: %s", task.get("id", "?"), exc
         )
-    log_step(task["title"], "OK", test_summary)
+    # Fabrication gate (2026-05-30 operator directive). A CRITICAL adversarial
+    # flag (DURATION_TOO_SHORT / IMPLAUSIBLE_PERFECT / TAUTOLOGY /
+    # GATE_PASSED_WITHOUT_DATA / SAMPLE_SIZE_BELOW_CLAIM) means the result is
+    # untrustworthy — likely fabricated (e.g. exp3397 ran in 2s declaring a live
+    # 35B GGUF, inference_substrate=sota_gguf_mock, auroc=1.0). Such a task MUST
+    # NOT log a clean OK: a clean OK counts it as a milestone success AND lets
+    # the artifact feed capstone / headline aggregation. Log a distinct FLAGGED
+    # status instead. The data is preserved + flagged_adversarial=True on the
+    # artifact; pick_next_task treats FLAGGED as completed-but-quarantined (no
+    # wasteful re-run, but NOT a clean success), and capstone/headline tasks MUST
+    # exclude flagged_adversarial artifacts (CLAUDE.md "Adversarial Artifact
+    # Verification" + the no-headline-on-flagged rule).
+    if _adversarial_critical:
+        log_step(
+            task["title"],
+            "FLAGGED",
+            f"adversarial_verify CRITICAL: {', '.join(_adversarial_kinds)} — "
+            f"result quarantined, not a clean success, excluded from headline / "
+            f"capstone. {test_summary}",
+        )
+    else:
+        log_step(task["title"], "OK", test_summary)
 
 
 def _run_haiku_doc_reconcile(task: dict, push: bool, timestamp: datetime) -> None:
