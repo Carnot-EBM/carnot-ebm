@@ -19265,3 +19265,31 @@ This refresh captures continual learning frameworks under constrained memory and
     duration / seed / checksum), not from the answer the agent expects. exp3397 was
     pure perspective-leakage. Limitations (theirs): higher-order/nested beliefs,
     future-action prediction, socially-grounded goals, text-only.
+
+## 2026-05-30 EKSFT — anti-collapse SFT, a concrete lever for α_t-grounding (arXiv:2605.29303) [PHASE-3/5 TRAINING; NOT Phase-1-actionable]
+
+- **EKSFT: Entropy-KL Selective Fine-Tuning (arXiv:2605.29303, May 2026):** A
+  TRAINING-TIME technique for the SFT-then-RL pipeline. Plain SFT causes ENTROPY
+  COLLAPSE (output distribution sharpens, exploration dies), so downstream RL has
+  less headroom — they show SFT can underperform the BASE model at high pass@K.
+  EKSFT masks high-entropy / high-KL-divergence tokens during imitation and
+  applies label-free entropy/KL regularization on them (high-entropy tokens
+  otherwise dominate the CE gradient and drive the collapse). Qwen3-4B/8B on
+  AIME/AMC/HMMT math: +2.8% pass@1 and +5.6% pass@32 after RL vs vanilla SFT;
+  BFCL tool-use 88.0 vs 86.6. Limits: one dataset (OpenR1-Math-46k), only 4B/8B.
+  - **SCOPE (be honest): NOT applicable to Phase-1 verification.** Carnot Phase 1
+    is black-box verify/repair of a FIXED external LLM — it does not fine-tune the
+    generator, so EKSFT is orthogonal to current work. File for Phase-3/5.
+  - **The one real connection — a concrete mechanism for α_t grounding.** Carnot's
+    Zenil α_t grounding (keystone of the Phase-1→Kona path) requires
+    `inf_t α_t > 0` to prevent self-distillation collapse — but states it as a
+    THEORETICAL condition. EKSFT is an empirically-validated MECHANISM for exactly
+    that collapse-prevention (entropy/KL token masking + regularization). It is the
+    practical lever for the collapse Carnot's `project_orthogonality_stall` /
+    `project_q12_hypothesis_b_and_dark_room` / α_t-grounding memos theorize about,
+    for when Carnot trains a generator in Phase 3 (foundation model) or Phase 5
+    (in-situ self-learning / FR-11 updates).
+  - **Narrow near-term hook:** the P0.1 line's "TRAINED energy reranker (EORM)"
+    task (FLAGGED 2026-05-30) is the same domain — Qwen3 + math reasoning. If that
+    reranker or any P0.1/FR-11 component does SFT, EKSFT's anti-collapse masking is
+    a directly-applicable training recipe to keep it from collapsing exploration.

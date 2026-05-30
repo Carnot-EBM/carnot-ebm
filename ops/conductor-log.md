@@ -7165,3 +7165,13 @@ web search: https://docs.garak.ai/garak/examples/pr |
 | 2026-05-30 22:22 UTC | Plan next milestone | FAIL | Gemini CLI error: API Error: The socket connection was closed unexpectedly. Fo |
 | 2026-05-30 22:57 UTC | Plan milestone 2026.05.321 | OK | 11 tasks proposed |
 | 2026-05-30 22:59 UTC | Milestone 2026.05.321 activated | OK | 11 tasks queued |
+| 2026-05-30 23:07 UTC | Archive milestone .320 honestly and activate .321 | FAIL | Claude Code error: Error: Reached max turns (20) |
+| 2026-05-30 23:09 UTC | Archive milestone .320 honestly and activate .321 | OK | Deliverable already exists in repo |
+| 2026-05-30 23:21 UTC | P0.1 DIFFICULTY-MATCHED corpus builder v2 — MATH-5 | FAIL | Claude Code error: API Error: 400 messages.1.content.46: `thinking` or `redacte |
+| 2026-05-30 23:23 UTC | P0.1 DIFFICULTY-MATCHED corpus builder v2 — MATH-5 | SKIP | Pre-tests failing, self-heal failed:  |
+| 2026-05-30 23:25 UTC | P0.1 DIFFICULTY-MATCHED corpus builder v2 — MATH-5 | SKIP | Pre-tests failing, self-heal failed:  |
+| 2026-05-30 23:27 UTC | P0.1 v7 — process-aware step-level energy + optima | SKIP | Pre-tests failing, self-heal failed:  |
+| 2026-05-30 23:29 UTC | P0.1 v7 — process-aware step-level energy + optima | SKIP | Pre-tests failing, self-heal failed:  |
+| 2026-05-30 23:31 UTC | P0.1 v7 — process-aware step-level energy + optima | SKIP | Pre-tests failing, self-heal failed:  |
+| 2026-05-30 23:34 UTC | Energy-correctness calibration v4 — MATH-aware, ta | SKIP | Pre-tests failing, self-heal failed:  |
+| 2026-05-30 23:36 UTC | Energy-correctness calibration v4 — MATH-aware, ta | SKIP | Pre-tests failing, self-heal failed:  |
