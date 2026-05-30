@@ -7815,3 +7815,4 @@ ModuleNotFoundError: No module named 'torch'; results/experiment_2828_fover_memo
 - 2026-05-30: Abductive CSP Integration (✅ Complete) — honest_verdict=complete; accuracy=0.6666666666666666; results/experiment_3407_abductive_csp_integration.json
 - 2026-05-30: Kona-Style Global Optimization Reasoning Benchmark (⚠️ Research Finding) — honest_verdict=SUCCESS: Executed Kona global inference emulation on hard Sudoku. Solved=False.; results/experiment_3408_kona_global_opt.json
 - 2026-05-30: Semantic Deficit Penalty Integration (✅ Complete) — honest_verdict=complete: semantic_deficit_penalty_evaluated; results/experiment_3409_semantic_deficit_penalty.json
+- 2026-05-30: FR-11 Updates with Spills (⚠️ Research Finding) — honest_verdict=unspecified; results/experiment_3410_fr11_updates_spills.json
