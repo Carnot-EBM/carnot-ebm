@@ -7032,3 +7032,5 @@ web search: https://docs.garak.ai/garak/examples/pr |
     at async file:///usr/lib/node_modules/@go |
 | 2026-05-30 05:27 UTC | Verifier-Ensemble Joint-Null-Space / lambda_min(Si | FAIL | Gemini CLI error: .js:345500:14)
     at async file:///usr/lib/node_modules/@go |
+| 2026-05-30 05:30 UTC | Verifier-Ensemble Joint-Null-Space / lambda_min(Si | FAIL | Gemini CLI error: .js:345500:14)
+    at async file:///usr/lib/node_modules/@go |
