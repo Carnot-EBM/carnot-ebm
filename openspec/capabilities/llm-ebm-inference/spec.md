@@ -1732,3 +1732,14 @@ The output SHALL be saved to `results/experiment_2133_hw_dab.json` with all requ
 **When** the HWDABLogitsProcessor is applied
 **Then** it updates logits by subtracting energy from simulated LUTs
 **And** the experiment artifact `results/experiment_2133_hw_dab.json` is generated.
+
+### REQ-INFER-3412: VGS Textual Constraint Decoding
+The system SHALL adapt the VGS penalty logic to use explicit textual constraint grounding.
+An active decoding modifier (LogitsProcessor) SHALL penalize autoregressive probabilities that disagree with explicit constraints.
+The output SHALL be saved to `results/experiment_3412_vgs_override_decoder.json` showing hallucination avoidance statistics.
+
+### SCENARIO-INFER-3412-001: VGS Textual Constraint Decoder Application
+**Given** an LLM generating text with explicit textual constraints
+**When** evaluated with VGSTextualConstraintLogitsProcessor
+**Then** probabilities disagreeing with constraints are penalized
+**And** hallucination avoidance statistics are reported in `results/experiment_3412_vgs_override_decoder.json`.
