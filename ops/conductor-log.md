@@ -7142,3 +7142,5 @@ web search: https://docs.garak.ai/garak/examples/pr |
 | 2026-05-30 18:20 UTC | G1-G4 gate-status synthesis (trained P0.1 v5 crux  | OK | 81 passed in 3.97s |
 | 2026-05-30 18:31 UTC | Capstone v319 | FAIL | Claude Code error: Error: Reached max turns (20) |
 | 2026-05-30 18:33 UTC | Capstone v319 | OK | Deliverable already exists in repo |
+| 2026-05-30 19:02 UTC | Plan milestone 2026.05.320 | OK | 12 tasks proposed |
+| 2026-05-30 19:04 UTC | Milestone 2026.05.320 activated | OK | 12 tasks queued |
