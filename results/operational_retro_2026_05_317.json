@@ -1,26 +1,86 @@
 {
   "schema": "carnot.operational_retro.v64",
   "milestone": "2026.05.317",
-  "generated_at": "2026-05-30T11:53:34Z",
+  "generated_at": "2026-05-30T12:30:00Z",
+  "retro_date": "2026-05-30",
   "retro_type": "operational_full",
-  "total_wall_time_minutes": 0,
-  "experiments_completed": 0,
+  "inference_substrate": "aggregation_from_upstream_artifacts",
+  "honest_verdict": "complete: operational_retro_2026_05_317_written",
+  "experiments_completed": 5,
+  "experiments_blocked_or_error": 2,
+  "experiments_gate_blocked": 2,
+  "experiments_retired": 1,
+  "flagged_adversarial_count": 0,
   "compute_bound_experiments_count": 0,
-  "slowest_experiments": [],
-  "gpu_idle_on_compute_bound_tasks": null,
-  "summary": "No experiments were completed this milestone, meaning total wall time and compute-bound tasks were 0.",
-  "bottlenecks_identified": [
-    "No experiments were processed, which is the primary bottleneck preventing data collection."
+  "total_wall_time_minutes": 1,
+  "slowest_experiments": [
+    {
+      "experiment_id": "exp3437",
+      "duration_minutes": 20,
+      "note": "P0.1 v3: RETIRED after 3x idle-timeout (1201s each). Live 35B GGUF generation at 200 problems x k=5 samples exceeds the ~20-min agent budget. Not a compute success.",
+      "status": "retired"
+    }
   ],
-  "improvements_suggested": [
-    "Investigate why no experiments were committed during this milestone.",
-    "Verify the experiment trigger pipeline and dispatch mechanisms."
+  "retired_experiments": [
+    {
+      "experiment_id": "exp3437",
+      "title": "P0.1 v3 \u2014 Energy-Weighted Vote vs Self-Consistency",
+      "root_cause": "single_in_session_live_35b_generation_exceeds_agent_budget",
+      "timeout_seconds": 1201,
+      "retry_count": 3,
+      "fix_for_318": "decouple_into_offline_generation_builder_plus_fast_cached_scoring_task"
+    }
   ],
-  "top_3_highest_leverage_actions": [
-    "Check experiment dispatch logs for activation failures.",
-    "Review failure_ledger to see if all tasks were blocked as doomed reruns.",
-    "Confirm milestone configuration is valid."
+  "gate_blocked_experiments": [
+    {
+      "experiment_id": "exp3445",
+      "title": "G1-G4 gate-status synthesis v317",
+      "reason": "upstream exp3437 retired before producing an artifact"
+    },
+    {
+      "experiment_id": "exp3446",
+      "title": "Capstone v317",
+      "reason": "upstream exp3445 gate synthesis was gate-blocked \u2014 capstone artifact is blocked_gate_check_failed"
+    }
   ],
-  "estimated_time_savings_pct": 0,
-  "meta_reflection": "An empty milestone indicates a potential pipeline stall or completion of planned tasks. Ensuring proper task dispatch is critical before attempting performance optimizations."
+  "completed_experiments": [
+    "exp3438-fover-g2-cleanroom-rootcause-and-fix-v2",
+    "exp3439-verifier-ensemble-lambda-min-diversity-audit-v3",
+    "exp3440-kona-global-opt-correctness-v3",
+    "exp3441-verifier-ensemble-vs-adaptive-injection-corpus-v3",
+    "exp3444-polarfire-reachability-audit-v3"
+  ],
+  "blocked_experiments": [
+    "exp3442-kv260-terminal-latency-transcript-v3",
+    "exp3443-gatemate-opportunistic-detect-continuity-v1"
+  ],
+  "depth_results_317": {
+    "g2_root_cause_fixed": true,
+    "g2_internal_cleanroom_passes": true,
+    "g2_external_reproducer_pending": true,
+    "g2_note": "scikit-learn was undeclared in pyproject.toml; fresh worktree+venv reproduces AUROC=0.9131 within published CI.",
+    "p0_2_gate_passed": false,
+    "p0_2_note": "lambda_min(Sigma)=-0.0 (threshold >0.1: FAILED). pcib_semantic + length_antivacuity are null-space verifiers.",
+    "kona_gate_passed": false,
+    "kona_note": "Pure Ising descent solve_rate=0.0 on 21 Sudoku. Hybrid solve_rate=1.0.",
+    "injection_auroc": 0.831515,
+    "injection_gate_passed_vs_sidecar": true,
+    "injection_noninferiority_vs_teacher": false,
+    "p0_1_v3_status": "retired_idle_timeout_x3",
+    "p0_1_hypothesis_answered": false
+  },
+  "top_operational_finding": "P0.1 v3 idle-timeout (x3) reveals a fundamental agent-budget mismatch: live 35B GGUF generation for 200+ problems cannot finish in the ~20-min conductor budget. Fix: split into offline generation builder + fast cached-scoring task.",
+  "top_forward_gap": "DECOUPLE P0.1 generation from scoring; SHIP external reproducer runbook; SCOPE Kona claim to hybrid-solver framing in paper-v6; ROTATE verifier ensemble (P0.2 null-space).",
+  "depth_forcing_function_active": true,
+  "depth_forcing_function_can_relax": false,
+  "g1": true,
+  "g2": false,
+  "g3": true,
+  "g4": true,
+  "unmet_gates": [
+    "G2"
+  ],
+  "paper_ready": false,
+  "capstone_landed": false,
+  "capstone_note": "Capstone exp3446 was GATE_BLOCK-skipped because gate synthesis exp3445 was gate-blocked after exp3437 retired."
 }
