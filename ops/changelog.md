@@ -1,5 +1,9 @@
 # Carnot — Changelog
 
+## 2026-05-30 (Milestone 2026.05.319 Operational Retrospective)
+
+- [outer-loop] Wrote `results/operational_retro_2026_05_319.json` (schema `carnot.operational_retro.v64`). The authoritative timing source reports no experiment commits since activation, leaving `total_wall_time_minutes=0`, `experiments_completed=0`, `compute_bound_experiments_count=0`, `slowest_experiments=[]`, and `gpu_idle_on_compute_bound_tasks=null`. Both RTX 3090s were idle in the GPU snapshot, but no GPU-idle bottleneck was recorded because there were 0 compute-bound timing rows. Recommended tooling change: investigate why no experiments were committed post-activation.
+
 ## 2026-05-30 (Milestone 2026.05.318 Archive + .319 Activation)
 
 - [outer-loop] Wrote `results/operational_retro_2026_05_318.json` (schema `carnot.operational_retro.v65`). Milestone .318 (Depth-Over-Breadth IV) was the first milestone where P0.1 produced real, non-degenerate numbers: exp3448 built a resumable n=47/120 GSM8K generation corpus (defeating the 1201 s idle-timeout that killed exp3437 in .317), and exp3449 scored it in 0.2 s. The honest answer across three measurements: untrained energy has AUROC=0.516 (chance) as a correctness classifier (exp3450), which mechanistically explains why energy_weighted_vote==self_consistency exactly — both experiments were FLAGGED for this TAUTOLOGY, but the flag IS the finding, not a bug. exp3451 advanced G2 (CI workflow + Docker clean-room both reproduce AUROC=0.9131; external run still pending — G2 remains the SOLE unmet publication gate). exp3452 confirmed FR-11 grounding collapse (at-risk grounding causes mode-collapse; entropy-reg prevents it) but was FLAGGED for a pass_rate==accuracy tautology explained by mode-collapse dynamics. Wrote `results/experiment_3458_archive_v318_activate_v319.json` with `archive_v318_activate_v319_ready=true`. Milestone .319 is active.

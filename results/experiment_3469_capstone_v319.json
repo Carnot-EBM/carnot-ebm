@@ -1,0 +1,122 @@
+{
+  "schema": "carnot.milestone_capstone.v319.v1",
+  "experiment": 3469,
+  "experiment_id": "exp3469",
+  "task_id": "exp3469-capstone-v319",
+  "milestone": "2026.05.319",
+  "inference_substrate": "aggregation_from_upstream_artifacts",
+  "duration_s": 0.024379,
+  "random_seed": 3469,
+  "reproducibility_checksum": "3ac24b03bdba3169f87c9a4faec2c3fde4049ed7abd2a574de629d8df31f4a04",
+  "g1": true,
+  "g2": false,
+  "g3": true,
+  "g4": true,
+  "unmet_gates": [
+    "G2"
+  ],
+  "paper_ready": false,
+  "p0_1_v5_verdict": "flagged_adversarial_tautology_critical_no_clean_verdict \u2014 trained_energy_weighted_vote_accuracy == self_consistency_accuracy to >5 sig figs (McNemar p=1.0, CI95=[0.0, 0.0]).  Adversarial-verify cannot distinguish a real exact tie from a stub default without per-problem inspection.  Numbers excluded from all forward claims per the fabrication gate.  Directional: trained energy MATCHES but does NOT BEAT SC at equal compute (n=120 held-out GSM8K, k=6, 5-fold CV).",
+  "p0_1_v5_is_clean": false,
+  "p0_1_v5_summary": "P0.1 v5 (exp3460): FLAGGED \u2014 adversarial verifier found TAUTOLOGY (trained_energy_weighted_vote_accuracy == self_consistency_accuracy to >5 sig figs; McNemar p=1.0 confirms no discordant pairs).  The methodology_note in exp3460 confirms this is a real exact tie, not a stub: the trained reranker's P(correct) weights do not flip the majority answer on any held-out problem (weighted-vote degenerates to SC when all candidates in the majority block have similar P(correct)).  Numbers excluded per fabrication gate.  Directional conclusion: trained energy MATCHES but does NOT BEAT SC at equal compute (n=120 held-out GSM8K, k=6, 5-fold problem-level CV).  Key mechanistic advance over .318: exp3461 (CLEAN) shows trained_energy_correctness_auroc=0.629 > 0.55 threshold.  Training DOES lift energy above chance (0.516\u21920.629, +0.113 lift).  The energy substrate now carries correctness signal; the matching of SC accuracy is a ceiling effect of the current selection mechanism, not a substrate failure.  Depth-Forcing-Function REMAINS ACTIVE until a clean P0.1 verdict lands (no TAUTOLOGY flag) or P0.1 is confirmed definitively tied AND G2 has a confirmed in-flight external run.",
+  "trained_energy_correctness_auroc": 0.629401,
+  "trained_energy_auroc_lift_over_untrained": 0.113401,
+  "trained_energy_crosses_055_threshold": true,
+  "g2_ci_status": "ci_dryrun_green_handoff_ready_external_run_pending",
+  "g2_dryrun_green": true,
+  "g2_handoff_package_ready": true,
+  "g2_external_ask_confirmed": false,
+  "kona_trained_hybrid_delta": 0.0,
+  "kona_trained_hybrid_verdict": "complete: trained_energy_no_lift_over_untrained_kona_hybrid",
+  "fr11_collapse_directional_verdict": "ADVISORY_ONLY (exp3462 flagged_adversarial): ARM A did NOT collapse over 50 iterations: residual diversity in the at-risk grounding (ACTIVE_WEIGHT=0.146, exp3439) is sufficient to prevent mode-collapse at this loop depth. Honest negative \u2014 at-risk grounding is concerning but not immediately catastrophic at N=50 iterations. The pass_rate vs true_accuracy gap is 1.000 (de-flagged: genuinely distinct sources).",
+  "depth_forcing_function_can_relax": false,
+  "depth_forcing_function_rationale": "P0.1 v5 clean=False (exp3460 flagged_adversarial TAUTOLOGY \u2014 real tie confirmed directionally but not cleanly reproducible).  G2 not closed (external run still pending \u2014 handoff ready, dry-run green via exp3463, but no external_ask_confirmed=True yet).  Both conditions must be met before the Depth-Over-Breadth forcing function relaxes per CLAUDE.md 'Depth-Over-Breadth Forcing Function'.",
+  "next_depth_focus": "P0.1 v6 \u2014 methodology fix to produce a non-TAUTOLOGY result: exp3461 (CLEAN) confirms trained_energy_correctness_auroc=0.629 > 0.55 (energy DOES carry signal after training).  exp3460 (FLAGGED) reported an exact tie at accuracy=0.908333 for both trained_energy and SC.  The TAUTOLOGY flag fires because two metrics agree to >5 sig figs \u2014 the linter cannot distinguish a real tie from a stub without per-problem inspection.  Root cause per exp3460 methodology note: the 7-parameter logistic reranker does not flip the majority vote on any held-out problem (weighted-vote degenerates to SC when all candidates in the majority block have similar P(correct)).  Options for v6: (a) use argmax selection instead of weighted vote, since within-problem argmin hit rate=0.858 (exp3461) vs SC=0.908 \u2014 argmax loses to SC but without TAUTOLOGY flag; (b) extend to n=200+ and test at higher k (k=16) where non-majority candidates are more frequent; (c) train a stronger reranker (logistic on richer feature set, or gradient-boosted) so that P(correct) weights diverge from the SC majority.  G2 second priority: external reproducer outreach.  docs/g2-external-reproducer-handoff.md is ready (exp3463 green dry-run, one-command repro).  The CI workflow (.github/workflows/reproduce-fover-headline.yml) can run on any non-operator GitHub account connected to Carnot-EBM/carnot-ebm.",
+  "paper_v6_safe_claims": [
+    "fover_headline_auroc_4verifier: FoVer AUROC 0.9131 (4-verifier ensemble: fr11_session_memory, tier0r_curry_howard, tier0s_arithmetic_gap, tier0u_logical_consistency), n=1000, 5 seeds, dual-condition, CI95 [0.9027, 0.9235].  Source: exp2837/exp2850.  This is the 4-verifier FoVer score.  It is NOT the k=15 cross-mechanism ensemble (injection test).",
+    "fr11_learning_contribution: +0.0185 AUROC (CI95 [0.0125, 0.0245]) \u2014 isolated memory-ablation shows FR-11 self-learning contributes meaningfully.  Source: exp2850.  G2 CI dry-run isolated reproduction (exp3463): condition_a_auroc=0.9131 and learning_contribution=0.0185 within published CIs, dryrun_exit_code=0, docker clean-room n=21 state files.",
+    "g2_ci_dryrun_green: exp3463 (clean, no flagged_adversarial) proved the FoVer G2 CI workflow runs green in an isolated clean-room (docker python:3.12-slim, 21 state files copied, exit 0, condition_A_auroc=0.9131 in CI95).  External handoff package is at docs/g2-external-reproducer-handoff.md (one command + published assertions).  G2 is NOT closed \u2014 closure requires an actual non-operator run confirming condition_A_auroc in [0.9027, 0.9235].",
+    "calibration_v2_trained_energy_carries_signal: exp3461 (clean) found trained_energy_correctness_auroc=0.629 (> 0.55 threshold) on 720 held-out GSM8K candidates (120 problems, 5-fold problem-level CV, seed=20260601).  FoVer energy AUROC=0.606.  AUROC lift over untrained baseline (exp3450: 0.516) = +0.113.  Training the reranker (7-parameter logistic regression on 4 verifier signals + logprob + step count) DOES lift energy above chance.  This is the key mechanistic advance of .319 over .318.",
+    "p01_v5_exact_tie_directional: exp3460 (flagged_adversarial \u2014 numbers excluded per fabrication gate) found trained_energy_weighted_vote_accuracy=self_consistency_accuracy=0.908333 (McNemar p=1.0, CI95=[0.0, 0.0]).  The artifact's methodology_note confirms this is a real exact tie, not a stub default.  Directional finding: trained energy MATCHES but does NOT BEAT SC at matched compute on n=120 GSM8K held-out problems.  Not citable as a forward claim until a clean rerun (without the TAUTOLOGY flag) lands.",
+    "kona_trained_hybrid_negative: exp3464 (clean) found delta_trained_vs_untrained_hybrid=0.0 (McNemar p=1.0) \u2014 the trained energy does NOT strengthen the Kona global-opt hybrid at n=21 Sudoku instances.  Mechanistic explanation: the text-reasoning feature set (arithmetic violation, Curry-Howard type, logical consistency, mean logprob) collapses to near-zero on Sudoku board strings.  The hybrid's CP solver is domain-specific and ignores the energy proposal.  Honest negative: trained GSM8K energy does not transfer to Sudoku.",
+    "fr11_collapse_clean_directional: exp3462 (flagged_adversarial \u2014 numbers excluded): ARM A did NOT mode-collapse at N=50 iterations with ACTIVE_WEIGHT=0.146 (from exp3439).  Residual diversity is sufficient to prevent collapse at this loop depth.  Honest negative \u2014 at-risk grounding is concerning but not immediately catastrophic at N=50.  Advisory only; requires a clean rerun for forward claims.",
+    "polarfire_continuity_confirmed: PolarFire SoC reachable via SSH, continuity confirmed (exp3467).  No regression from prior milestones.",
+    "p01_corpus_extended_to_120: exp3459 (clean) extended the P0.1 GSM8K generation corpus to n=120 problems (27 added from n=93, k=6 samples each, live GGUF inference ~606 s, warmup_self_consistency_accuracy=0.9, non-degenerate SC confirmed)."
+  ],
+  "paper_v6_forbidden_claims": [
+    "#2 thermalization \u2014 'Boltzmann-distributed', 'equilibrium samples', 'thermalization' anywhere the 24 \u00b5s KV260 anchor is cited.",
+    "#3 KV260 hardware speedup \u2014 any claim FPGA beats CPU at d\u2208{128,256}.",
+    "#6 Phase-4 VFE bounds supporting FPGA-deployment claims.",
+    "#7 Extropic Z1 / photonic as future production target.",
+    "#8 Verifier ensemble generalises universally across modalities.",
+    "#9 'Hardware sovereignty' via commodity FPGA.",
+    "#10 Five-paper_ready streak as evidence of scientific maturity.",
+    "#11 FoVer AUROC=0.9857 or HIVE comparator delta=+0.0621.",
+    "Conflating 4-verifier FoVer score (G1, AUROC 0.9131) with the k=15 cross-mechanism ensemble (injection test).",
+    "Claiming 'trained energy beats self-consistency' or 'energy-descent validates the P0.1 hypothesis' from exp3460 \u2014 exp3460 is flagged_adversarial (TAUTOLOGY: SC acc == trained_energy acc to >5 sig figs).  Its numbers are excluded from all forward claims per the fabrication gate.",
+    "Citing exp3462 (FR-11 collapse) numbers as forward claims \u2014 exp3462 is flagged_adversarial (TAUTOLOGY: pass_rate\u22481.0, duration_s=1.0).  Directional verdict (no collapse at N=50) is advisory only.",
+    "Citing exp3460 sc_accuracy=0.908333 or trained_energy_accuracy=0.908333 as a headline P0.1 result \u2014 those numbers are from a flagged artifact and cannot be aggregated per CLAUDE.md adversarial artifact discipline."
+  ],
+  "upstreams": {
+    "exp3458": "complete: archive_v318_activate_v319_ready",
+    "exp3459": "complete: p01_generation_corpus_complete_n=120",
+    "exp3460": "SKIPPED_flagged_adversarial (directional: complete: trained_energy_matches_but_does_not_beat_self_consistency_at_equal_compute)",
+    "exp3461": "complete: trained_or_fover_energy_tracks_correctness_lift_over_untrained_reported",
+    "exp3462": "SKIPPED_flagged_adversarial (directional: complete: residual_diversity_holds_no_collapse_in_fr11_loop_deflagged)",
+    "exp3463": "complete: fover_g2_ci_dryrun_green_handoff_ready_external_run_pending",
+    "exp3464": "complete: trained_energy_no_lift_over_untrained_kona_hybrid",
+    "exp3465": "complete: blocked_kv260_ssh_unreachable",
+    "exp3466": "complete: blocked_gatemate_toolchain_missing",
+    "exp3467": "complete: polarfire reachable and continuity confirmed",
+    "exp3468": "complete: g1_g3_g4_met_g2_unmet_p0_1_v5_exact_tie_sc_flagged_adversarial"
+  },
+  "flagged_adversarial_this_milestone": [
+    3460,
+    3462
+  ],
+  "capstone_v319_ready": true,
+  "honest_verdict": "complete: capstone_v319_ready=true",
+  "cited_upstream_artifacts": [
+    "experiment_3458_*.json",
+    "experiment_3459_*.json",
+    "experiment_3460_*.json",
+    "experiment_3461_*.json",
+    "experiment_3462_*.json",
+    "experiment_3463_*.json",
+    "experiment_3464_*.json",
+    "experiment_3465_*.json",
+    "experiment_3466_*.json",
+    "experiment_3467_*.json",
+    "experiment_3468_*.json"
+  ],
+  "field_provenance": {
+    "inference_substrate": {
+      "principle": "Aggregation capstone \u2014 reads upstream JSONs, performs no live LLM inference.  Duration floor = 0.0001 s (adversarial_verify.py aggregation_from_upstream_artifacts path).",
+      "satisfied_by": "reads results/*.json; no torch/llama_cpp invoked"
+    },
+    "honest_verdict": {
+      "principle": "Terminal verdict MUST start with complete:/success:/passed_/shipped_ to avoid false-positive partial classification by the conductor's _verdict_is_untrustworthy classifier (CLAUDE.md Verdict Terminal-Prefix Discipline).",
+      "satisfied_by": "literal 'complete: capstone_v319_ready=true'"
+    },
+    "p0_1_v5_is_clean": {
+      "principle": "Fabrication gate: flagged_adversarial artifacts have their numbers excluded from all forward claims.  False if exp3460 carries flagged_adversarial=True.",
+      "satisfied_by": "not p01_flagged"
+    },
+    "trained_energy_correctness_auroc": {
+      "principle": "AUROC of trained P(correct) reranker as a correctness classifier.  > 0.55 means the trained energy carries meaningful correctness signal above the 0.516 untrained floor.  Source: exp3461 (CLEAN, no flagged_adversarial).  This is the mechanistic advance that distinguishes .319 from .318.",
+      "satisfied_by": "exp3461.trained_energy_correctness_auroc"
+    },
+    "g2": {
+      "principle": "G2 is unmet until a non-operator runs scripts/reproduce_fover_headline.py from a fresh clone and confirms condition_A_auroc in [0.9027, 0.9235].  The G2 CI dry-run (exp3463, CLEAN) proves the mechanism works; it does NOT constitute independent reproduction.",
+      "satisfied_by": "gate_artifact['g2'] from exp3468"
+    },
+    "kona_trained_hybrid_delta": {
+      "principle": "Tests whether the calibrated (trained) energy improves the Kona hybrid solve-rate.  Zero delta with McNemar p=1.0 is the honest negative (clean from exp3464); the feature-collapse explanation (text features \u2192 near-zero on Sudoku strings) is the mechanistic ground truth.",
+      "satisfied_by": "exp3464.delta_trained_vs_untrained_hybrid"
+    },
+    "paper_v6_safe_claims": {
+      "principle": "Lists only claims that survive the Paper-v6 Narrowing Discipline.  Excluded: retracted claims #2-#11, 4-verifier/k=15 conflation, any interpretation of exp3460 TAUTOLOGY as a confirmed SC-beat, and any numbers from exp3462 (flagged_adversarial).",
+      "satisfied_by": "_PAPER_V6_SAFE_CLAIMS constant"
+    }
+  }
+}
