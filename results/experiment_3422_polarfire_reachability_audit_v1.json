@@ -1,0 +1,25 @@
+{
+  "experiment_id": 3422,
+  "schema": "carnot.polarfire_reachability_audit.v1",
+  "spec_refs": [
+    "REQ-HW-070",
+    "SCENARIO-HW-070"
+  ],
+  "inference_substrate": "hardware_smoke",
+  "honest_verdict": "complete: polarfire reachable and continuity confirmed",
+  "polarfire_reachable": true,
+  "preconditions_checked": [
+    {
+      "resource": "polarfire_ssh",
+      "available": true,
+      "check": "ssh -o ConnectTimeout=5 -o BatchMode=yes polarfire true",
+      "returncode": 0
+    }
+  ],
+  "ssh_returncode": 0,
+  "ssh_stderr": "",
+  "uptime": "06:19:09 up 15:49,  0 user,  load average: 0.08, 0.02, 0.01",
+  "continuity_note": "Board reachable via SSH; uptime='06:19:09 up 15:49,  0 user,  load average: 0.08, 0.02, 0.01'. No regression from last validated state (exp2958 1000-clause hash-verified).",
+  "duration_s": 1.9074381309910677,
+  "thermal_note": "passively cooled; no active fan; sustained-load results may differ from production with active cooling"
+}
