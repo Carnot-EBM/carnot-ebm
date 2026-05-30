@@ -7795,3 +7795,4 @@ ModuleNotFoundError: No module named 'torch'; results/experiment_2828_fover_memo
 - 2026-05-30: GateMate N16 Bitstream Bootstrap Fix (⚠️ Research Finding) — honest_verdict=unspecified; results/experiment_3392_gatemate_n16_bootstrap_fix.json
 - 2026-05-30: GateMate N16 Bitstream Bootstrap Fix (⚠️ Research Finding) — honest_verdict=unspecified; results/experiment_3392_gatemate_n16_bootstrap_fix.json
 - 2026-05-30: Proximal-Gradient Constraint Network Layer (✅ Complete) — honest_verdict=Proximal-Gradient constraint layer implemented and tested successfully.; results/experiment_3393_proximal_gradient_constraint.json
+- 2026-05-30: Energy-Based Replay Selection for FR-11 Continual Learning (⚠️ Research Finding) — honest_verdict=SUCCESS: Energy-guided selection achieved better or equal nonforgetting compared to random.; results/experiment_3395_energy_based_replay.json
