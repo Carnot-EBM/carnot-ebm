@@ -1608,6 +1608,18 @@ It SHALL NOT claim a scientific delta, and SHALL set `energy_descent_bootstrap_r
 **Then** it runs a tiny deterministic smoke and writes telemetry
 **And** the artifact sets `energy_descent_bootstrap_ready=true` only if all checks pass.
 
+### REQ-INFER-3406: Latent Spills Sensing EBM Pipeline
+The system SHALL provide an EBM pipeline to read latent activation energies and detect 'spills' signaling guessing.
+The verification pipeline SHALL be instrumented to extract internal latent states using `MODEL_SPECS = ["unsloth/gemma-4-31B-it-GGUF"]`.
+The EBM SHALL calculate energy spills dynamically per token.
+The pipeline SHALL validate against a small hallucination dataset and output an artifact `results/experiment_3406_latent_spills_sensing.json` with all required schema fields including `honest_verdict` and `spill_detection_ready`.
+
+### SCENARIO-INFER-3406-001: Latent Spills Sensing Pipeline Execution
+**Given** the model unsloth/gemma-4-31B-it-GGUF and a small hallucination dataset
+**When** the latent spills sensing EBM pipeline is executed
+**Then** it calculates energy spills dynamically per token
+**And** the experiment artifact `results/experiment_3406_latent_spills_sensing.json` is generated.
+
 ## Implementation Status
 
 | Requirement | Python | Tests |
