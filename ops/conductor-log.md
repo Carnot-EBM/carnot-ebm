@@ -7090,3 +7090,4 @@ web search: https://docs.garak.ai/garak/examples/pr |
 | 2026-05-30 09:36 UTC | P0.1 v3 — Energy-Weighted Vote vs Self-Consistency | FAIL | Claude Code error: Wall-clock+idle timeout after 1201s (1201s silence). Last ou |
 | 2026-05-30 10:00 UTC | P0.1 v3 — Energy-Weighted Vote vs Self-Consistency | FAIL | Claude Code error: Wall-clock+idle timeout after 1201s (1201s silence). Last ou |
 | 2026-05-30 10:23 UTC | P0.1 v3 — Energy-Weighted Vote vs Self-Consistency | FAIL | Claude Code error: Wall-clock+idle timeout after 1201s (1201s silence). Last ou |
+| 2026-05-30 10:33 UTC | FoVer Headline G2 — Clean-Room Root-Cause + Fix (m | OK | 103 passed, 1 warning in 5.53s |
