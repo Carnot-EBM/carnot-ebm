@@ -84,14 +84,14 @@ difficulty needs to change.**
    └──────────┬───────────┘        └─────────────────────────────┘
               │ honest_verdict (cheap, reliable — the gate-chain anchor)
    ┌──────────┴────────────────────────────────────────────────────────────┐
-   │ exp3492  G1-G4 SYNTHESIS  ──gated_on exp3484.honest_verdict contains    │
-   │ 'complete'──>  exp3493  CAPSTONE                                         │
+   │ exp3491  G1-G4 SYNTHESIS  ──gated_on exp3484.honest_verdict contains    │
+   │ 'complete'──>  exp3492  CAPSTONE                                         │
    └─────────────────────────────────────────────────────────────────────────┘
 
   PARALLEL DEPTH:  exp3486 FR-11 minimal-β + grounding-dependence (mandatory
                    self-learning) │ exp3487 Kona harder-instance generation
-  G2:              exp3488 public one-click external-ask + regression-verify
-  HARDWARE:        exp3489 KV260 terminal │ exp3490 GateMate │ exp3491 PolarFire
+  G2:              exp3488 clean-room regression-verify + external-ask
+  HARDWARE:        exp3489 KV260 terminal │ exp3490 PolarFire (opportunistic)
 ```
 
 **Gate-chain principle (the .317 cascade lesson):** the synthesis/capstone gate on the
@@ -127,19 +127,23 @@ cannot cascade-skip the gate chain.
   correctness-first gate, then tests the process energy as proposal heuristic. Cached/CPU.
 
 ### Phase C — G2 (1 task; the sole publication gate)
-- **exp3488** FoVer G2 public one-click external-ask + package regression-verify —
-  regression-verify the exp3476 package still reproduces from a clean env, and prepare
-  the lowest-friction external ask (public `workflow_dispatch` workflow + reproducer
-  invite + operator checklist). Does NOT push, does NOT trigger CI, does NOT mark G2 met.
+- **exp3488** FoVer G2 clean-room regression-verify + lowest-friction external-ask —
+  regression-verify the exp3476 package still reproduces 0.9131 from a truly fresh
+  environment (isolated dir + fresh venv), then prepare the external ask (public
+  `workflow_dispatch` workflow + reproducer invite + operator checklist). Does NOT
+  push, does NOT trigger CI, does NOT mark G2 met (Operator-Only External Publication).
 
-### Phase D — HARDWARE (3 tasks; light, opportunistic per north-star §3)
+### Phase D — HARDWARE (2 tasks; light, opportunistic per north-star §3)
 - **exp3489** KV260 terminal latency transcript (re-attempt SSH; mandatory until terminal).
-- **exp3490** GateMate opportunistic detect + toolchain continuity (no flash mandate).
-- **exp3491** PolarFire opportunistic reachability audit (no terminal mandate).
+- **exp3490** PolarFire opportunistic reachability audit (no terminal mandate).
+- **GateMate EXCLUDED this milestone:** its toolchain (`nextpnr-himbaechel`) is missing,
+  so `.320` exp3478 returned `blocked_gatemate_toolchain_missing`; a re-detect is a
+  doomed rerun (Failed-Experiment Rerun Discipline) and north-star §3 says "do NOT block
+  milestones on it." Documented as blocked-on-toolchain future-work in the gate synthesis.
 
 ### Phase E — OPS synthesis + capstone (2 tasks)
-- **exp3492** G1-G4 gate-status synthesis (gated on the cheap exp3484 crux).
-- **exp3493** Capstone v321 (gated on exp3492).
+- **exp3491** G1-G4 gate-status synthesis (gated on the cheap exp3484 crux).
+- **exp3492** Capstone v321 (gated on exp3491).
 
 ---
 
@@ -148,16 +152,17 @@ cannot cascade-skip the gate chain.
 ```
 exp3482 (archive/activate)  ──> [all]
 exp3483 (corpus builder)    ──(cached file; soft)──> exp3484, exp3485, exp3487
-exp3484 (P0.1 crux)         ──gated_on honest_verdict contains 'complete'──> exp3492
-exp3485, exp3486, exp3487   ──(read by)──> exp3492
-exp3488 (G2), exp3489-91 (hw)──(read by)──> exp3492
-exp3492 (synthesis)         ──gated_on gate_status_v321_ready==true──> exp3493 (capstone)
+exp3484 (P0.1 crux)         ──gated_on honest_verdict contains 'complete'──> exp3491
+exp3485, exp3486, exp3487   ──(read by)──> exp3491
+exp3488 (G2), exp3489-90 (hw)──(read by)──> exp3491
+exp3491 (synthesis)         ──gated_on gate_status_v321_ready==true──> exp3492 (capstone)
 ```
 
 All downstream depth consumers handle a small/absent corpus via their own PRECONDITIONS
-(clean `blocked_*` verdicts), so a CUDA-blocked exp3483 cannot cascade. exp3487 is
-additionally `gated_on exp3484.honest_verdict contains 'complete'` (the process energy
-must exist before it is reused as a Kona heuristic).
+(clean `blocked_*` verdicts), so a CUDA-blocked exp3483 cannot cascade. exp3487 (Kona)
+and exp3491 (synthesis) are additionally `gated_on exp3484.honest_verdict contains
+'complete'` (the cheap, reliable cached crux is the gate-chain anchor — never the live
+builder, per the `.317` cascade lesson).
 
 ---
 
@@ -167,11 +172,10 @@ must exist before it is reused as a Kona heuristic).
 |---|---|---|
 | exp3483 corpus builder | 1× RTX 3090 (CUDA) + cached SOTA GGUF | `live_llm_inference` |
 | exp3484/3485/3486/3487 | CPU only (cached scoring) | `verifier_ensemble_against_cached_candidates` |
-| exp3488 G2 | CPU (Docker/fresh venv) | `verifier_ensemble_against_cached_candidates` |
+| exp3488 G2 | CPU (fresh venv) | `verifier_ensemble_against_cached_candidates` |
 | exp3489 KV260 | SSH to `kria` board | `hardware_smoke` |
-| exp3490 GateMate | DirtyJtag USB + himbaechel toolchain | `hardware_smoke` |
-| exp3491 PolarFire | SSH to `polarfire` board | `hardware_smoke` |
-| exp3482/3492/3493 | CPU (aggregation) | `aggregation_from_upstream_artifacts` |
+| exp3490 PolarFire | SSH to `polarfire` board | `hardware_smoke` |
+| exp3482/3491/3492 | CPU (aggregation) | `aggregation_from_upstream_artifacts` |
 
 **Models:** SOTA GGUF per CLAUDE.md — `unsloth/gemma-4-26B-A4B-it-GGUF` (default,
 homogeneous with the .320 corpus), with `unsloth/gemma-4-31B-it-GGUF` as the stronger
@@ -195,12 +199,13 @@ actionable Phase-5 pre-deployment default.
 
 ## 8. Discipline compliance checklist
 
-- **Depth-Over-Breadth:** 5 of 12 tasks are P0.1/Kona/self-learning depth; 1 is G2 (the
+- **Depth-Over-Breadth:** 5 of 11 tasks are P0.1/Kona/self-learning depth; 1 is G2 (the
   finish line). No `vN+1` re-measurement of an already-measured artifact — every depth
   task answers a question its predecessor structurally could not (in-band corpus,
   MATH-domain calibration, minimal-β, harder Kona instances).
-- **Hardware-Task Continuity:** one task per attached board (KV260 mandatory until
-  terminal; GateMate + PolarFire opportunistic per north-star §3).
+- **Hardware-Task Continuity:** KV260 (mandatory until terminal) + PolarFire
+  (opportunistic) per north-star §3; GateMate excluded this milestone (toolchain
+  `nextpnr-himbaechel` missing → re-detect is a doomed rerun; documented future-work).
 - **Gemini-cli is DOWN** (.315/.316/.318 crashed every gemini task) → ALL tasks
   `agent_type: claude, requires_claude: true`; heavy/long/hardware on `model: opus`.
 - **Pre-Launch Preconditions** on every compute-bound task; **KV260 SSH-not-SD-card**;
