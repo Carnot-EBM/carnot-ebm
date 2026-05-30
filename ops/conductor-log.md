@@ -7014,3 +7014,4 @@ web search: https://docs.garak.ai/garak/examples/pr |
 | 2026-05-30 02:51 UTC | GateMate N16 Bitstream Bootstrap Fix | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_3404_gatemat |
 | 2026-05-30 02:58 UTC | GateMate N16 Bitstream Bootstrap Fix | OK | 88 passed in 4.17s |
 | 2026-05-30 03:03 UTC | NUP Metric Evaluation | OK | 81 passed in 3.42s |
+| 2026-05-30 03:08 UTC | Latent Spills Sensing | OK | 81 passed in 3.37s |
