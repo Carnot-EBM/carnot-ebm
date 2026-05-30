@@ -7138,3 +7138,4 @@ web search: https://docs.garak.ai/garak/examples/pr |
 | 2026-05-30 18:02 UTC | KV260 terminal board-level latency transcript (dri | OK | 81 passed in 4.97s |
 | 2026-05-30 18:08 UTC | GateMate opportunistic detect + toolchain continui | FAIL | Claude Code error: Error: Reached max turns (20) |
 | 2026-05-30 18:10 UTC | GateMate opportunistic detect + toolchain continui | OK | Deliverable already exists in repo |
+| 2026-05-30 18:13 UTC | PolarFire opportunistic reachability + continuity  | OK | 94 passed in 3.26s |
