@@ -6998,3 +6998,5 @@ web search: https://docs.garak.ai/garak/examples/pr |
 | 2026-05-30 00:42 UTC | GateMate N16 Bitstream Bootstrap Fix | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_3392_gatemat |
 | 2026-05-30 00:54 UTC | GateMate N16 Bitstream Bootstrap Fix | FAIL | Gemini CLI error: Stalled after 600s silence. Last output: Warning: 256-color  |
 | 2026-05-30 01:02 UTC | Proximal-Gradient Constraint Network Layer | OK | 81 passed in 3.45s |
+| 2026-05-30 01:15 UTC | Kona-Style Global Optimization Reasoning Benchmark | FAIL | Gemini CLI error: Stalled after 600s silence. Last output: Warning: 256-color  |
+| 2026-05-30 01:17 UTC | Kona-Style Global Optimization Reasoning Benchmark | OK | Deliverable already exists in repo |

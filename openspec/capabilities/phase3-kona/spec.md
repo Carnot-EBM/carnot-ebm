@@ -2174,3 +2174,15 @@ The artifact MUST be written to `results/experiment_3384_pem_composition.json` a
 **And** the artifact is written to `results/experiment_3384_pem_composition.json` with `pem_composition_ready=true`.
 
 
+
+### REQ-KONA-3394: Kona Global Optimization Emulation on Hard Sudoku
+
+Carnot MUST emulate Logical Intelligence's Kona global inference procedure on a hard Sudoku problem set using Carnot's Ising energy function. The implementation MUST treat the Sudoku board as a joint energy landscape and apply continuous sampling/optimization over the entire board at once, avoiding any autoregressive token-by-token prediction. It MUST score correctness and report the time-to-solution.
+The Exp 3394 artifact MUST be written to `results/experiment_3394_kona_global_opt.json` and include the fields `solved_sudoku`, `time_to_solution`, and `honest_verdict`.
+
+### SCENARIO-KONA-3394: Exp 3394 Emulates Kona Global Inference
+
+**Given** a hard Sudoku problem modeled as an Ising energy function
+**When** the global inference procedure continuous sampling/optimization is applied over the entire board at once
+**Then** the solver successfully minimizes energy without autoregressive prediction, scores correctness, and reports time-to-solution
+**And** the artifact is written to `results/experiment_3394_kona_global_opt.json` with all required fields.

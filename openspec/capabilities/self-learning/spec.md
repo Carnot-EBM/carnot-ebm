@@ -10015,3 +10015,20 @@ episodes that can be loaded, keeps `controller_memory_only=true`,
 |---|---|---|
 | REQ-LEARN-3373 | Pending | Pending |
 
+
+## REQ-LEARN-3395: FR-11 Energy-Guided Sample Selection
+**Given** a memory buffer of constraint violations
+**When** the FR-11 continual update loop selects samples for replay
+**Then** it MUST use the Ising energy difference to prioritize the most critical samples
+**And** it MUST measure a nonforgetting metric comparing the energy-guided selection against random replay.
+
+### SCENARIO-LEARN-3395: Energy Difference Guides Critical Sample Selection
+**Given** multiple constraint violations in the memory buffer
+**When** the Ising energy difference is computed for each sample
+**Then** the samples with the largest energy difference are selected for replay
+**And** the nonforgetting metric shows improvement or parity compared to random selection.
+
+## Implementation Status (REQ-LEARN-3395)
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-LEARN-3395 | Implemented (`scripts/experiment_3395_energy_based_replay.py`) | Implemented (`tests/python/test_experiment_3395_energy_based_replay.py`) |
