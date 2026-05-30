@@ -7107,3 +7107,5 @@ web search: https://docs.garak.ai/garak/examples/pr |
 | 2026-05-30 12:24 UTC | Milestone 2026.05.318 activated | OK | 11 tasks queued |
 | 2026-05-30 12:29 UTC | Archive milestones .316 and .317 honestly and acti | FAIL | Claude Code error: Error: Reached max turns (20) |
 | 2026-05-30 12:35 UTC | Archive milestones .316 and .317 honestly and acti | OK | 81 passed in 3.42s |
+| 2026-05-30 12:58 UTC | P0.1 generation corpus builder — k-sample GSM8K ge | FAIL | Claude Code error: Wall-clock+idle timeout after 1201s (1201s silence). Last ou |
+| 2026-05-30 13:21 UTC | P0.1 generation corpus builder — k-sample GSM8K ge | FAIL | Claude Code error: Wall-clock+idle timeout after 1201s (1201s silence). Last ou |

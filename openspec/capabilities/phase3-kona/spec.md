@@ -2315,6 +2315,84 @@ embedded tokenizer is unavailable
 **Then** it writes a `blocked_<resource>` honest verdict and exits without
 fabricating accuracy numbers.
 
+### REQ-KONA-3448: Resumable Generation-Corpus Builder for the P0.1 Premise Test
+
+Exp 3437 (the prior P0.1 attempt) did NOT fail scientifically — it died of a
+1201s idle-timeout: a single in-session job that did live 35B generation over
+`200 x k` samples AND scored energy/self-consistency ran silently past the
+agent's wall-clock+idle budget and produced no artifact at all. The structural
+fix is to DECOUPLE generation from scoring. Exp 3448 does ONLY the expensive,
+non-deterministic part — generating sampled candidate solutions from the SOTA
+GGUF — and writes them to a cached, append-only, RESUMABLE corpus at
+`data/p01_gsm8k_generations.jsonl`. A downstream scoring task (exp3449) then
+consumes that corpus with NO live model and thus no idle-timeout risk, and
+answers the P0.1 question (does energy selection beat self-consistency at
+matched compute?) deterministically.
+
+**Rationale:** a builder that checkpoints one completed problem at a time, prints
+a progress line after every problem (so the subprocess is never silent for the
+~20 minutes that killed exp3437), respects an ~18-minute wall-time budget, and
+resumes from whatever it already wrote makes the corpus accumulate across
+milestones without any single run ever timing out. A partial corpus is progress,
+not failure.
+
+**Acceptance criteria:**
+
+- `completed_problem_ids` reads the JSONL corpus (if present) and returns the set
+  of problem ids that already have a full set of generations, so a re-invocation
+  SKIPS them and only generates for the remainder — the resume contract.
+- `build_corpus_row` packs one completed problem into a JSONL row carrying the
+  problem id, question, gold answer, the greedy generation, and the `k` sampled
+  generations, where EACH generation records its raw text, extracted integer
+  answer, the per-token logprobs, and the mean-token logprob (the mean token
+  confidence needed for downstream self-certainty Best-of-N).
+- `warmup_self_consistency_check` computes, over the first `>=20` completed
+  problems, the majority-vote (self-consistency) accuracy and the greedy
+  accuracy, and sets `self_consistency_non_degenerate=true` iff SC accuracy
+  `>= greedy AND > 0.30`; when degenerate it records the raw extracted answers of
+  three example problems so the per-sample extraction bug (the exp3426 0.0 bug)
+  is diagnosable — but generation CONTINUES (the corpus is still useful and the
+  scoring task re-validates the gate).
+- `derive_corpus_verdict` maps `n_completed` vs the target to exactly one
+  terminal verdict prefixed `complete:` (`..._complete`, `..._partial_resumable`,
+  or `..._seeded_..._resume_next_milestone`); a partial corpus is a terminal
+  success, not a failure.
+- The Exp 3448 artifact carries `inference_substrate=live_llm_inference`,
+  `corpus_path`, `n_problems_completed`, `n_problems_target`, `k_samples`,
+  `per_sample_logprobs_captured`, `self_consistency_non_degenerate`,
+  `warmup_self_consistency_accuracy`, `warmup_greedy_accuracy`, `model_specs`
+  (the gemma-4-26B-A4B-it GGUF), `random_seed`, `reproducibility_checksum`, and a
+  `duration_s` above the 60s live-inference floor.
+
+### SCENARIO-KONA-3448: Exp 3448 Builds a Resumable Generation Corpus
+**Given** CUDA is available, the `unsloth/gemma-4-26B-A4B-it-GGUF` embedded
+tokenizer loads via the GGUF path, and a GSM8K subset of `>=120` real problems
+with integer labels
+**When** we run `experiment_3448_p01_generation_corpus_builder_v1.py`
+**Then** for each not-yet-completed problem it generates one greedy generation and
+`k=6` sampled generations, capturing raw text, extracted answer, and per-token
+logprobs for each, and appends one JSONL row to `data/p01_gsm8k_generations.jsonl`
+immediately after the problem finishes
+**And** it prints a one-line progress message after every problem, stops when it
+approaches the ~18-minute wall-time budget, and writes the artifact with a
+`complete:` verdict reporting how many problems/samples landed and the warm-up
+self-consistency self-check.
+
+### SCENARIO-KONA-3448-RESUME: Exp 3448 Resumes From a Partial Corpus
+**Given** `data/p01_gsm8k_generations.jsonl` already contains completed rows from a
+prior run
+**When** the experiment is re-invoked
+**Then** it reads the already-completed problem ids, skips them, and only generates
+for the remaining problems, so the corpus accumulates monotonically toward the
+target across milestones without re-doing finished work.
+
+### SCENARIO-KONA-3448-BLOCKED: Exp 3448 Emits an Honest Block on Missing Preconditions
+**Given** any of CUDA, the SOTA GGUF embedded tokenizer, or the real GSM8K corpus
+is unavailable
+**When** the experiment runs its step-0 preconditions
+**Then** it writes a `blocked_<resource>` honest verdict and exits without
+fabricating any generations.
+
 ### REQ-KONA-3440: Kona Global-Opt Correctness-First Solve-Rate Gate
 
 Carnot MUST re-gate the Kona-style global-optimization Sudoku claim on
