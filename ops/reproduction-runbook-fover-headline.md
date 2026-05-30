@@ -147,6 +147,54 @@ already ran `pip install carnot-ebm` + the tutorial. CG is the natural first
 ask for G2 — this run is even cheaper (no GPU). A single CG reproduction within
 CI closes G2 and flips `paper_ready` to true.
 
+## CI workflow + Docker clean-room (exp3451, 2026-05-30)
+
+Two non-operator-environment mechanisms now ship in the repo so a non-operator
+can close G2 with a single action:
+
+### 1. GitHub Actions workflow (the CI path the ship gate counts)
+
+`.github/workflows/reproduce-fover-headline.yml` runs on a clean
+`ubuntu-latest` runner: `actions/checkout` → Python 3.12 → `pip install -e .`
+→ `python3 scripts/reproduce_fover_headline.py`. The reproducer's `main()` exits
+non-zero unless condition-A mean AUROC is in `[0.9027, 0.9235]` AND
+learning_contribution mean is in `[0.0125, 0.0245]`, so a green run is an
+in-CI assertion. Trigger it from the Actions tab ("FoVer Headline Independent
+Reproducer" → "Run workflow"); it also runs weekly (Mon 07:00 UTC). A green run
+on GitHub-hosted infrastructure is non-operator evidence — record it below to
+close G2.
+
+### 2. Docker clean-room (strongest autonomous isolation)
+
+Reproduce on a stock `python:3.12-slim` base image (a *different* base image
+than the operator's box), with a from-scratch `pip install -e .`:
+
+```bash
+# minimal build context: pyproject + license/readme + python/ (sans .so/__pycache__)
+#                        + data/fover_corpus.jsonl + FR-11 state files + the harness
+# (see scripts/experiment_3451_fover_g2_ci_workflow_and_docker_cleanroom_v1.py)
+docker build -t carnot-fover-g2-cleanroom .
+docker run --rm carnot-fover-g2-cleanroom python3 -c \
+  "import sys, json; sys.path.insert(0,'python'); sys.path.insert(0,'scripts'); \
+   from reproduce_fover_headline import run_reproduction; from pathlib import Path; \
+   print(json.dumps(run_reproduction(Path('/carnot'))))"
+```
+
+**Observed isolated numbers (2026-05-30, `python:3.12-slim` container):**
+
+| Quantity | Value | Published CI | In CI? |
+|---|---|---|---|
+| condition-A production AUROC (mean) | 0.91313 | [0.9027, 0.9235] | yes |
+| learning_contribution (mean) | 0.01847 | [0.0125, 0.0245] | yes |
+
+These match the operator-venv and fresh-worktree numbers (exp3438) on a
+completely different base image — the strongest autonomous, non-operator G2
+evidence short of an external human run. **G2 is NOT yet closed**: closure
+requires an actual external/CI run by a non-operator (the workflow above is the
+turnkey path). `g2_independent_reproducer` remains `false` until then.
+
+Artifact: `results/experiment_3451_fover_g2_ci_workflow_and_docker_cleanroom_v1.json`.
+
 ## Cross-references
 - `ops/north-star.md` §2 (the gate), §1 (the headline claim)
 - `scripts/publication_gate.py` (G1–G4 computation)

@@ -1,0 +1,55 @@
+# FoVer headline independent reproducer (publication gate G2).
+#
+# Why this workflow exists
+# ------------------------
+# G2 (independent reproduction) is the SOLE remaining blocker to paper_ready
+# (G1/G3/G4 are met per ops/north-star.md §2). The gate requires ">=1 reproducer
+# who is NOT the operator". The Phase-1 ship gate explicitly counts "a CI run" as
+# that reproducer. This workflow IS that mechanism: a clean ubuntu-latest runner
+# (a machine that is not the operator's box, with no access to the operator's
+# results/ directory) does a fresh `pip install -e .` and recomputes the FoVer
+# headline AUROC from the committed corpus, then asserts the numbers land inside
+# their published confidence intervals.
+#
+# A green run of this workflow on GitHub-hosted infrastructure is independent,
+# non-operator evidence that the headline reproduces. To close G2, run this
+# workflow (Actions tab -> "FoVer Headline Independent Reproducer" -> "Run
+# workflow") and record the green run per ops/reproduction-runbook-fover-headline.md.
+#
+# It is CPU-only and cheap: the headline is the verifier ensemble *scoring* a
+# labeled corpus, NOT live LLM generation (no GPU, no 35B model, no HF creds).
+name: FoVer Headline Independent Reproducer
+
+on:
+  workflow_dispatch:
+  schedule:
+    # Weekly Monday 07:00 UTC — a recurring non-operator reproduction signal.
+    - cron: '0 7 * * 1'
+
+jobs:
+  reproduce:
+    name: Recompute FoVer headline AUROC on a clean runner
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      # Fresh install from pyproject — this exercises the scikit-learn dependency
+      # fix (exp3438): a clean venv that lacked sklearn previously raised
+      # ModuleNotFoundError before any AUROC could be computed.
+      - name: Install Carnot-EBM (fresh, CPU-only)
+        run: pip install -e .
+
+      # Run the self-contained reproducer. It exits non-zero (failing the job)
+      # unless condition-A mean AUROC is in [0.9027, 0.9235] AND
+      # learning_contribution mean is in [0.0125, 0.0245] — the published CIs.
+      # The assertion lives inside the script's main(); this step surfaces it.
+      - name: Reproduce FoVer headline and assert published CIs
+        env:
+          JAX_PLATFORMS: cpu
+        run: python3 scripts/reproduce_fover_headline.py

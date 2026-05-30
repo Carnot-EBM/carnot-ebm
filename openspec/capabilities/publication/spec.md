@@ -1163,6 +1163,63 @@ contains failed samples or failed acceptance-gate status
 **Then** it writes a blocked Exp 2903 JSON artifact
 AND does not create or update the LaTeX snippet.
 
+### REQ-PUBLISH-036: Exp 3451 FoVer G2 CI Workflow + Docker Clean-Room
+
+The Exp 3451 G2 mechanism builder MUST ship the mechanism a non-operator
+environment uses to close gate G2 (independent reproduction of the FoVer
+headline) without itself claiming G2 is met.
+
+It MUST author a GitHub Actions workflow at
+`.github/workflows/reproduce-fover-headline.yml` that, on a clean
+`ubuntu-latest` runner, checks out the repo, sets up Python, runs
+`pip install -e .`, executes `scripts/reproduce_fover_headline.py`, and ASSERTS
+condition-A mean AUROC in `[0.9027, 0.9235]` AND learning_contribution mean in
+`[0.0125, 0.0245]` (exiting non-zero when either falls outside its published
+CI). The workflow file is committed to the working tree only; the builder MUST
+NOT push.
+
+When Docker is available (`command -v docker` AND `docker info` succeed), the
+builder MUST write a minimal Dockerfile on a clean Python base image (NOT the
+operator's venv), build it, and run the harness inside the container, capturing
+the containerized condition-A AUROC and learning_contribution. When Docker is
+unavailable, the builder MUST fall back to a fresh-venv clean-room run rather
+than failing the task — the CI workflow file is still the primary deliverable.
+
+The builder MUST NOT push, MUST NOT set `g2_independent_reproducer=true` (only
+an actual external/CI run by a non-operator may flip that), and MUST NOT modify
+`scripts/research_conductor.py`. It MUST write
+`results/experiment_3451_fover_g2_ci_workflow_and_docker_cleanroom_v1.json` with
+`honest_verdict` (terminal `complete:` prefix),
+`inference_substrate="verifier_ensemble_against_cached_candidates"`,
+`ci_workflow_path`, `docker_available`, `g2_docker_cleanroom_reproduced`,
+`condition_a_auroc_isolated`, `learning_contribution_isolated`, `g2_status`,
+`g2_independent_reproducer` (always false), `reproducibility_checksum`,
+`random_seed`, and `duration_s`.
+
+### SCENARIO-PUBLISH-036: CI Workflow + Docker Clean-Room Both Ready
+
+**Given** the reproducer harness and FoVer corpus are present and Docker is
+available
+**When** the Exp 3451 builder runs
+**Then** it writes `.github/workflows/reproduce-fover-headline.yml` asserting
+both published CIs
+AND builds + runs the harness inside a clean-room Docker container that
+recomputes condition-A AUROC in `[0.9027, 0.9235]` and learning_contribution in
+`[0.0125, 0.0245]`
+AND writes the Exp 3451 JSON artifact with a `complete:` verdict,
+`g2_docker_cleanroom_reproduced == true`, and `g2_independent_reproducer == false`.
+
+### SCENARIO-PUBLISH-036B: Docker Unavailable Falls Back To Fresh Venv
+
+**Given** the harness and corpus are present but Docker is not available
+**When** the Exp 3451 builder runs
+**Then** it still authors the CI workflow file
+AND falls back to a fresh-venv clean-room recompute
+AND records `docker_available == false` with an honest `g2_status` of
+`ci_ready_docker_unavailable` (when the fresh-venv clean-room reproduced) or a
+`still_failing_<cause>` string otherwise
+AND never sets `g2_independent_reproducer == true`.
+
 
 ## Implementation Status
 
@@ -1199,6 +1256,7 @@ AND does not create or update the LaTeX snippet.
 | REQ-PUBLISH-033 | Planned | Exp 2833 paper-v6 multi-corpus table v2 |
 | REQ-PUBLISH-034 | Planned | Exp 2841 paper-v6 multi-corpus table v3 |
 | REQ-PUBLISH-035 | Planned | Exp 2903 paper-v6 hardware-validation snippet |
+| REQ-PUBLISH-036 | Implemented | Exp 3451 FoVer G2 CI workflow + Docker clean-room |
 
 ### REQ-PUBLISH-026: HuggingFace Publish Retry
 The experiment 1750 huggingface retry runner MUST attempt to upload the smallest model in models/ with a no-emoji model card. If credentials pass, it MUST upload and record hf_upload_succeeded = True. If blocked, it MUST emit an honest verdict of "blocked_credentials".

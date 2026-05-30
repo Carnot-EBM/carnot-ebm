@@ -1,0 +1,51 @@
+{
+  "artifact": "experiment_3451_fover_g2_ci_workflow_and_docker_cleanroom_v1",
+  "schema": "carnot.fover_g2_ci_workflow_and_docker_cleanroom_v1",
+  "honest_verdict": "complete: fover_g2_ci_and_docker_cleanroom_ready_external_run_pending",
+  "inference_substrate": "verifier_ensemble_against_cached_candidates",
+  "ci_workflow_path": ".github/workflows/reproduce-fover-headline.yml",
+  "ci_workflow_asserts_cis": true,
+  "docker_available": true,
+  "isolation_mode": "docker",
+  "g2_docker_cleanroom_reproduced": true,
+  "condition_a_auroc_isolated": 0.9131335999999999,
+  "learning_contribution_isolated": 0.0184712,
+  "g2_status": "ci_and_docker_ready_external_run_pending",
+  "g2_independent_reproducer": false,
+  "g2_note": "The mechanism a non-operator uses to close G2 now exists in the repo: a GitHub Actions workflow at .github/workflows/reproduce-fover-headline.yml that fresh-installs and asserts the published CIs, plus a Docker (or fresh-venv) clean-room recompute on a different base image than the operator's box. G2 is NOT closed by authoring this mechanism \u2014 closure requires an actual external/CI run by a non-operator reporting condition_A_auroc in [0.9027, 0.9235] and learning_contribution in [0.0125, 0.0245]. See ops/reproduction-runbook-fover-headline.md.",
+  "reproducibility_checksum": "748a695343d105129585d0114f1f8d5e6255fea3fd5519a03d9cc927524901e3",
+  "random_seed": [
+    42,
+    137,
+    271,
+    314,
+    1729
+  ],
+  "duration_s": 90.32069182395935,
+  "n_examples": 1000,
+  "live_model_invoked": false,
+  "preconditions_checked": {
+    "ok": true,
+    "harness": "/home/ianblenke/github.com/ianblenke/carnot/scripts/reproduce_fover_headline.py",
+    "corpus": "/home/ianblenke/github.com/ianblenke/carnot/data/fover_corpus.jsonl"
+  },
+  "ci_workflow_invokes_harness": true,
+  "docker_base_image": "python:3.12-slim",
+  "docker_run_error": null,
+  "state_files_copied_to_cleanroom": 21,
+  "isolated_harness_error_if_any": null,
+  "field_principles": {
+    "honest_verdict": "complete:/success:/passed:/shipped_ prefix required by CLAUDE.md Verdict Terminal-Prefix Discipline.",
+    "inference_substrate": "Declares verifier-scoring (not live LLM) so adversarial_verify.py applies the 1s floor, not the 60s live-inference floor.",
+    "ci_workflow_path": ".github/workflows/reproduce-fover-headline.yml \u2014 the mechanism a non-operator CI runner uses to close G2.",
+    "docker_available": "Whether Docker isolation was achievable on this box.",
+    "g2_docker_cleanroom_reproduced": "Boolean: the headline recomputed in a Docker/fresh-venv container in [0.9027, 0.9235] (and learning_contribution in CI).",
+    "condition_a_auroc_isolated": "The recomputed production AUROC from the most-isolated environment achieved.",
+    "learning_contribution_isolated": "The recomputed FR-11 ablation from that environment; must land in [0.0125, 0.0245].",
+    "g2_status": "Honest string: ci_and_docker_ready_external_run_pending | ci_ready_docker_unavailable | still_failing_<cause>.",
+    "g2_independent_reproducer": "MUST be false \u2014 only an actual external/CI run by a non-operator flips it true.",
+    "reproducibility_checksum": "Content hash from the isolated recompute.",
+    "random_seed": "The published seeds [42,137,271,314,1729].",
+    "duration_s": "Isolated install + CPU verifier scoring wall time."
+  }
+}
