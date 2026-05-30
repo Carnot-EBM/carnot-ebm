@@ -7135,3 +7135,4 @@ web search: https://docs.garak.ai/garak/examples/pr |
 | 2026-05-30 17:24 UTC | FoVer G2 — CI workflow dry-run validation + Docker | OK | 81 passed in 3.20s |
 | 2026-05-30 17:47 UTC | Kona global-opt — TRAINED energy as the hybrid pro | FAIL | Claude Code error: Wall-clock+idle timeout after 1201s (1201s silence). Last ou |
 | 2026-05-30 17:55 UTC | Kona global-opt — TRAINED energy as the hybrid pro | OK | cache hit: 102 passed in 3.46s |
+| 2026-05-30 18:02 UTC | KV260 terminal board-level latency transcript (dri | OK | 81 passed in 4.97s |
