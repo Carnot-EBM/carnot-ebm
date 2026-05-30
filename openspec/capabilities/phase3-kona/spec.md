@@ -2314,3 +2314,65 @@ embedded tokenizer is unavailable
 **When** the experiment runs its step-0 preconditions
 **Then** it writes a `blocked_<resource>` honest verdict and exits without
 fabricating accuracy numbers.
+
+### REQ-KONA-3440: Kona Global-Opt Correctness-First Solve-Rate Gate
+
+Carnot MUST re-gate the Kona-style global-optimization Sudoku claim on
+SOLVE-RATE (a valid board with all Sudoku constraints satisfied / final energy
+zero, verified on the board), NOT on time-to-solution. The exp3408 framing
+(`solved_sudoku=False`, energy plateaued at 10.05, yet an implied "~15x speedup
+over autoregressive") is fast-but-wrong-vs-slow and MUST be retired: a speedup
+claim is invalid until the method actually solves.
+
+The implementation MUST:
+
+1. **STEP 0a (gating encoding validity):** encode a KNOWN-VALID solved Sudoku
+   board into the Ising energy and assert the total energy is zero within a
+   float epsilon. If a correct solution does not give E==0, the energy
+   formulation is mis-specified; the experiment MUST stop, report the
+   per-constraint residual-energy breakdown, and run no optimization. No
+   optimizer can solve a mis-specified energy.
+2. **STEP 0b (easy-tier sanity):** before any hard puzzle, confirm the optimizer
+   solves easy boards (many clues). A near-zero easy solve-rate indicates a
+   representational (energy/encoding) failure, not an optimizer-power failure.
+3. **Optimizer ladder (only if 0a passes and 0b solves easy):** run vanilla
+   Langevin and an annealed + random-restart variant, reporting `solve_rate`
+   by difficulty AND by `optimizer_variant`.
+4. **Plateau characterization:** report `n_violated_constraints_at_plateau` so a
+   "few cells almost-solved" outcome is distinguished from pervasive
+   infeasibility.
+5. **Energy-guided + constraint-propagation hybrid:** report `hybrid_solve_rate`
+   separately so the claim narrows honestly from "energy replaces search" to
+   "energy is a global heuristic" when only the hybrid solves.
+
+The artifact MUST be written to
+`results/experiment_3440_kona_global_opt_correctness_v3.json` and include
+`encoding_validity_E0`, `easy_tier_solve_rate`,
+`n_violated_constraints_at_plateau`, `hybrid_solve_rate`, `solve_rate`,
+`n_puzzles` (>=20), `solve_rate_by_difficulty`, `time_to_solution_solved_only`,
+`optimizer_variant`, `random_seed`, `reproducibility_checksum`, `duration_s`,
+and a terminal `honest_verdict` (starting with `complete:`/`success:`/`passed:`/
+`shipped:`). A speedup-vs-autoregressive number, if reported at all, MUST be
+restricted to the solved subset.
+
+### SCENARIO-KONA-3440: Exp 3440 Re-Gates Kona Global-Opt on Solve-Rate
+
+**Given** the continuous Sudoku Ising energy from `carnot.verify.sudoku` and a
+seeded set of at least 20 valid Sudoku puzzles across easy/medium/hard tiers
+**When** we run `experiment_3440_kona_global_opt_correctness_v3.py`
+**Then** STEP 0a verifies a known-valid solved board gives E==0 before any
+optimization solve-rate is reported
+**And** it reports `solve_rate` over the puzzle set, `solve_rate_by_difficulty`,
+`n_violated_constraints_at_plateau`, and `hybrid_solve_rate`, with any
+speedup claim restricted to the solved subset
+**And** the artifact is written with a terminal `honest_verdict` that honestly
+states whether pure energy descent solves, only the hybrid solves, or the
+current Ising energy formulation cannot do hard-Sudoku global reasoning yet.
+
+### SCENARIO-KONA-3440-ENCODING-INVALID: Exp 3440 Forks on a Mis-Specified Energy
+
+**Given** the encoding-validity check on a known-valid solved board
+**When** the total energy of that board exceeds the float epsilon
+**Then** the experiment writes
+`complete: blocked_energy_encoding_invalid_per_constraint_residual_reported`
+with the per-constraint residual-energy breakdown and runs no optimization.
