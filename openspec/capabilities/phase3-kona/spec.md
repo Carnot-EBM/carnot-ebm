@@ -2197,3 +2197,58 @@ The artifact MUST be written to `results/experiment_3408_kona_global_opt.json` a
 **When** we run `experiment_3408_kona_global_opt.py`
 **Then** it applies continuous sampling over the board at once
 **And** the artifact is written to `results/experiment_3408_kona_global_opt.json` with `status=success`.
+
+### REQ-KONA-3312: Energy-Descent-vs-Autoregressive Premise Test (P0.1)
+
+The entire Phase 3 / Kona endgame rests on the premise that energy-descent
+reasoning over continuous latents is at least competitive with — and ideally
+superior to — autoregressive (AR) token sampling on a real reasoning task. That
+premise MUST be tested head-to-head on a real benchmark with ground-truth labels
+(GSM8K subset `n>=200` or ARC-AGI-1), not on toy synthetic puzzles. Exp 3312
+runs the paired comparison and emits a falsifiable significance gate.
+
+**Rationale:** prior evidence (exp1165/exp1210/exp1222) only measured stability
+or BFS ties on synthetic 5x5 grids. A real-task, AR-compared, paired-significance
+result either greenlights Phase 3 (premise validated) or honestly retires the
+foundation-model endgame (premise unsupported at scale). Either outcome is
+high-value; the dishonest outcome is to never run it.
+
+**Acceptance criteria:**
+
+- `load_gsm8k_subset` returns a deterministic `n>=200` held-out split of real
+  GSM8K problems with integer ground-truth answers, keyed by `(path, n, seed)`.
+- `extract_final_answer` parses the model's `#### <number>` coda (or the last
+  integer fallback) into an int, returning `None` only when no number is present.
+- `energy_descent_select` performs bounded-depth gradient descent on the
+  continuous latent of each candidate under a trained Boltzmann-GPT energy and
+  selects the minimum-energy candidate — no token sampling occurs inside the
+  descent loop (REQ-KONA-001 reasoning mode).
+- `mcnemar_test` and `paired_bootstrap_ci` compute a paired significance signal
+  on the per-problem correctness vectors; an unpaired or `n<200` delta is
+  rejected as gameable.
+- `derive_premise_verdict` maps `(ar_accuracy, energy_descent_accuracy,
+  p_value, ci)` to exactly one terminal verdict prefixed `complete:` and reports
+  the two gates G1 (premise-viable / non-inferior) and G2 (premise-validated /
+  significant superiority).
+- The Exp 3312 artifact carries `inference_substrate=live_llm_inference`,
+  `n_problems>=200`, `ar_baseline_accuracy`, `energy_descent_accuracy`,
+  `accuracy_delta`, `paired_significance`, `compute_parity_note`, `random_seed`,
+  `reproducibility_checksum`, and a `duration_s` above the 60s live-inference
+  floor.
+
+### SCENARIO-KONA-3312: Exp 3312 Runs the Premise Head-to-Head
+**Given** CUDA is available, a trainable Boltzmann-GPT energy substrate, a
+GSM8K subset of `n>=200` real problems, and a cached SOTA AR baseline GGUF
+**When** we run `experiment_3312_energy_descent_vs_autoregressive_premise_v1.py`
+**Then** it scores the AR baseline and the energy-descent condition on the SAME
+paired problems with comparable generation compute
+**And** it writes `results/experiment_3312_energy_descent_vs_autoregressive_premise_v1.json`
+with a `complete:` verdict, the G1/G2 gate booleans, and a paired significance
+test over `n>=200` per-problem outcomes.
+
+### SCENARIO-KONA-3312-BLOCKED: Exp 3312 Emits an Honest Block on Missing Preconditions
+**Given** any of CUDA, the energy substrate, the real corpus, or the AR baseline
+is unavailable
+**When** the experiment runs its step-0 preconditions
+**Then** it writes a `blocked_<resource>` honest verdict and exits without
+fabricating accuracy numbers.

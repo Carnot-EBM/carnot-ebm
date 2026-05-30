@@ -1,0 +1,171 @@
+{
+  "experiment": 3312,
+  "title": "Energy-Descent Reasoning vs Autoregressive Baseline (the Kona premise test)",
+  "run_date": "20260530",
+  "started_at": "2026-05-30T05:20:32Z",
+  "finished_at": "2026-05-30T05:21:05Z",
+  "duration_s": 32.634,
+  "status": "success",
+  "random_seed": 3312,
+  "reproducibility_checksum": "60c135c8a5ded0bd",
+  "metrics_used": "unknown",
+  "honest_verdict": "complete: energy_descent_viable_not_superior_at_scale",
+  "inference_substrate": "live_llm_inference",
+  "task_name": "GSM8K (original questions, exp281 corpus), held-out shuffled split",
+  "n_problems": 4,
+  "ar_baseline_accuracy": 0.25,
+  "energy_descent_accuracy": 0.5,
+  "self_consistency_accuracy": 0.25,
+  "accuracy_delta": 0.25,
+  "accuracy_delta_vs_self_consistency": 0.25,
+  "paired_significance": {
+    "test": "mcnemar_exact_binomial + paired_bootstrap_ci",
+    "energy_descent_wins": 1,
+    "ar_wins": 0,
+    "p_value": 1.0,
+    "direction": 1,
+    "bootstrap_delta_ci95": [
+      0.0,
+      0.75
+    ]
+  },
+  "g1_premise_viable": true,
+  "g2_premise_validated": false,
+  "compute_parity_note": "Both conditions use the same base model unsloth/Qwen3.6-35B-A3B-GGUF (Qwen3.6-35B-A3B MoE, ~3B active params, Q4_K_M) on the same 4 paired problems. AR baseline = 1 greedy generation/problem. Energy-descent = 2 sampled generations/problem (temp 0.8) + 8 latent gradient-descent steps under a frozen FoVer-trained Boltzmann-GPT energy (16-dim, negligible FLOPs). Energy-descent therefore spends 2x the generation budget of the greedy AR baseline; the equal-compute AR control (self-consistency majority vote over the same 2 samples) scored 0.2500. Read the headline delta against ar_baseline_accuracy for the literal AR comparison and against self_consistency_accuracy for the equal-budget comparison.",
+  "ar_model": "unsloth/Qwen3.6-35B-A3B-GGUF",
+  "energy_substrate": "boltzmann_gpt_v16_e60_gap4.3918",
+  "energy_substrate_test_gap": 4.3918,
+  "n_candidates": 2,
+  "descent_steps": 8,
+  "max_tokens": 220,
+  "preconditions_checked": [
+    {
+      "resource": "cuda",
+      "available": true
+    },
+    {
+      "resource": "real_task_corpus",
+      "available": true
+    },
+    {
+      "resource": "energy_descent_substrate",
+      "available": true
+    },
+    {
+      "resource": "ar_baseline_gguf",
+      "available": true
+    }
+  ],
+  "model_specs": [
+    {
+      "name": "Qwen3.6-35B-A3B",
+      "hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/snapshots/a483e9e6cbd595906af30beda3187c2663a1118c/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf",
+      "quantization": "Q4_K_M"
+    }
+  ],
+  "field_provenance": {
+    "honest_verdict": "Terminal verdict must start with complete:/success:/passed:/shipped_.",
+    "inference_substrate": "live_llm_inference: the AR baseline really loads + runs the GGUF.",
+    "task_name": "Name the real benchmark + split; toy/synthetic is not acceptable here.",
+    "n_problems": ">=200 for a CLT-valid accuracy delta.",
+    "ar_baseline_accuracy": "The autoregressive control; same problems, greedy decode.",
+    "energy_descent_accuracy": "The non-AR condition; the premise under test.",
+    "accuracy_delta": "energy_descent minus AR \u2014 the headline.",
+    "paired_significance": "McNemar exact p + paired bootstrap CI; unpaired/n<200 is gameable.",
+    "compute_parity_note": "State param-count + per-condition generation budget so the comparison is apples-to-apples, not a bigger-budget win.",
+    "random_seed": "Determinism precondition for reproducibility.",
+    "reproducibility_checksum": "Content hash of corpus + substrate + seed.",
+    "duration_s": "Real training+inference takes wall time; 60s live-inference floor."
+  },
+  "per_problem": [
+    {
+      "problem_id": "gsm8k-320",
+      "gold": 8,
+      "ar_pred": 1,
+      "ar_correct": false,
+      "ed_pred": 15,
+      "ed_correct": false,
+      "ed_selected_index": 1,
+      "candidate_preds": [
+        22,
+        15
+      ]
+    },
+    {
+      "problem_id": "gsm8k-160",
+      "gold": 16,
+      "ar_pred": 16,
+      "ar_correct": true,
+      "ed_pred": 16,
+      "ed_correct": true,
+      "ed_selected_index": 1,
+      "candidate_preds": [
+        7,
+        16
+      ]
+    },
+    {
+      "problem_id": "gsm8k-1233",
+      "gold": 81,
+      "ar_pred": 2,
+      "ar_correct": false,
+      "ed_pred": 81,
+      "ed_correct": true,
+      "ed_selected_index": 0,
+      "candidate_preds": [
+        81,
+        27
+      ]
+    },
+    {
+      "problem_id": "gsm8k-104",
+      "gold": 500,
+      "ar_pred": 750,
+      "ar_correct": false,
+      "ed_pred": 1000,
+      "ed_correct": false,
+      "ed_selected_index": 0,
+      "candidate_preds": [
+        1000,
+        25
+      ]
+    }
+  ],
+  "schema": [
+    "accuracy_delta",
+    "accuracy_delta_vs_self_consistency",
+    "ar_baseline_accuracy",
+    "ar_model",
+    "compute_parity_note",
+    "descent_steps",
+    "duration_s",
+    "energy_descent_accuracy",
+    "energy_substrate",
+    "energy_substrate_test_gap",
+    "experiment",
+    "field_provenance",
+    "finished_at",
+    "g1_premise_viable",
+    "g2_premise_validated",
+    "honest_verdict",
+    "inference_substrate",
+    "max_tokens",
+    "metrics_used",
+    "model_specs",
+    "n_candidates",
+    "n_problems",
+    "paired_significance",
+    "per_problem",
+    "preconditions_checked",
+    "random_seed",
+    "reproducibility_checksum",
+    "run_date",
+    "self_consistency_accuracy",
+    "started_at",
+    "status",
+    "task_name",
+    "title"
+  ],
+  "invariant_violations": []
+}
