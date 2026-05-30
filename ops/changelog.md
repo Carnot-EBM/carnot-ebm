@@ -7810,3 +7810,4 @@ ModuleNotFoundError: No module named 'torch'; results/experiment_2828_fover_memo
 - 2026-05-30: Archive milestone .313 honestly and activate .314 (✅ Complete) — honest_verdict=complete: archive_v313_activate_v314_ready=true; results/experiment_3403_archive_v313_activate_v314.json
 - 2026-05-30: GateMate N16 Bitstream Bootstrap Fix (⚠️ Research Finding) — honest_verdict=unspecified; results/experiment_3404_gatemate_n16_bootstrap_fix.json
 - 2026-05-30: GateMate N16 Bitstream Bootstrap Fix (⚠️ Research Finding) — honest_verdict=unspecified; results/experiment_3404_gatemate_n16_bootstrap_fix.json
+- 2026-05-30: NUP Metric Evaluation (⚠️ Research Finding) — honest_verdict=unspecified; accuracy=1.0; results/experiment_3405_nup_metric_evaluation.json
