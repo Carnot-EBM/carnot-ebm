@@ -7056,3 +7056,5 @@ web search: https://docs.garak.ai/garak/examples/pr |
 | 2026-05-30 06:55 UTC | Milestone 2026.05.316 activated | OK | 11 tasks queued |
 | 2026-05-30 07:01 UTC | Archive milestone .315 honestly and activate .316 | OK | 81 passed in 3.07s |
 | 2026-05-30 07:14 UTC | P0.1 v2 — Energy-Descent vs AR vs Self-Consistency | FLAGGED | adversarial_verify CRITICAL: DURATION_TOO_SHORT — result quarantined, not a clea |
+| 2026-05-30 07:17 UTC | P0.2 v2 — Verifier-Ensemble Joint-Null-Space / lam | FAIL | Gemini CLI error: :345500:14)
+    at async file:///usr/lib/node_modules/@googl |
