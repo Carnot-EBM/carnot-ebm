@@ -11,5 +11,18 @@
     "compute_savings_percent": 13.33,
     "rejected_trajectories": 100
   },
-  "execution_time_s": 0.0001571178436279297
+  "execution_time_s": 0.0001571178436279297,
+  "flagged_adversarial": true,
+  "corrigendum_pending": [
+    {
+      "kind": "TAUTOLOGY",
+      "severity": "critical",
+      "detail": "states_saved=100.0 and rejected_trajectories=100.0 agree to >5 sig figs. Two distinct metrics matching this precisely is more likely a bug than a finding."
+    },
+    {
+      "kind": "METHODOLOGY_MISSING",
+      "severity": "warn",
+      "detail": "Compute-bound artifact missing: model_specs/target_model, random_seed, reproducibility_checksum. Methodology unverifiable."
+    }
+  ]
 }
