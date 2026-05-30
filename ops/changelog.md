@@ -7852,3 +7852,4 @@ ModuleNotFoundError: No module named 'torch'; results/experiment_2828_fover_memo
 
 - 2026-05-30: Operational Retrospective (✅ Complete) — honest_verdict=complete: Milestone 2026.05.317 resulted in no experiments being processed.
 - 2026-05-30: Archive milestones .316 and .317 honestly and activate .318 (✅ Complete) — honest_verdict=complete: archive_v316_v317_activate_v318_ready=true; results/experiment_3447_archive_v316_v317_activate_v318.json
+- 2026-05-30: P0.1 generation corpus builder — k-sample GSM8K generations (resumable, progress-printing, timeout-proof) (⚠️ Research Finding) — honest_verdict=complete: p01_generation_corpus_partial_resumable_n=47; results/experiment_3448_p01_generation_corpus_builder_v1.json
