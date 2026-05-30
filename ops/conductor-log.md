@@ -7130,3 +7130,4 @@ web search: https://docs.garak.ai/garak/examples/pr |
 | 2026-05-30 16:28 UTC | P0.1 corpus extend 47->120 — resume the resumable  | FAIL | Claude Code error: Wall-clock+idle timeout after 1201s (1201s silence). Last ou |
 | 2026-05-30 16:33 UTC | P0.1 corpus extend 47->120 — resume the resumable  | OK | cache hit: 92 passed in 4.43s |
 | 2026-05-30 16:44 UTC | P0.1 v5 — TRAINED energy reranker (EORM) + FoVer-v | FLAGGED | adversarial_verify CRITICAL: TAUTOLOGY, TAUTOLOGY, TAUTOLOGY — result quarantine |
+| 2026-05-30 16:56 UTC | Energy-correctness calibration v2 — TRAINED rerank | OK | 81 passed in 3.52s |
