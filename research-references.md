@@ -1,3 +1,89 @@
+## 2026-05-30 Post-.317 Planning Sweep (Milestone 2026.05.318)
+
+`.317` (Depth-Over-Breadth III) finally landed three of the four depth verdicts
+cleanly — but **P0.1, the existential crux, is STILL unanswered**, this time for
+a new reason:
+
+- **P0.1 v3 (exp3437): TIMED OUT 3× and was RETIRED.** The conductor log shows
+  `Claude Code error: Wall-clock+idle timeout after 1201s (1201s silence)` on all
+  three attempts. The live 35B GGUF generation over 200 problems × k samples ran
+  *silently* past the ~20-minute idle ceiling, produced no artifact, and the
+  `retire_if_same_verdict: true` lineage retired the task. **P0.1 has now failed
+  three distinct ways: flagged (exp3312), degenerate 0.0-tie harness (exp3426),
+  idle-timeout (exp3437).** The lesson is architectural, not scientific: a single
+  in-session live-inference job of this size cannot complete inside the agent's
+  wall-clock budget. **The .318 fix is to DECOUPLE generation from scoring** — a
+  resumable, progress-printing generation-corpus builder (cannot go silent →
+  cannot idle-timeout; checkpoints per problem → resumes) feeding a pure
+  cached-candidate scoring task (seconds, cannot time out). This is exactly the
+  pattern that makes the FoVer headline (exp2837) and the G2 clean-room (exp3438)
+  robust.
+- **G2 (exp3438): ROOT-CAUSED AND FIXED.** The clean-room failure was an
+  undeclared `scikit-learn` dependency; adding it to `pyproject.toml` makes a
+  fresh `git worktree` + fresh venv reproduce the headline AUROC **0.9131** and
+  the FR-11 learning contribution in their published CIs (`reproduced_in_ci=true`,
+  `g2_status=cleanroom_reproducible_internal_external_run_pending`). **G2 is now
+  internally clean-room reproducible; the only remaining piece is a NON-operator
+  run.** The strongest autonomous next step is a CI workflow + a Docker
+  clean-room (stronger isolation than a worktree) so a runner that is "not the
+  operator" closes G2 per the Phase-1 ship gate ("a CI run" counts).
+- **P0.2 (exp3439): honest negative landed.** `null_space_collapse_confirmed`,
+  `lambda_min(Sigma) = -0.0`, effective-k = 3.54. The ensemble has *some*
+  diversity (eff-k ≈ 3.5) but a near-zero joint-null eigenvalue → the α_t
+  grounding that prevents self-distillation collapse is *at risk*. This is the
+  motivation for the .318 continuous-self-learning task: does the at-risk
+  grounding actually cause collapse in an FR-11 self-improvement loop?
+- **Kona (exp3440): honest negative landed.** Encoding valid (a solved board
+  gives E==0), but pure energy descent `solve_rate=0.0` on hard Sudoku; only the
+  **energy + constraint-propagation HYBRID** solves. Verdict:
+  `energy_is_global_heuristic_hybrid_solves_pure_descent_does_not`. This is a
+  load-bearing P0.1 datapoint: at least in the discrete-CSP regime, **energy is a
+  global heuristic, not a complete solver — the hybrid is what works.**
+- **Injection (exp3441): landed.** Full k=15 ensemble AUROC **0.831** on the
+  adaptive corpus vs the single KAN sidecar's 0.475 — `beats_sidecar_but_below
+  _replacement_grade`. Cross-mechanism diversity does cover much of the surface
+  -feature null space a lone sidecar falls into.
+- **KV260 (exp3442):** `blocked_kv260_ssh_unreachable` again (board power/network
+  is an operator action). Gate-status synthesis (exp3445) and capstone (exp3446)
+  **GATE_BLOCKed** because they gated on the retired P0.1 (exp3437) — a cascade to
+  break in .318 by gating the capstone chain on the cheap, reliable P0.1 *scoring*
+  task instead of the heavy generation task.
+
+### New references directly bearing on the P0.1 crux (energy-vote vs SC, and the hybrid)
+
+- **"Budget-aware Test-time Scaling via Discriminative Verification"**
+  (arXiv:2510.14913). A **verifier + self-consistency HYBRID** beats either alone
+  by up to **15.3%** on AIME2025 at a fixed compute budget. This converges with
+  the .317 Kona finding (the energy+constraint hybrid solves where pure energy
+  does not) and motivates adding an explicit **energy-weighted-vote-over-SC
+  hybrid** condition to P0.1 v4 — the honest target is no longer "energy beats
+  greedy AR" but "energy (or energy×SC hybrid) beats plain majority-vote SC."
+- **"Incentivizing LLMs to Self-Verify Their Answers"** (arXiv:2506.01369). The
+  sharp adversarial reference: external verifiers trained on specific data often
+  **fail to generalize and underperform plain self-consistency**; self-verify and
+  SC are the strong baselines. If Carnot's energy can't beat SC, this is the
+  predicted-and-explained outcome, and the honest move is to retire the
+  energy-*superiority* framing (the project's negatives are already trustworthy).
+- **"Not All Votes Count! Programs as Verifiers Improve Self-Consistency"**
+  (arXiv:2410.12608). The existence proof: a program-verifier-weighted vote *does*
+  beat plain SC on math — so "a verifier can beat SC" is achievable; the question
+  is whether Carnot's *energy* signal is one of those verifiers.
+- **"VFScale: Verifier-Free Test-time Scalable Diffusion"** (arXiv:2502.01989) and
+  **"Parallel Test-Time Scaling for Latent Reasoning Models"** (arXiv:2510.07745,
+  Latent Reward Model aggregation): the diffusion/latent-reasoning energy function
+  *as its own verifier* — the closest external precedent for energy-as-selector,
+  relevant if P0.1 v4 confirms the energy signal carries value.
+
+**Net for .318:** Depth-Over-Breadth CANNOT relax (P0.1 still unanswered; G2 is
+internally-reproducible but has no external run yet). The milestone re-runs the
+existential block with ONE decisive structural change the prior three lacked:
+**P0.1 generation and scoring are split into two tasks**, so the live-inference
+job can make resumable progress without timing out and the comparison itself runs
+as fast cached scoring. NO vN+1 re-measurement of an already-measured artifact
+appears — every depth task either answers a never-answered question (P0.1 energy
+-vs-SC, energy-correctness calibration, FR-11 collapse-under-at-risk-grounding) or
+advances the sole publication gate (G2 external reproducer via CI/Docker).
+
 ## 2026-05-30 Post-.316 Planning Sweep (Milestone 2026.05.317)
 
 `.316` (Depth-Over-Breadth II) tried to complete the existential block cleanly
