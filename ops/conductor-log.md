@@ -7015,3 +7015,4 @@ web search: https://docs.garak.ai/garak/examples/pr |
 | 2026-05-30 02:58 UTC | GateMate N16 Bitstream Bootstrap Fix | OK | 88 passed in 4.17s |
 | 2026-05-30 03:03 UTC | NUP Metric Evaluation | OK | 81 passed in 3.42s |
 | 2026-05-30 03:08 UTC | Latent Spills Sensing | OK | 81 passed in 3.37s |
+| 2026-05-30 03:13 UTC | Abductive CSP Integration | OK | 145 passed in 5.66s |
