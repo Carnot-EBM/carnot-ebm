@@ -7175,3 +7175,4 @@ web search: https://docs.garak.ai/garak/examples/pr |
 | 2026-05-30 23:31 UTC | P0.1 v7 — process-aware step-level energy + optima | SKIP | Pre-tests failing, self-heal failed:  |
 | 2026-05-30 23:34 UTC | Energy-correctness calibration v4 — MATH-aware, ta | SKIP | Pre-tests failing, self-heal failed:  |
 | 2026-05-30 23:36 UTC | Energy-correctness calibration v4 — MATH-aware, ta | SKIP | Pre-tests failing, self-heal failed:  |
+| 2026-05-30 23:38 UTC | Energy-correctness calibration v4 — MATH-aware, ta | SKIP | Pre-tests failing, self-heal failed:  |
