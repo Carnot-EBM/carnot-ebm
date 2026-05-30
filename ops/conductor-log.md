@@ -7096,3 +7096,5 @@ web search: https://docs.garak.ai/garak/examples/pr |
 | 2026-05-30 11:24 UTC | Verifier-Ensemble vs Adaptive Prompt-Injection Cor | OK | 81 passed in 3.95s |
 | 2026-05-30 11:32 UTC | KV260 terminal board-level latency transcript (dri | OK | 81 passed in 3.75s |
 | 2026-05-30 11:38 UTC | GateMate opportunistic detect + continuity audit ( | FLAGGED | adversarial_verify CRITICAL: TAUTOLOGY — result quarantined, not a clean success |
+| 2026-05-30 11:44 UTC | PolarFire opportunistic reachability + continuity  | OK | 81 passed in 2.98s |
+| 2026-05-30 11:46 UTC | G1-G4 gate-status synthesis (clean P0.1 v3 / G2 / | GATE_BLOCK | Pre-emptive skip: upstream retired (exp3437-energy-vote-vs-self-consistency-real |
