@@ -3750,3 +3750,50 @@ execute a basic test vector across the new host interface to verify hardware con
 
 **Implementation status:** Pending (Exp 3382)
 
+---
+
+### REQ-HW-107
+
+**Title:** Root-cause why the GateMate N=16 bootstrap artifact resolves `unspecified`
+
+**Description:**
+The GateMate N=16 bootstrap flash (Exps 3382, 3392, 3404) landed an artifact whose
+reconciled `honest_verdict` was `unspecified` for three consecutive milestones. Re-running
+the identical flash is a doomed rerun (Failed-Experiment Rerun Discipline) and GateMate is
+opportunistic per north-star §3, so the honest move is a ROOT-CAUSE DIAGNOSTIC rather than a
+fourth flash attempt. Experiment 3421 MUST run three diagnostic checks — (a) toolchain
+presence (`yosys`, `nextpnr-himbaechel`, `openFPGALoader`), (b) GateMate IDCODE detection via
+`openFPGALoader -c dirtyJtag --detect`, and (c) a static scan of the Exp 3404 script for any
+code path that assigns `honest_verdict` — and classify the actionable root cause. The
+diagnostic MUST NOT attempt synthesis, place-and-route, or any flash command.
+
+**Acceptance criteria:**
+- `results/experiment_3421_gatemate_bootstrap_rootcause_diagnostic_v1.json` is generated with
+  `inference_substrate="hardware_smoke"`.
+- The artifact includes `honest_verdict`, `preconditions_checked`, `rootcause_classification`,
+  `recommended_fix`, and `duration_s`.
+- `rootcause_classification` is one of `toolchain_missing`, `board_unreachable`, or
+  `script_never_sets_verdict`.
+- `honest_verdict` starts with a terminal prefix (`complete:` / `success:` / `passed:` /
+  `shipped_`) when the diagnostic completes, or a `blocked_gatemate_*` prefix only if the
+  diagnostic itself could not run.
+- No flash command is attempted (`no_flash_attempted=true`).
+
+**Implementation status:** Pending (Exp 3421)
+
+---
+
+### SCENARIO-HW-107
+
+**Scenario:** The bootstrap artifact's `unspecified` verdict is diagnosed to the producing script.
+
+**Given:** The Exp 3404 script assigns `status` but never assigns `honest_verdict`, and
+`build_result()` does not auto-populate `honest_verdict`.
+**When:** Experiment 3421 runs the three diagnostic checks.
+**Then:** It classifies `rootcause_classification="script_never_sets_verdict"`, records each
+precondition check result in `preconditions_checked`, recommends adding an explicit
+`honest_verdict` to the producing script's `build_result()` calls, and emits a terminal
+`honest_verdict` without attempting any flash.
+
+**Implementation status:** Pending (Exp 3421)
+

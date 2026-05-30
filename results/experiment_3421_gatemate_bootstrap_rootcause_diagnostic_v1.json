@@ -1,0 +1,68 @@
+{
+  "experiment": 3421,
+  "title": "GateMate Bootstrap 'unspecified' Verdict Root-Cause Diagnostic",
+  "run_date": "20260530",
+  "started_at": "2026-05-30T06:11:13Z",
+  "finished_at": "2026-05-30T06:11:14Z",
+  "duration_s": 0.802,
+  "status": "success",
+  "random_seed": 42,
+  "reproducibility_checksum": "71fdd397a74cb935",
+  "metrics_used": "unknown",
+  "inference_substrate": "hardware_smoke",
+  "honest_verdict": "complete: rootcause=script_never_sets_verdict; exp3404 never assigns honest_verdict and build_result() does not auto-populate it, so the emitted artifact has no verdict field -> reconciler reads 'unspecified'.",
+  "rootcause_classification": "script_never_sets_verdict",
+  "recommended_fix": "Add an explicit honest_verdict to the Exp 3404 build_result() calls. ExperimentTemplate.build_result() does NOT auto-populate honest_verdict, so the script must pass it: e.g. honest_verdict='blocked_gatemate_toolchain_missing' when PnR/flash tools are absent, or honest_verdict='success_gatemate_n16_flashed' on a real flash. Without this, every run emits a verdict-less artifact the reconciler reads as 'unspecified'.",
+  "preconditions_checked": [
+    {
+      "resource": "toolchain:yosys",
+      "available": true,
+      "detail": "/usr/bin/yosys"
+    },
+    {
+      "resource": "toolchain:nextpnr-himbaechel",
+      "available": false,
+      "detail": "not on PATH"
+    },
+    {
+      "resource": "toolchain:openFPGALoader",
+      "available": false,
+      "detail": "not on PATH"
+    },
+    {
+      "resource": "gatemate_board_detect",
+      "available": false,
+      "detail": "exit=127"
+    },
+    {
+      "resource": "exp3404_script_assigns_honest_verdict",
+      "available": false,
+      "detail": "no honest_verdict assignment found"
+    }
+  ],
+  "toolchain_ok": false,
+  "board_reachable": false,
+  "exp3404_assigns_honest_verdict": false,
+  "no_flash_attempted": true,
+  "schema": [
+    "board_reachable",
+    "duration_s",
+    "exp3404_assigns_honest_verdict",
+    "experiment",
+    "finished_at",
+    "honest_verdict",
+    "inference_substrate",
+    "metrics_used",
+    "no_flash_attempted",
+    "preconditions_checked",
+    "random_seed",
+    "recommended_fix",
+    "reproducibility_checksum",
+    "rootcause_classification",
+    "run_date",
+    "started_at",
+    "status",
+    "title",
+    "toolchain_ok"
+  ]
+}
