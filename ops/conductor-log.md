@@ -7018,3 +7018,4 @@ web search: https://docs.garak.ai/garak/examples/pr |
 | 2026-05-30 03:13 UTC | Abductive CSP Integration | OK | 145 passed in 5.66s |
 | 2026-05-30 03:20 UTC | Kona-Style Global Optimization Reasoning Benchmark | OK | 81 passed in 3.01s |
 | 2026-05-30 03:25 UTC | Semantic Deficit Penalty Integration | OK | 81 passed in 4.14s |
+| 2026-05-30 03:29 UTC | FR-11 Updates with Spills | OK | 81 passed in 4.18s |
