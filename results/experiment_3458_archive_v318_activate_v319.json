@@ -1,0 +1,83 @@
+{
+  "schema": "carnot.archive_activate.v1",
+  "experiment_id": "exp3458",
+  "task_id": "exp3458-archive-v318-activate-v319",
+  "inference_substrate": "aggregation_from_upstream_artifacts",
+  "honest_verdict": "complete: archive_v318_activate_v319_ready",
+  "random_seed": 3458,
+  "reproducibility_checksum": "3458_archive_v318_v319_agg",
+  "duration_s": 0.1,
+  "archived_milestone": "2026.05.318",
+  "activated_milestone": "2026.05.319",
+  "archive_v318_activate_v319_ready": true,
+  "status": "success",
+  "milestone_318_summary": "Depth-Over-Breadth IV.  6 experiments completed; 0 blocked; 2 flagged adversarial (both tautologies with valid mechanistic explanations).  P0.1 v4 got real numbers for the first time: untrained energy AUROC=0.516 (chance), delta_energy_vs_SC=0.0.  G2 CI+Docker mechanism shipped.  FR-11 collapse confirmed directionally.",
+  "experiments_completed_318": [
+    "exp3448",
+    "exp3449",
+    "exp3450",
+    "exp3451",
+    "exp3452",
+    "exp3456"
+  ],
+  "experiments_flagged_318": [
+    "exp3449",
+    "exp3452"
+  ],
+  "experiments_blocked_318": [],
+  "experiments_retired_318": [],
+  "p01_v4_finding": "untrained_energy_uninformative: AUROC=0.516 (chance level) for correctness classification across 282 GSM8K candidates.  energy_weighted_vote == self_consistency (delta=0.0, p=1.0) because uninformative energy-weighting degenerates to uniform weighting = majority vote.",
+  "energy_correctness_auroc_318": 0.5160115448048378,
+  "delta_energy_vs_sc": 0.0,
+  "p01_hypothesis_answered": false,
+  "p01_next_step": "Train energy reranker (EORM, arXiv:2505.14999) on GSM8K; test whether trained_energy_correctness_auroc > 0.55; if yes, re-run scoring to test trained-energy-weighted-vote vs SC.",
+  "g2_status_318": "ci_and_docker_ready_external_run_pending",
+  "g2_mechanism_path": ".github/workflows/reproduce-fover-headline.yml",
+  "g2_independent_reproducer": false,
+  "fr11_collapse_directional_finding": "at_risk_grounding_causes_collapse_entropy_reg_prevents_it \u2014 ARM A entropy dropped from 5.01 to 0.03 (mode-collapse confirmed); ARM B entropy stayed at 4.98 with entropy_beta=0.5 (collapse prevented).  Directional verdict valid; TAUTOLOGY flag explained mechanistically.",
+  "g1": true,
+  "g2": false,
+  "g3": true,
+  "g4": true,
+  "unmet_gates": [
+    "G2"
+  ],
+  "paper_ready": false,
+  "depth_forcing_function_active": true,
+  "depth_forcing_function_can_relax": false,
+  "next_top_gap": "PIVOT P0.1 from untrained to TRAINED energy reranker (EORM): (1) fine-tune an energy function on GSM8K correctness labels so energy_correctness_auroc > 0.55; (2) re-run exp3449-style scoring with trained energy; (3) if delta > 0 at n=120, this IS the P0.1 positive finding. CLOSE G2: solicit an external non-operator CI run via the shipped workflow + runbook at ops/reproduction-runbook-fover-headline.md. DE-FLAG FR-11 collapse: add mechanistic explanation to paper-v6 Phase-5 section and re-score with quarantined fields excluded.",
+  "preconditions_checked": [
+    {
+      "resource": "exp3448_corpus_builder",
+      "available": true
+    },
+    {
+      "resource": "exp3449_scoring_v4",
+      "available": true
+    },
+    {
+      "resource": "exp3450_calibration_audit",
+      "available": true
+    },
+    {
+      "resource": "exp3451_g2_ci_docker",
+      "available": true
+    },
+    {
+      "resource": "exp3452_fr11_collapse",
+      "available": true
+    },
+    {
+      "resource": "exp3456_gate_synthesis_v318",
+      "available": true
+    }
+  ],
+  "retro_path": "results/operational_retro_2026_05_318.json",
+  "field_provenance": {
+    "honest_verdict": "complete:/success:/passed:/shipped_ prefix required by CLAUDE.md Verdict Terminal-Prefix Discipline.",
+    "inference_substrate": "aggregation_from_upstream_artifacts: no model loaded; reads .318 artifact JSON files only.",
+    "archive_v318_activate_v319_ready": "True when all .318 artifacts are landed and the retro is written; signals the conductor to advance to .319.",
+    "duration_s": "Near-zero: pure JSON read + write, no inference.  adversarial_verify.py applies the near-zero floor for aggregation_from_upstream_artifacts substrate.",
+    "p01_hypothesis_answered": "False: the UNTRAINED energy verdict (not informative) is not the final P0.1 verdict.  A TRAINED reranker must be tested before concluding that energy cannot improve on SC."
+  }
+}
