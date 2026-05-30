@@ -7021,3 +7021,4 @@ web search: https://docs.garak.ai/garak/examples/pr |
 | 2026-05-30 03:29 UTC | FR-11 Updates with Spills | OK | 81 passed in 4.18s |
 | 2026-05-30 03:35 UTC | EBM-CoT Scaling | OK | 81 passed in 3.47s |
 | 2026-05-30 03:39 UTC | VGS Override Decoder | OK | 81 passed in 3.47s |
+| 2026-05-30 03:44 UTC | Telemetry Aggregation v39 | OK | 81 passed in 3.63s |
