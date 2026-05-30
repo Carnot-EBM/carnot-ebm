@@ -7160,3 +7160,5 @@ web search: https://docs.garak.ai/garak/examples/pr |
 | 2026-05-30 21:31 UTC | GateMate opportunistic detect + toolchain continui | OK | Deliverable already exists in repo |
 | 2026-05-30 21:35 UTC | PolarFire opportunistic reachability + continuity  | OK | 94 passed in 3.36s |
 | 2026-05-30 21:44 UTC | G1-G4 gate-status synthesis (P0.1 v6 headroom crux | OK | 81 passed in 4.21s |
+| 2026-05-30 21:54 UTC | Capstone v320 | FAIL | Claude Code error: Error: Reached max turns (20) |
+| 2026-05-30 21:56 UTC | Capstone v320 | OK | Deliverable already exists in repo |

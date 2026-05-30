@@ -7892,3 +7892,7 @@ ModuleNotFoundError: No module named 'torch'; results/experiment_2828_fover_memo
 - 2026-05-30: KV260 terminal board-level latency transcript (drive to terminal, then freeze) (⚠️ Blocked) — honest_verdict=complete: blocked_kv260_ssh_unreachable; results/experiment_3477_kv260_terminal_latency_transcript_v6.json
 - 2026-05-30: PolarFire opportunistic reachability + continuity audit (no terminal mandate) (✅ Complete) — honest_verdict=complete: polarfire reachable and continuity confirmed; results/experiment_3479_polarfire_reachability_audit_v6.json
 - 2026-05-30: G1-G4 gate-status synthesis (P0.1 v6 headroom crux / G2 self-contained package / calibration v3 / FR-11 depth verdicts) (⚠️ Blocked) — honest_verdict=complete: g1_g3_g4_met_g2_still_open_p01_v6_blocked_corpus_too_small; results/experiment_3480_g_gate_status_synthesis_v320.json
+
+## 2026-05-30 (Milestone 2026.05.320 Operational Retrospective)
+
+- [outer-loop] Wrote results/operational_retro_2026_05_320.json (schema carnot.operational_retro.v64). The authoritative timing source reports no experiment commits since activation, leaving total_wall_time_minutes=0, experiments_completed=0, compute_bound_experiments_count=0, slowest_experiments=[], and gpu_idle_on_compute_bound_tasks=null. Both RTX 3090s were idle in the GPU snapshot, but no GPU-idle bottleneck was recorded because there were 0 compute-bound timing rows. Recommended tooling change: Verify why no experiments were committed during this milestone window.
