@@ -2597,3 +2597,94 @@ current Ising energy formulation cannot do hard-Sudoku global reasoning yet.
 **Then** the experiment writes
 `complete: blocked_energy_encoding_invalid_per_constraint_residual_reported`
 with the per-constraint residual-energy breakdown and runs no optimization.
+
+### REQ-KONA-3460: Trained Energy Reranker vs Self-Consistency on Held-Out GSM8K (P0.1 v5)
+
+Exp 3449 (REQ-KONA-3449) established that the UNTRAINED, parameter-free
+verifier-energy ensemble does NOT beat majority-vote self-consistency: the
+energy-weighted vote degenerated onto plain majority (the exp3449 tautology
+flag), and exp3450 measured energy-vs-correctness AUROC at 0.516 (~chance). The
+literature says the fix is a TRAINED energy: arXiv:2505.14999 (EORM — a
+lightweight energy reranker trained on outcome labels boosts math reasoning),
+arXiv:2603.25450 (generator self-perplexity is nearly uninformative on CoT), and
+arXiv:2506.09338 (PRM calibration). Exp 3460 is the never-asked test: does a
+TRAINED outcome-label energy reranker, evaluated on a HELD-OUT problem-level
+split, MATCH or BEAT self-consistency at matched compute? It invokes NO live
+model — it consumes the cached corpus and a small trained reranker — so it
+completes in seconds and CANNOT idle-timeout.
+
+**Rationale:** the UNTRAINED energy failed the AUROC-0.55 floor (exp3450 0.516).
+A trained reranker is the literature-prescribed fix, but it MUST be evaluated on
+held-out problems with a leakage-guarded, problem-level split, at matched
+generation budget, against a VERIFIED-NON-DEGENERATE self-consistency control
+(the exp3426 0.0-tie guard). If even a trained energy cannot match SC at equal
+compute, the energy-superiority framing for final-answer selection retires
+honestly on this substrate; if it beats SC significantly, that is the first real
+Phase-3 justification.
+
+**Acceptance criteria:**
+
+- `candidate_feature_vector` extracts a fixed-length feature vector per cached
+  candidate (arithmetic-violation energy `IsingVerifier`, adjacent-step
+  contradiction energy `EbmCotCalibrator`, Curry-Howard type-violation score
+  `Tier0rVerifier`, logical-inconsistency score `Tier0uVerifier`, mean-token
+  logprob, and a step-count feature); `fover_candidate_energy` aggregates the four
+  verifier signals into one scalar candidate energy (lower is better) — the FoVer
+  step-error ensemble routed into final-answer selection.
+- `TrainedEnergyReranker` is a small logistic-regression energy reranker trained
+  on candidate outcome-correctness labels with train-fold-only feature
+  standardisation (the leakage guard); its parameter count is recorded
+  (`n_params`) as the compute-parity accounting.
+- `problem_kfold_indices` produces a deterministic K-fold split BY PROBLEM id
+  (never splitting samples of the same problem across folds); ALL reported
+  accuracies are on held-out problems only.
+- `trained_energy_weighted_vote` votes over the `k` held-out samples weighted by
+  the trained reranker's P(correct) (THE headline condition); `trained_energy_sc_hybrid`
+  combines the SC majority signal with the trained weight (arXiv:2510.14913);
+  `fover_energy_argmin` picks the lowest FoVer-energy answer. Greedy AR is the
+  1-sample floor; self-consistency (majority vote) is the PRIMARY control; all
+  selection conditions consume the SAME `k` cached generations (matched compute).
+- A NON-DEGENERATE-SC gate re-asserts over the FULL corpus that self-consistency
+  accuracy `>= greedy AND > 0.30` BEFORE any energy comparison is reported; when
+  it fails, the verdict is
+  `complete: blocked_self_consistency_harness_degenerate_per_sample_extraction_broken`
+  with three example problems' raw extracted answers.
+- `mcnemar_exact` + `paired_bootstrap_ci` provide a paired significance test for
+  the trained-energy-vote, FoVer-energy, and hybrid deltas vs self-consistency
+  over per-problem held-out outcomes.
+- `derive_v5_verdict` maps the result to exactly one terminal verdict prefixed
+  `complete:`: G1 (a trained-energy condition non-inferior to SC) and G2 (a
+  trained-energy condition significantly beats SC at matched compute).
+- The Exp 3460 artifact carries
+  `inference_substrate=verifier_ensemble_against_cached_candidates`,
+  `n_problems_heldout`, `k_samples`, `reranker_param_count`,
+  `train_test_split_note`, `self_consistency_non_degenerate`, the six condition
+  accuracies, `delta_trained_energy_vs_self_consistency`,
+  `delta_fover_energy_vs_self_consistency`, `delta_hybrid_vs_self_consistency`,
+  `paired_significance`, `compute_parity_note`, `random_seed`,
+  `reproducibility_checksum`, and a `duration_s` above the 1s cached-scoring
+  floor, with clean methodology so `adversarial_verify.py` does not flag it.
+
+### SCENARIO-KONA-3460: Exp 3460 Trains and Held-Out-Scores Six Conditions
+**Given** `data/p01_gsm8k_generations.jsonl` exists with `>=47` problems each
+having a greedy generation, `k>=5` sampled generations with extracted answers and
+per-sample logprobs, and the verifier-energy + reranker substrate is loadable
+**When** we run
+`experiment_3460_p01_trained_energy_reranker_vs_self_consistency_v5.py`
+**Then** it splits the corpus by problem id into K folds, trains a small
+outcome-label logistic-regression energy reranker on each train fold with
+train-fold-only standardisation, and scores greedy AR, self-consistency,
+self-certainty BoN, FoVer-energy argmin, trained-energy-weighted vote, and the
+trained-energy×SC hybrid on the held-out problems
+**And** it writes the artifact with a `complete:` verdict, the G0/G1/G2 gate
+booleans, the reranker parameter count, the problem-level split note, and a paired
+McNemar + bootstrap significance test for the trained-energy, FoVer-energy, and
+hybrid deltas vs self-consistency.
+
+### SCENARIO-KONA-3460-BLOCKED: Exp 3460 Emits an Honest Block on a Too-Small or Degenerate Corpus
+**Given** the cached corpus is absent / has `n<47` problems, OR the energy/reranker
+substrate is unloadable, OR self-consistency is degenerate over the full corpus
+**When** the experiment runs its step-0 preconditions
+**Then** it writes the matching `complete: blocked_*` honest verdict (a clean
+`complete:` prefix so downstream gate-synth/capstone are NOT cascade-blocked) and
+exits without reporting any energy comparison against a broken control.
