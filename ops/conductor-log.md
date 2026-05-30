@@ -7098,3 +7098,5 @@ web search: https://docs.garak.ai/garak/examples/pr |
 | 2026-05-30 11:38 UTC | GateMate opportunistic detect + continuity audit ( | FLAGGED | adversarial_verify CRITICAL: TAUTOLOGY — result quarantined, not a clean success |
 | 2026-05-30 11:44 UTC | PolarFire opportunistic reachability + continuity  | OK | 81 passed in 2.98s |
 | 2026-05-30 11:46 UTC | G1-G4 gate-status synthesis (clean P0.1 v3 / G2 / | GATE_BLOCK | Pre-emptive skip: upstream retired (exp3437-energy-vote-vs-self-consistency-real |
+| 2026-05-30 11:46 UTC | Capstone v317 | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp3445-g-gate-status-synthesis-v317.gate_ |
+| 2026-05-30 11:48 UTC | G1-G4 gate-status synthesis (clean P0.1 v3 / G2 / | GATE_BLOCK | Pre-emptive skip: upstream retired (exp3437-energy-vote-vs-self-consistency-real |
