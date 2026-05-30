@@ -19766,3 +19766,17 @@ The system shall support a repair loop for FR-11 constraint templates, where:
 
 The repository shall provide a script `scripts/experiment_3397_ebm_cot_live_benchmark.py` that runs 100 examples from GSM8K using `cached_sota_pair() unsloth/Qwen3.6-35B-A3B-GGUF`. It applies step-wise energy calibration to intermediate reasoning steps and reports the AUROC of intermediate energy spikes predicting final answer failure in `results/experiment_3397_ebm_cot_live_benchmark.json`.
 
+### REQ-VERIFY-3405: NUP Metric Symmetry Breaking Detection
+
+The repository shall provide a script `scripts/experiment_3405_nup_metric_evaluation.py` that evaluates the NUP metric to detect symmetry breaking in the gradient landscape as an early hallucination indicator.
+- Evaluates gradients during text generation on GSM8K using `MODEL_SPECS = ["unsloth/Qwen3.6-35B-A3B-GGUF"]`.
+- Maps the gradients to an Ising energy configuration and measures sudden energy shifts (phase transitions).
+- Compares detection accuracy against exact verifier results.
+- Outputs `results/experiment_3405_nup_metric_evaluation.json`.
+
+### SCENARIO-VERIFY-3405: NUP Metric Detects Phase Transition
+
+**Given** a sequence of gradients mapped to Ising energy configurations
+**When** a sudden energy shift (phase transition) occurs
+**Then** the NUP metric detects the symmetry breaking and flags it as a hallucination indicator.
+
