@@ -6992,3 +6992,5 @@ web search: https://docs.garak.ai/garak/examples/pr |
 | 2026-05-30 00:22 UTC | Activation REFUSED: milestone 2026.05.313 | BLOCK | exclusion-manifest: 4 HARD violation(s); first: SCOPE_MATCHED_PRIOR_FAILURE on e |
 | 2026-05-30 00:24 UTC | Activation REFUSED: milestone 2026.05.313 | BLOCK | exclusion-manifest: 4 HARD violation(s); first: SCOPE_MATCHED_PRIOR_FAILURE on e |
 | 2026-05-30 00:26 UTC | Milestone 2026.05.313 activated | OK | 12 tasks queued |
+| 2026-05-30 00:31 UTC | Archive milestone .312 honestly and activate .313 | FAIL | Claude Code error: Error: Reached max turns (20) |
+| 2026-05-30 00:33 UTC | Archive milestone .312 honestly and activate .313 | OK | Deliverable already exists in repo |
