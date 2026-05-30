@@ -1,0 +1,37 @@
+{
+  "experiment_id": 3466,
+  "title": "GateMate Opportunistic Detect + Toolchain Continuity Audit v3",
+  "schema": "carnot.gatemate_detect.v3",
+  "spec_refs": [
+    "REQ-HW-106",
+    "SCENARIO-HW-106"
+  ],
+  "inference_substrate": "hardware_smoke",
+  "honest_verdict": "complete: blocked_gatemate_toolchain_missing",
+  "gatemate_board_detected": false,
+  "toolchain_present": false,
+  "preconditions_checked": [
+    {
+      "resource": "toolchain:yosys",
+      "available": true,
+      "path_or_none": "/usr/bin/yosys"
+    },
+    {
+      "resource": "toolchain:nextpnr-himbaechel",
+      "available": false,
+      "path_or_none": null
+    },
+    {
+      "resource": "toolchain:openFPGALoader",
+      "available": false,
+      "path_or_none": null
+    },
+    {
+      "resource": "gatemate_board_detect",
+      "available": false,
+      "detail": "skipped \u2014 toolchain missing: ['toolchain:nextpnr-himbaechel', 'toolchain:openFPGALoader']"
+    }
+  ],
+  "duration_s": 6.870900688227266e-05,
+  "continuity_note": "Toolchain incomplete \u2014 missing: ['toolchain:nextpnr-himbaechel', 'toolchain:openFPGALoader']. Cannot proceed to board detect without toolchain."
+}
