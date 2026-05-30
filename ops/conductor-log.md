@@ -7007,3 +7007,4 @@ web search: https://docs.garak.ai/garak/examples/pr |
 | 2026-05-30 01:51 UTC | LogicVault Multi-Turn Context Expansion | OK | 81 passed in 3.46s |
 | 2026-05-30 01:59 UTC | Cross-Corpus Evidence Matrix v38 | OK | 81 passed in 3.88s |
 | 2026-05-30 02:06 UTC | FR-11 Continuous Learning End-to-End Stress Test | OK | 81 passed in 3.03s |
+| 2026-05-30 02:12 UTC | Capstone v313 | OK | 81 passed in 3.55s |
