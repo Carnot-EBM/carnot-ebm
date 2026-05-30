@@ -2186,3 +2186,14 @@ The Exp 3394 artifact MUST be written to `results/experiment_3394_kona_global_op
 **When** the global inference procedure continuous sampling/optimization is applied over the entire board at once
 **Then** the solver successfully minimizes energy without autoregressive prediction, scores correctness, and reports time-to-solution
 **And** the artifact is written to `results/experiment_3394_kona_global_opt.json` with all required fields.
+
+### REQ-KONA-3408: Kona Global Optimization Emulation 3408
+Carnot MUST emulate Logical Intelligence's Kona global inference procedure on a hard Sudoku problem set using Carnot's Ising energy function in experiment 3408.
+The implementation MUST treat the Sudoku board as a joint energy landscape, apply continuous sampling/optimization over the entire board at once using MODEL_SPECS = ["unsloth/gemma-4-26B-A4B-it-GGUF"], score correctness, and report the time-to-solution vs standard autoregressive search.
+The artifact MUST be written to `results/experiment_3408_kona_global_opt.json` and include the field `status` set to `success`.
+
+### SCENARIO-KONA-3408: Exp 3408 Evaluates Kona Global Opt
+**Given** a hard Sudoku problem set
+**When** we run `experiment_3408_kona_global_opt.py`
+**Then** it applies continuous sampling over the board at once
+**And** the artifact is written to `results/experiment_3408_kona_global_opt.json` with `status=success`.
