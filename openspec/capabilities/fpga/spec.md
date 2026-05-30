@@ -3797,3 +3797,53 @@ precondition check result in `preconditions_checked`, recommends adding an expli
 
 **Implementation status:** Pending (Exp 3421)
 
+---
+
+### REQ-HW-108
+
+**Title:** Apply the GateMate bootstrap verdict fix and attempt one flash
+
+**Description:**
+Exp 3421 (REQ-HW-107) root-caused the recurring `unspecified` reconciled verdict: the
+GateMate bootstrap script never assigns `honest_verdict`, and `build_result()` does not
+auto-populate it, so the reconciler reads `unspecified`. Experiment 3432 MUST apply that fix
+by guaranteeing that EVERY artifact-emission path assigns a terminal `honest_verdict` (one
+starting `complete:` / `success:`, or a `complete: blocked_gatemate_*` prefix when a
+precondition is hard-missing) — `unspecified` MUST NOT be emittable. Because GateMate is
+opportunistic per north-star §3 (it does NOT block milestones), the experiment attempts the
+N=16 Ising tile flash AT MOST ONCE — it is NOT a fourth identical re-flash. The toolchain
+(`yosys`, `nextpnr-himbaechel`, `openFPGALoader`, `gmpack`) lives under the oss-cad-suite
+install, which MUST be resolved onto PATH before the precondition checks.
+
+**Acceptance criteria:**
+- `scripts/experiment_3432_gatemate_apply_verdict_fix_and_flash_v1.py` resolves the oss-cad-suite
+  toolchain onto PATH, runs the PRECONDITIONS (toolchain presence + GateMate IDCODE detect), and
+  on pass attempts the synth -> place-and-route -> pack -> flash flow exactly once.
+- The verdict classifier returns a CONCRETE terminal verdict for every (toolchain, board, flash)
+  outcome — never `unspecified`.
+- `results/experiment_3432_gatemate_apply_verdict_fix_and_flash_v1.json` is emitted with
+  `inference_substrate="hardware_smoke"`, `honest_verdict` (terminal prefix or
+  `complete: blocked_gatemate_*`), `preconditions_checked`, `verdict_fix_applied`,
+  `gatemate_bitstream_flashed`, and `duration_s`.
+- Test `tests/python/test_experiment_3432_gatemate_apply_verdict_fix_and_flash_v1.py` covers the
+  classifier, the PATH-resolution helper, and the precondition builder.
+
+**Implementation status:** Implemented (Exp 3432)
+
+---
+
+### SCENARIO-HW-108
+
+**Scenario:** The bootstrap verdict fix is applied and a single flash is attempted.
+
+**Given:** The producing script previously emitted no `honest_verdict`, so the reconciler read
+`unspecified`.
+**When:** Experiment 3432 resolves the toolchain, checks preconditions, and (if they pass)
+attempts the N=16 flash once.
+**Then:** It emits the artifact with a concrete terminal `honest_verdict` — `success: ...flashed`
+when the bitstream reaches the board, `complete: ...not_flashed` when the flow runs but does not
+flash, or `complete: blocked_gatemate_toolchain_missing` / `complete: blocked_gatemate_board_unreachable`
+when a precondition is hard-missing — and never `unspecified`.
+
+**Implementation status:** Implemented (Exp 3432)
+
