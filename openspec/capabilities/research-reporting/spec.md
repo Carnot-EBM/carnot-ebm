@@ -14935,3 +14935,27 @@ pushes, or modify `research-roadmap.yaml`, `scripts/research_conductor.py`,
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-REPORT-3391 | Implemented (`python/carnot/reporting/archive_v312_activate_v313_3391.py`) | Implemented (`tests/python/test_experiment_3391_archive_v312_activate_v313.py`) |
+
+### REQ-REPORT-3400: Cross-Corpus Evidence Matrix v38
+
+The repository shall provide an Exp 3400 workflow that writes
+`results/experiment_3400_cross_corpus_matrix_v38.json`.
+The workflow MUST be aggregation only. It MUST NOT run model inference, CUDA
+probes, verifier scoring, FR-11 updates, hardware commands, the conductor,
+pushes, or modify `research-roadmap.yaml`, `scripts/research_conductor.py`,
+`ops/status.md`, `ops/changelog.md`, or `_bmad/traceability.md`.
+The matrix SHALL gather and aggregate cross-corpus outcomes from `.312` and
+`.313` experiments.
+
+#### SCENARIO-REPORT-3400: Matrix v38 Aggregation
+
+**Given** `.312` and `.313` milestone artifacts are available
+**When** the Exp 3400 workflow runs
+**Then** it writes `results/experiment_3400_cross_corpus_matrix_v38.json`
+with all required schema fields and an `honest_verdict` beginning with `complete:`.
+
+## Implementation Status (REQ-REPORT-3400)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-3400 | Planned (`python/carnot/reporting/cross_corpus_matrix_v38_3400.py`) | Planned (`tests/python/test_experiment_3400_cross_corpus_matrix_v38.py`) |
