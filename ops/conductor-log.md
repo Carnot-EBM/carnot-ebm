@@ -7120,3 +7120,5 @@ web search: https://docs.garak.ai/garak/examples/pr |
 | 2026-05-30 14:51 UTC | PolarFire opportunistic reachability + continuity  | OK | 81 passed in 3.76s |
 | 2026-05-30 14:59 UTC | G1-G4 gate-status synthesis (clean P0.1 v4 cached- | OK | 81 passed in 3.25s |
 | 2026-05-30 15:02 UTC | Capstone v318 | FAIL | Claude Code error: Error: Reached max turns (20) |
+| 2026-05-30 15:10 UTC | Capstone v318 | FAIL | Claude Code error: Error: Reached max turns (20) |
+| 2026-05-30 15:12 UTC | Capstone v318 | SKIP | Pre-tests failing, self-heal failed: 1 failed, 103 passed, 1 skipped in 3.57s |
