@@ -7811,3 +7811,4 @@ ModuleNotFoundError: No module named 'torch'; results/experiment_2828_fover_memo
 - 2026-05-30: GateMate N16 Bitstream Bootstrap Fix (⚠️ Research Finding) — honest_verdict=unspecified; results/experiment_3404_gatemate_n16_bootstrap_fix.json
 - 2026-05-30: GateMate N16 Bitstream Bootstrap Fix (⚠️ Research Finding) — honest_verdict=unspecified; results/experiment_3404_gatemate_n16_bootstrap_fix.json
 - 2026-05-30: NUP Metric Evaluation (⚠️ Research Finding) — honest_verdict=unspecified; accuracy=1.0; results/experiment_3405_nup_metric_evaluation.json
+- 2026-05-30: Latent Spills Sensing (⚠️ Research Finding) — honest_verdict=success: latent spills pipeline executed; results/experiment_3406_latent_spills_sensing.json
