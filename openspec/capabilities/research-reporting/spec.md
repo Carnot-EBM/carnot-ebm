@@ -14991,3 +14991,37 @@ The artifact shall include:
 ### SCENARIO-REPORT-3413: Exp 3413 Matrix Generated
 
 Given outputs for exp3405 to exp3412, when Exp 3413 runs, then it writes all required REQ-REPORT-3413 fields, setting `matrix_v39_ready` to true.
+
+### REQ-REPORT-3458: Archive V318 And Activate V319 Handoff
+
+**Description:** Aggregate milestone .318 outcomes (Depth-Over-Breadth IV),
+write the archive/activation artifact at
+`results/experiment_3458_archive_v318_activate_v319.json`, and confirm that
+milestone .319 is active. Aggregation only — no model inference, CUDA probes,
+hardware commands, or conductor/roadmap edits.
+
+Key .318 findings to record:
+- exp3448: P0.1 generation corpus builder (n=47/120 resumable, live GGUF defeated the 1201s timeout via decoupled design)
+- exp3449: P0.1 cached scoring v4 (0.2s; flagged_adversarial TAUTOLOGY — energy_weighted_vote == self_consistency to >5 sig figs; mechanistic cause: energy_correctness_auroc=0.516 ~ chance)
+- exp3450: Energy-correctness calibration audit (AUROC=0.516; explains the P0.1 delta=0 ceiling — untrained energy does not track correctness)
+- exp3451: FoVer G2 CI workflow + Docker cleanroom (AUROC=0.9131 reproduced; G2 mechanism shipped; external run pending)
+- exp3452: FR-11 grounding collapse stress test (flagged_adversarial TAUTOLOGY on pass_rate==accuracy; directional finding preserved: entropy-reg prevents collapse)
+- exp3453–3455: Hardware continuity (KV260 blocked/SSH, GateMate blocked/toolchain, PolarFire reachable)
+- exp3456: G-gate status synthesis (G2 sole unmet gate; depth forcing function remains active)
+
+Forward top gap: test whether a TRAINED energy reranker (EORM, arXiv:2505.14999) crosses AUROC 0.55 and beats SC; take G2 to an external/CI run.
+
+#### SCENARIO-REPORT-3458: Archive V318 Activate V319
+
+**Given** milestone .318 artifacts (exp3448–exp3456) are available
+**When** the Exp 3458 workflow runs
+**Then** it writes `results/experiment_3458_archive_v318_activate_v319.json`
+with `archived_milestone=2026.05.318`, `activated_milestone=2026.05.319`,
+`archive_v318_activate_v319_ready=True`,
+and `honest_verdict` beginning with `complete:`.
+
+## Implementation Status (REQ-REPORT-3458)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-3458 | Implemented (`python/carnot/reporting/archive_v318_activate_v319_3458.py`) | Implemented (`tests/python/reporting/test_archive_v318_activate_v319_3458.py`) |

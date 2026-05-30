@@ -7124,3 +7124,4 @@ web search: https://docs.garak.ai/garak/examples/pr |
 | 2026-05-30 15:12 UTC | Capstone v318 | SKIP | Pre-tests failing, self-heal failed: 1 failed, 103 passed, 1 skipped in 3.57s |
 | 2026-05-30 15:45 UTC | Plan milestone 2026.05.319 | OK | 12 tasks proposed |
 | 2026-05-30 15:47 UTC | Milestone 2026.05.319 activated | OK | 12 tasks queued |
+| 2026-05-30 15:51 UTC | Archive milestone .318 honestly and activate .319 | FAIL | Claude Code error: Error: Reached max turns (20) |
