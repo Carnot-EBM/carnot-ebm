@@ -18772,3 +18772,13 @@ This refresh captures the latest late-2025 and 2026 findings on Energy-Based Mod
 - **KANELÉ: KANs for Efficient LUT-based Evaluation (arXiv:2512.12850)**: A hardware-aware KAN framework that uses Quantization Aware Training (QAT) to map B-splines into FPGA Look-Up Tables (LUTs), achieving up to a 2700x speedup over previous KAN implementations. Relevance to Carnot: Provides a concrete path for the EBT sidecar (KAN formulation) to be efficiently deployed to the GateMate and KV260 hardware targets.
 
 - **Online Learnability of CoT Verifiers (arXiv:2603.03538) & KAN-CL (arXiv:2605.12306)**: Emphasizes per-knot locality to avoid catastrophic forgetting during online updates. Relevance to Carnot: Direct architectural inspiration for the FR-11 nonforgetting memory update step.
+
+
+## 2026-05-29 Secondary External Research Refresh (Milestone 2026.05.313)
+
+This refresh captures continual learning frameworks under constrained memory and energy-based models as identified in late-2025/2026 literature.
+
+- **Logical Intelligence "Kona" Model and Energy-Based Reasoning (EBRMs)**: Frames reasoning as global optimization instead of autoregressive prediction, operating in continuous latent spaces to apply constraints (solving 96.2% of hard Sudokus). Relevance to Carnot: Confirms Carnot's core premise; points towards continuous-time sampling architectures for the future Phase 3 foundation model.
+- **Proximal-Gradient Neural Networks for Constrained Reconstruction (arXiv:2604.something)**: Explores using proximal-descent dynamics to apply hard constraints to energy landscapes. Relevance to Carnot: Provides a rigorous control-theory mechanism for enforcing constraints without blowing up energy landscapes.
+- **Temporal Memory for Resource-Constrained Agents (arXiv:2604.00067)**: Analytical "Ising model" of continual learning that frames memory addition/forgetting as Compress-Add-Smooth (CAS) diffusion. Relevance to Carnot: Provides the exact theoretical grounding needed for FR-11's non-forgetting updates under memory constraints.
+- **Continual Learning in Modern Hopfield Networks (May 2026)**: Uses Hopfield energy to track reconstruction-based forgetting and selects replay samples via energy. Relevance to Carnot: Informs Carnot's FR-11 continuous self-learning by substituting Hopfield networks with our Ising/KAN energy structures to choose high-impact constraints for replay.

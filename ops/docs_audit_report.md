@@ -4,46 +4,52 @@
 # docs_audit_report — 2026-05-29
 
 ## TL;DR (stranger's 30-second take)
-I would close the tab in 10 seconds. The page is riddled with catastrophic template-injection errors that leak local file paths into the user-facing text and CSS, making the project look abandoned or broken. Beneath that, it reads like an internal project-management status board choked with acronyms, not a product pitch.
+I would close the tab. The page reads like a dumped internal status dashboard with perfect-looking, cherry-picked benchmark stats and a dozen acronyms I don't know, trying way too hard to prove it's "real" by over-explaining its own internal reporting drama.
 
 ## TOP 3 PROBLEMS
-1. **Broken Template Injection / Leaked Paths:** Local pytest file paths are literally bleeding into the HTML font links, CSS media queries, and result cards.
-2. **Severe Internal Jargon:** The page is buried in undefined acronyms (FoVer, CCTU, SVAMP, PREM) and hyper-specific internal labels ("5-seed dual-condition"). 
-3. **Internal Status Reporting:** Multiple sections (Preprint, Recent Progress) read like copy-pasted Jira updates ("pending operator-initiated upload", "Repinned from v2 0.9857").
+1. Internal Jargon Overload — The page throws unexplained terms like "FoVer", "PREM", "CCTU", and "5-seed dual-condition" at a cold audience.
+2. Fabrication Signals — Claims of perfect "1.0 TP rate", "60/60 attacks caught", "Zero false positives", and exactly "2.0x speedup" destroy credibility.
+3. Inconsistent Core Claims — The page gives three wildly different numbers for how much it improves code generation pass rates (+3 points, +36 points, and +72 points).
 
 ## DETAILED FINDINGS
 ### Bloat
-- **Overall Page Grid** — 32 total cards (2 Problem, 7 Feature, 12 Result, 7 Blog, plus 4 Stats) — Way over the ~20 card threshold. A stranger will instantly start scrolling past the wall of text.
-- **Hero "Recent progress" card** — 72 words — Cap at 60 words. It's a dense wall of text in what should be a snappy header.
-- **"Why 'Energy-Based'?" card** — 72 words — Too long for a Bento grid element.
+- Entire Page — 32 total cards (Bento, Results, Blog, etc.) — Far too overwhelming. Cap at 10-12 max for the whole page; a stranger will skim none of this.
+- "Results" grid — 12 separate metric cards — Cap at 3 or 4 headline results.
+- "Features" section — 7 large bento cards (>300 words total) — Cap at 3-4 core capabilities.
 
 ### Internal jargon
-- **Results / SOTA 35B card** — `@.tmp-pytest/pytest-of-ianblenke/pytest-3/popen-gw0/test_req_verify_2932_run_uses_0/citation_hallucination_field_verifier_2932_raw/spilled-energy-2602-18671:real.txt` — This is a raw internal filepath rendered directly into the public headline text.
-- **HTML Head & CSS** — `@.tmp-pytest/pytest-of-ianblenke/pytest-3/popen-gw0/test_corrupt_file_returns_fals0/experiment_400.json` injected into Google Fonts URLs, and `@results/experiment_3341_verifier_diversity_remediation_plan_v2.json` injected into CSS media queries. It breaks the page styling.
-- **Hero Stats** — "5-seed dual-condition", "architecture-only", "FoVer" — Utterly meaningless to a stranger.
-- **Result Cards** — "IterativeSelfRepair", "EstimationVerifier SVAMP", "VeriCoT equation-style CoT fix", "PRM-BiasBench-style", "CCTU constrained micro-benchmark" — Academic acronym soup that assumes the reader has read all your internal papers.
+- Hero / Stats bar — "FoVer", "5-seed dual-condition" — A stranger doesn't know what the FoVer dataset is or what these internal configuration flags mean.
+- Features / Test-Time Compute — "TTC & PREM", "Process-Reward Energy Model" — Undefined acronyms for internal architecture concepts.
+- Results / Code repair — "HumanEval-50, execute-feedback-retry" — Internal pipeline names/flags.
+- Results / Math reasoning — "EstimationVerifier SVAMP AUC" — Internal class names.
+- Results / Cascade routing — "HalluGuard v3", "0.0pp accuracy delta" — Internal project names and formatting.
+- Features / Tool Use — "CCTU constrained micro-benchmark" — An unknown benchmark to an outsider.
 
 ### Per-milestone narrative
-- **Preprint Section** — "The arXiv submission is prepared but pending operator-initiated upload." — I don't care about your upload queue workflow. This is a task status, not landing page copy.
-- **Hero Recent Progress** — "Repinned from v2 0.9857 after pre-submission adversarial audit..." — Reads exactly like an internal retrospective or PR summary. 
+- Hero / Recent Progress — "Repinned from v2 0.9857 after pre-submission adversarial audit..." — This is an internal status update, not product copy.
+- Results section text — "Model benchmark rows use live GPU inference... infrastructure, hardware... are labeled by provenance." — Defensive meta-commentary about reporting standards, not a benefit statement.
+- Blog / Writing section — "We paid for a hostile audit... Seven fatal findings...", "A verifier with a docstring... turned out to be 56 lines of regex." — This reads like an internal post-mortem/retro complaining about the dev process rather than pitching a tool.
 
 ### Inconsistencies
-- **AUROC Claims vs Baselines** — The Hero claims "0.9131 Verifier AUROC on FoVer", but the Math reasoning card claims "0.90 AUC (vs 0.125 FoVer baseline)". If the baseline is 0.125, the 0.9131 number lacks context. 
-- **100% vs 99.3%** — The Code features card says "99.3% of wrong code flagged", but the results card for Math extraction claims a perfect "TP rate: 0.5 -> 1.0".
+- HumanEval pass rate vs Code repair vs SOTA 35B — "Features: Code" says "+3 points on pass-rate" and "99.3% flagged". "Results: Code repair" claims "8% -> 80% pass rate (+72pp)". "Results: SOTA 35B" claims "0% -> 36%". These are wildly contradictory claims about code correction performance.
+- AUROC numbers — The page cites "0.9131 Verifier AUROC" vs "0.91 AUROC (publication gate)" vs "architecture-only 0.8947" vs "v2 0.9857".
 
 ### Missing essentials
-- **Who actually maintains this?** — The footer says "Ian Blenke · Carnot Project" but there is no context on whether this is a solo hobby project, an academic lab, or a corporate entity.
+- Why should I trust the numbers? — The page gets highly defensive, stating "Every number below is backed by a checked-in experiment artifact", but it doesn't actually link to those artifacts or third-party validation anywhere accessible. It sounds like an internal memo "assuring" management.
 
 ### Fabrication signals
-- **Results / Adversarial audit** — "k=5 ensemble catches 60/60 attacks" — A mathematically perfect 100% block rate on a suspiciously small sample size of 60 looks like cherry-picking.
-- **Results / Math extraction** — "GSM8K extraction TP rate: 0.5 -> 1.0" — Perfect 1.0 True Positive rate triggers immediate skepticism.
+- Results / Training — "2.0x speedup, identical losses" — Perfect linear scaling on 2 GPUs implies zero communication overhead, which is unbelievable.
+- Results / Math extraction — "GSM8K extraction TP rate: 0.5 -> 1.0" — A perfect 1.0 True Positive rate is mathematically suspect.
+- Results / Adversarial audit — "k=5 ensemble catches 60/60 attacks" — 100% success rate without a credibility anchor.
+- Blog / Dogfooding — "Zero false positives" — A claim of 0 FPR over 26 days of automated operations is a massive red flag.
 
 ## WHAT'S WORKING
-- The hero H1 and subtext ("Catch the mistakes your LLM confidently makes up") is excellent, direct, and immediately tells me what the tool actually does.
-- The Quickstart section is strong. Showing 3 lines of standard Python next to the Rust equivalent grounds the abstract EBM concepts into something a developer knows how to use.
+- The one-sentence pitch ("Catch the mistakes your LLM confidently makes up") is clear, punchy, and instantly understandable.
+- The Quickstart code blocks (Python/Rust tabs) are clean, show exactly how to use the API, and immediately communicate a strong developer experience.
 
 ## RECOMMENDED OPERATOR ACTIONS
-1. **Sanitize the HTML:** Immediately remove the leaked `.tmp-pytest` and `experiment_*.json` paths from the Google Fonts link, CSS `@media` rules, and the SOTA 35B result card. They completely undermine trust.
-2. **Purge Status Updates:** Rewrite the "Recent Progress" and "Preprint" text to remove any mention of "operator-initiated upload" or "repinned from v2". Focus on what it is, not what you just did to it.
-3. **Cull the Cards:** Reduce the "Results" section from 12 cards down to the top 4 most impressive, verifiable metrics. 
-4. **De-jargon the Metrics:** Remove terms like "SVAMP", "FoVer", and "CCTU" from the high-level cards, or replace them with generic plain-english equivalents (e.g. "Math reasoning benchmarks", "Tool-use benchmarks").
+1. Prune the grid: Delete at least half of the result cards and features cards. Consolidate the 12 "Results" into 3 indisputable highlights.
+2. Translate Jargon: Remove all internal experiment parameters (5-seed, CCTU, PREM, FoVer). If a metric isn't broadly understood in the industry, drop it or explain it.
+3. Clean up the numbers: Remove the perfect "1.0", "60/60", and "Zero false positives" claims. Replace with realistic, defensible metrics, or explicitly frame them as "100% on a targeted 60-sample test".
+4. Clarify the HumanEval contradiction: Unify the three different code pass-rate claims into a single, cohesive story.
+5. Stop defending the process: Delete the meta-narrative about "adversarial audits", "checked-in artifacts", and "repinned numbers" from the hero and section headers. Keep the landing page focused on the product itself.

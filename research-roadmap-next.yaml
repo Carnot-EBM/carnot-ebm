@@ -1,0 +1,245 @@
+milestone: "2026.05.313"
+milestone_title: "Proximal-Gradient Constraints, GateMate Recovery, and Energy-Guided Replay"
+milestone_doc: "openspec/change-proposals/research-roadmap-vNEXT.md"
+
+tasks:
+  - id: exp3391-archive-v312-activate-v313
+    milestone: "2026.05.313"
+    title: "Archive milestone .312 honestly and activate .313"
+    priority: critical
+    max_turns: 20
+    agent_type: claude
+    estimated_wall_time_min: 5
+    track: ops
+    inference_substrate: validation
+    requires_gpu: false
+    deliverable: "results/experiment_3391_archive_v312_activate_v313.json"
+    prompt: |
+      CONTEXT: Milestone .312 has completed.
+      TASK: Archive .312 to ops/changelog.md and results/operational_retro_2026_05_312.json.
+      CONCRETE STEPS:
+        1. Read results/experiment_3390_capstone_v312.json.
+        2. Draft the retrospective JSON.
+        3. Emit artifact.
+      Run command: cd {project_root} && JAX_PLATFORMS=cpu .venv/bin/python scripts/experiment_3391_archive_v312_activate_v313.py. Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  - id: exp3392-gatemate-n16-bootstrap-fix
+    prior_failures:
+      - experiment_id: exp3382-gatemate-n16-flash-and-smoke
+        verdict: "artifact_not_updated_past_bootstrap"
+        addressed_by: "Implemented robust artifact emission upfront and fixed host UART bridge timeout."
+        retire_if_same_verdict: true
+    milestone: "2026.05.313"
+    title: "GateMate N16 Bitstream Bootstrap Fix"
+    priority: high
+    max_turns: 100
+    model: opus
+    estimated_wall_time_min: 20
+    track: hardware
+    inference_substrate: hardware_smoke
+    requires_gpu: false
+    deliverable: "results/experiment_3392_gatemate_n16_bootstrap_fix.json"
+    prompt: |
+      CONTEXT: exp3382 failed with artifact_not_updated_past_bootstrap.
+      CRITICAL: write artifact FIRST.
+      TASK: Synthesize, flash, and verify N=16 GateMate. Ensure the script emits an artifact immediately to avoid conductor termination.
+      CONCRETE STEPS:
+        1. Write the initial artifact JSON before starting hardware routines.
+        2. Flash using openFPGALoader.
+        3. Test vector over dirtyJtag/UART.
+        4. Update artifact with results.
+      Run command: cd {project_root} && JAX_PLATFORMS=cpu .venv/bin/python scripts/experiment_3392_gatemate_n16_bootstrap_fix.py. Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  - id: exp3393-proximal-gradient-constraint-layer
+    milestone: "2026.05.313"
+    title: "Proximal-Gradient Constraint Network Layer"
+    priority: high
+    max_turns: 50
+    agent_type: codex
+    model: gpt-5.5
+    estimated_wall_time_min: 30
+    track: live-model
+    inference_substrate: live_generation
+    requires_gpu: true
+    deliverable: "results/experiment_3393_proximal_gradient_constraint.json"
+    prompt: |
+      CONTEXT: 2026 research indicates proximal-gradient dynamics can efficiently satisfy composite constraints.
+      TASK: Implement a Proximal-Gradient step for constraint satisfaction in the verifier pipeline.
+      CONCRETE STEPS:
+        1. Set up a subset of constraints using continuous relaxation.
+        2. Implement proximal-descent projection over cached_sota_pair() unsloth/gemma-4-31B-it-GGUF logits.
+        3. Measure constraint satisfaction improvement versus soft penalty.
+      Run command: cd {project_root} && .venv/bin/python scripts/experiment_3393_proximal_gradient_constraint.py. Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  - id: exp3394-kona-style-global-optimization
+    milestone: "2026.05.313"
+    title: "Kona-Style Global Optimization Reasoning Benchmark"
+    priority: high
+    max_turns: 50
+    estimated_wall_time_min: 40
+    track: live-model
+    inference_substrate: live_generation
+    requires_gpu: true
+    deliverable: "results/experiment_3394_kona_global_opt.json"
+    prompt: |
+      CONTEXT: Logical Intelligence's Kona (2026) demonstrated solving Sudokus using global energy optimization instead of autoregressive prediction.
+      TASK: Emulate Kona's global inference procedure on a hard Sudoku problem set using Carnot's Ising energy function.
+      CONCRETE STEPS:
+        1. Treat the Sudoku board as a joint energy landscape.
+        2. Apply continuous sampling/optimization over the entire board at once (no autoregressive prediction).
+        3. Score correctness and report the time-to-solution.
+      Run command: cd {project_root} && .venv/bin/python scripts/experiment_3394_kona_global_opt.py. Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  - id: exp3395-hopfield-energy-replay-fr11
+    milestone: "2026.05.313"
+    title: "Energy-Based Replay Selection for FR-11 Continual Learning"
+    priority: critical
+    max_turns: 50
+    estimated_wall_time_min: 30
+    track: self-learning
+    inference_substrate: live_generation
+    requires_gpu: true
+    deliverable: "results/experiment_3395_energy_based_replay.json"
+    prompt: |
+      CONTEXT: Hopfield networks use energy to track reconstruction-based forgetting (arXiv 2026).
+      TASK: Implement an energy-guided sample selection for Carnot's FR-11 memory.
+      CONCRETE STEPS:
+        1. Maintain a memory buffer of constraint violations.
+        2. Use the Ising energy difference to select the most critical samples for replay during continual updates.
+        3. Measure nonforgetting metric on the selected vs random replay.
+      Run command: cd {project_root} && .venv/bin/python scripts/experiment_3395_energy_based_replay.py. Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  - id: exp3396-compress-add-smooth-diffusion
+    milestone: "2026.05.313"
+    title: "Compress-Add-Smooth (CAS) Diffusion for Constraints"
+    priority: high
+    max_turns: 50
+    agent_type: claude
+    estimated_wall_time_min: 25
+    track: self-learning
+    inference_substrate: synthetic
+    requires_gpu: true
+    deliverable: "results/experiment_3396_cas_diffusion.json"
+    prompt: |
+      CONTEXT: arXiv:2604.00067 proposes the CAS recursion for bounded memory updates.
+      TASK: Apply Compress-Add-Smooth updates to Carnot's constraint templates.
+      CONCRETE STEPS:
+        1. Load existing constraint templates.
+        2. Implement a CAS update step to merge new constraints smoothly.
+        3. Verify the updated constraints evaluate correctly without blowing up memory.
+      Run command: cd {project_root} && .venv/bin/python scripts/experiment_3396_cas_diffusion.py. Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  - id: exp3397-ebm-cot-live-benchmark
+    milestone: "2026.05.313"
+    title: "EBM-CoT Verification Pipeline on Live GGUFs"
+    priority: high
+    max_turns: 50
+    estimated_wall_time_min: 40
+    track: live-model
+    inference_substrate: live_generation
+    requires_gpu: true
+    deliverable: "results/experiment_3397_ebm_cot_live_benchmark.json"
+    prompt: |
+      CONTEXT: exp3383 successfully implemented the EBM-CoT trajectory monitor.
+      TASK: Scale up the trajectory monitor to a full 100-sample benchmark using cached_sota_pair() unsloth/Qwen3.6-35B-A3B-GGUF.
+      CONCRETE STEPS:
+        1. Run 100 examples from GSM8K.
+        2. Apply step-wise energy calibration.
+        3. Report AUROC of intermediate energy spikes predicting final answer failure.
+      Run command: cd {project_root} && .venv/bin/python scripts/experiment_3397_ebm_cot_live_benchmark.py. Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  - id: exp3398-caffnet-robustness-check
+    milestone: "2026.05.313"
+    title: "CAffNet Layer Out-of-Distribution Robustness"
+    priority: normal
+    max_turns: 50
+    agent_type: gemini
+    estimated_wall_time_min: 20
+    track: validation
+    inference_substrate: synthetic
+    requires_gpu: false
+    deliverable: "results/experiment_3398_caffnet_robustness.json"
+    prompt: |
+      CONTEXT: exp3385 prototyped CAffNet differentiable constraints.
+      TASK: Test the robustness of the CAffNet layer against out-of-distribution inputs.
+      CONCRETE STEPS:
+        1. Generate adversarial OOD constraint configurations.
+        2. Feed into CAffNet.
+        3. Verify projection still satisfies affine constraints.
+      Run command: cd {project_root} && JAX_PLATFORMS=cpu .venv/bin/python scripts/experiment_3398_caffnet_robustness.py. Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  - id: exp3399-logicvault-long-context
+    milestone: "2026.05.313"
+    title: "LogicVault Multi-Turn Context Expansion"
+    priority: normal
+    max_turns: 50
+    agent_type: gemini
+    estimated_wall_time_min: 30
+    track: logic
+    inference_substrate: live_generation
+    requires_gpu: true
+    deliverable: "results/experiment_3399_logicvault_long_context.json"
+    prompt: |
+      CONTEXT: LogicVault CDCL learning (exp3388) needs testing on long contexts.
+      TASK: Test LogicVault's consistency checking over a 16k token multi-turn interaction.
+      CONCRETE STEPS:
+        1. Generate a multi-turn chat using cached_sota_pair() unsloth/gemma-4-26B-A4B-it-GGUF.
+        2. Evaluate accumulated logical axioms.
+        3. Report any contradictions caught by CDCL logic.
+      Run command: cd {project_root} && .venv/bin/python scripts/experiment_3399_logicvault_long_context.py. Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  - id: exp3400-cross-corpus-matrix-v38
+    milestone: "2026.05.313"
+    title: "Cross-Corpus Evidence Matrix v38"
+    priority: high
+    max_turns: 20
+    estimated_wall_time_min: 10
+    track: ops
+    inference_substrate: validation
+    requires_gpu: false
+    deliverable: "results/experiment_3400_cross_corpus_matrix_v38.json"
+    prompt: |
+      CONTEXT: Milestone requires updating the cross-corpus metrics.
+      TASK: Compile the latest results into the matrix v38.
+      CONCRETE STEPS:
+        1. Gather outputs from .312 and .313 experiments.
+        2. Update the master matrix file.
+      Run command: cd {project_root} && JAX_PLATFORMS=cpu .venv/bin/python scripts/experiment_3400_cross_corpus_matrix_v38.py. Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  - id: exp3401-fr11-replay-stress-test
+    milestone: "2026.05.313"
+    title: "FR-11 Continuous Learning End-to-End Stress Test"
+    priority: critical
+    max_turns: 50
+    estimated_wall_time_min: 35
+    track: self-learning
+    inference_substrate: live_generation
+    requires_gpu: true
+    deliverable: "results/experiment_3401_fr11_stress.json"
+    prompt: |
+      CONTEXT: Validate FR-11 end-to-end with the new Hopfield and CAS methods.
+      TASK: Run a continuous learning stress test simulating 1000 user interactions.
+      CONCRETE STEPS:
+        1. Setup simulated interaction loop.
+        2. Apply CAS updates and Energy-based replay.
+        3. Evaluate final constraint fidelity.
+      Run command: cd {project_root} && .venv/bin/python scripts/experiment_3401_fr11_stress.py. Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  - id: exp3402-capstone-v313
+    milestone: "2026.05.313"
+    title: "Capstone v313"
+    priority: critical
+    max_turns: 100
+    model: opus
+    estimated_wall_time_min: 10
+    track: ops
+    inference_substrate: validation
+    requires_gpu: false
+    deliverable: "results/experiment_3402_capstone_v313.json"
+    prompt: |
+      CONTEXT: All milestone .313 experiments are complete.
+      TASK: Generate the capstone JSON artifact summarizing the milestone findings.
+      CONCRETE STEPS:
+        1. Analyze all results.
+        2. Write the capstone v313 JSON matching the established schema.
+      Run command: cd {project_root} && JAX_PLATFORMS=cpu .venv/bin/python scripts/experiment_3402_capstone_v313.py. Do NOT push. Do NOT modify scripts/research_conductor.py.

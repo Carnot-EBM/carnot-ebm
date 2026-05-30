@@ -1,55 +1,97 @@
-# Research Roadmap v2026.05.312
+# Carnot Research Roadmap — Milestone 2026.05.313
 
-**Milestone Title:** Hardware Execution, EBM-CoT Calibration, and Nonforgetting Continuous Learning
+**Milestone:** 2026.05.313
+**Title:** Proximal-Gradient Constraints, GateMate Recovery, and Energy-Guided Replay
+**Status:** PROPOSED
+**Date:** 2026-05-29
+**Experiment IDs:** exp3391–exp3402
 
-## 1. Context and Previous Milestone (.311) Summary
+---
 
-Milestone `2026.05.311` successfully completed hardware and infrastructure prerequisites. We restored KV260 SSH connectivity, added AXI/UIO interfaces to the GateMate N=16 Ising RTL, scaled FR-11 counterexample repair to 100 cases, implemented LogicVault concurrent agent beliefs, and verified EBT sidecar KAN scoring.
+## What Milestone .312 Proved
 
-However, three major gaps remain between our current state and the PRD vision:
-1. **True Hardware Latency Evidence:** We have synthetic hardware definitions but lack real end-to-end wall-clock latency proof via the UIO registers on the KV260 and GateMate boards.
-2. **Live Energy-Based Continuous Generation (Phase-3):** We need to prove that Energy-Based Models applied to reasoning traces (EBM-CoT) offer measurable superiority over pure autoregressive generation, tracking intermediate hallucination risk.
-3. **Rigorous Nonforgetting Constraints:** Continuous self-learning (FR-11) currently relies on bulk replay. We lack online locality-aware bounds that prevent catastrophic forgetting of prior verifier axioms.
+Milestone 2026.05.312 successfully validated several components but hit a critical hardware failure:
 
-## 2. Theoretical Anchors (2025-2026)
+1. **KV260 Hardware Execution Verified** (exp3381): Measured true hardware latency versus CPU.
+2. **GateMate N16 Bitstream Failure** (exp3382): Failed due to `artifact_not_updated_past_bootstrap`. Conductor terminated because the script crashed before writing the artifact.
+3. **EBM-CoT Trajectory Monitor works** (exp3383): An Interwhen-style verifier differentiates early commitment hallucinations.
+4. **PEM and CAffNet Prototypes** (exp3384, exp3385): Prototyped Parallel Energy Minimization and Differentiable Constraint enforcement.
+5. **FR-11 Locality-Aware Nonforgetting** (exp3386): Memory rollback and updates validated.
+6. **LogicVault CDCL** (exp3388): Clause learning logic integrated.
 
-This milestone integrates recent findings from arXiv (2025–2026):
-*   **Energy-Based CoT Calibration & Monitoring:** Oarga & Du's Parallel Energy Minimization (PEM) and Interwhen-style verifier monitors, shifting hallucination detection to "early commitment failures" in the reasoning trajectory.
-*   **HardNet++/CAffNet Differentiable Layers:** Moving beyond soft penalties to hard constraint satisfaction embedded directly into neural layer projections.
-*   **KANELÉ Quantization & KAN-CL:** Utilizing LUT-based evaluation for massive KAN speedups on FPGA and applying locality anchoring for non-forgetful continual learning.
+## Three Biggest Gaps for .313
 
-## 3. Phase Descriptions
+1. **GateMate Flashing Pipeline Fails**: The GateMate deployment must succeed; we need the bootstrap fix to properly write the artifact before the test routines can crash the agent loop.
+2. **True Continuous Global Reasoning (Kona style)**: We must adapt to the 2026 Kona-style continuous latent space global optimization for reasoning traces, escaping pure autoregressive dead-ends.
+3. **Continuous Learning Selection Bottleneck**: FR-11 lacks an energy-based replay selection mechanism to pick high-value samples (derived from Hopfield memory concepts).
 
-### Phase 1: Hardware Execution & Acceleration
-Convert the `.311` preparation into concrete latency numbers. Flash the `carnot_ising_v4` to the KV260, execute a sample via `/dev/uio0`, and measure real latency against a CPU fallback. Follow this with a dirtyJtag flash of the new AXI-enabled N=16 GateMate design.
+## New Research Opportunities (Late 2025 - Early 2026)
 
-### Phase 2: Live SOTA Inference with EBM-CoT
-Leverage `unsloth/Qwen3.6-35B-A3B-GGUF` and `unsloth/gemma-4-31B-it-GGUF`. We will implement trajectory monitors to score intermediate reasoning tokens, enforcing global coherence via energy evaluation instead of treating CoT as purely unguided.
+- **Proximal-Gradient Constraint Networks (2026)**: Enforcing constraints directly inside the network using proximal descent.
+- **Kona Global Optimization (2026)**: Global energy optimization over traces to avoid autoregressive dead ends.
+- **Compress-Add-Smooth (CAS) Diffusion**: Formalizing continuous memory additions.
 
-### Phase 3: Hard-Constraint Prototyping
-Introduce differentiable constraint architectures (CAffNet) as Tier-1 prototypes, proving that we can guarantee 100% affine constraint satisfaction in the forward pass.
+---
 
-### Phase 4: Continuous Self-Learning Resilience
-Upgrade FR-11 with KAN-CL inspired locality-aware updates to prevent forgetting. Test whether learning a new constraint violation reduces holdout accuracy, and apply Conflict-Driven Clause Learning (CDCL) paradigms to LogicVault to shorten multi-agent search cycles.
+## Architecture After .313
 
-## 4. Hardware Requirements
-*   **KV260 Board:** Powered on, SSH reachable (`ssh kria`), loaded with the `carnot_ising_v4` bitstream.
-*   **GateMate A1-EVB-2M:** USB attached, accessible via `openFPGALoader -c dirtyJtag`.
-*   **GPU:** Local RTX/ROCm setup for SOTA GGUF inference (Qwen3.6-35B, Gemma4-31B).
+VerifyRepairPipeline (post-.313 target)
+│
+├── Proximal-Gradient Constraints (exp3393) ── strictly enforces logical bounds on output
+│
+├── Kona-Style Global Reasoner (exp3394) ── solves constraint landscapes holistically
+│
+├── EBM-CoT Monitor (exp3397) ── aborts early upon energy spikes
+│
+└── FR-11 Self-Learning (exp3401)
+    ├── Energy-Based Replay Selection (exp3395)
+    └── CAS Diffusion Memory Updates (exp3396)
 
-## 5. Dependency Graph
+---
 
-```mermaid
-graph TD
-  3381(KV260 Latency) --> 3390(Capstone)
-  3382(GateMate Smoke) --> 3390
-  3383(EBM-CoT Monitor) --> 3390
-  3384(PEM Composition) --> 3390
-  3385(CAffNet Prototype) --> 3390
-  3386(FR11 Nonforgetting) --> 3390
-  3387(KANELÉ Quantization) --> 3390
-  3388(LogicVault CDCL) --> 3390
-  3389(ConstraintBench Baseline) --> 3390
-  3390 --> 3391(Plan .313)
-  3391 --> 3392(Archive .311 / Activate .312)
-```
+## Phase Structure
+
+### Phase A: Admin + Hardware Fix (exp3391-exp3392)
+- exp3391: Archive .312 and activate .313
+- exp3392: GateMate N16 Bootstrap fix (replaces exp3382)
+
+### Phase B: Differentiable Constraints + Kona Strategy (exp3393-exp3394)
+- exp3393: Proximal-Gradient Constraint Layer integration.
+- exp3394: Emulate Kona's global inference procedure on Sudoku boards.
+
+### Phase C: FR-11 Continuous Learning Upgrades (exp3395-exp3396)
+- exp3395: Energy-Based Replay Selection for FR-11.
+- exp3396: CAS Diffusion algorithm for constraints.
+
+### Phase D: Pipeline Integration and Evaluation (exp3397-exp3401)
+- exp3397: EBM-CoT Verification Pipeline on Live GGUFs.
+- exp3398: CAffNet Layer Out-of-Distribution Robustness.
+- exp3399: LogicVault Multi-Turn Context Expansion.
+- exp3400: Cross-Corpus Evidence Matrix v38.
+- exp3401: FR-11 Continuous Learning End-to-End Stress Test.
+
+### Phase E: Capstone (exp3402)
+- exp3402: Capstone v313 aggregation.
+
+---
+
+## Dependency Graph
+
+- A(exp3391 Admin) -> B(exp3392 GateMate)
+- A -> C(exp3393 Proximal-Gradient)
+- A -> D(exp3394 Kona)
+- A -> E(exp3395 Energy Replay)
+- E -> F(exp3396 CAS Diffusion)
+- F -> G(exp3401 FR-11 Stress Test)
+- C -> H(exp3397 EBM-CoT Live)
+- D -> I(exp3399 LogicVault)
+- B -> J(exp3400 Matrix)
+- G -> J
+- H -> J
+- I -> J
+- J -> K(exp3402 Capstone)
+
+## Hardware Requirements
+
+- **GPU**: RTX 3090 required for exp3393, exp3394, exp3395, exp3397, exp3399, exp3401.
+- **Hardware Boards**: GateMate board required for exp3392.
