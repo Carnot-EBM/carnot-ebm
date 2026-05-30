@@ -27,11 +27,15 @@ def project_affine(logits: jnp.ndarray, A: jnp.ndarray, b: jnp.ndarray) -> jnp.n
     
     # Using lstsq for numerical stability in case A A^T is poorly conditioned
     # or jnp.linalg.solve if we assume full row rank.
-    # We'll use solve for simplicity and assuming well-posed constraints.
+    # We solve and fallback to lstsq if there are NaNs, using jnp.where for JAX compatibility.
     try:
         y = jnp.linalg.solve(A_A_T, A_x_minus_b)
+        # JAX solve doesn't always raise on singular matrices, it returns NaNs
+        # We compute lstsq as fallback
+        y_lstsq = jnp.linalg.lstsq(A_A_T, A_x_minus_b, rcond=None)[0]
+        y = jnp.where(jnp.isnan(y).any() | jnp.isinf(y).any(), y_lstsq, y)
     except Exception:
-        # Fallback to pseudo-inverse
+        # Fallback to pseudo-inverse for tracing errors
         y = jnp.linalg.lstsq(A_A_T, A_x_minus_b, rcond=None)[0]
         
     x_proj = logits - A.T @ y
