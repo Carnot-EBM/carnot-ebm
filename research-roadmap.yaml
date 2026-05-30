@@ -1,348 +1,800 @@
-milestone: "2026.05.314"
-milestone_title: "Latent Energy Spills, Neural Uncertainty Phase Transitions, and Kona Global Reasoning"
+milestone: "2026.05.315"
+milestone_title: "Depth-Over-Breadth: P0.1 Energy-Descent Premise, P0.2 Verifier Diversity, Kona Solve-Rate Gate, and G2 Reproduction Closure"
 milestone_doc: "openspec/change-proposals/research-roadmap-vNEXT.md"
 
+# ---------------------------------------------------------------------------
+# PLANNER NOTE (Opus 4.8, 2026-05-30)
+# This milestone is the FIRST application of the Depth-Over-Breadth Forcing
+# Function (CLAUDE.md, 2026-05-30). Milestone .314 was breadth churn (NUP v?,
+# latent-spills, telemetry v39, FR-11 stress vN, evidence matrix v38/39) and
+# never ran the load-bearing existential link tests the operator hand-authored
+# in ops/known-issues.md. .315 corrects that: the MAJORITY of substantive slots
+# are P0.1 (exp3312, energy-descent-vs-AR — THE Kona premise), P0.2 (exp3313,
+# verifier-diversity / alpha_t grounding keystone), the Kona solve-rate
+# correctness gate (concrete instance of P0.1), the ensemble-vs-adaptive-
+# injection test, and G2 reproduction closure (the SOLE unmet publication gate).
+# Hardware tasks are kept light + opportunistic per north-star §3 (KV260 to
+# terminal; GateMate/PolarFire opportunistic). NO vN+1 re-measurement of an
+# already-measured artifact appears in this milestone.
+# ---------------------------------------------------------------------------
+
 tasks:
-  - id: exp3403-archive-v313-activate-v314
-    operator_override: "2026-05-30 operator directive (standing, mechanical auto-stamp): structural false-positive — routine milestone-transition task scope-matched a retired exp; not a doomed rerun."
-    milestone: "2026.05.314"
-    title: "Archive milestone .313 honestly and activate .314"
+  # =========================================================================
+  # OPS — milestone transition
+  # =========================================================================
+  - id: exp3416-archive-v314-activate-v315
+    operator_override: "2026-05-29 operator directive (standing, mechanical auto-stamp): routine milestone-transition task — false-positive scope-match vs exp3403/exp3392 archive tasks; structurally never a doomed rerun."
+    prior_failures:
+      - experiment_id: exp3403-archive-v313-activate-v314
+        verdict: "complete: archive_v313_activate_v314_ready=true"
+        addressed_by: "Routine milestone progression; .314 has completed and is archived to make room for .315."
+        retire_if_same_verdict: false
+    milestone: "2026.05.315"
+    title: "Archive milestone .314 honestly and activate .315"
     priority: critical
     max_turns: 20
     agent_type: claude
     estimated_wall_time_min: 5
     track: ops
-    inference_substrate: validation
+    inference_substrate: aggregation_from_upstream_artifacts
     requires_gpu: false
-    deliverable: "results/experiment_3403_archive_v313_activate_v314.json"
-    prior_failures:
-      - experiment_id: exp3337-archive-v308-activate-v309
-        verdict: "unspecified"
-        addressed_by: "Routine milestone progression."
-        retire_if_same_verdict: false
+    deliverable: "results/experiment_3416_archive_v314_activate_v315.json"
     prompt: |
-      CONTEXT: Milestone .313 has completed.
-      TASK: Archive .313 to ops/changelog.md and results/operational_retro_2026_05_313.json.
-      CONCRETE STEPS:
-        1. Read results/experiment_3402_capstone_v313.json.
-        2. Draft the retrospective JSON.
-        3. Emit artifact.
-      Run command: cd {project_root} && JAX_PLATFORMS=cpu .venv/bin/python scripts/experiment_3403_archive_v313_activate_v314.py. Do NOT push. Do NOT modify scripts/research_conductor.py.
+      CONTEXT: Milestone .314 has completed. Per the Depth-Over-Breadth Forcing
+      Function (CLAUDE.md, 2026-05-30), .314 was largely breadth churn and several
+      of its artifacts (exp3397, exp3405) carry flagged_adversarial=true — those
+      MUST NOT be aggregated into any forward-facing claim.
 
-  - id: exp3404-gatemate-n16-bootstrap-fix
+      EXISTING CODE TO READ FIRST:
+        - results/experiment_3415_wrap_up_v314.json (the .314 capstone)
+        - ops/changelog.md (append, never delete — Documentation Update Rules)
+        - ops/known-issues.md (the .315 mandatory priorities: P0.1/P0.2/Kona gate)
+
+      TASK: Archive .314 to ops/changelog.md and write the operational
+      retrospective JSON. Confirm .315 is active.
+
+      CONCRETE STEPS:
+        1. Read results/experiment_3415_wrap_up_v314.json and the .314 task list.
+        2. Draft results/operational_retro_2026_05_314.json (schema
+           carnot.operational_retro.v64): experiments completed, flagged artifacts
+           (exp3397/exp3405 — note they are quarantined, not headline-eligible),
+           wall-time, and the top forward gap = "run the P0.1/P0.2 depth block".
+        3. Append a .314 archive section to ops/changelog.md (do NOT delete prior
+           entries).
+        4. Emit the deliverable artifact with honest_verdict starting
+           'complete:' and field archive_v314_activate_v315_ready=true.
+      Run command: cd {project_root} && JAX_PLATFORMS=cpu .venv/bin/python scripts/experiment_3416_archive_v314_activate_v315.py. Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  # =========================================================================
+  # DEPTH BLOCK — the load-bearing existential link tests (operator-authored
+  # in ops/known-issues.md; queued at .82/.94 and never run for 200+ milestones)
+  # =========================================================================
+
+  # ---- P0.1: THE single most important experiment in the project -----------
+  - id: exp3312-energy-descent-vs-autoregressive-premise-v1
+    operator_override: "2026-05-29 operator directive (standing): P0.1 is the hand-authored Phase-3 de-risking experiment in ops/known-issues.md; scope-match vs exp1222/exp1210/exp1165 is the intended supersession (toy predecessors -> real-task head-to-head), not a doomed rerun."
     prior_failures:
-      - experiment_id: exp3392-gatemate-n16-bootstrap-fix
-        verdict: "unspecified"
-        addressed_by: "Added Opus model and robust hardware checks."
+      - experiment_id: exp1222-phase5a-insitu-prototype
+        verdict: "complete: toy 5x5 synthetic puzzle prototype; stability gates passed"
+        addressed_by: "exp1222 ran energy-descent on toy 5x5 synthetic puzzles and only measured stability, never head-to-head accuracy vs an autoregressive baseline on a REAL task. This task runs the head-to-head on a real reasoning benchmark (GSM8K subset >=200) — the only test of the premise the Phase-3 endgame rests on."
+        retire_if_same_verdict: false
+      - experiment_id: exp1210-phase4-bfs-intractable-puzzles-v2
+        verdict: "complete: BFS tie (downgraded); synthetic advantage only on BFS-intractable puzzles"
+        addressed_by: "exp1210 produced a BFS tie on synthetic puzzles. This task uses a REAL reasoning task with an apples-to-apples AR baseline of comparable parameter count, paired per-problem, with a falsifiable superiority/non-inferiority gate."
         retire_if_same_verdict: true
-    milestone: "2026.05.314"
-    title: "GateMate N16 Bitstream Bootstrap Fix"
-    priority: high
+      - experiment_id: exp1165-phase4-active-inference-pilot-v1
+        verdict: "complete: ARC-AGI-3-CLASS result on 5x5 synthetic (74.7% action reduction)"
+        addressed_by: "exp1165 was a synthetic 5x5 toy, not a real benchmark and not vs an AR baseline. This task is real-task, AR-compared, paired-significance."
+        retire_if_same_verdict: true
+    milestone: "2026.05.315"
+    title: "Energy-Descent Reasoning vs Autoregressive Baseline — the Kona premise test (P0.1)"
+    priority: critical
     max_turns: 100
     model: opus
+    agent_type: claude
+    requires_claude: true   # (1) gemini has never trained the energy-descent substrate to beat AR (toy predecessors stalled); (2) 5+ files: boltzmann_gpt.py + continuous_ebm.py + verifier energy + corpus loader + AR baseline + paired stats; (3) open-ended judgment on refinement schedule + compute parity that no deterministic gate substitutes for.
+    estimated_wall_time_min: 120
+    track: evidence
+    inference_substrate: live_llm_inference
+    requires_gpu: true
+    deliverable: "results/experiment_3312_energy_descent_vs_autoregressive_premise_v1.json"
+    prompt: |
+      CONTEXT: The entire Phase-3 / Kona endgame assumes energy-descent reasoning
+      on continuous latents is BETTER than autoregressive (AR) token sampling.
+      That premise has NEVER been tested on a real task vs a real AR baseline —
+      only toy 5x5 puzzles (exp1222) and a downgraded BFS tie (exp1210). This is
+      P0.1: the single most important experiment in the project. Either outcome is
+      high-value — validation greenlights Phase 3; refutation honestly retires the
+      foundation-model endgame and saves years. CUDA recovered 2026-05-28, so the
+      compute blocker that justified deferring this is gone.
+
+      EXISTING CODE TO READ FIRST:
+        - python/carnot/phase3/boltzmann_gpt.py (continuous-latent refinement substrate)
+        - python/carnot/phase3/continuous_ebm.py (latent EBM)
+        - python/carnot/phase3/active_inference_pilot.py (exp1165 toy predecessor)
+        - scripts/experiment_template.py (cached_sota_pair, BatchedInferenceRunner)
+        - data/ for a GSM8K subset; ops/known-issues.md exp3312 spec (authoritative)
+
+      TASK: Run a paired head-to-head: energy-descent reasoning vs an AR baseline
+      of comparable parameter count, on a REAL reasoning benchmark, with a
+      falsifiable significance gate.
+
+      PRECONDITIONS (step 0, before any inference — emit blocked_* and STOP if any fail):
+        a. CUDA available: python -c "import torch; assert torch.cuda.is_available()".
+           If not -> honest_verdict blocked_cuda_unavailable.
+        b. The continuous-latent refinement substrate (boltzmann_gpt / continuous_ebm)
+           is trainable. If not -> blocked_energy_descent_substrate_unavailable.
+        c. A real reasoning corpus with ground-truth labels (GSM8K subset >=200,
+           or ARC-AGI-1 train). If not -> blocked_real_task_corpus_missing.
+        d. An AR baseline of comparable parameter count runnable on the same corpus.
+           If not -> blocked_ar_baseline_unavailable.
+
+      CONCRETE STEPS:
+        1. Pick a real reasoning task with binary pass/fail (recommend a GSM8K
+           subset, n>=200, held-out). Document the exact split + seed.
+        2. AR condition: the base model answers each problem autoregressively
+           (greedy or fixed-temp). Record per-problem pass/fail. Use
+           MODEL_SPECS = ["unsloth/Qwen3.6-35B-A3B-GGUF"] for the AR baseline.
+        3. Energy-descent condition: the continuous-latent refinement substrate
+           solves each problem via bounded-depth iterative refinement on the latent
+           guided by the verifier energy (REQ-KONA-001/002 reasoning mode),
+           decoding to an answer only at the coda. SAME problems (paired),
+           comparable compute.
+        4. Compute accuracy for each condition + the paired delta with a
+           significance test (McNemar or paired bootstrap CI).
+        5. Emit results with all REQUIRED ARTIFACT FIELDS.
+
+      REQUIRED ARTIFACT FIELDS (each carries a principle per CLAUDE.md):
+        honest_verdict: principle="Terminal verdict must start with complete:/success:/passed:/shipped_."
+        inference_substrate: value=live_llm_inference
+        task_name: principle="name the real benchmark + split; toy/synthetic is NOT acceptable for this test."
+        n_problems: principle=">=200 for a CLT-valid accuracy delta."
+        ar_baseline_accuracy: principle="the autoregressive control; same problems, comparable compute."
+        energy_descent_accuracy: principle="the non-AR condition; the premise under test."
+        accuracy_delta: principle="energy_descent minus AR — the headline."
+        paired_significance: principle="McNemar/bootstrap p-value or CI; an unpaired or n<200 delta is gameable."
+        compute_parity_note: principle="state the param-count + inference-compute of each condition so the comparison is apples-to-apples, not a bigger-model win."
+        random_seed: principle="determinism precondition for reproducibility."
+        reproducibility_checksum: principle="content hash of corpus+substrate+seed."
+        duration_s: principle="real training+inference takes wall time; 60s floor."
+
+      ACCEPTANCE GATES:
+        - condition: "energy_descent_accuracy >= ar_baseline_accuracy AND paired_significance favors non-inferiority"
+          principle: "G1 PREMISE-VIABLE: energy-descent at least matches AR on a real task."
+        - condition: "accuracy_delta > 0 with paired p < 0.05"
+          principle: "G2 PREMISE-VALIDATED: energy-descent SIGNIFICANTLY beats AR — the justification for the entire foundation-model endgame."
+
+      TERMINAL VERDICTS (all start with complete:):
+        - G2 passes -> "complete: energy_descent_beats_ar_premise_validated"
+        - G1 passes, G2 fails -> "complete: energy_descent_viable_not_superior_at_scale"
+        - G1 fails -> "complete: energy_descent_below_ar_premise_unsupported_at_scale"
+      Run command: cd {project_root} && .venv/bin/python scripts/experiment_3312_energy_descent_vs_autoregressive_premise_v1.py. Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  # ---- P0.2: the alpha_t grounding keystone (self-learning depth) ----------
+  - id: exp3313-verifier-ensemble-lambda-min-diversity-audit-v1
+    operator_override: "2026-05-29 operator directive (standing): P0.2 is the hand-authored alpha_t-grounding keystone audit in ops/known-issues.md; scope-match vs exp1224 is the intended supersession (k=3 collapse -> deliberately disjoint-kernel larger-k audit), not a doomed rerun."
+    prior_failures:
+      - experiment_id: exp1224-phase5c-adversarial-probe
+        verdict: "complete: k=3 ensemble pairwise_max_correlation=1.0 — effective ensemble collapsed k=3 -> k=1"
+        addressed_by: "exp1224 showed a k=3 ensemble collapsed to effective k=1 (verifiers perfectly correlated via the shared decoder). This task measures lambda_min(Sigma) + participation-ratio effective-k on a DELIBERATELY disjoint-kernel suite (structural / empirical / semantic / anti-vacuity / memory classes) at larger k, to test whether real diversity is recoverable or the collapse is intrinsic. The FoVer headline (exp2837) corroborates the risk: 3 of its 4 verifiers showed ZERO learning contribution."
+        retire_if_same_verdict: true
+    milestone: "2026.05.315"
+    title: "Verifier-Ensemble Joint-Null-Space / lambda_min(Sigma) Diversity Audit (P0.2)"
+    priority: critical
+    max_turns: 40
+    agent_type: gemini
+    model: gemini-3.1-pro-preview
+    estimated_wall_time_min: 45
+    track: evidence
+    inference_substrate: verifier_ensemble_against_cached_candidates
+    requires_gpu: true
+    deliverable: "results/experiment_3313_verifier_ensemble_lambda_min_diversity_audit_v1.json"
+    prompt: |
+      CONTEXT: alpha_t grounding — the keystone that lets a self-correcting model
+      avoid self-distillation collapse — only holds if the verifier ensemble has
+      real diversity (a small joint null space). exp1224 showed k=3 collapsing to
+      effective k=1, and the FoVer headline (exp2837) showed 3 of its 4 verifiers
+      contributing zero. If a deliberately disjoint-kernel suite ALSO collapses,
+      the grounding precondition of the entire self-improvement thesis fails. This
+      is cheap (verifier scoring, reuses the FoVer corpus) and directly tests the
+      keystone — it is the milestone's continuous-self-learning depth experiment.
+
+      EXISTING CODE TO READ FIRST:
+        - python/carnot/verify/ (the verifier suite; label each by kernel class)
+        - data/fover_corpus.jsonl (the cached candidate corpus)
+        - results/experiment_2837_fover_memory_leakage_v3.json (the 3-of-4-zero pattern)
+        - ops/known-issues.md exp3313 spec (authoritative)
+
+      TASK: Measure lambda_min(Sigma), effective-k (participation ratio), and
+      per-verifier drop-one-out contribution on the broadest disjoint-kernel
+      verifier suite, on FoVer + an adversarial/OOD slice.
+
+      PRECONDITIONS (step 0):
+        a. FoVer corpus present (data/fover_corpus.jsonl) + an adversarial/OOD
+           slice. If not -> blocked_corpus_missing.
+        b. The verifier suite is callable in batch over cached candidates with a
+           configurable verifier set. If not -> blocked_verifier_suite_uncallable.
+        c. CUDA available for any model-based verifiers. If not, run CPU-only
+           verifiers and record which were skipped (do NOT silently drop them).
+
+      CONCRETE STEPS:
+        1. Assemble the broadest available verifier set, labeled by kernel class
+           (structural: Z3/AST; empirical: PBT/execution; semantic: ThinkPRM/
+           semantic-cosine; anti-vacuity: liveness/coverage; memory: fr11).
+        2. Score every verifier on FoVer + the adversarial slice; build the k x k
+           verifier-DECISION covariance matrix Sigma.
+        3. Compute: lambda_min(Sigma); the full pairwise-correlation matrix;
+           effective-k via participation ratio (sum(lambda)^2 / sum(lambda^2));
+           per-verifier marginal contribution (drop-one-out AUROC delta).
+        4. Identify which verifiers share a null space (high pairwise correlation,
+           zero drop-one-out contribution — the exp2837 "3-of-4 contribute zero").
+        5. Emit results with all REQUIRED ARTIFACT FIELDS.
+
+      REQUIRED ARTIFACT FIELDS (each carries a principle per CLAUDE.md):
+        honest_verdict: principle="complete:/success:/passed:/shipped_ prefix."
+        inference_substrate: value=verifier_ensemble_against_cached_candidates
+        k_verifiers: principle="how many verifiers in the audited suite."
+        lambda_min_sigma: principle="smallest eigenvalue of the decision covariance; the joint-null-space proxy. Zenil-stack threshold is >0.1."
+        pairwise_max_correlation: principle="the exp1224 collapse signature; near-1.0 means redundancy."
+        effective_k_participation_ratio: principle="how many verifiers ACTUALLY contribute independent signal vs nominal k."
+        per_verifier_dropout_contribution: principle="drop-one-out AUROC delta per verifier; zero means that verifier is null."
+        n_examples: principle=">=1000 for a stable covariance estimate."
+        random_seed: principle="determinism."
+        reproducibility_checksum: principle="content hash."
+        duration_s: principle="verifier scoring; 1s floor."
+
+      ACCEPTANCE GATES:
+        - condition: "lambda_min_sigma > 0.1 AND effective_k_participation_ratio >= 3"
+          principle: "G1 GROUNDING-HOLDS: the ensemble has real diversity, so the alpha_t grounding signal that prevents self-distillation collapse survives at production k."
+
+      TERMINAL VERDICTS (all start with complete:):
+        - G1 passes -> "complete: verifier_ensemble_diversity_sufficient_grounding_holds"
+        - G1 fails -> "complete: verifier_ensemble_null_space_collapse_confirmed_grounding_at_risk"
+      Run command: cd {project_root} && .venv/bin/python scripts/experiment_3313_verifier_ensemble_lambda_min_diversity_audit_v1.py. Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  # ---- Kona solve-rate correctness gate (concrete instance of P0.1) --------
+  - id: exp3417-kona-global-opt-correctness-gate-v1
+    prior_failures:
+      - experiment_id: exp3408-kona-global-opt
+        verdict: "SUCCESS but solved_sudoku=False (energy plateaued at 10, not 0)"
+        addressed_by: "Re-gated on SOLVE-RATE not time. STEP 0a (encoding validity: a known-valid solved board MUST give E==0) and STEP 0b (easy-tier sanity) are mandatory and gating BEFORE any optimization. Diagnoses the energy~10 plateau as local-minimum vs representational and tests an optimizer ladder (annealing, random restarts, parallel tempering, constraint-aware block moves, Lagrangian penalties). Forbids the fast-but-wrong timing framing exp3408 invited."
+        retire_if_same_verdict: true
+      - experiment_id: exp3394-kona-style-global-optimization
+        verdict: "unspecified (no solve-rate gate; timing-only framing)"
+        addressed_by: "Same correctness-first re-gating as above; the prior task measured time without ever verifying a valid solution on the board."
+        retire_if_same_verdict: true
+    milestone: "2026.05.315"
+    title: "Kona global-optimization solve-rate gate (correctness-first)"
+    priority: critical
+    max_turns: 60
+    agent_type: gemini
+    model: gemini-3.1-pro-preview
+    estimated_wall_time_min: 60
+    track: evidence
+    inference_substrate: live_llm_inference
+    requires_gpu: true
+    deliverable: "results/experiment_3417_kona_global_opt_correctness_v1.json"
+    prompt: |
+      CONTEXT: exp3408 ran Kona-style global optimization on hard Sudoku:
+      initial_energy=2104 -> final_energy=10.05 over 50,000 steps,
+      time_to_solution=14.1s vs autoregressive 212.2s — but solved_sudoku=False
+      (final energy 10, not 0 = constraints still violated). The implied ~15x
+      "speedup over autoregressive" is fast-but-wrong-vs-slow: meaningless. A
+      speedup claim is invalid until the method actually SOLVES. This is the
+      cleanest concrete testbed for P0.1: if Carnot's Ising energy can't solve
+      hard Sudoku via global optimization, that is load-bearing evidence about the
+      non-AR-reasoning endgame.
+
+      EXISTING CODE TO READ FIRST:
+        - results/experiment_3408_kona_global_opt.json (the plateau-at-10 result)
+        - python/carnot/samplers/adaptive_ising.py (parallel tempering / replica exchange)
+        - python/carnot/phase3/scrambled_grid_puzzle.py + snap_validity.py
+        - ops/known-issues.md exp34NN Kona correctness-gate spec (authoritative)
+
+      TASK: Re-gate Kona global-opt on SOLVE-RATE (valid board, final_energy==0
+      verified on the BOARD), not time. STEP 0 is mandatory and gating.
+
+      CONCRETE STEPS (STEP 0 IS MANDATORY AND GATING — run BEFORE any optimization):
+        0a. ENCODING VALIDITY (hard precondition): encode a KNOWN-VALID solved
+            Sudoku board into the Ising energy and assert E == 0 (within float eps).
+            If a correct solution does NOT give E==0, the energy formulation is
+            wrong (missing constraint / unbalanced penalty weights) — STOP, write
+            honest_verdict: blocked_energy_encoding_invalid with the per-constraint
+            residual-energy breakdown, and do NOT run any optimization.
+        0b. EASY-TIER SANITY: before any HARD puzzle, confirm the current optimizer
+            solves EASY boards (many clues, near-fully-constrained). If it cannot
+            solve easy, the failure is REPRESENTATIONAL (energy/encoding), not
+            optimizer power — report that and do NOT climb the optimizer ladder.
+        1. Only if 0a passes (E==0 on a valid board) AND 0b solves easy: run the
+           optimizer ladder (slower annealing -> random restarts (K parallel inits)
+           -> parallel tempering / replica exchange (adaptive_ising.py) ->
+           constraint-aware block moves -> adaptive penalty weights / Lagrangian),
+           reporting solve_rate by difficulty AND by optimizer_variant. Use
+           MODEL_SPECS = ["unsloth/gemma-4-26B-A4B-it-GGUF"] only if an LLM proposal
+           step is part of the hybrid; the core optimizer is the Ising sampler.
+        2. Characterize the energy~10 plateau: report n_violated_constraints at the
+           plateau (a few cells = 'almost solved', optimizer-fixable; pervasive =
+           representational).
+        3. If pure energy descent still can't close the last violations, test the
+           energy-guided + constraint-propagation hybrid (energy proposes; Carnot's
+           Z3/AST/arc-consistency verifiers clean up residual violations) and report
+           its solve_rate separately — narrows the claim honestly from
+           'energy replaces search' to 'energy is a global heuristic' if only the
+           hybrid solves.
+
+      REQUIRED ARTIFACT FIELDS (each carries a principle per CLAUDE.md):
+        encoding_validity_E0: principle="E of a known-valid solved board MUST be 0 (Step 0a); if not, energy is mis-specified — gating precondition; report per-constraint residual when it fails."
+        easy_tier_solve_rate: principle="must solve EASY boards (Step 0b) before any hard-board claim; near-0 means representational failure, not optimizer power."
+        n_violated_constraints_at_plateau: principle="distinguishes 'almost solved' (a few cells) from pervasive infeasibility; exp3408 plateaued at energy 10.05."
+        hybrid_solve_rate: principle="solve_rate of the energy-guided + constraint-propagation path (Step 3), reported separately so the claim is honest."
+        solve_rate: principle="fraction of puzzles reaching a VALID solution (final_energy==0 verified on the BOARD). This is the gate; time is meaningless without it."
+        n_puzzles: principle=">=20 puzzles across difficulty tiers; solve_rate on n<20 is not headline-eligible."
+        solve_rate_by_difficulty: principle="report per-tier so partial capability is visible."
+        time_to_solution_solved_only: principle="timing reported ONLY for solved instances; any speedup-vs-AR claim is valid ONLY on the solved subset."
+        optimizer_variant: principle="which fix was applied (vanilla/annealed/restarts/tempering) so the plateau diagnosis is auditable."
+        honest_verdict: principle="Terminal verdict must start with complete:/success:/passed:/shipped_."
+
+      ACCEPTANCE GATES:
+        - condition: "STEP 0a passes (a known-valid solved board gives E==0) BEFORE any optimization solve-rate is reported"
+          principle: "an optimization solve-rate against a mis-specified energy is meaningless; forks the strategy (fix encoding vs fix optimizer)."
+        - condition: "solve_rate reported on >=20 puzzles; speedup claimed ONLY on solved subset"
+          principle: "kills the fast-but-wrong framing exp3408 invited."
+        - condition: "if solve_rate ~0 even with optimizer fixes -> honest verdict that the current Ising energy formulation cannot do hard-Sudoku global reasoning yet; retire the 'global-opt beats AR' timing claim"
+          principle: "an honest negative here is a real P0.1 datapoint, not a failure."
+
+      TERMINAL VERDICTS (all start with complete:):
+        - 0a fails -> "complete: blocked_energy_encoding_invalid_per_constraint_residual_reported" (treated as honest finding)
+        - solves hard tier -> "complete: kona_global_opt_solves_hard_sudoku_solve_rate_reported"
+        - only hybrid solves -> "complete: energy_is_global_heuristic_hybrid_solves_pure_descent_does_not"
+        - solve_rate ~0 -> "complete: ising_energy_cannot_do_hard_sudoku_global_reasoning_yet"
+      Run command: cd {project_root} && .venv/bin/python scripts/experiment_3417_kona_global_opt_correctness_v1.py. Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  # ---- Ensemble vs adaptive prompt-injection (architecturally-honest test) -
+  - id: exp3418-verifier-ensemble-vs-adaptive-injection-corpus-v1
+    operator_override: "2026-05-28 operator directive (known-issues.md NEW 2026-05-28): architecturally-honest ensemble test on the exp3273 held-out corpus; scope-match vs exp3273 is the intended supersession (single KAN sidecar -> full k=15 cross-mechanism ensemble), not a doomed rerun."
+    prior_failures:
+      - experiment_id: exp3273-prompt-injection-kan-full-corpus-delong-eval-v1
+        verdict: "complete: full_corpus_auroc=0.475326; delong_noninferiority_passed=false; retire_from_prompt_injection_headline"
+        addressed_by: "exp3273 tested a SINGLE distilled KAN sidecar, which collapsed to random (0.475) on the adaptive corpus. This task tests the FULL k=15 cross-mechanism verifier ensemble (AND-composition + energy-rank scoring) on the SAME held-out corpus — a structurally different approach (ensemble vs lone sidecar) per CLAUDE.md Spera/Welch joint-null-space theory. Hypothesis: cross-mechanism diversity covers the surface-feature null space a single KAN falls into. If the ensemble also lands ~0.475, the single-axis stall extends to the ensemble on the injection domain and the ensemble-replacement path retires too."
+        retire_if_same_verdict: true
+    milestone: "2026.05.315"
+    title: "Verifier-Ensemble vs Adaptive Prompt-Injection Corpus v1"
+    priority: high
+    max_turns: 50
+    agent_type: gemini
+    model: gemini-3.1-pro-preview
+    estimated_wall_time_min: 60
+    track: evidence
+    inference_substrate: verifier_ensemble_against_cached_candidates
+    requires_gpu: true
+    deliverable: "results/experiment_3418_verifier_ensemble_vs_adaptive_injection_corpus_v1.json"
+    prompt: |
+      CONTEXT: A SINGLE distilled 16-knot KAN sidecar collapsed to AUROC 0.475
+      (random) on the full 15k adaptive prompt-injection corpus (exp3273), DeLong
+      non-inferiority rejected, leakage audit passed -> genuine capability ceiling.
+      But the sidecar was never Carnot's thesis — the thesis is the k=15
+      cross-mechanism verifier ensemble where AND-composition shrinks the joint
+      null space exponentially (Spera Theorem 9.2 / Welch-ceiling). The open
+      question: does the full ensemble beat a single verifier on the SAME adaptive
+      corpus, where any one mechanism fails? This reuses the exp3273 held-out
+      corpus + DeLong harness — no new corpus assembly or teacher labeling needed.
+
+      EXISTING CODE TO READ FIRST:
+        - results/experiment_3273_prompt_injection_kan_full_corpus_delong_eval_v1.json
+        - results/experiment_3269_prompt_injection_v4_full_corpus_split_manifest_v1.json
+        - python/carnot/verify/ (the k=15 ensemble; batch scoring over cached candidates)
+        - ops/known-issues.md NEW 2026-05-28 ensemble-vs-injection spec (authoritative)
+
+      TASK: Score the FULL k=15 ensemble on the exp3273 held-out adaptive corpus;
+      DeLong-compare vs the single KAN (0.475) and vs the 20B teacher.
+
+      PRECONDITIONS (step 0, before any scoring):
+        a. exp3273 corpus + candidate scores present (the two results files above).
+           If absent -> honest_verdict blocked_adaptive_corpus_missing.
+        b. The k=15 verifier ensemble callable in batch mode over cached candidates.
+           If not -> blocked_ensemble_not_callable.
+        c. CUDA available for model-based ensemble verifiers (semantic, ThinkPRM):
+           python -c "import torch; assert torch.cuda.is_available()". If not ->
+           blocked_cuda_unavailable.
+
+      CONCRETE STEPS:
+        1. Load the exp3273 held-out adaptive corpus (n=4000 paired rows, same eval
+           set the single KAN scored 0.475 on).
+        2. Score every candidate with the FULL k=15 ensemble: per-verifier decision
+           + AND-composed ensemble decision + energy-rank scalar.
+        3. Compute ensemble AUROC + AUPRC on the paired rows.
+        4. DeLong paired comparison, two references: (a) vs the single KAN
+           (exp3273, 0.475) — does the ensemble beat it? (b) vs
+           gpt-oss-safeguard:20b teacher labels — replacement-grade?
+        5. Break down ensemble accuracy by attack category (dataflip_kad, encoding,
+           tool_rag_indirect, long_reasoning, static).
+        6. (secondary, non-gating) per-verifier AUROC on the adaptive corpus.
+
+      REQUIRED ARTIFACT FIELDS (each carries a principle per CLAUDE.md):
+        honest_verdict: principle="complete:/success:/passed:/shipped_ prefix."
+        inference_substrate: value=verifier_ensemble_against_cached_candidates
+        ensemble_auroc_adaptive_corpus: principle="the headline: full-ensemble AUROC on the same corpus where the single KAN scored 0.475."
+        ensemble_auprc_adaptive_corpus: principle="complements AUROC under class imbalance (2761 pos / 1239 neg)."
+        delong_vs_single_kan: principle="paired DeLong: ensemble minus single-KAN AUROC + 95% CI."
+        delong_vs_teacher_20b: principle="paired DeLong non-inferiority vs gpt-oss-safeguard:20b at margin -0.02 (the replacement-grade test)."
+        per_category_auroc: principle="per adaptive-attack category breakdown — where the single KAN failed."
+        per_verifier_auroc: principle="which mechanisms carry injection signal vs share the joint null space."
+        random_seed: principle="determinism."
+        reproducibility_checksum: principle="content hash of (corpus + ensemble config + seed)."
+        duration_s: principle="verifier scoring; 1s floor."
+
+      ACCEPTANCE GATES:
+        - condition: "ensemble_auroc_adaptive_corpus > 0.55 AND delong_vs_single_kan lower-CI > 0"
+          principle: "G1 beats-the-sidecar: the ensemble is meaningfully above the 0.475 floor AND significantly better than the single KAN."
+        - condition: "delong_vs_teacher_20b non-inferiority passes (lower-CI > -0.02)"
+          principle: "G2 replacement-grade: the ensemble statistically matches the 20B teacher on the adaptive corpus."
+
+      TERMINAL VERDICTS (all start with complete:):
+        - All gates pass -> "complete: ensemble_replacement_grade_on_adaptive_injection"
+        - G1 passes, G2 fails -> "complete: ensemble_beats_sidecar_but_below_replacement_grade"
+        - G1 fails -> "complete: ensemble_no_better_than_single_verifier_injection_stall_confirmed"
+      Run command: cd {project_root} && .venv/bin/python scripts/experiment_3418_verifier_ensemble_vs_adaptive_injection_corpus_v1.py. Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  # ---- G2 reproduction closure — the SOLE unmet publication gate -----------
+  - id: exp3419-fover-headline-g2-reproduction-harness-v1
+    operator_override: "2026-05-29 operator directive (ops/north-star.md §2 + ops/reproduction-runbook-fover-headline.md): G2 is the sole unmet publication gate; this productionizes the turnkey reproduction harness. New deliverable, not a rerun of exp2837 — reuses but does not re-measure the headline."
+    milestone: "2026.05.315"
+    title: "FoVer Headline G2 Reproduction Harness — turnkey clean-room reproducer"
+    priority: critical
+    max_turns: 50
+    agent_type: claude
+    estimated_wall_time_min: 30
+    track: evidence
+    inference_substrate: verifier_ensemble_against_cached_candidates
+    requires_gpu: false
+    deliverable: "results/experiment_3419_fover_g2_reproduction_harness_v1.json"
+    prompt: |
+      CONTEXT: G2 (independent reproduction) is the SOLE remaining blocker to
+      paper_ready (G1/G3/G4 met per ops/north-star.md §2). The FoVer headline is
+      CPU-only verifier-scoring (no GPU, no 35B model, ~16s) — it is cheaply,
+      externally reproducible. ops/reproduction-runbook-fover-headline.md documents
+      the exact claim, seeds [42,137,271,314,1729], n=1000, and acceptance CI. This
+      task does NOT falsely claim G2 met (that requires an EXTERNAL non-operator
+      reproducer); it makes external reproduction TURNKEY and confirms the number
+      reproduces from a clean-room recompute that does not read existing results/.
+
+      EXISTING CODE TO READ FIRST:
+        - ops/reproduction-runbook-fover-headline.md (the exact protocol)
+        - python/carnot/eval/fover_memory_leakage_v3.py (ExperimentConfig, run_experiment)
+        - results/experiment_2837_fover_memory_leakage_v3.json (primary, do NOT read its numbers into the recompute — recompute independently)
+        - data/fover_corpus.jsonl (committed corpus, 8829 rows)
+
+      TASK: Build a single self-contained reproduction script
+      (scripts/reproduce_fover_headline.py) that a fresh-clone non-operator can run,
+      and execute it to confirm the headline reproduces within CI from a clean
+      recompute.
+
+      PRECONDITIONS (step 0):
+        a. data/fover_corpus.jsonl present. If not -> blocked_fover_corpus_missing.
+        b. carnot.eval.fover_memory_leakage_v3 importable. If not ->
+           blocked_fover_eval_module_missing.
+        c. Any upstream preflight artifact the ExperimentConfig references
+           (results/experiment_2836_*.json) present or stub-satisfiable. If a hard
+           missing dependency blocks the run -> blocked_fover_preflight_dependency.
+
+      CONCRETE STEPS:
+        1. Write scripts/reproduce_fover_headline.py implementing the runbook's
+           snippet: ExperimentConfig(random_seeds=[42,137,271,314,1729],
+           n_examples=1000) -> run_experiment -> print condition_A mean AUROC,
+           condition_B mean AUROC, learning_contribution mean, reproducibility_checksum.
+           It must NOT read results/experiment_2837*.json — it recomputes.
+        2. Run it. Capture condition_a_production_auroc_mean,
+           condition_b_architecture_only_auroc_mean, learning_contribution mean,
+           and the checksum.
+        3. Check acceptance: condition-A mean AUROC in [0.9027, 0.9235] AND
+           learning_contribution mean in [0.0125, 0.0245] AND no degraded/blocked
+           fallback (live_model_invoked False is expected and correct).
+        4. Emit the artifact recording reproduced numbers, in_ci booleans, the
+           harness path, platform/python/lib versions, and an honest statement that
+           G2 is ADVANCED (turnkey harness + internal clean-room confirmation) but
+           NOT yet closed (still needs an external non-operator run per the runbook).
+           Do NOT set g2_independent_reproducer=true in publication_gate_state.json.
+
+      REQUIRED ARTIFACT FIELDS (each carries a principle per CLAUDE.md):
+        honest_verdict: principle="complete:/success:/passed:/shipped_ prefix."
+        inference_substrate: value=verifier_ensemble_against_cached_candidates
+        condition_a_auroc_reproduced: principle="the recomputed production AUROC; must land in [0.9027,0.9235]."
+        learning_contribution_reproduced: principle="recomputed FR-11 ablation; must land in [0.0125,0.0245]."
+        reproduced_in_ci: principle="boolean: both numbers in their published CIs from a clean recompute."
+        harness_path: principle="path to the self-contained reproducer a third party runs."
+        g2_status: principle="honest string: 'advanced_turnkey_harness_internal_confirmation' — NOT 'closed' (external reproducer still required)."
+        reproducibility_checksum: principle="content hash from the recompute (byte-match vs exp2837 is a bonus, not required)."
+        random_seed: principle="the published seeds [42,137,271,314,1729]."
+        duration_s: principle="CPU verifier scoring; 1s floor."
+
+      ACCEPTANCE GATES:
+        - condition: "reproduced_in_ci == true (condition-A in CI AND learning_contribution in CI)"
+          principle: "confirms the headline recomputes cleanly, de-risking external G2 reproduction."
+
+      TERMINAL VERDICT: "complete: fover_g2_harness_shipped_headline_reproduced_in_ci_external_run_pending"
+      Run command: cd {project_root} && JAX_PLATFORMS=cpu .venv/bin/python scripts/experiment_3419_fover_g2_reproduction_harness_v1.py. Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  # =========================================================================
+  # HARDWARE — light + opportunistic (north-star §3: KV260 to terminal;
+  # GateMate/PolarFire opportunistic, do NOT block milestones)
+  # =========================================================================
+  - id: exp3420-kv260-terminal-latency-transcript-v1
+    operator_override: "2026-05-29 operator directive (ops/north-star.md §3): KV260 is THE sovereignty story — drive to terminal then freeze. Hardware-Task Continuity forward work; scope-match vs exp3381/exp2898 latency tasks is the intended continuation, not a doomed rerun."
+    prior_failures:
+      - experiment_id: exp3381-kv260-latency-benchmark
+        verdict: "complete: kv260_hardware_latency_transcript_recorded"
+        addressed_by: "exp3381 recorded a latency baseline; this task records the terminal board-level latency transcript that graduates KV260 to its defined terminal state (kv260_synthesis_succeeded + on-board latency transcript), after which the per-milestone hardware mandate lifts for this board."
+        retire_if_same_verdict: false
+    milestone: "2026.05.315"
+    title: "KV260 terminal board-level latency transcript (drive to terminal, then freeze)"
+    priority: medium
+    max_turns: 100
+    model: opus
+    agent_type: claude
+    estimated_wall_time_min: 25
+    track: hardware
+    inference_substrate: hardware_smoke
+    requires_gpu: false
+    deliverable: "results/experiment_3420_kv260_terminal_latency_transcript_v1.json"
+    prompt: |
+      CONTEXT: north-star §3 designates KV260 as THE sovereignty story — drive to
+      terminal, then freeze. The board is reachable via SSH (Ubuntu Xilinx),
+      carnot_ising_v4 flashed, exp2898/exp3381 anchored latency. One terminal
+      board-level latency transcript reaches the defined terminal state, after
+      which the per-milestone hardware mandate lifts for this board.
+
+      KV260 SSH-NOT-SD-CARD DISCIPLINE (MANDATORY): the precondition is SSH
+      reachability ONLY. Host SD-card-slot block-device checks are a retired,
+      wrong-mechanism precondition — if any such check is present, emit
+      blocked_kv260_wrong_mechanism_sd_card_precondition. See CLAUDE.md
+      "KV260 SSH-Not-SD-Card Discipline".
+
+      EXISTING CODE TO READ FIRST:
+        - results/experiment_3381_kv260_latency_benchmark.json
+        - ops/hardware-bringup-prep.md (KV260 bring-up state)
+        - CLAUDE.md "KV260 SSH-Not-SD-Card Discipline" + Pre-Launch Preconditions KV260 row
+
+      TASK: Record the terminal on-board latency transcript over SSH and mark KV260
+      terminal.
+
+      PRECONDITIONS (step 0):
+        a. ssh -o ConnectTimeout=5 -o BatchMode=yes kria 'true' returns 0. If not ->
+           honest_verdict blocked_kv260_ssh_unreachable. STOP. (Do NOT use any host
+           SD-card-slot block-device check — SSH reachability is the only precondition.)
+        b. ssh kria 'xmutil listapps' shows the loaded overlay. If the Carnot Ising
+           overlay is not loaded -> ssh kria 'xmutil loadapp carnot_ising_v2_n64'.
+
+      CONCRETE STEPS:
+        1. Confirm SSH reachability + loaded overlay (step 0).
+        2. Run the on-board latency measurement over SSH (N iterations of the UIO
+           register round-trip for the n=64 Ising tile), capturing a real transcript.
+        3. Report per-iteration latency stats (mean/p50/p99) and the raw transcript.
+        4. Emit the artifact with kv260_synthesis_succeeded=true,
+           kv260_terminal_state_reached=true, and honest_verdict starting
+           'complete:'. If the board is unreachable, emit the blocked_* verdict —
+           do NOT fabricate a transcript.
+
+      REQUIRED ARTIFACT FIELDS:
+        honest_verdict: principle="complete:/success:/passed:/shipped_ prefix, or blocked_kv260_ssh_unreachable."
+        inference_substrate: value=hardware_smoke
+        preconditions_checked: principle="records WHICH resources (SSH reachability, overlay) were verified — pre-empts fabrication."
+        kv260_latency_transcript: principle="the real on-board measurement transcript; the terminal-state evidence."
+        kv260_terminal_state_reached: principle="boolean: graduates the board so the per-milestone mandate lifts."
+        duration_s: principle="real SSH round-trips take wall time."
+
+      Run command: cd {project_root} && JAX_PLATFORMS=cpu .venv/bin/python scripts/experiment_3420_kv260_terminal_latency_transcript_v1.py. Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  - id: exp3421-gatemate-bootstrap-rootcause-diagnostic-v1
+    prior_failures:
+      - experiment_id: exp3404-gatemate-n16-bootstrap-fix
+        verdict: "unspecified (artifact landed but honest_verdict never resolved; recurred across exp3382/exp3392/exp3404)"
+        addressed_by: "This is NOT another flash attempt (those recur 'unspecified' — a doomed rerun). It is a ROOT-CAUSE DIAGNOSTIC of WHY the bootstrap artifact keeps resolving 'unspecified': inspect the script's artifact-emission path, the openFPGALoader detect output, and the toolchain preconditions, and emit a concrete diagnosis (toolchain-missing vs board-unreachable vs script-never-sets-verdict). retire_if_same_verdict: if the diagnostic itself resolves 'unspecified', the GateMate bootstrap scope retires from per-milestone mandate (north-star §3 makes it opportunistic anyway)."
+        retire_if_same_verdict: true
+    milestone: "2026.05.315"
+    title: "GateMate N16 bootstrap root-cause diagnostic (why 'unspecified' recurs)"
+    priority: low
+    max_turns: 100
+    model: opus
+    agent_type: claude
     estimated_wall_time_min: 20
     track: hardware
     inference_substrate: hardware_smoke
     requires_gpu: false
-    deliverable: "results/experiment_3404_gatemate_n16_bootstrap_fix.json"
+    deliverable: "results/experiment_3421_gatemate_bootstrap_rootcause_diagnostic_v1.json"
     prompt: |
-      CONTEXT: exp3392 failed or was unspecified.
-      CRITICAL: write artifact FIRST.
-      TASK: Synthesize, flash, and verify N=16 GateMate. Ensure the script emits an artifact immediately to avoid conductor termination.
-      CONCRETE STEPS:
-        1. Write the initial artifact JSON before starting hardware routines.
-        2. Flash using openFPGALoader.
-        3. Test vector over dirtyJtag/UART.
-        4. Update artifact with results.
-      Run command: cd {project_root} && JAX_PLATFORMS=cpu .venv/bin/python scripts/experiment_3404_gatemate_n16_bootstrap_fix.py. Do NOT push. Do NOT modify scripts/research_conductor.py.
+      CONTEXT: The GateMate N16 bitstream bootstrap fix has landed an artifact with
+      honest_verdict 'unspecified' three milestones running (exp3382, exp3392,
+      exp3404). Re-running the identical flash is a doomed rerun. north-star §3
+      makes GateMate opportunistic (do NOT block milestones on it). The honest move
+      is a ROOT-CAUSE DIAGNOSTIC, not a fourth flash attempt.
 
-  - id: exp3405-nup-metric-evaluation
-    operator_override: "2026-05-30 operator directive: Legitimate lineage continuation."
-    prior_failures:
-      - experiment_id: exp484-nup-probe
-        verdict: "unspecified"
-        addressed_by: "New approach utilizing recent NUP phase transition literature."
-        retire_if_same_verdict: true
-    milestone: "2026.05.314"
-    title: "NUP Metric Evaluation"
-    priority: high
-    max_turns: 50
-    estimated_wall_time_min: 40
-    track: live-model
-    inference_substrate: live_generation
-    requires_gpu: true
-    deliverable: "results/experiment_3405_nup_metric_evaluation.json"
-    prompt: |
-      CONTEXT: March 2026 research indicates hallucinations act as phase transitions in the optimization space mapped by the Ising model.
-      TASK: Implement the NUP metric to detect symmetry breaking in the gradient landscape as an early hallucination indicator.
-      CONCRETE STEPS:
-        1. Evaluate gradients during text generation on GSM8K using MODEL_SPECS = ["unsloth/Qwen3.6-35B-A3B-GGUF"].
-        2. Map the gradients to an Ising energy configuration and measure sudden energy shifts (phase transitions).
-        3. Compare detection accuracy against exact verifier results.
-      Run command: cd {project_root} && .venv/bin/python scripts/experiment_3405_nup_metric_evaluation.py. Do NOT push. Do NOT modify scripts/research_conductor.py.
+      EXISTING CODE TO READ FIRST:
+        - results/experiment_3404_gatemate_n16_bootstrap_fix.json (and 3392/3382)
+        - scripts/experiment_3404_gatemate_n16_bootstrap_fix.py (the recurring script)
+        - CLAUDE.md Pre-Launch Preconditions: GateMate board-reachable + nextpnr-himbaechel rows
 
-  - id: exp3406-latent-spills-sensing
-    operator_override: "2026-05-30 operator directive: Legitimate lineage continuation based on new 2025/2026 latent spill research, not a doomed rerun of GRPO or pruning."
-    prior_failures:
-      - experiment_id: exp949-spilled-energy-tier0
-        verdict: "unspecified"
-        addressed_by: "New training-free EBM formulation for latent energy spills."
-        retire_if_same_verdict: true
-    milestone: "2026.05.314"
-    title: "Latent Spills Sensing"
-    priority: high
-    max_turns: 50
-    estimated_wall_time_min: 35
-    track: live-model
-    inference_substrate: live_generation
-    requires_gpu: true
-    deliverable: "results/experiment_3406_latent_spills_sensing.json"
-    prompt: |
-      CONTEXT: Recent EBM research identifies training-free hallucination detection via measuring 'energy spills' in latent representations.
-      TASK: Build an EBM pipeline to read latent activation energies and detect 'spills' signaling guessing.
-      CONCRETE STEPS:
-        1. Instrument the verification pipeline to extract internal latent states using MODEL_SPECS = ["unsloth/gemma-4-31B-it-GGUF"].
-        2. Formulate the EBM to calculate energy spills dynamically per token.
-        3. Validate against a small hallucination dataset.
-      Run command: cd {project_root} && .venv/bin/python scripts/experiment_3406_latent_spills_sensing.py. Do NOT push. Do NOT modify scripts/research_conductor.py.
+      TASK: Diagnose WHY the bootstrap artifact resolves 'unspecified'. Do NOT
+      attempt another flash.
 
-  - id: exp3407-abductive-csp-integration
-    operator_override: "2026-05-30 operator directive: Legitimate lineage continuation."
-    prior_failures:
-      - experiment_id: exp66-differentiable-constraints
-        verdict: "unspecified"
-        addressed_by: "New Abductive Reasoning CSP contextual graph framing."
-        retire_if_same_verdict: true
-    milestone: "2026.05.314"
-    title: "Abductive CSP Integration"
-    priority: medium
-    max_turns: 50
-    estimated_wall_time_min: 30
-    track: verify-repair
-    inference_substrate: live_generation
-    requires_gpu: true
-    deliverable: "results/experiment_3407_abductive_csp_integration.json"
-    prompt: |
-      CONTEXT: "Tackling LLM Hallucination with Abductive Reasoning" (Nov 2025) frames CoT verification as a Constraint Satisfaction Problem.
-      TASK: Implement an Abductive CSP layer into the VerifyRepairPipeline.
-      CONCRETE STEPS:
-        1. Formulate reasoning traces as contextual graph constraint networks.
-        2. Verify logical coherence of the entire graph concurrently rather than sequentially using MODEL_SPECS = ["unsloth/Qwen3.6-35B-A3B-GGUF"].
-        3. Test on logic puzzles dataset.
-      Run command: cd {project_root} && .venv/bin/python scripts/experiment_3407_abductive_csp_integration.py. Do NOT push. Do NOT modify scripts/research_conductor.py.
+      PRECONDITIONS (step 0, all checks are diagnostic — record results, do not abort):
+        a. command -v yosys && command -v nextpnr-himbaechel && command -v openFPGALoader
+        b. openFPGALoader -c dirtyJtag --detect (does the GateMate IDCODE appear?)
+        c. grep the exp3404 script for where it sets honest_verdict — does any code
+           path leave it unset/'unspecified'?
 
-  - id: exp3408-kona-style-global-optimization
-    prior_failures:
-      - experiment_id: exp3394-kona-style-global-optimization
-        verdict: "unspecified"
-        addressed_by: "Increased turn count and detailed execution steps to ensure execution completion."
-        retire_if_same_verdict: true
-    milestone: "2026.05.314"
-    title: "Kona-Style Global Optimization Reasoning Benchmark"
-    priority: high
-    max_turns: 50
-    estimated_wall_time_min: 45
-    track: live-model
-    inference_substrate: live_generation
-    requires_gpu: true
-    deliverable: "results/experiment_3408_kona_global_opt.json"
-    prompt: |
-      CONTEXT: Logical Intelligence's Kona (2026) solved Sudokus using global energy optimization instead of autoregressive prediction.
-      TASK: Emulate Kona's global inference procedure on a hard Sudoku problem set using Carnot's Ising energy function.
       CONCRETE STEPS:
-        1. Treat the Sudoku board as a joint energy landscape.
-        2. Apply continuous sampling/optimization over the entire board at once using MODEL_SPECS = ["unsloth/gemma-4-26B-A4B-it-GGUF"].
-        3. Score correctness and report the time-to-solution vs standard autoregressive search.
-        4. Emit an artifact with field 'status' set to 'success'.
+        1. Run the three diagnostic checks. Capture stdout + exit codes verbatim.
+        2. Read the exp3404 script's artifact-emission path; identify whether the
+           'unspecified' verdict comes from (i) toolchain missing, (ii) board
+           unreachable, or (iii) the script never assigning a terminal verdict.
+        3. Emit a concrete diagnosis + the single recommended fix (which the
+           operator can act on). If the board/toolchain is genuinely absent, emit
+           the matching blocked_* verdict honestly.
+
       REQUIRED ARTIFACT FIELDS:
-        - status
-      Run command: cd {project_root} && .venv/bin/python scripts/experiment_3408_kona_global_opt.py. Do NOT push. Do NOT modify scripts/research_conductor.py.
+        honest_verdict: principle="complete:/success:/passed:/shipped_ prefix, or blocked_gatemate_*."
+        inference_substrate: value=hardware_smoke
+        preconditions_checked: principle="records the three diagnostic checks + results."
+        rootcause_classification: principle="one of toolchain_missing | board_unreachable | script_never_sets_verdict — the actionable diagnosis."
+        recommended_fix: principle="the single concrete next action for the operator."
+        duration_s: principle="diagnostic shell calls take wall time."
 
-  - id: exp3409-semantic-deficit-penalty
-    operator_override: "2026-05-30 operator directive: Legitimate lineage continuation."
-    prior_failures:
-      - experiment_id: exp2733
-        verdict: "unspecified"
-        addressed_by: "Reframed as Semantic Deficit Penalty based on new paper."
-        retire_if_same_verdict: true
-    milestone: "2026.05.314"
-    title: "Semantic Deficit Penalty Integration"
-    priority: medium
-    max_turns: 50
-    estimated_wall_time_min: 30
-    track: verify-repair
-    inference_substrate: live_generation
-    requires_gpu: true
-    deliverable: "results/experiment_3409_semantic_deficit_penalty.json"
+      Run command: cd {project_root} && JAX_PLATFORMS=cpu .venv/bin/python scripts/experiment_3421_gatemate_bootstrap_rootcause_diagnostic_v1.py. Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  - id: exp3422-polarfire-opportunistic-reachability-audit-v1
+    operator_override: "2026-05-29 operator directive (ops/north-star.md §3): PolarFire opportunistic only, no terminal-state mandate. Light reachability/continuity audit to keep the board visible per Hardware-Task Continuity without burning wall-time; scope-match vs prior PolarFire smoke tasks is the intended opportunistic continuation."
+    milestone: "2026.05.315"
+    title: "PolarFire opportunistic reachability + continuity audit (no terminal mandate)"
+    priority: low
+    max_turns: 20
+    agent_type: claude
+    estimated_wall_time_min: 8
+    track: hardware
+    inference_substrate: hardware_smoke
+    requires_gpu: false
+    deliverable: "results/experiment_3422_polarfire_reachability_audit_v1.json"
     prompt: |
-      CONTEXT: Dec 2025 research on "Structural Enforcement of Statistical Rigor" uses a Semantic Violation Cost to reject smooth falsehoods.
-      TASK: Calculate structural deformation cost for proposed reasoning outputs.
-      CONCRETE STEPS:
-        1. Generate CoT answers using MODEL_SPECS = ["unsloth/gemma-4-31B-it-GGUF"].
-        2. Apply the Semantic Violation Cost calculation to evaluate the structural integrity of the generated knowledge graph mapping.
-        3. Reject outputs where cost exceeds an acceptable deformation threshold.
-      Run command: cd {project_root} && .venv/bin/python scripts/experiment_3409_semantic_deficit_penalty.py. Do NOT push. Do NOT modify scripts/research_conductor.py.
+      CONTEXT: north-star §3 classifies PolarFire as opportunistic only (scaling
+      validated to 1000 clauses; no terminal-state mandate). This is a LIGHT audit
+      to keep the board visible per Hardware-Task Continuity without burning
+      wall-time — NOT a new workload run.
 
-  - id: exp3410-fr11-updates-with-spills
-    operator_override: "2026-05-30 operator directive: FR-11 continual learning requires repeated execution; structural false positive."
-    prior_failures:
-      - experiment_id: exp1791-fr11-continual-learning-lsebmcl
-        verdict: "unspecified"
-        addressed_by: "Incorporating new latent energy spills diagnostic."
-        retire_if_same_verdict: true
-    milestone: "2026.05.314"
-    title: "FR-11 Updates with Spills"
-    priority: critical
-    max_turns: 50
-    estimated_wall_time_min: 40
-    track: self-learning
-    inference_substrate: live_generation
-    requires_gpu: true
-    deliverable: "results/experiment_3410_fr11_updates_spills.json"
-    prompt: |
-      CONTEXT: The FR-11 continuous self-learning loop needs robust metrics. Latent energy spills offer a training-free target.
-      TASK: Use Latent Energy Spills as the reward/rejection signal for the FR-11 Continual Learning update.
-      CONCRETE STEPS:
-        1. Run inference using MODEL_SPECS = ["unsloth/Qwen3.6-35B-A3B-GGUF"].
-        2. Use the spill detection algorithm to identify when the model relies on language priors.
-        3. Replay failed examples and update the constraint templates using the Latent Energy Spill values as priority weights.
-        4. Output a retention and adaptation score.
-      Run command: cd {project_root} && .venv/bin/python scripts/experiment_3410_fr11_updates_spills.py. Do NOT push. Do NOT modify scripts/research_conductor.py.
+      EXISTING CODE TO READ FIRST:
+        - ops/hardware-bringup-prep.md (PolarFire state)
+        - CLAUDE.md Pre-Launch Preconditions: PolarFire SSH row
 
-  - id: exp3411-ebm-cot-scaling
-    operator_override: "2026-05-30 operator directive: Legitimate lineage continuation for EBM-CoT scaling on live GGUFs following recent success."
-    prior_failures:
-      - experiment_id: exp1416-ebm-cot-v3-temperature-calibration
-        verdict: "unspecified"
-        addressed_by: "Scaled up using exact verifiers and new GGUF models."
-        retire_if_same_verdict: true
-    milestone: "2026.05.314"
-    title: "EBM-CoT Scaling"
-    priority: high
-    max_turns: 50
-    estimated_wall_time_min: 40
-    track: live-model
-    inference_substrate: live_generation
-    requires_gpu: true
-    deliverable: "results/experiment_3411_ebm_cot_scaling.json"
-    prompt: |
-      CONTEXT: Building on exp3397, EBM-CoT trajectory monitor must be verified on larger instruction-tuned sets.
-      TASK: Scale up the trajectory monitor using exact verifiers and EBMs.
-      CONCRETE STEPS:
-        1. Run 150 examples from GSM8K.
-        2. Apply step-wise energy calibration using MODEL_SPECS = ["unsloth/Qwen3.6-35B-A3B-GGUF"].
-        3. Evaluate whether early trajectory detection saves compute time.
-      Run command: cd {project_root} && .venv/bin/python scripts/experiment_3411_ebm_cot_scaling.py. Do NOT push. Do NOT modify scripts/research_conductor.py.
+      TASK: Audit PolarFire reachability and record continuity status.
 
-  - id: exp3412-vgs-override-decoder
-    operator_override: "2026-05-30 operator directive: Legitimate lineage continuation."
-    prior_failures:
-      - experiment_id: exp3224-logitext-partial-smt-context-coverage-pilot-v1
-        verdict: "unspecified"
-        addressed_by: "Applies VGS grounding instead of SMT context."
-        retire_if_same_verdict: true
-    milestone: "2026.05.314"
-    title: "VGS Override Decoder"
-    priority: medium
-    max_turns: 50
-    estimated_wall_time_min: 30
-    track: verify-repair
-    inference_substrate: live_generation
-    requires_gpu: true
-    deliverable: "results/experiment_3412_vgs_override_decoder.json"
-    prompt: |
-      CONTEXT: March 2026 VGS-Decoding applies visual grounding scores to override language priors.
-      TASK: Adapt the VGS penalty logic to use explicit textual constraint grounding.
-      CONCRETE STEPS:
-        1. Implement an active decoding modifier penalizing autoregressive probabilities that disagree with explicit constraints.
-        2. Test text generation over constraints using MODEL_SPECS = ["unsloth/gemma-4-26B-A4B-it-GGUF"].
-        3. Provide statistics on hallucination avoidance.
-      Run command: cd {project_root} && .venv/bin/python scripts/experiment_3412_vgs_override_decoder.py. Do NOT push. Do NOT modify scripts/research_conductor.py.
+      PRECONDITIONS / CONCRETE STEPS:
+        1. ssh -o ConnectTimeout=5 polarfire 'true' (record exit code). If
+           unreachable -> honest_verdict blocked_polarfire_ssh_timeout (honest,
+           expected-acceptable for an opportunistic board).
+        2. If reachable: record uptime + confirm no regression from the last
+           validated state. Do NOT launch a new dispatch workload.
+        3. Emit the artifact with the reachability result + a one-line continuity
+           note, honest_verdict starting 'complete:' (reachable) or the blocked_*
+           verdict (unreachable).
 
-  - id: exp3413-telemetry-aggregation-v39
-    operator_override: "2026-05-30 operator directive (standing, mechanical auto-stamp): structural false-positive — routine matrix tracking task."
+      REQUIRED ARTIFACT FIELDS:
+        honest_verdict: principle="complete:/success:/passed:/shipped_ prefix, or blocked_polarfire_ssh_timeout."
+        inference_substrate: value=hardware_smoke
+        preconditions_checked: principle="records the SSH reachability check."
+        polarfire_reachable: principle="boolean continuity signal."
+        duration_s: principle="SSH check wall time."
+
+      Run command: cd {project_root} && JAX_PLATFORMS=cpu .venv/bin/python scripts/experiment_3422_polarfire_reachability_audit_v1.py. Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  # =========================================================================
+  # OPS — gate-status synthesis + capstone (depth-aligned, NOT a breadth matrix)
+  # =========================================================================
+  - id: exp3423-g-gate-status-synthesis-v315
+    operator_override: "2026-05-29 operator directive (ops/north-star.md §2): the capstone should report which of G1-G4 are unmet, not a publication_blocker_count. This is the gate-status synthesis, NOT a vN+1 evidence/telemetry matrix (which the Depth-Over-Breadth rule forbids)."
     prior_failures:
-      - experiment_id: exp2805
+      - experiment_id: exp3413-telemetry-aggregation-v39
         verdict: "unspecified"
-        addressed_by: "Routine milestone evidence aggregation."
-        retire_if_same_verdict: true
+        addressed_by: "This is NOT a telemetry/evidence matrix vN+1 (that pattern is the breadth churn the Depth-Over-Breadth rule forbids). It synthesizes the G1-G4 gate status + the P0.1/P0.2/Kona/G2 verdicts from THIS milestone's depth block — a different, depth-aligned deliverable."
+        retire_if_same_verdict: false
     gated_on:
-      - upstream: exp3408-kona-style-global-optimization
-        artifact_field: status
-        op: 'in'
-        value: ["complete", "success"]
-    milestone: "2026.05.314"
-    title: "Telemetry Aggregation v39"
+      - upstream: exp3312-energy-descent-vs-autoregressive-premise-v1
+        artifact_field: honest_verdict
+        op: 'contains'
+        value: 'complete'
+    milestone: "2026.05.315"
+    title: "G1-G4 gate-status synthesis (P0.1/P0.2/Kona/G2 verdicts)"
     priority: high
     max_turns: 30
+    agent_type: claude
     estimated_wall_time_min: 15
     track: ops
-    inference_substrate: validation
+    inference_substrate: aggregation_from_upstream_artifacts
     requires_gpu: false
-    deliverable: "results/experiment_3413_telemetry_aggregation_v39.json"
+    deliverable: "results/experiment_3423_g_gate_status_synthesis_v315.json"
     prompt: |
-      CONTEXT: We must track new evidence artifacts created in this milestone.
-      TASK: Generate Evidence Matrix v39 tracking the diagnostics and continuous learning results.
+      CONTEXT: Per north-star §2, the capstone reports WHICH of G1-G4 are unmet, not
+      a redefinable publication_blocker_count. This milestone ran the depth block
+      (P0.1 exp3312, P0.2 exp3313, Kona gate exp3417, ensemble-vs-injection exp3418,
+      G2 harness exp3419). This task synthesizes their verdicts against the gate.
+
+      EXISTING CODE TO READ FIRST:
+        - ops/north-star.md §2 (the G1-G4 gate definitions)
+        - scripts/publication_gate.py (the gate computation, if present)
+        - results/experiment_3312/3313/3417/3418/3419 artifacts (this milestone's depth block)
+
+      TASK: Read the depth-block artifacts and emit a structured G1-G4 status report
+      plus a one-paragraph record of what the P0.1 premise test concluded.
+
       CONCRETE STEPS:
-        1. Gather the outputs of exp3405 to exp3412.
-        2. Tally blocked, complete, flagged, and missing metrics.
-        3. Emit the JSON matrix.
-        4. Emit an artifact with field 'matrix_v39_ready' set to true.
+        1. Read the depth-block artifacts (exp3312, exp3313, exp3417, exp3418, exp3419).
+        2. For each gate G1-G4, record met/unmet + the supporting artifact. In
+           particular: did P0.1 (exp3312) reach a verdict (premise validated /
+           viable-not-superior / unsupported)? Did G2 (exp3419) reproduce in-CI?
+        3. Record whether the Depth-Over-Breadth Forcing Function can now relax
+           (it relaxes once P0.1 has a verdict AND G2 has a concrete in-flight
+           reproducer) — report this as a boolean with justification.
+        4. Emit the artifact (g1..g4 booleans, unmet_gates list, p0_1_verdict,
+           depth_forcing_function_can_relax) with honest_verdict starting 'complete:'
+           and field gate_status_v315_ready=true. Do NOT touch operator-curated docs
+           (north-star.md, index.html, README).
+
       REQUIRED ARTIFACT FIELDS:
-        - matrix_v39_ready
-      Run command: cd {project_root} && JAX_PLATFORMS=cpu .venv/bin/python scripts/experiment_3413_telemetry_aggregation_v39.py. Do NOT push. Do NOT modify scripts/research_conductor.py.
+        honest_verdict: principle="complete:/success:/passed:/shipped_ prefix."
+        g1: principle="headline measured (FoVer 0.9131) — boolean."
+        g2: principle="independently reproduced — boolean (external run still pending after exp3419)."
+        g3: principle="prose narrowing-clean — boolean."
+        g4: principle="numbers trace to primary artifacts — boolean."
+        unmet_gates: principle="the list of unmet gates (NOT a count); the stable steering signal."
+        p0_1_verdict: principle="the P0.1 (exp3312) terminal verdict — the milestone's load-bearing outcome."
+        depth_forcing_function_can_relax: principle="boolean: P0.1 has a verdict AND G2 has a concrete in-flight reproducer."
+        gate_status_v315_ready: principle="terminal completion flag the capstone gates on."
+      Run command: cd {project_root} && JAX_PLATFORMS=cpu .venv/bin/python scripts/experiment_3423_g_gate_status_synthesis_v315.py. Do NOT push. Do NOT modify scripts/research_conductor.py.
 
-  - id: exp3414-fr11-adversarial-robustness
-    operator_override: "2026-05-30 operator directive: New stress test adding NUP Phase Transition and Latent Spills variables."
+  - id: exp3424-capstone-v315
+    operator_override: "2026-05-29 operator directive (standing, mechanical auto-stamp): routine capstone task — false-positive scope-match vs exp3415/exp3402 capstone tasks; structurally never a doomed rerun."
     prior_failures:
-      - experiment_id: exp3358-fr11-continuous-learning-stress-test
-        verdict: "unspecified"
-        addressed_by: "Now includes NUP and latent spills."
-        retire_if_same_verdict: true
-    milestone: "2026.05.314"
-    title: "FR-11 Adversarial Robustness"
-    priority: high
-    max_turns: 50
-    estimated_wall_time_min: 45
-    track: self-learning
-    inference_substrate: live_generation
-    requires_gpu: true
-    deliverable: "results/experiment_3414_fr11_adversarial_robustness.json"
-    prompt: |
-      CONTEXT: The continuous self-learning system must survive adversarial distribution shifts.
-      TASK: Run a full stress test of FR-11 integrating the new NUP phase transition and Latent Spills signals.
-      CONCRETE STEPS:
-        1. Initialize the VerifyRepairPipeline with FR-11 metrics enabled.
-        2. Process a dataset combining normal and adversarially perturbed CoT traces using MODEL_SPECS = ["unsloth/Qwen3.6-35B-A3B-GGUF"].
-        3. Evaluate final system accuracy and self-calibration limits.
-      Run command: cd {project_root} && .venv/bin/python scripts/experiment_3414_fr11_adversarial_robustness.py. Do NOT push. Do NOT modify scripts/research_conductor.py.
-
-  - id: exp3415-wrap-up-v314
-    operator_override: "2026-05-30 operator directive (standing, mechanical auto-stamp): structural false-positive — routine capstone tracking task."
-    prior_failures:
-      - experiment_id: exp3390-capstone-v312
-        verdict: "unspecified"
-        addressed_by: "Routine milestone progression."
-        retire_if_same_verdict: true
+      - experiment_id: exp3415-wrap-up-v314
+        verdict: "complete: capstone_v314_ready=true"
+        addressed_by: "Routine milestone capstone for the next milestone (.315)."
+        retire_if_same_verdict: false
     gated_on:
-      - upstream: exp3413-telemetry-aggregation-v39
-        artifact_field: matrix_v39_ready
+      - upstream: exp3423-g-gate-status-synthesis-v315
+        artifact_field: gate_status_v315_ready
         op: '=='
         value: true
-    milestone: "2026.05.314"
-    title: "Wrap-Up v314"
+    milestone: "2026.05.315"
+    title: "Capstone v315"
     priority: critical
     max_turns: 20
+    agent_type: claude
     estimated_wall_time_min: 5
     track: ops
-    inference_substrate: validation
+    inference_substrate: aggregation_from_upstream_artifacts
     requires_gpu: false
-    deliverable: "results/experiment_3415_wrap_up_v314.json"
+    deliverable: "results/experiment_3424_capstone_v315.json"
     prompt: |
-      CONTEXT: Milestone .314 has completed.
-      TASK: Produce the Capstone evaluation for .314.
+      CONTEXT: Milestone .315 (the first Depth-Over-Breadth milestone) has run its
+      depth block. Per the fabrication gate, SKIP any artifact carrying
+      flagged_adversarial=true — never aggregate flagged numbers.
+
+      EXISTING CODE TO READ FIRST:
+        - results/experiment_3423_g_gate_status_synthesis_v315.json (the gate status)
+        - all .315 experiment artifacts (exp3416, 3312, 3313, 3417-3422)
+        - ops/north-star.md §1 (the headline) + §2 (the gate)
+
+      TASK: Produce the .315 capstone.
+
       CONCRETE STEPS:
-        1. Read all experiment outputs for the .314 block.
-        2. Identify the next biggest gaps.
-        3. Update status counters and paper_ready fields.
-      Run command: cd {project_root} && JAX_PLATFORMS=cpu .venv/bin/python scripts/experiment_3415_wrap_up_v314.py. Do NOT push. Do NOT modify scripts/research_conductor.py.
+        1. Read exp3423 gate status + all .315 artifacts.
+        2. Report which G1-G4 gates moved and the P0.1 verdict (the headline
+           outcome of the milestone). Identify the next biggest gaps — if the
+           Depth-Over-Breadth function can relax, recommend the next depth focus
+           (P0.2 follow-up / transpilation round-trip / G2 external reproducer);
+           if not, recommend re-running the unresolved depth task.
+        3. Emit paper_v6_safe_claims / paper_v6_forbidden_claims honoring the
+           Paper-v6 Narrowing Discipline (exclude flagged_adversarial artifacts;
+           do NOT re-assert retracted claims). FRAMING GUARD: the FoVer headline
+           (G1, AUROC 0.9131) is a 4-VERIFIER score per north-star §1 — do NOT
+           conflate it with the k=15 cross-mechanism ensemble used in the
+           injection test (exp3418). Keep the two ensembles distinct.
+        4. Emit the artifact with honest_verdict starting 'complete:' and field
+           capstone_v315_ready=true.
+      Run command: cd {project_root} && JAX_PLATFORMS=cpu .venv/bin/python scripts/experiment_3424_capstone_v315.py. Do NOT push. Do NOT modify scripts/research_conductor.py.
