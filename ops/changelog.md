@@ -7798,3 +7798,4 @@ ModuleNotFoundError: No module named 'torch'; results/experiment_2828_fover_memo
 - 2026-05-30: Energy-Based Replay Selection for FR-11 Continual Learning (⚠️ Research Finding) — honest_verdict=SUCCESS: Energy-guided selection achieved better or equal nonforgetting compared to random.; results/experiment_3395_energy_based_replay.json
 - 2026-05-30: Compress-Add-Smooth (CAS) Diffusion for Constraints (✅ Complete) — honest_verdict=complete: CAS updates verified — decay geometric, add activates templates, memory bounded, deactivation confirmed; results/experiment_3396_cas_diffusion.json
 - 2026-05-30: EBM-CoT Verification Pipeline on Live GGUFs (⚠️ Research Finding) — honest_verdict=trajectory_verifier_differentiates_early_commitment_at_scale; results/experiment_3397_ebm_cot_live_benchmark.json
+- 2026-05-30: CAffNet Layer Out-of-Distribution Robustness (⚠️ Research Finding) — honest_verdict=robust; results/experiment_3398_caffnet_robustness.json
