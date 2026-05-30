@@ -158,5 +158,13 @@
     "warmup_n_problems",
     "warmup_self_consistency_accuracy"
   ],
-  "invariant_violations": []
+  "invariant_violations": [],
+  "flagged_adversarial": true,
+  "corrigendum_pending": [
+    {
+      "kind": "TAUTOLOGY",
+      "severity": "critical",
+      "detail": "warmup_self_consistency_accuracy=0.3333 and warmup_greedy_accuracy=0.3333 agree to >5 sig figs. Two distinct metrics matching this precisely is more likely a bug than a finding."
+    }
+  ]
 }
