@@ -19794,3 +19794,17 @@ The repository shall provide a script `scripts/experiment_3407_abductive_csp_int
 **Given** a set of reasoning traces from logic puzzles
 **When** the Abductive CSP layer formulates them as a contextual graph constraint network
 **Then** it verifies logical coherence concurrently and outputs the expected metrics.
+
+### REQ-VERIFY-3409: Semantic Violation Cost Calculation
+
+The repository shall provide a script `scripts/experiment_3409_semantic_deficit_penalty.py` that calculates the structural deformation cost for proposed reasoning outputs.
+- Generates CoT answers using `MODEL_SPECS = ["unsloth/gemma-4-31B-it-GGUF"]`.
+- Applies the Semantic Violation Cost calculation to evaluate the structural integrity of the generated knowledge graph mapping.
+- Rejects outputs where the cost exceeds an acceptable deformation threshold.
+- Outputs `results/experiment_3409_semantic_deficit_penalty.json`.
+
+### SCENARIO-VERIFY-3409: Structural Deformation Rejects Smooth Falsehoods
+
+**Given** generated CoT answers mapped to a knowledge graph
+**When** the Semantic Violation Cost calculation evaluates the structural integrity
+**Then** outputs exceeding the acceptable deformation threshold are rejected as smooth falsehoods.
