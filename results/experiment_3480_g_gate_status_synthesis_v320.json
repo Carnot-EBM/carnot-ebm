@@ -1,0 +1,82 @@
+{
+  "experiment": 3480,
+  "title": "G1\u2013G4 gate-status synthesis for milestone v320",
+  "run_date": "20260530",
+  "inference_substrate": "aggregation_from_upstream_artifacts",
+  "duration_s": 0.06517792501836084,
+  "field_provenance": {
+    "honest_verdict": {
+      "principle": "complete:/success:/passed:/shipped_ prefix required.",
+      "satisfied_by": "verdict starts with 'complete:'"
+    },
+    "g1": {
+      "principle": "headline measured (FoVer 0.9131) \u2014 boolean.",
+      "satisfied_by": "scripts/publication_gate.py G1 check"
+    },
+    "g2": {
+      "principle": "independently reproduced \u2014 boolean (external; honest manual).",
+      "satisfied_by": "ops/publication_gate_state.json g2_independent_reproducer"
+    },
+    "g3": {
+      "principle": "prose narrowing-clean \u2014 boolean.",
+      "satisfied_by": "scripts/publication_gate.py G3 lint check"
+    },
+    "g4": {
+      "principle": "numbers trace to primary artifacts \u2014 boolean.",
+      "satisfied_by": "scripts/publication_gate.py G4 check"
+    },
+    "p0_1_v6_verdict": {
+      "principle": "the clean P0.1 v6 (exp3472) terminal verdict \u2014 blocked when corpus insufficient.",
+      "satisfied_by": "exp3472 honest_verdict field"
+    },
+    "process_energy_vs_self_consistency_delta": {
+      "principle": "optimal-aggregation minus SC \u2014 null when exp3472 blocked.",
+      "satisfied_by": "exp3472 delta_optimal_vs_self_consistency (null: corpus too small)"
+    },
+    "flip_count": {
+      "principle": "exp3472 flip_count \u2014 non-degeneracy proof (null: corpus too small).",
+      "satisfied_by": "exp3472 flip_count_optimal_vs_sc (null: blocked)"
+    },
+    "minority_correct_recovery_rate": {
+      "principle": "exp3473 minority-correct recovery rate (null: artifact flagged_adversarial).",
+      "satisfied_by": "exp3473 minority_correct_recovery_rate_process (excluded: flagged)"
+    },
+    "g2_package_status": {
+      "principle": "exp3476 G2 package status string.",
+      "satisfied_by": "exp3476 g2_status field"
+    },
+    "fr11_depth_collapse_consequence": {
+      "principle": "exp3474 grounding collapse consequence at N>=200 \u2014 now citable.",
+      "satisfied_by": "exp3474 grounding_collapse_consequence (clean artifact)"
+    },
+    "kona_process_hybrid_delta": {
+      "principle": "exp3475 process_hybrid delta (null: Kona instances saturated).",
+      "satisfied_by": "exp3475 blocked (untrained_hybrid_solve_rate >= 0.80)"
+    },
+    "depth_forcing_function_can_relax": {
+      "principle": "True only when P0.1 clean AND G2 external-in-motion.",
+      "satisfied_by": "p0_1_clean=False (blocked corpus) \u2192 False"
+    },
+    "gate_status_v320_ready": {
+      "principle": "terminal completion flag (always True).",
+      "satisfied_by": "hardcoded True"
+    }
+  },
+  "honest_verdict": "complete: g1_g3_g4_met_g2_still_open_p01_v6_blocked_corpus_too_small",
+  "g1": true,
+  "g2": false,
+  "g3": true,
+  "g4": true,
+  "unmet_gates": [
+    "G2"
+  ],
+  "p0_1_v6_verdict": "complete: blocked_p01_corpus_too_small_n=21",
+  "process_energy_vs_self_consistency_delta": null,
+  "flip_count": null,
+  "minority_correct_recovery_rate": null,
+  "g2_package_status": "self_contained_package_verified_external_run_pending",
+  "fr11_depth_collapse_consequence": "ARM A COLLAPSED at depth N=200 (onset iteration 138): entropy\u21920.9901, mode_mass\u21920.6056, pass_rate=1.0000 while true_accuracy=0.000000 (gap=1.0000 \u2014 null-space gaming). The exp3439 at-risk grounding (ACTIVE_WEIGHT=0.146) caused self-distillation to concentrate mass on null-space-gaming traces. ARM B (entropy_beta=0.50) PREVENTED collapse: entropy=4.9067. depth_changes_conclusion=True (N=50 had no collapse; N=200 does). ACTION: entropy regularization is mandatory before Phase-5 deployment.",
+  "kona_process_hybrid_delta": null,
+  "depth_forcing_function_can_relax": false,
+  "gate_status_v320_ready": true
+}
