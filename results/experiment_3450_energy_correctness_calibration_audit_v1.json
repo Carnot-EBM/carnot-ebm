@@ -1,0 +1,80 @@
+{
+  "experiment": 3450,
+  "title": "P0.1 energy-correctness calibration audit v1",
+  "run_date": "2026-05-30T13:54:17Z",
+  "started_at": "2026-05-30T13:54:17Z",
+  "finished_at": "2026-05-30T13:54:17Z",
+  "duration_s": 1.0,
+  "status": "success",
+  "inference_substrate": "verifier_ensemble_against_cached_candidates",
+  "random_seed": 20260531,
+  "reproducibility_checksum": "4d8d9a6ecbdc6634",
+  "corpus_path": "/home/ianblenke/github.com/ianblenke/carnot/data/p01_gsm8k_generations.jsonl",
+  "preconditions_checked": [
+    {
+      "resource": "p01_gsm8k_corpus",
+      "available": true
+    },
+    {
+      "resource": "p01_corpus_size",
+      "available": true,
+      "n_problems": 47,
+      "n_candidates": 282
+    },
+    {
+      "resource": "energy_substrate_ising_ebmcot",
+      "available": true
+    }
+  ],
+  "field_provenance": {
+    "honest_verdict": "Must start with complete:/success:/passed:/shipped_.",
+    "inference_substrate": "No live model loaded; scores cached candidates only.",
+    "n_candidates": "Total candidate generations scored across all problems.",
+    "energy_correctness_spearman": "Spearman \u03c1(energy, correctness); negative means lower-energy \u2192 correct.",
+    "energy_as_correctness_auroc": "AUROC of -energy classifier; >0.5 means energy carries correctness signal.",
+    "within_problem_argmin_correct_rate": "Fraction of problems where argmin-energy pick is correct; explains exp3449 energy-argmin accuracy.",
+    "random_seed": "Fixed seed for determinism.",
+    "reproducibility_checksum": "Content hash of corpus + seed + substrate.",
+    "duration_s": "Wall-clock seconds; 1s floor (no live inference)."
+  },
+  "n_candidates": 282,
+  "n_problems": 47,
+  "energy_correctness_spearman": -0.03275600312579375,
+  "energy_as_correctness_auroc": 0.5160115448048378,
+  "within_problem_argmin_correct_rate": 0.7872340425531915,
+  "correct_mean_energy": 0.11926086634030558,
+  "incorrect_mean_energy": 0.1151610644257703,
+  "energy_gap": -0.004099801914535281,
+  "acceptance_gate_g1_energy_tracks_correctness": {
+    "condition": "energy_as_correctness_auroc > 0.55",
+    "passed": false,
+    "measured": 0.5160115448048378,
+    "principle": "AUROC > 0.55 means energy carries meaningful correctness signal; failure explains the exp3449 energy ceiling."
+  },
+  "honest_verdict": "complete: energy_does_not_track_correctness_explains_p01_ceiling",
+  "schema": [
+    "acceptance_gate_g1_energy_tracks_correctness",
+    "corpus_path",
+    "correct_mean_energy",
+    "duration_s",
+    "energy_as_correctness_auroc",
+    "energy_correctness_spearman",
+    "energy_gap",
+    "experiment",
+    "field_provenance",
+    "finished_at",
+    "honest_verdict",
+    "incorrect_mean_energy",
+    "inference_substrate",
+    "n_candidates",
+    "n_problems",
+    "preconditions_checked",
+    "random_seed",
+    "reproducibility_checksum",
+    "run_date",
+    "started_at",
+    "status",
+    "title",
+    "within_problem_argmin_correct_rate"
+  ]
+}
