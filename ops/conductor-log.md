@@ -7054,3 +7054,4 @@ web search: https://docs.garak.ai/garak/examples/pr |
 | 2026-05-30 06:53 UTC | Plan milestone 2026.05.316 | OK | 11 tasks proposed |
 | 2026-05-30 06:55 UTC | Capstone v315 | OK | Deliverable already exists in repo |
 | 2026-05-30 06:55 UTC | Milestone 2026.05.316 activated | OK | 11 tasks queued |
+| 2026-05-30 07:01 UTC | Archive milestone .315 honestly and activate .316 | OK | 81 passed in 3.07s |
