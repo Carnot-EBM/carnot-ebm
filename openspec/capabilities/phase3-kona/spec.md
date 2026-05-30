@@ -2252,3 +2252,65 @@ is unavailable
 **When** the experiment runs its step-0 preconditions
 **Then** it writes a `blocked_<resource>` honest verdict and exits without
 fabricating accuracy numbers.
+
+### REQ-KONA-3426: Four-Condition Matched-Compute Premise Test (P0.1 v2)
+
+Exp 3312 (REQ-KONA-3312) showed energy-descent selection beat a single greedy
+autoregressive (AR) generation but LOST to plain majority-vote self-consistency
+over the same samples, and its artifact was flagged_adversarial (a false-positive
+tautology: `random_seed` equalled the experiment id). The load-bearing question
+is therefore still open: **does the energy function add anything beyond plain
+majority vote at the SAME compute budget?** Exp 3426 answers it with a paired
+four-condition head-to-head on a real reasoning benchmark (GSM8K `n>=200`,
+held-out) at MATCHED compute, with a falsifiable significance gate whose PRIMARY
+comparison is energy-weighted vote vs majority-vote self-consistency.
+
+**Rationale:** if energy cannot beat — or even match — plain self-consistency at
+equal compute, the "energy-descent reasoning is a better substrate" framing that
+motivates the Phase-3 / Kona foundation-model endgame is unsupported and the
+superiority framing retires. If energy SIGNIFICANTLY beats self-consistency, that
+is the first real justification for the endgame. Either outcome is high-value.
+
+**Acceptance criteria:**
+
+- `mean_token_confidence` / `self_certainty_select` implement the cheap
+  self-certainty Best-of-N selector (arXiv:2502.18581) over the per-token chosen
+  logprobs llama.cpp returns, as a disclosed monotone proxy for sequence
+  confidence — the strongest cheap selector energy must beat.
+- `energy_weighted_vote` aggregates the same k candidate answers by
+  `softmax(-E/T)` over distinct extracted answers (EBM-CoT calibration,
+  arXiv:2511.07124); `T -> inf` recovers plain majority vote, so the premise is
+  that a meaningful `T` reshapes the vote toward correctness.
+- All four sampled-aggregation conditions (self-consistency, self-certainty BoN,
+  energy-argmin, energy-weighted vote) consume the SAME `k` generations; greedy
+  AR is the 1-sample floor — energy gets no extra samples (matched compute).
+- `derive_premise_v2_verdict` maps the PRIMARY (energy-weighted-vote vs
+  self-consistency) paired comparison to exactly one terminal verdict prefixed
+  `complete:`, reporting G1 (energy non-inferior to self-consistency) and G2
+  (energy significantly beats self-consistency at matched compute).
+- The Exp 3426 artifact carries `inference_substrate=live_llm_inference`,
+  `n_problems>=200`, `k_samples`, the five condition accuracies,
+  `delta_energy_vs_self_consistency`, `delta_energy_vs_greedy_ar`,
+  `paired_significance`, `compute_parity_note`, `random_seed` (distinct from the
+  experiment id), `reproducibility_checksum`, and a `duration_s` above the 60s
+  live-inference floor, with clean methodology so `adversarial_verify.py` does
+  not flag it.
+
+### SCENARIO-KONA-3426: Exp 3426 Runs the Four-Condition Premise at Matched Compute
+**Given** CUDA is available, a trainable Boltzmann-GPT energy substrate, a GSM8K
+subset of `n>=200` real problems, and a cached SOTA GGUF whose embedded tokenizer
+loads via the GGUF path
+**When** we run `experiment_3426_energy_descent_vs_ar_vs_self_consistency_premise_v2.py`
+**Then** it scores greedy AR, self-consistency, self-certainty BoN, energy-argmin,
+and energy-weighted vote on the SAME paired problems with the four aggregation
+conditions sharing the SAME `k` samples
+**And** it writes the artifact with a `complete:` verdict, the G1/G2 gate booleans,
+and a paired McNemar + bootstrap significance test for the PRIMARY energy-vs-
+self-consistency delta over `n>=200` per-problem outcomes.
+
+### SCENARIO-KONA-3426-BLOCKED: Exp 3426 Emits an Honest Block on Missing Preconditions
+**Given** any of CUDA, the energy substrate, the real corpus, or the SOTA GGUF
+embedded tokenizer is unavailable
+**When** the experiment runs its step-0 preconditions
+**Then** it writes a `blocked_<resource>` honest verdict and exits without
+fabricating accuracy numbers.

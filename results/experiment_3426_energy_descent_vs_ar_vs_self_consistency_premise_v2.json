@@ -1,0 +1,169 @@
+{
+  "experiment": 3426,
+  "title": "Energy vs AR vs Self-Consistency at matched compute (Kona premise v2)",
+  "run_date": "20260530",
+  "started_at": "2026-05-30T07:12:23Z",
+  "finished_at": "2026-05-30T07:12:40Z",
+  "duration_s": 16.771,
+  "status": "success",
+  "random_seed": 20260530,
+  "reproducibility_checksum": "e5ce0d24cb2693bc",
+  "metrics_used": "unknown",
+  "honest_verdict": "complete: energy_matches_but_does_not_beat_self_consistency_at_equal_compute",
+  "inference_substrate": "live_llm_inference",
+  "task_name": "GSM8K (original questions, exp281 corpus), held-out shuffled split",
+  "n_problems": 2,
+  "k_samples": 2,
+  "ar_greedy_accuracy": 0.0,
+  "self_consistency_accuracy": 0.0,
+  "self_certainty_bon_accuracy": 0.0,
+  "energy_argmin_accuracy": 0.0,
+  "energy_weighted_vote_accuracy": 0.0,
+  "delta_energy_vs_self_consistency": 0.0,
+  "delta_energy_vs_greedy_ar": 0.0,
+  "paired_significance": {
+    "comparison": "energy_weighted_vote_vs_self_consistency",
+    "test": "mcnemar_exact_binomial + paired_bootstrap_ci",
+    "energy_wins": 0,
+    "self_consistency_wins": 0,
+    "p_value": 1.0,
+    "direction": 0,
+    "bootstrap_delta_ci95": [
+      0.0,
+      0.0
+    ]
+  },
+  "g1_energy_non_inferior": true,
+  "g2_energy_adds_value": false,
+  "compute_parity_note": "All conditions use the same base model unsloth/Qwen3.6-35B-A3B-GGUF (Qwen3.6-35B-A3B MoE, ~3B active params, Q4_K_M) on the same 2 paired problems. Greedy AR = 1 greedy generation/problem (the matched-compute floor). Conditions 2-4 (self-consistency, self-certainty BoN, energy-argmin, energy-weighted vote) ALL consume the SAME 2 sampled generations/problem (temp 0.8); only the selection/aggregation differs \u2014 energy gets NO extra samples. The energy conditions add only a 16-dim latent gradient descent (8 steps, negligible FLOPs, no token sampling in-loop). The energy-weighted vote softmaxes over per-problem z-scored final energies at temperature T=0.5 (scale-free; T->inf recovers plain majority vote). PRIMARY comparison is energy_weighted_vote vs self_consistency at matched compute; delta_energy_vs_greedy_ar is reported only for continuity with exp3312.",
+  "ar_model": "unsloth/Qwen3.6-35B-A3B-GGUF",
+  "energy_substrate": "boltzmann_gpt_v16_e60_gap4.6476",
+  "energy_substrate_test_gap": 4.6476,
+  "energy_vote_temperature": 0.5,
+  "descent_steps": 8,
+  "max_tokens": 160,
+  "preconditions_checked": [
+    {
+      "resource": "cuda",
+      "available": true
+    },
+    {
+      "resource": "real_task_corpus",
+      "available": true
+    },
+    {
+      "resource": "energy_descent_substrate",
+      "available": true
+    },
+    {
+      "resource": "sota_gguf_tokenizer",
+      "available": true
+    }
+  ],
+  "model_specs": [
+    {
+      "name": "Qwen3.6-35B-A3B",
+      "hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/snapshots/a483e9e6cbd595906af30beda3187c2663a1118c/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf",
+      "quantization": "Q4_K_M"
+    }
+  ],
+  "field_provenance": {
+    "honest_verdict": "Terminal verdict must start with complete:/success:/passed:/shipped_.",
+    "inference_substrate": "live_llm_inference: candidates really load + run the GGUF.",
+    "task_name": "Name the real benchmark + split; toy/synthetic is not acceptable.",
+    "n_problems": ">=200 for a CLT-valid accuracy delta.",
+    "k_samples": "Generations per problem for conditions 2-4; the matched-compute budget.",
+    "ar_greedy_accuracy": "1-sample greedy control (the exp3312 baseline).",
+    "self_consistency_accuracy": "Majority vote over k samples \u2014 the PRIMARY control energy must beat.",
+    "self_certainty_bon_accuracy": "Self-certainty Best-of-N (arXiv:2502.18581) \u2014 the strongest cheap selector.",
+    "energy_argmin_accuracy": "Energy-argmin selection over the same k samples.",
+    "energy_weighted_vote_accuracy": "Energy-weighted vote (EBM-CoT) \u2014 the premise under test; the headline condition.",
+    "delta_energy_vs_self_consistency": "energy_weighted_vote minus self_consistency at MATCHED compute \u2014 THE headline; does energy add value over majority vote?",
+    "delta_energy_vs_greedy_ar": "energy minus greedy AR \u2014 reported for continuity with exp3312.",
+    "paired_significance": "McNemar exact p + paired bootstrap CI95 for the PRIMARY (energy vs SC) delta; an unpaired or n<200 delta is gameable.",
+    "compute_parity_note": "State per-condition generation budget + param count so energy does not win by spending more compute.",
+    "random_seed": "Determinism precondition for reproducibility.",
+    "reproducibility_checksum": "Content hash of corpus + substrate + seed.",
+    "duration_s": "Real live 35B inference over 200 problems x k samples takes minutes; 60s floor \u2014 a sub-60s duration is the fabrication signal that flagged exp3312-class artifacts."
+  },
+  "per_problem": [
+    {
+      "problem_id": "gsm8k-1121",
+      "gold": 35,
+      "ar_pred": 7,
+      "sc_pred": null,
+      "self_certainty_pred": null,
+      "self_certainty_index": 0,
+      "energy_argmin_pred": null,
+      "energy_argmin_index": 0,
+      "energy_weighted_vote_pred": null,
+      "candidate_preds": [
+        null,
+        null
+      ],
+      "candidate_final_energies": [
+        -569.818848,
+        -569.818848
+      ]
+    },
+    {
+      "problem_id": "gsm8k-873",
+      "gold": 12,
+      "ar_pred": 3,
+      "sc_pred": null,
+      "self_certainty_pred": null,
+      "self_certainty_index": 0,
+      "energy_argmin_pred": null,
+      "energy_argmin_index": 0,
+      "energy_weighted_vote_pred": null,
+      "candidate_preds": [
+        null,
+        null
+      ],
+      "candidate_final_energies": [
+        -569.818848,
+        -569.818848
+      ]
+    }
+  ],
+  "schema": [
+    "ar_greedy_accuracy",
+    "ar_model",
+    "compute_parity_note",
+    "delta_energy_vs_greedy_ar",
+    "delta_energy_vs_self_consistency",
+    "descent_steps",
+    "duration_s",
+    "energy_argmin_accuracy",
+    "energy_substrate",
+    "energy_substrate_test_gap",
+    "energy_vote_temperature",
+    "energy_weighted_vote_accuracy",
+    "experiment",
+    "field_provenance",
+    "finished_at",
+    "g1_energy_non_inferior",
+    "g2_energy_adds_value",
+    "honest_verdict",
+    "inference_substrate",
+    "k_samples",
+    "max_tokens",
+    "metrics_used",
+    "model_specs",
+    "n_problems",
+    "paired_significance",
+    "per_problem",
+    "preconditions_checked",
+    "random_seed",
+    "reproducibility_checksum",
+    "run_date",
+    "self_certainty_bon_accuracy",
+    "self_consistency_accuracy",
+    "started_at",
+    "status",
+    "task_name",
+    "title"
+  ],
+  "invariant_violations": []
+}
