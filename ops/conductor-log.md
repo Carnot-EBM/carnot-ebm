@@ -7128,3 +7128,4 @@ web search: https://docs.garak.ai/garak/examples/pr |
 | 2026-05-30 15:59 UTC | Archive milestone .318 honestly and activate .319 | FAIL | Claude Code error: Error: Reached max turns (20) |
 | 2026-05-30 16:04 UTC | Archive milestone .318 honestly and activate .319 | OK | 103 passed in 3.11s |
 | 2026-05-30 16:28 UTC | P0.1 corpus extend 47->120 — resume the resumable  | FAIL | Claude Code error: Wall-clock+idle timeout after 1201s (1201s silence). Last ou |
+| 2026-05-30 16:33 UTC | P0.1 corpus extend 47->120 — resume the resumable  | OK | cache hit: 92 passed in 4.43s |
