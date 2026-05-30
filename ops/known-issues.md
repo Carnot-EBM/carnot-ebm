@@ -358,7 +358,50 @@ endgame.
         local-minimum failure of the optimizer and tests fixes (annealing
         schedule, random restarts, parallel tempering, adaptive step count).
       retire_if_same_verdict: true
+  CONCRETE STEPS (STEP 0 IS MANDATORY AND GATING — run BEFORE any optimization):
+    0a. ENCODING VALIDITY (hard precondition): encode a KNOWN-VALID solved Sudoku
+        board into the Ising energy and assert E == 0 (within float eps). If a
+        correct solution does NOT give E==0, the energy formulation is wrong
+        (missing constraint / unbalanced penalty weights) — STOP, write
+        honest_verdict: blocked_energy_encoding_invalid with the per-constraint
+        residual-energy breakdown, and do NOT run any optimization. No optimizer
+        can solve a mis-specified energy; a solve-rate against a broken energy is
+        meaningless. This forks the entire strategy: encoding bug vs optimizer.
+    0b. EASY-TIER SANITY: before any HARD puzzle, confirm the current optimizer
+        solves EASY boards (many clues, near-fully-constrained). If it cannot
+        solve easy, the failure is REPRESENTATIONAL (energy/encoding), not
+        optimizer power — report that and do NOT climb the optimizer ladder.
+    1. Only if 0a passes (E==0 on a valid board) AND 0b solves easy: run the
+       optimizer ladder (slower annealing schedule → random restarts (K parallel
+       inits) → parallel tempering / replica exchange (adaptive_ising.py) →
+       constraint-aware block moves → adaptive penalty weights / Lagrangian),
+       reporting solve_rate by difficulty AND by optimizer_variant.
+    2. Characterize the energy~10 plateau: report n_violated_constraints at the
+       plateau (a few cells = 'almost solved', optimizer-fixable; pervasive =
+       representational).
+    3. If pure energy descent still can't close the last violations, test the
+       energy-guided + constraint-propagation hybrid (energy proposes; Carnot's
+       Z3/AST/arc-consistency verifiers clean up residual violations) and report
+       its solve_rate separately — this narrows the claim honestly from
+       'energy replaces search' to 'energy is a global heuristic' if only the
+       hybrid solves.
   REQUIRED ARTIFACT FIELDS:
+    encoding_validity_E0:
+      principle: "E of a known-valid solved board MUST be 0 (Step 0a). If not, the
+                  energy is mis-specified and NO optimizer can solve it — gating
+                  precondition; report the per-constraint residual when it fails."
+    easy_tier_solve_rate:
+      principle: "must solve EASY boards (Step 0b) before any hard-board claim; an
+                  easy solve_rate near 0 means the failure is representational
+                  (energy/encoding), not optimizer power."
+    n_violated_constraints_at_plateau:
+      principle: "distinguishes 'almost solved' (a few cells → optimizer-fixable)
+                  from pervasive infeasibility (→ representational); exp3408
+                  plateaued at energy 10.05, this quantifies what that means."
+    hybrid_solve_rate:
+      principle: "solve_rate of the energy-guided + constraint-propagation path
+                  (Step 3), reported separately so the claim ('energy replaces
+                  search' vs 'energy is a global heuristic') is honest."
     solve_rate:
       principle: "fraction of puzzles reaching a VALID solution (all Sudoku
                   constraints satisfied / final_energy==0, verified on the BOARD
@@ -376,6 +419,11 @@ endgame.
       principle: "which fix was applied (vanilla / annealed / restarts /
                   tempering) so the plateau diagnosis is auditable."
   acceptance_gates:
+    - condition: "STEP 0a passes (a known-valid solved board gives E==0) BEFORE any
+                  optimization solve-rate is reported"
+      principle: "an optimization solve-rate against a mis-specified energy is
+                  meaningless; this precondition forks the strategy (fix encoding
+                  vs fix optimizer) before any compute is spent on the ladder."
     - condition: "solve_rate reported on >=20 puzzles; speedup claimed ONLY on solved subset"
       principle: "kills the fast-but-wrong framing exp3408 invited."
     - condition: "if solve_rate ~0 even with optimizer fixes → honest verdict that
