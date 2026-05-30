@@ -7178,3 +7178,5 @@ web search: https://docs.garak.ai/garak/examples/pr |
 | 2026-05-30 23:38 UTC | Energy-correctness calibration v4 — MATH-aware, ta | SKIP | Pre-tests failing, self-heal failed:  |
 | 2026-05-30 23:48 UTC | FR-11 minimal-sufficient entropy beta sweep + grou | OK | 81 passed in 4.09s |
 | 2026-05-30 23:50 UTC | Kona global-opt — PROCESS energy as the hybrid heu | GATE_BLOCK | Pre-emptive skip: upstream retired (exp3484-p01-process-energy-vs-self-consisten |
+| 2026-05-30 23:51 UTC | FoVer G2 — clean-room regression-verify the self-c | FAIL | Claude Code error: API Error: 400 messages.1.content.5: `thinking` or `redacted |
+| 2026-05-30 23:53 UTC | Kona global-opt — PROCESS energy as the hybrid heu | GATE_BLOCK | Pre-emptive skip: upstream retired (exp3484-p01-process-energy-vs-self-consisten |
