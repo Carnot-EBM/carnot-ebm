@@ -463,11 +463,11 @@ tasks:
 
   # ---- FR-11 minimal-sufficient entropy beta + grounding-dependence (mandatory) --
   - id: exp3486-fr11-minimal-beta-grounding-dependence-v4
-    operator_override: "2026-05-30 planner (Opus 4.8): the mandatory continuous-self-learning task. exp3474 (.320) cleanly showed ARM A collapses at depth N=200 (onset 138) and entropy_beta=0.50 cures it. This asks the NEW questions: what is the MINIMAL effective beta (sweep {0, 0.1, 0.25, 0.5}), and does the collapse onset depend on the grounding diversity (ACTIVE_WEIGHT)? Converts 'beta=0.50 works' into 'beta>=X is necessary-and-sufficient, margin scales with grounding' — the actionable Phase-5 default. Cites ER-PRM (arXiv:2412.11006). New sweep + grounding-dependence = forward work, not a re-run of exp3474's single-beta confirmation. scope-match vs exp3474/exp3462 is the intended depth continuation."
+    operator_override: "2026-05-30 planner (Opus 4.8): the mandatory continuous-self-learning task. exp3474 (.320) cleanly showed ARM A collapses at depth N=200 (onset 138) and entropy_beta=0.50 cures it. This asks the NEW questions: what is the MINIMAL effective beta (sweep {{0, 0.1, 0.25, 0.5}}), and does the collapse onset depend on the grounding diversity (ACTIVE_WEIGHT)? Converts 'beta=0.50 works' into 'beta>=X is necessary-and-sufficient, margin scales with grounding' — the actionable Phase-5 default. Cites ER-PRM (arXiv:2412.11006). New sweep + grounding-dependence = forward work, not a re-run of exp3474's single-beta confirmation. scope-match vs exp3474/exp3462 is the intended depth continuation."
     prior_failures:
       - experiment_id: exp3474-fr11-grounding-collapse-depth-stress-v3
         verdict: "complete: at_risk_grounding_causes_collapse_at_depth_entropy_reg_prevents_it_deflagged"
-        addressed_by: "exp3474 confirmed collapse at N=200 and that a SINGLE beta (0.50) cures it. This task SWEEPS beta {0, 0.1, 0.25, 0.5} to find the MINIMAL sufficient value, and varies the grounding strength (ACTIVE_WEIGHT) to test whether the collapse onset / required beta scales with grounding diversity. Different question (minimal-beta + grounding-dependence), not a re-confirmation of the N=200 collapse. pass_rate and true_accuracy remain strictly distinct (runtime assert), keeping it de-flagged."
+        addressed_by: "exp3474 confirmed collapse at N=200 and that a SINGLE beta (0.50) cures it. This task SWEEPS beta {{0, 0.1, 0.25, 0.5}} to find the MINIMAL sufficient value, and varies the grounding strength (ACTIVE_WEIGHT) to test whether the collapse onset / required beta scales with grounding diversity. Different question (minimal-beta + grounding-dependence), not a re-confirmation of the N=200 collapse. pass_rate and true_accuracy remain strictly distinct (runtime assert), keeping it de-flagged."
         retire_if_same_verdict: true
     milestone: "2026.05.321"
     title: "FR-11 minimal-sufficient entropy beta sweep + grounding-dependence at depth (N>=200) — the actionable Phase-5 self-learning default (mandatory continuous-self-learning)"
@@ -500,9 +500,9 @@ tasks:
         - project_q12_hypothesis_b_and_dark_room + project_zenil_alpha_grounding (memory) — the theory
         - research-references.md "2026-05-30 Post-.320 Planning Sweep" (ER-PRM ref)
 
-      TASK: Sweep entropy beta {0, 0.1, 0.25, 0.5} on the N>=200 two-arm FR-11 loop to find the
+      TASK: Sweep entropy beta {{0, 0.1, 0.25, 0.5}} on the N>=200 two-arm FR-11 loop to find the
       MINIMAL beta that prevents collapse, and vary the grounding strength (ACTIVE_WEIGHT at
-      e.g. {0.146 (at-risk), and a higher healthier value}) to test whether the required beta /
+      e.g. {{0.146 (at-risk), and a higher healthier value}}) to test whether the required beta /
       collapse onset depends on grounding diversity.
 
       PRECONDITIONS (step 0):
@@ -510,7 +510,7 @@ tasks:
         b. The verifier ensemble (grounding) is callable. If not -> complete: blocked_verifier_suite_uncallable.
 
       CONCRETE STEPS:
-        1. For each beta in {0, 0.1, 0.25, 0.5}: run the FR-11 self-improvement loop to N>=200,
+        1. For each beta in {{0, 0.1, 0.25, 0.5}}: run the FR-11 self-improvement loop to N>=200,
            tracking DISTINCT metrics (output entropy, top-mode mass, verifier-PASS rate, and TRUE
            ground-truth accuracy — ASSERT pass_rate and true_accuracy are not the same array).
         2. Record per-beta: collapse_detected (entropy drop + mode concentration + pass/true gap),
@@ -525,7 +525,7 @@ tasks:
         honest_verdict: principle="complete:/success:/passed:/shipped_ prefix."
         inference_substrate: value=verifier_ensemble_against_cached_candidates
         n_iterations: principle="self-improvement iterations per run (>=200) — the depth exp3474 established collapse requires."
-        beta_grid: principle="the entropy betas swept {0,0.1,0.25,0.5}."
+        beta_grid: principle="the entropy betas swept {{0,0.1,0.25,0.5}}."
         minimal_sufficient_beta: principle="the smallest beta with no collapse at N>=200 — the actionable Phase-5 default."
         collapse_onset_by_beta: principle="per-beta collapse onset iteration (or null) — the dose-response curve."
         pass_rate_vs_true_accuracy_gap_beta0: principle="the gaming signal at beta=0 (verifier-pass minus ground-truth), from DISTINCT sources (asserted) — keeps it de-flagged."
