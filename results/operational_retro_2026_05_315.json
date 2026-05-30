@@ -1,0 +1,99 @@
+{
+  "schema": "carnot.operational_retro.v64",
+  "milestone": "2026.05.315",
+  "generated_at": "2026-05-30T06:57:34Z",
+  "retro_date": "2026-05-30",
+  "retro_type": "operational_full",
+  "inference_substrate": "aggregation_from_upstream_artifacts",
+  "honest_verdict": "complete: operational_retro_2026_05_315_written",
+  "experiments_completed": 7,
+  "experiments_blocked_or_error": 1,
+  "experiments_missing": 2,
+  "flagged_adversarial_count": 1,
+  "compute_bound_experiments_count": 1,
+  "total_wall_time_minutes": 37,
+  "slowest_experiments": [
+    {
+      "experiment_id": "exp3312",
+      "duration_minutes": 37.1,
+      "note": "Live GGUF inference — Qwen3.6-35B-A3B, n=200 paired GSM8K. Real result but flagged_adversarial by conductor; quarantined."
+    }
+  ],
+  "flagged_artifacts": [
+    {
+      "experiment_id": "exp3312",
+      "reason": "Flagged adversarial by conductor. Data is real (37-min live run, McNemar p=0.033, n=200) but conductor applied the FLAGGED status. The result is structurally valid (energy_descent=0.840 > AR_baseline=0.750) but energy-descent LOST to equal-compute self-consistency (0.895 > 0.840, delta=-0.055). QUARANTINED — not headline-eligible. Reframe for .316: does energy add value OVER self-consistency at equal compute?",
+      "status": "quarantined"
+    }
+  ],
+  "completed_experiments": [
+    "exp3416-archive-v314-activate-v315",
+    "exp3313-repair-substrate-autopsy",
+    "exp3419-fover-g2-reproduction-harness-v1",
+    "exp3421-gatemate-bootstrap-rootcause-diagnostic-v1",
+    "exp3422-polarfire-reachability-audit-v1",
+    "exp3423-g-gate-status-synthesis-v315",
+    "exp3424-capstone-v315"
+  ],
+  "blocked_or_error_experiments": [
+    "exp3420-kv260-terminal-latency-transcript-v1"
+  ],
+  "missing_experiments": [
+    "exp3417-kona-solve-rate-gate",
+    "exp3418-ensemble-vs-injection"
+  ],
+  "milestone_assessment": "PARTIAL_DEPTH: .315 was the first Depth-Over-Breadth milestone and aimed at the right existential targets. One depth task landed cleanly (G2 harness, exp3419). P0.1 (exp3312) produced a real result but is flagged_adversarial and — critically — lost to equal-compute self-consistency (0.840 vs 0.895), which changes the question for .316. P0.2 was displaced into a repair autopsy. Kona gate and ensemble-vs-injection produced no artifacts. The capstone (exp3424) prematurely set depth_forcing_function_can_relax=true; this retro corrects that: the Depth-Over-Breadth Forcing Function remains active for .316.",
+  "depth_tasks_status": {
+    "P0.1_energy_descent_vs_ar": {
+      "experiment_id": "exp3312",
+      "status": "flagged_adversarial_quarantined",
+      "result": "energy_descent=0.840 beats AR=0.750 (delta=+0.090, McNemar p=0.033) but LOSES to equal-compute self-consistency=0.895 (delta=-0.055). The premise test is structurally valid but the equal-budget comparison requires .316 reframe.",
+      "headline_eligible": false
+    },
+    "P0.2_verifier_diversity_alpha_t": {
+      "experiment_id": "exp3313",
+      "status": "displaced_not_run",
+      "result": "exp3313 ran as a repair-substrate autopsy rather than the intended verifier-diversity / alpha_t experiment. Genuine P0.2 still pending.",
+      "headline_eligible": false
+    },
+    "kona_solve_rate_gate": {
+      "experiment_id": "exp3417",
+      "status": "missing_no_artifact",
+      "result": null,
+      "headline_eligible": false
+    },
+    "ensemble_vs_injection": {
+      "experiment_id": "exp3418",
+      "status": "missing_no_artifact",
+      "result": null,
+      "headline_eligible": false
+    },
+    "G2_harness": {
+      "experiment_id": "exp3419",
+      "status": "complete_clean",
+      "result": "scripts/reproduce_fover_headline.py shipped; internal CI confirmed condition_A_auroc in [0.9027, 0.9235] and learning_contribution in [0.0125, 0.0245]. External (non-operator) run still pending for G2 closure.",
+      "headline_eligible": true
+    }
+  },
+  "top_forward_gap": "complete_existential_block_cleanly",
+  "top_forward_gap_detail": "For .316: (1) Rerun P0.1 as energy-descent vs equal-compute self-consistency — the specific question .315 surfaced. (2) Run genuine P0.2 verifier-diversity / alpha_t. (3) Run Kona solve-rate gate. (4) Close G2 with an external (non-operator) run of scripts/reproduce_fover_headline.py from a fresh clone. Depth-Over-Breadth Forcing Function stays active; NO vN+1 re-measurements of already-measured artifacts.",
+  "paper_ready": false,
+  "unmet_gates": ["G2"],
+  "g1": true,
+  "g2": false,
+  "g3": true,
+  "g4": true,
+  "summary": "Milestone .315 ran 7 experiments to completion (including capstone), produced 1 adversarially-flagged artifact (exp3312 — quarantined), 1 blocked (exp3420 — KV260 SSH unreachable), and 2 missing (exp3417, exp3418 — Kona gate and ensemble-vs-injection). Only G2 harness (exp3419) was a clean depth landing. The capstone's depth_forcing_function_can_relax=true was premature; corrected here.",
+  "bottlenecks_identified": [
+    "exp3312 (P0.1) is real data but flagged_adversarial — root cause TBD; conductor's classification may be overly strict for an artifact with a 37-min real run.",
+    "P0.2 scope was silently displaced: exp3313 ran repair-substrate autopsy instead of verifier-diversity / alpha_t.",
+    "exp3417 and exp3418 produced no artifacts — no blocked_* verdict either, suggesting the tasks were never activated.",
+    "KV260 SSH unreachable (exp3420) — board state requires investigation before next hardware task."
+  ],
+  "improvements_suggested": [
+    "For .316 P0.1 reframe: use the EBM-CoT arXiv:2511.07124 protocol (energy as a tie-breaker within the self-consistency pool) so the comparison is energy-vs-SC not energy-vs-1-sample-AR.",
+    "Ensure P0.2 task prompt explicitly names verifier-diversity / alpha_t and is NOT repurposeable as an autopsy.",
+    "Investigate why exp3417 and exp3418 were not activated — check conductor logs for GATE_BLOCK or DOOMED_RERUN_BLOCK.",
+    "KV260: verify SSH reachability before including in .316 roadmap; if unreachable, document operator action needed."
+  ]
+}
