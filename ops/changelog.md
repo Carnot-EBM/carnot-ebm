@@ -7835,3 +7835,4 @@ ModuleNotFoundError: No module named 'torch'; results/experiment_2828_fover_memo
 - 2026-05-30: Capstone v315 (✅ Complete) — honest_verdict=complete: capstone_v315_ready=true; results/experiment_3424_capstone_v315.json
 - 2026-05-30: Archive milestone .315 honestly and activate .316 (✅ Complete) — honest_verdict=complete: archive_v315_activate_v316_ready=true; results/experiment_3425_archive_v315_activate_v316.json
 - 2026-05-30: P0.1 v2 — Energy-Descent vs AR vs Self-Consistency vs Self-Certainty BoN (matched compute) (✅ Complete) — honest_verdict=complete: energy_matches_but_does_not_beat_self_consistency_at_equal_compute; results/experiment_3426_energy_descent_vs_ar_vs_self_consistency_premise_v2.json
+- 2026-05-30: FoVer Headline G2 Clean-Room Validation (isolated worktree + fresh venv) (❌ Failed) — honest_verdict=complete: fover_g2_cleanroom_ci_gate_failed; results/experiment_3430_fover_g2_cleanroom_validation_v1.json
