@@ -7078,3 +7078,4 @@ web search: https://docs.garak.ai/garak/examples/pr |
 | 2026-05-30 07:55 UTC | KV260 terminal board-level latency transcript (dri | OK | 81 passed in 4.40s |
 | 2026-05-30 07:58 UTC | GateMate N16 bootstrap — apply the identified verd | FAIL | Claude Code error: API Error: 400 messages.1.content.9: `thinking` or `redacted |
 | 2026-05-30 08:08 UTC | GateMate N16 bootstrap — apply the identified verd | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_3432_gatemat |
+| 2026-05-30 08:13 UTC | GateMate N16 bootstrap — apply the identified verd | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_3432_gatemat |
