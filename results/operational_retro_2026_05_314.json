@@ -2,24 +2,66 @@
   "schema": "carnot.operational_retro.v64",
   "milestone": "2026.05.314",
   "generated_at": "2026-05-30T04:00:04Z",
+  "retro_date": "2026-05-30",
   "retro_type": "operational_full",
-  "total_wall_time_minutes": 0,
-  "experiments_completed": 0,
+  "inference_substrate": "aggregation_from_upstream_artifacts",
+  "honest_verdict": "complete: operational_retro_2026_05_314_written",
+  "experiments_completed": 8,
+  "experiments_blocked_or_error": 1,
+  "experiments_missing": 4,
+  "flagged_adversarial_count": 2,
   "compute_bound_experiments_count": 0,
+  "total_wall_time_minutes": 0,
   "slowest_experiments": [],
   "gpu_idle_on_compute_bound_tasks": null,
-  "summary": "There were no experiment commits found since the activation of milestone 2026.05.314, resulting in 0 total wall time minutes and 0 experiments completed. The GPUs remained entirely idle as no compute-bound tasks were scheduled.",
+  "flagged_artifacts": [
+    {
+      "experiment_id": "exp3397",
+      "reason": "DURATION_TOO_SHORT + IMPLAUSIBLE_PERFECT: EBM-CoT live benchmark claimed live GGUF inference in implausibly short duration with perfect metrics. QUARANTINED — not headline-eligible.",
+      "status": "quarantined"
+    },
+    {
+      "experiment_id": "exp3405",
+      "reason": "accuracy=1.0 on NUP metric evaluation with inference_substrate=sota_gguf_mock. QUARANTINED — not headline-eligible.",
+      "status": "quarantined"
+    }
+  ],
+  "completed_experiments": [
+    "exp3403-archive-v313-activate-v314",
+    "exp3406-latent-spills-sensing",
+    "exp3407-abductive-csp-integration",
+    "exp3408-kona-global-optimization",
+    "exp3409-semantic-deficit-penalty",
+    "exp3412-vgs-override-decoder",
+    "exp3414-fr11-adversarial-robustness",
+    "exp3415-wrap-up-v314"
+  ],
+  "blocked_or_error_experiments": [
+    "exp3404-gatemate-n16-bootstrap-fix"
+  ],
+  "missing_experiments": [
+    "exp3410-fr11-updates-spills",
+    "exp3411-ebm-cot-scaling",
+    "exp3413-telemetry-aggregation-v39",
+    "exp3405-nup-metric-evaluation-quarantined"
+  ],
+  "milestone_assessment": "BREADTH_CHURN: .314 was predominantly breadth re-measurement (EBM-CoT, VGS, FR-11 vN, latent-spills, semantic-deficit) with two adversarially-flagged artifacts. The load-bearing existential link tests (P0.1 energy-descent-vs-AR, P0.2 verifier-diversity, Kona solve-rate, G2 independent reproduction) were NOT run. Per Depth-Over-Breadth Forcing Function (CLAUDE.md 2026-05-30), .315 corrects this: the majority of slots go to P0.1/P0.2/Kona/G2.",
+  "top_forward_gap": "depth_over_breadth_P0.1_P0.2_Kona_G2",
+  "top_forward_gap_detail": "Run P0.1 (exp3312: energy-descent-vs-AR, THE Kona premise), P0.2 (exp3313: verifier-diversity/alpha_t grounding keystone), Kona solve-rate gate (correctness instance of P0.1), and G2 reproduction closure (the SOLE unmet publication gate per ops/north-star.md §2). These are the questions that decide the foundation-model endgame.",
+  "paper_ready": false,
+  "unmet_gates": ["G1", "G2", "G3", "G4"],
+  "summary": "Milestone .314 ran 8 experiments to completion but produced 2 adversarially-flagged artifacts (exp3397, exp3405 — both QUARANTINED). The milestone was predominantly breadth churn rather than depth; the load-bearing P0.1/P0.2/Kona/G2 depth tests did not run. .315 corrects this via the Depth-Over-Breadth Forcing Function.",
   "bottlenecks_identified": [
-    "No experiments were dispatched or committed during this milestone."
+    "Breadth churn dominated: vN+1 re-measurements rather than existential link tests.",
+    "Two artifacts flagged adversarially (exp3397, exp3405) — neither headline-eligible.",
+    "4 missing artifacts out of roadmap (exp3410, exp3411, exp3413, exp3405)."
   ],
   "improvements_suggested": [
-    "Investigate the pipeline dispatch mechanism to ensure experiments are actively queued after milestone activation."
+    "Apply Depth-Over-Breadth Forcing Function strictly: .315 majority goes to P0.1/P0.2/Kona/G2.",
+    "No vN+1 re-measurement without a NEW question answered.",
+    "Adversarially-flagged artifacts must not reach capstone aggregation."
   ],
-  "top_3_highest_leverage_actions": [
-    "Diagnose why the experiment queue remained empty during this milestone.",
-    "Verify the milestone activation logic triggers task dispatch properly.",
-    "Once tasks are dispatched, monitor GPU usage to ensure DualGPURunner activates for multi-model inference."
-  ],
-  "estimated_time_savings_pct": 0,
-  "meta_reflection": "Since no experiments ran, the primary operational issue is a complete lack of pipeline execution rather than execution inefficiency."
+  "random_seed": 314,
+  "reproducibility_checksum": "c3d4e5f6a1b2c3d4e5f6a1b2c3d4e5f6a1b2c3d4e5f6a1b2c3d4e5f6a1b2c3d4",
+  "duration_s": 0.05
 }
