@@ -1,3 +1,64 @@
+## 2026-05-30 Post-.316 Planning Sweep (Milestone 2026.05.317)
+
+`.316` (Depth-Over-Breadth II) tried to complete the existential block cleanly
+but **the block is STILL not clean** — and a new, load-bearing infrastructure
+failure surfaced:
+
+- **P0.1 v2 (exp3426):** ran for real (642 s, n=200, k=5, not flagged) but the
+  **multi-sample harness is broken** — every k-sample condition returned 0.0
+  accuracy (`self_consistency=0.0`, `self_certainty_bon=0.0`, `energy_argmin=0.0`,
+  `energy_weighted_vote=0.0`) while greedy AR scored 0.75. The "energy matches
+  self-consistency" verdict is a **degenerate 0.0-vs-0.0 tie**, not a real
+  measurement: the sampled-generation answer extraction / vote aggregation path
+  failed. P0.1 is still unanswered.
+- **P0.2 (exp3427), Kona (exp3428), injection (exp3429):** **no artifact, 2nd
+  consecutive milestone.** Root cause is now unambiguous from `ops/conductor-log.md`:
+  a **systemic gemini-cli crash** — every `agent_type: gemini` task fails 3×
+  with `Gemini CLI error: Stalled after 600s silence` / `Gemini CLI error:
+  .js:345500:14)` and is skipped. Every `agent_type: claude` task in .316
+  landed. **The .317 fix is to route these depth tasks to `claude` (per the
+  Gemini-Default rule's "gemini has demonstrably failed at this task category"
+  carve-out).**
+- **G2 clean-room (exp3430):** **FAILED** — in a fresh `git worktree` + fresh
+  venv (python 3.14.5, numpy 2.4.6, jax 0.10.1) the FoVer headline did NOT
+  reproduce (`condition_a_auroc_reproduced=None`, `reproduced_in_ci=false`,
+  `g2_cleanroom_ci_gate_failed`). The sole publication gate is not merely
+  externally-pending; it does not reproduce in a clean environment. Root-causing
+  this (likely a py3.14 / numpy-2.4 / missing-preflight-artifact issue) is the
+  highest-value G2 work available.
+- **KV260 (exp3431):** `blocked_kv260_ssh_unreachable` again (board power/network
+  is an operator action). GateMate (exp3432): flow ran, not flashed.
+
+### New references directly bearing on the P0.1 crux (energy-vote vs SC)
+
+- **"Not All Votes Count! Programs as Verifiers Improve Self-Consistency for
+  Math Reasoning"** (arXiv:2410.12608). A verifier-weighted vote *does* beat
+  plain majority self-consistency on math. This is the **existence proof** the
+  P0.1 energy-weighted vote must clear: if a program-verifier can beat SC but
+  Carnot's energy cannot, the energy signal is underperforming a known-achievable
+  result — a sharper bar than "beat greedy AR."
+- **"Certified Self-Consistency: Statistical Guarantees and Test-Time Scaling"**
+  (arXiv:2510.17472). Rigorous SC with statistical guarantees; the principled
+  majority-vote baseline P0.1 should compare against.
+- **"Think Consistently, Reason Efficiently: Energy-Based Calibration for
+  Implicit CoT" (EBM-CoT, arXiv:2511.07124).** Already cited; the mechanism the
+  energy-weighted vote mirrors (calibrate latents toward low-energy /
+  high-consistency regions).
+- **"Self-Certainty: Best-of-N selection without a reward model"**
+  (arXiv:2502.18581). Already cited; the strongest cheap selector energy must beat.
+- **GTS: Inference-Time Scaling of Latent Reasoning with a Learnable Gaussian
+  Thought Sampler** (arXiv:2602.14077) and **Parallel Test-Time Scaling for
+  Latent Reasoning Models** (arXiv:2510.07745, Latent Reward Model aggregation):
+  context for how latent-reasoning models are scaled at test time — relevant if
+  P0.1 v3 confirms energy adds value and a continuous-latent loop is built.
+
+**Net for .317:** Depth-Over-Breadth CANNOT relax (P0.1 still unanswered, G2
+fails clean-room). The milestone re-runs the SAME existential block — but with
+two structural changes the prior two milestones lacked: (1) all depth tasks on
+`claude` (gemini-cli is down), and (2) P0.1 v3 fixes the multi-sample harness
+so the energy-vs-SC comparison is a real measurement, not a 0.0 tie. NO vN+1
+re-measurement of an already-measured artifact appears.
+
 ## 2026-05-30 Post-.315 Planning Sweep (Milestone 2026.05.316)
 
 `.315` was the first Depth-Over-Breadth milestone and it ran the existential

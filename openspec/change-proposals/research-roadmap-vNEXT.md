@@ -1,201 +1,208 @@
-# Research Roadmap — Milestone 2026.05.316
+# Research Roadmap — Milestone 2026.05.317
 
-**Depth-Over-Breadth II: Clean the Existential Block + Reframe P0.1 Around Self-Consistency**
+**Depth-Over-Breadth III: Finish the Existential Block Cleanly (P0.1 v3 real
+harness, G2 clean-room root-cause, P0.2 / Kona / injection OFF gemini)**
 
-Planner: Opus 4.8, 2026-05-30. Supersedes the `.315` design doc in place.
-
----
-
-## TL;DR
-
-`.315` was the FIRST Depth-Over-Breadth milestone and it pointed the loop at the
-right targets — but **3 of its 5 load-bearing depth tasks did not cleanly land**.
-`.316` is not a new direction; it is the **honest completion of the same
-existential block**, plus a sharpened P0.1 that answers the question `.315`
-actually surfaced.
-
-The Depth-Over-Breadth Forcing Function (CLAUDE.md, 2026-05-30) does **NOT**
-relax for `.316`. The `.315` capstone reported `depth_forcing_function_can_relax
-= true`, but that was premature: P0.1's verdict is **contested and
-flagged_adversarial**, P0.2 never ran, the Kona gate never ran, and the
-ensemble-injection test never ran. The function relaxes only once P0.1 has a
-**clean** verdict AND G2 has a concrete in-flight reproducer. `.316` is built to
-earn that.
+**Planner:** Opus 4.8, 2026-05-30 (highest-leverage call per CLAUDE.md
+Depth-Over-Breadth Forcing Function — planner is Claude, not gemini, precisely
+so this prose discipline is followed reliably).
 
 ---
 
-## What `.315` proved (and didn't)
+## 1. What the previous milestone (.316) proved — and what it did NOT
 
-| Depth task | Outcome | Status going into `.316` |
+`.316` (Depth-Over-Breadth II) aimed at the right targets but **the existential
+block is still not clean**, and a systemic infrastructure failure was the
+proximate cause for 3 of 5 depth tasks.
+
+| .316 task | Outcome | Status |
 |---|---|---|
-| **P0.1** energy-descent vs AR (exp3312) | Landed, **flagged_adversarial**. Energy-selection 0.840 beat *greedy* AR 0.750 (+0.090, McNemar p=0.033) but **LOST to equal-compute self-consistency** (majority vote, 0.895, Δ −0.055). The "energy-descent" was best-of-3 reranking + 8 latent steps. | **Contested.** Rerun clean + reframe around the SC control. |
-| **P0.2** verifier-diversity / λ_min(Σ) (exp3313) | **Displaced** — deliverable became a repair-substrate autopsy; the diversity audit never ran. | **Never ran.** Re-attempt. |
-| **Kona** solve-rate gate (exp3417) | **No artifact produced.** | **Never ran.** Re-attempt. |
-| **Ensemble-vs-injection** (exp3418) | **No artifact produced.** | **Never ran.** Re-attempt. |
-| **G2** reproduction harness (exp3419) | **Clean landing.** `scripts/reproduce_fover_headline.py` reproduces condition-A AUROC 0.9131 + learning-contribution 0.0185 in-CI from a clean recompute. | Advance to **isolated clean-room** validation; external run still operator-gated. |
+| P0.1 v2 energy-vs-SC (exp3426) | Ran 642 s, n=200, k=5, **not** flagged — but **every k-sample condition = 0.0 accuracy** (SC, self-certainty BoN, energy-argmin, energy-vote all 0.0) vs greedy AR 0.75. Verdict "energy matches SC" is a **degenerate 0.0-vs-0.0 tie**. | ❌ broken harness — P0.1 unanswered |
+| P0.2 diversity (exp3427) | **No artifact** — gemini-cli crashed 3× | ❌ never ran (2nd milestone) |
+| Kona solve-rate (exp3428) | **No artifact** — gemini-cli crashed 3× | ❌ never ran (2nd milestone) |
+| Ensemble-vs-injection (exp3429) | **No artifact** — gemini-cli crashed 3× | ❌ never ran (2nd milestone) |
+| G2 clean-room (exp3430) | **FAILED** — fresh worktree + fresh venv (py3.14.5 / numpy2.4.6 / jax0.10.1): headline did NOT reproduce (`reproduced_in_ci=false`) | ❌ G2 regressed in clean env |
+| KV260 terminal (exp3431) | `blocked_kv260_ssh_unreachable` | ⏸ operator action (board power) |
+| GateMate (exp3432) | Flow ran, **not flashed**; verdict-fix applied | ⏸ opportunistic |
+| Gate synthesis (exp3434) | g1=T g2=F g3=T g4=T; **depth_relax=False** | ✅ |
 
-The single most important takeaway: **at equal compute, energy-based selection
-did not beat plain majority-vote self-consistency** on GSM8K. That is the real
-test of the Kona premise, and `.316` is built around it.
+**Two root causes, both fixable at the planner layer:**
 
----
+1. **gemini-cli is down.** `ops/conductor-log.md` shows every `agent_type:
+   gemini` task in .315 and .316 failing 3× with `Gemini CLI error: Stalled
+   after 600s silence` or `Gemini CLI error: .js:345500:14)`. Every
+   `agent_type: claude` task landed. The Gemini-Default rule's positive
+   criterion for `requires_claude: true` is met ("gemini has demonstrably
+   failed at this specific task category in a prior milestone" — cite
+   exp3427/3428/3429). **.317 routes all depth tasks to `claude`.**
 
-## The three biggest gaps between current state and the PRD vision
+2. **P0.1 v2's multi-sample harness silently produced 0.0** for every sampled
+   condition. The greedy path worked; the k-sample sampling/extraction/vote
+   path did not. P0.1 v3 must make the SC baseline itself non-degenerate
+   (SC accuracy ≥ greedy AR on GSM8K, the well-known result) before any energy
+   comparison is trusted.
 
-1. **The Kona premise is unproven at equal compute.** Phase-3's foundation-model
-   endgame assumes energy-descent reasoning on continuous latents *beats* token
-   sampling. `.315` showed it beats *greedy* AR but loses to *self-consistency* —
-   and the result was flagged. We do not yet know if energy adds anything beyond
-   what majority vote already gives you. **Gap closed by exp3426 (P0.1 v2).**
-
-2. **The α_t grounding keystone is unmeasured at production k.** The entire
-   self-correcting-model thesis (PRD FR-11 / continuous self-learning) rests on
-   the verifier ensemble having real diversity (small joint null space). exp1224
-   showed k=3 collapsing to effective k=1, and the FoVer headline showed 3 of 4
-   verifiers contributing zero. We have never measured λ_min(Σ) on a deliberately
-   disjoint-kernel suite at larger k. **Gap closed by exp3427 (P0.2).**
-
-3. **Energy-based global inference has never been shown to *solve*, only to run
-   fast.** exp3408's Sudoku run descended energy 2104→10 but `solved=False`,
-   making its "15× speedup" fast-but-wrong. We do not know whether Carnot's Ising
-   energy formulation can actually solve a hard combinatorial reasoning task.
-   **Gap closed by exp3428 (Kona solve-rate gate).**
+**Depth-Over-Breadth Forcing Function remains ACTIVE** (CLAUDE.md, 2026-05-30):
+it relaxes only once P0.1 has a CLEAN verdict AND G2 has a concrete in-flight
+reproducer. Neither holds. `.316`'s `depth_relax=False` is correct.
 
 ---
 
-## Architecture under test
+## 2. The three biggest gaps between current state and the PRD vision
+
+1. **The Phase-3 premise is unproven (P0.1).** The entire foundation-model
+   endgame rests on "energy-descent reasoning on continuous latents beats token
+   sampling." After 200+ milestones it has never been cleanly measured. v2's
+   harness broke. **Gap-closer: P0.1 v3 with a verified-non-degenerate SC
+   baseline and a real energy-weighted vote, matched compute.** The sharpened
+   bar (arXiv:2410.12608): a program-verifier already beats SC, so energy must
+   clear "beats SC," not merely "beats greedy AR."
+
+2. **The sole publication gate (G2) does not reproduce in a clean environment.**
+   The headline reproduces in the operator's working venv but FAILED in a fresh
+   worktree (py3.14/numpy2.4/jax0.10). Until a clean clone reproduces, no
+   external reproducer can close G2. **Gap-closer: root-cause + fix the
+   clean-room failure, then re-run the isolated reproduction.**
+
+3. **Continuous self-learning's keystone (α_t grounding / P0.2) is unmeasured at
+   production k.** FR-11 self-improvement is sound only if the verifier ensemble
+   has real diversity (small joint null space). exp1224 showed k=3 collapse;
+   exp2837 showed 3-of-4 FoVer verifiers contributing zero. The audit has been
+   displaced/blocked for two milestones. **Gap-closer: run the λ_min(Σ) /
+   effective-k audit on `claude`.**
+
+---
+
+## 3. Milestone architecture
 
 ```
-          ┌─────────────────────── P0.1 (exp3426): the premise ────────────────────────┐
-          │  problem ──► base LLM (Qwen3.6-35B-A3B-GGUF)                                  │
-          │                 │                                                            │
-          │     ┌───────────┼───────────────┬────────────────────┐                      │
-          │     ▼           ▼                ▼                    ▼                      │
-          │  greedy AR   k samples ──►   k samples ──►       k samples ──►               │
-          │  (control)   majority vote   self-certainty       ENERGY-weighted vote       │
-          │              (SC, the real    BoN (2502.18581)     + latent energy descent   │
-          │               control .315    strongest cheap       (EBM-CoT 2511.07124)     │
-          │               lost to)        selector)             ── the premise           │
-          │     └───────────┴───────────────┴────────────────────┘                      │
-          │  headline = energy-vote accuracy − SC accuracy (paired, matched compute)     │
-          └──────────────────────────────────────────────────────────────────────────────┘
+ PHASE A — ops transition
+   exp3436  archive .316 / activate .317                         [claude, 20t]
 
-   P0.2 (exp3427): does the ensemble that GROUNDS self-correction have real diversity?
-       173 verifiers ──► label by kernel class ──► Σ (decision covariance)
-       ──► λ_min(Σ), effective-k (participation ratio), drop-one-out contribution
-       grounding holds ⇔ λ_min > 0.1 AND effective-k ≥ 3
+ PHASE B — DEPTH BLOCK (the majority; all on claude — gemini-cli is down)
+   exp3437  P0.1 v3  energy-vote vs SC, REAL multi-sample harness [opus, 100t] *crux*
+   exp3438  G2 clean-room ROOT-CAUSE + fix + re-isolated run      [opus, 80t]  *sole gate*
+   exp3439  P0.2  verifier lambda_min(Sigma) / effective-k audit  [claude,50t]
+   exp3440  Kona  global-opt solve-rate gate (correctness-first)  [opus, 60t]
+   exp3441  Ensemble vs adaptive prompt-injection corpus          [claude,50t]
 
-   exp3428 (Kona, concrete P0.1 instance): can energy SOLVE, not just run fast?
-       STEP 0a encoding validity (valid board ⇒ E==0)  ──gate──►  optimizer ladder
-       ──► solve_rate by difficulty (final_energy==0 verified ON THE BOARD)
+ PHASE C — HARDWARE (light + opportunistic; north-star §3)
+   exp3442  KV260 terminal latency transcript (ssh-gated)         [opus,100t]
+   exp3443  GateMate opportunistic detect + continuity            [claude,20t]
+   exp3444  PolarFire opportunistic reachability                  [claude,20t]
 
-   exp3429: does the k=15 cross-mechanism ensemble beat a lone KAN (0.475) on the
-            adaptive prompt-injection corpus where any single mechanism fails?
-
-   G2 (exp3430): run the shipped harness in an ISOLATED clean-room env (fresh
-                 worktree + fresh venv) to de-risk the external reproducer.
+ PHASE D — ops synthesis + capstone
+   exp3445  G1-G4 gate-status synthesis (clean depth verdicts)    [claude,30t]
+   exp3446  Capstone v317                                         [claude,20t]
 ```
+
+11 tasks. **5 substantive depth tasks (B)** = the majority of non-ops,
+non-hardware slots — satisfies Depth-Over-Breadth. **NO vN+1 re-measurement of
+an already-measured artifact** appears: every depth task either fixes a broken
+measurement (P0.1 v3, G2 clean-room) or runs a measurement that has never
+produced an artifact (P0.2, Kona, injection — all gemini-crash victims).
+
+### Dependency graph
+
+```
+exp3436 (activate) ─┬─> exp3437 P0.1 v3 ────────────────┐
+                    ├─> exp3438 G2 clean-room            │
+                    ├─> exp3439 P0.2                     ├─> exp3445 gate-synthesis ─> exp3446 capstone
+                    ├─> exp3440 Kona                     │   (gated_on exp3437 verdict
+                    ├─> exp3441 injection                │    contains 'complete')
+                    ├─> exp3442/3443/3444 hardware ──────┘
+```
+
+The depth tasks are mutually independent; only the synthesis (exp3445) gates on
+exp3437's terminal verdict, and the capstone (exp3446) gates on exp3445.
 
 ---
 
-## Phases
+## 4. Why each depth task is depth, not breadth
 
-### Phase A — OPS transition (1 task)
-- **exp3425** — archive `.315` honestly (note the contested/flagged P0.1 + the
-  3 non-landing depth tasks), activate `.316`.
+- **exp3437 (P0.1 v3)** — fixes a *broken measurement* of the single most
+  load-bearing premise. The headline number (energy-vote − SC at matched
+  compute) directly determines whether the Phase-3 endgame is justified. Either
+  outcome is high value: beats SC → first real justification; doesn't → retire
+  the energy-superiority framing.
+- **exp3438 (G2 clean-room)** — directly advances the SOLE unmet publication
+  gate, which actively regressed in .316. Without a clean-env reproduction, G2
+  cannot be closed by any external reproducer.
+- **exp3439 (P0.2)** — the alpha_t-grounding keystone of continuous
+  self-learning (PRD FR-11). Measures whether ensemble diversity survives at
+  production k.
+- **exp3440 (Kona)** — the cleanest concrete instance of P0.1 (does Ising energy
+  *solve* hard Sudoku via global optimization?). Correctness-first gate.
+- **exp3441 (injection)** — tests whether the k=15 cross-mechanism ensemble
+  beats the single-KAN 0.475 floor (Spera joint-null-space theory).
 
-### Phase B — DEPTH BLOCK (the majority; 5 tasks)
-The load-bearing existential tests, completed cleanly.
-- **exp3426 — P0.1 v2 (THE crux):** energy-descent vs AR vs **self-consistency**
-  vs self-certainty-BoN, at matched compute, clean methodology to clear the
-  adversarial flag. Headline = energy-weighted-vote − majority-vote SC. Mirrors
-  EBM-CoT (2511.07124). `requires_claude`.
-- **exp3427 — P0.2:** verifier-ensemble λ_min(Σ) / joint-null-space diversity
-  audit on a deliberately disjoint-kernel suite. **This is the milestone's
-  continuous-self-learning depth experiment** (α_t grounding precondition for
-  FR-11 self-correction). `gemini`.
-- **exp3428 — Kona solve-rate gate:** correctness-first (STEP 0a encoding
-  validity gates everything), solve_rate not time. `gemini`.
-- **exp3429 — ensemble-vs-adaptive-injection:** full k=15 cross-mechanism
-  ensemble on the exp3273 held-out corpus the lone KAN scored 0.475 on. `gemini`.
-- **exp3430 — G2 clean-room validation:** run `scripts/reproduce_fover_headline.py`
-  in an isolated fresh git worktree + fresh venv; confirm in-CI; document the
-  turnkey external path. Does NOT set `g2_independent_reproducer=true` (external
-  non-operator run still required). `claude`.
-
-### Phase C — HARDWARE (light + opportunistic per north-star §3; 3 tasks)
-KV260 to terminal then freeze; GateMate/PolarFire opportunistic, never blocking.
-- **exp3431** — KV260 terminal latency transcript (re-attempt; was
-  `blocked_kv260_ssh_unreachable` in `.315`). SSH-only precondition.
-- **exp3432** — GateMate: apply the `.315`-identified fix (exp3421 root-cause =
-  script never sets `honest_verdict`) to the experiment script, then attempt the
-  bootstrap once. Opportunistic.
-- **exp3433** — PolarFire light reachability/continuity audit (no new workload).
-
-### Phase D — OPS synthesis + capstone (2 tasks)
-- **exp3434** — G1–G4 gate-status synthesis (gated on exp3426 P0.1 v2 verdict).
-- **exp3435** — Capstone v316 (gated on exp3434).
+Each maps to a G-gate or a load-bearing-unproven link, per the Depth-Over-Breadth
+three-question test.
 
 ---
 
-## Dependency graph
+## 5. Continuous self-learning coverage
 
-```
-exp3425 (archive/activate)
-   │
-   ├─► exp3426  P0.1 v2  ──────────────┐  (gates exp3434 on honest_verdict contains 'complete')
-   ├─► exp3427  P0.2 diversity         │
-   ├─► exp3428  Kona solve-rate        │
-   ├─► exp3429  ensemble-vs-injection  │
-   ├─► exp3430  G2 clean-room          │
-   ├─► exp3431  KV260 terminal         │
-   ├─► exp3432  GateMate fix-apply     │
-   └─► exp3433  PolarFire audit        │
-                                       ▼
-                              exp3434  G1–G4 synthesis  (gated_on exp3426 verdict)
-                                       │  (gates exp3435 on gate_status_v316_ready==true)
-                                       ▼
-                              exp3435  Capstone v316
-```
+**exp3439 (P0.2 diversity audit)** is the continuous-self-learning experiment
+this milestone (research-program.md "Continuous Self-Learning"): alpha_t
+grounding is the precondition that lets the FR-11 self-correcting loop avoid
+self-distillation collapse. If the ensemble's joint null space is too large
+(effective-k < 3, lambda_min(Sigma) <= 0.1), the grounding signal is at risk and
+the self-improvement thesis needs an adversarial-rotation fix.
 
 ---
 
-## Hardware requirements
+## 6. Hardware requirements
 
-- **2× RTX 3090 (CUDA):** exp3426 (live 35B GGUF inference + latent energy
-  descent), exp3427 / exp3429 (model-based verifiers), exp3428 (Ising sampler +
-  optional LLM proposal step). CUDA recovered 2026-05-28 — no compute blocker.
-- **CPU only:** exp3430 (FoVer verifier-scoring reproduction), all OPS tasks.
-- **KV260** via `ssh kria` (SSH-only precondition, never host SD-card).
-- **GateMate** via `openFPGALoader -c dirtyJtag`; **PolarFire** via `ssh polarfire`.
+Per north-star §3 (KV260 to terminal, then freeze; GateMate/PolarFire
+opportunistic):
 
-## SOTA model usage (CLAUDE.md mandate)
+- **exp3437 / exp3440** need CUDA (RTX 3090) for live 35B GGUF inference and the
+  Ising optimizer. SOTA model: `unsloth/Qwen3.6-35B-A3B-GGUF` (P0.1),
+  `unsloth/gemma-4-26B-A4B-it-GGUF` (Kona hybrid proposal step).
+- **exp3438 / exp3439 / exp3441** are CPU verifier-scoring (no GPU strictly
+  required for the headline path; GPU used only for model-based verifiers).
+- **exp3442** needs `ssh kria` reachability (operator action if board is off).
+- **exp3443 / exp3444** need the GateMate DirtyJTAG / PolarFire SSH preconditions.
 
-- exp3426 AR + energy-descent baseline: `unsloth/Qwen3.6-35B-A3B-GGUF` (flagship
-  MoE), loaded via the GGUF path (embedded tokenizer — NEVER `AutoTokenizer` on a
-  `-GGUF` repo id, per the 2026-05-29 GGUF tokenizer rule).
-- exp3428 optional hybrid LLM-proposal step: `unsloth/gemma-4-26B-A4B-it-GGUF`.
-- exp3427 / exp3429 model-based verifiers use the cached SOTA pair as configured
-  in the verifier suite.
+---
 
-## Self-learning coverage (PRD / research-program.md mandate)
+## 7. Process changes vs .316
 
-**exp3427 (P0.2) is the continuous-self-learning experiment.** α_t grounding is
-the precondition that lets a self-correcting model (FR-11, Tiers 1–4) avoid
-self-distillation collapse; it only holds if the verifier ensemble has real
-diversity. exp3427 measures exactly that keystone at production k. The FR-11
-learning-contribution (+0.0185, exp2837) is the live self-learning signal whose
-grounding exp3427 validates.
+1. **All experiment tasks route to `claude`** (gemini-cli is down — cite
+   exp3427/3428/3429 3× crashes). This is the single highest-leverage process
+   fix; it converts 3 perpetually-missing depth artifacts into landing tasks.
+2. **P0.1 v3 hardens the SC baseline**: a PRECONDITION asserts the SC accuracy
+   is non-degenerate (SC ≥ greedy AR on GSM8K, the textbook result) BEFORE any
+   energy comparison is reported — making the 0.0-vs-0.0 failure mode impossible
+   to ship as a verdict.
+3. **G2 task is now root-cause-and-fix**, not just re-run, because the .316
+   clean-room actively failed.
 
-## Depth-Over-Breadth compliance statement
+---
 
-Every `.316` substantive task either (a) tests a load-bearing-unproven link
-(P0.1 exp3426, P0.2 exp3427, Kona exp3428), (b) closes/advances a publication
-gate (G2 exp3430, gate synthesis exp3434), or (c) tests whether the ensemble
-generalizes where a single verifier failed (exp3429). **No task re-measures an
-already-measured artifact** (no cross-corpus matrix vN+1, no telemetry vN+1, no
-repair-panel vN+1). P0.1 v2 is NOT re-measurement — the `.315` result was flagged
-and contested, and the v2 adds the matched-compute self-consistency control as
-the PRIMARY comparison (a question the `.315` run did not answer). The hardware
-tasks are the light, opportunistic, KV260-to-terminal allocation north-star §3
-prescribes.
+## 8. Acceptance / exit criteria
+
+The milestone succeeds if:
+- P0.1 v3 emits a CLEAN (non-degenerate, non-flagged) energy-vote-vs-SC number
+  with paired significance, OR an honest blocked_* if a precondition fails.
+- G2 clean-room either reproduces in-CI from an isolated env, OR identifies and
+  fixes the concrete root cause of the .316 failure.
+- P0.2 / Kona / injection each produce a real artifact (no longer gemini-crash
+  victims).
+- The gate synthesis recomputes `depth_forcing_function_can_relax` against the
+  clean depth verdicts (expected: still False unless P0.1 lands clean AND G2
+  has an in-flight external reproducer).
+
+---
+
+## 9. Cross-references
+- `ops/north-star.md` §1 (headline), §2 (G1-G4 gate), §3 (hardware focus)
+- `ops/known-issues.md` — P0.1 (exp3312), P0.2 (exp3313), Kona correctness gate
+  (NEW 2026-05-30), ensemble-vs-injection (NEW 2026-05-28)
+- `research-references.md` "2026-05-30 Post-.316 Planning Sweep" (the new
+  energy-vote-vs-SC references: arXiv:2410.12608, 2510.17472)
+- CLAUDE.md "Depth-Over-Breadth Forcing Function", "Gemini-Default for
+  Experiments" (the `requires_claude` carve-out), "Adversarial Artifact
+  Verification" (fabrication gate), "KV260 SSH-Not-SD-Card Discipline"
+- exp3426 / exp3430 / exp3434 (the .316 outcomes this milestone supersedes)
