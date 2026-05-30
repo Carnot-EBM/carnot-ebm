@@ -7867,3 +7867,4 @@ ModuleNotFoundError: No module named 'torch'; results/experiment_2828_fover_memo
 - 2026-05-30: G1-G4 gate-status synthesis (clean P0.1 v4 cached-scoring / G2 CI / calibration / FR-11 verdicts) (✅ Complete) — honest_verdict=complete: g2_sole_unmet_gate_p01_v4_flagged_depth_forcing_remains_active; results/experiment_3456_g_gate_status_synthesis_v318.json
 - 2026-05-30: Operational Retrospective (✅ Complete) — honest_verdict=complete: Milestone 2026.05.318 resulted in no experiments being processed.
 - 2026-05-30: Archive milestone .318 honestly and activate .319 (✅ Complete) — honest_verdict=complete: archive_v318_activate_v319_ready; results/experiment_3458_archive_v318_activate_v319.json
+- 2026-05-30: P0.1 corpus extend 47->120 — resume the resumable GSM8K generation builder (timeout-proof) (✅ Complete) — honest_verdict=complete: p01_generation_corpus_headline_eligible_n=93; results/experiment_3459_p01_generation_corpus_extend_to_120_v2.json
