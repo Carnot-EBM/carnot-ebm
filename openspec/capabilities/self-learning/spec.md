@@ -10049,3 +10049,17 @@ episodes that can be loaded, keeps `controller_memory_only=true`,
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-LEARN-3399 | Implemented (`scripts/experiment_3399_logicvault_long_context.py`) | Implemented (`tests/python/test_experiment_3399_logicvault_long_context.py`) |
+
+## REQ-LEARN-030: Latent Energy Spills as Reward Signal
+
+**Given** the FR-11 continuous self-learning loop
+**When** inference is run using `MODEL_SPECS = ["unsloth/Qwen3.6-35B-A3B-GGUF"]`
+**Then** the spill detection algorithm identifies when the model relies on language priors
+**And** failed examples are replayed and constraint templates updated using Latent Energy Spill values as priority weights
+**And** the script `scripts/experiment_3410_fr11_updates_spills.py` outputs a retention and adaptation score to `results/experiment_3410_fr11_updates_spills.json`.
+
+### SCENARIO-LEARN-030: Spills Driven Constraint Update
+
+**Given** a set of model outputs
+**When** latent energy spills are detected
+**Then** the constraint templates are updated weighted by the spill values, correctly computing adaptation and retention scores.
