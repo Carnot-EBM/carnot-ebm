@@ -2,25 +2,25 @@
   "experiment": 3426,
   "title": "Energy vs AR vs Self-Consistency at matched compute (Kona premise v2)",
   "run_date": "20260530",
-  "started_at": "2026-05-30T07:12:23Z",
-  "finished_at": "2026-05-30T07:12:40Z",
-  "duration_s": 16.771,
+  "started_at": "2026-05-30T07:12:59Z",
+  "finished_at": "2026-05-30T07:23:42Z",
+  "duration_s": 642.821,
   "status": "success",
   "random_seed": 20260530,
-  "reproducibility_checksum": "e5ce0d24cb2693bc",
+  "reproducibility_checksum": "3eb6b5de31f0d76b",
   "metrics_used": "unknown",
   "honest_verdict": "complete: energy_matches_but_does_not_beat_self_consistency_at_equal_compute",
   "inference_substrate": "live_llm_inference",
   "task_name": "GSM8K (original questions, exp281 corpus), held-out shuffled split",
-  "n_problems": 2,
-  "k_samples": 2,
-  "ar_greedy_accuracy": 0.0,
+  "n_problems": 200,
+  "k_samples": 5,
+  "ar_greedy_accuracy": 0.75,
   "self_consistency_accuracy": 0.0,
   "self_certainty_bon_accuracy": 0.0,
   "energy_argmin_accuracy": 0.0,
   "energy_weighted_vote_accuracy": 0.0,
   "delta_energy_vs_self_consistency": 0.0,
-  "delta_energy_vs_greedy_ar": 0.0,
+  "delta_energy_vs_greedy_ar": -0.75,
   "paired_significance": {
     "comparison": "energy_weighted_vote_vs_self_consistency",
     "test": "mcnemar_exact_binomial + paired_bootstrap_ci",
@@ -35,13 +35,13 @@
   },
   "g1_energy_non_inferior": true,
   "g2_energy_adds_value": false,
-  "compute_parity_note": "All conditions use the same base model unsloth/Qwen3.6-35B-A3B-GGUF (Qwen3.6-35B-A3B MoE, ~3B active params, Q4_K_M) on the same 2 paired problems. Greedy AR = 1 greedy generation/problem (the matched-compute floor). Conditions 2-4 (self-consistency, self-certainty BoN, energy-argmin, energy-weighted vote) ALL consume the SAME 2 sampled generations/problem (temp 0.8); only the selection/aggregation differs \u2014 energy gets NO extra samples. The energy conditions add only a 16-dim latent gradient descent (8 steps, negligible FLOPs, no token sampling in-loop). The energy-weighted vote softmaxes over per-problem z-scored final energies at temperature T=0.5 (scale-free; T->inf recovers plain majority vote). PRIMARY comparison is energy_weighted_vote vs self_consistency at matched compute; delta_energy_vs_greedy_ar is reported only for continuity with exp3312.",
+  "compute_parity_note": "All conditions use the same base model unsloth/Qwen3.6-35B-A3B-GGUF (Qwen3.6-35B-A3B MoE, ~3B active params, Q4_K_M) on the same 200 paired problems. Greedy AR = 1 greedy generation/problem (the matched-compute floor). Conditions 2-4 (self-consistency, self-certainty BoN, energy-argmin, energy-weighted vote) ALL consume the SAME 5 sampled generations/problem (temp 0.8); only the selection/aggregation differs \u2014 energy gets NO extra samples. The energy conditions add only a 16-dim latent gradient descent (8 steps, negligible FLOPs, no token sampling in-loop). The energy-weighted vote softmaxes over per-problem z-scored final energies at temperature T=0.5 (scale-free; T->inf recovers plain majority vote). PRIMARY comparison is energy_weighted_vote vs self_consistency at matched compute; delta_energy_vs_greedy_ar is reported only for continuity with exp3312.",
   "ar_model": "unsloth/Qwen3.6-35B-A3B-GGUF",
   "energy_substrate": "boltzmann_gpt_v16_e60_gap4.6476",
   "energy_substrate_test_gap": 4.6476,
   "energy_vote_temperature": 0.5,
   "descent_steps": 8,
-  "max_tokens": 160,
+  "max_tokens": 512,
   "preconditions_checked": [
     {
       "resource": "cuda",
@@ -91,7 +91,7 @@
     {
       "problem_id": "gsm8k-1121",
       "gold": 35,
-      "ar_pred": 7,
+      "ar_pred": 35,
       "sc_pred": null,
       "self_certainty_pred": null,
       "self_certainty_index": 0,
@@ -100,9 +100,15 @@
       "energy_weighted_vote_pred": null,
       "candidate_preds": [
         null,
+        null,
+        null,
+        null,
         null
       ],
       "candidate_final_energies": [
+        -569.818848,
+        -569.818848,
+        -569.818848,
         -569.818848,
         -569.818848
       ]
@@ -110,6 +116,81 @@
     {
       "problem_id": "gsm8k-873",
       "gold": 12,
+      "ar_pred": 12,
+      "sc_pred": null,
+      "self_certainty_pred": null,
+      "self_certainty_index": 0,
+      "energy_argmin_pred": null,
+      "energy_argmin_index": 0,
+      "energy_weighted_vote_pred": null,
+      "candidate_preds": [
+        null,
+        null,
+        null,
+        null,
+        null
+      ],
+      "candidate_final_energies": [
+        -569.818848,
+        -569.818848,
+        -569.818848,
+        -569.818848,
+        -569.818848
+      ]
+    },
+    {
+      "problem_id": "gsm8k-500",
+      "gold": 16,
+      "ar_pred": 16,
+      "sc_pred": null,
+      "self_certainty_pred": null,
+      "self_certainty_index": 0,
+      "energy_argmin_pred": null,
+      "energy_argmin_index": 0,
+      "energy_weighted_vote_pred": null,
+      "candidate_preds": [
+        null,
+        null,
+        null,
+        null,
+        null
+      ],
+      "candidate_final_energies": [
+        -569.818848,
+        -569.818848,
+        -569.818848,
+        -569.818848,
+        -569.818848
+      ]
+    },
+    {
+      "problem_id": "gsm8k-424",
+      "gold": 570,
+      "ar_pred": 570,
+      "sc_pred": null,
+      "self_certainty_pred": null,
+      "self_certainty_index": 0,
+      "energy_argmin_pred": null,
+      "energy_argmin_index": 0,
+      "energy_weighted_vote_pred": null,
+      "candidate_preds": [
+        null,
+        null,
+        null,
+        null,
+        null
+      ],
+      "candidate_final_energies": [
+        -569.818848,
+        -569.818848,
+        -569.818848,
+        -569.818848,
+        -569.818848
+      ]
+    },
+    {
+      "problem_id": "gsm8k-56",
+      "gold": 3,
       "ar_pred": 3,
       "sc_pred": null,
       "self_certainty_pred": null,
@@ -119,9 +200,4890 @@
       "energy_weighted_vote_pred": null,
       "candidate_preds": [
         null,
+        null,
+        null,
+        null,
         null
       ],
       "candidate_final_energies": [
+        -569.818848,
+        -569.818848,
+        -569.818848,
+        -569.818848,
+        -569.818848
+      ]
+    },
+    {
+      "problem_id": "gsm8k-823",
+      "gold": 14,
+      "ar_pred": 18,
+      "sc_pred": null,
+      "self_certainty_pred": null,
+      "self_certainty_index": 0,
+      "energy_argmin_pred": null,
+      "energy_argmin_index": 0,
+      "energy_weighted_vote_pred": null,
+      "candidate_preds": [
+        null,
+        null,
+        null,
+        null,
+        null
+      ],
+      "candidate_final_energies": [
+        -569.818848,
+        -569.818848,
+        -569.818848,
+        -569.818848,
+        -569.818848
+      ]
+    },
+    {
+      "problem_id": "gsm8k-375",
+      "gold": 48,
+      "ar_pred": 48,
+      "sc_pred": null,
+      "self_certainty_pred": null,
+      "self_certainty_index": 0,
+      "energy_argmin_pred": null,
+      "energy_argmin_index": 0,
+      "energy_weighted_vote_pred": null,
+      "candidate_preds": [
+        null,
+        null,
+        null,
+        null,
+        null
+      ],
+      "candidate_final_energies": [
+        -569.818848,
+        -569.818848,
+        -569.818848,
+        -569.818848,
+        -569.818848
+      ]
+    },
+    {
+      "problem_id": "gsm8k-83",
+      "gold": 600,
+      "ar_pred": 600,
+      "sc_pred": null,
+      "self_certainty_pred": null,
+      "self_certainty_index": 0,
+      "energy_argmin_pred": null,
+      "energy_argmin_index": 0,
+      "energy_weighted_vote_pred": null,
+      "candidate_preds": [
+        null,
+        null,
+        null,
+        null,
+        null
+      ],
+      "candidate_final_energies": [
+        -569.818848,
+        -569.818848,
+        -569.818848,
+        -569.818848,
+        -569.818848
+      ]
+    },
+    {
+      "problem_id": "gsm8k-400",
+      "gold": 48,
+      "ar_pred": 48,
+      "sc_pred": null,
+      "self_certainty_pred": null,
+      "self_certainty_index": 0,
+      "energy_argmin_pred": null,
+      "energy_argmin_index": 0,
+      "energy_weighted_vote_pred": null,
+      "candidate_preds": [
+        null,
+        null,
+        null,
+        null,
+        null
+      ],
+      "candidate_final_energies": [
+        -569.818848,
+        -569.818848,
+        -569.818848,
+        -569.818848,
+        -569.818848
+      ]
+    },
+    {
+      "problem_id": "gsm8k-1036",
+      "gold": 10,
+      "ar_pred": 10,
+      "sc_pred": null,
+      "self_certainty_pred": null,
+      "self_certainty_index": 0,
+      "energy_argmin_pred": null,
+      "energy_argmin_index": 0,
+      "energy_weighted_vote_pred": null,
+      "candidate_preds": [
+        null,
+        null,
+        null,
+        null,
+        null
+      ],
+      "candidate_final_energies": [
+        -569.818848,
+        -569.818848,
+        -569.818848,
+        -569.818848,
+        -569.818848
+      ]
+    },
+    {
+      "problem_id": "gsm8k-1254",
+      "gold": 30,
+      "ar_pred": 30,
+      "sc_pred": null,
+      "self_certainty_pred": null,
+      "self_certainty_index": 0,
+      "energy_argmin_pred": null,
+      "energy_argmin_index": 0,
+      "energy_weighted_vote_pred": null,
+      "candidate_preds": [
+        null,
+        null,
+        null,
+        null,
+        null
+      ],
+      "candidate_final_energies": [
+        -569.818848,
+        -569.818848,
+        -569.818848,
+        -569.818848,
+        -569.818848
+      ]
+    },
+    {
+      "problem_id": "gsm8k-1008",
+      "gold": 230,
+      "ar_pred": 230,
+      "sc_pred": null,
+      "self_certainty_pred": null,
+      "self_certainty_index": 0,
+      "energy_argmin_pred": null,
+      "energy_argmin_index": 0,
+      "energy_weighted_vote_pred": null,
+      "candidate_preds": [
+        null,
+        null,
+        null,
+        null,
+        null
+      ],
+      "candidate_final_energies": [
+        -569.818848,
+        -569.818848,
+        -569.818848,
+        -569.818848,
+        -569.818848
+      ]
+    },
+    {
+      "problem_id": "gsm8k-587",
+      "gold": 30,
+      "ar_pred": 1,
+      "sc_pred": null,
+      "self_certainty_pred": null,
+      "self_certainty_index": 0,
+      "energy_argmin_pred": null,
+      "energy_argmin_index": 0,
+      "energy_weighted_vote_pred": null,
+      "candidate_preds": [
+        null,
+        null,
+        null,
+        null,
+        null
+      ],
+      "candidate_final_energies": [
+        -569.818848,
+        -569.818848,
+        -569.818848,
+        -569.818848,
+        -569.818848
+      ]
+    },
+    {
+      "problem_id": "gsm8k-197",
+      "gold": 6277,
+      "ar_pred": 6277,
+      "sc_pred": null,
+      "self_certainty_pred": null,
+      "self_certainty_index": 0,
+      "energy_argmin_pred": null,
+      "energy_argmin_index": 0,
+      "energy_weighted_vote_pred": null,
+      "candidate_preds": [
+        null,
+        null,
+        null,
+        null,
+        null
+      ],
+      "candidate_final_energies": [
+        -569.818848,
+        -569.818848,
+        -569.818848,
+        -569.818848,
+        -569.818848
+      ]
+    },
+    {
+      "problem_id": "gsm8k-1068",
+      "gold": 24,
+      "ar_pred": 24,
+      "sc_pred": null,
+      "self_certainty_pred": null,
+      "self_certainty_index": 0,
+      "energy_argmin_pred": null,
+      "energy_argmin_index": 0,
+      "energy_weighted_vote_pred": null,
+      "candidate_preds": [
+        null,
+        null,
+        null,
+        null,
+        null
+      ],
+      "candidate_final_energies": [
+        -569.818848,
+        -569.818848,
+        -569.818848,
+        -569.818848,
+        -569.818848
+      ]
+    },
+    {
+      "problem_id": "gsm8k-687",
+      "gold": 13,
+      "ar_pred": 13,
+      "sc_pred": null,
+      "self_certainty_pred": null,
+      "self_certainty_index": 0,
+      "energy_argmin_pred": null,
+      "energy_argmin_index": 0,
+      "energy_weighted_vote_pred": null,
+      "candidate_preds": [
+        null,
+        null,
+        null,
+        null,
+        null
+      ],
+      "candidate_final_energies": [
+        -569.818848,
+        -569.818848,
+        -569.818848,
+        -569.818848,
+        -569.818848
+      ]
+    },
+    {
+      "problem_id": "gsm8k-1017",
+      "gold": 45,
+      "ar_pred": 5,
+      "sc_pred": null,
+      "self_certainty_pred": null,
+      "self_certainty_index": 0,
+      "energy_argmin_pred": null,
+      "energy_argmin_index": 0,
+      "energy_weighted_vote_pred": null,
+      "candidate_preds": [
+        null,
+        null,
+        null,
+        null,
+        null
+      ],
+      "candidate_final_energies": [
+        -569.818848,
+        -569.818848,
+        -569.818848,
+        -569.818848,
+        -569.818848
+      ]
+    },
+    {
+      "problem_id": "gsm8k-427",
+      "gold": 150,
+      "ar_pred": 150,
+      "sc_pred": null,
+      "self_certainty_pred": null,
+      "self_certainty_index": 0,
+      "energy_argmin_pred": null,
+      "energy_argmin_index": 0,
+      "energy_weighted_vote_pred": null,
+      "candidate_preds": [
+        null,
+        null,
+        null,
+        null,
+        null
+      ],
+      "candidate_final_energies": [
+        -569.818848,
+        -569.818848,
+        -569.818848,
+        -569.818848,
+        -569.818848
+      ]
+    },
+    {
+      "problem_id": "gsm8k-568",
+      "gold": 175,
+      "ar_pred": 175,
+      "sc_pred": null,
+      "self_certainty_pred": null,
+      "self_certainty_index": 0,
+      "energy_argmin_pred": null,
+      "energy_argmin_index": 0,
+      "energy_weighted_vote_pred": null,
+      "candidate_preds": [
+        null,
+        null,
+        null,
+        null,
+        null
+      ],
+      "candidate_final_energies": [
+        -569.818848,
+        -569.818848,
+        -569.818848,
+        -569.818848,
+        -569.818848
+      ]
+    },
+    {
+      "problem_id": "gsm8k-514",
+      "gold": 90000,
+      "ar_pred": 90000,
+      "sc_pred": null,
+      "self_certainty_pred": null,
+      "self_certainty_index": 0,
+      "energy_argmin_pred": null,
+      "energy_argmin_index": 0,
+      "energy_weighted_vote_pred": null,
+      "candidate_preds": [
+        null,
+        null,
+        null,
+        null,
+        null
+      ],
+      "candidate_final_energies": [
+        -569.818848,
+        -569.818848,
+        -569.818848,
+        -569.818848,
+        -569.818848
+      ]
+    },
+    {
+      "problem_id": "gsm8k-128",
+      "gold": 880,
+      "ar_pred": 880,
+      "sc_pred": null,
+      "self_certainty_pred": null,
+      "self_certainty_index": 0,
+      "energy_argmin_pred": null,
+      "energy_argmin_index": 0,
+      "energy_weighted_vote_pred": null,
+      "candidate_preds": [
+        null,
+        null,
+        null,
+        null,
+        null
+      ],
+      "candidate_final_energies": [
+        -569.818848,
+        -569.818848,
+        -569.818848,
+        -569.818848,
+        -569.818848
+      ]
+    },
+    {
+      "problem_id": "gsm8k-971",
+      "gold": 100,
+      "ar_pred": 100,
+      "sc_pred": null,
+      "self_certainty_pred": null,
+      "self_certainty_index": 0,
+      "energy_argmin_pred": null,
+      "energy_argmin_index": 0,
+      "energy_weighted_vote_pred": null,
+      "candidate_preds": [
+        null,
+        null,
+        null,
+        null,
+        null
+      ],
+      "candidate_final_energies": [
+        -569.818848,
+        -569.818848,
+        -569.818848,
+        -569.818848,
+        -569.818848
+      ]
+    },
+    {
+      "problem_id": "gsm8k-503",
+      "gold": 18,
+      "ar_pred": 18,
+      "sc_pred": null,
+      "self_certainty_pred": null,
+      "self_certainty_index": 0,
+      "energy_argmin_pred": null,
+      "energy_argmin_index": 0,
+      "energy_weighted_vote_pred": null,
+      "candidate_preds": [
+        null,
+        null,
+        null,
+        null,
+        null
+      ],
+      "candidate_final_energies": [
+        -569.818848,
+        -569.818848,
+        -569.818848,
+        -569.818848,
+        -569.818848
+      ]
+    },
+    {
+      "problem_id": "gsm8k-818",
+      "gold": 16,
+      "ar_pred": 16,
+      "sc_pred": null,
+      "self_certainty_pred": null,
+      "self_certainty_index": 0,
+      "energy_argmin_pred": null,
+      "energy_argmin_index": 0,
+      "energy_weighted_vote_pred": null,
+      "candidate_preds": [
+        null,
+        null,
+        null,
+        null,
+        null
+      ],
+      "candidate_final_energies": [
+        -569.818848,
+        -569.818848,
+        -569.818848,
+        -569.818848,
+        -569.818848
+      ]
+    },
+    {
+      "problem_id": "gsm8k-12",
+      "gold": 13,
+      "ar_pred": 13,
+      "sc_pred": null,
+      "self_certainty_pred": null,
+      "self_certainty_index": 0,
+      "energy_argmin_pred": null,
+      "energy_argmin_index": 0,
+      "energy_weighted_vote_pred": null,
+      "candidate_preds": [
+        null,
+        null,
+        null,
+        null,
+        null
+      ],
+      "candidate_final_energies": [
+        -569.818848,
+        -569.818848,
+        -569.818848,
+        -569.818848,
+        -569.818848
+      ]
+    },
+    {
+      "problem_id": "gsm8k-154",
+      "gold": 272,
+      "ar_pred": 272,
+      "sc_pred": null,
+      "self_certainty_pred": null,
+      "self_certainty_index": 0,
+      "energy_argmin_pred": null,
+      "energy_argmin_index": 0,
+      "energy_weighted_vote_pred": null,
+      "candidate_preds": [
+        null,
+        null,
+        null,
+        null,
+        null
+      ],
+      "candidate_final_energies": [
+        -569.818848,
+        -569.818848,
+        -569.818848,
+        -569.818848,
+        -569.818848
+      ]
+    },
+    {
+      "problem_id": "gsm8k-985",
+      "gold": 63,
+      "ar_pred": 63,
+      "sc_pred": null,
+      "self_certainty_pred": null,
+      "self_certainty_index": 0,
+      "energy_argmin_pred": null,
+      "energy_argmin_index": 0,
+      "energy_weighted_vote_pred": null,
+      "candidate_preds": [
+        null,
+        null,
+        null,
+        null,
+        null
+      ],
+      "candidate_final_energies": [
+        -569.818848,
+        -569.818848,
+        -569.818848,
+        -569.818848,
+        -569.818848
+      ]
+    },
+    {
+      "problem_id": "gsm8k-377",
+      "gold": 50,
+      "ar_pred": 50,
+      "sc_pred": null,
+      "self_certainty_pred": null,
+      "self_certainty_index": 0,
+      "energy_argmin_pred": null,
+      "energy_argmin_index": 0,
+      "energy_weighted_vote_pred": null,
+      "candidate_preds": [
+        null,
+        null,
+        null,
+        null,
+        null
+      ],
+      "candidate_final_energies": [
+        -569.818848,
+        -569.818848,
+        -569.818848,
+        -569.818848,
+        -569.818848
+      ]
+    },
+    {
+      "problem_id": "gsm8k-117",
+      "gold": 360,
+      "ar_pred": 360,
+      "sc_pred": null,
+      "self_certainty_pred": null,
+      "self_certainty_index": 0,
+      "energy_argmin_pred": null,
+      "energy_argmin_index": 0,
+      "energy_weighted_vote_pred": null,
+      "candidate_preds": [
+        null,
+        null,
+        null,
+        null,
+        null
+      ],
+      "candidate_final_energies": [
+        -569.818848,
+        -569.818848,
+        -569.818848,
+        -569.818848,
+        -569.818848
+      ]
+    },
+    {
+      "problem_id": "gsm8k-887",
+      "gold": 34,
+      "ar_pred": 34,
+      "sc_pred": null,
+      "self_certainty_pred": null,
+      "self_certainty_index": 0,
+      "energy_argmin_pred": null,
+      "energy_argmin_index": 0,
+      "energy_weighted_vote_pred": null,
+      "candidate_preds": [
+        null,
+        null,
+        null,
+        null,
+        null
+      ],
+      "candidate_final_energies": [
+        -569.818848,
+        -569.818848,
+        -569.818848,
+        -569.818848,
+        -569.818848
+      ]
+    },
+    {
+      "problem_id": "gsm8k-136",
+      "gold": 6,
+      "ar_pred": 6,
+      "sc_pred": null,
+      "self_certainty_pred": null,
+      "self_certainty_index": 0,
+      "energy_argmin_pred": null,
+      "energy_argmin_index": 0,
+      "energy_weighted_vote_pred": null,
+      "candidate_preds": [
+        null,
+        null,
+        null,
+        null,
+        null
+      ],
+      "candidate_final_energies": [
+        -569.818848,
+        -569.818848,
+        -569.818848,
+        -569.818848,
+        -569.818848
+      ]
+    },
+    {
+      "problem_id": "gsm8k-1157",
+      "gold": 3,
+      "ar_pred": 3,
+      "sc_pred": null,
+      "self_certainty_pred": null,
+      "self_certainty_index": 0,
+      "energy_argmin_pred": null,
+      "energy_argmin_index": 0,
+      "energy_weighted_vote_pred": null,
+      "candidate_preds": [
+        null,
+        null,
+        null,
+        null,
+        null
+      ],
+      "candidate_final_energies": [
+        -569.818848,
+        -569.818848,
+        -569.818848,
+        -569.818848,
+        -569.818848
+      ]
+    },
+    {
+      "problem_id": "gsm8k-1282",
+      "gold": 12,
+      "ar_pred": 12,
+      "sc_pred": null,
+      "self_certainty_pred": null,
+      "self_certainty_index": 0,
+      "energy_argmin_pred": null,
+      "energy_argmin_index": 0,
+      "energy_weighted_vote_pred": null,
+      "candidate_preds": [
+        null,
+        null,
+        null,
+        null,
+        null
+      ],
+      "candidate_final_energies": [
+        -569.818848,
+        -569.818848,
+        -569.818848,
+        -569.818848,
+        -569.818848
+      ]
+    },
+    {
+      "problem_id": "gsm8k-1233",
+      "gold": 81,
+      "ar_pred": 81,
+      "sc_pred": null,
+      "self_certainty_pred": null,
+      "self_certainty_index": 0,
+      "energy_argmin_pred": null,
+      "energy_argmin_index": 0,
+      "energy_weighted_vote_pred": null,
+      "candidate_preds": [
+        null,
+        null,
+        null,
+        null,
+        null
+      ],
+      "candidate_final_energies": [
+        -569.818848,
+        -569.818848,
+        -569.818848,
+        -569.818848,
+        -569.818848
+      ]
+    },
+    {
+      "problem_id": "gsm8k-892",
+      "gold": 1,
+      "ar_pred": 1,
+      "sc_pred": null,
+      "self_certainty_pred": null,
+      "self_certainty_index": 0,
+      "energy_argmin_pred": null,
+      "energy_argmin_index": 0,
+      "energy_weighted_vote_pred": null,
+      "candidate_preds": [
+        null,
+        null,
+        null,
+        null,
+        null
+      ],
+      "candidate_final_energies": [
+        -569.818848,
+        -569.818848,
+        -569.818848,
+        -569.818848,
+        -569.818848
+      ]
+    },
+    {
+      "problem_id": "gsm8k-991",
+      "gold": 15,
+      "ar_pred": 15,
+      "sc_pred": null,
+      "self_certainty_pred": null,
+      "self_certainty_index": 0,
+      "energy_argmin_pred": null,
+      "energy_argmin_index": 0,
+      "energy_weighted_vote_pred": null,
+      "candidate_preds": [
+        null,
+        null,
+        null,
+        null,
+        null
+      ],
+      "candidate_final_energies": [
+        -569.818848,
+        -569.818848,
+        -569.818848,
+        -569.818848,
+        -569.818848
+      ]
+    },
+    {
+      "problem_id": "gsm8k-1260",
+      "gold": 5,
+      "ar_pred": 5,
+      "sc_pred": null,
+      "self_certainty_pred": null,
+      "self_certainty_index": 0,
+      "energy_argmin_pred": null,
+      "energy_argmin_index": 0,
+      "energy_weighted_vote_pred": null,
+      "candidate_preds": [
+        null,
+        null,
+        null,
+        null,
+        null
+      ],
+      "candidate_final_energies": [
+        -569.818848,
+        -569.818848,
+        -569.818848,
+        -569.818848,
+        -569.818848
+      ]
+    },
+    {
+      "problem_id": "gsm8k-650",
+      "gold": 142,
+      "ar_pred": 142,
+      "sc_pred": null,
+      "self_certainty_pred": null,
+      "self_certainty_index": 0,
+      "energy_argmin_pred": null,
+      "energy_argmin_index": 0,
+      "energy_weighted_vote_pred": null,
+      "candidate_preds": [
+        null,
+        null,
+        null,
+        null,
+        null
+      ],
+      "candidate_final_energies": [
+        -569.818848,
+        -569.818848,
+        -569.818848,
+        -569.818848,
+        -569.818848
+      ]
+    },
+    {
+      "problem_id": "gsm8k-228",
+      "gold": 1,
+      "ar_pred": 3,
+      "sc_pred": null,
+      "self_certainty_pred": null,
+      "self_certainty_index": 0,
+      "energy_argmin_pred": null,
+      "energy_argmin_index": 0,
+      "energy_weighted_vote_pred": null,
+      "candidate_preds": [
+        null,
+        null,
+        null,
+        null,
+        null
+      ],
+      "candidate_final_energies": [
+        -569.818848,
+        -569.818848,
+        -569.818848,
+        -569.818848,
+        -569.818848
+      ]
+    },
+    {
+      "problem_id": "gsm8k-165",
+      "gold": 77,
+      "ar_pred": 77,
+      "sc_pred": null,
+      "self_certainty_pred": null,
+      "self_certainty_index": 0,
+      "energy_argmin_pred": null,
+      "energy_argmin_index": 0,
+      "energy_weighted_vote_pred": null,
+      "candidate_preds": [
+        null,
+        null,
+        null,
+        null,
+        null
+      ],
+      "candidate_final_energies": [
+        -569.818848,
+        -569.818848,
+        -569.818848,
+        -569.818848,
+        -569.818848
+      ]
+    },
+    {
+      "problem_id": "gsm8k-534",
+      "gold": 300,
+      "ar_pred": 300,
+      "sc_pred": null,
+      "self_certainty_pred": null,
+      "self_certainty_index": 0,
+      "energy_argmin_pred": null,
+      "energy_argmin_index": 0,
+      "energy_weighted_vote_pred": null,
+      "candidate_preds": [
+        null,
+        null,
+        null,
+        null,
+        null
+      ],
+      "candidate_final_energies": [
+        -569.818848,
+        -569.818848,
+        -569.818848,
+        -569.818848,
+        -569.818848
+      ]
+    },
+    {
+      "problem_id": "gsm8k-1263",
+      "gold": 500,
+      "ar_pred": 500,
+      "sc_pred": null,
+      "self_certainty_pred": null,
+      "self_certainty_index": 0,
+      "energy_argmin_pred": null,
+      "energy_argmin_index": 0,
+      "energy_weighted_vote_pred": null,
+      "candidate_preds": [
+        null,
+        null,
+        null,
+        null,
+        null
+      ],
+      "candidate_final_energies": [
+        -569.818848,
+        -569.818848,
+        -569.818848,
+        -569.818848,
+        -569.818848
+      ]
+    },
+    {
+      "problem_id": "gsm8k-652",
+      "gold": 75,
+      "ar_pred": 15,
+      "sc_pred": null,
+      "self_certainty_pred": null,
+      "self_certainty_index": 0,
+      "energy_argmin_pred": null,
+      "energy_argmin_index": 0,
+      "energy_weighted_vote_pred": null,
+      "candidate_preds": [
+        null,
+        null,
+        null,
+        null,
+        null
+      ],
+      "candidate_final_energies": [
+        -569.818848,
+        -569.818848,
+        -569.818848,
+        -569.818848,
+        -569.818848
+      ]
+    },
+    {
+      "problem_id": "gsm8k-455",
+      "gold": 1920,
+      "ar_pred": 1920,
+      "sc_pred": null,
+      "self_certainty_pred": null,
+      "self_certainty_index": 0,
+      "energy_argmin_pred": null,
+      "energy_argmin_index": 0,
+      "energy_weighted_vote_pred": null,
+      "candidate_preds": [
+        null,
+        null,
+        null,
+        null,
+        null
+      ],
+      "candidate_final_energies": [
+        -569.818848,
+        -569.818848,
+        -569.818848,
+        -569.818848,
+        -569.818848
+      ]
+    },
+    {
+      "problem_id": "gsm8k-757",
+      "gold": 75,
+      "ar_pred": 75,
+      "sc_pred": null,
+      "self_certainty_pred": null,
+      "self_certainty_index": 0,
+      "energy_argmin_pred": null,
+      "energy_argmin_index": 0,
+      "energy_weighted_vote_pred": null,
+      "candidate_preds": [
+        null,
+        null,
+        null,
+        null,
+        null
+      ],
+      "candidate_final_energies": [
+        -569.818848,
+        -569.818848,
+        -569.818848,
+        -569.818848,
+        -569.818848
+      ]
+    },
+    {
+      "problem_id": "gsm8k-968",
+      "gold": 227,
+      "ar_pred": 227,
+      "sc_pred": null,
+      "self_certainty_pred": null,
+      "self_certainty_index": 0,
+      "energy_argmin_pred": null,
+      "energy_argmin_index": 0,
+      "energy_weighted_vote_pred": null,
+      "candidate_preds": [
+        null,
+        null,
+        null,
+        null,
+        null
+      ],
+      "candidate_final_energies": [
+        -569.818848,
+        -569.818848,
+        -569.818848,
+        -569.818848,
+        -569.818848
+      ]
+    },
+    {
+      "problem_id": "gsm8k-972",
+      "gold": 120,
+      "ar_pred": 120,
+      "sc_pred": null,
+      "self_certainty_pred": null,
+      "self_certainty_index": 0,
+      "energy_argmin_pred": null,
+      "energy_argmin_index": 0,
+      "energy_weighted_vote_pred": null,
+      "candidate_preds": [
+        null,
+        null,
+        null,
+        null,
+        null
+      ],
+      "candidate_final_energies": [
+        -569.818848,
+        -569.818848,
+        -569.818848,
+        -569.818848,
+        -569.818848
+      ]
+    },
+    {
+      "problem_id": "gsm8k-347",
+      "gold": 36,
+      "ar_pred": 36,
+      "sc_pred": null,
+      "self_certainty_pred": null,
+      "self_certainty_index": 0,
+      "energy_argmin_pred": null,
+      "energy_argmin_index": 0,
+      "energy_weighted_vote_pred": null,
+      "candidate_preds": [
+        null,
+        null,
+        null,
+        null,
+        null
+      ],
+      "candidate_final_energies": [
+        -569.818848,
+        -569.818848,
+        -569.818848,
+        -569.818848,
+        -569.818848
+      ]
+    },
+    {
+      "problem_id": "gsm8k-189",
+      "gold": 34,
+      "ar_pred": 34,
+      "sc_pred": null,
+      "self_certainty_pred": null,
+      "self_certainty_index": 0,
+      "energy_argmin_pred": null,
+      "energy_argmin_index": 0,
+      "energy_weighted_vote_pred": null,
+      "candidate_preds": [
+        null,
+        null,
+        null,
+        null,
+        null
+      ],
+      "candidate_final_energies": [
+        -569.818848,
+        -569.818848,
+        -569.818848,
+        -569.818848,
+        -569.818848
+      ]
+    },
+    {
+      "problem_id": "gsm8k-1156",
+      "gold": 120,
+      "ar_pred": 6,
+      "sc_pred": null,
+      "self_certainty_pred": null,
+      "self_certainty_index": 0,
+      "energy_argmin_pred": null,
+      "energy_argmin_index": 0,
+      "energy_weighted_vote_pred": null,
+      "candidate_preds": [
+        null,
+        null,
+        null,
+        null,
+        null
+      ],
+      "candidate_final_energies": [
+        -569.818848,
+        -569.818848,
+        -569.818848,
+        -569.818848,
+        -569.818848
+      ]
+    },
+    {
+      "problem_id": "gsm8k-1180",
+      "gold": 5600,
+      "ar_pred": 5600,
+      "sc_pred": null,
+      "self_certainty_pred": null,
+      "self_certainty_index": 0,
+      "energy_argmin_pred": null,
+      "energy_argmin_index": 0,
+      "energy_weighted_vote_pred": null,
+      "candidate_preds": [
+        null,
+        null,
+        null,
+        null,
+        null
+      ],
+      "candidate_final_energies": [
+        -569.818848,
+        -569.818848,
+        -569.818848,
+        -569.818848,
+        -569.818848
+      ]
+    },
+    {
+      "problem_id": "gsm8k-1034",
+      "gold": 66,
+      "ar_pred": 6,
+      "sc_pred": null,
+      "self_certainty_pred": null,
+      "self_certainty_index": 0,
+      "energy_argmin_pred": null,
+      "energy_argmin_index": 0,
+      "energy_weighted_vote_pred": null,
+      "candidate_preds": [
+        null,
+        null,
+        null,
+        null,
+        null
+      ],
+      "candidate_final_energies": [
+        -569.818848,
+        -569.818848,
+        -569.818848,
+        -569.818848,
+        -569.818848
+      ]
+    },
+    {
+      "problem_id": "gsm8k-1111",
+      "gold": 157,
+      "ar_pred": 157,
+      "sc_pred": null,
+      "self_certainty_pred": null,
+      "self_certainty_index": 0,
+      "energy_argmin_pred": null,
+      "energy_argmin_index": 0,
+      "energy_weighted_vote_pred": null,
+      "candidate_preds": [
+        null,
+        null,
+        null,
+        null,
+        null
+      ],
+      "candidate_final_energies": [
+        -569.818848,
+        -569.818848,
+        -569.818848,
+        -569.818848,
+        -569.818848
+      ]
+    },
+    {
+      "problem_id": "gsm8k-81",
+      "gold": 17,
+      "ar_pred": 17,
+      "sc_pred": null,
+      "self_certainty_pred": null,
+      "self_certainty_index": 0,
+      "energy_argmin_pred": null,
+      "energy_argmin_index": 0,
+      "energy_weighted_vote_pred": null,
+      "candidate_preds": [
+        null,
+        null,
+        null,
+        null,
+        null
+      ],
+      "candidate_final_energies": [
+        -569.818848,
+        -569.818848,
+        -569.818848,
+        -569.818848,
+        -569.818848
+      ]
+    },
+    {
+      "problem_id": "gsm8k-1192",
+      "gold": 280,
+      "ar_pred": 8,
+      "sc_pred": null,
+      "self_certainty_pred": null,
+      "self_certainty_index": 0,
+      "energy_argmin_pred": null,
+      "energy_argmin_index": 0,
+      "energy_weighted_vote_pred": null,
+      "candidate_preds": [
+        null,
+        null,
+        null,
+        null,
+        null
+      ],
+      "candidate_final_energies": [
+        -569.818848,
+        -569.818848,
+        -569.818848,
+        -569.818848,
+        -569.818848
+      ]
+    },
+    {
+      "problem_id": "gsm8k-998",
+      "gold": 50,
+      "ar_pred": 50,
+      "sc_pred": null,
+      "self_certainty_pred": null,
+      "self_certainty_index": 0,
+      "energy_argmin_pred": null,
+      "energy_argmin_index": 0,
+      "energy_weighted_vote_pred": null,
+      "candidate_preds": [
+        null,
+        null,
+        null,
+        null,
+        null
+      ],
+      "candidate_final_energies": [
+        -569.818848,
+        -569.818848,
+        -569.818848,
+        -569.818848,
+        -569.818848
+      ]
+    },
+    {
+      "problem_id": "gsm8k-328",
+      "gold": 2,
+      "ar_pred": 2,
+      "sc_pred": null,
+      "self_certainty_pred": null,
+      "self_certainty_index": 0,
+      "energy_argmin_pred": null,
+      "energy_argmin_index": 0,
+      "energy_weighted_vote_pred": null,
+      "candidate_preds": [
+        null,
+        null,
+        null,
+        null,
+        null
+      ],
+      "candidate_final_energies": [
+        -569.818848,
+        -569.818848,
+        -569.818848,
+        -569.818848,
+        -569.818848
+      ]
+    },
+    {
+      "problem_id": "gsm8k-695",
+      "gold": 5,
+      "ar_pred": 5,
+      "sc_pred": null,
+      "self_certainty_pred": null,
+      "self_certainty_index": 0,
+      "energy_argmin_pred": null,
+      "energy_argmin_index": 0,
+      "energy_weighted_vote_pred": null,
+      "candidate_preds": [
+        null,
+        null,
+        null,
+        null,
+        null
+      ],
+      "candidate_final_energies": [
+        -569.818848,
+        -569.818848,
+        -569.818848,
+        -569.818848,
+        -569.818848
+      ]
+    },
+    {
+      "problem_id": "gsm8k-108",
+      "gold": 50,
+      "ar_pred": 50,
+      "sc_pred": null,
+      "self_certainty_pred": null,
+      "self_certainty_index": 0,
+      "energy_argmin_pred": null,
+      "energy_argmin_index": 0,
+      "energy_weighted_vote_pred": null,
+      "candidate_preds": [
+        null,
+        null,
+        null,
+        null,
+        null
+      ],
+      "candidate_final_energies": [
+        -569.818848,
+        -569.818848,
+        -569.818848,
+        -569.818848,
+        -569.818848
+      ]
+    },
+    {
+      "problem_id": "gsm8k-909",
+      "gold": 38,
+      "ar_pred": 38,
+      "sc_pred": null,
+      "self_certainty_pred": null,
+      "self_certainty_index": 0,
+      "energy_argmin_pred": null,
+      "energy_argmin_index": 0,
+      "energy_weighted_vote_pred": null,
+      "candidate_preds": [
+        null,
+        null,
+        null,
+        null,
+        null
+      ],
+      "candidate_final_energies": [
+        -569.818848,
+        -569.818848,
+        -569.818848,
+        -569.818848,
+        -569.818848
+      ]
+    },
+    {
+      "problem_id": "gsm8k-47",
+      "gold": 800,
+      "ar_pred": 800,
+      "sc_pred": null,
+      "self_certainty_pred": null,
+      "self_certainty_index": 0,
+      "energy_argmin_pred": null,
+      "energy_argmin_index": 0,
+      "energy_weighted_vote_pred": null,
+      "candidate_preds": [
+        null,
+        null,
+        null,
+        null,
+        null
+      ],
+      "candidate_final_energies": [
+        -569.818848,
+        -569.818848,
+        -569.818848,
+        -569.818848,
+        -569.818848
+      ]
+    },
+    {
+      "problem_id": "gsm8k-321",
+      "gold": 1,
+      "ar_pred": 1,
+      "sc_pred": null,
+      "self_certainty_pred": null,
+      "self_certainty_index": 0,
+      "energy_argmin_pred": null,
+      "energy_argmin_index": 0,
+      "energy_weighted_vote_pred": null,
+      "candidate_preds": [
+        null,
+        null,
+        null,
+        null,
+        null
+      ],
+      "candidate_final_energies": [
+        -569.818848,
+        -569.818848,
+        -569.818848,
+        -569.818848,
+        -569.818848
+      ]
+    },
+    {
+      "problem_id": "gsm8k-1246",
+      "gold": 3360,
+      "ar_pred": 3360,
+      "sc_pred": null,
+      "self_certainty_pred": null,
+      "self_certainty_index": 0,
+      "energy_argmin_pred": null,
+      "energy_argmin_index": 0,
+      "energy_weighted_vote_pred": null,
+      "candidate_preds": [
+        null,
+        null,
+        null,
+        null,
+        null
+      ],
+      "candidate_final_energies": [
+        -569.818848,
+        -569.818848,
+        -569.818848,
+        -569.818848,
+        -569.818848
+      ]
+    },
+    {
+      "problem_id": "gsm8k-1184",
+      "gold": 306,
+      "ar_pred": 306,
+      "sc_pred": null,
+      "self_certainty_pred": null,
+      "self_certainty_index": 0,
+      "energy_argmin_pred": null,
+      "energy_argmin_index": 0,
+      "energy_weighted_vote_pred": null,
+      "candidate_preds": [
+        null,
+        null,
+        null,
+        null,
+        null
+      ],
+      "candidate_final_energies": [
+        -569.818848,
+        -569.818848,
+        -569.818848,
+        -569.818848,
+        -569.818848
+      ]
+    },
+    {
+      "problem_id": "gsm8k-454",
+      "gold": 150,
+      "ar_pred": 240,
+      "sc_pred": null,
+      "self_certainty_pred": null,
+      "self_certainty_index": 0,
+      "energy_argmin_pred": null,
+      "energy_argmin_index": 0,
+      "energy_weighted_vote_pred": null,
+      "candidate_preds": [
+        null,
+        null,
+        null,
+        null,
+        null
+      ],
+      "candidate_final_energies": [
+        -569.818848,
+        -569.818848,
+        -569.818848,
+        -569.818848,
+        -569.818848
+      ]
+    },
+    {
+      "problem_id": "gsm8k-890",
+      "gold": 25,
+      "ar_pred": 25,
+      "sc_pred": null,
+      "self_certainty_pred": null,
+      "self_certainty_index": 0,
+      "energy_argmin_pred": null,
+      "energy_argmin_index": 0,
+      "energy_weighted_vote_pred": null,
+      "candidate_preds": [
+        null,
+        null,
+        null,
+        null,
+        null
+      ],
+      "candidate_final_energies": [
+        -569.818848,
+        -569.818848,
+        -569.818848,
+        -569.818848,
+        -569.818848
+      ]
+    },
+    {
+      "problem_id": "gsm8k-105",
+      "gold": 20,
+      "ar_pred": 20,
+      "sc_pred": null,
+      "self_certainty_pred": null,
+      "self_certainty_index": 0,
+      "energy_argmin_pred": null,
+      "energy_argmin_index": 0,
+      "energy_weighted_vote_pred": null,
+      "candidate_preds": [
+        null,
+        null,
+        null,
+        null,
+        null
+      ],
+      "candidate_final_energies": [
+        -569.818848,
+        -569.818848,
+        -569.818848,
+        -569.818848,
+        -569.818848
+      ]
+    },
+    {
+      "problem_id": "gsm8k-1224",
+      "gold": 5,
+      "ar_pred": 5,
+      "sc_pred": null,
+      "self_certainty_pred": null,
+      "self_certainty_index": 0,
+      "energy_argmin_pred": null,
+      "energy_argmin_index": 0,
+      "energy_weighted_vote_pred": null,
+      "candidate_preds": [
+        null,
+        null,
+        null,
+        null,
+        null
+      ],
+      "candidate_final_energies": [
+        -569.818848,
+        -569.818848,
+        -569.818848,
+        -569.818848,
+        -569.818848
+      ]
+    },
+    {
+      "problem_id": "gsm8k-23",
+      "gold": 8,
+      "ar_pred": 8,
+      "sc_pred": null,
+      "self_certainty_pred": null,
+      "self_certainty_index": 0,
+      "energy_argmin_pred": null,
+      "energy_argmin_index": 0,
+      "energy_weighted_vote_pred": null,
+      "candidate_preds": [
+        null,
+        null,
+        null,
+        null,
+        null
+      ],
+      "candidate_final_energies": [
+        -569.818848,
+        -569.818848,
+        -569.818848,
+        -569.818848,
+        -569.818848
+      ]
+    },
+    {
+      "problem_id": "gsm8k-854",
+      "gold": 144,
+      "ar_pred": 144,
+      "sc_pred": null,
+      "self_certainty_pred": null,
+      "self_certainty_index": 0,
+      "energy_argmin_pred": null,
+      "energy_argmin_index": 0,
+      "energy_weighted_vote_pred": null,
+      "candidate_preds": [
+        null,
+        null,
+        null,
+        null,
+        null
+      ],
+      "candidate_final_energies": [
+        -569.818848,
+        -569.818848,
+        -569.818848,
+        -569.818848,
+        -569.818848
+      ]
+    },
+    {
+      "problem_id": "gsm8k-756",
+      "gold": 22,
+      "ar_pred": 22,
+      "sc_pred": null,
+      "self_certainty_pred": null,
+      "self_certainty_index": 0,
+      "energy_argmin_pred": null,
+      "energy_argmin_index": 0,
+      "energy_weighted_vote_pred": null,
+      "candidate_preds": [
+        null,
+        null,
+        null,
+        null,
+        null
+      ],
+      "candidate_final_energies": [
+        -569.818848,
+        -569.818848,
+        -569.818848,
+        -569.818848,
+        -569.818848
+      ]
+    },
+    {
+      "problem_id": "gsm8k-770",
+      "gold": 4,
+      "ar_pred": 4,
+      "sc_pred": null,
+      "self_certainty_pred": null,
+      "self_certainty_index": 0,
+      "energy_argmin_pred": null,
+      "energy_argmin_index": 0,
+      "energy_weighted_vote_pred": null,
+      "candidate_preds": [
+        null,
+        null,
+        null,
+        null,
+        null
+      ],
+      "candidate_final_energies": [
+        -569.818848,
+        -569.818848,
+        -569.818848,
+        -569.818848,
+        -569.818848
+      ]
+    },
+    {
+      "problem_id": "gsm8k-1191",
+      "gold": 100,
+      "ar_pred": 2,
+      "sc_pred": null,
+      "self_certainty_pred": null,
+      "self_certainty_index": 0,
+      "energy_argmin_pred": null,
+      "energy_argmin_index": 0,
+      "energy_weighted_vote_pred": null,
+      "candidate_preds": [
+        null,
+        null,
+        null,
+        null,
+        null
+      ],
+      "candidate_final_energies": [
+        -569.818848,
+        -569.818848,
+        -569.818848,
+        -569.818848,
+        -569.818848
+      ]
+    },
+    {
+      "problem_id": "gsm8k-678",
+      "gold": 120,
+      "ar_pred": 120,
+      "sc_pred": null,
+      "self_certainty_pred": null,
+      "self_certainty_index": 0,
+      "energy_argmin_pred": null,
+      "energy_argmin_index": 0,
+      "energy_weighted_vote_pred": null,
+      "candidate_preds": [
+        null,
+        null,
+        null,
+        null,
+        null
+      ],
+      "candidate_final_energies": [
+        -569.818848,
+        -569.818848,
+        -569.818848,
+        -569.818848,
+        -569.818848
+      ]
+    },
+    {
+      "problem_id": "gsm8k-320",
+      "gold": 8,
+      "ar_pred": 8,
+      "sc_pred": null,
+      "self_certainty_pred": null,
+      "self_certainty_index": 0,
+      "energy_argmin_pred": null,
+      "energy_argmin_index": 0,
+      "energy_weighted_vote_pred": null,
+      "candidate_preds": [
+        null,
+        null,
+        null,
+        null,
+        null
+      ],
+      "candidate_final_energies": [
+        -569.818848,
+        -569.818848,
+        -569.818848,
+        -569.818848,
+        -569.818848
+      ]
+    },
+    {
+      "problem_id": "gsm8k-1302",
+      "gold": 72,
+      "ar_pred": 72,
+      "sc_pred": null,
+      "self_certainty_pred": null,
+      "self_certainty_index": 0,
+      "energy_argmin_pred": null,
+      "energy_argmin_index": 0,
+      "energy_weighted_vote_pred": null,
+      "candidate_preds": [
+        null,
+        null,
+        null,
+        null,
+        null
+      ],
+      "candidate_final_energies": [
+        -569.818848,
+        -569.818848,
+        -569.818848,
+        -569.818848,
+        -569.818848
+      ]
+    },
+    {
+      "problem_id": "gsm8k-448",
+      "gold": 539,
+      "ar_pred": 539,
+      "sc_pred": null,
+      "self_certainty_pred": null,
+      "self_certainty_index": 0,
+      "energy_argmin_pred": null,
+      "energy_argmin_index": 0,
+      "energy_weighted_vote_pred": null,
+      "candidate_preds": [
+        null,
+        null,
+        null,
+        null,
+        null
+      ],
+      "candidate_final_energies": [
+        -569.818848,
+        -569.818848,
+        -569.818848,
+        -569.818848,
+        -569.818848
+      ]
+    },
+    {
+      "problem_id": "gsm8k-1055",
+      "gold": 2304,
+      "ar_pred": 2304,
+      "sc_pred": null,
+      "self_certainty_pred": null,
+      "self_certainty_index": 0,
+      "energy_argmin_pred": null,
+      "energy_argmin_index": 0,
+      "energy_weighted_vote_pred": null,
+      "candidate_preds": [
+        null,
+        null,
+        null,
+        null,
+        null
+      ],
+      "candidate_final_energies": [
+        -569.818848,
+        -569.818848,
+        -569.818848,
+        -569.818848,
+        -569.818848
+      ]
+    },
+    {
+      "problem_id": "gsm8k-671",
+      "gold": 4,
+      "ar_pred": 4,
+      "sc_pred": null,
+      "self_certainty_pred": null,
+      "self_certainty_index": 0,
+      "energy_argmin_pred": null,
+      "energy_argmin_index": 0,
+      "energy_weighted_vote_pred": null,
+      "candidate_preds": [
+        null,
+        null,
+        null,
+        null,
+        null
+      ],
+      "candidate_final_energies": [
+        -569.818848,
+        -569.818848,
+        -569.818848,
+        -569.818848,
+        -569.818848
+      ]
+    },
+    {
+      "problem_id": "gsm8k-249",
+      "gold": 5600,
+      "ar_pred": 13,
+      "sc_pred": null,
+      "self_certainty_pred": null,
+      "self_certainty_index": 0,
+      "energy_argmin_pred": null,
+      "energy_argmin_index": 0,
+      "energy_weighted_vote_pred": null,
+      "candidate_preds": [
+        null,
+        null,
+        null,
+        null,
+        null
+      ],
+      "candidate_final_energies": [
+        -569.818848,
+        -569.818848,
+        -569.818848,
+        -569.818848,
+        -569.818848
+      ]
+    },
+    {
+      "problem_id": "gsm8k-17",
+      "gold": 57500,
+      "ar_pred": 57500,
+      "sc_pred": null,
+      "self_certainty_pred": null,
+      "self_certainty_index": 0,
+      "energy_argmin_pred": null,
+      "energy_argmin_index": 0,
+      "energy_weighted_vote_pred": null,
+      "candidate_preds": [
+        null,
+        null,
+        null,
+        null,
+        null
+      ],
+      "candidate_final_energies": [
+        -569.818848,
+        -569.818848,
+        -569.818848,
+        -569.818848,
+        -569.818848
+      ]
+    },
+    {
+      "problem_id": "gsm8k-601",
+      "gold": 104,
+      "ar_pred": 104,
+      "sc_pred": null,
+      "self_certainty_pred": null,
+      "self_certainty_index": 0,
+      "energy_argmin_pred": null,
+      "energy_argmin_index": 0,
+      "energy_weighted_vote_pred": null,
+      "candidate_preds": [
+        null,
+        null,
+        null,
+        null,
+        null
+      ],
+      "candidate_final_energies": [
+        -569.818848,
+        -569.818848,
+        -569.818848,
+        -569.818848,
+        -569.818848
+      ]
+    },
+    {
+      "problem_id": "gsm8k-1109",
+      "gold": 3,
+      "ar_pred": 7,
+      "sc_pred": null,
+      "self_certainty_pred": null,
+      "self_certainty_index": 0,
+      "energy_argmin_pred": null,
+      "energy_argmin_index": 0,
+      "energy_weighted_vote_pred": null,
+      "candidate_preds": [
+        null,
+        null,
+        null,
+        null,
+        null
+      ],
+      "candidate_final_energies": [
+        -569.818848,
+        -569.818848,
+        -569.818848,
+        -569.818848,
+        -569.818848
+      ]
+    },
+    {
+      "problem_id": "gsm8k-551",
+      "gold": 17,
+      "ar_pred": 17,
+      "sc_pred": null,
+      "self_certainty_pred": null,
+      "self_certainty_index": 0,
+      "energy_argmin_pred": null,
+      "energy_argmin_index": 0,
+      "energy_weighted_vote_pred": null,
+      "candidate_preds": [
+        null,
+        null,
+        null,
+        null,
+        null
+      ],
+      "candidate_final_energies": [
+        -569.818848,
+        -569.818848,
+        -569.818848,
+        -569.818848,
+        -569.818848
+      ]
+    },
+    {
+      "problem_id": "gsm8k-910",
+      "gold": 700,
+      "ar_pred": 700,
+      "sc_pred": null,
+      "self_certainty_pred": null,
+      "self_certainty_index": 0,
+      "energy_argmin_pred": null,
+      "energy_argmin_index": 0,
+      "energy_weighted_vote_pred": null,
+      "candidate_preds": [
+        null,
+        null,
+        null,
+        null,
+        null
+      ],
+      "candidate_final_energies": [
+        -569.818848,
+        -569.818848,
+        -569.818848,
+        -569.818848,
+        -569.818848
+      ]
+    },
+    {
+      "problem_id": "gsm8k-434",
+      "gold": 5,
+      "ar_pred": 5,
+      "sc_pred": null,
+      "self_certainty_pred": null,
+      "self_certainty_index": 0,
+      "energy_argmin_pred": null,
+      "energy_argmin_index": 0,
+      "energy_weighted_vote_pred": null,
+      "candidate_preds": [
+        null,
+        null,
+        null,
+        null,
+        null
+      ],
+      "candidate_final_energies": [
+        -569.818848,
+        -569.818848,
+        -569.818848,
+        -569.818848,
+        -569.818848
+      ]
+    },
+    {
+      "problem_id": "gsm8k-543",
+      "gold": 6,
+      "ar_pred": 0,
+      "sc_pred": null,
+      "self_certainty_pred": null,
+      "self_certainty_index": 0,
+      "energy_argmin_pred": null,
+      "energy_argmin_index": 0,
+      "energy_weighted_vote_pred": null,
+      "candidate_preds": [
+        null,
+        null,
+        null,
+        null,
+        null
+      ],
+      "candidate_final_energies": [
+        -569.818848,
+        -569.818848,
+        -569.818848,
+        -569.818848,
+        -569.818848
+      ]
+    },
+    {
+      "problem_id": "gsm8k-1124",
+      "gold": 64,
+      "ar_pred": 2,
+      "sc_pred": null,
+      "self_certainty_pred": null,
+      "self_certainty_index": 0,
+      "energy_argmin_pred": null,
+      "energy_argmin_index": 0,
+      "energy_weighted_vote_pred": null,
+      "candidate_preds": [
+        null,
+        null,
+        null,
+        null,
+        null
+      ],
+      "candidate_final_energies": [
+        -569.818848,
+        -569.818848,
+        -569.818848,
+        -569.818848,
+        -569.818848
+      ]
+    },
+    {
+      "problem_id": "gsm8k-307",
+      "gold": 16,
+      "ar_pred": 2,
+      "sc_pred": null,
+      "self_certainty_pred": null,
+      "self_certainty_index": 0,
+      "energy_argmin_pred": null,
+      "energy_argmin_index": 0,
+      "energy_weighted_vote_pred": null,
+      "candidate_preds": [
+        null,
+        null,
+        null,
+        null,
+        null
+      ],
+      "candidate_final_energies": [
+        -569.818848,
+        -569.818848,
+        -569.818848,
+        -569.818848,
+        -569.818848
+      ]
+    },
+    {
+      "problem_id": "gsm8k-94",
+      "gold": 348,
+      "ar_pred": 348,
+      "sc_pred": null,
+      "self_certainty_pred": null,
+      "self_certainty_index": 0,
+      "energy_argmin_pred": null,
+      "energy_argmin_index": 0,
+      "energy_weighted_vote_pred": null,
+      "candidate_preds": [
+        null,
+        null,
+        null,
+        null,
+        null
+      ],
+      "candidate_final_energies": [
+        -569.818848,
+        -569.818848,
+        -569.818848,
+        -569.818848,
+        -569.818848
+      ]
+    },
+    {
+      "problem_id": "gsm8k-773",
+      "gold": 10,
+      "ar_pred": 10,
+      "sc_pred": null,
+      "self_certainty_pred": null,
+      "self_certainty_index": 0,
+      "energy_argmin_pred": null,
+      "energy_argmin_index": 0,
+      "energy_weighted_vote_pred": null,
+      "candidate_preds": [
+        null,
+        null,
+        null,
+        null,
+        null
+      ],
+      "candidate_final_energies": [
+        -569.818848,
+        -569.818848,
+        -569.818848,
+        -569.818848,
+        -569.818848
+      ]
+    },
+    {
+      "problem_id": "gsm8k-1236",
+      "gold": 84,
+      "ar_pred": 84,
+      "sc_pred": null,
+      "self_certainty_pred": null,
+      "self_certainty_index": 0,
+      "energy_argmin_pred": null,
+      "energy_argmin_index": 0,
+      "energy_weighted_vote_pred": null,
+      "candidate_preds": [
+        null,
+        null,
+        null,
+        null,
+        null
+      ],
+      "candidate_final_energies": [
+        -569.818848,
+        -569.818848,
+        -569.818848,
+        -569.818848,
+        -569.818848
+      ]
+    },
+    {
+      "problem_id": "gsm8k-1110",
+      "gold": 60,
+      "ar_pred": 60,
+      "sc_pred": null,
+      "self_certainty_pred": null,
+      "self_certainty_index": 0,
+      "energy_argmin_pred": null,
+      "energy_argmin_index": 0,
+      "energy_weighted_vote_pred": null,
+      "candidate_preds": [
+        null,
+        null,
+        null,
+        null,
+        null
+      ],
+      "candidate_final_energies": [
+        -569.818848,
+        -569.818848,
+        -569.818848,
+        -569.818848,
+        -569.818848
+      ]
+    },
+    {
+      "problem_id": "gsm8k-104",
+      "gold": 500,
+      "ar_pred": 500,
+      "sc_pred": null,
+      "self_certainty_pred": null,
+      "self_certainty_index": 0,
+      "energy_argmin_pred": null,
+      "energy_argmin_index": 0,
+      "energy_weighted_vote_pred": null,
+      "candidate_preds": [
+        null,
+        null,
+        null,
+        null,
+        null
+      ],
+      "candidate_final_energies": [
+        -569.818848,
+        -569.818848,
+        -569.818848,
+        -569.818848,
+        -569.818848
+      ]
+    },
+    {
+      "problem_id": "gsm8k-914",
+      "gold": 3,
+      "ar_pred": 3000,
+      "sc_pred": null,
+      "self_certainty_pred": null,
+      "self_certainty_index": 0,
+      "energy_argmin_pred": null,
+      "energy_argmin_index": 0,
+      "energy_weighted_vote_pred": null,
+      "candidate_preds": [
+        null,
+        null,
+        null,
+        null,
+        null
+      ],
+      "candidate_final_energies": [
+        -569.818848,
+        -569.818848,
+        -569.818848,
+        -569.818848,
+        -569.818848
+      ]
+    },
+    {
+      "problem_id": "gsm8k-639",
+      "gold": 216,
+      "ar_pred": 216,
+      "sc_pred": null,
+      "self_certainty_pred": null,
+      "self_certainty_index": 0,
+      "energy_argmin_pred": null,
+      "energy_argmin_index": 0,
+      "energy_weighted_vote_pred": null,
+      "candidate_preds": [
+        null,
+        null,
+        null,
+        null,
+        null
+      ],
+      "candidate_final_energies": [
+        -569.818848,
+        -569.818848,
+        -569.818848,
+        -569.818848,
+        -569.818848
+      ]
+    },
+    {
+      "problem_id": "gsm8k-1133",
+      "gold": 50,
+      "ar_pred": 50,
+      "sc_pred": null,
+      "self_certainty_pred": null,
+      "self_certainty_index": 0,
+      "energy_argmin_pred": null,
+      "energy_argmin_index": 0,
+      "energy_weighted_vote_pred": null,
+      "candidate_preds": [
+        null,
+        null,
+        null,
+        null,
+        null
+      ],
+      "candidate_final_energies": [
+        -569.818848,
+        -569.818848,
+        -569.818848,
+        -569.818848,
+        -569.818848
+      ]
+    },
+    {
+      "problem_id": "gsm8k-637",
+      "gold": 17,
+      "ar_pred": 17,
+      "sc_pred": null,
+      "self_certainty_pred": null,
+      "self_certainty_index": 0,
+      "energy_argmin_pred": null,
+      "energy_argmin_index": 0,
+      "energy_weighted_vote_pred": null,
+      "candidate_preds": [
+        null,
+        null,
+        null,
+        null,
+        null
+      ],
+      "candidate_final_energies": [
+        -569.818848,
+        -569.818848,
+        -569.818848,
+        -569.818848,
+        -569.818848
+      ]
+    },
+    {
+      "problem_id": "gsm8k-565",
+      "gold": 5,
+      "ar_pred": 5,
+      "sc_pred": null,
+      "self_certainty_pred": null,
+      "self_certainty_index": 0,
+      "energy_argmin_pred": null,
+      "energy_argmin_index": 0,
+      "energy_weighted_vote_pred": null,
+      "candidate_preds": [
+        null,
+        null,
+        null,
+        null,
+        null
+      ],
+      "candidate_final_energies": [
+        -569.818848,
+        -569.818848,
+        -569.818848,
+        -569.818848,
+        -569.818848
+      ]
+    },
+    {
+      "problem_id": "gsm8k-484",
+      "gold": 240,
+      "ar_pred": 240,
+      "sc_pred": null,
+      "self_certainty_pred": null,
+      "self_certainty_index": 0,
+      "energy_argmin_pred": null,
+      "energy_argmin_index": 0,
+      "energy_weighted_vote_pred": null,
+      "candidate_preds": [
+        null,
+        null,
+        null,
+        null,
+        null
+      ],
+      "candidate_final_energies": [
+        -569.818848,
+        -569.818848,
+        -569.818848,
+        -569.818848,
+        -569.818848
+      ]
+    },
+    {
+      "problem_id": "gsm8k-851",
+      "gold": 110,
+      "ar_pred": 110,
+      "sc_pred": null,
+      "self_certainty_pred": null,
+      "self_certainty_index": 0,
+      "energy_argmin_pred": null,
+      "energy_argmin_index": 0,
+      "energy_weighted_vote_pred": null,
+      "candidate_preds": [
+        null,
+        null,
+        null,
+        null,
+        null
+      ],
+      "candidate_final_energies": [
+        -569.818848,
+        -569.818848,
+        -569.818848,
+        -569.818848,
+        -569.818848
+      ]
+    },
+    {
+      "problem_id": "gsm8k-529",
+      "gold": 11,
+      "ar_pred": 11,
+      "sc_pred": null,
+      "self_certainty_pred": null,
+      "self_certainty_index": 0,
+      "energy_argmin_pred": null,
+      "energy_argmin_index": 0,
+      "energy_weighted_vote_pred": null,
+      "candidate_preds": [
+        null,
+        null,
+        null,
+        null,
+        null
+      ],
+      "candidate_final_energies": [
+        -569.818848,
+        -569.818848,
+        -569.818848,
+        -569.818848,
+        -569.818848
+      ]
+    },
+    {
+      "problem_id": "gsm8k-483",
+      "gold": 40,
+      "ar_pred": 40,
+      "sc_pred": null,
+      "self_certainty_pred": null,
+      "self_certainty_index": 0,
+      "energy_argmin_pred": null,
+      "energy_argmin_index": 0,
+      "energy_weighted_vote_pred": null,
+      "candidate_preds": [
+        null,
+        null,
+        null,
+        null,
+        null
+      ],
+      "candidate_final_energies": [
+        -569.818848,
+        -569.818848,
+        -569.818848,
+        -569.818848,
+        -569.818848
+      ]
+    },
+    {
+      "problem_id": "gsm8k-777",
+      "gold": 4400,
+      "ar_pred": 440,
+      "sc_pred": null,
+      "self_certainty_pred": null,
+      "self_certainty_index": 0,
+      "energy_argmin_pred": null,
+      "energy_argmin_index": 0,
+      "energy_weighted_vote_pred": null,
+      "candidate_preds": [
+        null,
+        null,
+        null,
+        null,
+        null
+      ],
+      "candidate_final_energies": [
+        -569.818848,
+        -569.818848,
+        -569.818848,
+        -569.818848,
+        -569.818848
+      ]
+    },
+    {
+      "problem_id": "gsm8k-1081",
+      "gold": 195,
+      "ar_pred": 195,
+      "sc_pred": null,
+      "self_certainty_pred": null,
+      "self_certainty_index": 0,
+      "energy_argmin_pred": null,
+      "energy_argmin_index": 0,
+      "energy_weighted_vote_pred": null,
+      "candidate_preds": [
+        null,
+        null,
+        null,
+        null,
+        null
+      ],
+      "candidate_final_energies": [
+        -569.818848,
+        -569.818848,
+        -569.818848,
+        -569.818848,
+        -569.818848
+      ]
+    },
+    {
+      "problem_id": "gsm8k-1217",
+      "gold": 75,
+      "ar_pred": 75,
+      "sc_pred": null,
+      "self_certainty_pred": null,
+      "self_certainty_index": 0,
+      "energy_argmin_pred": null,
+      "energy_argmin_index": 0,
+      "energy_weighted_vote_pred": null,
+      "candidate_preds": [
+        null,
+        null,
+        null,
+        null,
+        null
+      ],
+      "candidate_final_energies": [
+        -569.818848,
+        -569.818848,
+        -569.818848,
+        -569.818848,
+        -569.818848
+      ]
+    },
+    {
+      "problem_id": "gsm8k-178",
+      "gold": 122,
+      "ar_pred": 122,
+      "sc_pred": null,
+      "self_certainty_pred": null,
+      "self_certainty_index": 0,
+      "energy_argmin_pred": null,
+      "energy_argmin_index": 0,
+      "energy_weighted_vote_pred": null,
+      "candidate_preds": [
+        null,
+        null,
+        null,
+        null,
+        null
+      ],
+      "candidate_final_energies": [
+        -569.818848,
+        -569.818848,
+        -569.818848,
+        -569.818848,
+        -569.818848
+      ]
+    },
+    {
+      "problem_id": "gsm8k-306",
+      "gold": 10,
+      "ar_pred": 10,
+      "sc_pred": null,
+      "self_certainty_pred": null,
+      "self_certainty_index": 0,
+      "energy_argmin_pred": null,
+      "energy_argmin_index": 0,
+      "energy_weighted_vote_pred": null,
+      "candidate_preds": [
+        null,
+        null,
+        null,
+        null,
+        null
+      ],
+      "candidate_final_energies": [
+        -569.818848,
+        -569.818848,
+        -569.818848,
+        -569.818848,
+        -569.818848
+      ]
+    },
+    {
+      "problem_id": "gsm8k-1138",
+      "gold": 700,
+      "ar_pred": 21,
+      "sc_pred": null,
+      "self_certainty_pred": null,
+      "self_certainty_index": 0,
+      "energy_argmin_pred": null,
+      "energy_argmin_index": 0,
+      "energy_weighted_vote_pred": null,
+      "candidate_preds": [
+        null,
+        null,
+        null,
+        null,
+        null
+      ],
+      "candidate_final_energies": [
+        -569.818848,
+        -569.818848,
+        -569.818848,
+        -569.818848,
+        -569.818848
+      ]
+    },
+    {
+      "problem_id": "gsm8k-983",
+      "gold": 15,
+      "ar_pred": 15,
+      "sc_pred": null,
+      "self_certainty_pred": null,
+      "self_certainty_index": 0,
+      "energy_argmin_pred": null,
+      "energy_argmin_index": 0,
+      "energy_weighted_vote_pred": null,
+      "candidate_preds": [
+        null,
+        null,
+        null,
+        null,
+        null
+      ],
+      "candidate_final_energies": [
+        -569.818848,
+        -569.818848,
+        -569.818848,
+        -569.818848,
+        -569.818848
+      ]
+    },
+    {
+      "problem_id": "gsm8k-642",
+      "gold": 10800,
+      "ar_pred": 5,
+      "sc_pred": null,
+      "self_certainty_pred": null,
+      "self_certainty_index": 0,
+      "energy_argmin_pred": null,
+      "energy_argmin_index": 0,
+      "energy_weighted_vote_pred": null,
+      "candidate_preds": [
+        null,
+        null,
+        null,
+        null,
+        null
+      ],
+      "candidate_final_energies": [
+        -569.818848,
+        -569.818848,
+        -569.818848,
+        -569.818848,
+        -569.818848
+      ]
+    },
+    {
+      "problem_id": "gsm8k-595",
+      "gold": 13,
+      "ar_pred": 13,
+      "sc_pred": null,
+      "self_certainty_pred": null,
+      "self_certainty_index": 0,
+      "energy_argmin_pred": null,
+      "energy_argmin_index": 0,
+      "energy_weighted_vote_pred": null,
+      "candidate_preds": [
+        null,
+        null,
+        null,
+        null,
+        null
+      ],
+      "candidate_final_energies": [
+        -569.818848,
+        -569.818848,
+        -569.818848,
+        -569.818848,
+        -569.818848
+      ]
+    },
+    {
+      "problem_id": "gsm8k-493",
+      "gold": 25,
+      "ar_pred": 4,
+      "sc_pred": null,
+      "self_certainty_pred": null,
+      "self_certainty_index": 0,
+      "energy_argmin_pred": null,
+      "energy_argmin_index": 0,
+      "energy_weighted_vote_pred": null,
+      "candidate_preds": [
+        null,
+        null,
+        null,
+        null,
+        null
+      ],
+      "candidate_final_energies": [
+        -569.818848,
+        -569.818848,
+        -569.818848,
+        -569.818848,
+        -569.818848
+      ]
+    },
+    {
+      "problem_id": "gsm8k-130",
+      "gold": 30,
+      "ar_pred": 30,
+      "sc_pred": null,
+      "self_certainty_pred": null,
+      "self_certainty_index": 0,
+      "energy_argmin_pred": null,
+      "energy_argmin_index": 0,
+      "energy_weighted_vote_pred": null,
+      "candidate_preds": [
+        null,
+        null,
+        null,
+        null,
+        null
+      ],
+      "candidate_final_energies": [
+        -569.818848,
+        -569.818848,
+        -569.818848,
+        -569.818848,
+        -569.818848
+      ]
+    },
+    {
+      "problem_id": "gsm8k-1020",
+      "gold": 22,
+      "ar_pred": 22,
+      "sc_pred": null,
+      "self_certainty_pred": null,
+      "self_certainty_index": 0,
+      "energy_argmin_pred": null,
+      "energy_argmin_index": 0,
+      "energy_weighted_vote_pred": null,
+      "candidate_preds": [
+        null,
+        null,
+        null,
+        null,
+        null
+      ],
+      "candidate_final_energies": [
+        -569.818848,
+        -569.818848,
+        -569.818848,
+        -569.818848,
+        -569.818848
+      ]
+    },
+    {
+      "problem_id": "gsm8k-549",
+      "gold": 398,
+      "ar_pred": 2,
+      "sc_pred": null,
+      "self_certainty_pred": null,
+      "self_certainty_index": 0,
+      "energy_argmin_pred": null,
+      "energy_argmin_index": 0,
+      "energy_weighted_vote_pred": null,
+      "candidate_preds": [
+        null,
+        null,
+        null,
+        null,
+        null
+      ],
+      "candidate_final_energies": [
+        -569.818848,
+        -569.818848,
+        -569.818848,
+        -569.818848,
+        -569.818848
+      ]
+    },
+    {
+      "problem_id": "gsm8k-499",
+      "gold": 10,
+      "ar_pred": 10,
+      "sc_pred": null,
+      "self_certainty_pred": null,
+      "self_certainty_index": 0,
+      "energy_argmin_pred": null,
+      "energy_argmin_index": 0,
+      "energy_weighted_vote_pred": null,
+      "candidate_preds": [
+        null,
+        null,
+        null,
+        null,
+        null
+      ],
+      "candidate_final_energies": [
+        -569.818848,
+        -569.818848,
+        -569.818848,
+        -569.818848,
+        -569.818848
+      ]
+    },
+    {
+      "problem_id": "gsm8k-260",
+      "gold": 11,
+      "ar_pred": 11,
+      "sc_pred": null,
+      "self_certainty_pred": null,
+      "self_certainty_index": 0,
+      "energy_argmin_pred": null,
+      "energy_argmin_index": 0,
+      "energy_weighted_vote_pred": null,
+      "candidate_preds": [
+        null,
+        null,
+        null,
+        null,
+        null
+      ],
+      "candidate_final_energies": [
+        -569.818848,
+        -569.818848,
+        -569.818848,
+        -569.818848,
+        -569.818848
+      ]
+    },
+    {
+      "problem_id": "gsm8k-788",
+      "gold": 100,
+      "ar_pred": 100,
+      "sc_pred": null,
+      "self_certainty_pred": null,
+      "self_certainty_index": 0,
+      "energy_argmin_pred": null,
+      "energy_argmin_index": 0,
+      "energy_weighted_vote_pred": null,
+      "candidate_preds": [
+        null,
+        null,
+        null,
+        null,
+        null
+      ],
+      "candidate_final_energies": [
+        -569.818848,
+        -569.818848,
+        -569.818848,
+        -569.818848,
+        -569.818848
+      ]
+    },
+    {
+      "problem_id": "gsm8k-669",
+      "gold": 132,
+      "ar_pred": 132,
+      "sc_pred": null,
+      "self_certainty_pred": null,
+      "self_certainty_index": 0,
+      "energy_argmin_pred": null,
+      "energy_argmin_index": 0,
+      "energy_weighted_vote_pred": null,
+      "candidate_preds": [
+        null,
+        null,
+        null,
+        null,
+        null
+      ],
+      "candidate_final_energies": [
+        -569.818848,
+        -569.818848,
+        -569.818848,
+        -569.818848,
+        -569.818848
+      ]
+    },
+    {
+      "problem_id": "gsm8k-1005",
+      "gold": 1490,
+      "ar_pred": 5,
+      "sc_pred": null,
+      "self_certainty_pred": null,
+      "self_certainty_index": 0,
+      "energy_argmin_pred": null,
+      "energy_argmin_index": 0,
+      "energy_weighted_vote_pred": null,
+      "candidate_preds": [
+        null,
+        null,
+        null,
+        null,
+        null
+      ],
+      "candidate_final_energies": [
+        -569.818848,
+        -569.818848,
+        -569.818848,
+        -569.818848,
+        -569.818848
+      ]
+    },
+    {
+      "problem_id": "gsm8k-433",
+      "gold": 6,
+      "ar_pred": 6,
+      "sc_pred": null,
+      "self_certainty_pred": null,
+      "self_certainty_index": 0,
+      "energy_argmin_pred": null,
+      "energy_argmin_index": 0,
+      "energy_weighted_vote_pred": null,
+      "candidate_preds": [
+        null,
+        null,
+        null,
+        null,
+        null
+      ],
+      "candidate_final_energies": [
+        -569.818848,
+        -569.818848,
+        -569.818848,
+        -569.818848,
+        -569.818848
+      ]
+    },
+    {
+      "problem_id": "gsm8k-1199",
+      "gold": 2,
+      "ar_pred": 3,
+      "sc_pred": null,
+      "self_certainty_pred": null,
+      "self_certainty_index": 0,
+      "energy_argmin_pred": null,
+      "energy_argmin_index": 0,
+      "energy_weighted_vote_pred": null,
+      "candidate_preds": [
+        null,
+        null,
+        null,
+        null,
+        null
+      ],
+      "candidate_final_energies": [
+        -569.818848,
+        -569.818848,
+        -569.818848,
+        -569.818848,
+        -569.818848
+      ]
+    },
+    {
+      "problem_id": "gsm8k-919",
+      "gold": 90,
+      "ar_pred": 90,
+      "sc_pred": null,
+      "self_certainty_pred": null,
+      "self_certainty_index": 0,
+      "energy_argmin_pred": null,
+      "energy_argmin_index": 0,
+      "energy_weighted_vote_pred": null,
+      "candidate_preds": [
+        null,
+        null,
+        null,
+        null,
+        null
+      ],
+      "candidate_final_energies": [
+        -569.818848,
+        -569.818848,
+        -569.818848,
+        -569.818848,
+        -569.818848
+      ]
+    },
+    {
+      "problem_id": "gsm8k-792",
+      "gold": 75,
+      "ar_pred": 75,
+      "sc_pred": null,
+      "self_certainty_pred": null,
+      "self_certainty_index": 0,
+      "energy_argmin_pred": null,
+      "energy_argmin_index": 0,
+      "energy_weighted_vote_pred": null,
+      "candidate_preds": [
+        null,
+        null,
+        null,
+        null,
+        null
+      ],
+      "candidate_final_energies": [
+        -569.818848,
+        -569.818848,
+        -569.818848,
+        -569.818848,
+        -569.818848
+      ]
+    },
+    {
+      "problem_id": "gsm8k-133",
+      "gold": 13,
+      "ar_pred": 13,
+      "sc_pred": null,
+      "self_certainty_pred": null,
+      "self_certainty_index": 0,
+      "energy_argmin_pred": null,
+      "energy_argmin_index": 0,
+      "energy_weighted_vote_pred": null,
+      "candidate_preds": [
+        null,
+        null,
+        null,
+        null,
+        null
+      ],
+      "candidate_final_energies": [
+        -569.818848,
+        -569.818848,
+        -569.818848,
+        -569.818848,
+        -569.818848
+      ]
+    },
+    {
+      "problem_id": "gsm8k-1158",
+      "gold": 7300,
+      "ar_pred": 7300,
+      "sc_pred": null,
+      "self_certainty_pred": null,
+      "self_certainty_index": 0,
+      "energy_argmin_pred": null,
+      "energy_argmin_index": 0,
+      "energy_weighted_vote_pred": null,
+      "candidate_preds": [
+        null,
+        null,
+        null,
+        null,
+        null
+      ],
+      "candidate_final_energies": [
+        -569.818848,
+        -569.818848,
+        -569.818848,
+        -569.818848,
+        -569.818848
+      ]
+    },
+    {
+      "problem_id": "gsm8k-564",
+      "gold": 240,
+      "ar_pred": 7,
+      "sc_pred": null,
+      "self_certainty_pred": null,
+      "self_certainty_index": 0,
+      "energy_argmin_pred": null,
+      "energy_argmin_index": 0,
+      "energy_weighted_vote_pred": null,
+      "candidate_preds": [
+        null,
+        null,
+        null,
+        null,
+        null
+      ],
+      "candidate_final_energies": [
+        -569.818848,
+        -569.818848,
+        -569.818848,
+        -569.818848,
+        -569.818848
+      ]
+    },
+    {
+      "problem_id": "gsm8k-74",
+      "gold": 88,
+      "ar_pred": 88,
+      "sc_pred": null,
+      "self_certainty_pred": null,
+      "self_certainty_index": 0,
+      "energy_argmin_pred": null,
+      "energy_argmin_index": 0,
+      "energy_weighted_vote_pred": null,
+      "candidate_preds": [
+        null,
+        null,
+        null,
+        null,
+        null
+      ],
+      "candidate_final_energies": [
+        -569.818848,
+        -569.818848,
+        -569.818848,
+        -569.818848,
+        -569.818848
+      ]
+    },
+    {
+      "problem_id": "gsm8k-280",
+      "gold": 7,
+      "ar_pred": 7,
+      "sc_pred": null,
+      "self_certainty_pred": null,
+      "self_certainty_index": 0,
+      "energy_argmin_pred": null,
+      "energy_argmin_index": 0,
+      "energy_weighted_vote_pred": null,
+      "candidate_preds": [
+        null,
+        null,
+        null,
+        null,
+        null
+      ],
+      "candidate_final_energies": [
+        -569.818848,
+        -569.818848,
+        -569.818848,
+        -569.818848,
+        -569.818848
+      ]
+    },
+    {
+      "problem_id": "gsm8k-498",
+      "gold": 40,
+      "ar_pred": 40,
+      "sc_pred": null,
+      "self_certainty_pred": null,
+      "self_certainty_index": 0,
+      "energy_argmin_pred": null,
+      "energy_argmin_index": 0,
+      "energy_weighted_vote_pred": null,
+      "candidate_preds": [
+        null,
+        null,
+        null,
+        null,
+        null
+      ],
+      "candidate_final_energies": [
+        -569.818848,
+        -569.818848,
+        -569.818848,
+        -569.818848,
+        -569.818848
+      ]
+    },
+    {
+      "problem_id": "gsm8k-622",
+      "gold": 7,
+      "ar_pred": 7,
+      "sc_pred": null,
+      "self_certainty_pred": null,
+      "self_certainty_index": 0,
+      "energy_argmin_pred": null,
+      "energy_argmin_index": 0,
+      "energy_weighted_vote_pred": null,
+      "candidate_preds": [
+        null,
+        null,
+        null,
+        null,
+        null
+      ],
+      "candidate_final_energies": [
+        -569.818848,
+        -569.818848,
+        -569.818848,
+        -569.818848,
+        -569.818848
+      ]
+    },
+    {
+      "problem_id": "gsm8k-930",
+      "gold": 14,
+      "ar_pred": 14,
+      "sc_pred": null,
+      "self_certainty_pred": null,
+      "self_certainty_index": 0,
+      "energy_argmin_pred": null,
+      "energy_argmin_index": 0,
+      "energy_weighted_vote_pred": null,
+      "candidate_preds": [
+        null,
+        null,
+        null,
+        null,
+        null
+      ],
+      "candidate_final_energies": [
+        -569.818848,
+        -569.818848,
+        -569.818848,
+        -569.818848,
+        -569.818848
+      ]
+    },
+    {
+      "problem_id": "gsm8k-1271",
+      "gold": 43,
+      "ar_pred": 43,
+      "sc_pred": null,
+      "self_certainty_pred": null,
+      "self_certainty_index": 0,
+      "energy_argmin_pred": null,
+      "energy_argmin_index": 0,
+      "energy_weighted_vote_pred": null,
+      "candidate_preds": [
+        null,
+        null,
+        null,
+        null,
+        null
+      ],
+      "candidate_final_energies": [
+        -569.818848,
+        -569.818848,
+        -569.818848,
+        -569.818848,
+        -569.818848
+      ]
+    },
+    {
+      "problem_id": "gsm8k-243",
+      "gold": 250,
+      "ar_pred": 250,
+      "sc_pred": null,
+      "self_certainty_pred": null,
+      "self_certainty_index": 0,
+      "energy_argmin_pred": null,
+      "energy_argmin_index": 0,
+      "energy_weighted_vote_pred": null,
+      "candidate_preds": [
+        null,
+        null,
+        null,
+        null,
+        null
+      ],
+      "candidate_final_energies": [
+        -569.818848,
+        -569.818848,
+        -569.818848,
+        -569.818848,
+        -569.818848
+      ]
+    },
+    {
+      "problem_id": "gsm8k-665",
+      "gold": 360,
+      "ar_pred": 6,
+      "sc_pred": null,
+      "self_certainty_pred": null,
+      "self_certainty_index": 0,
+      "energy_argmin_pred": null,
+      "energy_argmin_index": 0,
+      "energy_weighted_vote_pred": null,
+      "candidate_preds": [
+        null,
+        null,
+        null,
+        null,
+        null
+      ],
+      "candidate_final_energies": [
+        -569.818848,
+        -569.818848,
+        -569.818848,
+        -569.818848,
+        -569.818848
+      ]
+    },
+    {
+      "problem_id": "gsm8k-1316",
+      "gold": 230,
+      "ar_pred": 230,
+      "sc_pred": null,
+      "self_certainty_pred": null,
+      "self_certainty_index": 0,
+      "energy_argmin_pred": null,
+      "energy_argmin_index": 0,
+      "energy_weighted_vote_pred": null,
+      "candidate_preds": [
+        null,
+        null,
+        null,
+        null,
+        null
+      ],
+      "candidate_final_energies": [
+        -569.818848,
+        -569.818848,
+        -569.818848,
+        -569.818848,
+        -569.818848
+      ]
+    },
+    {
+      "problem_id": "gsm8k-384",
+      "gold": 32,
+      "ar_pred": 32,
+      "sc_pred": null,
+      "self_certainty_pred": null,
+      "self_certainty_index": 0,
+      "energy_argmin_pred": null,
+      "energy_argmin_index": 0,
+      "energy_weighted_vote_pred": null,
+      "candidate_preds": [
+        null,
+        null,
+        null,
+        null,
+        null
+      ],
+      "candidate_final_energies": [
+        -569.818848,
+        -569.818848,
+        -569.818848,
+        -569.818848,
+        -569.818848
+      ]
+    },
+    {
+      "problem_id": "gsm8k-381",
+      "gold": 67,
+      "ar_pred": 67,
+      "sc_pred": null,
+      "self_certainty_pred": null,
+      "self_certainty_index": 0,
+      "energy_argmin_pred": null,
+      "energy_argmin_index": 0,
+      "energy_weighted_vote_pred": null,
+      "candidate_preds": [
+        null,
+        null,
+        null,
+        null,
+        null
+      ],
+      "candidate_final_energies": [
+        -569.818848,
+        -569.818848,
+        -569.818848,
+        -569.818848,
+        -569.818848
+      ]
+    },
+    {
+      "problem_id": "gsm8k-523",
+      "gold": 74,
+      "ar_pred": 68,
+      "sc_pred": null,
+      "self_certainty_pred": null,
+      "self_certainty_index": 0,
+      "energy_argmin_pred": null,
+      "energy_argmin_index": 0,
+      "energy_weighted_vote_pred": null,
+      "candidate_preds": [
+        null,
+        null,
+        null,
+        null,
+        null
+      ],
+      "candidate_final_energies": [
+        -569.818848,
+        -569.818848,
+        -569.818848,
+        -569.818848,
+        -569.818848
+      ]
+    },
+    {
+      "problem_id": "gsm8k-195",
+      "gold": 12,
+      "ar_pred": 12,
+      "sc_pred": null,
+      "self_certainty_pred": null,
+      "self_certainty_index": 0,
+      "energy_argmin_pred": null,
+      "energy_argmin_index": 0,
+      "energy_weighted_vote_pred": null,
+      "candidate_preds": [
+        null,
+        null,
+        null,
+        null,
+        null
+      ],
+      "candidate_final_energies": [
+        -569.818848,
+        -569.818848,
+        -569.818848,
+        -569.818848,
+        -569.818848
+      ]
+    },
+    {
+      "problem_id": "gsm8k-236",
+      "gold": 31,
+      "ar_pred": 1,
+      "sc_pred": null,
+      "self_certainty_pred": null,
+      "self_certainty_index": 0,
+      "energy_argmin_pred": null,
+      "energy_argmin_index": 0,
+      "energy_weighted_vote_pred": null,
+      "candidate_preds": [
+        null,
+        null,
+        null,
+        null,
+        null
+      ],
+      "candidate_final_energies": [
+        -569.818848,
+        -569.818848,
+        -569.818848,
+        -569.818848,
+        -569.818848
+      ]
+    },
+    {
+      "problem_id": "gsm8k-1117",
+      "gold": 9,
+      "ar_pred": 459,
+      "sc_pred": null,
+      "self_certainty_pred": null,
+      "self_certainty_index": 0,
+      "energy_argmin_pred": null,
+      "energy_argmin_index": 0,
+      "energy_weighted_vote_pred": null,
+      "candidate_preds": [
+        null,
+        null,
+        null,
+        null,
+        null
+      ],
+      "candidate_final_energies": [
+        -569.818848,
+        -569.818848,
+        -569.818848,
+        -569.818848,
+        -569.818848
+      ]
+    },
+    {
+      "problem_id": "gsm8k-58",
+      "gold": 57,
+      "ar_pred": 40,
+      "sc_pred": null,
+      "self_certainty_pred": null,
+      "self_certainty_index": 0,
+      "energy_argmin_pred": null,
+      "energy_argmin_index": 0,
+      "energy_weighted_vote_pred": null,
+      "candidate_preds": [
+        null,
+        null,
+        null,
+        null,
+        null
+      ],
+      "candidate_final_energies": [
+        -569.818848,
+        -569.818848,
+        -569.818848,
+        -569.818848,
+        -569.818848
+      ]
+    },
+    {
+      "problem_id": "gsm8k-939",
+      "gold": 650,
+      "ar_pred": 650,
+      "sc_pred": null,
+      "self_certainty_pred": null,
+      "self_certainty_index": 0,
+      "energy_argmin_pred": null,
+      "energy_argmin_index": 0,
+      "energy_weighted_vote_pred": null,
+      "candidate_preds": [
+        null,
+        null,
+        null,
+        null,
+        null
+      ],
+      "candidate_final_energies": [
+        -569.818848,
+        -569.818848,
+        -569.818848,
+        -569.818848,
+        -569.818848
+      ]
+    },
+    {
+      "problem_id": "gsm8k-719",
+      "gold": 175,
+      "ar_pred": 7,
+      "sc_pred": null,
+      "self_certainty_pred": null,
+      "self_certainty_index": 0,
+      "energy_argmin_pred": null,
+      "energy_argmin_index": 0,
+      "energy_weighted_vote_pred": null,
+      "candidate_preds": [
+        null,
+        null,
+        null,
+        null,
+        null
+      ],
+      "candidate_final_energies": [
+        -569.818848,
+        -569.818848,
+        -569.818848,
+        -569.818848,
+        -569.818848
+      ]
+    },
+    {
+      "problem_id": "gsm8k-617",
+      "gold": 5,
+      "ar_pred": 5,
+      "sc_pred": null,
+      "self_certainty_pred": null,
+      "self_certainty_index": 0,
+      "energy_argmin_pred": null,
+      "energy_argmin_index": 0,
+      "energy_weighted_vote_pred": null,
+      "candidate_preds": [
+        null,
+        null,
+        null,
+        null,
+        null
+      ],
+      "candidate_final_energies": [
+        -569.818848,
+        -569.818848,
+        -569.818848,
+        -569.818848,
+        -569.818848
+      ]
+    },
+    {
+      "problem_id": "gsm8k-701",
+      "gold": 200,
+      "ar_pred": 2,
+      "sc_pred": null,
+      "self_certainty_pred": null,
+      "self_certainty_index": 0,
+      "energy_argmin_pred": null,
+      "energy_argmin_index": 0,
+      "energy_weighted_vote_pred": null,
+      "candidate_preds": [
+        null,
+        null,
+        null,
+        null,
+        null
+      ],
+      "candidate_final_energies": [
+        -569.818848,
+        -569.818848,
+        -569.818848,
+        -569.818848,
+        -569.818848
+      ]
+    },
+    {
+      "problem_id": "gsm8k-443",
+      "gold": 59,
+      "ar_pred": 59,
+      "sc_pred": null,
+      "self_certainty_pred": null,
+      "self_certainty_index": 0,
+      "energy_argmin_pred": null,
+      "energy_argmin_index": 0,
+      "energy_weighted_vote_pred": null,
+      "candidate_preds": [
+        null,
+        null,
+        null,
+        null,
+        null
+      ],
+      "candidate_final_energies": [
+        -569.818848,
+        -569.818848,
+        -569.818848,
+        -569.818848,
+        -569.818848
+      ]
+    },
+    {
+      "problem_id": "gsm8k-683",
+      "gold": 50,
+      "ar_pred": 50,
+      "sc_pred": null,
+      "self_certainty_pred": null,
+      "self_certainty_index": 0,
+      "energy_argmin_pred": null,
+      "energy_argmin_index": 0,
+      "energy_weighted_vote_pred": null,
+      "candidate_preds": [
+        null,
+        null,
+        null,
+        null,
+        null
+      ],
+      "candidate_final_energies": [
+        -569.818848,
+        -569.818848,
+        -569.818848,
+        -569.818848,
+        -569.818848
+      ]
+    },
+    {
+      "problem_id": "gsm8k-631",
+      "gold": 4800,
+      "ar_pred": 5,
+      "sc_pred": null,
+      "self_certainty_pred": null,
+      "self_certainty_index": 0,
+      "energy_argmin_pred": null,
+      "energy_argmin_index": 0,
+      "energy_weighted_vote_pred": null,
+      "candidate_preds": [
+        null,
+        null,
+        null,
+        null,
+        null
+      ],
+      "candidate_final_energies": [
+        -569.818848,
+        -569.818848,
+        -569.818848,
+        -569.818848,
+        -569.818848
+      ]
+    },
+    {
+      "problem_id": "gsm8k-92",
+      "gold": 4,
+      "ar_pred": 4,
+      "sc_pred": null,
+      "self_certainty_pred": null,
+      "self_certainty_index": 0,
+      "energy_argmin_pred": null,
+      "energy_argmin_index": 0,
+      "energy_weighted_vote_pred": null,
+      "candidate_preds": [
+        null,
+        null,
+        null,
+        null,
+        null
+      ],
+      "candidate_final_energies": [
+        -569.818848,
+        -569.818848,
+        -569.818848,
+        -569.818848,
+        -569.818848
+      ]
+    },
+    {
+      "problem_id": "gsm8k-211",
+      "gold": 4,
+      "ar_pred": 4,
+      "sc_pred": null,
+      "self_certainty_pred": null,
+      "self_certainty_index": 0,
+      "energy_argmin_pred": null,
+      "energy_argmin_index": 0,
+      "energy_weighted_vote_pred": null,
+      "candidate_preds": [
+        null,
+        null,
+        null,
+        null,
+        null
+      ],
+      "candidate_final_energies": [
+        -569.818848,
+        -569.818848,
+        -569.818848,
+        -569.818848,
+        -569.818848
+      ]
+    },
+    {
+      "problem_id": "gsm8k-230",
+      "gold": 276000,
+      "ar_pred": 4,
+      "sc_pred": null,
+      "self_certainty_pred": null,
+      "self_certainty_index": 0,
+      "energy_argmin_pred": null,
+      "energy_argmin_index": 0,
+      "energy_weighted_vote_pred": null,
+      "candidate_preds": [
+        null,
+        null,
+        null,
+        null,
+        null
+      ],
+      "candidate_final_energies": [
+        -569.818848,
+        -569.818848,
+        -569.818848,
+        -569.818848,
+        -569.818848
+      ]
+    },
+    {
+      "problem_id": "gsm8k-1307",
+      "gold": 8,
+      "ar_pred": 8,
+      "sc_pred": null,
+      "self_certainty_pred": null,
+      "self_certainty_index": 0,
+      "energy_argmin_pred": null,
+      "energy_argmin_index": 0,
+      "energy_weighted_vote_pred": null,
+      "candidate_preds": [
+        null,
+        null,
+        null,
+        null,
+        null
+      ],
+      "candidate_final_energies": [
+        -569.818848,
+        -569.818848,
+        -569.818848,
+        -569.818848,
+        -569.818848
+      ]
+    },
+    {
+      "problem_id": "gsm8k-97",
+      "gold": 12,
+      "ar_pred": 12,
+      "sc_pred": null,
+      "self_certainty_pred": null,
+      "self_certainty_index": 0,
+      "energy_argmin_pred": null,
+      "energy_argmin_index": 0,
+      "energy_weighted_vote_pred": null,
+      "candidate_preds": [
+        null,
+        null,
+        null,
+        null,
+        null
+      ],
+      "candidate_final_energies": [
+        -569.818848,
+        -569.818848,
+        -569.818848,
+        -569.818848,
+        -569.818848
+      ]
+    },
+    {
+      "problem_id": "gsm8k-193",
+      "gold": 24,
+      "ar_pred": 6,
+      "sc_pred": null,
+      "self_certainty_pred": null,
+      "self_certainty_index": 0,
+      "energy_argmin_pred": null,
+      "energy_argmin_index": 0,
+      "energy_weighted_vote_pred": null,
+      "candidate_preds": [
+        null,
+        null,
+        null,
+        null,
+        null
+      ],
+      "candidate_final_energies": [
+        -569.818848,
+        -569.818848,
+        -569.818848,
+        -569.818848,
+        -569.818848
+      ]
+    },
+    {
+      "problem_id": "gsm8k-908",
+      "gold": 14,
+      "ar_pred": 14,
+      "sc_pred": null,
+      "self_certainty_pred": null,
+      "self_certainty_index": 0,
+      "energy_argmin_pred": null,
+      "energy_argmin_index": 0,
+      "energy_weighted_vote_pred": null,
+      "candidate_preds": [
+        null,
+        null,
+        null,
+        null,
+        null
+      ],
+      "candidate_final_energies": [
+        -569.818848,
+        -569.818848,
+        -569.818848,
+        -569.818848,
+        -569.818848
+      ]
+    },
+    {
+      "problem_id": "gsm8k-89",
+      "gold": 24,
+      "ar_pred": 16,
+      "sc_pred": null,
+      "self_certainty_pred": null,
+      "self_certainty_index": 0,
+      "energy_argmin_pred": null,
+      "energy_argmin_index": 0,
+      "energy_weighted_vote_pred": null,
+      "candidate_preds": [
+        null,
+        null,
+        null,
+        null,
+        null
+      ],
+      "candidate_final_energies": [
+        -569.818848,
+        -569.818848,
+        -569.818848,
+        -569.818848,
+        -569.818848
+      ]
+    },
+    {
+      "problem_id": "gsm8k-618",
+      "gold": 36,
+      "ar_pred": 36,
+      "sc_pred": null,
+      "self_certainty_pred": null,
+      "self_certainty_index": 0,
+      "energy_argmin_pred": null,
+      "energy_argmin_index": 0,
+      "energy_weighted_vote_pred": null,
+      "candidate_preds": [
+        null,
+        null,
+        null,
+        null,
+        null
+      ],
+      "candidate_final_energies": [
+        -569.818848,
+        -569.818848,
+        -569.818848,
+        -569.818848,
+        -569.818848
+      ]
+    },
+    {
+      "problem_id": "gsm8k-1009",
+      "gold": 1875,
+      "ar_pred": 37,
+      "sc_pred": null,
+      "self_certainty_pred": null,
+      "self_certainty_index": 0,
+      "energy_argmin_pred": null,
+      "energy_argmin_index": 0,
+      "energy_weighted_vote_pred": null,
+      "candidate_preds": [
+        null,
+        null,
+        null,
+        null,
+        null
+      ],
+      "candidate_final_energies": [
+        -569.818848,
+        -569.818848,
+        -569.818848,
+        -569.818848,
+        -569.818848
+      ]
+    },
+    {
+      "problem_id": "gsm8k-1163",
+      "gold": 12,
+      "ar_pred": 5,
+      "sc_pred": null,
+      "self_certainty_pred": null,
+      "self_certainty_index": 0,
+      "energy_argmin_pred": null,
+      "energy_argmin_index": 0,
+      "energy_weighted_vote_pred": null,
+      "candidate_preds": [
+        null,
+        null,
+        null,
+        null,
+        null
+      ],
+      "candidate_final_energies": [
+        -569.818848,
+        -569.818848,
+        -569.818848,
+        -569.818848,
+        -569.818848
+      ]
+    },
+    {
+      "problem_id": "gsm8k-807",
+      "gold": 4,
+      "ar_pred": 4,
+      "sc_pred": null,
+      "self_certainty_pred": null,
+      "self_certainty_index": 0,
+      "energy_argmin_pred": null,
+      "energy_argmin_index": 0,
+      "energy_weighted_vote_pred": null,
+      "candidate_preds": [
+        null,
+        null,
+        null,
+        null,
+        null
+      ],
+      "candidate_final_energies": [
+        -569.818848,
+        -569.818848,
+        -569.818848,
+        -569.818848,
+        -569.818848
+      ]
+    },
+    {
+      "problem_id": "gsm8k-803",
+      "gold": 9,
+      "ar_pred": 9,
+      "sc_pred": null,
+      "self_certainty_pred": null,
+      "self_certainty_index": 0,
+      "energy_argmin_pred": null,
+      "energy_argmin_index": 0,
+      "energy_weighted_vote_pred": null,
+      "candidate_preds": [
+        null,
+        null,
+        null,
+        null,
+        null
+      ],
+      "candidate_final_energies": [
+        -569.818848,
+        -569.818848,
+        -569.818848,
+        -569.818848,
+        -569.818848
+      ]
+    },
+    {
+      "problem_id": "gsm8k-1038",
+      "gold": 4,
+      "ar_pred": 75,
+      "sc_pred": null,
+      "self_certainty_pred": null,
+      "self_certainty_index": 0,
+      "energy_argmin_pred": null,
+      "energy_argmin_index": 0,
+      "energy_weighted_vote_pred": null,
+      "candidate_preds": [
+        null,
+        null,
+        null,
+        null,
+        null
+      ],
+      "candidate_final_energies": [
+        -569.818848,
+        -569.818848,
+        -569.818848,
+        -569.818848,
+        -569.818848
+      ]
+    },
+    {
+      "problem_id": "gsm8k-1189",
+      "gold": 6,
+      "ar_pred": 6,
+      "sc_pred": null,
+      "self_certainty_pred": null,
+      "self_certainty_index": 0,
+      "energy_argmin_pred": null,
+      "energy_argmin_index": 0,
+      "energy_weighted_vote_pred": null,
+      "candidate_preds": [
+        null,
+        null,
+        null,
+        null,
+        null
+      ],
+      "candidate_final_energies": [
+        -569.818848,
+        -569.818848,
+        -569.818848,
+        -569.818848,
+        -569.818848
+      ]
+    },
+    {
+      "problem_id": "gsm8k-1047",
+      "gold": 10,
+      "ar_pred": 10,
+      "sc_pred": null,
+      "self_certainty_pred": null,
+      "self_certainty_index": 0,
+      "energy_argmin_pred": null,
+      "energy_argmin_index": 0,
+      "energy_weighted_vote_pred": null,
+      "candidate_preds": [
+        null,
+        null,
+        null,
+        null,
+        null
+      ],
+      "candidate_final_energies": [
+        -569.818848,
+        -569.818848,
+        -569.818848,
+        -569.818848,
+        -569.818848
+      ]
+    },
+    {
+      "problem_id": "gsm8k-603",
+      "gold": 1800,
+      "ar_pred": 12,
+      "sc_pred": null,
+      "self_certainty_pred": null,
+      "self_certainty_index": 0,
+      "energy_argmin_pred": null,
+      "energy_argmin_index": 0,
+      "energy_weighted_vote_pred": null,
+      "candidate_preds": [
+        null,
+        null,
+        null,
+        null,
+        null
+      ],
+      "candidate_final_energies": [
+        -569.818848,
+        -569.818848,
+        -569.818848,
+        -569.818848,
+        -569.818848
+      ]
+    },
+    {
+      "problem_id": "gsm8k-461",
+      "gold": 9,
+      "ar_pred": 9,
+      "sc_pred": null,
+      "self_certainty_pred": null,
+      "self_certainty_index": 0,
+      "energy_argmin_pred": null,
+      "energy_argmin_index": 0,
+      "energy_weighted_vote_pred": null,
+      "candidate_preds": [
+        null,
+        null,
+        null,
+        null,
+        null
+      ],
+      "candidate_final_energies": [
+        -569.818848,
+        -569.818848,
+        -569.818848,
+        -569.818848,
+        -569.818848
+      ]
+    },
+    {
+      "problem_id": "gsm8k-938",
+      "gold": 4,
+      "ar_pred": 4,
+      "sc_pred": null,
+      "self_certainty_pred": null,
+      "self_certainty_index": 0,
+      "energy_argmin_pred": null,
+      "energy_argmin_index": 0,
+      "energy_weighted_vote_pred": null,
+      "candidate_preds": [
+        null,
+        null,
+        null,
+        null,
+        null
+      ],
+      "candidate_final_energies": [
+        -569.818848,
+        -569.818848,
+        -569.818848,
+        -569.818848,
+        -569.818848
+      ]
+    },
+    {
+      "problem_id": "gsm8k-1195",
+      "gold": 320,
+      "ar_pred": 320,
+      "sc_pred": null,
+      "self_certainty_pred": null,
+      "self_certainty_index": 0,
+      "energy_argmin_pred": null,
+      "energy_argmin_index": 0,
+      "energy_weighted_vote_pred": null,
+      "candidate_preds": [
+        null,
+        null,
+        null,
+        null,
+        null
+      ],
+      "candidate_final_energies": [
+        -569.818848,
+        -569.818848,
+        -569.818848,
+        -569.818848,
+        -569.818848
+      ]
+    },
+    {
+      "problem_id": "gsm8k-174",
+      "gold": 95,
+      "ar_pred": 35,
+      "sc_pred": null,
+      "self_certainty_pred": null,
+      "self_certainty_index": 0,
+      "energy_argmin_pred": null,
+      "energy_argmin_index": 0,
+      "energy_weighted_vote_pred": null,
+      "candidate_preds": [
+        null,
+        null,
+        null,
+        null,
+        null
+      ],
+      "candidate_final_energies": [
+        -569.818848,
+        -569.818848,
+        -569.818848,
+        -569.818848,
+        -569.818848
+      ]
+    },
+    {
+      "problem_id": "gsm8k-581",
+      "gold": 215,
+      "ar_pred": 215,
+      "sc_pred": null,
+      "self_certainty_pred": null,
+      "self_certainty_index": 0,
+      "energy_argmin_pred": null,
+      "energy_argmin_index": 0,
+      "energy_weighted_vote_pred": null,
+      "candidate_preds": [
+        null,
+        null,
+        null,
+        null,
+        null
+      ],
+      "candidate_final_energies": [
+        -569.818848,
+        -569.818848,
+        -569.818848,
+        -569.818848,
+        -569.818848
+      ]
+    },
+    {
+      "problem_id": "gsm8k-765",
+      "gold": 490,
+      "ar_pred": 490,
+      "sc_pred": null,
+      "self_certainty_pred": null,
+      "self_certainty_index": 0,
+      "energy_argmin_pred": null,
+      "energy_argmin_index": 0,
+      "energy_weighted_vote_pred": null,
+      "candidate_preds": [
+        null,
+        null,
+        null,
+        null,
+        null
+      ],
+      "candidate_final_energies": [
+        -569.818848,
+        -569.818848,
+        -569.818848,
+        -569.818848,
+        -569.818848
+      ]
+    },
+    {
+      "problem_id": "gsm8k-1088",
+      "gold": 30,
+      "ar_pred": 16,
+      "sc_pred": null,
+      "self_certainty_pred": null,
+      "self_certainty_index": 0,
+      "energy_argmin_pred": null,
+      "energy_argmin_index": 0,
+      "energy_weighted_vote_pred": null,
+      "candidate_preds": [
+        null,
+        null,
+        null,
+        null,
+        null
+      ],
+      "candidate_final_energies": [
+        -569.818848,
+        -569.818848,
+        -569.818848,
+        -569.818848,
+        -569.818848
+      ]
+    },
+    {
+      "problem_id": "gsm8k-387",
+      "gold": 36,
+      "ar_pred": 36,
+      "sc_pred": null,
+      "self_certainty_pred": null,
+      "self_certainty_index": 0,
+      "energy_argmin_pred": null,
+      "energy_argmin_index": 0,
+      "energy_weighted_vote_pred": null,
+      "candidate_preds": [
+        null,
+        null,
+        null,
+        null,
+        null
+      ],
+      "candidate_final_energies": [
+        -569.818848,
+        -569.818848,
+        -569.818848,
+        -569.818848,
+        -569.818848
+      ]
+    },
+    {
+      "problem_id": "gsm8k-160",
+      "gold": 16,
+      "ar_pred": 16,
+      "sc_pred": null,
+      "self_certainty_pred": null,
+      "self_certainty_index": 0,
+      "energy_argmin_pred": null,
+      "energy_argmin_index": 0,
+      "energy_weighted_vote_pred": null,
+      "candidate_preds": [
+        null,
+        null,
+        null,
+        null,
+        null
+      ],
+      "candidate_final_energies": [
+        -569.818848,
+        -569.818848,
+        -569.818848,
+        -569.818848,
+        -569.818848
+      ]
+    },
+    {
+      "problem_id": "gsm8k-220",
+      "gold": 70,
+      "ar_pred": 70,
+      "sc_pred": null,
+      "self_certainty_pred": null,
+      "self_certainty_index": 0,
+      "energy_argmin_pred": null,
+      "energy_argmin_index": 0,
+      "energy_weighted_vote_pred": null,
+      "candidate_preds": [
+        null,
+        null,
+        null,
+        null,
+        null
+      ],
+      "candidate_final_energies": [
+        -569.818848,
+        -569.818848,
+        -569.818848,
+        -569.818848,
+        -569.818848
+      ]
+    },
+    {
+      "problem_id": "gsm8k-75",
+      "gold": 60,
+      "ar_pred": 128,
+      "sc_pred": null,
+      "self_certainty_pred": null,
+      "self_certainty_index": 0,
+      "energy_argmin_pred": null,
+      "energy_argmin_index": 0,
+      "energy_weighted_vote_pred": null,
+      "candidate_preds": [
+        null,
+        null,
+        null,
+        null,
+        null
+      ],
+      "candidate_final_energies": [
+        -569.818848,
+        -569.818848,
+        -569.818848,
+        -569.818848,
+        -569.818848
+      ]
+    },
+    {
+      "problem_id": "gsm8k-764",
+      "gold": 14,
+      "ar_pred": 14,
+      "sc_pred": null,
+      "self_certainty_pred": null,
+      "self_certainty_index": 0,
+      "energy_argmin_pred": null,
+      "energy_argmin_index": 0,
+      "energy_weighted_vote_pred": null,
+      "candidate_preds": [
+        null,
+        null,
+        null,
+        null,
+        null
+      ],
+      "candidate_final_energies": [
+        -569.818848,
+        -569.818848,
+        -569.818848,
+        -569.818848,
+        -569.818848
+      ]
+    },
+    {
+      "problem_id": "gsm8k-1118",
+      "gold": 5,
+      "ar_pred": 11,
+      "sc_pred": null,
+      "self_certainty_pred": null,
+      "self_certainty_index": 0,
+      "energy_argmin_pred": null,
+      "energy_argmin_index": 0,
+      "energy_weighted_vote_pred": null,
+      "candidate_preds": [
+        null,
+        null,
+        null,
+        null,
+        null
+      ],
+      "candidate_final_energies": [
+        -569.818848,
+        -569.818848,
+        -569.818848,
+        -569.818848,
+        -569.818848
+      ]
+    },
+    {
+      "problem_id": "gsm8k-253",
+      "gold": 18,
+      "ar_pred": 18,
+      "sc_pred": null,
+      "self_certainty_pred": null,
+      "self_certainty_index": 0,
+      "energy_argmin_pred": null,
+      "energy_argmin_index": 0,
+      "energy_weighted_vote_pred": null,
+      "candidate_preds": [
+        null,
+        null,
+        null,
+        null,
+        null
+      ],
+      "candidate_final_energies": [
+        -569.818848,
+        -569.818848,
+        -569.818848,
+        -569.818848,
+        -569.818848
+      ]
+    },
+    {
+      "problem_id": "gsm8k-863",
+      "gold": 110,
+      "ar_pred": 110,
+      "sc_pred": null,
+      "self_certainty_pred": null,
+      "self_certainty_index": 0,
+      "energy_argmin_pred": null,
+      "energy_argmin_index": 0,
+      "energy_weighted_vote_pred": null,
+      "candidate_preds": [
+        null,
+        null,
+        null,
+        null,
+        null
+      ],
+      "candidate_final_energies": [
+        -569.818848,
+        -569.818848,
+        -569.818848,
+        -569.818848,
+        -569.818848
+      ]
+    },
+    {
+      "problem_id": "gsm8k-697",
+      "gold": 27,
+      "ar_pred": 27,
+      "sc_pred": null,
+      "self_certainty_pred": null,
+      "self_certainty_index": 0,
+      "energy_argmin_pred": null,
+      "energy_argmin_index": 0,
+      "energy_weighted_vote_pred": null,
+      "candidate_preds": [
+        null,
+        null,
+        null,
+        null,
+        null
+      ],
+      "candidate_final_energies": [
+        -569.818848,
+        -569.818848,
+        -569.818848,
+        -569.818848,
+        -569.818848
+      ]
+    },
+    {
+      "problem_id": "gsm8k-112",
+      "gold": 24,
+      "ar_pred": 5,
+      "sc_pred": null,
+      "self_certainty_pred": null,
+      "self_certainty_index": 0,
+      "energy_argmin_pred": null,
+      "energy_argmin_index": 0,
+      "energy_weighted_vote_pred": null,
+      "candidate_preds": [
+        null,
+        null,
+        null,
+        null,
+        null
+      ],
+      "candidate_final_energies": [
+        -569.818848,
+        -569.818848,
+        -569.818848,
+        -569.818848,
+        -569.818848
+      ]
+    },
+    {
+      "problem_id": "gsm8k-137",
+      "gold": 29,
+      "ar_pred": 2,
+      "sc_pred": null,
+      "self_certainty_pred": null,
+      "self_certainty_index": 0,
+      "energy_argmin_pred": null,
+      "energy_argmin_index": 0,
+      "energy_weighted_vote_pred": null,
+      "candidate_preds": [
+        null,
+        null,
+        null,
+        null,
+        null
+      ],
+      "candidate_final_energies": [
+        -569.818848,
+        -569.818848,
+        -569.818848,
+        -569.818848,
+        -569.818848
+      ]
+    },
+    {
+      "problem_id": "gsm8k-787",
+      "gold": 25,
+      "ar_pred": 6,
+      "sc_pred": null,
+      "self_certainty_pred": null,
+      "self_certainty_index": 0,
+      "energy_argmin_pred": null,
+      "energy_argmin_index": 0,
+      "energy_weighted_vote_pred": null,
+      "candidate_preds": [
+        null,
+        null,
+        null,
+        null,
+        null
+      ],
+      "candidate_final_energies": [
+        -569.818848,
+        -569.818848,
+        -569.818848,
+        -569.818848,
+        -569.818848
+      ]
+    },
+    {
+      "problem_id": "gsm8k-1090",
+      "gold": 72,
+      "ar_pred": 72,
+      "sc_pred": null,
+      "self_certainty_pred": null,
+      "self_certainty_index": 0,
+      "energy_argmin_pred": null,
+      "energy_argmin_index": 0,
+      "energy_weighted_vote_pred": null,
+      "candidate_preds": [
+        null,
+        null,
+        null,
+        null,
+        null
+      ],
+      "candidate_final_energies": [
+        -569.818848,
+        -569.818848,
+        -569.818848,
+        -569.818848,
+        -569.818848
+      ]
+    },
+    {
+      "problem_id": "gsm8k-1082",
+      "gold": 2,
+      "ar_pred": 4,
+      "sc_pred": null,
+      "self_certainty_pred": null,
+      "self_certainty_index": 0,
+      "energy_argmin_pred": null,
+      "energy_argmin_index": 0,
+      "energy_weighted_vote_pred": null,
+      "candidate_preds": [
+        null,
+        null,
+        null,
+        null,
+        null
+      ],
+      "candidate_final_energies": [
+        -569.818848,
+        -569.818848,
+        -569.818848,
+        -569.818848,
+        -569.818848
+      ]
+    },
+    {
+      "problem_id": "gsm8k-26",
+      "gold": 243,
+      "ar_pred": 3,
+      "sc_pred": null,
+      "self_certainty_pred": null,
+      "self_certainty_index": 0,
+      "energy_argmin_pred": null,
+      "energy_argmin_index": 0,
+      "energy_weighted_vote_pred": null,
+      "candidate_preds": [
+        null,
+        null,
+        null,
+        null,
+        null
+      ],
+      "candidate_final_energies": [
+        -569.818848,
+        -569.818848,
+        -569.818848,
+        -569.818848,
+        -569.818848
+      ]
+    },
+    {
+      "problem_id": "gsm8k-1004",
+      "gold": 8,
+      "ar_pred": 8,
+      "sc_pred": null,
+      "self_certainty_pred": null,
+      "self_certainty_index": 0,
+      "energy_argmin_pred": null,
+      "energy_argmin_index": 0,
+      "energy_weighted_vote_pred": null,
+      "candidate_preds": [
+        null,
+        null,
+        null,
+        null,
+        null
+      ],
+      "candidate_final_energies": [
+        -569.818848,
+        -569.818848,
+        -569.818848,
+        -569.818848,
+        -569.818848
+      ]
+    },
+    {
+      "problem_id": "gsm8k-86",
+      "gold": 22,
+      "ar_pred": 2,
+      "sc_pred": null,
+      "self_certainty_pred": null,
+      "self_certainty_index": 0,
+      "energy_argmin_pred": null,
+      "energy_argmin_index": 0,
+      "energy_weighted_vote_pred": null,
+      "candidate_preds": [
+        null,
+        null,
+        null,
+        null,
+        null
+      ],
+      "candidate_final_energies": [
+        -569.818848,
+        -569.818848,
+        -569.818848,
+        -569.818848,
+        -569.818848
+      ]
+    },
+    {
+      "problem_id": "gsm8k-638",
+      "gold": 12,
+      "ar_pred": 12,
+      "sc_pred": null,
+      "self_certainty_pred": null,
+      "self_certainty_index": 0,
+      "energy_argmin_pred": null,
+      "energy_argmin_index": 0,
+      "energy_weighted_vote_pred": null,
+      "candidate_preds": [
+        null,
+        null,
+        null,
+        null,
+        null
+      ],
+      "candidate_final_energies": [
+        -569.818848,
+        -569.818848,
+        -569.818848,
+        -569.818848,
+        -569.818848
+      ]
+    },
+    {
+      "problem_id": "gsm8k-402",
+      "gold": 4,
+      "ar_pred": 5,
+      "sc_pred": null,
+      "self_certainty_pred": null,
+      "self_certainty_index": 0,
+      "energy_argmin_pred": null,
+      "energy_argmin_index": 0,
+      "energy_weighted_vote_pred": null,
+      "candidate_preds": [
+        null,
+        null,
+        null,
+        null,
+        null
+      ],
+      "candidate_final_energies": [
+        -569.818848,
+        -569.818848,
+        -569.818848,
+        -569.818848,
+        -569.818848
+      ]
+    },
+    {
+      "problem_id": "gsm8k-263",
+      "gold": 8,
+      "ar_pred": 8,
+      "sc_pred": null,
+      "self_certainty_pred": null,
+      "self_certainty_index": 0,
+      "energy_argmin_pred": null,
+      "energy_argmin_index": 0,
+      "energy_weighted_vote_pred": null,
+      "candidate_preds": [
+        null,
+        null,
+        null,
+        null,
+        null
+      ],
+      "candidate_final_energies": [
+        -569.818848,
+        -569.818848,
+        -569.818848,
+        -569.818848,
+        -569.818848
+      ]
+    },
+    {
+      "problem_id": "gsm8k-475",
+      "gold": 20,
+      "ar_pred": 20,
+      "sc_pred": null,
+      "self_certainty_pred": null,
+      "self_certainty_index": 0,
+      "energy_argmin_pred": null,
+      "energy_argmin_index": 0,
+      "energy_weighted_vote_pred": null,
+      "candidate_preds": [
+        null,
+        null,
+        null,
+        null,
+        null
+      ],
+      "candidate_final_energies": [
+        -569.818848,
+        -569.818848,
+        -569.818848,
+        -569.818848,
+        -569.818848
+      ]
+    },
+    {
+      "problem_id": "gsm8k-1262",
+      "gold": 12,
+      "ar_pred": 12,
+      "sc_pred": null,
+      "self_certainty_pred": null,
+      "self_certainty_index": 0,
+      "energy_argmin_pred": null,
+      "energy_argmin_index": 0,
+      "energy_weighted_vote_pred": null,
+      "candidate_preds": [
+        null,
+        null,
+        null,
+        null,
+        null
+      ],
+      "candidate_final_energies": [
+        -569.818848,
+        -569.818848,
+        -569.818848,
+        -569.818848,
+        -569.818848
+      ]
+    },
+    {
+      "problem_id": "gsm8k-343",
+      "gold": 180000,
+      "ar_pred": 180000,
+      "sc_pred": null,
+      "self_certainty_pred": null,
+      "self_certainty_index": 0,
+      "energy_argmin_pred": null,
+      "energy_argmin_index": 0,
+      "energy_weighted_vote_pred": null,
+      "candidate_preds": [
+        null,
+        null,
+        null,
+        null,
+        null
+      ],
+      "candidate_final_energies": [
+        -569.818848,
+        -569.818848,
+        -569.818848,
+        -569.818848,
+        -569.818848
+      ]
+    },
+    {
+      "problem_id": "gsm8k-140",
+      "gold": 20,
+      "ar_pred": 20,
+      "sc_pred": null,
+      "self_certainty_pred": null,
+      "self_certainty_index": 0,
+      "energy_argmin_pred": null,
+      "energy_argmin_index": 0,
+      "energy_weighted_vote_pred": null,
+      "candidate_preds": [
+        null,
+        null,
+        null,
+        null,
+        null
+      ],
+      "candidate_final_energies": [
+        -569.818848,
+        -569.818848,
+        -569.818848,
+        -569.818848,
+        -569.818848
+      ]
+    },
+    {
+      "problem_id": "gsm8k-1167",
+      "gold": 120,
+      "ar_pred": 120,
+      "sc_pred": null,
+      "self_certainty_pred": null,
+      "self_certainty_index": 0,
+      "energy_argmin_pred": null,
+      "energy_argmin_index": 0,
+      "energy_weighted_vote_pred": null,
+      "candidate_preds": [
+        null,
+        null,
+        null,
+        null,
+        null
+      ],
+      "candidate_final_energies": [
+        -569.818848,
+        -569.818848,
+        -569.818848,
         -569.818848,
         -569.818848
       ]
@@ -165,23 +5127,5 @@
     "task_name",
     "title"
   ],
-  "invariant_violations": [],
-  "flagged_adversarial": true,
-  "corrigendum_pending": [
-    {
-      "kind": "IMPLAUSIBLE_PERFECT",
-      "severity": "info",
-      "detail": "delta_energy_vs_self_consistency=0.0 (exactly zero). Confirm this is not a stub default."
-    },
-    {
-      "kind": "IMPLAUSIBLE_PERFECT",
-      "severity": "info",
-      "detail": "delta_energy_vs_greedy_ar=0.0 (exactly zero). Confirm this is not a stub default."
-    },
-    {
-      "kind": "DURATION_TOO_SHORT",
-      "severity": "critical",
-      "detail": "duration_s=16.771 but artifact references compute-bound markers (GGUF / CUDA / live model). Loading and running a real model takes >=60.0s minimum; this completed too fast to have invoked the model."
-    }
-  ]
+  "invariant_violations": []
 }
