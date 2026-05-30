@@ -7024,3 +7024,5 @@ web search: https://docs.garak.ai/garak/examples/pr |
 | 2026-05-30 03:44 UTC | Telemetry Aggregation v39 | OK | 81 passed in 3.63s |
 | 2026-05-30 03:50 UTC | FR-11 Adversarial Robustness | OK | 81 passed in 3.79s |
 | 2026-05-30 03:56 UTC | Wrap-Up v314 | OK | 81 passed in 3.63s |
+| 2026-05-30 04:56 UTC | Plan milestone 2026.05.315 | OK | 11 tasks proposed |
+| 2026-05-30 04:58 UTC | Milestone 2026.05.315 activated | OK | 11 tasks queued |
