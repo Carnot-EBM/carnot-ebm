@@ -2774,3 +2774,89 @@ substrate is unloadable, OR self-consistency is degenerate over the full corpus
 **Then** it writes the matching `complete: blocked_*` honest verdict (a clean
 `complete:` prefix so downstream gate-synth/capstone are NOT cascade-blocked) and
 exits without reporting any energy comparison against a broken control.
+
+### REQ-KONA-3472: P0.1 Process-Aware Energy + Optimal Aggregation vs Self-Consistency on a HEADROOM Corpus
+The Kona Phase-3 selection premise (a learned energy beats majority-vote
+self-consistency at matched compute) failed on GSM8K (exp3460) for a structural
+reason, not a modelling one: GSM8K self-consistency is at ceiling (~0.908), so
+the majority vote is almost always already correct and an energy-weighted vote
+degenerates onto it — an exact tie flagged as a tautology. The literature says
+the win appears WITH HEADROOM and from PROCESS-level (step-aware) verification
+(arXiv:2602.11570 PRIME reports process-aware verification beats outcome-only by
++8-9% on AIME; arXiv:2510.13918 gives an optimal SC+PRM aggregation). The
+never-asked question: on a HEADROOM benchmark (SC in [0.4, 0.78]) does a
+PROCESS-AWARE step-level energy plus OPTIMAL aggregation BEAT self-consistency at
+matched compute? Exp 3472 answers it by scoring the cached HEADROOM corpus
+(`data/p01_hardmath_generations.jsonl`, built by exp3471) with NO live model, so
+it completes in seconds and cannot idle-timeout.
+
+- The scoring substrate (`carnot.phase3.p01_process_energy`) reuses the v5
+  trained-reranker, problem-level K-fold split, FoVer verifier bundle, and paired
+  significance machinery, and ADDS three things: (1) a PER-STEP process energy
+  that scores each parsed reasoning step with the FoVer 4-verifier ensemble and
+  aggregates to a candidate process-energy; (2) an OPTIMAL SC+energy aggregator
+  (arXiv:2510.13918) whose single mixing coefficient is fit on the TRAIN fold and
+  applied on held-out; (3) a FLIP-COUNT primary metric that is tautology-clean by
+  construction.
+- Step 0 PRECONDITIONS gate before any comparison: (a) corpus present with
+  `>=40` problems each having a greedy + `k>=5` sampled generations with per-step
+  traces, correctness labels, and logprobs (else
+  `complete: blocked_p01_corpus_too_small_n=NN`); (b) the FoVer + EORM substrate
+  loadable (else `complete: blocked_energy_substrate_unavailable`); (c) a HEADROOM
+  GATE requiring full-corpus SC accuracy in `[0.4, 0.78]` (else
+  `complete: blocked_corpus_at_ceiling_no_headroom_sc=SS`).
+- Seven held-out conditions at matched compute: (1) greedy AR floor; (2)
+  self-consistency majority vote (PRIMARY control); (3) self-certainty BoN
+  (arXiv:2502.18581); (4) process-energy argmin (the .320 new per-step condition);
+  (5) trained-energy-weighted vote; (6) trained-energy×SC hybrid; (7) optimal
+  SC+energy aggregation (THE headline condition). Conditions 2-7 consume the SAME
+  `k` cached generations; energy adds only scoring + a tiny reranker/aggregator.
+- PRIMARY metric is the FLIP-COUNT vs SC: for each energy/aggregation condition,
+  `flip_count` (problems where the condition's selected answer differs from the SC
+  majority answer), `flips_correct`, `flips_incorrect`, and
+  `net_correctness_gain = flips_correct - flips_incorrect`. When a condition
+  agrees with SC its `flip_count` is 0, reported ONCE with a methodology_note —
+  never two bit-identical accuracy fields (the exp3460 tautology flag).
+- `derive_v6_verdict` maps the result to exactly one `complete:`-prefixed terminal
+  verdict over three gates: G0 HEADROOM (SC in band), G1
+  ENERGY-BEATS-SC-WITH-HEADROOM (net_correctness_gain_optimal > 0 AND
+  delta_optimal_vs_sc > 0 with paired p < 0.05), G2 NON-DEGENERATE (flip_count > 0).
+- The Exp 3472 artifact carries `inference_substrate=verifier_ensemble_against_cached_candidates`,
+  `benchmark_id`, `n_problems_heldout`, `k_samples`,
+  `self_consistency_in_headroom_band`, the seven condition accuracies, the optimal
+  flip metrics, `delta_optimal_vs_self_consistency`,
+  `delta_process_energy_vs_self_consistency`, `paired_significance`,
+  `compute_parity_note`, `random_seed`, `reproducibility_checksum`, and a
+  `duration_s` above the 1s cached-scoring floor, with clean methodology so
+  `adversarial_verify.py` does not flag it.
+
+### SCENARIO-KONA-3472: Exp 3472 Scores Seven Conditions on a HEADROOM Corpus and Reports the Flip-Count
+**Given** `data/p01_hardmath_generations.jsonl` exists with `>=40` problems each
+having a greedy generation, `k>=5` sampled generations with per-step traces,
+extracted answers, correctness labels, and per-sample logprobs, the FoVer + EORM
+substrate is loadable, AND full-corpus self-consistency is in `[0.4, 0.78]`
+**When** we run
+`experiment_3472_p01_process_energy_vs_self_consistency_headroom_v6.py`
+**Then** it splits by problem id into K folds, scores each candidate's parsed
+steps with the FoVer per-step process energy, trains the EORM reranker and fits an
+optimal SC+energy aggregator on each train fold, and scores all seven conditions
+on the held-out problems
+**And** it writes the artifact with a `complete:` verdict, the G0/G1/G2 gate
+booleans, the optimal-aggregation flip metrics
+(`flip_count_optimal_vs_sc`, `flips_correct_optimal`, `flips_incorrect_optimal`,
+`net_correctness_gain_optimal`), the headline
+`delta_optimal_vs_self_consistency`, and a paired McNemar + bootstrap
+significance test for the optimal, process-energy, and hybrid deltas vs
+self-consistency.
+
+### SCENARIO-KONA-3472-BLOCKED: Exp 3472 Emits an Honest Block on a Too-Small, Unloadable, or Ceiling Corpus
+**Given** the cached HEADROOM corpus is absent / has `n<40` problems, OR the
+energy/reranker substrate is unloadable, OR full-corpus self-consistency is above
+the headroom ceiling (`> 0.78`)
+**When** the experiment runs its step-0 preconditions
+**Then** it writes the matching `complete: blocked_*` honest verdict (a clean
+`complete:` prefix so downstream gate-synth/capstone are NOT cascade-blocked) —
+`complete: blocked_p01_corpus_too_small_n=NN`,
+`complete: blocked_energy_substrate_unavailable`, or
+`complete: blocked_corpus_at_ceiling_no_headroom_sc=SS` — and exits without
+reporting any energy comparison.
