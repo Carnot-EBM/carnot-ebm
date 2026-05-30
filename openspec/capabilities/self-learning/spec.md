@@ -10032,3 +10032,20 @@ episodes that can be loaded, keeps `controller_memory_only=true`,
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-LEARN-3395 | Implemented (`scripts/experiment_3395_energy_based_replay.py`) | Implemented (`tests/python/test_experiment_3395_energy_based_replay.py`) |
+
+## REQ-LEARN-3399: LogicVault CDCL Long Context Verification
+**Given** a long multi-turn context (e.g. 16k tokens) generated via `cached_sota_pair`
+**When** new facts and axioms are checked for consistency
+**Then** the LogicVault CDCL logic MUST identify contradictions and track learned clauses
+**And** it MUST emit a verdict of "contradiction_caught" when an inconsistent statement is parsed.
+
+### SCENARIO-LEARN-3399-A: CDCL Identifies Contradictions
+**Given** accumulated logical axioms from a multi-turn chat
+**When** the agent issues a contradicting claim
+**Then** LogicVault CDCL catches the contradiction
+**And** the check returns False.
+
+## Implementation Status (REQ-LEARN-3399)
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-LEARN-3399 | Implemented (`scripts/experiment_3399_logicvault_long_context.py`) | Implemented (`tests/python/test_experiment_3399_logicvault_long_context.py`) |
