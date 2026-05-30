@@ -2457,6 +2457,92 @@ logprobs
 re-generated, and the G1 CORPUS-NOT-REGRESSED gate stays true so the resume
 contract is monotone.
 
+### REQ-KONA-3471: Build a HARD-MATH Headroom Corpus With Per-Step Traces for P0.1 (v1)
+
+P0.1 — "does energy-based selection/voting BEAT plain self-consistency at equal
+compute?" — could NOT be answered on GSM8K because self-consistency (SC) is at
+CEILING there: exp3460 found the trained-energy vote tied SC EXACTLY (SC ~0.908),
+leaving no room for any selector to help. A selector can only beat SC where SC has
+HEADROOM — i.e. where SC accuracy is materially below 1.0. The process-reward
+literature (arXiv:2602.11570 PRIME: +8-9% on AIME from process-aware verification)
+shows that the regime where verifier selection beats SC is HARD math scored as a
+PROCESS reward over per-step reasoning traces. Exp 3471 builds that substrate: a
+NEW cached corpus on a hard-math benchmark (MATH Level 5) whose SC lands in the
+HEADROOM band `[0.4, 0.7]`, capturing 1 greedy + `k=6` sampled generations per
+problem, EACH carrying a parsed list of discrete reasoning STEPS so the FoVer
+step-error verifier (the 0.9131 ensemble) can be scored as a PROCESS reward by the
+downstream crux (exp3472/3473/3475).
+
+**Rationale:** the corpus is only useful if SC is NOT at ceiling — otherwise
+exp3472 repeats the GSM8K null. The G1 HEADROOM-CONFIRMED gate makes that property
+a first-class, falsifiable precondition rather than an assumption. The builder
+reuses the proven decoupled-generation discipline (generation only, append per
+problem, progress line per problem, wall-time budget, clean partial exit, resume
+on re-invocation) so it cannot idle-timeout, and the NEW capability over the GSM8K
+builders is the per-step trace capture plus the headroom-band self-check.
+
+**Acceptance criteria:**
+
+- The verdict (`derive_headroom_verdict`) maps `n_completed`, the warm-up SC, and
+  the in-band boolean to exactly one `complete:`-prefixed terminal verdict:
+  `..._headline_eligible_n=NN_sc=SS` (`n >= 80` AND in band),
+  `..._scorable_partial_n=NN_resume_next_milestone` (`40 <= n < 80` AND in band),
+  `..._partial_n=NN_resume_next_milestone` (too few problems to judge the band yet),
+  and `blocked_no_headroom_benchmark_sc_outside_band` (enough problems but SC fell
+  outside `[0.4, 0.7]` — the chosen split has no headroom).
+- The gates (`headroom_acceptance_gates`) report G1 HEADROOM-CONFIRMED
+  (`self_consistency_in_headroom_band`) and G2 SCORABLE
+  (`n_completed >= 40 AND per_step_traces_captured`).
+- `parse_reasoning_steps` splits a chain-of-thought into discrete reasoning steps
+  (newline-delimited, falling back to sentence segmentation for single-line CoT),
+  capped to a bounded count, so each generation carries a step list for PROCESS
+  scoring.
+- `extract_math_answer` / `normalize_math_answer` / `math_is_correct` extract and
+  compare the `\boxed{}` final answer of a MATH generation (falling back to a
+  `#### <n>` coda or the last number), normalising LaTeX so equivalent surface
+  forms match.
+- `headroom_warmup_check` recomputes SC vs greedy accuracy over the corpus and the
+  `self_consistency_in_headroom_band` boolean, exactly what the live run reports.
+- The Exp 3471 artifact carries `inference_substrate=live_llm_inference`,
+  `corpus_path` (`data/p01_hardmath_generations.jsonl`), `benchmark_id`,
+  `n_problems_completed`, `n_problems_target`, `n_problems_added_this_run`,
+  `k_samples`, `per_step_traces_captured`, `per_sample_logprobs_captured`,
+  `warmup_self_consistency_accuracy`, `self_consistency_in_headroom_band`,
+  `warmup_greedy_accuracy`, `model_specs` (the gemma-4-26B-A4B-it GGUF),
+  `random_seed`, `reproducibility_checksum`, and a `duration_s` above the 60s
+  live-inference floor.
+
+### SCENARIO-KONA-3471: Exp 3471 Builds a Hard-Math Headroom Corpus With Per-Step Traces
+**Given** CUDA and the `unsloth/gemma-4-26B-A4B-it-GGUF` embedded tokenizer are
+available and the MATH Level 5 split is loadable
+**When** we run `experiment_3471_p01_headroom_corpus_builder_hard_math_v1.py`
+**Then** it confirms the warm-up SC lands in `[0.4, 0.7]`, generates 1 greedy +
+`k=6` sampled generations per problem (each with an extracted `\boxed{}` answer, a
+correctness label, a mean-token logprob, AND a parsed list of reasoning steps),
+appends one JSONL row per completed problem to
+`data/p01_hardmath_generations.jsonl`, prints a progress line after each problem,
+and exits clean on its ~22-minute wall-time budget
+**And** it writes the artifact with a `complete:` verdict reporting
+`n_problems_completed`, `n_problems_added_this_run`, the G1 HEADROOM-CONFIRMED /
+G2 SCORABLE gates, and the full-corpus warm-up SC headroom-band self-check.
+
+### SCENARIO-KONA-3471-RESUME: Exp 3471 Resumes and Never Re-Generates Finished Problems
+**Given** `data/p01_hardmath_generations.jsonl` already contains `n` completed
+problems for the chosen split
+**When** the builder is re-invoked
+**Then** it reads the completed problem ids, skips them, generates only the
+remainder, and reports `n_problems_added_this_run` distinct from the running total
+so the artifact proves the resume did new work.
+
+### SCENARIO-KONA-3471-NO-HEADROOM: Exp 3471 Emits an Honest Block When the Split Has No Headroom
+**Given** enough problems have been scored to judge the band but the warm-up SC
+falls outside `[0.4, 0.7]` (the split is too easy or too hard)
+**When** the builder finalises
+**Then** it emits the `complete: blocked_no_headroom_benchmark_sc_outside_band`
+verdict (a clean `complete:` prefix so downstream gate-synth/capstone are NOT
+cascade-blocked) and records the measured SC so a re-invocation can switch to a
+harder/easier split.
+
 ### REQ-KONA-3449: Cached Six-Condition Energy-Vote-vs-Self-Consistency Scoring (P0.1 v4)
 
 Exp 3448 (REQ-KONA-3448) decoupled the expensive generation half of the P0.1

@@ -1,0 +1,162 @@
+{
+  "experiment": 3471,
+  "title": "P0.1 hard-math headroom corpus builder with per-step traces (v1)",
+  "run_date": "20260530",
+  "started_at": "2026-05-30T19:24:30Z",
+  "finished_at": "2026-05-30T19:26:55Z",
+  "duration_s": 144.204,
+  "status": "success",
+  "random_seed": 20260530,
+  "reproducibility_checksum": "88003180041fab03",
+  "metrics_used": "unknown",
+  "honest_verdict": "complete: p01_headroom_corpus_partial_n=3_resume_next_milestone",
+  "inference_substrate": "live_llm_inference",
+  "task_name": "MATH (Hendrycks) Level 5 hard-math split, held-out shuffled",
+  "benchmark_id": "EleutherAI/hendrycks_math:test:Level 5 | subjects=algebra+number_theory+prealgebra | levels=Level 5 | seed=20260530",
+  "corpus_path": "data/p01_hardmath_generations.jsonl",
+  "n_problems_completed": 3,
+  "n_problems_target": 80,
+  "n_problems_added_this_run": 3,
+  "n_problems_prior": 0,
+  "k_samples": 6,
+  "max_tokens": 512,
+  "sample_temperature": 0.8,
+  "levels": [
+    "Level 5"
+  ],
+  "per_step_traces_captured": true,
+  "per_sample_logprobs_captured": true,
+  "warmup_self_consistency_accuracy": 0.3333,
+  "self_consistency_in_headroom_band": false,
+  "warmup_greedy_accuracy": 0.3333,
+  "warmup_n_problems": 3,
+  "warmup_extraction_examples": [
+    {
+      "problem_id": "math-694c09866c4a",
+      "gold": "0",
+      "greedy_answer": "0",
+      "sample_answers": [
+        "6",
+        "0",
+        "0",
+        "1",
+        "7",
+        "0"
+      ],
+      "majority_vote": "0"
+    },
+    {
+      "problem_id": "math-58289a326af5",
+      "gold": "11",
+      "greedy_answer": "-0",
+      "sample_answers": [
+        "1",
+        "15",
+        "2",
+        "2",
+        "1",
+        "14"
+      ],
+      "majority_vote": "1"
+    },
+    {
+      "problem_id": "math-8dd85b04b841",
+      "gold": "10",
+      "greedy_answer": "9",
+      "sample_answers": [
+        "4",
+        "20",
+        "2",
+        "100",
+        "2",
+        "0"
+      ],
+      "majority_vote": "2"
+    }
+  ],
+  "wall_budget_s": 100.0,
+  "wall_budget_hit": true,
+  "acceptance_gate_g1_headroom_confirmed": false,
+  "acceptance_gate_g2_scorable": false,
+  "preconditions_checked": [
+    {
+      "resource": "cuda",
+      "available": true
+    },
+    {
+      "resource": "sota_gguf_tokenizer",
+      "available": true
+    },
+    {
+      "resource": "hard_math_benchmark",
+      "available": true
+    }
+  ],
+  "model_specs": [
+    {
+      "name": "Gemma4-26B-A4B-it",
+      "hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+      "quantization": "Q4_K_M"
+    }
+  ],
+  "field_provenance": {
+    "honest_verdict": "Terminal verdict must start with complete:/success:/passed:/shipped_.",
+    "inference_substrate": "live_llm_inference: candidates really load + run the GGUF.",
+    "corpus_path": "data/p01_hardmath_generations.jsonl \u2014 the headroom corpus exp3472/3473/3475 consume.",
+    "benchmark_id": "the exact hard-math dataset id + split + level + seed \u2014 the new substrate (unlike GSM8K's 0.908 ceiling).",
+    "n_problems_completed": "problems with a full generation set after this run.",
+    "n_problems_target": "the target (>=80 for headline-eligibility); n < target -> resume next milestone.",
+    "n_problems_added_this_run": "problems newly generated this invocation (proves resume worked, distinct from total).",
+    "k_samples": "sampled generations per problem (6) \u2014 the matched-compute budget.",
+    "per_step_traces_captured": "boolean: each generation carries a parsed step list for PROCESS-reward scoring (the .320 new capability).",
+    "per_sample_logprobs_captured": "boolean: mean-token confidence stored per generation.",
+    "warmup_self_consistency_accuracy": "majority-vote accuracy over the corpus \u2014 MUST land in the headroom band for the corpus to be useful.",
+    "self_consistency_in_headroom_band": "boolean: SC in [0.4,0.7] \u2014 the precondition that makes P0.1 testable (unlike GSM8K's 0.908 ceiling).",
+    "warmup_greedy_accuracy": "greedy accuracy over the corpus.",
+    "model_specs": "the actual GGUF invoked (gemma-4-26B-A4B-it-GGUF).",
+    "random_seed": "determinism precondition for reproducibility.",
+    "reproducibility_checksum": "content hash of benchmark split + model + seed.",
+    "duration_s": "real live MoE generation takes wall time; 60s floor \u2014 sub-60s is the fabrication signal."
+  },
+  "schema": [
+    "acceptance_gate_g1_headroom_confirmed",
+    "acceptance_gate_g2_scorable",
+    "benchmark_id",
+    "corpus_path",
+    "duration_s",
+    "experiment",
+    "field_provenance",
+    "finished_at",
+    "honest_verdict",
+    "inference_substrate",
+    "k_samples",
+    "levels",
+    "max_tokens",
+    "metrics_used",
+    "model_specs",
+    "n_problems_added_this_run",
+    "n_problems_completed",
+    "n_problems_prior",
+    "n_problems_target",
+    "per_sample_logprobs_captured",
+    "per_step_traces_captured",
+    "preconditions_checked",
+    "random_seed",
+    "reproducibility_checksum",
+    "run_date",
+    "sample_temperature",
+    "self_consistency_in_headroom_band",
+    "started_at",
+    "status",
+    "task_name",
+    "title",
+    "wall_budget_hit",
+    "wall_budget_s",
+    "warmup_extraction_examples",
+    "warmup_greedy_accuracy",
+    "warmup_n_problems",
+    "warmup_self_consistency_accuracy"
+  ],
+  "invariant_violations": []
+}
