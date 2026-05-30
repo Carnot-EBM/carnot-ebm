@@ -7030,3 +7030,5 @@ web search: https://docs.garak.ai/garak/examples/pr |
 | 2026-05-30 05:23 UTC | Energy-Descent Reasoning vs Autoregressive Baselin | FLAGGED | adversarial_verify CRITICAL: TAUTOLOGY, TAUTOLOGY, TAUTOLOGY, TAUTOLOGY, TAUTOLO |
 | 2026-05-30 05:25 UTC | Verifier-Ensemble Joint-Null-Space / lambda_min(Si | FAIL | Gemini CLI error: .js:345500:14)
     at async file:///usr/lib/node_modules/@go |
+| 2026-05-30 05:27 UTC | Verifier-Ensemble Joint-Null-Space / lambda_min(Si | FAIL | Gemini CLI error: .js:345500:14)
+    at async file:///usr/lib/node_modules/@go |
