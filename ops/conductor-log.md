@@ -7113,3 +7113,4 @@ web search: https://docs.garak.ai/garak/examples/pr |
 | 2026-05-30 13:46 UTC | P0.1 v4 — Energy-Weighted Vote vs Self-Consistency | FLAGGED | adversarial_verify CRITICAL: TAUTOLOGY, TAUTOLOGY, TAUTOLOGY, TAUTOLOGY — result |
 | 2026-05-30 13:54 UTC | Energy-correctness calibration — does the energy s | OK | 81 passed in 4.45s |
 | 2026-05-30 14:08 UTC | FoVer Headline G2 — CI reproduction workflow + Doc | OK | 81 passed in 3.07s |
+| 2026-05-30 14:23 UTC | FR-11 grounding-collapse stress test — does at-ris | FLAGGED | adversarial_verify CRITICAL: TAUTOLOGY, TAUTOLOGY, TAUTOLOGY — result quarantine |
