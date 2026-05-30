@@ -225,3 +225,26 @@ NOT closed** — closure requires an actual external/CI run by a non-operator. T
 one-command handoff package is at `docs/g2-external-reproducer-handoff.md`.
 
 Artifact: `results/experiment_3463_fover_g2_ci_dryrun_and_external_handoff_v1.json`.
+
+## Self-contained reproduction package (exp3476, 2026-05-30)
+
+A single self-contained tarball now lets a true stranger reproduce the
+FoVer headline in one command, with no repo checkout and no Carnot
+knowledge. Unpack and run:
+
+```bash
+tar xzf g2-fover-repro.tar.gz && cd g2-fover-repro && bash run.sh
+```
+
+`run.sh` installs the pinned dependencies, installs the package, and runs
+the reproducer harness, which exits non-zero unless condition-A mean AUROC
+lands in [0.9027, 0.9235] AND learning_contribution mean in [0.0125, 0.0245].
+
+- Package: `dist/g2-fover-repro.tar.gz`
+- sha256: `521ecbc3adfa42bce839d16cdcb48cf552e267fc9a8bc69f86068b92a937e6be`
+- IPFS CID: `QmcoN4zKfAT7GPpokzM31acbE4RBkntfPjhXoEun2NMo9c`
+- Clean-environment verification reproduced both numbers in CI: True
+
+G2 is still NOT closed by building + verifying this package — closure
+requires an actual external/CI run by a non-operator. Artifact:
+`results/experiment_3476_fover_g2_self_contained_external_package_v1.json`.

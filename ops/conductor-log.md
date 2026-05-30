@@ -7151,3 +7151,6 @@ web search: https://docs.garak.ai/garak/examples/pr |
 | 2026-05-30 19:53 UTC | Energy-correctness calibration v3 — process energy | FAIL | Claude Code error: Error: Reached max turns (50) |
 | 2026-05-30 20:00 UTC | Energy-correctness calibration v3 — process energy | FLAGGED | adversarial_verify CRITICAL: TAUTOLOGY — result quarantined, not a clean success |
 | 2026-05-30 20:19 UTC | FR-11 grounding-collapse DEPTH stress (N>=200) — d | OK | 81 passed in 3.47s |
+| 2026-05-30 20:42 UTC | Kona global-opt — PROCESS energy as the hybrid heu | FAIL | Claude Code error: Wall-clock+idle timeout after 1201s (1201s silence). Last ou |
+| 2026-05-30 21:05 UTC | Kona global-opt — PROCESS energy as the hybrid heu | FAIL | Claude Code error: Wall-clock+idle timeout after 1201s (1201s silence). Last ou |
+| 2026-05-30 21:07 UTC | Kona global-opt — PROCESS energy as the hybrid heu | OK | Deliverable already exists in repo |

@@ -1292,6 +1292,75 @@ AND still writes the handoff package (`g2_handoff_package_ready == true`)
 AND reports an honest `g2_status` and never sets
 `g2_independent_reproducer == true`.
 
+### REQ-PUBLISH-038: Exp 3476 FoVer G2 Self-Contained External Reproduction Package
+
+The Exp 3476 G2 package builder MUST assemble a single self-contained
+reproduction package that a true stranger (no repo checkout, zero Carnot
+knowledge) can run in one command to independently recompute the FoVer headline,
+and MUST verify that package reproduces from a clean environment — without
+itself claiming gate G2 is met.
+
+It MUST build a package directory containing: the reproducer harness
+(`scripts/reproduce_fover_headline.py`), the labeled corpus
+(`data/fover_corpus.jsonl`), the FR-11 session-memory state files required for
+condition A (production), the `carnot` package source, a pinned
+`requirements.txt` (exact installed versions), the build metadata
+(`pyproject.toml` + license/readme), a single one-command entry point
+(`run.sh`) that installs the pinned dependencies, installs the package, runs the
+harness, and propagates the harness non-zero exit on CI-band failure, and a
+package `README` explaining the one command and the expected output. It MUST tar
+the directory to `dist/g2-fover-repro.tar.gz` and compute its sha256. When an
+IPFS node is available it MUST record the tarball CID (decentralization rule 3);
+otherwise it MUST record `ipfs_available=false` and MUST NOT fail.
+
+It MUST VERIFY the package by extracting the tarball into a fresh temporary
+directory and running the one command inside a clean environment (a stock Docker
+base image, NOT the operator's venv, when Docker is available; otherwise a fresh
+venv), confirming condition-A mean AUROC lands in `[0.9027, 0.9235]` AND
+learning_contribution mean in `[0.0125, 0.0245]`. The clean-environment method
+is recorded in `clean_env_method` (`docker` | `fresh_venv`). When no clean
+environment is available it MUST report `package_built_verification_unavailable`
+rather than fail.
+
+The builder MUST append (never delete) the package path + checksum to
+`ops/reproduction-runbook-fover-headline.md`, MUST NOT edit operator-curated docs
+(`ops/north-star.md`, `docs/index.html`, `README.md`), MUST NOT push, MUST NOT
+trigger external CI, MUST NOT set `g2_independent_reproducer=true` (only an
+actual external/CI run by a non-operator may flip that), and MUST NOT modify
+`scripts/research_conductor.py`. It MUST write
+`results/experiment_3476_fover_g2_self_contained_external_package_v1.json` with
+`honest_verdict` (terminal `complete:` prefix),
+`inference_substrate="verifier_ensemble_against_cached_candidates"`,
+`package_path`, `package_sha256`, `package_cid`, `ipfs_available`,
+`one_command_repro`, `clean_env_method`, `condition_a_auroc_isolated`,
+`learning_contribution_isolated`, `package_verified_reproduces`, `g2_status`,
+`g2_independent_reproducer` (always false), `operator_action_required`,
+`reproducibility_checksum`, `random_seed`, and `duration_s`.
+
+### SCENARIO-PUBLISH-038: Self-Contained Package Built And Verified
+
+**Given** the reproducer harness and FoVer corpus are present and a clean
+environment (Docker or fresh venv) is available
+**When** the Exp 3476 package builder runs
+**Then** it builds `dist/g2-fover-repro.tar.gz` with a non-null sha256
+(`package_sha256 != null`)
+AND the package includes a one-command entry point (`one_command_repro != null`)
+AND extracting the tarball into a fresh temp dir and running the one command in a
+clean environment recomputes condition-A AUROC in `[0.9027, 0.9235]` and
+learning_contribution in `[0.0125, 0.0245]` (`package_verified_reproduces == true`)
+AND writes the Exp 3476 JSON artifact with a `complete:` verdict and
+`g2_independent_reproducer == false`.
+
+### SCENARIO-PUBLISH-038B: No Clean Environment Reports Built-But-Unverified
+
+**Given** the harness and corpus are present but neither Docker nor a usable
+fresh venv is available
+**When** the Exp 3476 package builder runs
+**Then** it still builds and checksums the package (`package_sha256 != null`)
+AND reports `g2_status == "package_built_verification_unavailable"` with
+`package_verified_reproduces == false`
+AND never sets `g2_independent_reproducer == true`.
+
 
 ## Implementation Status
 
@@ -1330,6 +1399,7 @@ AND reports an honest `g2_status` and never sets
 | REQ-PUBLISH-035 | Planned | Exp 2903 paper-v6 hardware-validation snippet |
 | REQ-PUBLISH-036 | Implemented | Exp 3451 FoVer G2 CI workflow + Docker clean-room |
 | REQ-PUBLISH-037 | Implemented | Exp 3463 FoVer G2 CI dry-run + external-reproducer handoff |
+| REQ-PUBLISH-038 | Implemented | Exp 3476 FoVer G2 self-contained external reproduction package |
 
 ### REQ-PUBLISH-026: HuggingFace Publish Retry
 The experiment 1750 huggingface retry runner MUST attempt to upload the smallest model in models/ with a no-emoji model card. If credentials pass, it MUST upload and record hf_upload_succeeded = True. If blocked, it MUST emit an honest verdict of "blocked_credentials".
