@@ -7133,3 +7133,4 @@ web search: https://docs.garak.ai/garak/examples/pr |
 | 2026-05-30 16:56 UTC | Energy-correctness calibration v2 — TRAINED rerank | OK | 81 passed in 3.52s |
 | 2026-05-30 17:13 UTC | FR-11 grounding-collapse CLEAN re-run — distinct p | FLAGGED | adversarial_verify CRITICAL: TAUTOLOGY, TAUTOLOGY, TAUTOLOGY, TAUTOLOGY — result |
 | 2026-05-30 17:24 UTC | FoVer G2 — CI workflow dry-run validation + Docker | OK | 81 passed in 3.20s |
+| 2026-05-30 17:47 UTC | Kona global-opt — TRAINED energy as the hybrid pro | FAIL | Claude Code error: Wall-clock+idle timeout after 1201s (1201s silence). Last ou |

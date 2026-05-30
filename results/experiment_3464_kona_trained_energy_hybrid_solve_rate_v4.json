@@ -1,0 +1,282 @@
+{
+  "schema": "carnot.kona_trained_energy_hybrid.v4",
+  "experiment": 3464,
+  "title": "Kona trained-energy hybrid solve-rate (v4)",
+  "run_date": "20260530",
+  "inference_substrate": "verifier_ensemble_against_cached_candidates",
+  "random_seed": 20260530,
+  "reproducibility_checksum": "b5a535981d0aa6b5",
+  "n_instances": 21,
+  "untrained_hybrid_solve_rate": 1.0,
+  "trained_hybrid_solve_rate": 1.0,
+  "pure_trained_energy_descent_solve_rate": 0.0,
+  "delta_trained_vs_untrained_hybrid": 0.0,
+  "delta_significance": {
+    "comparison": "trained_hybrid_vs_untrained_hybrid",
+    "discordant_trained_wins": 0,
+    "discordant_untrained_wins": 0,
+    "mcnemar_exact_p": 1.0,
+    "interpretation": "p = 1.0 means zero discordant pairs \u2014 no statistical evidence that the trained energy changes the hybrid's outcome."
+  },
+  "duration_s": 760.360191822052,
+  "baseline_source": "results/experiment_3440_kona_global_opt_correctness_v3.json",
+  "corpus_path": "data/p01_gsm8k_generations.jsonl",
+  "n_train_candidates": 720,
+  "n_candidates_per_puzzle": 3,
+  "fast_optimizer_n_steps": 50,
+  "acceptance_gate_g1_trained_strengthens_hybrid": {
+    "condition": "trained_hybrid_solve_rate > untrained_hybrid_solve_rate AND delta_significance favours the treatment",
+    "passed": false,
+    "principle": "G1 TRAINED-ENERGY-STRENGTHENS-HYBRID: a calibrated energy improves the Kona global-opt hybrid \u2014 actionable for Phase-3 endgame."
+  },
+  "acceptance_gate_g1_prime_no_lift": {
+    "condition": "trained_hybrid_solve_rate <= untrained_hybrid_solve_rate",
+    "passed": true,
+    "principle": "G1' NO-LIFT: a trained energy does not strengthen the hybrid \u2014 consistent with exp3461 if AUROC stayed low, or with an architectural ceiling (hybrid ignores the proposal) or domain mismatch (text features do not capture Sudoku validity)."
+  },
+  "methodology_note": "The trained energy reranker (exp3460/3461, AUROC 0.629 on GSM8K) is trained on text-reasoning features: arithmetic-violation energy, adjacent-step contradiction, Curry-Howard type violations, logical inconsistency, mean token logprob, and log(1+n_steps). Sudoku board strings contain none of these patterns; all six features collapse to near-zero on any board. Selection among candidates is therefore effectively uniform (equivalent to first-seen tiebreaking). The hybrid solve-rate equals the untrained baseline (1.0) for a separate, architectural reason: hybrid_solve() ignores the energy proposal and runs the CP solver directly from the original clues (see sudoku_global_opt.hybrid_solve: `_ = energy_board`).",
+  "per_puzzle_trained_hybrid": [
+    {
+      "puzzle_id": "easy_0",
+      "solved": true,
+      "max_reranker_score": 1.1136530361172103e-07,
+      "score_range": 0.0
+    },
+    {
+      "puzzle_id": "easy_1",
+      "solved": true,
+      "max_reranker_score": 1.1136530361172103e-07,
+      "score_range": 0.0
+    },
+    {
+      "puzzle_id": "easy_2",
+      "solved": true,
+      "max_reranker_score": 1.1136530361172103e-07,
+      "score_range": 0.0
+    },
+    {
+      "puzzle_id": "easy_3",
+      "solved": true,
+      "max_reranker_score": 1.1136530361172103e-07,
+      "score_range": 0.0
+    },
+    {
+      "puzzle_id": "easy_4",
+      "solved": true,
+      "max_reranker_score": 1.1136530361172103e-07,
+      "score_range": 0.0
+    },
+    {
+      "puzzle_id": "easy_5",
+      "solved": true,
+      "max_reranker_score": 1.1136530361172103e-07,
+      "score_range": 0.0
+    },
+    {
+      "puzzle_id": "easy_6",
+      "solved": true,
+      "max_reranker_score": 1.1136530361172103e-07,
+      "score_range": 0.0
+    },
+    {
+      "puzzle_id": "medium_0",
+      "solved": true,
+      "max_reranker_score": 1.1136530361172103e-07,
+      "score_range": 0.0
+    },
+    {
+      "puzzle_id": "medium_1",
+      "solved": true,
+      "max_reranker_score": 1.1136530361172103e-07,
+      "score_range": 0.0
+    },
+    {
+      "puzzle_id": "medium_2",
+      "solved": true,
+      "max_reranker_score": 1.1136530361172103e-07,
+      "score_range": 0.0
+    },
+    {
+      "puzzle_id": "medium_3",
+      "solved": true,
+      "max_reranker_score": 1.1136530361172103e-07,
+      "score_range": 0.0
+    },
+    {
+      "puzzle_id": "medium_4",
+      "solved": true,
+      "max_reranker_score": 1.1136530361172103e-07,
+      "score_range": 0.0
+    },
+    {
+      "puzzle_id": "medium_5",
+      "solved": true,
+      "max_reranker_score": 1.1136530361172103e-07,
+      "score_range": 0.0
+    },
+    {
+      "puzzle_id": "medium_6",
+      "solved": true,
+      "max_reranker_score": 1.1136530361172103e-07,
+      "score_range": 0.0
+    },
+    {
+      "puzzle_id": "hard_0",
+      "solved": true,
+      "max_reranker_score": 1.1136530361172103e-07,
+      "score_range": 0.0
+    },
+    {
+      "puzzle_id": "hard_1",
+      "solved": true,
+      "max_reranker_score": 1.1136530361172103e-07,
+      "score_range": 0.0
+    },
+    {
+      "puzzle_id": "hard_2",
+      "solved": true,
+      "max_reranker_score": 1.1136530361172103e-07,
+      "score_range": 0.0
+    },
+    {
+      "puzzle_id": "hard_3",
+      "solved": true,
+      "max_reranker_score": 1.1136530361172103e-07,
+      "score_range": 0.0
+    },
+    {
+      "puzzle_id": "hard_4",
+      "solved": true,
+      "max_reranker_score": 1.1136530361172103e-07,
+      "score_range": 0.0
+    },
+    {
+      "puzzle_id": "hard_5",
+      "solved": true,
+      "max_reranker_score": 1.1136530361172103e-07,
+      "score_range": 0.0
+    },
+    {
+      "puzzle_id": "hard_6",
+      "solved": true,
+      "max_reranker_score": 1.1136530361172103e-07,
+      "score_range": 0.0
+    }
+  ],
+  "per_puzzle_pure_trained_descent": [
+    {
+      "puzzle_id": "easy_0",
+      "solved": false
+    },
+    {
+      "puzzle_id": "easy_1",
+      "solved": false
+    },
+    {
+      "puzzle_id": "easy_2",
+      "solved": false
+    },
+    {
+      "puzzle_id": "easy_3",
+      "solved": false
+    },
+    {
+      "puzzle_id": "easy_4",
+      "solved": false
+    },
+    {
+      "puzzle_id": "easy_5",
+      "solved": false
+    },
+    {
+      "puzzle_id": "easy_6",
+      "solved": false
+    },
+    {
+      "puzzle_id": "medium_0",
+      "solved": false
+    },
+    {
+      "puzzle_id": "medium_1",
+      "solved": false
+    },
+    {
+      "puzzle_id": "medium_2",
+      "solved": false
+    },
+    {
+      "puzzle_id": "medium_3",
+      "solved": false
+    },
+    {
+      "puzzle_id": "medium_4",
+      "solved": false
+    },
+    {
+      "puzzle_id": "medium_5",
+      "solved": false
+    },
+    {
+      "puzzle_id": "medium_6",
+      "solved": false
+    },
+    {
+      "puzzle_id": "hard_0",
+      "solved": false
+    },
+    {
+      "puzzle_id": "hard_1",
+      "solved": false
+    },
+    {
+      "puzzle_id": "hard_2",
+      "solved": false
+    },
+    {
+      "puzzle_id": "hard_3",
+      "solved": false
+    },
+    {
+      "puzzle_id": "hard_4",
+      "solved": false
+    },
+    {
+      "puzzle_id": "hard_5",
+      "solved": false
+    },
+    {
+      "puzzle_id": "hard_6",
+      "solved": false
+    }
+  ],
+  "honest_verdict": "complete: trained_energy_no_lift_over_untrained_kona_hybrid",
+  "preconditions_checked": [
+    {
+      "resource": "kona_harness",
+      "available": true,
+      "n_puzzles": 21
+    },
+    {
+      "resource": "gsm8k_corpus",
+      "available": true,
+      "n_train_candidates": 720
+    },
+    {
+      "resource": "trained_reranker_module",
+      "available": true
+    }
+  ],
+  "field_provenance": {
+    "honest_verdict": "complete:/success:/passed:/shipped_ prefix required for conductor reconciler to classify the verdict as terminal.",
+    "inference_substrate": "verifier_ensemble_against_cached_candidates: scores the verifier ensemble against the puzzle set and the cached GSM8K corpus; no live model is loaded.",
+    "n_instances": "global-opt benchmark instances attempted.",
+    "untrained_hybrid_solve_rate": "exp3440 baseline carried forward; not re-run to avoid the 5-minute Langevin cost.",
+    "trained_hybrid_solve_rate": "hybrid with the TRAINED energy as the proposal heuristic \u2014 the treatment arm.",
+    "pure_trained_energy_descent_solve_rate": "does training alone let pure descent solve, or is the hybrid still required?",
+    "delta_trained_vs_untrained_hybrid": "trained_hybrid minus untrained_hybrid solve-rate \u2014 does a calibrated energy strengthen the Kona hybrid?",
+    "delta_significance": "paired McNemar exact p for the hybrid solve-rate delta.",
+    "random_seed": "determinism; must match exp3440 seed for the puzzle set.",
+    "reproducibility_checksum": "content hash of corpus path + seed + candidate config.",
+    "duration_s": "cached/CPU experiment; floor is 1s (no live model load)."
+  }
+}
