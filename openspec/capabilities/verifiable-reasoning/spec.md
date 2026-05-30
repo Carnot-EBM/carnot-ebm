@@ -19761,3 +19761,8 @@ The system shall support a repair loop for FR-11 constraint templates, where:
 **Given** a synthetic flawed constraint template with an inherent contradiction
 **When** the template is passed to the Z3ConstraintRepairAgent
 **Then** the agent extracts the unsat core, drops the conflicting constraint, verifies the remainder is SAT, and successfully returns the repaired constraints.
+
+### REQ-VERIFY-3397: EBM-CoT Live Benchmark AUROC
+
+The repository shall provide a script `scripts/experiment_3397_ebm_cot_live_benchmark.py` that runs 100 examples from GSM8K using `cached_sota_pair() unsloth/Qwen3.6-35B-A3B-GGUF`. It applies step-wise energy calibration to intermediate reasoning steps and reports the AUROC of intermediate energy spikes predicting final answer failure in `results/experiment_3397_ebm_cot_live_benchmark.json`.
+

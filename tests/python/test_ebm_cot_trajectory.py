@@ -57,4 +57,4 @@ def test_verify_trajectory_spike():
     res = verifier.verify_trajectory(states)
     assert res["rejected"]
     assert res["early_commitment_detected"]
-    assert len(res["energies"]) == 1  # Breaks early, doesn't append the spike
+    assert len(res["energies"]) == 3  # Energies are now fully processed before checking spikes

@@ -22,22 +22,42 @@ class EBMCoTTrajectoryVerifier:
             return 10.0
         return 10.0 / (len(step_text.strip()) + 1.0)
 
+    def apply_step_wise_energy_calibration(self, energies: list[float]) -> list[float]:
+        """Apply step-wise energy calibration to a sequence of energies.
+        
+        This mock calibration applies a simple smoothing or scaling to represent
+        EBM-CoT latent calibration (e.g., isotonic regression approximation).
+        """
+        if not energies:
+            return []
+        
+        calibrated = []
+        for i, energy in enumerate(energies):
+            # Simple mock calibration: smooth with previous if available
+            if i > 0:
+                calibrated_energy = 0.7 * energy + 0.3 * calibrated[i-1]
+            else:
+                calibrated_energy = energy
+            calibrated.append(calibrated_energy)
+        return calibrated
+
     def verify_trajectory(self, states: list[str]) -> dict:
         """Score intermediate trajectory steps and detect early commitment drops.
         
         Rejects paths where verifier confidence drops (energy spike) before completion.
         """
-        energies = []
-        rejected = False
+        raw_energies = [self.score_step(state) for state in states]
+        energies = self.apply_step_wise_energy_calibration(raw_energies)
         
-        for state in states:
-            energy = self.score_step(state)
-            if energies and energy > energies[-1] + 1.5:  # Energy spike
+        rejected = False
+        early_commitment = False
+        
+        for i in range(1, len(energies)):
+            if energies[i] > energies[i-1] + 1.5:  # Energy spike
                 rejected = True
+                early_commitment = True
                 break
-            energies.append(energy)
-            
-        early_commitment = rejected and len(energies) < len(states)
+                
         return {
             "energies": energies,
             "rejected": rejected,
