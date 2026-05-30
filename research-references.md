@@ -1,3 +1,70 @@
+## 2026-05-30 Post-.320 Planning Sweep (Milestone 2026.05.321)
+
+`.320` (Depth-Over-Breadth VI) pivoted P0.1 off the saturated GSM8K ceiling onto a
+HEADROOM benchmark — and the result is sharp but **blocked on a benchmark-selection
+precondition, not on the energy substrate**:
+
+- **exp3471 (headroom corpus builder):** built n=34 problems of **MATH Level 5** with
+  Gemma4-26B-A4B at k=6 — but self-consistency accuracy came out **0.265**, BELOW the
+  headroom band floor `[0.40, 0.70]`. The model solves Level-5 too rarely for a
+  majority vote to carry signal → no "crowd wisdom" to beat.
+- **exp3472 (P0.1 v6, THE crux): BLOCKED** — `complete: blocked_p01_corpus_too_small_n=21`
+  AND corpus outside the headroom band. **No energy-vs-SC comparison was run; P0.1
+  REMAINS OPEN.** This is NOT a refutation of the energy hypothesis — the headroom
+  precondition was never satisfied.
+- **exp3473 (calibration v3): FLAGGED (TAUTOLOGY)** — process & trained
+  `minority_correct_recovery_rate` were bit-identical. Advisory (excluded per the
+  fabrication gate): process-energy AUROC **0.441 (below chance)** on MATH, minority
+  recovery 4.2%, minority-correct fraction 0.71. Suggests the FoVer 4-verifier ensemble
+  (trained on GSM8K/FoVer) **lacks correctness discrimination on the MATH domain** — a
+  domain-specificity concern requiring MATH-aware calibration.
+- **exp3474 (FR-11 depth, CLEAN — de-flagged):** the milestone's solid positive.
+  ARM A (no entropy reg) **COLLAPSED at depth N=200** (onset iteration 138):
+  entropy→0.99, mode_mass→0.61, `pass_rate=1.0` while `true_accuracy=0` (gap=1.0 =
+  null-space gaming). ARM B (`entropy_beta=0.50`) **fully prevented** it (entropy=4.91).
+  Collapse is **depth-sensitive** (no collapse at N=50 per .319; appears between 50 and
+  200). **MANDATORY before Phase-5: entropy regularization.**
+- **exp3475 (Kona): BLOCKED — saturated** (untrained-hybrid solve-rate 1.0, no headroom;
+  the exact analogue of the GSM8K ceiling).
+- **exp3476 (G2, CLEAN):** self-contained reproduction package built + internally
+  verified (`dist/g2-fover-repro.tar.gz`, SHA256 + IPFS CID, condition_A AUROC 0.9131).
+  **G2 still UNMET** — only a non-operator external run closes it (Operator-Only
+  External Publication discipline).
+
+**The diagnosis that drives .321:** the .320 corpus used **MATH Level 5**, which is
+too hard for Gemma4-26B (SC 0.265 ≪ band floor). The fix is **difficulty matching** —
+build the corpus on a split where SC lands in `[0.40, 0.70]`.
+
+New references surfaced (2026-05-30 sweep):
+
+- **arXiv:2504.16828 — "Process Reward Models That Think" (ThinkPRM).** A long-CoT PRM
+  fine-tuned on 1% of PRM800K labels; **improves best-of-N specifically on the harder
+  problems — MATH-500 levels 3/4/5 and GPQA-Physics levels 2/3/4.** THE directly-
+  actionable .321 reference: it locates the headroom sweet-spot at **MATH-500 levels
+  3-4** (level 5 alone was too hard at SC 0.265). exp3483 (corpus builder v2) targets a
+  difficulty-matched levels-3/4 split with an adaptive warm-up that selects the in-band
+  level.
+- **arXiv:2412.11006 — "Entropy-Regularized Process Reward Model" (ER-PRM).** Entropy
+  regularization stabilizes PRM training and gives +2-3% on MATH best-of-N. **Converges
+  with the .320 FR-11 finding** that `entropy_beta=0.50` cures self-distillation
+  collapse — independent precedent that entropy regularization is the right knob.
+  exp3486 sweeps the minimal effective β.
+- **arXiv:2509.23152 — "Critique to Verify / Mirror-Critique" (ICLR 2026).** RL-trained
+  verifier whose stated motivation is exactly the .320 nuance: "reward-model selection
+  often fails to identify minority-yet-correct answers, limiting it beyond majority
+  voting." Mirror-Verifier **significantly outperforms majority voting** by recovering
+  those answers — an existence proof that a verifier CAN beat SC with the right design,
+  and the contrast class for exp3485's minority-correct-recovery measurement.
+
+Sources: [2504.16828](https://arxiv.org/abs/2504.16828),
+[2412.11006](https://arxiv.org/abs/2412.11006),
+[2509.23152](https://arxiv.org/abs/2509.23152),
+[2602.11570](https://arxiv.org/abs/2602.11570),
+[2510.13918](https://arxiv.org/abs/2510.13918),
+[2502.18581](https://arxiv.org/abs/2502.18581).
+
+---
+
 ## 2026-05-30 Post-.319 Planning Sweep (Milestone 2026.05.320)
 
 `.319` (Depth-Over-Breadth V) ran the decisive **TRAINED-energy** P0.1 test and the

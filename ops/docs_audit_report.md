@@ -4,51 +4,43 @@
 # docs_audit_report — 2026-05-30
 
 ## TL;DR (stranger's 30-second take)
-A stranger would bounce in 10 seconds. The page looks like a dense internal dashboard for a research team, cluttered with unexplained acronyms, suspiciously perfect metric claims (1.0 TP rates, 0 false positives), and literal leaked file paths from a local build system embedded directly in the text and CSS.
+I would bounce in 15 seconds. The page starts strong with a clear value prop, but the "Results" section devolves into an impenetrable wall of project-insider acronyms, and the visually meaningless 100% progress bars make the numbers look like marketing fluff rather than rigorous engineering.
 
 ## TOP 3 PROBLEMS
-1. Leaked Local Paths — The HTML and CSS contain raw local file paths (e.g., `@.tmp-pytest/...`) which completely destroys credibility.
-2. Heavy Internal Jargon — Acronyms like FoVer, CCTU, PREM, and SVAMP are thrown around without explanation, alienating non-insiders.
-3. Suspiciously Perfect Claims — Unqualified claims like "1.0 TP rate", "60/60 attacks", and "Zero false positives" trigger immediate skepticism.
+1. Acronym soup in the Results grid (SVAMP, VeriCoT, CCTU, FoVer).
+2. Suspiciously perfect numbers (60/60 attacks, 1.0 TP rate) without immediate credibility anchors.
+3. Defensive, internal narrative in the hero section ("Repinned from v2 0.9857...").
 
 ## DETAILED FINDINGS
 ### Bloat
-- Results grid — 12 cards — 6 max (strangers won't read 12 different benchmark results).
-- Blog section — 7 blog post cards — 3 max (or just link to the blog index).
+- `Recent progress` hero card — ~60 words — It's right at the cap, but carries a heavy, dense narrative that slows down the most critical part of the page.
 
 ### Internal jargon
-- Recent progress card — "FoVer", "5-seed dual-condition" — A stranger has no context for this internal dataset or evaluation condition.
-- Test-Time Compute bento card — "PREM", "TTC" — Deep academic jargon that obfuscates the actual feature.
-- Math reasoning result card — "SVAMP AUC", "FoVer baseline" — Unexplained benchmark acronyms and baseline references.
-- Code repair result card — "IterativeSelfRepair", "HumanEval-50, execute-feedback-retry" — Sounds like internal test harness flags/modes.
-- Math extraction result card — "VeriCoT equation-style CoT fix" — Internal capability terminology.
-- Adversarial audit result card — "PRM-BiasBench-style attacks" — Obscure or internal benchmark name.
+- `Recent progress` card — "FoVer (5-seed dual-condition; architecture-only 0.8947)" — A stranger has no idea what FoVer is or why the seeds/conditions matter.
+- `Features` bento grid / `Results` grid — "CCTU constrained micro-benchmark" — CCTU is undefined.
+- `Results` grid — "VeriCoT equation-style CoT fix", "GSM8K extraction TP rate", "EstimationVerifier SVAMP AUC", "PRM-BiasBench-style attacks", "HalluGuard v3" — Pure insider shorthand.
+- `Features` bento grid — "Test-Time Compute (TTC) & PREM" — PREM (Process-Reward Energy Model) is dropped in with zero introductory context.
 
 ### Per-milestone narrative
-- Stats bar — "382 Completed milestones"
-- Recent progress card — "Repinned from v2 0.9857 after pre-submission adversarial audit"
-- Preprint section — "(paper-v6)", "arXiv submission is prepared but pending operator-initiated upload"
+- `Recent progress` card — "Repinned from v2 0.9857 after pre-submission adversarial audit; see Why We Report Two AUROCs Now." — This reads like an internal retrospective or defensive commit message, not landing page copy.
 
 ### Inconsistencies
-- Code Bento Card states "+3.0 points on pass-rate" for HumanEval vs Code repair result card states "8% -> 80% pass rate (+72pp)" for HumanEval. Which one is the real code repair result?
+- The Hero stats bar claims "0.9131 Verifier AUROC", but the Results grid highlights "0.91 AUROC (publication gate)" for a "Prompt-injection classifier". It is unclear to a stranger if these are the same metric slightly altered, or two entirely different things.
 
 ### Missing essentials
-- None. The page successfully covers the one-sentence summary, installation, license, maintainer, and why to trust the numbers (checked-in artifacts).
+- **Trust anchors for the perfect numbers**: The page claims "Every number below is backed by a checked-in experiment artifact", but when claiming a perfect 1.0 True Positive rate or 60/60 caught attacks, the lack of an immediate methodology link or N-size explanation triggers an instant "this is fake" reaction.
 
 ### Fabrication signals
-- Live benchmark result card — Literal test artifact path leaked `@.tmp-pytest/pytest-of-ianblenke/pytest-3/popen-gw0/test_req_verify_2932_run_uses_0/citation_hallucination_field_verifier_2932_raw/spilled-energy-2602-18671:real.txt`
-- Math extraction result card — `1.0` TP rate
-- Adversarial audit result card — `60/60` attacks caught
-- Blog "Carnot Dogfooding by the Numbers" — `Zero` false positives
-- Training result card — perfect `2.0x` speedup
+- `Adversarial audit` result card — "k=5 ensemble catches 60/60 attacks" — 100% catch rate looks extremely overfit or cherry-picked.
+- `Math extraction` result card — "TP rate: 0.5 -> 1.0" — A perfect 1.0 true positive rate is an immediate red flag for evaluation leakage.
+- `Hardware` and `Training` result cards — Using a 100% full HTML progress bar for binary or categorical claims like "Ising sampler live on silicon" and "2.0x speedup" is visually nonsensical.
 
 ## WHAT'S WORKING
-- The Hero section is punchy and gets straight to the point: what it does, how to get it (`pip install carnot-ebm`), and the license.
-- The 3-step "Extract -> Check -> Repair" Bento card flow makes the complex Energy-Based Model pipeline conceptually easy to grasp.
+- The "Extract -> Check -> Repair" bento flow is an excellent, clear mental model for how the system actually functions.
+- The "Quick Start" code tabs are exactly what a developer wants to see: pip install, import, verify.
 
 ## RECOMMENDED OPERATOR ACTIONS
-1. Scrub all leaked local file paths (e.g., `@.tmp-pytest/...`, `@results/...`) from the HTML text and `<style>` block.
-2. Resolve the glaring inconsistency between the "+3.0 points" and "+72pp" HumanEval pass rate claims.
-3. Consolidate the 12 Results cards into the 4-6 most defensible metrics, translating internal dataset names (FoVer, CCTU) into plain English descriptions.
-4. Tone down or firmly contextualize suspiciously perfect claims ("1.0", "60/60", "Zero false positives") to avoid triggering a stranger's bullshit detector.
-5. Remove all internal status trivia (milestone counts, paper versioning, pending upload statuses) that distract from the core value proposition.
+1. Rewrite the "Recent progress" hero card to remove the defensive backstory about re-pinning AUROCs; just link to the blog post.
+2. Purge the Results grid of all internal acronyms (SVAMP, VeriCoT, CCTU). Translate them into what they actually measure (e.g., "Math Word Problems").
+3. Remove the HTML progress bars from non-percentage cards (Hardware, Training) to stop them from looking like fabricated dashboard widgets.
+4. For the 60/60 and 1.0 TP rate claims, explicitly state the methodology/N-size in the card, or replace them with more representative, aggregated metrics that don't trigger "too good to be true" alarms.
