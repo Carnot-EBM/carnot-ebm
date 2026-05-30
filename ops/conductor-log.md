@@ -7115,3 +7115,4 @@ web search: https://docs.garak.ai/garak/examples/pr |
 | 2026-05-30 14:08 UTC | FoVer Headline G2 — CI reproduction workflow + Doc | OK | 81 passed in 3.07s |
 | 2026-05-30 14:23 UTC | FR-11 grounding-collapse stress test — does at-ris | FLAGGED | adversarial_verify CRITICAL: TAUTOLOGY, TAUTOLOGY, TAUTOLOGY — result quarantine |
 | 2026-05-30 14:31 UTC | KV260 terminal board-level latency transcript (dri | OK | 81 passed in 3.70s |
+| 2026-05-30 14:37 UTC | GateMate opportunistic detect + continuity audit ( | FAIL | Claude Code error: Error: Reached max turns (20) |
