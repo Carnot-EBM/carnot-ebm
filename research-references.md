@@ -1,3 +1,77 @@
+## 2026-05-30 Post-.315 Planning Sweep (Milestone 2026.05.316)
+
+`.315` was the first Depth-Over-Breadth milestone and it ran the existential
+block — but **3 of its 5 load-bearing depth tasks did not cleanly land**:
+
+- **P0.1 (exp3312, energy-descent-vs-AR):** landed but was **flagged_adversarial**
+  (quarantined by the capstone) AND the honest result is weak — energy-descent
+  selection (0.840) beat *greedy* AR (0.750, +0.090, McNemar p=0.033) but **LOST
+  to equal-compute self-consistency** (majority vote over the same 3 samples,
+  0.895, delta −0.055). The "energy-descent" here was best-of-3 reranking by a
+  frozen energy + 8 latent steps, not a clean continuous-latent reasoning loop.
+- **P0.2 (exp3313, verifier-diversity / λ_min(Σ)):** **displaced** — the
+  deliverable became a repair-substrate autopsy; the diversity audit never ran.
+- **Kona solve-rate gate (exp3417):** **never produced an artifact**.
+- **Ensemble-vs-adaptive-injection (exp3418):** **never produced an artifact**.
+- **G2 reproduction harness (exp3419):** the one clean landing —
+  `scripts/reproduce_fover_headline.py` reproduces condition-A AUROC 0.9131 and
+  learning-contribution 0.0185 in-CI from a clean recompute; G2 still needs an
+  external non-operator run.
+
+**Therefore `.316` does NOT relax the Depth-Over-Breadth Forcing Function** (the
+.315 capstone's `can_relax=true` was premature — P0.1's verdict is contested and
+flagged, and three depth tasks didn't run). `.316` re-runs the existential block
+cleanly and reframes P0.1 around the now-load-bearing question surfaced by the
+.315 self-consistency caveat: **does energy add value over plain self-consistency
+at equal compute?** This is completing existential depth, not breadth churn.
+
+### The crux: energy-based latent reasoning vs self-consistency at equal compute
+
+The .315 P0.1 caveat (energy-selection loses to majority vote at matched budget)
+is the real test of the Kona premise. Recent 2026 work frames the right
+comparison and gives a concrete mechanism to mirror:
+
+- **EBM-CoT — "Think Consistently, Reason Efficiently: Energy-Based Calibration
+  for Implicit Chain-of-Thought" (arXiv:2511.07124):** refines latent thought
+  representations through an EBM, steering latent reasoning trajectories toward
+  lower-energy / higher-consistency regions. Closest external method to Carnot's
+  energy-descent premise and, crucially, frames energy as a
+  *calibration/complement* to consistency — not a replacement for sampling. The
+  .316 P0.1 v2 should mirror this: energy-WEIGHTED voting over the same k samples
+  vs plain majority vote, at matched compute. Source:
+  https://arxiv.org/pdf/2511.07124
+- **"Scalable Best-of-N Selection via Self-Certainty" (arXiv:2502.18581):**
+  self-certainty voting outperforms self-consistency in Best-of-N selection and
+  scales with N without a reward model's cost. The honest baseline ladder for
+  P0.1 v2: greedy AR → majority-vote SC → self-certainty BoN → energy-weighted
+  vote. Energy must beat the *strongest cheap* selector, not just greedy.
+  Source: https://arxiv.org/html/2502.18581v1
+- **"Generative Verifiers: Reward Modeling as Next-Token Prediction"
+  (arXiv:2408.15240):** BoN + majority voting nearly matches an oracle verifier —
+  i.e., the bar "energy beats majority vote" is high and is the correct
+  replacement-grade test. Source: https://arxiv.org/pdf/2408.15240
+- **"Parallel Test-Time Scaling for Latent Reasoning Models" (arXiv:2510.07745,
+  ACL 2026):** sampling + probabilistic trajectory aggregation for
+  continuous-latent reasoning — the aggregation step Carnot's energy could
+  supply, and a fair compute-matched protocol to borrow. Source:
+  https://arxiv.org/pdf/2510.07745
+- **"Certified Self-Consistency: Statistical Guarantees and Test-Time"
+  (arXiv:2510.17472):** statistical guarantees for SC under test-time scaling —
+  relevant to the paired-significance gate P0.1 needs. Source:
+  https://arxiv.org/pdf/2510.17472
+- **"Scaling up Test-Time Compute with Latent Reasoning: A Recurrent Depth
+  Approach" (arXiv:2502.05171):** latent recurrent reasoning competitive with
+  larger models — the continuous-latent substrate family Carnot's Boltzmann-GPT
+  belongs to. Source: https://arxiv.org/pdf/2502.05171
+
+**Carnot action for `.316`:** P0.1 v2 (exp3426) reruns clean (clears the
+adversarial flag with real methodology/seed/checksum/duration) and adds the
+matched-compute self-consistency control as the PRIMARY comparison, plus an
+energy-weighted-voting condition mirroring EBM-CoT. The honest headline becomes
+"does energy add anything beyond majority vote?" — if no (and flagged again),
+the energy-descent-superiority framing retires; if yes, it is the first real
+justification for the Phase-3 endgame.
+
 ## 2026-05-29 Post-.308 Planning Sweep (Milestone 2026.05.309)
 
 Milestone `.308` completed operationally, but the evidence chain is still
