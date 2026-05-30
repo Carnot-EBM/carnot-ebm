@@ -101,7 +101,7 @@ def main():
                 artifact_data["test_success"] = test_success
                 artifact_data["test_log"] = test_log[-1000:] if test_log else ""
 
-    status = "success" if artifact_data["test_success"] else "blocked"
+    status = "success" if artifact_data["test_success"] else "error"
     
     # Update artifact with results
     artifact = tmpl.build_result(artifact_data, status=status)

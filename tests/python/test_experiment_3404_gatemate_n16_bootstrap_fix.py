@@ -57,7 +57,7 @@ def test_experiment_3404_synthesis_fail(mock_run, mock_template):
     with open(mock_template._output_path) as f:
         artifact = json.load(f)
         
-    assert artifact["status"] == "blocked"
+    assert artifact["status"] == "error"
     assert artifact["data"]["synthesis_success"] is False
     assert artifact["data"]["pnr_success"] is False
     assert artifact["data"]["flash_success"] is False
@@ -80,7 +80,7 @@ def test_experiment_3404_flash_fail(mock_run, mock_template):
     with open(mock_template._output_path) as f:
         artifact = json.load(f)
         
-    assert artifact["status"] == "blocked"
+    assert artifact["status"] == "error"
     assert artifact["data"]["synthesis_success"] is True
     assert artifact["data"]["pnr_success"] is True
     assert artifact["data"]["flash_success"] is False
@@ -115,7 +115,7 @@ def test_experiment_3404_tool_not_found(mock_run, mock_template):
     with open(mock_template._output_path) as f:
         artifact = json.load(f)
         
-    assert artifact["status"] == "blocked"
+    assert artifact["status"] == "error"
     assert artifact["data"]["synthesis_success"] is False
     assert "Command not found" in artifact["data"]["synthesis_log"]
 
