@@ -7050,3 +7050,4 @@ web search: https://docs.garak.ai/garak/examples/pr |
 | 2026-05-30 06:06 UTC | KV260 terminal board-level latency transcript (dri | OK | 81 passed in 3.22s |
 | 2026-05-30 06:13 UTC | GateMate N16 bootstrap root-cause diagnostic (why  | OK | 81 passed in 3.26s |
 | 2026-05-30 06:19 UTC | PolarFire opportunistic reachability + continuity  | OK | 81 passed in 3.36s |
+| 2026-05-30 06:27 UTC | G1-G4 gate-status synthesis (P0.1/P0.2/Kona/G2 ver | OK | 81 passed in 3.63s |
