@@ -7012,3 +7012,4 @@ web search: https://docs.garak.ai/garak/examples/pr |
 | 2026-05-30 02:41 UTC | Milestone 2026.05.314 activated | OK | 13 tasks queued |
 | 2026-05-30 02:46 UTC | Archive milestone .313 honestly and activate .314 | OK | 81 passed in 4.11s |
 | 2026-05-30 02:51 UTC | GateMate N16 Bitstream Bootstrap Fix | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_3404_gatemat |
+| 2026-05-30 02:58 UTC | GateMate N16 Bitstream Bootstrap Fix | OK | 88 passed in 4.17s |
