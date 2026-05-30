@@ -7083,3 +7083,5 @@ web search: https://docs.garak.ai/garak/examples/pr |
 | 2026-05-30 08:25 UTC | G1-G4 gate-status synthesis (clean P0.1 v2 / P0.2  | OK | 81 passed in 3.51s |
 | 2026-05-30 08:53 UTC | Plan milestone 2026.05.317 | OK | 11 tasks proposed |
 | 2026-05-30 08:59 UTC | Capstone v316 | FAIL | Claude Code error: Error: Reached max turns (20) |
+| 2026-05-30 09:04 UTC | Capstone v316 | FLAGGED | adversarial_verify CRITICAL: TAUTOLOGY — result quarantined, not a clean success |
+| 2026-05-30 09:06 UTC | Milestone 2026.05.317 activated | OK | 11 tasks queued |
