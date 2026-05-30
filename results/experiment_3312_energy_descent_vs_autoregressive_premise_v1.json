@@ -2,42 +2,42 @@
   "experiment": 3312,
   "title": "Energy-Descent Reasoning vs Autoregressive Baseline (the Kona premise test)",
   "run_date": "20260530",
-  "started_at": "2026-05-30T05:20:32Z",
-  "finished_at": "2026-05-30T05:21:05Z",
-  "duration_s": 32.634,
+  "started_at": "2026-05-30T05:21:17Z",
+  "finished_at": "2026-05-30T05:58:23Z",
+  "duration_s": 2225.773,
   "status": "success",
   "random_seed": 3312,
-  "reproducibility_checksum": "60c135c8a5ded0bd",
+  "reproducibility_checksum": "38c810259dc29c56",
   "metrics_used": "unknown",
-  "honest_verdict": "complete: energy_descent_viable_not_superior_at_scale",
+  "honest_verdict": "complete: energy_descent_beats_ar_premise_validated",
   "inference_substrate": "live_llm_inference",
   "task_name": "GSM8K (original questions, exp281 corpus), held-out shuffled split",
-  "n_problems": 4,
-  "ar_baseline_accuracy": 0.25,
-  "energy_descent_accuracy": 0.5,
-  "self_consistency_accuracy": 0.25,
-  "accuracy_delta": 0.25,
-  "accuracy_delta_vs_self_consistency": 0.25,
+  "n_problems": 200,
+  "ar_baseline_accuracy": 0.75,
+  "energy_descent_accuracy": 0.84,
+  "self_consistency_accuracy": 0.895,
+  "accuracy_delta": 0.09,
+  "accuracy_delta_vs_self_consistency": -0.055,
   "paired_significance": {
     "test": "mcnemar_exact_binomial + paired_bootstrap_ci",
-    "energy_descent_wins": 1,
-    "ar_wins": 0,
-    "p_value": 1.0,
+    "energy_descent_wins": 41,
+    "ar_wins": 23,
+    "p_value": 0.032766,
     "direction": 1,
     "bootstrap_delta_ci95": [
-      0.0,
-      0.75
+      0.01,
+      0.165
     ]
   },
   "g1_premise_viable": true,
-  "g2_premise_validated": false,
-  "compute_parity_note": "Both conditions use the same base model unsloth/Qwen3.6-35B-A3B-GGUF (Qwen3.6-35B-A3B MoE, ~3B active params, Q4_K_M) on the same 4 paired problems. AR baseline = 1 greedy generation/problem. Energy-descent = 2 sampled generations/problem (temp 0.8) + 8 latent gradient-descent steps under a frozen FoVer-trained Boltzmann-GPT energy (16-dim, negligible FLOPs). Energy-descent therefore spends 2x the generation budget of the greedy AR baseline; the equal-compute AR control (self-consistency majority vote over the same 2 samples) scored 0.2500. Read the headline delta against ar_baseline_accuracy for the literal AR comparison and against self_consistency_accuracy for the equal-budget comparison.",
+  "g2_premise_validated": true,
+  "compute_parity_note": "Both conditions use the same base model unsloth/Qwen3.6-35B-A3B-GGUF (Qwen3.6-35B-A3B MoE, ~3B active params, Q4_K_M) on the same 200 paired problems. AR baseline = 1 greedy generation/problem. Energy-descent = 3 sampled generations/problem (temp 0.8) + 8 latent gradient-descent steps under a frozen FoVer-trained Boltzmann-GPT energy (16-dim, negligible FLOPs). Energy-descent therefore spends 3x the generation budget of the greedy AR baseline; the equal-compute AR control (self-consistency majority vote over the same 3 samples) scored 0.8950. Read the headline delta against ar_baseline_accuracy for the literal AR comparison and against self_consistency_accuracy for the equal-budget comparison.",
   "ar_model": "unsloth/Qwen3.6-35B-A3B-GGUF",
   "energy_substrate": "boltzmann_gpt_v16_e60_gap4.3918",
   "energy_substrate_test_gap": 4.3918,
-  "n_candidates": 2,
+  "n_candidates": 3,
   "descent_steps": 8,
-  "max_tokens": 220,
+  "max_tokens": 512,
   "preconditions_checked": [
     {
       "resource": "cuda",
@@ -82,14 +82,15 @@
     {
       "problem_id": "gsm8k-320",
       "gold": 8,
-      "ar_pred": 1,
-      "ar_correct": false,
-      "ed_pred": 15,
-      "ed_correct": false,
+      "ar_pred": 8,
+      "ar_correct": true,
+      "ed_pred": 8,
+      "ed_correct": true,
       "ed_selected_index": 1,
       "candidate_preds": [
-        22,
-        15
+        8,
+        8,
+        8
       ]
     },
     {
@@ -97,38 +98,2785 @@
       "gold": 16,
       "ar_pred": 16,
       "ar_correct": true,
-      "ed_pred": 16,
-      "ed_correct": true,
-      "ed_selected_index": 1,
+      "ed_pred": 3,
+      "ed_correct": false,
+      "ed_selected_index": 0,
       "candidate_preds": [
-        7,
+        3,
+        16,
         16
       ]
     },
     {
       "problem_id": "gsm8k-1233",
       "gold": 81,
-      "ar_pred": 2,
-      "ar_correct": false,
+      "ar_pred": 81,
+      "ar_correct": true,
       "ed_pred": 81,
       "ed_correct": true,
       "ed_selected_index": 0,
       "candidate_preds": [
         81,
-        27
+        81,
+        81
       ]
     },
     {
       "problem_id": "gsm8k-104",
       "gold": 500,
-      "ar_pred": 750,
+      "ar_pred": 500,
+      "ar_correct": true,
+      "ed_pred": 500,
+      "ed_correct": true,
+      "ed_selected_index": 0,
+      "candidate_preds": [
+        500,
+        500,
+        500
+      ]
+    },
+    {
+      "problem_id": "gsm8k-140",
+      "gold": 20,
+      "ar_pred": 20,
+      "ar_correct": true,
+      "ed_pred": 4,
+      "ed_correct": false,
+      "ed_selected_index": 2,
+      "candidate_preds": [
+        20,
+        5,
+        4
+      ]
+    },
+    {
+      "problem_id": "gsm8k-665",
+      "gold": 360,
+      "ar_pred": 6,
       "ar_correct": false,
-      "ed_pred": 1000,
+      "ed_pred": 360,
+      "ed_correct": true,
+      "ed_selected_index": 1,
+      "candidate_preds": [
+        360,
+        360,
+        360
+      ]
+    },
+    {
+      "problem_id": "gsm8k-83",
+      "gold": 600,
+      "ar_pred": 600,
+      "ar_correct": true,
+      "ed_pred": 600,
+      "ed_correct": true,
+      "ed_selected_index": 2,
+      "candidate_preds": [
+        600,
+        600,
+        600
+      ]
+    },
+    {
+      "problem_id": "gsm8k-1236",
+      "gold": 84,
+      "ar_pred": 84,
+      "ar_correct": true,
+      "ed_pred": 84,
+      "ed_correct": true,
+      "ed_selected_index": 1,
+      "candidate_preds": [
+        84,
+        84,
+        84
+      ]
+    },
+    {
+      "problem_id": "gsm8k-1217",
+      "gold": 75,
+      "ar_pred": 75,
+      "ar_correct": true,
+      "ed_pred": 75,
+      "ed_correct": true,
+      "ed_selected_index": 1,
+      "candidate_preds": [
+        75,
+        75,
+        75
+      ]
+    },
+    {
+      "problem_id": "gsm8k-197",
+      "gold": 6277,
+      "ar_pred": 6277,
+      "ar_correct": true,
+      "ed_pred": 17509,
       "ed_correct": false,
       "ed_selected_index": 0,
       "candidate_preds": [
-        1000,
+        17509,
+        6277,
+        6277
+      ]
+    },
+    {
+      "problem_id": "gsm8k-938",
+      "gold": 4,
+      "ar_pred": 4,
+      "ar_correct": true,
+      "ed_pred": 4,
+      "ed_correct": true,
+      "ed_selected_index": 0,
+      "candidate_preds": [
+        4,
+        4,
+        5
+      ]
+    },
+    {
+      "problem_id": "gsm8k-433",
+      "gold": 6,
+      "ar_pred": 6,
+      "ar_correct": true,
+      "ed_pred": 6,
+      "ed_correct": true,
+      "ed_selected_index": 0,
+      "candidate_preds": [
+        6,
+        6,
+        6
+      ]
+    },
+    {
+      "problem_id": "gsm8k-1157",
+      "gold": 3,
+      "ar_pred": 3,
+      "ar_correct": true,
+      "ed_pred": 3,
+      "ed_correct": true,
+      "ed_selected_index": 2,
+      "candidate_preds": [
+        2,
+        3,
+        3
+      ]
+    },
+    {
+      "problem_id": "gsm8k-97",
+      "gold": 12,
+      "ar_pred": 12,
+      "ar_correct": true,
+      "ed_pred": 6,
+      "ed_correct": false,
+      "ed_selected_index": 1,
+      "candidate_preds": [
+        12,
+        6,
+        12
+      ]
+    },
+    {
+      "problem_id": "gsm8k-108",
+      "gold": 50,
+      "ar_pred": 50,
+      "ar_correct": true,
+      "ed_pred": 50,
+      "ed_correct": true,
+      "ed_selected_index": 2,
+      "candidate_preds": [
+        50,
+        50,
+        50
+      ]
+    },
+    {
+      "problem_id": "gsm8k-484",
+      "gold": 240,
+      "ar_pred": 240,
+      "ar_correct": true,
+      "ed_pred": 240,
+      "ed_correct": true,
+      "ed_selected_index": 0,
+      "candidate_preds": [
+        240,
+        240,
+        240
+      ]
+    },
+    {
+      "problem_id": "gsm8k-972",
+      "gold": 120,
+      "ar_pred": 120,
+      "ar_correct": true,
+      "ed_pred": 120,
+      "ed_correct": true,
+      "ed_selected_index": 1,
+      "candidate_preds": [
+        120,
+        120,
+        120
+      ]
+    },
+    {
+      "problem_id": "gsm8k-863",
+      "gold": 110,
+      "ar_pred": 110,
+      "ar_correct": true,
+      "ed_pred": 110,
+      "ed_correct": true,
+      "ed_selected_index": 2,
+      "candidate_preds": [
+        110,
+        110,
+        110
+      ]
+    },
+    {
+      "problem_id": "gsm8k-551",
+      "gold": 17,
+      "ar_pred": 17,
+      "ar_correct": true,
+      "ed_pred": 17,
+      "ed_correct": true,
+      "ed_selected_index": 0,
+      "candidate_preds": [
+        17,
+        17,
+        17
+      ]
+    },
+    {
+      "problem_id": "gsm8k-1254",
+      "gold": 30,
+      "ar_pred": 30,
+      "ar_correct": true,
+      "ed_pred": 6,
+      "ed_correct": false,
+      "ed_selected_index": 2,
+      "candidate_preds": [
+        7,
+        30,
+        6
+      ]
+    },
+    {
+      "problem_id": "gsm8k-402",
+      "gold": 4,
+      "ar_pred": 5,
+      "ar_correct": false,
+      "ed_pred": 4,
+      "ed_correct": true,
+      "ed_selected_index": 2,
+      "candidate_preds": [
+        4,
+        4,
+        4
+      ]
+    },
+    {
+      "problem_id": "gsm8k-1195",
+      "gold": 320,
+      "ar_pred": 320,
+      "ar_correct": true,
+      "ed_pred": 320,
+      "ed_correct": true,
+      "ed_selected_index": 0,
+      "candidate_preds": [
+        320,
+        320,
+        320
+      ]
+    },
+    {
+      "problem_id": "gsm8k-47",
+      "gold": 800,
+      "ar_pred": 800,
+      "ar_correct": true,
+      "ed_pred": 800,
+      "ed_correct": true,
+      "ed_selected_index": 2,
+      "candidate_preds": [
+        800,
+        800,
+        800
+      ]
+    },
+    {
+      "problem_id": "gsm8k-803",
+      "gold": 9,
+      "ar_pred": 9,
+      "ar_correct": true,
+      "ed_pred": 9,
+      "ed_correct": true,
+      "ed_selected_index": 1,
+      "candidate_preds": [
+        9,
+        9,
+        9
+      ]
+    },
+    {
+      "problem_id": "gsm8k-549",
+      "gold": 398,
+      "ar_pred": 2,
+      "ar_correct": false,
+      "ed_pred": 398,
+      "ed_correct": true,
+      "ed_selected_index": 0,
+      "candidate_preds": [
+        398,
+        2,
+        2
+      ]
+    },
+    {
+      "problem_id": "gsm8k-263",
+      "gold": 8,
+      "ar_pred": 8,
+      "ar_correct": true,
+      "ed_pred": 8,
+      "ed_correct": true,
+      "ed_selected_index": 0,
+      "candidate_preds": [
+        8,
+        8,
+        8
+      ]
+    },
+    {
+      "problem_id": "gsm8k-601",
+      "gold": 104,
+      "ar_pred": 104,
+      "ar_correct": true,
+      "ed_pred": 2,
+      "ed_correct": false,
+      "ed_selected_index": 0,
+      "candidate_preds": [
+        2,
+        12,
+        12
+      ]
+    },
+    {
+      "problem_id": "gsm8k-1005",
+      "gold": 1490,
+      "ar_pred": 5,
+      "ar_correct": false,
+      "ed_pred": 1490,
+      "ed_correct": true,
+      "ed_selected_index": 1,
+      "candidate_preds": [
+        1490,
+        1490,
+        1490
+      ]
+    },
+    {
+      "problem_id": "gsm8k-1038",
+      "gold": 4,
+      "ar_pred": 75,
+      "ar_correct": false,
+      "ed_pred": 4,
+      "ed_correct": true,
+      "ed_selected_index": 0,
+      "candidate_preds": [
+        4,
+        4,
+        4
+      ]
+    },
+    {
+      "problem_id": "gsm8k-443",
+      "gold": 59,
+      "ar_pred": 59,
+      "ar_correct": true,
+      "ed_pred": 40,
+      "ed_correct": false,
+      "ed_selected_index": 2,
+      "candidate_preds": [
+        5,
+        50,
+        40
+      ]
+    },
+    {
+      "problem_id": "gsm8k-770",
+      "gold": 4,
+      "ar_pred": 4,
+      "ar_correct": true,
+      "ed_pred": 4,
+      "ed_correct": true,
+      "ed_selected_index": 1,
+      "candidate_preds": [
+        20,
+        4,
+        4
+      ]
+    },
+    {
+      "problem_id": "gsm8k-777",
+      "gold": 4400,
+      "ar_pred": 440,
+      "ar_correct": false,
+      "ed_pred": 6,
+      "ed_correct": false,
+      "ed_selected_index": 2,
+      "candidate_preds": [
+        6,
+        6,
+        6
+      ]
+    },
+    {
+      "problem_id": "gsm8k-136",
+      "gold": 6,
+      "ar_pred": 6,
+      "ar_correct": true,
+      "ed_pred": 6,
+      "ed_correct": true,
+      "ed_selected_index": 0,
+      "candidate_preds": [
+        6,
+        6,
+        6
+      ]
+    },
+    {
+      "problem_id": "gsm8k-94",
+      "gold": 348,
+      "ar_pred": 348,
+      "ar_correct": true,
+      "ed_pred": 348,
+      "ed_correct": true,
+      "ed_selected_index": 0,
+      "candidate_preds": [
+        348,
+        348,
+        348
+      ]
+    },
+    {
+      "problem_id": "gsm8k-249",
+      "gold": 5600,
+      "ar_pred": 13,
+      "ar_correct": false,
+      "ed_pred": 5600,
+      "ed_correct": true,
+      "ed_selected_index": 2,
+      "candidate_preds": [
+        5600,
+        5600,
+        5600
+      ]
+    },
+    {
+      "problem_id": "gsm8k-1020",
+      "gold": 22,
+      "ar_pred": 22,
+      "ar_correct": true,
+      "ed_pred": 22,
+      "ed_correct": true,
+      "ed_selected_index": 0,
+      "candidate_preds": [
+        22,
+        22,
+        22
+      ]
+    },
+    {
+      "problem_id": "gsm8k-499",
+      "gold": 10,
+      "ar_pred": 10,
+      "ar_correct": true,
+      "ed_pred": 10,
+      "ed_correct": true,
+      "ed_selected_index": 0,
+      "candidate_preds": [
+        10,
+        10,
+        10
+      ]
+    },
+    {
+      "problem_id": "gsm8k-89",
+      "gold": 24,
+      "ar_pred": 16,
+      "ar_correct": false,
+      "ed_pred": 24,
+      "ed_correct": true,
+      "ed_selected_index": 2,
+      "candidate_preds": [
+        18,
+        18,
+        24
+      ]
+    },
+    {
+      "problem_id": "gsm8k-1282",
+      "gold": 12,
+      "ar_pred": 12,
+      "ar_correct": true,
+      "ed_pred": 12,
+      "ed_correct": true,
+      "ed_selected_index": 0,
+      "candidate_preds": [
+        12,
+        12,
+        12
+      ]
+    },
+    {
+      "problem_id": "gsm8k-701",
+      "gold": 200,
+      "ar_pred": 2,
+      "ar_correct": false,
+      "ed_pred": 200,
+      "ed_correct": true,
+      "ed_selected_index": 0,
+      "candidate_preds": [
+        200,
+        2,
+        200
+      ]
+    },
+    {
+      "problem_id": "gsm8k-642",
+      "gold": 10800,
+      "ar_pred": 5,
+      "ar_correct": false,
+      "ed_pred": 10800,
+      "ed_correct": true,
+      "ed_selected_index": 1,
+      "candidate_preds": [
+        10800,
+        10800,
+        10800
+      ]
+    },
+    {
+      "problem_id": "gsm8k-1109",
+      "gold": 3,
+      "ar_pred": 7,
+      "ar_correct": false,
+      "ed_pred": 3,
+      "ed_correct": true,
+      "ed_selected_index": 2,
+      "candidate_preds": [
+        3,
+        5,
+        3
+      ]
+    },
+    {
+      "problem_id": "gsm8k-534",
+      "gold": 300,
+      "ar_pred": 300,
+      "ar_correct": true,
+      "ed_pred": 6,
+      "ed_correct": false,
+      "ed_selected_index": 2,
+      "candidate_preds": [
+        300,
+        60,
+        6
+      ]
+    },
+    {
+      "problem_id": "gsm8k-328",
+      "gold": 2,
+      "ar_pred": 2,
+      "ar_correct": true,
+      "ed_pred": 2,
+      "ed_correct": true,
+      "ed_selected_index": 2,
+      "candidate_preds": [
+        2,
+        2,
+        2
+      ]
+    },
+    {
+      "problem_id": "gsm8k-498",
+      "gold": 40,
+      "ar_pred": 40,
+      "ar_correct": true,
+      "ed_pred": 40,
+      "ed_correct": true,
+      "ed_selected_index": 0,
+      "candidate_preds": [
+        40,
+        40,
+        40
+      ]
+    },
+    {
+      "problem_id": "gsm8k-1199",
+      "gold": 2,
+      "ar_pred": 3,
+      "ar_correct": false,
+      "ed_pred": 1,
+      "ed_correct": false,
+      "ed_selected_index": 1,
+      "candidate_preds": [
+        5,
+        1,
+        8
+      ]
+    },
+    {
+      "problem_id": "gsm8k-1260",
+      "gold": 5,
+      "ar_pred": 5,
+      "ar_correct": true,
+      "ed_pred": 5,
+      "ed_correct": true,
+      "ed_selected_index": 2,
+      "candidate_preds": [
+        5,
+        5,
+        5
+      ]
+    },
+    {
+      "problem_id": "gsm8k-1307",
+      "gold": 8,
+      "ar_pred": 8,
+      "ar_correct": true,
+      "ed_pred": 1,
+      "ed_correct": false,
+      "ed_selected_index": 0,
+      "candidate_preds": [
+        1,
+        6,
+        8
+      ]
+    },
+    {
+      "problem_id": "gsm8k-427",
+      "gold": 150,
+      "ar_pred": 150,
+      "ar_correct": true,
+      "ed_pred": 10,
+      "ed_correct": false,
+      "ed_selected_index": 0,
+      "candidate_preds": [
+        10,
+        2,
+        1
+      ]
+    },
+    {
+      "problem_id": "gsm8k-503",
+      "gold": 18,
+      "ar_pred": 18,
+      "ar_correct": true,
+      "ed_pred": 18,
+      "ed_correct": true,
+      "ed_selected_index": 1,
+      "candidate_preds": [
+        18,
+        18,
+        18
+      ]
+    },
+    {
+      "problem_id": "gsm8k-695",
+      "gold": 5,
+      "ar_pred": 5,
+      "ar_correct": true,
+      "ed_pred": 5,
+      "ed_correct": true,
+      "ed_selected_index": 0,
+      "candidate_preds": [
+        5,
+        5,
+        5
+      ]
+    },
+    {
+      "problem_id": "gsm8k-178",
+      "gold": 122,
+      "ar_pred": 122,
+      "ar_correct": true,
+      "ed_pred": 122,
+      "ed_correct": true,
+      "ed_selected_index": 2,
+      "candidate_preds": [
+        36,
+        122,
+        122
+      ]
+    },
+    {
+      "problem_id": "gsm8k-1189",
+      "gold": 6,
+      "ar_pred": 6,
+      "ar_correct": true,
+      "ed_pred": 6,
+      "ed_correct": true,
+      "ed_selected_index": 1,
+      "candidate_preds": [
+        6,
+        6,
+        6
+      ]
+    },
+    {
+      "problem_id": "gsm8k-587",
+      "gold": 30,
+      "ar_pred": 1,
+      "ar_correct": false,
+      "ed_pred": 30,
+      "ed_correct": true,
+      "ed_selected_index": 1,
+      "candidate_preds": [
+        30,
+        30,
+        30
+      ]
+    },
+    {
+      "problem_id": "gsm8k-193",
+      "gold": 24,
+      "ar_pred": 6,
+      "ar_correct": false,
+      "ed_pred": 24,
+      "ed_correct": true,
+      "ed_selected_index": 2,
+      "candidate_preds": [
+        24,
+        24,
+        24
+      ]
+    },
+    {
+      "problem_id": "gsm8k-678",
+      "gold": 120,
+      "ar_pred": 120,
+      "ar_correct": true,
+      "ed_pred": 120,
+      "ed_correct": true,
+      "ed_selected_index": 2,
+      "candidate_preds": [
+        120,
+        120,
+        120
+      ]
+    },
+    {
+      "problem_id": "gsm8k-914",
+      "gold": 3,
+      "ar_pred": 3000,
+      "ar_correct": false,
+      "ed_pred": 3,
+      "ed_correct": true,
+      "ed_selected_index": 0,
+      "candidate_preds": [
+        3,
+        3,
+        3
+      ]
+    },
+    {
+      "problem_id": "gsm8k-971",
+      "gold": 100,
+      "ar_pred": 100,
+      "ar_correct": true,
+      "ed_pred": 100,
+      "ed_correct": true,
+      "ed_selected_index": 1,
+      "candidate_preds": [
+        100,
+        100,
+        100
+      ]
+    },
+    {
+      "problem_id": "gsm8k-86",
+      "gold": 22,
+      "ar_pred": 2,
+      "ar_correct": false,
+      "ed_pred": 22,
+      "ed_correct": true,
+      "ed_selected_index": 2,
+      "candidate_preds": [
+        22,
+        22,
+        22
+      ]
+    },
+    {
+      "problem_id": "gsm8k-1138",
+      "gold": 700,
+      "ar_pred": 21,
+      "ar_correct": false,
+      "ed_pred": 700,
+      "ed_correct": true,
+      "ed_selected_index": 0,
+      "candidate_preds": [
+        700,
+        700,
+        700
+      ]
+    },
+    {
+      "problem_id": "gsm8k-424",
+      "gold": 570,
+      "ar_pred": 570,
+      "ar_correct": true,
+      "ed_pred": 570,
+      "ed_correct": true,
+      "ed_selected_index": 0,
+      "candidate_preds": [
+        570,
+        570,
+        6
+      ]
+    },
+    {
+      "problem_id": "gsm8k-243",
+      "gold": 250,
+      "ar_pred": 250,
+      "ar_correct": true,
+      "ed_pred": 250,
+      "ed_correct": true,
+      "ed_selected_index": 2,
+      "candidate_preds": [
+        250,
+        250,
+        250
+      ]
+    },
+    {
+      "problem_id": "gsm8k-236",
+      "gold": 31,
+      "ar_pred": 1,
+      "ar_correct": false,
+      "ed_pred": 5,
+      "ed_correct": false,
+      "ed_selected_index": 1,
+      "candidate_preds": [
+        31,
+        5,
+        31
+      ]
+    },
+    {
+      "problem_id": "gsm8k-939",
+      "gold": 650,
+      "ar_pred": 650,
+      "ar_correct": true,
+      "ed_pred": 15,
+      "ed_correct": false,
+      "ed_selected_index": 2,
+      "candidate_preds": [
+        650,
+        35,
+        15
+      ]
+    },
+    {
+      "problem_id": "gsm8k-1163",
+      "gold": 12,
+      "ar_pred": 5,
+      "ar_correct": false,
+      "ed_pred": 12,
+      "ed_correct": true,
+      "ed_selected_index": 1,
+      "candidate_preds": [
+        12,
+        12,
+        3
+      ]
+    },
+    {
+      "problem_id": "gsm8k-211",
+      "gold": 4,
+      "ar_pred": 4,
+      "ar_correct": true,
+      "ed_pred": 4,
+      "ed_correct": true,
+      "ed_selected_index": 0,
+      "candidate_preds": [
+        4,
+        4,
+        4
+      ]
+    },
+    {
+      "problem_id": "gsm8k-455",
+      "gold": 1920,
+      "ar_pred": 1920,
+      "ar_correct": true,
+      "ed_pred": 1920,
+      "ed_correct": true,
+      "ed_selected_index": 2,
+      "candidate_preds": [
+        1920,
+        1920,
+        1920
+      ]
+    },
+    {
+      "problem_id": "gsm8k-543",
+      "gold": 6,
+      "ar_pred": 0,
+      "ar_correct": false,
+      "ed_pred": 6,
+      "ed_correct": true,
+      "ed_selected_index": 1,
+      "candidate_preds": [
+        6,
+        6,
+        6
+      ]
+    },
+    {
+      "problem_id": "gsm8k-1158",
+      "gold": 7300,
+      "ar_pred": 7300,
+      "ar_correct": true,
+      "ed_pred": 7300,
+      "ed_correct": true,
+      "ed_selected_index": 1,
+      "candidate_preds": [
+        7300,
+        7300,
+        7300
+      ]
+    },
+    {
+      "problem_id": "gsm8k-500",
+      "gold": 16,
+      "ar_pred": 16,
+      "ar_correct": true,
+      "ed_pred": 16,
+      "ed_correct": true,
+      "ed_selected_index": 1,
+      "candidate_preds": [
+        16,
+        16,
+        16
+      ]
+    },
+    {
+      "problem_id": "gsm8k-650",
+      "gold": 142,
+      "ar_pred": 142,
+      "ar_correct": true,
+      "ed_pred": 142,
+      "ed_correct": true,
+      "ed_selected_index": 0,
+      "candidate_preds": [
+        142,
+        400,
+        20
+      ]
+    },
+    {
+      "problem_id": "gsm8k-764",
+      "gold": 14,
+      "ar_pred": 14,
+      "ar_correct": true,
+      "ed_pred": 14,
+      "ed_correct": true,
+      "ed_selected_index": 1,
+      "candidate_preds": [
+        14,
+        14,
+        14
+      ]
+    },
+    {
+      "problem_id": "gsm8k-1090",
+      "gold": 72,
+      "ar_pred": 72,
+      "ar_correct": true,
+      "ed_pred": 72,
+      "ed_correct": true,
+      "ed_selected_index": 1,
+      "candidate_preds": [
+        72,
+        72,
+        72
+      ]
+    },
+    {
+      "problem_id": "gsm8k-1008",
+      "gold": 230,
+      "ar_pred": 230,
+      "ar_correct": true,
+      "ed_pred": 230,
+      "ed_correct": true,
+      "ed_selected_index": 2,
+      "candidate_preds": [
+        230,
+        230,
+        230
+      ]
+    },
+    {
+      "problem_id": "gsm8k-998",
+      "gold": 50,
+      "ar_pred": 50,
+      "ar_correct": true,
+      "ed_pred": 50,
+      "ed_correct": true,
+      "ed_selected_index": 0,
+      "candidate_preds": [
+        50,
+        50,
+        50
+      ]
+    },
+    {
+      "problem_id": "gsm8k-117",
+      "gold": 360,
+      "ar_pred": 360,
+      "ar_correct": true,
+      "ed_pred": 360,
+      "ed_correct": true,
+      "ed_selected_index": 2,
+      "candidate_preds": [
+        1,
+        360,
+        360
+      ]
+    },
+    {
+      "problem_id": "gsm8k-387",
+      "gold": 36,
+      "ar_pred": 36,
+      "ar_correct": true,
+      "ed_pred": 36,
+      "ed_correct": true,
+      "ed_selected_index": 1,
+      "candidate_preds": [
+        36,
+        36,
+        36
+      ]
+    },
+    {
+      "problem_id": "gsm8k-1088",
+      "gold": 30,
+      "ar_pred": 16,
+      "ar_correct": false,
+      "ed_pred": 16,
+      "ed_correct": false,
+      "ed_selected_index": 0,
+      "candidate_preds": [
+        16,
+        30,
+        30
+      ]
+    },
+    {
+      "problem_id": "gsm8k-983",
+      "gold": 15,
+      "ar_pred": 15,
+      "ar_correct": true,
+      "ed_pred": 15,
+      "ed_correct": true,
+      "ed_selected_index": 0,
+      "candidate_preds": [
+        15,
+        15,
+        15
+      ]
+    },
+    {
+      "problem_id": "gsm8k-253",
+      "gold": 18,
+      "ar_pred": 18,
+      "ar_correct": true,
+      "ed_pred": 18,
+      "ed_correct": true,
+      "ed_selected_index": 2,
+      "candidate_preds": [
+        18,
+        18,
+        18
+      ]
+    },
+    {
+      "problem_id": "gsm8k-228",
+      "gold": 1,
+      "ar_pred": 3,
+      "ar_correct": false,
+      "ed_pred": 1,
+      "ed_correct": true,
+      "ed_selected_index": 2,
+      "candidate_preds": [
+        1,
+        1,
+        1
+      ]
+    },
+    {
+      "problem_id": "gsm8k-1121",
+      "gold": 35,
+      "ar_pred": 35,
+      "ar_correct": true,
+      "ed_pred": 35,
+      "ed_correct": true,
+      "ed_selected_index": 2,
+      "candidate_preds": [
+        35,
+        35,
+        35
+      ]
+    },
+    {
+      "problem_id": "gsm8k-12",
+      "gold": 13,
+      "ar_pred": 13,
+      "ar_correct": true,
+      "ed_pred": 12,
+      "ed_correct": false,
+      "ed_selected_index": 1,
+      "candidate_preds": [
+        13,
+        12,
+        12
+      ]
+    },
+    {
+      "problem_id": "gsm8k-26",
+      "gold": 243,
+      "ar_pred": 3,
+      "ar_correct": false,
+      "ed_pred": 243,
+      "ed_correct": true,
+      "ed_selected_index": 0,
+      "candidate_preds": [
+        243,
+        243,
+        243
+      ]
+    },
+    {
+      "problem_id": "gsm8k-565",
+      "gold": 5,
+      "ar_pred": 5,
+      "ar_correct": true,
+      "ed_pred": 1,
+      "ed_correct": false,
+      "ed_selected_index": 0,
+      "candidate_preds": [
+        1,
+        12,
+        5
+      ]
+    },
+    {
+      "problem_id": "gsm8k-74",
+      "gold": 88,
+      "ar_pred": 88,
+      "ar_correct": true,
+      "ed_pred": 88,
+      "ed_correct": true,
+      "ed_selected_index": 0,
+      "candidate_preds": [
+        88,
+        88,
+        88
+      ]
+    },
+    {
+      "problem_id": "gsm8k-1017",
+      "gold": 45,
+      "ar_pred": 5,
+      "ar_correct": false,
+      "ed_pred": 45,
+      "ed_correct": true,
+      "ed_selected_index": 0,
+      "candidate_preds": [
+        45,
+        45,
+        45
+      ]
+    },
+    {
+      "problem_id": "gsm8k-1110",
+      "gold": 60,
+      "ar_pred": 60,
+      "ar_correct": true,
+      "ed_pred": 60,
+      "ed_correct": true,
+      "ed_selected_index": 0,
+      "candidate_preds": [
+        60,
+        60,
+        60
+      ]
+    },
+    {
+      "problem_id": "gsm8k-823",
+      "gold": 14,
+      "ar_pred": 18,
+      "ar_correct": false,
+      "ed_pred": 18,
+      "ed_correct": false,
+      "ed_selected_index": 0,
+      "candidate_preds": [
+        18,
+        18,
+        6
+      ]
+    },
+    {
+      "problem_id": "gsm8k-652",
+      "gold": 75,
+      "ar_pred": 15,
+      "ar_correct": false,
+      "ed_pred": 105,
+      "ed_correct": false,
+      "ed_selected_index": 0,
+      "candidate_preds": [
+        105,
+        75,
+        105
+      ]
+    },
+    {
+      "problem_id": "gsm8k-581",
+      "gold": 215,
+      "ar_pred": 215,
+      "ar_correct": true,
+      "ed_pred": 215,
+      "ed_correct": true,
+      "ed_selected_index": 2,
+      "candidate_preds": [
+        215,
+        215,
+        215
+      ]
+    },
+    {
+      "problem_id": "gsm8k-564",
+      "gold": 240,
+      "ar_pred": 7,
+      "ar_correct": false,
+      "ed_pred": 240,
+      "ed_correct": true,
+      "ed_selected_index": 0,
+      "candidate_preds": [
+        240,
+        5,
+        7
+      ]
+    },
+    {
+      "problem_id": "gsm8k-854",
+      "gold": 144,
+      "ar_pred": 144,
+      "ar_correct": true,
+      "ed_pred": 144,
+      "ed_correct": true,
+      "ed_selected_index": 1,
+      "candidate_preds": [
+        144,
+        144,
+        144
+      ]
+    },
+    {
+      "problem_id": "gsm8k-792",
+      "gold": 75,
+      "ar_pred": 75,
+      "ar_correct": true,
+      "ed_pred": 75,
+      "ed_correct": true,
+      "ed_selected_index": 0,
+      "candidate_preds": [
+        75,
+        75,
+        75
+      ]
+    },
+    {
+      "problem_id": "gsm8k-165",
+      "gold": 77,
+      "ar_pred": 77,
+      "ar_correct": true,
+      "ed_pred": 77,
+      "ed_correct": true,
+      "ed_selected_index": 1,
+      "candidate_preds": [
+        77,
+        77,
+        77
+      ]
+    },
+    {
+      "problem_id": "gsm8k-617",
+      "gold": 5,
+      "ar_pred": 5,
+      "ar_correct": true,
+      "ed_pred": 5,
+      "ed_correct": true,
+      "ed_selected_index": 1,
+      "candidate_preds": [
+        5,
+        5,
+        5
+      ]
+    },
+    {
+      "problem_id": "gsm8k-137",
+      "gold": 29,
+      "ar_pred": 2,
+      "ar_correct": false,
+      "ed_pred": 29,
+      "ed_correct": true,
+      "ed_selected_index": 0,
+      "candidate_preds": [
+        29,
+        29,
+        29
+      ]
+    },
+    {
+      "problem_id": "gsm8k-765",
+      "gold": 490,
+      "ar_pred": 490,
+      "ar_correct": true,
+      "ed_pred": 490,
+      "ed_correct": true,
+      "ed_selected_index": 2,
+      "candidate_preds": [
+        490,
+        490,
+        490
+      ]
+    },
+    {
+      "problem_id": "gsm8k-930",
+      "gold": 14,
+      "ar_pred": 14,
+      "ar_correct": true,
+      "ed_pred": 14,
+      "ed_correct": true,
+      "ed_selected_index": 2,
+      "candidate_preds": [
+        14,
+        14,
+        14
+      ]
+    },
+    {
+      "problem_id": "gsm8k-1184",
+      "gold": 306,
+      "ar_pred": 306,
+      "ar_correct": true,
+      "ed_pred": 17,
+      "ed_correct": false,
+      "ed_selected_index": 0,
+      "candidate_preds": [
+        17,
+        306,
+        306
+      ]
+    },
+    {
+      "problem_id": "gsm8k-375",
+      "gold": 48,
+      "ar_pred": 48,
+      "ar_correct": true,
+      "ed_pred": 48,
+      "ed_correct": true,
+      "ed_selected_index": 2,
+      "candidate_preds": [
+        48,
+        48,
+        48
+      ]
+    },
+    {
+      "problem_id": "gsm8k-56",
+      "gold": 3,
+      "ar_pred": 3,
+      "ar_correct": true,
+      "ed_pred": 3,
+      "ed_correct": true,
+      "ed_selected_index": 2,
+      "candidate_preds": [
+        3,
+        3,
+        3
+      ]
+    },
+    {
+      "problem_id": "gsm8k-1068",
+      "gold": 24,
+      "ar_pred": 24,
+      "ar_correct": true,
+      "ed_pred": 24,
+      "ed_correct": true,
+      "ed_selected_index": 0,
+      "candidate_preds": [
+        24,
+        24,
+        24
+      ]
+    },
+    {
+      "problem_id": "gsm8k-483",
+      "gold": 40,
+      "ar_pred": 40,
+      "ar_correct": true,
+      "ed_pred": 40,
+      "ed_correct": true,
+      "ed_selected_index": 2,
+      "candidate_preds": [
+        40,
+        40,
+        40
+      ]
+    },
+    {
+      "problem_id": "gsm8k-908",
+      "gold": 14,
+      "ar_pred": 14,
+      "ar_correct": true,
+      "ed_pred": 14,
+      "ed_correct": true,
+      "ed_selected_index": 0,
+      "candidate_preds": [
+        14,
+        14,
+        14
+      ]
+    },
+    {
+      "problem_id": "gsm8k-1111",
+      "gold": 157,
+      "ar_pred": 157,
+      "ar_correct": true,
+      "ed_pred": 157,
+      "ed_correct": true,
+      "ed_selected_index": 1,
+      "candidate_preds": [
+        157,
+        157,
+        157
+      ]
+    },
+    {
+      "problem_id": "gsm8k-887",
+      "gold": 34,
+      "ar_pred": 34,
+      "ar_correct": true,
+      "ed_pred": 34,
+      "ed_correct": true,
+      "ed_selected_index": 2,
+      "candidate_preds": [
+        34,
+        34,
+        34
+      ]
+    },
+    {
+      "problem_id": "gsm8k-890",
+      "gold": 25,
+      "ar_pred": 25,
+      "ar_correct": true,
+      "ed_pred": 25,
+      "ed_correct": true,
+      "ed_selected_index": 1,
+      "candidate_preds": [
+        25,
+        25,
         25
+      ]
+    },
+    {
+      "problem_id": "gsm8k-719",
+      "gold": 175,
+      "ar_pred": 7,
+      "ar_correct": false,
+      "ed_pred": 175,
+      "ed_correct": true,
+      "ed_selected_index": 0,
+      "candidate_preds": [
+        175,
+        175,
+        175
+      ]
+    },
+    {
+      "problem_id": "gsm8k-991",
+      "gold": 15,
+      "ar_pred": 15,
+      "ar_correct": true,
+      "ed_pred": 15,
+      "ed_correct": true,
+      "ed_selected_index": 2,
+      "candidate_preds": [
+        2,
+        15,
+        15
+      ]
+    },
+    {
+      "problem_id": "gsm8k-1192",
+      "gold": 280,
+      "ar_pred": 8,
+      "ar_correct": false,
+      "ed_pred": 280,
+      "ed_correct": true,
+      "ed_selected_index": 0,
+      "candidate_preds": [
+        280,
+        280,
+        280
+      ]
+    },
+    {
+      "problem_id": "gsm8k-306",
+      "gold": 10,
+      "ar_pred": 10,
+      "ar_correct": true,
+      "ed_pred": 5,
+      "ed_correct": false,
+      "ed_selected_index": 0,
+      "candidate_preds": [
+        5,
+        10,
+        5
+      ]
+    },
+    {
+      "problem_id": "gsm8k-910",
+      "gold": 700,
+      "ar_pred": 700,
+      "ar_correct": true,
+      "ed_pred": 700,
+      "ed_correct": true,
+      "ed_selected_index": 0,
+      "candidate_preds": [
+        700,
+        700,
+        700
+      ]
+    },
+    {
+      "problem_id": "gsm8k-1180",
+      "gold": 5600,
+      "ar_pred": 5600,
+      "ar_correct": true,
+      "ed_pred": 5600,
+      "ed_correct": true,
+      "ed_selected_index": 2,
+      "candidate_preds": [
+        5600,
+        5600,
+        5600
+      ]
+    },
+    {
+      "problem_id": "gsm8k-75",
+      "gold": 60,
+      "ar_pred": 128,
+      "ar_correct": false,
+      "ed_pred": 60,
+      "ed_correct": true,
+      "ed_selected_index": 1,
+      "candidate_preds": [
+        60,
+        60,
+        60
+      ]
+    },
+    {
+      "problem_id": "gsm8k-17",
+      "gold": 57500,
+      "ar_pred": 57500,
+      "ar_correct": true,
+      "ed_pred": 57500,
+      "ed_correct": true,
+      "ed_selected_index": 0,
+      "candidate_preds": [
+        57500,
+        57500,
+        57500
+      ]
+    },
+    {
+      "problem_id": "gsm8k-1271",
+      "gold": 43,
+      "ar_pred": 43,
+      "ar_correct": true,
+      "ed_pred": 43,
+      "ed_correct": true,
+      "ed_selected_index": 1,
+      "candidate_preds": [
+        108,
+        43,
+        43
+      ]
+    },
+    {
+      "problem_id": "gsm8k-985",
+      "gold": 63,
+      "ar_pred": 63,
+      "ar_correct": true,
+      "ed_pred": 63,
+      "ed_correct": true,
+      "ed_selected_index": 2,
+      "candidate_preds": [
+        63,
+        63,
+        63
+      ]
+    },
+    {
+      "problem_id": "gsm8k-130",
+      "gold": 30,
+      "ar_pred": 30,
+      "ar_correct": true,
+      "ed_pred": 30,
+      "ed_correct": true,
+      "ed_selected_index": 0,
+      "candidate_preds": [
+        30,
+        30,
+        30
+      ]
+    },
+    {
+      "problem_id": "gsm8k-1055",
+      "gold": 2304,
+      "ar_pred": 2304,
+      "ar_correct": true,
+      "ed_pred": 2304,
+      "ed_correct": true,
+      "ed_selected_index": 1,
+      "candidate_preds": [
+        2304,
+        2304,
+        2304
+      ]
+    },
+    {
+      "problem_id": "gsm8k-514",
+      "gold": 90000,
+      "ar_pred": 90000,
+      "ar_correct": true,
+      "ed_pred": 90000,
+      "ed_correct": true,
+      "ed_selected_index": 1,
+      "candidate_preds": [
+        6,
+        90000,
+        3
+      ]
+    },
+    {
+      "problem_id": "gsm8k-671",
+      "gold": 4,
+      "ar_pred": 4,
+      "ar_correct": true,
+      "ed_pred": 4,
+      "ed_correct": true,
+      "ed_selected_index": 2,
+      "candidate_preds": [
+        4,
+        4,
+        4
+      ]
+    },
+    {
+      "problem_id": "gsm8k-1302",
+      "gold": 72,
+      "ar_pred": 72,
+      "ar_correct": true,
+      "ed_pred": 72,
+      "ed_correct": true,
+      "ed_selected_index": 1,
+      "candidate_preds": [
+        72,
+        72,
+        72
+      ]
+    },
+    {
+      "problem_id": "gsm8k-58",
+      "gold": 57,
+      "ar_pred": 40,
+      "ar_correct": false,
+      "ed_pred": 57,
+      "ed_correct": true,
+      "ed_selected_index": 2,
+      "candidate_preds": [
+        57,
+        57,
+        57
+      ]
+    },
+    {
+      "problem_id": "gsm8k-448",
+      "gold": 539,
+      "ar_pred": 539,
+      "ar_correct": true,
+      "ed_pred": 539,
+      "ed_correct": true,
+      "ed_selected_index": 2,
+      "candidate_preds": [
+        539,
+        539,
+        539
+      ]
+    },
+    {
+      "problem_id": "gsm8k-475",
+      "gold": 20,
+      "ar_pred": 20,
+      "ar_correct": true,
+      "ed_pred": 20,
+      "ed_correct": true,
+      "ed_selected_index": 1,
+      "candidate_preds": [
+        20,
+        20,
+        20
+      ]
+    },
+    {
+      "problem_id": "gsm8k-603",
+      "gold": 1800,
+      "ar_pred": 12,
+      "ar_correct": false,
+      "ed_pred": 1800,
+      "ed_correct": true,
+      "ed_selected_index": 2,
+      "candidate_preds": [
+        1800,
+        1800,
+        1800
+      ]
+    },
+    {
+      "problem_id": "gsm8k-343",
+      "gold": 180000,
+      "ar_pred": 180000,
+      "ar_correct": true,
+      "ed_pred": 180000,
+      "ed_correct": true,
+      "ed_selected_index": 0,
+      "candidate_preds": [
+        180000,
+        180000,
+        180000
+      ]
+    },
+    {
+      "problem_id": "gsm8k-631",
+      "gold": 4800,
+      "ar_pred": 5,
+      "ar_correct": false,
+      "ed_pred": 4800,
+      "ed_correct": true,
+      "ed_selected_index": 1,
+      "candidate_preds": [
+        4800,
+        4800,
+        4800
+      ]
+    },
+    {
+      "problem_id": "gsm8k-873",
+      "gold": 12,
+      "ar_pred": 12,
+      "ar_correct": true,
+      "ed_pred": 12,
+      "ed_correct": true,
+      "ed_selected_index": 2,
+      "candidate_preds": [
+        12,
+        12,
+        12
+      ]
+    },
+    {
+      "problem_id": "gsm8k-260",
+      "gold": 11,
+      "ar_pred": 11,
+      "ar_correct": true,
+      "ed_pred": 11,
+      "ed_correct": true,
+      "ed_selected_index": 0,
+      "candidate_preds": [
+        11,
+        11,
+        11
+      ]
+    },
+    {
+      "problem_id": "gsm8k-1009",
+      "gold": 1875,
+      "ar_pred": 37,
+      "ar_correct": false,
+      "ed_pred": 1875,
+      "ed_correct": true,
+      "ed_selected_index": 0,
+      "candidate_preds": [
+        1875,
+        16,
+        1875
+      ]
+    },
+    {
+      "problem_id": "gsm8k-669",
+      "gold": 132,
+      "ar_pred": 132,
+      "ar_correct": true,
+      "ed_pred": 132,
+      "ed_correct": true,
+      "ed_selected_index": 0,
+      "candidate_preds": [
+        132,
+        132,
+        0
+      ]
+    },
+    {
+      "problem_id": "gsm8k-788",
+      "gold": 100,
+      "ar_pred": 100,
+      "ar_correct": true,
+      "ed_pred": 100,
+      "ed_correct": true,
+      "ed_selected_index": 2,
+      "candidate_preds": [
+        100,
+        100,
+        100
+      ]
+    },
+    {
+      "problem_id": "gsm8k-892",
+      "gold": 1,
+      "ar_pred": 1,
+      "ar_correct": true,
+      "ed_pred": 1,
+      "ed_correct": true,
+      "ed_selected_index": 1,
+      "candidate_preds": [
+        1,
+        1,
+        1
+      ]
+    },
+    {
+      "problem_id": "gsm8k-638",
+      "gold": 12,
+      "ar_pred": 12,
+      "ar_correct": true,
+      "ed_pred": 12,
+      "ed_correct": true,
+      "ed_selected_index": 1,
+      "candidate_preds": [
+        12,
+        12,
+        12
+      ]
+    },
+    {
+      "problem_id": "gsm8k-687",
+      "gold": 13,
+      "ar_pred": 13,
+      "ar_correct": true,
+      "ed_pred": 13,
+      "ed_correct": true,
+      "ed_selected_index": 2,
+      "candidate_preds": [
+        6,
+        13,
+        13
+      ]
+    },
+    {
+      "problem_id": "gsm8k-81",
+      "gold": 17,
+      "ar_pred": 17,
+      "ar_correct": true,
+      "ed_pred": 17,
+      "ed_correct": true,
+      "ed_selected_index": 2,
+      "candidate_preds": [
+        17,
+        17,
+        17
+      ]
+    },
+    {
+      "problem_id": "gsm8k-757",
+      "gold": 75,
+      "ar_pred": 75,
+      "ar_correct": true,
+      "ed_pred": 2,
+      "ed_correct": false,
+      "ed_selected_index": 1,
+      "candidate_preds": [
+        1,
+        2,
+        75
+      ]
+    },
+    {
+      "problem_id": "gsm8k-756",
+      "gold": 22,
+      "ar_pred": 22,
+      "ar_correct": true,
+      "ed_pred": 6,
+      "ed_correct": false,
+      "ed_selected_index": 0,
+      "candidate_preds": [
+        6,
+        22,
+        22
+      ]
+    },
+    {
+      "problem_id": "gsm8k-230",
+      "gold": 276000,
+      "ar_pred": 4,
+      "ar_correct": false,
+      "ed_pred": 276000,
+      "ed_correct": true,
+      "ed_selected_index": 2,
+      "candidate_preds": [
+        276000,
+        276000,
+        276000
+      ]
+    },
+    {
+      "problem_id": "gsm8k-968",
+      "gold": 227,
+      "ar_pred": 227,
+      "ar_correct": true,
+      "ed_pred": 227,
+      "ed_correct": true,
+      "ed_selected_index": 1,
+      "candidate_preds": [
+        18,
+        227,
+        227
+      ]
+    },
+    {
+      "problem_id": "gsm8k-637",
+      "gold": 17,
+      "ar_pred": 17,
+      "ar_correct": true,
+      "ed_pred": 17,
+      "ed_correct": true,
+      "ed_selected_index": 1,
+      "candidate_preds": [
+        17,
+        17,
+        17
+      ]
+    },
+    {
+      "problem_id": "gsm8k-807",
+      "gold": 4,
+      "ar_pred": 4,
+      "ar_correct": true,
+      "ed_pred": 4,
+      "ed_correct": true,
+      "ed_selected_index": 0,
+      "candidate_preds": [
+        4,
+        4,
+        4
+      ]
+    },
+    {
+      "problem_id": "gsm8k-1082",
+      "gold": 2,
+      "ar_pred": 4,
+      "ar_correct": false,
+      "ed_pred": 2,
+      "ed_correct": true,
+      "ed_selected_index": 0,
+      "candidate_preds": [
+        2,
+        2,
+        2
+      ]
+    },
+    {
+      "problem_id": "gsm8k-683",
+      "gold": 50,
+      "ar_pred": 50,
+      "ar_correct": true,
+      "ed_pred": 60,
+      "ed_correct": false,
+      "ed_selected_index": 0,
+      "candidate_preds": [
+        60,
+        30,
+        6
+      ]
+    },
+    {
+      "problem_id": "gsm8k-461",
+      "gold": 9,
+      "ar_pred": 9,
+      "ar_correct": true,
+      "ed_pred": 9,
+      "ed_correct": true,
+      "ed_selected_index": 1,
+      "candidate_preds": [
+        16,
+        9,
+        9
+      ]
+    },
+    {
+      "problem_id": "gsm8k-568",
+      "gold": 175,
+      "ar_pred": 175,
+      "ar_correct": true,
+      "ed_pred": 175,
+      "ed_correct": true,
+      "ed_selected_index": 2,
+      "candidate_preds": [
+        175,
+        175,
+        175
+      ]
+    },
+    {
+      "problem_id": "gsm8k-1156",
+      "gold": 120,
+      "ar_pred": 6,
+      "ar_correct": false,
+      "ed_pred": 120,
+      "ed_correct": true,
+      "ed_selected_index": 1,
+      "candidate_preds": [
+        120,
+        120,
+        120
+      ]
+    },
+    {
+      "problem_id": "gsm8k-1316",
+      "gold": 230,
+      "ar_pred": 230,
+      "ar_correct": true,
+      "ed_pred": 230,
+      "ed_correct": true,
+      "ed_selected_index": 2,
+      "candidate_preds": [
+        230,
+        230,
+        230
+      ]
+    },
+    {
+      "problem_id": "gsm8k-220",
+      "gold": 70,
+      "ar_pred": 70,
+      "ar_correct": true,
+      "ed_pred": 70,
+      "ed_correct": true,
+      "ed_selected_index": 0,
+      "candidate_preds": [
+        70,
+        70,
+        70
+      ]
+    },
+    {
+      "problem_id": "gsm8k-128",
+      "gold": 880,
+      "ar_pred": 880,
+      "ar_correct": true,
+      "ed_pred": 880,
+      "ed_correct": true,
+      "ed_selected_index": 1,
+      "candidate_preds": [
+        880,
+        880,
+        880
+      ]
+    },
+    {
+      "problem_id": "gsm8k-1167",
+      "gold": 120,
+      "ar_pred": 120,
+      "ar_correct": true,
+      "ed_pred": 120,
+      "ed_correct": true,
+      "ed_selected_index": 2,
+      "candidate_preds": [
+        120,
+        6,
+        120
+      ]
+    },
+    {
+      "problem_id": "gsm8k-523",
+      "gold": 74,
+      "ar_pred": 68,
+      "ar_correct": false,
+      "ed_pred": 6,
+      "ed_correct": false,
+      "ed_selected_index": 2,
+      "candidate_preds": [
+        74,
+        74,
+        6
+      ]
+    },
+    {
+      "problem_id": "gsm8k-1118",
+      "gold": 5,
+      "ar_pred": 11,
+      "ar_correct": false,
+      "ed_pred": 5,
+      "ed_correct": true,
+      "ed_selected_index": 0,
+      "candidate_preds": [
+        5,
+        5,
+        5
+      ]
+    },
+    {
+      "problem_id": "gsm8k-595",
+      "gold": 13,
+      "ar_pred": 13,
+      "ar_correct": true,
+      "ed_pred": 13,
+      "ed_correct": true,
+      "ed_selected_index": 1,
+      "candidate_preds": [
+        13,
+        13,
+        13
+      ]
+    },
+    {
+      "problem_id": "gsm8k-195",
+      "gold": 12,
+      "ar_pred": 12,
+      "ar_correct": true,
+      "ed_pred": 12,
+      "ed_correct": true,
+      "ed_selected_index": 1,
+      "candidate_preds": [
+        12,
+        12,
+        12
+      ]
+    },
+    {
+      "problem_id": "gsm8k-1262",
+      "gold": 12,
+      "ar_pred": 12,
+      "ar_correct": true,
+      "ed_pred": 4500,
+      "ed_correct": false,
+      "ed_selected_index": 0,
+      "candidate_preds": [
+        4500,
+        4,
+        5
+      ]
+    },
+    {
+      "problem_id": "gsm8k-1047",
+      "gold": 10,
+      "ar_pred": 10,
+      "ar_correct": true,
+      "ed_pred": 10,
+      "ed_correct": true,
+      "ed_selected_index": 0,
+      "candidate_preds": [
+        10,
+        10,
+        5
+      ]
+    },
+    {
+      "problem_id": "gsm8k-639",
+      "gold": 216,
+      "ar_pred": 216,
+      "ar_correct": true,
+      "ed_pred": 216,
+      "ed_correct": true,
+      "ed_selected_index": 0,
+      "candidate_preds": [
+        216,
+        216,
+        216
+      ]
+    },
+    {
+      "problem_id": "gsm8k-384",
+      "gold": 32,
+      "ar_pred": 32,
+      "ar_correct": true,
+      "ed_pred": 32,
+      "ed_correct": true,
+      "ed_selected_index": 0,
+      "candidate_preds": [
+        32,
+        32,
+        5
+      ]
+    },
+    {
+      "problem_id": "gsm8k-1263",
+      "gold": 500,
+      "ar_pred": 500,
+      "ar_correct": true,
+      "ed_pred": 2,
+      "ed_correct": false,
+      "ed_selected_index": 0,
+      "candidate_preds": [
+        2,
+        7,
+        500
+      ]
+    },
+    {
+      "problem_id": "gsm8k-773",
+      "gold": 10,
+      "ar_pred": 10,
+      "ar_correct": true,
+      "ed_pred": 10,
+      "ed_correct": true,
+      "ed_selected_index": 0,
+      "candidate_preds": [
+        10,
+        10,
+        10
+      ]
+    },
+    {
+      "problem_id": "gsm8k-1246",
+      "gold": 3360,
+      "ar_pred": 3360,
+      "ar_correct": true,
+      "ed_pred": 3360,
+      "ed_correct": true,
+      "ed_selected_index": 0,
+      "candidate_preds": [
+        3360,
+        3360,
+        3360
+      ]
+    },
+    {
+      "problem_id": "gsm8k-23",
+      "gold": 8,
+      "ar_pred": 8,
+      "ar_correct": true,
+      "ed_pred": 8,
+      "ed_correct": true,
+      "ed_selected_index": 1,
+      "candidate_preds": [
+        8,
+        8,
+        8
+      ]
+    },
+    {
+      "problem_id": "gsm8k-818",
+      "gold": 16,
+      "ar_pred": 16,
+      "ar_correct": true,
+      "ed_pred": 16,
+      "ed_correct": true,
+      "ed_selected_index": 2,
+      "candidate_preds": [
+        16,
+        16,
+        16
+      ]
+    },
+    {
+      "problem_id": "gsm8k-434",
+      "gold": 5,
+      "ar_pred": 5,
+      "ar_correct": true,
+      "ed_pred": 5,
+      "ed_correct": true,
+      "ed_selected_index": 1,
+      "candidate_preds": [
+        5,
+        5,
+        5
+      ]
+    },
+    {
+      "problem_id": "gsm8k-347",
+      "gold": 36,
+      "ar_pred": 36,
+      "ar_correct": true,
+      "ed_pred": 36,
+      "ed_correct": true,
+      "ed_selected_index": 2,
+      "candidate_preds": [
+        36,
+        36,
+        36
+      ]
+    },
+    {
+      "problem_id": "gsm8k-377",
+      "gold": 50,
+      "ar_pred": 50,
+      "ar_correct": true,
+      "ed_pred": 50,
+      "ed_correct": true,
+      "ed_selected_index": 1,
+      "candidate_preds": [
+        50,
+        50,
+        50
+      ]
+    },
+    {
+      "problem_id": "gsm8k-787",
+      "gold": 25,
+      "ar_pred": 6,
+      "ar_correct": false,
+      "ed_pred": 25,
+      "ed_correct": true,
+      "ed_selected_index": 0,
+      "candidate_preds": [
+        25,
+        6,
+        40
+      ]
+    },
+    {
+      "problem_id": "gsm8k-92",
+      "gold": 4,
+      "ar_pred": 4,
+      "ar_correct": true,
+      "ed_pred": 4,
+      "ed_correct": true,
+      "ed_selected_index": 0,
+      "candidate_preds": [
+        4,
+        5,
+        4
+      ]
+    },
+    {
+      "problem_id": "gsm8k-112",
+      "gold": 24,
+      "ar_pred": 5,
+      "ar_correct": false,
+      "ed_pred": 24,
+      "ed_correct": true,
+      "ed_selected_index": 1,
+      "candidate_preds": [
+        24,
+        24,
+        24
+      ]
+    },
+    {
+      "problem_id": "gsm8k-493",
+      "gold": 25,
+      "ar_pred": 4,
+      "ar_correct": false,
+      "ed_pred": 25,
+      "ed_correct": true,
+      "ed_selected_index": 1,
+      "candidate_preds": [
+        25,
+        25,
+        25
+      ]
+    },
+    {
+      "problem_id": "gsm8k-1034",
+      "gold": 66,
+      "ar_pred": 6,
+      "ar_correct": false,
+      "ed_pred": 66,
+      "ed_correct": true,
+      "ed_selected_index": 2,
+      "candidate_preds": [
+        66,
+        22,
+        66
+      ]
+    },
+    {
+      "problem_id": "gsm8k-529",
+      "gold": 11,
+      "ar_pred": 11,
+      "ar_correct": true,
+      "ed_pred": 11,
+      "ed_correct": true,
+      "ed_selected_index": 1,
+      "candidate_preds": [
+        44,
+        11,
+        11
+      ]
+    },
+    {
+      "problem_id": "gsm8k-1133",
+      "gold": 50,
+      "ar_pred": 50,
+      "ar_correct": true,
+      "ed_pred": 10,
+      "ed_correct": false,
+      "ed_selected_index": 0,
+      "candidate_preds": [
+        10,
+        50,
+        10
+      ]
+    },
+    {
+      "problem_id": "gsm8k-321",
+      "gold": 1,
+      "ar_pred": 1,
+      "ar_correct": true,
+      "ed_pred": 1,
+      "ed_correct": true,
+      "ed_selected_index": 2,
+      "candidate_preds": [
+        1,
+        1,
+        1
+      ]
+    },
+    {
+      "problem_id": "gsm8k-697",
+      "gold": 27,
+      "ar_pred": 27,
+      "ar_correct": true,
+      "ed_pred": 27,
+      "ed_correct": true,
+      "ed_selected_index": 1,
+      "candidate_preds": [
+        27,
+        27,
+        27
+      ]
+    },
+    {
+      "problem_id": "gsm8k-280",
+      "gold": 7,
+      "ar_pred": 7,
+      "ar_correct": true,
+      "ed_pred": 7,
+      "ed_correct": true,
+      "ed_selected_index": 2,
+      "candidate_preds": [
+        7,
+        2,
+        7
+      ]
+    },
+    {
+      "problem_id": "gsm8k-174",
+      "gold": 95,
+      "ar_pred": 35,
+      "ar_correct": false,
+      "ed_pred": 95,
+      "ed_correct": true,
+      "ed_selected_index": 2,
+      "candidate_preds": [
+        95,
+        95,
+        95
+      ]
+    },
+    {
+      "problem_id": "gsm8k-1081",
+      "gold": 195,
+      "ar_pred": 195,
+      "ar_correct": true,
+      "ed_pred": 195,
+      "ed_correct": true,
+      "ed_selected_index": 2,
+      "candidate_preds": [
+        195,
+        195,
+        195
+      ]
+    },
+    {
+      "problem_id": "gsm8k-105",
+      "gold": 20,
+      "ar_pred": 20,
+      "ar_correct": true,
+      "ed_pred": 20,
+      "ed_correct": true,
+      "ed_selected_index": 1,
+      "candidate_preds": [
+        20,
+        20,
+        20
+      ]
+    },
+    {
+      "problem_id": "gsm8k-154",
+      "gold": 272,
+      "ar_pred": 272,
+      "ar_correct": true,
+      "ed_pred": 272,
+      "ed_correct": true,
+      "ed_selected_index": 2,
+      "candidate_preds": [
+        272,
+        17,
+        272
+      ]
+    },
+    {
+      "problem_id": "gsm8k-1124",
+      "gold": 64,
+      "ar_pred": 2,
+      "ar_correct": false,
+      "ed_pred": 64,
+      "ed_correct": true,
+      "ed_selected_index": 0,
+      "candidate_preds": [
+        64,
+        64,
+        64
+      ]
+    },
+    {
+      "problem_id": "gsm8k-919",
+      "gold": 90,
+      "ar_pred": 90,
+      "ar_correct": true,
+      "ed_pred": 90,
+      "ed_correct": true,
+      "ed_selected_index": 0,
+      "candidate_preds": [
+        90,
+        90,
+        90
+      ]
+    },
+    {
+      "problem_id": "gsm8k-381",
+      "gold": 67,
+      "ar_pred": 67,
+      "ar_correct": true,
+      "ed_pred": 67,
+      "ed_correct": true,
+      "ed_selected_index": 2,
+      "candidate_preds": [
+        67,
+        67,
+        67
+      ]
+    },
+    {
+      "problem_id": "gsm8k-909",
+      "gold": 38,
+      "ar_pred": 38,
+      "ar_correct": true,
+      "ed_pred": 38,
+      "ed_correct": true,
+      "ed_selected_index": 0,
+      "candidate_preds": [
+        38,
+        38,
+        38
+      ]
+    },
+    {
+      "problem_id": "gsm8k-133",
+      "gold": 13,
+      "ar_pred": 13,
+      "ar_correct": true,
+      "ed_pred": 13,
+      "ed_correct": true,
+      "ed_selected_index": 1,
+      "candidate_preds": [
+        13,
+        13,
+        13
+      ]
+    },
+    {
+      "problem_id": "gsm8k-851",
+      "gold": 110,
+      "ar_pred": 110,
+      "ar_correct": true,
+      "ed_pred": 110,
+      "ed_correct": true,
+      "ed_selected_index": 1,
+      "candidate_preds": [
+        110,
+        110,
+        110
+      ]
+    },
+    {
+      "problem_id": "gsm8k-1117",
+      "gold": 9,
+      "ar_pred": 459,
+      "ar_correct": false,
+      "ed_pred": 4,
+      "ed_correct": false,
+      "ed_selected_index": 1,
+      "candidate_preds": [
+        9,
+        4,
+        9
+      ]
+    },
+    {
+      "problem_id": "gsm8k-1004",
+      "gold": 8,
+      "ar_pred": 8,
+      "ar_correct": true,
+      "ed_pred": 4,
+      "ed_correct": false,
+      "ed_selected_index": 0,
+      "candidate_preds": [
+        4,
+        8,
+        8
+      ]
+    },
+    {
+      "problem_id": "gsm8k-618",
+      "gold": 36,
+      "ar_pred": 36,
+      "ar_correct": true,
+      "ed_pred": 36,
+      "ed_correct": true,
+      "ed_selected_index": 1,
+      "candidate_preds": [
+        36,
+        36,
+        36
+      ]
+    },
+    {
+      "problem_id": "gsm8k-454",
+      "gold": 150,
+      "ar_pred": 240,
+      "ar_correct": false,
+      "ed_pred": 240,
+      "ed_correct": false,
+      "ed_selected_index": 1,
+      "candidate_preds": [
+        240,
+        240,
+        240
+      ]
+    },
+    {
+      "problem_id": "gsm8k-622",
+      "gold": 7,
+      "ar_pred": 7,
+      "ar_correct": true,
+      "ed_pred": 7,
+      "ed_correct": true,
+      "ed_selected_index": 1,
+      "candidate_preds": [
+        7,
+        7,
+        7
+      ]
+    },
+    {
+      "problem_id": "gsm8k-189",
+      "gold": 34,
+      "ar_pred": 34,
+      "ar_correct": true,
+      "ed_pred": 102,
+      "ed_correct": false,
+      "ed_selected_index": 2,
+      "candidate_preds": [
+        34,
+        34,
+        102
+      ]
+    },
+    {
+      "problem_id": "gsm8k-1224",
+      "gold": 5,
+      "ar_pred": 5,
+      "ar_correct": true,
+      "ed_pred": 5,
+      "ed_correct": true,
+      "ed_selected_index": 0,
+      "candidate_preds": [
+        5,
+        5,
+        5
+      ]
+    },
+    {
+      "problem_id": "gsm8k-1191",
+      "gold": 100,
+      "ar_pred": 2,
+      "ar_correct": false,
+      "ed_pred": 100,
+      "ed_correct": true,
+      "ed_selected_index": 0,
+      "candidate_preds": [
+        100,
+        100,
+        100
+      ]
+    },
+    {
+      "problem_id": "gsm8k-1036",
+      "gold": 10,
+      "ar_pred": 10,
+      "ar_correct": true,
+      "ed_pred": 10,
+      "ed_correct": true,
+      "ed_selected_index": 1,
+      "candidate_preds": [
+        10,
+        10,
+        10
+      ]
+    },
+    {
+      "problem_id": "gsm8k-400",
+      "gold": 48,
+      "ar_pred": 48,
+      "ar_correct": true,
+      "ed_pred": 48,
+      "ed_correct": true,
+      "ed_selected_index": 0,
+      "candidate_preds": [
+        48,
+        48,
+        48
+      ]
+    },
+    {
+      "problem_id": "gsm8k-307",
+      "gold": 16,
+      "ar_pred": 2,
+      "ar_correct": false,
+      "ed_pred": 16,
+      "ed_correct": true,
+      "ed_selected_index": 1,
+      "candidate_preds": [
+        16,
+        16,
+        16
       ]
     }
   ],
@@ -167,48 +2915,5 @@
     "task_name",
     "title"
   ],
-  "invariant_violations": [],
-  "flagged_adversarial": true,
-  "corrigendum_pending": [
-    {
-      "kind": "TAUTOLOGY",
-      "severity": "critical",
-      "detail": "experiment=3312.0 and random_seed=3312.0 agree to >5 sig figs. Two distinct metrics matching this precisely is more likely a bug than a finding."
-    },
-    {
-      "kind": "TAUTOLOGY",
-      "severity": "critical",
-      "detail": "ar_baseline_accuracy=0.25 and self_consistency_accuracy=0.25 agree to >5 sig figs. Two distinct metrics matching this precisely is more likely a bug than a finding."
-    },
-    {
-      "kind": "TAUTOLOGY",
-      "severity": "critical",
-      "detail": "ar_baseline_accuracy=0.25 and accuracy_delta=0.25 agree to >5 sig figs. Two distinct metrics matching this precisely is more likely a bug than a finding."
-    },
-    {
-      "kind": "TAUTOLOGY",
-      "severity": "critical",
-      "detail": "ar_baseline_accuracy=0.25 and accuracy_delta_vs_self_consistency=0.25 agree to >5 sig figs. Two distinct metrics matching this precisely is more likely a bug than a finding."
-    },
-    {
-      "kind": "TAUTOLOGY",
-      "severity": "critical",
-      "detail": "self_consistency_accuracy=0.25 and accuracy_delta=0.25 agree to >5 sig figs. Two distinct metrics matching this precisely is more likely a bug than a finding."
-    },
-    {
-      "kind": "TAUTOLOGY",
-      "severity": "critical",
-      "detail": "self_consistency_accuracy=0.25 and accuracy_delta_vs_self_consistency=0.25 agree to >5 sig figs. Two distinct metrics matching this precisely is more likely a bug than a finding."
-    },
-    {
-      "kind": "TAUTOLOGY",
-      "severity": "critical",
-      "detail": "accuracy_delta=0.25 and accuracy_delta_vs_self_consistency=0.25 agree to >5 sig figs. Two distinct metrics matching this precisely is more likely a bug than a finding."
-    },
-    {
-      "kind": "DURATION_TOO_SHORT",
-      "severity": "critical",
-      "detail": "duration_s=32.634 but artifact references compute-bound markers (GGUF / CUDA / live model). Loading and running a real model takes >=60.0s minimum; this completed too fast to have invoked the model."
-    }
-  ]
+  "invariant_violations": []
 }
