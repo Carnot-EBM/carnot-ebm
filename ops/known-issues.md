@@ -320,6 +320,95 @@ tasks are not.
 
 ## MANDATORY-NEXT-MILESTONE PRIORITIES (.86 planner — hard pickup per CLAUDE.md)
 
+### NEW 2026-05-30: KONA GLOBAL-OPT CORRECTNESS-FIRST GATE (solve-rate, NOT time)
+
+**Origin:** 2026-05-30 operator review of exp3394/exp3408 (Kona-Style Global
+Optimization). The artifacts are HONEST but the framing is misleading and the
+gate is wrong. exp3408: `solved_sudoku=False`, `initial_energy=2104 →
+final_energy=10.05` over 50,000 optimization steps, `time_to_solution=14.1s` vs
+`autoregressive_time_to_solution=212.2s`. The energy descended hugely but never
+reached a valid solution (final energy 10, not 0 = constraints still violated),
+so the implied "~15x speedup over autoregressive" is **fast-but-wrong vs slow** —
+a meaningless comparison. A speedup claim is invalid until the method actually
+SOLVES. This is the cleanest concrete testbed for P0.1 (exp3312 energy-descent-
+vs-AR, below): if Carnot's Ising energy formulation can't solve hard Sudoku via
+global optimization, that's load-bearing evidence about the non-AR-reasoning
+endgame.
+
+**The follow-up (correctness-first):**
+
+```yaml
+- id: exp34NN-kona-global-opt-correctness-gate-v1
+  milestone: "2026.05.<NNN>"
+  deliverable: "results/experiment_34NN_kona_global_opt_correctness_v1.json"
+  title: "Kona global-optimization solve-rate gate (correctness-first)"
+  priority: critical
+  agent_type: gemini
+  model: gemini-3.1-pro-preview
+  max_turns: 60
+  estimated_wall_time_min: 60
+  track: evidence
+  inference_substrate: aggregation_from_upstream_artifacts  # or live if re-run
+  requires_gpu: true
+  prior_failures:
+    - experiment_id: exp3408-kona-global-opt
+      verdict: "SUCCESS but solved_sudoku=False (energy plateaued at 10, not 0)"
+      addressed_by: >
+        Re-gated on SOLVE-RATE not time. Diagnoses the energy~10 plateau as a
+        local-minimum failure of the optimizer and tests fixes (annealing
+        schedule, random restarts, parallel tempering, adaptive step count).
+      retire_if_same_verdict: true
+  REQUIRED ARTIFACT FIELDS:
+    solve_rate:
+      principle: "fraction of puzzles reaching a VALID solution (all Sudoku
+                  constraints satisfied / final_energy==0, verified on the BOARD
+                  not just an energy threshold). This is the gate. Time is
+                  meaningless without it."
+    n_puzzles:
+      principle: ">=20 puzzles across difficulty tiers; solve_rate on n<20 is
+                  not headline-eligible (Sample-Size Rigor)."
+    solve_rate_by_difficulty:
+      principle: "report per-tier so a partial capability is visible."
+    time_to_solution_solved_only:
+      principle: "timing reported ONLY for solved instances; any speedup-vs-AR
+                  claim is valid ONLY on the solved subset."
+    optimizer_variant:
+      principle: "which fix was applied (vanilla / annealed / restarts /
+                  tempering) so the plateau diagnosis is auditable."
+  acceptance_gates:
+    - condition: "solve_rate reported on >=20 puzzles; speedup claimed ONLY on solved subset"
+      principle: "kills the fast-but-wrong framing exp3408 invited."
+    - condition: "if solve_rate ~0 even with optimizer fixes → honest verdict that
+                  the current Ising energy formulation cannot do hard-Sudoku global
+                  reasoning yet; retire the 'global-opt beats AR' claim until the
+                  energy/optimizer is improved (do NOT re-propose the timing framing)."
+      principle: "an honest negative here is a real P0.1 datapoint, not a failure."
+```
+
+Cross-ref: this is a concrete instance of P0.1 (exp3312) — Sudoku is the cleanest
+"does energy-based global inference actually solve, not just run fast" testbed.
+
+### NEW 2026-05-30: ADVERSARIAL-VERIFY CORRIGENDUM — exp3397 + exp3405 flagged (NOT headline-eligible)
+
+**Origin:** 2026-05-30 operator-requested adversarial-verify pass on recent
+"perfect-score" results. Both confirmed flagged by
+`scripts/adversarial_verify.py`; `flagged_adversarial: true` +
+`corrigendum_pending` written to each artifact (data preserved, NOT retired —
+per CLAUDE.md "Adversarial Artifact Verification" disclosure discipline).
+
+| Artifact | Flags | Why it cannot be cited |
+|---|---|---|
+| `results/experiment_3397_ebm_cot_live_benchmark.json` | **CRITICAL DURATION_TOO_SHORT** (duration_s=2.06 but references live GGUF — loading+running a 35B model on 100 GSM8K examples takes minutes, not 2s) + IMPLAUSIBLE_PERFECT (auroc_intermediate_spikes=1.0 on n=100) | The "AUROC=1.0 for intermediate energy spikes predicting final failure" did NOT come from real live inference. Degenerate/leaked. |
+| `results/experiment_3405_nup_metric_evaluation.json` | IMPLAUSIBLE_PERFECT (accuracy=1.0 on n=100) + METHODOLOGY_MISSING (no random_seed, no reproducibility_checksum) | accuracy=1.0 + unverifiable methodology = trivial/leaked, not a capability. |
+
+**Disposition:** neither may appear in paper-v6, capstone `paper_v6_safe_claims`,
+evidence tables, or any forward-facing doc. Future planners: if either scope is
+re-proposed, it MUST carry a `prior_failures:` block citing this corrigendum and
+a methodology fix (real model invocation with plausible duration + seed +
+checksum for exp3397; seed + checksum + non-trivial eval set for exp3405).
+
+---
+
 ### NEW 2026-05-29: PHASE-3 PATH DE-RISKING ROADMAP — the two existential link tests (run these INSTEAD OF Phase-1 re-measurement)
 
 **Origin:** 2026-05-29 Opus 4.8 architecture review (with two Explore audits of

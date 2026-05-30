@@ -1724,16 +1724,15 @@
   ],
   "blocked_reasons": [],
   "flagged_adversarial": true,
-  "corrigendum_pending": [
-    {
-      "kind": "IMPLAUSIBLE_PERFECT",
-      "severity": "warn",
-      "detail": "auroc_intermediate_spikes=1.0 on 100 samples is implausibly clean. Real classifiers exhibit non-zero error at small N."
-    },
-    {
-      "kind": "DURATION_TOO_SHORT",
-      "severity": "critical",
-      "detail": "duration_s=2.056203842163086 but artifact references compute-bound markers (GGUF / CUDA / live model). Loading and running a real model takes >=60.0s minimum; this completed too fast to have invoked the model."
-    }
-  ]
+  "corrigendum_pending": {
+    "flagged_by": "scripts/adversarial_verify.py",
+    "flagged_date": "2026-05-30",
+    "flags": [
+      "CRITICAL DURATION_TOO_SHORT (duration_s=2.06 references live GGUF; <60s impossible for a real 35B run on n=100)",
+      "WARN IMPLAUSIBLE_PERFECT (auroc_intermediate_spikes=1.0 on n=100)"
+    ],
+    "disposition": "NOT headline-eligible; excluded from paper-v6 / capstone / evidence tables. Data preserved, not retired (per CLAUDE.md Adversarial Artifact Verification).",
+    "note": "AUROC=1.0 did not come from real live inference; degenerate/leaked. NOT headline-eligible. Re-run requires real model invocation with plausible duration + random_seed + reproducibility_checksum.",
+    "recorded_in": "ops/known-issues.md \"ADVERSARIAL-VERIFY CORRIGENDUM \u2014 exp3397 + exp3405\""
+  }
 }

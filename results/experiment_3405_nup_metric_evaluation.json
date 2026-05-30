@@ -1609,5 +1609,17 @@
         -0.90625
       ]
     }
-  ]
+  ],
+  "flagged_adversarial": true,
+  "corrigendum_pending": {
+    "flagged_by": "scripts/adversarial_verify.py",
+    "flagged_date": "2026-05-30",
+    "flags": [
+      "WARN IMPLAUSIBLE_PERFECT (accuracy=1.0 on n=100)",
+      "WARN METHODOLOGY_MISSING (no random_seed, no reproducibility_checksum)"
+    ],
+    "disposition": "NOT headline-eligible; excluded from paper-v6 / capstone / evidence tables. Data preserved, not retired (per CLAUDE.md Adversarial Artifact Verification).",
+    "note": "accuracy=1.0 + unverifiable methodology = trivial/leaked, not a capability. NOT headline-eligible. Re-run requires seed + checksum + non-trivial eval set.",
+    "recorded_in": "ops/known-issues.md \"ADVERSARIAL-VERIFY CORRIGENDUM \u2014 exp3397 + exp3405\""
+  }
 }
