@@ -1,3 +1,71 @@
+## 2026-05-30 Post-.319 Planning Sweep (Milestone 2026.05.320)
+
+`.319` (Depth-Over-Breadth V) ran the decisive **TRAINED-energy** P0.1 test and the
+answer is now sharp — and it points directly at the .320 design.
+
+- **exp3459 (corpus):** the GSM8K P0.1 corpus reached the full **n=120** (resumable
+  builder, SC non-degenerate 0.90). Headline-eligible sample achieved.
+- **exp3461 (calibration v2, CLEAN):** the **trained** EORM reranker energy reaches
+  `correctness AUROC = 0.629` (lift **+0.113** over the 0.516 untrained floor); the
+  FoVer step-error verifier energy reaches 0.606. **Training fixes the uninformative-
+  energy problem** — the energy now carries real correctness signal. within-problem
+  argmin-correct rate 0.858.
+- **exp3460 (P0.1 v5, the crux — FLAGGED tautology):** on n=120 held-out GSM8K, k=6,
+  5-fold CV: greedy 0.850, **SC 0.9083**, self-certainty-BoN 0.842, FoVer-energy-argmin
+  0.825 (**LOSES** to SC, −0.083, McNemar p=0.002), trained-energy-weighted-vote
+  **0.9083 = SC EXACTLY** (delta 0.0, McNemar p=1.0), trained-energy×SC-hybrid 0.9083 =
+  SC. **The verdict: a trained energy (AUROC 0.629) MATCHES but does NOT BEAT SC at
+  matched compute.** The exact tie is a *real* tie (McNemar p=1.0) but tripped the
+  adversarial TAUTOLOGY flag (two bit-identical accuracy fields), so it is quarantined.
+- **exp3464 (Kona):** trained energy **no lift** over the untrained hybrid (both solve
+  1.0 — the benchmark is saturated, no headroom).
+
+**The diagnosis that drives .320: GSM8K SC is at CEILING (0.908).** A near-perfect
+majority vote leaves almost no room for any selector to help; the energy-weighted vote
+degenerates onto the majority answer (hence the exact tie). The recurring TAUTOLOGY
+flag is the *symptom* of testing the selection premise on a saturated benchmark.
+
+**The .320 reframe (new question GSM8K structurally cannot answer):** test the
+selection premise on a benchmark **WITH HEADROOM** (hard math where SC ≈ 0.4–0.7),
+using **process-aware (step-level)** energy and **optimal SC+energy aggregation**, with
+a **flip-count primary metric** that is tautology-clean *by construction*.
+
+New references surfaced (2026-05-30 sweep, sources below):
+
+- **arXiv:2602.11570 — "PRIME: A Process-Outcome Alignment Benchmark for Verifiable
+  Reasoning."** Reports **process-aware verification beats outcome-only by +8.29% /
+  +9.12% / +7.31% on AIME24 / AIME25 / Beyond-AIME** (Qwen3-14B-Base). THE directly-
+  actionable .320 reference: the gains appear on HARD benchmarks with headroom, and
+  come from PROCESS (step-level) verification — exactly what Carnot's FoVer 0.9131
+  step-error ensemble is, but exp3460 used it only at candidate-level argmin. exp3472
+  (P0.1 v6) routes the step-error verifier per-step as a process reward on a headroom
+  corpus.
+- **arXiv:2510.13918 — "Optimal Aggregation of LLM and PRM Signals for Efficient
+  Test-Time Scaling."** How to combine the generator's own signal (SC) with a PRM/
+  verifier signal optimally. Directly informs the .320 hybrid condition — the .319
+  naive hybrid tied SC; this gives a principled aggregation that can exceed either.
+- **arXiv:2509.23152 — "Critique to Verify: Accurate and Honest Test-Time Scaling with
+  RL-Trained Verifiers."** RL-trained verifiers for test-time selection; a stronger
+  trained-verifier recipe than the lightweight EORM if the headroom test motivates it.
+- **arXiv:2602.02143 — "Learning Generative Selection for Best-of-N."** Generative
+  (not just scalar) selection over BoN candidates; candidate future P0.1 condition.
+- **Load-bearing nuance from the sweep (explains the .319 tie, frames the .320 honest
+  negative path):** majority voting can *outperform* PRM-guided Best-of-N, because
+  **verifiers often fail to identify the minority-yet-correct solution.** On a ceiling
+  benchmark (GSM8K) the minority-correct fraction is tiny → nothing to recover → energy
+  ties SC. On a headroom benchmark the minority-correct fraction is large → a good
+  process verifier has room to win. exp3473 (calibration v3) measures exactly this:
+  the energy's minority-correct recovery rate on the headroom corpus.
+
+Sources: [2602.11570](https://arxiv.org/abs/2602.11570),
+[2510.13918](https://arxiv.org/abs/2510.13918),
+[2509.23152](https://arxiv.org/abs/2509.23152),
+[2602.02143](https://arxiv.org/abs/2602.02143),
+[2410.12608](https://arxiv.org/abs/2410.12608),
+[2505.14999](https://arxiv.org/abs/2505.14999).
+
+---
+
 ## 2026-05-30 Post-.318 Planning Sweep (Milestone 2026.05.319)
 
 `.318` (Depth-Over-Breadth IV) **finally got P0.1 to produce real numbers** — the

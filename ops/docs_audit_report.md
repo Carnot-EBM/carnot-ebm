@@ -4,52 +4,51 @@
 # docs_audit_report — 2026-05-30
 
 ## TL;DR (stranger's 30-second take)
-A stranger would close the tab in 10 seconds. The page feels like an internal project dashboard drowning in jargon, perfectly fabricated-looking numbers, and literal local file paths leaking into the copy and CSS, which destroys its credibility as a production-ready tool.
+A stranger would bounce in 10 seconds. The page looks like a dense internal dashboard for a research team, cluttered with unexplained acronyms, suspiciously perfect metric claims (1.0 TP rates, 0 false positives), and literal leaked file paths from a local build system embedded directly in the text and CSS.
 
 ## TOP 3 PROBLEMS
-1. **Broken Template Injections:** Local test paths like `@.tmp-pytest/...` are littered throughout the CSS and the Live benchmark card, making the project look broken.
-2. **Hostile Jargon Wall:** The hero section and results cards are packed with insider acronyms ("FoVer," "PREM," "CCTU") that mean nothing to a newcomer.
-3. **Suspiciously Perfect Numbers:** Claims like "1.0 TP rate," "60/60 attacks," and "Zero false positives" read as fabricated without a strong credibility anchor.
+1. Leaked Local Paths — The HTML and CSS contain raw local file paths (e.g., `@.tmp-pytest/...`) which completely destroys credibility.
+2. Heavy Internal Jargon — Acronyms like FoVer, CCTU, PREM, and SVAMP are thrown around without explanation, alienating non-insiders.
+3. Suspiciously Perfect Claims — Unqualified claims like "1.0 TP rate", "60/60 attacks", and "Zero false positives" trigger immediate skepticism.
 
 ## DETAILED FINDINGS
 ### Bloat
-- **Results grid** — 12 cards — Suggested cap: 3-4 key metrics. A stranger won't read a wall of 12 granular benchmarks.
-- **Writing section** — 7 cards — Suggested cap: 3 recent or most relevant posts. It visually overwhelms the footer.
-- **Overall page** — 28 total cards — Too many individual bento boxes and stats; it induces severe scrolling fatigue.
+- Results grid — 12 cards — 6 max (strangers won't read 12 different benchmark results).
+- Blog section — 7 blog post cards — 3 max (or just link to the blog index).
 
 ### Internal jargon
-- **Hero Stats / Recent progress** — "FoVer", "5-seed dual-condition", "architecture-only 0.8947" — Strangers don't know your datasets or ablation naming conventions.
-- **Features (TTC & PREM)** — "Test-Time Compute (TTC)", "Process-Reward Energy Model (PREM)" — Unexplained internal architectural acronyms.
-- **Results (Math reasoning)** — "EstimationVerifier SVAMP AUC" — Internal class names leaked into copy.
-- **Results (Tool use)** — "CCTU constrained micro-benchmark" — An unknown benchmark acronym.
-- **Results (Code repair)** — "IterativeSelfRepair (HumanEval-50, execute-feedback-retry)" — Internal function names leaked into marketing copy.
+- Recent progress card — "FoVer", "5-seed dual-condition" — A stranger has no context for this internal dataset or evaluation condition.
+- Test-Time Compute bento card — "PREM", "TTC" — Deep academic jargon that obfuscates the actual feature.
+- Math reasoning result card — "SVAMP AUC", "FoVer baseline" — Unexplained benchmark acronyms and baseline references.
+- Code repair result card — "IterativeSelfRepair", "HumanEval-50, execute-feedback-retry" — Sounds like internal test harness flags/modes.
+- Math extraction result card — "VeriCoT equation-style CoT fix" — Internal capability terminology.
+- Adversarial audit result card — "PRM-BiasBench-style attacks" — Obscure or internal benchmark name.
 
 ### Per-milestone narrative
-- **Hero Stats Bar** — "382 Completed milestones" and "Repinned from v2 0.9857 after pre-submission adversarial audit" — Internal status reporting and task tracker chatter, not a product pitch.
-- **Preprint Section** — "The arXiv submission is prepared but pending operator-initiated upload" — Reads like an internal commit message or sync update.
+- Stats bar — "382 Completed milestones"
+- Recent progress card — "Repinned from v2 0.9857 after pre-submission adversarial audit"
+- Preprint section — "(paper-v6)", "arXiv submission is prepared but pending operator-initiated upload"
 
 ### Inconsistencies
-- **"No model fine-tuning required"** (How it works) vs **"Training — Two-GPU parallel retrain"** (Results) — If it's a zero-shot verifier framework that works with any API, why is there a prominent training/retraining speedup result?
-- **AUROC metrics** — The hero mentions `0.9131` and `0.8947`, another text block mentions a drop from `0.9857`, and a safety card claims `0.91`. It's an incoherent salad of competing metrics.
+- Code Bento Card states "+3.0 points on pass-rate" for HumanEval vs Code repair result card states "8% -> 80% pass rate (+72pp)" for HumanEval. Which one is the real code repair result?
 
 ### Missing essentials
-- **Why should I trust the numbers?** — The page claims numbers are backed by "checked-in experiment artifacts", but provides no public links to them, instead leaking unclickable local file paths (`@.tmp-pytest/...`).
+- None. The page successfully covers the one-sentence summary, installation, license, maintainer, and why to trust the numbers (checked-in artifacts).
 
 ### Fabrication signals
-- **Results (Math extraction)** — "GSM8K extraction TP rate: 0.5 -> 1.0" — A perfectly round 1.0 true positive rate looks suspiciously overfit.
-- **Results (Adversarial audit)** — "k=5 ensemble catches 60/60 attacks" — A perfect 60/60 score without a credibility anchor or context triggers immediate skepticism.
-- **Writing (Dogfooding)** — "Zero false positives" — Claiming exactly 0 false positives across 639 autonomous code analysis runs sounds impossibly perfect for an LLM-based tool.
-- **Results (Training)** — "2.0x speedup" — A perfectly round 2.0x speedup on multi-GPU training looks like a placeholder rather than a measured result.
+- Live benchmark result card — Literal test artifact path leaked `@.tmp-pytest/pytest-of-ianblenke/pytest-3/popen-gw0/test_req_verify_2932_run_uses_0/citation_hallucination_field_verifier_2932_raw/spilled-energy-2602-18671:real.txt`
+- Math extraction result card — `1.0` TP rate
+- Adversarial audit result card — `60/60` attacks caught
+- Blog "Carnot Dogfooding by the Numbers" — `Zero` false positives
+- Training result card — perfect `2.0x` speedup
 
 ## WHAT'S WORKING
-- The "Problem" framing is excellent. The analogy of an LLM committing to "47 + 28 = 7" and being unable to backtrack explains the core value proposition instantly.
-- The Quick Start section's 3-line Python snippet clearly and concretely demonstrates how to use the API.
+- The Hero section is punchy and gets straight to the point: what it does, how to get it (`pip install carnot-ebm`), and the license.
+- The 3-step "Extract -> Check -> Repair" Bento card flow makes the complex Energy-Based Model pipeline conceptually easy to grasp.
 
 ## RECOMMENDED OPERATOR ACTIONS
-1. Fix the template injection bugs leaking local file paths (`@.tmp-pytest/...`) into the HTML and CSS.
-2. Delete the "Recent progress" card from the hero entirely; it is pure milestone narrative and jargon.
-3. Cut the "Results" grid down from 12 cards to the 3 most impressive, independently verifiable claims.
-4. Replace or contextualize perfect numbers ("1.0", "60/60", "Zero false positives") to avoid triggering fabrication alarms.
-5. Scrub all internal references like "FoVer," "PREM," and "IterativeSelfRepair" and rewrite them as plain-English capabilities.
-6. Remove the "Completed milestones" stat and internal pending tasks (like the arXiv upload status).
-7. Clarify the contradiction between claiming "no fine-tuning required" and advertising a "parallel retrain" speedup.
+1. Scrub all leaked local file paths (e.g., `@.tmp-pytest/...`, `@results/...`) from the HTML text and `<style>` block.
+2. Resolve the glaring inconsistency between the "+3.0 points" and "+72pp" HumanEval pass rate claims.
+3. Consolidate the 12 Results cards into the 4-6 most defensible metrics, translating internal dataset names (FoVer, CCTU) into plain English descriptions.
+4. Tone down or firmly contextualize suspiciously perfect claims ("1.0", "60/60", "Zero false positives") to avoid triggering a stranger's bullshit detector.
+5. Remove all internal status trivia (milestone counts, paper versioning, pending upload statuses) that distract from the core value proposition.

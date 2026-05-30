@@ -1,0 +1,1025 @@
+milestone: "2026.05.320"
+milestone_title: "Depth-Over-Breadth VI: P0.1 on a Benchmark With Headroom — Does Energy Reranking Beat Self-Consistency Where SC Isn't at Ceiling? + G2 Self-Contained External Package"
+milestone_doc: "openspec/change-proposals/research-roadmap-vNEXT.md"
+
+# ---------------------------------------------------------------------------
+# PLANNER NOTE (Opus 4.8, 2026-05-30)
+# .319 ran the decisive TRAINED-energy P0.1 test. The answer is sharp:
+#  - exp3461 (CLEAN): the trained EORM energy reaches correctness AUROC 0.629,
+#    a +0.113 LIFT over the 0.516 untrained floor -> training fixes the
+#    uninformative-energy problem. The energy now carries real signal.
+#  - exp3460 (FLAGGED tautology): on n=120 held-out GSM8K, k=6, 5-fold CV, the
+#    trained-energy-weighted vote = SC = 0.9083 EXACTLY (delta 0.0, McNemar p=1.0);
+#    FoVer-energy-argmin LOSES to SC (-0.083). A trained energy MATCHES but does
+#    NOT BEAT SC at matched compute. The exact tie is REAL but tripped the
+#    bit-identical-fields TAUTOLOGY flag -> quarantined.
+#  - exp3464 Kona: trained energy no lift (benchmark saturated 1.0/1.0).
+# THE DIAGNOSIS: GSM8K SC is at CEILING (0.908). A near-perfect majority vote
+# leaves no room for a selector; the energy-weighted vote degenerates onto the
+# majority answer (the exact tie). The recurring TAUTOLOGY flag is the SYMPTOM
+# of testing the selection premise on a saturated benchmark.
+# THE .320 REFRAME (a question GSM8K structurally CANNOT answer): test the premise
+# on a benchmark WITH HEADROOM (hard math, SC ~0.4-0.7) using PROCESS-AWARE
+# (step-level) energy + optimal SC+energy aggregation, with a FLIP-COUNT primary
+# metric that is tautology-clean BY CONSTRUCTION. Literature: arXiv:2602.11570
+# (PRIME: process-aware verification beats outcome-only by +8-9% on AIME);
+# arXiv:2510.13918 (optimal LLM+PRM aggregation); the sweep nuance that verifiers
+# fail to recover minority-yet-correct answers (tiny fraction at ceiling, large
+# fraction with headroom). exp3472 is THE crux; exp3473 explains it (minority-correct
+# recovery); exp3474 is the mandatory continuous-self-learning task (FR-11 DEEPER,
+# N>=200, finally de-flag); exp3475 extends Kona to harder instances; exp3476 ships
+# the G2 self-contained external package (sole unmet gate). Depth-Over-Breadth does
+# NOT relax (P0.1 not yet CLEAN; G2 not externally run). NO vN+1 re-measurement of an
+# already-measured artifact. gemini-cli is DOWN (.315/.316/.318 every gemini task
+# crashed) -> ALL tasks on claude; heavy/long/hardware on opus. The gate chain depends
+# on the CHEAP cached-scoring crux (exp3472), never the live generation task (exp3471)
+# — the .317 cascade lesson.
+# ---------------------------------------------------------------------------
+
+tasks:
+  # =========================================================================
+  # PHASE A — OPS transition
+  # =========================================================================
+  - id: exp3470-archive-v319-activate-v320
+    operator_override: "2026-05-29 operator directive (standing, mechanical auto-stamp): routine milestone-transition task — false-positive scope-match vs exp3458/exp3447 archive tasks; structurally never a doomed rerun."
+    prior_failures:
+      - experiment_id: exp3458-archive-v318-activate-v319
+        verdict: "complete: archive_v318_activate_v319_ready=true"
+        addressed_by: "Routine milestone progression; .319 has completed (all experiments ran, capstone landed) and is archived to make room for .320."
+        retire_if_same_verdict: false
+    milestone: "2026.05.320"
+    title: "Archive milestone .319 honestly and activate .320"
+    priority: critical
+    max_turns: 20
+    agent_type: claude
+    requires_claude: true   # gemini-cli is DOWN (.315/.316/.318: every gemini task crashed); claude is the only backend landing artifacts. Robust to GEMINI_FORCE/CODEX_FORCE coercion.
+    estimated_wall_time_min: 5
+    track: ops
+    inference_substrate: aggregation_from_upstream_artifacts
+    requires_gpu: false
+    deliverable: "results/experiment_3470_archive_v319_activate_v320.json"
+    prompt: |
+      CONTEXT: Milestone .319 (Depth-Over-Breadth V) has completed. It ran the decisive
+      TRAINED-energy P0.1 test. The answer is sharp: exp3461 (CLEAN) showed the trained
+      EORM energy reaches correctness AUROC 0.629 — a +0.113 LIFT over the 0.516 untrained
+      floor (training fixes the uninformative-energy problem). But exp3460 (FLAGGED
+      tautology) found that on n=120 held-out GSM8K, k=6, 5-fold CV the trained-energy-
+      weighted vote = self-consistency = 0.9083 EXACTLY (delta 0.0, McNemar p=1.0), and
+      FoVer-energy-argmin LOSES to SC (-0.083): a trained energy MATCHES but does NOT BEAT
+      SC at matched compute. THE DIAGNOSIS: GSM8K SC is at CEILING (0.908), leaving no room
+      for a selector — the energy-weighted vote degenerates onto the majority answer (the
+      exact tie). exp3464 Kona showed no lift (benchmark saturated). exp3463 advanced G2
+      (CI dry-run green + Docker reproduces 0.9131 + handoff ready; external run pending —
+      G2 is the SOLE unmet gate). exp3462 FR-11 found no collapse at N=50 (flagged again).
+
+      EXISTING CODE TO READ FIRST:
+        - results/experiment_3460_p01_trained_energy_reranker_vs_self_consistency_v5.json (FLAGGED; the exact-tie crux)
+        - results/experiment_3461_energy_correctness_calibration_trained_vs_untrained_v2.json (CLEAN; AUROC 0.629)
+        - results/experiment_3463_fover_g2_ci_dryrun_and_external_handoff_v1.json (G2 status)
+        - results/experiment_3468_g_gate_status_synthesis_v319.json (G2 sole unmet gate)
+        - results/experiment_3469_capstone_v319.json
+        - ops/changelog.md (append, never delete — Documentation Update Rules)
+        - ops/known-issues.md (P0.1 / G2 MANDATORY priorities)
+
+      TASK: Archive .319 to ops/changelog.md and write the .319 operational retrospective
+      JSON. Confirm .320 is active.
+
+      CONCRETE STEPS:
+        1. Read the .319 artifacts and the conductor log.
+        2. Draft results/operational_retro_2026_05_319.json (schema
+           carnot.operational_retro.v65): experiments completed, the KEY finding (the
+           trained energy carries real signal AUROC 0.629 but TIES SC at matched compute
+           BECAUSE GSM8K is at CEILING 0.908; the recurring tautology flag is the symptom of
+           a saturated benchmark), G2 status (ci_and_docker_ready_external_run_pending),
+           wall-time, and the top forward gap = "test the selection premise on a benchmark
+           WITH HEADROOM (hard math, SC ~0.4-0.7) using process-aware step-level energy +
+           optimal aggregation, flip-count tautology-clean; finally de-flag FR-11 at depth;
+           ship the G2 self-contained external package".
+        3. Append a .319 archive section to ops/changelog.md (do NOT delete prior entries).
+           Note that .320 pivots P0.1 from a saturated GSM8K substrate to a HEADROOM benchmark.
+        4. Emit the deliverable artifact with honest_verdict starting 'complete:' and field
+           archive_v319_activate_v320_ready=true.
+      Run command: cd {project_root} && JAX_PLATFORMS=cpu .venv/bin/python scripts/experiment_3470_archive_v319_activate_v320.py. Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  # =========================================================================
+  # PHASE B — DEPTH BLOCK (the majority of substantive slots; all on claude)
+  # =========================================================================
+
+  # ---- HEADROOM corpus builder — hard math where SC is NOT at ceiling -----------
+  - id: exp3471-p01-headroom-corpus-builder-hard-math-v1
+    operator_override: "2026-05-29 operator directive (standing): P0.1 (exp3312) is the project's single most important test. .319 proved the trained energy carries signal (AUROC 0.629) but TIES SC because GSM8K is at CEILING (0.908). This builds a NEW corpus on a HARD benchmark with HEADROOM (SC ~0.4-0.7) so the selection premise can be tested where a selector has room to help — a question the GSM8K corpus structurally cannot answer (ceiling). New benchmark + per-step traces = new deliverable, not a doomed rerun of the GSM8K builder. scope-match vs exp3459/exp3448 is the intended new-corpus continuation."
+    prior_failures:
+      - experiment_id: exp3459-p01-generation-corpus-extend-to-120-v2
+        verdict: "complete: p01_generation_corpus_complete_n=120"
+        addressed_by: "exp3459 built the GSM8K corpus to n=120 — but GSM8K SC is at ceiling (0.908) so it cannot test whether a selector beats SC (exp3460 tied). This task builds a DIFFERENT corpus on a HARD benchmark (MATH-500 hard subset / GSM-Hard) where SC ~0.4-0.7, and ALSO captures per-STEP reasoning traces (not just final answers) so the FoVer step-error verifier can be applied as a PROCESS reward. Different benchmark, different captured structure, different question. Same timeout-proof resumable per-problem-append builder pattern."
+        retire_if_same_verdict: false
+    milestone: "2026.05.320"
+    title: "P0.1 HEADROOM corpus builder — hard-math cached corpus (SC ~0.4-0.7) with per-STEP traces (timeout-proof, resumable)"
+    priority: critical
+    max_turns: 100
+    model: opus
+    agent_type: claude
+    requires_claude: true   # (1) gemini-cli is DOWN; (2) 5+ files: GGUF loader + hard-math corpus selection + per-step trace capture + per-token logprob + resume-from-JSONL + progress harness; (3) open-ended judgment selecting a benchmark whose SC lands in the headroom band + the per-step trace format the process-reward scorer needs — no deterministic gate substitutes.
+    estimated_wall_time_min: 30
+    track: evidence
+    inference_substrate: live_llm_inference
+    requires_gpu: true
+    deliverable: "results/experiment_3471_p01_headroom_corpus_builder_hard_math_v1.json"
+    prompt: |
+      CONTEXT: P0.1 (does energy-based selection beat self-consistency at equal compute?)
+      cannot be answered on GSM8K because SC is at CEILING (0.908) — exp3460 found the
+      trained-energy vote tied SC EXACTLY (no room for a selector). This task builds a NEW
+      cached corpus on a HARD math benchmark where SC has HEADROOM (target SC ~0.4-0.7),
+      and captures per-STEP reasoning traces so the FoVer step-error verifier (the 0.9131
+      ensemble) can be scored as a PROCESS reward — the literature's recipe for where
+      verifier selection beats SC (arXiv:2602.11570 PRIME: +8-9% on AIME from process-aware
+      verification). It does ONLY generation, appends per-problem, prints progress per
+      problem -> cannot idle-timeout (the exp3437 failure mode).
+
+      EXISTING CODE TO READ FIRST:
+        - scripts/experiment_3459_p01_generation_corpus_extend_to_120_v2.py (the resumable GSM8K builder — reuse/adapt the resume + progress + append pattern)
+        - results/experiment_3459_p01_generation_corpus_extend_to_120_v2.json (corpus metadata + warm-up SC gate)
+        - scripts/experiment_template.py (cached_sota_pair, BatchedInferenceRunner)
+        - CLAUDE.md "SOTA Local Models" + "GGUF tokenizer rule (MANDATORY — 2026-05-29)"
+        - research-references.md "2026-05-30 Post-.319 Planning Sweep" (the headroom thesis + refs)
+
+      TASK: Build data/p01_hardmath_generations.jsonl on a HARD benchmark whose
+      self-consistency accuracy lands in [0.4, 0.7] (verify the SC band in a small warm-up
+      probe; if the first benchmark choice is too easy/hard, switch to a harder/easier split
+      and document it). For each problem capture 1 greedy + k=6 sampled generations, each
+      with: raw text, extracted final answer, correctness label, mean-token logprob, AND a
+      parsed list of reasoning STEPS (for per-step process scoring). RESUME if the file
+      already exists. EXIT CLEAN with whatever you complete.
+
+      PRECONDITIONS (step 0, before any generation — emit complete: blocked_* and STOP if a/b fail):
+        a. CUDA available: python -c "import torch; assert torch.cuda.is_available()".
+           If not -> honest_verdict complete: blocked_cuda_unavailable.
+        b. SOTA GGUF loads via the GGUF path (NOT AutoTokenizer on a -GGUF repo id; embedded
+           tokenizer per the 2026-05-29 GGUF tokenizer rule):
+           llama_cpp.Llama(model_path=..., vocab_only=True).tokenize(b"x") succeeds.
+           MODEL_SPECS = ["unsloth/gemma-4-26B-A4B-it-GGUF"] (the SAME fastest SOTA MoE the
+           .318/.319 builders used — homogeneity with the GSM8K corpus comparison).
+           If not -> complete: blocked_sota_gguf_tokenizer_unavailable.
+
+      CONCRETE STEPS:
+        1. Pick a HARD benchmark / split (e.g. MATH-500 level-4/5 subset, GSM-Hard, or an
+           equivalently-hard public split). Document the exact dataset id, split, and seed.
+        2. WARM-UP SC PROBE: on ~10 problems confirm SC (majority over k) lands in [0.4,0.7].
+           If SC > 0.75 the benchmark is too easy (no headroom) -> pick a harder split and
+           re-probe. If SC < 0.35 -> pick an easier split. Record the chosen split + its SC.
+        3. RESUME: read completed problem ids from data/p01_hardmath_generations.jsonl, SKIP
+           them, generate only the remainder.
+        4. Per problem: 1 greedy (temp 0) + k=6 sampled (temp ~0.8); capture raw text,
+           extracted answer, correctness label, mean-token logprob, AND a parsed step list
+           (split the chain-of-thought into discrete reasoning steps). Cap max_tokens (~512
+           for hard math).
+        5. CHECKPOINT: append one JSONL row per COMPLETED problem immediately.
+        6. PROGRESS: print a one-line message after EVERY problem (LOAD-BEARING — defeats the
+           idle-timeout).
+        7. WALL-TIME BUDGET: at ~22 min, STOP, finalize the JSONL, EXIT CLEAN (code 0).
+        8. Recompute the full-corpus warm-up SC self-check and the SC headroom band.
+        9. Emit the artifact recording total n + the SC band + per-step capture confirmation.
+
+      REQUIRED ARTIFACT FIELDS (each carries a principle per CLAUDE.md):
+        honest_verdict: principle="Terminal verdict must start with complete:/success:/passed:/shipped_."
+        inference_substrate: value=live_llm_inference
+        corpus_path: principle="data/p01_hardmath_generations.jsonl — the headroom corpus exp3472/3473/3475 consume."
+        benchmark_id: principle="the exact hard-math dataset id + split + seed — the new substrate."
+        n_problems_completed: principle="problems with a full generation set after this run."
+        n_problems_target: principle="the target (>=80 for headline-eligibility); n < target -> resume next milestone."
+        n_problems_added_this_run: principle="problems newly generated this invocation (proves resume worked)."
+        k_samples: principle="sampled generations per problem (6) — the matched-compute budget."
+        per_step_traces_captured: principle="boolean: each generation carries a parsed step list for PROCESS-reward scoring (the .320 new capability)."
+        per_sample_logprobs_captured: principle="boolean: mean-token confidence stored per generation."
+        warmup_self_consistency_accuracy: principle="majority-vote accuracy over the corpus — MUST land in the headroom band for the corpus to be useful."
+        self_consistency_in_headroom_band: principle="boolean: SC in [0.4,0.7] — the precondition that makes P0.1 testable (unlike GSM8K's 0.908 ceiling)."
+        warmup_greedy_accuracy: principle="greedy accuracy over the corpus."
+        model_specs: principle="the actual GGUF invoked (gemma-4-26B-A4B-it-GGUF)."
+        random_seed: principle="determinism precondition for reproducibility."
+        reproducibility_checksum: principle="content hash of benchmark split + model + seed."
+        duration_s: principle="real live MoE generation takes wall time; 60s floor — sub-60s is the fabrication signal."
+
+      ACCEPTANCE GATES:
+        - condition: "self_consistency_in_headroom_band == true"
+          principle: "G1 HEADROOM-CONFIRMED: SC is NOT at ceiling, so a selector has room to help — the property GSM8K lacked; without it exp3472 cannot test the premise."
+        - condition: "n_problems_completed >= 40 AND per_step_traces_captured == true"
+          principle: "G2 SCORABLE: enough problems with per-step traces for exp3472 to report a (preliminary) process-energy-vs-SC verdict."
+
+      TERMINAL VERDICTS (all start with complete:):
+        - n >= 80 in band -> "complete: p01_headroom_corpus_headline_eligible_n=NN_sc=SS"
+        - 40 <= n < 80 in band -> "complete: p01_headroom_corpus_scorable_partial_n=NN_resume_next_milestone"
+        - n < 40 -> "complete: p01_headroom_corpus_partial_n=NN_resume_next_milestone"
+        - no headroom split found -> "complete: blocked_no_headroom_benchmark_sc_outside_band"
+      Run command: cd {project_root} && .venv/bin/python scripts/experiment_3471_p01_headroom_corpus_builder_hard_math_v1.py. Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  # ---- P0.1 v6: process-aware energy + optimal aggregation vs SC on HEADROOM ------
+  - id: exp3472-p01-process-energy-vs-self-consistency-headroom-v6
+    operator_override: "2026-05-29 operator directive (standing): P0.1 (exp3312) is the project's single most important test. .319 cleanly established that on a CEILING benchmark (GSM8K SC 0.908) a trained energy ties SC (exp3460, real exact tie flagged as tautology). This tests the DIFFERENT, never-asked question (arXiv:2602.11570 PRIME, arXiv:2510.13918): on a HEADROOM benchmark (SC ~0.4-0.7) does a PROCESS-AWARE (step-level) energy + OPTIMAL SC+energy aggregation BEAT SC at matched compute? New substrate (headroom hard-math + per-step process energy), new technique (step-level process reward + principled aggregation, not candidate-level argmin), tautology-clean BY CONSTRUCTION (flip-count primary metric — no two bit-identical accuracy fields). Supersedes exp3460/exp3449/exp3312."
+    prior_failures:
+      - experiment_id: exp3460-p01-trained-energy-reranker-vs-self-consistency-v5
+        verdict: "complete: trained_energy_matches_but_does_not_beat_self_consistency_at_equal_compute (FLAGGED adversarial_verify CRITICAL: TAUTOLOGY)"
+        addressed_by: "exp3460 tested a candidate-level trained energy on GSM8K (SC at ceiling 0.908) and tied SC EXACTLY (the bit-identical tautology flag). This task (1) uses a HEADROOM benchmark (SC ~0.4-0.7) where a selector can actually help, (2) uses a PROCESS-AWARE step-level energy (the FoVer 0.9131 step-error verifier applied per-step) + OPTIMAL SC+energy aggregation (arXiv:2510.13918) rather than candidate-level argmin, and (3) reports a FLIP-COUNT primary metric (problems where the energy choice differs from SC, and the net correctness change among flips) so it is tautology-clean BY CONSTRUCTION — when energy and SC agree it is reported once as flip_count with a methodology_note, never as two bit-identical accuracy fields."
+        retire_if_same_verdict: true
+      - experiment_id: exp3449-p01-energy-vote-vs-self-consistency-cached-scoring-v4
+        verdict: "complete: energy_matches_but_does_not_beat_self_consistency_at_equal_compute (FLAGGED TAUTOLOGY)"
+        addressed_by: "exp3449 used an untrained energy on GSM8K (ceiling). This task uses a trained PROCESS energy on a HEADROOM benchmark with a flip-count tautology-clean design."
+        retire_if_same_verdict: true
+    # NOT gated_on exp3471: the cached corpus may be partial/absent; this task handles a
+    # small/absent corpus via its own PRECONDITIONS (clean 'complete: blocked_corpus_too_small'),
+    # so a CUDA-blocked exp3471 cannot cascade-skip this crux. The gate chain depends on THIS
+    # task's verdict, not vice-versa (the proven .318/.319 pattern).
+    milestone: "2026.05.320"
+    title: "P0.1 v6 — process-aware step-level energy + optimal SC+energy aggregation vs Self-Consistency on a HEADROOM benchmark (cached, held-out, matched compute, flip-count tautology-clean)"
+    priority: critical
+    max_turns: 80
+    model: opus
+    agent_type: claude
+    requires_claude: true   # (1) gemini-cli is DOWN; (2) 5+ files: headroom corpus reader + per-step FoVer process scorer + trained EORM reranker + optimal-aggregation fit + 7 condition scorers + flip-count/McNemar/bootstrap; (3) open-ended judgment on the held-out protocol, the flip-count tautology-clean design, the optimal-aggregation fit, and matched-compute accounting — no deterministic gate substitutes.
+    estimated_wall_time_min: 35
+    track: evidence
+    inference_substrate: verifier_ensemble_against_cached_candidates
+    requires_gpu: false
+    deliverable: "results/experiment_3472_p01_process_energy_vs_self_consistency_headroom_v6.json"
+    prompt: |
+      CONTEXT: This is THE decisive P0.1 test for .320. .319 cleanly established that on a
+      CEILING benchmark (GSM8K SC 0.908) a trained energy (correctness AUROC 0.629) TIES SC
+      exactly (exp3460) because a near-perfect majority vote leaves no room for a selector —
+      the energy-weighted vote degenerates onto the majority answer (the exact tie flagged as
+      a tautology). The literature says the win appears WITH HEADROOM and from PROCESS-level
+      verification: arXiv:2602.11570 (PRIME) reports process-aware verification beats
+      outcome-only by +8-9% on AIME; arXiv:2510.13918 gives optimal SC+PRM aggregation; the
+      sweep nuance is that verifiers fail to recover the minority-yet-correct answer (a tiny
+      fraction at ceiling, a large fraction with headroom). The never-asked question: on a
+      HEADROOM benchmark (SC ~0.4-0.7) does a PROCESS-AWARE step-level energy + OPTIMAL
+      aggregation BEAT SC at matched compute? It invokes NO live model (scores exp3471's
+      cached corpus) so it completes in seconds and CANNOT time out.
+
+      EXISTING CODE TO READ FIRST:
+        - data/p01_hardmath_generations.jsonl (the HEADROOM cached corpus from exp3471 —
+          each candidate has raw text, extracted answer, correctness label, mean-token
+          logprob, AND a parsed step list for process scoring)
+        - results/experiment_3460_p01_trained_energy_reranker_vs_self_consistency_v5.json
+          (the GSM8K predecessor + its tautology flag — what to avoid; reuse its trained-reranker recipe)
+        - results/experiment_3461_energy_correctness_calibration_trained_vs_untrained_v2.json (AUROC 0.629 trained, 0.606 FoVer)
+        - python/carnot/verify/ (the FoVer 4-verifier step-error ensemble: fr11_session_memory,
+          tier0r_curry_howard, tier0s_arithmetic_gap, tier0u_logical_consistency — applied PER STEP here)
+        - python/carnot/ (the EORM / energy-reranker module from Exp 443)
+        - research-references.md "2026-05-30 Post-.319 Planning Sweep" (PRIME + optimal-aggregation refs)
+
+      TASK: On the HEADROOM corpus, train a process-aware energy (the FoVer step-error
+      verifier scored PER STEP + the trained EORM reranker) with a documented held-out split,
+      fit an OPTIMAL SC+energy aggregation, and compare to a VERIFIED-NON-DEGENERATE
+      self-consistency baseline at matched compute. PRIMARY metric: the FLIP-COUNT (problems
+      where the energy/aggregation choice differs from the SC majority answer) and the net
+      correctness change among flips — tautology-clean by construction.
+
+      PRECONDITIONS (step 0, before any comparison is reported):
+        a. data/p01_hardmath_generations.jsonl present with >=40 problems, each with a greedy +
+           k>=5 sampled generations + per-step traces + correctness labels + logprobs. If absent
+           or n<40 -> honest_verdict complete: blocked_p01_corpus_too_small_n=NN (a clean
+           complete: so downstream gate-synth/capstone are NOT cascade-blocked).
+        b. The FoVer step-error ensemble + EORM/reranker substrate loadable. If not ->
+           complete: blocked_energy_substrate_unavailable.
+        c. HEADROOM GATE: SC (majority-vote) accuracy over the full corpus in [0.4, 0.78].
+           If SC > 0.78 the corpus is at ceiling (no headroom; the GSM8K problem) -> write
+           complete: blocked_corpus_at_ceiling_no_headroom_sc=SS and report no energy comparison.
+
+      CONCRETE STEPS:
+        1. Split by PROBLEM id into TRAIN / HELD-OUT folds (never split samples of one problem
+           across folds — leakage). Use k-fold CV if n is small; document split + seed. ALL
+           accuracies are held-out only.
+        2. PROCESS ENERGY: score each candidate's PARSED STEPS with the FoVer 4-verifier
+           step-error ensemble (per-step), aggregate to a candidate process-energy.
+        3. TRAINED ENERGY: train the EORM reranker on outcome labels (features = process-energy
+           components + logprob + verifier signals); record param count.
+        4. OPTIMAL AGGREGATION: fit a principled SC+energy combiner (arXiv:2510.13918) on TRAIN,
+           apply on HELD-OUT.
+        5. Score 7 conditions on held-out: (1) greedy AR floor; (2) self-consistency (PRIMARY
+           control, majority vote); (3) self-certainty BoN (arXiv:2502.18581); (4) process-energy
+           argmin; (5) trained-energy-weighted vote; (6) trained-energy x SC hybrid; (7) OPTIMAL
+           SC+energy aggregation (the headline condition).
+        6. MATCHED COMPUTE: conditions 2-7 consume the SAME k cached generations; energy adds only
+           scoring (no extra samples). Report per-condition generation budget + reranker/aggregator
+           param count.
+        7. PRIMARY FLIP-COUNT METRIC (tautology-clean by construction): for each energy/aggregation
+           condition vs SC, compute (i) flip_count = problems where the condition's selected answer
+           differs from the SC majority answer, (ii) flips_correct = flips that are now CORRECT,
+           (iii) flips_incorrect = flips now WRONG, (iv) net_correctness_gain = flips_correct -
+           flips_incorrect. Report accuracies too, but when a condition agrees with SC, that is
+           flip_count=0 reported ONCE with a methodology_note — NEVER two conceptually-distinct
+           accuracy fields with bit-identical values (the exp3460 flag).
+        8. Compute held-out accuracy per condition + the PRIMARY paired delta (optimal-aggregation
+           minus SC) AND the process-energy/trained-energy/hybrid deltas, each with McNemar exact p
+           + paired bootstrap CI95.
+        9. Emit results with clean methodology (real duration, seed, checksum,
+           inference_substrate=verifier_ensemble_against_cached_candidates).
+
+      REQUIRED ARTIFACT FIELDS (each carries a principle per CLAUDE.md):
+        honest_verdict: principle="complete:/success:/passed:/shipped_ prefix."
+        inference_substrate: value=verifier_ensemble_against_cached_candidates
+        benchmark_id: principle="the headroom benchmark scored (distinct from GSM8K)."
+        n_problems_heldout: principle="held-out problems scored; >=20 preliminary, >=40 headline-eligible (with CV)."
+        k_samples: principle="sampled generations/problem consumed (the matched-compute budget)."
+        self_consistency_in_headroom_band: principle="SC in [0.4,0.78] — the property that makes a selector-vs-SC test meaningful (unlike GSM8K)."
+        ar_greedy_accuracy: principle="1-sample greedy control (held-out)."
+        self_consistency_accuracy: principle="majority vote over k — the PRIMARY control (held-out)."
+        self_certainty_bon_accuracy: principle="self-certainty Best-of-N (arXiv:2502.18581)."
+        process_energy_argmin_accuracy: principle="FoVer step-level PROCESS energy argmin — the .320 new condition (per-step, not candidate-level)."
+        trained_energy_weighted_vote_accuracy: principle="trained EORM energy-weighted vote."
+        trained_energy_sc_hybrid_accuracy: principle="trained-energy x SC hybrid."
+        optimal_aggregation_accuracy: principle="optimal SC+energy aggregation (arXiv:2510.13918) — THE headline condition."
+        flip_count_optimal_vs_sc: principle="problems where optimal-aggregation differs from SC — the tautology-clean primary signal (0 -> the two agree, no separate bit-identical field)."
+        flips_correct_optimal: principle="flips that became CORRECT (the win mechanism: recovering minority-yet-correct answers)."
+        flips_incorrect_optimal: principle="flips that became WRONG (the cost)."
+        net_correctness_gain_optimal: principle="flips_correct - flips_incorrect for optimal aggregation — the honest net effect, robust to ceiling-induced ties."
+        delta_optimal_vs_self_consistency: principle="optimal-aggregation minus SC at matched compute — THE headline delta."
+        delta_process_energy_vs_self_consistency: principle="process-energy argmin minus SC — does per-step verification route into selection?"
+        paired_significance: principle="McNemar exact p + paired bootstrap CI95 for the optimal, process-energy, and hybrid deltas."
+        compute_parity_note: principle="per-condition generation budget + reranker/aggregator params so energy does not win by spending more compute."
+        random_seed: principle="determinism precondition for reproducibility."
+        reproducibility_checksum: principle="content hash of corpus + reranker config + split + seed."
+        duration_s: principle="cached scoring + small-model training; 1s floor (no live model — why it cannot time out)."
+
+      ACCEPTANCE GATES:
+        - condition: "self_consistency_in_headroom_band == true BEFORE any energy comparison is reported"
+          principle: "G0 HEADROOM: SC must not be at ceiling, else the test repeats the GSM8K degenerate tie (exp3460)."
+        - condition: "net_correctness_gain_optimal > 0 AND delta_optimal_vs_self_consistency > 0 with paired p < 0.05"
+          principle: "G1 ENERGY-BEATS-SC-WITH-HEADROOM: a process-aware energy + optimal aggregation SIGNIFICANTLY beats majority vote at matched compute where SC has room — the FIRST real Phase-3 selection justification; clears the arXiv:2410.12608 / PRIME bar."
+        - condition: "flip_count_optimal_vs_sc > 0"
+          principle: "G2 NON-DEGENERATE: the energy actually CHANGES selections (a non-zero flip count) — proves this is not the exp3460 degenerate-tie regime, regardless of whether the net gain is positive."
+
+      TERMINAL VERDICTS (all start with complete:):
+        - corpus too small -> "complete: blocked_p01_corpus_too_small_n=NN" (honest; exp3471 resumes)
+        - corpus at ceiling -> "complete: blocked_corpus_at_ceiling_no_headroom_sc=SS"
+        - G1 passes -> "complete: process_energy_beats_self_consistency_with_headroom_phase3_premise_validated"
+        - flips occur but no net win -> "complete: process_energy_changes_selections_but_does_not_beat_self_consistency_with_headroom"
+        - no flips (degenerate even with headroom) -> "complete: process_energy_does_not_change_selections_selection_premise_refuted_on_this_substrate"
+      Run command: cd {project_root} && .venv/bin/python scripts/experiment_3472_p01_process_energy_vs_self_consistency_headroom_v6.py. Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  # ---- Calibration v3: process energy + minority-correct recovery on HEADROOM ----
+  - id: exp3473-energy-correctness-calibration-process-minority-v3
+    operator_override: "2026-05-30 planner (Opus 4.8) under Depth-Over-Breadth: the mechanistic explainer for exp3472. exp3461 (.319) measured the trained energy at AUROC 0.629 on GSM8K. This asks the NEW question on the HEADROOM corpus: does the PROCESS (step-level) energy track correctness, and crucially does it RECOVER minority-yet-correct answers (the literature's key nuance for when a verifier beats SC)? Not a re-measurement of exp3461 — a different energy (process/step-level) on a different (headroom) corpus, plus the minority-correct-recovery metric exp3461 did not compute. scope-match vs exp3461/exp3450 is the intended continuation with a stated forward difference."
+    prior_failures:
+      - experiment_id: exp3461-energy-correctness-calibration-trained-vs-untrained-v2
+        verdict: "complete: trained_or_fover_energy_tracks_correctness_lift_over_untrained_reported"
+        addressed_by: "exp3461 calibrated the candidate-level trained/FoVer energy on GSM8K (AUROC 0.629/0.606). This task calibrates the PER-STEP PROCESS energy on the HEADROOM corpus AND adds the minority-yet-correct recovery rate (the fraction of problems where the correct answer is NOT the SC majority but the energy ranks it first) — the metric that directly explains whether the energy can beat SC, which exp3461 did not measure."
+        retire_if_same_verdict: false
+    # NOT gated_on exp3471/exp3472: handles a small/absent corpus via its own PRECONDITIONS.
+    milestone: "2026.05.320"
+    title: "Energy-correctness calibration v3 — process energy + minority-yet-correct recovery on the HEADROOM corpus"
+    priority: high
+    max_turns: 50
+    agent_type: claude
+    requires_claude: true   # gemini-cli is DOWN; cached scoring + judgment on the minority-correct framing; claude is the only landing backend.
+    estimated_wall_time_min: 20
+    track: evidence
+    inference_substrate: verifier_ensemble_against_cached_candidates
+    requires_gpu: false
+    deliverable: "results/experiment_3473_energy_correctness_calibration_process_minority_v3.json"
+    prompt: |
+      CONTEXT: exp3472 measures whether a process energy beats SC on a headroom benchmark.
+      THIS task explains WHY at the mechanism level. exp3461 (.319) showed the candidate-level
+      trained energy reaches AUROC 0.629 on GSM8K. The literature's load-bearing nuance
+      (research-references.md .319 sweep): verifiers fail to beat SC when they cannot recover
+      the MINORITY-YET-CORRECT answer — the answer that is correct but is NOT the majority
+      vote. At ceiling (GSM8K) that fraction is tiny; with headroom it is large. This is a
+      cheap cached-scoring diagnostic over exp3471's HEADROOM corpus, on the PER-STEP PROCESS
+      energy (FoVer step-error ensemble) + the trained EORM energy.
+
+      EXISTING CODE TO READ FIRST:
+        - data/p01_hardmath_generations.jsonl (exp3471 headroom corpus; per-step traces + labels)
+        - results/experiment_3461_energy_correctness_calibration_trained_vs_untrained_v2.json (the GSM8K AUROC 0.629/0.606 baseline)
+        - results/experiment_3472_p01_process_energy_vs_self_consistency_headroom_v6.json (reuse its held-out split + trained model)
+        - python/carnot/verify/ (the FoVer 4-verifier step-error ensemble)
+
+      TASK: On the HEADROOM corpus held-out split, compute the PROCESS (step-level) energy and
+      the trained energy per candidate, and measure (a) how well each predicts correctness and
+      (b) the MINORITY-YET-CORRECT RECOVERY rate.
+
+      PRECONDITIONS (step 0):
+        a. data/p01_hardmath_generations.jsonl present with >=40 problems x k samples + per-step
+           traces + labels. If absent/small -> complete: blocked_p01_corpus_too_small_n=NN.
+        b. The process/trained energy substrate loadable. If not -> complete: blocked_energy_substrate_unavailable.
+
+      CONCRETE STEPS:
+        1. On the held-out split: for each candidate compute the PROCESS (step-level FoVer)
+           energy and the trained reranker energy; read the correctness label.
+        2. For EACH energy: Spearman vs correctness, AUROC of -energy as a correctness classifier,
+           within-problem argmin-correct rate.
+        3. MINORITY-CORRECT RECOVERY: among problems where the correct answer is NOT the SC
+           majority answer, what fraction does the energy rank first? This is the direct
+           predictor of whether the energy can beat SC (exp3472).
+        4. Report the AUROC of each energy AND the minority-correct recovery rate, with the
+           GSM8K 0.629/0.606 baselines carried forward for contrast.
+        5. Emit the artifact with clean methodology. Ensure no two conceptually-distinct metrics
+           share a bit-identical value (the tautology guard).
+
+      REQUIRED ARTIFACT FIELDS (each carries a principle per CLAUDE.md):
+        honest_verdict: principle="complete:/success:/passed:/shipped_ prefix."
+        inference_substrate: value=verifier_ensemble_against_cached_candidates
+        benchmark_id: principle="the headroom benchmark (distinct from the GSM8K baseline)."
+        n_candidates_heldout: principle="total held-out candidates scored."
+        process_energy_correctness_auroc: principle="AUROC of the per-step PROCESS energy as a correctness classifier — the .320 core number."
+        trained_energy_correctness_auroc: principle="AUROC of the trained reranker energy on the headroom corpus."
+        gsm8k_trained_energy_auroc_baseline: principle="the exp3461 0.629 reference carried forward for contrast."
+        minority_correct_fraction: principle="fraction of problems where the correct answer is NOT the SC majority — the headroom this benchmark provides (vs GSM8K's ~tiny fraction)."
+        minority_correct_recovery_rate: principle="fraction of those minority-correct problems where the energy ranks the correct answer first — directly predicts whether the energy can beat SC."
+        within_problem_argmin_correct_rate_process: principle="fraction of problems where the lowest-process-energy candidate is correct."
+        random_seed: principle="determinism."
+        reproducibility_checksum: principle="content hash."
+        duration_s: principle="cached scoring; 1s floor."
+
+      ACCEPTANCE GATES:
+        - condition: "minority_correct_fraction > 0.10"
+          principle: "G0 HEADROOM-HAS-MINORITY-CORRECT: there ARE correct answers the majority misses — the necessary condition for any selector to beat SC (GSM8K lacked this)."
+        - condition: "minority_correct_recovery_rate > 0.5 OR max(process_energy_correctness_auroc, trained_energy_correctness_auroc) > 0.65"
+          principle: "G1 ENERGY-RECOVERS-MINORITY: the energy recovers more than half the minority-correct answers OR carries strong correctness signal — the mechanism that would let exp3472 beat SC."
+
+      TERMINAL VERDICTS (all start with complete:):
+        - G1 passes -> "complete: process_energy_recovers_minority_correct_explains_p01_headroom_outcome"
+        - G1 fails, headroom present -> "complete: energy_fails_to_recover_minority_correct_even_with_headroom_ceiling_is_the_energy_not_the_benchmark"
+        - no headroom -> "complete: blocked_corpus_lacks_minority_correct_no_headroom"
+      Run command: cd {project_root} && JAX_PLATFORMS=cpu .venv/bin/python scripts/experiment_3473_energy_correctness_calibration_process_minority_v3.py. Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  # ---- FR-11 self-learning DEEPER (N>=200) + finally de-flag (mandatory) ---------
+  - id: exp3474-fr11-grounding-collapse-depth-stress-v3
+    operator_override: "2026-05-30 planner (Opus 4.8): the mandatory continuous-self-learning task. exp3462 (.319) found NO collapse at N=50 (residual diversity holds) but was FLAGGED AGAIN (third flag in the lineage). The N=50 'no collapse' may simply be too SHALLOW — self-distillation collapse is a depth phenomenon. This task pushes the loop to N>=200 to test whether collapse emerges at depth, with pass_rate and true_accuracy as genuinely distinct sources (finally de-flag). New depth + finally-clean = forward work, not a doomed rerun. scope-match vs exp3462/exp3452 is the intended depth continuation."
+    prior_failures:
+      - experiment_id: exp3462-fr11-grounding-collapse-clean-rerun-v2
+        verdict: "complete: residual_diversity_holds_no_collapse_in_fr11_loop_deflagged (FLAGGED adversarial_verify CRITICAL: TAUTOLOGY)"
+        addressed_by: "exp3462 ran only N=50 iterations (no collapse — possibly too shallow) and was flagged AGAIN for a residual pass_rate tautology. This task (1) pushes the loop to N>=200 iterations so a depth-emergent collapse can appear, (2) computes pass_rate (verifier-pass fraction) and true_accuracy (ground-truth fraction) from STRICTLY distinct sources with an asserted runtime check that they are not the same array, and (3) reports the collapse via the distinct entropy + mode-mass + (pass_rate - true_accuracy gap) trajectories with a trend-significance test — so it de-flags AND answers whether the no-collapse-at-50 result holds at depth."
+        retire_if_same_verdict: true
+    milestone: "2026.05.320"
+    title: "FR-11 grounding-collapse DEPTH stress (N>=200) — does collapse emerge at depth? distinct pass-rate vs accuracy, de-flagged (mandatory self-learning)"
+    priority: high
+    max_turns: 50
+    agent_type: claude
+    requires_claude: true   # gemini-cli is DOWN; cached-trace self-learning loop + judgment on the distinct-metrics + depth framing; claude is the only landing backend.
+    estimated_wall_time_min: 20
+    track: evidence
+    inference_substrate: verifier_ensemble_against_cached_candidates
+    requires_gpu: false
+    deliverable: "results/experiment_3474_fr11_grounding_collapse_depth_stress_v3.json"
+    prompt: |
+      CONTEXT: The self-learning thesis (PRD FR-11 / continuous self-learning) rests on
+      alpha_t grounding — the verifier signal that keeps a self-correcting model from
+      collapsing onto its own null space (Zenil alpha_t; Q12 Dark Room / Hypothesis-B).
+      exp3462 (.319) found NO mode-collapse at N=50 (residual diversity in the at-risk
+      grounding, ACTIVE_WEIGHT 0.146, was sufficient) — but it was FLAGGED AGAIN for a
+      pass_rate tautology, and N=50 may simply be too SHALLOW: self-distillation collapse is
+      a depth phenomenon (the model needs many rounds to drift into the null space). This task
+      pushes the loop to N>=200 and finally de-flags by computing pass_rate and true_accuracy
+      from strictly distinct sources. On cached traces (no live model -> no timeout). This is
+      the milestone's mandatory continuous-self-learning experiment.
+
+      EXISTING CODE TO READ FIRST:
+        - results/experiment_3462_fr11_grounding_collapse_clean_rerun_v2.json (the flagged N=50 predecessor)
+        - scripts/experiment_3462_fr11_grounding_collapse_clean_rerun_v2.py (reuse/adapt; FIX the residual pass_rate tautology + extend N)
+        - results/experiment_3439_verifier_ensemble_lambda_min_diversity_audit_v3.json (the at-risk grounding, ACTIVE_WEIGHT 0.146)
+        - python/carnot/ (the FR-11 controller-memory / self-learning module)
+        - project_q12_hypothesis_b_and_dark_room + project_zenil_alpha_grounding (memory) — the theory
+
+      TASK: Re-run the two-arm FR-11 self-improvement loop to N>=200 iterations, with pass_rate
+      and true_accuracy as STRICTLY distinct measurements (assert at runtime they are not the
+      same array), and a trend-significance test on the entropy trajectory.
+
+      PRECONDITIONS (step 0):
+        a. FR-11 self-learning module + cached traces present. If not ->
+           complete: blocked_fr11_module_or_traces_unavailable.
+        b. The verifier ensemble (at-risk grounding) is callable. If not ->
+           complete: blocked_verifier_suite_uncallable.
+
+      CONCRETE STEPS:
+        1. ARM A (control): FR-11 self-improvement loop over cached traces, NO entropy reg, N>=200.
+        2. ARM B (treatment): same loop WITH entropy/diversity regularization, N>=200.
+        3. Track per-arm DISTINCT metrics over all N: (i) output/latent entropy, (ii) top-mode
+           mass fraction, (iii) verifier-PASS rate (fraction the verifier ensemble accepts), and
+           (iv) TRUE accuracy (fraction matching GROUND TRUTH). pass_rate and true_accuracy MUST
+           be computed from different sources (verifier vs gold) — ASSERT at runtime they are not
+           the same array; if they coincide numerically that itself is the gaming signal
+           (verifier-pass rises while true accuracy does not), report both distinctly.
+        4. Collapse test: entropy monotonically dropping + mode-mass concentrating + pass_rate
+           rising while true_accuracy stagnates/drops = gaming the null space. Add a trend-test on
+           the ARM A entropy trajectory; report the iteration index where collapse (if any) onsets.
+        5. Report whether ARM A collapses AT DEPTH (and at what N) and whether ARM B prevents it,
+           via the DISTINCT entropy + mode-mass + (pass_rate - true_accuracy GAP) curves.
+
+      REQUIRED ARTIFACT FIELDS (each carries a principle per CLAUDE.md):
+        honest_verdict: principle="complete:/success:/passed:/shipped_ prefix."
+        inference_substrate: value=verifier_ensemble_against_cached_candidates
+        n_iterations: principle="self-improvement iterations per arm (>=200) — the depth that exp3462's N=50 could not reach."
+        collapse_onset_iteration: principle="iteration index where ARM A collapse onsets, or null if no collapse through N — the depth answer."
+        arm_a_final_entropy: principle="control final output entropy (the primary collapse signal)."
+        arm_b_final_entropy: principle="treatment final output entropy."
+        arm_a_final_mode_mass: principle="control top-mode mass fraction (distinct from entropy)."
+        arm_a_pass_rate_vs_true_accuracy_gap: principle="verifier-pass MINUS ground-truth accuracy at convergence — the gaming signal; computed from DISTINCT sources (asserted), the de-flag."
+        arm_a_mode_collapse_detected: principle="boolean: control collapsed onto the null space at depth (the Dark-Room failure)."
+        arm_b_mode_collapse_detected: principle="boolean: treatment collapsed despite regularization."
+        entropy_trend_significance: principle="significance of the ARM A entropy decline — makes the collapse claim defensible, not eyeballed."
+        depth_changes_conclusion: principle="boolean: did going from N=50 to N>=200 change the collapse verdict? — the load-bearing forward answer."
+        grounding_collapse_consequence: principle="honest string: does at-risk grounding cause collapse at depth, and does regularization prevent it?"
+        random_seed: principle="determinism."
+        reproducibility_checksum: principle="content hash."
+        duration_s: principle="cached-trace loop; 1s floor."
+
+      ACCEPTANCE GATES:
+        - condition: "arm_a_mode_collapse_detected and not arm_b_mode_collapse_detected"
+          principle: "G1 COLLAPSE-AT-DEPTH-CONFIRMED-AND-CURABLE: at-risk grounding causes self-distillation collapse at depth AND entropy regularization is the antidote — actionable for Phase-5, now citable."
+        - condition: "not arm_a_mode_collapse_detected"
+          principle: "G1' GROUNDING-HOLDS-AT-DEPTH: residual diversity is enough even at N>=200 — a stronger reassuring negative than exp3462's N=50 result."
+
+      TERMINAL VERDICTS (all start with complete:):
+        - arm A collapses at depth, arm B does not -> "complete: at_risk_grounding_causes_collapse_at_depth_entropy_reg_prevents_it_deflagged"
+        - arm A does not collapse even at depth -> "complete: residual_diversity_holds_at_depth_no_collapse_deflagged"
+        - both collapse -> "complete: collapse_not_prevented_by_entropy_reg_grounding_insufficient_at_depth"
+      Run command: cd {project_root} && JAX_PLATFORMS=cpu .venv/bin/python scripts/experiment_3474_fr11_grounding_collapse_depth_stress_v3.py. Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  # ---- Kona depth: trained/process energy on HARDER (non-saturated) instances ----
+  - id: exp3475-kona-process-energy-harder-instances-v5
+    operator_override: "2026-05-30 planner (Opus 4.8) under Depth-Over-Breadth: Kona is a named depth target. exp3464 (.319) found trained_energy_no_lift because BOTH hybrids solved 1.0 — the benchmark was SATURATED (no headroom), the exact analogue of the GSM8K ceiling. This re-runs on HARDER (non-saturated, solve-rate <0.8) instances where the energy has room to lift the hybrid, using the PROCESS energy from exp3472. Harder instances + process energy = a question the saturated benchmark structurally could not answer. scope-match vs exp3464/exp3440 is the intended headroom continuation."
+    prior_failures:
+      - experiment_id: exp3464-kona-trained-energy-hybrid-solve-rate-v4
+        verdict: "complete: trained_energy_no_lift_over_untrained_kona_hybrid"
+        addressed_by: "exp3464 found no lift but BOTH hybrids solved 1.0 — the benchmark was saturated (ceiling), so no lift was POSSIBLE. This task uses HARDER instances (untrained-hybrid solve-rate < 0.8, with headroom) and the PROCESS energy from exp3472, so a lift is measurable if it exists. Different (harder) instances + a different (process) energy = a genuinely new test, not a re-run of the saturated one."
+        retire_if_same_verdict: true
+    gated_on:
+      - upstream: exp3472-p01-process-energy-vs-self-consistency-headroom-v6
+        artifact_field: honest_verdict
+        op: 'contains'
+        value: 'complete'
+    milestone: "2026.05.320"
+    title: "Kona global-opt — PROCESS energy as the hybrid heuristic on HARDER (non-saturated) instances"
+    priority: high
+    max_turns: 50
+    agent_type: claude
+    requires_claude: true   # gemini-cli is DOWN; cached/CPU global-opt harness + judgment on the harder-instance framing; claude is the only landing backend.
+    estimated_wall_time_min: 20
+    track: evidence
+    inference_substrate: verifier_ensemble_against_cached_candidates
+    requires_gpu: false
+    deliverable: "results/experiment_3475_kona_process_energy_harder_instances_v5.json"
+    prompt: |
+      CONTEXT: The Kona endgame asks whether Carnot's energy can drive global optimization
+      (non-autoregressive, self-correcting reasoning). exp3464 (.319) found the trained energy
+      gave NO lift over the untrained hybrid — but BOTH hybrids solved 1.0, i.e. the benchmark
+      was SATURATED (no headroom), the exact analogue of the GSM8K ceiling that produced the
+      P0.1 tie. The never-asked question: on HARDER (non-saturated) Kona instances where the
+      untrained-hybrid solve-rate is < 0.8, does the PROCESS energy from exp3472 lift the
+      global-opt hybrid? Cached/CPU, no live model -> no timeout. If exp3472's process energy
+      did NOT recover minority-correct answers (no headroom benefit), report that the hybrid
+      cannot improve and explain why — an honest negative, not a failure.
+
+      EXISTING CODE TO READ FIRST:
+        - results/experiment_3464_kona_trained_energy_hybrid_solve_rate_v4.json (the saturated baseline, 1.0/1.0)
+        - scripts/experiment_3464_kona_trained_energy_hybrid_solve_rate_v4.py (the global-opt harness — reuse/adapt; HARDEN the instances)
+        - results/experiment_3472_p01_process_energy_vs_self_consistency_headroom_v6.json (the process energy + its headroom verdict)
+        - reference_dr3_consensus_and_dual_svid + project_dbae_ebm_phase3 (memory) — the Kona/transpilation theory
+
+      TASK: Build/select HARDER Kona global-opt instances (untrained-hybrid solve-rate < 0.8),
+      run the hybrid with the PROCESS energy as proposal heuristic, and compare its solve-rate
+      to the untrained-energy hybrid on the SAME harder instances.
+
+      PRECONDITIONS (step 0):
+        a. The Kona global-opt harness + a way to generate harder instances present. If not ->
+           complete: blocked_kona_harness_unavailable.
+        b. The process energy from exp3472 loadable. If not -> complete: blocked_process_energy_unavailable.
+        c. HEADROOM GATE: the untrained-hybrid solve-rate on the chosen instances < 0.8 (else
+           saturated — the exp3464 problem) -> if you cannot find instances with solve-rate < 0.8,
+           write complete: blocked_kona_instances_saturated_no_headroom and report no comparison.
+
+      CONCRETE STEPS:
+        1. Generate/select HARDER instances; confirm the untrained-hybrid solve-rate < 0.8.
+        2. BASELINE: untrained-energy hybrid solve-rate on the harder instances.
+        3. TREATMENT: hybrid with the PROCESS energy from exp3472 as the proposal heuristic.
+        4. Report solve-rate per arm + the paired delta (process-hybrid minus untrained-hybrid)
+           with significance, and the pure-process-energy-descent solve-rate.
+        5. Emit the artifact with clean methodology. No two conceptually-distinct metrics may
+           share a bit-identical value (the tautology guard).
+
+      REQUIRED ARTIFACT FIELDS (each carries a principle per CLAUDE.md):
+        honest_verdict: principle="complete:/success:/passed:/shipped_ prefix."
+        inference_substrate: value=verifier_ensemble_against_cached_candidates
+        n_instances: principle="harder global-opt instances evaluated."
+        instances_have_headroom: principle="boolean: untrained-hybrid solve-rate < 0.8 (the property exp3464's saturated benchmark lacked)."
+        untrained_hybrid_solve_rate: principle="untrained-energy hybrid on the harder instances — the baseline (NOT 1.0 this time)."
+        process_hybrid_solve_rate: principle="hybrid with the PROCESS energy as proposal heuristic — the treatment."
+        pure_process_energy_descent_solve_rate: principle="does the process energy alone let pure descent solve, or is the hybrid still required?"
+        delta_process_vs_untrained_hybrid: principle="process-hybrid minus untrained-hybrid solve-rate — does a process energy strengthen the Kona hybrid where there is headroom?"
+        delta_significance: principle="paired significance of the hybrid solve-rate delta."
+        random_seed: principle="determinism."
+        reproducibility_checksum: principle="content hash."
+        duration_s: principle="cached/CPU global-opt; 1s floor."
+
+      ACCEPTANCE GATES:
+        - condition: "instances_have_headroom == true"
+          principle: "G0 NON-SATURATED: the instances are not all trivially solved (exp3464's failure), so a lift is measurable."
+        - condition: "process_hybrid_solve_rate > untrained_hybrid_solve_rate AND delta_significance favors the treatment"
+          principle: "G1 PROCESS-ENERGY-STRENGTHENS-HYBRID: a process energy improves the Kona global-opt hybrid where there is headroom — actionable for the Phase-3 endgame."
+
+      TERMINAL VERDICTS (all start with complete:):
+        - process hybrid beats untrained on harder instances -> "complete: process_energy_strengthens_kona_hybrid_with_headroom"
+        - no lift with headroom -> "complete: process_energy_no_lift_over_untrained_kona_hybrid_even_with_headroom"
+        - saturated -> "complete: blocked_kona_instances_saturated_no_headroom"
+      Run command: cd {project_root} && JAX_PLATFORMS=cpu .venv/bin/python scripts/experiment_3475_kona_process_energy_harder_instances_v5.py. Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  # =========================================================================
+  # PHASE C — G2 (the sole publication gate)
+  # =========================================================================
+  - id: exp3476-fover-g2-self-contained-external-package-v1
+    operator_override: "2026-05-29 operator directive (ops/north-star.md §2 + ops/reproduction-runbook-fover-headline.md): G2 (independent reproduction) is the sole unmet publication gate. exp3463 (.319) shipped a CI dry-run + a repo-based handoff. The remaining gap is making reproduction trivial for a TRUE stranger with zero Carnot knowledge. This task builds a SELF-CONTAINED, REPO-INDEPENDENT reproduction package (tarball + pinned deps + one script + content-addressed checksum/CID per decentralization rule 3) — a new deliverable, not a re-run of the CI workflow exp3463 already validated."
+    prior_failures:
+      - experiment_id: exp3463-fover-g2-ci-dryrun-and-external-handoff-v1
+        verdict: "complete: fover_g2_ci_dryrun_green_handoff_ready_external_run_pending"
+        addressed_by: "exp3463 validated the CI workflow dry-run + wrote a repo-based handoff doc. This task produces a SELF-CONTAINED package: a single tarball bundling the reproduce harness + the FoVer corpus + pinned dependency versions + a one-command runner, with a content-addressed checksum (and an IPFS CID if a node is available, per decentralization rule 3), so an external party needs NO git clone and NO Carnot knowledge. Different deliverable: a portable artifact, not a workflow validation."
+        retire_if_same_verdict: false
+    milestone: "2026.05.320"
+    title: "FoVer G2 — self-contained, repo-independent reproduction package (tarball + pinned deps + content-addressed CID)"
+    priority: critical
+    max_turns: 80
+    model: opus
+    agent_type: claude
+    requires_claude: true   # (1) gemini-cli is DOWN; (2) 5+ files: harness + corpus + pinned requirements + a new runner + a new README + checksum/CID tooling; (3) open-ended judgment on what makes a TRUE-stranger one-command repro within 'Do NOT push / cannot trigger external CI'.
+    estimated_wall_time_min: 35
+    track: evidence
+    inference_substrate: verifier_ensemble_against_cached_candidates
+    requires_gpu: false
+    deliverable: "results/experiment_3476_fover_g2_self_contained_external_package_v1.json"
+    prompt: |
+      CONTEXT: G2 (independent reproduction) is the SOLE remaining blocker to paper_ready
+      (G1/G3/G4 met per ops/north-star.md §2). exp3463 (.319) validated the CI workflow dry-run
+      and wrote a repo-based handoff (g2_status=ci_dryrun_green_handoff_ready_external_run_pending).
+      The gate needs ">=1 reproducer who is not the operator." The lowest-friction path to that is
+      a SELF-CONTAINED package a true stranger can run in one command with zero Carnot knowledge.
+      This task builds + verifies that package locally. Do NOT push, do NOT trigger external CI,
+      and do NOT mark G2 met (only an actual non-operator/CI run flips it).
+
+      EXISTING CODE TO READ FIRST:
+        - scripts/reproduce_fover_headline.py (the harness)
+        - data/fover_corpus.jsonl (the labeled corpus)
+        - .github/workflows/reproduce-fover-headline.yml (exp3451's workflow)
+        - docs/g2-external-reproducer-handoff.md (exp3463's repo-based handoff)
+        - ops/reproduction-runbook-fover-headline.md (the protocol + caveats)
+        - pyproject.toml (the pinned dependency set, scikit-learn after exp3438)
+
+      TASK: Assemble a self-contained reproduction package and VERIFY it reproduces AUROC 0.9131
+      (CI [0.9027,0.9235]) + learning_contribution 0.0185 (CI [0.0125,0.0245]) from a clean
+      environment with no repo checkout.
+
+      PRECONDITIONS (step 0):
+        a. scripts/reproduce_fover_headline.py + data/fover_corpus.jsonl present. If not ->
+           complete: blocked_fover_harness_or_corpus_missing.
+        b. A clean-environment mechanism available: docker (preferred) OR a fresh venv. Record which.
+
+      CONCRETE STEPS:
+        1. Build dist/g2-fover-repro/ containing: the harness, the corpus, a pinned
+           requirements.txt (exact versions), a single run.sh / run.py one-command entry point
+           that installs deps + runs the harness + asserts both numbers land in their CIs with a
+           non-zero exit on failure, and a README explaining the one command + the expected output.
+        2. Tar it to dist/g2-fover-repro.tar.gz and compute its sha256.
+        3. If an IPFS node is available (command -v ipfs && ipfs id), add the tarball and record
+           the CID (decentralization rule 3). If not, record ipfs_available=false (do NOT fail).
+        4. VERIFY: extract the tarball into a fresh temp dir + clean environment (docker or fresh
+           venv), run the one command, confirm both numbers land in their CIs. Capture the output.
+        5. Update ops/reproduction-runbook-fover-headline.md with the package path + checksum
+           (append, never delete). Do NOT edit operator-curated docs (north-star.md, index.html, README).
+        6. Emit the artifact. Do NOT set g2_independent_reproducer=true.
+
+      REQUIRED ARTIFACT FIELDS (each carries a principle per CLAUDE.md):
+        honest_verdict: principle="complete:/success:/passed:/shipped_ prefix."
+        inference_substrate: value=verifier_ensemble_against_cached_candidates
+        package_path: principle="dist/g2-fover-repro.tar.gz — the self-contained artifact a stranger runs."
+        package_sha256: principle="content-addressed checksum — integrity + the G4 trace anchor."
+        package_cid: principle="IPFS CID if a node was available, else null (decentralization rule 3)."
+        ipfs_available: principle="boolean: whether the CID could be computed this run."
+        one_command_repro: principle="the single command a stranger runs (the true-stranger test)."
+        clean_env_method: principle="'docker' | 'fresh_venv' — how the package was verified."
+        condition_a_auroc_isolated: principle="recomputed production AUROC from the self-contained package."
+        learning_contribution_isolated: principle="recomputed FR-11 ablation; must land in [0.0125,0.0245]."
+        package_verified_reproduces: principle="boolean: the extracted package reproduced both numbers in their CIs from a clean environment."
+        g2_status: principle="honest string: 'self_contained_package_verified_external_run_pending' | 'package_built_verification_unavailable' | 'still_failing_<cause>'."
+        g2_independent_reproducer: principle="MUST be false — only an actual external/CI run by a non-operator flips it true."
+        operator_action_required: principle="the one-line note that closing G2 needs a non-operator to run the package (Operator-Only External Publication)."
+        reproducibility_checksum: principle="content hash from the isolated recompute."
+        random_seed: principle="the published seeds [42,137,271,314,1729]."
+        duration_s: principle="package build + clean-env install + CPU verifier scoring wall time."
+
+      ACCEPTANCE GATES:
+        - condition: "package_verified_reproduces == true AND package_sha256 != null"
+          principle: "a self-contained, content-addressed package reproduces the headline from a clean environment — G2 is one non-operator command from met."
+        - condition: "one_command_repro != null AND package_path != null"
+          principle: "the true-stranger path exists: one command, no repo, no Carnot knowledge."
+
+      TERMINAL VERDICTS (all start with complete:):
+        - package built + verified -> "complete: fover_g2_self_contained_package_verified_external_run_pending"
+        - built but no clean-env verifier -> "complete: fover_g2_package_built_verification_unavailable"
+        - reproduction fails -> "complete: fover_g2_package_repro_failing_<cause>"
+      Run command: cd {project_root} && JAX_PLATFORMS=cpu .venv/bin/python scripts/experiment_3476_fover_g2_self_contained_external_package_v1.py. Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  # =========================================================================
+  # PHASE D — HARDWARE (light + opportunistic; north-star §3)
+  # =========================================================================
+  - id: exp3477-kv260-terminal-latency-transcript-v6
+    operator_override: "2026-05-29 operator directive (ops/north-star.md §3): KV260 is THE sovereignty story — drive to terminal then freeze. exp3465 (.319) was blocked_kv260_ssh_unreachable; this re-attempt is Hardware-Task Continuity forward work, not a doomed rerun."
+    prior_failures:
+      - experiment_id: exp3465-kv260-terminal-latency-transcript-v5
+        verdict: "complete: blocked_kv260_ssh_unreachable"
+        addressed_by: "exp3465 was blocked because the board was unreachable via SSH that milestone. This re-attempt checks SSH reachability first and, if reachable, records the terminal board-level latency transcript that graduates KV260 to its terminal state. If still unreachable, emits the honest blocked_* verdict again."
+        retire_if_same_verdict: false
+    milestone: "2026.05.320"
+    title: "KV260 terminal board-level latency transcript (drive to terminal, then freeze)"
+    priority: medium
+    max_turns: 100
+    model: opus
+    agent_type: claude
+    requires_claude: true   # gemini-cli is DOWN; hardware-integration class routes to opus/claude per planner guidance. Robust to GEMINI_FORCE/CODEX_FORCE coercion.
+    estimated_wall_time_min: 25
+    track: hardware
+    inference_substrate: hardware_smoke
+    requires_gpu: false
+    deliverable: "results/experiment_3477_kv260_terminal_latency_transcript_v6.json"
+    prompt: |
+      CONTEXT: north-star §3 designates KV260 as THE sovereignty story — drive to terminal,
+      then freeze. exp3465 (.319) was blocked_kv260_ssh_unreachable. One terminal board-level
+      latency transcript reaches the defined terminal state, after which the per-milestone
+      hardware mandate lifts for this board.
+
+      KV260 SSH-NOT-SD-CARD DISCIPLINE (MANDATORY): the precondition is SSH reachability ONLY.
+      Host SD-card-slot block-device checks are a retired, wrong-mechanism precondition — if any
+      such check is present, emit complete: blocked_kv260_wrong_mechanism_sd_card_precondition.
+      See CLAUDE.md "KV260 SSH-Not-SD-Card Discipline".
+
+      EXISTING CODE TO READ FIRST:
+        - results/experiment_3465_kv260_terminal_latency_transcript_v5.json (the blocked attempt)
+        - ops/hardware-bringup-prep.md (KV260 bring-up state)
+        - CLAUDE.md "KV260 SSH-Not-SD-Card Discipline" + Pre-Launch Preconditions KV260 row
+
+      TASK: Record the terminal on-board latency transcript over SSH and mark KV260 terminal.
+      If unreachable, emit the honest blocked_* verdict (do NOT fabricate).
+
+      PRECONDITIONS (step 0):
+        a. ssh -o ConnectTimeout=5 -o BatchMode=yes kria 'true' returns 0. If not ->
+           honest_verdict complete: blocked_kv260_ssh_unreachable. STOP. (Do NOT use any host
+           SD-card-slot block-device check — SSH reachability is the only precondition.)
+        b. ssh kria 'xmutil listapps' shows the loaded overlay. If the Carnot Ising overlay is
+           not loaded -> ssh kria 'xmutil loadapp carnot_ising_v2_n64'.
+
+      CONCRETE STEPS:
+        1. Confirm SSH reachability + loaded overlay (step 0).
+        2. Run the on-board latency measurement over SSH (N iterations of the UIO register
+           round-trip for the n=64 Ising tile), capturing a real transcript.
+        3. Report per-iteration latency stats (mean/p50/p99) and the raw transcript.
+        4. Emit the artifact with kv260_synthesis_succeeded=true, kv260_terminal_state_reached=true,
+           honest_verdict starting 'complete:'.
+
+      REQUIRED ARTIFACT FIELDS:
+        honest_verdict: principle="complete:/success:/passed:/shipped_ prefix, or complete: blocked_kv260_ssh_unreachable."
+        inference_substrate: value=hardware_smoke
+        preconditions_checked: principle="records WHICH resources (SSH reachability, overlay) were verified — pre-empts fabrication."
+        kv260_latency_transcript: principle="the real on-board measurement transcript; the terminal-state evidence."
+        kv260_terminal_state_reached: principle="boolean: graduates the board so the per-milestone mandate lifts."
+        duration_s: principle="real SSH round-trips take wall time."
+      Run command: cd {project_root} && JAX_PLATFORMS=cpu .venv/bin/python scripts/experiment_3477_kv260_terminal_latency_transcript_v6.py. Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  - id: exp3478-gatemate-opportunistic-detect-continuity-v4
+    operator_override: "2026-05-29 operator directive (ops/north-star.md §3): GateMate opportunistic only. exp3466 (.319) was blocked_gatemate_toolchain_missing; this v4 keeps the board visible per Hardware-Task Continuity without burning wall-time; scope-match vs prior GateMate tasks is the intended opportunistic continuation."
+    prior_failures:
+      - experiment_id: exp3466-gatemate-opportunistic-detect-continuity-v3
+        verdict: "complete: blocked_gatemate_toolchain_missing"
+        addressed_by: "exp3466 found the himbaechel toolchain missing. This v4 re-checks toolchain + board detect (the toolchain may have been installed since) and records continuity. Light detect-only audit, NOT a flash attempt; records distinct detect/toolchain signals (no two metrics forced equal — the .317 TAUTOLOGY guard)."
+        retire_if_same_verdict: false
+    milestone: "2026.05.320"
+    title: "GateMate opportunistic detect + toolchain continuity audit (no flash mandate; tautology-clean)"
+    priority: low
+    max_turns: 20
+    agent_type: claude
+    requires_claude: true   # gemini-cli is DOWN; claude is the only landing backend.
+    estimated_wall_time_min: 8
+    track: hardware
+    inference_substrate: hardware_smoke
+    requires_gpu: false
+    deliverable: "results/experiment_3478_gatemate_opportunistic_detect_continuity_v4.json"
+    prompt: |
+      CONTEXT: north-star §3 classifies GateMate as opportunistic only (do NOT block milestones).
+      exp3466 (.319) was blocked_gatemate_toolchain_missing. This is a LIGHT continuity audit —
+      confirm the board enumerates + whether the toolchain is present — NOT a flash attempt, and
+      it must NOT emit two conceptually-distinct numeric metrics with identical values (the .317
+      TAUTOLOGY flag).
+
+      EXISTING CODE TO READ FIRST:
+        - results/experiment_3466_gatemate_opportunistic_detect_continuity_v3.json (the blocked predecessor)
+        - CLAUDE.md Pre-Launch Preconditions: GateMate board-reachable + nextpnr-himbaechel rows
+        - scripts/adversarial_verify.py (the TAUTOLOGY rule — two distinct metrics agreeing to >5 sig figs)
+
+      TASK: Audit GateMate detect + toolchain presence and record continuity. Do NOT re-run the
+      full flash flow. Do NOT emit two distinct metrics with identical values.
+
+      PRECONDITIONS / CONCRETE STEPS:
+        1. command -v yosys && command -v nextpnr-himbaechel && command -v openFPGALoader (record
+           each result distinctly). If toolchain missing -> honest_verdict
+           complete: blocked_gatemate_toolchain_missing.
+        2. openFPGALoader -c dirtyJtag --detect (record the IDCODE or absence). If the board is
+           absent -> complete: blocked_gatemate_board_unreachable (honest, expected-acceptable for
+           an opportunistic board).
+        3. Emit the artifact with the detect result + a one-line continuity note, honest_verdict
+           starting 'complete:'. NEVER 'unspecified'. Ensure no two conceptually-distinct numeric
+           fields share a bit-identical value.
+
+      REQUIRED ARTIFACT FIELDS:
+        honest_verdict: principle="complete:/success:/passed:/shipped_ prefix, or complete: blocked_gatemate_*. NEVER 'unspecified'."
+        inference_substrate: value=hardware_smoke
+        preconditions_checked: principle="records toolchain + board-detect checks + distinct results."
+        gatemate_board_detected: principle="boolean continuity signal."
+        toolchain_present: principle="boolean: yosys + nextpnr-himbaechel + openFPGALoader all on PATH (distinct from board_detected)."
+        duration_s: principle="detect + toolchain check wall time."
+      Run command: cd {project_root} && JAX_PLATFORMS=cpu .venv/bin/python scripts/experiment_3478_gatemate_opportunistic_detect_continuity_v4.py. Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  - id: exp3479-polarfire-opportunistic-reachability-audit-v6
+    operator_override: "2026-05-29 operator directive (ops/north-star.md §3): PolarFire opportunistic only, no terminal-state mandate. Light reachability/continuity audit to keep the board visible per Hardware-Task Continuity without burning wall-time; scope-match vs prior PolarFire smoke tasks is the intended opportunistic continuation."
+    prior_failures:
+      - experiment_id: exp3467-polarfire-opportunistic-reachability-audit-v5
+        verdict: "complete: polarfire reachable and continuity confirmed"
+        addressed_by: "Routine opportunistic continuity audit for the next milestone; PolarFire was reachable in .319 and this confirms no regression. No new workload."
+        retire_if_same_verdict: false
+    milestone: "2026.05.320"
+    title: "PolarFire opportunistic reachability + continuity audit (no terminal mandate)"
+    priority: low
+    max_turns: 20
+    agent_type: claude
+    requires_claude: true   # gemini-cli is DOWN; claude is the only landing backend.
+    estimated_wall_time_min: 8
+    track: hardware
+    inference_substrate: hardware_smoke
+    requires_gpu: false
+    deliverable: "results/experiment_3479_polarfire_reachability_audit_v6.json"
+    prompt: |
+      CONTEXT: north-star §3 classifies PolarFire as opportunistic only (scaling validated to
+      1000 clauses; no terminal-state mandate). This is a LIGHT audit to keep the board visible
+      per Hardware-Task Continuity without burning wall-time — NOT a new workload run. PolarFire
+      was reachable in .319 (exp3467).
+
+      EXISTING CODE TO READ FIRST:
+        - results/experiment_3467_polarfire_reachability_audit_v5.json
+        - ops/hardware-bringup-prep.md (PolarFire state)
+        - CLAUDE.md Pre-Launch Preconditions: PolarFire SSH row
+
+      TASK: Audit PolarFire reachability and record continuity status.
+
+      PRECONDITIONS / CONCRETE STEPS:
+        1. ssh -o ConnectTimeout=5 polarfire 'true' (record exit code). If unreachable ->
+           honest_verdict complete: blocked_polarfire_ssh_timeout (honest, expected-acceptable for
+           an opportunistic board).
+        2. If reachable: record uptime + confirm no regression from the last validated state. Do
+           NOT launch a new dispatch workload.
+        3. Emit the artifact with the reachability result + a one-line continuity note,
+           honest_verdict starting 'complete:'.
+
+      REQUIRED ARTIFACT FIELDS:
+        honest_verdict: principle="complete:/success:/passed:/shipped_ prefix, or complete: blocked_polarfire_ssh_timeout."
+        inference_substrate: value=hardware_smoke
+        preconditions_checked: principle="records the SSH reachability check."
+        polarfire_reachable: principle="boolean continuity signal."
+        duration_s: principle="SSH check wall time."
+      Run command: cd {project_root} && JAX_PLATFORMS=cpu .venv/bin/python scripts/experiment_3479_polarfire_reachability_audit_v6.py. Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  # =========================================================================
+  # PHASE E — OPS synthesis + capstone
+  # =========================================================================
+  - id: exp3480-g-gate-status-synthesis-v320
+    operator_override: "2026-05-29 operator directive (ops/north-star.md §2): the capstone reports which of G1-G4 are unmet, not a publication_blocker_count. This synthesis gates on the CHEAP, RELIABLE P0.1 SCORING crux (exp3472), NOT a heavy generation task — to avoid the .317 cascade. Not a vN+1 evidence/telemetry matrix (Depth-Over-Breadth forbids that)."
+    prior_failures:
+      - experiment_id: exp3468-g-gate-status-synthesis-v319
+        verdict: "complete: g1_g3_g4_met_g2_unmet_p0_1_v5_exact_tie_sc_flagged_adversarial"
+        addressed_by: "Routine per-milestone gate synthesis for .320; gates on the cheap reliable cached-scoring crux (exp3472), which emits a complete: verdict under every outcome (including a clean blocked-on-small-corpus / blocked-on-ceiling verdict), so it cannot cascade-block."
+        retire_if_same_verdict: false
+    gated_on:
+      - upstream: exp3472-p01-process-energy-vs-self-consistency-headroom-v6
+        artifact_field: honest_verdict
+        op: 'contains'
+        value: 'complete'
+    milestone: "2026.05.320"
+    title: "G1-G4 gate-status synthesis (P0.1 v6 headroom crux / G2 self-contained package / calibration v3 / FR-11 depth verdicts)"
+    priority: high
+    max_turns: 30
+    agent_type: claude
+    requires_claude: true   # gemini-cli is DOWN; claude is the only landing backend.
+    estimated_wall_time_min: 15
+    track: ops
+    inference_substrate: aggregation_from_upstream_artifacts
+    requires_gpu: false
+    deliverable: "results/experiment_3480_g_gate_status_synthesis_v320.json"
+    prompt: |
+      CONTEXT: Per north-star §2, the capstone reports WHICH of G1-G4 are unmet, not a
+      redefinable publication_blocker_count. This milestone tested whether a PROCESS-AWARE energy
+      + optimal aggregation beats self-consistency on a HEADROOM benchmark (exp3472), explained
+      it via the energy's minority-correct recovery (exp3473), shipped a self-contained G2
+      external package (exp3476), stress-tested FR-11 self-learning at depth N>=200 (exp3474), and
+      extended Kona to harder instances (exp3475). This task synthesizes their verdicts against
+      the gate. It gates on exp3472's honest_verdict (cheap + reliable) so it cannot cascade-block.
+
+      EXISTING CODE TO READ FIRST:
+        - ops/north-star.md §2 (the G1-G4 gate definitions)
+        - scripts/publication_gate.py (the gate computation)
+        - ops/publication_gate_state.json (the G2 manual boolean)
+        - results/experiment_3472/3473/3474/3475/3476 artifacts (this milestone's depth + G2 block)
+
+      TASK: Read the depth + G2 artifacts and emit a structured G1-G4 status report plus a
+      one-paragraph record of what the P0.1 v6 HEADROOM test concluded and whether G2 now has a
+      verified self-contained external package.
+
+      CONCRETE STEPS:
+        1. Read the artifacts. SKIP any artifact carrying flagged_adversarial=true (do NOT aggregate it).
+        2. For each gate G1-G4, record met/unmet + the supporting artifact via
+           scripts/publication_gate.py. In particular: did P0.1 v6 (exp3472) reach a CLEAN,
+           NON-DEGENERATE, tautology-FREE verdict on a HEADROOM benchmark, and did the process
+           energy + optimal aggregation BEAT / match / lose to SC at matched compute (with a
+           non-zero flip count)? Did the energy recover minority-correct answers (exp3473)? Did
+           G2 (exp3476) verify a self-contained external package (g2 still external-pending, not met)?
+        3. Record whether the Depth-Over-Breadth Forcing Function can now relax — it relaxes ONLY
+           once P0.1 has a CLEAN (un-flagged) verdict AND G2 has a concrete in-flight reproducer
+           (verified self-contained package + an external ask in motion). Report this as a boolean
+           with justification.
+        4. Emit the artifact (g1..g4 booleans, unmet_gates list, p0_1_v6_verdict,
+           process_energy_vs_self_consistency_delta, flip_count, minority_correct_recovery_rate,
+           g2_package_status, fr11_depth_collapse_consequence, kona_process_hybrid_delta,
+           depth_forcing_function_can_relax) with honest_verdict starting 'complete:' and field
+           gate_status_v320_ready=true. Do NOT touch operator-curated docs (north-star.md, index.html, README).
+
+      REQUIRED ARTIFACT FIELDS:
+        honest_verdict: principle="complete:/success:/passed:/shipped_ prefix."
+        g1: principle="headline measured (FoVer 0.9131) — boolean."
+        g2: principle="independently reproduced — boolean (external/CI run still pending after exp3476)."
+        g3: principle="prose narrowing-clean — boolean."
+        g4: principle="numbers trace to primary artifacts — boolean."
+        unmet_gates: principle="the list of unmet gates (NOT a count); the stable steering signal."
+        p0_1_v6_verdict: principle="the clean P0.1 v6 (exp3472) terminal verdict — the milestone's load-bearing outcome."
+        process_energy_vs_self_consistency_delta: principle="optimal-aggregation minus SC at matched compute on the headroom held-out set (only if SC in band + verdict un-flagged)."
+        flip_count: principle="exp3472 flip_count — proves the test was non-degenerate (not the exp3460 exact-tie regime)."
+        minority_correct_recovery_rate: principle="exp3473: did the energy recover minority-yet-correct answers — the mechanism behind the P0.1 outcome."
+        g2_package_status: principle="exp3476 outcome: self_contained_package_verified | package_built_verification_unavailable | still_failing."
+        fr11_depth_collapse_consequence: principle="exp3474 outcome: does at-risk grounding cause collapse at N>=200 depth (now citable)?"
+        kona_process_hybrid_delta: principle="exp3475: does the process energy strengthen the Kona hybrid on harder instances?"
+        depth_forcing_function_can_relax: principle="boolean: P0.1 has a CLEAN verdict AND G2 has a concrete in-flight reproducer."
+        gate_status_v320_ready: principle="terminal completion flag the capstone gates on."
+      Run command: cd {project_root} && JAX_PLATFORMS=cpu .venv/bin/python scripts/experiment_3480_g_gate_status_synthesis_v320.py. Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  - id: exp3481-capstone-v320
+    operator_override: "2026-05-29 operator directive (standing, mechanical auto-stamp): routine capstone task — false-positive scope-match vs exp3469/exp3457 capstone tasks; structurally never a doomed rerun."
+    prior_failures:
+      - experiment_id: exp3469-capstone-v319
+        verdict: "complete: capstone_v319_ready=true"
+        addressed_by: "Routine milestone capstone for .320; gates on exp3480 (which gates on the cheap reliable P0.1 scoring crux exp3472), breaking any cascade."
+        retire_if_same_verdict: false
+    gated_on:
+      - upstream: exp3480-g-gate-status-synthesis-v320
+        artifact_field: gate_status_v320_ready
+        op: '=='
+        value: true
+    milestone: "2026.05.320"
+    title: "Capstone v320"
+    priority: critical
+    max_turns: 20
+    agent_type: claude
+    requires_claude: true   # gemini-cli is DOWN; claude is the only landing backend.
+    estimated_wall_time_min: 5
+    track: ops
+    inference_substrate: aggregation_from_upstream_artifacts
+    requires_gpu: false
+    deliverable: "results/experiment_3481_capstone_v320.json"
+    prompt: |
+      CONTEXT: Milestone .320 (Depth-Over-Breadth VI) tested whether a PROCESS-AWARE (step-level)
+      energy + optimal SC+energy aggregation BEATS self-consistency on a benchmark WITH HEADROOM
+      (hard math, SC ~0.4-0.7) — the win GSM8K's ceiling (0.908) structurally precluded in .319.
+      It explained the outcome via the energy's minority-yet-correct recovery (exp3473), shipped a
+      self-contained repo-independent G2 reproduction package (exp3476), stress-tested FR-11
+      self-learning at depth N>=200 (exp3474), and extended Kona to harder instances (exp3475).
+      Per the fabrication gate, SKIP any artifact carrying flagged_adversarial=true — never
+      aggregate flagged numbers.
+
+      EXISTING CODE TO READ FIRST:
+        - results/experiment_3480_g_gate_status_synthesis_v320.json (the gate status)
+        - all .320 experiment artifacts (exp3470-exp3479)
+        - ops/north-star.md §1 (the headline) + §2 (the gate)
+
+      TASK: Produce the .320 capstone.
+
+      CONCRETE STEPS:
+        1. Read exp3480 gate status + all .320 artifacts. SKIP flagged_adversarial.
+        2. Report which G1-G4 gates moved and the clean P0.1 v6 verdict (the headline outcome):
+           with a NON-DEGENERATE SC baseline IN THE HEADROOM BAND at matched compute on held-out
+           problems, did the process energy + optimal aggregation BEAT / match / lose to SC, with
+           what flip count and net correctness gain, and does the calibration v3 (exp3473)
+           minority-correct recovery explain it? Report G2's self-contained-package status
+           (exp3476), the FR-11 depth-collapse finding (exp3474), and the Kona harder-instance
+           result (exp3475). Identify the next biggest gaps — if Depth-Over-Breadth can NOW relax
+           (clean P0.1 verdict + in-flight G2 reproducer), recommend the next depth focus; if not,
+           recommend the next decoupled step.
+        3. Emit paper_v6_safe_claims / paper_v6_forbidden_claims honoring the Paper-v6 Narrowing
+           Discipline (exclude flagged_adversarial artifacts; do NOT re-assert retracted claims).
+           FRAMING GUARD: the FoVer headline (G1, AUROC 0.9131) is a 4-VERIFIER score per
+           north-star §1 — do NOT conflate it with the k=15 cross-mechanism ensemble. ALSO: state
+           the P0.1 result honestly — if the process energy only matched or lost to SC even WITH
+           headroom, frame it as a strong refutation of the selection premise on this substrate
+           (do NOT claim "energy beats SC"); if it WON, frame it as the first real Phase-3
+           selection justification, preliminary until replicated.
+        4. Emit the artifact with honest_verdict starting 'complete:' and field capstone_v320_ready=true.
+      Run command: cd {project_root} && JAX_PLATFORMS=cpu .venv/bin/python scripts/experiment_3481_capstone_v320.py. Do NOT push. Do NOT modify scripts/research_conductor.py.
