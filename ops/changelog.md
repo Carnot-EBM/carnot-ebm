@@ -7834,3 +7834,4 @@ ModuleNotFoundError: No module named 'torch'; results/experiment_2828_fover_memo
 - 2026-05-30: G1-G4 gate-status synthesis (P0.1/P0.2/Kona/G2 verdicts) (✅ Complete) — honest_verdict=complete: g1=True g2=False g3=True g4=True unmet=['G2'] depth_relax=True; results/experiment_3423_g_gate_status_synthesis_v315.json
 - 2026-05-30: Capstone v315 (✅ Complete) — honest_verdict=complete: capstone_v315_ready=true; results/experiment_3424_capstone_v315.json
 - 2026-05-30: Archive milestone .315 honestly and activate .316 (✅ Complete) — honest_verdict=complete: archive_v315_activate_v316_ready=true; results/experiment_3425_archive_v315_activate_v316.json
+- 2026-05-30: P0.1 v2 — Energy-Descent vs AR vs Self-Consistency vs Self-Certainty BoN (matched compute) (✅ Complete) — honest_verdict=complete: energy_matches_but_does_not_beat_self_consistency_at_equal_compute; results/experiment_3426_energy_descent_vs_ar_vs_self_consistency_premise_v2.json
