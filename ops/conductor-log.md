@@ -7044,3 +7044,5 @@ web search: https://docs.garak.ai/garak/examples/pr |
     at async file:///usr/lib/node_modules/@g |
 | 2026-05-30 05:41 UTC | Verifier-Ensemble vs Adaptive Prompt-Injection Cor | FAIL | Gemini CLI error: T.js:345500:14)
     at async file:///usr/lib/node_modules/@g |
+| 2026-05-30 05:43 UTC | Verifier-Ensemble vs Adaptive Prompt-Injection Cor | FAIL | Gemini CLI error: T.js:345500:14)
+    at async file:///usr/lib/node_modules/@g |
