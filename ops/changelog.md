@@ -7800,3 +7800,4 @@ ModuleNotFoundError: No module named 'torch'; results/experiment_2828_fover_memo
 - 2026-05-30: EBM-CoT Verification Pipeline on Live GGUFs (⚠️ Research Finding) — honest_verdict=trajectory_verifier_differentiates_early_commitment_at_scale; results/experiment_3397_ebm_cot_live_benchmark.json
 - 2026-05-30: CAffNet Layer Out-of-Distribution Robustness (⚠️ Research Finding) — honest_verdict=robust; results/experiment_3398_caffnet_robustness.json
 - 2026-05-30: LogicVault Multi-Turn Context Expansion (✅ Complete) — honest_verdict=complete: LogicVault checked long context facts; results/experiment_3399_logicvault_long_context.json
+- 2026-05-30: Cross-Corpus Evidence Matrix v38 (✅ Complete) — honest_verdict=complete: gathered 30 artifacts from .312 and .313; results/experiment_3400_cross_corpus_matrix_v38.json
