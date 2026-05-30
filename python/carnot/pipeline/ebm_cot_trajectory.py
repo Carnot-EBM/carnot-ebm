@@ -45,15 +45,27 @@ class EBMCoTTrajectoryVerifier:
         """Score intermediate trajectory steps and detect early commitment drops.
         
         Rejects paths where verifier confidence drops (energy spike) before completion.
+        Also calculates compute savings by aborting evaluation early.
         """
-        raw_energies = [self.score_step(state) for state in states]
-        energies = self.apply_step_wise_energy_calibration(raw_energies)
-        
+        energies = []
         rejected = False
         early_commitment = False
+        states_evaluated = 0
         
-        for i in range(1, len(energies)):
-            if energies[i] > energies[i-1] + 1.5:  # Energy spike
+        for i, state in enumerate(states):
+            states_evaluated += 1
+            raw_energy = self.score_step(state)
+            
+            # Calibrate on the fly
+            if i > 0:
+                calibrated_energy = 0.7 * raw_energy + 0.3 * energies[i-1]
+            else:
+                calibrated_energy = raw_energy
+                
+            energies.append(calibrated_energy)
+            
+            # Check for spike
+            if i > 0 and energies[i] > energies[i-1] + 1.5:
                 rejected = True
                 early_commitment = True
                 break
@@ -61,5 +73,8 @@ class EBMCoTTrajectoryVerifier:
         return {
             "energies": energies,
             "rejected": rejected,
-            "early_commitment_detected": early_commitment
+            "early_commitment_detected": early_commitment,
+            "total_states": len(states),
+            "states_evaluated": states_evaluated,
+            "states_saved": len(states) - states_evaluated
         }

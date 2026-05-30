@@ -19766,6 +19766,16 @@ The system shall support a repair loop for FR-11 constraint templates, where:
 
 The repository shall provide a script `scripts/experiment_3397_ebm_cot_live_benchmark.py` that runs 100 examples from GSM8K using `cached_sota_pair() unsloth/Qwen3.6-35B-A3B-GGUF`. It applies step-wise energy calibration to intermediate reasoning steps and reports the AUROC of intermediate energy spikes predicting final answer failure in `results/experiment_3397_ebm_cot_live_benchmark.json`.
 
+### REQ-VERIFY-3411: EBM-CoT Scaling and Compute Savings
+
+The repository shall provide a script `scripts/experiment_3411_ebm_cot_scaling.py` that runs 150 examples from GSM8K using `cached_sota_pair() unsloth/Qwen3.6-35B-A3B-GGUF`. It scales up the trajectory monitor using exact verifiers and EBMs, applying step-wise energy calibration. It evaluates whether early trajectory detection saves compute time by calculating total states, states before rejection, and compute time saved, outputting to `results/experiment_3411_ebm_cot_scaling.json`.
+
+### SCENARIO-VERIFY-3411: EBM-CoT Scaling Evaluates Compute Time
+
+**Given** 150 examples from GSM8K and a trajectory monitor using exact verifiers and EBMs
+**When** step-wise energy calibration is applied to intermediate reasoning steps
+**Then** the monitor detects early commitments and calculates the compute time saved before rejection.
+
 ### REQ-VERIFY-3405: NUP Metric Symmetry Breaking Detection
 
 The repository shall provide a script `scripts/experiment_3405_nup_metric_evaluation.py` that evaluates the NUP metric to detect symmetry breaking in the gradient landscape as an early hallucination indicator.
