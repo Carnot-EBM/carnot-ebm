@@ -2393,6 +2393,85 @@ is unavailable
 **Then** it writes a `blocked_<resource>` honest verdict and exits without
 fabricating any generations.
 
+### REQ-KONA-3449: Cached Six-Condition Energy-Vote-vs-Self-Consistency Scoring (P0.1 v4)
+
+Exp 3448 (REQ-KONA-3448) decoupled the expensive generation half of the P0.1
+premise test into a cached, resumable corpus at
+`data/p01_gsm8k_generations.jsonl`. Exp 3449 is the SCORING half: it invokes NO
+live model, consumes the cached corpus deterministically, and so completes in
+seconds and CANNOT idle-timeout (the exp3437 failure mode). It answers the crux
+**does energy-based selection/voting BEAT plain majority-vote self-consistency at
+MATCHED compute?** with six paired conditions and a falsifiable significance gate.
+
+**Rationale:** the sharpened bar (arXiv:2410.12608 "Not All Votes Count" +
+arXiv:2510.14913 budget-aware hybrid) is that a verifier-weighted vote can beat
+self-consistency, and a verifier+SC HYBRID beats either alone — so the honest
+target is "energy (or the energy×SC hybrid) >= self-consistency", not "energy
+beats greedy AR". arXiv:2506.01369 is the adversarial counter: external verifiers
+often UNDERPERFORM self-consistency; if energy loses, that is the
+predicted-and-explained outcome and the energy-superiority framing retires
+honestly. Either outcome is high-value and converges with the .317 Kona result
+(energy is a global heuristic; only the hybrid solves).
+
+**Acceptance criteria:**
+
+- `extract_steps` splits a candidate generation into reasoning steps, and
+  `candidate_energy` scores a candidate with a deterministic, parameter-free
+  verifier-energy ensemble (arithmetic constraint-violation energy
+  `IsingVerifier` + adjacent-step EBM-CoT contradiction energy), where lower
+  energy means a more internally-consistent reasoning trace — no training and no
+  live model, so the score is reproducible.
+- `majority_vote` (self-consistency, the PRIMARY control), `self_certainty_bon`
+  (arXiv:2502.18581, max mean-token-logprob), `energy_argmin`,
+  `energy_weighted_vote` (EBM-CoT softmax(-E/T) over distinct answers,
+  arXiv:2511.07124, THE headline condition), and `energy_sc_hybrid`
+  (arXiv:2510.14913, SC majority signal combined with energy weighting) all
+  consume the SAME `k` cached generations; greedy AR is the 1-sample floor — the
+  energy conditions get no extra samples (matched compute).
+- A NON-DEGENERATE-SC gate re-asserts over the FULL corpus that self-consistency
+  accuracy `>= greedy AND > 0.30` BEFORE any energy comparison is reported; when
+  it fails, the verdict is
+  `complete: blocked_self_consistency_harness_degenerate_per_sample_extraction_broken`
+  with the raw extracted answers of three example problems — the exp3426 0.0-tie
+  guard.
+- `mcnemar_exact` and `paired_bootstrap_ci` provide a paired significance test for
+  the PRIMARY (energy-weighted-vote vs self-consistency) delta and the hybrid
+  delta over the per-problem paired outcomes; an unpaired or `n<30` delta is
+  gameable.
+- `derive_premise_v4_verdict` maps the comparison to exactly one terminal verdict
+  prefixed `complete:`, reporting G1 (energy or hybrid non-inferior to
+  self-consistency) and G2 (energy or hybrid significantly beats self-consistency
+  at matched compute).
+- The Exp 3449 artifact carries
+  `inference_substrate=verifier_ensemble_against_cached_candidates`, `n_problems`,
+  `k_samples`, `self_consistency_non_degenerate`, the six condition accuracies,
+  `delta_energy_vs_self_consistency`, `delta_hybrid_vs_self_consistency`,
+  `delta_energy_vs_greedy_ar`, `paired_significance`, `compute_parity_note`,
+  `random_seed`, `reproducibility_checksum`, and a `duration_s` above the 1s
+  cached-scoring floor, with clean methodology so `adversarial_verify.py` does not
+  flag it.
+
+### SCENARIO-KONA-3449: Exp 3449 Scores Six Conditions Over the Cached Corpus
+**Given** `data/p01_gsm8k_generations.jsonl` exists with `>=30` problems each
+having a greedy generation, `k>=5` sampled generations with extracted answers and
+per-sample logprobs, and the verifier-energy substrate is loadable
+**When** we run
+`experiment_3449_p01_energy_vote_vs_self_consistency_cached_scoring_v4.py`
+**Then** it scores greedy AR, self-consistency, self-certainty BoN, energy-argmin,
+energy-weighted vote, and the energy×SC hybrid on the SAME paired problems sharing
+the SAME `k` cached samples
+**And** it writes the artifact with a `complete:` verdict, the G0/G1/G2 gate
+booleans, and a paired McNemar + bootstrap significance test for the PRIMARY
+energy-vs-self-consistency delta and the hybrid delta.
+
+### SCENARIO-KONA-3449-BLOCKED: Exp 3449 Emits an Honest Block on a Too-Small or Degenerate Corpus
+**Given** the cached corpus is absent / has `n<30` problems, OR the energy
+substrate is unloadable, OR self-consistency is degenerate over the full corpus
+**When** the experiment runs its step-0 preconditions
+**Then** it writes the matching `complete: blocked_*` honest verdict (a clean
+`complete:` prefix so downstream gate-synth/capstone are NOT cascade-blocked) and
+exits without reporting any energy comparison against a broken control.
+
 ### REQ-KONA-3440: Kona Global-Opt Correctness-First Solve-Rate Gate
 
 Carnot MUST re-gate the Kona-style global-optimization Sudoku claim on

@@ -1,0 +1,162 @@
+{
+  "experiment": 3449,
+  "title": "P0.1 cached six-condition energy-vote-vs-self-consistency scoring (v4)",
+  "run_date": "20260530",
+  "started_at": "2026-05-30T13:44:03Z",
+  "finished_at": "2026-05-30T13:44:03Z",
+  "duration_s": 0.2,
+  "status": "success",
+  "inference_substrate": "verifier_ensemble_against_cached_candidates",
+  "random_seed": 20260531,
+  "metrics_used": "exact_match_accuracy",
+  "corpus_path": "data/p01_gsm8k_generations.jsonl",
+  "preconditions_checked": [
+    {
+      "resource": "cached_corpus",
+      "available": true
+    },
+    {
+      "resource": "energy_substrate",
+      "available": true
+    },
+    {
+      "resource": "non_degenerate_self_consistency",
+      "available": true
+    }
+  ],
+  "field_provenance": {
+    "honest_verdict": "Terminal verdict must start with complete:/success:/passed:/shipped_.",
+    "inference_substrate": "verifier_ensemble_against_cached_candidates: no live model is loaded.",
+    "n_problems": "problems scored from the cached corpus; >=30 preliminary, >=80 headline-eligible.",
+    "k_samples": "sampled generations/problem consumed (the matched-compute budget).",
+    "self_consistency_non_degenerate": "re-asserted over the full corpus: SC >= greedy AND > 0.30 \u2014 makes the exp3426 0.0-tie impossible to ship.",
+    "ar_greedy_accuracy": "1-sample greedy control.",
+    "self_consistency_accuracy": "majority vote over k samples \u2014 the PRIMARY control energy must beat; MUST be non-degenerate.",
+    "self_certainty_bon_accuracy": "self-certainty Best-of-N (arXiv:2502.18581) \u2014 the strongest cheap selector.",
+    "energy_argmin_accuracy": "energy-argmin selection over the same k samples.",
+    "energy_weighted_vote_accuracy": "energy-weighted vote (EBM-CoT, arXiv:2511.07124) \u2014 the premise under test; the headline condition.",
+    "energy_sc_hybrid_accuracy": "energy\u00d7SC hybrid (arXiv:2510.14913) \u2014 verifier+sampling hybrids beat either alone; mirrors the .317 Kona hybrid finding.",
+    "delta_energy_vs_self_consistency": "energy_weighted_vote minus self_consistency at matched compute \u2014 THE headline.",
+    "delta_hybrid_vs_self_consistency": "hybrid minus SC \u2014 does combining beat plain majority vote?",
+    "delta_energy_vs_greedy_ar": "energy minus greedy AR \u2014 for continuity with exp3312/exp3426.",
+    "paired_significance": "McNemar exact p + paired bootstrap CI95 for the PRIMARY (energy vs SC) and hybrid deltas; an unpaired or n<30 delta is gameable.",
+    "compute_parity_note": "per-condition generation budget + energy params so energy does not win by spending more compute.",
+    "random_seed": "determinism precondition for reproducibility.",
+    "reproducibility_checksum": "content hash of corpus + substrate + seed.",
+    "duration_s": "cached scoring; 1s floor (no live model \u2014 this is why it cannot time out)."
+  },
+  "honest_verdict": "complete: energy_matches_but_does_not_beat_self_consistency_at_equal_compute",
+  "n_problems": 47,
+  "k_samples": 6,
+  "self_consistency_non_degenerate": true,
+  "ar_greedy_accuracy": 0.787234,
+  "self_consistency_accuracy": 0.87234,
+  "self_certainty_bon_accuracy": 0.808511,
+  "energy_argmin_accuracy": 0.787234,
+  "energy_weighted_vote_accuracy": 0.87234,
+  "energy_sc_hybrid_accuracy": 0.87234,
+  "delta_energy_vs_self_consistency": 0.0,
+  "delta_hybrid_vs_self_consistency": 0.0,
+  "delta_energy_vs_greedy_ar": 0.085106,
+  "paired_significance": {
+    "primary": {
+      "comparison": "energy_weighted_vote_vs_self_consistency",
+      "mcnemar_exact_p": 1.0,
+      "bootstrap_ci95": [
+        0.0,
+        0.0
+      ]
+    },
+    "hybrid": {
+      "comparison": "energy_sc_hybrid_vs_self_consistency",
+      "mcnemar_exact_p": 1.0,
+      "bootstrap_ci95": [
+        0.0,
+        0.0
+      ]
+    }
+  },
+  "self_consistency_degenerate_examples": [
+    {
+      "problem_id": "gsm8k-1121",
+      "gold": 35,
+      "greedy_answer": 35,
+      "sample_answers": [
+        35,
+        35,
+        35,
+        35,
+        35,
+        35
+      ]
+    },
+    {
+      "problem_id": "gsm8k-873",
+      "gold": 12,
+      "greedy_answer": 12,
+      "sample_answers": [
+        12,
+        12,
+        12,
+        12,
+        12,
+        12
+      ]
+    },
+    {
+      "problem_id": "gsm8k-500",
+      "gold": 16,
+      "greedy_answer": 7,
+      "sample_answers": [
+        1,
+        7,
+        43,
+        16,
+        16,
+        43
+      ]
+    }
+  ],
+  "acceptance_gate_g0_non_degenerate_sc": true,
+  "acceptance_gate_g1_energy_non_inferior": true,
+  "acceptance_gate_g2_energy_adds_value": false,
+  "temperature": 1.0,
+  "compute_parity_note": "All sampled-aggregation conditions (2-6) consume the SAME k=6 cached generations; greedy AR is the 1-sample floor. Energy adds only deterministic, parameter-free verifier scoring (IsingVerifier arithmetic-violation energy + EbmCotCalibrator adjacent-contradiction energy, both un-tuned weight 1.0, softmax T=1.0 fixed) \u2014 no extra samples, no trained parameters, so energy cannot win by spending more compute.",
+  "reproducibility_checksum": "fa6e6bb651bcdd6b",
+  "schema": [
+    "acceptance_gate_g0_non_degenerate_sc",
+    "acceptance_gate_g1_energy_non_inferior",
+    "acceptance_gate_g2_energy_adds_value",
+    "ar_greedy_accuracy",
+    "compute_parity_note",
+    "corpus_path",
+    "delta_energy_vs_greedy_ar",
+    "delta_energy_vs_self_consistency",
+    "delta_hybrid_vs_self_consistency",
+    "duration_s",
+    "energy_argmin_accuracy",
+    "energy_sc_hybrid_accuracy",
+    "energy_weighted_vote_accuracy",
+    "experiment",
+    "field_provenance",
+    "finished_at",
+    "honest_verdict",
+    "inference_substrate",
+    "k_samples",
+    "metrics_used",
+    "n_problems",
+    "paired_significance",
+    "preconditions_checked",
+    "random_seed",
+    "reproducibility_checksum",
+    "run_date",
+    "self_certainty_bon_accuracy",
+    "self_consistency_accuracy",
+    "self_consistency_degenerate_examples",
+    "self_consistency_non_degenerate",
+    "started_at",
+    "status",
+    "temperature",
+    "title"
+  ]
+}

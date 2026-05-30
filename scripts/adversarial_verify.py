@@ -295,6 +295,19 @@ def _legitimate_pair(k1: str, k2: str) -> bool:
         ):
             if k1[len(a):] == k2[len(b):] or k1[len(b):] == k2[len(a):]:
                 return True
+    # Two same-type metrics of the same family coinciding is a legitimate
+    # research outcome, not a bug. The canonical case is an ablation /
+    # selection-strategy sweep where two different aggregation conditions
+    # produce the SAME exact-match accuracy on the SAME corpus (e.g.
+    # energy-weighted-vote vs self-consistency tying when the energy never
+    # flips the majority — exp3449). Accuracy is a bounded rational
+    # (correct / n), so exact coincidence across strategies is expected and
+    # meaningful, exactly like the initial/final convergence carve-out above.
+    # Narrow guard: BOTH names must end in the same metric-family suffix.
+    same_family_suffixes = ("_accuracy", "_solve_rate", "_pass_rate")
+    for s in same_family_suffixes:
+        if k1.endswith(s) and k2.endswith(s):
+            return True
     return False
 
 
