@@ -18789,3 +18789,46 @@ This refresh captures continual learning frameworks under constrained memory and
 - **Neural Uncertainty Principle (Mar 2026)**: Uses the Ising model to map hallucinations and adversarial fragility to phase transitions in neural network optimization (symmetry breaking).
 - **Abductive Reasoning CSP (Nov 2025)**: "Tackling LLM Hallucination with Abductive Reasoning" treats chain-of-thought verification as a CSP over a contextual graph.
 - **Visual Grounding Score (VGS) Decoding (Mar 2026)**: Penalizes tokens relying on language priors over grounded visual/contextual evidence.
+
+## 2026-05-30 UserHarness — external validation of the "harness > free generation" thesis (arXiv:2605.27721)
+
+- **UserHarness: Harnessing User Minds for Stronger Agent Theory-of-Mind
+  (arXiv:2605.27721, May 2026):** Reframes Theory-of-Mind as explicit structured
+  reconstruction of a user's belief chain (E→O→B→A→E) inside a "harness" that
+  confines the base model to three constrained roles (translate / proof-audit /
+  fallback), rather than free-form prompting. Results: **95.94% macro (Claude
+  Opus) vs 72.61% direct prompting** across ToMi/BigToM/MMToM-QA/MuMA-ToM/Hi-ToM,
+  and — critically — it **collapses the model-spread from 26.75 points to 3.65**
+  (every backbone GPT/Gemini/Claude/Llama/Qwen >92%). Token-efficient (156–187
+  output tokens/example). Domain (conversational ToM) is NOT Carnot's; the value
+  is the META-ARCHITECTURE, which independently validates Carnot's core bet in an
+  adjacent field. Three load-bearing application notes:
+  - **(1) Constrain the auditor — never give an LLM verifier free veto.** Their
+    Figure 2: when the model is allowed to freely override harness-derived proofs
+    it FALSELY REJECTS correct proofs ~50% of the time; constraining the auditor
+    is what makes the system work. Relevance to Carnot: validates the choice of
+    EXACT/SYMBOLIC verifiers (Boolean-E, SAT, Z3, AST) over LLM-judge verifiers,
+    and is a hard caution for any LLM-based verifier in the ensemble (the
+    NLA-class 16th verifier, eval-awareness probes) — give them constrained roles,
+    not free veto. Same lesson as the 2026-05-30 fabrication gate (self-auditing
+    gemini agents rubber-stamped fabricated results, e.g. exp3397).
+  - **(2) Symbolic-floor + neural-lift is the winning decomposition.** Their
+    symbolic-only harness already reaches 75.63%; the neural part adds ~20 points
+    on hard cases. Relevance to Carnot: this is the empirical precedent for the
+    queued Kona global-opt HYBRID (energy/symbolic structure proposes, neural +
+    Carnot's Z3/AST verifiers refine the residual — `ops/known-issues.md` Kona
+    correctness-first gate, Step 3). Cite UserHarness for "structure carries the
+    floor, neural lifts the tail." Complements the Logical Intelligence Kona ref
+    (96.2% hard-Sudoku) above.
+  - **(3) Structure > model choice.** Spread collapsing to 3.65 means the HARNESS
+    is the leverage, not the backbone (though Opus + harness is their top result).
+    Relevance to Carnot: tempers the 2026-05-30 planner→Opus switch — the durable
+    win is STRUCTURING the planner's task (auto-stamp, depth-over-breadth,
+    prior_failures discipline) so it performs regardless of model; Opus is the
+    multiplier, not the foundation.
+  - **Framing bonus:** their "beliefs update only from accessible evidence, never
+    hidden truth (perspective leakage)" is a clean name for what adversarial_verify
+    enforces — a result must derive from accessible computed evidence (real
+    duration / seed / checksum), not from the answer the agent expects. exp3397 was
+    pure perspective-leakage. Limitations (theirs): higher-order/nested beliefs,
+    future-action prediction, socially-grounded goals, text-only.
