@@ -7842,3 +7842,4 @@ ModuleNotFoundError: No module named 'torch'; results/experiment_2828_fover_memo
 - 2026-05-30: PolarFire opportunistic reachability + continuity audit (no terminal mandate) (✅ Complete) — honest_verdict=complete: polarfire reachable and continuity confirmed; results/experiment_3433_polarfire_reachability_audit_v2.json
 - 2026-05-30: G1-G4 gate-status synthesis (clean P0.1 v2 / P0.2 / Kona / G2 verdicts) (✅ Complete) — honest_verdict=complete: gate_status_v316_synthesized; results/experiment_3434_g_gate_status_synthesis_v316.json
 - 2026-05-30: Capstone v316 (✅ Complete) — honest_verdict=complete: capstone_v316_ready=true; results/experiment_3435_capstone_v316.json
+- 2026-05-30: FoVer Headline G2 — Clean-Room Root-Cause + Fix (make a fresh clone reproduce) (✅ Complete) — honest_verdict=complete: fover_g2_cleanroom_rootcaused_and_fixed_external_run_pending; results/experiment_3438_fover_g2_cleanroom_rootcause_and_fix_v2.json
