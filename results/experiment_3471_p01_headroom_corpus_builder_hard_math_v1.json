@@ -2,22 +2,22 @@
   "experiment": 3471,
   "title": "P0.1 hard-math headroom corpus builder with per-step traces (v1)",
   "run_date": "20260530",
-  "started_at": "2026-05-30T19:24:30Z",
-  "finished_at": "2026-05-30T19:26:55Z",
-  "duration_s": 144.204,
+  "started_at": "2026-05-30T19:27:38Z",
+  "finished_at": "2026-05-30T19:50:17Z",
+  "duration_s": 1358.769,
   "status": "success",
   "random_seed": 20260530,
   "reproducibility_checksum": "88003180041fab03",
   "metrics_used": "unknown",
-  "honest_verdict": "complete: p01_headroom_corpus_partial_n=3_resume_next_milestone",
+  "honest_verdict": "complete: blocked_no_headroom_benchmark_sc_outside_band",
   "inference_substrate": "live_llm_inference",
   "task_name": "MATH (Hendrycks) Level 5 hard-math split, held-out shuffled",
   "benchmark_id": "EleutherAI/hendrycks_math:test:Level 5 | subjects=algebra+number_theory+prealgebra | levels=Level 5 | seed=20260530",
   "corpus_path": "data/p01_hardmath_generations.jsonl",
-  "n_problems_completed": 3,
+  "n_problems_completed": 34,
   "n_problems_target": 80,
-  "n_problems_added_this_run": 3,
-  "n_problems_prior": 0,
+  "n_problems_added_this_run": 31,
+  "n_problems_prior": 3,
   "k_samples": 6,
   "max_tokens": 512,
   "sample_temperature": 0.8,
@@ -26,10 +26,10 @@
   ],
   "per_step_traces_captured": true,
   "per_sample_logprobs_captured": true,
-  "warmup_self_consistency_accuracy": 0.3333,
+  "warmup_self_consistency_accuracy": 0.2647,
   "self_consistency_in_headroom_band": false,
-  "warmup_greedy_accuracy": 0.3333,
-  "warmup_n_problems": 3,
+  "warmup_greedy_accuracy": 0.2941,
+  "warmup_n_problems": 34,
   "warmup_extraction_examples": [
     {
       "problem_id": "math-694c09866c4a",
@@ -74,7 +74,7 @@
       "majority_vote": "2"
     }
   ],
-  "wall_budget_s": 100.0,
+  "wall_budget_s": 1320.0,
   "wall_budget_hit": true,
   "acceptance_gate_g1_headroom_confirmed": false,
   "acceptance_gate_g2_scorable": false,
@@ -158,13 +158,5 @@
     "warmup_n_problems",
     "warmup_self_consistency_accuracy"
   ],
-  "invariant_violations": [],
-  "flagged_adversarial": true,
-  "corrigendum_pending": [
-    {
-      "kind": "TAUTOLOGY",
-      "severity": "critical",
-      "detail": "warmup_self_consistency_accuracy=0.3333 and warmup_greedy_accuracy=0.3333 agree to >5 sig figs. Two distinct metrics matching this precisely is more likely a bug than a finding."
-    }
-  ]
+  "invariant_violations": []
 }
