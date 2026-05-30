@@ -2393,6 +2393,70 @@ is unavailable
 **Then** it writes a `blocked_<resource>` honest verdict and exits without
 fabricating any generations.
 
+### REQ-KONA-3459: Resume-and-Extend the P0.1 Generation Corpus Toward n=120 (v2)
+
+Exp 3448 (REQ-KONA-3448) landed a PARTIAL corpus of `n=47/120` problems at
+`data/p01_gsm8k_generations.jsonl` — its resumable builder exited clean on its
+~18-minute wall-time budget BY DESIGN, not by failure. The downstream P0.1 crux
+(exp3460) needs a HEADLINE-eligible sample (`>=80` problems) before it can report
+a trained-energy verdict rather than a preliminary one. Exp 3459 RE-INVOKES the
+same decoupled generation half: it reads which problem ids are already complete,
+SKIPS them, and generates only the remainder (1 greedy + `k=6` sampled per
+problem, with per-token / mean-token logprobs), using the SAME GSM8K split, seed,
+model, and sampling parameters exp3448 documented so the extended rows are
+homogeneous. It appends one JSONL row per completed problem, prints a progress
+line after every problem (defeating the exp3437 idle-timeout), and exits clean on
+its wall-time budget with whatever it finished.
+
+**Rationale:** the corpus must accumulate MONOTONICALLY across milestones. A v2
+extend run that regressed the corpus, dropped the logprobs the scorer needs, or
+re-generated finished problems would waste GPU time and break the resume
+contract. The verdict band is sharpened for v2: `>=120` is complete, `>=80` is
+HEADLINE-eligible (lets exp3460 report a headline, not a preliminary, verdict),
+and anything below 80 is an extended-partial that resumes again next milestone.
+
+**Acceptance criteria:**
+
+- The v2 verdict (`derive_extend_verdict`) maps `n_completed` vs the target to
+  exactly one `complete:`-prefixed terminal verdict in three bands:
+  `..._complete_n=NN` (`>=120`), `..._headline_eligible_n=NN` (`80 <= n < 120`),
+  and `..._extended_partial_n=NN_resume_next_milestone` (`n < 80`).
+- The v2 gates (`extend_acceptance_gates`) report G1 CORPUS-NOT-REGRESSED
+  (`n_completed >= 47 AND per_sample_logprobs_captured`) — the corpus did not
+  shrink and still carries the logprobs the scoring task needs (resume is
+  monotone) — and G2 HEADLINE-ELIGIBLE (`n_completed >= 80`).
+- `added_this_run(n_total, n_prior)` reports the problems newly generated this
+  invocation (`max(0, n_total - n_prior)`), distinct from the running total, so
+  the artifact proves the resume actually generated new work.
+- The Exp 3459 artifact carries `inference_substrate=live_llm_inference`,
+  `corpus_path`, `n_problems_completed`, `n_problems_target`,
+  `n_problems_added_this_run`, `k_samples`, `per_sample_logprobs_captured`,
+  `self_consistency_non_degenerate`, `warmup_self_consistency_accuracy`,
+  `warmup_greedy_accuracy`, `model_specs` (the gemma-4-26B-A4B-it GGUF),
+  `random_seed`, `reproducibility_checksum`, and a `duration_s` above the 60s
+  live-inference floor.
+
+### SCENARIO-KONA-3459: Exp 3459 Resumes and Extends Toward the Headline-Eligible Target
+**Given** `data/p01_gsm8k_generations.jsonl` already holds the exp3448 partial
+corpus (`n=47`) and CUDA + the `unsloth/gemma-4-26B-A4B-it-GGUF` embedded
+tokenizer are available
+**When** we run `experiment_3459_p01_generation_corpus_extend_to_120_v2.py`
+**Then** it loads the exp3448 GSM8K split + seed, skips the already-completed
+problem ids, generates 1 greedy + `k=6` sampled generations (with per-token
+logprobs) for the remaining problems, appends one JSONL row per completed problem,
+prints a progress line after each, and exits clean on its wall-time budget
+**And** it writes the artifact with a `complete:` verdict reporting the new total
+`n_problems_completed`, `n_problems_added_this_run`, the G1/G2 gates, and the
+full-corpus warm-up self-consistency self-check.
+
+### SCENARIO-KONA-3459-RESUME-MONOTONE: Exp 3459 Never Regresses the Corpus
+**Given** the corpus already contains `n` completed problems with per-sample
+logprobs
+**When** the extend run is re-invoked any number of times
+**Then** the completed problem count never decreases, finished problems are never
+re-generated, and the G1 CORPUS-NOT-REGRESSED gate stays true so the resume
+contract is monotone.
+
 ### REQ-KONA-3449: Cached Six-Condition Energy-Vote-vs-Self-Consistency Scoring (P0.1 v4)
 
 Exp 3448 (REQ-KONA-3448) decoupled the expensive generation half of the P0.1

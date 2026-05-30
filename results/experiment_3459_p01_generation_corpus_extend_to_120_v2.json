@@ -1,0 +1,113 @@
+{
+  "experiment": 3459,
+  "title": "P0.1 generation-corpus resume-and-extend toward n=120 (v2)",
+  "run_date": "20260530",
+  "started_at": "2026-05-30T16:14:25Z",
+  "finished_at": "2026-05-30T16:31:26Z",
+  "duration_s": 1021.141,
+  "status": "success",
+  "random_seed": 20260530,
+  "reproducibility_checksum": "fe67d17756d37454",
+  "metrics_used": "unknown",
+  "honest_verdict": "complete: p01_generation_corpus_headline_eligible_n=93",
+  "inference_substrate": "live_llm_inference",
+  "task_name": "GSM8K (original questions, exp281 corpus), held-out shuffled split",
+  "corpus_path": "data/p01_gsm8k_generations.jsonl",
+  "n_problems_completed": 93,
+  "n_problems_target": 120,
+  "n_problems_added_this_run": 46,
+  "n_problems_prior": 47,
+  "k_samples": 6,
+  "max_tokens": 320,
+  "sample_temperature": 0.8,
+  "per_sample_logprobs_captured": true,
+  "self_consistency_non_degenerate": true,
+  "warmup_self_consistency_accuracy": 0.8925,
+  "warmup_greedy_accuracy": 0.828,
+  "warmup_n_problems": 93,
+  "warmup_extraction_examples": [],
+  "wall_budget_s": 1020.0,
+  "wall_budget_hit": true,
+  "acceptance_gate_g1_corpus_not_regressed": true,
+  "acceptance_gate_g2_headline_eligible": true,
+  "preconditions_checked": [
+    {
+      "resource": "cuda",
+      "available": true
+    },
+    {
+      "resource": "sota_gguf_tokenizer",
+      "available": true
+    },
+    {
+      "resource": "p01_corpus_present",
+      "available": true
+    },
+    {
+      "resource": "real_task_corpus",
+      "available": true
+    }
+  ],
+  "model_specs": [
+    {
+      "name": "Gemma4-26B-A4B-it",
+      "hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+      "quantization": "Q4_K_M"
+    }
+  ],
+  "field_provenance": {
+    "honest_verdict": "Terminal verdict must start with complete:/success:/passed:/shipped_.",
+    "inference_substrate": "live_llm_inference: candidates really load + run the GGUF.",
+    "corpus_path": "data/p01_gsm8k_generations.jsonl \u2014 the cached corpus exp3460/3461/3464 consume.",
+    "n_problems_completed": "TOTAL problems with a full generation set after this run (was 47).",
+    "n_problems_target": "the target (120); n < target -> resume again next milestone.",
+    "n_problems_added_this_run": "problems newly generated this invocation (proves resume worked, distinct from total).",
+    "k_samples": "sampled generations per problem (6) \u2014 the matched-compute budget for scoring.",
+    "per_sample_logprobs_captured": "boolean: mean-token confidence stored per generation.",
+    "self_consistency_non_degenerate": "full-corpus warm-up gate: SC >= greedy AND > 0.30 (the exp3426 0.0-bug guard).",
+    "warmup_self_consistency_accuracy": "majority-vote accuracy over the full corpus.",
+    "warmup_greedy_accuracy": "greedy accuracy over the full corpus.",
+    "model_specs": "the actual GGUF invoked (gemma-4-26B-A4B-it-GGUF).",
+    "random_seed": "determinism precondition for reproducibility.",
+    "reproducibility_checksum": "content hash of corpus split + model + seed.",
+    "duration_s": "real live MoE generation takes wall time; 60s floor \u2014 sub-60s is the fabrication signal."
+  },
+  "schema": [
+    "acceptance_gate_g1_corpus_not_regressed",
+    "acceptance_gate_g2_headline_eligible",
+    "corpus_path",
+    "duration_s",
+    "experiment",
+    "field_provenance",
+    "finished_at",
+    "honest_verdict",
+    "inference_substrate",
+    "k_samples",
+    "max_tokens",
+    "metrics_used",
+    "model_specs",
+    "n_problems_added_this_run",
+    "n_problems_completed",
+    "n_problems_prior",
+    "n_problems_target",
+    "per_sample_logprobs_captured",
+    "preconditions_checked",
+    "random_seed",
+    "reproducibility_checksum",
+    "run_date",
+    "sample_temperature",
+    "self_consistency_non_degenerate",
+    "started_at",
+    "status",
+    "task_name",
+    "title",
+    "wall_budget_hit",
+    "wall_budget_s",
+    "warmup_extraction_examples",
+    "warmup_greedy_accuracy",
+    "warmup_n_problems",
+    "warmup_self_consistency_accuracy"
+  ],
+  "invariant_violations": []
+}
