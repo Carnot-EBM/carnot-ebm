@@ -7075,3 +7075,4 @@ web search: https://docs.garak.ai/garak/examples/pr |
 | 2026-05-30 07:35 UTC | Verifier-Ensemble vs Adaptive Prompt-Injection Cor | FAIL | Gemini CLI error: T.js:345500:14)
     at async file:///usr/lib/node_modules/@g |
 | 2026-05-30 07:45 UTC | FoVer Headline G2 Clean-Room Validation (isolated  | OK | 81 passed in 4.63s |
+| 2026-05-30 07:55 UTC | KV260 terminal board-level latency transcript (dri | OK | 81 passed in 4.40s |
