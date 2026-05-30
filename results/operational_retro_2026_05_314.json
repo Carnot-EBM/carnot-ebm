@@ -1,0 +1,25 @@
+{
+  "schema": "carnot.operational_retro.v64",
+  "milestone": "2026.05.314",
+  "generated_at": "2026-05-30T04:00:04Z",
+  "retro_type": "operational_full",
+  "total_wall_time_minutes": 0,
+  "experiments_completed": 0,
+  "compute_bound_experiments_count": 0,
+  "slowest_experiments": [],
+  "gpu_idle_on_compute_bound_tasks": null,
+  "summary": "There were no experiment commits found since the activation of milestone 2026.05.314, resulting in 0 total wall time minutes and 0 experiments completed. The GPUs remained entirely idle as no compute-bound tasks were scheduled.",
+  "bottlenecks_identified": [
+    "No experiments were dispatched or committed during this milestone."
+  ],
+  "improvements_suggested": [
+    "Investigate the pipeline dispatch mechanism to ensure experiments are actively queued after milestone activation."
+  ],
+  "top_3_highest_leverage_actions": [
+    "Diagnose why the experiment queue remained empty during this milestone.",
+    "Verify the milestone activation logic triggers task dispatch properly.",
+    "Once tasks are dispatched, monitor GPU usage to ensure DualGPURunner activates for multi-model inference."
+  ],
+  "estimated_time_savings_pct": 0,
+  "meta_reflection": "Since no experiments ran, the primary operational issue is a complete lack of pipeline execution rather than execution inefficiency."
+}
