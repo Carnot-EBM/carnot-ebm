@@ -1608,6 +1608,18 @@ It SHALL NOT claim a scientific delta, and SHALL set `energy_descent_bootstrap_r
 **Then** it runs a tiny deterministic smoke and writes telemetry
 **And** the artifact sets `energy_descent_bootstrap_ready=true` only if all checks pass.
 
+### REQ-INFER-3414: FR-11 Adversarial Robustness Stress Test
+The system SHALL execute a full stress test of FR-11 integrating the new NUP phase transition and Latent Spills signals.
+It SHALL initialize the VerifyRepairPipeline with FR-11 metrics enabled.
+It SHALL process a dataset combining normal and adversarially perturbed CoT traces using `MODEL_SPECS = ["unsloth/Qwen3.6-35B-A3B-GGUF"]`.
+It SHALL evaluate final system accuracy and self-calibration limits and output `results/experiment_3414_fr11_adversarial_robustness.json`.
+
+### SCENARIO-INFER-3414-001: FR-11 Adversarial Robustness Execution
+**Given** FR-11 metrics enabled in VerifyRepairPipeline
+**When** adversarially perturbed CoT traces are processed with Qwen3.6
+**Then** it evaluates accuracy and self-calibration limits
+**And** the experiment artifact `results/experiment_3414_fr11_adversarial_robustness.json` is generated.
+
 ### REQ-INFER-3406: Latent Spills Sensing EBM Pipeline
 The system SHALL provide an EBM pipeline to read latent activation energies and detect 'spills' signaling guessing.
 The verification pipeline SHALL be instrumented to extract internal latent states using `MODEL_SPECS = ["unsloth/gemma-4-31B-it-GGUF"]`.
