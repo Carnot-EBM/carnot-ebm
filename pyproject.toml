@@ -52,6 +52,16 @@ dependencies = [
     # three .269 corpus tasks because preconditions check failed with
     # ModuleNotFoundError. Pinning so the same regression can't recur.
     "datasets>=3.0",
+    # scikit-learn — required at IMPORT time by carnot.verify.__init__, which
+    # eagerly imports tier0g_semantic_energy (TfidfVectorizer) plus many
+    # models/samplers/verify modules. 2026-05-30 G2 clean-room incident
+    # (exp3430): a fresh `pip install -e .` venv lacked sklearn, so importing
+    # ANY carnot.verify.* submodule raised `ModuleNotFoundError: No module
+    # named 'sklearn'`. That made the FoVer headline reproducer return
+    # condition_a=None in a clean room while it passed in the operator's
+    # working venv (which happened to have sklearn installed). Declaring it
+    # here is the load-bearing fix that lets a fresh clone reproduce G2.
+    "scikit-learn>=1.4",
 ]
 
 [project.scripts]

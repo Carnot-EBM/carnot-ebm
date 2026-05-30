@@ -1,0 +1,63 @@
+{
+  "artifact": "experiment_3438_fover_g2_cleanroom_rootcause_and_fix_v2",
+  "schema": "carnot.fover_g2_cleanroom_rootcause_and_fix_v2",
+  "honest_verdict": "complete: fover_g2_cleanroom_rootcaused_and_fixed_external_run_pending",
+  "inference_substrate": "verifier_ensemble_against_cached_candidates",
+  "cleanroom_failure_traceback": "Traceback (most recent call last):\n  File \"scripts/reproduce_fover_headline.py\", line 185, in run_reproduction\n    return run_experiment(cfg, ...)\n  File \"python/carnot/eval/fover_memory_leakage_v3.py\", line 899, in run_experiment\n    condition_a = condition_runner(config, ...)\n  File \"scripts/reproduce_fover_headline.py\", line 139, in in_process_condition_runner\n    return score_fover_subset(repo_root=config.repo_root, ...)\n  File \"python/carnot/eval/fover_memory_leakage_v3.py\", line 563, in score_fover_subset\n    verifier_scores = _score_text_verifiers(texts)\n  File \"python/carnot/eval/fover_memory_leakage_v3.py\", line 525, in _score_text_verifiers\n    from carnot.verify.tier0r_curry_howard import Tier0rVerifier\n  File \"python/carnot/verify/__init__.py\", line 51, in <module>\n    from carnot.verify.tier0g_semantic_energy import SemanticEnergyVerifier\n  File \"python/carnot/verify/tier0g_semantic_energy.py\", line 6, in <module>\n    from sklearn.feature_extraction.text import TfidfVectorizer\nModuleNotFoundError: No module named 'sklearn'",
+  "root_cause": "other_undeclared_sklearn_dependency",
+  "root_cause_detail": "carnot.verify.__init__ eagerly imports tier0g_semantic_energy, which imports sklearn (TfidfVectorizer). scikit-learn was not declared in pyproject.toml dependencies, so a fresh `pip install -e .` venv lacked it and importing any carnot.verify.* submodule (which the FoVer scorer does via _score_text_verifiers) raised ModuleNotFoundError before any AUROC could be computed. The operator's working venv had sklearn installed, masking the gap.",
+  "fix_applied": "Added scikit-learn>=1.4 to pyproject.toml [project].dependencies",
+  "fix_present_in_pyproject": true,
+  "isolation_level": "fresh_worktree",
+  "condition_a_auroc_reproduced": 0.9131335999999999,
+  "learning_contribution_reproduced": 0.0184712,
+  "reproduced_in_ci": true,
+  "condition_a_in_published_ci": true,
+  "learning_contribution_in_published_ci": true,
+  "isolated_env_versions": {
+    "python": "3.14.5 (main, May 22 2026, 00:15:09) [GCC 16.1.1 20260430]",
+    "platform": "Linux-7.0.10-2-cachyos-x86_64-with-glibc2.43",
+    "carnot": "0.1.0b1",
+    "numpy": "2.4.6",
+    "jax": "0.10.1",
+    "scikit_learn": "1.8.0"
+  },
+  "g2_status": "cleanroom_reproducible_internal_external_run_pending",
+  "g2_independent_reproducer": false,
+  "g2_note": "Root cause of the exp3430 clean-room failure identified and fixed: scikit-learn was an undeclared import-time dependency of carnot.verify, so a fresh `pip install -e .` venv raised ModuleNotFoundError before any AUROC was computed. With scikit-learn declared in pyproject.toml, a fresh worktree + venv reproduces the FoVer headline within the published CI. G2 is now CLEAN-ROOM-REPRODUCIBLE INTERNALLY but still NOT CLOSED: closure requires a non-operator to run scripts/reproduce_fover_headline.py from a fresh clone and report condition_A_auroc in [0.9027, 0.9235] and learning_contribution in [0.0125, 0.0245]. See ops/reproduction-runbook-fover-headline.md.",
+  "reproducibility_checksum": "748a695343d105129585d0114f1f8d5e6255fea3fd5519a03d9cc927524901e3",
+  "random_seed": [
+    42,
+    137,
+    271,
+    314,
+    1729
+  ],
+  "duration_s": 32.49278211593628,
+  "n_examples": 1000,
+  "live_model_invoked": false,
+  "preconditions_checked": {
+    "ok": true,
+    "head_sha": "5a71f9561b234e43c9c1288a8072593cca2bf2c7"
+  },
+  "install_returncode": 0,
+  "install_transcript_hash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "carnot_importable_in_isolated_env": true,
+  "harness_error_if_any": null,
+  "field_principles": {
+    "honest_verdict": "complete:/success:/passed:/shipped_ prefix required by CLAUDE.md Verdict Terminal-Prefix Discipline.",
+    "inference_substrate": "Declares verifier-scoring (not live LLM) so adversarial_verify.py applies the 1s floor, not the 60s live-inference floor.",
+    "cleanroom_failure_traceback": "The exact error from the fresh-env run \u2014 the load-bearing evidence of WHY .316 failed.",
+    "root_cause": "The classified cause (missing_exp2836_preflight | py314_numpy24_incompat | working_tree_path | uncommitted_data | other).",
+    "fix_applied": "One-line description of the minimal repo change that makes a fresh clone reproduce.",
+    "isolation_level": "fresh_worktree | fresh_clone | in_place_fallback \u2014 honest about whether true isolation was achieved post-fix.",
+    "condition_a_auroc_reproduced": "Post-fix recomputed production AUROC in the isolated env; must land in [0.9027, 0.9235].",
+    "learning_contribution_reproduced": "Post-fix recomputed FR-11 ablation; must land in [0.0125, 0.0245].",
+    "reproduced_in_ci": "Boolean: both numbers in their published CIs from the post-fix isolated recompute.",
+    "isolated_env_versions": "Python + key lib versions of the isolated env.",
+    "g2_status": "Honest string: cleanroom_reproducible_internal_external_run_pending if fixed, or cleanroom_still_failing_<cause> if not.",
+    "reproducibility_checksum": "Content hash from the post-fix isolated recompute.",
+    "random_seed": "The published seeds [42,137,271,314,1729].",
+    "duration_s": "CPU verifier scoring + isolated install; wall time."
+  }
+}

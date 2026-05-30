@@ -7085,3 +7085,8 @@ web search: https://docs.garak.ai/garak/examples/pr |
 | 2026-05-30 08:59 UTC | Capstone v316 | FAIL | Claude Code error: Error: Reached max turns (20) |
 | 2026-05-30 09:04 UTC | Capstone v316 | FLAGGED | adversarial_verify CRITICAL: TAUTOLOGY — result quarantined, not a clean success |
 | 2026-05-30 09:06 UTC | Milestone 2026.05.317 activated | OK | 11 tasks queued |
+| 2026-05-30 09:13 UTC | Archive milestone .316 honestly and activate .317 | FAIL | Claude Code error: Error: Reached max turns (20) |
+| 2026-05-30 09:15 UTC | Archive milestone .316 honestly and activate .317 | OK | Deliverable already exists in repo |
+| 2026-05-30 09:36 UTC | P0.1 v3 — Energy-Weighted Vote vs Self-Consistency | FAIL | Claude Code error: Wall-clock+idle timeout after 1201s (1201s silence). Last ou |
+| 2026-05-30 10:00 UTC | P0.1 v3 — Energy-Weighted Vote vs Self-Consistency | FAIL | Claude Code error: Wall-clock+idle timeout after 1201s (1201s silence). Last ou |
+| 2026-05-30 10:23 UTC | P0.1 v3 — Energy-Weighted Vote vs Self-Consistency | FAIL | Claude Code error: Wall-clock+idle timeout after 1201s (1201s silence). Last ou |

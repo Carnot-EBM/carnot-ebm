@@ -113,6 +113,19 @@ FoVer headline.
 
 ## Known caveats (be honest with the reproducer)
 
+- **scikit-learn must be installed (FIXED 2026-05-30, exp3438):** The clean-room
+  validation exp3430 (.316) FAILED with `condition_a=None` because a fresh
+  `pip install -e .` venv lacked `scikit-learn`. `carnot.verify.__init__`
+  eagerly imports `tier0g_semantic_energy`, which imports
+  `sklearn.feature_extraction.text.TfidfVectorizer`; the FoVer scorer imports a
+  `carnot.verify.*` submodule, so the missing dependency raised
+  `ModuleNotFoundError: No module named 'sklearn'` **before any AUROC was
+  computed**. The operator's working venv had sklearn installed, masking the
+  gap. **Fix:** `scikit-learn>=1.4` is now declared in `pyproject.toml`
+  `dependencies`, so a fresh `pip install -e .` pulls it automatically. With the
+  fix, a fresh worktree + fresh venv reproduces condition-A mean AUROC 0.9131
+  (in CI) and learning_contribution 0.0185 (in CI). If you are on a clone from
+  BEFORE this fix, run `pip install scikit-learn` and re-run.
 - **Upstream preflight dependency:** `ExperimentConfig` references an
   `exp2836_path` (a SOTA-runtime preflight artifact). For the CPU verifier-
   scoring path this is a gate-check, not a compute dependency, but if the run
