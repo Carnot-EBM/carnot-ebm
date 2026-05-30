@@ -1,3 +1,80 @@
+## 2026-05-30 Post-.318 Planning Sweep (Milestone 2026.05.319)
+
+`.318` (Depth-Over-Breadth IV) **finally got P0.1 to produce real numbers** — the
+decoupled generation builder (exp3448) defeated the 1201s idle-timeout (n=47/120
+cached, resumable, SC non-degenerate) and the cached-scoring crux (exp3449) ran in
+0.2s and CANNOT time out. The honest answer is now legible, and it converges across
+three independent .318 measurements:
+
+- **exp3449 (P0.1 v4 scoring):** at matched compute, energy-weighted vote = 0.87234
+  = self-consistency *exactly* (delta 0.0, McNemar p=1.0); energy-argmin = 0.78723 =
+  greedy-AR floor. **FLAGGED (tautology):** the two metrics are bit-identical. The
+  flag is mechanically correct but the *cause* is not a code bug — it is the
+  consequence below.
+- **exp3450 (energy-correctness calibration):** the .318 energy (IsingVerifier
+  arithmetic-violation + EbmCotCalibrator adjacent-contradiction heuristics, **un-tuned
+  weight 1.0, softmax T=1.0**) has `energy_as_correctness_auroc = 0.516` (≈ chance),
+  Spearman −0.03. **An uninformative energy → uniform softmax weights → energy-weighted
+  vote degenerates to majority vote (= SC), and energy-argmin degenerates to the greedy
+  pick.** That is *exactly* the tautology exp3449 tripped. Verdict:
+  `energy_does_not_track_correctness_explains_p01_ceiling`.
+- **exp3440 (.317 Kona) convergence:** `energy_is_global_heuristic_hybrid_solves_pure_
+  descent_does_not` — same shape: a raw energy landscape does not cleanly separate
+  correct from incorrect; only a hybrid helps.
+
+**The load-bearing reframe for .319:** the .318 energy was an *untrained* heuristic.
+The literature says a *trained* energy reranker is the fix. The decisive P0.1 v5 test
+is therefore: **train a small outcome-label energy reranker on the cached corpus
+(held-out eval) and ask whether the TRAINED energy tracks correctness (AUROC > 0.55)
+and beats SC at matched compute.** If a trained energy ALSO fails to beat SC, the
+"energy-as-ground-truth-for-selection" Phase-3 premise is honestly REFUTED on this
+substrate; if it wins, it is the FIRST real Phase-3 justification.
+
+New references surfaced (2026-05-30 sweep, sources below):
+
+- **arXiv:2505.14999 — "Learning to Rank Chain-of-Thought: Using a Small Model" (EORM).**
+  A lightweight **energy-based** verifier trained SOLELY on outcome labels reranks CoT
+  candidates and significantly boosts math reasoning from a limited candidate set.
+  **THE directly-actionable .319 reference:** it is the trained counterpart to Carnot's
+  untrained .318 energy (AUROC 0.516). Carnot already has EORM infra (Exp 443 "EORM +
+  JEPA retrained"). exp3460 (P0.1 v5) trains this on the cached GSM8K outcome labels.
+- **arXiv:2603.25450 — "Cross-Model Disagreement as a Label-Free Correctness Signal."**
+  Reports that **generator self-perplexity becomes nearly uninformative on CoT tasks**
+  (GSM8K), while cross-model disagreement carries signal. *Independently confirms* the
+  .318 finding (self-certainty BoN only 0.808; energy 0.516). Candidate future signal:
+  a second-model disagreement condition for P0.1 (needs a 2nd cached model).
+- **arXiv:2506.09338 — "Know What You Don't Know: Uncertainty Calibration of Process
+  Reward Models."** PRM calibration / AUROC methodology; directly informs exp3461
+  (energy-correctness calibration v2). Reports entropy/Brier calibration on GSM8K with
+  AUROC ~66–67% — a realistic ceiling for what a calibrated correctness signal looks
+  like (vs Carnot's 0.516 untrained floor).
+- **arXiv:2505.15960 — "Generalizable Process Reward Models via Formally Verified
+  Training Data" (FoVer-80K source).** FoVer-80K training improves step-level
+  verification AUROC on MATH/Olympiad/Omni-Math. This is the corpus behind Carnot's
+  G1 headline (FoVer 0.9131 step-error AUROC). Tension worth noting: Carnot's verifiers
+  detect STEP errors well (0.9131) yet the aggregate energy does NOT rank GSM8K
+  FINAL-ANSWER correctness (0.516) — exp3460 tests whether routing the step-error
+  verifier ensemble into candidate-level selection bridges that gap.
+- **arXiv:2504.01005 — "When To Solve, When To Verify: Compute-Optimal Problem Solving
+  and Generative Verification."** Compute-optimal trade-off between sampling-more vs
+  verifying; the rigorous frame for P0.1's matched-compute accounting.
+- **arXiv:2601.02970 — "Reliability-Aware Adaptive Self-Consistency."** Adaptive SC
+  sampling; relevant to making the SC baseline a strong (not strawman) control.
+- **arXiv:2504.16760 — "Lightweight Latent Verifiers for Efficient Meta-Generation."**
+  Latent-space verifiers for meta-generation; relevant to the continuous-latent energy
+  substrate (boltzmann_gpt / continuous_ebm).
+
+Sources: [2505.14999](https://arxiv.org/abs/2505.14999),
+[2603.25450](https://arxiv.org/abs/2603.25450),
+[2506.09338](https://arxiv.org/abs/2506.09338),
+[2505.15960](https://arxiv.org/abs/2505.15960),
+[2504.01005](https://arxiv.org/abs/2504.01005),
+[2601.02970](https://arxiv.org/abs/2601.02970),
+[2504.16760](https://arxiv.org/abs/2504.16760),
+[2502.18581](https://arxiv.org/abs/2502.18581).
+
+---
+
 ## 2026-05-30 Post-.317 Planning Sweep (Milestone 2026.05.318)
 
 `.317` (Depth-Over-Breadth III) finally landed three of the four depth verdicts
