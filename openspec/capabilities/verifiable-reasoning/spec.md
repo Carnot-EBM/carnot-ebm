@@ -19818,3 +19818,29 @@ The repository shall provide a script `scripts/experiment_3409_semantic_deficit_
 **Given** generated CoT answers mapped to a knowledge graph
 **When** the Semantic Violation Cost calculation evaluates the structural integrity
 **Then** outputs exceeding the acceptable deformation threshold are rejected as smooth falsehoods.
+
+### REQ-VERIFY-3439: Verifier Ensemble Lambda-Min Diversity Audit v3
+
+The repository shall provide a module `python/carnot/verify/verifier_ensemble_diversity.py`
+and a script `scripts/experiment_3439_verifier_ensemble_lambda_min_diversity_audit_v3.py`
+that measure the joint-null-space diversity of the CPU-accessible verifier ensemble.
+The module shall:
+- Score a configurable set of disjoint-kernel verifiers over FoVer + adversarial/OOD slices.
+- Build the k×k verifier-decision covariance matrix Sigma.
+- Compute lambda_min(Sigma), the full pairwise-correlation matrix,
+  effective-k via participation ratio (sum(lambda)^2 / sum(lambda^2)),
+  and per-verifier drop-one-out AUROC delta.
+- Report which verifiers share a null space (zero drop-one-out contribution).
+- Accept if lambda_min_sigma > 0.1 AND effective_k_participation_ratio >= 3.
+- Emit `results/experiment_3439_verifier_ensemble_lambda_min_diversity_audit_v3.json`
+  with all required artifact fields: honest_verdict, inference_substrate,
+  k_verifiers, lambda_min_sigma, pairwise_max_correlation, effective_k_participation_ratio,
+  per_verifier_dropout_contribution, n_examples, random_seed, reproducibility_checksum, duration_s.
+
+### SCENARIO-VERIFY-3439: Ensemble Diversity Audit Detects Null-Space Collapse
+
+**Given** the CPU-accessible verifier suite scored on the FoVer corpus (>=1000 examples)
+**When** the k×k decision covariance matrix is computed and eigendecomposed
+**Then** lambda_min(Sigma) >= 0.1 AND effective_k_participation_ratio >= 3 indicates
+the alpha_t grounding signal survives (G1 GROUNDING-HOLDS); otherwise the ensemble
+has collapsed to fewer independent axes of variation (null-space collapse confirmed).

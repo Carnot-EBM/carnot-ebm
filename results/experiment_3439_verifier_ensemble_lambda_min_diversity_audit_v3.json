@@ -1,0 +1,131 @@
+{
+  "artifact": "experiment_3439_verifier_ensemble_lambda_min_diversity_audit_v3",
+  "experiment_id": 3439,
+  "honest_verdict": "complete: verifier_ensemble_null_space_collapse_confirmed_grounding_at_risk",
+  "inference_substrate": "verifier_ensemble_against_cached_candidates",
+  "k_verifiers": 6,
+  "lambda_min_sigma": -0.0,
+  "pairwise_max_correlation": 0.13172677,
+  "effective_k_participation_ratio": 3.541643,
+  "per_verifier_dropout_contribution": {
+    "z3_math": 0.14631602,
+    "ast_structure": 0.00830723,
+    "pcib_semantic": 0.0,
+    "rprm_heuristic": 0.01308237,
+    "semantic_consistency": 0.01208109,
+    "length_antivacuity": -0.0019868
+  },
+  "n_examples": 1200,
+  "random_seed": 42,
+  "reproducibility_checksum": "0a42f992c71ebb7b",
+  "duration_s": 1.9533,
+  "full_ensemble_auroc": 0.68865371,
+  "eigenvalues": [
+    0.04946559,
+    0.04583311,
+    0.02354764,
+    0.01239828,
+    0.00559372,
+    -0.0
+  ],
+  "acceptance_gate_passed": false,
+  "gate_g1_description": "lambda_min_sigma > 0.1 AND effective_k_participation_ratio >= 3",
+  "null_space_verifiers": [
+    "pcib_semantic",
+    "length_antivacuity"
+  ],
+  "high_correlation_pairs": [],
+  "skipped_gpu_verifiers": [],
+  "verifier_metadata": [
+    {
+      "name": "z3_math",
+      "kernel_class": "structural"
+    },
+    {
+      "name": "ast_structure",
+      "kernel_class": "structural"
+    },
+    {
+      "name": "pcib_semantic",
+      "kernel_class": "semantic"
+    },
+    {
+      "name": "rprm_heuristic",
+      "kernel_class": "empirical"
+    },
+    {
+      "name": "semantic_consistency",
+      "kernel_class": "semantic"
+    },
+    {
+      "name": "length_antivacuity",
+      "kernel_class": "anti_vacuity"
+    }
+  ],
+  "corpus_split": {
+    "main_fover": 1000,
+    "adversarial_ood": 200,
+    "total": 1200
+  },
+  "preconditions_checked": [
+    {
+      "resource": "fover_corpus",
+      "available": true
+    },
+    {
+      "resource": "verifier_suite",
+      "available": true
+    },
+    {
+      "resource": "cuda",
+      "available": true,
+      "note": "CPU-only verifiers used regardless"
+    }
+  ],
+  "field_provenance": {
+    "honest_verdict": {
+      "principle": "complete:/success:/passed:/shipped_ prefix required for conductor reconciler.",
+      "satisfied_by": "string starts with 'complete:'"
+    },
+    "inference_substrate": {
+      "principle": "Declares that no LLM was loaded; scoring is over cached candidates. Duration floor is 1s.",
+      "satisfied_by": "verifier_ensemble_against_cached_candidates"
+    },
+    "k_verifiers": {
+      "principle": "Nominal verifier count; compare to effective_k to quantify redundancy.",
+      "satisfied_by": "len(verifier_registry) = 6"
+    },
+    "lambda_min_sigma": {
+      "principle": "Smallest eigenvalue of the decision covariance; the joint-null-space proxy. Threshold >0.1.",
+      "satisfied_by": "numpy.linalg.eigh on the k\u00d7k binary decision covariance"
+    },
+    "pairwise_max_correlation": {
+      "principle": "The exp1224 collapse signature; near-1.0 means structural redundancy.",
+      "satisfied_by": "max off-diagonal |Pearson correlation| over verifier-decision pairs"
+    },
+    "effective_k_participation_ratio": {
+      "principle": "How many verifiers ACTUALLY contribute independent signal. Threshold >=3.",
+      "satisfied_by": "sum(lambda)^2 / sum(lambda^2)"
+    },
+    "per_verifier_dropout_contribution": {
+      "principle": "Drop-one-out AUROC delta; ~0 means that verifier is in the joint null space.",
+      "satisfied_by": "remove verifier j, recompute majority-vote AUROC, report full_auroc - reduced_auroc"
+    },
+    "n_examples": {
+      "principle": ">=1000 for a stable covariance estimate (CLT minimum for stable eigenvalues).",
+      "satisfied_by": "main(1000) + adversarial(200) = 1200"
+    },
+    "random_seed": {
+      "principle": "Determinism; enables external replication of the exact corpus sample.",
+      "satisfied_by": "numpy.random.default_rng(42)"
+    },
+    "reproducibility_checksum": {
+      "principle": "Content hash over first 50 records + seed; detects corpus-version drift.",
+      "satisfied_by": "SHA-256[:16] of seed + first-50 step_text prefixes"
+    },
+    "duration_s": {
+      "principle": "Real wall-clock time; verifier_ensemble substrate floor is 1s.",
+      "satisfied_by": "time.time() delta, no sleep padding"
+    }
+  }
+}
