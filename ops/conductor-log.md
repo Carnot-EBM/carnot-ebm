@@ -7064,3 +7064,5 @@ web search: https://docs.garak.ai/garak/examples/pr |
     at async file:///usr/lib/node_modules/@go |
 | 2026-05-30 07:23 UTC | Kona global-optimization solve-rate gate (correctn | FAIL | Gemini CLI error: .js:345500:14)
     at async file:///usr/lib/node_modules/@go |
+| 2026-05-30 07:26 UTC | Kona global-optimization solve-rate gate (correctn | FAIL | Gemini CLI error: DT.js:345500:14)
+    at async file:///usr/lib/node_modules/@ |
