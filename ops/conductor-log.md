@@ -7080,3 +7080,4 @@ web search: https://docs.garak.ai/garak/examples/pr |
 | 2026-05-30 08:08 UTC | GateMate N16 bootstrap — apply the identified verd | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_3432_gatemat |
 | 2026-05-30 08:13 UTC | GateMate N16 bootstrap — apply the identified verd | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_3432_gatemat |
 | 2026-05-30 08:18 UTC | PolarFire opportunistic reachability + continuity  | OK | 81 passed in 3.45s |
+| 2026-05-30 08:25 UTC | G1-G4 gate-status synthesis (clean P0.1 v2 / P0.2  | OK | 81 passed in 3.51s |
