@@ -7132,3 +7132,4 @@ web search: https://docs.garak.ai/garak/examples/pr |
 | 2026-05-30 16:44 UTC | P0.1 v5 — TRAINED energy reranker (EORM) + FoVer-v | FLAGGED | adversarial_verify CRITICAL: TAUTOLOGY, TAUTOLOGY, TAUTOLOGY — result quarantine |
 | 2026-05-30 16:56 UTC | Energy-correctness calibration v2 — TRAINED rerank | OK | 81 passed in 3.52s |
 | 2026-05-30 17:13 UTC | FR-11 grounding-collapse CLEAN re-run — distinct p | FLAGGED | adversarial_verify CRITICAL: TAUTOLOGY, TAUTOLOGY, TAUTOLOGY, TAUTOLOGY — result |
+| 2026-05-30 17:24 UTC | FoVer G2 — CI workflow dry-run validation + Docker | OK | 81 passed in 3.20s |
