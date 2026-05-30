@@ -6984,3 +6984,11 @@ web search: https://docs.garak.ai/garak/examples/pr |
 | 2026-05-29 23:38 UTC | Capstone v312 | OK | 81 passed in 3.45s |
 | 2026-05-29 23:43 UTC | Plan milestone 2026.05.313 | OK | 81 passed in 3.56s |
 | 2026-05-29 23:48 UTC | Archive milestone .311 honestly and activate .312 | OK | 81 passed in 3.40s |
+| 2026-05-30 00:12 UTC | Plan milestone 2026.05.313 | OK | 12 tasks proposed |
+| 2026-05-30 00:14 UTC | Activation REFUSED: milestone 2026.05.313 | BLOCK | exclusion-manifest: 4 HARD violation(s); first: SCOPE_MATCHED_PRIOR_FAILURE on e |
+| 2026-05-30 00:16 UTC | Activation REFUSED: milestone 2026.05.313 | BLOCK | exclusion-manifest: 4 HARD violation(s); first: SCOPE_MATCHED_PRIOR_FAILURE on e |
+| 2026-05-30 00:18 UTC | Activation REFUSED: milestone 2026.05.313 | BLOCK | exclusion-manifest: 4 HARD violation(s); first: SCOPE_MATCHED_PRIOR_FAILURE on e |
+| 2026-05-30 00:20 UTC | Activation REFUSED: milestone 2026.05.313 | BLOCK | exclusion-manifest: 4 HARD violation(s); first: SCOPE_MATCHED_PRIOR_FAILURE on e |
+| 2026-05-30 00:22 UTC | Activation REFUSED: milestone 2026.05.313 | BLOCK | exclusion-manifest: 4 HARD violation(s); first: SCOPE_MATCHED_PRIOR_FAILURE on e |
+| 2026-05-30 00:24 UTC | Activation REFUSED: milestone 2026.05.313 | BLOCK | exclusion-manifest: 4 HARD violation(s); first: SCOPE_MATCHED_PRIOR_FAILURE on e |
+| 2026-05-30 00:26 UTC | Milestone 2026.05.313 activated | OK | 12 tasks queued |
