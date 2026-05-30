@@ -1,0 +1,267 @@
+{
+  "artifact": "experiment_3419_fover_g2_reproduction_harness_v1",
+  "condition_a_auroc_ci95": {
+    "high": 0.9235355665466916,
+    "low": 0.9027316334533082,
+    "mean": 0.9131335999999999
+  },
+  "condition_a_auroc_reproduced": 0.9131335999999999,
+  "condition_a_in_published_ci": true,
+  "condition_b_auroc_reproduced": 0.8946624,
+  "duration_s": 2.502497911453247,
+  "field_principles": {
+    "condition_a_auroc_reproduced": "Recomputed production AUROC; must be in [0.9027, 0.9235].",
+    "duration_s": "CPU verifier scoring wall-clock; 1s floor.",
+    "g2_status": "Honest string: advanced means harness shipped + internal CI pass; closed needs external run.",
+    "harness_path": "Path to the self-contained script a third party runs.",
+    "honest_verdict": "complete:/success:/passed:/shipped_ prefix required.",
+    "inference_substrate": "Declares that this is verifier-scoring, not live LLM inference.",
+    "learning_contribution_reproduced": "Recomputed FR-11 ablation; must be in [0.0125, 0.0245].",
+    "random_seed": "The published seeds [42,137,271,314,1729] used in the recompute.",
+    "reproduced_in_ci": "True only when both numbers land in their published CIs.",
+    "reproducibility_checksum": "SHA-256 from the recompute; byte-match vs exp2837 is a bonus not required."
+  },
+  "g2_independent_reproducer": false,
+  "g2_note": "This run confirms the headline recomputes within CI on the operator's machine (internal clean-room: does not read results/experiment_2837*.json).  G2 is ADVANCED but NOT YET CLOSED.  Closure requires a non-operator to run scripts/reproduce_fover_headline.py from a fresh clone and report condition_A_auroc within [0.9027, 0.9235] and learning_contribution within [0.0125, 0.0245].  See ops/reproduction-runbook-fover-headline.md.",
+  "g2_status": "advanced_turnkey_harness_internal_confirmation",
+  "harness_path": "scripts/reproduce_fover_headline.py",
+  "honest_verdict": "complete: fover_g2_harness_shipped_headline_reproduced_in_ci_external_run_pending",
+  "inference_substrate": "verifier_ensemble_against_cached_candidates",
+  "learning_contribution_ci95": {
+    "high": 0.024480839704138033,
+    "low": 0.012461560295861967,
+    "mean": 0.0184712
+  },
+  "learning_contribution_in_published_ci": true,
+  "learning_contribution_reproduced": 0.0184712,
+  "live_model_invoked": false,
+  "n_examples": 1000,
+  "per_seed_results": [
+    {
+      "condition_a_fr11_state_loaded": true,
+      "condition_a_per_verifier_auroc": {
+        "fr11_session_memory": 0.876712,
+        "tier0r_curry_howard": 0.89726,
+        "tier0s_arithmetic_gap": 0.296278,
+        "tier0u_logical_consistency": 0.50587
+      },
+      "condition_a_production_auroc": 0.914952,
+      "condition_a_python": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+      "condition_a_state_visible_count": 21,
+      "condition_b_architecture_only_auroc": 0.897008,
+      "condition_b_fr11_state_loaded": false,
+      "condition_b_per_verifier_auroc": {
+        "tier0r_curry_howard": 0.89726,
+        "tier0s_arithmetic_gap": 0.296278,
+        "tier0u_logical_consistency": 0.50587
+      },
+      "condition_b_python": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+      "condition_b_state_visible_count": 0,
+      "condition_b_subset_sha256": "57c7dff98df749951de1a043294d12c0203029e92623db86529223e797ef6cd2",
+      "learning_contribution": 0.01794399999999996,
+      "n_examples": 1000,
+      "python_restarted_between_conditions": true,
+      "seed": 42,
+      "state_restored_sha_match_after_seed": true,
+      "subset_sha256": "57c7dff98df749951de1a043294d12c0203029e92623db86529223e797ef6cd2"
+    },
+    {
+      "condition_a_fr11_state_loaded": true,
+      "condition_a_per_verifier_auroc": {
+        "fr11_session_memory": 0.856952,
+        "tier0r_curry_howard": 0.898054,
+        "tier0s_arithmetic_gap": 0.280964,
+        "tier0u_logical_consistency": 0.512902
+      },
+      "condition_a_production_auroc": 0.908738,
+      "condition_a_python": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+      "condition_a_state_visible_count": 21,
+      "condition_b_architecture_only_auroc": 0.897914,
+      "condition_b_fr11_state_loaded": false,
+      "condition_b_per_verifier_auroc": {
+        "tier0r_curry_howard": 0.898054,
+        "tier0s_arithmetic_gap": 0.280964,
+        "tier0u_logical_consistency": 0.512902
+      },
+      "condition_b_python": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+      "condition_b_state_visible_count": 0,
+      "condition_b_subset_sha256": "761ba450cce1eab0c6343403c958dec8408e37dd3de4a7216545a3fd31307c2d",
+      "learning_contribution": 0.010824000000000056,
+      "n_examples": 1000,
+      "python_restarted_between_conditions": true,
+      "seed": 137,
+      "state_restored_sha_match_after_seed": true,
+      "subset_sha256": "761ba450cce1eab0c6343403c958dec8408e37dd3de4a7216545a3fd31307c2d"
+    },
+    {
+      "condition_a_fr11_state_loaded": true,
+      "condition_a_per_verifier_auroc": {
+        "fr11_session_memory": 0.856142,
+        "tier0r_curry_howard": 0.881362,
+        "tier0s_arithmetic_gap": 0.278704,
+        "tier0u_logical_consistency": 0.507984
+      },
+      "condition_a_production_auroc": 0.90145,
+      "condition_a_python": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+      "condition_a_state_visible_count": 21,
+      "condition_b_architecture_only_auroc": 0.881334,
+      "condition_b_fr11_state_loaded": false,
+      "condition_b_per_verifier_auroc": {
+        "tier0r_curry_howard": 0.881362,
+        "tier0s_arithmetic_gap": 0.278704,
+        "tier0u_logical_consistency": 0.507984
+      },
+      "condition_b_python": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+      "condition_b_state_visible_count": 0,
+      "condition_b_subset_sha256": "0ecee5724c62fded647b43fff8f30128571da256f163c3eba53a470489b131ee",
+      "learning_contribution": 0.020116000000000023,
+      "n_examples": 1000,
+      "python_restarted_between_conditions": true,
+      "seed": 271,
+      "state_restored_sha_match_after_seed": true,
+      "subset_sha256": "0ecee5724c62fded647b43fff8f30128571da256f163c3eba53a470489b131ee"
+    },
+    {
+      "condition_a_fr11_state_loaded": true,
+      "condition_a_per_verifier_auroc": {
+        "fr11_session_memory": 0.888094,
+        "tier0r_curry_howard": 0.892994,
+        "tier0s_arithmetic_gap": 0.307648,
+        "tier0u_logical_consistency": 0.511
+      },
+      "condition_a_production_auroc": 0.917102,
+      "condition_a_python": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+      "condition_a_state_visible_count": 21,
+      "condition_b_architecture_only_auroc": 0.893026,
+      "condition_b_fr11_state_loaded": false,
+      "condition_b_per_verifier_auroc": {
+        "tier0r_curry_howard": 0.892994,
+        "tier0s_arithmetic_gap": 0.307648,
+        "tier0u_logical_consistency": 0.511
+      },
+      "condition_b_python": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+      "condition_b_state_visible_count": 0,
+      "condition_b_subset_sha256": "53dcb9dc6ecdeb540fb4b53bcc74b7870d31f1cfe4b2e54f204ced776b47c9ed",
+      "learning_contribution": 0.024075999999999986,
+      "n_examples": 1000,
+      "python_restarted_between_conditions": true,
+      "seed": 314,
+      "state_restored_sha_match_after_seed": true,
+      "subset_sha256": "53dcb9dc6ecdeb540fb4b53bcc74b7870d31f1cfe4b2e54f204ced776b47c9ed"
+    },
+    {
+      "condition_a_fr11_state_loaded": true,
+      "condition_a_per_verifier_auroc": {
+        "fr11_session_memory": 0.871832,
+        "tier0r_curry_howard": 0.904034,
+        "tier0s_arithmetic_gap": 0.310264,
+        "tier0u_logical_consistency": 0.514976
+      },
+      "condition_a_production_auroc": 0.923426,
+      "condition_a_python": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+      "condition_a_state_visible_count": 21,
+      "condition_b_architecture_only_auroc": 0.90403,
+      "condition_b_fr11_state_loaded": false,
+      "condition_b_per_verifier_auroc": {
+        "tier0r_curry_howard": 0.904034,
+        "tier0s_arithmetic_gap": 0.310264,
+        "tier0u_logical_consistency": 0.514976
+      },
+      "condition_b_python": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+      "condition_b_state_visible_count": 0,
+      "condition_b_subset_sha256": "42259e022c2757dddabfadcda9ef3407237d27ae1f527be8ae7a4e742d5e0ef8",
+      "learning_contribution": 0.01939599999999997,
+      "n_examples": 1000,
+      "python_restarted_between_conditions": true,
+      "seed": 1729,
+      "state_restored_sha_match_after_seed": true,
+      "subset_sha256": "42259e022c2757dddabfadcda9ef3407237d27ae1f527be8ae7a4e742d5e0ef8"
+    }
+  ],
+  "per_verifier_condition_a_auroc": {
+    "fr11_session_memory": [
+      0.876712,
+      0.856952,
+      0.856142,
+      0.888094,
+      0.871832
+    ],
+    "tier0r_curry_howard": [
+      0.89726,
+      0.898054,
+      0.881362,
+      0.892994,
+      0.904034
+    ],
+    "tier0s_arithmetic_gap": [
+      0.296278,
+      0.280964,
+      0.278704,
+      0.307648,
+      0.310264
+    ],
+    "tier0u_logical_consistency": [
+      0.50587,
+      0.512902,
+      0.507984,
+      0.511,
+      0.514976
+    ]
+  },
+  "per_verifier_condition_b_auroc": {
+    "tier0r_curry_howard": [
+      0.89726,
+      0.898054,
+      0.881362,
+      0.892994,
+      0.904034
+    ],
+    "tier0s_arithmetic_gap": [
+      0.296278,
+      0.280964,
+      0.278704,
+      0.307648,
+      0.310264
+    ],
+    "tier0u_logical_consistency": [
+      0.50587,
+      0.512902,
+      0.507984,
+      0.511,
+      0.514976
+    ]
+  },
+  "platform_info": {
+    "carnot_version": "0.1.0b1",
+    "jax_version": "0.10.0",
+    "numpy_version": "2.4.6",
+    "platform": "Linux-7.0.10-2-cachyos-x86_64-with-glibc2.43",
+    "platform_machine": "x86_64",
+    "python_executable": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+    "python_version": "3.14.5 (main, May 22 2026, 00:15:09) [GCC 16.1.1 20260430]"
+  },
+  "preconditions_checked": {
+    "eval_module_importable": true,
+    "exp2836_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_2836_fover_memory_leakage_isolation.json",
+    "exp2836_present": true,
+    "fover_corpus_path": "/home/ianblenke/github.com/ianblenke/carnot/data/fover_corpus.jsonl",
+    "fover_corpus_present": true
+  },
+  "random_seed": [
+    42,
+    137,
+    271,
+    314,
+    1729
+  ],
+  "random_seeds_used": [
+    42,
+    137,
+    271,
+    314,
+    1729
+  ],
+  "reproduced_in_ci": true,
+  "reproducibility_checksum": "748a695343d105129585d0114f1f8d5e6255fea3fd5519a03d9cc927524901e3",
+  "schema": "carnot.g2_reproduction_harness_v1"
+}
