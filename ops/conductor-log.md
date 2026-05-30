@@ -6996,3 +6996,4 @@ web search: https://docs.garak.ai/garak/examples/pr |
 | 2026-05-30 00:33 UTC | Archive milestone .312 honestly and activate .313 | OK | Deliverable already exists in repo |
 | 2026-05-30 00:36 UTC | GateMate N16 Bitstream Bootstrap Fix | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_3392_gatemat |
 | 2026-05-30 00:42 UTC | GateMate N16 Bitstream Bootstrap Fix | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_3392_gatemat |
+| 2026-05-30 00:54 UTC | GateMate N16 Bitstream Bootstrap Fix | FAIL | Gemini CLI error: Stalled after 600s silence. Last output: Warning: 256-color  |

@@ -9193,3 +9193,20 @@ When Exp 3375 builds the repair ladder artifact, it produces all required schema
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-VERIFY-3375 | Implemented (`scripts/experiment_3375_vgb_llama3.py`) | Implemented (`tests/python/test_experiment_3375_vgb_llama3.py`) |
+
+
+### REQ-VERIFY-3393: Proximal-Gradient Constraint Layer
+- REQ-VERIFY-3393-1: Implement a Proximal-Gradient step for constraint satisfaction in the verifier pipeline.
+- REQ-VERIFY-3393-2: Set up a subset of constraints using continuous relaxation.
+- REQ-VERIFY-3393-3: Implement proximal-descent projection over cached_sota_pair() unsloth/gemma-4-31B-it-GGUF logits.
+- REQ-VERIFY-3393-4: Measure constraint satisfaction improvement versus soft penalty.
+- REQ-VERIFY-3393-5: The workflow SHALL write `results/experiment_3393_proximal_gradient_constraint.json` with the required schema fields.
+
+### SCENARIO-VERIFY-3393: Proximal-Gradient Constraint Layer
+When Exp 3393 runs, it produces all required schema fields on the exit path.
+
+## Implementation Status (REQ-VERIFY-3393)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-VERIFY-3393 | Implemented (`scripts/experiment_3393_proximal_gradient_constraint.py`, `python/carnot/verify/proximal_gradient_constraint_layer.py`) | Implemented (`tests/python/test_experiment_3393_proximal_gradient.py`) |
