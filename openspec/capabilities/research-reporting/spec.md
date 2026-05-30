@@ -14959,3 +14959,24 @@ with all required schema fields and an `honest_verdict` beginning with `complete
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-REPORT-3400 | Planned (`python/carnot/reporting/cross_corpus_matrix_v38_3400.py`) | Planned (`tests/python/test_experiment_3400_cross_corpus_matrix_v38.py`) |
+
+### REQ-REPORT-3403: Archive V313 And Activate V314 Handoff
+
+**Description:** Aggregate milestone .313 outcomes, write the archive/activation
+artifact at `results/experiment_3403_archive_v313_activate_v314.json`, and
+confirm milestone .314 is ready to run. Aggregation only — no model inference,
+CUDA probes, hardware commands, or conductor/roadmap edits.
+
+#### SCENARIO-REPORT-3403: Archive V313 Activate V314
+
+**Given** milestone .313 capstone artifact is available
+**When** the Exp 3403 workflow runs
+**Then** it writes `results/experiment_3403_archive_v313_activate_v314.json`
+with `archived_milestone=2026.05.313`, `activated_milestone=2026.05.314`,
+and `honest_verdict` beginning with `complete:`.
+
+## Implementation Status (REQ-REPORT-3403)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-3403 | Implemented (`python/carnot/reporting/archive_v313_activate_v314_3403.py`) | Implemented (`tests/python/test_experiment_3403_archive_v313_activate_v314.py`) |
