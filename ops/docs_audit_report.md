@@ -4,52 +4,48 @@
 # docs_audit_report — 2026-05-29
 
 ## TL;DR (stranger's 30-second take)
-I would close the tab. The page reads like a dumped internal status dashboard with perfect-looking, cherry-picked benchmark stats and a dozen acronyms I don't know, trying way too hard to prove it's "real" by over-explaining its own internal reporting drama.
+I am closing this tab immediately. Your page is actively leaking raw pytest temporary directory paths into the text and CSS, making it look broken and abandoned. Even if I ignore the corrupted rendering, the page is an impenetrable wall of internal acronyms, perfect 1.0 metrics, and milestone drama that I don't care about. It reads like an internal status dashboard, not a tool I can use.
 
 ## TOP 3 PROBLEMS
-1. Internal Jargon Overload — The page throws unexplained terms like "FoVer", "PREM", "CCTU", and "5-seed dual-condition" at a cold audience.
-2. Fabrication Signals — Claims of perfect "1.0 TP rate", "60/60 attacks caught", "Zero false positives", and exactly "2.0x speedup" destroy credibility.
-3. Inconsistent Core Claims — The page gives three wildly different numbers for how much it improves code generation pass rates (+3 points, +36 points, and +72 points).
+1. **Template Injection/HTML Corruption:** Raw pytest paths (`@.tmp-pytest/...`) are visibly leaking into the CSS `<link>`, `@media` queries, and the "Live benchmark" result card.
+2. **Absurd Contradictions:** You claim HumanEval improved by "+3.0 points" in the Features card, but magically improved "+72pp" (8% to 80%) in the Results grid.
+3. **Internal Navel-Gazing:** The "Recent Progress" card is a copy-pasted changelog whining about an "adversarial audit" and "repinned AUROCs". Strangers don't care about your internal milestone drama.
 
 ## DETAILED FINDINGS
+
 ### Bloat
-- Entire Page — 32 total cards (Bento, Results, Blog, etc.) — Far too overwhelming. Cap at 10-12 max for the whole page; a stranger will skim none of this.
-- "Results" grid — 12 separate metric cards — Cap at 3 or 4 headline results.
-- "Features" section — 7 large bento cards (>300 words total) — Cap at 3-4 core capabilities.
+- **"Recent progress" Hero Card** — ~75 words — Cap at 30 words. It's a massive wall of text dragging down the hero section.
+- **Results Grid** — 12 cards — Cap at 4-6 cards. A stranger isn't going to read a dozen different metrics. Pick your best proofs and cut the rest.
+- **Blog Section** — 7 cards — Cap at 3. It's a landing page, not an RSS feed archive.
 
 ### Internal jargon
-- Hero / Stats bar — "FoVer", "5-seed dual-condition" — A stranger doesn't know what the FoVer dataset is or what these internal configuration flags mean.
-- Features / Test-Time Compute — "TTC & PREM", "Process-Reward Energy Model" — Undefined acronyms for internal architecture concepts.
-- Results / Code repair — "HumanEval-50, execute-feedback-retry" — Internal pipeline names/flags.
-- Results / Math reasoning — "EstimationVerifier SVAMP AUC" — Internal class names.
-- Results / Cascade routing — "HalluGuard v3", "0.0pp accuracy delta" — Internal project names and formatting.
-- Features / Tool Use — "CCTU constrained micro-benchmark" — An unknown benchmark to an outsider.
+- **Hero "Recent progress" card** — `FoVer`, `5-seed dual-condition` — What is FoVer? A dataset? A metric? I don't know. 
+- **Features (Test-Time Compute)** — `TTC`, `PREM`, `Process-Reward Energy Model variance` — Unexplained acronyms tossed into the final feature card. 
+- **Results Grid (Math extraction)** — `VeriCoT equation-style CoT fix` — Pure insider shorthand. 
+- **Results Grid (Math reasoning)** — `EstimationVerifier SVAMP AUC` — Word salad to anyone outside your specific research track.
+- **Results Grid (Live benchmark)** — `Qwen3.6-35B-A3B` — Is this a public model or your own fine-tune? 
 
 ### Per-milestone narrative
-- Hero / Recent Progress — "Repinned from v2 0.9857 after pre-submission adversarial audit..." — This is an internal status update, not product copy.
-- Results section text — "Model benchmark rows use live GPU inference... infrastructure, hardware... are labeled by provenance." — Defensive meta-commentary about reporting standards, not a benefit statement.
-- Blog / Writing section — "We paid for a hostile audit... Seven fatal findings...", "A verifier with a docstring... turned out to be 56 lines of regex." — This reads like an internal post-mortem/retro complaining about the dev process rather than pitching a tool.
+- **Hero "Recent progress" card** — "Repinned from v2 0.9857 after pre-submission adversarial audit..." — This is a commit message or retrospective, not landing page copy. It raises more questions than it answers.
 
 ### Inconsistencies
-- HumanEval pass rate vs Code repair vs SOTA 35B — "Features: Code" says "+3 points on pass-rate" and "99.3% flagged". "Results: Code repair" claims "8% -> 80% pass rate (+72pp)". "Results: SOTA 35B" claims "0% -> 36%". These are wildly contradictory claims about code correction performance.
-- AUROC numbers — The page cites "0.9131 Verifier AUROC" vs "0.91 AUROC (publication gate)" vs "architecture-only 0.8947" vs "v2 0.9857".
+- **HumanEval Pass Rates** vs **HumanEval Pass Rates**: The "Code" feature card claims repair pushes pass-rate up by **3 points**. The "Code repair" results card claims IterativeSelfRepair pushes pass rate from 8% to 80% (**+72 points**). Which is it? You can't have both on the same page.
+- **AUROC Claims**: Hero stats bar says `0.9131` Verifier AUROC. The Safety results card claims `0.91` AUROC. The "Recent Progress" card mentions `0.8947` architecture-only and a repinned `0.9857`. Pick the canonical number and stick to it.
 
 ### Missing essentials
-- Why should I trust the numbers? — The page gets highly defensive, stating "Every number below is backed by a checked-in experiment artifact", but it doesn't actually link to those artifacts or third-party validation anywhere accessible. It sounds like an internal memo "assuring" management.
+- **Why should I trust the numbers?** You state "Every number below is backed by a checked-in experiment artifact", but give me absolutely no links to those artifacts, reproducible scripts, or third-party validations. I just have to take your word for it.
 
 ### Fabrication signals
-- Results / Training — "2.0x speedup, identical losses" — Perfect linear scaling on 2 GPUs implies zero communication overhead, which is unbelievable.
-- Results / Math extraction — "GSM8K extraction TP rate: 0.5 -> 1.0" — A perfect 1.0 True Positive rate is mathematically suspect.
-- Results / Adversarial audit — "k=5 ensemble catches 60/60 attacks" — 100% success rate without a credibility anchor.
-- Blog / Dogfooding — "Zero false positives" — A claim of 0 FPR over 26 days of automated operations is a massive red flag.
+- **Math extraction card**: `TP rate: 0.5 → 1.0` — A perfectly clean 1.0 True Positive rate? On LLM output? Suspicious.
+- **Adversarial audit card**: `catches 60/60 attacks` — Perfectly flat 100% catch rate with no credibility anchor or methodology explanation.
 
 ## WHAT'S WORKING
-- The one-sentence pitch ("Catch the mistakes your LLM confidently makes up") is clear, punchy, and instantly understandable.
-- The Quickstart code blocks (Python/Rust tabs) are clean, show exactly how to use the API, and immediately communicate a strong developer experience.
+- The "Extract → Check → Repair" mental model is excellent. It explains the core loop cleanly in plain English without requiring me to understand energy-based physics.
+- The Python Quickstart block is great. Three lines to verify, one line to auto-repair. It proves the tool is actually usable.
 
 ## RECOMMENDED OPERATOR ACTIONS
-1. Prune the grid: Delete at least half of the result cards and features cards. Consolidate the 12 "Results" into 3 indisputable highlights.
-2. Translate Jargon: Remove all internal experiment parameters (5-seed, CCTU, PREM, FoVer). If a metric isn't broadly understood in the industry, drop it or explain it.
-3. Clean up the numbers: Remove the perfect "1.0", "60/60", and "Zero false positives" claims. Replace with realistic, defensible metrics, or explicitly frame them as "100% on a targeted 60-sample test".
-4. Clarify the HumanEval contradiction: Unify the three different code pass-rate claims into a single, cohesive story.
-5. Stop defending the process: Delete the meta-narrative about "adversarial audits", "checked-in artifacts", and "repinned numbers" from the hero and section headers. Keep the landing page focused on the product itself.
+1. **Fix the build script immediately.** Your pipeline injected `@.tmp-pytest/...` and `@results/...` string replacements directly into `<link href="...">`, CSS `@media` queries, and the text of the "Live benchmark" results card.
+2. **Delete the "Recent Progress" card entirely.** Move the PyPI/HuggingFace links to the hero subtitle and drop the internal audit narrative.
+3. **Reconcile the HumanEval contradiction.** Decide what the actual code repair metric is and use it consistently.
+4. **Prune the Results Grid.** Drop the 12 cards down to 4 headline metrics. Remove everything that relies on unexplained acronyms (VeriCoT, PREM, FoVer).
+5. **Trim the Blog.** Keep only the 3 most relevant or recent posts.

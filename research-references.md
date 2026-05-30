@@ -18782,3 +18782,10 @@ This refresh captures continual learning frameworks under constrained memory and
 - **Proximal-Gradient Neural Networks for Constrained Reconstruction (arXiv:2604.something)**: Explores using proximal-descent dynamics to apply hard constraints to energy landscapes. Relevance to Carnot: Provides a rigorous control-theory mechanism for enforcing constraints without blowing up energy landscapes.
 - **Temporal Memory for Resource-Constrained Agents (arXiv:2604.00067)**: Analytical "Ising model" of continual learning that frames memory addition/forgetting as Compress-Add-Smooth (CAS) diffusion. Relevance to Carnot: Provides the exact theoretical grounding needed for FR-11's non-forgetting updates under memory constraints.
 - **Continual Learning in Modern Hopfield Networks (May 2026)**: Uses Hopfield energy to track reconstruction-based forgetting and selects replay samples via energy. Relevance to Carnot: Informs Carnot's FR-11 continuous self-learning by substituting Hopfield networks with our Ising/KAN energy structures to choose high-impact constraints for replay.
+
+## 2026-05-30 Planning Sweep (Milestone 2026.05.314)
+- **Latent Space Energy Spills (2025)**: "Training-free, LLM hallucination detection generalizing across tasks using the EBM framework" identifies hallucinations without retraining by measuring energy spills in latent representations.
+- **Structural Enforcement of Statistical Rigor (Dec 2025)**: Defines "Semantic Violation Cost", framing verification as a CSP where smooth falsehoods are statistically probable but require massive knowledge graph deformation.
+- **Neural Uncertainty Principle (Mar 2026)**: Uses the Ising model to map hallucinations and adversarial fragility to phase transitions in neural network optimization (symmetry breaking).
+- **Abductive Reasoning CSP (Nov 2025)**: "Tackling LLM Hallucination with Abductive Reasoning" treats chain-of-thought verification as a CSP over a contextual graph.
+- **Visual Grounding Score (VGS) Decoding (Mar 2026)**: Penalizes tokens relying on language priors over grounded visual/contextual evidence.

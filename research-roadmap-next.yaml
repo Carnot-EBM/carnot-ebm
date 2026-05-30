@@ -1,0 +1,348 @@
+milestone: "2026.05.314"
+milestone_title: "Latent Energy Spills, Neural Uncertainty Phase Transitions, and Kona Global Reasoning"
+milestone_doc: "openspec/change-proposals/research-roadmap-vNEXT.md"
+
+tasks:
+  - id: exp3403-archive-v313-activate-v314
+    operator_override: "2026-05-30 operator directive (standing, mechanical auto-stamp): structural false-positive — routine milestone-transition task scope-matched a retired exp; not a doomed rerun."
+    milestone: "2026.05.314"
+    title: "Archive milestone .313 honestly and activate .314"
+    priority: critical
+    max_turns: 20
+    agent_type: claude
+    estimated_wall_time_min: 5
+    track: ops
+    inference_substrate: validation
+    requires_gpu: false
+    deliverable: "results/experiment_3403_archive_v313_activate_v314.json"
+    prior_failures:
+      - experiment_id: exp3337-archive-v308-activate-v309
+        verdict: "unspecified"
+        addressed_by: "Routine milestone progression."
+        retire_if_same_verdict: false
+    prompt: |
+      CONTEXT: Milestone .313 has completed.
+      TASK: Archive .313 to ops/changelog.md and results/operational_retro_2026_05_313.json.
+      CONCRETE STEPS:
+        1. Read results/experiment_3402_capstone_v313.json.
+        2. Draft the retrospective JSON.
+        3. Emit artifact.
+      Run command: cd {project_root} && JAX_PLATFORMS=cpu .venv/bin/python scripts/experiment_3403_archive_v313_activate_v314.py. Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  - id: exp3404-gatemate-n16-bootstrap-fix
+    prior_failures:
+      - experiment_id: exp3392-gatemate-n16-bootstrap-fix
+        verdict: "unspecified"
+        addressed_by: "Added Opus model and robust hardware checks."
+        retire_if_same_verdict: true
+    milestone: "2026.05.314"
+    title: "GateMate N16 Bitstream Bootstrap Fix"
+    priority: high
+    max_turns: 100
+    model: opus
+    estimated_wall_time_min: 20
+    track: hardware
+    inference_substrate: hardware_smoke
+    requires_gpu: false
+    deliverable: "results/experiment_3404_gatemate_n16_bootstrap_fix.json"
+    prompt: |
+      CONTEXT: exp3392 failed or was unspecified.
+      CRITICAL: write artifact FIRST.
+      TASK: Synthesize, flash, and verify N=16 GateMate. Ensure the script emits an artifact immediately to avoid conductor termination.
+      CONCRETE STEPS:
+        1. Write the initial artifact JSON before starting hardware routines.
+        2. Flash using openFPGALoader.
+        3. Test vector over dirtyJtag/UART.
+        4. Update artifact with results.
+      Run command: cd {project_root} && JAX_PLATFORMS=cpu .venv/bin/python scripts/experiment_3404_gatemate_n16_bootstrap_fix.py. Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  - id: exp3405-nup-metric-evaluation
+    operator_override: "2026-05-30 operator directive: Legitimate lineage continuation."
+    prior_failures:
+      - experiment_id: exp484-nup-probe
+        verdict: "unspecified"
+        addressed_by: "New approach utilizing recent NUP phase transition literature."
+        retire_if_same_verdict: true
+    milestone: "2026.05.314"
+    title: "NUP Metric Evaluation"
+    priority: high
+    max_turns: 50
+    estimated_wall_time_min: 40
+    track: live-model
+    inference_substrate: live_generation
+    requires_gpu: true
+    deliverable: "results/experiment_3405_nup_metric_evaluation.json"
+    prompt: |
+      CONTEXT: March 2026 research indicates hallucinations act as phase transitions in the optimization space mapped by the Ising model.
+      TASK: Implement the NUP metric to detect symmetry breaking in the gradient landscape as an early hallucination indicator.
+      CONCRETE STEPS:
+        1. Evaluate gradients during text generation on GSM8K using MODEL_SPECS = ["unsloth/Qwen3.6-35B-A3B-GGUF"].
+        2. Map the gradients to an Ising energy configuration and measure sudden energy shifts (phase transitions).
+        3. Compare detection accuracy against exact verifier results.
+      Run command: cd {project_root} && .venv/bin/python scripts/experiment_3405_nup_metric_evaluation.py. Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  - id: exp3406-latent-spills-sensing
+    operator_override: "2026-05-30 operator directive: Legitimate lineage continuation based on new 2025/2026 latent spill research, not a doomed rerun of GRPO or pruning."
+    prior_failures:
+      - experiment_id: exp949-spilled-energy-tier0
+        verdict: "unspecified"
+        addressed_by: "New training-free EBM formulation for latent energy spills."
+        retire_if_same_verdict: true
+    milestone: "2026.05.314"
+    title: "Latent Spills Sensing"
+    priority: high
+    max_turns: 50
+    estimated_wall_time_min: 35
+    track: live-model
+    inference_substrate: live_generation
+    requires_gpu: true
+    deliverable: "results/experiment_3406_latent_spills_sensing.json"
+    prompt: |
+      CONTEXT: Recent EBM research identifies training-free hallucination detection via measuring 'energy spills' in latent representations.
+      TASK: Build an EBM pipeline to read latent activation energies and detect 'spills' signaling guessing.
+      CONCRETE STEPS:
+        1. Instrument the verification pipeline to extract internal latent states using MODEL_SPECS = ["unsloth/gemma-4-31B-it-GGUF"].
+        2. Formulate the EBM to calculate energy spills dynamically per token.
+        3. Validate against a small hallucination dataset.
+      Run command: cd {project_root} && .venv/bin/python scripts/experiment_3406_latent_spills_sensing.py. Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  - id: exp3407-abductive-csp-integration
+    operator_override: "2026-05-30 operator directive: Legitimate lineage continuation."
+    prior_failures:
+      - experiment_id: exp66-differentiable-constraints
+        verdict: "unspecified"
+        addressed_by: "New Abductive Reasoning CSP contextual graph framing."
+        retire_if_same_verdict: true
+    milestone: "2026.05.314"
+    title: "Abductive CSP Integration"
+    priority: medium
+    max_turns: 50
+    estimated_wall_time_min: 30
+    track: verify-repair
+    inference_substrate: live_generation
+    requires_gpu: true
+    deliverable: "results/experiment_3407_abductive_csp_integration.json"
+    prompt: |
+      CONTEXT: "Tackling LLM Hallucination with Abductive Reasoning" (Nov 2025) frames CoT verification as a Constraint Satisfaction Problem.
+      TASK: Implement an Abductive CSP layer into the VerifyRepairPipeline.
+      CONCRETE STEPS:
+        1. Formulate reasoning traces as contextual graph constraint networks.
+        2. Verify logical coherence of the entire graph concurrently rather than sequentially using MODEL_SPECS = ["unsloth/Qwen3.6-35B-A3B-GGUF"].
+        3. Test on logic puzzles dataset.
+      Run command: cd {project_root} && .venv/bin/python scripts/experiment_3407_abductive_csp_integration.py. Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  - id: exp3408-kona-style-global-optimization
+    prior_failures:
+      - experiment_id: exp3394-kona-style-global-optimization
+        verdict: "unspecified"
+        addressed_by: "Increased turn count and detailed execution steps to ensure execution completion."
+        retire_if_same_verdict: true
+    milestone: "2026.05.314"
+    title: "Kona-Style Global Optimization Reasoning Benchmark"
+    priority: high
+    max_turns: 50
+    estimated_wall_time_min: 45
+    track: live-model
+    inference_substrate: live_generation
+    requires_gpu: true
+    deliverable: "results/experiment_3408_kona_global_opt.json"
+    prompt: |
+      CONTEXT: Logical Intelligence's Kona (2026) solved Sudokus using global energy optimization instead of autoregressive prediction.
+      TASK: Emulate Kona's global inference procedure on a hard Sudoku problem set using Carnot's Ising energy function.
+      CONCRETE STEPS:
+        1. Treat the Sudoku board as a joint energy landscape.
+        2. Apply continuous sampling/optimization over the entire board at once using MODEL_SPECS = ["unsloth/gemma-4-26B-A4B-it-GGUF"].
+        3. Score correctness and report the time-to-solution vs standard autoregressive search.
+        4. Emit an artifact with field 'status' set to 'success'.
+      REQUIRED ARTIFACT FIELDS:
+        - status
+      Run command: cd {project_root} && .venv/bin/python scripts/experiment_3408_kona_global_opt.py. Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  - id: exp3409-semantic-deficit-penalty
+    operator_override: "2026-05-30 operator directive: Legitimate lineage continuation."
+    prior_failures:
+      - experiment_id: exp2733
+        verdict: "unspecified"
+        addressed_by: "Reframed as Semantic Deficit Penalty based on new paper."
+        retire_if_same_verdict: true
+    milestone: "2026.05.314"
+    title: "Semantic Deficit Penalty Integration"
+    priority: medium
+    max_turns: 50
+    estimated_wall_time_min: 30
+    track: verify-repair
+    inference_substrate: live_generation
+    requires_gpu: true
+    deliverable: "results/experiment_3409_semantic_deficit_penalty.json"
+    prompt: |
+      CONTEXT: Dec 2025 research on "Structural Enforcement of Statistical Rigor" uses a Semantic Violation Cost to reject smooth falsehoods.
+      TASK: Calculate structural deformation cost for proposed reasoning outputs.
+      CONCRETE STEPS:
+        1. Generate CoT answers using MODEL_SPECS = ["unsloth/gemma-4-31B-it-GGUF"].
+        2. Apply the Semantic Violation Cost calculation to evaluate the structural integrity of the generated knowledge graph mapping.
+        3. Reject outputs where cost exceeds an acceptable deformation threshold.
+      Run command: cd {project_root} && .venv/bin/python scripts/experiment_3409_semantic_deficit_penalty.py. Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  - id: exp3410-fr11-updates-with-spills
+    operator_override: "2026-05-30 operator directive: FR-11 continual learning requires repeated execution; structural false positive."
+    prior_failures:
+      - experiment_id: exp1791-fr11-continual-learning-lsebmcl
+        verdict: "unspecified"
+        addressed_by: "Incorporating new latent energy spills diagnostic."
+        retire_if_same_verdict: true
+    milestone: "2026.05.314"
+    title: "FR-11 Updates with Spills"
+    priority: critical
+    max_turns: 50
+    estimated_wall_time_min: 40
+    track: self-learning
+    inference_substrate: live_generation
+    requires_gpu: true
+    deliverable: "results/experiment_3410_fr11_updates_spills.json"
+    prompt: |
+      CONTEXT: The FR-11 continuous self-learning loop needs robust metrics. Latent energy spills offer a training-free target.
+      TASK: Use Latent Energy Spills as the reward/rejection signal for the FR-11 Continual Learning update.
+      CONCRETE STEPS:
+        1. Run inference using MODEL_SPECS = ["unsloth/Qwen3.6-35B-A3B-GGUF"].
+        2. Use the spill detection algorithm to identify when the model relies on language priors.
+        3. Replay failed examples and update the constraint templates using the Latent Energy Spill values as priority weights.
+        4. Output a retention and adaptation score.
+      Run command: cd {project_root} && .venv/bin/python scripts/experiment_3410_fr11_updates_spills.py. Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  - id: exp3411-ebm-cot-scaling
+    operator_override: "2026-05-30 operator directive: Legitimate lineage continuation for EBM-CoT scaling on live GGUFs following recent success."
+    prior_failures:
+      - experiment_id: exp1416-ebm-cot-v3-temperature-calibration
+        verdict: "unspecified"
+        addressed_by: "Scaled up using exact verifiers and new GGUF models."
+        retire_if_same_verdict: true
+    milestone: "2026.05.314"
+    title: "EBM-CoT Scaling"
+    priority: high
+    max_turns: 50
+    estimated_wall_time_min: 40
+    track: live-model
+    inference_substrate: live_generation
+    requires_gpu: true
+    deliverable: "results/experiment_3411_ebm_cot_scaling.json"
+    prompt: |
+      CONTEXT: Building on exp3397, EBM-CoT trajectory monitor must be verified on larger instruction-tuned sets.
+      TASK: Scale up the trajectory monitor using exact verifiers and EBMs.
+      CONCRETE STEPS:
+        1. Run 150 examples from GSM8K.
+        2. Apply step-wise energy calibration using MODEL_SPECS = ["unsloth/Qwen3.6-35B-A3B-GGUF"].
+        3. Evaluate whether early trajectory detection saves compute time.
+      Run command: cd {project_root} && .venv/bin/python scripts/experiment_3411_ebm_cot_scaling.py. Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  - id: exp3412-vgs-override-decoder
+    operator_override: "2026-05-30 operator directive: Legitimate lineage continuation."
+    prior_failures:
+      - experiment_id: exp3224-logitext-partial-smt-context-coverage-pilot-v1
+        verdict: "unspecified"
+        addressed_by: "Applies VGS grounding instead of SMT context."
+        retire_if_same_verdict: true
+    milestone: "2026.05.314"
+    title: "VGS Override Decoder"
+    priority: medium
+    max_turns: 50
+    estimated_wall_time_min: 30
+    track: verify-repair
+    inference_substrate: live_generation
+    requires_gpu: true
+    deliverable: "results/experiment_3412_vgs_override_decoder.json"
+    prompt: |
+      CONTEXT: March 2026 VGS-Decoding applies visual grounding scores to override language priors.
+      TASK: Adapt the VGS penalty logic to use explicit textual constraint grounding.
+      CONCRETE STEPS:
+        1. Implement an active decoding modifier penalizing autoregressive probabilities that disagree with explicit constraints.
+        2. Test text generation over constraints using MODEL_SPECS = ["unsloth/gemma-4-26B-A4B-it-GGUF"].
+        3. Provide statistics on hallucination avoidance.
+      Run command: cd {project_root} && .venv/bin/python scripts/experiment_3412_vgs_override_decoder.py. Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  - id: exp3413-telemetry-aggregation-v39
+    operator_override: "2026-05-30 operator directive (standing, mechanical auto-stamp): structural false-positive — routine matrix tracking task."
+    prior_failures:
+      - experiment_id: exp2805
+        verdict: "unspecified"
+        addressed_by: "Routine milestone evidence aggregation."
+        retire_if_same_verdict: true
+    gated_on:
+      - upstream: exp3408-kona-style-global-optimization
+        artifact_field: status
+        op: 'in'
+        value: ["complete", "success"]
+    milestone: "2026.05.314"
+    title: "Telemetry Aggregation v39"
+    priority: high
+    max_turns: 30
+    estimated_wall_time_min: 15
+    track: ops
+    inference_substrate: validation
+    requires_gpu: false
+    deliverable: "results/experiment_3413_telemetry_aggregation_v39.json"
+    prompt: |
+      CONTEXT: We must track new evidence artifacts created in this milestone.
+      TASK: Generate Evidence Matrix v39 tracking the diagnostics and continuous learning results.
+      CONCRETE STEPS:
+        1. Gather the outputs of exp3405 to exp3412.
+        2. Tally blocked, complete, flagged, and missing metrics.
+        3. Emit the JSON matrix.
+        4. Emit an artifact with field 'matrix_v39_ready' set to true.
+      REQUIRED ARTIFACT FIELDS:
+        - matrix_v39_ready
+      Run command: cd {project_root} && JAX_PLATFORMS=cpu .venv/bin/python scripts/experiment_3413_telemetry_aggregation_v39.py. Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  - id: exp3414-fr11-adversarial-robustness
+    operator_override: "2026-05-30 operator directive: New stress test adding NUP Phase Transition and Latent Spills variables."
+    prior_failures:
+      - experiment_id: exp3358-fr11-continuous-learning-stress-test
+        verdict: "unspecified"
+        addressed_by: "Now includes NUP and latent spills."
+        retire_if_same_verdict: true
+    milestone: "2026.05.314"
+    title: "FR-11 Adversarial Robustness"
+    priority: high
+    max_turns: 50
+    estimated_wall_time_min: 45
+    track: self-learning
+    inference_substrate: live_generation
+    requires_gpu: true
+    deliverable: "results/experiment_3414_fr11_adversarial_robustness.json"
+    prompt: |
+      CONTEXT: The continuous self-learning system must survive adversarial distribution shifts.
+      TASK: Run a full stress test of FR-11 integrating the new NUP phase transition and Latent Spills signals.
+      CONCRETE STEPS:
+        1. Initialize the VerifyRepairPipeline with FR-11 metrics enabled.
+        2. Process a dataset combining normal and adversarially perturbed CoT traces using MODEL_SPECS = ["unsloth/Qwen3.6-35B-A3B-GGUF"].
+        3. Evaluate final system accuracy and self-calibration limits.
+      Run command: cd {project_root} && .venv/bin/python scripts/experiment_3414_fr11_adversarial_robustness.py. Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  - id: exp3415-wrap-up-v314
+    operator_override: "2026-05-30 operator directive (standing, mechanical auto-stamp): structural false-positive — routine capstone tracking task."
+    prior_failures:
+      - experiment_id: exp3390-capstone-v312
+        verdict: "unspecified"
+        addressed_by: "Routine milestone progression."
+        retire_if_same_verdict: true
+    gated_on:
+      - upstream: exp3413-telemetry-aggregation-v39
+        artifact_field: matrix_v39_ready
+        op: '=='
+        value: true
+    milestone: "2026.05.314"
+    title: "Wrap-Up v314"
+    priority: critical
+    max_turns: 20
+    estimated_wall_time_min: 5
+    track: ops
+    inference_substrate: validation
+    requires_gpu: false
+    deliverable: "results/experiment_3415_wrap_up_v314.json"
+    prompt: |
+      CONTEXT: Milestone .314 has completed.
+      TASK: Produce the Capstone evaluation for .314.
+      CONCRETE STEPS:
+        1. Read all experiment outputs for the .314 block.
+        2. Identify the next biggest gaps.
+        3. Update status counters and paper_ready fields.
+      Run command: cd {project_root} && JAX_PLATFORMS=cpu .venv/bin/python scripts/experiment_3415_wrap_up_v314.py. Do NOT push. Do NOT modify scripts/research_conductor.py.
