@@ -1,0 +1,26 @@
+{
+  "schema": "carnot.operational_retro.v64",
+  "milestone": "2026.05.317",
+  "generated_at": "2026-05-30T11:53:34Z",
+  "retro_type": "operational_full",
+  "total_wall_time_minutes": 0,
+  "experiments_completed": 0,
+  "compute_bound_experiments_count": 0,
+  "slowest_experiments": [],
+  "gpu_idle_on_compute_bound_tasks": null,
+  "summary": "No experiments were completed this milestone, meaning total wall time and compute-bound tasks were 0.",
+  "bottlenecks_identified": [
+    "No experiments were processed, which is the primary bottleneck preventing data collection."
+  ],
+  "improvements_suggested": [
+    "Investigate why no experiments were committed during this milestone.",
+    "Verify the experiment trigger pipeline and dispatch mechanisms."
+  ],
+  "top_3_highest_leverage_actions": [
+    "Check experiment dispatch logs for activation failures.",
+    "Review failure_ledger to see if all tasks were blocked as doomed reruns.",
+    "Confirm milestone configuration is valid."
+  ],
+  "estimated_time_savings_pct": 0,
+  "meta_reflection": "An empty milestone indicates a potential pipeline stall or completion of planned tasks. Ensuring proper task dispatch is critical before attempting performance optimizations."
+}
