@@ -7110,3 +7110,4 @@ web search: https://docs.garak.ai/garak/examples/pr |
 | 2026-05-30 12:58 UTC | P0.1 generation corpus builder — k-sample GSM8K ge | FAIL | Claude Code error: Wall-clock+idle timeout after 1201s (1201s silence). Last ou |
 | 2026-05-30 13:21 UTC | P0.1 generation corpus builder — k-sample GSM8K ge | FAIL | Claude Code error: Wall-clock+idle timeout after 1201s (1201s silence). Last ou |
 | 2026-05-30 13:35 UTC | P0.1 generation corpus builder — k-sample GSM8K ge | OK | cache hit: 101 passed in 4.84s |
+| 2026-05-30 13:46 UTC | P0.1 v4 — Energy-Weighted Vote vs Self-Consistency | FLAGGED | adversarial_verify CRITICAL: TAUTOLOGY, TAUTOLOGY, TAUTOLOGY, TAUTOLOGY — result |

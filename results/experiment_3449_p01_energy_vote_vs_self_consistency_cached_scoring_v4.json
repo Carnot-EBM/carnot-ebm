@@ -158,5 +158,38 @@
     "status",
     "temperature",
     "title"
+  ],
+  "flagged_adversarial": true,
+  "corrigendum_pending": [
+    {
+      "kind": "TAUTOLOGY",
+      "severity": "critical",
+      "detail": "ar_greedy_accuracy=0.787234 and energy_argmin_accuracy=0.787234 agree to >5 sig figs. Two distinct metrics matching this precisely is more likely a bug than a finding."
+    },
+    {
+      "kind": "TAUTOLOGY",
+      "severity": "critical",
+      "detail": "self_consistency_accuracy=0.87234 and energy_weighted_vote_accuracy=0.87234 agree to >5 sig figs. Two distinct metrics matching this precisely is more likely a bug than a finding."
+    },
+    {
+      "kind": "TAUTOLOGY",
+      "severity": "critical",
+      "detail": "self_consistency_accuracy=0.87234 and energy_sc_hybrid_accuracy=0.87234 agree to >5 sig figs. Two distinct metrics matching this precisely is more likely a bug than a finding."
+    },
+    {
+      "kind": "TAUTOLOGY",
+      "severity": "critical",
+      "detail": "energy_weighted_vote_accuracy=0.87234 and energy_sc_hybrid_accuracy=0.87234 agree to >5 sig figs. Two distinct metrics matching this precisely is more likely a bug than a finding."
+    },
+    {
+      "kind": "IMPLAUSIBLE_PERFECT",
+      "severity": "info",
+      "detail": "delta_energy_vs_self_consistency=0.0 (exactly zero). Confirm this is not a stub default."
+    },
+    {
+      "kind": "IMPLAUSIBLE_PERFECT",
+      "severity": "info",
+      "detail": "delta_hybrid_vs_self_consistency=0.0 (exactly zero). Confirm this is not a stub default."
+    }
   ]
 }
