@@ -7026,3 +7026,4 @@ web search: https://docs.garak.ai/garak/examples/pr |
 | 2026-05-30 03:56 UTC | Wrap-Up v314 | OK | 81 passed in 3.63s |
 | 2026-05-30 04:56 UTC | Plan milestone 2026.05.315 | OK | 11 tasks proposed |
 | 2026-05-30 04:58 UTC | Milestone 2026.05.315 activated | OK | 11 tasks queued |
+| 2026-05-30 05:06 UTC | Archive milestone .314 honestly and activate .315 | OK | 81 passed in 3.96s |
