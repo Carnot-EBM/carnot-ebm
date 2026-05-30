@@ -14980,3 +14980,14 @@ and `honest_verdict` beginning with `complete:`.
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-REPORT-3403 | Implemented (`python/carnot/reporting/archive_v313_activate_v314_3403.py`) | Implemented (`tests/python/test_experiment_3403_archive_v313_activate_v314.py`) |
+
+### REQ-REPORT-3413: Exp 3413 Telemetry Aggregation v39
+
+The Exp 3413 telemetry aggregation workflow shall read outputs from exp3405 to exp3412 and generate `results/experiment_3413_telemetry_aggregation_v39.json`.
+The artifact shall include:
+- `matrix_v39_ready` set to true
+- `tallies` counting blocked, complete, flagged, and missing metrics
+
+### SCENARIO-REPORT-3413: Exp 3413 Matrix Generated
+
+Given outputs for exp3405 to exp3412, when Exp 3413 runs, then it writes all required REQ-REPORT-3413 fields, setting `matrix_v39_ready` to true.
