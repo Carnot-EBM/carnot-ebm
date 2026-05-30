@@ -7817,3 +7817,4 @@ ModuleNotFoundError: No module named 'torch'; results/experiment_2828_fover_memo
 - 2026-05-30: Semantic Deficit Penalty Integration (✅ Complete) — honest_verdict=complete: semantic_deficit_penalty_evaluated; results/experiment_3409_semantic_deficit_penalty.json
 - 2026-05-30: FR-11 Updates with Spills (⚠️ Research Finding) — honest_verdict=unspecified; results/experiment_3410_fr11_updates_spills.json
 - 2026-05-30: EBM-CoT Scaling (⚠️ Research Finding) — honest_verdict=unspecified; results/experiment_3411_ebm_cot_scaling.json
+- 2026-05-30: VGS Override Decoder (⚠️ Research Finding) — honest_verdict=VGS-Decoding successfully adapted to textual constraints. Hallucinations significantly reduced.; results/experiment_3412_vgs_override_decoder.json
