@@ -7118,3 +7118,4 @@ web search: https://docs.garak.ai/garak/examples/pr |
 | 2026-05-30 14:37 UTC | GateMate opportunistic detect + continuity audit ( | FAIL | Claude Code error: Error: Reached max turns (20) |
 | 2026-05-30 14:42 UTC | GateMate opportunistic detect + continuity audit ( | OK | cache hit: 94 passed in 4.02s |
 | 2026-05-30 14:51 UTC | PolarFire opportunistic reachability + continuity  | OK | 81 passed in 3.76s |
+| 2026-05-30 14:59 UTC | G1-G4 gate-status synthesis (clean P0.1 v4 cached- | OK | 81 passed in 3.25s |
