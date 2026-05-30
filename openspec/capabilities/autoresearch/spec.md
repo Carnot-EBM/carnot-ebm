@@ -3306,3 +3306,25 @@ The system shall generate a planning artifact for milestone 313 containing tasks
 **When** the milestone 313 planning task runs,
 **Then** it outputs `results/experiment_3391_plan_milestone_313.json` with required schema fields.
 
+
+### REQ-LEARN-3401: FR-11 Continuous Learning End-to-End Stress Test
+
+**Requirement:**
+    The system MUST validate FR-11 end-to-end with the new Hopfield and CAS methods by running a continuous learning stress test simulating 1000 user interactions.
+    The script MUST:
+      1. Setup a simulated interaction loop.
+      2. Apply CAS updates and Energy-based replay.
+      3. Evaluate the final constraint fidelity.
+    The script MUST output a JSON deliverable to `results/experiment_3401_fr11_stress.json`.
+
+**Rationale:**
+    Continuous learning requires stress testing under sustained updates to ensure constraint fidelity is maintained when subjected to CAS updates and Energy-based replay over 1000 interactions.
+
+Spec: REQ-LEARN-3401, SCENARIO-LEARN-3401
+
+### SCENARIO-LEARN-3401: FR-11 Stress Test Completion
+
+**Given** a simulated interaction loop of 1000 interactions
+**When** CAS updates and Energy-based replay are applied
+**Then** the script evaluates final constraint fidelity
+**And** produces `results/experiment_3401_fr11_stress.json` containing the results.
