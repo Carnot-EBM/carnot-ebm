@@ -7155,3 +7155,4 @@ web search: https://docs.garak.ai/garak/examples/pr |
 | 2026-05-30 21:05 UTC | Kona global-opt — PROCESS energy as the hybrid heu | FAIL | Claude Code error: Wall-clock+idle timeout after 1201s (1201s silence). Last ou |
 | 2026-05-30 21:07 UTC | Kona global-opt — PROCESS energy as the hybrid heu | OK | Deliverable already exists in repo |
 | 2026-05-30 21:17 UTC | FoVer G2 — self-contained, repo-independent reprod | OK | 96 passed in 4.15s |
+| 2026-05-30 21:24 UTC | KV260 terminal board-level latency transcript (dri | OK | 81 passed in 3.87s |
