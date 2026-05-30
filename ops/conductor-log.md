@@ -7004,3 +7004,4 @@ web search: https://docs.garak.ai/garak/examples/pr |
 | 2026-05-30 01:32 UTC | Compress-Add-Smooth (CAS) Diffusion for Constraint | OK | 81 passed in 3.82s |
 | 2026-05-30 01:40 UTC | EBM-CoT Verification Pipeline on Live GGUFs | OK | 85 passed in 3.30s |
 | 2026-05-30 01:46 UTC | CAffNet Layer Out-of-Distribution Robustness | OK | 85 passed in 5.62s |
+| 2026-05-30 01:51 UTC | LogicVault Multi-Turn Context Expansion | OK | 81 passed in 3.46s |
