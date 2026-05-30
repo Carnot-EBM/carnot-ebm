@@ -7147,3 +7147,4 @@ web search: https://docs.garak.ai/garak/examples/pr |
 | 2026-05-30 19:11 UTC | Archive milestone .319 honestly and activate .320 | FAIL | Claude Code error: Error: Reached max turns (20) |
 | 2026-05-30 19:13 UTC | Archive milestone .319 honestly and activate .320 | OK | Deliverable already exists in repo |
 | 2026-05-30 19:29 UTC | P0.1 HEADROOM corpus builder — hard-math cached co | FLAGGED | adversarial_verify CRITICAL: TAUTOLOGY — result quarantined, not a clean success |
+| 2026-05-30 19:41 UTC | P0.1 v6 — process-aware step-level energy + optima | OK | 81 passed in 3.53s |
