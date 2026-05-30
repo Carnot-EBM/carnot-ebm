@@ -7094,3 +7094,4 @@ web search: https://docs.garak.ai/garak/examples/pr |
 | 2026-05-30 10:46 UTC | P0.2 v3 — Verifier-Ensemble Joint-Null-Space / lam | OK | 81 passed in 4.32s |
 | 2026-05-30 11:09 UTC | Kona global-optimization solve-rate gate (correctn | FLAGGED | adversarial_verify CRITICAL: TAUTOLOGY — result quarantined, not a clean success |
 | 2026-05-30 11:24 UTC | Verifier-Ensemble vs Adaptive Prompt-Injection Cor | OK | 81 passed in 3.95s |
+| 2026-05-30 11:32 UTC | KV260 terminal board-level latency transcript (dri | OK | 81 passed in 3.75s |
