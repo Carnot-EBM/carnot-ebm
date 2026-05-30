@@ -19780,3 +19780,17 @@ The repository shall provide a script `scripts/experiment_3405_nup_metric_evalua
 **When** a sudden energy shift (phase transition) occurs
 **Then** the NUP metric detects the symmetry breaking and flags it as a hallucination indicator.
 
+
+### REQ-VERIFY-3407: Abductive CSP Layer Integration
+
+The repository shall provide a script `scripts/experiment_3407_abductive_csp_integration.py` that implements an Abductive Constraint Satisfaction Problem (CSP) layer into the `VerifyRepairPipeline`.
+- It formulates reasoning traces as contextual graph constraint networks.
+- It verifies logical coherence of the entire graph concurrently rather than sequentially using `MODEL_SPECS = ["unsloth/Qwen3.6-35B-A3B-GGUF"]`.
+- It tests the CSP verification layer on a logic puzzles dataset.
+- Outputs `results/experiment_3407_abductive_csp_integration.json`.
+
+### SCENARIO-VERIFY-3407: Abductive CSP Validates Concurrent Logic Graph
+
+**Given** a set of reasoning traces from logic puzzles
+**When** the Abductive CSP layer formulates them as a contextual graph constraint network
+**Then** it verifies logical coherence concurrently and outputs the expected metrics.

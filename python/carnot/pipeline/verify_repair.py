@@ -456,6 +456,7 @@ class VerifyRepairPipeline:
         jepa_fast_path_threshold: float = 0.2,
         learning_mode: bool = False,
         n_learning_cycles: int = 3,
+        enable_abductive_csp: bool = False,
     ) -> None:
         """Initialize the verify-repair pipeline.
 
@@ -527,6 +528,13 @@ class VerifyRepairPipeline:
         """
         self.learning_mode = learning_mode
         self.n_learning_cycles = n_learning_cycles
+        
+        self.enable_abductive_csp = enable_abductive_csp
+        if self.enable_abductive_csp:
+            from carnot.pipeline.abductive_csp import AbductiveCSPLayer
+            self.abductive_csp_layer = AbductiveCSPLayer()
+        else:
+            self.abductive_csp_layer = None
         if learning_mode:
             from carnot.verify.nexus_constraint_memory import NexusConstraintMemory
             from carnot.pipeline.ttt_loop import TTTLoop

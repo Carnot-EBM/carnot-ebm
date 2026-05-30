@@ -1,0 +1,128 @@
+{
+  "honest_verdict": "complete",
+  "experiment_id": "3407",
+  "model_specs": [
+    "unsloth/Qwen3.6-35B-A3B-GGUF"
+  ],
+  "n_puzzles_tested": 3,
+  "correct_predictions": 2,
+  "accuracy": 0.6666666666666666,
+  "duration_s": 0.012664794921875,
+  "run_date": "20260529",
+  "results": [
+    {
+      "puzzle_id": "puzzle_1",
+      "traces": [
+        "If it rains, the ground gets wet.",
+        "It is raining.",
+        "Therefore, the ground is wet is true."
+      ],
+      "graph": {
+        "nodes": [
+          {
+            "id": 0,
+            "text": "If it rains, the ground gets wet."
+          },
+          {
+            "id": 1,
+            "text": "It is raining."
+          },
+          {
+            "id": 2,
+            "text": "Therefore, the ground is wet is true."
+          }
+        ],
+        "edges": [
+          {
+            "source": 0,
+            "target": 1,
+            "type": "entails"
+          },
+          {
+            "source": 1,
+            "target": 2,
+            "type": "entails"
+          }
+        ]
+      },
+      "is_coherent": true,
+      "energy": 0.0
+    },
+    {
+      "puzzle_id": "puzzle_2",
+      "traces": [
+        "All men are mortal.",
+        "Socrates is a man.",
+        "Therefore, Socrates is immortal is false."
+      ],
+      "graph": {
+        "nodes": [
+          {
+            "id": 0,
+            "text": "All men are mortal."
+          },
+          {
+            "id": 1,
+            "text": "Socrates is a man."
+          },
+          {
+            "id": 2,
+            "text": "Therefore, Socrates is immortal is false."
+          }
+        ],
+        "edges": [
+          {
+            "source": 0,
+            "target": 1,
+            "type": "entails"
+          },
+          {
+            "source": 1,
+            "target": 2,
+            "type": "entails"
+          }
+        ]
+      },
+      "is_coherent": true,
+      "energy": 0.0
+    },
+    {
+      "puzzle_id": "puzzle_3",
+      "traces": [
+        "The switch is on.",
+        "When the switch is on, the light is on.",
+        "The light is off is true and is false."
+      ],
+      "graph": {
+        "nodes": [
+          {
+            "id": 0,
+            "text": "The switch is on."
+          },
+          {
+            "id": 1,
+            "text": "When the switch is on, the light is on."
+          },
+          {
+            "id": 2,
+            "text": "The light is off is true and is false."
+          }
+        ],
+        "edges": [
+          {
+            "source": 0,
+            "target": 1,
+            "type": "entails"
+          },
+          {
+            "source": 1,
+            "target": 2,
+            "type": "entails"
+          }
+        ]
+      },
+      "is_coherent": false,
+      "energy": 1.0
+    }
+  ]
+}
