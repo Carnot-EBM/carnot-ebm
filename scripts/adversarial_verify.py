@@ -1009,6 +1009,102 @@ def sweep_milestone_range(
     return reports
 
 
+# High-precision fabrication-signal kinds. These are safe to backfill-stamp
+# retroactively across all of history because a false positive is very unlikely:
+# a duration_s far below the model-load floor while claiming a live GGUF/CUDA
+# model is almost certainly fabricated, and a gate marked passed with the gated
+# metric null/missing is structurally untrustworthy. TAUTOLOGY is deliberately
+# NOT here — retroactively it over-flags legitimate coincidental old findings
+# (e.g. abstention having no measured effect, or a tiny-corpus recall tie), so
+# historical TAUTOLOGY is left to the completion-time gate + operator review.
+HIGH_PRECISION_KINDS = ("DURATION_TOO_SHORT", "GATE_PASSED_WITHOUT_DATA")
+
+
+def _claims_live_model(d: dict[str, Any]) -> bool:
+    """True if the artifact AFFIRMATIVELY claims it ran a named live model
+    (declares model_specs / target_model / models, or
+    inference_substrate=live_llm_inference). DURATION_TOO_SHORT is only a real
+    fabrication signal when paired with such a claim — an aggregation/audit
+    artifact that merely mentions 'GGUF' in prose but declares no model didn't
+    claim a live run, so a sub-floor duration is expected, not suspicious. This
+    guard keeps the retroactive backfill high-precision (see exp1877/1498/1459
+    aggregation false positives vs exp1851/1782 real live-claim fabrications)."""
+    if str(d.get("inference_substrate", "")).lower() == "live_llm_inference":
+        return True
+    for key in ("model_specs", "target_model", "models", "model"):
+        v = d.get(key)
+        if v:
+            return True
+    return False
+
+
+def backfill_stamps(
+    paths: list[Path],
+    apply: bool = False,
+    kinds_filter: tuple[str, ...] | None = None,
+) -> list[dict[str, Any]]:
+    """Backstop for the conductor's completion-time fabrication gate.
+
+    The gate in `research_conductor._log_experiment_completion` only fires for
+    artifacts that complete inside `research_step`. Artifacts written out-of-band
+    (manual reruns, batch scripts, historical pre-gate experiments) escape it.
+    This sweep re-verifies a set of artifacts and stamps `flagged_adversarial`
+    on any UNSTAMPED one whose critical flags intersect `kinds_filter`
+    (None = any critical kind).
+
+    NON-DESTRUCTIVE: only ADDS `flagged_adversarial: true` +
+    `corrigendum_pending` (the offending flags) + a `corrigendum_note`. Never
+    deletes or alters existing fields, per the never-prune discipline. Idempotent
+    (skips already-stamped artifacts).
+
+    Returns one record per artifact that HAS a qualifying critical flag, whether
+    or not it was written (so dry-run reports the full scope).
+    """
+    out: list[dict[str, Any]] = []
+    for p in paths:
+        try:
+            d = json.loads(p.read_text())
+        except Exception:
+            continue
+        if not isinstance(d, dict) or d.get("flagged_adversarial"):
+            continue
+        try:
+            rep = verify_artifact(p)
+        except Exception:
+            continue
+        crit = [
+            f for f in rep.get("flags", [])
+            if str(f.get("severity", "")).lower() == "critical"
+        ]
+        if kinds_filter is not None:
+            crit = [f for f in crit if f.get("kind") in kinds_filter]
+        # Precision guard: DURATION_TOO_SHORT only counts when the artifact
+        # affirmatively claims a live model run. Otherwise an aggregation/audit
+        # artifact that merely references compute markers in prose would be
+        # mislabeled (the operator's explicit false-positive concern).
+        crit = [
+            f
+            for f in crit
+            if f.get("kind") != "DURATION_TOO_SHORT" or _claims_live_model(d)
+        ]
+        if not crit:
+            continue
+        kinds = sorted({str(f.get("kind")) for f in crit})
+        written = False
+        if apply:
+            d["flagged_adversarial"] = True
+            d.setdefault("corrigendum_pending", []).extend(crit)
+            d["corrigendum_note"] = (
+                "backfill_stamps: flagged_adversarial added by "
+                "adversarial_verify.py --backfill (completion-gate backstop). "
+                "Excluded from headline / capstone aggregation."
+            )
+            p.write_text(json.dumps(d, indent=2))
+            written = True
+        out.append({"path": str(p), "kinds": kinds, "written": written})
+    return out
+
+
 def main(argv: list[str]) -> int:  # pragma: no cover
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("artifacts", nargs="*", help="Specific artifact files to verify")
@@ -1025,7 +1121,55 @@ def main(argv: list[str]) -> int:  # pragma: no cover
         default=Path(__file__).resolve().parent.parent / "results",
     )
     parser.add_argument("--json", action="store_true", help="Output full JSON report")
+    parser.add_argument(
+        "--backfill",
+        action="store_true",
+        help="Completion-gate backstop: scan results/ and stamp unstamped "
+        "real-critical artifacts (dry-run unless --apply).",
+    )
+    parser.add_argument(
+        "--apply",
+        action="store_true",
+        help="With --backfill: actually write the stamps (default is dry-run).",
+    )
+    parser.add_argument(
+        "--high-precision-only",
+        action="store_true",
+        help="With --backfill: restrict to %s (safe for retroactive history)."
+        % ", ".join(HIGH_PRECISION_KINDS),
+    )
+    parser.add_argument(
+        "--since-hours",
+        type=float,
+        default=None,
+        help="With --backfill: only artifacts modified within the last N hours.",
+    )
     args = parser.parse_args(argv[1:])
+
+    if args.backfill:
+        import time
+
+        paths = sorted(args.results_dir.glob("experiment_*.json"))
+        if args.since_hours is not None:
+            cutoff = time.time() - args.since_hours * 3600.0
+            paths = [p for p in paths if p.stat().st_mtime >= cutoff]
+        kinds_filter = HIGH_PRECISION_KINDS if args.high_precision_only else None
+        recs = backfill_stamps(paths, apply=args.apply, kinds_filter=kinds_filter)
+        mode = "APPLIED" if args.apply else "DRY-RUN"
+        scope = (
+            f"high-precision({','.join(HIGH_PRECISION_KINDS)})"
+            if args.high_precision_only
+            else "any-critical"
+        )
+        win = f", last {args.since_hours}h" if args.since_hours else ""
+        print(
+            f"[backfill {mode}] scanned {len(paths)} artifact(s){win}; scope={scope}; "
+            f"{len(recs)} qualifying unstamped critical artifact(s):"
+        )
+        for r in recs:
+            tag = "stamped" if r["written"] else "would-stamp"
+            print(f"  [{tag}] {Path(r['path']).name}: {r['kinds']}")
+        return 1 if recs else 0
 
     reports: list[dict[str, Any]] = []
     if args.milestone_range:

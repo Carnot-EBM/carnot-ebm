@@ -4106,6 +4106,34 @@ def research_step(
                 except Exception as _e:
                     logger.warning("Verifier authenticity audit failed (non-fatal): %s", _e)
 
+            # Adversarial-verify completion-gate BACKSTOP (2026-05-31 operator
+            # directive). The fabrication gate in _log_experiment_completion only
+            # fires for artifacts that complete inside research_step. Artifacts
+            # written out-of-band (manual reruns, batch scripts, deliverable-path
+            # mismatch) escape it. This sweep re-verifies artifacts modified in
+            # the last 24h and stamps flagged_adversarial on any unstamped
+            # real-critical one (any kind; the DURATION live-claim precision guard
+            # is built into backfill_stamps so aggregation/audit artifacts that
+            # merely mention compute markers are not mislabeled). Non-destructive
+            # + idempotent. Historical TAUTOLOGY is intentionally NOT swept here
+            # (recent-window only) to avoid retroactively mislabeling legitimate
+            # old coincidental-metric findings. Non-fatal.
+            if not dry_run:
+                try:
+                    logger.info("Running adversarial-verify completion-gate backstop...")
+                    subprocess.run(
+                        [
+                            sys.executable,
+                            str(PROJECT_ROOT / "scripts" / "adversarial_verify.py"),
+                            "--backfill", "--apply", "--since-hours", "24",
+                        ],
+                        cwd=PROJECT_ROOT,
+                        timeout=300,
+                        check=False,
+                    )
+                except Exception as _e:
+                    logger.warning("Adversarial backstop failed (non-fatal): %s", _e)
+
             logger.info("No research-roadmap-next.yaml — launching planning agent")
             if dry_run:
                 logger.info("[DRY RUN] Would launch planning agent for next milestone")
