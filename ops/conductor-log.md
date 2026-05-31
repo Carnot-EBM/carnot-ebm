@@ -7182,3 +7182,4 @@ web search: https://docs.garak.ai/garak/examples/pr |
 | 2026-05-30 23:53 UTC | Kona global-opt — PROCESS energy as the hybrid heu | GATE_BLOCK | Pre-emptive skip: upstream retired (exp3484-p01-process-energy-vs-self-consisten |
 | 2026-05-31 00:00 UTC | FoVer G2 — clean-room regression-verify the self-c | OK | 81 passed in 3.84s |
 | 2026-05-31 00:02 UTC | Kona global-opt — PROCESS energy as the hybrid heu | GATE_BLOCK | Pre-emptive skip: upstream retired (exp3484-p01-process-energy-vs-self-consisten |
+| 2026-05-31 00:06 UTC | KV260 terminal board-level latency transcript (dri | OK | 81 passed in 3.43s |
