@@ -1,0 +1,106 @@
+{
+ "experiment_id": 3496,
+ "experiment": 3496,
+ "title": "P0.1 Difficulty-Matched Corpus Builder (v3, MATH-500 L3-4, Sonnet)",
+ "run_date": "20260531",
+ "run_timestamp": "2026-05-31T01:52:50Z",
+ "schema": "carnot.p01_difficulty_matched_corpus_v3",
+ "duration_s": 67.21024894714355,
+ "honest_verdict": "complete: blocked_no_in_band_split_found_sc_outside_band",
+ "inference_substrate": "live_llm_inference",
+ "corpus_path": "data/p01_difficulty_matched_generations.jsonl",
+ "benchmark_id": "HuggingFaceH4/MATH-500 (test split), levels=[3, 4], seed=3496",
+ "selected_levels": [],
+ "per_level_probe_sc": {
+  "3": 0.0,
+  "4": 0.0,
+  "3+4": 0.0
+ },
+ "n_problems_completed": 2,
+ "n_problems_target": 80,
+ "n_problems_added_this_run": 2,
+ "k_samples": 6,
+ "per_step_traces_captured": true,
+ "per_sample_logprobs_captured": false,
+ "warmup_self_consistency_accuracy": 0.0,
+ "self_consistency_in_headroom_band": false,
+ "warmup_greedy_accuracy": 0.0,
+ "model_specs": {
+  "name": "Qwen3.6-35B-A3B",
+  "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/snapshots/a483e9e6cbd595906af30beda3187c2663a1118c/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf",
+  "loader": "llama_cpp",
+  "prompt_format": "qwen_chatml"
+ },
+ "random_seed": 3496,
+ "reproducibility_checksum": "598ec4b87b3e0faf",
+ "preconditions_checked": [
+  {
+   "resource": "cuda",
+   "available": true
+  },
+  {
+   "resource": "sota_gguf_tokenizer",
+   "available": true
+  }
+ ],
+ "status": "blocked",
+ "field_provenance": {
+  "honest_verdict": {
+   "principle": "Terminal verdict must start with complete:/success:/passed:/shipped_."
+  },
+  "inference_substrate": {
+   "principle": "live_llm_inference \u2014 real GGUF generation on GPU; 60s floor when CUDA is available."
+  },
+  "corpus_path": {
+   "principle": "data/p01_difficulty_matched_generations.jsonl \u2014 the shared in-band corpus exp3495+ consume."
+  },
+  "benchmark_id": {
+   "principle": "the exact MATH-500 dataset id + level(s) + seed \u2014 provenance for replication."
+  },
+  "selected_levels": {
+   "principle": "the MATH level(s) chosen by the adaptive warm-up to land SC in the [0.40,0.70] band."
+  },
+  "per_level_probe_sc": {
+   "principle": "warm-up SC per candidate level \u2014 the evidence that the chosen level is in band."
+  },
+  "n_problems_completed": {
+   "principle": "problems with a full generation set after this run."
+  },
+  "n_problems_target": {
+   "principle": "the target (>=80 for headline-eligibility)."
+  },
+  "n_problems_added_this_run": {
+   "principle": "problems newly generated this invocation \u2014 proves resume worked."
+  },
+  "k_samples": {
+   "principle": "sampled generations per problem \u2014 the matched-compute budget for P0.1."
+  },
+  "per_step_traces_captured": {
+   "principle": "each generation carries a parsed step list for PROCESS-reward scoring."
+  },
+  "per_sample_logprobs_captured": {
+   "principle": "mean-token confidence stored per generation \u2014 proxy for energy ranking."
+  },
+  "warmup_self_consistency_accuracy": {
+   "principle": "majority-vote accuracy \u2014 MUST land in [0.40,0.70] for the corpus to be useful."
+  },
+  "self_consistency_in_headroom_band": {
+   "principle": "boolean: SC in [0.40,0.70] \u2014 the precondition that makes P0.1 testable."
+  },
+  "warmup_greedy_accuracy": {
+   "principle": "greedy accuracy over the corpus \u2014 baseline for understanding the model's raw capability."
+  },
+  "model_specs": {
+   "principle": "the actual GGUF invoked (Qwen3.6-35B default or gemma-4 fallback)."
+  },
+  "random_seed": {
+   "principle": "determinism precondition for reproducibility \u2014 allows re-runs to verify these numbers."
+  },
+  "reproducibility_checksum": {
+   "principle": "content hash of benchmark split + model + seed \u2014 catches silent version drift."
+  },
+  "duration_s": {
+   "principle": "real live MoE generation takes wall time; 60s floor \u2014 sub-60s with CUDA is the fabrication signal."
+  }
+ }
+}
