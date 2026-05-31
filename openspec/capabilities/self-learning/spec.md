@@ -10110,3 +10110,54 @@ beta >= f(lambda_min) with safety margin.
 **Given** any grounding configuration at beta=0
 **When** the FR-11 self-improvement loop runs for N=200 iterations
 **Then** verifier pass_rate >> true_accuracy (gaming confirmed from distinct sources)
+
+---
+
+## REQ-FR11-CLD-001: Lambda_min Measured and Beta Deployed from exp3498 Formula
+
+**Given** a fresh grounding configuration (ACTIVE_WEIGHT not in the exp3498 fit set)
+**When** the closed-loop deployment experiment runs
+**Then** the system measures lambda_min(Sigma) from the k×k verifier-decision covariance
+**And** computes beta_deployed = max(0, slope * lambda_min + intercept) using the
+        fitted law coefficients from exp3498 (slope=1.8461, intercept=-0.3001)
+
+**Implementation status:** In progress (exp3509).
+**Spec traces:** REQ-FR11-CLD-001
+
+## REQ-FR11-CLD-002: Three-Arm Closed Loop at N>=200 with Distinct Metrics
+
+**Given** a fresh grounding configuration with measured lambda_min and beta_deployed
+**When** the FR-11 self-improvement loop runs to N>=200
+**Then** three arms are executed: Arm A (beta=f(lambda_min)), Arm B (beta=0), Arm C (beta=0.5)
+**And** pass_rate and true_accuracy are verified element-wise distinct before each arm
+
+**Implementation status:** In progress (exp3509).
+**Spec traces:** REQ-FR11-CLD-002
+
+## REQ-FR11-CLD-003: Deployment Validated: Arm A Prevents Collapse, Arm B Collapses
+
+**Given** three-arm results across >=2 fresh grounding configurations
+**When** collapse is evaluated at N=200 depth (depth-aware criterion)
+**Then** Arm A (deployed law) shows collapse_detected=False at ALL fresh configs
+**And** Arm B (beta=0 control) shows collapse_detected=True at >=1 fresh config
+
+**Implementation status:** In progress (exp3509).
+**Spec traces:** REQ-FR11-CLD-003
+
+### SCENARIO-FR11-CLD-001: Deployed Law Prevents Collapse at Fresh Configs
+
+**Given** fresh grounding configs with AW not in {0.05, 0.10, 0.146, 0.30}
+**When** Arm A runs with beta = f(lambda_min) from exp3498 law
+**Then** collapse_detected is False at all fresh configs (law generalizes to deployment)
+
+### SCENARIO-FR11-CLD-002: Beta=0 Control Collapses
+
+**Given** the same fresh grounding configs as SCENARIO-FR11-CLD-001
+**When** Arm B runs with beta=0
+**Then** collapse_detected is True at >=1 config (proves the loop CAN collapse)
+
+### SCENARIO-FR11-CLD-003: Arm A Accuracy Not Materially Worse Than Arm C
+
+**Given** three-arm results including fixed-conservative Arm C (beta=0.5)
+**When** true_accuracy is compared between Arm A and Arm C
+**Then** mean(accuracy_A - accuracy_C) >= -0.001 (law not over-regularizing)
