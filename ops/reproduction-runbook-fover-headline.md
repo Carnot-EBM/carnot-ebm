@@ -260,3 +260,15 @@ The self-contained package was re-run from an environment isolated from the work
 - Lowest-friction external ask prepared (committed to the working tree, NOT pushed/triggered): `.github/workflows/fover-g2-repro.yml`, `docs/g2-reproducer-invite.md`, `ops/g2-external-ask-operator-checklist.md`.
 
 G2 remains UNMET. Closure requires a confirmed non-operator external/CI run (Operator-Only External Publication). Artifact: `results/experiment_3488_fover_g2_clean_room_regression_verify_external_ask_v1.json`.
+
+## Clean-room regression verify + external ask (exp3499, 2026-05-31)
+
+The self-contained package was re-run from an environment isolated from the working repo to catch any drift since it was built (.320):
+
+- Isolation method: `isolated_dir`
+- Reproduced condition-A mean AUROC: `0.9131` (within published CI [0.9027, 0.9235]: True)
+- Package sha256: `521ecbc3adfa42bce839d16cdcb48cf552e267fc9a8bc69f86068b92a937e6be` (re-verified against recorded checksum: True)
+- IPFS CID: `QmcoN4zKfAT7GPpokzM31acbE4RBkntfPjhXoEun2NMo9c`
+- Lowest-friction external ask prepared (committed to the working tree, NOT pushed/triggered): `.github/workflows/fover-g2-repro.yml`, `docs/g2-reproducer-invite.md`, `ops/g2-external-ask-operator-checklist.md`.
+
+G2 remains UNMET. Closure requires a confirmed non-operator external/CI run (Operator-Only External Publication). Artifact: `results/experiment_3499_fover_g2_regression_verify_external_ask_refresh_v2.json`.

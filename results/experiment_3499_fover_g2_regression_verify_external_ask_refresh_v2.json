@@ -1,0 +1,73 @@
+{
+  "artifact": "experiment_3499_fover_g2_regression_verify_external_ask_refresh_v2",
+  "schema": "carnot.fover_g2_regression_verify_external_ask_refresh_v2",
+  "experiment": 3499,
+  "honest_verdict": "complete: fover_g2_package_regression_clean_external_ask_ready_g2_operator_gated",
+  "inference_substrate": "verifier_ensemble_against_cached_candidates",
+  "package_path": "dist/g2-fover-repro.tar.gz",
+  "package_reproduced_auroc": 0.9131,
+  "package_auroc_within_ci": true,
+  "package_learning_contribution": 0.0185,
+  "package_sha256": "521ecbc3adfa42bce839d16cdcb48cf552e267fc9a8bc69f86068b92a937e6be",
+  "package_sha256_verified": true,
+  "package_sha256_recorded": "521ecbc3adfa42bce839d16cdcb48cf552e267fc9a8bc69f86068b92a937e6be",
+  "package_cid": "QmcoN4zKfAT7GPpokzM31acbE4RBkntfPjhXoEun2NMo9c",
+  "ipfs_available": true,
+  "clean_env_method": "isolated_dir",
+  "regression_attempts": [
+    {
+      "method": "isolated_dir",
+      "error": null,
+      "exit_code": 0
+    }
+  ],
+  "one_command_repro": "tar xzf g2-fover-repro.tar.gz && cd g2-fover-repro && bash run.sh",
+  "external_ask_workflow_path": ".github/workflows/fover-g2-repro.yml",
+  "reproducer_invite_path": "docs/g2-reproducer-invite.md",
+  "operator_checklist_path": "ops/g2-external-ask-operator-checklist.md",
+  "runbook_appended": true,
+  "g2_met": false,
+  "g2_independent_reproducer": false,
+  "external_run_pending": true,
+  "operator_action_required": "Closing G2 requires a person who is NOT the operator to run the one-click workflow or the self-contained package and report condition-A AUROC in [0.9027, 0.9235]. Per Operator-Only External Publication, autonomous work may regression-verify the package and prepare the ask but may never flip g2_met.",
+  "reproducibility_checksum": "748a695343d105129585d0114f1f8d5e6255fea3fd5519a03d9cc927524901e3",
+  "random_seed": [
+    42,
+    137,
+    271,
+    314,
+    1729
+  ],
+  "duration_s": 3.152780294418335,
+  "n_examples": 1000,
+  "live_model_invoked": false,
+  "preconditions_checked": {
+    "ok": true,
+    "package_present": true,
+    "package_rebuildable": true,
+    "tarball": "/home/ianblenke/github.com/ianblenke/carnot/dist/g2-fover-repro.tar.gz"
+  },
+  "condition_a_ci": [
+    0.9027,
+    0.9235
+  ],
+  "learning_contribution_ci": [
+    0.0125,
+    0.0245
+  ],
+  "field_principles": {
+    "honest_verdict": "complete:/success:/passed:/shipped_ prefix required by CLAUDE.md Verdict Terminal-Prefix Discipline.",
+    "inference_substrate": "verifier_ensemble_against_cached_candidates: the package scores the verifier ensemble against the labeled FoVer corpus; no live LLM is loaded, so adversarial_verify.py applies the 1s floor.",
+    "package_reproduced_auroc": "The AUROC the self-contained package produced in the fresh environment \u2014 proves it still works.",
+    "package_auroc_within_ci": "Boolean: reproduced AUROC within the stated 0.9131 CI \u2014 the regression gate.",
+    "package_sha256_verified": "Boolean: tarball SHA256 re-verified against Exp 3476's recorded checksum \u2014 content integrity for an external party.",
+    "package_cid": "IPFS CID of the package (decentralization rule 3) \u2014 content-addressed external fetch.",
+    "external_ask_workflow_path": "The public workflow_dispatch file an external party one-clicks (committed locally, not pushed/triggered).",
+    "operator_checklist_path": "The operator checklist whose terminal step is the single external-ask action.",
+    "g2_met": "MUST be false \u2014 G2 flips only on a confirmed non-operator external run (Operator-Only External Publication).",
+    "external_run_pending": "Boolean true \u2014 the honest remaining state.",
+    "random_seed": "Determinism \u2014 the published seeds [42,137,271,314,1729].",
+    "reproducibility_checksum": "Content hash anchoring the run (isolated harness checksum when available, else the verified tarball sha256).",
+    "duration_s": "Fresh-env install + cached scoring wall time; 1s floor."
+  }
+}

@@ -553,15 +553,25 @@ def append_runbook(
     package_sha256: str | None,
     package_sha256_verified: bool,
     package_cid: str | None,
+    exp_id: str = "exp3488",
+    run_date: str = "2026-05-30",
+    artifact_name: str = (
+        "experiment_3488_fover_g2_clean_room_regression_verify_external_ask_v1"
+    ),
 ) -> bool:
-    """Append (never delete) the regression result to the runbook. Returns ok."""
+    """Append (never delete) the regression result to the runbook. Returns ok.
+
+    ``exp_id``, ``run_date``, and ``artifact_name`` default to the Exp 3488 /
+    .321 values for backward compatibility; callers running a later drift-check
+    pass the correct identifiers so the runbook section is self-documenting.
+    """
     runbook = repo_root / RUNBOOK_REL
     if not runbook.exists():
         return False
     auroc_str = f"{reproduced_auroc:.4f}" if isinstance(reproduced_auroc, float) else "n/a"
     cid_line = f"- IPFS CID: `{package_cid}`\n" if package_cid else ""
     section = (
-        "\n## Clean-room regression verify + external ask (exp3488, 2026-05-30)\n\n"
+        f"\n## Clean-room regression verify + external ask ({exp_id}, {run_date})\n\n"
         "The self-contained package was re-run from an environment isolated from "
         "the working repo to catch any drift since it was built (.320):\n\n"
         f"- Isolation method: `{clean_env_method or 'unavailable'}`\n"
@@ -576,7 +586,7 @@ def append_runbook(
         "`ops/g2-external-ask-operator-checklist.md`.\n\n"
         "G2 remains UNMET. Closure requires a confirmed non-operator external/CI "
         "run (Operator-Only External Publication). Artifact: "
-        "`results/experiment_3488_fover_g2_clean_room_regression_verify_external_ask_v1.json`.\n"
+        f"`results/{artifact_name}.json`.\n"
     )
     with open(runbook, "a", encoding="utf-8") as f:
         f.write(section)

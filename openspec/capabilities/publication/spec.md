@@ -1433,6 +1433,24 @@ and `external_run_pending == true`.
 `complete: blocked_g2_package_unavailable`
 AND never sets `g2_met == true`.
 
+### REQ-PUBLISH-039C: Exp 3499 FoVer G2 Regression Drift Check (post-.322)
+
+Same guarantees as REQ-PUBLISH-039 but run AFTER milestone .322's changes.  It
+MUST re-verify the on-disk package produces AUROC within `[0.9027, 0.9235]` from
+a fresh isolated environment, re-confirm the SHA256, refresh the external-ask
+artifacts, and append a v2 section to the runbook.  It MUST write
+`results/experiment_3499_fover_g2_regression_verify_external_ask_refresh_v2.json`
+and MUST NOT set `g2_met=true`.
+
+### SCENARIO-PUBLISH-039C: v2 Post-.322 Drift Check Produces v2 Artifact
+
+**Given** the package `dist/g2-fover-repro.tar.gz` is present
+**When** the Exp 3499 regression verifier (v2) runs
+**Then** it produces
+`results/experiment_3499_fover_g2_regression_verify_external_ask_refresh_v2.json`
+with `package_auroc_within_ci == true`, `package_sha256_verified == true`,
+`g2_met == false`, `external_run_pending == true`, and a `complete:` verdict.
+
 
 ## Implementation Status
 
