@@ -7209,3 +7209,4 @@ web search: https://docs.garak.ai/garak/examples/pr |
 | 2026-05-31 03:49 UTC | Capstone v322 | FLAGGED | adversarial_verify CRITICAL: TAUTOLOGY — result quarantined, not a clean success |
 | 2026-05-31 04:18 UTC | Plan milestone 2026.05.323 | OK | 11 tasks proposed |
 | 2026-05-31 04:21 UTC | Milestone 2026.05.323 activated | OK | 11 tasks queued |
+| 2026-05-31 04:29 UTC | Archive milestone .322 honestly and activate .323 | OK | 81 passed in 3.40s |
