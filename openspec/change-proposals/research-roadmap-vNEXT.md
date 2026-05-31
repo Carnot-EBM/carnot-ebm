@@ -1,221 +1,170 @@
-# Research Roadmap — Milestone 2026.05.321 (Depth-Over-Breadth VII)
+# Research Roadmap — Milestone 2026.05.322 (Depth-Over-Breadth VIII)
 
-**Title:** P0.1 on a Difficulty-Matched Headroom Corpus (Fix the SC-Band Precondition)
-+ FR-11 Minimal-β & Grounding-Dependence + Kona Harder Instances + G2 External-Ask
+**Title:** P0.1 via Two Infra-Independent Routes — the Sudoku/Kona Correctness-First
+Solve-Rate Gate (CPU, QUBO-validated) + the Energy-vs-Self-Consistency Crux on the In-Band
+Contested Subset of Cached Corpora. Finally land a P0.1 verdict after three milestones lost
+to infrastructure.
 
-**Planner:** Claude Opus 4.8, 2026-05-30 (Depth-Over-Breadth Forcing Function ACTIVE).
+**Planner:** Claude Opus 4.8, 2026-05-31 (Depth-Over-Breadth Forcing Function ACTIVE).
 **Milestone doc format:** follows v7/v8.
-**Prior milestone:** 2026.05.320 (Depth-Over-Breadth VI).
+**Prior milestone:** 2026.05.321 (Depth-Over-Breadth VII).
 
 ---
 
-## 1. What the previous milestone (.320) proved
+## 1. What the previous milestone (.321) proved — and how it was lost
 
-`.320` pivoted P0.1 (does energy-based selection beat self-consistency at equal
-compute?) off the **saturated GSM8K ceiling** (SC 0.908, where .319 found an exact
-tie) onto a **HEADROOM** benchmark. The result is sharp but **blocked on a
-benchmark-selection precondition — not on the energy substrate**:
+`.321` was **lost to infrastructure, not science.** Its design (a difficulty-matched
+MATH levels-3/4 corpus → the energy-vs-SC crux in-band) was sound. The P0.1 crux failed
+to run for the **THIRD consecutive milestone** (.319 GSM8K ceiling SC 0.908, .320 MATH-L5
+floor SC 0.265, .321 infra) — but this time purely operationally:
 
-| Exp | Verdict | Outcome |
+| Exp | Result | Mechanism |
 |---|---|---|
-| exp3471 corpus builder | `blocked_no_headroom` | MATH **Level 5**, Gemma4-26B, k=6 → **SC 0.265**, below band floor [0.40] |
-| exp3472 P0.1 v6 (crux) | `blocked_p01_corpus_too_small_n=21` | **No energy-vs-SC comparison run. P0.1 REMAINS OPEN.** |
-| exp3473 calibration v3 | FLAGGED (TAUTOLOGY) | Advisory: process AUROC **0.441 (below chance)** on MATH → FoVer ensemble domain-specificity concern |
-| **exp3474 FR-11 depth** | **CLEAN (de-flagged)** | **Collapse at N=200 (onset 138); `entropy_beta=0.50` cures it.** Depth-sensitive. |
-| exp3475 Kona | `blocked_saturated` | Untrained hybrid solve-rate **1.0** — no headroom (GSM8K-ceiling analogue) |
-| exp3476 G2 package | CLEAN | Self-contained tarball + SHA256 + IPFS CID, AUROC 0.9131 verified; **external run pending** |
+| exp3483 difficulty-matched corpus builder v2 | **FAIL → SKIP×2** | `API Error 400: 'thinking'/'redacted_thinking'` (opus extended-thinking 400 on a long live-GPU task) then pre-test self-heal failed. No corpus. |
+| **exp3484 THE crux** | **SKIP×3 → RETIRED** | "Pre-tests failing, self-heal failed." **Energy-vs-SC never ran.** Its retirement cascade-GATE_BLOCKed exp3487/3491/3492. |
+| exp3485 calibration v4 | **SKIP×3** | Pre-test self-heal failed. No artifact. |
+| **exp3486 FR-11 minimal-β** | **CLEAN POSITIVE** | Found minimal-sufficient entropy β + grounding-dependence. The one landed depth result. |
+| exp3487 Kona | **GATE_BLOCK** | Pre-emptive skip: upstream crux retired. |
+| **exp3488 G2 package** | **CLEAN** | Regression-verified AUROC 0.9131, SHA256 + IPFS CID; external run pending. |
+| exp3489 KV260 | `blocked_ssh_unreachable` | Board down (6 consecutive runs). |
+| exp3490 PolarFire | **FLAGGED (tautology)** | Quarantined. |
+| exp3491 synthesis / exp3492 capstone | **GATE_BLOCK** | Cascaded from the retired crux. |
 
-Hardware: KV260 `blocked_ssh_unreachable`, GateMate `blocked_toolchain_missing`,
-PolarFire reachable (continuity confirmed).
+**Three independent infra failure modes:** (a) the **`thinking`-400** on opus-routed
+long/live tasks; (b) **pre-test self-heal failures** on heavyweight 80–100-turn tasks
+whose scripts never reached a green state; (c) **idle-timeouts** ("Wall-clock+idle timeout
+after 1201s (1201s silence)") on long silent optimization loops.
 
-**Gate status:** G1 ✓, G3 ✓, G4 ✓, **G2 ✗** (sole unmet). `paper_ready = false`.
-**Depth-Over-Breadth Forcing Function REMAINS ACTIVE** (P0.1 has no clean verdict;
-G2 has no confirmed external run).
+**What is now true:** G1/G3/G4 met; **G2 is the sole unmet publication gate** (operator-
+gated external run). P0.1 **remains OPEN — not refuted.** Two large cached generation
+corpora already exist on disk: `data/p01_gsm8k_generations.jsonl` (5.9 MB, SC ceiling
+0.908) and `data/p01_hardmath_generations.jsonl` (3.4 MB, SC floor 0.265).
 
-**The single load-bearing diagnosis:** the .320 corpus used **MATH Level 5**, too hard
-for Gemma4-26B (SC 0.265 ≪ band floor). The selection premise was never tested because
-the precondition (a non-degenerate majority vote with room to improve) was never met.
-The corpus builder already has all the per-step-trace machinery; **only the benchmark
-difficulty needs to change.**
+## 2. The .322 fix — architectural, not scientific
 
----
+The science has been right for three milestones. The fix targets the loss mechanism:
 
-## 2. The three biggest gaps (current state vs PRD vision)
+1. **Route P0.1 through TWO infra-independent paths so no single fragile task gates the
+   verdict.**
+   - **Route 1 (PRIMARY, CPU-only, infra-bulletproof):** the Sudoku/Kona **correctness-
+     first solve-rate gate** (the operator's explicitly-filed cleanest P0.1 testbed). No
+     GGUF, no CUDA, no live generation → immune to the `thinking`-400 / CUDA / GGUF-
+     tokenizer failure modes. Cross-validates Carnot's Ising-Sudoku encoding against the
+     *verified-correct* published QUBO (arXiv:2403.04816) at Step 0a, then climbs the
+     IRED/Kona adaptive-step optimizer ladder. Mandatory per-puzzle progress printing
+     defeats idle-timeout.
+   - **Route 2 (cached-scoring, infra-robust):** the energy-vs-SC crux on the **IN-BAND
+     CONTESTED SUBSET** of the *already-cached* GSM8K/MATH corpora — the subset of problems
+     whose per-problem SC lands in `[0.40, 0.70]`. This synthesizes headroom from existing
+     data with **no fresh live build**, so the crux finally executes regardless of any live
+     generation. Pure cached scoring → seconds → cannot idle-timeout, cannot `thinking`-400.
+2. **Keep every task on sonnet (omit `model`).** The `thinking`-400 hit the **opus**-routed
+   tasks (exp3483/exp3488); the sonnet tasks (exp3486/exp3490) ran clean. We deliberately
+   deviate from "heavy → opus" because .321 proves opus `thinking`-400 is more dangerous
+   than sonnet max-turns here, and the science is now routed through CPU/cached tasks that
+   do not need opus-level reasoning. Tight scope + heavy harness reuse + generous max_turns
+   mitigate max-turns (C+E escalation is skipped when `agent_type` is set).
+3. **Break the cascade: no depth task is `gated_on` another depth task; the synthesis is
+   UNGATED; only the capstone gates on the (robust, cached) synthesis.** The .321 cascade
+   came from gating the synthesis/Kona on the fragile crux. Removing those gates means no
+   depth-task retirement can pre-emptively GATE_BLOCK downstream.
+4. **Print progress on every loop iteration** (corpus generation, optimizer restarts,
+   self-learning iterations) to defeat the 1201 s idle-timeout.
+5. **gemini-cli is DOWN** (.315/.316/.318 crashed; .321 planning crashed) → ALL tasks on
+   `agent_type: claude`, `requires_claude: true`.
 
-1. **P0.1 is still OPEN** — the single most important test (energy-based selection vs
-   self-consistency, the Phase-3 non-autoregressive-reasoning premise) has never had a
-   clean run because both attempted substrates were degenerate (GSM8K at ceiling 0.908;
-   MATH Level 5 at floor 0.265). **Gap: a difficulty-matched corpus where SC ∈ [0.40,
-   0.70].** Literature (ThinkPRM, arXiv:2504.16828) locates this at **MATH-500 levels
-   3-4**.
-2. **The verifier ensemble's domain transfer is unmeasured** — exp3473's advisory
-   (process AUROC 0.441 < chance on MATH) suggests the FoVer 4-verifier ensemble,
-   designed for GSM8K/FoVer, may not discriminate correctness on MATH. If the energy
-   carries no signal on the test corpus, P0.1 cannot be answered regardless of headroom.
-   **Gap: a clean (de-flagged) MATH-domain energy calibration.**
-3. **G2 (independent reproduction) is unclosable by the autonomous loop** — the package
-   is built and internally verified; closing it requires a **non-operator external run**
-   (Operator-Only External Publication). **Gap: the lowest-friction external-ask** — a
-   public one-click `workflow_dispatch` path + a regression-verified package, so the
-   operator's action is a single click.
+## 3. The three biggest PRD-vision gaps this milestone targets
 
----
+1. **The Kona/Phase-3 premise (P0.1) has never produced a verdict.** The entire
+   foundation-model endgame assumes energy-descent global inference beats/matches
+   autoregressive token sampling. Three milestones tried and lost to infra. .322 lands a
+   verdict via two robust routes.
+2. **Continuous self-learning (FR-11) needs a deployable grounding law.** .321 found a
+   minimal-sufficient entropy β; the open question is whether β_min is *predictable* from
+   the measured verifier-ensemble diversity (λ_min(Σ), the P0.2 keystone). exp3498 fuses
+   the FR-11 minimal-β finding with the λ_min audit into a predictive Phase-5 default —
+   the mandatory continuous-self-learning task, doubling as the P0.2 follow-up.
+3. **Publication convergence (G2).** G2 is the sole unmet gate. exp3499 keeps the
+   regression-clean package bulletproof and the external ask one-click, while never
+   pushing/triggering (Operator-Only External Publication).
 
-## 3. Architecture diagram (the P0.1 difficulty-matched pipeline)
-
-```
-                       .321 P0.1 v7 PIPELINE (the fix)
-  ┌──────────────────────────────────────────────────────────────────────┐
-  │ exp3483  HEADROOM CORPUS BUILDER v2  (live GGUF, GPU)                   │
-  │   MATH-500 levels 3-4  ──ADAPTIVE warm-up SC probe──> select in-band    │
-  │   split where SC ∈ [0.40, 0.70]   (fallback: stronger SOTA / higher k)  │
-  │   per problem: 1 greedy + k=6 sampled + per-STEP traces + logprobs      │
-  │           │  data/p01_difficulty_matched_generations.jsonl              │
-  └───────────┼────────────────────────────────────────────────────────────┘
-              │ (cached; downstream NOT gated on the live builder —
-              │  each consumer handles small/absent corpus via its own
-              │  PRECONDITIONS → clean blocked verdict, no cascade)
-   ┌──────────┴───────────┐        ┌─────────────────────────────┐
-   │ exp3484  P0.1 v7 CRUX │        │ exp3485  CALIBRATION v4      │
-   │ process-step energy + │        │ (de-flagged): process AUROC  │
-   │ optimal SC+energy agg │◀──────▶│ + minority-correct recovery  │
-   │ vs SC @ matched compute│  same  │ on MATH; MATH-aware recal.   │
-   │ FLIP-COUNT (taut-clean)│  corpus│ distinct energies (asserted) │
-   └──────────┬───────────┘        └─────────────────────────────┘
-              │ honest_verdict (cheap, reliable — the gate-chain anchor)
-   ┌──────────┴────────────────────────────────────────────────────────────┐
-   │ exp3491  G1-G4 SYNTHESIS  ──gated_on exp3484.honest_verdict contains    │
-   │ 'complete'──>  exp3492  CAPSTONE                                         │
-   └─────────────────────────────────────────────────────────────────────────┘
-
-  PARALLEL DEPTH:  exp3486 FR-11 minimal-β + grounding-dependence (mandatory
-                   self-learning) │ exp3487 Kona harder-instance generation
-  G2:              exp3488 clean-room regression-verify + external-ask
-  HARDWARE:        exp3489 KV260 terminal │ exp3490 PolarFire (opportunistic)
-```
-
-**Gate-chain principle (the .317 cascade lesson):** the synthesis/capstone gate on the
-**cheap, reliable CACHED scoring crux (exp3484)**, never the live generation task
-(exp3483). exp3484 emits a `complete:` verdict under EVERY outcome (including a clean
-`blocked_corpus_too_small` / `blocked_corpus_at_ceiling`), so a GPU-blocked builder
-cannot cascade-skip the gate chain.
-
----
-
-## 4. Phases
-
-### Phase A — OPS transition (1 task)
-- **exp3482** archive .320, write the operational retro, activate .321.
-
-### Phase B — DEPTH BLOCK (5 tasks; the majority of substantive slots)
-- **exp3483** P0.1 HEADROOM corpus builder v2 — **difficulty-matched** (MATH-500 levels
-  3-4) with an adaptive warm-up that selects the split where SC ∈ [0.40, 0.70]. The ONE
-  change from exp3471: benchmark difficulty. Live GGUF, GPU, resumable, timeout-proof.
-- **exp3484** P0.1 v7 — process-aware step-level energy + optimal SC+energy aggregation
-  vs self-consistency at matched compute, flip-count tautology-clean. THE crux. Cached.
-- **exp3485** calibration v4 (de-flagged) — process & trained energy AUROC + minority-
-  correct recovery on the in-band corpus, with MATH-aware recalibration; fixes the
-  exp3473 tautology by computing the two energies from genuinely distinct pipelines
-  (runtime assert). Cached.
-- **exp3486** FR-11 minimal-β + grounding-dependence (**mandatory continuous-self-
-  learning task**) — exp3474 showed β=0.50 cures collapse at N=200; this finds the
-  MINIMAL effective β (sweep {0, 0.1, 0.25, 0.5}) and whether collapse onset moves with
-  grounding strength (ACTIVE_WEIGHT). Cites ER-PRM. Cached.
-- **exp3487** Kona harder-instance generation + process hybrid — exp3475 was saturated;
-  this generates harder instances (untrained-hybrid solve-rate < 0.8) behind an
-  encoding-validity gate (E==0 on a known-valid board) per the known-issues KONA
-  correctness-first gate, then tests the process energy as proposal heuristic. Cached/CPU.
-
-### Phase C — G2 (1 task; the sole publication gate)
-- **exp3488** FoVer G2 clean-room regression-verify + lowest-friction external-ask —
-  regression-verify the exp3476 package still reproduces 0.9131 from a truly fresh
-  environment (isolated dir + fresh venv), then prepare the external ask (public
-  `workflow_dispatch` workflow + reproducer invite + operator checklist). Does NOT
-  push, does NOT trigger CI, does NOT mark G2 met (Operator-Only External Publication).
-
-### Phase D — HARDWARE (2 tasks; light, opportunistic per north-star §3)
-- **exp3489** KV260 terminal latency transcript (re-attempt SSH; mandatory until terminal).
-- **exp3490** PolarFire opportunistic reachability audit (no terminal mandate).
-- **GateMate EXCLUDED this milestone:** its toolchain (`nextpnr-himbaechel`) is missing,
-  so `.320` exp3478 returned `blocked_gatemate_toolchain_missing`; a re-detect is a
-  doomed rerun (Failed-Experiment Rerun Discipline) and north-star §3 says "do NOT block
-  milestones on it." Documented as blocked-on-toolchain future-work in the gate synthesis.
-
-### Phase E — OPS synthesis + capstone (2 tasks)
-- **exp3491** G1-G4 gate-status synthesis (gated on the cheap exp3484 crux).
-- **exp3492** Capstone v321 (gated on exp3491).
-
----
-
-## 5. Dependency graph
+## 4. Architecture / dependency graph (cascade-proof)
 
 ```
-exp3482 (archive/activate)  ──> [all]
-exp3483 (corpus builder)    ──(cached file; soft)──> exp3484, exp3485, exp3487
-exp3484 (P0.1 crux)         ──gated_on honest_verdict contains 'complete'──> exp3491
-exp3485, exp3486, exp3487   ──(read by)──> exp3491
-exp3488 (G2), exp3489-90 (hw)──(read by)──> exp3491
-exp3491 (synthesis)         ──gated_on gate_status_v321_ready==true──> exp3492 (capstone)
+exp3493 archive .321 / activate .322  (ops)
+        |
+        v
+   +--------------- DEPTH BLOCK (no cross-gating) ---------------+
+   |  exp3494  P0.1 Route 1: Sudoku/Kona correctness-first       |  CPU, no LLM   (PRIMARY)
+   |           solve-rate gate (QUBO-validated, IRED ladder)     |
+   |  exp3495  P0.1 Route 2: energy-vs-SC crux on the IN-BAND    |  cached scoring
+   |           CONTESTED SUBSET of cached GSM8K/MATH corpora     |
+   |  exp3496  (OPTIONAL, non-blocking) live difficulty-matched  |  live GGUF, sonnet
+   |           corpus builder v3 (resume exp3483 script)         |
+   |  exp3497  MATH-aware energy-correctness calibration v5      |  cached scoring
+   |           (tautology-FIXED, step-vs-final AUROC)            |
+   |  exp3498  FR-11 beta_min = f(lambda_min) predictive law     |  cached  (self-learning + P0.2)
+   +------------------------------------------------------------+
+   exp3499  G2 clean-room regression-verify + external-ask refresh  (cached; never pushes)
+   exp3500  KV260 terminal latency transcript (SSH precondition)    (hardware, opportunistic)
+   exp3501  PolarFire opportunistic reachability audit              (hardware, opportunistic)
+        |
+        v
+   exp3502  G1-G4 gate-status synthesis v322   (UNGATED -- reads & skips absent/flagged)
+        |  (gated_on exp3502.gate_status_v322_ready == true)
+        v
+   exp3503  Capstone v322
 ```
 
-All downstream depth consumers handle a small/absent corpus via their own PRECONDITIONS
-(clean `blocked_*` verdicts), so a CUDA-blocked exp3483 cannot cascade. exp3487 (Kona)
-and exp3491 (synthesis) are additionally `gated_on exp3484.honest_verdict contains
-'complete'` (the cheap, reliable cached crux is the gate-chain anchor — never the live
-builder, per the `.317` cascade lesson).
+Every gate in the chain depends only on the robust cached synthesis, never on a P0.1
+task that might retire on infra. exp3496 is non-blocking; its failure cannot cascade.
 
----
+## 5. Phases
+
+- **Phase A — OPS:** exp3493 archive/activate.
+- **Phase B — DEPTH (majority of slots, Depth-Over-Breadth):** exp3494 (Sudoku P0.1,
+  primary), exp3495 (crux, contested subset), exp3496 (optional live builder),
+  exp3497 (calibration), exp3498 (self-learning / P0.2 law).
+- **Phase C — G2 (sole publication gate):** exp3499.
+- **Phase D — HARDWARE (opportunistic continuity, north-star §3):** exp3500 KV260,
+  exp3501 PolarFire.
+- **Phase E — SYNTHESIS:** exp3502 gate status, exp3503 capstone.
 
 ## 6. Hardware requirements
 
-| Task | Hardware | Substrate |
-|---|---|---|
-| exp3483 corpus builder | 1× RTX 3090 (CUDA) + cached SOTA GGUF | `live_llm_inference` |
-| exp3484/3485/3486/3487 | CPU only (cached scoring) | `verifier_ensemble_against_cached_candidates` |
-| exp3488 G2 | CPU (fresh venv) | `verifier_ensemble_against_cached_candidates` |
-| exp3489 KV260 | SSH to `kria` board | `hardware_smoke` |
-| exp3490 PolarFire | SSH to `polarfire` board | `hardware_smoke` |
-| exp3482/3491/3492 | CPU (aggregation) | `aggregation_from_upstream_artifacts` |
+- exp3494/3495/3497/3498/3499/3502/3503: **CPU only** (no GPU). This is the point — the
+  P0.1 verdict no longer depends on the GPU/live-LLM stack.
+- exp3496 (optional, non-blocking): 1× RTX 3090 for live GGUF generation; gated behind
+  CUDA + GGUF-tokenizer preconditions; blocks cleanly if unavailable.
+- exp3500/3501: SSH reachability to KV260 (`kria`) / PolarFire; honest blocked verdict if
+  unreachable.
 
-**Models:** SOTA GGUF per CLAUDE.md — `unsloth/gemma-4-26B-A4B-it-GGUF` (default,
-homogeneous with the .320 corpus), with `unsloth/gemma-4-31B-it-GGUF` as the stronger
-fallback if even MATH Level 3 lands below the band. GGUF path only (embedded tokenizer;
-never `AutoTokenizer` on a `-GGUF` repo id per the 2026-05-29 GGUF tokenizer rule).
+## 7. Depth-Over-Breadth compliance
 
----
+Per the 2026-05-30 forcing function, the milestone does NOT relax (P0.1 has no clean
+verdict; G2 not externally run). Every task advances the headline, closes a G-gate, or
+tests a load-bearing-unproven link. **No vN+1 re-measurement of an already-measured
+artifact:** exp3494 is the *correctness-first, QUBO-validated, ladder-climbing* Sudoku gate
+(new vs exp3408's time-framed plateau and exp3475's saturated block); exp3495 runs the
+energy-vs-SC comparison on a *contested-subset* corpus that finally satisfies the headroom
+precondition (the question exp3472/exp3484 structurally could not answer); exp3498 derives
+a *predictive law* beta_min=f(lambda_min) (new vs exp3486's single-point minimal-β). The
+forcing function relaxes only once P0.1 has a clean verdict AND G2 is externally in-motion.
 
-## 7. Continuous self-learning coverage (PRD requirement)
+## 8. SOTA model usage
 
-**exp3486** is the mandatory continuous-self-learning task. It advances the FR-11 /
-Tier-3 self-learning track by determining the **minimal entropy regularization** that
-keeps the self-distillation loop from collapsing onto the verifier null space (the
-Q12 Dark-Room / Zenil α_t failure mode), and whether the collapse onset depends on the
-grounding diversity. This is a genuine forward step (minimal-β + grounding-dependence),
-not a re-measurement of exp3474's N=200 confirmation — it converts "β=0.50 works" into
-"β≥X is necessary and sufficient, and the safety margin scales with grounding," the
-actionable Phase-5 pre-deployment default.
+The only live-LLM task (exp3496, optional) uses `unsloth/gemma-4-26B-A4B-it-GGUF`
+(default) with `unsloth/gemma-4-31B-it-GGUF` documented fallback, via the GGUF model_path
+loader (embedded tokenizer; NEVER `AutoTokenizer` on a `-GGUF` repo id, per the 2026-05-29
+GGUF tokenizer rule). All cached-scoring tasks consume the already-generated corpora.
 
----
+## 9. Cross-references
 
-## 8. Discipline compliance checklist
-
-- **Depth-Over-Breadth:** 5 of 11 tasks are P0.1/Kona/self-learning depth; 1 is G2 (the
-  finish line). No `vN+1` re-measurement of an already-measured artifact — every depth
-  task answers a question its predecessor structurally could not (in-band corpus,
-  MATH-domain calibration, minimal-β, harder Kona instances).
-- **Hardware-Task Continuity:** KV260 (mandatory until terminal) + PolarFire
-  (opportunistic) per north-star §3; GateMate excluded this milestone (toolchain
-  `nextpnr-himbaechel` missing → re-detect is a doomed rerun; documented future-work).
-- **Gemini-cli is DOWN** (.315/.316/.318 crashed every gemini task) → ALL tasks
-  `agent_type: claude, requires_claude: true`; heavy/long/hardware on `model: opus`.
-- **Pre-Launch Preconditions** on every compute-bound task; **KV260 SSH-not-SD-card**;
-  **Verdict Terminal-Prefix** (`complete:`); **Inference-Substrate Declaration**;
-  **Principle-Annotated** artifact fields + gates; **Adversarial / Sample-Size Rigor**
-  (flip-count tautology-clean by construction; distinct-energy runtime asserts).
-- **Exclusion-Manifest / Failed-Experiment Rerun:** every scope-matching task carries an
-  `operator_override:` (standing 2026-05-29/30 directives) + a full `prior_failures:`
-  block (all four sub-fields).
-- **Operator-Only External Publication:** exp3488 prepares the external ask but never
-  pushes, triggers CI, or marks G2 met.
-- **Public Documentation Discipline:** no autonomous edits to north-star.md, index.html,
-  README, or operator-curated docs.
+- `ops/north-star.md` — headline (§1), G1–G4 gate (§2), KV260-terminal hardware focus (§3)
+- `ops/known-issues.md` — KONA GLOBAL-OPT CORRECTNESS-FIRST GATE (2026-05-30), PHASE-3
+  PATH DE-RISKING ROADMAP / exp3312 P0.1 + exp3313 P0.2 (2026-05-29)
+- CLAUDE.md — Depth-Over-Breadth Forcing Function, Failed-Experiment Rerun Discipline,
+  Pre-Launch Preconditions, Adversarial Artifact Verification (fabrication gate)
+- research-references.md "2026-05-31 Post-.321 Planning Sweep" (QUBO-Sudoku 2403.04816,
+  IRED 2406.11179, Enso, Closed-Loop Transformers 2511.21882, Kona datapoint)
+- exp2837 (FoVer 0.9131 headline), exp3486 (FR-11 minimal-β), exp3439 (λ_min audit v3)

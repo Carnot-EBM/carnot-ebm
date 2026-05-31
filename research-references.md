@@ -1,3 +1,78 @@
+## 2026-05-31 Post-.321 Planning Sweep (Milestone 2026.05.322)
+
+`.321` (Depth-Over-Breadth VII) was lost to **infrastructure, not science.** The P0.1
+energy-vs-self-consistency crux (the project's single most important test) failed to run
+for the THIRD consecutive milestone — but this time the design was sound and the failure
+was purely operational:
+
+- **exp3483 (difficulty-matched corpus builder v2):** crashed mid-run with
+  `API Error: 400 messages.1.content.46: 'thinking' or 'redacted_thinking'` (an extended-
+  thinking block-ordering 400 that hit the **opus**-routed long live-GPU task), then SKIP'd
+  twice on "Pre-tests failing, self-heal failed." No corpus produced.
+- **exp3484 (THE crux):** SKIP'd 3× ("Pre-tests failing, self-heal failed"), then RETIRED
+  in the doomed-rerun ledger. **The energy-vs-SC comparison never ran.** Its retirement
+  cascade-GATE_BLOCKed exp3487 (Kona), exp3491 (synthesis), and exp3492 (capstone) —
+  because they were `gated_on` the crux.
+- **exp3486 (FR-11 minimal-β): CLEAN POSITIVE** — found a minimal-sufficient entropy β and
+  characterized its grounding-dependence (the milestone's one landed depth result).
+- **exp3488 (G2): CLEAN** — the self-contained package regression-verified (AUROC 0.9131,
+  SHA256 + IPFS CID); external run still pending (G2 is the SOLE unmet publication gate).
+- Kona tasks repeatedly hit **`Wall-clock+idle timeout after 1201s (1201s silence)`** —
+  long silent optimization loops idle-timed-out.
+
+**The diagnosis that drives .322:** the science was right for three milestones; the loss
+mechanism is (a) the **`thinking`-400** on opus-routed long/live tasks, (b) **pre-test
+self-heal failures** on heavyweight 80–100-turn tasks whose scripts never reached a green
+state, and (c) **idle-timeouts** on silent loops. The fix is architectural, not scientific:
+**route P0.1 through two CPU-only / cached-only paths that have NO live-LLM dependency, so
+the verdict no longer hinges on one fragile live task; keep tasks on sonnet (the opus
+`thinking`-400 class); ungate the synthesis/capstone so no depth-task retirement can
+cascade; and print progress on every loop iteration.**
+
+New references surfaced (2026-05-31 sweep), all directly actionable for the infra-robust
+Sudoku/Kona P0.1 route:
+
+- **arXiv:2403.04816 — "A Simple QUBO Formulation of Sudoku."** A *verified-correct*
+  Ising/QUBO energy for Sudoku in which a valid solution is the unique global minimum
+  (E==0). **THE directly-actionable reference for the Kona correctness-first gate:**
+  exp3408 plateaued at `final_energy=10.05` (never 0) — i.e. its Ising encoding was
+  mis-specified or its optimizer stuck. exp3494 cross-validates Carnot's Sudoku-Ising
+  encoding against this published QUBO so Step 0a (E==0 on a known-valid board) has a
+  ground-truth reference to fix the encoding if it fails.
+- **arXiv:2406.11179 — "Learning Iterative Reasoning through Energy Diffusion" (IRED).**
+  Energy-diffusion reasoning runs an *adaptive number of optimization steps* scaled to
+  problem hardness, enabling solutions to harder-than-training CSP instances (incl. harder
+  Sudoku). The optimizer-ladder design (annealing → restarts → parallel tempering →
+  adaptive step count) for exp3494's solve-rate gate.
+- **github.com/MVPandey/Enso** — open-source EBM trained to reason in latent space and
+  solve Sudoku (LeCun-style EBM). Reference implementation / sanity comparator for the
+  energy-descent-solves-Sudoku claim.
+- **Kona 1.0 (Logical Intelligence) datapoint:** 96.2% on *hard* Sudoku at ~313 ms/puzzle;
+  frontier LLMs ~2% combined. Trained only on 50%-masked partial solutions; runs an
+  adaptive number of test-time optimization steps. The benchmark target the Kona P0.1
+  testbed is anchored to — and the existence proof that energy-based global inference CAN
+  solve hard Sudoku, making exp3408's plateau a Carnot-encoding/optimizer issue, not a
+  fundamental limit.
+- **arXiv:2511.21882 — "Closed-Loop Transformers: Autoregressive Modeling as Iterative
+  Latent Equilibrium" (Nov 2025).** Frames AR as an open-loop special case of iterative
+  latent refinement; the open-loop bottleneck (errors propagate uncorrected) is the exact
+  failure mode P0.1's energy-descent condition is meant to beat. Framing reference for the
+  energy-descent-vs-AR contrast.
+- **arXiv:2507.02092 — "Energy-Based Transformers are Scalable Learners and Thinkers"
+  (EBT, carried forward).** Iterative energy-minimization refinement; scales >30% faster
+  than Transformer++ on several axes. The macro-thesis P0.1 tests at Carnot scale.
+
+**How .322 uses these:** exp3494 (Kona/Sudoku correctness-first solve-rate gate) becomes
+the PRIMARY, infra-bulletproof P0.1 route — CPU-only, no GGUF, immune to the `thinking`-400
+/ CUDA / GGUF-tokenizer failure modes — cross-validating Carnot's Ising-Sudoku encoding
+against arXiv:2403.04816 and climbing the IRED/Kona adaptive-step optimizer ladder, with
+mandatory per-puzzle progress printing to defeat idle-timeout. exp3495 (the energy-vs-SC
+crux) runs on the IN-BAND CONTESTED SUBSET of the *already-cached* GSM8K/MATH corpora (no
+fresh live build), so the crux finally executes regardless of whether any live generation
+succeeds.
+
+---
+
 ## 2026-05-30 Post-.320 Planning Sweep (Milestone 2026.05.321)
 
 `.320` (Depth-Over-Breadth VI) pivoted P0.1 off the saturated GSM8K ceiling onto a

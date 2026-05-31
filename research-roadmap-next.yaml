@@ -1,0 +1,1043 @@
+milestone: "2026.05.322"
+milestone_title: "Depth-Over-Breadth VIII: P0.1 via Two Infra-Independent Routes — the Sudoku/Kona Correctness-First Solve-Rate Gate (CPU, QUBO-validated) + the Energy-vs-Self-Consistency Crux on the In-Band Contested Subset of Cached Corpora; FR-11 beta_min=f(lambda_min) Predictive Law; G2 Clean-Room Regression-Verify"
+milestone_doc: "openspec/change-proposals/research-roadmap-vNEXT.md"
+
+# ---------------------------------------------------------------------------
+# PLANNER NOTE (Opus 4.8, 2026-05-31)
+# .321 was LOST TO INFRASTRUCTURE, NOT SCIENCE. The P0.1 energy-vs-SC crux failed to run
+# for the THIRD straight milestone (.319 ceiling, .320 floor, .321 infra). The .321 design
+# was sound; the loss mechanism was: (a) `API Error 400: 'thinking'/'redacted_thinking'`
+# on the OPUS-routed long/live tasks (exp3483/exp3488); (b) pre-test self-heal failures on
+# heavyweight 80-100-turn tasks whose scripts never reached green (exp3484/exp3485 SKIP x3
+# -> exp3484 RETIRED -> cascade GATE_BLOCK of exp3487/3491/3492); (c) idle-timeouts on long
+# silent optimization loops ("Wall-clock+idle timeout after 1201s").
+#
+# THE .322 FIX IS ARCHITECTURAL:
+#  1. Route P0.1 through TWO infra-independent paths. Route 1 (PRIMARY) = the Sudoku/Kona
+#     correctness-first solve-rate gate: CPU-only, NO GGUF/CUDA/live-gen, immune to the
+#     thinking-400 / CUDA / tokenizer failures; cross-validates Carnot's Ising-Sudoku
+#     encoding against the verified QUBO (arXiv:2403.04816) at Step 0a then climbs the
+#     IRED/Kona adaptive-step optimizer ladder. Route 2 = the energy-vs-SC crux on the
+#     IN-BAND CONTESTED SUBSET of the ALREADY-CACHED GSM8K/MATH corpora (no fresh live
+#     build) -> the crux finally executes regardless of any live generation.
+#  2. ALL tasks on sonnet (OMIT `model`). thinking-400 hit the opus tasks; the sonnet
+#     tasks ran clean. Deliberate deviation from "heavy->opus": opus thinking-400 is more
+#     dangerous than sonnet max-turns, and the science is now CPU/cached.
+#  3. CASCADE-PROOF: NO depth task is gated_on another depth task; the synthesis is
+#     UNGATED (reads & skips absent/flagged upstreams); only the capstone gates on the
+#     robust cached synthesis. No depth-task retirement can pre-emptively block downstream.
+#  4. PRINT PROGRESS on every loop iteration (defeats the 1201s idle-timeout).
+#  5. gemini-cli is DOWN -> ALL tasks agent_type: claude, requires_claude: true.
+# Depth-Over-Breadth does NOT relax (P0.1 not yet CLEAN; G2 not externally run). NO vN+1
+# re-measurement — every task answers a question its predecessor structurally could not.
+# ---------------------------------------------------------------------------
+
+tasks:
+  # =========================================================================
+  # PHASE A — OPS transition
+  # =========================================================================
+  - id: exp3493-archive-v321-activate-v322
+    operator_override: "2026-05-29 operator directive (standing, mechanical auto-stamp): routine milestone-transition task — false-positive scope-match vs exp3482/exp3470 archive tasks; structurally never a doomed rerun."
+    prior_failures:
+      - experiment_id: exp3482-archive-v320-activate-v321
+        verdict: "complete: archive_v320_activate_v321_ready=true"
+        addressed_by: "Routine milestone progression; .321 has completed (all tasks ran or blocked honestly, capstone gate-blocked) and is archived to make room for .322."
+        retire_if_same_verdict: false
+    milestone: "2026.05.322"
+    title: "Archive milestone .321 honestly and activate .322"
+    priority: critical
+    max_turns: 20
+    agent_type: claude
+    requires_claude: true   # gemini-cli is DOWN (.315/.316/.318/.321-plan all crashed); claude is the only backend landing artifacts.
+    estimated_wall_time_min: 5
+    track: ops
+    inference_substrate: aggregation_from_upstream_artifacts
+    requires_gpu: false
+    deliverable: "results/experiment_3493_archive_v321_activate_v322.json"
+    prompt: |
+      CONTEXT: Milestone .321 (Depth-Over-Breadth VII) has completed, but it was LOST TO
+      INFRASTRUCTURE, not science. The P0.1 energy-vs-SC crux failed to run for the THIRD
+      straight milestone — this time because (a) the difficulty-matched corpus builder
+      (exp3483) crashed on `API Error 400: 'thinking'/'redacted_thinking'` (an opus
+      extended-thinking 400 on a long live-GPU task) then failed pre-tests; (b) the crux
+      (exp3484) SKIP'd 3x on "Pre-tests failing, self-heal failed" then RETIRED, cascade-
+      GATE_BLOCKing exp3487/3491/3492; (c) Kona tasks idle-timed-out at 1201s. The landed
+      positives: exp3486 (FR-11 minimal entropy beta + grounding dependence) and exp3488
+      (G2 package regression-verified, AUROC 0.9131, external run pending). G1/G3/G4 met;
+      G2 is the sole unmet gate. P0.1 REMAINS OPEN (not refuted).
+
+      EXISTING CODE TO READ FIRST:
+        - results/experiment_3486_fr11_minimal_beta_grounding_dependence_v4.json (the depth positive)
+        - results/experiment_3488_fover_g2_clean_room_regression_verify_external_ask_v1.json (G2)
+        - results/experiment_3489_kv260_terminal_latency_transcript_v7.json (blocked ssh)
+        - results/experiment_3492_capstone_v321.json (gate-blocked capstone)
+        - ops/conductor-log.md (the .321 SKIP/RETIRE/GATE_BLOCK trail — the infra evidence)
+        - ops/changelog.md (append, never delete — Documentation Update Rules)
+        - ops/known-issues.md (P0.1 / KONA correctness-first gate / G2 MANDATORY priorities)
+
+      TASK: Archive .321 to ops/changelog.md and write the .321 operational retrospective
+      JSON. Confirm .322 is active.
+
+      CONCRETE STEPS:
+        1. Read the .321 artifacts + the conductor log.
+        2. Draft results/operational_retro_2026_05_321.json (schema carnot.operational_retro.v65):
+           experiments completed, the KEY finding (P0.1 was lost to INFRA not science — the
+           crux SKIP'd on pre-test self-heal failures + the opus thinking-400; the design
+           was sound), the milestone positives (FR-11 minimal beta; G2 regression-clean),
+           G2 status (external run pending = sole unmet gate), wall-time, and the top forward
+           gap = "route P0.1 through TWO infra-independent paths (CPU Sudoku correctness-first
+           gate + cached-corpus contested-subset crux) so the verdict no longer depends on a
+           fragile live task; keep all tasks on sonnet to dodge the thinking-400; ungate the
+           synthesis/capstone so no depth-task retirement cascades".
+        3. Append a .321 archive section to ops/changelog.md (do NOT delete prior entries).
+           Note that .322 fixes the INFRA loss mechanism, not the science.
+        4. Emit the deliverable artifact with honest_verdict starting 'complete:' and field
+           archive_v321_activate_v322_ready=true.
+      Run command: cd {project_root} && JAX_PLATFORMS=cpu .venv/bin/python scripts/experiment_3493_archive_v321_activate_v322.py. Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  # =========================================================================
+  # PHASE B — DEPTH BLOCK (majority of slots; all sonnet; no cross-gating)
+  # =========================================================================
+
+  # ---- P0.1 ROUTE 1 (PRIMARY, CPU-only, infra-bulletproof): Sudoku correctness-first ----
+  - id: exp3494-p01-sudoku-correctness-first-solve-rate-gate-v1
+    operator_override: "2026-05-30 operator directive (ops/known-issues.md 'KONA GLOBAL-OPT CORRECTNESS-FIRST GATE') + 2026-05-29 standing P0.1 directive: P0.1 (exp3312) is the project's single most important test, and it has been LOST TO INFRA for three milestones. This routes it through the operator's explicitly-filed CLEANEST P0.1 testbed — the Sudoku/Kona correctness-first solve-rate gate — which is CPU-only (no GGUF/CUDA/live-gen), immune to the thinking-400 / tokenizer / idle-timeout failures that killed .319-.321. It cross-validates Carnot's Ising-Sudoku encoding against the VERIFIED QUBO (arXiv:2403.04816) at Step 0a (the fix for exp3408's energy~10 plateau) and climbs the IRED/Kona adaptive-step optimizer ladder. Correctness-first gate + QUBO cross-validation + adaptive ladder = a new test exp3408/exp3475 structurally could not run. scope-match vs exp3408/exp3440/exp3475/exp3487 is the intended Kona-correctness continuation."
+    prior_failures:
+      - experiment_id: exp3408-kona-global-opt
+        verdict: "complete: SUCCESS but solved_sudoku=False (energy plateaued at 10.05, not 0); time framing fast-but-wrong"
+        addressed_by: "exp3408 reported a meaningless ~15x speedup because the method never actually SOLVED (final energy 10, not 0). This task re-gates on SOLVE-RATE not time, and adds Step 0a ENCODING VALIDITY (a known-valid solved board MUST give E==0, cross-validated against the published QUBO arXiv:2403.04816) — if E!=0 the energy is mis-specified (the plateau diagnosis), STOP. Then an optimizer ladder (annealing -> restarts -> parallel tempering -> adaptive step count per IRED) with per-puzzle progress printing. Different gate (solve-rate), different precondition (QUBO-validated encoding), different optimizer."
+        retire_if_same_verdict: true
+      - experiment_id: exp3475-kona-process-energy-harder-instances-v5
+        verdict: "complete: blocked_kona_instances_saturated_no_headroom"
+        addressed_by: "exp3475 could not find non-saturated instances. This task uses standard Sudoku difficulty tiers (easy/medium/hard) with a published difficulty metric, and the correctness-first gate makes an honest negative (E!=0, or solve-rate ~0 even with the ladder) a VALID P0.1 datapoint rather than a saturation block. Different substrate (graded Sudoku), correctness-first gating, QUBO-validated encoding."
+        retire_if_same_verdict: true
+    # NOT gated_on anything: pure CPU; handles its own preconditions; the synthesis reads
+    # this verdict but does NOT gate on it (cascade-proof).
+    milestone: "2026.05.322"
+    title: "P0.1 Route 1 (PRIMARY, CPU) — Sudoku/Kona correctness-first solve-rate gate: QUBO-validated Ising encoding (Step 0a E==0) + IRED/Kona adaptive-step optimizer ladder, solve-rate by difficulty, energy-vs-AR on the solved subset only"
+    priority: critical
+    max_turns: 70
+    agent_type: claude
+    requires_claude: true   # gemini-cli is DOWN; CPU global-opt harness + judgment on the QUBO cross-validation, the optimizer ladder, and the correctness-first negative; claude is the only landing backend. NO model:opus — the opus thinking-400 killed .321; this is CPU/mechanical with clear gates, sonnet-appropriate with generous max_turns.
+    estimated_wall_time_min: 30
+    track: evidence
+    inference_substrate: aggregation_from_upstream_artifacts
+    requires_gpu: false
+    deliverable: "results/experiment_3494_p01_sudoku_correctness_first_solve_rate_gate_v1.json"
+    prompt: |
+      CONTEXT: P0.1 (does energy-based global inference actually SOLVE, not just descend
+      fast?) is the project's single most important test and has been LOST TO INFRA for
+      three milestones (.319/.320/.321) on the live-LLM route. This is the INFRA-BULLETPROOF
+      route: the Sudoku/Kona correctness-first solve-rate gate (ops/known-issues.md 'KONA
+      GLOBAL-OPT CORRECTNESS-FIRST GATE'). CPU-only, NO GGUF, NO CUDA, NO live generation ->
+      immune to the thinking-400 / tokenizer / CUDA failures. The operator filed this as the
+      cleanest concrete P0.1 testbed: "if Carnot's Ising energy formulation can't solve hard
+      Sudoku via global optimization, that's load-bearing evidence about the non-AR-reasoning
+      endgame." exp3408 plateaued at final_energy=10.05 (never 0) and claimed a meaningless
+      ~15x speedup over a slow AR baseline — fast-but-wrong. Kona 1.0 solves hard Sudoku at
+      96.2% (~313ms) and frontier LLMs at ~2%, so the plateau is a Carnot-encoding/optimizer
+      issue, NOT a fundamental limit. The literature gives the tools: arXiv:2403.04816 is a
+      VERIFIED-CORRECT QUBO Sudoku energy (a valid board is the unique global minimum, E==0);
+      arXiv:2406.11179 (IRED) and Kona run an ADAPTIVE number of optimization steps scaled to
+      hardness to solve harder-than-training instances.
+
+      EXISTING CODE TO READ FIRST:
+        - scripts/experiment_3408_kona_global_opt.py (the energy~10 plateau — the bug to diagnose)
+        - scripts/experiment_3440_kona_global_opt_correctness_v3.py (a prior correctness attempt)
+        - scripts/experiment_3475_kona_process_energy_harder_instances_v5.py (the saturated block; reuse the harness)
+        - scripts/experiment_2072_kona_sudoku.py + scripts/experiment_2085_pem_sudoku_eval.py (existing Sudoku-Ising harnesses)
+        - python/carnot/ (the Ising energy / sampler modules; the SamplerBackend + adaptive_ising.py if present)
+        - ops/known-issues.md "NEW 2026-05-30: KONA GLOBAL-OPT CORRECTNESS-FIRST GATE" (the mandatory Step-0 protocol + required fields)
+        - research-references.md "2026-05-31 Post-.321 Planning Sweep" (QUBO-Sudoku 2403.04816, IRED 2406.11179, Enso, Kona datapoint)
+
+      TASK: Validate the Sudoku-Ising energy encoding against the published QUBO (Step 0a),
+      confirm easy-tier solvability (Step 0b), then climb the optimizer ladder on >=20
+      puzzles across difficulty tiers, reporting SOLVE-RATE (final board valid / E==0 verified
+      ON THE BOARD) by difficulty and by optimizer variant. An honest negative is a valid
+      P0.1 datapoint.
+
+      PRECONDITIONS (step 0 — MANDATORY AND GATING, run BEFORE any optimization):
+        0a. ENCODING VALIDITY: encode a KNOWN-VALID solved Sudoku board into the Ising/QUBO
+            energy and assert E == 0 (within float eps). Cross-validate the constraint set
+            against arXiv:2403.04816 (row/col/box one-hot + cell one-hot penalties). If a
+            valid solution does NOT give E==0 -> honest_verdict complete: blocked_energy_encoding_invalid
+            with the per-constraint residual-energy breakdown; STOP. No optimizer can solve a
+            mis-specified energy.
+        0b. EASY-TIER SANITY: confirm the optimizer solves EASY (many-clue) boards. If it
+            cannot -> complete: blocked_kona_failure_is_representational_not_optimizer (easy
+            solve-rate ~0 means the failure is encoding, not optimizer power).
+
+      CONCRETE STEPS:
+        1. Run Step 0a/0b. Only if BOTH pass, proceed.
+        2. Assemble >=20 puzzles across difficulty tiers (easy / medium / hard), labeled by a
+           published difficulty metric (clue count + constraint-propagation depth). Document
+           the source + seed.
+        3. OPTIMIZER LADDER (report solve-rate per variant): (i) vanilla descent/Glauber;
+           (ii) slower simulated-annealing schedule; (iii) K random restarts; (iv) parallel
+           tempering / replica exchange (adaptive_ising.py if present); (v) ADAPTIVE step
+           count scaled to hardness (IRED/Kona). PRINT one progress line per puzzle AND per
+           ladder rung (LOAD-BEARING — defeats the 1201s idle-timeout).
+        4. SOLVE = final board satisfies ALL Sudoku constraints, VERIFIED ON THE BOARD (not
+           just an energy threshold). Report solve_rate overall + solve_rate_by_difficulty +
+           by optimizer_variant.
+        5. PLATEAU CHARACTERIZATION: for unsolved instances, report n_violated_constraints at
+           the plateau (a few cells = optimizer-fixable; pervasive = representational).
+        6. HYBRID: if pure energy descent can't close the last violations, test the energy +
+           constraint-propagation hybrid (energy proposes; Carnot's Z3/AST/arc-consistency
+           verifiers clean up residuals) and report its solve_rate SEPARATELY — narrows the
+           claim honestly from "energy replaces search" to "energy is a global heuristic".
+        7. ENERGY-vs-AR (solved subset only): for SOLVED puzzles, report time_to_solution vs
+           an autoregressive baseline — a speedup claim is valid ONLY on the solved subset.
+        8. Emit the artifact with clean methodology (real duration, seed, checksum).
+
+      REQUIRED ARTIFACT FIELDS (each carries a principle per CLAUDE.md):
+        honest_verdict: principle="Terminal verdict must start with complete:/success:/passed:/shipped_."
+        inference_substrate: value=aggregation_from_upstream_artifacts
+        encoding_validity_E0: principle="E of a known-valid solved board MUST be 0 (Step 0a), cross-validated vs arXiv:2403.04816 — gating; a solve-rate against a mis-specified energy is meaningless."
+        qubo_crossvalidation_note: principle="how Carnot's constraint set maps to the published QUBO (row/col/box/cell one-hot) — the audit trail for Step 0a."
+        easy_tier_solve_rate: principle="optimizer must solve EASY boards (Step 0b) before any hard claim; ~0 means the failure is representational."
+        n_puzzles: principle=">=20 across tiers; solve_rate on n<20 is not headline-eligible (Sample-Size Rigor)."
+        solve_rate: principle="fraction reaching a VALID solution (all constraints satisfied, verified ON THE BOARD) — the gate. Time is meaningless without it."
+        solve_rate_by_difficulty: principle="per-tier so partial capability is visible."
+        solve_rate_by_optimizer_variant: principle="which ladder rung solved what — the plateau diagnosis, auditable."
+        n_violated_constraints_at_plateau: principle="distinguishes 'almost solved' (optimizer-fixable) from pervasive infeasibility (representational)."
+        hybrid_solve_rate: principle="energy + constraint-propagation solve-rate, reported separately so the claim is honest (energy replaces search vs energy is a global heuristic)."
+        time_to_solution_solved_only: principle="timing ONLY for solved instances; any speedup-vs-AR claim is valid ONLY on the solved subset."
+        ar_baseline_solve_rate: principle="the autoregressive control's solve-rate on the same puzzles — the P0.1 comparator."
+        random_seed: principle="determinism precondition for reproducibility."
+        reproducibility_checksum: principle="content hash of puzzle set + encoding + optimizer config + seed."
+        duration_s: principle="CPU global-opt over >=20 puzzles takes real wall time; honest value (not sub-second)."
+
+      ACCEPTANCE GATES:
+        - condition: "encoding_validity_E0 == true AND easy_tier_solve_rate > 0.5 BEFORE any hard solve-rate is reported"
+          principle: "G0 CORRECTNESS-FIRST: the energy is valid (E==0 on a solved board, QUBO-cross-validated) and the optimizer solves easy boards — without this a hard solve-rate is meaningless (the known-issues KONA gate)."
+        - condition: "solve_rate reported on >=20 puzzles AND any speedup claimed ONLY on the solved subset"
+          principle: "G1 HONEST-SOLVE-RATE: kills the exp3408 fast-but-wrong framing; solve-rate is the gate, time is conditional on solving."
+        - condition: "solve_rate > ar_baseline_solve_rate OR hybrid_solve_rate > ar_baseline_solve_rate"
+          principle: "G2 P0.1-DATAPOINT: energy (or the energy+propagation hybrid) global inference solves at least as well as AR on a real CSP — the first clean P0.1 evidence on an infra-robust testbed; an honest negative here equally retires the timing framing."
+
+      TERMINAL VERDICTS (all start with complete:):
+        - encoding invalid -> "complete: blocked_energy_encoding_invalid_fix_encoding_not_optimizer"
+        - representational failure -> "complete: blocked_kona_failure_is_representational_not_optimizer"
+        - energy/hybrid solves competitively -> "complete: energy_global_inference_solves_sudoku_p01_datapoint_positive"
+        - energy plateaus, only hybrid solves -> "complete: energy_is_global_heuristic_hybrid_solves_pure_descent_plateaus"
+        - neither solves with the ladder -> "complete: ising_energy_cannot_solve_hard_sudoku_yet_p01_negative_retire_timing_framing"
+      Run command: cd {project_root} && JAX_PLATFORMS=cpu .venv/bin/python scripts/experiment_3494_p01_sudoku_correctness_first_solve_rate_gate_v1.py. Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  # ---- P0.1 ROUTE 2 (cached-scoring): energy-vs-SC crux on the IN-BAND CONTESTED SUBSET ----
+  - id: exp3495-p01-energy-vs-sc-contested-subset-inband-v8
+    operator_override: "2026-05-29 standing P0.1 directive: P0.1 (exp3312) has NEVER run on an in-band corpus — every attempt was degenerate (GSM8K ceiling 0.908, MATH-L5 floor 0.265) or lost to infra (exp3484 SKIP'd on pre-test self-heal failures). This finally runs the energy-vs-SC comparison on the IN-BAND CONTESTED SUBSET of the ALREADY-CACHED GSM8K/MATH corpora (the subset of problems whose per-problem SC lands in [0.40,0.70]) — synthesizing headroom from existing data with NO fresh live build, so the crux executes regardless of any live generation. Cached scoring (seconds) -> cannot thinking-400, cannot idle-timeout. New (in-band, contested-subset, no-live-dependency) substrate + the never-executed comparison = the first real verdict, not a doomed rerun. Supersedes exp3484/exp3472/exp3460/exp3312 on a different, infra-robust corpus construction."
+    prior_failures:
+      - experiment_id: exp3484-p01-process-energy-vs-self-consistency-inband-v7
+        verdict: "complete: SKIP x3 -> RETIRED (pre-tests failing, self-heal failed; the crux never ran)"
+        addressed_by: "exp3484 was lost to INFRA (it depended on a fresh live difficulty-matched corpus that the builder exp3483 never produced, and was an 80-turn opus task that failed pre-tests + the thinking-400). This task removes ALL live dependency: it constructs headroom from the EXISTING cached corpora (data/p01_gsm8k_generations.jsonl + data/p01_hardmath_generations.jsonl) by stratifying to the CONTESTED SUBSET where per-problem SC in [0.40,0.70], then runs the SAME flip-count-tautology-clean 7-condition comparison. sonnet, cached scoring, no GGUF -> infra-robust. Different corpus construction (contested subset of cached data), no live build, so it actually runs."
+        retire_if_same_verdict: true
+      - experiment_id: exp3472-p01-process-energy-vs-self-consistency-headroom-v6
+        verdict: "complete: blocked_p01_corpus_too_small_n=21"
+        addressed_by: "exp3472 blocked on a too-small out-of-band corpus. This task draws the contested subset from the FULL cached GSM8K (5.9MB) + MATH (3.4MB) corpora, yielding a far larger in-band n, so the comparison runs. Same scorer recipe, a corpus construction that finally satisfies headroom + size."
+        retire_if_same_verdict: true
+    # NOT gated_on exp3496: this task does NOT need the optional live build; it scores the
+    # ALREADY-CACHED corpora. The synthesis reads this verdict but does NOT gate on it.
+    milestone: "2026.05.322"
+    title: "P0.1 Route 2 (cached) — energy-vs-Self-Consistency crux on the IN-BAND CONTESTED SUBSET of the already-cached GSM8K/MATH corpora (per-problem SC in [0.40,0.70]), 7 conditions, flip-count tautology-clean, matched compute"
+    priority: critical
+    max_turns: 50
+    agent_type: claude
+    requires_claude: true   # gemini-cli is DOWN; cached-corpus reader + per-step FoVer scorer + EORM reranker + optimal-aggregation fit + flip-count/McNemar/bootstrap + judgment on the contested-subset stratification; claude is the only landing backend.
+    estimated_wall_time_min: 25
+    track: evidence
+    inference_substrate: verifier_ensemble_against_cached_candidates
+    requires_gpu: false
+    deliverable: "results/experiment_3495_p01_energy_vs_sc_contested_subset_inband_v8.json"
+    prompt: |
+      CONTEXT: This is the cached, infra-robust P0.1 route — it finally runs the energy-vs-SC
+      comparison IN-BAND with NO fresh live build. .319 found GSM8K is at ceiling (SC 0.908);
+      .320 found MATH-L5 is at floor (SC 0.265); .321 lost the crux to infra. Instead of a
+      new live generation (the fragile path), this STRATIFIES the ALREADY-CACHED corpora to
+      the CONTESTED SUBSET: problems whose per-problem self-consistency (majority-vote fraction)
+      lands in [0.40,0.70] — neither trivially-right nor trivially-wrong — synthesizing
+      headroom from existing data. There a majority vote carries signal AND a selector has
+      room to help. The literature says the win appears WITH HEADROOM from PROCESS-level
+      verification: arXiv:2602.11570 (PRIME, +8-9% AIME from process-aware verification);
+      arXiv:2504.16828 (ThinkPRM, PRM beats SC under best-of-N at matched compute);
+      arXiv:2510.13918 (optimal SC+PRM aggregation); arXiv:2502.18581 (self-certainty BoN,
+      the cheap baseline to beat); arXiv:2509.23152 (Mirror-Critique: a verifier CAN beat SC
+      by recovering minority-yet-correct answers). Cached scoring -> seconds -> cannot
+      thinking-400, cannot idle-timeout.
+
+      EXISTING CODE TO READ FIRST:
+        - data/p01_gsm8k_generations.jsonl (5.9MB, SC ceiling 0.908 — each problem has greedy + k sampled gens with answers, labels, logprobs, step traces if present)
+        - data/p01_hardmath_generations.jsonl (3.4MB, MATH-L5 SC floor 0.265 — same shape)
+        - scripts/experiment_3472_p01_process_energy_vs_self_consistency_headroom_v6.py (the v6 scorer — reuse the flip-count + held-out + 7-condition + optimal-aggregation recipe; the ONLY change is the contested-subset corpus construction from cached data)
+        - python/carnot/verify/ (the FoVer 4-verifier step-error ensemble: fr11_session_memory, tier0r_curry_howard, tier0s_arithmetic_gap, tier0u_logical_consistency — applied PER STEP)
+        - python/carnot/ (the EORM / energy-reranker module from Exp 443)
+        - research-references.md "2026-05-31 Post-.321 Planning Sweep" + "2026-05-30 Post-.320 Planning Sweep" (PRIME + ThinkPRM + optimal-agg + Mirror-Critique refs)
+
+      TASK: Build the IN-BAND CONTESTED SUBSET from the cached corpora, train a process-aware
+      energy (per-step FoVer + the EORM reranker) on a documented held-out split, fit an
+      OPTIMAL SC+energy aggregation, and compare to a verified-non-degenerate self-consistency
+      baseline at matched compute. PRIMARY metric: the FLIP-COUNT (problems where the
+      energy/aggregation choice differs from the SC majority) + net correctness change among
+      flips — tautology-clean by construction.
+
+      PRECONDITIONS (step 0, before any comparison is reported):
+        a. At least one cached corpus present (data/p01_gsm8k_generations.jsonl OR
+           data/p01_hardmath_generations.jsonl), each problem with a greedy + k>=4 sampled
+           generations + correctness labels + (logprobs and step traces where available). If
+           neither present -> complete: blocked_no_cached_corpus.
+        b. CONTESTED SUBSET CONSTRUCTION: per problem, compute the SC majority-vote fraction;
+           keep problems whose per-problem correctness rate over the k samples is in
+           [0.40,0.70]. If the resulting subset has < 40 problems even after pooling both
+           corpora -> complete: blocked_contested_subset_too_small_n=NN (honest; resume with
+           the optional live builder next milestone).
+        c. The FoVer step-error ensemble + EORM/reranker substrate loadable. If not ->
+           complete: blocked_energy_substrate_unavailable.
+
+      CONCRETE STEPS:
+        1. Construct the contested subset (precondition b). Document the source corpora,
+           the per-problem SC distribution, the [0.40,0.70] filter, and the resulting n.
+           Report the subset-level SC and confirm it lands in band.
+        2. Split by PROBLEM id into TRAIN / HELD-OUT folds (never split samples of one problem
+           across folds — leakage). Use k-fold CV if n is small; document split + seed. ALL
+           accuracies are held-out only.
+        3. PROCESS ENERGY: score each candidate's parsed STEPS with the FoVer 4-verifier
+           step-error ensemble (per-step), aggregate to a candidate process-energy. If a
+           corpus lacks step traces, fall back to a documented heuristic step segmentation.
+        4. TRAINED ENERGY: train the EORM reranker on outcome labels (features = process-energy
+           components + logprob + verifier signals); record param count.
+        5. OPTIMAL AGGREGATION: fit a principled SC+energy combiner (arXiv:2510.13918) on TRAIN,
+           apply on HELD-OUT.
+        6. Score 7 conditions on held-out: (1) greedy AR floor; (2) self-consistency (PRIMARY
+           control, majority vote); (3) self-certainty BoN (arXiv:2502.18581); (4) process-energy
+           argmin; (5) trained-energy-weighted vote; (6) trained-energy x SC hybrid; (7) OPTIMAL
+           SC+energy aggregation (the headline condition). MATCHED COMPUTE: conditions 2-7
+           consume the SAME k cached generations; energy adds only scoring.
+        7. PRIMARY FLIP-COUNT METRIC (tautology-clean by construction): per energy/aggregation
+           condition vs SC: flip_count = problems where the selected answer differs from the
+           SC majority; flips_correct; flips_incorrect; net_correctness_gain = flips_correct -
+           flips_incorrect. When a condition agrees with SC, report flip_count=0 ONCE with a
+           methodology_note — NEVER two conceptually-distinct accuracy fields bit-identical.
+        8. Held-out accuracy per condition + the PRIMARY paired delta (optimal-aggregation
+           minus SC) AND the process-energy/hybrid deltas, each with McNemar exact p + paired
+           bootstrap CI95.
+        9. Emit results with clean methodology (real duration, seed, checksum,
+           inference_substrate=verifier_ensemble_against_cached_candidates).
+
+      REQUIRED ARTIFACT FIELDS (each carries a principle per CLAUDE.md):
+        honest_verdict: principle="complete:/success:/passed:/shipped_ prefix."
+        inference_substrate: value=verifier_ensemble_against_cached_candidates
+        source_corpora: principle="which cached corpora were pooled (gsm8k/mathL5) — the provenance."
+        contested_subset_n: principle="problems in the in-band contested subset; >=40 scorable, >=80 headline-eligible."
+        contested_subset_sc: principle="majority-vote accuracy over the contested subset — MUST land in [0.40,0.70] (the headroom the full corpora lacked)."
+        self_consistency_in_headroom_band: principle="boolean: contested-subset SC in [0.40,0.70] — the precondition that makes P0.1 testable."
+        k_samples: principle="sampled generations/problem consumed (the matched-compute budget)."
+        ar_greedy_accuracy: principle="1-sample greedy control (held-out)."
+        self_consistency_accuracy: principle="majority vote over k — the PRIMARY control (held-out)."
+        self_certainty_bon_accuracy: principle="self-certainty Best-of-N (arXiv:2502.18581) — the cheap selector the energy must beat."
+        process_energy_argmin_accuracy: principle="FoVer step-level PROCESS energy argmin."
+        trained_energy_weighted_vote_accuracy: principle="trained EORM energy-weighted vote."
+        trained_energy_sc_hybrid_accuracy: principle="trained-energy x SC hybrid."
+        optimal_aggregation_accuracy: principle="optimal SC+energy aggregation (arXiv:2510.13918) — THE headline condition."
+        flip_count_optimal_vs_sc: principle="problems where optimal-aggregation differs from SC — the tautology-clean primary signal (0 -> they agree, no separate bit-identical field)."
+        flips_correct_optimal: principle="flips that became CORRECT (the win mechanism: recovering minority-yet-correct answers)."
+        flips_incorrect_optimal: principle="flips that became WRONG (the cost)."
+        net_correctness_gain_optimal: principle="flips_correct - flips_incorrect for optimal aggregation — the honest net effect."
+        delta_optimal_vs_self_consistency: principle="optimal-aggregation minus SC at matched compute — THE headline delta."
+        delta_process_energy_vs_self_consistency: principle="process-energy argmin minus SC — does per-step verification route into selection?"
+        paired_significance: principle="McNemar exact p + paired bootstrap CI95 for the optimal/process/hybrid deltas."
+        compute_parity_note: principle="per-condition generation budget + reranker/aggregator params so energy does not win by spending more compute."
+        random_seed: principle="determinism precondition for reproducibility."
+        reproducibility_checksum: principle="content hash of corpus subset + reranker config + split + seed."
+        duration_s: principle="cached scoring + small-model training; 1s floor (no live model — why it cannot time out)."
+
+      ACCEPTANCE GATES:
+        - condition: "self_consistency_in_headroom_band == true BEFORE any energy comparison is reported"
+          principle: "G0 HEADROOM: the contested-subset SC must be in-band, else the test repeats the GSM8K ceiling tie or the MATH-L5 no-signal floor."
+        - condition: "net_correctness_gain_optimal > 0 AND delta_optimal_vs_self_consistency > 0 with paired p < 0.05"
+          principle: "G1 ENERGY-BEATS-SC-IN-BAND: a process-aware energy + optimal aggregation SIGNIFICANTLY beats majority vote at matched compute in-band — the first real Phase-3 selection justification; clears the PRIME / Mirror-Critique bar."
+        - condition: "flip_count_optimal_vs_sc > 0"
+          principle: "G2 NON-DEGENERATE: the energy actually CHANGES selections (non-zero flip count) — proves this is not the exp3460 degenerate-tie regime, regardless of net sign."
+
+      TERMINAL VERDICTS (all start with complete:):
+        - no cached corpus -> "complete: blocked_no_cached_corpus"
+        - contested subset too small -> "complete: blocked_contested_subset_too_small_n=NN"
+        - G1 passes -> "complete: process_energy_beats_self_consistency_in_band_phase3_premise_validated"
+        - flips occur, no net win -> "complete: process_energy_changes_selections_but_does_not_beat_self_consistency_in_band"
+        - no flips even in-band -> "complete: process_energy_does_not_change_selections_selection_premise_refuted_on_this_substrate"
+      Run command: cd {project_root} && JAX_PLATFORMS=cpu .venv/bin/python scripts/experiment_3495_p01_energy_vs_sc_contested_subset_inband_v8.py. Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  # ---- OPTIONAL / NON-BLOCKING: live difficulty-matched corpus builder v3 (resume exp3483) ----
+  - id: exp3496-p01-difficulty-matched-corpus-builder-v3-optional
+    operator_override: "2026-05-29 standing P0.1 directive: a CLEANER levels-3-4 corpus would let a future milestone run the crux on a true difficulty-matched split. This is the OPTIONAL, NON-BLOCKING live builder: it RESUMES the existing 26KB exp3483 script (data/p01_difficulty_matched_generations.jsonl), runs on sonnet (the opus thinking-400 killed .321's builder), and prints progress per problem (defeats idle-timeout). NOTHING downstream gates on it — exp3495 already runs the crux on the contested subset. If it lands a clean corpus, great; if infra blocks it again, no cascade. Different (sonnet, resume-existing-script, non-blocking) execution + the levels-3-4 difficulty fix = a new attempt, not a doomed rerun. scope-match vs exp3483/exp3471 is the intended difficulty-fix continuation."
+    prior_failures:
+      - experiment_id: exp3483-p01-difficulty-matched-corpus-builder-v2
+        verdict: "complete: FAIL (API Error 400 thinking) -> SKIP x2 (pre-tests failing, self-heal failed); no corpus produced"
+        addressed_by: "exp3483 was an opus task that crashed on the thinking-400 then failed pre-tests. This task (1) runs on SONNET (the thinking-400 hit opus), (2) RESUMES the already-written 26KB exp3483 script + any partial JSONL rather than rewriting from scratch (so pre-tests start from a green-able state), (3) is NON-BLOCKING (nothing gates on it), and (4) prints progress per problem to defeat idle-timeout. Different model + resume-existing-script + non-blocking = a robust new attempt."
+        retire_if_same_verdict: true
+    # NOT gated_on anything; OPTIONAL/non-blocking. No downstream task gates on its output.
+    milestone: "2026.05.322"
+    title: "P0.1 OPTIONAL (non-blocking) — live difficulty-matched corpus builder v3 (MATH-500 levels 3-4, resume the existing exp3483 script, sonnet, progress-printing)"
+    priority: medium
+    max_turns: 60
+    agent_type: claude
+    requires_claude: true   # gemini-cli is DOWN; live GGUF generation; sonnet (NOT opus — opus thinking-400 killed exp3483) reusing the existing script.
+    estimated_wall_time_min: 25
+    track: evidence
+    inference_substrate: live_llm_inference
+    requires_gpu: true
+    deliverable: "results/experiment_3496_p01_difficulty_matched_corpus_builder_v3_optional.json"
+    prompt: |
+      CONTEXT: This is the OPTIONAL, NON-BLOCKING live corpus builder. A clean MATH-500
+      levels-3-4 difficulty-matched corpus (SC in [0.40,0.70]) would let a future milestone
+      run the crux on a true in-band split rather than the contested subset of cached data.
+      But NOTHING in .322 depends on it — exp3495 already runs the crux on the contested
+      subset. exp3483 (.321) was an OPUS task that crashed on the thinking-400 then failed
+      pre-tests; the 26KB script already exists. This task RESUMES it on SONNET and prints
+      progress per problem so it cannot idle-timeout. If infra blocks it again, no cascade.
+
+      EXISTING CODE TO READ FIRST:
+        - scripts/experiment_3483_p01_difficulty_matched_corpus_builder_v2.py (the 26KB script written in .321 — REUSE it; resume from the JSONL; do NOT rewrite from scratch)
+        - data/p01_difficulty_matched_generations.jsonl (the target file — resume if it exists)
+        - data/p01_hardmath_generations.jsonl (the MATH-L5 corpus for reference)
+        - scripts/experiment_template.py (cached_sota_pair, BatchedInferenceRunner)
+        - CLAUDE.md "SOTA Local Models" + "GGUF tokenizer rule (MANDATORY — 2026-05-29)"
+        - research-references.md "2026-05-30 Post-.320 Planning Sweep" (ThinkPRM levels-3-4 headroom thesis)
+
+      TASK: Resume/run the difficulty-matched corpus builder on MATH-500 levels 3-4 with an
+      adaptive warm-up that lands SC in [0.40,0.70], capturing per-step traces + logprobs.
+      Append per problem; print progress per problem; exit clean with whatever you complete.
+
+      PRECONDITIONS (step 0, before any generation — emit complete: blocked_* and STOP if a/b fail):
+        a. CUDA available: python -c "import torch; assert torch.cuda.is_available()".
+           If not -> complete: blocked_cuda_unavailable (NON-BLOCKING — no cascade).
+        b. SOTA GGUF loads via the GGUF path (NOT AutoTokenizer on a -GGUF repo id; embedded
+           tokenizer per the 2026-05-29 GGUF tokenizer rule):
+           llama_cpp.Llama(model_path=..., vocab_only=True).tokenize(b"x") succeeds.
+           Default ["unsloth/gemma-4-26B-A4B-it-GGUF"]; fallback ["unsloth/gemma-4-31B-it-GGUF"].
+           If neither loads -> complete: blocked_sota_gguf_tokenizer_unavailable.
+
+      CONCRETE STEPS:
+        1. ADAPTIVE WARM-UP: probe SC on ~10 problems of MATH-500 level 3, then 4, then a 3+4
+           mix; select the level/mix whose SC lands in [0.40,0.70]. Document per-level probe SC.
+        2. If no in-band split with the default model: switch to gemma-4-31B and/or raise k,
+           re-probe, document. If still none -> complete: blocked_no_in_band_split_found.
+        3. RESUME: read completed problem ids from data/p01_difficulty_matched_generations.jsonl,
+           SKIP them, generate only the remainder.
+        4. Per problem: 1 greedy (temp 0) + k=6 sampled (temp ~0.8); capture raw text, extracted
+           answer, correctness label, mean-token logprob, AND a parsed step list. Cap max_tokens ~512.
+        5. CHECKPOINT: append one JSONL row per COMPLETED problem immediately.
+        6. PROGRESS: print one line after EVERY problem (LOAD-BEARING — defeats idle-timeout).
+        7. WALL-TIME BUDGET: at ~20 min, STOP, finalize the JSONL, EXIT CLEAN (code 0).
+        8. Recompute the full-subset SC self-check; confirm band; emit the artifact.
+
+      REQUIRED ARTIFACT FIELDS (each carries a principle per CLAUDE.md):
+        honest_verdict: principle="complete:/success:/passed:/shipped_ prefix."
+        inference_substrate: value=live_llm_inference
+        corpus_path: principle="data/p01_difficulty_matched_generations.jsonl — the cleaner in-band corpus a future crux can prefer."
+        selected_levels: principle="the MATH level(s) the adaptive warm-up chose to land SC in band."
+        per_level_probe_sc: principle="warm-up SC per candidate level — the in-band evidence."
+        n_problems_completed: principle="problems with a full generation set after this run."
+        n_problems_added_this_run: principle="problems newly generated this invocation (proves resume worked)."
+        warmup_self_consistency_accuracy: principle="majority-vote accuracy over the corpus — should land in [0.40,0.70]."
+        self_consistency_in_headroom_band: principle="boolean: SC in band."
+        per_step_traces_captured: principle="boolean: each generation carries a parsed step list."
+        model_specs: principle="the actual GGUF invoked (26B default or 31B fallback)."
+        random_seed: principle="determinism precondition for reproducibility."
+        reproducibility_checksum: principle="content hash of benchmark split + model + seed."
+        duration_s: principle="real live MoE generation takes wall time; 60s floor when CUDA is available (sub-60s with CUDA available is the fabrication signal)."
+
+      ACCEPTANCE GATES:
+        - condition: "self_consistency_in_headroom_band == true OR honest_verdict starts with 'complete: blocked_'"
+          principle: "either the corpus lands in band, or the task blocks honestly — both are acceptable for a NON-BLOCKING builder; no fabrication."
+
+      TERMINAL VERDICTS (all start with complete:):
+        - n >= 80 in band -> "complete: p01_difficulty_matched_corpus_headline_eligible_n=NN_sc=SS"
+        - 40 <= n < 80 in band -> "complete: p01_difficulty_matched_corpus_scorable_partial_n=NN_resume_next_milestone"
+        - n < 40 in band -> "complete: p01_difficulty_matched_corpus_partial_n=NN_resume_next_milestone"
+        - blocked -> "complete: blocked_cuda_unavailable" / "complete: blocked_sota_gguf_tokenizer_unavailable" / "complete: blocked_no_in_band_split_found"
+      Run command: cd {project_root} && .venv/bin/python scripts/experiment_3496_p01_difficulty_matched_corpus_builder_v3_optional.py. Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  # ---- MATH-aware energy-correctness calibration v5 (cached, tautology-FIXED) ----
+  - id: exp3497-energy-correctness-calibration-mathaware-v5
+    operator_override: "2026-05-30 planner (Opus 4.8) under Depth-Over-Breadth: the mechanistic explainer for exp3495 and the de-flag of exp3473. exp3473 was FLAGGED (process & trained minority-recovery bit-identical) and exp3485 never ran (lost to infra). This asks on the IN-BAND CONTESTED SUBSET: WHY does the FoVer ensemble (0.9131 step-ERROR AUROC) give sub-chance FINAL-correctness AUROC on MATH — the step-vs-final gap or the GSM8K->MATH domain shift? — and tests a MATH-AWARE recalibration. Tautology FIXED via genuinely distinct pipelines + runtime assert. Cached scoring -> infra-robust. Not a re-measurement of exp3473: a clean, decomposed, recalibrated analysis on the in-band contested subset. scope-match vs exp3473/exp3485/exp3461 is the intended clean continuation."
+    prior_failures:
+      - experiment_id: exp3473-energy-correctness-calibration-process-minority-v3
+        verdict: "complete: energy_fails_to_recover_minority_correct... (FLAGGED adversarial_verify CRITICAL: TAUTOLOGY)"
+        addressed_by: "exp3473 was flagged (process & trained minority_correct_recovery bit-identical, a pipeline-sharing bug) on the out-of-band MATH-L5 corpus. This task (1) computes process and trained energy from GENUINELY DISTINCT pipelines with a runtime assert their per-candidate score arrays are not equal (the de-flag), (2) runs on the IN-BAND contested subset from exp3495, (3) DECOMPOSES step-ERROR AUROC vs final-CORRECTNESS AUROC, and (4) tests a MATH-AWARE recalibration."
+        retire_if_same_verdict: true
+      - experiment_id: exp3485-energy-correctness-calibration-mathaware-v4
+        verdict: "complete: SKIP x3 (pre-tests failing, self-heal failed; never ran)"
+        addressed_by: "exp3485 was lost to infra (no cached in-band corpus existed; it was a downstream-of-the-failed-builder task). This task runs on the contested subset that exp3495 constructs from cached data (no live dependency), on sonnet, cached scoring — so it actually runs."
+        retire_if_same_verdict: true
+    # NOT gated_on exp3495: handles a small/absent contested subset via its own PRECONDITIONS.
+    milestone: "2026.05.322"
+    title: "Energy-correctness calibration v5 — MATH-aware, tautology-FIXED, step-error-vs-final-correctness AUROC decomposition + minority-correct recovery on the in-band contested subset"
+    priority: high
+    max_turns: 50
+    agent_type: claude
+    requires_claude: true   # gemini-cli is DOWN; cached scoring + judgment on the distinct-pipeline de-flag + the step-vs-final decomposition; claude is the only landing backend.
+    estimated_wall_time_min: 20
+    track: evidence
+    inference_substrate: verifier_ensemble_against_cached_candidates
+    requires_gpu: false
+    deliverable: "results/experiment_3497_energy_correctness_calibration_mathaware_v5.json"
+    prompt: |
+      CONTEXT: exp3495 measures whether a process energy beats SC on the in-band contested
+      subset. THIS task explains WHY at the mechanism level and de-flags exp3473. exp3473
+      advised that on MATH the FoVer process energy has correctness AUROC 0.441 (BELOW chance)
+      — but it was FLAGGED (the two minority-recovery numbers were bit-identical, a pipeline-
+      sharing bug) and ran on the out-of-band MATH-L5 corpus. exp3485 (the in-band version)
+      never ran (lost to infra). The FoVer 4-verifier ensemble scores 0.9131 AUROC at FoVer
+      STEP-ERROR detection; the open question is why that does not transfer to MATH FINAL-
+      answer correctness: the step-error-vs-final-correctness gap, or the GSM8K/FoVer -> MATH
+      domain shift. The literature contrast is Mirror-Critique (arXiv:2509.23152): an
+      RL-trained verifier that DOES beat SC by recovering minority-yet-correct answers — so
+      the question is whether a MATH-AWARE recalibration recovers that signal. Cheap cached
+      scoring over exp3495's in-band contested subset.
+
+      EXISTING CODE TO READ FIRST:
+        - results/experiment_3495_p01_energy_vs_sc_contested_subset_inband_v8.json (the in-band contested subset + its held-out split + trained model)
+        - data/p01_gsm8k_generations.jsonl + data/p01_hardmath_generations.jsonl (the cached corpora the subset is drawn from)
+        - scripts/experiment_3473_energy_correctness_calibration_process_minority_v3.py (the FLAGGED predecessor — FIX the bit-identical recovery bug: the two energies MUST come from distinct pipelines)
+        - results/experiment_3473_energy_correctness_calibration_process_minority_v3.json (process AUROC 0.441; the tautology flag to fix)
+        - python/carnot/verify/ (the FoVer 4-verifier step-error ensemble — its native task is step-ERROR, not final-correctness)
+
+      TASK: On the in-band contested subset held-out split, compute (a) the per-step PROCESS
+      energy and the trained reranker energy from GENUINELY DISTINCT pipelines, (b) the
+      step-error-detection AUROC vs the final-correctness AUROC, (c) the minority-yet-correct
+      recovery rate, and (d) a MATH-AWARE recalibration's effect.
+
+      PRECONDITIONS (step 0):
+        a. The in-band contested subset is reconstructable (from exp3495's artifact or by
+           re-stratifying the cached corpora) with >=40 problems x k samples + labels. If
+           absent/small -> complete: blocked_contested_subset_too_small_n=NN.
+        b. The process/trained energy substrate loadable. If not -> complete: blocked_energy_substrate_unavailable.
+
+      CONCRETE STEPS:
+        1. DISTINCT PIPELINES (the de-flag): compute the process energy (per-step FoVer
+           aggregate) and the trained reranker energy via SEPARATE code paths; ASSERT at
+           runtime their per-candidate score arrays are NOT element-wise equal (if they are,
+           it is the exp3473 bug — fail loudly, do not emit a bit-identical pair).
+        2. CORRECTNESS AUROC: for each energy, AUROC of -energy as a FINAL-correctness
+           classifier on the held-out split, Spearman vs correctness, within-problem
+           argmin-correct rate.
+        3. STEP-VS-FINAL DECOMPOSITION: where a per-step error label/proxy is available, report
+           the energy's step-ERROR-detection AUROC and contrast it with its final-CORRECTNESS
+           AUROC — locating whether the gap is step-vs-final or domain shift.
+        4. MINORITY-CORRECT RECOVERY: among problems where the correct answer is NOT the SC
+           majority, what fraction does each energy rank first? (from the distinct pipelines).
+        5. MATH-AWARE RECALIBRATION: re-fit the trained reranker (and/or re-weight the 4
+           verifiers) on MATH labels via held-out CV; report recalibrated correctness AUROC +
+           minority recovery vs the un-recalibrated and vs the GSM8K 0.629 baseline.
+        6. Emit the artifact with clean methodology. No two conceptually-distinct metrics may
+           share a bit-identical value (verified by the runtime assert in step 1).
+
+      REQUIRED ARTIFACT FIELDS (each carries a principle per CLAUDE.md):
+        honest_verdict: principle="complete:/success:/passed:/shipped_ prefix."
+        inference_substrate: value=verifier_ensemble_against_cached_candidates
+        n_candidates_heldout: principle="total held-out candidates scored."
+        distinct_pipeline_assert_passed: principle="boolean: process & trained energy arrays verified element-wise distinct at runtime — the exp3473 de-flag."
+        process_energy_correctness_auroc: principle="AUROC of the per-step PROCESS energy as a FINAL-correctness classifier on the in-band subset — the core number."
+        trained_energy_correctness_auroc: principle="AUROC of the trained reranker energy (distinct pipeline)."
+        process_energy_step_error_auroc: principle="AUROC of the process energy at STEP-ERROR detection — contrasts with final-correctness to locate the gap."
+        step_vs_final_auroc_gap: principle="step-error AUROC minus final-correctness AUROC — quantifies how much of the 0.9131->sub-chance drop is step-vs-final vs domain shift."
+        mathaware_recalibrated_correctness_auroc: principle="correctness AUROC after MATH-domain recalibration — does domain-matched fitting recover signal?"
+        gsm8k_trained_energy_auroc_baseline: principle="the exp3461 0.629 GSM8K reference carried forward for contrast."
+        minority_correct_fraction: principle="fraction of problems where the correct answer is NOT the SC majority — the in-band headroom."
+        minority_correct_recovery_rate_process: principle="fraction of minority-correct problems the PROCESS energy ranks first (distinct pipeline)."
+        minority_correct_recovery_rate_trained: principle="same for the TRAINED energy (distinct pipeline — must NOT equal the process rate by construction)."
+        random_seed: principle="determinism."
+        reproducibility_checksum: principle="content hash."
+        duration_s: principle="cached scoring; 1s floor."
+
+      ACCEPTANCE GATES:
+        - condition: "distinct_pipeline_assert_passed == true"
+          principle: "G0 DE-FLAG: the two energies are computed from distinct pipelines (no bit-identical pair) — the exp3473 tautology is fixed by construction."
+        - condition: "mathaware_recalibrated_correctness_auroc > max(process_energy_correctness_auroc, trained_energy_correctness_auroc) OR step_vs_final_auroc_gap > 0.15"
+          principle: "G1 MECHANISM-LOCATED: either MATH-aware recalibration recovers signal (domain shift was the cause) OR a large step-vs-final gap explains the drop — both are actionable diagnoses."
+
+      TERMINAL VERDICTS (all start with complete:):
+        - recalibration recovers signal -> "complete: mathaware_recalibration_recovers_correctness_signal_domain_shift_was_the_cause"
+        - large step-vs-final gap -> "complete: step_error_detection_does_not_transfer_to_final_correctness_on_math_gap_quantified"
+        - neither, signal absent -> "complete: energy_carries_no_final_correctness_signal_on_math_even_recalibrated"
+        - subset too small -> "complete: blocked_contested_subset_too_small_n=NN"
+      Run command: cd {project_root} && JAX_PLATFORMS=cpu .venv/bin/python scripts/experiment_3497_energy_correctness_calibration_mathaware_v5.py. Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  # ---- FR-11 beta_min = f(lambda_min) predictive law (mandatory continuous-self-learning + P0.2) ----
+  - id: exp3498-fr11-beta-min-lambda-min-predictive-law-v1
+    operator_override: "2026-05-30 planner (Opus 4.8): the mandatory continuous-self-learning task, fused with the P0.2 keystone (verifier-ensemble diversity / lambda_min(Sigma)). exp3486 (.321) found a minimal-sufficient entropy beta and whether it depends on grounding; exp3439 measured lambda_min(Sigma). This asks the NEW question: is beta_min PREDICTABLE from the MEASURED lambda_min of the grounding ensemble? — i.e. fit/test a law beta_min ~= f(lambda_min) across grounding configs, converting two point-findings into a deployable Phase-5 default. New synthesis (a predictive law) + the P0.2 follow-up = forward work, not a re-run of exp3486's single-point beta. scope-match vs exp3486/exp3474/exp3439/exp3313 is the intended self-learning + diversity continuation."
+    prior_failures:
+      - experiment_id: exp3486-fr11-minimal-beta-grounding-dependence-v4
+        verdict: "complete: minimal_sufficient_entropy_beta_found_grounding_dependence_characterized_phase5_default_set"
+        addressed_by: "exp3486 found the minimal beta at ~2 grounding strengths and whether it moves with grounding. This task RUNS the minimal-beta search at >=3 grounding configurations of MEASURED lambda_min(Sigma) (P0.2) and FITS a predictive law beta_min ~= f(lambda_min) with a held-out check, turning the dependence into a deployable formula. Different question (a predictive law across measured lambda_min, not a single minimal-beta point); de-flagged (pass_rate vs true_accuracy strictly distinct + runtime assert)."
+        retire_if_same_verdict: true
+      - experiment_id: exp3439-verifier-ensemble-lambda-min-diversity-audit-v3
+        verdict: "complete: lambda_min diversity audit (ACTIVE_WEIGHT 0.146 at-risk grounding)"
+        addressed_by: "exp3439 measured lambda_min at one configuration. This task measures lambda_min(Sigma) + participation-ratio effective-k at >=3 grounding configs and connects each to the minimal-sufficient entropy beta — the P0.2 keystone fused with FR-11 self-learning, not a re-measurement of the single audit."
+        retire_if_same_verdict: true
+    milestone: "2026.05.322"
+    title: "FR-11 beta_min = f(lambda_min) predictive law — minimal-sufficient entropy beta vs MEASURED verifier-ensemble diversity lambda_min(Sigma) across grounding configs (mandatory continuous-self-learning + P0.2 keystone)"
+    priority: high
+    max_turns: 50
+    agent_type: claude
+    requires_claude: true   # gemini-cli is DOWN; cached-trace self-learning sweep + lambda_min covariance computation + law-fit judgment; claude is the only landing backend.
+    estimated_wall_time_min: 22
+    track: evidence
+    inference_substrate: verifier_ensemble_against_cached_candidates
+    requires_gpu: false
+    deliverable: "results/experiment_3498_fr11_beta_min_lambda_min_predictive_law_v1.json"
+    prompt: |
+      CONTEXT: The self-learning thesis (PRD FR-11 / continuous self-learning) rests on
+      alpha_t grounding — the verifier signal that keeps a self-correcting model from
+      collapsing onto its own null space (Zenil alpha_t; Q12 Dark Room / Hypothesis-B). Two
+      findings now exist separately: exp3486 (.321) found a MINIMAL-SUFFICIENT entropy beta
+      that prevents depth-N=200 collapse and that it depends on grounding strength; exp3439
+      measured lambda_min(Sigma), the verifier-ensemble decision-covariance diversity (the
+      P0.2 keystone — small joint null space = real diversity = strong grounding). The open,
+      deployable question: is the minimal beta PREDICTABLE from the MEASURED lambda_min? If
+      beta_min ~= f(lambda_min), Phase-5 deployment has a formula: "measure your ensemble's
+      lambda_min, set beta >= f(lambda_min)". Independent precedent: ER-PRM (arXiv:2412.11006)
+      entropy regularization stabilizes PRM training. Cached traces + cached verifier scoring
+      -> no live model -> no timeout. This is the milestone's mandatory continuous-self-
+      learning experiment, fused with the P0.2 diversity keystone.
+
+      EXISTING CODE TO READ FIRST:
+        - scripts/experiment_3486_fr11_minimal_beta_grounding_dependence_v4.py (the minimal-beta sweep — reuse; KEEP pass_rate/true_accuracy strictly distinct + the runtime assert)
+        - results/experiment_3486_fr11_minimal_beta_grounding_dependence_v4.json (the minimal-beta + grounding-dependence result)
+        - results/experiment_3439_verifier_ensemble_lambda_min_diversity_audit_v3.json (the lambda_min audit; ACTIVE_WEIGHT 0.146)
+        - python/carnot/verify/ (the verifier ensemble — to build the k x k decision covariance Sigma per config)
+        - python/carnot/ (the FR-11 controller-memory / self-learning module)
+        - data/fover_corpus.jsonl (the cached corpus for verifier decision scoring)
+        - ops/known-issues.md "exp3313 — P0.2: Verifier-Ensemble Joint-Null-Space / lambda_min(Sigma) Diversity Audit" (the P0.2 spec)
+        - project_q12_hypothesis_b_and_dark_room + project_zenil_alpha_grounding (memory) — the theory
+
+      TASK: At >=3 grounding configurations (different verifier subsets / ACTIVE_WEIGHTs
+      yielding different lambda_min), (a) MEASURE lambda_min(Sigma) + participation-ratio
+      effective-k from the k x k decision covariance on the cached corpus, and (b) find the
+      MINIMAL-SUFFICIENT entropy beta that prevents depth-N>=200 collapse. Then FIT and
+      held-out-TEST a predictive law beta_min ~= f(lambda_min).
+
+      PRECONDITIONS (step 0):
+        a. FR-11 self-learning module + cached traces present. If not -> complete: blocked_fr11_module_or_traces_unavailable.
+        b. The verifier ensemble is callable in batch to build Sigma. If not -> complete: blocked_verifier_suite_uncallable.
+
+      CONCRETE STEPS:
+        1. Define >=3 grounding configurations spanning low->high diversity (e.g. a single
+           verifier; the at-risk ACTIVE_WEIGHT 0.146 subset; a deliberately disjoint-kernel
+           subset). For EACH: build the k x k verifier DECISION covariance Sigma on the cached
+           corpus; compute lambda_min(Sigma), pairwise_max_correlation, effective_k
+           (participation ratio sum(lambda)^2 / sum(lambda^2)).
+        2. For EACH config: sweep entropy beta {{0, 0.1, 0.25, 0.5}} on the FR-11 self-
+           improvement loop to N>=200, tracking DISTINCT metrics (output entropy, top-mode
+           mass, verifier-PASS rate, TRUE ground-truth accuracy — ASSERT pass_rate and
+           true_accuracy are not the same array). Find the minimal beta with collapse_detected=False.
+           PRINT one progress line per (config, beta) — defeats idle-timeout.
+        3. FIT a predictive law beta_min ~= f(lambda_min) across the >=3 configs (monotone
+           decreasing expected: higher lambda_min -> stronger grounding -> smaller beta needed).
+           Report the fit + a held-out / leave-one-config-out check.
+        4. Report the recommended Phase-5 deployment rule: given a measured lambda_min, the
+           beta to set, with the safety margin.
+        5. Emit the artifact with clean methodology. No two conceptually-distinct metrics bit-identical.
+
+      REQUIRED ARTIFACT FIELDS (each carries a principle per CLAUDE.md):
+        honest_verdict: principle="complete:/success:/passed:/shipped_ prefix."
+        inference_substrate: value=verifier_ensemble_against_cached_candidates
+        n_grounding_configs: principle="number of grounding configurations swept (>=3 to fit a law)."
+        lambda_min_by_config: principle="measured lambda_min(Sigma) per config — the P0.2 diversity axis."
+        effective_k_by_config: principle="participation-ratio effective-k per config — how many verifiers truly contribute."
+        minimal_beta_by_config: principle="the minimal-sufficient entropy beta per config — the self-learning axis."
+        beta_min_lambda_min_fit: principle="the fitted law beta_min ~= f(lambda_min) (params + form) — the deployable Phase-5 formula."
+        law_holds_out_of_sample: principle="boolean: the law predicts the held-out config's beta_min within tolerance — does the relationship generalize?"
+        pass_rate_vs_true_accuracy_gap_beta0: principle="the gaming signal at beta=0 (verifier-pass minus ground-truth), from DISTINCT sources (asserted) — keeps it de-flagged."
+        recommended_phase5_rule: principle="honest string: given a measured lambda_min, the entropy beta to set + safety margin — the actionable default."
+        random_seed: principle="determinism."
+        reproducibility_checksum: principle="content hash."
+        duration_s: principle="cached-trace sweep + covariance computation; 1s floor."
+
+      ACCEPTANCE GATES:
+        - condition: "n_grounding_configs >= 3 AND beta_min_lambda_min_fit is not null"
+          principle: "G1 LAW-FIT: a predictive relationship between measured ensemble diversity and the required entropy beta exists across >=3 configs — the deployable Phase-5 self-learning default, fusing FR-11 with the P0.2 keystone."
+        - condition: "pass_rate_vs_true_accuracy_gap_beta0 > 0 at the lowest-diversity config"
+          principle: "G2 GROUNDING-IS-LOAD-BEARING: at low diversity + beta=0 the model still games (pass>>true) — confirms grounding/entropy is measuring a real effect, not a stale corpus."
+
+      TERMINAL VERDICTS (all start with complete:):
+        - law fits + holds out -> "complete: beta_min_predictable_from_lambda_min_phase5_deployment_law_established"
+        - law fits but does not generalize -> "complete: beta_min_lambda_min_related_but_law_does_not_hold_out_of_sample"
+        - no relationship -> "complete: beta_min_independent_of_lambda_min_use_conservative_default"
+      Run command: cd {project_root} && JAX_PLATFORMS=cpu .venv/bin/python scripts/experiment_3498_fr11_beta_min_lambda_min_predictive_law_v1.py. Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  # =========================================================================
+  # PHASE C — G2 (the sole publication gate)
+  # =========================================================================
+  - id: exp3499-fover-g2-regression-verify-external-ask-refresh-v2
+    operator_override: "2026-05-29 operator directive (ops/north-star.md §2 + ops/reproduction-runbook-fover-headline.md): G2 (independent reproduction) is the sole unmet publication gate. exp3488 (.321) regression-verified the self-contained package + prepared the external ask. This re-confirms the package STILL reproduces 0.9131 from a fresh environment after .322's changes (catching any drift) and keeps the one-click external ask current. New deliverable (a fresh regression-verify after a milestone of changes + external-ask refresh), not a re-build. Operator-Only External Publication: this task NEVER pushes, triggers CI, or marks G2 met. sonnet (exp3488 hit the opus thinking-400 before its retry succeeded)."
+    prior_failures:
+      - experiment_id: exp3488-fover-g2-clean-room-regression-verify-external-ask-v1
+        verdict: "complete: fover_g2_package_regression_clean_external_ask_ready_g2_operator_gated"
+        addressed_by: "exp3488 regression-verified the package once (on opus, after a thinking-400 retry). This re-runs the regression-verify on SONNET from a fresh environment after a full milestone of repository changes (drift detection), refreshes the external-ask artifacts to current, and re-confirms the SHA256/CID. Routine per-milestone G2 hardening, not a re-build; G2 stays operator-gated."
+        retire_if_same_verdict: false
+    milestone: "2026.05.322"
+    title: "FoVer G2 — clean-room regression-verify the self-contained package (drift check after .322 changes) + keep the one-click external-ask current (no push, no CI trigger, G2 stays operator-gated)"
+    priority: critical
+    max_turns: 50
+    agent_type: claude
+    requires_claude: true   # gemini-cli is DOWN; package unpack + fresh-venv runner + checksum re-verify + judgment on the one-click external ask; sonnet (exp3488 hit the opus thinking-400).
+    estimated_wall_time_min: 25
+    track: evidence
+    inference_substrate: verifier_ensemble_against_cached_candidates
+    requires_gpu: false
+    deliverable: "results/experiment_3499_fover_g2_regression_verify_external_ask_refresh_v2.json"
+    prompt: |
+      CONTEXT: G2 (independent reproduction of the FoVer 0.9131 headline) is the SOLE unmet
+      publication gate (G1/G3/G4 met). exp3488 (.321) regression-verified the self-contained
+      package (dist/g2-fover-repro.tar.gz, SHA256 + IPFS CID, AUROC 0.9131 within CI) and
+      prepared the one-click external ask. After a full milestone of repository changes, this
+      task re-confirms the package STILL reproduces 0.9131 from a truly fresh environment
+      (drift detection) and keeps the external-ask artifacts current. Per Operator-Only
+      External Publication, this task NEVER pushes, triggers external CI, or flips G2 to met.
+
+      EXISTING CODE TO READ FIRST:
+        - results/experiment_3488_fover_g2_clean_room_regression_verify_external_ask_v1.json (the .321 regression-verify + external-ask)
+        - scripts/experiment_3488_fover_g2_clean_room_regression_verify_external_ask_v1.py (the regression-verify runner — reuse)
+        - ops/reproduction-runbook-fover-headline.md (the headline reproduction runbook)
+        - dist/g2-fover-repro.tar.gz (the package, if present) + .github/workflows/ (the workflow_dispatch repro file, if committed)
+        - ops/north-star.md §2 (G2 definition + the operator-gated external dependency)
+
+      TASK: In an isolated environment (fresh venv / temp dir from the unpacked tarball — NOT
+      the working repo), re-run the self-contained reproducer and confirm it lands AUROC 0.9131
+      within the CI after .322's changes. Re-verify the SHA256 (and CID if a node is available).
+      Confirm the public workflow_dispatch reproduction workflow + reproducer invite + operator
+      checklist are present and current (committed to the working tree only; NOT pushed, NOT triggered).
+
+      PRECONDITIONS (step 0):
+        a. The package dist/g2-fover-repro.tar.gz present (or rebuildable from exp3476/exp3488
+           scripts). If absent and not rebuildable -> complete: blocked_g2_package_unavailable.
+        b. A fresh-venv / isolated-dir runner is constructible (python -m venv works). If not ->
+           complete: blocked_fresh_env_unavailable.
+
+      CONCRETE STEPS:
+        1. Unpack the tarball into a TEMP dir outside the repo; create a fresh venv; install ONLY
+           the package's pinned deps.
+        2. Run the package's single reproduce command; capture the AUROC + its CI.
+        3. REGRESSION GATE: assert the reproduced AUROC is within the package's stated CI of
+           0.9131 (e.g. [0.9027, 0.9235]). Re-verify the tarball SHA256; record the CID.
+        4. Confirm/refresh the public workflow_dispatch reproduction workflow file, the
+           reproducer invite, and the operator checklist (working tree only; DO NOT push/trigger).
+        5. Emit the artifact recording the regression result + external-ask readiness. G2 remains
+           UNMET (g2_met=false) until a non-operator external run lands.
+
+      REQUIRED ARTIFACT FIELDS (each carries a principle per CLAUDE.md):
+        honest_verdict: principle="complete:/success:/passed:/shipped_ prefix."
+        inference_substrate: value=verifier_ensemble_against_cached_candidates
+        package_reproduced_auroc: principle="the AUROC the self-contained package produced in the fresh environment — proves it still works after .322 changes."
+        package_auroc_within_ci: principle="boolean: reproduced AUROC within the stated 0.9131 CI — the regression gate / drift detector."
+        package_sha256_verified: principle="boolean: tarball SHA256 re-verified — content integrity for an external party."
+        package_cid: principle="IPFS CID of the package (decentralization rule 3) — content-addressed external fetch."
+        external_ask_workflow_path: principle="the public workflow_dispatch file an external party one-clicks (committed locally, not pushed/triggered)."
+        operator_checklist_path: principle="the operator checklist whose terminal step is the single external-ask action."
+        g2_met: principle="MUST be false — G2 flips only on a confirmed non-operator external run (Operator-Only External Publication)."
+        external_run_pending: principle="boolean true — the honest remaining state."
+        random_seed: principle="determinism."
+        reproducibility_checksum: principle="content hash."
+        duration_s: principle="fresh-venv install + cached scoring; 1s floor."
+
+      ACCEPTANCE GATES:
+        - condition: "package_auroc_within_ci == true AND package_sha256_verified == true"
+          principle: "G1 REGRESSION-CLEAN: the self-contained package still reproduces 0.9131 within CI from a fresh environment after a milestone of changes — the package remains bulletproof for an external party."
+        - condition: "g2_met == false AND external_run_pending == true"
+          principle: "G2 HONEST-GATE: the task did not self-mark the gate; G2 closes only on a non-operator external run (Operator-Only External Publication)."
+
+      TERMINAL VERDICTS (all start with complete:):
+        - regression clean + external-ask current -> "complete: fover_g2_package_regression_clean_external_ask_current_g2_operator_gated"
+        - regression drift -> "complete: fover_g2_package_regression_drift_detected_needs_rebuild"
+        - package unavailable -> "complete: blocked_g2_package_unavailable"
+      Run command: cd {project_root} && JAX_PLATFORMS=cpu .venv/bin/python scripts/experiment_3499_fover_g2_regression_verify_external_ask_refresh_v2.py. Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  # =========================================================================
+  # PHASE D — HARDWARE (opportunistic continuity per north-star §3; minimal)
+  # =========================================================================
+  - id: exp3500-kv260-terminal-latency-transcript-v8
+    operator_override: "2026-05-18 operator directive (Hardware-Task Continuity, standing) + ops/north-star.md §3 (KV260 is THE sovereignty board, drive to terminal then freeze): KV260 has been SSH-unreachable for 7 consecutive runs. This re-attempts the terminal board-level latency transcript via the SSH precondition. Mandatory-until-terminal continuity; structurally never a doomed rerun while the terminal artifact is unrecorded. scope-match vs exp3489/exp3477 is the intended continuity continuation."
+    prior_failures:
+      - experiment_id: exp3489-kv260-terminal-latency-transcript-v7
+        verdict: "complete: blocked_kv260_ssh_unreachable"
+        addressed_by: "exp3489 found the board SSH-unreachable. This re-attempts the SAME terminal transcript on the same SSH precondition; if reachable this milestone, it records the terminal latency artifact (driving the board to terminal per north-star §3); if still unreachable, it emits the honest blocked verdict, keeping the board visible per Hardware-Task Continuity."
+        retire_if_same_verdict: false
+    milestone: "2026.05.322"
+    title: "KV260 terminal board-level latency transcript (drive to terminal, then freeze) — SSH precondition"
+    priority: medium
+    max_turns: 30
+    agent_type: claude
+    requires_claude: true   # gemini-cli is DOWN; SSH hardware probe + judgment; claude is the only landing backend.
+    estimated_wall_time_min: 10
+    track: hardware
+    inference_substrate: hardware_smoke
+    requires_gpu: false
+    deliverable: "results/experiment_3500_kv260_terminal_latency_transcript_v8.json"
+    prompt: |
+      CONTEXT: Per ops/north-star.md §3, the KV260 is THE sovereignty board — drive it to its
+      terminal state (a non-fabricated board-level latency transcript), then freeze. It has
+      been SSH-unreachable for the last 7 runs. The precondition is SSH-reachability ONLY
+      (KV260 SSH-Not-SD-Card Discipline — any host SD-card check is the wrong mechanism and
+      is forbidden for KV260 tasks).
+
+      EXISTING CODE TO READ FIRST:
+        - results/experiment_3489_kv260_terminal_latency_transcript_v7.json (the most recent block)
+        - scripts/experiment_3489_kv260_terminal_latency_transcript_v7.py (the SSH-probe harness — reuse)
+        - CLAUDE.md "KV260 SSH-Not-SD-Card Discipline" + "Pre-Launch Preconditions Discipline" (KV260 row)
+        - ops/north-star.md §3 (KV260 terminal-then-freeze)
+
+      TASK: If the board is reachable, record the terminal board-level latency transcript via
+      xmutil + the on-board UIO interface. If not, emit the honest blocked verdict.
+
+      PRECONDITIONS (step 0):
+        a. SSH reachability: ssh -o ConnectTimeout=5 -o BatchMode=yes kria 'true' returns 0.
+           If not -> honest_verdict complete: blocked_kv260_ssh_unreachable. STOP. Do NOT fall
+           back to any host SD-card check (wrong mechanism — KV260 SSH-Not-SD-Card Discipline).
+
+      CONCRETE STEPS:
+        1. SSH-probe the board. If unreachable, write the blocked artifact and exit.
+        2. If reachable: confirm the carnot_ising bitstream is loaded (xmutil listapps), run the
+           on-board latency measurement over the UIO register interface, capture a real transcript.
+        3. Emit the artifact with the latency transcript + kv260_terminal_state_reached flag, or
+           the honest blocked verdict.
+
+      REQUIRED ARTIFACT FIELDS (each carries a principle per CLAUDE.md):
+        honest_verdict: principle="complete:/success:/passed:/shipped_ or complete: blocked_* prefix."
+        inference_substrate: value=hardware_smoke
+        preconditions_checked: principle="records the SSH-reachability check result — pre-empts fabrication via wrong mechanism."
+        kv260_ssh_reachable: principle="boolean: the board answered SSH this run — the gating reachability."
+        board_latency_transcript: principle="the real on-board latency measurement (null if unreachable) — the terminal artifact."
+        kv260_terminal_state_reached: principle="boolean: a non-fabricated terminal transcript was recorded — the north-star §3 freeze condition."
+        random_seed: principle="determinism."
+        reproducibility_checksum: principle="content hash."
+        duration_s: principle="SSH probe + on-board measurement; honest small for a blocked probe."
+
+      ACCEPTANCE GATES:
+        - condition: "kv260_ssh_reachable == false -> honest blocked verdict; OR kv260_terminal_state_reached == true"
+          principle: "either the board is honestly unreachable (no fabrication) or the terminal transcript is genuinely recorded — both are honest outcomes."
+
+      TERMINAL VERDICTS (all start with complete:):
+        - reachable + transcript -> "complete: kv260_hardware_latency_transcript_recorded_terminal"
+        - unreachable -> "complete: blocked_kv260_ssh_unreachable"
+      Run command: cd {project_root} && JAX_PLATFORMS=cpu .venv/bin/python scripts/experiment_3500_kv260_terminal_latency_transcript_v8.py. Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  - id: exp3501-polarfire-opportunistic-reachability-audit-v8
+    operator_override: "2026-05-18 operator directive (Hardware-Task Continuity, standing) + ops/north-star.md §3 (PolarFire opportunistic, no terminal mandate): keeps the always-reachable PolarFire board visible in the milestone retro. scope-match vs exp3490/exp3479 is the intended continuity continuation."
+    prior_failures:
+      - experiment_id: exp3490-polarfire-opportunistic-reachability-audit-v7
+        verdict: "complete: polarfire reachable and continuity confirmed (FLAGGED tautology)"
+        addressed_by: "exp3490 was FLAGGED for a tautology (two conceptually-distinct fields bit-identical). This re-runs the opportunistic continuity audit with STRICTLY DISTINCT fields (uptime vs reachability vs dispatch-state, runtime-asserted non-equal) to avoid the tautology flag, re-confirming PolarFire SSH reachability + Carnot dispatch continuity. No terminal mandate (north-star §3); a de-flagged visibility check, not a doomed rerun."
+        retire_if_same_verdict: false
+    milestone: "2026.05.322"
+    title: "PolarFire opportunistic reachability + continuity audit (no terminal mandate; tautology-de-flagged distinct fields)"
+    priority: medium
+    max_turns: 20
+    agent_type: claude
+    requires_claude: true   # gemini-cli is DOWN; SSH hardware probe; claude is the only landing backend.
+    estimated_wall_time_min: 8
+    track: hardware
+    inference_substrate: hardware_smoke
+    requires_gpu: false
+    deliverable: "results/experiment_3501_polarfire_opportunistic_reachability_audit_v8.json"
+    prompt: |
+      CONTEXT: Per ops/north-star.md §3, PolarFire is opportunistic (no terminal mandate). This
+      is the per-milestone visibility check that keeps the board in the retro (Hardware-Task
+      Continuity Discipline). exp3490 (.321) was FLAGGED for a tautology — two conceptually-
+      distinct fields were bit-identical. This re-run uses STRICTLY DISTINCT fields with a
+      runtime assert to avoid the flag.
+
+      EXISTING CODE TO READ FIRST:
+        - results/experiment_3490_polarfire_opportunistic_reachability_audit_v7.json (the prior FLAGGED audit — fix the bit-identical fields)
+        - scripts/experiment_3490_polarfire_opportunistic_reachability_audit_v7.py (the SSH-probe harness — reuse, but make the reported fields distinct)
+        - CLAUDE.md "Pre-Launch Preconditions Discipline" (PolarFire SSH row) + "Adversarial Artifact Verification" (the tautology flag to avoid)
+
+      TASK: SSH-probe the PolarFire board, confirm reachability + Carnot dispatch continuity,
+      emit the audit artifact with STRICTLY DISTINCT fields (no two conceptually-distinct
+      values bit-identical — runtime-asserted).
+
+      PRECONDITIONS (step 0):
+        a. SSH reachability: ssh -o ConnectTimeout=5 polarfire 'true' returns 0.
+           If not -> honest_verdict complete: blocked_polarfire_ssh_timeout.
+
+      CONCRETE STEPS:
+        1. SSH-probe the board; record uptime_seconds (an integer from `uptime`) and
+           ssh_reachable (a boolean) as DISTINCT fields; ASSERT they are not the same value.
+        2. Confirm the Carnot dispatch path still functions (a lightweight smoke), or note the
+           last validated state, as a SEPARATE field.
+        3. Emit the audit artifact.
+
+      REQUIRED ARTIFACT FIELDS (each carries a principle per CLAUDE.md):
+        honest_verdict: principle="complete:/success:/passed:/shipped_ or complete: blocked_* prefix."
+        inference_substrate: value=hardware_smoke
+        preconditions_checked: principle="records the SSH-reachability check result."
+        polarfire_ssh_reachable: principle="boolean: the board answered SSH this run — distinct from uptime."
+        uptime_seconds: principle="board uptime in seconds (from `uptime`) — a distinct numeric field, never bit-identical to a boolean/rate (the exp3490 de-flag)."
+        continuity_confirmed: principle="boolean: the board remains visible + dispatch-capable per Hardware-Task Continuity."
+        distinct_fields_assert_passed: principle="boolean: the reported fields were runtime-verified non-bit-identical — the tautology de-flag."
+        random_seed: principle="determinism."
+        reproducibility_checksum: principle="content hash."
+        duration_s: principle="SSH probe; honest small."
+
+      ACCEPTANCE GATES:
+        - condition: "polarfire_ssh_reachable in [true, false] AND continuity_confirmed recorded AND distinct_fields_assert_passed == true"
+          principle: "an honest reachability outcome is recorded with strictly-distinct fields — keeps the board visible without the exp3490 tautology flag."
+
+      TERMINAL VERDICTS (all start with complete:):
+        - reachable -> "complete: polarfire reachable and continuity confirmed deflagged"
+        - unreachable -> "complete: blocked_polarfire_ssh_timeout"
+      Run command: cd {project_root} && JAX_PLATFORMS=cpu .venv/bin/python scripts/experiment_3501_polarfire_opportunistic_reachability_audit_v8.py. Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  # =========================================================================
+  # PHASE E — SYNTHESIS (gate status + capstone) — UNGATED synthesis (cascade-proof)
+  # =========================================================================
+  - id: exp3502-g-gate-status-synthesis-v322
+    operator_override: "2026-05-29 operator directive (ops/north-star.md §2): the stable G1-G4 publication-gate synthesis replaces publication_blocker_count. UNGATED by design (.322 cascade-proofing): it reads the .322 P0.1/depth/G2 artifacts and SKIPS any that are absent or flagged_adversarial, so no depth-task retirement can pre-emptively GATE_BLOCK it (the .321 failure mode). Routine per-milestone synthesis; scope-match vs exp3491/exp3480 is the intended gate-status continuation."
+    prior_failures:
+      - experiment_id: exp3491-g-gate-status-synthesis-v321
+        verdict: "complete: GATE_BLOCK (pre-emptive skip; upstream crux exp3484 retired)"
+        addressed_by: "exp3491 was GATE_BLOCKed because it was gated_on the fragile crux exp3484, which retired. This task is UNGATED — it reads all .322 artifacts and gracefully skips absent/flagged ones, computing G1-G4 from whatever landed (the two robust P0.1 routes exp3494/exp3495 + depth + G2). Different structure (ungated, skip-absent), not a re-run."
+        retire_if_same_verdict: false
+    # DELIBERATELY NO gated_on: the .321 cascade came from gating this on the crux. Ungated
+    # so no depth-task retirement can pre-emptively block it. Reads & skips absent/flagged.
+    milestone: "2026.05.322"
+    title: "G1-G4 gate-status synthesis v322 (UNGATED, cascade-proof) — Sudoku P0.1 solve-rate / contested-subset crux / MATH-aware calibration / beta_min=f(lambda_min) / G2 regression verdicts"
+    priority: high
+    max_turns: 30
+    agent_type: claude
+    requires_claude: true   # gemini-cli is DOWN; aggregation + judgment; claude is the only landing backend.
+    estimated_wall_time_min: 8
+    track: ops
+    inference_substrate: aggregation_from_upstream_artifacts
+    requires_gpu: false
+    deliverable: "results/experiment_3502_g_gate_status_synthesis_v322.json"
+    prompt: |
+      CONTEXT: ops/north-star.md §2 defines the stable G1-G4 publication gate (replaces
+      publication_blocker_count). This synthesizes the .322 gate state from whatever landed.
+      It is UNGATED by design: the .321 synthesis (exp3491) was GATE_BLOCKed because it was
+      gated on the fragile crux that retired — this task instead READS the .322 artifacts and
+      SKIPS any that are absent or flagged_adversarial, so no depth-task retirement can block
+      it. The two robust P0.1 routes are exp3494 (Sudoku solve-rate, CPU) and exp3495
+      (energy-vs-SC on the contested subset, cached); plus exp3497 (calibration), exp3498
+      (beta_min=f(lambda_min) self-learning), exp3499 (G2 regression).
+
+      EXISTING CODE TO READ FIRST:
+        - results/experiment_3491_g_gate_status_synthesis_v321.json (the prior synthesis schema — if present; else exp3480)
+        - results/experiment_3494_p01_sudoku_correctness_first_solve_rate_gate_v1.json (P0.1 Route 1 — read honest_verdict; SKIP if absent/flagged)
+        - results/experiment_3495_p01_energy_vs_sc_contested_subset_inband_v8.json (P0.1 Route 2 — SKIP if absent/flagged)
+        - results/experiment_3497_energy_correctness_calibration_mathaware_v5.json (SKIP if absent/flagged)
+        - results/experiment_3498_fr11_beta_min_lambda_min_predictive_law_v1.json (SKIP if absent/flagged)
+        - results/experiment_3499_fover_g2_regression_verify_external_ask_refresh_v2.json
+        - scripts/publication_gate.py (the G1/G3/G4 checks) + ops/publication_gate_state.json (G2)
+        - ops/north-star.md §2 (gate definitions)
+
+      TASK: Compute g1..g4 booleans + unmet_gates from whatever .322 artifacts landed (skip
+      absent/flagged for headline numbers). Record the P0.1 verdicts from BOTH routes (Sudoku
+      solve-rate + contested-subset crux delta), the calibration diagnosis, the FR-11
+      beta_min=f(lambda_min) law, and the G2 regression status. Set
+      depth_forcing_function_can_relax = (P0.1 has a clean verdict on at least one route AND
+      G2 external-in-motion). EXCLUDE any artifact carrying flagged_adversarial:true from
+      headline aggregation (fabrication gate).
+
+      CONCRETE STEPS:
+        1. Read the .322 artifacts that exist; skip absent/flagged ones (do not fail on a missing file).
+        2. Run/parse scripts/publication_gate.py for G1/G3/G4; read G2 from the gate state.
+        3. Emit g1..g4 + unmet_gates + the P0.1 Route-1 (Sudoku solve_rate) and Route-2
+           (energy-vs-SC delta + flip_count) verdicts + calibration diagnosis + FR-11
+           beta_min=f(lambda_min) law + G2 status + depth_forcing_function_can_relax, each
+           principle-annotated.
+
+      REQUIRED ARTIFACT FIELDS (each carries a principle per CLAUDE.md):
+        honest_verdict: principle="complete: prefix."
+        inference_substrate: value=aggregation_from_upstream_artifacts
+        g1: principle="headline measured (FoVer 0.9131) — boolean."
+        g2: principle="independently reproduced — boolean (external; honest manual)."
+        g3: principle="prose narrowing-clean — boolean."
+        g4: principle="numbers trace to primary artifacts — boolean."
+        unmet_gates: principle="the list of unmet gates — what to report instead of a count."
+        p01_route1_sudoku_verdict: principle="exp3494 terminal verdict (solve-rate / encoding-valid) — the CPU P0.1 datapoint (null if absent/flagged)."
+        p01_route1_solve_rate: principle="exp3494 solve_rate (null if blocked/absent)."
+        p01_route2_crux_verdict: principle="exp3495 terminal verdict — the in-band energy-vs-SC result (null if absent/flagged)."
+        p01_route2_delta: principle="exp3495 delta_optimal_vs_self_consistency (null if blocked/flagged)."
+        p01_route2_flip_count: principle="exp3495 flip_count_optimal_vs_sc — non-degeneracy proof (null if absent)."
+        p01_has_clean_verdict: principle="boolean: at least one P0.1 route produced a clean (non-blocked, non-flagged) verdict — the Depth-Over-Breadth relax precondition."
+        calibration_diagnosis: principle="exp3497 step-vs-final / domain-shift diagnosis (null if absent/flagged)."
+        fr11_beta_min_lambda_min_law: principle="exp3498 fitted law + holds-out boolean (null if absent)."
+        g2_package_status: principle="exp3499 regression + external-ask status string."
+        depth_forcing_function_can_relax: principle="True only when P0.1 has a clean verdict AND G2 external-in-motion."
+        gate_status_v322_ready: principle="terminal completion flag (always True)."
+        random_seed: principle="determinism."
+        reproducibility_checksum: principle="content hash."
+        duration_s: principle="aggregation; sub-second honest."
+      Run command: cd {project_root} && JAX_PLATFORMS=cpu .venv/bin/python scripts/experiment_3502_g_gate_status_synthesis_v322.py. Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  - id: exp3503-capstone-v322
+    operator_override: "2026-05-29 operator directive (standing): routine per-milestone capstone aggregation; scope-match vs exp3492/exp3481 is the intended capstone continuation — structurally never a doomed rerun."
+    prior_failures:
+      - experiment_id: exp3492-capstone-v321
+        verdict: "complete: GATE_BLOCK (1 of 1 gate failed; upstream synthesis exp3491 retired)"
+        addressed_by: "exp3492 was GATE_BLOCKed because its upstream synthesis (exp3491) was itself gate-blocked by the retired crux. This capstone gates on the .322 UNGATED synthesis (exp3502), which always lands gate_status_v322_ready=true regardless of which depth tasks landed — so the cascade is broken. New inputs (the two robust P0.1 routes), not a re-run."
+        retire_if_same_verdict: false
+    gated_on:
+      - upstream: exp3502-g-gate-status-synthesis-v322
+        artifact_field: gate_status_v322_ready
+        op: '=='
+        value: true
+    milestone: "2026.05.322"
+    title: "Capstone v322"
+    priority: high
+    max_turns: 30
+    agent_type: claude
+    requires_claude: true   # gemini-cli is DOWN; synthesis + judgment; claude is the only landing backend.
+    estimated_wall_time_min: 10
+    track: ops
+    inference_substrate: aggregation_from_upstream_artifacts
+    requires_gpu: false
+    deliverable: "results/experiment_3503_capstone_v322.json"
+    prompt: |
+      CONTEXT: Milestone .322 (Depth-Over-Breadth VIII) routed P0.1 through TWO infra-
+      independent paths after three milestones lost the crux to infrastructure: Route 1 (CPU
+      Sudoku/Kona correctness-first solve-rate gate, QUBO-validated) and Route 2 (energy-vs-SC
+      crux on the in-band contested subset of cached corpora). It also explained the energy's
+      MATH behavior (calibration v5), fused FR-11 self-learning with the P0.2 keystone
+      (beta_min=f(lambda_min)), and regression-verified the G2 package. This capstone
+      aggregates the milestone honestly.
+
+      EXISTING CODE TO READ FIRST:
+        - results/experiment_3502_g_gate_status_synthesis_v322.json (the gate state — authoritative)
+        - results/experiment_3494/3495/3497/3498/3499_*.json (the P0.1 + depth + G2 artifacts; skip absent/flagged)
+        - results/experiment_3492_capstone_v321.json (the prior capstone schema) OR results/experiment_3481_capstone_v320.json
+        - ops/north-star.md (the headline claim §1 + the gate §2 — do not edit; read-only)
+        - CLAUDE.md "Paper-v6 Narrowing Discipline" + "Adversarial Artifact Verification" (fabrication gate — SKIP flagged_adversarial artifacts in any headline aggregation)
+
+      TASK: Write the .322 capstone: experiments completed, the KEY finding (whether P0.1 now
+      has a clean verdict on either route — Sudoku solve-rate and/or the in-band energy-vs-SC
+      delta; the MATH calibration diagnosis; the FR-11 beta_min=f(lambda_min) law), the unmet
+      gates (G2), paper_v6_safe_claims / paper_v6_forbidden_claims respecting the Narrowing
+      Discipline, and the top forward gap. EXCLUDE any flagged_adversarial artifact from
+      headline numbers (fabrication gate).
+
+      CONCRETE STEPS:
+        1. Read the gate synthesis + depth + G2 artifacts (skip flagged ones for headline numbers).
+        2. Aggregate into the capstone schema; set capstone_v322_ready=true.
+        3. Record paper_v6_safe_claims / forbidden_claims per the Narrowing Discipline (no KV260
+           speedup, no thermalization, no universal generalization, FoVer headline = 0.9131).
+        4. Set p0_1_status to OPEN/CLEAN per whether either route produced a clean verdict, and
+           note the Depth-Over-Breadth relax condition.
+        5. Emit the artifact with honest_verdict starting 'complete:'.
+
+      REQUIRED ARTIFACT FIELDS (each carries a principle per CLAUDE.md):
+        honest_verdict: principle="complete: prefix."
+        inference_substrate: value=aggregation_from_upstream_artifacts
+        experiments_completed: principle="count of .322 experiments aggregated."
+        key_finding: principle="the milestone's load-bearing result (whether P0.1 got a clean verdict on either infra-robust route + its mechanism)."
+        p0_1_status: principle="OPEN/CLEAN — whether P0.1 now has a clean verdict on Route 1 (Sudoku solve-rate) and/or Route 2 (in-band crux), and the Depth-Over-Breadth relax condition."
+        unmet_gates: principle="carried from the gate synthesis — G2."
+        paper_v6_safe_claims: principle="claims defensible post-Narrowing (FoVer 0.9131, etc.)."
+        paper_v6_forbidden_claims: principle="the retracted phrasings the capstone must not assert."
+        top_forward_gap: principle="the single most important next step."
+        capstone_v322_ready: principle="terminal completion flag (always True)."
+        random_seed: principle="determinism."
+        reproducibility_checksum: principle="content hash."
+        duration_s: principle="aggregation; sub-second honest."
+      Run command: cd {project_root} && JAX_PLATFORMS=cpu .venv/bin/python scripts/experiment_3503_capstone_v322.py. Do NOT push. Do NOT modify scripts/research_conductor.py.
