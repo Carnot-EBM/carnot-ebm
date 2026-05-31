@@ -7303,3 +7303,4 @@ web search: https://docs.garak.ai/garak/examples/pr |
 | 2026-05-31 18:04 UTC | PROMOTE the step->final aggregation positive to a  | OK | 81 passed in 4.38s |
 | 2026-05-31 18:10 UTC | FR-11 DEPLOY the conservative-default self-learnin | OK | 84 passed in 4.32s |
 | 2026-05-31 18:16 UTC | FoVer G2 — clean-room regression-verify the self-c | OK | 81 passed in 4.50s |
+| 2026-05-31 18:21 UTC | KV260 terminal board-level latency transcript (dri | OK | 100 passed in 3.79s |
