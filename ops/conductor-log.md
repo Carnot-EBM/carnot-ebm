@@ -7262,3 +7262,4 @@ web search: https://docs.garak.ai/garak/examples/pr |
 | 2026-05-31 13:09 UTC | FR-11 DEPLOY the conservative-default self-learnin | OK | 81 passed in 4.84s |
 | 2026-05-31 13:15 UTC | FoVer G2 — clean-room regression-verify the self-c | OK | 81 passed in 4.20s |
 | 2026-05-31 13:24 UTC | KV260 terminal board-level latency transcript (dri | OK | 81 passed in 4.50s |
+| 2026-05-31 13:30 UTC | PolarFire opportunistic reachability + continuity  | OK | 81 passed in 3.86s |
