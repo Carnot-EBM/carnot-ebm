@@ -385,4 +385,17 @@ def select_max_turns(task: dict, default: int = 100) -> int:
         # agent gets one turn which is essentially useless. Out-of-bounds
         # values fall back to the default.
         return default
+    # Transition-task turn floor (2026-05-31 operator directive). Archive /
+    # capstone / plan-milestone tasks run on claude and were repeatedly hitting
+    # their planner-emitted 20-turn cap ("Claude Code error: Reached max turns
+    # (20)") — failing, then re-running, ~2 wasted claude calls/milestone (17
+    # Claude-side errors across .315-.322 vs 1 gemini). These ops tasks read
+    # upstream artifacts and write retros/changelog + validate YAML, so they
+    # genuinely need more headroom than the planner gives them. Floor them at 40
+    # (still within the <=100 bound) regardless of the emitted value.
+    _tid = str(task.get("id", "")).lower()
+    if val < 40 and any(
+        _p in _tid for _p in ("archive-v", "capstone-v", "plan-milestone-")
+    ):
+        return 40
     return val
