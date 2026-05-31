@@ -7318,3 +7318,4 @@ web search: https://docs.garak.ai/garak/examples/pr |
 | 2026-05-31 20:17 UTC | P0.1 Route-2 NL-math FINAL attempt + TERMINAL verd | FAIL | Gemini CLI error: Stalled after 600s silence. Last output: Warning: 256-color  |
 | 2026-05-31 20:24 UTC | PROMOTE the step->final aggregation positive to a  | FLAGGED | adversarial_verify CRITICAL: TAUTOLOGY, TAUTOLOGY, TAUTOLOGY, TAUTOLOGY, TAUTOLO |
 | 2026-05-31 20:32 UTC | FR-11 ADVANCE (mandatory continuous self-learning  | OK | 84 passed in 3.41s |
+| 2026-05-31 20:37 UTC | FoVer G2 — clean-room regression-verify the self-c | OK | 90 passed in 7.06s |
