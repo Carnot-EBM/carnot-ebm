@@ -3876,3 +3876,29 @@ It MUST output `results/experiment_3577_kv260_continuity_v16.json` with fields:
 
 **Implementation status:** Implemented (Exp 3577)
 
+
+### REQ-HW-3578
+
+**Title:** PolarFire hardware-task continuity verification
+
+**Description:**
+To satisfy hardware-task continuity, one PolarFire task per milestone must run. PolarFire lives on SSH.
+The task MUST check SSH reachability via `ssh -o ConnectTimeout=5 polarfire 'true'`.
+If reachable, it MUST confirm continuity (uptime, carnot dispatch path) deflagged.
+It MUST output `results/experiment_3578_polarfire_continuity_v16.json` with fields:
+`honest_verdict` (terminal prefix), `inference_substrate="hardware_smoke"`, `preconditions_checked`,
+`polarfire_ssh_reachable` (bool), `random_seed`, `reproducibility_checksum`, `duration_s`.
+
+**Implementation status:** Implemented (Exp 3578)
+
+---
+
+### SCENARIO-HW-3578
+
+**Scenario:** PolarFire continuity is checked via SSH.
+
+**Given:** A PolarFire continuity check is required.
+**When:** The script runs `ssh -o ConnectTimeout=5 polarfire 'true'`.
+**Then:** If the check fails, it produces a verdict `complete: blocked_polarfire_ssh_timeout`. If it succeeds, it produces `complete: polarfire_continuity_confirmed_reachable`.
+
+**Implementation status:** Implemented (Exp 3578)
