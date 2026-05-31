@@ -7299,3 +7299,4 @@ web search: https://docs.garak.ai/garak/examples/pr |
 | 2026-05-31 17:29 UTC | P0.1 Route-2 SELECTABLE-HEADROOM corpus build (liv | FAIL | Gemini CLI error: Stalled after 600s silence. Last output: Warning: 256-color  |
 | 2026-05-31 17:41 UTC | P0.1 Route-2 SELECTABLE-HEADROOM corpus build (liv | FAIL | Gemini CLI error: Stalled after 600s silence. Last output: Warning: 256-color  |
 | 2026-05-31 17:52 UTC | P0.1 Route-2 SELECTABLE-HEADROOM corpus build (liv | FAIL | Gemini CLI error: Stalled after 600s silence. Last output: Warning: 256-color  |
+| 2026-05-31 17:58 UTC | P0.1 Route-2 energy/aggregation-vs-STRONG-SC on th | OK | 89 passed in 5.18s |
