@@ -2860,3 +2860,48 @@ the headroom ceiling (`> 0.78`)
 `complete: blocked_energy_substrate_unavailable`, or
 `complete: blocked_corpus_at_ceiling_no_headroom_sc=SS` — and exits without
 reporting any energy comparison.
+
+---
+
+### REQ-KONA-3495: P0.1 IN-BAND Contested-Subset Energy vs Self-Consistency (v8)
+
+Exp 3495 is the cached, infra-robust P0.1 route. Instead of a fresh live
+generation, it STRATIFIES the ALREADY-CACHED GSM8K and MATH-L5 corpora to the
+CONTESTED SUBSET: problems whose per-problem sample correctness rate lands in
+[0.40, 0.70] — neither trivially-right nor trivially-wrong. The contested subset
+is constructed by loading both cached corpora, computing the per-problem
+correctness rate (fraction of k samples with the gold answer), and keeping
+problems in band. If n < 40 after pooling both corpora, the experiment emits
+complete: blocked_contested_subset_too_small_n=NN honestly. If n >= 40, it runs
+the same seven-condition process-energy + optimal-aggregation scoring as v6
+(REQ-KONA-3472).
+
+- Source corpora: data/p01_gsm8k_generations.jsonl and
+  data/p01_hardmath_generations.jsonl, pooled.
+- Contested subset filter: per-problem correctness rate in [0.40, 0.70].
+- Minimum problem count: 40 (headline-eligible; else blocked_contested_subset_too_small).
+- Scoring: same seven conditions as REQ-KONA-3472 (greedy AR, SC majority vote,
+  self-certainty BoN, process-energy argmin, trained-energy-weighted vote,
+  trained-energy x SC hybrid, optimal SC+energy aggregation).
+- PRIMARY metric: FLIP-COUNT of optimal aggregation vs SC.
+- The artifact carries inference_substrate=verifier_ensemble_against_cached_candidates,
+  source_corpora, contested_subset_n, contested_subset_sc,
+  self_consistency_in_headroom_band, the seven condition accuracies, flip metrics,
+  deltas, paired_significance, random_seed, reproducibility_checksum, duration_s.
+
+### SCENARIO-KONA-3495: Exp 3495 Builds the Contested Subset and Scores Seven Conditions
+**Given** both cached corpora exist, their pooled contested subset (per-problem
+correctness rate in [0.40, 0.70]) has n >= 40 problems, the FoVer + EORM
+substrate is loadable, AND the contested-subset SC is in [0.40, 0.70]
+**When** we run experiment_3495_p01_energy_vs_sc_contested_subset_inband_v8.py
+**Then** it filters to the contested subset, splits by problem id into K folds,
+scores all seven conditions on held-out problems, and writes the artifact with a
+complete: verdict, contested_subset_n, contested_subset_sc,
+self_consistency_in_headroom_band, flip metrics, and paired significance.
+
+### SCENARIO-KONA-3495-BLOCKED: Exp 3495 Emits an Honest Block on Small Subset or Unavailable Substrate
+**Given** the contested subset has n < 40 problems (after pooling both corpora),
+OR the FoVer + EORM substrate is unloadable, OR no cached corpus exists
+**When** the experiment runs its step-0 preconditions
+**Then** it writes the matching complete: blocked_* honest verdict and exits without
+reporting any energy comparison.
