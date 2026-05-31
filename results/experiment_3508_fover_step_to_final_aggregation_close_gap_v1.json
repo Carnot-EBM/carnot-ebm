@@ -112,5 +112,18 @@
     "title",
     "unaggregated_final_correctness_auroc",
     "unaggregated_process_energy_auroc_reference"
+  ],
+  "flagged_adversarial": true,
+  "corrigendum_pending": [
+    {
+      "kind": "TAUTOLOGY",
+      "severity": "critical",
+      "detail": "fover_step_error_auroc_reference=0.9131 and step_error_auroc=0.9131 agree to >5 sig figs. Two distinct metrics matching this precisely is more likely a bug than a finding."
+    },
+    {
+      "kind": "TAUTOLOGY",
+      "severity": "critical",
+      "detail": "unaggregated_process_energy_auroc_reference=0.601 and unaggregated_final_correctness_auroc=0.601 agree to >5 sig figs. Two distinct metrics matching this precisely is more likely a bug than a finding."
+    }
   ]
 }

@@ -7215,3 +7215,4 @@ web search: https://docs.garak.ai/garak/examples/pr |
 | 2026-05-31 05:21 UTC | P0.1 OPTIONAL (non-blocking) — extend the purpose- | FAIL | Claude Code error: Wall-clock+idle timeout after 1201s (1201s silence). Last ou |
 | 2026-05-31 05:23 UTC | P0.1 OPTIONAL (non-blocking) — extend the purpose- | OK | Deliverable already exists in repo |
 | 2026-05-31 05:33 UTC | P0.1 Route 2 CRUX (cached) — energy-vs-Self-Consis | FLAGGED | adversarial_verify CRITICAL: TAUTOLOGY, TAUTOLOGY, TAUTOLOGY, TAUTOLOGY, TAUTOLO |
+| 2026-05-31 05:52 UTC | Close the FoVer step-vs-final 0.138 gap — step->fi | FLAGGED | adversarial_verify CRITICAL: TAUTOLOGY, TAUTOLOGY — result quarantined, not a cl |
