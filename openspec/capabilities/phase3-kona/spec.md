@@ -2965,3 +2965,40 @@ ar_baseline_solve_rate, and emits one of the four terminal verdicts starting wit
 **When** the experiment runs Step 0a
 **Then** it writes complete: blocked_energy_encoding_invalid_regression with the
 residual breakdown and exits without running any optimizer.
+
+### REQ-KONA-3507: P0.1 Energy vs Self-Consistency on Purpose-Built Level-3 In-Band Corpus (v9)
+
+**Origin:** exp3506 built data/p01_difficulty_matched_generations.jsonl — a purpose-built
+level-3 corpus with per-level aggregate SC in [0.40, 0.70] and >=40 problems. This is the
+corpus the P0.1 premise test (energy beats SC at matched compute) was always waiting for.
+
+**Requirement:** On the level-3 in-band corpus, run the same 7-condition process-aware
+energy + optimal-aggregation comparison as exp3495 (v8), but with the NEW corpus as the
+only source. Normalize the new corpus schema (gold_answer_norm / extracted_answer_norm /
+reasoning_steps) to the format expected by the existing process-energy module. Report the
+flip-count primary metric, 7 held-out accuracies, McNemar + bootstrap significance, and
+all required artifact fields. Emit one of the terminal complete: verdicts per the
+acceptance gates G0/G1/G2.
+
+**Acceptance gates:**
+- G0 (HEADROOM): level3_sc in [0.40, 0.70] and level3_n >= 40
+- G1 (ENERGY-BEATS-SC-IN-BAND): net_correctness_gain_optimal > 0 AND
+  delta_optimal_vs_self_consistency > 0 AND paired McNemar p < 0.05
+- G2 (NON-DEGENERATE): flip_count_optimal_vs_sc > 0
+
+### SCENARIO-KONA-3507: Exp 3507 Scores the Level-3 Corpus and Reports Energy vs SC
+
+**Given** data/p01_difficulty_matched_generations.jsonl exists with >=40 level-3 problems
+and aggregate level-3 SC in [0.40, 0.70]
+**When** we run experiment_3507_p01_energy_vs_sc_on_level3_inband_corpus_v9.py
+**Then** it loads the level-3 records, normalizes the schema, runs k-fold CV with the
+FoVer process-energy module and EORM reranker, scores 7 conditions, computes flip-count
+metrics, McNemar exact p and bootstrap CI95, and emits one terminal complete: verdict.
+
+### SCENARIO-KONA-3507-BLOCKED: Exp 3507 Blocks on Missing Corpus or Insufficient Size
+
+**Given** data/p01_difficulty_matched_generations.jsonl is missing or has fewer than 40
+level-3 usable problems
+**When** the experiment runs step 0
+**Then** it writes complete: blocked_no_level3_corpus or
+complete: blocked_level3_corpus_too_small_n=NN and exits without scoring.

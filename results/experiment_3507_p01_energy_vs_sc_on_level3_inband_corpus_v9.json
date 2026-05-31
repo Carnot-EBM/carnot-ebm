@@ -1,0 +1,195 @@
+{
+  "experiment": 3507,
+  "title": "P0.1 process-aware energy + optimal aggregation vs self-consistency on purpose-built level-3 in-band corpus (v9)",
+  "run_date": "20260531",
+  "started_at": "2026-05-31T05:31:03Z",
+  "finished_at": "2026-05-31T05:31:06Z",
+  "duration_s": 2.553,
+  "status": "success",
+  "inference_substrate": "verifier_ensemble_against_cached_candidates",
+  "random_seed": 1815308654,
+  "metrics_used": "exact_match_accuracy+flip_count",
+  "corpus_source": "data/p01_difficulty_matched_generations.jsonl",
+  "headroom_band": [
+    0.4,
+    0.7
+  ],
+  "preconditions_checked": [
+    {
+      "resource": "level3_corpus_file",
+      "available": true,
+      "path": "data/p01_difficulty_matched_generations.jsonl"
+    },
+    {
+      "resource": "level3_corpus_size",
+      "available": true,
+      "level3_n": 49,
+      "min_required": 40
+    },
+    {
+      "resource": "process_energy_reranker_substrate",
+      "available": true
+    },
+    {
+      "resource": "self_consistency_in_headroom_band",
+      "available": true
+    }
+  ],
+  "field_provenance": {
+    "honest_verdict": "Terminal verdict must start with complete:/success:/passed:/shipped_ so the conductor reconciler classifies it as terminal without false-positive partial-token matches (CLAUDE.md Verdict Terminal-Prefix Discipline).",
+    "inference_substrate": "verifier_ensemble_against_cached_candidates: no live model is loaded; duration floor is 1 s (not 60 s).  Declared explicitly to avoid the DURATION_TOO_SHORT false-positive that triggered the Inference-Substrate Declaration Discipline (CLAUDE.md 2026-05-22).",
+    "corpus_source": "data/p01_difficulty_matched_generations.jsonl (purpose-built level-3) \u2014 the provenance; this is NOT the headroom-free cached GSM8K/MATH.",
+    "level3_n": "In-band level-3 problems scored; >=40 required for headline-eligibility.",
+    "level3_sc": "Majority-vote accuracy over the level-3 corpus \u2014 MUST land in [0.40, 0.70] (the headroom the cached corpora lacked).",
+    "self_consistency_in_headroom_band": "boolean: level-3 SC in [0.40, 0.70] \u2014 the precondition that makes P0.1 testable.",
+    "k_samples": "Sampled generations/problem consumed (the matched-compute budget).",
+    "best_step_aggregation": "Which step->final aggregation (last/product/min/uncertainty) won on TRAIN (arXiv:2508.01773).  The process_energy module uses per-step mean + contradiction by default; this field documents the effective aggregation.",
+    "ar_greedy_accuracy": "1-sample greedy control (held-out).",
+    "self_consistency_accuracy": "Majority vote over k \u2014 the PRIMARY control (held-out).",
+    "self_certainty_bon_accuracy": "Self-certainty Best-of-N (arXiv:2502.18581) \u2014 the cheap selector energy must beat.",
+    "process_energy_argmin_accuracy": "FoVer step-level PROCESS energy argmin \u2014 per-step, not candidate-level.",
+    "trained_energy_weighted_vote_accuracy": "Trained EORM energy-weighted vote.",
+    "trained_energy_sc_hybrid_accuracy": "Trained-energy x SC hybrid.",
+    "optimal_aggregation_accuracy": "Optimal SC+energy aggregation (arXiv:2510.13918) \u2014 THE headline condition.",
+    "flip_count_optimal_vs_sc": "Problems where optimal-aggregation differs from SC \u2014 the tautology-clean primary signal (0 -> they agree, no separate bit-identical field).",
+    "flips_correct_optimal": "Flips that became CORRECT (the win mechanism).",
+    "flips_incorrect_optimal": "Flips that became WRONG (the cost).",
+    "net_correctness_gain_optimal": "flips_correct - flips_incorrect for optimal aggregation \u2014 the honest net effect.",
+    "delta_optimal_vs_self_consistency": "Optimal-aggregation minus SC at matched compute \u2014 THE headline delta.",
+    "delta_process_energy_vs_self_consistency": "Process-energy argmin minus SC \u2014 does per-step verification route into selection?",
+    "paired_significance": "McNemar exact p + paired bootstrap CI95 for the optimal/process/hybrid deltas.",
+    "compute_parity_note": "Per-condition generation budget + reranker/aggregator params so energy does not win by spending more compute.",
+    "random_seed": "Determinism is the precondition for reproducibility; CONTENT-DERIVED (not the experiment number, which would trigger the exp3502 tautology class).",
+    "reproducibility_checksum": "Content hash of corpus + reranker config + split + seed \u2014 catches silent corpus or config drift between runs.",
+    "duration_s": "Cached scoring + small-model training; substrate is verifier_ensemble_against_cached_candidates so 1 s floor applies, not 60 s (no live model inference)."
+  },
+  "honest_verdict": "complete: process_energy_does_not_change_selections_selection_premise_refuted_on_this_substrate",
+  "level3_n": 49,
+  "level3_sc": 0.653061,
+  "n_problems_heldout": 49,
+  "k_samples": 6,
+  "reranker_param_count": 7,
+  "aggregator_param_count": 1,
+  "fitted_lambdas": [
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0
+  ],
+  "train_test_split_note": "problem-level 5-fold CV (seed=1815308654); each problem's up to 6 samples are entirely in train OR held-out, never split; feature standardisation AND the optimal-aggregator lambda are fit on the train fold only. All accuracies are on held-out problems.",
+  "self_consistency_in_headroom_band": true,
+  "best_step_aggregation": "per_step_mean_plus_contradiction_normalised",
+  "ar_greedy_accuracy": 0.428571,
+  "self_consistency_accuracy": 0.653061,
+  "self_certainty_bon_accuracy": 0.0,
+  "process_energy_argmin_accuracy": 0.653061,
+  "trained_energy_weighted_vote_accuracy": 0.653061,
+  "trained_energy_sc_hybrid_accuracy": 0.653061,
+  "optimal_aggregation_accuracy": 0.653061,
+  "flip_count_optimal_vs_sc": 0,
+  "flips_correct_optimal": 0,
+  "flips_incorrect_optimal": 0,
+  "net_correctness_gain_optimal": 0,
+  "flip_process_energy_vs_sc": {
+    "flip_count": 0,
+    "flips_correct": 0,
+    "flips_incorrect": 0,
+    "net_correctness_gain": 0
+  },
+  "flip_hybrid_vs_sc": {
+    "flip_count": 0,
+    "flips_correct": 0,
+    "flips_incorrect": 0,
+    "net_correctness_gain": 0
+  },
+  "delta_optimal_vs_self_consistency": 0.0,
+  "delta_process_energy_vs_self_consistency": 0.0,
+  "delta_hybrid_vs_self_consistency": 0.0,
+  "paired_significance": {
+    "optimal_aggregation": {
+      "comparison": "optimal_aggregation_vs_self_consistency",
+      "mcnemar_exact_p": 1.0,
+      "bootstrap_ci95": [
+        0.0,
+        0.0
+      ]
+    },
+    "process_energy": {
+      "comparison": "process_energy_argmin_vs_self_consistency",
+      "mcnemar_exact_p": 1.0,
+      "bootstrap_ci95": [
+        0.0,
+        0.0
+      ]
+    },
+    "hybrid": {
+      "comparison": "trained_energy_sc_hybrid_vs_self_consistency",
+      "mcnemar_exact_p": 1.0,
+      "bootstrap_ci95": [
+        0.0,
+        0.0
+      ]
+    }
+  },
+  "acceptance_gate_g0_headroom": true,
+  "acceptance_gate_g1_energy_beats_sc_in_band": false,
+  "acceptance_gate_g2_non_degenerate_flips": false,
+  "n_folds": 5,
+  "compute_parity_note": "All sampled-aggregation conditions consume the SAME k=6 cached generations; greedy AR is the 1-sample floor.  The energy adds only a 7-parameter logistic reranker (4 verifier signals + mean logprob + step count) plus a 1-parameter optimal aggregator (the mixing coefficient lambda, fit on train) \u2014 no extra samples \u2014 so energy cannot win by spending more compute.",
+  "reproducibility_checksum": "db1f819f1f4b18c8",
+  "methodology_note": "PRIMARY signal is the flip-count over the LEVEL-3 IN-BAND CORPUS, not a pair of accuracies: optimal-aggregation flips 0 of 49 held-out problems vs the SC majority (flips_correct=0, flips_incorrect=0).  Level-3 corpus built by exp3506 to land at aggregate SC in [0.4, 0.7].  Schema adapted from gold_answer_norm/extracted_answer_norm/reasoning_steps to the format expected by the process-energy module.",
+  "surprising_result_acknowledgment": "Process-energy / optimal-aggregation result at n_heldout=49 with 5-fold problem-level CV over the level-3 in-band corpus.  A positive G1 (significant beat with positive net flip gain) would require independent replication before any headline claim.",
+  "schema": [
+    "acceptance_gate_g0_headroom",
+    "acceptance_gate_g1_energy_beats_sc_in_band",
+    "acceptance_gate_g2_non_degenerate_flips",
+    "aggregator_param_count",
+    "ar_greedy_accuracy",
+    "best_step_aggregation",
+    "compute_parity_note",
+    "corpus_source",
+    "delta_hybrid_vs_self_consistency",
+    "delta_optimal_vs_self_consistency",
+    "delta_process_energy_vs_self_consistency",
+    "duration_s",
+    "experiment",
+    "field_provenance",
+    "finished_at",
+    "fitted_lambdas",
+    "flip_count_optimal_vs_sc",
+    "flip_hybrid_vs_sc",
+    "flip_process_energy_vs_sc",
+    "flips_correct_optimal",
+    "flips_incorrect_optimal",
+    "headroom_band",
+    "honest_verdict",
+    "inference_substrate",
+    "k_samples",
+    "level3_n",
+    "level3_sc",
+    "methodology_note",
+    "metrics_used",
+    "n_folds",
+    "n_problems_heldout",
+    "net_correctness_gain_optimal",
+    "optimal_aggregation_accuracy",
+    "paired_significance",
+    "preconditions_checked",
+    "process_energy_argmin_accuracy",
+    "random_seed",
+    "reproducibility_checksum",
+    "reranker_param_count",
+    "run_date",
+    "self_certainty_bon_accuracy",
+    "self_consistency_accuracy",
+    "self_consistency_in_headroom_band",
+    "started_at",
+    "status",
+    "surprising_result_acknowledgment",
+    "title",
+    "train_test_split_note",
+    "trained_energy_sc_hybrid_accuracy",
+    "trained_energy_weighted_vote_accuracy"
+  ]
+}
