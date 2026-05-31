@@ -7260,3 +7260,4 @@ web search: https://docs.garak.ai/garak/examples/pr |
 | 2026-05-31 12:44 UTC | P0.1 Route 2 energy/step-aggregation-vs-SC on the  | OK | 81 passed in 3.18s |
 | 2026-05-31 12:57 UTC | Promote the step->final aggregation positive — rep | OK | 81 passed in 5.41s |
 | 2026-05-31 13:09 UTC | FR-11 DEPLOY the conservative-default self-learnin | OK | 81 passed in 4.84s |
+| 2026-05-31 13:15 UTC | FoVer G2 — clean-room regression-verify the self-c | OK | 81 passed in 4.20s |
