@@ -3328,3 +3328,22 @@ Spec: REQ-LEARN-3401, SCENARIO-LEARN-3401
 **When** CAS updates and Energy-based replay are applied
 **Then** the script evaluates final constraint fidelity
 **And** produces `results/experiment_3401_fr11_stress.json` containing the results.
+
+### REQ-AR-050: P0.1 Difficulty-Matched Corpus Builder v3 — Adaptive Level Selection + Process Traces
+
+**Requirement:**
+The system MUST build a MATH-500 difficulty-matched corpus for the P0.1 energy-selection experiment (exp3496) with:
+1. An adaptive warm-up that probes SC per candidate MATH level (3, 4, 3+4 mix) and selects the level(s) whose SC lands in the headroom band [0.40, 0.70].
+2. Resume semantics: re-invocations skip already-completed problem IDs and add only new rows.
+3. Per-problem output: 1 greedy (temp=0) + k=6 sampled (temp=0.8) solutions, extracted `\boxed{}` answer, correctness label, and parsed reasoning steps.
+4. Checkpointing: one JSONL row appended per completed problem immediately (fsync'd) so kills lose at most one row.
+5. Terminal verdicts starting with `complete:`, encoding the corpus-size band (headline-eligible >=80, scorable-partial 40-79, partial <40, or blocked if no in-band split found).
+
+**Rationale:**
+P0.1 is the existential question: "does energy-based selection beat majority-vote at equal compute?" It is only testable when the corpus's self-consistency lands in [0.40, 0.70] — the headroom window where both floor and ceiling are non-degenerate. MATH-500 levels 3-4 is the identified candidate; the adaptive warm-up ensures the chosen level actually lands in band rather than assuming it.
+
+**Scenarios:**
+- SCENARIO-AR-050-01: Final-answer extraction and normalization — `\boxed{}` content extracted from the last occurrence; LaTeX wrappers stripped for comparison.
+- SCENARIO-AR-050-02: Self-consistency band classification — majority-vote SC computed over sampled answers; in_headroom_band returns True iff SC in [0.40, 0.70].
+- SCENARIO-AR-050-03: Per-step reasoning traces captured — each generation row carries a parsed list of reasoning paragraphs.
+- SCENARIO-AR-050-04: Resume skips completed problems — completed_problem_ids reads the JSONL and returns the set of problem_id values already written.

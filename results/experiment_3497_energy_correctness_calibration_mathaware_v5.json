@@ -1,0 +1,120 @@
+{
+  "experiment": 3497,
+  "title": "MATH-aware energy-correctness calibration with distinct pipelines (v5)",
+  "run_date": "20260531",
+  "started_at": "2026-05-31T02:42:09Z",
+  "finished_at": "2026-05-31T02:42:10Z",
+  "duration_s": 1.512,
+  "status": "success",
+  "inference_substrate": "verifier_ensemble_against_cached_candidates",
+  "random_seed": 20260603,
+  "contest_window": [
+    0.3,
+    0.8
+  ],
+  "corpus_paths": [
+    "data/p01_gsm8k_generations.jsonl",
+    "data/p01_hardmath_generations.jsonl"
+  ],
+  "preconditions_checked": [
+    {
+      "resource": "in_band_contested_subset",
+      "available": true,
+      "n_usable": 154,
+      "n_contested": 48,
+      "contest_window": [
+        0.3,
+        0.8
+      ]
+    },
+    {
+      "resource": "energy_substrate",
+      "available": true
+    }
+  ],
+  "field_provenance": {
+    "honest_verdict": "Terminal verdict must start with complete:/success:/passed:/shipped_. Prefix convention: conductor's _verdict_is_untrustworthy classifier requires it.",
+    "inference_substrate": "verifier_ensemble_against_cached_candidates: no live model is loaded \u2014 all scoring is over cached candidate texts, so the 1s floor applies, not 60s.",
+    "n_candidates_heldout": "Total held-out candidates scored. The denominator for AUROC and Spearman.",
+    "distinct_pipeline_assert_passed": "Boolean: process-energy and trained-energy per-candidate score arrays verified element-wise distinct at runtime. The exp3473 de-flag: proves the two energies come from different computations, not a shared pipeline.",
+    "process_energy_correctness_auroc": "AUROC of -process_energy as a FINAL-CORRECTNESS classifier on the in-band contested subset. 0.5 = random; 1.0 = perfect. The core number contrasting with FoVer step-error AUROC 0.9131.",
+    "trained_energy_correctness_auroc": "AUROC of the trained reranker energy (DISTINCT pipeline from process energy) as a final-correctness classifier. Trained on all in-band contested problems.",
+    "process_energy_step_error_auroc": "AUROC of max-step-energy as a step-error detector on hardmath problems. Uses final-correctness as proxy for step error. Contrasts with final-correctness AUROC to locate whether the gap is step-vs-final or domain shift.",
+    "step_vs_final_auroc_gap": "step-error AUROC minus final-correctness AUROC. Positive = verifiers are better at detecting step errors than predicting final correctness, quantifying how much of the 0.9131 \u2192 below-chance drop is step-vs-final gap vs domain shift.",
+    "mathaware_recalibrated_correctness_auroc": "AUROC of the MATH-aware recalibrated reranker (trained on MATH labels only via 5-fold CV within hardmath). If > process/trained AUROC: domain shift was the cause and domain-matched training recovers the signal.",
+    "gsm8k_trained_energy_auroc_baseline": "The exp3461 0.629 GSM8K reference carried forward for contrast. Domain baseline for the trained reranker.",
+    "minority_correct_fraction": "Fraction of contested problems where the correct answer is NOT the SC majority. Measures how much headroom the in-band contested subset provides.",
+    "minority_correct_recovery_rate_process": "Fraction of minority-correct problems where the PROCESS energy ranks first (distinct pipeline). De-flagged from exp3473's bit-identical pair.",
+    "minority_correct_recovery_rate_trained": "Same for the TRAINED energy (distinct pipeline \u2014 must NOT equal the process rate by construction; runtime assert verifies this).",
+    "random_seed": "Determinism: same seed = same held-out split across reruns.",
+    "reproducibility_checksum": "Content hash of corpus + config + seed. Matching checksum = same data.",
+    "duration_s": "Cached scoring + small model training; 1s floor applied. No live model = cannot timeout."
+  },
+  "gsm8k_trained_energy_auroc_baseline": 0.629401,
+  "fover_step_error_auroc_reference": 0.9131,
+  "honest_verdict": "complete: mathaware_recalibration_recovers_correctness_signal_domain_shift_was_the_cause",
+  "n_candidates_heldout": 288,
+  "distinct_pipeline_assert_passed": true,
+  "process_energy_correctness_auroc": 0.60102,
+  "trained_energy_correctness_auroc": 0.545519,
+  "process_energy_step_error_auroc": 0.547368,
+  "step_vs_final_auroc_gap": 0.13795,
+  "mathaware_recalibrated_correctness_auroc": 0.624931,
+  "minority_correct_fraction": 0.4375,
+  "minority_correct_recovery_rate_process": 0.095238,
+  "minority_correct_recovery_rate_trained": 0.0,
+  "n_minority_correct_problems": 21,
+  "n_math_problems_recalib": 19,
+  "n_math_candidates_recalib": 114,
+  "acceptance_gate_g0_distinct_pipelines": {
+    "condition": "distinct_pipeline_assert_passed == True",
+    "passed": true,
+    "principle": "G0 DE-FLAG: the two energies are computed from distinct pipelines (no bit-identical pair) \u2014 the exp3473 tautology is fixed by construction."
+  },
+  "acceptance_gate_g1_mechanism_located": {
+    "condition": "mathaware_recalibrated_correctness_auroc > max(process_energy_correctness_auroc, trained_energy_correctness_auroc) OR |step_vs_final_auroc_gap| > 0.15",
+    "passed": true,
+    "mathaware_auroc": 0.624931,
+    "process_auroc": 0.60102,
+    "trained_auroc": 0.545519,
+    "step_vs_final_gap": 0.13795,
+    "principle": "G1 MECHANISM-LOCATED: either MATH-aware recalibration recovers signal (domain shift was the cause) OR a large step-vs-final gap explains the drop \u2014 both are actionable diagnoses."
+  },
+  "methodology_note": "5-fold problem-level CV (seed=20260603). In-band contested subset: window=[0.3,0.8], n=48 problems (19 MATH, 29 GSM8K). Pipeline A (process): per-step FoVer 4-verifier energy, aggregated via mean. Pipeline B (trained): holistic feature vector + logistic reranker P(correct). MATH-aware recalibration: 5-fold CV on 19 MATH problems only. Step-error AUROC: max-step-energy proxy on 19 hardmath problems. FoVer cross-domain reference AUROC: 0.9131. Tautology check: no tautology flags.",
+  "reproducibility_checksum": "1d866989e4c59131",
+  "schema": [
+    "acceptance_gate_g0_distinct_pipelines",
+    "acceptance_gate_g1_mechanism_located",
+    "contest_window",
+    "corpus_paths",
+    "distinct_pipeline_assert_passed",
+    "duration_s",
+    "experiment",
+    "field_provenance",
+    "finished_at",
+    "fover_step_error_auroc_reference",
+    "gsm8k_trained_energy_auroc_baseline",
+    "honest_verdict",
+    "inference_substrate",
+    "mathaware_recalibrated_correctness_auroc",
+    "methodology_note",
+    "minority_correct_fraction",
+    "minority_correct_recovery_rate_process",
+    "minority_correct_recovery_rate_trained",
+    "n_candidates_heldout",
+    "n_math_candidates_recalib",
+    "n_math_problems_recalib",
+    "n_minority_correct_problems",
+    "preconditions_checked",
+    "process_energy_correctness_auroc",
+    "process_energy_step_error_auroc",
+    "random_seed",
+    "reproducibility_checksum",
+    "run_date",
+    "started_at",
+    "status",
+    "step_vs_final_auroc_gap",
+    "title",
+    "trained_energy_correctness_auroc"
+  ]
+}

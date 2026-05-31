@@ -175,12 +175,20 @@ def self_consistency_accuracy(records: list[dict[str, Any]]) -> float:
         answers = rec.get("sampled_answers") or []
         if not answers or gold is None:
             continue
-        # Majority vote: count normalized answers and find the most common.
-        counts: dict[str | None, int] = {}
+        # Majority vote: count parseable (non-None) normalized answers only.
+        # None entries represent samples where the model produced no \boxed{}
+        # answer; including them in the vote would let a high null-extraction
+        # rate suppress a genuine majority of correct answers (e.g. 4×None
+        # vs 2×correct → None wins, SC = 0 incorrectly).
+        counts: dict[str, int] = {}
         for a in answers:
-            counts[a] = counts.get(a, 0) + 1
+            if a is not None:
+                counts[a] = counts.get(a, 0) + 1
+        if not counts:
+            # All samples failed to produce a parseable answer — counts as wrong.
+            continue
         majority = max(counts, key=lambda k: counts[k])
-        if majority is not None and normalize_answer(majority) == normalize_answer(gold):
+        if normalize_answer(majority) == normalize_answer(gold):
             correct += 1
     return correct / len(records)
 

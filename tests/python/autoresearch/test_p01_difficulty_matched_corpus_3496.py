@@ -258,8 +258,34 @@ def test_self_consistency_accuracy_empty_sampled_answers():
         {"sampled_answers": [], "gold_answer_norm": "3"},      # empty answers
         {"sampled_answers": ["3", "3"], "gold_answer_norm": "3"},  # correct
     ]
-    # Only the second record contributes; SC = 1/2 (only 1 of 2 has majority)
-    # But the empty-answer record uses the continue branch so count = 1/2 = 0.5
-    # Wait: len(records) = 2, correct count = 1 -> 0.5
     result = helpers.self_consistency_accuracy(records)
     assert result == 0.5
+
+
+def test_self_consistency_accuracy_none_entries_not_counted_as_votes():
+    # REQ-AR-050 / SCENARIO-AR-050-02: None entries must be filtered BEFORE
+    # the majority vote, not treated as a valid answer option.
+    # Bug scenario: [None, "3", None, "3", None, None] → 4×None vs 2×"3".
+    # Without the fix, None wins the vote and SC = 0 even though "3" is the
+    # only parseable answer and matches the gold.
+    records = [
+        {
+            "sampled_answers": [None, "3", None, "3", None, None],
+            "gold_answer_norm": "3",
+        },
+    ]
+    # "3" is the only non-None answer and matches gold → SC = 1.0
+    assert helpers.self_consistency_accuracy(records) == 1.0
+
+
+def test_self_consistency_accuracy_all_none_counts_as_wrong():
+    # REQ-AR-050: a problem where ALL samples are None has no parseable
+    # majority → treated as incorrect (no credit, continue branch).
+    records = [
+        {"sampled_answers": [None, None, None], "gold_answer_norm": "3"},
+        {"sampled_answers": ["3", "3"], "gold_answer_norm": "3"},  # correct
+    ]
+    # First record: all None → counts as wrong (no majority, continue).
+    # Second record: majority "3" == gold → correct.
+    # SC = 1 correct / 2 records = 0.5
+    assert helpers.self_consistency_accuracy(records) == 0.5
