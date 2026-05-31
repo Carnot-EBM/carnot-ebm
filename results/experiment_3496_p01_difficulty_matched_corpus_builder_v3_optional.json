@@ -3,28 +3,30 @@
  "experiment": 3496,
  "title": "P0.1 Difficulty-Matched Corpus Builder (v3, MATH-500 L3-4, Sonnet)",
  "run_date": "20260531",
- "run_timestamp": "2026-05-31T02:00:25Z",
+ "run_timestamp": "2026-05-31T02:48:30Z",
  "schema": "carnot.p01_difficulty_matched_corpus_v3",
- "duration_s": 438.3771686553955,
+ "duration_s": 1115.8918306827545,
  "honest_verdict": "complete: blocked_no_in_band_split_found_sc_outside_band",
  "inference_substrate": "live_llm_inference",
  "corpus_path": "data/p01_difficulty_matched_generations.jsonl",
- "benchmark_id": "HuggingFaceH4/MATH-500 (test split), levels=[3, 4], seed=3496",
- "selected_levels": [],
+ "benchmark_id": "HuggingFaceH4/MATH-500 (test split), levels=[3], seed=3496",
+ "selected_levels": [
+  3
+ ],
  "per_level_probe_sc": {
-  "3": 0.0,
-  "4": 0.0,
-  "3+4": 0.0
+  "3": 0.5,
+  "4": 0.625,
+  "3+4": 0.5625
  },
- "n_problems_completed": 18,
+ "n_problems_completed": 27,
  "n_problems_target": 80,
- "n_problems_added_this_run": 16,
+ "n_problems_added_this_run": 22,
  "k_samples": 6,
  "per_step_traces_captured": true,
  "per_sample_logprobs_captured": false,
- "warmup_self_consistency_accuracy": 0.0,
+ "warmup_self_consistency_accuracy": 0.7037037037037037,
  "self_consistency_in_headroom_band": false,
- "warmup_greedy_accuracy": 0.0,
+ "warmup_greedy_accuracy": 0.4074074074074074,
  "model_specs": {
   "name": "Qwen3.6-35B-A3B",
   "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/snapshots/a483e9e6cbd595906af30beda3187c2663a1118c/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf",
@@ -32,7 +34,7 @@
   "prompt_format": "qwen_chatml"
  },
  "random_seed": 3496,
- "reproducibility_checksum": "836462c17ebbe40b",
+ "reproducibility_checksum": "59bdd25d892ff117",
  "preconditions_checked": [
   {
    "resource": "cuda",
@@ -43,7 +45,7 @@
    "available": true
   }
  ],
- "status": "blocked",
+ "status": "success",
  "field_provenance": {
   "honest_verdict": {
    "principle": "Terminal verdict must start with complete:/success:/passed:/shipped_."

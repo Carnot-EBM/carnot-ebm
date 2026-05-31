@@ -10063,3 +10063,50 @@ episodes that can be loaded, keeps `controller_memory_only=true`,
 **Given** a set of model outputs
 **When** latent energy spills are detected
 **Then** the constraint templates are updated weighted by the spill values, correctly computing adaptation and retention scores.
+
+## REQ-FR11-BML-001: Beta-Min Lambda-Min Decision-Covariance Measurement
+
+The system MUST compute the k×k binary decision covariance matrix Sigma from at least
+3 grounding configurations (varying ACTIVE_WEIGHT) on the cached trace corpus,
+yielding lambda_min(Sigma), effective_k (participation ratio), and pairwise_max_correlation
+per configuration.
+
+**Implementation status:** In progress (exp3498).
+**Spec traces:** REQ-FR11-BML-001
+
+## REQ-FR11-BML-002: Beta-Min Sweep per Grounding Configuration
+
+For each grounding configuration defined by REQ-FR11-BML-001, the system MUST sweep
+entropy beta in {0, 0.1, 0.25, 0.5} on the FR-11 self-improvement loop at N>=200
+iterations, identifying the minimal-sufficient entropy beta that prevents mode-collapse.
+
+**Implementation status:** In progress (exp3498).
+**Spec traces:** REQ-FR11-BML-002
+
+## REQ-FR11-BML-003: Predictive Law beta_min ~ f(lambda_min)
+
+The system MUST fit a predictive law beta_min ~ f(lambda_min) across >=3 grounding
+configurations and validate it via leave-one-config-out cross-validation. A valid
+law enables the Phase-5 deployment formula: measure lambda_min(Sigma), set
+beta >= f(lambda_min) with safety margin.
+
+**Implementation status:** In progress (exp3498).
+**Spec traces:** REQ-FR11-BML-003
+
+### SCENARIO-FR11-BML-001: At-Risk Config Requires Higher Beta
+
+**Given** a grounding configuration with low lambda_min (high null-space dominance)
+**When** the beta sweep is run at N=200
+**Then** the minimal sufficient beta is higher than for a well-grounded configuration
+
+### SCENARIO-FR11-BML-002: Law Holds Out-of-Sample
+
+**Given** a predictive law fitted on 3 grounding configurations
+**When** the law is applied to a held-out 4th configuration
+**Then** the predicted beta_min is within 0.15 of the actual beta_min
+
+### SCENARIO-FR11-BML-003: Gaming Signal Confirmed at Beta=0
+
+**Given** any grounding configuration at beta=0
+**When** the FR-11 self-improvement loop runs for N=200 iterations
+**Then** verifier pass_rate >> true_accuracy (gaming confirmed from distinct sources)
