@@ -7205,3 +7205,4 @@ web search: https://docs.garak.ai/garak/examples/pr |
 | 2026-05-31 03:20 UTC | FoVer G2 — clean-room regression-verify the self-c | OK | 81 passed in 3.93s |
 | 2026-05-31 03:25 UTC | KV260 terminal board-level latency transcript (dri | OK | 81 passed in 4.06s |
 | 2026-05-31 03:31 UTC | PolarFire opportunistic reachability + continuity  | OK | 81 passed in 3.56s |
+| 2026-05-31 03:40 UTC | G1-G4 gate-status synthesis v322 (UNGATED, cascade | FLAGGED | adversarial_verify CRITICAL: TAUTOLOGY — result quarantined, not a clean success |
