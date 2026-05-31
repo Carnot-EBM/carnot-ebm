@@ -7259,3 +7259,4 @@ web search: https://docs.garak.ai/garak/examples/pr |
 | 2026-05-31 12:32 UTC | P0.1 Route 2 SELECTABLE-HEADROOM NL-math corpus bu | OK | cache hit: 106 passed in 3.65s |
 | 2026-05-31 12:44 UTC | P0.1 Route 2 energy/step-aggregation-vs-SC on the  | OK | 81 passed in 3.18s |
 | 2026-05-31 12:57 UTC | Promote the step->final aggregation positive — rep | OK | 81 passed in 5.41s |
+| 2026-05-31 13:09 UTC | FR-11 DEPLOY the conservative-default self-learnin | OK | 81 passed in 4.84s |
