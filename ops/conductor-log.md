@@ -7338,3 +7338,5 @@ web search: https://docs.garak.ai/garak/examples/pr |
 | 2026-05-31 22:57 UTC | FR-11 continuous self-learning — conservative-defa | OK | 83 passed in 4.59s |
 | 2026-05-31 23:02 UTC | G1-G4 gate-status synthesis v329 (paper_ready=true | OK | 82 passed in 3.61s |
 | 2026-05-31 23:10 UTC | Capstone v329 — does the verifier ensemble's value | OK | 82 passed in 3.47s |
+| 2026-05-31 23:38 UTC | Plan milestone 2026.05.330 | OK | 14 tasks proposed |
+| 2026-05-31 23:40 UTC | Milestone 2026.05.330 activated | OK | 14 tasks queued |
