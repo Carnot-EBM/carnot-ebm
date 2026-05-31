@@ -1,0 +1,63 @@
+{
+  "experiment": 3519,
+  "run_date": "2026-05-31T09:08:39.052882+00:00",
+  "honest_verdict": "complete: energy_makes_distinct_selections_but_does_not_beat_self_consistency_in_band",
+  "inference_substrate": "verifier_ensemble_against_cached_candidates",
+  "collapse_root_cause": "The v9 reranker collapsed because the SC majority-vote indicator was included as a feature (collinear with the target, dominates L2 regression), compounded by absent StandardScaler (binary indicator vs float energy at incompatible scales causes disproportionate L2 shrinkage on energy weights) and over-regularization (C=1.0 with scale mismatch drives all lambdas to zero).",
+  "reranker_makes_distinct_selections": true,
+  "level3_n": 80,
+  "self_consistency_accuracy": 0.5,
+  "greedy_accuracy": 0.375,
+  "self_certainty_bon_accuracy": 0.5,
+  "process_energy_argmin_accuracy": 0.25,
+  "trained_energy_vote_accuracy": 0.475,
+  "sc_energy_hybrid_accuracy": 0.5,
+  "optimal_aggregation_accuracy": 0.475,
+  "flip_count_trained_vs_sc": 2,
+  "flip_count_process_vs_sc": 24,
+  "flip_count_optimal_vs_sc": 2,
+  "flips_correct_optimal": 0,
+  "flips_incorrect_optimal": 2,
+  "net_correctness_gain_optimal": -2,
+  "delta_optimal_vs_self_consistency": -0.025,
+  "paired_significance": {
+    "mcnemar_p": 0.5,
+    "bootstrap_ci95": [
+      -0.0625,
+      0.0
+    ]
+  },
+  "random_seed": 2052263087,
+  "reproducibility_checksum": "d7a94ded06b18d99",
+  "duration_s": 0.935,
+  "preconditions_checked": [
+    {
+      "resource": "level3_corpus_file",
+      "available": true
+    },
+    {
+      "resource": "level3_corpus_size",
+      "available": true,
+      "level3_n": 80,
+      "min_required": 40
+    },
+    {
+      "resource": "sklearn",
+      "available": true
+    },
+    {
+      "resource": "sc_in_headroom_band",
+      "available": true,
+      "sc_accuracy": 0.5,
+      "headroom_band": [
+        0.4,
+        0.8
+      ]
+    }
+  ],
+  "acceptance_gates": {
+    "G0_nondegeneracy": true,
+    "G1_energy_beats_sc": false
+  },
+  "n_folds_used": 5
+}
