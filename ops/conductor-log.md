@@ -7332,3 +7332,4 @@ web search: https://docs.garak.ai/garak/examples/pr |
 | 2026-05-31 22:23 UTC | Verifier ensemble vs FACTUAL HALLUCINATIONS — erro | FLAGGED | adversarial_verify CRITICAL: TAUTOLOGY — result quarantined, not a clean success |
 | 2026-05-31 22:28 UTC | Discriminating value — does the ensemble catch err | OK | 86 passed in 3.82s |
 | 2026-05-31 22:35 UTC | Cross-domain generalization SYNTHESIS — does verif | OK | 82 passed in 3.97s |
+| 2026-05-31 22:41 UTC | KV260 SSH-reachability continuity (per Hardware-Ta | OK | 89 passed in 3.78s |
