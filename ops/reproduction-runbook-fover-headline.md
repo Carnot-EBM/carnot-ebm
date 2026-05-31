@@ -248,3 +248,15 @@ lands in [0.9027, 0.9235] AND learning_contribution mean in [0.0125, 0.0245].
 G2 is still NOT closed by building + verifying this package — closure
 requires an actual external/CI run by a non-operator. Artifact:
 `results/experiment_3476_fover_g2_self_contained_external_package_v1.json`.
+
+## Clean-room regression verify + external ask (exp3488, 2026-05-30)
+
+The self-contained package was re-run from an environment isolated from the working repo to catch any drift since it was built (.320):
+
+- Isolation method: `isolated_dir`
+- Reproduced condition-A mean AUROC: `0.9131` (within published CI [0.9027, 0.9235]: True)
+- Package sha256: `521ecbc3adfa42bce839d16cdcb48cf552e267fc9a8bc69f86068b92a937e6be` (re-verified against recorded checksum: True)
+- IPFS CID: `QmcoN4zKfAT7GPpokzM31acbE4RBkntfPjhXoEun2NMo9c`
+- Lowest-friction external ask prepared (committed to the working tree, NOT pushed/triggered): `.github/workflows/fover-g2-repro.yml`, `docs/g2-reproducer-invite.md`, `ops/g2-external-ask-operator-checklist.md`.
+
+G2 remains UNMET. Closure requires a confirmed non-operator external/CI run (Operator-Only External Publication). Artifact: `results/experiment_3488_fover_g2_clean_room_regression_verify_external_ask_v1.json`.

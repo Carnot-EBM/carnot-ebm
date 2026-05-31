@@ -1,0 +1,40 @@
+# FoVer G2 one-click reproduction (publication gate G2).
+#
+# G2 (independent reproduction) is the SOLE remaining blocker to
+# paper_ready (ops/north-star.md §2). This workflow is the lowest-friction
+# external ask: a clean ubuntu-latest runner (NOT the operator's box) does
+# a fresh `pip install -e .` and recomputes the FoVer headline AUROC from
+# the committed corpus, asserting the numbers land inside their published
+# confidence intervals. A green run on GitHub-hosted infrastructure is
+# independent, non-operator evidence that the headline reproduces.
+#
+# To close G2: Actions tab -> 'FoVer G2 One-Click Reproduction' ->
+# 'Run workflow'. CPU-only and cheap (verifier ensemble scoring a labeled
+# corpus, NOT live LLM generation; no GPU, no 35B model, no HF creds).
+name: FoVer G2 One-Click Reproduction
+
+on:
+  workflow_dispatch:
+
+jobs:
+  reproduce:
+    name: Recompute FoVer headline AUROC on a clean runner
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install Carnot-EBM (fresh, CPU-only)
+        run: pip install -e .
+
+      # Exits non-zero (failing the job) unless condition-A mean AUROC is in
+      # [0.9027, 0.9235] AND learning_contribution mean in [0.0125, 0.0245].
+      - name: Reproduce FoVer headline and assert published CIs
+        env:
+          JAX_PLATFORMS: cpu
+        run: python3 scripts/reproduce_fover_headline.py

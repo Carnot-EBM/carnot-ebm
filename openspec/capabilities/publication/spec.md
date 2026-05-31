@@ -1361,6 +1361,78 @@ AND reports `g2_status == "package_built_verification_unavailable"` with
 `package_verified_reproduces == false`
 AND never sets `g2_independent_reproducer == true`.
 
+### REQ-PUBLISH-039: Exp 3488 FoVer G2 Clean-Room Regression Verify + Lowest-Friction External Ask
+
+The Exp 3488 G2 regression verifier MUST re-run the self-contained reproduction
+package built by Exp 3476 from an environment isolated from the working repo,
+confirm it still lands condition-A mean AUROC inside the published CI, re-verify
+the package's content integrity, and prepare the lowest-friction external ask —
+all WITHOUT itself claiming gate G2 is met.
+
+It MUST check preconditions first: the package `dist/g2-fover-repro.tar.gz` MUST
+be present (or rebuildable from Exp 3476's builder); if absent and not
+rebuildable it MUST report `blocked_g2_package_unavailable`. An isolated runner
+(a fresh `python -m venv`, or a temp directory unpacked from the tarball and run
+outside the working repo) MUST be constructible; if not it MUST report
+`blocked_fresh_env_unavailable`.
+
+It MUST extract the on-disk tarball into a temporary directory OUTSIDE the
+working repo, run the package's single reproduce command in an isolated
+environment (a fresh venv when one can be built, otherwise the unpacked temp
+directory run with the package source on the path — never the working repo's
+import path), and capture the reproduced condition-A AUROC and its CI band. The
+REGRESSION GATE is `package_auroc_within_ci`: the reproduced condition-A mean
+AUROC MUST land inside `[0.9027, 0.9235]`. It MUST re-compute the tarball sha256
+and compare it to the sha256 recorded by Exp 3476; `package_sha256_verified` is
+true only on an exact match. It MUST record the IPFS CID when a node is
+available (decentralization rule 3) and MUST NOT fail when IPFS is absent.
+
+It MUST author the lowest-friction external ask as files in the working tree
+ONLY (never pushed, never triggered): a public `workflow_dispatch` reproduction
+workflow (`.github/workflows/fover-g2-repro.yml`) an external party can one-click
+run, a one-paragraph reproducer invite (`docs/g2-reproducer-invite.md`), and an
+operator checklist (`ops/g2-external-ask-operator-checklist.md`) whose terminal
+step is the single operator action (clicking "Run workflow" / sending the
+invite). It MUST append (never delete) the regression result to
+`ops/reproduction-runbook-fover-headline.md`.
+
+It MUST NOT edit operator-curated docs (`ops/north-star.md`, `docs/index.html`,
+`README.md`), MUST NOT push, MUST NOT trigger external CI, MUST NOT set
+`g2_met=true` / `g2_independent_reproducer=true` (only an actual external/CI run
+by a non-operator may flip those — Operator-Only External Publication), and MUST
+NOT modify `scripts/research_conductor.py`. It MUST write
+`results/experiment_3488_fover_g2_clean_room_regression_verify_external_ask_v1.json`
+with `honest_verdict` (terminal `complete:` prefix),
+`inference_substrate="verifier_ensemble_against_cached_candidates"`,
+`package_reproduced_auroc`, `package_auroc_within_ci`, `package_sha256_verified`,
+`package_cid`, `external_ask_workflow_path`, `operator_checklist_path`,
+`g2_met` (always false), `external_run_pending` (true), `random_seed`,
+`reproducibility_checksum`, and `duration_s`.
+
+### SCENARIO-PUBLISH-039: Package Regression-Clean And External Ask Ready
+
+**Given** the Exp 3476 package `dist/g2-fover-repro.tar.gz` is present and an
+isolated runner is constructible
+**When** the Exp 3488 regression verifier runs
+**Then** it re-runs the package from a temp directory outside the working repo
+and the reproduced condition-A mean AUROC lands in `[0.9027, 0.9235]`
+(`package_auroc_within_ci == true`)
+AND the tarball sha256 matches Exp 3476's recorded checksum
+(`package_sha256_verified == true`)
+AND it writes the `workflow_dispatch` workflow, reproducer invite, and operator
+checklist to the working tree (`external_ask_workflow_path != null` and
+`operator_checklist_path != null`)
+AND writes the Exp 3488 JSON artifact with a `complete:` verdict, `g2_met == false`,
+and `external_run_pending == true`.
+
+### SCENARIO-PUBLISH-039B: Missing Package Reports Blocked
+
+**Given** the Exp 3476 package is absent and cannot be rebuilt
+**When** the Exp 3488 regression verifier runs
+**Then** it reports `honest_verdict` starting with
+`complete: blocked_g2_package_unavailable`
+AND never sets `g2_met == true`.
+
 
 ## Implementation Status
 
@@ -1400,6 +1472,7 @@ AND never sets `g2_independent_reproducer == true`.
 | REQ-PUBLISH-036 | Implemented | Exp 3451 FoVer G2 CI workflow + Docker clean-room |
 | REQ-PUBLISH-037 | Implemented | Exp 3463 FoVer G2 CI dry-run + external-reproducer handoff |
 | REQ-PUBLISH-038 | Implemented | Exp 3476 FoVer G2 self-contained external reproduction package |
+| REQ-PUBLISH-039 | Implemented | Exp 3488 FoVer G2 clean-room regression verify + lowest-friction external ask |
 
 ### REQ-PUBLISH-026: HuggingFace Publish Retry
 The experiment 1750 huggingface retry runner MUST attempt to upload the smallest model in models/ with a no-emoji model card. If credentials pass, it MUST upload and record hf_upload_succeeded = True. If blocked, it MUST emit an honest verdict of "blocked_credentials".
