@@ -7226,3 +7226,4 @@ web search: https://docs.garak.ai/garak/examples/pr |
 | 2026-05-31 07:20 UTC | Milestone 2026.05.324 activated | OK | 12 tasks queued |
 | 2026-05-31 07:34 UTC | Archive milestone .323 honestly and activate .324 | OK | 81 passed in 5.59s |
 | 2026-05-31 07:57 UTC | P0.1 OPTIONAL (non-blocking) — extend the LEVEL-3  | FAIL | Claude Code error: Wall-clock+idle timeout after 1201s (1201s silence). Last ou |
+| 2026-05-31 08:03 UTC | P0.1 OPTIONAL (non-blocking) — extend the LEVEL-3  | FLAGGED | adversarial_verify CRITICAL: TAUTOLOGY, DURATION_TOO_SHORT — result quarantined, |
