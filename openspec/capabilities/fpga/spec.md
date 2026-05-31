@@ -3902,3 +3902,29 @@ It MUST output `results/experiment_3578_polarfire_continuity_v16.json` with fiel
 **Then:** If the check fails, it produces a verdict `complete: blocked_polarfire_ssh_timeout`. If it succeeds, it produces `complete: polarfire_continuity_confirmed_reachable`.
 
 **Implementation status:** Implemented (Exp 3578)
+
+---
+
+### REQ-HW-3579
+
+**Title:** GateMate continuity audit recorded flash smoke host-IO hang known-blocker
+
+**Description:**
+GateMate visibility each milestone, but the flash/smoke host-IO script hangs (known-issues). Documentation / reachability audit only — do NOT run the hanging flash/smoke path.
+PRECONDITIONS (step 0): `openFPGALoader -c dirtyJtag --detect`. If it hangs/fails, record the known-issue state honestly and STOP.
+REQUIRED ARTIFACT FIELDS (principle-annotated): honest_verdict (terminal prefix), inference_substrate=hardware_smoke, gatemate_idcode_detected (bool or null), known_blocker (string), random_seed, reproducibility_checksum, duration_s.
+TERMINAL VERDICT: "complete: gatemate_continuity_audit_recorded_flash_smoke_host_io_hang_known_blocker"
+
+**Implementation status:** Implemented (Exp 3579)
+
+---
+
+### SCENARIO-HW-3579
+
+**Scenario:** GateMate continuity is audited via detect without running hanging host-IO path.
+
+**Given:** A GateMate continuity audit is required.
+**When:** The script checks `openFPGALoader -c dirtyJtag --detect` and avoids hanging paths.
+**Then:** It writes `results/experiment_3579_gatemate_continuity_audit_v16.json` with the required artifact fields.
+
+**Implementation status:** Implemented (Exp 3579)
