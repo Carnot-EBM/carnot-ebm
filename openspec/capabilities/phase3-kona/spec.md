@@ -3002,3 +3002,42 @@ level-3 usable problems
 **When** the experiment runs step 0
 **Then** it writes complete: blocked_no_level3_corpus or
 complete: blocked_level3_corpus_too_small_n=NN and exits without scoring.
+
+### REQ-KONA-3516: P0.1 Level-3 Corpus Extend to N>=80 (v5, optional)
+
+**Origin:** exp3506 (.323) left data/p01_difficulty_matched_generations.jsonl with 49
+level-3 problems (SC=0.653, in band).  n>=80 makes exp3519 headline-eligible.  This
+requirement governs the v5 optional builder that resumes from n=49 toward n>=80.
+
+**Requirement:** Resume from the existing 49 level-3 rows, generate only NEW level-3
+problems toward n>=80, append per problem, print flushed progress per problem, and stop
+cleanly at 18-minute wall budget.  Use a content-derived random seed (NOT the experiment
+number).  Emit one of the terminal complete: verdicts.
+
+**Acceptance gates:**
+- G1 (IN-BAND): level3_sc in [0.40, 0.70]  (OR honest blocked_ if preconditions fail)
+- G2 (SEED-NOT-EXP-ID): RANDOM_SEED != EXP_ID (no tautology seed)
+
+### SCENARIO-KONA-3516: Three-Band Terminal Verdict for Level-3 Corpus Extension v5
+
+**Given** the level-3 corpus after a v5 run
+**When** classify_verdict_v5(n, in_band, sc) is called
+**Then** n>=80 and in-band -> complete: p01_level3_corpus_headline_eligible_n=N_sc=S;
+40<=n<80 and in-band -> complete: p01_level3_corpus_scorable_partial_n=N_resume_next_milestone;
+n<40 and in-band -> complete: p01_level3_corpus_partial_n=N_resume_next_milestone;
+in_band=False -> complete: blocked_level3_sc_outside_headroom_band.
+
+### SCENARIO-KONA-3516-TERMINAL-PREFIX: Every Verdict Starts With complete:
+
+**Given** any (n, in_band, sc) combination
+**When** classify_verdict_v5 is called
+**Then** the returned string always starts with ``complete:`` per Verdict Terminal-Prefix
+Discipline — no partial-token substring (blocked/marginal/no_improvement) at the front.
+
+### SCENARIO-KONA-3516-SEED: Content-Derived Seed is Not the Experiment Number
+
+**Given** the v5 script constants
+**When** RANDOM_SEED is compared to EXP_ID
+**Then** RANDOM_SEED != EXP_ID, ensuring the seed was computed from benchmark content
+rather than copied from the experiment number (the tautology seed anti-pattern that
+triggers GATE_PASSED_WITHOUT_DATA in adversarial_verify.py).
