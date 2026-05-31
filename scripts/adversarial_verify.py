@@ -232,6 +232,132 @@ def _is_integer_value(v: float) -> bool:
     return float(v).is_integer()
 
 
+_IDENTIFIER_FIELDS = frozenset(
+    {
+        "experiment", "experiment_id", "exp_id", "id", "run_id", "task_id",
+        "random_seed", "seed", "rng_seed", "torch_seed", "np_seed", "jax_seed",
+        "milestone", "milestone_id", "schema_version", "version",
+        "pid", "port", "gpu_id", "device_id", "rank", "world_size",
+    }
+)
+
+
+def _is_identifier_field(k: str) -> bool:
+    """True if the field is an identifier / seed / metadata field, not a
+    measured metric. Identifiers legitimately coincide (e.g. random_seed ==
+    experiment_id) and must be excluded from tautology comparison."""
+    kl = k.lower()
+    if kl in _IDENTIFIER_FIELDS:
+        return True
+    return kl.endswith("_seed") or kl.endswith("_id") or kl.endswith("_seed_used")
+
+
+def check_false_negative_risk(d: dict[str, Any], flags: list[Flag]) -> None:
+    """Detect NULL/negative claims that lack a valid positive control or that
+    rest on a degenerate (un-exercised) method — the false-negative trap.
+
+    Origin: exp3507 reported the process-energy reranker "does not beat
+    self-consistency" (a null claim) while flip_count==0 — the reranker never
+    actually changed a single selection, so the corpus had no headroom for the
+    method to act on. A null claim from a method that was never exercised is
+    not evidence the method fails; it's evidence the TEST was degenerate.
+
+    Three independent risk signals (any one fires a warn; we never auto-pass a
+    null claim that lacks a demonstrated positive control):
+
+      1. NON-DEGENERACY: a `*flip*count*` / `*n_changed*` field == 0 means the
+         method under test produced identical output to the baseline — the
+         experiment cannot distinguish "method fails" from "no headroom."
+      2. POSITIVE CONTROL / ORACLE: if an oracle/optimal upper bound is present
+         and it does NOT exceed the baseline, the corpus has no selectable
+         headroom; no method could win, so the null is uninformative.
+      3. EXPLICIT G2-STYLE GATE: a `*non_degenerate*` / `*g2*` acceptance gate
+         recorded as False is the experiment self-reporting its own degeneracy.
+    """
+    verdict_raw = d.get("honest_verdict") or ""
+    verdict = (verdict_raw if isinstance(verdict_raw, str) else "").lower()
+    null_markers = (
+        "no_improvement", "does_not", "doesnt", "no_delta", "no_gain",
+        "not_beat", "no_beat", "no_effect", "refuted", "null_result",
+        "no_lift", "no_advantage", "no_benefit", "fails_to_beat",
+        "not_better", "no_headroom",
+    )
+    is_null_claim = any(m in verdict for m in null_markers)
+    if not is_null_claim:
+        return
+
+    # Signal 1: degenerate non-exercise (flip/change count == 0)
+    for k, v in d.items():
+        kl = k.lower()
+        if not _is_finite_number(v):
+            continue
+        if ("flip" in kl and "count" in kl) or kl.startswith("n_changed") or (
+            "n_flips" in kl
+        ):
+            if float(v) == 0.0:
+                flags.append(
+                    Flag(
+                        kind="FALSE_NEGATIVE_RISK",
+                        severity="warn",
+                        detail=(
+                            f"Null claim ({verdict[:48]!r}) but {k}=0: the "
+                            f"method never changed any selection. Cannot "
+                            f"distinguish 'method fails' from 'no headroom'. "
+                            f"Re-run on a corpus where {k}>0 (positive control) "
+                            f"before treating this as evidence the method fails."
+                        ),
+                    )
+                )
+
+    # Signal 2: oracle/optimal upper bound does not exceed baseline
+    oracle = None
+    baseline = None
+    for k, v in d.items():
+        if not _is_finite_number(v):
+            continue
+        kl = k.lower()
+        if oracle is None and any(
+            s in kl for s in ("oracle", "optimal", "upper_bound", "best_possible")
+        ) and any(s in kl for s in ("acc", "rate", "solve", "score")):
+            oracle = float(v)
+        if baseline is None and any(
+            s in kl for s in ("self_consistency", "baseline", "majority")
+        ) and any(s in kl for s in ("acc", "rate", "solve", "score")):
+            baseline = float(v)
+    if oracle is not None and baseline is not None and oracle <= baseline:
+        flags.append(
+            Flag(
+                kind="FALSE_NEGATIVE_RISK",
+                severity="warn",
+                detail=(
+                    f"Null claim but oracle/optimal upper bound ({oracle}) does "
+                    f"not exceed the baseline ({baseline}): the corpus has no "
+                    f"selectable headroom, so NO method could win here. The null "
+                    f"is uninformative about the method. Build a difficulty-"
+                    f"matched corpus with oracle>baseline before re-testing."
+                ),
+            )
+        )
+
+    # Signal 3: an explicit non-degeneracy / G2 gate self-reported False
+    for k, v in d.items():
+        kl = k.lower()
+        if isinstance(v, bool) and v is False and (
+            "non_degenerate" in kl or "g2" in kl or "headroom" in kl
+        ):
+            flags.append(
+                Flag(
+                    kind="FALSE_NEGATIVE_RISK",
+                    severity="warn",
+                    detail=(
+                        f"Null claim and the experiment's own gate {k}=False: "
+                        f"it self-reports the test was degenerate. Do not "
+                        f"propagate this null to a forward-facing claim."
+                    ),
+                )
+            )
+
+
 def check_tautology(d: dict[str, Any], flags: list[Flag]) -> None:
     """Detect distinct metrics agreeing to TAUTOLOGY_DIGITS sig figs.
 
@@ -244,6 +370,14 @@ def check_tautology(d: dict[str, Any], flags: list[Flag]) -> None:
     """
     for k1, k2, v1, v2 in _numeric_pairs(d):
         if _legitimate_pair(k1, k2):
+            continue
+        # Skip identifier / seed / metadata fields. These are NOT metrics:
+        # `experiment_id`, `experiment`, and `random_seed` legitimately all
+        # equal the experiment number (seeding the RNG off the experiment ID
+        # is good reproducibility practice — see exp3505/3506/3496/3481 which
+        # this rule was false-flagging as TAUTOLOGY). Two identifiers agreeing
+        # is structural, not a coincidence between two distinct measurements.
+        if _is_identifier_field(k1) or _is_identifier_field(k2):
             continue
         # Skip count-coincidence pairs: both names imply counts AND
         # both values are small integers.
@@ -841,6 +975,7 @@ def verify_artifact(path: Path) -> dict[str, Any]:
     check_gate_passed_without_data(d, flags)
     check_methodology_present(d, flags)
     check_implausible_tight_ci(d, flags)
+    check_false_negative_risk(d, flags)
 
     verdict_raw = d_raw.get("honest_verdict") or ""
     verdict = verdict_raw if isinstance(verdict_raw, str) else ""

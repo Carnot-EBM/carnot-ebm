@@ -1580,6 +1580,43 @@ This was added after exp3397/exp3405 (both `flagged_adversarial` per the
 2026-05-30 corrigendum in `ops/known-issues.md`) logged clean OK and reached the
 record before being caught manually.
 
+**False-negative trap — FALSE_NEGATIVE_RISK (MANDATORY — 2026-05-31).** A
+NULL/negative claim ("X does not beat Y", "selection premise refuted") is NOT
+a finding unless a positive control passed. `adversarial_verify.py` now emits
+`FALSE_NEGATIVE_RISK` (warn) when an artifact's `honest_verdict` is a null
+claim AND any of: (1) a `*flip*count*` / `n_changed` field == 0 (the method
+never changed a single output → cannot distinguish "method fails" from "no
+headroom"); (2) an oracle/optimal upper bound that does NOT exceed the baseline
+(the corpus has no selectable headroom, so no method could win — the null is
+uninformative); (3) the experiment's own `*non_degenerate*` / `*g2*` /
+`*headroom*` gate self-reported False. Origin: exp3507 reported the
+process-energy reranker "does not beat self-consistency" with `flip_count==0`
+and `optimal==SC==0.653` — a degenerate test, not evidence the method fails.
+**Before propagating any null result to a forward-facing claim, run a positive
+control (a corpus where oracle>baseline and flips>0).**
+
+**Reading-Results Discipline (MANDATORY — 2026-05-31).** Before citing ANY
+number from a result artifact as a conclusion, read it via
+`python3 scripts/summarize_artifact.py <id|glob|--recent N>` — never eyeball
+the raw JSON. The tool forces a fixed reading order: (1) `honest_verdict`,
+(2) `flagged_adversarial` stamped AND a LIVE adversarial re-check (catches the
+gap where a critical-flaggable artifact was never stamped), (3) every
+`acceptance_gate_*` self-report (a FAILED gate overrides a celebratory
+verdict), (4) `duration_s` + `inference_substrate` plausibility floor, (5)
+headline metrics last, annotated with any flag touching them, and a prominent
+FALSE_NEGATIVE_RISK section. This exists because three artifact misreads
+occurred in one session (a degenerate `flip_count=0` read as a real verdict; a
+stale log line read as live looping; identifier/seed TAUTOLOGY false-positives
+read as a coverage gap). Exit code: 2 if a live critical flag, 1 if any warn.
+
+**TAUTOLOGY excludes identifiers/seeds (2026-05-31).** The TAUTOLOGY check no
+longer compares identifier/seed/metadata fields (`experiment_id`, `experiment`,
+`random_seed`, `*_seed`, `*_id`, `milestone`, etc.). Seeding the RNG off the
+experiment number is good reproducibility practice; `experiment_id == experiment
+== random_seed == 3506` is structural, not a coincidence between two distinct
+measurements. This removed the false positives that made exp3505/3506/3496/3481
+look like a conductor coverage gap when the gate was in fact correct.
+
 CRITICAL flags do not block downstream gates from firing; the
 gate-check layer is upstream of the verify layer. The verify
 output is for paper-v6 disclosure discipline + future-task

@@ -377,6 +377,72 @@ def parallel_tempering_solve(
     return board, solved, states[0]["n_viol"]
 
 
+def parallel_tempering_solve_instrumented(
+    clues: Grid,
+    *,
+    n_sweeps: int = 5000,
+    n_moves_per_sweep: int = 100,
+    n_chains: int = 6,
+    T_min: float = 0.1,
+    T_max: float = 2.0,
+    n_exchange_interval: int = 50,
+    seed: int = 0,
+    progress_callback: Any = None,
+) -> tuple[list, bool, int, float]:
+    """Parallel tempering with swap-acceptance tracking and tunable ladder.
+
+    WHY this exists: exp3505 found parallel_tempering_solve_rate=0.38, BELOW
+    discrete_sa_restarts20=1.0. Root cause: n_exchange_interval=n_sweeps//5+1
+    gave only ~4 total exchange attempts per puzzle — practically no chain mixing.
+    This version makes exchange_interval configurable (default 50, yielding many
+    exchanges) and tracks swap_acceptance_rate so the ladder quality is auditable.
+
+    Returns (board, solved, n_viol, swap_acceptance_rate).
+    swap_acceptance_rate is the fraction of proposed adjacent-chain swaps that were
+    accepted; target 0.2-0.5 for effective mixing.
+    """
+    from carnot.phase3.sudoku_global_opt import board_is_valid_solution
+
+    clues_arr = np.array(clues, dtype=np.int64)
+
+    # Logarithmically-spaced temperatures from cold to hot.
+    temps = np.exp(np.linspace(math.log(T_min), math.log(T_max), n_chains)).tolist()
+
+    rngs = [np.random.default_rng(seed + i * 1337) for i in range(n_chains)]
+    states = [_init_state(clues_arr, rngs[i]) for i in range(n_chains)]
+
+    total_proposals = 0
+    total_accepts = 0
+
+    for sweep in range(n_sweeps):
+        for i in range(n_chains):
+            _run_sweep(states[i], temps[i], rngs[i], n_moves_per_sweep)
+
+        if (sweep + 1) % n_exchange_interval == 0:
+            exchange_rng = rngs[0]
+            for i in range(n_chains - 1):
+                total_proposals += 1
+                E_i = states[i]["n_viol"]
+                E_ip1 = states[i + 1]["n_viol"]
+                beta_i = 1.0 / temps[i] if temps[i] > 0 else 1e9
+                beta_ip1 = 1.0 / temps[i + 1] if temps[i + 1] > 0 else 1e9
+                delta_swap = (beta_i - beta_ip1) * (E_ip1 - E_i)
+                if delta_swap >= 0 or exchange_rng.random() < math.exp(delta_swap):
+                    states[i], states[i + 1] = states[i + 1], states[i]
+                    total_accepts += 1
+
+            if progress_callback:
+                progress_callback(sweep + 1, states[0]["n_viol"])
+
+        if states[0]["n_viol"] == 0:
+            break
+
+    board = states[0]["board"].tolist()
+    solved = board_is_valid_solution(board, clues)
+    swap_acceptance = total_accepts / total_proposals if total_proposals > 0 else 0.0
+    return board, solved, states[0]["n_viol"], swap_acceptance
+
+
 def compute_violations_from_board(board: Grid) -> int:
     """Count total column + box violations in a 9x9 board (all rows assumed unique).
 
