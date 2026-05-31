@@ -33825,3 +33825,75 @@ milestones:
     title: Capstone v324
     deliverable: results/experiment_3526_capstone_v324.json
     result: OK (conductor)
+- id: 2026.05.325
+  title: 'Depth-Over-Breadth XI: Defeat the P0.1 Ceiling-Saturation on Route 1 (HARD headroom-preserving graph-coloring corpus
+    near the freezing transition + a STRONG non-AR baseline, AND the same defeat-ceiling for Sudoku) + Build a SELECTABLE-HEADROOM
+    NL-math corpus (oracle>SC) and re-test Route 2 fairly using the CONFIRMED step-to-final aggregation mechanism + Promote
+    the two surviving positives toward headline-eligibility (aggregation AUROC at n>=80 multi-seed CI + DEPLOY the conservative-default
+    self-learning rule end-to-end) + G2 drift-verify'
+  doc: openspec/change-proposals/research-roadmap-vNEXT.md
+  completed: '2026-05-31'
+  finding: See conductor log for per-experiment results.
+  tasks:
+  - id: exp3527-archive-v324-activate-v325
+    title: Archive milestone .324 honestly and activate .325
+    deliverable: results/experiment_3527_archive_v324_activate_v325.json
+    result: OK (conductor)
+  - id: exp3528-p01-graph-coloring-headroom-strong-baseline-v1
+    title: "P0.1 Route 1 GRAPH-COLORING headroom re-test (CPU, operator priority) \u2014 build a HARD k-coloring corpus near\
+      \ the freezing transition (vanilla_descent < 0.9, exact==1.0, n>=30) and beat a STRONG non-AR baseline (DSATUR / tuned\
+      \ SA-restarts / backtracking), not just greedy-AR; defeats the exp3518 CEILING_SATURATION"
+    deliverable: results/experiment_3528_p01_graph_coloring_headroom_strong_baseline_v1.json
+    result: OK (conductor)
+  - id: exp3529-p01-sudoku-headroom-discriminating-tier-v1
+    title: "P0.1 Route 1 SUDOKU headroom re-test (CPU) \u2014 build a DISCRIMINATING hard tier (minimal-clue / 17-clue) where\
+      \ discrete_sa_single < 0.9 so PT/restarts/adaptive separate from trivial SA (exact-CP confirms solvability); defeats\
+      \ the exp3517 CEILING_SATURATION"
+    deliverable: results/experiment_3529_p01_sudoku_headroom_discriminating_tier_v1.json
+    result: OK (conductor)
+  - id: exp3530-p01-route2-selectable-headroom-corpus-build-v1
+    title: "P0.1 Route 2 SELECTABLE-HEADROOM NL-math corpus build (live GPU) \u2014 construct/filter a MATH/AIME-style corpus\
+      \ where the oracle (best selectable among k candidates) STRICTLY exceeds the SC majority (oracle>SC, target headroom\
+      \ >=+0.05); the positive control the FALSE_NEGATIVE_RISK guidance demands"
+    deliverable: results/experiment_3530_p01_route2_selectable_headroom_corpus_build_v1.json
+    result: OK (conductor)
+  - id: exp3531-p01-route2-energy-vs-sc-on-headroom-corpus-v1
+    title: "P0.1 Route 2 energy/step-aggregation-vs-SC on the SELECTABLE-HEADROOM corpus (cached) \u2014 the FIRST fair test:\
+      \ the fixed non-degenerate reranker + exp3520's confirmed step->final aggregation scorer + a pessimistic-BoN variant,\
+      \ on a corpus where oracle>SC; flip-count + delta + McNemar + bootstrap CI"
+    deliverable: results/experiment_3531_p01_route2_energy_vs_sc_on_headroom_corpus_v1.json
+    result: OK (conductor)
+  - id: exp3532-fover-step-aggregation-promote-n80-multiseed-ci-v1
+    title: "Promote the step->final aggregation positive \u2014 replicate exp3520's confirmed min/aggregation mechanism (final-correctness\
+      \ AUROC ~0.9055, shuffle-validated) at n>=80 with >=5 seeds + CI95 on a held-out split, toward headline-eligibility"
+    deliverable: results/experiment_3532_fover_step_aggregation_promote_n80_multiseed_ci_v1.json
+    result: OK (conductor)
+  - id: exp3533-fr11-conservative-default-deploy-closed-loop-v1
+    title: "FR-11 DEPLOY the conservative-default self-learning rule end-to-end (mandatory continuous self-learning + P0.2)\
+      \ \u2014 run the closed loop to N>=200 on a FRESH corpus with the conservative-default beta; confirm it prevents collapse\
+      \ where beta=0 collapses + report the deployed alpha_t-grounding margin"
+    deliverable: results/experiment_3533_fr11_conservative_default_deploy_closed_loop_v1.json
+    result: OK (conductor)
+  - id: exp3534-fover-g2-regression-verify-external-ask-refresh-v5
+    title: "FoVer G2 \u2014 clean-room regression-verify the self-contained package (drift check after .325 changes) + keep\
+      \ the one-click external-ask current (no push, no CI trigger, G2 stays operator-gated)"
+    deliverable: results/experiment_3534_fover_g2_regression_verify_external_ask_refresh_v5.json
+    result: OK (conductor)
+  - id: exp3535-kv260-terminal-latency-transcript-v11
+    title: "KV260 terminal board-level latency transcript (drive to terminal, then freeze) \u2014 SSH precondition"
+    deliverable: results/experiment_3535_kv260_terminal_latency_transcript_v11.json
+    result: OK (conductor)
+  - id: exp3536-polarfire-opportunistic-reachability-audit-v11
+    title: PolarFire opportunistic reachability + continuity audit (no terminal mandate; tautology-de-flagged distinct fields)
+    deliverable: results/experiment_3536_polarfire_opportunistic_reachability_audit_v11.json
+    result: OK (conductor)
+  - id: exp3537-g-gate-status-synthesis-v325
+    title: "G1-G4 gate-status synthesis v325 (UNGATED, cascade-proof, seed-fixed) \u2014 headroom-preserving Route-1 (graph\
+      \ coloring + Sudoku, vanilla baseline < 0.9 + strong-baseline comparison) / selectable-headroom corpus + fair Route-2\
+      \ flip-count+delta / promoted aggregation AUROC CI / deployed self-learning rule / G2 regression"
+    deliverable: results/experiment_3537_g_gate_status_synthesis_v325.json
+    result: OK (conductor)
+  - id: exp3538-capstone-v325
+    title: Capstone v325
+    deliverable: results/experiment_3538_capstone_v325.json
+    result: OK (conductor)
