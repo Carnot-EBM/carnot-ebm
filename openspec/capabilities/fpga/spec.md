@@ -3847,3 +3847,32 @@ when a precondition is hard-missing — and never `unspecified`.
 
 **Implementation status:** Implemented (Exp 3432)
 
+---
+
+### REQ-HW-3577
+
+**Title:** KV260 hardware-task continuity verification
+
+**Description:**
+To satisfy hardware-task continuity, one KV260 task per milestone must run. KV260 lives on SSH.
+The task MUST check SSH reachability via `ssh -o ConnectTimeout=5 -o BatchMode=yes kria 'true'`.
+If reachable, it MUST query loaded overlays using `xmutil listapps` via SSH.
+It MUST output `results/experiment_3577_kv260_continuity_v16.json` with fields:
+`honest_verdict` (terminal prefix), `inference_substrate="hardware_smoke"`, `preconditions_checked`,
+`kv260_ssh_reachable` (bool), `kv260_overlay_loaded` (string or null), `random_seed`,
+`reproducibility_checksum`, `duration_s`.
+
+**Implementation status:** Implemented (Exp 3577)
+
+---
+
+### SCENARIO-HW-3577
+
+**Scenario:** KV260 continuity is checked via SSH.
+
+**Given:** A KV260 continuity check is required.
+**When:** The script runs `ssh kria 'true'`.
+**Then:** If the check fails, it produces a verdict `complete: blocked_kv260_ssh_unreachable`. If it succeeds, it runs `xmutil listapps` and produces `complete: kv260_continuity_confirmed_reachable` with the overlay state.
+
+**Implementation status:** Implemented (Exp 3577)
+
