@@ -2005,3 +2005,10 @@ not reliable enough to skip execution tests at this accuracy level.
 | REQ-EXTRACT-036 | Implemented |
 | REQ-RANK-001 | Implemented (Exp 787) |
 | REQ-RANK-002 | Implemented (Exp 787) |
+| REQ-CODE-3573 | Implemented |
+
+### REQ-CODE-3573: Verifier Ensemble Generalization to Code
+The verifier ensemble MUST be evaluated for generalization on code domains (correct vs buggy execution-labeled completions).
+- Compare AUROC to model-confidence and best single verifier.
+- Produce `results/experiment_3573_verifier_code_bug_error_detection.json`.
+
