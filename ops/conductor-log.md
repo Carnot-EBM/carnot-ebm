@@ -7331,3 +7331,4 @@ web search: https://docs.garak.ai/garak/examples/pr |
 | 2026-05-31 22:17 UTC | Verifier ensemble vs CODE BUGS — error-detection A | OK | 83 passed in 7.84s |
 | 2026-05-31 22:23 UTC | Verifier ensemble vs FACTUAL HALLUCINATIONS — erro | FLAGGED | adversarial_verify CRITICAL: TAUTOLOGY — result quarantined, not a clean success |
 | 2026-05-31 22:28 UTC | Discriminating value — does the ensemble catch err | OK | 86 passed in 3.82s |
+| 2026-05-31 22:35 UTC | Cross-domain generalization SYNTHESIS — does verif | OK | 82 passed in 3.97s |
