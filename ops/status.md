@@ -1,5 +1,52 @@
 # Carnot — Operational Status
 
+## Session 2026-05-31 - Milestone 2026.05.328 Research Planning Staged
+
+Planned milestone 2026.05.328 ("Depth-Over-Breadth XIV: Consolidate the P0.1 positive") as the NEXT
+milestone after all `.327` tasks completed. Authority (read via `scripts/summarize_artifact.py`):
+`results/experiment_3551_p01_graph_coloring_terminal_discriminating_corpus_v3.json` (P0.1 Route-1
+**CLEAN TERMINAL POSITIVE** — energy global inference `solve_rate=0.9625` vs a STRONG DSATUR baseline
+`0.70` (hard-tier `0.56`), hard-tier paired diff `+0.38`, `p=0.000`, greedy-AR `0.15`, exact `==1.0`,
+0 CRITICAL flags — energy descent beats BOTH autoregressive AND a strong classical CSP solver),
+`results/experiment_3553_...v3.json` (Route-2 fair test BLOCKED no-headroom AGAIN — exp3552's
+greedy-wrong corpus built only n=3), `results/experiment_3554_...v2.json` (aggregation promotion
+BLOCKED `no_second_corpus_for_transfer` — the exp3543 A→B AUROC 0.861 transfer stands but unpromoted),
+`results/experiment_3555_...v3.json` (FR-11 conservative-default deploy CLEAN POSITIVE on a
+non-degenerate corpus), `results/experiment_3556_...v7.json` (G2 regression clean, external pending =
+sole unmet gate), the `.327` synthesis/capstone (`depth_forcing_function_can_relax=true`; G1∧G3∧G4 met,
+G2 unmet), `ops/north-star.md`, `ops/known-issues.md`, and a fresh arxiv sweep.
+
+The `.327` finding: P0.1 got its FIRST clean, terminal, discriminating verdict — POSITIVE — but it is
+single-CSP/single-seed, and two fresh positives blocked on BUILD failures (not science). The Depth
+function CAN now relax, so `.328` is CONSOLIDATION (still depth-weighted, no breadth churn): GENERALIZE
+the Route-1 positive to a SECOND discriminating CSP with the strong-baseline rigor (exp3562, k-SAT /
+Max-Cut / partitioning), HARDEN the graph-coloring positive with multi-seed CI + a second generator
+(exp3563), give Route-2 NL-math its TERMINAL verdict (final harder-corpus + multi-verifier headroom
+attempt or permanent retire, exp3564), PROMOTE the cross-corpus aggregation positive to a secondary
+headline by building transfer targets from on-disk corpora (exp3565), ADVANCE self-learning across a
+non-degenerate battery + answer the P0.2 verifier-diversity question (exp3566, the mandatory
+continuous-self-learning task), keep G2 fresh (exp3567), KV260/PolarFire continuity (exp3568/3569), and
+synthesis + capstone (exp3570/3571).
+
+Updated `research-references.md` with the 2026-05-31 Post-`.327` sweep (IsingFormer 2509.23043; 2D PT
+for constrained optimization 2506.14781; discrete-diffusion-beats-AR 2410.14157; neural-CO critique
+2502.03669/2302.03602/2112.12251; PRM step/question-OOD transfer 2502.14361 + multi-domain aggregation
+2510.00492; Weaver weak-verifier combination 2506.18203 + BoN-MAV multi-agent verification 2502.20379),
+rewrote `openspec/change-proposals/research-roadmap-vNEXT.md`, and created `research-roadmap-next.yaml`
+with 11 tasks (`exp3561`-`exp3571`). Carried the working `.322`-`.327`
+architecture rules: all tasks `agent_type: claude` + `requires_claude: true` (pass the
+MODEL_AGENT_COHERENCE gate audit; outer-loop reroutes the mechanical tasks to gemini at activation),
+NO `model: opus`, cascade-proof (no depth task gated on another; UNGATED synthesis; capstone gates only
+on the synthesis-ready flag), per-iteration progress flush + hard wall-clock budgets, and the
+anti-tautology seed/distinct-field discipline (aggregations `random_seed=20260601`; measurements
+content-derived). Validation passed: YAML schema (11 tasks), exclusion-manifest lint, canonical-URL +
+conductor-manifest validators, and the gate audit (0 model-agent-coherence / 0 gate-cross-ref / 0
+upstream failures). The gate audit's single `ARXIV_PRIOR_FAILURES_COVERAGE exp1153` note is a hardcoded
+baseline check (ARXIV_TASK_ID constant) that fires identically against the already-activated `.327`
+roadmap and is unrelated to this plan (no arXiv task here). Left `research-roadmap.yaml` and
+`scripts/research_conductor.py` untouched.
+
+
 ## Session 2026-05-31 - Milestone 2026.05.324 Research Planning Staged
 
 Planned milestone 2026.05.324 ("Depth-Over-Breadth X") as the NEXT milestone after all

@@ -1,3 +1,96 @@
+## 2026-05-31 Post-.327 Planning Sweep (Milestone 2026.05.328)
+
+`.327` (Depth-Over-Breadth XIII) was the milestone that gave P0.1 its first **clean, terminal,
+discriminating verdict** — and it came back POSITIVE. Read via `scripts/summarize_artifact.py`, the
+.327 verdicts are:
+
+- **exp3551 (P0.1 Route-1 graph-coloring TERMINAL on a DISCRIMINATING corpus): CLEAN TERMINAL
+  POSITIVE.** On a corpus sampled near the chromatic/freezing threshold where the STRONG baseline
+  DSATUR is forced below ceiling (`strong_baseline_solve_rate=0.70`, hard-tier `0.56`), energy-based
+  global inference (Ising/QUBO + parallel-tempering/SA + exact CP) solved `solve_rate=0.9625`
+  (hard-tier paired diff `+0.38`, `p=0.000`), while greedy-AR managed `0.15`. Zero CRITICAL flags,
+  `pt_swap_acceptance_rate=0.346` (PT is the real mechanism), exact solver `==1.0` (instances are
+  solvable). **This is the first defensible "energy descent beats BOTH autoregressive generation AND a
+  strong classical CSP solver" datapoint — the non-autoregressive-reasoning thesis (Phase 3 / Kona
+  premise) made empirical.** It is a single CSP (graph coloring) at a single seed, so `.328` HARDENS
+  it (multi-seed CI + a second graph generator) and GENERALIZES it to a SECOND discriminating CSP.
+- **exp3553 (P0.1 Route-2 fair test): BLOCKED — no selectable headroom (oracle <= SC), `flip_count=0`.**
+  The greedy-wrong GPU corpus builder (exp3552) produced only n=3 (an unusable stub), so the fair test
+  fell back to a no-headroom corpus and blocked honestly — the **fourth** consecutive Route-2
+  headroom-starved result (exp3507/3530/3531/3542/3553). The MoB "mode-is-the-answer" result
+  (arXiv:2511.18630) + the Delta-gap sample-complexity theory (arXiv:2506.05295) predict exactly this:
+  NL-math SC is near-optimal because the correct answer IS the mode (large Delta). `.328` gives Route-2
+  ONE final genuinely-different construction (harder competition-grade problems + a bigger pool + the
+  full GPU budget) with `retire_if_same_verdict: true` — if still no headroom, **Route-2 on NL-math is
+  permanently retired as a trustworthy terminal negative** (SC is near-optimal; the energy-reranking
+  selection premise does not hold on natural-language math).
+- **exp3554 (cross-corpus aggregation promotion): BLOCKED — `no_second_corpus_for_transfer`.** The
+  single A->B transfer positive from exp3543 (AUROC 0.861) STANDS but was not promoted, because the
+  task depended on a second/third transfer corpus that was not constructible at run time. `.328` fixes
+  this by building the transfer targets from held-out DISJOINT splits of corpora that already exist
+  (FoVer + the level-3 corpus), so the multi-seed A->{B,C} promotion can complete.
+- **exp3555 (FR-11 conservative-default self-learning deploy on a NON-DEGENERATE corpus): CLEAN
+  POSITIVE.** On a corpus with starting true accuracy `0.34`, the conservative-default beta prevented
+  depth-N>=200 collapse while beta=0 collapsed, and preserved real quality (`deploy_final=0.367`). The
+  self-learning thesis (PRD FR-11 / alpha_t grounding) now has its first non-vacuous deployment. `.328`
+  ADVANCES it (multi-corpus battery + a verifier-DIVERSITY grounding test, P0.2).
+- **exp3556 (G2 regression-verify): CLEAN.** The self-contained package still reproduces FoVer
+  `AUROC=0.9131` within CI from a fresh environment. **G2 (independent external reproduction) remains
+  the SOLE unmet publication gate** (G1/G3/G4 met). It is operator-gated; the loop keeps the package
+  drift-free and the one-click external ask current.
+
+**Net `.327` state:** `depth_forcing_function_can_relax = true` (P0.1 has a clean terminal verdict).
+G1=true, G2=false, G3=true, G4=true. The milestone shifts from *chasing an unproven crux* to
+*hardening the proven positives into defensible (secondary) headlines and giving the bounded tracks
+their terminal verdicts*. North-star §1 still governs: every `.328` task advances a headline (Route-1
+generalization, aggregation promotion, self-learning, G2) or it is noise.
+
+### Verified papers added this sweep
+
+**Energy / PT global inference vs STRONG classical CO baselines (frames the Route-1 generalization to a
+SECOND CSP — the discrimination must survive a strong, not weak, baseline):**
+- **arXiv:2509.23043** — *IsingFormer: Augmenting Parallel Tempering With Learned Proposals* (Sep 2025).
+  PT mixes slowly near critical points; learned global-move proposals find substantially lower-energy
+  states on 3D spin glasses. Directly relevant: our exp3551 positive is PT-driven
+  (`pt_swap_acceptance_rate=0.346`); learned proposals are a candidate upgrade for the second-CSP
+  generalization, and the paper's strong-baseline framing matches our discrimination requirement.
+- **arXiv:2506.14781** — *Two-dimensional Parallel Tempering for Constrained Optimization* (2025).
+  PT specialized for hard constrained-optimization landscapes — the regime our discriminating CSP
+  corpora live in (near the feasibility threshold).
+- **arXiv:2403.01320** — *Energy landscapes of combinatorial optimization in Ising machines* (carried
+  forward). Why hard instances near the phase transition discriminate solver classes.
+- **arXiv:2410.14157** — *Beyond Autoregression: Discrete Diffusion for Complex Reasoning and Planning*
+  (carried forward). Non-AR (diffusion) beats AR on Sudoku/SAT/Countdown (91.5%/100% vs 45.8%/20.7%)
+  WITHOUT search. The canonical "non-autoregressive beats autoregressive on CSP" precedent — the SAT /
+  Countdown families it uses are exactly the second-CSP candidates for the `.328` generalization.
+
+**PRM aggregation cross-corpus / OOD transfer (supports the aggregation secondary headline):**
+- **arXiv:2502.14361** — *Retrieval-Augmented Process Reward Model for Generalizable Mathematical
+  Reasoning* (2025). Names the two OOD failure modes a transfer claim must survive: **step-OOD**
+  (different reasoning patterns across model types/sizes) and **question-OOD** (dataset shift). Our
+  A->{B,C} multi-seed transfer with per-target shuffle controls is the test these failure modes demand.
+- **arXiv:2510.00492** — *Rethinking Reward Models for Multi-Domain Test-Time Scaling* (2025).
+  Trajectory-level aggregation of per-step scores across multiple domains — the multi-corpus framing of
+  the aggregation headline.
+- **arXiv:2406.10216** — *Regularizing Hidden States Enables Learning Generalizable Reward Model for
+  LLMs* (2024). Hidden-state regularization as a route to OOD-robust reward models; a candidate
+  mechanism if the frozen-aggregation transfer degrades on a third corpus.
+
+**Multi-verifier combination / weak-to-strong (frames the self-learning DIVERSITY test, P0.2, and the
+final Route-2 attempt):**
+- **arXiv:2506.18203** — *Shrinking the Generation-Verification Gap with Weak Verifiers* (Weaver, 2025).
+  Combines many weak, imperfect verifiers via weak-supervision accuracy estimation into a strong
+  verifier. Directly relevant to Carnot's verifier ensemble: the `.328` self-learning task tests
+  whether DIVERSE multi-verifier alpha_t grounding (Weaver-style) beats single-verifier grounding (P0.2).
+- **arXiv:2502.20379** — *Multi-Agent Verification: Scaling Test-Time Compute with Multiple Verifiers*
+  (BoN-MAV, 2025). Multiple verifiers scale better than self-consistency and single-RM verification;
+  weak-to-strong generalization. The genuinely-different angle for the final Route-2 attempt — combine
+  the verifier ensemble rather than relying on one energy reranker.
+- **arXiv:2502.18581** — *Scalable Best-of-N Selection via Self-Certainty* (carried forward). The
+  self-certainty BoN control already wired into the Route-2 panel.
+
+---
+
 ## 2026-05-31 Post-.326 Planning Sweep (Milestone 2026.05.327)
 
 `.326` (Depth-Over-Breadth XII) RESCUED P0.1's strongest datapoint from a storage-bug flag, then
