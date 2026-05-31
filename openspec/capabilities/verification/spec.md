@@ -9223,3 +9223,18 @@ When Exp 3576 runs, it produces all required schema fields on the exit path.
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-VERIFY-3576 | Implemented (`scripts/experiment_3576_verifier_cross_domain_synthesis.py`) | Implemented (`tests/python/test_experiment_3576_verifier_cross_domain_synthesis.py`) |
+
+### REQ-VERIFY-3582: Verifier Cross-Domain Capstone
+- REQ-VERIFY-3582-1: The system SHALL capstone the verifier-cross-domain milestone.
+- REQ-VERIFY-3582-2: It MUST aggregate upstream experiments via `scripts/summarize_artifact.py`.
+- REQ-VERIFY-3582-3: It MUST write `results/experiment_3582_capstone_v329.json` with required fields such as `code_generalizes`, `facts_generalize`, `second_pair_of_eyes_lift_real`, `verifier_value_scope`, `paper_ready`, etc.
+- REQ-VERIFY-3582-4: It MUST EXCLUDE flagged_adversarial artifacts from the cited upstream artifacts.
+
+### SCENARIO-VERIFY-3582: Capstone Evaluates Verifier Generalization
+When Exp 3582 runs, it produces all required schema fields on the exit path.
+
+## Implementation Status (REQ-VERIFY-3582)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-VERIFY-3582 | Implemented (`scripts/experiment_3582_capstone_v329.py`) | Implemented (`tests/python/test_experiment_3582_capstone_v329.py`) |
