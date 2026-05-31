@@ -7319,3 +7319,4 @@ web search: https://docs.garak.ai/garak/examples/pr |
 | 2026-05-31 20:24 UTC | PROMOTE the step->final aggregation positive to a  | FLAGGED | adversarial_verify CRITICAL: TAUTOLOGY, TAUTOLOGY, TAUTOLOGY, TAUTOLOGY, TAUTOLO |
 | 2026-05-31 20:32 UTC | FR-11 ADVANCE (mandatory continuous self-learning  | OK | 84 passed in 3.41s |
 | 2026-05-31 20:37 UTC | FoVer G2 — clean-room regression-verify the self-c | OK | 90 passed in 7.06s |
+| 2026-05-31 20:43 UTC | KV260 terminal board-level latency transcript (dri | OK | 100 passed in 3.92s |
