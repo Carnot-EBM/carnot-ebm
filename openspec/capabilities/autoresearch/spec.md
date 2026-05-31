@@ -3359,3 +3359,13 @@ Previous attempts to build a headroom corpus via difficulty filtering (MATH L4-5
 - SCENARIO-AR-051-01: Headroom condition correctly identified — `has_selectable_headroom(record)` returns True iff the greedy answer is wrong AND at least one sampled answer is correct.
 - SCENARIO-AR-051-02: Oracle strictly exceeds SC — `compute_corpus_stats` returns `oracle_exceeds_sc = True` when the oracle accuracy is strictly greater than SC accuracy.
 - SCENARIO-AR-051-03: Artifact reports required headroom bounds — the deliverable JSON captures greedy, SC, and oracle accuracies, and asserts selectable_headroom > 0.
+
+### REQ-AR-051: P0.1 Route-2 NL-Math Final Headroom or Retire
+
+**Requirement:**
+The autoresearch harness MUST pull harder competition-grade problems (AIME / MATH level-5) to construct a greedy-wrong headroom corpus where oracle > SC by construction. If such a corpus is built (n >= 40), it MUST score the multi-verifier Weaver/BoN-MAV combination (along with energy reranker and STRONG SC) and compute significance. If no headroom corpus can be built even from harder problems, it MUST emit a terminal negative 'permanently retired' verdict.
+
+#### SCENARIO-AR-051-01: Terminal Verdict Emission
+**Given** the Route-2 NL-math final experiment is executed
+**When** a headroom corpus is built and scored, or cannot be built
+**Then** it MUST output a valid JSON artifact with 'route2_nlmath_terminal' verdict and 'multi_verifier_accuracy'.
