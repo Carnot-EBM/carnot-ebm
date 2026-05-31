@@ -7908,3 +7908,4 @@ ModuleNotFoundError: No module named 'torch'; results/experiment_2828_fover_memo
 ## 2026-05-31 (Milestone 2026.05.321 Operational Retrospective)
 
 - [outer-loop] Wrote results/operational_retro_2026_05_321.json (schema carnot.operational_retro.v64). Total wall time and experiments completed are both 0, as no experiment commits were found since activation. There were zero compute-bound tasks; the GPU idle state (both RTX 3090s at 0%) is consistent with no compute tasks running rather than a specific efficiency bottleneck. Recommended improvement is to investigate the dispatch pipeline for a stall.
+- 2026-05-31: Archive milestone .321 honestly and activate .322 (✅ Complete) — honest_verdict=complete: v321_archived_v322_activated_p01_infra_loss_not_science; results/experiment_3493_archive_v321_activate_v322.json
