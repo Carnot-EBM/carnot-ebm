@@ -7224,3 +7224,4 @@ web search: https://docs.garak.ai/garak/examples/pr |
 | 2026-05-31 06:39 UTC | Capstone v323 | OK | 81 passed in 3.84s |
 | 2026-05-31 07:18 UTC | Plan milestone 2026.05.324 | OK | 12 tasks proposed |
 | 2026-05-31 07:20 UTC | Milestone 2026.05.324 activated | OK | 12 tasks queued |
+| 2026-05-31 07:34 UTC | Archive milestone .323 honestly and activate .324 | OK | 81 passed in 5.59s |
