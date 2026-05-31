@@ -320,6 +320,60 @@ tasks are not.
 
 ## MANDATORY-NEXT-MILESTONE PRIORITIES (.86 planner — hard pickup per CLAUDE.md)
 
+### NEW 2026-05-31: P0.1 GRAPH-COLORING RE-TEST ON A HARD, HEADROOM-PRESERVING CORPUS (exp3518 was ceiling-saturated)
+
+**Origin:** 2026-05-31 outer-loop read of exp3518
+(`results/experiment_3518_p01_second_csp_energy_vs_ar_generalization_v1.json`)
+via `scripts/summarize_artifact.py`. The artifact passed the mechanical
+adversarial gate but is NOT headline-eligible: it is **ceiling-saturated** on the
+method side. `solve_rate_by_optimizer_variant` = {vanilla_descent: 1.0,
+sa_single: 1.0, sa_restarts15: 1.0, parallel_tempering: 1.0, exact_backtracking:
+1.0} and `solve_rate_by_difficulty` = {easy: 1.0, medium: 1.0, hard: 1.0,
+extreme: 1.0}, with `pt_swap_acceptance_rate=0.0` (tempering was inert). So
+"energy global inference generalizes to graph coloring, 1.00 vs AR 0.50" only
+proves **greedy-AR has a known Brooks'-theorem ordering pathology** — NOT that
+energy inference is uniquely capable. Any non-greedy method (even vanilla
+descent) wins. The new `CEILING_SATURATION` check in `adversarial_verify.py`
+(2026-05-31) now flags this pattern; this task FIXES the test.
+
+**The re-test (agent_type: gemini — mechanical CPU harness with deterministic
+gates; default per Gemini-Default).**
+
+REQUIRED design:
+1. **Hardness gate (the headroom precondition):** build / select a graph
+   k-coloring corpus tuned so that `vanilla_descent` solve_rate is STRICTLY
+   below the ceiling (target ~0.4–0.7). If the trivial baseline still saturates,
+   the corpus is too easy — escalate hardness (raise chromatic number near the
+   degree bound, add frustration / near-uncolorable structure) until it drops.
+   Acceptance: `vanilla_descent_solve_rate < 0.9 AND exact_baseline_solve_rate
+   == 1.0` (instances remain solvable so there IS a target).
+2. **Strong non-AR baseline, not just greedy:** compare energy global inference
+   against (a) greedy-AR, AND (b) a STRONG non-AR baseline (DSATUR / a
+   well-tuned SA-restarts or a backtracking-with-heuristic), so the claim is
+   "energy beats a strong method," not "energy beats the weakest possible AR."
+3. **Sample size:** n >= 30 instances (CLAUDE.md CLT minimum), ideally 50–100,
+   stratified by difficulty with a genuinely non-saturated hard tier.
+4. **Mechanism attribution:** if parallel tempering is the claimed mechanism,
+   `pt_swap_acceptance_rate` MUST be > 0 (else report which optimizer actually
+   did the work and re-frame).
+
+REQUIRED ARTIFACT FIELDS (each carries a principle per CLAUDE.md): `solve_rate`,
+`solve_rate_by_optimizer_variant` (incl. vanilla_descent — the headroom witness),
+`solve_rate_by_difficulty` (non-saturated hard tier), `strong_baseline_solve_rate`,
+`ar_greedy_solve_rate`, `exact_baseline_solve_rate`, `n_instances` (>=30),
+`pt_swap_acceptance_rate`, `random_seed` (content-derived, NOT 3518),
+`reproducibility_checksum`, `inference_substrate: ising_energy_optimization_cpu`,
+`honest_verdict` (terminal prefix).
+
+ACCEPTANCE GATE: `vanilla_descent_solve_rate < 0.9` (headroom exists) AND
+`energy_solve_rate > strong_baseline_solve_rate` (beats a STRONG method, not just
+greedy-AR) AND `solve_rate_by_difficulty["hard"] < 1.0 for the trivial baseline`.
+If energy does NOT beat the strong baseline on the hard tier, that is an honest
+negative — report it; do not fall back to the greedy-AR comparison as the headline.
+
+This is depth work (P0.1 existential test), not breadth — it directly determines
+whether the energy-descent-beats-autoregressive claim survives on a second CSP.
+
 ### NEW 2026-05-30: KONA GLOBAL-OPT CORRECTNESS-FIRST GATE (solve-rate, NOT time)
 
 **Origin:** 2026-05-30 operator review of exp3394/exp3408 (Kona-Style Global

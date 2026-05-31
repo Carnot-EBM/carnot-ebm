@@ -7231,3 +7231,4 @@ web search: https://docs.garak.ai/garak/examples/pr |
 | 2026-05-31 08:37 UTC | P0.1 Route 1 HARDENING (PRIMARY, CPU) — scale the  | OK | 107 passed in 7.51s |
 | 2026-05-31 08:52 UTC | P0.1 Route 1 GENERALIZATION (CPU) — the energy-glo | OK | 81 passed in 3.38s |
 | 2026-05-31 09:09 UTC | P0.1 Route 2 SUBSTRATE FIX (cached) — fix the dege | OK | 81 passed in 3.97s |
+| 2026-05-31 09:17 UTC | De-flag + verify the FoVer step-to-final gap closu | OK | 81 passed in 4.14s |

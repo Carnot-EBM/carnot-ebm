@@ -358,6 +358,114 @@ def check_false_negative_risk(d: dict[str, Any], flags: list[Flag]) -> None:
             )
 
 
+_COMPARISON_VERDICT_MARKERS = (
+    "beats", "_vs_", "generaliz", "outperform", "superior", "wins",
+    "better_than", "_beat_", "dominates",
+)
+_TRIVIAL_BASELINE_MARKERS = (
+    "vanilla", "greedy", "random", "single", "descent", "naive", "trivial",
+    "default", "sequential", "baseline",
+)
+
+
+def _is_comparative_claim(d: dict[str, Any]) -> bool:
+    """True if the artifact asserts one method beats another — the precondition
+    for a CEILING_SATURATION false positive to matter."""
+    v = str(d.get("honest_verdict", "")).lower()
+    if any(m in v for m in _COMPARISON_VERDICT_MARKERS):
+        return True
+    # a weak baseline field strictly below the headline rate (exclude the
+    # exact/oracle upper bound, which is supposed to be at the ceiling)
+    headline = d.get("solve_rate") or d.get("accuracy") or d.get("pass_rate")
+    if _is_finite_number(headline):
+        for k, vv in d.items():
+            kl = k.lower()
+            if "baseline" in kl and "exact" not in kl and "oracle" not in kl:
+                if _is_finite_number(vv) and float(vv) < float(headline):
+                    return True
+    return False
+
+
+def check_ceiling_saturation(d: dict[str, Any], flags: list[Flag]) -> None:
+    """Positive-claim partner to FALSE_NEGATIVE_RISK. A method-superiority claim
+    is uninformative if the corpus is ceiling-saturated: every method variant
+    (including a TRIVIAL baseline) and/or every difficulty tier hits the same
+    maximum. Then the corpus has no headroom on the METHOD side — it cannot
+    distinguish a powerful method from a trivial one, so "method X generalizes /
+    beats Y" over-claims.
+
+    Origin: exp3518 reported "energy global inference generalizes to graph
+    coloring, solve_rate 1.00 vs AR 0.50", but vanilla_descent (no annealing, no
+    tempering) ALSO solved 100% on the 'extreme' difficulty tier — all 5
+    optimizers and all 4 difficulties tied at 1.0. The win only proves greedy-AR
+    has a known ordering pathology, not that energy inference is uniquely
+    capable. Only fires on comparative claims (gated) to avoid flagging
+    legitimately-easy sanity checks that make no superiority claim."""
+    if not _is_comparative_claim(d):
+        return
+    CEIL = 0.99
+
+    # Signal 1 — a trivial baseline variant saturates alongside the method.
+    for k, v in d.items():
+        if not isinstance(v, dict):
+            continue
+        kl = k.lower()
+        if not any(
+            s in kl
+            for s in ("by_optimizer", "by_variant", "by_method", "by_model",
+                      "by_approach", "by_sampler", "by_solver")
+        ):
+            continue
+        nums = {kk: float(vv) for kk, vv in v.items() if _is_finite_number(vv)}
+        if len(nums) < 2 or max(nums.values()) < CEIL:
+            continue
+        at_ceiling = [kk for kk, vv in nums.items() if vv >= CEIL]
+        trivial = [
+            kk for kk in at_ceiling
+            if any(m in kk.lower() for m in _TRIVIAL_BASELINE_MARKERS)
+        ]
+        if len(at_ceiling) >= 2 and trivial:
+            flags.append(
+                Flag(
+                    kind="CEILING_SATURATION",
+                    severity="warn",
+                    detail=(
+                        f"{k}: a trivial baseline ({trivial[0]}) also saturates "
+                        f"at the ceiling (>= {CEIL}); {len(at_ceiling)} variants "
+                        f"tie at {max(nums.values())}. The corpus cannot "
+                        f"discriminate a powerful method from a trivial one, so "
+                        f"the superiority claim is uninformative. Harden the "
+                        f"corpus until the trivial baseline drops below ceiling."
+                    ),
+                )
+            )
+
+    # Signal 2 — every difficulty tier saturates: the difficulty axis is inert.
+    for k, v in d.items():
+        if not isinstance(v, dict):
+            continue
+        kl = k.lower()
+        if not any(
+            s in kl for s in ("by_difficulty", "by_tier", "by_hardness", "by_level")
+        ):
+            continue
+        nums = {kk: float(vv) for kk, vv in v.items() if _is_finite_number(vv)}
+        if len(nums) >= 2 and min(nums.values()) >= CEIL:
+            flags.append(
+                Flag(
+                    kind="CEILING_SATURATION",
+                    severity="warn",
+                    detail=(
+                        f"{k}: every difficulty tier saturates at the ceiling "
+                        f"({sorted(nums.items())}). The hardest tier is as easy "
+                        f"as the easiest, so the difficulty axis is inert and a "
+                        f"'solves hard instances' claim is unsupported. Add "
+                        f"genuinely harder instances until the top tier drops."
+                    ),
+                )
+            )
+
+
 def check_tautology(d: dict[str, Any], flags: list[Flag]) -> None:
     """Detect distinct metrics agreeing to TAUTOLOGY_DIGITS sig figs.
 
@@ -976,6 +1084,7 @@ def verify_artifact(path: Path) -> dict[str, Any]:
     check_methodology_present(d, flags)
     check_implausible_tight_ci(d, flags)
     check_false_negative_risk(d, flags)
+    check_ceiling_saturation(d, flags)
 
     verdict_raw = d_raw.get("honest_verdict") or ""
     verdict = verdict_raw if isinstance(verdict_raw, str) else ""

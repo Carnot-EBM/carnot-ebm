@@ -233,3 +233,76 @@ def test_backfill_idempotent_skips_already_stamped(tmp_path):
     p = tmp_path / "experiment_9004_x.json"
     p.write_text(json.dumps(art))
     assert av.backfill_stamps([p], apply=True) == []
+
+
+# --- 5. CEILING_SATURATION (positive-claim no-headroom partner) -------------
+
+def test_ceiling_saturation_trivial_baseline_ties():
+    """REQ: a superiority claim where a trivial baseline also saturates the
+    ceiling is uninformative (exp3518: vanilla_descent also solved 100%)."""
+    flags = []
+    av.check_ceiling_saturation(
+        {
+            "honest_verdict": "complete: energy_vs_ar_generalizes_to_graph_coloring",
+            "ar_baseline_solve_rate": 0.5,
+            "solve_rate": 1.0,
+            "solve_rate_by_optimizer_variant": {
+                "vanilla_descent": 1.0,
+                "parallel_tempering": 1.0,
+                "exact_backtracking": 1.0,
+            },
+        },
+        flags,
+    )
+    assert "CEILING_SATURATION" in _kinds(flags)
+
+
+def test_ceiling_saturation_difficulty_inert():
+    """REQ: a comparative claim where every difficulty tier saturates means the
+    difficulty axis is inert — a 'solves hard instances' claim is unsupported."""
+    flags = []
+    av.check_ceiling_saturation(
+        {
+            "honest_verdict": "complete: method_beats_baseline",
+            "baseline_solve_rate": 0.4,
+            "solve_rate": 1.0,
+            "solve_rate_by_difficulty": {
+                "easy": 1.0, "medium": 1.0, "hard": 1.0, "extreme": 1.0
+            },
+        },
+        flags,
+    )
+    assert "CEILING_SATURATION" in _kinds(flags)
+
+
+def test_ceiling_saturation_silent_on_noncomparative():
+    """REQ: a pure sanity check (no superiority claim) that happens to all-pass
+    must NOT be flagged — the gate is only meaningful for comparative claims."""
+    flags = []
+    av.check_ceiling_saturation(
+        {
+            "honest_verdict": "complete: sanity_smoke_all_pass",
+            "solve_rate_by_difficulty": {"easy": 1.0, "hard": 1.0},
+        },
+        flags,
+    )
+    assert "CEILING_SATURATION" not in _kinds(flags)
+
+
+def test_ceiling_saturation_silent_with_real_headroom():
+    """REQ: a comparative claim where the trivial baseline does NOT saturate
+    (real headroom) is a valid test — must not fire."""
+    flags = []
+    av.check_ceiling_saturation(
+        {
+            "honest_verdict": "complete: energy_beats_ar",
+            "ar_baseline_solve_rate": 0.3,
+            "solve_rate": 0.9,
+            "solve_rate_by_optimizer_variant": {
+                "vanilla_descent": 0.4, "parallel_tempering": 0.9
+            },
+            "solve_rate_by_difficulty": {"easy": 1.0, "hard": 0.6},
+        },
+        flags,
+    )
+    assert "CEILING_SATURATION" not in _kinds(flags)
