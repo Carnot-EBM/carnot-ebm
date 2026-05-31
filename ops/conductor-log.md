@@ -7222,3 +7222,5 @@ web search: https://docs.garak.ai/garak/examples/pr |
 | 2026-05-31 06:23 UTC | PolarFire opportunistic reachability + continuity  | OK | 81 passed in 4.42s |
 | 2026-05-31 06:30 UTC | G1-G4 gate-status synthesis v323 (UNGATED, cascade | OK | 81 passed in 4.33s |
 | 2026-05-31 06:39 UTC | Capstone v323 | OK | 81 passed in 3.84s |
+| 2026-05-31 07:18 UTC | Plan milestone 2026.05.324 | OK | 12 tasks proposed |
+| 2026-05-31 07:20 UTC | Milestone 2026.05.324 activated | OK | 12 tasks queued |
