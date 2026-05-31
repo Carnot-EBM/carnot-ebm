@@ -7306,3 +7306,4 @@ web search: https://docs.garak.ai/garak/examples/pr |
 | 2026-05-31 18:21 UTC | KV260 terminal board-level latency transcript (dri | OK | 100 passed in 3.79s |
 | 2026-05-31 18:27 UTC | PolarFire opportunistic reachability + continuity  | OK | 93 passed in 3.91s |
 | 2026-05-31 18:34 UTC | G1-G4 gate-status synthesis v327 (UNGATED, cascade | OK | 85 passed in 4.34s |
+| 2026-05-31 18:40 UTC | Capstone v327 | OK | 84 passed in 4.13s |
