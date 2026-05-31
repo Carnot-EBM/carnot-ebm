@@ -1,0 +1,91 @@
+{
+ "experiment_id": 3531,
+ "experiment": 3531,
+ "title": "P0.1 Route 2 Energy Reranker vs SC on Selectable-Headroom Corpus v1",
+ "schema": "carnot.p01_route2_energy_vs_sc_headroom_v1",
+ "run_timestamp": "2026-05-31T12:41:48Z",
+ "run_date": "20260531",
+ "honest_verdict": "complete: energy_does_not_beat_sc_even_with_headroom_route2_selection_premise_bounded_informative_negative",
+ "inference_substrate": "verifier_ensemble_against_cached_candidates",
+ "corpus_oracle_exceeds_sc": true,
+ "selectable_headroom": 0.0108,
+ "reranker_makes_distinct_selections": true,
+ "headroom_corpus_n": 93,
+ "corpus_source": "p01_difficulty_matched_generations.jsonl",
+ "self_consistency_accuracy": 0.505376,
+ "step_aggregation_energy_accuracy": null,
+ "pessimistic_bon_energy_accuracy": 0.268817,
+ "optimal_aggregation_accuracy": 0.473118,
+ "best_condition": "trained_energy_vote",
+ "flip_count_best_vs_sc": 3,
+ "flips_correct_best": 0,
+ "flips_incorrect_best": 3,
+ "net_correctness_gain_best": -3,
+ "delta_best_vs_self_consistency": -0.032258,
+ "paired_significance": {
+  "mcnemar_p": 0.25,
+  "bootstrap_ci95": [
+   -0.16129032258064513,
+   0.10752688172043012
+  ]
+ },
+ "random_seed": 11695672,
+ "reproducibility_checksum": "2ac4b71eac45cfcc",
+ "duration_s": 0.786,
+ "preconditions_checked": [
+  {
+   "resource": "primary_headroom_corpus",
+   "available": false
+  },
+  {
+   "resource": "fallback_difficulty_matched_corpus",
+   "available": true
+  },
+  {
+   "resource": "corpus_headroom",
+   "available": true,
+   "oracle": 0.5161,
+   "sc": 0.5054
+  },
+  {
+   "resource": "energy_substrate",
+   "available": true
+  }
+ ],
+ "acceptance_gates": {
+  "G0_fair_test": true,
+  "G1_energy_beats_sc_with_headroom": false
+ },
+ "methodology_note": "step_aggregation_energy_accuracy is None because per_step_traces_captured=False in the fallback corpus. self_certainty_BoN collapses to SC because all mean_token_logprob values are None in this corpus.",
+ "field_provenance": {
+  "honest_verdict": "complete:/success:/passed:/shipped_ prefix per Verdict Terminal-Prefix Discipline; lets the conductor reconciler classify terminal vs partial.",
+  "inference_substrate": "verifier_ensemble_against_cached_candidates \u2014 no live model; sub-1s floor is legitimate (scoring cached generations with numpy/sklearn only).",
+  "corpus_oracle_exceeds_sc": "The FALSE_NEGATIVE_RISK precondition: oracle > SC means the correct answer IS present as a selectable minority, so a non-degenerate reranker CAN win.",
+  "selectable_headroom": "oracle - SC on the scored corpus; measures how much room a reranker has to improve over majority vote.",
+  "reranker_makes_distinct_selections": "Non-degeneracy de-flag: if True, the reranker selects at least one answer different from SC, so the result is not a tautological null (exp3507 fix).",
+  "headroom_corpus_n": "Held-out problems scored (>= 40 required); below 40 the estimate is too noisy to support a distributional claim.",
+  "self_consistency_accuracy": "Majority-vote accuracy \u2014 the PRIMARY CONTROL, reported once. All deltas are computed against this value.",
+  "step_aggregation_energy_accuracy": "exp3520's confirmed min-aggregation scorer; None here because this corpus has no per-step FoVer traces (per_step_traces_captured=False).",
+  "pessimistic_bon_energy_accuracy": "Pessimistic-BoN energy (penalize over-confident flips) per arXiv:2604.04648; directly targets exp3519's wrong-flip failure mode.",
+  "optimal_aggregation_accuracy": "Best energy condition held-out accuracy \u2014 THE headline condition (DISTINCT from SC when reranker_makes_distinct_selections=True).",
+  "best_condition": "The energy condition with the highest held-out accuracy; used to identify which mechanism (if any) drives the improvement.",
+  "flip_count_best_vs_sc": "Problems where the best condition differs from SC \u2014 the tautology-clean primary signal; MUST be > 0 for a non-degenerate result.",
+  "flips_correct_best": "Flips that became CORRECT (win mechanism: recovering minority-correct answers that SC dismissed).",
+  "flips_incorrect_best": "Flips that became WRONG (cost: incorrectly overriding SC's correct majority).",
+  "net_correctness_gain_best": "flips_correct - flips_incorrect; the honest net effect of reranking. Positive = energy reranker adds value on this corpus.",
+  "delta_best_vs_self_consistency": "Best condition minus SC at matched compute \u2014 THE headline delta. Positive AND significant (p<0.05) = G1 gate passes.",
+  "paired_significance": "McNemar exact p + paired bootstrap CI95 for the best-condition delta; establishes statistical confidence rather than relying on point estimates.",
+  "random_seed": "Determinism; CONTENT-DERIVED (sha256 of corpus + config string), NOT the experiment number \u2014 per CLAUDE.md Adversarial Artifact Verification.",
+  "reproducibility_checksum": "Content hash of corpus + reranker config + seed; lets a third party confirm the exact data the artifact was computed over.",
+  "duration_s": "Wall-clock time; cached scoring + sklearn only, so 1s floor is legitimate and DURATION_TOO_SHORT adversarial flag should not fire."
+ },
+ "extended_metrics": {
+  "greedy_accuracy": 0.408602,
+  "process_energy_argmin_accuracy": 0.247312,
+  "trained_energy_vote_accuracy": 0.473118,
+  "flip_count_process_vs_sc": 29,
+  "flip_count_pbon_vs_sc": 27,
+  "flip_count_trained_vs_sc": 3,
+  "n_folds": 5
+ }
+}
