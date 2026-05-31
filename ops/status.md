@@ -1,5 +1,46 @@
 # Carnot — Operational Status
 
+## Session 2026-05-31 - Milestone 2026.05.324 Research Planning Staged
+
+Planned milestone 2026.05.324 ("Depth-Over-Breadth X") as the NEXT milestone after all
+`.323` tasks completed. Authority: `results/experiment_3505_p01_sudoku_real_combinatorial_optimizer_ladder_v2.json`
+(P0.1 Route 1 CLEAN POSITIVE — energy global inference solves Sudoku `solve_rate=1.0` via
+discrete SA / 20-restarts / exact-CP vs AR greedy `0.0`, encoding E==0 re-asserted),
+`results/experiment_3507_...inband_corpus_v9.json` (Route 2 FLAGGED — energy reranker
+collapsed onto the SC baseline, `flip_count=0`), `results/experiment_3508_...close_gap_v1.json`
+(FLAGGED reference==measured duplication), `results/experiment_3509_...beta_law_deployment_v1.json`
+(CLEAN NEGATIVE — offline β-law does not deploy), `results/experiment_3510_...g2...v3.json`
+(G2 regression-clean, external pending = SOLE unmet gate), the `.323` synthesis/capstone,
+`ops/north-star.md`, `ops/known-issues.md`, and a fresh arxiv sweep.
+
+The `.323` finding: P0.1 has its FIRST clean positive — but it is fragile (21 puzzles, a
+naive-greedy AR baseline, parallel_tempering=0.38) and narrow (Sudoku only), and its
+product-relevant sibling (energy-vs-self-consistency on natural-language math) is broken.
+`.324` stays in DEPTH (no breadth churn): HARDEN the Sudoku positive (fair LLM-AR baseline +
+PT diagnosis + >=40 puzzles, exp3517), GENERALIZE it to a SECOND CSP (exp3518), FIX the
+Route-2 reranker collapse / break the consensus trap (exp3519), DE-FLAG + falsify the
+step-to-final gap with a shuffle-label control (exp3520), find the self-learning rule that
+actually deploys (adaptive-online + conservative-default β, exp3521, the mandatory
+continuous-self-learning task), and keep G2 fresh (exp3522).
+
+Updated `research-references.md` with the 2026-05-31 Post-`.323` sweep (arXiv:2410.14157
+discrete-diffusion-beats-AR across Sudoku/SAT/Countdown; DIFUSCO 2302.08224; Sudoku-Bench
+2505.16135 + Kona 96%/2% + Pathway BDH for a fair AR baseline; CoVerRL 2603.17775 "consensus
+trap" for the Route-2 fix; ThinkPRM; intra-trajectory consistency 2506.09096), rewrote
+`openspec/change-proposals/research-roadmap-vNEXT.md`, and created `research-roadmap-next.yaml`
+with 12 tasks (`exp3515`-`exp3526`). Carried the working `.322`/`.323` architecture rules: all
+tasks `agent_type: claude` + `requires_claude: true` (gemini-cli DOWN), NO `model: opus`,
+cascade-proof (no depth task gated on another; UNGATED synthesis; capstone gates only on the
+synthesis-ready flag), per-iteration progress flush + hard wall-clock budgets, and the tightened
+anti-tautology seed/distinct-field discipline (aggregations `random_seed=20260531`; measurements
+content-derived; no reference==measured fields; runtime distinct-from-SC asserts on the reranker).
+Validation passed: YAML schema, prior-failure 4-subfield discipline, exclusion-manifest lint,
+canonical-URL + overdue-priority lints, conductor manifest validator, and model/agent coherence.
+(The roadmap-gate audit's single GATE_FIELD_CROSS_REF note is the same benign parser quirk the
+already-activated `.323` roadmap produces — the gate field IS present in the proven-good format.)
+Left `research-roadmap.yaml` and `scripts/research_conductor.py` untouched.
+
+
 **Last Updated:** 2026-05-28 (Milestone 2026.05.305 operational retrospective complete)
 
 ## Session 2026-05-28 - Milestone 2026.05.305 Operational Retrospective Complete

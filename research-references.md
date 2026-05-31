@@ -1,3 +1,107 @@
+## 2026-05-31 Post-.323 Planning Sweep (Milestone 2026.05.324)
+
+`.323` (Depth-Over-Breadth IX) was the milestone P0.1 produced its **first clean positive
+datapoint** — and simultaneously exposed exactly which parts of the positive are fragile and
+which adjacent results are broken. The verdicts:
+
+- **exp3505 (P0.1 Route 1, Sudoku optimizer ladder): CLEAN POSITIVE.** On the now-VALIDATED
+  Sudoku-Ising encoding (E==0 re-asserted), real combinatorial optimizers solve at
+  `solve_rate=1.0` across all difficulty tiers (21/21) — `discrete_sa_single=1.0`,
+  `discrete_sa_restarts20=1.0`, `exact_cp=1.0` — while the autoregressive greedy baseline
+  solves `0.0` and `vanilla_langevin=0.0` (gradient-only still fails, consistent with .322's
+  exp3494). **This is the first clean P0.1 evidence that energy-based global inference with a
+  proper combinatorial optimizer solves what autoregressive generation cannot.** Two
+  fragilities to harden in .324: (a) only **21 puzzles**; (b) `parallel_tempering=0.38` only —
+  PT *underperformed* SA, which is backwards and signals a temperature-ladder/tuning bug worth
+  diagnosing; (c) the AR baseline is a **naive greedy fill**, not a real LLM — a defensible
+  P0.1 claim needs the genuine LLM-on-Sudoku baseline (well-documented in the literature below)
+  and ideally an in-house SOTA-GGUF run; (d) Sudoku-only — needs a SECOND CSP to show the
+  positive is a general property, not Sudoku-overfit.
+- **exp3507 (P0.1 Route 2, energy-vs-SC on the in-band level-3 corpus): FLAGGED — REAL
+  SUBSTRATE BUG.** `level3_n=49`, `level3_sc=0.653` (in band), but **every energy metric
+  collapsed to the SC baseline 0.653061** (process-energy argmin, trained-energy vote, hybrid,
+  optimal-aggregation all == 0.653061; `flip_count_optimal_vs_sc=0`; `delta=0.0`). The reranker
+  made **zero distinct selections from the SC majority** — the fitted λs collapsed to 0. This is
+  not an adversarial false-positive; the energy reranker is degenerate on this substrate and
+  must be FIXED before any energy-vs-SC verdict on natural-language math is defensible.
+- **exp3508 (step-to-final gap closure): FLAGGED — field-duplication tautology.** It stored a
+  reference value identical to a measured value twice (`fover_step_error_auroc_reference=0.9131`
+  == `step_error_auroc=0.9131`; `unaggregated_..._reference=0.601` == measured 0.601). The
+  headline `min`-aggregation result (final-correctness AUROC 0.601→0.903, `gap_closed_fraction
+  =0.9665`) is **directional only** until re-run with distinct field names AND a shuffle-label
+  control ruling out the trivial "min-of-step-error-scores ≈ all-steps-correct ≈ final-correct"
+  tautology.
+- **exp3509 (FR-11 β-law deployment): CLEAN NEGATIVE.** `deployed_law_prevents_collapse=False` —
+  the offline-fitted `β_min = -0.300 + 1.846·λ_min` law (exp3498) does **NOT** generalize to
+  fresh deployment configs. Honest negative; recommendation is a conservative default β. The
+  .324 self-learning step must validate the conservative default's robustness AND test an
+  ADAPTIVE ONLINE β rule (since the offline law failed).
+- **exp3510 (G2): CLEAN.** Package regression-clean (AUROC 0.9131 within CI), external run
+  pending. G2 remains the SOLE unmet publication gate (`unmet_gates=['G2']`), "external-in-motion".
+- Gate synthesis (exp3513) + capstone (exp3514): clean this time (seed = 20260531 fix worked);
+  `depth_forcing_function_can_relax=True` (P0.1 has a clean verdict + G2 external-in-motion).
+
+**The diagnosis that drives .324:** P0.1 has a *positive* but it is *fragile* and *narrow*, and
+its more product-relevant sibling (energy-vs-SC on natural-language math) is *broken*. .324 stays
+in DEPTH (no breadth churn): (1) HARDEN the Sudoku positive into a defensible result — more
+puzzles, harder tiers, a FAIR LLM-AR baseline, and diagnose the PT underperformance;
+(2) GENERALIZE it to a SECOND CSP (the discrete-diffusion-beats-AR literature gives the testbed);
+(3) FIX the Route-2 energy-reranker collapse so it makes distinct selections (the "consensus
+trap"); (4) DE-FLAG the step-to-final gap with distinct fields + a shuffle-label control;
+(5) find the self-learning rule that actually deploys (conservative default + adaptive online β),
+since the offline law failed; (6) keep G2 fresh.
+
+New references surfaced (2026-05-31 Post-.323 sweep), directly actionable:
+
+- **arXiv:2410.14157 — "Beyond Autoregression: Discrete Diffusion for Complex Reasoning and
+  Planning."** THE peer/precedent for the exp3505 Route-1 positive AND the testbed for the
+  .324 generalization task: discrete diffusion (a non-autoregressive, energy-adjacent global
+  inference) significantly outperforms autoregressive models on **Sudoku (100% vs 20.7%),
+  Boolean SAT, and Countdown (91.5% vs 45.8%)** — i.e. the "energy/global-inference beats AR on
+  CSPs" result generalizes across multiple problem families, not just Sudoku. exp3518 replicates
+  the energy-vs-AR comparison on a SECOND CSP (graph coloring / SAT / Countdown) using this as
+  the multi-task scaffold.
+- **arXiv:2302.08224 — "DIFUSCO: Graph-based Diffusion Solvers for Combinatorial Optimization"
+  (NeurIPS 2023).** Parallel (non-AR) diffusion solver for graph CO (TSP, MIS); the canonical
+  reference for a graph-CSP second testbed and for the "AR sequential decoding is the bottleneck"
+  framing exp3518 leans on.
+- **arXiv:2505.16135 — "Sudoku-Bench: Evaluating creative reasoning with Sudoku variants"
+  (NeurIPS 2025).** SOTA LLMs solve **<15%** of puzzles unaided; the curated difficulty metric
+  (missing-cell count + distribution) is the difficulty labeling exp3517 should adopt. THE
+  reference for a fair, literature-grounded LLM-AR baseline.
+- **logicalintelligence.com Kona EBM Sudoku demo — "EBM 96% vs LLMs 2%."** The existence proof
+  + headline comparator: Kona 1.0 solves hard Sudoku at 96.2% (~313 ms) where frontier LLMs sit
+  near 2%. exp3517's AR=0.0 is consistent with this; cite it so the Route-1 baseline is fair,
+  not a strawman.
+- **Pathway BDH — "solves Sudoku Extreme with 97.4% accuracy, while leading LLMs are close to
+  0."** Second independent datapoint that AR-LLMs fail Sudoku at the extreme tier (~0%), and a
+  non-AR architecture succeeds — corroborates the Route-1 finding's direction.
+- **arXiv:2603.17775 — "CoVerRL: Breaking the Consensus Trap in Label-Free Reasoning via
+  Generator-Verifier Co-Evolution" (2026).** Names and breaks EXACTLY the exp3507 failure mode:
+  the "consensus trap" where a verifier collapses onto the self-consistency majority and makes
+  no distinct selections (flip_count=0). The mechanism (generator-verifier co-evolution / a
+  verifier trained to recover self-consistent errors) is the technique exp3519 uses to make the
+  energy reranker produce non-zero distinct selections.
+- **arXiv:2504.16828 — "Process Reward Models That Think" (ThinkPRM, carried forward).** ThinkPRM
+  beats self-consistency at matched compute under high sampling via weighted-majority over step
+  scores — the bar exp3519 (a non-degenerate energy reranker) must clear.
+- **arXiv:2506.09096 — "Intra-Trajectory Consistency for Reward Modeling" (2026).** Step-score
+  consistency along a trajectory for reward modeling; an aggregation prior for exp3520 (de-flag +
+  verify the step-to-final aggregation).
+- **arXiv:2509.24210 (ICLR 2026), arXiv:2511.21086 — Sudoku / orthographic constraint-satisfaction
+  LLM evaluations.** Additional difficulty-alignment + CSP-evaluation references for the .324
+  hardening + generalization tasks.
+
+**How .324 uses these:** exp3517 (Sudoku hardening) adopts the Sudoku-Bench difficulty metric +
+the Kona/BDH literature AR baselines + an optional in-house SOTA-GGUF LLM-AR run (CUDA-gated,
+non-fatal). exp3518 (second CSP) replicates energy-vs-AR on graph coloring / SAT / Countdown per
+2410.14157 + DIFUSCO. exp3519 (Route-2 fix) breaks the consensus trap (CoVerRL) so the reranker
+makes distinct selections and clears the ThinkPRM bar. exp3520 (de-flag gap) uses distinct fields
++ a shuffle-label control + intra-trajectory-consistency aggregation. exp3521 (self-learning)
+validates the conservative-default + adaptive-online β after the offline law failed.
+
+---
+
 ## 2026-05-31 Post-.322 Planning Sweep (Milestone 2026.05.323)
 
 `.322` (Depth-Over-Breadth VIII) was the FIRST milestone where the P0.1 architecture held:
