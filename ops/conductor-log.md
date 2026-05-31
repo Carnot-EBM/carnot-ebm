@@ -7204,3 +7204,4 @@ web search: https://docs.garak.ai/garak/examples/pr |
 | 2026-05-31 03:12 UTC | FR-11 beta_min = f(lambda_min) predictive law — mi | OK | cache hit: 133 passed in 3.85s |
 | 2026-05-31 03:20 UTC | FoVer G2 — clean-room regression-verify the self-c | OK | 81 passed in 3.93s |
 | 2026-05-31 03:25 UTC | KV260 terminal board-level latency transcript (dri | OK | 81 passed in 4.06s |
+| 2026-05-31 03:31 UTC | PolarFire opportunistic reachability + continuity  | OK | 81 passed in 3.56s |
