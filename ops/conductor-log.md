@@ -7309,3 +7309,4 @@ web search: https://docs.garak.ai/garak/examples/pr |
 | 2026-05-31 18:40 UTC | Capstone v327 | OK | 84 passed in 4.13s |
 | 2026-05-31 19:12 UTC | Plan milestone 2026.05.328 | OK | 11 tasks proposed |
 | 2026-05-31 19:14 UTC | Milestone 2026.05.328 activated | OK | 11 tasks queued |
+| 2026-05-31 19:19 UTC | Archive milestone .327 honestly and activate .328 | OK | 82 passed in 4.09s |
