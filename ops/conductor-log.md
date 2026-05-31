@@ -7275,3 +7275,19 @@ web search: https://docs.garak.ai/garak/examples/pr |
 | 2026-05-31 15:28 UTC | P0.1 Route-2 SELECTABLE-HEADROOM corpus build (liv | FAIL | Gemini CLI error: Stalled after 600s silence. Last output: Warning: 256-color  |
 | 2026-05-31 15:36 UTC | P0.1 Route-2 energy/aggregation-vs-STRONG-SC on th | OK | 85 passed in 4.72s |
 | 2026-05-31 15:42 UTC | Generalize the step->final aggregation positive CR | OK | 81 passed in 4.15s |
+| 2026-05-31 15:55 UTC | FR-11 DEPLOY the conservative-default self-learnin | FAIL | Gemini CLI error: Stalled after 600s silence. Last output: Warning: 256-color  |
+| 2026-05-31 15:57 UTC | FR-11 DEPLOY the conservative-default self-learnin | SKIP | Pre-tests failing, self-heal failed: nondegenerate_gate_passed: True |
+| 2026-05-31 15:59 UTC | FR-11 DEPLOY the conservative-default self-learnin | SKIP | Pre-tests failing, self-heal failed: nondegenerate_gate_passed: True |
+| 2026-05-31 16:01 UTC | FoVer G2 — clean-room regression-verify the self-c | SKIP | Pre-tests failing, self-heal failed: nondegenerate_gate_passed: True |
+| 2026-05-31 16:03 UTC | FoVer G2 — clean-room regression-verify the self-c | SKIP | Pre-tests failing, self-heal failed: nondegenerate_gate_passed: True |
+| 2026-05-31 16:06 UTC | FoVer G2 — clean-room regression-verify the self-c | SKIP | Pre-tests failing, self-heal failed: nondegenerate_gate_passed: True |
+| 2026-05-31 16:08 UTC | KV260 terminal board-level latency transcript (dri | SKIP | Pre-tests failing, self-heal failed: nondegenerate_gate_passed: True |
+| 2026-05-31 16:10 UTC | KV260 terminal board-level latency transcript (dri | SKIP | Pre-tests failing, self-heal failed: nondegenerate_gate_passed: True |
+| 2026-05-31 16:12 UTC | KV260 terminal board-level latency transcript (dri | SKIP | Pre-tests failing, self-heal failed: nondegenerate_gate_passed: True |
+| 2026-05-31 16:15 UTC | PolarFire opportunistic reachability + continuity  | SKIP | Pre-tests failing, self-heal failed: nondegenerate_gate_passed: True |
+| 2026-05-31 16:17 UTC | PolarFire opportunistic reachability + continuity  | SKIP | Pre-tests failing, self-heal failed: nondegenerate_gate_passed: True |
+| 2026-05-31 16:19 UTC | PolarFire opportunistic reachability + continuity  | SKIP | Pre-tests failing, self-heal failed: nondegenerate_gate_passed: True |
+| 2026-05-31 16:21 UTC | G1-G4 gate-status synthesis v326 (UNGATED, cascade | SKIP | Pre-tests failing, self-heal failed: nondegenerate_gate_passed: True |
+| 2026-05-31 16:24 UTC | G1-G4 gate-status synthesis v326 (UNGATED, cascade | SKIP | Pre-tests failing, self-heal failed: nondegenerate_gate_passed: True |
+| 2026-05-31 16:26 UTC | G1-G4 gate-status synthesis v326 (UNGATED, cascade | SKIP | Pre-tests failing, self-heal failed: nondegenerate_gate_passed: True |
+| 2026-05-31 16:28 UTC | Capstone v326 | GATE_BLOCK | Pre-emptive skip: upstream retired (exp3548-g-gate-status-synthesis-v326) |
