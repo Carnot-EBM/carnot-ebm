@@ -15025,3 +15025,21 @@ and `honest_verdict` beginning with `complete:`.
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-REPORT-3458 | Implemented (`python/carnot/reporting/archive_v318_activate_v319_3458.py`) | Implemented (`tests/python/reporting/test_archive_v318_activate_v319_3458.py`) |
+
+### REQ-REPORT-3583: Archive V329 Activate V330
+
+The Exp 3583 workflow shall archive milestone `2026.05.329` and confirm `2026.05.330` is active.
+It shall write `results/experiment_3583_archive_v329_activate_v330.json` with the specified fields.
+
+#### SCENARIO-REPORT-3583: Archive V329 Activate V330
+
+**Given** milestone .329 artifacts are available
+**When** the Exp 3583 workflow runs
+**Then** it writes `results/experiment_3583_archive_v329_activate_v330.json`
+with `honest_verdict` beginning with `complete: archived_v329_contaminated_null`.
+
+## Implementation Status (REQ-REPORT-3583)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-3583 | Implemented (`scripts/experiment_3583_archive_v329_activate_v330.py`) | Implemented (`tests/python/test_experiment_3583_archive.py`) |
