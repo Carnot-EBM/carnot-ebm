@@ -1,1069 +1,392 @@
-milestone: "2026.05.328"
-milestone_title: "Depth-Over-Breadth XIV: CONSOLIDATE the P0.1 positive — generalize the Route-1 energy-beats-strong-classical+AR result to a SECOND discriminating CSP + harden the graph-coloring positive with multi-seed CI and a second generator + give Route-2 NL-math its terminal verdict (final headroom-build attempt or permanent retire) + PROMOTE the cross-corpus aggregation positive to a defensible secondary headline (A->{{B,C}} multi-seed CI) + ADVANCE self-learning across a corpus battery with a P0.2 verifier-diversity grounding test + G2 drift-verify"
-milestone_doc: "openspec/change-proposals/research-roadmap-vNEXT.md"
+milestone: "2026.05.329"
+milestone_title: "Verifier Cross-Domain Value — does the verifier ensemble catch errors SC/baselines miss, and does it generalize beyond math (code bugs + factual hallucinations)?"
+milestone_doc: openspec/change-proposals/research-roadmap-vNEXT.md
 
-# ---------------------------------------------------------------------------
-# PLANNER NOTE (Opus 4.8, 2026-05-31)
-# .327 (Depth-Over-Breadth XIII) gave P0.1 its FIRST clean, terminal, DISCRIMINATING verdict — POSITIVE.
-# Read via scripts/summarize_artifact.py:
-#   - exp3551 (Route-1 graph coloring, DISCRIMINATING corpus): CLEAN TERMINAL POSITIVE — energy global
-#     inference solve_rate 0.9625 vs a STRONG DSATUR baseline 0.70 (hard-tier 0.56), hard-tier paired
-#     diff +0.38 p=0.000, greedy-AR 0.15, exact==1.0, pt_swap_acceptance 0.346, 0 CRITICAL flags. Energy
-#     descent beats BOTH autoregressive AND a strong classical CSP solver. THE result the Depth function
-#     was waiting for — but ONE CSP / ONE seed / ONE generator.
-#   - exp3553 (Route-2 fair test): BLOCKED no-headroom AGAIN — exp3552's greedy-wrong corpus built only
-#     n=3 (a stub). Route-2 headroom-starved 4x. MoB (2511.18630) + Delta-gap theory (2506.05295) predict
-#     SC is near-optimal on NL-math.
-#   - exp3554 (aggregation promotion): BLOCKED no_second_corpus_for_transfer — the exp3543 A->B transfer
-#     positive (AUROC 0.861) STANDS but unpromoted; the second/third corpus was not constructible.
-#   - exp3555 (FR-11 non-degenerate deploy): CLEAN POSITIVE — conservative-default beta prevents N>=200
-#     collapse + maintains real quality on a true_acc~0.34 corpus. First non-vacuous FR-11 deploy.
-#   - exp3556 (G2 regression): CLEAN — package reproduces 0.9131 within CI; G2 the SOLE unmet gate.
-#   depth_forcing_function_can_relax = true. G1=T G2=F G3=T G4=T.
-#
-# .328 STRATEGY: the Depth function CAN relax, so .328 is CONSOLIDATION — harden the proven positives
-# into defensible (secondary) headlines and give the bounded tracks their terminal verdicts. North-star
-# §1 still governs: every task advances a headline (Route-1 generalization, aggregation promotion,
-# self-learning, G2) or it is noise. NO vN+1 re-measurement that does not answer a new question.
-#
-# THE .328 RULES (carried from the working .322-.327 architecture):
-#  1. AGENT ROUTING: all 11 tasks PLANNED agent_type: claude + requires_claude: true — REQUIRED to pass
-#     the MODEL_AGENT_COHERENCE pre-activation gate audit (scripts/experiment_1152_gate_audit_pre_activation_v2.py),
-#     which does NOT allow gemini. The outer-loop REROUTES the mechanical tasks
-#     (3561/3563/3565/3566/3567/3568/3569/3570/3571) to gemini AT ACTIVATION per Gemini-Default + the
-#     .325/.326/.327 reroute precedent (gemini-cli 0.44.0 is up); exp3564 (Route-2 final attempt +
-#     honest terminal framing) STAYS claude — the SOLE genuine-judgment task.
-#  2. NO model: opus anywhere (the opus thinking-400 killed .321's builder + .322's first G2).
-#  3. CASCADE-PROOF: no depth task gated_on another depth task; exp3564 READS its own / exp3552's corpus
-#     and blocks honestly rather than gating; the synthesis (exp3570) is UNGATED (reads & skips
-#     absent/flagged); only the capstone (exp3571) gates on the synthesis-ready flag.
-#  4. PER-ITERATION progress flush + hard wall-clock budget on every loop (defeats the 1201s idle-timeout).
-#  5. ANTI-TAUTOLOGY: aggregation/ops/hardware/G2/synthesis/capstone tasks set random_seed=20260601 (NOT
-#     the exp number); measurement tasks set a CONTENT-DERIVED seed; NEVER store the same measured
-#     quantity under two field names; references go ONLY in methodology_note strings; CSP corpora must NOT
-#     be ceiling-saturated for the STRONG baseline (strong-baseline hard-tier solve-rate < 0.9).
-# ---------------------------------------------------------------------------
+# OUTER-LOOP / OPERATOR PRE-STAGED ROADMAP (2026-05-31, Claude Opus 4.8 on operator directive). PIVOT:
+# the P0.1 energy-descent existential question is answered HONEST-NEGATIVE (Route-1/Route-2 bounded; SC /
+# strong classical baselines are near-optimal on math/CSP, so energy SELECTION has no headroom). G2 is now
+# CLOSED (FoVer headline reproduced on a clean CI runner, run 26725185125; paper_ready=true). The
+# Depth-Over-Breadth forcing function is RETIRED. So this milestone stops re-grinding the answered question
+# and asks the REAL product question (Carnot's north star = escape LLM hallucinations): the now-reproduced
+# VERIFIER ENSEMBLE works on FoVer math step-errors (AUROC 0.9131). Does it (a) catch errors a STRONG
+# baseline (model-confidence / best single verifier) MISSES — the "second pair of eyes" value, tested where
+# it matters — and (b) GENERALIZE beyond math to code bugs (execution-verifiable ground truth) and factual
+# hallucinations (the core motivation, noisier labels)? This has REAL headroom: SC is not a near-optimal
+# baseline for "is THIS output wrong?" (verification) the way it is for "what's the answer?" (selection).
+# Build on existing labeled data (HumanEval code verification exp1999; data/qa_dataset_1000.json) to avoid
+# the blocked_cannot_construct trap. All tasks default agent_type: gemini (the claude->gemini coercion
+# enforces it). Either outcome is genuine learning: generalizes -> broader paper; domain-bound -> a precise,
+# honest limitation that scopes the verifier claim.
 
 tasks:
-  # =========================================================================
-  # PHASE A — OPS transition
-  # =========================================================================
-  - id: exp3561-archive-v327-activate-v328
-    operator_override: "2026-05-29 operator directive (standing, mechanical auto-stamp): routine milestone-transition task — false-positive scope-match vs exp3550/exp3539 archive tasks; structurally never a doomed rerun."
-    prior_failures:
-      - experiment_id: exp3550-archive-v326-activate-v327
-        verdict: "complete: Archived milestone .326 and activated .327."
-        addressed_by: "Routine milestone progression; .327 has completed (all 11 tasks ran — P0.1 Route-1 got a CLEAN TERMINAL POSITIVE on a discriminating corpus, Route-2 and the aggregation promotion blocked on build failures not science, FR-11 deployed on a non-degenerate corpus, G2 stayed clean) and is archived to make room for .328."
-        retire_if_same_verdict: false
-    milestone: "2026.05.328"
-    title: "Archive milestone .327 honestly and activate .328"
+  - id: exp3572-archive-v328-activate-v329
+    operator_override: "2026-05-29 operator directive (standing): routine milestone-transition (archive-vN-activate-vN+1) — false-positive scope-match vs prior archive-v* tasks; structurally never a doomed rerun."
+    milestone: "2026.05.329"
+    title: "Archive milestone .328 honestly and activate .329 (verifier cross-domain pivot)"
     priority: critical
     max_turns: 20
-    agent_type: claude
-    requires_claude: true   # plan-time claude to pass the MODEL_AGENT_COHERENCE pre-activation gate audit (no gemini); outer-loop reroutes to gemini AT ACTIVATION per Gemini-Default + the .325/.326/.327 reroute precedent
-    estimated_wall_time_min: 5
+    agent_type: gemini
+    estimated_wall_time_min: 6
     track: ops
     inference_substrate: aggregation_from_upstream_artifacts
     requires_gpu: false
-    deliverable: "results/experiment_3561_archive_v327_activate_v328.json"
+    deliverable: results/experiment_3572_archive_v328_activate_v329.json
     prompt: |
-      CONTEXT: Milestone .327 (Depth-Over-Breadth XIII) gave P0.1 its FIRST clean, terminal,
-      DISCRIMINATING verdict — and it came back POSITIVE. Read via scripts/summarize_artifact.py the
-      verdicts are: exp3551 (Route-1 graph coloring on a DISCRIMINATING corpus) CLEAN TERMINAL POSITIVE —
-      energy global inference solve_rate 0.9625 vs a STRONG DSATUR baseline 0.70 (hard-tier 0.56),
-      hard-tier paired diff +0.38 p=0.000, greedy-AR 0.15, exact==1.0, 0 CRITICAL flags (energy descent
-      beats BOTH autoregressive AND a strong classical CSP solver); exp3553 (Route-2 fair test) BLOCKED
-      no-headroom because exp3552's greedy-wrong corpus built only n=3; exp3554 (aggregation promotion)
-      BLOCKED no_second_corpus_for_transfer (the exp3543 A->B transfer positive AUROC 0.861 STANDS but
-      unpromoted); exp3555 (FR-11 non-degenerate deploy) CLEAN POSITIVE; exp3556 (G2 regression) CLEAN,
-      G2 the SOLE unmet gate. depth_forcing_function_can_relax = true. The diagnosis: P0.1 Route-1 is a
-      clean positive but single-CSP/single-seed; two fresh positives are blocked on BUILD failures not
-      science; .328 is CONSOLIDATION.
+      CONTEXT: .328 closed P0.1 as an HONEST NEGATIVE (Route-1/Route-2 bounded; SC near-optimal). G2 is CLOSED
+      (paper_ready=true). The Depth-Over-Breadth forcing function is RETIRED (CLAUDE.md). .329 pivots to the
+      verifier ensemble's REAL value: does it catch errors strong baselines miss, and generalize to code +
+      facts? DO NOT re-assert a P0.1 positive; DO NOT re-test Route-1/Route-2.
+      TASK: archive .328 to research-complete.yaml honestly, confirm .329 active.
+      REQUIRED ARTIFACT FIELDS (principle-annotated): honest_verdict (terminal prefix
+      complete:/success:/passed:/shipped_), inference_substrate=aggregation_from_upstream_artifacts,
+      p01_recorded_as (string: honest-negative), g2_recorded_as (string: closed/paper_ready),
+      n_tasks_archived, random_seed, reproducibility_checksum, duration_s.
+      TERMINAL VERDICT: "complete: archived_v328_p01_honest_negative_g2_closed_v329_verifier_pivot_active"
+      Run: cd {project_root} && python scripts/experiment_3572_archive_v328_activate_v329.py
+      Do NOT push. Do NOT modify scripts/research_conductor.py.
 
-      EXISTING CODE TO READ FIRST:
-        - results/experiment_3551_p01_graph_coloring_terminal_discriminating_corpus_v3.json (the clean terminal positive)
-        - results/experiment_3553_p01_route2_energy_vs_strong_sc_on_headroom_corpus_v3.json (blocked no-headroom)
-        - results/experiment_3554_fover_step_aggregation_secondary_headline_multiseed_third_corpus_v2.json (blocked no second corpus)
-        - results/experiment_3555_fr11_conservative_default_deploy_nondegenerate_corpus_v3.json (FR-11 clean positive)
-        - results/experiment_3559_g_gate_status_synthesis_v327.json + results/experiment_3560_capstone_v327.json (gate state; G2 sole unmet)
-        - ops/conductor-log.md (the .327 trail) ; ops/changelog.md (append, never delete) ; ops/known-issues.md
-        - ops/north-star.md (G1-G4 gate; G2 the sole unmet gate)
-
-      TASK: Archive .327 to ops/changelog.md and write/refresh the .327 operational retrospective JSON.
-      Confirm .328 is active.
-
-      CONCRETE STEPS:
-        1. Read the .327 artifacts + the conductor log.
-        2. Draft/refresh results/operational_retro_2026_05_327.json (schema carnot.operational_retro.v67):
-           experiments completed (11 of 11), the KEY finding (P0.1 Route-1 got a CLEAN TERMINAL POSITIVE
-           on a DISCRIMINATING corpus — energy 0.9625 vs strong DSATUR 0.70, p=0.000; Route-2 and the
-           aggregation promotion blocked on BUILD failures not science; FR-11 deployed on a non-degenerate
-           corpus; depth_forcing_function_can_relax=true), G2 status (external run pending = sole unmet
-           gate), wall-time, and the top forward gap = "CONSOLIDATE: generalize the Route-1 positive to a
-           SECOND discriminating CSP + multi-seed CI on graph coloring; promote the cross-corpus
-           aggregation positive (A->{{B,C}}); give Route-2 NL-math its terminal verdict; advance
-           self-learning + P0.2 diversity; G2 drift-verify".
-        3. Append a .327 archive section to ops/changelog.md (do NOT delete prior entries).
-        4. Emit the deliverable artifact with honest_verdict starting 'complete:' and field
-           archive_v327_activate_v328_ready=true. Set random_seed=20260601 (NOT 3561).
-      Run command: cd {project_root} && JAX_PLATFORMS=cpu .venv/bin/python scripts/experiment_3561_archive_v327_activate_v328.py. Do NOT push. Do NOT modify scripts/research_conductor.py.
-
-  # =========================================================================
-  # PHASE B — DEPTH (consolidate the P0.1 positives; majority of slots; no cross-gating)
-  # =========================================================================
-
-  # ---- THE #1 PRIORITY: generalize the Route-1 positive to a SECOND discriminating CSP ----
-  - id: exp3562-p01-route1-second-csp-discriminating-generalization-v2
-    operator_override: "2026-05-31 planner (Opus 4.8) under Depth-Over-Breadth: exp3551 (.327) gave P0.1 Route-1 a CLEAN TERMINAL POSITIVE on a DISCRIMINATING graph-coloring corpus (energy 0.9625 vs STRONG DSATUR 0.70, hard-tier p=0.000). exp3518 (.324) showed energy beats AR on a second CSP but only vs a WEAK AR baseline (not a strong classical one). This task GENERALIZES the .327 positive with the SAME discriminating rigor (a STRONG classical baseline forced < 0.9 on the hard tier + multi-seed CI + paired significance) to a NEW CSP (k-SAT near the satisfiability threshold; fallback Max-Cut / number partitioning) — turning a single-CSP positive into 'energy global inference beats strong classical + AR on TWO independent CSPs'. Different (a NEW CSP + the strong-baseline discriminating protocol exp3518 lacked) = a genuine generalization, not a re-run. scope-match vs exp3518/exp3551/exp3540 is the intended P0.1 Route-1 generalization continuation."
+  - id: exp3573-verifier-ensemble-code-bug-error-detection
     prior_failures:
-      - experiment_id: exp3518-p01-second-csp-energy-vs-ar-generalization-v1
-        verdict: "complete: p01_energy_vs_ar_generalizes_to_graph_coloring_solve_rate_1_00_vs_ar_0_50"
-        addressed_by: "exp3518 generalized energy-vs-AR to graph coloring but compared only to a WEAK greedy-AR baseline on a non-discriminating corpus. This task applies the .327 discriminating-corpus + STRONG-classical-baseline + multi-seed-CI + paired-significance protocol to a NEW CSP (k-SAT near threshold; fallback Max-Cut / number partitioning), so the comparison survives the neural-CO critique literature (a method that only beats a weak baseline is not a result). Different CSP + strong baseline + statistical rigor = a robust generalization of the exp3551 positive."
-        retire_if_same_verdict: true
-    # NOT gated_on anything: pure CPU; re-asserts its own encoding + discriminating-hardness preconditions.
-    milestone: "2026.05.328"
-    title: "P0.1 Route-1 GENERALIZE to a SECOND discriminating CSP (CPU, operator priority #1) — apply the exp3551 protocol (STRONG classical baseline forced < 0.9 on the hard tier while exact == feasible; energy vs strong-classical vs AR-greedy; multi-seed bootstrap CI + paired significance) to a NEW CSP (k-SAT near the satisfiability threshold alpha~4.26; fallback Max-Cut / number partitioning). Energy significantly beats the strong baseline on the hard tier -> the Route-1 positive generalizes (robust secondary headline). Energy ties/loses -> the Route-1 claim is bounded to graph coloring (terminal)."
-    priority: critical
-    max_turns: 70
-    agent_type: claude
-    requires_claude: true   # plan-time claude to pass the MODEL_AGENT_COHERENCE pre-activation gate audit (no gemini); outer-loop reroutes to gemini AT ACTIVATION per Gemini-Default + the .325/.326/.327 reroute precedent
-    estimated_wall_time_min: 45
-    track: evidence
-    inference_substrate: ising_energy_optimization_cpu
-    requires_gpu: false
-    deliverable: "results/experiment_3562_p01_route1_second_csp_discriminating_generalization_v2.json"
-    prompt: |
-      CONTEXT: exp3551 (.327) is P0.1's first clean, terminal, DISCRIMINATING positive: on a graph-coloring
-      corpus near the chromatic/freezing threshold (STRONG DSATUR forced to 0.70 global / 0.56 hard-tier),
-      energy global inference (Ising/QUBO + parallel-tempering/SA + exact CP) solved 0.9625, hard-tier
-      paired diff +0.38, p=0.000; greedy-AR 0.15; exact==1.0; pt_swap_acceptance 0.346; 0 CRITICAL flags.
-      Energy descent beats BOTH autoregressive AND a strong classical CSP solver. But it is ONE CSP. The
-      neural-CO critique literature (arXiv:2502.03669 AI-vs-classical MIS; arXiv:2302.03602
-      Angelini/Ricci-Tersenghi GNN-vs-greedy; arXiv:2112.12251 ML4CO strong baselines) is unforgiving of
-      single-instance-family claims. This task GENERALIZES the positive to a SECOND discriminating CSP
-      with the SAME strong-baseline rigor. PRIMARY candidate: k-SAT near the satisfiability threshold
-      (alpha = clauses/vars ~ 4.26 for 3-SAT), where the discrete-diffusion-beats-AR family
-      (arXiv:2410.14157) showed AR collapses and a non-AR method wins; STRONG baseline = WalkSAT or a CDCL
-      solver; AR baseline = greedy left-to-right assignment. FALLBACK candidates if k-SAT cannot be made
-      discriminating on the hard tier: Max-Cut (strong baseline = local search / Goemans-Williamson SDP
-      rounding) or number partitioning (strong baseline = Karmarkar-Karp). PT priors: arXiv:2509.23043
-      (IsingFormer learned PT proposals), arXiv:2506.14781 (2D PT for constrained optimization),
-      arXiv:2403.01320 (energy landscapes).
-
-      EXISTING CODE TO READ FIRST:
-        - scripts/experiment_3551_p01_graph_coloring_terminal_discriminating_corpus_v3.py (REUSE the discriminating-corpus protocol, the optimizer ladder, the strong-baseline + AR-greedy + exact comparison, the de-aliased field storage, and the bootstrap-CI/paired-significance machinery; ADAPT the encoding to the NEW CSP)
-        - results/experiment_3551_p01_graph_coloring_terminal_discriminating_corpus_v3.json (the clean positive to generalize: solve_rate 0.9625, strong_baseline 0.70, hard-tier paired diff +0.38 p=0.000)
-        - scripts/experiment_3518_p01_second_csp_energy_vs_ar_generalization_v1.py (the prior second-CSP attempt — note it used only a WEAK AR baseline; do NOT repeat that gap)
-        - scripts/adversarial_verify.py (the TAUTOLOGY + CEILING_SATURATION checks — confirm 0 CRITICAL and no ceiling warn on the HARD tier before finalizing)
-        - python/carnot/ (Ising energy / sampler / parallel-tempering primitives)
-        - research-references.md "2026-05-31 Post-.327 Planning Sweep" (IsingFormer 2509.23043, 2D PT 2506.14781, discrete-diffusion-beats-AR 2410.14157, neural-CO critique 2502.03669/2302.03602/2112.12251)
-
-      TASK: Apply the exp3551 discriminating protocol to a NEW CSP (NOT graph coloring or Sudoku). Build a
-      corpus where a STRONG classical baseline solve-rate ON THE HARD TIER is < 0.9 while the exact solver
-      confirms feasibility (==1.0), and measure energy global inference vs the STRONG baseline vs AR-greedy
-      with multi-seed bootstrap CI + a paired significance test on the hard-tier per-instance solve diff.
-
-      PRECONDITIONS (step 0):
-        0a. ENCODING VALIDITY: encode a known-valid solution of the chosen CSP and assert its Ising/QUBO
-            energy E==0 (for k-SAT, a satisfying assignment has zero unsatisfied-clause penalty). If not ->
-            complete: blocked_second_csp_encoding_invalid (report residual + which CSP); STOP.
-        0b. DISCRIMINATING-HEADROOM GATE (HARD TIER): assemble the corpus near the relevant phase
-            transition and confirm the STRONG baseline solve-rate ON THE HARD TIER < 0.9 WHILE the exact
-            solver confirms feasibility (==1.0). If you cannot push HARD-TIER strong-baseline solve-rate
-            below 0.9 while keeping instances feasible on the chosen CSP, TRY the fallback CSPs in order
-            (k-SAT -> Max-Cut -> number partitioning); if NONE can be made discriminating ->
-            complete: blocked_cannot_construct_discriminating_second_csp (report the CSPs tried + their
-            hard-tier strong-baseline solve-rates).
-
-      CONCRETE STEPS:
-        1. Re-assert Step 0a (E==0) and Step 0b (HARD-TIER strong-baseline < 0.9, exact == 1.0) on the
-           chosen CSP.
-        2. Assemble n>=60 (target 60-120) instances STRATIFIED by difficulty with a HARD tier >=30 near
-           the phase transition. Document CSP family, instance parameters (e.g. n_vars, alpha for k-SAT;
-           n_nodes, density for Max-Cut), feasibility-verification method, and seed.
-        3. OPTIMIZER LADDER (solve-rate per variant): vanilla_descent, tuned geometric SA, K>=20
-           SA-restarts, PARALLEL TEMPERING with instrumented swap-acceptance, and an EXACT baseline.
-           PRINT one flushed progress line per sweep — defeats idle-timeout.
-        4. STRONG NON-AR BASELINE: strong_baseline_solve_rate = best of the CSP-appropriate strong
-           classical methods (k-SAT: WalkSAT/CDCL; Max-Cut: local search / GW rounding; partitioning:
-           Karmarkar-Karp) — global AND strong_baseline_solve_rate_hard_tier (CONFIRM < 0.9). AR baseline:
-           greedy left-to-right / degree-ordered assignment.
-        5. MULTI-SEED + DE-TAUTOLOGY: run the hard-tier paired comparison over >=5 seeds; store EACH
-           measured quantity EXACTLY ONCE (no alias). Literature reference numbers go ONLY in
-           methodology_note strings.
-        6. STATISTICS (HARD TIER): bootstrap CI95 on the per-instance PAIRED difference
-           (energy_solved[i] - strong_solved[i]) ON THE HARD TIER across seeds (must report mean + CI);
-           McNemar exact p (or paired-bootstrap p) for "energy solves strictly more than the strong
-           baseline on the hard tier". Report global solve rates for context.
-        7. MECHANISM ATTRIBUTION: report pt_swap_acceptance_rate (>0 if PT is claimed); else name which
-           optimizer did the work.
-        8. RUN adversarial_verify on the emitted artifact; CONFIRM zero CRITICAL flags. A CEILING_SATURATION
-           WARN on the easy/medium tiers is acceptable; the discrimination is the hard-tier paired
-           comparison. HARD WALL-CLOCK BUDGET ~43 min: finalize + EXIT CLEAN (code 0); prioritize the HARD
-           tier + >=5 seeds over total n if budget tightens. Content-derived seed.
-
-      REQUIRED ARTIFACT FIELDS (each carries a principle per CLAUDE.md):
-        honest_verdict: principle="Terminal verdict starts complete:/success:/passed:/shipped_."
-        inference_substrate: value=ising_energy_optimization_cpu
-        csp_family: principle="the NEW CSP tested (k-SAT / Max-Cut / number partitioning) — NOT graph coloring or Sudoku."
-        encoding_validity_E0: principle="E of a known-valid solution is 0 — the correctness-first precondition for the new CSP."
-        n_instances: principle=">=60 with a hard tier >=30 so the strong-baseline margin is statistically meaningful."
-        strong_baseline_solve_rate: principle="best CSP-appropriate strong classical method (global) — STORED ONCE."
-        strong_baseline_solve_rate_hard_tier: principle="the strong baseline's HARD-TIER solve-rate — MUST be < 0.9 (the discriminating condition). STORED ONCE; do NOT alias."
-        vanilla_descent_solve_rate: principle="the trivial-baseline witness (< 0.9). STORED ONCE."
-        solve_rate: principle="energy global inference solve-rate (feasibility verified) — the gate."
-        solve_rate_ci95: principle="multi-seed bootstrap CI95 on the energy solve-rate."
-        energy_minus_strong_paired_diff_hard_tier: principle="the per-instance paired solve difference (energy - strong) ON THE HARD TIER — the discriminating quantity."
-        energy_minus_strong_paired_diff_hard_tier_ci95: principle="multi-seed bootstrap CI95 on the hard-tier paired difference — must EXCLUDE 0 for a generalized positive."
-        energy_vs_strong_paired_p_hard_tier: principle="McNemar/paired-bootstrap p (HARD TIER) for energy solving strictly more than the strong baseline."
-        ar_greedy_solve_rate: principle="greedy-AR control (the AR-pathology baseline the .327 positive crushed)."
-        exact_baseline_solve_rate: principle="exact-solver reference — confirms the instances ARE feasible (==1.0)."
-        n_seeds: principle=">=5 — the multi-seed rigor exp3551's single run lacked."
-        pt_swap_acceptance_rate: principle="PT swap-acceptance (>0 if PT is the claimed mechanism). STORED ONCE."
-        mechanism_attribution_note: principle="string: which optimizer did the work; literature reference numbers live here, NOT in numeric fields."
-        no_aliased_fields_assert: principle="boolean: runtime-verified no two conceptually-distinct numeric fields are bit-identical to >5 sig figs — passes adversarial_verify with 0 CRITICAL flags."
-        hard_tier_discriminating: principle="boolean: strong_baseline_solve_rate_hard_tier < 0.9 — the comparison can actually discriminate on this CSP."
-        route1_generalizes: principle="boolean: energy significantly beats the strong baseline on the hard tier of a SECOND discriminating CSP (the generalized positive) — false if it ties/loses (Route-1 bounded to graph coloring)."
-        random_seed: principle="determinism; content-derived, NOT the experiment number."
-        reproducibility_checksum: principle="content hash of instance set + encoding + optimizer configs + seeds."
-        duration_s: principle="CPU global-opt over a HARD non-trivial corpus across >=5 seeds takes real wall time; honest value."
-
-      ACCEPTANCE GATES:
-        - condition: "encoding_validity_E0 == true AND strong_baseline_solve_rate_hard_tier < 0.9 AND exact_baseline_solve_rate == 1.0 AND n_instances >= 60 AND n_seeds >= 5 AND no_aliased_fields_assert == true AND hard_tier_discriminating == true"
-          principle: "G0 DISCRIMINATING + CLEAN + MULTI-SEED: valid encoding on a NEW CSP, the strong baseline forced below ceiling on the hard tier, instances feasible, n and seeds large enough, zero aliased fields — the conditions for a robust generalization test."
-        - condition: "route1_generalizes == true AND energy_vs_strong_paired_p_hard_tier < 0.05 AND energy_minus_strong_paired_diff_hard_tier > 0"
-          principle: "G1 GENERALIZES: on a SECOND discriminating CSP, energy global inference SIGNIFICANTLY beats a STRONG classical baseline on the hard tier (the Route-1 positive generalizes -> robust secondary headline). An honest tie/loss bounds the Route-1 claim to graph coloring (terminal, equally clean)."
-
-      TERMINAL VERDICTS (all start with complete:):
-        - cannot build a discriminating second CSP -> "complete: blocked_cannot_construct_discriminating_second_csp"
-        - encoding invalid -> "complete: blocked_second_csp_encoding_invalid"
-        - energy significantly beats the strong baseline on a second discriminating CSP -> "complete: p01_route1_generalizes_energy_beats_strong_nonAR_baseline_on_second_csp_CSP_solve_SS_vs_strong_TT_p_PP"
-        - energy ties/loses on a second discriminating CSP -> "complete: p01_route1_bounded_to_graph_coloring_energy_competitive_not_superior_on_second_csp_CSP_solve_SS_vs_strong_TT_p_PP"
-      Run command: cd {project_root} && JAX_PLATFORMS=cpu .venv/bin/python scripts/experiment_3562_p01_route1_second_csp_discriminating_generalization_v2.py. Do NOT push. Do NOT modify scripts/research_conductor.py.
-
-  # ---- HARDEN the graph-coloring positive: multi-seed CI + a SECOND graph generator ----
-  - id: exp3563-p01-route1-graph-coloring-multiseed-second-generator-v4
-    operator_override: "2026-05-31 planner (Opus 4.8) under Depth-Over-Breadth: exp3551 (.327) is P0.1's clean terminal positive but it ran on a SINGLE discriminating corpus at a SINGLE seed with a SINGLE graph generator. This HARDENS it to defensible-headline-grade: re-run the hard-tier paired comparison over >=5 seeds (report the per-instance paired-diff CI95, which must EXCLUDE 0) AND on a SECOND graph family/generator (e.g. Erdos-Renyi vs Barabasi-Albert / planted-partition), ruling out a seed/generator artifact. Different (multi-seed CI + a second generator) = hardening a confirmed positive, not a re-run. scope-match vs exp3551/exp3540/exp3528 is the intended graph-coloring hardening continuation."
-    prior_failures:
-      - experiment_id: exp3551-p01-graph-coloring-terminal-discriminating-corpus-v3
-        verdict: "complete: p01_energy_beats_strong_nonAR_baseline_on_discriminating_corpus_terminal_positive_solve_rate_0.963_vs_strong_0.700_p_0.000"
-        addressed_by: "exp3551 established the positive on a single discriminating corpus / single seed / single generator. This task adds >=5-seed CI on the hard-tier paired diff (must exclude 0) AND a SECOND graph generator, ruling out a seed/generator artifact. Different (multi-seed + second generator) = a promotion of a confirmed positive to a defensible headline, not a re-measurement."
+      - experiment_id: exp1999-code-verification-humaneval
+        verdict: prior_code_verification_baseline
+        addressed_by: "exp1999 established HumanEval code verification; this task is DIFFERENT — it measures the FULL verifier ENSEMBLE's error-detection AUROC vs a strong model-confidence baseline AND best-single-verifier, framed as a CROSS-DOMAIN generalization test of the FoVer-validated ensemble (does math->code transfer?), not a single-verifier code check. New comparison + new framing + reuses the existing labeled corpus."
         retire_if_same_verdict: false
-    # NOT gated_on anything: pure CPU; re-asserts encoding + discriminating-hardness preconditions.
-    milestone: "2026.05.328"
-    title: "P0.1 Route-1 graph-coloring HARDEN (CPU) — re-run the discriminating hard-tier paired comparison over >=5 seeds (per-instance paired-diff CI95 must EXCLUDE 0) AND on a SECOND graph generator (Erdos-Renyi vs Barabasi-Albert / planted-partition), so the exp3551 positive is robust to seed and generator, not a single-corpus artifact"
-    priority: high
+    milestone: "2026.05.329"
+    title: "Verifier ensemble vs CODE BUGS — error-detection AUROC on execution-labeled HumanEval completions (does math->code generalize?)"
+    priority: critical
     max_turns: 60
-    agent_type: claude
-    requires_claude: true   # plan-time claude to pass the MODEL_AGENT_COHERENCE pre-activation gate audit (no gemini); outer-loop reroutes to gemini AT ACTIVATION per Gemini-Default + the .325/.326/.327 reroute precedent
-    estimated_wall_time_min: 40
+    agent_type: gemini
+    estimated_wall_time_min: 30
     track: evidence
-    inference_substrate: ising_energy_optimization_cpu
+    inference_substrate: verifier_ensemble_against_cached_candidates
     requires_gpu: false
-    deliverable: "results/experiment_3563_p01_route1_graph_coloring_multiseed_second_generator_v4.json"
+    deliverable: results/experiment_3573_verifier_code_bug_error_detection.json
     prompt: |
-      CONTEXT: exp3551 (.327) established P0.1's clean terminal positive on a DISCRIMINATING graph-coloring
-      corpus (energy 0.9625 vs STRONG DSATUR 0.70, hard-tier paired diff +0.38, p=0.000, 0 CRITICAL flags)
-      — but on a SINGLE corpus, SINGLE seed, SINGLE graph generator. A defensible secondary headline must
-      survive seed and generator variation (the neural-CO critique literature warns that single-instance
-      results are fragile: arXiv:2502.03669/2302.03602/2112.12251). This task HARDENS the positive: re-run
-      the hard-tier paired comparison over >=5 seeds (report the per-instance paired-diff mean + CI95,
-      which must EXCLUDE 0) AND on a SECOND graph family/generator, so the positive is shown robust.
-
-      EXISTING CODE TO READ FIRST:
-        - scripts/experiment_3551_p01_graph_coloring_terminal_discriminating_corpus_v3.py (REUSE the discriminating-corpus protocol + optimizer ladder + DSATUR baseline + de-aliased storage + bootstrap-CI/paired-significance machinery; ADD a >=5-seed loop + a SECOND generator)
-        - results/experiment_3551_p01_graph_coloring_terminal_discriminating_corpus_v3.json (the positive to harden: hard-tier paired diff +0.38, p=0.000)
-        - scripts/adversarial_verify.py (TAUTOLOGY + CEILING_SATURATION checks — 0 CRITICAL, no hard-tier ceiling warn)
-        - python/carnot/ (Ising energy / sampler / parallel-tempering primitives)
-        - research-references.md "2026-05-31 Post-.327 Planning Sweep" (IsingFormer 2509.23043; neural-CO critique 2502.03669/2302.03602/2112.12251)
-
-      TASK: Re-run the exp3551 discriminating hard-tier comparison over >=5 seeds AND on a SECOND graph
-      generator (the first generator was exp3551's; the second is a structurally-different family — e.g.
-      Erdos-Renyi G(n,p) vs Barabasi-Albert / planted-partition), keeping the hard-tier strong-baseline
-      (DSATUR) solve-rate < 0.9 on BOTH generators while exact == 1.0. Report the per-instance hard-tier
-      paired-diff mean + CI95 (must exclude 0) per generator.
-
+      CONTEXT: the verifier ensemble (G2-reproduced on FoVer math step-errors, AUROC 0.9131) must show it
+      GENERALIZES to a different domain to be a defensible product claim. Code is the cleanest second domain:
+      execution gives objective ground truth. Question: on a corpus of CORRECT vs BUGGY code completions,
+      what is the verifier ensemble's ERROR-DETECTION AUROC, and does it beat a strong baseline?
+      EXISTING DATA/CODE TO READ FIRST: results/experiment_1999_code_verification_humaneval.json + the script
+      that produced it (the HumanEval code-verification corpus + labels); python/carnot/verify/
+      ast_structure_verifier.py, code_structural_dependency_verifier.py, controlled_invariance_executor_v2.py,
+      executable_monitor_runtime_adapter.py (the code-relevant verifiers); the verifier ENSEMBLE composition.
       PRECONDITIONS (step 0):
-        0a. ENCODING VALIDITY: assert a known-valid k-coloring has Ising energy E==0. If not ->
-            complete: blocked_graph_coloring_encoding_invalid; STOP.
-        0b. DISCRIMINATING-HEADROOM GATE: on BOTH generators, confirm hard-tier DSATUR solve-rate < 0.9
-            while exact == 1.0. If a generator cannot be made discriminating, report it and proceed with
-            the generators that can (>=1 required besides exp3551's); if NONE ->
-            complete: blocked_cannot_construct_discriminating_corpus.
-
+        a. An execution-labeled code corpus (correct vs buggy completions, >= 100 examples) is loadable —
+           reuse exp1999's HumanEval corpus if present. If absent and you must GENERATE buggy/correct
+           completions with a SOTA model, that is allowed (the conductor now gives live-model tasks a 1800s
+           idle grace) — but PREFER the existing labeled corpus. If neither -> "complete: blocked_code_corpus_unavailable".
+        b. The verifier ensemble is importable. If not -> "complete: blocked_verifier_ensemble_unavailable".
       CONCRETE STEPS:
-        1. Re-assert Step 0a (E==0) and Step 0b (hard-tier DSATUR < 0.9, exact == 1.0) on each generator.
-        2. For each of >=2 graph generators, assemble n>=60 (hard tier >=30) near the chromatic/freezing
-           threshold; run the optimizer ladder (vanilla, SA, K>=20 restarts, PARALLEL TEMPERING with
-           instrumented swap-acceptance, exact) over >=5 seeds. PRINT one flushed line per generator/seed.
-        3. STRONG NON-AR BASELINE: DSATUR (+ tuned restarts) per generator; AR baseline: greedy-AR.
-        4. DE-TAUTOLOGY: store each measured quantity ONCE per generator (no alias). References in
-           methodology_note only.
-        5. STATISTICS: per generator, bootstrap CI95 on the hard-tier per-instance paired diff
-           (energy - DSATUR) across seeds (MUST exclude 0 to confirm the positive holds); McNemar/paired
-           p. Report a pooled cross-generator paired diff + CI as the headline robustness number.
-        6. RUN adversarial_verify; CONFIRM 0 CRITICAL. HARD WALL-CLOCK BUDGET ~38 min: finalize + EXIT
-           CLEAN; prioritize >=5 seeds on >=2 generators over total n. Content-derived seed.
+        1. Score the verifier ensemble (objective energy) on each (problem, completion); compute
+           error-detection AUROC (label = is-buggy) over >= 100 examples, >= 3 seeds, bootstrap CI.
+        2. Strong baselines for comparison: (b1) model log-prob / sequence-confidence of the completion;
+           (b2) the BEST SINGLE verifier in the ensemble. Compute their AUROCs on the same examples.
+        3. Report ensemble AUROC vs both baselines + the deltas with paired CIs.
+      REQUIRED ARTIFACT FIELDS (principle-annotated): honest_verdict (terminal prefix),
+      inference_substrate=verifier_ensemble_against_cached_candidates,
+      ensemble_code_error_detection_auroc (MEASURED + CI), best_single_verifier_auroc,
+      model_confidence_baseline_auroc, ensemble_minus_best_baseline_delta (+ paired CI),
+      n_examples (>=100), n_buggy / n_correct (class balance — sample-size rigor),
+      generalizes_to_code (bool: ensemble AUROC materially > 0.5 AND > the model-confidence baseline),
+      random_seed (content-derived), reproducibility_checksum, duration_s (1s floor).
+      ACCEPTANCE GATE:
+        - condition: "ensemble_code_error_detection_auroc present AND model_confidence_baseline_auroc present AND n_examples >= 100"
+          principle: "Cross-domain generalization is measured against a STRONG baseline on adequate N — a number above 0.5 alone is not a win; it must beat model-confidence to show the ensemble adds value in code."
+      TERMINAL VERDICTS: "complete: verifier_ensemble_generalizes_to_code_beats_confidence_baseline_auroc_FF" /
+      "complete: verifier_ensemble_code_auroc_does_not_beat_confidence_baseline_domain_value_limited" /
+      "complete: blocked_<resource>"
+      Run: cd {project_root} && python scripts/experiment_3573_verifier_code_bug_error_detection.py
+      Do NOT push. Do NOT modify scripts/research_conductor.py.
 
-      REQUIRED ARTIFACT FIELDS (each carries a principle per CLAUDE.md):
-        honest_verdict: principle="complete:/success:/passed:/shipped_ prefix."
-        inference_substrate: value=ising_energy_optimization_cpu
-        encoding_validity_E0: principle="E of a known-valid k-coloring is 0."
-        n_generators: principle=">=2 graph families/generators — the generator-robustness rigor exp3551 lacked."
-        generator_names: principle="list of the graph generators tested (e.g. ['erdos_renyi','barabasi_albert'])."
-        n_seeds: principle=">=5 — the seed-robustness rigor exp3551 lacked."
-        strong_baseline_solve_rate_hard_tier_per_generator: principle="DSATUR hard-tier solve-rate per generator — each MUST be < 0.9 (discriminating). STORED ONCE per generator."
-        solve_rate_per_generator: principle="energy global inference solve-rate per generator."
-        hard_tier_paired_diff_per_generator: principle="the per-instance hard-tier paired diff (energy - DSATUR) per generator (MEASURED, distinct per generator)."
-        hard_tier_paired_diff_ci95_per_generator: principle="multi-seed CI95 of the hard-tier paired diff per generator — each MUST exclude 0 for the positive to hold on that generator."
-        pooled_hard_tier_paired_diff: principle="cross-generator pooled hard-tier paired diff — the robustness headline."
-        pooled_hard_tier_paired_diff_ci95: principle="CI95 of the pooled paired diff — the defensible-headline number; MUST exclude 0."
-        ar_greedy_solve_rate: principle="greedy-AR control (pooled)."
-        exact_baseline_solve_rate: principle="exact-solver reference — confirms feasibility (==1.0)."
-        pt_swap_acceptance_rate: principle="PT swap-acceptance (>0 if PT is the mechanism). STORED ONCE."
-        no_aliased_fields_assert: principle="boolean: no two conceptually-distinct numeric fields bit-identical — 0 CRITICAL flags."
-        positive_robust_to_seed_and_generator: principle="boolean: the hard-tier paired-diff CI excludes 0 on >=2 generators across >=5 seeds — the positive is robust, not a single-corpus artifact."
-        random_seed: principle="determinism; content-derived, NOT the experiment number."
-        reproducibility_checksum: principle="content hash of instance sets + encoding + optimizer configs + seeds."
-        duration_s: principle="CPU multi-seed multi-generator global-opt takes real wall time; honest value."
-
-      ACCEPTANCE GATES:
-        - condition: "encoding_validity_E0 == true AND n_generators >= 2 AND n_seeds >= 5 AND no_aliased_fields_assert == true"
-          principle: "G0 ROBUSTNESS-RIGOR: valid encoding, >=2 generators, >=5 seeds, no aliased fields — the conditions to test seed/generator robustness."
-        - condition: "positive_robust_to_seed_and_generator == true"
-          principle: "G1 ROBUST-POSITIVE: the hard-tier paired-diff CI excludes 0 across >=2 generators and >=5 seeds — the graph-coloring positive is defensible-headline-grade. An honest negative (CI includes 0 on a second generator) bounds the positive to exp3551's generator."
-
-      TERMINAL VERDICTS (all start with complete:):
-        - robust across seeds + generators -> "complete: p01_route1_graph_coloring_positive_robust_multiseed_multigenerator_defensible_headline"
-        - fragile to generator/seed -> "complete: p01_route1_graph_coloring_positive_bounded_to_single_generator_ci_includes_zero_on_second"
-        - cannot construct discriminating corpus -> "complete: blocked_cannot_construct_discriminating_corpus"
-      Run command: cd {project_root} && JAX_PLATFORMS=cpu .venv/bin/python scripts/experiment_3563_p01_route1_graph_coloring_multiseed_second_generator_v4.py. Do NOT push. Do NOT modify scripts/research_conductor.py.
-
-  # ---- Route-2 NL-math FINAL attempt + terminal verdict (the SOLE judgment task) ----
-  - id: exp3564-p01-route2-nlmath-final-headroom-or-retire-v4
-    operator_override: "2026-05-29 standing P0.1 directive + the .327 exp3553 no-headroom block: the Route-2 selection premise has now been headroom-starved FIVE times (exp3507/3530/3531/3542/3553), and the greedy-wrong builder produced only n=3 (exp3552). This is the FINAL genuinely-different attempt: HARDER competition-grade problems (AIME/MATH-L5), a much bigger pool, the full GPU budget, k>=16, AND the MULTI-verifier ensemble (Weaver/BoN-MAV) rather than a single energy reranker. If a headroom corpus (oracle>SC, n>=40) is built, run the fair test; if STILL none, Route-2 on NL-math is PERMANENTLY RETIRED as a trustworthy terminal negative (SC is near-optimal on NL-math; the energy-reranking selection premise does not hold there). Different (harder corpus + bigger pool + multi-verifier combination) = the final genuinely-different attempt the prior bounds earn. retire_if_same_verdict: true -> retire Route-2 NL-math. scope-match vs exp3553/exp3552/exp3530 is the intended P0.1 Route-2 terminal continuation."
+  - id: exp3574-verifier-ensemble-factual-hallucination-error-detection
     prior_failures:
-      - experiment_id: exp3553-p01-route2-energy-vs-strong-sc-on-headroom-corpus-v3
-        verdict: "complete: blocked_corpus_has_no_selectable_headroom_oracle_le_sc"
-        addressed_by: "exp3553 blocked because exp3552's greedy-wrong corpus built only n=3. This task rebuilds the corpus from HARDER competition-grade problems with a much bigger pool + full GPU budget + k>=16, and additionally combines the MULTI-verifier ensemble (Weaver/BoN-MAV) rather than a single energy reranker. If a headroom corpus is finally built it runs the fair test; if not, Route-2 NL-math is permanently retired. Different construction + multi-verifier reranker = the final genuinely-different attempt."
-        retire_if_same_verdict: true
-      - experiment_id: exp3530-p01-route2-selectable-headroom-corpus-build-v1
-        verdict: "complete: p01_no_selectable_headroom_even_at_level4_5_sc_majority_is_near_optimal_route2_premise_bounded"
-        addressed_by: "exp3530 difficulty-filtered MATH L4-5 and found SC near-optimal. This task uses HARDER competition-grade problems (AIME/MATH-L5) with a much bigger pool and a multi-verifier reranker, the last untried construction; if it also finds no headroom, the Route-2 NL-math premise is terminally bounded and retired."
-        retire_if_same_verdict: true
-    # NOT gated_on anything; live GPU build + cached scoring. Blocks honestly if no headroom.
-    milestone: "2026.05.328"
-    title: "P0.1 Route-2 NL-math FINAL attempt + TERMINAL verdict (live GPU, sole judgment task) — rebuild a greedy-wrong headroom corpus from HARDER competition-grade problems (bigger pool, full GPU budget, k>=16) AND score it with the MULTI-verifier ensemble (Weaver/BoN-MAV) vs a STRONG ranked-voting SC; if a headroom corpus (oracle>SC, n>=40) is built run the fair test, else PERMANENTLY RETIRE Route-2 NL-math as a trustworthy terminal negative"
-    priority: critical
-    max_turns: 65
-    agent_type: claude
-    requires_claude: true   # reranker/scorer integration + headroom judgment + honest framing of a terminal verdict (positive, informative-negative, OR permanent retire) — the SOLE genuine-judgment task this milestone (stays claude even after activation reroute).
-    estimated_wall_time_min: 28
-    track: evidence
-    inference_substrate: live_llm_inference
-    requires_gpu: true
-    deliverable: "results/experiment_3564_p01_route2_nlmath_final_headroom_or_retire_v4.json"
-    prompt: |
-      CONTEXT: The Route-2 selection premise (a verifier/energy reranker beats self-consistency on
-      NL-math) has been headroom-starved FIVE times: exp3507/3530/3531/3542/3553 all found oracle <= SC
-      (no problem where the correct answer is a selectable minority), and the greedy-wrong builder
-      (exp3552) produced only n=3 before the .327 budget ran out. The MoB result (arXiv:2511.18630) and
-      the Delta-gap sample-complexity theory (arXiv:2506.05295) explain WHY: on NL-math the correct
-      answer IS the mode (large Delta), so reranking has nothing to recover. This is the FINAL genuinely-
-      different attempt: pull HARDER competition-grade problems (AIME / MATH level-5) where even the SOTA
-      model's greedy answer is often wrong, a much BIGGER pool, the FULL GPU budget, k>=16, AND score with
-      the MULTI-verifier ensemble (Weaver weak-verifier combination arXiv:2506.18203; BoN-MAV multi-agent
-      verification arXiv:2502.20379) rather than a single energy reranker. If a headroom corpus
-      (oracle>SC, n>=40) is finally built, run the fair test; if NOT, Route-2 on NL-math is PERMANENTLY
-      RETIRED as a trustworthy terminal negative.
-
-      EXISTING CODE TO READ FIRST:
-        - scripts/experiment_3552_p01_route2_headroom_corpus_greedy_wrong_construction_v3.py (the greedy-wrong builder that produced n=3 — REUSE the generation harness; CHANGE to harder competition-grade problems + a bigger pool + full budget)
-        - scripts/experiment_3553_p01_route2_energy_vs_strong_sc_on_headroom_corpus_v3.py (the fair-test scorer + non-degeneracy assert + paired-significance machinery — REUSE; ADD the multi-verifier Weaver/BoN-MAV combination as a reranker condition)
-        - results/experiment_3553_p01_route2_energy_vs_strong_sc_on_headroom_corpus_v3.json (the no-headroom block: oracle <= SC, flip_count 0)
-        - data/p01_greedy_wrong_headroom_corpus.jsonl (the n=3 stub — TRUNCATE and rebuild) + data/p01_difficulty_matched_generations.jsonl (the level-3 corpus, no headroom — for contrast)
-        - python/carnot/verify/ (the FoVer 4-verifier step-error ensemble — the verifiers to COMBINE Weaver-style)
-        - python/carnot/ (the EORM / energy-reranker module)
-        - scripts/experiment_template.py (cached_sota_pair, BatchedInferenceRunner) ; CLAUDE.md "SOTA Local Models" + "GGUF tokenizer rule (MANDATORY — 2026-05-29)"
-        - research-references.md "2026-05-31 Post-.327 Planning Sweep" (Weaver 2506.18203, BoN-MAV 2502.20379, MoB 2511.18630, Delta-gap 2506.05295)
-
-      TASK: Rebuild a greedy-wrong headroom corpus from HARDER problems (keep a problem iff GREEDY temp-0
-      answer is WRONG and >=1 of k>=16 sampled candidates is CORRECT, so oracle STRICTLY > SC by
-      construction), then on whatever corpus has headroom, score the MULTI-verifier ensemble (Weaver-style
-      combination) + the energy reranker + a step->final aggregation scorer vs a STRONG ranked-voting SC,
-      with flip-count + paired significance. If no headroom corpus can be built even from harder problems,
-      emit the PERMANENT-RETIRE terminal verdict. TRUNCATE and REBUILD
-      data/p01_greedy_wrong_headroom_corpus.jsonl from scratch (do NOT overwrite the level-3 corpus).
-
-      PRECONDITIONS (step 0 — emit complete: blocked_* and STOP if a/b fail; NON-BLOCKING, no cascade):
-        a. CUDA available: python -c "import torch; assert torch.cuda.is_available()". If not ->
-           complete: blocked_cuda_unavailable.
-        b. SOTA GGUF loads via the GGUF path (NOT AutoTokenizer on a -GGUF repo id; embedded tokenizer per
-           the 2026-05-29 GGUF tokenizer rule): llama_cpp.Llama(model_path=..., vocab_only=True).tokenize(b"x")
-           succeeds. Default ["unsloth/gemma-4-26B-A4B-it-GGUF"]; fallback ["unsloth/gemma-4-31B-it-GGUF",
-           "unsloth/Qwen3.6-35B-A3B-GGUF"]. If none load -> complete: blocked_sota_gguf_tokenizer_unavailable.
-
-      CONCRETE STEPS:
-        1. Pull HARDER competition-grade problems (AIME / MATH level-5) — a much bigger pool than exp3552.
-        2. Per problem: 1 greedy (temp 0) + k>=16 sampled (temp ~0.8); capture raw text, extracted answer,
-           correctness label, mean-token logprob, parsed step list. Cap max_tokens ~1024.
-        3. HEADROOM-BY-CONSTRUCTION FILTER: keep a problem iff GREEDY answer is WRONG AND >=1 sampled
-           candidate is CORRECT. Track running greedy / SC / oracle accuracy. CHECKPOINT one JSONL row per
-           KEPT problem. PRINT one flushed line per problem (kept/skipped + running oracle-vs-SC gap) —
-           LOAD-BEARING (defeats idle-timeout).
-        4. HARD WALL-TIME BUDGET ~22 min for generation: STOP, finalize the JSONL, then score.
-        5. IF a headroom corpus (oracle>SC, n>=40) exists: split by problem id into TRAIN/HELD-OUT; score
-           on held-out at MATCHED COMPUTE — greedy floor; plurality SC; RANKED-VOTING SC (the STRONG
-           control, arXiv:2505.10772); self-certainty BoN; process-energy argmin; step->final aggregation
-           energy; MULTI-VERIFIER Weaver/BoN-MAV combination (the new condition). Assert each reranker's
-           selection array is NOT element-wise equal to the STRONG SC (non-degeneracy). Report flip_count,
-           flips_correct, flips_incorrect, net_correctness_gain, delta vs STRONG SC, McNemar p + bootstrap CI95.
-        6. IF no headroom corpus can be built: emit the PERMANENT-RETIRE terminal verdict (do NOT fabricate
-           headroom). random_seed CONTENT-DERIVED (NOT 3564).
-
-      REQUIRED ARTIFACT FIELDS (each carries a principle per CLAUDE.md):
-        honest_verdict: principle="complete:/success:/passed:/shipped_ prefix."
-        inference_substrate: value=live_llm_inference
-        corpus_path: principle="data/p01_greedy_wrong_headroom_corpus.jsonl — the rebuilt corpus."
-        construction_criterion: principle="string: 'harder competition-grade + greedy-wrong AND >=1 of k>=16 correct' — the final genuinely-different construction."
-        k_candidates: principle=">=16."
-        problem_pool_size: principle="the number of HARDER problems attempted — much bigger than exp3552's pool."
-        n_problems_kept: principle="problems with the greedy-wrong-recoverable property (need >=40 for a fair test)."
-        greedy_accuracy: principle="temp-0 greedy accuracy over kept corpus (0 by construction)."
-        self_consistency_accuracy: principle="plurality SC accuracy over kept corpus."
-        strong_sc_accuracy: principle="ranked-voting SC accuracy (the STRONG control) — null if no headroom corpus built."
-        oracle_accuracy: principle="accuracy if the correct answer is always selected when present among k."
-        selectable_headroom: principle="oracle - SC — MUST be > 0 for a fair test; reports the bound if <= 0."
-        oracle_exceeds_sc: principle="boolean: oracle STRICTLY > SC — whether a fair test was finally possible."
-        multi_verifier_accuracy: principle="Weaver/BoN-MAV multi-verifier combination accuracy (the new reranker condition) — null if no headroom corpus."
-        multi_verifier_makes_distinct_selections: principle="boolean: the multi-verifier selection array differs from the STRONG SC (non-degeneracy) — null if no headroom corpus."
-        best_condition: principle="the reranker condition with the highest held-out accuracy."
-        flip_count_best_vs_strong_sc: principle="problems where the best condition differs from the STRONG SC — tautology-clean primary signal."
-        net_correctness_gain_best: principle="flips_correct - flips_incorrect for the best condition."
-        delta_best_vs_strong_sc: principle="best condition minus the STRONG SC at matched compute — THE headline delta (null if no headroom)."
-        paired_significance: principle="McNemar p + bootstrap CI95 for the best-condition delta vs the STRONG SC (null if no headroom)."
-        route2_nlmath_terminal: principle="string: 'positive' / 'informative_negative_with_headroom' / 'permanently_retired_no_headroom' — the terminal verdict for Route-2 on NL-math."
-        model_specs: principle="the actual GGUF invoked."
-        random_seed: principle="determinism; content-derived, not the experiment number."
-        reproducibility_checksum: principle="content hash of benchmark split + model + verifiers + seed."
-        duration_s: principle="live MoE generation with k>=16 on harder problems + cached scoring; 60s floor when CUDA is available."
-
-      ACCEPTANCE GATES:
-        - condition: "oracle_exceeds_sc == true AND n_problems_kept >= 40 AND multi_verifier_makes_distinct_selections == true"
-          principle: "G0 FAIR-TEST FINALLY POSSIBLE: a headroom corpus (oracle>SC, n>=40) was built from harder problems AND the multi-verifier reranker is non-degenerate — the conditions exp3530-3553 never met."
-        - condition: "(net_correctness_gain_best > 0 AND delta_best_vs_strong_sc > 0 with paired p < 0.05) OR route2_nlmath_terminal == 'permanently_retired_no_headroom' OR route2_nlmath_terminal == 'informative_negative_with_headroom'"
-          principle: "G1 TERMINAL: either a non-degenerate reranker SIGNIFICANTLY beats a STRONG SC on a headroom corpus (the Phase-3 selection premise validated on NL-math), OR an informative negative with headroom bounds it, OR — if no headroom corpus can be built even from harder problems — Route-2 on NL-math is permanently retired as a trustworthy terminal negative. No fabricated headroom."
-
-      TERMINAL VERDICTS (all start with complete:):
-        - energy/multi-verifier beats the strong SC with headroom -> "complete: p01_route2_nlmath_reranker_beats_strong_sc_with_headroom_phase3_selection_premise_validated"
-        - informative negative (headroom present, reranker loses) -> "complete: p01_route2_nlmath_informative_negative_reranker_does_not_beat_strong_sc_with_headroom_premise_bounded"
-        - no headroom even from harder problems -> "complete: p01_route2_nlmath_permanently_retired_no_selectable_headroom_sc_near_optimal_terminal_negative"
-        - blocked -> "complete: blocked_cuda_unavailable" / "complete: blocked_sota_gguf_tokenizer_unavailable"
-      Run command: cd {project_root} && .venv/bin/python scripts/experiment_3564_p01_route2_nlmath_final_headroom_or_retire_v4.py. Do NOT push. Do NOT modify scripts/research_conductor.py.
-
-  # ---- PROMOTE the cross-corpus aggregation positive to a defensible secondary headline ----
-  - id: exp3565-fover-step-aggregation-secondary-headline-multiseed-third-corpus-v3
-    operator_override: "2026-05-30 planner (Opus 4.8) under Depth-Over-Breadth: exp3543 (.326, CLEAN) showed the step->final aggregation positive GENERALIZES cross-corpus (frozen fit on A transfers to B at AUROC 0.861, floor 0.749, shuffle 0.496); exp3554 (.327) tried to PROMOTE it but BLOCKED 'no_second_corpus_for_transfer'. This task fixes that root cause by building the transfer targets from held-out DISJOINT splits of corpora that ALREADY exist (data/fover_corpus.jsonl is large; data/p01_difficulty_matched_generations.jsonl is a second source), so A->{{B,C}} multi-seed transfer with per-target shuffle controls can complete. Different (transfer targets guaranteed constructible from existing corpora, not a missing GPU-built corpus) = the promotion exp3554 could not run. scope-match vs exp3554/exp3543/exp3532 is the intended aggregation-mechanism continuation."
-    prior_failures:
-      - experiment_id: exp3554-fover-step-aggregation-secondary-headline-multiseed-third-corpus-v2
-        verdict: "complete: blocked_no_second_corpus_for_transfer"
-        addressed_by: "exp3554 blocked because it expected a second/third corpus that was not constructible at run time (it depended on exp3552's GPU corpus, which failed). This task builds B and C from held-out DISJOINT splits of corpora that ALREADY exist on disk (the large FoVer corpus + the level-3 corpus), GUARANTEEING >=2 transfer targets. Different (transfer targets built from existing corpora, not a missing external build) = the promotion can finally complete."
+      - experiment_id: exp3329-verifier-ensemble-diversity-audit-v2
+        verdict: prior_verifier_ensemble_eval
+        addressed_by: "Prior verifier-ensemble evals (exp3329 diversity-audit, exp3441 adaptive-injection) measured ensemble diversity / prompt-injection robustness on injection corpora. This task asks a DIFFERENT question on a NEW domain: factual-hallucination error-detection AUROC on labeled QA (data/qa_dataset_1000.json) vs a strong model-confidence baseline, with per-verifier factual attribution. New domain + new metric + an explicit honest domain-bound hypothesis."
         retire_if_same_verdict: false
-    # NOT gated_on anything: cached scoring; builds transfer targets from on-disk corpora.
-    milestone: "2026.05.328"
-    title: "PROMOTE the step->final aggregation positive to a defensible SECONDARY HEADLINE — fit FROZEN on corpus A, evaluate on B AND C (built from held-out DISJOINT splits of data/fover_corpus.jsonl + data/p01_difficulty_matched_generations.jsonl) over >=5 seeds with per-target shuffle controls; secondary-headline-eligible iff transfer beats the un-aggregated floor on BOTH targets with collapsing shuffle controls"
+      - experiment_id: exp3441-verifier-ensemble-vs-adaptive-injection-corpus-v3
+        verdict: prior_verifier_ensemble_eval
+        addressed_by: "Adaptive-injection is prompt-injection robustness, not factual error-detection — different corpus, label, and baseline; not a re-run."
+        retire_if_same_verdict: false
+    milestone: "2026.05.329"
+    title: "Verifier ensemble vs FACTUAL HALLUCINATIONS — error-detection AUROC on labeled QA (does it generalize to facts, or is it constraint-domain-bound?)"
+    priority: critical
+    max_turns: 60
+    agent_type: gemini
+    estimated_wall_time_min: 30
+    track: evidence
+    inference_substrate: verifier_ensemble_against_cached_candidates
+    requires_gpu: false
+    deliverable: results/experiment_3574_verifier_factual_hallucination_error_detection.json
+    prompt: |
+      CONTEXT: the HARDER generalization test (the core motivation — escape LLM hallucinations). Constraint
+      verifiers (SAT/Z3/AST) do NOT naturally apply to factual claims; the semantic / NLA verifiers might.
+      Question: on a labeled corpus of CORRECT vs INCORRECT (hallucinated) answers, what is the verifier
+      ensemble's error-detection AUROC, and which verifiers carry the signal? Honest expectation: this may
+      be WEAK (the ensemble could be constraint-domain-bound) — that is a valid, paper-scoping finding, not a
+      failure to hide.
+      EXISTING DATA/CODE TO READ FIRST: data/qa_dataset_1000.json (a 1000-example QA dataset — use its
+      correct vs incorrect answer labels, or construct true/false claim pairs from it); the SEMANTIC / NLA
+      verifiers python/carnot/verify/semantic_consistency_verifier.py, semantic_energy.py, nla_verifier_v3.py,
+      nla_probe.py, fover_semantic_calibration.py.
+      PRECONDITIONS (step 0):
+        a. data/qa_dataset_1000.json present with usable correctness labels (or derivable true/false pairs),
+           >= 100 examples. If unusable -> "complete: blocked_factual_corpus_unavailable".
+        b. The verifier ensemble importable. If not -> "complete: blocked_verifier_ensemble_unavailable".
+      CONCRETE STEPS:
+        1. Build correct vs hallucinated (input, answer, label) pairs from the QA corpus.
+        2. Score the verifier ensemble; error-detection AUROC (label = is-hallucination), >= 3 seeds, CI.
+        3. Baselines: model-confidence/log-prob AUROC + best-single-verifier AUROC.
+        4. Per-verifier attribution: which verifiers (if any) carry signal on FACTS vs which are inert
+           (constraint verifiers expected inert) — informs whether the ensemble is constraint-domain-bound.
+      REQUIRED ARTIFACT FIELDS (principle-annotated): honest_verdict (terminal prefix),
+      inference_substrate=verifier_ensemble_against_cached_candidates,
+      ensemble_factual_error_detection_auroc (MEASURED + CI), best_single_verifier_auroc,
+      model_confidence_baseline_auroc, ensemble_minus_best_baseline_delta (+ CI),
+      per_verifier_auroc (dict: which verifiers carry factual signal), n_examples (>=100),
+      generalizes_to_facts (bool), constraint_verifiers_inert_on_facts (bool: honest domain-bound signal),
+      random_seed (content-derived), reproducibility_checksum, duration_s.
+      ACCEPTANCE GATE:
+        - condition: "ensemble_factual_error_detection_auroc present AND model_confidence_baseline_auroc present AND per_verifier_auroc present"
+          principle: "Measures factual generalization vs a strong baseline AND attributes which verifiers carry signal — a domain-bound result (constraint verifiers inert, AUROC ~ baseline) is a valid honest finding that scopes the paper's claim."
+      TERMINAL VERDICTS: "complete: verifier_ensemble_generalizes_to_facts_beats_confidence_baseline_FF" /
+      "complete: verifier_ensemble_factual_auroc_at_baseline_ensemble_is_constraint_domain_bound" /
+      "complete: blocked_<resource>"
+      Run: cd {project_root} && python scripts/experiment_3574_verifier_factual_hallucination_error_detection.py
+      Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  - id: exp3575-verifier-discriminating-value-where-baseline-misses
+    milestone: "2026.05.329"
+    title: "Discriminating value — does the ensemble catch errors the STRONG baseline MISSES? (the 'second pair of eyes' lift, code + facts, McNemar)"
     priority: high
     max_turns: 50
-    agent_type: claude
-    requires_claude: true   # plan-time claude to pass the MODEL_AGENT_COHERENCE pre-activation gate audit (no gemini); outer-loop reroutes to gemini AT ACTIVATION per Gemini-Default + the .325/.326/.327 reroute precedent
+    agent_type: gemini
+    estimated_wall_time_min: 22
+    track: evidence
+    inference_substrate: verifier_ensemble_against_cached_candidates
+    requires_gpu: false
+    deliverable: results/experiment_3575_verifier_discriminating_value.json
+    prompt: |
+      CONTEXT: AUROC alone can hide the real value prop. The "second pair of eyes" claim is specifically that
+      the verifier ensemble catches errors a STRONG baseline (model-confidence) MISSES. This task measures
+      that conditional lift across code (exp3573) + facts (exp3574).
+      PRECONDITIONS (step 0): read exp3573 + exp3574 artifacts via scripts/summarize_artifact.py. If either
+      is blocked/missing -> run on whichever domain landed; if both missing -> "complete: blocked_prereq_domains_missing".
+      CONCRETE STEPS:
+        1. For each domain, on the held-out errors: compute (a) fraction the model-confidence baseline catches
+           at a fixed FPR, (b) fraction the ensemble catches, (c) the CONDITIONAL catch-rate: errors the
+           ensemble catches that the baseline MISSES (and vice-versa). McNemar paired test on the
+           ensemble-vs-baseline disagreement + CI.
+        2. Report the net "second pair of eyes" lift per domain: does the ensemble add coverage the baseline
+           lacks, beyond what AUROC shows?
+      REQUIRED ARTIFACT FIELDS (principle-annotated): honest_verdict (terminal prefix),
+      inference_substrate=verifier_ensemble_against_cached_candidates,
+      code_conditional_catch_rate_ensemble_over_baseline (errors caught by ensemble but missed by baseline),
+      factual_conditional_catch_rate_ensemble_over_baseline, mcnemar_p_code, mcnemar_p_factual,
+      second_pair_of_eyes_lift_real (bool: ensemble catches a significant set the baseline misses in >=1 domain),
+      n_errors_code / n_errors_factual, random_seed (content-derived), reproducibility_checksum, duration_s.
+      ACCEPTANCE GATE:
+        - condition: "code_conditional_catch_rate_ensemble_over_baseline present AND mcnemar_p_code present"
+          principle: "The product value is conditional coverage (catching what the baseline misses), tested with a paired significance test — not just a higher AUROC."
+      TERMINAL VERDICTS: "complete: verifier_ensemble_catches_errors_baseline_misses_second_pair_of_eyes_confirmed" /
+      "complete: verifier_ensemble_no_conditional_lift_over_confidence_baseline_value_is_redundant" /
+      "complete: blocked_prereq_domains_missing"
+      Run: cd {project_root} && python scripts/experiment_3575_verifier_discriminating_value.py
+      Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  - id: exp3576-verifier-cross-domain-generalization-synthesis
+    prior_failures:
+      - experiment_id: exp826-prm-cross-domain-benchmark
+        verdict: prior_cross_domain_benchmark
+        addressed_by: "exp826 was a PRM cross-domain benchmark. This task is a SYNTHESIS that aggregates THIS milestone's fresh verifier-ensemble code (exp3573) + factual (exp3574) + discriminating-value (exp3575) results into a scoped paper claim — it reads new upstream artifacts, not a re-run of exp826's PRM benchmark."
+        retire_if_same_verdict: false
+    milestone: "2026.05.329"
+    title: "Cross-domain generalization SYNTHESIS — does verifier value generalize (math 0.91 -> code -> facts) or is it domain-bound? (the milestone headline + paper-claim scoping)"
+    priority: high
+    max_turns: 40
+    agent_type: gemini
+    estimated_wall_time_min: 15
+    track: publication
+    inference_substrate: aggregation_from_upstream_artifacts
+    requires_gpu: false
+    deliverable: results/experiment_3576_verifier_cross_domain_synthesis.json
+    prompt: |
+      CONTEXT: synthesize the verifier ensemble's cross-domain value into a defensible, honestly-scoped claim.
+      PRECONDITIONS (step 0): read exp3573 (code), exp3574 (facts), exp3575 (discriminating value) via
+      scripts/summarize_artifact.py — verdict + flagged_adversarial(stamped vs LIVE) +
+      FALSE_NEGATIVE_RISK/CEILING_SATURATION/TAUTOLOGY. EXCLUDE any flagged_adversarial artifact from the
+      headline (fabrication gate).
+      CONCRETE STEPS: build the generalization table: FoVer math (0.9131, G2-reproduced) | code (exp3573) |
+      facts (exp3574), each with AUROC vs baseline + the discriminating lift (exp3575). State the honest
+      verdict: generalizes broadly / code-only / math-only (constraint-domain-bound). Write paper_safe_claims
+      / paper_forbidden_claims (Paper-v6 Narrowing Discipline — do NOT overclaim; a domain-bound ensemble is a
+      scoped claim, not a foundation-model claim). cited_upstream_artifacts with sha256.
+      REQUIRED ARTIFACT FIELDS (principle-annotated): honest_verdict (terminal prefix),
+      inference_substrate=aggregation_from_upstream_artifacts, generalization_table (dict: domain->auroc+delta),
+      verifier_value_generalizes (string: broad / code_only / math_only_domain_bound),
+      paper_safe_claims (list), paper_forbidden_claims (list), cited_upstream_artifacts (list),
+      random_seed (content-derived), reproducibility_checksum, duration_s.
+      TERMINAL VERDICT: "complete: verifier_cross_domain_synthesis_value_generalizes_<scope>_paper_claim_scoped"
+      Run: cd {project_root} && python scripts/experiment_3576_verifier_cross_domain_synthesis.py
+      Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  - id: exp3577-kv260-continuity-v16
+    operator_override: "2026-05-29 operator directive (standing): active hardware-continuity task (KV260) per Hardware-Task Continuity Discipline — false-positive scope-match vs prior kv260 exps; required forward work until terminal."
+    milestone: "2026.05.329"
+    title: "KV260 SSH-reachability continuity (per Hardware-Task Continuity)"
+    priority: medium
+    max_turns: 30
+    agent_type: gemini
+    estimated_wall_time_min: 10
+    track: hardware
+    inference_substrate: hardware_smoke
+    requires_gpu: false
+    deliverable: results/experiment_3577_kv260_continuity_v16.json
+    prompt: |
+      CONTEXT: Hardware-Task Continuity requires one KV260 task per milestone. KV260 lives on SSH.
+      PRECONDITIONS (step 0): `ssh -o ConnectTimeout=5 -o BatchMode=yes kria 'true'` (kria = kv260.local).
+      Exit 0 -> proceed; non-zero -> "complete: blocked_kv260_ssh_unreachable". Use SSH reachability only.
+      CONCRETE STEPS: if reachable, `ssh kria 'xmutil listapps'` + record overlay/continuity state (distinct
+      field names, deflagged).
+      REQUIRED ARTIFACT FIELDS (principle-annotated): honest_verdict (terminal prefix),
+      inference_substrate=hardware_smoke, preconditions_checked (list of {resource, available}),
+      kv260_ssh_reachable (bool), kv260_overlay_loaded (string or null), random_seed,
+      reproducibility_checksum, duration_s.
+      TERMINAL VERDICTS: "complete: kv260_continuity_confirmed_reachable" / "complete: blocked_kv260_ssh_unreachable"
+      Run: cd {project_root} && python scripts/experiment_3577_kv260_continuity_v16.py
+      Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  - id: exp3578-polarfire-continuity-v16
+    operator_override: "2026-05-29 operator directive (standing): active hardware-continuity task (PolarFire) per Hardware-Task Continuity Discipline — false-positive scope-match vs prior polarfire exps."
+    milestone: "2026.05.329"
+    title: "PolarFire opportunistic reachability + continuity audit (per Hardware-Task Continuity)"
+    priority: medium
+    max_turns: 30
+    agent_type: gemini
+    estimated_wall_time_min: 10
+    track: hardware
+    inference_substrate: hardware_smoke
+    requires_gpu: false
+    deliverable: results/experiment_3578_polarfire_continuity_v16.json
+    prompt: |
+      CONTEXT: Hardware-Task Continuity requires one PolarFire task per milestone.
+      PRECONDITIONS (step 0): `ssh -o ConnectTimeout=5 polarfire 'true'`. Exit 0 -> proceed; non-zero ->
+      "complete: blocked_polarfire_ssh_timeout".
+      CONCRETE STEPS: if reachable, confirm continuity (uptime, carnot dispatch path) deflagged.
+      REQUIRED ARTIFACT FIELDS (principle-annotated): honest_verdict (terminal prefix),
+      inference_substrate=hardware_smoke, preconditions_checked, polarfire_ssh_reachable (bool),
+      random_seed, reproducibility_checksum, duration_s.
+      TERMINAL VERDICTS: "complete: polarfire_continuity_confirmed_reachable" / "complete: blocked_polarfire_ssh_timeout"
+      Run: cd {project_root} && python scripts/experiment_3578_polarfire_continuity_v16.py
+      Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  - id: exp3579-gatemate-continuity-audit-v16
+    operator_override: "2026-05-29 operator directive (standing): active hardware-continuity task (GateMate) per Hardware-Task Continuity Discipline — documentation/audit-only because the flash/smoke host-IO script hangs (known issue); false-positive scope-match vs prior gatemate exps."
+    milestone: "2026.05.329"
+    title: "GateMate continuity audit (documentation-only — flash/smoke host-IO hangs, per known-issues)"
+    priority: low
+    max_turns: 25
+    agent_type: gemini
+    estimated_wall_time_min: 8
+    track: hardware
+    inference_substrate: hardware_smoke
+    requires_gpu: false
+    deliverable: results/experiment_3579_gatemate_continuity_audit_v16.json
+    prompt: |
+      CONTEXT: GateMate visibility each milestone, but the flash/smoke host-IO script hangs (known-issues).
+      Documentation / reachability audit only — do NOT run the hanging flash/smoke path.
+      PRECONDITIONS (step 0): `openFPGALoader -c dirtyJtag --detect`. If it hangs/fails, record the
+      known-issue state honestly and STOP.
+      REQUIRED ARTIFACT FIELDS (principle-annotated): honest_verdict (terminal prefix),
+      inference_substrate=hardware_smoke, gatemate_idcode_detected (bool or null), known_blocker (string),
+      random_seed, reproducibility_checksum, duration_s.
+      TERMINAL VERDICT: "complete: gatemate_continuity_audit_recorded_flash_smoke_host_io_hang_known_blocker"
+      Run: cd {project_root} && python scripts/experiment_3579_gatemate_continuity_audit_v16.py
+      Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  - id: exp3580-fr11-continuous-self-learning-v4
+    operator_override: "2026-05-29 operator directive (standing): mandatory continuous-self-learning continuation (FR-11 vN+1) with a STATED forward difference (fresh non-degenerate corpus) — false-positive scope-match vs prior fr11 exps."
+    prior_failures:
+      - experiment_id: fr11-conservative-default-deploy-prior
+        verdict: prior_fr11_deploy
+        addressed_by: "Prior FR-11 deploys validated the conservative-default beta on a non-degenerate battery (exp3566). This task's forward difference: a FRESH non-degenerate corpus with measurable true quality + the pass_rate/true_accuracy distinct-arrays de-flag, confirming the deployed rule holds out-of-sample, not a re-run of the same battery."
+        retire_if_same_verdict: false
+    milestone: "2026.05.329"
+    title: "FR-11 continuous self-learning — conservative-default deploy on a FRESH non-degenerate corpus (mandatory continuous self-learning)"
+    priority: medium
+    max_turns: 50
+    agent_type: gemini
     estimated_wall_time_min: 18
-    track: evidence
+    track: self-learning
     inference_substrate: verifier_ensemble_against_cached_candidates
     requires_gpu: false
-    deliverable: "results/experiment_3565_fover_step_aggregation_secondary_headline_multiseed_third_corpus_v3.json"
+    deliverable: results/experiment_3580_fr11_continuous_self_learning_v4.json
     prompt: |
-      CONTEXT: exp3543 (.326) showed the step->final aggregation positive GENERALIZES cross-corpus: a
-      FROZEN aggregation fit on corpus A transferred to a DIFFERENT corpus B at transfer_auroc 0.861
-      (un-aggregated floor 0.749, within-corpus 0.906), shuffle collapsed to 0.496. exp3554 (.327) tried
-      to promote it to a secondary headline (multi-seed CI + a third corpus) but BLOCKED because no second
-      transfer corpus was constructible (it depended on exp3552's GPU corpus, which failed to build). This
-      task fixes the root cause: build the transfer targets B and C from held-out DISJOINT splits of
-      corpora that ALREADY exist on disk — data/fover_corpus.jsonl (large) and
-      data/p01_difficulty_matched_generations.jsonl (the level-3 corpus, a second source) — so A->{{B,C}}
-      multi-seed transfer with per-target shuffle controls can complete. The transfer must survive the two
-      PRM-OOD failure modes (arXiv:2502.14361): step-OOD (different reasoning patterns) and question-OOD
-      (dataset shift). Priors: arXiv:2510.08049 (PRM survey — aggregation is the bottleneck),
-      arXiv:2506.00027 (math->code PRM transfer), arXiv:2505.15960 (FoVer formally-verified PRM transfers
-      OOD), arXiv:2510.00492 (multi-domain reward aggregation). Cached scoring -> seconds.
+      CONTEXT: every milestone includes one continuous-self-learning experiment. Forward difference: verify
+      the deployed conservative-default beta prevents collapse on a FRESH non-degenerate corpus (not the .328
+      battery) with true quality measurable and pass_rate vs true_accuracy kept element-wise distinct.
+      PRECONDITIONS (step 0): FR-11 module + cached traces present. If not -> "complete: blocked_fr11_module_or_traces_unavailable".
+      REQUIRED ARTIFACT FIELDS (principle-annotated): honest_verdict (terminal prefix), inference_substrate,
+      n_grounding_configs, collapse_detected_deploy_arm (bool), collapse_detected_control_beta0 (bool),
+      pass_rate_vs_true_accuracy_distinct_assert (bool), quality_maintained (bool), random_seed
+      (content-derived), reproducibility_checksum, duration_s.
+      ACCEPTANCE GATE: deploy arm prevents collapse AND control collapses AND distinct-arrays assert true.
+      TERMINAL VERDICTS: "complete: fr11_conservative_default_holds_on_fresh_nondegenerate_corpus_quality_maintained" /
+      "complete: fr11_does_not_hold_out_of_sample_self_learning_needs_new_mechanism"
+      Run: cd {project_root} && python scripts/experiment_3580_fr11_continuous_self_learning_v4.py
+      Do NOT push. Do NOT modify scripts/research_conductor.py.
 
-      EXISTING CODE TO READ FIRST:
-        - scripts/experiment_3543_fover_step_aggregation_cross_corpus_generalize_v1.py (REUSE the fit-on-A / freeze / evaluate-on-B + distinct-pipeline + shuffle-control machinery)
-        - scripts/experiment_3554_fover_step_aggregation_secondary_headline_multiseed_third_corpus_v2.py (the .327 version that blocked on no second corpus — REUSE its multi-seed-CI structure; FIX the corpus-availability by building B and C from on-disk splits)
-        - results/experiment_3543_fover_step_aggregation_cross_corpus_generalize_v1.json (the A->B transfer: 0.861, floor 0.749, shuffle 0.496)
-        - results/experiment_3554_fover_step_aggregation_secondary_headline_multiseed_third_corpus_v2.json (the no-second-corpus block)
-        - data/fover_corpus.jsonl (8829 rows — split into disjoint A-fit / B-transfer subsets) + data/p01_difficulty_matched_generations.jsonl (93 rows — corpus C, a second-source transfer target)
-        - python/carnot/verify/ (the FoVer 4-verifier step-error ensemble)
-        - research-references.md "2026-05-31 Post-.327 Planning Sweep" (PRM survey 2510.08049, math->code transfer 2506.00027, FoVer 2505.15960, RA-PRM step/question-OOD 2502.14361, multi-domain aggregation 2510.00492)
-
-      TASK: PROMOTE the cross-corpus aggregation positive: fit/select the best aggregation function on
-      corpus A (a held-out-disjoint split of FoVer, TRAIN ONLY), FREEZE it, and evaluate held-out
-      final-correctness AUROC on TWO transfer targets — B (a DISJOINT FoVer split) and C (the level-3
-      corpus) — each over >=5 seeds (mean + CI95), each with a shuffle-label control. Distinct pipelines;
-      no reference==measured.
-
-      PRECONDITIONS (step 0):
-        a. Corpus A (fit) and >=2 DISJOINT transfer corpora (B, C) with step traces + correctness labels
-           reconstructable from data/fover_corpus.jsonl (split disjointly) + data/p01_difficulty_matched_generations.jsonl.
-           If a SECOND distinct transfer corpus is genuinely not constructible -> still run the
-           single-target multi-seed CI on B and report third_corpus_available=false (multi-seed CI on B
-           alone is still a partial promotion); do NOT block.
-        b. The FoVer step-error ensemble loadable. If not -> complete: blocked_energy_substrate_unavailable.
-
-      CONCRETE STEPS:
-        1. DISTINCT PIPELINES: compute per-step FoVer scores and aggregated final scores via SEPARATE code
-           paths; ASSERT the arrays are NOT element-wise equal. exp3543's reference numbers (0.861, 0.749)
-           go ONLY in a methodology_note string — NEVER a numeric field equal to a measured one.
-        2. Split data/fover_corpus.jsonl into a TRAIN/fit split (corpus A) and a DISJOINT transfer split
-           (corpus B); use data/p01_difficulty_matched_generations.jsonl as corpus C. Confirm A and B are
-           problem-id-disjoint.
-        3. Fit/select the aggregation weights on corpus A (TRAIN ONLY); FREEZE.
-        4. Over >=5 seeds: evaluate held-out final-correctness AUROC on corpus B AND corpus C; report
-           per-target mean transfer AUROC + CI95. Also report same-corpus-A held-out AUROC as the
-           within-corpus reference. PRINT one flushed line per corpus/seed — defeats idle-timeout.
-        5. SHUFFLE-LABEL control per target (permute per-step labels, re-aggregate, recompute AUROC);
-           confirm each collapses (< 0.6).
-        6. Set secondary_headline_eligible iff transfer beats the un-aggregated floor on EVERY available
-           target with collapsing shuffle controls AND the multi-seed CIs exclude the floor. Emit the
-           artifact, clean methodology. random_seed=20260601 (a DISTINCT fixed seed for the seed-sweep
-           harness; per-seed values vary within the sweep), NOT 3565.
-
-      REQUIRED ARTIFACT FIELDS (each carries a principle per CLAUDE.md):
-        honest_verdict: principle="complete:/success:/passed:/shipped_ prefix."
-        inference_substrate: value=verifier_ensemble_against_cached_candidates
-        distinct_pipeline_assert_passed: principle="boolean: step-score and final-aggregate arrays verified element-wise distinct — the de-flag."
-        train_corpus: principle="the corpus the aggregation was fit on (A — a FoVer fit split)."
-        transfer_corpus_b: principle="the first DIFFERENT corpus (B — a DISJOINT FoVer split)."
-        transfer_corpus_c: principle="the THIRD corpus (C — the level-3 corpus, a second source) ruling out a single-pair artifact (null if unavailable)."
-        a_b_disjoint_assert: principle="boolean: corpus A and B are problem-id-disjoint — the transfer is genuine, not a same-data leak."
-        third_corpus_available: principle="boolean: whether a genuine third transfer target was scorable."
-        within_corpus_auroc: principle="held-out AUROC on corpus A — the within-corpus reference (MEASURED)."
-        transfer_auroc_b: principle="mean held-out AUROC on B over >=5 seeds with the FROZEN aggregation (MEASURED)."
-        transfer_auroc_b_ci95: principle="CI95 of the B transfer AUROC across seeds — the rigor a single-pair lacked."
-        transfer_auroc_c: principle="mean held-out AUROC on C over >=5 seeds (null if unavailable)."
-        transfer_auroc_c_ci95: principle="CI95 of the C transfer AUROC across seeds (null if unavailable)."
-        unaggregated_transfer_floor_b: principle="the un-aggregated floor on B — the contrast the transfer must beat."
-        unaggregated_transfer_floor_c: principle="the un-aggregated floor on C (null if unavailable)."
-        transfer_shuffle_control_b: principle="shuffle-label AUROC on B — must collapse (<0.6)."
-        transfer_shuffle_control_c: principle="shuffle-label AUROC on C (null if unavailable) — must collapse."
-        shuffle_controls_collapse: principle="boolean: every available target's shuffle AUROC < 0.6 — survives falsification cross-corpus."
-        secondary_headline_eligible: principle="boolean: transfer beats the un-aggregated floor on EVERY available target with collapsing shuffle controls AND multi-seed CIs exclude the floor — the secondary-headline promotion gate."
-        random_seed: principle="determinism; 20260601 for the seed-sweep harness, not the experiment number."
-        reproducibility_checksum: principle="content hash of corpora + aggregation config + splits + seeds."
-        duration_s: principle="cached scoring; 1s floor."
-
-      ACCEPTANCE GATES:
-        - condition: "distinct_pipeline_assert_passed == true AND a_b_disjoint_assert == true AND transfer_corpus_b != train_corpus"
-          principle: "G0 GENERALIZATION-RIGOR: distinct pipelines AND a genuinely different, problem-id-disjoint evaluation corpus — the transfer is real, not a same-corpus re-run or a data leak."
-        - condition: "secondary_headline_eligible == true AND shuffle_controls_collapse == true"
-          principle: "G1 SECONDARY-HEADLINE: the FROZEN aggregation beats the un-aggregated floor on every available transfer target with multi-seed CIs and collapsing shuffle controls — a defensible corpus-general secondary headline. An honest negative (does not transfer to a second target) bounds it to the A->B pair."
-
-      TERMINAL VERDICTS (all start with complete:):
-        - promotes to a secondary headline -> "complete: step_to_final_aggregation_secondary_headline_confirmed_multiseed_transfer_to_two_corpora_secondary_headline_eligible"
-        - transfers to B but not C -> "complete: step_to_final_aggregation_transfers_to_B_not_C_bounded_to_single_pair_not_yet_secondary_headline"
-        - substrate unavailable -> "complete: blocked_energy_substrate_unavailable"
-      Run command: cd {project_root} && JAX_PLATFORMS=cpu .venv/bin/python scripts/experiment_3565_fover_step_aggregation_secondary_headline_multiseed_third_corpus_v3.py. Do NOT push. Do NOT modify scripts/research_conductor.py.
-
-  # =========================================================================
-  # PHASE C — SELF-LEARNING (mandatory + P0.2) + G2 (the sole publication gate)
-  # =========================================================================
-  - id: exp3566-fr11-multicorpus-deploy-verifier-diversity-grounding-v1
-    operator_override: "2026-05-30 planner (Opus 4.8): the mandatory continuous-self-learning task + P0.2. exp3555 (.327) DEPLOYED the conservative-default beta on ONE non-degenerate corpus (CLEAN POSITIVE — prevents N>=200 collapse, real quality maintained). This ADVANCES it: run the closed loop on a 3-corpus non-degenerate BATTERY AND test whether DIVERSE multi-verifier alpha_t grounding (Weaver-style combination of the verifier ensemble, arXiv:2506.18203) sustains collapse-prevention + quality better than single-verifier grounding — the P0.2 verifier-diversity question, untested to date. Different (multi-corpus battery + a verifier-diversity grounding contrast) = a forward extension of a confirmed positive, not a re-run. scope-match vs exp3555/exp3544/exp3521 is the intended self-learning + P0.2 continuation."
-    prior_failures:
-      - experiment_id: exp3555-fr11-conservative-default-deploy-nondegenerate-corpus-v3
-        verdict: "complete: conservative_default_beta_deploys_on_nondegenerate_corpus_prevents_collapse_to_N200_real_quality_maintained"
-        addressed_by: "exp3555 deployed the rule on a SINGLE non-degenerate corpus. This task runs it on a 3-corpus battery (robustness) AND adds the P0.2 verifier-DIVERSITY grounding contrast (multi-verifier Weaver-style alpha_t grounding vs single-verifier), answering whether verifier diversity improves the self-learning signal. Different (multi-corpus + diversity contrast) = a forward extension, not a re-measurement."
-        retire_if_same_verdict: false
-    milestone: "2026.05.328"
-    title: "FR-11 ADVANCE (mandatory continuous self-learning + P0.2) — deploy the conservative-default rule across a 3-corpus NON-DEGENERATE battery AND test whether DIVERSE multi-verifier alpha_t grounding (Weaver-style ensemble combination) sustains collapse-prevention + quality better than single-verifier grounding"
+  - id: exp3581-g-gate-status-synthesis-v329
+    operator_override: "2026-05-29 operator directive (standing): routine per-milestone G1-G4 gate-status synthesis — false-positive scope-match vs prior g-gate-synthesis tasks."
+    milestone: "2026.05.329"
+    title: "G1-G4 gate-status synthesis v329 (paper_ready=true after G2 close; record the verifier cross-domain result)"
     priority: high
-    max_turns: 50
-    agent_type: claude
-    requires_claude: true   # plan-time claude to pass the MODEL_AGENT_COHERENCE pre-activation gate audit (no gemini); outer-loop reroutes to gemini AT ACTIVATION per Gemini-Default + the .325/.326/.327 reroute precedent
-    estimated_wall_time_min: 22
-    track: evidence
-    inference_substrate: verifier_ensemble_against_cached_candidates
+    max_turns: 40
+    agent_type: gemini
+    estimated_wall_time_min: 12
+    track: publication
+    inference_substrate: aggregation_from_upstream_artifacts
     requires_gpu: false
-    deliverable: "results/experiment_3566_fr11_multicorpus_deploy_verifier_diversity_grounding_v1.json"
+    deliverable: results/experiment_3581_g_gate_status_synthesis_v329.json
     prompt: |
-      CONTEXT: The self-learning thesis (PRD FR-11 / continuous self-learning) rests on alpha_t grounding
-      — the verifier signal that keeps a self-correcting model from collapsing onto its own null space
-      (Zenil alpha_t; Q12 Dark Room / Hypothesis-B). exp3555 (.327) DEPLOYED the conservative-default beta
-      end-to-end on a NON-DEGENERATE corpus (initial true accuracy 0.34) and confirmed it prevents
-      depth-N>=200 collapse while beta=0 collapses, preserving real quality. This task ADVANCES it on two
-      axes: (1) ROBUSTNESS — run the loop on a 3-corpus non-degenerate BATTERY; (2) P0.2 VERIFIER
-      DIVERSITY — test whether DIVERSE multi-verifier alpha_t grounding (combine the verifier ensemble
-      Weaver-style, arXiv:2506.18203; BoN-MAV arXiv:2502.20379) sustains collapse-prevention + quality
-      BETTER than single-verifier grounding. The orthogonality-stall theory (project_orthogonality_stall,
-      project_pathological_joint_null_space) predicts single-verifier grounding has a compute-immune
-      ceiling because the residual rotates into the verifier's null space — verifier DIVERSITY is the
-      candidate antidote. Cached traces + cached verifier scoring -> no live model -> no timeout. This is
-      the milestone's mandatory continuous-self-learning experiment.
+      CONTEXT: G2 is closed (paper_ready=true). Synthesize the gate status + the verifier cross-domain
+      finding.
+      CONCRETE STEPS: run `python scripts/publication_gate.py --json` (expect G1-G4 all pass, paper_ready
+      true); read exp3573/3574/3575/3576 via scripts/summarize_artifact.py; state the verifier
+      cross-domain generalization verdict + whether it broadens or scopes the paper claim. Record P0.1 as
+      honest-negative (do NOT re-assert positive). EXCLUDE flagged_adversarial artifacts from headline.
+      REQUIRED ARTIFACT FIELDS (principle-annotated): honest_verdict (terminal prefix),
+      inference_substrate=aggregation_from_upstream_artifacts, g1/g2/g3/g4 (bool each), paper_ready (bool),
+      unmet_gates (list), verifier_generalization_scope (string), p01_status (string: honest-negative),
+      cited_upstream_artifacts (list), random_seed, reproducibility_checksum, duration_s.
+      TERMINAL VERDICT: "complete: g_gate_synthesis_v329_paper_ready_true_verifier_generalization_<scope>"
+      Run: cd {project_root} && python scripts/experiment_3581_g_gate_status_synthesis_v329.py
+      Do NOT push. Do NOT modify scripts/research_conductor.py.
 
-      EXISTING CODE TO READ FIRST:
-        - scripts/experiment_3555_fr11_conservative_default_deploy_nondegenerate_corpus_v3.py (REUSE the closed-loop harness + collapse detection + the pass_rate/true_accuracy distinct assert + the non-degenerate-corpus gate; ADD a multi-corpus loop + a single-vs-diverse grounding contrast)
-        - results/experiment_3555_fr11_conservative_default_deploy_nondegenerate_corpus_v3.json (the single-corpus deploy: initial_true_accuracy 0.34, real quality maintained)
-        - results/experiment_3521_fr11_adaptive_online_beta_robust_default_v1.json (the conservative-default beta selected as robust)
-        - python/carnot/ (the FR-11 controller-memory / self-learning module) + python/carnot/verify/ (the verifier ensemble for alpha_t grounding — the verifiers to combine Weaver-style)
-        - data/fover_corpus.jsonl + data/p01_difficulty_matched_generations.jsonl (candidate corpora — build a 3-corpus battery with non-trivial true accuracy)
-        - project_q12_hypothesis_b_and_dark_room + project_zenil_alpha_grounding + project_orthogonality_stall + project_pathological_joint_null_space (memory) — the theory
-        - research-references.md "2026-05-31 Post-.327 Planning Sweep" (Weaver 2506.18203, BoN-MAV 2502.20379)
-
-      TASK: Run the FR-11 closed loop to N>=200 on a 3-corpus NON-DEGENERATE battery (each corpus starting
-      true accuracy in [0.3,0.6]) under THREE arms:
-        - Arm DEPLOY-SINGLE (conservative-default beta, SINGLE-verifier grounding): the exp3555 condition.
-        - Arm DEPLOY-DIVERSE (conservative-default beta, DIVERSE multi-verifier Weaver-style grounding): the P0.2 condition.
-        - Arm CONTROL (beta=0): expected to COLLAPSE.
-      Track DISTINCT metrics (output entropy, top-mode mass, verifier-PASS rate, TRUE ground-truth accuracy
-      — ASSERT pass_rate and true_accuracy are different arrays).
-
-      PRECONDITIONS (step 0):
-        a. FR-11 self-learning module + cached traces present. If not -> complete: blocked_fr11_module_or_traces_unavailable.
-        b. The verifier ensemble is callable in batch (single AND combinable). If not -> complete: blocked_verifier_suite_uncallable.
-        c. NON-DEGENERATE BATTERY GATE: assemble >=2 (target 3) corpora each with starting TRUE accuracy in
-           [0.3,0.6]. If you cannot assemble >=2 such corpora -> complete: blocked_cannot_assemble_nondegenerate_battery
-           (report the candidates' true accuracies). Do NOT run on true_acc~0 corpora.
-
-      CONCRETE STEPS:
-        1. Assemble the non-degenerate battery; verify each corpus starting true accuracy in [0.3,0.6].
-           Build the SINGLE-verifier and DIVERSE multi-verifier grounding configs; record each config's
-           verifier decision covariance + lambda_min + effective_k.
-        2. Run the FR-11 loop to N>=200 per corpus under the three arms. Track entropy, top-mode mass,
-           pass_rate, true_accuracy (distinct arrays — runtime assert). PRINT one flushed line per
-           corpus/arm every ~20 steps — defeats idle-timeout.
-        3. Report collapse_detected per arm per corpus; deployment robustness = DEPLOY arms prevent
-           collapse on EVERY battery corpus while CONTROL collapses.
-        4. P0.2 CONTRAST: compare DEPLOY-DIVERSE vs DEPLOY-SINGLE on (a) collapse-prevention margin and
-           (b) final true accuracy, pooled across the battery. diverse_grounding_helps = DEPLOY-DIVERSE
-           final true accuracy and/or alpha_t margin materially exceeds DEPLOY-SINGLE.
-        5. Emit the artifact, clean methodology. random_seed CONTENT-DERIVED, NOT 3566.
-
-      REQUIRED ARTIFACT FIELDS (each carries a principle per CLAUDE.md):
-        honest_verdict: principle="complete:/success:/passed:/shipped_ prefix."
-        inference_substrate: value=verifier_ensemble_against_cached_candidates
-        n_battery_corpora: principle=">=2 (target 3) non-degenerate corpora — the robustness rigor exp3555's single corpus lacked."
-        n_steps: principle=">=200 — the depth at which prior loops collapsed."
-        battery_initial_true_accuracies: principle="per-corpus starting TRUE accuracy — each MUST be in [0.3,0.6]."
-        conservative_default_beta: principle="the deployed beta value (from exp3521)."
-        collapse_prevented_deploy_single_all_corpora: principle="boolean: SINGLE-verifier grounding prevents N>=200 collapse on EVERY battery corpus."
-        collapse_prevented_deploy_diverse_all_corpora: principle="boolean: DIVERSE multi-verifier grounding prevents N>=200 collapse on EVERY battery corpus."
-        collapse_detected_control_beta0_any: principle="boolean: beta=0 collapses on >=1 corpus — proves the loop CAN collapse."
-        deploy_single_final_true_accuracy_pooled: principle="pooled final TRUE accuracy under single-verifier grounding."
-        deploy_diverse_final_true_accuracy_pooled: principle="pooled final TRUE accuracy under diverse multi-verifier grounding — the P0.2 contrast (DISTINCT field)."
-        diverse_grounding_helps: principle="boolean: diverse multi-verifier grounding materially beats single-verifier grounding on collapse margin and/or final quality — the P0.2 verifier-diversity answer."
-        pass_rate_vs_true_accuracy_distinct_assert: principle="boolean: pass_rate and true_accuracy verified element-wise distinct at runtime — keeps it de-flagged."
-        random_seed: principle="determinism; content-derived, not the experiment number."
-        reproducibility_checksum: principle="content hash."
-        duration_s: principle="cached-trace closed-loop sweep across a battery to N>=200; 1s floor."
-
-      ACCEPTANCE GATES:
-        - condition: "n_battery_corpora >= 2 AND collapse_prevented_deploy_single_all_corpora == true AND collapse_detected_control_beta0_any == true AND pass_rate_vs_true_accuracy_distinct_assert == true"
-          principle: "G1 DEPLOYS-ACROSS-A-BATTERY: the conservative-default rule prevents depth-N>=200 collapse on EVERY non-degenerate battery corpus while beta=0 collapses, with no tautology — the Phase-5 self-learning default holds robustly, not on a single corpus."
-        - condition: "diverse_grounding_helps in [true, false]"
-          principle: "G0 P0.2-ANSWERED: the diverse-vs-single verifier-grounding contrast is recorded (either diversity helps — the orthogonality-stall antidote — or it does not, an informative bound on P0.2). Either outcome is a clean datapoint."
-
-      TERMINAL VERDICTS (all start with complete:):
-        - deploys across battery + diversity helps -> "complete: fr11_deploys_across_nondegenerate_battery_and_verifier_diversity_improves_grounding_p02_positive"
-        - deploys across battery, diversity does not help -> "complete: fr11_deploys_across_nondegenerate_battery_verifier_diversity_no_material_gain_p02_bounded"
-        - cannot assemble battery -> "complete: blocked_cannot_assemble_nondegenerate_battery"
-      Run command: cd {project_root} && JAX_PLATFORMS=cpu .venv/bin/python scripts/experiment_3566_fr11_multicorpus_deploy_verifier_diversity_grounding_v1.py. Do NOT push. Do NOT modify scripts/research_conductor.py.
-
-  - id: exp3567-fover-g2-regression-verify-external-ask-refresh-v8
-    operator_override: "2026-05-29 operator directive (ops/north-star.md §2 + ops/reproduction-runbook-fover-headline.md): G2 (independent reproduction) is the sole unmet publication gate. exp3556 (.327) regression-verified the self-contained package (AUROC 0.9131 within CI). This re-confirms the package STILL reproduces after the .328 changes (drift detection) and keeps the one-click external ask current. New deliverable (fresh regression-verify after a milestone of changes), not a re-build. Operator-Only External Publication: this task NEVER pushes, triggers CI, or marks G2 met. scope-match vs exp3556/exp3534/exp3510 is the intended G2-hardening continuation."
-    prior_failures:
-      - experiment_id: exp3556-fover-g2-regression-verify-external-ask-refresh-v7
-        verdict: "complete: fover_g2_package_regression_clean_external_ask_current_g2_operator_gated"
-        addressed_by: "exp3556 regression-verified the package after .327's changes. This re-runs the regression-verify from a fresh environment after the .328 changes (drift detection), refreshes the external-ask artifacts, and re-confirms the SHA256/CID. Routine per-milestone G2 hardening, not a re-build; G2 stays operator-gated."
-        retire_if_same_verdict: false
-    milestone: "2026.05.328"
-    title: "FoVer G2 — clean-room regression-verify the self-contained package (drift check after the .328 changes) + keep the one-click external-ask current (no push, no CI trigger, G2 stays operator-gated)"
-    priority: critical
-    max_turns: 50
-    agent_type: claude
-    requires_claude: true   # plan-time claude to pass the MODEL_AGENT_COHERENCE pre-activation gate audit (no gemini); outer-loop reroutes to gemini AT ACTIVATION per Gemini-Default + the .325/.326/.327 reroute precedent
-    estimated_wall_time_min: 22
-    track: evidence
-    inference_substrate: verifier_ensemble_against_cached_candidates
-    requires_gpu: false
-    deliverable: "results/experiment_3567_fover_g2_regression_verify_external_ask_refresh_v8.json"
-    prompt: |
-      CONTEXT: G2 (independent reproduction of the FoVer 0.9131 headline) is the SOLE unmet publication
-      gate (G1/G3/G4 met). exp3556 (.327) regression-verified the self-contained package
-      (dist/g2-fover-repro.tar.gz, SHA256 + IPFS CID, AUROC 0.9131 within CI) from a fresh environment.
-      After the .328 changes, this task re-confirms the package STILL reproduces 0.9131 from a truly fresh
-      environment (drift detection) and keeps the external-ask artifacts current. Per Operator-Only
-      External Publication, this task NEVER pushes, triggers external CI, or flips G2 to met.
-
-      EXISTING CODE TO READ FIRST:
-        - results/experiment_3556_fover_g2_regression_verify_external_ask_refresh_v7.json (the .327 regression-verify + external-ask)
-        - scripts/experiment_3556_fover_g2_regression_verify_external_ask_refresh_v7.py (the regression-verify runner — reuse)
-        - ops/reproduction-runbook-fover-headline.md (the headline reproduction runbook)
-        - dist/g2-fover-repro.tar.gz (the package, if present) + .github/workflows/fover-g2-repro.yml (the workflow_dispatch repro file, if committed)
-        - ops/north-star.md §2 (G2 definition + the operator-gated external dependency)
-
-      TASK: In an isolated environment (fresh venv / temp dir from the unpacked tarball — NOT the working
-      repo), re-run the self-contained reproducer and confirm it lands AUROC 0.9131 within the CI after the
-      .328 changes. Re-verify the SHA256 (and CID if a node is available). Confirm the public
-      workflow_dispatch reproduction workflow + reproducer invite + operator checklist are present and
-      current (committed to the working tree only; NOT pushed, NOT triggered).
-
-      PRECONDITIONS (step 0):
-        a. The package dist/g2-fover-repro.tar.gz present (or rebuildable from exp3499/exp3510/exp3556 scripts).
-           If absent and not rebuildable -> complete: blocked_g2_package_unavailable.
-        b. A fresh-venv / isolated-dir runner is constructible (python -m venv works). If not ->
-           complete: blocked_fresh_env_unavailable.
-
-      CONCRETE STEPS:
-        1. Unpack the tarball into a TEMP dir outside the repo; create a fresh venv; install ONLY the
-           package's pinned deps.
-        2. Run the package's single reproduce command; capture the AUROC + its CI.
-        3. REGRESSION GATE: assert the reproduced AUROC is within the package's stated CI of 0.9131
-           (e.g. [0.9027, 0.9235]). Re-verify the tarball SHA256; record the CID.
-        4. Confirm/refresh the public workflow_dispatch reproduction workflow file, the reproducer invite,
-           and the operator checklist (working tree only; DO NOT push/trigger).
-        5. Emit the artifact recording the regression result + external-ask readiness. G2 remains UNMET
-           (g2_met=false) until a non-operator external run lands. random_seed=20260601 (NOT 3567).
-
-      REQUIRED ARTIFACT FIELDS (each carries a principle per CLAUDE.md):
-        honest_verdict: principle="complete:/success:/passed:/shipped_ prefix."
-        inference_substrate: value=verifier_ensemble_against_cached_candidates
-        package_reproduced_auroc: principle="the AUROC the self-contained package produced in the fresh environment — proves it still works after the .328 changes."
-        package_auroc_within_ci: principle="boolean: reproduced AUROC within the stated 0.9131 CI — the regression gate / drift detector."
-        package_sha256_verified: principle="boolean: tarball SHA256 re-verified — content integrity for an external party."
-        package_cid: principle="IPFS CID of the package (decentralization rule 3)."
-        external_ask_workflow_path: principle="the public workflow_dispatch file an external party one-clicks (committed locally, not pushed/triggered)."
-        operator_checklist_path: principle="the operator checklist whose terminal step is the single external-ask action."
-        g2_met: principle="MUST be false — G2 flips only on a confirmed non-operator external run (Operator-Only External Publication)."
-        external_run_pending: principle="boolean true — the honest remaining state."
-        random_seed: principle="determinism; 20260601, not the experiment number."
-        reproducibility_checksum: principle="content hash."
-        duration_s: principle="fresh-venv install + cached scoring; 1s floor."
-
-      ACCEPTANCE GATES:
-        - condition: "package_auroc_within_ci == true AND package_sha256_verified == true"
-          principle: "G1 REGRESSION-CLEAN: the self-contained package still reproduces 0.9131 within CI from a fresh environment after a milestone of changes — bulletproof for an external party."
-        - condition: "g2_met == false AND external_run_pending == true"
-          principle: "G2 HONEST-GATE: the task did not self-mark the gate; G2 closes only on a non-operator external run."
-
-      TERMINAL VERDICTS (all start with complete:):
-        - regression clean + external-ask current -> "complete: fover_g2_package_regression_clean_external_ask_current_g2_operator_gated"
-        - regression drift -> "complete: fover_g2_package_regression_drift_detected_needs_rebuild"
-        - package unavailable -> "complete: blocked_g2_package_unavailable"
-      Run command: cd {project_root} && JAX_PLATFORMS=cpu .venv/bin/python scripts/experiment_3567_fover_g2_regression_verify_external_ask_refresh_v8.py. Do NOT push. Do NOT modify scripts/research_conductor.py.
-
-  # =========================================================================
-  # PHASE D — HARDWARE (opportunistic continuity per north-star §3; minimal)
-  # =========================================================================
-  - id: exp3568-kv260-terminal-latency-transcript-v14
-    operator_override: "2026-05-18 operator directive (Hardware-Task Continuity, standing) + ops/north-star.md §3 (KV260 is THE sovereignty board, drive to terminal then freeze): the KV260 terminal latency transcript is still unrecorded (SSH-unreachable for 13+ runs; exp3557 the .327 attempt blocked). This re-attempts via the SSH precondition. Mandatory-until-terminal continuity; structurally never a doomed rerun while the terminal artifact is unrecorded. scope-match vs exp3557/exp3535/exp3511 is the intended continuity continuation."
-    prior_failures:
-      - experiment_id: exp3557-kv260-terminal-latency-transcript-v13
-        verdict: "complete: blocked_kv260_ssh_unreachable"
-        addressed_by: "exp3557 found the board SSH-unreachable. This re-attempts the SAME terminal transcript on the same SSH precondition; if reachable this milestone it records the terminal latency artifact (driving the board to terminal per north-star §3); if still unreachable it emits the honest blocked verdict, keeping the board visible per Hardware-Task Continuity."
-        retire_if_same_verdict: false
-    milestone: "2026.05.328"
-    title: "KV260 terminal board-level latency transcript (drive to terminal, then freeze) — SSH precondition"
-    priority: medium
-    max_turns: 30
-    agent_type: claude
-    requires_claude: true   # plan-time claude to pass the MODEL_AGENT_COHERENCE pre-activation gate audit (no gemini); outer-loop reroutes to gemini AT ACTIVATION per Gemini-Default + the .325/.326/.327 reroute precedent
-    estimated_wall_time_min: 10
-    track: hardware
-    inference_substrate: hardware_smoke
-    requires_gpu: false
-    deliverable: "results/experiment_3568_kv260_terminal_latency_transcript_v14.json"
-    prompt: |
-      CONTEXT: Per ops/north-star.md §3, the KV260 is THE sovereignty board — drive it to its terminal
-      state (a non-fabricated board-level latency transcript), then freeze. It has been SSH-unreachable for
-      the last 13+ runs (exp3557 the .327 attempt blocked). The precondition is SSH-reachability ONLY
-      (KV260 SSH-Not-SD-Card Discipline — any host SD-card check is the wrong mechanism and is forbidden
-      for KV260 tasks).
-
-      EXISTING CODE TO READ FIRST:
-        - results/experiment_3557_kv260_terminal_latency_transcript_v13.json (the most recent block)
-        - scripts/experiment_3557_kv260_terminal_latency_transcript_v13.py (the SSH-probe harness — reuse)
-        - CLAUDE.md "KV260 SSH-Not-SD-Card Discipline" + "Pre-Launch Preconditions Discipline" (KV260 row)
-        - ops/north-star.md §3 (KV260 terminal-then-freeze)
-
-      TASK: If the board is reachable, record the terminal board-level latency transcript via xmutil + the
-      on-board UIO interface. If not, emit the honest blocked verdict.
-
-      PRECONDITIONS (step 0):
-        a. SSH reachability: ssh -o ConnectTimeout=5 -o BatchMode=yes kria 'true' returns 0. If not ->
-           honest_verdict complete: blocked_kv260_ssh_unreachable. STOP. Do NOT fall back to any host
-           SD-card check (wrong mechanism — KV260 SSH-Not-SD-Card Discipline).
-
-      CONCRETE STEPS:
-        1. SSH-probe the board. If unreachable, write the blocked artifact and exit.
-        2. If reachable: confirm the carnot_ising bitstream is loaded (xmutil listapps), run the on-board
-           latency measurement over the UIO register interface, capture a real transcript.
-        3. Emit the artifact with the latency transcript + kv260_terminal_state_reached flag, or the honest
-           blocked verdict. random_seed=20260601 (NOT 3568).
-
-      REQUIRED ARTIFACT FIELDS (each carries a principle per CLAUDE.md):
-        honest_verdict: principle="complete:/success:/passed:/shipped_ or complete: blocked_* prefix."
-        inference_substrate: value=hardware_smoke
-        preconditions_checked: principle="records the SSH-reachability check result — pre-empts fabrication via wrong mechanism."
-        kv260_ssh_reachable: principle="boolean: the board answered SSH this run — the gating reachability."
-        board_latency_transcript: principle="the real on-board latency measurement (null if unreachable) — the terminal artifact."
-        kv260_terminal_state_reached: principle="boolean: a non-fabricated terminal transcript was recorded — the north-star §3 freeze condition."
-        random_seed: principle="determinism; 20260601, not the experiment number."
-        reproducibility_checksum: principle="content hash."
-        duration_s: principle="SSH probe + on-board measurement; honest small for a blocked probe."
-
-      ACCEPTANCE GATES:
-        - condition: "kv260_ssh_reachable == false -> honest blocked verdict; OR kv260_terminal_state_reached == true"
-          principle: "either the board is honestly unreachable (no fabrication) or the terminal transcript is genuinely recorded — both honest outcomes."
-
-      TERMINAL VERDICTS (all start with complete:):
-        - reachable + transcript -> "complete: kv260_hardware_latency_transcript_recorded_terminal"
-        - unreachable -> "complete: blocked_kv260_ssh_unreachable"
-      Run command: cd {project_root} && JAX_PLATFORMS=cpu .venv/bin/python scripts/experiment_3568_kv260_terminal_latency_transcript_v14.py. Do NOT push. Do NOT modify scripts/research_conductor.py.
-
-  - id: exp3569-polarfire-opportunistic-reachability-audit-v14
-    operator_override: "2026-05-18 operator directive (Hardware-Task Continuity, standing) + ops/north-star.md §3 (PolarFire opportunistic, no terminal mandate): keeps the always-reachable PolarFire board visible in the milestone retro. scope-match vs exp3558/exp3536/exp3512 is the intended continuity continuation."
-    prior_failures:
-      - experiment_id: exp3558-polarfire-opportunistic-reachability-audit-v13
-        verdict: "complete: polarfire reachable and continuity confirmed deflagged"
-        addressed_by: "exp3558 ran clean with distinct fields. This re-runs the opportunistic continuity audit with STRICTLY DISTINCT fields (uptime vs reachability vs dispatch-state, runtime-asserted non-equal) to keep the board visible without a tautology flag. No terminal mandate (north-star §3); a routine visibility check, not a doomed rerun."
-        retire_if_same_verdict: false
-    milestone: "2026.05.328"
-    title: "PolarFire opportunistic reachability + continuity audit (no terminal mandate; tautology-de-flagged distinct fields)"
-    priority: medium
-    max_turns: 20
-    agent_type: claude
-    requires_claude: true   # plan-time claude to pass the MODEL_AGENT_COHERENCE pre-activation gate audit (no gemini); outer-loop reroutes to gemini AT ACTIVATION per Gemini-Default + the .325/.326/.327 reroute precedent
-    estimated_wall_time_min: 8
-    track: hardware
-    inference_substrate: hardware_smoke
-    requires_gpu: false
-    deliverable: "results/experiment_3569_polarfire_opportunistic_reachability_audit_v14.json"
-    prompt: |
-      CONTEXT: Per ops/north-star.md §3, PolarFire is opportunistic (no terminal mandate). This is the
-      per-milestone visibility check that keeps the board in the retro (Hardware-Task Continuity
-      Discipline). Use STRICTLY DISTINCT fields with a runtime assert to avoid the tautology flag that has
-      hit prior hardware audits.
-
-      EXISTING CODE TO READ FIRST:
-        - results/experiment_3558_polarfire_opportunistic_reachability_audit_v13.json (the prior clean audit — keep fields distinct)
-        - scripts/experiment_3558_polarfire_opportunistic_reachability_audit_v13.py (the SSH-probe harness — reuse, keep reported fields distinct)
-        - CLAUDE.md "Pre-Launch Preconditions Discipline" (PolarFire SSH row) + "Adversarial Artifact Verification" (the tautology flag to avoid)
-
-      TASK: SSH-probe the PolarFire board, confirm reachability + Carnot dispatch continuity, emit the
-      audit artifact with STRICTLY DISTINCT fields (no two conceptually-distinct values bit-identical —
-      runtime-asserted).
-
-      PRECONDITIONS (step 0):
-        a. SSH reachability: ssh -o ConnectTimeout=5 polarfire 'true' returns 0. If not ->
-           honest_verdict complete: blocked_polarfire_ssh_timeout.
-
-      CONCRETE STEPS:
-        1. SSH-probe the board; record uptime_seconds (an integer from `uptime`) and ssh_reachable (a
-           boolean) as DISTINCT fields; ASSERT they are not the same value.
-        2. Confirm the Carnot dispatch path still functions (a lightweight smoke), or note the last
-           validated state, as a SEPARATE field.
-        3. Emit the audit artifact. random_seed=20260601 (NOT 3569).
-
-      REQUIRED ARTIFACT FIELDS (each carries a principle per CLAUDE.md):
-        honest_verdict: principle="complete:/success:/passed:/shipped_ or complete: blocked_* prefix."
-        inference_substrate: value=hardware_smoke
-        preconditions_checked: principle="records the SSH-reachability check result."
-        polarfire_ssh_reachable: principle="boolean: the board answered SSH this run — distinct from uptime."
-        uptime_seconds: principle="board uptime in seconds (from `uptime`) — a distinct numeric field, never bit-identical to a boolean/rate (the de-flag)."
-        continuity_confirmed: principle="boolean: the board remains visible + dispatch-capable per Hardware-Task Continuity."
-        distinct_fields_assert_passed: principle="boolean: the reported fields were runtime-verified non-bit-identical — the tautology de-flag."
-        random_seed: principle="determinism; 20260601, not the experiment number."
-        reproducibility_checksum: principle="content hash."
-        duration_s: principle="SSH probe; honest small."
-
-      ACCEPTANCE GATES:
-        - condition: "polarfire_ssh_reachable in [true, false] AND continuity_confirmed recorded AND distinct_fields_assert_passed == true"
-          principle: "an honest reachability outcome is recorded with strictly-distinct fields — keeps the board visible without a tautology flag."
-
-      TERMINAL VERDICTS (all start with complete:):
-        - reachable -> "complete: polarfire reachable and continuity confirmed deflagged"
-        - unreachable -> "complete: blocked_polarfire_ssh_timeout"
-      Run command: cd {project_root} && JAX_PLATFORMS=cpu .venv/bin/python scripts/experiment_3569_polarfire_opportunistic_reachability_audit_v14.py. Do NOT push. Do NOT modify scripts/research_conductor.py.
-
-  # =========================================================================
-  # PHASE E — SYNTHESIS (gate status + capstone) — UNGATED synthesis (cascade-proof), seed-fixed
-  # =========================================================================
-  - id: exp3570-g-gate-status-synthesis-v328
-    operator_override: "2026-05-29 operator directive (ops/north-star.md §2): the stable G1-G4 publication-gate synthesis replaces publication_blocker_count. UNGATED by design (cascade-proofing): it reads the .328 P0.1/depth/G2 artifacts and SKIPS any that are absent or flagged_adversarial, so no depth-task retirement can pre-emptively GATE_BLOCK it (the .321 failure mode). Routine per-milestone synthesis; scope-match vs exp3559/exp3537/exp3525 is the intended gate-status continuation."
-    prior_failures:
-      - experiment_id: exp3559-g-gate-status-synthesis-v327
-        verdict: "complete: g_gate_status_synthesis_v327"
-        addressed_by: "exp3559 ran the ungated synthesis for .327. This task runs the SAME ungated synthesis for .328, reading the second-CSP generalization (exp3562), the graph-coloring multi-seed hardening (exp3563), the Route-2 terminal verdict (exp3564), the aggregation secondary-headline promotion (exp3565), the multi-corpus self-learning + P0.2 deploy (exp3566), and G2 (exp3567). Same ungated structure + the fixed-seed discipline; a new milestone's synthesis."
-        retire_if_same_verdict: false
-    # DELIBERATELY NO gated_on: the .321 cascade came from gating this on the crux. Ungated so no
-    # depth-task retirement can pre-emptively block it. Reads & skips absent/flagged.
-    milestone: "2026.05.328"
-    title: "G1-G4 gate-status synthesis v328 (UNGATED, cascade-proof, seed-fixed) — P0.1 Route-1 second-CSP generalization + graph-coloring multi-seed hardening / Route-2 NL-math terminal verdict / cross-corpus aggregation SECONDARY-HEADLINE promotion / multi-corpus self-learning + P0.2 diversity / G2 regression"
+  - id: exp3582-capstone-v329
+    operator_override: "2026-05-29 operator directive (standing): routine per-milestone capstone — false-positive scope-match vs prior capstone-v* tasks."
+    milestone: "2026.05.329"
+    title: "Capstone v329 — does the verifier ensemble's value generalize beyond math? (code + facts)"
     priority: high
-    max_turns: 30
-    agent_type: claude
-    requires_claude: true   # plan-time claude to pass the MODEL_AGENT_COHERENCE pre-activation gate audit (no gemini); outer-loop reroutes to gemini AT ACTIVATION per Gemini-Default + the .325/.326/.327 reroute precedent
-    estimated_wall_time_min: 8
+    max_turns: 40
+    agent_type: gemini
+    estimated_wall_time_min: 12
     track: ops
     inference_substrate: aggregation_from_upstream_artifacts
     requires_gpu: false
-    deliverable: "results/experiment_3570_g_gate_status_synthesis_v328.json"
+    deliverable: results/experiment_3582_capstone_v329.json
     prompt: |
-      CONTEXT: ops/north-star.md §2 defines the stable G1-G4 publication gate (replaces
-      publication_blocker_count). This synthesizes the .328 gate state from whatever landed. It is UNGATED
-      by design: the .321 synthesis was GATE_BLOCKed because it gated on a fragile crux that retired — this
-      task instead READS the .328 artifacts and SKIPS any that are absent or flagged_adversarial, so no
-      depth-task retirement can block it. The .328 depth artifacts: exp3562 (P0.1 Route-1 second-CSP
-      generalization — energy vs a STRONG classical baseline on a NEW discriminating CSP), exp3563
-      (graph-coloring multi-seed + second-generator hardening), exp3564 (Route-2 NL-math terminal verdict —
-      headroom test or permanent retire), exp3565 (cross-corpus aggregation SECONDARY-HEADLINE promotion —
-      A->{{B,C}} multi-seed CI), exp3566 (multi-corpus self-learning + P0.2 diversity), exp3567 (G2
-      regression). CRITICAL: set random_seed = 20260601 (a DISTINCT fixed value), NEVER the experiment
-      number.
-
-      EXISTING CODE TO READ FIRST:
-        - results/experiment_3559_g_gate_status_synthesis_v327.json (the prior synthesis schema; keep the fixed seed)
-        - results/experiment_3562_p01_route1_second_csp_discriminating_generalization_v2.json (second-CSP generalization; SKIP if absent/flagged)
-        - results/experiment_3563_p01_route1_graph_coloring_multiseed_second_generator_v4.json (graph-coloring hardening; SKIP if absent/flagged)
-        - results/experiment_3564_p01_route2_nlmath_final_headroom_or_retire_v4.json (Route-2 terminal; SKIP if absent/flagged)
-        - results/experiment_3565_fover_step_aggregation_secondary_headline_multiseed_third_corpus_v3.json (aggregation promotion; SKIP if absent/flagged)
-        - results/experiment_3566_fr11_multicorpus_deploy_verifier_diversity_grounding_v1.json (SKIP if absent/flagged)
-        - results/experiment_3567_fover_g2_regression_verify_external_ask_refresh_v8.json
-        - scripts/publication_gate.py (the G1/G3/G4 checks) + ops/publication_gate_state.json (G2)
-        - ops/north-star.md §2 (gate definitions)
-
-      TASK: Compute g1..g4 booleans + unmet_gates from whatever .328 artifacts landed (skip absent/flagged
-      for headline numbers). Record: whether the P0.1 Route-1 positive GENERALIZED to a second
-      discriminating CSP (exp3562) and is ROBUST to seed/generator (exp3563); the Route-2 NL-math TERMINAL
-      verdict (exp3564 — headroom test result or permanent retire); the cross-corpus aggregation
-      SECONDARY-HEADLINE promotion (exp3565 secondary_headline_eligible + multi-seed transfer CI + a second
-      target); the multi-corpus self-learning + P0.2 diversity verdict (exp3566); and G2 (exp3567). EXCLUDE
-      any artifact carrying flagged_adversarial:true from headline aggregation (fabrication gate). Set
-      random_seed = 20260601.
-
-      CONCRETE STEPS:
-        1. Read the .328 artifacts that exist; skip absent/flagged ones (do not fail on a missing file).
-        2. Run/parse scripts/publication_gate.py for G1/G3/G4; read G2 from the gate state.
-        3. Emit g1..g4 + unmet_gates + the P0.1 verdicts (second-CSP generalization + its CI/p + flag
-           status; graph-coloring robustness; the Route-2 terminal verdict) + the cross-corpus aggregation
-           SECONDARY-HEADLINE promotion + the multi-corpus self-learning + P0.2 diversity deploy + G2
-           status, each principle-annotated. random_seed=20260601.
-
-      REQUIRED ARTIFACT FIELDS: (each carries a principle per CLAUDE.md)
-        honest_verdict: principle="complete: prefix."
-        inference_substrate: value=aggregation_from_upstream_artifacts
-        g1: principle="headline measured (FoVer 0.9131) — boolean."
-        g2: principle="independently reproduced — boolean (external; honest manual)."
-        g3: principle="prose narrowing-clean — boolean."
-        g4: principle="numbers trace to primary artifacts — boolean."
-        unmet_gates: principle="the list of unmet gates — what to report instead of a count."
-        p01_route1_generalizes_second_csp: principle="exp3562 verdict — did energy SIGNIFICANTLY beat a STRONG classical baseline on a SECOND discriminating CSP with CI + paired p (the generalized positive), or is Route-1 bounded to graph coloring? (null if absent/flagged)."
-        p01_route1_robust_multiseed_multigenerator: principle="exp3563 boolean — is the graph-coloring positive robust to seed and generator (CI excludes 0 on >=2 generators)? (null if absent/flagged)."
-        p01_route2_nlmath_terminal_verdict: principle="exp3564 terminal verdict — reranker beats a strong SC with headroom (positive), informative-negative with headroom, OR permanently retired (no headroom, SC near-optimal)? (null if absent/flagged)."
-        aggregation_secondary_headline_eligible: principle="exp3565 secondary_headline_eligible — whether the step->final aggregation transfers to >=2 corpora with multi-seed CIs (the secondary headline; null if absent/flagged)."
-        self_learning_battery_p02_verdict: principle="exp3566 verdict — whether the conservative-default rule deploys across a non-degenerate battery AND whether verifier diversity improves grounding (P0.2) (null if absent/flagged)."
-        g2_package_status: principle="exp3567 regression + external-ask status string."
-        secondary_headlines_count: principle="count of NEW defensible secondary headlines this milestone (Route-1 generalization/robustness + aggregation promotion) — the consolidation scorecard."
-        gate_status_v328_ready: principle="terminal completion flag (always True) — the field the capstone exp3571 gates on; MUST appear in this REQUIRED ARTIFACT FIELDS block."
-        random_seed: principle="determinism; MUST be 20260601 (a distinct fixed value), NOT the experiment number — the exp3502 tautology fix."
-        reproducibility_checksum: principle="content hash."
-        duration_s: principle="aggregation; sub-second honest."
-      Run command: cd {project_root} && JAX_PLATFORMS=cpu .venv/bin/python scripts/experiment_3570_g_gate_status_synthesis_v328.py. Do NOT push. Do NOT modify scripts/research_conductor.py.
-
-  - id: exp3571-capstone-v328
-    operator_override: "2026-05-29 operator directive (standing): routine per-milestone capstone aggregation; scope-match vs exp3560/exp3538/exp3526 is the intended capstone continuation — structurally never a doomed rerun."
-    prior_failures:
-      - experiment_id: exp3560-capstone-v327
-        verdict: "complete: capstone_v327_depth_over_breadth_xiii_terminal_positive_p0_1_on_discriminating_corpus_route2_bounded_g2_unmet"
-        addressed_by: "exp3560 was the .327 capstone. This capstone aggregates the .328 milestone (the second-CSP generalization, the graph-coloring multi-seed hardening, the Route-2 NL-math terminal verdict, the cross-corpus aggregation secondary-headline promotion, the multi-corpus self-learning + P0.2 deploy, G2), gates on the UNGATED synthesis exp3570, and keeps random_seed=20260601. A new milestone's capstone."
-        retire_if_same_verdict: false
-    gated_on:
-      - upstream: exp3570-g-gate-status-synthesis-v328
-        artifact_field: gate_status_v328_ready
-        op: '=='
-        value: true
-    milestone: "2026.05.328"
-    title: "Capstone v328"
-    priority: high
-    max_turns: 30
-    agent_type: claude
-    requires_claude: true   # plan-time claude to pass the MODEL_AGENT_COHERENCE pre-activation gate audit (no gemini); outer-loop reroutes to gemini AT ACTIVATION per Gemini-Default + the .325/.326/.327 reroute precedent
-    estimated_wall_time_min: 10
-    track: ops
-    inference_substrate: aggregation_from_upstream_artifacts
-    requires_gpu: false
-    deliverable: "results/experiment_3571_capstone_v328.json"
-    prompt: |
-      CONTEXT: Milestone .328 (Depth-Over-Breadth XIV: Consolidate the P0.1 positive) followed .327's
-      clean terminal POSITIVE for P0.1 Route-1 (energy 0.9625 vs strong DSATUR 0.70, p=0.000 on a
-      discriminating graph-coloring corpus). With the Depth function able to relax, .328 CONSOLIDATED:
-      exp3562 tried to GENERALIZE the Route-1 positive to a SECOND discriminating CSP (k-SAT / Max-Cut /
-      partitioning) with the same strong-baseline rigor; exp3563 HARDENED the graph-coloring positive with
-      multi-seed CI + a second generator; exp3564 gave Route-2 NL-math its TERMINAL verdict (a final
-      headroom-build attempt from harder problems + multi-verifier reranking, or permanent retire);
-      exp3565 PROMOTED the cross-corpus aggregation positive to a secondary headline (A->{{B,C}} multi-seed
-      CI); exp3566 ADVANCED self-learning across a non-degenerate battery + answered the P0.2
-      verifier-diversity question; exp3567 regression-verified G2. This capstone aggregates the milestone
-      honestly. CRITICAL: set random_seed = 20260601 (NOT the experiment number).
-
-      EXISTING CODE TO READ FIRST:
-        - results/experiment_3570_g_gate_status_synthesis_v328.json (the gate state — authoritative)
-        - results/experiment_3562/3563/3564/3565/3566/3567_*.json (the P0.1 + depth + G2 artifacts; skip absent/flagged)
-        - results/experiment_3560_capstone_v327.json (the prior capstone schema — keep random_seed=20260601)
-        - ops/north-star.md (the headline claim §1 + the gate §2 — do not edit; read-only)
-        - CLAUDE.md "Paper-v6 Narrowing Discipline" + "Adversarial Artifact Verification" (fabrication gate — SKIP flagged_adversarial artifacts in any headline aggregation)
-
-      TASK: Write the .328 capstone: experiments completed, the KEY finding (whether the P0.1 Route-1
-      positive GENERALIZED to a second discriminating CSP with CLEAN, UNFLAGGED numbers + CI + paired p, or
-      is bounded to graph coloring; whether the graph-coloring positive is ROBUST to seed/generator;
-      whether Route-2 NL-math got a headroom test or was permanently retired as a terminal negative;
-      whether the cross-corpus aggregation positive was PROMOTED to a SECONDARY HEADLINE; whether
-      self-learning deploys across a battery + whether verifier DIVERSITY helps the grounding signal —
-      P0.2), the unmet gates (G2), paper_v6_safe_claims / paper_v6_forbidden_claims respecting the
-      Narrowing Discipline, and the top forward gap. EXCLUDE any flagged_adversarial artifact from headline
-      numbers. Set random_seed = 20260601.
-
-      CONCRETE STEPS:
-        1. Read the gate synthesis + depth + G2 artifacts (skip flagged ones for headline numbers).
-        2. Aggregate into the capstone schema; set capstone_v328_ready=true. random_seed=20260601.
-        3. Record paper_v6_safe_claims / forbidden_claims per the Narrowing Discipline (no KV260 speedup,
-           no thermalization, no universal generalization, FoVer headline = 0.9131; claim a Route-1
-           energy-beats-a-strong-classical-baseline GENERALIZATION result ONLY if exp3562 is CLEAN/UNFLAGGED
-           with a significant paired p on a DISCRIMINATING second CSP; claim the graph-coloring positive is
-           robust ONLY if exp3563 confirmed it; claim the cross-corpus aggregation secondary headline ONLY
-           if exp3565 secondary_headline_eligible; state the HONEST Route-2 reading — permanently retired as
-           a terminal negative / SC near-optimal on NL-math — if exp3564 found no headroom).
-        4. Set p0_1_status to TERMINAL_POSITIVE_GENERALIZED / TERMINAL_POSITIVE_GRAPH_COLORING_ONLY /
-           OPEN per the second-CSP + robustness + Route-2 outcomes, and note the Depth-Over-Breadth state.
-        5. Emit the artifact with honest_verdict starting 'complete:'.
-
-      REQUIRED ARTIFACT FIELDS (each carries a principle per CLAUDE.md):
-        honest_verdict: principle="complete: prefix."
-        inference_substrate: value=aggregation_from_upstream_artifacts
-        experiments_completed: principle="count of .328 experiments aggregated."
-        key_finding: principle="the milestone's load-bearing result (whether the P0.1 Route-1 positive generalized to a second CSP + is robust, the Route-2 NL-math terminal verdict, the cross-corpus aggregation secondary-headline promotion, the multi-corpus self-learning + P0.2 diversity answer)."
-        p0_1_status: principle="TERMINAL_POSITIVE_GENERALIZED / TERMINAL_POSITIVE_GRAPH_COLORING_ONLY / OPEN — whether the Route-1 positive generalized to a second discriminating CSP and is robust to seed/generator; + the Route-2 NL-math terminal verdict."
-        route1_second_csp_verdict: principle="string: exp3562's verdict — energy significantly beats a strong classical baseline on a SECOND discriminating CSP (generalized) OR competitive-not-superior (bounded to graph coloring)."
-        route1_robust_verdict: principle="string: exp3563's verdict — the graph-coloring positive robust to seed/generator or bounded to a single generator."
-        route2_nlmath_terminal_verdict: principle="string: exp3564's terminal verdict — headroom-positive / informative-negative-with-headroom / permanently-retired (SC near-optimal on NL-math)."
-        aggregation_secondary_headline_confirmed: principle="boolean: exp3565 promoted the cross-corpus aggregation positive to a defensible secondary headline (multi-seed transfer CI + >=2 corpora)."
-        self_learning_p02_verdict: principle="string: exp3566's verdict — deploys across a battery + whether verifier diversity improves grounding (P0.2)."
-        new_secondary_headlines: principle="list of the NEW defensible secondary headlines established this milestone — the consolidation scorecard."
-        unmet_gates: principle="carried from the gate synthesis — G2."
-        paper_v6_safe_claims: principle="claims defensible post-Narrowing (FoVer 0.9131; the Route-1 graph-coloring positive; the second-CSP generalization ONLY if exp3562 clean+significant; the aggregation secondary headline ONLY if exp3565 confirmed; the conservative-default self-learning deploy)."
-        paper_v6_forbidden_claims: principle="the retracted phrasings the capstone must not assert (incl. any Route-1 generalization claim if exp3562 is flagged/non-significant, any aggregation secondary-headline claim if exp3565 did not confirm, and any Route-2 energy-beats-SC claim — Route-2 NL-math is bounded/retired)."
-        top_forward_gap: principle="the single most important next step (likely the G2 external reproduction + paper-v6 integration of the newly-consolidated secondary headlines)."
-        capstone_v328_ready: principle="terminal completion flag (always True)."
-        random_seed: principle="determinism; MUST be 20260601, NOT the experiment number — the exp3503 tautology fix."
-        reproducibility_checksum: principle="content hash."
-        duration_s: principle="aggregation; sub-second honest."
-      Run command: cd {project_root} && JAX_PLATFORMS=cpu .venv/bin/python scripts/experiment_3571_capstone_v328.py. Do NOT push. Do NOT modify scripts/research_conductor.py.
+      CONTEXT: capstone the verifier-cross-domain milestone. Headline: does the now-reproduced verifier
+      ensemble (FoVer 0.9131) catch errors strong baselines miss, and generalize to code + facts?
+      CONCRETE STEPS: aggregate exp3573/3574/3575/3576 via scripts/summarize_artifact.py. Report honestly:
+      code generalization, factual generalization, the discriminating "second pair of eyes" lift, and the
+      scoped paper claim. EXCLUDE flagged_adversarial artifacts. paper_v6_safe_claims / forbidden_claims per
+      the Paper-v6 Narrowing Discipline (no overclaim; domain-bound is a scoped claim, not a foundation
+      claim; P0.1 stays honest-negative).
+      REQUIRED ARTIFACT FIELDS (principle-annotated): honest_verdict (terminal prefix),
+      inference_substrate=aggregation_from_upstream_artifacts, code_generalizes (bool),
+      facts_generalize (bool), second_pair_of_eyes_lift_real (bool), verifier_value_scope (string),
+      paper_ready (bool), cited_upstream_artifacts (list), random_seed, reproducibility_checksum, duration_s.
+      TERMINAL VERDICT: "complete: capstone_v329_verifier_value_<scope>_code_<bool>_facts_<bool>_paper_ready_true"
+      Run: cd {project_root} && python scripts/experiment_3582_capstone_v329.py
+      Do NOT push. Do NOT modify scripts/research_conductor.py.
