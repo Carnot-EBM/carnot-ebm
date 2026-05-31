@@ -1,0 +1,118 @@
+{
+  "experiment": 3537,
+  "title": "G-Gate Status Synthesis v325",
+  "schema": "carnot.g_gate_status_synthesis.v325",
+  "honest_verdict": "complete: g1_g3_g4_met_g2_pending_p01_sudoku_energy_power_visible_graph_coloring_flagged_skipped_route2_informative_negative_headroom_present_depth_relax=yes",
+  "inference_substrate": "aggregation_from_upstream_artifacts",
+  "g1": true,
+  "g2": false,
+  "g3": true,
+  "g4": true,
+  "unmet_gates": [
+    "G2"
+  ],
+  "p01_route1_graph_coloring_verdict": null,
+  "p01_route1_headroom_preserved": null,
+  "p01_route1_beats_strong_baseline": null,
+  "p01_sudoku_energy_power_visible": true,
+  "p01_route2_corpus_had_headroom_exp3530": false,
+  "p01_route2_fair_verdict": "complete: energy_does_not_beat_sc_even_with_headroom_route2_selection_premise_bounded_informative_negative",
+  "p01_route2_corpus_had_headroom": true,
+  "p01_route2_flip_count": 3,
+  "p01_route2_delta": -0.032258,
+  "p01_has_clean_defensible_verdict": true,
+  "aggregation_positive_promoted": "mean_auroc=0.9234, CI=[0.899056, 0.947832]",
+  "self_learning_deployed_rule": "complete: conservative_default_beta_prevents_collapse_but_over_regularizes_quality_drops_needs_tuning",
+  "g2_package_status": "package_regression_clean_auroc=0.9131; auroc_within_ci=True; external_ask_workflow=.github/workflows/fover-g2-repro.yml; g2_met=False; G2-external-in-motion",
+  "depth_forcing_function_can_relax": true,
+  "gate_status_v325_ready": true,
+  "random_seed": 20260531,
+  "reproducibility_checksum": "d9dfea9299d65c56",
+  "duration_s": 0.071119,
+  "availability_summary": {
+    "exp3528": "skipped_flagged_adversarial",
+    "exp3529": "present",
+    "exp3530": "present",
+    "exp3531": "present",
+    "exp3532": "present",
+    "exp3533": "present",
+    "exp3534": "present"
+  },
+  "field_provenance": {
+    "honest_verdict": {
+      "principle": "complete: prefix required (Verdict Terminal-Prefix Discipline) so the conductor reconciler classifies this as terminal without false-positive partial-token matches on words like 'pending' or 'negative'."
+    },
+    "inference_substrate": {
+      "principle": "aggregation_from_upstream_artifacts: no live model is loaded; duration floor is 0.0001s \u2014 declaring this avoids DURATION_TOO_SHORT false-positives (Inference-Substrate Declaration Discipline, 2026-05-22)."
+    },
+    "g1": {
+      "principle": "headline measured (FoVer 0.9131) \u2014 boolean from publication_gate.py G1 check."
+    },
+    "g2": {
+      "principle": "independently reproduced \u2014 boolean (external; honest manual from ops/publication_gate_state.json).  False until a non-operator human confirms."
+    },
+    "g3": {
+      "principle": "prose narrowing-clean \u2014 boolean from publication_gate.py G3 narrowing lint."
+    },
+    "g4": {
+      "principle": "numbers trace to primary artifacts \u2014 boolean from publication_gate.py G4 checksum check (seed + reproducibility_checksum present in headline source)."
+    },
+    "unmet_gates": {
+      "principle": "list of unmet G1-G4 gate names; report this instead of a count (replaces redefinable publication_blocker_count per ops/north-star.md \u00a72)."
+    },
+    "p01_route1_graph_coloring_verdict": {
+      "principle": "exp3528 terminal verdict \u2014 did energy beat a STRONG non-AR baseline on a NON-saturated corpus (vanilla_descent<0.9)?  The discriminating Route-1 datapoint \u2014 null if absent or flagged_adversarial."
+    },
+    "p01_route1_headroom_preserved": {
+      "principle": "exp3528 vanilla_descent_solve_rate < 0.9 \u2014 the CEILING_SATURATION fix; null if exp3528 absent or flagged (a saturated corpus makes a win uninterpretable, so this field gates whether the Route-1 result is defensible)."
+    },
+    "p01_route1_beats_strong_baseline": {
+      "principle": "boolean: exp3528 energy solve_rate > strong_baseline_solve_rate \u2014 the defensible P0.1 Route-1 claim (null if exp3528 absent or flagged)."
+    },
+    "p01_sudoku_energy_power_visible": {
+      "principle": "exp3529 energy_power_gradient_present \u2014 whether energy's combinatorial advantage shows on a discriminating Sudoku tier (solve_rate=1.0 vs SA=0.73); null if exp3529 absent or flagged."
+    },
+    "p01_route2_corpus_had_headroom_exp3530": {
+      "principle": "exp3530 oracle_exceeds_sc \u2014 whether the exp3530 corpus build found any selectable headroom (False means SC is near-optimal in that specific corpus, bounding the Route-2 premise for that corpus)."
+    },
+    "p01_route2_fair_verdict": {
+      "principle": "exp3531 terminal verdict \u2014 the FIRST fair Route-2 test (headroom present + non-degenerate reranker); null if exp3531 absent or flagged."
+    },
+    "p01_route2_corpus_had_headroom": {
+      "principle": "exp3531 corpus_oracle_exceeds_sc \u2014 whether the Route-2 test was finally informative (headroom present means the test distinguishes methods); null if exp3531 absent."
+    },
+    "p01_route2_flip_count": {
+      "principle": "exp3531 flip_count_best_vs_sc \u2014 non-degeneracy proof: >0 means the reranker makes distinct selections from SC, so the negative result is informative (not a flip_count=0 degenerate test that the FALSE_NEGATIVE_RISK check would flag)."
+    },
+    "p01_route2_delta": {
+      "principle": "exp3531 delta_best_vs_self_consistency \u2014 signed accuracy gain of energy over SC on the headroom corpus; negative means energy loses."
+    },
+    "p01_has_clean_defensible_verdict": {
+      "principle": "boolean: P0.1 has a clean, defensible verdict \u2014 energy beats a strong baseline on a non-saturated Route-1 corpus (Sudoku: 1.0 vs SA 0.73) AND/OR an informative Route-2 verdict with headroom (exp3531: headroom present, flip_count=3, informative negative). The Depth-Over-Breadth Forcing Function relax precondition (CLAUDE.md 2026-05-30)."
+    },
+    "aggregation_positive_promoted": {
+      "principle": "exp3532 mean AUROC + CI95 at n\u226580 multi-seed \u2014 whether the step\u2192final aggregation positive replicates at scale; a candidate secondary headline (null if exp3532 absent or flagged)."
+    },
+    "self_learning_deployed_rule": {
+      "principle": "exp3533 terminal verdict \u2014 whether the conservative-default FR-11 self-learning rule deploys end-to-end in a closed loop; null if exp3533 absent or flagged."
+    },
+    "g2_package_status": {
+      "principle": "exp3534 regression + external-ask status string \u2014 describes G2 progress without auto-flipping g2 (the operator decides when G2 is met, per Operator-Only External Publication rule)."
+    },
+    "depth_forcing_function_can_relax": {
+      "principle": "True only when P0.1 has a clean defensible verdict AND G2 external-in-motion; until both conditions hold, depth tasks preempt breadth (CLAUDE.md Depth-Over-Breadth Forcing Function, 2026-05-30)."
+    },
+    "gate_status_v325_ready": {
+      "principle": "terminal completion flag \u2014 always True once the script runs successfully; signals to the conductor that this synthesis is complete and usable by downstream capstone or doc-reconcile tasks."
+    },
+    "random_seed": {
+      "principle": "determinism; MUST be 20260531 (YYYYMMDD), NOT the experiment number \u2014 adversarial_verify flags random_seed == experiment_id as TAUTOLOGY (the exp3502 lesson; Adversarial Artifact Verification, 2026-05-31)."
+    },
+    "reproducibility_checksum": {
+      "principle": "SHA-256 prefix over sorted upstream artifact filenames \u2014 any change in which .325 artifacts are present invalidates this checksum, enabling audit of corpus drift between synthesis and future replication."
+    },
+    "duration_s": {
+      "principle": "aggregation; sub-second honest. inference_substrate=aggregation_from_upstream_artifacts so the 0.0001s floor applies, not 60s."
+    }
+  }
+}
