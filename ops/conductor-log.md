@@ -7296,3 +7296,6 @@ web search: https://docs.garak.ai/garak/examples/pr |
 | 2026-05-31 17:07 UTC | Milestone 2026.05.327 activated | OK | 11 tasks queued |
 | 2026-05-31 17:11 UTC | Archive milestone .326 honestly and activate .327 | OK | 81 passed in 3.85s |
 | 2026-05-31 17:17 UTC | P0.1 Route-1 GRAPH-COLORING TERMINAL (CPU, operato | OK | 81 passed in 3.94s |
+| 2026-05-31 17:29 UTC | P0.1 Route-2 SELECTABLE-HEADROOM corpus build (liv | FAIL | Gemini CLI error: Stalled after 600s silence. Last output: Warning: 256-color  |
+| 2026-05-31 17:41 UTC | P0.1 Route-2 SELECTABLE-HEADROOM corpus build (liv | FAIL | Gemini CLI error: Stalled after 600s silence. Last output: Warning: 256-color  |
+| 2026-05-31 17:52 UTC | P0.1 Route-2 SELECTABLE-HEADROOM corpus build (liv | FAIL | Gemini CLI error: Stalled after 600s silence. Last output: Warning: 256-color  |
