@@ -4,45 +4,49 @@
 # docs_audit_report — 2026-05-31
 
 ## TL;DR (stranger's 30-second take)
-A stranger would bounce within 15 seconds. While the page has a strong initial hook and a clean mental model, it rapidly devolves into an exhausting wall of 30+ dense cards loaded with undocumented internal acronyms and suspiciously perfect metrics that undermine its credibility.
+I'm bouncing. The headline is great, but the page immediately descends into an overwhelming, defensive wall of internal project lore, meaningless operational metrics, and suspiciously perfect benchmark numbers. It reads like a copied-and-pasted Jira dashboard and academic grant report, not a product page for a stranger.
 
 ## TOP 3 PROBLEMS
-1. Incomprehensible internal acronyms — Results grid / Capabilities section
-2. Severe card bloat overwhelming the reader — Entire page / Results grid
-3. Suspiciously perfect 100% metrics triggering skepticism — Results grid
+1. **Vanity CI/CD Metrics as Hero Stats:** "382 Completed milestones" and "30,658 Automated tests" are internal team metrics that mean absolutely nothing to a user evaluating the tool.
+2. **Jargon Overload in Results:** The "Evidence" section is a 12-card wall of text relying on unexplained acronyms (FoVer, SVAMP, PRM-BiasBench, CCTU, HalluGuard v3). 
+3. **Internal Status Bleed:** Cards talking about "pre-submission adversarial audits," "Repinned from v2," and pending "operator-initiated uploads" make me feel like I've accidentally stumbled into your private Slack channel.
 
 ## DETAILED FINDINGS
+
 ### Bloat
-- Entire Page — 32 cards total — cap at ~12-15 to ensure visitors actually read them.
-- Results grid — 12 cards — cap at 4-6 of the most impactful, credible metrics.
-- From the blog section — 7 cards — cap at 3 recent or highly relevant posts.
+- **Results grid (`.results-grid`)** — 12 cards — Cap at 4-6. A stranger is not going to read 12 separate benchmark claims. It dilutes the impact of the good ones.
+- **From the blog (`#writing`)** — 7 cards — Cap at 3. The page is already too long; listing 7 blog posts makes this look like a directory index.
+- **Seven capabilities (`.bento-grid`)** — 7 cards — "Research operations" and "Test-Time Compute (TTC) & PREM" are implementation/development details, not core user capabilities, and clutter the framework's actual value proposition.
 
 ### Internal jargon
-- Recent progress card — "FoVer (5-seed dual-condition; architecture-only 0.8947)" — A stranger has no context for what FoVer is or why the seed/condition details matter here.
-- Capabilities / TTC & PREM card — "Process-Reward Energy Model (PREM)" — Undefined acronym that requires deep domain knowledge to parse.
-- Results grid — "SVAMP AUC", "0.125 FoVer baseline", "IterativeSelfRepair (HumanEval-50, execute-feedback-retry)", "CCTU constrained micro-benchmark", "VeriCoT equation-style CoT fix" — This reads like an internal lab notebook rather than public-facing marketing copy.
+- **Hero Stats & Recent Progress** — "FoVer (5-seed dual-condition; architecture-only 0.8947)". Complete gibberish to anyone outside the project. What is FoVer?
+- **Evidence Grid** — "CCTU constrained tool-use", "EstimationVerifier SVAMP AUC", "PRM-BiasBench-style attacks". You are name-dropping benchmarks and internal tool names without establishing what they measure.
+- **Bento Cards** — "Process-Reward Energy Model (PREM)" and "Test-Time Compute (TTC)". Academic word salad dumped into a feature grid.
 
 ### Per-milestone narrative
-- Recent progress card — "Repinned from v2 0.9857 after pre-submission adversarial audit" — This reads exactly like an internal status update or commit message rather than a value proposition.
+- **Recent Progress Card** — "Repinned from v2 0.9857 after pre-submission adversarial audit..." This is an internal post-mortem/commit message, not marketing copy.
+- **Project Stats** — "382 Completed milestones", "2,953 Experiment runs". This is pipeline status reporting.
+- **Preprint Section** — "The current draft anchors its claims to checked-in experiment artifacts... The arXiv submission is prepared but pending operator-initiated upload." A stranger does not care about your pending upload task status. Just link the paper.
 
 ### Inconsistencies
-- "No model fine-tuning required" (How it works section) vs "Training — Two-GPU parallel retrain: 2.0x speedup" (Results grid) — If the framework genuinely requires no tuning, highlighting a retraining speedup benchmark directly contradicts the pitch.
+- **AUROC Number Soup** — The hero claims "0.9131 Verifier AUROC", the progress card mentions "0.9857", the Safety card claims "0.91 AUROC", and the Math reasoning card claims "0.90 AUC". Throwing this many slightly different AUC/AUROC numbers around with different qualifiers destroys the credibility of the primary headline stat.
+- **Target Audience** — Is this a Python pip package for SWEs, or an FPGA hardware overlay ("KV260 FPGA prototype") for silicon engineers? The page swings wildly between high-level Python APIs and live-on-silicon hardware flexes.
 
 ### Missing essentials
-- Clear maintainer/team identity — "Ian Blenke" is buried in the copyright footer. A project making state-of-the-art claims needs a visible "Who we are" or "Maintained by X" section to establish basic trust.
+- **Hardware/Environment Prerequisites:** The quickstart shows a simple pip install, but the evidence section talks about dual RTX 3090s and FPGA samplers. Can I run this on my Macbook, or do I need a bare-metal GPU rig? It is not stated.
 
 ### Fabrication signals
-- 1.0 (100% TP rate) in the Math extraction result card — Perfect scores scream overfitting, trivial datasets, or synthetic evaluations.
-- 60/60 attacks caught in the Adversarial audit result card — A flawless 100% defense success rate is a massive red flag for any seasoned engineer or researcher.
-- 2.0x speedup, identical losses in the Training result card — Exactly perfect scaling is highly improbable in practice and looks artificially rounded.
+- **Math extraction card** — "GSM8K extraction TP rate: 0.5 -> 1.0" — A perfect 1.0 (100%) true positive rate on LLM extraction sets off immediate bullshit detectors. Nothing in ML is 100%.
+- **Adversarial audit card** — "k=5 ensemble catches 60/60 attacks" — Again, perfect 100% scores look like an overfitted toy dataset to a skeptical practitioner.
+- **Code bento card** — "99.3% of wrong code flagged" — Suspiciously high without immediate, rigorous qualification.
 
 ## WHAT'S WORKING
-- The "Extract -> Check -> Repair" mental model is extremely clear, compelling, and easy to understand.
-- The Quickstart section proves the tool's value immediately with a concise, zero-friction 5-line script.
+- The hero headline and sub-headline are excellent. "Catch the mistakes your LLM confidently makes up" perfectly frames the problem and solution in plain English.
+- The Quickstart tab design (Python vs Rust) is visually clean, and the `VerifyRepairPipeline` code snippet is actually short, readable, and demonstrates immediate value.
 
 ## RECOMMENDED OPERATOR ACTIONS
-1. Slash the Results grid from 12 cards down to 4-6, keeping only the most credible, plain-English metrics.
-2. Scrub all internal acronyms (FoVer, CCTU, PREM, VeriCoT) and replace them with standard descriptions (e.g., "Math extraction," "Tool use completion").
-3. Rewrite the "Recent Progress" card to focus solely on the current state, removing the "repinned from v2" commit-message history.
-4. Add a brief "Who builds this?" line or section to establish project provenance and trust before hitting the reader with wild claims.
-5. Clarify the "No fine-tuning" contradiction by either removing the training metric or explicitly specifying that the training applies to the EBM itself, not the LLM.
+1. **Delete the "Recent progress" card completely.** Move the PyPI and HuggingFace links to simple icon buttons in the hero actions.
+2. **Replace the CI/CD vanity metrics** (milestones, test counts, experiment runs) with actual capability or scale metrics (e.g., supported models, latency overhead).
+3. **Cull the Evidence grid.** Reduce it to the 4-6 most universally understood metrics (e.g., HumanEval code repair). Remove anything that requires explaining an acronym.
+4. **Rewrite the Preprint section.** Delete the internal status about "operator-initiated upload" and just describe what the paper proves.
+5. **Add an environment requirement sentence** near the Quickstart to clarify if this requires GPUs to run the verifier pipeline locally.

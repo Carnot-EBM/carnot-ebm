@@ -1,3 +1,88 @@
+## 2026-05-31 Post-.325 Planning Sweep (Milestone 2026.05.326)
+
+`.325` (Depth-Over-Breadth XI) attacked the two ways P0.1 was still not defensible: Route 1 was
+ceiling-saturated on both CSPs; Route 2 was headroom-starved. Read via
+`scripts/summarize_artifact.py`, the .325 verdicts are:
+
+- **exp3528 (Route 1, graph-coloring headroom + strong baseline): SCIENTIFICALLY POSITIVE but
+  CRITICAL-FLAGGED and EXCLUDED from the headline by a STORAGE bug.** The science is the strongest
+  P0.1 datapoint to date: a HARD, headroom-preserving corpus (`vanilla_descent_solve_rate=0.2`,
+  hard-tier 0.133; `exact_baseline=1.0`) where energy global inference `solve_rate=1.0` BEATS a
+  STRONG non-AR baseline (DSATUR 0.956) and trounces greedy-AR (0.267); PT was effective
+  (`pt_swap_acceptance_rate=0.449`). BUT it carries TWO **CRITICAL TAUTOLOGY** flags caused purely
+  by storing the same measured quantity under two field names:
+  `calibration_vanilla_descent_solve_rate == vanilla_descent_solve_rate_hard_tier` (0.1333) and
+  `pt_mean_swap_rate == pt_swap_acceptance_rate` (0.4488). Per the fabrication gate, the capstone
+  EXCLUDED it. **.326's #1 priority is to rescue this positive cleanly: store each quantity ONCE,
+  expand n for a robust DSATUR margin (1.0 vs 0.956 was only ~2 instances on n≈45), and add a
+  bootstrap CI + a paired significance test on the solve-rate difference.** The lesson is general:
+  the TAUTOLOGY check fires on ANY two distinct-named numeric fields agreeing to >5 sig figs —
+  never alias a measurement.
+- **exp3529 (Route 1, Sudoku discriminating tier): POSITIVE, energy-power visible.** A
+  discriminating hard tier dropped `discrete_sa_single_solve_rate` to 0.733 (hard-tier 0.867)
+  while the energy ladder reached `solve_rate=1.0` and `exact_cp=1.0` confirms solvability. Note
+  `parallel_tempering_solve_rate=0.289` UNDERPERFORMED single-SA — the energy power came from
+  SA-restarts, not PT (PT swap-acceptance 0.73 but the ladder/schedule needs work). A clean
+  positive, modulo a lingering CEILING_SATURATION warn on the best-optimizer tier.
+- **exp3530 (Route 2, selectable-headroom corpus build): NEGATIVE — NO headroom found.**
+  `n_problems_kept=0` of 24 attempted (1238s budget); even at MATH L4-5 the SC majority is
+  near-optimal, so the correct answer, when present among k candidates, is almost always ALSO the
+  majority. `complete: p01_no_selectable_headroom_even_at_level4_5_sc_majority_is_near_optimal_route2_premise_bounded`.
+  This BOUNDS the Route-2 premise on MATH-style benchmarks. **.326 must either find headroom via a
+  GENUINELY different construction (target greedy-wrong / model-uncertain problems, k≥16, a
+  weaker-SC regime, a larger budget) or accept the bound and pivot the existential test to Route 1.**
+- **exp3531 (Route 2, fair test): informative-negative but STILL headroom-starved.** Fell back to
+  the level-3 corpus (oracle 0.473 ≤ SC 0.505, FALSE_NEGATIVE_RISK); `delta=-0.032`,
+  `flips_correct=0`, `flips_incorrect=3`. Uninformative until a headroom corpus exists.
+- **exp3532 (aggregation promotion): CLEAN POSITIVE, REPLICATED.** `mean_final_correctness_auroc=
+  0.9234`, CI95 [0.8991, 0.9478], n=93, 5 seeds, `shuffle_control=0.474` (collapses). The
+  step→final aggregation is now a candidate SECONDARY headline. **.326 should harden it with
+  CROSS-CORPUS generalization (does it hold on a held-out / different corpus?) — the step from
+  "single-corpus replication" to "headline-eligible."**
+- **exp3533 (self-learning deploy): ran on a DEGENERATE corpus.** `initial_true_accuracy=0.0067`
+  (≈0), so the conservative-default rule "prevented collapse but quality dropped" is an ARTIFACT
+  of a corpus with no true accuracy to preserve. `complete: ...over_regularizes_quality_drops_needs_tuning`.
+  **.326's mandatory continuous-self-learning task must re-deploy on a NON-DEGENERATE corpus
+  (starting true accuracy ~0.3–0.6) so collapse-prevention AND quality-maintenance are both
+  meaningfully measurable.**
+- **exp3534 (G2 regression): CLEAN.** Package still reproduces `0.9131`. G2 remains the SOLE unmet
+  publication gate (operator-gated external run).
+
+**The diagnosis that drives .326:** P0.1's strongest result (graph coloring beats a STRONG non-AR
+baseline on a non-saturated corpus) EXISTS but is locked out of the headline by a trivial
+duplicate-field tautology — rescuing it cleanly is the highest-leverage single task. Route 2 is
+structurally headroom-bounded on MATH and needs one genuinely-different headroom attempt or a clean
+bound. The aggregation positive replicated and should be generalized cross-corpus; the self-learning
+deploy needs a real corpus. .326 stays in DEPTH (P0.1 still lacks a clean, flag-free, headline-eligible
+verdict; G2 external run still pending).
+
+New references surfaced (2026-05-31 Post-.325 sweep), directly actionable:
+
+- **arXiv:2511.18630 (MoB) — re-read for the no-headroom insight.** "With imperfect rewards BoN
+  degrades, but the correct answer is often the MOST LIKELY OUTCOME (the mode)." This is precisely
+  why exp3530 found no headroom: when SC≈optimal, the mode IS the answer, so reranking has nothing
+  to recover. If exp3541 DOES find headroom, MoB (select the bootstrapped mode) is a candidate
+  reranker for exp3542 that competes with both SC and energy.
+- **arXiv:2505.10772 — "Ranked-Voting Self-Consistency."** A STRONGER SC variant (rank-aggregate
+  candidates rather than plurality vote). Use as a STRONGER baseline in exp3542 so a Route-2 win
+  is "energy beats a strong SC," not "energy beats plurality vote."
+- **arXiv:2505.20250 — "Efficient Optimization Accelerator Framework for Multi-state Spin Ising
+  Problems."** A MULTI-STATE (one-hot-per-vertex) Ising solver for graph coloring that matches SOTA
+  heuristics and significantly beats SOTA QUBO-based Ising solvers (probabilistic Ising, simulated
+  bifurcation). Directly informs exp3540's encoding + gives a strong-baseline reference point for
+  the graph-coloring claim.
+- **arXiv:2510.19544 — "Demonstrating Real Advantage of Machine-Learning-Enhanced Monte Carlo for
+  Combinatorial Optimization"** and the Global-Annealing-MC-with-ML result: ML-assisted optimization
+  can EXCEED classical SOTA (SA) on QUBO. Frames exp3540's claim honestly — beating SA is a known,
+  achievable bar; the discriminating question is beating the STRONGEST classical method (DSATUR /
+  tuned restarts / exact) on a non-saturated corpus, which is what exp3540 must do.
+- **arXiv:2403.01320 — "Energy landscapes of combinatorial optimization in Ising machines."** The
+  energy-landscape structure (basin width, barrier heights) that makes some instances hard for
+  local search — informs why the near-freezing-transition corpus has headroom and how to verify the
+  hard tier is genuinely hard (not just large).
+
+---
+
 ## 2026-05-31 Post-.324 Planning Sweep (Milestone 2026.05.325)
 
 `.324` (Depth-Over-Breadth X) took P0.1's first clean positive (.323's Sudoku result) and worked
