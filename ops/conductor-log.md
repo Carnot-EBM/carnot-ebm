@@ -7337,3 +7337,4 @@ web search: https://docs.garak.ai/garak/examples/pr |
 | 2026-05-31 22:52 UTC | GateMate continuity audit (documentation-only — fl | OK | 86 passed in 3.95s |
 | 2026-05-31 22:57 UTC | FR-11 continuous self-learning — conservative-defa | OK | 83 passed in 4.59s |
 | 2026-05-31 23:02 UTC | G1-G4 gate-status synthesis v329 (paper_ready=true | OK | 82 passed in 3.61s |
+| 2026-05-31 23:10 UTC | Capstone v329 — does the verifier ensemble's value | OK | 82 passed in 3.47s |
