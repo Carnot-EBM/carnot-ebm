@@ -7268,3 +7268,4 @@ web search: https://docs.garak.ai/garak/examples/pr |
 | 2026-05-31 13:59 UTC | Capstone v325 | OK | Deliverable already exists in repo |
 | 2026-05-31 14:32 UTC | Plan milestone 2026.05.326 | OK | 11 tasks proposed |
 | 2026-05-31 14:35 UTC | Milestone 2026.05.326 activated | OK | 11 tasks queued |
+| 2026-05-31 14:40 UTC | Archive milestone .325 honestly and activate .326 | OK | 81 passed in 4.32s |
