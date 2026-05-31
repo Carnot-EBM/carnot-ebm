@@ -7312,3 +7312,4 @@ web search: https://docs.garak.ai/garak/examples/pr |
 | 2026-05-31 19:19 UTC | Archive milestone .327 honestly and activate .328 | OK | 82 passed in 4.09s |
 | 2026-05-31 19:32 UTC | P0.1 Route-1 GENERALIZE to a SECOND discriminating | FAIL | Gemini CLI error: Stalled after 600s silence. Last output: Warning: 256-color  |
 | 2026-05-31 19:34 UTC | P0.1 Route-1 GENERALIZE to a SECOND discriminating | OK | Deliverable already exists in repo |
+| 2026-05-31 19:40 UTC | P0.1 Route-1 graph-coloring HARDEN (CPU) — re-run  | OK | 85 passed in 4.07s |
