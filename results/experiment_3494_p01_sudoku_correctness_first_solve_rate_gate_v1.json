@@ -1,0 +1,34 @@
+{
+  "schema": "carnot.kona_p01_gate.v1",
+  "experiment": 3494,
+  "inference_substrate": "ising_energy_optimization_cpu",
+  "random_seed": 20260531,
+  "reproducibility_checksum": "9c61e60e51806b03bfb695f91da73fcd10fab4cfcb4e3ef421869922f5fb2835",
+  "n_puzzles": 21,
+  "optimizer_config": {
+    "n_steps_base": 3000,
+    "n_restarts": 3,
+    "ar_n_trials": 1
+  },
+  "qubo_crossvalidation_note": "Carnot's Sudoku energy (carnot.verify.sudoku.build_sudoku_energy) implements the same four constraint families as the QUBO encoding in arXiv:2403.04816: (1) cell uniqueness -- pairwise repulsion sum_{i<j}max(0,1-|x_i-x_j|)^2 over the 9 digits per cell, equivalent to the QUBO one-hot row-sum penalty; (2) row uniqueness -- same pairwise repulsion over all 9 cells in each row; (3) column uniqueness -- over each column; (4) 3x3 box uniqueness -- over each 3x3 box; plus (5) given-digit pinning (x_i=d_i)^2 for each clue cell. A fully solved, clue-satisfying board achieves E=0 iff all 27 groups are permutations of 1-9 and clues are preserved -- identical to the published QUBO global-minimum condition. Step-0a asserts this property empirically on a known-valid board.",
+  "encoding_validity_E0": {
+    "total_energy": 0.0,
+    "is_valid": true,
+    "residual_by_type": {
+      "row": 0.0,
+      "col": 0.0,
+      "box": 0.0,
+      "clue": 0.0
+    }
+  },
+  "easy_tier_solve_rate": 0.0,
+  "solve_rate": null,
+  "solve_rate_by_difficulty": {},
+  "solve_rate_by_optimizer_variant": {},
+  "n_violated_constraints_at_plateau": null,
+  "hybrid_solve_rate": null,
+  "time_to_solution_solved_only": [],
+  "ar_baseline_solve_rate": null,
+  "honest_verdict": "complete: blocked_kona_failure_is_representational_not_optimizer",
+  "duration_s": 180.2985782623291
+}
