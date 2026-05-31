@@ -136,8 +136,8 @@ tasks:
     prompt: |
       CONTEXT: P0.1 (does energy-based global inference actually SOLVE, not just descend fast?)
       is the project's single most important test. exp3494 (.322) VALIDATED the Sudoku-Ising
-      ENCODING — `encoding_validity_E0` = {total_energy: 0.0, is_valid: True, residual
-      row/col/box/clue all 0.0}, cross-validated vs the published QUBO (arXiv:2403.04816). But
+      ENCODING — `encoding_validity_E0` = {{total_energy: 0.0, is_valid: True, residual
+      row/col/box/clue all 0.0}}, cross-validated vs the published QUBO (arXiv:2403.04816). But
       it reported `easy_tier_solve_rate=0.0` and bailed at the Step-0b easy-tier sanity check
       because its optimizer was vanilla/gradient descent, which cannot escape local minima — it
       NEVER reached its own SA/parallel-tempering/restart ladder. With the encoding now PROVEN
@@ -515,7 +515,7 @@ tasks:
            final-aggregate array are NOT element-wise equal (the exp3473 bug — fail loudly if equal).
         2. STEP-ERROR REFERENCE: where a per-step error label/proxy exists, report the ensemble's
            step-ERROR-detection AUROC (the 0.9131-class strong signal) as the ceiling to recover toward.
-        3. AGGREGATION SWEEP: for each function in {last, product, min, mean, uncertainty-weighted}
+        3. AGGREGATION SWEEP: for each function in {{last, product, min, mean, uncertainty-weighted}}
            (arXiv:2508.01773), aggregate per-step scores to a per-candidate final score; compute its
            FINAL-CORRECTNESS AUROC on the held-out split (CV-fit any weights on TRAIN only).
         4. GAP CLOSURE: report best_aggregation_final_correctness_auroc and gap_closed_fraction =
