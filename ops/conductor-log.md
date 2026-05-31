@@ -7324,3 +7324,5 @@ web search: https://docs.garak.ai/garak/examples/pr |
 | 2026-05-31 20:53 UTC | G1-G4 gate-status synthesis v328 (UNGATED, cascade | OK | 86 passed in 4.40s |
 | 2026-05-31 20:58 UTC | Capstone v328 | OK | 82 passed in 4.10s |
 | 2026-05-31 21:15 UTC | Plan next milestone | FAIL | Gemini CLI error: API Error: 400 messages.1.content.8: `thinking` or `redacted |
+| 2026-05-31 21:57 UTC | Plan next milestone | FAIL | Gemini CLI error: Wall-clock+idle timeout after 1201s (1201s silence). Last ou |
+| 2026-05-31 21:59 UTC | Milestone 2026.05.329 activated | OK | 11 tasks queued |

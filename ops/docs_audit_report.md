@@ -4,52 +4,47 @@
 # docs_audit_report — 2026-05-31
 
 ## TL;DR (stranger's 30-second take)
-The page looks visually polished but reads like an internal lab notebook mixed with a buggy template rendering. The overwhelming number of dense cards, heavy use of undefined acronyms, suspiciously perfect numbers, and literal internal file paths leaked into the text would make a stranger bounce immediately, assuming the project is unmaintained or broken.
+I'd bounce immediately. While the hero section clearly explains the problem, the page is visibly broken with raw internal file paths injected into the text and CSS, and the content quickly devolves into an impenetrable wall of internal benchmark jargon and defensive status updates.
 
 ## TOP 3 PROBLEMS
-1. **Broken Templating / Path Leaks** — Internal file paths and experiment IDs (e.g., `@.tmp-pytest/.../experiment_400.json`) have leaked directly into font imports, CSS media queries, and result card titles.
-2. **Wall of Jargon** — The page is riddled with acronyms and internal terms (FoVer, CCTU, PREM, SVAMP, PRM-BiasBench) that alienate new visitors.
-3. **Suspiciously Perfect Metrics** — Claims like "1.0 TP rate", "60/60 attacks caught", and "Zero false positives" scream over-optimization or fabrication without strong credibility anchors.
+1. **Broken Site / Leaked Internal Paths:** The HTML generation is broken. Raw pytest file paths and JSON file paths (`@.tmp-pytest/...`) are injected directly into text, Google Font URLs, and CSS media queries.
+2. **Incomprehensible Jargon Soup:** The "Evidence" section relies entirely on internal shorthands (FoVer, SVAMP, CCTU, PRM-BiasBench) that mean nothing to an outsider.
+3. **Internal Status Updates Masquerading as Copy:** The "Preprint" block talks about "pending operator-initiated upload" and the recent progress card mentions "Repinned from v2 0.9857" — this is internal project management reporting, not marketing copy.
 
 ## DETAILED FINDINGS
-
 ### Bloat
-- Results Grid — 12 cards — Cap at 4-6 most impactful, comprehensible metrics.
-- Blog/Writing Grid — 7 cards — Cap at 3 most recent/relevant posts.
-- Features Grid — 7 bento cards — Compress into 3-4 core capabilities.
+- Evidence Section — 12 cards — Cap at 4-6. A stranger will not read a massive grid of benchmark cards, especially when they can't understand the metrics.
+- Blog Section — 7 cards — Cap at 3 or 4. It dominates the vertical space and looks overwhelming.
 
 ### Internal jargon
-- Font imports & CSS — `@.tmp-pytest/.../experiment_400.json`, `@results/experiment_3500_kv260_terminal_latency_transcript_v8.json`, `@.tmp-pytest/.../experiment_1238_phase5d_intermediate_scale.json` — Raw internal paths breaking the code.
-- "Live benchmark" card — The title contains a leaked test path: `@.tmp-pytest/pytest-of-ianblenke/pytest-3/.../spilled-energy-2602-18671:real.txt`.
-- "Recent progress" card — `FoVer`, `5-seed dual-condition`, `architecture-only 0.8947` — A stranger has no context for what FoVer is or what these conditions mean.
-- "Features" section — `CCTU constrained micro-benchmark`, `PREM`, `Test-Time Compute (TTC)` — Academic/internal shorthand used without definitions.
-- "Results" section — `Z3`, `HumanEval-50`, `execute-feedback-retry`, `SVAMP AUC`, `Qwen3.6-35B-A3B`, `VeriCoT`, `PRM-BiasBench` — Dense, hyper-specific dataset and benchmark names that mean nothing to a casual reader.
+- Recent Progress Card — `FoVer (5-seed dual-condition; architecture-only 0.8947)` — Total gibberish to an outsider. What is FoVer?
+- Evidence Cards — `HumanEval-50, execute-feedback-retry`, `SVAMP AUC`, `PRM-BiasBench-style attacks`, `CCTU constrained micro-benchmark` — Strangers do not know your internal benchmark subsets or specific baseline shorthands.
+- Test-Time Compute Card — `Process-Reward Energy Model (PREM)` — Dropped as an acronym without any prior definition.
+- Live benchmark card — `Qwen3.6-35B-A3B` — Hyper-specific checkpoint jargon.
 
 ### Per-milestone narrative
-- "Recent progress" card — "Repinned from v2 0.9857 after pre-submission adversarial audit..."
-- "Writing" section descriptions — "Three rigorous theory rounds approved the architecture. A single blind-spot audit pass found five fatal flaws...", "We paid for a hostile audit...", "639 experiments self-verified." — These read like internal Slack updates or sprint retrospectives rather than marketing copy.
+- Recent Progress Card — "Repinned from v2 0.9857 after pre-submission adversarial audit; see Why We Report Two AUROCs Now." reads like a defensive PR description or retrospective note.
+- Preprint Section — "The arXiv submission is prepared but pending operator-initiated upload." — Irrelevant internal tracking status.
+- Project stats — "382 Completed milestones" — A meaningless internal velocity metric to a visitor.
 
 ### Inconsistencies
-- The hero claims "no model fine-tuning required," but the features mention a "Process-Reward Energy Model (PREM)" and the blog discusses "self-distillation" and "training - two-GPU parallel retrain."
-- The hero claims "Every number below is backed by a checked-in experiment artifact", but the blog posts immediately confess to the system "caught cheating" with an artifact claiming 95-microsecond evaluations and verifiers that are actually "56 lines of regex" or "sleep-padded."
+- The hero stats bar highlights "0.9131 AUROC" for the Verifier, while the Safety evidence card cites "0.91 AUROC" for prompt-injection. It's unclear if these are the same metric or different capabilities.
+- "Carnot works with any LLM you can call" vs the API examples showing it explicitly taking a model checkpoint string (`model="Qwen/Qwen3.5-0.8B"`), leaving it ambiguous how external API keys or local servers are managed.
 
 ### Missing essentials
-- A clear, simple "Why choose this over just asking the LLM to double-check itself?" explanation.
-- An explicit definition of who the project is for (Researchers? Enterprise devs? Hobbyists?).
+- How does the "repair" step integrate with actual application logic? The Quick Start shows a trivial text-in-text-out example but doesn't show how it handles the "typed JSON constraints" or "code properties" highlighted as key features.
 
 ### Fabrication signals
-- "GSM8K extraction TP rate: 0.5 → 1.0" — A perfect 1.0 True Positive rate is highly suspect.
-- "k=5 ensemble catches 60/60 attacks" — A 100% catch rate on adversarial attacks lacks credibility.
-- "Training — Two-GPU parallel retrain: 2.0× speedup, identical losses" — Perfect linear scaling with zero precision loss in distributed training is extremely rare and physically/numerically suspect.
-- "Zero false positives" in 639 self-verified experiments — Suspiciously perfect for any AI-driven analysis.
+- Math extraction card — `GSM8K extraction TP rate: 0.5 -> 1.0` — A perfect 1.0 (100%) true positive rate looks suspiciously cherry-picked or overfit.
+- Adversarial audit card — `k=5 ensemble catches 60/60 attacks` — 100% defense rate on exactly 60 attacks screams "we overfit to a small internal test set."
 
 ## WHAT'S WORKING
-- The Quickstart section is excellent: the code is genuinely short, shows the exact import paths, and demonstrates both the simple verify and the verify-and-repair use cases clearly in multiple languages.
-- The core "Three steps" (Extract -> Check -> Repair) explanation is punchy and easy to follow.
+- The hero section does a fantastic job stating the problem clearly ("LLMs predict. They don't check.") and the proposed solution in plain English.
+- The Python Quickstart code snippet is concise and immediately shows the developer experience.
 
 ## RECOMMENDED OPERATOR ACTIONS
-1. **Fix the Build/Template Bug:** Immediately remove the leaked `@.tmp-pytest/...` and `@results/...` paths from the HTML head, media queries, and the "Live benchmark" card title.
-2. **Purge the Jargon:** Rewrite the "Recent progress" and "Results" cards to use plain English. Replace dataset names with functional descriptions (e.g., "Math extraction" instead of "VeriCoT on GSM8K").
-3. **Trim the Fat:** Cut the "Results" section from 12 cards to a top 4. Reduce the "Writing" section to the 3 most important posts.
-4. **Ground the Numbers:** Remove the "1.0", "60/60", and perfect "2.0x" claims, or add immediate asterisks/context on the dataset size that makes these numbers plausible.
-5. **Remove Internal Status:** Rewrite the "Recent progress" card to focus on what the user gets today, not the history of how the AUROC changed during an audit.
+1. Fix the templating bug injecting `@.tmp-pytest/...` and `@results/...` into the HTML text, font URLs, and CSS media queries.
+2. Cut the "Evidence" section down to the 4-6 most impressive, clearly-explained metrics (e.g., Code repair, Tool use) and remove acronyms like FoVer and CCTU.
+3. Rewrite the "Preprint" section to simply offer the arXiv draft, removing the "pending operator-initiated upload" status.
+4. Remove defensive narrative text (e.g., "Repinned from v2 0.9857") from the Recent Progress card.
+5. Limit the Blog section to the 3 most recent posts to reduce scrolling bloat.

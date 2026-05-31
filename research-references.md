@@ -1,3 +1,107 @@
+## 2026-05-31 Post-.328 Planning Sweep (Milestone 2026.05.329)
+
+`.328` (Depth-Over-Breadth XIV, CONSOLIDATION) tried to harden the `.327` P0.1 Route-1 positive into a
+defensible general claim. The honest result: the positive is REAL but **bounded and regime-narrow**, and
+the recent neural-CO critique literature says this is exactly what to expect. Read via
+`scripts/summarize_artifact.py`, the `.328` verdicts are:
+
+- **exp3562 (P0.1 Route-1 GENERALIZE to a second discriminating CSP): BLOCKED —
+  `cannot_construct_discriminating_second_csp`.** On the second CSP (k-SAT), the STRONG classical
+  baseline solved the hard tier `==1.0` (no headroom to discriminate), and energy global inference
+  actually *lost* slightly (`energy_minus_strong_paired_diff_hard_tier=-0.03`, `p=1.0`). The lesson:
+  strong classical CSP solvers are excellent, so a discriminating regime is hard to even *construct* off
+  the graph-coloring phase transition.
+- **exp3563 (P0.1 Route-1 graph-coloring HARDEN, multi-seed + second generator): BOUNDED —
+  `positive_bounded_to_single_generator_ci_includes_zero_on_second`.** Across >=5 seeds the hard-tier
+  paired-diff CI EXCLUDED 0 on the first generator but INCLUDED 0 on a second graph generator. The
+  `.327` positive is therefore **fragile to the instance distribution**, not a robust general headline.
+- **exp3564 (P0.1 Route-2 NL-math FINAL live-GPU attempt): NO ARTIFACT — three `Gemini CLI Stalled
+  after 600s silence` failures, then retired.** The live-GPU generation task never ran. This is the
+  recurring **gemini-600s-stall on live-generation tasks** that the operator flagged ("get to the bottom
+  of what impedes scientific advancement") — it is the #1 *operational* impediment to P0.1 progress, and
+  it means Route-2 still has **no terminal verdict** despite 5 prior headroom-starved blocks.
+- **exp3565 (cross-corpus aggregation promotion): FLAGGED ADVERSARIAL (TAUTOLOGY) —
+  `step_to_final_aggregation_does_not_transfer`.** Transfer onto corpus C was healthy
+  (`transfer_auroc_c=0.904`) but corpus B was DEGENERATE (`transfer_auroc_b=0.5`, equal to its own
+  floor and shuffle control — a build bug, not a science result). The promotion did not land cleanly.
+- **exp3566 (FR-11 multi-corpus deploy + P0.2 verifier-diversity): BOUNDED —
+  `verifier_diversity_no_material_gain_p02_bounded`.** FR-11 deploys across a non-degenerate battery, but
+  diverse multi-verifier grounding (0.479) did NOT beat single-verifier grounding (0.490). P0.2 bounded.
+- **exp3567 (G2 regression-verify): CLEAN.** Package still reproduces FoVer `AUROC=0.9131`. **G2
+  (independent external reproduction) remains the SOLE unmet publication gate** (G1/G3/G4 met).
+- **Hardware:** KV260 was `blocked_kv260_ssh_unreachable` (board down); PolarFire reachable.
+
+**Net `.328` state:** the P0.1 existential positive is honest but **narrow** — energy global inference
+beats strong-classical + AR specifically near the graph-coloring phase transition on one generator, and
+does NOT generalize to a second CSP or a second generator. `depth_forcing_function_can_relax=true`.
+G1=true, G2=false, G3=true, G4=true. **`.329` strategy** (per north-star §1 — every task advances a
+headline or it is noise): (1) STOP chasing "does it generalize" and instead **CHARACTERIZE the regime**
+where energy global inference has a real advantage (an honest, publishable hardness/amortized-efficiency
+map); (2) OPEN the reranker front where headroom plausibly EXISTS — **CODE generation** (multi-basin,
+functionally checkable) rather than single-basin NL-math; (3) **terminally RETIRE Route-2 NL-math** on a
+CPU-only synthesis (no live-GPU = no 600s stall) given 5 headroom-starved blocks + theory; (4) clean up
+the flagged aggregation result; (5) advance self-learning; (6) keep driving G2. **Operational discipline
+for `.329`: put ZERO critical science on a live-GPU-generation path** — everything is CPU (Ising) or
+cached-candidate scoring, so the gemini-600s-stall cannot retire a depth task again.
+
+### Verified papers added this sweep (researched 2026-05-31)
+
+**Q1 — WHERE/WHEN does energy/neural CO actually beat STRONG classical solvers? (regime maps,
+phase-transition hardness, the neural-CO critique — frames the `.329` Route-1 REGIME MAP):**
+- **arXiv:2502.03669** — *Unrealized Expectations: Comparing AI Methods vs Classical Algorithms for
+  Maximum Independent Set* — Wu, Zhao, Arora (Feb 2025). Successor to the Angelini–Ricci-Tersenghi
+  critique: the classical solver KaMIS consistently beats every leading AI/GPU method on MIS, even
+  in-distribution, up to 10^6 nodes. **The strongest adversarial baseline for our "energy beats
+  classical" claim — the regime map must show WHERE we win and concede where KaMIS-class solvers win.**
+- **arXiv:2508.02510** — *On Distributional Dependent Performance of Classical and Neural Routing
+  Solvers* — Thyssens, Dernedde, Sentanoe (Aug 2025). The neural-vs-classical gap closes on narrow fixed
+  distributions and widens on broadly-random instances. **This is our exp3563 "fragile across generators"
+  finding stated as a general law — the win is distribution-narrow.**
+- **arXiv:2605.14624** — *An Amortized Efficiency Threshold for Comparing Neural and Heuristic Solvers in
+  Combinatorial Optimization* — Afifi (May 2026). A neural solver is net-efficient only above a breakeven
+  deployment volume (GPU training cost amortized against per-instance CPU heuristic cost). **The honest,
+  paper-citable framing for a bounded positive: the win is volume-amortized, not blanket solve-rate.**
+
+**Q2 — Energy/verifier RERANKING of LLM candidates for CODE (does selection beat self-consistency when
+there IS headroom? — frames the `.329` CODE-reranking front):**
+- **arXiv:2604.06485** — *Inference-Time Code Selection via Symbolic Equivalence Partitioning* — Cho,
+  Wang, Sui (Apr 2026). SEP groups functionally-equivalent candidates via symbolic execution and picks
+  the dominant correct partition: 0.826 HumanEval+ / 0.647 LiveCodeBench at N=10, beating consensus.
+  **Canonical proof that CODE has selectable headroom majority vote misses — the slot for a Carnot energy
+  verifier.**
+- **arXiv:2604.15618** — *Majority Voting for Code Generation* — Launer, Hübotter, Bagatella (Apr 2026).
+  Functional Majority Voting clusters by runtime execution signature and boosts pass@1, but finds no
+  self-improvement beyond the base model's coverage ceiling. **The honest baseline our code reranker must
+  beat (functional consensus, not token-majority); headroom is capped by base-model coverage.**
+
+**Q3 — Self-consistency optimality / when reranking helps (selectable-headroom theory — explains the
+NL-math null and predicts where a reranker can win):**
+- **arXiv:2605.26172** — *ARBITER: Reasoning Trajectory Basins and Majority Vote Failures in Test-Time
+  Sampling* — Cai, Kulik, Choudhury (May 2026). Sampled traces concentrate into few "basins"; majority
+  vote picks the most *stable* basin, not the most *accurate* one — wrong-majority failures where the
+  correct answer is present but outvoted. **THE theory of selectable headroom: multi-basin problems have
+  headroom a verifier can exploit; single-basin do not — explains our NL-math null and tells us which
+  problems to put in the code-reranking corpus.**
+- **arXiv:2509.06870** — *The Majority is not always right: RL training for solution aggregation* — Zhao,
+  Aggarwal, Saha (Sep 2025). AggLM learns to select/combine candidates including minority-correct cases,
+  beating majority voting at fewer tokens. **A strong learned-aggregator baseline; its minority-correct
+  training split is a ready protocol for building the headroom-positive corpus.**
+- **arXiv:2502.18581** — *Scalable Best-of-N Selection via Self-Certainty* — Kang, Zhao, Song (Feb 2025;
+  carried forward). The near-zero-cost intrinsic-confidence BoN baseline an energy verifier must beat —
+  and a headroom diagnostic (self-certainty wins precisely where voting has no selectable signal).
+
+**Q4 — Learned proposals / parallel tempering for Ising/QUBO (candidate fix for generator-fragility):**
+- **arXiv:2509.23043** — *IsingFormer: Augmenting Parallel Tempering With Learned Proposals* — Bunaiyan,
+  Delacour, Chowdhury (Sep 2025; carried forward + re-confirmed). A Transformer trained on equilibrium
+  samples proposes whole-configuration global moves in PT, cutting equilibration and **transferring to
+  unseen instances**. **The cross-instance transfer is the mechanism that could make the Route-1 positive
+  robust across the generators where exp3563 found it fragile.**
+- **arXiv:2502.10328** — *Accelerated Parallel Tempering via Neural Transports* (Feb 2025). Neural
+  samplers (flows/diffusion) as transport maps reduce the temperature-overlap requirement in PT. The
+  continuous-relaxation counterpart to IsingFormer for a continuous-latent → sign → Ising path.
+
+---
+
 ## 2026-05-31 Post-.327 Planning Sweep (Milestone 2026.05.328)
 
 `.327` (Depth-Over-Breadth XIII) was the milestone that gave P0.1 its first **clean, terminal,
