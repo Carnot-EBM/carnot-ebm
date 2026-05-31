@@ -7196,3 +7196,4 @@ web search: https://docs.garak.ai/garak/examples/pr |
 | 2026-05-31 01:19 UTC | P0.1 Route 1 (PRIMARY, CPU) — Sudoku/Kona correctn | OK | 81 passed in 3.33s |
 | 2026-05-31 01:31 UTC | P0.1 Route 2 (cached) — energy-vs-Self-Consistency | OK | 81 passed in 3.25s |
 | 2026-05-31 01:53 UTC | P0.1 OPTIONAL (non-blocking) — live difficulty-mat | FAIL | Claude Code error: Wall-clock+idle timeout after 1201s (1201s silence). Last ou |
+| 2026-05-31 01:58 UTC | P0.1 OPTIONAL (non-blocking) — live difficulty-mat | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_3496_p01_dif |
