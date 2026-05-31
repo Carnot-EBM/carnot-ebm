@@ -1,0 +1,92 @@
+{
+  "experiment": 3502,
+  "title": "G-Gate Status Synthesis v322",
+  "honest_verdict": "complete: g1_g3_g4_met_g2_pending_p01_both_routes_blocked",
+  "inference_substrate": "aggregation_from_upstream_artifacts",
+  "g1": true,
+  "g2": false,
+  "g3": true,
+  "g4": true,
+  "unmet_gates": [
+    "G2"
+  ],
+  "p01_route1_sudoku_verdict": "complete: blocked_kona_failure_is_representational_not_optimizer",
+  "p01_route1_solve_rate": null,
+  "p01_route2_crux_verdict": "complete: blocked_contested_subset_too_small_n=21",
+  "p01_route2_delta": null,
+  "p01_route2_flip_count": null,
+  "p01_has_clean_verdict": false,
+  "calibration_diagnosis": "mathaware_recalibration_recovers_correctness_signal_domain_shift_was_the_cause; step_vs_final_auroc_gap=0.13795; mathaware_recalibrated_correctness_auroc=0.624931",
+  "fr11_beta_min_lambda_min_law": "Phase-5 deployment rule: beta_min = -0.3001 + 1.8461 * lambda_min (R\u00b2=0.989). beta=0 sufficient when lambda_min \u2264 0.1625. Law validated out-of-sample (prediction error \u2264 0.15). Safety margin: add 0.10 to the predicted beta_min for unknown-ensemble deployments.",
+  "g2_package_status": "package_regression_clean; external_run_pending=True; g2_met=False; G2-external-in-motion (ask sent, awaiting non-operator run)",
+  "depth_forcing_function_can_relax": false,
+  "gate_status_v322_ready": true,
+  "random_seed": 3502,
+  "reproducibility_checksum": "29d6b0b27b00a299",
+  "duration_s": 0.108583,
+  "field_provenance": {
+    "honest_verdict": {
+      "principle": "complete: prefix required (Verdict Terminal-Prefix Discipline) so the conductor reconciler classifies this as terminal without false-positive partial-token matches."
+    },
+    "inference_substrate": {
+      "principle": "aggregation_from_upstream_artifacts: no live model is loaded; duration floor is 0.0001s. Declared explicitly to avoid DURATION_TOO_SHORT false-positives (Inference-Substrate Declaration Discipline, CLAUDE.md 2026-05-22)."
+    },
+    "g1": {
+      "principle": "headline measured (FoVer 0.9131) \u2014 boolean from publication_gate.py G1 check."
+    },
+    "g2": {
+      "principle": "independently reproduced \u2014 boolean (external; honest manual from ops/publication_gate_state.json)."
+    },
+    "g3": {
+      "principle": "prose narrowing-clean \u2014 boolean from publication_gate.py G3 narrowing lint."
+    },
+    "g4": {
+      "principle": "numbers trace to primary artifacts \u2014 boolean from publication_gate.py G4 checksum check."
+    },
+    "unmet_gates": {
+      "principle": "list of unmet G1-G4 gate names; report this instead of a count (replaces redefinable publication_blocker_count per ops/north-star.md \u00a72)."
+    },
+    "p01_route1_sudoku_verdict": {
+      "principle": "exp3494 terminal verdict (solve-rate / encoding-valid) \u2014 the CPU P0.1 datapoint (null if absent/flagged)."
+    },
+    "p01_route1_solve_rate": {
+      "principle": "exp3494 solve_rate (null if blocked/absent) \u2014 the headline CPU solve-rate number."
+    },
+    "p01_route2_crux_verdict": {
+      "principle": "exp3495 terminal verdict \u2014 the in-band energy-vs-SC result (null if absent/flagged)."
+    },
+    "p01_route2_delta": {
+      "principle": "exp3495 delta_optimal_vs_self_consistency (null if blocked/flagged) \u2014 the headline P0.1 delta."
+    },
+    "p01_route2_flip_count": {
+      "principle": "exp3495 flip_count_optimal_vs_sc \u2014 non-degeneracy proof (null if absent); 0 means the two methods agree everywhere."
+    },
+    "p01_has_clean_verdict": {
+      "principle": "boolean: at least one P0.1 route produced a clean (non-blocked, non-flagged) verdict \u2014 the Depth-Over-Breadth relax precondition (CLAUDE.md Depth-Over-Breadth Forcing Function)."
+    },
+    "calibration_diagnosis": {
+      "principle": "exp3497 step-vs-final / domain-shift diagnosis (null if absent/flagged) \u2014 explains whether energy-vs-SC delta is confounded by calibration shift."
+    },
+    "fr11_beta_min_lambda_min_law": {
+      "principle": "exp3498 fitted law + holds-out boolean (null if absent) \u2014 the Phase-5 deployment rule for setting beta_min from the ensemble's lambda_min."
+    },
+    "g2_package_status": {
+      "principle": "exp3499 regression + external-ask status string \u2014 describes G2 progress toward closure without auto-flipping g2 (Operator-Only External Publication rule)."
+    },
+    "depth_forcing_function_can_relax": {
+      "principle": "True only when P0.1 has a clean verdict AND G2 external-in-motion; until then depth tasks preempt breadth (CLAUDE.md Depth-Over-Breadth Forcing Function 2026-05-30)."
+    },
+    "gate_status_v322_ready": {
+      "principle": "terminal completion flag (always True) \u2014 signals to the conductor that this synthesis artifact is complete."
+    },
+    "random_seed": {
+      "principle": "determinism: fixed seed 3502 (the experiment number) ensures any deterministic sub-step is reproducible."
+    },
+    "reproducibility_checksum": {
+      "principle": "content hash of non-null upstream artifact paths \u2014 any upstream change invalidates this synthesis deterministically, enabling a third party to verify the aggregation is not synthesizing numbers from nothing."
+    },
+    "duration_s": {
+      "principle": "aggregation; sub-second honest. inference_substrate=aggregation_from_upstream_artifacts so 0.0001s floor applies, not 60s."
+    }
+  }
+}
