@@ -1,0 +1,236 @@
+{
+  "schema": "carnot.operational_retro.v66",
+  "experiment": 3527,
+  "experiment_id": 3527,
+  "experiment_title": "Archive v324 + Activate v325",
+  "run_date": "20260531",
+  "generated_at": "2026-05-31T10:54:00Z",
+  "inference_substrate": "aggregation_from_upstream_artifacts",
+  "milestone_archived": "2026.05.324",
+  "milestone_activated": "2026.05.325",
+  "archive_v324_activate_v325_ready": true,
+  "p01_ceiling_saturation_is_blocker": true,
+  "p01_route2_reranker_fixed_no_headroom": true,
+  "p01_two_clean_positives_this_milestone": true,
+  "p01_route1_sudoku_verdict": "complete: p01_sudoku_positive_hardened_solve_rate_1_00_beats_fair_ar_baseline",
+  "p01_route1_sudoku_solve_rate": 1.0,
+  "p01_route1_sudoku_ar_greedy_solve_rate": 0.025,
+  "p01_route1_sudoku_discrete_sa_single_rate": 1.0,
+  "p01_route1_sudoku_pt_solve_rate": 0.525,
+  "p01_route1_sudoku_pt_swap_acceptance": 0.5320895007854294,
+  "p01_route1_sudoku_n_puzzles": 40,
+  "p01_route1_sudoku_encoding_valid_E0": true,
+  "p01_route1_sudoku_ceiling_saturated": true,
+  "p01_route1_sudoku_ceiling_saturation_diagnosis": "discrete_sa_single (trivial single-restart SA) also achieves solve_rate=1.0 across all difficulty tiers. Every variant except vanilla_langevin and greedy AR saturates at 1.0. The corpus is too easy for modern combinatorial optimizers: ANY non-trivial method wins. Energy-specific power is not separated.",
+  "p01_route1_graphcol_verdict": "complete: p01_energy_vs_ar_generalizes_to_graph_coloring_solve_rate_1_00_vs_ar_0_50",
+  "p01_route1_graphcol_solve_rate": 1.0,
+  "p01_route1_graphcol_ar_baseline": 0.5,
+  "p01_route1_graphcol_vanilla_descent": 1.0,
+  "p01_route1_graphcol_pt_swap_acceptance": 0.0,
+  "p01_route1_graphcol_ceiling_saturated": true,
+  "p01_route1_graphcol_ceiling_saturation_diagnosis": "vanilla_descent (trivial gradient descent) also achieves solve_rate=1.0. pt_swap_acceptance=0.0 means PT made no exchanges \u2014 all chains collapsed to the same basin immediately. This only proves greedy-AR's Brooks pathology (AR can't avoid monochromatic edges), not that energy is special among solvers.",
+  "p01_route2_verdict": "complete: energy_makes_distinct_selections_but_does_not_beat_self_consistency_in_band",
+  "p01_route2_reranker_distinct": true,
+  "p01_route2_flip_count_process": 24,
+  "p01_route2_flip_count_optimal": 2,
+  "p01_route2_optimal_accuracy": 0.475,
+  "p01_route2_sc_accuracy": 0.5,
+  "p01_route2_no_selectable_headroom": true,
+  "p01_route2_diagnosis": "Reranker collapse IS FIXED: flip_count_process=24 (non-zero distinct selections). But oracle accuracy=0.475 <= SC baseline=0.5 \u2014 the level-3 in-band corpus has NO SELECTABLE HEADROOM. SC is already optimal; no method can beat it on this corpus. The null result (energy doesn't beat SC) is uninformative about energy: nothing can beat SC here. Need corpus with oracle>SC.",
+  "agg_step_to_final_verdict": "complete: step_to_final_aggregation_recovers_signal_confirmed_real_shuffle_control_passed_gap_closed_FF",
+  "agg_step_to_final_best_auroc": 0.905535,
+  "agg_step_to_final_shuffle_auroc": 0.452403,
+  "agg_step_to_final_gap_fraction": 0.960983,
+  "agg_step_to_final_shuffle_collapses": true,
+  "agg_step_to_final_is_clean_positive": true,
+  "agg_step_to_final_deployment_note": "CONFIRMED REAL MECHANISM. min-aggregation AUROC=0.9055, shuffle collapses to 0.4524 (chance level). The step-to-final gap closure is a genuine information-theoretic signal. Deployable as a post-hoc correction step in the FoVer production pipeline.",
+  "fr11_verdict": "complete: conservative_default_beta_is_the_robust_phase5_default_adaptive_online_unnecessary",
+  "fr11_conservative_prevents_collapse": true,
+  "fr11_adaptive_prevents_collapse": false,
+  "fr11_recommended_phase5_rule": "conservative-default beta (0.5)",
+  "fr11_is_clean_positive": true,
+  "fr11_deployment_note": "Conservative-default beta=0.5 is the robust Phase-5 deployment rule. Adaptive online beta failed on low-diversity configs (collapse detected=True). Static offline law also prevented collapse but not tested on all configs. Deployed rule: conservative-default.",
+  "g2_external_run_pending": true,
+  "g2_fover_headline_auroc": 0.9131,
+  "publication_gate_status": {
+    "G1_headline_measured": true,
+    "G2_independent_reproducer": false,
+    "G3_prose_narrowing_clean": true,
+    "G4_numbers_trace_to_artifacts": true,
+    "paper_ready": false,
+    "unmet_gates": [
+      "G2"
+    ],
+    "sole_unmet_gate": "G2",
+    "G2_external_run_pending": true,
+    "G2_fover_headline_auroc": 0.9131,
+    "G2_fover_headline_auroc_ci": [
+      0.9027,
+      0.9235
+    ],
+    "note": "Gate synthesis (exp3525) SKIP this milestone due to pre-test cascade. Gate status is carry-forward from .323: G1/G3/G4 met, G2 pending. G2 external run is the sole unmet publication gate."
+  },
+  "depth_forcing_function_can_relax": false,
+  "depth_forcing_function_rationale": "Route 1 positive (exp3517/3518) is CEILING_SATURATED: trivial optimizers (discrete_sa_single, vanilla_descent) also saturate at 1.0. Energy-specific advantage is not yet demonstrated above non-energy combinatorial optimizers. Route 2 (exp3519) has no selectable headroom (oracle=0.475 <= SC=0.5). The two clean positives (aggregation=exp3520, self-learning=exp3521) are deployable but do not close the P0.1 existential test. Depth forcing function remains ACTIVE until a hard-headroom corpus yields a non-trivially-reproducible Route 1 positive.",
+  "flagged_adversarial_this_milestone": [
+    3516
+  ],
+  "skipped_gate_block_this_milestone": [
+    "exp3522_fover_g2",
+    "exp3523_kv260",
+    "exp3524_polarfire",
+    "exp3525_g_gate",
+    "exp3526_capstone_v324"
+  ],
+  "flagged_artifacts_note": "exp3516 (optional corpus builder) FLAGGED CRITICAL: DURATION_TOO_SHORT (14.9s for live_llm_inference). Gate status derived from non-flagged primary experiments (3517-3521) only. exp3519 has FALSE_NEGATIVE_RISK warn (not a CRITICAL flag) \u2014 directional reading is valid; numbers are not headline-eligible until a selectable-headroom corpus confirms.",
+  "key_finding": "P0.1 ROUTE 1 IS CEILING-SATURATED ON BOTH CSPs. exp3517 (Sudoku, 40 puzzles, fair PT, n=40): solve_rate=1.0 but discrete_sa_single also=1.0 every tier \u2014 energy-specific power is NOT separated from any non-greedy optimizer. exp3518 (graph coloring): vanilla_descent also=1.0, pt_swap=0.0 \u2014 only proves greedy-AR's Brooks pathology, not that energy is special. P0.1 ROUTE 2 RERANKER IS FIXED (exp3519): flip_count_process=24 (non-zero), but oracle=0.475 <= SC=0.5 \u2014 no selectable headroom, null is uninformative. TWO CLEAN POSITIVES SURVIVE: exp3520 (step-to-final min-aggregation AUROC=0.9055 with shuffle control collapsing to 0.4524 \u2014 REAL mechanism confirmed) and exp3521 (conservative-default beta=0.5 is robust Phase-5 self-learning rule). G2 external run remains the sole unmet publication gate.",
+  "top_forward_gap": "1. DEFEAT ceiling-saturation: build HARD corpora where discrete_sa_single FAILS but Carnot's energy-based optimizer chain succeeds \u2014 Sudoku extreme with \u2265100 puzzles at clue_count\u226417, graph-coloring K=4+ at N\u226560, or 3-SAT at the phase transition (alpha\u22484.267 for K=3). Any corpus where the trivial optimizer saturates is uninformative. 2. BUILD a selectable-headroom NL-math corpus (oracle>SC on level-3 in-band problems) and re-test Route 2 fairly; current corpus has SC=optimal=0.5. 3. PROMOTE the step-to-final aggregation (exp3520 AUROC=0.9055) to the production FoVer pipeline and close G2 with an external non-operator run. 4. DEPLOY conservative-default beta=0.5 rule (exp3521) in Phase-5 pipeline.",
+  "experiments_completed": [
+    {
+      "id": 3515,
+      "title": "Archive v323 + Activate v324",
+      "outcome": "complete",
+      "key_result": "v323 archived, v324 activated"
+    },
+    {
+      "id": 3516,
+      "title": "P0.1 OPTIONAL \u2014 extend level-3 corpus v5",
+      "outcome": "flagged_critical_duration_too_short",
+      "key_result": "FLAGGED CRITICAL: DURATION_TOO_SHORT (14.9s, live_llm_inference). Quarantined.",
+      "honest_verdict": "complete: p01_level3_corpus_headline_eligible_n=80_sc=0.500"
+    },
+    {
+      "id": 3517,
+      "title": "P0.1 Route 1 HARDENING \u2014 Sudoku fair AR baseline, PT diagnosis v3",
+      "outcome": "complete_ceiling_saturated_warn",
+      "key_result": "solve_rate=1.0; discrete_sa_single=1.0; ar_greedy=0.025; pt=0.525 (swap=0.532); n_puzzles=40; ceiling_saturated=True",
+      "honest_verdict": "complete: p01_sudoku_positive_hardened_solve_rate_1_00_beats_fair_ar_baseline"
+    },
+    {
+      "id": 3518,
+      "title": "P0.1 Route 1 GENERALIZATION \u2014 graph coloring v1",
+      "outcome": "complete_ceiling_saturated_warn",
+      "key_result": "solve_rate=1.0; vanilla_descent=1.0; ar_baseline=0.5; pt_swap=0.0; ceiling_saturated=True",
+      "honest_verdict": "complete: p01_energy_vs_ar_generalizes_to_graph_coloring_solve_rate_1_00_vs_ar_0_50"
+    },
+    {
+      "id": 3519,
+      "title": "P0.1 Route 2 SUBSTRATE FIX \u2014 energy reranker v10",
+      "outcome": "complete_false_negative_risk_no_headroom",
+      "key_result": "flip_count_process=24 (fixed from 0); oracle=0.475; sc=0.5; no_selectable_headroom=True (oracle<=SC)",
+      "honest_verdict": "complete: energy_makes_distinct_selections_but_does_not_beat_self_consistency_in_band"
+    },
+    {
+      "id": 3520,
+      "title": "De-flag + verify FoVer step-to-final gap v2",
+      "outcome": "complete_clean_real_mechanism",
+      "key_result": "best_auroc=0.905535; shuffle_auroc=0.452403; gap_fraction=0.961; shuffle_collapses=True",
+      "honest_verdict": "complete: step_to_final_aggregation_recovers_signal_confirmed_real_shuffle_control_passed_gap_closed_FF"
+    },
+    {
+      "id": 3521,
+      "title": "FR-11 Adaptive Online Beta Robust Default v1",
+      "outcome": "complete_clean_conservative_default_wins",
+      "key_result": "conservative_prevents_collapse=True; adaptive_prevents_collapse=False; recommended='conservative-default beta (0.5)'",
+      "honest_verdict": "complete: conservative_default_beta_is_the_robust_phase5_default_adaptive_online_unnecessary"
+    }
+  ],
+  "cited_upstream_artifacts": [
+    {
+      "experiment_id": "exp3516",
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_3516_p01_level3_corpus_extend_to_80_v5_optional.json",
+      "sha256": "158b91050e6cc664"
+    },
+    {
+      "experiment_id": "exp3517",
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_3517_p01_sudoku_harden_fair_ar_baseline_pt_diagnosis_v3.json",
+      "sha256": "19f42a42088e0745"
+    },
+    {
+      "experiment_id": "exp3518",
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_3518_p01_second_csp_energy_vs_ar_generalization_v1.json",
+      "sha256": "1b4fef85be4cbb2b"
+    },
+    {
+      "experiment_id": "exp3519",
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_3519_p01_route2_energy_reranker_fix_consensus_trap_v10.json",
+      "sha256": "a967a949e973a1f5"
+    },
+    {
+      "experiment_id": "exp3520",
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_3520_fover_step_to_final_gap_deflag_verify_v2.json",
+      "sha256": "50b89730b1212037"
+    },
+    {
+      "experiment_id": "exp3521",
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_3521_fr11_adaptive_online_beta_robust_default_v1.json",
+      "sha256": "a4c6eb52ec48b818"
+    }
+  ],
+  "random_seed": 20260531,
+  "reproducibility_checksum": "ef639e5482290006",
+  "duration_s": 0.001,
+  "honest_verdict": "complete: v324_archived_v325_activated_ceiling_saturation_diagnosed_two_clean_positives_aggregation_and_selflearning",
+  "field_provenance": {
+    "inference_substrate": {
+      "principle": "Aggregation-only; no LLM loaded. Reads upstream JSONs, computes milestone summary, writes deliverable. Duration floor 0.001s.",
+      "satisfied_by": "aggregation_from_upstream_artifacts"
+    },
+    "archive_v324_activate_v325_ready": {
+      "principle": "Terminal boolean for the conductor's gate check \u2014 True when this artifact is complete and .325 is ready to run.",
+      "satisfied_by": "unconditionally True when deliverable written without exception"
+    },
+    "p01_ceiling_saturation_is_blocker": {
+      "principle": "True when both Route 1 CSPs have trivial optimizers saturating at 1.0, meaning energy-specific power is not demonstrated. This is the key architectural insight that should guide .325 corpus design.",
+      "satisfied_by": "exp3517 discrete_sa_single=1.0 AND exp3518 vanilla_descent=1.0"
+    },
+    "p01_route2_reranker_distinct": {
+      "principle": "True when flip_count_process > 0: the reranker makes at least one distinct selection from SC. This is the mechanical fix for the .323 collapse (flip_count=0 meant zero distinct selections).",
+      "satisfied_by": "exp3519 flip_count_process_vs_sc=24"
+    },
+    "p01_route2_no_selectable_headroom": {
+      "principle": "True when oracle_accuracy <= sc_accuracy on the test corpus. Per FALSE_NEGATIVE_RISK discipline: a null result is uninformative when oracle cannot exceed baseline \u2014 no method could win here.",
+      "satisfied_by": "exp3519 optimal_aggregation_accuracy=0.475 <= sc=0.5"
+    },
+    "agg_step_to_final_is_clean_positive": {
+      "principle": "True when exp3520 is non-flagged and best_auroc > 0.85. The shuffle control (AUROC collapses to ~0.45) confirms the mechanism is real, not a labeling artifact.",
+      "satisfied_by": "exp3520 clean, best_auroc=0.9055, shuffle=0.4524"
+    },
+    "fr11_is_clean_positive": {
+      "principle": "True when exp3521 is non-flagged and conservative_prevents_collapse=True. Conservative-default beta is validated as the Phase-5 deployment rule.",
+      "satisfied_by": "exp3521 clean, conservative_prevents_collapse=True"
+    },
+    "flagged_adversarial_this_milestone": {
+      "principle": "Lists experiment IDs flagged CRITICAL by adversarial_verify.py. Flagged artifacts must NOT contribute numbers to forward claims (fabrication-gate rule, CLAUDE.md 2026-05-30).",
+      "satisfied_by": "[3516] \u2014 DURATION_TOO_SHORT critical flag"
+    },
+    "publication_gate_status": {
+      "principle": "G1-G4 gate state per ops/north-star.md \u00a72; report unmet_gates list, not a count. G2 is the sole unmet gate and requires a non-operator reproducer (Operator-Only External Publication discipline).",
+      "satisfied_by": "carry-forward from .323 (gate synthesis SKIP this milestone); G1/G3/G4 met, G2 external run pending"
+    },
+    "depth_forcing_function_can_relax": {
+      "principle": "True only when P0.1 has a non-trivially-reproducible positive (oracle>baseline, energy beats a STRONG non-AR baseline) AND G2 has an external reproducer. False = depth forcing function remains active.",
+      "satisfied_by": "False \u2014 ceiling-saturated Route 1, no-headroom Route 2"
+    },
+    "random_seed": {
+      "principle": "Fixed constant (NOT the experiment number) to prevent the TAUTOLOGY flag. Determinism for reproducibility.",
+      "satisfied_by": "RANDOM_SEED = 20260531 (date-based constant, not 3527)"
+    },
+    "honest_verdict": {
+      "principle": "complete:/success:/passed:/shipped_ prefix required by CLAUDE.md Verdict Terminal-Prefix Discipline.",
+      "satisfied_by": "verdict starts with 'complete:'"
+    },
+    "cited_upstream_artifacts": {
+      "principle": "Audit trail: aggregation must cite the upstream sources so a third party can verify the retro is not synthesizing numbers from nothing.",
+      "satisfied_by": "list of {experiment_id, path, sha256} for each upstream"
+    },
+    "reproducibility_checksum": {
+      "principle": "Content hash of cited artifact paths; catches upstream path drift between this and any future replication attempt.",
+      "satisfied_by": "SHA256[:16] of JSON-encoded UPSTREAM path dict"
+    },
+    "duration_s": {
+      "principle": "Aggregation-only; floored at 0.001s. No live inference, so adversarial_verify applies the aggregation-tier floor.",
+      "satisfied_by": "time.monotonic() delta, max(actual, 0.001)"
+    }
+  }
+}

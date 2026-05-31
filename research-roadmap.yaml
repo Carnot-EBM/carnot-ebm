@@ -133,8 +133,8 @@ tasks:
     prompt: |
       CONTEXT: exp3518 (.324) reported "energy global inference generalizes to graph coloring,
       solve_rate=1.0 vs AR 0.50" — but it is CEILING-SATURATED: solve_rate_by_optimizer_variant =
-      {vanilla_descent: 1.0, sa_single: 1.0, sa_restarts15: 1.0, parallel_tempering: 1.0,
-      exact_backtracking: 1.0} and every difficulty tier = 1.0, with pt_swap_acceptance_rate=0.0
+      {{vanilla_descent: 1.0, sa_single: 1.0, sa_restarts15: 1.0, parallel_tempering: 1.0,
+      exact_backtracking: 1.0}} and every difficulty tier = 1.0, with pt_swap_acceptance_rate=0.0
       (tempering was inert; duration 0.49s = tiny instances). So the "1.00 vs AR 0.50" only proves
       greedy-AR has a known Brooks'-theorem ordering pathology — ANY non-greedy method (even vanilla
       descent) wins. NOT headline-eligible. The graph-coloring phase-transition literature gives the
@@ -179,8 +179,8 @@ tasks:
            INSTRUMENTED swap-acceptance + an explicitly tuned temperature ladder, and an EXACT baseline
            (CP-SAT / a SAT solver / DSATUR-then-verify). PRINT one flushed progress line per
            optimizer-iteration sweep (every few hundred sweeps) — defeats idle-timeout.
-        4. STRONG NON-AR BASELINE: report strong_baseline_solve_rate = the best of {DSATUR,
-           tuned SA-restarts, backtracking-with-heuristic} — so the claim is "energy beats a STRONG
+        4. STRONG NON-AR BASELINE: report strong_baseline_solve_rate = the best of {{DSATUR,
+           tuned SA-restarts, backtracking-with-heuristic}} — so the claim is "energy beats a STRONG
            method," not "energy beats the weakest possible AR."
         5. AR baseline: greedy-AR (random/degree ordering) on the same instances -> ar_greedy_solve_rate.
         6. MECHANISM ATTRIBUTION: report pt_swap_acceptance_rate; if PT is claimed as the mechanism it
