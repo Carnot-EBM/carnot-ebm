@@ -1,3 +1,85 @@
+## 2026-05-31 Post-.322 Planning Sweep (Milestone 2026.05.323)
+
+`.322` (Depth-Over-Breadth VIII) was the FIRST milestone where the P0.1 architecture held:
+the two infra-robust routes both RAN (no thinking-400, no idle-timeout on the crux tasks
+themselves) and produced **honest, actionable diagnoses** rather than infra losses. P0.1 is
+still OPEN, but for the first time the blockers are scientific and narrow, not operational:
+
+- **exp3494 (P0.1 Route 1, Sudoku):** the Ising-Sudoku **encoding is VALIDATED** —
+  `encoding_validity_E0 = {total_energy: 0.0, is_valid: True, residual row/col/box/clue all
+  0.0}`, cross-validated against the published QUBO (arXiv:2403.04816). BUT
+  `easy_tier_solve_rate = 0.0`: the task bailed at the Step-0b easy-tier sanity check because
+  its optimizer (vanilla/gradient descent) cannot escape local minima — it **never reached
+  its own SA / parallel-tempering / restart ladder.** The verdict label said
+  "representational," but the E==0 evidence says the opposite: **the encoding is correct; the
+  OPTIMIZER is the bottleneck.** The unambiguous next step: with the encoding now validated,
+  run REAL combinatorial optimizers on it.
+- **exp3495 (P0.1 Route 2, energy-vs-SC on cached corpora):**
+  `blocked_contested_subset_too_small_n=21` (min 40), `contested_subset_sc=1.0`. The cached
+  GSM8K (ceiling, SC 0.908) and MATH-L5 (floor, SC 0.265) corpora structurally **lack an
+  in-band contested subset** — pooling them yields only 21 in-band problems. The
+  contested-subset-of-cached approach is exhausted; a PURPOSE-BUILT in-band corpus is needed.
+- **exp3496 (the live difficulty-matched builder):** idle-timed-out twice but DID leave
+  `data/p01_difficulty_matched_generations.jsonl` with **40 MATH-500 level-3 problems whose
+  per-level SC = 0.5 (IN BAND).** It only emitted `blocked_no_in_band_split_found` because the
+  *combined* level-3+4 self-check landed at 0.70 (boundary). **A clean, in-band level-3 corpus
+  already exists** — it just needs extension to n≥80 and the crux run on it directly.
+- **exp3497 (calibration v5): CLEAN POSITIVE** — MATH-aware recalibration recovers correctness
+  signal (process-energy correctness AUROC 0.601 → recalibrated 0.625) and a **step-vs-final
+  AUROC gap of 0.138** (the FoVer ensemble is strong at step-ERROR, 0.9131, but weak at
+  final-CORRECTNESS on MATH). The gap is the mechanism to close.
+- **exp3498 (FR-11 β_min = f(λ_min)): CLEAN POSITIVE** — a deployable Phase-5 law fits with
+  **r²=0.989, p=0.006, holds out of sample**: `β_min = -0.300 + 1.846·λ_min`. Now needs
+  in-loop validation (deploy the formula, confirm it prevents collapse).
+- **exp3499 (G2): CLEAN** — package regression-clean, AUROC within CI; G2 is the SOLE unmet
+  publication gate, awaiting a non-operator external run.
+- **exp3502/exp3503 (synthesis + capstone): FLAGGED for a TRIVIAL self-inflicted tautology** —
+  both set `random_seed == experiment_number`, so adversarial_verify flagged
+  `experiment==random_seed`. Not a measurement fabrication, but it logged FLAGGED instead of
+  OK. **The .323 fix is one line: aggregation tasks MUST set a distinct fixed seed (e.g.
+  20260531), never `random_seed = <exp number>`.**
+
+**The diagnosis that drives .323:** P0.1 now has TWO narrow, scientific next steps —
+(1) run real combinatorial optimizers (SA / parallel tempering / restarts / exact QUBO) on
+the now-VALIDATED Sudoku-Ising encoding (exp3494 proved the encoding; the optimizer is the
+bug); (2) run the energy-vs-SC crux on the PURPOSE-BUILT in-band level-3 corpus (extend the
+existing 40-problem corpus to n≥80), because the cached corpora lack headroom. Keep all tasks
+on **sonnet** (opus thinking-400), **ungate** synthesis/capstone (cascade-proof), and **fix
+the random_seed tautology**.
+
+New references surfaced (2026-05-31 Post-.322 sweep), directly actionable:
+
+- **arXiv:2506.04596 — "A Novel Solver for QUBO Problems: Performance Analysis and Comparative
+  Study."** Benchmarks SA, parallel tempering, D-Wave Neal, simulated bifurcation, coherent
+  Ising machines, and Gurobi on canonical QUBO classes under a uniform runtime budget. THE
+  reference for exp3505's optimizer ladder + the exact-solver baseline (which optimizer to
+  reach for, and how to budget-match them).
+- **arXiv:2510.19835 — "A Quantum-Inspired Algorithm for Solving Sudoku Puzzles and the MaxCut
+  Problem" (2025).** Sudoku-specific QUBO solver; confirms Sudoku-QUBO is an ideal testbed for
+  optimizer quality and gives a concrete quantum-inspired (classical) solve recipe for the
+  exp3505 ladder beyond vanilla descent.
+- **Wang et al. 2026, Software: Practice & Experience (spe.70063) — "A Resource Efficient Ising
+  Model-Based Quantum Sudoku Solver."** A resource-efficient Ising Sudoku encoding + solver;
+  comparator for exp3505's encoding-vs-optimizer separation.
+- **arXiv:2508.01773 — "Uncertainty-Based Methods for Automated Process Reward Data
+  Construction and Output Aggregation in Mathematical Reasoning."** Step-wise reward
+  aggregation functions (last / product / min / uncertainty-weighted) for routing PRM step
+  scores into final-answer selection. Directly actionable for exp3508 (closing the
+  step-vs-final 0.138 gap) and exp3507's aggregation condition.
+- **arXiv:2504.16828 — "Process Reward Models That Think" (ThinkPRM, carried forward).**
+  ThinkPRM beats self-consistency at matched compute under high sampling via weighted majority
+  voting over verifier scores. The bar exp3507 (energy-vs-SC on the in-band corpus) must clear.
+
+**How .323 uses these:** exp3505 (Route 1 redux) runs the real optimizer ladder
+(SA/PT/restarts/exact-QUBO from arXiv:2506.04596 + arXiv:2510.19835) on the VALIDATED Sudoku
+encoding, per-iteration progress flush + hard wall-clock budget to defeat idle-timeout.
+exp3506 (non-blocking, live) extends the level-3 in-band corpus to n≥80; exp3507 (cached, the
+crux) runs energy-vs-SC on WHATEVER level-3 in-band corpus exists (≥40 already cached),
+ungated so it runs regardless. exp3508 closes the step-vs-final gap via the aggregation
+functions in arXiv:2508.01773. exp3509 deploys the β_min=f(λ_min) law in a closed FR-11 loop.
+
+---
+
 ## 2026-05-31 Post-.321 Planning Sweep (Milestone 2026.05.322)
 
 `.321` (Depth-Over-Breadth VII) was lost to **infrastructure, not science.** The P0.1
