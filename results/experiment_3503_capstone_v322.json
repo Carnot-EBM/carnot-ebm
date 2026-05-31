@@ -163,5 +163,13 @@
       "principle": "Aggregation; sub-second honest.  inference_substrate=aggregation_from_upstream_artifacts so 0.0001s floor applies, not 60s (adversarial_verify.py Inference-Substrate Declaration Discipline).",
       "satisfied_by": "wall-clock measured by runner script"
     }
-  }
+  },
+  "flagged_adversarial": true,
+  "corrigendum_pending": [
+    {
+      "kind": "TAUTOLOGY",
+      "severity": "critical",
+      "detail": "experiment=3503.0 and random_seed=3503.0 agree to >5 sig figs. Two distinct metrics matching this precisely is more likely a bug than a finding."
+    }
+  ]
 }
