@@ -1,0 +1,37 @@
+{
+  "honest_verdict": "complete: verifier_cross_domain_synthesis_value_generalizes_math_only_domain_bound_paper_claim_scoped",
+  "inference_substrate": "aggregation_from_upstream_artifacts",
+  "generalization_table": {
+    "math": {
+      "auroc": 0.9131,
+      "baseline_auroc": null,
+      "delta": null,
+      "discriminating_lift": null
+    },
+    "code": {
+      "auroc": 0.44000000000000006,
+      "baseline_auroc": 0.8992,
+      "delta": -0.45919999999999994,
+      "discriminating_lift": 0.75
+    }
+  },
+  "verifier_value_generalizes": "math_only_domain_bound",
+  "paper_safe_claims": [
+    "The verifier ensemble achieves 0.9131 AUROC on math tasks (G2-reproduced).",
+    "On code tasks, the verifier ensemble acts as a second pair of eyes, catching 75% of errors missed by the model confidence baseline.",
+    "The verifier ensemble's value is constraint-domain-bound, not generalizing uniformly across arbitrary domains."
+  ],
+  "paper_forbidden_claims": [
+    "The verifier ensemble generalizes broadly to code and factual domains.",
+    "The verifier ensemble outperforms the confidence baseline on code error detection.",
+    "The verifier ensemble provides zero-shot error detection across all reasoning tasks."
+  ],
+  "cited_upstream_artifacts": [
+    "50e055277574f13fd173963ab59982413084d9f7f926e297faea09992ae49a32",
+    "017d21bc14f558d85026e3f4f80d79beadad699589f51f3ea87f936231806597",
+    "7ba3dae27525bd933a1cb40a8be5c4e2c84305c6aa8a53ce78f22f4979f42f11"
+  ],
+  "random_seed": 1619570197,
+  "reproducibility_checksum": "7aa58ba45bac9bb9ec1e6278d6b8180efde4af0b0428277a2291b32298fbf4d3",
+  "duration_s": 0.0001723766326904297
+}

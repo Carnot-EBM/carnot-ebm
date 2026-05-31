@@ -9210,3 +9210,16 @@ When Exp 3393 runs, it produces all required schema fields on the exit path.
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-VERIFY-3393 | Implemented (`scripts/experiment_3393_proximal_gradient_constraint.py`, `python/carnot/verify/proximal_gradient_constraint_layer.py`) | Implemented (`tests/python/test_experiment_3393_proximal_gradient.py`) |
+
+### REQ-VERIFY-3576: Cross-Domain Value Synthesis
+- REQ-VERIFY-3576-1: The system SHALL synthesize the cross-domain value of the verifier ensemble from upstream experiments.
+- REQ-VERIFY-3576-2: It MUST write `results/experiment_3576_verifier_cross_domain_synthesis.json` with required fields.
+
+### SCENARIO-VERIFY-3576: Cross-Domain Value Synthesis
+When Exp 3576 runs, it produces all required schema fields on the exit path.
+
+## Implementation Status (REQ-VERIFY-3576)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-VERIFY-3576 | Implemented (`scripts/experiment_3576_verifier_cross_domain_synthesis.py`) | Implemented (`tests/python/test_experiment_3576_verifier_cross_domain_synthesis.py`) |
