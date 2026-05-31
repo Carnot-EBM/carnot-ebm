@@ -16,6 +16,7 @@ from __future__ import annotations
 
 import importlib.util
 import json
+import sys
 from pathlib import Path
 
 import pytest
@@ -31,6 +32,14 @@ _spec = importlib.util.spec_from_file_location("exp3420", SCRIPT_PATH)
 assert _spec is not None
 module = importlib.util.module_from_spec(_spec)
 assert _spec.loader is not None
+# Register the dynamically-loaded module in sys.modules BEFORE exec_module.
+# Python 3.14's @dataclass resolves field types via
+# sys.modules.get(cls.__module__).__dict__; if the module name ("exp3420") is
+# absent from sys.modules that lookup returns None and dataclass creation raises
+# AttributeError at import time, breaking pytest collection of this file (the
+# 2026-05-31 kv260 collection error). Registering first is the standard
+# spec_from_file_location + exec_module pattern for modules with dataclasses.
+sys.modules[_spec.name] = module
 _spec.loader.exec_module(module)
 
 
@@ -346,7 +355,12 @@ def test_run_experiment_blocked_uio_absent(tmp_path):
     assert artifact["honest_verdict"] == "blocked_kv260_uio_devices_absent"
 
 
-def test_run_experiment_blocked_bitstream_missing(tmp_path):
+def test_run_experiment_blocked_bitstream_missing(tmp_path, monkeypatch):
+    # The 1.0s hardware-smoke duration floor is a fabrication guard for REAL
+    # KV260 runs; a deterministic FakeBoard unit test legitimately completes in
+    # <1s, so the floor is inapplicable here (mock the dependency, test the
+    # logic — CLAUDE.md "Tests Must Run and Assert").
+    monkeypatch.setattr(module, "DURATION_FLOOR_S", 0.0)
     artifact = module.run_experiment(
         FakeBoard(bitstream_ok=False),
         result_path=tmp_path / "r.json",
@@ -413,8 +427,11 @@ def test_validate_terminal_raises_each_guard():
         module.validate_artifact(short)
 
 
-def test_run_experiment_success_full_flow(tmp_path):
+def test_run_experiment_success_full_flow(tmp_path, monkeypatch):
     """SCENARIO-HW-061: reachable board -> terminal transcript recorded."""
+    # FakeBoard runs in <1s; neutralize the real-hardware duration floor (a
+    # fabrication guard that does not apply to a deterministic unit test).
+    monkeypatch.setattr(module, "DURATION_FLOOR_S", 0.0)
     result_path = tmp_path / "r.json"
     artifact = module.run_experiment(
         FakeBoard(),
