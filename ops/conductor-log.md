@@ -7341,3 +7341,4 @@ web search: https://docs.garak.ai/garak/examples/pr |
 | 2026-05-31 23:38 UTC | Plan milestone 2026.05.330 | OK | 14 tasks proposed |
 | 2026-05-31 23:40 UTC | Milestone 2026.05.330 activated | OK | 14 tasks queued |
 | 2026-05-31 23:46 UTC | Archive milestone .329 honestly and activate .330  | OK | 82 passed in 4.97s |
+| 2026-05-31 23:51 UTC | Diagnose the .329 null — confirm corpus degeneracy | OK | 82 passed in 4.05s |

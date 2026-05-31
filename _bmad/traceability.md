@@ -1689,3 +1689,5 @@
 | REQ-PREM-005 | Phase 3: Dynamic Test-Time Compute (TTC) Controller | Implemented | results/experiment_2150_ttc_controller.json |
 | SCENARIO-PREM-003 | Phase 3: Dynamic Test-Time Compute (TTC) Controller | Implemented | results/experiment_2150_ttc_controller.json |
 | SCENARIO-PREM-004 | Phase 3: Dynamic Test-Time Compute (TTC) Controller | Implemented | results/experiment_2150_ttc_controller.json |
+| REQ-VERIFY-3584 | Exp 3584: Diagnose 329 Null Positive Control | Implemented | results/experiment_3584_diagnose_329_null_positive_control.json |
+| SCENARIO-VERIFY-3584 | Exp 3584: Diagnose 329 Null Positive Control | Implemented | results/experiment_3584_diagnose_329_null_positive_control.json |
