@@ -3035,6 +3035,18 @@ was down when .322 was planned, the all-claude routing was copied forward to
   "because gemini-cli is down" — emit gemini and let runtime route. If gemini is
   genuinely down, the operator sets the coercion env; the roadmap stays
   gemini-default so it self-heals the moment gemini recovers.
+- DO NOT plan all-claude expecting the outer-loop to reroute to gemini. The
+  .324 reroute was a ONE-TIME BUG FIX correcting a stale gemini-outage, NOT a
+  workflow to replicate. The activation guard does NOT require claude; gemini
+  tasks activate and run fine (proven on .324). Emitting all-claude is a
+  Gemini-Default violation, full stop.
+- MECHANICAL ENFORCEMENT (2026-05-31): under GEMINI_FORCE_EXPERIMENTS=1 the
+  conductor now coerces `claude → gemini` at task-launch REGARDLESS of
+  `requires_claude` (which became an abused signal). So emitting `claude` does
+  NOT keep the task on claude — it just makes the YAML lie about what runs.
+  Emit `gemini` so the YAML is honest. The ONLY way a task runs on claude is the
+  operator-only `requires_claude_verified: true` flag; you (the planner) MUST
+  NOT emit that flag — it is reserved for the operator/outer-loop.
 
 EXCLUSION-MANIFEST / SCOPE-MATCH DISCIPLINE (see CLAUDE.md
 "Exclusion-Manifest Cross-Check" — "Auto-override for known-legit
@@ -4700,6 +4712,34 @@ def research_step(
             "GEMINI_FORCE_EXPERIMENTS=1: coercing task %r agent_type "
             "codex → gemini (codex quota window; set requires_codex:true "
             "to bypass)",
+            task.get("id", "?"),
+        )
+        task_agent_type = "gemini"
+    # 2026-05-31 operator directive (routing fix): the Opus planner began
+    # marking EVERY task `agent_type: claude` + `requires_claude: true` (12/12
+    # on .322-.325), rationalizing the one-time .324 bug-fix reroute as a
+    # "workflow" — defeating the Gemini-Default quota-preservation intent AND
+    # the prompt-level fix (commit 309d99c50), which the planner out-reasoned.
+    # Because `requires_claude` is now an ABUSED signal (the planner sets it
+    # unconditionally), GEMINI_FORCE_EXPERIMENTS=1 coerces per-task
+    # `claude → gemini` REGARDLESS of requires_claude. A task that genuinely
+    # needs Claude's multi-file tool ergonomics uses the operator-only
+    # `requires_claude_verified: true` bypass — the planner does not emit it;
+    # only the operator / outer-loop sets it on the rare verified-claude task
+    # (the same opt-in model as the .324 manual reroute, but mechanized:
+    # default gemini, opt in to claude). The WARNING makes every coercion
+    # visible so a YAML-vs-runtime mismatch is auditable. Planner/retro paths
+    # use AGENT_TYPE_PLANNER/RETRO and bypass this per-task coercion.
+    if (
+        os.environ.get("GEMINI_FORCE_EXPERIMENTS") == "1"
+        and task_agent_type == "claude"
+        and not task.get("requires_claude_verified")
+    ):
+        logger.warning(
+            "GEMINI_FORCE_EXPERIMENTS=1: coercing task %r agent_type "
+            "claude → gemini (planner `requires_claude` is an abused signal "
+            "as of 2026-05-31; set operator-only `requires_claude_verified:"
+            "true` to bypass)",
             task.get("id", "?"),
         )
         task_agent_type = "gemini"
