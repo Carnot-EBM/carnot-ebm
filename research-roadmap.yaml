@@ -191,8 +191,8 @@ tasks:
            geometric SA, K>=20 SA-restarts, PARALLEL TEMPERING with instrumented swap-acceptance, and
            an EXACT baseline (CP-SAT / DSATUR-then-verify). PRINT one flushed progress line per sweep —
            defeats idle-timeout.
-        4. STRONG NON-AR BASELINE: report strong_baseline_solve_rate = the best of {DSATUR, tuned
-           SA-restarts, backtracking-with-heuristic}. AR baseline: greedy-AR (random/degree ordering).
+        4. STRONG NON-AR BASELINE: report strong_baseline_solve_rate = the best of {{DSATUR, tuned
+           SA-restarts, backtracking-with-heuristic}}. AR baseline: greedy-AR (random/degree ordering).
         5. *** DE-TAUTOLOGY (the load-bearing fix) ***: store EACH measured quantity EXACTLY ONCE.
            Do NOT emit a calibration_* alias of vanilla_descent_solve_rate_hard_tier; do NOT emit a
            pt_mean_swap_rate alias of pt_swap_acceptance_rate. If two conceptually-distinct fields
