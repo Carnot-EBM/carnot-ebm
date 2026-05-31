@@ -7335,3 +7335,4 @@ web search: https://docs.garak.ai/garak/examples/pr |
 | 2026-05-31 22:41 UTC | KV260 SSH-reachability continuity (per Hardware-Ta | OK | 89 passed in 3.78s |
 | 2026-05-31 22:46 UTC | PolarFire opportunistic reachability + continuity  | OK | 85 passed in 4.24s |
 | 2026-05-31 22:52 UTC | GateMate continuity audit (documentation-only — fl | OK | 86 passed in 3.95s |
+| 2026-05-31 22:57 UTC | FR-11 continuous self-learning — conservative-defa | OK | 83 passed in 4.59s |
