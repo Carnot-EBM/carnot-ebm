@@ -7258,3 +7258,4 @@ web search: https://docs.garak.ai/garak/examples/pr |
 | 2026-05-31 12:24 UTC | P0.1 Route 2 SELECTABLE-HEADROOM NL-math corpus bu | FAIL | Claude Code error: Wall-clock+idle timeout after 1201s (1201s silence). Last ou |
 | 2026-05-31 12:32 UTC | P0.1 Route 2 SELECTABLE-HEADROOM NL-math corpus bu | OK | cache hit: 106 passed in 3.65s |
 | 2026-05-31 12:44 UTC | P0.1 Route 2 energy/step-aggregation-vs-SC on the  | OK | 81 passed in 3.18s |
+| 2026-05-31 12:57 UTC | Promote the step->final aggregation positive — rep | OK | 81 passed in 5.41s |
