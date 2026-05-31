@@ -4,47 +4,45 @@
 # docs_audit_report — 2026-05-31
 
 ## TL;DR (stranger's 30-second take)
-A stranger would close the tab almost immediately. While the hook is strong, the presence of literal pytest file paths and internal experiment logs leaked into the page text and CSS screams that the project is broken or abandoned.
+A stranger would bounce within 15 seconds. While the page has a strong initial hook and a clean mental model, it rapidly devolves into an exhausting wall of 30+ dense cards loaded with undocumented internal acronyms and suspiciously perfect metrics that undermine its credibility.
 
 ## TOP 3 PROBLEMS
-1. Broken HTML / Leaked Artifacts: Pytest paths and raw JSON experiment IDs are injected into CSS font links, media queries, and benchmark result text.
-2. Inconsistencies (Code Performance): The HumanEval repair claims wildly contradict each other (+3 points vs +72 percentage points).
-3. Fabrication Signals: Multiple unanchored claims of perfect scores (1.0 TP rates, 60/60 attacks caught, "Zero false positives") trigger an immediate skepticism reflex.
+1. Incomprehensible internal acronyms — Results grid / Capabilities section
+2. Severe card bloat overwhelming the reader — Entire page / Results grid
+3. Suspiciously perfect 100% metrics triggering skepticism — Results grid
 
 ## DETAILED FINDINGS
 ### Bloat
-- Results section — 12 cards — Suggested cap: 6. A stranger will not read twelve different metrics; pick the best ones.
-- Writing section — 7 blog cards — Suggested cap: 3-4.
+- Entire Page — 32 cards total — cap at ~12-15 to ensure visitors actually read them.
+- Results grid — 12 cards — cap at 4-6 of the most impactful, credible metrics.
+- From the blog section — 7 cards — cap at 3 recent or highly relevant posts.
 
 ### Internal jargon
-- SOTA 35B Live benchmark card — `@.tmp-pytest/pytest-of-ianblenke/pytest-3/popen-gw0/.../spilled-energy-2602-18671:real.txt` — An internal test path leaked into public text.
-- HTML `<head>` & CSS — `experiment_400.json`, `experiment_1238_phase5d_intermediate_scale.json` — Test logs and raw experiment IDs corrupted the font imports and media queries.
-- Features / TTC & PREM card — `PREM`, `Test-Time Compute (TTC)` — Unexplained, niche acronyms.
-- Features / Typed constraints card — `CCTU` — Unexplained benchmark acronym.
-- Hero / Stats bar — `FoVer` — Used multiple times but never defined.
+- Recent progress card — "FoVer (5-seed dual-condition; architecture-only 0.8947)" — A stranger has no context for what FoVer is or why the seed/condition details matter here.
+- Capabilities / TTC & PREM card — "Process-Reward Energy Model (PREM)" — Undefined acronym that requires deep domain knowledge to parse.
+- Results grid — "SVAMP AUC", "0.125 FoVer baseline", "IterativeSelfRepair (HumanEval-50, execute-feedback-retry)", "CCTU constrained micro-benchmark", "VeriCoT equation-style CoT fix" — This reads like an internal lab notebook rather than public-facing marketing copy.
 
 ### Per-milestone narrative
-- Recent progress card — "Repinned from v2 0.9857 after pre-submission adversarial audit" — Reads like an internal retrospective or milestone report, not value proposition copy.
+- Recent progress card — "Repinned from v2 0.9857 after pre-submission adversarial audit" — This reads exactly like an internal status update or commit message rather than a value proposition.
 
 ### Inconsistencies
-- HumanEval performance vs. Code repair performance — The "Code" feature card claims "repair pushes pass-rate up by 3 points", but the "Code repair" results card claims an "8% → 80% pass rate (+72pp)".
+- "No model fine-tuning required" (How it works section) vs "Training — Two-GPU parallel retrain: 2.0x speedup" (Results grid) — If the framework genuinely requires no tuning, highlighting a retraining speedup benchmark directly contradicts the pitch.
 
 ### Missing essentials
-- Trust in the numbers — The leaked file paths and perfect 1.0 metrics completely undermine the credibility of the other, more reasonable numbers. 
+- Clear maintainer/team identity — "Ian Blenke" is buried in the copyright footer. A project making state-of-the-art claims needs a visible "Who we are" or "Maintained by X" section to establish basic trust.
 
 ### Fabrication signals
-- Math extraction card — "GSM8K extraction TP rate: 0.5 → 1.0" — 1.0 (100%) extraction on noisy outputs is suspiciously perfect.
-- Adversarial audit card — "k=5 ensemble catches 60/60 attacks" — 100% detection rate looks unanchored and too perfect.
-- Writing / Dogfooding card — "Zero false positives" — Claiming 0.0 FPR over 639 autonomous runs is extremely hard to believe without a huge asterisk.
+- 1.0 (100% TP rate) in the Math extraction result card — Perfect scores scream overfitting, trivial datasets, or synthetic evaluations.
+- 60/60 attacks caught in the Adversarial audit result card — A flawless 100% defense success rate is a massive red flag for any seasoned engineer or researcher.
+- 2.0x speedup, identical losses in the Training result card — Exactly perfect scaling is highly improbable in practice and looks artificially rounded.
 
 ## WHAT'S WORKING
-- The hero section explains exactly what the tool does in a single, clear sentence.
-- The "How it works" 3-step section is excellent and easy for a newcomer to mentally model.
-- The "Quickstart" section gives immediate, runnable proof that the tool is real and accessible.
+- The "Extract -> Check -> Repair" mental model is extremely clear, compelling, and easy to understand.
+- The Quickstart section proves the tool's value immediately with a concise, zero-friction 5-line script.
 
 ## RECOMMENDED OPERATOR ACTIONS
-1. Re-render or clean the HTML to remove the injected pytest filepaths, JSON experiment IDs, and broken CSS media queries.
-2. Reconcile the conflicting HumanEval performance numbers.
-3. Add context to (or soften) the perfect 1.0, 60/60, and "Zero false positives" claims.
-4. Prune the Results grid to the 6 strongest, most credible cards.
-5. Define or remove internal jargon like PREM, CCTU, and FoVer.
+1. Slash the Results grid from 12 cards down to 4-6, keeping only the most credible, plain-English metrics.
+2. Scrub all internal acronyms (FoVer, CCTU, PREM, VeriCoT) and replace them with standard descriptions (e.g., "Math extraction," "Tool use completion").
+3. Rewrite the "Recent Progress" card to focus solely on the current state, removing the "repinned from v2" commit-message history.
+4. Add a brief "Who builds this?" line or section to establish project provenance and trust before hitting the reader with wild claims.
+5. Clarify the "No fine-tuning" contradiction by either removing the training metric or explicitly specifying that the training applies to the EBM itself, not the LLM.

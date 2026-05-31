@@ -1,3 +1,84 @@
+## 2026-05-31 Post-.324 Planning Sweep (Milestone 2026.05.325)
+
+`.324` (Depth-Over-Breadth X) took P0.1's first clean positive (.323's Sudoku result) and worked
+to make it DEFENSIBLE and GENERAL while FIXING its broken sibling. Read via
+`scripts/summarize_artifact.py`, the .324 verdicts are sharper than the milestone titles suggest:
+
+- **exp3517 (Route 1, Sudoku hardening): POSITIVE BUT CEILING-SATURATED.** `solve_rate=1.0` at
+  >=40 puzzles, `ar_greedy_solve_rate=0.025`, `exact_baseline=1.0`, PT diagnosed/recovered to
+  0.525 (swap-acceptance 0.53). BUT the new `CEILING_SATURATION` adversarial check (warn) fires:
+  `discrete_sa_single` ALSO saturates at 1.0 across EVERY difficulty tier. So the puzzle set is
+  trivially solvable by any non-AR optimizer — the claim is "global inference beats AR," not
+  "energy inference is uniquely capable." The energy-specific power is invisible because there is
+  no hard tier where trivial local search fails.
+- **exp3518 (Route 1, graph-coloring generalization): GENERALIZES BUT CEILING-SATURATED.**
+  `solve_rate=1.0` vs `ar_baseline=0.5`, but `vanilla_descent` ALSO saturates at 1.0 across all
+  tiers and `pt_swap_acceptance_rate=0.0` (tempering inert; duration 0.49s = tiny instances).
+  The "1.00 vs AR 0.50" only proves greedy-AR has a Brooks'-theorem ordering pathology; ANY
+  non-greedy method wins. NOT headline-eligible. **This is the explicit operator-queued .325
+  priority (ops/known-issues.md, NEW 2026-05-31).**
+- **exp3519 (Route 2, energy reranker fix): DE-DEGENERATED BUT NO HEADROOM.** The reranker now
+  makes DISTINCT selections (G0 non-degeneracy True; `flip_count_process_vs_sc=24`,
+  `flip_count_optimal_vs_sc=2`) — the consensus trap is broken. But energy does NOT beat SC
+  (`delta_optimal_vs_self_consistency=-0.025`, `flips_correct_optimal=0`). Critically:
+  **FALSE_NEGATIVE_RISK** — the optimal/oracle upper bound (0.475) does NOT exceed the SC baseline
+  (0.5). The corpus has NO selectable headroom, so NO method could win. The null is uninformative
+  about the method. exp3516's n=80 level-3 corpus (SC=0.500) confirms this is structural at
+  level-3: the correct answer is rarely a selectable minority. **.325 must build a corpus where
+  oracle STRICTLY exceeds SC before re-testing.**
+- **exp3520 (step-to-final gap): CLEAN, CONFIRMED REAL MECHANISM.** `best_aggregation_final_
+  correctness_auroc=0.9055` vs `unaggregated=0.7192`, `shuffle_control_auroc=0.4524` (collapses
+  to ~0.5 -> the gap closure is a real mechanism, NOT a label-correlated tautology). This is a
+  GENUINE secondary positive: a step->final aggregation recovers final-correctness signal. It is
+  the candidate selection mechanism for Route 2 and should be promoted toward headline-eligibility
+  (larger corpus, multi-seed CI).
+- **exp3521 (FR-11 self-learning rule): CLEAN, DEPLOYABLE DEFAULT FOUND.**
+  `conservative_default_beta_is_the_robust_phase5_default`; adaptive-online unnecessary;
+  `winning_arm_vs_least_regularized_accuracy_gap=0.0` (no over-regularization). The self-learning
+  deployment question is answered; .325 should DEPLOY the conservative default in an actual
+  closed loop on a fresh corpus to confirm it holds end-to-end.
+
+**The diagnosis that drives .325:** P0.1's Route 1 positive is real but **ceiling-saturated** on
+BOTH CSPs (Sudoku + graph coloring) — trivial optimizers also solve every instance, so the
+energy-specific capability is not demonstrated. Route 2 is **de-degenerated but headroom-starved**
+— the reranker works, but the test corpus has no selectable minority-correct answers. .325 stays
+in DEPTH: (1) defeat ceiling-saturation on graph coloring with a HARD, headroom-preserving corpus
+near the freezing transition + a STRONG non-AR baseline (the operator priority); (2) the same
+defeat-ceiling for Sudoku; (3) build a selectable-headroom NL-math corpus (oracle>SC); (4) re-test
+Route 2 on it using exp3520's confirmed aggregation mechanism as the scorer; (5) promote the
+step-to-final aggregation positive toward headline-eligibility; (6) deploy the conservative-default
+self-learning rule; (7) keep G2 fresh.
+
+New references surfaced (2026-05-31 Post-.324 sweep), directly actionable:
+
+- **arXiv:2408.01503 — "Efficient Graph Coloring with Neural Networks: A Physics-Inspired
+  Approach for Large Graphs."** Physics-inspired GNN coloring competitive with Focused Metropolis
+  Search; uses planted solutions + symmetry breaking to navigate *clustered* energy landscapes.
+  Directly informs exp3528's HARD corpus: instances near the **freezing transition** are hard for
+  local search (vanilla descent < 1.0) yet remain solvable (a planted solution exists) — exactly
+  the selectable-headroom regime the operator priority demands.
+- **Random-graph-coloring phase-transition literature (clustering vs FREEZING transition;
+  semanticscholar a28f8f6, arXiv:0704.1269, cond-mat/0309518).** The onset of computational
+  hardness for local search tracks the *freezing* transition (a finite fraction of variables
+  forced to a single color in every solution within a cluster), not the clustering transition.
+  Generating k-coloring instances with average degree tuned just below the freezing threshold (so
+  vanilla descent solve-rate ~0.4-0.7 but a planted solution exists) is THE recipe for the
+  headroom-preserving corpus exp3528 needs.
+- **arXiv:2511.18630 — "Majority of the Bests (MoB): Improving Best-of-N via Bootstrapping."**
+  Estimates the BoN output distribution via bootstrapping and selects its mode — a selection
+  mechanism that competes with / complements self-consistency. A candidate Route-2 reranker
+  upgrade (exp3531) when a headroom corpus exists.
+- **arXiv:2604.04648 — "From Curiosity to Caution: Mitigating Reward Hacking for Best-of-N with
+  Pessimism."** Pessimistic BoN penalizes high-variance/over-confident reranker selections —
+  directly relevant to exp3519's failure mode (`flips_incorrect_optimal=2`, `flips_correct=0`):
+  a pessimistic energy reranker would avoid flipping SC's correct majority into a wrong minority.
+- **arXiv:2504.16828 (ThinkPRM) — re-confirmed.** PRM beats SC by ~2.4 pts at Best-of-8 and the
+  advantage widens with budget; at LOW budget PRM ~ SC. Frames exp3531: a fair energy-vs-SC test
+  needs matched, ideally larger, candidate budgets AND a headroom corpus, or the comparison is
+  in the regime where PRM and SC tie by construction.
+
+---
+
 ## 2026-05-31 Post-.323 Planning Sweep (Milestone 2026.05.324)
 
 `.323` (Depth-Over-Breadth IX) was the milestone P0.1 produced its **first clean positive

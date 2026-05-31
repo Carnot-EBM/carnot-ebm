@@ -316,5 +316,24 @@
       }
     ]
   },
-  "invariant_violations": []
+  "invariant_violations": [],
+  "flagged_adversarial": true,
+  "corrigendum_pending": [
+    {
+      "kind": "TAUTOLOGY",
+      "severity": "critical",
+      "detail": "v1_recall=0.058823529411764705 and v2_recall=0.058823529411764705 agree to >5 sig figs. Two distinct metrics matching this precisely is more likely a bug than a finding."
+    },
+    {
+      "kind": "TAUTOLOGY",
+      "severity": "critical",
+      "detail": "v1_recall=0.058823529411764705 and v2_tp_rate=0.058823529411764705 agree to >5 sig figs. Two distinct metrics matching this precisely is more likely a bug than a finding."
+    },
+    {
+      "kind": "TAUTOLOGY",
+      "severity": "critical",
+      "detail": "v2_recall=0.058823529411764705 and v2_tp_rate=0.058823529411764705 agree to >5 sig figs. Two distinct metrics matching this precisely is more likely a bug than a finding."
+    }
+  ],
+  "corrigendum_note": "backfill_stamps: flagged_adversarial added by adversarial_verify.py --backfill (completion-gate backstop). Excluded from headline / capstone aggregation."
 }

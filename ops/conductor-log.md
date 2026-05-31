@@ -7248,3 +7248,6 @@ web search: https://docs.garak.ai/garak/examples/pr |
 | 2026-05-31 10:11 UTC | G1-G4 gate-status synthesis v324 (UNGATED, cascade | SKIP | Pre-tests failing, self-heal failed:  |
 | 2026-05-31 10:13 UTC | G1-G4 gate-status synthesis v324 (UNGATED, cascade | SKIP | Pre-tests failing, self-heal failed:  |
 | 2026-05-31 10:15 UTC | Capstone v324 | GATE_BLOCK | Pre-emptive skip: upstream retired (exp3525-g-gate-status-synthesis-v324) |
+| 2026-05-31 10:49 UTC | Plan next milestone | FAIL | Gemini CLI error: Wall-clock+idle timeout after 1201s (1201s silence). Last ou |
+| 2026-05-31 10:51 UTC | Capstone v324 | GATE_BLOCK | Pre-emptive skip: upstream retired (exp3525-g-gate-status-synthesis-v324) |
+| 2026-05-31 10:51 UTC | Milestone 2026.05.325 activated | OK | 12 tasks queued |
