@@ -934,10 +934,23 @@
   },
   "exact_baseline_solve_rate": 1.0,
   "exact_baseline_method": "planted_coloring_verification",
-  "exact_baseline_note": "Instances are 3-colorable by construction (planted solution). Planted coloring verified E==0 on all 45/45 instances. DSATUR (greedy heuristic) achieves 95.6% within the k-color budget — reported separately as dsatur_solve_rate. The exact_baseline_solve_rate=1.0 confirms all instances ARE solvable (the G0 headroom gate: a target exists for energy optimizers to aim at).",
+  "exact_baseline_note": "Instances are 3-colorable by construction (planted solution). Planted coloring verified E==0 on all 45/45 instances. DSATUR (greedy heuristic) achieves 95.6% within the k-color budget \u2014 reported separately as dsatur_solve_rate. The exact_baseline_solve_rate=1.0 confirms all instances ARE solvable (the G0 headroom gate: a target exists for energy optimizers to aim at).",
   "dsatur_as_strong_baseline_solve_rate": 0.9555555555555556,
   "pt_swap_acceptance_rate": 0.44880000000000003,
-  "mechanism_attribution_note": "SA-restarts (K=20) solved 45/45 instances (100%) across all tiers. PT with mean_swap_rate=0.449 (was 0.0 in exp3518 — fixed via wider temperature ladder [0.02,0.1,0.4,1.2,3.5,10.0]) also solved 100% of hard/very_hard tier. Vanilla descent is the headroom WITNESS: 13.3% on the hard tier (calibration, n=30 p_cross=0.35) and 20% combined hard+very_hard — confirming non-saturated corpus (the exp3518 ceiling-saturation failure mode is avoided). DSATUR (strong deterministic greedy baseline) solved 43/45 = 95.6%, failing on instance_id 2007 (medium) and 4005 (very_hard). G1 confirmed: energy SA-restarts (1.0) > DSATUR strong baseline (0.956). PT mechanism active: swap_rate=0.449 >> 0 confirms genuine replica exchange (not inert as in exp3518 where pt_swap=0.0).",
+  "mechanism_attribution_note": "SA-restarts (K=20) solved 45/45 instances (100%) across all tiers. PT with mean_swap_rate=0.449 (was 0.0 in exp3518 \u2014 fixed via wider temperature ladder [0.02,0.1,0.4,1.2,3.5,10.0]) also solved 100% of hard/very_hard tier. Vanilla descent is the headroom WITNESS: 13.3% on the hard tier (calibration, n=30 p_cross=0.35) and 20% combined hard+very_hard \u2014 confirming non-saturated corpus (the exp3518 ceiling-saturation failure mode is avoided). DSATUR (strong deterministic greedy baseline) solved 43/45 = 95.6%, failing on instance_id 2007 (medium) and 4005 (very_hard). G1 confirmed: energy SA-restarts (1.0) > DSATUR strong baseline (0.956). PT mechanism active: swap_rate=0.449 >> 0 confirms genuine replica exchange (not inert as in exp3518 where pt_swap=0.0).",
   "honest_verdict": "complete: p01_energy_beats_strong_nonAR_baseline_on_hard_graph_coloring_solve_rate_1_0_vs_strong_0_956",
-  "duration_s": 9.378151893615723
+  "duration_s": 9.378151893615723,
+  "flagged_adversarial": true,
+  "corrigendum_pending": [
+    {
+      "kind": "TAUTOLOGY",
+      "severity": "critical",
+      "detail": "calibration_vanilla_descent_solve_rate=0.13333333333333333 and vanilla_descent_solve_rate_hard_tier=0.13333333333333333 agree to >5 sig figs. Two distinct metrics matching this precisely is more likely a bug than a finding."
+    },
+    {
+      "kind": "TAUTOLOGY",
+      "severity": "critical",
+      "detail": "pt_mean_swap_rate=0.44880000000000003 and pt_swap_acceptance_rate=0.44880000000000003 agree to >5 sig figs. Two distinct metrics matching this precisely is more likely a bug than a finding."
+    }
+  ]
 }
