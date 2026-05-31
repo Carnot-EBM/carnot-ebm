@@ -344,6 +344,31 @@ def _meaningful_error_tail(full_output: str, prompt: str, n: int = 500) -> str:
     return post[-n:]
 
 
+_LIVE_MODEL_PROMPT_MARKERS = (
+    "cached_sota_pair",
+    "live_llm_inference",
+    "llama_cpp",
+    "n_gpu_layers",
+    "live gpu",
+)
+
+
+def _prompt_loads_live_model(prompt: str) -> bool:
+    """True if the task prompt indicates it loads + runs a live SOTA GGUF model.
+
+    Such tasks have long *silent* generation phases — a single hard problem can
+    generate k samples on a 26-35B model with no flushed output (most experiment
+    scripts only flush per-problem, not per-sample). That legitimately exceeds
+    the 600s idle-stall timeout, which was retiring exactly the
+    scientifically-important live-generation P0.1 tasks (exp3564 .328 Route-2
+    NL-math died 3x at 600s even though the 35B model itself loads in ~9s — the
+    stall is in generation, not load). These markers cleanly identify the
+    load+run-a-model tasks (verified: only the stalled task carried them across
+    the .328 roadmap; the 10 cached/CPU tasks carried none)."""
+    p = (prompt or "").lower()
+    return any(m in p for m in _LIVE_MODEL_PROMPT_MARKERS)
+
+
 def run_agent(
     prompt: str,
     max_turns: int = 20,
@@ -381,7 +406,12 @@ def run_agent(
 
     # Expose research mode so repo-local agent hooks can relax interactive
     # gates when the configured CLI supports them.
-    env = {**os.environ, "CARNOT_MODE": "research"}
+    # PYTHONUNBUFFERED so a child experiment script's progress prints reach the
+    # conductor's stall detector immediately (block-buffered stdout under the
+    # pipe was hiding "[expNNNN] Loading model..." / per-problem lines, making a
+    # live-generation task look idle even while working — part of the exp3564
+    # 600s-stall root cause).
+    env = {**os.environ, "CARNOT_MODE": "research", "PYTHONUNBUFFERED": "1"}
 
     try:
         proc = subprocess.Popen(
@@ -438,7 +468,18 @@ def run_agent(
         # 600s gives codex enough thinking room while still bounding hang
         # detection within ~10 min.
         _effective_for_stall = agent_type_override or AGENT_TYPE
-        STALL_TIMEOUT = 0 if _effective_for_stall == "claude" else 600
+        if _effective_for_stall == "claude":
+            STALL_TIMEOUT = 0
+        elif _prompt_loads_live_model(prompt):
+            # Live SOTA-GGUF tasks generate silently for many minutes during a
+            # single problem's multi-sample run on a 26-35B model. 600s was
+            # retiring exactly the scientifically-important live-generation P0.1
+            # tasks (exp3564 .328 Route-2 NL-math died 3x). Give them a 30-min
+            # idle grace; the progress-aware WALL_CLOCK_TIMEOUT still bounds a
+            # genuine infinite hang, and non-live tasks keep the fast 600s catch.
+            STALL_TIMEOUT = 1800
+        else:
+            STALL_TIMEOUT = 600
 
         def _kill_subagent_group(reason: str) -> None:
             """Kill the subagent AND every descendant process in its process group.
