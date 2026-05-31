@@ -1,3 +1,88 @@
+## 2026-05-31 Post-.326 Planning Sweep (Milestone 2026.05.327)
+
+`.326` (Depth-Over-Breadth XII) RESCUED P0.1's strongest datapoint from a storage-bug flag, then
+got an honest answer. Read via `scripts/summarize_artifact.py`, the .326 verdicts are:
+
+- **exp3540 (Route 1, graph-coloring CLEAN re-run): the rescue SUCCEEDED but the SCIENCE came back
+  NEGATIVE.** With each quantity stored ONCE (no aliased fields, zero CRITICAL flags), n expanded,
+  and a paired significance test added, energy global inference `solve_rate=1.0` did NOT
+  significantly beat a STRONG DSATUR baseline (`strong_baseline_solve_rate=0.99`,
+  `energy_minus_strong_paired_diff=0.01`, `energy_vs_strong_paired_p=0.135`). It still crushes naive
+  greedy-AR (0.085). **The .325 "1.0 vs 0.956" margin was a small-sample artifact.** A `warn`
+  CEILING_SATURATION flag fired — DSATUR itself sat at 0.99, so the corpus was not hard enough to
+  *discriminate* energy from a strong classical heuristic. Honest reading: energy-based global
+  inference (PT/SA on the Ising encoding) is **competitive with, but not superior to, strong
+  classical CSP solvers, and decisively beats autoregressive generation** — the Kona premise
+  (energy-descent beats AR) holds against AR but NOT against the best classical method. **.327's #1
+  depth task gives this a TERMINAL verdict on a corpus where DSATUR is forced well below ceiling
+  (so the comparison is discriminating).** This is exactly the failure mode the neural-CO critique
+  literature warns about: a learned/energy method that matches a tuned classical baseline while only
+  beating a weak one — see arXiv:2502.03669, arXiv:2302.03602, arXiv:2112.12251 below.
+- **exp3542 (Route 2, energy-vs-strong-SC): BLOCKED — no selectable headroom.** The greedy-wrong
+  GPU corpus builder (exp3541) never got its turn (the milestone was interrupted after exp3543, not
+  a CUDA failure — CUDA is up, 2x RTX 3090), so the fair test fell back to a no-headroom corpus and
+  blocked honestly (`flip_count=0`, `oracle <= SC`). Route 2 has now been headroom-starved across
+  exp3507/3530/3531/3542. **.327 gives it ONE genuinely-different construction attempt (greedy-wrong
+  + k>=16 on live GPU, now runnable) and then a terminal bound** — the MoB "mode-is-the-answer"
+  result (arXiv:2511.18630) + the sample-complexity Delta-gap theory (arXiv:2506.05295) explain WHY
+  NL-math SC is near-optimal and predict headroom lives only in small-Delta / greedy-wrong-recoverable
+  problems.
+- **exp3543 (cross-corpus aggregation): CLEAN POSITIVE — the strongest FRESH result.** The replicated
+  step->final aggregation positive (exp3532, AUROC 0.9234) GENERALIZES: a FROZEN aggregation fit on
+  corpus A transferred to a DIFFERENT corpus B at `transfer_auroc=0.861` (un-aggregated floor 0.749,
+  within-corpus 0.906), and the shuffle-label control collapsed to 0.496. **This is
+  secondary-headline-eligible.** `.327 promotes it: multi-seed transfer CI + a THIRD corpus (A->{B,C})
+  so it is not a single-pair artifact.** Aggregation-as-the-bottleneck and PRM transfer priors:
+  arXiv:2510.08049 (PRM survey — aggregation is the bottleneck), arXiv:2506.00027 (math->code PRM
+  transfer), arXiv:2505.15960 (FoVer — the canonical title is "Efficient PRM Training Data Synthesis
+  via Formal Verification"; transfers to OOD NLI/BBH).
+
+The milestone was interrupted after exp3543: exp3544 (FR-11 non-degenerate self-learning deploy),
+exp3545 (G2 regression-verify), exp3546/3547 (KV260/PolarFire), and exp3548/3549 (synthesis/capstone)
+NEVER RAN — `.327 carries them forward.
+
+### Verified papers added this sweep
+
+**Neural / energy / diffusion global inference vs STRONG classical CO baselines (frames the honest
+Route-1 negative):**
+- **arXiv:2502.03669** — *Unrealized Expectations: Comparing AI Methods vs Classical Algorithms for
+  Maximum Independent Set* (Wu/Zhao/Arora, 2025). Leading AI-inspired solvers are consistently
+  outperformed by the classical KaMIS on a single CPU; some fail to beat degree-greedy. Our
+  energy-ties-DSATUR-only-beats-greedy-AR result is the same pattern.
+- **arXiv:2302.03602** — *Reply to: Modern graph neural networks do worse than classical greedy
+  algorithms ... (maximum independent set)* (Angelini & Ricci-Tersenghi). Canonical "GNN CO
+  underperforms simple greedy" exchange — the strong-baseline-discipline citation.
+- **arXiv:2112.12251** — *ML4CO: Is GCNN All You Need? ... Strong Baselines ... If Tuned and Trained
+  Properly* (Gupta et al., NeurIPS 2021 ML4CO). Weak baselines inflate neural-CO claims; a tuned
+  simple model matches SOTA.
+- *Applicability of Neural Combinatorial Optimization: A Critical View* — ACM TELO 2024
+  (doi:10.1145/3647644). Critical survey of NCO limits on NP-hard problems.
+
+**PRM step->final aggregation + cross-corpus / OOD transfer (supports the secondary headline):**
+- **arXiv:2510.08049** — *A Survey of Process Reward Models: From Outcome Signals to Process
+  Supervisions* (2025). Frames AGGREGATION (min/mean/product over steps) — not step-level scoring —
+  as the key bottleneck. Our exact question.
+- **arXiv:2506.00027** — *From Mathematical Reasoning to Code: Generalization of Process Reward Models
+  in Test-Time Scaling* (Chen et al., 2025). Math-trained PRMs match code-tailored PRMs — direct
+  cross-corpus transfer precedent for the AUROC 0.861 result.
+- **arXiv:2505.15960** — *Efficient PRM Training Data Synthesis via Formal Verification* (FoVer; Kamoi
+  et al., 2025). The FoVer paper itself; formally-verified PRM data transfers to OOD NLI/BBH. (Repo
+  in-text paraphrase "Generalizable PRMs..." should be corrected to this exact title.)
+- **arXiv:2504.16828** — *Process Reward Models That Think* (ThinkPRM; Khalifa et al., 2025).
+  Verbalized step-wise verification chains; aggregation-of-step-scores design reference.
+
+**Self-consistency headroom theory (frames the Route-2 bound):**
+- **arXiv:2511.18630** — *Majority of the Bests: Improving Best-of-N via Bootstrapping* (MoB, 2025).
+  Under imperfect rewards the correct answer is rarely p~1 but IS the mode; formalizes
+  "mode-is-the-answer" and where reranking can/can't help. The Route-2 no-headroom explanation.
+- **arXiv:2506.05295** — *Sample Complexity and Representation Ability of Test-time Scaling Paradigms*
+  (2025). SC needs Theta(1/Delta^2) vs best-of-N's Theta(1/Delta), Delta = gap between the correct and
+  second-most-likely answer. When the mode is already correct (large Delta) SC has no headroom;
+  headroom lives in small-Delta / greedy-wrong-recoverable cases — the exact criterion the .327
+  Route-2 corpus selects for.
+
+---
+
 ## 2026-05-31 Post-.325 Planning Sweep (Milestone 2026.05.326)
 
 `.325` (Depth-Over-Breadth XI) attacked the two ways P0.1 was still not defensible: Route 1 was
