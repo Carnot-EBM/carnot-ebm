@@ -9238,3 +9238,19 @@ When Exp 3582 runs, it produces all required schema fields on the exit path.
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-VERIFY-3582 | Implemented (`scripts/experiment_3582_capstone_v329.py`) | Implemented (`tests/python/test_experiment_3582_capstone_v329.py`) |
+
+### REQ-VERIFY-3584: Diagnose 329 Null Positive Control
+
+The repository shall provide a script `experiment_3584_diagnose_329_null_positive_control.py` that diagnoses the 329 null result. It must confirm contamination signals quantitatively (AUROC=1.0 for facts baseline, per-verifier inertia AUROC=0.5 for omitted verifiers) and output the domain-applicable verifier set a fair test must score.
+
+### SCENARIO-VERIFY-3584: Positive Control Established
+
+Given the 329 null result artifacts,
+When the diagnosis runs,
+Then it identifies the QA corpus degeneracy and applicable verifiers for facts and code domains, ensuring the positive control requirements are explicitly stated.
+
+## Implementation Status (REQ-VERIFY-3584)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-VERIFY-3584 | Implemented (`scripts/experiment_3584_diagnose_329_null_positive_control.py`) | Implemented (`tests/python/test_experiment_3584.py`) |
