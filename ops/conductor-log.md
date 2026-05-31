@@ -7253,3 +7253,4 @@ web search: https://docs.garak.ai/garak/examples/pr |
 | 2026-05-31 10:51 UTC | Milestone 2026.05.325 activated | OK | 12 tasks queued |
 | 2026-05-31 11:02 UTC | Archive milestone .324 honestly and activate .325 | OK | 81 passed in 4.03s |
 | 2026-05-31 11:21 UTC | P0.1 Route 1 GRAPH-COLORING headroom re-test (CPU, | FLAGGED | adversarial_verify CRITICAL: TAUTOLOGY, TAUTOLOGY — result quarantined, not a cl |
+| 2026-05-31 11:44 UTC | P0.1 Route 1 SUDOKU headroom re-test (CPU) — build | FAIL | Claude Code error: Wall-clock+idle timeout after 1201s (1201s silence). Last ou |
