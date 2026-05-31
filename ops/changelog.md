@@ -7935,3 +7935,4 @@ ModuleNotFoundError: No module named 'torch'; results/experiment_2828_fover_memo
 - 2026-05-31: Capstone v323 (✅ Complete) — honest_verdict=complete: capstone_v323_ready=true_p01_route1_positive_sudoku_solve_rate_1p0; results/experiment_3514_capstone_v323.json
 - Added operational retrospective for milestone 2026.05.323, noting zero experiments completed due to no commits found.
 - 2026-05-31: Archive milestone .323 honestly and activate .324 (✅ Complete) — honest_verdict=complete: v323_archived_v324_activated_p01_route1_first_clean_positive; results/experiment_3515_archive_v323_activate_v324.json
+- 2026-05-31: P0.1 OPTIONAL (non-blocking) — extend the LEVEL-3 in-band corpus from n=49 toward n>=80 (resume the existing exp3506 builder, sonnet, per-problem flush, hard 18-min budget) (✅ Complete) — honest_verdict=complete: p01_level3_corpus_headline_eligible_n=80_sc=0.500; results/experiment_3516_p01_level3_corpus_extend_to_80_v5_optional.json
