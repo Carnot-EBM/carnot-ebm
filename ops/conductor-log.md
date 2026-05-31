@@ -7316,3 +7316,4 @@ web search: https://docs.garak.ai/garak/examples/pr |
 | 2026-05-31 19:52 UTC | P0.1 Route-2 NL-math FINAL attempt + TERMINAL verd | FAIL | Gemini CLI error: Stalled after 600s silence. Last output: YOLO mode is enable |
 | 2026-05-31 20:05 UTC | P0.1 Route-2 NL-math FINAL attempt + TERMINAL verd | FAIL | Gemini CLI error: Stalled after 600s silence. Last output: Warning: 256-color  |
 | 2026-05-31 20:17 UTC | P0.1 Route-2 NL-math FINAL attempt + TERMINAL verd | FAIL | Gemini CLI error: Stalled after 600s silence. Last output: Warning: 256-color  |
+| 2026-05-31 20:24 UTC | PROMOTE the step->final aggregation positive to a  | FLAGGED | adversarial_verify CRITICAL: TAUTOLOGY, TAUTOLOGY, TAUTOLOGY, TAUTOLOGY, TAUTOLO |
