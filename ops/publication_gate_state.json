@@ -1,6 +1,6 @@
 {
   "_doc": "Manual / external state for the publication gate (scripts/publication_gate.py). Only G2 is genuinely external; G1/G3/G4 are computed mechanically from artifacts + prose. Update g2 when an independent reproducer lands.",
-  "g2_independent_reproducer": false,
-  "g2_evidence": "",
-  "last_reviewed": "2026-05-29"
+  "g2_independent_reproducer": true,
+  "g2_evidence": "GitHub Actions workflow 'FoVer Headline Independent Reproducer' (.github/workflows/reproduce-fover-headline.yml), run 26725185125 on Carnot-EBM/carnot-ebm, 2026-05-31, conclusion=success. Clean ubuntu-latest runner, fresh CPU-only install from a clean checkout (non-operator environment), recomputed the FoVer headline AUROC via scripts/reproduce_fover_headline.py and asserted the published CIs: condition_A (production) AUROC in [0.9027, 0.9235] and learning_contribution in [0.0125, 0.0245] — both PASS. This is a CI-run independent reproducer per the Phase-1 ship gate ('could be a teammate, a CI run, or an external user'). Internally further de-risked by exp3430 (fresh git worktree + venv) and the local run on 2026-05-31 (AUROC 0.9131 within CI). NOTE: G2 attests the FoVer verifier-ensemble headline reproduces; it does NOT attest the broader energy-descent existential claim, which remains an honest-negative (Route-1/Route-2 bounded). Run: https://github.com/Carnot-EBM/carnot-ebm/actions/runs/26725185125",
+  "last_reviewed": "2026-05-31"
 }
