@@ -1,0 +1,824 @@
+{
+  "schema": "carnot.kona_p01_gate.graph_coloring.v1",
+  "experiment": 3518,
+  "csp_family": "graph_coloring",
+  "inference_substrate": "ising_energy_optimization_cpu",
+  "random_seed": 1975617008,
+  "reproducibility_checksum": "2327908afe6e184fc21fd90a7d0b05c31e0609d76ddbabc7da3fdc6a2f3e0718",
+  "n_instances": 20,
+  "optimizer_config": {
+    "csp_family": "graph_coloring",
+    "sa_n_restarts": 15,
+    "sa_config": {
+      "easy": {
+        "n_sweeps": 2000,
+        "n_moves": 30,
+        "T_init": 1.0,
+        "T_final": 0.01
+      },
+      "medium": {
+        "n_sweeps": 4000,
+        "n_moves": 40,
+        "T_init": 1.0,
+        "T_final": 0.01
+      },
+      "hard": {
+        "n_sweeps": 6000,
+        "n_moves": 50,
+        "T_init": 1.0,
+        "T_final": 0.005
+      },
+      "extreme": {
+        "n_sweeps": 8000,
+        "n_moves": 50,
+        "T_init": 1.5,
+        "T_final": 0.005
+      }
+    },
+    "pt_config": {
+      "easy": {
+        "n_sweeps": 2000,
+        "n_moves": 30,
+        "n_chains": 6,
+        "T_min": 0.1,
+        "T_max": 2.0,
+        "n_exchange_interval": 50
+      },
+      "medium": {
+        "n_sweeps": 4000,
+        "n_moves": 40,
+        "n_chains": 6,
+        "T_min": 0.1,
+        "T_max": 2.0,
+        "n_exchange_interval": 50
+      },
+      "hard": {
+        "n_sweeps": 6000,
+        "n_moves": 50,
+        "n_chains": 6,
+        "T_min": 0.1,
+        "T_max": 2.0,
+        "n_exchange_interval": 50
+      },
+      "extreme": {
+        "n_sweeps": 8000,
+        "n_moves": 50,
+        "n_chains": 6,
+        "T_min": 0.1,
+        "T_max": 3.0,
+        "n_exchange_interval": 50
+      }
+    },
+    "tier_config": {
+      "easy": {
+        "n_vertices": 10,
+        "n_colors": 3,
+        "edge_prob": 0.3,
+        "n_instances": 5
+      },
+      "medium": {
+        "n_vertices": 15,
+        "n_colors": 3,
+        "edge_prob": 0.5,
+        "n_instances": 5
+      },
+      "hard": {
+        "n_vertices": 20,
+        "n_colors": 3,
+        "edge_prob": 0.65,
+        "n_instances": 5
+      },
+      "extreme": {
+        "n_vertices": 25,
+        "n_colors": 4,
+        "edge_prob": 0.75,
+        "n_instances": 5
+      }
+    }
+  },
+  "encoding_validity_E0": {
+    "total_energy": 0.0,
+    "is_valid": true,
+    "n_conflicts": 0,
+    "n_uncolored": 0
+  },
+  "solve_rate": 1.0,
+  "solve_rate_by_difficulty": {
+    "easy": 1.0,
+    "medium": 1.0,
+    "hard": 1.0,
+    "extreme": 1.0
+  },
+  "solve_rate_by_optimizer_variant": {
+    "vanilla_descent": 1.0,
+    "sa_single": 1.0,
+    "sa_restarts15": 1.0,
+    "parallel_tempering": 1.0,
+    "exact_backtracking": 1.0
+  },
+  "exact_baseline_solve_rate": 1.0,
+  "parallel_tempering_solve_rate": 1.0,
+  "pt_swap_acceptance_rate": 0.0,
+  "pt_per_instance_swap_acceptance": [
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0
+  ],
+  "ar_baseline_solve_rate": 0.5,
+  "ar_literature_baselines_note": "Graph k-coloring AR baseline: greedy sequential coloring (lowest available color, random vertex order) \u2014 canonical AR analog (no backtracking). Literature: DIFUSCO (arXiv:2302.08224) showed non-AR diffusion beats greedy AR on graph coloring. 'Beyond Autoregression' (arXiv:2410.14157): global-inference beats AR on Sudoku (100% vs 20.7%), SAT, Countdown (91.5% vs 45.8%) \u2014 same regime tested here. Greedy AR uses at most \u0394+1 colors (Brooks' theorem), so it fails on k-colorable graphs with \u0394 \u2265 k-1 in adversarial orderings.",
+  "llm_ar_inhouse_solve_rate": null,
+  "time_to_solution_solved_only": [
+    0.00027823448181152344,
+    0.00015997886657714844,
+    0.0002551078796386719,
+    0.0001964569091796875,
+    0.0002918243408203125,
+    0.014658212661743164,
+    0.006375312805175781,
+    0.0034990310668945312,
+    0.0003781318664550781,
+    0.015475749969482422,
+    0.0010383129119873047,
+    0.0025370121002197266,
+    0.0005869865417480469,
+    0.0007791519165039062,
+    0.0021419525146484375,
+    0.042014122009277344,
+    0.049247026443481445,
+    0.00828695297241211,
+    0.029508590698242188,
+    0.014658212661743164
+  ],
+  "generalizes_beyond_sudoku": true,
+  "per_instance_results": {
+    "vanilla_descent": [
+      {
+        "instance_id": "easy_0",
+        "difficulty": "easy",
+        "solved": true,
+        "n_conflicts": 0
+      },
+      {
+        "instance_id": "easy_1",
+        "difficulty": "easy",
+        "solved": true,
+        "n_conflicts": 0
+      },
+      {
+        "instance_id": "easy_2",
+        "difficulty": "easy",
+        "solved": true,
+        "n_conflicts": 0
+      },
+      {
+        "instance_id": "easy_3",
+        "difficulty": "easy",
+        "solved": true,
+        "n_conflicts": 0
+      },
+      {
+        "instance_id": "easy_4",
+        "difficulty": "easy",
+        "solved": true,
+        "n_conflicts": 0
+      },
+      {
+        "instance_id": "medium_0",
+        "difficulty": "medium",
+        "solved": true,
+        "n_conflicts": 0
+      },
+      {
+        "instance_id": "medium_1",
+        "difficulty": "medium",
+        "solved": true,
+        "n_conflicts": 0
+      },
+      {
+        "instance_id": "medium_2",
+        "difficulty": "medium",
+        "solved": true,
+        "n_conflicts": 0
+      },
+      {
+        "instance_id": "medium_3",
+        "difficulty": "medium",
+        "solved": true,
+        "n_conflicts": 0
+      },
+      {
+        "instance_id": "medium_4",
+        "difficulty": "medium",
+        "solved": true,
+        "n_conflicts": 0
+      },
+      {
+        "instance_id": "hard_0",
+        "difficulty": "hard",
+        "solved": true,
+        "n_conflicts": 0
+      },
+      {
+        "instance_id": "hard_1",
+        "difficulty": "hard",
+        "solved": true,
+        "n_conflicts": 0
+      },
+      {
+        "instance_id": "hard_2",
+        "difficulty": "hard",
+        "solved": true,
+        "n_conflicts": 0
+      },
+      {
+        "instance_id": "hard_3",
+        "difficulty": "hard",
+        "solved": true,
+        "n_conflicts": 0
+      },
+      {
+        "instance_id": "hard_4",
+        "difficulty": "hard",
+        "solved": true,
+        "n_conflicts": 0
+      },
+      {
+        "instance_id": "extreme_0",
+        "difficulty": "extreme",
+        "solved": true,
+        "n_conflicts": 0
+      },
+      {
+        "instance_id": "extreme_1",
+        "difficulty": "extreme",
+        "solved": true,
+        "n_conflicts": 0
+      },
+      {
+        "instance_id": "extreme_2",
+        "difficulty": "extreme",
+        "solved": true,
+        "n_conflicts": 0
+      },
+      {
+        "instance_id": "extreme_3",
+        "difficulty": "extreme",
+        "solved": true,
+        "n_conflicts": 0
+      },
+      {
+        "instance_id": "extreme_4",
+        "difficulty": "extreme",
+        "solved": true,
+        "n_conflicts": 0
+      }
+    ],
+    "sa_single": [
+      {
+        "instance_id": "easy_0",
+        "difficulty": "easy",
+        "solved": true,
+        "n_conflicts": 0
+      },
+      {
+        "instance_id": "easy_1",
+        "difficulty": "easy",
+        "solved": true,
+        "n_conflicts": 0
+      },
+      {
+        "instance_id": "easy_2",
+        "difficulty": "easy",
+        "solved": true,
+        "n_conflicts": 0
+      },
+      {
+        "instance_id": "easy_3",
+        "difficulty": "easy",
+        "solved": true,
+        "n_conflicts": 0
+      },
+      {
+        "instance_id": "easy_4",
+        "difficulty": "easy",
+        "solved": true,
+        "n_conflicts": 0
+      },
+      {
+        "instance_id": "medium_0",
+        "difficulty": "medium",
+        "solved": true,
+        "n_conflicts": 0
+      },
+      {
+        "instance_id": "medium_1",
+        "difficulty": "medium",
+        "solved": true,
+        "n_conflicts": 0
+      },
+      {
+        "instance_id": "medium_2",
+        "difficulty": "medium",
+        "solved": true,
+        "n_conflicts": 0
+      },
+      {
+        "instance_id": "medium_3",
+        "difficulty": "medium",
+        "solved": true,
+        "n_conflicts": 0
+      },
+      {
+        "instance_id": "medium_4",
+        "difficulty": "medium",
+        "solved": true,
+        "n_conflicts": 0
+      },
+      {
+        "instance_id": "hard_0",
+        "difficulty": "hard",
+        "solved": true,
+        "n_conflicts": 0
+      },
+      {
+        "instance_id": "hard_1",
+        "difficulty": "hard",
+        "solved": true,
+        "n_conflicts": 0
+      },
+      {
+        "instance_id": "hard_2",
+        "difficulty": "hard",
+        "solved": true,
+        "n_conflicts": 0
+      },
+      {
+        "instance_id": "hard_3",
+        "difficulty": "hard",
+        "solved": true,
+        "n_conflicts": 0
+      },
+      {
+        "instance_id": "hard_4",
+        "difficulty": "hard",
+        "solved": true,
+        "n_conflicts": 0
+      },
+      {
+        "instance_id": "extreme_0",
+        "difficulty": "extreme",
+        "solved": true,
+        "n_conflicts": 0
+      },
+      {
+        "instance_id": "extreme_1",
+        "difficulty": "extreme",
+        "solved": true,
+        "n_conflicts": 0
+      },
+      {
+        "instance_id": "extreme_2",
+        "difficulty": "extreme",
+        "solved": true,
+        "n_conflicts": 0
+      },
+      {
+        "instance_id": "extreme_3",
+        "difficulty": "extreme",
+        "solved": true,
+        "n_conflicts": 0
+      },
+      {
+        "instance_id": "extreme_4",
+        "difficulty": "extreme",
+        "solved": true,
+        "n_conflicts": 0
+      }
+    ],
+    "sa_restarts15": [
+      {
+        "instance_id": "easy_0",
+        "difficulty": "easy",
+        "solved": true,
+        "n_conflicts": 0,
+        "time_s": 0.00027823448181152344
+      },
+      {
+        "instance_id": "easy_1",
+        "difficulty": "easy",
+        "solved": true,
+        "n_conflicts": 0,
+        "time_s": 0.00015997886657714844
+      },
+      {
+        "instance_id": "easy_2",
+        "difficulty": "easy",
+        "solved": true,
+        "n_conflicts": 0,
+        "time_s": 0.0002551078796386719
+      },
+      {
+        "instance_id": "easy_3",
+        "difficulty": "easy",
+        "solved": true,
+        "n_conflicts": 0,
+        "time_s": 0.0001964569091796875
+      },
+      {
+        "instance_id": "easy_4",
+        "difficulty": "easy",
+        "solved": true,
+        "n_conflicts": 0,
+        "time_s": 0.0002918243408203125
+      },
+      {
+        "instance_id": "medium_0",
+        "difficulty": "medium",
+        "solved": true,
+        "n_conflicts": 0,
+        "time_s": 0.014658212661743164
+      },
+      {
+        "instance_id": "medium_1",
+        "difficulty": "medium",
+        "solved": true,
+        "n_conflicts": 0,
+        "time_s": 0.006375312805175781
+      },
+      {
+        "instance_id": "medium_2",
+        "difficulty": "medium",
+        "solved": true,
+        "n_conflicts": 0,
+        "time_s": 0.0034990310668945312
+      },
+      {
+        "instance_id": "medium_3",
+        "difficulty": "medium",
+        "solved": true,
+        "n_conflicts": 0,
+        "time_s": 0.0003781318664550781
+      },
+      {
+        "instance_id": "medium_4",
+        "difficulty": "medium",
+        "solved": true,
+        "n_conflicts": 0,
+        "time_s": 0.015475749969482422
+      },
+      {
+        "instance_id": "hard_0",
+        "difficulty": "hard",
+        "solved": true,
+        "n_conflicts": 0,
+        "time_s": 0.0010383129119873047
+      },
+      {
+        "instance_id": "hard_1",
+        "difficulty": "hard",
+        "solved": true,
+        "n_conflicts": 0,
+        "time_s": 0.0025370121002197266
+      },
+      {
+        "instance_id": "hard_2",
+        "difficulty": "hard",
+        "solved": true,
+        "n_conflicts": 0,
+        "time_s": 0.0005869865417480469
+      },
+      {
+        "instance_id": "hard_3",
+        "difficulty": "hard",
+        "solved": true,
+        "n_conflicts": 0,
+        "time_s": 0.0007791519165039062
+      },
+      {
+        "instance_id": "hard_4",
+        "difficulty": "hard",
+        "solved": true,
+        "n_conflicts": 0,
+        "time_s": 0.0021419525146484375
+      },
+      {
+        "instance_id": "extreme_0",
+        "difficulty": "extreme",
+        "solved": true,
+        "n_conflicts": 0,
+        "time_s": 0.042014122009277344
+      },
+      {
+        "instance_id": "extreme_1",
+        "difficulty": "extreme",
+        "solved": true,
+        "n_conflicts": 0,
+        "time_s": 0.049247026443481445
+      },
+      {
+        "instance_id": "extreme_2",
+        "difficulty": "extreme",
+        "solved": true,
+        "n_conflicts": 0,
+        "time_s": 0.00828695297241211
+      },
+      {
+        "instance_id": "extreme_3",
+        "difficulty": "extreme",
+        "solved": true,
+        "n_conflicts": 0,
+        "time_s": 0.029508590698242188
+      },
+      {
+        "instance_id": "extreme_4",
+        "difficulty": "extreme",
+        "solved": true,
+        "n_conflicts": 0,
+        "time_s": 0.014658212661743164
+      }
+    ],
+    "parallel_tempering": [
+      {
+        "instance_id": "easy_0",
+        "difficulty": "easy",
+        "solved": true,
+        "n_conflicts": 0,
+        "swap_acceptance_rate": 0.0
+      },
+      {
+        "instance_id": "easy_1",
+        "difficulty": "easy",
+        "solved": true,
+        "n_conflicts": 0,
+        "swap_acceptance_rate": 0.0
+      },
+      {
+        "instance_id": "easy_2",
+        "difficulty": "easy",
+        "solved": true,
+        "n_conflicts": 0,
+        "swap_acceptance_rate": 0.0
+      },
+      {
+        "instance_id": "easy_3",
+        "difficulty": "easy",
+        "solved": true,
+        "n_conflicts": 0,
+        "swap_acceptance_rate": 0.0
+      },
+      {
+        "instance_id": "easy_4",
+        "difficulty": "easy",
+        "solved": true,
+        "n_conflicts": 0,
+        "swap_acceptance_rate": 0.0
+      },
+      {
+        "instance_id": "medium_0",
+        "difficulty": "medium",
+        "solved": true,
+        "n_conflicts": 0,
+        "swap_acceptance_rate": 0.0
+      },
+      {
+        "instance_id": "medium_1",
+        "difficulty": "medium",
+        "solved": true,
+        "n_conflicts": 0,
+        "swap_acceptance_rate": 0.0
+      },
+      {
+        "instance_id": "medium_2",
+        "difficulty": "medium",
+        "solved": true,
+        "n_conflicts": 0,
+        "swap_acceptance_rate": 0.0
+      },
+      {
+        "instance_id": "medium_3",
+        "difficulty": "medium",
+        "solved": true,
+        "n_conflicts": 0,
+        "swap_acceptance_rate": 0.0
+      },
+      {
+        "instance_id": "medium_4",
+        "difficulty": "medium",
+        "solved": true,
+        "n_conflicts": 0,
+        "swap_acceptance_rate": 0.0
+      },
+      {
+        "instance_id": "hard_0",
+        "difficulty": "hard",
+        "solved": true,
+        "n_conflicts": 0,
+        "swap_acceptance_rate": 0.0
+      },
+      {
+        "instance_id": "hard_1",
+        "difficulty": "hard",
+        "solved": true,
+        "n_conflicts": 0,
+        "swap_acceptance_rate": 0.0
+      },
+      {
+        "instance_id": "hard_2",
+        "difficulty": "hard",
+        "solved": true,
+        "n_conflicts": 0,
+        "swap_acceptance_rate": 0.0
+      },
+      {
+        "instance_id": "hard_3",
+        "difficulty": "hard",
+        "solved": true,
+        "n_conflicts": 0,
+        "swap_acceptance_rate": 0.0
+      },
+      {
+        "instance_id": "hard_4",
+        "difficulty": "hard",
+        "solved": true,
+        "n_conflicts": 0,
+        "swap_acceptance_rate": 0.0
+      },
+      {
+        "instance_id": "extreme_0",
+        "difficulty": "extreme",
+        "solved": true,
+        "n_conflicts": 0,
+        "swap_acceptance_rate": 0.0
+      },
+      {
+        "instance_id": "extreme_1",
+        "difficulty": "extreme",
+        "solved": true,
+        "n_conflicts": 0,
+        "swap_acceptance_rate": 0.0
+      },
+      {
+        "instance_id": "extreme_2",
+        "difficulty": "extreme",
+        "solved": true,
+        "n_conflicts": 0,
+        "swap_acceptance_rate": 0.0
+      },
+      {
+        "instance_id": "extreme_3",
+        "difficulty": "extreme",
+        "solved": true,
+        "n_conflicts": 0,
+        "swap_acceptance_rate": 0.0
+      },
+      {
+        "instance_id": "extreme_4",
+        "difficulty": "extreme",
+        "solved": true,
+        "n_conflicts": 0,
+        "swap_acceptance_rate": 0.0
+      }
+    ],
+    "exact_backtracking": [
+      {
+        "instance_id": "easy_0",
+        "difficulty": "easy",
+        "solved": true,
+        "time_s": 2.7418136596679688e-05
+      },
+      {
+        "instance_id": "easy_1",
+        "difficulty": "easy",
+        "solved": true,
+        "time_s": 1.3113021850585938e-05
+      },
+      {
+        "instance_id": "easy_2",
+        "difficulty": "easy",
+        "solved": true,
+        "time_s": 1.239776611328125e-05
+      },
+      {
+        "instance_id": "easy_3",
+        "difficulty": "easy",
+        "solved": true,
+        "time_s": 1.9550323486328125e-05
+      },
+      {
+        "instance_id": "easy_4",
+        "difficulty": "easy",
+        "solved": true,
+        "time_s": 1.0728836059570312e-05
+      },
+      {
+        "instance_id": "medium_0",
+        "difficulty": "medium",
+        "solved": true,
+        "time_s": 2.3365020751953125e-05
+      },
+      {
+        "instance_id": "medium_1",
+        "difficulty": "medium",
+        "solved": true,
+        "time_s": 4.935264587402344e-05
+      },
+      {
+        "instance_id": "medium_2",
+        "difficulty": "medium",
+        "solved": true,
+        "time_s": 1.9311904907226562e-05
+      },
+      {
+        "instance_id": "medium_3",
+        "difficulty": "medium",
+        "solved": true,
+        "time_s": 2.47955322265625e-05
+      },
+      {
+        "instance_id": "medium_4",
+        "difficulty": "medium",
+        "solved": true,
+        "time_s": 3.2901763916015625e-05
+      },
+      {
+        "instance_id": "hard_0",
+        "difficulty": "hard",
+        "solved": true,
+        "time_s": 3.266334533691406e-05
+      },
+      {
+        "instance_id": "hard_1",
+        "difficulty": "hard",
+        "solved": true,
+        "time_s": 2.8133392333984375e-05
+      },
+      {
+        "instance_id": "hard_2",
+        "difficulty": "hard",
+        "solved": true,
+        "time_s": 3.0040740966796875e-05
+      },
+      {
+        "instance_id": "hard_3",
+        "difficulty": "hard",
+        "solved": true,
+        "time_s": 2.765655517578125e-05
+      },
+      {
+        "instance_id": "hard_4",
+        "difficulty": "hard",
+        "solved": true,
+        "time_s": 2.86102294921875e-05
+      },
+      {
+        "instance_id": "extreme_0",
+        "difficulty": "extreme",
+        "solved": true,
+        "time_s": 6.031990051269531e-05
+      },
+      {
+        "instance_id": "extreme_1",
+        "difficulty": "extreme",
+        "solved": true,
+        "time_s": 4.5299530029296875e-05
+      },
+      {
+        "instance_id": "extreme_2",
+        "difficulty": "extreme",
+        "solved": true,
+        "time_s": 8.249282836914062e-05
+      },
+      {
+        "instance_id": "extreme_3",
+        "difficulty": "extreme",
+        "solved": true,
+        "time_s": 4.8160552978515625e-05
+      },
+      {
+        "instance_id": "extreme_4",
+        "difficulty": "extreme",
+        "solved": true,
+        "time_s": 4.57763671875e-05
+      }
+    ]
+  },
+  "honest_verdict": "complete: p01_energy_vs_ar_generalizes_to_graph_coloring_solve_rate_1_00_vs_ar_0_50",
+  "duration_s": 0.4911031723022461
+}

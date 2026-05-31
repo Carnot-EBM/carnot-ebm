@@ -94,101 +94,101 @@
   },
   "solve_rate_by_optimizer_variant": {
     "vanilla_langevin": 0.0,
-    "discrete_sa_single": 0.975,
+    "discrete_sa_single": 1.0,
     "discrete_sa_restarts20": 1.0,
-    "parallel_tempering_tuned": 0.45,
+    "parallel_tempering_tuned": 0.525,
     "exact_cp": 1.0
   },
   "exact_baseline_solve_rate": 1.0,
-  "parallel_tempering_solve_rate": 0.45,
-  "pt_swap_acceptance_rate": 0.6310512203071003,
+  "parallel_tempering_solve_rate": 0.525,
+  "pt_swap_acceptance_rate": 0.5320895007854294,
   "pt_per_puzzle_swap_acceptance": [
+    0.0,
+    0.0,
+    0.815,
+    0.0,
+    0.0,
+    0.74,
+    0.0,
+    0.0,
     0.8,
     0.0,
-    0.0,
-    0.66,
-    0.8,
-    0.0,
-    0.0,
-    0.0,
-    0.0,
-    0.0,
-    0.778,
-    0.762,
-    0.658,
-    0.718,
-    0.714,
-    0.734,
-    0.7894736842105263,
-    0.676,
-    0.704,
     0.71,
-    0.749,
-    0.7741935483870968,
-    0.759,
+    0.6,
     0.778,
-    0.788,
-    0.731,
-    0.763,
+    0.0,
+    0.0,
+    0.8162162162162162,
+    0.712,
+    0.692,
+    0.688,
+    0.84,
+    0.701,
+    0.759,
+    0.713,
+    0.785,
+    0.782,
+    0.817,
+    0.739,
+    0.742,
+    0.721,
+    0.757,
+    0.0,
+    0.9333333333333333,
+    0.0,
+    0.7846153846153846,
+    0.7810126582278482,
     0.8,
-    0.765,
-    0.8068027210884354,
-    0.78,
-    0.8179487179487179,
-    0.7763837638376384,
-    0.82,
-    0.95,
-    0.744,
-    0.8072463768115942,
-    0.852,
-    0.741,
-    0.736
+    0.0,
+    0.7515,
+    0.7939024390243903,
+    0.732
   ],
-  "pt_diagnosis_note": "exp3505 PT underperformance root cause: n_exchange_interval was set to n_sweeps//5+1, yielding only ~4 total replica-exchange attempts per puzzle (401 interval with 2000 sweeps for easy tier). With ~4 proposals, chains had virtually no opportunity to mix \u2014 PT degraded to 4 independent restarts with no inter-chain communication, explaining the below-SA solve rate. | Tuned ladder (n_exchange_interval=50, n_chains=6, T_min=0.1, T_max=2.0): mean_swap_acceptance=0.631, tuned_pt_solve_rate=0.450 (vs exp3505 pt_solve_rate=0.381). Fix confirmed: tuned PT >= original PT.",
-  "ar_greedy_solve_rate": 0.0,
+  "pt_diagnosis_note": "exp3505 PT underperformance root cause: n_exchange_interval was set to n_sweeps//5+1, yielding only ~4 total replica-exchange attempts per puzzle (401 interval with 2000 sweeps for easy tier). With ~4 proposals, chains had virtually no opportunity to mix \u2014 PT degraded to 4 independent restarts with no inter-chain communication, explaining the below-SA solve rate. | Tuned ladder (n_exchange_interval=50, n_chains=6, T_min=0.1, T_max=2.0): mean_swap_acceptance=0.532, tuned_pt_solve_rate=0.525 (vs exp3505 pt_solve_rate=0.381). Fix confirmed: tuned PT >= original PT.",
+  "ar_greedy_solve_rate": 0.025,
   "ar_literature_baselines_note": "exp3505 parallel_tempering_solve_rate=0.381 (8 of 21 puzzles, easy/medium/hard only). Sudoku-Bench arXiv:2505.16135: SOTA LLMs solve <15% unaided. Kona EBM (Logical Intelligence): 96.2% vs frontier LLMs ~2% on hard Sudoku. BDH (Pathway arXiv:2024): 97.4% on Sudoku Extreme vs leading LLMs ~0%. These literature numbers make the AR=0.0 greedy baseline conservative (real LLMs also fail near 0% on hard/extreme boards).",
   "llm_ar_inhouse_solve_rate": null,
   "time_to_solution_solved_only": [
-    0.0067729949951171875,
-    0.0035216808319091797,
-    0.0205996036529541,
-    0.0028162002563476562,
-    0.003949880599975586,
-    0.004544496536254883,
-    0.003362417221069336,
-    0.002821683883666992,
-    0.00610661506652832,
-    0.003429889678955078,
-    0.033136844635009766,
-    0.033724308013916016,
-    0.005316734313964844,
-    0.060516357421875,
-    12.009719371795654,
-    0.032526254653930664,
-    0.02192091941833496,
-    0.022706270217895508,
-    0.18485546112060547,
-    0.027225017547607422,
-    0.09070491790771484,
-    0.029363155364990234,
-    0.1739513874053955,
-    0.0614778995513916,
-    0.10681700706481934,
-    0.14708566665649414,
-    0.4226417541503906,
-    0.08638858795166016,
-    0.0853116512298584,
-    0.08922576904296875,
-    0.0462801456451416,
-    0.014429807662963867,
-    0.24089503288269043,
-    0.20747804641723633,
-    0.08250975608825684,
-    0.05224466323852539,
-    0.18294072151184082,
-    0.2471022605895996,
-    0.30902767181396484,
-    0.013495683670043945
+    0.00213623046875,
+    0.002431154251098633,
+    0.002905607223510742,
+    0.003175497055053711,
+    0.002627134323120117,
+    0.0029687881469726562,
+    0.004153728485107422,
+    0.002425670623779297,
+    0.0034110546112060547,
+    0.0024061203002929688,
+    0.12437844276428223,
+    0.04562544822692871,
+    0.05891251564025879,
+    0.005211353302001953,
+    0.023188114166259766,
+    0.05805468559265137,
+    0.055880069732666016,
+    0.09638810157775879,
+    0.008772134780883789,
+    0.04111766815185547,
+    0.04323101043701172,
+    0.10192394256591797,
+    0.21028637886047363,
+    0.17441201210021973,
+    0.35631895065307617,
+    0.14902043342590332,
+    0.07962441444396973,
+    0.15462756156921387,
+    0.00844264030456543,
+    0.16383743286132812,
+    0.06401515007019043,
+    0.11576175689697266,
+    0.04936695098876953,
+    0.3111691474914551,
+    0.05630326271057129,
+    0.10881829261779785,
+    0.057176828384399414,
+    0.2127838134765625,
+    0.1353297233581543,
+    0.20775222778320312
   ],
   "per_puzzle_results": {
     "vanilla_langevin": [
@@ -196,25 +196,25 @@
         "puzzle_id": "easy_0",
         "difficulty": "easy",
         "solved": false,
-        "n_violated": 26
+        "n_violated": 27
       },
       {
         "puzzle_id": "easy_1",
         "difficulty": "easy",
         "solved": false,
-        "n_violated": 27
+        "n_violated": 26
       },
       {
         "puzzle_id": "easy_2",
         "difficulty": "easy",
         "solved": false,
-        "n_violated": 27
+        "n_violated": 26
       },
       {
         "puzzle_id": "easy_3",
         "difficulty": "easy",
         "solved": false,
-        "n_violated": 26
+        "n_violated": 27
       },
       {
         "puzzle_id": "easy_4",
@@ -226,7 +226,7 @@
         "puzzle_id": "easy_5",
         "difficulty": "easy",
         "solved": false,
-        "n_violated": 27
+        "n_violated": 26
       },
       {
         "puzzle_id": "easy_6",
@@ -256,7 +256,7 @@
         "puzzle_id": "medium_0",
         "difficulty": "medium",
         "solved": false,
-        "n_violated": 26
+        "n_violated": 27
       },
       {
         "puzzle_id": "medium_1",
@@ -268,19 +268,19 @@
         "puzzle_id": "medium_2",
         "difficulty": "medium",
         "solved": false,
-        "n_violated": 27
+        "n_violated": 25
       },
       {
         "puzzle_id": "medium_3",
         "difficulty": "medium",
         "solved": false,
-        "n_violated": 26
+        "n_violated": 27
       },
       {
         "puzzle_id": "medium_4",
         "difficulty": "medium",
         "solved": false,
-        "n_violated": 26
+        "n_violated": 27
       },
       {
         "puzzle_id": "medium_5",
@@ -298,7 +298,7 @@
         "puzzle_id": "medium_7",
         "difficulty": "medium",
         "solved": false,
-        "n_violated": 27
+        "n_violated": 26
       },
       {
         "puzzle_id": "medium_8",
@@ -310,7 +310,7 @@
         "puzzle_id": "medium_9",
         "difficulty": "medium",
         "solved": false,
-        "n_violated": 26
+        "n_violated": 27
       },
       {
         "puzzle_id": "hard_0",
@@ -322,7 +322,7 @@
         "puzzle_id": "hard_1",
         "difficulty": "hard",
         "solved": false,
-        "n_violated": 26
+        "n_violated": 27
       },
       {
         "puzzle_id": "hard_2",
@@ -358,7 +358,7 @@
         "puzzle_id": "hard_7",
         "difficulty": "hard",
         "solved": false,
-        "n_violated": 27
+        "n_violated": 26
       },
       {
         "puzzle_id": "hard_8",
@@ -424,7 +424,7 @@
         "puzzle_id": "extreme_8",
         "difficulty": "extreme",
         "solved": false,
-        "n_violated": 26
+        "n_violated": 27
       },
       {
         "puzzle_id": "extreme_9",
@@ -521,8 +521,8 @@
       {
         "puzzle_id": "medium_4",
         "difficulty": "medium",
-        "solved": false,
-        "n_violated": 4
+        "solved": true,
+        "n_violated": 0
       },
       {
         "puzzle_id": "medium_5",
@@ -681,289 +681,289 @@
         "difficulty": "easy",
         "solved": true,
         "n_violated": 0,
-        "time_s": 0.0067729949951171875
+        "time_s": 0.00213623046875
       },
       {
         "puzzle_id": "easy_1",
         "difficulty": "easy",
         "solved": true,
         "n_violated": 0,
-        "time_s": 0.0035216808319091797
+        "time_s": 0.002431154251098633
       },
       {
         "puzzle_id": "easy_2",
         "difficulty": "easy",
         "solved": true,
         "n_violated": 0,
-        "time_s": 0.0205996036529541
+        "time_s": 0.002905607223510742
       },
       {
         "puzzle_id": "easy_3",
         "difficulty": "easy",
         "solved": true,
         "n_violated": 0,
-        "time_s": 0.0028162002563476562
+        "time_s": 0.003175497055053711
       },
       {
         "puzzle_id": "easy_4",
         "difficulty": "easy",
         "solved": true,
         "n_violated": 0,
-        "time_s": 0.003949880599975586
+        "time_s": 0.002627134323120117
       },
       {
         "puzzle_id": "easy_5",
         "difficulty": "easy",
         "solved": true,
         "n_violated": 0,
-        "time_s": 0.004544496536254883
+        "time_s": 0.0029687881469726562
       },
       {
         "puzzle_id": "easy_6",
         "difficulty": "easy",
         "solved": true,
         "n_violated": 0,
-        "time_s": 0.003362417221069336
+        "time_s": 0.004153728485107422
       },
       {
         "puzzle_id": "easy_7",
         "difficulty": "easy",
         "solved": true,
         "n_violated": 0,
-        "time_s": 0.002821683883666992
+        "time_s": 0.002425670623779297
       },
       {
         "puzzle_id": "easy_8",
         "difficulty": "easy",
         "solved": true,
         "n_violated": 0,
-        "time_s": 0.00610661506652832
+        "time_s": 0.0034110546112060547
       },
       {
         "puzzle_id": "easy_9",
         "difficulty": "easy",
         "solved": true,
         "n_violated": 0,
-        "time_s": 0.003429889678955078
+        "time_s": 0.0024061203002929688
       },
       {
         "puzzle_id": "medium_0",
         "difficulty": "medium",
         "solved": true,
         "n_violated": 0,
-        "time_s": 0.033136844635009766
+        "time_s": 0.12437844276428223
       },
       {
         "puzzle_id": "medium_1",
         "difficulty": "medium",
         "solved": true,
         "n_violated": 0,
-        "time_s": 0.033724308013916016
+        "time_s": 0.04562544822692871
       },
       {
         "puzzle_id": "medium_2",
         "difficulty": "medium",
         "solved": true,
         "n_violated": 0,
-        "time_s": 0.005316734313964844
+        "time_s": 0.05891251564025879
       },
       {
         "puzzle_id": "medium_3",
         "difficulty": "medium",
         "solved": true,
         "n_violated": 0,
-        "time_s": 0.060516357421875
+        "time_s": 0.005211353302001953
       },
       {
         "puzzle_id": "medium_4",
         "difficulty": "medium",
         "solved": true,
         "n_violated": 0,
-        "time_s": 12.009719371795654
+        "time_s": 0.023188114166259766
       },
       {
         "puzzle_id": "medium_5",
         "difficulty": "medium",
         "solved": true,
         "n_violated": 0,
-        "time_s": 0.032526254653930664
+        "time_s": 0.05805468559265137
       },
       {
         "puzzle_id": "medium_6",
         "difficulty": "medium",
         "solved": true,
         "n_violated": 0,
-        "time_s": 0.02192091941833496
+        "time_s": 0.055880069732666016
       },
       {
         "puzzle_id": "medium_7",
         "difficulty": "medium",
         "solved": true,
         "n_violated": 0,
-        "time_s": 0.022706270217895508
+        "time_s": 0.09638810157775879
       },
       {
         "puzzle_id": "medium_8",
         "difficulty": "medium",
         "solved": true,
         "n_violated": 0,
-        "time_s": 0.18485546112060547
+        "time_s": 0.008772134780883789
       },
       {
         "puzzle_id": "medium_9",
         "difficulty": "medium",
         "solved": true,
         "n_violated": 0,
-        "time_s": 0.027225017547607422
+        "time_s": 0.04111766815185547
       },
       {
         "puzzle_id": "hard_0",
         "difficulty": "hard",
         "solved": true,
         "n_violated": 0,
-        "time_s": 0.09070491790771484
+        "time_s": 0.04323101043701172
       },
       {
         "puzzle_id": "hard_1",
         "difficulty": "hard",
         "solved": true,
         "n_violated": 0,
-        "time_s": 0.029363155364990234
+        "time_s": 0.10192394256591797
       },
       {
         "puzzle_id": "hard_2",
         "difficulty": "hard",
         "solved": true,
         "n_violated": 0,
-        "time_s": 0.1739513874053955
+        "time_s": 0.21028637886047363
       },
       {
         "puzzle_id": "hard_3",
         "difficulty": "hard",
         "solved": true,
         "n_violated": 0,
-        "time_s": 0.0614778995513916
+        "time_s": 0.17441201210021973
       },
       {
         "puzzle_id": "hard_4",
         "difficulty": "hard",
         "solved": true,
         "n_violated": 0,
-        "time_s": 0.10681700706481934
+        "time_s": 0.35631895065307617
       },
       {
         "puzzle_id": "hard_5",
         "difficulty": "hard",
         "solved": true,
         "n_violated": 0,
-        "time_s": 0.14708566665649414
+        "time_s": 0.14902043342590332
       },
       {
         "puzzle_id": "hard_6",
         "difficulty": "hard",
         "solved": true,
         "n_violated": 0,
-        "time_s": 0.4226417541503906
+        "time_s": 0.07962441444396973
       },
       {
         "puzzle_id": "hard_7",
         "difficulty": "hard",
         "solved": true,
         "n_violated": 0,
-        "time_s": 0.08638858795166016
+        "time_s": 0.15462756156921387
       },
       {
         "puzzle_id": "hard_8",
         "difficulty": "hard",
         "solved": true,
         "n_violated": 0,
-        "time_s": 0.0853116512298584
+        "time_s": 0.00844264030456543
       },
       {
         "puzzle_id": "hard_9",
         "difficulty": "hard",
         "solved": true,
         "n_violated": 0,
-        "time_s": 0.08922576904296875
+        "time_s": 0.16383743286132812
       },
       {
         "puzzle_id": "extreme_0",
         "difficulty": "extreme",
         "solved": true,
         "n_violated": 0,
-        "time_s": 0.0462801456451416
+        "time_s": 0.06401515007019043
       },
       {
         "puzzle_id": "extreme_1",
         "difficulty": "extreme",
         "solved": true,
         "n_violated": 0,
-        "time_s": 0.014429807662963867
+        "time_s": 0.11576175689697266
       },
       {
         "puzzle_id": "extreme_2",
         "difficulty": "extreme",
         "solved": true,
         "n_violated": 0,
-        "time_s": 0.24089503288269043
+        "time_s": 0.04936695098876953
       },
       {
         "puzzle_id": "extreme_3",
         "difficulty": "extreme",
         "solved": true,
         "n_violated": 0,
-        "time_s": 0.20747804641723633
+        "time_s": 0.3111691474914551
       },
       {
         "puzzle_id": "extreme_4",
         "difficulty": "extreme",
         "solved": true,
         "n_violated": 0,
-        "time_s": 0.08250975608825684
+        "time_s": 0.05630326271057129
       },
       {
         "puzzle_id": "extreme_5",
         "difficulty": "extreme",
         "solved": true,
         "n_violated": 0,
-        "time_s": 0.05224466323852539
+        "time_s": 0.10881829261779785
       },
       {
         "puzzle_id": "extreme_6",
         "difficulty": "extreme",
         "solved": true,
         "n_violated": 0,
-        "time_s": 0.18294072151184082
+        "time_s": 0.057176828384399414
       },
       {
         "puzzle_id": "extreme_7",
         "difficulty": "extreme",
         "solved": true,
         "n_violated": 0,
-        "time_s": 0.2471022605895996
+        "time_s": 0.2127838134765625
       },
       {
         "puzzle_id": "extreme_8",
         "difficulty": "extreme",
         "solved": true,
         "n_violated": 0,
-        "time_s": 0.30902767181396484
+        "time_s": 0.1353297233581543
       },
       {
         "puzzle_id": "extreme_9",
         "difficulty": "extreme",
         "solved": true,
         "n_violated": 0,
-        "time_s": 0.013495683670043945
+        "time_s": 0.20775222778320312
       }
     ],
     "parallel_tempering_tuned": [
       {
         "puzzle_id": "easy_0",
         "difficulty": "easy",
-        "solved": false,
-        "n_violated": 4,
-        "swap_acceptance_rate": 0.8
+        "solved": true,
+        "n_violated": 0,
+        "swap_acceptance_rate": 0.0
       },
       {
         "puzzle_id": "easy_1",
@@ -975,30 +975,30 @@
       {
         "puzzle_id": "easy_2",
         "difficulty": "easy",
-        "solved": true,
-        "n_violated": 0,
-        "swap_acceptance_rate": 0.0
+        "solved": false,
+        "n_violated": 4,
+        "swap_acceptance_rate": 0.815
       },
       {
         "puzzle_id": "easy_3",
         "difficulty": "easy",
-        "solved": false,
-        "n_violated": 5,
-        "swap_acceptance_rate": 0.66
+        "solved": true,
+        "n_violated": 0,
+        "swap_acceptance_rate": 0.0
       },
       {
         "puzzle_id": "easy_4",
         "difficulty": "easy",
-        "solved": false,
-        "n_violated": 4,
-        "swap_acceptance_rate": 0.8
+        "solved": true,
+        "n_violated": 0,
+        "swap_acceptance_rate": 0.0
       },
       {
         "puzzle_id": "easy_5",
         "difficulty": "easy",
-        "solved": true,
-        "n_violated": 0,
-        "swap_acceptance_rate": 0.0
+        "solved": false,
+        "n_violated": 6,
+        "swap_acceptance_rate": 0.74
       },
       {
         "puzzle_id": "easy_6",
@@ -1019,7 +1019,7 @@
         "difficulty": "easy",
         "solved": true,
         "n_violated": 0,
-        "swap_acceptance_rate": 0.0
+        "swap_acceptance_rate": 0.8
       },
       {
         "puzzle_id": "easy_9",
@@ -1032,211 +1032,211 @@
         "puzzle_id": "medium_0",
         "difficulty": "medium",
         "solved": false,
-        "n_violated": 6,
-        "swap_acceptance_rate": 0.778
+        "n_violated": 5,
+        "swap_acceptance_rate": 0.71
       },
       {
         "puzzle_id": "medium_1",
         "difficulty": "medium",
-        "solved": false,
-        "n_violated": 6,
-        "swap_acceptance_rate": 0.762
+        "solved": true,
+        "n_violated": 0,
+        "swap_acceptance_rate": 0.6
       },
       {
         "puzzle_id": "medium_2",
         "difficulty": "medium",
         "solved": false,
-        "n_violated": 8,
-        "swap_acceptance_rate": 0.658
+        "n_violated": 6,
+        "swap_acceptance_rate": 0.778
       },
       {
         "puzzle_id": "medium_3",
         "difficulty": "medium",
-        "solved": false,
-        "n_violated": 6,
-        "swap_acceptance_rate": 0.718
+        "solved": true,
+        "n_violated": 0,
+        "swap_acceptance_rate": 0.0
       },
       {
         "puzzle_id": "medium_4",
         "difficulty": "medium",
-        "solved": false,
-        "n_violated": 7,
-        "swap_acceptance_rate": 0.714
+        "solved": true,
+        "n_violated": 0,
+        "swap_acceptance_rate": 0.0
       },
       {
         "puzzle_id": "medium_5",
         "difficulty": "medium",
-        "solved": false,
-        "n_violated": 8,
-        "swap_acceptance_rate": 0.734
+        "solved": true,
+        "n_violated": 0,
+        "swap_acceptance_rate": 0.8162162162162162
       },
       {
         "puzzle_id": "medium_6",
         "difficulty": "medium",
-        "solved": true,
-        "n_violated": 0,
-        "swap_acceptance_rate": 0.7894736842105263
+        "solved": false,
+        "n_violated": 7,
+        "swap_acceptance_rate": 0.712
       },
       {
         "puzzle_id": "medium_7",
         "difficulty": "medium",
         "solved": false,
-        "n_violated": 8,
-        "swap_acceptance_rate": 0.676
+        "n_violated": 6,
+        "swap_acceptance_rate": 0.692
       },
       {
         "puzzle_id": "medium_8",
         "difficulty": "medium",
         "solved": false,
-        "n_violated": 5,
-        "swap_acceptance_rate": 0.704
+        "n_violated": 6,
+        "swap_acceptance_rate": 0.688
       },
       {
         "puzzle_id": "medium_9",
         "difficulty": "medium",
-        "solved": false,
-        "n_violated": 6,
-        "swap_acceptance_rate": 0.71
+        "solved": true,
+        "n_violated": 0,
+        "swap_acceptance_rate": 0.84
       },
       {
         "puzzle_id": "hard_0",
         "difficulty": "hard",
         "solved": false,
         "n_violated": 6,
-        "swap_acceptance_rate": 0.749
+        "swap_acceptance_rate": 0.701
       },
       {
         "puzzle_id": "hard_1",
-        "difficulty": "hard",
-        "solved": true,
-        "n_violated": 0,
-        "swap_acceptance_rate": 0.7741935483870968
-      },
-      {
-        "puzzle_id": "hard_2",
         "difficulty": "hard",
         "solved": false,
         "n_violated": 6,
         "swap_acceptance_rate": 0.759
       },
       {
+        "puzzle_id": "hard_2",
+        "difficulty": "hard",
+        "solved": false,
+        "n_violated": 7,
+        "swap_acceptance_rate": 0.713
+      },
+      {
         "puzzle_id": "hard_3",
         "difficulty": "hard",
         "solved": false,
         "n_violated": 6,
-        "swap_acceptance_rate": 0.778
+        "swap_acceptance_rate": 0.785
       },
       {
         "puzzle_id": "hard_4",
         "difficulty": "hard",
         "solved": false,
         "n_violated": 6,
-        "swap_acceptance_rate": 0.788
+        "swap_acceptance_rate": 0.782
       },
       {
         "puzzle_id": "hard_5",
         "difficulty": "hard",
         "solved": false,
         "n_violated": 6,
-        "swap_acceptance_rate": 0.731
+        "swap_acceptance_rate": 0.817
       },
       {
         "puzzle_id": "hard_6",
         "difficulty": "hard",
         "solved": false,
-        "n_violated": 6,
-        "swap_acceptance_rate": 0.763
+        "n_violated": 7,
+        "swap_acceptance_rate": 0.739
       },
       {
         "puzzle_id": "hard_7",
         "difficulty": "hard",
-        "solved": true,
-        "n_violated": 0,
-        "swap_acceptance_rate": 0.8
+        "solved": false,
+        "n_violated": 7,
+        "swap_acceptance_rate": 0.742
       },
       {
         "puzzle_id": "hard_8",
         "difficulty": "hard",
         "solved": false,
-        "n_violated": 6,
-        "swap_acceptance_rate": 0.765
+        "n_violated": 8,
+        "swap_acceptance_rate": 0.721
       },
       {
         "puzzle_id": "hard_9",
         "difficulty": "hard",
-        "solved": true,
-        "n_violated": 0,
-        "swap_acceptance_rate": 0.8068027210884354
+        "solved": false,
+        "n_violated": 7,
+        "swap_acceptance_rate": 0.757
       },
       {
         "puzzle_id": "extreme_0",
         "difficulty": "extreme",
         "solved": true,
         "n_violated": 0,
-        "swap_acceptance_rate": 0.78
+        "swap_acceptance_rate": 0.0
       },
       {
         "puzzle_id": "extreme_1",
         "difficulty": "extreme",
         "solved": true,
         "n_violated": 0,
-        "swap_acceptance_rate": 0.8179487179487179
+        "swap_acceptance_rate": 0.9333333333333333
       },
       {
         "puzzle_id": "extreme_2",
         "difficulty": "extreme",
         "solved": true,
         "n_violated": 0,
-        "swap_acceptance_rate": 0.7763837638376384
+        "swap_acceptance_rate": 0.0
       },
       {
         "puzzle_id": "extreme_3",
         "difficulty": "extreme",
         "solved": true,
         "n_violated": 0,
-        "swap_acceptance_rate": 0.82
+        "swap_acceptance_rate": 0.7846153846153846
       },
       {
         "puzzle_id": "extreme_4",
         "difficulty": "extreme",
         "solved": true,
         "n_violated": 0,
-        "swap_acceptance_rate": 0.95
+        "swap_acceptance_rate": 0.7810126582278482
       },
       {
         "puzzle_id": "extreme_5",
         "difficulty": "extreme",
-        "solved": false,
-        "n_violated": 6,
-        "swap_acceptance_rate": 0.744
+        "solved": true,
+        "n_violated": 0,
+        "swap_acceptance_rate": 0.8
       },
       {
         "puzzle_id": "extreme_6",
         "difficulty": "extreme",
         "solved": true,
         "n_violated": 0,
-        "swap_acceptance_rate": 0.8072463768115942
+        "swap_acceptance_rate": 0.0
       },
       {
         "puzzle_id": "extreme_7",
         "difficulty": "extreme",
-        "solved": true,
-        "n_violated": 0,
-        "swap_acceptance_rate": 0.852
+        "solved": false,
+        "n_violated": 8,
+        "swap_acceptance_rate": 0.7515
       },
       {
         "puzzle_id": "extreme_8",
         "difficulty": "extreme",
-        "solved": false,
-        "n_violated": 8,
-        "swap_acceptance_rate": 0.741
+        "solved": true,
+        "n_violated": 0,
+        "swap_acceptance_rate": 0.7939024390243903
       },
       {
         "puzzle_id": "extreme_9",
         "difficulty": "extreme",
         "solved": false,
-        "n_violated": 6,
-        "swap_acceptance_rate": 0.736
+        "n_violated": 7,
+        "swap_acceptance_rate": 0.732
       }
     ],
     "exact_cp": [
@@ -1244,244 +1244,244 @@
         "puzzle_id": "easy_0",
         "difficulty": "easy",
         "solved": true,
-        "time_s": 0.0012748241424560547
+        "time_s": 0.000978231430053711
       },
       {
         "puzzle_id": "easy_1",
         "difficulty": "easy",
         "solved": true,
-        "time_s": 0.0012516975402832031
+        "time_s": 0.0009431838989257812
       },
       {
         "puzzle_id": "easy_2",
         "difficulty": "easy",
         "solved": true,
-        "time_s": 0.0012564659118652344
+        "time_s": 0.0009343624114990234
       },
       {
         "puzzle_id": "easy_3",
         "difficulty": "easy",
         "solved": true,
-        "time_s": 0.0012729167938232422
+        "time_s": 0.0009448528289794922
       },
       {
         "puzzle_id": "easy_4",
         "difficulty": "easy",
         "solved": true,
-        "time_s": 0.0012664794921875
+        "time_s": 0.0009362697601318359
       },
       {
         "puzzle_id": "easy_5",
         "difficulty": "easy",
         "solved": true,
-        "time_s": 0.001257181167602539
+        "time_s": 0.0009398460388183594
       },
       {
         "puzzle_id": "easy_6",
         "difficulty": "easy",
         "solved": true,
-        "time_s": 0.0012373924255371094
+        "time_s": 0.0009541511535644531
       },
       {
         "puzzle_id": "easy_7",
         "difficulty": "easy",
         "solved": true,
-        "time_s": 0.001249551773071289
+        "time_s": 0.0009403228759765625
       },
       {
         "puzzle_id": "easy_8",
         "difficulty": "easy",
         "solved": true,
-        "time_s": 0.0012178421020507812
+        "time_s": 0.0009355545043945312
       },
       {
         "puzzle_id": "easy_9",
         "difficulty": "easy",
         "solved": true,
-        "time_s": 0.0012502670288085938
+        "time_s": 0.0009410381317138672
       },
       {
         "puzzle_id": "medium_0",
         "difficulty": "medium",
         "solved": true,
-        "time_s": 0.0021538734436035156
+        "time_s": 0.0016231536865234375
       },
       {
         "puzzle_id": "medium_1",
         "difficulty": "medium",
         "solved": true,
-        "time_s": 0.0021200180053710938
+        "time_s": 0.0016300678253173828
       },
       {
         "puzzle_id": "medium_2",
         "difficulty": "medium",
         "solved": true,
-        "time_s": 0.0021555423736572266
+        "time_s": 0.0016024112701416016
       },
       {
         "puzzle_id": "medium_3",
         "difficulty": "medium",
         "solved": true,
-        "time_s": 0.002467632293701172
+        "time_s": 0.0016357898712158203
       },
       {
         "puzzle_id": "medium_4",
         "difficulty": "medium",
         "solved": true,
-        "time_s": 0.0021774768829345703
+        "time_s": 0.0016393661499023438
       },
       {
         "puzzle_id": "medium_5",
         "difficulty": "medium",
         "solved": true,
-        "time_s": 0.0021762847900390625
+        "time_s": 0.003041982650756836
       },
       {
         "puzzle_id": "medium_6",
         "difficulty": "medium",
         "solved": true,
-        "time_s": 0.002124786376953125
+        "time_s": 0.00162506103515625
       },
       {
         "puzzle_id": "medium_7",
         "difficulty": "medium",
         "solved": true,
-        "time_s": 0.0021600723266601562
+        "time_s": 0.0016131401062011719
       },
       {
         "puzzle_id": "medium_8",
         "difficulty": "medium",
         "solved": true,
-        "time_s": 0.002392292022705078
+        "time_s": 0.005013465881347656
       },
       {
         "puzzle_id": "medium_9",
         "difficulty": "medium",
         "solved": true,
-        "time_s": 0.002142190933227539
+        "time_s": 0.0015804767608642578
       },
       {
         "puzzle_id": "hard_0",
         "difficulty": "hard",
         "solved": true,
-        "time_s": 0.0029413700103759766
+        "time_s": 0.0022897720336914062
       },
       {
         "puzzle_id": "hard_1",
         "difficulty": "hard",
         "solved": true,
-        "time_s": 0.0029070377349853516
+        "time_s": 0.002464771270751953
       },
       {
         "puzzle_id": "hard_2",
         "difficulty": "hard",
         "solved": true,
-        "time_s": 0.007727146148681641
+        "time_s": 0.0023491382598876953
       },
       {
         "puzzle_id": "hard_3",
         "difficulty": "hard",
         "solved": true,
-        "time_s": 0.0029497146606445312
+        "time_s": 0.0021834373474121094
       },
       {
         "puzzle_id": "hard_4",
         "difficulty": "hard",
         "solved": true,
-        "time_s": 0.003223419189453125
+        "time_s": 0.0027115345001220703
       },
       {
         "puzzle_id": "hard_5",
         "difficulty": "hard",
         "solved": true,
-        "time_s": 0.0045545101165771484
+        "time_s": 0.006326436996459961
       },
       {
         "puzzle_id": "hard_6",
         "difficulty": "hard",
         "solved": true,
-        "time_s": 0.0057315826416015625
+        "time_s": 0.0060122013092041016
       },
       {
         "puzzle_id": "hard_7",
         "difficulty": "hard",
         "solved": true,
-        "time_s": 0.0029561519622802734
+        "time_s": 0.0022444725036621094
       },
       {
         "puzzle_id": "hard_8",
         "difficulty": "hard",
         "solved": true,
-        "time_s": 0.0034792423248291016
+        "time_s": 0.0027730464935302734
       },
       {
         "puzzle_id": "hard_9",
         "difficulty": "hard",
         "solved": true,
-        "time_s": 0.002859354019165039
+        "time_s": 0.002593994140625
       },
       {
         "puzzle_id": "extreme_0",
         "difficulty": "extreme",
         "solved": true,
-        "time_s": 0.00342559814453125
+        "time_s": 0.0032808780670166016
       },
       {
         "puzzle_id": "extreme_1",
         "difficulty": "extreme",
         "solved": true,
-        "time_s": 0.0034911632537841797
+        "time_s": 0.002969980239868164
       },
       {
         "puzzle_id": "extreme_2",
         "difficulty": "extreme",
         "solved": true,
-        "time_s": 0.0034151077270507812
+        "time_s": 0.0028052330017089844
       },
       {
         "puzzle_id": "extreme_3",
         "difficulty": "extreme",
         "solved": true,
-        "time_s": 0.004530906677246094
+        "time_s": 0.03749585151672363
       },
       {
         "puzzle_id": "extreme_4",
         "difficulty": "extreme",
         "solved": true,
-        "time_s": 0.003697633743286133
+        "time_s": 0.002966165542602539
       },
       {
         "puzzle_id": "extreme_5",
         "difficulty": "extreme",
         "solved": true,
-        "time_s": 0.003467559814453125
+        "time_s": 0.0032439231872558594
       },
       {
         "puzzle_id": "extreme_6",
         "difficulty": "extreme",
         "solved": true,
-        "time_s": 0.004954814910888672
+        "time_s": 0.002821207046508789
       },
       {
         "puzzle_id": "extreme_7",
         "difficulty": "extreme",
         "solved": true,
-        "time_s": 0.0035877227783203125
+        "time_s": 0.002791881561279297
       },
       {
         "puzzle_id": "extreme_8",
         "difficulty": "extreme",
         "solved": true,
-        "time_s": 0.0040073394775390625
+        "time_s": 0.003612518310546875
       },
       {
         "puzzle_id": "extreme_9",
         "difficulty": "extreme",
         "solved": true,
-        "time_s": 0.007643938064575195
+        "time_s": 0.0029485225677490234
       }
     ]
   },
   "honest_verdict": "complete: p01_sudoku_positive_hardened_solve_rate_1_00_beats_fair_ar_baseline",
-  "duration_s": 1308.8491859436035
+  "duration_s": 1238.2840640544891
 }
