@@ -7269,3 +7269,4 @@ web search: https://docs.garak.ai/garak/examples/pr |
 | 2026-05-31 14:32 UTC | Plan milestone 2026.05.326 | OK | 11 tasks proposed |
 | 2026-05-31 14:35 UTC | Milestone 2026.05.326 activated | OK | 11 tasks queued |
 | 2026-05-31 14:40 UTC | Archive milestone .325 honestly and activate .326 | OK | 81 passed in 4.32s |
+| 2026-05-31 14:51 UTC | P0.1 Route-1 GRAPH-COLORING CLEAN RE-RUN (CPU, ope | OK | 81 passed in 4.08s |
