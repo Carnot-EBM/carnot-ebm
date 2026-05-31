@@ -33754,3 +33754,74 @@ milestones:
     title: Capstone v323
     deliverable: results/experiment_3514_capstone_v323.json
     result: OK (conductor)
+- id: 2026.05.324
+  title: 'Depth-Over-Breadth X: Harden the P0.1 Sudoku Positive into a Defensible Result (fair LLM-AR baseline + parallel-tempering
+    diagnosis + harder tiers) + Generalize It to a SECOND CSP (graph-coloring / SAT / Countdown) + FIX the Route-2 Energy-Reranker
+    Collapse (break the consensus trap) + De-Flag the Step-to-Final Gap (distinct fields + shuffle control) + Find the Self-Learning
+    Rule That Actually Deploys (conservative-default + adaptive-online beta) + G2 Drift-Verify'
+  doc: openspec/change-proposals/research-roadmap-vNEXT.md
+  completed: '2026-05-31'
+  finding: See conductor log for per-experiment results.
+  tasks:
+  - id: exp3515-archive-v323-activate-v324
+    title: Archive milestone .323 honestly and activate .324
+    deliverable: results/experiment_3515_archive_v323_activate_v324.json
+    result: OK (conductor)
+  - id: exp3516-p01-level3-corpus-extend-to-80-v5-optional
+    title: "P0.1 OPTIONAL (non-blocking) \u2014 extend the LEVEL-3 in-band corpus from n=49 toward n>=80 (resume the existing\
+      \ exp3506 builder, sonnet, per-problem flush, hard 18-min budget)"
+    deliverable: results/experiment_3516_p01_level3_corpus_extend_to_80_v5_optional.json
+    result: OK (conductor)
+  - id: exp3517-p01-sudoku-harden-fair-ar-baseline-pt-diagnosis-v3
+    title: "P0.1 Route 1 HARDENING (PRIMARY, CPU) \u2014 scale the Sudoku positive to >=40 puzzles across harder tiers, add\
+      \ a FAIR AR baseline (literature LLM-on-Sudoku + optional in-house SOTA-GGUF LLM-AR), and DIAGNOSE the parallel-tempering\
+      \ underperformance; solve-rate by difficulty + optimizer variant + time-to-solution vs AR on the solved subset"
+    deliverable: results/experiment_3517_p01_sudoku_harden_fair_ar_baseline_pt_diagnosis_v3.json
+    result: OK (conductor)
+  - id: exp3518-p01-second-csp-energy-vs-ar-generalization-v1
+    title: "P0.1 Route 1 GENERALIZATION (CPU) \u2014 the energy-global-inference-vs-AR + exact-baseline + solve-rate protocol\
+      \ on a SECOND CSP (graph coloring / Boolean SAT / Countdown), to show the Sudoku positive is a general property and\
+      \ not Sudoku-overfit"
+    deliverable: results/experiment_3518_p01_second_csp_energy_vs_ar_generalization_v1.json
+    result: OK (conductor)
+  - id: exp3519-p01-route2-energy-reranker-fix-consensus-trap-v10
+    title: "P0.1 Route 2 SUBSTRATE FIX (cached) \u2014 fix the degenerate energy reranker (break the consensus trap so it\
+      \ makes distinct selections, flip_count>0), then re-run the energy-vs-SC crux on the level-3 in-band corpus, tautology-clean\
+      \ with a runtime distinct-from-SC assert"
+    deliverable: results/experiment_3519_p01_route2_energy_reranker_fix_consensus_trap_v10.json
+    result: OK (conductor)
+  - id: exp3520-fover-step-to-final-gap-deflag-verify-v2
+    title: "De-flag + verify the FoVer step-to-final gap closure \u2014 re-run the aggregation sweep with DISTINCT field names\
+      \ (no reference==measured) + a SHUFFLE-LABEL negative control to confirm the 97% min-aggregation gap closure is a real\
+      \ mechanism, not a label-correlated tautology"
+    deliverable: results/experiment_3520_fover_step_to_final_gap_deflag_verify_v2.json
+    result: OK (conductor)
+  - id: exp3521-fr11-adaptive-online-beta-robust-default-v1
+    title: "FR-11 robust self-learning default \u2014 validate the conservative-default beta across MANY fresh grounding configs\
+      \ AND test an ADAPTIVE ONLINE beta (measure lambda_min online, clamp to a safety floor) to find the rule that prevents\
+      \ depth-N>=200 collapse where the static offline law did not (mandatory continuous self-learning + P0.2)"
+    deliverable: results/experiment_3521_fr11_adaptive_online_beta_robust_default_v1.json
+    result: OK (conductor)
+  - id: exp3522-fover-g2-regression-verify-external-ask-refresh-v4
+    title: "FoVer G2 \u2014 clean-room regression-verify the self-contained package (drift check after .324 changes) + keep\
+      \ the one-click external-ask current (no push, no CI trigger, G2 stays operator-gated)"
+    deliverable: results/experiment_3522_fover_g2_regression_verify_external_ask_refresh_v4.json
+    result: OK (conductor)
+  - id: exp3523-kv260-terminal-latency-transcript-v10
+    title: "KV260 terminal board-level latency transcript (drive to terminal, then freeze) \u2014 SSH precondition"
+    deliverable: results/experiment_3523_kv260_terminal_latency_transcript_v10.json
+    result: OK (conductor)
+  - id: exp3524-polarfire-opportunistic-reachability-audit-v10
+    title: PolarFire opportunistic reachability + continuity audit (no terminal mandate; tautology-de-flagged distinct fields)
+    deliverable: results/experiment_3524_polarfire_opportunistic_reachability_audit_v10.json
+    result: OK (conductor)
+  - id: exp3525-g-gate-status-synthesis-v324
+    title: "G1-G4 gate-status synthesis v324 (UNGATED, cascade-proof, seed-fixed) \u2014 hardened Sudoku solve-rate + fair\
+      \ AR baseline / second-CSP generalization / fixed Route-2 reranker flip-count+delta / de-flagged step-to-final gap /\
+      \ robust self-learning rule / G2 regression verdicts"
+    deliverable: results/experiment_3525_g_gate_status_synthesis_v324.json
+    result: OK (conductor)
+  - id: exp3526-capstone-v324
+    title: Capstone v324
+    deliverable: results/experiment_3526_capstone_v324.json
+    result: OK (conductor)
