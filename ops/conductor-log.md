@@ -7294,3 +7294,4 @@ web search: https://docs.garak.ai/garak/examples/pr |
 | 2026-05-31 17:05 UTC | Plan next milestone | FAIL | Gemini CLI error: Wall-clock+idle timeout after 1201s (1201s silence). Last ou |
 | 2026-05-31 17:07 UTC | Capstone v326 | GATE_BLOCK | Pre-emptive skip: upstream retired (exp3548-g-gate-status-synthesis-v326) |
 | 2026-05-31 17:07 UTC | Milestone 2026.05.327 activated | OK | 11 tasks queued |
+| 2026-05-31 17:11 UTC | Archive milestone .326 honestly and activate .327 | OK | 81 passed in 3.85s |
