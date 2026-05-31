@@ -7192,3 +7192,4 @@ web search: https://docs.garak.ai/garak/examples/pr |
 | 2026-05-31 00:19 UTC | Capstone v321 | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp3491-g-gate-status-synthesis-v321.gate_ |
 | 2026-05-31 00:51 UTC | Plan milestone 2026.05.322 | OK | 11 tasks proposed |
 | 2026-05-31 00:53 UTC | Milestone 2026.05.322 activated | OK | 11 tasks queued |
+| 2026-05-31 00:59 UTC | Archive milestone .321 honestly and activate .322 | OK | 81 passed in 3.69s |
