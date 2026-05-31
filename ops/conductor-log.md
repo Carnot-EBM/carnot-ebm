@@ -7328,3 +7328,4 @@ web search: https://docs.garak.ai/garak/examples/pr |
 | 2026-05-31 21:59 UTC | Milestone 2026.05.329 activated | OK | 11 tasks queued |
 | 2026-05-31 22:02 UTC | Archive milestone .328 honestly and activate .329  | FAIL | No file changes produced |
 | 2026-05-31 22:07 UTC | Archive milestone .328 honestly and activate .329  | OK | 83 passed in 3.57s |
+| 2026-05-31 22:17 UTC | Verifier ensemble vs CODE BUGS — error-detection A | OK | 83 passed in 7.84s |
