@@ -4861,3 +4861,9 @@ The critical path for milestone .250:
 - theme: Operational efficiency and hardware utilization tracking
 - key result: No experiments were completed in this milestone (no commits found).
 - acceptance: 0/0 criteria met
+
+### Milestone 2026.05.324
+- exp_range: no data available this milestone
+- theme: Operational retrospective for an empty milestone-scoped timing window
+- key result: No experiment commits were found since activation, so compute-bound and slowest-experiment analysis is unavailable.
+- acceptance: no data available this milestone

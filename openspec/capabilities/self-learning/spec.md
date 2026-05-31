@@ -10161,3 +10161,37 @@ beta >= f(lambda_min) with safety margin.
 **Given** three-arm results including fixed-conservative Arm C (beta=0.5)
 **When** true_accuracy is compared between Arm A and Arm C
 **Then** mean(accuracy_A - accuracy_C) >= -0.001 (law not over-regularizing)
+
+
+## REQ-FR11-AOB-001: Adaptive Online Beta Measurement
+
+**Given** a running FR-11 self-improvement loop
+**When** evaluated at each step
+**Then** lambda_min MUST be measured online using the current trace probability distribution to compute the weighted decision covariance.
+
+**Implementation status:** Implemented (exp3521).
+**Spec traces:** REQ-FR11-AOB-001
+
+## REQ-FR11-AOB-002: Four-Arm Adaptive Deployment Loop
+
+**Given** a verifier ensemble and cached traces
+**When** running the self-learning loop for >=200 iterations
+**Then** it MUST run four arms: Arm A (Adaptive Online), Arm B (beta=0), Arm C (conservative beta=0.5), and Arm D (static offline law).
+
+**Implementation status:** Implemented (exp3521).
+**Spec traces:** REQ-FR11-AOB-002
+
+## REQ-FR11-AOB-003: Adaptive Rule Validated Against Conservative
+
+**Given** the four-arm results
+**When** checked across >=4 fresh configs
+**Then** either the Adaptive Online rule OR the Conservative Default MUST prevent collapse at all configs while Arm B collapses at >=1 config.
+
+**Implementation status:** Implemented (exp3521).
+**Spec traces:** REQ-FR11-AOB-003
+
+### SCENARIO-FR11-AOB-001: Adaptive Rule Robustly Prevents Collapse
+
+**Given** 5 fresh grounding configs
+**When** Arm A runs with beta = clamp(1.8461 * lambda_min_online - 0.3001, 0.0, 0.5)
+**Then** collapse_detected is False at all configs.

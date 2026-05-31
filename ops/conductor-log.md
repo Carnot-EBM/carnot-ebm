@@ -7232,3 +7232,19 @@ web search: https://docs.garak.ai/garak/examples/pr |
 | 2026-05-31 08:52 UTC | P0.1 Route 1 GENERALIZATION (CPU) — the energy-glo | OK | 81 passed in 3.38s |
 | 2026-05-31 09:09 UTC | P0.1 Route 2 SUBSTRATE FIX (cached) — fix the dege | OK | 81 passed in 3.97s |
 | 2026-05-31 09:17 UTC | De-flag + verify the FoVer step-to-final gap closu | OK | 81 passed in 4.14s |
+| 2026-05-31 09:29 UTC | FR-11 robust self-learning default — validate the  | FAIL | Gemini CLI error: Stalled after 600s silence. Last output: Warning: 256-color  |
+| 2026-05-31 09:47 UTC | FR-11 robust self-learning default — validate the  | FAIL | Post-tests failed:  |
+| 2026-05-31 09:49 UTC | FR-11 robust self-learning default — validate the | OK | Deliverable already exists in repo |
+| 2026-05-31 09:49 UTC | FoVer G2 — clean-room regression-verify the self-c | SKIP | Pre-tests failing, self-heal failed:  |
+| 2026-05-31 09:51 UTC | FoVer G2 — clean-room regression-verify the self-c | SKIP | Pre-tests failing, self-heal failed:  |
+| 2026-05-31 09:53 UTC | FoVer G2 — clean-room regression-verify the self-c | SKIP | Pre-tests failing, self-heal failed:  |
+| 2026-05-31 09:55 UTC | KV260 terminal board-level latency transcript (dri | SKIP | Pre-tests failing, self-heal failed:  |
+| 2026-05-31 09:57 UTC | KV260 terminal board-level latency transcript (dri | SKIP | Pre-tests failing, self-heal failed:  |
+| 2026-05-31 10:00 UTC | KV260 terminal board-level latency transcript (dri | SKIP | Pre-tests failing, self-heal failed:  |
+| 2026-05-31 10:02 UTC | PolarFire opportunistic reachability + continuity  | SKIP | Pre-tests failing, self-heal failed:  |
+| 2026-05-31 10:04 UTC | PolarFire opportunistic reachability + continuity  | SKIP | Pre-tests failing, self-heal failed:  |
+| 2026-05-31 10:06 UTC | PolarFire opportunistic reachability + continuity  | SKIP | Pre-tests failing, self-heal failed:  |
+| 2026-05-31 10:08 UTC | G1-G4 gate-status synthesis v324 (UNGATED, cascade | SKIP | Pre-tests failing, self-heal failed:  |
+| 2026-05-31 10:11 UTC | G1-G4 gate-status synthesis v324 (UNGATED, cascade | SKIP | Pre-tests failing, self-heal failed:  |
+| 2026-05-31 10:13 UTC | G1-G4 gate-status synthesis v324 (UNGATED, cascade | SKIP | Pre-tests failing, self-heal failed:  |
+| 2026-05-31 10:15 UTC | Capstone v324 | GATE_BLOCK | Pre-emptive skip: upstream retired (exp3525-g-gate-status-synthesis-v324) |
