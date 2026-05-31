@@ -7263,3 +7263,4 @@ web search: https://docs.garak.ai/garak/examples/pr |
 | 2026-05-31 13:15 UTC | FoVer G2 — clean-room regression-verify the self-c | OK | 81 passed in 4.20s |
 | 2026-05-31 13:24 UTC | KV260 terminal board-level latency transcript (dri | OK | 81 passed in 4.50s |
 | 2026-05-31 13:30 UTC | PolarFire opportunistic reachability + continuity  | OK | 81 passed in 3.86s |
+| 2026-05-31 13:38 UTC | G1-G4 gate-status synthesis v325 (UNGATED, cascade | OK | 81 passed in 4.36s |
