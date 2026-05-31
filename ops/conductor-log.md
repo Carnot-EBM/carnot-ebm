@@ -7211,3 +7211,4 @@ web search: https://docs.garak.ai/garak/examples/pr |
 | 2026-05-31 04:21 UTC | Milestone 2026.05.323 activated | OK | 11 tasks queued |
 | 2026-05-31 04:29 UTC | Archive milestone .322 honestly and activate .323 | OK | 81 passed in 3.40s |
 | 2026-05-31 04:52 UTC | P0.1 Route 1 (PRIMARY, CPU) — REAL combinatorial-o | FAIL | Claude Code error: Wall-clock+idle timeout after 1201s (1201s silence). Last ou |
+| 2026-05-31 04:58 UTC | P0.1 Route 1 (PRIMARY, CPU) — REAL combinatorial-o | FLAGGED | adversarial_verify CRITICAL: TAUTOLOGY — result quarantined, not a clean success |
