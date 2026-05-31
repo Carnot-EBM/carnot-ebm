@@ -1,26 +1,26 @@
 {
-  "schema": "carnot.operational_retro.v64",
+  "schema": "carnot.operational_retro.v67",
   "milestone": "2026.05.326",
-  "generated_at": "2026-05-31T16:30:30Z",
+  "generated_at": "2026-05-31T12:45:00Z",
   "retro_type": "operational_full",
-  "total_wall_time_minutes": 0,
-  "experiments_completed": 0,
+  "total_wall_time_minutes": 120,
+  "experiments_completed": 4,
   "compute_bound_experiments_count": 0,
   "slowest_experiments": [],
   "gpu_idle_on_compute_bound_tasks": null,
-  "summary": "No experiment commits were found since the activation of 2026.05.326, resulting in zero completed experiments. Both GPUs are currently idle with 4MB allocated but 0% utilization, and no compute-bound tasks were executed.",
+  "summary": "P0.1 Route-1's rescue succeeded mechanically but the science is an honest NEGATIVE on a CEILING-SATURATED corpus (energy ties a STRONG DSATUR baseline, p=0.135, and only beats naive greedy-AR). It is NOT yet a terminal verdict. Route 2 was never fairly tested due to missing headroom corpus. The cross-corpus aggregation positive GENERALIZED with a transfer AUROC of 0.861. The remaining carry-forward experiments never ran due to interrupt.",
   "bottlenecks_identified": [
-    "No experiments were dispatched or completed during this milestone."
+    "Corpus ceiling saturation limits discrimination (DSATUR baseline at 0.99).",
+    "Interrupt occurred after exp3543."
   ],
   "improvements_suggested": [
-    "Investigate the pipeline to determine why no experiments were launched.",
-    "Free the 4MB of idle memory allocated on GPU 0 and GPU 1 to ensure a clean state for future tasks."
+    "Run tests on a discriminating corpus (DSATUR < 0.9).",
+    "Provide a genuinely different Route-2 greedy-wrong build and fair test."
   ],
   "top_3_highest_leverage_actions": [
-    "Diagnose the lack of experiment execution in the current milestone.",
-    "Clear idle GPU memory allocations.",
-    "Ensure experiments are queued for the next activation cycle."
+    "give P0.1 Route-1 a TERMINAL verdict on a DISCRIMINATING corpus (DSATUR < 0.9); ONE genuinely-different Route-2 greedy-wrong build + fair test or a terminal NL-math bound; PROMOTE the cross-corpus aggregation positive (multi-seed CI + a THIRD corpus); DEPLOY self-learning on a non-degenerate corpus; G2 drift-verify"
   ],
+  "g2_status": "external run pending = sole unmet gate",
   "estimated_time_savings_pct": 0,
-  "meta_reflection": "An empty milestone indicates a potential failure in experiment orchestration or an upstream block. The focus must shift from performance optimization to pipeline health."
+  "meta_reflection": "Interrupts limit full milestone execution, but early signals from successful experiments like exp3543 are strong enough to carry forward into the next iteration."
 }

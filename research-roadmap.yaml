@@ -19,7 +19,7 @@ milestone_doc: "openspec/change-proposals/research-roadmap-vNEXT.md"
 #   - exp3543 (cross-corpus aggregation): CLEAN POSITIVE, the strongest FRESH result — a FROZEN
 #     aggregation fit on corpus A transfers to a DIFFERENT corpus B at AUROC 0.861 (floor 0.749,
 #     within-corpus 0.906), shuffle collapses 0.496. PROMOTE to a defensible secondary headline:
-#     multi-seed transfer CI + a THIRD corpus (A->{B,C}).
+#     multi-seed transfer CI + a THIRD corpus (A->{{B,C}}).
 #   - The milestone was INTERRUPTED after exp3543: exp3544 (FR-11 non-degenerate deploy), exp3545 (G2),
 #     exp3546/3547 (KV260/PolarFire), exp3548/3549 (synthesis/capstone) NEVER RAN -> carried forward.
 #
@@ -194,8 +194,8 @@ tasks:
         3. OPTIMIZER LADDER (solve-rate per variant): vanilla_descent, tuned geometric SA, K>=20
            SA-restarts, PARALLEL TEMPERING with instrumented swap-acceptance, and an EXACT baseline
            (CP-SAT). PRINT one flushed progress line per sweep — defeats idle-timeout.
-        4. STRONG NON-AR BASELINE: report strong_baseline_solve_rate = best of {DSATUR, tuned
-           SA-restarts, backtracking-with-heuristic} (global) AND strong_baseline_solve_rate_hard_tier —
+        4. STRONG NON-AR BASELINE: report strong_baseline_solve_rate = best of {{DSATUR, tuned
+           SA-restarts, backtracking-with-heuristic}} (global) AND strong_baseline_solve_rate_hard_tier —
            and CONFIRM the HARD-TIER value is < 0.9 (the discriminating condition; the global value may
            be higher if easy tiers saturate). AR baseline: greedy-AR (random/degree ordering).
         5. DE-TAUTOLOGY (carried from exp3540): store EACH measured quantity EXACTLY ONCE — no
@@ -474,11 +474,11 @@ tasks:
 
   # ---- PROMOTE the cross-corpus aggregation positive to a defensible secondary headline ----
   - id: exp3554-fover-step-aggregation-secondary-headline-multiseed-third-corpus-v2
-    operator_override: "2026-05-30 planner (Opus 4.8) under Depth-Over-Breadth: exp3543 (.326, CLEAN) showed the step->final aggregation positive GENERALIZES cross-corpus (a FROZEN aggregation fit on corpus A transfers to a DIFFERENT corpus B at transfer_auroc 0.861, un-aggregated floor 0.749, shuffle 0.496). A single A->B pair is not yet a secondary headline. This task PROMOTES it: multi-seed transfer CI + a THIRD corpus (A->{B,C}) with per-target shuffle controls, so the mechanism is shown corpus-general, not single-pair. Different (multi-seed CI + a third transfer target) = promotion of a confirmed positive to a defensible secondary headline. scope-match vs exp3543/exp3532/exp3520 is the intended aggregation-mechanism continuation."
+    operator_override: "2026-05-30 planner (Opus 4.8) under Depth-Over-Breadth: exp3543 (.326, CLEAN) showed the step->final aggregation positive GENERALIZES cross-corpus (a FROZEN aggregation fit on corpus A transfers to a DIFFERENT corpus B at transfer_auroc 0.861, un-aggregated floor 0.749, shuffle 0.496). A single A->B pair is not yet a secondary headline. This task PROMOTES it: multi-seed transfer CI + a THIRD corpus (A->{{B,C}}) with per-target shuffle controls, so the mechanism is shown corpus-general, not single-pair. Different (multi-seed CI + a third transfer target) = promotion of a confirmed positive to a defensible secondary headline. scope-match vs exp3543/exp3532/exp3520 is the intended aggregation-mechanism continuation."
     prior_failures:
       - experiment_id: exp3543-fover-step-aggregation-cross-corpus-generalize-v1
         verdict: "complete: step_to_final_aggregation_generalizes_cross_corpus_transfer_auroc_08610_secondary_headline_eligible"
-        addressed_by: "exp3543 showed A->B transfer at a single seed/pair (transfer_auroc 0.861). This task adds multi-seed transfer CI (>=5 seeds) on B AND a THIRD corpus C (A->{B,C}) with per-target shuffle controls, so a single-pair artifact is ruled out and the result is a defensible secondary headline. Different (multi-seed CI + a third transfer target) = a promotion of a confirmed positive, not a re-run."
+        addressed_by: "exp3543 showed A->B transfer at a single seed/pair (transfer_auroc 0.861). This task adds multi-seed transfer CI (>=5 seeds) on B AND a THIRD corpus C (A->{{B,C}}) with per-target shuffle controls, so a single-pair artifact is ruled out and the result is a defensible secondary headline. Different (multi-seed CI + a third transfer target) = a promotion of a confirmed positive, not a re-run."
         retire_if_same_verdict: false
     # NOT gated_on anything: cached scoring; reads whatever corpora exist.
     milestone: "2026.05.327"
@@ -498,7 +498,7 @@ tasks:
       (un-aggregated floor 0.749, within-corpus 0.906), shuffle collapsed to 0.496. A single A->B pair
       at a single seed is not yet a secondary headline. This task PROMOTES it to a defensible result:
       multi-seed transfer CI (>=5 seeds) on B AND a THIRD corpus C, so transfer is shown on TWO distinct
-      targets (A->{B,C}) with per-target shuffle controls — ruling out a single-pair artifact. Priors:
+      targets (A->{{B,C}}) with per-target shuffle controls — ruling out a single-pair artifact. Priors:
       arXiv:2510.08049 (PRM survey — aggregation is the bottleneck), arXiv:2506.00027 (math->code PRM
       transfer), arXiv:2505.15960 (FoVer formally-verified PRM transfers OOD), arXiv:2508.01773
       (aggregation functions). Cached scoring -> seconds.
