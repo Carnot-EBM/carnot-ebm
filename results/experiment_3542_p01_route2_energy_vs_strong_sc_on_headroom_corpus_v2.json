@@ -1,0 +1,52 @@
+{
+ "honest_verdict": "complete: blocked_corpus_has_no_selectable_headroom_oracle_le_sc",
+ "inference_substrate": "verifier_ensemble_against_cached_candidates",
+ "corpus_oracle_exceeds_sc": false,
+ "selectable_headroom": 0.0,
+ "reranker_makes_distinct_selections": false,
+ "headroom_corpus_n": 4,
+ "strong_sc_accuracy": null,
+ "plurality_sc_accuracy": null,
+ "step_aggregation_energy_accuracy": null,
+ "pessimistic_bon_energy_accuracy": null,
+ "mob_accuracy": null,
+ "best_condition": null,
+ "flip_count_best_vs_strong_sc": 0,
+ "flips_correct_best": 0,
+ "flips_incorrect_best": 0,
+ "net_correctness_gain_best": 0,
+ "delta_best_vs_strong_sc": null,
+ "paired_significance": {
+  "mcnemar_p": 1.0,
+  "bootstrap_ci95": [
+   0.0,
+   0.0
+  ]
+ },
+ "random_seed": 1650656118,
+ "reproducibility_checksum": "f61a41c7d4355ac0",
+ "duration_s": 1.0,
+ "field_provenance": {
+  "honest_verdict": "complete:/success:/passed:/shipped_ prefix.",
+  "inference_substrate": "verifier_ensemble_against_cached_candidates",
+  "corpus_oracle_exceeds_sc": "boolean: the corpus has selectable headroom (oracle>SC) \u2014 the precondition that makes this test informative.",
+  "selectable_headroom": "oracle - SC on the scored corpus \u2014 the room a reranker has to win.",
+  "reranker_makes_distinct_selections": "boolean: the reranker's selection array differs from SC on >=1 problem \u2014 the non-degeneracy de-flag.",
+  "headroom_corpus_n": "held-out problems scored (>=40).",
+  "strong_sc_accuracy": "ranked-voting SC accuracy (held-out) \u2014 the STRONG control the energy reranker must beat, reported ONCE.",
+  "plurality_sc_accuracy": "plurality majority vote (held-out) \u2014 the weaker control, for context.",
+  "step_aggregation_energy_accuracy": "exp3520's step->final aggregation as the reranker scorer (DISTINCT from SC).",
+  "pessimistic_bon_energy_accuracy": "pessimistic-BoN energy \u2014 targets exp3519's wrong-flip failure mode.",
+  "mob_accuracy": "MoB bootstrapped-mode selection \u2014 the strong non-energy alternative.",
+  "best_condition": "the energy condition with the highest held-out accuracy.",
+  "flip_count_best_vs_strong_sc": "problems where the best condition differs from the STRONG SC \u2014 the tautology-clean primary signal; MUST be > 0.",
+  "flips_correct_best": "flips that became CORRECT (the win mechanism).",
+  "flips_incorrect_best": "flips that became WRONG (the cost).",
+  "net_correctness_gain_best": "flips_correct - flips_incorrect \u2014 the honest net effect.",
+  "delta_best_vs_strong_sc": "best condition minus the STRONG SC at matched compute \u2014 THE headline delta.",
+  "paired_significance": "McNemar exact p + paired bootstrap CI95 for the best-condition delta vs the STRONG SC.",
+  "random_seed": "determinism; CONTENT-DERIVED, not the experiment number.",
+  "reproducibility_checksum": "content hash of corpus + reranker config + split + seed.",
+  "duration_s": "cached scoring + small-model training; 1s floor (no live model)."
+ }
+}

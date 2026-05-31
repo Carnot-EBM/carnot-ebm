@@ -3347,3 +3347,15 @@ P0.1 is the existential question: "does energy-based selection beat majority-vot
 - SCENARIO-AR-050-02: Self-consistency band classification — majority-vote SC computed over sampled answers; in_headroom_band returns True iff SC in [0.40, 0.70].
 - SCENARIO-AR-050-03: Per-step reasoning traces captured — each generation row carries a parsed list of reasoning paragraphs.
 - SCENARIO-AR-050-04: Resume skips completed problems — completed_problem_ids reads the JSONL and returns the set of problem_id values already written.
+
+### REQ-AUTO-015: P0.1 Route 2 Headroom Corpus (Greedy-Wrong Construction)
+
+The system shall construct a selectable-headroom corpus for Route 2 evaluation by intentionally selecting for problems where the greedy (temp=0) answer is incorrect, but at least one of $k \ge 16$ sampled candidates is correct. This guarantees headroom by construction, meaning the oracle accuracy strictly exceeds both greedy and self-consistency (majority-vote) accuracy.
+
+**Rationale:**
+Previous attempts to build a headroom corpus via difficulty filtering (MATH L4-5) yielded near-optimal self-consistency (SC) accuracy, where the correct answer was usually the most likely outcome, leaving no headroom for energy-based selection to improve upon. By filtering for "greedy-wrong and recoverable" problems, the correct answer is guaranteed to be a minority among the samples, creating a strict gap where oracle > SC.
+
+**Scenarios:**
+- SCENARIO-AR-051-01: Headroom condition correctly identified — `has_selectable_headroom(record)` returns True iff the greedy answer is wrong AND at least one sampled answer is correct.
+- SCENARIO-AR-051-02: Oracle strictly exceeds SC — `compute_corpus_stats` returns `oracle_exceeds_sc = True` when the oracle accuracy is strictly greater than SC accuracy.
+- SCENARIO-AR-051-03: Artifact reports required headroom bounds — the deliverable JSON captures greedy, SC, and oracle accuracies, and asserts selectable_headroom > 0.
