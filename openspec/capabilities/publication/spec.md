@@ -99,6 +99,10 @@ It MUST recompile `docs/arxiv-paper/main.pdf`, repack
 `results/carnot-arxiv-v5.tar.gz`, and emit the required closed-set
 `honest_verdict`.
 
+### REQ-PUBLISH-007: G-Gate Status Synthesis
+
+The G-gate synthesis script MUST aggregate the findings of `publication_gate.py` with the verifier cross-domain synthesis. The script MUST evaluate `publication_gate.py --json` to get the G1-G4 status, `paper_ready`, and `unmet_gates`. It MUST also synthesize the `verifier_generalization_scope` from the verifier cross-domain synthesis experiment (e.g., experiment 3576). The script MUST record `p01_status` as `honest-negative`. It MUST NOT cite any artifact that is flagged adversarial (e.g., experiment 3574). It MUST record `cited_upstream_artifacts` as a list of valid experiment artifacts. The resulting JSON MUST have an `honest_verdict` with the `complete: g_gate_synthesis_v329_paper_ready_{bool}_verifier_generalization_{scope}` prefix.
+
 ## Scenarios
 
 ### SCENARIO-PUBLISH-001: All Headline Numbers Have Live-GPU Provenance
@@ -148,6 +152,12 @@ AND the deliverable JSON contains exact manual arXiv upload steps
 **Given** the position paper source and Exp 1165/1166 result artifacts exist
 AND Section 7 contains the four Phase 4 active-inference comparison
 subsections
+
+### SCENARIO-PUBLISH-007: G-Gate Status Synthesis Complete
+
+**Given** publication gate is ready and verifier cross-domain synthesis artifacts are available
+**When** the G-gate status synthesis script runs
+**Then** the script executes `publication_gate.py`, excludes flagged adversarial artifacts, and emits a correctly-formatted JSON with all required fields.
 **When** the exp1167 Phase 4 paper-revision runner executes
 **Then** `docs/arxiv-paper/main.pdf` is recompiled
 AND `results/carnot-arxiv-v5.tar.gz` is verified
