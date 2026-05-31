@@ -28,5 +28,14 @@
     "classification": "REAL_BUG",
     "rationale": "GATE_PASSED_WITHOUT_DATA indicates missing metrics. TAUTOLOGY is a false positive. IMPLAUSIBLE_PERFECT requires verification.",
     "follow_up_action": "Fix exp2110 metric extraction and re-evaluate."
-  }
+  },
+  "flagged_adversarial": true,
+  "corrigendum_pending": [
+    {
+      "kind": "GATE_PASSED_WITHOUT_DATA",
+      "severity": "critical",
+      "detail": "acceptance_gate_passed=true but these fields are null/zero: baseline_violation_rate=0, violation_rate=0"
+    }
+  ],
+  "corrigendum_note": "backfill_stamps: flagged_adversarial added by adversarial_verify.py --backfill (completion-gate backstop). Excluded from headline / capstone aggregation."
 }

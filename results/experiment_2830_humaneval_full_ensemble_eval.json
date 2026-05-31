@@ -162,5 +162,14 @@
     "production_minus_peer_best": null,
     "peer_best_pass_at_1": null
   },
-  "methodology_note": "Blocked before live HumanEval inference, code execution, or repair because required resources were missing: cuda, hf_openai_humaneval, qwen36_gguf_cache. No pass@1, AUROC, candidate, execution, or ensemble metrics were inferred."
+  "methodology_note": "Blocked before live HumanEval inference, code execution, or repair because required resources were missing: cuda, hf_openai_humaneval, qwen36_gguf_cache. No pass@1, AUROC, candidate, execution, or ensemble metrics were inferred.",
+  "flagged_adversarial": true,
+  "corrigendum_pending": [
+    {
+      "kind": "DURATION_TOO_SHORT",
+      "severity": "critical",
+      "detail": "duration_s=0.9537258148193359 but artifact references compute-bound markers (GGUF / CUDA / live model). Loading and running a real model takes >=60.0s minimum; this completed too fast to have invoked the model."
+    }
+  ],
+  "corrigendum_note": "backfill_stamps: flagged_adversarial added by adversarial_verify.py --backfill (completion-gate backstop). Excluded from headline / capstone aggregation."
 }

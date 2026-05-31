@@ -349,5 +349,14 @@
       "response_hash": "99466825704cda491d78ed38a1e57aa4bd03f98f63bcf717a4e8fb087ad2b37d",
       "transcript_sha256": "ad13bf382b1321e1a96d00bc176c54cc67896bc912251ec20c598e80b9057258"
     }
-  ]
+  ],
+  "flagged_adversarial": true,
+  "corrigendum_pending": [
+    {
+      "kind": "DURATION_TOO_SHORT",
+      "severity": "critical",
+      "detail": "duration_s=10.590346 but artifact references compute-bound markers (GGUF / CUDA / live model). Loading and running a real model takes >=60.0s minimum; this completed too fast to have invoked the model."
+    }
+  ],
+  "corrigendum_note": "backfill_stamps: flagged_adversarial added by adversarial_verify.py --backfill (completion-gate backstop). Excluded from headline / capstone aggregation."
 }

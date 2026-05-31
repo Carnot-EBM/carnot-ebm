@@ -19,5 +19,14 @@
   "mean_latency_s": 0.0,
   "per_question_latencies": [],
   "honest_verdict": "gpu_required",
-  "blocked_reason": "LiveGPUGate: CARNOT_FORCE_LIVE not set \u2014 source scripts/session_startup.sh before running GPU experiments"
+  "blocked_reason": "LiveGPUGate: CARNOT_FORCE_LIVE not set \u2014 source scripts/session_startup.sh before running GPU experiments",
+  "flagged_adversarial": true,
+  "corrigendum_pending": [
+    {
+      "kind": "DURATION_TOO_SHORT",
+      "severity": "critical",
+      "detail": "duration_s=0.0 but artifact references compute-bound markers (GGUF / CUDA / live model). Loading and running a real model takes >=60.0s minimum; this completed too fast to have invoked the model."
+    }
+  ],
+  "corrigendum_note": "backfill_stamps: flagged_adversarial added by adversarial_verify.py --backfill (completion-gate backstop). Excluded from headline / capstone aggregation."
 }

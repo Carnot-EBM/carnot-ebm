@@ -361,5 +361,14 @@
   "reproducibility_checksum": "3001f8974ab79ce398d9c14bbe91c466dc06f30382d555085e621014f868806b",
   "schema": "carnot.humaneval_full_ensemble_eval.exp2838",
   "state_files_restored_sha_match": true,
-  "vanilla_qwen36_pass_at_1": null
+  "vanilla_qwen36_pass_at_1": null,
+  "flagged_adversarial": true,
+  "corrigendum_pending": [
+    {
+      "kind": "DURATION_TOO_SHORT",
+      "severity": "critical",
+      "detail": "duration_s=7.491755485534668 but artifact references compute-bound markers (GGUF / CUDA / live model). Loading and running a real model takes >=60.0s minimum; this completed too fast to have invoked the model."
+    }
+  ],
+  "corrigendum_note": "backfill_stamps: flagged_adversarial added by adversarial_verify.py --backfill (completion-gate backstop). Excluded from headline / capstone aggregation."
 }

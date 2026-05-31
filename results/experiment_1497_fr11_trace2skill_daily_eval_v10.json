@@ -56,5 +56,14 @@
     ".venv/bin/coverage run --include='*/python/carnot/reporting/fr11_trace2skill_daily_eval.py' -m pytest tests/python/test_fr11_trace2skill_daily_eval.py -q --no-cov -n 0",
     ".venv/bin/coverage report --fail-under=100 -m python/carnot/reporting/fr11_trace2skill_daily_eval.py"
   ],
-  "trace2skill_cases_evaluated": 24
+  "trace2skill_cases_evaluated": 24,
+  "flagged_adversarial": true,
+  "corrigendum_pending": [
+    {
+      "kind": "DURATION_TOO_SHORT",
+      "severity": "critical",
+      "detail": "duration_s=0.002 but artifact references compute-bound markers (GGUF / CUDA / live model). Loading and running a real model takes >=60.0s minimum; this completed too fast to have invoked the model."
+    }
+  ],
+  "corrigendum_note": "backfill_stamps: flagged_adversarial added by adversarial_verify.py --backfill (completion-gate backstop). Excluded from headline / capstone aggregation."
 }

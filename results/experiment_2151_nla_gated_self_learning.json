@@ -26,23 +26,92 @@
     "total_rejected": 10,
     "soundness_mistakes": 0,
     "per_iteration": [
-      {"iteration": 0, "n_candidates": 2, "n_retained": 1, "n_rejected_by_nla": 1, "soundness_mistakes": 0},
-      {"iteration": 1, "n_candidates": 2, "n_retained": 1, "n_rejected_by_nla": 1, "soundness_mistakes": 0},
-      {"iteration": 2, "n_candidates": 2, "n_retained": 1, "n_rejected_by_nla": 1, "soundness_mistakes": 0},
-      {"iteration": 3, "n_candidates": 2, "n_retained": 1, "n_rejected_by_nla": 1, "soundness_mistakes": 0},
-      {"iteration": 4, "n_candidates": 2, "n_retained": 1, "n_rejected_by_nla": 1, "soundness_mistakes": 0},
-      {"iteration": 5, "n_candidates": 2, "n_retained": 1, "n_rejected_by_nla": 1, "soundness_mistakes": 0},
-      {"iteration": 6, "n_candidates": 2, "n_retained": 1, "n_rejected_by_nla": 1, "soundness_mistakes": 0},
-      {"iteration": 7, "n_candidates": 2, "n_retained": 1, "n_rejected_by_nla": 1, "soundness_mistakes": 0},
-      {"iteration": 8, "n_candidates": 2, "n_retained": 1, "n_rejected_by_nla": 1, "soundness_mistakes": 0},
-      {"iteration": 9, "n_candidates": 2, "n_retained": 1, "n_rejected_by_nla": 1, "soundness_mistakes": 0}
+      {
+        "iteration": 0,
+        "n_candidates": 2,
+        "n_retained": 1,
+        "n_rejected_by_nla": 1,
+        "soundness_mistakes": 0
+      },
+      {
+        "iteration": 1,
+        "n_candidates": 2,
+        "n_retained": 1,
+        "n_rejected_by_nla": 1,
+        "soundness_mistakes": 0
+      },
+      {
+        "iteration": 2,
+        "n_candidates": 2,
+        "n_retained": 1,
+        "n_rejected_by_nla": 1,
+        "soundness_mistakes": 0
+      },
+      {
+        "iteration": 3,
+        "n_candidates": 2,
+        "n_retained": 1,
+        "n_rejected_by_nla": 1,
+        "soundness_mistakes": 0
+      },
+      {
+        "iteration": 4,
+        "n_candidates": 2,
+        "n_retained": 1,
+        "n_rejected_by_nla": 1,
+        "soundness_mistakes": 0
+      },
+      {
+        "iteration": 5,
+        "n_candidates": 2,
+        "n_retained": 1,
+        "n_rejected_by_nla": 1,
+        "soundness_mistakes": 0
+      },
+      {
+        "iteration": 6,
+        "n_candidates": 2,
+        "n_retained": 1,
+        "n_rejected_by_nla": 1,
+        "soundness_mistakes": 0
+      },
+      {
+        "iteration": 7,
+        "n_candidates": 2,
+        "n_retained": 1,
+        "n_rejected_by_nla": 1,
+        "soundness_mistakes": 0
+      },
+      {
+        "iteration": 8,
+        "n_candidates": 2,
+        "n_retained": 1,
+        "n_rejected_by_nla": 1,
+        "soundness_mistakes": 0
+      },
+      {
+        "iteration": 9,
+        "n_candidates": 2,
+        "n_retained": 1,
+        "n_rejected_by_nla": 1,
+        "soundness_mistakes": 0
+      }
     ]
   },
   "soundness_mistakes": 0,
   "tests_passed": 15,
   "code_artifact": "python/carnot/pipeline/nla_gated_self_learning.py",
   "test_artifact": "tests/python/test_nla_gated_self_learning.py",
-  "spec_updated": "openspec/capabilities/self-learning/spec.md — added REQ-LEARN-2151, SCENARIO-LEARN-2151, SCENARIO-LEARN-2152",
+  "spec_updated": "openspec/capabilities/self-learning/spec.md \u2014 added REQ-LEARN-2151, SCENARIO-LEARN-2151, SCENARIO-LEARN-2152",
   "status": "complete",
-  "honest_verdict": "complete: NLA confidence gate integrated into FR-11 policy retention; 10-iteration self-learning loop runs cleanly; soundness_mistakes=0 across all iterations; 15 tests pass"
+  "honest_verdict": "complete: NLA confidence gate integrated into FR-11 policy retention; 10-iteration self-learning loop runs cleanly; soundness_mistakes=0 across all iterations; 15 tests pass",
+  "flagged_adversarial": true,
+  "corrigendum_pending": [
+    {
+      "kind": "DURATION_TOO_SHORT",
+      "severity": "critical",
+      "detail": "duration_s=5 but artifact references compute-bound markers (GGUF / CUDA / live model). Loading and running a real model takes >=60.0s minimum; this completed too fast to have invoked the model."
+    }
+  ],
+  "corrigendum_note": "backfill_stamps: flagged_adversarial added by adversarial_verify.py --backfill (completion-gate backstop). Excluded from headline / capstone aggregation."
 }

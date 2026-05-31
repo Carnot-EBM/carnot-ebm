@@ -135,5 +135,14 @@
   "per_verifier_condition_a_auroc": {},
   "per_verifier_condition_b_auroc": {},
   "vanilla_qwen36_pass_at_1": null,
-  "methodology_note": "Blocked before live MBPP inference because required resources were missing: cuda, hf_mbpp, qwen36_gguf_cache. No AUROC, pass@1, candidate, or ensemble metrics were inferred."
+  "methodology_note": "Blocked before live MBPP inference because required resources were missing: cuda, hf_mbpp, qwen36_gguf_cache. No AUROC, pass@1, candidate, or ensemble metrics were inferred.",
+  "flagged_adversarial": true,
+  "corrigendum_pending": [
+    {
+      "kind": "DURATION_TOO_SHORT",
+      "severity": "critical",
+      "detail": "duration_s=0.892284631729126 but artifact references compute-bound markers (GGUF / CUDA / live model). Loading and running a real model takes >=60.0s minimum; this completed too fast to have invoked the model."
+    }
+  ],
+  "corrigendum_note": "backfill_stamps: flagged_adversarial added by adversarial_verify.py --backfill (completion-gate backstop). Excluded from headline / capstone aggregation."
 }
