@@ -7194,3 +7194,4 @@ web search: https://docs.garak.ai/garak/examples/pr |
 | 2026-05-31 00:53 UTC | Milestone 2026.05.322 activated | OK | 11 tasks queued |
 | 2026-05-31 00:59 UTC | Archive milestone .321 honestly and activate .322 | OK | 81 passed in 3.69s |
 | 2026-05-31 01:19 UTC | P0.1 Route 1 (PRIMARY, CPU) — Sudoku/Kona correctn | OK | 81 passed in 3.33s |
+| 2026-05-31 01:31 UTC | P0.1 Route 2 (cached) — energy-vs-Self-Consistency | OK | 81 passed in 3.25s |
