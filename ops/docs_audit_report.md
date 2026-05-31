@@ -4,45 +4,52 @@
 # docs_audit_report — 2026-05-31
 
 ## TL;DR (stranger's 30-second take)
-A stranger would instantly close the tab because the page is structurally corrupted with internal `pytest` file paths leaking into the text and CSS, combined with dense academic jargon and suspiciously perfect benchmark numbers that destroy credibility. 
+The page looks visually polished but reads like an internal lab notebook mixed with a buggy template rendering. The overwhelming number of dense cards, heavy use of undefined acronyms, suspiciously perfect numbers, and literal internal file paths leaked into the text would make a stranger bounce immediately, assuming the project is unmaintained or broken.
 
 ## TOP 3 PROBLEMS
-1. Structural file corruption: Internal `pytest` artifact paths (`@.tmp-pytest/...`) have accidentally been injected into font URLs, CSS media queries, and result card text.
-2. Suspiciously perfect metrics (1.0 TP rate, 60/60 attacks, 2.0x speedup) that signal fabrication to an outsider.
-3. Unexplained internal jargon ("PREM", "TTC", "FoVer", "CCTU") scattered across feature and result cards.
+1. **Broken Templating / Path Leaks** — Internal file paths and experiment IDs (e.g., `@.tmp-pytest/.../experiment_400.json`) have leaked directly into font imports, CSS media queries, and result card titles.
+2. **Wall of Jargon** — The page is riddled with acronyms and internal terms (FoVer, CCTU, PREM, SVAMP, PRM-BiasBench) that alienate new visitors.
+3. **Suspiciously Perfect Metrics** — Claims like "1.0 TP rate", "60/60 attacks caught", and "Zero false positives" scream over-optimization or fabrication without strong credibility anchors.
 
 ## DETAILED FINDINGS
+
 ### Bloat
-- Results Grid — 12 cards — Cap at 6-8 of the strongest, most verifiable claims. The sheer volume dilutes the impact and causes reader fatigue.
+- Results Grid — 12 cards — Cap at 4-6 most impactful, comprehensible metrics.
+- Blog/Writing Grid — 7 cards — Cap at 3 most recent/relevant posts.
+- Features Grid — 7 bento cards — Compress into 3-4 core capabilities.
 
 ### Internal jargon
-- Recent Progress (Hero) — "FoVer", "5-seed dual-condition" — A stranger has no idea what dataset or conditions these refer to.
-- Features/Typed constraints — "CCTU" — Undefined micro-benchmark.
-- Features/TTC & PREM — "Test-Time Compute (TTC)", "Process-Reward Energy Model (PREM)" — Deep academic shorthand not explained anywhere in the text.
-- Results/Math reasoning — "SVAMP", "FoVer baseline" — Unexplained datasets and baselines.
-- Page-wide Corruption — Literal temporary file paths like `@.tmp-pytest/pytest-of-ianblenke/...` appear in the Live Benchmark text, breaking CSS media queries and Google Font links in the `<head>`.
+- Font imports & CSS — `@.tmp-pytest/.../experiment_400.json`, `@results/experiment_3500_kv260_terminal_latency_transcript_v8.json`, `@.tmp-pytest/.../experiment_1238_phase5d_intermediate_scale.json` — Raw internal paths breaking the code.
+- "Live benchmark" card — The title contains a leaked test path: `@.tmp-pytest/pytest-of-ianblenke/pytest-3/.../spilled-energy-2602-18671:real.txt`.
+- "Recent progress" card — `FoVer`, `5-seed dual-condition`, `architecture-only 0.8947` — A stranger has no context for what FoVer is or what these conditions mean.
+- "Features" section — `CCTU constrained micro-benchmark`, `PREM`, `Test-Time Compute (TTC)` — Academic/internal shorthand used without definitions.
+- "Results" section — `Z3`, `HumanEval-50`, `execute-feedback-retry`, `SVAMP AUC`, `Qwen3.6-35B-A3B`, `VeriCoT`, `PRM-BiasBench` — Dense, hyper-specific dataset and benchmark names that mean nothing to a casual reader.
 
 ### Per-milestone narrative
-- Recent Progress (Hero) — "Repinned from v2 0.9857 after pre-submission adversarial audit..." — Reads like an internal retrospective or commit message rather than a user-facing value proposition.
+- "Recent progress" card — "Repinned from v2 0.9857 after pre-submission adversarial audit..."
+- "Writing" section descriptions — "Three rigorous theory rounds approved the architecture. A single blind-spot audit pass found five fatal flaws...", "We paid for a hostile audit...", "639 experiments self-verified." — These read like internal Slack updates or sprint retrospectives rather than marketing copy.
 
 ### Inconsistencies
-- "No model fine-tuning required" (How it works) vs "Two-GPU parallel retrain" and "model weights mirrored at huggingface" — If no fine-tuning is required, an outsider will be confused about what is being retrained and what the weights are for.
+- The hero claims "no model fine-tuning required," but the features mention a "Process-Reward Energy Model (PREM)" and the blog discusses "self-distillation" and "training - two-GPU parallel retrain."
+- The hero claims "Every number below is backed by a checked-in experiment artifact", but the blog posts immediately confess to the system "caught cheating" with an artifact claiming 95-microsecond evaluations and verifiers that are actually "56 lines of regex" or "sleep-padded."
 
 ### Missing essentials
-- Who maintains it — The maintainer ("Ian Blenke") is buried in the tiny footer copyright. A stranger does not know if this is an academic lab, a startup, or a single-developer hobby project.
+- A clear, simple "Why choose this over just asking the LLM to double-check itself?" explanation.
+- An explicit definition of who the project is for (Researchers? Enterprise devs? Hobbyists?).
 
 ### Fabrication signals
-- Math extraction result card — "TP rate: 0.5 -> 1.0" — A perfect 1.0 extraction rate is highly suspicious.
-- Adversarial audit result card — "catches 60/60 attacks" — 100% success on a suspiciously small, round sample size.
-- Training result card — "2.0x speedup, identical losses" — Perfect linear scaling without any overhead is a strong fabrication signal in ML systems.
+- "GSM8K extraction TP rate: 0.5 → 1.0" — A perfect 1.0 True Positive rate is highly suspect.
+- "k=5 ensemble catches 60/60 attacks" — A 100% catch rate on adversarial attacks lacks credibility.
+- "Training — Two-GPU parallel retrain: 2.0× speedup, identical losses" — Perfect linear scaling with zero precision loss in distributed training is extremely rare and physically/numerically suspect.
+- "Zero false positives" in 639 self-verified experiments — Suspiciously perfect for any AI-driven analysis.
 
 ## WHAT'S WORKING
-- The "How it works" 1-2-3 bento box is excellent; it explains the core value proposition clearly without getting bogged down in math.
-- The Python Quickstart code block effectively demonstrates how to use the tool in just three lines of code.
+- The Quickstart section is excellent: the code is genuinely short, shows the exact import paths, and demonstrates both the simple verify and the verify-and-repair use cases clearly in multiple languages.
+- The core "Three steps" (Extract -> Check -> Repair) explanation is punchy and easy to follow.
 
 ## RECOMMENDED OPERATOR ACTIONS
-1. Revert or fix the search-and-replace corruption that injected `@.tmp-pytest/...` paths into the Google Fonts `<link>`, CSS media queries, and Live benchmark card.
-2. Remove or restate the perfect "1.0", "60/60", and "2.0x" claims; replace them with realistic figures or state the sample limitations.
-3. Delete the internal "Repinned from v2..." history from the Recent Progress card.
-4. Purge the "TTC & PREM" bento card entirely or rewrite it in plain English.
-5. Trim the Results section from 12 cards down to the best 6.
+1. **Fix the Build/Template Bug:** Immediately remove the leaked `@.tmp-pytest/...` and `@results/...` paths from the HTML head, media queries, and the "Live benchmark" card title.
+2. **Purge the Jargon:** Rewrite the "Recent progress" and "Results" cards to use plain English. Replace dataset names with functional descriptions (e.g., "Math extraction" instead of "VeriCoT on GSM8K").
+3. **Trim the Fat:** Cut the "Results" section from 12 cards to a top 4. Reduce the "Writing" section to the 3 most important posts.
+4. **Ground the Numbers:** Remove the "1.0", "60/60", and perfect "2.0x" claims, or add immediate asterisks/context on the dataset size that makes these numbers plausible.
+5. **Remove Internal Status:** Rewrite the "Recent progress" card to focus on what the user gets today, not the history of how the AUROC changed during an audit.

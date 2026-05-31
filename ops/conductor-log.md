@@ -7323,3 +7323,4 @@ web search: https://docs.garak.ai/garak/examples/pr |
 | 2026-05-31 20:48 UTC | PolarFire opportunistic reachability + continuity  | OK | 93 passed in 3.82s |
 | 2026-05-31 20:53 UTC | G1-G4 gate-status synthesis v328 (UNGATED, cascade | OK | 86 passed in 4.40s |
 | 2026-05-31 20:58 UTC | Capstone v328 | OK | 82 passed in 4.10s |
+| 2026-05-31 21:15 UTC | Plan next milestone | FAIL | Gemini CLI error: API Error: 400 messages.1.content.8: `thinking` or `redacted |
