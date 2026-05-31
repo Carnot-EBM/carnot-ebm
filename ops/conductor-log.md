@@ -7301,3 +7301,4 @@ web search: https://docs.garak.ai/garak/examples/pr |
 | 2026-05-31 17:52 UTC | P0.1 Route-2 SELECTABLE-HEADROOM corpus build (liv | FAIL | Gemini CLI error: Stalled after 600s silence. Last output: Warning: 256-color  |
 | 2026-05-31 17:58 UTC | P0.1 Route-2 energy/aggregation-vs-STRONG-SC on th | OK | 89 passed in 5.18s |
 | 2026-05-31 18:04 UTC | PROMOTE the step->final aggregation positive to a  | OK | 81 passed in 4.38s |
+| 2026-05-31 18:10 UTC | FR-11 DEPLOY the conservative-default self-learnin | OK | 84 passed in 4.32s |
