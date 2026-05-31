@@ -7904,3 +7904,7 @@ ModuleNotFoundError: No module named 'torch'; results/experiment_2828_fover_memo
 - 2026-05-31: FoVer G2 — clean-room regression-verify the self-contained package + lowest-friction public external-ask (no push, no CI trigger, G2 stays operator-gated) (⚠️ Research Finding) — honest_verdict=complete: fover_g2_package_regression_clean_external_ask_ready_g2_operator_gated; results/experiment_3488_fover_g2_clean_room_regression_verify_external_ask_v1.json
 - 2026-05-31: KV260 terminal board-level latency transcript (drive to terminal, then freeze) — SSH precondition (⚠️ Blocked) — honest_verdict=complete: blocked_kv260_ssh_unreachable; results/experiment_3489_kv260_terminal_latency_transcript_v7.json
 - 2026-05-31: PolarFire opportunistic reachability + continuity audit (no terminal mandate) (✅ Complete) — honest_verdict=complete: polarfire reachable and continuity confirmed; results/experiment_3490_polarfire_opportunistic_reachability_audit_v7.json
+
+## 2026-05-31 (Milestone 2026.05.321 Operational Retrospective)
+
+- [outer-loop] Wrote results/operational_retro_2026_05_321.json (schema carnot.operational_retro.v64). Total wall time and experiments completed are both 0, as no experiment commits were found since activation. There were zero compute-bound tasks; the GPU idle state (both RTX 3090s at 0%) is consistent with no compute tasks running rather than a specific efficiency bottleneck. Recommended improvement is to investigate the dispatch pipeline for a stall.
