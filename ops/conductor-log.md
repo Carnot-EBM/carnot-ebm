@@ -7201,3 +7201,4 @@ web search: https://docs.garak.ai/garak/examples/pr |
 | 2026-05-31 02:44 UTC | Energy-correctness calibration v5 — MATH-aware, ta | OK | 109 passed in 3.65s |
 | 2026-05-31 03:07 UTC | FR-11 beta_min = f(lambda_min) predictive law — mi | FAIL | Claude Code error: Wall-clock+idle timeout after 1201s (1201s silence). Last ou |
 | 2026-05-31 03:09 UTC | P0.1 OPTIONAL (non-blocking) — live difficulty-mat | OK | Deliverable already exists in repo |
+| 2026-05-31 03:12 UTC | FR-11 beta_min = f(lambda_min) predictive law — mi | OK | cache hit: 133 passed in 3.85s |
