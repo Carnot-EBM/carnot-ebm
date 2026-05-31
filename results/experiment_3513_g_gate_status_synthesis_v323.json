@@ -1,0 +1,103 @@
+{
+  "experiment": 3513,
+  "title": "G-Gate Status Synthesis v323",
+  "honest_verdict": "complete: g1_g3_g4_met_g2_pending_p01_route1_positive_sudoku_solves_route2_flagged_skipped",
+  "inference_substrate": "aggregation_from_upstream_artifacts",
+  "g1": true,
+  "g2": false,
+  "g3": true,
+  "g4": true,
+  "unmet_gates": [
+    "G2"
+  ],
+  "p01_route1_sudoku_verdict": "complete: energy_global_inference_solves_sudoku_p01_datapoint_positive",
+  "p01_route1_solve_rate": 1.0,
+  "p01_route1_exact_baseline_solve_rate": 1.0,
+  "p01_route2_crux_verdict": null,
+  "p01_route2_delta": null,
+  "p01_route2_flip_count": null,
+  "p01_has_clean_verdict": true,
+  "step_to_final_gap_closed_fraction": null,
+  "fr11_beta_law_deployment_validated": false,
+  "g2_package_status": "package_regression_clean_auroc=0.9131; auroc_within_ci=True; external_ask_workflow=.github/workflows/fover-g2-repro.yml; g2_met=False; G2-external-in-motion",
+  "depth_forcing_function_can_relax": true,
+  "gate_status_v323_ready": true,
+  "random_seed": 20260531,
+  "reproducibility_checksum": "05280769aa99bdf4",
+  "duration_s": 0.062256,
+  "availability_summary": {
+    "exp3505": "present",
+    "exp3507": "skipped_flagged_adversarial",
+    "exp3508": "skipped_flagged_adversarial",
+    "exp3509": "present",
+    "exp3510": "present"
+  },
+  "field_provenance": {
+    "honest_verdict": {
+      "principle": "complete: prefix required (Verdict Terminal-Prefix Discipline) so the conductor reconciler classifies this as terminal without false-positive partial-token matches."
+    },
+    "inference_substrate": {
+      "principle": "aggregation_from_upstream_artifacts: no live model is loaded; duration floor is 0.0001s. Declared explicitly to avoid DURATION_TOO_SHORT false-positives (Inference-Substrate Declaration Discipline, CLAUDE.md 2026-05-22)."
+    },
+    "g1": {
+      "principle": "headline measured (FoVer 0.9131) \u2014 boolean from publication_gate.py G1 check."
+    },
+    "g2": {
+      "principle": "independently reproduced \u2014 boolean (external; honest manual from ops/publication_gate_state.json)."
+    },
+    "g3": {
+      "principle": "prose narrowing-clean \u2014 boolean from publication_gate.py G3 narrowing lint."
+    },
+    "g4": {
+      "principle": "numbers trace to primary artifacts \u2014 boolean from publication_gate.py G4 checksum check."
+    },
+    "unmet_gates": {
+      "principle": "list of unmet G1-G4 gate names; report this instead of a count (replaces redefinable publication_blocker_count per ops/north-star.md \u00a72)."
+    },
+    "p01_route1_sudoku_verdict": {
+      "principle": "exp3505 terminal verdict (optimizer-ladder solve-rate) \u2014 the CPU P0.1 datapoint (null if absent/flagged)."
+    },
+    "p01_route1_solve_rate": {
+      "principle": "exp3505 solve_rate (null if blocked/absent)."
+    },
+    "p01_route1_exact_baseline_solve_rate": {
+      "principle": "exp3505 exact-baseline solve-rate \u2014 confirms boards are solvable (isolates optimizer power from unsolvable-input failure)."
+    },
+    "p01_route2_crux_verdict": {
+      "principle": "exp3507 terminal verdict \u2014 the in-band energy-vs-SC result (null if absent/flagged). exp3507 was flagged_adversarial=True in .323."
+    },
+    "p01_route2_delta": {
+      "principle": "exp3507 delta_optimal_vs_self_consistency (null if blocked/flagged)."
+    },
+    "p01_route2_flip_count": {
+      "principle": "exp3507 flip_count_optimal_vs_sc \u2014 non-degeneracy proof (null if absent); 0 means the two methods agree everywhere."
+    },
+    "p01_has_clean_verdict": {
+      "principle": "boolean: at least one P0.1 route produced a clean (non-blocked, non-flagged) verdict \u2014 the Depth-Over-Breadth relax precondition (CLAUDE.md Depth-Over-Breadth Forcing Function)."
+    },
+    "step_to_final_gap_closed_fraction": {
+      "principle": "exp3508 gap_closed_fraction (null if absent/flagged). exp3508 was flagged_adversarial=True in .323."
+    },
+    "fr11_beta_law_deployment_validated": {
+      "principle": "exp3509 deployed_law_prevents_collapse boolean (null if absent). False means law does not generalise; use conservative default beta."
+    },
+    "g2_package_status": {
+      "principle": "exp3510 regression + external-ask status string \u2014 describes G2 progress toward closure without auto-flipping g2 (Operator-Only External Publication rule)."
+    },
+    "depth_forcing_function_can_relax": {
+      "principle": "True only when P0.1 has a clean verdict AND G2 external-in-motion; until then depth tasks preempt breadth (CLAUDE.md Depth-Over-Breadth Forcing Function 2026-05-30)."
+    },
+    "gate_status_v323_ready": {
+      "principle": "terminal completion flag (always True) \u2014 signals to the conductor that this synthesis artifact is complete and usable by downstream tasks."
+    },
+    "random_seed": {
+      "principle": "determinism; MUST be 20260531 (a distinct fixed value), NOT the experiment number \u2014 the exp3502 tautology fix (adversarial_verify flags random_seed == experiment_id as TAUTOLOGY)."
+    },
+    "reproducibility_checksum": {
+      "principle": "SHA-256 prefix over sorted upstream artifact filenames \u2014 any upstream change invalidates this synthesis, enabling third-party audit."
+    },
+    "duration_s": {
+      "principle": "aggregation; sub-second honest. inference_substrate=aggregation_from_upstream_artifacts so 0.0001s floor applies, not 60s."
+    }
+  }
+}
