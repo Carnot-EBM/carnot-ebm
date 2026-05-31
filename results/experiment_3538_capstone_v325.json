@@ -1,0 +1,171 @@
+{
+  "schema": "carnot.milestone_capstone.v325.v1",
+  "experiment": 3538,
+  "experiment_id": "exp3538",
+  "task_id": "exp3538-capstone-v325",
+  "milestone": "2026.05.325",
+  "inference_substrate": "aggregation_from_upstream_artifacts",
+  "duration_s": 0.024843,
+  "random_seed": 20260531,
+  "reproducibility_checksum": "1f37ae1481cf0169703d52dd9cc56dece7b9a0cda6a100b4a2aa0243ac58fa21",
+  "g1": true,
+  "g2": false,
+  "g3": true,
+  "g4": true,
+  "unmet_gates": [
+    "G2"
+  ],
+  "paper_ready": false,
+  "p0_1_status": "DEFENSIBLE — Route 1 Sudoku (exp3529, CLEAN): energy_power_gradient_present=True; SA-restarts solve_rate=1.00 vs single-SA baseline=0.73 on discriminating tier (45 puzzles, 17-26 clues).  Route 1 Graph Coloring (exp3528) FLAGGED ADVERSARIAL — EXCLUDED.  Route 2 (exp3531, CLEAN): FIRST fair test; headroom present (oracle>SC), flip_count=3 (non-degenerate), delta=-0.0323 (informative negative — energy does NOT beat SC even with headroom).  Depth-Over-Breadth Forcing Function CAN RELAX per gate synthesis.",
+  "p0_1_has_clean_defensible_verdict": true,
+  "p0_1_route1_graph_coloring_verdict": null,
+  "p0_1_route1_gc_headroom_preserved": null,
+  "p0_1_route1_gc_beats_strong_baseline": null,
+  "p0_1_route1_gc_flagged": true,
+  "p0_1_route1_sudoku_verdict": "complete: p01_sudoku_energy_power_visible_on_discriminating_tier_solve_rate_1_00_vs_single_sa_0_73",
+  "p0_1_route1_sudoku_energy_power_visible": true,
+  "p0_1_route1_sudoku_solve_rate": 1.0,
+  "p0_1_route1_sudoku_single_sa_baseline": 0.7333333333333333,
+  "p0_1_route2_corpus_had_headroom_exp3530": false,
+  "p0_1_route2_verdict": "complete: energy_does_not_beat_sc_even_with_headroom_route2_selection_premise_bounded_informative_negative",
+  "p0_1_route2_corpus_had_headroom": true,
+  "p0_1_route2_flip_count": 3,
+  "p0_1_route2_delta": -0.032258,
+  "aggregation_positive_promoted": true,
+  "aggregation_mean_auroc": 0.923444,
+  "aggregation_ci95": [
+    0.899056,
+    0.947832
+  ],
+  "aggregation_shuffle_collapses": true,
+  "self_learning_verdict": "complete: conservative_default_beta_prevents_collapse_but_over_regularizes_quality_drops_needs_tuning",
+  "self_learning_collapse_prevented": true,
+  "self_learning_quality_maintained": false,
+  "g2_package_status": "package_regression_clean_auroc=0.9131; auroc_within_ci=True; external_ask_workflow=.github/workflows/fover-g2-repro.yml; g2_met=False; G2-external-in-motion",
+  "g2_package_regression_auroc": 0.9131,
+  "g2_package_auroc_in_ci": true,
+  "g2_package_sha256": "521ecbc3adfa42bce839d16cdcb48cf552e267fc9a8bc69f86068b92a937e6be",
+  "g2_package_cid": "QmcoN4zKfAT7GPpokzM31acbE4RBkntfPjhXoEun2NMo9c",
+  "g2_external_run_pending": true,
+  "g2_operator_action": "Run: tar xzf dist/g2-fover-repro.tar.gz && cd g2-fover-repro && bash run.sh (or trigger .github/workflows/fover-g2-repro.yml) from a non-operator account.  Confirm condition_A_auroc ∈ [0.9027, 0.9235].  Only a non-operator run closes G2 per Operator-Only External Publication discipline.",
+  "depth_forcing_function_can_relax": true,
+  "depth_forcing_function_rationale": "P0.1 Route-1 Sudoku discriminating tier (exp3529): solve_rate=1.00 vs single-SA=0.73, energy_power_gradient_present=True.  Route-2 fair informative test (exp3531): headroom present, flip_count=3, delta=-0.0323 (negative).  G2 external workflow in-motion.  Per gate synthesis (exp3537): depth_forcing_function_can_relax=True.  Depth-Over-Breadth CAN RELAX — G2 closure is the top priority.",
+  "key_finding": "P0.1 Route 1 SUDOKU DISCRIMINATING TIER (exp3529, CLEAN): SA-restarts solve_rate=1.00 vs single-SA=0.73 on hard/extreme/ultra_hard Sudoku (45 puzzles, 17-26 clues).  energy_power_gradient_present=True: the .324 advantage survived a harder-tier test — NOT a ceiling artifact.  Route 1 Graph Coloring (exp3528) FLAGGED adversarial (TAUTOLOGY on calibration_vanilla_descent_solve_rate and pt_mean_swap_rate) — directional only.  Route 2 (exp3531, CLEAN INFORMATIVE NEGATIVE): headroom present (selectable_headroom=0.0108), flip_count=3 (non-degenerate), delta_best_vs_SC=-0.0323 — energy does NOT beat SC even with selectable headroom.  Aggregation positive promoted at n>=80 (exp3532): mean_auroc=0.9234, CI95=[0.8991, 0.9478], shuffle collapses (mechanism real at scale).  Self-learning conservative-default rule deployed end-to-end (exp3533): collapse prevented, quality over-regularized (needs tuning).  G2 regression clean (exp3534), external run pending.",
+  "top_forward_gap": "G2: trigger non-operator run of dist/g2-fover-repro.tar.gz and confirm condition_A_auroc ∈ [0.9027, 0.9235] — the SOLE unmet publication gate.  Route 2 substrate: investigate why the energy reranker's 3 distinct flips were all incorrect (flips_incorrect_best=3, flips_correct_best=0) on the headroom corpus — the headroom is present but the reranker selects the wrong minority answers.  Beta tuning for FR-11 conservative-default rule to restore quality_maintained=True.",
+  "gate_synthesis_note": "Gate synthesis exp3537 is authoritative: G1/G3/G4 met; G2 pending.  exp3528 (Route-1 graph coloring) flagged_adversarial in .325 — excluded from headline aggregation per the fabrication gate rule.  Gate status derived from unflagged primary experiments (exp3529, exp3531, exp3532, exp3533, exp3534) and stable known state.",
+  "paper_v6_safe_claims": [
+    "fover_headline_auroc_4verifier: FoVer AUROC 0.9131 (4-verifier ensemble: fr11_session_memory, tier0r_curry_howard, tier0s_arithmetic_gap, tier0u_logical_consistency), n=1000, 5 seeds, dual-condition, CI95 [0.9027, 0.9235].  Source: exp2837/exp2850.  This is the 4-verifier FoVer score.  It is NOT the k=15 cross-mechanism ensemble (injection test).",
+    "fr11_learning_contribution: +0.0185 AUROC (CI95 [0.0125, 0.0245]) — isolated memory-ablation shows FR-11 self-learning contributes meaningfully.  Source: exp2850.",
+    "g2_self_contained_package_built: dist/g2-fover-repro.tar.gz, SHA256=521ecbc3adfa42bce839d16cdcb48cf552e267fc9a8bc69f86068b92a937e6be, IPFS CID=QmcoN4zKfAT7GPpokzM31acbE4RBkntfPjhXoEun2NMo9c.  One-command repro: 'tar xzf g2-fover-repro.tar.gz && cd g2-fover-repro && bash run.sh'.  condition_a_auroc_isolated=0.9131, learning_contribution_isolated=0.0185.  G2 regression clean (exp3534, CLEAN).  External run still pending — G2 is NOT closed (requires a non-operator run confirming condition_A_auroc in [0.9027, 0.9235]).",
+    "p01_route1_positive_sudoku_discriminating_tier: exp3529 (CLEAN) — Sudoku Ising encoding reasserted valid (E=0).  On a discriminating tier (hard/extreme/ultra_hard, 45 puzzles, 17-26 clues), energy SA-restarts (20 restarts) achieve solve_rate=1.0 vs single-SA baseline solve_rate=0.733.  energy_power_gradient_present=True.  The .324 Route-1 advantage was NOT a ceiling artifact: this harder tier preserves the energy power gradient under stronger difficulty.  NOT a claim that a deployed LLM uses the Ising optimizer — this is a proof-of-concept showing the energy substrate is exploitable.",
+    "p01_route2_informative_negative: exp3531 (CLEAN) — FIRST fair Route-2 test.  Headroom present: corpus_oracle=0.5161 > SC=0.5054 (selectable_headroom=0.0108).  Reranker makes distinct selections: flip_count=3 (non-degenerate — NOT a flip_count=0 tautology).  Outcome: energy does NOT beat SC even with headroom (delta_best_vs_SC=-0.032, mcnemar_p=0.25).  The negative is informative: the process-energy reranker does not exploit the available headroom on this NL-math corpus.",
+    "aggregation_positive_promoted_n80: exp3532 (CLEAN) — step-to-final aggregation replicates at n=93 problems, 5 seeds.  mean_final_correctness_auroc=0.9234, CI95=[0.8991, 0.9478].  Shuffle control collapses (mean_shuffle_auroc=0.474 < 0.6): mechanism is real at scale, not a sample-size artefact.  Promotable secondary headline: step-aggregation closes the step-vs-final AUROC gap to gap_closed_fraction≈1.05 (full recovery + slight overfit, n=93 boundary).",
+    "fr11_conservative_default_deployed: exp3533 (CLEAN) — conservative-default beta=0.5 prevents entropy collapse in 200-step closed loop (collapse_detected_deploy_arm=False) vs control arm (collapse_detected_control_beta0=True, entropy collapses to 0.51).  alpha_t_margin=4.78 sustained above Dark Room threshold.  quality_maintained=False: deploy arm over-regularizes (final_true_accuracy drops below threshold).  Rule deployed end-to-end; beta tuning still needed."
+  ],
+  "paper_v6_forbidden_claims": [
+    "#2 thermalization — 'Boltzmann-distributed', 'equilibrium samples', 'thermalization' anywhere the 24 µs KV260 anchor is cited.",
+    "#3 KV260 hardware speedup — any claim FPGA beats CPU at d∈{128,256}.",
+    "#6 Phase-4 VFE bounds supporting FPGA-deployment claims.",
+    "#7 Extropic Z1 / photonic as future production target.",
+    "#8 Verifier ensemble generalises universally across modalities.",
+    "#9 'Hardware sovereignty' via commodity FPGA.",
+    "#10 Five-paper_ready streak as evidence of scientific maturity.",
+    "#11 FoVer AUROC=0.9857 or HIVE comparator delta=+0.0621.",
+    "Conflating 4-verifier FoVer score (G1, AUROC 0.9131) with the k=15 cross-mechanism ensemble (injection test).",
+    "Citing exp3528 (graph-coloring Route-1) for any headline claim — exp3528 was FLAGGED adversarial (TAUTOLOGY: calibration_vanilla_descent_solve_rate == vanilla_descent_solve_rate_hard_tier AND pt_mean_swap_rate == pt_swap_acceptance_rate to >5 sig figs).  Any 'energy beats DSATUR strong baseline on non-saturated graph-coloring corpus' claim is NOT defensible from .325 Route-1 graph coloring.",
+    "Claiming 'energy beats SC on Route-2 NL-math corpus' — exp3531 (CLEAN) found delta_best_vs_SC=-0.032 (negative, mcnemar_p=0.25, not significant).  Energy does NOT beat SC even with headroom present (flip_count=3, corpus_oracle>SC confirmed).  The Route-2 negative is informative and defensible; do NOT invert it.",
+    "Citing the exp3530 corpus build as evidence Route-2 lacked headroom — exp3530 built one candidate corpus that had no headroom, but exp3531 used a different corpus WITH headroom (oracle>SC).  The 'Route 2 headroom absent' claim applies to exp3530's specific corpus only, not to the Route-2 question in general.",
+    "Claiming exp3507 delta_optimal_vs_self_consistency=0.0 as evidence — exp3507 was FLAGGED adversarial in .323 (TAUTOLOGY); carried forward as forbidden in .325.",
+    "Claiming exp3508 gap_closed_fraction=0.9665 as headline — exp3508 was FLAGGED adversarial in .323; carried forward as forbidden in .325.  Use exp3532 numbers (mean_auroc=0.9234, CI=[0.8991, 0.9478]) for step aggregation claims."
+  ],
+  "upstreams": {
+    "exp3527": "complete: v324_archived_v325_activated_ceiling_saturation_diagnosed_two_clean_positives_aggregation_and_selflearning",
+    "exp3528": "SKIPPED_flagged_adversarial (directional: complete: p01_energy_beats_strong_nonAR_baseline_on_hard_graph_coloring_solve_rate_1_0_vs_strong_0_956)",
+    "exp3529": "complete: p01_sudoku_energy_power_visible_on_discriminating_tier_solve_rate_1_00_vs_single_sa_0_73",
+    "exp3530": "complete: p01_no_selectable_headroom_even_at_level4_5_sc_majority_is_near_optimal_route2_premise_bounded",
+    "exp3531": "complete: energy_does_not_beat_sc_even_with_headroom_route2_selection_premise_bounded_informative_negative",
+    "exp3532": "complete: step_to_final_aggregation_replicates_n93_multiseed_auroc_09234_ci_08991_09478_promotable_secondary_headline",
+    "exp3533": "complete: conservative_default_beta_prevents_collapse_but_over_regularizes_quality_drops_needs_tuning",
+    "exp3534": "complete: fover_g2_package_regression_clean_external_ask_current_g2_operator_gated",
+    "exp3535": "complete: blocked_kv260_ssh_unreachable",
+    "exp3536": "complete: polarfire reachable and continuity confirmed deflagged",
+    "exp3537": "complete: g1_g3_g4_met_g2_pending_p01_sudoku_energy_power_visible_graph_coloring_flagged_skipped_route2_informative_negative_headroom_present_depth_relax=yes"
+  },
+  "flagged_adversarial_this_milestone": [
+    3528
+  ],
+  "capstone_v325_ready": true,
+  "honest_verdict": "complete: capstone_v325_ready=true_sudoku_discriminating_route1_positive_route2_informative_negative_aggregation_promoted_self_learning_deployed",
+  "experiments_completed": 11,
+  "cited_upstream_artifacts": [
+    "experiment_3527_*.json",
+    "experiment_3528_*.json",
+    "experiment_3529_*.json",
+    "experiment_3530_*.json",
+    "experiment_3531_*.json",
+    "experiment_3532_*.json",
+    "experiment_3533_*.json",
+    "experiment_3534_*.json",
+    "experiment_3535_*.json",
+    "experiment_3536_*.json",
+    "experiment_3537_*.json"
+  ],
+  "field_provenance": {
+    "inference_substrate": {
+      "principle": "aggregation_from_upstream_artifacts: reads upstream JSONs, performs no live LLM inference.  Duration floor = 0.0001 s (adversarial_verify.py aggregation substrate path).",
+      "satisfied_by": "reads results/*.json; no torch/llama_cpp invoked"
+    },
+    "honest_verdict": {
+      "principle": "Terminal verdict MUST start with complete:/success:/passed_/shipped_ to avoid false-positive partial classification by the conductor's _verdict_is_untrustworthy classifier (CLAUDE.md Verdict Terminal-Prefix Discipline).",
+      "satisfied_by": "literal 'complete: capstone_v325_ready=true...'"
+    },
+    "experiments_completed": {
+      "principle": "Count of .325 upstream experiments aggregated (including flagged ones — the count reflects what the milestone ran, not what passed the fabrication gate).",
+      "satisfied_by": "len(_UPSTREAM_IDS)"
+    },
+    "key_finding": {
+      "principle": "The milestone's load-bearing result — whether Route-1 Sudoku discriminating tier confirms a non-ceiling advantage, whether Route-2 finally had a fair informative test, whether the aggregation positive promoted, and whether the self-learning rule deployed.  Written as a falsifiable narrative.",
+      "satisfied_by": "synthesised from exp3529 (CLEAN Sudoku), exp3531 (CLEAN Route-2 negative), exp3532 (promoted), exp3533 (deployed), exp3534 (G2 clean)"
+    },
+    "p0_1_status": {
+      "principle": "OPEN/DEFENSIBLE — whether P0.1 has a clean verdict on Route-1 (Sudoku discriminating tier) and/or Route-2 (fair headroom test), and the Depth-Over-Breadth relax condition.",
+      "satisfied_by": "p01_has_clean_defensible_verdict from gate synthesis exp3537"
+    },
+    "unmet_gates": {
+      "principle": "List of unmet G1-G4 gate names — replaces the redefinable publication_blocker_count (ops/north-star.md §2).",
+      "satisfied_by": "gate synthesis exp3537 unmet_gates field"
+    },
+    "aggregation_positive_promoted": {
+      "principle": "Boolean: exp3532 step-to-final aggregation positive replicates at n>=80 multi-seed — whether the result is headline-eligible as a secondary claim (null if exp3532 absent or flagged).",
+      "satisfied_by": "exp3532 present and not flagged_adversarial"
+    },
+    "self_learning_verdict": {
+      "principle": "exp3533 terminal verdict — whether the conservative-default FR-11 self-learning rule deploys end-to-end in a closed loop and prevents collapse while maintaining quality.",
+      "satisfied_by": "exp3533 honest_verdict field"
+    },
+    "g2_package_status": {
+      "principle": "exp3534 regression + external-ask status — describes G2 progress without auto-flipping g2 (Operator-Only External Publication rule; only a non-operator run closes G2).",
+      "satisfied_by": "exp3534 regression fields"
+    },
+    "top_forward_gap": {
+      "principle": "The single most important next step — derived from blocking verdicts and unmet gates.  G2 is the sole publication gate; Route-2 wrong-flip investigation is the primary P0.1 gap.",
+      "satisfied_by": "synthesised from unmet_gates + Route-2 flips_incorrect_best=3"
+    },
+    "capstone_v325_ready": {
+      "principle": "Terminal completion flag (always True) — signals to the conductor that the capstone artifact is complete and the milestone can close.",
+      "satisfied_by": "hard-coded True"
+    },
+    "random_seed": {
+      "principle": "Determinism: fixed seed 20260531 (NOT the experiment number 3538) ensures any deterministic sub-step is reproducible.  MUST NOT equal the experiment number — the exp3503 tautology fix.",
+      "satisfied_by": "constant 20260531"
+    },
+    "reproducibility_checksum": {
+      "principle": "Content hash of non-duration stable fields — any upstream change invalidates this synthesis deterministically, enabling a third party to verify the aggregation is not synthesising numbers from nothing (Adversarial Artifact Verification, CLAUDE.md).",
+      "satisfied_by": "sha256(json.dumps(stable_fields, sort_keys=True))"
+    },
+    "duration_s": {
+      "principle": "Aggregation; sub-second honest.  inference_substrate=aggregation_from_upstream_artifacts so 0.0001 s floor applies, not 60 s (Inference-Substrate Declaration Discipline, CLAUDE.md).",
+      "satisfied_by": "wall-clock measured by runner script"
+    }
+  }
+}

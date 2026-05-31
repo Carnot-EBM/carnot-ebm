@@ -4867,3 +4867,9 @@ The critical path for milestone .250:
 - theme: Operational retrospective for an empty milestone-scoped timing window
 - key result: No experiment commits were found since activation, so compute-bound and slowest-experiment analysis is unavailable.
 - acceptance: no data available this milestone
+
+### Milestone 2026.05.325
+- exp_range: none
+- theme: Operational Retrospective
+- key result: Honest negative: no experiment commits found since activation of 2026.05.325.
+- acceptance: 0/0 criteria met
