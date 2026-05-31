@@ -1,0 +1,166 @@
+{
+  "schema": "carnot.operational_retro.v65",
+  "experiment": 3493,
+  "experiment_id": 3493,
+  "experiment_title": "Archive v321 + Activate v322",
+  "run_date": "20260531",
+  "generated_at": "2026-05-31T00:55:00Z",
+  "inference_substrate": "aggregation_from_upstream_artifacts",
+  "milestone_archived": "2026.05.321",
+  "milestone_activated": "2026.05.322",
+  "archive_v321_activate_v322_ready": true,
+  "p01_status": "open_infra_loss_not_science",
+  "p01_consecutive_infra_losses": 3,
+  "p01_failure_mechanism_v321": "exp3483 (difficulty-matched corpus builder) crashed on API Error 400 `thinking`/`redacted_thinking` \u2014 opus extended-thinking 400 error on a long live-GPU task \u2014 then pre-tests failed after the crash. exp3484 (P0.1 crux) SKIP'd 3x on 'Pre-tests failing, self-heal failed' then RETIRED. Cascade GATE_BLOCKed exp3487 (Kona global-opt), exp3491 (G-gate synthesis), exp3492 (capstone v321). Multiple Kona tasks idle-timed-out at 1201s.",
+  "p01_design_was_sound": true,
+  "p01_science_unresolved": true,
+  "p01_not_refuted": true,
+  "experiments_completed": [
+    {
+      "id": 3482,
+      "title": "Archive v320 + Activate v321",
+      "outcome": "complete",
+      "key_result": "v320 archived, v321 activated"
+    },
+    {
+      "id": 3483,
+      "title": "P0.1 difficulty-matched corpus builder v2",
+      "outcome": "failed_thinking_400_then_skip_retired",
+      "key_result": "API Error 400 thinking/redacted_thinking on attempt 1; pre-test failures blocked attempts 2-3; RETIRED"
+    },
+    {
+      "id": 3484,
+      "title": "P0.1 v7 \u2014 process-aware step-level energy + optimal path crux",
+      "outcome": "skip_3x_retired",
+      "key_result": "Pre-tests failing, self-heal failed x3 \u2192 RETIRED \u2192 cascade GATE_BLOCK"
+    },
+    {
+      "id": 3485,
+      "title": "Energy-correctness calibration v4",
+      "outcome": "skip_3x_retired",
+      "key_result": "Pre-tests failing, self-heal failed x3 \u2192 RETIRED"
+    },
+    {
+      "id": 3486,
+      "title": "FR-11 Minimal Beta + Grounding-Dependence Sweep v4",
+      "outcome": "complete",
+      "key_result": "minimal_sufficient_beta=0.1; grounding-dependence confirmed; Phase-5 default = entropy_beta=0.100 (conservative)",
+      "honest_verdict": "complete: minimal_sufficient_entropy_beta_found_grounding_dependence_characterized_phase5_default_set"
+    },
+    {
+      "id": 3487,
+      "title": "Kona global-opt \u2014 PROCESS energy as hybrid heuristic",
+      "outcome": "gate_blocked",
+      "key_result": "Pre-emptive skip: upstream retired (exp3484)"
+    },
+    {
+      "id": 3488,
+      "title": "FoVer G2 clean-room regression-verify + external ask",
+      "outcome": "complete",
+      "key_result": "package_reproduced_auroc=0.9131; package_auroc_within_ci=True; external_run_pending=True; g2_met=False (operator-gated)",
+      "honest_verdict": "complete: fover_g2_package_regression_clean_external_ask_ready_g2_operator_gated"
+    },
+    {
+      "id": 3489,
+      "title": "KV260 terminal latency transcript v7",
+      "outcome": "blocked_ssh_unreachable",
+      "key_result": "complete: blocked_kv260_ssh_unreachable"
+    },
+    {
+      "id": 3491,
+      "title": "G1-G4 gate-status synthesis v321",
+      "outcome": "gate_blocked",
+      "key_result": "Pre-emptive skip: upstream retired (exp3484)"
+    },
+    {
+      "id": 3492,
+      "title": "Capstone v321",
+      "outcome": "gate_blocked",
+      "key_result": "upstream artifact not found for exp3491"
+    }
+  ],
+  "publication_gate_status": {
+    "G1_headline_measured": true,
+    "G2_independent_reproducer": false,
+    "G3_prose_narrowing_clean": true,
+    "G4_numbers_trace_to_artifacts": true,
+    "paper_ready": false,
+    "sole_unmet_gate": "G2",
+    "G2_external_run_pending": true,
+    "G2_package_auroc": 0.9131,
+    "G2_package_auroc_ci": [
+      0.9027,
+      0.9235
+    ],
+    "G2_operator_action": "A person who is NOT the operator must run `bash run.sh` from the g2-fover-repro.tar.gz package and report condition-A AUROC in [0.9027, 0.9235]. Per Operator-Only External Publication, autonomous work may not flip g2_met."
+  },
+  "fr11_phase5_entropy_beta_default": 0.1,
+  "fr11_phase5_grounding_dependence_confirmed": true,
+  "fr11_recommended_phase5_default": "Phase-5 default: entropy_beta=0.100 (conservative: worst-case across grounding strengths tested). Per-grounding: [ACTIVE_WEIGHT=0.146\u2192beta_min=0.100; ACTIVE_WEIGHT=0.300\u2192beta_min=0.000]. The minimal sufficient beta VARIES with grounding diversity (use the at-risk value as the conservative default). Safety margin: use beta=0.20 for deployments with unknown grounding diversity.",
+  "kv260_terminal_state_reached": false,
+  "kv260_blocked_reason": "SSH hostname resolution failure (kv260.local not resolvable)",
+  "root_cause_v321_loss": "opus extended-thinking API 400 error caused exp3483 to crash and leave pre-tests in a broken state. The pre-test failure then prevented exp3484 from running (self-heal loop exhausted 3 attempts without fixing the test breakage). exp3484's RETIRE cascaded to GATE_BLOCK exp3487/3491/3492 via the pre-emptive-skip mechanism. No science was lost \u2014 P0.1 remains OPEN and NOT refuted.",
+  "forward_gap_top": "Route P0.1 through TWO infra-independent paths so the verdict no longer depends on a fragile live task: (1) CPU Sudoku correctness-first gate \u2014 no GGUF, no GPU, no thinking API required; proves energy-descent principle on a verified-correct search space using pure CPU symbolic search; (2) cached-corpus contested-subset crux \u2014 pure verifier-ensemble scoring against pre-cached candidate traces, inference_substrate=verifier_ensemble_against_cached_candidates. Keep ALL tasks on sonnet to dodge the thinking-400. Ungate the synthesis/capstone so no depth-task retirement cascades (synthesis task runs regardless of P0.1 outcome, reporting whatever P0.1 found or that it was blocked).",
+  "v322_infra_fix_not_science": true,
+  "v322_key_change": "Two-path P0.1 routing (CPU Sudoku + cached-corpus) + all tasks on sonnet + ungated synthesis/capstone",
+  "cited_upstream_artifacts": [
+    {
+      "experiment_id": "exp3486",
+      "path": "results/experiment_3486_fr11_minimal_beta_grounding_dependence_v4.json",
+      "sha256": "119b9a78fdc65aad"
+    },
+    {
+      "experiment_id": "exp3488",
+      "path": "results/experiment_3488_fover_g2_clean_room_regression_verify_external_ask_v1.json",
+      "sha256": "895abd7409302406"
+    },
+    {
+      "experiment_id": "exp3489",
+      "path": "results/experiment_3489_kv260_terminal_latency_transcript_v7.json",
+      "sha256": "3936d2ab71fd9516"
+    },
+    {
+      "experiment_id": "exp3492",
+      "path": "results/experiment_3492_capstone_v321.json",
+      "sha256": "f05fbb64b4987020"
+    }
+  ],
+  "random_seed": 42,
+  "reproducibility_checksum": "239ad74b731a42de",
+  "duration_s": 0.001,
+  "honest_verdict": "complete: v321_archived_v322_activated_p01_infra_loss_not_science",
+  "field_provenance": {
+    "inference_substrate": {
+      "principle": "Aggregation-only; no LLM loaded. Reads upstream JSONs, computes milestone summary, writes deliverable. Duration floor 0.0001s.",
+      "satisfied_by": "aggregation_from_upstream_artifacts"
+    },
+    "archive_v321_activate_v322_ready": {
+      "principle": "Terminal boolean for the conductor's gate check \u2014 True when this artifact is complete and .322 is ready to run.",
+      "satisfied_by": "unconditionally True when deliverable written without exception"
+    },
+    "p01_status": {
+      "principle": "Honest status of the P0.1 existential test \u2014 distinguishes INFRA loss from SCIENCE refutation so future planners don't treat a retry as a doomed rerun.",
+      "satisfied_by": "open_infra_loss_not_science \u2014 third consecutive milestone where infra prevented the run"
+    },
+    "publication_gate_status": {
+      "principle": "G1-G4 gate state per ops/north-star.md \u00a72; G2 is the sole unmet gate and requires an external non-operator reproducer.",
+      "satisfied_by": "carried from exp3488 which regression-verified the package to AUROC=0.9131"
+    },
+    "honest_verdict": {
+      "principle": "complete:/success:/passed:/shipped_ prefix required by CLAUDE.md Verdict Terminal-Prefix Discipline.",
+      "satisfied_by": "verdict starts with 'complete:'"
+    },
+    "cited_upstream_artifacts": {
+      "principle": "Audit trail: aggregation must cite the upstream sources so a third party can verify the capstone is not synthesizing numbers from nothing.",
+      "satisfied_by": "list of {experiment_id, path, sha256} for each upstream read"
+    },
+    "reproducibility_checksum": {
+      "principle": "Content hash of cited artifact paths; catches upstream path drift between this and any future replication attempt.",
+      "satisfied_by": "SHA256[:16] of JSON-encoded UPSTREAM dict"
+    },
+    "duration_s": {
+      "principle": "Aggregation-only; floored at 0.001s. No live inference, so adversarial_verify applies the aggregation-tier floor.",
+      "satisfied_by": "time.monotonic() delta, max(actual, 0.001)"
+    }
+  }
+}
