@@ -7218,3 +7218,4 @@ web search: https://docs.garak.ai/garak/examples/pr |
 | 2026-05-31 05:52 UTC | Close the FoVer step-vs-final 0.138 gap — step->fi | FLAGGED | adversarial_verify CRITICAL: TAUTOLOGY, TAUTOLOGY — result quarantined, not a cl |
 | 2026-05-31 06:02 UTC | FR-11 closed-loop deployment of beta_min=f(lambda_ | OK | 81 passed in 4.32s |
 | 2026-05-31 06:08 UTC | FoVer G2 — clean-room regression-verify the self-c | OK | 81 passed in 4.46s |
+| 2026-05-31 06:18 UTC | KV260 terminal board-level latency transcript (dri | OK | 81 passed in 4.57s |
