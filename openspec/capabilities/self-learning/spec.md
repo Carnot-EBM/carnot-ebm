@@ -10195,3 +10195,19 @@ beta >= f(lambda_min) with safety margin.
 **Given** 5 fresh grounding configs
 **When** Arm A runs with beta = clamp(1.8461 * lambda_min_online - 0.3001, 0.0, 0.5)
 **Then** collapse_detected is False at all configs.
+
+## REQ-LEARN-3580: FR-11 Continuous Self Learning v4 Forward Difference
+
+**Given** a FR-11 module with cached traces present
+**When** the continuous self-learning experiment (Exp 3580) runs on a fresh nondegenerate corpus
+**Then** the deploy arm MUST prevent collapse (collapse_detected_deploy_arm=False)
+**And** the control arm MUST collapse (collapse_detected_control_beta0=True)
+**And** pass_rate_vs_true_accuracy_distinct_assert MUST be True
+**And** quality_maintained MUST be True
+**And** honest_verdict MUST be "complete: fr11_conservative_default_holds_on_fresh_nondegenerate_corpus_quality_maintained"
+
+### REQ-LEARN-3580 Sub-requirements
+
+- REQ-LEARN-3580-1: The experiment SHALL log inference_substrate, n_grounding_configs, random_seed, reproducibility_checksum, duration_s.
+
+---
