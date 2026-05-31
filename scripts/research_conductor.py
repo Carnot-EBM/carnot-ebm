@@ -1162,6 +1162,35 @@ def run_tests(full: bool = False) -> tuple[bool, str]:
         except Exception:
             pass
 
+        # ALSO include test files the CURRENT task has added or modified in the
+        # WORKING TREE but not yet committed. The `git diff HEAD~1` block above
+        # only sees COMMITTED changes, so a task's own brand-new test
+        # (uncommitted at post-test time) was NEVER run against the task that
+        # created it — the smart subset only picked it up on the *next* task's
+        # pre-test (after the broken test had been committed), cascading the
+        # whole milestone tail into SKIPs. Root cause of the exp3521 (.325) and
+        # exp3544 (.326) SKIP cascades: agents shipping a test that fails against
+        # their own script. Running the task's own uncommitted/untracked tests
+        # here makes a broken agent-shipped test FAIL *that* task's post-test
+        # (contained, retried/self-healed) instead of poisoning the next task.
+        try:
+            _, wt_out, _ = run_cmd(["git", "diff", "--name-only", "HEAD"])
+            _, untracked_out, _ = run_cmd(
+                ["git", "ls-files", "--others", "--exclude-standard"]
+            )
+            for f in (wt_out.splitlines() + untracked_out.splitlines()):
+                f = f.strip()
+                if (
+                    f.startswith("tests/python/")
+                    and f.endswith(".py")
+                    and "/quarantine/" not in f
+                    and f not in test_files
+                    and (PROJECT_ROOT / f).exists()
+                ):
+                    test_files.append(f)
+        except Exception:
+            pass
+
         # Filter to files that actually exist
         existing = [f for f in test_files if (PROJECT_ROOT / f).exists()]
         if not existing:
