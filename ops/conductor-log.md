@@ -7214,3 +7214,4 @@ web search: https://docs.garak.ai/garak/examples/pr |
 | 2026-05-31 04:58 UTC | P0.1 Route 1 (PRIMARY, CPU) — REAL combinatorial-o | FLAGGED | adversarial_verify CRITICAL: TAUTOLOGY — result quarantined, not a clean success |
 | 2026-05-31 05:21 UTC | P0.1 OPTIONAL (non-blocking) — extend the purpose- | FAIL | Claude Code error: Wall-clock+idle timeout after 1201s (1201s silence). Last ou |
 | 2026-05-31 05:23 UTC | P0.1 OPTIONAL (non-blocking) — extend the purpose- | OK | Deliverable already exists in repo |
+| 2026-05-31 05:33 UTC | P0.1 Route 2 CRUX (cached) — energy-vs-Self-Consis | FLAGGED | adversarial_verify CRITICAL: TAUTOLOGY, TAUTOLOGY, TAUTOLOGY, TAUTOLOGY, TAUTOLO |
