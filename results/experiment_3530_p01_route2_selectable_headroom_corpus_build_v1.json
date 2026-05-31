@@ -1,0 +1,88 @@
+{
+ "experiment_id": 3530,
+ "experiment": 3530,
+ "title": "P0.1 Route 2 Selectable-Headroom Corpus Build v1",
+ "run_date": "20260531",
+ "run_timestamp": "2026-05-31T12:31:49Z",
+ "schema": "carnot.p01_selectable_headroom_corpus_v1",
+ "duration_s": 1238.5137186050415,
+ "honest_verdict": "complete: p01_no_selectable_headroom_even_at_level4_5_sc_majority_is_near_optimal_route2_premise_bounded",
+ "inference_substrate": "live_llm_inference",
+ "corpus_path": "data/p01_selectable_headroom_corpus.jsonl",
+ "benchmark_id": "HuggingFaceH4/MATH-500 (test split), levels=[4, 5], seed=2323699563",
+ "target_levels": [
+  4,
+  5
+ ],
+ "n_problems_attempted": 24,
+ "n_problems_kept": 0,
+ "n_problems_added_this_run": 0,
+ "n_problems_target": 40,
+ "k_samples": 8,
+ "per_step_traces_captured": false,
+ "per_sample_logprobs_captured": false,
+ "self_consistency_accuracy": 0.0,
+ "oracle_accuracy": 0.0,
+ "selectable_headroom": 0.0,
+ "oracle_exceeds_sc": false,
+ "model_specs": {
+  "name": "Qwen3.6-35B-A3B",
+  "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/snapshots/a483e9e6cbd595906af30beda3187c2663a1118c/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf",
+  "loader": "llama_cpp",
+  "prompt_format": "qwen_chatml"
+ },
+ "random_seed": 2323699563,
+ "reproducibility_checksum": "04c1c0fcabb433ee",
+ "preconditions_checked": [
+  {
+   "resource": "cuda",
+   "available": true
+  },
+  {
+   "resource": "sota_gguf_tokenizer",
+   "available": true
+  }
+ ],
+ "status": "success",
+ "field_provenance": {
+  "honest_verdict": {
+   "principle": "Terminal verdict must start with complete:/success:/passed:/shipped_; the prefix lets the conductor reconciler classify terminal vs partial without re-running the experiment."
+  },
+  "inference_substrate": {
+   "principle": "live_llm_inference \u2014 real GGUF generation on GPU; sub-60s with CUDA is the DURATION_TOO_SHORT fabrication signal in adversarial_verify.py."
+  },
+  "corpus_path": {
+   "principle": "data/p01_selectable_headroom_corpus.jsonl \u2014 the new positive-control corpus exp3531 reads for its Route-2 energy-vs-SC test."
+  },
+  "n_problems_kept": {
+   "principle": "Number of problems that passed the selectable-headroom filter; exp3531 needs >=40 for a meaningful Route-2 verdict."
+  },
+  "self_consistency_accuracy": {
+   "principle": "SC majority-vote accuracy over the KEPT corpus; should be 0.0 by construction (we only keep problems where SC majority is wrong) \u2014 any non-zero value signals a filter logic error."
+  },
+  "oracle_accuracy": {
+   "principle": "Accuracy if the correct answer is always selected when present; should be 1.0 by construction (we only keep problems where correct answer IS present in samples) \u2014 any sub-1.0 value signals a filter logic error."
+  },
+  "selectable_headroom": {
+   "principle": "oracle_accuracy - self_consistency_accuracy; MUST be > 0 (ideally 1.0 for the kept corpus) \u2014 this is the positive-control property exp3519 lacked."
+  },
+  "oracle_exceeds_sc": {
+   "principle": "Boolean: oracle STRICTLY > SC; the FALSE_NEGATIVE_RISK precondition for a meaningful Route-2 energy-vs-SC test."
+  },
+  "per_step_traces_captured": {
+   "principle": "Each generation carries a parsed step list for FoVer PRIME process reward scoring; False means step-level scoring is unavailable."
+  },
+  "model_specs": {
+   "principle": "The actual GGUF invoked \u2014 required for reproducibility; a mismatch between claimed and actual model is a fabrication signal."
+  },
+  "random_seed": {
+   "principle": "Determinism precondition for reproducibility; content-derived via sha256 of benchmark id + level + version, NOT the experiment number."
+  },
+  "reproducibility_checksum": {
+   "principle": "Content hash of benchmark split + model + seed \u2014 catches silent version drift between this artifact and any future replication."
+  },
+  "duration_s": {
+   "principle": "Real live MoE generation takes wall time; 60s floor when CUDA is available \u2014 sub-60s is the DURATION_TOO_SHORT fabrication signal."
+  }
+ }
+}

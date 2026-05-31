@@ -7255,3 +7255,4 @@ web search: https://docs.garak.ai/garak/examples/pr |
 | 2026-05-31 11:21 UTC | P0.1 Route 1 GRAPH-COLORING headroom re-test (CPU, | FLAGGED | adversarial_verify CRITICAL: TAUTOLOGY, TAUTOLOGY — result quarantined, not a cl |
 | 2026-05-31 11:44 UTC | P0.1 Route 1 SUDOKU headroom re-test (CPU) — build | FAIL | Claude Code error: Wall-clock+idle timeout after 1201s (1201s silence). Last ou |
 | 2026-05-31 12:00 UTC | P0.1 Route 1 SUDOKU headroom re-test (CPU) — build | OK | cache hit: 120 passed in 4.92s |
+| 2026-05-31 12:24 UTC | P0.1 Route 2 SELECTABLE-HEADROOM NL-math corpus bu | FAIL | Claude Code error: Wall-clock+idle timeout after 1201s (1201s silence). Last ou |
