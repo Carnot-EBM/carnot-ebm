@@ -3012,6 +3012,30 @@ IMPORTANT:
 - Each experiment must have a clear deliverable file path
 - Experiments should be ordered so dependencies are met (earlier experiments first)
 
+AGENT ROUTING — GEMINI-DEFAULT (see CLAUDE.md "Gemini-Default for
+Experiments"). Assign each task's `agent_type` deliberately. Do NOT copy the
+prior roadmap's `agent_type` wholesale — that froze a transient gemini-cli
+outage into every subsequent milestone (the .322-.324 all-claude bug: gemini-cli
+was down when .322 was planned, the all-claude routing was copied forward to
+.323/.324, and it kept burning claude quota long after gemini-cli recovered):
+- DEFAULT every task to `agent_type: gemini`, `model: gemini-3.1-pro-preview`.
+- Transition tasks (archive-vN-activate-vN+1), capstone-vN, status/synthesis,
+  hardware smoke/audit (KV260 / PolarFire / GateMate), and mechanical
+  verify / sweep / aggregation / corpus-build tasks are ALWAYS gemini.
+- Only set `agent_type: claude` + `requires_claude: true` when the task meets
+  ALL THREE Gemini-Default positive criteria (gemini has demonstrably failed
+  this category before, OR the task needs 5+ file Edit/Read/Bash choreography,
+  AND multi-step judgment a deterministic gate cannot substitute for). A typical
+  12-task milestone is ~10 gemini + <=2 claude. If more than 2 are claude,
+  re-evaluate each against the criterion and downgrade the ones that don't meet
+  it. "Important" / "high-stakes" / "needs accuracy" do NOT justify claude.
+- Backend AVAILABILITY (whether gemini-cli is up or down) is handled at RUNTIME
+  by the conductor's coercion (GEMINI_FORCE_EXPERIMENTS / CODEX_FORCE_EXPERIMENTS
+  env), NOT by freezing claude into `agent_type`. Do NOT hardcode claude
+  "because gemini-cli is down" — emit gemini and let runtime route. If gemini is
+  genuinely down, the operator sets the coercion env; the roadmap stays
+  gemini-default so it self-heals the moment gemini recovers.
+
 EXCLUSION-MANIFEST / SCOPE-MATCH DISCIPLINE (see CLAUDE.md
 "Exclusion-Manifest Cross-Check" — "Auto-override for known-legit
 continuations", 2026-05-29):

@@ -19,7 +19,7 @@ milestone_doc: "openspec/change-proposals/research-roadmap-vNEXT.md"
 #   - exp3510 (G2): CLEAN; package reproduces 0.9131 within CI; external run pending = sole gate.
 #
 # THE .324 RULES (carried from the working .322/.323 architecture + a tightened anti-tautology rule):
-#  1. ALL tasks agent_type: claude, requires_claude: true (gemini-cli is DOWN).
+#  1. 9 of 12 tasks rerouted to gemini 2026-05-31 (gemini-cli 0.44.0 UP); 3517/3518/3519 (P0.1 depth) kept on claude.
 #  2. NO model: opus anywhere (the opus thinking-400 killed .321's builder + .322's first G2).
 #  3. CASCADE-PROOF: no depth task gated_on another depth task; exp3519 does NOT gate on exp3516;
 #     the synthesis (exp3525) is UNGATED (reads & skips absent/flagged); only the capstone gates
@@ -50,8 +50,8 @@ tasks:
     title: "Archive milestone .323 honestly and activate .324"
     priority: critical
     max_turns: 20
-    agent_type: claude
-    requires_claude: true   # gemini-cli is DOWN; claude is the only backend landing artifacts.
+    agent_type: gemini
+    model: gemini-3.1-pro-preview   # rerouted 2026-05-31: gemini-cli 0.44.0 verified UP; .324 all-claude was a stale gemini-cli-down response
     estimated_wall_time_min: 5
     track: ops
     inference_substrate: aggregation_from_upstream_artifacts
@@ -116,8 +116,8 @@ tasks:
     title: "P0.1 OPTIONAL (non-blocking) — extend the LEVEL-3 in-band corpus from n=49 toward n>=80 (resume the existing exp3506 builder, sonnet, per-problem flush, hard 18-min budget)"
     priority: medium
     max_turns: 60
-    agent_type: claude
-    requires_claude: true   # gemini-cli is DOWN; live GGUF generation; sonnet (NOT opus — the opus thinking-400 killed the live builder in .321) reusing the existing script.
+    agent_type: gemini
+    model: gemini-3.1-pro-preview   # rerouted 2026-05-31: gemini-cli 0.44.0 verified UP; .324 all-claude was a stale gemini-cli-down response
     estimated_wall_time_min: 22
     track: evidence
     inference_substrate: live_llm_inference
@@ -526,8 +526,8 @@ tasks:
     title: "De-flag + verify the FoVer step-to-final gap closure — re-run the aggregation sweep with DISTINCT field names (no reference==measured) + a SHUFFLE-LABEL negative control to confirm the 97% min-aggregation gap closure is a real mechanism, not a label-correlated tautology"
     priority: high
     max_turns: 50
-    agent_type: claude
-    requires_claude: true   # gemini-cli is DOWN; cached scoring + the shuffle-label falsification control + judgment on the de-flag; claude is the only landing backend.
+    agent_type: gemini
+    model: gemini-3.1-pro-preview   # rerouted 2026-05-31: gemini-cli 0.44.0 verified UP; .324 all-claude was a stale gemini-cli-down response
     estimated_wall_time_min: 20
     track: evidence
     inference_substrate: verifier_ensemble_against_cached_candidates
@@ -628,8 +628,8 @@ tasks:
     title: "FR-11 robust self-learning default — validate the conservative-default beta across MANY fresh grounding configs AND test an ADAPTIVE ONLINE beta (measure lambda_min online, clamp to a safety floor) to find the rule that prevents depth-N>=200 collapse where the static offline law did not (mandatory continuous self-learning + P0.2)"
     priority: high
     max_turns: 50
-    agent_type: claude
-    requires_claude: true   # gemini-cli is DOWN; cached-trace closed-loop self-learning sweep + lambda_min covariance + collapse detection; claude is the only landing backend.
+    agent_type: gemini
+    model: gemini-3.1-pro-preview   # rerouted 2026-05-31: gemini-cli 0.44.0 verified UP; .324 all-claude was a stale gemini-cli-down response
     estimated_wall_time_min: 22
     track: evidence
     inference_substrate: verifier_ensemble_against_cached_candidates
@@ -729,8 +729,8 @@ tasks:
     title: "FoVer G2 — clean-room regression-verify the self-contained package (drift check after .324 changes) + keep the one-click external-ask current (no push, no CI trigger, G2 stays operator-gated)"
     priority: critical
     max_turns: 50
-    agent_type: claude
-    requires_claude: true   # gemini-cli is DOWN; package unpack + fresh-venv runner + checksum re-verify; sonnet.
+    agent_type: gemini
+    model: gemini-3.1-pro-preview   # rerouted 2026-05-31: gemini-cli 0.44.0 verified UP; .324 all-claude was a stale gemini-cli-down response
     estimated_wall_time_min: 22
     track: evidence
     inference_substrate: verifier_ensemble_against_cached_candidates
@@ -816,8 +816,8 @@ tasks:
     title: "KV260 terminal board-level latency transcript (drive to terminal, then freeze) — SSH precondition"
     priority: medium
     max_turns: 30
-    agent_type: claude
-    requires_claude: true   # gemini-cli is DOWN; SSH hardware probe + judgment; claude is the only landing backend.
+    agent_type: gemini
+    model: gemini-3.1-pro-preview   # rerouted 2026-05-31: gemini-cli 0.44.0 verified UP; .324 all-claude was a stale gemini-cli-down response
     estimated_wall_time_min: 10
     track: hardware
     inference_substrate: hardware_smoke
@@ -882,8 +882,8 @@ tasks:
     title: "PolarFire opportunistic reachability + continuity audit (no terminal mandate; tautology-de-flagged distinct fields)"
     priority: medium
     max_turns: 20
-    agent_type: claude
-    requires_claude: true   # gemini-cli is DOWN; SSH hardware probe; claude is the only landing backend.
+    agent_type: gemini
+    model: gemini-3.1-pro-preview   # rerouted 2026-05-31: gemini-cli 0.44.0 verified UP; .324 all-claude was a stale gemini-cli-down response
     estimated_wall_time_min: 8
     track: hardware
     inference_substrate: hardware_smoke
@@ -952,8 +952,8 @@ tasks:
     title: "G1-G4 gate-status synthesis v324 (UNGATED, cascade-proof, seed-fixed) — hardened Sudoku solve-rate + fair AR baseline / second-CSP generalization / fixed Route-2 reranker flip-count+delta / de-flagged step-to-final gap / robust self-learning rule / G2 regression verdicts"
     priority: high
     max_turns: 30
-    agent_type: claude
-    requires_claude: true   # gemini-cli is DOWN; aggregation + judgment; claude is the only landing backend.
+    agent_type: gemini
+    model: gemini-3.1-pro-preview   # rerouted 2026-05-31: gemini-cli 0.44.0 verified UP; .324 all-claude was a stale gemini-cli-down response
     estimated_wall_time_min: 8
     track: ops
     inference_substrate: aggregation_from_upstream_artifacts
@@ -1043,8 +1043,8 @@ tasks:
     title: "Capstone v324"
     priority: high
     max_turns: 30
-    agent_type: claude
-    requires_claude: true   # gemini-cli is DOWN; synthesis + judgment; claude is the only landing backend.
+    agent_type: gemini
+    model: gemini-3.1-pro-preview   # rerouted 2026-05-31: gemini-cli 0.44.0 verified UP; .324 all-claude was a stale gemini-cli-down response
     estimated_wall_time_min: 10
     track: ops
     inference_substrate: aggregation_from_upstream_artifacts
