@@ -1,21 +1,19 @@
 import json
-import sys
+import random
 
-def check(path):
-    traces = []
-    with open(path) as f:
+def check(file_path):
+    correct = 0
+    total = 0
+    with open(file_path) as f:
         for line in f:
-            if line.strip():
-                try:
-                    traces.append(json.loads(line))
-                except:
-                    pass
-    if not traces:
-        print(f"{path}: empty")
-        return
-    is_correct = [float(bool(t.get("is_correct", False))) for t in traces]
-    print(f"{path}: n={len(traces)}, true_acc={sum(is_correct)/len(traces):.4f}")
+            if not line.strip(): continue
+            d = json.loads(line)
+            if 'samples' in d:
+                for s in d['samples']:
+                    if s.get('correct'): correct += 1
+                    total += 1
+    if total > 0:
+        print(f"{file_path}: {correct/total:.3f} ({correct}/{total})")
 
-check("data/fover_corpus.jsonl")
-check("data/p01_difficulty_matched_generations.jsonl")
-check("data/fr11_zenil_distill_v2.jsonl")
+for f in ["data/p01_gsm8k_generations.jsonl", "data/p01_hardmath_generations.jsonl"]:
+    check(f)
