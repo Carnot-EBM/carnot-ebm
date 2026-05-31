@@ -2905,3 +2905,63 @@ OR the FoVer + EORM substrate is unloadable, OR no cached corpus exists
 **When** the experiment runs its step-0 preconditions
 **Then** it writes the matching complete: blocked_* honest verdict and exits without
 reporting any energy comparison.
+
+---
+
+## P0.1 Real Combinatorial Optimizer Ladder (Exp 3505)
+
+### REQ-KONA-3505: Discrete Combinatorial Optimizer Ladder on Validated Sudoku Encoding
+
+**Motivation:** Exp 3494 validated that Carnot's Sudoku-Ising encoding is correct
+(E=0 on a valid board). But the easy-tier solve rate was 0.0 because the optimizer
+was continuous-relaxation Langevin, which cannot escape local minima in discrete
+constraint satisfaction. The OPTIMIZER is the bottleneck, not the representation.
+
+**Requirement:** Given the validated encoding (REQ proven by exp3494's E=0 assertion),
+run a proper combinatorial optimizer ladder on >=20 Sudoku puzzles across difficulty
+tiers (easy/medium/hard) and report solve-rate scored on the DISCRETE BOARD (all
+constraints verified, not just energy threshold). The ladder must include at minimum:
+(i) vanilla Langevin baseline (for contrast with exp3494), (ii) discrete SA with
+single restart, (iii) discrete SA with K>=20 restarts, (iv) parallel tempering
+(>=4 chains with replica exchange), (v) exact CP/backtracking solver (confirms boards
+are solvable — the optimizer-isolation control). An AR greedy baseline provides the P0.1
+comparator. Plateau characterization (n_violated_constraints_at_plateau) distinguishes
+"almost solved" (few violations, optimizer-fixable) from "pervasive" (representational
+failure). A hybrid solve rate (exact CP on same puzzles) provides the "energy is a
+global heuristic" vs "energy replaces search" discriminator.
+
+**Row-swap SA representation:** Discrete SA operates on the INTEGER board directly
+using row-swap moves (swap two non-clue cells in the same row), which preserves row
+uniqueness by construction. Energy = count of excess digit occurrences across columns
+and boxes. Delta computation is O(1) via cached count arrays. This is the Simonis
+(2005) classical approach for hard Sudoku.
+
+**Acceptance gates:**
+- G0 (CORRECTNESS-FIRST): encoding_validity_E0_reasserted == true AND
+  exact_baseline_solve_rate > 0.5 (boards ARE solvable; failure isolates to optimizer)
+- G1 (HONEST-SOLVE-RATE): solve_rate reported on >=20 puzzles; any speedup claim
+  made ONLY on the solved subset
+- G2 (P0.1-DATAPOINT): solve_rate > ar_baseline_solve_rate OR
+  hybrid_solve_rate > ar_baseline_solve_rate (energy-based method beats AR on a CSP)
+
+**Implementation:** `python/carnot/phase3/sudoku_discrete_sa.py` (row-swap SA +
+parallel tempering), `python/carnot/phase3/sudoku_global_opt.py` (encoding, CP solver,
+puzzle generation), `python/carnot/phase3/sudoku_p01_gate.py` (AR baseline).
+
+### SCENARIO-KONA-3505: Exp 3505 Runs Optimizer Ladder and Reports P0.1 Datapoint
+**Given** the Sudoku-Ising encoding is valid (E=0 on a known-valid board, regression
+from exp3494), and >=20 puzzles spanning easy/medium/hard are available
+**When** we run experiment_3505_p01_sudoku_real_combinatorial_optimizer_ladder_v2.py
+**Then** it re-asserts E=0 (Step 0a), runs the full optimizer ladder (vanilla, SA
+single, SA K=20 restarts, parallel tempering, exact CP), measures AR baseline,
+reports solve_rate / solve_rate_by_difficulty / solve_rate_by_optimizer_variant /
+exact_baseline_solve_rate / n_violated_constraints_at_plateau / hybrid_solve_rate /
+ar_baseline_solve_rate, and emits one of the four terminal verdicts starting with
+"complete:".
+
+### SCENARIO-KONA-3505-BLOCKED: Exp 3505 Blocks on Encoding Regression
+**Given** the Sudoku-Ising encoding no longer gives E=0 on a known-valid board
+(regression from exp3494's validated state)
+**When** the experiment runs Step 0a
+**Then** it writes complete: blocked_energy_encoding_invalid_regression with the
+residual breakdown and exits without running any optimizer.

@@ -1,0 +1,388 @@
+{
+  "schema": "carnot.kona_p01_gate.v2",
+  "experiment": 3505,
+  "inference_substrate": "ising_energy_optimization_cpu",
+  "random_seed": 3505,
+  "reproducibility_checksum": "8957a028564e46a2daedd7d59d03568bfe88426349db775a7ec5ddde213bbf46",
+  "n_puzzles": 21,
+  "optimizer_config": {
+    "sa_n_restarts": 20,
+    "sa_config": {
+      "easy": {
+        "n_sweeps": 3000,
+        "n_moves_per_sweep": 50,
+        "T_init": 0.5,
+        "T_final": 0.01
+      },
+      "medium": {
+        "n_sweeps": 8000,
+        "n_moves_per_sweep": 80,
+        "T_init": 0.5,
+        "T_final": 0.01
+      },
+      "hard": {
+        "n_sweeps": 20000,
+        "n_moves_per_sweep": 100,
+        "T_init": 0.5,
+        "T_final": 0.01
+      }
+    },
+    "pt_config": {
+      "easy": {
+        "n_sweeps": 2000,
+        "n_moves_per_sweep": 50,
+        "n_chains": 4,
+        "T_min": 0.05,
+        "T_max": 1.0
+      },
+      "medium": {
+        "n_sweeps": 5000,
+        "n_moves_per_sweep": 80,
+        "n_chains": 4,
+        "T_min": 0.05,
+        "T_max": 1.0
+      },
+      "hard": {
+        "n_sweeps": 10000,
+        "n_moves_per_sweep": 100,
+        "n_chains": 4,
+        "T_min": 0.05,
+        "T_max": 1.0
+      }
+    },
+    "vanilla_n_steps": 1000,
+    "vanilla_n_restarts": 1,
+    "exact_cp_max_nodes": 5000000
+  },
+  "encoding_validity_E0_reasserted": {
+    "total_energy": 0.0,
+    "is_valid": true,
+    "residual_by_type": {
+      "row": 0.0,
+      "col": 0.0,
+      "box": 0.0,
+      "clue": 0.0
+    }
+  },
+  "easy_tier_solve_rate": 1.0,
+  "solve_rate": 1.0,
+  "solve_rate_by_difficulty": {
+    "easy": 1.0,
+    "medium": 1.0,
+    "hard": 1.0
+  },
+  "solve_rate_by_optimizer_variant": {
+    "vanilla_langevin": 0.0,
+    "discrete_sa_single": 0.9047619047619048,
+    "discrete_sa_restarts20": 1.0,
+    "parallel_tempering": 0.2857142857142857,
+    "exact_cp": 1.0
+  },
+  "exact_baseline_solve_rate": 1.0,
+  "n_violated_constraints_at_plateau": 0.0,
+  "n_violated_constraints_at_plateau_samples": [],
+  "hybrid_solve_rate": 1.0,
+  "time_to_solution_solved_only": [
+    0.0026886463165283203,
+    0.0029561519622802734,
+    0.003100156784057617,
+    0.0020554065704345703,
+    0.7267646789550781,
+    0.0023851394653320312,
+    0.003813028335571289,
+    0.06812572479248047,
+    0.1057283878326416,
+    0.009556055068969727,
+    0.051995038986206055,
+    0.028023719787597656,
+    2.178142547607422,
+    0.004985332489013672,
+    0.011673688888549805,
+    0.0055348873138427734,
+    0.021300315856933594,
+    0.04424309730529785,
+    0.018534183502197266,
+    0.02184891700744629,
+    0.07792091369628906
+  ],
+  "ar_baseline_solve_rate": 0.0,
+  "per_puzzle": [
+    {
+      "puzzle_id": "easy_0",
+      "difficulty": "easy",
+      "solved": true,
+      "n_violated": 0,
+      "time_s": 0.0026886463165283203
+    },
+    {
+      "puzzle_id": "easy_1",
+      "difficulty": "easy",
+      "solved": true,
+      "n_violated": 0,
+      "time_s": 0.0029561519622802734
+    },
+    {
+      "puzzle_id": "easy_2",
+      "difficulty": "easy",
+      "solved": true,
+      "n_violated": 0,
+      "time_s": 0.003100156784057617
+    },
+    {
+      "puzzle_id": "easy_3",
+      "difficulty": "easy",
+      "solved": true,
+      "n_violated": 0,
+      "time_s": 0.0020554065704345703
+    },
+    {
+      "puzzle_id": "easy_4",
+      "difficulty": "easy",
+      "solved": true,
+      "n_violated": 0,
+      "time_s": 0.7267646789550781
+    },
+    {
+      "puzzle_id": "easy_5",
+      "difficulty": "easy",
+      "solved": true,
+      "n_violated": 0,
+      "time_s": 0.0023851394653320312
+    },
+    {
+      "puzzle_id": "easy_6",
+      "difficulty": "easy",
+      "solved": true,
+      "n_violated": 0,
+      "time_s": 0.003813028335571289
+    },
+    {
+      "puzzle_id": "medium_0",
+      "difficulty": "medium",
+      "solved": true,
+      "n_violated": 0,
+      "time_s": 0.06812572479248047
+    },
+    {
+      "puzzle_id": "medium_1",
+      "difficulty": "medium",
+      "solved": true,
+      "n_violated": 0,
+      "time_s": 0.1057283878326416
+    },
+    {
+      "puzzle_id": "medium_2",
+      "difficulty": "medium",
+      "solved": true,
+      "n_violated": 0,
+      "time_s": 0.009556055068969727
+    },
+    {
+      "puzzle_id": "medium_3",
+      "difficulty": "medium",
+      "solved": true,
+      "n_violated": 0,
+      "time_s": 0.051995038986206055
+    },
+    {
+      "puzzle_id": "medium_4",
+      "difficulty": "medium",
+      "solved": true,
+      "n_violated": 0,
+      "time_s": 0.028023719787597656
+    },
+    {
+      "puzzle_id": "medium_5",
+      "difficulty": "medium",
+      "solved": true,
+      "n_violated": 0,
+      "time_s": 2.178142547607422
+    },
+    {
+      "puzzle_id": "medium_6",
+      "difficulty": "medium",
+      "solved": true,
+      "n_violated": 0,
+      "time_s": 0.004985332489013672
+    },
+    {
+      "puzzle_id": "hard_0",
+      "difficulty": "hard",
+      "solved": true,
+      "n_violated": 0,
+      "time_s": 0.011673688888549805
+    },
+    {
+      "puzzle_id": "hard_1",
+      "difficulty": "hard",
+      "solved": true,
+      "n_violated": 0,
+      "time_s": 0.0055348873138427734
+    },
+    {
+      "puzzle_id": "hard_2",
+      "difficulty": "hard",
+      "solved": true,
+      "n_violated": 0,
+      "time_s": 0.021300315856933594
+    },
+    {
+      "puzzle_id": "hard_3",
+      "difficulty": "hard",
+      "solved": true,
+      "n_violated": 0,
+      "time_s": 0.04424309730529785
+    },
+    {
+      "puzzle_id": "hard_4",
+      "difficulty": "hard",
+      "solved": true,
+      "n_violated": 0,
+      "time_s": 0.018534183502197266
+    },
+    {
+      "puzzle_id": "hard_5",
+      "difficulty": "hard",
+      "solved": true,
+      "n_violated": 0,
+      "time_s": 0.02184891700744629
+    },
+    {
+      "puzzle_id": "hard_6",
+      "difficulty": "hard",
+      "solved": true,
+      "n_violated": 0,
+      "time_s": 0.07792091369628906
+    }
+  ],
+  "hybrid_per_puzzle": [
+    {
+      "puzzle_id": "easy_0",
+      "difficulty": "easy",
+      "solved": true,
+      "time_s": 0.001191854476928711
+    },
+    {
+      "puzzle_id": "easy_1",
+      "difficulty": "easy",
+      "solved": true,
+      "time_s": 0.001096963882446289
+    },
+    {
+      "puzzle_id": "easy_2",
+      "difficulty": "easy",
+      "solved": true,
+      "time_s": 0.0010936260223388672
+    },
+    {
+      "puzzle_id": "easy_3",
+      "difficulty": "easy",
+      "solved": true,
+      "time_s": 0.001100301742553711
+    },
+    {
+      "puzzle_id": "easy_4",
+      "difficulty": "easy",
+      "solved": true,
+      "time_s": 0.0011069774627685547
+    },
+    {
+      "puzzle_id": "easy_5",
+      "difficulty": "easy",
+      "solved": true,
+      "time_s": 0.0011165142059326172
+    },
+    {
+      "puzzle_id": "easy_6",
+      "difficulty": "easy",
+      "solved": true,
+      "time_s": 0.0010919570922851562
+    },
+    {
+      "puzzle_id": "medium_0",
+      "difficulty": "medium",
+      "solved": true,
+      "time_s": 0.0019102096557617188
+    },
+    {
+      "puzzle_id": "medium_1",
+      "difficulty": "medium",
+      "solved": true,
+      "time_s": 0.002610445022583008
+    },
+    {
+      "puzzle_id": "medium_2",
+      "difficulty": "medium",
+      "solved": true,
+      "time_s": 0.001940011978149414
+    },
+    {
+      "puzzle_id": "medium_3",
+      "difficulty": "medium",
+      "solved": true,
+      "time_s": 0.001844167709350586
+    },
+    {
+      "puzzle_id": "medium_4",
+      "difficulty": "medium",
+      "solved": true,
+      "time_s": 0.0018646717071533203
+    },
+    {
+      "puzzle_id": "medium_5",
+      "difficulty": "medium",
+      "solved": true,
+      "time_s": 0.00186920166015625
+    },
+    {
+      "puzzle_id": "medium_6",
+      "difficulty": "medium",
+      "solved": true,
+      "time_s": 0.0018682479858398438
+    },
+    {
+      "puzzle_id": "hard_0",
+      "difficulty": "hard",
+      "solved": true,
+      "time_s": 0.002588987350463867
+    },
+    {
+      "puzzle_id": "hard_1",
+      "difficulty": "hard",
+      "solved": true,
+      "time_s": 0.0025315284729003906
+    },
+    {
+      "puzzle_id": "hard_2",
+      "difficulty": "hard",
+      "solved": true,
+      "time_s": 0.006692647933959961
+    },
+    {
+      "puzzle_id": "hard_3",
+      "difficulty": "hard",
+      "solved": true,
+      "time_s": 0.0058896541595458984
+    },
+    {
+      "puzzle_id": "hard_4",
+      "difficulty": "hard",
+      "solved": true,
+      "time_s": 0.002574920654296875
+    },
+    {
+      "puzzle_id": "hard_5",
+      "difficulty": "hard",
+      "solved": true,
+      "time_s": 0.0037145614624023438
+    },
+    {
+      "puzzle_id": "hard_6",
+      "difficulty": "hard",
+      "solved": true,
+      "time_s": 0.013425350189208984
+    }
+  ],
+  "honest_verdict": "complete: energy_global_inference_solves_sudoku_p01_datapoint_positive",
+  "duration_s": 437.45812821388245
+}
