@@ -7266,3 +7266,5 @@ web search: https://docs.garak.ai/garak/examples/pr |
 | 2026-05-31 13:38 UTC | G1-G4 gate-status synthesis v325 (UNGATED, cascade | OK | 81 passed in 4.36s |
 | 2026-05-31 13:59 UTC | Capstone v325 | FAIL | Post-tests failed: 2 failed, 107 passed in 4.49s |
 | 2026-05-31 13:59 UTC | Capstone v325 | OK | Deliverable already exists in repo |
+| 2026-05-31 14:32 UTC | Plan milestone 2026.05.326 | OK | 11 tasks proposed |
+| 2026-05-31 14:35 UTC | Milestone 2026.05.326 activated | OK | 11 tasks queued |
