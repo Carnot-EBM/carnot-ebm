@@ -7334,3 +7334,4 @@ web search: https://docs.garak.ai/garak/examples/pr |
 | 2026-05-31 22:35 UTC | Cross-domain generalization SYNTHESIS — does verif | OK | 82 passed in 3.97s |
 | 2026-05-31 22:41 UTC | KV260 SSH-reachability continuity (per Hardware-Ta | OK | 89 passed in 3.78s |
 | 2026-05-31 22:46 UTC | PolarFire opportunistic reachability + continuity  | OK | 85 passed in 4.24s |
+| 2026-05-31 22:52 UTC | GateMate continuity audit (documentation-only — fl | OK | 86 passed in 3.95s |
