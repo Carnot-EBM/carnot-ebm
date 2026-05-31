@@ -1,231 +1,240 @@
-# Research Roadmap — Milestone 2026.05.329 (Depth-Over-Breadth XV)
+# Research Roadmap — Milestone 2026.05.330
 
-**CHARACTERIZE the regime, OPEN the code-reranking front, RETIRE Route-2 NL-math,
-clean the aggregation, drive G2 — with ZERO critical science on a live-GPU path.**
+**Verifier Cross-Domain Value, DE-CONTAMINATED — was ".329 math-only" a real
+limitation or a failed positive control? Build the missing factual-grounding
+verifier and re-test on realistic corpora.**
 
-**Status:** staged (pre-activation)
-**Planner:** Claude Opus 4.8, 2026-05-31 (the gemini planner failed this cycle with
-`thinking`/400 + a 1201s idle-timeout, so Opus planned directly).
-**Predecessor:** 2026.05.328 (Depth-Over-Breadth XIV, CONSOLIDATION).
-**Milestone doc format:** v7/v8.
+Planned 2026-05-31 (Claude Opus 4.8, outer-loop, on the autonomous-planner
+directive). Pre-staged per the Pre-Staged Roadmap Convention.
 
 ---
 
-## 1. What `.328` proved (and disproved)
+## 1. What the previous milestone (.329) actually proved
 
-`.328` tried to harden the `.327` P0.1 Route-1 positive (energy/Ising global inference
-beats a STRONG classical solver + autoregressive greedy on graph coloring near the
-chromatic threshold: `solve 0.9625 vs DSATUR 0.70`, hard-tier paired diff `+0.38`,
-`p=0.000`) into a defensible general claim. Read via `scripts/summarize_artifact.py`:
+`.329` asked the right product question — does the G2-reproduced verifier
+ensemble (FoVer math step-error **AUROC 0.9131**, `paper_ready=true`) catch
+errors a strong baseline misses, and **generalize beyond math** to code bugs
+and factual hallucinations? Its headline verdict was **"math-only,
+domain-bound"** (exp3576). Reading the underlying artifacts shows that verdict
+is **a contaminated null — the positive control failed** (FALSE_NEGATIVE_RISK,
+CLAUDE.md Reading-Results Discipline):
 
-| Exp | Goal | Verdict | Honest reading |
-|---|---|---|---|
-| **exp3562** | Generalize Route-1 to a SECOND discriminating CSP (k-SAT) | **BLOCKED** `cannot_construct_discriminating_second_csp` | Strong classical k-SAT solvers solve the hard tier `==1.0` — no headroom to discriminate; energy actually lost `-0.03`, `p=1.0`. A discriminating regime is hard to even *construct* off the coloring phase transition. |
-| **exp3563** | Harden coloring: >=5 seeds + a second generator | **BOUNDED** `ci_includes_zero_on_second_generator` | Hard-tier paired-diff CI excluded 0 on generator 1, **included 0 on generator 2**. The positive is **fragile to the instance distribution**, not a robust headline. |
-| **exp3564** | Route-2 NL-math final live-GPU attempt + terminal verdict | **NO ARTIFACT** — 3× `Gemini CLI Stalled after 600s silence` | The live-generation task never ran. The **gemini-600s-stall** is the #1 *operational* impediment to P0.1. Route-2 still has **no terminal verdict** after 5 headroom-starved blocks. |
-| **exp3565** | Promote cross-corpus aggregation to a secondary headline | **FLAGGED (TAUTOLOGY)** `does_not_transfer` | Corpus C transfer healthy (`0.904`) but corpus B **degenerate** (`0.5` = floor = shuffle — a build bug). Promotion did not land. |
-| **exp3566** | FR-11 multi-corpus deploy + P0.2 verifier diversity | **BOUNDED** `verifier_diversity_no_material_gain_p02_bounded` | FR-11 deploys across a non-degenerate battery, but diverse grounding (`0.479`) did not beat single (`0.490`). P0.2 bounded. |
-| **exp3567** | G2 regression-verify | **CLEAN** | Package still reproduces FoVer `AUROC=0.9131`. **G2 is the SOLE unmet publication gate** (G1/G3/G4 met). |
-| Hardware | KV260 / PolarFire continuity | KV260 `blocked_ssh_unreachable`; PolarFire reachable | KV260 board down; PolarFire opportunistic-clean. |
+| .329 exp | domain | ensemble AUROC | best single verifier | model-confidence baseline | what it really means |
+|---|---|---|---|---|---|
+| exp3573 | code | **0.44** (worse than random) | 0.50 (inert) | 0.8992 | code-applicable verifiers **never fired** |
+| exp3574 | facts | **0.50** (inert) | 0.50 (inert) | **1.0 (perfect)** | degenerate corpus + only 2 inert verifiers scored |
 
-**Net state:** `depth_forcing_function_can_relax=true`. `G1=T, G2=F, G3=T, G4=T`.
-The P0.1 existential positive is **honest but narrow** — energy global inference beats
-strong-classical+AR specifically *near the graph-coloring phase transition on one
-generator*, and does **not** generalize to a second CSP or a second generator. This is
-exactly what the 2025-2026 neural-CO critique literature predicts (see §3).
+Two independent contamination signals:
 
----
+1. **Degenerate corpora.** A model-confidence AUROC of **1.0** on facts (and
+   0.90 on code) is the IMPLAUSIBLE_PERFECT signature: the negatives were
+   trivially separable, so there was **no real headroom** for any verifier to
+   demonstrate value. A null measured where confidence already scores 1.0 is
+   uninformative.
+2. **Inert / wrong verifier set.** Every per-verifier AUROC was exactly **0.50**
+   — the verifiers did not fire. exp3574 scored only `SemanticConsistencyVerifier`
+   + `IsingVerifier`; the actually factual-applicable verifiers
+   (`semantic_energy`, `nla_verifier_v3`,
+   `canonical_answer_vericot_grounding_pilot_v1`, `suppressed_retrieval_probe`,
+   `tier0u/v/w` consistency) were **never in the ensemble**. exp3573's code
+   ensemble at 0.44 likewise means the execution-applicable verifiers
+   (`controlled_invariance_executor_v2`, `executable_monitor_runtime_adapter`,
+   `ast_structure_verifier`) were not scoring the completions.
 
-## 2. The three biggest gaps (current state vs PRD vision)
+There is also an unresolved internal tension: exp3575 reported "second pair of
+eyes confirmed" (`code_conditional_catch_rate=0.75`) **from an ensemble whose
+code AUROC was 0.44** — a result that cannot both be true under a fair test and
+must be re-derived once the verifiers actually fire.
 
-1. **We have a bounded positive but no MAP of where it holds.** Chasing "does it
-   generalize" (exp3562/exp3563) answered: *narrowly, and fragile to distribution*.
-   The honest, publishable next move is not another CSP — it is to **characterize the
-   hardness regime** in which energy global inference beats strong classical solvers,
-   and concede the regime where it does not (the KaMIS lesson, arXiv:2502.03669).
-2. **The reranker premise was tested only where it cannot win.** Route-2 attacked
-   NL-math five times and found no selectable headroom because NL-math is single-basin
-   (the correct answer IS the mode — ARBITER arXiv:2605.26172, MoB arXiv:2511.18630).
-   The premise plausibly holds on **CODE** (multi-basin, functionally checkable, greedy
-   often wrong) — and CODE is where Carnot's genuine surviving positives live
-   (exp1999 `0.66→0.84`, exp2090 CRANE `0.70→0.85`). This front is unopened.
-3. **G2 — the finish line — is the SOLE unmet gate, and it is external.** The loop
-   cannot close G2 (Operator-Only External Publication), but every milestone it must
-   keep the self-contained reproducer drift-free and the one-click external ask current.
+**So `.329`'s real, defensible findings are narrower than its headline:** the
+FoVer math headline (0.9131, G2-reproduced) stands; the "doesn't generalize"
+claim is **not yet earned** — it was measured against a failed positive control.
+This milestone earns (or refutes) it honestly.
 
-**Operational gap (the operator's standing question — "get to the bottom of what
-impedes scientific advancement"):** the #1 impediment is the **gemini-600s-stall on
-live-GPU-generation tasks**, which retired Route-2 three times. The structural fix this
-milestone: **put ZERO critical science on a live-GPU-generation path.** Every `.329`
-depth task is CPU-Ising or cached-candidate scoring; the one task that could need fresh
-generation (code candidates) uses the **resumable-checkpoint + per-problem-flush**
-pattern that exp3448 proved defeats the idle-timeout.
-
----
-
-## 3. Recent research integrated (2026-05-31 sweep)
-
-Filed to `research-references.md` "2026-05-31 Post-.328 Planning Sweep".
-
-- **Q1 — regime maps / neural-CO-vs-classical critique:** arXiv:2502.03669 (KaMIS beats
-  AI on MIS even in-distribution — the adversarial baseline the regime map must concede
-  to where it loses), arXiv:2508.02510 (the neural-vs-classical gap is *distribution-
-  narrow* — our exp3563 fragility stated as a law), arXiv:2605.14624 (Amortized
-  Efficiency Threshold — the honest framing for a bounded win: volume-amortized, not
-  blanket solve-rate).
-- **Q2 — code reranking:** arXiv:2604.06485 (SEP symbolic equivalence partitioning —
-  CODE has selectable headroom majority vote misses), arXiv:2604.15618 (Functional
-  Majority Voting — the honest baseline our code reranker must beat).
-- **Q3 — selectable-headroom theory:** arXiv:2605.26172 (ARBITER reasoning basins —
-  THE theory of when reranking can win: multi-basin yes, single-basin no), arXiv:2509.06870
-  (AggLM minority-correct training split = a ready headroom-corpus protocol),
-  arXiv:2502.18581 (self-certainty BoN baseline + headroom diagnostic).
-- **Q4 — learned proposals for the generator-fragility fix:** arXiv:2509.23043
-  (IsingFormer learned PT proposals that *transfer across instances* — the mechanism to
-  make the Route-1 positive robust across generators), arXiv:2502.10328 (neural
-  transports for PT).
+### What stands unchanged going into .330
+- **G1–G4 all met; `paper_ready=true`** (FoVer headline reproduced on a clean
+  CI runner, G2 closed). North-star §2.
+- **P0.1 is honest-negative** (energy *selection* has no headroom where
+  self-consistency / strong classical baselines are near-optimal). Do NOT
+  re-test Route-1/Route-2.
+- Hardware: KV260 repeatedly SSH-unreachable (board down), PolarFire reachable,
+  GateMate flash/smoke host-IO hangs (known blocker).
 
 ---
 
-## 4. Architecture (where `.329` touches the stack)
+## 2. The three biggest gaps between current state and the PRD vision
+
+The PRD north star is **"escape LLM hallucinations + autonomous directed
+self-learning, energy as ground truth."** Against that:
+
+1. **No working factual-grounding verifier (the core-motivation gap).** Carnot's
+   *entire reason to exist* is catching factual hallucinations, yet `.329` shows
+   the ensemble has **no verifier that fires on factual claims**. Constraint
+   verifiers (SAT/Z3/AST/Ising) structurally cannot check facts. The SOTA recipe
+   (retrieval + atomic-claim NLI entailment, per Mu-SHROOM / HalluSearch) is
+   not yet wired into the ensemble. **This is the milestone's primary build.**
+
+2. **The cross-domain generalization question is unanswered, not answered
+   "no".** A peer EBM judge (arXiv:2505.14999) claims energy verifiers DO
+   generalize OOD — but theirs is *trained* on reasoning-validity, where
+   Carnot's is a fixed constraint ensemble. We must run the fair test (realistic
+   corpora + applicable verifiers) before scoping the paper to "math-only".
+
+3. **The product value prop ("second pair of eyes") is unmeasured under a fair
+   test.** Whether the ensemble is *additive* to a strong model-confidence
+   baseline — catching errors confidence misses — is the genuine commercial
+   claim, and `.329` measured it against a degenerate corpus.
+
+---
+
+## 3. Architecture of the milestone
 
 ```
-                          +---------------------------------------------+
-   P0.1 Route-1 (CSP)     |  energy/Ising GLOBAL inference  vs classical |
-   -- REGIME MAP ---------|  + autoregressive greedy                     |
-   -- generator-robust ---|  (CPU; PT + SA + exact; learned proposals)   |
-                          +---------------------------------------------+
-                                            |  characterized, not chased
-                          +---------------------------------------------+
-   P0.1 Route-2 (reason)  |  verifier / energy RERANKER vs self-consist. |
-   -- OPEN: CODE ---------|  CODE: multi-basin, functionally checkable    |
-   -- RETIRE: NL-math ----|  NL-math: single-basin -> terminal negative  |
-                          +---------------------------------------------+
-                          +---------------------------------------------+
-   Verification headline  |  FoVer 4-verifier ensemble -> AUROC 0.9131   |
-   -- aggregation clean --|  step->final aggregation transfer (A->{B,C}) |
-   -- G2 drive -----------|  self-contained reproducer (drift-free)      |
-                          +---------------------------------------------+
-                          +---------------------------------------------+
-   Self-learning (FR-11)  |  conservative-beta grounding -> no-collapse  |
-   -- distribution shift -|  robustness under a SHIFTED corpus           |
-                          +---------------------------------------------+
-   Hardware (opportunistic)  KV260 (SSH, until terminal) - PolarFire (audit)
+                 .329 NULL (contaminated)
+                 "verifier is math-only"
+                          |
+        +-----------------+------------------+
+        |  Phase A - DE-CONTAMINATE          |
+        |  A1 diagnose the null (positive-   |
+        |     control + verifier-inertia)    |
+        |  A2 build REALISTIC corpora where  |
+        |     confidence is NOT perfect      |
+        +-----------------+------------------+
+                          | realistic, headroom-bearing corpora
+        +-----------------+------------------+
+        |  Phase B - BUILD / WIRE THE        |
+        |  RIGHT VERIFIERS                    |
+        |  B1 score factual-APPLICABLE        |
+        |     verifiers (which fire?)         |
+        |  B2 prototype retrieval/NLI factual-|
+        |     grounding verifier (the gap)    |
+        +-----------------+------------------+
+                          | verifiers that actually fire
+        +-----------------+------------------+
+        |  Phase C - THE FAIR PRODUCT TEST   |
+        |  C1 corrected cross-domain re-      |
+        |     measurement (math|code|facts)   |
+        |  C2 additivity / second-pair-of-eyes|
+        |     vs strong confidence (McNemar)  |
+        +-----------------+------------------+
+                          |
+        +-----------------+------------------+
+        |  Phase D - SELF-LEARNING, SYNTH,   |
+        |  HARDWARE, OPS                      |
+        |  FR-11 . synthesis . G-gate .       |
+        |  KV260/PolarFire/GateMate . capstone|
+        +------------------------------------+
 ```
 
----
-
-## 5. Phases (12 experiments, exp3572-exp3583)
-
-**Phase A — OPS transition (1):** exp3572 archive `.328` / activate `.329`.
-
-**Phase B — DEPTH (6; the majority; no cross-gating, all CPU or cached):**
-- **exp3573 — P0.1 Route-1 REGIME MAP (CPU, #1 priority).** Sweep graph-coloring
-  instances across a hardness axis (proximity to the chromatic/freezing threshold) and
-  measure the energy-vs-strong-classical advantage *as a function of hardness*. Output:
-  the regime where energy wins, ties, and loses — with an amortized-efficiency framing.
-- **exp3574 — P0.1 Route-1 generator-robustness (CPU).** Directly address exp3563's
-  fragility: does a stronger / learned-proposal PT optimizer (IsingFormer-style global
-  moves) make the hard-tier paired-diff CI exclude 0 on the second generator?
-- **exp3575 — P0.1 Route-2 CODE reranking headroom (cached-first, stall-proof).** Open
-  the front where headroom plausibly exists: build/score a code-candidate corpus where
-  greedy is wrong and a correct candidate is present; score the Carnot energy/verifier
-  reranker vs Functional Majority Voting + self-certainty BoN.
-- **exp3576 — P0.1 Route-2 NL-math TERMINAL RETIREMENT (CPU synthesis, no GPU).** Give
-  Route-2 NL-math its terminal verdict on the accumulated evidence (5 headroom-starved
-  blocks + theory) — no live generation, so the 600s-stall cannot retire it again.
-- **exp3577 — Aggregation secondary-headline CLEAN re-run (cached).** Fix the exp3565
-  corpus-B degeneracy (non-degenerate B/C splits) and re-run A->{B,C} multi-seed, clean.
-- **exp3578 — FR-11 self-learning ADVANCE (CPU, mandatory).** New question: does the
-  conservative-beta deploy survive a *distribution shift* between the grounding corpus
-  and the deployment corpus (not just depth-N)?
-
-**Phase C — FINISH LINE (1):** exp3579 G2 regression-verify + external-ask refresh.
-
-**Phase D — HARDWARE (2; opportunistic per north-star §3):** exp3580 KV260 SSH
-continuity (until terminal), exp3581 PolarFire opportunistic audit.
-
-**Phase E — SYNTHESIS (2):** exp3582 G1-G4 gate-status synthesis v329 (UNGATED,
-cascade-proof, seed-fixed), exp3583 capstone v329 (gated on the synthesis-ready flag).
+**Either outcome is genuine learning** (and neither re-grinds an answered
+question):
+- *Verifiers fire on realistic corpora and beat/augment confidence* → the
+  `.329` "math-only" verdict was an artifact; the verifier value generalizes →
+  **a broader, stronger paper claim.**
+- *Verifiers still don't fire even with the right set + realistic corpora* →
+  "math-only" is now earned against a valid positive control → **a precise,
+  defensible limitation that honestly scopes the verifier claim** (and motivates
+  the trained-judge direction of arXiv:2505.14999 as future work).
 
 ---
 
-## 6. Dependency graph (cascade-proof)
+## 4. Phases and experiments (14 tasks, exp3583–exp3596)
+
+**Phase 0 — ops**
+- exp3583 — archive .329, activate .330.
+
+**Phase A — de-contaminate the .329 null**
+- exp3584 — diagnose the null: confirm corpus degeneracy (confidence AUROC≈1.0)
+  + verifier inertia (per-verifier=0.5); enumerate which verifiers are
+  *applicable* per domain. Positive-control audit (FALSE_NEGATIVE_RISK).
+- exp3585 — build a REALISTIC factual hallucination corpus where
+  model-confidence is NOT a perfect detector (SOTA GGUF generation over
+  TruthfulQA-style / open QA with fact-level labels, or fetch Mu-SHROOM/SHROOM).
+
+**Phase B — build / wire the right verifiers**
+- exp3586 — score the factual-APPLICABLE verifiers on the realistic corpus:
+  which fire (per-verifier AUROC materially > 0.5)? Is the ensemble inert
+  because of composition, or genuinely domain-bound?
+- exp3587 — prototype a retrieval/NLI atomic-claim grounding verifier (the SOTA
+  recipe) and evaluate it vs the confidence baseline on the realistic corpus.
+
+**Phase C — the fair product test**
+- exp3588 — corrected cross-domain re-measurement: math (0.9131) | code | facts,
+  using the per-domain APPLICABLE verifier set + realistic corpora + strong
+  confidence baseline. Honest verdict with a valid positive control.
+- exp3589 — additivity / "second pair of eyes": does ensemble⊕confidence beat
+  confidence alone? Conditional catch-rate + McNemar on realistic corpora.
+  Resolves the exp3575/exp3576 tension.
+
+**Phase D — self-learning, synthesis, hardware, ops**
+- exp3590 — FR-11 continuous self-learning (mandatory): conservative-default on
+  a fresh non-degenerate corpus, optionally calibrating the new factual verifier.
+- exp3591 — cross-domain synthesis v2 + paper-claim scoping (does the corrected
+  test broaden, confirm, or re-scope "math-only"?).
+- exp3592 — G1–G4 gate-status synthesis v330 (paper_ready stays true; record the
+  corrected verifier-generalization result).
+- exp3593 — KV260 SSH continuity (Hardware-Task Continuity).
+- exp3594 — PolarFire opportunistic reachability + continuity audit.
+- exp3595 — GateMate continuity audit (documentation-only; flash/smoke hangs).
+- exp3596 — capstone v330.
+
+---
+
+## 5. Dependency graph
 
 ```
-exp3572 (ops) --> [all depth tasks activate]
-exp3573  exp3574  exp3575  exp3576  exp3577  exp3578   (NO cross-gating; each
-   |        |        |        |        |        |        re-asserts its own
-   +--------+--------+--------+---+----+--------+        preconditions, blocks
-                                  |                      honestly, never gates)
-exp3579 (G2)  exp3580 (KV260)  exp3581 (PolarFire)      (independent)
-                                  |
-exp3582 (synthesis, UNGATED -- reads & SKIPS absent/flagged artifacts)
-                                  |  gate_status_v329_ready == true
-exp3583 (capstone -- the ONLY gated task)
+exp3583 (activate)
+   +-> exp3584 (diagnose) --+
+   +-> exp3585 (corpus)  ---+--> exp3586 (score applicable verifiers)
+                                  +-> exp3587 (factual grounding verifier)
+                                         +-> exp3588 (corrected cross-domain)
+                                                +-> exp3589 (additivity / McNemar)
+                                                       +-> exp3591 (synthesis)
+                                                              +-> exp3592 (G-gate)
+                                                                     +-> exp3596 (capstone)
+exp3590 (FR-11)            -- independent (self-learning mandate)
+exp3593/3594/3595 (HW)     -- independent (hardware continuity)
 ```
 
-No depth task is `gated_on` another depth task (the `.321` cascade failure mode). The
-synthesis is UNGATED and skips absent/flagged inputs; only the capstone gates, on the
-synthesis-ready flag.
+Gates: exp3588 gated on exp3586 landing a non-inert verifier signal; exp3589
+gated on exp3588. Corpus-availability handled by in-prompt PRECONDITIONS with
+`blocked_*` fallbacks (not structural gates), so a missing corpus degrades
+gracefully rather than cascade-blocking.
 
 ---
 
-## 7. The `.329` rules (carried from the working `.322-.328` architecture)
+## 6. Hardware requirements
 
-1. **AGENT ROUTING:** all 12 tasks PLANNED `agent_type: claude` + `requires_claude: true`
-   to pass the `MODEL_AGENT_COHERENCE` pre-activation gate audit (no gemini). The
-   outer-loop REROUTES the mechanical tasks to gemini at activation per Gemini-Default +
-   the `.325/.326/.327` precedent. The two genuine-judgment tasks — **exp3575**
-   (code-reranking judgment) and **exp3576** (honest terminal framing of a permanent
-   retirement) — STAY claude.
-2. **NO `model: opus` anywhere** (the opus thinking-400 killed `.321`/`.322` builders).
-3. **ZERO critical science on a live-GPU-generation path.** Every depth task is CPU-Ising
-   or cached-candidate scoring. exp3575 (the only task that could generate) is cached-first
-   and, if it must generate, uses the resumable-checkpoint + per-problem-flush pattern
-   (exp3448) that defeats the 600s/1201s idle-timeout.
-4. **PER-ITERATION progress flush + hard wall-clock budget** on every loop.
-5. **ANTI-TAUTOLOGY:** ops/aggregation/G2/hardware/synthesis/capstone set
-   `random_seed=20260602` (NOT the exp number); measurement tasks use a CONTENT-DERIVED
-   seed; never store the same measured quantity under two field names; references live
-   ONLY in `methodology_note` strings; CSP corpora must NOT be ceiling-saturated for the
-   STRONG baseline on the hard tier.
+- **CPU-only** for all verifier-scoring + aggregation tasks (the
+  `verifier_ensemble_against_cached_candidates` / `aggregation_from_upstream`
+  substrates — cheap, externally reproducible, no GPU).
+- **GPU / llama.cpp (SOTA GGUF)** ONLY for exp3585 corpus generation if a
+  realistic labeled corpus must be synthesized (precondition-gated; prefers an
+  existing/fetched corpus). MODEL_SPECS use the mandated SOTA GGUFs
+  (`unsloth/Qwen3.6-35B-A3B-GGUF`, `unsloth/gemma-4-31B-it-GGUF`,
+  `unsloth/gemma-4-26B-A4B-it-GGUF`) via `cached_sota_pair()`.
+- **FPGA boards** (KV260 via `ssh kria`, PolarFire via `ssh polarfire`, GateMate
+  via DirtyJTAG): SSH-reachability / detect preconditions only, per the KV260
+  SSH-Not-SD-Card Discipline. No bitstream rebuild this milestone.
 
 ---
 
-## 8. Hardware requirements
+## 7. Disciplines honored
 
-- **CPU only** for all six depth tasks + aggregation + FR-11 + G2 + synthesis + capstone.
-- **GPU (RTX 3090)** only as a *fallback* for exp3575 if no cached code-candidate corpus
-  exists — bounded, resumable, per-problem-flush; cached path preferred.
-- **KV260** (SSH, `ssh kria`) and **PolarFire** (SSH, `ssh polarfire`) for the two
-  opportunistic continuity audits. No host SD-card checks for KV260 (SSH-Not-SD-Card).
-
----
-
-## 9. SOTA model policy
-
-exp3575 (code reranking) — if it generates — uses a mandated SOTA GGUF via the GGUF path
-(NOT `AutoTokenizer` on a `-GGUF` repo id): default `unsloth/gemma-4-26B-A4B-it-GGUF`,
-fallback `unsloth/gemma-4-31B-it-GGUF` / `unsloth/Qwen3.6-35B-A3B-GGUF`. All other tasks
-score cached candidates or run CPU-Ising and invoke no LLM.
-
----
-
-## 10. Done criteria
-
-- exp3573 emits a regime map: energy-vs-strong-classical advantage as a function of
-  hardness, with the win/tie/lose bands named and an amortized-efficiency framing.
-- exp3574 reports whether a stronger/learned PT optimizer makes the coloring positive
-  robust across generators (CI excludes 0 on generator 2) — positive or honest bound.
-- exp3575 reports whether the reranker beats Functional-Majority-Voting + self-certainty
-  on a headroom code corpus — positive (a new code secondary-headline candidate) or
-  honest bound (still no win even where headroom exists).
-- exp3576 emits Route-2 NL-math's TERMINAL verdict (permanently retired as a trustworthy
-  terminal negative, SC near-optimal on NL-math).
-- exp3577 lands the A->{B,C} aggregation transfer CLEAN (no degenerate 0.5, no flag) or an
-  honest bound.
-- exp3578 reports whether the conservative-beta deploy survives a distribution shift.
-- exp3579 keeps G2 regression-clean; G2 stays operator-gated (g2_met=false).
-- exp3582/exp3583 emit the G1-G4 gate state + a narrowing-clean capstone; flagged
-  artifacts excluded from every headline number.
+- **Reading-Results / FALSE_NEGATIVE_RISK** — the milestone exists to supply the
+  positive control the `.329` null lacked.
+- **Adversarial Artifact Verification + Sample-Size Rigor** — all AUROC claims
+  carry n≥100, ≥3 seeds, bootstrap CIs, class balance; surprising results
+  cross-checked.
+- **Inference-Substrate Declaration** — every task declares its substrate.
+- **Pre-Launch Preconditions** — every compute/corpus/hardware resource is
+  checked before use with a `blocked_*` fallback.
+- **Principle-Annotated Artifact Fields** — every required field + gate carries a
+  `principle:`.
+- **Gemini-Default** — all tasks `agent_type: gemini`.
+- **Paper-v6 Narrowing** — synthesis/capstone emit `paper_safe_claims` /
+  `paper_forbidden_claims`; a domain-bound ensemble is a *scoped* claim, never a
+  foundation-model claim; P0.1 stays honest-negative.
+- **Hardware-Task Continuity** — one task per attached board, operator_override
+  on the routine continuations.
+- **Verdict Terminal-Prefix** — every `honest_verdict` starts `complete:`.

@@ -20002,3 +20002,47 @@ This refresh captures continual learning frameworks under constrained memory and
     task (FLAGGED 2026-05-30) is the same domain — Qwen3 + math reasoning. If that
     reranker or any P0.1/FR-11 component does SFT, EKSFT's anti-collapse masking is
     a directly-applicable training recipe to keep it from collapsing exploration.
+
+## 2026-05-31 Post-.329 Planning Sweep (Milestone 2026.05.330)
+
+`.329` pivoted off the answered P0.1 question to the REAL product question: does the G2-reproduced
+verifier ensemble (FoVer math AUROC 0.9131) catch errors strong baselines miss, and **generalize beyond
+math** to code bugs and factual hallucinations? The headline verdict was **"math-only, domain-bound"**
+(exp3576). But reading the artifacts via `scripts/summarize_artifact.py` + raw fields exposes that the
+null is **contaminated — the positive control failed** (FALSE_NEGATIVE_RISK per CLAUDE.md
+Reading-Results Discipline):
+
+- **exp3573 (code):** ensemble AUROC **0.44** (worse than random), best-single-verifier **0.50** (inert),
+  model-confidence baseline **0.8992**. An ensemble at 0.44 with every member at 0.50 means the
+  code-applicable verifiers **never fired** on this corpus — not that the ensemble lost a fair fight.
+- **exp3574 (facts):** ensemble AUROC **0.50**, per-verifier `{SemanticConsistencyVerifier: 0.5,
+  IsingVerifier: 0.5}` (both inert), model-confidence baseline **1.0 (perfect)**. A confidence AUROC of
+  exactly 1.0 is the IMPLAUSIBLE_PERFECT signature of a **degenerate corpus** (negatives trivially
+  separable). Critically, only 2 verifiers were scored — the actually factual-applicable verifiers
+  (`semantic_energy`, `nla_verifier_v3`, `canonical_answer_vericot_grounding_pilot_v1`,
+  `suppressed_retrieval_probe`, `tier0u/v/w` consistency) were **never in the ensemble**.
+
+**Conclusion for `.330`:** Before accepting "Carnot's verifier is math-only," run the positive control —
+a REALISTIC corpus where model-confidence is NOT a perfect detector, scored with the verifiers that
+actually APPLY to each domain. `.330` is that de-contamination + the build of the missing
+factual-grounding verifier.
+
+### New peer / grounding references
+
+- **"Learning to Rank Chain-of-Thought: Using a Small Model" (arXiv:2505.14999, May 2025):** an
+  **EBM-based judge** for CoT reranking that **outperforms majority voting and traditional Outcome Reward
+  Models AND generalizes to OOD problems and unseen models**. This is the closest peer to Carnot's
+  energy-verifier and a direct counterpoint to `.329`'s domain-bound finding — they claim the OOD
+  generalization Carnot's ensemble (as currently composed) lacks. Read to understand WHY their energy
+  judge transfers (it is TRAINED on reasoning-validity, not a fixed constraint ensemble) and whether the
+  same training recipe rescues Carnot's cross-domain transfer.
+- **Unsupervised Ensemble Learning Through Deep Energy-Based Models (arXiv:2601.20556, Jan 2026):**
+  EBM-based unsupervised ensemble combination — relevant to how Carnot fuses per-verifier energies into a
+  single ensemble score (the fusion that `.329` did naively / inertly).
+- **SemEval-2025 Task 3 (Mu-SHROOM) + HalluSearch (arXiv:2504.10168) + Span-Level Hallucination Detection
+  (arXiv:2504.18639):** the SOTA factual-hallucination-detection recipe is **retrieval-augmented +
+  atomic-claim decomposition + DeBERTa/NLI entailment vs retrieved context + token-confidence fusion**.
+  Mu-SHROOM is a realistic multilingual span-level hallucination benchmark; TruthfulQA reports >50%
+  baseline hallucination (so confidence is NOT a perfect detector there — the opposite of the degenerate
+  `qa_dataset_1000.json` corpus). These ground the `.330` factual-grounding-verifier design and the
+  realistic-corpus build.
