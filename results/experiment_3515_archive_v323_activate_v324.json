@@ -1,0 +1,249 @@
+{
+  "schema": "carnot.operational_retro.v66",
+  "experiment": 3515,
+  "experiment_id": 3515,
+  "experiment_title": "Archive v323 + Activate v324",
+  "run_date": "20260531",
+  "generated_at": "2026-05-31T07:22:48Z",
+  "inference_substrate": "aggregation_from_upstream_artifacts",
+  "milestone_archived": "2026.05.323",
+  "milestone_activated": "2026.05.324",
+  "archive_v323_activate_v324_ready": true,
+  "p01_first_clean_positive": true,
+  "p01_has_clean_verdict": true,
+  "p01_route1_verdict": "complete: energy_global_inference_solves_sudoku_p01_datapoint_positive",
+  "p01_route1_solve_rate": 1.0,
+  "p01_route1_easy_tier_solve_rate": 1.0,
+  "p01_route1_ar_baseline_solve_rate": 0.0,
+  "p01_route1_vanilla_langevin_solve_rate": 0.0,
+  "p01_route1_encoding_valid_E0_reasserted": true,
+  "p01_route1_n_puzzles": 21,
+  "p01_route1_pt_solve_rate": 0.38095238095238093,
+  "p01_route1_fragility_note": "21 puzzles only; naive-greedy AR baseline (not real LLM); PT=0.38 (underperformed SA \u2014 backwards, tuning bug); Sudoku-only.",
+  "p01_route2_verdict": null,
+  "p01_route2_flagged": true,
+  "p01_route2_delta": null,
+  "p01_route2_flip_count": null,
+  "p01_route2_level3_sc": 0.653061,
+  "p01_route2_collapse_diagnosis": "Fitted lambdas all collapsed to 0 \u2014 reranker made ZERO distinct selections from SC. Process-energy makes no independent signal from SC on this substrate.",
+  "step_to_final_gap_closed_fraction": null,
+  "step_to_final_gap_verdict": null,
+  "step_to_final_gap_flagged": true,
+  "step_to_final_gap_deflag_action": "exp3508 stored reference==measured (TAUTOLOGY). De-flag by: (a) compute step_error_auroc from local corpus, not from stored exp2837 reference; (b) add shuffle control \u2014 confirmed-distinct arrays.",
+  "fr11_beta_law_deployment_validated": false,
+  "fr11_deployment_verdict": "complete: beta_min_lambda_min_law_does_not_generalize_to_deployment_use_conservative_default",
+  "fr11_deployment_recommendation": "Use conservative default beta; add adaptive-online beta estimation (deploy beta = f(observed lambda_min) + 0.10 safety margin).",
+  "g2_package_regression_auroc": 0.9131,
+  "g2_package_auroc_in_ci": true,
+  "g2_external_run_pending": true,
+  "g2_verdict": "complete: fover_g2_package_regression_clean_external_ask_current_g2_operator_gated",
+  "g2_operator_action": "Run: tar xzf dist/g2-fover-repro.tar.gz && cd g2-fover-repro && bash run.sh (or trigger external workflow) from a non-operator account.  Confirm condition_A_auroc \u2208 [0.9027, 0.9235].  Only a non-operator run closes G2 per Operator-Only External Publication discipline.",
+  "publication_gate_status": {
+    "G1_headline_measured": true,
+    "G2_independent_reproducer": false,
+    "G3_prose_narrowing_clean": true,
+    "G4_numbers_trace_to_artifacts": true,
+    "paper_ready": false,
+    "unmet_gates": [
+      "G2"
+    ],
+    "sole_unmet_gate": "G2",
+    "G2_external_run_pending": true,
+    "G2_package_auroc": 0.9131,
+    "G2_package_auroc_ci": [
+      0.9027,
+      0.9235
+    ]
+  },
+  "kv260_verdict": "complete: blocked_kv260_ssh_unreachable",
+  "kv260_blocked": true,
+  "kv260_terminal_state_reached": false,
+  "polarfire_verdict": "complete: polarfire reachable and continuity confirmed deflagged",
+  "polarfire_reachable": true,
+  "depth_forcing_function_can_relax": true,
+  "depth_forcing_function_rationale": "P0.1 Route 1 POSITIVE (exp3505 solve_rate=1.0 vs AR=0.0); Route 2 FLAGGED adversarial. G2 external workflow in-motion. Per gate synthesis (exp3513): can_relax=True. G2 closure remains the top priority.",
+  "key_finding": "P0.1 ROUTE 1 POSITIVE (exp3505, CLEAN): real combinatorial optimizers (discrete SA 20 restarts, parallel tempering, exact CP) achieve solve_rate=1.0 across all Sudoku difficulty tiers (21/21) vs AR greedy baseline=0.0. Encoding validated E=0. Vanilla Langevin=0.0 (gradient-only still fails, consistent with .322). This is the FIRST clean positive P0.1 datapoint: energy-descent with a proper combinatorial optimizer DOES solve what autoregressive generation cannot. FRAGILE: 21 puzzles, naive-greedy AR, PT=0.38 (SA > PT \u2014 tuning bug). Sudoku-only. Route 2 (exp3507) FLAGGED TAUTOLOGY \u2014 process energy makes zero distinct selections from SC (flip_count=0, fitted lambdas all=0). Step-to-final gap (exp3508) FLAGGED TAUTOLOGY \u2014 directional only. FR-11 beta-law (exp3509, CLEAN NEGATIVE): law does not generalise to deployment. G2 regression clean (exp3510), external run pending = SOLE unmet publication gate.",
+  "top_forward_gap": "1. HARDEN the Sudoku positive: fair LLM-AR baseline + PT diagnosis/fix (more chains, wider temperature range) + \u226550 puzzles. 2. GENERALIZE to a SECOND CSP (graph-coloring / SAT / Countdown). 3. FIX the Route-2 reranker collapse: break consensus trap \u2014 ensure process-energy produces flip_count > 0 (distinct from SC). 4. DE-FLAG the step-to-final gap: separate field arrays, add shuffle control. 5. Find the self-learning rule that actually deploys: conservative-default + adaptive-online beta estimation.",
+  "flagged_adversarial_this_milestone": [
+    3507,
+    3508
+  ],
+  "flagged_artifacts_note": "exp3507 (Route 2 in-band) and exp3508 (step-to-final gap) were flagged TAUTOLOGY. Gate status in this retro is derived from unflagged primary experiments (3505, 3509, 3510, 3511, 3512, 3513, 3514) directly, per the fabrication-gate rule.",
+  "experiments_completed": [
+    {
+      "id": 3504,
+      "title": "Archive v322 + Activate v323",
+      "outcome": "complete",
+      "key_result": "v322 archived, v323 activated"
+    },
+    {
+      "id": 3505,
+      "title": "P0.1 Route 1 \u2014 REAL combinatorial-optimizer ladder (Sudoku) v2",
+      "outcome": "complete_clean_positive",
+      "key_result": "solve_rate=1.0; ar_baseline=0.0; encoding_E0=True; n_puzzles=21; pt_solve_rate=0.38095238095238093 (PT underperformed SA \u2014 tuning bug)",
+      "honest_verdict": "complete: energy_global_inference_solves_sudoku_p01_datapoint_positive"
+    },
+    {
+      "id": 3506,
+      "title": "P0.1 OPTIONAL \u2014 extend purpose-built level-3 corpus v4",
+      "outcome": "complete_optional",
+      "key_result": "complete: p01_level3_corpus_scorable_partial_n=49_resume_next_milestone"
+    },
+    {
+      "id": 3507,
+      "title": "P0.1 Route 2 CRUX \u2014 energy-vs-SC in-band corpus v9",
+      "outcome": "flagged_adversarial_tautology",
+      "key_result": "FLAGGED TAUTOLOGY x5. Real finding (directional): reranker collapsed (flip_count=0, fitted lambdas all=0). Process energy makes zero distinct selections from SC.",
+      "honest_verdict": "complete: process_energy_does_not_change_selections_selection_premise_refuted_on_this_substrate"
+    },
+    {
+      "id": 3508,
+      "title": "FoVer step-to-final aggregation gap close v1",
+      "outcome": "flagged_adversarial_tautology",
+      "key_result": "FLAGGED TAUTOLOGY x2. Real finding (directional): 'min' aggregation closes ~97% of gap (directional only).",
+      "honest_verdict": "complete: step_to_final_aggregation_recovers_correctness_signal_gap_closed_97pct"
+    },
+    {
+      "id": 3509,
+      "title": "FR-11 closed-loop beta-law deployment v1",
+      "outcome": "complete_clean_negative",
+      "key_result": "deployed_law_prevents_collapse=False; use conservative default beta",
+      "honest_verdict": "complete: beta_min_lambda_min_law_does_not_generalize_to_deployment_use_conservative_default"
+    },
+    {
+      "id": 3510,
+      "title": "FoVer G2 regression-verify + external ask refresh v3",
+      "outcome": "complete_clean",
+      "key_result": "AUROC=0.9131; within_ci=True; external_run_pending=True; G2 is the sole unmet publication gate",
+      "honest_verdict": "complete: fover_g2_package_regression_clean_external_ask_current_g2_operator_gated"
+    },
+    {
+      "id": 3511,
+      "title": "KV260 terminal latency transcript v9",
+      "outcome": "blocked_ssh_unreachable",
+      "key_result": "complete: blocked_kv260_ssh_unreachable"
+    },
+    {
+      "id": 3512,
+      "title": "PolarFire opportunistic reachability audit v9",
+      "outcome": "complete_reachable",
+      "key_result": "complete: polarfire reachable and continuity confirmed deflagged"
+    },
+    {
+      "id": 3513,
+      "title": "G1-G4 gate-status synthesis v323",
+      "outcome": "complete_clean",
+      "key_result": "G1/G3/G4 met; G2 pending; p01_route1_positive; relax=True",
+      "honest_verdict": "complete: g1_g3_g4_met_g2_pending_p01_route1_positive_sudoku_solves_route2_flagged_skipped"
+    },
+    {
+      "id": 3514,
+      "title": "Capstone v323",
+      "outcome": "complete_clean",
+      "key_result": "capstone_v323_ready=true; seed=20260531 (no TAUTOLOGY)",
+      "honest_verdict": "complete: capstone_v323_ready=true_p01_route1_positive_sudoku_solve_rate_1p0"
+    }
+  ],
+  "cited_upstream_artifacts": [
+    {
+      "experiment_id": "exp3505",
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_3505_p01_sudoku_real_combinatorial_optimizer_ladder_v2.json",
+      "sha256": "5e71bcb4fc7b9062"
+    },
+    {
+      "experiment_id": "exp3506",
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_3506_p01_level3_corpus_extend_to_80_v4_optional.json",
+      "sha256": "143cb8bad016d89e"
+    },
+    {
+      "experiment_id": "exp3507",
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_3507_p01_energy_vs_sc_on_level3_inband_corpus_v9.json",
+      "sha256": "825214c5afa9c058"
+    },
+    {
+      "experiment_id": "exp3508",
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_3508_fover_step_to_final_aggregation_close_gap_v1.json",
+      "sha256": "dd337d32de7ecdfe"
+    },
+    {
+      "experiment_id": "exp3509",
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_3509_fr11_closed_loop_beta_law_deployment_v1.json",
+      "sha256": "e9d495ae4bd28765"
+    },
+    {
+      "experiment_id": "exp3510",
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_3510_fover_g2_regression_verify_external_ask_refresh_v3.json",
+      "sha256": "29ca87f01700be06"
+    },
+    {
+      "experiment_id": "exp3511",
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_3511_kv260_terminal_latency_transcript_v9.json",
+      "sha256": "f0af0293b67df6a2"
+    },
+    {
+      "experiment_id": "exp3512",
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_3512_polarfire_opportunistic_reachability_audit_v9.json",
+      "sha256": "e214dc557124e159"
+    },
+    {
+      "experiment_id": "exp3513",
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_3513_g_gate_status_synthesis_v323.json",
+      "sha256": "c0b42e381f9d67b8"
+    },
+    {
+      "experiment_id": "exp3514",
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_3514_capstone_v323.json",
+      "sha256": "94d23610842d2004"
+    }
+  ],
+  "random_seed": 20260531,
+  "reproducibility_checksum": "c93779e8f6e6c783",
+  "duration_s": 0.001,
+  "honest_verdict": "complete: v323_archived_v324_activated_p01_route1_first_clean_positive",
+  "field_provenance": {
+    "inference_substrate": {
+      "principle": "Aggregation-only; no LLM loaded. Reads upstream JSONs, computes milestone summary, writes deliverable. Duration floor 0.001s.",
+      "satisfied_by": "aggregation_from_upstream_artifacts"
+    },
+    "archive_v323_activate_v324_ready": {
+      "principle": "Terminal boolean for the conductor's gate check \u2014 True when this artifact is complete and .324 is ready to run.",
+      "satisfied_by": "unconditionally True when deliverable written without exception"
+    },
+    "p01_first_clean_positive": {
+      "principle": "True when .323 produced the FIRST non-flagged, non-blocked P0.1 positive result. Distinguishes .323 from all prior milestones where P0.1 routes were blocked or produced only CLEAN NEGATIVEs.",
+      "satisfied_by": "exp3505 non-flagged, solve_rate=1.0, ar_baseline=0.0"
+    },
+    "p01_route1_fragility_note": {
+      "principle": "Documents known weaknesses in the positive result so downstream tasks harden rather than over-claim (adversarial-confirmation discipline).",
+      "satisfied_by": "literal string listing puzzle count, AR baseline quality, PT bug"
+    },
+    "flagged_adversarial_this_milestone": {
+      "principle": "Lists experiment IDs flagged by adversarial_verify.py. Flagged artifacts must NOT contribute numbers to forward claims (fabrication-gate rule, CLAUDE.md 2026-05-30).",
+      "satisfied_by": "[3507, 3508] \u2014 both flagged TAUTOLOGY"
+    },
+    "publication_gate_status": {
+      "principle": "G1-G4 gate state per ops/north-star.md \u00a72; report unmet_gates list, not a count. G2 is the sole unmet gate and requires a non-operator reproducer (Operator-Only External Publication discipline).",
+      "satisfied_by": "derived from unflagged primary experiments (3505\u20133512, 3513\u20133514); NOT from flagged exp3507/3508"
+    },
+    "random_seed": {
+      "principle": "Fixed constant (NOT the experiment number) to prevent the TAUTOLOGY flag that affected exp3502/3503 and was fixed in exp3513/3514. Determinism for reproducibility.",
+      "satisfied_by": "RANDOM_SEED = 20260531 (date-based constant)"
+    },
+    "honest_verdict": {
+      "principle": "complete:/success:/passed:/shipped_ prefix required by CLAUDE.md Verdict Terminal-Prefix Discipline.",
+      "satisfied_by": "verdict starts with 'complete:'"
+    },
+    "cited_upstream_artifacts": {
+      "principle": "Audit trail: aggregation must cite the upstream sources so a third party can verify the retro is not synthesizing numbers from nothing.",
+      "satisfied_by": "list of {experiment_id, path, sha256} for each upstream"
+    },
+    "reproducibility_checksum": {
+      "principle": "Content hash of cited artifact paths; catches upstream path drift between this and any future replication attempt.",
+      "satisfied_by": "SHA256[:16] of JSON-encoded UPSTREAM path dict"
+    },
+    "duration_s": {
+      "principle": "Aggregation-only; floored at 0.001s. No live inference, so adversarial_verify applies the aggregation-tier floor.",
+      "satisfied_by": "time.monotonic() delta, max(actual, 0.001)"
+    }
+  }
+}
