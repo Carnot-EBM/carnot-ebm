@@ -2622,7 +2622,32 @@ structural backstop.
 - CLAUDE.md "Pre-Launch Preconditions Discipline" table — KV260 row
   authoritative precondition
 
-## Depth-Over-Breadth Forcing Function (MANDATORY — 2026-05-30)
+## Depth-Over-Breadth Forcing Function (RETIRED 2026-05-31 — condition satisfied; preserved per never-prune)
+
+> **STATUS (2026-05-31): RETIRED — its own retirement condition is now met.**
+> The rule below relaxes "once P0.1 has a verdict AND G2 is either met or has a
+> concrete in-flight reproducer." Both now hold:
+> - **P0.1 has a recorded HONEST-NEGATIVE verdict.** The energy-descent
+>   existential claim is bounded on the tested math/CSP corpora: Route-2 is
+>   triply-confirmed bounded (oracle ≤ SC; exp3530/3531/3542), Route-1 ties a
+>   strong DSATUR baseline (exp3540, paired p=0.135, "advantage was small-sample
+>   artifact") and is bounded-to-single-generator (exp3563), and the one clean
+>   positive (step→final aggregation, exp3532) does NOT transfer cross-corpus
+>   (exp3565). The shared root cause: self-consistency / strong classical
+>   baselines are already near-optimal on these corpora, leaving no headroom.
+> - **G2 is CLOSED.** The FoVer verifier-ensemble headline independently
+>   reproduced on a clean CI runner (GitHub Actions "FoVer Headline Independent
+>   Reproducer", run 26725185125, 2026-05-31, success); `publication_gate.py`
+>   now reports G1∧G2∧G3∧G4 = `paper_ready: true`.
+>
+> **Effect:** the planner is NO LONGER required to reserve milestones for P0.1
+> Route-1/Route-2. Continuing to re-test the answered existential question is
+> the diminishing-returns churn this rule was meant to prevent — so the rule
+> correctly retires rather than perpetuates it. The planner may resume normal
+> research breadth toward NEW directions (e.g. the verifier ensemble's
+> discriminating value / cross-domain generalization — where SC is NOT
+> near-optimal). The prose below is preserved as historical context per the
+> never-prune rule; do NOT treat it as active guidance.
 
 **Origin:** 2026-05-30 operator directive after a session audit. The loop runs
 ~30 milestones/day but produces mostly **breadth churn** — `vN+1` re-measurement
