@@ -7919,3 +7919,7 @@ ModuleNotFoundError: No module named 'torch'; results/experiment_2828_fover_memo
 - 2026-05-31: PolarFire opportunistic reachability + continuity audit (no terminal mandate; tautology-de-flagged distinct fields) (✅ Complete) — honest_verdict=complete: polarfire reachable and continuity confirmed deflagged; results/experiment_3501_polarfire_opportunistic_reachability_audit_v8.json
 - 2026-05-31: G1-G4 gate-status synthesis v322 (UNGATED, cascade-proof) — Sudoku P0.1 solve-rate / contested-subset crux / MATH-aware calibration / beta_min=f(lambda_min) / G2 regression verdicts (⚠️ Blocked) — honest_verdict=complete: g1_g3_g4_met_g2_pending_p01_both_routes_blocked; results/experiment_3502_g_gate_status_synthesis_v322.json
 - 2026-05-31: Capstone v322 (✅ Complete) — honest_verdict=complete: capstone_v322_ready=true; results/experiment_3503_capstone_v322.json
+
+## 2026-05-31 (Milestone 2026.05.322 Operational Retrospective)
+
+- [outer-loop] Wrote results/operational_retro_2026_05_322.json (schema carnot.operational_retro.v64). The authoritative timing source reports no experiment commits since activation, leaving total_wall_time_minutes=0, experiments_completed=0, compute_bound_experiments_count=0, slowest_experiments=[], and gpu_idle_on_compute_bound_tasks=null. Both RTX 3090s were idle in the GPU snapshot, but no GPU-idle bottleneck was recorded because there were 0 compute-bound timing rows. Recommended tooling change: Investigate experiment runner startup and queue status.
