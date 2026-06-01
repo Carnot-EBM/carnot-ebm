@@ -1,0 +1,159 @@
+{
+  "acceptance_gate": {
+    "condition": "collapse_detected_deploy_arm == false AND collapse_detected_control == true AND pass_rate_vs_true_accuracy_distinct_assert == true",
+    "passed": true,
+    "principle": "Self-learning is validated only when the guarded arm holds, the control collapses, and the two metrics are genuinely distinct (not a tautology)."
+  },
+  "artifact": "experiment_3660_fr11_continuous_self_learning_v9",
+  "calibration_bias_by_domain": {
+    "code": 0.4,
+    "math": -0.26
+  },
+  "calibration_improved": true,
+  "collapse_detected_control": true,
+  "collapse_detected_deploy_arm": false,
+  "corpus_status": {
+    "code": {
+      "n_examples": 320,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/data/code_verification_corpus_v1.jsonl",
+      "status": "loaded"
+    },
+    "math": {
+      "n_examples": 6548,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/data/fover_corpus_v4.json",
+      "status": "loaded"
+    }
+  },
+  "domains": [
+    "code",
+    "math"
+  ],
+  "duration_s": 2.759513,
+  "field_principles": {
+    "calibration_improved": "Brier/ECE before vs after online adaptation.",
+    "collapse_detected_control": "Positive control: the naive online arm must collapse, else the test has no contrast.",
+    "collapse_detected_deploy_arm": "The conservative-default + uncertainty-gated rule must prevent fusion-weight collapse (alpha_t grounding).",
+    "duration_s": "Plausibility floor.",
+    "honest_verdict": "Terminal prefix for reconciler classification.",
+    "inference_substrate": "Scores cached traces; no LLM load.",
+    "n_online_updates": "Sample-size of the self-learning sweep (>=200).",
+    "online_fusion_auroc_gain": "The forward difference -- does online fusion-weight learning beat a fixed 50/50 fusion?",
+    "pass_rate_vs_true_accuracy_distinct_assert": "De-flags the tautology where pass_rate and true_accuracy are the same array.",
+    "quality_maintained": "Collapse-prevention must not come at the cost of detector quality.",
+    "random_seed": "Determinism precondition.",
+    "reproducibility_checksum": "Drift detection."
+  },
+  "fusion_weight_bounds_deploy": {
+    "ceiling": 0.8,
+    "floor": 0.2,
+    "principle": "Closed interval proves deploy cannot collapse to alpha=0 or alpha=1."
+  },
+  "fusion_weight_control_final_by_domain": {
+    "code": 1.0,
+    "math": 1.0
+  },
+  "fusion_weight_deploy_final_by_domain": {
+    "code": 0.761101,
+    "math": 0.779774
+  },
+  "fusion_weight_deploy_initial_by_domain": {
+    "code": 0.5,
+    "math": 0.5
+  },
+  "honest_verdict": "complete: fr11_v9_online_fusion_weighting_holds_no_collapse_quality_maintained",
+  "inference_substrate": "verifier_ensemble_against_cached_candidates (principle: scores cached traces; no LLM load).",
+  "metrics_after_control_by_domain": {
+    "code": {
+      "auroc": 0.924831,
+      "brier": 0.470535,
+      "ece": 0.63737
+    },
+    "math": {
+      "auroc": 0.970578,
+      "brier": 0.123169,
+      "ece": 0.33092
+    }
+  },
+  "metrics_after_control_online_adaptation": {
+    "auroc": 0.572755,
+    "brier": 0.139354,
+    "ece": 0.327876
+  },
+  "metrics_after_deploy_by_domain": {
+    "code": {
+      "auroc": 0.816934,
+      "brier": 0.115661,
+      "ece": 0.22384
+    },
+    "math": {
+      "auroc": 0.970578,
+      "brier": 0.013943,
+      "ece": 0.002828
+    }
+  },
+  "metrics_after_deploy_online_adaptation": {
+    "auroc": 0.990325,
+    "brier": 0.018682,
+    "ece": 0.012925
+  },
+  "metrics_before_by_domain": {
+    "code": {
+      "auroc": 0.589245,
+      "brier": 0.420275,
+      "ece": 0.570736
+    },
+    "math": {
+      "auroc": 0.970578,
+      "brier": 0.039324,
+      "ece": 0.160982
+    }
+  },
+  "metrics_before_online_adaptation": {
+    "auroc": 0.821868,
+    "brier": 0.057074,
+    "ece": 0.153099
+  },
+  "n_online_updates": 6868,
+  "observed_catch_utility_delta_by_domain": {
+    "code": 0.44482,
+    "math": 0.559277
+  },
+  "online_fusion_auroc_gain": 0.168457,
+  "pass_rate_trajectory": [
+    0.957756,
+    0.953827,
+    0.952698,
+    0.942565,
+    0.954184,
+    0.956038,
+    0.951457,
+    0.952029
+  ],
+  "pass_rate_vs_true_accuracy_distinct_assert": true,
+  "preconditions_checked": [
+    {
+      "available": true,
+      "detail": "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/fr11",
+      "resource": "fr11_module"
+    },
+    {
+      "available": true,
+      "detail": "n_examples=6868; labels=[0, 1]; domains=['code', 'math']; required>=200",
+      "resource": "cached_traces_with_ensemble_and_confidence"
+    }
+  ],
+  "quality_maintained": true,
+  "random_seed": 3660,
+  "reproducibility_checksum": "4a46a3f4db5b1071f79ab9e6dcd481c4f5296498a581df0736b9c9ddb353bc49",
+  "schema": "carnot.fr11_continuous_self_learning_v9",
+  "true_accuracy_trajectory": [
+    0.987194,
+    0.970896,
+    0.977881,
+    0.988359,
+    0.982538,
+    0.977881,
+    0.979045,
+    0.982456
+  ]
+}

@@ -10318,3 +10318,64 @@ quality is maintained.
 | Requirement  | Python | Tests |
 |-------------|--------|-------|
 | REQ-LEARN-3647 | Implemented (python/carnot/fr11/continuous_self_learning_v8.py; scripts/experiment_3647_fr11_continuous_self_learning_v8.py) | Implemented (tests/python/test_experiment_3647_fr11_csl_v8.py) |
+
+---
+
+## REQ-LEARN-3660: FR-11 Continuous Self Learning v9 Online Fusion Weighting
+
+**Given** the FR-11 module and cached detector traces with both verifier
+ensemble scores and confidence-derived error scores are present
+**When** Exp 3660 runs a closed FR-11 continuous self-learning loop over at
+least 200 non-degenerate cached examples
+**Then** the deploy arm SHALL learn the fused-detector ensemble-vs-confidence
+weight online per domain from observed catch-rate evidence
+**And** the deploy arm SHALL apply a conservative default and uncertainty gate
+that clips the learned fusion weight away from 0 and 1
+**And** the control arm SHALL run a naive online fusion-weight update without
+that guard so collapse can be detected as a positive control
+**And** the artifact SHALL report fused-detector AUROC, Brier, and ECE before
+and after online adaptation, online fusion AUROC gain over fixed 50/50 fusion,
+deploy/control collapse status, quality maintenance, and a
+pass-rate-vs-true-accuracy distinctness assertion.
+
+### REQ-LEARN-3660 Sub-requirements
+
+- REQ-LEARN-3660-1: Runnable artifacts SHALL use cached traces only, with
+  `inference_substrate` equal to
+  `verifier_ensemble_against_cached_candidates (principle: scores cached traces; no LLM load).`.
+- REQ-LEARN-3660-2: If the FR-11 module or cached ensemble-plus-confidence
+  traces are unavailable, the workflow SHALL write the terminal verdict
+  `complete: blocked_fr11_module_or_traces_unavailable`.
+- REQ-LEARN-3660-3: `n_online_updates` SHALL be at least 200 for runnable
+  artifacts.
+- REQ-LEARN-3660-4: The acceptance gate SHALL pass only when
+  `collapse_detected_deploy_arm == false`,
+  `collapse_detected_control == true`, and
+  `pass_rate_vs_true_accuracy_distinct_assert == true`.
+- REQ-LEARN-3660-5: Runnable artifacts SHALL include principle annotations for
+  `honest_verdict`, `inference_substrate`, `n_online_updates`,
+  `collapse_detected_deploy_arm`, `collapse_detected_control`,
+  `online_fusion_auroc_gain`, `calibration_improved`,
+  `pass_rate_vs_true_accuracy_distinct_assert`, `quality_maintained`,
+  `random_seed`, `reproducibility_checksum`, and `duration_s`.
+- REQ-LEARN-3660-6: The terminal verdict SHALL be
+  `complete: fr11_v9_online_fusion_weighting_holds_no_collapse_quality_maintained`
+  when the acceptance gate passes and online fusion improves AUROC over fixed
+  50/50 fusion, otherwise
+  `complete: fr11_v9_online_fusion_no_gain_fixed_fusion_sufficient`.
+
+### SCENARIO-LEARN-3660: Guarded Online Fusion Weighting Prevents Collapse
+
+**Given** cached ensemble and confidence scores with binary correctness labels
+and at least one domain where one signal has higher observed catch utility
+**When** the v9 online self-learning evaluator compares the guarded deploy arm
+against the naive control arm
+**Then** the deploy arm keeps every fusion weight bounded away from 0 and 1,
+the control arm collapses to a boundary weight, pass-rate and true-accuracy
+trajectories are not element-wise identical, and quality is maintained.
+
+## Implementation Status (REQ-LEARN-3660)
+
+| Requirement  | Python | Tests |
+|-------------|--------|-------|
+| REQ-LEARN-3660 | Proposed (python/carnot/fr11/continuous_self_learning_v9.py; scripts/experiment_3660_fr11_continuous_self_learning_v9.py) | Proposed (tests/python/test_experiment_3660_fr11_csl_v9.py) |
