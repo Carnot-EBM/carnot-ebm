@@ -9771,6 +9771,59 @@ the live real corpus verdict.
 |---|---|---|
 | REQ-VERIFY-3670 | Planned (`python/carnot/verify/facts_row_real_benchmark_3670.py`, `scripts/experiment_3670_facts_row_real_benchmark.py`) | Planned (`tests/python/test_experiment_3670_facts_row_real_benchmark.py`) |
 
+### REQ-VERIFY-3672: Ensemble Selection Where Self-Consistency Is Weak
+
+The repository shall provide an Exp 3672 workflow that evaluates verifier
+ensemble best-of-N candidate selection only on cached multi-candidate rows with
+per-candidate correctness labels and no live LLM generation. The workflow SHALL
+first identify an SC-weak stratum where majority-vote self-consistency accuracy
+is below the configured weak-accuracy ceiling, at least 50 multi-candidate
+items are present, and oracle best-of-N accuracy exceeds self-consistency
+accuracy. If no loadable multi-candidate corpus exists, it SHALL write the
+terminal verdict `complete: blocked_no_multi_candidate_corpus`.
+
+For runnable SC-weak inputs, the workflow SHALL compare candidate selection by
+self-consistency majority vote, model confidence, verifier ensemble energy, and
+verifier-ensemble-plus-confidence fusion on the same candidate rows. It SHALL
+report self-consistency accuracy, oracle best-of-N accuracy, confidence
+selection accuracy, verifier ensemble selection accuracy, fusion selection
+accuracy, verifier-vs-SC flip count, paired bootstrap confidence intervals, and
+exact McNemar statistics. The workflow SHALL set `positive_control_valid=true`
+only when oracle best-of-N accuracy exceeds self-consistency accuracy and the
+verifier ensemble changes at least one selection relative to self-consistency.
+
+The terminal artifact SHALL be
+`results/experiment_3672_ensemble_selection_where_sc_weak.json` and SHALL
+include `honest_verdict`, `inference_substrate`, `sc_accuracy`,
+`oracle_bestofn_accuracy`, `flip_count`, `ensemble_selection_accuracy`,
+`confidence_selection_accuracy`, `ensemble_vs_sc_delta_ci`,
+`positive_control_valid`, a bare top-level
+`ensemble_adds_selection_value_sc_weak` boolean, `n_examples`, `random_seed`,
+`reproducibility_checksum`, and `duration_s`, with field principles
+documenting why each required field exists. The bare boolean SHALL be true only
+when the positive control is valid, the verifier ensemble selection accuracy
+beats both self-consistency and confidence selection, and paired delta evidence
+excludes zero in the positive direction. The terminal verdict SHALL be one of
+`complete: ensemble_adds_selection_value_where_sc_weak_new_direction_positive`,
+`complete: ensemble_no_selection_value_even_with_headroom_sc_weak_earned_negative`,
+`complete: no_selectable_headroom_corpus_uninformative`, or
+`complete: blocked_no_multi_candidate_corpus`.
+
+### SCENARIO-VERIFY-3672: SC-Weak Selection Verdicts Cover Positive, Earned Negative, No-Headroom, And Blocked
+
+Given synthetic multi-candidate fixtures covering ensemble selection value,
+no value despite oracle headroom and nonzero flips, no selectable headroom, and
+blocked corpus outcomes, when the Exp 3672 artifact builder runs, then it emits
+the required bare booleans, SC/oracle/selection metrics, flip counts,
+bootstrap and McNemar statistics, and a terminal verdict selected from the
+measured outcome rather than hard-coding a single success string.
+
+## Implementation Status (REQ-VERIFY-3672)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-VERIFY-3672 | Implemented (`python/carnot/verify/ensemble_selection_sc_weak_3672.py`, `scripts/experiment_3672_ensemble_selection_where_sc_weak.py`) | Implemented (`tests/python/test_experiment_3672_ensemble_selection_sc_weak.py`) |
+
 ### REQ-VERIFY-3646: Trained EBM Judge OOD Counterpoint V2
 
 The repository shall provide an Exp 3646 workflow that trains a small
