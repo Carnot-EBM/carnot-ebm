@@ -34508,64 +34508,155 @@ milestones:
     deliverable: results/experiment_3651_capstone_and_g_gate_v334.json
     result: OK (codex artifact landed)
 - id: 2026.06.335
-  title: "FACTS made real, but domain-bound on synthetic v3"
+  title: FACTS made real, but domain-bound on synthetic v3
   doc: openspec/change-proposals/research-roadmap-vNEXT.md
   completed: '2026-06-01'
-  finding: "FACTS DOMAIN-BOUND ON SYNTHETIC V3: .335 made the facts row real with a model-based NLI verifier, but the negative was still measured on the synthetic v3 corpus (grounding AUROC 0.743656 ~= confidence 0.744576). A complementary catch signal exists (McNemar p=0.00031, conditional catch rate about 0.38191 at fixed confidence FPR), while the RAGTruth real benchmark gap remains open. dependency-aware weighting BEAT Carnot (0.932562 vs 0.919446) but exp3656 was TAUTOLOGY-flagged from an aliased AUROC field, so it is an open .336 lead rather than a claim. Code generalization replicated on a balanced second corpus; the fused second-pair detector wins on math; trained-judge-as-cross-domain-fix is RETIRED; FR-11 v9 held without collapse; paper_ready stayed TRUE (G1-G4) and P0.1 stayed honest-negative. .336 is active to clean the dependency-aware lead and test facts on a real benchmark."
+  finding: 'FACTS DOMAIN-BOUND ON SYNTHETIC V3: .335 made the facts row real with a model-based NLI verifier, but the negative
+    was still measured on the synthetic v3 corpus (grounding AUROC 0.743656 ~= confidence 0.744576). A complementary catch
+    signal exists (McNemar p=0.00031, conditional catch rate about 0.38191 at fixed confidence FPR), while the RAGTruth real
+    benchmark gap remains open. dependency-aware weighting BEAT Carnot (0.932562 vs 0.919446) but exp3656 was TAUTOLOGY-flagged
+    from an aliased AUROC field, so it is an open .336 lead rather than a claim. Code generalization replicated on a balanced
+    second corpus; the fused second-pair detector wins on math; trained-judge-as-cross-domain-fix is RETIRED; FR-11 v9 held
+    without collapse; paper_ready stayed TRUE (G1-G4) and P0.1 stayed honest-negative. .336 is active to clean the dependency-aware
+    lead and test facts on a real benchmark.'
   tasks:
   - id: exp3652-archive-v334-activate-v335
-    title: "Archive .334 and activate .335"
+    title: Archive .334 and activate .335
     deliverable: results/experiment_3652_archive_v334_activate_v335.json
     result: OK (codex artifact landed)
   - id: exp3653-backend-state-diagnostic
-    title: "Backend-state diagnostic"
+    title: Backend-state diagnostic
     deliverable: results/experiment_3653_backend_state_diagnostic.json
     result: OK (codex artifact landed)
   - id: exp3654-real-nli-atomic-claim-grounding-verifier
-    title: "Build a real model-based NLI atomic-claim grounding verifier"
+    title: Build a real model-based NLI atomic-claim grounding verifier
     deliverable: results/experiment_3654_real_nli_atomic_claim_grounding_verifier.json
     result: OK (codex artifact landed)
   - id: exp3655-facts-row-remeasurement-real-nli-v5
-    title: "Re-measure the facts row with the real NLI grounding verifier"
+    title: Re-measure the facts row with the real NLI grounding verifier
     deliverable: results/experiment_3655_facts_row_remeasurement_real_nli_v5.json
     result: OK (codex artifact landed)
   - id: exp3656-correlation-aware-weighting-paradox-diagnosis
-    title: "Diagnose the correlation-aware weighting paradox"
+    title: Diagnose the correlation-aware weighting paradox
     deliverable: results/experiment_3656_correlation_aware_weighting_paradox_diagnosis.json
     result: OK (codex artifact landed)
   - id: exp3657-deployable-second-pair-of-eyes-detector
-    title: "Build the deployable second-pair-of-eyes detector"
+    title: Build the deployable second-pair-of-eyes detector
     deliverable: results/experiment_3657_deployable_second_pair_of_eyes_detector.json
     result: OK (codex artifact landed)
   - id: exp3658-code-generalization-second-corpus-replication
-    title: "Replicate code generalization on a second balanced code corpus"
+    title: Replicate code generalization on a second balanced code corpus
     deliverable: results/experiment_3658_code_generalization_second_corpus.json
     result: OK (codex artifact landed)
   - id: exp3659-trained-ebm-judge-ood-real-substrate-v3
-    title: "Trained-EBM-judge OOD v3 with a real model substrate"
+    title: Trained-EBM-judge OOD v3 with a real model substrate
     deliverable: results/experiment_3659_trained_ebm_judge_ood_real_substrate_v3.json
     result: OK (codex artifact landed)
   - id: exp3660-fr11-continuous-self-learning-v9-online-fusion-weights
-    title: "FR-11 continuous self-learning v9 online fusion weights"
+    title: FR-11 continuous self-learning v9 online fusion weights
     deliverable: results/experiment_3660_fr11_continuous_self_learning_v9.json
     result: OK (codex artifact landed)
   - id: exp3661-kv260-continuity-v22
-    title: "KV260 SSH reachability continuity v22"
+    title: KV260 SSH reachability continuity v22
     deliverable: results/experiment_3661_kv260_continuity_v22.json
     result: OK (codex artifact landed)
   - id: exp3662-polarfire-continuity-v22
-    title: "PolarFire opportunistic reachability and continuity audit"
+    title: PolarFire opportunistic reachability and continuity audit
     deliverable: results/experiment_3662_polarfire_continuity_v22.json
     result: OK (codex artifact landed)
   - id: exp3663-gatemate-continuity-audit-v22
-    title: "GateMate continuity audit v22"
+    title: GateMate continuity audit v22
     deliverable: results/experiment_3663_gatemate_continuity_audit_v22.json
     result: OK (codex artifact landed)
   - id: exp3664-capstone-and-g-gate-v335
-    title: "Capstone v335 and G1-G4 gate synthesis"
+    title: Capstone v335 and G1-G4 gate synthesis
     deliverable: results/experiment_3664_capstone_and_g_gate_v335.json
     result: OK (codex artifact landed)
   - id: exp3665-archive-v335-activate-v336
-    title: "Archive .335 honestly and activate .336"
+    title: Archive .335 honestly and activate .336
     deliverable: results/experiment_3665_archive_v335_activate_v336.json
     result: OK (codex artifact landed)
+- id: 2026.06.336
+  title: Advance the headline (clean up the dependency-aware weighting lead that BEAT Carnot 0.9326 vs 0.919, de-tautologized
+    + held-out validated, arXiv:1903.05844 / Weaver arXiv:2506.18203), stress the FACTS earned-negative on a REAL hallucination
+    benchmark (RAGTruth arXiv:2401.00396 vs the .335 synthetic corpus, with the complementary catch-rate lens not just AUROC),
+    SHIP the second-pair-of-eyes detector into the Phase-1 product surface (math-validated + balanced-code operating points),
+    open the NEW direction of ensemble selection value where self-consistency is WEAK (flip the answered P0.1 premise), continue
+    FR-11 self-learning + hardware continuity. paper_ready MUST stay TRUE (G1-G4); P0.1 stays honest-negative; trained-judge-OOD
+    is RETIRED.
+  doc: openspec/change-proposals/research-roadmap-vNEXT.md
+  completed: '2026-06-01'
+  finding: See conductor log for per-experiment results.
+  tasks:
+  - id: exp3665-archive-v335-activate-v336
+    title: 'Archive milestone .335 honestly (the FACTS-made-real milestone: facts is domain-bound even with a real NLI verifier
+      but on a synthetic corpus; dependency-aware weighting BEAT Carnot 0.9326 vs 0.919 but was tautology-flagged; code generalization
+      replicated; detector wins on math; trained-judge OOD retired; paper_ready stayed true) and activate .336'
+    deliverable: results/experiment_3665_archive_v335_activate_v336.json
+    result: OK (conductor)
+  - id: exp3666-backend-state-diagnostic-v2
+    title: "Backend-state diagnostic v2 \u2014 second consecutive probe of gemini quota/crash stability since exp3653 reported\
+      \ recovery; recommend whether .337 may flip to gemini-default; .336 stays on codex (documentation-only)"
+    deliverable: results/experiment_3666_backend_state_diagnostic_v2.json
+    result: OK (conductor)
+  - id: exp3667-dependency-aware-weighting-clean-detautologized
+    title: "Clean, de-tautologized dependency-aware ensemble weighting (arXiv:1903.05844 learned label-conditional dependency\
+      \ structure + Weaver arXiv:2506.18203) on FoVer \u2014 multi-seed + bootstrap CI + DeLong vs Carnot's 0.919; the headline-advancement\
+      \ candidate the exp3656 tautology flag quarantined"
+    deliverable: results/experiment_3667_dependency_aware_weighting_clean.json
+    result: OK (conductor)
+  - id: exp3668-dependency-aware-weighting-heldout-validation
+    title: "Held-out / cross-split validation of the dependency-aware weighting (fit the learned dependency structure on a\
+      \ FoVer train split, evaluate on a disjoint test split) \u2014 guard against overfitting the weighting before it can\
+      \ advance the frozen headline"
+    deliverable: results/experiment_3668_dependency_aware_weighting_heldout.json
+    result: OK (conductor)
+  - id: exp3669-build-real-factual-hallucination-corpus
+    title: "Build a REAL factual-hallucination corpus from an external benchmark (RAGTruth arXiv:2401.00396, with FELM / HaluEval\
+      \ fallback) \u2014 evidence passages + binary hallucination labels + model-confidence \u2014 to stress-test whether\
+      \ the .335 'facts domain-bound' negative is a synthetic-corpus artifact"
+    deliverable: results/experiment_3669_build_real_factual_corpus.json
+    result: OK (conductor)
+  - id: exp3670-facts-row-real-benchmark-remeasurement
+    title: "Re-measure the FACTS row on a REAL benchmark (RAGTruth, exp3669) with the real NLI grounding verifier (exp3654)\
+      \ \u2014 AUROC AND the complementary catch-rate lens \u2014 is the .335 'facts domain-bound' a synthetic-corpus artifact\
+      \ or genuinely earned? (the core escape-hallucinations answer; retire_if_same)"
+    deliverable: results/experiment_3670_facts_row_real_benchmark.json
+    result: OK (conductor)
+  - id: exp3671-ship-second-pair-of-eyes-detector-product-surface
+    title: "SHIP the second-pair-of-eyes detector into the Phase-1 product surface \u2014 a clean calibrated fused-detector\
+      \ API in python/carnot/pipeline/ wired to score_candidates (MCP/CLI), with math-validated + balanced-code operating\
+      \ points (exp3658 corpus) and an E2E test"
+    deliverable: results/experiment_3671_ship_second_pair_of_eyes_detector.json
+    result: OK (conductor)
+  - id: exp3672-ensemble-selection-value-where-sc-is-weak
+    title: "NEW direction \u2014 verifier-ensemble SELECTION value where self-consistency is WEAK: build/identify a corpus\
+      \ where majority-vote SC is near-chance (high answer entropy / ambiguous problems) and test whether the ensemble adds\
+      \ real best-of-N selection value confidence/SC cannot (flips the answered P0.1 near-optimal-SC premise)"
+    deliverable: results/experiment_3672_ensemble_selection_where_sc_weak.json
+    result: OK (conductor)
+  - id: exp3673-fr11-continuous-self-learning-v10-online-dependency-aware
+    title: "FR-11 continuous self-learning v10 \u2014 online learning of the DEPENDENCY-AWARE verifier weighting without collapse\
+      \ (forward diff from v9's online fusion weights; folds the exp3656/3667 learned-dependency-structure win into the online\
+      \ loop)"
+    deliverable: results/experiment_3673_fr11_continuous_self_learning_v10.json
+    result: OK (conductor)
+  - id: exp3674-kv260-continuity-v23
+    title: "KV260 SSH-reachability continuity (UNREACHABLE .331-.335 \u2014 re-check + record honest state, flag 6-milestone\
+      \ outage as operator-action)"
+    deliverable: results/experiment_3674_kv260_continuity_v23.json
+    result: OK (conductor)
+  - id: exp3675-polarfire-continuity-v23
+    title: PolarFire opportunistic reachability + continuity audit (per Hardware-Task Continuity)
+    deliverable: results/experiment_3675_polarfire_continuity_v23.json
+    result: OK (conductor)
+  - id: exp3676-gatemate-continuity-audit-v23
+    title: "GateMate continuity audit (documentation-only \u2014 openFPGALoader missing in .331-.335, per known-issues)"
+    deliverable: results/experiment_3676_gatemate_continuity_audit_v23.json
+    result: OK (conductor)
+  - id: exp3677-capstone-and-g-gate-v336
+    title: "Capstone v336 + G1-G4 gate synthesis \u2014 did the dependency-aware weighting clean up into a held-out headline-advancement\
+      \ candidate? did FACTS hold up on a REAL benchmark? is the second-pair-of-eyes detector SHIPPED? did the new SC-weak\
+      \ selection direction find ensemble value? paper_ready must stay TRUE."
+    deliverable: results/experiment_3677_capstone_and_g_gate_v336.json
+    result: OK (conductor)

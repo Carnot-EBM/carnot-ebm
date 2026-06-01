@@ -1,71 +1,76 @@
-milestone: "2026.06.336"
-milestone_title: "Advance the headline (clean up the dependency-aware weighting lead that BEAT Carnot 0.9326 vs 0.919, de-tautologized + held-out validated, arXiv:1903.05844 / Weaver arXiv:2506.18203), stress the FACTS earned-negative on a REAL hallucination benchmark (RAGTruth arXiv:2401.00396 vs the .335 synthetic corpus, with the complementary catch-rate lens not just AUROC), SHIP the second-pair-of-eyes detector into the Phase-1 product surface (math-validated + balanced-code operating points), open the NEW direction of ensemble selection value where self-consistency is WEAK (flip the answered P0.1 premise), continue FR-11 self-learning + hardware continuity. paper_ready MUST stay TRUE (G1-G4); P0.1 stays honest-negative; trained-judge-OOD is RETIRED."
+milestone: "2026.06.337"
+milestone_title: "PROMOTE the headline (take the held-out-validated dependency-aware ensemble weighting 0.9332 vs Carnot 0.919, arXiv:1903.05844, to full G1-rigor dual-condition integrity + prepare the OPERATOR re-freeze package WITHOUT silently substituting the frozen 0.9131), SCOPE the product honestly (diagnose+try-to-close the discrimination-vs-selection decoupling exp3672 earned, arXiv:2512.23067; harden the shipped detector's code-blind operating point exp3671; adversarially re-baseline product value vs self-certainty arXiv:2502.18581), continue FR-11 self-learning + hardware continuity. paper_ready MUST stay TRUE (G1-G4); frozen headline 0.9131 stays frozen; facts-generalization + trained-judge-OOD + P0.1 stay RETIRED/honest-negative."
 milestone_doc: openspec/change-proposals/research-roadmap-vNEXT.md
 
 # OUTER-LOOP / OPERATOR PRE-STAGED ROADMAP (2026-06-01, Claude Opus 4.8). RATIONALE:
-# .335 made the FACTS row REAL (exp3654/3655: facts is domain-bound even with a real NLI verifier,
-# grounding 0.744 ~= confidence 0.745) BUT on a SYNTHETIC corpus, and a complementary catch-signal exists
-# (McNemar p=0.0003, ~40% catch-at-fixed-FPR). The single most exciting lead: dependency-aware ensemble
-# weighting BEAT Carnot (exp3656: 0.9326 vs 0.919) -- but that artifact was TAUTOLOGY-flagged (false
-# positive: same AUROC stored under two field names). .336 PRIORITIES: (1) clean up the dependency-aware
-# weighting lead so it can advance the headline (de-tautologize, multi-seed, DeLong, held-out validate);
-# (2) stress the facts negative on a REAL benchmark (RAGTruth) -- is "facts domain-bound" a corpus artifact
-# or genuine?; (3) SHIP the second-pair-of-eyes detector (exp3657) into the Phase-1 surface; (4) open a NEW
-# direction -- ensemble SELECTION value where self-consistency is WEAK (P0.1 failed because SC was
-# near-optimal; flip the premise). INVARIANTS: paper_ready=true (G1-G4 closed 2026-05-31; do NOT regress;
-# headline FoVer 0.9131 stays frozen -- a dependency-aware win is a CANDIDATE for a future re-freeze, not a
-# silent substitution). P0.1 stays honest-negative. Trained-judge-as-cross-domain-fix is RETIRED (exp3659
-# same-verdict) -- do NOT re-propose. Every gated_on is a BARE scalar (feedback_gated_fields_must_be_bare).
+# .336 produced the first headline-advancing lead in months: dependency-aware ensemble weighting
+# (arXiv:1903.05844 learned label-conditional dependency structure) BEAT Carnot CLEAN + de-tautologized
+# (exp3667: 0.9332 vs 0.9194, 5-seed, DeLong) AND generalized held-out (exp3668: heldout 0.9332 vs 0.9200)
+# -- verdict literally "headline_re_freeze_candidate_for_v337". .337 PRIORITIES: (1) take that lead to FULL
+# G1-rigor dual-condition integrity (mirror exp2837/2850) + prepare the OPERATOR re-freeze package (new G1
+# candidate artifact + updated G2 reproducer + checklist) -- NEVER silently substitute the frozen 0.9131;
+# (2) SCOPE THE PRODUCT HONESTLY -- diagnose + try to close the discrimination-vs-selection decoupling
+# exp3672 earned (ensemble AUROC 0.93 but selection 0.344 < SC 0.459; known phenomenon per arXiv:2512.23067),
+# harden the shipped detector's code-blind operating point (exp3671 code AUROC 0.5), and adversarially
+# re-baseline product value vs the STRONGER free baseline self-certainty (arXiv:2502.18581); (3) continue
+# FR-11 + hardware. INVARIANTS: paper_ready=true (G1-G4 closed 2026-05-31; do NOT regress; frozen FoVer
+# 0.9131 stays frozen -- a dependency-aware win is a CANDIDATE for a future re-freeze, not a silent swap;
+# north-star sec-1 is operator-curated, the agent prepares the package only). facts-generalization is RETIRED
+# (exp3670 same-verdict on REAL RAGTruth -- do NOT re-propose). trained-judge-OOD RETIRED (exp3659). P0.1
+# stays honest-negative. SC-selection-by-energy is an earned-negative (exp3672) -- .337 DIAGNOSES the gap, it
+# does NOT re-run the same selection test. Every gated_on is a BARE scalar (feedback_gated_fields_must_be_bare).
 # NO poison tests (.325/.326/.332 cascade): parametrize pytests over honest verdicts on realistic synthetic
 # fixtures; never hard-assert one success string against a real corpus; never use Q/R/H-number placeholders.
-# BACKEND: exp3653 reported gemini RECOVERED (single probe), but .333 was a total gemini-crash wipeout and
-# codex ran 28/28 clean across .334+.335. Asymmetric risk -> keep codex+requires_codex for ONE more
-# milestone while exp3666 confirms gemini stable across a 2nd consecutive probe; .337 may then flip to
-# gemini-default. Operator may override to gemini-default if quota preservation outweighs the wipeout risk.
+# BACKEND: exp3666 reports gemini stable 2 consecutive probes (eligible to flip), but .333 was a total
+# gemini-crash wipeout and .337 carries the highest-value work in months. Asymmetric risk -> keep
+# codex+requires_codex for ONE more milestone while exp3679 confirms a 3rd consecutive stable probe; .338 may
+# then flip to gemini-default. Operator may override to gemini-default if quota preservation outweighs the risk.
 
 tasks:
-  - id: exp3665-archive-v335-activate-v336
+  - id: exp3678-archive-v336-activate-v337
     operator_override: "2026-05-29 operator directive (standing): routine milestone-transition (archive-vN-activate-vN+1) — false-positive scope-match vs prior archive-v* tasks; structurally never a doomed rerun."
-    milestone: "2026.06.336"
-    title: "Archive milestone .335 honestly (the FACTS-made-real milestone: facts is domain-bound even with a real NLI verifier but on a synthetic corpus; dependency-aware weighting BEAT Carnot 0.9326 vs 0.919 but was tautology-flagged; code generalization replicated; detector wins on math; trained-judge OOD retired; paper_ready stayed true) and activate .336"
+    milestone: "2026.06.337"
+    title: "Archive milestone .336 honestly (the first-headline-advancing-lead milestone: dependency-aware weighting beat Carnot CLEAN and generalized held-out as a v337 re-freeze candidate; facts genuinely domain-bound on REAL RAGTruth -> facts-generalization retired; ensemble adds NO best-of-N selection value even with headroom -> earned-negative; detector shipped math-strong code-blind; paper_ready stayed true) and activate .337"
     priority: critical
     max_turns: 20
     agent_type: codex
     model: gpt-5.5
-    requires_codex: true   # anti-wipeout: gemini recovered on one probe but .333 wiped a whole milestone; keep codex one more milestone until exp3666 confirms a 2nd stable probe
+    requires_codex: true   # anti-wipeout: gemini stable 2 probes but .333 wiped a whole milestone; keep codex one more milestone until exp3679 confirms a 3rd stable probe
     estimated_wall_time_min: 6
     track: ops
     inference_substrate: aggregation_from_upstream_artifacts
     requires_gpu: false
-    deliverable: results/experiment_3665_archive_v335_activate_v336.json
+    deliverable: results/experiment_3678_archive_v336_activate_v337.json
     prompt: |
-      CONTEXT: .335 made the FACTS row real and hardened math+code scope; all 14 tasks landed on codex.
-      Record honestly: facts is domain-bound even with a real model-based NLI verifier (exp3654/3655,
-      grounding 0.744 ~= confidence 0.745) BUT measured on a SYNTHETIC v3 corpus, with a complementary
-      catch-signal (McNemar p=0.0003, ~40% catch-at-fixed-FPR); dependency-aware weighting BEAT Carnot
-      (exp3656, 0.9326 vs 0.919) but that artifact was TAUTOLOGY-flagged (false positive); code
-      generalization replicated on a balanced 2nd corpus (exp3658); the fused detector wins on math
-      (exp3657); the trained-judge-as-cross-domain-fix hypothesis is RETIRED (exp3659 same-verdict);
-      FR-11 v9 held no collapse (exp3660); paper_ready stayed TRUE (G1-G4, exp3664).
-      EXISTING CODE TO READ FIRST: research-roadmap.yaml (.335, just finished); exp3664 (the .335 capstone)
-      and exp3656/exp3655 via scripts/summarize_artifact.py; ops/north-star.md.
-      TASK: archive .335 to research-complete.yaml honestly, confirm .336 active.
+      CONTEXT: .336 produced the first headline-advancing lead in many milestones; all 12 tasks landed on codex.
+      Record honestly: dependency-aware ensemble weighting (arXiv:1903.05844) BEAT Carnot CLEAN + de-tautologized
+      (exp3667: 0.9332 vs 0.9194, 5-seed, DeLong, adversarial-clean) AND generalized held-out (exp3668: heldout
+      0.9332 vs 0.9200) -> a v337 HEADLINE RE-FREEZE CANDIDATE; facts is genuinely domain-bound on a REAL RAGTruth
+      corpus (exp3669/3670, leak-free, retire_if_same fired) -> facts-generalization is RETIRED; the ensemble adds
+      NO best-of-N selection value even where SC is weak and headroom exists (exp3672: ensemble 0.344 < SC 0.459,
+      delta -0.115, McNemar p=0.016) -> earned-negative (discrimination != selection); the second-pair-of-eyes
+      detector SHIPPED (exp3671: math AUROC 0.980 strong, code AUROC 0.5 blind); FR-11 v10 held no collapse
+      (exp3673); paper_ready stayed TRUE (G1-G4, exp3677).
+      EXISTING CODE TO READ FIRST: research-roadmap.yaml (.336, just finished); exp3677 (the .336 capstone),
+      exp3668 (the re-freeze candidate), exp3670 (facts real), exp3672 (selection negative) via
+      scripts/summarize_artifact.py; ops/north-star.md.
+      TASK: archive .336 to research-complete.yaml honestly, confirm .337 active.
       REQUIRED ARTIFACT FIELDS (the principle: annotation documents WHY each field matters; store the bare VALUE):
         honest_verdict:
           principle: "Terminal prefix lets the conductor reconciler classify the transition as complete without re-running it."
         inference_substrate: "aggregation_from_upstream_artifacts (principle: a JSON-read + format task, not live inference; 0.0001s floor)."
-        v335_outcome_recorded_as:
-          principle: "Records .335's defensible state (facts domain-bound on synthetic corpus; dependency-aware weighting beat Carnot but was flagged; code replicated; detector wins on math; trained-judge retired) so the record does not revert."
-        headline_advancement_lead_recorded:
-          principle: "Names the #1 .336 lead: dependency-aware weighting beat Carnot 0.9326 vs 0.919, blocked only by a false-positive tautology flag."
-        facts_real_benchmark_gap_recorded:
-          principle: "Names the #1 facts gap: the .335 negative was on a SYNTHETIC corpus; RAGTruth (real) was never tried."
+        v336_outcome_recorded_as:
+          principle: "Records .336's defensible state (dependency-aware re-freeze candidate; facts domain-bound on REAL data; selection earned-negative; detector shipped math-strong code-blind) so the record does not revert."
+        headline_refreeze_candidate_recorded:
+          principle: "Names the #1 .337 lead: dependency-aware weighting 0.9332 generalized held-out -- a candidate to RAISE the frozen 0.9131, pending G1-rigor + G2 re-reproduction."
+        facts_generalization_retired_recorded:
+          principle: "Records that facts-generalization is RETIRED (exp3670 same-verdict on REAL RAGTruth) so .337 does not re-propose it."
+        selection_earned_negative_recorded:
+          principle: "Records that ensemble best-of-N selection is an earned-negative (exp3672) -- .337 diagnoses the gap, does not re-run the same test."
         paper_ready_preserved:
-          principle: "G1-G4 stay met; the transition must not silently regress paper_ready."
+          principle: "G1-G4 stay met; the transition must not silently regress paper_ready; frozen headline 0.9131 stays frozen."
         p01_status_preserved:
           principle: "P0.1 stays honest-negative; the transition does not re-assert a positive."
-        trained_judge_ood_retired_recorded:
-          principle: "Records that the trained-judge-as-cross-domain-fix hypothesis is retired (exp3659 same-verdict) so .336 does not re-propose it."
         n_tasks_archived:
           principle: "Sample-size hygiene -- confirms the full milestone was archived, not a partial."
         random_seed:
@@ -74,14 +79,14 @@ tasks:
           principle: "Content hash catches silent drift between this artifact and any replication."
         duration_s:
           principle: "Wall-clock plausibility floor; missing duration is the fabrication signal."
-      TERMINAL VERDICT: "complete: archived_v335_facts_domain_bound_on_synthetic_dependency_aware_lead_open_v336_active_paper_ready_true"
-      Run: cd {project_root} && python scripts/experiment_3665_archive_v335_activate_v336.py
+      TERMINAL VERDICT: "complete: archived_v336_dependency_aware_refreeze_candidate_facts_retired_selection_negative_v337_active_paper_ready_true"
+      Run: cd {project_root} && python scripts/experiment_3678_archive_v336_activate_v337.py
       Do NOT push. Do NOT modify scripts/research_conductor.py.
 
-  - id: exp3666-backend-state-diagnostic-v2
-    operator_override: "2026-06-01 outer-loop directive: per-milestone backend-state diagnostic (2nd consecutive gemini-recovery probe + routing recommendation) — documentation-only; does not modify the conductor or env; the .336 science stays on codex regardless so a gemini relapse cannot wipe the milestone."
-    milestone: "2026.06.336"
-    title: "Backend-state diagnostic v2 — second consecutive probe of gemini quota/crash stability since exp3653 reported recovery; recommend whether .337 may flip to gemini-default; .336 stays on codex (documentation-only)"
+  - id: exp3679-backend-state-diagnostic-v3
+    operator_override: "2026-06-01 outer-loop directive: per-milestone backend-state diagnostic (3rd consecutive gemini-recovery probe + routing recommendation) — documentation-only; does not modify the conductor or env; the .337 science stays on codex regardless so a gemini relapse cannot wipe the milestone."
+    milestone: "2026.06.337"
+    title: "Backend-state diagnostic v3 — third consecutive probe of gemini quota/crash stability (exp3653 probe1, exp3666 probe2 both OK); recommend whether .338 may flip to gemini-default; .337 stays on codex (documentation-only)"
     priority: critical
     max_turns: 30
     agent_type: codex
@@ -91,15 +96,16 @@ tasks:
     track: ops
     inference_substrate: hardware_smoke
     requires_gpu: false
-    deliverable: results/experiment_3666_backend_state_diagnostic_v2.json
+    deliverable: results/experiment_3679_backend_state_diagnostic_v3.json
     prompt: |
-      CONTEXT: exp3653 (.335) reported gemini RECOVERED via a single trivial probe. .333 was a total
-      gemini-crash wipeout (zero artifacts). This task is the SECOND consecutive stability probe: if gemini
-      is stable across .335 AND .336, .337 may flip to gemini-default. Documentation-only -- MUST NOT modify
+      CONTEXT: exp3653 (.335) and exp3666 (.336) both probed gemini OK (2 consecutive stable probes). .333 was a
+      total gemini-crash wipeout (zero artifacts), so the routing flip is held to a conservative 3-consecutive-
+      probe bar before risking the high-value .337 work on gemini. This is the THIRD probe: if gemini is stable
+      across .335, .336 AND .337, .338 may flip to gemini-default. Documentation-only -- MUST NOT modify
       scripts/research_conductor.py, env vars, or conductor config.
-      EXISTING CODE TO READ FIRST: results/experiment_3653 (the .335 recovery probe) and results/experiment_3639
-      (the .334 gemini-crash diagnostic) via scripts/summarize_artifact.py; CLAUDE.md "Gemini-Default for
-      Experiments" (the GEMINI/CODEX_FORCE_EXPERIMENTS coercion rules).
+      EXISTING CODE TO READ FIRST: results/experiment_3666 (the .336 probe v2, consecutive_stable_probes=2) and
+      results/experiment_3653 (the .335 recovery probe) via scripts/summarize_artifact.py; CLAUDE.md
+      "Gemini-Default for Experiments" (the GEMINI/CODEX_FORCE_EXPERIMENTS coercion rules).
       PRECONDITIONS (step 0): codex backend reachable (this task runs on it). A gemini 429/crash is an EXPECTED
       finding, not a blocker.
       CONCRETE STEPS:
@@ -107,8 +113,8 @@ tasks:
            `timeout 60 gemini -m gemini-3.1-pro-preview -p "Reply OK"` -- CAPTURE stdout + exit code; record
            ok / quota_exhausted_429 / crash_js_345500 verbatim. Do NOT loop or retry.
         2. Record the conductor coercion env (`env | grep -iE 'AGENT_TYPE|FORCE_EXPERIMENTS'`) -- read-only.
-        3. Recommend: if gemini ok on a 2nd consecutive probe -> operator MAY flip .337 to gemini-default;
-           if 429/crash -> keep codex+requires_codex (the proven .334/.335 routing).
+        3. Recommend: if gemini ok on a 3rd consecutive probe -> operator MAY flip .338 to gemini-default;
+           if 429/crash -> keep codex+requires_codex (the proven .334/.335/.336 routing) and reset the counter.
       ANTI-POISON TEST DISCIPLINE (MANDATORY): if you ship a pytest, parametrize over the script's honest
       outcomes (gemini_ok / gemini_quota_exhausted / gemini_crash) on synthetic fixtures; NEVER hard-assert one
       success string. Run your own test green BEFORE finishing.
@@ -119,13 +125,13 @@ tasks:
         gemini_cli_version:
           principle: "Records the installed gemini-cli version so a future upgrade is auditable."
         gemini_quota_state:
-          principle: "ok / quota_exhausted_429 / crash_js_345500 -- whether gemini is stable on a 2nd consecutive probe."
+          principle: "ok / quota_exhausted_429 / crash_js_345500 -- whether gemini is stable on a 3rd consecutive probe."
         consecutive_stable_probes:
-          principle: "Counts consecutive milestones gemini probed OK (exp3653 was probe 1); 2+ supports a .337 flip."
+          principle: "Counts consecutive milestones gemini probed OK (was 2 at exp3666); 3+ supports a .338 flip."
         conductor_coercion_env:
           principle: "Records AGENT_TYPE + FORCE_EXPERIMENTS active -- explains why per-task agent_type routes as it does."
         recommended_routing:
-          principle: "codex_requires_codex (keep) or gemini_default_eligible_for_v337 -- the operator-actionable recommendation."
+          principle: "codex_requires_codex (keep) or gemini_default_eligible_for_v338 -- the operator-actionable recommendation."
         conductor_unmodified_assert:
           principle: "Asserts this diagnostic did NOT modify research_conductor.py or env."
         random_seed:
@@ -134,84 +140,94 @@ tasks:
           principle: "Drift detection."
         duration_s:
           principle: "Plausibility floor."
-      TERMINAL VERDICTS: "complete: backend_diagnosed_gemini_stable_2nd_probe_v337_may_flip_to_gemini_default" /
+      TERMINAL VERDICTS: "complete: backend_diagnosed_gemini_stable_3rd_probe_v338_may_flip_to_gemini_default" /
       "complete: backend_diagnosed_gemini_still_unstable_keep_codex_routing"
-      Run: cd {project_root} && python scripts/experiment_3666_backend_state_diagnostic_v2.py
+      Run: cd {project_root} && python scripts/experiment_3679_backend_state_diagnostic_v3.py
       Do NOT push. Do NOT modify scripts/research_conductor.py.
 
-  - id: exp3667-dependency-aware-weighting-clean-detautologized
+  - id: exp3680-dependency-aware-dual-condition-integrity-g1-rigor
     prior_failures:
-      - experiment_id: exp3656-correlation-aware-weighting-paradox-diagnosis
-        verdict: complete_paradox_resolved_naive_penalty_misspecified_dependency_aware_recovers
-        addressed_by: "exp3656 found dependency-aware weighting beats Carnot (0.9326 vs 0.919) but the artifact was TAUTOLOGY-flagged (flagged_adversarial=true) because it stored the SAME correlation-aware AUROC under two field names (correlation_aware AND naive_correlation_aware, both 0.635312). This task re-runs the dependency-aware weighting CLEAN: store each distinct AUROC under exactly ONE field name (no aliasing), add >=5 seeds + bootstrap CI + a DeLong paired test vs Carnot's weighting, so the +0.013 win is a de-flagged, significance-tested, headline-advancement candidate -- not a quarantined finding."
+      - experiment_id: exp3667-dependency-aware-weighting-clean-detautologized
+        verdict: complete_dependency_aware_weighting_beats_carnot_clean_significant_headline_candidate
+        addressed_by: "exp3667 measured dependency-aware vs Carnot AUROC on a single (pooled) FoVer scoring split with a DeLong test; exp3668 added a held-out split. NEITHER ran the FULL G1-rigor DUAL-CONDITION integrity protocol (production condition + architecture-only memory-ablation condition, the exact methodology behind the frozen G1 source exp2837/exp2850). This task re-runs the dependency-aware weighting under THAT protocol so the candidate is directly comparable to the frozen 0.9131 G1 artifact: both conditions, >=5 seeds, per-seed AUROC + pooled CI, reproducibility_checksum, leak-free, adversarial-verify clean. Different deliverable shape (a G1-candidate dual-condition integrity artifact, not a weighting panel)."
         retire_if_same_verdict: false
-    milestone: "2026.06.336"
-    title: "Clean, de-tautologized dependency-aware ensemble weighting (arXiv:1903.05844 learned label-conditional dependency structure + Weaver arXiv:2506.18203) on FoVer — multi-seed + bootstrap CI + DeLong vs Carnot's 0.919; the headline-advancement candidate the exp3656 tautology flag quarantined"
+    milestone: "2026.06.337"
+    title: "Promote the dependency-aware weighting to a G1-rigor headline candidate — run the FULL dual-condition integrity protocol (mirror exp2837/exp2850: production + architecture-only conditions, >=5 seeds, per-seed AUROC + pooled CI, reproducibility_checksum, leak-free, adversarial-verify clean) on the held-out-validated dependency-aware weighting; produce the new-headline CANDIDATE artifact directly comparable to the frozen 0.9131 G1 source"
     priority: critical
     max_turns: 60
     agent_type: codex
     model: gpt-5.5
-    requires_codex: true   # anti-wipeout codex routing for .336; multi-file weighting + significance test
-    estimated_wall_time_min: 26
+    requires_codex: true   # anti-wipeout codex routing for .337; multi-file integrity protocol replication
+    estimated_wall_time_min: 28
     track: evidence
     inference_substrate: verifier_ensemble_against_cached_candidates
     requires_gpu: false
-    deliverable: results/experiment_3667_dependency_aware_weighting_clean.json
+    deliverable: results/experiment_3680_dependency_aware_dual_condition_integrity.json
     prompt: |
-      CONTEXT: exp3656 (.335) found that PROPER dependency-aware weighting (learning the label-conditional
-      dependency graph, arXiv:1903.05844, NOT a naive marginal-correlation redundancy penalty) BEAT Carnot's
-      current ensemble weighting on FoVer: 0.9326 vs 0.919 (+0.013) and recovered the -0.236 naive-penalty
-      regression. This is the first lead in many milestones that could RAISE the headline AUROC. But exp3656
-      was TAUTOLOGY-flagged (flagged_adversarial=true): it stored the SAME correlation-aware AUROC under two
-      field names. This task re-runs it CLEAN so the win is de-flagged and significance-tested.
-      DE-TAUTOLOGY RULE (MANDATORY): store each conceptually-distinct AUROC under exactly ONE field name. Do
-      NOT alias the same value under two keys (the exp3656 flag). If two weighting schemes genuinely produce
-      the same number, report ONE field and a note -- never two identical numeric fields.
-      EXISTING CODE TO READ FIRST: results/experiment_3656 (the four AUROCs + the flag) and results/experiment_3644
-      (the correlation matrix + Weaver-style baseline) and results/experiment_2837 (the FoVer corpus + the 4
-      scoring verifiers) via scripts/summarize_artifact.py; project_orthogonality_stall and
-      project_pathological_joint_null_space memories; research-references.md "Learning Dependency Structures for
-      Weak Supervision (arXiv:1903.05844)" and "Weaver (arXiv:2506.18203)" and "Dependency Structure
-      Misspecification (arXiv:2106.10302)" entries.
-      PRECONDITIONS (step 0): the FoVer corpus + the 4 scoring verifiers loadable; the exp3656 dependency-aware
-      implementation present. If not -> "complete: blocked_fover_corpus_or_dependency_weighting_unavailable".
+      CONTEXT: the frozen FoVer headline (0.9131, G1) comes from exp2837/exp2850's DUAL-CONDITION integrity
+      protocol (production condition AUROC 0.9131 + architecture-only memory-ablation condition; 5 seeds; CI
+      [0.9027,0.9235]; learning_contribution +0.0185 CI [0.0125,0.0245]). .336 found a held-out-validated
+      dependency-aware weighting (exp3667/3668: 0.9332 vs Carnot 0.919/0.920) but NOT under that exact protocol.
+      Before the dependency-aware number can EVER be promoted to the headline, it must be measured under the SAME
+      G1-rigor protocol so it is apples-to-apples with the frozen artifact. This task produces that candidate
+      artifact. It does NOT touch the frozen headline -- the frozen 0.9131 stays frozen until a future operator
+      re-freeze (exp3681 prepares the package).
+      EXISTING CODE TO READ FIRST: results/experiment_2850 (the frozen G1 dual-condition integrity source -- copy
+      its protocol) and results/experiment_2837 (the FoVer corpus + the 4 scoring verifiers) and
+      results/experiment_3667 + results/experiment_3668 (the clean dependency-aware weighting + held-out
+      validation) via scripts/summarize_artifact.py; scripts/reproduce_fover_headline.py (the G2 reproducer
+      logic, to mirror); ops/north-star.md sec-1 + sec-2 (the headline + G1 definition).
+      PRECONDITIONS (step 0): the FoVer corpus + the 4 scoring verifiers loadable; the exp3667 dependency-aware
+      weighting implementation present; exp2850 readable for protocol parity. If not -> "complete:
+      blocked_fover_corpus_or_dependency_weighting_or_g1_source_unavailable".
+      DE-TAUTOLOGY + LEAK GUARDS (MANDATORY): store each conceptually-distinct AUROC under exactly ONE field name;
+      verifiers score (input, candidate) only -- never the gold label; an AUROC >= 0.99 on n>=1000 is a RED-FLAG
+      leak (report leak_free=false). Seeds may equal content-derived values but never the experiment number alone
+      (the exp3506 tautology trap).
       CONCRETE STEPS:
-        1. Reproduce the weighting panel with NO aliased fields: unweighted / Weaver-style / Carnot-current /
-           dependency-aware-proper. Each AUROC under exactly one field name.
-        2. >=5 seeds + bootstrap CI on each; DeLong paired test of dependency-aware vs Carnot-current on the
-           SAME corpus split (report the p-value and the paired delta CI).
-        3. Run adversarial_verify on your own artifact (`python scripts/adversarial_verify.py <path>`) and
-           CONFIRM no TAUTOLOGY/critical flag before finishing -- the whole point is to de-flag the finding.
-        4. Honest verdict: does dependency-aware weighting beat Carnot with the delta CI excluding 0 AND a
-           significant DeLong p? If yes, it is a headline-advancement CANDIDATE (NOT a silent headline swap --
-           the frozen 0.9131 stays until a future re-freeze + re-reproduction).
+        1. Replicate exp2850's dual-condition protocol EXACTLY but with the dependency-aware weighting in the
+           production condition: production-condition dependency-aware AUROC (>=5 seeds, per-seed + pooled CI) and
+           the architecture-only condition (the memory-ablation), so learning_contribution is recomputed under
+           the new weighting. Report Carnot-current weighting under the IDENTICAL protocol as the in-artifact bar.
+        2. Paired delta (dependency-aware production vs Carnot production) + bootstrap CI + DeLong p on the SAME
+           splits; report the dependency-aware production AUROC vs the FROZEN 0.9131 explicitly (this is the
+           candidate-new-headline number).
+        3. Run `python scripts/adversarial_verify.py <your artifact>` and CONFIRM no TAUTOLOGY/critical flag and
+           leak_free before finishing.
+        4. Honest verdict: is the dependency-aware production-condition AUROC, under the frozen protocol, both
+           higher than 0.9131 AND significant (delta CI excludes 0, DeLong p<0.05), AND adversarial-clean +
+           leak-free? If yes -> dependency_aware_g1_rigor_confirmed=true (a G1-candidate, NOT a swap).
       ANTI-POISON TEST DISCIPLINE (MANDATORY): parametrize any pytest over the honest outcomes
-      (beats_carnot_significant / no_significant_gain / blocked) on synthetic fixtures; NEVER hard-assert one
-      success string. Run your own test green BEFORE finishing.
-      REQUIRED ARTIFACT FIELDS (principle: documents WHY; dependency_aware_beats_carnot MUST be a BARE top-level bool):
+      (g1_rigor_confirmed / no_significant_gain_under_protocol / blocked) on synthetic fixtures; NEVER hard-assert
+      one success string. Run your own test green BEFORE finishing.
+      REQUIRED ARTIFACT FIELDS (principle: documents WHY; dependency_aware_g1_rigor_confirmed MUST be a BARE top-level bool):
         honest_verdict:
           principle: "Terminal prefix for reconciler classification."
-        inference_substrate: "verifier_ensemble_against_cached_candidates (principle: scores the cached FoVer corpus; no LLM load)."
-        auroc_unweighted:
-          principle: "Baseline -- one field, no alias."
-        auroc_weaver_style:
-          principle: "Weaver weak-supervision weighting (arXiv:2506.18203) -- one field, no alias."
-        auroc_carnot_current:
-          principle: "Carnot's current weighting (~0.919) -- the bar; one field, no alias."
-        auroc_dependency_aware_proper:
-          principle: "The arXiv:1903.05844 learned-dependency-structure weighting -- the candidate; one field, no alias."
-        dependency_aware_vs_carnot_delta_ci:
-          principle: "Paired delta + bootstrap CI of dependency-aware minus Carnot -- the headline-advancement magnitude."
+        inference_substrate: "verifier_ensemble_against_cached_candidates (principle: scores the cached FoVer corpus under the dual-condition protocol; no LLM load)."
+        production_auroc_dependency_aware:
+          principle: "The candidate-new-headline number: dependency-aware AUROC in the production condition under the frozen G1 protocol -- one field, no alias."
+        production_auroc_carnot_current:
+          principle: "Carnot's current weighting under the IDENTICAL protocol -- the in-artifact bar; one field, no alias."
+        frozen_headline_auroc:
+          principle: "The frozen 0.9131 -- recorded verbatim so the candidate is explicitly compared, never silently substituted."
+        production_auroc_ci:
+          principle: "Pooled bootstrap CI of the dependency-aware production AUROC -- a candidate headline needs a CI like the frozen one."
+        learning_contribution_dependency_aware:
+          principle: "The architecture-only memory-ablation delta recomputed under the new weighting -- the FR-11 contribution must be re-measured for a re-freeze."
+        dependency_vs_carnot_delta_ci:
+          principle: "Paired delta + bootstrap CI of dependency-aware minus Carnot under the protocol."
         delong_p_dependency_vs_carnot:
-          principle: "DeLong paired significance of the AUROC difference -- a point estimate alone is not enough to move a headline."
-        adversarial_verify_clean:
-          principle: "True iff the artifact passes adversarial_verify with no TAUTOLOGY/critical flag -- de-flags the exp3656 finding (the whole point)."
-        dependency_aware_beats_carnot:
-          principle: "BARE bool. True iff dependency-aware AUROC > Carnot AND the delta CI excludes 0 AND DeLong p<0.05 -- the headline-advancement-candidate gate. STORE AS BARE true/false -- gates exp3668."
+          principle: "DeLong paired significance under the protocol -- a point estimate alone cannot move a headline."
+        n_seeds:
+          principle: "Replication count (>=5, matching the frozen G1 source)."
         n_examples:
           principle: "Sample-size rigor (FoVer n>=1000)."
-        n_seeds:
-          principle: "Replication count (>=5)."
+        adversarial_verify_clean:
+          principle: "True iff the artifact passes adversarial_verify with no TAUTOLOGY/critical flag -- a G1 candidate must be adversarial-clean."
+        leak_free:
+          principle: "True iff verifiers scored (input, candidate) only and AUROC < 0.99 -- a leaked AUROC cannot be a headline."
+        dependency_aware_g1_rigor_confirmed:
+          principle: "BARE bool. True iff dependency-aware production AUROC > frozen 0.9131 AND delta CI excludes 0 AND DeLong p<0.05 AND adversarial_verify_clean AND leak_free -- the G1-candidate gate. STORE AS BARE true/false -- gates exp3681."
         random_seed:
           principle: "Determinism precondition."
         reproducibility_checksum:
@@ -219,70 +235,86 @@ tasks:
         duration_s:
           principle: "Plausibility floor."
       ACCEPTANCE GATE:
-        - condition: "adversarial_verify_clean == true AND auroc_dependency_aware_proper present AND delong_p_dependency_vs_carnot present"
-          principle: "A headline-advancement candidate requires a de-flagged artifact with a measured AUROC and a significance test -- a tautology-flagged or untested number cannot move a headline."
-      TERMINAL VERDICTS: "complete: dependency_aware_weighting_beats_carnot_clean_significant_headline_candidate" /
-      "complete: dependency_aware_weighting_no_significant_gain_clean_carnot_weighting_sufficient" /
-      "complete: blocked_fover_corpus_or_dependency_weighting_unavailable"
-      Run: cd {project_root} && python scripts/experiment_3667_dependency_aware_weighting_clean.py
+        - condition: "production_auroc_dependency_aware present AND production_auroc_carnot_current present AND adversarial_verify_clean == true AND leak_free == true AND n_seeds >= 5"
+          principle: "A G1-rigor headline candidate requires both weightings measured under the frozen dual-condition protocol, >=5 seeds, adversarial-clean and leak-free -- otherwise it is not comparable to the frozen G1 source."
+      TERMINAL VERDICTS: "complete: dependency_aware_g1_rigor_confirmed_headline_candidate_exceeds_frozen_0_9131" /
+      "complete: dependency_aware_no_significant_gain_under_g1_protocol_frozen_headline_stands" /
+      "complete: blocked_fover_corpus_or_dependency_weighting_or_g1_source_unavailable"
+      Run: cd {project_root} && python scripts/experiment_3680_dependency_aware_dual_condition_integrity.py
       Do NOT push. Do NOT modify scripts/research_conductor.py.
 
-  - id: exp3668-dependency-aware-weighting-heldout-validation
-    operator_override: "2026-06-01 outer-loop directive: NEW held-out validation step (does the dependency-aware weighting from exp3667 generalize to a FoVer split it was NOT fit on, or is the +0.013 an overfit of the weighting to the scoring corpus?) — gated on exp3667; no prior task ran the held-out validation, so this is forward de-risking before any headline re-freeze, not a rerun."
-    milestone: "2026.06.336"
-    title: "Held-out / cross-split validation of the dependency-aware weighting (fit the learned dependency structure on a FoVer train split, evaluate on a disjoint test split) — guard against overfitting the weighting before it can advance the frozen headline"
+  - id: exp3681-g2-reproducer-prep-operator-refreeze-package
+    operator_override: "2026-06-01 outer-loop directive: NEW G2-reproducer-prep + OPERATOR re-freeze package step (gated on exp3680). Prepare-only per Operator-Only External Publication + Public Documentation Discipline (north-star sec-1 is operator-curated; the frozen 0.9131 is NEVER silently substituted by an autonomous task). No prior task prepared a headline re-freeze package, so this is forward de-risking, not a rerun."
+    milestone: "2026.06.337"
+    title: "Prepare the headline re-freeze PACKAGE for the operator (gated on exp3680 G1-rigor confirmed) — extend scripts/reproduce_fover_headline.py to also compute the dependency-aware AUROC + CI, draft the updated CI-workflow assertion bounds, and emit an operator checklist for the north-star sec-1 re-freeze — PREPARE-ONLY; the frozen 0.9131 stays frozen and the agent never edits north-star.md or triggers the CI run"
     priority: high
     max_turns: 50
     agent_type: codex
     model: gpt-5.5
-    requires_codex: true   # anti-wipeout codex routing for .336
+    requires_codex: true   # anti-wipeout codex routing for .337; multi-file reproducer + checklist
     estimated_wall_time_min: 18
-    track: evidence
+    track: ops
     inference_substrate: verifier_ensemble_against_cached_candidates
     requires_gpu: false
     gated_on:
-      - upstream: exp3667-dependency-aware-weighting-clean-detautologized
-        artifact_field: dependency_aware_beats_carnot
+      - upstream: exp3680-dependency-aware-dual-condition-integrity-g1-rigor
+        artifact_field: dependency_aware_g1_rigor_confirmed
         op: '=='
         value: true
-    deliverable: results/experiment_3668_dependency_aware_weighting_heldout.json
+    deliverable: results/experiment_3681_g2_reproducer_prep_operator_refreeze_package.json
     prompt: |
-      CONTEXT: exp3667 showed dependency-aware weighting beats Carnot on FoVer (clean, significant). Before
-      that can ever advance the frozen 0.9131 headline, it must be shown the learned dependency structure +
-      weights generalize -- i.e. they were not overfit to the corpus they were estimated on. This task does a
-      proper train/test split: learn the dependency structure + weights on a FoVer TRAIN split, evaluate AUROC
-      on a DISJOINT TEST split, vs Carnot's weighting on the SAME test split. NULL DISCIPLINE: a held-out win
-      is only meaningful if Carnot's weighting is also evaluated on the identical held-out split.
-      EXISTING CODE TO READ FIRST: results/experiment_3667 (the clean weighting panel + the dependency-aware
-      implementation) via scripts/summarize_artifact.py; results/experiment_2837 (the FoVer corpus).
-      PRECONDITIONS (step 0): exp3667 dependency_aware_beats_carnot==true AND the dependency-aware weighting
-      implementation present. If not -> "complete: blocked_dependency_aware_weighting_not_confirmed_upstream".
+      CONTEXT: exp3680 confirmed the dependency-aware weighting clears G1-rigor (dual-condition, >=5 seeds, CI,
+      adversarial-clean, leak-free) and exceeds the frozen 0.9131. A headline re-freeze needs TWO more things
+      before it can be the new headline: (a) the G2 independent reproducer (the CI workflow + script) must
+      compute and assert the NEW number's CI, and (b) the north-star sec-1 headline prose + frozen number must be
+      edited. BOTH the north-star edit and the CI-run trigger are OPERATOR actions (north-star is operator-curated
+      per Public Documentation Discipline; flipping the published headline is operator-only). This task PREPARES
+      the package -- it MUST NOT edit ops/north-star.md, MUST NOT trigger the GitHub Actions reproducer, and MUST
+      NOT change the frozen 0.9131 anywhere the publication gate reads. It updates the reproducer SCRIPT to also
+      compute the candidate number (additively, behind a flag/function so the existing 0.9131 assertion is
+      untouched) and writes an operator checklist.
+      EXISTING CODE TO READ FIRST: scripts/reproduce_fover_headline.py (the G2 reproducer) and
+      .github/workflows/reproduce-fover-headline.yml (the CI workflow, READ-ONLY -- do NOT edit) and
+      results/experiment_3680 (the G1-candidate artifact) and results/experiment_2850 (the frozen G1 source) via
+      scripts/summarize_artifact.py; ops/north-star.md sec-1+sec-2; CLAUDE.md "Operator-Only External
+      Publication" + "Public Documentation Discipline".
+      PRECONDITIONS (step 0): exp3680 dependency_aware_g1_rigor_confirmed==true; scripts/reproduce_fover_headline.py
+      importable. If not -> "complete: blocked_g1_candidate_not_confirmed_or_reproducer_unavailable".
       CONCRETE STEPS:
-        1. Split FoVer into disjoint train/test (>=5 seeded splits; report per-split + pooled).
-        2. Fit the dependency structure + weights on TRAIN only; evaluate dependency-aware AUROC and
-           Carnot-weighting AUROC on the held-out TEST split. Paired delta + bootstrap CI + DeLong on test.
-        3. Honest verdict: does the held-out test delta still favor dependency-aware with CI excluding 0? If
-           the train-fit win evaporates on held-out, the +0.013 was an overfit (report honestly -- a
-           trustworthy negative, NOT a regression of paper_ready).
+        1. Extend scripts/reproduce_fover_headline.py ADDITIVELY: add a function/flag that recomputes the
+           dependency-aware production AUROC + CI from the cached corpus and ASSERTS it lands in exp3680's CI.
+           The existing 0.9131 reproduction path MUST remain unchanged and still pass (run both; confirm green).
+        2. Draft (in the artifact, NOT applied to the .yml) the exact updated CI-workflow assertion bounds the
+           operator would set for a re-freeze (the new AUROC CI + learning_contribution CI from exp3680).
+        3. Emit an OPERATOR CHECKLIST: the precise north-star sec-1 edits (old headline -> candidate headline with
+           CI + source artifact), the CI-workflow assertion change, and "trigger the reproducer run" -- each
+           marked OPERATOR-ACTION. State plainly that the frozen 0.9131 stays the headline until the operator
+           completes the checklist AND the CI reproducer re-runs green on the new number.
+        4. ASSERT in the artifact: north-star.md was NOT modified, the .yml was NOT modified, the GitHub run was
+           NOT triggered, and the publication gate still reads 0.9131 (paper_ready unchanged).
       ANTI-POISON TEST DISCIPLINE (MANDATORY): parametrize any pytest over the honest outcomes
-      (generalizes_heldout / overfit_train_only / blocked) on synthetic fixtures; NEVER hard-assert one success
+      (package_ready / candidate_not_confirmed / blocked) on synthetic fixtures; NEVER hard-assert one success
       string. Run your own test green BEFORE finishing.
-      REQUIRED ARTIFACT FIELDS (principle: documents WHY; dependency_aware_generalizes_heldout MUST be a BARE top-level bool):
+      REQUIRED ARTIFACT FIELDS (principle: documents WHY; store the bare VALUE):
         honest_verdict:
           principle: "Terminal prefix for reconciler classification."
-        inference_substrate: "verifier_ensemble_against_cached_candidates (principle: scores held-out FoVer splits; no LLM load)."
-        heldout_auroc_dependency_aware:
-          principle: "Dependency-aware AUROC on the disjoint TEST split (fit on TRAIN only) -- the generalization number."
-        heldout_auroc_carnot:
-          principle: "Carnot weighting on the identical TEST split -- the held-out bar."
-        heldout_delta_ci:
-          principle: "Paired held-out delta + bootstrap CI -- whether the win survives out-of-fit."
-        heldout_delong_p:
-          principle: "DeLong significance on the held-out split."
-        n_splits:
-          principle: "Replication count of train/test splits (>=5)."
-        dependency_aware_generalizes_heldout:
-          principle: "BARE bool. True iff the held-out delta favors dependency-aware with CI excluding 0 -- the de-risk gate before any headline re-freeze. STORE AS BARE true/false."
+        inference_substrate: "verifier_ensemble_against_cached_candidates (principle: re-runs the cached-corpus reproducer; no LLM load)."
+        reproducer_extended:
+          principle: "True iff scripts/reproduce_fover_headline.py was extended ADDITIVELY to compute+assert the candidate number while leaving the 0.9131 path green."
+        existing_0_9131_reproduction_still_green:
+          principle: "True iff the unchanged 0.9131 reproduction path still passes -- proves the additive change did not regress G2."
+        candidate_reproduction_asserts_in_ci:
+          principle: "True iff the new dependency-aware reproduction lands inside exp3680's CI -- the new number is independently recomputable."
+        draft_ci_workflow_assertion_bounds:
+          principle: "The exact CI-workflow assertion bounds the operator would set (drafted in-artifact, NOT applied) -- the operator's re-freeze input."
+        operator_checklist:
+          principle: "The ordered OPERATOR-ACTION steps (north-star sec-1 edit, CI-workflow update, trigger run) -- the re-freeze is operator-only."
+        north_star_unmodified_assert:
+          principle: "Asserts ops/north-star.md was NOT edited (operator-curated)."
+        ci_workflow_unmodified_assert:
+          principle: "Asserts the .github reproducer workflow was NOT edited and the run was NOT triggered (operator-only external action)."
+        frozen_headline_unchanged_assert:
+          principle: "Asserts the publication gate still reads 0.9131 and paper_ready is unchanged -- no silent substitution."
         random_seed:
           principle: "Determinism precondition."
         reproducibility_checksum:
@@ -290,322 +322,89 @@ tasks:
         duration_s:
           principle: "Plausibility floor."
       ACCEPTANCE GATE:
-        - condition: "heldout_auroc_dependency_aware present AND heldout_auroc_carnot present AND n_splits >= 5"
-          principle: "A generalization verdict requires both weightings evaluated on the same disjoint held-out splits, replicated -- a single-split or train-only number cannot de-risk a headline change."
-      TERMINAL VERDICTS: "complete: dependency_aware_weighting_generalizes_heldout_headline_re_freeze_candidate_for_v337" /
-      "complete: dependency_aware_weighting_overfit_train_only_heldout_win_evaporates" /
-      "complete: blocked_dependency_aware_weighting_not_confirmed_upstream"
-      Run: cd {project_root} && python scripts/experiment_3668_dependency_aware_weighting_heldout.py
+        - condition: "reproducer_extended == true AND existing_0_9131_reproduction_still_green == true AND north_star_unmodified_assert == true AND frozen_headline_unchanged_assert == true"
+          principle: "A re-freeze package is correct only if the reproducer is extended additively, the frozen reproduction still passes, and the operator-curated headline + frozen number are untouched -- the agent prepares, the operator promotes."
+      TERMINAL VERDICTS: "complete: refreeze_package_ready_for_operator_frozen_headline_unchanged" /
+      "complete: blocked_g1_candidate_not_confirmed_or_reproducer_unavailable"
+      Run: cd {project_root} && python scripts/experiment_3681_g2_reproducer_prep_operator_refreeze_package.py
       Do NOT push. Do NOT modify scripts/research_conductor.py.
 
-  - id: exp3669-build-real-factual-hallucination-corpus
-    operator_override: "2026-06-01 outer-loop directive: NEW real-data corpus build (RAGTruth arXiv:2401.00396 / FELM / HaluEval) to replace the .335 SYNTHETIC v3 facts corpus — exp3640 built a synthetic corpus successfully (not a failure); this is a forward difference (real external benchmark with evidence+labels+confidence), sanctioned by north-star rigor + the core escape-hallucinations mission."
-    milestone: "2026.06.336"
-    title: "Build a REAL factual-hallucination corpus from an external benchmark (RAGTruth arXiv:2401.00396, with FELM / HaluEval fallback) — evidence passages + binary hallucination labels + model-confidence — to stress-test whether the .335 'facts domain-bound' negative is a synthetic-corpus artifact"
-    priority: high
-    max_turns: 60
-    agent_type: codex
-    model: gpt-5.5
-    requires_codex: true   # anti-wipeout codex routing for .336; dataset-fetch + labeling pipeline
-    estimated_wall_time_min: 24
-    track: evidence
-    inference_substrate: verifier_ensemble_against_cached_candidates
-    requires_gpu: false
-    deliverable: results/experiment_3669_build_real_factual_corpus.json
-    prompt: |
-      CONTEXT: .335 (exp3654/3655) earned "facts is domain-bound even with a real NLI verifier" -- but ONLY
-      on a SYNTHETIC v3 corpus where confidence already reached 0.745. The real factual-hallucination
-      benchmarks (RAGTruth arXiv:2401.00396, FELM, HaluEval) were never tried. This task builds a REAL corpus
-      so .336 can test whether "facts domain-bound" is a synthetic-corpus artifact or genuine. RAGTruth is
-      preferred (word/span-level hallucination annotations with retrieved context). NULL DISCIPLINE: the
-      corpus must have real class balance AND confidence must NOT be a perfect detector (a confidence AUROC
-      ~1.0 is the degenerate-corpus signature exp3574 hit -- reject such a corpus).
-      EXISTING CODE TO READ FIRST: results/experiment_3640 (the synthetic v3 corpus schema:
-      {question, answer, is_hallucination, evidence_passage, model_confidence}) via scripts/summarize_artifact.py;
-      research-references.md "RAGTruth (arXiv:2401.00396)" + "HalluLens/HalluScan" entries; scripts/experiment_template.py.
-      PRECONDITIONS (step 0):
-        a. Network reachable to fetch the benchmark (`curl -sf -o /dev/null https://huggingface.co/api/models`)
-           OR a cached copy present. If neither -> "complete: blocked_no_network_and_no_cached_real_corpus".
-        b. If the primary (RAGTruth) is unavailable, fall back to FELM / HaluEval and record which was used.
-      CONCRETE STEPS:
-        1. Fetch RAGTruth (or fallback) and project to the v3 schema: {question/prompt, model_answer,
-           is_hallucination (binary), evidence_passage (retrieved context), model_confidence}. Persist
-           data/real_factual_corpus_ragtruth.jsonl.
-        2. Record n, class balance (reject if either class < 20%), the source benchmark + version, and the
-           confidence-baseline AUROC. ASSERT confidence AUROC < 0.95 (else the corpus is degenerate -- report
-           real_factual_corpus_built=false and the degeneracy).
-        3. Sanity: a few examples printed (real factual text, NOT placeholders) to confirm the projection.
-      ANTI-POISON TEST DISCIPLINE (MANDATORY): parametrize any pytest over the honest outcomes
-      (corpus_built / degenerate_confidence_perfect / blocked) on realistic synthetic fixtures (NOT
-      Q/R/H-number tokens); NEVER hard-assert one success string against the on-disk corpus. Run your own test
-      green BEFORE finishing.
-      REQUIRED ARTIFACT FIELDS (principle: documents WHY; real_factual_corpus_built MUST be a BARE top-level bool):
-        honest_verdict:
-          principle: "Terminal prefix for reconciler classification."
-        inference_substrate: "verifier_ensemble_against_cached_candidates (principle: builds + baselines a cached corpus; no FoVer LLM load)."
-        corpus_path:
-          principle: "Where the real corpus lives -- the provenance for exp3670."
-        source_benchmark:
-          principle: "RAGTruth / FELM / HaluEval + version -- external-benchmark provenance (the whole point: real, not synthetic)."
-        n_examples:
-          principle: "Sample-size rigor (>=200 for a percentage-point AUROC claim downstream)."
-        class_balance:
-          principle: "Both classes >= 20% -- guards against the imbalance that made the .335 code corpus fragile."
-        confidence_baseline_auroc:
-          principle: "The bar the grounding verifier must beat downstream; MUST be < 0.95 (a perfect confidence baseline = degenerate corpus, exp3574)."
-        corpus_non_degenerate:
-          principle: "True iff confidence AUROC < 0.95 AND class balance ok -- a degenerate corpus cannot test the facts hypothesis."
-        real_factual_corpus_built:
-          principle: "BARE bool. True iff a real, non-degenerate, schema-valid corpus was persisted. STORE AS BARE true/false -- gates exp3670."
-        random_seed:
-          principle: "Determinism precondition."
-        reproducibility_checksum:
-          principle: "Drift detection."
-        duration_s:
-          principle: "Plausibility floor."
-      ACCEPTANCE GATE:
-        - condition: "real_factual_corpus_built == true AND corpus_non_degenerate == true AND n_examples >= 200"
-          principle: "A facts re-measurement is only meaningful on a real, non-degenerate, adequately-sized corpus -- a degenerate or tiny corpus repeats the .335/.330 limitation."
-      TERMINAL VERDICTS: "complete: real_factual_corpus_built_ragtruth_non_degenerate" /
-      "complete: real_factual_corpus_built_fallback_felm_or_halueval_non_degenerate" /
-      "complete: blocked_real_corpus_degenerate_confidence_perfect" /
-      "complete: blocked_no_network_and_no_cached_real_corpus"
-      Run: cd {project_root} && python scripts/experiment_3669_build_real_factual_corpus.py
-      Do NOT push. Do NOT modify scripts/research_conductor.py.
-
-  - id: exp3670-facts-row-real-benchmark-remeasurement
+  - id: exp3682-discrimination-vs-selection-gap-diagnosis
     prior_failures:
-      - experiment_id: exp3655-facts-row-remeasurement-real-nli-v5
-        verdict: complete_facts_domain_bound_even_with_real_nli_334_negative_confirmed_earned
-        addressed_by: "exp3655 measured the facts row on a SYNTHETIC v3 corpus (grounding 0.744 ~= confidence 0.745). This task re-measures with the SAME real NLI grounding verifier (exp3654) on a REAL external benchmark (RAGTruth, from exp3669) AND adds the complementary catch-rate lens (the McNemar p=0.0003 / ~40% catch-at-fixed-FPR signal AUROC hides). Different corpus (real vs synthetic) + a second metric lens = new science. retire_if_same_verdict: if facts is STILL AUROC-domain-bound AND has no complementary catch-value on a REAL corpus, the facts-generalization hypothesis is genuinely earned-negative and retires."
+      - experiment_id: exp3672-ensemble-selection-value-where-sc-weak
+        verdict: complete_ensemble_no_selection_value_even_with_headroom_sc_weak_earned_negative
+        addressed_by: "exp3672 measured that ensemble best-of-N selection (argmax energy within a question) is WORSE than SC even with valid headroom -- an earned-negative. This task is NOT a rerun of that selection test: it DIAGNOSES WHY (the discrimination-vs-selection decoupling is a known phenomenon per arXiv:2512.23067) and TESTS FIXES the prior task never tried -- per-question energy normalization / z-scoring, a pairwise within-question ranking calibration, and a stronger free confidence baseline (self-certainty, arXiv:2502.18581). Different question (why + is it fixable), different method (per-question recalibration + ranking objective), retire_if_same only if NO fix recovers any selection value."
         retire_if_same_verdict: true
-    milestone: "2026.06.336"
-    title: "Re-measure the FACTS row on a REAL benchmark (RAGTruth, exp3669) with the real NLI grounding verifier (exp3654) — AUROC AND the complementary catch-rate lens — is the .335 'facts domain-bound' a synthetic-corpus artifact or genuinely earned? (the core escape-hallucinations answer; retire_if_same)"
-    priority: high
-    max_turns: 55
-    agent_type: codex
-    model: gpt-5.5
-    requires_codex: true   # anti-wipeout codex routing for .336
-    estimated_wall_time_min: 22
-    track: evidence
-    inference_substrate: verifier_ensemble_against_cached_candidates
-    requires_gpu: false
-    gated_on:
-      - upstream: exp3669-build-real-factual-hallucination-corpus
-        artifact_field: real_factual_corpus_built
-        op: '=='
-        value: true
-    deliverable: results/experiment_3670_facts_row_real_benchmark.json
-    prompt: |
-      CONTEXT: the facts row is the original escape-LLM-hallucinations mission. .335 earned "facts domain-bound"
-      but on a SYNTHETIC corpus, with a complementary catch-signal AUROC hid (McNemar p=0.0003, ~40%
-      catch-at-fixed-FPR). exp3669 built a REAL corpus (RAGTruth). This task re-measures the facts row fairly on
-      real data with BOTH lenses: discrimination (AUROC) AND the second-pair-of-eyes catch-rate (errors the
-      grounding verifier catches that confidence misses, McNemar). NULL DISCIPLINE / FALSE_NEGATIVE_RISK: a
-      "facts does not generalize" verdict is trustworthy only if the verifier fired leak-free on a
-      headroom-bearing real corpus (confidence < 0.95) AND the catch-rate lens was also reported.
-      EXISTING CODE TO READ FIRST: results/experiment_3669 (the real corpus + confidence baseline) and
-      results/experiment_3654 (the real NLI grounding verifier + leak guard) and results/experiment_3655 (the
-      synthetic-corpus facts result, for the before/after) via scripts/summarize_artifact.py;
-      python/carnot/verify/nli_atomic_claim_grounding_verifier.py.
-      PRECONDITIONS (step 0): exp3669 real_factual_corpus_built==true; the exp3654 NLI grounding verifier
-      importable and leak-free. If not -> "complete: blocked_real_corpus_or_grounding_verifier_unavailable".
-      LEAK GUARDS (MANDATORY): the verifier scores (model_answer, evidence) only -- never the gold answer/label;
-      AUROC >= 0.99 on n>=200 is a RED-FLAG leak (report grounding_leak_free=false + the diagnosed leak).
-      CONCRETE STEPS:
-        1. Score the real NLI grounding verifier on the real corpus: AUROC + >=3 seeds + bootstrap CI;
-           confidence-baseline AUROC + CI; grounding-minus-confidence paired delta + CI.
-        2. Complementary lens: at fixed confidence FPR, the conditional catch-rate (errors grounding catches
-           that confidence misses) + McNemar paired test -- the facts second-pair-of-eyes signal on real data.
-        3. Honest verdict vs the .335 synthetic result: does facts generalize on a REAL corpus (grounding
-           materially > confidence in AUROC) OR add real catch-value even at AUROC-parity OR is it genuinely
-           domain-bound (no AUROC win AND no catch-value)? Compare grounding AUROC real-vs-synthetic.
-      ANTI-POISON TEST DISCIPLINE (MANDATORY): parametrize any pytest over the honest outcomes
-      (generalizes_real / catch_value_at_parity / domain_bound_real / blocked) on realistic synthetic fixtures;
-      NEVER hard-assert one success string against the real corpus. Run your own test green BEFORE finishing.
-      REQUIRED ARTIFACT FIELDS (principle: documents WHY; facts_generalize_or_adds_value_real MUST be a BARE top-level bool):
-        honest_verdict:
-          principle: "Terminal prefix for reconciler classification."
-        inference_substrate: "verifier_ensemble_against_cached_candidates (principle: scores the cached real corpus; no LLM load)."
-        grounding_auroc_real_corpus:
-          principle: "The real NLI grounding signal on the REAL corpus + CI -- the corrected facts-row number."
-        confidence_baseline_auroc:
-          principle: "The bar (from exp3669); facts AUROC-value requires beating it."
-        grounding_minus_confidence_delta:
-          principle: "Signed paired delta + CI -- additive facts value over confidence in AUROC terms."
-        facts_conditional_catch_rate:
-          principle: "Errors grounding catches that confidence misses at fixed FPR -- the second-pair-of-eyes lens AUROC hides."
-        mcnemar_p_facts:
-          principle: "Paired significance of the grounding-vs-confidence disagreement on real data."
-        grounding_leak_free:
-          principle: "True iff evidence excludes the gold answer AND AUROC < 0.99 AND the label is never read."
-        real_vs_synthetic_grounding_delta:
-          principle: "Did using a REAL corpus change the .335 synthetic answer (grounding 0.744)? -- the corpus-artifact question."
-        positive_control_valid:
-          principle: "True iff the verifier fired leak-free on a headroom-bearing real corpus (confidence < 0.95) -- a null without this is uninformative."
-        facts_generalize_or_adds_value_real:
-          principle: "BARE bool. True iff on the REAL corpus grounding materially beats confidence in AUROC OR adds significant complementary catch-value (McNemar p<0.05 with positive catch-rate), leak-free -- the corrected core-mission answer. STORE AS BARE true/false."
-        n_examples:
-          principle: "Sample-size rigor (>=200)."
-        random_seed:
-          principle: "Determinism precondition."
-        reproducibility_checksum:
-          principle: "Drift detection."
-        duration_s:
-          principle: "Plausibility floor."
-      ACCEPTANCE GATE:
-        - condition: "grounding_auroc_real_corpus present AND confidence_baseline_auroc present AND positive_control_valid == true AND grounding_leak_free == true"
-          principle: "A corrected facts verdict requires the real verifier fired leak-free on a headroom-bearing real corpus vs a measured confidence baseline -- otherwise it repeats the synthetic-corpus limitation."
-      TERMINAL VERDICTS: "complete: facts_generalize_on_real_benchmark_335_synthetic_understated_facts_value" /
-      "complete: facts_auroc_parity_but_real_complementary_catch_value_on_real_benchmark" /
-      "complete: facts_domain_bound_on_real_benchmark_335_negative_genuinely_earned" /
-      "complete: blocked_real_corpus_or_grounding_verifier_unavailable"
-      Run: cd {project_root} && python scripts/experiment_3670_facts_row_real_benchmark.py
-      Do NOT push. Do NOT modify scripts/research_conductor.py.
-
-  - id: exp3671-ship-second-pair-of-eyes-detector-product-surface
-    operator_override: "2026-06-01 outer-loop directive: NEW Phase-1 product-ship step (wire the .335 exp3657 validated fused detector into the actual pipeline/MCP/CLI surface with an E2E test) sanctioned by north-star sec-1 product advancement + Phase-1 software-operational ship gate; exp3657 built the experiment artifact, this is the forward integration into a deployable surface, not a rerun."
-    milestone: "2026.06.336"
-    title: "SHIP the second-pair-of-eyes detector into the Phase-1 product surface — a clean calibrated fused-detector API in python/carnot/pipeline/ wired to score_candidates (MCP/CLI), with math-validated + balanced-code operating points (exp3658 corpus) and an E2E test"
-    priority: high
-    max_turns: 55
-    agent_type: codex
-    model: gpt-5.5
-    requires_codex: true   # anti-wipeout codex routing for .336; formulaic multi-file integration (codex strength)
-    estimated_wall_time_min: 24
-    track: product
-    inference_substrate: verifier_ensemble_against_cached_candidates
-    requires_gpu: false
-    deliverable: results/experiment_3671_ship_second_pair_of_eyes_detector.json
-    prompt: |
-      CONTEXT: .335 exp3657 validated a calibrated fused detector (ensemble energy + model confidence) that
-      WINS on math (fused AUROC 0.954 vs confidence 0.5; Brier 0.015/ECE 0.020) but is weak+uncalibrated on the
-      imbalanced code corpus (0.45, ECE 0.37). exp3658 built a BALANCED code corpus. This task turns the
-      validated detector into a DEPLOYABLE Phase-1 product surface: a clean API in python/carnot/pipeline/
-      wired to the existing score_candidates path (MCP/CLI), with HONEST per-domain operating points (math
-      from FoVer, code from the balanced exp3658 corpus) and an E2E test. Phase-1 ship gate is
-      software-operational -- this advances it. NULL DISCIPLINE: the detector must materially beat confidence
-      alone on >=1 headroom-bearing domain; report per-domain honestly (do not hide the code weakness).
-      VERIFIER AUTHENTICITY: the API must actually compute ensemble energy + confidence and the calibration on
-      the corpora -- not replay the exp3657 numbers or return a constant.
-      EXISTING CODE TO READ FIRST: results/experiment_3657 (the fused-detector method + per-domain numbers) and
-      results/experiment_3658 (the balanced code corpus path) via scripts/summarize_artifact.py;
-      python/carnot/pipeline/ (VerifyRepairPipeline + the score_candidates surface); the MCP server + CLI entry
-      points; ops/e2e-test-plan.md.
-      PRECONDITIONS (step 0): the FoVer math corpus + the balanced code corpus (exp3658) loadable; the
-      pipeline score_candidates surface importable. If neither corpus -> "complete: blocked_no_labeled_corpus_for_detector".
-      CONCRETE STEPS:
-        1. Implement a clean calibrated fused-detector class in python/carnot/pipeline/ (logistic/isotonic
-           calibration over [ensemble_energy, confidence]); fit on a train split, evaluate held-out per domain.
-        2. Wire it to the score_candidates surface (MCP tool / CLI) so a caller gets a single calibrated
-           hallucination/error score + a per-domain operating point.
-        3. Report fused vs confidence-alone vs ensemble-alone AUROC per domain; recall-at-fixed-FPR table (FPR
-           in {0.05,0.10,0.20}); calibration (Brier/ECE) per domain. Be honest about code.
-        4. E2E test (per ops/e2e-test-plan.md): call the shipped surface end-to-end on a held-out example and
-           assert it returns a calibrated score. Run it green.
-      ANTI-POISON TEST DISCIPLINE (MANDATORY): parametrize any pytest over the honest outcomes
-      (ships_math_and_code / ships_math_only_code_weak / blocked) on synthetic fixtures; NEVER hard-assert one
-      success string against a real corpus. Run your own tests green BEFORE finishing.
-      REQUIRED ARTIFACT FIELDS (principle: documents WHY; detector_shipped MUST be a BARE top-level bool):
-        honest_verdict:
-          principle: "Terminal prefix for reconciler classification."
-        inference_substrate: "verifier_ensemble_against_cached_candidates (principle: scores cached corpora; no LLM load)."
-        detector_module_path:
-          principle: "Where the deployable fused detector lives -- the Phase-1 product surface."
-        wired_surface:
-          principle: "Which caller surface (score_candidates MCP tool / CLI) the detector is wired to -- proves it is deployable, not just an experiment script."
-        fused_detector_auroc_per_domain:
-          principle: "Held-out fused AUROC per domain (math, code) -- the deployable headline numbers."
-        confidence_alone_auroc_per_domain:
-          principle: "The per-domain bar the fused detector must beat."
-        recall_at_fixed_fpr_table:
-          principle: "domain -> {fpr -> recall} fused vs confidence -- the operating-point table a deployer reads."
-        calibration_brier_ece_per_domain:
-          principle: "Calibration per domain -- a deployable detector must be calibrated (and honest where it is not, e.g. code)."
-        e2e_test_passed:
-          principle: "True iff the shipped surface was called end-to-end and returned a calibrated score -- Phase-1 software-operational ship evidence."
-        detector_shipped:
-          principle: "BARE bool. True iff the detector is wired to a real caller surface AND the E2E test passed AND it beats confidence on >=1 domain. STORE AS BARE true/false."
-        n_examples_per_domain:
-          principle: "Sample-size rigor per domain."
-        random_seed:
-          principle: "Determinism precondition."
-        reproducibility_checksum:
-          principle: "Drift detection."
-        duration_s:
-          principle: "Plausibility floor."
-      ACCEPTANCE GATE:
-        - condition: "detector_module_path present AND e2e_test_passed == true AND fused_detector_auroc_per_domain present AND calibration_brier_ece_per_domain present"
-          principle: "A shipped product surface requires a real module, a passing E2E test, measured per-domain discrimination AND calibration -- an experiment artifact alone is not a shipped product."
-      TERMINAL VERDICTS: "complete: second_pair_of_eyes_detector_shipped_math_strong_code_honest_e2e_green" /
-      "complete: second_pair_of_eyes_detector_shipped_math_only_code_weak_documented_e2e_green" /
-      "complete: blocked_no_labeled_corpus_for_detector"
-      Run: cd {project_root} && python scripts/experiment_3671_ship_second_pair_of_eyes_detector.py
-      Do NOT push. Do NOT modify scripts/research_conductor.py.
-
-  - id: exp3672-ensemble-selection-value-where-sc-is-weak
-    operator_override: "2026-06-01 outer-loop directive: NEW research direction sanctioned by north-star sec-1 (resume breadth toward NEW directions — the verifier ensemble's discriminating value where self-consistency is NOT near-optimal). P0.1 (exp3312) is RETIRED/answered (energy-descent GENERATION bounded because SC was near-optimal on math/CSP); this FLIPS the premise — it tests ensemble candidate SELECTION on a corpus engineered so SC is WEAK — a structurally different question, not a P0.1 rerun."
-    milestone: "2026.06.336"
-    title: "NEW direction — verifier-ensemble SELECTION value where self-consistency is WEAK: build/identify a corpus where majority-vote SC is near-chance (high answer entropy / ambiguous problems) and test whether the ensemble adds real best-of-N selection value confidence/SC cannot (flips the answered P0.1 near-optimal-SC premise)"
+    milestone: "2026.06.337"
+    title: "Diagnose + try to CLOSE the discrimination-vs-selection gap (exp3672: ensemble AUROC 0.93 but selection < SC) — is the decoupling fixable for an energy verifier via per-question normalization / a within-question ranking calibration / a stronger self-certainty baseline (arXiv:2502.18581), or is it fundamental as arXiv:2512.23067 suggests?"
     priority: high
     max_turns: 60
     agent_type: codex
     model: gpt-5.5
-    requires_codex: true   # anti-wipeout codex routing for .336
+    requires_codex: true   # anti-wipeout codex routing for .337
     estimated_wall_time_min: 26
     track: research
     inference_substrate: verifier_ensemble_against_cached_candidates
     requires_gpu: false
-    deliverable: results/experiment_3672_ensemble_selection_where_sc_weak.json
+    deliverable: results/experiment_3682_discrimination_vs_selection_gap.json
     prompt: |
-      CONTEXT: P0.1 (the energy-descent existential test) is an earned honest-negative because self-consistency
-      was already near-optimal on the tested math/CSP corpora -- there was no selectable headroom (oracle <= SC).
-      The north-star explicitly directs resuming breadth toward NEW directions where SC is NOT near-optimal.
-      This task FLIPS the premise: build/identify a corpus where majority-vote SC is WEAK (near-chance) -- e.g.
-      high answer-entropy problems, multiple plausible candidates, ambiguous or adversarially-hard items -- and
-      test whether the verifier ensemble adds real best-of-N candidate-SELECTION value (oracle > SC, and the
-      ensemble realizes a fraction of that headroom) that confidence and SC alone cannot. This is candidate
-      SELECTION (Carnot's product), NOT energy-descent GENERATION (the retired P0.1). NULL/FALSE_NEGATIVE
-      DISCIPLINE: only meaningful if the positive control holds -- oracle best-of-N materially > SC (real
-      headroom) AND flip-count > 0 (the ensemble actually changes selections).
-      EXISTING CODE TO READ FIRST: results/experiment_3645 (headroom hybrid verifier vs SC) and
-      results/experiment_2837 (FoVer + the verifiers) via scripts/summarize_artifact.py;
-      project_orthogonality_stall memory; ops/known-issues.md P0.1 entries (for what made SC near-optimal --
-      to deliberately AVOID that regime here).
-      PRECONDITIONS (step 0): a multi-candidate corpus with per-candidate correctness labels loadable or
-      buildable (FoVer multi-candidate, or a generated high-entropy set with cached candidates + labels). If
-      none -> "complete: blocked_no_multi_candidate_corpus".
+      CONTEXT: exp3672 earned that the verifier ensemble DISCRIMINATES well (per-candidate AUROC ~0.93) but
+      SELECTS worse than self-consistency (ensemble selection 0.344 < SC 0.459) even where headroom exists (oracle
+      0.607, flips 28). arXiv:2512.23067 ("Reward Model Selection Crisis") documents this exact decoupling between
+      discriminative ranking and downstream selection utility (Kendall tau 0.08-0.31). The open question for an
+      ENERGY-based verifier: is the gap a fixable CALIBRATION/NORMALIZATION artifact (energy is calibrated for
+      cross-question discrimination, not within-question ranking) or fundamental? This task DIAGNOSES the gap and
+      tests fixes the prior task never tried. NULL/FALSE_NEGATIVE DISCIPLINE: only meaningful where the positive
+      control holds (oracle > SC, flips > 0); a "nothing fixes it" verdict requires that at least one fix was
+      actually applied and could in principle have changed selections.
+      EXISTING CODE TO READ FIRST: results/experiment_3672 (the selection negative + the multi-candidate corpus)
+      and results/experiment_2837 (the verifiers + FoVer) via scripts/summarize_artifact.py;
+      research-references.md "The Reward Model Selection Crisis (arXiv:2512.23067)" + "Scalable Best-of-N via
+      Self-Certainty (arXiv:2502.18581)" entries; project_orthogonality_stall memory.
+      PRECONDITIONS (step 0): the exp3672 multi-candidate corpus (per-candidate energy + correctness labels)
+      loadable. If not -> "complete: blocked_no_multi_candidate_corpus".
       CONCRETE STEPS:
-        1. Construct/identify the SC-WEAK regime: select items where majority-vote accuracy is near chance AND
-           oracle best-of-N is materially higher (real selectable headroom). Report SC accuracy + oracle.
-        2. Best-of-N selection by: SC/majority, confidence, ensemble energy, ensemble+confidence fusion.
-           Report selection accuracy + flip-count + paired delta vs SC + bootstrap CI + McNemar.
-        3. POSITIVE CONTROL: confirm oracle > SC (headroom) AND flip-count > 0; if not, report
-           "no_selectable_headroom" honestly (uninformative, not a win for either side).
-        4. Honest verdict: does the ensemble add selection value SC/confidence cannot WHERE SC IS WEAK?
+        1. DIAGNOSE: confirm the decoupling on the exp3672 corpus -- per-candidate AUROC (cross-question
+           discrimination) vs within-question selection accuracy; report the rank correlation between energy
+           ordering and correctness WITHIN each question (this is the Kendall-tau-style decoupling measure).
+        2. FIX A -- per-question normalization: z-score / min-max the ensemble energy WITHIN each question before
+           argmax; re-measure selection accuracy + paired delta vs SC + McNemar.
+        3. FIX B -- within-question ranking calibration: fit a simple monotone/pairwise calibration of energy to
+           within-question correctness on a train split, evaluate selection on held-out.
+        4. FIX C -- stronger baseline: implement self-certainty (arXiv:2502.18581) as the confidence signal and
+           re-run BoN selection (SC vs self-certainty vs ensemble vs ensemble+self-certainty fusion).
+        5. POSITIVE CONTROL: confirm oracle > SC and flips > 0 throughout; honest verdict -- does ANY fix make
+           ensemble (or ensemble+self-certainty) selection beat SC with a delta CI excluding 0, or is the
+           decoupling fundamental on this corpus?
       ANTI-POISON TEST DISCIPLINE (MANDATORY): parametrize any pytest over the honest outcomes
-      (ensemble_adds_selection_value / no_value_even_with_headroom / no_selectable_headroom / blocked) on
-      synthetic fixtures; NEVER hard-assert one success string. Run your own test green BEFORE finishing.
-      REQUIRED ARTIFACT FIELDS (principle: documents WHY; ensemble_adds_selection_value_sc_weak MUST be a BARE top-level bool):
+      (fix_recovers_selection_value / decoupling_fundamental_no_fix_helps / blocked) on synthetic fixtures;
+      NEVER hard-assert one success string. Run your own test green BEFORE finishing.
+      REQUIRED ARTIFACT FIELDS (principle: documents WHY; selection_gap_closed MUST be a BARE top-level bool):
         honest_verdict:
           principle: "Terminal prefix for reconciler classification."
-        inference_substrate: "verifier_ensemble_against_cached_candidates (principle: best-of-N selection over cached candidates; no LLM generation)."
-        sc_accuracy:
-          principle: "Majority-vote SC accuracy -- must be WEAK (near chance) for this regime to be the intended new direction."
+        inference_substrate: "verifier_ensemble_against_cached_candidates (principle: best-of-N over cached candidates; no LLM generation)."
+        per_candidate_auroc:
+          principle: "Cross-question discrimination -- confirms the ensemble discriminates (the half that works)."
+        within_question_rank_corr:
+          principle: "Energy-vs-correctness rank correlation WITHIN questions -- the decoupling measure (arXiv:2512.23067)."
+        sc_selection_accuracy:
+          principle: "Majority-vote SC baseline accuracy -- the bar."
         oracle_bestofn_accuracy:
-          principle: "Upper bound -- must materially exceed SC for selectable headroom to exist (the positive control)."
+          principle: "Upper bound; must exceed SC for the positive control (selectable headroom)."
         flip_count:
-          principle: "How many selections the ensemble changes vs SC -- flip_count==0 means the test is degenerate (FALSE_NEGATIVE_RISK)."
-        ensemble_selection_accuracy:
-          principle: "Best-of-N accuracy selecting by ensemble energy -- the core number."
-        confidence_selection_accuracy:
-          principle: "Best-of-N by confidence -- the baseline the ensemble must beat."
-        ensemble_vs_sc_delta_ci:
-          principle: "Paired selection-accuracy delta + CI + McNemar vs SC -- the selection-value magnitude + significance."
+          principle: "Selections changed by the best fix vs SC -- flip_count==0 means a degenerate test (FALSE_NEGATIVE_RISK)."
+        selection_accuracy_per_question_normalized:
+          principle: "FIX A: selection after within-question energy normalization."
+        selection_accuracy_ranking_calibrated:
+          principle: "FIX B: selection after a within-question ranking calibration (held-out)."
+        self_certainty_selection_accuracy:
+          principle: "FIX C baseline: self-certainty BoN selection (arXiv:2502.18581) -- the stronger free baseline."
+        best_fix_vs_sc_delta_ci:
+          principle: "Paired delta + bootstrap CI + McNemar of the BEST fix vs SC -- the gap-closure magnitude + significance."
         positive_control_valid:
-          principle: "True iff oracle > SC AND flip_count > 0 -- without it a null is uninformative (the P0.1 lesson)."
-        ensemble_adds_selection_value_sc_weak:
-          principle: "BARE bool. True iff, on a headroom-bearing SC-weak corpus, ensemble selection materially beats both SC and confidence (delta CI excludes 0) -- the NEW-direction result. STORE AS BARE true/false."
+          principle: "True iff oracle > SC AND flips > 0 -- without it the null is uninformative (the P0.1 lesson)."
+        selection_gap_closed:
+          principle: "BARE bool. True iff at least one fix makes ensemble (or ensemble+self-certainty) selection beat SC with the delta CI excluding 0, positive-control-valid -- the diagnosis verdict. STORE AS BARE true/false."
         n_examples:
           principle: "Sample-size rigor (>=50 multi-candidate items)."
         random_seed:
@@ -615,67 +414,81 @@ tasks:
         duration_s:
           principle: "Plausibility floor."
       ACCEPTANCE GATE:
-        - condition: "sc_accuracy present AND oracle_bestofn_accuracy present AND positive_control_valid == true"
-          principle: "A selection-value verdict in the SC-weak regime requires a valid positive control (real headroom + nonzero flips) -- otherwise the result repeats the P0.1 degenerate-test trap."
-      TERMINAL VERDICTS: "complete: ensemble_adds_selection_value_where_sc_weak_new_direction_positive" /
-      "complete: ensemble_no_selection_value_even_with_headroom_sc_weak_earned_negative" /
-      "complete: no_selectable_headroom_corpus_uninformative" /
+        - condition: "per_candidate_auroc present AND within_question_rank_corr present AND positive_control_valid == true AND flip_count > 0"
+          principle: "A selection-gap verdict requires the discrimination measure, the within-question decoupling measure, a valid positive control and a fix that actually changed selections -- otherwise it repeats the degenerate-test trap."
+      TERMINAL VERDICTS: "complete: selection_gap_closed_per_question_calibration_recovers_value" /
+      "complete: selection_gap_fundamental_no_fix_beats_sc_discrimination_decoupled_as_2512_23067" /
       "complete: blocked_no_multi_candidate_corpus"
-      Run: cd {project_root} && python scripts/experiment_3672_ensemble_selection_where_sc_weak.py
+      Run: cd {project_root} && python scripts/experiment_3682_discrimination_vs_selection_gap.py
       Do NOT push. Do NOT modify scripts/research_conductor.py.
 
-  - id: exp3673-fr11-continuous-self-learning-v10-online-dependency-aware
-    operator_override: "2026-05-29 operator directive (standing): mandatory continuous-self-learning continuation (FR-11 vN+1) with a STATED forward difference (online learning of the DEPENDENCY-AWARE verifier weighting — the exp3656/exp3667 learned label-conditional structure — rather than v9's online fusion weights, with a conservative-default/uncertainty rule that prevents collapse) — false-positive scope-match vs prior fr11 exps; the .335 exp3660 (v9 online fusion) is the predecessor with a distinct forward difference."
-    milestone: "2026.06.336"
-    title: "FR-11 continuous self-learning v10 — online learning of the DEPENDENCY-AWARE verifier weighting without collapse (forward diff from v9's online fusion weights; folds the exp3656/3667 learned-dependency-structure win into the online loop)"
-    priority: medium
-    max_turns: 50
+  - id: exp3683-detector-code-operating-point-hardening
+    operator_override: "2026-06-01 outer-loop directive: versioned product continuation of the shipped second-pair-of-eyes detector (exp3671) with a STATED forward difference — harden the code-blind operating point (exp3671 code AUROC 0.5) by testing whether the .336-validated dependency-aware weighting transfers to code discrimination and re-calibrating the code operating point on the balanced exp3658 corpus. False-positive scope-match vs prior detector/code exps; exp3671 shipped the surface, this hardens its code path."
+    milestone: "2026.06.337"
+    title: "Harden the shipped detector's CODE operating point — exp3671 ships but code AUROC 0.5 (no signal) + ECE 0.37; on the balanced code corpus (exp3658) test whether the .336-validated dependency-aware weighting transfers to code discrimination and re-calibrate the code operating point, or honestly document code as math-only"
+    priority: high
+    max_turns: 55
     agent_type: codex
     model: gpt-5.5
-    requires_codex: true   # anti-wipeout codex routing for .336
-    estimated_wall_time_min: 18
-    track: self-learning
+    requires_codex: true   # anti-wipeout codex routing for .337; formulaic multi-file calibration (codex strength)
+    estimated_wall_time_min: 22
+    track: product
     inference_substrate: verifier_ensemble_against_cached_candidates
     requires_gpu: false
-    deliverable: results/experiment_3673_fr11_continuous_self_learning_v10.json
+    deliverable: results/experiment_3683_detector_code_operating_point.json
     prompt: |
-      CONTEXT: every milestone includes one continuous-self-learning experiment. Forward difference from v9
-      (exp3660, online fusion weights): v10 learns the DEPENDENCY-AWARE verifier weighting (the exp3656/exp3667
-      learned label-conditional dependency structure that beat Carnot offline) ONLINE, updating the structure +
-      weights from observed catch-rate under a conservative-default / uncertainty-gated rule that provably
-      prevents collapse onto a single verifier. Keep pass_rate vs true_accuracy element-wise distinct
-      (de-flag tautology).
-      EXISTING CODE TO READ FIRST: results/experiment_3660 (FR-11 v9) and results/experiment_3667 (the clean
-      dependency-aware weighting) via scripts/summarize_artifact.py; the FR-11 module + cached traces.
-      PRECONDITIONS (step 0): FR-11 module + cached traces (with per-verifier votes + labels) present. If
-      neither -> "complete: blocked_fr11_module_or_traces_unavailable".
+      CONTEXT: exp3671 shipped python/carnot/pipeline/second_pair_detector.py wired to score_candidates, but the
+      CODE operating point is blind: code fused AUROC 0.5 (= chance), ECE 0.37 (badly miscalibrated) even on the
+      balanced corpus, while math is strong (0.980, ECE 0.009). A detector that returns noise on code is
+      half-shipped. .336 also validated a dependency-aware weighting that beat Carnot on FoVer MATH -- and .334
+      confirmed math->code PRM verifier transfer (arXiv:2506.00027). This task tests whether (a) the
+      dependency-aware weighting transfers to code discrimination and (b) a code-specific recalibration lifts the
+      code operating point -- or honestly documents code as math-only. NULL DISCIPLINE: a code AUROC must beat the
+      0.5 chance floor with a CI excluding 0.5 to count as signal; if nothing lifts it, report code as math-only
+      honestly (an earned product-scope negative, NOT a regression).
+      EXISTING CODE TO READ FIRST: results/experiment_3671 (the shipped detector + per-domain numbers) and
+      results/experiment_3658 (the balanced code corpus) and results/experiment_3667 (the dependency-aware
+      weighting) and results/experiment_3642 (math->code generalization) via scripts/summarize_artifact.py;
+      python/carnot/pipeline/second_pair_detector.py.
+      PRECONDITIONS (step 0): the balanced code corpus (exp3658) loadable AND the second_pair_detector module
+      importable. If not -> "complete: blocked_no_balanced_code_corpus_or_detector_module".
+      VERIFIER AUTHENTICITY: actually compute ensemble energy + calibration on the code corpus -- do NOT replay
+      exp3671's numbers or return a constant.
       CONCRETE STEPS:
-        1. Run the closed FR-11 loop to N>=200 on a fresh non-degenerate corpus; deploy arm = conservative-
-           default + uncertainty-gated online dependency-aware weight update, control arm = naive online update
-           (no guard).
-        2. Measure ensemble AUROC before vs after online adaptation; whether online dependency-aware weighting
-           improves over a fixed (offline) dependency-aware weighting and over Carnot's static weighting.
-        3. Confirm: deploy arm prevents collapse (no verifier weight slammed to 0/1), control arm collapses,
-           quality maintained, distinct-arrays assert holds.
+        1. Re-measure the code operating point on the balanced corpus: fused / ensemble-alone / confidence-alone
+           AUROC + CI; calibration (Brier/ECE). Confirm the 0.5 baseline.
+        2. FIX A -- swap in the .336 dependency-aware verifier weighting (instead of Carnot-current) for the code
+           ensemble energy; re-measure code AUROC + CI. Does the math-validated weighting transfer to code?
+        3. FIX B -- code-specific recalibration: refit the logistic/isotonic calibration on a code train split,
+           evaluate held-out; re-measure ECE/Brier + recall-at-fixed-FPR.
+        4. Honest verdict: does any fix lift code AUROC above 0.5 (CI excludes 0.5) AND improve calibration? If
+           yes -> update the shipped module's code operating point + re-run the E2E test green. If no -> document
+           the detector as math-only in the module + artifact (earned scope).
       ANTI-POISON TEST DISCIPLINE (MANDATORY): parametrize any pytest over the honest outcomes
-      (holds_no_collapse / no_gain / blocked) on synthetic fixtures; NEVER hard-assert one success string
-      against real traces; never use Q/R/H-number placeholder tokens. Run your own test green BEFORE finishing.
-      REQUIRED ARTIFACT FIELDS (principle: documents WHY; store the bare VALUE):
+      (code_operating_point_recovered / code_remains_math_only / blocked) on synthetic fixtures; NEVER
+      hard-assert one success string against a real corpus. Run your own tests green BEFORE finishing.
+      REQUIRED ARTIFACT FIELDS (principle: documents WHY; code_operating_point_recovered MUST be a BARE top-level bool):
         honest_verdict:
           principle: "Terminal prefix for reconciler classification."
-        inference_substrate: "verifier_ensemble_against_cached_candidates (principle: scores cached traces; no LLM load)."
-        n_online_updates:
-          principle: "Sample-size of the self-learning sweep (>=200)."
-        collapse_detected_deploy_arm:
-          principle: "The conservative-default + uncertainty-gated rule must prevent weight collapse (alpha_t grounding)."
-        collapse_detected_control:
-          principle: "Positive control: the naive online arm must collapse, else the test has no contrast."
-        online_dependency_aware_auroc_gain:
-          principle: "The forward difference -- does online dependency-aware weighting beat fixed dependency-aware and static Carnot?"
-        pass_rate_vs_true_accuracy_distinct_assert:
-          principle: "De-flags the tautology where pass_rate and true_accuracy are the same array."
-        quality_maintained:
-          principle: "Collapse-prevention must not come at the cost of ensemble quality."
+        inference_substrate: "verifier_ensemble_against_cached_candidates (principle: scores the cached balanced code corpus; no LLM load)."
+        code_auroc_baseline:
+          principle: "The exp3671 0.5 code baseline reconfirmed -- the bar to beat."
+        code_auroc_dependency_aware:
+          principle: "Code AUROC with the .336 dependency-aware weighting -- does the math-validated weighting transfer to code?"
+        code_auroc_recalibrated:
+          principle: "Code AUROC after code-specific recalibration + its CI -- must exclude 0.5 to count as signal."
+        code_calibration_brier_ece_after:
+          principle: "Calibration after the fix -- a deployable code operating point must be calibrated."
+        code_recall_at_fixed_fpr:
+          principle: "Recall-at-FPR table for the code operating point a deployer reads."
+        module_code_path_updated:
+          principle: "True iff the shipped module's code operating point was updated (or honestly documented math-only)."
+        e2e_test_passed:
+          principle: "True iff the shipped surface E2E test still passes after the change."
+        code_operating_point_recovered:
+          principle: "BARE bool. True iff a fix lifts code AUROC above 0.5 (CI excludes 0.5) AND improves calibration -- else code is honestly math-only. STORE AS BARE true/false."
+        n_examples_code:
+          principle: "Sample-size rigor on the code corpus."
         random_seed:
           principle: "Determinism precondition."
         reproducibility_checksum:
@@ -683,38 +496,184 @@ tasks:
         duration_s:
           principle: "Plausibility floor."
       ACCEPTANCE GATE:
-        - condition: "collapse_detected_deploy_arm == false AND collapse_detected_control == true AND pass_rate_vs_true_accuracy_distinct_assert == true"
-          principle: "Self-learning is validated only when the guarded arm holds, the control collapses, and the two metrics are genuinely distinct (not a tautology)."
-      TERMINAL VERDICTS: "complete: fr11_v10_online_dependency_aware_weighting_holds_no_collapse_quality_maintained" /
-      "complete: fr11_v10_online_no_gain_fixed_weighting_sufficient" /
-      "complete: blocked_fr11_module_or_traces_unavailable"
-      Run: cd {project_root} && python scripts/experiment_3673_fr11_continuous_self_learning_v10.py
+        - condition: "code_auroc_baseline present AND code_auroc_recalibrated present AND code_calibration_brier_ece_after present"
+          principle: "A code-hardening verdict requires the baseline, the post-fix AUROC and the post-fix calibration -- a single number cannot decide whether the code operating point is deployable or math-only."
+      TERMINAL VERDICTS: "complete: code_operating_point_recovered_detector_now_math_and_code" /
+      "complete: code_remains_math_only_detector_scoped_honestly" /
+      "complete: blocked_no_balanced_code_corpus_or_detector_module"
+      Run: cd {project_root} && python scripts/experiment_3683_detector_code_operating_point.py
       Do NOT push. Do NOT modify scripts/research_conductor.py.
 
-  - id: exp3674-kv260-continuity-v23
+  - id: exp3684-product-value-vs-self-certainty-adversarial-rebaseline
+    operator_override: "2026-06-01 outer-loop directive: NEW adversarial product self-check sanctioned by north-star sec-1 (every product claim must survive a stronger baseline) + the literature-priority discipline (two-source rule before claiming additive value). exp3671/exp3643 measured the detector's added value over PLAIN model confidence; arXiv:2502.18581 self-certainty is a STRONGER free baseline never tried. Forward difference (stronger comparator), not a rerun."
+    milestone: "2026.06.337"
+    title: "Adversarial product re-baseline vs self-certainty (arXiv:2502.18581) — the second-pair-of-eyes detector's 'beats confidence' claim used PLAIN model confidence; re-measure whether the ensemble adds value OVER the stronger free self-certainty signal, on math (FoVer) and the balanced code corpus — is the product value robust or an artifact of a weak baseline?"
+    priority: high
+    max_turns: 50
+    agent_type: codex
+    model: gpt-5.5
+    requires_codex: true   # anti-wipeout codex routing for .337
+    estimated_wall_time_min: 18
+    track: product
+    inference_substrate: verifier_ensemble_against_cached_candidates
+    requires_gpu: false
+    deliverable: results/experiment_3684_product_value_vs_self_certainty.json
+    prompt: |
+      CONTEXT: the second-pair-of-eyes detector's headline claim ("fused detector beats confidence alone") used
+      PLAIN model confidence as the baseline (exp3643/3671). arXiv:2502.18581 shows self-certainty -- a
+      lightweight, training-free signal -- is a STRONGER free baseline that surpasses both greedy and SC for
+      best-of-N. A robust product claim must survive the stronger baseline: does the ensemble add value OVER
+      self-certainty, not just over plain confidence? This is an adversarial self-check (literature-priority
+      two-source rule + north-star "every claim must survive a stronger baseline"). NULL DISCIPLINE: report
+      per-domain honestly; if the ensemble's edge collapses against self-certainty, that is an honest narrowing,
+      not a regression of paper_ready (the headline is FoVer discrimination AUROC, unaffected).
+      EXISTING CODE TO READ FIRST: results/experiment_3643 + results/experiment_3671 (the detector's
+      confidence-baseline claim) and results/experiment_2837 (FoVer) and results/experiment_3658 (balanced code)
+      via scripts/summarize_artifact.py; research-references.md "Scalable Best-of-N via Self-Certainty
+      (arXiv:2502.18581)" entry; python/carnot/pipeline/second_pair_detector.py.
+      PRECONDITIONS (step 0): the FoVer math corpus + the balanced code corpus loadable; per-candidate logits or a
+      proxy from which self-certainty can be computed (if no logit-level signal is available, compute the closest
+      disclosed proxy and DISCLOSE the gap per the pcib_probe.py honest-heuristic pattern). If neither corpus ->
+      "complete: blocked_no_labeled_corpus_for_rebaseline".
+      VERIFIER AUTHENTICITY: implement self-certainty honestly (the arXiv:2502.18581 definition, or a disclosed
+      proxy with the gap stated) -- do NOT silently substitute plain confidence and call it self-certainty.
+      CONCRETE STEPS:
+        1. Implement self-certainty (or a disclosed proxy) per domain; report self-certainty-alone AUROC + CI vs
+           plain-confidence-alone AUROC per domain.
+        2. Re-measure the fused detector (ensemble + self-certainty) vs self-certainty-alone vs ensemble-alone per
+           domain: AUROC + paired delta + bootstrap CI + recall-at-fixed-FPR.
+        3. Honest verdict per domain: does the ensemble add value OVER self-certainty (delta CI excludes 0)? State
+           whether the original "beats confidence" claim was inflated by a weak baseline.
+      ANTI-POISON TEST DISCIPLINE (MANDATORY): parametrize any pytest over the honest outcomes
+      (ensemble_adds_value_over_self_certainty / value_collapses_vs_stronger_baseline / blocked) on synthetic
+      fixtures; NEVER hard-assert one success string. Run your own test green BEFORE finishing.
+      REQUIRED ARTIFACT FIELDS (principle: documents WHY; ensemble_adds_value_over_self_certainty MUST be a BARE top-level bool):
+        honest_verdict:
+          principle: "Terminal prefix for reconciler classification."
+        inference_substrate: "verifier_ensemble_against_cached_candidates (principle: scores cached corpora; no LLM load)."
+        self_certainty_auroc_per_domain:
+          principle: "The stronger free baseline AUROC per domain (math, code) -- the new bar."
+        plain_confidence_auroc_per_domain:
+          principle: "The original (weaker) baseline -- shows whether the prior claim leaned on a weak comparator."
+        fused_ensemble_self_certainty_auroc_per_domain:
+          principle: "Ensemble + self-certainty fused AUROC per domain -- the product number under the stronger baseline."
+        ensemble_minus_self_certainty_delta_ci_per_domain:
+          principle: "Paired delta + CI of fused vs self-certainty-alone per domain -- the additive value over the stronger baseline."
+        self_certainty_implementation:
+          principle: "Honest description of the self-certainty implementation or the disclosed proxy + its gap (verifier authenticity)."
+        ensemble_adds_value_over_self_certainty:
+          principle: "BARE bool. True iff on >=1 domain the fused detector beats self-certainty-alone with the delta CI excluding 0 -- the robust-product-value verdict. STORE AS BARE true/false."
+        n_examples_per_domain:
+          principle: "Sample-size rigor per domain."
+        random_seed:
+          principle: "Determinism precondition."
+        reproducibility_checksum:
+          principle: "Drift detection."
+        duration_s:
+          principle: "Plausibility floor."
+      ACCEPTANCE GATE:
+        - condition: "self_certainty_auroc_per_domain present AND fused_ensemble_self_certainty_auroc_per_domain present AND ensemble_minus_self_certainty_delta_ci_per_domain present"
+          principle: "A robust-product verdict requires the stronger baseline, the fused number and the paired delta CI per domain -- comparing only against plain confidence would repeat the weak-baseline inflation this task checks for."
+      TERMINAL VERDICTS: "complete: ensemble_adds_value_over_self_certainty_product_value_robust" /
+      "complete: product_value_collapses_vs_self_certainty_claim_narrowed" /
+      "complete: blocked_no_labeled_corpus_for_rebaseline"
+      Run: cd {project_root} && python scripts/experiment_3684_product_value_vs_self_certainty.py
+      Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  - id: exp3685-fr11-continuous-self-learning-v11-drift-aware
+    operator_override: "2026-05-29 operator directive (standing): mandatory continuous-self-learning continuation (FR-11 vN+1) with a STATED forward difference (online dependency-aware verifier weighting WITH explicit distribution-drift detection + streaming re-estimation of the dependency structure, vs v10's static-structure online weights) and a conservative-default/uncertainty rule that prevents collapse — false-positive scope-match vs prior fr11 exps; exp3673 (v10) is the predecessor with a distinct forward difference."
+    milestone: "2026.06.337"
+    title: "FR-11 continuous self-learning v11 — drift-aware online dependency-aware weighting: detect distribution drift and re-estimate the dependency structure online (forward diff from v10's fixed-structure online weights), under a conservative-default / uncertainty-gated rule that provably prevents collapse"
+    priority: medium
+    max_turns: 50
+    agent_type: codex
+    model: gpt-5.5
+    requires_codex: true   # anti-wipeout codex routing for .337
+    estimated_wall_time_min: 18
+    track: self-learning
+    inference_substrate: verifier_ensemble_against_cached_candidates
+    requires_gpu: false
+    deliverable: results/experiment_3685_fr11_continuous_self_learning_v11.json
+    prompt: |
+      CONTEXT: every milestone includes one continuous-self-learning experiment. Forward difference from v10
+      (exp3673, online dependency-aware weighting with a fixed learned structure): v11 adds explicit
+      distribution-DRIFT detection and STREAMING re-estimation of the dependency structure -- when the
+      verifier-vote distribution drifts, the structure is re-learned online, still under a conservative-default /
+      uncertainty-gated rule that provably prevents collapse onto a single verifier. Keep pass_rate vs
+      true_accuracy element-wise distinct (de-flag tautology).
+      EXISTING CODE TO READ FIRST: results/experiment_3673 (FR-11 v10) and results/experiment_3667 (the clean
+      dependency-aware weighting + structure) via scripts/summarize_artifact.py; the FR-11 module + cached traces.
+      PRECONDITIONS (step 0): FR-11 module + cached traces (per-verifier votes + labels) present, with at least
+      two distributionally-distinct slices to simulate drift. If not -> "complete: blocked_fr11_module_or_traces_unavailable".
+      CONCRETE STEPS:
+        1. Run the closed FR-11 loop to N>=200 across a drifting trace stream (a non-degenerate corpus whose
+           vote-distribution shifts mid-stream); deploy arm = drift-detected streaming structure re-estimation +
+           conservative-default + uncertainty gating, control arm = naive online update (no drift detection, no
+           guard).
+        2. Measure ensemble AUROC before vs after drift in each arm; whether drift-aware online weighting recovers
+           faster / higher than fixed-structure online (v10) and static Carnot weighting after the drift point.
+        3. Confirm: deploy arm detects the drift AND prevents collapse (no verifier weight slammed to 0/1),
+           control arm collapses or fails to adapt, quality maintained, distinct-arrays assert holds.
+      ANTI-POISON TEST DISCIPLINE (MANDATORY): parametrize any pytest over the honest outcomes
+      (drift_recovered_no_collapse / no_gain_over_v10 / blocked) on synthetic fixtures; NEVER hard-assert one
+      success string against real traces; never use Q/R/H-number placeholder tokens. Run your own test green BEFORE finishing.
+      REQUIRED ARTIFACT FIELDS (principle: documents WHY; store the bare VALUE):
+        honest_verdict:
+          principle: "Terminal prefix for reconciler classification."
+        inference_substrate: "verifier_ensemble_against_cached_candidates (principle: scores cached traces; no LLM load)."
+        n_online_updates:
+          principle: "Sample-size of the self-learning sweep (>=200)."
+        drift_detected_deploy_arm:
+          principle: "The deploy arm must detect the injected distribution drift (the v11 forward difference)."
+        collapse_detected_deploy_arm:
+          principle: "The conservative-default + uncertainty-gated rule must prevent weight collapse (alpha_t grounding)."
+        collapse_detected_control:
+          principle: "Positive control: the naive arm must collapse or fail to adapt, else the test has no contrast."
+        post_drift_auroc_gain_over_v10:
+          principle: "The forward difference -- does drift-aware re-estimation beat v10's fixed-structure online weighting after drift?"
+        pass_rate_vs_true_accuracy_distinct_assert:
+          principle: "De-flags the tautology where pass_rate and true_accuracy are the same array."
+        quality_maintained:
+          principle: "Collapse-prevention + drift adaptation must not come at the cost of ensemble quality."
+        random_seed:
+          principle: "Determinism precondition."
+        reproducibility_checksum:
+          principle: "Drift detection (of the artifact, vs the corpus drift it measures)."
+        duration_s:
+          principle: "Plausibility floor."
+      ACCEPTANCE GATE:
+        - condition: "drift_detected_deploy_arm == true AND collapse_detected_deploy_arm == false AND collapse_detected_control == true AND pass_rate_vs_true_accuracy_distinct_assert == true"
+          principle: "Drift-aware self-learning is validated only when the deploy arm detects drift, does not collapse, the control collapses, and the two metrics are genuinely distinct (not a tautology)."
+      TERMINAL VERDICTS: "complete: fr11_v11_drift_aware_online_dependency_aware_recovers_no_collapse_quality_maintained" /
+      "complete: fr11_v11_no_gain_over_v10_fixed_structure_online_sufficient" /
+      "complete: blocked_fr11_module_or_traces_unavailable"
+      Run: cd {project_root} && python scripts/experiment_3685_fr11_continuous_self_learning_v11.py
+      Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  - id: exp3686-kv260-continuity-v24
     operator_override: "2026-05-29 operator directive (standing): active hardware-continuity task (KV260) per Hardware-Task Continuity Discipline — false-positive scope-match vs prior kv260 exps; required forward work until terminal."
-    milestone: "2026.06.336"
-    title: "KV260 SSH-reachability continuity (UNREACHABLE .331-.335 — re-check + record honest state, flag 6-milestone outage as operator-action)"
+    milestone: "2026.06.337"
+    title: "KV260 SSH-reachability continuity (UNREACHABLE .331-.336 — re-check + record honest state, flag 7-milestone outage as operator-action)"
     priority: medium
     max_turns: 30
     agent_type: codex
     model: gpt-5.5
-    requires_codex: true   # anti-wipeout codex routing for .336
+    requires_codex: true   # anti-wipeout codex routing for .337
     estimated_wall_time_min: 10
     track: hardware
     inference_substrate: hardware_smoke
     requires_gpu: false
-    deliverable: results/experiment_3674_kv260_continuity_v23.json
+    deliverable: results/experiment_3686_kv260_continuity_v24.json
     prompt: |
       CONTEXT: Hardware-Task Continuity requires one KV260 task per milestone. The board was SSH-UNREACHABLE in
-      .331-.335. KV260 lives on SSH; use ONLY SSH reachability as the precondition (host SD-card device checks
+      .331-.336. KV260 lives on SSH; use ONLY SSH reachability as the precondition (host SD-card device checks
       are PERMANENTLY retired per the KV260 SSH-Not-SD-Card Discipline). Record the honest state.
       PRECONDITIONS (step 0): `ssh -o ConnectTimeout=5 -o BatchMode=yes kria 'true'` (kria = kv260.local). Exit
       0 -> proceed; non-zero -> "complete: blocked_kv260_ssh_unreachable". NEVER use a host SD-card device-node
       check as a KV260 precondition (permanently retired).
       CONCRETE STEPS: if reachable, `ssh kria 'xmutil listapps'` + record overlay/continuity state (distinct
       field names, deflagged). If still unreachable, record blocked honestly and note it has now been
-      unreachable for 6 consecutive milestones -- surface as an operator-action item.
+      unreachable for 7 consecutive milestones -- surface as an operator-action item.
       REQUIRED ARTIFACT FIELDS (principle: documents WHY; store the bare VALUE):
         honest_verdict:
           principle: "Terminal prefix for reconciler classification."
@@ -726,7 +685,7 @@ tasks:
         kv260_overlay_loaded:
           principle: "Continuity state if reachable."
         consecutive_unreachable_milestones:
-          principle: "Tracks the .331->.335 unreachable streak so a persistent outage surfaces as an operator-action item."
+          principle: "Tracks the .331->.336 unreachable streak so a persistent outage surfaces as an operator-action item."
         random_seed:
           principle: "Determinism precondition."
         reproducibility_checksum:
@@ -734,23 +693,23 @@ tasks:
         duration_s:
           principle: "Plausibility floor."
       TERMINAL VERDICTS: "complete: kv260_continuity_confirmed_reachable" / "complete: blocked_kv260_ssh_unreachable"
-      Run: cd {project_root} && python scripts/experiment_3674_kv260_continuity_v23.py
+      Run: cd {project_root} && python scripts/experiment_3686_kv260_continuity_v24.py
       Do NOT push. Do NOT modify scripts/research_conductor.py.
 
-  - id: exp3675-polarfire-continuity-v23
+  - id: exp3687-polarfire-continuity-v24
     operator_override: "2026-05-29 operator directive (standing): active hardware-continuity task (PolarFire) per Hardware-Task Continuity Discipline — false-positive scope-match vs prior polarfire exps."
-    milestone: "2026.06.336"
+    milestone: "2026.06.337"
     title: "PolarFire opportunistic reachability + continuity audit (per Hardware-Task Continuity)"
     priority: medium
     max_turns: 30
     agent_type: codex
     model: gpt-5.5
-    requires_codex: true   # anti-wipeout codex routing for .336
+    requires_codex: true   # anti-wipeout codex routing for .337
     estimated_wall_time_min: 10
     track: hardware
     inference_substrate: hardware_smoke
     requires_gpu: false
-    deliverable: results/experiment_3675_polarfire_continuity_v23.json
+    deliverable: results/experiment_3687_polarfire_continuity_v24.json
     prompt: |
       CONTEXT: Hardware-Task Continuity requires one PolarFire task per milestone (reachable in .331).
       PRECONDITIONS (step 0): `ssh -o ConnectTimeout=5 polarfire 'true'`. Exit 0 -> proceed; non-zero ->
@@ -772,23 +731,23 @@ tasks:
         duration_s:
           principle: "Plausibility floor."
       TERMINAL VERDICTS: "complete: polarfire_continuity_confirmed_reachable" / "complete: blocked_polarfire_ssh_timeout"
-      Run: cd {project_root} && python scripts/experiment_3675_polarfire_continuity_v23.py
+      Run: cd {project_root} && python scripts/experiment_3687_polarfire_continuity_v24.py
       Do NOT push. Do NOT modify scripts/research_conductor.py.
 
-  - id: exp3676-gatemate-continuity-audit-v23
-    operator_override: "2026-05-29 operator directive (standing): active hardware-continuity task (GateMate) per Hardware-Task Continuity Discipline — documentation/audit-only because openFPGALoader was not found in .331-.335 (known issue); false-positive scope-match vs prior gatemate exps."
-    milestone: "2026.06.336"
-    title: "GateMate continuity audit (documentation-only — openFPGALoader missing in .331-.335, per known-issues)"
+  - id: exp3688-gatemate-continuity-audit-v24
+    operator_override: "2026-05-29 operator directive (standing): active hardware-continuity task (GateMate) per Hardware-Task Continuity Discipline — documentation/audit-only because openFPGALoader was not found in .331-.336 (known issue); false-positive scope-match vs prior gatemate exps."
+    milestone: "2026.06.337"
+    title: "GateMate continuity audit (documentation-only — openFPGALoader missing in .331-.336, per known-issues)"
     priority: low
     max_turns: 25
     agent_type: codex
     model: gpt-5.5
-    requires_codex: true   # anti-wipeout codex routing for .336
+    requires_codex: true   # anti-wipeout codex routing for .337
     estimated_wall_time_min: 8
     track: hardware
     inference_substrate: hardware_smoke
     requires_gpu: false
-    deliverable: results/experiment_3676_gatemate_continuity_audit_v23.json
+    deliverable: results/experiment_3688_gatemate_continuity_audit_v24.json
     prompt: |
       CONTEXT: GateMate visibility each milestone, but openFPGALoader was not found on PATH and the flash/smoke
       host-IO script hangs (known-issues). Documentation / reachability audit only -- do NOT run the hanging
@@ -815,58 +774,57 @@ tasks:
         duration_s:
           principle: "Plausibility floor."
       TERMINAL VERDICT: "complete: gatemate_continuity_audit_recorded_openfpgaloader_state_flash_smoke_host_io_hang_known_blocker"
-      Run: cd {project_root} && python scripts/experiment_3676_gatemate_continuity_audit_v23.py
+      Run: cd {project_root} && python scripts/experiment_3688_gatemate_continuity_audit_v24.py
       Do NOT push. Do NOT modify scripts/research_conductor.py.
 
-  - id: exp3677-capstone-and-g-gate-v336
+  - id: exp3689-capstone-and-g-gate-v337
     operator_override: "2026-05-29 operator directive (standing): routine per-milestone capstone + G1-G4 gate-status synthesis — false-positive scope-match vs prior capstone-v* / g-gate-synthesis tasks."
-    milestone: "2026.06.336"
-    title: "Capstone v336 + G1-G4 gate synthesis — did the dependency-aware weighting clean up into a held-out headline-advancement candidate? did FACTS hold up on a REAL benchmark? is the second-pair-of-eyes detector SHIPPED? did the new SC-weak selection direction find ensemble value? paper_ready must stay TRUE."
+    milestone: "2026.06.337"
+    title: "Capstone v337 + G1-G4 gate synthesis — did the dependency-aware weighting clear G1-rigor into an operator-ready re-freeze package? is the discrimination-vs-selection gap fixable? did the detector's code operating point recover? does product value survive the self-certainty baseline? paper_ready must stay TRUE; frozen 0.9131 stays frozen."
     priority: high
     max_turns: 40
     agent_type: codex
     model: gpt-5.5
-    requires_codex: true   # anti-wipeout codex routing for .336
+    requires_codex: true   # anti-wipeout codex routing for .337
     estimated_wall_time_min: 14
     track: ops
     inference_substrate: aggregation_from_upstream_artifacts
     requires_gpu: false
-    deliverable: results/experiment_3677_capstone_and_g_gate_v336.json
+    deliverable: results/experiment_3689_capstone_and_g_gate_v337.json
     prompt: |
-      CONTEXT: capstone the milestone that (1) tried to clean up the dependency-aware weighting lead into a
-      held-out, significance-tested headline-advancement CANDIDATE (exp3667/3668), (2) stressed the FACTS
-      earned-negative on a REAL benchmark (exp3669/3670), (3) SHIPPED the second-pair-of-eyes detector
-      (exp3671), (4) opened the NEW SC-weak ensemble-selection direction (exp3672), and (5) continued FR-11
-      (exp3673). Re-check the publication gate.
-      CONCRETE STEPS: run `python scripts/publication_gate.py --json` (expect G1-G4 all pass, paper_ready true);
-      aggregate exp3667/3668/3669/3670/3671/3672/3673 via scripts/summarize_artifact.py. EXCLUDE
-      flagged_adversarial artifacts (fabrication gate) -- and CONFIRM exp3667 specifically cleared its tautology
-      flag (adversarial_verify_clean==true) before citing its number. Treat any grounding AUROC >= 0.99 as a
-      leak unless proven leak-free. If a gated task was skipped (e.g. exp3668 because exp3667
-      dependency_aware_beats_carnot was false, or exp3670 because the real corpus was degenerate), record it as
-      "not_measured" -- NEVER read a missing field as None and synthesize around it. Record P0.1 as
-      honest-negative; record the trained-judge-OOD hypothesis as RETIRED (do NOT re-assert). The frozen FoVer
-      headline (0.9131) stays frozen; report any dependency-aware win ONLY as a "headline-advancement candidate
-      pending re-freeze + re-reproduction in a future milestone". paper_v6_safe_claims / forbidden_claims per
-      Paper-v6 Narrowing.
+      CONTEXT: capstone the milestone that (1) took the dependency-aware weighting lead to G1-rigor dual-condition
+      integrity + an operator re-freeze package (exp3680/3681), (2) diagnosed the discrimination-vs-selection gap
+      (exp3682), (3) hardened the detector's code operating point (exp3683), (4) adversarially re-baselined
+      product value vs self-certainty (exp3684), and (5) continued FR-11 (exp3685). Re-check the publication gate.
+      CONCRETE STEPS: run `python scripts/publication_gate.py --json` (expect G1-G4 all pass, paper_ready true,
+      frozen headline 0.9131 UNCHANGED); aggregate exp3680/3681/3682/3683/3684/3685 via
+      scripts/summarize_artifact.py. EXCLUDE flagged_adversarial artifacts (fabrication gate) and CONFIRM exp3680
+      cleared adversarial_verify (adversarial_verify_clean==true) before citing its number. Treat any AUROC >=
+      0.99 as a leak unless proven leak-free. If a gated task was skipped (e.g. exp3681 because exp3680
+      dependency_aware_g1_rigor_confirmed was false), record it as "not_measured" -- NEVER read a missing field as
+      None and synthesize around it. Record P0.1 as honest-negative; record facts-generalization + trained-judge-
+      OOD as RETIRED (do NOT re-assert). The frozen FoVer headline (0.9131) stays frozen; report any
+      dependency-aware win ONLY as a "headline-advancement candidate with an operator-ready re-freeze package
+      pending operator action + CI re-reproduction". paper_v6_safe_claims / forbidden_claims per Paper-v6
+      Narrowing.
       REQUIRED ARTIFACT FIELDS (principle: documents WHY; store the bare VALUE):
         honest_verdict:
           principle: "Terminal prefix for reconciler classification."
         inference_substrate: "aggregation_from_upstream_artifacts (principle: reads the gate script + artifacts; no live inference)."
-        dependency_aware_headline_candidate_status:
-          principle: "clean_and_heldout_validated / clean_but_overfit / no_significant_gain / flagged_still -- the status of the .336 headline-advancement lead (exp3667/3668)."
-        facts_real_benchmark_verdict:
-          principle: "generalizes_real / auroc_parity_with_catch_value / domain_bound_real_earned / not_measured -- the corrected core-mission answer (exp3670)."
-        facts_real_vs_synthetic:
-          principle: "States how the REAL-corpus facts result corrects or confirms the .335 synthetic negative."
-        second_pair_of_eyes_shipped:
-          principle: "Whether the calibrated fused detector is wired to a real surface with a passing E2E test (exp3671) -- Phase-1 product advancement."
-        sc_weak_selection_direction_result:
-          principle: "ensemble_adds_value / no_value_with_headroom / no_headroom / not_measured -- the NEW-direction result (exp3672)."
-        fr11_v10_result:
-          principle: "Whether online dependency-aware weighting held without collapse (exp3673)."
+        dependency_aware_g1_candidate_status:
+          principle: "g1_rigor_confirmed_package_ready / g1_rigor_confirmed_package_blocked / no_significant_gain_under_protocol / flagged_still -- the status of the .337 headline-advancement lead (exp3680/3681)."
+        refreeze_package_status:
+          principle: "ready_for_operator / not_prepared_candidate_unconfirmed -- whether exp3681 produced an operator-ready re-freeze package; the frozen 0.9131 stays frozen regardless."
+        selection_gap_verdict:
+          principle: "closed_by_per_question_calibration / fundamental_decoupling / not_measured -- the discrimination-vs-selection diagnosis (exp3682)."
+        detector_code_operating_point:
+          principle: "recovered_math_and_code / math_only_earned / not_measured -- did the code operating point harden (exp3683)?"
+        product_value_vs_self_certainty:
+          principle: "robust_beats_self_certainty / narrowed_collapses_vs_self_certainty / not_measured -- does product value survive the stronger baseline (exp3684)?"
+        fr11_v11_result:
+          principle: "Whether drift-aware online dependency-aware weighting recovered without collapse (exp3685)."
         verifier_value_scope:
-          principle: "math_plus_code / math_plus_code_plus_facts / math_only_earned + the SC-weak selection finding -- the scoped product claim after the fair re-measurements."
+          principle: "The scoped product claim after .337: math+code DISCRIMINATION (frozen headline), facts RETIRED, selection earned-negative (or closed if exp3682 found a fix)."
         g1:
           principle: "Headline measured (FoVer 0.9131, 5-seed, CI, adversarial-clean)."
         g2:
@@ -877,10 +835,14 @@ tasks:
           principle: "Numbers trace to primary artifacts."
         paper_ready:
           principle: "G1 and G2 and G3 and G4 -- must remain true; the milestone does not regress the gate."
+        frozen_headline_unchanged:
+          principle: "True iff the publication gate still reads 0.9131 -- a dependency-aware win is a candidate, never a silent swap."
         unmet_gates:
           principle: "Report which gates are unmet, not a count (publication_blocker_count is retired)."
         p01_status:
           principle: "P0.1 stays honest-negative; do not re-assert a positive."
+        facts_generalization_retired:
+          principle: "Records facts-generalization as RETIRED (exp3670 same-verdict on REAL RAGTruth)."
         trained_judge_ood_retired:
           principle: "Records the trained-judge-OOD hypothesis as retired (exp3659 same-verdict)."
         paper_v6_safe_claims:
@@ -895,6 +857,6 @@ tasks:
           principle: "Drift detection."
         duration_s:
           principle: "Plausibility floor."
-      TERMINAL VERDICT: "complete: capstone_v336_dependency_aware_<status>_facts_real_<verdict>_detector_shipped_<bool>_paper_ready_true"
-      Run: cd {project_root} && python scripts/experiment_3677_capstone_and_g_gate_v336.py
+      TERMINAL VERDICT: "complete: capstone_v337_dependency_aware_<status>_selection_<verdict>_detector_code_<status>_paper_ready_true_frozen_headline_unchanged"
+      Run: cd {project_root} && python scripts/experiment_3689_capstone_and_g_gate_v337.py
       Do NOT push. Do NOT modify scripts/research_conductor.py.
