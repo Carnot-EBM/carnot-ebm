@@ -1,67 +1,63 @@
-milestone: "2026.06.333"
-milestone_title: "Finish the cross-domain de-contamination for the 5th and FINAL time — the .332 poison test is quarantined, so RUN the facts (real evidence corpus) + code (firing verifiers) rows against a VALID positive control; then NEW breadth: Weaver correlation matrix, verifier-beats-SC headroom, and the trained-EBM-judge OOD counterpoint that may name the fix for 'math-only'."
+milestone: "2026.06.334"
+milestone_title: "Run the cross-domain de-contamination science that .333 DESIGNED but NEVER EXECUTED — gemini quota exhaustion (429) crashed gemini-cli (.js:345500:14) on 100% of .333 tasks, producing ZERO artifacts. Route every task to codex (gpt-5.5, requires_codex bypasses GEMINI_FORCE_EXPERIMENTS=1); add a gemini-quota-crash resilience diagnostic + operator backend-flip recommendation; then run the math|code|facts re-measurement, Weaver correlation matrix, verifier-beats-SC headroom, and trained-EBM-judge OOD counterpoint against a VALID positive control."
 milestone_doc: openspec/change-proposals/research-roadmap-vNEXT.md
 
 # OUTER-LOOP / OPERATOR PRE-STAGED ROADMAP (2026-06-01, Claude Opus 4.8). PIVOT RATIONALE:
-# .329/.330/.331/.332 all tried to answer ONE question -- does verifier value generalize beyond MATH to
-# CODE+FACTS -- and NONE finished. Each failed for a different INFRASTRUCTURE reason, never the science:
-# .329 contaminated null (confidence baseline AUROC=1.0 degenerate corpus, verifiers inert); .330 dict-vs-bare
-# gated-field cascade; .331 empty-{}-artifact cascade; .332 POISON-TEST cascade (exp3612 shipped a test that
-# asserted the corpus validates, but the corpus is genuinely degenerate at AUROC 0.4509, so the script honestly
-# returned 'blocked' and the staged broken test SKIPped exp3613-exp3623). The .332 poison test was QUARANTINED
-# during this planning pass (git mv -> tests/python/quarantine/). .333 finishes it with every lesson baked in:
-# (1) BUILD a facts corpus v3 from a REAL evidence-bearing dataset (HaluEval QA knowledge / FELM / RAGTruth /
-# Mu-SHROOM) -- validating the degenerate v2 is a dead end; (2) BUILD the labeled code corpus from exp1999 +
-# WIRE the execution verifiers to FIRE; (3) RUN the centerpiece cross-domain re-measurement (real leak-free NLI
-# grounding verifier, graceful per-row degradation, VALID positive control, BARE flags); (4) additivity McNemar.
-# Then NEW breadth (north-star sec-retirement): (5) Weaver (arXiv:2506.18203) + the inter-verifier CORRELATION
-# matrix Weaver assumes away; (6) headroom corpus where oracle>SC + hybrid (arXiv:2510.14913); (7) the
-# trained-EBM-judge OOD counterpoint (arXiv:2505.14999) that claims the cross-domain generalization Carnot's
-# FIXED ensemble lacks -- it may NAME the fix. (8) FR-11 v8 self-learning. (9-11) hardware continuity. (12-13)
-# synthesis + capstone. INVARIANTS: paper_ready=true (G1-G4; do NOT regress). P0.1 stays honest-negative (do
-# NOT re-test Route-1/2; Depth-Over-Breadth retired 2026-05-31). Every gated_on field is a BARE scalar
-# (feedback_gated_fields_must_be_bare). NO agent ships a test that hard-asserts a single success verdict or uses
-# placeholder tokens (Q\d+/R\d+/H\d+) the script rejects -- that is the .325/.326/.332 poison-test cascade.
-# exp3625/3626/3627 -> claude (gemini demonstrably failed this exact category in .329/.330/.331); all others
-# default agent_type: gemini.
+# .333 produced ZERO science. Every one of its 14 tasks FAILED with "Gemini CLI error: .js:345500:14"
+# (ops/conductor-log.md, 06:09-07:39 UTC 2026-06-01). Live probe during planning found the root cause:
+# gemini quota is EXHAUSTED (429, "reset after ~3h") and gemini-cli 0.44.0 CRASHES on a 429 instead of
+# erroring gracefully. With AGENT_TYPE=gemini + GEMINI_FORCE_EXPERIMENTS=1 set on the conductor, even the
+# requires_claude tasks were force-routed to the dead backend and crashed. No script written, no artifact
+# landed. This is an INFRASTRUCTURE OUTAGE, not a scientific result -- the .333 design was sound and never ran.
+# THE FIX: route every .334 experiment task to agent_type: codex + model: gpt-5.5 + requires_codex: true.
+# codex-cli 0.135.0 is verified working; requires_codex is the ONE flag GEMINI_FORCE_EXPERIMENTS=1 honors as an
+# exemption (coerces codex->gemini UNLESS requires_codex). This satisfies the CLAUDE.md requires_codex positive
+# criterion #3 ("GEMINI QUOTA IS EXHAUSTED"). OPERATOR ACTION surfaced in exp3639 + the doc: set
+# CODEX_FORCE_EXPERIMENTS=1 on the conductor (or wait ~3h for gemini quota reset). INVARIANTS: paper_ready=true
+# (G1-G4 closed 2026-05-31; do NOT regress). P0.1 stays honest-negative (do NOT re-test Route-1/2;
+# Depth-Over-Breadth retired). Every gated_on is a BARE scalar (feedback_gated_fields_must_be_bare). NO poison
+# tests (.325/.326/.332 cascade) -- parametrize over honest verdicts on realistic synthetic fixtures, never
+# hard-assert one success string against a real corpus, never use Q\d+/R\d+/H\d+ placeholder tokens. The .332
+# poison test stays quarantined. Re-proposing the .333 science is NOT a doomed rerun: each .329-.333 stall had a
+# DISTINCT infra cause and the science has never executed (Failed-Experiment Rerun Discipline).
 
 tasks:
-  - id: exp3624-archive-v332-activate-v333
+  - id: exp3638-archive-v333-activate-v334
     operator_override: "2026-05-29 operator directive (standing): routine milestone-transition (archive-vN-activate-vN+1) — false-positive scope-match vs prior archive-v* tasks; structurally never a doomed rerun."
-    milestone: "2026.06.333"
-    title: "Archive milestone .332 honestly (record the POISON-TEST cascade: exp3613-3623 SKIPPED, facts/code rows NOT measured, question STILL open; poison quarantined) and activate .333"
+    milestone: "2026.06.334"
+    title: "Archive milestone .333 honestly (record the gemini-quota TOTAL WIPEOUT: all 14 tasks FAILED on gemini-cli .js:345500:14 / 429, ZERO artifacts, cross-domain question STILL open after 5 milestones) and activate .334"
     priority: critical
     max_turns: 20
-    agent_type: gemini
-    model: gemini-3.1-pro-preview
+    agent_type: codex
+    model: gpt-5.5
+    requires_codex: true   # gemini quota exhausted (429) crashed gemini-cli on 100% of .333; codex 0.135.0 verified working; requires_codex bypasses GEMINI_FORCE_EXPERIMENTS=1
     estimated_wall_time_min: 6
     track: ops
     inference_substrate: aggregation_from_upstream_artifacts
     requires_gpu: false
-    deliverable: results/experiment_3624_archive_v332_activate_v333.json
+    deliverable: results/experiment_3638_archive_v333_activate_v334.json
     prompt: |
-      CONTEXT: .332 was the FOURTH consecutive failed attempt to answer "does verifier value generalize beyond
-      MATH to CODE/FACTS". It cascade-failed on a POISON TEST: exp3612 shipped
-      tests/python/test_experiment_3612_validate_factual_corpus_v2.py asserting the facts corpus VALIDATES, but
-      the corpus is genuinely DEGENERATE (confidence_baseline_auroc=0.4509, anti-correlated) so the script
-      honestly returned a "blocked" verdict -> the staged broken test failed the conductor pre-test gate ->
-      exp3613 through exp3623 ALL SKIPPED. The poison test was quarantined during planning (moved to
-      tests/python/quarantine/). The cross-domain question is STILL OPEN. paper_ready=true (G1-G4 met) and P0.1
-      honest-negative must NOT regress.
-      EXISTING CODE TO READ FIRST: research-roadmap.yaml (.332, the just-finished milestone); ops/conductor-log.md
-      tail (the SKIP cascade); results/experiment_3611/3612 via scripts/summarize_artifact.py; ops/north-star.md.
-      TASK: archive .332 to research-complete.yaml honestly, confirm .333 active.
+      CONTEXT: .333 was the FIFTH consecutive failed attempt to answer "does verifier value generalize beyond
+      MATH to CODE/FACTS", and the first to produce ZERO artifacts. Root cause: gemini quota EXHAUSTED (429) and
+      gemini-cli 0.44.0 crashes (.js:345500:14) instead of erroring gracefully; with GEMINI_FORCE_EXPERIMENTS=1
+      every task (incl. the requires_claude ones) was force-routed to the dead backend and FAILED. No script
+      written, no artifact landed. The .333 science design was sound and never ran. paper_ready=true (G1-G4 met)
+      and P0.1 honest-negative must NOT regress.
+      EXISTING CODE TO READ FIRST: research-roadmap.yaml (.333, the just-finished milestone); the tail of
+      ops/conductor-log.md (the 14 FAIL rows with "Gemini CLI error: .js:345500:14"); ops/north-star.md.
+      TASK: archive .333 to research-complete.yaml honestly, confirm .334 active. Note that exp3624 (the .333
+      archive task) itself never ran, so .332's full archive may also be a leftover -- record both honestly.
       REQUIRED ARTIFACT FIELDS (the principle: annotation documents WHY each field matters; store each field's
       VALUE -- bare scalars are fine):
         honest_verdict:
           principle: "Terminal prefix lets the conductor reconciler classify the transition as complete without re-running it."
         inference_substrate: "aggregation_from_upstream_artifacts (principle: a JSON-read + format task, not live inference; 0.0001s floor)."
-        v332_outcome_recorded_as:
-          principle: "Records that .332's defensible state is an UNFINISHED de-contamination (facts/code rows SKIPPED on a poison test, NOT measured), NOT a clean finding -- prevents a false null propagating to the paper."
-        poison_test_cascade_recorded:
-          principle: "Names the recurring failure mode (an agent shipping a test that fails against its own script poisons the pre-test gate; exp3521/.325, exp3544/.326, exp3612/.332) so the audit trail is honest."
+        v333_outcome_recorded_as:
+          principle: "Records .333's defensible state as a TOTAL INFRASTRUCTURE WIPEOUT (gemini quota crash, ZERO artifacts, science never ran), NOT a scientific finding -- prevents a false null propagating to the paper."
+        gemini_quota_crash_cascade_recorded:
+          principle: "Names the recurring failure mode (gemini quota 429 + gemini-cli .js:345500:14 crash + GEMINI_FORCE_EXPERIMENTS coercion) so the audit trail is honest and the operator can act."
         cross_domain_question_still_open:
-          principle: "Confirms the 4-milestone-old question is unanswered, so .333 is a legitimate continuation not a churn re-run."
+          principle: "Confirms the 5-milestone-old question is unanswered, so .334 is a legitimate continuation not a churn re-run."
         paper_ready_preserved:
           principle: "G1-G4 stay met; the transition must not silently regress paper_ready."
         p01_status_preserved:
@@ -74,33 +70,97 @@ tasks:
           principle: "Content hash catches silent drift between this artifact and any replication."
         duration_s:
           principle: "Wall-clock plausibility floor; missing duration is the fabrication signal."
-      TERMINAL VERDICT: "complete: archived_v332_poison_test_cascade_facts_code_rows_skipped_not_measured_v333_active_paper_ready_true"
-      Run: cd {project_root} && python scripts/experiment_3624_archive_v332_activate_v333.py
+      TERMINAL VERDICT: "complete: archived_v333_gemini_quota_total_wipeout_zero_artifacts_cross_domain_question_still_open_v334_active_paper_ready_true"
+      Run: cd {project_root} && python scripts/experiment_3638_archive_v333_activate_v334.py
       Do NOT push. Do NOT modify scripts/research_conductor.py.
 
-  - id: exp3625-build-factual-corpus-v3-real-evidence-dataset
+  - id: exp3639-gemini-cli-quota-crash-resilience-diagnostic
+    operator_override: "2026-06-01 outer-loop directive: NEW infrastructure-resilience diagnostic (record the gemini quota-429 + gemini-cli .js:345500:14 crash that wiped out .333, and write the operator backend-flip recommendation) — no prior task ran this scope; documentation-only, does not modify the conductor or env."
+    milestone: "2026.06.334"
+    title: "gemini-cli quota-crash RESILIENCE DIAGNOSTIC — record the live gemini quota state + the .js:345500:14 crash-on-429 signature + the GEMINI_FORCE_EXPERIMENTS coercion that wiped out .333; write the operator backend-flip recommendation (documentation-only)"
+    priority: critical
+    max_turns: 30
+    agent_type: codex
+    model: gpt-5.5
+    requires_codex: true   # diagnosing the gemini outage; must run on a backend that is NOT the broken one
+    estimated_wall_time_min: 8
+    track: ops
+    inference_substrate: hardware_smoke
+    requires_gpu: false
+    deliverable: results/experiment_3639_gemini_cli_quota_crash_resilience_diagnostic.json
+    prompt: |
+      CONTEXT: .333 was wiped out because gemini quota is exhausted (429) and gemini-cli 0.44.0 CRASHES on a 429
+      (.js:345500:14) instead of returning a clean retryable error, while the conductor's AGENT_TYPE=gemini +
+      GEMINI_FORCE_EXPERIMENTS=1 force-route every task to that dead backend. This task DIAGNOSES and DOCUMENTS
+      the outage so the operator can act. It is documentation-only: it MUST NOT modify scripts/research_conductor.py,
+      env vars, or any conductor config -- only record findings and a recommendation.
+      EXISTING CODE TO READ FIRST: the tail of ops/conductor-log.md (the .js:345500:14 FAIL rows); CLAUDE.md
+      "Gemini-Default for Experiments" (the GEMINI_FORCE_EXPERIMENTS / CODEX_FORCE_EXPERIMENTS coercion rules);
+      ops/known-issues.md "gemini backend routing paused" entry.
+      PRECONDITIONS (step 0): codex backend reachable (this task runs on it). No gemini call is required to land
+      this artifact -- a 429 is the EXPECTED finding, not a blocker.
+      CONCRETE STEPS:
+        1. Probe gemini state non-fatally: `timeout 30 gemini --version` (record version) and a single bounded
+           real call `timeout 60 gemini -m gemini-3.1-pro-preview -p "Reply OK"` -- CAPTURE stdout+exit code; if
+           it returns QUOTA_EXHAUSTED/429 or crashes at .js:345500:14, record that verbatim. Do NOT loop/retry.
+        2. Record the conductor coercion env that was active during .333 (AGENT_TYPE, GEMINI_FORCE_EXPERIMENTS)
+           from `env | grep -iE 'AGENT_TYPE|FORCE_EXPERIMENTS'` -- read-only.
+        3. Write the operator recommendation: set CODEX_FORCE_EXPERIMENTS=1 (and override GEMINI_FORCE_EXPERIMENTS)
+           until gemini quota recovers, OR wait ~3h for the quota reset before relaunching the conductor.
+      ANTI-POISON TEST DISCIPLINE (MANDATORY): if you ship a pytest, parametrize over the script's honest outcomes
+      (gemini_ok / gemini_quota_exhausted / gemini_crash) for synthetic fixtures; NEVER hard-assert a single
+      success string. Run your own test green BEFORE finishing.
+      REQUIRED ARTIFACT FIELDS (principle: documents WHY; store the VALUE):
+        honest_verdict:
+          principle: "Terminal prefix for reconciler classification."
+        inference_substrate: "hardware_smoke (principle: a bounded CLI health probe, not live model inference)."
+        gemini_cli_version:
+          principle: "Records the installed gemini-cli version (0.44.0 at planning) so a future upgrade is auditable."
+        gemini_quota_state:
+          principle: "ok / quota_exhausted_429 / crash_js_345500 -- the root-cause signal that wiped out .333."
+        gemini_reset_eta:
+          principle: "If 429, the reported quota-reset window -- tells the operator how long to wait."
+        conductor_coercion_env:
+          principle: "Records AGENT_TYPE + GEMINI_FORCE_EXPERIMENTS active during .333 -- why per-task agent_type did not route around the failure."
+        operator_recommendation:
+          principle: "The concrete operator action (set CODEX_FORCE_EXPERIMENTS=1 or wait for reset) -- this task cannot change the conductor, only surface the fix."
+        conductor_unmodified_assert:
+          principle: "Asserts this diagnostic did NOT modify research_conductor.py or env -- honors the never-modify-conductor rule."
+        random_seed:
+          principle: "Determinism precondition."
+        reproducibility_checksum:
+          principle: "Drift detection."
+        duration_s:
+          principle: "Plausibility floor."
+      TERMINAL VERDICTS: "complete: gemini_quota_crash_diagnosed_429_crash_recorded_operator_codex_flip_recommended" /
+      "complete: gemini_recovered_quota_ok_no_action_needed"
+      Run: cd {project_root} && python scripts/experiment_3639_gemini_cli_quota_crash_resilience_diagnostic.py
+      Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  - id: exp3640-build-factual-corpus-v3-real-evidence-dataset
     prior_failures:
+      - experiment_id: exp3625-build-factual-corpus-v3-real-evidence-dataset
+        verdict: fail_gemini_cli_quota_exhaustion_crash_never_ran
+        addressed_by: "exp3625 (the .333 version) NEVER RAN -- it crashed on the gemini-cli quota-429 wipeout (.js:345500:14), not on any data problem. This re-attempt is routed to codex (requires_codex bypasses GEMINI_FORCE_EXPERIMENTS=1) on a verified-working backend. Identical scientific scope; the blocker was the dead gemini backend and is cleared."
+        retire_if_same_verdict: false
       - experiment_id: exp3612-validate-factual-corpus-v2
         verdict: complete_factual_corpus_degenerate_confidence_out_of_band_or_evidence_leaks_facts_row_blocked
-        addressed_by: "exp3612 found the existing data/realistic_factual_corpus_v2.jsonl genuinely DEGENERATE (confidence AUROC 0.4509 < 0.50, anti-correlated). Validating v2 is a dead end. This task is DIFFERENT: it BUILDS a fresh corpus v3 by FETCHING a real evidence-bearing labeled hallucination dataset (HaluEval QA `knowledge` field / FELM / RAGTruth reference passages / Mu-SHROOM) -- not by validating the broken v2 and not by fragile live SOTA generation -- and gates on confidence AUROC landing in (0.5,0.95) with held-out evidence independent of the label. New data source + headroom gate = a usable corpus, not a re-validation of a degenerate one."
+        addressed_by: "exp3612 found the existing v2 corpus genuinely DEGENERATE (confidence AUROC 0.4509 < 0.50). Validating v2 is a dead end. This task BUILDS a fresh corpus v3 by FETCHING a real evidence-bearing labeled hallucination dataset (HaluEval QA knowledge / FELM / RAGTruth / Mu-SHROOM) and gates on confidence AUROC in (0.5,0.95) with held-out evidence independent of the label. New data source + headroom gate = a usable corpus, not a re-validation of a degenerate one."
         retire_if_same_verdict: false
-      - experiment_id: exp3599-build-factual-corpus-v2-with-evidence
-        verdict: empty_artifact_no_verdict_corpus_data_landed_but_json_was_empty_braces
-        addressed_by: "exp3599 built v2 but wrote an empty {} artifact (the .331 cascade). This task writes a CLEAN artifact with the gated fields as BARE top-level booleans (the .330/.331/.332 cascade fix per feedback_gated_fields_must_be_bare) and fetches a DIFFERENT, real evidence-bearing dataset rather than the degenerate v2 generation path."
-        retire_if_same_verdict: false
-    milestone: "2026.06.333"
+    milestone: "2026.06.334"
     title: "Build factual corpus v3 from a REAL evidence-bearing labeled dataset (HaluEval QA knowledge / FELM / RAGTruth / Mu-SHROOM) — confidence AUROC in (0.5,0.95), held-out evidence independent of label, BARE gated fields"
     priority: critical
     max_turns: 50
-    agent_type: claude
-    requires_claude: true   # gemini wrote an empty {} artifact (.331 exp3599) and the v2 it built was degenerate (.332 exp3612); judgment-heavy dataset selection + leak/independence checks + bare-field emit
+    agent_type: codex
+    model: gpt-5.5
+    requires_codex: true   # gemini quota exhausted crashed the .333 version (exp3625); codex 0.135.0 verified working; requires_codex bypasses GEMINI_FORCE_EXPERIMENTS=1
     estimated_wall_time_min: 18
     track: evidence
     inference_substrate: aggregation_from_upstream_artifacts
     requires_gpu: false
-    deliverable: results/experiment_3625_build_factual_corpus_v3.json
+    deliverable: results/experiment_3640_build_factual_corpus_v3.json
     prompt: |
-      CONTEXT: the facts row has been blocked 4x. The existing v2 corpus is genuinely degenerate (exp3612:
+      CONTEXT: the facts row has been blocked 5x. The existing v2 corpus is genuinely degenerate (exp3612:
       confidence AUROC 0.4509). This task makes the facts apparatus REAL by building a v3 corpus from a real
       evidence-bearing labeled hallucination dataset, where model confidence is an IMPERFECT detector (AUROC in
       (0.5,0.95)) so a grounding verifier has headroom to add value, and where the evidence passage is held-out
@@ -108,7 +168,7 @@ tasks:
       EXISTING CODE TO READ FIRST: results/experiment_3612 (the v2 degeneracy diagnosis) +
       data/realistic_factual_corpus_v2.jsonl (what NOT to reuse) via scripts/summarize_artifact.py;
       research-references.md "HalluSearch / Mu-SHROOM" entries (arXiv:2504.10168) for the recipe;
-      scripts/experiment_template.py + scripts/cached_sota_pair usage.
+      scripts/experiment_template.py + cached_sota_pair usage.
       PRECONDITIONS (step 0, check BEFORE building):
         a. Network: `curl -sf -o /dev/null https://huggingface.co/api/datasets`. If down AND no local
            evidence-bearing dataset is on disk -> honest_verdict "complete: blocked_no_evidence_dataset".
@@ -154,7 +214,7 @@ tasks:
         placeholder_tokens_rejected:
           principle: "Confirms the toy R1/H1/Q1 tokens that produced the .330 leak and the v2 degeneracy are absent."
         facts_corpus_has_evidence:
-          principle: "BARE bool. True iff every record carries an independent held-out evidence passage. STORE AS BARE true/false (gates the grounding-verifier path in exp3627)."
+          principle: "BARE bool. True iff every record carries an independent held-out evidence passage. STORE AS BARE true/false (gates the grounding-verifier path in exp3642)."
         facts_corpus_validated:
           principle: "BARE bool. True iff confidence AUROC in (0.5,0.95) AND evidence_independent_of_label AND no placeholder tokens. STORE AS BARE true/false."
         random_seed:
@@ -165,34 +225,35 @@ tasks:
           principle: "Plausibility floor."
       ACCEPTANCE GATE:
         - condition: "n_examples >= 200 AND facts_corpus_has_evidence == true AND facts_corpus_validated == true"
-          principle: "A fair factual corpus is defined by independent held-out evidence AND confidence headroom; without both, the downstream grounding test repeats the .329-.332 contamination."
+          principle: "A fair factual corpus is defined by independent held-out evidence AND confidence headroom; without both, the downstream grounding test repeats the .329-.333 contamination."
       TERMINAL VERDICTS: "complete: factual_corpus_v3_built_real_evidence_dataset_confidence_headroom_confirmed_bare_fields_emitted" /
       "complete: factual_corpus_v3_built_but_confidence_out_of_band_facts_row_degenerate" /
       "complete: blocked_no_evidence_dataset"
-      Run: cd {project_root} && python scripts/experiment_3625_build_factual_corpus_v3.py
+      Run: cd {project_root} && python scripts/experiment_3640_build_factual_corpus_v3.py
       Do NOT push. Do NOT modify scripts/research_conductor.py.
 
-  - id: exp3626-code-corpus-verifiers-fire-math-to-code-transfer-v2
+  - id: exp3641-code-corpus-verifiers-fire-math-to-code-transfer-v3
     prior_failures:
+      - experiment_id: exp3626-code-corpus-verifiers-fire-math-to-code-transfer-v2
+        verdict: fail_gemini_cli_quota_exhaustion_crash_never_ran
+        addressed_by: "exp3626 (the .333 version) NEVER RAN -- it crashed on the gemini-cli quota-429 wipeout. This re-attempt is routed to codex (requires_codex bypasses GEMINI_FORCE_EXPERIMENTS=1). Identical scientific scope; the dead-gemini blocker is cleared."
+        retire_if_same_verdict: false
       - experiment_id: exp3602-math-to-code-prm-transfer-positive-control
         verdict: complete_blocked_no_labeled_code_corpus_verifiers_fired_on_code_false
-        addressed_by: "exp3602 blocked because no labeled code corpus was loadable and the execution-applicable verifiers never scored. This task is DIFFERENT: it BUILDS the labeled code corpus from the EXISTING results/experiment_1999_code_verification_humaneval.json (per-candidate correctness labels) and explicitly WIRES the four execution-applicable verifiers (controlled_invariance_executor_v2, executable_monitor_runtime_adapter, ast_structure_verifier, code_structural_dependency_verifier) to score completions, asserting n_scored>0 and score-variance>0 BEFORE reporting any transfer number. New corpus + new verifier wiring + a headroom check = a runnable test."
+        addressed_by: "exp3602 blocked because no labeled code corpus was loadable and the execution-applicable verifiers never scored. This task BUILDS the labeled code corpus from the EXISTING results/experiment_1999_code_verification_humaneval.json (per-candidate correctness labels) and explicitly WIRES the four execution-applicable verifiers to score completions, asserting n_scored>0 and score-variance>0 BEFORE reporting any transfer number. New corpus + new verifier wiring + a headroom check = a runnable test."
         retire_if_same_verdict: false
-      - experiment_id: exp3613-code-corpus-verifiers-fire-transfer
-        verdict: skipped_poison_test_cascade_never_ran
-        addressed_by: "exp3613 (the .332 version) never ran -- it SKIPPED on the exp3612 poison-test cascade, not on any code problem. The poison test is now quarantined, so this re-attempt actually executes. Identical scientific scope; the blocker was infrastructure and is cleared."
-        retire_if_same_verdict: false
-    milestone: "2026.06.333"
-    title: "Build the labeled CODE corpus from exp1999 + make the execution-applicable verifiers actually FIRE + math→code PRM-transfer stress-test (arXiv:2506.00027 vs ThinkPRM arXiv:2504.16828)"
+    milestone: "2026.06.334"
+    title: "Build the labeled CODE corpus from exp1999 + make the execution-applicable verifiers actually FIRE + math->code PRM-transfer stress-test (arXiv:2506.00027 vs ThinkPRM arXiv:2504.16828)"
     priority: critical
     max_turns: 60
-    agent_type: claude
-    requires_claude: true   # multi-file verifier wiring + execution choreography + OOD judgment; gemini left these verifiers inert in .331 (exp3602)
+    agent_type: codex
+    model: gpt-5.5
+    requires_codex: true   # gemini quota exhausted crashed the .333 version (exp3626); multi-file verifier wiring; codex 0.135.0 verified working; requires_codex bypasses GEMINI_FORCE
     estimated_wall_time_min: 24
     track: evidence
     inference_substrate: verifier_ensemble_against_cached_candidates
     requires_gpu: false
-    deliverable: results/experiment_3626_code_corpus_verifiers_fire_transfer_v2.json
+    deliverable: results/experiment_3641_code_corpus_verifiers_fire_transfer_v3.json
     prompt: |
       CONTEXT: the code row has never produced a real result -- no labeled corpus, verifiers inert. This task
       makes the code apparatus REAL and runs the literature's positive control: arXiv:2506.00027 found
@@ -229,7 +290,7 @@ tasks:
           principle: "Terminal prefix for reconciler classification."
         inference_substrate: "verifier_ensemble_against_cached_candidates (principle: scores the cached code corpus; no LLM load)."
         code_corpus_path:
-          principle: "Where the labeled code corpus lives -- the apparatus exp3627 reuses for the code row."
+          principle: "Where the labeled code corpus lives -- the apparatus exp3642 reuses for the code row."
         code_corpus_name:
           principle: "Which labeled code benchmark was scored -- provenance."
         n_examples:
@@ -259,33 +320,33 @@ tasks:
       "complete: code_corpus_built_verifiers_fire_math_signal_does_not_transfer_discriminative_fragility" /
       "complete: code_corpus_built_but_execution_verifiers_inert_diagnosed" /
       "complete: blocked_no_labeled_code_corpus"
-      Run: cd {project_root} && python scripts/experiment_3626_code_corpus_verifiers_fire_transfer_v2.py
+      Run: cd {project_root} && python scripts/experiment_3641_code_corpus_verifiers_fire_transfer_v3.py
       Do NOT push. Do NOT modify scripts/research_conductor.py.
 
-  - id: exp3627-corrected-cross-domain-remeasurement-v3
+  - id: exp3642-corrected-cross-domain-remeasurement-v4
     prior_failures:
-      - experiment_id: exp3614-corrected-cross-domain-remeasurement-v2
-        verdict: skipped_poison_test_cascade_never_ran
-        addressed_by: "exp3614 (the .332 centerpiece) never ran -- it SKIPPED on the exp3612 poison-test cascade. The poison is quarantined; the facts corpus is now v3 (real evidence, validated bare fields, exp3625); the code verifiers fire (exp3626). Same scientific scope, infrastructure blocker cleared, plus the centerpiece is UNGATED and degrades per-row so a missing corpus can never SKIP the whole task."
+      - experiment_id: exp3627-corrected-cross-domain-remeasurement-v3
+        verdict: fail_gemini_cli_quota_exhaustion_crash_never_ran
+        addressed_by: "exp3627 (the .333 centerpiece) NEVER RAN -- it crashed on the gemini-cli quota-429 wipeout. This re-attempt is routed to codex (requires_codex bypasses GEMINI_FORCE_EXPERIMENTS=1); the facts corpus is now v3 (exp3640), the code verifiers fire (exp3641); identical scope, dead-gemini blocker cleared, and the centerpiece is UNGATED and degrades per-row so a missing corpus can never SKIP the whole task."
         retire_if_same_verdict: false
       - experiment_id: exp3601-corrected-cross-domain-remeasurement
         verdict: blocked_gate_check_failed
-        addressed_by: "exp3601 (.331) blocked because its upstream wrote an empty artifact. Root cause fixed: corpus validated with BARE gated fields by exp3625; code verifiers fire per exp3626; this task removes the brittle hard gate and degrades gracefully per row."
+        addressed_by: "exp3601 (.331) blocked because its upstream wrote an empty artifact. Root cause fixed: corpus validated with BARE gated fields by exp3640; code verifiers fire per exp3641; this task removes the brittle hard gate and degrades gracefully per row."
         retire_if_same_verdict: false
-    milestone: "2026.06.333"
-    title: "CENTERPIECE: corrected cross-domain re-measurement — math (0.9131, frozen) | code (firing execution verifiers, exp3626) | facts (real leak-free NLI grounding verifier, validated corpus exp3625) vs strong confidence baseline, VALID positive control, graceful per-row degradation"
+    milestone: "2026.06.334"
+    title: "CENTERPIECE: corrected cross-domain re-measurement v4 — math (0.9131, frozen) | code (firing execution verifiers, exp3641) | facts (real leak-free NLI grounding verifier, validated corpus exp3640) vs strong confidence baseline, VALID positive control, graceful per-row degradation"
     priority: critical
-    max_turns: 60
-    agent_type: claude
-    requires_claude: true   # the .329-.332 centerpieces all failed; multi-file (NLI verifier + execution verifiers + scoring) + leak judgment + graceful-degradation logic
-    model: opus
-    estimated_wall_time_min: 30
+    max_turns: 80
+    agent_type: codex
+    model: gpt-5.5
+    requires_codex: true   # gemini quota exhausted crashed the .333 centerpiece (exp3627); reasoning-heavy multi-file work; codex 0.135.0 verified working; requires_codex bypasses GEMINI_FORCE
+    estimated_wall_time_min: 32
     track: evidence
     inference_substrate: verifier_ensemble_against_cached_candidates
     requires_gpu: true
-    deliverable: results/experiment_3627_corrected_cross_domain_remeasurement_v3.json
+    deliverable: results/experiment_3642_corrected_cross_domain_remeasurement_v4.json
     prompt: |
-      CONTEXT: the fair cross-domain test that .329/.330/.331/.332 each tried and failed to RUN. Measure the
+      CONTEXT: the fair cross-domain test that .329/.330/.331/.332/.333 each tried and failed to RUN. Measure the
       verifier ensemble's error-detection generalization across math | code | facts, each with its APPLICABLE
       verifier set on a corpus WITH headroom, vs a strong model-confidence baseline. CRITICAL LESSON: do NOT
       assert a null when a row is blocked. This task NEVER asserts "math-only" from a blocked row -- it runs
@@ -305,20 +366,20 @@ tasks:
       number. Note: it is EXPECTED and NOT a leak that a correct answer's evidence entails it while a
       hallucinated answer's evidence does not -- that is what grounding measures; the leak is any path from the
       gold answer/label into the score.
-      EXISTING CODE TO READ FIRST: results/experiment_3625 (corpus_path_used + facts_corpus_validated) +
-      results/experiment_3626 (code_corpus_path + code_verifiers_fire) via scripts/summarize_artifact.py;
+      EXISTING CODE TO READ FIRST: results/experiment_3640 (corpus_path_used + facts_corpus_validated) +
+      results/experiment_3641 (code_corpus_path + code_verifiers_fire) via scripts/summarize_artifact.py;
       results/experiment_2837_fover_memory_leakage_v3.json (the frozen FoVer math 0.9131 headline -- NO re-run);
       python/carnot/verify/retrieval_nli_grounding_verifier.py + the code-applicable verifiers; CLAUDE.md
       "Verifier Authenticity Discipline".
       PRECONDITIONS (step 0):
         a. Math row = the frozen exp2837 0.9131 headline (always lands, no dependency).
-        b. Facts row: if results/experiment_3625 facts_corpus_validated==true AND a NLI checkpoint (or disclosed
+        b. Facts row: if results/experiment_3640 facts_corpus_validated==true AND a NLI checkpoint (or disclosed
            proxy) is loadable, RUN it; else mark the facts row "blocked_facts_corpus" and continue.
-        c. Code row: if results/experiment_3626 code_verifiers_fire==true, RUN it on code_corpus_path; else mark
+        c. Code row: if results/experiment_3641 code_verifiers_fire==true, RUN it on code_corpus_path; else mark
            the code row "blocked_code_verifiers" and continue.
       CONCRETE STEPS:
         1. Build the generalization table: rows = {math (0.9131, frozen), code (execution-applicable verifiers
-           on exp3626 corpus), facts (real NLI grounding verifier on exp3625 corpus)}. Each row: ensemble AUROC
+           on exp3641 corpus), facts (real NLI grounding verifier on exp3640 corpus)}. Each row: ensemble AUROC
            + CI, confidence-baseline AUROC + CI, ensemble-minus-confidence delta + paired CI.
         2. >=3 seeds per row that runs; bootstrap CI; class balance recorded per row.
         3. Per-domain honest verdict: generalizes (ensemble materially > 0.5 AND >= confidence) / domain-bound
@@ -350,7 +411,7 @@ tasks:
         positive_control_valid:
           principle: "BARE bool. True iff BOTH non-math rows actually RAN (not blocked) AND each has confidence-baseline AUROC < 0.95 (real headroom). A facts-less or code-less run MUST set this false. STORE AS BARE true/false."
         at_least_one_nonmath_row_ran:
-          principle: "BARE bool. True iff >=1 non-math row (code OR facts) actually RAN with headroom. Gates exp3628 so a single-domain real result still yields a product-value number. STORE AS BARE true/false."
+          principle: "BARE bool. True iff >=1 non-math row (code OR facts) actually RAN with headroom. Gates exp3643 so a single-domain real result still yields a product-value number. STORE AS BARE true/false."
         n_examples_per_domain:
           principle: "Sample-size rigor per row."
         random_seed:
@@ -366,38 +427,39 @@ tasks:
       "complete: verifier_value_math_only_EARNED_against_valid_positive_control_scoped_limitation" /
       "complete: verifier_value_generalizes_to_code_not_facts_partial_scope" /
       "complete: verifier_value_generalizes_to_facts_not_code_partial_scope"
-      Run: cd {project_root} && python scripts/experiment_3627_corrected_cross_domain_remeasurement_v3.py
+      Run: cd {project_root} && python scripts/experiment_3642_corrected_cross_domain_remeasurement_v4.py
       Do NOT push. Do NOT modify scripts/research_conductor.py.
 
-  - id: exp3628-additivity-second-pair-of-eyes-mcnemar-v3
+  - id: exp3643-additivity-second-pair-of-eyes-mcnemar-v4
     prior_failures:
-      - experiment_id: exp3615-additivity-second-pair-of-eyes-v2
-        verdict: gate_blocked_upstream_centerpiece_skipped_never_ran
-        addressed_by: "exp3615 (.332) never ran -- its upstream centerpiece SKIPPED on the poison-test cascade. This task gates on exp3627's BARE at_least_one_nonmath_row_ran (the corrected, ungated, gracefully-degrading centerpiece) and re-derives the additive second-pair-of-eyes value from the genuinely fair re-measurement -- new upstream + bare gate + fair measurement, not a re-run."
+      - experiment_id: exp3628-additivity-second-pair-of-eyes-mcnemar-v3
+        verdict: gate_blocked_upstream_centerpiece_never_ran_gemini_wipeout
+        addressed_by: "exp3628 (.333) never ran -- its upstream centerpiece crashed on the gemini quota wipeout. This task gates on exp3642's BARE at_least_one_nonmath_row_ran (the corrected, ungated, gracefully-degrading centerpiece) and re-derives the additive second-pair-of-eyes value from the genuinely fair re-measurement -- new upstream + bare gate + working backend, not a re-run."
         retire_if_same_verdict: false
-    milestone: "2026.06.333"
+    milestone: "2026.06.334"
     title: "Additivity / 'second pair of eyes' — does ensemble-fused-with-confidence beat confidence alone? (conditional catch-rate + McNemar, on the fair re-measurement)"
     priority: high
     max_turns: 50
-    agent_type: gemini
-    model: gemini-3.1-pro-preview
+    agent_type: codex
+    model: gpt-5.5
+    requires_codex: true   # gemini quota exhausted; codex 0.135.0 verified working; requires_codex bypasses GEMINI_FORCE
     estimated_wall_time_min: 20
     track: evidence
     inference_substrate: verifier_ensemble_against_cached_candidates
     requires_gpu: false
     gated_on:
-      - upstream: exp3627-corrected-cross-domain-remeasurement-v3
+      - upstream: exp3642-corrected-cross-domain-remeasurement-v4
         artifact_field: at_least_one_nonmath_row_ran
         op: '=='
         value: true
-    deliverable: results/experiment_3628_additivity_second_pair_of_eyes_v3.json
+    deliverable: results/experiment_3643_additivity_second_pair_of_eyes_v4.json
     prompt: |
       CONTEXT: AUROC alone hides the product claim. The "second pair of eyes" value is that the verifier catches
-      errors a STRONG confidence baseline MISSES -- additive, not redundant. .329-.332 claimed this confirmed
-      from blocked/skipped rows. Re-derive it from the corrected, fairly-measured rows (exp3627).
-      EXISTING CODE TO READ FIRST: results/experiment_3627 (the corrected generalization table) via
+      errors a STRONG confidence baseline MISSES -- additive, not redundant. .329-.333 claimed this confirmed
+      from blocked/skipped/wiped rows. Re-derive it from the corrected, fairly-measured rows (exp3642).
+      EXISTING CODE TO READ FIRST: results/experiment_3642 (the corrected generalization table) via
       scripts/summarize_artifact.py.
-      PRECONDITIONS (step 0): exp3627 landed with at_least_one_nonmath_row_ran==true. If not ->
+      PRECONDITIONS (step 0): exp3642 landed with at_least_one_nonmath_row_ran==true. If not ->
       "complete: blocked_no_nonmath_row_ran". Degrade PER DOMAIN: compute the additive value for EACH non-math
       row that actually ran (code and/or facts); if only one ran, report that one and mark the other
       "not_measured" -- do NOT block the whole task on the missing row.
@@ -440,29 +502,30 @@ tasks:
       TERMINAL VERDICTS: "complete: ensemble_additive_to_confidence_second_pair_of_eyes_real_fusion_wins" /
       "complete: ensemble_redundant_with_confidence_no_additive_value_value_prop_weak" /
       "complete: blocked_no_nonmath_row_ran"
-      Run: cd {project_root} && python scripts/experiment_3628_additivity_second_pair_of_eyes_v3.py
+      Run: cd {project_root} && python scripts/experiment_3643_additivity_second_pair_of_eyes_v4.py
       Do NOT push. Do NOT modify scripts/research_conductor.py.
 
-  - id: exp3629-weaver-peer-comparison-correlation-matrix-v2
-    operator_override: "2026-05-31 outer-loop directive: NEW literature-grounded research direction (Weaver arXiv:2506.18203 peer positioning + the inter-verifier CORRELATION matrix Weaver assumes away) sanctioned by north-star sec-retirement (resume breadth toward NEW directions); the .332 exp3616 SKIPPED on the poison cascade and never ran -- forward work, not a scope-matched rerun."
-    milestone: "2026.06.333"
+  - id: exp3644-weaver-peer-comparison-correlation-matrix-v3
+    operator_override: "2026-05-31 outer-loop directive: NEW literature-grounded research direction (Weaver arXiv:2506.18203 peer positioning + the inter-verifier CORRELATION matrix Weaver assumes away) sanctioned by north-star sec-retirement (resume breadth toward NEW directions); the .333 exp3629 crashed on the gemini quota wipeout and never ran -- forward work, not a scope-matched rerun."
+    milestone: "2026.06.334"
     title: "Position Carnot vs the SOTA weak-verifier peer Weaver (arXiv:2506.18203) + measure the inter-verifier CORRELATION matrix Weaver assumes away"
     priority: high
     max_turns: 50
-    agent_type: gemini
-    model: gemini-3.1-pro-preview
+    agent_type: codex
+    model: gpt-5.5
+    requires_codex: true   # gemini quota exhausted crashed the .333 version (exp3629); codex 0.135.0 verified working; requires_codex bypasses GEMINI_FORCE
     estimated_wall_time_min: 22
     track: evidence
     inference_substrate: verifier_ensemble_against_cached_candidates
     requires_gpu: false
-    deliverable: results/experiment_3629_weaver_peer_comparison_v2.json
+    deliverable: results/experiment_3644_weaver_peer_comparison_v3.json
     prompt: |
       CONTEXT: Weaver (arXiv:2506.18203) is Carnot's closest peer -- a weighted weak-verifier ensemble (weighted
       beats unweighted by up to 11.2 pts; +8.5% over single best; 87.7% avg beating o3-mini). It has TWO
       documented gaps Carnot can claim as differentiation: (a) NO correlation validation -- Weaver ASSUMES
       conditional independence of verifiers given the label and never measures the inter-verifier correlation
       matrix; (b) NO online weighting (fixed weights fit once). This task measures (a) on Carnot's ensemble and
-      reproduces a Weaver-style weighting baseline for apples-to-apples positioning. ((b) is exp3632.)
+      reproduces a Weaver-style weighting baseline for apples-to-apples positioning. ((b) is exp3647.)
       EXISTING CODE TO READ FIRST: results/experiment_2837_fover_memory_leakage_v3.json (the FoVer corpus + the
       4 scoring verifiers) and the verifier inventory under python/carnot/verify/ via
       scripts/summarize_artifact.py; any existing ensemble-weighting code in python/carnot/verify/ or
@@ -506,28 +569,30 @@ tasks:
       TERMINAL VERDICTS: "complete: weaver_compared_correlation_matters_carnot_differentiates_on_correlation_awareness" /
       "complete: weaver_compared_verifiers_near_independent_correlation_awareness_marginal" /
       "complete: blocked_fover_corpus_or_verifiers_unavailable"
-      Run: cd {project_root} && python scripts/experiment_3629_weaver_peer_comparison_v2.py
+      Run: cd {project_root} && python scripts/experiment_3644_weaver_peer_comparison_v3.py
       Do NOT push. Do NOT modify scripts/research_conductor.py.
 
-  - id: exp3630-headroom-corpus-hybrid-verifier-vs-sc-v2
-    operator_override: "2026-05-31 outer-loop directive: NEW research direction (build a corpus where oracle > self-consistency and measure the verifier-vs-SC margin + the hybrid detector, arXiv:2510.14913) sanctioned by north-star sec-retirement (find where SC is NOT near-optimal); the .332 exp3617 SKIPPED on the poison cascade -- forward work, not a scope-matched rerun."
-    milestone: "2026.06.333"
+  - id: exp3645-headroom-corpus-hybrid-verifier-vs-sc-v3
+    operator_override: "2026-05-31 outer-loop directive: NEW research direction (build a corpus where oracle > self-consistency and measure the verifier-vs-SC margin + the hybrid detector, arXiv:2510.14913) sanctioned by north-star sec-retirement (find where SC is NOT near-optimal); the .333 exp3630 crashed on the gemini quota wipeout -- forward work, not a scope-matched rerun. Complements P0.1's no-headroom null; does NOT re-test Route-1/2."
+    milestone: "2026.06.334"
     title: "Where does a verifier beat self-consistency? Build a corpus where oracle > SC (real headroom) and measure verifier-vs-SC + the hybrid detector under a compute budget (arXiv:2510.14913)"
     priority: high
     max_turns: 50
-    agent_type: gemini
-    model: gemini-3.1-pro-preview
+    agent_type: codex
+    model: gpt-5.5
+    requires_codex: true   # gemini quota exhausted crashed the .333 version (exp3630); codex 0.135.0 verified working; requires_codex bypasses GEMINI_FORCE
     estimated_wall_time_min: 22
     track: evidence
     inference_substrate: verifier_ensemble_against_cached_candidates
     requires_gpu: false
-    deliverable: results/experiment_3630_headroom_hybrid_verifier_vs_sc_v2.json
+    deliverable: results/experiment_3645_headroom_hybrid_verifier_vs_sc_v3.json
     prompt: |
       CONTEXT: P0.1 is honest-negative because self-consistency (SC) is near-optimal on the corpora tested,
       leaving a verifier no headroom (FALSE_NEGATIVE_RISK: oracle ~ SC). arXiv:2510.14913 shows the productive
       framing is corpora where oracle > SC, and that a HYBRID (verification + SC) is best under a compute budget.
       This task builds the positive control P0.1 lacked and measures where the verifier genuinely helps. This is
-      NOT a re-test of energy-vs-AR -- it is the complementary "find the headroom" study.
+      NOT a re-test of energy-vs-AR (P0.1 stays honest-negative) -- it is the complementary "find the headroom"
+      study.
       EXISTING CODE TO READ FIRST: results/experiment_3507 (the P0.1 honest-negative where oracle==SC==0.653) +
       any best-of-N / SC scaffolding under scripts/ or python/carnot/ via scripts/summarize_artifact.py;
       results/experiment_2837 (the FoVer corpus where the verifier DOES have signal).
@@ -574,22 +639,23 @@ tasks:
       "complete: verifier_does_not_beat_sc_even_with_headroom_selection_value_weak" /
       "complete: no_headroom_corpus_found_verifier_study_uninformative" /
       "complete: blocked_no_multicandidate_corpus"
-      Run: cd {project_root} && python scripts/experiment_3630_headroom_hybrid_verifier_vs_sc_v2.py
+      Run: cd {project_root} && python scripts/experiment_3645_headroom_hybrid_verifier_vs_sc_v3.py
       Do NOT push. Do NOT modify scripts/research_conductor.py.
 
-  - id: exp3631-trained-ebm-judge-ood-counterpoint
-    operator_override: "2026-05-31 outer-loop directive: NEW research direction (the trained EBM CoT-rerank judge of arXiv:2505.14999, which CLAIMS the OOD generalization Carnot's FIXED ensemble lacks) sanctioned by north-star sec-retirement; this directly probes WHETHER a trained judge is the fix for 'math-only' -- forward work, no prior Carnot task ran this scope."
-    milestone: "2026.06.333"
+  - id: exp3646-trained-ebm-judge-ood-counterpoint-v2
+    operator_override: "2026-05-31 outer-loop directive: NEW research direction (the trained EBM CoT-rerank judge of arXiv:2505.14999, which CLAIMS the OOD generalization Carnot's FIXED ensemble lacks) sanctioned by north-star sec-retirement; this directly probes WHETHER a trained judge is the fix for 'math-only' -- forward work; the .333 exp3631 crashed on the gemini quota wipeout and never ran."
+    milestone: "2026.06.334"
     title: "Trained-EBM-judge OOD counterpoint (arXiv:2505.14999) — does a small judge TRAINED on reasoning-validity transfer cross-domain where Carnot's FIXED constraint ensemble does not? (it may name the fix for 'math-only')"
     priority: high
-    max_turns: 60
-    agent_type: claude
-    requires_claude: true   # open-ended judgment: design + train a small ranking judge + compare cross-domain transfer against the fixed ensemble; multi-file + ambiguous experimental framing, not a mechanical gate
-    estimated_wall_time_min: 26
+    max_turns: 70
+    agent_type: codex
+    model: gpt-5.5
+    requires_codex: true   # gemini quota exhausted crashed the .333 version (exp3631); reasoning-heavy train+eval; codex 0.135.0 verified working; requires_codex bypasses GEMINI_FORCE
+    estimated_wall_time_min: 28
     track: research
     inference_substrate: verifier_ensemble_against_cached_candidates
     requires_gpu: true
-    deliverable: results/experiment_3631_trained_ebm_judge_ood_counterpoint.json
+    deliverable: results/experiment_3646_trained_ebm_judge_ood_counterpoint_v2.json
     prompt: |
       CONTEXT: arXiv:2505.14999 ("Learning to Rank Chain-of-Thought: Using a Small Model") reports an EBM-based
       CoT-rerank judge that beats majority voting and Outcome Reward Models AND GENERALIZES to OOD problems and
@@ -599,12 +665,12 @@ tasks:
       verification a TRAINED energy judge rather than (or alongside) the fixed verifier ensemble? This task runs
       the small-scale prototype + adversarial check (Phase Prototype + Validation Discipline).
       EXISTING CODE TO READ FIRST: results/experiment_2837 (the frozen FoVer math corpus + labels) and
-      results/experiment_3626 (the labeled code corpus, if it landed) via scripts/summarize_artifact.py; any
+      results/experiment_3641 (the labeled code corpus, if it landed) via scripts/summarize_artifact.py; any
       existing EORM / ranking-judge code under python/carnot/ (the project trained an EORM previously -- Exp 443
       era); research-references.md "Learning to Rank Chain-of-Thought (arXiv:2505.14999)" entry.
       PRECONDITIONS (step 0):
-        a. A labeled in-domain training corpus (FoVer math) AND >=1 OOD eval corpus (code from exp3626, or facts
-           from exp3625) loadable. If only math is available -> train on math, report
+        a. A labeled in-domain training corpus (FoVer math) AND >=1 OOD eval corpus (code from exp3641, or facts
+           from exp3640) loadable. If only math is available -> train on math, report
            "complete: blocked_no_ood_eval_corpus" honestly (do NOT fabricate an OOD number).
         b. A small trainable model substrate (a tiny ranking head / small EBM / a SOTA-GGUF embedding via
            cached_sota_pair) available. If none -> "complete: blocked_no_trainable_substrate".
@@ -616,7 +682,7 @@ tasks:
         3. ADVERSARIAL CHECK (mandatory): could the judge be learning a degenerate length/format prior rather
            than reasoning-validity? Add a shuffled-label control and a confidence-only baseline; the trained
            judge must beat both on OOD to claim transfer.
-        4. Compare: does the TRAINED judge transfer OOD better than Carnot's FIXED ensemble did (the .329-.332
+        4. Compare: does the TRAINED judge transfer OOD better than Carnot's FIXED ensemble did (the .329-.333
            math-only result)? Report the cross-domain delta of trained-judge vs fixed-ensemble.
       ANTI-POISON TEST DISCIPLINE (MANDATORY): any pytest you ship MUST parametrize over the script's honest
       verdicts (transfers / does-not-transfer / blocked) for synthetic fixtures; NEVER hard-assert one success
@@ -636,7 +702,7 @@ tasks:
         shuffled_label_control_auroc:
           principle: "Adversarial control: a near-0.5 here confirms the judge is not learning a degenerate prior."
         trained_judge_vs_fixed_ensemble_ood_delta:
-          principle: "Does TRAINING the judge buy the OOD transfer the fixed ensemble (.329-.332) lacked -- the foundation-model-path signal."
+          principle: "Does TRAINING the judge buy the OOD transfer the fixed ensemble (.329-.333) lacked -- the foundation-model-path signal."
         trained_judge_transfers_ood:
           principle: "True iff the trained judge beats both confidence-only and shuffled-control on OOD -- the falsifiable transfer claim."
         n_examples_per_domain:
@@ -653,32 +719,34 @@ tasks:
       TERMINAL VERDICTS: "complete: trained_ebm_judge_transfers_ood_fixed_ensemble_was_the_bottleneck" /
       "complete: trained_ebm_judge_also_math_only_transfer_not_a_training_artifact" /
       "complete: blocked_no_ood_eval_corpus" / "complete: blocked_no_trainable_substrate"
-      Run: cd {project_root} && python scripts/experiment_3631_trained_ebm_judge_ood_counterpoint.py
+      Run: cd {project_root} && python scripts/experiment_3646_trained_ebm_judge_ood_counterpoint_v2.py
       Do NOT push. Do NOT modify scripts/research_conductor.py.
 
-  - id: exp3632-fr11-continuous-self-learning-v8-online-correlation-aware
-    operator_override: "2026-05-29 operator directive (standing): mandatory continuous-self-learning continuation (FR-11 vN+1) with a STATED forward difference (online CORRELATION-AWARE verifier weighting — down-weight redundant verifiers using the exp3629 matrix, not just noisy ones — closing Weaver's no-online-adaptation gap, with a conservative-default/uncertainty rule that prevents collapse) — false-positive scope-match vs prior fr11 exps; the .332 exp3618 SKIPPED on the poison cascade and never ran."
-    milestone: "2026.06.333"
+  - id: exp3647-fr11-continuous-self-learning-v8-online-correlation-aware
+    operator_override: "2026-05-29 operator directive (standing): mandatory continuous-self-learning continuation (FR-11 vN+1) with a STATED forward difference (online CORRELATION-AWARE verifier weighting — down-weight redundant verifiers using the exp3644 matrix, not just noisy ones — closing Weaver's no-online-adaptation gap, with a conservative-default/uncertainty rule that prevents collapse) — false-positive scope-match vs prior fr11 exps; the .333 exp3632 crashed on the gemini quota wipeout and never ran."
+    milestone: "2026.06.334"
     title: "FR-11 continuous self-learning v8 — online CORRELATION-AWARE verifier weighting without collapse (closes Weaver's no-online-adaptation gap)"
     priority: medium
     max_turns: 50
-    agent_type: gemini
-    model: gemini-3.1-pro-preview
+    agent_type: codex
+    model: gpt-5.5
+    requires_codex: true   # gemini quota exhausted crashed the .333 version (exp3632); codex 0.135.0 verified working; requires_codex bypasses GEMINI_FORCE
     estimated_wall_time_min: 18
     track: self-learning
     inference_substrate: verifier_ensemble_against_cached_candidates
     requires_gpu: false
-    deliverable: results/experiment_3632_fr11_continuous_self_learning_v8.json
+    deliverable: results/experiment_3647_fr11_continuous_self_learning_v8.json
     prompt: |
       CONTEXT: every milestone includes one continuous-self-learning experiment. Forward difference from the
-      prior FR-11 deploy (exp3604): instead of only down-weighting NOISY verifiers, update weights ONLINE to
-      down-weight REDUNDANT verifiers (high conditional correlation given the label -- the matrix exp3629
+      prior FR-11 deploy (exp3604, v6): instead of only down-weighting NOISY verifiers, update weights ONLINE to
+      down-weight REDUNDANT verifiers (high conditional correlation given the label -- the matrix exp3644
       measures), under a conservative-default / uncertainty-gated rule that provably prevents collapse. This
       closes Weaver's no-online-adaptation gap. Keep pass_rate vs true_accuracy element-wise distinct (de-flag
       tautology).
-      EXISTING CODE TO READ FIRST: results/experiment_3604 (the prior FR-11 deploy) + results/experiment_3629
-      (the correlation matrix, if landed) via scripts/summarize_artifact.py; the FR-11 module + cached traces.
-      PRECONDITIONS (step 0): FR-11 module + cached traces present; if exp3629's correlation matrix landed, use
+      EXISTING CODE TO READ FIRST: results/experiment_3604_fr11_continuous_self_learning_v6 (the prior FR-11
+      deploy) + results/experiment_3644 (the correlation matrix, if landed) via scripts/summarize_artifact.py;
+      the FR-11 module + cached traces.
+      PRECONDITIONS (step 0): FR-11 module + cached traces present; if exp3644's correlation matrix landed, use
       it to seed the redundancy penalty, else compute correlation inline. If neither FR-11 module nor traces
       present -> "complete: blocked_fr11_module_or_traces_unavailable".
       CONCRETE STEPS:
@@ -718,32 +786,34 @@ tasks:
       TERMINAL VERDICTS: "complete: fr11_v8_online_correlation_aware_weighting_holds_no_collapse_quality_maintained" /
       "complete: fr11_v8_correlation_penalty_no_auroc_gain_noise_only_weighting_sufficient" /
       "complete: blocked_fr11_module_or_traces_unavailable"
-      Run: cd {project_root} && python scripts/experiment_3632_fr11_continuous_self_learning_v8.py
+      Run: cd {project_root} && python scripts/experiment_3647_fr11_continuous_self_learning_v8.py
       Do NOT push. Do NOT modify scripts/research_conductor.py.
 
-  - id: exp3633-kv260-continuity-v20
+  - id: exp3648-kv260-continuity-v21
     operator_override: "2026-05-29 operator directive (standing): active hardware-continuity task (KV260) per Hardware-Task Continuity Discipline — false-positive scope-match vs prior kv260 exps; required forward work until terminal."
-    milestone: "2026.06.333"
-    title: "KV260 SSH-reachability continuity (UNREACHABLE in .331 AND .332 — re-check + record honest state, flag 3-milestone outage as operator-action)"
+    milestone: "2026.06.334"
+    title: "KV260 SSH-reachability continuity (UNREACHABLE in .331/.332/.333 — re-check + record honest state, flag 4-milestone outage as operator-action)"
     priority: medium
     max_turns: 30
-    agent_type: gemini
-    model: gemini-3.1-pro-preview
+    agent_type: codex
+    model: gpt-5.5
+    requires_codex: true   # gemini quota exhausted; codex 0.135.0 verified working; requires_codex bypasses GEMINI_FORCE
     estimated_wall_time_min: 10
     track: hardware
     inference_substrate: hardware_smoke
     requires_gpu: false
-    deliverable: results/experiment_3633_kv260_continuity_v20.json
+    deliverable: results/experiment_3648_kv260_continuity_v21.json
     prompt: |
       CONTEXT: Hardware-Task Continuity requires one KV260 task per milestone. The board was SSH-UNREACHABLE in
-      .331 AND .332. KV260 lives on SSH; use ONLY SSH reachability as the precondition (host SD-card device
-      checks are PERMANENTLY retired per the KV260 SSH-Not-SD-Card Discipline). Record the honest state.
+      .331, .332, AND .333 (the .333 check itself crashed on the gemini wipeout so the state is stale). KV260
+      lives on SSH; use ONLY SSH reachability as the precondition (host SD-card device checks are PERMANENTLY
+      retired per the KV260 SSH-Not-SD-Card Discipline). Record the honest state.
       PRECONDITIONS (step 0): `ssh -o ConnectTimeout=5 -o BatchMode=yes kria 'true'` (kria = kv260.local). Exit
       0 -> proceed; non-zero -> "complete: blocked_kv260_ssh_unreachable". Use SSH reachability only. NEVER use
       a host SD-card device-node check as a KV260 precondition (permanently retired).
       CONCRETE STEPS: if reachable, `ssh kria 'xmutil listapps'` + record overlay/continuity state (distinct
       field names, deflagged). If still unreachable, record blocked honestly and note it has now been
-      unreachable for 3 consecutive milestones -- surface as an operator-action item.
+      unreachable for 4 consecutive milestones -- surface as an operator-action item.
       REQUIRED ARTIFACT FIELDS (principle: documents WHY; store the VALUE):
         honest_verdict:
           principle: "Terminal prefix for reconciler classification."
@@ -755,7 +825,7 @@ tasks:
         kv260_overlay_loaded:
           principle: "Continuity state if reachable."
         consecutive_unreachable_milestones:
-          principle: "Tracks the .331->.332->.333 unreachable streak so a persistent outage surfaces as an operator-action item."
+          principle: "Tracks the .331->.332->.333->.334 unreachable streak so a persistent outage surfaces as an operator-action item."
         random_seed:
           principle: "Determinism precondition."
         reproducibility_checksum:
@@ -763,22 +833,23 @@ tasks:
         duration_s:
           principle: "Plausibility floor."
       TERMINAL VERDICTS: "complete: kv260_continuity_confirmed_reachable" / "complete: blocked_kv260_ssh_unreachable"
-      Run: cd {project_root} && python scripts/experiment_3633_kv260_continuity_v20.py
+      Run: cd {project_root} && python scripts/experiment_3648_kv260_continuity_v21.py
       Do NOT push. Do NOT modify scripts/research_conductor.py.
 
-  - id: exp3634-polarfire-continuity-v20
+  - id: exp3649-polarfire-continuity-v21
     operator_override: "2026-05-29 operator directive (standing): active hardware-continuity task (PolarFire) per Hardware-Task Continuity Discipline — false-positive scope-match vs prior polarfire exps."
-    milestone: "2026.06.333"
+    milestone: "2026.06.334"
     title: "PolarFire opportunistic reachability + continuity audit (per Hardware-Task Continuity)"
     priority: medium
     max_turns: 30
-    agent_type: gemini
-    model: gemini-3.1-pro-preview
+    agent_type: codex
+    model: gpt-5.5
+    requires_codex: true   # gemini quota exhausted; codex 0.135.0 verified working; requires_codex bypasses GEMINI_FORCE
     estimated_wall_time_min: 10
     track: hardware
     inference_substrate: hardware_smoke
     requires_gpu: false
-    deliverable: results/experiment_3634_polarfire_continuity_v20.json
+    deliverable: results/experiment_3649_polarfire_continuity_v21.json
     prompt: |
       CONTEXT: Hardware-Task Continuity requires one PolarFire task per milestone (reachable in .331).
       PRECONDITIONS (step 0): `ssh -o ConnectTimeout=5 polarfire 'true'`. Exit 0 -> proceed; non-zero ->
@@ -800,22 +871,23 @@ tasks:
         duration_s:
           principle: "Plausibility floor."
       TERMINAL VERDICTS: "complete: polarfire_continuity_confirmed_reachable" / "complete: blocked_polarfire_ssh_timeout"
-      Run: cd {project_root} && python scripts/experiment_3634_polarfire_continuity_v20.py
+      Run: cd {project_root} && python scripts/experiment_3649_polarfire_continuity_v21.py
       Do NOT push. Do NOT modify scripts/research_conductor.py.
 
-  - id: exp3635-gatemate-continuity-audit-v20
+  - id: exp3650-gatemate-continuity-audit-v21
     operator_override: "2026-05-29 operator directive (standing): active hardware-continuity task (GateMate) per Hardware-Task Continuity Discipline — documentation/audit-only because openFPGALoader was not found in .331/.332 (known issue); false-positive scope-match vs prior gatemate exps."
-    milestone: "2026.06.333"
+    milestone: "2026.06.334"
     title: "GateMate continuity audit (documentation-only — openFPGALoader missing in .331/.332, per known-issues)"
     priority: low
     max_turns: 25
-    agent_type: gemini
-    model: gemini-3.1-pro-preview
+    agent_type: codex
+    model: gpt-5.5
+    requires_codex: true   # gemini quota exhausted; codex 0.135.0 verified working; requires_codex bypasses GEMINI_FORCE
     estimated_wall_time_min: 8
     track: hardware
     inference_substrate: hardware_smoke
     requires_gpu: false
-    deliverable: results/experiment_3635_gatemate_continuity_audit_v20.json
+    deliverable: results/experiment_3650_gatemate_continuity_audit_v21.json
     prompt: |
       CONTEXT: GateMate visibility each milestone, but openFPGALoader was not found on PATH and the flash/smoke
       host-IO script hangs (known-issues). Documentation / reachability audit only -- do NOT run the hanging
@@ -842,107 +914,43 @@ tasks:
         duration_s:
           principle: "Plausibility floor."
       TERMINAL VERDICT: "complete: gatemate_continuity_audit_recorded_openfpgaloader_state_flash_smoke_host_io_hang_known_blocker"
-      Run: cd {project_root} && python scripts/experiment_3635_gatemate_continuity_audit_v20.py
+      Run: cd {project_root} && python scripts/experiment_3650_gatemate_continuity_audit_v21.py
       Do NOT push. Do NOT modify scripts/research_conductor.py.
 
-  - id: exp3636-cross-domain-synthesis-v5
-    operator_override: "2026-05-29 operator directive (standing): routine per-milestone synthesis aggregating THIS milestone's fresh fairly-measured cross-domain results — false-positive scope-match vs prior synthesis tasks; reads new upstream artifacts, not a re-run."
-    milestone: "2026.06.333"
-    title: "Cross-domain generalization SYNTHESIS v5 — CORRECT the .329-.332 record (the null was asserted from BLOCKED/SKIPPED rows 4x); state the scope now that facts + code rows ACTUALLY RAN"
-    priority: high
-    max_turns: 40
-    agent_type: gemini
-    model: gemini-3.1-pro-preview
-    estimated_wall_time_min: 14
-    track: publication
-    inference_substrate: aggregation_from_upstream_artifacts
-    requires_gpu: false
-    deliverable: results/experiment_3636_cross_domain_synthesis_v5.json
-    prompt: |
-      CONTEXT: synthesize the GENUINELY-FAIR cross-domain result into a defensible, honestly-scoped claim, and
-      EXPLICITLY CORRECT the .329-.332 record (whose "math-only" verdict was asserted from BLOCKED/SKIPPED
-      non-math rows 4 times -- a FALSE_NEGATIVE_RISK violation, not a measurement).
-      PRECONDITIONS (step 0): read exp3625 (corpus validated), exp3626 (code corpus + transfer), exp3627
-      (corrected re-measurement), exp3628 (additivity), exp3629 (Weaver + correlation), exp3630 (headroom +
-      hybrid), exp3631 (trained-judge OOD) via scripts/summarize_artifact.py -- verdict + flagged_adversarial
-      (stamped vs LIVE) + FALSE_NEGATIVE_RISK/IMPLAUSIBLE_PERFECT/TAUTOLOGY. EXCLUDE any flagged_adversarial
-      artifact from the headline (fabrication gate). Treat any AUROC=1.0 factual number as a leak unless exp3627
-      proved grounding_leak_free==true. If exp3628 was gate-blocked (no non-math row ran), record its outputs as
-      the string "not_measured" -- NEVER read a missing value as None and synthesize around it (the .331
-      mis-synthesis pattern).
-      CONCRETE STEPS:
-        1. Build the corrected generalization table: FoVer math (0.9131, frozen, G2-reproduced) | code
-           (corrected, with the math->code transfer context from exp3626) | facts (real grounding verifier,
-           leak-free, from exp3627), each with AUROC vs confidence + the additive second-pair-of-eyes lift.
-        2. State the honest verdict: value generalizes broadly / code-only / facts-only / math-only-EARNED.
-           CRITICALLY note whether the .329 "math-only" is now an ARTIFACT (verifiers fire on a fair test) or
-           CONFIRMED (still inert against a VALID positive control where rows RAN). Record the Weaver-positioning
-           (correlation-awareness), the headroom (verifier-beats-SC), and the trained-judge-OOD findings -- and
-           whether a TRAINED judge is the candidate fix for math-only.
-        3. Write paper_safe_claims / paper_forbidden_claims (Paper-v6 Narrowing Discipline): a domain-bound
-           ensemble is a SCOPED claim, NOT a foundation-model claim; never overclaim generalization; never cite a
-           leaking 1.0. cited_upstream_artifacts with sha256.
-      REQUIRED ARTIFACT FIELDS (principle: documents WHY; store the VALUE):
-        honest_verdict:
-          principle: "Terminal prefix for reconciler classification."
-        inference_substrate: "aggregation_from_upstream_artifacts (principle: reads upstream artifacts; no live inference)."
-        corrected_generalization_table:
-          principle: "domain -> auroc+delta+lift -- the milestone's central evidence, now measured fairly and leak-free."
-        v329_332_record_corrected_to:
-          principle: "Explicitly states that .329-.332's 'math-only' was asserted from BLOCKED/SKIPPED rows, and what the fairly-measured scope actually is -- the editorial correction."
-        v329_null_was:
-          principle: "'artifact' (verifiers fire on a fair test) or 'confirmed' (still inert against a VALID positive control) -- the explicit resolution."
-        verifier_value_generalizes:
-          principle: "broad / code_only / facts_only / math_only_earned -- the scoped claim."
-        weaver_differentiation:
-          principle: "Whether correlation-awareness differentiates Carnot from Weaver (exp3629)."
-        verifier_beats_sc_headroom:
-          principle: "Whether the verifier beats SC on headroom-bearing corpora (exp3630) -- complements the P0.1 null."
-        trained_judge_is_candidate_fix:
-          principle: "Whether a trained judge (exp3631) transferred OOD where the fixed ensemble did not -- the Phase-3 foundation-model-path signal."
-        paper_safe_claims:
-          principle: "Narrowing-clean claims the corrected evidence supports."
-        paper_forbidden_claims:
-          principle: "Overclaims to avoid -- a domain-bound ensemble is not a foundation-model claim; never cite a leaking 1.0."
-        cited_upstream_artifacts:
-          principle: "sha256-pinned provenance so the synthesis numbers trace to real measurements (G4)."
-        random_seed:
-          principle: "Determinism precondition."
-        reproducibility_checksum:
-          principle: "Drift detection."
-        duration_s:
-          principle: "Plausibility floor."
-      TERMINAL VERDICT: "complete: cross_domain_synthesis_v5_value_generalizes_<scope>_329_null_was_<artifact_or_confirmed>_v329_332_record_corrected_paper_scoped"
-      Run: cd {project_root} && python scripts/experiment_3636_cross_domain_synthesis_v5.py
-      Do NOT push. Do NOT modify scripts/research_conductor.py.
-
-  - id: exp3637-capstone-and-g-gate-v333
+  - id: exp3651-capstone-and-g-gate-v334
     operator_override: "2026-05-29 operator directive (standing): routine per-milestone capstone + G1-G4 gate-status synthesis — false-positive scope-match vs prior capstone-v* / g-gate-synthesis tasks."
-    milestone: "2026.06.333"
-    title: "Capstone v333 + G1-G4 gate synthesis — was '.329 math-only' an artifact or EARNED once the facts + code rows ACTUALLY RAN against a valid positive control? (paper_ready must stay true)"
+    milestone: "2026.06.334"
+    title: "Capstone v334 + G1-G4 gate synthesis — was '.329 math-only' an artifact or EARNED once the facts + code rows ACTUALLY RAN against a valid positive control? (paper_ready must stay true)"
     priority: high
     max_turns: 40
-    agent_type: gemini
-    model: gemini-3.1-pro-preview
+    agent_type: codex
+    model: gpt-5.5
+    requires_codex: true   # gemini quota exhausted; codex 0.135.0 verified working; requires_codex bypasses GEMINI_FORCE
     estimated_wall_time_min: 14
     track: ops
     inference_substrate: aggregation_from_upstream_artifacts
     requires_gpu: false
-    deliverable: results/experiment_3637_capstone_and_g_gate_v333.json
+    deliverable: results/experiment_3651_capstone_and_g_gate_v334.json
     prompt: |
-      CONTEXT: capstone the FINALLY-FINISHED de-contamination milestone + re-check the publication gate.
-      Headline: .329/.330/.331/.332 each asserted "math-only" from BLOCKED/SKIPPED non-math rows. .333 built the
-      facts corpus v3 (real evidence, bare fields), made the code verifiers FIRE, and RAN the centerpiece
-      cross-domain re-measurement with a VALID positive control + the literature math->code transfer control +
-      the trained-judge OOD counterpoint. Report whether verifier value generalizes once the test is genuinely
-      fair, and confirm G1-G4 / paper_ready did not regress.
+      CONTEXT: capstone the FINALLY-EXECUTED de-contamination milestone + re-check the publication gate. This
+      task ALSO performs the cross-domain SYNTHESIS: it builds the corrected generalization table and EXPLICITLY
+      CORRECTS the .329-.333 record (whose "math-only" verdict was asserted from BLOCKED/SKIPPED/WIPED non-math
+      rows 5 times -- a FALSE_NEGATIVE_RISK violation, not a measurement; .333 produced ZERO artifacts).
+      Headline: .329/.330/.331/.332 each asserted "math-only" from BLOCKED/SKIPPED non-math rows, and .333
+      produced ZERO artifacts (gemini quota wipeout). .334 routed to codex, built the facts corpus v3 (real
+      evidence, bare fields), made the code verifiers FIRE, and RAN the centerpiece cross-domain re-measurement
+      with a VALID positive control + the literature math->code transfer control + the trained-judge OOD
+      counterpoint. Report whether verifier value generalizes once the test is genuinely fair, and confirm
+      G1-G4 / paper_ready did not regress.
       CONCRETE STEPS: run `python scripts/publication_gate.py --json` (expect G1-G4 all pass, paper_ready true);
-      aggregate exp3626/3627/3628/3629/3630/3631/3636 via scripts/summarize_artifact.py. Report honestly: did
+      aggregate exp3640/3641/3642/3643/3644/3645/3646 via scripts/summarize_artifact.py. Build the corrected
+      generalization table (math 0.9131 frozen | code w/ transfer context | facts leak-free grounding) and state
+      v329_333_record_corrected_to. Report honestly: did
       facts/code generalize once verifiers actually fired against a valid positive control? was the .329 null an
       artifact or EARNED? the additive second-pair-of-eyes value; the Weaver correlation differentiation; the
       verifier-beats-SC-on-headroom finding; whether a TRAINED judge is the candidate fix for math-only; the
       scoped paper claim. EXCLUDE flagged_adversarial artifacts (fabrication gate); treat any AUROC=1.0 as a leak
-      unless exp3627 proved grounding_leak_free==true. If exp3628 was gate-blocked, record second_pair_of_eyes_
+      unless exp3642 proved grounding_leak_free==true. If exp3643 was gate-blocked, record second_pair_of_eyes_
       real as the string "not_measured" -- NEVER read it as None and synthesize around a missing value. Record
       P0.1 as honest-negative (do NOT re-assert a positive). paper_v6_safe_claims / forbidden_claims per
       Paper-v6 Narrowing (no overclaim; domain-bound is a scoped claim; do not regress paper_ready).
@@ -950,10 +958,14 @@ tasks:
         honest_verdict:
           principle: "Terminal prefix for reconciler classification."
         inference_substrate: "aggregation_from_upstream_artifacts (principle: reads the gate script + artifacts; no live inference)."
+        corrected_generalization_table:
+          principle: "domain -> auroc+delta+lift -- the milestone's central evidence, now measured fairly and leak-free (the synthesis duty folded into the capstone)."
+        v329_333_record_corrected_to:
+          principle: "Explicitly states that .329-.333's 'math-only' was asserted from BLOCKED/SKIPPED/WIPED rows, and what the fairly-measured scope actually is -- the editorial correction."
         v329_null_was_artifact_or_confirmed:
           principle: "The milestone's central scientific result -- was 'math-only' a contamination artifact or an earned limitation, now measured fairly with a VALID positive control."
         facts_code_rows_actually_ran:
-          principle: "Confirms the non-math rows RAN (not blocked/skipped) -- the operational success criterion that .329-.332 all missed."
+          principle: "Confirms the non-math rows RAN (not blocked/skipped/wiped) -- the operational success criterion that .329-.333 all missed."
         grounding_leak_free:
           principle: "Records that the facts row's grounding verifier was leak-free (no AUROC=1.0) so no fabricated factual claim reaches the paper."
         code_generalizes:
@@ -963,11 +975,11 @@ tasks:
         second_pair_of_eyes_real:
           principle: "The honest additive-value claim vs a strong confidence baseline."
         weaver_differentiation:
-          principle: "Correlation-awareness differentiation vs the SOTA peer (exp3629)."
+          principle: "Correlation-awareness differentiation vs the SOTA peer (exp3644)."
         verifier_beats_sc_headroom:
-          principle: "Where the verifier beats SC (exp3630) -- complements the P0.1 null."
+          principle: "Where the verifier beats SC (exp3645) -- complements the P0.1 null."
         trained_judge_is_candidate_fix:
-          principle: "Whether a trained judge (exp3631) is the candidate fix for math-only -- the Phase-3 path signal."
+          principle: "Whether a trained judge (exp3646) is the candidate fix for math-only -- the Phase-3 path signal."
         verifier_value_scope:
           principle: "broad / code_only / facts_only / math_only_earned -- the scoped product claim."
         g1:
@@ -996,6 +1008,6 @@ tasks:
           principle: "Drift detection."
         duration_s:
           principle: "Plausibility floor."
-      TERMINAL VERDICT: "complete: capstone_v333_329_null_was_<artifact_or_confirmed>_verifier_value_<scope>_facts_code_rows_ran_paper_ready_true"
-      Run: cd {project_root} && python scripts/experiment_3637_capstone_and_g_gate_v333.py
+      TERMINAL VERDICT: "complete: capstone_v334_329_null_was_<artifact_or_confirmed>_verifier_value_<scope>_facts_code_rows_ran_paper_ready_true"
+      Run: cd {project_root} && python scripts/experiment_3651_capstone_and_g_gate_v334.py
       Do NOT push. Do NOT modify scripts/research_conductor.py.

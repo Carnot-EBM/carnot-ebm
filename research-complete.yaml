@@ -34375,3 +34375,81 @@ milestones:
       \ ACTUALLY RAN against a valid positive control? (paper_ready must stay true)"
     deliverable: results/experiment_3623_capstone_and_g_gate_v332.json
     result: OK (conductor)
+- id: 2026.06.333
+  title: "Finish the cross-domain de-contamination for the 5th and FINAL time \u2014 the .332 poison test is quarantined,\
+    \ so RUN the facts (real evidence corpus) + code (firing verifiers) rows against a VALID positive control; then NEW breadth:\
+    \ Weaver correlation matrix, verifier-beats-SC headroom, and the trained-EBM-judge OOD counterpoint that may name the\
+    \ fix for 'math-only'."
+  doc: openspec/change-proposals/research-roadmap-vNEXT.md
+  completed: '2026-06-01'
+  finding: See conductor log for per-experiment results.
+  tasks:
+  - id: exp3624-archive-v332-activate-v333
+    title: 'Archive milestone .332 honestly (record the POISON-TEST cascade: exp3613-3623 SKIPPED, facts/code rows NOT measured,
+      question STILL open; poison quarantined) and activate .333'
+    deliverable: results/experiment_3624_archive_v332_activate_v333.json
+    result: OK (conductor)
+  - id: exp3625-build-factual-corpus-v3-real-evidence-dataset
+    title: "Build factual corpus v3 from a REAL evidence-bearing labeled dataset (HaluEval QA knowledge / FELM / RAGTruth\
+      \ / Mu-SHROOM) \u2014 confidence AUROC in (0.5,0.95), held-out evidence independent of label, BARE gated fields"
+    deliverable: results/experiment_3625_build_factual_corpus_v3.json
+    result: OK (conductor)
+  - id: exp3626-code-corpus-verifiers-fire-math-to-code-transfer-v2
+    title: "Build the labeled CODE corpus from exp1999 + make the execution-applicable verifiers actually FIRE + math\u2192\
+      code PRM-transfer stress-test (arXiv:2506.00027 vs ThinkPRM arXiv:2504.16828)"
+    deliverable: results/experiment_3626_code_corpus_verifiers_fire_transfer_v2.json
+    result: OK (conductor)
+  - id: exp3627-corrected-cross-domain-remeasurement-v3
+    title: "CENTERPIECE: corrected cross-domain re-measurement \u2014 math (0.9131, frozen) | code (firing execution verifiers,\
+      \ exp3626) | facts (real leak-free NLI grounding verifier, validated corpus exp3625) vs strong confidence baseline,\
+      \ VALID positive control, graceful per-row degradation"
+    deliverable: results/experiment_3627_corrected_cross_domain_remeasurement_v3.json
+    result: OK (conductor)
+  - id: exp3628-additivity-second-pair-of-eyes-mcnemar-v3
+    title: "Additivity / 'second pair of eyes' \u2014 does ensemble-fused-with-confidence beat confidence alone? (conditional\
+      \ catch-rate + McNemar, on the fair re-measurement)"
+    deliverable: results/experiment_3628_additivity_second_pair_of_eyes_v3.json
+    result: OK (conductor)
+  - id: exp3629-weaver-peer-comparison-correlation-matrix-v2
+    title: Position Carnot vs the SOTA weak-verifier peer Weaver (arXiv:2506.18203) + measure the inter-verifier CORRELATION
+      matrix Weaver assumes away
+    deliverable: results/experiment_3629_weaver_peer_comparison_v2.json
+    result: OK (conductor)
+  - id: exp3630-headroom-corpus-hybrid-verifier-vs-sc-v2
+    title: Where does a verifier beat self-consistency? Build a corpus where oracle > SC (real headroom) and measure verifier-vs-SC
+      + the hybrid detector under a compute budget (arXiv:2510.14913)
+    deliverable: results/experiment_3630_headroom_hybrid_verifier_vs_sc_v2.json
+    result: OK (conductor)
+  - id: exp3631-trained-ebm-judge-ood-counterpoint
+    title: "Trained-EBM-judge OOD counterpoint (arXiv:2505.14999) \u2014 does a small judge TRAINED on reasoning-validity\
+      \ transfer cross-domain where Carnot's FIXED constraint ensemble does not? (it may name the fix for 'math-only')"
+    deliverable: results/experiment_3631_trained_ebm_judge_ood_counterpoint.json
+    result: OK (conductor)
+  - id: exp3632-fr11-continuous-self-learning-v8-online-correlation-aware
+    title: "FR-11 continuous self-learning v8 \u2014 online CORRELATION-AWARE verifier weighting without collapse (closes\
+      \ Weaver's no-online-adaptation gap)"
+    deliverable: results/experiment_3632_fr11_continuous_self_learning_v8.json
+    result: OK (conductor)
+  - id: exp3633-kv260-continuity-v20
+    title: "KV260 SSH-reachability continuity (UNREACHABLE in .331 AND .332 \u2014 re-check + record honest state, flag 3-milestone\
+      \ outage as operator-action)"
+    deliverable: results/experiment_3633_kv260_continuity_v20.json
+    result: OK (conductor)
+  - id: exp3634-polarfire-continuity-v20
+    title: PolarFire opportunistic reachability + continuity audit (per Hardware-Task Continuity)
+    deliverable: results/experiment_3634_polarfire_continuity_v20.json
+    result: OK (conductor)
+  - id: exp3635-gatemate-continuity-audit-v20
+    title: "GateMate continuity audit (documentation-only \u2014 openFPGALoader missing in .331/.332, per known-issues)"
+    deliverable: results/experiment_3635_gatemate_continuity_audit_v20.json
+    result: OK (conductor)
+  - id: exp3636-cross-domain-synthesis-v5
+    title: "Cross-domain generalization SYNTHESIS v5 \u2014 CORRECT the .329-.332 record (the null was asserted from BLOCKED/SKIPPED\
+      \ rows 4x); state the scope now that facts + code rows ACTUALLY RAN"
+    deliverable: results/experiment_3636_cross_domain_synthesis_v5.json
+    result: OK (conductor)
+  - id: exp3637-capstone-and-g-gate-v333
+    title: "Capstone v333 + G1-G4 gate synthesis \u2014 was '.329 math-only' an artifact or EARNED once the facts + code rows\
+      \ ACTUALLY RAN against a valid positive control? (paper_ready must stay true)"
+    deliverable: results/experiment_3637_capstone_and_g_gate_v333.json
+    result: OK (conductor)
