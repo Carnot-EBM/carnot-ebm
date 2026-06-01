@@ -9718,6 +9718,85 @@ single success verdict.
 |---|---|---|
 | REQ-VERIFY-3668 | Implemented (`python/carnot/verify/dependency_aware_weighting_heldout.py`, `scripts/experiment_3668_dependency_aware_weighting_heldout.py`) | Implemented (`tests/python/test_experiment_3668_dependency_aware_weighting_heldout.py`) |
 
+### REQ-VERIFY-3680: Dependency-Aware Dual-Condition Integrity G1 Rigor
+
+The repository shall provide an Exp 3680 workflow that measures the Exp 3667
+dependency-aware FoVer weighting under the same dual-condition protocol used by
+Exp 2837 and Exp 2850 before any dependency-aware number can be treated as a
+G1-rigor headline candidate. The workflow SHALL write
+`results/experiment_3680_dependency_aware_dual_condition_integrity.json`
+without invoking a live LLM, loading model weights, editing
+`scripts/research_conductor.py`, or replacing the frozen FoVer headline value
+`0.9131`.
+
+Before scoring, the workflow SHALL verify that the FoVer corpus has at least
+1000 labeled rows, the same four Exp 2837 scoring verifiers are loadable, the
+Exp 3667 dependency-aware implementation is importable, and the Exp 2850 G1
+source artifact is readable for protocol parity. If any precondition is
+unavailable, it SHALL write the terminal verdict
+`complete: blocked_fover_corpus_or_dependency_weighting_or_g1_source_unavailable`
+without inferred AUROC values.
+
+For runnable inputs, the workflow SHALL score the five Exp 2850 seeds
+`[42, 137, 271, 314, 1729]` under both production FR-11-state-visible and
+architecture-only memory-ablation conditions. It SHALL compute the
+dependency-aware production AUROC, Carnot-current production AUROC, and
+dependency-aware architecture-only AUROC on the same per-seed row selections,
+then report the recomputed dependency-aware learning contribution as production
+minus architecture-only. It SHALL store each conceptually distinct AUROC under
+exactly one top-level field and SHALL declare that verifiers scored only the
+FoVer input/candidate text, never the gold label.
+
+The workflow SHALL compute a pooled bootstrap CI for the dependency-aware
+production AUROC, a paired bootstrap CI for dependency-aware production minus
+Carnot-current production on identical rows, and a paired DeLong p-value for
+that same dependency-aware versus Carnot comparison. It SHALL set
+`leak_free=false` when verifiers are not input/candidate-only or when the
+dependency-aware AUROC is at least `0.99` for `n_examples >= 1000`.
+
+The workflow SHALL run `scripts/adversarial_verify.py` against its own artifact
+after writing the measured fields and SHALL set `adversarial_verify_clean=true`
+only when no TAUTOLOGY or critical flag is present. The top-level
+`dependency_aware_g1_rigor_confirmed` field SHALL be a bare boolean and SHALL
+be true only when dependency-aware production AUROC is greater than the frozen
+`0.9131`, the paired delta CI excludes zero in the positive direction, the
+DeLong p-value is below `0.05`, `adversarial_verify_clean=true`, and
+`leak_free=true`.
+
+The terminal artifact SHALL include `honest_verdict`, `inference_substrate`,
+`production_auroc_dependency_aware`, `production_auroc_carnot_current`,
+`frozen_headline_auroc`, `production_auroc_ci`,
+`learning_contribution_dependency_aware`, `dependency_vs_carnot_delta_ci`,
+`delong_p_dependency_vs_carnot`, `n_seeds`, `n_examples`,
+`adversarial_verify_clean`, `leak_free`,
+`dependency_aware_g1_rigor_confirmed`, `random_seed`,
+`reproducibility_checksum`, and `duration_s`, with principle annotations for
+each required field and enough per-seed diagnostics to audit row parity,
+condition parity, score checksums, and verifier names.
+
+The terminal verdict SHALL be one of
+`complete: dependency_aware_g1_rigor_confirmed_headline_candidate_exceeds_frozen_0_9131`,
+`complete: dependency_aware_no_significant_gain_under_g1_protocol_frozen_headline_stands`,
+or
+`complete: blocked_fover_corpus_or_dependency_weighting_or_g1_source_unavailable`.
+
+### SCENARIO-VERIFY-3680: G1-Rigor Candidate Uses Frozen Dual-Condition Protocol
+
+Given a FoVer-style fixture with four verifier score columns, binary labels,
+and synthetic production and architecture-only condition rows, when the Exp
+3680 workflow builds its artifact, then it reports dependency-aware production
+AUROC and Carnot-current production AUROC on identical row selections, reports
+the dependency-aware memory-ablation learning contribution, stores
+`dependency_aware_g1_rigor_confirmed` as a bare boolean, rejects leaked AUROC
+values at or above `0.99` for n>=1000, and classifies confirmed, no-significant
+gain, and blocked outcomes without hard-coding a single success verdict.
+
+## Implementation Status (REQ-VERIFY-3680)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-VERIFY-3680 | Implemented (`python/carnot/verify/dependency_aware_dual_condition_integrity.py`, `scripts/experiment_3680_dependency_aware_dual_condition_integrity.py`) | Implemented (`tests/python/test_experiment_3680_dependency_aware_dual_condition_integrity.py`) |
+
 ### REQ-VERIFY-3670: Facts Row Real-Benchmark Remeasurement
 
 The repository shall provide an Exp 3670 workflow that remeasures the facts
