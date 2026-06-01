@@ -9254,3 +9254,20 @@ Then it identifies the QA corpus degeneracy and applicable verifiers for facts a
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-VERIFY-3584 | Implemented (`scripts/experiment_3584_diagnose_329_null_positive_control.py`) | Implemented (`tests/python/test_experiment_3584.py`) |
+
+
+### REQ-VERIFY-3592: G-Gate Status Synthesis V330
+
+The repository shall provide an Exp 3592 script `experiment_3592_g_gate_status_synthesis_v330.py` that synthesizes the publication gate status and the corrected verifier cross-domain finding.
+- REQ-VERIFY-3592-1: The script SHALL gather G1-G4 status via publication_gate.
+- REQ-VERIFY-3592-2: The script SHALL aggregate findings from experiment 3591.
+- REQ-VERIFY-3592-3: The script SHALL output a terminal artifact `results/experiment_3592_g_gate_status_synthesis_v330.json` with required schema fields.
+
+### SCENARIO-VERIFY-3592: G-Gate Synthesis
+When Exp 3592 runs, it produces the G-gate status, sets p01_status to honest-negative, and extracts the verifier generalization scope from Exp 3591.
+
+## Implementation Status (REQ-VERIFY-3592)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-VERIFY-3592 | Implemented (`scripts/experiment_3592_g_gate_status_synthesis_v330.py`) | Implemented (`tests/python/test_experiment_3592_g_gate_status_synthesis_v330.py`) |
