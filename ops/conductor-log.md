@@ -7553,3 +7553,4 @@ web search: https://docs.garak.ai/garak/examples/pr |
 | 2026-06-01 22:05 UTC | Capstone v336 + G1-G4 gate synthesis — did the dep | OK | 86 passed in 5.40s |
 | 2026-06-01 22:38 UTC | Plan milestone 2026.06.337 | OK | 12 tasks proposed |
 | 2026-06-01 22:40 UTC | Milestone 2026.06.337 activated | OK | 12 tasks queued |
+| 2026-06-01 22:52 UTC | Archive milestone .336 honestly (the first-headlin | OK | 86 passed in 4.00s |
