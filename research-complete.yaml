@@ -34441,64 +34441,150 @@ milestones:
     deliverable: results/experiment_3637_capstone_and_g_gate_v333.json
     result: FAIL (gemini quota crash; no artifact landed)
 - id: 2026.06.334
-  title: "Cross-domain de-contamination science ran on codex"
+  title: Cross-domain de-contamination science ran on codex
   doc: openspec/change-proposals/research-roadmap-vNEXT.md
   completed: '2026-06-01'
-  finding: "CONTAMINATION ARTIFACT: .334 finally ran the cross-domain de-contamination science on codex after the .329-.333 stalls. The .329 math-only verdict was an artifact: verifier value generalizes to math plus CODE, while FACTS remain open because the facts row used a text-statistical PROXY (AUROC 0.6495), not a real model-based NLI grounding verifier. second-pair-of-eyes is REAL (fused AUROC 0.822 vs confidence 0.536); verifier beats SC where headroom exists; trained judge does not solve OOD; correlation-aware weighting HURT (-0.236). paper_ready stayed TRUE (G1-G4) and P0.1 stayed honest-negative. .335 is active to make the facts row real."
+  finding: 'CONTAMINATION ARTIFACT: .334 finally ran the cross-domain de-contamination science on codex after the .329-.333
+    stalls. The .329 math-only verdict was an artifact: verifier value generalizes to math plus CODE, while FACTS remain open
+    because the facts row used a text-statistical PROXY (AUROC 0.6495), not a real model-based NLI grounding verifier. second-pair-of-eyes
+    is REAL (fused AUROC 0.822 vs confidence 0.536); verifier beats SC where headroom exists; trained judge does not solve
+    OOD; correlation-aware weighting HURT (-0.236). paper_ready stayed TRUE (G1-G4) and P0.1 stayed honest-negative. .335
+    is active to make the facts row real.'
   tasks:
   - id: exp3638-archive-v333-activate-v334
-    title: "Archive .333 wipeout and activate .334"
+    title: Archive .333 wipeout and activate .334
     deliverable: results/experiment_3638_archive_v333_activate_v334.json
     result: OK (codex artifact landed)
   - id: exp3639-gemini-cli-quota-crash-resilience-diagnostic
-    title: "Gemini CLI quota crash resilience diagnostic"
+    title: Gemini CLI quota crash resilience diagnostic
     deliverable: results/experiment_3639_gemini_cli_quota_crash_resilience_diagnostic.json
     result: OK (codex artifact landed)
   - id: exp3640-build-factual-corpus-v3-real-evidence-dataset
-    title: "Build factual corpus v3 from a real evidence dataset"
+    title: Build factual corpus v3 from a real evidence dataset
     deliverable: results/experiment_3640_build_factual_corpus_v3.json
     result: OK (codex artifact landed)
   - id: exp3641-code-corpus-verifiers-fire-math-to-code-transfer-v3
-    title: "Build code corpus and fire math-to-code transfer verifiers"
+    title: Build code corpus and fire math-to-code transfer verifiers
     deliverable: results/experiment_3641_code_corpus_verifiers_fire_transfer_v3.json
     result: OK (codex artifact landed)
   - id: exp3642-corrected-cross-domain-remeasurement-v4
-    title: "Corrected cross-domain remeasurement v4"
+    title: Corrected cross-domain remeasurement v4
     deliverable: results/experiment_3642_corrected_cross_domain_remeasurement_v4.json
     result: OK (codex artifact landed)
   - id: exp3643-additivity-second-pair-of-eyes-mcnemar-v4
-    title: "Second-pair-of-eyes additivity measurement"
+    title: Second-pair-of-eyes additivity measurement
     deliverable: results/experiment_3643_additivity_second_pair_of_eyes_v4.json
     result: OK (codex artifact landed)
   - id: exp3644-weaver-peer-comparison-correlation-matrix-v3
-    title: "Weaver peer comparison and correlation matrix v3"
+    title: Weaver peer comparison and correlation matrix v3
     deliverable: results/experiment_3644_weaver_peer_comparison_v3.json
     result: OK (codex artifact landed)
   - id: exp3645-headroom-corpus-hybrid-verifier-vs-sc-v3
-    title: "Headroom corpus hybrid verifier versus self-consistency v3"
+    title: Headroom corpus hybrid verifier versus self-consistency v3
     deliverable: results/experiment_3645_headroom_hybrid_verifier_vs_sc_v3.json
     result: OK (codex artifact landed)
   - id: exp3646-trained-ebm-judge-ood-counterpoint-v2
-    title: "Trained EBM judge OOD counterpoint v2"
+    title: Trained EBM judge OOD counterpoint v2
     deliverable: results/experiment_3646_trained_ebm_judge_ood_counterpoint_v2.json
     result: OK (codex artifact landed)
   - id: exp3647-fr11-continuous-self-learning-v8-online-correlation-aware
-    title: "FR-11 continuous self-learning v8 online correlation-aware"
+    title: FR-11 continuous self-learning v8 online correlation-aware
     deliverable: results/experiment_3647_fr11_continuous_self_learning_v8.json
     result: OK (codex artifact landed)
   - id: exp3648-kv260-continuity-v21
-    title: "KV260 SSH reachability continuity v21"
+    title: KV260 SSH reachability continuity v21
     deliverable: results/experiment_3648_kv260_continuity_v21.json
     result: OK (codex artifact landed)
   - id: exp3649-polarfire-continuity-v21
-    title: "PolarFire continuity v21"
+    title: PolarFire continuity v21
     deliverable: results/experiment_3649_polarfire_continuity_v21.json
     result: OK (codex artifact landed)
   - id: exp3650-gatemate-continuity-audit-v21
-    title: "GateMate continuity audit v21"
+    title: GateMate continuity audit v21
     deliverable: results/experiment_3650_gatemate_continuity_audit_v21.json
     result: OK (codex artifact landed)
   - id: exp3651-capstone-and-g-gate-v334
-    title: "Capstone v334 and G1-G4 gate synthesis"
+    title: Capstone v334 and G1-G4 gate synthesis
     deliverable: results/experiment_3651_capstone_and_g_gate_v334.json
     result: OK (codex artifact landed)
+- id: 2026.06.335
+  title: "Make the FACTS row REAL \u2014 build a model-based NLI atomic-claim grounding verifier (Span-Level DeBERTa-NLI arXiv:2504.18639\
+    \ / FinGround arXiv:2604.23588) and re-measure whether factual hallucination grounding generalizes, since .334 only tested\
+    \ it with a weak text-statistical proxy (AUROC 0.6495 < confidence 0.7446). Harden the now-defensible math+code cross-domain\
+    \ scope (replicate code on a second balanced corpus) and the second-pair-of-eyes product detector (fused AUROC 0.822 vs\
+    \ confidence 0.536). Diagnose the correlation-aware weighting paradox (.334 corr-aware 0.635 << Carnot 0.919) with proper\
+    \ dependency-aware weak supervision (arXiv:1903.05844). Retry the trained-EBM-judge OOD test with a real model substrate.\
+    \ Continue FR-11 self-learning + hardware continuity. paper_ready must stay TRUE (G1-G4); P0.1 stays honest-negative."
+  doc: openspec/change-proposals/research-roadmap-vNEXT.md
+  completed: '2026-06-01'
+  finding: See conductor log for per-experiment results.
+  tasks:
+  - id: exp3652-archive-v334-activate-v335
+    title: 'Archive milestone .334 honestly (record the cross-domain SCIENCE that finally ran: .329 ''math-only'' was a contamination
+      ARTIFACT, verifier value generalizes to CODE not FACTS, second-pair-of-eyes is REAL, paper_ready stayed true) and activate
+      .335'
+    deliverable: results/experiment_3652_archive_v334_activate_v335.json
+    result: OK (conductor)
+  - id: exp3653-backend-state-diagnostic
+    title: "Backend-state diagnostic \u2014 probe whether gemini quota recovered since the .333 wipeout; recommend routing;\
+      \ the .335 science stays on codex regardless (documentation-only)"
+    deliverable: results/experiment_3653_backend_state_diagnostic.json
+    result: OK (conductor)
+  - id: exp3654-real-nli-atomic-claim-grounding-verifier
+    title: "Build a REAL model-based NLI atomic-claim grounding verifier (DeBERTa/MiniLM-NLI + SRL/atomic decomposition, arXiv:2504.18639\
+      \ / FinGround arXiv:2604.23588) \u2014 replaces the .334 text-statistical proxy; leak-guarded; standalone AUROC on the\
+      \ v3 facts corpus"
+    deliverable: results/experiment_3654_real_nli_atomic_claim_grounding_verifier.json
+    result: OK (conductor)
+  - id: exp3655-facts-row-remeasurement-real-nli-v5
+    title: "Re-measure the FACTS row with the REAL NLI grounding verifier (exp3654) vs the strong confidence baseline \u2014\
+      \ does factual hallucination grounding generalize once a real model is used? (the core-mission answer)"
+    deliverable: results/experiment_3655_facts_row_remeasurement_real_nli_v5.json
+    result: OK (conductor)
+  - id: exp3656-correlation-aware-weighting-paradox-diagnosis
+    title: "Diagnose the correlation-aware weighting PARADOX \u2014 .334 (exp3644) corr-aware AUROC 0.635 << Carnot 0.919;\
+      \ is inter-verifier correlation genuinely harmless here, or was the redundancy penalty mis-specified? (dependency-aware\
+      \ weak supervision, arXiv:1903.05844)"
+    deliverable: results/experiment_3656_correlation_aware_weighting_paradox_diagnosis.json
+    result: OK (conductor)
+  - id: exp3657-deployable-second-pair-of-eyes-detector
+    title: "Build the deployable 'second pair of eyes' detector \u2014 calibrated fusion of ensemble energy + model confidence,\
+      \ per-domain operating points + recall-at-fixed-FPR table (the .334 exp3643 finding made into a Phase-1 product surface)"
+    deliverable: results/experiment_3657_deployable_second_pair_of_eyes_detector.json
+    result: OK (conductor)
+  - id: exp3658-code-generalization-second-corpus-replication
+    title: "Replicate CODE generalization on a SECOND balanced code corpus (MBPP / LiveCodeBench) \u2014 de-risk the single-imbalanced-corpus\
+      \ exp3641 result before it becomes a paper claim"
+    deliverable: results/experiment_3658_code_generalization_second_corpus.json
+    result: OK (conductor)
+  - id: exp3659-trained-ebm-judge-ood-real-substrate-v3
+    title: "Trained-EBM-judge OOD v3 with a REAL model substrate (cached_sota_pair GGUF embedding / small transformer ranking\
+      \ head, GPU) \u2014 does a properly-resourced trained judge beat confidence OOD where the .334 CPU-only toy head did\
+      \ not? (the Phase-3 foundation-model-path signal; retire_if_same)"
+    deliverable: results/experiment_3659_trained_ebm_judge_ood_real_substrate_v3.json
+    result: OK (conductor)
+  - id: exp3660-fr11-continuous-self-learning-v9-online-fusion-weights
+    title: "FR-11 continuous self-learning v9 \u2014 online learning of the ensemble-vs-confidence FUSION weights per-domain\
+      \ without collapse (the new second-pair-of-eyes product surface; forward diff from v8's online correlation-aware verifier\
+      \ weighting)"
+    deliverable: results/experiment_3660_fr11_continuous_self_learning_v9.json
+    result: OK (conductor)
+  - id: exp3661-kv260-continuity-v22
+    title: "KV260 SSH-reachability continuity (UNREACHABLE in .331/.332/.333/.334 \u2014 re-check + record honest state, flag\
+      \ 5-milestone outage as operator-action)"
+    deliverable: results/experiment_3661_kv260_continuity_v22.json
+    result: OK (conductor)
+  - id: exp3662-polarfire-continuity-v22
+    title: PolarFire opportunistic reachability + continuity audit (per Hardware-Task Continuity)
+    deliverable: results/experiment_3662_polarfire_continuity_v22.json
+    result: OK (conductor)
+  - id: exp3663-gatemate-continuity-audit-v22
+    title: "GateMate continuity audit (documentation-only \u2014 openFPGALoader missing in .331-.334, per known-issues)"
+    deliverable: results/experiment_3663_gatemate_continuity_audit_v22.json
+    result: OK (conductor)
+  - id: exp3664-capstone-and-g-gate-v335
+    title: "Capstone v335 + G1-G4 gate synthesis \u2014 does FACTS generalize once measured with a REAL NLI grounding verifier\
+      \ (vs the .334 proxy)? consolidate the math+code scope, the deployable second-pair-of-eyes detector, the correlation-paradox\
+      \ resolution. paper_ready must stay TRUE."
+    deliverable: results/experiment_3664_capstone_and_g_gate_v335.json
+    result: OK (conductor)
