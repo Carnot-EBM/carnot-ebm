@@ -7535,3 +7535,4 @@ web search: https://docs.garak.ai/garak/examples/pr |
 | 2026-06-01 16:24 UTC | KV260 SSH-reachability continuity (UNREACHABLE in  | OK | 89 passed in 3.74s |
 | 2026-06-01 16:34 UTC | PolarFire opportunistic reachability + continuity  | OK | 88 passed in 4.83s |
 | 2026-06-01 16:43 UTC | GateMate continuity audit (documentation-only — op | OK | 89 passed in 3.37s |
+| 2026-06-01 17:00 UTC | Capstone v335 + G1-G4 gate synthesis — does FACTS  | OK | 87 passed in 4.49s |
