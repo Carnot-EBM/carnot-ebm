@@ -9718,6 +9718,59 @@ single success verdict.
 |---|---|---|
 | REQ-VERIFY-3668 | Implemented (`python/carnot/verify/dependency_aware_weighting_heldout.py`, `scripts/experiment_3668_dependency_aware_weighting_heldout.py`) | Implemented (`tests/python/test_experiment_3668_dependency_aware_weighting_heldout.py`) |
 
+### REQ-VERIFY-3670: Facts Row Real-Benchmark Remeasurement
+
+The repository shall provide an Exp 3670 workflow that remeasures the facts
+row on the real Exp 3669 factual corpus with the Exp 3654 NLI atomic-claim
+grounding verifier. The workflow SHALL require
+`results/experiment_3669_build_real_factual_corpus.json` to report
+`real_factual_corpus_built=true`, the persisted real corpus to expose the v3
+facts schema, and Exp 3654 to report a leak-free model-backed NLI grounding
+verifier. If those preconditions are not met, it SHALL write the terminal
+verdict `complete: blocked_real_corpus_or_grounding_verifier_unavailable`
+without promoting a synthetic or proxy null result.
+
+For runnable real-corpus inputs, the workflow SHALL score only
+`(model_answer, evidence_passage)` from the cached real corpus, SHALL NOT pass
+the hallucination label or any separate gold-answer field into the verifier
+score path, and SHALL treat AUROC at or above 0.99 on `n>=200` as a leak red
+flag. It SHALL compute real-corpus grounding AUROC, confidence-baseline AUROC,
+grounding-minus-confidence paired delta, deterministic bootstrap confidence
+intervals over at least three seeds, a fixed-confidence-FPR conditional catch
+rate, and exact McNemar paired significance for grounding-vs-confidence error
+catches.
+
+The terminal artifact SHALL be
+`results/experiment_3670_facts_row_real_benchmark.json` and SHALL include
+`honest_verdict`, `inference_substrate`,
+`grounding_auroc_real_corpus`, `confidence_baseline_auroc`,
+`grounding_minus_confidence_delta`, `facts_conditional_catch_rate`,
+`mcnemar_p_facts`, `grounding_leak_free`,
+`real_vs_synthetic_grounding_delta`, `positive_control_valid`, a bare
+top-level `facts_generalize_or_adds_value_real` boolean, `n_examples`,
+`random_seed`, `reproducibility_checksum`, and `duration_s`, with
+`field_principles` documenting each required field. The core boolean SHALL be
+true only when the real-corpus run is leak-free and either grounding
+materially beats confidence in AUROC or grounding adds significant
+complementary catch value by McNemar (`p<0.05`) with positive grounding-only
+error catches.
+
+### SCENARIO-VERIFY-3670: Real Facts Verdicts Cover AUROC Win, Catch-Value, Domain-Bound, And Blocked
+
+Given realistic synthetic real-corpus fixtures with grounding and confidence
+score vectors covering `generalizes_real`, `catch_value_at_parity`,
+`domain_bound_real`, and `blocked` outcomes, when the Exp 3670 artifact
+builder runs, then it emits required bare booleans, leak diagnostics, at least
+three bootstrap seeds, fixed-FPR catch-rate and McNemar statistics, and a
+terminal verdict selected from the measured outcome rather than hard-coding
+the live real corpus verdict.
+
+## Implementation Status (REQ-VERIFY-3670)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-VERIFY-3670 | Planned (`python/carnot/verify/facts_row_real_benchmark_3670.py`, `scripts/experiment_3670_facts_row_real_benchmark.py`) | Planned (`tests/python/test_experiment_3670_facts_row_real_benchmark.py`) |
+
 ### REQ-VERIFY-3646: Trained EBM Judge OOD Counterpoint V2
 
 The repository shall provide an Exp 3646 workflow that trains a small

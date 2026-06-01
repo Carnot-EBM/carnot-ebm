@@ -1,0 +1,150 @@
+{
+  "acceptance_gate": {
+    "condition": "grounding_auroc_real_corpus present AND confidence_baseline_auroc present AND positive_control_valid == true AND grounding_leak_free == true",
+    "passed": true,
+    "principle": "A corrected facts verdict requires the real verifier fired leak-free on a headroom-bearing real corpus vs a measured confidence baseline -- otherwise it repeats the synthetic-corpus limitation."
+  },
+  "auroc_material_win": false,
+  "catch_value_at_parity": false,
+  "confidence_baseline_auroc": {
+    "bootstrap_seeds": [
+      3670,
+      3671,
+      3672
+    ],
+    "ci95": [
+      0.700662,
+      0.715599
+    ],
+    "exp3669_point": 0.707994,
+    "n": 17617,
+    "n_negative_correct": 10626,
+    "n_positive_errors": 6991,
+    "point": 0.708003,
+    "score_variance": 0.005678963618,
+    "seed_mean_aurocs": [
+      0.708031,
+      0.708088,
+      0.707937
+    ]
+  },
+  "corpus_path_used": "data/real_factual_corpus_ragtruth.jsonl",
+  "duration_s": 1334.829451,
+  "evidence_excludes_gold_answer_assert": true,
+  "facts_conditional_catch_rate": {
+    "bootstrap_seeds": [
+      3670,
+      3671,
+      3672
+    ],
+    "ci95": [
+      0.113309,
+      0.143376
+    ],
+    "confidence_error_catch_rate": 0.184666,
+    "confidence_realized_fpr": 0.099849,
+    "confidence_threshold": 0.546333,
+    "denominator_confidence_missed_errors": 5700,
+    "fixed_confidence_fpr": 0.1,
+    "grounding_error_catch_rate": 0.125733,
+    "grounding_realized_fpr": 0.099944,
+    "grounding_threshold": 0.23059,
+    "mcnemar": {
+      "both_catch_errors": 140,
+      "both_miss_errors": 4961,
+      "confidence_only_error_catches": 1151,
+      "grounding_only_error_catches": 739,
+      "p_value": 0.0
+    },
+    "numerator_grounding_catches_confidence_misses": 739,
+    "point": 0.129649,
+    "seed_mean_conditional_catch_rates": [
+      0.127994,
+      0.127478,
+      0.127726
+    ]
+  },
+  "facts_generalize_or_adds_value_real": false,
+  "field_principles": {
+    "confidence_baseline_auroc": "The bar (from exp3669); facts AUROC-value requires beating it.",
+    "duration_s": "Plausibility floor.",
+    "facts_conditional_catch_rate": "Errors grounding catches that confidence misses at fixed FPR -- the second-pair-of-eyes lens AUROC hides.",
+    "facts_generalize_or_adds_value_real": "BARE bool. True iff on the REAL corpus grounding materially beats confidence in AUROC OR adds significant complementary catch-value (McNemar p<0.05 with positive catch-rate), leak-free -- the corrected core-mission answer. STORE AS BARE true/false.",
+    "grounding_auroc_real_corpus": "The real NLI grounding signal on the REAL corpus + CI -- the corrected facts-row number.",
+    "grounding_leak_free": "True iff evidence excludes the gold answer AND AUROC < 0.99 AND the label is never read.",
+    "grounding_minus_confidence_delta": "Signed paired delta + CI -- additive facts value over confidence in AUROC terms.",
+    "honest_verdict": "Terminal prefix for reconciler classification.",
+    "inference_substrate": "verifier_ensemble_against_cached_candidates (principle: scores the cached real corpus; no LLM load).",
+    "mcnemar_p_facts": "Paired significance of the grounding-vs-confidence disagreement on real data.",
+    "n_examples": "Sample-size rigor (>=200).",
+    "positive_control_valid": "True iff the verifier fired leak-free on a headroom-bearing real corpus (confidence < 0.95) -- a null without this is uninformative.",
+    "random_seed": "Determinism precondition.",
+    "real_vs_synthetic_grounding_delta": "Did using a REAL corpus change the .335 synthetic answer (grounding 0.744)? -- the corpus-artifact question.",
+    "reproducibility_checksum": "Drift detection."
+  },
+  "fixed_confidence_fpr": 0.1,
+  "grounding_auroc_real_corpus": {
+    "bootstrap_seeds": [
+      3670,
+      3671,
+      3672
+    ],
+    "ci95": [
+      0.633678,
+      0.651995
+    ],
+    "n": 17617,
+    "n_negative_correct": 10626,
+    "n_positive_errors": 6991,
+    "point": 0.642844,
+    "score_variance": 0.027983339613,
+    "seed_mean_aurocs": [
+      0.643033,
+      0.642428,
+      0.642995
+    ]
+  },
+  "grounding_leak_free": true,
+  "grounding_minus_confidence_delta": {
+    "bootstrap_seeds": [
+      3670,
+      3671,
+      3672
+    ],
+    "ci95": [
+      -0.076739,
+      -0.052914
+    ],
+    "point": -0.065158,
+    "seed_mean_deltas": [
+      -0.064998,
+      -0.06566,
+      -0.064942
+    ]
+  },
+  "honest_outcome": "domain_bound_real",
+  "honest_verdict": "complete: facts_domain_bound_on_real_benchmark_335_negative_genuinely_earned",
+  "inference_substrate": "verifier_ensemble_against_cached_candidates (principle: scores the cached real corpus; no LLM load).",
+  "leak_diagnostics": [],
+  "mcnemar_p_facts": 0.0,
+  "n_examples": 17617,
+  "nli_substrate": "model_based_transformers_checkpoint: cross-encoder/nli-deberta-v3-small on cuda",
+  "ops_docs_reconciliation_left_to_conductor": true,
+  "positive_control_valid": true,
+  "random_seed": 3670,
+  "real_vs_synthetic_grounding_delta": {
+    "delta": -0.100812,
+    "real_grounding_auroc": 0.642844,
+    "synthetic_grounding_auroc": 0.743656
+  },
+  "reproducibility_checksum": "c2986d066f8b1b8b",
+  "sample_size_rigor_met": true,
+  "score_path_answer_evidence_only": true,
+  "scripts_research_conductor_modified": false,
+  "source_artifacts": [
+    "results/experiment_3669_build_real_factual_corpus.json",
+    "results/experiment_3654_real_nli_atomic_claim_grounding_verifier.json",
+    "results/experiment_3655_facts_row_remeasurement_real_nli_v5.json"
+  ],
+  "tests_run": []
+}
