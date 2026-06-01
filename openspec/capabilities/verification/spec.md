@@ -9351,6 +9351,55 @@ verdict is selected only from the honest per-row outcomes.
 |---|---|---|
 | REQ-VERIFY-3642 | Implemented (`python/carnot/verify/corrected_cross_domain_remeasurement_v4.py`, `scripts/experiment_3642_corrected_cross_domain_remeasurement_v4.py`) | Implemented (`tests/python/test_experiment_3642_corrected_cross_domain_remeasurement_v4.py`) |
 
+### REQ-VERIFY-3654: Real NLI Atomic-Claim Grounding Verifier
+
+The repository shall provide an Exp 3654 workflow that scores the Exp 3640 v3
+facts corpus with an atomic-claim grounding verifier and writes
+`results/experiment_3654_real_nli_atomic_claim_grounding_verifier.json`. The
+verifier SHALL decompose `model_answer` strings into factual-looking atomic
+claims, score each claim only against `evidence_passage`, and SHALL NOT pass the
+corpus `is_hallucination` label or any separate gold-answer field into the
+verifier score path. When a cached transformers NLI checkpoint is loadable, the
+verifier SHALL declare the named checkpoint and use that checkpoint for
+claim/evidence NLI scoring. When no cached checkpoint is loadable, the workflow
+SHALL build only an explicitly disclosed text-statistical entailment proxy and
+record that fallback in `nli_substrate`.
+
+The terminal artifact SHALL include `honest_verdict`,
+`inference_substrate`, `nli_substrate`, a bare top-level
+`nli_grounding_built` boolean, `grounding_auroc`,
+`grounding_auroc_vs_proxy_delta`, `confidence_baseline_auroc`,
+`grounding_beats_confidence`, `grounding_leak_free`,
+`evidence_excludes_gold_answer_assert`, `n_examples`, `random_seed`,
+`reproducibility_checksum`, and `duration_s`. `grounding_auroc` SHALL include a
+point estimate plus deterministic bootstrap confidence interval over at least
+three seeds. `grounding_leak_free` SHALL be true only when the evidence does
+not contain a separate gold-answer field, the grounding AUROC is below 0.99,
+and verifier scoring consumed only `(model_answer, evidence_passage)`.
+
+If `data/realistic_factual_corpus_v3.jsonl` is absent or does not expose the
+expected `{question, answer, is_hallucination, evidence_passage,
+model_confidence}` schema, the workflow SHALL write the terminal verdict
+`complete: blocked_no_v3_facts_corpus` without synthetic metrics. A leak
+diagnostic path SHALL set `grounding_leak_free=false` rather than promoting a
+near-perfect AUROC as progress.
+
+### SCENARIO-VERIFY-3654: Atomic Claim Grounding Handles Model, Proxy, Leak, And Blocked Outcomes
+
+Given realistic synthetic factual corpus fixtures covering a model-backed NLI
+run, a disclosed proxy fallback, a leak-detected near-perfect score, and a
+missing v3-corpus block, when the Exp 3654 artifact builder runs, then it
+emits the required bare booleans and metric fields, never passes label or
+separate gold-answer values into the verifier score path, reports bootstrap
+AUROC over at least three seeds for runnable corpora, and selects an honest
+terminal verdict for each outcome.
+
+## Implementation Status (REQ-VERIFY-3654)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-VERIFY-3654 | Planned (`python/carnot/verify/nli_atomic_claim_grounding_verifier.py`, `scripts/experiment_3654_real_nli_atomic_claim_grounding_verifier.py`) | Planned (`tests/python/test_experiment_3654_real_nli_atomic_claim_grounding_verifier.py`) |
+
 ### REQ-VERIFY-3643: Additive Second-Pair-Of-Eyes Remeasurement V4
 
 The repository shall provide an Exp 3643 workflow that reads the corrected Exp
