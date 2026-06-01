@@ -34160,3 +34160,75 @@ milestones:
     title: "Capstone v329 \u2014 does the verifier ensemble's value generalize beyond math? (code + facts)"
     deliverable: results/experiment_3582_capstone_v329.json
     result: OK (conductor)
+- id: 2026.05.330
+  title: "Verifier Cross-Domain Value, DE-CONTAMINATED \u2014 was '.329 math-only' a real limitation or a failed positive\
+    \ control? Build the missing factual-grounding verifier and re-test on realistic corpora."
+  doc: openspec/change-proposals/research-roadmap-vNEXT.md
+  completed: '2026-06-01'
+  finding: See conductor log for per-experiment results.
+  tasks:
+  - id: exp3583-archive-v329-activate-v330
+    title: Archive milestone .329 honestly and activate .330 (verifier cross-domain DE-CONTAMINATION pivot)
+    deliverable: results/experiment_3583_archive_v329_activate_v330.json
+    result: OK (conductor)
+  - id: exp3584-diagnose-329-null-positive-control-audit
+    title: "Diagnose the .329 null \u2014 confirm corpus degeneracy + verifier inertia, enumerate per-domain APPLICABLE verifiers\
+      \ (positive-control audit)"
+    deliverable: results/experiment_3584_diagnose_329_null_positive_control.json
+    result: OK (conductor)
+  - id: exp3585-build-realistic-factual-hallucination-corpus
+    title: Build a REALISTIC factual hallucination corpus where model-confidence is NOT a perfect detector (TruthfulQA-style
+      / Mu-SHROOM, fact-level labels)
+    deliverable: results/experiment_3585_realistic_factual_corpus.json
+    result: OK (conductor)
+  - id: exp3586-score-factual-applicable-verifiers
+    title: "Score the factual-APPLICABLE verifiers on the realistic corpus \u2014 which actually FIRE (per-verifier AUROC\
+      \ > 0.5)?"
+    deliverable: results/experiment_3586_score_factual_applicable_verifiers.json
+    result: OK (conductor)
+  - id: exp3587-prototype-retrieval-nli-factual-grounding-verifier
+    title: Prototype a retrieval/NLI atomic-claim factual-grounding verifier (the Mu-SHROOM/HalluSearch SOTA recipe) + eval
+      vs confidence
+    deliverable: results/experiment_3587_retrieval_nli_factual_grounding_verifier.json
+    result: OK (conductor)
+  - id: exp3588-corrected-cross-domain-remeasurement
+    title: "Corrected cross-domain re-measurement \u2014 math (0.9131) | code | facts with APPLICABLE verifiers + realistic\
+      \ corpora + strong confidence baseline"
+    deliverable: results/experiment_3588_corrected_cross_domain_remeasurement.json
+    result: OK (conductor)
+  - id: exp3589-additivity-second-pair-of-eyes-mcnemar
+    title: "Additivity / 'second pair of eyes' \u2014 does ensemble OR-with-confidence beat confidence alone? (conditional\
+      \ catch-rate + McNemar, resolves exp3575/3576 tension)"
+    deliverable: results/experiment_3589_additivity_second_pair_of_eyes.json
+    result: OK (conductor)
+  - id: exp3590-fr11-continuous-self-learning-v5
+    title: "FR-11 continuous self-learning \u2014 conservative-default deploy on a fresh corpus, calibrating the new factual-grounding\
+      \ verifier (mandatory continuous self-learning)"
+    deliverable: results/experiment_3590_fr11_continuous_self_learning_v5.json
+    result: OK (conductor)
+  - id: exp3591-cross-domain-synthesis-v2
+    title: "Cross-domain generalization SYNTHESIS v2 \u2014 does verifier value generalize once the test is FAIR? (the corrected\
+      \ milestone headline + paper-claim scoping)"
+    deliverable: results/experiment_3591_cross_domain_synthesis_v2.json
+    result: OK (conductor)
+  - id: exp3592-g-gate-status-synthesis-v330
+    title: G1-G4 gate-status synthesis v330 (paper_ready=true; record the corrected verifier cross-domain result)
+    deliverable: results/experiment_3592_g_gate_status_synthesis_v330.json
+    result: OK (conductor)
+  - id: exp3593-kv260-continuity-v17
+    title: KV260 SSH-reachability continuity (per Hardware-Task Continuity)
+    deliverable: results/experiment_3593_kv260_continuity_v17.json
+    result: OK (conductor)
+  - id: exp3594-polarfire-continuity-v17
+    title: PolarFire opportunistic reachability + continuity audit (per Hardware-Task Continuity)
+    deliverable: results/experiment_3594_polarfire_continuity_v17.json
+    result: OK (conductor)
+  - id: exp3595-gatemate-continuity-audit-v17
+    title: "GateMate continuity audit (documentation-only \u2014 flash/smoke host-IO hangs, per known-issues)"
+    deliverable: results/experiment_3595_gatemate_continuity_audit_v17.json
+    result: OK (conductor)
+  - id: exp3596-capstone-v330
+    title: "Capstone v330 \u2014 was '.329 math-only' real or a failed positive control? Does verifier value generalize once\
+      \ the test is fair?"
+    deliverable: results/experiment_3596_capstone_v330.json
+    result: OK (conductor)
