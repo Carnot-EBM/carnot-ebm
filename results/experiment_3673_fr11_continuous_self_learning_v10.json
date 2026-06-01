@@ -1,0 +1,188 @@
+{
+  "acceptance_gate": {
+    "condition": "collapse_detected_deploy_arm == false AND collapse_detected_control == true AND pass_rate_vs_true_accuracy_distinct_assert == true",
+    "passed": true,
+    "principle": "Self-learning is validated only when the guarded arm holds, the control collapses, and the two metrics are genuinely distinct (not a tautology)."
+  },
+  "artifact": "experiment_3673_fr11_continuous_self_learning_v10",
+  "collapse_detected_control": true,
+  "collapse_detected_deploy_arm": false,
+  "control_selected_verifier": "fr11_session_memory",
+  "deploy_dependency_edges_final": [
+    {
+      "by_label_correlation": {
+        "0": 0.008003,
+        "1": 0.190253
+      },
+      "conditional_mutual_information": 0.009233,
+      "pair": [
+        "fr11_session_memory",
+        "tier0r_curry_howard"
+      ]
+    },
+    {
+      "by_label_correlation": {
+        "0": -0.004753,
+        "1": 0.126355
+      },
+      "conditional_mutual_information": 0.004029,
+      "pair": [
+        "fr11_session_memory",
+        "tier0s_arithmetic_gap"
+      ]
+    },
+    {
+      "by_label_correlation": {
+        "0": 0.101721,
+        "1": -0.02153
+      },
+      "conditional_mutual_information": 0.002716,
+      "pair": [
+        "tier0s_arithmetic_gap",
+        "tier0u_logical_consistency"
+      ]
+    }
+  ],
+  "deploy_n_weight_updates": 39,
+  "deploy_weight_bound": {
+    "max_abs_weight": 0.8,
+    "principle": "Signed verifier weights are rejected if one verifier dominates."
+  },
+  "duration_s": 0.676938,
+  "field_principles": {
+    "collapse_detected_control": "Positive control: the naive online arm must collapse, else the test has no contrast.",
+    "collapse_detected_deploy_arm": "The conservative-default + uncertainty-gated rule must prevent weight collapse (alpha_t grounding).",
+    "duration_s": "Plausibility floor.",
+    "honest_verdict": "Terminal prefix for reconciler classification.",
+    "inference_substrate": "Scores cached traces; no LLM load.",
+    "n_online_updates": "Sample-size of the self-learning sweep (>=200).",
+    "online_dependency_aware_auroc_gain": "The forward difference -- does online dependency-aware weighting beat fixed dependency-aware and static Carnot?",
+    "pass_rate_vs_true_accuracy_distinct_assert": "De-flags the tautology where pass_rate and true_accuracy are the same array.",
+    "quality_maintained": "Collapse-prevention must not come at the cost of ensemble quality.",
+    "random_seed": "Determinism precondition.",
+    "reproducibility_checksum": "Drift detection."
+  },
+  "honest_verdict": "complete: fr11_v10_online_dependency_aware_weighting_holds_no_collapse_quality_maintained",
+  "inference_substrate": "verifier_ensemble_against_cached_candidates (principle: scores cached traces; no LLM load).",
+  "metrics_after_control_online_adaptation": {
+    "auroc": 0.87311,
+    "brier": 0.188094,
+    "ece": 0.20345
+  },
+  "metrics_after_deploy_online_adaptation": {
+    "auroc": 0.934136,
+    "brier": 0.300747,
+    "ece": 0.348803
+  },
+  "metrics_before_online_adaptation": {
+    "auroc": 0.916566,
+    "brier": 0.208501,
+    "ece": 0.287795
+  },
+  "metrics_fixed_dependency_aware": {
+    "auroc": 0.932336,
+    "brier": 0.298138,
+    "ece": 0.345824
+  },
+  "metrics_fixed_dependency_aware_final_fit": {
+    "auroc": 0.93421,
+    "brier": 0.298023,
+    "ece": 0.346054
+  },
+  "n_online_updates": 1000,
+  "observed_catch_utility_by_verifier": {
+    "fr11_session_memory": 0.372,
+    "tier0r_curry_howard": 0.034,
+    "tier0s_arithmetic_gap": -0.236,
+    "tier0u_logical_consistency": 0.0
+  },
+  "online_dependency_aware_auroc_gain": 0.0018,
+  "pass_rate_trajectory": [
+    0.852945,
+    0.841098,
+    0.845196,
+    0.83204,
+    0.842256,
+    0.867552,
+    0.867527,
+    0.841808
+  ],
+  "pass_rate_vs_true_accuracy_distinct_assert": true,
+  "preconditions_checked": [
+    {
+      "available": true,
+      "detail": "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/fr11",
+      "resource": "fr11_module"
+    },
+    {
+      "available": true,
+      "detail": "line_count=8829; required>=1000",
+      "resource": "cached_traces_with_per_verifier_scores_and_labels"
+    },
+    {
+      "available": true,
+      "detail": "loaded=tier0r_curry_howard,tier0s_arithmetic_gap,tier0u_logical_consistency",
+      "resource": "text_scoring_verifiers"
+    },
+    {
+      "available": true,
+      "detail": "state_files=21; memory_loaded=True",
+      "resource": "fr11_session_memory_verifier"
+    },
+    {
+      "available": true,
+      "detail": "online graph fit, graph learner, and fixed crossfit baseline importable",
+      "resource": "dependency_aware_weighting_implementation"
+    }
+  ],
+  "quality_maintained": true,
+  "random_seed": 3673,
+  "reproducibility_checksum": "97a0e0785980ea510dd153a2ef2cdf4bffe267a35d34ec37e0e9a5167b3beb7e",
+  "schema": "carnot.fr11_continuous_self_learning_v10",
+  "true_accuracy_trajectory": [
+    0.496,
+    0.488,
+    0.52,
+    0.464,
+    0.48,
+    0.584,
+    0.544,
+    0.488
+  ],
+  "verifier_names": [
+    "fr11_session_memory",
+    "tier0r_curry_howard",
+    "tier0s_arithmetic_gap",
+    "tier0u_logical_consistency"
+  ],
+  "weights_carnot_static": {
+    "fr11_session_memory": 0.5,
+    "tier0r_curry_howard": 0.45,
+    "tier0s_arithmetic_gap": 0.0,
+    "tier0u_logical_consistency": 0.05
+  },
+  "weights_control_final": {
+    "fr11_session_memory": 1.0,
+    "tier0r_curry_howard": 0.0,
+    "tier0s_arithmetic_gap": 0.0,
+    "tier0u_logical_consistency": 0.0
+  },
+  "weights_deploy_final": {
+    "fr11_session_memory": 0.282098,
+    "tier0r_curry_howard": 0.331918,
+    "tier0s_arithmetic_gap": -0.093648,
+    "tier0u_logical_consistency": 0.292336
+  },
+  "weights_deploy_initial": {
+    "fr11_session_memory": 0.25,
+    "tier0r_curry_howard": 0.25,
+    "tier0s_arithmetic_gap": 0.25,
+    "tier0u_logical_consistency": 0.25
+  },
+  "weights_fixed_dependency_aware_mean": {
+    "fr11_session_memory": 0.285919,
+    "tier0r_curry_howard": 0.337668,
+    "tier0s_arithmetic_gap": -0.092776,
+    "tier0u_logical_consistency": 0.283637
+  }
+}
