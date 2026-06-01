@@ -10379,3 +10379,67 @@ trajectories are not element-wise identical, and quality is maintained.
 | Requirement  | Python | Tests |
 |-------------|--------|-------|
 | REQ-LEARN-3660 | Proposed (python/carnot/fr11/continuous_self_learning_v9.py; scripts/experiment_3660_fr11_continuous_self_learning_v9.py) | Proposed (tests/python/test_experiment_3660_fr11_csl_v9.py) |
+
+---
+
+## REQ-LEARN-3673: FR-11 Continuous Self Learning v10 Online Dependency-Aware Weighting
+
+**Given** the FR-11 module and cached verifier traces with per-verifier scores
+and binary labels are present
+**When** Exp 3673 runs a closed FR-11 continuous self-learning loop over at
+least 200 non-degenerate cached examples
+**Then** the deploy arm SHALL learn the label-conditional dependency structure
+and verifier weights online from observed catch-rate evidence
+**And** the deploy arm SHALL begin from a conservative default, update only
+after an uncertainty gate clears, and apply a collapse guard that prevents any
+single verifier weight from concentrating at 0 or 1
+**And** the control arm SHALL run a naive online update without that guard so
+single-verifier collapse can be detected as a positive control
+**And** the artifact SHALL report ensemble AUROC before and after online
+adaptation, online dependency-aware AUROC gain over both fixed dependency-aware
+weighting and Carnot static weighting, deploy/control collapse status, quality
+maintenance, and a pass-rate-vs-true-accuracy distinctness assertion.
+
+### REQ-LEARN-3673 Sub-requirements
+
+- REQ-LEARN-3673-1: Runnable artifacts SHALL use cached traces only, with
+  `inference_substrate` equal to
+  `verifier_ensemble_against_cached_candidates (principle: scores cached traces; no LLM load).`.
+- REQ-LEARN-3673-2: If the FR-11 module or cached per-verifier trace scores are
+  unavailable, the workflow SHALL write the terminal verdict
+  `complete: blocked_fr11_module_or_traces_unavailable`.
+- REQ-LEARN-3673-3: `n_online_updates` SHALL be at least 200 for runnable
+  artifacts.
+- REQ-LEARN-3673-4: The acceptance gate SHALL pass only when
+  `collapse_detected_deploy_arm == false`,
+  `collapse_detected_control == true`, and
+  `pass_rate_vs_true_accuracy_distinct_assert == true`.
+- REQ-LEARN-3673-5: Runnable artifacts SHALL include principle annotations for
+  `honest_verdict`, `inference_substrate`, `n_online_updates`,
+  `collapse_detected_deploy_arm`, `collapse_detected_control`,
+  `online_dependency_aware_auroc_gain`,
+  `pass_rate_vs_true_accuracy_distinct_assert`, `quality_maintained`,
+  `random_seed`, `reproducibility_checksum`, and `duration_s`.
+- REQ-LEARN-3673-6: The terminal verdict SHALL be
+  `complete: fr11_v10_online_dependency_aware_weighting_holds_no_collapse_quality_maintained`
+  when the acceptance gate passes and the online dependency-aware ensemble
+  improves AUROC over fixed dependency-aware and Carnot static weighting,
+  otherwise
+  `complete: fr11_v10_online_no_gain_fixed_weighting_sufficient`.
+
+### SCENARIO-LEARN-3673: Online Dependency-Aware Weighting Prevents Collapse
+
+**Given** cached verifier scores with binary correctness labels and at least one
+verifier whose observed catch utility differs from the others
+**When** the v10 online self-learning evaluator compares the guarded
+dependency-aware deploy arm against the naive single-best-verifier control arm
+**Then** the deploy arm keeps verifier weights bounded away from single-verifier
+collapse, the control arm collapses to a boundary weight, pass-rate and
+true-accuracy trajectories are not element-wise identical, and quality is
+maintained.
+
+## Implementation Status (REQ-LEARN-3673)
+
+| Requirement  | Python | Tests |
+|-------------|--------|-------|
+| REQ-LEARN-3673 | Proposed (python/carnot/fr11/continuous_self_learning_v10.py; scripts/experiment_3673_fr11_continuous_self_learning_v10.py) | Proposed (tests/python/test_experiment_3673_fr11_csl_v10.py) |
