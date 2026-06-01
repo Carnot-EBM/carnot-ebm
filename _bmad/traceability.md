@@ -1709,3 +1709,8 @@
 | REQ-VERIFY-3596-1 | Exp 3596: Capstone V330 329-Null Correction | Implemented | results/experiment_3596_capstone_v330.json |
 | REQ-VERIFY-3596-2 | Exp 3596: Capstone V330 329-Null Correction | Implemented | results/experiment_3596_capstone_v330.json |
 | SCENARIO-VERIFY-3596 | Exp 3596: Capstone V330 329-Null Correction | Implemented | results/experiment_3596_capstone_v330.json |
+| REQ-LEARN-3604 | Exp 3604: FR-11 Continuous Self Learning v6 | Implemented | results/experiment_3604_fr11_continuous_self_learning_v6.json |
+| REQ-LEARN-3604-1 | Exp 3604: FR-11 Continuous Self Learning v6 | Implemented | results/experiment_3604_fr11_continuous_self_learning_v6.json |
+| REQ-LEARN-3604-2 | Exp 3604: FR-11 Continuous Self Learning v6 | Implemented | results/experiment_3604_fr11_continuous_self_learning_v6.json |
+| REQ-LEARN-3604-3 | Exp 3604: FR-11 Continuous Self Learning v6 | Implemented | results/experiment_3604_fr11_continuous_self_learning_v6.json |
+| SCENARIO-LEARN-3604 | Exp 3604: FR-11 Continuous Self Learning v6 | Implemented | results/experiment_3604_fr11_continuous_self_learning_v6.json |
