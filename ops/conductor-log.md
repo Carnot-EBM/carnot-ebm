@@ -7555,3 +7555,4 @@ web search: https://docs.garak.ai/garak/examples/pr |
 | 2026-06-01 22:40 UTC | Milestone 2026.06.337 activated | OK | 12 tasks queued |
 | 2026-06-01 22:52 UTC | Archive milestone .336 honestly (the first-headlin | OK | 86 passed in 4.00s |
 | 2026-06-01 23:04 UTC | Backend-state diagnostic v3 — third consecutive pr | OK | 89 passed in 4.65s |
+| 2026-06-01 23:28 UTC | Promote the dependency-aware weighting to a G1-rig | OK | 93 passed in 8.82s |
