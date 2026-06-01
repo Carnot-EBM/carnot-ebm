@@ -7,7 +7,7 @@
     responses on top of the existing verification logic.
 
 **Detailed explanation for engineers:**
-    This server exposes nine tools over MCP (stdio JSON-RPC):
+    This server exposes ten tools over MCP (stdio JSON-RPC):
 
     1. ``verify_code`` -- Run structural tests on a Python function (from Exp 48).
     2. ``verify_with_properties`` -- Property-based testing with random inputs.
@@ -19,8 +19,9 @@
        verdict events.
     6. ``verify_and_repair`` -- Full verify-then-repair loop using the pipeline.
     7. ``score_agent_outputs`` -- Rank competing agent responses by energy.
-    8. ``list_domains`` -- List available constraint extraction domains.
-    9. ``health_check`` -- Liveness probe returning server version and status.
+    8. ``score_candidates`` -- Calibrated second-pair detector scoring.
+    9. ``list_domains`` -- List available constraint extraction domains.
+    10. ``health_check`` -- Liveness probe returning server version and status.
 
     Production safeguards:
     - All tool handlers run inside ``_guarded_call()`` which enforces a 30-second
@@ -967,6 +968,7 @@ def health_check() -> dict[str, Any]:
             "verify_stream",
             "verify_and_repair",
             "score_agent_outputs",
+            "score_candidates",
             "list_domains",
             "health_check",
         ],
@@ -1032,6 +1034,58 @@ def score_agent_outputs(question: str, responses: list[str]) -> dict[str, Any]:
     Spec: REQ-AGENT-003, REQ-AGENT-004, SCENARIO-AGENT-004
     """
     return _guarded_call(_run_score_agent_outputs, question, responses)
+
+
+# ---------------------------------------------------------------------------
+# Tool: score_candidates
+# ---------------------------------------------------------------------------
+
+
+def _run_score_candidates(
+    candidates: list[dict[str, Any]],
+    domain: str | None,
+) -> dict[str, Any]:
+    """Score candidates with the calibrated second-pair detector.
+
+    Spec: REQ-SPOE-3671, SCENARIO-SPOE-3672
+    """
+
+    if not isinstance(candidates, list):
+        raise MCPError("INVALID_INPUT", "candidates must be a list of candidate dicts")
+    if not candidates:
+        raise MCPError("INVALID_INPUT", "candidates must not be empty")
+    for i, candidate in enumerate(candidates):
+        if not isinstance(candidate, dict):
+            raise MCPError("INVALID_INPUT", f"candidate {i} must be a dict")
+        candidate_id = candidate.get("id", candidate.get("candidate_id"))
+        text = (
+            candidate.get("text")
+            or candidate.get("answer")
+            or candidate.get("response")
+            or candidate.get("candidate_code")
+            or ""
+        )
+        if isinstance(candidate_id, str):
+            _validate_input(candidate_id, f"candidates[{i}].id")
+        if isinstance(text, str):
+            _validate_input(text, f"candidates[{i}].text")
+
+    from carnot.pipeline.second_pair_detector import score_candidates as _score_candidates
+
+    return _score_candidates(candidates, default_domain=domain)
+
+
+@mcp_server.tool()
+def score_candidates(
+    candidates: list[dict[str, Any]],
+    domain: str | None = None,
+) -> dict[str, Any]:
+    """Return calibrated hallucination/error scores for candidate outputs.
+
+    Spec: REQ-SPOE-3671, SCENARIO-SPOE-3672
+    """
+
+    return _guarded_call(_run_score_candidates, candidates, domain)
 
 
 # ---------------------------------------------------------------------------

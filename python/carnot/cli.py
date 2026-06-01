@@ -22,6 +22,7 @@ from __future__ import annotations
 
 import argparse
 import ast
+import json
 import os
 import sys
 from typing import cast
@@ -382,6 +383,39 @@ def cmd_score(args: argparse.Namespace) -> int:
     return 0
 
 
+def cmd_score_candidates(args: argparse.Namespace) -> int:
+    """Score candidates with the calibrated second-pair detector.
+
+    Spec: REQ-SPOE-3671, SCENARIO-SPOE-3672
+    """
+
+    if args.candidates_file is None and args.candidates_json is None:
+        print("Error: provide --candidates-json or --candidates-file", file=sys.stderr)
+        return 1
+    try:
+        if args.candidates_file is not None:
+            with open(args.candidates_file, encoding="utf-8") as f:
+                candidates = json.load(f)
+        else:
+            candidates = json.loads(args.candidates_json)
+    except (OSError, json.JSONDecodeError) as exc:
+        print(f"Error reading candidates: {exc}", file=sys.stderr)
+        return 1
+    if not isinstance(candidates, list):
+        print("Error: candidates payload must be a JSON list", file=sys.stderr)
+        return 1
+
+    from carnot.pipeline.second_pair_detector import score_candidates
+
+    try:
+        result = score_candidates(candidates, default_domain=args.domain)
+    except ValueError as exc:
+        print(f"Error: {exc}", file=sys.stderr)
+        return 1
+    print(json.dumps(result, indent=2, sort_keys=True))
+    return 0
+
+
 def cmd_memory_export(args: argparse.Namespace) -> int:
     """Export SessionMemory as a portable JSON pack.
 
@@ -543,6 +577,27 @@ def main() -> int:
         help="List available pre-trained EBM models",
     )
 
+    # --- score-candidates subcommand ---
+    score_candidates_parser = subparsers.add_parser(
+        "score-candidates",
+        help="Score candidate outputs with the calibrated second-pair detector",
+    )
+    score_candidates_parser.add_argument(
+        "--candidates-json",
+        default=None,
+        help="JSON list of candidate dicts",
+    )
+    score_candidates_parser.add_argument(
+        "--candidates-file",
+        default=None,
+        help="Path to a JSON file containing a candidate list",
+    )
+    score_candidates_parser.add_argument(
+        "--domain",
+        default=None,
+        help="Default domain for candidates that omit a domain",
+    )
+
     # --- memory subcommands ---
     memory_parser = subparsers.add_parser(
         "memory",
@@ -612,6 +667,8 @@ def main() -> int:
         return cmd_verify_code(parsed)
     if parsed.command == "score":
         return cmd_score(parsed)
+    if parsed.command == "score-candidates":
+        return cmd_score_candidates(parsed)
     if parsed.command == "memory":
         if parsed.memory_command == "export":
             return cmd_memory_export(parsed)

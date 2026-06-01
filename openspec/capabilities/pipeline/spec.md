@@ -195,6 +195,56 @@ detector, and writes
   or `complete: blocked_no_labeled_corpus_for_fusion`.
 - The runner does not modify `scripts/research_conductor.py`.
 
+### REQ-SPOE-3671: Phase-1 Shipped Second-Pair Detector Surface
+
+The pipeline MUST expose the calibrated second-pair detector through a shipped
+`score_candidates` product surface callable from MCP and the CLI.  The shipped
+surface MUST fit calibration from labeled cached corpora using ensemble energy
+and confidence-error features, score caller-provided candidates with the same
+feature contract, and return a calibrated error probability plus the applicable
+per-domain operating point.  Code-domain calibration MUST use the balanced Exp
+3658 corpus when present, not the older imbalanced code corpus.
+
+**Acceptance criteria:**
+- The deployable detector module lives under `python/carnot/pipeline/` and
+  exposes the fitted detector API and `score_candidates` surface.
+- MCP exposes a `score_candidates` tool and the CLI exposes a matching
+  `score-candidates` command.
+- The surface returns `calibrated_error_score`, `ensemble_energy`,
+  `confidence_error`, `domain`, and `operating_point` for each candidate.
+- The Exp 3671 artifact reports fused, confidence-alone, and ensemble-alone
+  AUROC per domain; Brier and ECE per domain; fixed-FPR recall table; wired
+  surface name; E2E surface result; and a bare top-level `detector_shipped`
+  bool.
+- `detector_shipped` is true only when the detector is wired to a caller
+  surface, the E2E surface call returns a calibrated score, and the fused
+  detector beats confidence alone on at least one headroom-bearing domain.
+- If no labeled FoVer math or balanced Exp 3658 code corpus can be loaded, the
+  artifact returns `complete: blocked_no_labeled_corpus_for_detector` without
+  fabricating metrics.
+
+### REQ-SPOE-3671-ARTIFACT: Exp 3671 Detector Ship Artifact Contract
+
+The pipeline MUST provide an Exp 3671 runner that builds the shipped detector
+artifact from the FoVer math corpus and the balanced Exp 3658 code corpus, calls
+the shipped `score_candidates` surface end-to-end on a held-out example, and
+writes `results/experiment_3671_ship_second_pair_of_eyes_detector.json`.
+
+**Acceptance criteria:**
+- The artifact includes `honest_verdict`, `inference_substrate`,
+  `detector_module_path`, `wired_surface`,
+  `fused_detector_auroc_per_domain`,
+  `confidence_alone_auroc_per_domain`, `ensemble_alone_auroc_per_domain`,
+  `recall_at_fixed_fpr_table`, `calibration_brier_ece_per_domain`,
+  `e2e_test_passed`, `detector_shipped`, `n_examples_per_domain`,
+  `random_seed`, `reproducibility_checksum`, and `duration_s`.
+- `detector_shipped` is a bare top-level bool.
+- The honest verdict is one of:
+  `complete: second_pair_of_eyes_detector_shipped_math_strong_code_honest_e2e_green`,
+  `complete: second_pair_of_eyes_detector_shipped_math_only_code_weak_documented_e2e_green`,
+  or `complete: blocked_no_labeled_corpus_for_detector`.
+- The runner does not modify `scripts/research_conductor.py`.
+
 ## Scenarios
 
 ### SCENARIO-INFRA-052: Version-Blocked Model Raises Error
@@ -287,6 +337,35 @@ real-corpus success string.
 recommended operating point is chosen from the same table.
 
 **Spec traces:** REQ-SPOE-3657
+
+### SCENARIO-SPOE-3671: Shipped Detector Verdicts Stay Honest
+
+**Given** synthetic fixture domains covering
+`ships_math_and_code`, `ships_math_only_code_weak`, and `blocked`
+**When** the Exp 3671 detector ship artifact is built
+**Then** it returns the corresponding terminal verdict and bare
+`detector_shipped` bool without hard-coding a real-corpus success string.
+
+**Spec traces:** REQ-SPOE-3671, REQ-SPOE-3671-ARTIFACT
+
+### SCENARIO-SPOE-3672: Score Candidates Surface Returns Calibrated Scores
+
+**Given** a fitted detector context with held-out operating points
+**When** the shipped `score_candidates` surface is called through the package
+surface
+**Then** each candidate receives a calibrated error score in `[0, 1]` and a
+per-domain operating point from the held-out evaluation table.
+
+**Spec traces:** REQ-SPOE-3671
+
+### SCENARIO-SPOE-3673: Balanced Code Corpus Is Preferred
+
+**Given** both the old code corpus and the Exp 3658 balanced code corpus are
+present
+**When** labeled detector examples are loaded for Exp 3671
+**Then** the code-domain rows come from `data/code_verification_corpus_v2.jsonl`.
+
+**Spec traces:** REQ-SPOE-3671
 
 ### REQ-SAMPLE-020: SparseIsingEBM K-Regular Graph
 
