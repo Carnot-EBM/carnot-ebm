@@ -1,58 +1,63 @@
-milestone: "2026.06.331"
-milestone_title: "Finish the De-Contamination — does verifier value generalize once the test is GENUINELY fair? Fix the .330 gate cascade, audit the AUROC=1.0 leak, build a real NLI grounding verifier on a corpus WITH held-out evidence, and run the cross-domain re-measurement .330 skipped."
+milestone: "2026.06.332"
+milestone_title: "Finish the de-contamination FOR REAL — RUN the facts + code rows (don't block them), answer cross-domain generalization against a VALID positive control, and resume NEW breadth: position Carnot vs the SOTA weak-verifier peer (Weaver) and find where a verifier actually beats self-consistency."
 milestone_doc: openspec/change-proposals/research-roadmap-vNEXT.md
 
-# OUTER-LOOP / OPERATOR PRE-STAGED ROADMAP (2026-06-01, Claude Opus 4.8). PIVOT RATIONALE:
-# .330 set out to de-contaminate the .329 "verifier is math-only" verdict but DID NOT FINISH. A gate
-# cascade (scripts/conductor_gates.py:_eval_op compared a principle-annotated dict {{value:true,...}} vs the
-# bare expected true, which _coerce_gate_value does not unwrap) blocked exp3586 -> the centerpiece exp3588
-# (corrected cross-domain re-measurement) NEVER RAN -> exp3589 blocked. The one factual number that landed
-# (exp3587 grounding verifier AUROC=1.0) is IMPLAUSIBLE_PERFECT contamination: the corpus
-# data/realistic_factual_corpus_v1.jsonl has NO evidence column ({{question,answer,is_hallucination,
-# model_confidence}}), so a grounding verifier scoring 1.0 is label-leaking, and nli_substrate was a
-# text-statistical proxy (no real NLI model). The .330 capstone "math_only_earned/329_null_was_artifact"
-# verdict was synthesized from this broken partial data -- the de-contamination question is STILL OPEN.
-# .331 finishes it HONESTLY: (1) bare gated fields fix the cascade; (2) adversarially adjudicate the 1.0
-# leak; (3) build a factual corpus WITH independent held-out evidence (HaluEval `knowledge`) + confidence
-# headroom; (4) build a REAL NLI-model grounding verifier (HalluSearch/VeriScore recipe, arXiv:2504.10168/
-# 2406.19276); (5) run the centerpiece re-measurement + the literature math->code positive control
-# (arXiv:2506.00027, +4-8pts) against the discriminative-fragility falsifier (ThinkPRM arXiv:2504.16828).
-# Either outcome is genuine learning. INVARIANTS: paper_ready=true (G1-G4 met, do NOT regress); P0.1 stays
-# honest-negative (do NOT re-test Route-1/Route-2). All tasks default agent_type: gemini.
+# OUTER-LOOP / OPERATOR PRE-STAGED ROADMAP (2026-05-31, Claude Opus 4.8). PIVOT RATIONALE:
+# .331 was the THIRD attempt (after .329/.330) to answer: does verifier value generalize beyond MATH to
+# CODE and FACTS? It again did NOT finish honestly. The capstone DECLARED ".329 math-only CONFIRMED" but the
+# non-math rows were BLOCKED, not measured: exp3599 (facts corpus v2) wrote an empty {{}} artifact so its
+# gated_on fields read None -> exp3600 (NLI grounding verifier) + exp3601 (the CENTERPIECE cross-domain
+# re-measurement) both blocked_gate_check_failed; exp3602 (math->code transfer) blocked_no_labeled_code_corpus
+# with verifiers_fired_on_code=false; exp3603 (additivity) never ran. Asserting a null with no valid positive
+# control is the exact FALSE_NEGATIVE_RISK failure mode. BUT the apparatus EXISTS: data/realistic_factual_
+# corpus_v2.jsonl has 200 records with a real evidence_passage column -- the .331 failure was artifact-write +
+# over-gating, not inability to build. .332 finishes it: (1) validate the facts corpus + emit BARE gated
+# fields (the .330 cascade fix); (2) build/label the CODE corpus so the execution-applicable verifiers FIRE +
+# fold in the math->code PRM transfer stress-test (arXiv:2506.00027 vs ThinkPRM arXiv:2504.16828); (3) RUN the
+# centerpiece cross-domain re-measurement with graceful per-row degradation + a VALID positive control;
+# (4) the additive second-pair-of-eyes McNemar test; then resume NEW breadth (north-star sec-retirement):
+# (5) position Carnot vs Weaver (arXiv:2506.18203) incl. the inter-verifier CORRELATION matrix Weaver assumes
+# away; (6) build a corpus where oracle > SC and measure verifier-vs-SC + the hybrid detector (arXiv:2510.14913).
+# INVARIANTS: paper_ready=true (G1-G4 met; do NOT regress). P0.1 stays honest-negative (do NOT re-test
+# Route-1/Route-2; Depth-Over-Breadth retired 2026-05-31). Every gated_on field is a BARE scalar
+# (feedback_gated_fields_must_be_bare). exp3612/3613/3614 -> claude (gemini demonstrably failed this exact
+# category in .331); all other tasks default agent_type: gemini.
 
 tasks:
-  - id: exp3597-archive-v330-activate-v331
+  - id: exp3611-archive-v331-activate-v332
     operator_override: "2026-05-29 operator directive (standing): routine milestone-transition (archive-vN-activate-vN+1) — false-positive scope-match vs prior archive-v* tasks; structurally never a doomed rerun."
-    milestone: "2026.06.331"
-    title: "Archive milestone .330 honestly (record the gate cascade + the contaminated AUROC=1.0) and activate .331"
+    milestone: "2026.06.332"
+    title: "Archive milestone .331 honestly (record that 'math-only confirmed' came from BLOCKED non-math rows, not measurement) and activate .332"
     priority: critical
     max_turns: 20
     agent_type: gemini
+    model: gemini-3.1-pro-preview
     estimated_wall_time_min: 6
     track: ops
     inference_substrate: aggregation_from_upstream_artifacts
     requires_gpu: false
-    deliverable: results/experiment_3597_archive_v330_activate_v331.json
+    deliverable: results/experiment_3611_archive_v331_activate_v332.json
     prompt: |
-      CONTEXT: .330 tried to de-contaminate the .329 "verifier is math-only" verdict but did NOT finish.
-      A gate cascade (principle-annotated dict {{value:true,...}} vs bare expected true in
-      scripts/conductor_gates.py:_eval_op) blocked exp3586 -> the centerpiece exp3588 (corrected
-      cross-domain re-measurement) NEVER RAN -> exp3589 blocked. The one factual number that landed,
-      exp3587 grounding-verifier AUROC=1.0, is contamination (the corpus has no evidence column to ground
-      against). The de-contamination question is STILL OPEN. .331 finishes it. paper_ready=true (G1-G4 met)
-      and P0.1 honest-negative must NOT regress.
-      EXISTING CODE TO READ FIRST: research-roadmap.yaml (.330, the just-finished milestone),
-      results/experiment_3586/3587/3588/3589/3591/3596 via scripts/summarize_artifact.py, ops/north-star.md.
-      TASK: archive .330 to research-complete.yaml honestly, confirm .331 active.
-      REQUIRED ARTIFACT FIELDS (the principle: annotation below documents WHY each field matters; store each
-      field's VALUE in the artifact -- bare scalars are fine):
+      CONTEXT: .331 DECLARED ".329 math-only CONFIRMED / verifier value math_only_earned" but the facts and
+      code rows were BLOCKED, not measured: exp3599 wrote an empty {{}} artifact -> exp3600/exp3601 cascade-
+      blocked; exp3602 had no labeled code corpus (verifiers inert); exp3603 never ran. Only MATH (FoVer
+      0.9131, frozen) landed. Asserting a null with no valid positive control is a FALSE_NEGATIVE_RISK
+      violation -- so the de-contamination question is STILL OPEN. .332 finishes it. paper_ready=true (G1-G4
+      met) and P0.1 honest-negative must NOT regress.
+      EXISTING CODE TO READ FIRST: research-roadmap.yaml (.331, the just-finished milestone);
+      results/experiment_3598/3599/3601/3602/3605/3610 via scripts/summarize_artifact.py; ops/north-star.md.
+      TASK: archive .331 to research-complete.yaml honestly, confirm .332 active.
+      REQUIRED ARTIFACT FIELDS (the principle: annotation documents WHY each field matters; store each field's
+      VALUE -- bare scalars are fine):
         honest_verdict:
           principle: "Terminal prefix lets the conductor reconciler classify the transition as complete without re-running it."
-        inference_substrate: "aggregation_from_upstream_artifacts (principle: declares a JSON-read + format task, not live inference; 0.0001s floor)."
-        v330_outcome_recorded_as:
-          principle: "Records that .330's defensible state is an UNFINISHED de-contamination (cascade + contaminated 1.0), NOT a clean 'math-only' finding -- prevents the false verdict propagating to the paper."
-        gate_cascade_root_cause_recorded:
-          principle: "Names the dict-vs-bare _eval_op mismatch so the .331 design (bare gated fields) is auditable."
+        inference_substrate: "aggregation_from_upstream_artifacts (principle: a JSON-read + format task, not live inference; 0.0001s floor)."
+        v331_outcome_recorded_as:
+          principle: "Records that .331's defensible state is an UNFINISHED de-contamination (facts/code rows BLOCKED not measured), NOT a clean 'math-only confirmed' finding -- prevents the false null propagating to the paper."
+        false_negative_risk_recorded:
+          principle: "Names that the .331 capstone asserted a null with no valid positive control -- the exact failure mode .332 repairs."
+        facts_corpus_exists_for_332:
+          principle: "Records that data/realistic_factual_corpus_v2.jsonl (200 records, evidence column) ALREADY exists, so .332 validates not rebuilds -- the tractability fact."
         paper_ready_preserved:
           principle: "G1-G4 stay met; the transition must not silently regress paper_ready."
         n_tasks_archived:
@@ -63,150 +68,66 @@ tasks:
           principle: "Content hash catches silent drift between this artifact and any replication."
         duration_s:
           principle: "Wall-clock plausibility floor; missing duration is the fabrication signal."
-      TERMINAL VERDICT: "complete: archived_v330_unfinished_decontamination_gate_cascade_recorded_v331_active_paper_ready_true"
-      Run: cd {project_root} && python scripts/experiment_3597_archive_v330_activate_v331.py
+      TERMINAL VERDICT: "complete: archived_v331_unfinished_decontamination_facts_code_blocked_not_measured_v332_active_paper_ready_true"
+      Run: cd {project_root} && python scripts/experiment_3611_archive_v331_activate_v332.py
       Do NOT push. Do NOT modify scripts/research_conductor.py.
 
-  - id: exp3598-diagnose-330-cascade-and-audit-auroc-1
-    operator_override: "2026-05-29 operator directive (standing): per-milestone diagnostic/positive-control audit (Reading-Results + FALSE_NEGATIVE_RISK Discipline) — false-positive scope-match vs prior diagnose-* tasks; reads NEW .330 artifacts to characterize a NEW contamination, not a re-run."
-    milestone: "2026.06.331"
-    title: "Diagnose the .330 gate cascade + adversarially audit the exp3587 AUROC=1.0 grounding verifier (leak or real?) + enumerate the corpus-evidence gap and per-domain applicable verifiers"
+  - id: exp3612-validate-factual-corpus-v2-emit-bare-fields
+    prior_failures:
+      - experiment_id: exp3599-build-factual-corpus-v2-with-evidence
+        verdict: empty_artifact_no_verdict_corpus_data_landed_but_json_was_empty_braces
+        addressed_by: "exp3599 BUILT the corpus (data/realistic_factual_corpus_v2.jsonl, 200 records with a real evidence_passage column) but wrote an empty {{}} artifact, so its gated_on fields read None and cascade-blocked exp3600/3601. This task is DIFFERENT: it does NOT regenerate via fragile live SOTA inference -- it VALIDATES the existing 200-record corpus (evidence independence + confidence headroom) and re-emits a CLEAN artifact with the gated fields as BARE top-level booleans (the .330/.331 cascade fix). If the existing corpus fails the sanity gates, it deterministically rebuilds from a real evidence-bearing labeled dataset (HaluEval QA `knowledge` / RAGTruth / FELM)."
+        retire_if_same_verdict: false
+    milestone: "2026.06.332"
+    title: "Validate the existing factual corpus v2 (200 recs, held-out evidence) — evidence independence + confidence headroom in (0.5,0.95) — and re-emit a CLEAN artifact with BARE gated fields"
     priority: critical
     max_turns: 50
-    agent_type: gemini
-    estimated_wall_time_min: 18
+    agent_type: claude
+    requires_claude: true   # gemini wrote an empty {{}} artifact for exactly this task in .331 (exp3599); judgment-heavy leak/independence checks + bare-field emit discipline
+    estimated_wall_time_min: 16
     track: evidence
     inference_substrate: aggregation_from_upstream_artifacts
     requires_gpu: false
-    deliverable: results/experiment_3598_diagnose_330_cascade_audit.json
+    deliverable: results/experiment_3612_validate_factual_corpus_v2.json
     prompt: |
-      CONTEXT: a fair re-test cannot be trusted until the .330 contamination is characterized (Reading-Results
-      + FALSE_NEGATIVE_RISK Discipline). This task establishes (a) the gate-cascade root cause, (b) whether
-      the exp3587 AUROC=1.0 is a genuine signal or a label leak, (c) the corpus-evidence gap, (d) the
-      per-domain structurally-applicable verifier sets. Its outputs are the spec the Phase-2/3 tasks consume.
-      EXISTING CODE TO READ FIRST: results/experiment_3586/3587/3588/3589 via scripts/summarize_artifact.py
-      AND raw JSON; scripts/conductor_gates.py (functions _eval_op + _coerce_gate_value -- the dict-vs-bare
-      bug); data/realistic_factual_corpus_v1.jsonl (note its keys); python/carnot/verify/
-      retrieval_nli_grounding_verifier.py (the exp3587 verifier); the verifier inventory under
-      python/carnot/verify/ (factual-applicable: semantic_energy.py, nla_verifier_v3.py,
-      canonical_answer_vericot_grounding_pilot_v1.py, suppressed_retrieval_probe.py, tier0g_semantic_energy.py,
-      tier0u_logical_consistency.py, tier0v_set_consistency.py, tier0w_paraphrase_consistency.py,
-      fover_semantic_calibration.py; code-applicable: ast_structure_verifier.py,
-      code_structural_dependency_verifier.py, controlled_invariance_executor_v2.py,
-      executable_monitor_runtime_adapter.py).
+      CONTEXT: the .331 facts row was blocked because exp3599 wrote an empty {{}} artifact even though it
+      successfully built data/realistic_factual_corpus_v2.jsonl (200 records: {{question, answer,
+      is_hallucination, evidence_passage, model_confidence}}). This task makes the facts apparatus USABLE:
+      validate the corpus and emit a clean artifact whose gated fields are BARE top-level booleans so the
+      downstream gated_on checks succeed (the .330/.331 cascade fix per feedback_gated_fields_must_be_bare).
+      EXISTING CODE TO READ FIRST: data/realistic_factual_corpus_v2.jsonl (the 200-record corpus to VALIDATE,
+      not rebuild); results/experiment_3598/3599 via scripts/summarize_artifact.py (the leak diagnosis +
+      what exp3599 intended); scripts/experiment_template.py.
+      PRECONDITIONS (step 0, check BEFORE validation):
+        a. data/realistic_factual_corpus_v2.jsonl present AND >= 200 lines of valid JSON. If absent or < 50
+           valid records -> deterministic rebuild path (step 1b). If neither the file nor a fetchable
+           evidence-bearing dataset is available -> honest_verdict "complete: blocked_no_evidence_corpus".
+        b. (rebuild fallback only) network check `curl -sf -o /dev/null https://huggingface.co/api/datasets`.
       CONCRETE STEPS:
-        1. GATE CASCADE: confirm exp3586/3589 blocked_gate_check_failed and that exp3588 produced no
-           artifact. Read the gates_evaluated block in exp3586 and show the actual value was a dict
-           {{value:true,principle:...}} compared against bare true. State the forward rule: gated fields must
-           be emitted bare.
-        2. AUROC=1.0 AUDIT: inspect data/realistic_factual_corpus_v1.jsonl -- confirm it has NO independent
-           evidence/reference column (only question/answer/is_hallucination/model_confidence). Read
-           retrieval_nli_grounding_verifier.py and determine WHAT it grounded against. Adjudicate: is the
-           1.0 a label leak / gold-answer-as-evidence / trivial separation (LEAK), or a defensible signal
-           (REAL)? Default to LEAK if the verifier had access to anything correlated with the label.
-        3. EVIDENCE GAP: state what a fair factual corpus must add -- an independent evidence passage held
-           out from the gold label (e.g. the HaluEval QA `knowledge` field). Confirm whether HaluEval QA
-           records (the exp3585 corpus_source) carry such a field.
-        4. APPLICABLE VERIFIERS: enumerate, per domain (facts, code), the verifiers STRUCTURALLY APPLICABLE
-           (could fire) vs STRUCTURALLY INERT. Output the per-domain applicable sets the fair test must use.
-      REQUIRED ARTIFACT FIELDS (principle: documents WHY; store the VALUE):
+        1a. VALIDATE the existing corpus: confirm every record carries a non-empty evidence_passage; confirm
+            answers are REAL factual strings (reject any `^[RH]\d+$` / `^Q\d+$` placeholder tokens -- those
+            are the toy tokens that leaked into the .330 AUROC=1.0). Record n_examples, n_hallucinated,
+            n_correct (class balance).
+        1b. IF validation fails (placeholder tokens, missing evidence, n<50): rebuild deterministically from a
+            real evidence-bearing labeled dataset (HaluEval QA `knowledge` field / RAGTruth reference passages
+            / FELM) -- prefer fetch over live generation; write data/realistic_factual_corpus_v3.jsonl and
+            validate THAT.
+        2. SANITY GATE A (headroom): compute the model-confidence (or sequence-logprob) AUROC on the corpus.
+           It MUST be in (0.50, 0.95). <=0.50 (anti-correlated noise) OR >=0.95 (no headroom) means the corpus
+           or confidence extraction is degenerate -- report honestly, set facts_corpus_validated=false.
+        3. SANITY GATE B (evidence independence): assert the evidence_passage is NOT a function of
+           is_hallucination (e.g. evidence present for both classes; passage does not trivially flag the
+           label) so a grounding verifier cannot leak the way exp3587 did.
+        4. Emit the validated corpus path + class balance.
+      REQUIRED ARTIFACT FIELDS (principle: documents WHY; the gated fields facts_corpus_validated and
+      facts_corpus_has_evidence MUST be stored as BARE top-level booleans, NOT {{value,principle}} dicts):
         honest_verdict:
           principle: "Terminal prefix for reconciler classification."
-        inference_substrate: "aggregation_from_upstream_artifacts (principle: reads .330 artifacts + source; no live inference)."
-        gate_cascade_confirmed:
-          principle: "Confirms the dict-vs-bare _eval_op mismatch took out exp3586/3588/3589 -- the operational root cause this milestone designs around."
-        auroc_1_verdict:
-          principle: "'leak' or 'real' for the exp3587 1.0 -- a 1.0 on a corpus with no evidence column is the IMPLAUSIBLE_PERFECT pattern; mislabeling it 'real' would propagate a fabricated factual claim."
-        auroc_1_leak_mechanism:
-          principle: "Names HOW the verifier reached 1.0 (gold-answer-as-evidence, label correlate, trivial separation) so the .331 grounding verifier avoids it."
-        corpus_evidence_gap_confirmed:
-          principle: "True iff the .330 corpus lacks an independent evidence column -- the precise gap exp3599 must close."
-        halueval_has_knowledge_field:
-          principle: "Whether HaluEval QA carries a held-out `knowledge` passage usable as independent evidence -- determines exp3599's corpus source."
-        applicable_verifiers_facts:
-          principle: "The factual-applicable verifier set a fair test must score -- the .329/.330 omission this milestone repairs."
-        applicable_verifiers_code:
-          principle: "The execution-applicable verifier set for the code re-test (the .330 code AUROC 0.44 means these never fired)."
-        random_seed:
-          principle: "Determinism precondition."
-        reproducibility_checksum:
-          principle: "Drift detection."
-        duration_s:
-          principle: "Plausibility floor."
-      ACCEPTANCE GATE:
-        - condition: "gate_cascade_confirmed present AND auroc_1_verdict present AND applicable_verifiers_facts present AND applicable_verifiers_code present"
-          principle: "The milestone cannot proceed to a fair re-test without the cascade root cause, the 1.0 adjudication, and the per-domain applicable verifier sets."
-      TERMINAL VERDICTS: "complete: diagnosed_330_cascade_confirmed_auroc1_is_leak_evidence_gap_named_applicable_sets_enumerated" /
-      "complete: diagnosed_330_cascade_confirmed_auroc1_is_real_applicable_sets_enumerated"
-      Run: cd {project_root} && python scripts/experiment_3598_diagnose_330_cascade_audit.py
-      Do NOT push. Do NOT modify scripts/research_conductor.py.
-
-  - id: exp3599-build-factual-corpus-v2-with-evidence
-    prior_failures:
-      - experiment_id: exp3585-build-realistic-factual-hallucination-corpus
-        verdict: complete_realistic_factual_corpus_built_confidence_auroc_FF_headroom_confirmed
-        addressed_by: "exp3585 built a corpus with NO independent evidence column ({{question,answer,is_hallucination,model_confidence}}), which is why exp3587's grounding verifier had nothing legitimate to ground against and leaked to AUROC=1.0. This task is DIFFERENT: it builds corpus v2 that CARRIES an independent evidence passage (the HaluEval QA `knowledge` field) held out from the gold label, AND validates the confidence baseline AUROC is in (0.5,0.95) -- real headroom AND a real grounding target."
-        retire_if_same_verdict: false
-    milestone: "2026.06.331"
-    title: "Build factual corpus v2 WITH independent held-out evidence passages (HaluEval QA `knowledge`) + confidence headroom in (0.5, 0.95)"
-    priority: critical
-    max_turns: 60
-    agent_type: gemini
-    estimated_wall_time_min: 28
-    track: evidence
-    inference_substrate: live_llm_inference
-    requires_gpu: true
-    deliverable: results/experiment_3599_factual_corpus_v2_with_evidence.json
-    prompt: |
-      CONTEXT: the .330 factual corpus had no evidence column, so a grounding verifier could not honestly
-      ground against anything (exp3587 leaked to AUROC=1.0). A fair factual test needs a corpus where each
-      record carries an INDEPENDENT evidence passage (held out from the gold label) AND where model
-      confidence is a MEDIOCRE detector (AUROC in (0.5,0.95) -- real headroom, not anti-correlated noise).
-      Build corpus v2.
-      EXISTING CODE TO READ FIRST: results/experiment_3598 (the diagnosis -- corpus_evidence_gap +
-      halueval_has_knowledge_field) via scripts/summarize_artifact.py; scripts/experiment_template.py
-      (cached_sota_pair() + BatchedInferenceRunner); data/realistic_factual_corpus_v1.jsonl (the v1 to
-      IMPROVE on -- carry its records but ADD evidence).
-      PRECONDITIONS (step 0, check BEFORE any generation):
-        a. PREFER a labeled corpus that already ships evidence: if a HaluEval QA / FELM / FEVER / SHROOM file
-           with per-record reference/knowledge passages is on disk OR fetchable via `curl -sf` to a public
-           dataset URL, use its `knowledge`/`evidence`/`reference` field. Check
-           `curl -sf -o /dev/null https://huggingface.co/api/datasets` for network.
-        b. ELSE generate answers but attach retrieved evidence: verify a SOTA GGUF is cached --
-           `ls ~/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/` (or gemma-4-31B-it-GGUF /
-           gemma-4-26B-A4B-it-GGUF) returns non-empty. If neither an evidence-bearing corpus nor a cached
-           model is available -> honest_verdict "complete: blocked_no_evidence_corpus_and_no_cached_sota_model".
-        c. If generating, CUDA/llama.cpp loadable:
-           `python -c "from carnot.inference.sota_models import cached_sota_pair; assert cached_sota_pair(gpu_indices=(0,1))"`.
-           If not -> "complete: blocked_sota_model_not_loadable".
-      CONCRETE STEPS:
-        1. Assemble >= 200 records, EACH carrying {{question, answer, is_hallucination, model_confidence,
-           evidence_passage}}. REJECT the .330 placeholder corpus: if any record's `answer` matches the
-           regex `^[RH]\d+$` (the toy R1/R2/H1/H2 label-tokens that leaked into exp3587's 1.0) or
-           `question` matches `^Q\d+$`, the corpus is synthetic-degenerate -- do NOT use it; fetch or
-           generate REAL factual records instead. The evidence_passage MUST be independent of the gold
-           label (a real knowledge/reference passage, NOT the gold answer string, NOT the is_hallucination
-           flag). If generating answers with a mandated SOTA GGUF (MODEL_SPECS MUST include >=1 of
-           Qwen3.6-35B-A3B-GGUF / gemma-4-31B-it-GGUF / gemma-4-26B-A4B-it-GGUF via cached_sota_pair),
-           include genuinely confident-but-wrong hallucinations (NOT random/empty strings).
-        2. SANITY GATE A (headroom): compute the model-confidence / sequence-logprob AUROC. It MUST be in
-           (0.50, 0.95). A value <= 0.50 (anti-correlated, like the v1 0.4573) OR >= 0.95 (no headroom)
-           means the corpus or the confidence extraction is degenerate -- report honestly and do NOT ship.
-        3. SANITY GATE B (evidence independence + real content): verify the evidence_passage does NOT
-           contain the gold answer verbatim and is not a function of is_hallucination -- so a grounding
-           verifier cannot leak. ALSO assert the records carry real factual text (answers are not the
-           `^[RH]\d+$` placeholder tokens) -- a leak-free but vacuous corpus is still degenerate.
-        4. Persist to data/realistic_factual_corpus_v2.jsonl with class balance recorded.
-      REQUIRED ARTIFACT FIELDS (principle: documents WHY; the two gated fields corpus_v2_is_realistic and
-      corpus_v2_has_evidence MUST be stored as BARE top-level booleans, NOT {{value,principle}} dicts, so the
-      downstream gated_on checks succeed -- this is the .330 cascade fix):
-        honest_verdict:
-          principle: "Terminal prefix for reconciler classification."
-        inference_substrate: "live_llm_inference (principle: declares live SOTA generation, 60s floor, if generated; honest about compute)."
-        preconditions_checked:
-          principle: "Records which resources were verified before generation -- pre-empts fabrication-when-resource-missing."
+        inference_substrate: "aggregation_from_upstream_artifacts (principle: validates an existing on-disk corpus + reads upstream diagnosis; no live LLM unless the rebuild fallback fires)."
+        corpus_path_used:
+          principle: "Which corpus the downstream rows must score (v2 validated, or v3 rebuilt) -- single source of truth."
         corpus_source:
-          principle: "Provenance: fetched dataset name+URL+field or generated-by-MODEL -- audit trail for the corpus and its evidence."
+          principle: "Provenance: validated-existing-v2 or rebuilt-from-DATASET+URL+field -- audit trail."
         n_examples:
           principle: "Sample-size rigor; >=200 for a percentage-point AUROC claim downstream."
         n_hallucinated:
@@ -217,102 +138,99 @@ tasks:
           principle: "THE realism gate: must be in (0.5,0.95) so verifiers have headroom AND confidence is not anti-correlated noise."
         evidence_independent_of_label:
           principle: "True iff the evidence passage does not leak the gold answer / label -- the precondition that prevents the exp3587 AUROC=1.0 leak from recurring."
-        corpus_v2_has_evidence:
-          principle: "BARE bool. True iff every record carries an independent held-out evidence passage -- gates exp3600. STORE AS BARE true/false."
-        corpus_v2_is_realistic:
-          principle: "BARE bool. True iff confidence_baseline_auroc_on_corpus in (0.5,0.95) AND evidence_independent_of_label -- gates exp3601. STORE AS BARE true/false."
-        model_specs:
-          principle: "Names the SOTA GGUF actually invoked (or the dataset) -- methodology traceability."
+        facts_corpus_has_evidence:
+          principle: "BARE bool. True iff every record carries an independent held-out evidence passage. STORE AS BARE true/false (gates the grounding-verifier path inside exp3614)."
+        facts_corpus_validated:
+          principle: "BARE bool. True iff confidence_baseline_auroc in (0.5,0.95) AND evidence_independent_of_label AND no placeholder tokens. STORE AS BARE true/false."
+        placeholder_tokens_rejected:
+          principle: "Confirms the toy R1/H1/Q1 tokens that produced the .330 leak are absent -- a leak-free but vacuous corpus is still degenerate."
         random_seed:
           principle: "Determinism precondition."
         reproducibility_checksum:
           principle: "Drift detection across replications."
         duration_s:
-          principle: "Plausibility floor -- live 35B generation cannot complete in <60s."
+          principle: "Plausibility floor."
       ACCEPTANCE GATE:
-        - condition: "n_examples >= 200 AND corpus_v2_has_evidence == true AND corpus_v2_is_realistic == true"
-          principle: "A fair factual corpus is defined by independent held-out evidence AND confidence headroom; without both, the downstream grounding test repeats the .330 contamination."
-      TERMINAL VERDICTS: "complete: factual_corpus_v2_built_with_held_out_evidence_confidence_headroom_confirmed" /
-      "complete: corpus_v2_degenerate_confidence_out_of_band_or_evidence_leaks_factual_test_blocked" /
-      "complete: blocked_<resource>"
-      Run: cd {project_root} && python scripts/experiment_3599_factual_corpus_v2_with_evidence.py
+        - condition: "n_examples >= 200 AND facts_corpus_has_evidence == true AND facts_corpus_validated == true"
+          principle: "A fair factual corpus is defined by independent held-out evidence AND confidence headroom; without both, the downstream grounding test repeats the .330/.331 contamination."
+      TERMINAL VERDICTS: "complete: factual_corpus_v2_validated_held_out_evidence_confidence_headroom_confirmed_bare_fields_emitted" /
+      "complete: factual_corpus_rebuilt_v3_validated_bare_fields_emitted" /
+      "complete: factual_corpus_degenerate_confidence_out_of_band_or_evidence_leaks_facts_row_blocked" /
+      "complete: blocked_no_evidence_corpus"
+      Run: cd {project_root} && python scripts/experiment_3612_validate_factual_corpus_v2.py
       Do NOT push. Do NOT modify scripts/research_conductor.py.
 
-  - id: exp3600-real-nli-grounding-verifier
-    operator_override: "2026-05-29 operator directive (standing): versioned verifier continuation with a STATED forward difference (the exp3587 grounding verifier used a text-statistical proxy and leaked to AUROC=1.0; this build uses a REAL NLI model scored against HELD-OUT evidence) — false-positive scope-match vs the exp3587 grounding-verifier build."
-    milestone: "2026.06.331"
-    title: "Build a REAL NLI-model atomic-claim factual-grounding verifier (HalluSearch/VeriScore recipe) scored against HELD-OUT evidence + honest eval vs confidence"
-    priority: high
+  - id: exp3613-code-corpus-verifiers-fire-math-to-code-transfer
+    prior_failures:
+      - experiment_id: exp3602-math-to-code-prm-transfer-positive-control
+        verdict: complete_blocked_no_labeled_code_corpus_verifiers_fired_on_code_false
+        addressed_by: "exp3602 blocked because no labeled code corpus was loadable and the execution-applicable verifiers never scored (verifiers_fired_on_code=false). This task is DIFFERENT: it BUILDS the labeled code corpus from the EXISTING results/experiment_1999_code_verification_humaneval.json (per-candidate correctness labels) and explicitly WIRES the four execution-applicable verifiers (controlled_invariance_executor_v2, executable_monitor_runtime_adapter, ast_structure_verifier, code_structural_dependency_verifier) to score completions, asserting n_scored>0 and not-all-0.5 BEFORE reporting any transfer number. New corpus + new verifier wiring + a headroom check = a runnable test, not a re-run of a blocked one."
+        retire_if_same_verdict: false
+    milestone: "2026.06.332"
+    title: "Build the labeled CODE corpus + make the execution-applicable verifiers actually FIRE + math→code PRM-transfer stress-test (arXiv:2506.00027 vs ThinkPRM arXiv:2504.16828)"
+    priority: critical
     max_turns: 60
-    agent_type: gemini
-    estimated_wall_time_min: 28
+    agent_type: claude
+    requires_claude: true   # gemini left the code verifiers inert in .331 (exp3602); multi-file verifier wiring + execution choreography + OOD judgment
+    estimated_wall_time_min: 24
     track: evidence
     inference_substrate: verifier_ensemble_against_cached_candidates
-    requires_gpu: true
-    gated_on:
-      - upstream: exp3599-build-factual-corpus-v2-with-evidence
-        artifact_field: corpus_v2_has_evidence
-        op: '=='
-        value: true
-    deliverable: results/experiment_3600_real_nli_grounding_verifier.json
+    requires_gpu: false
+    deliverable: results/experiment_3613_code_corpus_verifiers_fire_transfer.json
     prompt: |
-      CONTEXT: the exp3587 grounding verifier reached AUROC=1.0 because it had no independent evidence to
-      ground against (label leak) and used a text-statistical proxy, not a real NLI model. This task builds
-      the verifier HONESTLY: decompose the answer into atomic claims -> retrieve evidence FROM THE CORPUS v2
-      held-out evidence_passage (NEVER the gold answer / label) -> NLI entailment per claim with a REAL
-      entailment model -> energy = fraction of unentailed/contradicted claims. This is the HalluSearch /
-      VeriScore SOTA recipe (arXiv:2504.10168 / 2406.19276).
-      VERIFIER AUTHENTICITY (CLAUDE.md -- MANDATORY): the implementation MUST match its docstring. If it
-      claims NLI, it MUST invoke a real entailment model (a small DeBERTa/MiniLM-NLI checkpoint via
-      transformers) OR be an HONEST text-statistical proxy with the gap DISCLOSED in the docstring per the
-      pcib_probe.py pattern -- and record which path in nli_substrate. NO np.random features, NO
-      sleep-padding, NO score-capping, NO min(score,0.99). Name it RetrievalNLIGroundingVerifier for what it
-      does. An AUROC of exactly 1.0 on n>=200 is a RED FLAG -- if you see it, the evidence is leaking; fix
-      the retrieval to exclude any label-correlated text and report the honest (lower) number.
-      EXISTING CODE TO READ FIRST: results/experiment_3598 (auroc_1_leak_mechanism) + 3599 (the corpus v2
-      path + evidence schema) via scripts/summarize_artifact.py; python/carnot/verify/
-      retrieval_nli_grounding_verifier.py (the leaky exp3587 verifier -- FIX it, do not duplicate),
-      canonical_answer_vericot_grounding_pilot_v1.py, suppressed_retrieval_probe.py, semantic_energy.py;
-      CLAUDE.md "Verifier Authenticity Discipline".
+      CONTEXT: the .331 code row was a non-result because there was no labeled code corpus and the
+      execution-applicable verifiers never fired. This task makes the code apparatus REAL and runs the
+      literature's positive control: arXiv:2506.00027 found math-trained PRMs transfer to code AS WELL AS OR
+      BETTER than code-trained PRMs (HumanEval+ best-of-8: PRM-Math 91.5% vs PRM-Code 89.0%); ThinkPRM
+      (arXiv:2504.16828) is the counter-hypothesis (discriminative verifiers are OOD-fragile). Does the
+      FoVer-math-derived verifier signal transfer to a CODE benchmark on Carnot?
+      VERIFIER AUTHENTICITY (CLAUDE.md -- MANDATORY): the verifiers must do what their docstrings claim; the
+      execution-applicable verifiers must actually execute/parse the candidate code, not return a constant.
+      NULL DISCIPLINE (FALSE_NEGATIVE_RISK): a "does not transfer" verdict is only trustworthy if the code
+      corpus has headroom (confidence/SC baseline materially < 1.0) AND the verifiers fired (n_scored>0,
+      not all 0.5).
+      EXISTING CODE TO READ FIRST: results/experiment_1999_code_verification_humaneval.json + its corpus
+      (baseline 0.66 -> repair 0.84) via scripts/summarize_artifact.py; results/experiment_3598 (the
+      applicable_verifiers_code list) if present; the four code-applicable verifiers under python/carnot/
+      verify/ -- controlled_invariance_executor_v2.py, executable_monitor_runtime_adapter.py,
+      ast_structure_verifier.py, code_structural_dependency_verifier.py.
       PRECONDITIONS (step 0):
-        a. data/realistic_factual_corpus_v2.jsonl present with an evidence_passage field (exp3599). If not
-           -> "complete: blocked_corpus_v2_unavailable".
-        b. An NLI checkpoint loadable (e.g. `python -c "from transformers import AutoModelForSequenceClassification"`
-           + a cached cross-encoder/nli checkpoint) OR fall back to a DISCLOSED text-statistical entailment
-           proxy. Record which path in nli_substrate; never fabricate a model run.
+        a. A code benchmark with per-candidate correctness labels loadable (exp1999 HumanEval; or MBPP/
+           LiveCodeBench if on disk). If none -> "complete: blocked_no_labeled_code_corpus".
+        b. The four code-applicable verifiers importable; record any import-inert verifier and continue.
       CONCRETE STEPS:
-        1. Fix/implement python/carnot/verify/retrieval_nli_grounding_verifier.py: atomic-claim split ->
-           evidence = corpus v2 evidence_passage ONLY (assert the gold answer is NOT in the evidence) ->
-           per-claim entailment with the real NLI model (or disclosed proxy) -> aggregate energy. Honest
-           docstring matching the implementation.
-        2. Score it on corpus v2; error-detection AUROC (label=is_hallucination) + >=3 seeds + bootstrap CI.
-        3. Compare vs (a) model-confidence baseline (exp3599), (b) the best existing factual verifier.
-        4. Measure the ensemble WITH the new verifier vs WITHOUT (ablation).
-      REQUIRED ARTIFACT FIELDS (principle: documents WHY; the gated field grounding_leak_free MUST be a BARE
+        1. Assemble the labeled code corpus from exp1999 (>= 50 candidates with correctness labels). Persist
+           data/code_verification_corpus_v1.jsonl with the candidate, the label, and the test outcome.
+        2. Score the four execution-applicable verifiers on each candidate. ASSERT they fired: code_verifiers_
+           fire = (n_scored > 0 AND score variance > 0). If they do not fire, DIAGNOSE why (interface
+           mismatch? sandbox?) and report code_verifiers_fire=false honestly -- do NOT fabricate scores.
+        3. Score the FoVer-math-derived verifier signal on the SAME corpus; error-detection AUROC + >=3 seeds
+           + CI. Compute the confidence/SC baseline AUROC (the headroom check).
+        4. Report the transfer delta vs the +4-8pt arXiv:2506.00027 anchor and which hypothesis it supports
+           (transfer vs discriminative-fragility).
+      REQUIRED ARTIFACT FIELDS (principle: documents WHY; the gated field code_verifiers_fire MUST be a BARE
       top-level bool):
         honest_verdict:
           principle: "Terminal prefix for reconciler classification."
-        inference_substrate: "verifier_ensemble_against_cached_candidates (principle: scores against the cached corpus; the NLI model is a verifier component, not the FoVer LLM)."
-        nli_substrate:
-          principle: "Declares model-based NLI vs disclosed text-statistical proxy -- verifier-authenticity honesty (implementation matches docstring)."
-        evidence_excludes_gold_answer_assert:
-          principle: "Asserts the retrieved evidence never contains the gold answer -- the explicit guard against the exp3587 leak."
-        grounding_verifier_auroc:
-          principle: "The new verifier's standalone factual signal + CI (an exact 1.0 here is a leak, not a win)."
-        confidence_baseline_auroc:
-          principle: "Strong baseline to beat or augment."
-        best_existing_factual_verifier_auroc:
-          principle: "Shows whether the new build adds signal the existing verifiers lacked."
-        ensemble_with_grounding_auroc:
-          principle: "Ensemble incl. the new verifier -- the additive-value test."
-        ensemble_without_grounding_auroc:
-          principle: "Ablation baseline -- isolates the grounding verifier's contribution."
-        grounding_adds_factual_signal:
-          principle: "True iff the grounding verifier's AUROC CI excludes 0.5 AND ensemble_with > ensemble_without -- the core build-success signal."
-        grounding_leak_free:
-          principle: "BARE bool. True iff evidence excludes the gold answer AND AUROC < 0.99 (not implausibly perfect) -- gates trust in the factual row. STORE AS BARE true/false."
+        inference_substrate: "verifier_ensemble_against_cached_candidates (principle: scores the cached code corpus; no LLM load)."
+        code_corpus_path:
+          principle: "Where the labeled code corpus lives -- the apparatus exp3614 reuses for the code row."
+        code_corpus_name:
+          principle: "Which labeled code benchmark was scored -- provenance."
         n_examples:
-          principle: "Sample-size rigor (>=200)."
+          principle: "Sample-size rigor (>=50 candidates with labels)."
+        code_verifiers_fire:
+          principle: "BARE bool. True iff the execution-applicable verifiers scored (n_scored>0, variance>0) -- distinguishes 'transfer failed' from 'verifiers never ran' (the .331 AUROC 0.44 cause). STORE AS BARE true/false."
+        execution_verifier_auroc:
+          principle: "The execution-applicable verifiers' standalone code-error signal + CI."
+        math_signal_code_auroc:
+          principle: "The transferred FoVer-math verifier signal on code -- the core transfer number."
+        code_confidence_baseline_auroc:
+          principle: "Headroom check: a baseline near 1.0 means no room to discriminate, so a null is uninformative (the .331 code failure mode)."
+        transfer_delta_vs_literature:
+          principle: "Signed comparison to the +4-8pt arXiv:2506.00027 anchor -- contextualizes Carnot against the published positive control."
+        hypothesis_supported:
+          principle: "'transfer' (2506.00027) or 'discriminative_fragility' (2504.16828) -- the falsifiable mechanism for the cross-domain result."
         random_seed:
           principle: "Determinism precondition."
         reproducibility_checksum:
@@ -320,77 +238,102 @@ tasks:
         duration_s:
           principle: "Plausibility floor."
       ACCEPTANCE GATE:
-        - condition: "grounding_verifier_auroc present AND ensemble_with_grounding_auroc present AND ensemble_without_grounding_auroc present AND grounding_leak_free == true"
-          principle: "The build is judged by a leak-free, NLI-grounded verifier giving the ensemble factual signal it structurally lacked -- measured as an ablation, not asserted, and never via a leaking 1.0."
-      TERMINAL VERDICTS: "complete: real_nli_grounding_verifier_adds_leak_free_factual_signal" /
-      "complete: real_nli_grounding_verifier_built_but_factual_signal_weak_facts_remain_hard" /
-      "complete: blocked_corpus_v2_unavailable"
-      Run: cd {project_root} && python scripts/experiment_3600_real_nli_grounding_verifier.py
+        - condition: "n_examples >= 50 AND code_verifiers_fire == true AND code_confidence_baseline_auroc present"
+          principle: "A code transfer verdict requires the verifiers actually fired on a headroom-bearing labeled corpus; a null without that is the .331 wiring failure, not evidence."
+      TERMINAL VERDICTS: "complete: code_corpus_built_verifiers_fire_math_signal_transfers_to_code" /
+      "complete: code_corpus_built_verifiers_fire_math_signal_does_not_transfer_discriminative_fragility" /
+      "complete: code_corpus_built_but_execution_verifiers_inert_diagnosed" /
+      "complete: blocked_no_labeled_code_corpus"
+      Run: cd {project_root} && python scripts/experiment_3613_code_corpus_verifiers_fire_transfer.py
       Do NOT push. Do NOT modify scripts/research_conductor.py.
 
-  - id: exp3601-corrected-cross-domain-remeasurement
+  - id: exp3614-corrected-cross-domain-remeasurement-v2
     prior_failures:
+      - experiment_id: exp3601-corrected-cross-domain-remeasurement
+        verdict: blocked_gate_check_failed
+        addressed_by: "exp3601 NEVER RAN -- it blocked because its upstream exp3599 wrote an empty artifact (the .331 cascade). This task fixes the root cause (the corpus is validated with BARE gated fields by exp3612; the code verifiers fire per exp3613) AND removes the brittle hard gate: the centerpiece is NOT gated_on anything -- it degrades GRACEFULLY per row (math always lands; a missing non-math corpus runs as a 'blocked' row, never skips the whole task). New gate plumbing + validated corpus + firing verifiers + graceful degradation = the fair re-measurement."
+        retire_if_same_verdict: false
       - experiment_id: exp3588-corrected-cross-domain-remeasurement
         verdict: blocked_gate_check_failed
-        addressed_by: "exp3588 NEVER RAN -- it blocked because its upstream exp3586 cascade-failed on the dict-vs-bare gate bug. This task fixes the root cause (every gated field is now a BARE bool from exp3599) AND uses the genuinely fair apparatus exp3588 lacked: corpus v2 with held-out evidence (exp3599), the real NLI grounding verifier (exp3600), and execution-applicable verifiers re-wired on the code row. New gate plumbing + new corpus + new verifier composition + a valid positive control = the fair re-measurement, not a re-run."
+        addressed_by: "exp3588 (the .330 centerpiece) also blocked on the dict-vs-bare gate cascade and never produced an artifact. Same structural fix: bare gated fields upstream + no hard gate on this task + graceful per-row degradation."
         retire_if_same_verdict: false
-      - experiment_id: exp3576-verifier-cross-domain-synthesis
-        verdict: complete_verifier_cross_domain_synthesis_value_generalizes_math_only_domain_bound
-        addressed_by: "exp3576 synthesized 'math-only' from contaminated tests (degenerate corpora + inert/wrong verifiers). This task MEASURES (not synthesizes) cross-domain generalization with a valid positive control (confidence baseline AUROC < 0.95 per domain) and applicable verifiers."
-        retire_if_same_verdict: false
-    milestone: "2026.06.331"
-    title: "CENTERPIECE: corrected cross-domain re-measurement — math (0.9131, frozen) | code (execution-applicable verifiers) | facts (real grounding verifier, corpus v2) vs strong confidence baseline"
+    milestone: "2026.06.332"
+    title: "CENTERPIECE: corrected cross-domain re-measurement — math (0.9131, frozen) | code (execution verifiers, exp3613) | facts (real NLI grounding verifier, validated corpus exp3612) vs strong confidence baseline, VALID positive control"
     priority: critical
-    max_turns: 50
-    agent_type: gemini
-    estimated_wall_time_min: 24
+    max_turns: 60
+    agent_type: claude
+    requires_claude: true   # the .330+.331 centerpieces both cascade-failed under gemini; multi-file (NLI verifier + execution verifiers + scoring) + leak judgment + graceful-degradation logic
+    model: opus
+    estimated_wall_time_min: 28
     track: evidence
     inference_substrate: verifier_ensemble_against_cached_candidates
-    requires_gpu: false
-    gated_on:
-      - upstream: exp3599-build-factual-corpus-v2-with-evidence
-        artifact_field: corpus_v2_is_realistic
-        op: '=='
-        value: true
-    deliverable: results/experiment_3601_corrected_cross_domain_remeasurement.json
+    requires_gpu: true
+    deliverable: results/experiment_3614_corrected_cross_domain_remeasurement_v2.json
     prompt: |
-      CONTEXT: the fair cross-domain test the .330 milestone should have run but skipped (exp3588 blocked).
-      Re-measure the verifier ensemble's error-detection generalization across math | code | facts, each
-      with its APPLICABLE verifier set on a corpus WITH headroom, vs a strong model-confidence baseline.
-      The .330 code AUROC of 0.44 means the execution-applicable verifiers
-      (controlled_invariance_executor_v2, executable_monitor_runtime_adapter, ast_structure_verifier) never
-      scored the completions -- fix the composition and re-measure on the exp1999 HumanEval corpus.
-      EXISTING CODE TO READ FIRST: results/experiment_3598 (applicable_verifiers_code/facts) + 3599 (corpus
-      v2) + 3600 (the real grounding verifier) via scripts/summarize_artifact.py;
-      results/experiment_1999_code_verification_humaneval.json + its corpus; the FoVer math headline 0.9131
-      (results/experiment_2837_fover_memory_leakage_v3.json -- frozen, no re-run); the code-applicable
-      verifiers under python/carnot/verify/.
+      CONTEXT: the fair cross-domain test that .329/.330/.331 each tried and failed to run honestly. Measure
+      the verifier ensemble's error-detection generalization across math | code | facts, each with its
+      APPLICABLE verifier set on a corpus WITH headroom, vs a strong model-confidence baseline. CRITICAL
+      LESSON FROM .331: do NOT assert a null when a row is blocked. This task NEVER asserts "math-only" from a
+      blocked row -- it runs each row that CAN run and marks rows that cannot as explicitly "blocked" (not as
+      AUROC~0.5). positive_control_valid is TRUE only if the non-math rows actually RAN with real headroom.
+      VERIFIER AUTHENTICITY (CLAUDE.md -- MANDATORY): the facts row uses a REAL NLI-model atomic-claim
+      grounding verifier (HalluSearch/VeriScore recipe, arXiv:2504.10168/2406.19276): decompose the MODEL'S
+      answer into atomic claims -> score each claim's entailment against the corpus evidence_passage ONLY ->
+      energy = fraction of unentailed/contradicted claims. Use a real DeBERTa/MiniLM-NLI checkpoint via
+      transformers, OR a DISCLOSED text-statistical proxy (pcib_probe.py pattern) -- record which in
+      nli_substrate. CRITICAL LEAK GUARDS: (i) the existing python/carnot/verify/
+      retrieval_nli_grounding_verifier.py is the LEAKY exp3587 verifier -- its proxy literally checks whether
+      the answer string contains the character 'H' (the toy H1/H2 label-correlate exp3598 caught). You MUST
+      DELETE that substring/'H'-token logic entirely, not merely tweak it. (ii) the verifier scores the
+      MODEL's answer against the evidence ONLY -- it must NEVER read the corpus `answer` (gold) field or the
+      `is_hallucination` label; pass it only (model_answer, evidence_passage). (iii) An AUROC of exactly 1.0
+      (or >=0.99) on n>=200 is a RED FLAG = leak; if you see it, the retrieval/feature is leaking -- diagnose,
+      fix, and report the honest lower number. Note: it is EXPECTED and NOT a leak that a correct answer's
+      evidence entails it while a hallucinated answer's evidence does not -- that is exactly what grounding
+      should measure; the leak is any path from the gold answer/label into the score.
+      EXISTING CODE TO READ FIRST: results/experiment_3612 (corpus_path_used + facts_corpus_validated) +
+      results/experiment_3613 (code_corpus_path + code_verifiers_fire) via scripts/summarize_artifact.py;
+      results/experiment_2837_fover_memory_leakage_v3.json (the frozen FoVer math 0.9131 headline -- NO
+      re-run); python/carnot/verify/retrieval_nli_grounding_verifier.py + the code-applicable verifiers;
+      CLAUDE.md "Verifier Authenticity Discipline".
       PRECONDITIONS (step 0):
-        a. data/realistic_factual_corpus_v2.jsonl present AND exp3599 corpus_v2_is_realistic true. If not ->
-           run the facts row as "blocked" but STILL produce math + code rows.
-        b. exp1999 HumanEval code corpus loadable. If not -> run the code row as "blocked" but still produce
-           math + facts. Math row = the frozen exp2837 0.9131 headline (always lands, no dependency).
+        a. Math row = the frozen exp2837 0.9131 headline (always lands, no dependency).
+        b. Facts row: if results/experiment_3612 facts_corpus_validated==true AND a NLI checkpoint (or
+           disclosed proxy) is loadable, RUN it; else mark the facts row "blocked_facts_corpus" and continue.
+        c. Code row: if results/experiment_3613 code_verifiers_fire==true, RUN it on code_corpus_path; else
+           mark the code row "blocked_code_verifiers" and continue.
       CONCRETE STEPS:
-        1. Build the generalization table: rows = {{math (0.9131, frozen), code (re-scored with
-           execution-applicable verifiers on exp1999), facts (exp3600 real grounding verifier + applicable
-           factual verifiers on corpus v2)}}. Each row: ensemble AUROC + CI, confidence-baseline AUROC + CI,
-           ensemble-minus-confidence delta + paired CI.
-        2. >=3 seeds per row, bootstrap CI, class balance recorded per row.
-        3. Honest verdict per domain: generalizes (ensemble materially > 0.5 AND >= confidence) /
-           domain-bound (ensemble ~ 0.5 OR < confidence) -- now against a VALID positive control.
+        1. Build the generalization table: rows = {{math (0.9131, frozen), code (execution-applicable verifiers
+           on exp3613 corpus), facts (real NLI grounding verifier on exp3612 corpus)}}. Each row: ensemble
+           AUROC + CI, confidence-baseline AUROC + CI, ensemble-minus-confidence delta + paired CI.
+        2. >=3 seeds per row that runs; bootstrap CI; class balance recorded per row.
+        3. Per-domain honest verdict: generalizes (ensemble materially > 0.5 AND >= confidence) / domain-bound
+           (ensemble ~0.5 OR < confidence) / blocked (row could not run) -- against a VALID positive control.
       REQUIRED ARTIFACT FIELDS (principle: documents WHY; the gated field positive_control_valid MUST be a
       BARE top-level bool):
         honest_verdict:
           principle: "Terminal prefix for reconciler classification."
-        inference_substrate: "verifier_ensemble_against_cached_candidates (principle: scores cached corpora; no LLM load)."
+        inference_substrate: "verifier_ensemble_against_cached_candidates (principle: scores cached corpora + a small NLI checkpoint; not the FoVer LLM)."
+        nli_substrate:
+          principle: "Declares model-based NLI vs disclosed text-statistical proxy -- verifier-authenticity honesty."
+        evidence_excludes_gold_answer_assert:
+          principle: "Asserts the retrieved evidence never contains the gold answer -- the explicit guard against the exp3587 leak."
         generalization_table:
-          principle: "domain -> {{ensemble_auroc, confidence_auroc, delta, ci}} -- the milestone's central evidence object, now measured fairly."
+          principle: "domain -> {{ensemble_auroc, confidence_auroc, delta, ci, ran_or_blocked}} -- the milestone's central evidence object, measured fairly."
+        math_ensemble_auroc:
+          principle: "The frozen FoVer math headline (0.9131) re-stated as the row baseline."
         code_generalizes:
-          principle: "Code re-tested with execution-applicable verifiers -- distinguishes the .330 wiring bug from a real code limitation."
+          principle: "Code re-tested with execution-applicable verifiers that fired -- distinguishes a wiring bug from a real code limitation."
         facts_generalize:
-          principle: "Facts re-tested with the real grounding verifier on a corpus with held-out evidence -- the core-motivation result."
+          principle: "Facts re-tested with the real leak-free grounding verifier on a corpus with held-out evidence -- the core-motivation result."
+        grounding_verifier_auroc:
+          principle: "The facts-row grounding signal + CI (an exact 1.0 is a leak, not a win)."
+        grounding_leak_free:
+          principle: "True iff evidence excludes the gold answer AND grounding AUROC < 0.99 -- gates trust in the factual row."
         positive_control_valid:
-          principle: "BARE bool. True iff BOTH non-math rows (code AND facts) actually RAN (not blocked) AND each has confidence baseline AUROC < 0.95 (real headroom). If the facts row is blocked, this MUST be false -- a facts-less run cannot present as a finished de-contamination (that is the exact .329/.330 failure mode). STORE AS BARE true/false."
+          principle: "BARE bool. True iff BOTH non-math rows actually RAN (not blocked) AND each has confidence-baseline AUROC < 0.95 (real headroom). A facts-less or code-less run MUST set this false -- a row-blocked run cannot present as a finished de-contamination (the exact .329/.330/.331 failure mode). STORE AS BARE true/false."
+        at_least_one_nonmath_row_ran:
+          principle: "BARE bool. True iff >=1 non-math row (code OR facts) actually RAN with headroom. Gates exp3615 so a single-domain real result still yields a product-value number (positive_control_valid requires BOTH; this requires ONE). STORE AS BARE true/false."
         n_examples_per_domain:
           principle: "Sample-size rigor per row."
         random_seed:
@@ -400,120 +343,53 @@ tasks:
         duration_s:
           principle: "Plausibility floor."
       ACCEPTANCE GATE:
-        - condition: "generalization_table present AND positive_control_valid == true"
-          principle: "A cross-domain generalization verdict is only valid when measured against headroom-bearing corpora with applicable verifiers; without positive_control_valid the verdict repeats the .329/.330 contamination."
+        - condition: "generalization_table present AND math_ensemble_auroc present"
+          principle: "The centerpiece always lands the math row + the table; positive_control_valid (bare) records whether the non-math rows ran -- the table is the evidence, the bare flag is the downstream gate."
       TERMINAL VERDICTS: "complete: verifier_value_generalizes_beyond_math_329_null_was_artifact" /
       "complete: verifier_value_math_only_EARNED_against_valid_positive_control_scoped_limitation" /
-      "complete: verifier_value_generalizes_to_code_not_facts_partial_scope"
-      Run: cd {project_root} && python scripts/experiment_3601_corrected_cross_domain_remeasurement.py
+      "complete: verifier_value_generalizes_to_code_not_facts_partial_scope" /
+      "complete: verifier_value_generalizes_to_facts_not_code_partial_scope"
+      Run: cd {project_root} && python scripts/experiment_3614_corrected_cross_domain_remeasurement_v2.py
       Do NOT push. Do NOT modify scripts/research_conductor.py.
 
-  - id: exp3602-math-to-code-prm-transfer-positive-control
-    operator_override: "2026-06-01 outer-loop directive: NEW literature-grounded positive control (arXiv:2506.00027 math->code PRM transfer, +4-8pts) testing whether the .330 code AUROC 0.44 was a wiring bug vs a real limit — forward difference from any prior code task; not a re-run."
-    milestone: "2026.06.331"
-    title: "math→code PRM-transfer positive control (arXiv:2506.00027) — does the math-trained verifier signal survive the modality jump, as the literature predicts?"
-    priority: high
-    max_turns: 50
-    agent_type: gemini
-    estimated_wall_time_min: 22
-    track: evidence
-    inference_substrate: verifier_ensemble_against_cached_candidates
-    requires_gpu: false
-    deliverable: results/experiment_3602_math_to_code_prm_transfer.json
-    prompt: |
-      CONTEXT: arXiv:2506.00027 ("From Mathematical Reasoning to Code") measured that a PRM trained purely
-      on MATH improves code generation under test-time scaling by +4-8 pts (HumanEval+, MBPP+,
-      LiveCodeBench, BigCodeBench). The counter-hypothesis is ThinkPRM (arXiv:2504.16828): discriminative
-      verifiers are OOD-FRAGILE. This task runs the literature's exact positive control on Carnot: does the
-      FoVer-math-trained verifier signal transfer to a CODE benchmark? A clean transfer means the .330 code
-      AUROC of 0.44 was a wiring failure, not a real Carnot limit. NULL-RESULT DISCIPLINE
-      (FALSE_NEGATIVE_RISK): a "does not transfer" verdict is only trustworthy if the code corpus has
-      headroom (a confidence/SC baseline materially below 1.0) AND the verifiers actually fired (>0 scored).
-      EXISTING CODE TO READ FIRST: results/experiment_3598 (applicable_verifiers_code) + 3601 (the corrected
-      code row) via scripts/summarize_artifact.py; results/experiment_1999_code_verification_humaneval.json
-      + corpus; the code-applicable verifiers under python/carnot/verify/. This task is SELF-CONTAINED on the
-      verifier set: if exp3598 has not landed, enumerate the code-applicable verifiers INLINE from
-      python/carnot/verify/ -- controlled_invariance_executor_v2.py, executable_monitor_runtime_adapter.py,
-      ast_structure_verifier.py, code_structural_dependency_verifier.py -- do NOT block on exp3598.
-      PRECONDITIONS (step 0):
-        a. A code benchmark corpus with per-candidate correctness labels loadable (exp1999 HumanEval; or
-           MBPP/LiveCodeBench if present). If none -> "complete: blocked_no_labeled_code_corpus".
-        b. The code-applicable verifiers importable; record any import-inert verifier and continue.
-      CONCRETE STEPS:
-        1. Score the FoVer-math-derived verifier signal + the execution-applicable verifiers on the code
-           corpus; error-detection AUROC + >=3 seeds + CI.
-        2. Compute the confidence/SC baseline AUROC on the same corpus (the headroom check).
-        3. Verify the verifiers FIRED (n_scored > 0, not all 0.5). Report the transfer delta vs the +4-8pt
-           literature anchor and which hypothesis it supports (transfer vs discriminative-fragility).
-      REQUIRED ARTIFACT FIELDS (principle: documents WHY; store the VALUE):
-        honest_verdict:
-          principle: "Terminal prefix for reconciler classification."
-        inference_substrate: "verifier_ensemble_against_cached_candidates (principle: scores the cached code corpus; no LLM load)."
-        code_corpus_name:
-          principle: "Which labeled code benchmark was scored -- provenance."
-        math_signal_code_auroc:
-          principle: "The transferred math-trained verifier signal on code -- the core transfer number."
-        code_confidence_baseline_auroc:
-          principle: "Headroom check: a baseline near 1.0 means no room to discriminate, so a null is uninformative (the .330 code failure mode)."
-        verifiers_fired_on_code:
-          principle: "True iff n_scored>0 and not-all-0.5 -- distinguishes 'transfer failed' from 'verifiers never ran' (the .330 AUROC 0.44 cause)."
-        transfer_delta_vs_literature:
-          principle: "Signed comparison to the +4-8pt arXiv:2506.00027 anchor -- contextualizes Carnot's result against the published positive control."
-        hypothesis_supported:
-          principle: "'transfer' (2506.00027) or 'discriminative_fragility' (2504.16828) -- the falsifiable mechanism for the cross-domain result."
-        n_examples:
-          principle: "Sample-size rigor."
-        random_seed:
-          principle: "Determinism precondition."
-        reproducibility_checksum:
-          principle: "Drift detection."
-        duration_s:
-          principle: "Plausibility floor."
-      ACCEPTANCE GATE:
-        - condition: "math_signal_code_auroc present AND code_confidence_baseline_auroc present AND verifiers_fired_on_code == true"
-          principle: "A transfer verdict requires the verifiers actually fired on a headroom-bearing code corpus; a null without a positive control repeats the .330 wiring failure."
-      TERMINAL VERDICTS: "complete: math_signal_transfers_to_code_330_auroc_044_was_a_wiring_bug" /
-      "complete: math_signal_does_not_transfer_to_code_discriminative_fragility_supported" /
-      "complete: blocked_no_labeled_code_corpus"
-      Run: cd {project_root} && python scripts/experiment_3602_math_to_code_prm_transfer.py
-      Do NOT push. Do NOT modify scripts/research_conductor.py.
-
-  - id: exp3603-additivity-second-pair-of-eyes-mcnemar
+  - id: exp3615-additivity-second-pair-of-eyes-mcnemar-v2
     prior_failures:
-      - experiment_id: exp3589-additivity-second-pair-of-eyes-mcnemar
-        verdict: blocked_gate_check_failed
-        addressed_by: "exp3589 blocked because its upstream exp3588 never produced an artifact (the .330 cascade). This task fixes the cascade (gated on exp3601's BARE positive_control_valid) and re-derives the additive second-pair-of-eyes value from the genuinely fair re-measurement (exp3601) on corpus v2 with the real grounding verifier -- new upstream + new corpus + new verifier, not a re-run."
+      - experiment_id: exp3603-additivity-second-pair-of-eyes-mcnemar
+        verdict: never_ran_upstream_centerpiece_blocked
+        addressed_by: "exp3603 never ran because its upstream exp3601 cascade-failed. This task gates on exp3614's BARE positive_control_valid (the corrected, ungated, gracefully-degrading centerpiece) and re-derives the additive second-pair-of-eyes value from the genuinely fair re-measurement on the validated corpora -- new upstream + bare gate + fair measurement, not a re-run."
         retire_if_same_verdict: false
-    milestone: "2026.06.331"
+    milestone: "2026.06.332"
     title: "Additivity / 'second pair of eyes' — does ensemble-fused-with-confidence beat confidence alone? (conditional catch-rate + McNemar, on the fair re-measurement)"
     priority: high
     max_turns: 50
     agent_type: gemini
+    model: gemini-3.1-pro-preview
     estimated_wall_time_min: 20
     track: evidence
     inference_substrate: verifier_ensemble_against_cached_candidates
     requires_gpu: false
     gated_on:
-      - upstream: exp3601-corrected-cross-domain-remeasurement
-        artifact_field: positive_control_valid
+      - upstream: exp3614-corrected-cross-domain-remeasurement-v2
+        artifact_field: at_least_one_nonmath_row_ran
         op: '=='
         value: true
-    deliverable: results/experiment_3603_additivity_second_pair_of_eyes.json
+    deliverable: results/experiment_3615_additivity_second_pair_of_eyes_v2.json
     prompt: |
-      CONTEXT: AUROC alone hides the real product claim. The "second pair of eyes" value is that the
-      verifier catches errors a STRONG confidence baseline MISSES -- additive, not redundant. .329/.330
-      claimed this confirmed (exp3575) from an ensemble at AUROC 0.44 -- impossible under a fair test.
-      Re-derive it now with the corrected verifiers (exp3601) on the realistic corpora.
-      EXISTING CODE TO READ FIRST: results/experiment_3601 (the corrected generalization table) +
-      results/experiment_3575 (the contaminated prior claim, for comparison) via scripts/summarize_artifact.py.
-      PRECONDITIONS (step 0): exp3601 landed with positive_control_valid==true. If not ->
-      "complete: blocked_corrected_remeasurement_unavailable".
+      CONTEXT: AUROC alone hides the product claim. The "second pair of eyes" value is that the verifier
+      catches errors a STRONG confidence baseline MISSES -- additive, not redundant. .329/.330/.331 claimed
+      this confirmed from blocked/contaminated rows. Re-derive it from the corrected, fairly-measured rows
+      (exp3614).
+      EXISTING CODE TO READ FIRST: results/experiment_3614 (the corrected generalization table) via
+      scripts/summarize_artifact.py.
+      PRECONDITIONS (step 0): exp3614 landed with at_least_one_nonmath_row_ran==true. If not ->
+      "complete: blocked_no_nonmath_row_ran". Degrade PER DOMAIN: compute the additive value for EACH non-math
+      row that actually ran in exp3614 (code and/or facts); if only one ran, report that one and mark the
+      other "not_measured" -- do NOT block the whole task on the missing row (the .331 all-or-nothing trap).
       CONCRETE STEPS:
-        1. Per domain (code, facts): at a fixed confidence-baseline FPR, compute (a) recall of the
-           confidence baseline, (b) recall of the ensemble, (c) the CONDITIONAL catch-rate: errors the
-           ensemble catches that confidence MISSES (and vice versa). McNemar paired test on the
-           disagreement + CI.
-        2. Compute the FUSED detector (ensemble OR confidence, or a simple calibrated combination) AUROC and
+        1. Per domain that ran (code, facts): at a fixed confidence-baseline FPR, compute (a) recall of
+           confidence, (b) recall of the ensemble, (c) the CONDITIONAL catch-rate: errors the ensemble catches
+           that confidence MISSES (and vice versa). McNemar paired test on the disagreement + CI.
+        2. Compute the FUSED detector (ensemble OR confidence, or a calibrated combination) AUROC and
            recall-at-fixed-FPR; compare to confidence alone -- the genuine additive-value number.
         3. Honest verdict: additive (fusion materially beats confidence) / redundant (no conditional lift).
       REQUIRED ARTIFACT FIELDS (principle: documents WHY; store the VALUE):
@@ -533,7 +409,7 @@ tasks:
         fusion_beats_confidence_alone:
           principle: "True iff the fused detector materially beats confidence -- the real 'is the verifier worth adding' answer."
         second_pair_of_eyes_real:
-          principle: "True iff the ensemble catches a significant set confidence misses in >=1 domain with McNemar p<0.05 -- re-derived honestly vs the contaminated exp3575."
+          principle: "True iff the ensemble catches a significant set confidence misses in >=1 domain with McNemar p<0.05 -- re-derived honestly vs the contaminated prior claim."
         n_errors_per_domain:
           principle: "Sample-size rigor for the conditional-catch claim."
         random_seed:
@@ -547,52 +423,192 @@ tasks:
           principle: "Product value is conditional, additive coverage measured with a paired significance test -- a higher AUROC alone is not the second-pair-of-eyes claim."
       TERMINAL VERDICTS: "complete: ensemble_additive_to_confidence_second_pair_of_eyes_real_fusion_wins" /
       "complete: ensemble_redundant_with_confidence_no_additive_value_value_prop_weak" /
-      "complete: blocked_corrected_remeasurement_unavailable"
-      Run: cd {project_root} && python scripts/experiment_3603_additivity_second_pair_of_eyes.py
+      "complete: blocked_corrected_remeasurement_invalid_positive_control"
+      Run: cd {project_root} && python scripts/experiment_3615_additivity_second_pair_of_eyes_v2.py
       Do NOT push. Do NOT modify scripts/research_conductor.py.
 
-  - id: exp3604-fr11-continuous-self-learning-v6
-    operator_override: "2026-05-29 operator directive (standing): mandatory continuous-self-learning continuation (FR-11 vN+1) with a STATED forward difference (online-calibrate the new REAL NLI grounding verifier's decision threshold via the conservative-default rule on a fresh corpus) — false-positive scope-match vs prior fr11 exps."
-    milestone: "2026.06.331"
-    title: "FR-11 continuous self-learning v6 — online-calibrate the REAL grounding verifier threshold via conservative-default; confirm no collapse (mandatory continuous self-learning)"
+  - id: exp3616-weaver-peer-comparison-correlation-matrix
+    operator_override: "2026-05-31 outer-loop directive: NEW literature-grounded research direction (Weaver arXiv:2506.18203 peer positioning + the inter-verifier CORRELATION matrix Weaver assumes away) sanctioned by north-star sec-retirement (resume breadth toward NEW directions); forward work, not a scope-matched rerun of any prior task."
+    milestone: "2026.06.332"
+    title: "Position Carnot vs the SOTA weak-verifier peer Weaver (arXiv:2506.18203) + measure the inter-verifier CORRELATION matrix Weaver assumes away"
+    priority: high
+    max_turns: 50
+    agent_type: gemini
+    model: gemini-3.1-pro-preview
+    estimated_wall_time_min: 22
+    track: evidence
+    inference_substrate: verifier_ensemble_against_cached_candidates
+    requires_gpu: false
+    deliverable: results/experiment_3616_weaver_peer_comparison.json
+    prompt: |
+      CONTEXT: Weaver (arXiv:2506.18203) is Carnot's closest peer -- a weighted weak-verifier ensemble (15
+      verifiers; weighted beats unweighted by up to 11.2 pts; +8.5% over single best; 87.7% avg beating
+      o3-mini). It has TWO documented gaps Carnot can claim as differentiation: (a) NO correlation validation
+      -- Weaver ASSUMES conditional independence of verifiers given the label and never measures the
+      inter-verifier correlation matrix; (b) NO online weighting (fixed weights fit once). This task measures
+      (a) on Carnot's ensemble and reproduces a Weaver-style weighting baseline for apples-to-apples
+      positioning. ((b) is exp3618.)
+      EXISTING CODE TO READ FIRST: results/experiment_2837_fover_memory_leakage_v3.json (the FoVer corpus +
+      the 4 scoring verifiers) and the verifier inventory under python/carnot/verify/ via
+      scripts/summarize_artifact.py; any existing ensemble-weighting code in python/carnot/verify/ or
+      python/carnot/pipeline/. project_orthogonality_stall / project_pathological_joint_null_space memories
+      are the conceptual backdrop (joint null space).
+      PRECONDITIONS (step 0): the FoVer corpus + the scoring verifiers loadable. If not ->
+      "complete: blocked_fover_corpus_or_verifiers_unavailable".
+      CONCRETE STEPS:
+        1. On the FoVer corpus, compute per-verifier scores; build the inter-verifier CORRELATION matrix
+           (Pearson + conditional correlation given the label). Report mean off-diagonal correlation and the
+           most-redundant verifier pair -- the quantity Weaver assumes is ~0.
+        2. Reproduce a Weaver-style weighting: weak-supervision / label-free weighting (e.g. inverse-variance
+           or a simple latent-truth EM over the verifier votes) vs Carnot's current weighting. Report
+           ensemble AUROC under: unweighted, Weaver-style weighted, Carnot weighted.
+        3. Honest verdict: does correlation-awareness matter (does accounting for the measured correlation
+           change the optimal weights / AUROC vs the independence-assuming Weaver baseline)?
+      REQUIRED ARTIFACT FIELDS (principle: documents WHY; store the VALUE):
+        honest_verdict:
+          principle: "Terminal prefix for reconciler classification."
+        inference_substrate: "verifier_ensemble_against_cached_candidates (principle: scores the cached FoVer corpus; no LLM load)."
+        mean_offdiagonal_verifier_correlation:
+          principle: "The quantity Weaver assumes ~0; a materially non-zero value is the differentiation evidence."
+        most_redundant_verifier_pair:
+          principle: "Names the pair Weaver's independence assumption most mis-handles -- concrete, auditable."
+        ensemble_auroc_unweighted:
+          principle: "Baseline: equal-weight ensemble."
+        ensemble_auroc_weaver_style:
+          principle: "Independence-assuming weak-supervision weighting -- the peer baseline."
+        ensemble_auroc_carnot:
+          principle: "Carnot's current weighting -- the apples-to-apples comparison."
+        correlation_awareness_matters:
+          principle: "True iff accounting for the measured correlation changes weights/AUROC vs the Weaver independence baseline -- the differentiation claim."
+        n_examples:
+          principle: "Sample-size rigor."
+        random_seed:
+          principle: "Determinism precondition."
+        reproducibility_checksum:
+          principle: "Drift detection."
+        duration_s:
+          principle: "Plausibility floor."
+      TERMINAL VERDICTS: "complete: weaver_compared_correlation_matters_carnot_differentiates_on_correlation_awareness" /
+      "complete: weaver_compared_verifiers_near_independent_correlation_awareness_marginal" /
+      "complete: blocked_fover_corpus_or_verifiers_unavailable"
+      Run: cd {project_root} && python scripts/experiment_3616_weaver_peer_comparison.py
+      Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  - id: exp3617-headroom-corpus-hybrid-verifier-vs-sc
+    operator_override: "2026-05-31 outer-loop directive: NEW research direction (build a corpus where oracle > self-consistency and measure the verifier-vs-SC margin + the hybrid detector, arXiv:2510.14913) sanctioned by north-star sec-retirement (find where SC is NOT near-optimal); forward work, not a scope-matched rerun."
+    milestone: "2026.06.332"
+    title: "Where does a verifier beat self-consistency? Build a corpus where oracle > SC (real headroom) and measure verifier-vs-SC + the hybrid detector under a compute budget (arXiv:2510.14913)"
+    priority: high
+    max_turns: 50
+    agent_type: gemini
+    model: gemini-3.1-pro-preview
+    estimated_wall_time_min: 22
+    track: evidence
+    inference_substrate: verifier_ensemble_against_cached_candidates
+    requires_gpu: false
+    deliverable: results/experiment_3617_headroom_hybrid_verifier_vs_sc.json
+    prompt: |
+      CONTEXT: P0.1 is honest-negative because self-consistency (SC) is near-optimal on the corpora tested,
+      leaving a verifier no headroom (FALSE_NEGATIVE_RISK: oracle ~ SC). arXiv:2510.14913 shows the productive
+      framing is corpora where oracle > SC, and that a HYBRID (verification + SC) is best under a compute
+      budget. This task builds the positive control P0.1 lacked and measures where the verifier genuinely
+      helps. This is NOT a re-test of energy-vs-AR -- it is the complementary "find the headroom" study.
+      EXISTING CODE TO READ FIRST: results/experiment_3507 (the P0.1 honest-negative where oracle==SC==0.653)
+      + any best-of-N / SC scaffolding under scripts/ or python/carnot/ via scripts/summarize_artifact.py;
+      results/experiment_2837 (the FoVer corpus where the verifier DOES have signal).
+      PRECONDITIONS (step 0): a multi-candidate corpus with per-candidate correctness labels loadable (FoVer,
+      or a best-of-N math/code set). If none -> "complete: blocked_no_multicandidate_corpus".
+      CONCRETE STEPS:
+        1. Construct / select a corpus stratum where the ORACLE (best-of-N upper bound) materially exceeds the
+           SC (majority-vote) accuracy -- i.e. real selectable headroom. Record oracle, SC, and the gap.
+           ASSERT oracle - SC > 0 (else report "no headroom found, verifier study uninformative on this corpus").
+        2. On that headroom-bearing stratum: measure best-of-N reranked by the verifier ensemble vs SC vs
+           oracle. Report verifier-over-SC lift + CI.
+        3. Measure the HYBRID (verifier + SC vote fusion) accuracy at matched compute vs SC-alone and
+           verifier-alone -- the arXiv:2510.14913 budget-aware comparison.
+      REQUIRED ARTIFACT FIELDS (principle: documents WHY; store the VALUE):
+        honest_verdict:
+          principle: "Terminal prefix for reconciler classification."
+        inference_substrate: "verifier_ensemble_against_cached_candidates (principle: reranks cached candidates; no LLM load)."
+        oracle_minus_sc_headroom:
+          principle: "The selectable headroom; a verifier study is only informative when this is > 0 (the P0.1 positive control)."
+        sc_accuracy:
+          principle: "Self-consistency majority-vote baseline -- the bar to beat."
+        verifier_reranked_accuracy:
+          principle: "Best-of-N reranked by the ensemble -- the verifier's selection value where headroom exists."
+        verifier_over_sc_lift:
+          principle: "verifier_reranked - sc + CI -- does the verifier beat SC when there IS headroom?"
+        hybrid_accuracy:
+          principle: "Verifier+SC fusion at matched compute -- the arXiv:2510.14913 budget-aware hybrid."
+        hybrid_beats_both:
+          principle: "True iff the hybrid materially beats both SC-alone and verifier-alone -- the deployable recommendation."
+        verifier_beats_sc_where_headroom_exists:
+          principle: "The core finding: the verifier DOES add selection value on headroom-bearing corpora (complements P0.1's no-headroom null)."
+        n_examples:
+          principle: "Sample-size rigor."
+        random_seed:
+          principle: "Determinism precondition."
+        reproducibility_checksum:
+          principle: "Drift detection."
+        duration_s:
+          principle: "Plausibility floor."
+      ACCEPTANCE GATE:
+        - condition: "oracle_minus_sc_headroom present AND verifier_over_sc_lift present AND hybrid_accuracy present"
+          principle: "A verifier-vs-SC verdict requires a measured headroom (oracle>SC); without it the study repeats the P0.1 degenerate null."
+      TERMINAL VERDICTS: "complete: verifier_beats_sc_on_headroom_corpus_hybrid_wins_under_budget" /
+      "complete: verifier_does_not_beat_sc_even_with_headroom_selection_value_weak" /
+      "complete: no_headroom_corpus_found_verifier_study_uninformative" /
+      "complete: blocked_no_multicandidate_corpus"
+      Run: cd {project_root} && python scripts/experiment_3617_headroom_hybrid_verifier_vs_sc.py
+      Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  - id: exp3618-fr11-continuous-self-learning-v7-online-correlation-aware
+    operator_override: "2026-05-29 operator directive (standing): mandatory continuous-self-learning continuation (FR-11 vN+1) with a STATED forward difference (online CORRELATION-AWARE verifier weighting — down-weight redundant verifiers, not just noisy ones — closing Weaver's no-online-adaptation gap, with a conservative-default/uncertainty rule that prevents collapse) — false-positive scope-match vs prior fr11 exps."
+    milestone: "2026.06.332"
+    title: "FR-11 continuous self-learning v7 — online CORRELATION-AWARE verifier weighting without collapse (closes Weaver's no-online-adaptation gap)"
     priority: medium
     max_turns: 50
     agent_type: gemini
+    model: gemini-3.1-pro-preview
     estimated_wall_time_min: 18
     track: self-learning
     inference_substrate: verifier_ensemble_against_cached_candidates
     requires_gpu: false
-    deliverable: results/experiment_3604_fr11_continuous_self_learning_v6.json
+    deliverable: results/experiment_3618_fr11_continuous_self_learning_v7.json
     prompt: |
       CONTEXT: every milestone includes one continuous-self-learning experiment. Forward difference from the
-      .330 FR-11 deploy (exp3590): apply the deployed conservative-default beta to CALIBRATE the NEW REAL
-      NLI grounding verifier's decision threshold online (exp3600), on a FRESH non-degenerate corpus, and
-      confirm the rule still prevents collapse while improving the factual detector's calibration. Keep
-      pass_rate vs true_accuracy element-wise distinct (de-flag tautology).
-      EXISTING CODE TO READ FIRST: results/experiment_3590 (the prior FR-11 deploy) + 3600 (the real
-      grounding verifier) via scripts/summarize_artifact.py; the FR-11 module + cached traces.
-      PRECONDITIONS (step 0): FR-11 module + cached traces present; if exp3600's grounding verifier landed,
-      use it as the calibration target, else fall back to the existing factual verifier. If neither FR-11
-      module nor traces present -> "complete: blocked_fr11_module_or_traces_unavailable".
+      .331 FR-11 deploy (exp3604): instead of only down-weighting NOISY verifiers, update weights ONLINE to
+      down-weight REDUNDANT verifiers (high conditional correlation given the label -- the matrix exp3616
+      measures), under a conservative-default / uncertainty-gated rule (RC2RLHF buffer-replay flavored) that
+      provably prevents collapse. This closes Weaver's no-online-adaptation gap. Keep pass_rate vs
+      true_accuracy element-wise distinct (de-flag tautology).
+      EXISTING CODE TO READ FIRST: results/experiment_3604 (the prior FR-11 deploy) + results/experiment_3616
+      (the correlation matrix, if landed) via scripts/summarize_artifact.py; the FR-11 module + cached traces.
+      PRECONDITIONS (step 0): FR-11 module + cached traces present; if exp3616's correlation matrix landed,
+      use it to seed the redundancy penalty, else compute correlation inline. If neither FR-11 module nor
+      traces present -> "complete: blocked_fr11_module_or_traces_unavailable".
       CONCRETE STEPS:
         1. Run the closed FR-11 loop to N>=200 on a fresh non-degenerate corpus; deploy arm = conservative-
-           default beta, control arm = beta=0.
-        2. Use the loop to calibrate the grounding verifier threshold; measure detector calibration
-           (Brier/ECE) before vs after.
+           default + correlation-aware redundancy penalty, control arm = naive online update (beta=0, no
+           penalty).
+        2. Measure ensemble AUROC + calibration (Brier/ECE) before vs after online adaptation; measure whether
+           the redundancy penalty improves AUROC over the noise-only weighting.
         3. Confirm: deploy arm prevents collapse, control arm collapses, quality maintained, distinct-arrays
            assert holds.
       REQUIRED ARTIFACT FIELDS (principle: documents WHY; store the VALUE):
         honest_verdict:
           principle: "Terminal prefix for reconciler classification."
         inference_substrate: "verifier_ensemble_against_cached_candidates (principle: scores cached traces; no LLM load)."
-        n_grounding_configs:
-          principle: "Sample-size of the self-learning sweep."
+        n_online_updates:
+          principle: "Sample-size of the self-learning sweep (>=200)."
         collapse_detected_deploy_arm:
-          principle: "The conservative-default rule must prevent self-distillation collapse (alpha_t grounding)."
-        collapse_detected_control_beta0:
-          principle: "Positive control: the unguarded arm must collapse, else the test has no contrast."
-        factual_verifier_calibration_improved:
-          principle: "The forward difference -- online calibration of the NEW real grounding detector via the deployed rule."
+          principle: "The conservative-default + correlation-aware rule must prevent self-distillation collapse (alpha_t grounding)."
+        collapse_detected_control:
+          principle: "Positive control: the naive online arm must collapse, else the test has no contrast."
+        correlation_aware_auroc_gain:
+          principle: "The forward difference -- does down-weighting redundant (not just noisy) verifiers improve AUROC?"
+        calibration_improved:
+          principle: "Brier/ECE before vs after online adaptation."
         pass_rate_vs_true_accuracy_distinct_assert:
           principle: "De-flags the tautology where pass_rate and true_accuracy are the same array."
         quality_maintained:
@@ -604,144 +620,37 @@ tasks:
         duration_s:
           principle: "Plausibility floor."
       ACCEPTANCE GATE:
-        - condition: "collapse_detected_deploy_arm == false AND collapse_detected_control_beta0 == true AND pass_rate_vs_true_accuracy_distinct_assert == true"
+        - condition: "collapse_detected_deploy_arm == false AND collapse_detected_control == true AND pass_rate_vs_true_accuracy_distinct_assert == true"
           principle: "Self-learning is validated only when the guarded arm holds, the control collapses, and the two metrics are genuinely distinct (not a tautology)."
-      TERMINAL VERDICTS: "complete: fr11_conservative_default_calibrates_real_grounding_verifier_holds_quality_maintained" /
-      "complete: fr11_does_not_hold_on_fresh_corpus_self_learning_needs_new_mechanism"
-      Run: cd {project_root} && python scripts/experiment_3604_fr11_continuous_self_learning_v6.py
+      TERMINAL VERDICTS: "complete: fr11_v7_online_correlation_aware_weighting_holds_no_collapse_quality_maintained" /
+      "complete: fr11_v7_correlation_penalty_no_auroc_gain_noise_only_weighting_sufficient" /
+      "complete: blocked_fr11_module_or_traces_unavailable"
+      Run: cd {project_root} && python scripts/experiment_3618_fr11_continuous_self_learning_v7.py
       Do NOT push. Do NOT modify scripts/research_conductor.py.
 
-  - id: exp3605-cross-domain-synthesis-v3
-    operator_override: "2026-05-29 operator directive (standing): routine per-milestone synthesis aggregating THIS milestone's fresh de-contaminated cross-domain results — false-positive scope-match vs prior synthesis tasks; reads new upstream artifacts, not a re-run."
-    milestone: "2026.06.331"
-    title: "Cross-domain generalization SYNTHESIS v3 — does verifier value generalize once the test is GENUINELY fair (real NLI verifier + held-out evidence + positive control)? Correct the .330 record."
-    priority: high
-    max_turns: 40
-    agent_type: gemini
-    estimated_wall_time_min: 14
-    track: publication
-    inference_substrate: aggregation_from_upstream_artifacts
-    requires_gpu: false
-    deliverable: results/experiment_3605_cross_domain_synthesis_v3.json
-    prompt: |
-      CONTEXT: synthesize the GENUINELY-FAIR cross-domain result into a defensible, honestly-scoped claim,
-      and explicitly correct the .330 record (whose "math_only_earned/329_null_was_artifact" verdict was
-      synthesized from a broken cascade + a contaminated AUROC=1.0).
-      PRECONDITIONS (step 0): read exp3598 (diagnosis/audit), exp3599 (corpus v2), exp3600 (real grounding
-      verifier), exp3601 (corrected re-measurement), exp3602 (math->code positive control), exp3603
-      (additivity) via scripts/summarize_artifact.py -- verdict + flagged_adversarial(stamped vs LIVE) +
-      FALSE_NEGATIVE_RISK/IMPLAUSIBLE_PERFECT/TAUTOLOGY. EXCLUDE any flagged_adversarial artifact from the
-      headline (fabrication gate). An AUROC=1.0 factual number MUST be treated as a leak unless exp3600
-      proved grounding_leak_free==true.
-      CONCRETE STEPS:
-        1. Build the corrected generalization table: FoVer math (0.9131, frozen, G2-reproduced) | code
-           (corrected, with the math->code transfer context) | facts (real grounding verifier, leak-free),
-           each with AUROC vs confidence + the additive second-pair-of-eyes lift.
-        2. State the honest verdict: value generalizes broadly / code-only / math-only-EARNED. CRITICALLY
-           note whether the .329 "math-only" was an ARTIFACT (verifiers now fire on a fair test) or
-           CONFIRMED (still inert against a valid positive control) -- the milestone's contribution either way.
-        3. Write paper_safe_claims / paper_forbidden_claims (Paper-v6 Narrowing Discipline): a domain-bound
-           ensemble is a SCOPED claim, NOT a foundation-model claim; do not overclaim generalization; never
-           cite a leaking 1.0. cited_upstream_artifacts with sha256.
-      REQUIRED ARTIFACT FIELDS (principle: documents WHY; store the VALUE):
-        honest_verdict:
-          principle: "Terminal prefix for reconciler classification."
-        inference_substrate: "aggregation_from_upstream_artifacts (principle: reads upstream artifacts; no live inference)."
-        corrected_generalization_table:
-          principle: "domain -> auroc+delta+lift -- the milestone's central evidence, now measured fairly and leak-free."
-        v329_null_was:
-          principle: "'artifact' (verifiers fire on a fair test) or 'confirmed' (still inert against a valid positive control) -- the explicit correction of the .329/.330 record."
-        verifier_value_generalizes:
-          principle: "broad / code_only / math_only_earned -- the scoped claim."
-        paper_safe_claims:
-          principle: "Narrowing-clean claims the corrected evidence supports."
-        paper_forbidden_claims:
-          principle: "Overclaims to avoid -- a domain-bound ensemble is not a foundation-model claim; never cite a leaking 1.0."
-        cited_upstream_artifacts:
-          principle: "sha256-pinned provenance so the synthesis numbers trace to real measurements (G4)."
-        random_seed:
-          principle: "Determinism precondition."
-        reproducibility_checksum:
-          principle: "Drift detection."
-        duration_s:
-          principle: "Plausibility floor."
-      TERMINAL VERDICT: "complete: cross_domain_synthesis_v3_value_generalizes_<scope>_329_null_was_<artifact_or_confirmed>_paper_scoped"
-      Run: cd {project_root} && python scripts/experiment_3605_cross_domain_synthesis_v3.py
-      Do NOT push. Do NOT modify scripts/research_conductor.py.
-
-  - id: exp3606-g-gate-status-synthesis-v331
-    operator_override: "2026-05-29 operator directive (standing): routine per-milestone G1-G4 gate-status synthesis — false-positive scope-match vs prior g-gate-synthesis tasks."
-    milestone: "2026.06.331"
-    title: "G1-G4 gate-status synthesis v331 (paper_ready=true; record the GENUINELY-FAIR verifier cross-domain result)"
-    priority: high
-    max_turns: 40
-    agent_type: gemini
-    estimated_wall_time_min: 12
-    track: publication
-    inference_substrate: aggregation_from_upstream_artifacts
-    requires_gpu: false
-    deliverable: results/experiment_3606_g_gate_status_synthesis_v331.json
-    prompt: |
-      CONTEXT: G2 is closed (paper_ready=true). Synthesize the gate status + the GENUINELY-FAIR verifier
-      cross-domain finding (the .329 "math-only" verdict re-examined against a valid positive control with a
-      real NLI grounding verifier on corpus v2).
-      CONCRETE STEPS: run `python scripts/publication_gate.py --json` (expect G1-G4 all pass, paper_ready
-      true); read exp3601/3603/3605 via scripts/summarize_artifact.py; state the corrected verifier
-      cross-domain generalization verdict + whether it broadens or scopes the paper claim. Record P0.1 as
-      honest-negative (do NOT re-assert positive). EXCLUDE flagged_adversarial artifacts from the headline.
-      REQUIRED ARTIFACT FIELDS (principle: documents WHY; store the VALUE):
-        honest_verdict:
-          principle: "Terminal prefix for reconciler classification."
-        inference_substrate: "aggregation_from_upstream_artifacts (principle: reads gate script + artifacts; no live inference)."
-        g1:
-          principle: "Headline measured (FoVer 0.9131, 5-seed, CI, adversarial-clean)."
-        g2:
-          principle: "Independently reproduced (CI runner)."
-        g3:
-          principle: "Prose narrowing-clean."
-        g4:
-          principle: "Numbers trace to primary artifacts."
-        paper_ready:
-          principle: "G1 and G2 and G3 and G4 -- must not silently regress."
-        unmet_gates:
-          principle: "Report which gates are unmet, not a count (publication_blocker_count is retired)."
-        verifier_generalization_scope:
-          principle: "The corrected cross-domain scope from exp3605."
-        p01_status:
-          principle: "P0.1 stays honest-negative; do not re-assert a positive."
-        cited_upstream_artifacts:
-          principle: "Provenance for the synthesized numbers."
-        random_seed:
-          principle: "Determinism precondition."
-        reproducibility_checksum:
-          principle: "Drift detection."
-        duration_s:
-          principle: "Plausibility floor."
-      TERMINAL VERDICT: "complete: g_gate_synthesis_v331_paper_ready_true_verifier_generalization_<scope>"
-      Run: cd {project_root} && python scripts/experiment_3606_g_gate_status_synthesis_v331.py
-      Do NOT push. Do NOT modify scripts/research_conductor.py.
-
-  - id: exp3607-kv260-continuity-v18
+  - id: exp3619-kv260-continuity-v19
     operator_override: "2026-05-29 operator directive (standing): active hardware-continuity task (KV260) per Hardware-Task Continuity Discipline — false-positive scope-match vs prior kv260 exps; required forward work until terminal."
-    milestone: "2026.06.331"
-    title: "KV260 SSH-reachability continuity (per Hardware-Task Continuity)"
+    milestone: "2026.06.332"
+    title: "KV260 SSH-reachability continuity (was UNREACHABLE in .331 — re-check + record honest state)"
     priority: medium
     max_turns: 30
     agent_type: gemini
+    model: gemini-3.1-pro-preview
     estimated_wall_time_min: 10
     track: hardware
     inference_substrate: hardware_smoke
     requires_gpu: false
-    deliverable: results/experiment_3607_kv260_continuity_v18.json
+    deliverable: results/experiment_3619_kv260_continuity_v19.json
     prompt: |
-      CONTEXT: Hardware-Task Continuity requires one KV260 task per milestone. KV260 lives on SSH; use ONLY
-      SSH reachability as the precondition (host SD-card device checks are PERMANENTLY retired per the KV260
-      SSH-Not-SD-Card Discipline). Record the honest state.
+      CONTEXT: Hardware-Task Continuity requires one KV260 task per milestone. The board was SSH-UNREACHABLE
+      in .331 (exp3607). KV260 lives on SSH; use ONLY SSH reachability as the precondition (host SD-card
+      device checks are PERMANENTLY retired per the KV260 SSH-Not-SD-Card Discipline). Record the honest state.
       PRECONDITIONS (step 0): `ssh -o ConnectTimeout=5 -o BatchMode=yes kria 'true'` (kria = kv260.local).
       Exit 0 -> proceed; non-zero -> "complete: blocked_kv260_ssh_unreachable". Use SSH reachability only.
       NEVER use a host SD-card device-node check as a KV260 precondition (permanently retired).
       CONCRETE STEPS: if reachable, `ssh kria 'xmutil listapps'` + record overlay/continuity state (distinct
-      field names, deflagged).
+      field names, deflagged). If still unreachable, record blocked honestly and note it has now been
+      unreachable for 2 consecutive milestones (a candidate operator-action item).
       REQUIRED ARTIFACT FIELDS (principle: documents WHY; store the VALUE):
         honest_verdict:
           principle: "Terminal prefix for reconciler classification."
@@ -752,6 +661,8 @@ tasks:
           principle: "The honest board state; an unreachable board is a blocked_*, not a fabricated pass."
         kv260_overlay_loaded:
           principle: "Continuity state if reachable."
+        consecutive_unreachable_milestones:
+          principle: "Tracks the .331->.332 unreachable streak so a persistent outage surfaces as an operator-action item."
         random_seed:
           principle: "Determinism precondition."
         reproducibility_checksum:
@@ -759,23 +670,24 @@ tasks:
         duration_s:
           principle: "Plausibility floor."
       TERMINAL VERDICTS: "complete: kv260_continuity_confirmed_reachable" / "complete: blocked_kv260_ssh_unreachable"
-      Run: cd {project_root} && python scripts/experiment_3607_kv260_continuity_v18.py
+      Run: cd {project_root} && python scripts/experiment_3619_kv260_continuity_v19.py
       Do NOT push. Do NOT modify scripts/research_conductor.py.
 
-  - id: exp3608-polarfire-continuity-v18
+  - id: exp3620-polarfire-continuity-v19
     operator_override: "2026-05-29 operator directive (standing): active hardware-continuity task (PolarFire) per Hardware-Task Continuity Discipline — false-positive scope-match vs prior polarfire exps."
-    milestone: "2026.06.331"
+    milestone: "2026.06.332"
     title: "PolarFire opportunistic reachability + continuity audit (per Hardware-Task Continuity)"
     priority: medium
     max_turns: 30
     agent_type: gemini
+    model: gemini-3.1-pro-preview
     estimated_wall_time_min: 10
     track: hardware
     inference_substrate: hardware_smoke
     requires_gpu: false
-    deliverable: results/experiment_3608_polarfire_continuity_v18.json
+    deliverable: results/experiment_3620_polarfire_continuity_v19.json
     prompt: |
-      CONTEXT: Hardware-Task Continuity requires one PolarFire task per milestone.
+      CONTEXT: Hardware-Task Continuity requires one PolarFire task per milestone (reachable in .331).
       PRECONDITIONS (step 0): `ssh -o ConnectTimeout=5 polarfire 'true'`. Exit 0 -> proceed; non-zero ->
       "complete: blocked_polarfire_ssh_timeout".
       CONCRETE STEPS: if reachable, confirm continuity (uptime, carnot dispatch path) with distinct field
@@ -795,93 +707,184 @@ tasks:
         duration_s:
           principle: "Plausibility floor."
       TERMINAL VERDICTS: "complete: polarfire_continuity_confirmed_reachable" / "complete: blocked_polarfire_ssh_timeout"
-      Run: cd {project_root} && python scripts/experiment_3608_polarfire_continuity_v18.py
+      Run: cd {project_root} && python scripts/experiment_3620_polarfire_continuity_v19.py
       Do NOT push. Do NOT modify scripts/research_conductor.py.
 
-  - id: exp3609-gatemate-continuity-audit-v18
-    operator_override: "2026-05-29 operator directive (standing): active hardware-continuity task (GateMate) per Hardware-Task Continuity Discipline — documentation/audit-only because the flash/smoke host-IO script hangs (known issue); false-positive scope-match vs prior gatemate exps."
-    milestone: "2026.06.331"
-    title: "GateMate continuity audit (documentation-only — flash/smoke host-IO hangs, per known-issues)"
+  - id: exp3621-gatemate-continuity-audit-v19
+    operator_override: "2026-05-29 operator directive (standing): active hardware-continuity task (GateMate) per Hardware-Task Continuity Discipline — documentation/audit-only because openFPGALoader was not found in .331 (known issue); false-positive scope-match vs prior gatemate exps."
+    milestone: "2026.06.332"
+    title: "GateMate continuity audit (documentation-only — openFPGALoader missing in .331, per known-issues)"
     priority: low
     max_turns: 25
     agent_type: gemini
+    model: gemini-3.1-pro-preview
     estimated_wall_time_min: 8
     track: hardware
     inference_substrate: hardware_smoke
     requires_gpu: false
-    deliverable: results/experiment_3609_gatemate_continuity_audit_v18.json
+    deliverable: results/experiment_3621_gatemate_continuity_audit_v19.json
     prompt: |
-      CONTEXT: GateMate visibility each milestone, but the flash/smoke host-IO script hangs (known-issues).
-      Documentation / reachability audit only -- do NOT run the hanging flash/smoke path.
-      PRECONDITIONS (step 0): `openFPGALoader -c dirtyJtag --detect` (with a short timeout). If it hangs or
-      fails, record the known-issue state honestly and STOP.
-      CONCRETE STEPS: record IDCODE-detect result + the known flash/smoke host-IO hang blocker.
+      CONTEXT: GateMate visibility each milestone, but in .331 openFPGALoader was not found on PATH and the
+      flash/smoke host-IO script hangs (known-issues). Documentation / reachability audit only -- do NOT run
+      the hanging flash/smoke path.
+      PRECONDITIONS (step 0): `command -v openFPGALoader` then (only if present) `openFPGALoader -c dirtyJtag
+      --detect` with a short timeout. If openFPGALoader is absent or detect hangs/fails, record the
+      known-issue state honestly and STOP.
+      CONCRETE STEPS: record whether openFPGALoader is installed + IDCODE-detect result + the known
+      flash/smoke host-IO hang blocker.
       REQUIRED ARTIFACT FIELDS (principle: documents WHY; store the VALUE):
         honest_verdict:
           principle: "Terminal prefix for reconciler classification."
         inference_substrate: "hardware_smoke (principle: JTAG detect only; no flash)."
+        openfpgaloader_installed:
+          principle: "Records the .331 root blocker (tool missing) honestly so the audit trail is current."
         gatemate_idcode_detected:
           principle: "Honest detect result (bool or null) -- not a fabricated flash pass."
         known_blocker:
-          principle: "Names the flash/smoke host-IO hang so the audit trail stays current."
+          principle: "Names the missing-tool / flash-smoke host-IO hang so the audit trail stays current."
         random_seed:
           principle: "Determinism precondition."
         reproducibility_checksum:
           principle: "Drift detection."
         duration_s:
           principle: "Plausibility floor."
-      TERMINAL VERDICT: "complete: gatemate_continuity_audit_recorded_flash_smoke_host_io_hang_known_blocker"
-      Run: cd {project_root} && python scripts/experiment_3609_gatemate_continuity_audit_v18.py
+      TERMINAL VERDICT: "complete: gatemate_continuity_audit_recorded_openfpgaloader_state_flash_smoke_host_io_hang_known_blocker"
+      Run: cd {project_root} && python scripts/experiment_3621_gatemate_continuity_audit_v19.py
       Do NOT push. Do NOT modify scripts/research_conductor.py.
 
-  - id: exp3610-capstone-v331
-    operator_override: "2026-05-29 operator directive (standing): routine per-milestone capstone — false-positive scope-match vs prior capstone-v* tasks."
-    milestone: "2026.06.331"
-    title: "Capstone v331 — was '.329 math-only' a contamination artifact or EARNED against a genuinely fair test? (real NLI grounding verifier + held-out evidence + positive control)"
+  - id: exp3622-cross-domain-synthesis-v4
+    operator_override: "2026-05-29 operator directive (standing): routine per-milestone synthesis aggregating THIS milestone's fresh fairly-measured cross-domain results — false-positive scope-match vs prior synthesis tasks; reads new upstream artifacts, not a re-run."
+    milestone: "2026.06.332"
+    title: "Cross-domain generalization SYNTHESIS v4 — CORRECT the .331 record (it declared 'math-only confirmed' from BLOCKED rows); state the scope now that facts + code rows ACTUALLY RAN"
     priority: high
     max_turns: 40
     agent_type: gemini
-    estimated_wall_time_min: 12
-    track: ops
+    model: gemini-3.1-pro-preview
+    estimated_wall_time_min: 14
+    track: publication
     inference_substrate: aggregation_from_upstream_artifacts
     requires_gpu: false
-    deliverable: results/experiment_3610_capstone_v331.json
+    deliverable: results/experiment_3622_cross_domain_synthesis_v4.json
     prompt: |
-      CONTEXT: capstone the FINISHED de-contamination milestone. Headline: .330 left the de-contamination
-      UNFINISHED (gate cascade broke the centerpiece; the one factual number was a contaminated AUROC=1.0).
-      .331 fixed the cascade (bare gated fields), audited the leak, built a corpus WITH held-out evidence +
-      a REAL NLI grounding verifier, and ran the centerpiece corrected cross-domain re-measurement + the
-      literature math->code positive control. Report whether verifier value generalizes once the test is
-      genuinely fair.
-      CONCRETE STEPS: aggregate exp3598/3599/3600/3601/3602/3603/3605 via scripts/summarize_artifact.py.
-      Report honestly: did facts/code generalize once verifiers actually fired against a valid positive
-      control? was the .329 null an artifact or EARNED? the additive second-pair-of-eyes value vs
-      confidence; the scoped paper claim. EXCLUDE flagged_adversarial artifacts (fabrication gate); treat
-      any AUROC=1.0 as a leak unless exp3600 proved grounding_leak_free==true. paper_v6_safe_claims /
-      forbidden_claims per the Paper-v6 Narrowing Discipline (no overclaim; domain-bound is a scoped claim,
-      not a foundation claim; P0.1 stays honest-negative; do not regress paper_ready).
+      CONTEXT: synthesize the GENUINELY-FAIR cross-domain result into a defensible, honestly-scoped claim,
+      and EXPLICITLY CORRECT the .331 record (whose "math_only_earned / 329_null_confirmed" verdict was
+      asserted from BLOCKED non-math rows -- a FALSE_NEGATIVE_RISK violation, not a measurement).
+      PRECONDITIONS (step 0): read exp3612 (corpus validated), exp3613 (code corpus + transfer), exp3614
+      (corrected re-measurement), exp3615 (additivity), exp3616 (Weaver + correlation), exp3617 (headroom +
+      hybrid) via scripts/summarize_artifact.py -- verdict + flagged_adversarial(stamped vs LIVE) +
+      FALSE_NEGATIVE_RISK/IMPLAUSIBLE_PERFECT/TAUTOLOGY. EXCLUDE any flagged_adversarial artifact from the
+      headline (fabrication gate). Treat any AUROC=1.0 factual number as a leak unless exp3614 proved
+      grounding_leak_free==true.
+      CONCRETE STEPS:
+        1. Build the corrected generalization table: FoVer math (0.9131, frozen, G2-reproduced) | code
+           (corrected, with the math->code transfer context from exp3613) | facts (real grounding verifier,
+           leak-free, from exp3614), each with AUROC vs confidence + the additive second-pair-of-eyes lift.
+        2. State the honest verdict: value generalizes broadly / code-only / facts-only / math-only-EARNED.
+           CRITICALLY note whether the .329 "math-only" is now an ARTIFACT (verifiers fire on a fair test) or
+           CONFIRMED (still inert against a VALID positive control where rows RAN) -- the contribution either
+           way. Also record the Weaver-positioning (correlation-awareness) and headroom (verifier-beats-SC)
+           findings.
+        3. Write paper_safe_claims / paper_forbidden_claims (Paper-v6 Narrowing Discipline): a domain-bound
+           ensemble is a SCOPED claim, NOT a foundation-model claim; never overclaim generalization; never
+           cite a leaking 1.0. cited_upstream_artifacts with sha256.
       REQUIRED ARTIFACT FIELDS (principle: documents WHY; store the VALUE):
         honest_verdict:
           principle: "Terminal prefix for reconciler classification."
         inference_substrate: "aggregation_from_upstream_artifacts (principle: reads upstream artifacts; no live inference)."
+        corrected_generalization_table:
+          principle: "domain -> auroc+delta+lift -- the milestone's central evidence, now measured fairly and leak-free."
+        v331_record_corrected_to:
+          principle: "Explicitly states that .331's 'math-only confirmed' was asserted from BLOCKED rows, and what the fairly-measured scope actually is -- the editorial correction."
+        v329_null_was:
+          principle: "'artifact' (verifiers fire on a fair test) or 'confirmed' (still inert against a VALID positive control) -- the explicit resolution."
+        verifier_value_generalizes:
+          principle: "broad / code_only / facts_only / math_only_earned -- the scoped claim."
+        weaver_differentiation:
+          principle: "Whether correlation-awareness differentiates Carnot from Weaver (exp3616)."
+        verifier_beats_sc_headroom:
+          principle: "Whether the verifier beats SC on headroom-bearing corpora (exp3617) -- complements the P0.1 null."
+        paper_safe_claims:
+          principle: "Narrowing-clean claims the corrected evidence supports."
+        paper_forbidden_claims:
+          principle: "Overclaims to avoid -- a domain-bound ensemble is not a foundation-model claim; never cite a leaking 1.0."
+        cited_upstream_artifacts:
+          principle: "sha256-pinned provenance so the synthesis numbers trace to real measurements (G4)."
+        random_seed:
+          principle: "Determinism precondition."
+        reproducibility_checksum:
+          principle: "Drift detection."
+        duration_s:
+          principle: "Plausibility floor."
+      TERMINAL VERDICT: "complete: cross_domain_synthesis_v4_value_generalizes_<scope>_329_null_was_<artifact_or_confirmed>_v331_record_corrected_paper_scoped"
+      Run: cd {project_root} && python scripts/experiment_3622_cross_domain_synthesis_v4.py
+      Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  - id: exp3623-capstone-and-g-gate-v332
+    operator_override: "2026-05-29 operator directive (standing): routine per-milestone capstone + G1-G4 gate-status synthesis — false-positive scope-match vs prior capstone-v* / g-gate-synthesis tasks."
+    milestone: "2026.06.332"
+    title: "Capstone v332 + G1-G4 gate synthesis — was '.329 math-only' an artifact or EARNED once the facts + code rows ACTUALLY RAN against a valid positive control? (paper_ready must stay true)"
+    priority: high
+    max_turns: 40
+    agent_type: gemini
+    model: gemini-3.1-pro-preview
+    estimated_wall_time_min: 14
+    track: ops
+    inference_substrate: aggregation_from_upstream_artifacts
+    requires_gpu: false
+    deliverable: results/experiment_3623_capstone_and_g_gate_v332.json
+    prompt: |
+      CONTEXT: capstone the FINALLY-FINISHED de-contamination milestone + re-check the publication gate.
+      Headline: .329/.330/.331 each asserted "math-only" from BLOCKED non-math rows. .332 validated the facts
+      corpus (bare fields), made the code verifiers FIRE, and RAN the centerpiece cross-domain re-measurement
+      with a VALID positive control + the literature math->code transfer control. Report whether verifier
+      value generalizes once the test is genuinely fair, and confirm G1-G4 / paper_ready did not regress.
+      CONCRETE STEPS: run `python scripts/publication_gate.py --json` (expect G1-G4 all pass, paper_ready
+      true); aggregate exp3613/3614/3615/3616/3617/3622 via scripts/summarize_artifact.py. Report honestly:
+      did facts/code generalize once verifiers actually fired against a valid positive control? was the .329
+      null an artifact or EARNED? the additive second-pair-of-eyes value; the Weaver correlation
+      differentiation; the verifier-beats-SC-on-headroom finding; the scoped paper claim. EXCLUDE
+      flagged_adversarial artifacts (fabrication gate); treat any AUROC=1.0 as a leak unless exp3614 proved
+      grounding_leak_free==true. If exp3615 blocked (no non-math row ran), record second_pair_of_eyes_real as
+      the string "not_measured" -- NEVER read it as None and synthesize around a missing value (the original
+      .331 mis-synthesis pattern). Record P0.1 as honest-negative (do NOT re-assert a positive). paper_v6_safe_
+      claims / forbidden_claims per Paper-v6 Narrowing (no overclaim; domain-bound is a scoped claim, not a
+      foundation claim; do not regress paper_ready).
+      REQUIRED ARTIFACT FIELDS (principle: documents WHY; store the VALUE):
+        honest_verdict:
+          principle: "Terminal prefix for reconciler classification."
+        inference_substrate: "aggregation_from_upstream_artifacts (principle: reads the gate script + artifacts; no live inference)."
         v329_null_was_artifact_or_confirmed:
-          principle: "The milestone's central scientific result -- was 'math-only' a contamination artifact or an earned limitation, now measured fairly."
-        gate_cascade_fixed:
-          principle: "Confirms the .330 dict-vs-bare cascade did not recur (bare gated fields) -- the operational success criterion."
-        auroc_1_resolved:
-          principle: "Records the exp3587 AUROC=1.0 adjudication (leak proven/refuted) so a fabricated factual claim never reaches the paper."
+          principle: "The milestone's central scientific result -- was 'math-only' a contamination artifact or an earned limitation, now measured fairly with a VALID positive control."
+        facts_code_rows_actually_ran:
+          principle: "Confirms the non-math rows RAN (not blocked) -- the operational success criterion that .329/.330/.331 all missed."
+        grounding_leak_free:
+          principle: "Records that the facts row's grounding verifier was leak-free (no AUROC=1.0) so no fabricated factual claim reaches the paper."
         code_generalizes:
           principle: "Corrected code result, with the math->code transfer context."
         facts_generalize:
           principle: "Corrected factual result (real grounding verifier, leak-free) -- the core-motivation answer."
-        grounding_verifier_helped:
-          principle: "Did the new real NLI verifier add leak-free factual signal."
         second_pair_of_eyes_real:
           principle: "The honest additive-value claim vs a strong confidence baseline."
+        weaver_differentiation:
+          principle: "Correlation-awareness differentiation vs the SOTA peer (exp3616)."
+        verifier_beats_sc_headroom:
+          principle: "Where the verifier beats SC (exp3617) -- complements the P0.1 null."
         verifier_value_scope:
-          principle: "broad / code_only / math_only_earned -- the scoped product claim."
+          principle: "broad / code_only / facts_only / math_only_earned -- the scoped product claim."
+        g1:
+          principle: "Headline measured (FoVer 0.9131, 5-seed, CI, adversarial-clean)."
+        g2:
+          principle: "Independently reproduced (CI runner)."
+        g3:
+          principle: "Prose narrowing-clean."
+        g4:
+          principle: "Numbers trace to primary artifacts."
         paper_ready:
-          principle: "Must remain true; the milestone does not regress the gate."
+          principle: "G1 and G2 and G3 and G4 -- must remain true; the milestone does not regress the gate."
+        unmet_gates:
+          principle: "Report which gates are unmet, not a count (publication_blocker_count is retired)."
+        p01_status:
+          principle: "P0.1 stays honest-negative; do not re-assert a positive."
         paper_v6_safe_claims:
           principle: "Narrowing-clean claims."
         paper_v6_forbidden_claims:
@@ -894,6 +897,6 @@ tasks:
           principle: "Drift detection."
         duration_s:
           principle: "Plausibility floor."
-      TERMINAL VERDICT: "complete: capstone_v331_329_null_was_<artifact_or_confirmed>_verifier_value_<scope>_gate_cascade_fixed_paper_ready_true"
-      Run: cd {project_root} && python scripts/experiment_3610_capstone_v331.py
+      TERMINAL VERDICT: "complete: capstone_v332_329_null_was_<artifact_or_confirmed>_verifier_value_<scope>_facts_code_rows_ran_paper_ready_true"
+      Run: cd {project_root} && python scripts/experiment_3623_capstone_and_g_gate_v332.py
       Do NOT push. Do NOT modify scripts/research_conductor.py.

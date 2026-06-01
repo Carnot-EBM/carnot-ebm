@@ -34232,3 +34232,76 @@ milestones:
       \ the test is fair?"
     deliverable: results/experiment_3596_capstone_v330.json
     result: OK (conductor)
+- id: 2026.06.331
+  title: "Finish the De-Contamination \u2014 does verifier value generalize once the test is GENUINELY fair? Fix the .330\
+    \ gate cascade, audit the AUROC=1.0 leak, build a real NLI grounding verifier on a corpus WITH held-out evidence, and\
+    \ run the cross-domain re-measurement .330 skipped."
+  doc: openspec/change-proposals/research-roadmap-vNEXT.md
+  completed: '2026-06-01'
+  finding: See conductor log for per-experiment results.
+  tasks:
+  - id: exp3597-archive-v330-activate-v331
+    title: Archive milestone .330 honestly (record the gate cascade + the contaminated AUROC=1.0) and activate .331
+    deliverable: results/experiment_3597_archive_v330_activate_v331.json
+    result: OK (conductor)
+  - id: exp3598-diagnose-330-cascade-and-audit-auroc-1
+    title: Diagnose the .330 gate cascade + adversarially audit the exp3587 AUROC=1.0 grounding verifier (leak or real?) +
+      enumerate the corpus-evidence gap and per-domain applicable verifiers
+    deliverable: results/experiment_3598_diagnose_330_cascade_audit.json
+    result: OK (conductor)
+  - id: exp3599-build-factual-corpus-v2-with-evidence
+    title: Build factual corpus v2 WITH independent held-out evidence passages (HaluEval QA `knowledge`) + confidence headroom
+      in (0.5, 0.95)
+    deliverable: results/experiment_3599_factual_corpus_v2_with_evidence.json
+    result: OK (conductor)
+  - id: exp3600-real-nli-grounding-verifier
+    title: Build a REAL NLI-model atomic-claim factual-grounding verifier (HalluSearch/VeriScore recipe) scored against HELD-OUT
+      evidence + honest eval vs confidence
+    deliverable: results/experiment_3600_real_nli_grounding_verifier.json
+    result: OK (conductor)
+  - id: exp3601-corrected-cross-domain-remeasurement
+    title: "CENTERPIECE: corrected cross-domain re-measurement \u2014 math (0.9131, frozen) | code (execution-applicable verifiers)\
+      \ | facts (real grounding verifier, corpus v2) vs strong confidence baseline"
+    deliverable: results/experiment_3601_corrected_cross_domain_remeasurement.json
+    result: OK (conductor)
+  - id: exp3602-math-to-code-prm-transfer-positive-control
+    title: "math\u2192code PRM-transfer positive control (arXiv:2506.00027) \u2014 does the math-trained verifier signal survive\
+      \ the modality jump, as the literature predicts?"
+    deliverable: results/experiment_3602_math_to_code_prm_transfer.json
+    result: OK (conductor)
+  - id: exp3603-additivity-second-pair-of-eyes-mcnemar
+    title: "Additivity / 'second pair of eyes' \u2014 does ensemble-fused-with-confidence beat confidence alone? (conditional\
+      \ catch-rate + McNemar, on the fair re-measurement)"
+    deliverable: results/experiment_3603_additivity_second_pair_of_eyes.json
+    result: OK (conductor)
+  - id: exp3604-fr11-continuous-self-learning-v6
+    title: "FR-11 continuous self-learning v6 \u2014 online-calibrate the REAL grounding verifier threshold via conservative-default;\
+      \ confirm no collapse (mandatory continuous self-learning)"
+    deliverable: results/experiment_3604_fr11_continuous_self_learning_v6.json
+    result: OK (conductor)
+  - id: exp3605-cross-domain-synthesis-v3
+    title: "Cross-domain generalization SYNTHESIS v3 \u2014 does verifier value generalize once the test is GENUINELY fair\
+      \ (real NLI verifier + held-out evidence + positive control)? Correct the .330 record."
+    deliverable: results/experiment_3605_cross_domain_synthesis_v3.json
+    result: OK (conductor)
+  - id: exp3606-g-gate-status-synthesis-v331
+    title: G1-G4 gate-status synthesis v331 (paper_ready=true; record the GENUINELY-FAIR verifier cross-domain result)
+    deliverable: results/experiment_3606_g_gate_status_synthesis_v331.json
+    result: OK (conductor)
+  - id: exp3607-kv260-continuity-v18
+    title: KV260 SSH-reachability continuity (per Hardware-Task Continuity)
+    deliverable: results/experiment_3607_kv260_continuity_v18.json
+    result: OK (conductor)
+  - id: exp3608-polarfire-continuity-v18
+    title: PolarFire opportunistic reachability + continuity audit (per Hardware-Task Continuity)
+    deliverable: results/experiment_3608_polarfire_continuity_v18.json
+    result: OK (conductor)
+  - id: exp3609-gatemate-continuity-audit-v18
+    title: "GateMate continuity audit (documentation-only \u2014 flash/smoke host-IO hangs, per known-issues)"
+    deliverable: results/experiment_3609_gatemate_continuity_audit_v18.json
+    result: OK (conductor)
+  - id: exp3610-capstone-v331
+    title: "Capstone v331 \u2014 was '.329 math-only' a contamination artifact or EARNED against a genuinely fair test? (real\
+      \ NLI grounding verifier + held-out evidence + positive control)"
+    deliverable: results/experiment_3610_capstone_v331.json
+    result: OK (conductor)
