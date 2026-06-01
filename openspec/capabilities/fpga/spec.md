@@ -4092,6 +4092,58 @@ principles, deterministic seed, checksum, and duration.
 
 ---
 
+### REQ-HW-3649
+
+**Title:** PolarFire continuity v21 MUST gate continuity evidence on live SSH reachability
+
+**Description:**
+Experiment 3649 MUST perform the milestone PolarFire hardware-task continuity
+check for milestone 2026.06.334. PolarFire lives on SSH and was reachable in
+milestone .331, so the experiment MUST first execute the SSH precondition:
+
+`ssh -o ConnectTimeout=5 polarfire 'true'`
+
+If that precondition exits zero, the experiment MUST proceed to collect live
+continuity evidence from the board by recording uptime and the Carnot dispatch
+path with distinct PolarFire field names. If the precondition exits non-zero,
+the experiment MUST stop at a terminal blocked artifact and MUST NOT claim
+continuity evidence.
+
+**Acceptance criteria:**
+- `results/experiment_3649_polarfire_continuity_v21.json` is generated.
+- The artifact includes `honest_verdict`, `inference_substrate`,
+  `preconditions_checked`, `polarfire_ssh_reachable`, `random_seed`,
+  `reproducibility_checksum`, and `duration_s`.
+- The artifact includes field-principle annotations for each required field,
+  documenting why the value exists rather than only restating the field name.
+- `inference_substrate` MUST be `"hardware_smoke"`.
+- If `ssh -o ConnectTimeout=5 polarfire 'true'` succeeds, the verdict MUST be
+  `"complete: polarfire_continuity_confirmed_reachable"` and the artifact MUST
+  include PolarFire uptime and Carnot dispatch-path values.
+- If the SSH precondition fails, the verdict MUST be
+  `"complete: blocked_polarfire_ssh_timeout"` and the artifact MUST record the
+  failed precondition before reporting the blocked board state.
+
+**Implementation status:** Pending (Exp 3649)
+
+---
+
+### SCENARIO-HW-3649
+
+**Scenario:** PolarFire continuity v21 records reachable or blocked state from SSH.
+
+**Given:** A PolarFire continuity check is required for milestone 2026.06.334.
+**When:** Experiment 3649 runs the SSH reachability precondition and, only when
+reachable, asks the board for uptime and the Carnot dispatch path.
+**Then:** It writes `results/experiment_3649_polarfire_continuity_v21.json` with
+the terminal verdict, SSH state, precondition record, live continuity values
+when reachable, field principles, deterministic seed, checksum, and duration.
+
+**Implementation status:** Pending (Exp 3649)
+
+
+---
+
 ### REQ-HW-081
 
 **Title:** PolarFire Continuity Check v18
