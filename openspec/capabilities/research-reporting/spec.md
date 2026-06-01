@@ -15353,3 +15353,58 @@ schema fields, recommends `gemini_default`, and emits
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-REPORT-3653 | Implemented (`python/carnot/reporting/backend_state_diagnostic_3653.py`, `scripts/experiment_3653_backend_state_diagnostic.py`) | Implemented (`tests/python/test_experiment_3653_backend_state_diagnostic.py`) |
+
+### REQ-REPORT-3665: Archive V335 And Activate V336 Handoff
+
+The Exp 3665 workflow shall archive milestone `2026.06.335` and confirm that
+milestone `2026.06.336` is active. It shall be aggregation-only: it SHALL read
+`research-roadmap.yaml`, `research-complete.yaml`, Exp 3664, Exp 3655, Exp
+3656, and `ops/north-star.md`; it SHALL NOT perform live model inference,
+modify `scripts/research_conductor.py`, or write
+ops/status/changelog/traceability documents.
+
+The workflow SHALL update the single `2026.06.335` entry in
+`research-complete.yaml`, or append it if absent, so the milestone finding
+records the honest post-capstone state: facts are domain-bound even with a real
+model-based NLI verifier, but the measurement used the synthetic v3 facts
+corpus; the complementary fixed-FPR catch signal exists; dependency-aware
+weighting beat Carnot `0.9326` vs `0.919` but the Exp 3656 artifact was
+TAUTOLOGY-flagged and must remain only a `.336` lead; code generalization
+replicated on a balanced second corpus; the fused second-pair detector wins on
+math; the trained-judge-as-cross-domain-fix hypothesis is retired; FR-11 v9
+held without collapse; `paper_ready` stayed true; and P0.1 stayed
+honest-negative. It SHALL archive all 14 `.335` tasks and preserve idempotence
+when the archive entry already exists.
+
+The workflow SHALL write
+`results/experiment_3665_archive_v335_activate_v336.json` with bare top-level
+values for the operator-required fields: `honest_verdict`,
+`inference_substrate`, `v335_outcome_recorded_as`,
+`headline_advancement_lead_recorded`, `facts_real_benchmark_gap_recorded`,
+`paper_ready_preserved`, `p01_status_preserved`,
+`trained_judge_ood_retired_recorded`, `n_tasks_archived`, `random_seed`,
+`reproducibility_checksum`, and `duration_s`. It SHALL include
+`field_principles` for those required fields, source artifact checksums, and
+the active milestone confirmation. `honest_verdict` SHALL equal
+`complete: archived_v335_facts_domain_bound_on_synthetic_dependency_aware_lead_open_v336_active_paper_ready_true`.
+
+#### SCENARIO-REPORT-3665: V335 Archive Preserves The Facts And Dependency-Aware Record
+
+**Given** Exp 3664 records `paper_ready=true`, `p01_status="honest-negative"`,
+facts as domain-bound under real NLI on the synthetic v3 corpus, code
+generalization replicated, second-pair detector deployability, a retired
+trained-judge OOD fix, and Exp 3656 records dependency-aware weighting above
+Carnot while flagged adversarial
+**When** the Exp 3665 archive workflow runs
+**Then** it writes `results/experiment_3665_archive_v335_activate_v336.json`
+with the terminal `complete:` verdict, `n_tasks_archived=14`,
+`paper_ready_preserved=true`, `p01_status_preserved="honest-negative"`, the
+RAGTruth real-benchmark gap open, the dependency-aware lead recorded as open
+but not claimed, and an idempotent `research-complete.yaml` archive entry for
+`2026.06.335`.
+
+## Implementation Status (REQ-REPORT-3665)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-3665 | Implemented (`python/carnot/reporting/archive_v335_activate_v336_3665.py`, `scripts/experiment_3665_archive_v335_activate_v336.py`) | Implemented (`tests/python/test_experiment_3665_archive_v335_activate_v336.py`) |
