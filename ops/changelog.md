@@ -8017,3 +8017,7 @@ ModuleNotFoundError: No module named 'torch'; results/experiment_2828_fover_memo
 - 2026-06-01: PolarFire opportunistic reachability + continuity audit (per Hardware-Task Continuity) (✅ Complete) — honest_verdict=complete: polarfire_continuity_confirmed_reachable; results/experiment_3594_polarfire_continuity_v17.json
 - 2026-06-01: GateMate continuity audit (documentation-only — flash/smoke host-IO hangs, per known-issues) (✅ Complete) — honest_verdict=complete: gatemate_continuity_audit_recorded_flash_smoke_host_io_hang_known_blocker; results/experiment_3595_gatemate_continuity_audit_v17.json
 - 2026-06-01: Capstone v330 — was '.329 math-only' real or a failed positive control? Does verifier value generalize once the test is fair? (✅ Complete) — honest_verdict=complete: capstone_v330_329_null_was_artifact_verifier_value_math_only_earned_paper_ready_true; results/experiment_3596_capstone_v330.json
+
+## 2026-06-01 (Milestone 2026.05.330 Operational Retrospective)
+
+- [outer-loop] Wrote `results/operational_retro_2026_05_330.json` (schema `carnot.operational_retro.v64`). The authoritative timing source reports no experiment commits since activation. Longest compute-bound tasks, GPU utilization efficiency on compute-bound tasks, and DualGPURunner engagement have no data available this milestone. Recommended tooling change: investigate why no experiment commits were found since activation.
