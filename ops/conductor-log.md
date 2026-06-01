@@ -7539,3 +7539,4 @@ web search: https://docs.garak.ai/garak/examples/pr |
 | 2026-06-01 17:35 UTC | Plan milestone 2026.06.336 | OK | 13 tasks proposed |
 | 2026-06-01 17:38 UTC | Milestone 2026.06.336 activated | OK | 13 tasks queued |
 | 2026-06-01 17:51 UTC | Archive milestone .335 honestly (the FACTS-made-re | OK | 86 passed in 4.40s |
+| 2026-06-01 18:04 UTC | Backend-state diagnostic v2 — second consecutive p | OK | 88 passed in 4.75s |
