@@ -1700,3 +1700,8 @@
 | REQ-LEARN-3590-1 | Exp 3590: FR-11 Continuous Self Learning v5 | Implemented | results/experiment_3590_fr11_continuous_self_learning_v5.json |
 | REQ-LEARN-3590-2 | Exp 3590: FR-11 Continuous Self Learning v5 | Implemented | results/experiment_3590_fr11_continuous_self_learning_v5.json |
 | SCENARIO-LEARN-3590 | Exp 3590: FR-11 Continuous Self Learning v5 | Implemented | results/experiment_3590_fr11_continuous_self_learning_v5.json |
+| REQ-VERIFY-3592 | Exp 3592: G-Gate Status Synthesis V330 | Implemented | results/experiment_3592_g_gate_status_synthesis_v330.json |
+| REQ-VERIFY-3592-1 | Exp 3592: G-Gate Status Synthesis V330 | Implemented | results/experiment_3592_g_gate_status_synthesis_v330.json |
+| REQ-VERIFY-3592-2 | Exp 3592: G-Gate Status Synthesis V330 | Implemented | results/experiment_3592_g_gate_status_synthesis_v330.json |
+| REQ-VERIFY-3592-3 | Exp 3592: G-Gate Status Synthesis V330 | Implemented | results/experiment_3592_g_gate_status_synthesis_v330.json |
+| SCENARIO-VERIFY-3592 | Exp 3592: G-Gate Status Synthesis V330 | Implemented | results/experiment_3592_g_gate_status_synthesis_v330.json |

@@ -7355,3 +7355,4 @@ web search: https://docs.garak.ai/garak/examples/pr |
 | 2026-06-01 00:28 UTC | Additivity / 'second pair of eyes' — does ensemble | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp3588-corrected-cross-domain-remeasureme |
 | 2026-06-01 00:33 UTC | FR-11 continuous self-learning — conservative-defa | OK | 83 passed in 3.71s |
 | 2026-06-01 00:38 UTC | Cross-domain generalization SYNTHESIS v2 — does ve | OK | 82 passed in 3.80s |
+| 2026-06-01 00:44 UTC | G1-G4 gate-status synthesis v330 (paper_ready=true | OK | 82 passed in 3.48s |
