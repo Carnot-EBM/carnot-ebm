@@ -1,0 +1,36 @@
+{
+  "experiment": 3598,
+  "schema": "diagnose_330_cascade_audit_v1",
+  "run_date": "2026-06-01",
+  "started_at": "2026-06-01T01:56:49.200495+00:00",
+  "finished_at": "2026-06-01T01:56:49.200495+00:00",
+  "status": "complete",
+  "title": "Exp 3598: Diagnose 330 Cascade Audit",
+  "honest_verdict": "complete: diagnosed_330_cascade_confirmed_auroc1_is_leak_evidence_gap_named_applicable_sets_enumerated",
+  "inference_substrate": "aggregation_from_upstream_artifacts",
+  "gate_cascade_confirmed": true,
+  "auroc_1_verdict": "leak",
+  "auroc_1_leak_mechanism": "The verifier achieves AUROC=1.0 through trivial separation via a label correlate: it directly checks if the 'answer' string contains 'H', which perfectly correlates with is_hallucination=1 in the mock corpus ('H1'/'H2' vs 'R1'/'R2').",
+  "corpus_evidence_gap_confirmed": true,
+  "halueval_has_knowledge_field": true,
+  "applicable_verifiers_facts": [
+    "semantic_energy.py",
+    "nla_verifier_v3.py",
+    "canonical_answer_vericot_grounding_pilot_v1.py",
+    "suppressed_retrieval_probe.py",
+    "tier0g_semantic_energy.py",
+    "tier0u_logical_consistency.py",
+    "tier0v_set_consistency.py",
+    "tier0w_paraphrase_consistency.py",
+    "fover_semantic_calibration.py"
+  ],
+  "applicable_verifiers_code": [
+    "ast_structure_verifier.py",
+    "code_structural_dependency_verifier.py",
+    "controlled_invariance_executor_v2.py",
+    "executable_monitor_runtime_adapter.py"
+  ],
+  "random_seed": 42,
+  "reproducibility_checksum": "a5a63d9b90e6bfe9261e70b66afec721",
+  "duration_s": 0.10000095367431641
+}
