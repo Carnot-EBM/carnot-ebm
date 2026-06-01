@@ -9302,3 +9302,51 @@ When Exp 3605 runs, it produces all required schema fields on the exit path and 
 |---|---|---|
 | REQ-VERIFY-3605 | Pending | Pending |
 
+### REQ-VERIFY-3642: Corrected Cross-Domain Remeasurement V4
+
+The repository shall provide an Exp 3642 workflow that fairly measures verifier
+ensemble error-detection generalization across math, code, and facts without
+turning blocked rows into null results. The math row SHALL restate the frozen
+Exp 2837 FoVer AUROC headline (`0.9131`) without rerunning FoVer. The code row
+SHALL run only when Exp 3641 reports `code_verifiers_fire=true` and SHALL score
+execution-applicable verifier energies against `code_corpus_path`. The facts
+row SHALL run only when Exp 3640 reports `facts_corpus_validated=true` and a
+declared NLI substrate, either a real NLI checkpoint or a disclosed
+text-statistical proxy, is available. Rows that cannot run SHALL be marked
+blocked with the specific blocked reason rather than assigned chance AUROC.
+
+The workflow SHALL write
+`results/experiment_3642_corrected_cross_domain_remeasurement_v4.json` with a
+`generalization_table` containing math, code, and facts rows. Every row that
+runs SHALL include ensemble AUROC, confidence-baseline AUROC, ensemble-minus-
+confidence delta, deterministic bootstrap 95% confidence intervals over at
+least three seeds, class balance, sample count, and a per-domain verdict of
+`generalizes` or `domain_bound`. Blocked rows SHALL include `ran_or_blocked`
+and a blocked reason instead of synthetic metrics. `positive_control_valid`
+SHALL be a bare top-level boolean that is true only when both non-math rows ran
+with confidence-baseline AUROC below 0.95. `at_least_one_nonmath_row_ran` SHALL
+be a bare top-level boolean that is true only when at least one non-math row ran
+with headroom.
+
+The facts grounding verifier SHALL score only `(model_answer,
+evidence_passage)` and SHALL NOT read gold answers or hallucination labels
+while computing verifier energy. The artifact SHALL declare `nli_substrate`,
+`evidence_excludes_gold_answer_assert`, `grounding_verifier_auroc`,
+`grounding_leak_free`, `math_ensemble_auroc`, `code_generalizes`,
+`facts_generalize`, `n_examples_per_domain`, `random_seed`,
+`reproducibility_checksum`, and `duration_s`.
+
+### SCENARIO-VERIFY-3642: Corrected Cross-Domain Table Handles Ran And Blocked Rows Honestly
+
+Given synthetic math, code, and factual corpus fixtures covering ran,
+blocked, generalizing, and domain-bound non-math outcomes, when the Exp 3642
+workflow builds its artifact, then every runnable row is scored with real
+labels and bootstrap intervals, every blocked row remains explicitly blocked,
+the positive-control booleans remain bare JSON booleans, and the terminal
+verdict is selected only from the honest per-row outcomes.
+
+## Implementation Status (REQ-VERIFY-3642)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-VERIFY-3642 | Implemented (`python/carnot/verify/corrected_cross_domain_remeasurement_v4.py`, `scripts/experiment_3642_corrected_cross_domain_remeasurement_v4.py`) | Implemented (`tests/python/test_experiment_3642_corrected_cross_domain_remeasurement_v4.py`) |

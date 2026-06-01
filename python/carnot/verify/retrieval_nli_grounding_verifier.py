@@ -1,43 +1,82 @@
-"""Retrieval NLI Grounding Verifier.
+"""Leak-free retrieval NLI grounding verifier.
 
 **What this is and why it exists:**
-    This verifier implements the SOTA factual-detection recipe:
-    1. Decompose the answer into atomic claims.
+    Factual hallucination checks should judge whether the model's answer is
+    grounded in the evidence passage, not whether the answer resembles a label
+    string in the corpus. The intended HalluSearch/VeriScore shape is:
+
+    1. Decompose the model answer into atomic claims.
     2. Retrieve evidence for each claim.
-    3. Evaluate NLI entailment of each claim against the retrieved evidence.
-    4. Compute energy as the fraction of unentailed or contradicted claims.
+    3. Score whether the evidence entails each claim.
+    4. Return energy as the fraction of unentailed claims.
 
 **What we're approximating here:**
-    We do not have a live DeBERTa/MiniLM NLI checkpoint available in this sandbox.
-    Instead, we implement an honest text-statistical entailment proxy.
-    Because the realistic factual corpus mock data only contains "R1"/"R2" (real) and "H1"/"H2" (hallucinated) tokens,
-    the proxy determines entailment by checking if the claim token indicates hallucination (e.g., contains "H").
-    This explicitly simulates the NLI signal for the mock data while retaining the structural decomposition
-    of the verifier pipeline.
+    This implementation is a disclosed text-statistical proxy rather than a
+    DeBERTa/MiniLM NLI checkpoint. It measures content-token support: a claim is
+    treated as grounded when its non-stopword tokens are present in the supplied
+    evidence passage. This is weaker than model-based NLI because it cannot
+    reason over paraphrase or contradiction, but it is honest about that gap and
+    it never reads gold answers or hallucination labels.
 
-    - Claim splitting: naive sentence split.
-    - Evidence retrieval: simply returns a static "gold context" placeholder or the question itself.
-    - NLI proxy: checks if the claim string is 'H1' or 'H2'.
-
-Spec: REQ-VERIFY-GROUNDING
+Spec: REQ-VERIFY-3642, SCENARIO-VERIFY-3642.
 """
 
 from __future__ import annotations
 
 import re
 
+
+_STOPWORDS = {
+    "a",
+    "an",
+    "and",
+    "are",
+    "as",
+    "at",
+    "be",
+    "been",
+    "being",
+    "by",
+    "for",
+    "from",
+    "had",
+    "has",
+    "have",
+    "he",
+    "her",
+    "his",
+    "in",
+    "is",
+    "it",
+    "its",
+    "of",
+    "on",
+    "or",
+    "she",
+    "that",
+    "the",
+    "their",
+    "this",
+    "to",
+    "was",
+    "were",
+    "with",
+}
+
+_TOKEN_RE = re.compile(r"[A-Za-z0-9][A-Za-z0-9'-]*")
+
+
 class RetrievalNLIGroundingVerifier:
     """Verifier combining atomic claim splitting, evidence retrieval, and NLI entailment.
 
-    This prototype uses a disclosed text-statistical proxy to simulate NLI entailment.
-    It splits text into claims, "retrieves" evidence (mocked here), and evaluates
-    entailment. The proxy uses 'H' presence as an explicit stand-in for the NLI
-    contradiction signal on the mock data.
+    The current substrate is a disclosed token-support proxy. It is deliberately
+    less capable than a real NLI checkpoint, but it preserves the critical leak
+    guard: the score depends only on the model answer and the evidence text.
     """
 
     def split_into_claims(self, answer: str) -> list[str]:
         """Decompose the answer into atomic claims."""
-        claims = [c.strip() for c in re.split(r'[.!?]+', answer) if c.strip()]
+        claims = [c.strip() for c in re.split(r"[.!?]+", answer) if c.strip()]
         if not claims:
             claims = [answer.strip()]
         return claims
@@ -54,13 +93,15 @@ class RetrievalNLIGroundingVerifier:
         """Compute the NLI proxy score.
 
         0.0 = Entailed (grounded), 1.0 = Contradiction/Neutral (ungrounded).
-        Since our mock corpus uses 'R1'/'R2' for real and 'H1'/'H2' for hallucinations,
-        this proxy honestly discloses that it uses the 'H' token to simulate
-        the NLI model's contradiction detection.
+        The proxy is ``1 - content_token_coverage`` over the evidence passage.
+        A real NLI model should replace this when a checkpoint is available.
         """
-        if "H" in claim.upper():
-            return 1.0  # Simulated unentailed/contradicted
-        return 0.0  # Simulated entailed
+        claim_tokens = set(_content_tokens(claim))
+        if not claim_tokens:
+            return 0.0
+        evidence_tokens = set(_content_tokens(evidence))
+        supported = len(claim_tokens & evidence_tokens)
+        return float(1.0 - supported / len(claim_tokens))
 
     def verify(self, answer: str, context: str) -> float:
         """Compute the overall grounding energy for the answer.
@@ -81,3 +122,14 @@ class RetrievalNLIGroundingVerifier:
                 unentailed_count += 1.0
 
         return float(unentailed_count / len(claims))
+
+
+def _content_tokens(text: str) -> list[str]:
+    """Return normalized content tokens for the disclosed grounding proxy."""
+
+    tokens = []
+    for token in _TOKEN_RE.findall(str(text).lower()):
+        if token in _STOPWORDS or len(token) <= 1:
+            continue
+        tokens.append(token)
+    return tokens
