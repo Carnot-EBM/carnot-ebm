@@ -7531,3 +7531,4 @@ web search: https://docs.garak.ai/garak/examples/pr |
 | 2026-06-01 15:23 UTC | Build the deployable 'second pair of eyes' detecto | OK | 93 passed in 4.56s |
 | 2026-06-01 15:40 UTC | Replicate CODE generalization on a SECOND balanced | OK | 88 passed in 5.02s |
 | 2026-06-01 15:56 UTC | Trained-EBM-judge OOD v3 with a REAL model substra | OK | 104 passed in 6.52s |
+| 2026-06-01 16:15 UTC | FR-11 continuous self-learning v9 — online learnin | OK | 86 passed in 5.03s |
