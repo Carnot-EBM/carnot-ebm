@@ -7346,3 +7346,4 @@ web search: https://docs.garak.ai/garak/examples/pr |
 | 2026-06-01 00:08 UTC | Score the factual-APPLICABLE verifiers on the real | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp3585-build-realistic-factual-hallucinat |
 | 2026-06-01 00:10 UTC | Score the factual-APPLICABLE verifiers on the real | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp3585-build-realistic-factual-hallucinat |
 | 2026-06-01 00:12 UTC | Score the factual-APPLICABLE verifiers on the real | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp3585-build-realistic-factual-hallucinat |
+| 2026-06-01 00:22 UTC | Prototype a retrieval/NLI atomic-claim factual-gro | OK | 84 passed in 3.90s |
