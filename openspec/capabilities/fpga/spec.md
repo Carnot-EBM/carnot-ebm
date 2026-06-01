@@ -4195,6 +4195,60 @@ when reachable, field principles, deterministic seed, checksum, and duration.
 
 ---
 
+### REQ-HW-3662
+
+**Title:** PolarFire continuity v22 MUST confirm live SSH continuity for milestone .335
+
+**Description:**
+Experiment 3662 MUST perform the milestone PolarFire hardware-task continuity
+check for milestone 2026.06.335. Hardware-Task Continuity requires one
+PolarFire task per milestone, and the board was last known reachable in .331.
+The experiment MUST first execute the SSH precondition:
+
+`ssh -o ConnectTimeout=5 polarfire 'true'`
+
+If that precondition exits zero, the experiment MUST collect live continuity
+evidence from the board by recording uptime and the Carnot dispatch path with
+distinct PolarFire field names. If the precondition exits non-zero, the
+experiment MUST write the terminal blocked verdict and MUST NOT claim board
+continuity values.
+
+**Acceptance criteria:**
+- `results/experiment_3662_polarfire_continuity_v22.json` is generated.
+- The artifact includes `honest_verdict`, `inference_substrate`,
+  `preconditions_checked`, `polarfire_ssh_reachable`, `random_seed`,
+  `reproducibility_checksum`, and `duration_s`.
+- The artifact includes field-principle annotations for each required field,
+  documenting why the value exists and storing the actual artifact value
+  separately from the principle.
+- `inference_substrate` MUST be `"hardware_smoke"`.
+- If `ssh -o ConnectTimeout=5 polarfire 'true'` succeeds, the verdict MUST be
+  `"complete: polarfire_continuity_confirmed_reachable"` and the artifact MUST
+  include PolarFire uptime and Carnot dispatch-path values.
+- If the SSH precondition fails, the verdict MUST be
+  `"complete: blocked_polarfire_ssh_timeout"` and the artifact MUST record the
+  failed precondition before reporting the blocked board state.
+
+**Implementation status:** Pending (Exp 3662)
+
+---
+
+### SCENARIO-HW-3662
+
+**Scenario:** PolarFire continuity v22 records reachable or blocked state from SSH.
+
+**Given:** A PolarFire continuity check is required for milestone 2026.06.335.
+**When:** Experiment 3662 runs the SSH reachability precondition and, only when
+reachable, asks the board for uptime and the Carnot dispatch path.
+**Then:** It writes `results/experiment_3662_polarfire_continuity_v22.json` with
+the terminal verdict, SSH state, precondition record, live continuity values
+when reachable, field principles, deterministic seed, checksum, and duration.
+
+**Implementation status:** Pending (Exp 3662)
+
+
+---
+
 ### REQ-HW-3650
 
 **Title:** GateMate continuity audit v21 records openFPGALoader state without running flash smoke host IO

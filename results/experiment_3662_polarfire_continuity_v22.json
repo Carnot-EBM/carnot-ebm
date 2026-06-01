@@ -1,0 +1,59 @@
+{
+  "command_probes": {
+    "polarfire_carnot_dispatch_path": {
+      "combined_output": "/usr/bin/carnot\n",
+      "command": "ssh polarfire 'which carnot'",
+      "exit_code": 0,
+      "stderr": "",
+      "stdout": "/usr/bin/carnot\n"
+    },
+    "polarfire_ssh": {
+      "combined_output": "",
+      "command": "ssh -o ConnectTimeout=5 polarfire true",
+      "exit_code": 0,
+      "stderr": "",
+      "stdout": ""
+    },
+    "polarfire_uptime": {
+      "combined_output": " 16:31:39 up 3 days,  2:02,  0 user,  load average: 0.00, 0.00, 0.00\n",
+      "command": "ssh polarfire uptime",
+      "exit_code": 0,
+      "stderr": "",
+      "stdout": " 16:31:39 up 3 days,  2:02,  0 user,  load average: 0.00, 0.00, 0.00\n"
+    }
+  },
+  "continuity_history": {
+    "current_milestone": "2026.06.335",
+    "last_recorded_reachable_milestone": ".331"
+  },
+  "duration_s": 2.5227,
+  "experiment_id": "exp3662",
+  "field_principles": {
+    "duration_s": "Plausibility floor.",
+    "honest_verdict": "Terminal prefix for reconciler classification.",
+    "inference_substrate": "SSH-attached board test.",
+    "polarfire_carnot_dispatch_path": "Live Carnot dispatch-path value collected only after SSH reachability passes.",
+    "polarfire_ssh_reachable": "Honest board state.",
+    "polarfire_uptime": "Live board continuity value collected only after SSH reachability passes.",
+    "preconditions_checked": "Records the SSH-reachability check before claiming continuity.",
+    "random_seed": "Determinism precondition.",
+    "reproducibility_checksum": "Drift detection."
+  },
+  "honest_verdict": "complete: polarfire_continuity_confirmed_reachable",
+  "inference_substrate": "hardware_smoke",
+  "polarfire_carnot_dispatch_path": "/usr/bin/carnot",
+  "polarfire_ssh_reachable": true,
+  "polarfire_uptime": "16:31:39 up 3 days,  2:02,  0 user,  load average: 0.00, 0.00, 0.00",
+  "preconditions_checked": [
+    {
+      "available": true,
+      "command": "ssh -o ConnectTimeout=5 polarfire true",
+      "exit_code": 0,
+      "resource": "polarfire_ssh"
+    }
+  ],
+  "random_seed": 3662,
+  "reproducibility_checksum": "ef55cd57a32ee922eed4d565a0d407b52ca994c4340ae16857aafce0d5993fb9",
+  "schema": "carnot.polarfire_continuity.v22",
+  "task_id": "exp3662-polarfire-continuity-v22"
+}
