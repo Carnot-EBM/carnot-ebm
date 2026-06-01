@@ -10232,3 +10232,32 @@ beta >= f(lambda_min) with safety margin.
 **When** the results are computed
 **Then** `honest_verdict` MUST indicate the calibration holds and quality is maintained.
 
+
+## REQ-LEARN-3604: FR-11 Continuous Self Learning v6 with Fallback Verifier
+
+**Given** the FR-11 continuous self-learning loop and a fresh non-degenerate corpus
+**When** the deployed conservative-default beta is used to calibrate the grounding verifier's decision threshold online
+**Then** the deploy arm MUST prevent self-distillation collapse (collapse_detected_deploy_arm == False)
+**And** the control arm (beta=0) MUST collapse (collapse_detected_control_beta0 == True)
+**And** the pass_rate and true_accuracy arrays MUST be genuinely distinct (pass_rate_vs_true_accuracy_distinct_assert == True)
+**And** detector quality MUST be maintained
+
+### REQ-LEARN-3604 Sub-requirements
+
+- REQ-LEARN-3604-1: If exp3600's real NLI grounding verifier landed, use it; else fall back to the existing factual verifier.
+- REQ-LEARN-3604-2: honest_verdict MUST be "complete: fr11_conservative_default_calibrates_real_grounding_verifier_holds_quality_maintained" if the acceptance gate passes.
+- REQ-LEARN-3604-3: The evaluation MUST measure detector calibration (e.g. factual_verifier_calibration_improved=True).
+
+### SCENARIO-LEARN-3604: Successful Calibration Prevents Collapse
+
+**Given** deploy arm without collapse, control arm with collapse, and distinct arrays for pass_rate vs true_accuracy
+**When** evaluate_continuous_self_learning_v6 is called
+**Then** honest_verdict == "complete: fr11_conservative_default_calibrates_real_grounding_verifier_holds_quality_maintained"
+
+---
+
+## Implementation Status (REQ-LEARN-3604)
+
+| Requirement  | Python | Tests |
+|-------------|--------|-------|
+| REQ-LEARN-3604 | Implemented (python/carnot/fr11/continuous_self_learning_v6.py) | Implemented (tests/python/test_experiment_3604_fr11_csl_v6.py) |
