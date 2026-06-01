@@ -4195,6 +4195,59 @@ count, field principles, deterministic seed, checksum, and duration.
 
 ---
 
+### REQ-HW-3675
+
+**Title:** PolarFire continuity v23 MUST confirm live SSH continuity for milestone .336
+
+**Description:**
+Experiment 3675 MUST perform the milestone PolarFire hardware-task continuity
+check. Hardware-Task Continuity requires one PolarFire task per milestone, and
+the board was last recorded reachable in .331. The experiment MUST first execute
+the SSH precondition:
+
+`ssh -o ConnectTimeout=5 polarfire 'true'`
+
+If that precondition exits zero, the experiment MUST collect live continuity
+evidence from the board by recording uptime and the Carnot dispatch path with
+distinct, deflagged PolarFire field names. If the precondition exits non-zero,
+the experiment MUST write the terminal blocked verdict and MUST NOT claim board
+continuity values.
+
+**Acceptance criteria:**
+- `results/experiment_3675_polarfire_continuity_v23.json` is generated.
+- The artifact includes `honest_verdict`, `inference_substrate`,
+  `preconditions_checked`, `polarfire_ssh_reachable`, `random_seed`,
+  `reproducibility_checksum`, and `duration_s`.
+- The artifact includes field-principle annotations for each required field,
+  documenting why the value exists while storing the bare value separately.
+- `inference_substrate` MUST be `"hardware_smoke"`.
+- If `ssh -o ConnectTimeout=5 polarfire 'true'` succeeds, the verdict MUST be
+  `"complete: polarfire_continuity_confirmed_reachable"` and the artifact MUST
+  include PolarFire uptime and Carnot dispatch-path values.
+- If the SSH precondition fails, the verdict MUST be
+  `"complete: blocked_polarfire_ssh_timeout"` and the artifact MUST record the
+  failed precondition before reporting the blocked board state.
+
+**Implementation status:** Pending (Exp 3675)
+
+---
+
+### SCENARIO-HW-3675
+
+**Scenario:** PolarFire continuity v23 records reachable or blocked state from SSH.
+
+**Given:** A PolarFire continuity check is required for milestone .336.
+**When:** Experiment 3675 runs the SSH reachability precondition and, only when
+reachable, asks the board for uptime and the Carnot dispatch path.
+**Then:** It writes `results/experiment_3675_polarfire_continuity_v23.json` with
+the terminal verdict, SSH state, precondition record, live continuity values
+when reachable, field principles, deterministic seed, checksum, and duration.
+
+**Implementation status:** Pending (Exp 3675)
+
+
+---
+
 ### REQ-HW-3649
 
 **Title:** PolarFire continuity v21 MUST gate continuity evidence on live SSH reachability
