@@ -7370,3 +7370,4 @@ web search: https://docs.garak.ai/garak/examples/pr |
 | 2026-06-01 02:10 UTC | Build a REAL NLI-model atomic-claim factual-ground | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp3599-build-factual-corpus-v2-with-evide |
 | 2026-06-01 02:12 UTC | Build a REAL NLI-model atomic-claim factual-ground | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp3599-build-factual-corpus-v2-with-evide |
 | 2026-06-01 02:14 UTC | CENTERPIECE: corrected cross-domain re-measurement | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp3599-build-factual-corpus-v2-with-evide |
+| 2026-06-01 02:16 UTC | CENTERPIECE: corrected cross-domain re-measurement | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp3599-build-factual-corpus-v2-with-evide |
