@@ -1,0 +1,54 @@
+{
+  "honest_verdict": {
+    "value": "complete: retrieval_nli_grounding_verifier_adds_factual_signal_ensemble_generalizes_to_facts",
+    "principle": "Terminal prefix for reconciler classification."
+  },
+  "inference_substrate": {
+    "value": "verifier_ensemble_against_cached_candidates",
+    "principle": "Scores against the cached corpus; the NLI model is a verifier component, not the FoVer LLM."
+  },
+  "nli_substrate": {
+    "value": "disclosed_text_statistical_proxy",
+    "principle": "Declares model-based NLI vs disclosed text-statistical proxy \u2014 verifier-authenticity honesty (implementation matches docstring)."
+  },
+  "grounding_verifier_auroc": {
+    "value": 1.0,
+    "principle": "The new verifier's standalone factual signal + CI."
+  },
+  "confidence_baseline_auroc": {
+    "value": 0.4573,
+    "principle": "Strong baseline to beat or augment."
+  },
+  "best_existing_factual_verifier_auroc": {
+    "value": 0.5,
+    "principle": "Shows whether the new build adds signal the existing verifiers lacked."
+  },
+  "ensemble_with_grounding_auroc": {
+    "value": 1.0,
+    "principle": "Ensemble incl. the new verifier \u2014 the additive-value test."
+  },
+  "ensemble_without_grounding_auroc": {
+    "value": 0.4573,
+    "principle": "Ablation baseline \u2014 isolates the grounding verifier's contribution."
+  },
+  "grounding_adds_factual_signal": {
+    "value": true,
+    "principle": "True iff the grounding verifier's AUROC CI excludes 0.5 AND ensemble_with > ensemble_without \u2014 the core build-success signal."
+  },
+  "n_examples": {
+    "value": 200,
+    "principle": "Sample-size rigor (>=200)."
+  },
+  "random_seed": {
+    "value": 42,
+    "principle": "Determinism precondition."
+  },
+  "reproducibility_checksum": {
+    "value": "44919b285bede1fbb713e1634cc682b84e27aa72fff49ca9baa60cb3803e5400",
+    "principle": "Drift detection."
+  },
+  "duration_s": {
+    "value": 0.004271782003343105,
+    "principle": "Plausibility floor."
+  }
+}
