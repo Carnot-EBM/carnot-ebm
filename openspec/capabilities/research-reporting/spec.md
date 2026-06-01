@@ -15304,3 +15304,52 @@ entry for `2026.06.334`.
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-REPORT-3652 | Implemented (`python/carnot/reporting/archive_v334_activate_v335_3652.py`, `scripts/experiment_3652_archive_v334_activate_v335.py`) | Implemented (`tests/python/test_experiment_3652_archive_v334_activate_v335.py`) |
+
+### REQ-REPORT-3653: Backend State Diagnostic
+
+The Exp 3653 workflow shall diagnose whether the Gemini backend recovered after
+the `.333` quota/crash wipeout and whether the operator should keep the proven
+`.334` `codex+requires_codex` routing or may flip back to Gemini-default
+routing. It shall run one bounded Gemini CLI version probe, one bounded Gemini
+prompt probe using `gemini-3.1-pro-preview`, and one read-only conductor
+coercion environment probe equivalent to
+`env | grep -iE 'AGENT_TYPE|FORCE_EXPERIMENTS'`. It SHALL NOT loop, retry,
+call the conductor, modify `scripts/research_conductor.py`, mutate shell
+environment variables, or edit conductor configuration.
+
+The workflow SHALL write
+`results/experiment_3653_backend_state_diagnostic.json` with bare top-level
+values for `honest_verdict`, `inference_substrate`, `gemini_cli_version`,
+`gemini_quota_state`, `conductor_coercion_env`, `recommended_routing`,
+`conductor_unmodified_assert`, `random_seed`, `reproducibility_checksum`, and
+`duration_s`, plus `field_principles` documenting why each required value
+exists. The prompt probe output SHALL be preserved with stdout, stderr, exit
+code, and combined output. `gemini_quota_state` SHALL be one of `ok`,
+`quota_exhausted_429`, or `crash_js_345500`. The workflow SHALL recommend
+`gemini_default` only when the bounded prompt probe exits successfully with an
+OK reply; otherwise it SHALL recommend `codex_requires_codex`.
+
+#### SCENARIO-REPORT-3653: Gemini Still Exhausted Keeps Codex Routing
+
+**Given** the bounded Gemini prompt probe reports `QUOTA_EXHAUSTED`, HTTP
+`429`, or the Gemini CLI `.js:345500:14` crash frame
+**When** the Exp 3653 workflow writes the diagnostic artifact
+**Then** it classifies `gemini_quota_state` as `quota_exhausted_429` or
+`crash_js_345500`, records the conductor coercion environment, asserts the
+conductor and environment were not modified, recommends
+`codex_requires_codex`, and emits
+`complete: backend_diagnosed_gemini_still_exhausted_keep_codex_routing`.
+
+#### SCENARIO-REPORT-3653-RECOVERED: Gemini OK Allows Operator Flip
+
+**Given** the bounded Gemini prompt probe exits successfully with an OK reply
+**When** the Exp 3653 workflow writes the diagnostic artifact
+**Then** it classifies `gemini_quota_state` as `ok`, records the same required
+schema fields, recommends `gemini_default`, and emits
+`complete: backend_diagnosed_gemini_recovered_operator_may_flip_to_gemini_default`.
+
+## Implementation Status (REQ-REPORT-3653)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-3653 | Implemented (`python/carnot/reporting/backend_state_diagnostic_3653.py`, `scripts/experiment_3653_backend_state_diagnostic.py`) | Implemented (`tests/python/test_experiment_3653_backend_state_diagnostic.py`) |
