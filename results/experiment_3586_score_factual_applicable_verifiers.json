@@ -1,0 +1,27 @@
+{
+  "experiment": 3586,
+  "schema": "blocked_gate_check_v1",
+  "run_date": "2026-06-01",
+  "started_at": "2026-06-01T00:08:48.751693+00:00",
+  "finished_at": "2026-06-01T00:08:48.751693+00:00",
+  "duration_s": 0.0,
+  "status": "blocked",
+  "title": "Score the factual-APPLICABLE verifiers on the realistic corpus \u2014 which actually FIRE (per-verifier AUROC > 0.5)?",
+  "honest_verdict": "blocked_gate_check_failed",
+  "gate_check_summary": "1 of 1 gate(s) failed; first failure: exp3585-build-realistic-factual-hallucination-corpus.corpus_is_realistic (actual={'value': True, 'principle': 'True iff confidence AUROC < 0.95 \u2014 the positive-control precondition for every downstream domain test.'} == expected=True)",
+  "gates_evaluated": [
+    {
+      "upstream": "exp3585-build-realistic-factual-hallucination-corpus",
+      "artifact_field": "corpus_is_realistic",
+      "op": "==",
+      "expected": true,
+      "actual": {
+        "value": true,
+        "principle": "True iff confidence AUROC < 0.95 \u2014 the positive-control precondition for every downstream domain test."
+      },
+      "passed": false,
+      "reason": "actual={'value': True, 'principle': 'True iff confidence AUROC < 0.95 \u2014 the positive-control precondition for every downstream domain test.'} == expected=True"
+    }
+  ],
+  "blocked_at_layer": "conductor_pre_gate"
+}
