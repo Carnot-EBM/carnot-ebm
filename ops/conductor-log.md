@@ -7540,3 +7540,4 @@ web search: https://docs.garak.ai/garak/examples/pr |
 | 2026-06-01 17:38 UTC | Milestone 2026.06.336 activated | OK | 13 tasks queued |
 | 2026-06-01 17:51 UTC | Archive milestone .335 honestly (the FACTS-made-re | OK | 86 passed in 4.40s |
 | 2026-06-01 18:04 UTC | Backend-state diagnostic v2 — second consecutive p | OK | 88 passed in 4.75s |
+| 2026-06-01 18:24 UTC | Clean, de-tautologized dependency-aware ensemble w | OK | 89 passed in 5.07s |
