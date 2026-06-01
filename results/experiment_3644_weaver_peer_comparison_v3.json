@@ -1,0 +1,171 @@
+{
+  "artifact": "experiment_3644_weaver_peer_comparison_v3",
+  "auroc_delta_correlation_aware_vs_weaver": -0.236268,
+  "conditional_verifier_correlation_by_label": {
+    "correct": [
+      [
+        1.0,
+        0.115233,
+        0.007865,
+        0.081157
+      ],
+      [
+        0.115233,
+        1.0,
+        0.026603,
+        0.012546
+      ],
+      [
+        0.007865,
+        0.026603,
+        1.0,
+        -0.064244
+      ],
+      [
+        0.081157,
+        0.012546,
+        -0.064244,
+        1.0
+      ]
+    ],
+    "incorrect": [
+      [
+        1.0,
+        0.130067,
+        0.129023,
+        0.002827
+      ],
+      [
+        0.130067,
+        1.0,
+        -0.085778,
+        0.074557
+      ],
+      [
+        0.129023,
+        -0.085778,
+        1.0,
+        0.051272
+      ],
+      [
+        0.002827,
+        0.074557,
+        0.051272,
+        1.0
+      ]
+    ]
+  },
+  "correlation_awareness_matters": true,
+  "duration_s": 0.29516,
+  "ensemble_auroc_carnot": 0.919446,
+  "ensemble_auroc_correlation_aware": 0.635312,
+  "ensemble_auroc_unweighted": 0.736244,
+  "ensemble_auroc_weaver_style": 0.87158,
+  "field_principles": {
+    "correlation_awareness_matters": "True iff accounting for the measured correlation changes weights/AUROC vs the Weaver independence baseline -- the differentiation claim.",
+    "duration_s": "Plausibility floor.",
+    "ensemble_auroc_carnot": "Carnot's current weighting -- the apples-to-apples comparison.",
+    "ensemble_auroc_unweighted": "Baseline: equal-weight ensemble.",
+    "ensemble_auroc_weaver_style": "Independence-assuming weak-supervision weighting -- the peer baseline.",
+    "honest_verdict": "Terminal prefix for reconciler classification.",
+    "inference_substrate": "Scores the cached FoVer corpus; no LLM load.",
+    "mean_offdiagonal_verifier_correlation": "The quantity Weaver assumes ~0; a materially non-zero value is the differentiation evidence.",
+    "most_redundant_verifier_pair": "Names the pair Weaver's independence assumption most mis-handles -- concrete, auditable.",
+    "n_examples": "Sample-size rigor.",
+    "random_seed": "Determinism precondition.",
+    "reproducibility_checksum": "Drift detection."
+  },
+  "honest_verdict": "complete: weaver_compared_correlation_matters_carnot_differentiates_on_correlation_awareness",
+  "inference_substrate": "verifier_ensemble_against_cached_candidates (principle: scores the cached FoVer corpus; no LLM load).",
+  "mean_offdiagonal_unconditional_verifier_correlation": 0.137796,
+  "mean_offdiagonal_verifier_correlation": 0.065098,
+  "most_redundant_verifier_pair": {
+    "by_label": {
+      "correct": 0.115233,
+      "incorrect": 0.130067
+    },
+    "conditional_abs_correlation": 0.12265,
+    "pair": [
+      "fr11_session_memory",
+      "tier0r_curry_howard"
+    ]
+  },
+  "n_examples": 1000,
+  "pearson_verifier_correlation_matrix": [
+    [
+      1.0,
+      0.435928,
+      -0.085202,
+      0.050778
+    ],
+    [
+      0.435928,
+      1.0,
+      -0.167926,
+      0.079965
+    ],
+    [
+      -0.085202,
+      -0.167926,
+      1.0,
+      -0.006978
+    ],
+    [
+      0.050778,
+      0.079965,
+      -0.006978,
+      1.0
+    ]
+  ],
+  "preconditions_checked": [
+    {
+      "available": true,
+      "detail": "line_count=8829; required>=1000",
+      "resource": "fover_corpus"
+    },
+    {
+      "available": true,
+      "detail": "loaded=tier0r_curry_howard,tier0s_arithmetic_gap,tier0u_logical_consistency",
+      "resource": "text_scoring_verifiers"
+    },
+    {
+      "available": true,
+      "detail": "state_files=21; memory_loaded=True",
+      "resource": "fr11_session_memory_verifier"
+    }
+  ],
+  "random_seed": 3644,
+  "reproducibility_checksum": "95b56b1910d9c5a4229587634ce568a7634545e280654b2c2d415f8146d467ad",
+  "schema": "carnot.weaver_peer_comparison_v3",
+  "verifier_names": [
+    "fr11_session_memory",
+    "tier0r_curry_howard",
+    "tier0s_arithmetic_gap",
+    "tier0u_logical_consistency"
+  ],
+  "weight_l1_delta_correlation_aware_vs_weaver": 0.00692,
+  "weights_carnot": {
+    "fr11_session_memory": 0.5,
+    "tier0r_curry_howard": 0.45,
+    "tier0s_arithmetic_gap": 0.0,
+    "tier0u_logical_consistency": 0.05
+  },
+  "weights_correlation_aware": {
+    "fr11_session_memory": 0.001148,
+    "tier0r_curry_howard": 0.001716,
+    "tier0s_arithmetic_gap": 0.002588,
+    "tier0u_logical_consistency": 0.994547
+  },
+  "weights_unweighted": {
+    "fr11_session_memory": 0.25,
+    "tier0r_curry_howard": 0.25,
+    "tier0s_arithmetic_gap": 0.25,
+    "tier0u_logical_consistency": 0.25
+  },
+  "weights_weaver_style": {
+    "fr11_session_memory": 0.002323,
+    "tier0r_curry_howard": 0.004001,
+    "tier0s_arithmetic_gap": 0.001267,
+    "tier0u_logical_consistency": 0.992408
+  }
+}

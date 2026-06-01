@@ -9402,3 +9402,55 @@ at least one domain has a significant ensemble-only error-catch set.
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-VERIFY-3643 | Implemented (`python/carnot/verify/additivity_second_pair_of_eyes_v4.py`, `scripts/experiment_3643_additivity_second_pair_of_eyes_v4.py`) | Implemented (`tests/python/test_experiment_3643_additivity_second_pair_of_eyes_v4.py`) |
+
+### REQ-VERIFY-3644: Weaver Peer Comparison Correlation Audit V3
+
+The repository shall provide an Exp 3644 workflow that scores the cached FoVer
+corpus with the same four scoring verifiers used by Exp 2837 and writes
+`results/experiment_3644_weaver_peer_comparison_v3.json` without live LLM
+inference or model-weight loading. Before scoring, the workflow SHALL verify
+that the FoVer corpus and all scoring verifier paths are loadable; if not, it
+SHALL write the terminal verdict
+`complete: blocked_fover_corpus_or_verifiers_unavailable` without inferring
+AUROC or correlation values.
+
+For runnable inputs, the workflow SHALL compute per-verifier scores, the
+unconditional Pearson inter-verifier correlation matrix, and label-conditional
+Pearson correlation matrices for correct and incorrect examples. It SHALL
+report the mean absolute off-diagonal label-conditional verifier correlation
+and the most redundant verifier pair as the concrete measurement of the
+conditional-independence assumption used by Weaver-style weak-verifier
+ensembles.
+
+The workflow SHALL compare equal-weight unweighted scoring, an
+independence-assuming Weaver-style label-free weighting baseline based on
+inverse verifier variance, and Carnot's current Exp 2837 architecture weighting.
+It SHALL also compute a correlation-aware inverse-covariance weighting
+diagnostic and set `correlation_awareness_matters=true` only when accounting
+for the measured correlation changes the normalized weights or materially
+changes AUROC versus the Weaver-style baseline.
+
+The terminal artifact SHALL include `honest_verdict`,
+`inference_substrate`, `mean_offdiagonal_verifier_correlation`,
+`most_redundant_verifier_pair`, `ensemble_auroc_unweighted`,
+`ensemble_auroc_weaver_style`, `ensemble_auroc_carnot`,
+`correlation_awareness_matters`, `n_examples`, `random_seed`,
+`reproducibility_checksum`, and `duration_s`. It SHALL also include principle
+annotations for those required fields and enough diagnostic fields to audit the
+correlation matrices, verifier names, and normalized weighting vectors.
+
+### SCENARIO-VERIFY-3644: Correlation Audit Compares Weaver-Style And Carnot Weights
+
+Given a FoVer-style fixture with four verifier score columns and binary labels,
+when the Exp 3644 workflow builds its artifact, then it computes unconditional
+and label-conditional Pearson correlation matrices, identifies the most
+redundant verifier pair from the conditional matrix, reports AUROC for
+unweighted, Weaver-style inverse-variance, and Carnot-weighted ensembles, and
+sets the terminal verdict according to whether correlation-aware weighting
+changes weights or AUROC relative to the independence-assuming baseline.
+
+## Implementation Status (REQ-VERIFY-3644)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-VERIFY-3644 | Implemented (`python/carnot/verify/weaver_peer_comparison_v3.py`, `scripts/experiment_3644_weaver_peer_comparison_v3.py`) | Implemented (`tests/python/test_experiment_3644_weaver_peer_comparison_v3.py`) |
