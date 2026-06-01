@@ -9551,6 +9551,52 @@ changes weights or AUROC relative to the independence-assuming baseline.
 |---|---|---|
 | REQ-VERIFY-3644 | Implemented (`python/carnot/verify/weaver_peer_comparison_v3.py`, `scripts/experiment_3644_weaver_peer_comparison_v3.py`) | Implemented (`tests/python/test_experiment_3644_weaver_peer_comparison_v3.py`) |
 
+### REQ-VERIFY-3656: Correlation-Aware Weighting Paradox Diagnosis
+
+The repository shall provide an Exp 3656 workflow that diagnoses the Exp 3644
+correlation-aware weighting regression over the cached FoVer corpus and writes
+`results/experiment_3656_correlation_aware_weighting_paradox_diagnosis.json`
+without live LLM inference or model-weight loading. The workflow SHALL first
+verify that the FoVer corpus, the four Exp 2837 scoring verifier paths, and the
+Exp 3644 correlation artifact are loadable. If any precondition is unavailable,
+it SHALL write the terminal verdict
+`complete: blocked_fover_corpus_or_correlation_matrix_unavailable`.
+
+For runnable inputs, the workflow SHALL reproduce the Exp 3644 four-way AUROC
+baseline for unweighted, Weaver-style, Carnot, and naive correlation-aware
+weighting, including the negative naive-correlation-aware delta against
+Weaver-style weighting. It SHALL then learn a label-conditional verifier
+dependency graph over the verifier vote columns, use that learned structure to
+compute dependency-aware verifier weights, and compare its AUROC against the
+four Exp 3644 baselines.
+
+The workflow SHALL diagnose whether the naive marginal-correlation penalty
+confused redundancy with complementarity by reporting per-verifier signal,
+direction, baseline weights, dependency-aware weights, and which correlated
+verifier pair retained independent label signal under the learned dependency
+model. The terminal artifact SHALL include `honest_verdict`,
+`inference_substrate`, `ensemble_auroc_naive_correlation_aware`,
+`ensemble_auroc_dependency_aware_proper`, `ensemble_auroc_carnot`,
+`naive_penalty_diagnosis`, `correlation_harmless_or_penalty_misspecified`,
+`n_examples`, `random_seed`, `reproducibility_checksum`, and `duration_s`, with
+principle annotations for each required field.
+
+### SCENARIO-VERIFY-3656: Learned Dependencies Separate Redundancy From Complementarity
+
+Given a FoVer-style fixture with four verifier score columns, binary labels,
+and a prior Exp 3644 correlation matrix, when the Exp 3656 workflow builds its
+artifact, then it reproduces the Exp 3644 AUROCs, learns a label-conditional
+dependency graph over the verifier votes, computes dependency-aware proper
+weights from that learned graph, reports why the naive redundancy penalty hurt,
+and classifies the outcome as correlation-harmless, penalty-mis-specified, or
+dependency-aware recovery without hard-coding a single success verdict.
+
+## Implementation Status (REQ-VERIFY-3656)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-VERIFY-3656 | Implemented (`python/carnot/verify/correlation_aware_weighting_paradox_diagnosis.py`, `scripts/experiment_3656_correlation_aware_weighting_paradox_diagnosis.py`) | Implemented (`tests/python/test_experiment_3656_correlation_aware_weighting_paradox_diagnosis.py`) |
+
 ### REQ-VERIFY-3646: Trained EBM Judge OOD Counterpoint V2
 
 The repository shall provide an Exp 3646 workflow that trains a small

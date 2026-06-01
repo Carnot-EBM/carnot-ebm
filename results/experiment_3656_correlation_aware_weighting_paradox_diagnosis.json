@@ -1,0 +1,357 @@
+{
+  "artifact": "experiment_3656_correlation_aware_weighting_paradox_diagnosis",
+  "baseline_random_seed": 3644,
+  "correlation_harmless_or_penalty_misspecified": "dependency_aware_recovers",
+  "dependency_aware_auroc_delta_vs_carnot": 0.013116,
+  "dependency_aware_auroc_gain_vs_naive": 0.29725,
+  "dependency_aware_fold_weights": [
+    {
+      "fr11_session_memory": 0.302148,
+      "tier0r_curry_howard": 0.403687,
+      "tier0s_arithmetic_gap": -0.075686,
+      "tier0u_logical_consistency": 0.21848
+    },
+    {
+      "fr11_session_memory": 0.307445,
+      "tier0r_curry_howard": 0.360726,
+      "tier0s_arithmetic_gap": -0.078259,
+      "tier0u_logical_consistency": 0.253569
+    },
+    {
+      "fr11_session_memory": 0.263206,
+      "tier0r_curry_howard": 0.401078,
+      "tier0s_arithmetic_gap": -0.081421,
+      "tier0u_logical_consistency": 0.254296
+    },
+    {
+      "fr11_session_memory": 0.276074,
+      "tier0r_curry_howard": 0.350398,
+      "tier0s_arithmetic_gap": -0.073931,
+      "tier0u_logical_consistency": 0.299598
+    },
+    {
+      "fr11_session_memory": 0.366002,
+      "tier0r_curry_howard": 0.454299,
+      "tier0s_arithmetic_gap": -0.103481,
+      "tier0u_logical_consistency": 0.076219
+    }
+  ],
+  "dependency_aware_graph_sparse_covariance": [
+    [
+      0.042189,
+      0.003916,
+      0.005169,
+      0.0
+    ],
+    [
+      0.003916,
+      0.024222,
+      0.0,
+      0.0
+    ],
+    [
+      0.005169,
+      0.0,
+      0.112295,
+      3.2e-05
+    ],
+    [
+      0.0,
+      0.0,
+      3.2e-05,
+      0.000252
+    ]
+  ],
+  "dependency_aware_learned_graph": {
+    "edge_frequencies_across_folds": [
+      {
+        "fold_count": 5,
+        "frequency": 1.0,
+        "pair": [
+          "fr11_session_memory",
+          "tier0r_curry_howard"
+        ]
+      },
+      {
+        "fold_count": 5,
+        "frequency": 1.0,
+        "pair": [
+          "fr11_session_memory",
+          "tier0s_arithmetic_gap"
+        ]
+      },
+      {
+        "fold_count": 3,
+        "frequency": 0.6,
+        "pair": [
+          "fr11_session_memory",
+          "tier0u_logical_consistency"
+        ]
+      },
+      {
+        "fold_count": 2,
+        "frequency": 0.4,
+        "pair": [
+          "tier0s_arithmetic_gap",
+          "tier0u_logical_consistency"
+        ]
+      }
+    ],
+    "edges": [
+      {
+        "by_label_correlation": {
+          "0": 0.115233,
+          "1": 0.130067
+        },
+        "conditional_mutual_information": 0.007607,
+        "pair": [
+          "fr11_session_memory",
+          "tier0r_curry_howard"
+        ]
+      },
+      {
+        "by_label_correlation": {
+          "0": 0.007865,
+          "1": 0.129023
+        },
+        "conditional_mutual_information": 0.004212,
+        "pair": [
+          "fr11_session_memory",
+          "tier0s_arithmetic_gap"
+        ]
+      },
+      {
+        "by_label_correlation": {
+          "0": -0.064244,
+          "1": 0.051272
+        },
+        "conditional_mutual_information": 0.001692,
+        "pair": [
+          "tier0s_arithmetic_gap",
+          "tier0u_logical_consistency"
+        ]
+      }
+    ],
+    "graph_type": "label_conditional_chow_liu_tree"
+  },
+  "dependency_aware_training_protocol": {
+    "baseline_selection_seed": 3644,
+    "folds": 5,
+    "graph_seed": 3656,
+    "learned_on_labels": true,
+    "method": "stratified_crossfit_graph_sparse_signed_fisher_weights"
+  },
+  "duration_s": 0.178347,
+  "ensemble_auroc_carnot": 0.919446,
+  "ensemble_auroc_correlation_aware": 0.635312,
+  "ensemble_auroc_dependency_aware_proper": 0.932562,
+  "ensemble_auroc_naive_correlation_aware": 0.635312,
+  "ensemble_auroc_unweighted": 0.736244,
+  "ensemble_auroc_weaver_style": 0.87158,
+  "exp3644_baseline_reproduction": {
+    "all_baselines_match_prior": true,
+    "auroc_delta_correlation_aware_vs_weaver": -0.236268,
+    "computed_from_current_scores": {
+      "auroc_delta_correlation_aware_vs_weaver": -0.236268,
+      "ensemble_auroc_carnot": 0.919446,
+      "ensemble_auroc_correlation_aware": 0.635312,
+      "ensemble_auroc_unweighted": 0.736244,
+      "ensemble_auroc_weaver_style": 0.87158
+    },
+    "ensemble_auroc_carnot": 0.919446,
+    "ensemble_auroc_correlation_aware": 0.635312,
+    "ensemble_auroc_unweighted": 0.736244,
+    "ensemble_auroc_weaver_style": 0.87158,
+    "matches_prior_exp3644": {
+      "auroc_delta_correlation_aware_vs_weaver": true,
+      "ensemble_auroc_carnot": true,
+      "ensemble_auroc_correlation_aware": true,
+      "ensemble_auroc_unweighted": true,
+      "ensemble_auroc_weaver_style": true
+    }
+  },
+  "field_principles": {
+    "correlation_harmless_or_penalty_misspecified": "H1 (correlation genuinely harmless) vs H2 (naive penalty mis-specified, proper dependency-awareness helps) -- the falsifiable result.",
+    "duration_s": "Plausibility floor.",
+    "ensemble_auroc_carnot": "Carnot's current weighting (0.919) -- the bar.",
+    "ensemble_auroc_dependency_aware_proper": "The arXiv:1903.05844 learned-dependency-structure weighting -- does proper dependency-awareness recover or beat Carnot's 0.919?",
+    "ensemble_auroc_naive_correlation_aware": "Reproduces the .334 regression (0.635) -- the paradox to explain.",
+    "honest_verdict": "Terminal prefix for reconciler classification.",
+    "inference_substrate": "Scores the cached FoVer corpus; no LLM load.",
+    "n_examples": "Sample-size rigor.",
+    "naive_penalty_diagnosis": "WHY the naive redundancy penalty hurt (redundancy-vs-complementarity confusion) -- the mechanistic explanation.",
+    "random_seed": "Determinism precondition.",
+    "reproducibility_checksum": "Drift detection."
+  },
+  "honest_verdict": "complete: paradox_resolved_naive_penalty_misspecified_dependency_aware_recovers",
+  "inference_substrate": "verifier_ensemble_against_cached_candidates (principle: scores the cached FoVer corpus; no LLM load).",
+  "n_examples": 1000,
+  "naive_auroc_delta_vs_weaver": -0.236268,
+  "naive_penalty_diagnosis": {
+    "learned_dependency_edges": [
+      {
+        "dependency_aware_weights": [
+          0.302975,
+          0.394038
+        ],
+        "pair": [
+          "fr11_session_memory",
+          "tier0r_curry_howard"
+        ],
+        "retains_complementary_signal": true,
+        "single_verifier_aurocs": [
+          0.872918,
+          0.900856
+        ]
+      },
+      {
+        "dependency_aware_weights": [
+          0.302975,
+          -0.082555
+        ],
+        "pair": [
+          "fr11_session_memory",
+          "tier0s_arithmetic_gap"
+        ],
+        "retains_complementary_signal": false,
+        "single_verifier_aurocs": [
+          0.872918,
+          0.297348
+        ]
+      },
+      {
+        "dependency_aware_weights": [
+          -0.082555,
+          0.220432
+        ],
+        "pair": [
+          "tier0s_arithmetic_gap",
+          "tier0u_logical_consistency"
+        ],
+        "retains_complementary_signal": false,
+        "single_verifier_aurocs": [
+          0.297348,
+          0.510952
+        ]
+      }
+    ],
+    "over_weighted_anti_signal_verifiers": [
+      "tier0s_arithmetic_gap"
+    ],
+    "over_weighted_low_signal_verifiers": [
+      "tier0u_logical_consistency"
+    ],
+    "per_verifier": {
+      "fr11_session_memory": {
+        "dependency_aware_weight": 0.302975,
+        "label_direction": "positive",
+        "mean_label_0": 0.2009,
+        "mean_label_1": 0.503767,
+        "naive_correlation_aware_weight": 0.001148,
+        "naive_minus_weaver_weight": -0.001176,
+        "single_verifier_auroc": 0.872918,
+        "weaver_weight": 0.002323
+      },
+      "tier0r_curry_howard": {
+        "dependency_aware_weight": 0.394038,
+        "label_direction": "positive",
+        "mean_label_0": 0.114686,
+        "mean_label_1": 0.348248,
+        "naive_correlation_aware_weight": 0.001716,
+        "naive_minus_weaver_weight": -0.002284,
+        "single_verifier_auroc": 0.900856,
+        "weaver_weight": 0.004001
+      },
+      "tier0s_arithmetic_gap": {
+        "dependency_aware_weight": -0.082555,
+        "label_direction": "anti_signal",
+        "mean_label_0": 0.37043,
+        "mean_label_1": 0.2031,
+        "naive_correlation_aware_weight": 0.002588,
+        "naive_minus_weaver_weight": 0.001321,
+        "single_verifier_auroc": 0.297348,
+        "weaver_weight": 0.001267
+      },
+      "tier0u_logical_consistency": {
+        "dependency_aware_weight": 0.220432,
+        "label_direction": "positive",
+        "mean_label_0": 0.00066,
+        "mean_label_1": 0.00214,
+        "naive_correlation_aware_weight": 0.994547,
+        "naive_minus_weaver_weight": 0.002139,
+        "single_verifier_auroc": 0.510952,
+        "weaver_weight": 0.992408
+      }
+    },
+    "redundancy_vs_complementarity_confusion": true,
+    "summary": "The naive inverse-covariance penalty treats marginal correlation as redundant mass to suppress. The learned dependency model instead keeps correlated high-AUROC verifiers when they retain label signal, flips anti-signal columns, and avoids promoting low-variance columns solely because they have small variance."
+  },
+  "outcome_rationale": "Proper label-conditional dependency-aware weights recover the naive correlation penalty regression and meet or nearly meet the Carnot bar.",
+  "preconditions_checked": [
+    {
+      "available": true,
+      "detail": "line_count=8829; required>=1000",
+      "resource": "fover_corpus"
+    },
+    {
+      "available": true,
+      "detail": "loaded=tier0r_curry_howard,tier0s_arithmetic_gap,tier0u_logical_consistency",
+      "resource": "text_scoring_verifiers"
+    },
+    {
+      "available": true,
+      "detail": "state_files=21; memory_loaded=True",
+      "resource": "fr11_session_memory_verifier"
+    },
+    {
+      "available": true,
+      "detail": "matrix_shape=4x4",
+      "resource": "exp3644_correlation_matrix"
+    }
+  ],
+  "random_seed": 3656,
+  "reproducibility_checksum": "392261911b1ee91f12f4e23d95cdc55890a87f038ace5b325475e0b3879327eb",
+  "schema": "carnot.correlation_aware_weighting_paradox_diagnosis.v1",
+  "verifier_names": [
+    "fr11_session_memory",
+    "tier0r_curry_howard",
+    "tier0s_arithmetic_gap",
+    "tier0u_logical_consistency"
+  ],
+  "weights_carnot": {
+    "fr11_session_memory": 0.5,
+    "tier0r_curry_howard": 0.45,
+    "tier0s_arithmetic_gap": 0.0,
+    "tier0u_logical_consistency": 0.05
+  },
+  "weights_dependency_aware_full_fit": {
+    "fr11_session_memory": 0.286055,
+    "tier0r_curry_howard": 0.371489,
+    "tier0s_arithmetic_gap": -0.077796,
+    "tier0u_logical_consistency": 0.26466
+  },
+  "weights_dependency_aware_proper": {
+    "fr11_session_memory": 0.302975,
+    "tier0r_curry_howard": 0.394038,
+    "tier0s_arithmetic_gap": -0.082555,
+    "tier0u_logical_consistency": 0.220432
+  },
+  "weights_naive_correlation_aware": {
+    "fr11_session_memory": 0.001148,
+    "tier0r_curry_howard": 0.001716,
+    "tier0s_arithmetic_gap": 0.002588,
+    "tier0u_logical_consistency": 0.994547
+  },
+  "weights_unweighted": {
+    "fr11_session_memory": 0.25,
+    "tier0r_curry_howard": 0.25,
+    "tier0s_arithmetic_gap": 0.25,
+    "tier0u_logical_consistency": 0.25
+  },
+  "weights_weaver_style": {
+    "fr11_session_memory": 0.002323,
+    "tier0r_curry_howard": 0.004001,
+    "tier0s_arithmetic_gap": 0.001267,
+    "tier0u_logical_consistency": 0.992408
+  }
+}
