@@ -1529,6 +1529,64 @@ and MUST NOT set `g2_met=true`.
 with `package_auroc_within_ci == true`, `package_sha256_verified == true`,
 `g2_met == false`, `external_run_pending == true`, and a `complete:` verdict.
 
+### REQ-PUBLISH-040: Exp 3681 G2 Reproducer Prep For Operator Re-Freeze
+
+The Exp 3681 prep runner MUST prepare, but not perform, a dependency-aware
+FoVer headline re-freeze. It MUST first verify that Exp 3680 records
+`dependency_aware_g1_rigor_confirmed == true` and that
+`scripts/reproduce_fover_headline.py` is importable. If either precondition is
+false, it MUST write
+`results/experiment_3681_g2_reproducer_prep_operator_refreeze_package.json`
+with the terminal verdict
+`complete: blocked_g1_candidate_not_confirmed_or_reproducer_unavailable`.
+
+When preconditions pass, the runner MUST use an ADDITIVE extension of
+`scripts/reproduce_fover_headline.py` to recompute the dependency-aware
+production AUROC and learning contribution from the cached FoVer corpus, assert
+that those values land inside Exp 3680-derived confidence bounds, and confirm
+that the unchanged frozen 0.9131 reproduction path still passes. The default
+workflow-facing 0.9131 path MUST remain unchanged.
+
+The artifact MUST draft, but not apply, the exact CI-workflow assertion bounds
+an operator would set for the candidate re-freeze. It MUST include the
+dependency-aware production AUROC CI from Exp 3680 and a learning-contribution
+CI derived from Exp 3680 per-seed rows. It MUST include an ordered
+`operator_checklist` whose steps are marked `OPERATOR-ACTION` for the north-star
+Section 1 headline edit, the CI-workflow assertion update, and triggering the
+independent reproducer run.
+
+The runner MUST NOT edit `ops/north-star.md`, MUST NOT edit
+`.github/workflows/reproduce-fover-headline.yml`, MUST NOT trigger GitHub
+Actions, MUST NOT change the frozen 0.9131 publication-gate source, MUST NOT
+change `paper_ready`, and MUST NOT modify `scripts/research_conductor.py`.
+
+### SCENARIO-PUBLISH-040: Re-Freeze Package Ready But Headline Unchanged
+
+**Given** Exp 3680 confirms the dependency-aware G1 candidate and the FoVer
+headline reproducer imports
+**When** the Exp 3681 prep runner executes
+**Then** it writes
+`results/experiment_3681_g2_reproducer_prep_operator_refreeze_package.json`
+with `honest_verdict ==
+"complete: refreeze_package_ready_for_operator_frozen_headline_unchanged"`
+AND `reproducer_extended == true`
+AND `existing_0_9131_reproduction_still_green == true`
+AND `candidate_reproduction_asserts_in_ci == true`
+AND `north_star_unmodified_assert == true`
+AND `ci_workflow_unmodified_assert == true`
+AND `frozen_headline_unchanged_assert == true`.
+
+### SCENARIO-PUBLISH-040B: Missing Candidate Or Reproducer Blocks
+
+**Given** Exp 3680 is missing, does not confirm the G1 candidate, or the FoVer
+headline reproducer cannot be imported
+**When** the Exp 3681 prep runner executes
+**Then** it writes the same artifact path with `honest_verdict ==
+"complete: blocked_g1_candidate_not_confirmed_or_reproducer_unavailable"`
+AND does not edit `ops/north-star.md`
+AND does not edit `.github/workflows/reproduce-fover-headline.yml`
+AND does not trigger GitHub Actions.
+
 
 ## Implementation Status
 
@@ -1569,6 +1627,7 @@ with `package_auroc_within_ci == true`, `package_sha256_verified == true`,
 | REQ-PUBLISH-037 | Implemented | Exp 3463 FoVer G2 CI dry-run + external-reproducer handoff |
 | REQ-PUBLISH-038 | Implemented | Exp 3476 FoVer G2 self-contained external reproduction package |
 | REQ-PUBLISH-039 | Implemented | Exp 3488 FoVer G2 clean-room regression verify + lowest-friction external ask |
+| REQ-PUBLISH-040 | Proposed | Exp 3681 G2 reproducer prep for operator re-freeze |
 
 ### REQ-PUBLISH-026: HuggingFace Publish Retry
 The experiment 1750 huggingface retry runner MUST attempt to upload the smallest model in models/ with a no-emoji model card. If credentials pass, it MUST upload and record hf_upload_succeeded = True. If blocked, it MUST emit an honest verdict of "blocked_credentials".
