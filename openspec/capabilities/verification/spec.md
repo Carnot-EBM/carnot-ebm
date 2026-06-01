@@ -9662,6 +9662,62 @@ gain, or blocked outcomes without hard-coding a single success string.
 |---|---|---|
 | REQ-VERIFY-3667 | Implemented (`python/carnot/verify/dependency_aware_weighting_clean.py`, `scripts/experiment_3667_dependency_aware_weighting_clean.py`) | Implemented (`tests/python/test_experiment_3667_dependency_aware_weighting_clean.py`) |
 
+### REQ-VERIFY-3668: Held-Out Dependency-Aware Weighting Generalization
+
+The repository shall provide an Exp 3668 workflow that tests whether the Exp
+3667 dependency-aware FoVer weighting result generalizes to disjoint held-out
+rows. The workflow SHALL first verify that Exp 3667 reports
+`dependency_aware_beats_carnot == true` and that the dependency-aware graph and
+weight fitting implementation is importable. If either upstream precondition is
+not met, it SHALL write the terminal verdict
+`complete: blocked_dependency_aware_weighting_not_confirmed_upstream`.
+
+For runnable inputs, the workflow SHALL score the same cached FoVer verifier
+columns without live LLM inference, create at least five deterministic
+stratified train/test splits, fit the dependency graph and weights on TRAIN
+only, and evaluate both dependency-aware scores and Carnot-current scores on
+the identical disjoint TEST rows for each split. It SHALL report per-split test
+AUROCs and a pooled held-out comparison across all test rows.
+
+The workflow SHALL compute a paired held-out bootstrap confidence interval for
+dependency-aware minus Carnot-current AUROC and a paired DeLong p-value on the
+held-out test substrate. It SHALL set
+`dependency_aware_generalizes_heldout` as a bare top-level boolean that is true
+only when dependency-aware held-out AUROC is greater than Carnot-current
+held-out AUROC and the paired held-out delta confidence interval excludes zero
+in the positive direction.
+
+The terminal artifact SHALL include `honest_verdict`, `inference_substrate`,
+`heldout_auroc_dependency_aware`, `heldout_auroc_carnot`,
+`heldout_delta_ci`, `heldout_delong_p`, `n_splits`,
+`dependency_aware_generalizes_heldout`, `random_seed`,
+`reproducibility_checksum`, and `duration_s`, with principle annotations for
+each required field. Its acceptance gate SHALL require both held-out AUROC
+fields to be present and `n_splits >= 5`.
+
+The terminal verdict SHALL be one of
+`complete: dependency_aware_weighting_generalizes_heldout_headline_re_freeze_candidate_for_v337`,
+`complete: dependency_aware_weighting_overfit_train_only_heldout_win_evaporates`,
+or `complete: blocked_dependency_aware_weighting_not_confirmed_upstream`.
+
+### SCENARIO-VERIFY-3668: Held-Out Split Uses Same Test Rows For Both Weightings
+
+Given a FoVer-style fixture with four verifier score columns, binary labels,
+and an upstream Exp 3667 success artifact, when the Exp 3668 workflow builds
+its held-out artifact, then it creates at least five seeded disjoint
+train/test splits, learns dependency-aware weights on each TRAIN split only,
+evaluates dependency-aware and Carnot-current AUROC on the same TEST rows,
+reports paired bootstrap and DeLong evidence on the pooled held-out rows, stores
+`dependency_aware_generalizes_heldout` as a bare boolean, and classifies
+generalizes, train-only overfit, and blocked outcomes without hard-coding a
+single success verdict.
+
+## Implementation Status (REQ-VERIFY-3668)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-VERIFY-3668 | Implemented (`python/carnot/verify/dependency_aware_weighting_heldout.py`, `scripts/experiment_3668_dependency_aware_weighting_heldout.py`) | Implemented (`tests/python/test_experiment_3668_dependency_aware_weighting_heldout.py`) |
+
 ### REQ-VERIFY-3646: Trained EBM Judge OOD Counterpoint V2
 
 The repository shall provide an Exp 3646 workflow that trains a small
