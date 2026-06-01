@@ -2016,3 +2016,36 @@ The verifier ensemble MUST be evaluated for generalization on code domains (corr
 ### REQ-CODE-VERIFY-3602: FoVer Math-Trained PRM Transfer to Code Benchmark
 
 Evaluate if a math-trained Process Reward Model (PRM) transfers its discriminator capability to a code-generation benchmark (such as HumanEval). Measures whether the discriminative verifier is robust to out-of-domain evaluation or if discriminative verifiers are OOD-FRAGILE. Required for determining whether the 0.44 AUROC on code was a fundamental limit or a wiring failure.
+
+### REQ-CODE-3641: Cached Code-Corpus Verifier Transfer Artifact
+
+The repository shall provide an offline Exp 3641 workflow that builds a
+machine-readable labeled code-candidate corpus and evaluates verifier transfer
+without live LLM inference:
+- The workflow first inspects Exp 1999 and records whether it contains both
+  correctness labels and candidate source text. If Exp 1999 lacks candidate
+  source, the workflow may fall back to an on-disk MBPP/HumanEval candidate
+  artifact that carries per-candidate source code and execution labels.
+- The workflow writes `data/code_verification_corpus_v1.jsonl` with at least
+  `candidate_code`, `label`, and `test_outcome` for every usable row.
+- The workflow imports the configured code-applicable verifier modules and
+  records whether each verifier actually scored candidate code, distinguishing
+  import success from an inert interface mismatch.
+- The top-level artifact writes `code_verifiers_fire` as a bare boolean that is
+  true only when at least one execution-applicable verifier produced nonconstant
+  scores (`n_scored > 0` and variance > 0).
+- The workflow reports execution-verifier AUROC, FoVer-math-derived signal
+  AUROC, and a confidence/self-consistency baseline AUROC with deterministic
+  bootstrap confidence intervals over at least three random seeds.
+- A no-transfer verdict is permitted only when the corpus has headroom and the
+  execution verifiers fired; otherwise the artifact must use a blocked or inert
+  terminal verdict.
+
+### SCENARIO-CODE-3641: Code Transfer Artifact Distinguishes Corpus, Inert, And Transfer Verdicts
+
+Given synthetic code-candidate fixtures that cover a blocked corpus, inert
+verifiers, a firing/no-transfer result, and a firing/transfer result, when the
+Exp 3641 workflow builds its artifact, then the terminal `honest_verdict`
+matches the honest fixture state, `code_verifiers_fire` remains a bare boolean,
+the corpus JSONL is written only when labeled source rows exist, and the AUROC
+fields include deterministic confidence intervals.
