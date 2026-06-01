@@ -7533,3 +7533,4 @@ web search: https://docs.garak.ai/garak/examples/pr |
 | 2026-06-01 15:56 UTC | Trained-EBM-judge OOD v3 with a REAL model substra | OK | 104 passed in 6.52s |
 | 2026-06-01 16:15 UTC | FR-11 continuous self-learning v9 — online learnin | OK | 86 passed in 5.03s |
 | 2026-06-01 16:24 UTC | KV260 SSH-reachability continuity (UNREACHABLE in  | OK | 89 passed in 3.74s |
+| 2026-06-01 16:34 UTC | PolarFire opportunistic reachability + continuity  | OK | 88 passed in 4.83s |
