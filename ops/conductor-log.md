@@ -7523,3 +7523,4 @@ web search: https://docs.garak.ai/garak/examples/pr |
 | 2026-06-01 12:21 UTC | Capstone v334 + G1-G4 gate synthesis — was '.329 m | OK | 85 passed in 4.66s |
 | 2026-06-01 12:55 UTC | Plan milestone 2026.06.335 | OK | 13 tasks proposed |
 | 2026-06-01 12:57 UTC | Milestone 2026.06.335 activated | OK | 13 tasks queued |
+| 2026-06-01 13:18 UTC | Archive milestone .334 honestly (record the cross- | OK | 86 passed in 3.68s |
