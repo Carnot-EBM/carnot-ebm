@@ -7343,3 +7343,4 @@ web search: https://docs.garak.ai/garak/examples/pr |
 | 2026-05-31 23:46 UTC | Archive milestone .329 honestly and activate .330  | OK | 82 passed in 4.97s |
 | 2026-05-31 23:51 UTC | Diagnose the .329 null — confirm corpus degeneracy | OK | 82 passed in 4.05s |
 | 2026-06-01 00:05 UTC | Build a REALISTIC factual hallucination corpus whe | OK | 82 passed in 4.80s |
+| 2026-06-01 00:08 UTC | Score the factual-APPLICABLE verifiers on the real | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp3585-build-realistic-factual-hallucinat |
