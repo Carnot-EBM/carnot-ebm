@@ -1,243 +1,153 @@
-# Research Roadmap — Milestone 2026.06.334
+# Research Roadmap — Milestone 2026.06.335
 
-**Status:** PRE-STAGED by outer-loop Claude Opus 4.8 (2026-06-01).
-**Supersedes:** 2026.06.333 (which produced ZERO science — see below).
+**Status:** Proposed (outer-loop / Opus 4.8 pre-staged, 2026-06-01)
+**Milestone doc for:** `research-roadmap-next.yaml` (`milestone: 2026.06.335`)
+**Prior milestone:** 2026.06.334 (the cross-domain de-contamination science that FINALLY ran)
 
 ---
 
-## 0. What the previous milestone (.333) actually produced: NOTHING
+## 1. What the previous milestone proved
 
-This is the load-bearing fact for .334 and must not be soft-pedalled.
+`.334` was the milestone that — after FIVE stalled attempts (`.329`–`.333`, the last a total
+gemini-quota wipeout) — finally executed the cross-domain de-contamination science, routed entirely to
+**codex (`requires_codex`)** on a verified-working backend. All 14 tasks landed real artifacts. The
+honest scientific outcomes (read via `scripts/summarize_artifact.py`):
 
-**Every one of the 14 tasks in milestone 2026.06.333 FAILED with the same
-error:** `Gemini CLI error: .js:345500:14`. No experiment script was written,
-no artifact landed, no `honest_verdict` was emitted. `results/` contains no
-`experiment_362x`/`experiment_363x` files. The conductor log
-(`ops/conductor-log.md`, 06:09–07:39 UTC 2026-06-01) shows `FAIL` on all 14,
-including the four tasks declared `agent_type: claude` — the per-task agent
-selection did not route around the failure.
-
-### Root cause (diagnosed during this planning pass)
-
-1. **Gemini quota is exhausted.** A live probe during planning returned:
-   `reason: 'QUOTA_EXHAUSTED', code: 429, "Your quota will reset after ~3h"`.
-2. **gemini-cli 0.44.0 crashes instead of erroring gracefully on a 429.** It
-   throws `An unexpected critical error occurred:[object Object]` at
-   `.js:345500:14` rather than returning a clean retryable error, so the
-   conductor's self-heal/retry logic could not recover.
-3. **The conductor environment forces gemini regardless of per-task
-   `agent_type`:** `AGENT_TYPE=gemini` + `GEMINI_FORCE_EXPERIMENTS=1` are set.
-   This is why even the `requires_claude: true` tasks crashed via gemini — the
-   force-coercion routed them to the dead backend.
-
-**This is an infrastructure outage, not a scientific result.** The .333
-*design* was sound (it baked in every lesson from .329–.332: real evidence
-corpus, firing code verifiers, valid positive control, bare gated fields,
-quarantined poison test). It simply never executed.
-
-### The standing question is now 5 milestones old — always for infra reasons
-
-| Milestone | Cross-domain attempt outcome | Infra root cause (never the science) |
+| Finding | Evidence | Verdict |
 |---|---|---|
-| .329 | contaminated null | degenerate corpus (confidence AUROC=1.0), verifiers inert |
-| .330 | cascade | dict-vs-bare gated-field break |
-| .331 | cascade | empty `{}` artifact |
-| .332 | cascade | poison test (exp3612 asserted a degenerate corpus validates) |
-| .333 | **total wipeout** | **gemini quota exhaustion + gemini-cli crash-on-429** |
+| The `.329` **"math-only" was a contamination ARTIFACT** | exp3642 centerpiece, valid positive control | `generalizes_to_code_not_facts` |
+| Math headline holds, frozen | exp2837/2850, AUROC **0.9131** | G1 met |
+| **CODE generalizes** | exp3641 verifiers fire; math->code PRM transfer (arXiv:2506.00027) | `code_generalizes=true` |
+| **FACTS does NOT generalize** | grounding AUROC **0.6495** < confidence **0.7446** | `facts_generalize=false` |
+| - but facts used a **text-statistical PROXY, not a real NLI model** | `nli_substrate=disclosed_text_statistical_proxy` | **the #1 gap** |
+| **Second pair of eyes is REAL** | exp3643 fused 0.822 vs confidence 0.536 (delta +0.286) | `fusion_wins` |
+| **Verifier beats SC where headroom exists** | exp3645 oracle 0.867 / SC 0.70 / hybrid 0.767 | `hybrid_wins_under_budget` |
+| **Trained EBM judge does NOT solve OOD** | exp3646 OOD 0.673 < confidence 0.882 (CPU-only, tiny) | `also_math_only` |
+| **Correlation-aware weighting HURT** | exp3644 corr-aware 0.635 << Carnot 0.919 (delta -0.236) | paradox, needs diagnosis |
+| `paper_ready` stays **TRUE** | G1-G4 met; FoVer G2-reproduced on CI run 26725185125 | invariant |
+| P0.1 stays **honest-negative** | Depth-Over-Breadth retired 2026-05-31 | invariant |
 
-Per the **Failed-Experiment Rerun Discipline**, re-proposing this science is
-legitimate: each prior failure names a *distinct* infrastructure cause, and
-.334 names what is different (a working backend + a quota-resilience
-diagnostic). It is not a doomed scientific rerun — the science has never run.
+**One-line summary:** Verifier value is now defensibly **math + code** (not math-only); the
+second-pair-of-eyes product value is **real and strong**; but **facts** — the original
+escape-LLM-hallucinations mission — has only been tested with a weak text-statistical proxy, the
+trained-judge cross-domain path was under-resourced, and the correlation-aware weighting result is a
+paradox. `paper_ready` is true and must not regress.
 
----
+## 2. The three biggest gaps between current state and the PRD vision
 
-## 1. The .334 thesis: run the .333 science on a backend that works
+1. **FACTS is untested with a real grounding verifier (CORE MISSION).** The PRD mission is "escape LLM
+   hallucinations." The one domain that maps directly to factual hallucination — grounding a model
+   answer against held-out evidence — was measured only with a text-statistical token-support proxy
+   (AUROC 0.6495, lost to confidence). The literature recipe (Span-Level / DeBERTa-NLI atomic-claim
+   decomposition, arXiv:2504.18639; FinGround type-routed verification, arXiv:2604.23588) was never
+   tried. **Until a real model-based NLI grounding verifier is measured, "facts does not generalize" is
+   not an earned conclusion.**
 
-.334 = the .333 science, **routed to codex (gpt-5.5)** — the verified-working
-reserve backend — plus a gemini-quota-crash resilience diagnostic, plus a
-prominent operator action to flip the conductor's backend coercion.
+2. **The now-defensible claims are single-corpus / under-resourced.** Code generalization rests on ONE
+   imbalanced corpus (exp3641: 296 errors / 24 correct, n=320). The trained-judge OOD test used a
+   CPU-only tiny numpy head. Both need a second corpus / real substrate before they harden into paper
+   claims.
 
-### Backend routing decision (every experiment task)
+3. **The correlation-aware weighting paradox is unresolved.** exp3644 + exp3647 down-weighted "redundant"
+   verifiers and it HURT (-0.236 AUROC). Either inter-verifier correlation is genuinely harmless on this
+   ensemble (refuting the joint-null-space concern), or the redundancy penalty is mis-specified vs proper
+   dependency-aware weak supervision (arXiv:1903.05844). This blocks the Weaver-differentiation claim.
 
-- **`agent_type: codex` + `model: gpt-5.5` + `requires_codex: true`** on every
-  experiment task.
-- **Why codex:** gemini quota is exhausted and gemini-cli crashes on 429;
-  codex-cli 0.135.0 is verified working during planning. This is exactly the
-  `requires_codex` positive criterion #3 in CLAUDE.md ("GEMINI QUOTA IS
-  EXHAUSTED").
-- **Why `requires_codex: true` specifically:** it is the one flag the
-  `GEMINI_FORCE_EXPERIMENTS=1` coercion explicitly honors as an exemption
-  (`coerces codex → gemini unless task has requires_codex: true`). Without it,
-  the dead-gemini coercion would crash .334 the same way it crashed .333.
+## 3. Milestone theme
 
-### OPERATOR ACTION (surfaced, not auto-applied — cannot modify the conductor)
+> **Make the FACTS row REAL, harden the defensible math+code + second-pair-of-eyes claims, and resolve
+> the correlation-aware weighting paradox — without regressing `paper_ready`.**
 
-The most robust fix is an operator/conductor-env change, which the autonomous
-loop is forbidden from making:
+Every task either (a) advances the headline (extends cross-domain scope or the product detector), or
+(b) closes a measurement gap that the `.334` findings exposed. No `vN+1` re-measurement of an already-
+measured artifact unless it answers a question the prior version did not (north-star section 1).
 
-> **Set `CODEX_FORCE_EXPERIMENTS=1` (and unset/override `GEMINI_FORCE_EXPERIMENTS=1`)
-> on the conductor until gemini quota recovers.** This flips the runtime
-> coercion so all experiment tasks route to working codex without depending on
-> the `requires_codex` flag on each task. Alternatively, wait for the ~3h
-> gemini quota reset before relaunching the conductor.
-
-Memory pin `feedback_pin_gemini_3_1_pro_preview_until_flash_available` governs
-the *model*; it does not require staying on a *crashed CLI with no quota*.
-Codex is the documented reserve (`feedback_inner_loop_switched_to_gemini`).
-
----
-
-## 2. Invariants preserved (do NOT regress)
-
-- **`paper_ready=true` (G1∧G2∧G3∧G4).** G2 closed 2026-05-31 (FoVer headline
-  independently reproduced on CI). The capstone re-checks `publication_gate.py`
-  and must not regress it.
-- **P0.1 stays honest-negative.** Depth-Over-Breadth retired 2026-05-31; do NOT
-  re-test Route-1/Route-2. The verifier-vs-SC *headroom* study (exp3645) is the
-  *complementary* "where does a verifier help" direction, not a P0.1 re-test.
-- **Every `gated_on` field is a BARE scalar** (`feedback_gated_fields_must_be_bare`).
-- **No poison tests.** Any shipped pytest parametrizes over the script's HONEST
-  verdicts for synthetic fixtures built from realistic strings; it NEVER
-  hard-asserts a single success verdict against a real on-disk corpus, and
-  NEVER uses placeholder tokens (`Q\d+`/`R\d+`/`H\d+`) the script rejects. The
-  .325/.326/.332 poison-test cascade must not recur. The .332 poison test stays
-  quarantined under `tests/python/quarantine/`.
-- **Fabrication gate.** Any `flagged_adversarial` artifact is excluded from the
-  headline/synthesis. Treat any factual-row AUROC of 1.0 as a leak unless
-  proven `grounding_leak_free`.
-
----
-
-## 3. Architecture (unchanged — this milestone is execution, not redesign)
+## 4. Phase structure
 
 ```
-                 model-confidence / self-consistency  (the baseline to beat)
-                                  |
-   +--------------+--------------+----------------+--------------------+
-   |   MATH        |   CODE                        |   FACTS            |
-   | FoVer 0.9131  | execution-applicable verifiers| real NLI grounding |
-   | (frozen,      | (controlled_invariance,       | verifier on        |
-   |  exp2837)     |  ast_structure, runtime_adapter|  held-out evidence |
-   |               |  ...) on exp1999-derived corpus|  (no 'H'-token leak)|
-   +--------------+----------------+---------------+--------------------+
-                                   |
-            corrected cross-domain re-measurement (CENTERPIECE)
-            vs strong confidence baseline, VALID positive control,
-            graceful per-row degradation (a blocked row != a null)
-                                   |
-   +--------------+----------------+----------+--------------------+
-   additivity     Weaver peer +         verifier-beats-SC      trained-EBM-judge
-   (2nd pair of   inter-verifier        on headroom corpus     OOD counterpoint
-    eyes,McNemar) correlation matrix    + hybrid (budget)      (candidate FIX
-                                                                for "math-only")
-                                   |
-                  synthesis (correct the .329-.333 record) -> capstone + G1-G4
+Phase A — Transition & backend (exp3652, exp3653)
+  3652 archive .334 / activate .335 (records the math+code+second-pair-of-eyes wins honestly)
+  3653 backend-state diagnostic (probe gemini; recommend routing; science stays on codex)
+
+Phase B — FACTS made real (THE core gap) (exp3654, exp3655)
+  3654 build a REAL model-based NLI atomic-claim grounding verifier (DeBERTa/MiniLM-NLI +
+       SRL/atomic decomposition, arXiv:2504.18639/2604.23588); leak guards; standalone AUROC on v3 corpus
+  3655 re-measure the FACTS row with the real NLI verifier vs confidence — does factual grounding
+       generalize once a real model is used?   [gated_on 3654 nli_grounding_built]
+
+Phase C — Harden defensible claims + product (exp3656, exp3657, exp3658)
+  3656 diagnose the correlation-aware weighting paradox with dependency-aware weak supervision (1903.05844)
+  3657 build the deployable fused "second pair of eyes" detector (calibrated, per-domain operating points)
+  3658 replicate code generalization on a SECOND balanced code corpus (MBPP/LiveCodeBench)
+
+Phase D — Foundation-model path + self-learning (exp3659, exp3660)
+  3659 trained-EBM-judge OOD v3 with a REAL model substrate (cached_sota_pair GGUF embedding, GPU)
+       — does a properly-resourced trained judge beat confidence OOD?   [retire_if_same_verdict]
+  3660 FR-11 continuous self-learning v9 — online learning of the FUSION weights per-domain (forward
+       diff from v8's online correlation-aware weighting); collapse control arm mandatory
+
+Phase E — Hardware continuity + capstone (exp3661-exp3664)
+  3661 KV260 SSH-reachability continuity (UNREACHABLE 4 milestones -> operator-action)
+  3662 PolarFire opportunistic continuity
+  3663 GateMate continuity audit (doc-only; openFPGALoader missing)
+  3664 Capstone v335 + G1-G4 gate synthesis (does facts generalize w/ real NLI? paper_ready stays true)
 ```
 
----
-
-## 4. Phases & tasks (14 tasks, conductor execution order)
-
-**Phase 0 — Transition + infra resilience (exp3638, exp3639)**
-- exp3638: archive .333 honestly (record the gemini-quota total wipeout, the
-  still-open cross-domain question, the .332 archive-leftover) + activate .334.
-- exp3639: gemini-cli quota-crash **resilience diagnostic** — record the live
-  gemini quota state + the `.js:345500:14` crash-on-429 signature + the
-  conductor's `GEMINI_FORCE_EXPERIMENTS=1` coercion, and write the operator
-  recommendation. Documentation only — must NOT touch the conductor or env.
-
-**Phase 1 — Build the fair apparatus (exp3640, exp3641)**
-- exp3640: build factual corpus v3 from a real evidence-bearing labeled dataset
-  (HaluEval QA `knowledge` / FELM / RAGTruth / Mu-SHROOM); confidence AUROC in
-  (0.5,0.95); held-out evidence independent of label; BARE gated fields.
-- exp3641: build the labeled CODE corpus from exp1999 + wire the four
-  execution-applicable verifiers to FIRE + math->code PRM-transfer stress-test
-  (arXiv:2506.00027 vs ThinkPRM arXiv:2504.16828).
-
-**Phase 2 — The fair measurement (exp3642 CENTERPIECE, exp3643)**
-- exp3642: corrected cross-domain re-measurement v4 — math (0.9131 frozen) |
-  code (firing verifiers) | facts (real leak-free NLI grounding verifier) vs
-  strong confidence baseline, VALID positive control, graceful per-row
-  degradation. Emits BARE `positive_control_valid` + `at_least_one_nonmath_row_ran`.
-- exp3643: additivity / "second pair of eyes" — conditional catch-rate +
-  McNemar (gated on exp3642 `at_least_one_nonmath_row_ran == true`, BARE).
-
-**Phase 3 — New breadth (exp3644, exp3645, exp3646)**
-- exp3644: position Carnot vs the SOTA weak-verifier peer Weaver
-  (arXiv:2506.18203) + measure the inter-verifier correlation matrix Weaver
-  assumes away.
-- exp3645: where does a verifier beat self-consistency? Build a corpus where
-  oracle > SC (real headroom) + verifier-vs-SC + hybrid under a compute budget
-  (arXiv:2510.14913). Complements P0.1's no-headroom null.
-- exp3646: trained-EBM-judge OOD counterpoint (arXiv:2505.14999) — does a small
-  judge TRAINED on reasoning-validity transfer cross-domain where Carnot's
-  FIXED ensemble does not? May name the fix for "math-only".
-
-**Phase 4 — Self-learning + hardware continuity (exp3647–exp3650)**
-- exp3647: FR-11 continuous self-learning v8 — online correlation-aware verifier
-  weighting without collapse (closes Weaver's no-online-adaptation gap).
-- exp3648: KV260 SSH-reachability continuity (unreachable .331–.333 — re-check,
-  flag the multi-milestone outage as operator action).
-- exp3649: PolarFire opportunistic reachability + continuity audit.
-- exp3650: GateMate continuity audit (documentation-only — openFPGALoader
-  missing per known-issues).
-
-**Phase 5 — Synthesis + capstone (exp3651, combined)**
-- exp3651: capstone v334 + cross-domain synthesis + G1-G4 gate. Builds the
-  corrected generalization table, corrects the .329-.333 record (the null was
-  asserted from blocked/skipped/wiped rows 5x; .333 produced zero artifacts),
-  states the scope now that facts + code rows actually ran, and re-checks
-  `publication_gate.py` — `paper_ready` must stay true. (Synthesis + capstone
-  are folded into one task to keep the milestone at 14; the capstone already
-  aggregated every upstream artifact.)
-
----
-
-## 5. Dependency graph
+### Dependency graph
 
 ```
-exp3638 (archive/activate) -> exp3639 (gemini resilience diagnostic)
-exp3640 (facts corpus v3) --+
-exp3641 (code corpus+fire) -+--> exp3642 (CENTERPIECE) --> exp3643 (additivity, BARE-gated)
-exp3644 (Weaver+correlation) -----------------------------> exp3647 (FR-11 v8 uses correlation matrix)
-exp3645 (headroom vs SC)
-exp3646 (trained-judge OOD)
-exp3648/3649/3650 (hardware, independent)
-exp3640..3647 --> exp3651 (capstone v334 = synthesis + G1-G4 gate, combined)
+3652 - 3653 -+- 3654 -- 3655 -----------------------+
+             +- 3656                                  |
+             +- 3657                                  +- 3664 (capstone)
+             +- 3658                                  |
+             +- 3659                                  |
+             +- 3660                                  |
+             +- 3661 / 3662 / 3663 (hardware) --------+
 ```
+Only 3655 has a hard `gated_on` (3654's bare `nli_grounding_built`). All other Phase B-E tasks run
+independently and degrade gracefully per the `.334` lesson (never assert a null from a blocked row).
 
-Only one hard structured gate (exp3643 on exp3642's bare `at_least_one_nonmath_row_ran`).
-Everything else degrades gracefully per row so a single blocked corpus can
-never SKIP the whole milestone (the .331/.332 cascade lesson).
+## 5. Architecture touchpoints
 
----
+- **`python/carnot/verify/`** — a NEW model-based NLI grounding verifier (exp3654). The leaky
+  `retrieval_nli_grounding_verifier.py` (exp3587 'H'-token proxy) is NOT reused; its substring logic was
+  already deleted in `.334`. The new verifier must invoke a real transformers NLI checkpoint OR carry the
+  explicit `pcib_probe.py`-style disclosure if a real checkpoint is unavailable. Verifier Authenticity
+  Discipline applies (docstring matches implementation; no adversarial gaming).
+- **`python/carnot/pipeline/`** — the fused "second pair of eyes" detector (exp3657) is a deployable
+  combination of ensemble energy + model confidence; it is the Phase-1 product surface.
+- **FR-11 self-learning module** — exp3660 extends the online-weighting loop to fusion weights.
+- No changes to `scripts/research_conductor.py` (forbidden).
 
 ## 6. Hardware requirements
 
-- exp3642 / exp3646 declare `requires_gpu: true` (NLI checkpoint + small judge
-  train/eval on the RTX 3090 rig). All others CPU-only verifier scoring or
-  aggregation.
-- Hardware continuity: KV260 / PolarFire / GateMate per Hardware-Task
-  Continuity Discipline (SSH reachability for KV260/PolarFire — never host SD
-  card; documentation-only audit for GateMate).
-
----
+- exp3654/3655/3659 prefer GPU (RTX 3090) for the NLI checkpoint + trained-judge substrate; all degrade
+  to CPU with an honest note. exp3659 declares `requires_gpu: true`.
+- KV260 / PolarFire / GateMate continuity tasks per Hardware-Task Continuity Discipline (SSH reachability
+  only for KV260 — host SD-card checks permanently retired).
 
 ## 7. Models
 
-- Math row: frozen FoVer headline (exp2837) — no re-run.
-- Facts/code corpora: real labeled datasets + small NLI checkpoint
-  (DeBERTa/MiniLM-NLI) or a disclosed text-statistical proxy (pcib_probe.py
-  pattern). Where a SOTA LLM is invoked, use `cached_sota_pair()` — at least
-  one of `unsloth/Qwen3.6-35B-A3B-GGUF` / `unsloth/gemma-4-31B-it-GGUF` /
-  `unsloth/gemma-4-26B-A4B-it-GGUF` via the `.gguf` path (embedded tokenizer;
-  NEVER `AutoTokenizer.from_pretrained` on a GGUF repo id).
+SOTA GGUF per CLAUDE.md where live LLM inference is genuinely needed: `unsloth/Qwen3.6-35B-A3B-GGUF`,
+`unsloth/gemma-4-31B-it-GGUF`, `unsloth/gemma-4-26B-A4B-it-GGUF` via `cached_sota_pair()` (exp3659
+trainable substrate). Most `.335` tasks are `verifier_ensemble_against_cached_candidates` (score cached
+corpora, no LLM load) or `aggregation_from_upstream_artifacts`; the NLI grounding verifier uses a
+DeBERTa/MiniLM-NLI checkpoint (a verifier substrate, not a generation model).
 
----
+## 8. Backend routing
 
-## 8. Self-learning coverage
+Gemini quota was exhausted through `.333` (the wipeout). `.334` routed every experiment to
+**codex (`gpt-5.5`, `requires_codex: true`)** and all 14 tasks succeeded. `.335` keeps that routing
+(CLAUDE.md Gemini-Default `requires_codex` positive criterion #3 — "gemini quota exhausted") until the
+exp3653 diagnostic confirms gemini recovery and the operator flips `CODEX_FORCE_EXPERIMENTS` off.
 
-exp3647 (FR-11 v8, online correlation-aware weighting without collapse)
-satisfies the per-milestone continuous-self-learning mandate
-(research-program.md "Continuous Self-Learning", Tier 1/2).
+## 9. Invariants (do NOT regress)
+
+- `paper_ready == true` (G1-G4 met). The capstone re-runs `scripts/publication_gate.py --json` and asserts.
+- P0.1 stays **honest-negative** — do NOT re-test energy-vs-AR Route-1/Route-2 (Depth-Over-Breadth retired).
+- Every `gated_on` value is a **bare scalar** (`feedback_gated_fields_must_be_bare`).
+- **No poison tests** (the `.325/.326/.332` cascade): parametrize pytests over the script's honest
+  verdicts on realistic synthetic fixtures; never hard-assert one success string against a real corpus;
+  never use `Q\d+/R\d+/H\d+` placeholder tokens. Run your own test green before finishing.
+- Leak guards on the facts row: the grounding verifier scores `(model_answer, evidence_passage)` ONLY,
+  never the gold answer or label; an AUROC >= 0.99 on n>=200 is a RED-FLAG leak, not a win.

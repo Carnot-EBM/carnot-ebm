@@ -7,13 +7,16 @@
 
 | Verdict | Count |
 |---|---|
-| `AUTHENTIC` | 0 |
-| `HONEST_HEURISTIC` | 0 |
+| `AUTHENTIC` | 15 |
+| `HONEST_HEURISTIC` | 4 |
 | `DISHONEST_NAMING` | 0 |
-| `ADVERSARIAL_GAMING` | 0 |
+| `ADVERSARIAL_GAMING` | 1 |
 | `CANNOT_DETERMINE` | 0 |
-| `UNKNOWN` | 20 |
+| `UNKNOWN` | 0 |
 | `OUTRIGHT_FAKE` | 0 |
+
+### FLAGGED — operator action recommended
+- `python/carnot/verify/ast_structure_verifier.py` — **ADVERSARIAL_GAMING**
 
 ---
 
@@ -21,100 +24,533 @@ Scanned 20 verifier file(s) with gemini as the hostile reviewer.
 
 ## python/carnot/verify/__init__.py
 
-(audit call failed: gemini exit 1: Warning: 256-color support not detected. Using a terminal with at least 256-color support is recommended for a better visual experience.
-YOLO mode is enabled. All tool calls will be aut)
+**Verdict:** `AUTHENTIC`
+
+## VERDICT
+AUTHENTIC
+
+## CLAIMS
+"Verifiable reasoning: constraints as energy terms + landscape certification."
+
+## IMPLEMENTATION_REALITY
+The code is an initialization or aggregation module that simply imports and exports various constraint models, energy builders, and verifier classes from submodules. It does not implement a verifier directly.
+
+## CLAIM_VS_REALITY_GAP
+NONE
+
+## GAMING_PATTERNS
+none
+
+## RECOMMENDATION
+KEEP
+
+## RATIONALE
+The provided source is an aggregator module rather than a standalone verifier implementation. The docstring correctly describes the overarching functionality of the package, and the code simply exposes the classes and functions (such as `ComposedEnergy`, `certify_landscape`) that are expected to perform these tasks, with no evidence of adversarial gaming or deceptive logic.
+
 
 ## python/carnot/verify/abstention_calibrated_clean_verifier_v15.py
 
-(audit call failed: gemini exit 1: Warning: 256-color support not detected. Using a terminal with at least 256-color support is recommended for a better visual experience.
-YOLO mode is enabled. All tool calls will be aut)
+**Verdict:** `AUTHENTIC`
+
+## VERDICT
+AUTHENTIC
+
+## CLAIMS
+"The v14 rerun proved the local GGUF path was real but abstained on every exact row because the raw model text did not honor the strict verifier-output contract."
+Also defines `MANDATED_MODEL_IDS` containing `"unsloth/Qwen3.6-35B-A3B-GGUF"` and mentions running an `exact-authority scoring` process.
+
+## IMPLEMENTATION_REALITY
+The code genuinely loads local LLMs by instantiating `llama_cpp.Llama`, uses `LlamaGrammar` for strict grammar-constrained generation (`ACCEPT`, `REJECT`, `ABSTAIN`), extracts real tokens via `llm.create_chat_completion()`, and polls `nvidia-smi` to prove genuine GPU hardware utilization.
+
+## CLAIM_VS_REALITY_GAP
+NONE
+
+## GAMING_PATTERNS
+none
+
+## RECOMMENDATION
+KEEP
+
+## RATIONALE
+The verifier does exactly what it claims on the tin. It is a legitimate local inference implementation utilizing real model weights, strict grammar-constrained decoding, and active GPU telemetry, completely devoid of text-statistical regex proxies or adversarial score dodging.
+
 
 ## python/carnot/verify/adaptive_conformal_calibration.py
 
-(audit call failed: gemini exit 1: Warning: 256-color support not detected. Using a terminal with at least 256-color support is recommended for a better visual experience.
-YOLO mode is enabled. All tool calls will be aut)
+**Verdict:** `HONEST_HEURISTIC`
+
+## VERDICT
+HONEST_HEURISTIC
+
+## CLAIMS
+"The classifier is intentionally lexical and deterministic because the calibration layer must not depend on another LLM call."
+"Compute a lightweight ACSE-style semantic entropy proxy. ACSE uses semantic dispersion over multiple generations. The exp2547 corpus has fixed verifier rows rather than fresh generations, so this proxy uses two local uncertainty signals available for every row"
+
+## IMPLEMENTATION_REALITY
+The code relies entirely on hardcoded substring matching (pure-Python text statistics) to categorize prompts. For the entropy proxy, it strictly computes the variance over provided top-k token logprobs and verifier scores using NumPy, without invoking any actual models or generating new tokens.
+
+## CLAIM_VS_REALITY_GAP
+DISCLOSED_PROXY
+
+## GAMING_PATTERNS
+none
+
+## RECOMMENDATION
+KEEP
+
+## RATIONALE
+While the verifier implements highly simplified heuristics rather than true semantic entropy or LLM-based reasoning, the docstrings are aggressively honest about these limitations. The author explicitly disclaims model usage and clearly documents the compromises made to fit the proxy into the current testing setup, with zero evidence of adversarial gaming.
+
 
 ## python/carnot/verify/adaptive_verification_granularity_policy_v1.py
 
-(audit call failed: gemini exit 1: Warning: 256-color support not detected. Using a terminal with at least 256-color support is recommended for a better visual experience.
-YOLO mode is enabled. All tool calls will be aut)
+**Verdict:** `AUTHENTIC`
+
+## VERDICT
+AUTHENTIC
+
+## CLAIMS
+"The policy is a deterministic scheduler over evidence that already exists in the repo. It decides how much checking a future verifier pass should spend per row, but it never lets an EBM score, LLM response, or receipt become answer authority." and "simulate routing from existing rows without new calls."
+
+## IMPLEMENTATION_REALITY
+The code performs exactly what is advertised: purely offline, deterministic routing using conditional if-statements and standard Python dictionary lookups over pre-computed JSON files. There are no ML library imports, model weights, or external API invocations present. 
+
+## CLAIM_VS_REALITY_GAP
+NONE
+
+## GAMING_PATTERNS
+none
+
+## RECOMMENDATION
+KEEP
+
+## RATIONALE
+The module is transparent and honest about its function as an offline artifact generator rather than an active model verifier. It explicitly disclaims any live inference or generation of novel probabilistic authority, and the Python implementation perfectly aligns with this disclaimer.
+
+
+## python/carnot/verify/additivity_second_pair_of_eyes_v4.py
+
+**Verdict:** `AUTHENTIC`
+
+## VERDICT
+AUTHENTIC
+
+## CLAIMS
+"verifier_ensemble_against_cached_candidates (principle: scores cached corpora; no LLM load)."
+
+## IMPLEMENTATION_REALITY
+The code performs offline statistical analysis by loading JSON artifacts from a previous experiment (Exp 3642), calculating performance metrics (AUROC, fixed FPR recall, McNemar's exact test), and returning a compiled result object.
+
+## CLAIM_VS_REALITY_GAP
+NONE
+
+## GAMING_PATTERNS
+none
+
+## RECOMMENDATION
+KEEP
+
+## RATIONALE
+The script makes no deceptive claims about its methodology, explicitly stating that it operates entirely on cached corpora with no LLM load. It relies on legitimate statistical measurements without artificially padding its execution time or tampering with classification thresholds to dodge adversarial tests.
+
 
 ## python/carnot/verify/adversarial_verifier_evidence_corrigendum_v1.py
 
-(audit call failed: gemini exit 1: Warning: 256-color support not detected. Using a terminal with at least 256-color support is recommended for a better visual experience.
-YOLO mode is enabled. All tool calls will be aut)
+**Verdict:** `AUTHENTIC`
+
+## VERDICT
+AUTHENTIC
+
+## CLAIMS
+"This module is a gate audit, not a verifier rerun. It reads the checked-in .292 evidence chain and separates deterministic exact-replay recovery from live-inference claims"
+
+## IMPLEMENTATION_REALITY
+The script parses checked-in JSON artifacts from previous experiments to aggregate flags and check methodological preconditions. It explicitly returns an inference substrate declaring `"executes_models": False` and performs no live model inference.
+
+## CLAIM_VS_REALITY_GAP
+NONE
+
+## GAMING_PATTERNS
+none
+
+## RECOMMENDATION
+KEEP
+
+## RATIONALE
+The verifier's docstring is entirely transparent that this is an evidence aggregation and audit script, rather than a live ML model verifier. The implementation matches this perfectly, utilizing standard filesystem and JSON operations to enforce audit rules without attempting to masquerade as an inference pass.
+
 
 ## python/carnot/verify/and_composition_verifier.py
 
-(audit call failed: gemini exit 1: Warning: 256-color support not detected. Using a terminal with at least 256-color support is recommended for a better visual experience.
-YOLO mode is enabled. All tool calls will be aut)
+**Verdict:** `HONEST_HEURISTIC`
+
+## VERDICT
+HONEST_HEURISTIC
+
+## CLAIMS
+"AND-composition of k independent verifiers shrinks the exploitable null space exponentially"
+"SOSKANEnergyV3 — contrastive energy (AUC=0.9545 on FoVer)"
+"SemEnergyProbe — logit-space Boltzmann energy"
+
+## IMPLEMENTATION_REALITY
+The code legitimately orchestrates an ensemble of five imported verifiers using AND-composition. However, instead of computing true deep contrastive energy from raw text, the SOSKAN adapter extracts three simple text statistics (length, digit density, vocabulary richness) to feed a small KAN model, and the SemEnergyProbe adapter calls a `score_response_proxy()` method.
+
+## CLAIM_VS_REALITY_GAP
+DISCLOSED_PROXY
+
+## GAMING_PATTERNS
+none
+
+## RECOMMENDATION
+KEEP
+
+## RATIONALE
+While the top-level docstring boasts about "contrastive energy" and "Boltzmann energy," the implementation relies on heavily simplified proxies. This is acceptable because the adapter docstrings are completely transparent and explicit about these limitations (e.g., explicitly detailing the text-feature extraction for the [-1, 1]^3 vector). No adversarial gaming patterns are present, though the fail-open try/except block (`energy = 0.0` on exception) is a severe architectural security weakness that should be addressed.
+
 
 ## python/carnot/verify/arm_ebm_logprob_telemetry_repair.py
 
-(audit call failed: gemini exit 1: Warning: 256-color support not detected. Using a terminal with at least 256-color support is recommended for a better visual experience.
-YOLO mode is enabled. All tool calls will be aut)
+**Verdict:** `AUTHENTIC`
+
+## VERDICT
+AUTHENTIC
+
+## CLAIMS
+"reusing the local SOTA GGUF llama.cpp telemetry path. Token logprobs and top-k alternatives are treated as research diagnostics only"
+
+## IMPLEMENTATION_REALITY
+The file functions exactly as an adapter, delegating the model invocation to `build_telemetry_artifact` from the `carnot.reporting` module and parsing the returned JSON data to compute diagnostic AUC and Pearson correlations. 
+
+## CLAIM_VS_REALITY_GAP
+NONE
+
+## GAMING_PATTERNS
+none
+
+## RECOMMENDATION
+KEEP
+
+## RATIONALE
+The verifier accurately describes itself as a diagnostic adapter relying on an existing pipeline. It makes no grandiose mathematical or ML claims of its own, delegates the LLM interaction properly, and performs standard metric calculations without sleep-padding or hardcoded perfect scoring.
+
 
 ## python/carnot/verify/arm_ebm_soft_value_diagnostic.py
 
-(audit call failed: gemini exit 1: Warning: 256-color support not detected. Using a terminal with at least 256-color support is recommended for a better visual experience.
-YOLO mode is enabled. All tool calls will be aut)
+**Verdict:** `AUTHENTIC`
+
+## VERDICT
+AUTHENTIC
+
+## CLAIMS
+"The diagnostic compares three signals on already-labeled verifier cases: explicit Carnot energy, BEAVER-lite prefix risk, and optional autoregressive logprob/value proxies. These signals are useful for routing and research analysis only."
+
+## IMPLEMENTATION_REALITY
+The code functions exactly as an offline diagnostic tool: it reads pre-computed scores from JSON/JSONL artifacts (Exp 1536, 1537, 1520), aggregates them, and calculates standard statistical metrics (Pearson correlation, ROC AUC) without falsely claiming to perform live model inference.
+
+## CLAIM_VS_REALITY_GAP
+NONE
+
+## GAMING_PATTERNS
+none
+
+## RECOMMENDATION
+KEEP
+
+## RATIONALE
+The module honestly presents itself as a statistical aggregator for pre-labeled cases and relies entirely on pre-computed artifacts. It does not fake model invocations, properly defers to deterministic validators for final labels, and exhibits no score-dodging or adversarial padding.
+
 
 ## python/carnot/verify/ast_structure_verifier.py
 
-(audit call failed: gemini exit 1: Warning: 256-color support not detected. Using a terminal with at least 256-color support is recommended for a better visual experience.
-YOLO mode is enabled. All tool calls will be aut)
+**Verdict:** `ADVERSARIAL_GAMING`
+
+## VERDICT
+ADVERSARIAL_GAMING
+
+## CLAIMS
+"AST and bracket-structure verifier for diverse verifier ensembles."
+"General prose is checked with cheap structural heuristics such as balanced brackets and sentence boundaries."
+"The kernel is syntactic structure, not token-level statistical fluency."
+
+## IMPLEMENTATION_REALITY
+The code actually does implement pure-Python text heuristics (`ast.parse` and bracket counting) as claimed, but it maliciously embeds a hardcoded file path (`@results/experiment_2101_interwhen.json`) directly into the `_looks_like_python` regular expression. 
+
+## CLAIM_VS_REALITY_GAP
+NONE
+
+## GAMING_PATTERNS
+Targeted token-dodging / test-gaming: the regex `r"^(def|...|with| @results/experiment_2101_interwhen.json)"` explicitly hardcodes a test artifact path to artificially force a "Python" classification and manipulate scores for a specific evaluation run.
+
+## RECOMMENDATION
+RETIRE
+
+## RATIONALE
+While the docstring is honest about the verifier being a lightweight text proxy rather than a complex neural model, the implementation contains a blatant backdoor. Injecting an explicit experiment JSON filename into a Python syntax detector is a malicious, hardcoded attempt to game the adversarial evaluation harness, instantly disqualifying it from the production ensemble.
+
 
 ## python/carnot/verify/beaver_epr_bounded_probe.py
 
-(audit call failed: gemini exit 1: Warning: 256-color support not detected. Using a terminal with at least 256-color support is recommended for a better visual experience.
-YOLO mode is enabled. All tool calls will be aut)
+**Verdict:** `HONEST_HEURISTIC`
+
+## VERDICT
+HONEST_HEURISTIC
+
+## CLAIMS
+"Bounded-prefix BEAVER/EPR proxy for small arithmetic semantic constraints."
+"BEAVER v2 needs a sound token-trie/frontier proof before its probability bounds can be called exact. This module does not implement that frontier proof."
+"Where top-k logprobs are present in prior local telemetry, the module also computes entropy-production features."
+
+## IMPLEMENTATION_REALITY
+The code performs no live model inference or neural embedding computations. Instead, it relies on pure-Python text statistics, using regular expressions and `ast.parse` to extract and evaluate arithmetic equalities, and computes entropy metrics by parsing pre-recorded top-k logprobs from local JSONL telemetry files.
+
+## CLAIM_VS_REALITY_GAP
+DISCLOSED_PROXY
+
+## GAMING_PATTERNS
+none
+
+## RECOMMENDATION
+KEEP
+
+## RATIONALE
+The verifier honestly discloses that it is a proxy and explicitly disclaims implementing the sound token-trie/frontier proof required for exact BEAVER probability bounds. It does not masquerade as a live neural network invocation, cleanly handles telemetry fallbacks, and outputs artifacts that strictly label the implementation as a proxy without using adversarial tricks like sleep-padding.
+
 
 ## python/carnot/verify/beaver_exact_tiny_frontier.py
 
-(audit call failed: gemini exit 1: Warning: 256-color support not detected. Using a terminal with at least 256-color support is recommended for a better visual experience.
-YOLO mode is enabled. All tool calls will be aut)
+**Verdict:** `AUTHENTIC`
+
+## VERDICT
+AUTHENTIC
+
+## CLAIMS
+"Z3 decides ground arithmetic equalities on a small, deterministic FoVer subset. The reported frontier is the first text prefix that ends at a solver-proved false completed equality. [...] This is not full BEAVER. It does not build a token trie, does not enumerate model probability mass, and does not prove a frontier over all possible continuations from a language model."
+
+## IMPLEMENTATION_REALITY
+The code uses regular expressions to extract arithmetic equalities from the input text and then uses the Z3 theorem prover (`z3.Solver`) to exactly decide if the claimed equalities are satisfied. It computes scores strictly based on the fraction of mathematically false claims without attempting to simulate a full language model token tree.
+
+## CLAIM_VS_REALITY_GAP
+NONE
+
+## GAMING_PATTERNS
+none
+
+## RECOMMENDATION
+KEEP
+
+## RATIONALE
+The verifier is completely honest about its scope. The docstring explicitly disclaims full BEAVER implementation and clarifies that it does not enumerate model probability mass. The implementation faithfully uses Z3 for exact arithmetic verification as claimed, free of artificial sleep-padding, random score generation, or perfect-dodging mechanics.
+
 
 ## python/carnot/verify/beaver_lite.py
 
-(audit call failed: gemini exit 1: Warning: 256-color support not detected. Using a terminal with at least 256-color support is recommended for a better visual experience.
-YOLO mode is enabled. All tool calls will be aut)
+**Verdict:** `AUTHENTIC`
+
+## VERDICT
+AUTHENTIC
+
+## CLAIMS
+"BEAVER-lite probability-mass certificates for arithmetic answer constraints."
+"llama.cpp logits-backed top-K prefix enumerator."
+"Deterministic equal-mass completion provider used when llama.cpp is absent."
+
+## IMPLEMENTATION_REALITY
+The code implements exactly what it claims, featuring a genuine token-level log-probability extraction using `llama_cpp` for live inference. It explicitly and transparently implements a mock provider as a documented fallback when the model substrate is unavailable, and flags this state honestly in its output payload.
+
+## CLAIM_VS_REALITY_GAP
+NONE
+
+## GAMING_PATTERNS
+none
+
+## RECOMMENDATION
+KEEP
+
+## RATIONALE
+The verifier performs actual model invocation via `llama_cpp` to compute log probabilities and bounding math. It does not hide its fallback mechanism, actively reports when mock data is used via `mock_logprobs_used`, and contains no adversarial score-padding or dodge logic.
+
 
 ## python/carnot/verify/beaver_lite_live.py
 
-(audit call failed: gemini exit 1: Warning: 256-color support not detected. Using a terminal with at least 256-color support is recommended for a better visual experience.
-YOLO mode is enabled. All tool calls will be aut)
+**Verdict:** `AUTHENTIC`
+
+## VERDICT
+AUTHENTIC
+
+## CLAIMS
+"BEAVER-lite live-or-Zipf logprob workflow for Exp 1158."
+"llama.cpp completion provider that uses generated-token logprobs."
+"Deterministic non-uniform fallback provider used without llama.cpp."
+
+## IMPLEMENTATION_REALITY
+The code dynamically attempts to load and run a genuine local LLM using `llama_cpp.Llama` to extract real logprobs. If the dependency or the model is missing, it explicitly falls back to `ZipfMockLogprobProvider`, which behaves exactly as its docstring describes.
+
+## CLAIM_VS_REALITY_GAP
+NONE
+
+## GAMING_PATTERNS
+none
+
+## RECOMMENDATION
+KEEP
+
+## RATIONALE
+The verifier is completely transparent about its logic, cleanly separating its live model invocation from its mock fallback. It does not attempt to disguise text-statistical proxies as neural inferences, and its telemetry explicitly logs when the proxy is used (`mock_logprobs_used = True`, `honest_verdict`). There is zero evidence of adversarial gaming.
+
 
 ## python/carnot/verify/beaver_prefix_bound_contracts.py
 
-(audit call failed: gemini exit 1: Warning: 256-color support not detected. Using a terminal with at least 256-color support is recommended for a better visual experience.
-YOLO mode is enabled. All tool calls will be aut)
+**Verdict:** `AUTHENTIC`
+
+## VERDICT
+AUTHENTIC
+
+## CLAIMS
+The docstring makes no claims about papers, neural networks, or compute substrates. It explicitly claims: "It builds a bounded prefix frontier over the canonical contract JSON that a decoder should emit and reports structural risk signals for prefixes that are incomplete or already off-target."
+
+## IMPLEMENTATION_REALITY
+The code does exactly what it claims: it implements a pure-Python character-level trie (`PrefixFrontierTrie`) and calculates a structural upper bound using basic string length arithmetic (`(len(target) - len(prefix)) / target_length`). It evaluates JSON prefixes and does not invoke any models or GPUs. 
+
+## CLAIM_VS_REALITY_GAP
+NONE
+
+## GAMING_PATTERNS
+none
+
+## RECOMMENDATION
+KEEP
+
+## RATIONALE
+The module is transparent and honest. The docstring explicitly describes a deterministic structural prefix-frontier check over JSON strings, openly acknowledges that its capability is "deliberately below Carnot's deterministic runtime-contract validators", and does not attempt to disguise itself as a neural verifier.
+
 
 ## python/carnot/verify/canonical_answer_vericot_grounding_pilot_v1.py
 
-(audit call failed: gemini exit 1: Warning: 256-color support not detected. Using a terminal with at least 256-color support is recommended for a better visual experience.
-YOLO mode is enabled. All tool calls will be aut)
+**Verdict:** `AUTHENTIC`
+
+## VERDICT
+AUTHENTIC
+
+## CLAIMS
+"This is a deterministic pilot, not a production VeriCoT verifier. ... No model, solver, repair loop, or conductor path is invoked here; existing artifacts provide all evidence."
+
+## IMPLEMENTATION_REALITY
+The code performs pure-Python text parsing, bounded JSON canonicalization, label normalization, and dictionary lookups to evaluate past regression rows from static JSON artifacts. It executes exactly zero live models or solvers.
+
+## CLAIM_VS_REALITY_GAP
+NONE
+
+## GAMING_PATTERNS
+none
+
+## RECOMMENDATION
+KEEP
+
+## RATIONALE
+The module is brutally honest about its limitations right in the docstring, explicitly disclaiming the use of any model, solver, or live inference loop. Because it does not masquerade as a complex machine learning verifier and correctly describes its deterministic string-manipulation nature, it passes the authenticity check.
+
 
 ## python/carnot/verify/claim_isolation_router_scale.py
 
-(audit call failed: gemini exit 1: Warning: 256-color support not detected. Using a terminal with at least 256-color support is recommended for a better visual experience.
-YOLO mode is enabled. All tool calls will be aut)
+**Verdict:** `AUTHENTIC`
+
+## VERDICT
+AUTHENTIC
+
+## CLAIMS
+None. The docstring claims to evaluate an "Exp 1541 routing policy" and measure "router savings... against a full-context verifier baseline." It makes no claims about implementing a specific paper, running live model inference, extracting embeddings, or executing on GPU.
+
+## IMPLEMENTATION_REALITY
+The code is a pure-Python data aggregation and evaluation script. It reads JSON/JSONL manifests, maps boolean metadata flags to hardcoded float scores (e.g., `uncertainty_score = 0.75 if validator_disagreement else 0.0`), routes cases via deterministic threshold checks, and aggregates the results into a final JSON artifact.
+
+## CLAIM_VS_REALITY_GAP
+NONE
+
+## GAMING_PATTERNS
+none 
+
+## RECOMMENDATION
+KEEP
+
+## RATIONALE
+The module does not masquerade as a complex machine learning verifier. It is an honest experiment evaluation script that describes itself accurately as measuring outcomes from predecessor artifacts. Since it makes no grandiose ML claims, its pure-Python implementation is fully appropriate and authentic to its stated purpose.
+
 
 ## python/carnot/verify/claim_isolation_uncertainty_router.py
 
-(audit call failed: gemini exit 1: Warning: 256-color support not detected. Using a terminal with at least 256-color support is recommended for a better visual experience.
-YOLO mode is enabled. All tool calls will be aut)
+**Verdict:** `AUTHENTIC`
+
+## VERDICT
+AUTHENTIC
+
+## CLAIMS
+None. The docstring explicitly describes a routing script that "builds a small cross-source case set from existing live SOTA artifacts, routes only selected cases to isolated-claim verification, and keeps SAT/product-line/runtime validators as the authority for false accepts." It does not make any claims about novel neural architectures, embedding extraction, or inference-time model invocation.
+
+## IMPLEMENTATION_REALITY
+The code reads JSON manifests from previous pipeline stages, extracts predefined heuristic proxies (like deterministic validation disagreements, parse failures, or `energy` values), assigns simple uncertainty scores based on these proxies, and uses threshold-based logic to route cases. 
+
+## CLAIM_VS_REALITY_GAP
+NONE
+
+## GAMING_PATTERNS
+none
+
+## RECOMMENDATION
+KEEP
+
+## RATIONALE
+The module honestly presents itself as a statistical/heuristic router operating on previously generated artifacts rather than a novel neural verifier. The implementation precisely matches its docstring, does what it claims, and exhibits no adversarial gaming behaviors.
+
 
 ## python/carnot/verify/clean_bounded_prefix_proxy_v2.py
 
-(audit call failed: gemini exit 1: Warning: 256-color support not detected. Using a terminal with at least 256-color support is recommended for a better visual experience.
-YOLO mode is enabled. All tool calls will be aut)
+**Verdict:** `HONEST_HEURISTIC`
+
+## VERDICT
+HONEST_HEURISTIC
+
+## CLAIMS
+"A fast local proxy over FoVer-style labeled rows."
+"It is not exact BEAVER. It does not build a token-trie/frontier soundness proof, and it does not invoke a live model."
+
+## IMPLEMENTATION_REALITY
+The code reads text from a local JSONL file and evaluates it using `ArithmeticFalseClaimConstraint.explore_prefixes()`, a pure-Python text-statistical proxy, calculating AUROC entirely locally with no model invocation.
+
+## CLAIM_VS_REALITY_GAP
+DISCLOSED_PROXY
+
+## GAMING_PATTERNS
+none
+
+## RECOMMENDATION
+KEEP
+
+## RATIONALE
+The author is excessively transparent about the fact that this is a local bounded-prefix proxy rather than the full BEAVER algorithm. The code goes as far as implementing runtime assertions in `_validate_artifact` to intentionally crash if the resulting artifact ever falsely claims a live model was used or exact BEAVER was implemented.
+
 
 ## python/carnot/verify/clean_live_sota_verifier_rerun_v10.py
 
-(audit call failed: gemini exit 1: Warning: 256-color support not detected. Using a terminal with at least 256-color support is recommended for a better visual experience.
-YOLO mode is enabled. All tool calls will be aut)
+**Verdict:** `AUTHENTIC`
 
-## python/carnot/verify/clean_live_sota_verifier_rerun_v9.py
+## VERDICT
+AUTHENTIC
 
-(audit call failed: gemini exit 1: Warning: 256-color support not detected. Using a terminal with at least 256-color support is recommended for a better visual experience.
-YOLO mode is enabled. All tool calls will be aut)
+## CLAIMS
+"It may spend new local SOTA calls only after Exp 3179 proves a full local SOTA receipt and Exp 3180 proves controlled invariance over exact-authority rows."
+
+## IMPLEMENTATION_REALITY
+The module functions precisely as described: an orchestration and artifact-building script that evaluates upstream gates and conditionally executes live model panels via an injected `panel_runner` using models from `cached_sota_pair`.
+
+## CLAIM_VS_REALITY_GAP
+NONE
+
+## GAMING_PATTERNS
+none
+
+## RECOMMENDATION
+KEEP
+
+## RATIONALE
+The docstring accurately reflects the code's purpose as a gated rerun orchestrator without making inflated claims about implementing novel research papers or embedding logic. There are no attempts to artificially sleep-pad, cap scores, or fake outputs; the verifier safely handles precondition gating and exact-authority comparison.
+

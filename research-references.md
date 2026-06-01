@@ -1,3 +1,58 @@
+## 2026-06-01 Post-.334 Planning Sweep (Milestone 2026.06.335)
+
+`.334` FINALLY ran the cross-domain de-contamination science (routed to codex after the `.333`
+gemini-quota wipeout). Read via `scripts/summarize_artifact.py`, the honest `.334` outcomes:
+
+- **The `.329` "math-only" verdict was a contamination ARTIFACT.** With a VALID positive control,
+  exp3642 (centerpiece) found `verifier_value_generalizes_to_code_not_facts`: math AUROC 0.9131 (frozen),
+  CODE generalizes (math→code PRM transfer confirmed per arXiv:2506.00027; exp3641 verifiers fire),
+  but FACTS does NOT (grounding AUROC **0.6495** < confidence baseline **0.7446**).
+- **CRITICAL CAVEAT — the facts row used a TEXT-STATISTICAL PROXY, not a real NLI model.**
+  `nli_substrate = "disclosed_text_statistical_proxy_token_support_no_gold_or_label_input"`. The facts
+  negative is on a WEAK proxy; a real model-based NLI atomic-claim grounding verifier was never tried.
+  This is the #1 gap for `.335` — facts is the core hallucination-detection mission.
+- **Second pair of eyes is REAL** (exp3643): fused detector (ensemble + confidence) AUROC **0.822** vs
+  confidence-alone **0.536** (delta +0.286), recall-at-10%-FPR 0.443 vs 0.145. Strong, deployable additive value.
+- **Verifier beats SC where headroom exists** (exp3645): oracle 0.867 / SC 0.700 / verifier-reranked 0.733
+  / hybrid 0.767 — the hybrid wins under a compute budget (arXiv:2510.14913).
+- **Trained EBM judge does NOT solve OOD** (exp3646): OOD judge AUROC 0.673 but confidence-only baseline
+  **0.882 beats it OOD**; shuffled-label control 0.423. So a (CPU-only, tiny) trained judge is NOT the
+  cross-domain fix — but it was under-resourced; a real-substrate retry is warranted (retire-if-same).
+- **Correlation-aware weighting HURT** (exp3644): correlation-aware AUROC **0.635** << Weaver-style 0.872
+  << Carnot 0.919 (delta -0.236). Down-weighting "redundant" verifiers as implemented degraded the ensemble.
+  The paradox needs diagnosis — the redundancy penalty is likely mis-specified vs proper dependency-aware
+  weak supervision.
+- `paper_ready` stays **TRUE** (G1-G4 met; FoVer 0.9131 G2-reproduced on CI run 26725185125). P0.1 stays
+  **honest-negative** (Depth-Over-Breadth retired 2026-05-31). Backend: gemini quota was exhausted through
+  `.333`; `.334` ran on codex+`requires_codex` — keep that routing for `.335` until gemini recovers.
+
+**`.335` mandate:** make the FACTS row REAL with a model-based NLI atomic-claim grounding verifier and
+re-measure whether factual hallucination grounding generalizes; harden the now-defensible math+code scope
+(replicate code on a second corpus) and the second-pair-of-eyes product detector; diagnose the
+correlation-aware weighting paradox with proper dependency-aware weak supervision; retry the trained judge
+with a real model substrate; continue FR-11 self-learning + hardware continuity; keep `paper_ready` true.
+
+### New literature (2025-2026) for `.335`
+
+- **Span-Level Hallucination Detection for LLM-Generated Answers** (arXiv:2504.18639). Decomposes answers
+  into atomic semantic roles (SRL) and scores each against retrieved reference context with a
+  **DeBERTa-based textual-entailment (NLI)** model. THIS is the concrete recipe the `.334` facts row was
+  missing — the real model-based grounding verifier to replace the text-statistical proxy. Load-bearing
+  for the `.335` facts-row rebuild.
+- **FinGround — Detecting and Grounding Financial Hallucinations via Atomic Claim Verification**
+  (arXiv:2604.23588). Three-stage verify-then-ground: decompose into atomic claims -> classify by a
+  six-type taxonomy -> type-routed verification (incl. formula reconstruction). The type-routed claim
+  verification pattern generalizes the NLI-grounding approach; relevant to a per-claim-type energy.
+- **GSAR — Typed Grounding for Hallucination Detection and Recovery in Multi-Agent LLMs**
+  (arXiv:2604.23366). Loops on verbal/scalar signals indexed by evidence provenance, telling iterations
+  which inference-typed claim was weak. Provenance-indexed grounding — relevant to the leak-free evidence
+  discipline (the exp3587 'H'-token leak guard) and to verify-repair recovery.
+- **Learning Dependency Structures for Weak Supervision Models** (arXiv:1903.05844). The classic
+  dependency-aware weak-supervision method — learns the inter-verifier correlation structure rather than
+  assuming conditional independence (Weaver's gap). The correct tool to diagnose/fix the `.334`
+  correlation-aware weighting paradox (exp3644's -0.236): the naive redundancy penalty is not the same as
+  a learned dependency graph over the label-conditional verifier votes.
+
 ## 2026-05-31 Post-.331 Planning Sweep (Milestone 2026.06.332)
 
 `.331` set out (for the THIRD time, after `.329`/`.330`) to answer: **does the verifier ensemble's

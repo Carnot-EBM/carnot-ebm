@@ -4,50 +4,50 @@
 # docs_audit_report — 2026-06-01
 
 ## TL;DR (stranger's 30-second take)
-A stranger would close this tab. The page promises a simple LLM verifier but immediately drowns the reader in internal project management stats, contradictory benchmark numbers, and unexplained acronyms.
+I would close the tab immediately. The page looks like a broken build artifact with raw file test paths leaked into the text and CSS, throws a wall of unexplained acronyms at the reader, and claims multiple perfect "100%" success rates that trigger immediate skepticism. 
 
 ## TOP 3 PROBLEMS
-1. Inconsistent claims — HumanEval pass rate improvements contradict each other wildly across three different sections.
-2. Internal jargon — The page is littered with unexplained acronyms (FoVer, CCTU, PREM) and literal local file paths masquerading as copy.
-3. Per-milestone narrative — Hero section stats and progress cards read like an internal sprint retrospective, not product copy.
+1. **Broken Template / Leaked Paths** — Raw internal file paths (like `@.tmp-pytest/...`) are injected into the CSS media queries, font URLs, and the "Live benchmark" result card.
+2. **Alphabet Soup Jargon** — The features and results sections are packed with unexplained acronyms (FoVer, CCTU, SVAMP, PRM-BiasBench, PREM, TTC) that mean nothing to an outsider.
+3. **Suspiciously Perfect Numbers** — Claims of exact 2.0x speedups, 1.0 True Positive rates, and 60/60 attack catches look like fabricated or heavily overfitted results without credible context.
 
 ## DETAILED FINDINGS
 ### Bloat
-- Recent progress card — ~75 words — Cap at 60 words. It's a dense wall of text.
-- Results section — 12 cards — Too many cards for a stranger to skim; pare down to the 6 strongest.
+- `Results` section — 12 cards — Cap at 6. Twelve cards is visually overwhelming and dilutes the strongest evidence.
+- `Writing` section — 7 cards — Cap at 3. Listing seven blog posts makes this section look like a blog index rather than a curated feature reel.
 
 ### Internal jargon
-- Hero Stats & Recent Progress — "FoVer", "5-seed dual-condition; architecture-only 0.8947" — A stranger doesn't know what FoVer is or what these flag-like conditions mean.
-- Features: Typed constraints — "CCTU" — Acronym is entirely unexplained.
-- Features: TTC & PREM — "PREM" and "TTC" — Acronym soup.
-- Results: Live benchmark — `@.tmp-pytest/pytest-of-ianblenke/pytest-3/popen-gw0/test_req_verify_2932_run_uses_0/citation_hallucination_field_verifier_2932_raw/spilled-energy-2602-18671:real.txt` — This is a raw local test artifact path leaked into public copy.
+- `Features (Test-Time Compute)` — `PREM`, `TTC` — Acronyms with zero prior explanation; "Process-Reward Energy Model" is highly specific terminology.
+- `Features (Typed constraints)` — `CCTU` — Unrecognized micro-benchmark acronym.
+- `Results (Math reasoning)` — `SVAMP`, `FoVer` — Names of niche benchmarks or internal datasets that an outsider cannot contextually anchor.
+- `Results (Math extraction)` — `VeriCoT`, `TP` — Assumes deep familiarity with chain-of-thought literature and confusion matrix abbreviations.
+- `Results (Adversarial audit)` — `PRM-BiasBench-style attacks` — Assumes knowledge of a specific, possibly internal, attack framework.
+- `Results (Live benchmark)` — `@.tmp-pytest/pytest-of-ianblenke/pytest-3/popen-gw0/test_req_verify_2932_run_uses_0/citation_hallucination_field_verifier_2932_raw/spilled-energy-2602-18671:real.txt` — This is a raw leaked internal test file path that completely breaks the fourth wall.
 
 ### Per-milestone narrative
-- Hero Stats — "382 Completed milestones" and "30,658 Automated tests" — Internal status reporting, completely irrelevant to a potential user.
-- Recent progress card — "Repinned from v2 0.9857 after pre-submission adversarial audit..." — Reads like an internal commit message or retrospective.
-- Preprint — "pending operator-initiated upload" — Internal operational status.
+- `Hero Stats` — `382 Completed milestones` — A stranger doesn't care about your internal Jira/Milestone tracking velocity.
+- `Hero (Recent progress card)` — `Repinned from v2 0.9857 after pre-submission adversarial audit` — This reads like a copy-pasted internal team update or commit message, not an introduction.
 
 ### Inconsistencies
-- HumanEval pass rate vs IterativeSelfRepair vs SOTA 35B — Features says "+3 points", Results card 6 says "8% -> 80% pass rate (+72pp)", and Results card 8 says "0% -> 36%". These massive discrepancies destroy credibility.
-- FoVer metric — Hero claims "0.9131 Verifier AUROC — FoVer math step-errors" while Results card 7 mentions "0.125 FoVer baseline" for SVAMP AUC. Is FoVer a dataset, a baseline, or a metric?
+- `AUROC` vs `AUC` — The hero states "0.9131 Verifier AUROC", the safety card says "0.91 AUROC", but the math reasoning card switches to "0.90 AUC".
+- `Qwen models` — The Python quickstart uses `Qwen/Qwen3.5-0.8B`, but the live benchmark card cites an unreleased/hallucinated `Qwen3.6-35B-A3B`.
 
 ### Missing essentials
-- Why should I trust the numbers? — You explicitly state numbers are backed by artifacts, but the glaring contradictions in your HumanEval claims instantly destroy that trust.
+- `Maintainer credibility` — The footer says "Ian Blenke · Carnot Project", but there is no context on who this is, what the project team is, or why they are credible enough to build this.
 
 ### Fabrication signals
-- Features: Code — "99.3% of wrong code flagged" — Suspiciously high without a credibility anchor.
-- Results: Math extraction — "GSM8K extraction TP rate: 0.5 -> 1.0" — 1.0 is a perfectly suspicious number.
-- Results: Adversarial audit — "k=5 ensemble catches 60/60 attacks" — 60/60 is perfect and suspect without context.
+- `1.0 TP Rate` (Math extraction) — `GSM8K extraction TP rate: 0.5 -> 1.0` — A perfect 1.0 true positive rate on a non-trivial benchmark is practically impossible without overfitting.
+- `60/60 attacks` (Adversarial audit) — `k=5 ensemble catches 60/60 attacks` — Perfect 100% defense without mentioning the False Positive Rate looks like a toy evaluation.
+- `2.0x speedup` (Training) — `2.0x speedup, identical losses` — Exactly 2.0x speedup on two GPUs is mathematically perfect linear scaling, which sets off BS detectors for anyone who has done distributed training.
+- `100% meter` (Hardware) — `Ising sampler live on silicon` meter bar is at 100% without a percentage metric to back it up.
 
 ## WHAT'S WORKING
-- The "Extract -> Check -> Repair" bento flow is clearly explained and visually grounded.
-- The Quick Start section is excellent, immediately showing practical 3-line usage in Python.
+- The one-sentence summary "Catch the reasoning errors your LLM states with total confidence" is strong and clear.
+- The 3-step "Extract -> Check -> Repair" flow is logical, easy to follow, and directly answers how the system operates.
 
 ## RECOMMENDED OPERATOR ACTIONS
-1. Resolve the HumanEval inconsistency: pick one reliable metric and use it consistently.
-2. Remove the leaked local test path in the "Live benchmark" card.
-3. Delete "Completed milestones" and "Automated tests" from the hero stats.
-4. Strip the internal narrative ("Repinned from v2...", "operator-initiated upload") from the copy.
-5. Explain or remove acronyms like FoVer, CCTU, TTC, PREM.
-6. Provide context or downplay the "perfect" scores (1.0 TP, 60/60) to build trust.
-7. Reduce the Results grid to the 6 strongest, non-contradictory claims.
+1. **Fix Template Injection:** Remove all `@.tmp-pytest/...` paths from the HTML head (fonts), CSS media queries (`@media`), and the "Live benchmark" result card immediately. They are breaking the page render.
+2. **Purge Acronyms:** Replace all niche benchmarks and acronyms (FoVer, CCTU, PREM, TTC) with plain English descriptions (e.g., "internal math reasoning benchmark", "tool-use tests").
+3. **Ground Perfect Numbers:** If 60/60 and 1.0 TP are real, add the denominators or constraints (e.g. "on a 60-prompt internal test set") so they don't look fake. Tone down the 2.0x scaling claim to a realistic figure.
+4. **Trim the Fat:** Cut the blog posts down to the top 3, remove "382 Completed milestones", and rewrite the "Recent progress" card to be a value proposition, not a changelog.
+5. **Add Maintainer Context:** Add a short sentence in the footer or hero about who built this and why they are credible.
