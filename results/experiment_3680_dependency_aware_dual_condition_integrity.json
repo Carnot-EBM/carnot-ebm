@@ -1,0 +1,235 @@
+{
+  "acceptance_gate": {
+    "condition": "production_auroc_dependency_aware present AND production_auroc_carnot_current present AND adversarial_verify_clean == true AND leak_free == true AND n_seeds >= 5",
+    "passed": true,
+    "principle": "A G1-rigor headline candidate requires both weightings measured under the frozen dual-condition protocol, >=5 seeds, adversarial-clean and leak-free -- otherwise it is not comparable to the frozen G1 source."
+  },
+  "adversarial_verify_clean": true,
+  "adversarial_verify_report": {
+    "flag_count": 0,
+    "flags": [],
+    "max_severity": -1
+  },
+  "architecture_auroc_dependency_aware": 0.90318,
+  "artifact": "experiment_3680_dependency_aware_dual_condition_integrity",
+  "bootstrap_seeds": [
+    42,
+    137,
+    271,
+    314,
+    1729
+  ],
+  "de_tautology_note": "Each conceptually distinct AUROC is stored under one top-level field; the frozen 0.9131 remains a comparison constant, not a replacement.",
+  "delong_dependency_vs_carnot": {
+    "auc_carnot_current": 0.91303,
+    "auc_dependency_aware_proper": 0.924869,
+    "auc_difference": 0.011839,
+    "method": "paired_delong_auc_two_sided",
+    "p_value": 2.40599e-11,
+    "standard_error": 0.001773,
+    "z_value": 6.678987
+  },
+  "delong_p_dependency_vs_carnot": 2.40599e-11,
+  "dependency_aware_g1_rigor_confirmed": true,
+  "dependency_aware_training_protocol": {
+    "dependency_reference": "Learning Dependency Structures for Weak Supervision Models (arXiv:1903.05844)",
+    "folds": 5,
+    "learned_on_labels_for_weight_fit": true,
+    "method": "stratified_crossfit_graph_sparse_signed_fisher_weights",
+    "verifier_scores_use_gold_label": false
+  },
+  "dependency_vs_carnot_delta_ci": {
+    "bootstrap_seeds": [
+      42,
+      137,
+      271,
+      314,
+      1729
+    ],
+    "ci95": [
+      0.008643,
+      0.01515
+    ],
+    "n_bootstrap_per_seed": 200,
+    "point": 0.011839,
+    "seed_mean_deltas": [
+      0.011849,
+      0.011984,
+      0.011743,
+      0.01166,
+      0.011896
+    ]
+  },
+  "duration_s": 21.229053,
+  "exp2850_protocol_source": {
+    "condition_a_production_auroc_mean": 0.9131335999999999,
+    "condition_b_architecture_only_auroc_mean": 0.8946624,
+    "n_examples": 1000,
+    "n_seeds": 5,
+    "path": "results/experiment_2850_fover_dual_condition_integrity_v4.json",
+    "reproducibility_checksum": "b3d8a0ea0ed6180e0120eb909513436d2e0a43055fe09d096d57d93faf21c2c9"
+  },
+  "field_principles": {
+    "adversarial_verify_clean": "True iff the artifact passes adversarial_verify with no TAUTOLOGY/critical flag -- a G1 candidate must be adversarial-clean.",
+    "delong_p_dependency_vs_carnot": "DeLong paired significance under the protocol -- a point estimate alone cannot move a headline.",
+    "dependency_aware_g1_rigor_confirmed": "BARE bool. True iff dependency-aware production AUROC > frozen 0.9131 AND delta CI excludes 0 AND DeLong p<0.05 AND adversarial_verify_clean AND leak_free -- the G1-candidate gate. STORE AS BARE true/false -- gates exp3681.",
+    "dependency_vs_carnot_delta_ci": "Paired delta + bootstrap CI of dependency-aware minus Carnot under the protocol.",
+    "duration_s": "Plausibility floor.",
+    "frozen_headline_auroc": "The frozen 0.9131 -- recorded verbatim so the candidate is explicitly compared, never silently substituted.",
+    "honest_verdict": "Terminal prefix for reconciler classification.",
+    "inference_substrate": "verifier_ensemble_against_cached_candidates (principle: scores the cached FoVer corpus under the dual-condition protocol; no LLM load).",
+    "leak_free": "True iff verifiers scored (input, candidate) only and AUROC < 0.99 -- a leaked AUROC cannot be a headline.",
+    "learning_contribution_dependency_aware": "The architecture-only memory-ablation delta recomputed under the new weighting -- the FR-11 contribution must be re-measured for a re-freeze.",
+    "n_examples": "Sample-size rigor (FoVer n>=1000).",
+    "n_seeds": "Replication count (>=5, matching the frozen G1 source).",
+    "production_auroc_carnot_current": "Carnot's current weighting under the IDENTICAL protocol -- the in-artifact bar; one field, no alias.",
+    "production_auroc_ci": "Pooled bootstrap CI of the dependency-aware production AUROC -- a candidate headline needs a CI like the frozen one.",
+    "production_auroc_dependency_aware": "The candidate-new-headline number: dependency-aware AUROC in the production condition under the frozen G1 protocol -- one field, no alias.",
+    "random_seed": "Determinism precondition.",
+    "reproducibility_checksum": "Drift detection."
+  },
+  "frozen_headline_auroc": 0.9131,
+  "honest_verdict": "complete: dependency_aware_g1_rigor_confirmed_headline_candidate_exceeds_frozen_0_9131",
+  "inference_substrate": "verifier_ensemble_against_cached_candidates (principle: scores the cached FoVer corpus under the dual-condition protocol; no LLM load).",
+  "leak_free": true,
+  "leak_guard": {
+    "red_flag_rule": "AUROC >= 0.99 on n>=1000 sets leak_free=false",
+    "triggered": false,
+    "verifiers_score_input_candidate_only": true
+  },
+  "learning_contribution_dependency_aware": 0.022149,
+  "n_bootstrap_per_seed": 200,
+  "n_examples": 1000,
+  "n_seeds": 5,
+  "per_seed_results": [
+    {
+      "architecture_auroc_dependency_aware": 0.906488,
+      "architecture_state_visible_count": 0,
+      "architecture_subset_sha256": "57c7dff98df749951de1a043294d12c0203029e92623db86529223e797ef6cd2",
+      "learning_contribution_dependency_aware": 0.018314,
+      "n_examples": 1000,
+      "production_auroc_carnot_current": 0.914952,
+      "production_auroc_dependency_aware": 0.924802,
+      "production_state_visible_count": 21,
+      "seed": 42,
+      "subset_sha256": "57c7dff98df749951de1a043294d12c0203029e92623db86529223e797ef6cd2"
+    },
+    {
+      "architecture_auroc_dependency_aware": 0.907564,
+      "architecture_state_visible_count": 0,
+      "architecture_subset_sha256": "761ba450cce1eab0c6343403c958dec8408e37dd3de4a7216545a3fd31307c2d",
+      "learning_contribution_dependency_aware": 0.013386,
+      "n_examples": 1000,
+      "production_auroc_carnot_current": 0.908738,
+      "production_auroc_dependency_aware": 0.92095,
+      "production_state_visible_count": 21,
+      "seed": 137,
+      "subset_sha256": "761ba450cce1eab0c6343403c958dec8408e37dd3de4a7216545a3fd31307c2d"
+    },
+    {
+      "architecture_auroc_dependency_aware": 0.886662,
+      "architecture_state_visible_count": 0,
+      "architecture_subset_sha256": "0ecee5724c62fded647b43fff8f30128571da256f163c3eba53a470489b131ee",
+      "learning_contribution_dependency_aware": 0.029904,
+      "n_examples": 1000,
+      "production_auroc_carnot_current": 0.90145,
+      "production_auroc_dependency_aware": 0.916566,
+      "production_state_visible_count": 21,
+      "seed": 271,
+      "subset_sha256": "0ecee5724c62fded647b43fff8f30128571da256f163c3eba53a470489b131ee"
+    },
+    {
+      "architecture_auroc_dependency_aware": 0.90024,
+      "architecture_state_visible_count": 0,
+      "architecture_subset_sha256": "53dcb9dc6ecdeb540fb4b53bcc74b7870d31f1cfe4b2e54f204ced776b47c9ed",
+      "learning_contribution_dependency_aware": 0.030056,
+      "n_examples": 1000,
+      "production_auroc_carnot_current": 0.917102,
+      "production_auroc_dependency_aware": 0.930296,
+      "production_state_visible_count": 21,
+      "seed": 314,
+      "subset_sha256": "53dcb9dc6ecdeb540fb4b53bcc74b7870d31f1cfe4b2e54f204ced776b47c9ed"
+    },
+    {
+      "architecture_auroc_dependency_aware": 0.914944,
+      "architecture_state_visible_count": 0,
+      "architecture_subset_sha256": "42259e022c2757dddabfadcda9ef3407237d27ae1f527be8ae7a4e742d5e0ef8",
+      "learning_contribution_dependency_aware": 0.019084,
+      "n_examples": 1000,
+      "production_auroc_carnot_current": 0.923426,
+      "production_auroc_dependency_aware": 0.934028,
+      "production_state_visible_count": 21,
+      "seed": 1729,
+      "subset_sha256": "42259e022c2757dddabfadcda9ef3407237d27ae1f527be8ae7a4e742d5e0ef8"
+    }
+  ],
+  "preconditions_checked": [
+    {
+      "available": true,
+      "detail": "labeled_rows=8829; required>=1000",
+      "resource": "fover_corpus"
+    },
+    {
+      "available": true,
+      "detail": "loaded=tier0r_curry_howard,tier0s_arithmetic_gap,tier0u_logical_consistency",
+      "resource": "four_exp2837_scoring_verifiers"
+    },
+    {
+      "available": true,
+      "detail": "state_files=21; memory_loaded=True",
+      "resource": "fr11_session_memory_state"
+    },
+    {
+      "available": true,
+      "detail": "dependency graph, crossfit scores, and clean panel importable",
+      "resource": "exp3667_dependency_aware_implementation"
+    },
+    {
+      "available": true,
+      "detail": "n_seeds=5; condition_a=0.9131335999999999",
+      "resource": "exp2850_g1_source_artifact"
+    }
+  ],
+  "production_auroc_carnot_current": 0.913134,
+  "production_auroc_ci": {
+    "bootstrap_seeds": [
+      42,
+      137,
+      271,
+      314,
+      1729
+    ],
+    "ci95": [
+      0.91699,
+      0.932891
+    ],
+    "n_bootstrap_per_seed": 200,
+    "point": 0.924869,
+    "seed_mean_aurocs": [
+      0.925001,
+      0.92456,
+      0.924508,
+      0.924939,
+      0.925471
+    ]
+  },
+  "production_auroc_dependency_aware": 0.925328,
+  "production_auroc_dependency_aware_vs_frozen_headline_delta": 0.012228,
+  "random_seed": 42,
+  "random_seeds_used": [
+    42,
+    137,
+    271,
+    314,
+    1729
+  ],
+  "reproducibility_checksum": "090912d89d2c5ad720d7e041d88871e68b5ee909bb6dc8e70fce8edc01a70686",
+  "schema": "carnot.dependency_aware_dual_condition_integrity.v1",
+  "verifier_names": [
+    "fr11_session_memory",
+    "tier0r_curry_howard",
+    "tier0s_arithmetic_gap",
+    "tier0u_logical_consistency"
+  ],
+  "verifier_scoring_input_candidate_only": true
+}
