@@ -34441,82 +34441,64 @@ milestones:
     deliverable: results/experiment_3637_capstone_and_g_gate_v333.json
     result: FAIL (gemini quota crash; no artifact landed)
 - id: 2026.06.334
-  title: "Run the cross-domain de-contamination science that .333 DESIGNED but NEVER EXECUTED \u2014 gemini quota exhaustion\
-    \ (429) crashed gemini-cli (.js:345500:14) on 100% of .333 tasks, producing ZERO artifacts. Route every task to codex\
-    \ (gpt-5.5, requires_codex bypasses GEMINI_FORCE_EXPERIMENTS=1); add a gemini-quota-crash resilience diagnostic + operator\
-    \ backend-flip recommendation; then run the math|code|facts re-measurement, Weaver correlation matrix, verifier-beats-SC\
-    \ headroom, and trained-EBM-judge OOD counterpoint against a VALID positive control."
+  title: "Cross-domain de-contamination science ran on codex"
   doc: openspec/change-proposals/research-roadmap-vNEXT.md
   completed: '2026-06-01'
-  finding: See conductor log for per-experiment results.
+  finding: "CONTAMINATION ARTIFACT: .334 finally ran the cross-domain de-contamination science on codex after the .329-.333 stalls. The .329 math-only verdict was an artifact: verifier value generalizes to math plus CODE, while FACTS remain open because the facts row used a text-statistical PROXY (AUROC 0.6495), not a real model-based NLI grounding verifier. second-pair-of-eyes is REAL (fused AUROC 0.822 vs confidence 0.536); verifier beats SC where headroom exists; trained judge does not solve OOD; correlation-aware weighting HURT (-0.236). paper_ready stayed TRUE (G1-G4) and P0.1 stayed honest-negative. .335 is active to make the facts row real."
   tasks:
   - id: exp3638-archive-v333-activate-v334
-    title: 'Archive milestone .333 honestly (record the gemini-quota TOTAL WIPEOUT: all 14 tasks FAILED on gemini-cli .js:345500:14
-      / 429, ZERO artifacts, cross-domain question STILL open after 5 milestones) and activate .334'
+    title: "Archive .333 wipeout and activate .334"
     deliverable: results/experiment_3638_archive_v333_activate_v334.json
-    result: OK (conductor)
+    result: OK (codex artifact landed)
   - id: exp3639-gemini-cli-quota-crash-resilience-diagnostic
-    title: "gemini-cli quota-crash RESILIENCE DIAGNOSTIC \u2014 record the live gemini quota state + the .js:345500:14 crash-on-429\
-      \ signature + the GEMINI_FORCE_EXPERIMENTS coercion that wiped out .333; write the operator backend-flip recommendation\
-      \ (documentation-only)"
+    title: "Gemini CLI quota crash resilience diagnostic"
     deliverable: results/experiment_3639_gemini_cli_quota_crash_resilience_diagnostic.json
-    result: OK (conductor)
+    result: OK (codex artifact landed)
   - id: exp3640-build-factual-corpus-v3-real-evidence-dataset
-    title: "Build factual corpus v3 from a REAL evidence-bearing labeled dataset (HaluEval QA knowledge / FELM / RAGTruth\
-      \ / Mu-SHROOM) \u2014 confidence AUROC in (0.5,0.95), held-out evidence independent of label, BARE gated fields"
+    title: "Build factual corpus v3 from a real evidence dataset"
     deliverable: results/experiment_3640_build_factual_corpus_v3.json
-    result: OK (conductor)
+    result: OK (codex artifact landed)
   - id: exp3641-code-corpus-verifiers-fire-math-to-code-transfer-v3
-    title: Build the labeled CODE corpus from exp1999 + make the execution-applicable verifiers actually FIRE + math->code
-      PRM-transfer stress-test (arXiv:2506.00027 vs ThinkPRM arXiv:2504.16828)
+    title: "Build code corpus and fire math-to-code transfer verifiers"
     deliverable: results/experiment_3641_code_corpus_verifiers_fire_transfer_v3.json
-    result: OK (conductor)
+    result: OK (codex artifact landed)
   - id: exp3642-corrected-cross-domain-remeasurement-v4
-    title: "CENTERPIECE: corrected cross-domain re-measurement v4 \u2014 math (0.9131, frozen) | code (firing execution verifiers,\
-      \ exp3641) | facts (real leak-free NLI grounding verifier, validated corpus exp3640) vs strong confidence baseline,\
-      \ VALID positive control, graceful per-row degradation"
+    title: "Corrected cross-domain remeasurement v4"
     deliverable: results/experiment_3642_corrected_cross_domain_remeasurement_v4.json
-    result: OK (conductor)
+    result: OK (codex artifact landed)
   - id: exp3643-additivity-second-pair-of-eyes-mcnemar-v4
-    title: "Additivity / 'second pair of eyes' \u2014 does ensemble-fused-with-confidence beat confidence alone? (conditional\
-      \ catch-rate + McNemar, on the fair re-measurement)"
+    title: "Second-pair-of-eyes additivity measurement"
     deliverable: results/experiment_3643_additivity_second_pair_of_eyes_v4.json
-    result: OK (conductor)
+    result: OK (codex artifact landed)
   - id: exp3644-weaver-peer-comparison-correlation-matrix-v3
-    title: Position Carnot vs the SOTA weak-verifier peer Weaver (arXiv:2506.18203) + measure the inter-verifier CORRELATION
-      matrix Weaver assumes away
+    title: "Weaver peer comparison and correlation matrix v3"
     deliverable: results/experiment_3644_weaver_peer_comparison_v3.json
-    result: OK (conductor)
+    result: OK (codex artifact landed)
   - id: exp3645-headroom-corpus-hybrid-verifier-vs-sc-v3
-    title: Where does a verifier beat self-consistency? Build a corpus where oracle > SC (real headroom) and measure verifier-vs-SC
-      + the hybrid detector under a compute budget (arXiv:2510.14913)
+    title: "Headroom corpus hybrid verifier versus self-consistency v3"
     deliverable: results/experiment_3645_headroom_hybrid_verifier_vs_sc_v3.json
-    result: OK (conductor)
+    result: OK (codex artifact landed)
   - id: exp3646-trained-ebm-judge-ood-counterpoint-v2
-    title: "Trained-EBM-judge OOD counterpoint (arXiv:2505.14999) \u2014 does a small judge TRAINED on reasoning-validity\
-      \ transfer cross-domain where Carnot's FIXED constraint ensemble does not? (it may name the fix for 'math-only')"
+    title: "Trained EBM judge OOD counterpoint v2"
     deliverable: results/experiment_3646_trained_ebm_judge_ood_counterpoint_v2.json
-    result: OK (conductor)
+    result: OK (codex artifact landed)
   - id: exp3647-fr11-continuous-self-learning-v8-online-correlation-aware
-    title: "FR-11 continuous self-learning v8 \u2014 online CORRELATION-AWARE verifier weighting without collapse (closes\
-      \ Weaver's no-online-adaptation gap)"
+    title: "FR-11 continuous self-learning v8 online correlation-aware"
     deliverable: results/experiment_3647_fr11_continuous_self_learning_v8.json
-    result: OK (conductor)
+    result: OK (codex artifact landed)
   - id: exp3648-kv260-continuity-v21
-    title: "KV260 SSH-reachability continuity (UNREACHABLE in .331/.332/.333 \u2014 re-check + record honest state, flag 4-milestone\
-      \ outage as operator-action)"
+    title: "KV260 SSH reachability continuity v21"
     deliverable: results/experiment_3648_kv260_continuity_v21.json
-    result: OK (conductor)
+    result: OK (codex artifact landed)
   - id: exp3649-polarfire-continuity-v21
-    title: PolarFire opportunistic reachability + continuity audit (per Hardware-Task Continuity)
+    title: "PolarFire continuity v21"
     deliverable: results/experiment_3649_polarfire_continuity_v21.json
-    result: OK (conductor)
+    result: OK (codex artifact landed)
   - id: exp3650-gatemate-continuity-audit-v21
-    title: "GateMate continuity audit (documentation-only \u2014 openFPGALoader missing in .331/.332, per known-issues)"
+    title: "GateMate continuity audit v21"
     deliverable: results/experiment_3650_gatemate_continuity_audit_v21.json
-    result: OK (conductor)
+    result: OK (codex artifact landed)
   - id: exp3651-capstone-and-g-gate-v334
-    title: "Capstone v334 + G1-G4 gate synthesis \u2014 was '.329 math-only' an artifact or EARNED once the facts + code rows\
-      \ ACTUALLY RAN against a valid positive control? (paper_ready must stay true)"
+    title: "Capstone v334 and G1-G4 gate synthesis"
     deliverable: results/experiment_3651_capstone_and_g_gate_v334.json
-    result: OK (conductor)
+    result: OK (codex artifact landed)

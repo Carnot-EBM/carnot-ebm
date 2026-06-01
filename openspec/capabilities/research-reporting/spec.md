@@ -15251,3 +15251,56 @@ artifacts from citations, and emits the terminal `complete:` verdict with
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-REPORT-3651 | Implemented (`python/carnot/reporting/capstone_and_g_gate_v334_3651.py`, `scripts/experiment_3651_capstone_and_g_gate_v334.py`) | Implemented (`tests/python/test_experiment_3651_capstone_and_g_gate_v334.py`) |
+
+### REQ-REPORT-3652: Archive V334 And Activate V335 Handoff
+
+The Exp 3652 workflow shall archive milestone `2026.06.334` and confirm that
+milestone `2026.06.335` is active. It shall be aggregation-only: it SHALL read
+`research-roadmap.yaml`, `research-complete.yaml`, Exp 3651, Exp 3642, the
+supporting Exp 3643 through Exp 3646 result artifacts, and
+`ops/north-star.md`; it SHALL NOT perform live model inference, modify
+`scripts/research_conductor.py`, or write ops/status/changelog/traceability
+documents.
+
+The workflow SHALL update the single `2026.06.334` entry in
+`research-complete.yaml`, or append it if absent, so the milestone finding
+records the honest post-capstone state: the `.329` "math-only" verdict was a
+contamination artifact; verifier value generalizes to math plus code; the facts
+row used a disclosed text-statistical proxy rather than a real model-based NLI
+grounding verifier; second-pair-of-eyes value is real; verifier beats
+self-consistency where headroom exists; the trained judge did not solve OOD;
+correlation-aware weighting hurt; `paper_ready` stayed true; and P0.1 stayed
+honest-negative. It SHALL archive all 14 `.334` tasks and preserve idempotence
+when the archive entry already exists.
+
+The workflow SHALL write
+`results/experiment_3652_archive_v334_activate_v335.json` with bare top-level
+values for the operator-required fields: `honest_verdict`,
+`inference_substrate`, `v334_outcome_recorded_as`,
+`cross_domain_scope_recorded`, `facts_gap_recorded`, `paper_ready_preserved`,
+`p01_status_preserved`, `n_tasks_archived`, `random_seed`,
+`reproducibility_checksum`, and `duration_s`. It SHALL include
+`field_principles` for those required fields, source artifact checksums, and
+the active milestone confirmation. `honest_verdict` SHALL equal
+`complete: archived_v334_cross_domain_science_ran_math_only_was_artifact_verifier_value_math_plus_code_facts_gap_open_v335_active_paper_ready_true`.
+
+#### SCENARIO-REPORT-3652: V334 Archive Preserves The Corrected Cross-Domain Record
+
+**Given** Exp 3651 records `paper_ready=true`, Exp 3642 records code
+generalization but facts as domain-bound under a text-statistical proxy, Exp
+3643 records fused detector AUROC above confidence, Exp 3644 records the
+correlation-aware regression, Exp 3645 records verifier-over-SC headroom, Exp
+3646 records trained-judge OOD failure, and `research-roadmap.yaml` declares
+`2026.06.335` active
+**When** the Exp 3652 archive workflow runs
+**Then** it writes `results/experiment_3652_archive_v334_activate_v335.json`
+with the terminal `complete:` verdict, `n_tasks_archived=14`,
+`paper_ready_preserved=true`, `p01_status_preserved="honest-negative"`, the
+facts real-NLI gap open, and an idempotent `research-complete.yaml` archive
+entry for `2026.06.334`.
+
+## Implementation Status (REQ-REPORT-3652)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-3652 | Implemented (`python/carnot/reporting/archive_v334_activate_v335_3652.py`, `scripts/experiment_3652_archive_v334_activate_v335.py`) | Implemented (`tests/python/test_experiment_3652_archive_v334_activate_v335.py`) |
