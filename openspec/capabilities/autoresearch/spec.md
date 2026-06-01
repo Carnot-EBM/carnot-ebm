@@ -3369,3 +3369,42 @@ The autoresearch harness MUST pull harder competition-grade problems (AIME / MAT
 **Given** the Route-2 NL-math final experiment is executed
 **When** a headroom corpus is built and scored, or cannot be built
 **Then** it MUST output a valid JSON artifact with 'route2_nlmath_terminal' verdict and 'multi_verifier_accuracy'.
+
+### REQ-AR-052: P0.1 Headroom Hybrid Verifier-vs-SC Positive Control
+
+**Requirement:**
+The autoresearch harness MUST provide a cached-candidate verifier-vs-self-consistency
+experiment (`scripts/experiment_3645_headroom_hybrid_verifier_vs_sc_v3.py`) that:
+1. Loads a multi-candidate corpus with per-candidate correctness labels without
+   invoking a live LLM.
+2. Selects a self-consistency-contested stratum whose oracle best-of-N accuracy
+   strictly exceeds the self-consistency majority-vote accuracy.
+3. Reports `oracle_minus_sc_headroom`, `sc_accuracy`,
+   `verifier_reranked_accuracy`, `verifier_over_sc_lift`, `hybrid_accuracy`,
+   `hybrid_beats_both`, `verifier_beats_sc_where_headroom_exists`,
+   `n_examples`, `random_seed`, `reproducibility_checksum`, and `duration_s`.
+4. Emits one of the terminal verdicts:
+   `complete: verifier_beats_sc_on_headroom_corpus_hybrid_wins_under_budget`,
+   `complete: verifier_does_not_beat_sc_even_with_headroom_selection_value_weak`,
+   `complete: no_headroom_corpus_found_verifier_study_uninformative`, or
+   `complete: blocked_no_multicandidate_corpus`.
+
+**Rationale:**
+Exp 3507 was an honest negative because oracle and self-consistency were equal,
+leaving no selectable headroom. This experiment is the complementary positive
+control: it first measures oracle > SC on cached candidates, then measures whether
+the FoVer verifier ensemble and a verifier+SC hybrid add selection value at the
+same candidate budget.
+
+#### SCENARIO-AR-052-01: Headroom Gate Before Verifier Verdict
+**Given** cached best-of-N rows with per-candidate correctness labels
+**When** the experiment selects a contested stratum
+**Then** `oracle_minus_sc_headroom` MUST be present and strictly positive before
+any verifier-vs-SC positive verdict is emitted.
+
+#### SCENARIO-AR-052-02: Hybrid and Verifier Lift Fields
+**Given** a headroom-bearing stratum
+**When** the verifier ensemble and verifier+SC hybrid are scored
+**Then** the artifact MUST include paired lift estimates with confidence
+intervals and the `hybrid_beats_both` and
+`verifier_beats_sc_where_headroom_exists` booleans.
