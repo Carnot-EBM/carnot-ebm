@@ -7350,3 +7350,5 @@ web search: https://docs.garak.ai/garak/examples/pr |
 | 2026-06-01 00:24 UTC | Corrected cross-domain re-measurement — math (0.91 | GATE_BLOCK | Pre-emptive skip: upstream retired (exp3586-score-factual-applicable-verifiers) |
 | 2026-06-01 00:24 UTC | Additivity / 'second pair of eyes' — does ensemble | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp3588-corrected-cross-domain-remeasureme |
 | 2026-06-01 00:26 UTC | Corrected cross-domain re-measurement — math (0.91 | GATE_BLOCK | Pre-emptive skip: upstream retired (exp3586-score-factual-applicable-verifiers) |
+| 2026-06-01 00:26 UTC | Additivity / 'second pair of eyes' — does ensemble | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp3588-corrected-cross-domain-remeasureme |
+| 2026-06-01 00:28 UTC | Corrected cross-domain re-measurement — math (0.91 | GATE_BLOCK | Pre-emptive skip: upstream retired (exp3586-score-factual-applicable-verifiers) |
