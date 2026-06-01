@@ -4897,3 +4897,9 @@ The critical path for milestone .250:
 - theme: Operational retrospective with no post-activation timing rows
 - key result: No experiment commits were found since activation, leaving efficiency questions with no data available this milestone.
 - acceptance: no data available this milestone
+
+### Milestone 2026.06.331
+- exp_range: N/A
+- theme: Operational Retrospective / Zero-Execution
+- key result: No experiments were completed or committed during this milestone.
+- acceptance: 0/0 criteria met

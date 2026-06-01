@@ -1,0 +1,26 @@
+{
+  "schema": "carnot.operational_retro.v64",
+  "milestone": "2026.06.331",
+  "generated_at": "2026-06-01T03:18:20Z",
+  "retro_type": "operational_final",
+  "total_wall_time_minutes": 0,
+  "experiments_completed": 0,
+  "compute_bound_experiments_count": 0,
+  "slowest_experiments": [],
+  "gpu_idle_on_compute_bound_tasks": null,
+  "summary": "No experiment commits were found since the activation of milestone 2026.06.331. Consequently, 0 experiments and 0 compute-bound tasks were completed.",
+  "bottlenecks_identified": [
+    "No experiments were executed, representing a complete pipeline stall or empty milestone."
+  ],
+  "improvements_suggested": [
+    "Investigate the trigger mechanism to understand why the milestone activated without running any experiments.",
+    "Free the stranded 4MB allocations on GPU 0 and GPU 1 to ensure a clean state for the next run."
+  ],
+  "top_3_highest_leverage_actions": [
+    "Audit the research conductor launch sequence.",
+    "Clear orphaned GPU memory allocations.",
+    "Review milestone planning for 2026.06.331 to determine if tasks were intended but dropped."
+  ],
+  "estimated_time_savings_pct": 0,
+  "meta_reflection": "An empty milestone indicates an issue upstream of experiment execution. The retrospective confirms zero throughput rather than inefficient execution."
+}
