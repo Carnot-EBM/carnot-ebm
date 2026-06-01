@@ -3952,3 +3952,32 @@ Experiment 3593 MUST perform a KV260 hardware-task continuity audit. It MUST use
 **Then:** It writes `results/experiment_3593_kv260_continuity_v17.json` with the required artifact fields.
 
 **Implementation status:** Pending
+
+---
+
+### REQ-HW-079
+
+**Title:** PolarFire Continuity Check v17
+
+**Description:**
+Experiment 3594 MUST perform a continuity check for the PolarFire SoC board. Hardware-Task Continuity requires one PolarFire task per milestone. The experiment MUST first execute `ssh -o ConnectTimeout=5 polarfire 'true'` to verify board reachability. If reachable, it MUST confirm continuity by retrieving board uptime and checking the carnot dispatch path. The result MUST be written to `results/experiment_3594_polarfire_continuity_v17.json` using distinct field names.
+
+**Acceptance criteria:**
+- `results/experiment_3594_polarfire_continuity_v17.json` is generated.
+- The artifact includes `honest_verdict`, `inference_substrate` equal to "hardware_smoke", `preconditions_checked`, `polarfire_ssh_reachable`, `random_seed`, `reproducibility_checksum`, and `duration_s`.
+- If `ssh` succeeds, the verdict MUST be "complete: polarfire_continuity_confirmed_reachable".
+- If `ssh` fails, the verdict MUST be "complete: blocked_polarfire_ssh_timeout".
+
+**Implementation status:** Pending (Exp 3594)
+
+---
+
+### SCENARIO-HW-079
+
+**Scenario:** PolarFire continuity check executes reachability and records artifact.
+
+**Given:** PolarFire is checked via SSH.
+**When:** Experiment 3594 runs the continuity check script.
+**Then:** It writes the results artifact with all required artifact fields, and if reachable, records uptime and dispatch path.
+
+**Implementation status:** Pending (Exp 3594)
