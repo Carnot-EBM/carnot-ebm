@@ -4089,6 +4089,57 @@ principles, deterministic seed, checksum, and duration.
 
 **Implementation status:** Pending (Exp 3648)
 
+---
+
+### REQ-HW-3661
+
+**Title:** KV260 Continuity Check v22 uses SSH reachability only and records the .331-.335 unreachable streak
+
+**Description:**
+Experiment 3661 MUST perform the milestone KV260 hardware-task continuity check.
+KV260 lives on SSH, so the ONLY permitted precondition is:
+
+`ssh -o ConnectTimeout=5 -o BatchMode=yes kria 'true'`
+
+The host SD-card device-node precondition is permanently retired and MUST NOT be
+used. If SSH is reachable, the experiment MUST run `ssh kria 'xmutil listapps'`
+and record the overlay continuity state using distinct KV260 field names. If SSH
+is unreachable, the experiment MUST write a terminal blocked artifact rather
+than fabricating a pass, and MUST record that .331, .332, .333, .334, and .335
+now form five consecutive unreachable milestones requiring operator action.
+
+**Acceptance criteria:**
+- `results/experiment_3661_kv260_continuity_v22.json` is generated.
+- The artifact includes `honest_verdict`, `inference_substrate`,
+  `preconditions_checked`, `kv260_ssh_reachable`, `kv260_overlay_loaded`,
+  `consecutive_unreachable_milestones`, `random_seed`,
+  `reproducibility_checksum`, and `duration_s`.
+- The artifact includes field-principle annotations for the required fields.
+- If `ssh` succeeds, the verdict MUST be
+  `"complete: kv260_continuity_confirmed_reachable"`.
+- If `ssh` fails, the verdict MUST be
+  `"complete: blocked_kv260_ssh_unreachable"` and
+  `consecutive_unreachable_milestones` MUST be `5`.
+- No implementation or test path may invoke `/dev/mmcblk*`, `/dev/disk*`, or any
+  host SD-card device-node check as a KV260 precondition.
+
+**Implementation status:** Pending (Exp 3661)
+
+---
+
+### SCENARIO-HW-3661
+
+**Scenario:** KV260 continuity v22 records reachable or blocked state from SSH only.
+
+**Given:** A KV260 continuity check is required for milestone .335.
+**When:** Experiment 3661 runs the SSH reachability precondition and, only when
+reachable, runs `ssh kria 'xmutil listapps'`.
+**Then:** It writes `results/experiment_3661_kv260_continuity_v22.json` with the
+terminal verdict, SSH state, overlay state, five-milestone unreachable streak
+count, field principles, deterministic seed, checksum, and duration.
+
+**Implementation status:** Pending (Exp 3661)
+
 
 ---
 
