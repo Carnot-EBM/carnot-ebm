@@ -2012,3 +2012,7 @@ The verifier ensemble MUST be evaluated for generalization on code domains (corr
 - Compare AUROC to model-confidence and best single verifier.
 - Produce `results/experiment_3573_verifier_code_bug_error_detection.json`.
 
+
+### REQ-CODE-VERIFY-3602: FoVer Math-Trained PRM Transfer to Code Benchmark
+
+Evaluate if a math-trained Process Reward Model (PRM) transfers its discriminator capability to a code-generation benchmark (such as HumanEval). Measures whether the discriminative verifier is robust to out-of-domain evaluation or if discriminative verifiers are OOD-FRAGILE. Required for determining whether the 0.44 AUROC on code was a fundamental limit or a wiring failure.
