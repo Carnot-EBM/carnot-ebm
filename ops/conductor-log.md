@@ -7524,3 +7524,4 @@ web search: https://docs.garak.ai/garak/examples/pr |
 | 2026-06-01 12:55 UTC | Plan milestone 2026.06.335 | OK | 13 tasks proposed |
 | 2026-06-01 12:57 UTC | Milestone 2026.06.335 activated | OK | 13 tasks queued |
 | 2026-06-01 13:18 UTC | Archive milestone .334 honestly (record the cross- | OK | 86 passed in 3.68s |
+| 2026-06-01 14:09 UTC | Backend-state diagnostic — probe whether gemini qu | OK | 88 passed in 3.62s |
