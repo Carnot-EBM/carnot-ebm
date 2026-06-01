@@ -3981,3 +3981,32 @@ Experiment 3594 MUST perform a continuity check for the PolarFire SoC board. Har
 **Then:** It writes the results artifact with all required artifact fields, and if reachable, records uptime and dispatch path.
 
 **Implementation status:** Pending (Exp 3594)
+
+---
+
+### REQ-HW-080
+
+**Title:** KV260 Continuity Check v18
+
+**Description:**
+Experiment 3607 MUST perform a continuity check for the KV260 board. Hardware-Task Continuity requires one KV260 task per milestone. The experiment MUST first execute `ssh -o ConnectTimeout=5 -o BatchMode=yes kria 'true'` to verify board reachability. The host SD-card device check is permanently retired. If reachable, it MUST execute `ssh kria 'xmutil listapps'` to determine the overlay loaded. The result MUST be written to `results/experiment_3607_kv260_continuity_v18.json` using distinct field names.
+
+**Acceptance criteria:**
+- `results/experiment_3607_kv260_continuity_v18.json` is generated.
+- The artifact includes `honest_verdict`, `inference_substrate` equal to "hardware_smoke", `preconditions_checked`, `kv260_ssh_reachable`, `kv260_overlay_loaded`, `random_seed`, `reproducibility_checksum`, and `duration_s`.
+- If `ssh` succeeds, the verdict MUST be "complete: kv260_continuity_confirmed_reachable".
+- If `ssh` fails, the verdict MUST be "complete: blocked_kv260_ssh_unreachable".
+
+**Implementation status:** Pending (Exp 3607)
+
+---
+
+### SCENARIO-HW-080
+
+**Scenario:** KV260 continuity check executes reachability and records artifact.
+
+**Given:** KV260 is checked via SSH.
+**When:** Experiment 3607 runs the continuity check script.
+**Then:** It writes the results artifact with all required artifact fields, and if reachable, records the overlay loaded.
+
+**Implementation status:** Pending (Exp 3607)
