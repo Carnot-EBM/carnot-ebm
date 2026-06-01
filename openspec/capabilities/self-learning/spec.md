@@ -10261,3 +10261,60 @@ beta >= f(lambda_min) with safety margin.
 | Requirement  | Python | Tests |
 |-------------|--------|-------|
 | REQ-LEARN-3604 | Implemented (python/carnot/fr11/continuous_self_learning_v6.py) | Implemented (tests/python/test_experiment_3604_fr11_csl_v6.py) |
+
+---
+
+## REQ-LEARN-3647: FR-11 Continuous Self Learning v8 Online Correlation-Aware Weighting
+
+**Given** the FR-11 module and cached verifier/candidate traces are present
+**When** Exp 3647 runs a closed FR-11 continuous self-learning loop over at
+least 200 cached examples from a fresh non-degenerate corpus
+**Then** the deploy arm SHALL apply a conservative-default online update with
+an uncertainty-gated redundancy penalty that down-weights highly conditionally
+correlated verifiers
+**And** the control arm SHALL run a naive beta=0 online update without the
+redundancy penalty
+**And** the artifact SHALL report deploy/control collapse status, before/after
+AUROC, Brier/ECE calibration, the correlation-aware AUROC gain over
+noise-only weighting, and a pass-rate-vs-true-accuracy distinctness assertion.
+
+### REQ-LEARN-3647 Sub-requirements
+
+- REQ-LEARN-3647-1: If Exp 3644's label-conditional verifier correlation
+  matrix exists, the redundancy penalty SHALL seed from that matrix; otherwise
+  the workflow SHALL compute the matrix inline from the cached scores.
+- REQ-LEARN-3647-2: `n_online_updates` SHALL be at least 200 for runnable
+  artifacts, and blocked artifacts SHALL use the terminal verdict
+  `complete: blocked_fr11_module_or_traces_unavailable`.
+- REQ-LEARN-3647-3: The acceptance gate SHALL pass only when
+  `collapse_detected_deploy_arm == false`,
+  `collapse_detected_control == true`, and
+  `pass_rate_vs_true_accuracy_distinct_assert == true`.
+- REQ-LEARN-3647-4: Runnable artifacts SHALL include principle annotations for
+  `honest_verdict`, `inference_substrate`, `n_online_updates`,
+  `collapse_detected_deploy_arm`, `collapse_detected_control`,
+  `correlation_aware_auroc_gain`, `calibration_improved`,
+  `pass_rate_vs_true_accuracy_distinct_assert`, `quality_maintained`,
+  `random_seed`, `reproducibility_checksum`, and `duration_s`.
+- REQ-LEARN-3647-5: The terminal verdict SHALL be
+  `complete: fr11_v8_online_correlation_aware_weighting_holds_no_collapse_quality_maintained`
+  when the acceptance gate passes and the redundancy penalty improves AUROC
+  over noise-only weighting, otherwise
+  `complete: fr11_v8_correlation_penalty_no_auroc_gain_noise_only_weighting_sufficient`
+  when the gate passes without a positive correlation-aware AUROC gain.
+
+### SCENARIO-LEARN-3647: Guarded Online Weighting Prevents Collapse
+
+**Given** cached verifier scores with binary correctness labels and at least
+one redundant verifier pair
+**When** the v8 online self-learning evaluator compares the deploy arm against
+the beta=0 control arm
+**Then** the deploy arm does not collapse, the control arm collapses, the
+pass-rate and true-accuracy trajectories are not element-wise identical, and
+quality is maintained.
+
+## Implementation Status (REQ-LEARN-3647)
+
+| Requirement  | Python | Tests |
+|-------------|--------|-------|
+| REQ-LEARN-3647 | Implemented (python/carnot/fr11/continuous_self_learning_v8.py; scripts/experiment_3647_fr11_continuous_self_learning_v8.py) | Implemented (tests/python/test_experiment_3647_fr11_csl_v8.py) |
