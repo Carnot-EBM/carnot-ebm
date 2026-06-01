@@ -1,0 +1,222 @@
+{
+  "cited_upstream_artifacts": [
+    {
+      "honest_verdict": "complete: factual_corpus_v3_built_real_evidence_dataset_confidence_headroom_confirmed_bare_fields_emitted",
+      "path": "results/experiment_3640_build_factual_corpus_v3.json",
+      "sha256": "10e26488e01c0012e2eeb7cffee069fade1eaa77333dacb503412f4bc1950cda"
+    },
+    {
+      "honest_verdict": "complete: code_corpus_built_verifiers_fire_math_signal_transfers_to_code",
+      "path": "results/experiment_3641_code_corpus_verifiers_fire_transfer_v3.json",
+      "sha256": "b71455d5eb7f1f2cc2bab297e91d5697f4d8796e2ce78f35f5804480acab13b7"
+    },
+    {
+      "honest_verdict": "complete: verifier_value_generalizes_to_code_not_facts_partial_scope",
+      "path": "results/experiment_3642_corrected_cross_domain_remeasurement_v4.json",
+      "sha256": "c1a5353c3b79938d163e6e6fef3f128d409141ed351ac7dd8549b8a517b5bc75"
+    },
+    {
+      "honest_verdict": "complete: ensemble_additive_to_confidence_second_pair_of_eyes_real_fusion_wins",
+      "path": "results/experiment_3643_additivity_second_pair_of_eyes_v4.json",
+      "sha256": "3adac92ef89d311f89318b7283752d0e0875d96903a73e1b138d620addb41ce9"
+    },
+    {
+      "honest_verdict": "complete: weaver_compared_correlation_matters_carnot_differentiates_on_correlation_awareness",
+      "path": "results/experiment_3644_weaver_peer_comparison_v3.json",
+      "sha256": "bc89c1b1d19269f56f05f8fbf413d3aabc90765611d9e8402e1648fcab783e7e"
+    },
+    {
+      "honest_verdict": "complete: verifier_beats_sc_on_headroom_corpus_hybrid_wins_under_budget",
+      "path": "results/experiment_3645_headroom_hybrid_verifier_vs_sc_v3.json",
+      "sha256": "8be09a6d326a4f8ec66d87b0bd98a6e5abdf69d258a1c55cbb4c25388a6e2267"
+    },
+    {
+      "honest_verdict": "complete: trained_ebm_judge_also_math_only_transfer_not_a_training_artifact",
+      "path": "results/experiment_3646_trained_ebm_judge_ood_counterpoint_v2.json",
+      "sha256": "c031e49a669744bdb1fec966a1de124283c8e8a1de22e07d41e427097c9e74dc"
+    }
+  ],
+  "code_generalizes": true,
+  "corrected_generalization_table": {
+    "code": {
+      "auroc": 0.924831,
+      "confidence_auroc": 0.362753,
+      "delta": 0.562078,
+      "domain_verdict": "generalizes",
+      "generalizes": true,
+      "lift": 0.562078,
+      "n_examples": 320,
+      "ran_or_blocked": "ran",
+      "transfer_context": {
+        "code_verifiers_fire": true,
+        "math_to_code_transfer_verdict": "complete: code_corpus_built_verifiers_fire_math_signal_transfers_to_code"
+      }
+    },
+    "facts": {
+      "auroc": 0.64952,
+      "confidence_auroc": 0.744576,
+      "delta": -0.095056,
+      "domain_verdict": "domain_bound",
+      "facts_corpus_validated": true,
+      "generalizes": false,
+      "grounding_leak_free": true,
+      "lift": -0.095056,
+      "n_examples": 500,
+      "ran_or_blocked": "ran"
+    },
+    "math": {
+      "auroc": 0.9131,
+      "confidence_auroc": 0.8947,
+      "delta": 0.0185,
+      "domain_verdict": "generalizes",
+      "generalizes": true,
+      "lift": 0.0185,
+      "n_examples": 1000,
+      "ran_or_blocked": "ran",
+      "status": "frozen_fover_math_headline"
+    }
+  },
+  "duration_s": 0.0001,
+  "facts_code_rows_actually_ran": true,
+  "facts_generalize": false,
+  "field_principles": {
+    "cited_upstream_artifacts": "sha256 provenance (G4).",
+    "code_generalizes": "Corrected code result, with the math->code transfer context.",
+    "corrected_generalization_table": "domain -> auroc+delta+lift -- the milestone's central evidence, now measured fairly and leak-free.",
+    "duration_s": "Plausibility floor.",
+    "facts_code_rows_actually_ran": "Confirms the non-math rows RAN rather than being blocked/skipped/wiped.",
+    "facts_generalize": "Corrected factual result from the leak-free grounding verifier.",
+    "g1": "Headline measured (FoVer 0.9131, 5-seed, CI, adversarial-clean).",
+    "g2": "Independently reproduced (CI runner).",
+    "g3": "Prose narrowing-clean.",
+    "g4": "Numbers trace to primary artifacts.",
+    "grounding_leak_free": "Records whether the facts row's grounding verifier was leak-free so no fabricated factual claim reaches the paper.",
+    "honest_verdict": "Terminal prefix for reconciler classification.",
+    "inference_substrate": "aggregation_from_upstream_artifacts (principle: reads the gate script + artifacts; no live inference).",
+    "p01_status": "P0.1 stays honest-negative; do not re-assert a positive.",
+    "paper_ready": "G1 and G2 and G3 and G4 -- must remain true.",
+    "paper_v6_forbidden_claims": "Overclaims to avoid.",
+    "paper_v6_safe_claims": "Narrowing-clean claims.",
+    "random_seed": "Determinism precondition.",
+    "reproducibility_checksum": "Drift detection.",
+    "second_pair_of_eyes_real": "The honest additive-value claim versus a strong confidence baseline.",
+    "trained_judge_is_candidate_fix": "Whether a trained judge is the candidate fix for math-only.",
+    "unmet_gates": "Report which gates are unmet, not a count.",
+    "v329_333_record_corrected_to": "Explicitly states that .329-.333's 'math-only' was asserted from BLOCKED/SKIPPED/WIPED rows and records the fairly measured scope.",
+    "v329_null_was_artifact_or_confirmed": "The central result: whether 'math-only' was a contamination artifact or an earned limitation under a valid positive control.",
+    "verifier_beats_sc_headroom": "Where the verifier beats self-consistency on a headroom-bearing corpus.",
+    "verifier_value_scope": "broad / code_only / facts_only / math_only_earned.",
+    "weaver_differentiation": "Correlation-awareness differentiation vs the Weaver-style peer."
+  },
+  "flagged_upstream_artifacts_excluded": [],
+  "g1": true,
+  "g2": true,
+  "g3": true,
+  "g4": true,
+  "grounding_leak_free": true,
+  "honest_verdict": "complete: capstone_v334_329_null_was_artifact_verifier_value_code_only_facts_code_rows_ran_paper_ready_true",
+  "inference_substrate": "aggregation_from_upstream_artifacts (principle: reads the gate script + artifacts; no live inference).",
+  "ops_docs_reconciliation_left_to_conductor": true,
+  "p01_status": "honest-negative",
+  "paper_ready": true,
+  "paper_v6_forbidden_claims": [
+    "Do not claim broad factual generalization from v334 when the facts row is domain-bound.",
+    "Do not cite .329-.333 as an earned math-only measurement; .329-.332 were blocked/skipped and .333 had zero artifacts.",
+    "Do not cite flagged_adversarial artifacts in the paper or capstone synthesis.",
+    "Do not treat grounding AUROC=1.0 as valid unless Exp 3642 proves grounding_leak_free=true.",
+    "Do not re-assert a P0.1 positive; the status remains honest-negative.",
+    "Do not claim the trained judge fixes math-only unless Exp 3646 passes its OOD-transfer gate."
+  ],
+  "paper_v6_safe_claims": [
+    "FoVer verifier ensemble math headline remains 0.9131 AUROC with G1-G4 satisfied.",
+    "Verifier value scope is code_only; this is a scoped, domain-bound paper claim.",
+    "P0.1 remains honest-negative; no energy-vs-SC positive is re-asserted.",
+    "The v334 code verifier value generalizes on the cached code-transfer row where execution-applicable verifiers fired.",
+    "The v334 facts row ran leak-free but is domain-bound; no factual generalization claim is made."
+  ],
+  "publication_gate": {
+    "G1": {
+      "detail": "FoVer dual-condition AUROC artifact present (experiment_2850_fover_dual_condition_integrity_v4.json); CI reported=True",
+      "pass": true,
+      "source": "experiment_2850_fover_dual_condition_integrity_v4.json"
+    },
+    "G2": {
+      "detail": "reproducer confirmed: GitHub Actions workflow 'FoVer Headline Independent Reproducer' (.github/workflows/reproduce-fover-headline.yml), run 26725185125 on Carnot-EBM/carnot-ebm, 2026-05-31, conclusion=success. Clean ubuntu-latest runner, fresh CPU-only install from a clean checkout (non-operator environment), recomputed the FoVer headline AUROC via scripts/reproduce_fover_headline.py and asserted the published CIs: condition_A (production) AUROC in [0.9027, 0.9235] and learning_contribution in [0.0125, 0.0245] \u2014 both PASS. This is a CI-run independent reproducer per the Phase-1 ship gate ('could be a teammate, a CI run, or an external user'). Internally further de-risked by exp3430 (fresh git worktree + venv) and the local run on 2026-05-31 (AUROC 0.9131 within CI). NOTE: G2 attests the FoVer verifier-ensemble headline reproduces; it does NOT attest the broader energy-descent existential claim, which remains an honest-negative (Route-1/Route-2 bounded). Run: https://github.com/Carnot-EBM/carnot-ebm/actions/runs/26725185125",
+      "pass": true
+    },
+    "G3": {
+      "detail": "no retracted phrasings asserted as live claims",
+      "hits": [],
+      "pass": true
+    },
+    "G4": {
+      "detail": "experiment_2850_fover_dual_condition_integrity_v4.json: random_seed/seeds=True, reproducibility_checksum=True",
+      "pass": true,
+      "source": "experiment_2850_fover_dual_condition_integrity_v4.json"
+    }
+  },
+  "random_seed": 3651,
+  "reproducibility_checksum": "747175e2b00039505c063b41887251252594d50f6a7cf8156d8820135cffd015",
+  "scripts_research_conductor_modified": false,
+  "second_pair_of_eyes_real": true,
+  "source_artifacts": [
+    "results/experiment_3640_build_factual_corpus_v3.json",
+    "results/experiment_3641_code_corpus_verifiers_fire_transfer_v3.json",
+    "results/experiment_3642_corrected_cross_domain_remeasurement_v4.json",
+    "results/experiment_3643_additivity_second_pair_of_eyes_v4.json",
+    "results/experiment_3644_weaver_peer_comparison_v3.json",
+    "results/experiment_3645_headroom_hybrid_verifier_vs_sc_v3.json",
+    "results/experiment_3646_trained_ebm_judge_ood_counterpoint_v2.json"
+  ],
+  "summarized_upstream_artifacts": [
+    {
+      "exp": 3640,
+      "returncode": 0,
+      "stderr_tail": "",
+      "stdout_tail": "==============================================================================\nARTIFACT  experiment_3640_build_factual_corpus_v3.json\n------------------------------------------------------------------------------\n  verdict          : complete: factual_corpus_v3_built_real_evidence_dataset_confidence_headroom_confirmed_bare_fields_emitted\n  flagged_adversarial (stamped): None   |   LIVE re-check: clean\n  acceptance gates : (none found \u2014 claim has no self-reported gate)\n  duration_s       : 0.7014350891113281   substrate: aggregation_from_upstream_artifacts (principle: fetches + validates a labeled dataset; no live LLM generation in the headline path).\n  headline metrics :\n      confidence_baseline_auroc_on_corpus = 0.744576\n  adversarial flags: none\n==============================================================================\n"
+    },
+    {
+      "exp": 3641,
+      "returncode": 0,
+      "stderr_tail": "",
+      "stdout_tail": "==============================================================================\nARTIFACT  experiment_3641_code_corpus_verifiers_fire_transfer_v3.json\n------------------------------------------------------------------------------\n  verdict          : complete: code_corpus_built_verifiers_fire_math_signal_transfers_to_code\n  flagged_adversarial (stamped): None   |   LIVE re-check: clean\n  acceptance gates :\n      [?   ] acceptance_gate = {'condition': 'n_examples >= 50 AND code_verifiers_fire == true AND code_confidence_baseline_auroc present', 'passed': True, 'principle': 'A code transfer verdict requires the verifiers actually fired on a headroom-bearing labeled corpus; a null without that is a wiring failure, not evidence.'}\n  duration_s       : 0.130559   substrate: verifier_ensemble_against_cached_candidates (principle: scores the cached code corpus; no LLM load).\n  adversarial flags: none\n==============================================================================\n"
+    },
+    {
+      "exp": 3642,
+      "returncode": 0,
+      "stderr_tail": "",
+      "stdout_tail": "==============================================================================\nARTIFACT  experiment_3642_corrected_cross_domain_remeasurement_v4.json\n------------------------------------------------------------------------------\n  verdict          : complete: verifier_value_generalizes_to_code_not_facts_partial_scope\n  flagged_adversarial (stamped): None   |   LIVE re-check: clean\n  acceptance gates :\n      [?   ] acceptance_gate = {'condition': 'generalization_table present AND math_ensemble_auroc present', 'passed': True, 'principle': 'The centerpiece always lands the math row plus the table; bare flags record downstream gates.'}\n  duration_s       : 0.368923   substrate: verifier_ensemble_against_cached_candidates (principle: scores cached corpora + a small NLI checkpoint; not the FoVer LLM).\n  headline metrics :\n      math_ensemble_auroc = 0.9131\n  adversarial flags: none\n==============================================================================\n"
+    },
+    {
+      "exp": 3643,
+      "returncode": 0,
+      "stderr_tail": "",
+      "stdout_tail": "==============================================================================\nARTIFACT  experiment_3643_additivity_second_pair_of_eyes_v4.json\n------------------------------------------------------------------------------\n  verdict          : complete: ensemble_additive_to_confidence_second_pair_of_eyes_real_fusion_wins\n  flagged_adversarial (stamped): None   |   LIVE re-check: clean\n  acceptance gates :\n      [?   ] acceptance_gate = {'condition': 'fused_detector_auroc present AND fusion_beats_confidence_alone present', 'passed': True, 'principle': 'Product value is conditional, additive coverage measured with a paired significance test -- a higher AUROC alone is not the second-pair-of-eyes claim.'}\n  duration_s       : 0.083736   substrate: verifier_ensemble_against_cached_candidates (principle: scores cached corpora; no LLM load).\n  headline metrics :\n      confidence_alone_auroc = 0.536376\n      confidence_recall_at_fixed_fpr = 0.144689\n      fixed_confidence_baseline_fpr = 0.1\n      fused_detector_auroc = 0.822394\n      fused_detector_recall_at_fixed_fpr = 0.443223\n      fusion_auroc_delta = 0.286018\n      fusion_recall_delta_at_fixed_fpr = 0.298534\n  adversarial flags: none\n==============================================================================\n"
+    },
+    {
+      "exp": 3644,
+      "returncode": 0,
+      "stderr_tail": "",
+      "stdout_tail": "==============================================================================\nARTIFACT  experiment_3644_weaver_peer_comparison_v3.json\n------------------------------------------------------------------------------\n  verdict          : complete: weaver_compared_correlation_matters_carnot_differentiates_on_correlation_awareness\n  flagged_adversarial (stamped): None   |   LIVE re-check: clean\n  acceptance gates : (none found \u2014 claim has no self-reported gate)\n  duration_s       : 0.29516   substrate: verifier_ensemble_against_cached_candidates (principle: scores the cached FoVer corpus; no LLM load).\n  headline metrics :\n      auroc_delta_correlation_aware_vs_weaver = -0.236268\n      ensemble_auroc_carnot = 0.919446\n      ensemble_auroc_correlation_aware = 0.635312\n      ensemble_auroc_unweighted = 0.736244\n      ensemble_auroc_weaver_style = 0.87158\n      weight_l1_delta_correlation_aware_vs_weaver = 0.00692\n  adversarial flags: none\n==============================================================================\n"
+    },
+    {
+      "exp": 3645,
+      "returncode": 0,
+      "stderr_tail": "",
+      "stdout_tail": "==============================================================================\nARTIFACT  experiment_3645_headroom_hybrid_verifier_vs_sc_v3.json\n------------------------------------------------------------------------------\n  verdict          : complete: verifier_beats_sc_on_headroom_corpus_hybrid_wins_under_budget\n  flagged_adversarial (stamped): None   |   LIVE re-check: clean\n  acceptance gates :\n      [?   ] acceptance_gate = {'condition': 'oracle_minus_sc_headroom present AND verifier_over_sc_lift present AND hybrid_accuracy present', 'required_fields_present': True}\n  duration_s       : 0.28717732429504395   substrate: verifier_ensemble_against_cached_candidates\n  headline metrics :\n      hybrid_accuracy = 0.7666666666666667\n      oracle_accuracy = 0.8666666666666667\n      sc_accuracy = 0.7\n      verifier_reranked_accuracy = 0.7333333333333333\n  adversarial flags: none\n==============================================================================\n"
+    },
+    {
+      "exp": 3646,
+      "returncode": 0,
+      "stderr_tail": "",
+      "stdout_tail": "==============================================================================\nARTIFACT  experiment_3646_trained_ebm_judge_ood_counterpoint_v2.json\n------------------------------------------------------------------------------\n  verdict          : complete: trained_ebm_judge_also_math_only_transfer_not_a_training_artifact\n  flagged_adversarial (stamped): None   |   LIVE re-check: clean\n  acceptance gates :\n      [?   ] acceptance_gate = {'condition': 'in_domain_judge_auroc present AND shuffled_label_control_auroc present AND ood_judge_auroc present', 'passed': True, 'principle': 'An OOD-transfer claim requires an in-domain sanity pass AND a shuffled-label adversarial control -- without both the OOD number could be a degenerate-prior artifact.'}\n  duration_s       : 0.346263   substrate: verifier_ensemble_against_cached_candidates (principle: trains a small head on cached labels + scores cached corpora; GPU use: none, CPU-only numpy).\n  headline metrics :\n      confidence_only_baseline_auroc = 0.882162\n      fixed_ensemble_ood_reference_auroc = 0.331\n      in_domain_judge_auroc = 0.992504\n      ood_judge_auroc = 0.673554\n      shuffled_label_control_auroc = 0.423293\n      trained_judge_vs_fixed_ensemble_ood_delta = 0.342554\n  adversarial flags: none\n==============================================================================\n"
+    }
+  ],
+  "trained_judge_is_candidate_fix": false,
+  "unmet_gates": [],
+  "v329_333_record_corrected_to": ".329/.330/.331/.332 asserted math-only from BLOCKED/SKIPPED non-math rows, and .333 produced ZERO artifacts after the Gemini quota wipeout. The fair v334 remeasurement scope is code_only: code_generalizes=true, facts_generalize=false.",
+  "v329_null_was_artifact_or_confirmed": "artifact",
+  "verifier_beats_sc_headroom": true,
+  "verifier_value_scope": "code_only",
+  "weaver_differentiation": true
+}

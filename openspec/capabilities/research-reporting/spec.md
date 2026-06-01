@@ -15198,3 +15198,56 @@ evidence-bearing source exists locally
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-REPORT-3640 | Planned (`scripts/experiment_3640_build_factual_corpus_v3.py`) | Planned (`tests/python/test_experiment_3640_build_factual_corpus_v3.py`) |
+
+### REQ-REPORT-3651: V334 Capstone And G-Gate Synthesis
+
+The Exp 3651 workflow shall capstone milestone `2026.06.334` by aggregating
+the already-landed Exp 3640 through Exp 3646 artifacts and the current
+`publication_gate.py --json` result. It shall be aggregation-only: it SHALL
+read upstream JSON artifacts, run the publication gate and artifact summarizer
+commands, and SHALL NOT perform live model inference, modify
+`scripts/research_conductor.py`, or write ops/status/changelog/traceability
+documents.
+
+The workflow SHALL write
+`results/experiment_3651_capstone_and_g_gate_v334.json` with bare top-level
+values for every required field named by the operator prompt, plus
+`field_principles` documenting why each value exists. The artifact SHALL build
+the corrected generalization table from Exp 3642, preserving the frozen math
+AUROC `0.9131`, the code row with math-to-code transfer context, and the facts
+row with leak-free grounding status. It SHALL exclude `flagged_adversarial`
+artifacts from `cited_upstream_artifacts`; any exact factual grounding
+`AUROC=1.0` SHALL be treated as leakage unless Exp 3642 explicitly records
+`grounding_leak_free=true`.
+
+The workflow SHALL explicitly correct the `.329-.333` record: `.329`, `.330`,
+`.331`, and `.332` asserted a "math-only" conclusion from blocked/skipped
+non-math rows, while `.333` produced zero artifacts due to the Gemini quota
+wipeout. The corrected verdict SHALL distinguish whether the prior `.329`
+null was an artifact or an earned limitation after Exp 3642 ran a valid
+positive control. If Exp 3643 is gate-blocked, the workflow SHALL record
+`second_pair_of_eyes_real` as the string `not_measured`, never as `null`.
+
+The workflow SHALL preserve `p01_status="honest-negative"`, SHALL report G1
+through G4 and `paper_ready` directly from `publication_gate.py --json`, SHALL
+emit narrowing-clean `paper_v6_safe_claims` and `paper_v6_forbidden_claims`,
+and SHALL end with the terminal verdict prefix
+`complete: capstone_v334_329_null_was_<artifact_or_confirmed>_verifier_value_<scope>_facts_code_rows_ran_paper_ready_true`.
+
+#### SCENARIO-REPORT-3651: Corrected V334 Capstone Runs From Fair Upstream Measurements
+
+**Given** clean Exp 3640 through Exp 3646 artifacts and a publication gate where
+G1, G2, G3, G4, and `paper_ready` all pass
+**When** the Exp 3651 workflow runs
+**Then** it writes the capstone artifact with the corrected generalization
+table, records code/facts rows as actually ran, records `v329_null_was` as an
+artifact when any non-math row generalizes under the valid positive control,
+preserves `p01_status="honest-negative"`, excludes flagged adversarial
+artifacts from citations, and emits the terminal `complete:` verdict with
+`paper_ready_true`.
+
+## Implementation Status (REQ-REPORT-3651)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-3651 | Implemented (`python/carnot/reporting/capstone_and_g_gate_v334_3651.py`, `scripts/experiment_3651_capstone_and_g_gate_v334.py`) | Implemented (`tests/python/test_experiment_3651_capstone_and_g_gate_v334.py`) |
