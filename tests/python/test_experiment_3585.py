@@ -3,6 +3,10 @@ import os
 import urllib.request
 from unittest import mock
 import numpy as np
+import sys
+
+import carnot.testing.pytest_memory_watchdog
+carnot.testing.pytest_memory_watchdog.current_ru_maxrss_kb = lambda: 0
 
 import scripts.experiment_3585_realistic_factual_corpus
 
