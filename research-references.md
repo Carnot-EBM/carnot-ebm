@@ -1,3 +1,90 @@
+## 2026-06-01 Post-.330 Planning Sweep (Milestone 2026.06.331)
+
+`.330` set out to DE-CONTAMINATE the `.329` "verifier is math-only, domain-bound" verdict by re-testing
+verifier cross-domain generalization on realistic corpora with the per-domain APPLICABLE verifier sets,
+and by building the missing retrieval/NLI factual-grounding verifier. **It did not finish the job — a
+gate cascade broke the centerpiece.** Read via `scripts/summarize_artifact.py`, the honest `.330` state:
+
+- **GATE CASCADE FAILURE (the load-bearing operational finding).** exp3586 (score factual-applicable
+  verifiers) reached `blocked_gate_check_failed`; its `gated_on` check compared the upstream field
+  `corpus_is_realistic` as a **principle-annotated dict** `{value: true, principle: "..."}` against the
+  bare expected `true` and failed (`scripts/conductor_gates.py:_eval_op` only coerces bool/str/int/float,
+  it does NOT unwrap `{value: ...}`). That blocked exp3586 → exp3588 (THE corrected cross-domain
+  re-measurement, the milestone centerpiece) **never produced an artifact** → exp3589 (additivity/McNemar)
+  blocked on the missing exp3588. **Root-cause rule for `.331` and forward: any field referenced in a
+  `gated_on` block MUST be emitted as a BARE top-level JSON value, never a `{value, principle}` dict.**
+- **exp3587 grounding verifier reported AUROC = 1.0 — IMPLAUSIBLE_PERFECT / contamination.** The realistic
+  corpus `data/realistic_factual_corpus_v1.jsonl` carries only `{question, answer, is_hallucination,
+  model_confidence}` — there is **no independent evidence/reference field** to ground against. A
+  retrieval/NLI grounding verifier scoring 1.0 on a corpus with no evidence column is almost certainly
+  **label-leaking**, not detecting factual error. `nli_substrate = disclosed_text_statistical_proxy` (no
+  real NLI model was loaded). This must be adversarially audited before any "facts generalize" claim.
+- **The capstone (exp3596) and synthesis (exp3591) verdict "329_null_was_artifact / verifier value
+  math_only_earned" was synthesized from this broken partial data** (centerpiece exp3588 missing, the one
+  factual number a contaminated 1.0). The de-contamination question is therefore **STILL OPEN**, not
+  resolved. `paper_ready` stays true (G1-G4 met; the FoVer 0.9131 headline is independent of this).
+- **Operational caveat:** the `.320-.330` operational retros all report "no experiment commits found since
+  activation" (total_wall_time=0). The timing/commit-detection infra under-reports, yet artifacts DO land
+  — a conductor-side instrumentation gap, out of planner scope (do not modify the conductor).
+
+**`.331` mandate:** finish the de-contamination HONESTLY — (1) fix the gate cascade by emitting bare gated
+fields; (2) adversarially prove/disprove the exp3587 AUROC=1.0 leak; (3) build a fair factual corpus that
+carries **independent evidence passages** (the HaluEval QA `knowledge` field) with confidence headroom;
+(4) build a REAL NLI-model grounding verifier (HalluSearch/VeriScore recipe) scored against held-out
+evidence; (5) run the centerpiece corrected cross-domain re-measurement that `.330` skipped, plus the
+literature-grounded math→code positive control. Either outcome is genuine learning. P0.1 stays
+honest-negative (do NOT re-test); paper_ready=true (do NOT regress).
+
+### Literature scan — cross-domain verifier generalization + SOTA factual hallucination detection (2025-2026)
+
+1. **EORM (arXiv:2505.14999)** — "Learning to Rank Chain-of-Thought: Using a Small Model." A 55M-param
+   energy-based model ranks candidate CoT solutions by scalar energy, trained on **outcome labels only**;
+   90.7% GSM8K / 63.7% MATH. **Abstract explicitly claims OOD generalization** ("learns fundamental
+   principles of valid reasoning"). Closest published analog to Carnot's exact thesis — but its OOD
+   evidence is math-INTERNAL (GSM8K↔MATH, unseen models), so it supports "energy verifier generalizes"
+   without settling the cross-MODALITY question Carnot is asking. Supporting prior art for the headline.
+2. **FoVer (arXiv:2505.15960)** — the corpus underlying Carnot's 0.9131 headline. Step labels synthesized
+   by Z3 + Isabelle over formal-logic/theorem tasks (FOVER-80K). Fine-tuning transfers from formal-logic
+   to **NLI (ANLI) and BBH** across 12 benchmarks — direct evidence that step-level verification
+   generalizes WITHIN reasoning. Does not cover factual grounding (no retrieval). Note: the 0.9131 AUROC
+   is Carnot's own measurement on the corpus, not a FoVer-paper number.
+3. **Math→Code PRM transfer (arXiv:2506.00027)** — "From Mathematical Reasoning to Code." A PRM trained
+   purely on MATH improves CODE generation under test-time scaling: HumanEval+ +4.9pts, MBPP+ +5.1,
+   LiveCodeBench +8.4, BigCodeBench +5.2; math-trained PRM ≈ code-trained PRM. **The single most direct
+   published evidence that step-level reasoning verifiers cross the math→code modality boundary** — the
+   exact positive control `.331` should run (the `.330` code AUROC of 0.44 was a wiring failure, not this).
+4. **ThinkPRM (arXiv:2504.16828)** — "Process Reward Models That Think." **Generative/reasoning PRMs
+   generalize OOD; DISCRIMINATIVE PRMs trained on process labels are FRAGILE under domain shift.** Carnot's
+   ensemble is discriminative-flavored → this is the explicit FALSIFICATION hypothesis for any negative
+   cross-domain result, and points to a generative/reasoning verifier head as the fix.
+5. **Mu-SHROOM / SemEval-2025 Task 3 (arXiv:2504.11975)** — 2,618 submissions, 14 languages. **RAG
+   submissions scored statistically-significantly higher IoU (p < 10⁻⁵⁹); logit/probability-only systems
+   had limited performance.** The definitive large-sample statement that for FACTUAL hallucination the SOTA
+   recipe is retrieval-grounded verification and confidence is a weak signal.
+6. **HalluSearch (arXiv:2504.10168)** — the concrete 3-stage recipe Carnot's factual verifier should
+   instantiate: (1) atomic-claim decomposition, (2) evidence retrieval, (3) per-claim entailment vs
+   evidence → span aggregation. 4th in English. The reference architecture for exp3600.
+7. **Real-Time Hallucinated-Entity Probes (arXiv:2509.03531)** — token-level linear probes on activations;
+   **AUC 0.90 on Llama-3.3-70B vs 0.71 for semantic entropy.** Trained only on entities, the probe
+   **generalizes to detecting incorrect answers in MATH reasoning** — the reverse of Carnot's question and
+   a positive signal that error-detection value crosses the factual↔reasoning boundary in both directions.
+8. **Confidence is a weak baseline (arXiv:2603.06604 + 2410.13246 Atomic Calibration)** — RL/GRPO/DPO
+   induce systematic OVERCONFIDENCE via reward exploitation, degrading sequence-logprob as a hallucination
+   signal; atomic-claim-level calibration materially beats sequence-level. Underpins WHY Carnot's "second
+   pair of eyes" should beat model confidence on realistic corpora, and motivates atomic decomposition.
+9. **VeriScore / VeriFastScore + MontageLie/Core (arXiv:2406.19276, 2505.16973)** — the FActScore → SAFE →
+   VeriScore → VeriFastScore retrieval+NLI atomic-claim lineage. **MontageLie: a single atomic-fact checker
+   is gameable to AUC < 65%; the Core combinatorial-selection fix restores discrimination** — a direct
+   parallel to Carnot's ensemble-as-anti-gaming thesis (a single grounded checker is fragile; the ensemble
+   is the defense).
+
+**Synthesis for `.331`:** the literature leans "verifier value generalizes within reasoning, with a
+documented caveat" (positive: 2506.00027 math→code +4-8pts, 2505.15960 FoVer→NLI/BBH, 2509.03531
+factual→math; falsifier: 2504.16828 discriminative fragility). The SOTA factual-detection recipe is
+atomic-claim + retrieval + NLI (2504.11975, 2504.10168, 2406.19276) with confidence as a weak baseline
+(2603.06604). `.331` builds exactly that verifier and runs the math→code positive control, against the
+discriminative-fragility falsifier.
+
 ## 2026-05-31 Post-.328 Planning Sweep (Milestone 2026.05.329)
 
 `.328` (Depth-Over-Breadth XIV, CONSOLIDATION) tried to harden the `.327` P0.1 Route-1 positive into a

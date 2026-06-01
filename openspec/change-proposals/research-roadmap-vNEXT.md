@@ -1,240 +1,221 @@
-# Research Roadmap — Milestone 2026.05.330
+# Research Roadmap v331 — Finish the De-Contamination: Does Verifier Value Generalize Once the Test Is Genuinely Fair?
 
-**Verifier Cross-Domain Value, DE-CONTAMINATED — was ".329 math-only" a real
-limitation or a failed positive control? Build the missing factual-grounding
-verifier and re-test on realistic corpora.**
-
-Planned 2026-05-31 (Claude Opus 4.8, outer-loop, on the autonomous-planner
-directive). Pre-staged per the Pre-Staged Roadmap Convention.
+**Milestone:** 2026.06.331 (June calendar-prefix rollover; today UTC = 2026-06-01)
+**Status:** Pre-staged by outer-loop (Claude Opus 4.8), 2026-06-01
+**Predecessor:** 2026.05.330 (Verifier Cross-Domain Value, DE-CONTAMINATED)
 
 ---
 
-## 1. What the previous milestone (.329) actually proved
+## 1. What `.330` Was Supposed to Prove — and Why It Didn't
 
-`.329` asked the right product question — does the G2-reproduced verifier
-ensemble (FoVer math step-error **AUROC 0.9131**, `paper_ready=true`) catch
-errors a strong baseline misses, and **generalize beyond math** to code bugs
-and factual hallucinations? Its headline verdict was **"math-only,
-domain-bound"** (exp3576). Reading the underlying artifacts shows that verdict
-is **a contaminated null — the positive control failed** (FALSE_NEGATIVE_RISK,
-CLAUDE.md Reading-Results Discipline):
+`.329` concluded the verifier ensemble is "math-only, domain-bound" (exp3576). `.330` correctly
+diagnosed that null as **contaminated** (degenerate corpora + inert/wrong verifier sets) and set out to
+re-run the test fairly. **`.330` did not finish the job.** Reading the `.330` artifacts via
+`scripts/summarize_artifact.py`:
 
-| .329 exp | domain | ensemble AUROC | best single verifier | model-confidence baseline | what it really means |
-|---|---|---|---|---|---|
-| exp3573 | code | **0.44** (worse than random) | 0.50 (inert) | 0.8992 | code-applicable verifiers **never fired** |
-| exp3574 | facts | **0.50** (inert) | 0.50 (inert) | **1.0 (perfect)** | degenerate corpus + only 2 inert verifiers scored |
+### 1a. The gate cascade broke the centerpiece
 
-Two independent contamination signals:
+| Task | Intended | Actual `.330` outcome |
+|---|---|---|
+| exp3585 build realistic factual corpus | corpus with confidence headroom | `complete` — corpus built (n=200, confidence AUROC 0.4573) |
+| exp3586 score factual-applicable verifiers | per-verifier AUROC table | **`blocked_gate_check_failed`** |
+| exp3587 retrieval/NLI grounding verifier | honest factual signal | `complete` — but **AUROC = 1.0 (IMPLAUSIBLE_PERFECT)** |
+| exp3588 corrected cross-domain re-measurement | **the milestone centerpiece** | **NO ARTIFACT — never ran** |
+| exp3589 additivity / McNemar | second-pair-of-eyes value | **`blocked_gate_check_failed`** (missing exp3588) |
 
-1. **Degenerate corpora.** A model-confidence AUROC of **1.0** on facts (and
-   0.90 on code) is the IMPLAUSIBLE_PERFECT signature: the negatives were
-   trivially separable, so there was **no real headroom** for any verifier to
-   demonstrate value. A null measured where confidence already scores 1.0 is
-   uninformative.
-2. **Inert / wrong verifier set.** Every per-verifier AUROC was exactly **0.50**
-   — the verifiers did not fire. exp3574 scored only `SemanticConsistencyVerifier`
-   + `IsingVerifier`; the actually factual-applicable verifiers
-   (`semantic_energy`, `nla_verifier_v3`,
-   `canonical_answer_vericot_grounding_pilot_v1`, `suppressed_retrieval_probe`,
-   `tier0u/v/w` consistency) were **never in the ensemble**. exp3573's code
-   ensemble at 0.44 likewise means the execution-applicable verifiers
-   (`controlled_invariance_executor_v2`, `executable_monitor_runtime_adapter`,
-   `ast_structure_verifier`) were not scoring the completions.
+**Root cause (the load-bearing operational finding):** the `gated_on` mechanism in
+`scripts/conductor_gates.py:_eval_op` compared exp3585's `corpus_is_realistic` field — emitted as a
+**principle-annotated dict** `{value: true, principle: "..."}` — against the bare expected `true`. The
+`_coerce_gate_value` helper only normalizes `bool/str/int/float`; it does **not** unwrap `{value: ...}`.
+So `{value: true} == true` evaluated False, exp3586 blocked, and the cascade took out exp3588 (the
+centerpiece) and exp3589.
 
-There is also an unresolved internal tension: exp3575 reported "second pair of
-eyes confirmed" (`code_conditional_catch_rate=0.75`) **from an ensemble whose
-code AUROC was 0.44** — a result that cannot both be true under a fair test and
-must be re-derived once the verifiers actually fire.
+> **Forward rule (`.331` design constraint):** ANY field referenced in a downstream `gated_on` block MUST
+> be emitted as a **BARE top-level JSON value** in the upstream artifact (`"corpus_v2_is_realistic": true`),
+> never a `{value, principle}` dict. The `principle:` annotation lives in the task-prompt spec, not in the
+> gated field's stored value. Every `.331` gated field below obeys this. We do NOT modify the conductor.
 
-**So `.329`'s real, defensible findings are narrower than its headline:** the
-FoVer math headline (0.9131, G2-reproduced) stands; the "doesn't generalize"
-claim is **not yet earned** — it was measured against a failed positive control.
-This milestone earns (or refutes) it honestly.
+### 1b. The one factual number that landed is contaminated
 
-### What stands unchanged going into .330
-- **G1–G4 all met; `paper_ready=true`** (FoVer headline reproduced on a clean
-  CI runner, G2 closed). North-star §2.
-- **P0.1 is honest-negative** (energy *selection* has no headroom where
-  self-consistency / strong classical baselines are near-optimal). Do NOT
-  re-test Route-1/Route-2.
-- Hardware: KV260 repeatedly SSH-unreachable (board down), PolarFire reachable,
-  GateMate flash/smoke host-IO hangs (known blocker).
+exp3587 reported `grounding_verifier_auroc = 1.0` and `ensemble_with_grounding_auroc = 1.0`. But the
+corpus `data/realistic_factual_corpus_v1.jsonl` carries only `{question, answer, is_hallucination,
+model_confidence}` — **there is no independent evidence/reference passage to ground against.** A
+retrieval/NLI grounding verifier cannot legitimately reach 1.0 on a corpus with no evidence column; it is
+almost certainly **label-leaking** (or the "retrieval" returned the gold answer). `nli_substrate` was a
+`disclosed_text_statistical_proxy` — no real NLI model was loaded. AUROC = 1.0 on n=200 is exactly the
+`IMPLAUSIBLE_PERFECT` pattern the Adversarial Artifact Verification rule exists to catch.
+
+### 1c. The verdict was synthesized from broken partial data
+
+The `.330` capstone (exp3596) and synthesis (exp3591) emitted "329_null_was_artifact / verifier value
+math_only_earned" — but the centerpiece (exp3588) never ran and the only factual number was a
+contaminated 1.0. **The de-contamination question is STILL OPEN.** `paper_ready` remains true (G1-G4 met;
+the FoVer 0.9131 headline is independent of all of this).
 
 ---
 
-## 2. The three biggest gaps between current state and the PRD vision
+## 2. The `.331` Thesis
 
-The PRD north star is **"escape LLM hallucinations + autonomous directed
-self-learning, energy as ground truth."** Against that:
+> **Finish the de-contamination honestly.** Fix the gate cascade (bare gated fields). Adversarially
+> prove or disprove the exp3587 AUROC = 1.0 leak. Build a factual corpus that carries **independent
+> evidence passages** (the HaluEval QA `knowledge` field) with genuine confidence headroom. Build a
+> **REAL NLI-model** atomic-claim grounding verifier (the HalluSearch / VeriScore SOTA recipe) scored
+> against **held-out** evidence (never the gold label). Then run the centerpiece corrected cross-domain
+> re-measurement that `.330` skipped — math (0.9131, frozen) | code (execution-applicable verifiers) |
+> facts (real grounding verifier) — plus the literature-grounded **math→code PRM-transfer positive
+> control** (arXiv:2506.00027, which measured +4–8 pts and predicts the `.330` code AUROC of 0.44 was a
+> wiring bug, not a real limit), against the **discriminative-fragility falsifier** (ThinkPRM,
+> arXiv:2504.16828).
 
-1. **No working factual-grounding verifier (the core-motivation gap).** Carnot's
-   *entire reason to exist* is catching factual hallucinations, yet `.329` shows
-   the ensemble has **no verifier that fires on factual claims**. Constraint
-   verifiers (SAT/Z3/AST/Ising) structurally cannot check facts. The SOTA recipe
-   (retrieval + atomic-claim NLI entailment, per Mu-SHROOM / HalluSearch) is
-   not yet wired into the ensemble. **This is the milestone's primary build.**
+**Either outcome is genuine learning:**
+- Verifiers fire on a fair test → the "math-only" verdict was a contamination artifact; verifier value
+  generalizes → a broader, stronger paper claim (scoped to measured corpora).
+- Verifiers still don't fire on a genuinely fair test (real NLI, held-out evidence, headroom corpus,
+  applicable verifiers) → "math-only" is **EARNED** — a precise, honest, defensible limitation, with the
+  ThinkPRM discriminative-fragility mechanism as the explanation.
 
-2. **The cross-domain generalization question is unanswered, not answered
-   "no".** A peer EBM judge (arXiv:2505.14999) claims energy verifiers DO
-   generalize OOD — but theirs is *trained* on reasoning-validity, where
-   Carnot's is a fixed constraint ensemble. We must run the fair test (realistic
-   corpora + applicable verifiers) before scoping the paper to "math-only".
-
-3. **The product value prop ("second pair of eyes") is unmeasured under a fair
-   test.** Whether the ensemble is *additive* to a strong model-confidence
-   baseline — catching errors confidence misses — is the genuine commercial
-   claim, and `.329` measured it against a degenerate corpus.
+**Invariants (do NOT regress):** P0.1 stays honest-negative (the Depth-Over-Breadth forcing function is
+retired; do NOT re-test Route-1/Route-2). `paper_ready` stays true (G1∧G2∧G3∧G4). No emojis in public
+docs. Verifier Authenticity Discipline binds every new verifier (implementation must match docstring; no
+np.random features, no sleep-padding, no score-capping; honest name).
 
 ---
 
-## 3. Architecture of the milestone
+## 3. Architecture of the Milestone
 
 ```
-                 .329 NULL (contaminated)
-                 "verifier is math-only"
-                          |
-        +-----------------+------------------+
-        |  Phase A - DE-CONTAMINATE          |
-        |  A1 diagnose the null (positive-   |
-        |     control + verifier-inertia)    |
-        |  A2 build REALISTIC corpora where  |
-        |     confidence is NOT perfect      |
-        +-----------------+------------------+
-                          | realistic, headroom-bearing corpora
-        +-----------------+------------------+
-        |  Phase B - BUILD / WIRE THE        |
-        |  RIGHT VERIFIERS                    |
-        |  B1 score factual-APPLICABLE        |
-        |     verifiers (which fire?)         |
-        |  B2 prototype retrieval/NLI factual-|
-        |     grounding verifier (the gap)    |
-        +-----------------+------------------+
-                          | verifiers that actually fire
-        +-----------------+------------------+
-        |  Phase C - THE FAIR PRODUCT TEST   |
-        |  C1 corrected cross-domain re-      |
-        |     measurement (math|code|facts)   |
-        |  C2 additivity / second-pair-of-eyes|
-        |     vs strong confidence (McNemar)  |
-        +-----------------+------------------+
-                          |
-        +-----------------+------------------+
-        |  Phase D - SELF-LEARNING, SYNTH,   |
-        |  HARDWARE, OPS                      |
-        |  FR-11 . synthesis . G-gate .       |
-        |  KV260/PolarFire/GateMate . capstone|
-        +------------------------------------+
+ Phase 0  -- ops transition --------------------------------------------------
+   exp3597  archive .330 (record cascade + contaminated 1.0) -> activate .331
+
+ Phase 1  -- diagnose & audit (no new science asserted yet) -----------------
+   exp3598  DIAGNOSIS: gate-cascade root cause + adversarial audit of the
+            exp3587 AUROC=1.0 leak + corpus-evidence-gap finding +
+            per-domain applicable-verifier enumeration + bare-gate convention
+
+ Phase 2  -- build the fair factual test apparatus --------------------------
+   exp3599  build factual corpus v2 WITH independent evidence passages
+            (HaluEval QA `knowledge` field) + confidence headroom in (0.5,0.95)
+            -> emits BARE corpus_v2_is_realistic / corpus_v2_has_evidence
+   exp3600  REAL NLI-model atomic-claim grounding verifier (HalluSearch recipe)
+            scored vs HELD-OUT evidence  [gated_on exp3599.corpus_v2_has_evidence]
+
+ Phase 3  -- the fair re-test (the science .330 skipped) --------------------
+   exp3601  CENTERPIECE corrected cross-domain re-measurement:
+            math (0.9131 frozen) | code (exec-applicable verifiers, exp1999) |
+            facts (real grounding verifier, corpus v2)  vs strong confidence
+            baseline, >=3 seeds, CI  [gated_on exp3599.corpus_v2_is_realistic]
+            -> emits BARE positive_control_valid
+   exp3602  math->code PRM-transfer positive control (arXiv:2506.00027) --
+            does the math-trained signal survive the modality jump?
+   exp3603  additivity / McNemar second-pair-of-eyes (fused detector vs
+            confidence)  [gated_on exp3601.positive_control_valid]
+
+ Phase 4  -- self-learning + synthesis --------------------------------------
+   exp3604  FR-11 continuous self-learning v6 -- calibrate the REAL grounding
+            verifier threshold online; conservative-default prevents collapse
+   exp3605  cross-domain synthesis v3 -- the corrected, de-contaminated verdict
+   exp3606  G1-G4 gate-status synthesis v331 (paper_ready preserved)
+
+ Phase 5  -- hardware continuity (mandatory, cheap) -------------------------
+   exp3607  KV260 SSH continuity   exp3608  PolarFire continuity
+   exp3609  GateMate audit-only
+
+ Phase 6  -- capstone -------------------------------------------------------
+   exp3610  Capstone v331 -- was '.329 math-only' a contamination artifact, or
+            EARNED against a genuinely fair test?
 ```
 
-**Either outcome is genuine learning** (and neither re-grinds an answered
-question):
-- *Verifiers fire on realistic corpora and beat/augment confidence* → the
-  `.329` "math-only" verdict was an artifact; the verifier value generalizes →
-  **a broader, stronger paper claim.**
-- *Verifiers still don't fire even with the right set + realistic corpora* →
-  "math-only" is now earned against a valid positive control → **a precise,
-  defensible limitation that honestly scopes the verifier claim** (and motivates
-  the trained-judge direction of arXiv:2505.14999 as future work).
-
----
-
-## 4. Phases and experiments (14 tasks, exp3583–exp3596)
-
-**Phase 0 — ops**
-- exp3583 — archive .329, activate .330.
-
-**Phase A — de-contaminate the .329 null**
-- exp3584 — diagnose the null: confirm corpus degeneracy (confidence AUROC≈1.0)
-  + verifier inertia (per-verifier=0.5); enumerate which verifiers are
-  *applicable* per domain. Positive-control audit (FALSE_NEGATIVE_RISK).
-- exp3585 — build a REALISTIC factual hallucination corpus where
-  model-confidence is NOT a perfect detector (SOTA GGUF generation over
-  TruthfulQA-style / open QA with fact-level labels, or fetch Mu-SHROOM/SHROOM).
-
-**Phase B — build / wire the right verifiers**
-- exp3586 — score the factual-APPLICABLE verifiers on the realistic corpus:
-  which fire (per-verifier AUROC materially > 0.5)? Is the ensemble inert
-  because of composition, or genuinely domain-bound?
-- exp3587 — prototype a retrieval/NLI atomic-claim grounding verifier (the SOTA
-  recipe) and evaluate it vs the confidence baseline on the realistic corpus.
-
-**Phase C — the fair product test**
-- exp3588 — corrected cross-domain re-measurement: math (0.9131) | code | facts,
-  using the per-domain APPLICABLE verifier set + realistic corpora + strong
-  confidence baseline. Honest verdict with a valid positive control.
-- exp3589 — additivity / "second pair of eyes": does ensemble⊕confidence beat
-  confidence alone? Conditional catch-rate + McNemar on realistic corpora.
-  Resolves the exp3575/exp3576 tension.
-
-**Phase D — self-learning, synthesis, hardware, ops**
-- exp3590 — FR-11 continuous self-learning (mandatory): conservative-default on
-  a fresh non-degenerate corpus, optionally calibrating the new factual verifier.
-- exp3591 — cross-domain synthesis v2 + paper-claim scoping (does the corrected
-  test broaden, confirm, or re-scope "math-only"?).
-- exp3592 — G1–G4 gate-status synthesis v330 (paper_ready stays true; record the
-  corrected verifier-generalization result).
-- exp3593 — KV260 SSH continuity (Hardware-Task Continuity).
-- exp3594 — PolarFire opportunistic reachability + continuity audit.
-- exp3595 — GateMate continuity audit (documentation-only; flash/smoke hangs).
-- exp3596 — capstone v330.
-
----
-
-## 5. Dependency graph
+### Dependency graph (gated_on edges use BARE fields only)
 
 ```
-exp3583 (activate)
-   +-> exp3584 (diagnose) --+
-   +-> exp3585 (corpus)  ---+--> exp3586 (score applicable verifiers)
-                                  +-> exp3587 (factual grounding verifier)
-                                         +-> exp3588 (corrected cross-domain)
-                                                +-> exp3589 (additivity / McNemar)
-                                                       +-> exp3591 (synthesis)
-                                                              +-> exp3592 (G-gate)
-                                                                     +-> exp3596 (capstone)
-exp3590 (FR-11)            -- independent (self-learning mandate)
-exp3593/3594/3595 (HW)     -- independent (hardware continuity)
+exp3597 -> exp3598 -> exp3599 --(corpus_v2_has_evidence)--> exp3600
+                         |                                      |
+                         +--(corpus_v2_is_realistic)--> exp3601 + (also reads exp3600)
+                                                            |
+                            exp3602 (independent)           +--(positive_control_valid)--> exp3603
+                                                            |
+   exp3600/3601/3602/3603 -> exp3604, exp3605 -> exp3606 -> exp3610
+   exp3607 / exp3608 / exp3609 (independent hardware)
 ```
 
-Gates: exp3588 gated on exp3586 landing a non-inert verifier signal; exp3589
-gated on exp3588. Corpus-availability handled by in-prompt PRECONDITIONS with
-`blocked_*` fallbacks (not structural gates), so a missing corpus degrades
-gracefully rather than cascade-blocking.
+**Cascade-robustness:** unlike `.330`, gated_on is used only on **bare** boolean fields, and every
+downstream task ALSO carries a `PRECONDITIONS` step that reads the upstream artifact and blocks honestly
+(`blocked_*`) if it is missing — so a single broken edge degrades one row rather than wiping the
+centerpiece. The math row of exp3601 is the frozen exp2837 0.9131 headline (no dependency, always lands).
 
 ---
 
-## 6. Hardware requirements
+## 4. Phase Descriptions
 
-- **CPU-only** for all verifier-scoring + aggregation tasks (the
-  `verifier_ensemble_against_cached_candidates` / `aggregation_from_upstream`
-  substrates — cheap, externally reproducible, no GPU).
-- **GPU / llama.cpp (SOTA GGUF)** ONLY for exp3585 corpus generation if a
-  realistic labeled corpus must be synthesized (precondition-gated; prefers an
-  existing/fetched corpus). MODEL_SPECS use the mandated SOTA GGUFs
-  (`unsloth/Qwen3.6-35B-A3B-GGUF`, `unsloth/gemma-4-31B-it-GGUF`,
-  `unsloth/gemma-4-26B-A4B-it-GGUF`) via `cached_sota_pair()`.
-- **FPGA boards** (KV260 via `ssh kria`, PolarFire via `ssh polarfire`, GateMate
-  via DirtyJTAG): SSH-reachability / detect preconditions only, per the KV260
-  SSH-Not-SD-Card Discipline. No bitstream rebuild this milestone.
+**Phase 1 (diagnose & audit).** Per the FALSE_NEGATIVE_RISK / Reading-Results disciplines, no fair re-test
+can be trusted until the `.330` contamination is characterized. exp3598 confirms the gate-cascade root
+cause, proves the exp3587 1.0 is a leak (the corpus has no evidence column), names the corpus-evidence
+gap, and enumerates the per-domain structurally-applicable verifier sets. Its outputs are the spec every
+Phase-2/3 task consumes.
+
+**Phase 2 (build the apparatus).** The fair test needs two things `.330` lacked: a corpus with
+**independent evidence** (so a grounding verifier has something legitimate to entail against — the
+HaluEval QA `knowledge` passage, held out from the label) and a **real NLI verifier** (a small
+DeBERTa/MiniLM-NLI checkpoint per the HalluSearch / VeriScore recipe, or an honestly-disclosed
+text-statistical proxy if no checkpoint is fetchable — never a fabricated 1.0). exp3600's evidence MUST be
+held out from the gold answer; a verifier that can see the label is not a verifier.
+
+**Phase 3 (the fair re-test).** exp3601 is the centerpiece exp3588 skipped: the math|code|facts
+generalization table, each domain with its applicable verifiers, on headroom-bearing corpora, vs a strong
+confidence baseline, >=3 seeds, bootstrap CI. exp3602 runs the literature's exact positive control
+(math->code PRM transfer) to distinguish "the `.330` code 0.44 was a wiring bug" from "code is genuinely
+hard for Carnot." exp3603 re-derives the additive "second-pair-of-eyes" value with a paired McNemar test.
+
+**Phase 4 (self-learning + synthesis).** exp3604 is the mandatory continuous-self-learning experiment with
+a stated forward difference (online-calibrate the new grounding verifier via the conservative-default
+rule). exp3605/exp3606 synthesize the corrected verdict and confirm the gate status.
+
+**Phase 5 (hardware continuity).** One task per attached board per the Hardware-Task Continuity Discipline
+(KV260 SSH-reachability, PolarFire reachability, GateMate audit-only — the flash/smoke host-IO path hangs
+per known-issues). All audit-cheap.
+
+**Phase 6 (capstone).** The honest milestone headline: was '.329 math-only' a contamination artifact or an
+earned limitation, measured against a genuinely fair test?
 
 ---
 
-## 7. Disciplines honored
+## 5. Hardware Requirements
 
-- **Reading-Results / FALSE_NEGATIVE_RISK** — the milestone exists to supply the
-  positive control the `.329` null lacked.
-- **Adversarial Artifact Verification + Sample-Size Rigor** — all AUROC claims
-  carry n≥100, ≥3 seeds, bootstrap CIs, class balance; surprising results
-  cross-checked.
-- **Inference-Substrate Declaration** — every task declares its substrate.
-- **Pre-Launch Preconditions** — every compute/corpus/hardware resource is
-  checked before use with a `blocked_*` fallback.
-- **Principle-Annotated Artifact Fields** — every required field + gate carries a
-  `principle:`.
-- **Gemini-Default** — all tasks `agent_type: gemini`.
-- **Paper-v6 Narrowing** — synthesis/capstone emit `paper_safe_claims` /
-  `paper_forbidden_claims`; a domain-bound ensemble is a *scoped* claim, never a
-  foundation-model claim; P0.1 stays honest-negative.
-- **Hardware-Task Continuity** — one task per attached board, operator_override
-  on the routine continuations.
-- **Verdict Terminal-Prefix** — every `honest_verdict` starts `complete:`.
+- **exp3599 / exp3600:** RTX 3090 (GPU) for SOTA-GGUF corpus generation/scoring and the NLI checkpoint.
+  Mandated SOTA GGUF (>=1 of `unsloth/Qwen3.6-35B-A3B-GGUF`, `unsloth/gemma-4-31B-it-GGUF`,
+  `unsloth/gemma-4-26B-A4B-it-GGUF`) via `cached_sota_pair()` when live generation is used; PRECONDITIONS
+  block falls back to a fetched public dataset / disclosed proxy rather than fabricating.
+- **exp3601 / exp3602 / exp3603 / exp3604:** CPU — `verifier_ensemble_against_cached_candidates`
+  (score verifiers against cached labeled corpora; no LLM load).
+- **exp3597 / exp3598 / exp3605 / exp3606 / exp3610:** CPU — `aggregation_from_upstream_artifacts`.
+- **exp3607 / exp3608 / exp3609:** SSH-attached boards (`hardware_smoke`). KV260 precondition is SSH
+  reachability ONLY (host `/dev/mmcblk*` checks are permanently retired).
+
+---
+
+## 6. Acceptance / Success Criteria
+
+The milestone succeeds (regardless of the scientific direction) when:
+1. The gate cascade does not recur (every gated field is bare; no `blocked_gate_check_failed` from a
+   dict/bare mismatch).
+2. The exp3587 AUROC = 1.0 is adversarially adjudicated (leak proven or refuted).
+3. A factual corpus with independent held-out evidence + confidence headroom exists and is validated.
+4. The centerpiece corrected cross-domain table (exp3601) actually lands with a `positive_control_valid`
+   verdict.
+5. The math->code positive control (exp3602) returns a verdict that explains the `.330` code 0.44.
+6. The capstone states whether '.329 math-only' was an artifact or earned, with `paper_ready` still true.
+
+---
+
+## 7. Cross-References
+
+- `ops/north-star.md` §1 (headline claim; every milestone advances it or is noise), §2 (G1-G4 gate)
+- `research-references.md` 2026-06-01 sweep (the 9-finding literature scan + the `.330` cascade diagnosis)
+- `scripts/conductor_gates.py:_eval_op` / `_coerce_gate_value` (the dict-vs-bare gate bug)
+- exp3585/3586/3587/3588/3589/3591/3596 (the `.330` artifacts this milestone repairs)
+- exp2837 (FoVer 0.9131 frozen math headline) · exp1999 (HumanEval code corpus)
+- arXiv:2506.00027 (math->code positive control) · 2504.16828 (discriminative-fragility falsifier) ·
+  2504.10168 / 2406.19276 (HalluSearch / VeriScore factual-grounding recipe)
+- CLAUDE.md: Verifier Authenticity · Adversarial Artifact Verification (IMPLAUSIBLE_PERFECT) ·
+  FALSE_NEGATIVE_RISK · Reading-Results · Pre-Launch Preconditions · Hardware-Task Continuity ·
+  Gemini-Default · Principle-Annotated Artifact Fields

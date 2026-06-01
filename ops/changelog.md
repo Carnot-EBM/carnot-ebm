@@ -8021,3 +8021,27 @@ ModuleNotFoundError: No module named 'torch'; results/experiment_2828_fover_memo
 ## 2026-06-01 (Milestone 2026.05.330 Operational Retrospective)
 
 - [outer-loop] Wrote `results/operational_retro_2026_05_330.json` (schema `carnot.operational_retro.v64`). The authoritative timing source reports no experiment commits since activation. Longest compute-bound tasks, GPU utilization efficiency on compute-bound tasks, and DualGPURunner engagement have no data available this milestone. Recommended tooling change: investigate why no experiment commits were found since activation.
+
+## 2026-06-01 (Milestone 2026.06.331 Research Planning — pre-staged roadmap)
+
+- [outer-loop] Planned milestone 2026.06.331 (June calendar-prefix rollover; today UTC 2026-06-01).
+  Wrote `openspec/change-proposals/research-roadmap-vNEXT.md` (design doc) + `research-roadmap-next.yaml`
+  (14 tasks), and prepended a 9-finding literature scan to `research-references.md`.
+- Triggering analysis (reading the .330 artifacts via `scripts/summarize_artifact.py`): .330's
+  de-contamination did NOT finish. A gate cascade — `scripts/conductor_gates.py:_eval_op` compared
+  exp3585's `corpus_is_realistic` emitted as a principle-annotated dict `{value:true,...}` against the
+  bare expected `true` (which `_coerce_gate_value` does not unwrap) — blocked exp3586, so the centerpiece
+  exp3588 (corrected cross-domain re-measurement) NEVER RAN, and exp3589 blocked. The one factual number
+  that landed, exp3587 grounding-verifier AUROC=1.0, is IMPLAUSIBLE_PERFECT contamination: the corpus has
+  no evidence column, so a grounding verifier scoring 1.0 is label-leaking. The .330 capstone
+  "math_only_earned / 329_null_was_artifact" verdict was synthesized from this broken partial data — the
+  de-contamination question is STILL OPEN.
+- .331 design: (1) fix the cascade by emitting every `gated_on` field as a BARE top-level value (no
+  conductor edit); (2) adversarially adjudicate the AUROC=1.0 leak (exp3598); (3) build a factual corpus
+  WITH independent held-out evidence + confidence headroom (exp3599); (4) build a REAL NLI-model grounding
+  verifier scored against held-out evidence per the HalluSearch/VeriScore recipe (exp3600); (5) run the
+  centerpiece corrected cross-domain re-measurement (exp3601) + the literature math→code positive control
+  (exp3602, arXiv:2506.00027) against the ThinkPRM discriminative-fragility falsifier (arXiv:2504.16828).
+  Invariants preserved: paper_ready=true (G1-G4), P0.1 honest-negative.
+- Lint status: `scripts/exclusion_manifest_lint.py research-roadmap-next.yaml` → exit 0 (6 WARNINGs, all
+  with operator_override; 0 HARD). Milestone matches `_expected_next_milestone('2026.05.330')`=2026.06.331.

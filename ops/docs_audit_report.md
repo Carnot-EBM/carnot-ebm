@@ -4,50 +4,48 @@
 # docs_audit_report — 2026-05-31
 
 ## TL;DR (stranger's 30-second take)
-A stranger would instantly close the tab. The page visibly leaks internal temporary file paths into the UI, drowns the reader in unexplained benchmark acronyms, and presents suspiciously perfect metrics (like exactly 2.0x speedups) that destroy any built-up credibility.
+I would bounce immediately because the site looks broken (raw test paths leaking into the text and CSS) and reads like an internal lab notebook. The wall of opaque acronyms and suspiciously perfect evaluation numbers destroy credibility for a stranger.
 
 ## TOP 3 PROBLEMS
-1. Leaked testing file paths (`@.tmp-pytest/...`) visibly rendered in CSS imports and the "Live benchmark" result card.
-2. Perfect/impossible numbers (exactly 2.0x speedup on 2 GPUs, 1.0 TP rate) that signal fabrication.
-3. Impenetrable internal jargon (FoVer, CCTU, SVAMP, experiment IDs) that alienates new users.
+1. Template Leak: Massive test file paths (`@.tmp-pytest/...`) have overwritten `@media` queries, font URLs, and card titles.
+2. Acronym Soup: The Evidence section is buried in unexplained jargon (FoVer, CCTU, SVAMP, PREM, VeriCoT).
+3. Fabrication Signals: Reporting perfectly clean numbers (100% extraction, 60/60 attacks caught, zero false positives) without immediate caveats screams "overfitted" to researchers.
 
 ## DETAILED FINDINGS
 ### Bloat
-- Results grid — 12 cards — cap at 6 to avoid overwhelming the reader.
-- Blog section — 7 cards — cap at 3 to highlight only the most critical posts.
+- Results / Evidence section — 12 result cards — Too dense for a landing page; visitors will skip reading entirely. Suggested cap: 6 most impressive metrics.
+- From the blog section — 7 article cards — Adds unnecessary scroll fatigue. Suggested cap: 3 recent/relevant posts.
 
 ### Internal jargon
-- CSS `<style>` block — `experiment_400.json`, `experiment_3500_kv260_terminal_latency_transcript_v8.json`, `experiment_1238_phase5d_intermediate_scale.json` — raw experiment IDs leaked directly into CSS media queries and font imports.
-- Hero / Stats bar — "FoVer (5-seed dual-condition" — a stranger doesn't know what benchmark or test condition this refers to.
-- Features / Tool use — "CCTU constrained micro-benchmark" — CCTU is an undefined acronym.
-- Features / Test-Time Compute — "Process-Reward Energy Model (PREM)" — introduced without any context or definition.
-- Results / Math reasoning — "EstimationVerifier SVAMP AUC" — unexplained internal component and benchmark.
-- Results / Code repair — "IterativeSelfRepair (HumanEval-50, execute-feedback-retry)" — reads like an internal script argument or class name.
+- Recent progress card — "FoVer", "5-seed dual-condition", "architecture-only" — A stranger has no context for what dataset or method this refers to.
+- Evidence grid — "CCTU", "SVAMP AUC", "VeriCoT equation-style CoT fix", "PRM-BiasBench-style", "HalluGuard v3" — Extremely niche or internal benchmark names that obscure the actual achievement.
+- Features / TTC & PREM card — "PREM variance" — Undefined internal mechanism.
 
 ### Per-milestone narrative
-- Stats Bar (Recent progress) — "Repinned from v2 0.9857 after pre-submission adversarial audit..." — reads like a Jira ticket or commit message instead of product copy.
+- Recent progress card — "Repinned from v2 0.9857 after pre-submission adversarial audit" — This is an internal post-mortem detail, not a hook for new users.
+- Preprint section — "The arXiv submission is prepared but pending operator-initiated upload." — Backlog status reporting shouldn't be public copy.
+- Stats bar — "382 Completed milestones" — A pure vanity metric that only matters to the maintainer.
 
 ### Inconsistencies
-- The hero claims a "0.9131 Verifier AUROC" while the Results section claims a "0.91 AUROC (publication gate)" for a "Prompt-injection classifier". It is unclear if these refer to the same verifier or completely different systems.
-- The claim "Every number below is backed by a checked-in experiment artifact" directly contradicts the leaked `.tmp-pytest` transient file paths visibly rendered in the "Live benchmark" card text.
+- "0.9131 Verifier AUROC" (hero stats) vs "Safety — Prompt-injection classifier 0.91 AUROC" (results). It's ambiguous if the headline metric is for general hallucination or just prompt-injection.
+- The hero claims to catch "mistakes your LLM confidently makes up," but prominent result cards focus on "Safety / Prompt-injection," which is a completely different domain than hallucination.
 
 ### Missing essentials
-- Hardware constraints: The Quickstart mentions running on a "single GPU" but does not specify the VRAM or system requirements needed for the suggested local `Qwen3.5-0.8B` model.
-- Organizational backing: The footer mentions "Ian Blenke" but the text frequently uses "We", leaving it ambiguous who actually maintains the framework and if it's production-ready.
+- What models does it actually support? The intro says "any LLM you can call" but doesn't clarify the requirements or context lengths for the "repair" feedback loop to function.
+- A link or footnote explaining the baseline models for the "+3.0 points on HumanEval" and "+4.9 points on compliance" claims.
 
 ### Fabrication signals
-- Results (Training) — "2.0x speedup, identical losses" — A perfect 2.0x speedup on two GPUs is physically impossible due to interconnect and synchronization overhead.
-- Results (Math extraction) — "TP rate: 0.5 -> 1.0" — A perfect 1.0 (100%) extraction rate on GSM8K is suspiciously perfect.
-- Results (Adversarial audit) — "catches 60/60 attacks" — 100% success on a small n=60 sample size signals overfitting or cherry-picked evaluation data.
+- "Adversarial audit" card: "k=5 ensemble catches 60/60 attacks" — 100% success on adversarial tests looks immediately suspicious.
+- "Math extraction" card: "GSM8K extraction TP rate: 0.5 -> 1.0" — A perfect 1.0 true positive rate on LLM output extraction is highly unbelievable.
+- "Dogfooding by the numbers" blog card: "Zero false positives" — Claiming 0 false positives over 639 runs in static/dynamic code analysis sets off alarm bells for any developer.
 
 ## WHAT'S WORKING
-- The "Extract -> Check -> Repair" Bento grid cleanly and effectively explains the core loop without getting bogged down in math.
-- The Quickstart section is excellent, providing concrete, copy-pasteable Python and Rust snippets that immediately demonstrate the developer experience.
+- The "Extract → Check → Repair" three-step breakdown is highly effective and easy to conceptualize.
+- The Quick Start section with side-by-side Python and Rust tabs clearly demonstrates the dual-language support and low integration effort.
 
 ## RECOMMENDED OPERATOR ACTIONS
-1. Scrub all leaked `@.tmp-pytest/...` and `experiment_*.json` strings from the HTML, CSS media queries, font imports, and Results cards.
-2. Remove or contextualize suspiciously perfect metrics (e.g., change "2.0x speedup" to the actual measured physical speedup like "1.9x").
-3. Replace insider acronyms (FoVer, CCTU, SVAMP) with descriptive generic terms (e.g., "constrained tool-use benchmark").
-4. Prune the Results grid from 12 cards down to the 6 most defensible and impressive claims.
-5. Rewrite the "Recent progress" card to focus on what users can do now, dropping the internal history of version pinning and auditing.
-6. Prune the Blog section to the top 3 posts to reduce page fatigue.
+1. Fix the critical template substitution error that injected `@.tmp-pytest/...` paths into the CSS and result cards.
+2. Purge the Evidence and Features sections of internal acronyms (FoVer, CCTU, SVAMP, PREM); describe the capability rather than the dataset.
+3. Add credibility anchors to the "perfect" numbers (1.0 TP, 60/60) or replace them with more realistic, representative metrics to avoid signaling fabrication.
+4. Reduce the Evidence grid to the 6 most impactful cards to eliminate bloat.
+5. Strip out internal lab-notebook narrative ("Repinned from v2", "pending operator-initiated upload") and focus entirely on user value.
