@@ -176,8 +176,8 @@ tasks:
            RAGTruth, or Mu-SHROOM is fetchable or already cached under data/ or ~/.cache/huggingface/.
       CONCRETE STEPS:
         1. Fetch/load a real evidence-bearing labeled dataset. Build data/realistic_factual_corpus_v3.jsonl with
-           records {question, answer (the MODEL/candidate answer), is_hallucination (0/1), evidence_passage
-           (held-out reference text), model_confidence (sequence logprob or a real confidence signal)}. >= 200
+           records {{question, answer (the MODEL/candidate answer), is_hallucination (0/1), evidence_passage
+           (held-out reference text), model_confidence (sequence logprob or a real confidence signal)}}. >= 200
            records, both classes present. REJECT any placeholder tokens (^[RHQ]\d+$) -- those are the toy tokens
            that produced the .330 AUROC=1.0 leak and the v2 degeneracy.
         2. SANITY GATE A (headroom): confidence AUROC on the corpus MUST be in (0.50, 0.95). <=0.50
@@ -193,7 +193,7 @@ tasks:
       against your own script's honest output poisons the milestone pre-test gate (the .332 exp3612 cascade).
       Run your own test green BEFORE finishing.
       REQUIRED ARTIFACT FIELDS (principle: documents WHY; facts_corpus_validated and facts_corpus_has_evidence
-      MUST be stored as BARE top-level booleans, NOT {value,principle} dicts):
+      MUST be stored as BARE top-level booleans, NOT {{value,principle}} dicts):
         honest_verdict:
           principle: "Terminal prefix for reconciler classification."
         inference_substrate: "aggregation_from_upstream_artifacts (principle: fetches + validates a labeled dataset; no live LLM generation in the headline path)."
@@ -274,7 +274,7 @@ tasks:
         b. The four code-applicable verifiers importable; record any import-inert verifier and continue.
       CONCRETE STEPS:
         1. Assemble the labeled code corpus from exp1999 (>= 50 candidates with correctness labels). Persist
-           data/code_verification_corpus_v1.jsonl with {candidate_code, label, test_outcome}.
+           data/code_verification_corpus_v1.jsonl with {{candidate_code, label, test_outcome}}.
         2. Score the four execution-applicable verifiers on each candidate. ASSERT they fired: code_verifiers_
            fire = (n_scored > 0 AND score variance > 0). If they do not fire, DIAGNOSE why (interface mismatch?
            sandbox?) and report code_verifiers_fire=false honestly -- do NOT fabricate scores.
@@ -378,8 +378,8 @@ tasks:
         c. Code row: if results/experiment_3641 code_verifiers_fire==true, RUN it on code_corpus_path; else mark
            the code row "blocked_code_verifiers" and continue.
       CONCRETE STEPS:
-        1. Build the generalization table: rows = {math (0.9131, frozen), code (execution-applicable verifiers
-           on exp3641 corpus), facts (real NLI grounding verifier on exp3640 corpus)}. Each row: ensemble AUROC
+        1. Build the generalization table: rows = {{math (0.9131, frozen), code (execution-applicable verifiers
+           on exp3641 corpus), facts (real NLI grounding verifier on exp3640 corpus)}}. Each row: ensemble AUROC
            + CI, confidence-baseline AUROC + CI, ensemble-minus-confidence delta + paired CI.
         2. >=3 seeds per row that runs; bootstrap CI; class balance recorded per row.
         3. Per-domain honest verdict: generalizes (ensemble materially > 0.5 AND >= confidence) / domain-bound
@@ -397,7 +397,7 @@ tasks:
         evidence_excludes_gold_answer_assert:
           principle: "Asserts the retrieved evidence never contains the gold answer -- the explicit guard against the exp3587 leak."
         generalization_table:
-          principle: "domain -> {ensemble_auroc, confidence_auroc, delta, ci, ran_or_blocked} -- the milestone's central evidence object, measured fairly."
+          principle: "domain -> {{ensemble_auroc, confidence_auroc, delta, ci, ran_or_blocked}} -- the milestone's central evidence object, measured fairly."
         math_ensemble_auroc:
           principle: "The frozen FoVer math headline (0.9131) re-stated as the row baseline."
         code_generalizes:

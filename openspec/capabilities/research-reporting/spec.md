@@ -15043,3 +15043,44 @@ with `honest_verdict` beginning with `complete: archived_v329_contaminated_null`
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-REPORT-3583 | Implemented (`scripts/experiment_3583_archive_v329_activate_v330.py`) | Implemented (`tests/python/test_experiment_3583_archive.py`) |
+
+### REQ-REPORT-3638: Archive V333 Gemini Quota Wipeout And Activate V334
+
+The Exp 3638 workflow shall archive milestone `2026.06.333` by recording the
+gemini quota-exhaustion failure as a total infrastructure wipeout, not as a
+scientific null result. It shall confirm that `research-roadmap.yaml` has
+`2026.06.334` active and write
+`results/experiment_3638_archive_v333_activate_v334.json` with the required
+transition fields: `honest_verdict`, `inference_substrate`,
+`v333_outcome_recorded_as`, `gemini_quota_crash_cascade_recorded`,
+`cross_domain_question_still_open`, `paper_ready_preserved`,
+`p01_status_preserved`, `n_tasks_archived`, `random_seed`,
+`reproducibility_checksum`, and `duration_s`.
+
+The workflow MUST be aggregation-only. It MUST NOT run model inference,
+hardware commands, the conductor, pushes, or modify
+`scripts/research_conductor.py`, `ops/status.md`, `ops/changelog.md`, or
+`_bmad/traceability.md`. It SHALL record that the Exp 3624 archive task itself
+never landed an artifact, so the existing `.332` full archive may be a
+leftover. It SHALL update or append the `2026.06.333` entry in
+`research-complete.yaml` so all 14 `.333` planned tasks are archived as failed
+with zero landed artifacts.
+
+#### SCENARIO-REPORT-3638: V333 Wipeout Opens V334 Without False Null
+
+**Given** `research-roadmap.yaml` is active for `2026.06.334`, the conductor log
+contains the `.333` gemini-cli `.js:345500:14` crash cascade, and no
+`results/experiment_3624..3637` artifacts exist
+**When** the Exp 3638 workflow runs
+**Then** it writes `results/experiment_3638_archive_v333_activate_v334.json`
+with `n_tasks_archived=14`, preserves `paper_ready=true` and P0.1
+`honest-negative`, marks the cross-domain question still open, records the
+Exp 3624 leftover warning, updates `research-complete.yaml` honestly for
+`2026.06.333`, and emits the terminal verdict
+`complete: archived_v333_gemini_quota_total_wipeout_zero_artifacts_cross_domain_question_still_open_v334_active_paper_ready_true`.
+
+## Implementation Status (REQ-REPORT-3638)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-3638 | Implemented (`python/carnot/reporting/archive_v333_activate_v334_3638.py`) | Implemented (`tests/python/test_experiment_3638_archive_v333_activate_v334.py`) |
