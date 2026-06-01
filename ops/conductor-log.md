@@ -7504,3 +7504,6 @@ web search: https://docs.garak.ai/garak/examples/pr |
 | 2026-06-01 07:39 UTC | Capstone v333 + G1-G4 gate synthesis — was '.329 m | FAIL | Gemini CLI error: T.js:345500:14)
     at async file:///usr/lib/node_modules/@g |
 | 2026-06-01 08:02 UTC | Plan milestone 2026.06.334 | OK | 14 tasks proposed |
+| 2026-06-01 08:04 UTC | Capstone v333 + G1-G4 gate synthesis — was '.329 m | FAIL | Gemini CLI error: T.js:345500:14)
+    at async file:///usr/lib/node_modules/@g |
+| 2026-06-01 08:06 UTC | Milestone 2026.06.334 activated | OK | 14 tasks queued |
