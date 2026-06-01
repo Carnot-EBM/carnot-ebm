@@ -3928,3 +3928,27 @@ TERMINAL VERDICT: "complete: gatemate_continuity_audit_recorded_flash_smoke_host
 **Then:** It writes `results/experiment_3579_gatemate_continuity_audit_v16.json` with the required artifact fields.
 
 **Implementation status:** Implemented (Exp 3579)
+
+### REQ-FPGA-KV260-CONTINUITY-V17
+
+**Title:** KV260 continuity MUST be audited using ONLY SSH reachability
+
+**Description:**
+Experiment 3593 MUST perform a KV260 hardware-task continuity audit. It MUST use ONLY SSH reachability (`ssh -o ConnectTimeout=5 -o BatchMode=yes kria 'true'`) as the precondition. The host SD-card device checks are strictly forbidden per the KV260 SSH-Not-SD-Card Discipline.
+
+- If reachable, it MUST run `ssh kria 'xmutil listapps'` and record the overlay continuity state.
+- If unreachable, it MUST record `honest_verdict: "complete: blocked_kv260_ssh_unreachable"` and not fail the test script.
+
+**Acceptance Criteria:**
+- `results/experiment_3593_kv260_continuity_v17.json` is generated.
+- The artifact records `honest_verdict`, `inference_substrate: "hardware_smoke"`, `preconditions_checked`, `kv260_ssh_reachable`, `kv260_overlay_loaded` (if reachable), `random_seed`, `reproducibility_checksum`, and `duration_s`.
+
+### SCENARIO-HW-3593
+
+**Scenario:** KV260 continuity is audited via SSH reachability only.
+
+**Given:** A KV260 continuity audit is required for the milestone.
+**When:** The script checks SSH reachability (`ssh -o ConnectTimeout=5 -o BatchMode=yes kria 'true'`) and, if reachable, records the overlay state.
+**Then:** It writes `results/experiment_3593_kv260_continuity_v17.json` with the required artifact fields.
+
+**Implementation status:** Pending
