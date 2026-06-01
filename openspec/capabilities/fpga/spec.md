@@ -4144,6 +4144,62 @@ when reachable, field principles, deterministic seed, checksum, and duration.
 
 ---
 
+### REQ-HW-3650
+
+**Title:** GateMate continuity audit v21 records openFPGALoader state without running flash smoke host IO
+
+**Description:**
+Experiment 3650 MUST perform the milestone GateMate visibility audit without
+running the known hanging flash/smoke host-IO path. The only permitted hardware
+probe is the JTAG detect precondition:
+
+1. Run `command -v openFPGALoader`.
+2. Only if that command succeeds, run
+   `timeout --kill-after=2s 5s openFPGALoader -c dirtyJtag --detect`.
+3. Stop after recording the installed/detect state and the known blocker.
+
+The artifact MUST NOT claim a flash or host-visible smoke pass. A successful
+GateMate IDCODE detect only proves JTAG visibility for the audit.
+
+**Acceptance criteria:**
+- `results/experiment_3650_gatemate_continuity_audit_v21.json` is generated.
+- The artifact includes `honest_verdict`, `inference_substrate`,
+  `openfpgaloader_installed`, `gatemate_idcode_detected`, `known_blocker`,
+  `random_seed`, `reproducibility_checksum`, and `duration_s`.
+- The artifact includes field-principle annotations for each required field,
+  documenting why the value exists rather than only restating the field name.
+- `honest_verdict` MUST be
+  `"complete: gatemate_continuity_audit_recorded_openfpgaloader_state_flash_smoke_host_io_hang_known_blocker"`.
+- `inference_substrate` MUST be `"hardware_smoke"`.
+- If `command -v openFPGALoader` fails, `openfpgaloader_installed` MUST be
+  `false`, `gatemate_idcode_detected` MUST be `null`, and the detect command
+  MUST NOT run.
+- If the detect command runs and exits non-zero or times out,
+  `gatemate_idcode_detected` MUST be `false` and the artifact MUST name the
+  missing-tool or detect blocker together with the flash/smoke host-IO hang.
+- No implementation or test path may invoke GateMate flash programming or the
+  hanging host-IO smoke script.
+
+**Implementation status:** Pending (Exp 3650)
+
+---
+
+### SCENARIO-HW-3650
+
+**Scenario:** GateMate continuity v21 audits JTAG detect state and preserves the host-IO blocker.
+
+**Given:** A GateMate continuity audit is required for milestone 2026.06.334.
+**When:** Experiment 3650 checks for `openFPGALoader`, optionally runs the bounded
+DirtyJTAG detect command, and avoids all flash/smoke host-IO commands.
+**Then:** It writes `results/experiment_3650_gatemate_continuity_audit_v21.json`
+with the terminal verdict, openFPGALoader installed state, IDCODE detect result,
+known blocker, field principles, deterministic seed, checksum, and duration.
+
+**Implementation status:** Pending (Exp 3650)
+
+
+---
+
 ### REQ-HW-081
 
 **Title:** PolarFire Continuity Check v18
