@@ -1219,3 +1219,15 @@ Carnot MUST provide an evaluation script that runs a subset of ConstraintBench t
 **Given** the script `scripts/experiment_3389_constraintbench.py` is executed
 **When** the evaluation completes
 **Then** it MUST write an artifact to `results/experiment_3389_constraintbench.json` containing the evaluation metrics for both AR and VGB repair loops.
+
+### REQ-BENCH-3585: Realistic Factual Corpus with Headroom
+
+- REQ-BENCH-3585-1: The corpus generation shall retrieve realistic QA pairs (e.g. HaluEval).
+- REQ-BENCH-3585-2: The model confidence for each pair shall be generated using a SOTA GGUF model via `cached_sota_pair`.
+- REQ-BENCH-3585-3: The sequence logprob / model-confidence AUROC shall be materially < 0.95 to ensure the corpus provides headroom for verifier benchmarking.
+
+#### SCENARIO-BENCH-3585-1: Corpus Generation produces realistic headroom
+**Given** the generation script `experiment_3585_realistic_factual_corpus.py`
+**When** the corpus is generated and scored
+**Then** the confidence baseline AUROC must be `< 0.95`.
+
