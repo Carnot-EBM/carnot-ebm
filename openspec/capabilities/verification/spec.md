@@ -9597,6 +9597,71 @@ dependency-aware recovery without hard-coding a single success verdict.
 |---|---|---|
 | REQ-VERIFY-3656 | Implemented (`python/carnot/verify/correlation_aware_weighting_paradox_diagnosis.py`, `scripts/experiment_3656_correlation_aware_weighting_paradox_diagnosis.py`) | Implemented (`tests/python/test_experiment_3656_correlation_aware_weighting_paradox_diagnosis.py`) |
 
+### REQ-VERIFY-3667: Clean Dependency-Aware Weighting Significance Rerun
+
+The repository shall provide an Exp 3667 workflow that reruns the Exp 3656
+dependency-aware FoVer weighting finding without aliased AUROC fields and writes
+`results/experiment_3667_dependency_aware_weighting_clean.json` without live LLM
+inference or model-weight loading. The workflow SHALL first verify that the
+FoVer corpus, the four Exp 2837 scoring verifier paths, the Exp 3644 correlation
+artifact, and the Exp 3656 dependency-aware implementation are loadable. If any
+precondition is unavailable, it SHALL write the terminal verdict
+`complete: blocked_fover_corpus_or_dependency_weighting_unavailable`.
+
+For runnable inputs, the workflow SHALL compute the weighting panel on the same
+FoVer corpus split for unweighted, Weaver-style, Carnot-current, and proper
+dependency-aware weighting. It SHALL store each conceptually distinct AUROC
+under exactly one top-level field: `auroc_unweighted`, `auroc_weaver_style`,
+`auroc_carnot_current`, and `auroc_dependency_aware_proper`. It SHALL NOT store
+the same AUROC value under two different top-level numeric field names; if two
+weighting schemes genuinely tie, the workflow SHALL report one numeric field for
+the tied scheme family plus a note rather than duplicating the value.
+
+The workflow SHALL run at least five deterministic seeds and compute bootstrap
+confidence intervals for each AUROC, plus a paired bootstrap CI for
+dependency-aware minus Carnot-current AUROC on the same rows. It SHALL run a
+paired DeLong test for dependency-aware versus Carnot-current AUROC and report
+the p-value. The workflow SHALL set `dependency_aware_beats_carnot` as a bare
+top-level boolean that is true only when dependency-aware AUROC is greater than
+Carnot-current AUROC, the paired delta CI excludes zero, and the DeLong p-value
+is below `0.05`.
+
+The workflow SHALL run `scripts/adversarial_verify.py` against its own artifact
+after writing the measured fields and SHALL set `adversarial_verify_clean=true`
+only when no TAUTOLOGY or critical flag is present. The acceptance gate SHALL
+require `adversarial_verify_clean == true`, `auroc_dependency_aware_proper`
+present, and `delong_p_dependency_vs_carnot` present. The terminal verdict SHALL
+be one of
+`complete: dependency_aware_weighting_beats_carnot_clean_significant_headline_candidate`,
+`complete: dependency_aware_weighting_no_significant_gain_clean_carnot_weighting_sufficient`,
+or `complete: blocked_fover_corpus_or_dependency_weighting_unavailable`.
+
+The terminal artifact SHALL include `honest_verdict`, `inference_substrate`,
+`auroc_unweighted`, `auroc_weaver_style`, `auroc_carnot_current`,
+`auroc_dependency_aware_proper`, `dependency_aware_vs_carnot_delta_ci`,
+`delong_p_dependency_vs_carnot`, `adversarial_verify_clean`,
+`dependency_aware_beats_carnot`, `n_examples`, `n_seeds`, `random_seed`,
+`reproducibility_checksum`, and `duration_s`, with principle annotations for
+each required field and enough diagnostic fields to audit the seed panel,
+bootstrap intervals, DeLong standard error, score checksums, and verifier names.
+
+### SCENARIO-VERIFY-3667: Clean Significance Gate Avoids AUROC Aliasing
+
+Given a FoVer-style fixture with four verifier score columns, binary labels, and
+prior Exp 3644 metadata, when the Exp 3667 workflow builds its artifact, then it
+reports exactly one top-level numeric AUROC field for each required weighting
+scheme, includes at least five seed replicates, reports bootstrap AUROC CIs,
+reports a paired dependency-aware-minus-Carnot delta CI, reports a paired DeLong
+p-value, stores `dependency_aware_beats_carnot` as a bare boolean, and
+classifies the terminal verdict across significant win, clean non-significant
+gain, or blocked outcomes without hard-coding a single success string.
+
+## Implementation Status (REQ-VERIFY-3667)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-VERIFY-3667 | Implemented (`python/carnot/verify/dependency_aware_weighting_clean.py`, `scripts/experiment_3667_dependency_aware_weighting_clean.py`) | Implemented (`tests/python/test_experiment_3667_dependency_aware_weighting_clean.py`) |
+
 ### REQ-VERIFY-3646: Trained EBM Judge OOD Counterpoint V2
 
 The repository shall provide an Exp 3646 workflow that trains a small

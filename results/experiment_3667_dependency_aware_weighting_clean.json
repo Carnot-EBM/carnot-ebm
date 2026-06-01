@@ -1,0 +1,277 @@
+{
+  "acceptance_gate": {
+    "condition": "adversarial_verify_clean == true AND auroc_dependency_aware_proper present AND delong_p_dependency_vs_carnot present",
+    "passed": true,
+    "principle": "A headline-advancement candidate requires a de-flagged artifact with measured AUROC and significance evidence."
+  },
+  "adversarial_verify_clean": true,
+  "adversarial_verify_report": {
+    "flag_count": 0,
+    "flags": [],
+    "max_severity": -1
+  },
+  "artifact": "experiment_3667_dependency_aware_weighting_clean",
+  "auroc_bootstrap": {
+    "carnot_current": {
+      "bootstrap_seeds": [
+        3667,
+        3668,
+        3669,
+        3670,
+        3671
+      ],
+      "ci95": [
+        0.900132,
+        0.93808
+      ],
+      "n_bootstrap_per_seed": 200,
+      "point": 0.919446,
+      "seed_mean_aurocs": [
+        0.919471,
+        0.919848,
+        0.919369,
+        0.919425,
+        0.919433
+      ]
+    },
+    "dependency_aware_proper": {
+      "bootstrap_seeds": [
+        3667,
+        3668,
+        3669,
+        3670,
+        3671
+      ],
+      "ci95": [
+        0.916555,
+        0.949471
+      ],
+      "n_bootstrap_per_seed": 200,
+      "point": 0.933238,
+      "seed_mean_aurocs": [
+        0.933474,
+        0.933461,
+        0.933249,
+        0.932979,
+        0.932813
+      ]
+    },
+    "unweighted": {
+      "bootstrap_seeds": [
+        3667,
+        3668,
+        3669,
+        3670,
+        3671
+      ],
+      "ci95": [
+        0.705498,
+        0.769374
+      ],
+      "n_bootstrap_per_seed": 200,
+      "point": 0.736244,
+      "seed_mean_aurocs": [
+        0.735683,
+        0.736461,
+        0.736115,
+        0.737188,
+        0.735943
+      ]
+    },
+    "weaver_style": {
+      "bootstrap_seeds": [
+        3667,
+        3668,
+        3669,
+        3670,
+        3671
+      ],
+      "ci95": [
+        0.848256,
+        0.895365
+      ],
+      "n_bootstrap_per_seed": 200,
+      "point": 0.87158,
+      "seed_mean_aurocs": [
+        0.871967,
+        0.872146,
+        0.871488,
+        0.871264,
+        0.871444
+      ]
+    }
+  },
+  "auroc_carnot_current": 0.919446,
+  "auroc_dependency_aware_proper": 0.933238,
+  "auroc_unweighted": 0.736244,
+  "auroc_weaver_style": 0.87158,
+  "bootstrap_seeds": [
+    3667,
+    3668,
+    3669,
+    3670,
+    3671
+  ],
+  "corpus_random_seed": 3644,
+  "de_tautology_note": "Each conceptually distinct AUROC is stored under exactly one top-level field; no exp3656 correlation-aware alias is emitted.",
+  "delong_dependency_vs_carnot": {
+    "auc_carnot_current": 0.919446,
+    "auc_dependency_aware_proper": 0.933238,
+    "auc_difference": 0.013792,
+    "method": "paired_delong_auc_two_sided",
+    "p_value": 8.7e-05,
+    "standard_error": 0.003514,
+    "z_value": 3.924946
+  },
+  "delong_p_dependency_vs_carnot": 8.7e-05,
+  "dependency_aware_beats_carnot": true,
+  "dependency_aware_training_protocol": {
+    "dependency_reference": "Learning Dependency Structures for Weak Supervision Models (arXiv:1903.05844)",
+    "folds": 5,
+    "learned_on_labels": true,
+    "method": "stratified_crossfit_graph_sparse_signed_fisher_weights"
+  },
+  "dependency_aware_vs_carnot_delta_ci": {
+    "bootstrap_seeds": [
+      3667,
+      3668,
+      3669,
+      3670,
+      3671
+    ],
+    "ci95": [
+      0.006723,
+      0.020468
+    ],
+    "n_bootstrap_per_seed": 200,
+    "point": 0.013792,
+    "seed_mean_deltas": [
+      0.014003,
+      0.013613,
+      0.013879,
+      0.013554,
+      0.01338
+    ]
+  },
+  "duration_s": 1.559763,
+  "exp3644_source": {
+    "baseline_reproduction": {
+      "all_baselines_match_prior": true,
+      "auroc_delta_correlation_aware_vs_weaver": -0.236268,
+      "computed_from_current_scores": {
+        "auroc_delta_correlation_aware_vs_weaver": -0.236268,
+        "ensemble_auroc_carnot": 0.919446,
+        "ensemble_auroc_correlation_aware": 0.635312,
+        "ensemble_auroc_unweighted": 0.736244,
+        "ensemble_auroc_weaver_style": 0.87158
+      },
+      "ensemble_auroc_carnot": 0.919446,
+      "ensemble_auroc_correlation_aware": 0.635312,
+      "ensemble_auroc_unweighted": 0.736244,
+      "ensemble_auroc_weaver_style": 0.87158,
+      "matches_prior_exp3644": {
+        "auroc_delta_correlation_aware_vs_weaver": true,
+        "ensemble_auroc_carnot": true,
+        "ensemble_auroc_correlation_aware": true,
+        "ensemble_auroc_unweighted": true,
+        "ensemble_auroc_weaver_style": true
+      }
+    },
+    "path": "results/experiment_3644_weaver_peer_comparison_v3.json"
+  },
+  "field_principles": {
+    "adversarial_verify_clean": "True iff the artifact passes adversarial_verify with no TAUTOLOGY/critical flag -- de-flags the exp3656 finding.",
+    "auroc_carnot_current": "Carnot's current weighting (~0.919) -- the bar; one field, no alias.",
+    "auroc_dependency_aware_proper": "The arXiv:1903.05844 learned-dependency-structure weighting -- the candidate; one field, no alias.",
+    "auroc_unweighted": "Baseline -- one field, no alias.",
+    "auroc_weaver_style": "Weaver weak-supervision weighting (arXiv:2506.18203) -- one field, no alias.",
+    "delong_p_dependency_vs_carnot": "DeLong paired significance of the AUROC difference -- a point estimate alone is not enough to move a headline.",
+    "dependency_aware_beats_carnot": "BARE bool. True iff dependency-aware AUROC > Carnot AND the delta CI excludes 0 AND DeLong p<0.05 -- the headline-advancement-candidate gate.",
+    "dependency_aware_vs_carnot_delta_ci": "Paired delta + bootstrap CI of dependency-aware minus Carnot -- the headline-advancement magnitude.",
+    "duration_s": "Plausibility floor.",
+    "honest_verdict": "Terminal prefix for reconciler classification.",
+    "inference_substrate": "verifier_ensemble_against_cached_candidates (principle: scores the cached FoVer corpus; no LLM load).",
+    "n_examples": "Sample-size rigor (FoVer n>=1000).",
+    "n_seeds": "Replication count (>=5).",
+    "random_seed": "Determinism precondition.",
+    "reproducibility_checksum": "Drift detection."
+  },
+  "honest_verdict": "complete: dependency_aware_weighting_beats_carnot_clean_significant_headline_candidate",
+  "inference_substrate": "verifier_ensemble_against_cached_candidates (principle: scores the cached FoVer corpus; no LLM load).",
+  "n_bootstrap_per_seed": 200,
+  "n_examples": 1000,
+  "n_seeds": 5,
+  "preconditions_checked": [
+    {
+      "available": true,
+      "detail": "line_count=8829; required>=1000",
+      "resource": "fover_corpus"
+    },
+    {
+      "available": true,
+      "detail": "loaded=tier0r_curry_howard,tier0s_arithmetic_gap,tier0u_logical_consistency",
+      "resource": "text_scoring_verifiers"
+    },
+    {
+      "available": true,
+      "detail": "state_files=21; memory_loaded=True",
+      "resource": "fr11_session_memory_verifier"
+    },
+    {
+      "available": true,
+      "detail": "matrix_shape=4x4",
+      "resource": "exp3644_correlation_matrix"
+    },
+    {
+      "available": true,
+      "detail": "dependency graph, crossfit scores, and graph-aware weights importable",
+      "resource": "exp3656_dependency_aware_implementation"
+    }
+  ],
+  "random_seed": 3667,
+  "reproducibility_checksum": "2b46149f61027166a880a77c20b59e0bb4ae6e8140e47f3b8c33b8541827e1c3",
+  "schema": "carnot.dependency_aware_weighting_clean.v1",
+  "seed_panel": [
+    {
+      "auroc_carnot_current": 0.919446,
+      "auroc_dependency_aware_proper": 0.933238,
+      "auroc_unweighted": 0.736244,
+      "auroc_weaver_style": 0.87158,
+      "seed": 3667
+    },
+    {
+      "auroc_carnot_current": 0.919446,
+      "auroc_dependency_aware_proper": 0.934502,
+      "auroc_unweighted": 0.736244,
+      "auroc_weaver_style": 0.87158,
+      "seed": 3668
+    },
+    {
+      "auroc_carnot_current": 0.919446,
+      "auroc_dependency_aware_proper": 0.933252,
+      "auroc_unweighted": 0.736244,
+      "auroc_weaver_style": 0.87158,
+      "seed": 3669
+    },
+    {
+      "auroc_carnot_current": 0.919446,
+      "auroc_dependency_aware_proper": 0.929158,
+      "auroc_unweighted": 0.736244,
+      "auroc_weaver_style": 0.87158,
+      "seed": 3670
+    },
+    {
+      "auroc_carnot_current": 0.919446,
+      "auroc_dependency_aware_proper": 0.932662,
+      "auroc_unweighted": 0.736244,
+      "auroc_weaver_style": 0.87158,
+      "seed": 3671
+    }
+  ],
+  "verifier_names": [
+    "fr11_session_memory",
+    "tier0r_curry_howard",
+    "tier0s_arithmetic_gap",
+    "tier0u_logical_consistency"
+  ]
+}
