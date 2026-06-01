@@ -7385,3 +7385,4 @@ web search: https://docs.garak.ai/garak/examples/pr |
 | 2026-06-01 03:12 UTC | Capstone v331 — was '.329 math-only' a contaminati | OK | 82 passed in 3.54s |
 | 2026-06-01 03:48 UTC | Plan milestone 2026.06.332 | OK | 13 tasks proposed |
 | 2026-06-01 03:51 UTC | Milestone 2026.06.332 activated | OK | 13 tasks queued |
+| 2026-06-01 03:57 UTC | Archive milestone .331 honestly (record that 'math | OK | 82 passed in 4.12s |
