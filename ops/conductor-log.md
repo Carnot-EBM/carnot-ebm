@@ -7367,3 +7367,4 @@ web search: https://docs.garak.ai/garak/examples/pr |
 | 2026-06-01 01:56 UTC | Diagnose the .330 gate cascade + adversarially aud | OK | 82 passed in 4.37s |
 | 2026-06-01 02:06 UTC | Build factual corpus v2 WITH independent held-out  | OK | 84 passed in 5.34s |
 | 2026-06-01 02:08 UTC | Build a REAL NLI-model atomic-claim factual-ground | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp3599-build-factual-corpus-v2-with-evide |
+| 2026-06-01 02:10 UTC | Build a REAL NLI-model atomic-claim factual-ground | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp3599-build-factual-corpus-v2-with-evide |
