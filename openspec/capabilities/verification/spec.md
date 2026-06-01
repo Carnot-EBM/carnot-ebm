@@ -9400,6 +9400,53 @@ terminal verdict for each outcome.
 |---|---|---|
 | REQ-VERIFY-3654 | Planned (`python/carnot/verify/nli_atomic_claim_grounding_verifier.py`, `scripts/experiment_3654_real_nli_atomic_claim_grounding_verifier.py`) | Planned (`tests/python/test_experiment_3654_real_nli_atomic_claim_grounding_verifier.py`) |
 
+### REQ-VERIFY-3655: Facts Row Remeasurement With Real NLI V5
+
+The repository shall provide an Exp 3655 workflow that remeasures the v3 facts
+row using the real Exp 3654 NLI grounding verifier against the confidence
+baseline without leakage. Before scoring, the workflow SHALL require Exp 3654
+to report `nli_grounding_built=true`, `grounding_leak_free=true`, and a
+model-based NLI substrate; otherwise it SHALL emit
+`complete: blocked_nli_grounding_verifier_unavailable_or_leaky` without
+promoting a null result.
+
+For runnable corpora, the workflow SHALL score only the cached Exp 3640 v3
+facts corpus, compute real-NLI grounding AUROC, confidence-baseline AUROC, and
+grounding-minus-confidence paired delta with deterministic bootstrap 95%
+confidence intervals over at least three seeds. It SHALL compute a fixed-FPR
+second-pair-of-eyes comparison: confidence and grounding error-catch decisions
+at the same confidence false-positive-rate budget, the conditional catch rate
+for errors that grounding catches after confidence misses, and exact McNemar
+paired significance for grounding-vs-confidence disagreement on error catches.
+
+The terminal artifact SHALL be
+`results/experiment_3655_facts_row_remeasurement_real_nli_v5.json` and SHALL
+include `honest_verdict`, `inference_substrate`,
+`grounding_auroc_real_nli`, `confidence_baseline_auroc`,
+`grounding_minus_confidence_delta`, `facts_conditional_catch_rate`,
+`mcnemar_p_facts`, a bare top-level `facts_generalize_real_nli` boolean,
+`real_nli_vs_proxy_delta`, a bare top-level `positive_control_valid` boolean,
+`n_examples`, `random_seed`, `reproducibility_checksum`, and `duration_s`.
+`facts_generalize_real_nli` SHALL be true only when the real-NLI grounding
+AUROC materially exceeds chance, is at least the measured confidence baseline,
+the verifier is leak-free, and the positive control is valid.
+
+### SCENARIO-VERIFY-3655: Real NLI Facts Remeasurement Handles Generalizing, Domain-Bound, And Blocked Outcomes
+
+Given realistic synthetic facts fixtures with real-NLI and confidence score
+vectors covering generalizing, domain-bound, and blocked precondition outcomes,
+when the Exp 3655 artifact builder runs, then it emits required bare booleans,
+bootstrap AUROC intervals over at least three seeds, paired delta and McNemar
+statistics, positive-control validity only when confidence has headroom, and
+selects a terminal verdict from the honest outcome instead of hard-coding the
+real corpus verdict.
+
+## Implementation Status (REQ-VERIFY-3655)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-VERIFY-3655 | Planned (`python/carnot/verify/facts_row_remeasurement_real_nli_v5.py`, `scripts/experiment_3655_facts_row_remeasurement_real_nli_v5.py`) | Planned (`tests/python/test_experiment_3655_facts_row_remeasurement_real_nli_v5.py`) |
+
 ### REQ-VERIFY-3643: Additive Second-Pair-Of-Eyes Remeasurement V4
 
 The repository shall provide an Exp 3643 workflow that reads the corrected Exp

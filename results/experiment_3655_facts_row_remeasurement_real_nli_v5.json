@@ -1,0 +1,147 @@
+{
+  "acceptance_gate": {
+    "condition": "grounding_auroc_real_nli present AND confidence_baseline_auroc present AND positive_control_valid == true",
+    "passed": true,
+    "principle": "A corrected facts verdict requires the real verifier fired on a headroom-bearing leak-free corpus vs a measured confidence baseline -- otherwise it repeats the .334 proxy limitation."
+  },
+  "confidence_baseline_auroc": {
+    "bootstrap_seeds": [
+      3655,
+      3656,
+      3657
+    ],
+    "ci95": [
+      0.704045,
+      0.7893
+    ],
+    "n": 500,
+    "n_negative_correct": 250,
+    "n_positive_errors": 250,
+    "point": 0.744576,
+    "score_variance": 0.005802947264,
+    "seed_mean_aurocs": [
+      0.744627,
+      0.743814,
+      0.746079
+    ]
+  },
+  "corpus_path_used": "data/realistic_factual_corpus_v3.jsonl",
+  "duration_s": 14.758074,
+  "evidence_excludes_gold_answer_assert": true,
+  "facts_conditional_catch_rate": {
+    "bootstrap_seeds": [
+      3655,
+      3656,
+      3657
+    ],
+    "ci95": [
+      0.257763,
+      0.539604
+    ],
+    "confidence_error_catch_rate": 0.204,
+    "confidence_realized_fpr": 0.06,
+    "confidence_threshold": 0.690476,
+    "denominator_confidence_missed_errors": 199,
+    "fixed_confidence_fpr": 0.1,
+    "grounding_error_catch_rate": 0.36,
+    "grounding_realized_fpr": 0.1,
+    "grounding_threshold": 0.620414,
+    "mcnemar": {
+      "both_catch_errors": 14,
+      "both_miss_errors": 123,
+      "confidence_only_error_catches": 37,
+      "grounding_only_error_catches": 76,
+      "p_value": 0.00031
+    },
+    "numerator_grounding_catches_confidence_misses": 76,
+    "point": 0.38191,
+    "seed_mean_conditional_catch_rates": [
+      0.388053,
+      0.408905,
+      0.382657
+    ]
+  },
+  "facts_generalize_real_nli": false,
+  "field_principles": {
+    "confidence_baseline_auroc": "The bar to beat (0.7446) -- facts value requires beating confidence.",
+    "duration_s": "Plausibility floor.",
+    "facts_conditional_catch_rate": "Errors the grounding verifier catches that confidence misses -- the facts second-pair-of-eyes signal.",
+    "facts_generalize_real_nli": "BARE bool. True iff the real NLI grounding verifier materially beats 0.5 AND >= confidence baseline, leak-free -- the corrected core-mission answer. STORE AS BARE true/false.",
+    "grounding_auroc_real_nli": "The real NLI grounding signal on facts + CI -- the corrected facts-row number.",
+    "grounding_minus_confidence_delta": "Signed paired delta + CI -- the additive facts value over confidence alone.",
+    "honest_verdict": "Terminal prefix for reconciler classification.",
+    "inference_substrate": "verifier_ensemble_against_cached_candidates (principle: scores the cached v3 corpus; no LLM load).",
+    "mcnemar_p_facts": "Paired significance of the grounding-vs-confidence disagreement (not just a point estimate).",
+    "n_examples": "Sample-size rigor (>=200).",
+    "positive_control_valid": "True iff the verifier fired on a headroom-bearing corpus (confidence < 0.95) leak-free -- a null without this is uninformative.",
+    "random_seed": "Determinism precondition.",
+    "real_nli_vs_proxy_delta": "Did using a real model change the .334 proxy answer (0.6495)? -- the methodological correction.",
+    "reproducibility_checksum": "Drift detection."
+  },
+  "fixed_confidence_fpr": 0.1,
+  "grounding_auroc_real_nli": {
+    "bootstrap_seeds": [
+      3655,
+      3656,
+      3657
+    ],
+    "ci95": [
+      0.700499,
+      0.785209
+    ],
+    "n": 500,
+    "n_negative_correct": 250,
+    "n_positive_errors": 250,
+    "point": 0.743656,
+    "score_variance": 0.15996575191,
+    "seed_mean_aurocs": [
+      0.741913,
+      0.745078,
+      0.743429
+    ]
+  },
+  "grounding_minus_confidence_delta": {
+    "bootstrap_seeds": [
+      3655,
+      3656,
+      3657
+    ],
+    "ci95": [
+      -0.066269,
+      0.06274
+    ],
+    "point": -0.00092,
+    "seed_mean_deltas": [
+      -0.002714,
+      0.001263,
+      -0.002651
+    ]
+  },
+  "honest_outcome": "domain_bound",
+  "honest_verdict": "complete: facts_domain_bound_even_with_real_nli_334_negative_confirmed_earned",
+  "inference_substrate": "verifier_ensemble_against_cached_candidates (principle: scores the cached v3 corpus; no LLM load).",
+  "mcnemar_p_facts": 0.00031,
+  "n_examples": 500,
+  "nli_substrate": "model_based_transformers_checkpoint: cross-encoder/nli-deberta-v3-small on cuda",
+  "ops_docs_reconciliation_left_to_conductor": true,
+  "positive_control_valid": true,
+  "random_seed": 3655,
+  "real_nli_vs_proxy_delta": {
+    "answer_changed": false,
+    "delta": 0.094136,
+    "proxy_auroc": 0.64952,
+    "proxy_verdict": "domain_bound",
+    "real_nli_auroc": 0.743656,
+    "real_nli_verdict": "domain_bound"
+  },
+  "reproducibility_checksum": "03b304849482d2f9",
+  "sample_size_rigor_met": true,
+  "score_path_answer_evidence_only": true,
+  "scripts_research_conductor_modified": false,
+  "source_artifacts": [
+    "results/experiment_3640_build_factual_corpus_v3.json",
+    "results/experiment_3642_corrected_cross_domain_remeasurement_v4.json",
+    "results/experiment_3654_real_nli_atomic_claim_grounding_verifier.json"
+  ],
+  "tests_run": []
+}
