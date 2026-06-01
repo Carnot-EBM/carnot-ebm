@@ -7545,3 +7545,4 @@ web search: https://docs.garak.ai/garak/examples/pr |
 | 2026-06-01 18:58 UTC | Build a REAL factual-hallucination corpus from an  | OK | 94 passed in 4.63s |
 | 2026-06-01 20:02 UTC | Re-measure the FACTS row on a REAL benchmark (RAGT | OK | 94 passed in 5.55s |
 | 2026-06-01 20:19 UTC | SHIP the second-pair-of-eyes detector into the Pha | OK | 164 passed, 1 skipped in 18.30s |
+| 2026-06-01 20:36 UTC | NEW direction — verifier-ensemble SELECTION value  | OK | 93 passed in 4.07s |
