@@ -7528,3 +7528,4 @@ web search: https://docs.garak.ai/garak/examples/pr |
 | 2026-06-01 14:29 UTC | Build a REAL model-based NLI atomic-claim groundin | OK | 94 passed in 4.74s |
 | 2026-06-01 14:48 UTC | Re-measure the FACTS row with the REAL NLI groundi | OK | 91 passed in 4.83s |
 | 2026-06-01 15:05 UTC | Diagnose the correlation-aware weighting PARADOX — | FLAGGED | adversarial_verify CRITICAL: TAUTOLOGY — result quarantined, not a clean success |
+| 2026-06-01 15:23 UTC | Build the deployable 'second pair of eyes' detecto | OK | 93 passed in 4.56s |
