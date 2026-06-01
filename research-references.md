@@ -1,3 +1,83 @@
+## 2026-05-31 Post-.331 Planning Sweep (Milestone 2026.06.332)
+
+`.331` set out (for the THIRD time, after `.329`/`.330`) to answer: **does the verifier ensemble's
+error-detection value generalize beyond MATH, to CODE and FACTS?** It again did NOT finish honestly.
+Read via `scripts/summarize_artifact.py`, the honest `.331` state:
+
+- **The capstone DECLARED "`.329` math-only CONFIRMED / verifier value math_only_earned" — but the
+  non-math rows were BLOCKED, not measured.** This is a FALSE_NEGATIVE_RISK violation (a null asserted
+  with no valid positive control): exp3599 (factual corpus v2) wrote an **empty `{}` artifact** so its
+  `gated_on` fields read `None` → exp3600 (real NLI grounding verifier) and exp3601 (THE centerpiece
+  cross-domain re-measurement) both `blocked_gate_check_failed`; exp3602 (math→code transfer)
+  `blocked_no_labeled_code_corpus` with `verifiers_fired_on_code=false`; exp3603 (additivity/McNemar)
+  never ran. So FACTS and CODE were never fairly measured — only MATH (0.9131, frozen) landed.
+- **The corpus DATA actually exists.** `data/realistic_factual_corpus_v2.jsonl` carries **200 records**
+  with the right schema `{question, answer, is_hallucination, evidence_passage, model_confidence}` and a
+  real held-out evidence column. The `.331` failure was an **artifact-reporting + over-gating cascade**,
+  not an inability to build the apparatus. `.332` can VALIDATE this corpus, emit BARE gated fields (per
+  `feedback_gated_fields_must_be_bare`), and finally RUN the facts row.
+- **exp3598 confirmed the `.330` AUROC=1.0 was a LEAK** (the verifier trivially keyed on the answer string
+  containing 'H', a perfect label-correlate in the toy corpus). The real NLI grounding verifier on a
+  leak-free corpus is the honest replacement.
+- `paper_ready` stays TRUE (G1-G4 met; FoVer 0.9131 headline G2-reproduced on a clean CI runner, run
+  26725185125, independent of the cross-domain question). P0.1 stays **honest-negative** (do NOT re-test
+  energy-vs-AR Route-1/Route-2; Depth-Over-Breadth forcing function retired 2026-05-31).
+
+**`.332` mandate:** finish the de-contamination HONESTLY at last — validate the existing facts corpus +
+emit bare fields, build/label the code corpus so the execution-applicable verifiers actually FIRE, run the
+centerpiece cross-domain re-measurement with a VALID positive control (both non-math rows actually RUN with
+headroom), and — resuming sanctioned NEW research breadth (north-star §retirement) — position Carnot
+against the SOTA weak-verifier-ensemble peer and find the corpora where a verifier genuinely beats
+self-consistency.
+
+### New literature (2025-2026) for `.332`
+
+- **Weaver — Shrinking the Generation-Verification Gap with Weak Verifiers** (arXiv:2506.18203). THE
+  milestone-defining peer: a weighted **weak-verifier ensemble** (uses 15 verifiers, +8.5% over single best;
+  weighted beats unweighted by up to 11.2 pts; 87.7% avg beating o3-mini 86.7%; distills a 400M
+  cross-encoder at 98.2% accuracy / 0.03% compute). Two gaps Carnot can claim as differentiation: (a) **no
+  correlation validation** — Weaver assumes conditional independence given the label and never measures the
+  inter-verifier correlation matrix (Carnot's joint-null-space / orthogonality work); (b) **no online
+  weighting** — fixed weights fit once, no distribution-shift adaptation (Carnot's online-calibration track).
+- **Budget-aware Test-time Scaling via Discriminative Verification** (arXiv:2510.14913). Quantifies WHEN a
+  verifier beats self-consistency: discriminative verification can need up to 8× more compute to MATCH SC;
+  best practical trade-off is a **hybrid (verification + SC)**. Explains Carnot's own P0.1 honest-negative
+  (SC near-optimal on tested corpora) and points to building corpora where **oracle > SC** (the
+  FALSE_NEGATIVE_RISK positive control) as the productive direction.
+- **From Mathematical Reasoning to Code: Generalization of PRMs** (arXiv:2506.00027). Math-trained PRMs
+  transfer to code AS WELL AS OR BETTER than code-trained PRMs (HumanEval+ best-of-8: PRM-Math 91.5% vs
+  PRM-Code 89.0%). The positive control for Carnot's math→code transfer; only success cases tested, so
+  Carnot should stress-test where it breaks.
+- **ThinkPRM — Process Reward Models That Think** (arXiv:2504.16828). Generative long-CoT PRM beats
+  discriminative verifiers OOD by +8% (GPQA-Diamond) / +4.5% (LiveCodeBench). The "discriminative verifiers
+  are OOD-fragile" counter-hypothesis Carnot's energy ensemble must measure itself against.
+- **The Illusion of Progress: Re-evaluating Hallucination Detection** (arXiv:2508.08285). NLI-based
+  atomic-claim checking is the best-calibrated method family (ECE 0.185); token-prob/entropy methods are at
+  chance (41-50% AUROC). Validates the real-NLI-grounding-verifier choice; gives an ECE target + a
+  baseline-family ranking table for the facts domain.
+- **GenPRM — Scaling Test-Time Compute of PRMs via Generative Reasoning** (arXiv:2504.00891) and
+  **GenRM — Reward Modeling as Next-Token Prediction** (arXiv:2408.15240). Generative-verifier references
+  (+16-40% best-of-N) to calibrate whether Carnot's deltas are competitive.
+- **Energy-Based Transformers (EBT)** (arXiv:2507.02092, public code) — energy-as-verifier + System-2
+  gradient-descent inference; +29% inference gain on language, gains GROW further OOD (opposite of the
+  discriminative-PRM fragility story). The architectural cousin to Carnot's Phase-3 endgame; test whether
+  Carnot's ensemble shares EBT's OOD-robustness or PRMs' fragility.
+- **ARM-EBM: Autoregressive LMs are Secretly Energy-Based Models** (arXiv:2512.15605) — exact ARM↔EBM
+  bijection with a closed-form KL distillation-error bound; theory citation for "energy is ground truth".
+- **Probabilistic Computers for Neural Quantum States** (arXiv:2512.24558) + **Training Deep Boltzmann
+  Networks with Sparse Ising Machines** (arXiv:2303.10728). FPGA p-bit Ising sampling at 6,400 spins,
+  ~45B MCMC samples/s, 4-10× over GPU/TPU AT SCALE — the citable high-N anchor that makes Carnot's KV260
+  "POC-simulator for future high-N deployment" framing defensible.
+- **RC²RLHF — Reward Calibration for Continual RLHF** (Springer 2025) + **Predictive Uncertainty for
+  Reducing Catastrophic Forgetting in Online Continual Learning** (arXiv:2407.07668). Memory-buffer-replay
+  + uncertainty-gated updating — concrete anti-collapse mechanisms for Carnot's online verifier-weight
+  calibration (FR-11) track; pairs directly with Weaver's no-online-adaptation gap.
+- **Extropic TSU / XTR-0 / Z1** (vendor + Scale By Tech 2026): XTR-0 dev board (CPU+FPGA+2 TSU sockets)
+  shipped Q3 2025; Z1 production TSU Early Access 2026. The FPGA+TSU socket design makes Carnot's KV260/FPGA
+  Ising work the natural on-ramp; Z1 migration becomes a backend swap.
+
+---
+
 ## 2026-06-01 Post-.330 Planning Sweep (Milestone 2026.06.331)
 
 `.330` set out to DE-CONTAMINATE the `.329` "verifier is math-only, domain-bound" verdict by re-testing
