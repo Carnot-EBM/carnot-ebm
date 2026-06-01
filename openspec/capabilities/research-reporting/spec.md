@@ -15131,3 +15131,70 @@ fields, and emits `complete: gemini_recovered_quota_ok_no_action_needed`.
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-REPORT-3639 | Implemented (`python/carnot/reporting/gemini_cli_quota_crash_resilience_diagnostic_3639.py`) | Implemented (`tests/python/test_experiment_3639_gemini_cli_quota_crash_resilience_diagnostic.py`) |
+
+### REQ-REPORT-3640: Real Evidence Factual Corpus V3 Builder
+
+The Exp 3640 workflow shall build
+`data/realistic_factual_corpus_v3.jsonl` from a real evidence-bearing labeled
+hallucination dataset, preferring the HaluEval QA split with `knowledge`
+evidence, `right_answer`, and `hallucinated_answer` fields. It shall write
+`results/experiment_3640_build_factual_corpus_v3.json` with bare top-level
+gate booleans `facts_corpus_has_evidence` and `facts_corpus_validated`, not
+principle-wrapped dictionaries.
+
+The workflow SHALL check Hugging Face dataset API network reachability before
+fetching. If no evidence-bearing source is fetchable and no cached local source
+exists under `data/` or the Hugging Face cache, it SHALL emit
+`complete: blocked_no_evidence_dataset`. For any built corpus, it SHALL reject
+toy placeholder fields matching `^[RHQ]\d+$`, require at least 200 records with
+both hallucinated and correct classes present, require evidence passages for
+both classes, and verify that evidence passages are shared across paired labels
+instead of class-specific label strings. The confidence baseline AUROC, computed
+with `model_confidence` as a correctness-confidence score, SHALL be strictly in
+`(0.50, 0.95)` for `facts_corpus_validated=true`; otherwise it SHALL emit
+`complete: factual_corpus_v3_built_but_confidence_out_of_band_facts_row_degenerate`.
+
+The artifact SHALL include `honest_verdict`, `inference_substrate`,
+`corpus_path_used`, `corpus_source`, `n_examples`, `n_hallucinated`,
+`n_correct`, `confidence_baseline_auroc_on_corpus`,
+`evidence_independent_of_label`, `placeholder_tokens_rejected`,
+`facts_corpus_has_evidence`, `facts_corpus_validated`, `random_seed`,
+`reproducibility_checksum`, and `duration_s`.
+
+#### SCENARIO-REPORT-3640: HaluEval QA Builds A Valid V3 Corpus
+
+**Given** a HaluEval-style QA source with factual-looking questions, knowledge
+evidence, right answers, and hallucinated answers
+**When** the Exp 3640 workflow builds and validates the corpus
+**Then** it writes at least 200 JSONL records with `question`, `answer`,
+`is_hallucination`, `evidence_passage`, and `model_confidence`
+**And** the artifact emits
+`complete: factual_corpus_v3_built_real_evidence_dataset_confidence_headroom_confirmed_bare_fields_emitted`
+only when confidence AUROC is in `(0.50, 0.95)`, evidence is present and
+paired across both labels, placeholder tokens are absent, and both gated
+booleans are bare JSON booleans.
+
+#### SCENARIO-REPORT-3640-DEGENERATE: Out-Of-Band Confidence Blocks Validation
+
+**Given** a factual-looking evidence source whose confidence signal is
+anti-correlated, chance, or near-perfect
+**When** the Exp 3640 workflow validates the built corpus
+**Then** it keeps the corpus auditable, sets `facts_corpus_validated=false`,
+and emits
+`complete: factual_corpus_v3_built_but_confidence_out_of_band_facts_row_degenerate`
+instead of poisoning downstream gates with a false success.
+
+#### SCENARIO-REPORT-3640-BLOCKED: Missing Evidence Dataset Is Terminal
+
+**Given** the Hugging Face dataset API is unreachable and no cached
+evidence-bearing source exists locally
+**When** the Exp 3640 workflow runs
+**Then** it writes the required artifact schema with zero counts,
+`facts_corpus_has_evidence=false`, `facts_corpus_validated=false`, and
+`honest_verdict=complete: blocked_no_evidence_dataset`.
+
+## Implementation Status (REQ-REPORT-3640)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-3640 | Planned (`scripts/experiment_3640_build_factual_corpus_v3.py`) | Planned (`tests/python/test_experiment_3640_build_factual_corpus_v3.py`) |
