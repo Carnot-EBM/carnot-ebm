@@ -1,0 +1,77 @@
+{
+  "command_probes": {
+    "conductor_env": {
+      "combined_output": "AGENT_TYPE_RETRO=gemini\nAGENT_TYPE=gemini\nGEMINI_FORCE_EXPERIMENTS=1\nAGENT_TYPE_PLANNER=claude\n",
+      "command": "bash -lc 'env | grep -iE '\"'\"'AGENT_TYPE|FORCE_EXPERIMENTS'\"'\"''",
+      "exit_code": 0,
+      "stderr": "",
+      "stdout": "AGENT_TYPE_RETRO=gemini\nAGENT_TYPE=gemini\nGEMINI_FORCE_EXPERIMENTS=1\nAGENT_TYPE_PLANNER=claude\n"
+    },
+    "gemini_reply": {
+      "combined_output": "OK\nWarning: Basic terminal detected (TERM=dumb). Visual rendering will be limited. For the best experience, use a terminal emulator with truecolor support.\nWarning: 256-color support not detected. Using a terminal with at least 256-color support is recommended for a better visual experience.\n",
+      "command": "timeout 60 gemini -m gemini-3.1-pro-preview -p 'Reply OK'",
+      "exit_code": 0,
+      "stderr": "Warning: Basic terminal detected (TERM=dumb). Visual rendering will be limited. For the best experience, use a terminal emulator with truecolor support.\nWarning: 256-color support not detected. Using a terminal with at least 256-color support is recommended for a better visual experience.\n",
+      "stdout": "OK\n"
+    },
+    "gemini_version": {
+      "combined_output": "0.44.0\n",
+      "command": "timeout 30 gemini --version",
+      "exit_code": 0,
+      "stderr": "",
+      "stdout": "0.44.0\n"
+    }
+  },
+  "conductor_coercion_env": {
+    "AGENT_TYPE": "gemini",
+    "AGENT_TYPE_PLANNER": "claude",
+    "AGENT_TYPE_RETRO": "gemini",
+    "CODEX_FORCE_EXPERIMENTS": null,
+    "GEMINI_FORCE_EXPERIMENTS": "1",
+    "raw": "AGENT_TYPE_RETRO=gemini\nAGENT_TYPE=gemini\nGEMINI_FORCE_EXPERIMENTS=1\nAGENT_TYPE_PLANNER=claude\n"
+  },
+  "conductor_unmodified_assert": "scripts/research_conductor.py sha256 unchanged before/after diagnostic; environment was read only and no conductor config writes were performed.",
+  "consecutive_stable_probes": 3,
+  "context_source_checksums": {
+    "CLAUDE.md": "7ef4cd87213dd3e5e3b2421ba98c22f3f5842d83bfe5fe51d232bdeb782c83e5",
+    "results/experiment_3653_backend_state_diagnostic.json": "ae983c66103ff93d11409eb942de913e5d7e854672bf5828a6a286862e8db2fc",
+    "results/experiment_3666_backend_state_diagnostic_v2.json": "98893e8169b220171b477c03622d4f3e181fc4aefd90d9f3ba0e3df43ad64e6c",
+    "scripts/summarize_artifact.py": "50361c21af9ff91b3de374a133219d57981883bbe39b1bea24a2f60db492a117"
+  },
+  "context_sources_read": [
+    "scripts/summarize_artifact.py results/experiment_3653_backend_state_diagnostic.json",
+    "scripts/summarize_artifact.py results/experiment_3666_backend_state_diagnostic_v2.json",
+    "CLAUDE.md Gemini-Default for Experiments"
+  ],
+  "duration_s": 14.5466,
+  "experiment_id": "exp3679",
+  "field_principles": {
+    "conductor_coercion_env": "Records AGENT_TYPE + FORCE_EXPERIMENTS active -- explains why per-task agent_type routes as it does.",
+    "conductor_unmodified_assert": "Asserts this diagnostic did NOT modify research_conductor.py or env.",
+    "consecutive_stable_probes": "Counts consecutive milestones gemini probed OK (was 2 at exp3666); 3+ supports a .338 flip.",
+    "duration_s": "Plausibility floor.",
+    "gemini_cli_version": "Records the installed gemini-cli version so a future upgrade is auditable.",
+    "gemini_quota_state": "ok / quota_exhausted_429 / crash_js_345500 -- whether gemini is stable on a 3rd consecutive probe.",
+    "honest_verdict": "Terminal prefix for reconciler classification.",
+    "inference_substrate": "hardware_smoke (principle: a bounded CLI health probe, not live model inference).",
+    "random_seed": "Determinism precondition.",
+    "recommended_routing": "codex_requires_codex (keep) or gemini_default_eligible_for_v338 -- the operator-actionable recommendation.",
+    "reproducibility_checksum": "Drift detection."
+  },
+  "gemini_cli_version": "0.44.0",
+  "gemini_quota_state": "ok",
+  "honest_verdict": "complete: backend_diagnosed_gemini_stable_3rd_probe_v338_may_flip_to_gemini_default",
+  "inference_substrate": "hardware_smoke",
+  "previous_gemini_probe_states": {
+    "exp3653": "ok",
+    "exp3666": "ok"
+  },
+  "random_seed": 3679,
+  "recommended_routing": "gemini_default_eligible_for_v338",
+  "reproducibility_checksum": "4d294edd343127eaac7d33d019dcfd5bbda29d2eb885985beec4b399b02db1ea",
+  "research_conductor_sha256_after": "4d4e79a1ea787ddc70234a6eae0818c37a94102ed9b8cbf28aecb77e2d9d6936",
+  "research_conductor_sha256_before": "4d4e79a1ea787ddc70234a6eae0818c37a94102ed9b8cbf28aecb77e2d9d6936",
+  "research_conductor_unmodified": true,
+  "schema": "carnot.backend_state_diagnostic.v3",
+  "task_id": "exp3679-backend-state-diagnostic-v3"
+}
