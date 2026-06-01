@@ -1691,3 +1691,8 @@
 | SCENARIO-PREM-004 | Phase 3: Dynamic Test-Time Compute (TTC) Controller | Implemented | results/experiment_2150_ttc_controller.json |
 | REQ-VERIFY-3584 | Exp 3584: Diagnose 329 Null Positive Control | Implemented | results/experiment_3584_diagnose_329_null_positive_control.json |
 | SCENARIO-VERIFY-3584 | Exp 3584: Diagnose 329 Null Positive Control | Implemented | results/experiment_3584_diagnose_329_null_positive_control.json |
+| REQ-BENCH-3585 | Exp 3585: Build a REALISTIC factual hallucination corpus | Implemented | results/experiment_3585_realistic_factual_corpus.json |
+| REQ-BENCH-3585-1 | Exp 3585: Build a REALISTIC factual hallucination corpus | Implemented | results/experiment_3585_realistic_factual_corpus.json |
+| REQ-BENCH-3585-2 | Exp 3585: Build a REALISTIC factual hallucination corpus | Implemented | results/experiment_3585_realistic_factual_corpus.json |
+| REQ-BENCH-3585-3 | Exp 3585: Build a REALISTIC factual hallucination corpus | Implemented | results/experiment_3585_realistic_factual_corpus.json |
+| SCENARIO-BENCH-3585-1 | Exp 3585: Build a REALISTIC factual hallucination corpus | Implemented | results/experiment_3585_realistic_factual_corpus.json |
