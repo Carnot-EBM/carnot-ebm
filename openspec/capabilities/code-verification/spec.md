@@ -2049,3 +2049,35 @@ Exp 3641 workflow builds its artifact, then the terminal `honest_verdict`
 matches the honest fixture state, `code_verifiers_fire` remains a bare boolean,
 the corpus JSONL is written only when labeled source rows exist, and the AUROC
 fields include deterministic confidence intervals.
+
+### REQ-CODE-3658: Balanced Second-Corpus Code Generalization Replication
+
+The repository shall provide an offline Exp 3658 workflow that re-tests the
+Exp 3641 math-to-code verifier transfer claim on a second, balanced code
+corpus without live LLM inference:
+- The workflow builds `data/code_verification_corpus_v2.jsonl` from a cached
+  MBPP, LiveCodeBench, or fresh HumanEval split with per-candidate correctness
+  labels and at least `candidate_code`, `label`, and `test_outcome` fields.
+- The corpus must contain at least 50 labeled examples and both correct and
+  error classes must each represent at least 20% of the rows; otherwise the
+  artifact must report `complete: blocked_no_second_code_corpus`.
+- The four execution-applicable verifier modules from Exp 3641 must be imported
+  and diagnosed, with inert per-candidate interfaces recorded without aborting
+  the run.
+- The artifact must report execution-verifier AUROC, FoVer-math-derived code
+  AUROC, and a confidence baseline AUROC with deterministic bootstrap
+  confidence intervals over at least three random seeds.
+- The top-level `code_generalization_replicates` field must be a bare boolean
+  and may be true only when the balanced second corpus meets the gate, the code
+  verifiers fire with nonconstant scores, and the math-derived signal is
+  consistent with the Exp 3641 transfer result.
+
+### SCENARIO-CODE-3658: Second Corpus Verdicts Cover Replication, Null, Inert, And Blocked
+
+Given synthetic second-corpus fixtures that cover a balanced replication, a
+balanced non-replication, inert verifier scores, and a missing or imbalanced
+corpus, when the Exp 3658 workflow builds its artifact, then the terminal
+`honest_verdict` matches the honest fixture state, `class_balance` records the
+class fractions, `code_generalization_replicates` remains a bare top-level
+boolean, and AUROC fields include deterministic confidence intervals whenever
+the corpus is accepted.
