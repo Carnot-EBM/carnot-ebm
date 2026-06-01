@@ -4,50 +4,47 @@
 # docs_audit_report — 2026-06-01
 
 ## TL;DR (stranger's 30-second take)
-I would close the tab immediately. The page looks like a broken build artifact with raw file test paths leaked into the text and CSS, throws a wall of unexplained acronyms at the reader, and claims multiple perfect "100%" success rates that trigger immediate skepticism. 
+I'd close the tab in 15 seconds. The page looks slick, but I am immediately bombarded with an alphabet soup of unexplained acronyms (FoVer, PREM, CCTU) and a massive wall of 32 different bento/result cards. It reads like an internal sprint retrospective, not a pitch to a prospective user.
 
 ## TOP 3 PROBLEMS
-1. **Broken Template / Leaked Paths** — Raw internal file paths (like `@.tmp-pytest/...`) are injected into the CSS media queries, font URLs, and the "Live benchmark" result card.
-2. **Alphabet Soup Jargon** — The features and results sections are packed with unexplained acronyms (FoVer, CCTU, SVAMP, PRM-BiasBench, PREM, TTC) that mean nothing to an outsider.
-3. **Suspiciously Perfect Numbers** — Claims of exact 2.0x speedups, 1.0 True Positive rates, and 60/60 attack catches look like fabricated or heavily overfitted results without credible context.
+1. **Aggressive Internal Jargon:** The hero section throws "FoVer (5-seed dual-condition)" at me before I even know what the product is.
+2. **Card Bloat:** 12 result cards and 7 capability cards is way too much cognitive load; I will skim none of them.
+3. **Suspiciously Perfect Numbers:** Claiming a "2.0x speedup" and "60/60 attacks" caught makes the entire page look like fabricated marketing fluff.
 
 ## DETAILED FINDINGS
+
 ### Bloat
-- `Results` section — 12 cards — Cap at 6. Twelve cards is visually overwhelming and dilutes the strongest evidence.
-- `Writing` section — 7 cards — Cap at 3. Listing seven blog posts makes this section look like a blog index rather than a curated feature reel.
+- **Overall Page Structure** — 32 total grid cards (Capabilities, Results, Blog, Problem) — Cap at ~12-15 total across the whole page.
+- **Results section** — 12 cards — Cap at 3-4 top-tier, indisputable results. A stranger won't read a dozen micro-benchmarks.
+- **Capabilities section** — 7 bento cards — Condense. Nobody needs a dedicated card for "Research operations" on a tool meant for verifying LLMs.
 
 ### Internal jargon
-- `Features (Test-Time Compute)` — `PREM`, `TTC` — Acronyms with zero prior explanation; "Process-Reward Energy Model" is highly specific terminology.
-- `Features (Typed constraints)` — `CCTU` — Unrecognized micro-benchmark acronym.
-- `Results (Math reasoning)` — `SVAMP`, `FoVer` — Names of niche benchmarks or internal datasets that an outsider cannot contextually anchor.
-- `Results (Math extraction)` — `VeriCoT`, `TP` — Assumes deep familiarity with chain-of-thought literature and confusion matrix abbreviations.
-- `Results (Adversarial audit)` — `PRM-BiasBench-style attacks` — Assumes knowledge of a specific, possibly internal, attack framework.
-- `Results (Live benchmark)` — `@.tmp-pytest/pytest-of-ianblenke/pytest-3/popen-gw0/test_req_verify_2932_run_uses_0/citation_hallucination_field_verifier_2932_raw/spilled-energy-2602-18671:real.txt` — This is a raw leaked internal test file path that completely breaks the fourth wall.
+- **Hero Stats Bar** — "FoVer (5-seed dual-condition; architecture-only 0.8947)" — I have no idea what FoVer is. 
+- **Features / TTC & PREM card** — "Process-Reward Energy Model (PREM) variance" — This reads like localized research dialect. Define PREM or drop it.
+- **Results Grid** — "IterativeSelfRepair", "EstimationVerifier SVAMP AUC", "VeriCoT equation-style CoT", "CCTU constrained micro-benchmark" — You are throwing raw benchmark and class names at me instead of explaining the value.
 
 ### Per-milestone narrative
-- `Hero Stats` — `382 Completed milestones` — A stranger doesn't care about your internal Jira/Milestone tracking velocity.
-- `Hero (Recent progress card)` — `Repinned from v2 0.9857 after pre-submission adversarial audit` — This reads like a copy-pasted internal team update or commit message, not an introduction.
+- **Hero Stats Bar** — "382 Completed milestones" and "3,043 Experiment runs" — These are internal vanity metrics. I don't care how hard your team worked; I care if the tool works.
+- **Preprint section** — "pending operator-initiated upload" — This is literal status-report copy-paste. It doesn't belong on a public landing page.
 
 ### Inconsistencies
-- `AUROC` vs `AUC` — The hero states "0.9131 Verifier AUROC", the safety card says "0.91 AUROC", but the math reasoning card switches to "0.90 AUC".
-- `Qwen models` — The Python quickstart uses `Qwen/Qwen3.5-0.8B`, but the live benchmark card cites an unreleased/hallucinated `Qwen3.6-35B-A3B`.
+- **Identity Crisis** — The hero claims this is an installable `pip` tool ready for production ("catch errors with total confidence"), but the rest of the page lists "FPGA prototypes", "autonomous research loops", and "pending arXiv uploads". Is this an academic science fair project or a reliable software product?
 
 ### Missing essentials
-- `Maintainer credibility` — The footer says "Ian Blenke · Carnot Project", but there is no context on who this is, what the project team is, or why they are credible enough to build this.
+- **Differentiation:** You tell me *how* it works (energy-based), but not *why* I should choose this over existing, well-known guardrail frameworks (e.g., DSPy, NeMo Guardrails, Outlines).
+- **Institution/Backing:** The footer says "Ian Blenke". Is this a solo project? An academic lab? A startup? Without an anchor, the massive claims feel ungrounded.
 
 ### Fabrication signals
-- `1.0 TP Rate` (Math extraction) — `GSM8K extraction TP rate: 0.5 -> 1.0` — A perfect 1.0 true positive rate on a non-trivial benchmark is practically impossible without overfitting.
-- `60/60 attacks` (Adversarial audit) — `k=5 ensemble catches 60/60 attacks` — Perfect 100% defense without mentioning the False Positive Rate looks like a toy evaluation.
-- `2.0x speedup` (Training) — `2.0x speedup, identical losses` — Exactly 2.0x speedup on two GPUs is mathematically perfect linear scaling, which sets off BS detectors for anyone who has done distributed training.
-- `100% meter` (Hardware) — `Ising sampler live on silicon` meter bar is at 100% without a percentage metric to back it up.
+- **"2.0× speedup"** (Results: Two-GPU parallel retrain) — An exactly perfect 2.0x scaling is virtually impossible in real hardware due to overhead. It looks faked.
+- **"60/60 attacks"** (Results: Adversarial audit) — 100% perfect defense against adversarial attacks sets off immediate bullshit detectors.
+- **"TP rate: 0.5 → 1.0"** (Results: Math extraction) — A perfect 1.0 True Positive rate without a credibility anchor implies you either overfit the test set or made the number up.
 
 ## WHAT'S WORKING
-- The one-sentence summary "Catch the reasoning errors your LLM states with total confidence" is strong and clear.
-- The 3-step "Extract -> Check -> Repair" flow is logical, easy to follow, and directly answers how the system operates.
+- The one-sentence pitch: "LLMs predict. They don't check." is fantastic and instantly understandable.
+- The Quickstart section with the Python vs. Rust tab is clean, shows exactly what the API looks like, and immediately grounds the abstract concepts in real code.
 
 ## RECOMMENDED OPERATOR ACTIONS
-1. **Fix Template Injection:** Remove all `@.tmp-pytest/...` paths from the HTML head (fonts), CSS media queries (`@media`), and the "Live benchmark" result card immediately. They are breaking the page render.
-2. **Purge Acronyms:** Replace all niche benchmarks and acronyms (FoVer, CCTU, PREM, TTC) with plain English descriptions (e.g., "internal math reasoning benchmark", "tool-use tests").
-3. **Ground Perfect Numbers:** If 60/60 and 1.0 TP are real, add the denominators or constraints (e.g. "on a 60-prompt internal test set") so they don't look fake. Tone down the 2.0x scaling claim to a realistic figure.
-4. **Trim the Fat:** Cut the blog posts down to the top 3, remove "382 Completed milestones", and rewrite the "Recent progress" card to be a value proposition, not a changelog.
-5. **Add Maintainer Context:** Add a short sentence in the footer or hero about who built this and why they are credible.
+1. **Purge the Stats Bar:** Remove internal metrics (milestones, experiment runs) and move the benchmark jargon to the technical report. 
+2. **Cull the Results Grid:** Drop the 12 cards down to the 4 most impressive, verifiable metrics. Delete anything that claims a 100% or "perfect" score unless heavily caveated.
+3. **De-Jargon the Features:** Rewrite the "TTC & PREM" card in plain English or remove it. 
+4. **Fix the Copy:** Change "pending operator-initiated upload" to "Read the preprint".

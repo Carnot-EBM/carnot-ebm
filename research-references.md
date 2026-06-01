@@ -20268,3 +20268,45 @@ factual-grounding verifier.
   baseline hallucination (so confidence is NOT a perfect detector there — the opposite of the degenerate
   `qa_dataset_1000.json` corpus). These ground the `.330` factual-grounding-verifier design and the
   realistic-corpus build.
+
+## 2026-06-01 Post-.335 Planning Sweep (Milestone 2026.06.336)
+
+`.335` made the FACTS row REAL: it built a model-based NLI atomic-claim grounding verifier (exp3654,
+arXiv:2504.18639 recipe) and re-measured the facts row (exp3655). The earned verdict: **facts is
+domain-bound even with a real NLI verifier** — grounding AUROC 0.7437 (CI [0.70, 0.785]) ~= the
+confidence baseline 0.7446 (delta -0.0009, CI straddles 0). HOWEVER this was on the *synthetic* v3
+corpus, and there is a real complementary signal the AUROC hides: McNemar p=0.00031 and a conditional
+catch-rate ~0.40 (the grounding verifier catches ~40% of the errors confidence misses at fixed FPR).
+Other .335 results: code generalization REPLICATED on a balanced 2nd corpus (exp3658); the
+second-pair-of-eyes detector WINS on math (fused 0.954 vs confidence 0.5, Brier 0.015/ECE 0.020) but is
+weak+uncalibrated on the imbalanced code corpus (0.45, ECE 0.37); the trained-EBM-judge-as-cross-domain-fix
+hypothesis is RETIRED (exp3659 OOD 0.572 < confidence 0.882, same verdict as the .334 toy head). The
+single most exciting lead: **dependency-aware ensemble weighting (exp3656) beat Carnot's current weighting
+on FoVer (0.9326 vs 0.919, +0.013) using the arXiv:1903.05844 learned-dependency-structure recipe** — but
+that artifact was TAUTOLOGY-flagged (a false positive: it stored the same correlation-aware AUROC under two
+field names, `correlation_aware` and `naive_correlation_aware`, both 0.635312). The finding needs a clean
+de-tautologized multi-seed re-run with a DeLong significance test before it can advance the frozen headline.
+
+### New references for .336
+
+- **Weaver: Shrinking the Generation-Verification Gap with Weak Verifiers (arXiv:2506.18203, Stanford
+  Scaling Intelligence Lab, Jun 2025):** weak-supervision weighting of multiple imperfect verifiers reaches
+  87.7% average accuracy, materially over unweighted combination, by estimating each verifier's accuracy and
+  normalizing/filtering outputs. This is the peer framework Carnot's "Weaver-style" baseline approximates
+  (0.872 in exp3644); it motivates the .336 clean dependency-aware weighting re-run.
+- **Learning Dependency Structures for Weak Supervision Models (arXiv:1903.05844):** the label-conditional
+  dependency-graph (junction-tree) recipe exp3656 used to BEAT Carnot's weighting. Re-run cleanly in .336.
+- **Dependency Structure Misspecification in Multi-Source Weak Supervision (arXiv:2106.10302):** companion —
+  why a MIS-specified dependency model (the naive marginal-correlation redundancy penalty, exp3644's -0.236)
+  hurts, and why learning the structure recovers. Directly explains the .334/.335 correlation paradox.
+- **RAGTruth: A Hallucination Corpus for Trustworthy RAG (arXiv:2401.00396) + RAGTruth++ (answer-level
+  hallucination-detection F1 0.776):** a REAL, word-level-annotated factual-hallucination corpus with
+  retrieved context. The .335 facts negative was measured on a SYNTHETIC v3 corpus; RAGTruth is the real
+  benchmark to stress-test whether "facts is domain-bound" is a corpus artifact or genuine. Detection via
+  DeBERTa-v3-base-mnli-fever-anli NLI entailment vs retrieved context — exactly the exp3654 verifier.
+- **HalluLens / HalluScan (arXiv:2605.02443) / FELM / HaluEval (35k samples):** additional real
+  factual-hallucination benchmarks (QA/dialogue/summarization, sentence-level annotations) for cross-corpus
+  facts replication if RAGTruth alone is insufficient.
+- **Think Consistently, Reason Efficiently: Energy-Based Calibration for Implicit CoT (arXiv:2511.07124):**
+  energy-based calibration of reasoning traces — relevant to the deployable detector's calibration (Brier/ECE)
+  and to FR-11 online fusion-weight calibration.

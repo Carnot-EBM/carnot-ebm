@@ -1,153 +1,148 @@
-# Research Roadmap — Milestone 2026.06.335
+# Research Roadmap — Milestone 2026.06.336
 
-**Status:** Proposed (outer-loop / Opus 4.8 pre-staged, 2026-06-01)
-**Milestone doc for:** `research-roadmap-next.yaml` (`milestone: 2026.06.335`)
-**Prior milestone:** 2026.06.334 (the cross-domain de-contamination science that FINALLY ran)
+**Status:** Pre-staged by outer-loop Claude (Opus 4.8), 2026-06-01.
+**Predecessor:** 2026.06.335 (FACTS-made-real milestone — all 14 tasks landed).
+**Milestone doc for:** `research-roadmap-next.yaml` (`milestone: 2026.06.336`)
 
 ---
 
-## 1. What the previous milestone proved
+## 1. What the previous milestone (.335) proved
 
-`.334` was the milestone that — after FIVE stalled attempts (`.329`–`.333`, the last a total
-gemini-quota wipeout) — finally executed the cross-domain de-contamination science, routed entirely to
-**codex (`requires_codex`)** on a verified-working backend. All 14 tasks landed real artifacts. The
-honest scientific outcomes (read via `scripts/summarize_artifact.py`):
+`.335` was the milestone that **made the FACTS row real** and hardened the
+math+code cross-domain scope. All 14 tasks landed real artifacts (codex,
+28/28 clean across .334+.335). Earned outcomes:
 
-| Finding | Evidence | Verdict |
+| Result | Finding | Artifact |
 |---|---|---|
-| The `.329` **"math-only" was a contamination ARTIFACT** | exp3642 centerpiece, valid positive control | `generalizes_to_code_not_facts` |
-| Math headline holds, frozen | exp2837/2850, AUROC **0.9131** | G1 met |
-| **CODE generalizes** | exp3641 verifiers fire; math->code PRM transfer (arXiv:2506.00027) | `code_generalizes=true` |
-| **FACTS does NOT generalize** | grounding AUROC **0.6495** < confidence **0.7446** | `facts_generalize=false` |
-| - but facts used a **text-statistical PROXY, not a real NLI model** | `nli_substrate=disclosed_text_statistical_proxy` | **the #1 gap** |
-| **Second pair of eyes is REAL** | exp3643 fused 0.822 vs confidence 0.536 (delta +0.286) | `fusion_wins` |
-| **Verifier beats SC where headroom exists** | exp3645 oracle 0.867 / SC 0.70 / hybrid 0.767 | `hybrid_wins_under_budget` |
-| **Trained EBM judge does NOT solve OOD** | exp3646 OOD 0.673 < confidence 0.882 (CPU-only, tiny) | `also_math_only` |
-| **Correlation-aware weighting HURT** | exp3644 corr-aware 0.635 << Carnot 0.919 (delta -0.236) | paradox, needs diagnosis |
-| `paper_ready` stays **TRUE** | G1-G4 met; FoVer G2-reproduced on CI run 26725185125 | invariant |
-| P0.1 stays **honest-negative** | Depth-Over-Breadth retired 2026-05-31 | invariant |
+| **Facts row, real NLI** | A real model-based NLI atomic-claim grounding verifier (arXiv:2504.18639 recipe) was built and scored. Facts is **domain-bound even with a real model**: grounding AUROC **0.7437** (CI [0.70,0.785]) ~= confidence baseline **0.7446** (delta -0.0009, CI straddles 0). | exp3654, exp3655 |
+| **...but a complementary catch-signal exists** | At fixed confidence FPR the grounding verifier catches **~40%** of errors confidence misses (McNemar **p=0.00031**) -- AUROC-parity hides real second-pair-of-eyes value. **Measured on a SYNTHETIC v3 corpus.** | exp3655 |
+| **Dependency-aware weighting BEATS Carnot** | Learned label-conditional dependency-structure weighting (arXiv:1903.05844) reached **0.9326** vs Carnot's **0.919** (+0.013) and recovered the -0.236 naive-penalty regression (+0.297). **BUT the artifact was tautology-flagged** (false positive: same AUROC stored under two field names). | exp3656 (flagged) |
+| **Code generalization replicated** | math->code verifier transfer held on a balanced 2nd corpus -- code claim hardened. | exp3658 |
+| **Second-pair-of-eyes detector** | Calibrated fused detector **wins on math** (0.954 vs 0.5 confidence; Brier 0.015/ECE 0.020) but is **weak+uncalibrated on the imbalanced code corpus** (0.45, ECE 0.37). | exp3657 |
+| **Trained judge OOD -- RETIRED** | A real-substrate trained EBM judge ALSO failed OOD (0.572 < confidence 0.882), same verdict as the .334 toy head. `retire_if_same_verdict` fired -> the trained-judge-as-cross-domain-fix hypothesis is retired. | exp3659 |
+| **FR-11 v9** | Online fusion-weight learning held with no collapse, +0.168 AUROC gain. | exp3660 |
+| **Publication gate** | **paper_ready = TRUE.** G1 (FoVer 0.9131, 5-seed, CI), G2 (CI reproducer run 26725185125), G3 (narrowing-clean), G4 (traces to artifacts) ALL met. | exp3664 |
+| **Backend** | gemini quota RECOVERED per a single probe; codex routing proven across 28 tasks. | exp3653 |
 
-**One-line summary:** Verifier value is now defensibly **math + code** (not math-only); the
-second-pair-of-eyes product value is **real and strong**; but **facts** — the original
-escape-LLM-hallucinations mission — has only been tested with a weak text-statistical proxy, the
-trained-judge cross-domain path was under-resourced, and the correlation-aware weighting result is a
-paradox. `paper_ready` is true and must not regress.
+**Strategic position:** the paper is over the line (paper_ready true). Per
+`ops/north-star.md` sec 1, the Depth-Over-Breadth forcing function is retired
+(P0.1 answered honest-negative; G2 closed). The mandate now: **resume research
+breadth toward NEW directions -- the verifier ensemble's discriminating value
+where self-consistency is NOT near-optimal -- while every milestone either
+advances the headline, ships product value, or earns a trustworthy negative.**
 
-## 2. The three biggest gaps between current state and the PRD vision
+---
 
-1. **FACTS is untested with a real grounding verifier (CORE MISSION).** The PRD mission is "escape LLM
-   hallucinations." The one domain that maps directly to factual hallucination — grounding a model
-   answer against held-out evidence — was measured only with a text-statistical token-support proxy
-   (AUROC 0.6495, lost to confidence). The literature recipe (Span-Level / DeBERTa-NLI atomic-claim
-   decomposition, arXiv:2504.18639; FinGround type-routed verification, arXiv:2604.23588) was never
-   tried. **Until a real model-based NLI grounding verifier is measured, "facts does not generalize" is
-   not an earned conclusion.**
+## 2. The three biggest gaps (PRD vision vs current state)
 
-2. **The now-defensible claims are single-corpus / under-resourced.** Code generalization rests on ONE
-   imbalanced corpus (exp3641: 296 errors / 24 correct, n=320). The trained-judge OOD test used a
-   CPU-only tiny numpy head. Both need a second corpus / real substrate before they harden into paper
-   claims.
+1. **The headline AUROC has a live improvement lead that is quarantined.**
+   exp3656 showed dependency-aware weighting beats Carnot's weighting (0.9326 vs
+   0.919) -- the first result in many milestones that could *raise* the headline.
+   It is blocked only by a false-positive tautology flag. Resolving it cleanly
+   (de-tautologized, multi-seed, DeLong, held-out validated) is the single
+   highest-value thing .336 can do toward sec 1 ("raises the AUROC").
 
-3. **The correlation-aware weighting paradox is unresolved.** exp3644 + exp3647 down-weighted "redundant"
-   verifiers and it HURT (-0.236 AUROC). Either inter-verifier correlation is genuinely harmless on this
-   ensemble (refuting the joint-null-space concern), or the redundancy penalty is mis-specified vs proper
-   dependency-aware weak supervision (arXiv:1903.05844). This blocks the Weaver-differentiation claim.
+2. **The facts negative rests on a synthetic corpus.** The core mission is
+   "escape LLM hallucinations." `.335` earned "facts is domain-bound" -- but only
+   on a synthetic v3 corpus where confidence already reached 0.745. The real
+   benchmarks (RAGTruth arXiv:2401.00396, FELM, HaluEval) were never tried. Until
+   the facts verdict is measured on a REAL hallucination corpus, "facts does not
+   generalize" is not fully earned -- and the complementary catch-signal (40% at
+   fixed FPR) hints the AUROC framing may be the wrong lens.
 
-## 3. Milestone theme
+3. **The strongest product result is still an experiment artifact, not a
+   product.** The second-pair-of-eyes detector (exp3657) wins on math and is
+   calibrated, but it is not wired into the shipped Phase-1 surface
+   (pipeline / MCP `score_candidates` / CLI). Phase 1's ship gate is software-
+   operational; turning the validated detector into a deployable, tested API is
+   the product-headline path (north-star sec 1 product advancement).
 
-> **Make the FACTS row REAL, harden the defensible math+code + second-pair-of-eyes claims, and resolve
-> the correlation-aware weighting paradox — without regressing `paper_ready`.**
+---
 
-Every task either (a) advances the headline (extends cross-domain scope or the product detector), or
-(b) closes a measurement gap that the `.334` findings exposed. No `vN+1` re-measurement of an already-
-measured artifact unless it answers a question the prior version did not (north-star section 1).
-
-## 4. Phase structure
+## 3. Milestone architecture (4 phases, 13 tasks)
 
 ```
-Phase A — Transition & backend (exp3652, exp3653)
-  3652 archive .334 / activate .335 (records the math+code+second-pair-of-eyes wins honestly)
-  3653 backend-state diagnostic (probe gemini; recommend routing; science stays on codex)
+Phase 0 -- Transition + routing safety (exp3665, exp3666)
+    archive .335 / activate .336  -->  backend-state diagnostic (gemini stability, 2nd probe)
 
-Phase B — FACTS made real (THE core gap) (exp3654, exp3655)
-  3654 build a REAL model-based NLI atomic-claim grounding verifier (DeBERTa/MiniLM-NLI +
-       SRL/atomic decomposition, arXiv:2504.18639/2604.23588); leak guards; standalone AUROC on v3 corpus
-  3655 re-measure the FACTS row with the real NLI verifier vs confidence — does factual grounding
-       generalize once a real model is used?   [gated_on 3654 nli_grounding_built]
+Phase 1 -- ADVANCE THE HEADLINE (the dependency-aware weighting lead)
+    exp3667 clean de-tautologized dependency-aware weighting (1903.05844 + Weaver 2506.18203)
+              |  dependency_aware_beats_carnot (BARE bool)
+              v
+    exp3668 held-out / cross-split validation (guard against overfitting the weighting)
 
-Phase C — Harden defensible claims + product (exp3656, exp3657, exp3658)
-  3656 diagnose the correlation-aware weighting paradox with dependency-aware weak supervision (1903.05844)
-  3657 build the deployable fused "second pair of eyes" detector (calibrated, per-domain operating points)
-  3658 replicate code generalization on a SECOND balanced code corpus (MBPP/LiveCodeBench)
+Phase 2 -- FACTS ON A REAL BENCHMARK (stress the earned negative)
+    exp3669 build a REAL factual-hallucination corpus (RAGTruth / FELM, evidence+labels+confidence)
+              |  real_factual_corpus_built (BARE bool)
+              v
+    exp3670 re-measure facts row (real NLI verifier exp3654) on the REAL corpus
+              (AUROC + the complementary catch-rate lens; retire_if_same)
 
-Phase D — Foundation-model path + self-learning (exp3659, exp3660)
-  3659 trained-EBM-judge OOD v3 with a REAL model substrate (cached_sota_pair GGUF embedding, GPU)
-       — does a properly-resourced trained judge beat confidence OOD?   [retire_if_same_verdict]
-  3660 FR-11 continuous self-learning v9 — online learning of the FUSION weights per-domain (forward
-       diff from v8's online correlation-aware weighting); collapse control arm mandatory
+Phase 3 -- PRODUCT + SELF-LEARNING + NEW DIRECTION
+    exp3671 ship the second-pair-of-eyes detector into the Phase-1 surface (pipeline/MCP/CLI) + E2E
+    exp3672 NEW DIRECTION -- ensemble selection value where SC is WEAK (flip the P0.1 premise)
+    exp3673 FR-11 v10 -- online dependency-aware verifier weighting (forward diff from v9 fusion)
 
-Phase E — Hardware continuity + capstone (exp3661-exp3664)
-  3661 KV260 SSH-reachability continuity (UNREACHABLE 4 milestones -> operator-action)
-  3662 PolarFire opportunistic continuity
-  3663 GateMate continuity audit (doc-only; openFPGALoader missing)
-  3664 Capstone v335 + G1-G4 gate synthesis (does facts generalize w/ real NLI? paper_ready stays true)
+Phase 4 -- HARDWARE CONTINUITY + CAPSTONE
+    exp3674 KV260 continuity   exp3675 PolarFire continuity   exp3676 GateMate audit
+    exp3677 Capstone v336 + G1-G4 gate synthesis (paper_ready must stay TRUE)
 ```
 
 ### Dependency graph
 
-```
-3652 - 3653 -+- 3654 -- 3655 -----------------------+
-             +- 3656                                  |
-             +- 3657                                  +- 3664 (capstone)
-             +- 3658                                  |
-             +- 3659                                  |
-             +- 3660                                  |
-             +- 3661 / 3662 / 3663 (hardware) --------+
-```
-Only 3655 has a hard `gated_on` (3654's bare `nli_grounding_built`). All other Phase B-E tasks run
-independently and degrade gracefully per the `.334` lesson (never assert a null from a blocked row).
+- exp3668 **gated_on** exp3667.`dependency_aware_beats_carnot == true`
+- exp3670 **gated_on** exp3669.`real_factual_corpus_built == true`
+- exp3677 (capstone) aggregates exp3667/3668/3669/3670/3671/3672/3673
+- All `gated_on` upstream fields are emitted as **BARE scalars**
+  (per `feedback_gated_fields_must_be_bare` -- a `{value,principle}` dict breaks
+  the conductor gate, the .330 cascade).
 
-## 5. Architecture touchpoints
+---
 
-- **`python/carnot/verify/`** — a NEW model-based NLI grounding verifier (exp3654). The leaky
-  `retrieval_nli_grounding_verifier.py` (exp3587 'H'-token proxy) is NOT reused; its substring logic was
-  already deleted in `.334`. The new verifier must invoke a real transformers NLI checkpoint OR carry the
-  explicit `pcib_probe.py`-style disclosure if a real checkpoint is unavailable. Verifier Authenticity
-  Discipline applies (docstring matches implementation; no adversarial gaming).
-- **`python/carnot/pipeline/`** — the fused "second pair of eyes" detector (exp3657) is a deployable
-  combination of ensemble energy + model confidence; it is the Phase-1 product surface.
-- **FR-11 self-learning module** — exp3660 extends the online-weighting loop to fusion weights.
-- No changes to `scripts/research_conductor.py` (forbidden).
+## 4. Invariants (do NOT regress)
+
+- **paper_ready = TRUE** (G1-G4 closed 2026-05-31). The capstone re-checks; no
+  task may regress the gate. Headline = FoVer **0.9131** (frozen, G2-reproduced).
+  A dependency-aware improvement is reported as a *candidate* for a future
+  re-freeze, NOT silently substituted for the frozen headline.
+- **P0.1 stays honest-negative.** Do not re-test Route-1/Route-2 energy-descent
+  (Depth-Over-Breadth retired; the question is answered).
+- **Trained-judge-as-cross-domain-fix is RETIRED** (exp3659 same-verdict). Do not
+  re-propose a trained-judge OOD vN.
+- **Anti-poison test discipline (.325/.326/.332 cascade):** every shipped pytest
+  parametrizes over the script's honest verdicts on realistic synthetic fixtures;
+  never hard-assert one success string against a real corpus; never use
+  Q/R/H-number placeholder tokens; run your own test green before finishing.
+- **Verifier authenticity:** docstring must match implementation; a heuristic
+  must carry the `pcib_probe.py`-style disclosure, never be named "model-based".
+- **Leak guards:** any grounding verifier scores `(model_answer, evidence)` only,
+  never the gold answer/label; AUROC >= 0.99 on n>=200 is a RED-FLAG leak.
+
+## 5. Backend routing decision
+
+exp3653 reported gemini *recovered* via a single trivial probe, but `.333` was a
+total gemini-crash wipeout (zero artifacts) and codex ran **28/28** tasks cleanly
+across `.334`+`.335`. Asymmetric risk (a gemini relapse wipes the whole
+milestone) favors **one more codex+requires_codex milestone** while gemini
+stability is confirmed across a *second* consecutive probe (exp3666). Once
+exp3666 confirms gemini stable across .335 AND .336, `.337` may flip to
+gemini-default per the standing Gemini-Default rule. The `requires_codex` on each
+task cites this anti-wipeout rationale. **Operator may override to gemini-default
+if quota preservation outweighs the wipeout risk.**
 
 ## 6. Hardware requirements
 
-- exp3654/3655/3659 prefer GPU (RTX 3090) for the NLI checkpoint + trained-judge substrate; all degrade
-  to CPU with an honest note. exp3659 declares `requires_gpu: true`.
-- KV260 / PolarFire / GateMate continuity tasks per Hardware-Task Continuity Discipline (SSH reachability
-  only for KV260 — host SD-card checks permanently retired).
+- exp3667/3668/3670/3671/3672/3673: CPU-only verifier-scoring against cached
+  corpora (`verifier_ensemble_against_cached_candidates`). GPU opportunistic.
+- exp3669 (real corpus build) may fetch RAGTruth/FELM -- needs network; precondition-gated.
+- Hardware continuity (exp3674-3676): SSH-reachability preconditions only
+  (KV260 = `ssh kria`, NOT host SD card; PolarFire = `ssh polarfire`; GateMate =
+  `command -v openFPGALoader` audit-only). KV260 has been unreachable 5
+  milestones -- surface as operator-action.
 
-## 7. Models
+## 7. New references filed (research-references.md)
 
-SOTA GGUF per CLAUDE.md where live LLM inference is genuinely needed: `unsloth/Qwen3.6-35B-A3B-GGUF`,
-`unsloth/gemma-4-31B-it-GGUF`, `unsloth/gemma-4-26B-A4B-it-GGUF` via `cached_sota_pair()` (exp3659
-trainable substrate). Most `.335` tasks are `verifier_ensemble_against_cached_candidates` (score cached
-corpora, no LLM load) or `aggregation_from_upstream_artifacts`; the NLI grounding verifier uses a
-DeBERTa/MiniLM-NLI checkpoint (a verifier substrate, not a generation model).
-
-## 8. Backend routing
-
-Gemini quota was exhausted through `.333` (the wipeout). `.334` routed every experiment to
-**codex (`gpt-5.5`, `requires_codex: true`)** and all 14 tasks succeeded. `.335` keeps that routing
-(CLAUDE.md Gemini-Default `requires_codex` positive criterion #3 — "gemini quota exhausted") until the
-exp3653 diagnostic confirms gemini recovery and the operator flips `CODEX_FORCE_EXPERIMENTS` off.
-
-## 9. Invariants (do NOT regress)
-
-- `paper_ready == true` (G1-G4 met). The capstone re-runs `scripts/publication_gate.py --json` and asserts.
-- P0.1 stays **honest-negative** — do NOT re-test energy-vs-AR Route-1/Route-2 (Depth-Over-Breadth retired).
-- Every `gated_on` value is a **bare scalar** (`feedback_gated_fields_must_be_bare`).
-- **No poison tests** (the `.325/.326/.332` cascade): parametrize pytests over the script's honest
-  verdicts on realistic synthetic fixtures; never hard-assert one success string against a real corpus;
-  never use `Q\d+/R\d+/H\d+` placeholder tokens. Run your own test green before finishing.
-- Leak guards on the facts row: the grounding verifier scores `(model_answer, evidence_passage)` ONLY,
-  never the gold answer or label; an AUROC >= 0.99 on n>=200 is a RED-FLAG leak, not a win.
+Weaver (arXiv:2506.18203), Learning Dependency Structures for Weak Supervision
+(arXiv:1903.05844), Dependency Structure Misspecification (arXiv:2106.10302),
+RAGTruth (arXiv:2401.00396) + RAGTruth++, HalluLens/HalluScan (arXiv:2605.02443),
+Energy-Based Calibration for Implicit CoT (arXiv:2511.07124).
