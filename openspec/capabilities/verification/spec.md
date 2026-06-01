@@ -9454,3 +9454,57 @@ changes weights or AUROC relative to the independence-assuming baseline.
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-VERIFY-3644 | Implemented (`python/carnot/verify/weaver_peer_comparison_v3.py`, `scripts/experiment_3644_weaver_peer_comparison_v3.py`) | Implemented (`tests/python/test_experiment_3644_weaver_peer_comparison_v3.py`) |
+
+### REQ-VERIFY-3646: Trained EBM Judge OOD Counterpoint V2
+
+The repository shall provide an Exp 3646 workflow that trains a small
+ranking/energy judge on in-domain FoVer math reasoning-validity labels and
+evaluates whether that trained judge detects errors on out-of-domain cached
+code and/or factual corpora without training on those OOD labels. The workflow
+SHALL use only cached corpora and local verifier scores; it SHALL NOT invoke a
+live LLM or modify `scripts/research_conductor.py`.
+
+The workflow SHALL first check that an in-domain FoVer math corpus with both
+correct and incorrect labels is loadable, that at least one OOD corpus is
+loadable from Exp 3641 code or Exp 3640 facts, and that a small trainable
+substrate is available. If no OOD corpus is available, it SHALL train/evaluate
+math when possible and emit
+`complete: blocked_no_ood_eval_corpus` without fabricating an OOD AUROC. If no
+trainable substrate is available, it SHALL emit
+`complete: blocked_no_trainable_substrate`.
+
+For runnable inputs, the workflow SHALL train a small logistic energy/ranking
+head on math-only features over at least three seeds, hold out math examples
+for the in-domain sanity AUROC, evaluate the trained judge on every available
+OOD domain, and report confidence intervals over the seed results. It SHALL
+also run the mandatory adversarial controls: a shuffled-label control trained
+on the same math feature matrix and a confidence-only baseline. The artifact's
+`trained_judge_transfers_ood` boolean SHALL be true only when the trained judge
+beats both controls on the combined OOD evaluation.
+
+The workflow SHALL write
+`results/experiment_3646_trained_ebm_judge_ood_counterpoint_v2.json` with
+`honest_verdict`, `inference_substrate`, `judge_recipe`,
+`in_domain_judge_auroc`, `ood_judge_auroc`, `ood_domains_tested`,
+`shuffled_label_control_auroc`, `trained_judge_vs_fixed_ensemble_ood_delta`,
+`trained_judge_transfers_ood`, `n_examples_per_domain`, `random_seed`,
+`reproducibility_checksum`, and `duration_s`. The artifact SHALL include
+principle annotations for those required fields, seed-level detail, CI fields,
+the confidence-only baseline AUROC, and an acceptance gate whose condition is
+`in_domain_judge_auroc present AND shuffled_label_control_auroc present AND
+ood_judge_auroc present`.
+
+### SCENARIO-VERIFY-3646: Trained Judge Verdicts Are Honest Across Transfer, Null, And Blocked Fixtures
+
+Given synthetic FoVer math fixtures and OOD fixtures that separately produce a
+transfer result, a does-not-transfer result, and a blocked result, when the Exp
+3646 workflow builds its artifact, then the terminal verdict is selected from
+the allowed honest verdicts, OOD transfer is claimed only when the trained judge
+beats both the shuffled-label and confidence-only controls, and blocked inputs
+retain blocked metrics instead of synthetic OOD numbers.
+
+## Implementation Status (REQ-VERIFY-3646)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-VERIFY-3646 | Implemented (`python/carnot/verify/trained_ebm_judge_ood_counterpoint_v2.py`, `scripts/experiment_3646_trained_ebm_judge_ood_counterpoint_v2.py`) | Implemented (`tests/python/test_experiment_3646_trained_ebm_judge_ood_counterpoint_v2.py`) |

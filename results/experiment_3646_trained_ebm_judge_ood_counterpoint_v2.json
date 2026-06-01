@@ -1,0 +1,147 @@
+{
+  "acceptance_gate": {
+    "condition": "in_domain_judge_auroc present AND shuffled_label_control_auroc present AND ood_judge_auroc present",
+    "passed": true,
+    "principle": "An OOD-transfer claim requires an in-domain sanity pass AND a shuffled-label adversarial control -- without both the OOD number could be a degenerate-prior artifact."
+  },
+  "artifact": "experiment_3646_trained_ebm_judge_ood_counterpoint_v2",
+  "confidence_only_baseline_auroc": 0.882162,
+  "confidence_only_baseline_auroc_ci95": [
+    0.882162,
+    0.882162
+  ],
+  "duration_s": 0.346263,
+  "field_principles": {
+    "duration_s": "Plausibility floor (a real train+eval takes minutes, not seconds).",
+    "honest_verdict": "Terminal prefix for reconciler classification.",
+    "in_domain_judge_auroc": "Sanity: the trained judge must work in-domain before any OOD claim is meaningful.",
+    "inference_substrate": "The train/eval substrate and GPU disclosure; this prototype trains only a small CPU head over cached scores.",
+    "judge_recipe": "The trained judge's features/loss/epochs -- reproducibility of the prototype.",
+    "n_examples_per_domain": "Sample-size rigor.",
+    "ood_domains_tested": "Which OOD domains (code/facts) were evaluated -- scopes the transfer claim.",
+    "ood_judge_auroc": "The core number: does the trained judge detect errors in a domain it was NOT trained on?",
+    "random_seed": "Determinism precondition.",
+    "reproducibility_checksum": "Drift detection.",
+    "shuffled_label_control_auroc": "Adversarial control: a near-0.5 here confirms the judge is not learning a degenerate prior.",
+    "trained_judge_transfers_ood": "True iff the trained judge beats both confidence-only and shuffled-control on OOD -- the falsifiable transfer claim.",
+    "trained_judge_vs_fixed_ensemble_ood_delta": "Does TRAINING the judge buy the OOD transfer the fixed ensemble (.329-.333) lacked -- the foundation-model-path signal."
+  },
+  "fixed_ensemble_ood_reference_auroc": 0.331,
+  "fixed_ensemble_ood_reference_range": [
+    0.329,
+    0.333
+  ],
+  "honest_verdict": "complete: trained_ebm_judge_also_math_only_transfer_not_a_training_artifact",
+  "in_domain_judge_auroc": 0.992504,
+  "in_domain_judge_auroc_ci95": [
+    0.990289,
+    0.99511
+  ],
+  "inference_substrate": "verifier_ensemble_against_cached_candidates (principle: trains a small head on cached labels + scores cached corpora; GPU use: none, CPU-only numpy).",
+  "judge_recipe": {
+    "epochs": 200,
+    "features": [
+      "validity_signal",
+      "confidence_error_signal",
+      "log1p_char_count",
+      "digit_fraction",
+      "format_noise_signal"
+    ],
+    "l2": 0.001,
+    "learning_rate": 0.35,
+    "loss": "L2-regularized binary cross-entropy on math error_label; score is P(error).",
+    "model": "tiny_logistic_energy_head",
+    "random_seeds": [
+      3646,
+      3647,
+      3648
+    ],
+    "train_eval_split": "80/20 stratified FoVer math split per seed; OOD labels are never used for training."
+  },
+  "n_examples_per_domain": {
+    "code": 320,
+    "facts": 500,
+    "math": 2000
+  },
+  "ood_domains_tested": [
+    "code",
+    "facts"
+  ],
+  "ood_judge_auroc": 0.673554,
+  "ood_judge_auroc_by_domain": {
+    "code": {
+      "ci95": [
+        0.621361,
+        0.621762
+      ],
+      "point": 0.621622,
+      "seed_values": [
+        0.62134,
+        0.621762,
+        0.621762
+      ]
+    },
+    "facts": {
+      "ci95": [
+        0.738784,
+        0.739346
+      ],
+      "point": 0.739072,
+      "seed_values": [
+        0.739088,
+        0.73936,
+        0.738768
+      ]
+    }
+  },
+  "ood_judge_auroc_ci95": [
+    0.6732,
+    0.674063
+  ],
+  "ops_docs_reconciliation_left_to_conductor": true,
+  "per_seed_results": [
+    {
+      "confidence_only_baseline_auroc": 0.882162,
+      "in_domain_judge_auroc": 0.990197,
+      "ood_judge_auroc": 0.673191,
+      "seed": 3646,
+      "shuffled_label_control_auroc": 0.590633
+    },
+    {
+      "confidence_only_baseline_auroc": 0.882162,
+      "in_domain_judge_auroc": 0.995272,
+      "ood_judge_auroc": 0.6741,
+      "seed": 3647,
+      "shuffled_label_control_auroc": 0.404294
+    },
+    {
+      "confidence_only_baseline_auroc": 0.882162,
+      "in_domain_judge_auroc": 0.992042,
+      "ood_judge_auroc": 0.673371,
+      "seed": 3648,
+      "shuffled_label_control_auroc": 0.274953
+    }
+  ],
+  "random_seed": 3646,
+  "random_seeds_used": [
+    3646,
+    3647,
+    3648
+  ],
+  "reproducibility_checksum": "1d3723edb0ad4d2b",
+  "schema": "carnot.trained_ebm_judge_ood_counterpoint.v2",
+  "scripts_research_conductor_modified": false,
+  "shuffled_label_control_auroc": 0.423293,
+  "shuffled_label_control_auroc_ci95": [
+    0.28142,
+    0.581316
+  ],
+  "source_artifacts": [
+    "results/experiment_3640_build_factual_corpus_v3.json",
+    "results/experiment_3641_code_corpus_verifiers_fire_transfer_v3.json",
+    "data/fover_corpus.jsonl"
+  ],
+  "tests_run": [],
+  "trained_judge_transfers_ood": false,
+  "trained_judge_vs_fixed_ensemble_ood_delta": 0.342554
+}
