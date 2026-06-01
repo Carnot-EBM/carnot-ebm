@@ -15465,3 +15465,78 @@ and environment were not modified, recommends `codex_requires_codex`, and emits
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-REPORT-3666 | Implemented (`python/carnot/reporting/backend_state_diagnostic_v2_3666.py`, `scripts/experiment_3666_backend_state_diagnostic_v2.py`) | Implemented (`tests/python/test_experiment_3666_backend_state_diagnostic_v2.py`) |
+
+### REQ-REPORT-3669: Real Factual Hallucination Corpus Builder
+
+The Exp 3669 workflow shall build a real factual hallucination corpus for the
+`.336` facts-domain remeasurement and write
+`results/experiment_3669_build_real_factual_corpus.json`. It SHALL prefer the
+RAGTruth benchmark (`ParticleMedia/RAGTruth`, arXiv:2401.00396) because it
+provides retrieval-augmented prompts, retrieved source context, model
+responses, and word/span-level hallucination annotations. If RAGTruth is not
+fetchable but a cached RAGTruth copy exists, the workflow SHALL use the cached
+copy. If neither RAGTruth nor a cache is available, it MAY fall back to FELM or
+HaluEval and SHALL record the source benchmark actually used. If no real corpus
+source is fetchable or cached, it SHALL write the terminal verdict
+`complete: blocked_no_network_and_no_cached_real_corpus`.
+
+For runnable inputs, the workflow SHALL project rows into
+`data/real_factual_corpus_ragtruth.jsonl` with the v3 fields
+`question`, `answer`, `is_hallucination`, `evidence_passage`, and
+`model_confidence`. `is_hallucination` SHALL be derived from human annotation
+labels rather than synthetic identifiers. `model_confidence` SHALL be a
+non-label confidence proxy based only on generation metadata and answer text,
+not the hallucination label or evidence text. The workflow SHALL reject toy
+placeholder rows, require at least 200 projected records, require both classes
+to be at least 20% of the corpus, and compute a confidence-baseline AUROC for
+correctness detection. A corpus SHALL be non-degenerate only when class balance
+passes and confidence AUROC is below `0.95`; confidence AUROC at or above
+`0.95` SHALL emit
+`complete: blocked_real_corpus_degenerate_confidence_perfect` and SHALL NOT set
+`real_factual_corpus_built=true`.
+
+The artifact SHALL include bare top-level values for `honest_verdict`,
+`inference_substrate`, `corpus_path`, `source_benchmark`, `n_examples`,
+`class_balance`, `confidence_baseline_auroc`, `corpus_non_degenerate`,
+`real_factual_corpus_built`, `random_seed`, `reproducibility_checksum`, and
+`duration_s`, plus `field_principles` documenting why each required value
+exists. `real_factual_corpus_built` SHALL be a bare JSON boolean and SHALL be
+true exactly when a real, schema-valid, non-degenerate corpus is persisted.
+The acceptance gate SHALL pass only when `real_factual_corpus_built == true`,
+`corpus_non_degenerate == true`, and `n_examples >= 200`.
+
+#### SCENARIO-REPORT-3669: RAGTruth Builds A Non-Degenerate Real Corpus
+
+**Given** realistic RAGTruth-style source and response fixtures with retrieved
+context, human hallucination span labels, model names, temperatures, and
+factual-looking answer text
+**When** the Exp 3669 workflow projects the corpus
+**Then** it writes v3-schema JSONL records, records RAGTruth provenance,
+prints real textual examples, emits
+`complete: real_factual_corpus_built_ragtruth_non_degenerate`, and sets the
+bare `real_factual_corpus_built` boolean true only when both classes are at
+least 20%, confidence AUROC is below `0.95`, and `n_examples >= 200`.
+
+#### SCENARIO-REPORT-3669-DEGENERATE: Perfect Confidence Blocks The Corpus
+
+**Given** a realistic external-benchmark fixture whose model-confidence proxy
+perfectly separates correct and hallucinated answers
+**When** the Exp 3669 workflow validates the projected corpus
+**Then** it keeps the artifact auditable, sets `corpus_non_degenerate=false`,
+sets `real_factual_corpus_built=false`, records the measured confidence AUROC,
+and emits `complete: blocked_real_corpus_degenerate_confidence_perfect`.
+
+#### SCENARIO-REPORT-3669-BLOCKED: No Network And No Cache Is Terminal
+
+**Given** the Hugging Face API is unreachable and no cached RAGTruth, FELM, or
+HaluEval source is available
+**When** the Exp 3669 workflow runs
+**Then** it writes the required artifact schema with zero examples,
+`corpus_non_degenerate=false`, `real_factual_corpus_built=false`, and
+`honest_verdict=complete: blocked_no_network_and_no_cached_real_corpus`.
+
+## Implementation Status (REQ-REPORT-3669)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-3669 | Implemented (`python/carnot/reporting/real_factual_corpus_ragtruth_3669.py`, `scripts/experiment_3669_build_real_factual_corpus.py`) | Implemented (`tests/python/test_experiment_3669_build_real_factual_corpus.py`) |
