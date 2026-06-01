@@ -1,3 +1,71 @@
+## 2026-06-01 Post-.336 Planning Sweep (Milestone 2026.06.337)
+
+`.336` delivered the first headline-advancing lead in many milestones. Read via
+`scripts/summarize_artifact.py`, the honest `.336` outcomes:
+
+- **Dependency-aware ensemble weighting BEAT Carnot, CLEAN and HELD-OUT VALIDATED.** exp3667
+  (de-tautologized, 5-seed, DeLong) measured dependency-aware AUROC **0.9332** vs Carnot-current
+  **0.9194** (+0.0138) on FoVer, adversarial-verify clean. exp3668 (≥5 train/test splits) confirmed
+  it GENERALIZES out-of-fit: held-out dependency-aware **0.9332** vs Carnot **0.9200**. Verdict
+  literally `headline_re_freeze_candidate_for_v337`. This is the `.337` #1 lead: the
+  arXiv:1903.05844 learned-label-conditional-dependency weighting is a candidate to RAISE the frozen
+  FoVer headline (0.9131) — but a re-freeze must be done at full G1 rigor + a re-reproduced G2, and
+  the north-star §1 edit is operator-curated (never a silent substitution).
+- **FACTS is genuinely domain-bound — earned-negative on a REAL benchmark.** exp3669 built a real,
+  non-degenerate RAGTruth corpus (confidence baseline AUROC 0.708); exp3670 (real NLI grounding
+  verifier, leak-free, n≥200, 1335 s) found `facts_domain_bound_on_real_benchmark_335_negative_genuinely_earned`.
+  `retire_if_same_verdict` was TRUE → the facts-generalization hypothesis is RETIRED. Do NOT
+  re-propose facts-generalization. Carnot's verifier value is scoped to math + code DISCRIMINATION.
+- **Ensemble adds NO best-of-N SELECTION value, even where SC is weak and headroom exists.** exp3672
+  (positive control valid: oracle 0.607 > SC 0.459, flip_count 28) found ensemble-selection 0.344 =
+  confidence-selection 0.344, both BELOW SC 0.459; fusion 0.279. Paired delta vs SC −0.115 (CI
+  [−0.197, −0.049], McNemar p=0.016). Earned-negative: Carnot DISCRIMINATES (AUROC 0.93) but does NOT
+  rank-within-a-question. This discrimination≠selection gap is the `.337` product-relevant diagnosis.
+- **Second-pair-of-eyes detector SHIPPED but code-weak.** exp3671 wired
+  `python/carnot/pipeline/second_pair_detector.py` to score_candidates (MCP/CLI), E2E green: math
+  fused AUROC **0.980** (Brier 0.014, ECE 0.009) but CODE AUROC **0.5** (ECE 0.27, uncalibrated) even
+  on the balanced corpus. Code operating point needs hardening in `.337`.
+- **FR-11 v10 online dependency-aware weighting holds, no collapse** (exp3673, gain +0.0018, tiny).
+- `paper_ready` stays **TRUE** (G1-G4 met; FoVer 0.9131 G2-reproduced on CI run 26725185125). P0.1
+  stays honest-negative. Backend: gemini probed stable 2 consecutive milestones (exp3653/3666,
+  eligible to flip) but `.333` was a total gemini-crash wipeout — `.337` keeps codex+requires_codex
+  for the high-value headline re-freeze, with a 3rd probe gating a `.338` flip.
+
+**`.337` mandate:** (1) take the dependency-aware weighting lead to full G1-rigor dual-condition
+integrity + prepare the operator re-freeze package (new G1 candidate artifact + updated G2
+reproducer + checklist) WITHOUT silently substituting the frozen 0.9131; (2) diagnose and try to
+close the discrimination-vs-selection gap (per-question calibration / ranking objective /
+self-certainty baseline); (3) harden the shipped detector's code operating point + test whether the
+validated dependency-aware weighting transfers to code; (4) adversarially re-baseline the product
+value against a STRONGER free confidence baseline (self-certainty); (5) continue FR-11 + hardware
+continuity; keep `paper_ready` true; record facts-generalization RETIRED and SC-selection
+earned-negative.
+
+### New literature (2025-2026) for `.337`
+
+- **The Reward Model Selection Crisis in Personalized Alignment** (arXiv:2512.23067, Dec 2025/Jan
+  2026). Finds a COMPLETE DECOUPLING between a verifier's discriminative ranking accuracy and its
+  downstream selection/generation utility — upstream RM accuracy correlates only weakly with
+  downstream policy accuracy (Kendall τ = 0.08–0.31); standard RM accuracy FAILS as a selection
+  criterion. This is independent precedent for the `.336` exp3672 earned-negative (high AUROC, poor
+  selection). Load-bearing framing for the `.337` discrimination-vs-selection diagnosis: the gap is a
+  known phenomenon; the question is whether per-question calibration / a ranking objective can recover
+  selection value for an ENERGY-based verifier, or whether the decoupling is fundamental.
+- **Scalable Best-of-N Selection via Self-Certainty** (arXiv:2502.18581, Feb 2025). A lightweight,
+  training-free confidence signal ("self-certainty") that surpasses both greedy decoding and
+  self-consistency for best-of-N, and generalizes to open-ended responses where SC is inapplicable.
+  Relevant two ways: (a) it is a STRONGER free baseline than plain model confidence — the `.337`
+  product re-baseline must check whether Carnot's ensemble adds value OVER self-certainty, not just
+  over plain confidence; (b) in exp3672, plain-confidence selection tied the ensemble below SC —
+  self-certainty is the stronger comparator to slot in.
+- **Self-Consistency Boosts Calibration for Math Reasoning** (arXiv:2403.09849). SC-derived
+  calibration for math reasoning; relevant to the per-question calibration approach in the
+  selection-gap diagnosis.
+- **Budget-aware Test-time Scaling via Discriminative Verification** (arXiv:2510.14913). Already cited
+  (exp3645 hybrid-under-budget); reinforces that discriminative verification helps under a compute
+  budget even when it does not win unconditionally — the honest framing for where the ensemble adds
+  value vs SC.
+
 ## 2026-06-01 Post-.334 Planning Sweep (Milestone 2026.06.335)
 
 `.334` FINALLY ran the cross-domain de-contamination science (routed to codex after the `.333`

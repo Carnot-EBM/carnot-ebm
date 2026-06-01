@@ -1,148 +1,169 @@
-# Research Roadmap — Milestone 2026.06.336
+# Research Roadmap — Milestone 2026.06.337
 
 **Status:** Pre-staged by outer-loop Claude (Opus 4.8), 2026-06-01.
-**Predecessor:** 2026.06.335 (FACTS-made-real milestone — all 14 tasks landed).
-**Milestone doc for:** `research-roadmap-next.yaml` (`milestone: 2026.06.336`)
+**Predecessor:** 2026.06.336 (first headline-advancing lead — all 12 tasks landed clean on codex).
+**Milestone doc for:** `research-roadmap-next.yaml` (`milestone: 2026.06.337`)
 
 ---
 
-## 1. What the previous milestone (.335) proved
+## 1. What the previous milestone (.336) proved
 
-`.335` was the milestone that **made the FACTS row real** and hardened the
-math+code cross-domain scope. All 14 tasks landed real artifacts (codex,
-28/28 clean across .334+.335). Earned outcomes:
+`.336` produced the **first headline-advancing lead in many milestones** and
+turned three open hypotheses into earned verdicts. All 12 tasks landed real
+artifacts (codex, anti-wipeout routing). Read via `scripts/summarize_artifact.py`:
 
 | Result | Finding | Artifact |
 |---|---|---|
-| **Facts row, real NLI** | A real model-based NLI atomic-claim grounding verifier (arXiv:2504.18639 recipe) was built and scored. Facts is **domain-bound even with a real model**: grounding AUROC **0.7437** (CI [0.70,0.785]) ~= confidence baseline **0.7446** (delta -0.0009, CI straddles 0). | exp3654, exp3655 |
-| **...but a complementary catch-signal exists** | At fixed confidence FPR the grounding verifier catches **~40%** of errors confidence misses (McNemar **p=0.00031**) -- AUROC-parity hides real second-pair-of-eyes value. **Measured on a SYNTHETIC v3 corpus.** | exp3655 |
-| **Dependency-aware weighting BEATS Carnot** | Learned label-conditional dependency-structure weighting (arXiv:1903.05844) reached **0.9326** vs Carnot's **0.919** (+0.013) and recovered the -0.236 naive-penalty regression (+0.297). **BUT the artifact was tautology-flagged** (false positive: same AUROC stored under two field names). | exp3656 (flagged) |
-| **Code generalization replicated** | math->code verifier transfer held on a balanced 2nd corpus -- code claim hardened. | exp3658 |
-| **Second-pair-of-eyes detector** | Calibrated fused detector **wins on math** (0.954 vs 0.5 confidence; Brier 0.015/ECE 0.020) but is **weak+uncalibrated on the imbalanced code corpus** (0.45, ECE 0.37). | exp3657 |
-| **Trained judge OOD -- RETIRED** | A real-substrate trained EBM judge ALSO failed OOD (0.572 < confidence 0.882), same verdict as the .334 toy head. `retire_if_same_verdict` fired -> the trained-judge-as-cross-domain-fix hypothesis is retired. | exp3659 |
-| **FR-11 v9** | Online fusion-weight learning held with no collapse, +0.168 AUROC gain. | exp3660 |
-| **Publication gate** | **paper_ready = TRUE.** G1 (FoVer 0.9131, 5-seed, CI), G2 (CI reproducer run 26725185125), G3 (narrowing-clean), G4 (traces to artifacts) ALL met. | exp3664 |
-| **Backend** | gemini quota RECOVERED per a single probe; codex routing proven across 28 tasks. | exp3653 |
+| **Dependency-aware weighting BEATS Carnot — CLEAN** | De-tautologized, 5-seed, DeLong: dependency-aware AUROC **0.9332** vs Carnot-current **0.9194** (+0.0138) on FoVer, adversarial-verify clean. The exp3656 tautology flag is resolved. | exp3667 |
+| **…and it GENERALIZES held-out** | ≥5 disjoint train/test splits: held-out dependency-aware **0.9332** vs Carnot **0.9200**. Verdict: `headline_re_freeze_candidate_for_v337`. | exp3668 |
+| **FACTS domain-bound on a REAL benchmark — earned-negative** | Real RAGTruth corpus (non-degenerate, confidence baseline 0.708) + real NLI grounding verifier (leak-free, n≥200): `facts_domain_bound_on_real_benchmark_335_negative_genuinely_earned`. `retire_if_same` fired → facts-generalization RETIRED. | exp3669, exp3670 |
+| **Ensemble adds NO best-of-N SELECTION value** | Positive control valid (oracle 0.607 > SC 0.459, flips 28): ensemble-selection 0.344 = confidence-selection 0.344, both **below SC 0.459**; fusion 0.279. Paired Δ vs SC −0.115 (CI [−0.197,−0.049], McNemar p=0.016). Earned-negative. | exp3672 |
+| **Second-pair-of-eyes detector SHIPPED — code-weak** | Wired `python/carnot/pipeline/second_pair_detector.py` → score_candidates (MCP/CLI), E2E green. Math fused AUROC **0.980** (Brier 0.014, ECE 0.009) but CODE AUROC **0.5** (ECE 0.27) even balanced. | exp3671 |
+| **FR-11 v10 online dependency-aware weighting** | Holds, no collapse, gain +0.0018 (tiny). | exp3673 |
+| **Publication gate** | **paper_ready = TRUE.** G1 (FoVer 0.9131, exp2850), G2 (CI reproducer run 26725185125), G3 (narrowing-clean), G4 (traces) all met. | exp3677 |
+| **Backend** | gemini stable for 2 consecutive probes (exp3653/3666); eligible to flip, but `.333` was a total gemini-crash wipeout. | exp3666 |
 
-**Strategic position:** the paper is over the line (paper_ready true). Per
-`ops/north-star.md` sec 1, the Depth-Over-Breadth forcing function is retired
-(P0.1 answered honest-negative; G2 closed). The mandate now: **resume research
-breadth toward NEW directions -- the verifier ensemble's discriminating value
-where self-consistency is NOT near-optimal -- while every milestone either
-advances the headline, ships product value, or earns a trustworthy negative.**
+**Strategic position:** the paper is over the line and now has a validated lead
+that could *raise* the frozen headline. Per `ops/north-star.md` §1, every
+milestone must either advance the headline, ship product value, or earn a
+trustworthy negative. `.337` does all three — with a clear, honest scope:
+**Carnot's verifier ensemble DISCRIMINATES step-errors well (math, generalizes
+to code) but does NOT generalize to facts (real, earned) and does NOT
+rank-within-a-question for best-of-N selection (earned).**
 
 ---
 
 ## 2. The three biggest gaps (PRD vision vs current state)
 
-1. **The headline AUROC has a live improvement lead that is quarantined.**
-   exp3656 showed dependency-aware weighting beats Carnot's weighting (0.9326 vs
-   0.919) -- the first result in many milestones that could *raise* the headline.
-   It is blocked only by a false-positive tautology flag. Resolving it cleanly
-   (de-tautologized, multi-seed, DeLong, held-out validated) is the single
-   highest-value thing .336 can do toward sec 1 ("raises the AUROC").
+1. **The headline lead is validated but not promoted.** The dependency-aware
+   weighting (0.9332) beats Carnot's weighting clean AND held-out, but the frozen
+   headline is still 0.9131. Promoting it requires full **G1-rigor dual-condition
+   integrity** (mirror exp2837/2850: production + architecture-only, ≥5 seeds, CI,
+   reproducibility_checksum, adversarial-clean, leak-free) PLUS a re-reproduced
+   **G2** (the CI reproducer asserts the old number) — and the north-star §1 edit
+   is operator-curated. The `.337` job is to produce the evidence + the operator
+   re-freeze package, never a silent substitution.
 
-2. **The facts negative rests on a synthetic corpus.** The core mission is
-   "escape LLM hallucinations." `.335` earned "facts is domain-bound" -- but only
-   on a synthetic v3 corpus where confidence already reached 0.745. The real
-   benchmarks (RAGTruth arXiv:2401.00396, FELM, HaluEval) were never tried. Until
-   the facts verdict is measured on a REAL hallucination corpus, "facts does not
-   generalize" is not fully earned -- and the complementary catch-signal (40% at
-   fixed FPR) hints the AUROC framing may be the wrong lens.
+2. **Discrimination decouples from selection — is it fixable?** exp3672 earned
+   that the ensemble (AUROC 0.93) selects worse than SC. Independent precedent
+   (arXiv:2512.23067, "Reward Model Selection Crisis": discrimination↔selection
+   decoupling, Kendall τ 0.08–0.31) says this is a known phenomenon. The open
+   question for an *energy*-based verifier: can per-question calibration / a
+   ranking objective / a stronger confidence signal (self-certainty,
+   arXiv:2502.18581) recover selection value, or is the decoupling fundamental?
+   This is the candidate-ranker product (Tier A `score_candidates`).
 
-3. **The strongest product result is still an experiment artifact, not a
-   product.** The second-pair-of-eyes detector (exp3657) wins on math and is
-   calibrated, but it is not wired into the shipped Phase-1 surface
-   (pipeline / MCP `score_candidates` / CLI). Phase 1's ship gate is software-
-   operational; turning the validated detector into a deployable, tested API is
-   the product-headline path (north-star sec 1 product advancement).
+3. **The shipped detector is math-strong, code-blind.** exp3671 ships but code
+   AUROC = 0.5 (no signal) and is badly miscalibrated even on the balanced
+   corpus. Phase-1's ship gate is software-operational; a detector that returns
+   noise on code is half-shipped. Test whether the validated dependency-aware
+   weighting transfers to code discrimination and re-calibrate the code operating
+   point — or honestly document code as math-only.
 
 ---
 
-## 3. Milestone architecture (4 phases, 13 tasks)
+## 3. Milestone architecture (4 phases, 12 tasks)
 
 ```
-Phase 0 -- Transition + routing safety (exp3665, exp3666)
-    archive .335 / activate .336  -->  backend-state diagnostic (gemini stability, 2nd probe)
+Phase 0 — Transition + routing safety (exp3678, exp3679)
+    archive .336 / activate .337  -->  backend-state diagnostic v3 (3rd gemini probe; gates a .338 flip)
 
-Phase 1 -- ADVANCE THE HEADLINE (the dependency-aware weighting lead)
-    exp3667 clean de-tautologized dependency-aware weighting (1903.05844 + Weaver 2506.18203)
-              |  dependency_aware_beats_carnot (BARE bool)
+Phase 1 — PROMOTE THE HEADLINE (the dependency-aware weighting re-freeze)
+    exp3680 dependency-aware dual-condition integrity at G1 rigor (1903.05844 + Weaver 2506.18203)
+              |  dependency_aware_g1_rigor_confirmed (BARE bool)
               v
-    exp3668 held-out / cross-split validation (guard against overfitting the weighting)
+    exp3681 G2 reproducer prep + OPERATOR re-freeze package (prepare-only; frozen 0.9131 stays)
 
-Phase 2 -- FACTS ON A REAL BENCHMARK (stress the earned negative)
-    exp3669 build a REAL factual-hallucination corpus (RAGTruth / FELM, evidence+labels+confidence)
-              |  real_factual_corpus_built (BARE bool)
-              v
-    exp3670 re-measure facts row (real NLI verifier exp3654) on the REAL corpus
-              (AUROC + the complementary catch-rate lens; retire_if_same)
+Phase 2 — SCOPE THE PRODUCT HONESTLY (discrimination vs selection; code; stronger baseline)
+    exp3682 diagnose + try to close the discrimination-vs-selection gap (2512.23067 + 2502.18581)
+    exp3683 harden the detector's CODE operating point (+ dependency-aware weighting on code)
+    exp3684 adversarial product re-baseline vs self-certainty (2502.18581) — is the value robust?
 
-Phase 3 -- PRODUCT + SELF-LEARNING + NEW DIRECTION
-    exp3671 ship the second-pair-of-eyes detector into the Phase-1 surface (pipeline/MCP/CLI) + E2E
-    exp3672 NEW DIRECTION -- ensemble selection value where SC is WEAK (flip the P0.1 premise)
-    exp3673 FR-11 v10 -- online dependency-aware verifier weighting (forward diff from v9 fusion)
-
-Phase 4 -- HARDWARE CONTINUITY + CAPSTONE
-    exp3674 KV260 continuity   exp3675 PolarFire continuity   exp3676 GateMate audit
-    exp3677 Capstone v336 + G1-G4 gate synthesis (paper_ready must stay TRUE)
+Phase 3 — SELF-LEARNING + HARDWARE + SYNTHESIS
+    exp3685 FR-11 v11 online dependency-aware weighting with drift detection (no collapse)
+    exp3686 KV260 continuity   exp3687 PolarFire continuity   exp3688 GateMate audit
+    exp3689 capstone + G1-G4 v337
 ```
 
-### Dependency graph
+### Dependency graph (cascade-proof)
 
-- exp3668 **gated_on** exp3667.`dependency_aware_beats_carnot == true`
-- exp3670 **gated_on** exp3669.`real_factual_corpus_built == true`
-- exp3677 (capstone) aggregates exp3667/3668/3669/3670/3671/3672/3673
+- exp3681 **gated_on** exp3680.`dependency_aware_g1_rigor_confirmed == true` (BARE bool).
+- Every other science task is **ungated** and self-contained.
+- exp3689 (capstone) is **ungated**; it aggregates exp3680–exp3685 and records
+  `not_measured` for any skipped gated task — never reads a missing field as None
+  and synthesizes around it.
 - All `gated_on` upstream fields are emitted as **BARE scalars**
-  (per `feedback_gated_fields_must_be_bare` -- a `{value,principle}` dict breaks
-  the conductor gate, the .330 cascade).
+  (`feedback_gated_fields_must_be_bare` — a `{value,principle}` dict breaks the
+  conductor gate, the .330 cascade).
 
 ---
 
-## 4. Invariants (do NOT regress)
+## 4. Invariants (carried from .322–.336, do NOT regress)
 
-- **paper_ready = TRUE** (G1-G4 closed 2026-05-31). The capstone re-checks; no
-  task may regress the gate. Headline = FoVer **0.9131** (frozen, G2-reproduced).
-  A dependency-aware improvement is reported as a *candidate* for a future
-  re-freeze, NOT silently substituted for the frozen headline.
-- **P0.1 stays honest-negative.** Do not re-test Route-1/Route-2 energy-descent
-  (Depth-Over-Breadth retired; the question is answered).
-- **Trained-judge-as-cross-domain-fix is RETIRED** (exp3659 same-verdict). Do not
-  re-propose a trained-judge OOD vN.
-- **Anti-poison test discipline (.325/.326/.332 cascade):** every shipped pytest
-  parametrizes over the script's honest verdicts on realistic synthetic fixtures;
-  never hard-assert one success string against a real corpus; never use
-  Q/R/H-number placeholder tokens; run your own test green before finishing.
-- **Verifier authenticity:** docstring must match implementation; a heuristic
-  must carry the `pcib_probe.py`-style disclosure, never be named "model-based".
-- **Leak guards:** any grounding verifier scores `(model_answer, evidence)` only,
-  never the gold answer/label; AUROC >= 0.99 on n>=200 is a RED-FLAG leak.
+- **paper_ready = TRUE (G1∧G2∧G3∧G4).** The frozen FoVer headline **0.9131**
+  stays frozen. A dependency-aware win is a **headline-advancement CANDIDATE**
+  pending a future re-freeze + re-reproduction — never a silent substitution.
+  North-star §1 is operator-curated; the agent prepares the package only
+  (Operator-Only External Publication + Public Documentation Discipline).
+- **P0.1 stays honest-negative.** Depth-Over-Breadth is retired; do not re-test
+  the answered energy-descent existential question.
+- **facts-generalization is RETIRED** (exp3670 same-verdict on real RAGTruth). Do
+  NOT re-propose a "does facts generalize" experiment.
+- **trained-judge-as-cross-domain-fix is RETIRED** (exp3659). Do not re-propose.
+- **SC-best-of-N-selection-by-ensemble-energy is an earned-negative** (exp3672).
+  `.337` DIAGNOSES the gap (a different question — why, and is it fixable), it
+  does not re-run the same selection test hoping for a different answer.
+- **Every gated_on is a BARE scalar** (`feedback_gated_fields_must_be_bare`).
+- **NO poison tests** (.325/.326/.332 cascade): parametrize pytests over honest
+  verdicts on realistic synthetic fixtures; never hard-assert one success string
+  against a real corpus; never use Q/R/H-number placeholder tokens; run your own
+  test green before finishing.
+- **De-tautology discipline:** store each conceptually-distinct metric under
+  exactly ONE field name; aggregations use a fixed `random_seed`, measurements
+  are content-derived.
+- **Verifier authenticity + leak guards:** docstring matches implementation; a
+  grounding verifier scores `(model_answer, evidence)` only, never the label;
+  AUROC ≥ 0.99 on n≥200 is a RED-FLAG leak.
 
-## 5. Backend routing decision
+## 5. Backend routing decision (.337)
 
-exp3653 reported gemini *recovered* via a single trivial probe, but `.333` was a
-total gemini-crash wipeout (zero artifacts) and codex ran **28/28** tasks cleanly
-across `.334`+`.335`. Asymmetric risk (a gemini relapse wipes the whole
-milestone) favors **one more codex+requires_codex milestone** while gemini
-stability is confirmed across a *second* consecutive probe (exp3666). Once
-exp3666 confirms gemini stable across .335 AND .336, `.337` may flip to
-gemini-default per the standing Gemini-Default rule. The `requires_codex` on each
-task cites this anti-wipeout rationale. **Operator may override to gemini-default
-if quota preservation outweighs the wipeout risk.**
+exp3666 reports gemini stable for **2 consecutive probes** (`recommended_routing:
+gemini_default_eligible_for_v337`). The standing Gemini-Default rule and the
+pre-stated `.336` flip criterion ("stable across .335 AND .336 → .337 may flip")
+are both satisfied. **However**, `.333` was a total gemini-crash wipeout (all 14
+tasks lost) and `.337` carries the highest-value work in months (the headline
+re-freeze). Given the asymmetric risk, `.337` **keeps codex + requires_codex**
+for one more milestone — matching the proven `.334/.335/.336` routing — and runs
+a **3rd consecutive gemini probe (exp3679)** that gates a `.338` flip. The
+`requires_codex` on each task cites this anti-wipeout rationale. **The operator
+may override to gemini-default if quota preservation outweighs the wipeout risk**
+(the diagnostic green light is already on file in exp3666).
 
 ## 6. Hardware requirements
 
-- exp3667/3668/3670/3671/3672/3673: CPU-only verifier-scoring against cached
-  corpora (`verifier_ensemble_against_cached_candidates`). GPU opportunistic.
-- exp3669 (real corpus build) may fetch RAGTruth/FELM -- needs network; precondition-gated.
-- Hardware continuity (exp3674-3676): SSH-reachability preconditions only
-  (KV260 = `ssh kria`, NOT host SD card; PolarFire = `ssh polarfire`; GateMate =
-  `command -v openFPGALoader` audit-only). KV260 has been unreachable 5
-  milestones -- surface as operator-action.
+Per Hardware-Task Continuity Discipline, one task per attached board, SSH-only
+preconditions:
+- exp3686 KV260 — `ssh kria` reachability (host SD-card checks PERMANENTLY
+  retired). Unreachable since `.331`; records the outage streak as operator-action.
+- exp3687 PolarFire — opportunistic `ssh polarfire` reachability + continuity.
+- exp3688 GateMate — documentation/audit only (`command -v openFPGALoader`;
+  flash/smoke host-IO hang is a known blocker — do NOT run the hanging path).
 
-## 7. New references filed (research-references.md)
+The science (exp3680–exp3685) is CPU-only verifier-scoring against cached corpora
+(`verifier_ensemble_against_cached_candidates`); GPU opportunistic.
 
-Weaver (arXiv:2506.18203), Learning Dependency Structures for Weak Supervision
-(arXiv:1903.05844), Dependency Structure Misspecification (arXiv:2106.10302),
-RAGTruth (arXiv:2401.00396) + RAGTruth++, HalluLens/HalluScan (arXiv:2605.02443),
-Energy-Based Calibration for Implicit CoT (arXiv:2511.07124).
+## 7. SOTA model usage
+
+The `.337` science scores cached corpora (FoVer, RAGTruth, balanced code,
+multi-candidate selection sets) — no live LLM load is headline this milestone.
+Where a task does invoke a model, it must use a mandated SOTA GGUF
+(`unsloth/Qwen3.6-35B-A3B-GGUF`, `unsloth/gemma-4-31B-it-GGUF`, or
+`unsloth/gemma-4-26B-A4B-it-GGUF`) via the `.gguf` path (embedded tokenizer;
+never `AutoTokenizer` on a GGUF repo).
+
+## 8. New references filed (research-references.md, Post-.336 sweep)
+
+The Reward Model Selection Crisis (arXiv:2512.23067 — discrimination↔selection
+decoupling), Scalable Best-of-N via Self-Certainty (arXiv:2502.18581),
+Self-Consistency Boosts Calibration for Math Reasoning (arXiv:2403.09849),
+Budget-aware Test-time Scaling via Discriminative Verification (arXiv:2510.14913).
