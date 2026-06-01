@@ -1,0 +1,114 @@
+{
+  "acceptance_gate": {
+    "condition": "sc_accuracy present AND oracle_bestofn_accuracy present AND positive_control_valid == true",
+    "positive_control_valid": true,
+    "principle": "A selection-value verdict in the SC-weak regime requires a valid positive control (real headroom + nonzero flips) -- otherwise the result repeats the P0.1 degenerate-test trap.",
+    "required_fields_present": true
+  },
+  "confidence_selection_accuracy": 0.3442622950819672,
+  "confidence_vs_sc_delta_ci": {
+    "ci95": [
+      -0.2459016393442623,
+      0.0
+    ],
+    "comparison": "confidence_vs_self_consistency",
+    "delta": -0.11475409836065575,
+    "mcnemar_exact_p": 0.11846923828125
+  },
+  "corpus_paths": [
+    "data/p01_gsm8k_generations.jsonl",
+    "data/p01_hardmath_generations.jsonl"
+  ],
+  "duration_s": 0.7092676162719727,
+  "ensemble_adds_selection_value_sc_weak": false,
+  "ensemble_selection_accuracy": 0.3442622950819672,
+  "ensemble_vs_confidence_delta_ci": {
+    "ci95": [
+      -0.11475409836065574,
+      0.11475409836065574
+    ],
+    "comparison": "ensemble_energy_vs_confidence",
+    "delta": 0.0,
+    "mcnemar_exact_p": 1.0
+  },
+  "ensemble_vs_sc_delta_ci": {
+    "ci95": [
+      -0.19672131147540983,
+      -0.04918032786885246
+    ],
+    "comparison": "ensemble_energy_vs_self_consistency",
+    "delta": -0.11475409836065575,
+    "mcnemar_exact_p": 0.015625
+  },
+  "field_principles": {
+    "confidence_selection_accuracy": "Best-of-N by confidence -- the baseline the ensemble must beat.",
+    "duration_s": "Plausibility floor.",
+    "ensemble_adds_selection_value_sc_weak": "BARE bool. True iff, on a headroom-bearing SC-weak corpus, ensemble selection materially beats both SC and confidence (delta CI excludes 0) -- the NEW-direction result. STORE AS BARE true/false.",
+    "ensemble_selection_accuracy": "Best-of-N accuracy selecting by ensemble energy -- the core number.",
+    "ensemble_vs_sc_delta_ci": "Paired selection-accuracy delta + CI + McNemar vs SC -- the selection-value magnitude + significance.",
+    "flip_count": "How many selections the ensemble changes vs SC -- flip_count==0 means the test is degenerate (FALSE_NEGATIVE_RISK).",
+    "honest_verdict": "Terminal prefix for reconciler classification.",
+    "inference_substrate": "Best-of-N selection over cached candidates; no LLM generation.",
+    "n_examples": "Sample-size rigor (>=50 multi-candidate items).",
+    "oracle_bestofn_accuracy": "Upper bound -- must materially exceed SC for selectable headroom to exist (the positive control).",
+    "positive_control_valid": "True iff oracle > SC AND flip_count > 0 -- without it a null is uninformative (the P0.1 lesson).",
+    "random_seed": "Determinism precondition.",
+    "reproducibility_checksum": "Drift detection.",
+    "sc_accuracy": "Majority-vote SC accuracy -- must be WEAK (near chance) for this regime to be the intended new direction."
+  },
+  "flip_count": 28,
+  "fusion_selection_accuracy": 0.2786885245901639,
+  "fusion_vs_sc_delta_ci": {
+    "ci95": [
+      -0.3114754098360656,
+      -0.04918032786885246
+    ],
+    "comparison": "ensemble_confidence_fusion_vs_self_consistency",
+    "delta": -0.18032786885245905,
+    "mcnemar_exact_p": 0.012725830078125
+  },
+  "honest_outcome": "no_value_even_with_headroom",
+  "honest_verdict": "complete: ensemble_no_selection_value_even_with_headroom_sc_weak_earned_negative",
+  "inference_substrate": "verifier_ensemble_against_cached_candidates (principle: best-of-N selection over cached candidates; no LLM generation).",
+  "max_majority_support": 0.6666666666666666,
+  "mean_candidates_per_example": 6.0,
+  "n_examples": 61,
+  "oracle_bestofn_accuracy": 0.6065573770491803,
+  "oracle_minus_sc_headroom": 0.14754098360655737,
+  "positive_control_valid": true,
+  "random_seed": 184757772,
+  "reproducibility_checksum": "1c50e037ab7c01bb",
+  "sc_accuracy": 0.45901639344262296,
+  "schema": [
+    "acceptance_gate",
+    "confidence_selection_accuracy",
+    "confidence_vs_sc_delta_ci",
+    "corpus_paths",
+    "duration_s",
+    "ensemble_adds_selection_value_sc_weak",
+    "ensemble_selection_accuracy",
+    "ensemble_vs_confidence_delta_ci",
+    "ensemble_vs_sc_delta_ci",
+    "field_principles",
+    "flip_count",
+    "fusion_selection_accuracy",
+    "fusion_vs_sc_delta_ci",
+    "honest_outcome",
+    "honest_verdict",
+    "inference_substrate",
+    "max_majority_support",
+    "mean_candidates_per_example",
+    "n_examples",
+    "oracle_bestofn_accuracy",
+    "oracle_minus_sc_headroom",
+    "positive_control_valid",
+    "random_seed",
+    "reproducibility_checksum",
+    "sc_accuracy",
+    "schema",
+    "selected_stratum",
+    "stratum_rule"
+  ],
+  "selected_stratum": "sc_weak_headroom",
+  "stratum_rule": "majority_support <= 0.666667; n_examples >= 50; sc_accuracy <= 0.550000"
+}
