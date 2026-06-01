@@ -1696,3 +1696,7 @@
 | REQ-BENCH-3585-2 | Exp 3585: Build a REALISTIC factual hallucination corpus | Implemented | results/experiment_3585_realistic_factual_corpus.json |
 | REQ-BENCH-3585-3 | Exp 3585: Build a REALISTIC factual hallucination corpus | Implemented | results/experiment_3585_realistic_factual_corpus.json |
 | SCENARIO-BENCH-3585-1 | Exp 3585: Build a REALISTIC factual hallucination corpus | Implemented | results/experiment_3585_realistic_factual_corpus.json |
+| REQ-LEARN-3590 | Exp 3590: FR-11 Continuous Self Learning v5 | Implemented | results/experiment_3590_fr11_continuous_self_learning_v5.json |
+| REQ-LEARN-3590-1 | Exp 3590: FR-11 Continuous Self Learning v5 | Implemented | results/experiment_3590_fr11_continuous_self_learning_v5.json |
+| REQ-LEARN-3590-2 | Exp 3590: FR-11 Continuous Self Learning v5 | Implemented | results/experiment_3590_fr11_continuous_self_learning_v5.json |
+| SCENARIO-LEARN-3590 | Exp 3590: FR-11 Continuous Self Learning v5 | Implemented | results/experiment_3590_fr11_continuous_self_learning_v5.json |
