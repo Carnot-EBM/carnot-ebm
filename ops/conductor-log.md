@@ -7372,3 +7372,5 @@ web search: https://docs.garak.ai/garak/examples/pr |
 | 2026-06-01 02:14 UTC | CENTERPIECE: corrected cross-domain re-measurement | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp3599-build-factual-corpus-v2-with-evide |
 | 2026-06-01 02:16 UTC | CENTERPIECE: corrected cross-domain re-measurement | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp3599-build-factual-corpus-v2-with-evide |
 | 2026-06-01 02:18 UTC | CENTERPIECE: corrected cross-domain re-measurement | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp3599-build-factual-corpus-v2-with-evide |
+| 2026-06-01 02:28 UTC | math→code PRM-transfer positive control (arXiv:250 | OK | 83 passed in 4.19s |
+| 2026-06-01 02:30 UTC | Additivity / 'second pair of eyes' — does ensemble | GATE_BLOCK | Pre-emptive skip: upstream retired (exp3601-corrected-cross-domain-remeasurement |
