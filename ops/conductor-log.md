@@ -7549,3 +7549,4 @@ web search: https://docs.garak.ai/garak/examples/pr |
 | 2026-06-01 21:00 UTC | FR-11 continuous self-learning v10 — online learni | OK | 86 passed in 8.76s |
 | 2026-06-01 21:10 UTC | KV260 SSH-reachability continuity (UNREACHABLE .33 | OK | 89 passed in 4.85s |
 | 2026-06-01 21:38 UTC | PolarFire opportunistic reachability + continuity  | OK | 88 passed in 4.34s |
+| 2026-06-01 21:48 UTC | GateMate continuity audit (documentation-only — op | OK | 89 passed in 4.77s |
