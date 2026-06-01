@@ -7376,3 +7376,5 @@ web search: https://docs.garak.ai/garak/examples/pr |
 | 2026-06-01 02:30 UTC | Additivity / 'second pair of eyes' — does ensemble | GATE_BLOCK | Pre-emptive skip: upstream retired (exp3601-corrected-cross-domain-remeasurement |
 | 2026-06-01 02:34 UTC | FR-11 continuous self-learning v6 — online-calibra | OK | 84 passed in 4.97s |
 | 2026-06-01 02:36 UTC | Additivity / 'second pair of eyes' — does ensemble | GATE_BLOCK | Pre-emptive skip: upstream retired (exp3601-corrected-cross-domain-remeasurement |
+| 2026-06-01 02:41 UTC | Cross-domain generalization SYNTHESIS v3 — does ve | OK | 82 passed in 3.55s |
+| 2026-06-01 02:43 UTC | Additivity / 'second pair of eyes' — does ensemble | GATE_BLOCK | Pre-emptive skip: upstream retired (exp3601-corrected-cross-domain-remeasurement |
