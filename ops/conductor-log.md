@@ -7382,3 +7382,4 @@ web search: https://docs.garak.ai/garak/examples/pr |
 | 2026-06-01 02:52 UTC | KV260 SSH-reachability continuity (per Hardware-Ta | OK | 89 passed in 4.06s |
 | 2026-06-01 02:57 UTC | PolarFire opportunistic reachability + continuity  | OK | 83 passed in 4.33s |
 | 2026-06-01 03:04 UTC | GateMate continuity audit (documentation-only — fl | OK | 86 passed in 3.70s |
+| 2026-06-01 03:12 UTC | Capstone v331 — was '.329 math-only' a contaminati | OK | 82 passed in 3.54s |
