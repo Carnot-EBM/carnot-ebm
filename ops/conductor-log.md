@@ -7381,3 +7381,4 @@ web search: https://docs.garak.ai/garak/examples/pr |
 | 2026-06-01 02:46 UTC | G1-G4 gate-status synthesis v331 (paper_ready=true | OK | 82 passed in 4.49s |
 | 2026-06-01 02:52 UTC | KV260 SSH-reachability continuity (per Hardware-Ta | OK | 89 passed in 4.06s |
 | 2026-06-01 02:57 UTC | PolarFire opportunistic reachability + continuity  | OK | 83 passed in 4.33s |
+| 2026-06-01 03:04 UTC | GateMate continuity audit (documentation-only — fl | OK | 86 passed in 3.70s |
