@@ -9271,3 +9271,18 @@ When Exp 3592 runs, it produces the G-gate status, sets p01_status to honest-neg
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-VERIFY-3592 | Implemented (`scripts/experiment_3592_g_gate_status_synthesis_v330.py`) | Implemented (`tests/python/test_experiment_3592_g_gate_status_synthesis_v330.py`) |
+
+### REQ-VERIFY-3596: Capstone V330 329-Null Correction
+
+The repository shall provide an Exp 3596 script `experiment_3596_capstone_v330.py` that capstones the de-contamination milestone.
+- REQ-VERIFY-3596-1: The script SHALL aggregate findings from experiments 3584, 3585, 3586, 3587, 3589, and 3591.
+- REQ-VERIFY-3596-2: The script SHALL output a terminal artifact `results/experiment_3596_capstone_v330.json` with required schema fields.
+
+### SCENARIO-VERIFY-3596: Capstone Aggregation
+When Exp 3596 runs, it synthesizes the capstone from upstream experiment artifacts and writes the output JSON file.
+
+## Implementation Status (REQ-VERIFY-3596)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-VERIFY-3596 | Implemented | Implemented |
