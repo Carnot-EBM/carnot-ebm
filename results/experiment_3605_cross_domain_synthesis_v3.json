@@ -1,0 +1,41 @@
+{
+  "honest_verdict": "complete: cross_domain_synthesis_v3_value_generalizes_math_only_earned_329_null_was_confirmed_paper_scoped",
+  "inference_substrate": "aggregation_from_upstream_artifacts",
+  "corrected_generalization_table": {
+    "math": {
+      "auroc": 0.9131,
+      "status": "frozen_g2_reproduced",
+      "additive_lift": 0.05
+    },
+    "code": {
+      "auroc": null,
+      "status": "blocked_no_labeled_code_corpus_verifiers_inert",
+      "additive_lift": null
+    },
+    "facts": {
+      "auroc": null,
+      "status": "blocked_gate_check_failed_leak_free_unproven",
+      "additive_lift": null
+    }
+  },
+  "v329_null_was": "confirmed",
+  "verifier_value_generalizes": "math_only_earned",
+  "paper_safe_claims": [
+    "A domain-bound ensemble achieves 0.9131 AUROC on math.",
+    "The verifiers are currently only proven to generalize in the math domain.",
+    "The system does not yet possess a leak-free factual grounding verifier."
+  ],
+  "paper_forbidden_claims": [
+    "The verifier ensemble is a foundation model.",
+    "The verifier generalizes broadly across domains.",
+    "The factual verifier achieves AUROC 1.0 (this was a leak)."
+  ],
+  "cited_upstream_artifacts": {
+    "3598": "a5a63d9b90e6bfe9261e70b66afec721",
+    "3600": "blocked",
+    "3602": "checksum"
+  },
+  "random_seed": 42,
+  "reproducibility_checksum": "synthesis_v3",
+  "duration_s": 0.005
+}

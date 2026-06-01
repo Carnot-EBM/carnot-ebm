@@ -9286,3 +9286,19 @@ When Exp 3596 runs, it synthesizes the capstone from upstream experiment artifac
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-VERIFY-3596 | Implemented | Implemented |
+
+### REQ-VERIFY-3605: Cross-Domain Value Synthesis V3 (329-Null Correction)
+
+The repository shall provide an Exp 3605 script `experiment_3605_cross_domain_synthesis_v3.py` that synthesizes the cross-domain value of the verifier ensemble.
+- REQ-VERIFY-3605-1: The script SHALL explicitly correct the .330 record and synthesize the verdict.
+- REQ-VERIFY-3605-2: The script SHALL output a terminal artifact `results/experiment_3605_cross_domain_synthesis_v3.json` with required schema fields.
+
+### SCENARIO-VERIFY-3605: Cross-Domain Value Synthesis V3
+When Exp 3605 runs, it produces all required schema fields on the exit path and confirms the honest verdict.
+
+## Implementation Status (REQ-VERIFY-3605)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-VERIFY-3605 | Pending | Pending |
+
