@@ -7513,3 +7513,4 @@ web search: https://docs.garak.ai/garak/examples/pr |
 | 2026-06-01 09:11 UTC | Build the labeled CODE corpus from exp1999 + make  | OK | 91 passed in 4.12s |
 | 2026-06-01 09:27 UTC | CENTERPIECE: corrected cross-domain re-measurement | OK | 109 passed in 6.25s |
 | 2026-06-01 09:42 UTC | Additivity / 'second pair of eyes' — does ensemble | OK | 88 passed in 4.57s |
+| 2026-06-01 09:57 UTC | Position Carnot vs the SOTA weak-verifier peer Wea | OK | 90 passed in 4.39s |
