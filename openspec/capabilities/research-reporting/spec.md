@@ -15466,6 +15466,65 @@ and environment were not modified, recommends `codex_requires_codex`, and emits
 |---|---|---|
 | REQ-REPORT-3666 | Implemented (`python/carnot/reporting/backend_state_diagnostic_v2_3666.py`, `scripts/experiment_3666_backend_state_diagnostic_v2.py`) | Implemented (`tests/python/test_experiment_3666_backend_state_diagnostic_v2.py`) |
 
+### REQ-REPORT-3679: Backend State Diagnostic Third Stability Probe
+
+The Exp 3679 workflow shall run the third consecutive Gemini backend
+stability probe after Exp 3653 and Exp 3666 both recorded OK Gemini prompt
+probes following the `.333` Gemini crash/quota wipeout. It shall run at most
+one bounded Gemini CLI version probe, one bounded Gemini prompt probe using
+`gemini-3.1-pro-preview`, and one read-only conductor coercion environment
+probe equivalent to `env | grep -iE 'AGENT_TYPE|FORCE_EXPERIMENTS'`. It SHALL
+NOT loop, retry, call the conductor, modify `scripts/research_conductor.py`,
+mutate shell environment variables, edit conductor configuration, or change
+`ops/status.md`, `ops/changelog.md`, or `_bmad/traceability.md`.
+
+The workflow SHALL read the Exp 3653 recovery probe and Exp 3666 second
+stability probe via `scripts/summarize_artifact.py`, plus `CLAUDE.md`
+Gemini-Default routing rules, and write
+`results/experiment_3679_backend_state_diagnostic_v3.json` with bare top-level
+values for `honest_verdict`, `inference_substrate`, `gemini_cli_version`,
+`gemini_quota_state`, `consecutive_stable_probes`,
+`conductor_coercion_env`, `recommended_routing`,
+`conductor_unmodified_assert`, `random_seed`,
+`reproducibility_checksum`, and `duration_s`, plus `field_principles`
+documenting why each required value exists. The prompt probe output SHALL be
+preserved with stdout, stderr, exit code, and combined output.
+`gemini_quota_state` SHALL be one of `ok`, `quota_exhausted_429`, or
+`crash_js_345500`. The workflow SHALL recommend
+`gemini_default_eligible_for_v338` only when Exp 3653 and Exp 3666 both
+recorded `gemini_quota_state=ok` and the bounded Exp 3679 prompt probe also
+exits successfully with an OK reply; otherwise it SHALL recommend
+`codex_requires_codex` and reset the stable-probe counter.
+
+#### SCENARIO-REPORT-3679: Third Stable Probe Makes V338 Eligible
+
+**Given** Exp 3653 and Exp 3666 both recorded `gemini_quota_state=ok`
+**When** the bounded Exp 3679 Gemini prompt probe exits successfully with an
+OK reply
+**Then** the workflow classifies `gemini_quota_state` as `ok`, records
+`consecutive_stable_probes=3`, preserves raw probe output, asserts the
+conductor and environment were not modified, recommends
+`gemini_default_eligible_for_v338`, and emits
+`complete: backend_diagnosed_gemini_stable_3rd_probe_v338_may_flip_to_gemini_default`.
+
+#### SCENARIO-REPORT-3679-UNSTABLE: Quota Or Crash Keeps Codex Routing
+
+**Given** Exp 3653 and Exp 3666 both recorded `gemini_quota_state=ok`
+**When** the bounded Exp 3679 Gemini prompt probe reports `QUOTA_EXHAUSTED`,
+HTTP `429`, or the Gemini CLI `.js:345500:14` crash frame
+**Then** the workflow classifies `gemini_quota_state` as
+`quota_exhausted_429` or `crash_js_345500`, records that the third stable
+probe did not materialize, preserves raw probe output, asserts the conductor
+and environment were not modified, recommends `codex_requires_codex`, resets
+the stable-probe counter to `0`, and emits
+`complete: backend_diagnosed_gemini_still_unstable_keep_codex_routing`.
+
+## Implementation Status (REQ-REPORT-3679)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-3679 | Implemented (`python/carnot/reporting/backend_state_diagnostic_v3_3679.py`, `scripts/experiment_3679_backend_state_diagnostic_v3.py`) | Implemented (`tests/python/test_experiment_3679_backend_state_diagnostic_v3.py`) |
+
 ### REQ-REPORT-3669: Real Factual Hallucination Corpus Builder
 
 The Exp 3669 workflow shall build a real factual hallucination corpus for the
