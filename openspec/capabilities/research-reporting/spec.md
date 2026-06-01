@@ -15084,3 +15084,50 @@ Exp 3624 leftover warning, updates `research-complete.yaml` honestly for
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-REPORT-3638 | Implemented (`python/carnot/reporting/archive_v333_activate_v334_3638.py`) | Implemented (`tests/python/test_experiment_3638_archive_v333_activate_v334.py`) |
+
+### REQ-REPORT-3639: Gemini CLI Quota Crash Resilience Diagnostic
+
+The Exp 3639 workflow shall diagnose the `.333` Gemini backend outage without
+changing conductor code, conductor configuration, or operator environment. It
+shall run at most one bounded Gemini version probe and one bounded Gemini
+prompt probe, record the read-only conductor coercion environment, and write
+`results/experiment_3639_gemini_cli_quota_crash_resilience_diagnostic.json`.
+
+The artifact shall include `honest_verdict`, `inference_substrate`,
+`gemini_cli_version`, `gemini_quota_state`, `gemini_reset_eta`,
+`conductor_coercion_env`, `operator_recommendation`,
+`conductor_unmodified_assert`, `random_seed`, `reproducibility_checksum`, and
+`duration_s`. If the prompt probe returns `QUOTA_EXHAUSTED`, HTTP `429`, or the
+Gemini CLI `.js:345500:14` stack frame, the workflow SHALL preserve that raw
+probe output and recommend either routing experiment tasks through Codex via
+`CODEX_FORCE_EXPERIMENTS=1` while overriding Gemini forcing, or waiting for the
+reported reset window before relaunching the conductor.
+
+The workflow MUST NOT modify `scripts/research_conductor.py`, shell
+environment variables, conductor config files, `ops/status.md`,
+`ops/changelog.md`, or `_bmad/traceability.md`.
+
+#### SCENARIO-REPORT-3639: Quota Exhaustion Recommends Codex Emergency Flip
+
+**Given** Gemini CLI version `0.44.0`, `AGENT_TYPE=gemini`, and
+`GEMINI_FORCE_EXPERIMENTS=1`
+**When** the bounded Gemini prompt probe returns `QUOTA_EXHAUSTED`, HTTP `429`,
+or the `.js:345500:14` crash frame
+**Then** the Exp 3639 workflow writes the diagnostic artifact with
+`gemini_quota_state` classified as `quota_exhausted_429` or
+`crash_js_345500`, records the reset ETA when present, preserves the raw probe
+output, asserts the conductor was unmodified, and emits
+`complete: gemini_quota_crash_diagnosed_429_crash_recorded_operator_codex_flip_recommended`.
+
+#### SCENARIO-REPORT-3639-RECOVERED: Recovered Gemini Requires No Routing Action
+
+**Given** the bounded Gemini prompt probe exits successfully with an OK reply
+**When** the Exp 3639 workflow writes the diagnostic artifact
+**Then** it classifies `gemini_quota_state` as `ok`, preserves the same schema
+fields, and emits `complete: gemini_recovered_quota_ok_no_action_needed`.
+
+## Implementation Status (REQ-REPORT-3639)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-3639 | Implemented (`python/carnot/reporting/gemini_cli_quota_crash_resilience_diagnostic_3639.py`) | Implemented (`tests/python/test_experiment_3639_gemini_cli_quota_crash_resilience_diagnostic.py`) |

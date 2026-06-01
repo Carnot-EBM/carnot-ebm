@@ -1,0 +1,69 @@
+{
+  "command_probes": {
+    "conductor_env": {
+      "combined_output": "AGENT_TYPE_RETRO=gemini\nAGENT_TYPE=gemini\nGEMINI_FORCE_EXPERIMENTS=1\nAGENT_TYPE_PLANNER=claude\n",
+      "command": "bash -lc 'env | grep -iE '\"'\"'AGENT_TYPE|FORCE_EXPERIMENTS'\"'\"''",
+      "exit_code": 0,
+      "stderr": "",
+      "stdout": "AGENT_TYPE_RETRO=gemini\nAGENT_TYPE=gemini\nGEMINI_FORCE_EXPERIMENTS=1\nAGENT_TYPE_PLANNER=claude\n"
+    },
+    "gemini_reply": {
+      "combined_output": "Warning: Basic terminal detected (TERM=dumb). Visual rendering will be limited. For the best experience, use a terminal emulator with truecolor support.\nWarning: 256-color support not detected. Using a terminal with at least 256-color support is recommended for a better visual experience.\nError when talking to Gemini API Full report available at: /tmp/gemini-client-error-Turn.run-sendMessageStream-2026-06-01T08-32-30-873Z.json TerminalQuotaError: You have exhausted your capacity on this model. Your quota will reset after 2h16m36s.\n    at classifyGoogleError (file:///usr/lib/node_modules/@google/gemini-cli/bundle/chunk-NBZI34DT.js:304869:18)\n    at retryWithBackoff (file:///usr/lib/node_modules/@google/gemini-cli/bundle/chunk-NBZI34DT.js:305640:31)\n    at process.processTicksAndRejections (node:internal/process/task_queues:104:5)\n    at async GeminiChat.makeApiCallAndProcessStream (file:///usr/lib/node_modules/@google/gemini-cli/bundle/chunk-NBZI34DT.js:330487:28)\n    at async GeminiChat.streamWithRetries (file:///usr/lib/node_modules/@google/gemini-cli/bundle/chunk-NBZI34DT.js:330238:29)\n    at async Turn.run (file:///usr/lib/node_modules/@google/gemini-cli/bundle/chunk-NBZI34DT.js:331114:24)\n    at async GeminiClient.processTurn (file:///usr/lib/node_modules/@google/gemini-cli/bundle/chunk-NBZI34DT.js:345379:22)\n    at async GeminiClient.sendMessageStream (file:///usr/lib/node_modules/@google/gemini-cli/bundle/chunk-NBZI34DT.js:345500:14)\n    at async file:///usr/lib/node_modules/@google/gemini-cli/bundle/gemini-O352TFG4.js:10855:26\n    at async main (file:///usr/lib/node_modules/@google/gemini-cli/bundle/gemini-O352TFG4.js:16260:5) {\n  retryDelayMs: 8196165.383129999,\n  reason: 'QUOTA_EXHAUSTED',\n  cause: {\n    code: 429,\n    message: 'You have exhausted your capacity on this model. Your quota will reset after 2h16m36s.',\n    details: [ [Object], [Object] ]\n  }\n}\nAn unexpected critical error occurred:[object Object]\n",
+      "command": "timeout 60 gemini -m gemini-3.1-pro-preview -p 'Reply OK'",
+      "exit_code": 1,
+      "stderr": "Warning: Basic terminal detected (TERM=dumb). Visual rendering will be limited. For the best experience, use a terminal emulator with truecolor support.\nWarning: 256-color support not detected. Using a terminal with at least 256-color support is recommended for a better visual experience.\nError when talking to Gemini API Full report available at: /tmp/gemini-client-error-Turn.run-sendMessageStream-2026-06-01T08-32-30-873Z.json TerminalQuotaError: You have exhausted your capacity on this model. Your quota will reset after 2h16m36s.\n    at classifyGoogleError (file:///usr/lib/node_modules/@google/gemini-cli/bundle/chunk-NBZI34DT.js:304869:18)\n    at retryWithBackoff (file:///usr/lib/node_modules/@google/gemini-cli/bundle/chunk-NBZI34DT.js:305640:31)\n    at process.processTicksAndRejections (node:internal/process/task_queues:104:5)\n    at async GeminiChat.makeApiCallAndProcessStream (file:///usr/lib/node_modules/@google/gemini-cli/bundle/chunk-NBZI34DT.js:330487:28)\n    at async GeminiChat.streamWithRetries (file:///usr/lib/node_modules/@google/gemini-cli/bundle/chunk-NBZI34DT.js:330238:29)\n    at async Turn.run (file:///usr/lib/node_modules/@google/gemini-cli/bundle/chunk-NBZI34DT.js:331114:24)\n    at async GeminiClient.processTurn (file:///usr/lib/node_modules/@google/gemini-cli/bundle/chunk-NBZI34DT.js:345379:22)\n    at async GeminiClient.sendMessageStream (file:///usr/lib/node_modules/@google/gemini-cli/bundle/chunk-NBZI34DT.js:345500:14)\n    at async file:///usr/lib/node_modules/@google/gemini-cli/bundle/gemini-O352TFG4.js:10855:26\n    at async main (file:///usr/lib/node_modules/@google/gemini-cli/bundle/gemini-O352TFG4.js:16260:5) {\n  retryDelayMs: 8196165.383129999,\n  reason: 'QUOTA_EXHAUSTED',\n  cause: {\n    code: 429,\n    message: 'You have exhausted your capacity on this model. Your quota will reset after 2h16m36s.',\n    details: [ [Object], [Object] ]\n  }\n}\nAn unexpected critical error occurred:[object Object]\n",
+      "stdout": ""
+    },
+    "gemini_version": {
+      "combined_output": "0.44.0\n",
+      "command": "timeout 30 gemini --version",
+      "exit_code": 0,
+      "stderr": "",
+      "stdout": "0.44.0\n"
+    }
+  },
+  "conductor_coercion_env": {
+    "AGENT_TYPE": "gemini",
+    "AGENT_TYPE_PLANNER": "claude",
+    "AGENT_TYPE_RETRO": "gemini",
+    "CODEX_FORCE_EXPERIMENTS": null,
+    "GEMINI_FORCE_EXPERIMENTS": "1",
+    "raw": "AGENT_TYPE_RETRO=gemini\nAGENT_TYPE=gemini\nGEMINI_FORCE_EXPERIMENTS=1\nAGENT_TYPE_PLANNER=claude\n"
+  },
+  "conductor_log_js345500_seen": true,
+  "conductor_unmodified_assert": "scripts/research_conductor.py sha256 unchanged before/after diagnostic; environment was read only and no conductor config writes were performed.",
+  "context_sources_read": [
+    "ops/conductor-log.md tail",
+    "CLAUDE.md Gemini-Default for Experiments",
+    "ops/known-issues.md gemini backend routing paused"
+  ],
+  "duration_s": 12.0128,
+  "experiment_id": "exp3639",
+  "field_principles": {
+    "conductor_coercion_env": "Records AGENT_TYPE and force-experiment env so the failed route is auditable.",
+    "conductor_unmodified_assert": "Asserts this diagnostic did not modify research_conductor.py or env.",
+    "duration_s": "Plausibility floor.",
+    "gemini_cli_version": "Records the installed gemini-cli version so a future upgrade is auditable.",
+    "gemini_quota_state": "Root-cause signal that wiped out .333: ok, quota_exhausted_429, or crash_js_345500.",
+    "gemini_reset_eta": "If 429 is returned, the reported quota-reset window tells the operator how long to wait.",
+    "honest_verdict": "Terminal prefix for reconciler classification.",
+    "inference_substrate": "A bounded CLI health probe, not live model inference; it only asks whether the Gemini backend is available.",
+    "operator_recommendation": "Concrete operator action: flip experiments to Codex or wait for quota reset.",
+    "random_seed": "Determinism precondition."
+  },
+  "gemini_cli_version": "0.44.0",
+  "gemini_crash_signature_seen": true,
+  "gemini_quota_signal_seen": true,
+  "gemini_quota_state": "quota_exhausted_429",
+  "gemini_reset_eta": "2h16m36s",
+  "honest_verdict": "complete: gemini_quota_crash_diagnosed_429_crash_recorded_operator_codex_flip_recommended",
+  "inference_substrate": "hardware_smoke",
+  "operator_recommendation": "Set CODEX_FORCE_EXPERIMENTS=1 and unset or override GEMINI_FORCE_EXPERIMENTS before relaunching the conductor, or wait about 2h16m36s for Gemini quota reset.",
+  "random_seed": 3639,
+  "reproducibility_checksum": "8f1568c431ec35ad57f0069f5d0e32ba3b757a5824162a45143937608c960dc6",
+  "research_conductor_sha256_after": "4d4e79a1ea787ddc70234a6eae0818c37a94102ed9b8cbf28aecb77e2d9d6936",
+  "research_conductor_sha256_before": "4d4e79a1ea787ddc70234a6eae0818c37a94102ed9b8cbf28aecb77e2d9d6936",
+  "research_conductor_unmodified": true,
+  "schema": "carnot.gemini_cli_quota_crash_resilience_diagnostic.v1",
+  "task_id": "exp3639-gemini-cli-quota-crash-resilience-diagnostic"
+}
