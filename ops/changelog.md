@@ -8061,3 +8061,4 @@ ModuleNotFoundError: No module named 'torch'; results/experiment_2828_fover_memo
 
 ### Summary
 Wrote operational retro for 2026.06.331. Found no experiment commits; 0 experiments and 0 compute-bound tasks completed. Identified stranded 4MB allocations on both idle GPUs.
+- 2026-06-01: Archive milestone .331 honestly (record that 'math-only confirmed' came from BLOCKED non-math rows, not measurement) and activate .332 (⚠️ Blocked) — honest_verdict=complete: archived_v331_unfinished_decontamination_facts_code_blocked_not_measured_v332_active_paper_ready_true; results/experiment_3611_archive_v331_activate_v332.json
