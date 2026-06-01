@@ -7379,3 +7379,4 @@ web search: https://docs.garak.ai/garak/examples/pr |
 | 2026-06-01 02:41 UTC | Cross-domain generalization SYNTHESIS v3 — does ve | OK | 82 passed in 3.55s |
 | 2026-06-01 02:43 UTC | Additivity / 'second pair of eyes' — does ensemble | GATE_BLOCK | Pre-emptive skip: upstream retired (exp3601-corrected-cross-domain-remeasurement |
 | 2026-06-01 02:46 UTC | G1-G4 gate-status synthesis v331 (paper_ready=true | OK | 82 passed in 4.49s |
+| 2026-06-01 02:52 UTC | KV260 SSH-reachability continuity (per Hardware-Ta | OK | 89 passed in 4.06s |
