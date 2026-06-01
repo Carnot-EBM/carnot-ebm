@@ -7375,3 +7375,4 @@ web search: https://docs.garak.ai/garak/examples/pr |
 | 2026-06-01 02:28 UTC | math→code PRM-transfer positive control (arXiv:250 | OK | 83 passed in 4.19s |
 | 2026-06-01 02:30 UTC | Additivity / 'second pair of eyes' — does ensemble | GATE_BLOCK | Pre-emptive skip: upstream retired (exp3601-corrected-cross-domain-remeasurement |
 | 2026-06-01 02:34 UTC | FR-11 continuous self-learning v6 — online-calibra | OK | 84 passed in 4.97s |
+| 2026-06-01 02:36 UTC | Additivity / 'second pair of eyes' — does ensemble | GATE_BLOCK | Pre-emptive skip: upstream retired (exp3601-corrected-cross-domain-remeasurement |
