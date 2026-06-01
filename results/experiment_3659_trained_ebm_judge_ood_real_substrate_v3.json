@@ -1,0 +1,171 @@
+{
+  "acceptance_gate": {
+    "condition": "in_domain_judge_auroc present AND shuffled_label_control_auroc present AND ood_judge_auroc present",
+    "passed": true,
+    "principle": "An OOD-transfer claim requires an in-domain sanity pass AND a shuffled-label adversarial control -- without both the OOD number could be a degenerate-prior artifact."
+  },
+  "artifact": "experiment_3659_trained_ebm_judge_ood_real_substrate_v3",
+  "confidence_only_baseline_auroc": 0.882162,
+  "confidence_only_baseline_auroc_ci95": [
+    0.882162,
+    0.882162
+  ],
+  "duration_s": 4.457216,
+  "exp3646_reference_metrics": {
+    "confidence_only_baseline_auroc": 0.882162,
+    "toy_head_ood_reference_auroc": 0.673554
+  },
+  "field_principles": {
+    "confidence_only_baseline_auroc": "The bar the judge must beat OOD (exp3646 found confidence 0.882 beat the toy judge 0.673).",
+    "duration_s": "Plausibility floor (a real train+eval takes minutes, not seconds).",
+    "honest_verdict": "Terminal prefix for reconciler classification.",
+    "in_domain_judge_auroc": "Sanity: the trained judge must work in-domain before any OOD claim is meaningful.",
+    "inference_substrate": "Trains a head on real embeddings of cached labels + scores cached corpora; declares GPU/CPU + substrate.",
+    "judge_recipe": "Features/loss/epochs -- reproducibility of the prototype.",
+    "judge_substrate": "The REAL substrate used (GGUF embedding model / small transformer) -- the key difference from the .334 toy numpy head.",
+    "n_examples_per_domain": "Sample-size rigor.",
+    "ood_domains_tested": "Which OOD domains (code/facts) were evaluated -- scopes the transfer claim.",
+    "ood_judge_auroc": "The core number: does the real-substrate trained judge detect errors OOD?",
+    "random_seed": "Determinism precondition.",
+    "real_substrate_vs_toy_head_ood_delta": "Did a real substrate buy OOD transfer the .334 toy head lacked? -- the resourcing-vs-method question.",
+    "reproducibility_checksum": "Drift detection.",
+    "shuffled_label_control_auroc": "Adversarial control: ~0.5 confirms the judge is not learning a degenerate length/format prior.",
+    "trained_judge_transfers_ood": "BARE bool. True iff the real-substrate judge beats BOTH confidence-only and shuffled-control OOD."
+  },
+  "honest_verdict": "complete: real_substrate_trained_judge_also_math_only_trained_judge_not_the_cross_domain_fix",
+  "in_domain_judge_auroc": 0.978741,
+  "in_domain_judge_auroc_ci95": [
+    0.964952,
+    0.989165
+  ],
+  "inference_substrate": "verifier_ensemble_against_cached_candidates",
+  "judge_recipe": {
+    "device": "cuda",
+    "embedding_features": "frozen local transformer sentence embeddings",
+    "epochs": 80,
+    "input_dim": 389,
+    "l2": 0.0001,
+    "learning_rate": 0.05,
+    "loss": "AdamW binary cross-entropy on math error_label; score is P(error).",
+    "model": "torch_logistic_energy_rank_head_on_real_transformer_embeddings",
+    "random_seeds": [
+      3659,
+      3660,
+      3661
+    ],
+    "scalar_features": [
+      "validity_signal",
+      "confidence_error_signal",
+      "log1p_char_count",
+      "digit_fraction",
+      "format_noise_signal"
+    ],
+    "train_eval_split": "80/20 stratified FoVer math split per seed; OOD labels are never used for training."
+  },
+  "judge_substrate": {
+    "device": "cuda",
+    "embedding_batch_size": 96,
+    "kind": "small_transformer_embedding_plus_torch_rank_head",
+    "local_files_only": true,
+    "max_length": 192,
+    "model_id": "sentence-transformers/all-MiniLM-L6-v2",
+    "num_embedding_model_params": 22713216
+  },
+  "models_tested": [
+    "sentence-transformers/all-MiniLM-L6-v2"
+  ],
+  "n_examples_per_domain": {
+    "code": 320,
+    "facts": 500,
+    "math": 2000
+  },
+  "ood_domains_tested": [
+    "code",
+    "facts"
+  ],
+  "ood_judge_auroc": 0.572465,
+  "ood_judge_auroc_by_domain": {
+    "code": {
+      "ci95": [
+        0.67859,
+        0.843074
+      ],
+      "point": 0.767173,
+      "seed_values": [
+        0.673142,
+        0.782095,
+        0.846284
+      ]
+    },
+    "facts": {
+      "ci95": [
+        0.611063,
+        0.617538
+      ],
+      "point": 0.614373,
+      "seed_values": [
+        0.614544,
+        0.61088,
+        0.617696
+      ]
+    }
+  },
+  "ood_judge_auroc_ci95": [
+    0.522149,
+    0.603621
+  ],
+  "ops_docs_reconciliation_left_to_conductor": true,
+  "per_seed_results": [
+    {
+      "confidence_only_baseline_auroc": 0.882162,
+      "in_domain_judge_auroc": 0.989505,
+      "ood_judge_auroc": 0.518315,
+      "seed": 3659,
+      "shuffled_label_control_auroc": 0.54552
+    },
+    {
+      "confidence_only_baseline_auroc": 0.882162,
+      "in_domain_judge_auroc": 0.982701,
+      "ood_judge_auroc": 0.595004,
+      "seed": 3660,
+      "shuffled_label_control_auroc": 0.572458
+    },
+    {
+      "confidence_only_baseline_auroc": 0.882162,
+      "in_domain_judge_auroc": 0.964018,
+      "ood_judge_auroc": 0.604075,
+      "seed": 3661,
+      "shuffled_label_control_auroc": 0.383145
+    }
+  ],
+  "preconditions": {
+    "cuda_available": true,
+    "fover_math_labels_loadable": true,
+    "ood_eval_corpus_loadable": true,
+    "real_trainable_substrate_available": true
+  },
+  "random_seed": 3659,
+  "random_seeds_used": [
+    3659,
+    3660,
+    3661
+  ],
+  "real_substrate_vs_confidence_ood_delta": -0.309697,
+  "real_substrate_vs_toy_head_ood_delta": -0.101089,
+  "reproducibility_checksum": "1d565e85effdecc0",
+  "schema": "carnot.trained_ebm_judge_ood_real_substrate.v3",
+  "scripts_research_conductor_modified": false,
+  "shuffled_label_control_auroc": 0.500374,
+  "shuffled_label_control_auroc_ci95": [
+    0.391264,
+    0.571111
+  ],
+  "source_artifacts": [
+    "results/experiment_3640_build_factual_corpus_v3.json",
+    "results/experiment_3641_code_corpus_verifiers_fire_transfer_v3.json",
+    "data/fover_corpus.jsonl"
+  ],
+  "tests_run": [],
+  "toy_head_ood_reference_auroc": 0.673554,
+  "trained_judge_transfers_ood": false
+}

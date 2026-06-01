@@ -9650,3 +9650,60 @@ retain blocked metrics instead of synthetic OOD numbers.
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-VERIFY-3646 | Implemented (`python/carnot/verify/trained_ebm_judge_ood_counterpoint_v2.py`, `scripts/experiment_3646_trained_ebm_judge_ood_counterpoint_v2.py`) | Implemented (`tests/python/test_experiment_3646_trained_ebm_judge_ood_counterpoint_v2.py`) |
+
+### REQ-VERIFY-3659: Real-Substrate Trained EBM Judge OOD Retry V3
+
+The repository shall provide an Exp 3659 workflow that retries the Exp 3646
+math-trained EBM judge OOD test with a real trainable substrate instead of the
+CPU-only tiny numpy head. The workflow SHALL train only on in-domain FoVer math
+reasoning-validity labels, evaluate error-detection AUROC on held-out math and
+on every loadable OOD code/facts corpus, and compare the OOD score against both
+the shuffled-label adversarial control and the confidence-only baseline.
+
+The workflow SHALL first check the preconditions: CUDA availability, loadable
+FoVer labels with both classes, at least one OOD corpus from Exp 3641 code or
+Exp 3640 facts, and a real trainable substrate. The substrate MAY be a cached
+SOTA GGUF embedding model resolved through `cached_sota_pair()` or a small
+transformer embedding/ranking substrate trained with torch; the artifact SHALL
+name the substrate honestly and SHALL NOT claim GGUF embedding inference unless
+that GGUF embedding path is actually used. If no OOD corpus is loadable, the
+workflow SHALL emit `complete: blocked_no_ood_eval_corpus`. If no real
+trainable substrate is available, it SHALL emit
+`complete: blocked_no_trainable_substrate`.
+
+For runnable inputs, the workflow SHALL run at least three random seeds, train
+a ranking/energy head on real embeddings or a real transformer substrate,
+report confidence intervals over seed AUROCs, and run a shuffled-label control
+whose OOD AUROC should be near chance. The top-level
+`trained_judge_transfers_ood` field SHALL be a bare boolean and SHALL be true
+only when the real-substrate trained judge beats both the confidence-only
+baseline and the shuffled-label control on combined OOD evaluation.
+
+The workflow SHALL write
+`results/experiment_3659_trained_ebm_judge_ood_real_substrate_v3.json` with
+the required fields `honest_verdict`, `inference_substrate`, `judge_substrate`,
+`judge_recipe`, `in_domain_judge_auroc`, `ood_judge_auroc`,
+`confidence_only_baseline_auroc`, `shuffled_label_control_auroc`,
+`ood_domains_tested`, `real_substrate_vs_toy_head_ood_delta`,
+`trained_judge_transfers_ood`, `n_examples_per_domain`, `random_seed`,
+`reproducibility_checksum`, and `duration_s`. The artifact SHALL include
+principle annotations for those required fields, seed-level detail, CI fields,
+source artifacts, and an acceptance gate whose condition is
+`in_domain_judge_auroc present AND shuffled_label_control_auroc present AND
+ood_judge_auroc present`.
+
+### SCENARIO-VERIFY-3659: Real-Substrate Verdicts Cover Transfer, Null, And Blocked Outcomes
+
+Given synthetic FoVer math fixtures, synthetic OOD fixtures, and injected real
+embedding fixtures that separately produce transfer, no-transfer, missing-OOD,
+and missing-substrate outcomes, when the Exp 3659 workflow builds its artifact,
+then the terminal verdict is selected from the allowed honest verdicts, the
+bare transfer boolean is true only when OOD AUROC beats both mandatory
+controls, and blocked outcomes retain missing OOD metrics rather than
+fabricating numbers.
+
+## Implementation Status (REQ-VERIFY-3659)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-VERIFY-3659 | Implemented (`python/carnot/verify/trained_ebm_judge_ood_real_substrate_v3.py`, `scripts/experiment_3659_trained_ebm_judge_ood_real_substrate_v3.py`) | Implemented (`tests/python/test_experiment_3659_trained_ebm_judge_ood_real_substrate_v3.py`) |
