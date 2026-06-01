@@ -7362,3 +7362,4 @@ web search: https://docs.garak.ai/garak/examples/pr |
 | 2026-06-01 01:06 UTC | Capstone v330 — was '.329 math-only' real or a fai | OK | 82 passed in 3.88s |
 | 2026-06-01 01:43 UTC | Plan milestone 2026.06.331 | OK | 14 tasks proposed |
 | 2026-06-01 01:45 UTC | Milestone 2026.06.331 activated | OK | 14 tasks queued |
+| 2026-06-01 01:50 UTC | Archive milestone .330 honestly (record the gate c | OK | 82 passed in 4.32s |
