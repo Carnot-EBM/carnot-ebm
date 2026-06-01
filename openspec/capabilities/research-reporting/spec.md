@@ -15540,3 +15540,53 @@ HaluEval source is available
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-REPORT-3669 | Implemented (`python/carnot/reporting/real_factual_corpus_ragtruth_3669.py`, `scripts/experiment_3669_build_real_factual_corpus.py`) | Implemented (`tests/python/test_experiment_3669_build_real_factual_corpus.py`) |
+
+### REQ-REPORT-3678: Archive V336 And Activate V337 Handoff
+
+The Exp 3678 workflow shall archive milestone `2026.06.336` and confirm that
+`research-roadmap.yaml` is active for milestone `2026.06.337`. It SHALL write
+`results/experiment_3678_archive_v336_activate_v337.json` by aggregating
+existing upstream artifacts and roadmap/archive files only. It SHALL NOT run
+live inference, push changes, or modify `scripts/research_conductor.py`.
+
+The workflow SHALL update the single `2026.06.336` block in
+`research-complete.yaml`, or append it if absent, so the archive records the
+defensible `.336` state: dependency-aware weighting is a clean, held-out
+validated headline re-freeze candidate; facts-generalization is retired on real
+RAGTruth data; ensemble best-of-N selection is an earned negative even where
+self-consistency is weak; the second-pair-of-eyes detector shipped
+math-strong/code-blind; FR-11 v10 held without collapse; `paper_ready` remains
+true; and P0.1 remains honest-negative. The archive update SHALL be idempotent.
+
+The terminal artifact SHALL include bare top-level values for
+`honest_verdict`, `inference_substrate`, `v336_outcome_recorded_as`,
+`headline_refreeze_candidate_recorded`,
+`facts_generalization_retired_recorded`,
+`selection_earned_negative_recorded`, `paper_ready_preserved`,
+`p01_status_preserved`, `n_tasks_archived`, `random_seed`,
+`reproducibility_checksum`, and `duration_s`, plus `field_principles`
+documenting each required value. `honest_verdict` SHALL equal
+`complete: archived_v336_dependency_aware_refreeze_candidate_facts_retired_selection_negative_v337_active_paper_ready_true`.
+`n_tasks_archived` SHALL equal the full `.336` planned task count, and
+`duration_s` SHALL use the aggregation-task plausibility floor of at least
+`0.0001`.
+
+#### SCENARIO-REPORT-3678: V336 Archive Preserves Re-Freeze Candidate State
+
+**Given** the active roadmap declares milestone `2026.06.337`, the `.336`
+capstone reports `paper_ready=true`, Exp 3668 reports a held-out validated
+dependency-aware win, Exp 3670 reports facts domain-bound on real RAGTruth, and
+Exp 3672 reports no ensemble selection value with headroom
+**When** the Exp 3678 workflow runs
+**Then** it writes the required terminal artifact, records all required
+principle-annotated bare fields, confirms `.337` active, archives all `.336`
+tasks exactly once in `research-complete.yaml`, preserves the frozen 0.9131
+headline as frozen rather than silently substituting the candidate, leaves
+`scripts/research_conductor.py` unchanged, and leaves ops/status/changelog and
+BMAD traceability reconciliation to the conductor.
+
+## Implementation Status (REQ-REPORT-3678)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-3678 | Implemented (`python/carnot/reporting/archive_v336_activate_v337_3678.py`, `scripts/experiment_3678_archive_v336_activate_v337.py`) | Implemented (`tests/python/test_experiment_3678_archive_v336_activate_v337.py`) |
