@@ -7509,3 +7509,4 @@ web search: https://docs.garak.ai/garak/examples/pr |
 | 2026-06-01 08:06 UTC | Milestone 2026.06.334 activated | OK | 14 tasks queued |
 | 2026-06-01 08:19 UTC | Archive milestone .333 honestly (record the gemini | OK | 84 passed in 4.61s |
 | 2026-06-01 08:35 UTC | gemini-cli quota-crash RESILIENCE DIAGNOSTIC — rec | OK | 88 passed in 4.85s |
+| 2026-06-01 08:53 UTC | Build factual corpus v3 from a REAL evidence-beari | OK | 88 passed in 4.92s |
