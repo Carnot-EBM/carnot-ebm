@@ -7511,3 +7511,4 @@ web search: https://docs.garak.ai/garak/examples/pr |
 | 2026-06-01 08:35 UTC | gemini-cli quota-crash RESILIENCE DIAGNOSTIC — rec | OK | 88 passed in 4.85s |
 | 2026-06-01 08:53 UTC | Build factual corpus v3 from a REAL evidence-beari | OK | 88 passed in 4.92s |
 | 2026-06-01 09:11 UTC | Build the labeled CODE corpus from exp1999 + make  | OK | 91 passed in 4.12s |
+| 2026-06-01 09:27 UTC | CENTERPIECE: corrected cross-domain re-measurement | OK | 109 passed in 6.25s |
