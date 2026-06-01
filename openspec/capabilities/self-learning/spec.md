@@ -10211,3 +10211,24 @@ beta >= f(lambda_min) with safety margin.
 - REQ-LEARN-3580-1: The experiment SHALL log inference_substrate, n_grounding_configs, random_seed, reproducibility_checksum, duration_s.
 
 ---
+
+## REQ-LEARN-3590: FR-11 Continuous Self Learning v5 Grounding Calibration
+
+**Given** the FR-11 module with a conservative-default beta and the factual-grounding verifier
+**When** the self-learning loop is run on a fresh non-degenerate corpus
+**Then** the deployed conservative-default beta MUST prevent self-distillation collapse
+**And** the positive control (beta=0) MUST collapse
+**And** the pass_rate and true_accuracy metrics MUST be distinct
+**And** the factual verifier's calibration MUST improve
+**And** overall detector quality MUST be maintained.
+
+### REQ-LEARN-3590 Sub-requirements
+
+- REQ-LEARN-3590-1: `evaluate_continuous_self_learning_v5` SHALL enforce distinct arrays for pass_rate and true_accuracy.
+- REQ-LEARN-3590-2: The acceptance gate SHALL pass only if deploy arm holds, control arm collapses, and arrays are distinct.
+
+## SCENARIO-LEARN-3590: Grounding Verifier Calibration Validation
+**Given** the evaluation function with deploy arm collapse = False and control collapse = True
+**When** the results are computed
+**Then** `honest_verdict` MUST indicate the calibration holds and quality is maintained.
+

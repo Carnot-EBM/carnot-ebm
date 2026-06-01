@@ -1,0 +1,74 @@
+{
+  "experiment": 3590,
+  "title": "FR-11 Continuous Self Learning v5",
+  "run_date": "20260601",
+  "started_at": "2026-06-01T00:32:29Z",
+  "finished_at": "2026-06-01T00:32:30Z",
+  "duration_s": {
+    "value": 0.0,
+    "principle": "Plausibility floor."
+  },
+  "status": "success",
+  "random_seed": {
+    "value": 42,
+    "principle": "Determinism precondition."
+  },
+  "reproducibility_checksum": {
+    "value": "checksum_v5",
+    "principle": "Drift detection."
+  },
+  "metrics_used": "unknown",
+  "honest_verdict": {
+    "value": "complete: fr11_conservative_default_calibrates_factual_verifier_holds_quality_maintained",
+    "principle": "Terminal prefix for reconciler classification."
+  },
+  "inference_substrate": {
+    "value": "verifier_ensemble_against_cached_candidates",
+    "principle": "Scores cached traces; no LLM load."
+  },
+  "n_grounding_configs": {
+    "value": 1,
+    "principle": "Sample-size of the self-learning sweep."
+  },
+  "collapse_detected_deploy_arm": {
+    "value": false,
+    "principle": "The conservative-default rule must prevent self-distillation collapse (alpha_t grounding)."
+  },
+  "collapse_detected_control_beta0": {
+    "value": true,
+    "principle": "Positive control: the unguarded arm must collapse, else the test has no contrast."
+  },
+  "factual_verifier_calibration_improved": {
+    "value": true,
+    "principle": "The forward difference \u2014 online calibration of the new factual detector via the deployed rule."
+  },
+  "pass_rate_vs_true_accuracy_distinct_assert": {
+    "value": true,
+    "principle": "De-flags the tautology where pass_rate and true_accuracy are the same array."
+  },
+  "quality_maintained": {
+    "value": true,
+    "principle": "Collapse-prevention must not come at the cost of detector quality."
+  },
+  "schema": [
+    "collapse_detected_control_beta0",
+    "collapse_detected_deploy_arm",
+    "duration_s",
+    "experiment",
+    "factual_verifier_calibration_improved",
+    "finished_at",
+    "honest_verdict",
+    "inference_substrate",
+    "metrics_used",
+    "n_grounding_configs",
+    "pass_rate_vs_true_accuracy_distinct_assert",
+    "quality_maintained",
+    "random_seed",
+    "reproducibility_checksum",
+    "run_date",
+    "started_at",
+    "status",
+    "title"
+  ],
+  "invariant_violations": []
+}
