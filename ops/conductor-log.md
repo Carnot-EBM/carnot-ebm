@@ -7368,3 +7368,4 @@ web search: https://docs.garak.ai/garak/examples/pr |
 | 2026-06-01 02:06 UTC | Build factual corpus v2 WITH independent held-out  | OK | 84 passed in 5.34s |
 | 2026-06-01 02:08 UTC | Build a REAL NLI-model atomic-claim factual-ground | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp3599-build-factual-corpus-v2-with-evide |
 | 2026-06-01 02:10 UTC | Build a REAL NLI-model atomic-claim factual-ground | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp3599-build-factual-corpus-v2-with-evide |
+| 2026-06-01 02:12 UTC | Build a REAL NLI-model atomic-claim factual-ground | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp3599-build-factual-corpus-v2-with-evide |

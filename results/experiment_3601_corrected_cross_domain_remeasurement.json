@@ -1,0 +1,24 @@
+{
+  "experiment": 3601,
+  "schema": "blocked_gate_check_v1",
+  "run_date": "2026-06-01",
+  "started_at": "2026-06-01T02:14:27.005029+00:00",
+  "finished_at": "2026-06-01T02:14:27.005029+00:00",
+  "duration_s": 0.0,
+  "status": "blocked",
+  "title": "CENTERPIECE: corrected cross-domain re-measurement \u2014 math (0.9131, frozen) | code (execution-applicable verifiers) | facts (real grounding verifier, corpus v2) vs strong confidence baseline",
+  "honest_verdict": "blocked_gate_check_failed",
+  "gate_check_summary": "1 of 1 gate(s) failed; first failure: exp3599-build-factual-corpus-v2-with-evidence.corpus_v2_is_realistic (actual=None == expected=True)",
+  "gates_evaluated": [
+    {
+      "upstream": "exp3599-build-factual-corpus-v2-with-evidence",
+      "artifact_field": "corpus_v2_is_realistic",
+      "op": "==",
+      "expected": true,
+      "actual": null,
+      "passed": false,
+      "reason": "actual=None == expected=True"
+    }
+  ],
+  "blocked_at_layer": "conductor_pre_gate"
+}
