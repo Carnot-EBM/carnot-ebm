@@ -4,12 +4,12 @@ milestone_doc: openspec/change-proposals/research-roadmap-vNEXT.md
 
 # OUTER-LOOP / OPERATOR PRE-STAGED ROADMAP (2026-06-01, Claude Opus 4.8). PIVOT RATIONALE:
 # .330 set out to de-contaminate the .329 "verifier is math-only" verdict but DID NOT FINISH. A gate
-# cascade (scripts/conductor_gates.py:_eval_op compared a principle-annotated dict {value:true,...} vs the
+# cascade (scripts/conductor_gates.py:_eval_op compared a principle-annotated dict {{value:true,...}} vs the
 # bare expected true, which _coerce_gate_value does not unwrap) blocked exp3586 -> the centerpiece exp3588
 # (corrected cross-domain re-measurement) NEVER RAN -> exp3589 blocked. The one factual number that landed
 # (exp3587 grounding verifier AUROC=1.0) is IMPLAUSIBLE_PERFECT contamination: the corpus
-# data/realistic_factual_corpus_v1.jsonl has NO evidence column ({question,answer,is_hallucination,
-# model_confidence}), so a grounding verifier scoring 1.0 is label-leaking, and nli_substrate was a
+# data/realistic_factual_corpus_v1.jsonl has NO evidence column ({{question,answer,is_hallucination,
+# model_confidence}}), so a grounding verifier scoring 1.0 is label-leaking, and nli_substrate was a
 # text-statistical proxy (no real NLI model). The .330 capstone "math_only_earned/329_null_was_artifact"
 # verdict was synthesized from this broken partial data -- the de-contamination question is STILL OPEN.
 # .331 finishes it HONESTLY: (1) bare gated fields fix the cascade; (2) adversarially adjudicate the 1.0
@@ -35,7 +35,7 @@ tasks:
     deliverable: results/experiment_3597_archive_v330_activate_v331.json
     prompt: |
       CONTEXT: .330 tried to de-contaminate the .329 "verifier is math-only" verdict but did NOT finish.
-      A gate cascade (principle-annotated dict {value:true,...} vs bare expected true in
+      A gate cascade (principle-annotated dict {{value:true,...}} vs bare expected true in
       scripts/conductor_gates.py:_eval_op) blocked exp3586 -> the centerpiece exp3588 (corrected
       cross-domain re-measurement) NEVER RAN -> exp3589 blocked. The one factual number that landed,
       exp3587 grounding-verifier AUROC=1.0, is contamination (the corpus has no evidence column to ground
@@ -97,7 +97,7 @@ tasks:
       CONCRETE STEPS:
         1. GATE CASCADE: confirm exp3586/3589 blocked_gate_check_failed and that exp3588 produced no
            artifact. Read the gates_evaluated block in exp3586 and show the actual value was a dict
-           {value:true,principle:...} compared against bare true. State the forward rule: gated fields must
+           {{value:true,principle:...}} compared against bare true. State the forward rule: gated fields must
            be emitted bare.
         2. AUROC=1.0 AUDIT: inspect data/realistic_factual_corpus_v1.jsonl -- confirm it has NO independent
            evidence/reference column (only question/answer/is_hallucination/model_confidence). Read
@@ -145,7 +145,7 @@ tasks:
     prior_failures:
       - experiment_id: exp3585-build-realistic-factual-hallucination-corpus
         verdict: complete_realistic_factual_corpus_built_confidence_auroc_FF_headroom_confirmed
-        addressed_by: "exp3585 built a corpus with NO independent evidence column ({question,answer,is_hallucination,model_confidence}), which is why exp3587's grounding verifier had nothing legitimate to ground against and leaked to AUROC=1.0. This task is DIFFERENT: it builds corpus v2 that CARRIES an independent evidence passage (the HaluEval QA `knowledge` field) held out from the gold label, AND validates the confidence baseline AUROC is in (0.5,0.95) -- real headroom AND a real grounding target."
+        addressed_by: "exp3585 built a corpus with NO independent evidence column ({{question,answer,is_hallucination,model_confidence}}), which is why exp3587's grounding verifier had nothing legitimate to ground against and leaked to AUROC=1.0. This task is DIFFERENT: it builds corpus v2 that CARRIES an independent evidence passage (the HaluEval QA `knowledge` field) held out from the gold label, AND validates the confidence baseline AUROC is in (0.5,0.95) -- real headroom AND a real grounding target."
         retire_if_same_verdict: false
     milestone: "2026.06.331"
     title: "Build factual corpus v2 WITH independent held-out evidence passages (HaluEval QA `knowledge`) + confidence headroom in (0.5, 0.95)"
@@ -180,8 +180,8 @@ tasks:
            `python -c "from carnot.inference.sota_models import cached_sota_pair; assert cached_sota_pair(gpu_indices=(0,1))"`.
            If not -> "complete: blocked_sota_model_not_loadable".
       CONCRETE STEPS:
-        1. Assemble >= 200 records, EACH carrying {question, answer, is_hallucination, model_confidence,
-           evidence_passage}. REJECT the .330 placeholder corpus: if any record's `answer` matches the
+        1. Assemble >= 200 records, EACH carrying {{question, answer, is_hallucination, model_confidence,
+           evidence_passage}}. REJECT the .330 placeholder corpus: if any record's `answer` matches the
            regex `^[RH]\d+$` (the toy R1/R2/H1/H2 label-tokens that leaked into exp3587's 1.0) or
            `question` matches `^Q\d+$`, the corpus is synthetic-degenerate -- do NOT use it; fetch or
            generate REAL factual records instead. The evidence_passage MUST be independent of the gold
@@ -198,7 +198,7 @@ tasks:
            `^[RH]\d+$` placeholder tokens) -- a leak-free but vacuous corpus is still degenerate.
         4. Persist to data/realistic_factual_corpus_v2.jsonl with class balance recorded.
       REQUIRED ARTIFACT FIELDS (principle: documents WHY; the two gated fields corpus_v2_is_realistic and
-      corpus_v2_has_evidence MUST be stored as BARE top-level booleans, NOT {value,principle} dicts, so the
+      corpus_v2_has_evidence MUST be stored as BARE top-level booleans, NOT {{value,principle}} dicts, so the
       downstream gated_on checks succeed -- this is the .330 cascade fix):
         honest_verdict:
           principle: "Terminal prefix for reconciler classification."
@@ -371,9 +371,9 @@ tasks:
         b. exp1999 HumanEval code corpus loadable. If not -> run the code row as "blocked" but still produce
            math + facts. Math row = the frozen exp2837 0.9131 headline (always lands, no dependency).
       CONCRETE STEPS:
-        1. Build the generalization table: rows = {math (0.9131, frozen), code (re-scored with
+        1. Build the generalization table: rows = {{math (0.9131, frozen), code (re-scored with
            execution-applicable verifiers on exp1999), facts (exp3600 real grounding verifier + applicable
-           factual verifiers on corpus v2)}. Each row: ensemble AUROC + CI, confidence-baseline AUROC + CI,
+           factual verifiers on corpus v2)}}. Each row: ensemble AUROC + CI, confidence-baseline AUROC + CI,
            ensemble-minus-confidence delta + paired CI.
         2. >=3 seeds per row, bootstrap CI, class balance recorded per row.
         3. Honest verdict per domain: generalizes (ensemble materially > 0.5 AND >= confidence) /
@@ -384,7 +384,7 @@ tasks:
           principle: "Terminal prefix for reconciler classification."
         inference_substrate: "verifier_ensemble_against_cached_candidates (principle: scores cached corpora; no LLM load)."
         generalization_table:
-          principle: "domain -> {ensemble_auroc, confidence_auroc, delta, ci} -- the milestone's central evidence object, now measured fairly."
+          principle: "domain -> {{ensemble_auroc, confidence_auroc, delta, ci}} -- the milestone's central evidence object, now measured fairly."
         code_generalizes:
           principle: "Code re-tested with execution-applicable verifiers -- distinguishes the .330 wiring bug from a real code limitation."
         facts_generalize:
