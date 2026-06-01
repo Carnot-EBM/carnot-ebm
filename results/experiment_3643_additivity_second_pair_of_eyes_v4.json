@@ -1,0 +1,94 @@
+{
+  "acceptance_gate": {
+    "condition": "fused_detector_auroc present AND fusion_beats_confidence_alone present",
+    "passed": true,
+    "principle": "Product value is conditional, additive coverage measured with a paired significance test -- a higher AUROC alone is not the second-pair-of-eyes claim."
+  },
+  "code_conditional_catch_rate_ensemble_over_confidence": 0.414179,
+  "confidence_alone_auroc": 0.536376,
+  "confidence_recall_at_fixed_fpr": 0.144689,
+  "duration_s": 0.083736,
+  "factual_conditional_catch_rate_ensemble_over_confidence": 0.321608,
+  "field_principles": {
+    "code_conditional_catch_rate_ensemble_over_confidence": "Errors the ensemble catches that confidence misses -- the second-pair-of-eyes signal for code.",
+    "duration_s": "Plausibility floor.",
+    "factual_conditional_catch_rate_ensemble_over_confidence": "Same for facts -- the core-motivation product signal.",
+    "fused_detector_auroc": "ensemble OR confidence -- the deployable detector's headline number.",
+    "fusion_beats_confidence_alone": "True iff the fused detector materially beats confidence -- the real 'is the verifier worth adding' answer.",
+    "honest_verdict": "Terminal prefix for reconciler classification.",
+    "inference_substrate": "Scores cached corpora through the corrected Exp 3642 substrate; no live LLM load.",
+    "mcnemar_p_code": "Paired significance of the ensemble-vs-confidence disagreement (not just a point estimate).",
+    "mcnemar_p_factual": "Same for facts.",
+    "n_errors_per_domain": "Sample-size rigor for the conditional-catch claim.",
+    "random_seed": "Determinism precondition.",
+    "reproducibility_checksum": "Drift detection.",
+    "second_pair_of_eyes_real": "True iff the ensemble catches a significant set confidence misses in >=1 domain with McNemar p<0.05 -- re-derived honestly vs the contaminated prior claim."
+  },
+  "fixed_confidence_baseline_fpr": 0.1,
+  "fused_detector_auroc": 0.822394,
+  "fused_detector_method": "max_negative-tail-calibrated ensemble/confidence score, equivalent to an OR over detector alert budgets.",
+  "fused_detector_recall_at_fixed_fpr": 0.443223,
+  "fusion_auroc_delta": 0.286018,
+  "fusion_beats_confidence_alone": true,
+  "fusion_recall_delta_at_fixed_fpr": 0.298534,
+  "honest_verdict": "complete: ensemble_additive_to_confidence_second_pair_of_eyes_real_fusion_wins",
+  "inference_substrate": "verifier_ensemble_against_cached_candidates (principle: scores cached corpora; no LLM load).",
+  "mcnemar_p_code": 0.0,
+  "mcnemar_p_factual": 0.00022250113,
+  "n_errors_per_domain": {
+    "code": 296,
+    "facts": 250
+  },
+  "per_domain_additivity": {
+    "code": {
+      "conditional_catch_rate_ci95": [
+        0.356824,
+        0.47396
+      ],
+      "conditional_catch_rate_confidence_over_ensemble": 0.054217,
+      "conditional_catch_rate_ensemble_over_confidence": 0.414179,
+      "confidence_actual_fpr": 0.083333,
+      "confidence_only_count": 9,
+      "confidence_recall": 0.094595,
+      "confidence_threshold": 0.8125,
+      "domain": "code",
+      "ensemble_actual_fpr": 0.0,
+      "ensemble_only_count": 111,
+      "ensemble_recall": 0.439189,
+      "ensemble_threshold": 0.333333333333,
+      "fixed_fpr": 0.1,
+      "mcnemar_p": 0.0,
+      "n_errors": 296,
+      "n_examples": 320,
+      "status": "measured"
+    },
+    "facts": {
+      "conditional_catch_rate_ci95": [
+        0.260618,
+        0.389355
+      ],
+      "conditional_catch_rate_confidence_over_ensemble": 0.171779,
+      "conditional_catch_rate_ensemble_over_confidence": 0.321608,
+      "confidence_actual_fpr": 0.06,
+      "confidence_only_count": 28,
+      "confidence_recall": 0.204,
+      "confidence_threshold": 0.690476190476,
+      "domain": "facts",
+      "ensemble_actual_fpr": 0.048,
+      "ensemble_only_count": 64,
+      "ensemble_recall": 0.348,
+      "ensemble_threshold": 0.5,
+      "fixed_fpr": 0.1,
+      "mcnemar_p": 0.00022250113,
+      "n_errors": 250,
+      "n_examples": 500,
+      "status": "measured"
+    }
+  },
+  "random_seed": 3643,
+  "reproducibility_checksum": "2427c1bd61396fd2",
+  "scripts_research_conductor_modified": false,
+  "second_pair_of_eyes_real": true,
+  "source_artifact": "results/experiment_3642_corrected_cross_domain_remeasurement_v4.json",
+  "tests_run": []
+}

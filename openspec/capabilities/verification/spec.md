@@ -9350,3 +9350,55 @@ verdict is selected only from the honest per-row outcomes.
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-VERIFY-3642 | Implemented (`python/carnot/verify/corrected_cross_domain_remeasurement_v4.py`, `scripts/experiment_3642_corrected_cross_domain_remeasurement_v4.py`) | Implemented (`tests/python/test_experiment_3642_corrected_cross_domain_remeasurement_v4.py`) |
+
+### REQ-VERIFY-3643: Additive Second-Pair-Of-Eyes Remeasurement V4
+
+The repository shall provide an Exp 3643 workflow that reads the corrected Exp
+3642 cross-domain artifact and re-measures whether the verifier ensemble adds
+deployable value over the confidence baseline on the non-math domains that
+actually ran. If Exp 3642 does not report
+`at_least_one_nonmath_row_ran=true`, the workflow SHALL write a terminal
+artifact with `honest_verdict="complete: blocked_no_nonmath_row_ran"` and SHALL
+not synthesize a positive additivity claim from blocked rows. If only one of
+the code or facts rows ran, the workflow SHALL measure that row and mark the
+other domain as `not_measured`.
+
+For every measured non-math domain, the workflow SHALL compute confidence
+recall and ensemble recall at a fixed confidence-baseline false-positive-rate
+budget, the conditional catch rate for errors the ensemble catches after
+confidence misses, the reverse conditional catch rate for confidence over the
+ensemble, exact paired McNemar significance over the error-catch disagreement,
+and a finite confidence interval for the conditional catch rate. The workflow
+SHALL compute a calibrated fused detector by combining the ensemble and
+confidence scores without live LLM inference, report fused AUROC and
+recall-at-fixed-FPR, compare those values with confidence alone, and select one
+of the terminal verdicts:
+`complete: ensemble_additive_to_confidence_second_pair_of_eyes_real_fusion_wins`,
+`complete: ensemble_redundant_with_confidence_no_additive_value_value_prop_weak`,
+or `complete: blocked_no_nonmath_row_ran`.
+
+The artifact SHALL include `honest_verdict`, `inference_substrate`,
+`code_conditional_catch_rate_ensemble_over_confidence`,
+`factual_conditional_catch_rate_ensemble_over_confidence`, `mcnemar_p_code`,
+`mcnemar_p_factual`, `fused_detector_auroc`,
+`fusion_beats_confidence_alone`, `second_pair_of_eyes_real`,
+`n_errors_per_domain`, `random_seed`, `reproducibility_checksum`, and
+`duration_s`. The artifact SHALL also include principle annotations for those
+fields and an acceptance gate whose condition is
+`fused_detector_auroc present AND fusion_beats_confidence_alone present`.
+
+### SCENARIO-VERIFY-3643: Additivity Is Measured Only On Corrected Runnable Rows
+
+Given corrected Exp 3642 artifacts with both runnable and blocked non-math
+rows, when Exp 3643 builds its artifact, then it measures only the runnable
+rows, marks blocked rows as `not_measured`, computes conditional
+ensemble-over-confidence catch rates with McNemar significance, reports a
+calibrated fused detector comparison against confidence alone, and uses the
+additive verdict only when the fused detector materially beats confidence and
+at least one domain has a significant ensemble-only error-catch set.
+
+## Implementation Status (REQ-VERIFY-3643)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-VERIFY-3643 | Implemented (`python/carnot/verify/additivity_second_pair_of_eyes_v4.py`, `scripts/experiment_3643_additivity_second_pair_of_eyes_v4.py`) | Implemented (`tests/python/test_experiment_3643_additivity_second_pair_of_eyes_v4.py`) |
