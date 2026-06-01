@@ -1,5 +1,48 @@
 # Carnot — Operational Status
 
+## Session 2026-06-01 - Milestone 2026.06.337 Research Planning Staged
+
+Planned milestone 2026.06.337 ("PROMOTE the headline + SCOPE the product honestly") as the NEXT
+milestone after all `.336` tasks completed. Authority (read via `scripts/summarize_artifact.py`):
+`results/experiment_3667_dependency_aware_weighting_clean.json` (dependency-aware ensemble weighting
+BEAT Carnot CLEAN + de-tautologized: AUROC **0.9332** vs **0.9194**, 5-seed, DeLong, adversarial-clean),
+`results/experiment_3668_dependency_aware_weighting_heldout.json` (it GENERALIZES held-out: 0.9332 vs
+0.9200 — verdict `headline_re_freeze_candidate_for_v337`), `results/experiment_3670_facts_row_real_benchmark.json`
+(facts genuinely domain-bound on REAL RAGTruth — `retire_if_same` fired → facts-generalization RETIRED),
+`results/experiment_3672_ensemble_selection_where_sc_weak.json` (ensemble best-of-N selection 0.344 <
+SC 0.459 even with valid headroom — earned-negative; discrimination≠selection), `results/experiment_3671_ship_second_pair_of_eyes_detector.json`
+(detector SHIPPED to score_candidates MCP/CLI, math AUROC 0.980 strong but code AUROC **0.5** blind),
+`results/experiment_3666_backend_state_diagnostic_v2.json` (gemini stable 2 consecutive probes,
+eligible to flip), `results/experiment_3677_capstone_and_g_gate_v336.json` (paper_ready TRUE, G1-G4
+all met, frozen headline 0.9131), `ops/north-star.md`, `ops/known-issues.md`, and a fresh arxiv sweep.
+
+The `.336` finding: the project earned its FIRST headline-advancing lead in months. `.337` does three
+things: (1) **PROMOTE the headline** — take the held-out-validated dependency-aware weighting to full
+G1-rigor dual-condition integrity (exp3680, mirror exp2837/2850) + prepare the OPERATOR re-freeze
+package (exp3681: additive G2 reproducer extension + checklist) WITHOUT silently substituting the
+frozen 0.9131 (north-star §1 is operator-curated); (2) **SCOPE the product honestly** — diagnose +
+try to close the discrimination-vs-selection decoupling (exp3682, arXiv:2512.23067 + self-certainty
+arXiv:2502.18581), harden the detector's code-blind operating point (exp3683), and adversarially
+re-baseline product value vs the stronger self-certainty signal (exp3684); (3) continue FR-11
+self-learning (exp3685 drift-aware v11) + hardware continuity (exp3686/3687/3688) + capstone (exp3689).
+
+Updated `research-references.md` with the 2026-06-01 Post-`.336` sweep (Reward Model Selection Crisis
+arXiv:2512.23067 — discrimination↔selection decoupling, Kendall τ 0.08–0.31; Scalable Best-of-N via
+Self-Certainty arXiv:2502.18581; Self-Consistency Boosts Calibration arXiv:2403.09849; Budget-aware
+Test-time Scaling arXiv:2510.14913), rewrote `openspec/change-proposals/research-roadmap-vNEXT.md`,
+and created `research-roadmap-next.yaml` with 12 tasks (`exp3678`–`exp3689`). Backend: kept
+codex+`requires_codex` for one more milestone (anti-wipeout — `.333` was a total gemini-crash wipeout
+and `.337` carries the highest-value headline-re-freeze work; exp3679 runs a 3rd consecutive gemini
+probe that gates a `.338` flip; operator may override to gemini-default). Invariants carried:
+paper_ready=true (G1-G4, frozen headline 0.9131 NEVER silently substituted), P0.1 honest-negative,
+facts-generalization + trained-judge-OOD RETIRED, every `gated_on` a BARE scalar, no poison tests,
+de-tautology + leak-guard discipline. Validation passed: YAML schema (12 tasks, all `.337`,
+deliverables+prompts present), prior_failures 4-subfield discipline, gated_on bare-scalar check,
+canonical-URL lint (clean), overdue-priority lint (clean), exclusion-manifest lint (all scope-matches
+downgraded to warnings via `operator_override`/`prior_failures` — activation proceeds). Left
+`research-roadmap.yaml` and `scripts/research_conductor.py` untouched.
+
+
 ## Session 2026-05-31 - Milestone 2026.05.328 Research Planning Staged
 
 Planned milestone 2026.05.328 ("Depth-Over-Breadth XIV: Consolidate the P0.1 positive") as the NEXT
