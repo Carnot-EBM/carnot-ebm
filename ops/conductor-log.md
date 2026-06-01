@@ -7526,3 +7526,4 @@ web search: https://docs.garak.ai/garak/examples/pr |
 | 2026-06-01 13:18 UTC | Archive milestone .334 honestly (record the cross- | OK | 86 passed in 3.68s |
 | 2026-06-01 14:09 UTC | Backend-state diagnostic — probe whether gemini qu | OK | 88 passed in 3.62s |
 | 2026-06-01 14:29 UTC | Build a REAL model-based NLI atomic-claim groundin | OK | 94 passed in 4.74s |
+| 2026-06-01 14:48 UTC | Re-measure the FACTS row with the REAL NLI groundi | OK | 91 passed in 4.83s |
