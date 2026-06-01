@@ -155,6 +155,46 @@ PATH B are unavailable, and it MUST record which path succeeded.
   `model_used=null`.
 - The honest verdict uses a terminal prefix such as `complete:` or `blocked:`.
 
+### REQ-SPOE-3657: Deployable Calibrated Second-Pair Detector
+
+The pipeline MUST provide a deployable calibrated fused detector API that
+combines an ensemble energy score and a model-confidence error score into one
+calibrated probability of error.  Calibration MUST be fit only on a train split,
+then evaluated on held-out examples.  The API MUST also evaluate confidence-only
+and ensemble-only baselines, Brier score, expected calibration error (ECE), and
+per-domain operating points at fixed FPR budgets.
+
+**Acceptance criteria:**
+- The detector exposes `fit`, `predict_proba`, and `evaluate_domains` behavior
+  from `python/carnot/pipeline/`.
+- Calibration uses both ensemble energy and confidence features when fitted.
+- Held-out evaluation reports fused AUROC, confidence-alone AUROC,
+  ensemble-alone AUROC, Brier, ECE, recall at fixed FPR in `{0.05, 0.10, 0.20}`,
+  and the selected deployer operating point.
+- If no labeled corpus with both required scores is present, the evaluation
+  returns the blocked verdict without fabricating metrics.
+
+### REQ-SPOE-3657-ARTIFACT: Exp 3657 Detector Artifact Contract
+
+The pipeline MUST provide an Exp 3657 runner that re-derives labels, ensemble
+energy, and confidence scores from cached corpora, fits the deployable fused
+detector, and writes
+`results/experiment_3657_deployable_second_pair_of_eyes_detector.json`.
+
+**Acceptance criteria:**
+- The artifact includes `honest_verdict`, `inference_substrate`,
+  `detector_module_path`, `fused_detector_auroc`,
+  `confidence_alone_auroc`, `recall_at_fixed_fpr_table`,
+  `calibration_brier_ece`, `fusion_beats_confidence_alone`,
+  `n_examples_per_domain`, `random_seed`, `reproducibility_checksum`, and
+  `duration_s`.
+- `fusion_beats_confidence_alone` is a bare top-level bool.
+- The honest verdict is one of:
+  `complete: deployable_second_pair_of_eyes_detector_built_fusion_wins_calibrated`,
+  `complete: deployable_detector_built_fusion_redundant_with_confidence_product_value_weak`,
+  or `complete: blocked_no_labeled_corpus_for_fusion`.
+- The runner does not modify `scripts/research_conductor.py`.
+
 ## Scenarios
 
 ### SCENARIO-INFRA-052: Version-Blocked Model Raises Error
@@ -228,6 +268,25 @@ write `results/experiment_2399_fst_live_path_ab.json`, set
 `fst_live_validated=true`, and record `live_path_used="C_cached"`.
 
 **Spec traces:** REQ-FST-2399
+
+### SCENARIO-SPOE-3657: Fusion Outcomes Are Honest
+
+**Given** synthetic labeled domains covering `fusion_wins`,
+`fusion_redundant`, and `blocked` outcomes
+**When** the deployable second-pair detector evaluation runs
+**Then** it returns the corresponding terminal verdict without hard-coding a
+real-corpus success string.
+
+**Spec traces:** REQ-SPOE-3657, REQ-SPOE-3657-ARTIFACT
+
+### SCENARIO-SPOE-3658: Fixed-FPR Operating Points Are Per-Domain
+
+**Given** a held-out domain with both correct and error examples
+**When** the detector computes operating points
+**Then** recall is reported at FPR budgets `0.05`, `0.10`, and `0.20`, and the
+recommended operating point is chosen from the same table.
+
+**Spec traces:** REQ-SPOE-3657
 
 ### REQ-SAMPLE-020: SparseIsingEBM K-Regular Graph
 
