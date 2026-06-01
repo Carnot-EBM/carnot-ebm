@@ -1,0 +1,212 @@
+{
+  "cited_upstream_artifacts": [
+    {
+      "honest_verdict": "complete: dependency_aware_weighting_beats_carnot_clean_significant_headline_candidate",
+      "path": "results/experiment_3667_dependency_aware_weighting_clean.json",
+      "sha256": "96cb5ade4491ae70a12dffa59f058f8edd2bfc5da9bbad7e0176b44a53d41c7b"
+    },
+    {
+      "honest_verdict": "complete: dependency_aware_weighting_generalizes_heldout_headline_re_freeze_candidate_for_v337",
+      "path": "results/experiment_3668_dependency_aware_weighting_heldout.json",
+      "sha256": "76303878ef3dc870ac1b2d291330af5bb6b1f285571db049dd73accc03b00718"
+    },
+    {
+      "honest_verdict": "complete: real_factual_corpus_built_ragtruth_non_degenerate",
+      "path": "results/experiment_3669_build_real_factual_corpus.json",
+      "sha256": "8162b51b099803798e80ba2938c671ae67b3ec10bc2f4fda311c1d6f24f753cf"
+    },
+    {
+      "honest_verdict": "complete: facts_domain_bound_on_real_benchmark_335_negative_genuinely_earned",
+      "path": "results/experiment_3670_facts_row_real_benchmark.json",
+      "sha256": "8a31ae10f56a2f3f95a4483a1d5f67a04a138acf500cf978b2304062c4d2c872"
+    },
+    {
+      "honest_verdict": "complete: second_pair_of_eyes_detector_shipped_math_only_code_weak_documented_e2e_green",
+      "path": "results/experiment_3671_ship_second_pair_of_eyes_detector.json",
+      "sha256": "00151330d67170794455feceeaa9da5099b75feddf77374b91af7b848e4db113"
+    },
+    {
+      "honest_verdict": "complete: ensemble_no_selection_value_even_with_headroom_sc_weak_earned_negative",
+      "path": "results/experiment_3672_ensemble_selection_where_sc_weak.json",
+      "sha256": "009458b53e9a1e849e9eabfe8aca6f42fdfd3fcf8c357c6e4ec1c42f54d3b1bb"
+    },
+    {
+      "honest_verdict": "complete: fr11_v10_online_dependency_aware_weighting_holds_no_collapse_quality_maintained",
+      "path": "results/experiment_3673_fr11_continuous_self_learning_v10.json",
+      "sha256": "b5536e35e769251078bfee4076cb1009ed4c3a1e5e7cafd3eb0436d4ac05376b"
+    }
+  ],
+  "dependency_aware_candidate": {
+    "claim_boundary": "headline-advancement candidate pending re-freeze + re-reproduction in a future milestone",
+    "exp3667_adversarial_verify_clean": true,
+    "exp3667_auroc_carnot_current": 0.919446,
+    "exp3667_auroc_dependency_aware_proper": 0.933238,
+    "exp3667_delong_p_dependency_vs_carnot": 8.7e-05,
+    "exp3667_dependency_aware_beats_carnot": true,
+    "exp3667_flagged_adversarial": false,
+    "exp3667_significant": true,
+    "heldout_auroc_carnot": 0.919964,
+    "heldout_auroc_dependency_aware": 0.933224,
+    "heldout_delong_p": 7.2e-05,
+    "heldout_missing_reason": null,
+    "heldout_status": "validated",
+    "status": "clean_and_heldout_validated"
+  },
+  "dependency_aware_headline_candidate_status": "clean_and_heldout_validated",
+  "duration_s": 0.362692,
+  "facts_real_benchmark": {
+    "confidence_baseline_auroc": 0.708003,
+    "grounding_auroc_real_corpus": 0.642844,
+    "grounding_leak_free": true,
+    "grounding_leak_risk": false,
+    "grounding_minus_confidence_delta": -0.065158,
+    "honest_outcome": "domain_bound_real",
+    "positive_control_valid": true,
+    "real_vs_synthetic_grounding_delta": {
+      "delta": -0.100812,
+      "real_grounding_auroc": 0.642844,
+      "synthetic_grounding_auroc": 0.743656
+    },
+    "verdict": "domain_bound_real_earned"
+  },
+  "facts_real_benchmark_verdict": "domain_bound_real_earned",
+  "facts_real_vs_synthetic": "REAL-corpus facts confirm the .335 synthetic negative as earned: factual verifier value remains domain-bound on the real benchmark.",
+  "field_principles": {
+    "cited_upstream_artifacts": "sha256 provenance (G4).",
+    "dependency_aware_headline_candidate_status": "clean_and_heldout_validated / clean_but_overfit / no_significant_gain / flagged_still -- the status of the .336 headline-advancement lead (exp3667/3668).",
+    "duration_s": "Plausibility floor.",
+    "facts_real_benchmark_verdict": "generalizes_real / auroc_parity_with_catch_value / domain_bound_real_earned / not_measured -- the corrected core-mission answer (exp3670).",
+    "facts_real_vs_synthetic": "States how the REAL-corpus facts result corrects or confirms the .335 synthetic negative.",
+    "fr11_v10_result": "Whether online dependency-aware weighting held without collapse (exp3673).",
+    "g1": "Headline measured (FoVer 0.9131, 5-seed, CI, adversarial-clean).",
+    "g2": "Independently reproduced (CI runner 26725185125).",
+    "g3": "Prose narrowing-clean.",
+    "g4": "Numbers trace to primary artifacts.",
+    "honest_verdict": "Terminal prefix for reconciler classification.",
+    "inference_substrate": "aggregation_from_upstream_artifacts (principle: reads the gate script + artifacts; no live inference).",
+    "p01_status": "P0.1 stays honest-negative; do not re-assert a positive.",
+    "paper_ready": "G1 and G2 and G3 and G4 -- must remain true; the milestone does not regress the gate.",
+    "paper_v6_forbidden_claims": "Overclaims to avoid (including: do NOT cite the dependency-aware win as the headline until re-frozen + re-reproduced).",
+    "paper_v6_safe_claims": "Narrowing-clean claims.",
+    "random_seed": "Determinism precondition.",
+    "reproducibility_checksum": "Drift detection.",
+    "sc_weak_selection_direction_result": "ensemble_adds_value / no_value_with_headroom / no_headroom / not_measured -- the NEW-direction result (exp3672).",
+    "second_pair_of_eyes_shipped": "Whether the calibrated fused detector is wired to a real surface with a passing E2E test (exp3671) -- Phase-1 product advancement.",
+    "trained_judge_ood_retired": "Records the trained-judge-OOD hypothesis as retired (exp3659 same-verdict).",
+    "unmet_gates": "Report which gates are unmet, not a count (publication_blocker_count is retired).",
+    "verifier_value_scope": "math_plus_code / math_plus_code_plus_facts / math_only_earned + the SC-weak selection finding -- the scoped product claim after the fair re-measurements."
+  },
+  "flagged_upstream_artifacts_excluded": [],
+  "fr11_v10_result": "held_no_collapse_quality_maintained",
+  "frozen_fover_headline_auroc": 0.9131,
+  "g1": true,
+  "g2": true,
+  "g3": true,
+  "g4": true,
+  "honest_verdict": "complete: capstone_v336_dependency_aware_clean_and_heldout_validated_facts_real_domain_bound_real_earned_detector_shipped_true_paper_ready_true",
+  "inference_substrate": "aggregation_from_upstream_artifacts (principle: reads the gate script + artifacts; no live inference).",
+  "ops_docs_reconciliation_left_to_conductor": true,
+  "p01_status": "honest-negative",
+  "paper_ready": true,
+  "paper_v6_forbidden_claims": [
+    "Do not cite the dependency-aware win as the headline until it is re-frozen and independently re-reproduced.",
+    "Do not overwrite the frozen FoVer 0.9131 headline with the dependency-aware candidate.",
+    "Do not re-assert a P0.1 positive; the status remains honest-negative.",
+    "Do not re-assert the trained-judge-OOD hypothesis; it is retired.",
+    "Do not read missing gated-task fields as None and synthesize a result around them.",
+    "Do not treat grounding AUROC >= 0.99 as valid unless leak-free evidence is explicit.",
+    "Do not claim broad factual generalization from the real facts benchmark."
+  ],
+  "paper_v6_safe_claims": [
+    "FoVer headline remains frozen at 0.9131 AUROC with G1-G4 satisfied.",
+    "P0.1 remains honest-negative; no energy-vs-self-consistency positive is re-asserted.",
+    "The trained-judge-OOD hypothesis is retired and is not re-asserted.",
+    "Dependency-aware weighting is a headline-advancement candidate pending re-freeze and re-reproduction in a future milestone.",
+    "The real facts benchmark records an earned domain-bound negative.",
+    "The calibrated second-pair-of-eyes detector is shipped with a passing E2E surface.",
+    "SC-weak ensemble-selection result: no_value_with_headroom.",
+    "FR-11 v10 result: held_no_collapse_quality_maintained."
+  ],
+  "publication_gate": {
+    "G1": {
+      "detail": "FoVer dual-condition AUROC artifact present (experiment_2850_fover_dual_condition_integrity_v4.json); CI reported=True",
+      "pass": true,
+      "source": "experiment_2850_fover_dual_condition_integrity_v4.json"
+    },
+    "G2": {
+      "detail": "reproducer confirmed: GitHub Actions workflow 'FoVer Headline Independent Reproducer' (.github/workflows/reproduce-fover-headline.yml), run 26725185125 on Carnot-EBM/carnot-ebm, 2026-05-31, conclusion=success. Clean ubuntu-latest runner, fresh CPU-only install from a clean checkout (non-operator environment), recomputed the FoVer headline AUROC via scripts/reproduce_fover_headline.py and asserted the published CIs: condition_A (production) AUROC in [0.9027, 0.9235] and learning_contribution in [0.0125, 0.0245] \u2014 both PASS. This is a CI-run independent reproducer per the Phase-1 ship gate ('could be a teammate, a CI run, or an external user'). Internally further de-risked by exp3430 (fresh git worktree + venv) and the local run on 2026-05-31 (AUROC 0.9131 within CI). NOTE: G2 attests the FoVer verifier-ensemble headline reproduces; it does NOT attest the broader energy-descent existential claim, which remains an honest-negative (Route-1/Route-2 bounded). Run: https://github.com/Carnot-EBM/carnot-ebm/actions/runs/26725185125",
+      "pass": true
+    },
+    "G3": {
+      "detail": "no retracted phrasings asserted as live claims",
+      "hits": [],
+      "pass": true
+    },
+    "G4": {
+      "detail": "experiment_2850_fover_dual_condition_integrity_v4.json: random_seed/seeds=True, reproducibility_checksum=True",
+      "pass": true,
+      "source": "experiment_2850_fover_dual_condition_integrity_v4.json"
+    }
+  },
+  "random_seed": 3677,
+  "reproducibility_checksum": "c357dfc3f03c21b1f513e4817f89a0c51ca48ecd1c47b700a5075d66b267a016",
+  "sc_weak_selection_direction_result": "no_value_with_headroom",
+  "scripts_research_conductor_modified": false,
+  "second_pair_of_eyes_shipped": true,
+  "source_artifacts": [
+    "results/experiment_3667_dependency_aware_weighting_clean.json",
+    "results/experiment_3668_dependency_aware_weighting_heldout.json",
+    "results/experiment_3669_build_real_factual_corpus.json",
+    "results/experiment_3670_facts_row_real_benchmark.json",
+    "results/experiment_3671_ship_second_pair_of_eyes_detector.json",
+    "results/experiment_3672_ensemble_selection_where_sc_weak.json",
+    "results/experiment_3673_fr11_continuous_self_learning_v10.json"
+  ],
+  "summarized_upstream_artifacts": [
+    {
+      "exp": 3667,
+      "returncode": 0,
+      "stderr_tail": "",
+      "stdout_tail": "==============================================================================\nARTIFACT  experiment_3667_dependency_aware_weighting_clean.json\n------------------------------------------------------------------------------\n  verdict          : complete: dependency_aware_weighting_beats_carnot_clean_significant_headline_candidate\n  flagged_adversarial (stamped): None   |   LIVE re-check: clean\n  acceptance gates :\n      [?   ] acceptance_gate = {'condition': 'adversarial_verify_clean == true AND auroc_dependency_aware_proper present AND delong_p_dependency_vs_carnot present', 'passed': True, 'principle': 'A headline-advancement candidate requires a de-flagged artifact with measured AUROC and significance evidence.'}\n  duration_s       : 1.559763   substrate: verifier_ensemble_against_cached_candidates (principle: scores the cached FoVer corpus; no LLM load).\n  headline metrics :\n      auroc_carnot_current = 0.919446\n      auroc_dependency_aware_proper = 0.933238\n      auroc_unweighted = 0.736244\n      auroc_weaver_style = 0.87158\n  adversarial flags: none\n==============================================================================\n"
+    },
+    {
+      "exp": 3668,
+      "returncode": 0,
+      "stderr_tail": "",
+      "stdout_tail": "==============================================================================\nARTIFACT  experiment_3668_dependency_aware_weighting_heldout.json\n------------------------------------------------------------------------------\n  verdict          : complete: dependency_aware_weighting_generalizes_heldout_headline_re_freeze_candidate_for_v337\n  flagged_adversarial (stamped): None   |   LIVE re-check: clean\n  acceptance gates :\n      [?   ] acceptance_gate = {'condition': 'heldout_auroc_dependency_aware present AND heldout_auroc_carnot present AND n_splits >= 5', 'passed': True, 'principle': 'A generalization verdict requires both weightings evaluated on the same disjoint held-out splits, replicated -- a single-split or train-only number cannot de-risk a headline change.'}\n  duration_s       : 0.94725   substrate: verifier_ensemble_against_cached_candidates (principle: scores held-out FoVer splits; no LLM load).\n  headline metrics :\n      heldout_auroc_carnot = 0.919964\n      heldout_auroc_dependency_aware = 0.933224\n  adversarial flags: none\n==============================================================================\n"
+    },
+    {
+      "exp": 3669,
+      "returncode": 0,
+      "stderr_tail": "",
+      "stdout_tail": "==============================================================================\nARTIFACT  experiment_3669_build_real_factual_corpus.json\n------------------------------------------------------------------------------\n  verdict          : complete: real_factual_corpus_built_ragtruth_non_degenerate\n  flagged_adversarial (stamped): None   |   LIVE re-check: clean\n  acceptance gates :\n      [?   ] acceptance_gate = {'condition': 'real_factual_corpus_built == true AND corpus_non_degenerate == true AND n_examples >= 200', 'passed': True, 'principle': 'A facts re-measurement is only meaningful on a real, non-degenerate, adequately-sized corpus -- a degenerate or tiny corpus repeats the .335/.330 limitation.'}\n  duration_s       : 1.673251   substrate: verifier_ensemble_against_cached_candidates (principle: builds + baselines a cached corpus; no FoVer LLM load).\n  headline metrics :\n      confidence_baseline_auroc = 0.707994\n  adversarial flags: none\n==============================================================================\n"
+    },
+    {
+      "exp": 3670,
+      "returncode": 0,
+      "stderr_tail": "",
+      "stdout_tail": "==============================================================================\nARTIFACT  experiment_3670_facts_row_real_benchmark.json\n------------------------------------------------------------------------------\n  verdict          : complete: facts_domain_bound_on_real_benchmark_335_negative_genuinely_earned\n  flagged_adversarial (stamped): None   |   LIVE re-check: clean\n  acceptance gates :\n      [?   ] acceptance_gate = {'condition': 'grounding_auroc_real_corpus present AND confidence_baseline_auroc present AND positive_control_valid == true AND grounding_leak_free == true', 'passed': True, 'principle': 'A corrected facts verdict requires the real verifier fired leak-free on a headroom-bearing real corpus vs a measured confidence baseline -- otherwise it repeats the synthetic-corpus limitation.'}\n  duration_s       : 1334.829451   substrate: verifier_ensemble_against_cached_candidates (principle: scores the cached real corpus; no LLM load).\n  headline metrics :\n      fixed_confidence_fpr = 0.1\n  adversarial flags: none\n==============================================================================\n"
+    },
+    {
+      "exp": 3671,
+      "returncode": 0,
+      "stderr_tail": "",
+      "stdout_tail": "==============================================================================\nARTIFACT  experiment_3671_ship_second_pair_of_eyes_detector.json\n------------------------------------------------------------------------------\n  verdict          : complete: second_pair_of_eyes_detector_shipped_math_only_code_weak_documented_e2e_green\n  flagged_adversarial (stamped): None   |   LIVE re-check: clean\n  acceptance gates :\n      [?   ] acceptance_gate = {'condition': 'detector_module_path present AND e2e_test_passed == true AND fused_detector_auroc_per_domain present AND calibration_brier_ece_per_domain present', 'passed': True, 'principle': 'A shipped product surface requires a real module, a passing E2E test, measured per-domain discrimination AND calibration -- an experiment artifact alone is not a shipped product.'}\n  duration_s       : 2.512606   substrate: verifier_ensemble_against_cached_candidates (principle: scores cached corpora; no LLM load).\n  adversarial flags: none\n==============================================================================\n"
+    },
+    {
+      "exp": 3672,
+      "returncode": 0,
+      "stderr_tail": "",
+      "stdout_tail": "==============================================================================\nARTIFACT  experiment_3672_ensemble_selection_where_sc_weak.json\n------------------------------------------------------------------------------\n  verdict          : complete: ensemble_no_selection_value_even_with_headroom_sc_weak_earned_negative\n  flagged_adversarial (stamped): None   |   LIVE re-check: clean\n  acceptance gates :\n      [?   ] acceptance_gate = {'condition': 'sc_accuracy present AND oracle_bestofn_accuracy present AND positive_control_valid == true', 'positive_control_valid': True, 'principle': 'A selection-value verdict in the SC-weak regime requires a valid positive control (real headroom + nonzero flips) -- otherwise the result repeats the P0.1 degenerate-test trap.', 'required_fields_present': True}\n  duration_s       : 0.7092676162719727   substrate: verifier_ensemble_against_cached_candidates (principle: best-of-N selection over cached candidates; no LLM generation).\n  headline metrics :\n      confidence_selection_accuracy = 0.3442622950819672\n      ensemble_selection_accuracy = 0.3442622950819672\n      flip_count = 28\n      fusion_selection_accuracy = 0.2786885245901639\n      oracle_bestofn_accuracy = 0.6065573770491803\n      sc_accuracy = 0.45901639344262296\n  adversarial flags: none\n==============================================================================\n"
+    },
+    {
+      "exp": 3673,
+      "returncode": 0,
+      "stderr_tail": "",
+      "stdout_tail": "==============================================================================\nARTIFACT  experiment_3673_fr11_continuous_self_learning_v10.json\n------------------------------------------------------------------------------\n  verdict          : complete: fr11_v10_online_dependency_aware_weighting_holds_no_collapse_quality_maintained\n  flagged_adversarial (stamped): None   |   LIVE re-check: clean\n  acceptance gates :\n      [?   ] acceptance_gate = {'condition': 'collapse_detected_deploy_arm == false AND collapse_detected_control == true AND pass_rate_vs_true_accuracy_distinct_assert == true', 'passed': True, 'principle': 'Self-learning is validated only when the guarded arm holds, the control collapses, and the two metrics are genuinely distinct (not a tautology).'}\n  duration_s       : 0.676938   substrate: verifier_ensemble_against_cached_candidates (principle: scores cached traces; no LLM load).\n  headline metrics :\n      online_dependency_aware_auroc_gain = 0.0018\n  adversarial flags: none\n==============================================================================\n"
+    }
+  ],
+  "trained_judge_ood_retired": true,
+  "unmet_gates": [],
+  "verifier_value_scope": "math_plus_code_sc_weak_no_value_with_headroom"
+}

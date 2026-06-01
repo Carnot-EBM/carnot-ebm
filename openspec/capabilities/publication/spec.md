@@ -119,6 +119,38 @@ claims, preserve P0.1 as `honest-negative`, and emit a terminal verdict with
 the `complete: capstone_v335_facts_{generalize_or_domain_bound}_with_real_nli_verifier_value_{scope}_paper_ready_true`
 prefix.
 
+### REQ-PUBLISH-3677: v336 Dependency-Aware/Facts-Real Capstone
+
+The Exp 3677 v336 capstone script MUST aggregate `publication_gate.py --json`
+with Exp 3667 through Exp 3673 artifacts and write
+`results/experiment_3677_capstone_and_g_gate_v336.json`. The workflow MUST be
+aggregation-only: it SHALL read upstream artifacts, run the artifact summarizer,
+and SHALL NOT perform live inference or modify `scripts/research_conductor.py`.
+
+The artifact MUST record whether Exp 3667/3668 form a
+`dependency_aware_headline_candidate_status` of
+`clean_and_heldout_validated`, `clean_but_overfit`, `no_significant_gain`, or
+`flagged_still`. Exp 3667 may be cited only when
+`adversarial_verify_clean == true` and the artifact is not
+`flagged_adversarial`; Exp 3668 skipped/missing fields MUST be reported as
+`not_measured` logic rather than inferred from `None`. The frozen FoVer headline
+MUST remain `0.9131`; any dependency-aware win MUST be described only as a
+headline-advancement candidate pending re-freeze and re-reproduction.
+
+The artifact MUST record the Exp 3670 facts real-benchmark verdict as one of
+`generalizes_real`, `auroc_parity_with_catch_value`,
+`domain_bound_real_earned`, or `not_measured`; any grounding AUROC greater than
+or equal to `0.99` MUST be treated as a leak unless `grounding_leak_free == true`
+is proven. It MUST record the Exp 3671 shipped-detector boolean, Exp 3672
+SC-weak selection direction, Exp 3673 FR-11 v10 result, `p01_status` as
+`honest-negative`, and `trained_judge_ood_retired == true`.
+
+The workflow MUST exclude `flagged_adversarial` upstream artifacts from
+`cited_upstream_artifacts`, record G1-G4 and `paper_ready` directly from the
+publication gate, include narrowing-clean `paper_v6_safe_claims` and
+`paper_v6_forbidden_claims`, and emit the terminal verdict prefix
+`complete: capstone_v336_dependency_aware_<status>_facts_real_<verdict>_detector_shipped_<bool>_paper_ready_true`.
+
 ## Scenarios
 
 ### SCENARIO-PUBLISH-001: All Headline Numbers Have Live-GPU Provenance
@@ -187,6 +219,18 @@ AND `honest_verdict == "paper_v4_phase4_complete_arxiv_ready"`
 **Then** the script records whether facts generalize under the real-NLI verifier,
 excludes flagged adversarial upstream artifacts, preserves P0.1 as
 honest-negative, and emits a paper-ready artifact with all required fields.
+
+### SCENARIO-PUBLISH-3677: v336 Capstone Complete
+
+**Given** publication gate is ready and clean Exp 3667 through Exp 3673
+artifacts are available
+**When** the Exp 3677 v336 capstone script runs
+**Then** it emits the required paper-ready artifact, excludes
+`flagged_adversarial` citations, classifies skipped upstream work as
+`not_measured`, preserves the frozen FoVer headline and P0.1 honest negative,
+retires the trained-judge-OOD hypothesis, and records the dependency-aware win
+only as a future headline-advancement candidate pending re-freeze and
+re-reproduction.
 
 ### REQ-PUBLISH-007: High-Severity Integrity Fixes (ISSUE-6 through ISSUE-10)
 
