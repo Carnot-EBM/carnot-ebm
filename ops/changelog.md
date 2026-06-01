@@ -8045,3 +8045,4 @@ ModuleNotFoundError: No module named 'torch'; results/experiment_2828_fover_memo
   Invariants preserved: paper_ready=true (G1-G4), P0.1 honest-negative.
 - Lint status: `scripts/exclusion_manifest_lint.py research-roadmap-next.yaml` → exit 0 (6 WARNINGs, all
   with operator_override; 0 HARD). Milestone matches `_expected_next_milestone('2026.05.330')`=2026.06.331.
+- 2026-06-01: Archive milestone .330 honestly (record the gate cascade + the contaminated AUROC=1.0) and activate .331 (✅ Complete) — honest_verdict=complete: archived_v330_unfinished_decontamination_gate_cascade_recorded_v331_active_paper_ready_true; results/experiment_3597_archive_v330_activate_v331.json
