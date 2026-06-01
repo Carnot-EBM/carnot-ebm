@@ -1705,3 +1705,7 @@
 | REQ-VERIFY-3592-2 | Exp 3592: G-Gate Status Synthesis V330 | Implemented | results/experiment_3592_g_gate_status_synthesis_v330.json |
 | REQ-VERIFY-3592-3 | Exp 3592: G-Gate Status Synthesis V330 | Implemented | results/experiment_3592_g_gate_status_synthesis_v330.json |
 | SCENARIO-VERIFY-3592 | Exp 3592: G-Gate Status Synthesis V330 | Implemented | results/experiment_3592_g_gate_status_synthesis_v330.json |
+| REQ-VERIFY-3596 | Exp 3596: Capstone V330 329-Null Correction | Implemented | results/experiment_3596_capstone_v330.json |
+| REQ-VERIFY-3596-1 | Exp 3596: Capstone V330 329-Null Correction | Implemented | results/experiment_3596_capstone_v330.json |
+| REQ-VERIFY-3596-2 | Exp 3596: Capstone V330 329-Null Correction | Implemented | results/experiment_3596_capstone_v330.json |
+| SCENARIO-VERIFY-3596 | Exp 3596: Capstone V330 329-Null Correction | Implemented | results/experiment_3596_capstone_v330.json |
