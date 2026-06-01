@@ -34,9 +34,11 @@ files and should yield ≈ 0.8947 on any machine with the committed corpus.
 from __future__ import annotations
 
 import json
+import math
 import sys
+import time
 from pathlib import Path
-from typing import Any, Sequence
+from typing import Any, Mapping, Sequence
 
 # ---------------------------------------------------------------------------
 # Published acceptance CI
@@ -49,6 +51,9 @@ LEARNING_CONTRIB_CI_HIGH = 0.0245
 
 RANDOM_SEEDS: tuple[int, ...] = (42, 137, 271, 314, 1729)
 N_EXAMPLES = 1000
+EXP3680_CANDIDATE_REL_PATH = Path(
+    "results/experiment_3680_dependency_aware_dual_condition_integrity.json"
+)
 
 
 def _ensure_python_path(repo_root: Path) -> None:
@@ -168,6 +173,149 @@ def check_acceptance_ci(result: dict[str, Any]) -> tuple[bool, bool]:
     return cond_a_in_ci, lc_in_ci
 
 
+def _round_metric(value: float | int, digits: int = 6) -> float:
+    return round(float(value), digits)
+
+
+def _seed_t_ci95(values: Sequence[float]) -> dict[str, float]:
+    """Return the same small-n seed-summary CI shape used by the frozen path."""
+
+    numeric = [float(value) for value in values]
+    if not numeric:
+        raise ValueError("at least one seed value is required")
+    mean = sum(numeric) / len(numeric)
+    if len(numeric) < 2:
+        return {
+            "mean": _round_metric(mean),
+            "low": _round_metric(mean),
+            "high": _round_metric(mean),
+        }
+    t_crit_by_n = {2: 12.706, 3: 4.303, 4: 3.182, 5: 2.776}
+    t_crit = t_crit_by_n.get(len(numeric), 1.96)
+    sample_std = math.sqrt(sum((value - mean) ** 2 for value in numeric) / (len(numeric) - 1))
+    half_width = t_crit * sample_std / math.sqrt(len(numeric))
+    return {
+        "mean": _round_metric(mean),
+        "low": _round_metric(mean - half_width),
+        "high": _round_metric(mean + half_width),
+    }
+
+
+def dependency_aware_candidate_bounds_from_artifact(
+    exp3680_artifact: Mapping[str, Any],
+) -> dict[str, Any]:
+    """Return Exp 3680-derived assertion bounds for the candidate re-freeze."""
+
+    production_ci = exp3680_artifact.get("production_auroc_ci")
+    if not isinstance(production_ci, Mapping):
+        raise ValueError("Exp 3680 artifact is missing production_auroc_ci")
+    production_bounds = list(production_ci.get("ci95") or [])
+    if len(production_bounds) != 2:
+        raise ValueError("Exp 3680 production_auroc_ci must contain two bounds")
+
+    per_seed = list(exp3680_artifact.get("per_seed_results") or [])
+    learning_values = [
+        float(dict(row)["learning_contribution_dependency_aware"])
+        for row in per_seed
+        if "learning_contribution_dependency_aware" in dict(row)
+    ]
+    if not learning_values:
+        raise ValueError("Exp 3680 per_seed_results lack learning contribution values")
+    learning_ci = _seed_t_ci95(learning_values)
+    learning_point = exp3680_artifact.get("learning_contribution_dependency_aware")
+    if learning_point is None:
+        learning_point = learning_ci["mean"]
+
+    return {
+        "production_auroc_dependency_aware": {
+            "point": _round_metric(float(production_ci.get("point"))),
+            "headline_candidate_point": _round_metric(
+                float(exp3680_artifact.get("production_auroc_dependency_aware"))
+            ),
+            "ci95": [_round_metric(production_bounds[0]), _round_metric(production_bounds[1])],
+            "source": EXP3680_CANDIDATE_REL_PATH.as_posix(),
+        },
+        "learning_contribution_dependency_aware": {
+            "point": _round_metric(float(learning_point)),
+            "ci95": [learning_ci["low"], learning_ci["high"]],
+            "ci_source": "derived_from_exp3680_per_seed_results_seed_t_ci95",
+            "source": EXP3680_CANDIDATE_REL_PATH.as_posix(),
+        },
+    }
+
+
+def load_dependency_aware_candidate_bounds(repo_root: Path) -> dict[str, Any]:
+    """Load Exp 3680 and derive candidate assertion bounds from it."""
+
+    path = Path(repo_root) / EXP3680_CANDIDATE_REL_PATH
+    payload = json.loads(path.read_text(encoding="utf-8"))
+    return dependency_aware_candidate_bounds_from_artifact(payload)
+
+
+def check_dependency_aware_candidate_ci(
+    result: Mapping[str, Any],
+    bounds: Mapping[str, Any],
+) -> tuple[bool, bool]:
+    """Return (production_auroc_in_ci, learning_contribution_in_ci)."""
+
+    production = result.get("production_auroc_dependency_aware")
+    learning = result.get("learning_contribution_dependency_aware")
+    production_ci = dict(bounds.get("production_auroc_dependency_aware") or {}).get("ci95") or []
+    learning_ci = dict(bounds.get("learning_contribution_dependency_aware") or {}).get("ci95") or []
+    production_in_ci = (
+        production is not None
+        and len(production_ci) == 2
+        and float(production_ci[0]) <= float(production) <= float(production_ci[1])
+    )
+    learning_in_ci = (
+        learning is not None
+        and len(learning_ci) == 2
+        and float(learning_ci[0]) <= float(learning) <= float(learning_ci[1])
+    )
+    return bool(production_in_ci), bool(learning_in_ci)
+
+
+def run_dependency_aware_candidate_reproduction(
+    repo_root: Path,
+    seeds: Sequence[int] = RANDOM_SEEDS,
+    n_examples: int = N_EXAMPLES,
+) -> dict[str, Any]:
+    """Recompute and assert the Exp 3680 dependency-aware candidate additively.
+
+    The default frozen 0.9131 path remains ``run_reproduction`` and is unchanged.
+    This function is an opt-in candidate path for an operator re-freeze package.
+    """
+
+    root = Path(repo_root)
+    _ensure_python_path(root)
+    from carnot.verify import dependency_aware_dual_condition_integrity as exp3680  # type: ignore[import]
+
+    started_s = time.time()
+    result = dict(
+        exp3680.build_artifact(
+            root,
+            started_s=started_s,
+            n_examples=n_examples,
+            random_seeds=tuple(seeds),
+            bootstrap_seeds=tuple(seeds),
+            adversarial_verify_clean=True,
+        )
+    )
+    bounds = load_dependency_aware_candidate_bounds(root)
+    if result.get("per_seed_results"):
+        learning_values = [
+            float(row["learning_contribution_dependency_aware"])
+            for row in result["per_seed_results"]
+        ]
+        result["learning_contribution_ci95"] = _seed_t_ci95(learning_values)
+    production_in_ci, learning_in_ci = check_dependency_aware_candidate_ci(result, bounds)
+    result["candidate_exp3680_assertion_bounds"] = bounds
+    result["candidate_production_auroc_in_exp3680_ci"] = production_in_ci
+    result["candidate_learning_contribution_in_exp3680_ci"] = learning_in_ci
+    result["candidate_reproduction_asserts_in_ci"] = bool(production_in_ci and learning_in_ci)
+    return result
+
+
 def run_reproduction(
     repo_root: Path,
     seeds: Sequence[int] = RANDOM_SEEDS,
@@ -191,6 +339,8 @@ def run_reproduction(
 
 
 def main(argv: Sequence[str] | None = None) -> int:
+    args = list(sys.argv[1:] if argv is None else argv)
+    run_candidate = "--dependency-aware-candidate" in args
     repo_root = Path(__file__).resolve().parent.parent
     _ensure_python_path(repo_root)
 
@@ -205,6 +355,31 @@ def main(argv: Sequence[str] | None = None) -> int:
         from carnot.eval import fover_memory_leakage_v3 as _m  # noqa: F401
     except ImportError as exc:
         print(f"BLOCKED: cannot import carnot.eval.fover_memory_leakage_v3: {exc}", file=sys.stderr)
+        return 1
+
+    if run_candidate:
+        result = run_dependency_aware_candidate_reproduction(repo_root)
+        if str(result.get("honest_verdict", "")).startswith("complete: blocked"):
+            print(f"BLOCKED: {result.get('honest_verdict')}", file=sys.stderr)
+            return 1
+        bounds = result.get("candidate_exp3680_assertion_bounds", {})
+        production = result.get("production_auroc_dependency_aware")
+        learning = result.get("learning_contribution_dependency_aware")
+        checksum = result.get("reproducibility_checksum")
+        production_in_ci, learning_in_ci = check_dependency_aware_candidate_ci(result, bounds)
+        production_ci = dict(bounds.get("production_auroc_dependency_aware") or {}).get("ci95")
+        learning_ci = dict(bounds.get("learning_contribution_dependency_aware") or {}).get("ci95")
+
+        print(f"dependency-aware production mean AUROC: {production:.6f}")
+        print(f"dependency-aware learning contribution: {learning:.6f}")
+        print(f"reproducibility_checksum:              {checksum}")
+        print()
+        print(f"production AUROC in exp3680 CI {production_ci}: {production_in_ci}")
+        print(f"learning contribution in exp3680 CI {learning_ci}: {learning_in_ci}")
+        if production_in_ci and learning_in_ci:
+            print("\nRESULT: PASS — dependency-aware candidate reproduces within exp3680 CI")
+            return 0
+        print("\nRESULT: FAIL — dependency-aware candidate outside exp3680 CI")
         return 1
 
     result = run_reproduction(repo_root)
