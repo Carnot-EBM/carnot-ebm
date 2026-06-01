@@ -7363,3 +7363,4 @@ web search: https://docs.garak.ai/garak/examples/pr |
 | 2026-06-01 01:43 UTC | Plan milestone 2026.06.331 | OK | 14 tasks proposed |
 | 2026-06-01 01:45 UTC | Milestone 2026.06.331 activated | OK | 14 tasks queued |
 | 2026-06-01 01:50 UTC | Archive milestone .330 honestly (record the gate c | OK | 82 passed in 4.32s |
+| 2026-06-01 01:52 UTC | Diagnose the .330 gate cascade + adversarially aud | FAIL | No file changes produced |
