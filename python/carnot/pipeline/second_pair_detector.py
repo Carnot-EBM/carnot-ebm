@@ -28,7 +28,9 @@ import numpy as np
 JsonDict = dict[str, Any]
 
 OUTPUT_REL_PATH = Path("results/experiment_3657_deployable_second_pair_of_eyes_detector.json")
+SHIP_OUTPUT_REL_PATH = Path("results/experiment_3671_ship_second_pair_of_eyes_detector.json")
 RANDOM_SEED = 3657
+SHIP_RANDOM_SEED = 3671
 FPR_BUDGETS = (0.05, 0.10, 0.20)
 MATERIAL_AUROC_LIFT = 0.01
 MATERIAL_RECALL_LIFT = 0.01
@@ -36,6 +38,7 @@ INFERENCE_SUBSTRATE = (
     "verifier_ensemble_against_cached_candidates (principle: scores cached corpora; no LLM load)."
 )
 DETECTOR_MODULE_PATH = "python/carnot/pipeline/second_pair_detector.py"
+WIRED_SURFACE = "score_candidates MCP tool and carnot score-candidates CLI"
 
 VERDICT_FUSION_WINS = (
     "complete: deployable_second_pair_of_eyes_detector_built_fusion_wins_calibrated"
@@ -44,6 +47,13 @@ VERDICT_FUSION_REDUNDANT = (
     "complete: deployable_detector_built_fusion_redundant_with_confidence_product_value_weak"
 )
 VERDICT_BLOCKED = "complete: blocked_no_labeled_corpus_for_fusion"
+SHIP_VERDICT_MATH_CODE = (
+    "complete: second_pair_of_eyes_detector_shipped_math_strong_code_honest_e2e_green"
+)
+SHIP_VERDICT_MATH_ONLY = (
+    "complete: second_pair_of_eyes_detector_shipped_math_only_code_weak_documented_e2e_green"
+)
+SHIP_VERDICT_BLOCKED = "complete: blocked_no_labeled_corpus_for_detector"
 
 REQUIRED_ARTIFACT_FIELDS = (
     "honest_verdict",
@@ -54,6 +64,23 @@ REQUIRED_ARTIFACT_FIELDS = (
     "recall_at_fixed_fpr_table",
     "calibration_brier_ece",
     "fusion_beats_confidence_alone",
+    "n_examples_per_domain",
+    "random_seed",
+    "reproducibility_checksum",
+    "duration_s",
+)
+REQUIRED_SHIP_ARTIFACT_FIELDS = (
+    "honest_verdict",
+    "inference_substrate",
+    "detector_module_path",
+    "wired_surface",
+    "fused_detector_auroc_per_domain",
+    "confidence_alone_auroc_per_domain",
+    "ensemble_alone_auroc_per_domain",
+    "recall_at_fixed_fpr_table",
+    "calibration_brier_ece_per_domain",
+    "e2e_test_passed",
+    "detector_shipped",
     "n_examples_per_domain",
     "random_seed",
     "reproducibility_checksum",
@@ -90,6 +117,41 @@ FIELD_PRINCIPLES = {
     "reproducibility_checksum": "Drift detection.",
     "duration_s": "Plausibility floor.",
 }
+SHIP_FIELD_PRINCIPLES = {
+    "honest_verdict": "Terminal prefix for reconciler classification.",
+    "inference_substrate": INFERENCE_SUBSTRATE,
+    "detector_module_path": (
+        "Where the deployable fused detector lives -- the Phase-1 product surface."
+    ),
+    "wired_surface": (
+        "Which caller surface (score_candidates MCP tool / CLI) the detector is wired to -- proves it is deployable, not just an experiment script."
+    ),
+    "fused_detector_auroc_per_domain": (
+        "Held-out fused AUROC per domain (math, code) -- the deployable headline numbers."
+    ),
+    "confidence_alone_auroc_per_domain": (
+        "The per-domain bar the fused detector must beat."
+    ),
+    "ensemble_alone_auroc_per_domain": (
+        "The per-domain energy-only baseline for null discipline."
+    ),
+    "recall_at_fixed_fpr_table": (
+        "domain -> {fpr -> recall} fused vs confidence -- the operating-point table a deployer reads."
+    ),
+    "calibration_brier_ece_per_domain": (
+        "Calibration per domain -- a deployable detector must be calibrated and honest where it is not."
+    ),
+    "e2e_test_passed": (
+        "True iff the shipped surface was called end-to-end and returned a calibrated score -- Phase-1 software-operational ship evidence."
+    ),
+    "detector_shipped": (
+        "BARE bool. True iff the detector is wired to a real caller surface AND the E2E test passed AND it beats confidence on >=1 domain. STORE AS BARE true/false."
+    ),
+    "n_examples_per_domain": "Sample-size rigor per domain.",
+    "random_seed": "Determinism precondition.",
+    "reproducibility_checksum": "Drift detection.",
+    "duration_s": "Plausibility floor.",
+}
 
 
 @dataclass(frozen=True)
@@ -105,6 +167,24 @@ class LabeledDetectorExample:
     ensemble_energy: float
     confidence_error: float
     example_id: str = ""
+
+
+@dataclass(frozen=True)
+class CandidateScoreInput:
+    """One runtime row for the shipped score_candidates surface.
+
+    ``confidence`` is model confidence that the candidate is correct.  The
+    derived ``confidence_error`` feature is ``1 - confidence``.  Callers that
+    already computed the oriented error score may pass ``confidence_error``
+    directly.
+    """
+
+    candidate_id: str
+    domain: str
+    text: str
+    confidence: float | None = None
+    confidence_error: float | None = None
+    ensemble_energy: float | None = None
 
 
 class CalibratedFusedDetector:
@@ -171,6 +251,14 @@ class CalibratedFusedDetector:
         coef = np.asarray(self.coef_, dtype=np.float64)
         logits = self.intercept_ + ((features - mean) / scale) @ coef
         return [round(float(value), 12) for value in _sigmoid(logits)]
+
+    def evaluate_domains(
+        self,
+        examples: Sequence[LabeledDetectorExample],
+    ) -> JsonDict:
+        """Evaluate held-out discrimination, calibration, and operating points."""
+
+        return evaluate_domains_with_detector(self, examples)
 
 
 def build_artifact(
@@ -337,10 +425,252 @@ def write_artifact(
     return output
 
 
+def build_ship_artifact(
+    root: Path | str,
+    *,
+    output_path: Path | str = SHIP_OUTPUT_REL_PATH,
+    examples: Sequence[LabeledDetectorExample] | None = None,
+    started_s: float | None = None,
+    now_s: float | None = None,
+    e2e_override: bool | None = None,
+    tests_run: Sequence[str] | None = None,
+) -> JsonDict:
+    """Build the Exp 3671 shipped detector artifact."""
+
+    root_path = Path(root)
+    if examples is None:
+        examples, corpus_status = load_cached_labeled_examples(
+            root_path,
+            use_balanced_code_corpus=True,
+        )
+    else:
+        corpus_status = {"synthetic": {"status": "provided", "n_examples": len(examples)}}
+    artifact = build_ship_artifact_from_examples(
+        examples,
+        root=root_path,
+        started_s=started_s,
+        now_s=now_s,
+        e2e_override=e2e_override,
+        tests_run=tests_run,
+    )
+    artifact["corpus_status"] = corpus_status
+    artifact["output_path"] = str(_repo_path(root_path, Path(output_path)))
+    validate_ship_artifact(artifact)
+    return artifact
+
+
+def build_ship_artifact_from_examples(
+    examples: Sequence[LabeledDetectorExample],
+    *,
+    root: Path | str | None = None,
+    started_s: float | None = None,
+    now_s: float | None = None,
+    e2e_override: bool | None = None,
+    tests_run: Sequence[str] | None = None,
+) -> JsonDict:
+    """Evaluate domains and return the Exp 3671 ship artifact."""
+
+    start = time.perf_counter() if started_s is None else float(started_s)
+    clean = _clean_examples(examples)
+    train, holdout = stratified_train_holdout(clean, seed=SHIP_RANDOM_SEED)
+    if not _has_both_classes(train) or not any(
+        _has_both_classes(group) for group in _by_domain(holdout).values()
+    ):
+        finished = time.perf_counter() if now_s is None else float(now_s)
+        artifact = _base_ship_artifact(
+            verdict=SHIP_VERDICT_BLOCKED,
+            detector_shipped=False,
+            e2e_passed=False,
+            duration_s=round(max(0.0, finished - start), 6),
+            tests_run=tests_run,
+        )
+        artifact.update(
+            {
+                "fused_detector_auroc_per_domain": {},
+                "confidence_alone_auroc_per_domain": {},
+                "ensemble_alone_auroc_per_domain": {},
+                "recall_at_fixed_fpr_table": {},
+                "calibration_brier_ece_per_domain": {},
+                "operating_points": {},
+                "material_win_per_domain": {},
+                "n_examples_per_domain": _n_examples_per_domain(clean),
+                "heldout_examples_per_domain": _n_examples_per_domain(holdout),
+            }
+        )
+        artifact["reproducibility_checksum"] = reproducibility_checksum_for_ship(artifact)
+        validate_ship_artifact(artifact)
+        return artifact
+
+    detector = CalibratedFusedDetector().fit(train)
+    metrics = detector.evaluate_domains(holdout)
+    e2e_passed = (
+        bool(e2e_override)
+        if e2e_override is not None
+        else _run_surface_e2e_smoke(clean, holdout, root=Path(root or "."))
+    )
+    material_wins = metrics["material_win_per_domain"]
+    beats_confidence = any(bool(value) for value in material_wins.values())
+    detector_shipped = bool(WIRED_SURFACE and e2e_passed and beats_confidence)
+    code_strong = bool(material_wins.get("code"))
+    if not detector_shipped:
+        verdict = SHIP_VERDICT_BLOCKED
+    elif code_strong:
+        verdict = SHIP_VERDICT_MATH_CODE
+    else:
+        verdict = SHIP_VERDICT_MATH_ONLY
+
+    finished = time.perf_counter() if now_s is None else float(now_s)
+    artifact = _base_ship_artifact(
+        verdict=verdict,
+        detector_shipped=detector_shipped,
+        e2e_passed=e2e_passed,
+        duration_s=round(max(0.0, finished - start), 6),
+        tests_run=tests_run,
+    )
+    artifact.update(
+        {
+            "fused_detector_auroc_per_domain": metrics["fused_detector_auroc_per_domain"],
+            "confidence_alone_auroc_per_domain": metrics[
+                "confidence_alone_auroc_per_domain"
+            ],
+            "ensemble_alone_auroc_per_domain": metrics["ensemble_alone_auroc_per_domain"],
+            "recall_at_fixed_fpr_table": metrics["recall_at_fixed_fpr_table"],
+            "calibration_brier_ece_per_domain": metrics[
+                "calibration_brier_ece_per_domain"
+            ],
+            "operating_points": metrics["operating_points"],
+            "material_win_per_domain": material_wins,
+            "n_examples_per_domain": _n_examples_per_domain(clean),
+            "heldout_examples_per_domain": _n_examples_per_domain(holdout),
+            "calibrator": {
+                "method": "logistic",
+                "feature_names": list(detector.feature_names),
+                "coef": [_round(value) for value in detector.coef_ or []],
+                "intercept": _round(detector.intercept_ or 0.0),
+            },
+        }
+    )
+    artifact["reproducibility_checksum"] = reproducibility_checksum_for_ship(artifact)
+    validate_ship_artifact(artifact)
+    return artifact
+
+
+def write_ship_artifact(
+    root: Path | str,
+    *,
+    output_path: Path | str = SHIP_OUTPUT_REL_PATH,
+    examples: Sequence[LabeledDetectorExample] | None = None,
+    started_s: float | None = None,
+    now_s: float | None = None,
+    e2e_override: bool | None = None,
+    tests_run: Sequence[str] | None = None,
+) -> Path:
+    """Build, validate, and persist the Exp 3671 ship artifact."""
+
+    root_path = Path(root)
+    output = _repo_path(root_path, Path(output_path))
+    artifact = build_ship_artifact(
+        root_path,
+        output_path=output_path,
+        examples=examples,
+        started_s=started_s,
+        now_s=now_s,
+        e2e_override=e2e_override,
+        tests_run=tests_run,
+    )
+    output.parent.mkdir(parents=True, exist_ok=True)
+    output.write_text(json.dumps(artifact, indent=2, sort_keys=True) + "\n", encoding="utf-8")
+    return output
+
+
+def score_candidates(
+    candidates: Sequence[CandidateScoreInput | Mapping[str, Any]],
+    *,
+    root: Path | str = ".",
+    examples: Sequence[LabeledDetectorExample] | None = None,
+    default_domain: str | None = None,
+) -> JsonDict:
+    """Score candidates with the shipped calibrated fused detector surface."""
+
+    root_path = Path(root)
+    if examples is None:
+        examples, corpus_status = load_cached_labeled_examples(
+            root_path,
+            use_balanced_code_corpus=True,
+        )
+    else:
+        corpus_status = {"synthetic": {"status": "provided", "n_examples": len(examples)}}
+    clean = _clean_examples(examples)
+    train, holdout = stratified_train_holdout(clean, seed=SHIP_RANDOM_SEED)
+    if not _has_both_classes(train) or not any(
+        _has_both_classes(group) for group in _by_domain(holdout).values()
+    ):
+        raise ValueError("score_candidates requires a labeled corpus with evaluable holdout rows")
+    detector = CalibratedFusedDetector().fit(train)
+    metrics = detector.evaluate_domains(holdout)
+    normalized = [
+        _coerce_candidate_input(candidate, default_domain=default_domain)
+        for candidate in candidates
+    ]
+    scored_examples = [
+        LabeledDetectorExample(
+            domain=candidate.domain,
+            label=0,
+            ensemble_energy=_candidate_ensemble_energy(candidate, root_path),
+            confidence_error=_candidate_confidence_error(candidate),
+            example_id=candidate.candidate_id,
+        )
+        for candidate in normalized
+    ]
+    probabilities = detector.predict_proba(scored_examples)
+    rows = []
+    for candidate, example, probability in zip(
+        normalized,
+        scored_examples,
+        probabilities,
+        strict=True,
+    ):
+        operating_point = metrics["operating_points"].get(candidate.domain)
+        rows.append(
+            {
+                "candidate_id": candidate.candidate_id,
+                "domain": candidate.domain,
+                "calibrated_error_score": _round(probability),
+                "ensemble_energy": _round(example.ensemble_energy),
+                "confidence_error": _round(example.confidence_error),
+                "operating_point": operating_point,
+            }
+        )
+    return {
+        "surface": "score_candidates",
+        "wired_surface": WIRED_SURFACE,
+        "detector_module_path": DETECTOR_MODULE_PATH,
+        "calibration_source": {
+            "random_seed": SHIP_RANDOM_SEED,
+            "n_examples_per_domain": _n_examples_per_domain(clean),
+            "corpus_status": corpus_status,
+        },
+        "domain_metrics": {
+            "fused_detector_auroc_per_domain": metrics[
+                "fused_detector_auroc_per_domain"
+            ],
+            "confidence_alone_auroc_per_domain": metrics[
+                "confidence_alone_auroc_per_domain"
+            ],
+            "ensemble_alone_auroc_per_domain": metrics["ensemble_alone_auroc_per_domain"],
+            "calibration_brier_ece_per_domain": metrics[
+                "calibration_brier_ece_per_domain"
+            ],
+        },
+        "scores": rows,
+    }
+
+
 def load_cached_labeled_examples(
     root: Path | str,
     *,
     score_overrides: Mapping[str, Mapping[str, Sequence[float]]] | None = None,
+    use_balanced_code_corpus: bool = False,
 ) -> tuple[list[LabeledDetectorExample], JsonDict]:
     """Load labeled FoVer math and Exp 3641 code rows with computed scores."""
 
@@ -349,7 +679,11 @@ def load_cached_labeled_examples(
     examples: list[LabeledDetectorExample] = []
     status: JsonDict = {}
     math_examples, math_status = _load_math_examples(root_path, overrides.get("math", {}))
-    code_examples, code_status = _load_code_examples(root_path, overrides.get("code", {}))
+    code_examples, code_status = _load_code_examples(
+        root_path,
+        overrides.get("code", {}),
+        use_balanced_code_corpus=use_balanced_code_corpus,
+    )
     examples.extend(math_examples)
     examples.extend(code_examples)
     status["math"] = math_status
@@ -430,6 +764,55 @@ def recall_at_fixed_fpr_table(
             "ensemble_threshold": ensemble[key]["threshold"],
         }
     return table
+
+
+def evaluate_domains_with_detector(
+    detector: CalibratedFusedDetector,
+    examples: Sequence[LabeledDetectorExample],
+) -> JsonDict:
+    """Evaluate a fitted detector on per-domain held-out examples."""
+
+    fused_auroc: JsonDict = {}
+    confidence_auroc: JsonDict = {}
+    ensemble_auroc: JsonDict = {}
+    recall_table: JsonDict = {}
+    calibration: JsonDict = {}
+    operating_points: JsonDict = {}
+    material_wins: dict[str, bool] = {}
+    for domain, domain_examples in sorted(_by_domain(_clean_examples(examples)).items()):
+        if not _has_both_classes(domain_examples):
+            continue
+        labels = [example.label for example in domain_examples]
+        fused_scores = detector.predict_proba(domain_examples)
+        confidence_scores = [example.confidence_error for example in domain_examples]
+        ensemble_scores = [example.ensemble_energy for example in domain_examples]
+        fused_auroc[domain] = _round(tie_aware_auroc(labels, fused_scores))
+        confidence_auroc[domain] = _round(tie_aware_auroc(labels, confidence_scores))
+        ensemble_auroc[domain] = _round(tie_aware_auroc(labels, ensemble_scores))
+        recall_table[domain] = recall_at_fixed_fpr_table(
+            labels,
+            fused_scores,
+            confidence_scores,
+            ensemble_scores,
+        )
+        calibration[domain] = {
+            "brier": _round(brier_score(labels, fused_scores)),
+            "ece": _round(expected_calibration_error(labels, fused_scores)),
+        }
+        operating_points[domain] = recommended_operating_point(recall_table[domain])
+        material_wins[domain] = bool(
+            confidence_auroc[domain] < 0.95
+            and fused_auroc[domain] - confidence_auroc[domain] >= MATERIAL_AUROC_LIFT
+        )
+    return {
+        "fused_detector_auroc_per_domain": fused_auroc,
+        "confidence_alone_auroc_per_domain": confidence_auroc,
+        "ensemble_alone_auroc_per_domain": ensemble_auroc,
+        "recall_at_fixed_fpr_table": recall_table,
+        "calibration_brier_ece_per_domain": calibration,
+        "operating_points": operating_points,
+        "material_win_per_domain": material_wins,
+    }
 
 
 def recommended_operating_point(table: Mapping[str, Mapping[str, float | None]]) -> JsonDict:
@@ -566,6 +949,27 @@ def validate_artifact(artifact: Mapping[str, Any]) -> None:
         raise ValueError("duration_s must be a non-negative number")
 
 
+def validate_ship_artifact(artifact: Mapping[str, Any]) -> None:
+    """Validate the Exp 3671 terminal ship artifact contract."""
+
+    missing = [field for field in REQUIRED_SHIP_ARTIFACT_FIELDS if field not in artifact]
+    if missing:
+        raise ValueError(f"missing required ship artifact fields: {missing}")
+    if artifact.get("honest_verdict") not in {
+        SHIP_VERDICT_MATH_CODE,
+        SHIP_VERDICT_MATH_ONLY,
+        SHIP_VERDICT_BLOCKED,
+    }:
+        raise ValueError("honest_verdict is not an accepted Exp 3671 terminal verdict")
+    if type(artifact.get("detector_shipped")) is not bool:
+        raise ValueError("detector_shipped must be a bare top-level bool")
+    if type(artifact.get("e2e_test_passed")) is not bool:
+        raise ValueError("e2e_test_passed must be a bare top-level bool")
+    duration = artifact.get("duration_s")
+    if not isinstance(duration, (int, float)) or float(duration) < 0.0:
+        raise ValueError("duration_s must be a non-negative number")
+
+
 def reproducibility_checksum(artifact: Mapping[str, Any]) -> str:
     """Hash deterministic artifact fields for drift detection."""
 
@@ -577,6 +981,28 @@ def reproducibility_checksum(artifact: Mapping[str, Any]) -> str:
         "calibration_brier_ece": artifact.get("calibration_brier_ece"),
         "n_examples_per_domain": artifact.get("n_examples_per_domain"),
         "random_seed": RANDOM_SEED,
+    }
+    encoded = json.dumps(payload, sort_keys=True, separators=(",", ":")).encode("utf-8")
+    return hashlib.sha256(encoded).hexdigest()[:16]
+
+
+def reproducibility_checksum_for_ship(artifact: Mapping[str, Any]) -> str:
+    """Hash deterministic Exp 3671 ship fields for drift detection."""
+
+    payload = {
+        "fused_detector_auroc_per_domain": artifact.get("fused_detector_auroc_per_domain"),
+        "confidence_alone_auroc_per_domain": artifact.get(
+            "confidence_alone_auroc_per_domain"
+        ),
+        "ensemble_alone_auroc_per_domain": artifact.get("ensemble_alone_auroc_per_domain"),
+        "recall_at_fixed_fpr_table": artifact.get("recall_at_fixed_fpr_table"),
+        "calibration_brier_ece_per_domain": artifact.get(
+            "calibration_brier_ece_per_domain"
+        ),
+        "detector_shipped": artifact.get("detector_shipped"),
+        "e2e_test_passed": artifact.get("e2e_test_passed"),
+        "n_examples_per_domain": artifact.get("n_examples_per_domain"),
+        "random_seed": SHIP_RANDOM_SEED,
     }
     encoded = json.dumps(payload, sort_keys=True, separators=(",", ":")).encode("utf-8")
     return hashlib.sha256(encoded).hexdigest()[:16]
@@ -613,6 +1039,147 @@ def _base_artifact(
         "tests_run": list(tests_run or []),
         "scripts_research_conductor_modified": False,
     }
+
+
+def _base_ship_artifact(
+    *,
+    verdict: str,
+    detector_shipped: bool,
+    e2e_passed: bool,
+    duration_s: float,
+    tests_run: Sequence[str] | None,
+) -> JsonDict:
+    return {
+        "honest_verdict": verdict,
+        "inference_substrate": INFERENCE_SUBSTRATE,
+        "detector_module_path": DETECTOR_MODULE_PATH,
+        "wired_surface": WIRED_SURFACE,
+        "e2e_test_passed": bool(e2e_passed),
+        "detector_shipped": bool(detector_shipped),
+        "random_seed": SHIP_RANDOM_SEED,
+        "reproducibility_checksum": "",
+        "duration_s": duration_s,
+        "field_principles": dict(SHIP_FIELD_PRINCIPLES),
+        "acceptance_gate": {
+            "condition": (
+                "detector_module_path present AND e2e_test_passed == true AND "
+                "fused_detector_auroc_per_domain present AND "
+                "calibration_brier_ece_per_domain present"
+            ),
+            "passed": bool(detector_shipped),
+            "principle": (
+                "A shipped product surface requires a real module, a passing E2E "
+                "test, measured per-domain discrimination AND calibration -- an "
+                "experiment artifact alone is not a shipped product."
+            ),
+        },
+        "tests_run": list(tests_run or []),
+        "scripts_research_conductor_modified": False,
+        "ops_docs_reconciliation_left_to_conductor": True,
+    }
+
+
+def _run_surface_e2e_smoke(
+    examples: Sequence[LabeledDetectorExample],
+    holdout: Sequence[LabeledDetectorExample],
+    *,
+    root: Path,
+) -> bool:
+    """Call the shipped score surface on one held-out example."""
+
+    for example in holdout:
+        if _has_both_classes(_by_domain(holdout).get(example.domain, [])):
+            try:
+                result = score_candidates(
+                    [
+                        CandidateScoreInput(
+                            candidate_id=f"e2e-{example.example_id}",
+                            domain=example.domain,
+                            text=example.example_id,
+                            confidence_error=example.confidence_error,
+                            ensemble_energy=example.ensemble_energy,
+                        )
+                    ],
+                    root=root,
+                    examples=examples,
+                )
+            except Exception:
+                return False
+            scores = result.get("scores")
+            if isinstance(scores, list) and scores:
+                value = scores[0].get("calibrated_error_score")
+                return isinstance(value, (int, float)) and 0.0 <= float(value) <= 1.0
+    return False
+
+
+def _coerce_candidate_input(
+    candidate: CandidateScoreInput | Mapping[str, Any],
+    *,
+    default_domain: str | None,
+) -> CandidateScoreInput:
+    if isinstance(candidate, CandidateScoreInput):
+        if not candidate.domain and default_domain is not None:
+            return CandidateScoreInput(
+                candidate_id=candidate.candidate_id,
+                domain=default_domain,
+                text=candidate.text,
+                confidence=candidate.confidence,
+                confidence_error=candidate.confidence_error,
+                ensemble_energy=candidate.ensemble_energy,
+            )
+        return candidate
+    domain = str(candidate.get("domain") or default_domain or "math")
+    text = str(
+        candidate.get("text")
+        or candidate.get("answer")
+        or candidate.get("response")
+        or candidate.get("candidate_code")
+        or ""
+    )
+    candidate_id = str(candidate.get("candidate_id") or candidate.get("id") or len(text))
+    confidence_raw = candidate.get("confidence")
+    confidence_error_raw = candidate.get("confidence_error")
+    ensemble_raw = candidate.get("ensemble_energy")
+    return CandidateScoreInput(
+        candidate_id=candidate_id,
+        domain=domain,
+        text=text,
+        confidence=None if confidence_raw is None else float(confidence_raw),
+        confidence_error=None if confidence_error_raw is None else float(confidence_error_raw),
+        ensemble_energy=None if ensemble_raw is None else float(ensemble_raw),
+    )
+
+
+def _candidate_confidence_error(candidate: CandidateScoreInput) -> float:
+    if candidate.confidence_error is not None:
+        return max(0.0, min(1.0, float(candidate.confidence_error)))
+    if candidate.confidence is not None:
+        return max(0.0, min(1.0, 1.0 - float(candidate.confidence)))
+    return 0.5
+
+
+def _candidate_ensemble_energy(candidate: CandidateScoreInput, root: Path) -> float:
+    if candidate.ensemble_energy is not None:
+        return float(candidate.ensemble_energy)
+    domain = candidate.domain.lower()
+    if domain == "code":
+        rows = [
+            {
+                "candidate_code": candidate.text,
+                "label": True,
+                "task_id": candidate.candidate_id,
+                "metadata": {
+                    "corpus": "surface",
+                    "stable_id": candidate.candidate_id,
+                    "candidate_index": 0,
+                },
+            }
+        ]
+        from carnot.verify import corrected_cross_domain_remeasurement_v4 as exp3642
+
+        return float(exp3642.score_code_rows(rows, root)[0])
+    rows = [{"step_text": candidate.text}]
+    return float(_score_math_rows(rows)[0])
 
 
 def _load_math_examples(
@@ -666,18 +1233,37 @@ def _load_math_examples(
 def _load_code_examples(
     root: Path,
     overrides: Mapping[str, Sequence[float]],
+    *,
+    use_balanced_code_corpus: bool,
 ) -> tuple[list[LabeledDetectorExample], JsonDict]:
-    artifact_path = root / "results/experiment_3641_code_corpus_verifiers_fire_transfer_v3.json"
-    corpus_path = root / "data/code_verification_corpus_v1.jsonl"
-    if artifact_path.exists():
+    if use_balanced_code_corpus:
+        artifact_path = root / "results/experiment_3658_code_generalization_second_corpus.json"
+        corpus_path = root / "data/code_verification_corpus_v2.jsonl"
+        if artifact_path.exists():
+            artifact = json.loads(artifact_path.read_text(encoding="utf-8"))
+            if isinstance(artifact, Mapping) and artifact.get("second_code_corpus_path"):
+                corpus_path = _repo_path(root, Path(str(artifact["second_code_corpus_path"])))
+    else:
+        artifact_path = root / "results/experiment_3641_code_corpus_verifiers_fire_transfer_v3.json"
+        corpus_path = root / "data/code_verification_corpus_v1.jsonl"
+    if not use_balanced_code_corpus and artifact_path.exists():
         artifact = json.loads(artifact_path.read_text(encoding="utf-8"))
         if isinstance(artifact, Mapping) and artifact.get("code_corpus_path"):
             corpus_path = _repo_path(root, Path(str(artifact["code_corpus_path"])))
     if not corpus_path.exists():
-        return [], {"status": "missing", "path": str(corpus_path)}
+        return [], {
+            "status": "missing",
+            "path": str(corpus_path),
+            "balanced_exp3658": bool(use_balanced_code_corpus),
+        }
     rows = _read_jsonl(corpus_path)
     if not rows:
-        return [], {"status": "blocked", "reason": "empty_code_corpus", "path": str(corpus_path)}
+        return [], {
+            "status": "blocked",
+            "reason": "empty_code_corpus",
+            "path": str(corpus_path),
+            "balanced_exp3658": bool(use_balanced_code_corpus),
+        }
     if "ensemble_scores" in overrides:
         ensemble_scores = [float(score) for score in overrides["ensemble_scores"]]
     else:
@@ -702,7 +1288,12 @@ def _load_code_examples(
             zip(rows, ensemble_scores, confidence_scores, strict=False)
         )
     ]
-    return examples, {"status": "loaded", "path": str(corpus_path), "n_examples": len(examples)}
+    return examples, {
+        "status": "loaded",
+        "path": str(corpus_path),
+        "n_examples": len(examples),
+        "balanced_exp3658": bool(use_balanced_code_corpus),
+    }
 
 
 def _score_math_rows(rows: Sequence[Mapping[str, Any]]) -> list[float]:

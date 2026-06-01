@@ -1,0 +1,188 @@
+{
+  "acceptance_gate": {
+    "condition": "detector_module_path present AND e2e_test_passed == true AND fused_detector_auroc_per_domain present AND calibration_brier_ece_per_domain present",
+    "passed": true,
+    "principle": "A shipped product surface requires a real module, a passing E2E test, measured per-domain discrimination AND calibration -- an experiment artifact alone is not a shipped product."
+  },
+  "calibration_brier_ece_per_domain": {
+    "code": {
+      "brier": 0.2747,
+      "ece": 0.058093
+    },
+    "math": {
+      "brier": 0.013556,
+      "ece": 0.008544
+    }
+  },
+  "calibrator": {
+    "coef": [
+      0.877436,
+      0.882714
+    ],
+    "feature_names": [
+      "ensemble_energy",
+      "confidence_error"
+    ],
+    "intercept": -4.35237,
+    "method": "logistic"
+  },
+  "confidence_alone_auroc_per_domain": {
+    "code": 0.5,
+    "math": 0.5
+  },
+  "corpus_status": {
+    "code": {
+      "balanced_exp3658": true,
+      "n_examples": 60,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/data/code_verification_corpus_v2.jsonl",
+      "status": "loaded"
+    },
+    "math": {
+      "n_examples": 6548,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/data/fover_corpus_v4.json",
+      "status": "loaded"
+    }
+  },
+  "detector_module_path": "python/carnot/pipeline/second_pair_detector.py",
+  "detector_shipped": true,
+  "duration_s": 2.512606,
+  "e2e_test_passed": true,
+  "ensemble_alone_auroc_per_domain": {
+    "code": 0.5,
+    "math": 0.979656
+  },
+  "field_principles": {
+    "calibration_brier_ece_per_domain": "Calibration per domain -- a deployable detector must be calibrated and honest where it is not.",
+    "confidence_alone_auroc_per_domain": "The per-domain bar the fused detector must beat.",
+    "detector_module_path": "Where the deployable fused detector lives -- the Phase-1 product surface.",
+    "detector_shipped": "BARE bool. True iff the detector is wired to a real caller surface AND the E2E test passed AND it beats confidence on >=1 domain. STORE AS BARE true/false.",
+    "duration_s": "Plausibility floor.",
+    "e2e_test_passed": "True iff the shipped surface was called end-to-end and returned a calibrated score -- Phase-1 software-operational ship evidence.",
+    "ensemble_alone_auroc_per_domain": "The per-domain energy-only baseline for null discipline.",
+    "fused_detector_auroc_per_domain": "Held-out fused AUROC per domain (math, code) -- the deployable headline numbers.",
+    "honest_verdict": "Terminal prefix for reconciler classification.",
+    "inference_substrate": "verifier_ensemble_against_cached_candidates (principle: scores cached corpora; no LLM load).",
+    "n_examples_per_domain": "Sample-size rigor per domain.",
+    "random_seed": "Determinism precondition.",
+    "recall_at_fixed_fpr_table": "domain -> {fpr -> recall} fused vs confidence -- the operating-point table a deployer reads.",
+    "reproducibility_checksum": "Drift detection.",
+    "wired_surface": "Which caller surface (score_candidates MCP tool / CLI) the detector is wired to -- proves it is deployable, not just an experiment script."
+  },
+  "fused_detector_auroc_per_domain": {
+    "code": 0.5,
+    "math": 0.979656
+  },
+  "heldout_examples_per_domain": {
+    "code": 18,
+    "math": 1964
+  },
+  "honest_verdict": "complete: second_pair_of_eyes_detector_shipped_math_only_code_weak_documented_e2e_green",
+  "inference_substrate": "verifier_ensemble_against_cached_candidates (principle: scores cached corpora; no LLM load).",
+  "material_win_per_domain": {
+    "code": false,
+    "math": true
+  },
+  "n_examples_per_domain": {
+    "code": 60,
+    "math": 6548
+  },
+  "operating_points": {
+    "code": {
+      "actual_fpr": 0.0,
+      "expected_recall": 0.0,
+      "fpr_budget": 0.1,
+      "threshold": null
+    },
+    "math": {
+      "actual_fpr": 0.1,
+      "expected_recall": 0.970588,
+      "fpr_budget": 0.1,
+      "threshold": 0.013138
+    }
+  },
+  "ops_docs_reconciliation_left_to_conductor": true,
+  "output_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_3671_ship_second_pair_of_eyes_detector.json",
+  "random_seed": 3671,
+  "recall_at_fixed_fpr_table": {
+    "code": {
+      "0.05": {
+        "confidence_actual_fpr": 0.0,
+        "confidence_recall": 0.0,
+        "confidence_threshold": null,
+        "ensemble_actual_fpr": 0.0,
+        "ensemble_recall": 0.0,
+        "ensemble_threshold": null,
+        "fused_actual_fpr": 0.0,
+        "fused_recall": 0.0,
+        "fused_threshold": null
+      },
+      "0.10": {
+        "confidence_actual_fpr": 0.0,
+        "confidence_recall": 0.0,
+        "confidence_threshold": null,
+        "ensemble_actual_fpr": 0.0,
+        "ensemble_recall": 0.0,
+        "ensemble_threshold": null,
+        "fused_actual_fpr": 0.0,
+        "fused_recall": 0.0,
+        "fused_threshold": null
+      },
+      "0.20": {
+        "confidence_actual_fpr": 0.0,
+        "confidence_recall": 0.0,
+        "confidence_threshold": null,
+        "ensemble_actual_fpr": 0.111111,
+        "ensemble_recall": 0.111111,
+        "ensemble_threshold": 0.25,
+        "fused_actual_fpr": 0.111111,
+        "fused_recall": 0.111111,
+        "fused_threshold": 0.971128
+      }
+    },
+    "math": {
+      "0.05": {
+        "confidence_actual_fpr": 0.0,
+        "confidence_recall": 0.0,
+        "confidence_threshold": null,
+        "ensemble_actual_fpr": 0.049741,
+        "ensemble_recall": 0.970588,
+        "ensemble_threshold": 0.356665,
+        "fused_actual_fpr": 0.049741,
+        "fused_recall": 0.970588,
+        "fused_threshold": 0.013657
+      },
+      "0.10": {
+        "confidence_actual_fpr": 0.0,
+        "confidence_recall": 0.0,
+        "confidence_threshold": null,
+        "ensemble_actual_fpr": 0.1,
+        "ensemble_recall": 0.970588,
+        "ensemble_threshold": 0.353895,
+        "fused_actual_fpr": 0.1,
+        "fused_recall": 0.970588,
+        "fused_threshold": 0.013138
+      },
+      "0.20": {
+        "confidence_actual_fpr": 0.0,
+        "confidence_recall": 0.0,
+        "confidence_threshold": null,
+        "ensemble_actual_fpr": 0.2,
+        "ensemble_recall": 1.0,
+        "ensemble_threshold": 0.35025,
+        "fused_actual_fpr": 0.2,
+        "fused_recall": 1.0,
+        "fused_threshold": 0.012485
+      }
+    }
+  },
+  "reproducibility_checksum": "054c427411ef1389",
+  "scripts_research_conductor_modified": false,
+  "tests_run": [
+    ".venv/bin/pytest tests/python/test_second_pair_detector_3671.py -q",
+    ".venv/bin/coverage run --source=python/carnot/pipeline/second_pair_detector.py -m pytest -o addopts='' tests/python/test_second_pair_detector_3671.py -q",
+    ".venv/bin/coverage report --include='python/carnot/pipeline/second_pair_detector.py' --fail-under=100 --show-missing",
+    ".venv/bin/python scripts/check_spec_coverage.py",
+    ".venv/bin/pytest tests/python -q"
+  ],
+  "wired_surface": "score_candidates MCP tool and carnot score-candidates CLI"
+}
