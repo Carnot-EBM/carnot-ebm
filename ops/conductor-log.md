@@ -7517,3 +7517,4 @@ web search: https://docs.garak.ai/garak/examples/pr |
 | 2026-06-01 10:19 UTC | Where does a verifier beat self-consistency? Build | OK | 94 passed in 4.40s |
 | 2026-06-01 11:15 UTC | Trained-EBM-judge OOD counterpoint (arXiv:2505.149 | OK | 105 passed in 4.37s |
 | 2026-06-01 11:34 UTC | FR-11 continuous self-learning v8 — online CORRELA | OK | 88 passed in 3.77s |
+| 2026-06-01 11:45 UTC | KV260 SSH-reachability continuity (UNREACHABLE in  | OK | 88 passed in 4.58s |
