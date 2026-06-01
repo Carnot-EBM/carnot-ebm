@@ -7541,3 +7541,4 @@ web search: https://docs.garak.ai/garak/examples/pr |
 | 2026-06-01 17:51 UTC | Archive milestone .335 honestly (the FACTS-made-re | OK | 86 passed in 4.40s |
 | 2026-06-01 18:04 UTC | Backend-state diagnostic v2 — second consecutive p | OK | 88 passed in 4.75s |
 | 2026-06-01 18:24 UTC | Clean, de-tautologized dependency-aware ensemble w | OK | 89 passed in 5.07s |
+| 2026-06-01 18:38 UTC | Held-out / cross-split validation of the dependenc | OK | 89 passed in 4.67s |
