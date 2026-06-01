@@ -7386,3 +7386,120 @@ web search: https://docs.garak.ai/garak/examples/pr |
 | 2026-06-01 03:48 UTC | Plan milestone 2026.06.332 | OK | 13 tasks proposed |
 | 2026-06-01 03:51 UTC | Milestone 2026.06.332 activated | OK | 13 tasks queued |
 | 2026-06-01 03:57 UTC | Archive milestone .331 honestly (record that 'math | OK | 82 passed in 4.12s |
+| 2026-06-01 04:20 UTC | Validate the existing factual corpus v2 (200 recs, | FAIL | Post-tests failed: 1 failed, 84 passed, 1 warning in 6.21s |
+| 2026-06-01 04:22 UTC | Validate the existing factual corpus v2 (200 recs, | OK | Deliverable already exists in repo |
+| 2026-06-01 04:22 UTC | Build the labeled CODE corpus + make the execution | SKIP | Pre-tests failing, self-heal failed: 1 failed, 84 passed, 1 warning in 5.86s |
+| 2026-06-01 04:24 UTC | Build the labeled CODE corpus + make the execution | SKIP | Pre-tests failing, self-heal failed: 1 failed, 84 passed, 1 warning in 5.87s |
+| 2026-06-01 04:26 UTC | Build the labeled CODE corpus + make the execution | SKIP | Pre-tests failing, self-heal failed: 1 failed, 84 passed, 1 warning in 4.79s |
+| 2026-06-01 04:29 UTC | CENTERPIECE: corrected cross-domain re-measurement | SKIP | Pre-tests failing, self-heal failed: 1 failed, 84 passed, 1 warning in 4.90s |
+| 2026-06-01 04:31 UTC | CENTERPIECE: corrected cross-domain re-measurement | SKIP | Pre-tests failing, self-heal failed: 1 failed, 84 passed, 1 warning in 6.13s |
+| 2026-06-01 04:33 UTC | CENTERPIECE: corrected cross-domain re-measurement | SKIP | Pre-tests failing, self-heal failed: 1 failed, 84 passed, 1 warning in 5.59s |
+| 2026-06-01 04:35 UTC | Additivity / 'second pair of eyes' — does ensemble | GATE_BLOCK | Pre-emptive skip: upstream retired (exp3614-corrected-cross-domain-remeasurement |
+| 2026-06-01 04:35 UTC | Position Carnot vs the SOTA weak-verifier peer Wea | SKIP | Pre-tests failing, self-heal failed: 1 failed, 84 passed, 1 warning in 5.27s |
+| 2026-06-01 04:37 UTC | Additivity / 'second pair of eyes' — does ensemble | GATE_BLOCK | Pre-emptive skip: upstream retired (exp3614-corrected-cross-domain-remeasurement |
+| 2026-06-01 04:38 UTC | Position Carnot vs the SOTA weak-verifier peer Wea | SKIP | Pre-tests failing, self-heal failed: 1 failed, 84 passed, 1 warning in 4.79s |
+| 2026-06-01 04:40 UTC | Additivity / 'second pair of eyes' — does ensemble | GATE_BLOCK | Pre-emptive skip: upstream retired (exp3614-corrected-cross-domain-remeasurement |
+| 2026-06-01 04:40 UTC | Position Carnot vs the SOTA weak-verifier peer Wea | SKIP | Pre-tests failing, self-heal failed: 1 failed, 84 passed, 1 warning in 5.31s |
+| 2026-06-01 04:42 UTC | Where does a verifier beat self-consistency? Build | SKIP | Pre-tests failing, self-heal failed: 1 failed, 84 passed, 1 warning in 5.08s |
+| 2026-06-01 04:44 UTC | Where does a verifier beat self-consistency? Build | SKIP | Pre-tests failing, self-heal failed: 1 failed, 84 passed, 1 warning in 5.80s |
+| 2026-06-01 04:47 UTC | Where does a verifier beat self-consistency? Build | SKIP | Pre-tests failing, self-heal failed: 1 failed, 84 passed, 1 warning in 5.56s |
+| 2026-06-01 04:49 UTC | FR-11 continuous self-learning v7 — online CORRELA | SKIP | Pre-tests failing, self-heal failed: 1 failed, 84 passed, 1 warning in 5.54s |
+| 2026-06-01 04:51 UTC | FR-11 continuous self-learning v7 — online CORRELA | SKIP | Pre-tests failing, self-heal failed: 1 failed, 84 passed, 1 warning in 6.14s |
+| 2026-06-01 04:53 UTC | FR-11 continuous self-learning v7 — online CORRELA | SKIP | Pre-tests failing, self-heal failed: 1 failed, 84 passed, 1 warning in 5.36s |
+| 2026-06-01 04:56 UTC | KV260 SSH-reachability continuity (was UNREACHABLE | SKIP | Pre-tests failing, self-heal failed: 1 failed, 84 passed, 1 warning in 5.82s |
+| 2026-06-01 04:58 UTC | KV260 SSH-reachability continuity (was UNREACHABLE | SKIP | Pre-tests failing, self-heal failed: 1 failed, 84 passed, 1 warning in 4.87s |
+| 2026-06-01 05:00 UTC | KV260 SSH-reachability continuity (was UNREACHABLE | SKIP | Pre-tests failing, self-heal failed: 1 failed, 84 passed, 1 warning in 5.75s |
+| 2026-06-01 05:03 UTC | PolarFire opportunistic reachability + continuity  | SKIP | Pre-tests failing, self-heal failed: 1 failed, 84 passed, 1 warning in 5.24s |
+| 2026-06-01 05:05 UTC | PolarFire opportunistic reachability + continuity  | SKIP | Pre-tests failing, self-heal failed: 1 failed, 84 passed, 1 warning in 5.68s |
+| 2026-06-01 05:07 UTC | PolarFire opportunistic reachability + continuity  | SKIP | Pre-tests failing, self-heal failed: 1 failed, 84 passed, 1 warning in 5.07s |
+| 2026-06-01 05:09 UTC | GateMate continuity audit (documentation-only — op | SKIP | Pre-tests failing, self-heal failed: 1 failed, 84 passed, 1 warning in 5.97s |
+| 2026-06-01 05:12 UTC | GateMate continuity audit (documentation-only — op | SKIP | Pre-tests failing, self-heal failed: 1 failed, 84 passed, 1 warning in 5.63s |
+| 2026-06-01 05:14 UTC | GateMate continuity audit (documentation-only — op | SKIP | Pre-tests failing, self-heal failed: 1 failed, 84 passed, 1 warning in 6.12s |
+| 2026-06-01 05:16 UTC | Cross-domain generalization SYNTHESIS v4 — CORRECT | SKIP | Pre-tests failing, self-heal failed: 1 failed, 84 passed, 1 warning in 5.71s |
+| 2026-06-01 05:18 UTC | Cross-domain generalization SYNTHESIS v4 — CORRECT | SKIP | Pre-tests failing, self-heal failed: 1 failed, 84 passed, 1 warning in 5.13s |
+| 2026-06-01 05:21 UTC | Cross-domain generalization SYNTHESIS v4 — CORRECT | SKIP | Pre-tests failing, self-heal failed: 1 failed, 84 passed, 1 warning in 5.31s |
+| 2026-06-01 05:23 UTC | Capstone v332 + G1-G4 gate synthesis — was '.329 m | SKIP | Pre-tests failing, self-heal failed: 1 failed, 84 passed, 1 warning in 4.84s |
+| 2026-06-01 05:25 UTC | Capstone v332 + G1-G4 gate synthesis — was '.329 m | SKIP | Pre-tests failing, self-heal failed: 1 failed, 84 passed, 1 warning in 5.50s |
+| 2026-06-01 06:04 UTC | Plan next milestone | FAIL | Gemini CLI error: Wall-clock+idle timeout after 1201s (1201s silence). Last ou |
+| 2026-06-01 06:07 UTC | Capstone v332 + G1-G4 gate synthesis — was '.329 m | FAIL | Gemini CLI error: T.js:345500:14)
+    at async file:///usr/lib/node_modules/@g |
+| 2026-06-01 06:09 UTC | Milestone 2026.06.333 activated | OK | 14 tasks queued |
+| 2026-06-01 06:12 UTC | Archive milestone .332 honestly (record the POISON | FAIL | Gemini CLI error: .js:345500:14)
+    at async file:///usr/lib/node_modules/@go |
+| 2026-06-01 06:14 UTC | Archive milestone .332 honestly (record the POISON | FAIL | Gemini CLI error: :345500:14)
+    at async file:///usr/lib/node_modules/@googl |
+| 2026-06-01 06:17 UTC | Archive milestone .332 honestly (record the POISON | FAIL | Gemini CLI error: .js:345500:14)
+    at async file:///usr/lib/node_modules/@go |
+| 2026-06-01 06:20 UTC | Build factual corpus v3 from a REAL evidence-beari | FAIL | Gemini CLI error: s:345500:14)
+    at async file:///usr/lib/node_modules/@goog |
+| 2026-06-01 06:22 UTC | Build factual corpus v3 from a REAL evidence-beari | FAIL | Gemini CLI error: .js:345500:14)
+    at async file:///usr/lib/node_modules/@go |
+| 2026-06-01 06:25 UTC | Build factual corpus v3 from a REAL evidence-beari | FAIL | Gemini CLI error: T.js:345500:14)
+    at async file:///usr/lib/node_modules/@g |
+| 2026-06-01 06:27 UTC | Build the labeled CODE corpus from exp1999 + make  | FAIL | Gemini CLI error: .js:345500:14)
+    at async file:///usr/lib/node_modules/@go |
+| 2026-06-01 06:29 UTC | Build the labeled CODE corpus from exp1999 + make  | FAIL | Gemini CLI error: :345500:14)
+    at async file:///usr/lib/node_modules/@googl |
+| 2026-06-01 06:32 UTC | Build the labeled CODE corpus from exp1999 + make  | FAIL | Gemini CLI error: s:345500:14)
+    at async file:///usr/lib/node_modules/@goog |
+| 2026-06-01 06:34 UTC | CENTERPIECE: corrected cross-domain re-measurement | FAIL | Gemini CLI error: .js:345500:14)
+    at async file:///usr/lib/node_modules/@go |
+| 2026-06-01 06:36 UTC | CENTERPIECE: corrected cross-domain re-measurement | FAIL | Gemini CLI error: .js:345500:14)
+    at async file:///usr/lib/node_modules/@go |
+| 2026-06-01 06:38 UTC | CENTERPIECE: corrected cross-domain re-measurement | FAIL | Gemini CLI error: s:345500:14)
+    at async file:///usr/lib/node_modules/@goog |
+| 2026-06-01 06:40 UTC | Additivity / 'second pair of eyes' — does ensemble | GATE_BLOCK | Pre-emptive skip: upstream retired (exp3627-corrected-cross-domain-remeasurement |
+| 2026-06-01 06:41 UTC | Position Carnot vs the SOTA weak-verifier peer Wea | FAIL | Gemini CLI error: T.js:345500:14)
+    at async file:///usr/lib/node_modules/@g |
+| 2026-06-01 06:43 UTC | Additivity / 'second pair of eyes' — does ensemble | GATE_BLOCK | Pre-emptive skip: upstream retired (exp3627-corrected-cross-domain-remeasurement |
+| 2026-06-01 06:43 UTC | Position Carnot vs the SOTA weak-verifier peer Wea | FAIL | Gemini CLI error: T.js:345500:14)
+    at async file:///usr/lib/node_modules/@g |
+| 2026-06-01 06:45 UTC | Additivity / 'second pair of eyes' — does ensemble | GATE_BLOCK | Pre-emptive skip: upstream retired (exp3627-corrected-cross-domain-remeasurement |
+| 2026-06-01 06:45 UTC | Position Carnot vs the SOTA weak-verifier peer Wea | FAIL | Gemini CLI error: T.js:345500:14)
+    at async file:///usr/lib/node_modules/@g |
+| 2026-06-01 06:48 UTC | Where does a verifier beat self-consistency? Build | FAIL | Gemini CLI error: T.js:345500:14)
+    at async file:///usr/lib/node_modules/@g |
+| 2026-06-01 06:50 UTC | Where does a verifier beat self-consistency? Build | FAIL | Gemini CLI error: .js:345500:14)
+    at async file:///usr/lib/node_modules/@go |
+| 2026-06-01 06:52 UTC | Where does a verifier beat self-consistency? Build | FAIL | Gemini CLI error: .js:345500:14)
+    at async file:///usr/lib/node_modules/@go |
+| 2026-06-01 06:55 UTC | Trained-EBM-judge OOD counterpoint (arXiv:2505.149 | FAIL | Gemini CLI error: .js:345500:14)
+    at async file:///usr/lib/node_modules/@go |
+| 2026-06-01 06:57 UTC | Trained-EBM-judge OOD counterpoint (arXiv:2505.149 | FAIL | Gemini CLI error: .js:345500:14)
+    at async file:///usr/lib/node_modules/@go |
+| 2026-06-01 06:59 UTC | Trained-EBM-judge OOD counterpoint (arXiv:2505.149 | FAIL | Gemini CLI error: .js:345500:14)
+    at async file:///usr/lib/node_modules/@go |
+| 2026-06-01 07:02 UTC | FR-11 continuous self-learning v8 — online CORRELA | FAIL | Gemini CLI error: T.js:345500:14)
+    at async file:///usr/lib/node_modules/@g |
+| 2026-06-01 07:04 UTC | FR-11 continuous self-learning v8 — online CORRELA | FAIL | Gemini CLI error: .js:345500:14)
+    at async file:///usr/lib/node_modules/@go |
+| 2026-06-01 07:06 UTC | FR-11 continuous self-learning v8 — online CORRELA | FAIL | Gemini CLI error: .js:345500:14)
+    at async file:///usr/lib/node_modules/@go |
+| 2026-06-01 07:08 UTC | KV260 SSH-reachability continuity (UNREACHABLE in  | FAIL | Gemini CLI error: T.js:345500:14)
+    at async file:///usr/lib/node_modules/@g |
+| 2026-06-01 07:11 UTC | KV260 SSH-reachability continuity (UNREACHABLE in  | FAIL | Gemini CLI error: :345500:14)
+    at async file:///usr/lib/node_modules/@googl |
+| 2026-06-01 07:13 UTC | KV260 SSH-reachability continuity (UNREACHABLE in  | FAIL | Gemini CLI error: .js:345500:14)
+    at async file:///usr/lib/node_modules/@go |
+| 2026-06-01 07:15 UTC | PolarFire opportunistic reachability + continuity  | FAIL | Gemini CLI error: .js:345500:14)
+    at async file:///usr/lib/node_modules/@go |
+| 2026-06-01 07:18 UTC | PolarFire opportunistic reachability + continuity  | FAIL | Gemini CLI error: T.js:345500:14)
+    at async file:///usr/lib/node_modules/@g |
+| 2026-06-01 07:20 UTC | PolarFire opportunistic reachability + continuity  | FAIL | Gemini CLI error: :345500:14)
+    at async file:///usr/lib/node_modules/@googl |
+| 2026-06-01 07:22 UTC | GateMate continuity audit (documentation-only — op | FAIL | Gemini CLI error: :345500:14)
+    at async file:///usr/lib/node_modules/@googl |
+| 2026-06-01 07:25 UTC | GateMate continuity audit (documentation-only — op | FAIL | Gemini CLI error: .js:345500:14)
+    at async file:///usr/lib/node_modules/@go |
+| 2026-06-01 07:27 UTC | GateMate continuity audit (documentation-only — op | FAIL | Gemini CLI error: T.js:345500:14)
+    at async file:///usr/lib/node_modules/@g |
+| 2026-06-01 07:29 UTC | Cross-domain generalization SYNTHESIS v5 — CORRECT | FAIL | Gemini CLI error: .js:345500:14)
+    at async file:///usr/lib/node_modules/@go |
+| 2026-06-01 07:32 UTC | Cross-domain generalization SYNTHESIS v5 — CORRECT | FAIL | Gemini CLI error: T.js:345500:14)
+    at async file:///usr/lib/node_modules/@g |
+| 2026-06-01 07:34 UTC | Cross-domain generalization SYNTHESIS v5 — CORRECT | FAIL | Gemini CLI error: .js:345500:14)
+    at async file:///usr/lib/node_modules/@go |
+| 2026-06-01 07:36 UTC | Capstone v333 + G1-G4 gate synthesis — was '.329 m | FAIL | Gemini CLI error: :345500:14)
+    at async file:///usr/lib/node_modules/@googl |
+| 2026-06-01 07:39 UTC | Capstone v333 + G1-G4 gate synthesis — was '.329 m | FAIL | Gemini CLI error: T.js:345500:14)
+    at async file:///usr/lib/node_modules/@g |
