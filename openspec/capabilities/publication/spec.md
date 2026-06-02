@@ -1587,6 +1587,56 @@ AND does not edit `ops/north-star.md`
 AND does not edit `.github/workflows/reproduce-fover-headline.yml`
 AND does not trigger GitHub Actions.
 
+### REQ-PUBLISH-041: Exp 3689 v337 Dependency-Aware Capstone And G-Gate
+
+The Exp 3689 capstone runner MUST aggregate `publication_gate.py --json` with
+Exp 3680 through Exp 3685 artifacts and write
+`results/experiment_3689_capstone_and_g_gate_v337.json`. The workflow MUST be
+aggregation-only: it SHALL run the artifact summarizer for each upstream
+artifact, SHALL NOT perform live inference, and SHALL NOT modify
+`scripts/research_conductor.py`.
+
+The artifact MUST preserve the frozen FoVer headline at `0.9131` and record
+`frozen_headline_unchanged == true` when the publication gate still sources the
+frozen FoVer artifact. A dependency-aware improvement from Exp 3680 MUST be
+reported only as a `headline-advancement candidate with an operator-ready
+re-freeze package pending operator action + CI re-reproduction`; it MUST NOT
+silently replace the frozen headline. Exp 3680's number may be cited only when
+`adversarial_verify_clean == true`, the artifact is not `flagged_adversarial`,
+the acceptance gate passes, `leak_free == true`, and any AUROC greater than or
+equal to `0.99` has explicit leak-free evidence.
+
+The artifact MUST exclude any `flagged_adversarial` upstream artifact from
+`cited_upstream_artifacts`. A flagged or missing Exp 3681 MUST block
+`refreeze_package_status == "ready_for_operator"` even when its local verdict
+string is celebratory. A flagged or missing Exp 3682 MUST record
+`selection_gap_verdict == "not_measured"` rather than synthesizing a
+fundamental-selection conclusion from missing or quarantined fields.
+
+The artifact MUST record Exp 3683 as `recovered_math_and_code`,
+`math_only_earned`, or `not_measured`; Exp 3684 as
+`robust_beats_self_certainty`, `narrowed_collapses_vs_self_certainty`, or
+`not_measured`; and Exp 3685 as the drift-aware FR-11 v11 result. It MUST
+preserve `p01_status == "honest-negative"`, set
+`facts_generalization_retired == true`, set
+`trained_judge_ood_retired == true`, include narrowing-clean
+`paper_v6_safe_claims` and `paper_v6_forbidden_claims`, and emit a terminal
+verdict with the prefix
+`complete: capstone_v337_dependency_aware_<status>_selection_<verdict>_detector_code_<status>_paper_ready_true_frozen_headline_unchanged`.
+
+### SCENARIO-PUBLISH-041: v337 Capstone Preserves Gate And Excludes Flagged Artifacts
+
+**Given** the publication gate reports G1-G4 pass and Exp 3680 through Exp 3685
+artifacts are available
+**When** the Exp 3689 capstone runner executes
+**Then** it writes
+`results/experiment_3689_capstone_and_g_gate_v337.json`
+with `paper_ready == true`, `frozen_headline_unchanged == true`,
+`p01_status == "honest-negative"`, facts-generalization and trained-judge-OOD
+retired, flagged upstream artifacts excluded from citations, skipped or
+flagged gated tasks recorded as `not_measured`, and the dependency-aware win
+kept as a candidate pending operator action plus CI re-reproduction.
+
 
 ## Implementation Status
 
@@ -1628,6 +1678,7 @@ AND does not trigger GitHub Actions.
 | REQ-PUBLISH-038 | Implemented | Exp 3476 FoVer G2 self-contained external reproduction package |
 | REQ-PUBLISH-039 | Implemented | Exp 3488 FoVer G2 clean-room regression verify + lowest-friction external ask |
 | REQ-PUBLISH-040 | Proposed | Exp 3681 G2 reproducer prep for operator re-freeze |
+| REQ-PUBLISH-041 | Proposed | Exp 3689 v337 dependency-aware capstone and G-gate |
 
 ### REQ-PUBLISH-026: HuggingFace Publish Retry
 The experiment 1750 huggingface retry runner MUST attempt to upload the smallest model in models/ with a no-emoji model card. If credentials pass, it MUST upload and record hf_upload_succeeded = True. If blocked, it MUST emit an honest verdict of "blocked_credentials".
