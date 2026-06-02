@@ -7563,3 +7563,4 @@ web search: https://docs.garak.ai/garak/examples/pr |
 | 2026-06-02 00:51 UTC | FR-11 continuous self-learning v11 — drift-aware o | OK | 86 passed in 4.84s |
 | 2026-06-02 01:25 UTC | KV260 SSH-reachability continuity (UNREACHABLE .33 | OK | 89 passed in 4.27s |
 | 2026-06-02 01:37 UTC | PolarFire opportunistic reachability + continuity  | OK | 88 passed in 4.22s |
+| 2026-06-02 01:47 UTC | GateMate continuity audit (documentation-only — op | OK | 89 passed in 4.80s |
