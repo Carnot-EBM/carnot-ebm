@@ -1,0 +1,64 @@
+{
+  "duration_s": 7.84,
+  "ebt_param_count": 37954560,
+  "experiment": 3726,
+  "first_step_losses": [
+    -0.077116,
+    -19.918041,
+    -29.592379,
+    -34.191006,
+    -36.031975,
+    -36.697777,
+    -36.954937,
+    -37.178551,
+    -37.448036,
+    -37.738224
+  ],
+  "honest_verdict": "complete: tiny_ebt_38M_fits_3090_1283mb_single_train_step_loss_finite_and_decreasing_corpus_gsm8k_n2048",
+  "inference_substrate": "live_llm_inference (principle: a real GPU compute task; strict duration floor, which real training easily clears).",
+  "loss_decreased": true,
+  "loss_finite": true,
+  "model_specs": {
+    "batch_size": 8,
+    "block_size": 128,
+    "device": "cuda:0",
+    "ebt_model_args": {
+      "dim": 768,
+      "ffn_dim_multiplier": 4.0,
+      "max_seq_len": 130,
+      "n_heads": 12,
+      "n_layers": 4
+    },
+    "from_scratch_not_pretrained_llm": true,
+    "learning_rate": 0.0003,
+    "model_name": "tiny_vendored_ebt_byte_energy_model",
+    "optimizer": "AdamW",
+    "pretrained_model_weights_used": false,
+    "source": "carnot.phase3.ebt_upstream.EBTDefault",
+    "tokenizer": {
+      "name": "utf8_byte_tokenizer",
+      "pretrained_tokenizer_weights_used": false,
+      "vocab_size": 258
+    },
+    "train_steps": 64,
+    "trainable_param_count": 37954560
+  },
+  "n_train": 2048,
+  "peak_vram_mb": 1283,
+  "preconditions_checked": {
+    "cuda": {
+      "available": true,
+      "device_count": 2,
+      "device_name": "NVIDIA GeForce RTX 3090"
+    },
+    "dataset": {
+      "available": true,
+      "source": "huggingface_api"
+    },
+    "ebt_vendored_importable": true,
+    "python_executable": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python"
+  },
+  "random_seed": 3726,
+  "reproducibility_checksum": "8e46db345b684b30ab3a8607d6cc1d4193d21378064282b1c90acfb50f824760",
+  "schema": "carnot.experiment_3726_tiny_ebt_train_smoke.v1"
+}
