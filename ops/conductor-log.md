@@ -7601,3 +7601,4 @@ web search: https://docs.garak.ai/garak/examples/pr |
 | 2026-06-02 15:31 UTC | SHIP paper_v6_narrowing_lint.py — convert the G3 ( | OK | 90 passed in 5.20s |
 | 2026-06-02 15:46 UTC | Full G4 provenance audit — verify EVERY headline + | OK | 87 passed in 4.84s |
 | 2026-06-02 16:08 UTC | RISK-COVERAGE ABSTENTION characterization of the p | OK | 90 passed in 5.46s |
+| 2026-06-02 16:23 UTC | REPLICATE the headline-class step-error discrimina | OK | 94 passed in 9.56s |
