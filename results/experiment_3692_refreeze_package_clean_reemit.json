@@ -1,0 +1,702 @@
+{
+  "acceptance_gate": {
+    "condition": "adversarial_verify_clean == true AND reproducer_extended == true AND existing_0_9131_reproduction_still_green == true AND north_star_unmodified_assert == true AND frozen_headline_unchanged_assert == true",
+    "passed": true,
+    "principle": "A re-freeze package is operator-actionable only if it is adversarial-clean, additive, keeps the frozen reproducer green, and leaves operator-curated headline state untouched."
+  },
+  "adversarial_verify_clean": true,
+  "artifact": "experiment_3692_refreeze_package_clean_reemit",
+  "candidate_reproduction_asserts_in_ci": true,
+  "candidate_reproduction_result": {
+    "acceptance_gate": {
+      "condition": "production_auroc_dependency_aware present AND production_auroc_carnot_current present AND adversarial_verify_clean == true AND leak_free == true AND n_seeds >= 5",
+      "passed": true,
+      "principle": "A G1-rigor headline candidate requires both weightings measured under the frozen dual-condition protocol, >=5 seeds, adversarial-clean and leak-free -- otherwise it is not comparable to the frozen G1 source."
+    },
+    "adversarial_verify_clean": true,
+    "architecture_auroc_dependency_aware": 0.90318,
+    "artifact": "experiment_3680_dependency_aware_dual_condition_integrity",
+    "bootstrap_seeds": [
+      42,
+      137,
+      271,
+      314,
+      1729
+    ],
+    "candidate_exp3680_assertion_bounds": {
+      "learning_contribution_dependency_aware": {
+        "ci95": [
+          0.012868,
+          0.03143
+        ],
+        "ci_source": "derived_from_exp3680_per_seed_results_seed_t_ci95",
+        "point": 0.022149,
+        "source": "results/experiment_3680_dependency_aware_dual_condition_integrity.json"
+      },
+      "production_auroc_dependency_aware": {
+        "ci95": [
+          0.91699,
+          0.932891
+        ],
+        "headline_candidate_point": 0.925328,
+        "point": 0.924869,
+        "source": "results/experiment_3680_dependency_aware_dual_condition_integrity.json"
+      }
+    },
+    "candidate_learning_contribution_in_exp3680_ci": true,
+    "candidate_production_auroc_in_exp3680_ci": true,
+    "candidate_reproduction_asserts_in_ci": true,
+    "de_tautology_note": "Each conceptually distinct AUROC is stored under one top-level field; the frozen 0.9131 remains a comparison constant, not a replacement.",
+    "delong_dependency_vs_carnot": {
+      "auc_carnot_current": 0.91303,
+      "auc_dependency_aware_proper": 0.924869,
+      "auc_difference": 0.011839,
+      "method": "paired_delong_auc_two_sided",
+      "p_value": 2.40599e-11,
+      "standard_error": 0.001773,
+      "z_value": 6.678987
+    },
+    "delong_p_dependency_vs_carnot": 2.40599e-11,
+    "dependency_aware_g1_rigor_confirmed": true,
+    "dependency_aware_training_protocol": {
+      "dependency_reference": "Learning Dependency Structures for Weak Supervision Models (arXiv:1903.05844)",
+      "folds": 5,
+      "learned_on_labels_for_weight_fit": true,
+      "method": "stratified_crossfit_graph_sparse_signed_fisher_weights",
+      "verifier_scores_use_gold_label": false
+    },
+    "dependency_vs_carnot_delta_ci": {
+      "bootstrap_seeds": [
+        42,
+        137,
+        271,
+        314,
+        1729
+      ],
+      "ci95": [
+        0.008643,
+        0.01515
+      ],
+      "n_bootstrap_per_seed": 200,
+      "point": 0.011839,
+      "seed_mean_deltas": [
+        0.011849,
+        0.011984,
+        0.011743,
+        0.01166,
+        0.011896
+      ]
+    },
+    "duration_s": 22.221802,
+    "exp2850_protocol_source": {
+      "condition_a_production_auroc_mean": 0.9131335999999999,
+      "condition_b_architecture_only_auroc_mean": 0.8946624,
+      "n_examples": 1000,
+      "n_seeds": 5,
+      "path": "results/experiment_2850_fover_dual_condition_integrity_v4.json",
+      "reproducibility_checksum": "b3d8a0ea0ed6180e0120eb909513436d2e0a43055fe09d096d57d93faf21c2c9"
+    },
+    "field_principles": {
+      "adversarial_verify_clean": "True iff the artifact passes adversarial_verify with no TAUTOLOGY/critical flag -- a G1 candidate must be adversarial-clean.",
+      "delong_p_dependency_vs_carnot": "DeLong paired significance under the protocol -- a point estimate alone cannot move a headline.",
+      "dependency_aware_g1_rigor_confirmed": "BARE bool. True iff dependency-aware production AUROC > frozen 0.9131 AND delta CI excludes 0 AND DeLong p<0.05 AND adversarial_verify_clean AND leak_free -- the G1-candidate gate. STORE AS BARE true/false -- gates exp3681.",
+      "dependency_vs_carnot_delta_ci": "Paired delta + bootstrap CI of dependency-aware minus Carnot under the protocol.",
+      "duration_s": "Plausibility floor.",
+      "frozen_headline_auroc": "The frozen 0.9131 -- recorded verbatim so the candidate is explicitly compared, never silently substituted.",
+      "honest_verdict": "Terminal prefix for reconciler classification.",
+      "inference_substrate": "verifier_ensemble_against_cached_candidates (principle: scores the cached FoVer corpus under the dual-condition protocol; no LLM load).",
+      "leak_free": "True iff verifiers scored (input, candidate) only and AUROC < 0.99 -- a leaked AUROC cannot be a headline.",
+      "learning_contribution_dependency_aware": "The architecture-only memory-ablation delta recomputed under the new weighting -- the FR-11 contribution must be re-measured for a re-freeze.",
+      "n_examples": "Sample-size rigor (FoVer n>=1000).",
+      "n_seeds": "Replication count (>=5, matching the frozen G1 source).",
+      "production_auroc_carnot_current": "Carnot's current weighting under the IDENTICAL protocol -- the in-artifact bar; one field, no alias.",
+      "production_auroc_ci": "Pooled bootstrap CI of the dependency-aware production AUROC -- a candidate headline needs a CI like the frozen one.",
+      "production_auroc_dependency_aware": "The candidate-new-headline number: dependency-aware AUROC in the production condition under the frozen G1 protocol -- one field, no alias.",
+      "random_seed": "Determinism precondition.",
+      "reproducibility_checksum": "Drift detection."
+    },
+    "frozen_headline_auroc": 0.9131,
+    "honest_verdict": "complete: dependency_aware_g1_rigor_confirmed_headline_candidate_exceeds_frozen_0_9131",
+    "inference_substrate": "verifier_ensemble_against_cached_candidates (principle: scores the cached FoVer corpus under the dual-condition protocol; no LLM load).",
+    "leak_free": true,
+    "leak_guard": {
+      "red_flag_rule": "AUROC >= 0.99 on n>=1000 sets leak_free=false",
+      "triggered": false,
+      "verifiers_score_input_candidate_only": true
+    },
+    "learning_contribution_ci95": {
+      "high": 0.03143,
+      "low": 0.012868,
+      "mean": 0.022149
+    },
+    "learning_contribution_dependency_aware": 0.022149,
+    "n_bootstrap_per_seed": 200,
+    "n_examples": 1000,
+    "n_seeds": 5,
+    "per_seed_results": [
+      {
+        "architecture_auroc_dependency_aware": 0.906488,
+        "architecture_state_visible_count": 0,
+        "architecture_subset_sha256": "57c7dff98df749951de1a043294d12c0203029e92623db86529223e797ef6cd2",
+        "learning_contribution_dependency_aware": 0.018314,
+        "n_examples": 1000,
+        "production_auroc_carnot_current": 0.914952,
+        "production_auroc_dependency_aware": 0.924802,
+        "production_state_visible_count": 21,
+        "seed": 42,
+        "subset_sha256": "57c7dff98df749951de1a043294d12c0203029e92623db86529223e797ef6cd2"
+      },
+      {
+        "architecture_auroc_dependency_aware": 0.907564,
+        "architecture_state_visible_count": 0,
+        "architecture_subset_sha256": "761ba450cce1eab0c6343403c958dec8408e37dd3de4a7216545a3fd31307c2d",
+        "learning_contribution_dependency_aware": 0.013386,
+        "n_examples": 1000,
+        "production_auroc_carnot_current": 0.908738,
+        "production_auroc_dependency_aware": 0.92095,
+        "production_state_visible_count": 21,
+        "seed": 137,
+        "subset_sha256": "761ba450cce1eab0c6343403c958dec8408e37dd3de4a7216545a3fd31307c2d"
+      },
+      {
+        "architecture_auroc_dependency_aware": 0.886662,
+        "architecture_state_visible_count": 0,
+        "architecture_subset_sha256": "0ecee5724c62fded647b43fff8f30128571da256f163c3eba53a470489b131ee",
+        "learning_contribution_dependency_aware": 0.029904,
+        "n_examples": 1000,
+        "production_auroc_carnot_current": 0.90145,
+        "production_auroc_dependency_aware": 0.916566,
+        "production_state_visible_count": 21,
+        "seed": 271,
+        "subset_sha256": "0ecee5724c62fded647b43fff8f30128571da256f163c3eba53a470489b131ee"
+      },
+      {
+        "architecture_auroc_dependency_aware": 0.90024,
+        "architecture_state_visible_count": 0,
+        "architecture_subset_sha256": "53dcb9dc6ecdeb540fb4b53bcc74b7870d31f1cfe4b2e54f204ced776b47c9ed",
+        "learning_contribution_dependency_aware": 0.030056,
+        "n_examples": 1000,
+        "production_auroc_carnot_current": 0.917102,
+        "production_auroc_dependency_aware": 0.930296,
+        "production_state_visible_count": 21,
+        "seed": 314,
+        "subset_sha256": "53dcb9dc6ecdeb540fb4b53bcc74b7870d31f1cfe4b2e54f204ced776b47c9ed"
+      },
+      {
+        "architecture_auroc_dependency_aware": 0.914944,
+        "architecture_state_visible_count": 0,
+        "architecture_subset_sha256": "42259e022c2757dddabfadcda9ef3407237d27ae1f527be8ae7a4e742d5e0ef8",
+        "learning_contribution_dependency_aware": 0.019084,
+        "n_examples": 1000,
+        "production_auroc_carnot_current": 0.923426,
+        "production_auroc_dependency_aware": 0.934028,
+        "production_state_visible_count": 21,
+        "seed": 1729,
+        "subset_sha256": "42259e022c2757dddabfadcda9ef3407237d27ae1f527be8ae7a4e742d5e0ef8"
+      }
+    ],
+    "preconditions_checked": [
+      {
+        "available": true,
+        "detail": "labeled_rows=8829; required>=1000",
+        "resource": "fover_corpus"
+      },
+      {
+        "available": true,
+        "detail": "loaded=tier0r_curry_howard,tier0s_arithmetic_gap,tier0u_logical_consistency",
+        "resource": "four_exp2837_scoring_verifiers"
+      },
+      {
+        "available": true,
+        "detail": "state_files=21; memory_loaded=True",
+        "resource": "fr11_session_memory_state"
+      },
+      {
+        "available": true,
+        "detail": "dependency graph, crossfit scores, and clean panel importable",
+        "resource": "exp3667_dependency_aware_implementation"
+      },
+      {
+        "available": true,
+        "detail": "n_seeds=5; condition_a=0.9131335999999999",
+        "resource": "exp2850_g1_source_artifact"
+      }
+    ],
+    "production_auroc_carnot_current": 0.913134,
+    "production_auroc_ci": {
+      "bootstrap_seeds": [
+        42,
+        137,
+        271,
+        314,
+        1729
+      ],
+      "ci95": [
+        0.91699,
+        0.932891
+      ],
+      "n_bootstrap_per_seed": 200,
+      "point": 0.924869,
+      "seed_mean_aurocs": [
+        0.925001,
+        0.92456,
+        0.924508,
+        0.924939,
+        0.925471
+      ]
+    },
+    "production_auroc_dependency_aware": 0.925328,
+    "production_auroc_dependency_aware_vs_frozen_headline_delta": 0.012228,
+    "random_seed": 42,
+    "random_seeds_used": [
+      42,
+      137,
+      271,
+      314,
+      1729
+    ],
+    "reproducibility_checksum": "090912d89d2c5ad720d7e041d88871e68b5ee909bb6dc8e70fce8edc01a70686",
+    "schema": "carnot.dependency_aware_dual_condition_integrity.v1",
+    "verifier_names": [
+      "fr11_session_memory",
+      "tier0r_curry_howard",
+      "tier0s_arithmetic_gap",
+      "tier0u_logical_consistency"
+    ],
+    "verifier_scoring_input_candidate_only": true
+  },
+  "ci_workflow_unmodified_assert": true,
+  "draft_ci_workflow_assertion_bounds": {
+    "learning_contribution_dependency_aware": {
+      "assertion": "0.012868 <= learning_contribution_dependency_aware <= 0.03143",
+      "ci95": [
+        0.012868,
+        0.03143
+      ],
+      "ci_source": "derived_from_exp3680_per_seed_results_seed_t_ci95",
+      "point": 0.022149,
+      "source": "results/experiment_3680_dependency_aware_dual_condition_integrity.json"
+    },
+    "not_applied_to_workflow": true,
+    "production_auroc_dependency_aware": {
+      "assertion": "0.91699 <= production_auroc_dependency_aware <= 0.932891",
+      "ci95": [
+        0.91699,
+        0.932891
+      ],
+      "headline_candidate_point": 0.925328,
+      "point": 0.924869,
+      "source": "results/experiment_3680_dependency_aware_dual_condition_integrity.json"
+    },
+    "source_artifact": "results/experiment_3680_dependency_aware_dual_condition_integrity.json"
+  },
+  "duration_s": 24.34058,
+  "existing_0_9131_reproduction_still_green": true,
+  "exp3680_dependency_aware_g1_rigor_confirmed": true,
+  "exp3681_clean_reemit_reason": "Exp 3681 was operator-prep correct in structure but failed the artifact linter because cached verifier-scoring outputs carried stale model-declaration fields. Exp 3692 stores sanitized outputs and the bare verifier-scoring substrate value.",
+  "field_principles": {
+    "adversarial_verify_clean": "True iff the artifact passes adversarial_verify with no DURATION_TOO_SHORT or critical flag -- the load-bearing fix vs Exp 3681; a flagged package is not operator-actionable.",
+    "candidate_reproduction_asserts_in_ci": "True iff the new dependency-aware reproduction lands inside Exp 3680's CI -- the new number is independently recomputable.",
+    "ci_workflow_unmodified_assert": "Asserts the .github reproducer workflow was NOT edited and the run was NOT triggered (operator-only external action).",
+    "draft_ci_workflow_assertion_bounds": "The exact CI-workflow assertion bounds the operator would set (drafted in-artifact, NOT applied) -- the operator's re-freeze input.",
+    "duration_s": "Plausibility floor.",
+    "existing_0_9131_reproduction_still_green": "True iff the unchanged 0.9131 reproduction path still passes -- proves the additive change did not regress G2.",
+    "frozen_headline_unchanged_assert": "Asserts the publication gate still reads 0.9131 and paper_ready is unchanged -- no silent substitution.",
+    "honest_verdict": "Terminal prefix for reconciler classification.",
+    "inference_substrate": "Bare verifier-scoring substrate value: re-runs the cached-corpus reproducer; no LLM load; no compute-bound marker.",
+    "north_star_unmodified_assert": "Asserts ops/north-star.md was NOT edited (operator-curated).",
+    "operator_checklist": "The ordered OPERATOR-ACTION steps (north-star sec-1 edit, CI-workflow update, trigger run) -- the re-freeze is operator-only.",
+    "random_seed": "Determinism precondition.",
+    "reproducer_extended": "True iff scripts/reproduce_fover_headline.py was extended ADDITIVELY to compute+assert the candidate number while leaving the 0.9131 path green.",
+    "reproducibility_checksum": "Drift detection."
+  },
+  "frozen_headline_unchanged_assert": true,
+  "frozen_reproduction_result": {
+    "artifact": "experiment_2837_fover_memory_leakage_v3",
+    "condition_a_production_auroc_ci95": {
+      "high": 0.9235355665466916,
+      "low": 0.9027316334533082,
+      "mean": 0.9131335999999999
+    },
+    "condition_a_production_auroc_mean": 0.9131335999999999,
+    "condition_a_production_auroc_std": 0.007494212209432014,
+    "condition_b_architecture_only_auroc_ci95": {
+      "high": 0.9051259450099536,
+      "low": 0.8841988549900464,
+      "mean": 0.8946624
+    },
+    "condition_b_architecture_only_auroc_mean": 0.8946624,
+    "condition_b_architecture_only_auroc_std": 0.007538577096508351,
+    "duration_s": 1.9125008583068848,
+    "field_principles": {
+      "condition_a_production_auroc_mean": "Production headline condition; never inferred.",
+      "condition_b_architecture_only_auroc_mean": "Architecture-only control condition; never inferred.",
+      "duration_s": "Real compute wall-time; no sleep padding.",
+      "fr11_state_files": "Memory-leakage audit trail.",
+      "honest_verdict": "MUST start with \"complete:\" / \"success:\" or \"blocked_\".",
+      "learning_contribution": "A - B quantifies FR-11 contribution.",
+      "per_seed_results": "5-seed replication required.",
+      "preconditions_checked": "Explains blocks without fabrication.",
+      "state_files_restored_sha_match": "Non-destructive reset proof."
+    },
+    "fr11_state_files": [
+      {
+        "n_bytes": 24576,
+        "path": "data/constraint_memory.db",
+        "sha256": "1166078542e53db6a10e23b83b0e18dd565576684525ff772ffe8dac0a250b86"
+      },
+      {
+        "n_bytes": 46909,
+        "path": "data/fr11_ssd_training_v3.jsonl",
+        "sha256": "fc4a748940fd79fd7ab471f6300c84cb3550d214dc1f7db0a56f6e04a12a8663"
+      },
+      {
+        "n_bytes": 89888,
+        "path": "data/fr11_zenil_distill_v2.jsonl",
+        "sha256": "e75087fa011f3a0cc27f85c7350890c5a169aa54c093bf244b8df07ed9360b3f"
+      },
+      {
+        "n_bytes": 610451,
+        "path": "results/constraint_memory_live_222.json",
+        "sha256": "91a22795be5a132acf2a1b690aa5c2c71f75def9e259dd5f9422775f007f58e6"
+      },
+      {
+        "n_bytes": 20,
+        "path": "results/constraint_patterns_v4.json",
+        "sha256": "ab2518c3d58439b59a93a6cc5f60d2e388cedc57269b018f9ab9c37590df8657"
+      },
+      {
+        "n_bytes": 384,
+        "path": "results/exp_448_session_memory/session_0/carnot_relay_synthetic/session_state.json",
+        "sha256": "f66f38427415b010e7366628ba9cc745bc413368f7aa6991d6651d7fc5656303"
+      },
+      {
+        "n_bytes": 385,
+        "path": "results/exp_448_session_memory/session_1/carnot_relay_synthetic/session_state.json",
+        "sha256": "88f26d27a06e61fbf80dcc90a62a709e81d41c226bed83f72f8c4916537fe928"
+      },
+      {
+        "n_bytes": 385,
+        "path": "results/exp_448_session_memory/session_2/carnot_relay_synthetic/session_state.json",
+        "sha256": "056c173b67dd59de4efd7893f05111daae71258414f9f5c04ffa90031360a99c"
+      },
+      {
+        "n_bytes": 611,
+        "path": "results/fr11_closure_certificate.json",
+        "sha256": "e3a0b48362e2b5217c7571eec76bd3344ae42b071161d949326cb4fa6d66dd59"
+      },
+      {
+        "n_bytes": 677,
+        "path": "results/fr11_continuous_self_learning_replay_2869_memory.json",
+        "sha256": "c40391cdfa1530284db3db9e85174c85a231f72aab7469819428ef83e1860f1f"
+      },
+      {
+        "n_bytes": 3432,
+        "path": "results/fr11_external_feedback_skill_graph_1539.json",
+        "sha256": "0422531c1773b2640531d06dba316fc4cf7906f135960067a622f71aba933c80"
+      },
+      {
+        "n_bytes": 1643,
+        "path": "results/fr11_external_feedback_skill_rollback_plan_1539.json",
+        "sha256": "b397467a89438ccd1a3b5b8688b9d8e34bbedf0615bd10230250174004419b3c"
+      },
+      {
+        "n_bytes": 44721,
+        "path": "results/fr11_live_policy_promotion_1524.jsonl",
+        "sha256": "fe79bbd809345e42a612b38c2e25705b41458067e88657a48093689e4bfe7738"
+      },
+      {
+        "n_bytes": 60543,
+        "path": "results/fr11_policy_cache_events_1512.jsonl",
+        "sha256": "3597a09bf7ed627193b94146f731501ab3f511dc1936acfb214fd5e60409e300"
+      },
+      {
+        "n_bytes": 72660,
+        "path": "results/fr11_policy_rollback_replay_1513.jsonl",
+        "sha256": "bc7d27010a77a21b2477477754f4d9c9f39946c74026cc4d2896a32fa6fc9543"
+      },
+      {
+        "n_bytes": 462,
+        "path": "results/fr11_positive_utility_skill_graph_1555.json",
+        "sha256": "3f9e1291ba1034972bdb50db7dfbb3470c6137f5615d7514a35790441de19aab"
+      },
+      {
+        "n_bytes": 1914,
+        "path": "results/fr11_recmem_recurrence_trigger_2881_memory.json",
+        "sha256": "4c125ea5a5051ffff5ea32754910262a1d340f2421d8bb7d3e85d26f3645cd94"
+      },
+      {
+        "n_bytes": 33454,
+        "path": "results/fr11_trace2skill_daily_eval_manifest_1497.jsonl",
+        "sha256": "9cfc0f3477664242920bcd15ec1c45d0a06b79d0ffc27f31d1cf4761b5d53d30"
+      },
+      {
+        "n_bytes": 2448,
+        "path": "results/nexus_constraint_memory_v2.json",
+        "sha256": "030497fb2fcde5e6bc4fd244549405568ddd7603c45d4bc549c6047fab9de00e"
+      },
+      {
+        "n_bytes": 184834,
+        "path": "results/session_memory_1447/fr11_v7_dvi_v3_local_fover/session_state.json",
+        "sha256": "7bf445b2c1a4f3587517d15d2b0eecbda56d32c768352b241adcb2881fa98565"
+      },
+      {
+        "n_bytes": 16481,
+        "path": "results/session_memory_1471/fr11_v8_exp1447_policy_fresh_verified_rows/session_state.json",
+        "sha256": "3c1d5205057d2f09382079fb8bc3462b49c4701aa405ab3fd3a1c62309ddeb5e"
+      }
+    ],
+    "honest_verdict": "complete: FoVer memory-leakage v3 measured with production state and architecture-only reset conditions",
+    "learning_contribution": 0.01847119999999991,
+    "learning_contribution_ci95": {
+      "high": 0.024480839704138033,
+      "low": 0.012461560295861967,
+      "mean": 0.0184712
+    },
+    "methodology_note": "Condition A scored the FoVer subset in a fresh selected-Python process with FR-11 state visible. Condition B moved every FR-11/NEXUS/session state file aside, restarted Python for architecture-only scoring, verified zero state files were visible, then restored all files and checked SHA256 equality.",
+    "n_examples": 1000,
+    "n_seeds": 5,
+    "per_seed_results": [
+      {
+        "condition_a_fr11_state_loaded": true,
+        "condition_a_per_verifier_auroc": {
+          "fr11_session_memory": 0.876712,
+          "tier0r_curry_howard": 0.89726,
+          "tier0s_arithmetic_gap": 0.296278,
+          "tier0u_logical_consistency": 0.50587
+        },
+        "condition_a_production_auroc": 0.914952,
+        "condition_a_python": "/usr/bin/python",
+        "condition_a_state_visible_count": 21,
+        "condition_b_architecture_only_auroc": 0.897008,
+        "condition_b_fr11_state_loaded": false,
+        "condition_b_per_verifier_auroc": {
+          "tier0r_curry_howard": 0.89726,
+          "tier0s_arithmetic_gap": 0.296278,
+          "tier0u_logical_consistency": 0.50587
+        },
+        "condition_b_python": "/usr/bin/python",
+        "condition_b_state_visible_count": 0,
+        "condition_b_subset_sha256": "57c7dff98df749951de1a043294d12c0203029e92623db86529223e797ef6cd2",
+        "learning_contribution": 0.01794399999999996,
+        "n_examples": 1000,
+        "python_restarted_between_conditions": true,
+        "seed": 42,
+        "state_restored_sha_match_after_seed": true,
+        "subset_sha256": "57c7dff98df749951de1a043294d12c0203029e92623db86529223e797ef6cd2"
+      },
+      {
+        "condition_a_fr11_state_loaded": true,
+        "condition_a_per_verifier_auroc": {
+          "fr11_session_memory": 0.856952,
+          "tier0r_curry_howard": 0.898054,
+          "tier0s_arithmetic_gap": 0.280964,
+          "tier0u_logical_consistency": 0.512902
+        },
+        "condition_a_production_auroc": 0.908738,
+        "condition_a_python": "/usr/bin/python",
+        "condition_a_state_visible_count": 21,
+        "condition_b_architecture_only_auroc": 0.897914,
+        "condition_b_fr11_state_loaded": false,
+        "condition_b_per_verifier_auroc": {
+          "tier0r_curry_howard": 0.898054,
+          "tier0s_arithmetic_gap": 0.280964,
+          "tier0u_logical_consistency": 0.512902
+        },
+        "condition_b_python": "/usr/bin/python",
+        "condition_b_state_visible_count": 0,
+        "condition_b_subset_sha256": "761ba450cce1eab0c6343403c958dec8408e37dd3de4a7216545a3fd31307c2d",
+        "learning_contribution": 0.010824000000000056,
+        "n_examples": 1000,
+        "python_restarted_between_conditions": true,
+        "seed": 137,
+        "state_restored_sha_match_after_seed": true,
+        "subset_sha256": "761ba450cce1eab0c6343403c958dec8408e37dd3de4a7216545a3fd31307c2d"
+      },
+      {
+        "condition_a_fr11_state_loaded": true,
+        "condition_a_per_verifier_auroc": {
+          "fr11_session_memory": 0.856142,
+          "tier0r_curry_howard": 0.881362,
+          "tier0s_arithmetic_gap": 0.278704,
+          "tier0u_logical_consistency": 0.507984
+        },
+        "condition_a_production_auroc": 0.90145,
+        "condition_a_python": "/usr/bin/python",
+        "condition_a_state_visible_count": 21,
+        "condition_b_architecture_only_auroc": 0.881334,
+        "condition_b_fr11_state_loaded": false,
+        "condition_b_per_verifier_auroc": {
+          "tier0r_curry_howard": 0.881362,
+          "tier0s_arithmetic_gap": 0.278704,
+          "tier0u_logical_consistency": 0.507984
+        },
+        "condition_b_python": "/usr/bin/python",
+        "condition_b_state_visible_count": 0,
+        "condition_b_subset_sha256": "0ecee5724c62fded647b43fff8f30128571da256f163c3eba53a470489b131ee",
+        "learning_contribution": 0.020116000000000023,
+        "n_examples": 1000,
+        "python_restarted_between_conditions": true,
+        "seed": 271,
+        "state_restored_sha_match_after_seed": true,
+        "subset_sha256": "0ecee5724c62fded647b43fff8f30128571da256f163c3eba53a470489b131ee"
+      },
+      {
+        "condition_a_fr11_state_loaded": true,
+        "condition_a_per_verifier_auroc": {
+          "fr11_session_memory": 0.888094,
+          "tier0r_curry_howard": 0.892994,
+          "tier0s_arithmetic_gap": 0.307648,
+          "tier0u_logical_consistency": 0.511
+        },
+        "condition_a_production_auroc": 0.917102,
+        "condition_a_python": "/usr/bin/python",
+        "condition_a_state_visible_count": 21,
+        "condition_b_architecture_only_auroc": 0.893026,
+        "condition_b_fr11_state_loaded": false,
+        "condition_b_per_verifier_auroc": {
+          "tier0r_curry_howard": 0.892994,
+          "tier0s_arithmetic_gap": 0.307648,
+          "tier0u_logical_consistency": 0.511
+        },
+        "condition_b_python": "/usr/bin/python",
+        "condition_b_state_visible_count": 0,
+        "condition_b_subset_sha256": "53dcb9dc6ecdeb540fb4b53bcc74b7870d31f1cfe4b2e54f204ced776b47c9ed",
+        "learning_contribution": 0.024075999999999986,
+        "n_examples": 1000,
+        "python_restarted_between_conditions": true,
+        "seed": 314,
+        "state_restored_sha_match_after_seed": true,
+        "subset_sha256": "53dcb9dc6ecdeb540fb4b53bcc74b7870d31f1cfe4b2e54f204ced776b47c9ed"
+      },
+      {
+        "condition_a_fr11_state_loaded": true,
+        "condition_a_per_verifier_auroc": {
+          "fr11_session_memory": 0.871832,
+          "tier0r_curry_howard": 0.904034,
+          "tier0s_arithmetic_gap": 0.310264,
+          "tier0u_logical_consistency": 0.514976
+        },
+        "condition_a_production_auroc": 0.923426,
+        "condition_a_python": "/usr/bin/python",
+        "condition_a_state_visible_count": 21,
+        "condition_b_architecture_only_auroc": 0.90403,
+        "condition_b_fr11_state_loaded": false,
+        "condition_b_per_verifier_auroc": {
+          "tier0r_curry_howard": 0.904034,
+          "tier0s_arithmetic_gap": 0.310264,
+          "tier0u_logical_consistency": 0.514976
+        },
+        "condition_b_python": "/usr/bin/python",
+        "condition_b_state_visible_count": 0,
+        "condition_b_subset_sha256": "42259e022c2757dddabfadcda9ef3407237d27ae1f527be8ae7a4e742d5e0ef8",
+        "learning_contribution": 0.01939599999999997,
+        "n_examples": 1000,
+        "python_restarted_between_conditions": true,
+        "seed": 1729,
+        "state_restored_sha_match_after_seed": true,
+        "subset_sha256": "42259e022c2757dddabfadcda9ef3407237d27ae1f527be8ae7a4e742d5e0ef8"
+      }
+    ],
+    "per_verifier_condition_a_auroc": {
+      "fr11_session_memory": [
+        0.876712,
+        0.856952,
+        0.856142,
+        0.888094,
+        0.871832
+      ],
+      "tier0r_curry_howard": [
+        0.89726,
+        0.898054,
+        0.881362,
+        0.892994,
+        0.904034
+      ],
+      "tier0s_arithmetic_gap": [
+        0.296278,
+        0.280964,
+        0.278704,
+        0.307648,
+        0.310264
+      ],
+      "tier0u_logical_consistency": [
+        0.50587,
+        0.512902,
+        0.507984,
+        0.511,
+        0.514976
+      ]
+    },
+    "per_verifier_condition_b_auroc": {
+      "tier0r_curry_howard": [
+        0.89726,
+        0.898054,
+        0.881362,
+        0.892994,
+        0.904034
+      ],
+      "tier0s_arithmetic_gap": [
+        0.296278,
+        0.280964,
+        0.278704,
+        0.307648,
+        0.310264
+      ],
+      "tier0u_logical_consistency": [
+        0.50587,
+        0.512902,
+        0.507984,
+        0.511,
+        0.514976
+      ]
+    },
+    "per_verifier_learning_contribution": {
+      "tier0r_curry_howard": 0.0,
+      "tier0s_arithmetic_gap": 0.0,
+      "tier0u_logical_consistency": 0.0
+    },
+    "preconditions_checked": [
+      {
+        "available": true,
+        "detail": "line_count=8829; required>=1000",
+        "resource": "fover_corpus"
+      },
+      {
+        "available": true,
+        "detail": "count=21",
+        "resource": "fr11_state_files"
+      }
+    ],
+    "random_seeds_used": [
+      42,
+      137,
+      271,
+      314,
+      1729
+    ],
+    "reproducibility_checksum": "748a695343d105129585d0114f1f8d5e6255fea3fd5519a03d9cc927524901e3",
+    "schema": "carnot.fover_memory_leakage_v3",
+    "state_files_restored_sha_match": true
+  },
+  "github_actions_run_triggered": false,
+  "honest_verdict": "complete: refreeze_package_reemitted_clean_for_operator_frozen_headline_unchanged",
+  "inference_substrate": "verifier_ensemble_against_cached_candidates",
+  "north_star_unmodified_assert": true,
+  "operator_checklist": [
+    "OPERATOR-ACTION: Edit ops/north-star.md Section 1 methods headline from FoVer AUROC 0.9131 to dependency-aware FoVer AUROC 0.925328 with CI [0.91699, 0.932891], learning contribution 0.022149 with CI [0.012868, 0.03143], source artifact results/experiment_3680_dependency_aware_dual_condition_integrity.json.",
+    "OPERATOR-ACTION: Update .github/workflows/reproduce-fover-headline.yml to run the dependency-aware candidate assertion and use production bounds [0.91699, 0.932891] plus learning-contribution bounds [0.012868, 0.03143].",
+    "OPERATOR-ACTION: Trigger the GitHub Actions FoVer headline reproducer run and record the green run before changing the publication gate. The frozen 0.9131 stays the headline until this checklist is complete and the CI reproducer re-runs green on the new number."
+  ],
+  "publication_gate_paper_ready_after": true,
+  "publication_gate_paper_ready_before": true,
+  "random_seed": 42,
+  "reproducer_extended": true,
+  "reproducer_importable": true,
+  "reproducibility_checksum": "e90f4733aba7c3f36f199cf9360199fa21823014080e8ffb60a7a3464b742fb1",
+  "schema": "carnot.g2_reproducer_clean_refreeze_package.v1",
+  "source_artifacts": [
+    "results/experiment_3680_dependency_aware_dual_condition_integrity.json",
+    "results/experiment_2850_fover_dual_condition_integrity_v4.json"
+  ]
+}
