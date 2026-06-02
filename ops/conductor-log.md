@@ -7629,3 +7629,5 @@ web search: https://docs.garak.ai/garak/examples/pr |
 | 2026-06-02 21:55 UTC | THE THESIS TEST (kill-gate part b): matched-COMPUT | GATE_BLOCK | Pre-emptive skip: upstream retired (exp3737-ebt-generation-smoke) |
 | 2026-06-02 22:12 UTC | Thesis-A kill-gate part-(b) VERDICT: at EQUAL infe | OK | 129 passed in 5.99s |
 | 2026-06-02 22:14 UTC | THE THESIS TEST (kill-gate part b): matched-COMPUT | GATE_BLOCK | Pre-emptive skip: upstream retired (exp3737-ebt-generation-smoke) |
+| 2026-06-02 22:28 UTC | FR-11 continuous self-learning v15 — Tier-1 ONLINE | OK | 87 passed in 5.08s |
+| 2026-06-02 22:30 UTC | THE THESIS TEST (kill-gate part b): matched-COMPUT | GATE_BLOCK | Pre-emptive skip: upstream retired (exp3737-ebt-generation-smoke) |
