@@ -1,0 +1,101 @@
+{
+  "command_probes": {
+    "conductor_env": {
+      "combined_output": "AGENT_TYPE_RETRO=gemini\nAGENT_TYPE=gemini\nGEMINI_FORCE_EXPERIMENTS=1\nAGENT_TYPE_PLANNER=claude\n",
+      "command": "bash -lc 'env | grep -iE '\"'\"'AGENT_TYPE|FORCE_EXPERIMENTS'\"'\"''",
+      "exit_code": 0,
+      "stderr": "",
+      "stdout": "AGENT_TYPE_RETRO=gemini\nAGENT_TYPE=gemini\nGEMINI_FORCE_EXPERIMENTS=1\nAGENT_TYPE_PLANNER=claude\n"
+    },
+    "gemini_reply": {
+      "combined_output": "OK\nWarning: Basic terminal detected (TERM=dumb). Visual rendering will be limited. For the best experience, use a terminal emulator with truecolor support.\nWarning: 256-color support not detected. Using a terminal with at least 256-color support is recommended for a better visual experience.\n",
+      "command": "timeout 60 gemini -m gemini-3.1-pro-preview -p 'Reply OK'",
+      "exit_code": 0,
+      "stderr": "Warning: Basic terminal detected (TERM=dumb). Visual rendering will be limited. For the best experience, use a terminal emulator with truecolor support.\nWarning: 256-color support not detected. Using a terminal with at least 256-color support is recommended for a better visual experience.\n",
+      "stdout": "OK\n"
+    },
+    "gemini_version": {
+      "combined_output": "0.44.0\n",
+      "command": "timeout 30 gemini --version",
+      "exit_code": 0,
+      "stderr": "",
+      "stdout": "0.44.0\n"
+    }
+  },
+  "conductor_coercion_env": {
+    "AGENT_TYPE": "gemini",
+    "AGENT_TYPE_PLANNER": "claude",
+    "AGENT_TYPE_RETRO": "gemini",
+    "CODEX_FORCE_EXPERIMENTS": null,
+    "GEMINI_FORCE_EXPERIMENTS": "1",
+    "raw": "AGENT_TYPE_RETRO=gemini\nAGENT_TYPE=gemini\nGEMINI_FORCE_EXPERIMENTS=1\nAGENT_TYPE_PLANNER=claude\n"
+  },
+  "conductor_unmodified_assert": "scripts/research_conductor.py sha256 unchanged before/after diagnostic; environment was read only and no conductor config writes were performed.",
+  "consecutive_stable_probes": 6,
+  "context_source_checksums": {
+    "CLAUDE.md": "7ef4cd87213dd3e5e3b2421ba98c22f3f5842d83bfe5fe51d232bdeb782c83e5",
+    "ops/conductor-log.md": "a0932d155a68e3d4c45f801b73a9448daf576ff9e9ead08020c125458f28e9c4",
+    "results/experiment_3653_backend_state_diagnostic.json": "ae983c66103ff93d11409eb942de913e5d7e854672bf5828a6a286862e8db2fc",
+    "results/experiment_3666_backend_state_diagnostic_v2.json": "98893e8169b220171b477c03622d4f3e181fc4aefd90d9f3ba0e3df43ad64e6c",
+    "results/experiment_3679_backend_state_diagnostic_v3.json": "13c52719fbde05110b0b755ec6b7f7dc3fc392c69162383b19a8b0cd4383fbb4",
+    "results/experiment_3691_backend_state_diagnostic_v4.json": "bfa2e62d79b0f6f73b56f967fe3d0075db26d2f87fcd10fb89253a79576c9c7b",
+    "results/experiment_3703_backend_state_diagnostic_v5.json": "a2b37e4165740bb7aa034650e8afff1e7136a0fddd0a1e45cec3cf748decd5eb",
+    "scripts/summarize_artifact.py": "50361c21af9ff91b3de374a133219d57981883bbe39b1bea24a2f60db492a117"
+  },
+  "context_sources_read": [
+    "results/experiment_3703_backend_state_diagnostic_v5.json",
+    "scripts/summarize_artifact.py results/experiment_3703_backend_state_diagnostic_v5.json",
+    "ops/conductor-log.md tail for .339 milestone Gemini failures",
+    "CLAUDE.md Gemini-Default for Experiments"
+  ],
+  "duration_s": 16.5857,
+  "experiment_id": "exp3714",
+  "field_principles": {
+    "conductor_coercion_env": "Records AGENT_TYPE + FORCE_EXPERIMENTS active -- explains why per-task agent_type routes as it does.",
+    "conductor_unmodified_assert": "Asserts this diagnostic did NOT modify research_conductor.py or env.",
+    "consecutive_stable_probes": "Counts consecutive milestones gemini probed OK; a real-workload crash resets confidence in a flip.",
+    "duration_s": "Plausibility floor.",
+    "gemini_cli_version": "Records the installed gemini-cli version so a future upgrade is auditable.",
+    "gemini_probe_state": "ok / quota_exhausted_429 / crash_js_345500 -- the one-shot probe result on the 6th probe.",
+    "honest_verdict": "Terminal prefix for reconciler classification.",
+    "inference_substrate": "hardware_smoke (principle: a bounded CLI health probe, not live model inference; no compute-bound marker).",
+    "prior_gemini_cli_version": "Records the Exp 3703 gemini-cli version so unchanged probes are auditable.",
+    "probe_redundancy_note": "Notes when an unchanged gemini-cli plus prior OK-probe/real-crash state adds no new flip confidence.",
+    "random_seed": "Determinism precondition.",
+    "real_workload_crash_observed": "True iff a real gemini workload crashed recently (re-confirmed exp3703) -- the divergence a one-shot probe hides.",
+    "recommended_routing": "codex_requires_codex (keep) or gemini_default_eligible_for_v341 -- eligibility requires probe OK AND no real-workload crash.",
+    "reproducibility_checksum": "Drift detection."
+  },
+  "gemini_cli_version": "0.44.0",
+  "gemini_probe_state": "ok",
+  "honest_verdict": "complete: backend_diagnosed_gemini_probe_ok_but_real_workload_crash_keep_codex_routing",
+  "inference_substrate": "hardware_smoke",
+  "previous_gemini_probe_states": {
+    "exp3653": "ok",
+    "exp3666": "ok",
+    "exp3679": "ok",
+    "exp3691": "ok",
+    "exp3703": "ok"
+  },
+  "prior_gemini_cli_version": "0.44.0",
+  "probe_redundancy_note": "gemini_cli_unchanged_since_exp3703_and_exp3703_already_recorded_probe_ok_real_workload_crash",
+  "probe_vs_real_workload_divergence": "one_shot_probe_ok_but_real_workload_crashed",
+  "random_seed": 3714,
+  "real_workload_crash_evidence": [
+    "| 2026-06-01 07:39 UTC | Capstone v333 + G1-G4 gate synthesis \u2014 was '.329 m | FAIL | Gemini CLI error: T.js:345500:14)",
+    "| 2026-06-01 08:04 UTC | Capstone v333 + G1-G4 gate synthesis \u2014 was '.329 m | FAIL | Gemini CLI error: T.js:345500:14)",
+    "| 2026-06-02 02:41 UTC | Plan next milestone | FAIL | Gemini CLI error: Wall-clock+idle timeout after 1201s (1201s silence). Last ou |",
+    "| 2026-05-31 21:57 UTC | Plan next milestone | FAIL | Gemini CLI error: Wall-clock+idle timeout after 1201s (1201s silence). Last ou |",
+    "| 2026-06-01 06:04 UTC | Plan next milestone | FAIL | Gemini CLI error: Wall-clock+idle timeout after 1201s (1201s silence). Last ou |",
+    "| 2026-06-01 07:32 UTC | Cross-domain generalization SYNTHESIS v5 \u2014 CORRECT | FAIL | Gemini CLI error: T.js:345500:14)",
+    "| 2026-06-01 07:34 UTC | Cross-domain generalization SYNTHESIS v5 \u2014 CORRECT | FAIL | Gemini CLI error: .js:345500:14)"
+  ],
+  "real_workload_crash_observed": true,
+  "recommended_routing": "codex_requires_codex",
+  "reproducibility_checksum": "f625ed7d6a027857314ea961e59dc6e0c9276b2ffbfd06f5ed8fcc02aa652e23",
+  "research_conductor_sha256_after": "4d4e79a1ea787ddc70234a6eae0818c37a94102ed9b8cbf28aecb77e2d9d6936",
+  "research_conductor_sha256_before": "4d4e79a1ea787ddc70234a6eae0818c37a94102ed9b8cbf28aecb77e2d9d6936",
+  "research_conductor_unmodified": true,
+  "schema": "carnot.backend_state_diagnostic.v6",
+  "task_id": "exp3714-backend-state-diagnostic-v6"
+}
