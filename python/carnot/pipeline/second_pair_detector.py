@@ -3,7 +3,8 @@
 The detector fuses two runtime signals: verifier ensemble energy and model
 confidence-derived error score.  It fits calibration on a deterministic train
 split, then reports held-out discrimination, calibration quality, and fixed-FPR
-operating points for each domain.
+operating points for each domain.  The code-domain operating point is scoped as
+math-only unless an explicit code AUROC CI excludes chance in Exp 3683.
 
 Spec: REQ-SPOE-3657, REQ-SPOE-3657-ARTIFACT,
       SCENARIO-SPOE-3657, SCENARIO-SPOE-3658
@@ -31,6 +32,9 @@ OUTPUT_REL_PATH = Path("results/experiment_3657_deployable_second_pair_of_eyes_d
 SHIP_OUTPUT_REL_PATH = Path("results/experiment_3671_ship_second_pair_of_eyes_detector.json")
 RANDOM_SEED = 3657
 SHIP_RANDOM_SEED = 3671
+CODE_OPERATING_POINT_SCOPE = (
+    "math_primary; code_discrimination_scoped_math_only_until_exp3683_auroc_ci_excludes_chance"
+)
 FPR_BUDGETS = (0.05, 0.10, 0.20)
 MATERIAL_AUROC_LIFT = 0.01
 MATERIAL_RECALL_LIFT = 0.01
