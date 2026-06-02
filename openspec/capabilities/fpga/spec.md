@@ -4248,6 +4248,64 @@ count, field principles, deterministic seed, checksum, and duration.
 
 ---
 
+### REQ-HW-3698
+
+**Title:** KV260 Continuity Check v25 uses SSH reachability only and records the .331-.338 unreachable streak
+
+**Description:**
+Experiment 3698 MUST perform the milestone KV260 hardware-task continuity check.
+KV260 lives on SSH, so the ONLY permitted precondition is:
+
+`ssh -o ConnectTimeout=5 -o BatchMode=yes kria 'true'`
+
+The host SD-card device-node precondition is permanently retired and MUST NOT be
+used. If SSH is reachable, the experiment MUST run `ssh kria 'xmutil listapps'`
+and record the overlay continuity state using distinct KV260 field names. If SSH
+is unreachable, the experiment MUST write a terminal blocked artifact rather
+than fabricating a pass, and MUST record that .331, .332, .333, .334, .335,
+.336, .337, and the current milestone now form eight consecutive unreachable
+milestones requiring operator action.
+
+**Acceptance criteria:**
+- `results/experiment_3698_kv260_continuity_v25.json` is generated.
+- The artifact includes `honest_verdict`, `inference_substrate`,
+  `preconditions_checked`, `kv260_ssh_reachable`, `kv260_overlay_loaded`,
+  `consecutive_unreachable_milestones`, `random_seed`,
+  `reproducibility_checksum`, and `duration_s`.
+- The artifact includes field-principle annotations for the required fields,
+  while the required fields store bare values.
+- `inference_substrate` MUST be exactly `"hardware_smoke"` and MUST NOT include
+  GGUF or CUDA markers.
+- If `ssh` succeeds, the verdict MUST be
+  `"complete: kv260_continuity_confirmed_reachable"`.
+- If `ssh` fails, the verdict MUST be
+  `"complete: blocked_kv260_ssh_unreachable"` and
+  `consecutive_unreachable_milestones` MUST be `8`.
+- No implementation or test path may invoke `/dev/mmcblk*`, `/dev/disk*`, or any
+  host SD-card device-node check as a KV260 precondition.
+
+**Implementation status:** Pending (Exp 3698)
+
+---
+
+### SCENARIO-HW-3698
+
+**Scenario:** KV260 continuity v25 records reachable or blocked state from SSH only.
+
+**Given:** A KV260 continuity check is required after milestones .331 through
+.337 were SSH-unreachable.
+**When:** Experiment 3698 runs the SSH reachability precondition and, only when
+reachable, runs `ssh kria 'xmutil listapps'`.
+**Then:** It writes `results/experiment_3698_kv260_continuity_v25.json` with the
+terminal verdict, SSH state, overlay state, eight-milestone unreachable streak
+count if still blocked, field principles, deterministic seed, checksum, and
+duration.
+
+**Implementation status:** Pending (Exp 3698)
+
+
+---
+
 ### REQ-HW-3687
 
 **Title:** PolarFire continuity v24 MUST confirm live SSH continuity for milestone .337
