@@ -7587,3 +7587,4 @@ web search: https://docs.garak.ai/garak/examples/pr |
 | 2026-06-02 09:07 UTC | DISAMBIGUATE the re-freeze candidate at full G1-ri | FLAGGED | adversarial_verify CRITICAL: TAUTOLOGY — result quarantined, not a clean success |
 | 2026-06-02 09:24 UTC | Adversarial leak-audit + HELD-OUT replication of t | OK | 90 passed in 4.30s |
 | 2026-06-02 10:33 UTC | Reconcile the SHIPPED detector's code operating po | OK | 107 passed in 4.80s |
+| 2026-06-02 10:46 UTC | FORMALLY CLOSE the discrimination-vs-selection dia | OK | 85 passed in 4.40s |
