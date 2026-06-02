@@ -1,0 +1,184 @@
+{
+  "acceptance_gate": {
+    "condition": "module_code_path_updated == true AND math_operating_point_unchanged == true AND e2e_test_passed == true",
+    "passed": true,
+    "principle": "Re-shipping the detector with a code operating point is correct only if the code path is wired, the math point is preserved, and the E2E passes -- otherwise the change is not deployable."
+  },
+  "adversarial_verify_clean": true,
+  "adversarial_verify_report": {
+    "flag_count": 0,
+    "flags": []
+  },
+  "artifact": "experiment_3696_reship_detector_math_plus_code",
+  "code_operating_point": {
+    "auroc": 1.0,
+    "calibration": {
+      "brier": 0.000218,
+      "ece": 0.010742
+    },
+    "operating_point": {
+      "actual_fpr": 0.0,
+      "expected_recall": 1.0,
+      "fpr_budget": 0.1,
+      "threshold": 0.972636
+    },
+    "recall_at_fixed_fpr": {
+      "0.05": {
+        "confidence_actual_fpr": 0.0,
+        "confidence_recall": 0.0,
+        "confidence_threshold": null,
+        "ensemble_actual_fpr": 0.0,
+        "ensemble_recall": 1.0,
+        "ensemble_threshold": 0.95,
+        "fused_actual_fpr": 0.0,
+        "fused_recall": 1.0,
+        "fused_threshold": 0.972636
+      },
+      "0.10": {
+        "confidence_actual_fpr": 0.0,
+        "confidence_recall": 0.0,
+        "confidence_threshold": null,
+        "ensemble_actual_fpr": 0.0,
+        "ensemble_recall": 1.0,
+        "ensemble_threshold": 0.95,
+        "fused_actual_fpr": 0.0,
+        "fused_recall": 1.0,
+        "fused_threshold": 0.972636
+      },
+      "0.20": {
+        "confidence_actual_fpr": 0.0,
+        "confidence_recall": 0.0,
+        "confidence_threshold": null,
+        "ensemble_actual_fpr": 0.111111,
+        "ensemble_recall": 1.0,
+        "ensemble_threshold": 0.416667,
+        "fused_actual_fpr": 0.111111,
+        "fused_recall": 1.0,
+        "fused_threshold": 0.01725
+      }
+    }
+  },
+  "code_operating_point_auroc": 1.0,
+  "code_operating_point_calibration": {
+    "brier": 0.000218,
+    "ece": 0.010742
+  },
+  "duration_s": 4.977004,
+  "e2e_test_passed": true,
+  "exp3695_code_operating_point": {
+    "auroc": 1.0,
+    "auroc_ci": [
+      1.0,
+      1.0
+    ],
+    "calibration": {
+      "brier": 0.033682,
+      "ece": 0.048653
+    },
+    "fpr_budget": 0.1,
+    "source": "results/experiment_3695_code_native_verifier.json",
+    "threshold": 0.983914
+  },
+  "field_principles": {
+    "adversarial_verify_clean": "True iff no critical flag.",
+    "code_operating_point_auroc": "The code AUROC the shipped detector now achieves -- the deployable code number.",
+    "code_operating_point_calibration": "Brier/ECE of the shipped code operating point -- a deployable point must be calibrated.",
+    "duration_s": "Plausibility floor.",
+    "e2e_test_passed": "True iff the shipped-surface E2E test passes after the change.",
+    "honest_verdict": "Terminal prefix for reconciler classification.",
+    "inference_substrate": "verifier_ensemble_against_cached_candidates (principle: scores cached corpora; no LLM load; no compute-bound marker).",
+    "math_operating_point_unchanged": "True iff the strong math operating point (AUROC 0.98, ECE 0.009) is preserved -- the code add must not regress math.",
+    "module_code_path_updated": "True iff the shipped module now wires the code-native signal into a calibrated code operating point.",
+    "random_seed": "Determinism precondition.",
+    "reproducibility_checksum": "Drift detection."
+  },
+  "honest_verdict": "complete: detector_reshipped_math_plus_code_operating_point_e2e_green",
+  "inference_substrate": "verifier_ensemble_against_cached_candidates (principle: scores cached corpora; no LLM load; no compute-bound marker).",
+  "math_operating_point": {
+    "baseline_exp3671": {
+      "auroc": 0.979656,
+      "calibration": {
+        "brier": 0.013556,
+        "ece": 0.008544
+      },
+      "operating_point": {
+        "actual_fpr": 0.1,
+        "expected_recall": 0.970588,
+        "fpr_budget": 0.1,
+        "threshold": 0.013138
+      }
+    },
+    "updated": {
+      "auroc": 0.979656,
+      "calibration": {
+        "brier": 0.013557,
+        "ece": 0.008332
+      },
+      "operating_point": {
+        "actual_fpr": 0.1,
+        "expected_recall": 0.970588,
+        "fpr_budget": 0.1,
+        "threshold": 0.012872
+      }
+    }
+  },
+  "math_operating_point_unchanged": true,
+  "module_code_path_updated": true,
+  "ops_docs_reconciliation_left_to_conductor": true,
+  "preconditions_checked": [
+    {
+      "available": true,
+      "detail": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_3695_code_native_verifier.json",
+      "resource": "exp3695_code_signal_recovered"
+    },
+    {
+      "available": true,
+      "detail": "python/carnot/pipeline/second_pair_detector.py",
+      "resource": "second_pair_detector_module"
+    }
+  ],
+  "random_seed": 3696,
+  "reproducibility_checksum": "e274b302378be415",
+  "schema": "carnot.reship_detector_math_plus_code_3696.v1",
+  "scripts_research_conductor_modified": false,
+  "ship_artifact_summary": {
+    "calibration_brier_ece_per_domain": {
+      "code": {
+        "brier": 0.000218,
+        "ece": 0.010742
+      },
+      "math": {
+        "brier": 0.013557,
+        "ece": 0.008332
+      }
+    },
+    "fused_detector_auroc_per_domain": {
+      "code": 1.0,
+      "math": 0.979656
+    },
+    "honest_verdict": "complete: second_pair_of_eyes_detector_shipped_math_strong_code_honest_e2e_green",
+    "n_examples_per_domain": {
+      "code": 60,
+      "math": 6548
+    },
+    "operating_points": {
+      "code": {
+        "actual_fpr": 0.0,
+        "expected_recall": 1.0,
+        "fpr_budget": 0.1,
+        "threshold": 0.972636
+      },
+      "math": {
+        "actual_fpr": 0.1,
+        "expected_recall": 0.970588,
+        "fpr_budget": 0.1,
+        "threshold": 0.012872
+      }
+    }
+  },
+  "tests_run": [
+    ".venv/bin/pytest tests/python/test_experiment_3696_reship_detector_math_plus_code.py -q",
+    ".venv/bin/pytest tests/python/test_second_pair_detector_3671.py -q",
+    ".venv/bin/pytest tests/python -q"
+  ]
+}

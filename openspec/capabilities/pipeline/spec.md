@@ -345,6 +345,40 @@ generation when the cached corpus is available:
 - Tests cover recovered, math-only, and blocked outcomes using synthetic
   fixtures rather than hard-coding a real-corpus success string.
 
+### REQ-SPOE-3696: Re-ship Detector With Math+Code Operating Point
+
+The pipeline MUST re-ship the `second_pair_detector` surface when Exp 3695 has
+already recovered a code-native signal.  The shipped detector MUST use the Exp
+3695 AST/runtime verifier score for code-domain ensemble energy while preserving
+the math-domain operating point from Exp 3671.  The re-ship artifact MUST
+measure the updated math and code AUROC/calibration on cached corpora, call the
+shipped `score_candidates` surface end-to-end, and write
+`results/experiment_3696_reship_detector_math_plus_code.json`.
+
+**Acceptance criteria:**
+- The runner checks `results/experiment_3695_code_native_verifier.json` and
+  blocks unless `code_signal_recovered == true` and the detector module is
+  importable.
+- The shipped module's code loading and runtime code candidate scoring paths use
+  the Exp 3695 code-native verifier score, not the older math-transfer code
+  score.
+- The artifact includes `honest_verdict`, `inference_substrate`,
+  `module_code_path_updated`, `math_operating_point_unchanged`,
+  `code_operating_point_auroc`, `code_operating_point_calibration`,
+  `e2e_test_passed`, `adversarial_verify_clean`, `random_seed`,
+  `reproducibility_checksum`, and `duration_s`.
+- `module_code_path_updated`, `math_operating_point_unchanged`,
+  `e2e_test_passed`, and `adversarial_verify_clean` are bare top-level
+  booleans.
+- `math_operating_point_unchanged` is true only when the remeasured math AUROC
+  still rounds to the Exp 3671 0.98 operating point and math calibration does
+  not regress.
+- The honest verdict is one of:
+  `complete: detector_reshipped_math_plus_code_operating_point_e2e_green` or
+  `complete: blocked_code_signal_not_recovered_or_module_unavailable`.
+- Tests cover `detector_math_plus_code_shipped` and `blocked` with synthetic
+  fixtures rather than hard-coding a real-corpus success string.
+
 ## Scenarios
 
 ### SCENARIO-INFRA-052: Version-Blocked Model Raises Error
@@ -501,6 +535,17 @@ point estimate, and only counts signal when the CI excludes the 0.5 chance
 floor and calibration improves.
 
 **Spec traces:** REQ-SPOE-3695
+
+### SCENARIO-SPOE-3696: Math+Code Re-ship Outcomes Stay Honest
+
+**Given** synthetic Exp 3696 fixtures for `detector_math_plus_code_shipped` and
+`blocked`
+**When** the Exp 3696 re-ship artifact is assembled
+**Then** terminal verdicts, bare booleans, code AUROC, and calibration fields are
+derived from the fixture measurements instead of hard-coded to a real-corpus
+success string.
+
+**Spec traces:** REQ-SPOE-3696
 
 ### REQ-SAMPLE-020: SparseIsingEBM K-Regular Graph
 
