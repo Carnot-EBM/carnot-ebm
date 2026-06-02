@@ -1,0 +1,29 @@
+{
+  "honest_verdict": "complete: harness_fixed_ebt_train_chunk_2_steps_stable_so_far_loss_converging_no_nan_ar_baseline_co_trained_checkpointed",
+  "inference_substrate": "live_llm_inference (principle: real GPU training; strict floor, easily cleared).",
+  "harness_fix_applied": true,
+  "cumulative_steps_trained": 2,
+  "ebt_loss_curve": [
+    0.9902918338775635,
+    1.141614317893982
+  ],
+  "ar_loss_curve": [
+    5.6731038093566895,
+    5.8303961753845215
+  ],
+  "nan_or_divergence_events": false,
+  "stabilizers_applied": "replay_buffer, langevin_noise, random_alpha, random_descent_steps, grad_clip, kl_cd_fix",
+  "peak_vram_mb": 100,
+  "preconditions_checked": {
+    "cuda": false,
+    "ebt_vendored": true,
+    "corpus_ok": true
+  },
+  "model_specs": {
+    "ebt_model": "tiny_ebt_from_scratch",
+    "ar_model": "tiny_ar_from_scratch_matched"
+  },
+  "random_seed": 3734,
+  "reproducibility_checksum": "9bbe177b68d0e3d10d9972711d337ab4f04e6d4f1bb23f5cd513efc857e46eae",
+  "duration_s": 1.64
+}
