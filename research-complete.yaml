@@ -34876,67 +34876,40 @@ milestones:
     deliverable: results/experiment_3723_capstone_and_g_gate_v340.json
     result: THESIS-A operator seed recorded for .341
 - id: 2026.06.341
-  title: "PHASE-3 THESIS A BRING-UP \u2014 energy-as-GENERATOR (EBT), operator-seeded 2026-06-02. The energy-as-SELECTOR thesis\
-    \ (P0.1) is comprehensively bounded (project_energy_selection_thesis_bounded); per that memory the next substantive thesis\
-    \ needed a HUMAN seed. The operator seeded Thesis A: a small Energy-Based Transformer whose inference IS gradient-descent\
-    \ energy minimization (NOT AR tokens, NOT reranking) can match/beat autoregression AT EQUAL INFERENCE COMPUTE on one structured-reasoning\
-    \ task. Anchor: Gladstone/Du/Ji 'Energy-Based Transformers are Scalable Learners and Thinkers' arXiv:2507.02092, public\
-    \ Apache-2.0 code github.com/alexiglad/EBT. WHY this sidesteps the bound: nothing is being SELECTED, and EBT needs no\
-    \ verifier so the math-only verifier ceiling does not transfer. .341 clears the CHEAP HALF of the kill-gate: can a tiny\
-    \ EBT even train stably on the 3090 rig? The matched-COMPUTE comparison is .342, GATED on .341 stability passing. CRITICAL\
-    \ discipline carried from P0.1: the eventual comparison is matched-COMPUTE (count energy-descent forward passes; give\
-    \ AR an equal total-inference-FLOP budget), NOT matched-params -- a params-matched 'win' is just extra inference FLOPs,\
-    \ the exact P0.1 trap. Banking the verifier product is unaffected (paper_ready stays TRUE; frozen 0.9131 stays frozen;\
-    \ this is a venture bet with a knife to its own throat)."
-  doc: docs/research-notes/phase3-alternative-thesis-menu.md
+  title: "Thesis A bring-up false-negative corrected"
+  doc: openspec/change-proposals/research-roadmap-vNEXT.md
   completed: '2026-06-02'
-  finding: See conductor log for per-experiment results.
+  finding: "INFRASTRUCTURE FALSE-NEGATIVE MILESTONE: .341 started Thesis A energy-as-generator bring-up. exp3725 vendor and energy-path audit passed, exp3726 single-step smoke passed with finite decreasing loss, and exp3727 matched-compute harness was built and tested. exp3728 blocked at 0 steps because its precondition check reported ebt_vendored=false and smoke_passed=false even though exp3725 and exp3726 prove those controls passed. exp3729 and exp3731 therefore misread an infra block as a mechanism bound. The corrected record is: kill-gate part-(a) re-opened as UNTESTED, not bounded. .342 runs the genuine kill-gate. P0.1 stayed honest-negative-bounded, paper_ready stayed TRUE (G1-G4), and the frozen FoVer 0.9131 stayed frozen."
   tasks:
   - id: exp3724-archive-v340-activate-v341
-    title: 'Archive milestone .340 honestly (convergence-hardening: G3 lint mechanized, G4 provenance audited, discriminator
-      characterized as risk-coverage abstention gate, headline replicated on fresh corpus, KV260 terminal confirmed, operator
-      seeded Thesis A) and activate .341 (Phase-3 Thesis-A EBT bring-up)'
+    title: "Archive .340 and activate Thesis A"
     deliverable: results/experiment_3724_archive_v340_activate_v341.json
-    result: OK (conductor)
+    result: OK previous transition
   - id: exp3725-ebt-fork-vendor-importable
-    title: Fork + vendor alexiglad/EBT (Apache-2.0, PINNED commit) under python/carnot/phase3/ebt_upstream/, audit the energy/inference
-      path, make it importable, smoke a forward+energy pass on CPU. THESIS-A bring-up step 1 of the kill-gate chain.
+    title: "Vendor and audit EBT fork"
     deliverable: results/experiment_3725_ebt_fork_vendor_importable.json
-    result: OK (conductor)
+    result: PASS vendor/import/audit
   - id: exp3726-tiny-ebt-corpus-and-train-step-smoke
-    title: Acquire a small structured-reasoning TRAIN corpus (GSM8K via HF datasets), shrink EBT to ~10-50M params, and smoke
-      a SINGLE real training step on the 3090 confirming the model fits in 24GB and the energy/loss DECREASES. THESIS-A bring-up
-      step 2.
+    title: "Tiny EBT corpus and single-step smoke"
     deliverable: results/experiment_3726_tiny_ebt_corpus_and_train_step_smoke.json
-    result: OK (conductor)
+    result: PASS single-step smoke; loss finite and decreasing
   - id: exp3727-matched-compute-eval-harness
-    title: 'Build + UNIT-TEST the matched-COMPUTE evaluation harness: held-out reasoning accuracy of energy-descent generation
-      vs AR generation at EQUAL total inference FLOPs (count EBT descent forward passes; give the AR baseline an equal-FLOP
-      best-of-N budget). The measurement instrument for the .342 decisive comparison -- built + tested BEFORE the real run.
-      THESIS-A bring-up step 3.'
+    title: "Matched-compute evaluation harness"
     deliverable: results/experiment_3727_matched_compute_eval_harness.json
-    result: OK (conductor)
+    result: PASS harness built and tested
   - id: exp3728-bounded-checkpointed-train-ebt-and-ar
-    title: Bounded CHECKPOINTED training of the tiny EBT + a matched tiny AR baseline (same params-band, same corpus, same
-      budget) on the 3090, with stability diagnostics (loss curve, convergence, NaN/divergence watch). Each task run trains
-      a BOUNDED chunk (<=1500s wall) then checkpoints + exits so it fits the loop; resumes from checkpoint. THESIS-A bring-up
-      step 4 (the GPU-budget half of the kill-gate).
+    title: "Bounded checkpointed EBT and AR training"
     deliverable: results/experiment_3728_bounded_checkpointed_train_ebt_and_ar.json
-    result: OK (conductor)
+    result: BLOCKED at 0 steps; infra bug, not mechanism signal
   - id: exp3729-stability-kill-gate-verdict
-    title: 'Thesis-A kill-gate part-(a) VERDICT: did the tiny EBT train to STABLE convergence within the bounded 3090 budget?
-      GREEN-LIGHT the .342 matched-compute comparison only if stable; else record energy-as-generator BOUNDED at small scale
-      and STOP. THESIS-A bring-up step 5.'
+    title: "Thesis-A kill-gate part-(a) verdict"
     deliverable: results/experiment_3729_stability_kill_gate_verdict.json
-    result: OK (conductor)
+    result: FALSE-NEGATIVE; superseded by .342 correction path
   - id: exp3730-kv260-opportunistic-continuity-audit
-    title: "KV260 opportunistic continuity audit \u2014 confirm terminal state holds (SSH-reachable, accelerator loadable);\
-      \ the per-milestone hardware mandate relaxed to opportunistic at .340. Documentation-only."
+    title: "KV260 opportunistic continuity audit"
     deliverable: results/experiment_3730_kv260_opportunistic_continuity_audit.json
-    result: OK (conductor)
+    result: OK terminal state held
   - id: exp3731-capstone-v341
-    title: "Capstone .341 \u2014 aggregate the Thesis-A EBT bring-up outcome (vendored + audited, tiny-EBT fits 3090, matched-compute\
-      \ harness built+tested, bounded train stability, kill-gate verdict). State HONESTLY whether part-(a) of the kill-gate\
-      \ passed (green-light .342) or the route is bounded at small scale. paper_ready MUST stay TRUE; frozen 0.9131 unchanged."
+    title: "Capstone .341"
     deliverable: results/experiment_3731_capstone_v341.json
-    result: OK (conductor)
+    result: FALSE-NEGATIVE carried; corrected by .342 handoff
