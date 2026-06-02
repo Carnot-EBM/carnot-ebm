@@ -7620,3 +7620,4 @@ web search: https://docs.garak.ai/garak/examples/pr |
 | 2026-06-02 20:41 UTC | Milestone 2026.06.342 activated | OK | 11 tasks queued |
 | 2026-06-02 20:56 UTC | Archive milestone .341 HONESTLY (Thesis-A EBT brin | OK | 105 passed in 5.76s |
 | 2026-06-02 21:08 UTC | CLEAN corrigendum of exp3729: the .341 kill-gate p | OK | 115 passed in 4.20s |
+| 2026-06-02 21:22 UTC | FIX the exp3728 cwd/import false-negative (robust  | OK | 86 passed in 6.74s |
