@@ -4610,6 +4610,101 @@ known blocker, field principles, deterministic seed, checksum, and duration.
 
 ---
 
+### REQ-HW-3721
+
+**Title:** Consolidated hardware continuity confirms KV260 terminal state and audits PolarFire plus GateMate
+
+**Description:**
+Experiment 3721 MUST perform the consolidated hardware-task continuity slot for
+milestone .340. KV260 reached its terminal-candidate board latency transcript in
+Exp 3709, so this experiment MUST confirm the terminal condition rather than
+rerun the latency harness. The ONLY permitted KV260 precondition is SSH
+reachability:
+
+`ssh -o ConnectTimeout=5 -o BatchMode=yes kria 'true'`
+
+The host SD-card device-node precondition is permanently retired and MUST NOT be
+used. If KV260 SSH is reachable, the experiment MUST run
+`ssh kria 'xmutil listapps'` to confirm that a `carnot_ising` overlay is listed.
+If `xmutil` reports that root privileges are required, the experiment MAY retry
+the same list operation as `sudo xmutil listapps` over SSH while preserving the
+original non-sudo probe. The experiment MUST inspect the existing
+`results/experiment_3709_kv260_drive_to_terminal_latency_transcript.json`
+artifact on disk and only accept it as terminal evidence when it carries at
+least 30 positive board-latency samples plus board-harness command evidence for
+real timings. If the overlay is confirmed and the Exp 3709 transcript evidence
+is non-fabricated, `kv260_terminal_condition_confirmed` MUST be a bare boolean
+`true` and the artifact MUST recommend that the operator lift the per-milestone
+KV260 mandate.
+
+The same artifact MUST opportunistically audit PolarFire and GateMate without
+making either board a milestone blocker. PolarFire MUST use
+`ssh -o ConnectTimeout=5 polarfire 'true'` as its precondition and, only when
+reachable, record uptime and the Carnot dispatch path with distinct PolarFire
+field names. GateMate MUST only record `command -v openFPGALoader` state and the
+known flash/smoke host-IO hang blocker; it MUST NOT run flash programming,
+host-visible smoke, or the hanging GateMate path.
+
+The transcript is a POC functional latency anchor only; the artifact MUST NOT
+make thermalization, equilibrium-sampling, or hardware-speedup-over-CPU claims.
+
+**Acceptance criteria:**
+- `results/experiment_3721_hardware_kv260_terminal_confirm_and_continuity.json`
+  is generated.
+- The artifact includes `honest_verdict`, `inference_substrate`,
+  `preconditions_checked`, `kv260_ssh_reachable`, `kv260_overlay_loaded`,
+  `kv260_terminal_transcript_present`,
+  `kv260_terminal_condition_confirmed`,
+  `kv260_mandate_lift_recommendation`, `polarfire_ssh_reachable`,
+  `gatemate_openfpgaloader_installed`, `speedup_claim_avoided_assert`,
+  `random_seed`, `reproducibility_checksum`, and `duration_s`.
+- The artifact includes field-principle annotations for each required field,
+  documenting why the value exists while the required field stores the bare
+  value.
+- `inference_substrate` MUST be exactly `"hardware_smoke"` and MUST NOT include
+  GGUF or CUDA markers.
+- If KV260 SSH is reachable, the artifact MUST include the `xmutil listapps`
+  probe transcript and set `kv260_overlay_loaded=true` only when a
+  `carnot_ising` overlay is present.
+- If the Exp 3709 artifact is missing, has fewer than 30 positive samples, or
+  lacks board-harness timing evidence, `kv260_terminal_transcript_present` MUST
+  be `false`.
+- If KV260 SSH is unreachable, the verdict MUST be
+  `"complete: kv260_unreachable_polarfire_gatemate_audited"` while PolarFire
+  and GateMate are still audited.
+- If KV260 SSH is reachable, the Carnot overlay is confirmed, and the Exp 3709
+  terminal transcript is present, the verdict MUST be
+  `"complete: kv260_terminal_confirmed_mandate_lift_recommended_polarfire_gatemate_audited"`.
+- If the consolidated audit completes but KV260 is reachable without satisfying
+  the terminal confirmation, the verdict MUST be
+  `"complete: hardware_continuity_partial_recorded"`.
+- No implementation or test path may invoke `/dev/mmcblk*`, `/dev/disk*`,
+  GateMate flash programming, or the hanging GateMate host-visible smoke path.
+
+**Implementation status:** Pending (Exp 3721)
+
+---
+
+### SCENARIO-HW-3721
+
+**Scenario:** Consolidated hardware continuity records terminal, unreachable, and partial states honestly.
+
+**Given:** KV260 terminal confirmation and opportunistic PolarFire/GateMate
+continuity are required for milestone .340.
+**When:** Experiment 3721 runs the KV260 SSH precondition, checks the KV260
+overlay and Exp 3709 transcript when possible, audits PolarFire SSH continuity,
+and records GateMate openFPGALoader state without flash or smoke commands.
+**Then:** It writes
+`results/experiment_3721_hardware_kv260_terminal_confirm_and_continuity.json`
+with one of the terminal-prefixed verdicts, bare required values, field
+principles, deterministic seed, checksum, duration, and no forbidden substrate
+markers or retired host-storage checks.
+
+**Implementation status:** Pending (Exp 3721)
+
+
+---
+
 ### REQ-HW-3687
 
 **Title:** PolarFire continuity v24 MUST confirm live SSH continuity for milestone .337
