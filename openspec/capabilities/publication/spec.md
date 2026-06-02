@@ -272,6 +272,47 @@ checklist only when the winner defensibly beats frozen, and asserts that the
 operator-curated north-star file, reproducer workflow, GitHub run state, and
 frozen `0.9131` publication headline remain unchanged.
 
+### REQ-PUBLISH-3715: Re-Freeze Disambiguation Clean Corrigendum
+
+The Exp 3715 runner MUST re-read the existing Exp 3704 re-freeze
+disambiguation artifact and emit
+`results/experiment_3715_refreeze_disambiguation_clean_corrigendum.json` as an
+aggregation-only corrigendum. It MUST NOT re-run candidate scoring, MUST NOT
+edit `ops/north-star.md`, MUST NOT edit or trigger the FoVer CI reproducer, and
+MUST preserve the frozen `0.9131` publication headline.
+
+The corrigendum artifact MUST preserve Exp 3704's candidate AUROCs for
+dependency-aware, external comparator, and fusion in exactly one top-level field
+per candidate. It MUST represent the strongest candidate as a string label plus
+a string pointer to the top-level candidate AUROC field that stores the value;
+it MUST NOT write a second `strongest_candidate_auroc` alias. The artifact MUST
+record the conservative conclusion that no candidate replaces the frozen
+headline, include the available Exp 3704 paired-delta evidence, and include a
+correction note explaining that Exp 3704's `strongest_candidate_auroc ==
+external_comparator_auroc` TAUTOLOGY flag was a benign copy-by-construction
+false positive because the strongest candidate was the external comparator.
+
+The artifact MUST use
+`inference_substrate="aggregation_from_upstream_artifacts ..."` without
+live-inference or compute-bound model markers, MUST run
+`scripts/adversarial_verify.py` on the written corrigendum, and MUST set
+`adversarial_verify_clean` true only when the corrigendum has no critical
+adversarial flag. If Exp 3704 is unavailable, the runner MUST write an honest
+blocked artifact with terminal verdict `complete: blocked_exp3704_unavailable`.
+
+### SCENARIO-PUBLISH-3715: Clean Corrigendum Keeps Frozen Headline
+
+**Given** the Exp 3704 artifact is available and carries the benign duplicated
+winner AUROC false-positive
+**When** the Exp 3715 runner re-emits the disambiguation as an
+aggregation-only corrigendum
+**Then** the output artifact preserves the original candidate numbers, stores
+the strongest candidate as a label plus source-field pointer, omits any
+duplicated strongest-candidate AUROC field, passes adversarial verification
+without a critical flag, records `no_candidate_beats_frozen == true`, and
+asserts that `ops/north-star.md`, the FoVer CI reproducer, and the frozen
+`0.9131` publication headline remain unchanged.
+
 ### REQ-PUBLISH-007: High-Severity Integrity Fixes (ISSUE-6 through ISSUE-10)
 
 The paper-v5 high-severity remediation script MUST verify that
