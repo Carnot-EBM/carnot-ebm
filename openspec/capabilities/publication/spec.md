@@ -1921,6 +1921,55 @@ numerical value
 retracted-number document fails, and the Exp 3716 artifact records that the
 current paper targets are clean and G3 is now mechanically enforced.
 
+### REQ-PUBLISH-3717: G4 Full Headline Provenance Audit
+
+The Exp 3717 G4 audit runner MUST enumerate every headline and north-star
+number in `ops/north-star.md` §1 for the frozen FoVer methods headline:
+FoVer AUROC, FoVer 95% CI lower/upper, FR-11 contribution, FR-11 95% CI
+lower/upper, shipped-detector operating point, and shipped-detector ECE.
+Each number MUST resolve to a primary `results/experiment_*.json` artifact
+rather than prose.
+
+For every audited number, the runner MUST record a provenance row containing
+`headline_number`, `value`, `primary_artifact`, `has_seed`, `has_checksum`,
+and `adversarial_clean`. It MUST live-run `scripts/adversarial_verify.py` or
+the equivalent verifier function on every cited primary artifact and treat any
+critical flag, including `flagged_adversarial`, as a G4 gap requiring
+operator action. The runner MUST be aggregation-only: it SHALL read
+`ops/north-star.md` and primary artifacts, SHALL NOT perform live inference,
+SHALL NOT include GGUF/CUDA compute-bound substrate markers, SHALL NOT edit
+`ops/north-star.md`, and SHALL NOT modify `scripts/research_conductor.py`.
+
+The artifact `results/experiment_3717_g4_full_provenance_audit.json` MUST
+include `honest_verdict`, `inference_substrate`, `provenance_rows`,
+`n_numbers_audited`, `all_numbers_trace_to_clean_artifacts` as a bare boolean,
+`any_cited_source_flagged` as a bare boolean, `g4_status`,
+`operator_action_items`, `north_star_unmodified_assert`,
+`adversarial_verify_clean`, `random_seed`, `reproducibility_checksum`, and
+`duration_s`. If the primary FoVer artifact is missing, the runner MUST emit
+terminal verdict `complete: blocked_primary_artifact_unavailable`; otherwise
+it MUST emit either
+`complete: g4_fully_traced_every_headline_number_to_clean_primary_artifact` or
+`complete: g4_provenance_gap_found_operator_action_items_recorded`.
+
+### SCENARIO-PUBLISH-3717: Full G4 Audit Classifies Honest Outcomes
+
+**Given** synthetic primary artifacts for all headline numbers that include
+seed/checksum evidence and pass adversarial verification
+**When** the Exp 3717 G4 audit runner audits them
+**Then** it emits a fully traced verdict, seven provenance rows, and bare true
+for `all_numbers_trace_to_clean_artifacts`.
+
+**Given** a synthetic cited source is missing seed/checksum evidence or is
+flagged by adversarial verification
+**When** the Exp 3717 G4 audit runner audits it
+**Then** it emits the gap-found terminal verdict and records operator action
+items without editing the north-star document.
+
+**Given** the primary FoVer artifact is unavailable
+**When** the Exp 3717 G4 audit runner starts
+**Then** it emits the blocked-primary-artifact terminal verdict.
+
 
 ## Implementation Status
 
@@ -1966,6 +2015,7 @@ current paper targets are clean and G3 is now mechanically enforced.
 | REQ-PUBLISH-3701 | Implemented | Exp 3701 v338 re-freeze capstone and publication gate recheck |
 | REQ-PUBLISH-3712 | Proposed | Exp 3712 v339 re-freeze winner capstone and publication gate recheck |
 | REQ-PUBLISH-3716 | Implemented | Exp 3716 standalone Paper-v6 narrowing lint |
+| REQ-PUBLISH-3717 | Planned | Exp 3717 full G4 headline provenance audit |
 
 ### REQ-PUBLISH-026: HuggingFace Publish Retry
 The experiment 1750 huggingface retry runner MUST attempt to upload the smallest model in models/ with a no-emoji model card. If credentials pass, it MUST upload and record hf_upload_succeeded = True. If blocked, it MUST emit an honest verdict of "blocked_credentials".
