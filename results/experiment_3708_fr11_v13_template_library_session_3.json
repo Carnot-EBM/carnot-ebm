@@ -1,0 +1,159 @@
+{
+  "bounded_policy": "cap entries; on overflow merge the highest cosine-similarity pair; evict lowest utility/support only if a merge cannot restore the cap",
+  "cap": 2,
+  "consolidation_events": [
+    {
+      "action": "add",
+      "size": 1,
+      "template_id": "template_1_fe982c64a1"
+    },
+    {
+      "action": "add",
+      "size": 2,
+      "template_id": "template_2_a15cb826f9"
+    },
+    {
+      "action": "add",
+      "size": 3,
+      "template_id": "template_3_4c762613f6"
+    },
+    {
+      "action": "merge",
+      "merged_template_id": "merged_064de988b8",
+      "policy": "merge highest cosine similarity pair when cap is exceeded",
+      "size": 2
+    }
+  ],
+  "entries": [
+    {
+      "edges": [
+        {
+          "by_label_correlation": {
+            "0": -0.61291,
+            "1": -0.24994
+          },
+          "conditional_mutual_information": 0.122508,
+          "pair": [
+            "tier0r_curry_howard",
+            "tier0s_arithmetic_gap"
+          ]
+        },
+        {
+          "by_label_correlation": {
+            "0": -0.123512,
+            "1": -0.450412
+          },
+          "conditional_mutual_information": 0.066446,
+          "pair": [
+            "fr11_session_memory",
+            "tier0s_arithmetic_gap"
+          ]
+        },
+        {
+          "by_label_correlation": {
+            "0": -0.074859,
+            "1": -0.143694
+          },
+          "conditional_mutual_information": 0.007048,
+          "pair": [
+            "fr11_session_memory",
+            "tier0u_logical_consistency"
+          ]
+        }
+      ],
+      "source_sessions": [
+        "mean_score_session_3"
+      ],
+      "support": 250,
+      "template_id": "template_3_4c762613f6",
+      "utility": 0.981334,
+      "weights": {
+        "fr11_session_memory": 0.322018,
+        "tier0r_curry_howard": 0.109594,
+        "tier0s_arithmetic_gap": -0.038745,
+        "tier0u_logical_consistency": 0.529643
+      }
+    },
+    {
+      "edges": [
+        {
+          "by_label_correlation": {
+            "0": 0.229903,
+            "1": 0.228791
+          },
+          "conditional_mutual_information": 0.027115,
+          "pair": [
+            "fr11_session_memory",
+            "tier0r_curry_howard"
+          ]
+        },
+        {
+          "by_label_correlation": {
+            "0": -0.614113,
+            "1": -0.562504
+          },
+          "conditional_mutual_information": 0.203223,
+          "pair": [
+            "fr11_session_memory",
+            "tier0s_arithmetic_gap"
+          ]
+        },
+        {
+          "by_label_correlation": {
+            "0": 0.0,
+            "1": 0.0
+          },
+          "conditional_mutual_information": 0.0,
+          "pair": [
+            "fr11_session_memory",
+            "tier0u_logical_consistency"
+          ]
+        },
+        {
+          "by_label_correlation": {
+            "0": -0.636267,
+            "1": -0.644225
+          },
+          "conditional_mutual_information": 0.265676,
+          "pair": [
+            "tier0r_curry_howard",
+            "tier0s_arithmetic_gap"
+          ]
+        },
+        {
+          "by_label_correlation": {
+            "0": 0.0,
+            "1": -0.119299
+          },
+          "conditional_mutual_information": 0.00516,
+          "pair": [
+            "tier0s_arithmetic_gap",
+            "tier0u_logical_consistency"
+          ]
+        }
+      ],
+      "source_sessions": [
+        "mean_score_session_0",
+        "mean_score_session_2"
+      ],
+      "support": 500,
+      "template_id": "merged_064de988b8",
+      "utility": 0.781006,
+      "weights": {
+        "fr11_session_memory": 0.16576,
+        "tier0r_curry_howard": -0.180147,
+        "tier0s_arithmetic_gap": -0.645372,
+        "tier0u_logical_consistency": 0.008721
+      }
+    }
+  ],
+  "schema": "carnot.fr11_v13_template_library",
+  "sha256": "a11cef303c5ed40b8adf9d1a3fa32bbdd4892c1a1959c5b6499ea9bd6740769e",
+  "size": 2,
+  "verifier_names": [
+    "fr11_session_memory",
+    "tier0r_curry_howard",
+    "tier0s_arithmetic_gap",
+    "tier0u_logical_consistency"
+  ]
+}

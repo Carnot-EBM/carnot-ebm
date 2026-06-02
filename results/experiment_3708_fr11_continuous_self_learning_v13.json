@@ -1,0 +1,347 @@
+{
+  "acceptance_gate": {
+    "condition": "template_library_bounded == true AND structure_persisted_and_restored == true AND collapse_detected_deploy_arm == false AND pass_rate_vs_true_accuracy_distinct_assert == true",
+    "passed": true,
+    "principle": "Multi-session consolidation is validated only when the library stays bounded, round-trips across sessions, does not collapse, and the two metrics are genuinely distinct (not a tautology)."
+  },
+  "adversarial_verify": "clean",
+  "artifact": "experiment_3708_fr11_continuous_self_learning_v13",
+  "cold_start_weights": {
+    "fr11_session_memory": 0.25,
+    "tier0r_curry_howard": 0.25,
+    "tier0s_arithmetic_gap": 0.25,
+    "tier0u_logical_consistency": 0.25
+  },
+  "collapse_detected_deploy_arm": false,
+  "consolidated_template_transfer_gain_over_cold_start": true,
+  "consolidated_template_weights": {
+    "fr11_session_memory": 0.235017,
+    "tier0r_curry_howard": -0.090154,
+    "tier0s_arithmetic_gap": -0.478093,
+    "tier0u_logical_consistency": 0.196736
+  },
+  "control_arm": "cold_start_no_template",
+  "deploy_arm": "consolidated_template",
+  "duration_s": 0.720211,
+  "field_principles": {
+    "collapse_detected_deploy_arm": "The conservative-default rule must prevent weight collapse during consolidation (alpha_t grounding).",
+    "consolidated_template_transfer_gain_over_cold_start": "The forward difference -- does a consolidated template beat cold-start on a fresh session's ensemble AUROC?",
+    "duration_s": "Plausibility floor.",
+    "honest_verdict": "Terminal prefix for reconciler classification.",
+    "inference_substrate": "verifier_ensemble_against_cached_candidates (principle: scores cached traces; no LLM load; no compute-bound marker).",
+    "n_online_updates": "Sample-size of the self-learning sweep across all sessions (>=200).",
+    "n_sessions": "Number of session boundaries consolidated across (>=3) -- the v13 forward difference.",
+    "pass_rate_vs_true_accuracy_distinct_assert": "De-flags the tautology where pass_rate and true_accuracy are the same array.",
+    "quality_maintained": "Consolidation + transfer must not cost ensemble quality.",
+    "random_seed": "Determinism precondition.",
+    "reproducibility_checksum": "Drift detection.",
+    "structure_persisted_and_restored": "Cross-session Tier-2 persistence -- the consolidated library round-trips (SHA256) across boundaries.",
+    "template_library_bounded": "True iff the consolidated template library stays under its size cap (merge/evict policy works)."
+  },
+  "fresh_session": {
+    "n_examples": 250,
+    "name": "mean_score_fresh_heldout_1"
+  },
+  "fresh_session_metrics": {
+    "cold_start_no_template": {
+      "auroc": 0.754309,
+      "brier": 0.406741,
+      "ece": 0.416869
+    },
+    "consolidated_template": {
+      "auroc": 0.776006,
+      "brier": 0.552306,
+      "ece": 0.564475
+    }
+  },
+  "fresh_session_transfer_auroc_gain": 0.021697,
+  "honest_verdict": "complete: fr11_v13_multi_session_consolidation_transfers_no_collapse_quality_maintained",
+  "inference_substrate": "verifier_ensemble_against_cached_candidates (principle: scores cached traces; no LLM load; no compute-bound marker).",
+  "n_online_updates": 750,
+  "n_sessions": 3,
+  "pass_rate_trajectory": [
+    0.976458,
+    0.970426,
+    0.97347,
+    0.974628,
+    0.982059,
+    0.979057,
+    0.976801,
+    0.979458
+  ],
+  "pass_rate_vs_true_accuracy_distinct_assert": true,
+  "preconditions_checked": [
+    {
+      "available": true,
+      "detail": "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/fr11",
+      "resource": "fr11_module"
+    },
+    {
+      "available": true,
+      "detail": "line_count=8829; required>=1000",
+      "resource": "cached_traces_with_per_verifier_scores_and_labels"
+    },
+    {
+      "available": true,
+      "detail": "loaded=tier0r_curry_howard,tier0s_arithmetic_gap,tier0u_logical_consistency",
+      "resource": "text_scoring_verifiers"
+    },
+    {
+      "available": true,
+      "detail": "state_files=21; memory_loaded=True",
+      "resource": "fr11_session_memory_verifier"
+    },
+    {
+      "available": true,
+      "detail": "online graph fit, graph learner, and fixed crossfit baseline importable",
+      "resource": "dependency_aware_weighting_implementation"
+    },
+    {
+      "available": true,
+      "detail": "drift stream builder, online re-estimator, and v10 fixed baseline importable",
+      "resource": "drift_aware_online_reestimation_implementation"
+    }
+  ],
+  "quality_maintained": true,
+  "random_seed": 3708,
+  "reproducibility_checksum": "545e047f33b5f5699db33acb68b59657939fd07caf7e9d80d78f55db921101cb",
+  "schema": "carnot.fr11_continuous_self_learning_v13",
+  "session_panel": {
+    "heldout_bin": 1,
+    "min_pairwise_vote_distribution_distance": 0.413492,
+    "policy": "choose the three cached quartile slices with the largest minimum pairwise vote-distribution distance; hold out the remaining quartile",
+    "projection": "mean_score",
+    "session_vote_distances": [
+      0.413492,
+      0.825639,
+      0.470761
+    ],
+    "training_bins": [
+      0,
+      2,
+      3
+    ]
+  },
+  "session_summaries": [
+    {
+      "collapse_detected": false,
+      "learned_template_id": "template_1_fe982c64a1",
+      "n_edges": 3,
+      "n_examples": 250,
+      "name": "mean_score_session_0",
+      "template_auroc": 0.887051
+    },
+    {
+      "collapse_detected": false,
+      "learned_template_id": "template_2_a15cb826f9",
+      "n_edges": 3,
+      "n_examples": 250,
+      "name": "mean_score_session_2",
+      "template_auroc": 0.67496
+    },
+    {
+      "collapse_detected": false,
+      "learned_template_id": "template_3_4c762613f6",
+      "n_edges": 3,
+      "n_examples": 250,
+      "name": "mean_score_session_3",
+      "template_auroc": 0.981334
+    }
+  ],
+  "structure_persisted_and_restored": true,
+  "template_library": {
+    "bounded_policy": "cap entries; on overflow merge the highest cosine-similarity pair; evict lowest utility/support only if a merge cannot restore the cap",
+    "cap": 2,
+    "consolidation_events": [
+      {
+        "action": "add",
+        "size": 1,
+        "template_id": "template_1_fe982c64a1"
+      },
+      {
+        "action": "add",
+        "size": 2,
+        "template_id": "template_2_a15cb826f9"
+      },
+      {
+        "action": "add",
+        "size": 3,
+        "template_id": "template_3_4c762613f6"
+      },
+      {
+        "action": "merge",
+        "merged_template_id": "merged_064de988b8",
+        "policy": "merge highest cosine similarity pair when cap is exceeded",
+        "size": 2
+      }
+    ],
+    "entries": [
+      {
+        "edges": [
+          {
+            "by_label_correlation": {
+              "0": -0.61291,
+              "1": -0.24994
+            },
+            "conditional_mutual_information": 0.122508,
+            "pair": [
+              "tier0r_curry_howard",
+              "tier0s_arithmetic_gap"
+            ]
+          },
+          {
+            "by_label_correlation": {
+              "0": -0.123512,
+              "1": -0.450412
+            },
+            "conditional_mutual_information": 0.066446,
+            "pair": [
+              "fr11_session_memory",
+              "tier0s_arithmetic_gap"
+            ]
+          },
+          {
+            "by_label_correlation": {
+              "0": -0.074859,
+              "1": -0.143694
+            },
+            "conditional_mutual_information": 0.007048,
+            "pair": [
+              "fr11_session_memory",
+              "tier0u_logical_consistency"
+            ]
+          }
+        ],
+        "source_sessions": [
+          "mean_score_session_3"
+        ],
+        "support": 250,
+        "template_id": "template_3_4c762613f6",
+        "utility": 0.981334,
+        "weights": {
+          "fr11_session_memory": 0.322018,
+          "tier0r_curry_howard": 0.109594,
+          "tier0s_arithmetic_gap": -0.038745,
+          "tier0u_logical_consistency": 0.529643
+        }
+      },
+      {
+        "edges": [
+          {
+            "by_label_correlation": {
+              "0": 0.229903,
+              "1": 0.228791
+            },
+            "conditional_mutual_information": 0.027115,
+            "pair": [
+              "fr11_session_memory",
+              "tier0r_curry_howard"
+            ]
+          },
+          {
+            "by_label_correlation": {
+              "0": -0.614113,
+              "1": -0.562504
+            },
+            "conditional_mutual_information": 0.203223,
+            "pair": [
+              "fr11_session_memory",
+              "tier0s_arithmetic_gap"
+            ]
+          },
+          {
+            "by_label_correlation": {
+              "0": 0.0,
+              "1": 0.0
+            },
+            "conditional_mutual_information": 0.0,
+            "pair": [
+              "fr11_session_memory",
+              "tier0u_logical_consistency"
+            ]
+          },
+          {
+            "by_label_correlation": {
+              "0": -0.636267,
+              "1": -0.644225
+            },
+            "conditional_mutual_information": 0.265676,
+            "pair": [
+              "tier0r_curry_howard",
+              "tier0s_arithmetic_gap"
+            ]
+          },
+          {
+            "by_label_correlation": {
+              "0": 0.0,
+              "1": -0.119299
+            },
+            "conditional_mutual_information": 0.00516,
+            "pair": [
+              "tier0s_arithmetic_gap",
+              "tier0u_logical_consistency"
+            ]
+          }
+        ],
+        "source_sessions": [
+          "mean_score_session_0",
+          "mean_score_session_2"
+        ],
+        "support": 500,
+        "template_id": "merged_064de988b8",
+        "utility": 0.781006,
+        "weights": {
+          "fr11_session_memory": 0.16576,
+          "tier0r_curry_howard": -0.180147,
+          "tier0s_arithmetic_gap": -0.645372,
+          "tier0u_logical_consistency": 0.008721
+        }
+      }
+    ],
+    "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_3708_fr11_v13_template_library.json",
+    "restored_sha256": "a11cef303c5ed40b8adf9d1a3fa32bbdd4892c1a1959c5b6499ea9bd6740769e",
+    "round_trips": [
+      {
+        "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_3708_fr11_v13_template_library_session_1.json",
+        "restored_sha256": "0cb7355302b3be05a7b8c9ad3e33b424f32eb5e66f649a3976b59a4c808e3989",
+        "round_trip_ok": true,
+        "session_boundary": 1,
+        "sha256": "0cb7355302b3be05a7b8c9ad3e33b424f32eb5e66f649a3976b59a4c808e3989"
+      },
+      {
+        "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_3708_fr11_v13_template_library_session_2.json",
+        "restored_sha256": "3b8df206390e8a4561c0d45fa5ee8188b212ff41d579d219cc6767b5d4b77489",
+        "round_trip_ok": true,
+        "session_boundary": 2,
+        "sha256": "3b8df206390e8a4561c0d45fa5ee8188b212ff41d579d219cc6767b5d4b77489"
+      },
+      {
+        "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_3708_fr11_v13_template_library_session_3.json",
+        "restored_sha256": "a11cef303c5ed40b8adf9d1a3fa32bbdd4892c1a1959c5b6499ea9bd6740769e",
+        "round_trip_ok": true,
+        "session_boundary": 3,
+        "sha256": "a11cef303c5ed40b8adf9d1a3fa32bbdd4892c1a1959c5b6499ea9bd6740769e"
+      }
+    ],
+    "schema": "carnot.fr11_v13_template_library",
+    "sha256": "a11cef303c5ed40b8adf9d1a3fa32bbdd4892c1a1959c5b6499ea9bd6740769e",
+    "size": 2,
+    "verifier_names": [
+      "fr11_session_memory",
+      "tier0r_curry_howard",
+      "tier0s_arithmetic_gap",
+      "tier0u_logical_consistency"
+    ]
+  },
+  "template_library_bounded": true,
+  "true_accuracy_trajectory": [
+    0.34375,
+    0.21875,
+    0.40625,
+    0.4375,
+    0.4375,
+    0.5,
+    0.53125,
+    0.423077
+  ]
+}

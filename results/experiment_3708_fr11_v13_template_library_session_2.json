@@ -1,0 +1,125 @@
+{
+  "bounded_policy": "cap entries; on overflow merge the highest cosine-similarity pair; evict lowest utility/support only if a merge cannot restore the cap",
+  "cap": 2,
+  "consolidation_events": [
+    {
+      "action": "add",
+      "size": 1,
+      "template_id": "template_1_fe982c64a1"
+    },
+    {
+      "action": "add",
+      "size": 2,
+      "template_id": "template_2_a15cb826f9"
+    }
+  ],
+  "entries": [
+    {
+      "edges": [
+        {
+          "by_label_correlation": {
+            "0": -0.349358,
+            "1": -0.312114
+          },
+          "conditional_mutual_information": 0.063202,
+          "pair": [
+            "fr11_session_memory",
+            "tier0s_arithmetic_gap"
+          ]
+        },
+        {
+          "by_label_correlation": {
+            "0": 0.229903,
+            "1": 0.228791
+          },
+          "conditional_mutual_information": 0.027115,
+          "pair": [
+            "fr11_session_memory",
+            "tier0r_curry_howard"
+          ]
+        },
+        {
+          "by_label_correlation": {
+            "0": 0.0,
+            "1": 0.0
+          },
+          "conditional_mutual_information": 0.0,
+          "pair": [
+            "fr11_session_memory",
+            "tier0u_logical_consistency"
+          ]
+        }
+      ],
+      "source_sessions": [
+        "mean_score_session_0"
+      ],
+      "support": 250,
+      "template_id": "template_1_fe982c64a1",
+      "utility": 0.887051,
+      "weights": {
+        "fr11_session_memory": 0.195475,
+        "tier0r_curry_howard": -0.272493,
+        "tier0s_arithmetic_gap": -0.532033,
+        "tier0u_logical_consistency": 0.0
+      }
+    },
+    {
+      "edges": [
+        {
+          "by_label_correlation": {
+            "0": -0.636267,
+            "1": -0.644225
+          },
+          "conditional_mutual_information": 0.265676,
+          "pair": [
+            "tier0r_curry_howard",
+            "tier0s_arithmetic_gap"
+          ]
+        },
+        {
+          "by_label_correlation": {
+            "0": -0.614113,
+            "1": -0.562504
+          },
+          "conditional_mutual_information": 0.203223,
+          "pair": [
+            "fr11_session_memory",
+            "tier0s_arithmetic_gap"
+          ]
+        },
+        {
+          "by_label_correlation": {
+            "0": 0.0,
+            "1": -0.119299
+          },
+          "conditional_mutual_information": 0.00516,
+          "pair": [
+            "tier0s_arithmetic_gap",
+            "tier0u_logical_consistency"
+          ]
+        }
+      ],
+      "source_sessions": [
+        "mean_score_session_2"
+      ],
+      "support": 250,
+      "template_id": "template_2_a15cb826f9",
+      "utility": 0.67496,
+      "weights": {
+        "fr11_session_memory": 0.136046,
+        "tier0r_curry_howard": -0.087801,
+        "tier0s_arithmetic_gap": -0.758711,
+        "tier0u_logical_consistency": 0.017443
+      }
+    }
+  ],
+  "schema": "carnot.fr11_v13_template_library",
+  "sha256": "3b8df206390e8a4561c0d45fa5ee8188b212ff41d579d219cc6767b5d4b77489",
+  "size": 2,
+  "verifier_names": [
+    "fr11_session_memory",
+    "tier0r_curry_howard",
+    "tier0s_arithmetic_gap",
+    "tier0u_logical_consistency"
+  ]
+}
