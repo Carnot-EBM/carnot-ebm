@@ -1,0 +1,203 @@
+{
+  "acceptance_gate": {
+    "condition": "code_auroc_baseline present AND code_native_auroc present AND code_native_auroc_ci present AND adversarial_verify_clean == true",
+    "passed": true,
+    "principle": "A code-native verdict requires the baseline, the code-native AUROC and its CI, and adversarial-clean status."
+  },
+  "adversarial_verify_clean": true,
+  "adversarial_verify_report": {
+    "flag_count": 0,
+    "flags": []
+  },
+  "artifact": "experiment_3695_code_native_verifier",
+  "code_auroc_baseline": {
+    "calibration_brier_ece": {
+      "brier": 0.2747,
+      "ece": 0.058093
+    },
+    "confidence": {
+      "bootstrap_seeds": [
+        3695,
+        3696,
+        3697
+      ],
+      "ci95": [
+        0.5,
+        0.5
+      ],
+      "n": 18,
+      "n_negative_correct": 9,
+      "n_positive_errors": 9,
+      "point": 0.5,
+      "seed_mean_aurocs": [
+        0.5,
+        0.5,
+        0.5
+      ]
+    },
+    "ensemble": {
+      "bootstrap_seeds": [
+        3695,
+        3696,
+        3697
+      ],
+      "ci95": [
+        0.338333,
+        0.65
+      ],
+      "n": 18,
+      "n_negative_correct": 9,
+      "n_positive_errors": 9,
+      "point": 0.5,
+      "seed_mean_aurocs": [
+        0.495517,
+        0.496034,
+        0.50385
+      ]
+    },
+    "fused": {
+      "bootstrap_seeds": [
+        3695,
+        3696,
+        3697
+      ],
+      "ci95": [
+        0.338333,
+        0.65
+      ],
+      "n": 18,
+      "n_negative_correct": 9,
+      "n_positive_errors": 9,
+      "point": 0.5,
+      "seed_mean_aurocs": [
+        0.495517,
+        0.496034,
+        0.50385
+      ]
+    },
+    "n_holdout": 18
+  },
+  "code_native_auroc": 1.0,
+  "code_native_auroc_ci": [
+    1.0,
+    1.0
+  ],
+  "code_native_auroc_metric": {
+    "bootstrap_seeds": [
+      3695,
+      3696,
+      3697
+    ],
+    "ci95": [
+      1.0,
+      1.0
+    ],
+    "n": 60,
+    "n_negative_correct": 30,
+    "n_positive_errors": 30,
+    "point": 1.0,
+    "seed_mean_aurocs": [
+      1.0,
+      1.0,
+      1.0
+    ]
+  },
+  "code_native_calibration_brier_ece": {
+    "brier": 0.033682,
+    "ece": 0.048653
+  },
+  "code_native_calibration_protocol": {
+    "feature_names": [
+      "ensemble_energy",
+      "confidence_error"
+    ],
+    "holdout_n": 18,
+    "method": "logistic",
+    "train_n": 42
+  },
+  "code_native_feature_summary": {
+    "mean_features": {
+      "ast_parseable": 1.0,
+      "code_extractor_violation_rate": 0.557001,
+      "dead_code_after_return": 0.5,
+      "early_unconditional_return": 0.5,
+      "execution_attempted": 1.0,
+      "forbidden_call": 0.0,
+      "missing_entry_point": 0.0,
+      "missing_value_return": 0.0,
+      "parse_error": 0.0,
+      "return_none_literal_rate": 0.243056,
+      "runtime_exception_rate": 0.094444,
+      "runtime_return_none_rate": 0.527778,
+      "runtime_type_mismatch_rate": 0.527778,
+      "undefined_name_count_clamped": 0.488889
+    },
+    "n_execution_attempted": 60,
+    "n_scored": 60,
+    "score_variance": 0.163506
+  },
+  "code_native_recall_at_fixed_fpr": {
+    "0.05": {
+      "code_native_actual_fpr": 0.0,
+      "code_native_recall": 1.0,
+      "code_native_threshold": 0.983914
+    },
+    "0.10": {
+      "code_native_actual_fpr": 0.0,
+      "code_native_recall": 1.0,
+      "code_native_threshold": 0.983914
+    },
+    "0.20": {
+      "code_native_actual_fpr": 0.111111,
+      "code_native_recall": 1.0,
+      "code_native_threshold": 0.77789
+    }
+  },
+  "code_native_verifier_implementation": "CodeNativeVerifier parses candidate Python with ast.parse, runs CodeExtractor for structural initialization/type/return findings, scores AST anomalies (parse failure, missing entry point, missing value return, literal None returns, early top-level returns and dead code after return), and executes deterministic signature-derived probes through safe_exec_function so runtime exceptions, None returns, and annotation type mismatches contribute an execution-trace signal. Weights are deterministic heuristic proxy weights; the inspected signals are code-native AST/runtime signals, not math-verifier scores.",
+  "code_signal_recovered": true,
+  "duration_s": 1.798642,
+  "field_principles": {
+    "adversarial_verify_clean": "True iff no critical flag.",
+    "code_auroc_baseline": "The exp3683 0.5 code baseline reconfirmed -- the chance floor to beat.",
+    "code_native_auroc": "The code-NATIVE verifier AUROC -- the new signal; the headline number for this task.",
+    "code_native_auroc_ci": "CI of the code-native AUROC -- must EXCLUDE 0.5 to count as signal.",
+    "code_native_calibration_brier_ece": "Calibration of the code-native signal -- a deployable code operating point must be calibrated.",
+    "code_native_recall_at_fixed_fpr": "Recall-at-FPR table a deployer reads for the code operating point.",
+    "code_native_verifier_implementation": "Honest description of the AST/execution signal; real parsing/execution, not math relabeling.",
+    "code_signal_recovered": "BARE bool. True iff code-native AUROC beats 0.5 with a CI excluding 0.5 AND calibration improves -- gates exp3696. STORE AS BARE true/false.",
+    "duration_s": "Plausibility floor.",
+    "honest_verdict": "Terminal prefix for reconciler classification.",
+    "inference_substrate": "verifier_ensemble_against_cached_candidates if cached-only (no live-model marker); live_llm_inference only if a real generation step ran.",
+    "n_examples_code": "Sample-size rigor on the code corpus.",
+    "random_seed": "Determinism precondition.",
+    "reproducibility_checksum": "Drift detection."
+  },
+  "honest_verdict": "complete: code_native_signal_recovered_beats_chance_floor",
+  "inference_substrate": "verifier_ensemble_against_cached_candidates",
+  "n_examples_code": 60,
+  "ops_docs_reconciliation_left_to_conductor": true,
+  "preconditions_checked": [
+    {
+      "available": true,
+      "detail": {
+        "n_examples": 60,
+        "path": "/home/ianblenke/github.com/ianblenke/carnot/data/code_verification_corpus_v2.jsonl",
+        "status": "loaded"
+      },
+      "n_examples": 60,
+      "resource": "balanced_exp3658_code_corpus"
+    },
+    {
+      "available": true,
+      "detail": "CodeExtractor, ast.parse, safe_exec_function",
+      "resource": "code_extractor_ast_runtime_tooling"
+    }
+  ],
+  "random_seed": 3695,
+  "reproducibility_checksum": "fadffec4a9eba1e1",
+  "schema": "carnot.code_native_verifier_3695.v1",
+  "scripts_research_conductor_modified": false,
+  "tests_run": [
+    "pytest tests/python/test_experiment_3695_code_native_verifier.py"
+  ]
+}

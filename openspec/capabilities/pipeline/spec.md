@@ -314,6 +314,37 @@ the verifier-authenticity gap rather than silently relabeling plain confidence.
   `value_collapses_vs_stronger_baseline`, and `blocked` with synthetic fixtures
   rather than hard-coding a real-corpus success string.
 
+### REQ-SPOE-3695: Code-Native Second-Pair Verifier Verdict
+
+The pipeline MUST provide an Exp 3695 runner that evaluates a genuinely
+code-native verifier on the balanced Exp 3658 code corpus without live LLM
+generation when the cached corpus is available:
+- The runner checks that the balanced Exp 3658 corpus is loadable and that the
+  CodeExtractor / AST tooling can be imported before scoring.
+- The verifier parses candidate Python code and produces AST/structural
+  features such as parse failures, undefined names, missing value returns,
+  early unconditional returns, and branch/loop structure.  When runnable code
+  has an entry point, it also executes deterministic runtime probes through the
+  existing execution path and records the execution-trace signal.
+- The artifact includes `honest_verdict`, `inference_substrate`,
+  `code_auroc_baseline`, `code_native_auroc`, `code_native_auroc_ci`,
+  `code_native_calibration_brier_ece`, `code_native_recall_at_fixed_fpr`,
+  `code_native_verifier_implementation`, `code_signal_recovered`,
+  `n_examples_code`, `adversarial_verify_clean`, `random_seed`,
+  `reproducibility_checksum`, and `duration_s`.
+- `code_signal_recovered` is a bare top-level boolean and may be true only when
+  code-native AUROC beats 0.5 with a CI excluding 0.5 and calibration improves
+  against the reconfirmed code baseline.
+- The runner records `inference_substrate` as
+  `verifier_ensemble_against_cached_candidates` for cached-only scoring and
+  uses `live_llm_inference` only if a real GGUF generation step runs.
+- The honest verdict is one of:
+  `complete: code_native_signal_recovered_beats_chance_floor`,
+  `complete: code_remains_math_only_code_native_signal_also_fails_earned`, or
+  `complete: blocked_no_code_corpus_or_ast_tooling`.
+- Tests cover recovered, math-only, and blocked outcomes using synthetic
+  fixtures rather than hard-coding a real-corpus success string.
+
 ## Scenarios
 
 ### SCENARIO-INFRA-052: Version-Blocked Model Raises Error
@@ -458,6 +489,18 @@ when the CI excludes the 0.5 chance floor.
 additive value when the paired delta CI excludes zero.
 
 **Spec traces:** REQ-SPOE-3684
+
+### SCENARIO-SPOE-3695: Code-Native Verdicts Stay Honest
+
+**Given** synthetic code-native verifier fixtures covering
+`code_signal_recovered`, `code_remains_math_only`, and `blocked`
+**When** the Exp 3695 artifact is assembled
+**Then** it returns the corresponding terminal verdict, preserves
+`code_signal_recovered` as a bare bool, reports the AUROC CI separately from the
+point estimate, and only counts signal when the CI excludes the 0.5 chance
+floor and calibration improves.
+
+**Spec traces:** REQ-SPOE-3695
 
 ### REQ-SAMPLE-020: SparseIsingEBM K-Regular Graph
 
