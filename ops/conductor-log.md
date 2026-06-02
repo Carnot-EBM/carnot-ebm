@@ -7568,3 +7568,4 @@ web search: https://docs.garak.ai/garak/examples/pr |
 | 2026-06-02 02:41 UTC | Plan next milestone | FAIL | Gemini CLI error: Wall-clock+idle timeout after 1201s (1201s silence). Last ou |
 | 2026-06-02 03:13 UTC | Plan milestone 2026.06.338 | OK | 12 tasks proposed |
 | 2026-06-02 03:15 UTC | Milestone 2026.06.338 activated | OK | 12 tasks queued |
+| 2026-06-02 03:30 UTC | Archive milestone .337 honestly (dependency-aware  | OK | 86 passed in 4.01s |
