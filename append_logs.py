@@ -1,19 +1,32 @@
 import datetime
 
-# Append to changelog
-with open('ops/changelog.md', 'a') as f:
-    f.write('\n## Session: 2026-06-01 Milestone 2026.06.331 Operational Retrospective\n\n### Summary\nWrote operational retro for 2026.06.331. Found no experiment commits; 0 experiments and 0 compute-bound tasks completed. Identified stranded 4MB allocations on both idle GPUs.\n')
+changelog_entry = """
+## 2026-06-02 (Milestone 2026.06.337 Operational Retrospective - Agent Update)
 
-# Append to research-log
-with open('docs/research-log.md', 'a') as f:
-    f.write('\n### Milestone 2026.06.331\n')
-    f.write('- exp_range: N/A\n')
-    f.write('- theme: Operational Retrospective / Zero-Execution\n')
-    f.write('- key result: No experiments were completed or committed during this milestone.\n')
-    f.write('- acceptance: 0/0 criteria met\n')
+- [outer-loop] Completed operational retrospective for milestone 2026.06.337. The authoritative timing source reports no experiment commits since activation, leaving total_wall_time_minutes=0 and experiments_completed=0. Both GPUs were idle, but no bottleneck was flagged because there were 0 compute-bound tasks. Recommended tooling change: investigate why no experiments were triggered.
+"""
 
-# Append to metrics
-end_time = datetime.datetime.utcnow().strftime("%Y-%m-%dT%H:%M:%SZ")
-with open('ops/metrics.md', 'a') as f:
-    f.write(f'| 1 | 2026-06-01T03:18:20Z | {end_time} | Wrote operational retro for 2026.06.331 | ~5k |\n')
+with open("ops/changelog.md", "r") as f:
+    content = f.read()
 
+# Insert at the top of the changelog after the header if possible
+if "# Carnot — Changelog" in content:
+    content = content.replace("# Carnot — Changelog\n", "# Carnot — Changelog\n" + changelog_entry)
+else:
+    content = changelog_entry + "\n" + content
+
+with open("ops/changelog.md", "w") as f:
+    f.write(content)
+
+research_log_entry = """
+### Milestone 2026.06.337
+- exp_range: no experiments found
+- theme: Operational Retrospective
+- key result: Honest negative — no experiment commits found since activation of 2026.06.337.
+- acceptance: 0/0 criteria met
+"""
+
+with open("docs/research-log.md", "a") as f:
+    f.write("\n" + research_log_entry + "\n")
+
+print("Logs appended.")
