@@ -1,0 +1,129 @@
+{
+  "adversarial_verify_clean": true,
+  "adversarial_verify_report": {
+    "critical_flag_count": 0,
+    "flag_count": 0,
+    "flags": []
+  },
+  "cited_upstream_artifacts": [
+    {
+      "experiment_id": 3727,
+      "fields_imported": [
+        "honest_verdict",
+        "flop_model_description",
+        "matched_compute_report.ebt_total_flops",
+        "matched_compute_report.ar_total_flops",
+        "matched_compute_report.budget_match.ar_best_of_m",
+        "matched_compute_report.budget_match.target_total_flops",
+        "matched_compute_report.budget_match.within_tolerance",
+        "random_seed",
+        "reproducibility_checksum",
+        "duration_s"
+      ],
+      "sha256": "48c65681d7fc3ad52f6d86603e1bb6067d56bb3562e4f2a10158e80bf60972cc"
+    },
+    {
+      "experiment_id": 3729,
+      "fields_imported": [
+        "honest_verdict",
+        "ebt_trained_stably",
+        "green_light_342",
+        "kill_gate_conclusion",
+        "reproducibility_checksum"
+      ],
+      "sha256": "80964239741cb3b74580c4be923c4e3d2ef93ffd6e0bfa66f004351841f79112"
+    },
+    {
+      "experiment_id": 3734,
+      "fields_imported": [
+        "honest_verdict",
+        "harness_fix_applied",
+        "cumulative_steps_trained",
+        "ebt_loss_curve",
+        "ar_loss_curve",
+        "nan_or_divergence_events",
+        "stabilizers_applied",
+        "peak_vram_mb",
+        "preconditions_checked.cuda",
+        "preconditions_checked.ebt_vendored",
+        "preconditions_checked.corpus_ok",
+        "random_seed",
+        "reproducibility_checksum",
+        "duration_s"
+      ],
+      "sha256": "cb78306f5fef1403154a74bb7612ca4b54014cc84889abd8675df2026de2ed7e"
+    },
+    {
+      "experiment_id": 3735,
+      "fields_imported": [
+        "honest_verdict",
+        "cumulative_steps_trained",
+        "ebt_loss_curve",
+        "ar_loss_curve",
+        "ebt_converged",
+        "nan_or_divergence_events",
+        "stabilizers_applied",
+        "peak_vram_mb",
+        "preconditions_checked.cuda",
+        "preconditions_checked.ebt_vendored",
+        "preconditions_checked.checkpoint_present",
+        "random_seed",
+        "reproducibility_checksum",
+        "duration_s"
+      ],
+      "sha256": "69c6c9e7867d7bf13a79b278ed0ed1d5575015f32f8e80afab4ba7a7ceb4a9e3"
+    }
+  ],
+  "duration_s": 0.0001,
+  "ebt_trained_stably": false,
+  "experiment": 3736,
+  "field_principles": {
+    "cited_upstream_artifacts": "Provenance: makes the verdict traceable to the real training run (anti-fabrication audit trail).",
+    "duration_s": "Wall-clock plausibility floor.",
+    "ebt_trained_stably": "The kill-gate part-(a) boolean over the GENUINE run -- the single most load-bearing field of the milestone.",
+    "green_light_342": "BARE bool. Gates whether the matched-compute comparison runs.",
+    "honest_verdict": "Terminal prefix stating the GENUINE kill-gate outcome (stable->green-light / diverged->bounded / not-run->untested).",
+    "inference_substrate": "A verdict over the real-run diagnostics, no live model.",
+    "kill_gate_conclusion": "Honest one-paragraph conclusion (green-light / genuinely-bounded-with-evidence / untested) so the record is self-explanatory and does not repeat the false-negative.",
+    "random_seed": "Determinism precondition.",
+    "reproducibility_checksum": "Content hash catches drift.",
+    "supersedes_exp3729": "Explicitly records that this verdict replaces exp3729's infra-false-negative as the authoritative part-(a) result.",
+    "training_actually_ran": "True iff cumulative_steps_trained>0 -- distinguishes a real stability result from the exp3729 infra-block false-negative."
+  },
+  "green_light_342": false,
+  "honest_verdict": "complete: real_kill_gate_part_a_untested_training_did_not_complete",
+  "inference_substrate": "aggregation_from_upstream_artifacts (principle: a verdict over the real-run diagnostics, no live model).",
+  "kill_gate_conclusion": "UNTESTED: training did not complete -- part-(a) remains untested, not bounded. Recorded cumulative_steps_trained=2 with source verdicts={'3734': 'complete: harness_fixed_ebt_train_chunk_2_steps_stable_so_far_loss_converging_no_nan_ar_baseline_co_trained_checkpointed', '3735': 'blocked_cuda'}; rerun the bounded training before green-lighting the matched-compute part-(b) comparison.",
+  "random_seed": 3736,
+  "real_run_diagnostics": {
+    "bounded_run_completed": false,
+    "cumulative_steps_by_experiment": {
+      "3734": 2,
+      "3735": 0
+    },
+    "cumulative_steps_trained": 2,
+    "ebt_converged_flag": false,
+    "finite_ebt_loss_curve": [
+      0.9902918338775635,
+      1.141614317893982
+    ],
+    "genuine_divergence": false,
+    "gradient_norms_bounded": false,
+    "missing_or_blocked_artifacts": [
+      3735
+    ],
+    "no_nan_inf_or_divergence": true,
+    "non_runaway_convergence": false,
+    "selected_loss_curve_source": 3734,
+    "source_verdicts": {
+      "3734": "complete: harness_fixed_ebt_train_chunk_2_steps_stable_so_far_loss_converging_no_nan_ar_baseline_co_trained_checkpointed",
+      "3735": "blocked_cuda"
+    },
+    "training_actually_ran": true
+  },
+  "recommended_part_b_setup": "Do not run part-(b) until part-(a) completes; when it does, use results/experiment_3734_checkpoint.pt and 10000 FLOPs from Exp 3727's harness.",
+  "reproducibility_checksum": "bcc0644c6d432770219288baa04c89b52fdd614b85f7a82b45b30cf72caa4aed",
+  "schema": "carnot.experiment_3736_real_kill_gate_part_a_verdict.v1",
+  "supersedes_exp3729": true,
+  "training_actually_ran": true
+}
