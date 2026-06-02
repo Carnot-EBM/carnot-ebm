@@ -2081,3 +2081,36 @@ corpus, when the Exp 3658 workflow builds its artifact, then the terminal
 class fractions, `code_generalization_replicates` remains a bare top-level
 boolean, and AUROC fields include deterministic confidence intervals whenever
 the corpus is accepted.
+
+### REQ-CODE-3705: Code-Native Leak Audit And Held-Out Replication
+
+The repository shall provide an offline Exp 3705 workflow that audits the
+Exp 3695 code-native AUROC=1.0 result before the code signal may remain a
+shipped headline:
+- The workflow must reproduce or read the Exp 3695 in-corpus code-native AUROC
+  and record why the number is suspicious, including separability,
+  train/holdout contamination, and label-correlated metadata or feature checks.
+- The workflow must score a held-out code corpus that is distinct from the
+  Exp 3658 tuned corpus, using AST and execution-trace features rather than a
+  label proxy or constant score.
+- The artifact must report held-out AUROC, CI, calibration Brier/ECE,
+  recall-at-fixed-FPR, five bootstrap seeds, held-out sample size, and a
+  reproducibility checksum.
+- The top-level `leak_detected` and `code_signal_survives_heldout` fields must
+  be bare booleans. `code_signal_survives_heldout` must be false whenever
+  held-out AUROC is at least 0.99, even if the CI excludes chance.
+- Cached-corpus-only runs must set `inference_substrate` exactly to
+  `verifier_ensemble_against_cached_candidates` and must not include live GGUF
+  markers. Live generation is out of scope unless a mandated cached GGUF and
+  CUDA precondition are both satisfied.
+
+### SCENARIO-CODE-3705: Leak Audit Verdicts Cover Survives, Leak, And Blocked
+
+Given synthetic Exp 3705 fixtures covering a genuine held-out signal, a
+label-correlated or implausibly perfect leak case, and a missing held-out
+corpus, when the workflow builds the artifact, then the terminal
+`honest_verdict` matches the honest fixture state, required AUROC/CI/audit
+fields are present, `leak_detected` and `code_signal_survives_heldout` remain
+bare booleans, and the acceptance gate passes only when the suspicious
+in-corpus result is explained and the held-out metric plus leak audit are
+recorded.
