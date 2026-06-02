@@ -7608,3 +7608,4 @@ web search: https://docs.garak.ai/garak/examples/pr |
 | 2026-06-02 17:37 UTC | Capstone v340 + G1-G4 gate synthesis — was the fla | OK | 85 passed in 4.76s |
 | 2026-06-02 17:39 UTC | Milestone 2026.06.341 activated | OK | 8 tasks queued |
 | 2026-06-02 17:54 UTC | Archive milestone .340 honestly (convergence-harde | OK | 104 passed in 4.70s |
+| 2026-06-02 18:00 UTC | Fork + vendor alexiglad/EBT (Apache-2.0, PINNED co | OK | 82 passed in 5.54s |
