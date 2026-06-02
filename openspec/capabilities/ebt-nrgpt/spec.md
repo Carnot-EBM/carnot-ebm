@@ -84,3 +84,8 @@ The system must vendor the minimal upstream EBT energy function and inference pa
 ## SCENARIO-EBT-3725: EBT Upstream Smoke Test
 Given the vendored subset of the EBT repository, the CPU smoke test runs a forward pass over a random tensor representing an embedding sequence, returning a finite scalar energy value.
 
+## REQ-EBT-3726: Tiny EBT GSM8K CUDA Train-Step Smoke
+The system must build a small structured-reasoning training corpus from GSM8K train examples, configure a tiny from-scratch vendored EBT in the 10M-50M parameter band, and run real CUDA training steps that record finite decreasing losses, peak VRAM, corpus size, parameter count, reproducibility metadata, and precondition evidence.
+
+## SCENARIO-EBT-3726: Single-GPU Tiny EBT Bring-Up Artifact
+Given CUDA, the vendored EBT import path, and GSM8K dataset availability, the experiment script tokenizes a bounded GSM8K train subset, trains the tiny EBT for a handful of real optimizer steps on cuda:0 with heartbeat output, and writes `results/experiment_3726_tiny_ebt_corpus_and_train_step_smoke.json` with a terminal `complete:` verdict when the loss is finite and decreases.
