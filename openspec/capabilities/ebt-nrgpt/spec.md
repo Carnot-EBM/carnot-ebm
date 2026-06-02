@@ -123,6 +123,21 @@ Given Exp 3734 or Exp 3735 is absent, blocked, incomplete, or missing the diagno
 ## SCENARIO-EBT-3736-DIVERGED: Genuine Divergence Produces Honest Negative
 Given the real Exp 3734/3735 run trained for nonzero steps and records NaN/inf/divergence, exploding gradients, or runaway collapse to unbounded negative energy within the bounded budget, the Exp 3736 verdict writes `ebt_trained_stably=false`, `green_light_342=false`, `training_actually_ran=true`, and an honest conclusion that energy-as-generator is bounded at small scale on this corpus and budget.
 
+## REQ-EBT-3739: Thesis-A Kill-Gate Part-B Verdict
+The system must provide `scripts/experiment_3739_kill_gate_part_b_verdict.py` to aggregate the Exp 3738 matched-compute heldout comparison and the Exp 3736 part-(a) green-light from checked-in artifacts only. The verdict must use the aggregation-only inference substrate, avoid live-model markers, cite upstream artifact fields with SHA256 hashes, run adversarial verification with no critical flag, and write `results/experiment_3739_kill_gate_part_b_verdict.json`. The artifact must set `ebt_beats_ar_at_matched_compute=true` only when `accuracy_delta>0`, FLOPs were matched within tolerance, and `n_heldout>=100`; it must otherwise distinguish an honest bounded negative from a compute-confounded invalid comparison and from a not-run fallback.
+
+## SCENARIO-EBT-3739-WIN: Equal-Compute EBT Win Recommends Bounded Scale-Up
+Given Exp 3736 green-lights part-(b) and Exp 3738 reports `accuracy_delta>0`, `flops_matched_within_tolerance=true`, and `n_heldout>=100`, the Exp 3739 verdict writes `thesis_a_outcome=ebt_beats_ar_at_matched_compute`, `ebt_beats_ar_at_matched_compute=true`, carries the cited delta and FLOP-match status, and recommends one bounded scale-up step rather than an open-ended scale commitment.
+
+## SCENARIO-EBT-3739-BOUNDED: Matched-FLOP Non-Win Records Honest Negative
+Given Exp 3736 green-lights part-(b) and Exp 3738 reports matched FLOPs but `accuracy_delta<=0`, the Exp 3739 verdict writes `thesis_a_outcome=bounded_at_small_scale`, `ebt_beats_ar_at_matched_compute=false`, records that energy-as-generator does not beat AR at equal compute at this scale, and recommends either one bounded 2x-training attempt when the upstream comparison reports a narrowing gap or retirement at small scale when the gap is flat or negative.
+
+## SCENARIO-EBT-3739-INVALID: FLOP Mismatch Blocks Winner Claims
+Given Exp 3738 reports that FLOPs were not matched within tolerance, the Exp 3739 verdict writes `thesis_a_outcome=comparison_invalid`, `ebt_beats_ar_at_matched_compute=false`, preserves the cited delta without calling a winner, and recommends re-running Exp 3738 with tighter matched-compute accounting.
+
+## SCENARIO-EBT-3739-NOT-RUN: Missing Or Blocked Part-B Is Not A Negative
+Given Exp 3736 does not green-light part-(b), Exp 3738 is absent, or Exp 3738 is blocked before producing a valid heldout comparison, the Exp 3739 verdict writes `thesis_a_outcome=part_b_not_run`, `ebt_beats_ar_at_matched_compute=false`, leaves unavailable metrics null, explains the fallback reason, and never labels the un-run comparison as an honest bounded negative.
+
 ## REQ-EBT-3731: Thesis-A EBT Bring-Up Capstone Aggregation
 The system must provide `scripts/experiment_3731_capstone_v341.py` to aggregate Exp 3724 through Exp 3730 from checked-in JSON artifacts only. The capstone must exclude any upstream artifact carrying `flagged_adversarial=true` from headline aggregation, cite every unflagged upstream artifact with imported fields and SHA256 hashes, preserve the paper-ready and frozen-headline invariants from Exp 3724, carry the kill-gate part-(a) verdict from Exp 3729, and write `results/experiment_3731_capstone_v341.json` with the required principle-annotated fields. The capstone must not claim that energy-as-generator works; `green_light_342=true` only means stable enough to run the matched-compute comparison, while `green_light_342=false` records Thesis-A as bounded at small scale.
 
