@@ -1,0 +1,94 @@
+{
+  "cited_upstream_artifacts": [
+    {
+      "experiment_id": 3725,
+      "fields_imported": [
+        "honest_verdict",
+        "importable",
+        "smoke_energy_value",
+        "upstream_commit_sha",
+        "reproducibility_checksum"
+      ],
+      "sha256": "668f59990b9a716bc4223206c61d948b9852bce97677937b369256975ae07dca"
+    },
+    {
+      "experiment_id": 3726,
+      "fields_imported": [
+        "honest_verdict",
+        "first_step_losses",
+        "loss_finite",
+        "loss_decreased",
+        "ebt_param_count",
+        "peak_vram_mb",
+        "reproducibility_checksum"
+      ],
+      "sha256": "457f07c8772bfc334f2e54da8aef342a98b36311258da44358c2e6d524b2af84"
+    },
+    {
+      "experiment_id": 3728,
+      "fields_imported": [
+        "honest_verdict",
+        "cumulative_steps_trained",
+        "ebt_loss_curve",
+        "ebt_converged",
+        "nan_or_divergence_events",
+        "stabilizers_applied",
+        "peak_vram_mb",
+        "preconditions_checked",
+        "random_seed",
+        "reproducibility_checksum",
+        "duration_s"
+      ],
+      "sha256": "2df80a1ded8ea93ad18eadb338c384cf2b02fb1876dead0f77e3fdd11fc0bbb9"
+    },
+    {
+      "experiment_id": 3727,
+      "fields_imported": [
+        "honest_verdict",
+        "flop_model_description",
+        "matched_compute_report.ebt_total_flops",
+        "matched_compute_report.ar_total_flops",
+        "matched_compute_report.budget_match.ar_best_of_m",
+        "matched_compute_report.budget_match.within_tolerance",
+        "reproducibility_checksum"
+      ],
+      "sha256": "48c65681d7fc3ad52f6d86603e1bb6067d56bb3562e4f2a10158e80bf60972cc"
+    }
+  ],
+  "duration_s": 0.000369453,
+  "ebt_trained_stably": false,
+  "experiment": 3729,
+  "field_principles": {
+    "cited_upstream_artifacts": "Provenance for imported upstream fields.",
+    "duration_s": "Wall-clock plausibility floor.",
+    "ebt_trained_stably": "Kill-gate part-(a) boolean.",
+    "green_light_342": "Controls whether the .342 matched-compute comparison runs.",
+    "honest_verdict": "Terminal prefix stating the kill-gate outcome.",
+    "inference_substrate": "Verdict over upstream diagnostics, no live model.",
+    "kill_gate_conclusion": "One-paragraph scientific conclusion with evidence.",
+    "random_seed": "Determinism precondition.",
+    "reproducibility_checksum": "Content hash catches drift."
+  },
+  "green_light_342": false,
+  "honest_verdict": "complete: kill_gate_part_a_FAIL_energy_as_generator_bounded_at_small_scale_honest_negative_stop",
+  "inference_substrate": "aggregation_from_upstream_artifacts (principle: a verdict over upstream diagnostics, no live model).",
+  "kill_gate_conclusion": "BOUNDED: Exp 3728 does not show stable bounded convergence evidence (verdict=blocked_ebt, steps=0, loss_converged=False, nan_or_divergence_events=False). Energy-as-generator is bounded at small scale on this corpus and budget; stop the .342 matched-compute comparison unless a separately budgeted stabilization recipe is explicitly approved.",
+  "random_seed": 3729,
+  "reproducibility_checksum": "2e69e89992f231bc477b7a8772c6f3d0e38ff0c2ff2dcf699f1d35ca1f011c62",
+  "schema": "carnot.experiment_3729_stability_kill_gate_verdict.v1",
+  "stability_diagnostics": {
+    "bounded_steps_present": false,
+    "checkpoint_path": null,
+    "cumulative_steps_trained": 0,
+    "ebt_converged": false,
+    "ebt_loss_curve": [],
+    "ebt_trained_stably": false,
+    "gradient_norms_bounded": false,
+    "loss_converged": false,
+    "nan_or_divergence_events": false,
+    "peak_vram_mb": 0,
+    "source_honest_verdict": "blocked_ebt",
+    "stabilizers_applied": "none",
+    "terminal_complete": false
+  }
+}
