@@ -1,0 +1,211 @@
+{
+  "acceptance_gate": {
+    "condition": "provenance_rows present AND n_numbers_audited present AND all_numbers_trace_to_clean_artifacts present AND adversarial_verify_clean == true AND north_star_unmodified_assert == true",
+    "passed": true,
+    "principle": "A trustworthy G4 audit traces every number to a clean primary artifact, is itself adversarial-clean, and leaves the operator-curated north-star untouched."
+  },
+  "adversarial_verify_clean": true,
+  "all_numbers_trace_to_clean_artifacts": true,
+  "any_cited_source_flagged": false,
+  "artifact": "experiment_3717_g4_full_provenance_audit",
+  "duration_s": 0.002579,
+  "field_principles": {
+    "adversarial_verify_clean": "True iff THIS audit artifact passes adversarial_verify with no critical flag.",
+    "all_numbers_trace_to_clean_artifacts": "BARE bool. True iff every audited number traces to a primary artifact with seed + checksum AND a clean adversarial re-check. STORE AS BARE true/false.",
+    "any_cited_source_flagged": "BARE bool. True iff any cited primary artifact carries flagged_adversarial (the exp3704 lesson) -> an operator corrigendum item. STORE AS BARE true/false.",
+    "duration_s": "Plausibility floor.",
+    "g4_status": "fully_traced / gap_found -- the hardened G4 verdict.",
+    "honest_verdict": "Terminal prefix for reconciler classification.",
+    "inference_substrate": "aggregation_from_upstream_artifacts (principle: reads north-star + primary artifacts; no live inference; no compute-bound marker).",
+    "n_numbers_audited": "How many headline + north-star numbers were traced (sample-size of the audit).",
+    "north_star_unmodified_assert": "Asserts ops/north-star.md was NOT edited (operator-curated).",
+    "operator_action_items": "Any flagged-source corrigenda or missing-seed/checksum gaps for OPERATOR action (read-only audit; no auto-fix).",
+    "provenance_rows": "Per-number {headline_number, value, primary_artifact, has_seed, has_checksum, adversarial_clean} -- the end-to-end G4 trace.",
+    "random_seed": "Determinism precondition.",
+    "reproducibility_checksum": "Drift detection."
+  },
+  "g4_status": "fully_traced",
+  "honest_verdict": "complete: g4_fully_traced_every_headline_number_to_clean_primary_artifact",
+  "inference_substrate": "aggregation_from_upstream_artifacts (principle: reads north-star + primary artifacts; no live inference; no compute-bound marker).",
+  "n_numbers_audited": 7,
+  "north_star_unmodified_assert": true,
+  "operator_action_items": [],
+  "provenance_rows": [
+    {
+      "adversarial_clean": true,
+      "artifact_field_path": "condition_a_production_auroc_mean",
+      "artifact_value": 0.9131335999999999,
+      "flagged_adversarial_stamped": false,
+      "has_checksum": true,
+      "has_seed": true,
+      "headline_number": "FoVer AUROC",
+      "live_adversarial_verify_report": {
+        "artifact": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_2850_fover_dual_condition_integrity_v4.json",
+        "exp_id": null,
+        "flag_count": 0,
+        "flags": [],
+        "honest_verdict": "complete: FoVer dual-condition integrity rerun measured dataset-only production-",
+        "loaded": true,
+        "max_severity": -1,
+        "title": ""
+      },
+      "primary_artifact": "results/experiment_2850_fover_dual_condition_integrity_v4.json",
+      "value": 0.9131,
+      "value_matches_artifact": true
+    },
+    {
+      "adversarial_clean": true,
+      "artifact_field_path": "condition_a_production_auroc_ci95.low",
+      "artifact_value": 0.9027316334533082,
+      "flagged_adversarial_stamped": false,
+      "has_checksum": true,
+      "has_seed": true,
+      "headline_number": "FoVer CI95 low",
+      "live_adversarial_verify_report": {
+        "artifact": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_2837_fover_memory_leakage_v3.json",
+        "exp_id": null,
+        "flag_count": 0,
+        "flags": [],
+        "honest_verdict": "complete: FoVer memory-leakage v3 measured with production state and architectur",
+        "loaded": true,
+        "max_severity": -1,
+        "title": ""
+      },
+      "primary_artifact": "results/experiment_2837_fover_memory_leakage_v3.json",
+      "value": 0.9027,
+      "value_matches_artifact": true
+    },
+    {
+      "adversarial_clean": true,
+      "artifact_field_path": "condition_a_production_auroc_ci95.high",
+      "artifact_value": 0.9235355665466916,
+      "flagged_adversarial_stamped": false,
+      "has_checksum": true,
+      "has_seed": true,
+      "headline_number": "FoVer CI95 high",
+      "live_adversarial_verify_report": {
+        "artifact": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_2837_fover_memory_leakage_v3.json",
+        "exp_id": null,
+        "flag_count": 0,
+        "flags": [],
+        "honest_verdict": "complete: FoVer memory-leakage v3 measured with production state and architectur",
+        "loaded": true,
+        "max_severity": -1,
+        "title": ""
+      },
+      "primary_artifact": "results/experiment_2837_fover_memory_leakage_v3.json",
+      "value": 0.9235,
+      "value_matches_artifact": true
+    },
+    {
+      "adversarial_clean": true,
+      "artifact_field_path": "learning_contribution_ci95.mean",
+      "artifact_value": 0.0184712,
+      "flagged_adversarial_stamped": false,
+      "has_checksum": true,
+      "has_seed": true,
+      "headline_number": "FR-11 AUROC contribution",
+      "live_adversarial_verify_report": {
+        "artifact": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_2837_fover_memory_leakage_v3.json",
+        "exp_id": null,
+        "flag_count": 0,
+        "flags": [],
+        "honest_verdict": "complete: FoVer memory-leakage v3 measured with production state and architectur",
+        "loaded": true,
+        "max_severity": -1,
+        "title": ""
+      },
+      "primary_artifact": "results/experiment_2837_fover_memory_leakage_v3.json",
+      "value": 0.0185,
+      "value_matches_artifact": true
+    },
+    {
+      "adversarial_clean": true,
+      "artifact_field_path": "learning_contribution_ci95.low",
+      "artifact_value": 0.012461560295861967,
+      "flagged_adversarial_stamped": false,
+      "has_checksum": true,
+      "has_seed": true,
+      "headline_number": "FR-11 contribution CI95 low",
+      "live_adversarial_verify_report": {
+        "artifact": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_2837_fover_memory_leakage_v3.json",
+        "exp_id": null,
+        "flag_count": 0,
+        "flags": [],
+        "honest_verdict": "complete: FoVer memory-leakage v3 measured with production state and architectur",
+        "loaded": true,
+        "max_severity": -1,
+        "title": ""
+      },
+      "primary_artifact": "results/experiment_2837_fover_memory_leakage_v3.json",
+      "value": 0.0125,
+      "value_matches_artifact": true
+    },
+    {
+      "adversarial_clean": true,
+      "artifact_field_path": "learning_contribution_ci95.high",
+      "artifact_value": 0.024480839704138033,
+      "flagged_adversarial_stamped": false,
+      "has_checksum": true,
+      "has_seed": true,
+      "headline_number": "FR-11 contribution CI95 high",
+      "live_adversarial_verify_report": {
+        "artifact": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_2837_fover_memory_leakage_v3.json",
+        "exp_id": null,
+        "flag_count": 0,
+        "flags": [],
+        "honest_verdict": "complete: FoVer memory-leakage v3 measured with production state and architectur",
+        "loaded": true,
+        "max_severity": -1,
+        "title": ""
+      },
+      "primary_artifact": "results/experiment_2837_fover_memory_leakage_v3.json",
+      "value": 0.0245,
+      "value_matches_artifact": true
+    },
+    {
+      "adversarial_clean": true,
+      "artifact_field_path": [
+        "math_operating_point.auroc",
+        "math_operating_point.calibration.ece"
+      ],
+      "artifact_value": {
+        "auroc": 0.979656,
+        "ece": 0.008158
+      },
+      "flagged_adversarial_stamped": false,
+      "has_checksum": true,
+      "has_seed": true,
+      "headline_number": "shipped detector math operating point AUROC and ECE",
+      "live_adversarial_verify_report": {
+        "artifact": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_3706_reconcile_shipped_detector_heldout.json",
+        "exp_id": null,
+        "flag_count": 0,
+        "flags": [],
+        "honest_verdict": "complete: shipped_detector_narrowed_to_math_only_abstain_on_code_e2e_green",
+        "loaded": true,
+        "max_severity": -1,
+        "title": ""
+      },
+      "primary_artifact": "results/experiment_3706_reconcile_shipped_detector_heldout.json",
+      "value": {
+        "auroc": 0.98,
+        "ece": 0.009
+      },
+      "value_matches_artifact": true
+    }
+  ],
+  "random_seed": 3717,
+  "reproducibility_checksum": "a5655f11ffc2a501fdb0c4e1c1bc9e8e36f4dd5a6fa859bb7eb7cc010e12fb09",
+  "schema": "carnot.g4_full_provenance_audit.v1",
+  "self_adversarial_verify_report": {
+    "artifact": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_3717_g4_full_provenance_audit.json",
+    "exp_id": null,
+    "flag_count": 0,
+    "flags": [],
+    "honest_verdict": "complete: g4_fully_traced_every_headline_number_to_clean_primary_artifact",
+    "loaded": true,
+    "max_severity": -1,
+    "title": ""
+  }
+}

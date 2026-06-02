@@ -24,26 +24,47 @@ dozen milestones. Pick ONE to seed (or use this as input to a Deep Think round).
 
 ---
 
-## Thesis A — Energy as the GENERATOR (EBT-as-base)  ·  *most direct*
+## Thesis A — Energy as the GENERATOR (EBT-as-base)  ·  *SELECTED 2026-06-02; most direct*
 
 - **Core claim:** A small Energy-Based Transformer whose inference *is* iterative
   energy descent over the output (not left-to-right AR tokens, not reranking) can
-  match autoregressive generation at equal params + compute on one structured
-  reasoning task. arXiv:2507.02092 (EBT) + 2512.15605 (ARM-EBM bijection).
+  match or beat autoregressive generation **at equal inference COMPUTE** on one
+  structured reasoning task.
+- **Primary anchor (operator-pointed 2026-06-02):** Gladstone, …, **Yilun Du, Heng
+  Ji** et al., *"Energy-Based Transformers are Scalable Learners and Thinkers"*
+  (arXiv:2507.02092). Public PyTorch code: **github.com/alexiglad/EBT**. Their
+  published claims ARE this thesis: inference = gradient-descent energy
+  minimization to convergence; up to **35% higher scaling rate** than Transformer++
+  across data/batch/params/FLOPs/depth; **+29% System-2 "thinking"** on language;
+  trained **unsupervised, no verifier** (so it does NOT inherit the
+  verifier-domain-bound ceiling). Secondary anchor: 2512.15605 (ARM-EBM bijection).
 - **Why it sidesteps the bound:** P0.1 disproved energy *selecting among AR
   samples*. This tests energy as the *generative process itself* — the selection
-  bound (SC near-optimal) cannot apply because nothing is being selected.
-- **Smallest decisive test:** train a tiny EBT (~10–50M params) and a matched tiny
-  AR transformer on ONE task (GSM8K-style arithmetic, or a synthetic multi-step
-  logic corpus). Equal params, equal training budget. Measure held-out accuracy of
-  energy-descent generation vs AR generation.
-- **KILL-GATE:** if (a) the tiny EBT cannot be trained to *stably converge* within
-  a bounded budget (≤ a few GPU-days on the 3090 rig), OR (b) it underperforms the
-  matched AR baseline by a clear margin AND the gap does not narrow with 2× compute
-  → the energy-as-generator route is dead at small scale. STOP; do not scale.
-- **Cost:** training-HEAVY (real from-scratch training). **Risk:** EBT training is
-  known to be finicky/unstable — which is itself the most likely failure mode, and
-  the test surfaces it cheaply.
+  bound (SC near-optimal) cannot apply because nothing is being selected. EBT also
+  needs no verifier, so the math-only verifier ceiling does not transfer.
+- **Smallest decisive test:** fork `alexiglad/EBT`, shrink to a tiny EBT (~10–50M
+  params), and train it + a matched tiny AR transformer on ONE task (GSM8K-style
+  arithmetic or a synthetic multi-step logic corpus). Measure held-out reasoning
+  accuracy of energy-descent generation vs AR generation.
+- **CRITICAL — matched-COMPUTE, not matched-params (the P0.1 lesson):** energy
+  descent runs N forward passes per prediction, so a "matched-params" win can be
+  pure extra inference FLOPs — the same trap P0.1 fell into (more compute ≠ better
+  mechanism). The comparison MUST give the AR baseline an equal total-inference-FLOP
+  budget (best-of-N / longer sampling). A win counts ONLY if EBT beats AR at equal
+  total inference compute.
+- **KILL-GATE:** if (a) the tiny EBT cannot be trained to *stably converge* within a
+  bounded budget (≤ a few GPU-days on the 3090 rig), OR (b) at **equal inference
+  compute** it does not beat the matched AR baseline AND the gap does not narrow
+  with 2× training → the energy-as-generator route is dead at small scale. STOP; do
+  not scale.
+- **Honest caveat:** EBT's *published* wins are on LM perplexity/scaling + image
+  denoising, NOT structured-reasoning accuracy; the System-2 headline is the
+  contested part precisely because of the compute-accounting issue above. Our test
+  is therefore a genuine new measurement (reasoning accuracy at matched compute),
+  not a reproduction.
+- **Cost:** training-HEAVY (real training, but fork-not-reimplement). **Risk:** EBT
+  training is known finicky/unstable — itself the most likely failure mode, and the
+  test surfaces it cheaply at tiny scale.
 
 ## Thesis B — Non-autoregressive global inference (discrete diffusion)  ·  *medium*
 
