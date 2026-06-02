@@ -7590,3 +7590,4 @@ web search: https://docs.garak.ai/garak/examples/pr |
 | 2026-06-02 10:46 UTC | FORMALLY CLOSE the discrimination-vs-selection dia | OK | 85 passed in 4.40s |
 | 2026-06-02 11:05 UTC | FR-11 continuous self-learning v13 — multi-session | OK | 89 passed in 5.35s |
 | 2026-06-02 11:25 UTC | KV260 DRIVE-TO-TERMINAL — the board is SSH-reachab | OK | 92 passed in 4.46s |
+| 2026-06-02 12:31 UTC | PolarFire opportunistic reachability + continuity  | OK | 89 passed in 4.53s |
