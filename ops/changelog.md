@@ -8197,3 +8197,44 @@ Did NOT modify research-roadmap.yaml or scripts/research_conductor.py. Did NOT p
 - 2026-06-02: PolarFire opportunistic reachability + continuity audit (per Hardware-Task Continuity) (✅ Complete) — honest_verdict=complete: polarfire_continuity_confirmed_reachable; results/experiment_3699_polarfire_continuity_v25.json
 - 2026-06-02: GateMate continuity audit (documentation-only — openFPGALoader missing in .331-.337, per known-issues) (✅ Complete) — honest_verdict=complete: gatemate_continuity_audit_recorded_openfpgaloader_state_flash_smoke_host_io_hang_known_blocker; results/experiment_3700_gatemate_continuity_audit_v25.json
 - 2026-06-02: Capstone v338 + G1-G4 gate synthesis — was the operator re-freeze package re-emitted CLEAN? does the dependency-aware candidate beat a published external comparator? was the selection diagnosis run PROPERLY (and is the gap closable)? did a code-native signal recover the code-blind detector? paper_ready must stay TRUE; frozen 0.9131 stays frozen (✅ Complete) — honest_verdict=complete: capstone_v338_refreeze_reemitted_clean_for_operator_external_ties_or_loses_selection_not_measured_detector_code_code_native_recovered_reshipped_paper_ready_true_frozen_headline_unchanged; results/experiment_3701_capstone_and_g_gate_v338.json
+
+## 2026-06-02 — Planned milestone 2026.06.339 (outer-loop Claude Opus 4.8)
+
+Triggered by: conductor "Plan next milestone" step (all 12 tasks of .338 completed).
+
+Produced `research-roadmap-next.yaml` (milestone 2026.06.339, 11 tasks exp3702–exp3712) +
+`openspec/change-proposals/research-roadmap-vNEXT.md`. Theme: VALIDATE the two PROVISIONAL .338
+results under full rigor before either can advance the headline, and DISAMBIGUATE the re-freeze.
+
+Grounded in the .338 outcomes (read via summarize_artifact.py):
+- exp3692 re-emitted the operator re-freeze package CLEAN, BUT exp3693 found the PUBLISHED external
+  de-entangled/CIG baseline (0.9287) BEAT Carnot's dependency-aware candidate (0.9249) — verdict
+  ties_or_loses; the re-freeze candidate is AMBIGUOUS.
+- exp3695 code-native verifier returned AUROC=1.0 on n=60 — IMPLAUSIBLE_PERFECT; the shipped detector
+  (exp3696) was already re-wired on it. Provisional until leak-audited + held-out-replicated.
+- exp3694 selection diagnosis BLOCKED a 2nd time (no multi-candidate corpus); energy-selection is
+  settled-bounded (project memory + exp3672).
+- KV260 SSH-reachable again (exp3698) after 8 unreachable milestones; FR-11 v12 ok; paper_ready TRUE.
+
+.339 tasks: archive/activate; backend diag v5 (keep codex — gemini still crashes real workloads,
+exp3691); DISAMBIGUATE the re-freeze (dependency-aware vs external vs FUSION at G1-rigor, re-emit clean
+package for the winner); leak-audit + HELD-OUT replication of the code-native AUROC=1.0 (TraceCoder
+arXiv:2602.06875 + held-out corpus arXiv:2605.11006 + contamination audit arXiv:2603.21454/2502.00678);
+reconcile the SHIPPED detector with the audit (runs unconditionally — recalibrate-to-held-out or
+narrow-to-math-only-abstain); FORMALLY CLOSE the twice-blocked selection diagnosis (recommend
+retirement, doc-only); FR-11 v13 multi-session Tier-2 consolidation; KV260 DRIVE-TO-TERMINAL board
+latency transcript (now reachable; POC anchor, no speedup claim); PolarFire/GateMate continuity;
+capstone v339.
+
+Disciplines: all tasks codex+requires_codex (anti-wipeout); inference-substrate hygiene (NO GGUF/CUDA
+markers on aggregation/scoring tasks); anti-poison test clauses; NO gated_on fields (exp3706 runs
+unconditionally with a disk-presence precondition — no None-read cascade); operator_override on all
+scope-matched legit continuations. Adversarial sub-agent review: no BLOCKERs; applied 2 SHOULD-FIX
+items to exp3705 (target the real n=60 separability trigger, not the n>=1000 framing; hard-assert
+code_signal_survives_heldout=false on held-out AUROC>=0.99). Validated: YAML parses, milestone ==
+_expected_next_milestone('2026.06.338') = 2026.06.339, exclusion-manifest lint = 6 WARNINGs (all
+operator_override, activation proceeds), no HARD violations. Added 8 new references to
+research-references.md (.339 planning sweep: arXiv:2602.06875, 2512.13821, 2601.19106, 2605.11006,
+2603.21454, 2502.00678, 2502.20379, 2604.07650).
+
+Did NOT modify research-roadmap.yaml or scripts/research_conductor.py. Did NOT push.
