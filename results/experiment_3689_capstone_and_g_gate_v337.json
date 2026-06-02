@@ -322,5 +322,18 @@
   ],
   "trained_judge_ood_retired": true,
   "unmet_gates": [],
-  "verifier_value_scope": "math_plus_code_discrimination_facts_retired_selection_not_measured"
+  "verifier_value_scope": "math_plus_code_discrimination_facts_retired_selection_not_measured",
+  "flagged_adversarial": true,
+  "corrigendum_pending": [
+    {
+      "kind": "DURATION_TOO_SHORT",
+      "severity": "critical",
+      "detail": "duration_s=0.321147 but artifact references compute-bound markers (GGUF / CUDA / live model). Loading and running a real model takes >=60.0s minimum; this completed too fast to have invoked the model."
+    },
+    {
+      "kind": "METHODOLOGY_MISSING",
+      "severity": "warn",
+      "detail": "Compute-bound artifact missing: model_specs/target_model. Methodology unverifiable."
+    }
+  ]
 }
