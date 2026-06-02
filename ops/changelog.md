@@ -8297,3 +8297,4 @@ retired exp1462; exp3721 '/dev/mmcblk' literal removed → exit 0), overdue-prio
 canonical-URL lint clean.
 
 Did NOT modify research-roadmap.yaml or scripts/research_conductor.py. Did NOT push.
+- 2026-06-02: Archive milestone .339 honestly (CONVERGENCE milestone: re-freeze CLOSED-NEGATIVE — no reweighting candidate beats frozen 0.9131 under dual-condition rigor, but exp3704 carries a benign TAUTOLOGY flag; code AUROC=1.0 was a LEAK -> detector narrowed to math-only-with-abstain; selection diagnosis FORMALLY CLOSED; KV260 TERMINAL; FR-11 v13 positive; paper_ready stayed TRUE; frozen 0.9131 unchanged) and activate .340 (⚠️ Research Finding) — honest_verdict=complete: archived_v339_convergence_refreeze_closed_negative_code_leak_narrowed_selection_closed_kv260_terminal_v340_active_paper_ready_true_frozen_headline_unchanged; results/experiment_3713_archive_v339_activate_v340.json
