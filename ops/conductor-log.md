@@ -7576,3 +7576,4 @@ web search: https://docs.garak.ai/garak/examples/pr |
 | 2026-06-02 04:58 UTC | Build a code-NATIVE verifier for the code-blind de | OK | 90 passed in 4.24s |
 | 2026-06-02 05:15 UTC | Re-ship the detector with a math+code operating po | OK | 100 passed in 4.60s |
 | 2026-06-02 05:32 UTC | FR-11 continuous self-learning v12 — drift-RESET p | OK | 87 passed in 4.72s |
+| 2026-06-02 05:44 UTC | KV260 SSH-reachability continuity (UNREACHABLE .33 | OK | 90 passed in 3.92s |
