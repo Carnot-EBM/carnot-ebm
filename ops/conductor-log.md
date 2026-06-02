@@ -7623,3 +7623,4 @@ web search: https://docs.garak.ai/garak/examples/pr |
 | 2026-06-02 21:22 UTC | FIX the exp3728 cwd/import false-negative (robust  | OK | 86 passed in 6.74s |
 | 2026-06-02 21:29 UTC | RESUME bounded checkpointed training (chunk 2): lo | OK | 89 passed in 7.11s |
 | 2026-06-02 21:46 UTC | REAL Thesis-A kill-gate part-(a) VERDICT over the  | OK | 117 passed in 5.36s |
+| 2026-06-02 21:49 UTC | EBT energy-descent GENERATION smoke on held-out GS | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp3736-real-kill-gate-part-a-verdict.gree |
