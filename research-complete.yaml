@@ -34701,56 +34701,151 @@ milestones:
     deliverable: results/experiment_3689_capstone_and_g_gate_v337.json
     result: FLAGGED hygiene; paper_ready true
 - id: 2026.06.338
-  title: "Ambiguous re-freeze candidate, provisional code signal, KV260 reachable"
+  title: Ambiguous re-freeze candidate, provisional code signal, KV260 reachable
   doc: openspec/change-proposals/research-roadmap-vNEXT.md
   completed: '2026-06-02'
-  finding: "REFREEZE CANDIDATE AMBIGUOUS: .338 re-emitted the operator re-freeze package cleanly for the dependency-aware candidate, but the published external baseline 0.9287 beat dependency-aware 0.9249 (exp3693), so the candidate is ambiguous and .339 must disambiguate dependency-aware vs external vs fusion at G1-rigor. The code-native AUROC 1.0 is PROVISIONAL: exp3695 recovered a code signal and exp3696 wired the shipped detector E2E green, but .339 must leak-audit and held-out replicate before treating it as validated. The selection diagnosis blocked a second time due to no multi-candidate corpus; energy-selection is already settled-bounded, so .339 formally closes the question rather than grinding a third diagnosis. KV260 became SSH-reachable again after the outage streak; FR-11 v12 drift-reset and cross-session persistence succeeded; paper_ready stayed TRUE (G1-G4), P0.1 stayed honest-negative, and the frozen FoVer 0.9131 stayed frozen."
+  finding: 'REFREEZE CANDIDATE AMBIGUOUS: .338 re-emitted the operator re-freeze package cleanly for the dependency-aware
+    candidate, but the published external baseline 0.9287 beat dependency-aware 0.9249 (exp3693), so the candidate is ambiguous
+    and .339 must disambiguate dependency-aware vs external vs fusion at G1-rigor. The code-native AUROC 1.0 is PROVISIONAL:
+    exp3695 recovered a code signal and exp3696 wired the shipped detector E2E green, but .339 must leak-audit and held-out
+    replicate before treating it as validated. The selection diagnosis blocked a second time due to no multi-candidate corpus;
+    energy-selection is already settled-bounded, so .339 formally closes the question rather than grinding a third diagnosis.
+    KV260 became SSH-reachable again after the outage streak; FR-11 v12 drift-reset and cross-session persistence succeeded;
+    paper_ready stayed TRUE (G1-G4), P0.1 stayed honest-negative, and the frozen FoVer 0.9131 stayed frozen.'
   tasks:
   - id: exp3690-archive-v337-activate-v338
-    title: "Archive .337 honestly and activate .338"
+    title: Archive .337 honestly and activate .338
     deliverable: results/experiment_3690_archive_v337_activate_v338.json
     result: OK (codex artifact landed)
   - id: exp3691-backend-state-diagnostic-v4
-    title: "Backend-state diagnostic v4"
+    title: Backend-state diagnostic v4
     deliverable: results/experiment_3691_backend_state_diagnostic_v4.json
     result: OK (codex artifact landed)
   - id: exp3692-refreeze-package-clean-reemit
-    title: "Re-emit the headline re-freeze package cleanly"
+    title: Re-emit the headline re-freeze package cleanly
     deliverable: results/experiment_3692_refreeze_package_clean_reemit.json
     result: CLEAN package re-emitted for dependency-aware candidate
   - id: exp3693-external-comparator-dependency-vs-deentangled-reweighting
-    title: "External comparator for the re-freeze candidate"
+    title: External comparator for the re-freeze candidate
     deliverable: results/experiment_3693_external_comparator_dependency_vs_deentangled.json
     result: AMBIGUOUS; disambiguate in .339
   - id: exp3694-selection-gap-proper-rediagnosis
-    title: "Redo the discrimination-vs-selection diagnosis properly"
+    title: Redo the discrimination-vs-selection diagnosis properly
     deliverable: results/experiment_3694_selection_gap_proper_rediagnosis.json
     result: BLOCKED second time; formally close in .339
   - id: exp3695-code-native-verifier-for-blind-detector
-    title: "Build a code-native verifier for the code-blind detector"
+    title: Build a code-native verifier for the code-blind detector
     deliverable: results/experiment_3695_code_native_verifier.json
     result: PROVISIONAL; leak-audit + held-out replicate in .339
   - id: exp3696-reship-detector-math-plus-code
-    title: "Re-ship the detector with a math-plus-code operating point"
+    title: Re-ship the detector with a math-plus-code operating point
     deliverable: results/experiment_3696_reship_detector_math_plus_code.json
     result: E2E green but based on provisional code-native signal
   - id: exp3697-fr11-continuous-self-learning-v12-drift-reset
-    title: "FR-11 v12 drift reset and cross-session persistence"
+    title: FR-11 v12 drift reset and cross-session persistence
     deliverable: results/experiment_3697_fr11_continuous_self_learning_v12.json
     result: OK drift-reset persistence no-collapse
   - id: exp3698-kv260-continuity-v25
-    title: "KV260 SSH-reachability continuity v25"
+    title: KV260 SSH-reachability continuity v25
     deliverable: results/experiment_3698_kv260_continuity_v25.json
     result: REACHABLE again after outage streak
   - id: exp3699-polarfire-continuity-v25
-    title: "PolarFire opportunistic reachability and continuity audit"
+    title: PolarFire opportunistic reachability and continuity audit
     deliverable: results/experiment_3699_polarfire_continuity_v25.json
     result: OK (codex artifact landed)
   - id: exp3700-gatemate-continuity-audit-v25
-    title: "GateMate continuity audit v25"
+    title: GateMate continuity audit v25
     deliverable: results/experiment_3700_gatemate_continuity_audit_v25.json
     result: OK (codex artifact landed)
   - id: exp3701-capstone-and-g-gate-v338
-    title: "Capstone v338 and G1-G4 gate synthesis"
+    title: Capstone v338 and G1-G4 gate synthesis
     deliverable: results/experiment_3701_capstone_and_g_gate_v338.json
     result: paper_ready true; frozen headline unchanged
+- id: 2026.06.339
+  title: "VALIDATE the two PROVISIONAL .338 wins under full rigor before either can advance the headline, and DISAMBIGUATE\
+    \ the re-freeze candidate: (1) the published external reweighting baseline (0.9287, exp3693) BEAT Carnot's dependency-aware\
+    \ candidate (0.9249) \u2014 run dependency-aware vs external vs a FUSION at full G1-rigor and re-emit the operator re-freeze\
+    \ package for the SINGLE strongest candidate; (2) the code-native verifier returned AUROC 1.0 (exp3695) which is IMPLAUSIBLE_PERFECT\
+    \ and the detector was already re-shipped on it (exp3696) \u2014 leak-audit + held-out-replicate the code signal, then\
+    \ reconcile the shipped surface honestly; formally CLOSE the twice-blocked selection diagnosis (energy-selection is settled-bounded);\
+    \ drive the now-reachable KV260 toward its terminal latency transcript; continue FR-11 self-learning. paper_ready MUST\
+    \ stay TRUE (G1-G4); the frozen FoVer headline 0.9131 stays frozen (any candidate is an operator re-freeze CANDIDATE,\
+    \ never a silent swap)."
+  doc: openspec/change-proposals/research-roadmap-vNEXT.md
+  completed: '2026-06-02'
+  finding: See conductor log for per-experiment results.
+  tasks:
+  - id: exp3702-archive-v338-activate-v339
+    title: Archive milestone .338 honestly (re-freeze package re-emitted CLEAN but the external published baseline 0.9287
+      BEAT the dependency-aware candidate 0.9249 -> re-freeze candidate ambiguous; code-native verifier returned AUROC 1.0
+      -> IMPLAUSIBLE_PERFECT, provisional, the shipped detector was re-wired on it; selection diagnosis blocked a 2nd time;
+      KV260 reachable again; FR-11 v12 + persistence succeeded; paper_ready stayed TRUE; frozen 0.9131 unchanged) and activate
+      .339
+    deliverable: results/experiment_3702_archive_v338_activate_v339.json
+    result: OK (conductor)
+  - id: exp3703-backend-state-diagnostic-v5
+    title: "Backend-state diagnostic v5 \u2014 fifth probe of gemini quota/crash stability (exp3653/3666/3679 probed OK but\
+      \ the .337-close planner call crashed on gemini and exp3691 re-confirmed probe-OK-but-real-workload-crash); record probe-vs-real-workload\
+      \ divergence; recommend whether .340 may flip to gemini-default; .339 stays on codex (documentation-only)"
+    deliverable: results/experiment_3703_backend_state_diagnostic_v5.json
+    result: OK (conductor)
+  - id: exp3704-refreeze-disambiguate-dependency-vs-external-vs-fusion
+    title: "DISAMBIGUATE the re-freeze candidate at full G1-rigor \u2014 exp3693 found the published external de-entangled/CIG\
+      \ baseline (0.9287) BEAT the dependency-aware candidate (0.9249). Run dependency-aware vs external vs a FUSION (multi-verifier,\
+      \ arXiv:2502.20379) head-to-head under the FROZEN dual-condition protocol (5-seed, CI, DeLong, adversarial-clean, leak-free),\
+      \ pick the SINGLE strongest candidate > frozen 0.9131, and re-emit the CLEAN operator re-freeze package for THAT winner\
+      \ \u2014 PREPARE-ONLY; the frozen 0.9131 stays frozen, the agent never edits north-star.md or triggers the CI run"
+    deliverable: results/experiment_3704_refreeze_disambiguate_dependency_vs_external_vs_fusion.json
+    result: OK (conductor)
+  - id: exp3705-code-native-leak-audit-and-heldout-replication
+    title: "Adversarial leak-audit + HELD-OUT replication of the code-native verifier \u2014 exp3695 returned code AUROC=1.0,\
+      \ which is IMPLAUSIBLE_PERFECT (the exp1851/exp3397 fabrication pattern + the AUROC>=0.99-is-a-leak rule). Audit for\
+      \ leakage (arXiv:2603.21454 / arXiv:2502.00678), re-measure on a DIFFERENT held-out code corpus (arXiv:2605.11006 /\
+      \ fresh GGUF-generated candidates) with a TraceCoder-style execution-trace signal (arXiv:2602.06875), 5 seeds, larger\
+      \ n. Does the code signal survive HELD-OUT with a CI excluding 0.5 and AUROC < 0.99 (i.e. a real, non-leaked signal),\
+      \ or was the 1.0 a leak/separable-by-construction artifact?"
+    deliverable: results/experiment_3705_code_native_leak_audit_heldout.json
+    result: OK (conductor)
+  - id: exp3706-reconcile-shipped-detector-with-heldout-audit
+    title: "Reconcile the SHIPPED detector's code operating point with the exp3705 held-out audit \u2014 the detector (exp3696)\
+      \ was re-wired on exp3695's AUROC=1.0; if exp3705 shows the code signal survives held-out, recalibrate the shipped code\
+      \ operating point to the HELD-OUT number; if it was a leak, NARROW the shipped detector back to math-only with an explicit\
+      \ abstain-on-code path. Re-run the E2E green. The shipped surface must be honest either way (runs unconditionally)"
+    deliverable: results/experiment_3706_reconcile_shipped_detector_heldout.json
+    result: OK (conductor)
+  - id: exp3707-selection-diagnosis-formal-closure
+    title: "FORMALLY CLOSE the discrimination-vs-selection diagnosis question (recommend retirement, do NOT grind a third\
+      \ attempt) \u2014 exp3672 stands as the earned-negative (ensemble discriminates ~0.93 but selects worse than SC); the\
+      \ diagnosis-of-WHY blocked twice (exp3682 degenerate no-op, exp3694 no multi-candidate corpus); energy-selection is\
+      \ settled-bounded per the project memory + arXiv:2512.23067 (Reward Model Selection Crisis). Record the closure + an\
+      \ operator retirement recommendation; doc/synthesis-only"
+    deliverable: results/experiment_3707_selection_diagnosis_formal_closure.json
+    result: OK (conductor)
+  - id: exp3708-fr11-continuous-self-learning-v13-multi-session-consolidation
+    title: "FR-11 continuous self-learning v13 \u2014 multi-session Tier-2 CONSOLIDATION: accumulate learned dependency structures\
+      \ across N>=3 session boundaries into a bounded reusable template library (forward diff from v12's single-boundary persistence),\
+      \ and validate that a consolidated template transfers to a FRESH session better than cold-start, still collapse-guarded"
+    deliverable: results/experiment_3708_fr11_continuous_self_learning_v13.json
+    result: OK (conductor)
+  - id: exp3709-kv260-drive-to-terminal-latency-transcript
+    title: "KV260 DRIVE-TO-TERMINAL \u2014 the board is SSH-reachable again (exp3698); per north-star sec-3 capture the board-level\
+      \ Ising-sampler LATENCY TRANSCRIPT (the terminal-state artifact) on the on-board carnot_ising overlay. NO speedup claim\
+      \ (Paper-v6 Narrowing #2/#3 \u2014 POC functional latency anchor only, not faster-than-CPU); SSH-reachability precondition\
+      \ only"
+    deliverable: results/experiment_3709_kv260_drive_to_terminal_latency_transcript.json
+    result: OK (conductor)
+  - id: exp3710-polarfire-continuity-v26
+    title: PolarFire opportunistic reachability + continuity audit (per Hardware-Task Continuity; reachable in .338)
+    deliverable: results/experiment_3710_polarfire_continuity_v26.json
+    result: OK (conductor)
+  - id: exp3711-gatemate-continuity-audit-v26
+    title: "GateMate continuity audit (documentation-only \u2014 openFPGALoader missing in .331-.338, per known-issues)"
+    deliverable: results/experiment_3711_gatemate_continuity_audit_v26.json
+    result: OK (conductor)
+  - id: exp3712-capstone-and-g-gate-v339
+    title: "Capstone v339 + G1-G4 gate synthesis \u2014 which single candidate is the strongest re-freeze (dependency-aware\
+      \ vs external vs fusion) and was the clean package re-emitted for it? did the code-native AUROC=1.0 survive the held-out\
+      \ leak-audit (or was it a leak, and was the shipped detector reconciled honestly)? was the selection diagnosis formally\
+      \ closed? did KV260 capture its terminal latency transcript? paper_ready must stay TRUE; frozen 0.9131 stays frozen"
+    deliverable: results/experiment_3712_capstone_and_g_gate_v339.json
+    result: OK (conductor)
