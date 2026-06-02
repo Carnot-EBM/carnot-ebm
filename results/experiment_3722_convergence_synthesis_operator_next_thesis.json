@@ -1,0 +1,193 @@
+{
+  "adversarial_verify_clean": true,
+  "adversarial_verify_report": {
+    "flag_count": 0,
+    "flags": [],
+    "max_severity": -1
+  },
+  "all_self_generable_threads_settled": true,
+  "candidate_next_theses": [
+    {
+      "authority": "results/experiment_3718_risk_coverage_abstention_characterization.json",
+      "operator_action_required": true,
+      "summary": "Scale the positive risk-coverage result into a calibrated abstention product study.",
+      "thesis": "energy_based_selective_prediction_at_scale",
+      "why_not_regrind": "It optimizes abstain-or-flag risk coverage, not the closed best-of-N selection question."
+    },
+    {
+      "authority": "research-program.md; project_verifier_domain_bound background",
+      "operator_action_required": true,
+      "summary": "Try a genuinely different verifier architecture in a domain where self-consistency is weak and abstention has headroom.",
+      "thesis": "different_verifier_architecture_for_weak_sc_domain",
+      "why_not_regrind": "It changes both architecture and operating domain instead of rerunning the settled FoVer weighting or selection lines."
+    },
+    {
+      "authority": "results/experiment_3712_capstone_and_g_gate_v339.json",
+      "operator_action_required": true,
+      "summary": "Submit the paper under operator control, then move the loop to maintenance and regression checks.",
+      "thesis": "finalize_submit_and_maintenance",
+      "why_not_regrind": "It banks the already-ready paper state rather than generating new experiments against settled threads."
+    },
+    {
+      "authority": "research-program.md Tier B",
+      "operator_action_required": true,
+      "summary": "Build the Tier B safety and jailbreak classifier product.",
+      "thesis": "tier_b_safety_jailbreak_classifier",
+      "why_not_regrind": "It uses the energy-function product roadmap in a new safety surface rather than re-scoring FoVer or re-freezing the headline."
+    },
+    {
+      "authority": "research-program.md Tier B",
+      "operator_action_required": true,
+      "summary": "Build the Tier B regulatory compliance checker product.",
+      "thesis": "tier_b_compliance_checker",
+      "why_not_regrind": "It applies constraint energy to external compliance rules, a product path not covered by the settled selection line."
+    }
+  ],
+  "converged_state_ledger": [
+    {
+      "authoritative_artifact": "results/experiment_3712_capstone_and_g_gate_v339.json; results/experiment_3717_g4_full_provenance_audit.json",
+      "settled": true,
+      "terminal_status": "frozen_fover_0_9131_proven_reproduced_and_narrowing_clean",
+      "thread": "headline"
+    },
+    {
+      "authoritative_artifact": "results/experiment_3712_capstone_and_g_gate_v339.json",
+      "settled": true,
+      "terminal_status": "honest_negative_bounded",
+      "thread": "p01"
+    },
+    {
+      "authoritative_artifact": "results/experiment_3707_selection_diagnosis_formal_closure.json; results/experiment_3712_capstone_and_g_gate_v339.json",
+      "settled": true,
+      "terminal_status": "settled_bounded_diagnosis_closed",
+      "thread": "selection"
+    },
+    {
+      "authoritative_artifact": "results/experiment_3715_refreeze_disambiguation_clean_corrigendum.json",
+      "settled": true,
+      "terminal_status": "closed_negative_no_candidate_beats_frozen",
+      "thread": "refreeze"
+    },
+    {
+      "authoritative_artifact": "results/experiment_3705_code_native_leak_audit_heldout.json; results/experiment_3706_reconcile_shipped_detector_heldout.json; results/experiment_3712_capstone_and_g_gate_v339.json",
+      "settled": true,
+      "terminal_status": "code_generalization_leak_narrowed_to_math_only_abstain",
+      "thread": "code"
+    },
+    {
+      "authoritative_artifact": "results/experiment_3670_facts_row_real_benchmark.json; results/experiment_3712_capstone_and_g_gate_v339.json",
+      "settled": true,
+      "terminal_status": "facts_generalization_retired",
+      "thread": "facts"
+    },
+    {
+      "authoritative_artifact": "results/experiment_3659_trained_ebm_judge_ood_real_substrate_v3.json; results/experiment_3712_capstone_and_g_gate_v339.json",
+      "settled": true,
+      "terminal_status": "trained_judge_ood_retired",
+      "thread": "judge_ood"
+    },
+    {
+      "authoritative_artifact": "results/experiment_3721_hardware_kv260_terminal_confirm_and_continuity.json",
+      "settled": true,
+      "terminal_status": "kv260_terminal_confirmed_mandate_lift_recommended",
+      "thread": "kv260"
+    },
+    {
+      "authoritative_artifact": "results/experiment_3720_fr11_continuous_self_learning_v14.json",
+      "settled": true,
+      "terminal_status": "fr11_v14_graceful_fallback_under_shift_no_collapse",
+      "thread": "self_learning"
+    },
+    {
+      "authoritative_artifact": "results/experiment_3712_capstone_and_g_gate_v339.json; results/experiment_3716_ship_paper_v6_narrowing_lint.json; results/experiment_3717_g4_full_provenance_audit.json",
+      "settled": true,
+      "terminal_status": "paper_ready_true_g1_g2_g3_g4_met_and_hardened",
+      "thread": "paper_ready"
+    }
+  ],
+  "duration_s": 0.0001,
+  "experiment_id": "exp3722",
+  "field_principles": {
+    "adversarial_verify_clean": "True iff no critical adversarial flag.",
+    "all_self_generable_threads_settled": "BARE bool. True iff every loop-self-generable thread has a terminal status.",
+    "candidate_next_theses": "The operator menu, with one why-not-regrind line per candidate.",
+    "converged_state_ledger": "Per-thread {thread, terminal_status, authoritative_artifact}; the honest convergence record.",
+    "duration_s": "Plausibility floor.",
+    "honest_verdict": "Terminal prefix for reconciler classification.",
+    "inference_substrate": "Reads prior artifacts and docs; no live inference and no compute-bound marker belongs in this aggregation artifact.",
+    "manifest_unmodified_assert": "Asserts ops/exclusion_manifest.yaml was not edited by this task.",
+    "north_star_unmodified_assert": "Asserts ops/north-star.md was not edited by this task.",
+    "operator_decision_request": "The explicit ask for what thesis or maintenance mode drives .341+.",
+    "paper_ready_status": "Records the paper-ready gate value from the capstone.",
+    "random_seed": "Determinism precondition.",
+    "recommended_default_thesis": "The loop's recommendation only; the operator still decides the thesis.",
+    "reproducibility_checksum": "Drift detection."
+  },
+  "honest_verdict": "complete: convergence_synthesized_next_theses_presented_operator_decision_requested",
+  "inference_substrate": "aggregation_from_upstream_artifacts (principle: reads prior artifacts + docs; no live inference; no compute-bound marker).",
+  "manifest_unmodified_assert": true,
+  "non_decision_assert": true,
+  "north_star_unmodified_assert": true,
+  "operator_decision_request": "The loop has converged. Which thesis, product direction, or maintenance mode should drive .341+?",
+  "paper_ready_status": true,
+  "random_seed": 3722,
+  "recommended_default_thesis": {
+    "baseline_aurc": 0.075498,
+    "energy_aurc": 0.000789,
+    "operator_decision_made": false,
+    "rationale": "Exp 3718 reports energy beating entropy as a selective-prediction signal, which is the strongest non-regrind extension of the frozen 0.9131 discriminator.",
+    "supporting_artifact": "results/experiment_3718_risk_coverage_abstention_characterization.json",
+    "thesis": "energy_based_selective_prediction_at_scale"
+  },
+  "reproducibility_checksum": "e71a2b6461f0882a51403110071edfd2b38327d94ea58e3b8b14499d4edc12a2",
+  "schema": "carnot.convergence_synthesis_operator_next_thesis.v1",
+  "scripts_research_conductor_modified": false,
+  "source_artifact_checksums": [
+    {
+      "name": "exp3712",
+      "path": "results/experiment_3712_capstone_and_g_gate_v339.json",
+      "sha256": "3dd05ad1e21f41a99bfe269dc3690561766280183e22e0080c5941892860c9ca"
+    },
+    {
+      "name": "exp3715",
+      "path": "results/experiment_3715_refreeze_disambiguation_clean_corrigendum.json",
+      "sha256": "8ad1a6998330e87bb7dccbe76b3fc3fbcb339f9112f8c854e0cc14c9a1499dd6"
+    },
+    {
+      "name": "exp3716",
+      "path": "results/experiment_3716_ship_paper_v6_narrowing_lint.json",
+      "sha256": "216571c45061dee7a36640c8f9de09cd1ef5f65cd344ae81eef7bbf250281fa2"
+    },
+    {
+      "name": "exp3717",
+      "path": "results/experiment_3717_g4_full_provenance_audit.json",
+      "sha256": "a342c1c9f7868e55cb1d78b9db5cfb8753f1848487ddb023147480f5572d504c"
+    },
+    {
+      "name": "exp3718",
+      "path": "results/experiment_3718_risk_coverage_abstention_characterization.json",
+      "sha256": "aa6e2229fc5ea167f0fa261a78c369079c96a7fdd681ce578dde8f0f77adc19f"
+    },
+    {
+      "name": "exp3719",
+      "path": "results/experiment_3719_headline_replication_fresh_corpus.json",
+      "sha256": "98fa336f71223487376864e07de0abd9953a4e90e511019df6616651f5ffe532"
+    },
+    {
+      "name": "exp3720",
+      "path": "results/experiment_3720_fr11_continuous_self_learning_v14.json",
+      "sha256": "c00d895557425c8fff1571f3e66b6b2894a7e2d67508792969d0e6eccfcc8225"
+    },
+    {
+      "name": "exp3721",
+      "path": "results/experiment_3721_hardware_kv260_terminal_confirm_and_continuity.json",
+      "sha256": "f58e3b061e748776c3aa2aab64e93bf9d9d445fe69b3c3de5ed9debd2b6ae9c0"
+    }
+  ],
+  "source_document_checksums": {
+    "ops/north-star.md": "e288b001d2582b5f8af368df5ef458c334b750daefdef36ec9f707c61b62b973",
+    "research-program.md": "53ed14d8257e92794b841f3959dc3337cafe56adce714fe3447fd62977e4d9f9",
+    "research-roadmap.yaml": "76286cb27e22521d1fcbe0a165417b0bd1be67bafa467bc67433bade80828e44"
+  },
+  "task_id": "exp3722-convergence-synthesis-operator-next-thesis"
+}

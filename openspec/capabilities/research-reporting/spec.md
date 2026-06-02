@@ -16156,3 +16156,74 @@ asserts the conductor and environment were not modified, recommends
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-REPORT-3714 | Implemented (`python/carnot/reporting/backend_state_diagnostic_v6_3714.py`, `scripts/experiment_3714_backend_state_diagnostic_v6.py`) | Implemented (`tests/python/test_experiment_3714_backend_state_diagnostic_v6.py`) |
+
+### REQ-REPORT-3722: Convergence Synthesis And Operator Next-Thesis Request
+
+The Exp 3722 workflow shall synthesize the converged project state and present
+candidate next-theses for operator choice. It SHALL read only upstream result
+artifacts, `ops/north-star.md`, `research-program.md`, and checked-in roadmap
+or reference text. It SHALL NOT run a new experiment, modify
+`ops/north-star.md`, modify `ops/exclusion_manifest.yaml`, modify
+`scripts/research_conductor.py`, push changes, or place any GGUF, CUDA,
+live-model, `model_specs`, or `target_model` marker in the terminal artifact.
+
+The workflow SHALL write
+`results/experiment_3722_convergence_synthesis_operator_next_thesis.json` with
+bare top-level values for `honest_verdict`, `inference_substrate`,
+`converged_state_ledger`, `all_self_generable_threads_settled`,
+`candidate_next_theses`, `recommended_default_thesis`,
+`operator_decision_request`, `paper_ready_status`,
+`north_star_unmodified_assert`, `manifest_unmodified_assert`,
+`adversarial_verify_clean`, `random_seed`, `reproducibility_checksum`, and
+`duration_s`, plus `field_principles` documenting why each required value
+exists. `inference_substrate` SHALL be exactly
+`aggregation_from_upstream_artifacts (principle: reads prior artifacts + docs; no live inference; no compute-bound marker).`
+`all_self_generable_threads_settled` SHALL be a bare boolean and SHALL be true
+only when the ledger records terminal statuses for headline, P0.1, selection,
+re-freeze, code, facts, judge-OOD, KV260, self-learning, and paper-ready
+threads. `candidate_next_theses` SHALL include a one-line
+`why_not_regrind` value for each candidate and SHALL include at least one
+publication/maintenance option, at least one energy-abstention or selective
+prediction option when Exp 3718 is positive, and at least one Tier B product
+option from `research-program.md`. `recommended_default_thesis` SHALL be a
+recommendation only, never an operator decision. `honest_verdict` SHALL be one
+of `complete: convergence_synthesized_next_theses_presented_operator_decision_requested`
+or `complete: convergence_synthesis_cannot_complete`.
+`adversarial_verify_clean` SHALL be true only after `scripts/adversarial_verify.py`
+reports no critical flag on the written artifact.
+
+#### SCENARIO-REPORT-3722-SYNTHESIZED: Converged State Becomes A Decision Request
+
+**Given** the .339 capstone records `paper_ready=true`, P0.1 honest-negative,
+selection closed, code narrowed to math-only-with-abstain, facts and
+trained-judge-OOD retired, KV260 terminal, and frozen FoVer headline 0.9131
+unchanged, and .340 artifacts include the clean re-freeze corrigendum, G3
+narrowing lint, G4 provenance audit, positive energy-abstention
+characterization, fresh-corpus narrowing, FR-11 v14 no-collapse/fallback, and
+KV260 terminal confirmation
+**When** the Exp 3722 workflow runs
+**Then** it writes the terminal artifact with all required bare fields, records
+the per-thread ledger with authoritative artifacts, sets
+`all_self_generable_threads_settled=true`, presents candidate next-theses with
+why-not-regrind lines, recommends a default without choosing for the operator,
+asks which thesis or maintenance mode should drive `.341+`, passes
+adversarial verification without a critical flag, and leaves the north-star
+document, exclusion manifest, and research conductor unmodified.
+
+#### SCENARIO-REPORT-3722-CANNOT-SYNTHESIZE: Missing Terminal Evidence Fails Closed
+
+**Given** one or more required terminal thread authorities are missing,
+contradictory, or malformed
+**When** the Exp 3722 workflow runs
+**Then** it writes the same required artifact shape, sets
+`all_self_generable_threads_settled=false`, keeps the candidate menu bounded to
+non-decisive operator options, emits
+`complete: convergence_synthesis_cannot_complete`, passes adversarial
+verification without a critical flag, and leaves the north-star document,
+exclusion manifest, and research conductor unmodified.
+
+## Implementation Status (REQ-REPORT-3722)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-3722 | Planned (`python/carnot/reporting/convergence_synthesis_operator_next_thesis_3722.py`, `scripts/experiment_3722_convergence_synthesis_operator_next_thesis.py`) | Planned (`tests/python/test_experiment_3722_convergence_synthesis_operator_next_thesis.py`) |
