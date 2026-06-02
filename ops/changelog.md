@@ -8323,3 +8323,54 @@ Did NOT modify research-roadmap.yaml or scripts/research_conductor.py. Did NOT p
 - 2026-06-02: Thesis-A kill-gate part-(a) VERDICT: did the tiny EBT train to STABLE convergence within the bounded 3090 budget? GREEN-LIGHT the .342 matched-compute comparison only if stable; else record energy-as-generator BOUNDED at small scale and STOP. THESIS-A bring-up step 5. (⚠️ Research Finding) — honest_verdict=complete: kill_gate_part_a_FAIL_energy_as_generator_bounded_at_small_scale_honest_negative_stop; results/experiment_3729_stability_kill_gate_verdict.json
 - 2026-06-02: KV260 opportunistic continuity audit — confirm terminal state holds (SSH-reachable, accelerator loadable); the per-milestone hardware mandate relaxed to opportunistic at .340. Documentation-only. (✅ Complete) — honest_verdict=complete: kv260_terminal_state_holds_ssh_reachable_accelerator_loadable_opportunistic_audit; results/experiment_3730_kv260_opportunistic_continuity_audit.json
 - 2026-06-02: Capstone .341 — aggregate the Thesis-A EBT bring-up outcome (vendored + audited, tiny-EBT fits 3090, matched-compute harness built+tested, bounded train stability, kill-gate verdict). State HONESTLY whether part-(a) of the kill-gate passed (green-light .342) or the route is bounded at small scale. paper_ready MUST stay TRUE; frozen 0.9131 unchanged. (✅ Complete) — honest_verdict=complete: capstone_v341_thesis_a_ebt_bringup_kill_gate_part_a_bounded_paper_ready_true_frozen_headline_unchanged; results/experiment_3731_capstone_v341.json
+
+## 2026-06-02 — [outer-loop/planner] Pre-staged milestone .342 (Thesis-A RECOVER false-negative + run the GENUINE kill-gate)
+
+Triggered by: conductor "Plan next milestone" step (all 11 tasks of .341 completed).
+
+Produced `research-roadmap-next.yaml` (milestone 2026.06.342, 11 tasks exp3732–exp3742) +
+`openspec/change-proposals/research-roadmap-vNEXT.md`. Theme: PHASE-3 THESIS A — recover from a
+same-day infrastructure FALSE-NEGATIVE, then run the genuine kill-gate.
+
+KEY FINDING reading .341 via summarize_artifact.py + direct inspection: the recorded kill-gate
+part-(a) FAIL ("energy-as-generator bounded at small scale, STOP", exp3729 green_light_342=false)
+is an INFRASTRUCTURE FALSE-NEGATIVE, not a scientific finding:
+- exp3725 (vendor+audit) PASS; exp3727 (matched-compute harness) built+tested.
+- exp3726 (single-step smoke) PASS — the POSITIVE CONTROL: 38M EBT fits one 3090 at 1283MB, GSM8K
+  n=2048, loss finite AND monotonically decreasing (−0.077 → −37.74 over 10 steps).
+- exp3728 (bounded training) BLOCKED at 0 steps in 65.5s: `preconditions_checked={ebt_vendored:false,
+  smoke_passed:false}` — BOTH demonstrably wrong (exp3725 importable=true; exp3726 result on disk).
+  Root cause: a bare `import carnot.phase3.ebt_upstream` from a bad cwd/sys.path + a RELATIVE
+  `os.path.exists("results/experiment_3726_*.json")`. It NEVER trained a single step.
+- exp3729 read that infra-block and mislabeled it "bounded." Per CLAUDE.md FALSE_NEGATIVE_RISK +
+  Reading-Results disciplines, a null claim with NO positive-control bounded run is unsupported.
+
+So Thesis A is NOT dead — part-(a) is UNTESTED, not bounded. .342: (0) archive .341 honestly +
+CLEAN corrigendum of exp3729 (exp3733, exp1850 pattern; does NOT retire the route); (1) FIX the
+exp3728 cwd/import bug (robust importlib.util.find_spec + ABSOLUTE paths + run from {project_root})
+and ship a training driver with the EBT-paper stability recipe (random-alpha + replay buffer +
+Langevin noise + grad-clip + KL-term CD arXiv:2012.01316), running two bounded checkpointed chunks of
+the tiny EBT + a matched tiny AR baseline on GSM8K (exp3734/3735, opus+requires_claude — EBT training
+is finicky); (2) the REAL part-(a) verdict superseding exp3729 (exp3736, emits green_light_342 BARE
+bool); IF stable: EBT generation smoke (exp3737) + the matched-COMPUTE comparison (exp3738: EBT
+energy-descent vs AR best-of-N at EQUAL inference FLOPs via the exp3727 harness) + the part-(b) thesis
+verdict (exp3739); (3) FR-11 v15 self-learning Tier-1 stabilizer-efficacy tracker (exp3740, the
+research-program.md self-learning mandate, on the EBT training loop); KV260 opportunistic terminal
+confirm (exp3741); capstone v342 (exp3742).
+
+Disciplines: matched-COMPUTE never matched-params (the P0.1 trap); gemini still crashes real GPU
+workloads → codex+requires_codex for non-claude (heavy training-debug = opus+requires_claude); GPU
+eval tasks codex+requires_codex+gpu (run the already-tested harness); PRECONDITIONS blocks on every
+GPU task with the exp3728-fix as headline lesson; bare-value gated_on ONLY on expensive GPU tasks
+(exp3735/3737/3738), graceful disk-presence fallback elsewhere (.340 pattern); prior_failures on
+exp3734/3735/3736/3739 (scope-match exp3728/3729, retire_if_same_verdict:true); operator_override on
+archive/capstone/KV260/FR-11-lineage; inference-substrate hygiene; anti-poison-test clauses on
+code-shipping tasks; INVARIANTS — paper_ready stays TRUE, frozen 0.9131 frozen, P0.1 settled-bounded.
+
+Added 8 references to research-references.md (arXiv:2507.02092 stability recipe, 2012.01316 KL-term CD,
+2512.15605 ARM-EBM bijection, 2503.21878 best-of-N baseline, 2603.04948, 2510.15447, 2303.06296,
+2512.18730). Validated: YAML parses (11 tasks); milestone == _expected_next_milestone('2026.06.341') =
+2026.06.342; exclusion-manifest lint 0 HARD (HARD on exp3739 fixed by adding its prior_failures block;
+3 WARNINGs all override-present); overdue-priority lint exit 0; canonical-URL lint exit 0.
+
+Did NOT modify research-roadmap.yaml or scripts/research_conductor.py. Did NOT push.

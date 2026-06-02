@@ -1,179 +1,192 @@
-# Research Roadmap — Milestone 2026.06.340
+# Research Roadmap — Milestone 2026.06.342
 
 **Status:** Pre-staged by outer-loop Claude (Opus 4.8), 2026-06-02.
-**Predecessor:** 2026.06.339 (a CONVERGENCE milestone — every major open research thread reached a
-terminal/settled state: re-freeze closed-negative, code = leak → math-only-with-abstain, selection
-diagnosis formally closed, KV260 terminal, FR-11 v13 positive, paper_ready stayed TRUE).
-**Milestone doc for:** `research-roadmap-next.yaml` (`milestone: 2026.06.340`)
+**Predecessor:** 2026.06.341 (Phase-3 Thesis-A EBT bring-up — the FIRST human-seeded paradigm
+alternative since energy-SELECTION was bounded; operator seeded energy-as-GENERATOR, EBT,
+arXiv:2507.02092 / github.com/alexiglad/EBT).
+**Milestone doc for:** `research-roadmap-next.yaml` (`milestone: 2026.06.342`)
 
 ---
 
-## 1. What the previous milestone (.339) proved
+## 1. What the previous milestone (.341) ACTUALLY proved (read the artifacts, not the verdict)
 
-`.339` validated the two PROVISIONAL `.338` wins under full rigor — and **both walked back to the
-conservative outcome**. Read via `scripts/summarize_artifact.py`:
+`.341` was the cheap half of the Thesis-A kill-gate: *can a tiny EBT even train stably on the 3090
+rig?* The recorded milestone verdict was **kill-gate part-(a) FAIL — "energy-as-generator bounded
+at small scale, STOP."** **That verdict is wrong.** Read via `scripts/summarize_artifact.py` +
+direct artifact inspection:
 
-| Result | Finding | Artifact |
+| Step | Artifact | What it ACTUALLY shows |
 |---|---|---|
-| **Re-freeze CLOSED-NEGATIVE** | Under the FROZEN 5-seed dual-condition protocol, dependency-aware (0.9249), the external de-entangled/CIG baseline (0.9287), and a FUSION (0.9285) **all fail to robustly beat frozen 0.9131** (the paired delta CI does not exclude 0). The .338 single-condition leads evaporated. Verdict `no_candidate_beats_frozen_headline_stays_0_9131`. **The headline stays 0.9131.** | exp3704 |
-| **— but exp3704 is FLAGGED (benign)** | `flagged_adversarial=True`, live re-check CRITICAL: a **TAUTOLOGY** between `strongest_candidate_auroc` and `external_comparator_auroc` — which are equal **by construction** (the external candidate IS the strongest). A linter false-positive (a legitimate copy, not two distinct measurements coinciding), but the milestone record now carries a flagged headline-adjacent artifact. | exp3704 |
-| **Code signal was a LEAK** | exp3695's code AUROC=1.0 reproduced in-corpus; on a held-out corpus it was **0.9932 (≥0.99 → still a leak red-flag)**. Verdict `one_point_zero_was_a_leak_code_claim_narrowed_earned`. | exp3705 |
-| **Shipped detector made honest** | exp3706 NARROWED the shipped second-pair-of-eyes detector back to **math-only with an explicit abstain-on-code path**, math operating point (AUROC ~0.98, ECE ~0.009) preserved, E2E green. | exp3706 |
-| **Selection diagnosis FORMALLY CLOSED** | exp3707 recorded the closure + an operator retirement recommendation. Energy SELECTION is settled-bounded (exp3672 earned-negative + arXiv:2512.23067). | exp3707 |
-| **FR-11 v13** | Multi-session Tier-2 consolidation transferred to a fresh session without collapse, library bounded. | exp3708 |
-| **KV260 TERMINAL** | Non-fabricated on-board Ising-sampler latency transcript captured (POC functional anchor, no speedup claim) → terminal candidate. | exp3709 |
-| **Publication gate** | **paper_ready = TRUE.** G1 (FoVer 0.9131, exp2850), G2 (CI run 26725185125), G3, G4. Frozen headline unchanged. | exp3712 |
-| **Backend** | gemini still crashes real workloads (exp3703, marked Failed/flagged). Keep codex+requires_codex. | exp3703 |
+| EBT vendored + audited | exp3725 | `importable=true`, Apache-2.0, commit pinned `19420cbe…`, energy path audited (energy descent via Langevin/MCMC, contrastive + CE training objective), CPU smoke energy `0.554` finite. **Clean PASS.** |
+| Tiny-EBT single-step smoke | exp3726 | **Clean PASS.** 38M-param EBT, fits one 3090 at **1283 MB** peak VRAM, GSM8K n=2048, loss finite AND **monotonically decreasing** across 10 steps (−0.077 → −37.74), 64 train steps wired correctly. This is the POSITIVE CONTROL and it passed. |
+| Matched-compute eval harness | exp3727 | Built + unit-tested (FLOP accounting + budget-matcher). The instrument for the .342 decisive comparison is ready. |
+| Bounded checkpointed training | exp3728 | **`blocked_ebt`, 0 steps, 65.5 s.** `preconditions_checked={ebt_vendored:false, smoke_passed:false}` — **both demonstrably false**: exp3725/3726 prove the module IS importable and the smoke DID pass. The task's precondition logic (`import carnot.phase3.ebt_upstream` + `os.path.exists("results/experiment_3726_*.json")`, a RELATIVE path) evaluated False because the run executed in a bad cwd / sys.path / venv. **It never trained a single step.** |
+| Kill-gate verdict | exp3729 | Read exp3728's `blocked_ebt`/steps=0 and concluded "energy-as-generator is bounded at small scale." `green_light_342=false`. |
 
-**Strategic position:** `.339` confirmed that the project has **converged**. The headline (FoVer 0.9131)
-is frozen, proven, independently reproduced, and narrowing-clean — `paper_ready=true`. Every direction
-the autonomous loop can self-generate is now settled, most as *trustworthy negatives*:
+**Diagnosis: the .341 kill-gate "FAIL" is an INFRASTRUCTURE FALSE-NEGATIVE, not a scientific
+finding.** It is exactly the failure mode CLAUDE.md's **FALSE_NEGATIVE_RISK** discipline names: a
+null/negative claim ("the route is bounded") asserted **without a positive control passing the
+bounded run**. The positive control (exp3726 single-step smoke) PASSED — the EBT trains, fits the
+GPU, and the loss decreases. exp3728 bailed before training on a cwd/import-path bug; exp3729
+mislabeled that infra failure as a mechanism result. Per the **Reading-Results Discipline**, a
+verdict synthesized over a `blocked_*` upstream with `steps=0` cannot bound a mechanism.
 
-- energy-descent existential claim (P0.1): **honest-negative**, bounded (Route-1/Route-2)
-- energy SELECTION beats SC: **settled-bounded**, diagnosis CLOSED (exp3707)
-- headline re-freeze via reweighting: **closed-negative** (no candidate beats frozen, exp3704)
-- code generalization: **leak**, narrowed to math-only-with-abstain (exp3705/3706)
-- facts generalization: **RETIRED** (exp3670); trained-judge-OOD: **RETIRED** (exp3659)
-- KV260 sovereignty story: **TERMINAL** (exp3709)
+**Strategic position:** Thesis A is NOT dead. The kill-gate part-(a) question — *does a tiny EBT
+train to stable convergence in a bounded budget?* — is **still open**, because no genuine bounded
+training run has happened yet. `.342` must (1) correct the record honestly, (2) FIX the harness bug
+and run the genuine bounded training, (3) render the REAL part-(a) verdict, and if stable,
+(4) run the matched-COMPUTE comparison — kill-gate part (b), the actual thesis test.
 
-This is exactly the state the `project_energy_selection_thesis_bounded` memory anticipated:
-> "Foundation-model alternatives need a human-seeded thesis; the loop won't self-initiate one."
-
-`.340` therefore does **not manufacture breadth** (north-star §1: a milestone that produces a new
-version of an existing artifact without moving the headline is *noise*). It is a **CONVERGENCE &
-FINALIZATION** milestone.
+This is NOT breadth churn (north-star §1): it is the direct, gated continuation of the
+operator-seeded Thesis-A bring-up, recovering from a same-day infrastructure false-negative.
 
 ---
 
 ## 2. The three biggest gaps (PRD vision vs current state)
 
-1. **The publication gates are met but two of them rest on honor-discipline, not enforcement.** G3
-   (prose narrowing-clean) is checked by an inline phrasing scan in `publication_gate.py`, but
-   CLAUDE.md's Paper-v6 Narrowing Discipline says a `paper_v6_narrowing_lint.py` pre-commit hook
-   *SHOULD* exist and does not. G4 (numbers trace to artifacts) has never been audited end-to-end for
-   *every* headline number against *clean, non-flagged* artifacts. paper_ready=true is only as strong
-   as its weakest enforcement. `.340` ships the G3 mechanical lint and runs a full G4 provenance audit —
-   converting the gate from "true today" to "true and mechanically defended."
+1. **The Phase-3 generator thesis has no genuine empirical signal yet.** The PRD endgame (Phase 3)
+   is an open-source EBM/EBT foundation model with non-autoregressive reasoning. Thesis A is the
+   first concrete test of that mechanism. `.341` produced a positive single-step control and then a
+   spurious negative; `.342` must produce the **genuine** bounded-training stability signal and, if
+   stable, the matched-COMPUTE accuracy comparison. Until a real bounded run exists, the route is
+   neither alive nor dead — it is **untested**, and an untested route blocks the Phase-3 decision.
 
-2. **The proven discriminator's DEPLOYABLE value is uncharacterized.** Carnot's 0.9131 step-error
-   discrimination is real and frozen, but the SELECTION conversion (best-of-N argmax beats SC) is
-   settled-negative. The OTHER conversion — discrimination → **selective-prediction / abstention** (flag
-   or abstain on likely-wrong steps, the literal job of the shipped "second pair of eyes") — has never
-   been characterized. This is the on-mission product framing (escape hallucinations = abstain when
-   wrong). arXiv:2603.21172 ("Entropy Alone is Insufficient") shows heuristic uncertainty fails as a
-   selective-prediction signal — motivating an ENERGY-based one. `.340` characterizes the risk-coverage
-   curve (AURC, risk@coverage) of the proven discriminator. This is the single genuinely-new, defensible
-   direction — and it is explicitly NOT the closed SELECTION question.
+2. **The record carries an unsupported negative claim.** `.341`'s capstone + kill-gate state
+   "energy-as-generator bounded at small scale." Left uncorrected, a future planner reads that as
+   a settled negative (like P0.1) and never revisits the route — enclosing a venture bet on a
+   harness bug. `.342` issues a CLEAN corrigendum (exp1850 pattern): preserve exp3729's numbers,
+   annotate the false-negative root cause, and re-open part-(a) as untested.
 
-3. **The headline rests on a single corpus (FoVer).** G1 is strong but FoVer-specific. A defensible
-   headline survives a *second, distinct* step-error corpus. `.340` replicates the 0.9131-class
-   discrimination on a FRESH corpus (a different PRM/step-error set) — the north-star-sanctioned way to
-   advance the headline ("replicates on a new seed/corpus"), as opposed to re-measuring FoVer (churn).
-
-**The meta-gap (surfaced, not closed by the loop):** the next *substantive research* direction requires
-a **human-seeded thesis**. `.340` includes a synthesis task that lays out the converged state and the
-candidate next-theses for the OPERATOR to choose among — it does not pick one autonomously.
+3. **Continuous self-learning has not yet touched the training loop itself.** FR-11 self-learning
+   (research-program.md Tiers 1–4) has been exercised on verifier-template consolidation, never on
+   the EBT bring-up. The most likely failure mode of EBT training is divergence; which stabilizer
+   recipe prevents it is exactly the kind of online, counter-update (Tier-1) knowledge the
+   self-learning system should accumulate. `.342` wires a Tier-1 online tracker of per-stabilizer
+   divergence-prevention efficacy across training chunks — a self-learning experiment that is also
+   directly load-bearing for the kill-gate.
 
 ---
 
-## 3. Milestone architecture (4 phases, 11 tasks)
+## 3. Architecture (Thesis-A bring-up, recovered)
 
 ```
-Phase 0 — Transition + routing safety (exp3713, exp3714)
-    archive .339 / activate .340  -->  backend-state diagnostic v6 (6th gemini probe; gates a .341 flip)
+                       ┌──────────────────────────────────────────────┐
+   .341 (DONE, but    │  exp3725 vendor+audit  ✔   exp3726 smoke  ✔    │
+   verdict false-neg) │  exp3727 matched-compute harness (tested) ✔   │
+                       │  exp3728 BLOCKED (cwd/import bug) ✘ steps=0   │
+                       │  exp3729 verdict = FALSE-NEGATIVE  ✘          │
+                       └───────────────────────┬──────────────────────┘
+                                                │
+  .342 PHASE 0  archive/activate (exp3732) + CLEAN corrigendum of exp3729 (exp3733; record honest)
+                                                │
+  .342 PHASE 1  ┌─────────────────────────────────────────────────────────────────┐
+  (the genuine  │ exp3734  FIX exp3728 (robust importlib check + abs paths, run    │
+   part-a)      │          from {project_root}); ship driver w/ EBT stability      │
+                │          recipe (random-alpha + replay buffer + Langevin noise +  │
+                │          grad-clip + KL-term CD); FIRST bounded train chunk        │
+                │          EBT + matched-AR  ──checkpoint──▶                         │
+                │ exp3735  RESUME chunk 2 (gated: chunk-1 trained >0 steps)          │
+                └───────────────────────────┬─────────────────────────────────────┘
+                                             │
+  .342 PHASE 2  exp3736  REAL kill-gate part-(a) verdict over the GENUINE run
+                          (supersedes false-negative exp3729) → green_light_342 (bare bool)
+                                             │  (gate: stable)
+                ┌────────────────────────────┴────────────────────────────┐
+                │ exp3737 EBT energy-descent GENERATION smoke on held-out    │
+                │ exp3738 matched-COMPUTE comparison: EBT energy-descent vs   │
+                │         AR best-of-N at EQUAL FLOPs (exp3727 harness)       │
+                │ exp3739 kill-gate part-(b) verdict: EBT beat AR @ equal     │
+                │         compute? does gap narrow w/ 2x train? (honest)      │
+                └────────────────────────────────────────────────────────────┘
+                                             │
+  .342 PHASE 3  exp3740 FR-11 v15 Tier-1 online stabilizer-efficacy tracker (self-learning)
+                exp3741 KV260 opportunistic continuity (terminal confirm)
+                exp3742 capstone .342 (honest: record corrected; real part-a; part-b verdict)
 
-Phase 1 — Record hygiene + gate hardening (exp3715, exp3716, exp3717)
-    exp3715  corrigendum: clean re-emit of the flagged exp3704 (benign TAUTOLOGY) — headline stays frozen
-    exp3716  SHIP paper_v6_narrowing_lint.py (G3 honor-discipline -> mechanical pre-commit lint)
-    exp3717  full G4 provenance audit: every headline number -> a clean, non-flagged primary artifact
-
-Phase 2 — Deployable value + headline robustness (exp3718, exp3719)
-    exp3718  RISK-COVERAGE abstention characterization of the proven 0.9131 discriminator (AURC,
-             risk@coverage, energy-vs-entropy selective prediction) — the sanctioned NEW framing
-    exp3719  REPLICATE the headline-class discrimination on a FRESH step-error corpus (G1 strengthening)
-
-Phase 3 — Self-learning + hardware relaxation + convergence synthesis + capstone
-    exp3720  FR-11 continuous self-learning v14 (mandatory continuous-self-learning task)
-    exp3721  hardware: KV260 terminal CONFIRM + mandate-relaxation recommendation + PolarFire/GateMate
-             opportunistic audit (one consolidated task, per north-star §3)
-    exp3722  CONVERGENCE SYNTHESIS + operator next-thesis recommendation (the meta-gap surfacing)
-    exp3723  capstone v340 + G1-G4 gate synthesis
+  INVARIANTS (every task): paper_ready stays TRUE (G1-G4 closed 2026-05-31); frozen FoVer 0.9131
+  stays frozen; P0.1 / energy-SELECTION stays settled-bounded (this tests GENERATION, a different
+  mechanism); never edit ops/north-star.md; never trigger CI; never push.
 ```
 
-**Dependency graph (no fragile gates — every task is independently runnable):**
-- No task is `gated_on` another task's runtime field. exp3717 (provenance audit) and exp3723 (capstone)
-  *read* upstream artifacts but use disk-presence preconditions + "not_measured" fallbacks (never a
-  None-read cascade), so a skipped upstream degrades gracefully.
-- exp3715 (corrigendum) is independent of exp3704's flagged state — it re-derives the conclusion cleanly.
-- exp3718/3719 are independent science tasks. exp3722 synthesizes whatever landed; exp3723 capstones.
+## 4. Phase descriptions
 
----
+- **Phase 0 — Transition + record correction.** Archive `.341` honestly (the kill-gate was an
+  infra false-negative; part-(a) re-opened as untested). Issue a CLEAN corrigendum of exp3729
+  (preserve numbers, annotate root cause). Cheap, codex, aggregation-only.
+- **Phase 1 — The genuine kill-gate part (a).** Fix exp3728's cwd/import precondition bug (robust
+  `importlib.util.find_spec` check, absolute artifact paths, run from `{project_root}`), ship the
+  training driver with the EBT-paper stability recipe (random-alpha + replay buffer + Langevin
+  noise + gradient clamp + the KL-term CD fix from arXiv:2012.01316), and run two bounded
+  checkpointed chunks of the tiny EBT + a matched tiny AR baseline on the SAME corpus/budget.
+  Heartbeat every K steps; ≤1500 s/run then checkpoint+exit; resume. **requires_claude + opus** —
+  divergence diagnosis is open-ended judgment under ambiguity (operator directive 2026-06-02).
+- **Phase 2 — Real verdict + the actual thesis test.** Render the genuine part-(a) verdict over the
+  real run (supersedes exp3729). If stable, smoke EBT generation, then run the matched-COMPUTE
+  comparison (EBT energy-descent vs AR best-of-N at EQUAL inference FLOPs via the exp3727 harness),
+  and render the honest part-(b) verdict. The matched-COMPUTE discipline is load-bearing: a
+  matched-PARAMS "win" is just extra inference FLOPs (the exact P0.1 trap).
+- **Phase 3 — Self-learning + hardware + capstone.** FR-11 v15 Tier-1 online stabilizer-efficacy
+  tracker (CPU counter updates; self-learning mandate). KV260 opportunistic terminal-confirm.
+  Capstone: record the corrected history, the real part-(a) outcome, and the part-(b) verdict —
+  paper_ready stays TRUE, frozen 0.9131 unchanged.
 
-## 4. Why this is convergence-respecting, not churn
+## 5. Dependency graph (bare-value gates only; no None-read cascades)
 
-| Settled thread | `.340` does NOT | `.340` DOES |
-|---|---|---|
-| energy SELECTION (closed exp3707) | re-run a best-of-N selection experiment | characterize ABSTENTION (a different conversion of discrimination) |
-| re-freeze (closed-negative exp3704) | run a 4th reweighting candidate | re-emit the flagged artifact CLEAN; keep headline frozen |
-| code generalization (leak) | re-attempt a code-native AUROC | (left settled; detector is math-only-with-abstain) |
-| FoVer headline (frozen) | re-measure FoVer for the Nth time | replicate on a DIFFERENT corpus (a new datapoint) |
-| KV260 (terminal) | run another KV260 latency experiment | CONFIRM terminal + relax the per-milestone mandate |
-| paper_ready (true) | declare victory and stop | HARDEN G3/G4 from honor-discipline to mechanical |
+```
+exp3732 (archive/activate) ─▶ exp3733 (corrigendum exp3729)
+exp3734 (fix+driver+chunk1, gpu/opus)
+   └─ cumulative_steps_trained>0 (BARE int) ─▶ exp3735 (resume chunk2, gpu/opus)
+exp3734,exp3735 ─▶ exp3736 (REAL part-a verdict) ─▶ green_light_342 (BARE bool)
+   └─ green_light_342==true ─▶ exp3737 (generation smoke, gpu)
+        └─ ebt_can_generate==true (BARE bool) ─▶ exp3738 (matched-compute, gpu)
+              └─▶ exp3739 (part-b verdict)
+exp3740 (FR-11 v15 self-learning) · exp3741 (KV260) · exp3742 (capstone) — ungated, graceful
+disk-presence fallback (read upstream if present, else record honest "not-run")
+```
 
-Every `.340` task either (a) advances the headline on a NEW datapoint, (b) closes a real enforcement
-gap, (c) characterizes deployable value in a genuinely-new (non-settled) frame, (d) is mandatory
-self-learning, or (e) surfaces the operator decision the loop cannot make. None re-grinds a settled
-question.
+`gated_on` is used ONLY on the expensive GPU tasks (exp3735/3737/3738) to genuinely skip GPU+Sonnet
+time when the prerequisite is unmet, and ONLY against **bare-value** fields (per
+`feedback_gated_fields_must_be_bare`: a principle-annotated `{value,principle}` dict breaks the
+comparator). Verdict/aggregation/self-learning/hardware/capstone tasks carry NO `gated_on` and read
+upstream artifacts with a graceful disk-presence fallback (the .340 proven-safe pattern).
 
----
+## 6. Hardware requirements
 
-## 5. Invariants (carried from .334–.339)
+- **2x RTX 3090 (CUDA):** Phase-1 training (exp3734/3735) + Phase-2 generation/eval (exp3737/3738).
+  The tiny 38M EBT fits one 3090 at ~1.3 GB (exp3726); the matched AR baseline is the same band.
+- **KV260 (SSH only):** opportunistic terminal-confirm (exp3741). SSH-reachability precondition
+  only — NEVER a host `/dev/mmcblk*` check (KV260 SSH-Not-SD-Card discipline).
+- gemini still crashes real GPU workloads (exp3703) → codex is the non-claude default; the heavy
+  open-ended training-debug tasks are requires_claude+opus.
 
-- **`paper_ready = true` (G1∧G2∧G3∧G4) MUST NOT regress.** Frozen FoVer headline **0.9131 stays frozen**;
-  any candidate is an operator re-freeze CANDIDATE, never a silent swap. `ops/north-star.md` is
-  operator-curated — no task edits it or triggers the CI reproducer.
-- **P0.1 stays honest-negative**; energy-SELECTION settled-bounded; facts-generalization + trained-judge-OOD
-  RETIRED; the selection diagnosis CLOSED (exp3707).
-- **Backend: all tasks codex + `requires_codex`** (anti-wipeout — `.333` was a whole-milestone gemini
-  crash wipeout, exp3703 re-confirmed real-workload crashes). exp3714 runs the 6th gemini probe that
-  gates a possible `.341` flip. The operator may override to gemini-default at activation if quota
-  preservation outweighs the wipeout risk.
-- **Inference-substrate hygiene:** every aggregation / verifier-scoring task sets `inference_substrate`
-  correctly and carries **NO GGUF/CUDA/live-model marker** in `model_specs`/`target_model`, then runs
-  `adversarial_verify` and confirms clean before finishing (the .337 DURATION false-flag fix, kept fixed).
-- **Leak-guard:** any AUROC ≥ 0.99 on n≥1000 is treated as a leak until proven leak-free.
-- **No poison tests:** parametrize pytests over honest verdicts on realistic synthetic fixtures; never
-  hard-assert one success string against a real corpus; never use Q/R/H-number placeholder tokens.
-- **Every `gated_on` is a BARE scalar** (none used in this milestone — graceful disk-presence fallbacks
-  instead).
+## 7. Routing & discipline summary
 
----
+- **requires_claude + opus:** exp3734 (fix+driver+chunk1), exp3735 (resume chunk2) — EBT training is
+  finicky; divergence diagnosis + multi-file driver work meets the requires_claude bar (operator
+  directive 2026-06-02).
+- **codex + requires_codex + gpu:** exp3737 (generation smoke), exp3738 (matched-compute) — running
+  the trained models through the already-tested exp3727 harness is mechanical with a deterministic
+  FLOP-accounting criterion; gemini crashes GPU so codex is the cheap-default.
+- **codex + requires_codex (no gpu):** all archive/corrigendum/verdict/self-learning/hardware/
+  capstone tasks (aggregation or CPU).
+- **PRECONDITIONS blocks** on every GPU task (CUDA + robust EBT-importable + corpus). The exp3728
+  fix is the headline lesson: robust `importlib.util.find_spec` check + absolute paths + run from
+  `{project_root}`; a missing resource → `blocked_<resource>`, never a fabricated pass.
+- **Failed-Experiment Rerun Discipline:** exp3734/3735/3736 scope-match exp3728/exp3729 → each
+  carries a `prior_failures:` block (root cause = infra false-negative, what's different = fixed
+  harness + real training, `retire_if_same_verdict: true`).
+- **operator_override:** routine archive/capstone/KV260/FR-11-lineage tasks carry the standing
+  2026-05-29 override string for false-positive scope-matches.
+- **inference-substrate hygiene:** aggregation tasks set `aggregation_from_upstream_artifacts` and
+  carry NO GGUF/CUDA marker; GPU training/eval sets `live_llm_inference` with full methodology.
+- **Anti-poison-test clause** on tasks that ship code+tests (exp3734, exp3740): the test must assert
+  against the script's real behavior, never poison the conductor pre-test gate.
 
-## 6. Hardware
+## 8. Honest framing (what a green-light does and does not mean)
 
-- **KV260:** terminal candidate reached (exp3709). `.340` exp3721 CONFIRMS the terminal state (overlay +
-  non-fabricated latency transcript on disk) and recommends the operator LIFT the per-milestone KV260
-  mandate (north-star §3). SSH-reachability precondition only; NO host SD-card check; NO speedup claim.
-- **PolarFire / GateMate:** opportunistic only — folded into exp3721 (reachability/continuity audit,
-  GateMate documentation-only because `openFPGALoader` is missing). No board blocks the milestone.
-
----
-
-## 7. SOTA local models
-
-Only exp3719 (fresh-corpus replication) may need live generation; it names a mandated SOTA GGUF
-(`unsloth/Qwen3.6-35B-A3B-GGUF` or `unsloth/gemma-4-26B-A4B-it-GGUF`), loads via the `.gguf` path (NEVER
-`AutoTokenizer` on a `-GGUF` repo id), and gates on cached + CUDA. If a fresh corpus can be assembled
-from on-disk labeled candidates, it runs as `verifier_ensemble_against_cached_candidates` with no live
-model. All other tasks are aggregation / verifier-scoring / hardware-smoke (no live model).
-
----
-
-## 8. The operator decision this milestone surfaces
-
-The loop has converged. Continuing to emit milestones that re-touch settled questions is the churn
-north-star §1 names as noise. exp3722 lays out — for the OPERATOR — the converged state and the
-candidate next-theses (e.g. energy-based selective prediction at scale; a genuinely different verifier
-architecture for a domain where SC is weak AND abstention has headroom; or finalize-and-submit the paper
-and shift to maintenance). The loop recommends but does not choose; per the project memory, the next
-substantive thesis is the operator's to seed.
+A part-(a) PASS means "the tiny EBT trains stably enough to run the matched-compute comparison" —
+NOT "energy-as-generator works." A part-(b) result is the actual thesis signal, and an honest
+NEGATIVE there (EBT does not beat matched-AR at equal compute, gap does not narrow with 2x train) is
+as valuable as a positive — it bounds the route cheaply, exactly as the kill-gate was designed to.
+This remains a venture bet with a knife to its own throat; banking the verifier product is
+unaffected (paper_ready stays TRUE; frozen 0.9131 stays frozen).
