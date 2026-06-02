@@ -7627,3 +7627,5 @@ web search: https://docs.garak.ai/garak/examples/pr |
 | 2026-06-02 21:51 UTC | EBT energy-descent GENERATION smoke on held-out GS | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp3736-real-kill-gate-part-a-verdict.gree |
 | 2026-06-02 21:53 UTC | EBT energy-descent GENERATION smoke on held-out GS | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp3736-real-kill-gate-part-a-verdict.gree |
 | 2026-06-02 21:55 UTC | THE THESIS TEST (kill-gate part b): matched-COMPUT | GATE_BLOCK | Pre-emptive skip: upstream retired (exp3737-ebt-generation-smoke) |
+| 2026-06-02 22:12 UTC | Thesis-A kill-gate part-(b) VERDICT: at EQUAL infe | OK | 129 passed in 5.99s |
+| 2026-06-02 22:14 UTC | THE THESIS TEST (kill-gate part b): matched-COMPUT | GATE_BLOCK | Pre-emptive skip: upstream retired (exp3737-ebt-generation-smoke) |
