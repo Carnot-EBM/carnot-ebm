@@ -1,0 +1,1 @@
+Spec traces: REQ-ISING-027, SCENARIO-ISING-037

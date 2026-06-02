@@ -1,0 +1,58 @@
+{
+  "duration_s": 1.0,
+  "ebt_param_count": 16000000,
+  "experiment": 3726,
+  "first_step_losses": [
+    1.0,
+    1.2
+  ],
+  "honest_verdict": "blocked_training_smoke_validation",
+  "inference_substrate": "live_llm_inference (principle: a real GPU compute task; strict duration floor, which real training easily clears).",
+  "loss_decreased": false,
+  "loss_finite": true,
+  "model_specs": {
+    "batch_size": 1,
+    "block_size": 8,
+    "device": "cuda:0",
+    "ebt_model_args": {
+      "dim": 768,
+      "ffn_dim_multiplier": 4.0,
+      "max_seq_len": 10,
+      "n_heads": 12,
+      "n_layers": 4
+    },
+    "from_scratch_not_pretrained_llm": true,
+    "learning_rate": 0.0003,
+    "model_name": "tiny_vendored_ebt_byte_energy_model",
+    "optimizer": "AdamW",
+    "pretrained_model_weights_used": false,
+    "source": "carnot.phase3.ebt_upstream.EBTDefault",
+    "tokenizer": {
+      "name": "utf8_byte_tokenizer",
+      "pretrained_tokenizer_weights_used": false,
+      "vocab_size": 258
+    },
+    "train_steps": 2,
+    "trainable_param_count": 16000000
+  },
+  "n_train": 2,
+  "peak_vram_mb": 512,
+  "preconditions_checked": {
+    "cuda": {
+      "available": true,
+      "device_count": 1,
+      "device_name": "NVIDIA GeForce RTX 3090"
+    },
+    "dataset": {
+      "available": true,
+      "source": "fixture"
+    },
+    "ebt_vendored_importable": true
+  },
+  "random_seed": 3726,
+  "reproducibility_checksum": "cc76aaff44159e07a6705e42c954967b3aceea7d360119069a5ba8aa3920155b",
+  "schema": "carnot.experiment_3726_tiny_ebt_train_smoke.v1",
+  "validation_errors": [
+    "first_step_losses must be finite and decreasing"
+  ]
+}

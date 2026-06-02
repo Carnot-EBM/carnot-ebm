@@ -1,0 +1,71 @@
+{
+  "bounded_policy": "cap entries; on overflow merge the highest cosine-similarity pair; evict lowest utility/support only if a merge cannot restore the cap",
+  "cap": 2,
+  "consolidation_events": [
+    {
+      "action": "add",
+      "size": 1,
+      "template_id": "template_1_2a90c69642"
+    }
+  ],
+  "entries": [
+    {
+      "edges": [
+        {
+          "by_label_correlation": {
+            "0": 0.842352,
+            "1": 0.524425
+          },
+          "conditional_mutual_information": 0.503832,
+          "pair": [
+            "fr11_session_memory",
+            "tier0u_logical_consistency"
+          ]
+        },
+        {
+          "by_label_correlation": {
+            "0": 0.746973,
+            "1": 0.467533
+          },
+          "conditional_mutual_information": 0.336972,
+          "pair": [
+            "fr11_session_memory",
+            "tier0s_arithmetic_gap"
+          ]
+        },
+        {
+          "by_label_correlation": {
+            "0": 0.70386,
+            "1": 0.418996
+          },
+          "conditional_mutual_information": 0.280641,
+          "pair": [
+            "fr11_session_memory",
+            "tier0r_curry_howard"
+          ]
+        }
+      ],
+      "source_sessions": [
+        "tier0u_logical_consistency_score_session_1"
+      ],
+      "support": 120,
+      "template_id": "template_1_2a90c69642",
+      "utility": 0.0,
+      "weights": {
+        "fr11_session_memory": -0.233633,
+        "tier0r_curry_howard": 0.236266,
+        "tier0s_arithmetic_gap": 0.116739,
+        "tier0u_logical_consistency": 0.413362
+      }
+    }
+  ],
+  "schema": "carnot.fr11_v13_template_library",
+  "sha256": "2011a4aed173d75f2076d8db56b2f5814c7195efa59b861e2a6dc58451e22f37",
+  "size": 1,
+  "verifier_names": [
+    "fr11_session_memory",
+    "tier0r_curry_howard",
+    "tier0s_arithmetic_gap",
+    "tier0u_logical_consistency"
+  ]
+}

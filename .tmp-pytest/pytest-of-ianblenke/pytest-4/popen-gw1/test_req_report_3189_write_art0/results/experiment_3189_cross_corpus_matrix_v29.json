@@ -1,0 +1,739 @@
+{
+  "artifact": "experiment_3189_cross_corpus_matrix_v29",
+  "blocked_rows": 2,
+  "blocker_delta_from_v28": 7,
+  "clean_rows": 3,
+  "cross_corpus_matrix_v29_ready": true,
+  "diagnostic_only_rows": 3,
+  "duration_s": 2.0,
+  "flagged_rows": 5,
+  "fr11_status": "controller_memory_promotion_allowed_cross_environment_replay_passed_no_model_weight_update",
+  "gated_skip_rows": 3,
+  "hardware_status": "diagnostic_only_thrml_local_api_smoke_no_kv260_speedup_no_tsu_kona_execution",
+  "honest_verdict": "complete: cross_corpus_matrix_v29_ready=true; prior_matrix_version=v28; paper_ready=false; publication_blocker_count=12; blocker_delta_from_v28=7; next_top_gap=full_local_sota_receipt_clean_rerun_allowed_repair_gate_unblock",
+  "inference_substrate": {
+    "executes_conductor": false,
+    "executes_hardware": false,
+    "executes_models": false,
+    "executes_repairs": false,
+    "executes_solvers": false,
+    "executes_verifiers": false,
+    "kind": "aggregation_from_checked_in_dot295_artifacts",
+    "local_repo_only": true,
+    "no_live_llm_inference": true,
+    "source": "matrix_v28_capstone_v294_archive_v295_and_dot295_artifacts"
+  },
+  "invariant_violations": [],
+  "milestone": "2026.05.295",
+  "missing_artifact_comparison": {
+    "missing_artifact_delta_from_v28": 0,
+    "new_missing_dot295_artifacts": [],
+    "v28_missing_artifact_count": 1,
+    "v29_missing_artifact_count": 1
+  },
+  "missing_artifacts": [
+    {
+      "experiment_id": "exp3141",
+      "path": "results/experiment_3141_multi_turn_repair_ladder_v2.json",
+      "reason": "carried_forward_unresolved_missing_artifact_from_v28"
+    }
+  ],
+  "missing_rows": 1,
+  "next_top_gap": "full_local_sota_receipt_clean_rerun_allowed_repair_gate_unblock",
+  "no_conductor_execution": true,
+  "no_new_hardware_run": true,
+  "no_new_model_execution": true,
+  "no_new_repair_run": true,
+  "no_new_solver_run": true,
+  "no_new_verifier_run": true,
+  "ops_docs_reconciliation_left_to_conductor": true,
+  "paper_readiness_implications": {
+    "blocked_headline_claims": [
+      "live_verifier_headline",
+      "repair_headline",
+      "deployed_verifier_sidecar",
+      "hardware_speedup"
+    ],
+    "paper_ready": false,
+    "publication_blocker_count": 12
+  },
+  "paper_ready": false,
+  "paper_v6_narrowing": {
+    "deployed_verifier_sidecar_claimed": false,
+    "kv260_speedup_claimed": false,
+    "model_weight_self_learning_claimed": false,
+    "paper_ready_streak_claimed": false,
+    "tsu_or_kona_execution_claimed": false
+  },
+  "paper_v6_narrowing_preserved": true,
+  "prior_matrix_artifact": "results/experiment_3175_cross_corpus_matrix_v28.json",
+  "prior_matrix_version": "v28",
+  "prior_publication_blocker_count": 5,
+  "projection_only_rows": 1,
+  "publication_blocker_count": 12,
+  "publication_blockers": [
+    {
+      "blocker_class": "publication_blocker_flagged",
+      "claim_scope": "headline",
+      "row_id": "carry_flagged",
+      "source_artifact": "results/carry_flagged.json",
+      "source_field": "status",
+      "status": "flagged"
+    },
+    {
+      "blocker_class": "publication_blocker_blocked",
+      "claim_scope": "headline",
+      "row_id": "carry_blocked",
+      "source_artifact": "results/carry_blocked.json",
+      "source_field": "status",
+      "status": "blocked"
+    },
+    {
+      "blocker_class": "publication_blocker_gated_skipped",
+      "claim_scope": "headline",
+      "row_id": "carry_gated",
+      "source_artifact": "results/carry_gated.json",
+      "source_field": "status",
+      "status": "gated_skipped"
+    },
+    {
+      "blocker_class": "publication_blocker_projection_only",
+      "claim_scope": "architecture_sidecar",
+      "row_id": "carry_projection",
+      "source_artifact": "results/carry_projection.json",
+      "source_field": "status",
+      "status": "projection_only"
+    },
+    {
+      "blocker_class": "publication_blocker_missing",
+      "claim_scope": "headline",
+      "row_id": "carry_missing",
+      "source_artifact": "results/carry_missing.json",
+      "source_field": "status",
+      "status": "missing"
+    },
+    {
+      "blocker_class": "publication_blocker_flagged",
+      "claim_scope": "live_verifier_authenticity_contract",
+      "row_id": "dot295:exp3178_receipt_contract",
+      "source_artifact": "results/experiment_3178_receipt_backed_authenticity_contract_v3.json",
+      "source_field": "receipt_backed_authenticity_contract_v3_ready",
+      "status": "flagged"
+    },
+    {
+      "blocker_class": "publication_blocker_flagged",
+      "claim_scope": "live_sota_receipt_precondition",
+      "row_id": "dot295:exp3179_sota_receipt_smoke",
+      "source_artifact": "results/experiment_3179_local_sota_receipt_smoke_v3.json",
+      "source_field": "clean_rerun_allowed",
+      "status": "flagged"
+    },
+    {
+      "blocker_class": "publication_blocker_flagged",
+      "claim_scope": "exact_authority_diagnostic",
+      "row_id": "dot295:exp3180_controlled_invariance",
+      "source_artifact": "results/experiment_3180_controlled_invariance_executor_v2.json",
+      "source_field": "controlled_invariance_passed",
+      "status": "flagged"
+    },
+    {
+      "blocker_class": "publication_blocker_gated_skipped",
+      "claim_scope": "live_verifier_headline_evidence",
+      "row_id": "dot295:exp3181_clean_live_rerun_v10",
+      "source_artifact": "results/experiment_3181_clean_live_sota_verifier_rerun_v10.json",
+      "source_field": "clean_live_sota_verifier_rerun_v10_ready",
+      "status": "gated_skipped"
+    },
+    {
+      "blocker_class": "publication_blocker_flagged",
+      "claim_scope": "formal_counterexample_repair_certificate",
+      "row_id": "dot295:exp3183_certificate_expansion",
+      "source_artifact": "results/experiment_3183_counterexample_certificate_expansion_v3.json",
+      "source_field": "repair_call_ready",
+      "status": "flagged"
+    },
+    {
+      "blocker_class": "publication_blocker_blocked",
+      "claim_scope": "repair_gate_decision",
+      "row_id": "dot295:exp3184_repair_gate_v4",
+      "source_artifact": "results/experiment_3184_repair_gate_decision_v4.json",
+      "source_field": "repair_gate_state",
+      "status": "blocked"
+    },
+    {
+      "blocker_class": "publication_blocker_gated_skipped",
+      "claim_scope": "repair_execution",
+      "row_id": "dot295:exp3185_repair_ladder_v5",
+      "source_artifact": "results/experiment_3185_multi_turn_repair_ladder_v5.json",
+      "source_field": "multi_turn_repair_ladder_v5_ready",
+      "status": "gated_skipped"
+    }
+  ],
+  "repair_status": "blocked_receipt_precondition_repair_ladder_gated_skipped_certificate_expansion_flagged",
+  "required_source_errors": [],
+  "retired_rows": 1,
+  "rows": [
+    {
+      "blocker_class": "none",
+      "claim_scope": "headline",
+      "evidence_class": "v28_carry",
+      "row_id": "carry_clean",
+      "row_origin": "matrix_v28_test",
+      "source_artifact": "results/carry_clean.json",
+      "source_field": "status",
+      "status": "clean",
+      "summary": {
+        "source_status": "clean",
+        "v29_status_rationale": "carried_forward_from_matrix_v28"
+      }
+    },
+    {
+      "blocker_class": "publication_blocker_flagged",
+      "claim_scope": "headline",
+      "evidence_class": "v28_carry",
+      "row_id": "carry_flagged",
+      "row_origin": "matrix_v28_test",
+      "source_artifact": "results/carry_flagged.json",
+      "source_field": "status",
+      "status": "flagged",
+      "summary": {
+        "source_status": "flagged",
+        "v29_status_rationale": "carried_forward_from_matrix_v28"
+      }
+    },
+    {
+      "blocker_class": "publication_blocker_blocked",
+      "claim_scope": "headline",
+      "evidence_class": "v28_carry",
+      "row_id": "carry_blocked",
+      "row_origin": "matrix_v28_test",
+      "source_artifact": "results/carry_blocked.json",
+      "source_field": "status",
+      "status": "blocked",
+      "summary": {
+        "source_status": "blocked",
+        "v29_status_rationale": "carried_forward_from_matrix_v28"
+      }
+    },
+    {
+      "blocker_class": "publication_blocker_gated_skipped",
+      "claim_scope": "headline",
+      "evidence_class": "v28_carry",
+      "row_id": "carry_gated",
+      "row_origin": "matrix_v28_test",
+      "source_artifact": "results/carry_gated.json",
+      "source_field": "status",
+      "status": "gated_skipped",
+      "summary": {
+        "source_status": "gated_skipped",
+        "v29_status_rationale": "carried_forward_from_matrix_v28"
+      }
+    },
+    {
+      "blocker_class": "diagnostic_non_blocking",
+      "claim_scope": "headline",
+      "evidence_class": "v28_carry",
+      "row_id": "carry_diagnostic",
+      "row_origin": "matrix_v28_test",
+      "source_artifact": "results/carry_diagnostic.json",
+      "source_field": "status",
+      "status": "diagnostic_only",
+      "summary": {
+        "source_status": "diagnostic_only",
+        "v29_status_rationale": "carried_forward_from_matrix_v28"
+      }
+    },
+    {
+      "blocker_class": "publication_blocker_projection_only",
+      "claim_scope": "architecture_sidecar",
+      "evidence_class": "v28_carry",
+      "row_id": "carry_projection",
+      "row_origin": "matrix_v28_test",
+      "source_artifact": "results/carry_projection.json",
+      "source_field": "status",
+      "status": "projection_only",
+      "summary": {
+        "source_status": "projection_only",
+        "v29_status_rationale": "carried_forward_from_matrix_v28"
+      }
+    },
+    {
+      "blocker_class": "publication_blocker_missing",
+      "claim_scope": "headline",
+      "evidence_class": "v28_carry",
+      "row_id": "carry_missing",
+      "row_origin": "matrix_v28_test",
+      "source_artifact": "results/carry_missing.json",
+      "source_field": "status",
+      "status": "missing",
+      "summary": {
+        "source_status": "missing",
+        "v29_status_rationale": "carried_forward_from_matrix_v28"
+      }
+    },
+    {
+      "blocker_class": "retired_non_blocking",
+      "claim_scope": "headline",
+      "evidence_class": "v28_carry",
+      "row_id": "carry_retired",
+      "row_origin": "matrix_v28_test",
+      "source_artifact": "results/carry_retired.json",
+      "source_field": "status",
+      "status": "retired",
+      "summary": {
+        "source_status": "retired",
+        "v29_status_rationale": "carried_forward_from_matrix_v28"
+      }
+    },
+    {
+      "blocker_class": "publication_blocker_flagged",
+      "claim_scope": "live_verifier_authenticity_contract",
+      "evidence_class": "receipt_backed_authenticity_contract_v3",
+      "row_id": "dot295:exp3178_receipt_contract",
+      "row_origin": "milestone_295",
+      "source_artifact": "results/experiment_3178_receipt_backed_authenticity_contract_v3.json",
+      "source_field": "receipt_backed_authenticity_contract_v3_ready",
+      "status": "flagged",
+      "summary": {
+        "contract_blocker_count": 0,
+        "flagged_adversarial": true,
+        "honest_verdict": "complete: receipt contract",
+        "receipt_backed_authenticity_contract_v3_ready": true
+      }
+    },
+    {
+      "blocker_class": "publication_blocker_flagged",
+      "claim_scope": "live_sota_receipt_precondition",
+      "evidence_class": "local_sota_receipt_smoke_v3",
+      "row_id": "dot295:exp3179_sota_receipt_smoke",
+      "row_origin": "milestone_295",
+      "source_artifact": "results/experiment_3179_local_sota_receipt_smoke_v3.json",
+      "source_field": "clean_rerun_allowed",
+      "status": "flagged",
+      "summary": {
+        "clean_rerun_allowed": false,
+        "flagged_adversarial": true,
+        "headline_claim_allowed": false,
+        "honest_verdict": "complete: receipt smoke",
+        "live_call_count": 2,
+        "local_sota_receipt_smoke_v3_ready": true,
+        "preflight_passed": true,
+        "proof_receipt_count": 2,
+        "substrate_classification": "cpu_fallback_receipt_only",
+        "throughput_plausibility_passed": true
+      }
+    },
+    {
+      "blocker_class": "publication_blocker_flagged",
+      "claim_scope": "exact_authority_diagnostic",
+      "evidence_class": "controlled_invariance_executor_v2",
+      "row_id": "dot295:exp3180_controlled_invariance",
+      "row_origin": "milestone_295",
+      "source_artifact": "results/experiment_3180_controlled_invariance_executor_v2.json",
+      "source_field": "controlled_invariance_passed",
+      "status": "flagged",
+      "summary": {
+        "controlled_invariance_executor_v2_ready": true,
+        "controlled_invariance_passed": true,
+        "exact_row_count": 72,
+        "flagged_adversarial": true,
+        "honest_verdict": "complete: controlled invariance",
+        "known_false_accept_regression_count": 2,
+        "semantic_false_accept_count": 0,
+        "shortcut_failure_count": 0,
+        "source_error_count": 0
+      }
+    },
+    {
+      "blocker_class": "publication_blocker_gated_skipped",
+      "claim_scope": "live_verifier_headline_evidence",
+      "evidence_class": "clean_live_sota_verifier_rerun_v10",
+      "row_id": "dot295:exp3181_clean_live_rerun_v10",
+      "row_origin": "milestone_295",
+      "source_artifact": "results/experiment_3181_clean_live_sota_verifier_rerun_v10.json",
+      "source_field": "clean_live_sota_verifier_rerun_v10_ready",
+      "status": "gated_skipped",
+      "summary": {
+        "abstention_rate": 0.0,
+        "clean_live_sota_verifier_rerun_v10_ready": true,
+        "controlled_invariance_passed": true,
+        "false_accept_rate": 0.0,
+        "false_reject_rate": 0.0,
+        "flagged_adversarial": true,
+        "gate_reasons": [
+          "exp3179.clean_rerun_allowed=false",
+          "exp3179.substrate_classification=cpu_fallback_receipt_only"
+        ],
+        "gated_skip": true,
+        "headline_claim_allowed": false,
+        "honest_verdict": "blocked_receipt_precondition: gated skip",
+        "known_false_accept_regression_count": 2,
+        "live_call_count": 0
+      }
+    },
+    {
+      "blocker_class": "diagnostic_non_blocking",
+      "claim_scope": "diagnostic_sidecar_boundary",
+      "evidence_class": "distributional_ebm_exact_row_sidecar_v1",
+      "row_id": "dot295:exp3182_distributional_sidecar",
+      "row_origin": "milestone_295",
+      "source_artifact": "results/experiment_3182_distributional_ebm_exact_row_sidecar_v1.json",
+      "source_field": "deployed_verifier_claim_allowed",
+      "status": "diagnostic_only",
+      "summary": {
+        "deployed_verifier_claim_allowed": false,
+        "distributional_ebm_exact_row_sidecar_v1_ready": true,
+        "exact_labeled_row_count": 72,
+        "false_accept_separation_auc": 1.0,
+        "honest_verdict": "complete: diagnostic sidecar",
+        "known_false_accept_rows_scored": 2,
+        "source_error_count": 0
+      }
+    },
+    {
+      "blocker_class": "publication_blocker_flagged",
+      "claim_scope": "formal_counterexample_repair_certificate",
+      "evidence_class": "counterexample_certificate_expansion_v3",
+      "row_id": "dot295:exp3183_certificate_expansion",
+      "row_origin": "milestone_295",
+      "source_artifact": "results/experiment_3183_counterexample_certificate_expansion_v3.json",
+      "source_field": "repair_call_ready",
+      "status": "flagged",
+      "summary": {
+        "blocker_reasons": [
+          "flagged_adversarial_evidence_present"
+        ],
+        "counterexample_certificate_expansion_v3_ready": true,
+        "counterexample_count": 4,
+        "exact_row_count": 72,
+        "flagged_adversarial": true,
+        "honest_verdict": "complete: certificate expansion",
+        "known_false_accept_rows_covered": 2,
+        "repair_call_ready": false
+      }
+    },
+    {
+      "blocker_class": "publication_blocker_blocked",
+      "claim_scope": "repair_gate_decision",
+      "evidence_class": "repair_gate_decision_v4",
+      "row_id": "dot295:exp3184_repair_gate_v4",
+      "row_origin": "milestone_295",
+      "source_artifact": "results/experiment_3184_repair_gate_decision_v4.json",
+      "source_field": "repair_gate_state",
+      "status": "blocked",
+      "summary": {
+        "blocker_reasons": [
+          "exp3179.clean_rerun_allowed is not true"
+        ],
+        "honest_verdict": "blocked_receipt_precondition: repair gate",
+        "missing_artifact_count": 0,
+        "repair_attempt_budget_enabled": false,
+        "repair_gate_decision_v4_ready": true,
+        "repair_gate_state": "blocked_receipt_precondition"
+      }
+    },
+    {
+      "blocker_class": "publication_blocker_gated_skipped",
+      "claim_scope": "repair_execution",
+      "evidence_class": "multi_turn_repair_ladder_v5",
+      "row_id": "dot295:exp3185_repair_ladder_v5",
+      "row_origin": "milestone_295",
+      "source_artifact": "results/experiment_3185_multi_turn_repair_ladder_v5.json",
+      "source_field": "multi_turn_repair_ladder_v5_ready",
+      "status": "gated_skipped",
+      "summary": {
+        "flagged_adversarial": true,
+        "gate_state": "blocked_receipt_precondition",
+        "gated_skip": true,
+        "headline_claim_allowed": false,
+        "honest_verdict": "blocked_repair_gate_precondition: repair ladder",
+        "multi_turn_repair_ladder_v5_ready": true,
+        "remaining_blockers": [
+          "repair gate not unblocked"
+        ],
+        "repair_attempt_count": 0,
+        "repair_success_delta": 0.0
+      }
+    },
+    {
+      "blocker_class": "none",
+      "claim_scope": "fr11_controller_memory_promotion",
+      "evidence_class": "fr11_controller_memory_promotion_pack_v1",
+      "row_id": "dot295:exp3186_fr11_promotion_pack",
+      "row_origin": "milestone_295",
+      "source_artifact": "results/experiment_3186_fr11_controller_memory_promotion_pack_v1.json",
+      "source_field": "promotion_allowed",
+      "status": "clean",
+      "summary": {
+        "continuous_self_learning_task": true,
+        "fr11_controller_memory_promotion_pack_v1_ready": true,
+        "honest_verdict": "complete: FR-11 promotion",
+        "learning_tier": "Tier 2: Constraint Memory",
+        "no_model_weight_update_claimed": true,
+        "promotion_allowed": true,
+        "promotion_decision": "promote_controller_memory_only"
+      }
+    },
+    {
+      "blocker_class": "none",
+      "claim_scope": "fr11_controller_memory_drift_replay",
+      "evidence_class": "fr11_cross_environment_drift_replay_v1",
+      "row_id": "dot295:exp3187_fr11_drift_replay",
+      "row_origin": "milestone_295",
+      "source_artifact": "results/experiment_3187_fr11_cross_environment_drift_replay_v1.json",
+      "source_field": "promotion_allowed",
+      "status": "clean",
+      "summary": {
+        "continuous_self_learning_task": true,
+        "cross_environment_row_count": 9,
+        "fr11_cross_environment_drift_replay_v1_ready": true,
+        "heldout_row_count": 12,
+        "honest_verdict": "complete: drift replay",
+        "negative_control_regression_count": 0,
+        "no_model_weight_update_claimed": true,
+        "promotion_allowed": true,
+        "replay_mode_only": true,
+        "rollback_triggered": false
+      }
+    },
+    {
+      "blocker_class": "diagnostic_non_blocking",
+      "claim_scope": "hardware_api_boundary_diagnostic",
+      "evidence_class": "thrml_factor_graph_api_boundary_v1",
+      "row_id": "dot295:exp3188_thrml_boundary",
+      "row_origin": "milestone_295",
+      "source_artifact": "results/experiment_3188_thrml_factor_graph_api_boundary_v1.json",
+      "source_field": "thrml_factor_graph_api_boundary_v1_ready",
+      "status": "diagnostic_only",
+      "summary": {
+        "api_gap_count": 1,
+        "hardware_speedup_claim_allowed": false,
+        "honest_verdict": "complete: THRML boundary",
+        "kona_or_tsu_execution_claimed": false,
+        "local_api_smoke_passed": true,
+        "selected_exact_row_count": 2,
+        "source_error_count": 0,
+        "thrml_factor_graph_api_boundary_v1_ready": true,
+        "thrml_import_available": true,
+        "thrml_version": "0.1.3"
+      }
+    }
+  ],
+  "rows_total": 19,
+  "run_date": "20260527",
+  "schema": "carnot.cross_corpus_matrix.v29_295_artifact_aggregation.v1",
+  "scripts_research_conductor_modified": false,
+  "sidecar_status": "diagnostic_only_distributional_sidecar_no_deployed_verifier_claim",
+  "source_artifacts": [
+    {
+      "experiment_id": "exp3175",
+      "loaded_path": "results/experiment_3175_cross_corpus_matrix_v28.json",
+      "path": "results/experiment_3175_cross_corpus_matrix_v28.json",
+      "present": true,
+      "primary_present": true,
+      "readable_json_object": true,
+      "ready_field": "matrix_v28_ready",
+      "required": true,
+      "role": "matrix_v28_authority",
+      "sha256": "56db21c01465c1d06c974ec4dff2a81e7a6ec93a5728d6894c4c090e52539a77",
+      "source_type": "json"
+    },
+    {
+      "experiment_id": "exp3176",
+      "loaded_path": "results/experiment_3176_capstone_v294.json",
+      "path": "results/experiment_3176_capstone_v294.json",
+      "present": true,
+      "primary_present": true,
+      "readable_json_object": true,
+      "ready_field": "capstone_v294_ready",
+      "required": true,
+      "role": "capstone_v294_authority",
+      "sha256": "8a95c7d6f18900f32c39d8a362ddbc6ab4ab046f9dbaef55c435b20d4e912c77",
+      "source_type": "json"
+    },
+    {
+      "experiment_id": "exp3177",
+      "loaded_path": "results/experiment_3177_archive_v294_activate_v295.json",
+      "path": "results/experiment_3177_archive_v294_activate_v295.json",
+      "present": true,
+      "primary_present": true,
+      "readable_json_object": true,
+      "ready_field": "archive_v294_activate_v295_ready",
+      "required": true,
+      "role": "archive_v294_activate_v295",
+      "sha256": "fb11d9926b974c7992722496b139ac7e31bdafbc8dcedf246d8ce36429e2aa3f",
+      "source_type": "json"
+    },
+    {
+      "experiment_id": "exp3178",
+      "loaded_path": "results/experiment_3178_receipt_backed_authenticity_contract_v3.json",
+      "path": "results/experiment_3178_receipt_backed_authenticity_contract_v3.json",
+      "present": true,
+      "primary_present": true,
+      "readable_json_object": true,
+      "ready_field": "receipt_backed_authenticity_contract_v3_ready",
+      "required": false,
+      "role": "receipt_backed_authenticity_contract",
+      "sha256": "2ae881bedfbe7d6aad00d0235192b6589f771be599f8b0ec3d00a93adcfee04c",
+      "source_type": "json"
+    },
+    {
+      "experiment_id": "exp3179",
+      "loaded_path": "results/experiment_3179_local_sota_receipt_smoke_v3.json",
+      "path": "results/experiment_3179_local_sota_receipt_smoke_v3.json",
+      "present": true,
+      "primary_present": true,
+      "readable_json_object": true,
+      "ready_field": "local_sota_receipt_smoke_v3_ready",
+      "required": false,
+      "role": "local_sota_receipt_smoke",
+      "sha256": "610bce31a49bc49924e24ac0538fb96509ae315029f04df906551f949a07ed70",
+      "source_type": "json"
+    },
+    {
+      "experiment_id": "exp3180",
+      "loaded_path": "results/experiment_3180_controlled_invariance_executor_v2.json",
+      "path": "results/experiment_3180_controlled_invariance_executor_v2.json",
+      "present": true,
+      "primary_present": true,
+      "readable_json_object": true,
+      "ready_field": "controlled_invariance_executor_v2_ready",
+      "required": false,
+      "role": "controlled_invariance_executor",
+      "sha256": "6da2ab5a2c251c948f61ac6e4f02a20727b85d3cda25162d00c952825920b8a0",
+      "source_type": "json"
+    },
+    {
+      "experiment_id": "exp3181",
+      "loaded_path": "results/experiment_3181_clean_live_sota_verifier_rerun_v10.json",
+      "path": "results/experiment_3181_clean_live_sota_verifier_rerun_v10.json",
+      "present": true,
+      "primary_present": true,
+      "readable_json_object": true,
+      "ready_field": "clean_live_sota_verifier_rerun_v10_ready",
+      "required": false,
+      "role": "clean_live_sota_verifier_rerun",
+      "sha256": "12f6e9f34c9b4fd696256c0b22ef971d80160a9eb17115d4f14853f20f37e5cb",
+      "source_type": "json"
+    },
+    {
+      "experiment_id": "exp3182",
+      "loaded_path": "results/experiment_3182_distributional_ebm_exact_row_sidecar_v1.json",
+      "path": "results/experiment_3182_distributional_ebm_exact_row_sidecar_v1.json",
+      "present": true,
+      "primary_present": true,
+      "readable_json_object": true,
+      "ready_field": "distributional_ebm_exact_row_sidecar_v1_ready",
+      "required": false,
+      "role": "distributional_ebm_exact_row_sidecar",
+      "sha256": "6911e7e72b1a860f31176128196422096c829ab4e3995a9f00a0a6a6ce106e0b",
+      "source_type": "json"
+    },
+    {
+      "experiment_id": "exp3183",
+      "loaded_path": "results/experiment_3183_counterexample_certificate_expansion_v3.json",
+      "path": "results/experiment_3183_counterexample_certificate_expansion_v3.json",
+      "present": true,
+      "primary_present": true,
+      "readable_json_object": true,
+      "ready_field": "counterexample_certificate_expansion_v3_ready",
+      "required": false,
+      "role": "counterexample_certificate_expansion",
+      "sha256": "8ee47cde7932b5a983fbb41dbd2e305851dbf45cf95f93d0712877b558aceb55",
+      "source_type": "json"
+    },
+    {
+      "experiment_id": "exp3184",
+      "loaded_path": "results/experiment_3184_repair_gate_decision_v4.json",
+      "path": "results/experiment_3184_repair_gate_decision_v4.json",
+      "present": true,
+      "primary_present": true,
+      "readable_json_object": true,
+      "ready_field": "repair_gate_decision_v4_ready",
+      "required": false,
+      "role": "repair_gate_v4",
+      "sha256": "ff0df556504447b55936996075f409e830cb2b7128ca20334d03fc5d0a1ceebd",
+      "source_type": "json"
+    },
+    {
+      "experiment_id": "exp3185",
+      "loaded_path": "results/experiment_3185_multi_turn_repair_ladder_v5.json",
+      "path": "results/experiment_3185_multi_turn_repair_ladder_v5.json",
+      "present": true,
+      "primary_present": true,
+      "readable_json_object": true,
+      "ready_field": "multi_turn_repair_ladder_v5_ready",
+      "required": false,
+      "role": "repair_ladder_v5",
+      "sha256": "df6e66794c2b988f0bee07b6dabca076d1a3a6cf78a8e918de73fc7b33f01097",
+      "source_type": "json"
+    },
+    {
+      "experiment_id": "exp3186",
+      "loaded_path": "results/experiment_3186_fr11_controller_memory_promotion_pack_v1.json",
+      "path": "results/experiment_3186_fr11_controller_memory_promotion_pack_v1.json",
+      "present": true,
+      "primary_present": true,
+      "readable_json_object": true,
+      "ready_field": "fr11_controller_memory_promotion_pack_v1_ready",
+      "required": false,
+      "role": "fr11_controller_memory_promotion_pack",
+      "sha256": "bafbae88e958db84c2e4370aae14f773d0267c8312bdb48c3df961be3c2993a7",
+      "source_type": "json"
+    },
+    {
+      "experiment_id": "exp3187",
+      "loaded_path": "results/experiment_3187_fr11_cross_environment_drift_replay_v1.json",
+      "path": "results/experiment_3187_fr11_cross_environment_drift_replay_v1.json",
+      "present": true,
+      "primary_present": true,
+      "readable_json_object": true,
+      "ready_field": "fr11_cross_environment_drift_replay_v1_ready",
+      "required": false,
+      "role": "fr11_cross_environment_drift_replay",
+      "sha256": "db77771c081479949c447748475e303cea5a0d0c71cf563d2cc7b96346dcc262",
+      "source_type": "json"
+    },
+    {
+      "experiment_id": "exp3188",
+      "loaded_path": "results/experiment_3188_thrml_factor_graph_api_boundary_v1.json",
+      "path": "results/experiment_3188_thrml_factor_graph_api_boundary_v1.json",
+      "present": true,
+      "primary_present": true,
+      "readable_json_object": true,
+      "ready_field": "thrml_factor_graph_api_boundary_v1_ready",
+      "required": false,
+      "role": "thrml_factor_graph_api_boundary",
+      "sha256": "508256c2b44cc82baaf7ca8f7412f730cb04f5a608df0e554857ce84b0dd25c7",
+      "source_type": "json"
+    }
+  ],
+  "source_checksums": {
+    "results/experiment_3175_cross_corpus_matrix_v28.json": "56db21c01465c1d06c974ec4dff2a81e7a6ec93a5728d6894c4c090e52539a77",
+    "results/experiment_3176_capstone_v294.json": "8a95c7d6f18900f32c39d8a362ddbc6ab4ab046f9dbaef55c435b20d4e912c77",
+    "results/experiment_3177_archive_v294_activate_v295.json": "fb11d9926b974c7992722496b139ac7e31bdafbc8dcedf246d8ce36429e2aa3f",
+    "results/experiment_3178_receipt_backed_authenticity_contract_v3.json": "2ae881bedfbe7d6aad00d0235192b6589f771be599f8b0ec3d00a93adcfee04c",
+    "results/experiment_3179_local_sota_receipt_smoke_v3.json": "610bce31a49bc49924e24ac0538fb96509ae315029f04df906551f949a07ed70",
+    "results/experiment_3180_controlled_invariance_executor_v2.json": "6da2ab5a2c251c948f61ac6e4f02a20727b85d3cda25162d00c952825920b8a0",
+    "results/experiment_3181_clean_live_sota_verifier_rerun_v10.json": "12f6e9f34c9b4fd696256c0b22ef971d80160a9eb17115d4f14853f20f37e5cb",
+    "results/experiment_3182_distributional_ebm_exact_row_sidecar_v1.json": "6911e7e72b1a860f31176128196422096c829ab4e3995a9f00a0a6a6ce106e0b",
+    "results/experiment_3183_counterexample_certificate_expansion_v3.json": "8ee47cde7932b5a983fbb41dbd2e305851dbf45cf95f93d0712877b558aceb55",
+    "results/experiment_3184_repair_gate_decision_v4.json": "ff0df556504447b55936996075f409e830cb2b7128ca20334d03fc5d0a1ceebd",
+    "results/experiment_3185_multi_turn_repair_ladder_v5.json": "df6e66794c2b988f0bee07b6dabca076d1a3a6cf78a8e918de73fc7b33f01097",
+    "results/experiment_3186_fr11_controller_memory_promotion_pack_v1.json": "bafbae88e958db84c2e4370aae14f773d0267c8312bdb48c3df961be3c2993a7",
+    "results/experiment_3187_fr11_cross_environment_drift_replay_v1.json": "db77771c081479949c447748475e303cea5a0d0c71cf563d2cc7b96346dcc262",
+    "results/experiment_3188_thrml_factor_graph_api_boundary_v1.json": "508256c2b44cc82baaf7ca8f7412f730cb04f5a608df0e554857ce84b0dd25c7"
+  },
+  "status_counts": {
+    "blocked": 2,
+    "clean": 3,
+    "diagnostic_only": 3,
+    "flagged": 5,
+    "gated_skipped": 3,
+    "missing": 1,
+    "projection_only": 1,
+    "retired": 1
+  },
+  "status_updates_written": false,
+  "verifier_status": "gated_skip_cpu_fallback_receipt_only_flagged_adversarial_controlled_invariance_passed_exact_authority_only"
+}

@@ -1,0 +1,19 @@
+
+\begin{abstract}
+GRPO with ThinkPRM v2 improves held-out GSM8K by +4 pp to +8.51 pp.
+\end{abstract}
+\section{Empirical Realities \& Anomalies}
+Energy Verifier Calibration (Milestone .87): Training the SOS-KAN verifier on a
+7,329-pair corpus fixed the energy inversion. Post-retrain AUROC=0.9774.
+correct energy ordering restored.
+GRPO with Energy Reward (Milestone .87-.88): ThinkPRM v2 (AUROC=0.9946)
+achieved +4 pp to +8.51 pp on held-out GSM8K.
+k=5 AND-compose production deployment (exp1121): deployed.
+Zenil alpha_t self-distillation grounding (Milestone .88): alpha_t measured at
+0.52 with retrained verifier vs prior 0.38.
+\section{Related Work}
+HIVE~\cite{hive2026} detects hallucinations; Carnot additionally provides
+energy-guided repair and local-first deployment.
+\section{Conclusion \& Roadmap}
+The retrained verifier fixes the observed energy ordering; remaining work is
+generalization.

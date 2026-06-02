@@ -1,0 +1,437 @@
+{
+  "artifact": "experiment_3146_hardware_sampler_evidence_boundary_v6",
+  "clut_sampler_boundary": {
+    "cpu_only": true,
+    "decision": "CPU simulation",
+    "flagged_adversarial": true,
+    "hardware_claim_allowed": false,
+    "hardware_commands_run": [],
+    "ready": true,
+    "source_artifact": "results/experiment_3118_clut_sampler_backend_integration_boundary_v2.json"
+  },
+  "evidence_inventory": {
+    "clut": {
+      "cpu_only": true,
+      "decision": "CPU simulation",
+      "flagged_adversarial": true,
+      "hardware_claim_allowed": false,
+      "hardware_commands_run": [],
+      "ready": true,
+      "source_artifact": "results/experiment_3118_clut_sampler_backend_integration_boundary_v2.json"
+    },
+    "gatemate": {
+      "decision": "blocked",
+      "gatemate_rerun_allowed": false,
+      "missing_fields": [
+        "gatemate_output_contract_ready",
+        "host_visible_io_plan_ready",
+        "ccf_binding_for_done"
+      ],
+      "operator_evidence_ingestion_v4_ready": true
+    },
+    "kona": {
+      "architecture_signal_only": true,
+      "decision": "out-of-scope",
+      "missing_fields": [
+        "authenticated_local_kona_access_or_execution_evidence"
+      ],
+      "present_evidence": [
+        "results/experiment_1362_publication_hold_ebt_arm_kona_claim_boundary.json"
+      ]
+    },
+    "kv260": {
+      "authenticated": true,
+      "decision": "authenticated hardware evidence",
+      "historical_speedup_claim_seen": true,
+      "historical_speedup_not_promoted_by_exp3146": true,
+      "missing_fields": [],
+      "present_evidence": [
+        "results/experiment_2898_kv260_ising_sampler_hardware_latency_benchmark_v1.json",
+        "results/experiment_2898_kv260_transcript.log"
+      ]
+    },
+    "polarfire": {
+      "authenticated": true,
+      "decision": "authenticated hardware evidence",
+      "missing_fields": [],
+      "no_speedup_claim": true,
+      "present_evidence": [
+        "results/experiment_2958_polarfire_1000_clause_scorer_v2.json",
+        "results/experiment_2958_polarfire_1000_clause_transcript_v2.json"
+      ]
+    },
+    "prior_v5": {
+      "present": true,
+      "ready": true,
+      "source_artifact": "results/experiment_3132_hardware_evidence_sampler_boundary_v5.json"
+    },
+    "ssqa": {
+      "decision": "blocked",
+      "host_visible_smoke_ready": false,
+      "missing_fields": [
+        "host_visible_transcript_path",
+        "readback_hash",
+        "per_sample_latency_s"
+      ],
+      "ssqa_readback_allowed": false
+    },
+    "thrml_tsu": {
+      "decision": "out-of-scope",
+      "missing_fields": [
+        "authenticated_tsu_hardware_evidence"
+      ],
+      "no_tsu_hardware_claim": true,
+      "present_evidence": [
+        "results/experiment_2916_thrml_kv260_sampler_parity_v1.json"
+      ]
+    }
+  },
+  "gatemate_evidence_complete": false,
+  "hardware_commands_run": [],
+  "hardware_sampler_evidence_boundary_v6_ready": true,
+  "honest_verdict": "complete: hardware_sampler_evidence_boundary_v6_ready=true; gatemate_evidence_complete=false; ssqa_readback_ready=false; kona_claim_allowed=false; speedup_claim_allowed=false; hardware_commands_run=0",
+  "inference_substrate": {
+    "board_flash_attempted": false,
+    "executes_hardware": false,
+    "executes_models": false,
+    "hardware_commands_run": [],
+    "hardware_readback_attempted": false,
+    "kind": "hardware_sampler_evidence_boundary_v6",
+    "local_repo_only": true,
+    "no_live_model_inference": true,
+    "source": "checked_in_local_artifacts",
+    "synthesis_or_pnr_run": false
+  },
+  "kona_claim_allowed": false,
+  "kv260_evidence_status": "authenticated_historical_kv260_hardware_evidence_present_no_new_execution",
+  "milestone": "2026.05.292",
+  "missing_operator_evidence": [
+    {
+      "checked_paths": [
+        "results/experiment_3048_gatemate_output_contract_operator_package_v1.json",
+        "hardware/gatemate/ising_n16_gatemate.ccf"
+      ],
+      "missing_item": "gatemate:authoritative_pinout_ccf_binding",
+      "missing_required_fields": [
+        "gatemate_output_contract_ready",
+        "host_visible_io_plan_ready",
+        "ccf_binding_for_done"
+      ],
+      "operator_action": "Provide authoritative GateMate output pinout.",
+      "source_artifact": "results/experiment_3048_gatemate_output_contract_operator_package_v1.json"
+    },
+    {
+      "checked_paths": [
+        "results/experiment_3050_gatemate_host_visible_flash_smoke_v5.json"
+      ],
+      "missing_item": "ssqa:host_visible_smoke_evidence",
+      "missing_required_fields": [
+        "host_visible_transcript_path",
+        "readback_hash",
+        "per_sample_latency_s"
+      ],
+      "operator_action": "Commit a passing host-visible smoke transcript.",
+      "source_artifact": "results/experiment_3050_gatemate_host_visible_flash_smoke_v5.json"
+    },
+    {
+      "checked_paths": [],
+      "missing_item": "thrml_tsu:authenticated_tsu_hardware_evidence",
+      "missing_required_fields": [
+        "authenticated_tsu_hardware_evidence"
+      ],
+      "operator_action": "Commit authenticated TSU hardware execution evidence before any TSU claim.",
+      "source_artifact": ""
+    },
+    {
+      "checked_paths": [],
+      "missing_item": "kona:authenticated_local_kona_access_or_execution_evidence",
+      "missing_required_fields": [
+        "authenticated_local_kona_access_or_execution_evidence"
+      ],
+      "operator_action": "Keep Kona bounded to architecture context until authenticated local Kona access or execution evidence exists.",
+      "source_artifact": ""
+    },
+    {
+      "checked_paths": [],
+      "missing_item": "clut:authenticated_hardware_execution_evidence",
+      "missing_required_fields": [
+        "hardware_execution_evidence"
+      ],
+      "operator_action": "Keep cLUT bounded to CPU until authenticated hardware execution evidence exists.",
+      "source_artifact": ""
+    }
+  ],
+  "missing_required_source_artifacts": [],
+  "polarfire_evidence_status": "authenticated_polarfire_dispatch_hash_evidence_present_no_speedup_claim",
+  "post_exp3132_evidence_scan": {
+    "evidence_tokens": [
+      "host_visible_transcript_path",
+      "gatemate_host_visible_smoke_passed",
+      "transcript_sha256",
+      "host_reader_command",
+      "expected_transcript",
+      "observed_transcript",
+      "transcript_matched",
+      "selected_output_signal",
+      "ccf_binding",
+      "flash_command",
+      "readback_hash",
+      "sample_count",
+      "wall_clock_duration_s",
+      "per_sample_latency_s",
+      "Pin_out"
+    ],
+    "matched_path_classification": {
+      "results/experiment_3133_cross_corpus_matrix_v25.json": "carry_forward_reference"
+    },
+    "matched_paths": [
+      "results/experiment_3133_cross_corpus_matrix_v25.json"
+    ],
+    "new_operator_evidence_found": false,
+    "scanned_paths": [
+      "results/experiment_3133_cross_corpus_matrix_v25.json",
+      "results/experiment_3135_archive_v291_activate_v292.json"
+    ]
+  },
+  "run_date": "20260526",
+  "sampler_boundary_decisions": {
+    "clut": "CPU simulation",
+    "gatemate": "blocked",
+    "kona": "out-of-scope",
+    "kv260": "authenticated hardware evidence",
+    "polarfire": "authenticated hardware evidence",
+    "ssqa": "blocked",
+    "thrml_tsu": "out-of-scope"
+  },
+  "schema": "carnot.hardware_sampler_evidence_boundary.v6",
+  "source_artifacts": [
+    {
+      "path": "results/experiment_3132_hardware_evidence_sampler_boundary_v5.json",
+      "present": true,
+      "readable": true,
+      "required": true,
+      "role": "exp3132_hardware_boundary_v5",
+      "sha256": "5d03fb94eb19d36aaa89b5038db570650e5a7cbfd2bb36095c1be6f59b77205a",
+      "source_type": "json"
+    },
+    {
+      "path": "results/experiment_3118_clut_sampler_backend_integration_boundary_v2.json",
+      "present": true,
+      "readable": true,
+      "required": true,
+      "role": "exp3118_clut_sampler_boundary",
+      "sha256": "92ddb42e2abad4cb34979e901cb2d05934a89a52f10acf5aee8545ce33c70a3b",
+      "source_type": "json"
+    },
+    {
+      "path": "results/experiment_3119_gatemate_ssqa_operator_evidence_ingestion_v4.json",
+      "present": true,
+      "readable": true,
+      "required": true,
+      "role": "exp3119_gatemate_ssqa_operator_evidence",
+      "sha256": "c34dfa05c6398b80b4df88517cc6ede8f15288bd35f6900b53440402db7a5e6a",
+      "source_type": "json"
+    },
+    {
+      "path": "research-hardware-wishlist.md",
+      "present": true,
+      "readable": true,
+      "required": false,
+      "role": "hardware_wishlist",
+      "sha256": "534d61786d52d9ee0a29e5e7ef091e790f3462ad04153539d43f5295e93e018f",
+      "source_type": "text"
+    },
+    {
+      "path": "research-references.md",
+      "present": true,
+      "readable": true,
+      "required": false,
+      "role": "research_references",
+      "sha256": "9cf8c82996e75a216405467df509b29e5901054d8afe9fbe8743a18e350ffeeb",
+      "source_type": "text"
+    },
+    {
+      "path": "ops/status.md",
+      "present": true,
+      "readable": true,
+      "required": false,
+      "role": "ops_status",
+      "sha256": "49ad0c7d92a993e61611f30fba8cdcc3af23fd60aa26823504bbaef5fec9e121",
+      "source_type": "text"
+    },
+    {
+      "path": "ops/changelog.md",
+      "present": true,
+      "readable": true,
+      "required": false,
+      "role": "ops_changelog",
+      "sha256": "b7d6aaa87ad44e7453b4b231590020233717db2897dd51b3b0c698f73201cb4e",
+      "source_type": "text"
+    },
+    {
+      "path": "hardware/gatemate/ising_n16_gatemate.ccf",
+      "present": true,
+      "readable": true,
+      "required": false,
+      "role": "gatemate_ccf",
+      "sha256": "fdd1b17f993a7d5c8ac97a63bccadcfdf83a0e5d73c65b72cf5398a48b258867",
+      "source_type": "text"
+    },
+    {
+      "path": "results/experiment_2898_kv260_ising_sampler_hardware_latency_benchmark_v1.json",
+      "present": true,
+      "readable": true,
+      "required": false,
+      "role": "kv260_latency_artifact",
+      "sha256": "3130af6f72cacfe4e930e012ae3f30318526f9a871c6d223aeedd5f7c62d0e14",
+      "source_type": "json"
+    },
+    {
+      "path": "results/experiment_2898_kv260_transcript.log",
+      "present": true,
+      "readable": true,
+      "required": false,
+      "role": "kv260_latency_transcript",
+      "sha256": "579c9a642aa37d2424a3f2b1850858b70f86916f4c9a8cc07b89f37d43b62c51",
+      "source_type": "text"
+    },
+    {
+      "path": "results/experiment_2913_kv260_hardware_cpu_claim_boundary_v1.json",
+      "present": true,
+      "readable": true,
+      "required": false,
+      "role": "kv260_claim_boundary",
+      "sha256": "dc289eb12fbf0858e0b21592d633d1a44f1cdd70ddd7a7ef1cbd7cb21a7dc9d9",
+      "source_type": "json"
+    },
+    {
+      "path": "results/experiment_2938_kv260_mmd_vs_cpu_sequential_gibbs_v1.json",
+      "present": false,
+      "readable": false,
+      "required": false,
+      "role": "kv260_mmd_artifact",
+      "sha256": null,
+      "source_type": "json"
+    },
+    {
+      "path": "results/experiment_2938_kv260_mmd_transcript.log",
+      "present": false,
+      "readable": false,
+      "required": false,
+      "role": "kv260_mmd_transcript",
+      "sha256": null,
+      "source_type": "text"
+    },
+    {
+      "path": "results/experiment_2942_kv260_continuation_n_scaling_v1.json",
+      "present": false,
+      "readable": false,
+      "required": false,
+      "role": "kv260_n_scaling_artifact",
+      "sha256": null,
+      "source_type": "json"
+    },
+    {
+      "path": "results/experiment_2942_kv260_n_scaling_transcript.log",
+      "present": false,
+      "readable": false,
+      "required": false,
+      "role": "kv260_n_scaling_transcript",
+      "sha256": null,
+      "source_type": "text"
+    },
+    {
+      "path": "results/experiment_2900_polarfire_carnot_dispatch_smoke_v1.json",
+      "present": false,
+      "readable": false,
+      "required": false,
+      "role": "polarfire_dispatch_artifact",
+      "sha256": null,
+      "source_type": "json"
+    },
+    {
+      "path": "results/experiment_2900_polarfire_transcript_v1.json",
+      "present": false,
+      "readable": false,
+      "required": false,
+      "role": "polarfire_dispatch_transcript",
+      "sha256": null,
+      "source_type": "json"
+    },
+    {
+      "path": "results/experiment_2941_polarfire_continuation_v1.json",
+      "present": false,
+      "readable": false,
+      "required": false,
+      "role": "polarfire_500_clause_artifact",
+      "sha256": null,
+      "source_type": "json"
+    },
+    {
+      "path": "results/experiment_2941_polarfire_transcript_v1.json",
+      "present": false,
+      "readable": false,
+      "required": false,
+      "role": "polarfire_500_clause_transcript",
+      "sha256": null,
+      "source_type": "json"
+    },
+    {
+      "path": "results/experiment_2958_polarfire_1000_clause_scorer_v2.json",
+      "present": true,
+      "readable": true,
+      "required": false,
+      "role": "polarfire_1000_clause_artifact",
+      "sha256": "0e0d3f31bc005cf34208734c3f01e415fbe259b33323184c9e4ac52d135f3e4e",
+      "source_type": "json"
+    },
+    {
+      "path": "results/experiment_2958_polarfire_1000_clause_transcript_v2.json",
+      "present": true,
+      "readable": true,
+      "required": false,
+      "role": "polarfire_1000_clause_transcript",
+      "sha256": "1964e3187b313399febb659b4242b58b1939435c25cdd6aac1f4a2b3ecbddf90",
+      "source_type": "json"
+    },
+    {
+      "path": "results/experiment_2883_thrml_sampler_portability_smoke_v2.json",
+      "present": false,
+      "readable": false,
+      "required": false,
+      "role": "thrml_portability_smoke",
+      "sha256": null,
+      "source_type": "json"
+    },
+    {
+      "path": "results/experiment_2901_thrml_local_import_repair_v1.json",
+      "present": false,
+      "readable": false,
+      "required": false,
+      "role": "thrml_import_repair",
+      "sha256": null,
+      "source_type": "json"
+    },
+    {
+      "path": "results/experiment_2916_thrml_kv260_sampler_parity_v1.json",
+      "present": true,
+      "readable": true,
+      "required": false,
+      "role": "thrml_kv260_simulator_parity",
+      "sha256": "2f829306defd3242b59c3803091f9f2138f52a2268ac3ea147fa04b1800cfbb4",
+      "source_type": "json"
+    },
+    {
+      "path": "results/experiment_1362_publication_hold_ebt_arm_kona_claim_boundary.json",
+      "present": true,
+      "readable": true,
+      "required": false,
+      "role": "kona_claim_boundary",
+      "sha256": "7c034af1b367e6bcb8e4e6985b2db6abea9620e6204aae120b01e0d5b5e2a473",
+      "source_type": "json"
+    }
+  ],
+  "speedup_claim_allowed": false,
+  "ssqa_readback_ready": false,
+  "thrml_tsu_claim_allowed": false
+}

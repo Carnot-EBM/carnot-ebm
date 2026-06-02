@@ -1,0 +1,57 @@
+{
+  "corrigendum_ready": true,
+  "downstream_usage_rules": {
+    "kan": {
+      "allowed": true,
+      "headline_allowed": false,
+      "rule": "May use corpus for sidecar/autopsy work only."
+    }
+  },
+  "duration_flags": [
+    {
+      "experiment_id": "exp3270",
+      "kind": "DURATION_TOO_SHORT"
+    },
+    {
+      "experiment_id": "exp3271",
+      "kind": "DURATION_TOO_SHORT"
+    }
+  ],
+  "duration_s": 0.018732,
+  "experiment_id": "exp3283",
+  "honest_verdict": "complete: corrigendum_ready=true",
+  "provenance_by_artifact": {
+    "exp3270": {
+      "artifact_class": "cached",
+      "row_provenance_counts": {
+        "cached_llm_panel": 12,
+        "template_backed": 5988
+      }
+    },
+    "exp3271": {
+      "artifact_class": "cached",
+      "row_provenance_counts": {
+        "cached_llm_panel": 11,
+        "template_backed": 5994
+      }
+    },
+    "exp3273": {
+      "artifact_class": "aggregation-only",
+      "claim_boundary": "KAN result is sidecar-only because non-inferiority failed"
+    }
+  },
+  "provisional_or_sidecar_metrics": [
+    {
+      "boundary": "KAN sidecar only; DeLong non-inferiority failed",
+      "metric": "full_corpus_auroc",
+      "source_experiment_id": "exp3273",
+      "value": 0.475326
+    }
+  ],
+  "tautology_flags": [
+    {
+      "experiment_id": "exp3272",
+      "kind": "TAUTOLOGY"
+    }
+  ]
+}

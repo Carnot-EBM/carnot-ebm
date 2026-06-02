@@ -1,0 +1,1 @@
+No authenticated hardware speedup.

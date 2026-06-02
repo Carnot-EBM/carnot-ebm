@@ -1,0 +1,129 @@
+{
+  "decode_trace": {
+    "final_text": " bad ok ok ok",
+    "steps": [
+      {
+        "positive_allowed_count": null,
+        "prefix_text": "",
+        "rejected_token_ids": [],
+        "rejection_constraints": {},
+        "selected_token_id": 1,
+        "selected_token_text": " bad",
+        "step": 0
+      },
+      {
+        "positive_allowed_count": null,
+        "prefix_text": " bad",
+        "rejected_token_ids": [
+          2
+        ],
+        "rejection_constraints": {
+          "2": [
+            "blocked_literal"
+          ]
+        },
+        "selected_token_id": 4,
+        "selected_token_text": " ok",
+        "step": 1
+      },
+      {
+        "positive_allowed_count": null,
+        "prefix_text": " bad ok",
+        "rejected_token_ids": [
+          5
+        ],
+        "rejection_constraints": {
+          "5": [
+            "email_format"
+          ]
+        },
+        "selected_token_id": 4,
+        "selected_token_text": " ok",
+        "step": 2
+      },
+      {
+        "positive_allowed_count": null,
+        "prefix_text": " bad ok ok",
+        "rejected_token_ids": [
+          6
+        ],
+        "rejection_constraints": {
+          "6": [
+            "invalid_ticket"
+          ]
+        },
+        "selected_token_id": 4,
+        "selected_token_text": " ok",
+        "step": 3
+      }
+    ],
+    "stopped_reason": "max_steps",
+    "token_ids": [
+      1,
+      4,
+      4,
+      4
+    ]
+  },
+  "experiment": 1956,
+  "honest_verdict": "complete: nco_negative_constraints_ready",
+  "nco_negative_constraint_layer_ready": true,
+  "negative_constraints_upheld": true,
+  "overhead_vs_positive_trie": {
+    "baseline": "positive_mask_trie_python",
+    "candidate_checks": 40,
+    "nco_ns_per_token": 8778.95,
+    "nco_rejected_count": 3,
+    "overhead_ratio": 1.706921,
+    "positive_trie_ns_per_token": 5143.15,
+    "tokens_evaluated": 20
+  },
+  "registry_summary": {
+    "constraint_count": 3,
+    "kinds": [
+      "literal",
+      "regex",
+      "regex"
+    ],
+    "max_lookback": 96,
+    "state_explosion_avoided": true
+  },
+  "rejected_token_examples": [
+    {
+      "constraint_names": [
+        "blocked_literal"
+      ],
+      "step": 1,
+      "token_id": 2,
+      "token_text": "word"
+    },
+    {
+      "constraint_names": [
+        "email_format"
+      ],
+      "step": 2,
+      "token_id": 5,
+      "token_text": " user@example.com"
+    },
+    {
+      "constraint_names": [
+        "invalid_ticket"
+      ],
+      "step": 3,
+      "token_id": 6,
+      "token_text": " ABC-12345"
+    }
+  ],
+  "run_date": "20260512",
+  "schema": "nco_negative_constraints_v1",
+  "source_paper": "arXiv:2605.10065",
+  "spec_refs": [
+    "REQ-INFER-1956",
+    "SCENARIO-INFER-1956"
+  ],
+  "status": "complete",
+  "tests_run": [
+    ".venv/bin/pytest tests/python/inference/test_negative_constraints_1956.py -q"
+  ],
+  "title": "Exp 1956: NCO Plug-in for Negative Constraints"
+}

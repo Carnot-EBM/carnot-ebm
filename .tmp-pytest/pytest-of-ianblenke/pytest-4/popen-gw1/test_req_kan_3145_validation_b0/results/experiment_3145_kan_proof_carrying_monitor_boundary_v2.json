@@ -1,0 +1,739 @@
+{
+  "artifact": "experiment_3145_kan_proof_carrying_monitor_boundary_v2",
+  "attached_monitor_record_count": 2,
+  "claim_boundary": {
+    "does_not_prove": [
+      "trained KAN network soundness",
+      "generation-path integration",
+      "deployed verifier improvement",
+      "hardware execution",
+      "live LLM inference"
+    ],
+    "proves": "two replayable KAN PWA/MILP proof records attached to monitor fixtures"
+  },
+  "deployed_verifier_claim": false,
+  "duration_s": 1.0,
+  "false_accept_relevance": {
+    "attached_false_accept_record_count": 2,
+    "attached_false_accept_row_ids": [
+      "resyn-3084-arith-003",
+      "resyn-3084-smt-000"
+    ],
+    "covered_false_accept_families": [
+      "contradiction"
+    ],
+    "covered_primary_mechanisms": [
+      "SAT/validity-token confusion",
+      "contradiction miss"
+    ],
+    "deployed_gate_missing": true,
+    "known_false_accept_row_ids": [
+      "resyn-3084-arith-003",
+      "resyn-3084-smt-000"
+    ],
+    "question": "Would the attached KAN proof-carrying records have helped any .291 false-accept family?",
+    "reason": "Records preserve exact fixture authority and KAN PWA proof evidence for replay, but no live accept/reject gate consumes them.",
+    "would_help_replay_audit": true,
+    "would_prevent_live_false_accept": false
+  },
+  "field_principles": {
+    "attached_monitor_record_count": "attachment scale must be visible",
+    "deployed_verifier_claim": "bounded monitor records are not deployment",
+    "false_accept_relevance": "architecture work must address the current blocker or say it does not",
+    "global_error_bound_summary": "network-level claims need propagated bounds",
+    "honest_verdict": "terminal verdict must use a success prefix unless honestly blocked",
+    "implementation_blockers": "design-only output must say what is missing",
+    "inference_substrate": "solver-only work must declare no live LLM inference",
+    "kan_code_present": "implementation claims require code",
+    "kan_proof_carrying_monitor_v2_ready": "KAN follow-up must produce a concrete boundary",
+    "local_error_bound_summary": "unit-level approximation error must be explicit",
+    "milp_property_check_count": "verification claims need property checks",
+    "monitor_record_schema": "proof-carrying records must be replayable",
+    "source_artifacts": "KAN evidence must trace to concrete files",
+    "tests_run": "verifier/abstraction code must be checked"
+  },
+  "global_error_bound_summary": {
+    "bounds_distinct_by_construction": true,
+    "global_error_bound": 0.09375,
+    "procedure": "weighted_output_error_propagation",
+    "weighted_contributions": [
+      {
+        "contribution": 0.0625,
+        "local_error_bound": 0.0625,
+        "name": "u0_x_squared",
+        "output_weight": 1.0
+      },
+      {
+        "contribution": 0.03125,
+        "local_error_bound": 0.015625,
+        "name": "u1_shifted_scaled_quadratic",
+        "output_weight": 2.0
+      }
+    ]
+  },
+  "honest_verdict": "complete_kan_proof_carrying_monitor_v2_records_attached_no_deployed_claim",
+  "implementation_blockers": [],
+  "inference_substrate": {
+    "deployed_verifier_claim": false,
+    "executes_models": false,
+    "hardware_execution": false,
+    "live_llm_inference": false,
+    "live_model_inference": false,
+    "local_gguf_inference": false,
+    "mode": "checked_in_artifact_kan_monitor_boundary",
+    "model_weight_mutation": false,
+    "model_weight_training": false,
+    "solver_only_abstraction_accounting": true
+  },
+  "kan_code_present": true,
+  "kan_proof_carrying_monitor_v2_ready": true,
+  "local_error_bound_summary": {
+    "max_local_error_bound": 0.0625,
+    "per_unit": [
+      {
+        "local_error_bound": 0.0625,
+        "name": "u0_x_squared",
+        "segment_count": 4,
+        "segment_local_error_bounds": [
+          0.0625,
+          0.0625,
+          0.0625,
+          0.0625
+        ]
+      },
+      {
+        "local_error_bound": 0.015625,
+        "name": "u1_shifted_scaled_quadratic",
+        "segment_count": 4,
+        "segment_local_error_bounds": [
+          0.015625,
+          0.015625,
+          0.015625,
+          0.015625
+        ]
+      }
+    ],
+    "procedure": "max_per_segment_midpoint_residual",
+    "segment_count": 8,
+    "unit_count": 2
+  },
+  "milp_property_check_count": 1,
+  "monitor_record_schema": {
+    "checksum_rule": "sha256 over the record with record_checksum removed",
+    "exact_fixture_link_fields": [
+      "fixture_id",
+      "source_prompt_payload_sha256",
+      "exact_label",
+      "expected_action",
+      "label_source",
+      "ledger_action",
+      "ledger_hash",
+      "live_decision",
+      "monitor_failure_mechanism"
+    ],
+    "milp_property_result_fields": [
+      "property_verified",
+      "certified_upper_bound",
+      "property_threshold",
+      "milp_backend_available",
+      "milp_backend_name",
+      "solver_status",
+      "counterexample_or_certificate"
+    ],
+    "pwa_abstraction_fields": [
+      "units",
+      "output_segments",
+      "property_domain",
+      "property_threshold",
+      "bound_procedures"
+    ],
+    "required_record_fields": [
+      "schema",
+      "record_version",
+      "record_id",
+      "fixture_id",
+      "exact_fixture_link",
+      "pwa_abstraction_parameters",
+      "local_error_bound_summary",
+      "global_error_bound_summary",
+      "milp_property_result",
+      "claim_boundary",
+      "record_checksum"
+    ],
+    "schema": "carnot.kan_proof_carrying_monitor.record.v2"
+  },
+  "monitor_records": [
+    {
+      "claim_boundary": {
+        "deployed_verifier_claim": false,
+        "fixture_scope": "Exp 3126 exact monitor fixture link only",
+        "proof_scope": "Exp 3131 two-unit PWA/MILP fixture only"
+      },
+      "exact_fixture_link": {
+        "exact_label": "INVALID",
+        "expected_action": "reject",
+        "extracted_answer": "VALID",
+        "final_answer_consistent_with_exact": false,
+        "final_answer_consistent_with_ledger": false,
+        "fixture_id": "resyn-3084-arith-003",
+        "is_monitor_violation": true,
+        "label_source": "python_ast_runtime_execution",
+        "ledger_action": "reject",
+        "ledger_hash": "7c1974b6ff884697ea2527f0824b062096e58eddd80e0fc76ba23989a4e253eb",
+        "ledger_source": "exact_label_fallback",
+        "live_decision": "accept",
+        "monitor_event_indices": [
+          15,
+          16,
+          17,
+          18,
+          19
+        ],
+        "monitor_failure_mechanism": "contradiction",
+        "solver_label": "assertion_fails",
+        "source_prompt_payload_sha256": "9269b55735106c7636b4d05ac7d92f84a98e4242df96c9cb504adf21c73194d8"
+      },
+      "fixture_id": "resyn-3084-arith-003",
+      "global_error_bound_summary": {
+        "bounds_distinct_by_construction": true,
+        "global_error_bound": 0.09375,
+        "procedure": "weighted_output_error_propagation",
+        "weighted_contributions": [
+          {
+            "contribution": 0.0625,
+            "local_error_bound": 0.0625,
+            "name": "u0_x_squared",
+            "output_weight": 1.0
+          },
+          {
+            "contribution": 0.03125,
+            "local_error_bound": 0.015625,
+            "name": "u1_shifted_scaled_quadratic",
+            "output_weight": 2.0
+          }
+        ]
+      },
+      "local_error_bound_summary": {
+        "max_local_error_bound": 0.0625,
+        "per_unit": [
+          {
+            "local_error_bound": 0.0625,
+            "name": "u0_x_squared",
+            "segment_count": 4,
+            "segment_local_error_bounds": [
+              0.0625,
+              0.0625,
+              0.0625,
+              0.0625
+            ]
+          },
+          {
+            "local_error_bound": 0.015625,
+            "name": "u1_shifted_scaled_quadratic",
+            "segment_count": 4,
+            "segment_local_error_bounds": [
+              0.015625,
+              0.015625,
+              0.015625,
+              0.015625
+            ]
+          }
+        ],
+        "procedure": "max_per_segment_midpoint_residual",
+        "segment_count": 8,
+        "unit_count": 2
+      },
+      "milp_property_result": {
+        "certified_upper_bound": 0.53125,
+        "counterexample_or_certificate": {
+          "certified_upper_bound": 0.53125,
+          "kind": "certificate",
+          "method": "z3_mixed_integer_linear_pwa",
+          "property_threshold": 0.625,
+          "selected_segment": 3,
+          "witness_maximizer_x": 0.5
+        },
+        "exact_enumeration_used_only_as_fallback": false,
+        "milp_backend_available": true,
+        "milp_backend_name": "z3",
+        "property_statement": "For all x in [-0.5, 0.5], weighted PWA upper envelope <= 0.625.",
+        "property_threshold": 0.625,
+        "property_verified": true,
+        "solver_status": "optimal",
+        "witness_x": 0.5
+      },
+      "pwa_abstraction_parameters": {
+        "bound_procedures": {
+          "global_error_bound": "weighted_output_error_propagation",
+          "local_error_bound": "max_per_segment_midpoint_residual"
+        },
+        "global_error_bound": 0.09375,
+        "local_error_bound": 0.0625,
+        "output_segment_count": 4,
+        "output_segments": [
+          {
+            "intercept": -0.71875,
+            "slope": -2.0,
+            "x_max": -0.5,
+            "x_min": -1.0
+          },
+          {
+            "intercept": 0.03125,
+            "slope": -0.5,
+            "x_max": 0.0,
+            "x_min": -0.5
+          },
+          {
+            "intercept": 0.03125,
+            "slope": 1.0,
+            "x_max": 0.5,
+            "x_min": 0.0
+          },
+          {
+            "intercept": -0.71875,
+            "slope": 2.5,
+            "x_max": 1.0,
+            "x_min": 0.5
+          }
+        ],
+        "property_domain": [
+          -0.5,
+          0.5
+        ],
+        "property_threshold": 0.625,
+        "unit_count": 2,
+        "units": [
+          {
+            "coefficient": 1.0,
+            "local_error_bound": 0.0625,
+            "name": "u0_x_squared",
+            "output_weight": 1.0,
+            "segments": [
+              {
+                "intercept": -0.5,
+                "local_error_bound": 0.0625,
+                "residual_lower": -0.0625,
+                "residual_upper": 0.0,
+                "slope": -1.5,
+                "x_max": -0.5,
+                "x_min": -1.0
+              },
+              {
+                "intercept": 0.0,
+                "local_error_bound": 0.0625,
+                "residual_lower": -0.0625,
+                "residual_upper": 0.0,
+                "slope": -0.5,
+                "x_max": 0.0,
+                "x_min": -0.5
+              },
+              {
+                "intercept": 0.0,
+                "local_error_bound": 0.0625,
+                "residual_lower": -0.0625,
+                "residual_upper": 0.0,
+                "slope": 0.5,
+                "x_max": 0.5,
+                "x_min": 0.0
+              },
+              {
+                "intercept": -0.5,
+                "local_error_bound": 0.0625,
+                "residual_lower": -0.0625,
+                "residual_upper": 0.0,
+                "slope": 1.5,
+                "x_max": 1.0,
+                "x_min": 0.5
+              }
+            ],
+            "shift": 0.0,
+            "weighted_global_error_contribution": 0.0625
+          },
+          {
+            "coefficient": 0.25,
+            "local_error_bound": 0.015625,
+            "name": "u1_shifted_scaled_quadratic",
+            "output_weight": 2.0,
+            "segments": [
+              {
+                "intercept": -0.109375,
+                "local_error_bound": 0.015625,
+                "residual_lower": -0.015625,
+                "residual_upper": 0.0,
+                "slope": -0.25,
+                "x_max": -0.5,
+                "x_min": -1.0
+              },
+              {
+                "intercept": 0.015625,
+                "local_error_bound": 0.015625,
+                "residual_lower": -0.015625,
+                "residual_upper": 0.0,
+                "slope": 0.0,
+                "x_max": 0.0,
+                "x_min": -0.5
+              },
+              {
+                "intercept": 0.015625,
+                "local_error_bound": 0.015625,
+                "residual_lower": -0.015625,
+                "residual_upper": 0.0,
+                "slope": 0.25,
+                "x_max": 0.5,
+                "x_min": 0.0
+              },
+              {
+                "intercept": -0.109375,
+                "local_error_bound": 0.015625,
+                "residual_lower": -0.015625,
+                "residual_upper": 0.0,
+                "slope": 0.5,
+                "x_max": 1.0,
+                "x_min": 0.5
+              }
+            ],
+            "shift": 0.25,
+            "weighted_global_error_contribution": 0.03125
+          }
+        ]
+      },
+      "record_checksum": "d01931a6922032cee0a4557a06ca8acda39dd14c47fc58c57d7517d257fd124e",
+      "record_id": "kan-proof-monitor-v2:resyn-3084-arith-003",
+      "record_version": "v2",
+      "schema": "carnot.kan_proof_carrying_monitor.record.v2"
+    },
+    {
+      "claim_boundary": {
+        "deployed_verifier_claim": false,
+        "fixture_scope": "Exp 3126 exact monitor fixture link only",
+        "proof_scope": "Exp 3131 two-unit PWA/MILP fixture only"
+      },
+      "exact_fixture_link": {
+        "exact_label": "UNSAT",
+        "expected_action": "reject",
+        "extracted_answer": "VALID",
+        "final_answer_consistent_with_exact": false,
+        "final_answer_consistent_with_ledger": false,
+        "fixture_id": "resyn-3084-smt-000",
+        "is_monitor_violation": true,
+        "label_source": "z3_solver",
+        "ledger_action": "reject",
+        "ledger_hash": "7c1974b6ff884697ea2527f0824b062096e58eddd80e0fc76ba23989a4e253eb",
+        "ledger_source": "exact_label_fallback",
+        "live_decision": "accept",
+        "monitor_event_indices": [
+          240,
+          241,
+          242,
+          243,
+          244
+        ],
+        "monitor_failure_mechanism": "contradiction",
+        "solver_label": "unsat",
+        "source_prompt_payload_sha256": "eb3a348301c25e73776b733eb5014423bfae60ea16b977c4425d579b339a6ad9"
+      },
+      "fixture_id": "resyn-3084-smt-000",
+      "global_error_bound_summary": {
+        "bounds_distinct_by_construction": true,
+        "global_error_bound": 0.09375,
+        "procedure": "weighted_output_error_propagation",
+        "weighted_contributions": [
+          {
+            "contribution": 0.0625,
+            "local_error_bound": 0.0625,
+            "name": "u0_x_squared",
+            "output_weight": 1.0
+          },
+          {
+            "contribution": 0.03125,
+            "local_error_bound": 0.015625,
+            "name": "u1_shifted_scaled_quadratic",
+            "output_weight": 2.0
+          }
+        ]
+      },
+      "local_error_bound_summary": {
+        "max_local_error_bound": 0.0625,
+        "per_unit": [
+          {
+            "local_error_bound": 0.0625,
+            "name": "u0_x_squared",
+            "segment_count": 4,
+            "segment_local_error_bounds": [
+              0.0625,
+              0.0625,
+              0.0625,
+              0.0625
+            ]
+          },
+          {
+            "local_error_bound": 0.015625,
+            "name": "u1_shifted_scaled_quadratic",
+            "segment_count": 4,
+            "segment_local_error_bounds": [
+              0.015625,
+              0.015625,
+              0.015625,
+              0.015625
+            ]
+          }
+        ],
+        "procedure": "max_per_segment_midpoint_residual",
+        "segment_count": 8,
+        "unit_count": 2
+      },
+      "milp_property_result": {
+        "certified_upper_bound": 0.53125,
+        "counterexample_or_certificate": {
+          "certified_upper_bound": 0.53125,
+          "kind": "certificate",
+          "method": "z3_mixed_integer_linear_pwa",
+          "property_threshold": 0.625,
+          "selected_segment": 3,
+          "witness_maximizer_x": 0.5
+        },
+        "exact_enumeration_used_only_as_fallback": false,
+        "milp_backend_available": true,
+        "milp_backend_name": "z3",
+        "property_statement": "For all x in [-0.5, 0.5], weighted PWA upper envelope <= 0.625.",
+        "property_threshold": 0.625,
+        "property_verified": true,
+        "solver_status": "optimal",
+        "witness_x": 0.5
+      },
+      "pwa_abstraction_parameters": {
+        "bound_procedures": {
+          "global_error_bound": "weighted_output_error_propagation",
+          "local_error_bound": "max_per_segment_midpoint_residual"
+        },
+        "global_error_bound": 0.09375,
+        "local_error_bound": 0.0625,
+        "output_segment_count": 4,
+        "output_segments": [
+          {
+            "intercept": -0.71875,
+            "slope": -2.0,
+            "x_max": -0.5,
+            "x_min": -1.0
+          },
+          {
+            "intercept": 0.03125,
+            "slope": -0.5,
+            "x_max": 0.0,
+            "x_min": -0.5
+          },
+          {
+            "intercept": 0.03125,
+            "slope": 1.0,
+            "x_max": 0.5,
+            "x_min": 0.0
+          },
+          {
+            "intercept": -0.71875,
+            "slope": 2.5,
+            "x_max": 1.0,
+            "x_min": 0.5
+          }
+        ],
+        "property_domain": [
+          -0.5,
+          0.5
+        ],
+        "property_threshold": 0.625,
+        "unit_count": 2,
+        "units": [
+          {
+            "coefficient": 1.0,
+            "local_error_bound": 0.0625,
+            "name": "u0_x_squared",
+            "output_weight": 1.0,
+            "segments": [
+              {
+                "intercept": -0.5,
+                "local_error_bound": 0.0625,
+                "residual_lower": -0.0625,
+                "residual_upper": 0.0,
+                "slope": -1.5,
+                "x_max": -0.5,
+                "x_min": -1.0
+              },
+              {
+                "intercept": 0.0,
+                "local_error_bound": 0.0625,
+                "residual_lower": -0.0625,
+                "residual_upper": 0.0,
+                "slope": -0.5,
+                "x_max": 0.0,
+                "x_min": -0.5
+              },
+              {
+                "intercept": 0.0,
+                "local_error_bound": 0.0625,
+                "residual_lower": -0.0625,
+                "residual_upper": 0.0,
+                "slope": 0.5,
+                "x_max": 0.5,
+                "x_min": 0.0
+              },
+              {
+                "intercept": -0.5,
+                "local_error_bound": 0.0625,
+                "residual_lower": -0.0625,
+                "residual_upper": 0.0,
+                "slope": 1.5,
+                "x_max": 1.0,
+                "x_min": 0.5
+              }
+            ],
+            "shift": 0.0,
+            "weighted_global_error_contribution": 0.0625
+          },
+          {
+            "coefficient": 0.25,
+            "local_error_bound": 0.015625,
+            "name": "u1_shifted_scaled_quadratic",
+            "output_weight": 2.0,
+            "segments": [
+              {
+                "intercept": -0.109375,
+                "local_error_bound": 0.015625,
+                "residual_lower": -0.015625,
+                "residual_upper": 0.0,
+                "slope": -0.25,
+                "x_max": -0.5,
+                "x_min": -1.0
+              },
+              {
+                "intercept": 0.015625,
+                "local_error_bound": 0.015625,
+                "residual_lower": -0.015625,
+                "residual_upper": 0.0,
+                "slope": 0.0,
+                "x_max": 0.0,
+                "x_min": -0.5
+              },
+              {
+                "intercept": 0.015625,
+                "local_error_bound": 0.015625,
+                "residual_lower": -0.015625,
+                "residual_upper": 0.0,
+                "slope": 0.25,
+                "x_max": 0.5,
+                "x_min": 0.0
+              },
+              {
+                "intercept": -0.109375,
+                "local_error_bound": 0.015625,
+                "residual_lower": -0.015625,
+                "residual_upper": 0.0,
+                "slope": 0.5,
+                "x_max": 1.0,
+                "x_min": 0.5
+              }
+            ],
+            "shift": 0.25,
+            "weighted_global_error_contribution": 0.03125
+          }
+        ]
+      },
+      "record_checksum": "4e044a4ae0c8d438cdd3fb389e64cd51a72f892d5102ab4f91473d75a21e5c5f",
+      "record_id": "kan-proof-monitor-v2:resyn-3084-smt-000",
+      "record_version": "v2",
+      "schema": "carnot.kan_proof_carrying_monitor.record.v2"
+    }
+  ],
+  "reproducibility_checksum": "144a017e771037679bd9e5ab05e38ae7a71915fa43806858e0eba024b906d973",
+  "run_date": "20260526",
+  "schema": "carnot.kan_proof_carrying_monitor_boundary.v2",
+  "source_artifacts": [
+    {
+      "exists": true,
+      "id": "agents_repo_instructions",
+      "path": "AGENTS.md",
+      "required": false,
+      "sha256": "b3d6581b04f16b85f77defb2837c98dc3b60ed51e10b347ecb36e609f318b619"
+    },
+    {
+      "exists": true,
+      "id": "codex_repo_workflow",
+      "path": "CODEX.md",
+      "required": false,
+      "sha256": "1db7ebc1009714f872db83447828a8957c3abb72061832cc1bc307735cd96bbe"
+    },
+    {
+      "exists": true,
+      "id": "claude_authenticity_rules",
+      "path": "CLAUDE.md",
+      "required": false,
+      "sha256": "7ef4cd87213dd3e5e3b2421ba98c22f3f5842d83bfe5fe51d232bdeb782c83e5"
+    },
+    {
+      "exists": true,
+      "id": "kan_openspec",
+      "path": "openspec/capabilities/kan/spec.md",
+      "required": true,
+      "sha256": "62de372568f49b4fb77732d2a6c5a4ca8a92d005e9b2c310efd3d51e5a700269"
+    },
+    {
+      "exists": true,
+      "id": "research_references",
+      "path": "research-references.md",
+      "required": false,
+      "sha256": "60ea6986e91a0e2331d43c6c07670adbc8302fd9563bf40b6a667f246e298d0e"
+    },
+    {
+      "exists": true,
+      "id": "exp3126_fragment_monitor",
+      "path": "results/experiment_3126_fragment_time_monitor_satisfiable_drift_audit_v1.json",
+      "required": true,
+      "sha256": "e072b70780360c2d5f3255d49712434d3b4a517d8f63348e02c49bbaba1656f9"
+    },
+    {
+      "exists": true,
+      "id": "exp3131_kan_abstraction_audit",
+      "path": "results/experiment_3131_kan_pwa_milp_verifier_abstraction_audit_v1.json",
+      "required": true,
+      "sha256": "b5d162c9c40c6aeb4cab2fc23048182a111dba37b7db456bc4ec09680f6c37ca"
+    },
+    {
+      "exists": true,
+      "id": "exp3136_false_accept_autopsy",
+      "path": "results/experiment_3136_false_accept_root_cause_autopsy_v1.json",
+      "required": true,
+      "sha256": "3a61c8490030b607c73f50ba2ce145dc4591621ac76f016a42811bedd670776a"
+    },
+    {
+      "exists": true,
+      "id": "exp3145_module",
+      "path": "python/carnot/eval/kan_proof_carrying_monitor_boundary_v2.py",
+      "required": false,
+      "sha256": "155c284359c39044cd5432bf76f0f78e110df9b1f7c9234ed326fd76d45fef77"
+    },
+    {
+      "exists": true,
+      "id": "exp3145_tests",
+      "path": "tests/python/test_experiment_3145_kan_proof_carrying_monitor_boundary_v2.py",
+      "required": false,
+      "sha256": "9ff184f03915d77ea385cdee27ad9fa683b5a527faa47e3c62ed6e322505b74c"
+    }
+  ],
+  "source_checksums": {
+    "AGENTS.md": "b3d6581b04f16b85f77defb2837c98dc3b60ed51e10b347ecb36e609f318b619",
+    "CLAUDE.md": "7ef4cd87213dd3e5e3b2421ba98c22f3f5842d83bfe5fe51d232bdeb782c83e5",
+    "CODEX.md": "1db7ebc1009714f872db83447828a8957c3abb72061832cc1bc307735cd96bbe",
+    "openspec/capabilities/kan/spec.md": "62de372568f49b4fb77732d2a6c5a4ca8a92d005e9b2c310efd3d51e5a700269",
+    "python/carnot/eval/kan_proof_carrying_monitor_boundary_v2.py": "155c284359c39044cd5432bf76f0f78e110df9b1f7c9234ed326fd76d45fef77",
+    "research-references.md": "60ea6986e91a0e2331d43c6c07670adbc8302fd9563bf40b6a667f246e298d0e",
+    "results/experiment_3126_fragment_time_monitor_satisfiable_drift_audit_v1.json": "e072b70780360c2d5f3255d49712434d3b4a517d8f63348e02c49bbaba1656f9",
+    "results/experiment_3131_kan_pwa_milp_verifier_abstraction_audit_v1.json": "b5d162c9c40c6aeb4cab2fc23048182a111dba37b7db456bc4ec09680f6c37ca",
+    "results/experiment_3136_false_accept_root_cause_autopsy_v1.json": "3a61c8490030b607c73f50ba2ce145dc4591621ac76f016a42811bedd670776a",
+    "tests/python/test_experiment_3145_kan_proof_carrying_monitor_boundary_v2.py": "9ff184f03915d77ea385cdee27ad9fa683b5a527faa47e3c62ed6e322505b74c"
+  },
+  "spec_refs": [
+    "REQ-KAN-3145",
+    "SCENARIO-KAN-3145"
+  ],
+  "tests_run": [
+    "validation"
+  ]
+}

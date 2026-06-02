@@ -1,0 +1,188 @@
+{
+  "artifact": "experiment_3185_multi_turn_repair_ladder_v5",
+  "duration_s": 0.25,
+  "exact_check_results": [],
+  "field_principles": {
+    "exact_check_results": "semantic repair must be exact-scored",
+    "gate_state": "repair behavior must trace to gate decision",
+    "gated_skip": "skipped live repair must be explicit",
+    "headline_claim_allowed": "gated or smoke evidence must not become headline",
+    "honest_verdict": "terminal verdict must honestly report blocked preconditions",
+    "inference_substrate": "live or gated-skip substrate must be declared",
+    "models_used": "SOTA policy must be auditable",
+    "multi_turn_repair_ladder_v5_ready": "repair ladder must materialize even when gated",
+    "remaining_blockers": "incomplete repair must remain actionable",
+    "repair_attempt_count": "no-call artifacts must not imply live repair",
+    "repair_success_delta": "repair benefit must be quantified",
+    "repair_targets": "repair attempts must trace to certificates",
+    "transcript_receipts": "live repair evidence must be replayable"
+  },
+  "gate_state": "blocked_receipt_precondition",
+  "gated_skip": true,
+  "headline_claim_allowed": false,
+  "honest_verdict": "blocked_repair_gate_precondition: repair gate not unblocked: blocked_receipt_precondition",
+  "inference_substrate": {
+    "exact_authority_only": true,
+    "executes_models": false,
+    "executes_repairs": false,
+    "executes_solvers": false,
+    "executes_verifiers": false,
+    "gate_state": "blocked_receipt_precondition",
+    "gated_skip": true,
+    "kind": "multi_turn_repair_ladder_v5",
+    "legacy_small_models_headline_eligible": false,
+    "live_model_calls": 0,
+    "model_policy": [
+      "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "unsloth/gemma-4-31B-it-GGUF",
+      "unsloth/gemma-4-26B-A4B-it-GGUF"
+    ],
+    "models_used": [],
+    "no_live_inference": true,
+    "repair_calls": 0,
+    "repair_target_count": 0
+  },
+  "models_used": [],
+  "multi_turn_repair_ladder_v5_ready": true,
+  "ops_docs_reconciliation_left_to_conductor": true,
+  "remaining_blockers": [
+    "repair gate not unblocked: blocked_receipt_precondition",
+    "exp3179.clean_rerun_allowed is not true",
+    "exp3181.flagged_adversarial is not false",
+    "exp3183.repair_call_ready is not true",
+    "exp3183: flagged_adversarial_evidence_present"
+  ],
+  "repair_attempt_count": 0,
+  "repair_success_delta": 0.0,
+  "repair_targets": [],
+  "run_date": "20260527",
+  "schema": "carnot.multi_turn_repair_ladder.v5",
+  "scripts_research_conductor_modified": false,
+  "source_artifacts": [
+    {
+      "path": "AGENTS.md",
+      "present": true,
+      "readable_json_object": null,
+      "required": false,
+      "role": "agents_repo_instructions",
+      "sha256": "c893735c3c7ece3f9bf4d48722846ef65e76ff35ebfbfe1d239930339d69470b",
+      "source_type": "text"
+    },
+    {
+      "path": "CODEX.md",
+      "present": true,
+      "readable_json_object": null,
+      "required": false,
+      "role": "codex_repo_workflow",
+      "sha256": "bab1c6ba20bb432cbd7cd6e3b12fb0089f303cb7742f929297647d6329e46502",
+      "source_type": "text"
+    },
+    {
+      "path": "CLAUDE.md",
+      "present": true,
+      "readable_json_object": null,
+      "required": false,
+      "role": "claude_authenticity_rules",
+      "sha256": "5f6104e3f5885ba75ee146477ea363e1b9ed2195a16bd4451fb2de629e0eb4be",
+      "source_type": "text"
+    },
+    {
+      "path": "scripts/experiment_template.py",
+      "present": true,
+      "readable_json_object": null,
+      "required": false,
+      "role": "experiment_template_policy",
+      "sha256": "7095bc65a461f0c3e8648d436823e2b0929f55c745c992482f52d34089f766af",
+      "source_type": "text"
+    },
+    {
+      "path": "python/carnot/inference/sota_models.py",
+      "present": false,
+      "readable_json_object": null,
+      "required": false,
+      "role": "sota_model_registry",
+      "sha256": null,
+      "source_type": "python"
+    },
+    {
+      "path": "openspec/capabilities/verification/spec.md",
+      "present": true,
+      "readable_json_object": null,
+      "required": true,
+      "role": "verification_openspec",
+      "sha256": "c5966df27284f7a4ebd67d05435424c508166c14919a98c1f3bc24f39d6da0af",
+      "source_type": "text"
+    },
+    {
+      "path": "results/experiment_3169_repair_ladder_materializer_v4.json",
+      "present": true,
+      "readable_json_object": true,
+      "required": false,
+      "role": "exp3169_repair_ladder_v4",
+      "sha256": "7584b0b3784e729a14c681ade8b8b9dac939b8ab4019b04c6662389daac649c7",
+      "source_type": "json"
+    },
+    {
+      "path": "results/experiment_3179_local_sota_receipt_smoke_v3.json",
+      "present": true,
+      "readable_json_object": true,
+      "required": false,
+      "role": "exp3179_receipt_smoke_v3",
+      "sha256": "d8255fa10f3f028aacecc7e4531f742c10cd8df0317dde2c96f0ca97e0b88cf2",
+      "source_type": "json"
+    },
+    {
+      "path": "results/experiment_3181_clean_live_sota_verifier_rerun_v10.json",
+      "present": true,
+      "readable_json_object": true,
+      "required": false,
+      "role": "exp3181_clean_verifier_v10",
+      "sha256": "a9fc297377331644e4159bf036fa042654656e065b17c228832fc48582c38169",
+      "source_type": "json"
+    },
+    {
+      "path": "results/experiment_3183_counterexample_certificate_expansion_v3.json",
+      "present": true,
+      "readable_json_object": true,
+      "required": true,
+      "role": "exp3183_certificate_expansion_v3",
+      "sha256": "837fcf5643b9ed81e1529391686cb775da992be70fc006c7ab7f4be9642feeb1",
+      "source_type": "json"
+    },
+    {
+      "path": "results/experiment_3184_repair_gate_decision_v4.json",
+      "present": true,
+      "readable_json_object": true,
+      "required": true,
+      "role": "exp3184_repair_gate_decision_v4",
+      "sha256": "dac0dd3e6b343f13f06ce208c3919688c047ea90b1efa5ce294c8fd3596c9625",
+      "source_type": "json"
+    },
+    {
+      "path": "python/carnot/verify/multi_turn_repair_ladder_v5.py",
+      "present": false,
+      "readable_json_object": null,
+      "required": false,
+      "role": "exp3185_module",
+      "sha256": null,
+      "source_type": "python"
+    },
+    {
+      "path": "tests/python/test_experiment_3185_multi_turn_repair_ladder_v5.py",
+      "present": false,
+      "readable_json_object": null,
+      "required": false,
+      "role": "exp3185_tests",
+      "sha256": null,
+      "source_type": "python"
+    }
+  ],
+  "spec_refs": [
+    "REQ-VERIFY-3185",
+    "SCENARIO-VERIFY-3185"
+  ],
+  "tests_run": [
+    "write"
+  ],
+  "transcript_receipts": []
+}

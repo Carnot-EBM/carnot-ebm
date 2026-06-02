@@ -1,0 +1,188 @@
+{
+  "abstention_reason_counts": {},
+  "abstention_root_cause_audit_ready": true,
+  "abstention_root_cause_identified": false,
+  "answerability_fields": [
+    "expected_decision",
+    "exact_authority",
+    "source_candidate_kind",
+    "fixture_id"
+  ],
+  "answerable_row_count": 0,
+  "audited_exact_row_count": 0,
+  "calibrated_rerun_plan": {
+    "acceptance_criteria": {
+      "max_false_accept_count": 0,
+      "minimum_answerable_rows": 6,
+      "minimum_audited_exact_rows": 6,
+      "minimum_decision_coverage": 0.5,
+      "requires_no_synthetic_rows": true,
+      "requires_parser_contract_evidence": true,
+      "target_false_accept_rate": 0.0,
+      "target_max_abstention_rate": 0.5
+    },
+    "experiment_id": "exp3287",
+    "measurement_fields": [
+      "n_eval",
+      "answerable_row_count",
+      "parseable_decision_count",
+      "abstention_rate",
+      "false_accept_rate",
+      "false_accept_count",
+      "exact_row_fixture_hash",
+      "reproducibility_checksum"
+    ],
+    "pre_gpu_smoke_gate": {
+      "abort_if_false_accept_count_gt": 0,
+      "abort_if_parseable_decision_count_lt": 1,
+      "rows": 2
+    },
+    "prior_blocker": {
+      "abstention_rate": 0.0,
+      "failure_mode": "all exact rows normalized to abstain"
+    },
+    "purpose": "rerun the clean verifier only after fixing the output contract",
+    "required_controls": [
+      "Use the model-native chat template or a grammar constrained decoder for ACCEPT|REJECT|ABSTAIN.",
+      "Keep the strict leading-token parser; non-leading or verbose answers still count as abstain.",
+      "Use only checked-in exact fixtures with canonical answers and minimal counterexamples.",
+      "Abort before a larger GPU rerun when the smoke rows do not produce parseable decisions."
+    ],
+    "root_cause_to_address": "model_output_parser_contract_mismatch"
+  },
+  "dominant_root_cause": "no_evaluated_exact_rows",
+  "duration_s": 0.0,
+  "evaluated_row_ids": [],
+  "exact_answer_fields": [
+    "expected_answer",
+    "minimal_counterexample.candidate_answer",
+    "prior_bait_answer"
+  ],
+  "exact_row_audit_table": [],
+  "experiment_id": "exp3286",
+  "honest_verdict": "complete: clean verifier abstention audit ready; root cause not identified",
+  "malformed_or_missing_answer_count": 0,
+  "milestone": "2026.05.303",
+  "parser_or_extraction_findings": [
+    {
+      "category": "row_extraction",
+      "declared_n_eval": 0,
+      "finding": "row_extraction_ok",
+      "per_row_results_count": 0
+    },
+    {
+      "category": "fixture_join",
+      "finding": "fixture_authority_available",
+      "fixture_rows_available": 2,
+      "malformed_or_missing_answer_count": 0
+    },
+    {
+      "category": "model_output_contract_mismatch",
+      "finding": "parser_contract_findings_recorded",
+      "missing_output_count": 0,
+      "unparseable_abstention_count": 0
+    }
+  ],
+  "prior_abstention_rate": 0.0,
+  "random_seed": 3286,
+  "reproducibility_checksum": "6f740ec09f2fb55c8e39644ee6f550753c94e1035a43797f5455cbf72077fbf9",
+  "row_class_counts": {
+    "answerable": 0,
+    "malformed_or_missing_answer": 0,
+    "unanswerable": 0,
+    "unknown": 0
+  },
+  "run_date": "20260528",
+  "schema_version": "carnot.clean_verifier_abstention_root_cause.v1",
+  "source_artifacts": [
+    {
+      "path": "results/experiment_3275_clean_local_sota_verifier_rerun_v14.json",
+      "present": true,
+      "role": "exp3275_clean_verifier_rerun",
+      "sha256": "4bda85e29ebf89468919ac4615e7e9a368d1bf38ca536427295418bdce2587dc"
+    },
+    {
+      "path": "results/experiment_3268_sota_receipt_methodology_supplement_v1.json",
+      "present": true,
+      "role": "exp3268_sota_receipt_methodology",
+      "sha256": "f67065f0483222a4ce148b9a52d425843109cd26b4d795d4ad442767784553e0"
+    },
+    {
+      "path": "results/experiment_3223_distributional_ebm_exact_row_uncertainty_sidecar_v2.json",
+      "present": false,
+      "role": "exp3223_exact_row_sidecar",
+      "sha256": null
+    },
+    {
+      "path": "data/research/context_cot_clbench_parametric_shortcut_v1.jsonl",
+      "present": true,
+      "role": "context_exact_row_fixture",
+      "sha256": "51b60e59c43d8a56fd2cdfcc7575c80f676e3c13faa49dcbdf4122c9aa833eef"
+    },
+    {
+      "path": "ops/verifier_authenticity_audit_report.md",
+      "present": false,
+      "role": "verifier_authenticity_audit_report",
+      "sha256": null
+    },
+    {
+      "path": "openspec/capabilities/verification/spec.md",
+      "present": false,
+      "role": "verification_openspec",
+      "sha256": null
+    },
+    {
+      "path": "python/carnot/verify/clean_verifier_abstention_root_cause_v1.py",
+      "present": false,
+      "role": "exp3286_module",
+      "sha256": null
+    },
+    {
+      "path": "tests/python/test_experiment_3286_clean_verifier_abstention_root_cause_v1.py",
+      "present": false,
+      "role": "exp3286_tests",
+      "sha256": null
+    }
+  ],
+  "spec_refs": [
+    "REQ-VERIFY-3286",
+    "SCENARIO-VERIFY-3286"
+  ],
+  "target_false_accept_rate": 0.0,
+  "target_max_abstention_rate": 0.5,
+  "tests_run": [
+    "writer"
+  ],
+  "threshold_fields": {
+    "abstention_threshold": 0.5,
+    "false_accept_threshold": 0.1,
+    "target_false_accept_rate": 0.0,
+    "target_max_abstention_rate": 0.5
+  },
+  "threshold_or_policy_findings": [
+    {
+      "blocked": true,
+      "category": "abstention_threshold",
+      "finding": "threshold_blocked_after_parser_abstentions",
+      "observed_abstention_rate": 0.0,
+      "threshold": 0.5
+    },
+    {
+      "category": "false_accept_policy",
+      "finding": "no_false_accepts_observed_in_prior_run",
+      "observed_false_accept_rate": 0.0,
+      "target_false_accept_rate": 0.0
+    },
+    {
+      "category": "safety_policy",
+      "finding": "not_implicated",
+      "policy_refusal_row_count": 0
+    }
+  ],
+  "upstream_receipt_summary": {
+    "clean_sota_receipt_eligible": true,
+    "models_used": [
+      "unsloth/gemma-4-26B-A4B-it-GGUF"
+    ]
+  }
+}

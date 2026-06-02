@@ -1,0 +1,73 @@
+{
+  "artifact_metadata": {
+    "project_root": "/home/ianblenke/github.com/ianblenke/carnot/.tmp-pytest/pytest-of-ianblenke/pytest-4/popen-gw3/test_scenario_verify_1432_run_0",
+    "run_date": "20260506"
+  },
+  "base_dvi_incorrect_threshold": 0.72,
+  "base_secl_confidence_threshold": 0.5,
+  "block_reasons": [],
+  "calibrated_dvi_incorrect_threshold": 0.72,
+  "calibrated_secl_confidence_threshold": 0.500001,
+  "calibration_nonforgetting_rate": 1.0,
+  "cpu_only": true,
+  "duration_s": 0.002,
+  "dvi_v2_auroc_delta_baseline": 0.011458,
+  "dvi_v3_auroc_delta": 0.02,
+  "dvi_v3_auroc_nonregression_gate": true,
+  "dvi_v3_baseline_auroc": 0.4,
+  "dvi_v3_checkpoint_path": "/home/ianblenke/github.com/ianblenke/carnot/.tmp-pytest/pytest-of-ianblenke/pytest-4/popen-gw3/test_scenario_verify_1432_run_0/verify/dvi_v3_repaired_checkpoint.pt",
+  "dvi_v3_deployed": true,
+  "dvi_v3_trained_auroc": 0.42,
+  "experiment": "1432_dvi_v3_nonforgetting_replay_balanced",
+  "failure_diagnosis": "thresholding",
+  "failure_diagnosis_evidence": [
+    "dvi_v3_auroc_delta=0.011842",
+    "dvi_v2_auroc_delta_baseline=0.011458",
+    "nonforgetting_rate=0.968604",
+    "nonforgetting_below_gate"
+  ],
+  "finished_at": "2026-06-02T19:05:25.098015+00:00",
+  "fover_heldout_cases_used": 3,
+  "fresh_case_source": "exp1395_memory_updates_promoted_dvi_v2_fover",
+  "fresh_cases_used": 2,
+  "fresh_llm_inference_used": false,
+  "fresh_verified_cases_used": 2,
+  "honest_verdict": "dvi_v3_deployed_replay_heldout_threshold_calibrated",
+  "min_nonforgetting_rate": 0.99,
+  "nonforgetting_rate": 1.0,
+  "replay_balance_applied": true,
+  "replay_calibration_cases_used": 2,
+  "replay_holdout_cases_used": 2,
+  "run_date": "20260506",
+  "schema": "dvi_v3_nonforgetting_replay_balanced_v1",
+  "secl_ece_after": 0.2,
+  "secl_ece_before": 0.4,
+  "secl_ece_reduction_pct_preserved": true,
+  "secl_ece_reduction_pct_v3": 50.0,
+  "source_artifact_aliases_missing": [
+    "results/experiment_1394_dvi_v2_secl_59_cases.json",
+    "results/experiment_1395_fr11_self_learning_v5_1508_cases.json"
+  ],
+  "source_artifacts": [
+    "results/experiment_1415_dvi_v3_1508_fresh_cases.json",
+    "results/experiment_1394_dvi_v2_secl_combined.json",
+    "results/experiment_1395_fr11_self_learning_v5.json",
+    "data/fover_corpus.jsonl"
+  ],
+  "source_checkpoint_path": "/home/ianblenke/github.com/ianblenke/carnot/.tmp-pytest/pytest-of-ianblenke/pytest-4/popen-gw3/test_scenario_verify_1432_run_0/verify/dvi_v2_secl_combined_checkpoint.pt",
+  "spec": [
+    "REQ-VERIFY-1432",
+    "SCENARIO-VERIFY-1432"
+  ],
+  "started_at": "2026-06-02T19:05:25.095892+00:00",
+  "status": "complete",
+  "tests_run": [
+    "pytest targeted"
+  ],
+  "threshold_calibration_applied": true,
+  "training_loss_history": [
+    0.7,
+    0.69
+  ],
+  "training_method": "dvi_v3_exp1415_weights_with_replay_heldout_threshold_calibration"
+}

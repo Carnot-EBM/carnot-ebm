@@ -1,0 +1,239 @@
+{
+  "allowed_repair_attempt_budget": {
+    "disabled_reason": "",
+    "enabled": true,
+    "max_attempts_per_row": 2,
+    "max_distinct_rows": 2,
+    "max_total_repair_attempts": 4,
+    "no_headline_claim_from_gate_alone": true,
+    "requires_certificate_repair_call_ready": true,
+    "requires_exact_authority_acceptance": true,
+    "requires_mandated_local_sota": true,
+    "stop_on_first_exact_accept_per_row": true
+  },
+  "artifact": "experiment_3184_repair_gate_decision_v4",
+  "blocker_reasons": [],
+  "duration_s": 0.5,
+  "field_principles": {
+    "allowed_repair_attempt_budget": "unblocked repair must remain bounded",
+    "blocker_reasons": "blocked repair must be actionable",
+    "honest_verdict": "terminal verdict must honestly reflect blocked preconditions",
+    "inference_substrate": "aggregation work must declare no live model inference",
+    "missing_artifacts": "absence must not be hidden",
+    "repair_gate_decision_v4_ready": "repair gate must be explicit",
+    "repair_gate_state": "downstream repair must read one machine state",
+    "source_artifacts": "gate summaries must trace to files",
+    "unblocking_predicates": "gate logic must be auditable"
+  },
+  "honest_verdict": "complete: repair_gate_state=unblocked_for_bounded_repair_ladder; max_total_repair_attempts=4; max_distinct_rows=2",
+  "inference_substrate": {
+    "aggregation_only": true,
+    "downloads_models": false,
+    "executes_models": false,
+    "executes_repairs": false,
+    "executes_solvers": false,
+    "executes_verifiers": false,
+    "kind": "deterministic_repair_gate_decision_v4",
+    "live_model_calls": 0,
+    "new_live_model_calls": 0,
+    "no_live_inference": true,
+    "no_llm_calls": true,
+    "repair_calls": 0,
+    "source_certificate_live_model_calls": 0,
+    "source_clean_verifier_live_model_calls": 6,
+    "source_receipt_live_model_calls": 2
+  },
+  "missing_artifacts": [],
+  "ops_docs_reconciliation_left_to_conductor": true,
+  "repair_gate_decision_v4_ready": true,
+  "repair_gate_state": "unblocked_for_bounded_repair_ladder",
+  "run_date": "20260527",
+  "schema": "carnot.repair_gate_decision.v4",
+  "scripts_research_conductor_modified": false,
+  "source_artifacts": [
+    {
+      "path": "AGENTS.md",
+      "present": true,
+      "readable_json_object": null,
+      "required": false,
+      "role": "agents_repo_instructions",
+      "sha256": "c893735c3c7ece3f9bf4d48722846ef65e76ff35ebfbfe1d239930339d69470b",
+      "source_type": "text"
+    },
+    {
+      "path": "CODEX.md",
+      "present": true,
+      "readable_json_object": null,
+      "required": false,
+      "role": "codex_repo_workflow",
+      "sha256": "bab1c6ba20bb432cbd7cd6e3b12fb0089f303cb7742f929297647d6329e46502",
+      "source_type": "text"
+    },
+    {
+      "path": "CLAUDE.md",
+      "present": true,
+      "readable_json_object": null,
+      "required": false,
+      "role": "claude_authenticity_rules",
+      "sha256": "5ac6eb0f6ff2db6f8f48e24e84f466e8570850d800893f0bf23af3710b081e42",
+      "source_type": "text"
+    },
+    {
+      "path": "openspec/capabilities/verification/spec.md",
+      "present": true,
+      "readable_json_object": null,
+      "required": true,
+      "role": "verification_openspec_gate_policy",
+      "sha256": "bbac1366fbd55a0eaf4241762ac671f265bbd85a842164d431c30aa65e62fdf7",
+      "source_type": "text"
+    },
+    {
+      "path": "results/experiment_3168_repair_gate_decision_v3.json",
+      "present": true,
+      "readable_json_object": true,
+      "required": true,
+      "role": "exp3168_prior_repair_gate_v3",
+      "sha256": "0088d9fbcfbb0ef811220a7025d7998d789182958b4f23170cee8f606f71c2f5",
+      "source_type": "json"
+    },
+    {
+      "path": "results/experiment_3179_local_sota_receipt_smoke_v3.json",
+      "present": true,
+      "readable_json_object": true,
+      "required": true,
+      "role": "exp3179_receipt_smoke_v3",
+      "sha256": "4fc24cc54a38d470ce8b2caf86c81c37f7b8cd8896e8d4468b4e8121957c5b1b",
+      "source_type": "json"
+    },
+    {
+      "path": "results/experiment_3180_controlled_invariance_executor_v2.json",
+      "present": true,
+      "readable_json_object": true,
+      "required": true,
+      "role": "exp3180_controlled_invariance_v2",
+      "sha256": "19da80725ceccf9400731d1209f02ad424f687cebcdb8a5bef905d091eab258d",
+      "source_type": "json"
+    },
+    {
+      "path": "results/experiment_3181_clean_live_sota_verifier_rerun_v10.json",
+      "present": true,
+      "readable_json_object": true,
+      "required": true,
+      "role": "exp3181_clean_verifier_v10",
+      "sha256": "52143d9c13ce224ae47f380585aa3bef744076915dee6d56f6c29cfacf38fe81",
+      "source_type": "json"
+    },
+    {
+      "path": "results/experiment_3183_counterexample_certificate_expansion_v3.json",
+      "present": true,
+      "readable_json_object": true,
+      "required": true,
+      "role": "exp3183_certificate_expansion_v3",
+      "sha256": "87607f3e5c7340caa2fc7d735cdeac412950e853b1ee110ca5b443b849ade572",
+      "source_type": "json"
+    },
+    {
+      "path": "python/carnot/verify/repair_gate_decision_v4.py",
+      "present": false,
+      "readable_json_object": null,
+      "required": false,
+      "role": "exp3184_module",
+      "sha256": null,
+      "source_type": "python"
+    },
+    {
+      "path": "tests/python/test_experiment_3184_repair_gate_decision_v4.py",
+      "present": false,
+      "readable_json_object": null,
+      "required": false,
+      "role": "exp3184_tests",
+      "sha256": null,
+      "source_type": "python"
+    }
+  ],
+  "source_checksums": {
+    "AGENTS.md": "c893735c3c7ece3f9bf4d48722846ef65e76ff35ebfbfe1d239930339d69470b",
+    "CLAUDE.md": "5ac6eb0f6ff2db6f8f48e24e84f466e8570850d800893f0bf23af3710b081e42",
+    "CODEX.md": "bab1c6ba20bb432cbd7cd6e3b12fb0089f303cb7742f929297647d6329e46502",
+    "openspec/capabilities/verification/spec.md": "bbac1366fbd55a0eaf4241762ac671f265bbd85a842164d431c30aa65e62fdf7",
+    "results/experiment_3168_repair_gate_decision_v3.json": "0088d9fbcfbb0ef811220a7025d7998d789182958b4f23170cee8f606f71c2f5",
+    "results/experiment_3179_local_sota_receipt_smoke_v3.json": "4fc24cc54a38d470ce8b2caf86c81c37f7b8cd8896e8d4468b4e8121957c5b1b",
+    "results/experiment_3180_controlled_invariance_executor_v2.json": "19da80725ceccf9400731d1209f02ad424f687cebcdb8a5bef905d091eab258d",
+    "results/experiment_3181_clean_live_sota_verifier_rerun_v10.json": "52143d9c13ce224ae47f380585aa3bef744076915dee6d56f6c29cfacf38fe81",
+    "results/experiment_3183_counterexample_certificate_expansion_v3.json": "87607f3e5c7340caa2fc7d735cdeac412950e853b1ee110ca5b443b849ade572"
+  },
+  "source_gate_summary": {
+    "exp3168_repair_gate_state": "unblocked",
+    "exp3179_clean_rerun_allowed": true,
+    "exp3179_substrate_classification": "full_local_sota_receipt",
+    "exp3180_controlled_invariance_passed": true,
+    "exp3181_false_accept_rate": 0.0,
+    "exp3181_flagged_adversarial": false,
+    "exp3181_gated_skip": false,
+    "exp3181_headline_claim_allowed": true,
+    "exp3181_metrics_computed": true,
+    "exp3183_repair_call_ready": true
+  },
+  "spec_refs": [
+    "REQ-VERIFY-3184",
+    "SCENARIO-VERIFY-3184"
+  ],
+  "tests_run": [
+    "focused"
+  ],
+  "unblocking_predicates": {
+    "certificate_repair_call_ready": {
+      "actual": true,
+      "blocker_reason": "",
+      "expected": true,
+      "field": "repair_call_ready",
+      "passed": true,
+      "source_artifact": "results/experiment_3183_counterexample_certificate_expansion_v3.json"
+    },
+    "clean_verifier_not_flagged_adversarial": {
+      "actual": false,
+      "blocker_reason": "",
+      "expected": false,
+      "field": "flagged_adversarial",
+      "passed": true,
+      "source_artifact": "results/experiment_3181_clean_live_sota_verifier_rerun_v10.json"
+    },
+    "controlled_invariance_passed": {
+      "actual": true,
+      "blocker_reason": "",
+      "expected": true,
+      "field": "controlled_invariance_passed",
+      "passed": true,
+      "source_artifact": "results/experiment_3180_controlled_invariance_executor_v2.json"
+    },
+    "false_accept_gate_acceptable": {
+      "actual": {
+        "false_accept_rate": 0.0,
+        "gated_skip": false,
+        "known_false_accepts_accepted": [],
+        "metrics_computed": true
+      },
+      "blocker_reason": "",
+      "expected": "finite <= 0.1 from computed clean verifier metrics",
+      "field": "false_accept_rate",
+      "passed": true,
+      "source_artifact": "results/experiment_3181_clean_live_sota_verifier_rerun_v10.json"
+    },
+    "headline_claim_allowed_for_verifier_metrics": {
+      "actual": true,
+      "blocker_reason": "",
+      "expected": true,
+      "field": "headline_claim_allowed",
+      "passed": true,
+      "source_artifact": "results/experiment_3181_clean_live_sota_verifier_rerun_v10.json"
+    },
+    "receipt_smoke_clean_rerun_allowed": {
+      "actual": true,
+      "blocker_reason": "",
+      "expected": true,
+      "field": "clean_rerun_allowed",
+      "passed": true,
+      "source_artifact": "results/experiment_3179_local_sota_receipt_smoke_v3.json"
+    }
+  }
+}

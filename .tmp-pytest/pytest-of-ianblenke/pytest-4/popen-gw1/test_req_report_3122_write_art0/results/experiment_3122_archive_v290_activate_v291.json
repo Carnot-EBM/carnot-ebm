@@ -1,0 +1,305 @@
+{
+  "activation_performed_by_this_task": false,
+  "archive_v290_activate_v291_ready": true,
+  "artifact": "experiment_3122_archive_v290_activate_v291",
+  "blocked_reasons": [],
+  "carry_forward_blockers": [
+    {
+      "blocker_id": "publication_blockers_36",
+      "description": "36 publication blockers",
+      "expected_carry_forward_value": 36,
+      "matches_expected": true,
+      "source": "results/experiment_3121_capstone_v290.json",
+      "source_field": "publication_blocker_count",
+      "value": 36
+    },
+    {
+      "blocker_id": "missing_headline_cache_coverage",
+      "description": "missing Qwen3.6/Gemma-4-31B headline cache coverage",
+      "expected_carry_forward_value": {
+        "missing_model_ids": [
+          "unsloth/Qwen3.6-35B-A3B-GGUF",
+          "unsloth/gemma-4-31B-it-GGUF"
+        ],
+        "present_model_ids": [
+          "unsloth/gemma-4-26B-A4B-it-GGUF"
+        ]
+      },
+      "matches_expected": true,
+      "source": "results/experiment_3121_capstone_v290.json",
+      "source_field": "headline_model_spec_gaps",
+      "value": {
+        "missing_model_ids": [
+          "unsloth/Qwen3.6-35B-A3B-GGUF",
+          "unsloth/gemma-4-31B-it-GGUF"
+        ],
+        "present_model_ids": [
+          "unsloth/gemma-4-26B-A4B-it-GGUF"
+        ]
+      }
+    },
+    {
+      "blocker_id": "diagnostic_only_verifier_lift",
+      "description": "diagnostic-only verifier lift",
+      "expected_carry_forward_value": "diagnostic_gain_recovered_but_headline_bounded_by_cache_and_prior_flags",
+      "matches_expected": true,
+      "source": "results/experiment_3121_capstone_v290.json",
+      "source_field": "verifier_gain_status",
+      "value": "diagnostic_gain_recovered_but_headline_bounded_by_cache_and_prior_flags"
+    },
+    {
+      "blocker_id": "zero_repair_delta",
+      "description": "zero repair delta",
+      "expected_carry_forward_value": {
+        "repair_claim_status": "bounded_micro_panel_executed_zero_delta_no_promotion",
+        "repair_success_delta": 0.0
+      },
+      "matches_expected": true,
+      "source": "results/experiment_3121_capstone_v290.json",
+      "source_field": "repair_claim_status,repair_success_delta",
+      "value": {
+        "repair_claim_status": "bounded_micro_panel_executed_zero_delta_no_promotion",
+        "repair_success_delta": 0.0
+      }
+    },
+    {
+      "blocker_id": "fr11_controller_only_learning",
+      "description": "FR-11 controller-only learning",
+      "expected_carry_forward_value": "bounded_controller_only_soundness_zero_completeness_zero_no_weight_update",
+      "matches_expected": true,
+      "source": "results/experiment_3121_capstone_v290.json",
+      "source_field": "fr11_self_learning_status",
+      "value": "bounded_controller_only_soundness_zero_completeness_zero_no_weight_update"
+    },
+    {
+      "blocker_id": "ebt_arm_projection_only",
+      "description": "EBT/ARM projection-only",
+      "expected_carry_forward_value": "projection_only_sidecar_correlation_no_live_model_integration",
+      "matches_expected": true,
+      "source": "results/experiment_3121_capstone_v290.json",
+      "source_field": "ebt_arm_status",
+      "value": "projection_only_sidecar_correlation_no_live_model_integration"
+    },
+    {
+      "blocker_id": "cpu_only_clut",
+      "description": "CPU-only cLUT",
+      "expected_carry_forward_value": "bounded_clut_cpu_only_no_hardware_speedup",
+      "matches_expected": true,
+      "source": "results/experiment_3121_capstone_v290.json",
+      "source_field": "sampler_hardware_status",
+      "value": "bounded_clut_cpu_only_no_hardware_speedup"
+    },
+    {
+      "blocker_id": "missing_operator_visible_hardware_evidence",
+      "description": "missing operator-visible hardware evidence",
+      "expected_carry_forward_value": {
+        "gatemate_status": "blocked_operator_evidence_incomplete_no_hardware_run",
+        "ssqa_status": "gated_skipped_host_visible_readback_missing"
+      },
+      "matches_expected": true,
+      "source": "results/experiment_3121_capstone_v290.json",
+      "source_field": "gatemate_status,ssqa_status",
+      "value": {
+        "gatemate_status": "blocked_operator_evidence_incomplete_no_hardware_run",
+        "ssqa_status": "gated_skipped_host_visible_readback_missing"
+      }
+    }
+  ],
+  "duration_s": 0.125,
+  "honest_verdict": "complete: archive_v290_activate_v291_ready=true; prior_capstone_ready=true; prior_paper_ready=false; prior_publication_blocker_count=36; next_milestone=2026.05.291; roadmap_source=research-roadmap-next.yaml",
+  "inference_substrate": {
+    "executes_conductor": false,
+    "executes_hardware": false,
+    "executes_models": false,
+    "executes_repairs": false,
+    "executes_solvers": false,
+    "executes_verifiers": false,
+    "hardware_commands_run": [],
+    "kind": "aggregation_from_upstream_artifacts",
+    "live_model_calls": 0,
+    "local_repo_only": true,
+    "no_live_llm_inference": true,
+    "source": "checked_in_artifacts"
+  },
+  "missing_source_artifacts": [],
+  "next_milestone": "2026.05.291",
+  "no_historical_artifact_rewrite": true,
+  "no_live_repair_rerun": true,
+  "no_new_board_flash": true,
+  "no_new_hardware_run": true,
+  "no_new_model_execution": true,
+  "no_new_solver_run": true,
+  "no_new_synthesis_run": true,
+  "no_new_verifier_run": true,
+  "no_push": true,
+  "ops_changelog_updated": false,
+  "ops_docs_reconciliation_left_to_conductor": true,
+  "ops_status_updated": false,
+  "prior_capstone_ready": true,
+  "prior_milestone": "2026.05.290",
+  "prior_paper_ready": false,
+  "prior_paper_ready_source_field_present": true,
+  "prior_publication_blocker_count": 36,
+  "prior_publication_blocker_count_source": "capstone_publication_blocker_count",
+  "research_roadmap_next_yaml_modified": false,
+  "research_roadmap_yaml_modified": false,
+  "roadmap_handoff": {
+    "active_roadmap_milestone": "2026.05.291",
+    "expected_milestone": "2026.05.291",
+    "expected_milestone_doc": "openspec/change-proposals/research-roadmap-vNEXT.md",
+    "milestone_doc_matches": true,
+    "milestone_matches": true,
+    "non_empty_tasks": true,
+    "observed_milestone": "2026.05.291",
+    "observed_milestone_doc": "openspec/change-proposals/research-roadmap-vNEXT.md",
+    "requested_staged_roadmap_path": "research-roadmap-next.yaml",
+    "requested_staged_roadmap_present": true,
+    "source_path": "research-roadmap-next.yaml",
+    "source_present": true,
+    "task_ids": [
+      "exp3122-archive-v290-activate-v291"
+    ],
+    "used_active_roadmap_fallback": false
+  },
+  "run_date": "20260526",
+  "schema": "carnot.archive_activation.v290_to_v291.v1",
+  "scripts_research_conductor_modified": false,
+  "source_artifacts": [
+    {
+      "path": "results/experiment_3120_cross_corpus_matrix_v24.json",
+      "present": true,
+      "role": "matrix_v24",
+      "sha256": "ac146980524b2b6796ad4e889859783ad01fa6d30af835d73b5e0a840581b58f"
+    },
+    {
+      "path": "results/experiment_3121_capstone_v290.json",
+      "present": true,
+      "role": "capstone_v290",
+      "sha256": "2188d35683de288933ee94938bceb1f491023a7945040fcad8d343be85cff76a"
+    },
+    {
+      "path": "research-roadmap-next.yaml",
+      "present": true,
+      "role": "staged_roadmap",
+      "sha256": "64e0d88e88b115d570a5ef623d2560bd73519000701ea587d5204255a519239c"
+    },
+    {
+      "path": "research-roadmap.yaml",
+      "present": true,
+      "role": "active_roadmap",
+      "sha256": "64e0d88e88b115d570a5ef623d2560bd73519000701ea587d5204255a519239c"
+    },
+    {
+      "path": "openspec/change-proposals/research-roadmap-vNEXT.md",
+      "present": true,
+      "role": "vnext_doc",
+      "sha256": "7d0bbf6b41678dca58795aeb9946b748c1e4b679bdac43cc7f199f01e4430d5a"
+    },
+    {
+      "path": "AGENTS.md",
+      "present": true,
+      "role": "agents_instructions",
+      "sha256": "9991172a3f79ab4223f36ebb7390d1e4bed5395d678159ea5f597ec5ba2b0229"
+    },
+    {
+      "path": "CODEX.md",
+      "present": true,
+      "role": "codex_instructions",
+      "sha256": "16968966a364bde5e758b82299c0bc1ccebcbe30d26aea7807749f2a934345ff"
+    },
+    {
+      "path": "CLAUDE.md",
+      "present": true,
+      "role": "claude_instructions",
+      "sha256": "b5c9335a9d000e7911fc41e984137960961cb7faafc2aa46b690413fee1c5896"
+    },
+    {
+      "path": "scripts/research_conductor.py",
+      "present": true,
+      "role": "research_conductor",
+      "sha256": "65b4c225a375fd5671af37d69057246b42512efe5e668d58e2010bd518e2f007"
+    },
+    {
+      "path": "ops/status.md",
+      "present": true,
+      "role": "ops_status",
+      "sha256": "e61bc81c56f66909bb03db3e15caa07ccd8d0f434bebc2017bdf6082a9417805"
+    },
+    {
+      "path": "ops/changelog.md",
+      "present": true,
+      "role": "ops_changelog",
+      "sha256": "3d029690bd2b4a06d8343b6fcebc476adae1358a314bbd53ded369c1aeb0a6f3"
+    },
+    {
+      "path": "_bmad/traceability.md",
+      "present": true,
+      "role": "traceability",
+      "sha256": "fc239ca44ca3a34e5186fab20ca76d6a757d21e8138b5bc787f0da627215b9ad"
+    }
+  ],
+  "source_checksums": {
+    "AGENTS.md": "9991172a3f79ab4223f36ebb7390d1e4bed5395d678159ea5f597ec5ba2b0229",
+    "CLAUDE.md": "b5c9335a9d000e7911fc41e984137960961cb7faafc2aa46b690413fee1c5896",
+    "CODEX.md": "16968966a364bde5e758b82299c0bc1ccebcbe30d26aea7807749f2a934345ff",
+    "_bmad/traceability.md": "fc239ca44ca3a34e5186fab20ca76d6a757d21e8138b5bc787f0da627215b9ad",
+    "openspec/change-proposals/research-roadmap-vNEXT.md": "7d0bbf6b41678dca58795aeb9946b748c1e4b679bdac43cc7f199f01e4430d5a",
+    "ops/changelog.md": "3d029690bd2b4a06d8343b6fcebc476adae1358a314bbd53ded369c1aeb0a6f3",
+    "ops/status.md": "e61bc81c56f66909bb03db3e15caa07ccd8d0f434bebc2017bdf6082a9417805",
+    "research-roadmap-next.yaml": "64e0d88e88b115d570a5ef623d2560bd73519000701ea587d5204255a519239c",
+    "research-roadmap.yaml": "64e0d88e88b115d570a5ef623d2560bd73519000701ea587d5204255a519239c",
+    "results/experiment_3120_cross_corpus_matrix_v24.json": "ac146980524b2b6796ad4e889859783ad01fa6d30af835d73b5e0a840581b58f",
+    "results/experiment_3121_capstone_v290.json": "2188d35683de288933ee94938bceb1f491023a7945040fcad8d343be85cff76a",
+    "scripts/research_conductor.py": "65b4c225a375fd5671af37d69057246b42512efe5e668d58e2010bd518e2f007"
+  },
+  "status_summary_290": {
+    "capstone_ready": true,
+    "ebt_arm_status": "projection_only_sidecar_correlation_no_live_model_integration",
+    "formal_feedback_status": "solver_certified_feedback_ready_no_live_sota_lift",
+    "fr11_self_learning_status": "bounded_controller_only_soundness_zero_completeness_zero_no_weight_update",
+    "gatemate_status": "blocked_operator_evidence_incomplete_no_hardware_run",
+    "matrix_v24_ready": true,
+    "model_cache_status": {
+      "headline_model_spec_gaps": [
+        {
+          "missing_model_ids": [
+            "unsloth/Qwen3.6-35B-A3B-GGUF",
+            "unsloth/gemma-4-31B-it-GGUF"
+          ],
+          "present_model_ids": [
+            "unsloth/gemma-4-26B-A4B-it-GGUF"
+          ],
+          "reason": "mandated headline model cache coverage incomplete",
+          "row_id": "dot290:exp3110_sota_model_spec_cache_manifest",
+          "source_artifact": "results/experiment_3110_sota_model_spec_cache_manifest_corrigendum_v1.json"
+        }
+      ],
+      "missing_model_ids": [
+        "unsloth/Qwen3.6-35B-A3B-GGUF",
+        "unsloth/gemma-4-31B-it-GGUF"
+      ],
+      "present_model_ids": [
+        "unsloth/gemma-4-26B-A4B-it-GGUF"
+      ]
+    },
+    "next_top_gap": "publishable_verifier_repair_headline_evidence",
+    "paper_ready": false,
+    "publication_blocker_count": 36,
+    "publication_blocker_count_source": "capstone_publication_blocker_count",
+    "repair_claim_status": "bounded_micro_panel_executed_zero_delta_no_promotion",
+    "sampler_hardware_status": "bounded_clut_cpu_only_no_hardware_speedup",
+    "source_artifacts": [
+      {
+        "path": "results/experiment_3120_cross_corpus_matrix_v24.json",
+        "role": "matrix_v24_authority"
+      },
+      {
+        "path": "results/experiment_3115_explicit_repair_gate_micro_panel_v4.json",
+        "role": "explicit_repair_gate_micro_panel"
+      }
+    ],
+    "ssqa_status": "gated_skipped_host_visible_readback_missing",
+    "verifier_gain_status": "diagnostic_gain_recovered_but_headline_bounded_by_cache_and_prior_flags"
+  },
+  "traceability_updated": false
+}

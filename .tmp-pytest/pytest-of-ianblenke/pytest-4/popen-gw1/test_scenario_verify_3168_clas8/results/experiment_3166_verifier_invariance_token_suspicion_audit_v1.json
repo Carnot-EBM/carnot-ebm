@@ -1,0 +1,37 @@
+{
+  "artifact": "experiment_3166_verifier_invariance_token_suspicion_audit_v1",
+  "downstream_policy_for_exp3167": {
+    "acceptance_requires_exact_authority": true,
+    "required_acceptance_authority_fields": [
+      "exact_label",
+      "exact_safe_replay_decision",
+      "canonical_equivalence",
+      "solver_or_test_authority",
+      "monitor_ledger_consistency"
+    ]
+  },
+  "trusted_exact_rows": [
+    {
+      "acceptance_authority": true,
+      "exact_label": "INVALID",
+      "expected_action": "reject",
+      "row_id": "row-fa",
+      "source_experiments": [
+        "exp3137",
+        "exp3138"
+      ],
+      "trusted_exact_authority": true
+    },
+    {
+      "acceptance_authority": true,
+      "exact_label": "VALID",
+      "expected_action": "accept",
+      "row_id": "row-ok",
+      "source_experiments": [
+        "exp3137"
+      ],
+      "trusted_exact_authority": true
+    }
+  ],
+  "verifier_invariance_token_suspicion_audit_ready": true
+}

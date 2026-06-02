@@ -1,0 +1,258 @@
+{
+  "artifact": "experiment_2908_capstone_v274",
+  "blocked_artifacts": [
+    "exp2899"
+  ],
+  "cited_upstream_artifacts": [
+    {
+      "artifact_path": "results/experiment_2897_archive_v273_activate_v274.json",
+      "experiment_id": "exp2897",
+      "honest_verdict": "complete: archive_ready=true; activated_milestone=2026.05.274",
+      "sha256": "43882c0c2d83ce53ce4bdd44297b868f00486943887c84de3bd1ca11c2b70073"
+    },
+    {
+      "artifact_path": "results/experiment_2898_kv260_ising_sampler_hardware_latency_benchmark_v1.json",
+      "experiment_id": "exp2898",
+      "honest_verdict": "complete: kv260_hardware_latency_transcript_recorded",
+      "sha256": "6d67e746a873f8e0d00a8dbafffbf019619ff49d861dda0f04c2e7955e6d608f"
+    },
+    {
+      "artifact_path": "results/experiment_2899_gatemate_a1_n16_ising_tile_bitstream_build_v1.json",
+      "experiment_id": "exp2899",
+      "honest_verdict": "blocked_gatemate_toolchain_missing",
+      "sha256": "fbab9dcc7d24d4736c723c0c49f0ba820d93aec0b61751f96d3d4d6e3dff8db6"
+    },
+    {
+      "artifact_path": "results/experiment_2900_polarfire_carnot_dispatch_smoke_v1.json",
+      "experiment_id": "exp2900",
+      "honest_verdict": "complete: polarfire_riscv64_constraint_scorer_hash_verified",
+      "sha256": "50b092b49850d2f325bd0e0fafb2df6375036ec009da260e2459a76b7b3a9c4a"
+    },
+    {
+      "artifact_path": "results/experiment_2901_thrml_local_import_repair_v1.json",
+      "experiment_id": "exp2901",
+      "honest_verdict": "complete: thrml_import_repaired_n16_parity_passed_no_hardware_claim",
+      "sha256": "b1ae8068395266e847c47e2f9a080518c878387e43d12a106ba08e840c7df916"
+    },
+    {
+      "artifact_path": "results/experiment_2902_cross_corpus_matrix_v8.json",
+      "experiment_id": "exp2902",
+      "honest_verdict": "complete: cross-corpus matrix v8 aggregated; clean=6; flagged=2",
+      "sha256": "5d18ef2d01daa05f861f7fe554f81fd45c5ff41b08f121e0765c14d8b0186bf0"
+    },
+    {
+      "artifact_path": "results/experiment_2903_paper_v6_hardware_validation_section_v1.json",
+      "experiment_id": "exp2903",
+      "honest_verdict": "complete: paper_v6_hardware_validation_section_staged_from_exp2898",
+      "sha256": "c532cde89f5cce0c43ef4feff9ea50050ada210240b6029f7382608b9f923a42"
+    },
+    {
+      "artifact_path": "results/experiment_2904_kan_hardware_complexity_accounting_v2.json",
+      "experiment_id": "exp2904",
+      "honest_verdict": "complete: KAN hardware complexity accounting v2 aggregated; no KAN synthesis claim",
+      "sha256": "0e7d58b5c056b9d6b79b212e7e305dce9b7f11f1732d987cdf32601aef253858"
+    },
+    {
+      "artifact_path": "results/experiment_2905_sota_code_generation_bounded_budget_expansion_v1.json",
+      "experiment_id": "exp2905",
+      "honest_verdict": "complete: bounded-budget k=8 live SOTA code generation executed with pass@1=0.5000 and pass@k=0.5000",
+      "sha256": "1f9be1aafc24e3a719f2c2a0dfc9ce6b99b0c98d7bde34630b0c82bf6ed0dab1"
+    },
+    {
+      "artifact_path": "results/experiment_2906_fr11_hardware_accelerated_replay_pilot_v1.json",
+      "experiment_id": "exp2906",
+      "honest_verdict": "complete: kv260_replay_dispatch_path_validated_pilot_only",
+      "sha256": "28f6970f6e40013fef11ec6cb5692e1259aed791d5b13e8cb928124016027450"
+    },
+    {
+      "artifact_path": "results/experiment_2907_operator_hardware_portfolio_status_v1.json",
+      "experiment_id": "exp2907",
+      "honest_verdict": "complete: operator_hardware_portfolio_status_aggregated",
+      "sha256": "7bd64258ace196716b6693368762d75f4527e3327dbd1f4ff3ff4a5260d131dc"
+    }
+  ],
+  "clean_artifacts": [
+    "exp2897",
+    "exp2898",
+    "exp2900",
+    "exp2901",
+    "exp2902",
+    "exp2903",
+    "exp2904",
+    "exp2907"
+  ],
+  "cross_corpus_matrix_v8_built": true,
+  "duration_s": 0.1,
+  "field_principles": {
+    "blocked_artifacts": "Artifacts that honestly report a precondition/gate block. Recorded here so the .275 planner can pick them up with prior_failures: set.",
+    "cited_upstream_artifacts": "Upstream artifact provenance \u2014 paths plus fields imported. Audit trail that lets a third party verify the capstone is not synthesizing numbers from nothing.",
+    "clean_artifacts": "Expected .274 deliverables with terminal verdicts, required booleans, and no adversarial flags.",
+    "cross_corpus_matrix_v8_built": "True only when exp2902 lands clean and reports rows_clean.",
+    "duration_s": "Measured wall-clock duration for synthesis; never sleep-padded.",
+    "flagged_artifacts": "Artifacts with adversarial-verify or corrigendum flags. Stay out of paper-ready claims even if their own ready booleans are True.",
+    "gaps_for_275": "Concrete gaps the .275 planner should pick up \u2014 flagged artifacts, blocked toolchain installs, missing same-basis CPU baselines.",
+    "gatemate_bitstream_built": "True only when exp2899's own synth_succeeded boolean is True AND place_and_route_succeeded is True AND a bitstream sha256 is recorded. nextpnr-gatemate toolchain absence keeps this False.",
+    "hardware_portfolio_reactivated": "True when at least three of four hardware tracks (KV260 latency, PolarFire smoke, THRML repair, GateMate bitstream) produced a clean deliverable; the remaining track must be honestly blocked, not missing.",
+    "honest_verdict": "Self-declared terminal state lets the reconciler classify the verdict without re-running. Capstone verdicts start with complete:.",
+    "inference_substrate": "Forward-only declaration this artifact is pure aggregation; the adversarial-verify linter applies the aggregation duration floor (1ms), not the live-LLM 60s floor.",
+    "kv260_first_latency_recorded": "True only when exp2898 lands clean with overlay loaded, UIO devices present, and a board transcript on disk. False otherwise.",
+    "missing_artifacts": "Expected .274 deliverables that are absent or malformed. Empty for a successful milestone close.",
+    "paper_ready": "True only when matrix v8 itself is clean and contains FoVer plus at least one other clean headline row; flagged or pilot-only rows cannot create paper readiness.",
+    "pilot_only_artifacts": "Artifacts that intentionally provide pilot/dispatch-only evidence without a headline benchmark or hardware-acceleration claim.",
+    "polarfire_smoke_verified": "True only when exp2900 lands clean with SSH-reachable riscv64 board and the constraint-scorer output hash matches the expected hash.",
+    "thrml_import_repaired": "True only when exp2901 lands clean with thrml_import_succeeded=True and a non-zero parity-energy-delta recorded against a fixed seed.",
+    "top_3_next_actions": "Three operator-actionable next steps that close the largest .274 gaps and unblock the .275 milestone."
+  },
+  "files_not_modified": [
+    "research-roadmap.yaml",
+    "scripts/research_conductor.py",
+    "docs/index.html",
+    "main.tex"
+  ],
+  "flagged_artifacts": [
+    "exp2905"
+  ],
+  "gaps_for_275": [
+    "GateMate A1-EVB-2M still has no bitstream; nextpnr-gatemate toolchain absent on the dev box.",
+    "exp2905 SOTA code generation expansion remains adversarial-flagged (TAUTOLOGY: pass@1==pass@k; METHODOLOGY_MISSING: no random_seed).",
+    "KV260 latency is recorded but no same-basis CPU baseline exists; hardware-speedup claims remain forbidden.",
+    "Blocked .274 deliverables to pick up in .275: exp2899."
+  ],
+  "gatemate_bitstream_built": false,
+  "hardware_portfolio_reactivated": true,
+  "headline_eligible_rows": [
+    "corpus:FoVer",
+    "corpus:HaluEval_FEVER",
+    "corpus:TruthfulQA",
+    "exp2890_code_structural_dependency",
+    "exp2892_vericot",
+    "exp2898_kv260_hardware"
+  ],
+  "honest_verdict": "complete: .274 capstone synthesized; paper_ready=true; hardware_portfolio_reactivated=true; clean_artifacts=8; flagged_artifacts=1; blocked_artifacts=1; missing_artifacts=0; pilot_only_artifacts=1",
+  "inference_substrate": "aggregation_from_upstream_artifacts",
+  "kv260_first_latency_recorded": true,
+  "kv260_latency_summary": {
+    "bitstream_sha256": "a90028a7931de505edd38caadfccfc1d7d5aa21e8abca5ae48bfb8a63a9876cb",
+    "board_transcript_path": "results/experiment_2898_kv260_transcript.log",
+    "kv260_overlay_loaded": "carnot_ising_v2_n64",
+    "per_seed_results": [
+      {
+        "final_energy": -42.0,
+        "n_samples": 1000,
+        "per_sample_wall_clock_us_median": 24.0,
+        "per_sample_wall_clock_us_p95": 24.5,
+        "seed": 1
+      }
+    ],
+    "uio_devices_present": [
+      "/dev/uio0",
+      "/dev/uio1",
+      "/dev/uio2"
+    ]
+  },
+  "milestone": "2026.05.274",
+  "missing_artifacts": [],
+  "paper_ready": true,
+  "per_board_status": {
+    "gatemate": {
+      "last_artifact": "results/experiment_2899_gatemate_a1_n16_ising_tile_bitstream_build_v1.json",
+      "next_step": "Provision nextpnr-gatemate, rerun build, do not flash until bitstream exists.",
+      "state": "blocked_gatemate_toolchain_missing"
+    },
+    "kv260": {
+      "last_artifact": "results/experiment_2898_kv260_ising_sampler_hardware_latency_benchmark_v1.json",
+      "next_step": "Add same-basis CPU baseline before speedup claims.",
+      "state": "ready_live_latency_recorded"
+    },
+    "polarfire": {
+      "last_artifact": "results/experiment_2900_polarfire_carnot_dispatch_smoke_v1.json",
+      "next_step": "Treat as CPU-dispatch proof; fabric acceleration remains separate.",
+      "state": "ready_riscv64_cpu_dispatch_verified"
+    },
+    "thrml": {
+      "last_artifact": "results/experiment_2901_thrml_local_import_repair_v1.json",
+      "next_step": "Use import/parity evidence; require TSU access before hardware claims.",
+      "state": "ready_software_parity_no_tsu_claim"
+    }
+  },
+  "pilot_only_artifacts": [
+    "exp2906"
+  ],
+  "polarfire_smoke_verified": true,
+  "run_date": "20260523",
+  "schema": "carnot.milestone_capstone.v274",
+  "source_artifact_status": {
+    "exp2897": {
+      "honest_verdict": "complete: archive_ready=true; activated_milestone=2026.05.274",
+      "path": "results/experiment_2897_archive_v273_activate_v274.json",
+      "present": true,
+      "status": "clean"
+    },
+    "exp2898": {
+      "honest_verdict": "complete: kv260_hardware_latency_transcript_recorded",
+      "path": "results/experiment_2898_kv260_ising_sampler_hardware_latency_benchmark_v1.json",
+      "present": true,
+      "status": "clean"
+    },
+    "exp2899": {
+      "honest_verdict": "blocked_gatemate_toolchain_missing",
+      "path": "results/experiment_2899_gatemate_a1_n16_ising_tile_bitstream_build_v1.json",
+      "present": true,
+      "status": "blocked"
+    },
+    "exp2900": {
+      "honest_verdict": "complete: polarfire_riscv64_constraint_scorer_hash_verified",
+      "path": "results/experiment_2900_polarfire_carnot_dispatch_smoke_v1.json",
+      "present": true,
+      "status": "clean"
+    },
+    "exp2901": {
+      "honest_verdict": "complete: thrml_import_repaired_n16_parity_passed_no_hardware_claim",
+      "path": "results/experiment_2901_thrml_local_import_repair_v1.json",
+      "present": true,
+      "status": "clean"
+    },
+    "exp2902": {
+      "honest_verdict": "complete: cross-corpus matrix v8 aggregated; clean=6; flagged=2",
+      "path": "results/experiment_2902_cross_corpus_matrix_v8.json",
+      "present": true,
+      "status": "clean"
+    },
+    "exp2903": {
+      "honest_verdict": "complete: paper_v6_hardware_validation_section_staged_from_exp2898",
+      "path": "results/experiment_2903_paper_v6_hardware_validation_section_v1.json",
+      "present": true,
+      "status": "clean"
+    },
+    "exp2904": {
+      "honest_verdict": "complete: KAN hardware complexity accounting v2 aggregated; no KAN synthesis claim",
+      "path": "results/experiment_2904_kan_hardware_complexity_accounting_v2.json",
+      "present": true,
+      "status": "clean"
+    },
+    "exp2905": {
+      "honest_verdict": "complete: bounded-budget k=8 live SOTA code generation executed with pass@1=0.5000 and pass@k=0.5000",
+      "path": "results/experiment_2905_sota_code_generation_bounded_budget_expansion_v1.json",
+      "present": true,
+      "status": "flagged"
+    },
+    "exp2906": {
+      "honest_verdict": "complete: kv260_replay_dispatch_path_validated_pilot_only",
+      "path": "results/experiment_2906_fr11_hardware_accelerated_replay_pilot_v1.json",
+      "present": true,
+      "status": "pilot-only"
+    },
+    "exp2907": {
+      "honest_verdict": "complete: operator_hardware_portfolio_status_aggregated",
+      "path": "results/experiment_2907_operator_hardware_portfolio_status_v1.json",
+      "present": true,
+      "status": "clean"
+    }
+  },
+  "thrml_import_repaired": true,
+  "top_3_next_actions": [
+    "Provision nextpnr-gatemate on the dev box (oss-cad-suite update or source build), rerun the GateMate n=16 Ising tile build, and record bitstream_sha256 + place_and_route_succeeded=True before any flash attempt.",
+    "Re-run the bounded-budget SOTA code-generation expansion with random_seed declared, n_tasks_per_corpus >= 20 so pass@1 and pass@k cannot tautologically agree, and the adversarial-verify tautology check explicitly addressed in methodology_note.",
+    "Add a same-basis CPU Gibbs baseline for the KV260 Ising sampler (matched n_spins=64, identical coupling/field tensors, same seeds) before any paper-v6 hardware-speedup claim."
+  ]
+}

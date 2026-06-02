@@ -1,0 +1,169 @@
+{
+  "artifact": "experiment_3140_repair_gate_unlock_decision_v1",
+  "duration_s": 2.25,
+  "exact_authority_ready": true,
+  "false_accept_gate_passed": true,
+  "false_accept_rate": 0.0,
+  "gate_criteria": {
+    "bounded_live_model_rerun_required": true,
+    "exact_labels_required": true,
+    "headline_disqualifiers_allowed": false,
+    "known_false_accepts_must_be_blocked": true,
+    "max_false_accept_rate": 0.1,
+    "monitor_ledger_replay_required": true,
+    "regression_rows_required": true
+  },
+  "headline_disqualifiers": [],
+  "honest_verdict": "complete: repair_gate_state=unblocked; false_accept_rate=0.0; selected_repair_rows=2",
+  "inference_substrate": {
+    "aggregation_only": true,
+    "executes_models": false,
+    "executes_repairs": false,
+    "kind": "deterministic_repair_gate_decision_v1",
+    "live_model_calls": 0,
+    "no_live_inference": true,
+    "repair_calls": 0,
+    "source_live_model_calls_reused": 6,
+    "source_repair_run_executed": false
+  },
+  "known_false_accepts_blocked": true,
+  "live_model_ready": true,
+  "monitor_ledger_ready": true,
+  "regression_rows_included": true,
+  "repair_blockers": [],
+  "repair_gate_decision_v1_ready": true,
+  "repair_gate_state": "unblocked",
+  "repair_rows_available": true,
+  "run_date": "20260526",
+  "schema": "carnot.repair_gate_unlock_decision.v1",
+  "selected_repair_rows": [
+    {
+      "constraints": {
+        "expected_direction": "replace claimed value 16 with 14",
+        "failing_constraint": "claimed_value == computed_value",
+        "solver_evidence": {
+          "authority": "python_ast_literal_evaluator",
+          "claimed_value": 16,
+          "computed_value": 14
+        }
+      },
+      "fixture_id": "repair-arith",
+      "fragment_id": "repair-arith:assert_claim",
+      "row_index": 0
+    },
+    {
+      "constraints": {
+        "expected_direction": "produce parseable JSON",
+        "failing_constraint": "valid_json_document",
+        "solver_evidence": {
+          "authority": "python_json_parser",
+          "parse_error": "Expecting ',' delimiter"
+        }
+      },
+      "fixture_id": "repair-json",
+      "fragment_id": "repair-json:json_document",
+      "row_index": 1
+    }
+  ],
+  "source_artifacts": [
+    {
+      "path": "AGENTS.md",
+      "present": true,
+      "required": false,
+      "role": "agents_repo_instructions",
+      "sha256": "c893735c3c7ece3f9bf4d48722846ef65e76ff35ebfbfe1d239930339d69470b"
+    },
+    {
+      "path": "CODEX.md",
+      "present": true,
+      "required": false,
+      "role": "codex_repo_workflow",
+      "sha256": "bab1c6ba20bb432cbd7cd6e3b12fb0089f303cb7742f929297647d6329e46502"
+    },
+    {
+      "path": "CLAUDE.md",
+      "present": true,
+      "required": false,
+      "role": "claude_authenticity_rules",
+      "sha256": "514f308134d671898351c4a8e698f9c29b56e8440214b2254552b77491a1f2f6"
+    },
+    {
+      "path": "openspec/capabilities/verification/spec.md",
+      "present": true,
+      "required": true,
+      "role": "verification_openspec",
+      "sha256": "70a07a54aa09e9b0812312a2d683ddfa524eea1695652949dbc72114f669abd9"
+    },
+    {
+      "path": "results/experiment_3139_live_sota_verifier_rerun_v7.json",
+      "present": true,
+      "required": true,
+      "role": "exp3139_live_verifier_rerun",
+      "sha256": "d059d4ec9cfc2db12f5745e0beada7c1ea3ac445f2dea28e6de58112e126e2f3"
+    },
+    {
+      "path": "results/experiment_3137_exact_safe_accept_abstain_contract_v1.json",
+      "present": true,
+      "required": true,
+      "role": "exp3137_exact_safe_contract",
+      "sha256": "f8641d7070cdb9ad5820fd3d65244b8c752153660488c7d047f56582bc8d6bf8"
+    },
+    {
+      "path": "results/experiment_3126_fragment_time_monitor_satisfiable_drift_audit_v1.json",
+      "present": true,
+      "required": true,
+      "role": "exp3126_monitor_ledger",
+      "sha256": "d3dd1011de7596d3c7dedf139bd3d0bb4dea8d31b1123e60d2203bf967875a0c"
+    },
+    {
+      "path": "results/experiment_3125_prefix_closed_deterministic_verifier_bound_pilot_v1.json",
+      "present": true,
+      "required": true,
+      "role": "exp3125_prefix_bound",
+      "sha256": "15a9bf4575948cc4f9c215f8f90d83a26623d5dd8a958155aad73e3e483e2e6a"
+    },
+    {
+      "path": "results/experiment_3115_explicit_repair_gate_micro_panel_v4.json",
+      "present": true,
+      "required": true,
+      "role": "exp3115_prior_repair_panel",
+      "sha256": "09674f7dae8bc9e7f971fb416dd9fefe62f83e3fe21dd4d79f2ea354e5d229f5"
+    },
+    {
+      "path": "python/carnot/verify/repair_gate_unlock_decision_v1.py",
+      "present": false,
+      "required": false,
+      "role": "exp3140_module",
+      "sha256": null
+    },
+    {
+      "path": "tests/python/test_experiment_3140_repair_gate_unlock_decision_v1.py",
+      "present": false,
+      "required": false,
+      "role": "exp3140_tests",
+      "sha256": null
+    },
+    {
+      "path": "results/fragment_verification_pilot_3114/repair_target_manifest.jsonl",
+      "present": true,
+      "required": true,
+      "role": "exp3115_repair_target_manifest",
+      "sha256": "ef3d3ed50c75e24fc3f12b6ed656a55ad79c62f614bf5a6a31c1bd1dfc752217"
+    }
+  ],
+  "source_checksums": {
+    "AGENTS.md": "c893735c3c7ece3f9bf4d48722846ef65e76ff35ebfbfe1d239930339d69470b",
+    "CLAUDE.md": "514f308134d671898351c4a8e698f9c29b56e8440214b2254552b77491a1f2f6",
+    "CODEX.md": "bab1c6ba20bb432cbd7cd6e3b12fb0089f303cb7742f929297647d6329e46502",
+    "openspec/capabilities/verification/spec.md": "70a07a54aa09e9b0812312a2d683ddfa524eea1695652949dbc72114f669abd9",
+    "results/experiment_3115_explicit_repair_gate_micro_panel_v4.json": "09674f7dae8bc9e7f971fb416dd9fefe62f83e3fe21dd4d79f2ea354e5d229f5",
+    "results/experiment_3125_prefix_closed_deterministic_verifier_bound_pilot_v1.json": "15a9bf4575948cc4f9c215f8f90d83a26623d5dd8a958155aad73e3e483e2e6a",
+    "results/experiment_3126_fragment_time_monitor_satisfiable_drift_audit_v1.json": "d3dd1011de7596d3c7dedf139bd3d0bb4dea8d31b1123e60d2203bf967875a0c",
+    "results/experiment_3137_exact_safe_accept_abstain_contract_v1.json": "f8641d7070cdb9ad5820fd3d65244b8c752153660488c7d047f56582bc8d6bf8",
+    "results/experiment_3139_live_sota_verifier_rerun_v7.json": "d059d4ec9cfc2db12f5745e0beada7c1ea3ac445f2dea28e6de58112e126e2f3",
+    "results/fragment_verification_pilot_3114/repair_target_manifest.jsonl": "ef3d3ed50c75e24fc3f12b6ed656a55ad79c62f614bf5a6a31c1bd1dfc752217"
+  },
+  "tests_run": [
+    "focused-3140"
+  ]
+}

@@ -1,0 +1,160 @@
+{
+  "artifact": "experiment_3110_sota_model_spec_cache_manifest_corrigendum_v1",
+  "cache_evidence": [
+    {
+      "cached": false,
+      "hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "selected": false,
+      "source_fields": [
+        "exp3099.model_specs",
+        "exp3100.inference_substrate.model_cache_status",
+        "exp3100.model_specs"
+      ]
+    },
+    {
+      "cached": false,
+      "hf_id": "unsloth/gemma-4-31B-it-GGUF",
+      "selected": false,
+      "source_fields": [
+        "exp3099.model_specs",
+        "exp3100.inference_substrate.model_cache_status",
+        "exp3100.model_specs"
+      ]
+    },
+    {
+      "cached": true,
+      "hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "selected": true,
+      "source_fields": [
+        "exp3099.model_specs",
+        "exp3100.inference_substrate.model_cache_status",
+        "exp3100.model_specs"
+      ]
+    }
+  ],
+  "cached_sota_pair_available": false,
+  "downstream_usage": {
+    "legacy_small_models": {
+      "allowed_only_for_cpu_smoke_tests": true,
+      "headline_claim_allowed": false,
+      "model_ids": [
+        "google/gemma-4-E4B-it",
+        "Qwen/Qwen3.5-0.8B"
+      ]
+    },
+    "live_llm_headline_tasks": {
+      "allowed_model_ids": [
+        "unsloth/gemma-4-26B-A4B-it-GGUF"
+      ],
+      "headline_claim_allowed": true,
+      "minimum_selected_mandated_cached_models": 1,
+      "requires_mandated_cached_model": true,
+      "when_no_selected_mandated_cached_model": "report headline_claim_allowed=false"
+    },
+    "pair_or_comparative_headline_tasks": {
+      "cached_sota_pair_available": false,
+      "headline_claim_allowed": false,
+      "requires_cached_sota_pair_available": true
+    },
+    "solver_only_tasks": {
+      "allowed_without_cached_sota_pair": true,
+      "headline_claim_allowed_from_solver_only": false,
+      "required_action": "Proceed with exact solver/test-oracle evidence, cite this manifest, and do not report live-LLM headline evidence from solver-only runs."
+    }
+  },
+  "duration_s": 0.5,
+  "headline_claim_allowed": true,
+  "honest_verdict": "complete: sota_model_manifest_ready=true; cached_sota_pair_available=False; selected_headline_model_ids=1; headline_claim_allowed=True; missing_model_ids=2",
+  "inference_substrate": {
+    "cache_probe_performed": false,
+    "executes_conductor": false,
+    "executes_hardware": false,
+    "executes_models": false,
+    "executes_solvers": false,
+    "kind": "corrigendum_from_checked_in_artifacts",
+    "local_repo_only": true,
+    "no_live_llm_inference": true,
+    "source": "exp3099_exp3100_matrix_v23_capstone_v289"
+  },
+  "mandatory_headline_model_ids": [
+    "unsloth/Qwen3.6-35B-A3B-GGUF",
+    "unsloth/gemma-4-31B-it-GGUF",
+    "unsloth/gemma-4-26B-A4B-it-GGUF"
+  ],
+  "matrix_reported_model_spec_gaps": [
+    {
+      "missing_model_ids": [],
+      "present_model_ids": [
+        "unsloth/Qwen3.6-35B-A3B-GGUF",
+        "unsloth/gemma-4-31B-it-GGUF",
+        "unsloth/gemma-4-26B-A4B-it-GGUF"
+      ],
+      "reason": "mandatory_headline_model_ids missing for live LLM artifact",
+      "row_id": "dot289:exp3099_local_sota_confidence_abstention_panel",
+      "source_artifact": "results/experiment_3099_local_sota_confidence_abstention_panel_v3.json"
+    }
+  ],
+  "milestone": "2026.05.290",
+  "missing_model_ids": [
+    "unsloth/Qwen3.6-35B-A3B-GGUF",
+    "unsloth/gemma-4-31B-it-GGUF"
+  ],
+  "missing_source_artifacts": [],
+  "no_new_hardware_run": true,
+  "no_new_model_execution": true,
+  "no_new_solver_run": true,
+  "ops_docs_reconciliation_left_to_conductor": true,
+  "present_model_ids": [
+    "unsloth/gemma-4-26B-A4B-it-GGUF"
+  ],
+  "run_date": "20260526",
+  "schema": "carnot.sota_model_spec_cache_manifest_corrigendum.v1",
+  "scripts_research_conductor_modified": false,
+  "selected_headline_model_ids": [
+    "unsloth/gemma-4-26B-A4B-it-GGUF"
+  ],
+  "smoke_test_model_ids": [
+    "google/gemma-4-E4B-it",
+    "Qwen/Qwen3.5-0.8B"
+  ],
+  "sota_model_manifest_ready": true,
+  "source_artifacts": [
+    {
+      "path": "results/experiment_3099_local_sota_confidence_abstention_panel_v3.json",
+      "present": true,
+      "role": "exp3099_local_sota_confidence_abstention_panel",
+      "sha256": "078697977733dd8669644c4e93c7986382422c23c2b1ef6ccbd0b170e31e6fc5"
+    },
+    {
+      "path": "results/experiment_3100_z3_oracle_feedback_v2.json",
+      "present": true,
+      "role": "exp3100_z3_oracle_feedback",
+      "sha256": "5de64be9ee11e7c18d4f021b226609a723e8a6a60c230b7cbc703b2fc63bd7df"
+    },
+    {
+      "path": "results/experiment_3107_cross_corpus_matrix_v23.json",
+      "present": true,
+      "role": "exp3107_cross_corpus_matrix_v23",
+      "sha256": "73a36ce0c4ffaa9557f8ecc5901b8b7130e5decde5f37506d10404644f43f381"
+    },
+    {
+      "path": "results/experiment_3108_capstone_v289.json",
+      "present": true,
+      "role": "exp3108_capstone_v289",
+      "sha256": "e6ebd7e3167c1851cd5e25b0f78b123fe4b7ea2b342a75ffbcce8516841f3424"
+    },
+    {
+      "path": "scripts/experiment_template.py",
+      "present": true,
+      "role": "experiment_template_cached_sota_pair_policy",
+      "sha256": "7024cd8437024c9b0503a690ab108c165b8409f354f3ca7c00d6393ad8ee7f1b"
+    }
+  ],
+  "source_checksums": {
+    "results/experiment_3099_local_sota_confidence_abstention_panel_v3.json": "078697977733dd8669644c4e93c7986382422c23c2b1ef6ccbd0b170e31e6fc5",
+    "results/experiment_3100_z3_oracle_feedback_v2.json": "5de64be9ee11e7c18d4f021b226609a723e8a6a60c230b7cbc703b2fc63bd7df",
+    "results/experiment_3107_cross_corpus_matrix_v23.json": "73a36ce0c4ffaa9557f8ecc5901b8b7130e5decde5f37506d10404644f43f381",
+    "results/experiment_3108_capstone_v289.json": "e6ebd7e3167c1851cd5e25b0f78b123fe4b7ea2b342a75ffbcce8516841f3424",
+    "scripts/experiment_template.py": "7024cd8437024c9b0503a690ab108c165b8409f354f3ca7c00d6393ad8ee7f1b"
+  }
+}

@@ -1,0 +1,22 @@
+{
+  "ccf_binding": {},
+  "expected_transcript": [],
+  "gatemate_output_contract_ready": false,
+  "hardware_execution_claim_made": false,
+  "honest_verdict": "complete: blocked_gatemate_output_contract_authority_missing",
+  "host_reader_command": "",
+  "host_visible_io_plan_ready": false,
+  "missing_operator_actions": [
+    "Provide an authoritative GateMate A1-EVB-2M output pinout and commit a CCF Pin_out binding for done.",
+    "Commit a concrete host reader command for done: GPIO/LED read, UART serial decode, or JTAG-readable status command.",
+    "Keep downstream flash smoke gated until the reader command has an expected pass/fail transcript."
+  ],
+  "safety_limits": {
+    "downstream_flash_gate_open": false,
+    "exp3049_gate": "require_gatemate_output_contract_ready_true",
+    "exp3050_gate": "require_host_visible_io_plan_ready_true",
+    "max_flash_attempts_without_operator_review": 0
+  },
+  "selected_output_signal": "done",
+  "speedup_claim_made": false
+}

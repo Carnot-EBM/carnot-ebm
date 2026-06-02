@@ -1,0 +1,23 @@
+{
+  "artifact": "experiment_3313_repair_substrate_root_cause_autopsy_v1",
+  "experiment_id": "exp3313",
+  "honest_verdict": "complete: fixture",
+  "no_new_model_execution": true,
+  "repair_substrate_autopsy_ready": true,
+  "rerun_contract": {
+    "exp3315": {
+      "acceptance_requirements": [
+        "vgb_repair_policy_ready=true",
+        "exact_verifiers_not_llm_judges_are_final"
+      ],
+      "deliverable": "results/experiment_3315_vgb_backtracking_repair_policy_v1.json"
+    },
+    "exp3316": {
+      "acceptance_requirements": [
+        "exact_acceptance_authority_no_llm_judge",
+        "headline_claim_allowed_true_only_if_all_gates_pass_else_honestly_blocked"
+      ],
+      "deliverable": "results/experiment_3316_sota_repair_rerun_v12_runtime_clean.json"
+    }
+  }
+}

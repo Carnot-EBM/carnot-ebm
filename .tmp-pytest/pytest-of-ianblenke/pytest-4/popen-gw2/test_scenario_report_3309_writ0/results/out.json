@@ -1,0 +1,254 @@
+{
+  "artifact": "experiment_3309_live_runtime_provenance_contract_v1",
+  "checker_entrypoint": "carnot.reporting.live_runtime_provenance_contract_3309.check_runtime_evidence_artifact",
+  "checker_file_sha256": "",
+  "checker_versions_required": [
+    "live_runtime_provenance_contract",
+    "executable_checker_path",
+    "checker_file_sha256",
+    "adversarial_verify",
+    "spec_coverage",
+    "llama_cpp_python",
+    "selected_python_cuda_probe"
+  ],
+  "contract_version": "carnot.live_runtime_provenance_contract.v1",
+  "downstream_implementation_steps": [
+    "import check_runtime_evidence_artifact before claiming runtime_provenance_clean",
+    "record every required_provenance_fields entry before writing the terminal artifact",
+    "store metric_lineage for guarded metrics and recompute rates from raw rows",
+    "copy the checker result into duration_contract_passed and runtime_contract_passed",
+    "have repair audits preserve the source panel runtime-contract result instead of rerunning live inference"
+  ],
+  "duration_guard_rules": {
+    "aggregation_audit_exception": {
+      "headline_promotion_allowed": false,
+      "minimum_duration_s": 0.0,
+      "required_labels": [
+        "evidence_tier=aggregation_audit",
+        "no_new_model_execution=true"
+      ],
+      "requires_source_runtime_contract": true
+    },
+    "cpu_smoke_exception": {
+      "headline_promotion_allowed": false,
+      "minimum_duration_s": 0.0,
+      "required_labels": [
+        "evidence_tier=cpu_smoke",
+        "cpu_smoke_only=true",
+        "headline_result=false"
+      ]
+    },
+    "headline_live_evidence": {
+      "applies_when": "GGUF/CUDA/live-model markers appear and headline promotion is possible",
+      "minimum_duration_s": 60.0,
+      "must_fail_when_short": true
+    }
+  },
+  "duration_s": 2.5,
+  "executable_checker_path": "python/carnot/reporting/live_runtime_provenance_contract_3309.py",
+  "experiment_id": "exp3309",
+  "honest_verdict": "complete: runtime_contract_ready=true; contract_version=carnot.live_runtime_provenance_contract.v1; minimum_live_duration_s=60.0; executable_checker_path=python/carnot/reporting/live_runtime_provenance_contract_3309.py",
+  "milestone": "2026.05.306",
+  "minimum_live_duration_s": 60.0,
+  "no_conductor_execution": true,
+  "no_new_cuda_probe": true,
+  "no_new_dataflip_run": true,
+  "no_new_garak_run": true,
+  "no_new_model_execution": true,
+  "no_new_repair_generation": true,
+  "no_push": true,
+  "random_seed": 3309,
+  "repair_substrate_rules": {
+    "audit_substrate_exception": {
+      "allowed_audit_substrate": "aggregation_from_upstream_artifacts",
+      "requires_no_new_model_execution": true
+    },
+    "promotion_gate": "substrate_consistency_passed is true only when the source panel's runtime contract is clean, critical adversarial flags are absent, exact checkers are preserved, and no legacy small model is substituted.",
+    "shared_fields": [
+      "source_artifact_hashes",
+      "panel_case_count",
+      "manifest_case_hashes",
+      "exact_checker_types",
+      "used_model_ids",
+      "missing_model_ids",
+      "source_panel_runtime_contract"
+    ]
+  },
+  "reproducibility_checksum": "3e62bbcf6f8d8dca5b0fa4e53786972679c6d0e63816bed3a4c0b205d045d4e5",
+  "required_provenance_fields": [
+    {
+      "category": "model_identity",
+      "fields": [
+        "models_used[].model_id",
+        "models_used[].hf_id",
+        "models_used[].name",
+        "models_used[].role"
+      ],
+      "required_for": [
+        "headline_live",
+        "cpu_smoke"
+      ]
+    },
+    {
+      "category": "cache_path",
+      "fields": [
+        "models_used[].model_path",
+        "models_used[].cache_root",
+        "models_used[].snapshot_revision"
+      ],
+      "required_for": [
+        "headline_live"
+      ]
+    },
+    {
+      "category": "model_size",
+      "fields": [
+        "models_used[].size_bytes",
+        "models_used[].quantization"
+      ],
+      "required_for": [
+        "headline_live"
+      ]
+    },
+    {
+      "category": "load_timing",
+      "fields": [
+        "runtime_provenance.model_load_started_at",
+        "runtime_provenance.model_load_finished_at",
+        "runtime_provenance.model_load_duration_s"
+      ],
+      "required_for": [
+        "headline_live"
+      ]
+    },
+    {
+      "category": "wall_clock_duration",
+      "fields": [
+        "duration_s",
+        "runtime_provenance.wall_clock_duration_s"
+      ],
+      "required_for": [
+        "headline_live",
+        "cpu_smoke",
+        "aggregation_audit"
+      ]
+    },
+    {
+      "category": "generated_token_count",
+      "fields": [
+        "tokens_generated",
+        "runtime_provenance.per_case_generation[].generated_tokens"
+      ],
+      "required_for": [
+        "headline_live"
+      ]
+    },
+    {
+      "category": "command",
+      "fields": [
+        "runtime_provenance.command",
+        "runtime_provenance.argv",
+        "runtime_provenance.cwd",
+        "runtime_provenance.pid"
+      ],
+      "required_for": [
+        "headline_live",
+        "cpu_smoke"
+      ]
+    },
+    {
+      "category": "cuda_visibility",
+      "fields": [
+        "runtime_provenance.cuda_visible_devices",
+        "runtime_provenance.selected_python_cuda"
+      ],
+      "required_for": [
+        "headline_live"
+      ]
+    },
+    {
+      "category": "gpu_memory",
+      "fields": [
+        "runtime_provenance.gpu_memory_samples"
+      ],
+      "required_for": [
+        "headline_live"
+      ]
+    },
+    {
+      "category": "checker_versions",
+      "fields": [
+        "checker_versions.live_runtime_provenance_contract",
+        "checker_versions.executable_checker_path",
+        "checker_versions.checker_file_sha256",
+        "checker_versions.adversarial_verify",
+        "checker_versions.spec_coverage",
+        "checker_versions.llama_cpp_python",
+        "checker_versions.selected_python_cuda_probe"
+      ],
+      "required_for": [
+        "headline_live",
+        "cpu_smoke",
+        "aggregation_audit"
+      ]
+    }
+  ],
+  "run_date": "20260529",
+  "runtime_contract_ready": true,
+  "schema": "carnot.live_runtime_provenance_contract.v1",
+  "schema_version": "carnot.live_runtime_provenance_contract.v1",
+  "scripts_research_conductor_modified": false,
+  "source_artifacts": [
+    {
+      "artifact": "experiment_3308_quality_flag_root_cause_autopsy_v1",
+      "experiment_id": "exp3308",
+      "path": "results/experiment_3308_quality_flag_root_cause_autopsy_v1.json",
+      "present": true,
+      "readable_json_object": true,
+      "ready": true,
+      "reported_experiment_id": "exp3308",
+      "sha256": "42eb41a753803fb41acedb46e2bb5614d42b9c5f3e89053bf1c9d6aeae80dd50"
+    }
+  ],
+  "spec_refs": [
+    "REQ-REPORT-3309",
+    "SCENARIO-REPORT-3309"
+  ],
+  "task_id": "exp3309-live-runtime-provenance-contract-v1",
+  "tautology_guard_rules": {
+    "distinct_metrics_must_not_share": [
+      "numerator",
+      "denominator",
+      "source_filter",
+      "calculation_function"
+    ],
+    "equal_rate_policy": "Equal distinct metric values are allowed only when both metrics can be recomputed from independent lineage or declare an explicit alias.",
+    "guarded_metric_pairs": [
+      [
+        "refusal_rate",
+        "aligned_instruction_false_positive_rate"
+      ],
+      [
+        "refusal_rate",
+        "aligned_benign_false_positive_rate"
+      ],
+      [
+        "repair_success_rate",
+        "false_accept_rate"
+      ],
+      [
+        "dataflip_detection_rate",
+        "attack_success_rate"
+      ]
+    ],
+    "lineage_required_fields": [
+      "numerator",
+      "denominator",
+      "source_filter",
+      "source_row_count",
+      "calculation_function",
+      "source_artifact_sha256"
+    ],
+    "required_lineage_object": "metric_lineage"
+  }
+}

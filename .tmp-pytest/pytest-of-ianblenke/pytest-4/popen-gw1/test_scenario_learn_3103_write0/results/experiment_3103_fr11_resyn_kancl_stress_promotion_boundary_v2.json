@@ -1,0 +1,776 @@
+{
+  "artifact": "experiment_3103_fr11_resyn_kancl_stress_promotion_boundary_v2",
+  "completeness_mistakes": 12,
+  "continuous_self_learning_task": true,
+  "delayed_regression_delta": 0.285714,
+  "duration_s": 4.25,
+  "family_holdout_delta": 0.117647,
+  "fr11_stress_ready": true,
+  "honest_verdict": "complete_fr11_stress_boundary_blocks_promotion",
+  "inference_substrate": {
+    "base_model_weights_updated": false,
+    "cached_artifacts_only": true,
+    "controller_weight_update": true,
+    "kan_model_weight_training": false,
+    "live_llm_inference": false,
+    "live_model_inference": false,
+    "local_gguf_inference": false,
+    "mode": "deterministic_fr11_stress_controller_replay",
+    "model_weight_mutation": false,
+    "model_weight_training": false,
+    "trace_memory_update": true,
+    "training_scope": "bounded_controller_side_anchor_memory_only"
+  },
+  "negative_control_results": {
+    "no_feedback": {
+      "case_count": 51,
+      "completeness_mistakes": 0,
+      "family_holdout_delta": 0.0,
+      "rolled_back": false,
+      "soundness_mistakes": 15
+    },
+    "shuffled_label": {
+      "case_count": 14,
+      "completeness_mistakes": 0,
+      "family_holdout_delta": -0.352941,
+      "rolled_back": true,
+      "soundness_mistakes": 33
+    }
+  },
+  "online_decisions": [
+    {
+      "controller_decision": "abstain",
+      "decision_label": "completeness_mistake",
+      "fixture_id": "resyn-3084-arith-000",
+      "perturbation_type": "arithmetic_true_verification",
+      "score": 0.1,
+      "target_action": "accept",
+      "target_source": "exp3097_protocol"
+    },
+    {
+      "controller_decision": "reject",
+      "decision_label": "correct",
+      "fixture_id": "resyn-3084-arith-001",
+      "perturbation_type": "arithmetic_false_verification",
+      "score": -1.9,
+      "target_action": "reject",
+      "target_source": "exp3097_protocol"
+    },
+    {
+      "controller_decision": "abstain",
+      "decision_label": "completeness_mistake",
+      "fixture_id": "resyn-3084-arith-002",
+      "perturbation_type": "arithmetic_true_verification",
+      "score": 0.1,
+      "target_action": "accept",
+      "target_source": "exp3097_protocol"
+    },
+    {
+      "controller_decision": "reject",
+      "decision_label": "correct",
+      "fixture_id": "resyn-3084-arith-003",
+      "perturbation_type": "arithmetic_false_verification",
+      "score": -1.9,
+      "target_action": "reject",
+      "target_source": "exp3097_protocol"
+    },
+    {
+      "controller_decision": "abstain",
+      "decision_label": "completeness_mistake",
+      "fixture_id": "resyn-3084-arith-004",
+      "perturbation_type": "arithmetic_true_verification",
+      "score": 0.1,
+      "target_action": "accept",
+      "target_source": "exp3097_protocol"
+    },
+    {
+      "controller_decision": "reject",
+      "decision_label": "correct",
+      "fixture_id": "resyn-3084-arith-005",
+      "perturbation_type": "arithmetic_false_verification",
+      "score": -1.9,
+      "target_action": "reject",
+      "target_source": "exp3097_protocol"
+    },
+    {
+      "controller_decision": "abstain",
+      "decision_label": "completeness_mistake",
+      "fixture_id": "resyn-3084-arith-006",
+      "perturbation_type": "arithmetic_true_verification",
+      "score": 0.1,
+      "target_action": "accept",
+      "target_source": "exp3097_protocol"
+    },
+    {
+      "controller_decision": "reject",
+      "decision_label": "correct",
+      "fixture_id": "resyn-3084-arith-007",
+      "perturbation_type": "arithmetic_false_verification",
+      "score": -1.9,
+      "target_action": "reject",
+      "target_source": "exp3097_protocol"
+    },
+    {
+      "controller_decision": "abstain",
+      "decision_label": "completeness_mistake",
+      "fixture_id": "resyn-3084-arith-008",
+      "perturbation_type": "arithmetic_true_verification",
+      "score": 0.1,
+      "target_action": "accept",
+      "target_source": "exp3097_protocol"
+    },
+    {
+      "controller_decision": "reject",
+      "decision_label": "correct",
+      "fixture_id": "resyn-3084-arith-009",
+      "perturbation_type": "arithmetic_false_verification",
+      "score": -1.9,
+      "target_action": "reject",
+      "target_source": "exp3097_protocol"
+    },
+    {
+      "controller_decision": "abstain",
+      "decision_label": "completeness_mistake",
+      "fixture_id": "resyn-3084-arith-010",
+      "perturbation_type": "arithmetic_true_verification",
+      "score": 0.1,
+      "target_action": "accept",
+      "target_source": "exp3097_protocol"
+    },
+    {
+      "controller_decision": "reject",
+      "decision_label": "correct",
+      "fixture_id": "resyn-3084-arith-011",
+      "perturbation_type": "arithmetic_false_verification",
+      "score": -1.9,
+      "target_action": "reject",
+      "target_source": "exp3097_protocol"
+    },
+    {
+      "controller_decision": "abstain",
+      "decision_label": "completeness_mistake",
+      "fixture_id": "resyn-3084-arith-012",
+      "perturbation_type": "arithmetic_true_verification",
+      "score": 0.1,
+      "target_action": "accept",
+      "target_source": "exp3097_protocol"
+    },
+    {
+      "controller_decision": "reject",
+      "decision_label": "correct",
+      "fixture_id": "resyn-3084-arith-013",
+      "perturbation_type": "arithmetic_false_verification",
+      "score": -1.9,
+      "target_action": "reject",
+      "target_source": "exp3097_protocol"
+    },
+    {
+      "controller_decision": "abstain",
+      "decision_label": "completeness_mistake",
+      "fixture_id": "resyn-3084-arith-014",
+      "perturbation_type": "arithmetic_true_verification",
+      "score": 0.1,
+      "target_action": "accept",
+      "target_source": "exp3097_protocol"
+    },
+    {
+      "controller_decision": "reject",
+      "decision_label": "correct",
+      "fixture_id": "resyn-3084-arith-015",
+      "perturbation_type": "arithmetic_false_verification",
+      "score": -1.9,
+      "target_action": "reject",
+      "target_source": "exp3097_protocol"
+    },
+    {
+      "controller_decision": "abstain",
+      "decision_label": "completeness_mistake",
+      "fixture_id": "resyn-3084-arith-016",
+      "perturbation_type": "arithmetic_true_verification",
+      "score": 0.1,
+      "target_action": "accept",
+      "target_source": "exp3097_protocol"
+    },
+    {
+      "controller_decision": "reject",
+      "decision_label": "correct",
+      "fixture_id": "resyn-3084-arith-017",
+      "perturbation_type": "arithmetic_false_verification",
+      "score": -1.9,
+      "target_action": "reject",
+      "target_source": "exp3097_protocol"
+    },
+    {
+      "controller_decision": "abstain",
+      "decision_label": "completeness_mistake",
+      "fixture_id": "resyn-3084-arith-018",
+      "perturbation_type": "arithmetic_true_verification",
+      "score": 0.1,
+      "target_action": "accept",
+      "target_source": "exp3097_protocol"
+    },
+    {
+      "controller_decision": "reject",
+      "decision_label": "correct",
+      "fixture_id": "resyn-3084-arith-019",
+      "perturbation_type": "arithmetic_false_verification",
+      "score": -1.9,
+      "target_action": "reject",
+      "target_source": "exp3097_protocol"
+    },
+    {
+      "controller_decision": "abstain",
+      "decision_label": "completeness_mistake",
+      "fixture_id": "resyn-3084-arith-020",
+      "perturbation_type": "arithmetic_true_verification",
+      "score": 0.1,
+      "target_action": "accept",
+      "target_source": "exp3097_protocol"
+    },
+    {
+      "controller_decision": "reject",
+      "decision_label": "correct",
+      "fixture_id": "resyn-3084-arith-021",
+      "perturbation_type": "arithmetic_false_verification",
+      "score": -1.9,
+      "target_action": "reject",
+      "target_source": "exp3097_protocol"
+    },
+    {
+      "controller_decision": "abstain",
+      "decision_label": "completeness_mistake",
+      "fixture_id": "resyn-3084-arith-022",
+      "perturbation_type": "arithmetic_true_verification",
+      "score": 0.1,
+      "target_action": "accept",
+      "target_source": "exp3097_protocol"
+    },
+    {
+      "controller_decision": "reject",
+      "decision_label": "correct",
+      "fixture_id": "resyn-3084-arith-023",
+      "perturbation_type": "arithmetic_false_verification",
+      "score": -1.9,
+      "target_action": "reject",
+      "target_source": "exp3097_protocol"
+    },
+    {
+      "controller_decision": "reject",
+      "decision_label": "correct",
+      "fixture_id": "resyn-3084-repair-json-000",
+      "perturbation_type": "json_syntax_repair",
+      "score": -2.0,
+      "target_action": "reject",
+      "target_source": "exp3097_protocol"
+    },
+    {
+      "controller_decision": "reject",
+      "decision_label": "correct",
+      "fixture_id": "resyn-3084-repair-json-003",
+      "perturbation_type": "json_syntax_repair",
+      "score": -2.0,
+      "target_action": "reject",
+      "target_source": "exp3097_protocol"
+    },
+    {
+      "controller_decision": "reject",
+      "decision_label": "correct",
+      "fixture_id": "resyn-3084-repair-json-006",
+      "perturbation_type": "json_syntax_repair",
+      "score": -2.0,
+      "target_action": "reject",
+      "target_source": "exp3097_protocol"
+    },
+    {
+      "controller_decision": "reject",
+      "decision_label": "correct",
+      "fixture_id": "resyn-3084-repair-json-009",
+      "perturbation_type": "json_syntax_repair",
+      "score": -2.0,
+      "target_action": "reject",
+      "target_source": "exp3097_protocol"
+    },
+    {
+      "controller_decision": "reject",
+      "decision_label": "correct",
+      "fixture_id": "resyn-3084-repair-json-012",
+      "perturbation_type": "json_syntax_repair",
+      "score": -2.0,
+      "target_action": "reject",
+      "target_source": "exp3097_protocol"
+    },
+    {
+      "controller_decision": "reject",
+      "decision_label": "correct",
+      "fixture_id": "resyn-3084-repair-json-015",
+      "perturbation_type": "json_syntax_repair",
+      "score": -2.0,
+      "target_action": "reject",
+      "target_source": "exp3097_protocol"
+    },
+    {
+      "controller_decision": "reject",
+      "decision_label": "correct",
+      "fixture_id": "resyn-3084-repair-json-018",
+      "perturbation_type": "json_syntax_repair",
+      "score": -2.0,
+      "target_action": "reject",
+      "target_source": "exp3097_protocol"
+    },
+    {
+      "controller_decision": "reject",
+      "decision_label": "correct",
+      "fixture_id": "resyn-3084-repair-json-021",
+      "perturbation_type": "json_syntax_repair",
+      "score": -2.0,
+      "target_action": "reject",
+      "target_source": "exp3097_protocol"
+    },
+    {
+      "controller_decision": "reject",
+      "decision_label": "correct",
+      "fixture_id": "resyn-3084-repair-py-002",
+      "perturbation_type": "python_assertion_repair",
+      "score": -3.8,
+      "target_action": "reject",
+      "target_source": "exp3097_protocol"
+    },
+    {
+      "controller_decision": "reject",
+      "decision_label": "correct",
+      "fixture_id": "resyn-3084-repair-py-005",
+      "perturbation_type": "python_assertion_repair",
+      "score": -3.8,
+      "target_action": "reject",
+      "target_source": "exp3097_protocol"
+    },
+    {
+      "controller_decision": "reject",
+      "decision_label": "correct",
+      "fixture_id": "resyn-3084-repair-py-008",
+      "perturbation_type": "python_assertion_repair",
+      "score": -3.8,
+      "target_action": "reject",
+      "target_source": "exp3097_protocol"
+    },
+    {
+      "controller_decision": "reject",
+      "decision_label": "correct",
+      "fixture_id": "resyn-3084-repair-py-011",
+      "perturbation_type": "python_assertion_repair",
+      "score": -3.8,
+      "target_action": "reject",
+      "target_source": "exp3097_protocol"
+    },
+    {
+      "controller_decision": "reject",
+      "decision_label": "correct",
+      "fixture_id": "resyn-3084-repair-py-014",
+      "perturbation_type": "python_assertion_repair",
+      "score": -3.8,
+      "target_action": "reject",
+      "target_source": "exp3097_protocol"
+    },
+    {
+      "controller_decision": "reject",
+      "decision_label": "correct",
+      "fixture_id": "resyn-3084-repair-py-017",
+      "perturbation_type": "python_assertion_repair",
+      "score": -3.8,
+      "target_action": "reject",
+      "target_source": "exp3097_protocol"
+    },
+    {
+      "controller_decision": "reject",
+      "decision_label": "correct",
+      "fixture_id": "resyn-3084-repair-py-020",
+      "perturbation_type": "python_assertion_repair",
+      "score": -3.8,
+      "target_action": "reject",
+      "target_source": "exp3097_protocol"
+    },
+    {
+      "controller_decision": "reject",
+      "decision_label": "correct",
+      "fixture_id": "resyn-3084-repair-py-023",
+      "perturbation_type": "python_assertion_repair",
+      "score": -3.8,
+      "target_action": "reject",
+      "target_source": "exp3097_protocol"
+    },
+    {
+      "controller_decision": "reject",
+      "decision_label": "correct",
+      "fixture_id": "resyn-3084-repair-smt-001",
+      "perturbation_type": "numeric_bound_repair",
+      "score": -2.0,
+      "target_action": "reject",
+      "target_source": "exp3097_protocol"
+    },
+    {
+      "controller_decision": "reject",
+      "decision_label": "correct",
+      "fixture_id": "resyn-3084-repair-smt-004",
+      "perturbation_type": "numeric_bound_repair",
+      "score": -2.0,
+      "target_action": "reject",
+      "target_source": "exp3097_protocol"
+    },
+    {
+      "controller_decision": "reject",
+      "decision_label": "correct",
+      "fixture_id": "resyn-3084-repair-smt-007",
+      "perturbation_type": "numeric_bound_repair",
+      "score": -2.0,
+      "target_action": "reject",
+      "target_source": "exp3097_protocol"
+    },
+    {
+      "controller_decision": "reject",
+      "decision_label": "correct",
+      "fixture_id": "resyn-3084-repair-smt-010",
+      "perturbation_type": "numeric_bound_repair",
+      "score": -2.0,
+      "target_action": "reject",
+      "target_source": "exp3097_protocol"
+    },
+    {
+      "controller_decision": "reject",
+      "decision_label": "correct",
+      "fixture_id": "resyn-3084-repair-smt-013",
+      "perturbation_type": "numeric_bound_repair",
+      "score": -2.0,
+      "target_action": "reject",
+      "target_source": "exp3097_protocol"
+    },
+    {
+      "controller_decision": "reject",
+      "decision_label": "correct",
+      "fixture_id": "resyn-3084-repair-smt-016",
+      "perturbation_type": "numeric_bound_repair",
+      "score": -2.0,
+      "target_action": "reject",
+      "target_source": "exp3097_protocol"
+    },
+    {
+      "controller_decision": "reject",
+      "decision_label": "correct",
+      "fixture_id": "resyn-3084-repair-smt-019",
+      "perturbation_type": "numeric_bound_repair",
+      "score": -2.0,
+      "target_action": "reject",
+      "target_source": "exp3097_protocol"
+    },
+    {
+      "controller_decision": "reject",
+      "decision_label": "correct",
+      "fixture_id": "resyn-3084-repair-smt-022",
+      "perturbation_type": "numeric_bound_repair",
+      "score": -2.0,
+      "target_action": "reject",
+      "target_source": "exp3097_protocol"
+    },
+    {
+      "controller_decision": "reject",
+      "decision_label": "correct",
+      "fixture_id": "resyn-3084-smt-000",
+      "perturbation_type": "smt_unsat_abstention",
+      "score": -2.0,
+      "target_action": "reject",
+      "target_source": "exp3097_protocol"
+    },
+    {
+      "controller_decision": "accept",
+      "decision_label": "correct",
+      "fixture_id": "resyn-3084-smt-001",
+      "perturbation_type": "smt_sat_solving",
+      "score": 2.0,
+      "target_action": "accept",
+      "target_source": "exp3097_protocol"
+    },
+    {
+      "controller_decision": "reject",
+      "decision_label": "correct",
+      "fixture_id": "resyn-3084-smt-002",
+      "perturbation_type": "smt_unsat_abstention",
+      "score": -2.0,
+      "target_action": "reject",
+      "target_source": "exp3097_protocol"
+    },
+    {
+      "controller_decision": "accept",
+      "decision_label": "correct",
+      "fixture_id": "resyn-3084-smt-003",
+      "perturbation_type": "smt_sat_solving",
+      "score": 2.0,
+      "target_action": "accept",
+      "target_source": "exp3097_protocol"
+    },
+    {
+      "controller_decision": "reject",
+      "decision_label": "correct",
+      "fixture_id": "resyn-3084-smt-004",
+      "perturbation_type": "smt_unsat_abstention",
+      "score": -2.0,
+      "target_action": "reject",
+      "target_source": "exp3097_protocol"
+    },
+    {
+      "controller_decision": "accept",
+      "decision_label": "correct",
+      "fixture_id": "resyn-3084-smt-005",
+      "perturbation_type": "smt_sat_solving",
+      "score": 2.0,
+      "target_action": "accept",
+      "target_source": "exp3097_protocol"
+    },
+    {
+      "controller_decision": "reject",
+      "decision_label": "correct",
+      "fixture_id": "resyn-3084-smt-006",
+      "perturbation_type": "smt_unsat_abstention",
+      "score": -2.0,
+      "target_action": "reject",
+      "target_source": "exp3097_protocol"
+    },
+    {
+      "controller_decision": "accept",
+      "decision_label": "correct",
+      "fixture_id": "resyn-3084-smt-007",
+      "perturbation_type": "smt_sat_solving",
+      "score": 2.0,
+      "target_action": "accept",
+      "target_source": "exp3097_protocol"
+    },
+    {
+      "controller_decision": "reject",
+      "decision_label": "correct",
+      "fixture_id": "resyn-3084-smt-008",
+      "perturbation_type": "smt_unsat_abstention",
+      "score": -2.0,
+      "target_action": "reject",
+      "target_source": "exp3097_protocol"
+    },
+    {
+      "controller_decision": "accept",
+      "decision_label": "correct",
+      "fixture_id": "resyn-3084-smt-009",
+      "perturbation_type": "smt_sat_solving",
+      "score": 2.0,
+      "target_action": "accept",
+      "target_source": "exp3097_protocol"
+    },
+    {
+      "controller_decision": "reject",
+      "decision_label": "correct",
+      "fixture_id": "resyn-3084-smt-010",
+      "perturbation_type": "smt_unsat_abstention",
+      "score": -2.0,
+      "target_action": "reject",
+      "target_source": "exp3097_protocol"
+    },
+    {
+      "controller_decision": "accept",
+      "decision_label": "correct",
+      "fixture_id": "resyn-3084-smt-011",
+      "perturbation_type": "smt_sat_solving",
+      "score": 2.0,
+      "target_action": "accept",
+      "target_source": "exp3097_protocol"
+    },
+    {
+      "controller_decision": "reject",
+      "decision_label": "correct",
+      "fixture_id": "resyn-3084-smt-012",
+      "perturbation_type": "smt_unsat_abstention",
+      "score": -2.0,
+      "target_action": "reject",
+      "target_source": "exp3097_protocol"
+    },
+    {
+      "controller_decision": "accept",
+      "decision_label": "correct",
+      "fixture_id": "resyn-3084-smt-013",
+      "perturbation_type": "smt_sat_solving",
+      "score": 2.0,
+      "target_action": "accept",
+      "target_source": "exp3097_protocol"
+    },
+    {
+      "controller_decision": "reject",
+      "decision_label": "correct",
+      "fixture_id": "resyn-3084-smt-014",
+      "perturbation_type": "smt_unsat_abstention",
+      "score": -2.0,
+      "target_action": "reject",
+      "target_source": "exp3097_protocol"
+    },
+    {
+      "controller_decision": "accept",
+      "decision_label": "correct",
+      "fixture_id": "resyn-3084-smt-015",
+      "perturbation_type": "smt_sat_solving",
+      "score": 2.0,
+      "target_action": "accept",
+      "target_source": "exp3097_protocol"
+    },
+    {
+      "controller_decision": "reject",
+      "decision_label": "correct",
+      "fixture_id": "resyn-3084-smt-016",
+      "perturbation_type": "smt_unsat_abstention",
+      "score": -2.0,
+      "target_action": "reject",
+      "target_source": "exp3097_protocol"
+    },
+    {
+      "controller_decision": "accept",
+      "decision_label": "correct",
+      "fixture_id": "resyn-3084-smt-017",
+      "perturbation_type": "smt_sat_solving",
+      "score": 2.0,
+      "target_action": "accept",
+      "target_source": "exp3097_protocol"
+    },
+    {
+      "controller_decision": "reject",
+      "decision_label": "correct",
+      "fixture_id": "resyn-3084-smt-018",
+      "perturbation_type": "smt_unsat_abstention",
+      "score": -2.0,
+      "target_action": "reject",
+      "target_source": "exp3097_protocol"
+    },
+    {
+      "controller_decision": "accept",
+      "decision_label": "correct",
+      "fixture_id": "resyn-3084-smt-019",
+      "perturbation_type": "smt_sat_solving",
+      "score": 2.0,
+      "target_action": "accept",
+      "target_source": "exp3097_protocol"
+    },
+    {
+      "controller_decision": "reject",
+      "decision_label": "correct",
+      "fixture_id": "resyn-3084-smt-020",
+      "perturbation_type": "smt_unsat_abstention",
+      "score": -2.0,
+      "target_action": "reject",
+      "target_source": "exp3097_protocol"
+    },
+    {
+      "controller_decision": "accept",
+      "decision_label": "correct",
+      "fixture_id": "resyn-3084-smt-021",
+      "perturbation_type": "smt_sat_solving",
+      "score": 2.0,
+      "target_action": "accept",
+      "target_source": "exp3097_protocol"
+    },
+    {
+      "controller_decision": "reject",
+      "decision_label": "correct",
+      "fixture_id": "resyn-3084-smt-022",
+      "perturbation_type": "smt_unsat_abstention",
+      "score": -2.0,
+      "target_action": "reject",
+      "target_source": "exp3097_protocol"
+    },
+    {
+      "controller_decision": "accept",
+      "decision_label": "correct",
+      "fixture_id": "resyn-3084-smt-023",
+      "perturbation_type": "smt_sat_solving",
+      "score": 2.0,
+      "target_action": "accept",
+      "target_source": "exp3097_protocol"
+    }
+  ],
+  "preconditions_checked": {
+    "exp3090_artifact_ready": {
+      "ok": true,
+      "path": "results/experiment_3090_fr11_resyn_kancl_completeness_repair_v1.json"
+    },
+    "exp3097_artifact_ready": {
+      "ok": true,
+      "path": "results/experiment_3097_exact_fixture_eval_protocol_audit_v1.json"
+    },
+    "fr11_stress_rows_available": {
+      "observed": 72,
+      "ok": true,
+      "required_min": 48
+    },
+    "protocol_manifest_exists": {
+      "ok": true,
+      "path": "results/exact_fixture_eval_protocol_3097/stratified_eval_manifest.jsonl"
+    },
+    "protocol_targets_supported": {
+      "observed": [
+        "accept",
+        "reject"
+      ],
+      "ok": true
+    }
+  },
+  "prior_retention_delta": -0.444444,
+  "promotion_decision": "blocked",
+  "rollback_count": 2,
+  "run_date": "20260526",
+  "schema": "carnot.fr11.resyn_kancl_stress_promotion_boundary.v2",
+  "soundness_mistakes": 0,
+  "source_artifacts": [
+    {
+      "exists": true,
+      "id": "exp3090_prior_fr11",
+      "path": "results/experiment_3090_fr11_resyn_kancl_completeness_repair_v1.json",
+      "role": ".288 FR-11 controller-only ReSyn/KAN-CL evidence",
+      "sha256": "8ed99e940a1edaf354bca2d96d8459976298a188ab9ae5970e3488b4d0b9f764"
+    },
+    {
+      "exists": true,
+      "id": "exp3097_protocol",
+      "path": "results/experiment_3097_exact_fixture_eval_protocol_audit_v1.json",
+      "role": ".289 exact fixture evaluation protocol artifact",
+      "sha256": "92954fc69cc0209268b626c9af9fb8554c62f89503ad52b3ad583d588ee1dace"
+    },
+    {
+      "exists": true,
+      "id": "exp3097_manifest",
+      "path": "results/exact_fixture_eval_protocol_3097/stratified_eval_manifest.jsonl",
+      "role": ".289 stratified exact fixture manifest for FR-11 stress",
+      "sha256": "c5c3c243042cb9ad3dbe2ff4149e467548fe89f213be348c49373d548392333f"
+    }
+  ],
+  "stress_decision_label_counts": {
+    "baseline_protocol": {
+      "correct": 48,
+      "soundness_mistake": 24
+    },
+    "candidate_protocol": {
+      "completeness_mistake": 12,
+      "correct": 60
+    },
+    "no_feedback_holdout": {
+      "correct": 36,
+      "soundness_mistake": 15
+    },
+    "shuffled_holdout": {
+      "correct": 18,
+      "soundness_mistake": 33
+    }
+  },
+  "stress_split_report": {
+    "candidate_update_rolled_back": true,
+    "delayed_regression_count": 7,
+    "family_holdout_count": 51,
+    "harder_holdout_perturbation_count": 7,
+    "no_feedback_control_count": 51,
+    "prior_retention_count": 36,
+    "shuffled_label_control_count": 14,
+    "train_update_count": 14
+  },
+  "tests_run": [
+    "focused-req-3103"
+  ]
+}

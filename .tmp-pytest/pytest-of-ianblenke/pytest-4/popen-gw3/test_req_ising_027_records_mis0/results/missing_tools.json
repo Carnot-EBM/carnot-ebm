@@ -1,0 +1,137 @@
+{
+  "bitfile_produced": false,
+  "board_execution_performed": false,
+  "commands_run": [
+    {
+      "command": [
+        "verilator",
+        "--version"
+      ],
+      "command_string": "verilator --version",
+      "error": "verilator",
+      "error_class": "not_found",
+      "returncode": null,
+      "stderr_summary": "",
+      "stdout_summary": ""
+    },
+    {
+      "command": [
+        "iverilog",
+        "-V"
+      ],
+      "command_string": "iverilog -V",
+      "error": "iverilog",
+      "error_class": "not_found",
+      "returncode": null,
+      "stderr_summary": "",
+      "stdout_summary": ""
+    },
+    {
+      "command": [
+        "yosys",
+        "--version"
+      ],
+      "command_string": "yosys --version",
+      "error": "yosys",
+      "error_class": "not_found",
+      "returncode": null,
+      "stderr_summary": "",
+      "stdout_summary": ""
+    }
+  ],
+  "experiment_id": 1476,
+  "honest_verdict": "blocked_rtl_regression_checks_failed_no_hardware_claim",
+  "icarus_sim_command": "iverilog -g2012 -o /tmp/discrete_sb_256_tb_1476.vvp hardware/kv260/discrete_sb_256.v hardware/kv260/discrete_sb_256_tb.v && vvp /tmp/discrete_sb_256_tb_1476.vvp",
+  "icarus_sim_passed": false,
+  "latency_claimed": false,
+  "prior_boundary_preserved": true,
+  "regression_manifest_path": "hardware/kv260/missing_tools.md",
+  "rtl_errors": [
+    {
+      "error": "verilator",
+      "error_class": "verilator_unavailable",
+      "returncode": null,
+      "stage": "verilator_lint",
+      "stderr_summary": "verilator",
+      "stdout_summary": ""
+    },
+    {
+      "error": "iverilog",
+      "error_class": "iverilog_unavailable",
+      "returncode": null,
+      "stage": "icarus_simulation",
+      "stderr_summary": "iverilog",
+      "stdout_summary": ""
+    }
+  ],
+  "rtl_files": [
+    "hardware/kv260/discrete_sb_256.v"
+  ],
+  "rtl_regression_complete": false,
+  "run_date": "20260507",
+  "source_experiment_ids": [
+    1451,
+    1460
+  ],
+  "status": "complete",
+  "testbench_files": [
+    "hardware/kv260/discrete_sb_256_tb.v"
+  ],
+  "tool_probe_results": {
+    "iverilog": {
+      "available": false,
+      "probe": {
+        "command": [
+          "iverilog",
+          "-V"
+        ],
+        "command_string": "iverilog -V",
+        "error": "iverilog",
+        "error_class": "not_found",
+        "returncode": null,
+        "stderr_summary": "",
+        "stdout_summary": ""
+      }
+    },
+    "verilator": {
+      "available": false,
+      "probe": {
+        "command": [
+          "verilator",
+          "--version"
+        ],
+        "command_string": "verilator --version",
+        "error": "verilator",
+        "error_class": "not_found",
+        "returncode": null,
+        "stderr_summary": "",
+        "stdout_summary": ""
+      }
+    },
+    "yosys": {
+      "available": false,
+      "probe": {
+        "command": [
+          "yosys",
+          "--version"
+        ],
+        "command_string": "yosys --version",
+        "error": "yosys",
+        "error_class": "not_found",
+        "returncode": null,
+        "stderr_summary": "",
+        "stdout_summary": ""
+      }
+    }
+  },
+  "tools_available": {
+    "iverilog": false,
+    "verilator": false,
+    "yosys": false
+  },
+  "verilator_lint_command": "verilator --lint-only --timing -Wall -Wno-DECLFILENAME -Wno-BLKSEQ -Wno-WIDTH hardware/kv260/discrete_sb_256.v hardware/kv260/discrete_sb_256_tb.v",
+  "verilator_lint_passed": false,
+  "yosys_available": false,
+  "yosys_probe_command": "yosys -q -p help read_verilog",
+  "yosys_probe_passed": false
+}

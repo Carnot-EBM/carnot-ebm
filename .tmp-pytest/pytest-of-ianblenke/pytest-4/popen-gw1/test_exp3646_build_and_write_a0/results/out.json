@@ -1,0 +1,101 @@
+{
+  "acceptance_gate": {
+    "condition": "in_domain_judge_auroc present AND shuffled_label_control_auroc present AND ood_judge_auroc present",
+    "passed": false,
+    "principle": "An OOD-transfer claim requires an in-domain sanity pass AND a shuffled-label adversarial control -- without both the OOD number could be a degenerate-prior artifact."
+  },
+  "artifact": "experiment_3646_trained_ebm_judge_ood_counterpoint_v2",
+  "confidence_only_baseline_auroc": null,
+  "confidence_only_baseline_auroc_ci95": null,
+  "duration_s": 0.009738,
+  "field_principles": {
+    "duration_s": "Plausibility floor (a real train+eval takes minutes, not seconds).",
+    "honest_verdict": "Terminal prefix for reconciler classification.",
+    "in_domain_judge_auroc": "Sanity: the trained judge must work in-domain before any OOD claim is meaningful.",
+    "inference_substrate": "The train/eval substrate and GPU disclosure; this prototype trains only a small CPU head over cached scores.",
+    "judge_recipe": "The trained judge's features/loss/epochs -- reproducibility of the prototype.",
+    "n_examples_per_domain": "Sample-size rigor.",
+    "ood_domains_tested": "Which OOD domains (code/facts) were evaluated -- scopes the transfer claim.",
+    "ood_judge_auroc": "The core number: does the trained judge detect errors in a domain it was NOT trained on?",
+    "random_seed": "Determinism precondition.",
+    "reproducibility_checksum": "Drift detection.",
+    "shuffled_label_control_auroc": "Adversarial control: a near-0.5 here confirms the judge is not learning a degenerate prior.",
+    "trained_judge_transfers_ood": "True iff the trained judge beats both confidence-only and shuffled-control on OOD -- the falsifiable transfer claim.",
+    "trained_judge_vs_fixed_ensemble_ood_delta": "Does TRAINING the judge buy the OOD transfer the fixed ensemble (.329-.333) lacked -- the foundation-model-path signal."
+  },
+  "fixed_ensemble_ood_reference_auroc": 0.331,
+  "fixed_ensemble_ood_reference_range": [
+    0.329,
+    0.333
+  ],
+  "honest_verdict": "complete: blocked_no_ood_eval_corpus",
+  "in_domain_judge_auroc": 1.0,
+  "in_domain_judge_auroc_ci95": [
+    1.0,
+    1.0
+  ],
+  "inference_substrate": "verifier_ensemble_against_cached_candidates (principle: trains a small head on cached labels + scores cached corpora; GPU use: none, CPU-only numpy).",
+  "judge_recipe": {
+    "epochs": 200,
+    "features": [
+      "validity_signal",
+      "confidence_error_signal",
+      "log1p_char_count",
+      "digit_fraction",
+      "format_noise_signal"
+    ],
+    "l2": 0.001,
+    "learning_rate": 0.35,
+    "loss": "L2-regularized binary cross-entropy on math error_label; score is P(error).",
+    "model": "tiny_logistic_energy_head",
+    "random_seeds": [
+      3646,
+      3647,
+      3648
+    ],
+    "train_eval_split": "80/20 stratified FoVer math split per seed; OOD labels are never used for training."
+  },
+  "n_examples_per_domain": {
+    "math": 4
+  },
+  "ood_domains_tested": [],
+  "ood_judge_auroc": null,
+  "ood_judge_auroc_by_domain": {},
+  "ood_judge_auroc_ci95": null,
+  "ops_docs_reconciliation_left_to_conductor": true,
+  "per_seed_results": [
+    {
+      "in_domain_judge_auroc": 1.0,
+      "seed": 3646
+    },
+    {
+      "in_domain_judge_auroc": 1.0,
+      "seed": 3647
+    },
+    {
+      "in_domain_judge_auroc": 1.0,
+      "seed": 3648
+    }
+  ],
+  "random_seed": 3646,
+  "random_seeds_used": [
+    3646,
+    3647,
+    3648
+  ],
+  "reproducibility_checksum": "1ea5c23adfbdaca5",
+  "schema": "carnot.trained_ebm_judge_ood_counterpoint.v2",
+  "scripts_research_conductor_modified": false,
+  "shuffled_label_control_auroc": null,
+  "shuffled_label_control_auroc_ci95": null,
+  "source_artifacts": [
+    "results/experiment_3640_build_factual_corpus_v3.json",
+    "results/experiment_3641_code_corpus_verifiers_fire_transfer_v3.json",
+    "data/fover_corpus.jsonl"
+  ],
+  "tests_run": [
+    "pytest synthetic"
+  ],
+  "trained_judge_transfers_ood": false,
+  "trained_judge_vs_fixed_ensemble_ood_delta": null
+}

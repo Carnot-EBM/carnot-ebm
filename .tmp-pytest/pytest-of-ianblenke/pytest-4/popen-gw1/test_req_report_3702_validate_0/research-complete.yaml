@@ -1,0 +1,59 @@
+# completed
+
+milestones:
+- id: 2026.06.337
+  finding: previous archive
+- id: 2026.06.338
+  title: "Ambiguous re-freeze candidate, provisional code signal, KV260 reachable"
+  doc: openspec/change-proposals/research-roadmap-vNEXT.md
+  completed: '2026-06-02'
+  finding: "REFREEZE CANDIDATE AMBIGUOUS: .338 re-emitted the operator re-freeze package cleanly for the dependency-aware candidate, but the published external baseline 0.9287 beat dependency-aware 0.9249 (exp3693), so the candidate is ambiguous and .339 must disambiguate dependency-aware vs external vs fusion at G1-rigor. The code-native AUROC 1.0 is PROVISIONAL: exp3695 recovered a code signal and exp3696 wired the shipped detector E2E green, but .339 must leak-audit and held-out replicate before treating it as validated. The selection diagnosis blocked a second time due to no multi-candidate corpus; energy-selection is already settled-bounded, so .339 formally closes the question rather than grinding a third diagnosis. KV260 became SSH-reachable again after the outage streak; FR-11 v12 drift-reset and cross-session persistence succeeded; paper_ready stayed TRUE (G1-G4), P0.1 stayed honest-negative, and the frozen FoVer 0.9131 stayed frozen."
+  tasks:
+  - id: exp3690-archive-v337-activate-v338
+    title: "Archive .337 honestly and activate .338"
+    deliverable: results/experiment_3690_archive_v337_activate_v338.json
+    result: OK (codex artifact landed)
+  - id: exp3691-backend-state-diagnostic-v4
+    title: "Backend-state diagnostic v4"
+    deliverable: results/experiment_3691_backend_state_diagnostic_v4.json
+    result: OK (codex artifact landed)
+  - id: exp3692-refreeze-package-clean-reemit
+    title: "Re-emit the headline re-freeze package cleanly"
+    deliverable: results/experiment_3692_refreeze_package_clean_reemit.json
+    result: CLEAN package re-emitted for dependency-aware candidate
+  - id: exp3693-external-comparator-dependency-vs-deentangled-reweighting
+    title: "External comparator for the re-freeze candidate"
+    deliverable: results/experiment_3693_external_comparator_dependency_vs_deentangled.json
+    result: AMBIGUOUS; disambiguate in .339
+  - id: exp3694-selection-gap-proper-rediagnosis
+    title: "Redo the discrimination-vs-selection diagnosis properly"
+    deliverable: results/experiment_3694_selection_gap_proper_rediagnosis.json
+    result: BLOCKED second time; formally close in .339
+  - id: exp3695-code-native-verifier-for-blind-detector
+    title: "Build a code-native verifier for the code-blind detector"
+    deliverable: results/experiment_3695_code_native_verifier.json
+    result: PROVISIONAL; leak-audit + held-out replicate in .339
+  - id: exp3696-reship-detector-math-plus-code
+    title: "Re-ship the detector with a math-plus-code operating point"
+    deliverable: results/experiment_3696_reship_detector_math_plus_code.json
+    result: E2E green but based on provisional code-native signal
+  - id: exp3697-fr11-continuous-self-learning-v12-drift-reset
+    title: "FR-11 v12 drift reset and cross-session persistence"
+    deliverable: results/experiment_3697_fr11_continuous_self_learning_v12.json
+    result: OK drift-reset persistence no-collapse
+  - id: exp3698-kv260-continuity-v25
+    title: "KV260 SSH-reachability continuity v25"
+    deliverable: results/experiment_3698_kv260_continuity_v25.json
+    result: REACHABLE again after outage streak
+  - id: exp3699-polarfire-continuity-v25
+    title: "PolarFire opportunistic reachability and continuity audit"
+    deliverable: results/experiment_3699_polarfire_continuity_v25.json
+    result: OK (codex artifact landed)
+  - id: exp3700-gatemate-continuity-audit-v25
+    title: "GateMate continuity audit v25"
+    deliverable: results/experiment_3700_gatemate_continuity_audit_v25.json
+    result: OK (codex artifact landed)
+  - id: exp3701-capstone-and-g-gate-v338
+    title: "Capstone v338 and G1-G4 gate synthesis"
+    deliverable: results/experiment_3701_capstone_and_g_gate_v338.json
+    result: paper_ready true; frozen headline unchanged

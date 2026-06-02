@@ -1,0 +1,59 @@
+{
+  "acceptance_contract_v1_ready": true,
+  "artifact": "experiment_3137_exact_safe_accept_abstain_contract_v1",
+  "honest_verdict": "complete: exact replay blocked known false accepts",
+  "inference_substrate": {
+    "no_live_llm_inference": true
+  },
+  "known_false_accept_rows_blocked": true,
+  "regression_row_set": [
+    "row-false"
+  ],
+  "replay_abstention_rate": 0.5,
+  "replay_false_accept_rate": 0.0,
+  "replay_false_reject_rate": 0.0,
+  "replay_rows": [
+    {
+      "decision": "accept",
+      "exact_label": "VALID",
+      "expected_action": "accept",
+      "extracted_answer": "VALID",
+      "matched_rule_id": "ACCEPT_EXACT_COVERED_CONSISTENT",
+      "parse_confidence": 1.0,
+      "prompt_hash": "prompt-clean",
+      "row_id": "row-clean",
+      "row_source": "exact_fixture",
+      "token_family_match": true
+    },
+    {
+      "answer_extraction_format": "validity_token",
+      "decision": "abstain",
+      "exact_label": "INVALID",
+      "expected_action": "reject",
+      "extracted_answer": "VALID",
+      "fixture_family": "arithmetic_code_assertions",
+      "matched_rule_id": "ABSTAIN_KNOWN_FALSE_ACCEPT_REGRESSION",
+      "monitor_events": [
+        {
+          "event_type": "candidate_final_answer",
+          "payload": {
+            "extracted_answer": "VALID",
+            "prompt_hash": "prompt-false",
+            "raw_output_hash": "raw-false"
+          }
+        }
+      ],
+      "primary_mechanism": "contradiction miss",
+      "prior_panel_row": {
+        "confidence": null,
+        "first_token_entropy": null,
+        "first_token_negative_logprob": null,
+        "raw_output_hash": "prior-raw-false"
+      },
+      "prompt_hash": "prompt-false",
+      "row_id": "row-false",
+      "row_source": "live",
+      "source_prompt_payload_sha256": "payload-false"
+    }
+  ]
+}

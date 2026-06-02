@@ -1,0 +1,142 @@
+{
+  "schema": "carnot.kan_pwa_milp_corrigendum.v2",
+  "experiment": 2876,
+  "artifact": "experiment_2876_kan_pwa_milp_corrigendum_v2",
+  "honest_verdict": "complete_corrigendum_z3_milp_bounds_distinct_no_general_kan_claim",
+  "local_error_bound": 0.0625,
+  "global_error_bound": 0.09375,
+  "solver_status": "optimal",
+  "pwa_fixture": {
+    "units": [
+      {
+        "name": "u0_x_squared",
+        "coefficient": 1.0,
+        "shift": 0.0,
+        "output_weight": 1.0,
+        "local_error_bound": 0.0625,
+        "weighted_global_error_contribution": 0.0625,
+        "segments": [
+          {
+            "x_min": -1.0,
+            "x_max": -0.5,
+            "slope": -1.5,
+            "intercept": -0.5,
+            "residual_lower": -0.0625,
+            "residual_upper": 0.0,
+            "local_error_bound": 0.0625
+          },
+          {
+            "x_min": -0.5,
+            "x_max": 0.0,
+            "slope": -0.5,
+            "intercept": 0.0,
+            "residual_lower": -0.0625,
+            "residual_upper": 0.0,
+            "local_error_bound": 0.0625
+          },
+          {
+            "x_min": 0.0,
+            "x_max": 0.5,
+            "slope": 0.5,
+            "intercept": 0.0,
+            "residual_lower": -0.0625,
+            "residual_upper": 0.0,
+            "local_error_bound": 0.0625
+          },
+          {
+            "x_min": 0.5,
+            "x_max": 1.0,
+            "slope": 1.5,
+            "intercept": -0.5,
+            "residual_lower": -0.0625,
+            "residual_upper": 0.0,
+            "local_error_bound": 0.0625
+          }
+        ]
+      },
+      {
+        "name": "u1_shifted_scaled_quadratic",
+        "coefficient": 0.25,
+        "shift": 0.25,
+        "output_weight": 2.0,
+        "local_error_bound": 0.015625,
+        "weighted_global_error_contribution": 0.03125,
+        "segments": [
+          {
+            "x_min": -1.0,
+            "x_max": -0.5,
+            "slope": -0.25,
+            "intercept": -0.109375,
+            "residual_lower": -0.015625,
+            "residual_upper": 0.0,
+            "local_error_bound": 0.015625
+          },
+          {
+            "x_min": -0.5,
+            "x_max": 0.0,
+            "slope": 0.0,
+            "intercept": 0.015625,
+            "residual_lower": -0.015625,
+            "residual_upper": 0.0,
+            "local_error_bound": 0.015625
+          },
+          {
+            "x_min": 0.0,
+            "x_max": 0.5,
+            "slope": 0.25,
+            "intercept": 0.015625,
+            "residual_lower": -0.015625,
+            "residual_upper": 0.0,
+            "local_error_bound": 0.015625
+          },
+          {
+            "x_min": 0.5,
+            "x_max": 1.0,
+            "slope": 0.5,
+            "intercept": -0.109375,
+            "residual_lower": -0.015625,
+            "residual_upper": 0.0,
+            "local_error_bound": 0.015625
+          }
+        ]
+      }
+    ],
+    "output_segments": [
+      {
+        "x_min": -1.0,
+        "x_max": -0.5,
+        "slope": -2.0,
+        "intercept": -0.71875
+      },
+      {
+        "x_min": -0.5,
+        "x_max": 0.0,
+        "slope": -0.5,
+        "intercept": 0.03125
+      },
+      {
+        "x_min": 0.0,
+        "x_max": 0.5,
+        "slope": 1.0,
+        "intercept": 0.03125
+      },
+      {
+        "x_min": 0.5,
+        "x_max": 1.0,
+        "slope": 2.5,
+        "intercept": -0.71875
+      }
+    ],
+    "property_domain": [
+      -0.5,
+      0.5
+    ],
+    "property_threshold": 0.625,
+    "local_error_bound": 0.0625,
+    "global_error_bound": 0.09375,
+    "bound_procedures": {
+      "local_error_bound": "max_per_segment_midpoint_residual",
+      "global_error_bound": "weighted_output_error_propagation"
+    }
+  }
+}

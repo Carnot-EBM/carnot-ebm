@@ -1,0 +1,86 @@
+{
+  "artifact": "experiment_3042_repair_promotion_reconciliation_v3",
+  "exp3028_evidence_checks": {
+    "nonnegative_pass_at_k_delta": true,
+    "positive_pass_at_1_delta": true,
+    "reproducibility_checksum_present": true,
+    "tautology_gate_clean": true
+  },
+  "honest_verdict": "complete: repair_claim_status=bounded",
+  "inference_substrate": {
+    "executes_conductor": false,
+    "executes_hardware": false,
+    "executes_models": false,
+    "kind": "aggregation_from_upstream_artifacts",
+    "no_live_llm_inference": true,
+    "source": "checked_in_artifacts"
+  },
+  "remaining_blockers": [
+    {
+      "blocking": true,
+      "classification": "true_blocker",
+      "evidence": [
+        {
+          "detail": "pass_at_1_delta=0.375 and pass_at_k_delta=0.375 agree to >5 sig figs. Two distinct metrics matching this precisely is more likely a bug than a finding.",
+          "kind": "TAUTOLOGY",
+          "severity": "critical"
+        },
+        {
+          "detail": "false_accept_delta=0.0 (exactly zero). Confirm this is not a stub default.",
+          "kind": "IMPLAUSIBLE_PERFECT",
+          "severity": "info"
+        },
+        {
+          "detail": "schema_failure_rate_delta=0.0 (exactly zero). Confirm this is not a stub default.",
+          "kind": "IMPLAUSIBLE_PERFECT",
+          "severity": "info"
+        },
+        {
+          "detail": "syntax_failure_rate_delta=0.0 (exactly zero). Confirm this is not a stub default.",
+          "kind": "IMPLAUSIBLE_PERFECT",
+          "severity": "info"
+        },
+        {
+          "detail": "duration_s=0.103766 but artifact references compute-bound markers (GGUF / CUDA / live model). Loading and running a real model takes >=60.0s minimum; this completed too fast to have invoked the model.",
+          "kind": "DURATION_TOO_SHORT",
+          "severity": "critical"
+        }
+      ],
+      "rationale": "fixture repair blocker",
+      "row_id": "exp3028:adversarial_flags",
+      "source_artifact": "results/experiment_3028_sota_repair_clean_methodology_rerun_v2.json",
+      "source_field": "corrigendum_pending"
+    },
+    {
+      "blocking": true,
+      "classification": "missing_metadata",
+      "evidence": [
+        {
+          "detail": "Compute-bound artifact missing: random_seed. Methodology unverifiable.",
+          "kind": "METHODOLOGY_MISSING",
+          "severity": "warn"
+        }
+      ],
+      "rationale": "fixture repair blocker",
+      "row_id": "exp3028:methodology_missing",
+      "source_artifact": "results/experiment_3028_sota_repair_clean_methodology_rerun_v2.json",
+      "source_field": "corrigendum_pending[METHODOLOGY_MISSING]"
+    },
+    {
+      "blocking": true,
+      "classification": "unresolved_bound",
+      "evidence": {
+        "check": "repair_promotable",
+        "passed": false,
+        "reason": "bounded"
+      },
+      "rationale": "fixture repair blocker",
+      "row_id": "capstone:repair_bounded",
+      "source_artifact": "results/experiment_3028_sota_repair_clean_methodology_rerun_v2.json",
+      "source_field": "paper_ready_checks[repair_promotable]"
+    }
+  ],
+  "repair_claim_status": "bounded",
+  "repair_promotion_candidate": false,
+  "repair_reconciliation_ready": true
+}

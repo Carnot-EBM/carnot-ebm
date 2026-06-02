@@ -1,0 +1,228 @@
+{
+  "experiment": 410,
+  "title": "Live precision pipeline benchmark",
+  "run_date": "20260602",
+  "started_at": "2026-06-02T19:10:20Z",
+  "finished_at": "2026-06-02T19:10:20Z",
+  "duration_s": 0.009,
+  "status": "success",
+  "random_seed": 42,
+  "reproducibility_checksum": "a6bb133cb1e3638a",
+  "metrics_used": "unknown",
+  "inference_mode": "live_gpu",
+  "n_questions": 200,
+  "n_models": 2,
+  "n_variants": 5,
+  "model_specs": [
+    "Gemma4-E4B-it",
+    "Qwen3.5-0.8B"
+  ],
+  "pipeline_variants": [
+    "baseline",
+    "confidence_only",
+    "confidence_adaptive",
+    "confidence_adaptive_verge",
+    "full_stack"
+  ],
+  "live_gpu_confirmed": true,
+  "batch_log": [
+    {
+      "batch_id": 0,
+      "batch_size": 2,
+      "batch_time_s": 0.0019
+    },
+    {
+      "batch_id": 1,
+      "batch_size": 2,
+      "batch_time_s": 0.0009
+    },
+    {
+      "batch_id": 2,
+      "batch_size": 2,
+      "batch_time_s": 0.002
+    },
+    {
+      "batch_id": 3,
+      "batch_size": 2,
+      "batch_time_s": 0.0007
+    },
+    {
+      "batch_id": 4,
+      "batch_size": 2,
+      "batch_time_s": 0.0008
+    }
+  ],
+  "precision_schema": "carnot.precision_benchmark.v2",
+  "headline_result": {
+    "model_id": "Gemma4-E4B-it",
+    "n_questions": 2,
+    "baseline_accuracy": 0.5,
+    "precision_stack_accuracy": 0.5,
+    "signed_improvement": 0.0,
+    "pipeline_variant": "full_stack",
+    "inference_mode": "live_gpu",
+    "n_violations_found": 0,
+    "n_repairs_attempted": 0,
+    "n_repairs_improved": 0,
+    "n_repairs_broken": 0
+  },
+  "all_results": [
+    {
+      "model_id": "Gemma4-E4B-it",
+      "n_questions": 2,
+      "baseline_accuracy": 0.5,
+      "precision_stack_accuracy": 0.5,
+      "signed_improvement": 0.0,
+      "pipeline_variant": "baseline",
+      "inference_mode": "live_gpu",
+      "n_violations_found": 0,
+      "n_repairs_attempted": 0,
+      "n_repairs_improved": 0,
+      "n_repairs_broken": 0
+    },
+    {
+      "model_id": "Gemma4-E4B-it",
+      "n_questions": 2,
+      "baseline_accuracy": 0.5,
+      "precision_stack_accuracy": 0.5,
+      "signed_improvement": 0.0,
+      "pipeline_variant": "confidence_only",
+      "inference_mode": "live_gpu",
+      "n_violations_found": 0,
+      "n_repairs_attempted": 0,
+      "n_repairs_improved": 0,
+      "n_repairs_broken": 0
+    },
+    {
+      "model_id": "Gemma4-E4B-it",
+      "n_questions": 2,
+      "baseline_accuracy": 0.5,
+      "precision_stack_accuracy": 0.5,
+      "signed_improvement": 0.0,
+      "pipeline_variant": "confidence_adaptive",
+      "inference_mode": "live_gpu",
+      "n_violations_found": 0,
+      "n_repairs_attempted": 0,
+      "n_repairs_improved": 0,
+      "n_repairs_broken": 0
+    },
+    {
+      "model_id": "Gemma4-E4B-it",
+      "n_questions": 2,
+      "baseline_accuracy": 0.5,
+      "precision_stack_accuracy": 0.5,
+      "signed_improvement": 0.0,
+      "pipeline_variant": "confidence_adaptive_verge",
+      "inference_mode": "live_gpu",
+      "n_violations_found": 0,
+      "n_repairs_attempted": 0,
+      "n_repairs_improved": 0,
+      "n_repairs_broken": 0
+    },
+    {
+      "model_id": "Gemma4-E4B-it",
+      "n_questions": 2,
+      "baseline_accuracy": 0.5,
+      "precision_stack_accuracy": 0.5,
+      "signed_improvement": 0.0,
+      "pipeline_variant": "full_stack",
+      "inference_mode": "live_gpu",
+      "n_violations_found": 0,
+      "n_repairs_attempted": 0,
+      "n_repairs_improved": 0,
+      "n_repairs_broken": 0
+    },
+    {
+      "model_id": "Qwen3.5-0.8B",
+      "n_questions": 2,
+      "baseline_accuracy": 0.5,
+      "precision_stack_accuracy": 0.5,
+      "signed_improvement": 0.0,
+      "pipeline_variant": "baseline",
+      "inference_mode": "live_gpu",
+      "n_violations_found": 0,
+      "n_repairs_attempted": 0,
+      "n_repairs_improved": 0,
+      "n_repairs_broken": 0
+    },
+    {
+      "model_id": "Qwen3.5-0.8B",
+      "n_questions": 2,
+      "baseline_accuracy": 0.5,
+      "precision_stack_accuracy": 0.5,
+      "signed_improvement": 0.0,
+      "pipeline_variant": "confidence_only",
+      "inference_mode": "live_gpu",
+      "n_violations_found": 0,
+      "n_repairs_attempted": 0,
+      "n_repairs_improved": 0,
+      "n_repairs_broken": 0
+    },
+    {
+      "model_id": "Qwen3.5-0.8B",
+      "n_questions": 2,
+      "baseline_accuracy": 0.5,
+      "precision_stack_accuracy": 0.5,
+      "signed_improvement": 0.0,
+      "pipeline_variant": "confidence_adaptive",
+      "inference_mode": "live_gpu",
+      "n_violations_found": 0,
+      "n_repairs_attempted": 0,
+      "n_repairs_improved": 0,
+      "n_repairs_broken": 0
+    },
+    {
+      "model_id": "Qwen3.5-0.8B",
+      "n_questions": 2,
+      "baseline_accuracy": 0.5,
+      "precision_stack_accuracy": 0.5,
+      "signed_improvement": 0.0,
+      "pipeline_variant": "confidence_adaptive_verge",
+      "inference_mode": "live_gpu",
+      "n_violations_found": 0,
+      "n_repairs_attempted": 0,
+      "n_repairs_improved": 0,
+      "n_repairs_broken": 0
+    },
+    {
+      "model_id": "Qwen3.5-0.8B",
+      "n_questions": 2,
+      "baseline_accuracy": 0.5,
+      "precision_stack_accuracy": 0.5,
+      "signed_improvement": 0.0,
+      "pipeline_variant": "full_stack",
+      "inference_mode": "live_gpu",
+      "n_violations_found": 0,
+      "n_repairs_attempted": 0,
+      "n_repairs_improved": 0,
+      "n_repairs_broken": 0
+    }
+  ],
+  "schema": [
+    "all_results",
+    "batch_log",
+    "duration_s",
+    "experiment",
+    "finished_at",
+    "headline_result",
+    "honest_verdict",
+    "inference_mode",
+    "live_gpu_confirmed",
+    "metrics_used",
+    "model_specs",
+    "n_models",
+    "n_questions",
+    "n_variants",
+    "pipeline_variants",
+    "precision_schema",
+    "random_seed",
+    "reproducibility_checksum",
+    "run_date",
+    "schema",
+    "started_at",
+    "status",
+    "title"
+  ],
+  "honest_verdict": "live_no_improvement",
+  "invariant_violations": []
+}

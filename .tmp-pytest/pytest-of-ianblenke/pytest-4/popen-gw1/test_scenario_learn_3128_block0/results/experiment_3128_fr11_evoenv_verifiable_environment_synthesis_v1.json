@@ -1,0 +1,94 @@
+{
+  "admission_records": [],
+  "admitted_environment_count": 0,
+  "admitted_environments": [],
+  "artifact": "experiment_3128_fr11_evoenv_verifiable_environment_synthesis_v1",
+  "blocked_reason": "exp3123_precondition_manifest_missing_or_empty",
+  "candidate_environment_count": 0,
+  "completeness_errors": 0,
+  "continuous_self_learning_targeted": true,
+  "duration_s": 0.25,
+  "fr11_evoenv_pilot_v1_ready": false,
+  "honest_verdict": "blocked_precondition_failed: exp3123_precondition_manifest_missing_or_empty",
+  "inference_substrate": {
+    "legacy_small_model_headline_used": false,
+    "live_model_calls": 0,
+    "live_model_environment_synthesis": false,
+    "mode": "blocked_precondition_check",
+    "model_weight_mutation": false,
+    "model_weight_training": false,
+    "present_mandated_model_ids": []
+  },
+  "live_call_count": 0,
+  "live_model_environment_synthesis": false,
+  "model_specs": [
+    "unsloth/Qwen3.6-35B-A3B-GGUF",
+    "unsloth/gemma-4-31B-it-GGUF",
+    "unsloth/gemma-4-26B-A4B-it-GGUF"
+  ],
+  "no_answer_leakage_pass_rate": 0.0,
+  "no_weight_update_claim": true,
+  "novelty_pass_rate": 0.0,
+  "precondition_checks": {
+    "exp3116_retention_ready": false,
+    "exp3123_manifest_ready": false
+  },
+  "retention_check": {
+    "post_admission_correct_rate": 0.0,
+    "prior_correct_rate": 0.0
+  },
+  "retention_delta": 0.0,
+  "run_date": "20260526",
+  "schema": "carnot.fr11.evoenv.verifiable_environment_synthesis.v1",
+  "selected_model_ids": [],
+  "solve_verify_asymmetry_pass_rate": 0.0,
+  "soundness_errors": 0,
+  "source_artifacts": [
+    {
+      "exists": false,
+      "name": "agents_repo_instructions",
+      "path": "AGENTS.md"
+    },
+    {
+      "exists": false,
+      "name": "codex_repo_workflow",
+      "path": "CODEX.md"
+    },
+    {
+      "exists": false,
+      "name": "claude_authenticity_rules",
+      "path": "CLAUDE.md"
+    },
+    {
+      "exists": false,
+      "name": "self_learning_openspec",
+      "path": "openspec/capabilities/self-learning/spec.md"
+    },
+    {
+      "exists": false,
+      "name": "exp3123_sota_preconditions",
+      "path": "results/experiment_3123_sota_cache_preconditions_manifest_v2.json"
+    },
+    {
+      "exists": false,
+      "name": "exp3116_fr11_retention_guard",
+      "path": "results/experiment_3116_fr11_unsolvable_curriculum_retention_guard_v1.json"
+    },
+    {
+      "exists": false,
+      "name": "exp3128_module",
+      "path": "python/carnot/eval/fr11_evoenv_verifiable_environment_synthesis_v1.py"
+    },
+    {
+      "exists": false,
+      "name": "exp3128_tests",
+      "path": "tests/python/test_experiment_3128_fr11_evoenv_verifiable_environment_synthesis_v1.py"
+    }
+  ],
+  "tests_run": [
+    ".venv/bin/pytest tests/python/test_experiment_3128_fr11_evoenv_verifiable_environment_synthesis_v1.py -q",
+    ".venv/bin/coverage run --source=python/carnot/eval/fr11_evoenv_verifiable_environment_synthesis_v1.py -m pytest -o addopts='' tests/python/test_experiment_3128_fr11_evoenv_verifiable_environment_synthesis_v1.py -q",
+    ".venv/bin/coverage report --include='python/carnot/eval/fr11_evoenv_verifiable_environment_synthesis_v1.py' --fail-under=100 --show-missing",
+    ".venv/bin/pytest tests/python -q"
+  ]
+}

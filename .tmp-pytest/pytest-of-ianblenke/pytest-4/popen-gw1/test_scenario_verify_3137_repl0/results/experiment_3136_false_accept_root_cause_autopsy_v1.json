@@ -1,0 +1,109 @@
+{
+  "artifact": "experiment_3136_false_accept_root_cause_autopsy_v1",
+  "false_accept_autopsy_v1_ready": true,
+  "false_accept_row_ids": [
+    "fa-arith",
+    "fa-smt"
+  ],
+  "false_accept_rows": [
+    {
+      "answer_extraction_format": "validity_token",
+      "exact_label": "INVALID",
+      "expected_action": "reject",
+      "extracted_answer": "VALID",
+      "failure_mechanism_from_exp3124": "contradiction miss",
+      "fixture_family": "arithmetic_code_assertions",
+      "fixture_id": "fa-arith",
+      "label_source": "unit_exact_authority",
+      "live_decision": "accept",
+      "primary_mechanism": "contradiction miss",
+      "row_id": "fa-arith",
+      "task_family": "arithmetic_code_assertions"
+    },
+    {
+      "answer_extraction_format": "sat_token",
+      "exact_label": "UNSAT",
+      "expected_action": "reject",
+      "extracted_answer": "VALID",
+      "failure_mechanism_from_exp3124": "SAT/validity-token confusion",
+      "fixture_family": "smt_constraints",
+      "fixture_id": "fa-smt",
+      "label_source": "unit_exact_authority",
+      "live_decision": "accept",
+      "primary_mechanism": "SAT/validity-token confusion",
+      "row_id": "fa-smt",
+      "task_family": "smt_constraints"
+    }
+  ],
+  "inference_substrate": {
+    "fresh_live_model_calls": 0,
+    "upstream_live_model_calls_reused": 4
+  },
+  "recommended_contract_changes": [
+    "add regression gates",
+    "add token-family checks"
+  ],
+  "regression_row_set": [
+    "fa-arith",
+    "fa-smt"
+  ],
+  "source_false_accept_rate": 0.5,
+  "verifier_rows": [
+    {
+      "answer_extraction_format": "validity_token",
+      "exact_label": "VALID",
+      "expected_action": "accept",
+      "extracted_answer": "VALID",
+      "failure_mechanism_from_exp3124": "no_failure",
+      "fixture_family": "arithmetic_code_assertions",
+      "fixture_id": "live-valid",
+      "label_source": "unit_exact_authority",
+      "live_decision": "accept",
+      "primary_mechanism": "no_failure",
+      "row_id": "live-valid",
+      "task_family": "arithmetic_code_assertions"
+    },
+    {
+      "answer_extraction_format": "validity_token",
+      "exact_label": "INVALID",
+      "expected_action": "reject",
+      "extracted_answer": "INVALID",
+      "failure_mechanism_from_exp3124": "no_failure",
+      "fixture_family": "arithmetic_code_assertions",
+      "fixture_id": "live-invalid",
+      "label_source": "unit_exact_authority",
+      "live_decision": "reject",
+      "primary_mechanism": "no_failure",
+      "row_id": "live-invalid",
+      "task_family": "arithmetic_code_assertions"
+    },
+    {
+      "answer_extraction_format": "validity_token",
+      "exact_label": "INVALID",
+      "expected_action": "reject",
+      "extracted_answer": "VALID",
+      "failure_mechanism_from_exp3124": "contradiction miss",
+      "fixture_family": "arithmetic_code_assertions",
+      "fixture_id": "fa-arith",
+      "label_source": "unit_exact_authority",
+      "live_decision": "accept",
+      "primary_mechanism": "contradiction miss",
+      "row_id": "fa-arith",
+      "task_family": "arithmetic_code_assertions"
+    },
+    {
+      "answer_extraction_format": "sat_token",
+      "exact_label": "UNSAT",
+      "expected_action": "reject",
+      "extracted_answer": "VALID",
+      "failure_mechanism_from_exp3124": "SAT/validity-token confusion",
+      "fixture_family": "smt_constraints",
+      "fixture_id": "fa-smt",
+      "label_source": "unit_exact_authority",
+      "live_decision": "accept",
+      "primary_mechanism": "SAT/validity-token confusion",
+      "row_id": "fa-smt",
+      "task_family": "smt_constraints"
+    }
+  ]
+}

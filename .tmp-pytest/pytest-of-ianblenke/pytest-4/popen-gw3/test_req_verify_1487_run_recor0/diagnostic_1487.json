@@ -1,0 +1,76 @@
+{
+  "baseline_accuracies": {
+    "beaver_style_ranking": 1.0,
+    "best_superficial": 1.0,
+    "energy_ranking": 1.0,
+    "format_validity": 0.5,
+    "random": 0.5,
+    "response_length": 1.0
+  },
+  "model_attempts": [
+    {
+      "blocker": "not_attempted_runtime_budget",
+      "hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "model_name": "Qwen3.6-35B-A3B",
+      "model_used": false
+    },
+    {
+      "blocker": "not_attempted_runtime_budget",
+      "hf_id": "unsloth/gemma-4-31B-it-GGUF",
+      "model_name": "Gemma4-31B-it",
+      "model_used": false
+    },
+    {
+      "blocker": "not_attempted_runtime_budget",
+      "hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "model_name": "Gemma4-26B-A4B-it",
+      "model_used": false
+    }
+  ],
+  "pairs": [
+    {
+      "beaver_style_choice": "A",
+      "beaver_style_correct": true,
+      "beaver_style_unsafe_bounds": {
+        "A": 0.0,
+        "B": 1.0
+      },
+      "case_id": "cctu-1486-arith-001",
+      "correct_label": "A",
+      "energy_choice": "A",
+      "energy_correct": true,
+      "energy_scores": {
+        "A": 0,
+        "B": 2
+      },
+      "format_choice": null,
+      "format_correct": false,
+      "format_valid": {
+        "A": true,
+        "B": true
+      },
+      "invalid_source": "exp1486_model_output",
+      "length_choice": "A",
+      "length_correct": true,
+      "lengths": {
+        "A": 188,
+        "B": 191
+      },
+      "pair_id": "exp1487_pair_001_cctu-1486-arith-001",
+      "pairwise_choice": null,
+      "pairwise_correct": false,
+      "source_model_hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF"
+    }
+  ],
+  "raw_pairwise_decisions": [],
+  "run_date": "20260507",
+  "schema_version": 1,
+  "source_artifacts": [
+    ".tmp-pytest/pytest-of-ianblenke/pytest-4/popen-gw3/test_req_verify_1487_run_recor0/experiment_1486.json",
+    ".tmp-pytest/pytest-of-ianblenke/pytest-4/popen-gw3/test_req_verify_1487_run_recor0/manifest_1486.jsonl"
+  ],
+  "spec": [
+    "REQ-VERIFY-1487",
+    "SCENARIO-VERIFY-1487"
+  ]
+}

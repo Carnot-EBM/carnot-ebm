@@ -1,0 +1,470 @@
+{
+  "acceptance_contract_v1_ready": true,
+  "artifact": "experiment_3137_exact_safe_accept_abstain_contract_v1",
+  "contract_rules": [
+    {
+      "condition": "exact_label is missing or outside the exact label vocabulary",
+      "decision": "abstain",
+      "id": "ABSTAIN_MISSING_EXACT_LABEL",
+      "order": 10,
+      "principle": "no accept/reject route may infer labels that exact authority did not provide"
+    },
+    {
+      "condition": "row is a known .291 false accept or known false-accept family",
+      "decision": "abstain",
+      "id": "ABSTAIN_KNOWN_FALSE_ACCEPT_REGRESSION",
+      "order": 20,
+      "principle": "prior false accepts must be blocked before generic exact-label routing"
+    },
+    {
+      "condition": "parse_confidence < 1.0",
+      "decision": "abstain",
+      "id": "ABSTAIN_LOW_PARSE_CONFIDENCE",
+      "order": 30,
+      "principle": "unsafe parses fail closed instead of accepting plausible raw text"
+    },
+    {
+      "condition": "extracted token family disagrees with exact label token family",
+      "decision": "abstain",
+      "id": "ABSTAIN_TOKEN_FAMILY_MISMATCH",
+      "order": 40,
+      "principle": "SAT/UNSAT prompts must not accept VALID/INVALID answers"
+    },
+    {
+      "condition": "live row has no replayed monitor-ledger evidence",
+      "decision": "abstain",
+      "id": "ABSTAIN_MISSING_LIVE_MONITOR_REPLAY",
+      "order": 50,
+      "principle": "live acceptance needs replayable ledger evidence"
+    },
+    {
+      "condition": "accept label is not covered by the prefix-bound pilot",
+      "decision": "abstain",
+      "id": "ABSTAIN_ACCEPT_LABEL_OUTSIDE_PREFIX_COVERAGE",
+      "order": 60,
+      "principle": "acceptance cannot claim exact-safe coverage outside the bounded frontier"
+    },
+    {
+      "condition": "exact accept label, exact answer match, prefix coverage, and ledger agreement",
+      "decision": "accept",
+      "id": "ACCEPT_EXACT_COVERED_CONSISTENT",
+      "order": 70,
+      "principle": "accept only when exact labels, parsing, premises, prefix bounds, and ledger agree"
+    },
+    {
+      "condition": "exact reject label and extracted answer matches that exact reject label",
+      "decision": "reject",
+      "id": "REJECT_EXACT_REJECT_MATCH",
+      "order": 80,
+      "principle": "exact reject labels remain authoritative when the candidate agrees"
+    },
+    {
+      "condition": "exact reject label, candidate would accept, and monitor ledger requires reject",
+      "decision": "reject",
+      "id": "REJECT_EXACT_REJECT_CONTRADICTION",
+      "order": 90,
+      "principle": "unknown exact contradictions are rejected after regression abstention gates"
+    },
+    {
+      "condition": "no earlier exact-safe rule matched",
+      "decision": "abstain",
+      "id": "ABSTAIN_DEFAULT_FAIL_CLOSED",
+      "order": 100,
+      "principle": "residual uncertainty trades coverage for safety"
+    }
+  ],
+  "duration_s": 0.25,
+  "honest_verdict": "complete: acceptance_contract_v1_ready=true; replay_false_accept_rate=0.0; known_false_accept_rows_blocked=True",
+  "inference_substrate": {
+    "executes_conductor": false,
+    "executes_hardware": false,
+    "executes_models": false,
+    "executes_repairs": false,
+    "executes_solvers": false,
+    "executes_verifiers": false,
+    "fresh_live_model_calls": 0,
+    "kind": "deterministic_artifact_replay",
+    "local_repo_only": true,
+    "no_live_llm_inference": true,
+    "source": "results/experiment_3136_false_accept_root_cause_autopsy_v1.json",
+    "upstream_live_model_calls_reused": 4
+  },
+  "known_false_accept_rows_blocked": true,
+  "no_live_repair_rerun": true,
+  "ops_docs_reconciliation_left_to_conductor": true,
+  "regression_row_set": [
+    "fa-arith",
+    "fa-smt"
+  ],
+  "repair_gate_prerequisites": {
+    "known_regression_rows_must_not_accept": true,
+    "maxsat_policy_fail_closed": true,
+    "maxsat_policy_present": true,
+    "must_load_contract_path": "results/experiment_3137_exact_safe_accept_abstain_contract_v1.json",
+    "repair_gate_opens_only_after_live_rerun_replay": true,
+    "replay_false_accept_rate_must_equal": 0.0,
+    "require_exact_label_authority": true,
+    "require_monitor_ledger_replay_for_live_rows": true,
+    "require_parse_confidence_floor": 1.0,
+    "require_prefix_bound_coverage_for_accept": true,
+    "required_contract_schema": "carnot.exact_safe_accept_abstain_contract.v1"
+  },
+  "replay_abstention_rate": 0.222222,
+  "replay_counts": {
+    "abstain_decision_count": 2,
+    "abstention_rate": 0.222222,
+    "accept_decision_count": 3,
+    "accept_denominator": 3,
+    "exact_fixture_rows": 5,
+    "false_accept_count": 0,
+    "false_accept_rate": 0.0,
+    "false_reject_count": 0,
+    "false_reject_rate": 0.0,
+    "live_rows": 4,
+    "reject_decision_count": 4,
+    "reject_denominator": 6,
+    "total_rows": 9
+  },
+  "replay_false_accept_rate": 0.0,
+  "replay_false_reject_rate": 0.0,
+  "replay_rows": [
+    {
+      "decision": "abstain",
+      "exact_label": "INVALID",
+      "expected_action": "reject",
+      "extracted_answer": "VALID",
+      "known_false_accept_family": true,
+      "matched_rule_id": "ABSTAIN_KNOWN_FALSE_ACCEPT_REGRESSION",
+      "monitor_replay": {
+        "candidate_extracted_answer": "VALID",
+        "candidate_live_decision": "accept",
+        "failure_mechanism": "contradiction",
+        "final_answer_consistent_with_ledger": false,
+        "is_monitor_violation": true,
+        "ledger_action": "reject",
+        "ledger_source": "unit_exact_ledger",
+        "monitor_event_count": 3
+      },
+      "parse_confidence": 1.0,
+      "prefix_label_covered": true,
+      "premise_answer_consistent": false,
+      "row_id": "fa-arith",
+      "row_source": "live",
+      "token_family_match": true
+    },
+    {
+      "decision": "abstain",
+      "exact_label": "UNSAT",
+      "expected_action": "reject",
+      "extracted_answer": "VALID",
+      "known_false_accept_family": true,
+      "matched_rule_id": "ABSTAIN_KNOWN_FALSE_ACCEPT_REGRESSION",
+      "monitor_replay": {
+        "candidate_extracted_answer": "VALID",
+        "candidate_live_decision": "accept",
+        "failure_mechanism": "contradiction",
+        "final_answer_consistent_with_ledger": false,
+        "is_monitor_violation": true,
+        "ledger_action": "reject",
+        "ledger_source": "unit_exact_ledger",
+        "monitor_event_count": 3
+      },
+      "parse_confidence": 1.0,
+      "prefix_label_covered": false,
+      "premise_answer_consistent": false,
+      "row_id": "fa-smt",
+      "row_source": "live",
+      "token_family_match": false
+    },
+    {
+      "decision": "reject",
+      "exact_label": "INVALID",
+      "expected_action": "reject",
+      "extracted_answer": "INVALID",
+      "known_false_accept_family": false,
+      "matched_rule_id": "REJECT_EXACT_REJECT_MATCH",
+      "monitor_replay": {
+        "candidate_extracted_answer": "INVALID",
+        "candidate_live_decision": "reject",
+        "failure_mechanism": "no_failure",
+        "final_answer_consistent_with_ledger": true,
+        "is_monitor_violation": false,
+        "ledger_action": "reject",
+        "ledger_source": "unit_exact_ledger",
+        "monitor_event_count": 3
+      },
+      "parse_confidence": 1.0,
+      "prefix_label_covered": true,
+      "premise_answer_consistent": true,
+      "row_id": "live-invalid",
+      "row_source": "live",
+      "token_family_match": true
+    },
+    {
+      "decision": "accept",
+      "exact_label": "VALID",
+      "expected_action": "accept",
+      "extracted_answer": "VALID",
+      "known_false_accept_family": false,
+      "matched_rule_id": "ACCEPT_EXACT_COVERED_CONSISTENT",
+      "monitor_replay": {
+        "candidate_extracted_answer": "VALID",
+        "candidate_live_decision": "accept",
+        "failure_mechanism": "no_failure",
+        "final_answer_consistent_with_ledger": true,
+        "is_monitor_violation": false,
+        "ledger_action": "accept",
+        "ledger_source": "unit_exact_ledger",
+        "monitor_event_count": 3
+      },
+      "parse_confidence": 1.0,
+      "prefix_label_covered": true,
+      "premise_answer_consistent": true,
+      "row_id": "live-valid",
+      "row_source": "live",
+      "token_family_match": true
+    },
+    {
+      "decision": "reject",
+      "exact_label": "INVALID",
+      "expected_action": "reject",
+      "extracted_answer": "INVALID",
+      "known_false_accept_family": false,
+      "matched_rule_id": "REJECT_EXACT_REJECT_MATCH",
+      "monitor_replay": {
+        "candidate_extracted_answer": null,
+        "candidate_live_decision": null,
+        "failure_mechanism": null,
+        "final_answer_consistent_with_ledger": null,
+        "is_monitor_violation": false,
+        "ledger_action": null,
+        "ledger_source": null,
+        "monitor_event_count": 0
+      },
+      "parse_confidence": 1.0,
+      "prefix_label_covered": true,
+      "premise_answer_consistent": true,
+      "row_id": "fixture-invalid",
+      "row_source": "exact_fixture",
+      "token_family_match": true
+    },
+    {
+      "decision": "reject",
+      "exact_label": "REPAIRABLE",
+      "expected_action": "reject",
+      "extracted_answer": "REPAIRABLE",
+      "known_false_accept_family": false,
+      "matched_rule_id": "REJECT_EXACT_REJECT_MATCH",
+      "monitor_replay": {
+        "candidate_extracted_answer": null,
+        "candidate_live_decision": null,
+        "failure_mechanism": null,
+        "final_answer_consistent_with_ledger": null,
+        "is_monitor_violation": false,
+        "ledger_action": null,
+        "ledger_source": null,
+        "monitor_event_count": 0
+      },
+      "parse_confidence": 1.0,
+      "prefix_label_covered": false,
+      "premise_answer_consistent": true,
+      "row_id": "fixture-repair",
+      "row_source": "exact_fixture",
+      "token_family_match": true
+    },
+    {
+      "decision": "accept",
+      "exact_label": "SAT",
+      "expected_action": "accept",
+      "extracted_answer": "SAT",
+      "known_false_accept_family": false,
+      "matched_rule_id": "ACCEPT_EXACT_COVERED_CONSISTENT",
+      "monitor_replay": {
+        "candidate_extracted_answer": null,
+        "candidate_live_decision": null,
+        "failure_mechanism": null,
+        "final_answer_consistent_with_ledger": null,
+        "is_monitor_violation": false,
+        "ledger_action": null,
+        "ledger_source": null,
+        "monitor_event_count": 0
+      },
+      "parse_confidence": 1.0,
+      "prefix_label_covered": true,
+      "premise_answer_consistent": true,
+      "row_id": "fixture-sat",
+      "row_source": "exact_fixture",
+      "token_family_match": true
+    },
+    {
+      "decision": "reject",
+      "exact_label": "UNSAT",
+      "expected_action": "reject",
+      "extracted_answer": "UNSAT",
+      "known_false_accept_family": false,
+      "matched_rule_id": "REJECT_EXACT_REJECT_MATCH",
+      "monitor_replay": {
+        "candidate_extracted_answer": null,
+        "candidate_live_decision": null,
+        "failure_mechanism": null,
+        "final_answer_consistent_with_ledger": null,
+        "is_monitor_violation": false,
+        "ledger_action": null,
+        "ledger_source": null,
+        "monitor_event_count": 0
+      },
+      "parse_confidence": 1.0,
+      "prefix_label_covered": false,
+      "premise_answer_consistent": true,
+      "row_id": "fixture-unsat",
+      "row_source": "exact_fixture",
+      "token_family_match": true
+    },
+    {
+      "decision": "accept",
+      "exact_label": "VALID",
+      "expected_action": "accept",
+      "extracted_answer": "VALID",
+      "known_false_accept_family": false,
+      "matched_rule_id": "ACCEPT_EXACT_COVERED_CONSISTENT",
+      "monitor_replay": {
+        "candidate_extracted_answer": null,
+        "candidate_live_decision": null,
+        "failure_mechanism": null,
+        "final_answer_consistent_with_ledger": null,
+        "is_monitor_violation": false,
+        "ledger_action": null,
+        "ledger_source": null,
+        "monitor_event_count": 0
+      },
+      "parse_confidence": 1.0,
+      "prefix_label_covered": true,
+      "premise_answer_consistent": true,
+      "row_id": "fixture-valid",
+      "row_source": "exact_fixture",
+      "token_family_match": true
+    }
+  ],
+  "run_date": "20260526",
+  "schema": "carnot.exact_safe_accept_abstain_contract.v1",
+  "scripts_research_conductor_modified": false,
+  "self_checks": {
+    "all_self_checks_passed": true,
+    "contract_has_accept_abstain_reject_rules": true,
+    "finite_rates_in_unit_interval": true,
+    "known_regression_rule_precedes_generic_reject": true,
+    "regression_rows_blocked_from_accept": true,
+    "regression_rows_present_in_live_replay": true,
+    "replay_deterministic": true,
+    "replay_hash": "28f0b26d770df5923ec996519d9fc3240f41510529f9c60909218197571ca7e7"
+  },
+  "source_artifacts": [
+    {
+      "path": "AGENTS.md",
+      "present": true,
+      "required": false,
+      "role": "agents_repo_instructions",
+      "sha256": "c893735c3c7ece3f9bf4d48722846ef65e76ff35ebfbfe1d239930339d69470b"
+    },
+    {
+      "path": "CODEX.md",
+      "present": true,
+      "required": false,
+      "role": "codex_repo_workflow",
+      "sha256": "bab1c6ba20bb432cbd7cd6e3b12fb0089f303cb7742f929297647d6329e46502"
+    },
+    {
+      "path": "CLAUDE.md",
+      "present": true,
+      "required": false,
+      "role": "claude_authenticity_rules",
+      "sha256": "6b36dcc5c86c1be1f11fa56d1727ef1d3daabc15066f14cc467d3ad941b83271"
+    },
+    {
+      "path": "research-references.md",
+      "present": true,
+      "required": false,
+      "role": "research_references",
+      "sha256": "422feae3af639c0ad835a3eb5a1f7fc3f34294ccd832226a48e647a606d8d567"
+    },
+    {
+      "path": "openspec/capabilities/verification/spec.md",
+      "present": true,
+      "required": false,
+      "role": "verification_openspec",
+      "sha256": "e2dfd7645b7c6b39f94a18b811a2e34fd59c30ac187381f9874e38fb784990bf"
+    },
+    {
+      "path": "results/experiment_3136_false_accept_root_cause_autopsy_v1.json",
+      "present": true,
+      "required": true,
+      "role": "exp3136_false_accept_autopsy",
+      "sha256": "dfaa10ab4965519a8e52986c2ee644f87b04659c035681c703e830275e7719a3"
+    },
+    {
+      "path": "results/experiment_3125_prefix_closed_deterministic_verifier_bound_pilot_v1.json",
+      "present": true,
+      "required": true,
+      "role": "exp3125_prefix_bound_pilot",
+      "sha256": "5a02ba7f7913fd80510bc4b07935b3380d7fb16a608a4da6a992402f59bad36e"
+    },
+    {
+      "path": "results/experiment_3126_fragment_time_monitor_satisfiable_drift_audit_v1.json",
+      "present": true,
+      "required": true,
+      "role": "exp3126_fragment_monitor",
+      "sha256": "abe9e9a900cf1db6ebaa36a391c45dabe465259bbcc3c168d4d4f1590d2520ce"
+    },
+    {
+      "path": "results/experiment_3098_maxsat_abstention_routing_policy_v1.json",
+      "present": true,
+      "required": false,
+      "role": "exp3098_maxsat_policy_optional",
+      "sha256": "196522d8756391589404483ce59934494b078c3d1739b8422bee81d6cc9a54ae"
+    },
+    {
+      "path": "results/experiment_3097_exact_fixture_eval_protocol_audit_v1.json",
+      "present": true,
+      "required": true,
+      "role": "exp3097_exact_fixture_protocol",
+      "sha256": "46cacb56fa753f94a643f1908829f6cb1547b8265ba36488ed6a2ba7fbf57003"
+    },
+    {
+      "path": "python/carnot/verify/exact_safe_accept_abstain_contract_v1.py",
+      "present": false,
+      "required": false,
+      "role": "exp3137_module",
+      "sha256": null
+    },
+    {
+      "path": "scripts/experiment_3137_exact_safe_accept_abstain_contract_v1.py",
+      "present": false,
+      "required": false,
+      "role": "exp3137_script",
+      "sha256": null
+    },
+    {
+      "path": "results/exact_fixture_eval_protocol_3097/stratified_eval_manifest.jsonl",
+      "present": true,
+      "required": true,
+      "role": "exp3097_stratified_manifest",
+      "sha256": "5be38daa026f2a8a80b3fcc05c7bf15d562c18e18546d9381b7f862fa1c64c45"
+    }
+  ],
+  "source_checksums": {
+    "AGENTS.md": "c893735c3c7ece3f9bf4d48722846ef65e76ff35ebfbfe1d239930339d69470b",
+    "CLAUDE.md": "6b36dcc5c86c1be1f11fa56d1727ef1d3daabc15066f14cc467d3ad941b83271",
+    "CODEX.md": "bab1c6ba20bb432cbd7cd6e3b12fb0089f303cb7742f929297647d6329e46502",
+    "openspec/capabilities/verification/spec.md": "e2dfd7645b7c6b39f94a18b811a2e34fd59c30ac187381f9874e38fb784990bf",
+    "research-references.md": "422feae3af639c0ad835a3eb5a1f7fc3f34294ccd832226a48e647a606d8d567",
+    "results/exact_fixture_eval_protocol_3097/stratified_eval_manifest.jsonl": "5be38daa026f2a8a80b3fcc05c7bf15d562c18e18546d9381b7f862fa1c64c45",
+    "results/experiment_3097_exact_fixture_eval_protocol_audit_v1.json": "46cacb56fa753f94a643f1908829f6cb1547b8265ba36488ed6a2ba7fbf57003",
+    "results/experiment_3098_maxsat_abstention_routing_policy_v1.json": "196522d8756391589404483ce59934494b078c3d1739b8422bee81d6cc9a54ae",
+    "results/experiment_3125_prefix_closed_deterministic_verifier_bound_pilot_v1.json": "5a02ba7f7913fd80510bc4b07935b3380d7fb16a608a4da6a992402f59bad36e",
+    "results/experiment_3126_fragment_time_monitor_satisfiable_drift_audit_v1.json": "abe9e9a900cf1db6ebaa36a391c45dabe465259bbcc3c168d4d4f1590d2520ce",
+    "results/experiment_3136_false_accept_root_cause_autopsy_v1.json": "dfaa10ab4965519a8e52986c2ee644f87b04659c035681c703e830275e7719a3"
+  },
+  "tests_run": [
+    "REQ-VERIFY-3137 focused"
+  ]
+}

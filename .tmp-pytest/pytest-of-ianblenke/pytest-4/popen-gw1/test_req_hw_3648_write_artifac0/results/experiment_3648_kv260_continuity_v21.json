@@ -1,0 +1,54 @@
+{
+  "command_probes": {
+    "kv260_ssh": {
+      "combined_output": "ssh: connect to host kria port 22: timed out\n",
+      "command": "ssh -o ConnectTimeout=5 -o BatchMode=yes kria true",
+      "exit_code": 255,
+      "stderr": "ssh: connect to host kria port 22: timed out\n",
+      "stdout": ""
+    },
+    "kv260_xmutil_listapps": null
+  },
+  "consecutive_unreachable_milestones": 4,
+  "continuity_history": {
+    "current_milestone": ".334",
+    "previous_unreachable_milestones": [
+      ".331",
+      ".332",
+      ".333"
+    ],
+    "stale_state_reason": ".333 check crashed during Gemini wipeout; v21 records the live SSH state instead of trusting stale state."
+  },
+  "duration_s": 3.0,
+  "experiment_id": "exp3648",
+  "field_principles": {
+    "consecutive_unreachable_milestones": "Tracks the .331 through .334 unreachable streak so persistent outage surfaces as an operator-action item.",
+    "duration_s": "Plausibility floor.",
+    "honest_verdict": "Terminal prefix for reconciler classification.",
+    "inference_substrate": "SSH-attached board test; the value distinguishes hardware-smoke continuity from simulation or documentation work.",
+    "kv260_overlay_loaded": "Continuity state from xmutil listapps if SSH is reachable.",
+    "kv260_ssh_reachable": "The honest board state; an unreachable board is a blocked verdict, not a fabricated pass.",
+    "preconditions_checked": "Records the SSH-reachability check, which is the correct KV260 precondition after retiring host SD-card checks.",
+    "random_seed": "Determinism precondition.",
+    "reproducibility_checksum": "Drift detection."
+  },
+  "honest_verdict": "complete: blocked_kv260_ssh_unreachable",
+  "inference_substrate": "hardware_smoke",
+  "kv260_overlay_loaded": null,
+  "kv260_ssh_reachable": false,
+  "operator_action_item": "KV260 SSH is unreachable for milestones .331, .332, .333, and .334; operator action required to restore kria/kv260.local DNS, network, or SSH access before the next hardware continuity task.",
+  "operator_action_required": true,
+  "preconditions_checked": [
+    {
+      "available": false,
+      "command": "ssh -o ConnectTimeout=5 -o BatchMode=yes kria true",
+      "exit_code": 255,
+      "resource": "kv260_ssh"
+    }
+  ],
+  "random_seed": 3648,
+  "reproducibility_checksum": "ffae97f8af0d4ff56536358ebf8cb69dc245a214c6bdc0fbae9dc27448bd916f",
+  "retired_precondition_policy": "Host SD-card device-node checks were not used; KV260 precondition is SSH only.",
+  "schema": "carnot.kv260_continuity.v21",
+  "task_id": "exp3648-kv260-continuity-v21"
+}

@@ -3409,6 +3409,39 @@ any verifier-vs-SC positive verdict is emitted.
 intervals and the `hybrid_beats_both` and
 `verifier_beats_sc_where_headroom_exists` booleans.
 
+### REQ-AR-053: P0.1 Matched-Compute FLOP Accounting Harness
+
+**Requirement:**
+The autoresearch harness MUST provide a matched-compute evaluation instrument
+(`scripts/experiment_3727_matched_compute_eval_harness.py`) that:
+1. Computes transparent inference FLOP estimates for EBT energy descent and AR
+   best-of-M generation using the documented model `parameter_count * sequence_tokens * forward_passes`.
+2. Counts an EBT prediction as one initial sequence pass plus `K`
+   energy-descent sequence passes, so energy descent cannot hide extra forward
+   passes behind a matched-parameter comparison.
+3. Tunes the AR best-of-M count to match the EBT total FLOP budget within an
+   explicit relative tolerance before comparing held-out accuracy.
+4. Reports the EBT and AR held-out accuracies, matched budgets, chosen AR
+   best-of-M count, tolerance, random seed, checksum, and terminal artifact
+   fields without invoking live model inference.
+
+**Rationale:**
+The P0.1 comparison is only decisive when "matched compute" means equal
+inference FLOPs, not merely equal parameter count. Energy descent performs
+multiple forward passes per prediction; without explicit accounting, an EBT win
+can be a disguised best-of-N compute advantage.
+
+**Scenarios:**
+- SCENARIO-AR-053-01: Hand-computed FLOPs — toy EBT and AR configurations with
+  equal `parameter_count * sequence_tokens * forward_passes` produce identical
+  FLOP totals.
+- SCENARIO-AR-053-02: Budget matcher — the AR best-of-M tuner selects an
+  integer `M` whose total FLOPs are within the configured relative tolerance of
+  the EBT budget.
+- SCENARIO-AR-053-03: Synthetic matched-compute verdict — deterministic EBT and
+  AR fixture generators with known labels return the expected equal-FLOP
+  accuracy comparison.
+
 ### REQ-LEARN-3697: FR-11 Continuous Self-Learning v12 Drift Reset and Cross-Session Persistence
 
 The FR-11 continuous self-learning experiment v12 MUST run on cached

@@ -1,0 +1,397 @@
+{
+  "artifact": "experiment_3143_fr11_experience_driven_verifier_memory_v1",
+  "continuous_self_learning_targeted": true,
+  "duration_s": 1.25,
+  "escalated_check_count": 2,
+  "estimated_check_savings_rate": 0.333333,
+  "false_accept_mechanism_counts": {
+    "contradiction miss": 1
+  },
+  "fr11_experience_verifier_memory_v1_ready": true,
+  "honest_verdict": "complete: fr11_experience_verifier_memory_v1_ready=true; promotion_recommendation=promote_controller_routing_memory_only_block_model_weight_learning_until_ledger_consistency_is_1.0; no model-weight update claimed",
+  "inference_substrate": {
+    "base_model_weights_updated": false,
+    "controller_routing_memory_only": true,
+    "executes_live_model_inference": false,
+    "fresh_live_inference_calls": 0,
+    "kan_model_weight_training": false,
+    "memory_table_type": "exact_key_policy_statistics",
+    "mode": "artifact_only_controller_routing_memory",
+    "model_weight_learning": false,
+    "model_weight_mutation": false,
+    "model_weight_training": false,
+    "source_false_accept_artifact": "results/experiment_3136_false_accept_root_cause_autopsy_v1.json",
+    "source_ledger_artifact": "results/experiment_3129_fr11_constraint_memory_retention_drift_audit_v1.json",
+    "source_variant_replay_artifact": "results/experiment_3142_fr11_vera_evoenv_hardening_v2.json",
+    "uses_checked_in_artifacts_only": true
+  },
+  "ledger_consistency_rate": 0.5,
+  "ledger_consistency_summary": {
+    "exp3129_ledger_consistency_rate": 0.5,
+    "exp3142_ledger_consistency_rate": 0.8,
+    "policy_ledger_consistency_rate": 0.5
+  },
+  "memory_key_schema": {
+    "fields": [
+      "fixture_family",
+      "difficulty",
+      "answer_format",
+      "failure_mechanism",
+      "contract_decision"
+    ],
+    "normalization": {
+      "answer_format": "extraction or response contract format",
+      "contract_decision": "expected verifier contract action: accept/reject/unknown",
+      "difficulty": "sorted pipe-joined difficulty buckets or variant kind",
+      "failure_mechanism": "historical mechanism label, no_failure when clean",
+      "fixture_family": "artifact family id as lowercase string"
+    },
+    "schema": "carnot.fr11.verifier_memory_key.v1"
+  },
+  "memory_key_summaries": [
+    {
+      "false_accept_count": 0,
+      "false_reject_count": 0,
+      "key": {
+        "answer_format": "validity_token",
+        "contract_decision": "accept",
+        "difficulty": "easy|satisfiable_drift",
+        "failure_mechanism": "no_failure",
+        "fixture_family": "safe_math"
+      },
+      "key_id": "913c711043485ccf",
+      "ledger_consistency_rate": 1.0,
+      "ledger_consistent_count": 1,
+      "low_risk_exact_history": true,
+      "observation_count": 1,
+      "replay_error_count": 0,
+      "row_ids": [
+        "safe-accept"
+      ]
+    },
+    {
+      "false_accept_count": 0,
+      "false_reject_count": 0,
+      "key": {
+        "answer_format": "repairability_token",
+        "contract_decision": "reject",
+        "difficulty": "hard",
+        "failure_mechanism": "no_failure",
+        "fixture_family": "repair_json"
+      },
+      "key_id": "13ba895b15091960",
+      "ledger_consistency_rate": 1.0,
+      "ledger_consistent_count": 1,
+      "low_risk_exact_history": true,
+      "observation_count": 1,
+      "replay_error_count": 0,
+      "row_ids": [
+        "safe-reject"
+      ]
+    },
+    {
+      "false_accept_count": 1,
+      "false_reject_count": 0,
+      "key": {
+        "answer_format": "validity_token",
+        "contract_decision": "reject",
+        "difficulty": "contradiction|easy",
+        "failure_mechanism": "contradiction",
+        "fixture_family": "unsafe_math"
+      },
+      "key_id": "c53d28db6ca5be9b",
+      "ledger_consistency_rate": 0.0,
+      "ledger_consistent_count": 0,
+      "low_risk_exact_history": false,
+      "observation_count": 1,
+      "replay_error_count": 0,
+      "row_ids": [
+        "unsafe-reject"
+      ]
+    },
+    {
+      "false_accept_count": 0,
+      "false_reject_count": 0,
+      "key": {
+        "answer_format": "validity_token",
+        "contract_decision": "accept",
+        "difficulty": "easy",
+        "failure_mechanism": "no_failure",
+        "fixture_family": "unsafe_math"
+      },
+      "key_id": "d5b1b0acf1d36573",
+      "ledger_consistency_rate": 1.0,
+      "ledger_consistent_count": 1,
+      "low_risk_exact_history": true,
+      "observation_count": 1,
+      "replay_error_count": 0,
+      "row_ids": [
+        "unsafe-valid"
+      ]
+    },
+    {
+      "false_accept_count": 0,
+      "false_reject_count": 0,
+      "key": {
+        "answer_format": "json_assignment",
+        "contract_decision": "accept",
+        "difficulty": "equivalent",
+        "failure_mechanism": "no_failure",
+        "fixture_family": "modular_balance_vera_equivalent"
+      },
+      "key_id": "26bb43a2b685b0aa",
+      "ledger_consistency_rate": 1.0,
+      "ledger_consistent_count": 1,
+      "low_risk_exact_history": true,
+      "observation_count": 1,
+      "replay_error_count": 0,
+      "row_ids": [
+        "safe-variant-e"
+      ]
+    },
+    {
+      "false_accept_count": 0,
+      "false_reject_count": 0,
+      "key": {
+        "answer_format": "json_assignment",
+        "contract_decision": "accept",
+        "difficulty": "hardened",
+        "failure_mechanism": "no_failure",
+        "fixture_family": "modular_balance_vera_hardened"
+      },
+      "key_id": "9a069c449c31df7e",
+      "ledger_consistency_rate": 1.0,
+      "ledger_consistent_count": 1,
+      "low_risk_exact_history": true,
+      "observation_count": 1,
+      "replay_error_count": 0,
+      "row_ids": [
+        "safe-variant-h"
+      ]
+    }
+  ],
+  "no_weight_update_claim": true,
+  "precondition_checks": {
+    "exp3129_constraint_memory_ready": true,
+    "exp3129_no_weight_update_claim": true,
+    "exp3136_false_accept_autopsy_ready": true,
+    "exp3142_no_weight_update_claim": true,
+    "exp3142_vera_evoenv_ready": true
+  },
+  "promotion_recommendation": "promote_controller_routing_memory_only_block_model_weight_learning_until_ledger_consistency_is_1.0",
+  "replay_row_count": 6,
+  "residual_false_accept_risk": 0.0,
+  "residual_false_reject_risk": 0.166667,
+  "routing_rows": [
+    {
+      "answer_format": "validity_token",
+      "contract_decision": "accept",
+      "difficulty": "easy|satisfiable_drift",
+      "exact_label": "VALID",
+      "expected_action": "accept",
+      "failure_mechanism": "no_failure",
+      "false_accept": false,
+      "false_reject": false,
+      "fixture_family": "safe_math",
+      "ledger_consistent": true,
+      "memory_key_id": "913c711043485ccf",
+      "observed_decision": "accept",
+      "replay_error": false,
+      "routing_decision": "suppress",
+      "routing_reason": "exact_key_low_risk_history",
+      "row_id": "safe-accept",
+      "source": "exp3136_verifier_row"
+    },
+    {
+      "answer_format": "repairability_token",
+      "contract_decision": "reject",
+      "difficulty": "hard",
+      "exact_label": "REPAIRABLE",
+      "expected_action": "reject",
+      "failure_mechanism": "no_failure",
+      "false_accept": false,
+      "false_reject": false,
+      "fixture_family": "repair_json",
+      "ledger_consistent": true,
+      "memory_key_id": "13ba895b15091960",
+      "observed_decision": "reject",
+      "replay_error": false,
+      "routing_decision": "suppress",
+      "routing_reason": "exact_key_low_risk_history",
+      "row_id": "safe-reject",
+      "source": "exp3136_verifier_row"
+    },
+    {
+      "answer_format": "validity_token",
+      "contract_decision": "reject",
+      "difficulty": "contradiction|easy",
+      "exact_label": "INVALID",
+      "expected_action": "reject",
+      "failure_mechanism": "contradiction",
+      "false_accept": true,
+      "false_reject": false,
+      "fixture_family": "unsafe_math",
+      "ledger_consistent": false,
+      "memory_key_id": "c53d28db6ca5be9b",
+      "observed_decision": "accept",
+      "replay_error": false,
+      "routing_decision": "escalate",
+      "routing_reason": "family_false_accept_or_replay_error_history",
+      "row_id": "unsafe-reject",
+      "source": "exp3136_verifier_row"
+    },
+    {
+      "answer_format": "validity_token",
+      "contract_decision": "accept",
+      "difficulty": "easy",
+      "exact_label": "VALID",
+      "expected_action": "accept",
+      "failure_mechanism": "no_failure",
+      "false_accept": false,
+      "false_reject": false,
+      "fixture_family": "unsafe_math",
+      "ledger_consistent": true,
+      "memory_key_id": "d5b1b0acf1d36573",
+      "observed_decision": "accept",
+      "replay_error": false,
+      "routing_decision": "escalate",
+      "routing_reason": "family_false_accept_or_replay_error_history",
+      "row_id": "unsafe-valid",
+      "source": "exp3136_verifier_row"
+    },
+    {
+      "answer_format": "json_assignment",
+      "contract_decision": "accept",
+      "difficulty": "equivalent",
+      "exact_label": "VALID_ASSIGNMENT",
+      "expected_action": "accept",
+      "failure_mechanism": "no_failure",
+      "false_accept": false,
+      "false_reject": false,
+      "fixture_family": "modular_balance_vera_equivalent",
+      "ledger_consistent": true,
+      "memory_key_id": "26bb43a2b685b0aa",
+      "observed_decision": "accept",
+      "replay_error": false,
+      "routing_decision": "suppress",
+      "routing_reason": "exact_key_low_risk_history",
+      "row_id": "safe-variant-e",
+      "source": "exp3142_variant_replay"
+    },
+    {
+      "answer_format": "json_assignment",
+      "contract_decision": "accept",
+      "difficulty": "hardened",
+      "exact_label": "VALID_ASSIGNMENT",
+      "expected_action": "accept",
+      "failure_mechanism": "no_failure",
+      "false_accept": false,
+      "false_reject": false,
+      "fixture_family": "modular_balance_vera_hardened",
+      "ledger_consistent": true,
+      "memory_key_id": "9a069c449c31df7e",
+      "observed_decision": "accept",
+      "replay_error": false,
+      "routing_decision": "suppress",
+      "routing_reason": "exact_key_low_risk_history",
+      "row_id": "safe-variant-h",
+      "source": "exp3142_variant_replay"
+    }
+  ],
+  "routing_summary": {
+    "baseline_check_count": 6,
+    "escalated_check_count": 2,
+    "estimated_check_savings_rate": 0.333333,
+    "estimated_policy_check_count": 4,
+    "gross_suppression_rate": 0.666667,
+    "ledger_consistency_rate": 0.5,
+    "normal_check_count": 0,
+    "replay_row_count": 6,
+    "residual_false_accept_count": 0,
+    "residual_false_accept_risk": 0.0,
+    "residual_false_reject_count": 1,
+    "residual_false_reject_risk": 0.166667,
+    "risky_families": [
+      "unsafe_math"
+    ],
+    "suppressed_check_count": 4
+  },
+  "run_date": "20260526",
+  "schema": "carnot.fr11.experience_driven_verifier_memory.v1",
+  "source_artifacts": [
+    {
+      "exists": true,
+      "id": "agents_repo_instructions",
+      "path": "AGENTS.md",
+      "required": false,
+      "sha256": "c893735c3c7ece3f9bf4d48722846ef65e76ff35ebfbfe1d239930339d69470b"
+    },
+    {
+      "exists": true,
+      "id": "codex_repo_workflow",
+      "path": "CODEX.md",
+      "required": false,
+      "sha256": "bab1c6ba20bb432cbd7cd6e3b12fb0089f303cb7742f929297647d6329e46502"
+    },
+    {
+      "exists": true,
+      "id": "claude_authenticity_rules",
+      "path": "CLAUDE.md",
+      "required": false,
+      "sha256": "674be13b9af34c23add383c0f31c7bed52d157078932c576c2eaa11e44f52314"
+    },
+    {
+      "exists": true,
+      "id": "research_program",
+      "path": "research-program.md",
+      "required": false,
+      "sha256": "f29300b88b1dd2d6b027c2dd7b3d1debcb212c4aad016a6467404cb68a8b5a86"
+    },
+    {
+      "exists": true,
+      "id": "self_learning_openspec",
+      "path": "openspec/capabilities/self-learning/spec.md",
+      "required": false,
+      "sha256": "7dfa6e9d0719c8c257004c98770cc8306cdf5bb21eae121b3660f6042936d069"
+    },
+    {
+      "exists": true,
+      "id": "exp3136_false_accept_autopsy",
+      "path": "results/experiment_3136_false_accept_root_cause_autopsy_v1.json",
+      "required": true,
+      "sha256": "4bb06747fe96c6fff611b7100b6e9aa606377a505abeaa7eda210d638bfedda2"
+    },
+    {
+      "exists": true,
+      "id": "exp3142_vera_evoenv_replay",
+      "path": "results/experiment_3142_fr11_vera_evoenv_hardening_v2.json",
+      "required": true,
+      "sha256": "499d1bf384ea3bba082d4836828ac9da25d8c6dde6c8e9074ff858516010fea2"
+    },
+    {
+      "exists": true,
+      "id": "exp3129_constraint_memory_audit",
+      "path": "results/experiment_3129_fr11_constraint_memory_retention_drift_audit_v1.json",
+      "required": true,
+      "sha256": "2c0926ce8c40536fd9a0ec15cda1fdf2af3592ab6de3e2c9d69c0b59dc00e389"
+    },
+    {
+      "exists": false,
+      "id": "exp3143_module",
+      "path": "python/carnot/eval/fr11_experience_driven_verifier_memory_v1.py",
+      "required": false,
+      "sha256": null
+    },
+    {
+      "exists": false,
+      "id": "exp3143_tests",
+      "path": "tests/python/test_experiment_3143_fr11_experience_driven_verifier_memory_v1.py",
+      "required": false,
+      "sha256": null
+    }
+  ],
+  "suppressed_check_count": 4,
+  "tests_run": [
+    "REQ-LEARN-3143 focused"
+  ]
+}

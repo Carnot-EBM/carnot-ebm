@@ -1,0 +1,430 @@
+{
+  "analyzed_artifacts": [
+    {
+      "artifact": "experiment_3302_headline_sota_repair_panel_v11",
+      "experiment_id": "exp3302",
+      "path": "results/experiment_3302_headline_sota_repair_panel_v11.json",
+      "present": true,
+      "readable_json_object": true,
+      "ready": true,
+      "ready_field": "headline_repair_panel_ready",
+      "reported_experiment_id": "exp3302",
+      "sha256": "d8680d61a2ec6b9fb00f56a30283bfc5d531a220d80fddf84f0b26c6b9e21898"
+    },
+    {
+      "artifact": "experiment_3303_repair_headline_evidence_audit_v1",
+      "experiment_id": "exp3303",
+      "path": "results/experiment_3303_repair_headline_evidence_audit_v1.json",
+      "present": true,
+      "readable_json_object": true,
+      "ready": true,
+      "ready_field": "repair_headline_evidence_audit_ready",
+      "reported_experiment_id": "exp3303",
+      "sha256": "bc84eb040a10597dcfb46d69361eda61f846f87e16395f53367d2fd5e0fea957"
+    },
+    {
+      "artifact": "experiment_3308_quality_flag_root_cause_autopsy_v1",
+      "experiment_id": "exp3308",
+      "path": "results/experiment_3308_quality_flag_root_cause_autopsy_v1.json",
+      "present": true,
+      "readable_json_object": true,
+      "ready": true,
+      "ready_field": "quality_flag_autopsy_ready",
+      "reported_experiment_id": "exp3308",
+      "sha256": "616ae27ce0706b1e1858967e79f8c8bfde36f053617fb1208b3b7dde1a0ff411"
+    },
+    {
+      "artifact": "experiment_3309_live_runtime_provenance_contract_v1",
+      "experiment_id": "exp3309",
+      "path": "results/experiment_3309_live_runtime_provenance_contract_v1.json",
+      "present": true,
+      "readable_json_object": true,
+      "ready": true,
+      "ready_field": "runtime_contract_ready",
+      "reported_experiment_id": "exp3309",
+      "sha256": "c5d9bf60131f215e58f3a02051b838aacf4e2ab765789bfdce056f9fbd0910aa"
+    },
+    {
+      "experiment_id": "ops_conductor_log",
+      "path": "ops/conductor-log.md",
+      "present": true,
+      "readable_text": true,
+      "ready": true,
+      "sha256": "780056f36001796ab0887a6581ce557ada1e04b022b35b4b1e647350a62abfe8"
+    }
+  ],
+  "artifact": "experiment_3313_repair_substrate_root_cause_autopsy_v1",
+  "blocker_classification": [
+    {
+      "candidate_result_count": 30,
+      "classification": "not_true_repair_failure",
+      "diagnosis": "Zero false accepts, exact checks on all rows, and no audit LLM-judge dependency are bounded positive evidence.",
+      "exact_check_passed_count": 30,
+      "false_accept_count": 0,
+      "id": "false_accept_and_exact_check_status",
+      "llm_judge_dependency_count": 0
+    },
+    {
+      "classification": "bounded_repair_performance_limitation",
+      "clean_verifier_rejected_exact_success_count": 3,
+      "diagnosis": "The 27/30 verified-success metric is real, but the three non-success rows were exact-pass rows rejected by the clean verifier, not false accepts.",
+      "id": "verified_success_shortfall",
+      "panel_case_count": 30,
+      "true_repair_failure": false,
+      "verified_success_count": 27
+    },
+    {
+      "classification": "evidence_hygiene_failure",
+      "diagnosis": "Headline promotion is blocked by runtime/provenance/substrate evidence, not by a false-accept repair failure.",
+      "headline_claim_allowed": false,
+      "headline_claim_allowed_after_audit": false,
+      "id": "headline_blocker_status",
+      "source_provenance_clean": false,
+      "substrate_consistency_passed": false
+    }
+  ],
+  "candidate_outcome_summary": {
+    "candidate_result_count": 30,
+    "clean_verifier_rejected_exact_success_case_ids": [
+      "case-07",
+      "case-11",
+      "case-23"
+    ],
+    "clean_verifier_rejected_exact_success_count": 3,
+    "exact_check_passed_count": 30,
+    "false_accept_count": 0,
+    "verified_success_count": 27
+  },
+  "duration_s": 3.5,
+  "experiment_id": "exp3313",
+  "honest_verdict": "complete: repair_substrate_autopsy_ready=true; repair_false_accept_failure=false; headline_blockers=evidence_hygiene; rerun_contract=exp3314_exp3315_exp3316; no_new_model_execution=true",
+  "inference_substrate": "aggregation_from_upstream_artifacts",
+  "milestone": "2026.05.306",
+  "no_conductor_execution": true,
+  "no_new_cuda_probe": true,
+  "no_new_dataflip_run": true,
+  "no_new_garak_run": true,
+  "no_new_model_execution": true,
+  "no_new_repair_generation": true,
+  "no_new_verifier_run": true,
+  "no_push": true,
+  "panel_audit_field_comparison": [
+    {
+      "audit": 30,
+      "field": "panel_case_count",
+      "panel": 30,
+      "status": "match"
+    },
+    {
+      "audit": 27,
+      "field": "verified_success_count_vs_exact_successes_audited",
+      "panel": 27,
+      "status": "match"
+    },
+    {
+      "audit": 0,
+      "field": "false_accept_count",
+      "panel": 0,
+      "status": "match"
+    },
+    {
+      "audit": false,
+      "field": "headline_claim_allowed",
+      "panel": false,
+      "status": "blocking_false_match"
+    },
+    {
+      "audit": false,
+      "field": "source_provenance_clean",
+      "panel": false,
+      "status": "blocking_false_match"
+    },
+    {
+      "audit": "aggregation_from_upstream_artifacts",
+      "field": "inference_substrate",
+      "panel": "live_local_sota_gguf_repair_plus_calibrated_clean_verifier",
+      "status": "expected_boundary_difference"
+    },
+    {
+      "audit": 0.001598,
+      "field": "duration_s",
+      "panel": 15.496424,
+      "status": "expected_audit_elapsed_time_difference"
+    },
+    {
+      "audit": [
+        "unsloth/gemma-4-26B-A4B-it-GGUF"
+      ],
+      "field": "used_model_ids",
+      "panel": [
+        "unsloth/gemma-4-26B-A4B-it-GGUF"
+      ],
+      "status": "match"
+    },
+    {
+      "audit": [
+        "unsloth/Qwen3.6-35B-A3B-GGUF",
+        "unsloth/gemma-4-31B-it-GGUF"
+      ],
+      "field": "missing_model_ids",
+      "panel": [
+        "unsloth/Qwen3.6-35B-A3B-GGUF",
+        "unsloth/gemma-4-31B-it-GGUF"
+      ],
+      "status": "match"
+    },
+    {
+      "audit": [
+        "unsloth/Qwen3.6-35B-A3B-GGUF",
+        "unsloth/gemma-4-26B-A4B-it-GGUF",
+        "unsloth/gemma-4-31B-it-GGUF"
+      ],
+      "field": "mandated_model_ids",
+      "panel": [
+        "unsloth/Qwen3.6-35B-A3B-GGUF",
+        "unsloth/gemma-4-31B-it-GGUF",
+        "unsloth/gemma-4-26B-A4B-it-GGUF"
+      ],
+      "status": "set_match_order_differs"
+    },
+    {
+      "audit": "d8680d61a2ec6b9fb00f56a30283bfc5d531a220d80fddf84f0b26c6b9e21898",
+      "field": "audited_artifact_sha256",
+      "panel": "d8680d61a2ec6b9fb00f56a30283bfc5d531a220d80fddf84f0b26c6b9e21898",
+      "status": "match"
+    },
+    {
+      "audit": [
+        "exact_alias_string",
+        "exact_integer_string"
+      ],
+      "field": "exact_checker_types",
+      "panel": [
+        "exact_alias_string"
+      ],
+      "status": "mismatch"
+    },
+    {
+      "audit": 0,
+      "field": "llm_judge_dependency_count",
+      "panel": 0,
+      "status": "match"
+    }
+  ],
+  "random_seed": 3313,
+  "repair_substrate_autopsy_ready": true,
+  "reproducibility_checksum": "157316e6000cfd1a1db68c6bb4b33e9f8afcbac5248d0e1751daa580652551df",
+  "rerun_contract": {
+    "exp3314": {
+      "acceptance_requirements": [
+        "distributional_repair_audit_ready=true",
+        "repair_case_count>=30",
+        "deterministic_exact_check_feature_present",
+        "clean_verifier_decision_feature_present",
+        "provenance_risk_features_include_runtime_contract_and_model_coverage",
+        "model_identity_confound_check_reports_used_and_missing_mandated_models",
+        "uncertainty_abstention_policy_blocks_high_risk_rows",
+        "exact_acceptance_remains_final_authority",
+        "no_new_model_execution=true"
+      ],
+      "deliverable": "results/experiment_3314_distributional_ebm_repair_uncertainty_audit_v1.json",
+      "purpose": "Separate exact correctness, clean-verifier behavior, uncertainty, abstention, provenance risk, and model identity before the live repair rerun."
+    },
+    "exp3315": {
+      "acceptance_requirements": [
+        "vgb_repair_policy_ready=true",
+        "proposal_budget_defined",
+        "backtrack_on_clean_verifier_rejects_exact_success",
+        "reject_on_exact_check_failure",
+        "abstain_when_provenance_or_uncertainty_policy_blocks",
+        "candidate_attempt_logging_required",
+        "verifier_confidence_thresholds_defined",
+        "exact_verifiers_not_llm_judges_are_final",
+        "no_new_model_execution=true"
+      ],
+      "deliverable": "results/experiment_3315_vgb_backtracking_repair_policy_v1.json",
+      "purpose": "Define when the next repair runner accepts, rejects, backtracks, or abstains while keeping exact verifiers final."
+    },
+    "exp3316": {
+      "acceptance_requirements": [
+        "repair_rerun_v12_ready=true",
+        "repair_panel_ran=true",
+        "panel_case_count>=30",
+        "same_or_superset_manifest_case_hashes_recorded",
+        "runtime_provenance_clean=true",
+        "duration_contract_passed=true",
+        "substrate_consistency_passed=true",
+        "model_specs_used_match_exp3309_contract",
+        "model_identity_cache_size_quantization_load_generation_gpu_checker_versions_present",
+        "no_legacy_small_model_substitution",
+        "used_and_missing_mandated_model_ids_reported",
+        "exact_acceptance_authority_no_llm_judge",
+        "false_accept_count=0",
+        "abstention_count_reported",
+        "confidence_interval_present",
+        "no_critical_adversarial_verify_flags",
+        "headline_claim_allowed_true_only_if_all_gates_pass_else_honestly_blocked"
+      ],
+      "deliverable": "results/experiment_3316_sota_repair_rerun_v12_runtime_clean.json",
+      "gated_on": [
+        "exp3312.dataflip_gate_passed=true",
+        "exp3312.quality_flags_cleared=true",
+        "exp3309.runtime_contract_ready=true",
+        "exp3314.distributional_repair_audit_ready=true",
+        "exp3315.vgb_repair_policy_ready=true"
+      ],
+      "purpose": "Rerun the repair panel only after DataFlip quality cleanup, runtime provenance, uncertainty audit, and backtracking policy gates are ready."
+    }
+  },
+  "run_date": "20260529",
+  "runtime_contract_reference": {
+    "experiment_id": "exp3309",
+    "minimum_live_duration_s": 60.0,
+    "repair_substrate_rules_present": true,
+    "runtime_contract_ready": true
+  },
+  "schema": "carnot.repair_substrate_root_cause_autopsy.v1",
+  "schema_version": "carnot.repair_substrate_root_cause_autopsy.v1",
+  "scripts_research_conductor_modified": false,
+  "source_provenance_failure_modes": [
+    {
+      "affected_fields": [
+        "exp3302.provenance_clean",
+        "exp3303.source_provenance_clean"
+      ],
+      "audit_value": false,
+      "classification": "evidence_hygiene_failure",
+      "id": "source_panel_provenance_dirty",
+      "panel_value": false,
+      "required_fix": "Exp3316 must set runtime_provenance_clean=true only after the Exp3309 checker passes.",
+      "true_repair_failure": false
+    },
+    {
+      "affected_fields": [
+        "exp3302.headline_claim_allowed",
+        "exp3303.source_headline_claim_allowed"
+      ],
+      "audit_value": false,
+      "classification": "evidence_hygiene_failure",
+      "id": "source_headline_gate_false",
+      "panel_value": false,
+      "required_fix": "Exp3316 must keep headline promotion false unless all runtime, source, and substrate gates pass.",
+      "true_repair_failure": false
+    },
+    {
+      "affected_fields": [
+        "exp3302.corrigendum_pending",
+        "exp3303.adversarial_verify_flags"
+      ],
+      "classification": "evidence_hygiene_failure",
+      "critical_flags": [
+        {
+          "detail": "duration_s=15.496424 but artifact references compute-bound markers.",
+          "kind": "DURATION_TOO_SHORT",
+          "severity": "critical"
+        }
+      ],
+      "id": "critical_duration_flag_carried_forward",
+      "required_fix": "Exp3316 must clear critical adversarial flags or write an honestly blocked artifact.",
+      "true_repair_failure": false
+    },
+    {
+      "classification": "evidence_hygiene_failure",
+      "id": "runtime_contract_fields_missing",
+      "missing_fields": [
+        "runtime_provenance",
+        "checker_versions",
+        "duration_contract_passed",
+        "runtime_provenance_clean"
+      ],
+      "required_fix": "Exp3316 must include runtime_provenance, checker_versions, duration_contract_passed, and runtime_provenance_clean.",
+      "true_repair_failure": false
+    },
+    {
+      "classification": "model_identity_hygiene_failure",
+      "id": "incomplete_mandated_model_coverage",
+      "legacy_small_model_used": false,
+      "missing_model_ids": [
+        "unsloth/Qwen3.6-35B-A3B-GGUF",
+        "unsloth/gemma-4-31B-it-GGUF"
+      ],
+      "required_fix": "Exp3316 must use the strongest available mandated GGUF and list every missing mandated model without substituting a legacy small model.",
+      "true_repair_failure": false,
+      "used_model_ids": [
+        "unsloth/gemma-4-26B-A4B-it-GGUF"
+      ]
+    },
+    {
+      "classification": "model_identity_hygiene_failure",
+      "id": "model_identity_fields_incomplete",
+      "missing_fields_by_model": [
+        {
+          "missing_fields": [
+            "size_bytes",
+            "quantization",
+            "cache_root",
+            "snapshot_revision"
+          ],
+          "model_id": "unsloth/gemma-4-26B-A4B-it-GGUF"
+        }
+      ],
+      "required_fix": "Exp3316 must record model ID, HF ID, path, size, quantization, cache root, and snapshot revision in the used-model rows.",
+      "true_repair_failure": false
+    }
+  ],
+  "spec_refs": [
+    "REQ-REPORT-3313",
+    "SCENARIO-REPORT-3313"
+  ],
+  "substrate_consistency_failure_modes": [
+    {
+      "audit_substrate": "aggregation_from_upstream_artifacts",
+      "classification": "expected_audit_boundary_not_failure",
+      "id": "audit_aggregation_boundary_expected",
+      "is_blocker": false,
+      "panel_substrate": "live_local_sota_gguf_repair_plus_calibrated_clean_verifier",
+      "required_fix": "Keep repair audits aggregation-only, but require the source panel to carry a clean runtime contract."
+    },
+    {
+      "classification": "evidence_hygiene_failure",
+      "id": "source_duration_below_live_floor",
+      "is_blocker": true,
+      "minimum_live_duration_s": 60.0,
+      "panel_duration_s": 15.496424,
+      "required_fix": "Exp3316 headline live evidence must satisfy the Exp3309 duration floor or stay blocked."
+    },
+    {
+      "classification": "evidence_hygiene_failure",
+      "id": "source_panel_runtime_contract_absent",
+      "is_blocker": true,
+      "missing_fields": [
+        "runtime_provenance",
+        "checker_versions",
+        "duration_contract_passed",
+        "runtime_provenance_clean"
+      ],
+      "required_fix": "Exp3316 must copy the Exp3309 checker result into duration_contract_passed and runtime_provenance_clean."
+    },
+    {
+      "classification": "evidence_hygiene_failure",
+      "critical_flags": [
+        {
+          "detail": "duration_s=15.496424 but artifact references compute-bound markers.",
+          "kind": "DURATION_TOO_SHORT",
+          "severity": "critical"
+        }
+      ],
+      "id": "critical_adversarial_flag_present",
+      "is_blocker": true,
+      "required_fix": "Exp3316 and Exp3317 must preserve zero critical adversarial flags before headline promotion."
+    },
+    {
+      "audit_value": false,
+      "classification": "evidence_hygiene_failure",
+      "id": "audit_substrate_consistency_gate_false",
+      "is_blocker": true,
+      "required_fix": "Exp3317 may set substrate_consistency_passed=true only when the source panel contract, exact checkers, model IDs, and critical flags are clean."
+    }
+  ],
+  "task_id": "exp3313-repair-substrate-root-cause-autopsy-v1"
+}

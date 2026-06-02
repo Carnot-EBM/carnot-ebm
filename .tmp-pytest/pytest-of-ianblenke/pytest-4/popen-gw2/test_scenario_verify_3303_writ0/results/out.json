@@ -1,0 +1,105 @@
+{
+  "adversarial_verify_flags": [
+    {
+      "detail": "duration_s=15.496424 but live model markers require >=60s",
+      "kind": "DURATION_TOO_SHORT",
+      "severity": "critical"
+    }
+  ],
+  "adversarial_verify_report": {
+    "flag_count": 1,
+    "loaded": true,
+    "max_severity": 2
+  },
+  "artifact": "experiment_3303_repair_headline_evidence_audit_v1",
+  "audited_artifact": "results/experiment_3302_headline_sota_repair_panel_v11.json",
+  "claim_boundaries": [
+    "Do not promote a headline repair claim until the critical duration/substrate adversarial verification flag is independently resolved.",
+    "Exp 3302 source artifact sets headline_claim_allowed=false, so downstream claims must remain audit/boundary evidence.",
+    "Source provenance is not clean; cite only bounded exact-check and no-false-accept facts.",
+    "Model claim is bounded to the used GGUF only; missing mandated models include unsloth/Qwen3.6-35B-A3B-GGUF, unsloth/gemma-4-31B-it-GGUF."
+  ],
+  "confidence_interval_present": true,
+  "duration_s": 2.5,
+  "exact_check_provenance": {
+    "all_claimed_successes_exact_checked": true,
+    "candidate_result_count": 30,
+    "claimed_success_count": 27,
+    "claimed_successes_missing_exact_check": [],
+    "exact_checker_types_for_successes": [
+      "exact_context_string"
+    ],
+    "llm_judge_dependency_count": 0,
+    "reported_success_count_matches_rows": true,
+    "reported_verified_success_count": 27
+  },
+  "exact_successes_audited": 27,
+  "experiment_id": "exp3303",
+  "false_accept_count": 0,
+  "field_provenance": {
+    "adversarial_verify_flags": "scripts.adversarial_verify.verify_artifact plus Exp 3302 corrigendum_pending.",
+    "claim_boundaries": "Derived from failed headline gates instead of discarding bounded evidence.",
+    "exact_successes_audited": "Candidate rows with verified_success=true and exact_check_passed=true.",
+    "panel_case_count": "Exp 3302 top-level panel_case_count checked against Exp 3301 hashes.",
+    "substrate_consistency_passed": "False when source provenance is dirty, a critical adversarial flag remains, or used models are not declared."
+  },
+  "headline_claim_allowed_after_audit": false,
+  "honest_verdict": "complete: repair_headline_evidence_audit_ready=true; headline_claim_allowed_after_audit=false; panel_case_count=30; exact_successes_audited=27; false_accept_count=0; adversarial_verify_flags=1",
+  "inference_substrate": "aggregation_from_upstream_artifacts",
+  "llm_judge_dependency_count": 0,
+  "manifest_consistency": {
+    "exp3301_manifest_hash_count": 30,
+    "hashes_match_exp3301": true,
+    "panel_manifest_hash_count": 30
+  },
+  "milestone": "2026.05.305",
+  "model_invocation_summary": {
+    "actual_model_declarations_present": true,
+    "legacy_small_model_used": false,
+    "mandated_model_ids": [
+      "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "unsloth/gemma-4-31B-it-GGUF"
+    ],
+    "missing_model_ids": [
+      "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "unsloth/gemma-4-31B-it-GGUF"
+    ],
+    "used_model_count": 1,
+    "used_model_ids": [
+      "unsloth/gemma-4-26B-A4B-it-GGUF"
+    ]
+  },
+  "no_llm_judge_used_by_audit": true,
+  "no_new_model_execution": true,
+  "no_new_repair_generation": true,
+  "panel_case_count": 30,
+  "random_seed": 3303,
+  "repair_headline_evidence_audit_ready": true,
+  "reproducibility_checksum": "fcc1e9ec59df9f0c8a77a1a79952aaf96dfc889a84bde1d9a642de3ce3fd1202",
+  "run_date": "20260529",
+  "schema": "carnot.repair_headline_evidence_audit.v1",
+  "schema_version": "carnot.repair_headline_evidence_audit.v1",
+  "source_artifacts": {
+    "exp3301": {
+      "path": ".tmp-pytest/pytest-of-ianblenke/pytest-4/popen-gw2/test_scenario_verify_3303_writ0/results/experiment_3301_exact_repair_panel_manifest_v11.json",
+      "present": true,
+      "readable": true,
+      "sha256": "ae419a9fa73f44d6d371766d8e361782376e3db211d135880d0dbe4b25b9d65e"
+    },
+    "exp3302": {
+      "path": ".tmp-pytest/pytest-of-ianblenke/pytest-4/popen-gw2/test_scenario_verify_3303_writ0/results/experiment_3302_headline_sota_repair_panel_v11.json",
+      "present": true,
+      "readable": true,
+      "sha256": "2147039da486ea633f8307f5755d8c098c4585798064551f3b8ab742ab33d399"
+    }
+  },
+  "source_headline_claim_allowed": false,
+  "source_provenance_clean": false,
+  "spec_refs": [
+    "REQ-VERIFY-3303",
+    "SCENARIO-VERIFY-3303"
+  ],
+  "substrate_consistency_passed": false,
+  "task_id": "exp3303-repair-headline-evidence-audit-v1"
+}

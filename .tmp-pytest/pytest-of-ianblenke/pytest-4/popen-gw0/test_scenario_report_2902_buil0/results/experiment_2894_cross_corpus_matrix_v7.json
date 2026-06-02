@@ -1,0 +1,127 @@
+{
+  "artifact": "experiment_2894_cross_corpus_matrix_v7",
+  "blocked_rows": {
+    "HumanEval": {
+      "generated_code_status": "blocked_unresolved_adversarial_flags",
+      "reasons": [
+        "flagged_adversarial=true"
+      ],
+      "source_artifact": "results/experiment_2889_mbpp_humaneval_generated_code_clean_row_v1.json"
+    },
+    "MBPP": {
+      "generated_code_status": "blocked_unresolved_adversarial_flags",
+      "reasons": [
+        "flagged_adversarial=true"
+      ],
+      "source_artifact": "results/experiment_2889_mbpp_humaneval_generated_code_clean_row_v1.json"
+    }
+  },
+  "cross_corpus_matrix_built": true,
+  "headline_eligible_rows": [
+    "FoVer",
+    "HaluEval/FEVER"
+  ],
+  "honest_verdict": "complete: cross-corpus matrix v7 built from 5 clean headline/pilot/taxonomy rows",
+  "matrix_rows": [
+    {
+      "corpus": "FoVer",
+      "generated_code_status": {
+        "reason": "not_a_code_corpus",
+        "value": null
+      },
+      "headline_eligible": true,
+      "pilot_only": false,
+      "primary_metric": {
+        "architecture_only_auroc": 0.8946624,
+        "production_auroc": 0.9131336
+      },
+      "row_status": "headline_eligible",
+      "source_artifact": "results/experiment_2850_fover_dual_condition_integrity_v4.json",
+      "taxonomy_only": false
+    },
+    {
+      "corpus": "HaluEval/FEVER",
+      "headline_eligible": true,
+      "pilot_only": false,
+      "primary_metric": {
+        "measured_auroc_by_dataset": {
+          "halueval": 0.553072
+        }
+      },
+      "row_status": "headline_eligible",
+      "source_artifact": "results/experiment_2864_halueval_fever_full_calibration_v3.json",
+      "taxonomy_only": false,
+      "vericot_exact_support": {
+        "candidate_rows": 1000,
+        "supported_rows": 25
+      }
+    },
+    {
+      "corpus": "MBPP",
+      "generated_code_status": {
+        "flag_reasons": [
+          "flagged_adversarial=true"
+        ],
+        "status": "blocked_unresolved_adversarial_flags"
+      },
+      "headline_eligible": false,
+      "pilot_only": true,
+      "primary_metric": {
+        "reason": "pilot_only_no_generated_code_metric",
+        "value": null
+      },
+      "row_status": "pilot_only",
+      "source_artifact": "results/experiment_2879_code_corpus_manifest_execution_pilot_v1.json",
+      "structural_dependency_verification": {
+        "n_rows_verified": 10,
+        "source_artifact": "results/experiment_2890_code_structural_dependency_verifier_v1.json"
+      },
+      "taxonomy_only": false
+    },
+    {
+      "corpus": "HumanEval",
+      "generated_code_status": {
+        "flag_reasons": [
+          "flagged_adversarial=true"
+        ],
+        "status": "blocked_unresolved_adversarial_flags"
+      },
+      "headline_eligible": false,
+      "pilot_only": true,
+      "primary_metric": {
+        "reason": "pilot_only_no_generated_code_metric",
+        "value": null
+      },
+      "row_status": "pilot_only",
+      "source_artifact": "results/experiment_2879_code_corpus_manifest_execution_pilot_v1.json",
+      "taxonomy_only": false
+    },
+    {
+      "corpus": "TruthfulQA",
+      "headline_eligible": false,
+      "pilot_only": false,
+      "primary_metric": {
+        "reason": "taxonomy_only_no_generated_answer_metrics",
+        "value": null
+      },
+      "row_status": "taxonomy_only",
+      "source_artifact": "results/experiment_2888_truthfulqa_inficheck_taxonomy_manifest_v1.json",
+      "taxonomy_only": true,
+      "truthfulqa_taxonomy": {
+        "n_rows_materialized": 100
+      }
+    }
+  ],
+  "missing_rows": {},
+  "pilot_only_rows": [
+    "MBPP",
+    "HumanEval"
+  ],
+  "source_status_by_artifact": {
+    "generated_code": "flagged",
+    "matrix_v6": "clean"
+  },
+  "taxonomy_only_rows": [
+    "TruthfulQA"
+  ]
+}

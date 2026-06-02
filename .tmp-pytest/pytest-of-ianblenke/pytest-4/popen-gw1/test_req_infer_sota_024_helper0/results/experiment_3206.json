@@ -1,0 +1,160 @@
+{
+  "active_roadmap_modified": false,
+  "artifact": "experiment_3206_cuda_env_forensics_ledger_v1",
+  "clean_subprocess_stderr_tail": [],
+  "conductor_file_modified": false,
+  "cuda_env_diagnosed": true,
+  "cuda_env_vars": {
+    "CMAKE_ARGS": null,
+    "CUDA_DISABLE_PERF_BOOST": "1",
+    "CUDA_VISIBLE_DEVICES": null,
+    "FORCE_CMAKE": null,
+    "LD_LIBRARY_PATH": null,
+    "PATH": "/usr/bin"
+  },
+  "cuda_init_clean": false,
+  "duration_s": 0.1,
+  "experiment_id": "exp3206",
+  "gpu_count_nvidia_smi": null,
+  "honest_verdict": "blocked_nvidia_visibility: cuda_env_diagnosed=true; cuda_init_clean=false; recommended_next_action=repair_nvidia_visibility_before_cuda_receipt",
+  "llama_cpp_clean_subprocess": {
+    "command": [
+      "/repo/.venv/bin/python",
+      "-I",
+      "-c",
+      "import importlib.metadata, importlib.util, json\npayload = {'probe': 'exp3206_llama_cpp_clean_probe', 'llama_cpp_import_ok': False}\ntry:\n    import llama_cpp\n    from llama_cpp import llama_cpp as low\n    lib = getattr(low, '_lib', None)\n    system_info = ''\n    printer = getattr(low, 'llama_print_system_info', None)\n    if callable(printer):\n        raw = printer()\n        system_info = raw.decode('utf-8', 'replace') if isinstance(raw, bytes) else str(raw)\n    supports = getattr(low, 'llama_supports_gpu_offload', None)\n    payload.update({\n      'llama_cpp_import_ok': True,\n      'llama_cpp_version': getattr(llama_cpp, '__version__', None) or importlib.metadata.version('llama-cpp-python'),\n      'llama_cpp_origin': importlib.util.find_spec('llama_cpp').origin,\n      'shared_library_path': getattr(lib, '_name', None),\n      'llama_cpp_supports_gpu_offload': bool(supports()) if callable(supports) else False,\n      'llama_system_info': system_info,\n    })\nexcept Exception as exc:\n    payload['error'] = f'{type(exc).__name__}: {exc}'\nprint(json.dumps(payload, sort_keys=True))\n"
+    ],
+    "llama_cpp_import_ok": true,
+    "llama_cpp_origin": "/repo/.venv/lib/python/site-packages/llama_cpp/__init__.py",
+    "llama_cpp_supports_gpu_offload": true,
+    "llama_cpp_version": "0.3.23",
+    "llama_system_info": "CUDA = 1",
+    "returncode": 0,
+    "shared_library_path": "/repo/.venv/lib/libllama.so",
+    "stderr_summary": ""
+  },
+  "llama_cpp_cuda_build_detected": true,
+  "llama_cpp_origin": "/repo/.venv/lib/python/site-packages/llama_cpp/__init__.py",
+  "llama_cpp_version": "0.3.23",
+  "milestone": "2026.05.297",
+  "nvcc": {
+    "available": true,
+    "command": [
+      "nvcc",
+      "--version"
+    ],
+    "returncode": 0,
+    "stderr_summary": "",
+    "stdout_summary": "Cuda compilation tools, release 12.8, V12.8.93\n"
+  },
+  "nvidia_smi": {
+    "available": false,
+    "driver_version": null,
+    "gpu_count": null,
+    "gpus": [],
+    "query_command": [
+      "nvidia-smi",
+      "--query-gpu=index,name,driver_version,memory.total,memory.used,memory.free",
+      "--format=csv,noheader,nounits"
+    ],
+    "query_returncode": 127,
+    "query_stderr_summary": "missing nvidia-smi\n",
+    "query_stdout_summary": "",
+    "raw_command": [
+      "nvidia-smi"
+    ],
+    "raw_returncode": 0,
+    "raw_stderr_summary": "",
+    "raw_stdout_summary": "NVIDIA-SMI 595.71.05\n"
+  },
+  "nvidia_smi_available": false,
+  "pip_show": {
+    "llama-cpp-python": {
+      "command": [
+        "/repo/.venv/bin/python",
+        "-m",
+        "pip",
+        "show",
+        "llama-cpp-python"
+      ],
+      "metadata": {
+        "Location": "/repo/.venv/lib",
+        "Name": "llama-cpp-python",
+        "Version": "0.3.23"
+      },
+      "package": "llama-cpp-python",
+      "returncode": 0,
+      "stderr_summary": "",
+      "stdout_summary": "Name: llama-cpp-python\nVersion: 0.3.23\nLocation: /repo/.venv/lib\n"
+    },
+    "torch": {
+      "command": [
+        "/repo/.venv/bin/python",
+        "-m",
+        "pip",
+        "show",
+        "torch"
+      ],
+      "metadata": {
+        "Location": "/repo/.venv/lib",
+        "Name": "torch",
+        "Version": "2.11.0+cu128"
+      },
+      "package": "torch",
+      "returncode": 0,
+      "stderr_summary": "",
+      "stdout_summary": "Name: torch\nVersion: 2.11.0+cu128\nLocation: /repo/.venv/lib\n"
+    }
+  },
+  "recommended_next_action": "repair_nvidia_visibility_before_cuda_receipt",
+  "schema_version": "carnot.cuda_env_forensics_ledger.v1",
+  "selected_python": "/repo/.venv/bin/python",
+  "selected_python_probe": {
+    "base_prefix": "/usr",
+    "command": [
+      "/repo/.venv/bin/python",
+      "-c",
+      "import json, os, sys\npayload = {\n  'probe': 'exp3206_python_env_probe',\n  'executable': sys.executable,\n  'prefix': sys.prefix,\n  'base_prefix': getattr(sys, 'base_prefix', None),\n  'virtualenv': os.environ.get('VIRTUAL_ENV'),\n  'sys_path': list(sys.path),\n}\nprint(json.dumps(payload, sort_keys=True))\n"
+    ],
+    "executable": "/repo/.venv/bin/python",
+    "prefix": "/repo/.venv",
+    "returncode": 0,
+    "stderr_summary": "",
+    "sys_path": [
+      "/usr/lib/python",
+      "/repo/.venv/lib/python/site-packages"
+    ],
+    "virtualenv": "/repo/.venv"
+  },
+  "selected_python_sys_path": [
+    "/usr/lib/python",
+    "/repo/.venv/lib/python/site-packages"
+  ],
+  "tests_run": [
+    "REQ-INFER-SOTA-024 focused"
+  ],
+  "torch_clean_subprocess": {
+    "command": [
+      "/repo/.venv/bin/python",
+      "-I",
+      "-c",
+      "import json, sys\npayload = {'probe': 'exp3206_torch_clean_probe', 'project_modules_preimport': [m for m in sys.modules if m == 'carnot' or m.startswith('carnot.') or m == 'scripts' or m.startswith('scripts.')]}\ntry:\n    import torch\n    available = bool(torch.cuda.is_available())\n    count = int(torch.cuda.device_count()) if available else 0\n    names = [torch.cuda.get_device_name(i) for i in range(count)]\n    payload.update({'torch_import_ok': True, 'torch_version': getattr(torch, '__version__', None), 'torch_cuda_version': getattr(torch.version, 'cuda', None), 'cuda_available': available, 'device_count': count, 'device_names': names})\nexcept Exception as exc:\n    payload.update({'torch_import_ok': False, 'torch_version': None, 'torch_cuda_version': None, 'cuda_available': False, 'device_count': 0, 'device_names': [], 'error': f'{type(exc).__name__}: {exc}'})\nprint(json.dumps(payload, sort_keys=True))\n"
+    ],
+    "cuda_available": true,
+    "device_count": 1,
+    "device_names": [
+      "NVIDIA GeForce RTX 3090"
+    ],
+    "project_modules_preimport": [],
+    "returncode": 0,
+    "stderr_summary": "",
+    "torch_cuda_version": "12.8",
+    "torch_import_ok": true,
+    "torch_version": "2.11.0+cu128"
+  },
+  "torch_cuda_available_clean_subprocess": true,
+  "torch_cuda_device_count_clean_subprocess": 1,
+  "torch_cuda_version": "12.8",
+  "torch_version": "2.11.0+cu128",
+  "virtualenv": "/repo/.venv"
+}

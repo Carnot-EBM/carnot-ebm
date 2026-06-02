@@ -1,0 +1,59 @@
+{
+  "artifact": "experiment_2922_capstone_v275",
+  "cited_upstream_artifacts": [
+    {
+      "artifact_path": "results/experiment_2911_code_hallucination_taxonomy_verifier_v1.json",
+      "experiment_id": "exp2911",
+      "present": true
+    },
+    {
+      "artifact_path": "results/experiment_2919_constraintbench_mini_direct_optimization_v1.json",
+      "experiment_id": "exp2919",
+      "present": true
+    },
+    {
+      "artifact_path": "results/experiment_2921_cross_corpus_matrix_v9_paper_boundary_v1.json",
+      "experiment_id": "exp2921",
+      "present": true
+    }
+  ],
+  "corrigendum_pending": [
+    {
+      "detail": "duration_s=0.007456 but artifact references compute-bound markers",
+      "kind": "DURATION_TOO_SHORT",
+      "severity": "critical"
+    },
+    {
+      "detail": "Compute-bound artifact missing methodology",
+      "kind": "METHODOLOGY_MISSING",
+      "severity": "critical"
+    }
+  ],
+  "duration_s": 0.007456,
+  "flagged_adversarial": true,
+  "flagged_artifacts": [
+    "exp2911",
+    "exp2919",
+    "exp2921"
+  ],
+  "honest_verdict": "complete: .275 capstone synthesized",
+  "inference_substrate": "aggregation_from_upstream_artifacts",
+  "schema": "carnot.milestone_capstone.v275",
+  "source_artifact_status": {
+    "exp2911": {
+      "path": "results/experiment_2911_code_hallucination_taxonomy_verifier_v1.json",
+      "present": true,
+      "status": "flagged"
+    },
+    "exp2919": {
+      "path": "results/experiment_2919_constraintbench_mini_direct_optimization_v1.json",
+      "present": true,
+      "status": "flagged"
+    },
+    "exp2921": {
+      "path": "results/experiment_2921_cross_corpus_matrix_v9_paper_boundary_v1.json",
+      "present": true,
+      "status": "flagged"
+    }
+  }
+}

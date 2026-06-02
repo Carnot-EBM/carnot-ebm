@@ -1,0 +1,41 @@
+{
+  "bounded_policy": "cap entries; on overflow merge the highest cosine-similarity pair; evict lowest utility/support only if a merge cannot restore the cap",
+  "cap": 2,
+  "consolidation_events": [
+    {
+      "action": "add",
+      "session": "session_a",
+      "size": 1
+    }
+  ],
+  "entries": [
+    {
+      "edges": [
+        {
+          "conditional_mutual_information": 0.2,
+          "pair": [
+            "a",
+            "b"
+          ]
+        }
+      ],
+      "source_sessions": [
+        "session_a"
+      ],
+      "support": 20,
+      "template_id": "template_a",
+      "utility": 0.7,
+      "weights": {
+        "a": 0.4,
+        "b": -0.6
+      }
+    }
+  ],
+  "schema": "carnot.fr11_v13_template_library",
+  "sha256": "51ca63c5b6be964919112b9cc879ab0d4451674453aa47d58cda45ff6c5e6608",
+  "size": 1,
+  "verifier_names": [
+    "a",
+    "b"
+  ]
+}

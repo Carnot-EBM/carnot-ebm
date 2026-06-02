@@ -1,0 +1,373 @@
+{
+  "abstention_count": 0,
+  "artifact": "experiment_3290_gated_sota_repair_micro_panel_v10",
+  "blocked_reasons": [],
+  "candidate_results": [
+    {
+      "abstained": false,
+      "calibrated_clean_verifier_decision": "accept",
+      "calibrated_clean_verifier_output": "ACCEPT",
+      "candidate_answer": "banana",
+      "candidate_hash": "01f9d9e60f1282e5f9547bdf220fa9e0cae389b3eb5896cc7ca7af0f044e6229",
+      "case_id": "ctx3290-symbolic-01:repair",
+      "exact_check_passed": true,
+      "exact_checker_type": "exact_alias_string",
+      "expected_answer": "banana",
+      "failing_candidate": "planet",
+      "failure_class": "unknown_verifier_decision",
+      "false_accept": false,
+      "family": "symbolic_aliases",
+      "fixture_id": "ctx3290-symbolic-01",
+      "localized_repair_feedback": "Use the local context for this fixture; replace 'planet' with the exact expected answer 'banana' for ctx3290-symbolic-01.",
+      "model_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "model_path": "/home/ianblenke/github.com/ianblenke/carnot/.tmp-pytest/pytest-of-ianblenke/pytest-4/popen-gw2/test_req_verify_3290_writer_an0/models/gemma26.gguf",
+      "token_counts": {},
+      "verified_success": true
+    },
+    {
+      "abstained": false,
+      "calibrated_clean_verifier_decision": "accept",
+      "calibrated_clean_verifier_output": "ACCEPT",
+      "candidate_answer": "blue screwdriver",
+      "candidate_hash": "14eaabdab5907fff4d332464af6e5325bc80883fa151deab87938a0b523ce89a",
+      "case_id": "ctx3290-symbolic-02:repair",
+      "exact_check_passed": true,
+      "exact_checker_type": "exact_alias_string",
+      "expected_answer": "blue screwdriver",
+      "failing_candidate": "snake",
+      "failure_class": "unknown_verifier_decision",
+      "false_accept": false,
+      "family": "symbolic_aliases",
+      "fixture_id": "ctx3290-symbolic-02",
+      "localized_repair_feedback": "Use the local context for this fixture; replace 'snake' with the exact expected answer 'blue screwdriver' for ctx3290-symbolic-02.",
+      "model_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "model_path": "/home/ianblenke/github.com/ianblenke/carnot/.tmp-pytest/pytest-of-ianblenke/pytest-4/popen-gw2/test_req_verify_3290_writer_an0/models/gemma26.gguf",
+      "token_counts": {},
+      "verified_success": true
+    },
+    {
+      "abstained": false,
+      "calibrated_clean_verifier_decision": "accept",
+      "calibrated_clean_verifier_output": "ACCEPT",
+      "candidate_answer": "teacup",
+      "candidate_hash": "cfd502ef25b2a34e65a0330573c386b6e765d0dd8d6f0dae3de1baf3084a5fe8",
+      "case_id": "ctx3290-symbolic-03:repair",
+      "exact_check_passed": true,
+      "exact_checker_type": "exact_alias_string",
+      "expected_answer": "teacup",
+      "failing_candidate": "planet",
+      "failure_class": "unknown_verifier_decision",
+      "false_accept": false,
+      "family": "symbolic_aliases",
+      "fixture_id": "ctx3290-symbolic-03",
+      "localized_repair_feedback": "Use the local context for this fixture; replace 'planet' with the exact expected answer 'teacup' for ctx3290-symbolic-03.",
+      "model_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "model_path": "/home/ianblenke/github.com/ianblenke/carnot/.tmp-pytest/pytest-of-ianblenke/pytest-4/popen-gw2/test_req_verify_3290_writer_an0/models/gemma26.gguf",
+      "token_counts": {},
+      "verified_success": true
+    },
+    {
+      "abstained": false,
+      "calibrated_clean_verifier_decision": "accept",
+      "calibrated_clean_verifier_output": "ACCEPT",
+      "candidate_answer": "12",
+      "candidate_hash": "11e6c45d32515802d3f9d527a91d354e1b0c4854f68df8c6afc370762810ffe7",
+      "case_id": "ctx3290-arithmetic-01:repair",
+      "exact_check_passed": true,
+      "exact_checker_type": "exact_integer_string",
+      "expected_answer": "12",
+      "failing_candidate": "7",
+      "failure_class": "unknown_verifier_decision",
+      "false_accept": false,
+      "family": "local_arithmetic_rules",
+      "fixture_id": "ctx3290-arithmetic-01",
+      "localized_repair_feedback": "Use the local context for this fixture; replace '7' with the exact expected answer '12' for ctx3290-arithmetic-01.",
+      "model_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "model_path": "/home/ianblenke/github.com/ianblenke/carnot/.tmp-pytest/pytest-of-ianblenke/pytest-4/popen-gw2/test_req_verify_3290_writer_an0/models/gemma26.gguf",
+      "token_counts": {},
+      "verified_success": true
+    }
+  ],
+  "clean_verifier_policy": {
+    "abstentions_recorded_separately": true,
+    "accepted_repairs_require_exact_pass": true,
+    "decision_contract": "ACCEPT|REJECT|ABSTAIN",
+    "source_experiment_id": "exp3287",
+    "strict_leading_token": true
+  },
+  "duration_s": 3.0,
+  "experiment_id": "exp3290",
+  "false_accept_count": 0,
+  "gate_source": {
+    "error": null,
+    "path": "results/experiment_3289_repair_gate_decision_v9_after_garak_abstention.json",
+    "present": true,
+    "readable": true,
+    "sha256": "6ec5e5c0b5f52aa2c799bc1b09647e1f493400eec3cdd02077941ea4886272bb"
+  },
+  "headline_claim_allowed": false,
+  "honest_verdict": "complete: repair_panel_ran=true; panel_case_count=4; verified_success_count=4; false_accept_count=0; abstention_count=0; headline_claim_allowed=false",
+  "inference_substrate": "local_sota_gguf_repair_plus_calibrated_clean_verifier",
+  "localized_failure_feedback": [],
+  "milestone": "2026.05.304",
+  "missing_model_specs": [
+    {
+      "cached": false,
+      "expected_quantization": "Q4_K_M",
+      "hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "model_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "model_path": null,
+      "name": "Qwen3.6-35B-A3B",
+      "reason": "not_cached",
+      "role": "moe",
+      "selected_by_scope": false
+    },
+    {
+      "cached": false,
+      "expected_quantization": "Q4_K_M",
+      "hf_id": "unsloth/gemma-4-31B-it-GGUF",
+      "model_id": "unsloth/gemma-4-31B-it-GGUF",
+      "model_path": null,
+      "name": "Gemma4-31B-it",
+      "reason": "not_cached",
+      "role": "dense",
+      "selected_by_scope": false
+    }
+  ],
+  "model_specs": {
+    "available_model_count": 1,
+    "cached_sota_pair_attempted": true,
+    "cached_sota_pair_available": false,
+    "cached_sota_pair_specs": [],
+    "generation_runtime": "llama_cpp_local_generation",
+    "mandated_model_ids": [
+      "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "unsloth/gemma-4-31B-it-GGUF",
+      "unsloth/gemma-4-26B-A4B-it-GGUF"
+    ],
+    "mandated_models": {
+      "unsloth/Qwen3.6-35B-A3B-GGUF": {
+        "cached": false,
+        "expected_quantization": "Q4_K_M",
+        "hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+        "model_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+        "model_path": null,
+        "name": "Qwen3.6-35B-A3B",
+        "role": "moe",
+        "selected_by_scope": false,
+        "size_bytes": 0
+      },
+      "unsloth/gemma-4-26B-A4B-it-GGUF": {
+        "cached": true,
+        "expected_quantization": "Q4_K_M",
+        "hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+        "model_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+        "model_path": "/home/ianblenke/github.com/ianblenke/carnot/.tmp-pytest/pytest-of-ianblenke/pytest-4/popen-gw2/test_req_verify_3290_writer_an0/models/gemma26.gguf",
+        "name": "Gemma4-26B-A4B-it",
+        "role": "moe",
+        "selected_by_scope": true,
+        "size_bytes": 4
+      },
+      "unsloth/gemma-4-31B-it-GGUF": {
+        "cached": false,
+        "expected_quantization": "Q4_K_M",
+        "hf_id": "unsloth/gemma-4-31B-it-GGUF",
+        "model_id": "unsloth/gemma-4-31B-it-GGUF",
+        "model_path": null,
+        "name": "Gemma4-31B-it",
+        "role": "dense",
+        "selected_by_scope": false,
+        "size_bytes": 0
+      }
+    },
+    "missing_model_count": 2,
+    "runtime": "llama_cpp_local_gguf_only",
+    "scope_selected_model_ids": [
+      "unsloth/gemma-4-26B-A4B-it-GGUF"
+    ],
+    "verification_runtime": "exp3287_calibrated_accept_reject_abstain_contract"
+  },
+  "models_used": [
+    {
+      "gpu_mem_used_mib": 4096,
+      "hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "legacy_small_model": false,
+      "model_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "model_path": "/home/ianblenke/github.com/ianblenke/carnot/.tmp-pytest/pytest-of-ianblenke/pytest-4/popen-gw2/test_req_verify_3290_writer_an0/models/gemma26.gguf",
+      "name": "Gemma4-26B-A4B-it",
+      "repair_panel_case_count": 4,
+      "role": "moe",
+      "source": "resolve_cached_gguf"
+    }
+  ],
+  "panel_case_count": 4,
+  "panel_cases": [
+    {
+      "case_hash": "2b1c71e479e9a84a88e47c6852cea0b020f2bdd6c112428f657bb42188aa0652",
+      "case_id": "ctx3290-symbolic-01:repair",
+      "context": "For this fixture only, mercury means banana.",
+      "exact_checker_type": "exact_alias_string",
+      "expected_answer": "banana",
+      "failing_candidate": "planet",
+      "family": "symbolic_aliases",
+      "fixture_id": "ctx3290-symbolic-01",
+      "localized_failure_mode": "parametric_prior_shortcut",
+      "localized_repair_feedback": "Use the local context for this fixture; replace 'planet' with the exact expected answer 'banana' for ctx3290-symbolic-01.",
+      "permitted_case_family": "exact_context_fixture_counterexamples",
+      "question": "What does mercury mean?"
+    },
+    {
+      "case_hash": "a01859fb710ddc06dd22a61f1987991dc50965f5e1aef0d318357d58edbaf711",
+      "case_id": "ctx3290-symbolic-02:repair",
+      "context": "For this fixture only, python means blue screwdriver.",
+      "exact_checker_type": "exact_alias_string",
+      "expected_answer": "blue screwdriver",
+      "failing_candidate": "snake",
+      "family": "symbolic_aliases",
+      "fixture_id": "ctx3290-symbolic-02",
+      "localized_failure_mode": "parametric_prior_shortcut",
+      "localized_repair_feedback": "Use the local context for this fixture; replace 'snake' with the exact expected answer 'blue screwdriver' for ctx3290-symbolic-02.",
+      "permitted_case_family": "exact_context_fixture_counterexamples",
+      "question": "What does python mean?"
+    },
+    {
+      "case_hash": "c29e32d067ae93dd120ab4ec829e9d34d8c3b9ff02303eaf811e6f3b0d1b45e8",
+      "case_id": "ctx3290-symbolic-03:repair",
+      "context": "For this fixture only, mars means teacup.",
+      "exact_checker_type": "exact_alias_string",
+      "expected_answer": "teacup",
+      "failing_candidate": "planet",
+      "family": "symbolic_aliases",
+      "fixture_id": "ctx3290-symbolic-03",
+      "localized_failure_mode": "parametric_prior_shortcut",
+      "localized_repair_feedback": "Use the local context for this fixture; replace 'planet' with the exact expected answer 'teacup' for ctx3290-symbolic-03.",
+      "permitted_case_family": "exact_context_fixture_counterexamples",
+      "question": "What does mars mean?"
+    },
+    {
+      "case_hash": "ffd1ca833880e433ba57a596051479967e8564bfb592bab95dc054573a964e00",
+      "case_id": "ctx3290-arithmetic-01:repair",
+      "context": "Use only this worksheet rule: plus means multiply.",
+      "exact_checker_type": "exact_integer_string",
+      "expected_answer": "12",
+      "failing_candidate": "7",
+      "family": "local_arithmetic_rules",
+      "fixture_id": "ctx3290-arithmetic-01",
+      "localized_failure_mode": "deterministic_integer_constraint_failure",
+      "localized_repair_feedback": "Use the local context for this fixture; replace '7' with the exact expected answer '12' for ctx3290-arithmetic-01.",
+      "permitted_case_family": "exact_context_fixture_counterexamples",
+      "question": "Under the worksheet rule, what is 3 plus 4?"
+    }
+  ],
+  "permitted_repair_scope": {
+    "claim_boundary": {
+      "headline_claim_allowed": false,
+      "no_generalization_beyond_panel": true,
+      "panel_claim": "diagnostic_micro_panel_only"
+    },
+    "exact_verification_requirements": {
+      "abstentions_recorded_separately": true,
+      "accepted_repairs_require_exact_pass": true,
+      "authority": [
+        "calibrated_clean_verifier_v15",
+        "exact_context_checker"
+      ],
+      "coverage_rate_floor": 1.0,
+      "false_accept_count": 0,
+      "false_accept_rate": 0.0
+    },
+    "max_panel_cases": 8,
+    "model_specs": {
+      "mandated_model_ids": [
+        "unsloth/Qwen3.6-35B-A3B-GGUF",
+        "unsloth/gemma-4-31B-it-GGUF",
+        "unsloth/gemma-4-26B-A4B-it-GGUF"
+      ],
+      "missing_model_ids": [
+        "unsloth/Qwen3.6-35B-A3B-GGUF",
+        "unsloth/gemma-4-31B-it-GGUF"
+      ],
+      "runtime": "llama_cpp_local_gguf_only",
+      "selected_model_ids": [
+        "unsloth/gemma-4-26B-A4B-it-GGUF"
+      ]
+    },
+    "permitted_case_families": [
+      "exact_context_fixture_counterexamples",
+      "localized_code_or_json_fragment_failures",
+      "deterministic_integer_constraint_failures"
+    ],
+    "repair_generation_allowed": true,
+    "repair_task_id": "exp3290-gated-sota-repair-micro-panel-v10",
+    "sample_size": {
+      "max_cases": 8,
+      "min_cases": 4
+    },
+    "scope_label": "bounded_exact_fixture_code_repair_micro_panel",
+    "selected_model_ids": [
+      "unsloth/gemma-4-26B-A4B-it-GGUF"
+    ]
+  },
+  "preconditions_checked": [
+    {
+      "error": null,
+      "name": "exp3289_repair_gate_open",
+      "passed": true,
+      "path": "results/experiment_3289_repair_gate_decision_v9_after_garak_abstention.json",
+      "present": true,
+      "readable": true,
+      "repair_gate_decision_v9_ready": true,
+      "repair_gate_open": true,
+      "sha256": "6ec5e5c0b5f52aa2c799bc1b09647e1f493400eec3cdd02077941ea4886272bb"
+    },
+    {
+      "detail": "test probe",
+      "name": "nvidia_smi",
+      "passed": true
+    },
+    {
+      "detail": "test probe",
+      "name": "selected_python_cuda",
+      "passed": true
+    },
+    {
+      "available_model_ids": [
+        "unsloth/gemma-4-26B-A4B-it-GGUF"
+      ],
+      "cached_sota_pair_attempted": true,
+      "cached_sota_pair_available": false,
+      "missing_model_ids": [
+        "unsloth/Qwen3.6-35B-A3B-GGUF",
+        "unsloth/gemma-4-31B-it-GGUF"
+      ],
+      "name": "mandated_sota_gguf_cache",
+      "passed": true
+    },
+    {
+      "maximum_case_count": 8,
+      "minimum_case_count": 4,
+      "name": "exact_context_fixture_panel",
+      "panel_case_count": 4,
+      "passed": true,
+      "path": "data/research/context_cot_clbench_parametric_shortcut_v1.jsonl",
+      "scope_label": "bounded_exact_fixture_code_repair_micro_panel"
+    }
+  ],
+  "random_seed": 3290,
+  "repair_panel_ran": true,
+  "repair_success_rate": 1.0,
+  "reproducibility_checksum": "6ecc577aa85b96180bd097d9e4b952996e752b037f637f768e9a7dd8c11064e2",
+  "run_date": "20260528",
+  "schema": "carnot.gated_sota_repair_micro_panel.v10",
+  "schema_version": "carnot.gated_sota_repair_micro_panel.v10",
+  "sota_repair_micro_panel_v10_ready": true,
+  "spec_refs": [
+    "REQ-VERIFY-3290",
+    "SCENARIO-VERIFY-3290"
+  ],
+  "task_id": "exp3290-gated-sota-repair-micro-panel-v10",
+  "tests_run": [
+    "writer"
+  ],
+  "verified_success_count": 4
+}

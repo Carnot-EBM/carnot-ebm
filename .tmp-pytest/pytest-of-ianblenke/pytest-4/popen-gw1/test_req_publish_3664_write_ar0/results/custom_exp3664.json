@@ -1,0 +1,181 @@
+{
+  "cited_upstream_artifacts": [
+    {
+      "honest_verdict": "complete: real_nli_grounding_verifier_built_beats_proxy_not_confidence",
+      "path": "results/experiment_3654_real_nli_atomic_claim_grounding_verifier.json",
+      "sha256": "f437c8d4db781acf656dca9206a609685b4732a0caacc287fd0df580aeee807f"
+    },
+    {
+      "honest_verdict": "complete: facts_domain_bound_even_with_real_nli_334_negative_confirmed_earned",
+      "path": "results/experiment_3655_facts_row_remeasurement_real_nli_v5.json",
+      "sha256": "78f153354f692674038c3bc9fa51401294b366e37bed82ba195df3572638b4f6"
+    },
+    {
+      "honest_verdict": "complete: deployable_second_pair_of_eyes_detector_built_fusion_wins_calibrated",
+      "path": "results/experiment_3657_deployable_second_pair_of_eyes_detector.json",
+      "sha256": "34990278cf0d128325ad2fe6bb780d6f3c2b2cb05a257d5bdbc0726465498c33"
+    },
+    {
+      "honest_verdict": "complete: code_generalization_replicates_on_balanced_second_corpus_claim_hardened",
+      "path": "results/experiment_3658_code_generalization_second_corpus.json",
+      "sha256": "c14c8b55a5cfde5dc40f2b75ef40a510bf753d00ecbc06e9705dbf976a49800f"
+    },
+    {
+      "honest_verdict": "complete: real_substrate_trained_judge_result",
+      "path": "results/experiment_3659_trained_ebm_judge_ood_real_substrate_v3.json",
+      "sha256": "43d43c9855caecd35199af7ff176a34aa76eb46f626d3a389b4db35dddf431f9"
+    },
+    {
+      "honest_verdict": "complete: fr11_v9_online_fusion_weighting_holds",
+      "path": "results/experiment_3660_fr11_continuous_self_learning_v9.json",
+      "sha256": "ea885844d288a2644677ebba2256a16225b8edbfb6ed26d6ff60254a6868e1d1"
+    }
+  ],
+  "code_generalization_replicated": true,
+  "corrected_generalization_table": {
+    "code": {
+      "auroc": 0.532222,
+      "delta": 0.048889,
+      "generalizes": true,
+      "lift": 0.048889,
+      "ran_or_blocked": "ran",
+      "second_corpus_balanced": true
+    },
+    "facts": {
+      "auroc": 0.743656,
+      "confidence_auroc": 0.744576,
+      "delta": -0.00092,
+      "generalizes": false,
+      "lift": -0.00092,
+      "ran_or_blocked": "ran",
+      "real_nli_status": "domain_bound"
+    },
+    "math": {
+      "auroc": 0.9131,
+      "delta": 0.018471,
+      "generalizes": true,
+      "lift": 0.018471,
+      "ran_or_blocked": "ran",
+      "status": "frozen_fover_math_headline"
+    }
+  },
+  "correlation_paradox_resolution": {
+    "reported_resolution": "H2_naive_penalty_misspecified_dependency_aware_recovers",
+    "source_honest_verdict": "complete: paradox_resolved_naive_penalty_misspecified_dependency_aware_recovers",
+    "status": "excluded_flagged_adversarial",
+    "usable_for_claims": false
+  },
+  "duration_s": 2.0,
+  "facts_generalize_real_nli": false,
+  "field_principles": {
+    "cited_upstream_artifacts": "sha256 provenance (G4).",
+    "code_generalization_replicated": "Whether code generalization held on a balanced second corpus (exp3658) -- hardens the code claim.",
+    "corrected_generalization_table": "domain -> {auroc, delta, lift, ran_or_blocked} -- the milestone's central evidence, with facts now measured by a real NLI verifier.",
+    "correlation_paradox_resolution": "H1 (correlation harmless) or H2 (naive penalty mis-specified, dependency-aware recovers) from exp3656.",
+    "duration_s": "Plausibility floor.",
+    "facts_generalize_real_nli": "The core-mission answer: does factual grounding generalize with a real NLI verifier (exp3655), vs the .334 proxy negative?",
+    "g1": "Headline measured (FoVer 0.9131, 5-seed, CI, adversarial-clean).",
+    "g2": "Independently reproduced (CI runner 26725185125).",
+    "g3": "Prose narrowing-clean.",
+    "g4": "Numbers trace to primary artifacts.",
+    "honest_verdict": "Terminal prefix for reconciler classification.",
+    "inference_substrate": "aggregation_from_upstream_artifacts (principle: reads the gate script + artifacts; no live inference).",
+    "p01_status": "P0.1 stays honest-negative; do not re-assert a positive.",
+    "paper_ready": "G1 and G2 and G3 and G4 -- must remain true; the milestone does not regress the gate.",
+    "paper_v6_forbidden_claims": "Overclaims to avoid.",
+    "paper_v6_safe_claims": "Narrowing-clean claims.",
+    "random_seed": "Determinism precondition.",
+    "real_nli_vs_proxy_correction": "States how the real NLI result corrects or confirms the .334 proxy facts negative (0.6495).",
+    "reproducibility_checksum": "Drift detection.",
+    "second_pair_of_eyes_deployable": "Whether the calibrated fused detector (exp3657) is a deployable product surface that beats confidence.",
+    "trained_judge_real_substrate_result": "Whether a real-substrate trained judge (exp3659) transfers OOD -- the Phase-3 path signal.",
+    "unmet_gates": "Report which gates are unmet, not a count (publication_blocker_count is retired).",
+    "verifier_value_scope": "broad / math_plus_code / math_plus_code_plus_facts / math_only_earned -- the scoped product claim after the fair facts re-measurement."
+  },
+  "flagged_upstream_artifacts_excluded": [
+    "results/experiment_3656_correlation_aware_weighting_paradox_diagnosis.json"
+  ],
+  "fr11_continuous_self_learning_result": {
+    "honest_verdict": "complete: fr11_v9_online_fusion_weighting_holds",
+    "online_fusion_auroc_gain": 0.168457,
+    "quality_maintained": true,
+    "usable_for_claims": true
+  },
+  "g1": true,
+  "g2": true,
+  "g3": true,
+  "g4": true,
+  "honest_verdict": "complete: capstone_v335_facts_domain_bound_with_real_nli_verifier_value_math_plus_code_paper_ready_true",
+  "inference_substrate": "aggregation_from_upstream_artifacts (principle: reads the gate script + artifacts; no live inference).",
+  "ops_docs_reconciliation_left_to_conductor": true,
+  "p01_status": "honest-negative",
+  "paper_ready": true,
+  "paper_v6_forbidden_claims": [
+    "Do not claim broad factual generalization unless Exp 3655 facts_generalize_real_nli is true.",
+    "Do not read missing real-NLI fields as None and synthesize a facts conclusion around them.",
+    "Do not treat grounding AUROC >= 0.99 as valid unless Exp 3655 proves grounding_leak_free.",
+    "Do not re-assert a P0.1 positive; the status remains honest-negative.",
+    "Do not claim the real-substrate trained judge transfers OOD unless Exp 3659 passes that gate.",
+    "Do not cite flagged_adversarial artifacts in the paper or capstone synthesis: results/experiment_3656_correlation_aware_weighting_paradox_diagnosis.json"
+  ],
+  "paper_v6_safe_claims": [
+    "FoVer verifier ensemble math headline remains 0.9131 AUROC with G1-G4 satisfied.",
+    "Verifier value scope is math_plus_code; this is a scoped, domain-bound product claim.",
+    "P0.1 remains honest-negative; no energy-vs-self-consistency positive is re-asserted.",
+    "Code verifier value generalizes and replicates on a balanced second corpus.",
+    "The real-NLI facts row ran and facts remain domain-bound; no broad factual generalization claim is made.",
+    "The calibrated fused second-pair-of-eyes detector beats confidence.",
+    "The real-substrate trained judge does not transfer OOD and is not the Phase-3 fix."
+  ],
+  "publication_gate": {
+    "G1": {
+      "detail": "FoVer 0.9131, 5-seed, CI",
+      "pass": true,
+      "source": "experiment_2850_fover_dual_condition_integrity_v4.json"
+    },
+    "G2": {
+      "detail": "CI runner 26725185125",
+      "pass": true
+    },
+    "G3": {
+      "detail": "narrowing-clean",
+      "pass": true
+    },
+    "G4": {
+      "detail": "numbers trace to artifacts",
+      "pass": true
+    }
+  },
+  "random_seed": 3664,
+  "real_nli_vs_proxy_correction": {
+    "confidence_baseline_auroc": 0.744576,
+    "delta_vs_confidence": -0.00092,
+    "exp3654_real_nli_vs_proxy_delta": 0.094156,
+    "proxy_negative_auroc": 0.6495,
+    "real_nli_auroc": 0.743656,
+    "status": "real_nli_confirms_proxy_negative"
+  },
+  "reproducibility_checksum": "5b0356e7a6d9036a47395f31994ffb559e3ef4d0562b44a53c28d6f1236838f7",
+  "scripts_research_conductor_modified": false,
+  "second_pair_of_eyes_deployable": true,
+  "source_artifacts": [
+    "results/experiment_3654_real_nli_atomic_claim_grounding_verifier.json",
+    "results/experiment_3655_facts_row_remeasurement_real_nli_v5.json",
+    "results/experiment_3656_correlation_aware_weighting_paradox_diagnosis.json",
+    "results/experiment_3657_deployable_second_pair_of_eyes_detector.json",
+    "results/experiment_3658_code_generalization_second_corpus.json",
+    "results/experiment_3659_trained_ebm_judge_ood_real_substrate_v3.json",
+    "results/experiment_3660_fr11_continuous_self_learning_v9.json"
+  ],
+  "summarized_upstream_artifacts": [],
+  "trained_judge_real_substrate_result": {
+    "confidence_only_baseline_auroc": 0.882162,
+    "delta_vs_confidence_ood": -0.309697,
+    "in_domain_judge_auroc": 0.978741,
+    "ood_judge_auroc": 0.572465,
+    "status": "does_not_transfer_ood",
+    "transfers_ood": false
+  },
+  "unmet_gates": [],
+  "verifier_value_scope": "math_plus_code"
+}

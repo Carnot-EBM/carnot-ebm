@@ -1,0 +1,72 @@
+{
+  "controlled_invariance_checks": [
+    {
+      "can_authorize_acceptance": false,
+      "name": "force",
+      "routes_to_exact_checks": true
+    },
+    {
+      "can_authorize_acceptance": false,
+      "name": "remove",
+      "routes_to_exact_checks": true
+    },
+    {
+      "can_authorize_acceptance": false,
+      "name": "shuffled_trace",
+      "routes_to_exact_checks": true
+    },
+    {
+      "can_authorize_acceptance": false,
+      "name": "answer_only",
+      "routes_to_exact_checks": true
+    },
+    {
+      "can_authorize_acceptance": false,
+      "name": "trace_only",
+      "routes_to_exact_checks": true
+    }
+  ],
+  "honest_verdict": "complete: fixture",
+  "token_suspicion_fields": [
+    {
+      "acceptance_authority": false,
+      "may_accept": true,
+      "may_route_exact_checks": true,
+      "name": "first_token_entropy"
+    }
+  ],
+  "trusted_exact_rows": [
+    {
+      "candidate_answers": [
+        "VALID"
+      ],
+      "exact_label": "VALID",
+      "expected_action": "accept",
+      "extracted_answer": "VALID",
+      "fixture_family": "arithmetic_code_assertions",
+      "row_id": "row-valid"
+    },
+    {
+      "answer_extraction_format": "validity_token",
+      "candidate_answers": [
+        "VALID"
+      ],
+      "exact_label": "INVALID",
+      "expected_action": "reject",
+      "extracted_answer": "VALID",
+      "fixture_family": "contradiction",
+      "row_id": "row-known-false-accept"
+    },
+    {
+      "candidate_answers": [
+        "SAT"
+      ],
+      "exact_label": "SAT",
+      "expected_action": "accept",
+      "extracted_answer": "SAT",
+      "fixture_family": "smt_constraints",
+      "row_id": "row-sat"
+    }
+  ],
+  "verifier_invariance_token_suspicion_audit_ready": true
+}

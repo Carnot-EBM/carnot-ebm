@@ -1,0 +1,103 @@
+{
+  "artifact": "experiment_1312_triggered_certificate_extraction_dccd_gbnf",
+  "artifact_metadata": {
+    "project_root": "/home/ianblenke/github.com/ianblenke/carnot/.tmp-pytest/pytest-of-ianblenke/pytest-4/popen-gw3/test_exp1312_run_experiment_wr0",
+    "run_date": "20260505",
+    "source_experiment": "1311",
+    "stability_gate": 0.6
+  },
+  "attempts": [
+    {
+      "compact_encoding": false,
+      "errors": [
+        "no_json_object"
+      ],
+      "hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "item_id": "cb_unknown_missing_bound",
+      "parseable": false,
+      "path": "raw_trigger",
+      "prompt_chars": 191,
+      "truthful": false
+    },
+    {
+      "compact_encoding": false,
+      "errors": [],
+      "hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "item_id": "cb_unknown_missing_bound",
+      "parseable": true,
+      "path": "gbnf_constrained",
+      "prompt_chars": 231,
+      "truthful": true
+    },
+    {
+      "compact_encoding": false,
+      "errors": [],
+      "hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "item_id": "cb_unknown_missing_bound",
+      "parseable": true,
+      "path": "dccd_compact",
+      "prompt_chars": 81,
+      "truthful": true
+    }
+  ],
+  "certificate_attempt_count": 3,
+  "certificate_parse_rate": 0.666667,
+  "certificate_truthfulness_rate": 1.0,
+  "dccd_delta_over_grammar_only": 0.0,
+  "grammar_projection_tax_proxy": {
+    "dccd_mean_extra_prompt_chars": -110.0,
+    "gbnf_mean_extra_prompt_chars": 40.0,
+    "proxy": "extra_prompt_chars",
+    "raw_trigger_mean_prompt_chars": 191.0,
+    "repair_mean_extra_prompt_chars": 40.0,
+    "rows_measured": 1
+  },
+  "headline_result_allowed": true,
+  "honest_verdict": "triggered_certificate_dccd_gbnf_comparison_complete",
+  "input_answer_stability_score": 0.9,
+  "input_exp1311_run_date": "20260505",
+  "measurement_note": "Exp 1312 compares certificate extraction/projection paths over the Exp 1311 live SOTA answer rows; no additional model inference is claimed by this artifact.",
+  "models_used": [
+    "unsloth/Qwen3.6-35B-A3B-GGUF",
+    "unsloth/gemma-4-31B-it-GGUF"
+  ],
+  "path_metrics": {
+    "dccd_compact": {
+      "attempts": 1,
+      "parse_rate": 1.0,
+      "parseable": 1,
+      "truthful": 1,
+      "truthful_rate": 1.0,
+      "truthfulness_rate": 1.0
+    },
+    "gbnf_constrained": {
+      "attempts": 1,
+      "parse_rate": 1.0,
+      "parseable": 1,
+      "truthful": 1,
+      "truthful_rate": 1.0,
+      "truthfulness_rate": 1.0
+    },
+    "raw_trigger": {
+      "attempts": 1,
+      "parse_rate": 0.0,
+      "parseable": 0,
+      "truthful": 0,
+      "truthful_rate": 0.0,
+      "truthfulness_rate": 0.0
+    },
+    "repaired_certificate": {
+      "attempts": 0,
+      "parse_rate": 0.0,
+      "parseable": 0,
+      "truthful": 0,
+      "truthful_rate": 0.0,
+      "truthfulness_rate": 0.0
+    }
+  },
+  "repair_success_rate": 0.0,
+  "run_date": "20260505",
+  "schema_version": 1,
+  "source_response_count": 1,
+  "status": "complete"
+}

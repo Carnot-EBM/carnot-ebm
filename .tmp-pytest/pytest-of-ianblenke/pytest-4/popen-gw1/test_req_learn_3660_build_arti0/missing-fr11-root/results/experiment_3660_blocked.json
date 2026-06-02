@@ -1,0 +1,43 @@
+{
+  "acceptance_gate": {
+    "condition": "collapse_detected_deploy_arm == false AND collapse_detected_control == true AND pass_rate_vs_true_accuracy_distinct_assert == true",
+    "passed": false,
+    "principle": "Self-learning is validated only when the guarded arm holds, the control collapses, and the two metrics are genuinely distinct (not a tautology)."
+  },
+  "artifact": "experiment_3660_fr11_continuous_self_learning_v9",
+  "calibration_improved": false,
+  "collapse_detected_control": false,
+  "collapse_detected_deploy_arm": false,
+  "corpus_status": {},
+  "duration_s": 1.0,
+  "field_principles": {
+    "calibration_improved": "Brier/ECE before vs after online adaptation.",
+    "collapse_detected_control": "Positive control: the naive online arm must collapse, else the test has no contrast.",
+    "collapse_detected_deploy_arm": "The conservative-default + uncertainty-gated rule must prevent fusion-weight collapse (alpha_t grounding).",
+    "duration_s": "Plausibility floor.",
+    "honest_verdict": "Terminal prefix for reconciler classification.",
+    "inference_substrate": "Scores cached traces; no LLM load.",
+    "n_online_updates": "Sample-size of the self-learning sweep (>=200).",
+    "online_fusion_auroc_gain": "The forward difference -- does online fusion-weight learning beat a fixed 50/50 fusion?",
+    "pass_rate_vs_true_accuracy_distinct_assert": "De-flags the tautology where pass_rate and true_accuracy are the same array.",
+    "quality_maintained": "Collapse-prevention must not come at the cost of detector quality.",
+    "random_seed": "Determinism precondition.",
+    "reproducibility_checksum": "Drift detection."
+  },
+  "honest_verdict": "complete: blocked_fr11_module_or_traces_unavailable",
+  "inference_substrate": "verifier_ensemble_against_cached_candidates (principle: scores cached traces; no LLM load).",
+  "n_online_updates": 0,
+  "online_fusion_auroc_gain": 0.0,
+  "pass_rate_vs_true_accuracy_distinct_assert": false,
+  "preconditions_checked": [
+    {
+      "available": false,
+      "detail": "/home/ianblenke/github.com/ianblenke/carnot/.tmp-pytest/pytest-of-ianblenke/pytest-4/popen-gw1/test_req_learn_3660_build_arti0/missing-fr11-root/python/carnot/fr11",
+      "resource": "fr11_module"
+    }
+  ],
+  "quality_maintained": false,
+  "random_seed": 3660,
+  "reproducibility_checksum": "09caa7858f1a1ea4493f829e817c27a9162138165f05ec0cbcf2320475df908e",
+  "schema": "carnot.fr11_continuous_self_learning_v9"
+}

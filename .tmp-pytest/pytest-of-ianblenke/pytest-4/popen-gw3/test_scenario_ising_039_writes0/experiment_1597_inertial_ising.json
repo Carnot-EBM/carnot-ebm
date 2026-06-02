@@ -1,0 +1,339 @@
+{
+  "algorithm": "Inertial Discrete Simulated Bifurcation CPU update v(t+1)=mu*v(t)+eta*J*x(t)-pressure(t); x(t+1)=sign(x(t)+v(t+1))",
+  "baseline_algorithm": "Carnot sequential bipolar Gibbs Ising baseline",
+  "constraint_problems_tested": [
+    "fover_156_row0_n8",
+    "fover_159_row1_n12",
+    "fover_160_row2_n16"
+  ],
+  "convergence_speedup_inertial_ising": 10.799999999999999,
+  "cpu_only": true,
+  "eta": 0.09,
+  "experiment_id": 1597,
+  "hardware_claim_allowed": false,
+  "hardware_execution_performed": false,
+  "honest_verdict": "complete: inertial_ising_speedup_observed_cpu_simulator_only",
+  "inertia_coefficient": 0.6,
+  "kv260_claim_allowed": false,
+  "mean_best_energy_gibbs_baseline": -93.66666666666667,
+  "mean_best_energy_inertial_ising": -138.33333333333334,
+  "metadata": {
+    "comparison": "CPU-only inertial dSB simulator ablation against Carnot sequential Gibbs; no RTL, synthesis, accelerator, or board execution was performed.",
+    "fover_source": "/home/ianblenke/github.com/ianblenke/carnot/data/fover_corpus.jsonl"
+  },
+  "n_variables": [
+    8,
+    12,
+    16
+  ],
+  "per_problem_results": [
+    {
+      "convergence_energy": -49.68,
+      "gibbs_baseline_mean_steps": 20.0,
+      "gibbs_baseline_runs": [
+        {
+          "best_energy": -54.0,
+          "best_state": [
+            1,
+            -1,
+            -1,
+            -1,
+            1,
+            -1,
+            -1,
+            -1
+          ],
+          "converged": true,
+          "energy_trace": [
+            8.0,
+            0.0,
+            6.0,
+            -4.0,
+            6.0,
+            4.0,
+            4.0,
+            6.0,
+            0.0,
+            0.0,
+            8.0,
+            8.0,
+            14.0,
+            0.0,
+            16.0,
+            4.0,
+            -14.0,
+            -32.0,
+            -18.0,
+            -54.0
+          ],
+          "final_energy": -54.0,
+          "steps_to_convergence": 20
+        }
+      ],
+      "ground_energy": -54.0,
+      "inertial_ising_mean_steps": 1.0,
+      "inertial_ising_runs": [
+        {
+          "best_energy": -54.0,
+          "best_state": [
+            -1,
+            1,
+            1,
+            1,
+            -1,
+            1,
+            1,
+            1
+          ],
+          "converged": true,
+          "energy_trace": [
+            -54.0
+          ],
+          "final_energy": -54.0,
+          "inertia_coefficient": 0.6,
+          "momentum_norm_trace": [
+            1.900684087374859
+          ],
+          "steps_to_convergence": 1
+        }
+      ],
+      "label": "incorrect",
+      "n_variables": 8,
+      "problem": "fover_156_row0_n8",
+      "question_id": "156",
+      "speedup": 20.0
+    },
+    {
+      "convergence_energy": -122.36,
+      "gibbs_baseline_mean_steps": 10.0,
+      "gibbs_baseline_runs": [
+        {
+          "best_energy": -133.0,
+          "best_state": [
+            1,
+            1,
+            1,
+            -1,
+            1,
+            1,
+            -1,
+            1,
+            1,
+            -1,
+            -1,
+            -1
+          ],
+          "converged": true,
+          "energy_trace": [
+            -9.0,
+            1.0,
+            7.0,
+            -1.0,
+            1.0,
+            23.0,
+            9.0,
+            17.0,
+            -5.0,
+            -133.0
+          ],
+          "final_energy": -133.0,
+          "steps_to_convergence": 10
+        }
+      ],
+      "ground_energy": -133.0,
+      "inertial_ising_mean_steps": 3.0,
+      "inertial_ising_runs": [
+        {
+          "best_energy": -133.0,
+          "best_state": [
+            -1,
+            -1,
+            -1,
+            1,
+            -1,
+            -1,
+            1,
+            -1,
+            -1,
+            1,
+            1,
+            1
+          ],
+          "converged": true,
+          "energy_trace": [
+            11.0,
+            -17.0,
+            -133.0
+          ],
+          "final_energy": -133.0,
+          "inertia_coefficient": 0.6,
+          "momentum_norm_trace": [
+            1.1022703842524302,
+            2.3131546230243454,
+            4.99883891093391
+          ],
+          "steps_to_convergence": 3
+        }
+      ],
+      "label": "correct",
+      "n_variables": 12,
+      "problem": "fover_159_row1_n12",
+      "question_id": "159",
+      "speedup": 3.3333333333333335
+    },
+    {
+      "convergence_energy": -209.76,
+      "gibbs_baseline_mean_steps": 24.0,
+      "gibbs_baseline_runs": [
+        {
+          "best_energy": -94.0,
+          "best_state": [
+            1,
+            -1,
+            1,
+            1,
+            -1,
+            1,
+            -1,
+            -1,
+            1,
+            1,
+            1,
+            -1,
+            1,
+            1,
+            1,
+            1
+          ],
+          "converged": false,
+          "energy_trace": [
+            -42.0,
+            18.0,
+            -22.0,
+            -14.0,
+            -90.0,
+            6.0,
+            16.0,
+            -30.0,
+            4.0,
+            -14.0,
+            6.0,
+            -18.0,
+            -94.0,
+            -12.0,
+            -12.0,
+            12.0,
+            4.0,
+            0.0,
+            20.0,
+            -68.0,
+            20.0,
+            22.0,
+            2.0,
+            0.0
+          ],
+          "final_energy": 0.0,
+          "steps_to_convergence": 24
+        }
+      ],
+      "ground_energy": -228.0,
+      "inertial_ising_mean_steps": 1.0,
+      "inertial_ising_runs": [
+        {
+          "best_energy": -228.0,
+          "best_state": [
+            -1,
+            -1,
+            1,
+            -1,
+            1,
+            -1,
+            1,
+            1,
+            1,
+            -1,
+            -1,
+            1,
+            -1,
+            -1,
+            -1,
+            -1
+          ],
+          "converged": true,
+          "energy_trace": [
+            -228.0
+          ],
+          "final_energy": -228.0,
+          "inertia_coefficient": 0.6,
+          "momentum_norm_trace": [
+            4.173128322973066
+          ],
+          "steps_to_convergence": 1
+        }
+      ],
+      "label": "incorrect",
+      "n_variables": 16,
+      "problem": "fover_160_row2_n16",
+      "question_id": "160",
+      "speedup": 24.0
+    }
+  ],
+  "pressure_schedule": {
+    "end": 1.0,
+    "start": 0.0,
+    "steps": 24
+  },
+  "run_date": "20260509",
+  "seeds": [
+    0
+  ],
+  "simulator_only": true,
+  "spec_refs": [
+    "REQ-ISING-029",
+    "SCENARIO-ISING-039"
+  ],
+  "status": "complete",
+  "steps_to_convergence_gibbs_baseline": {
+    "mean_steps": 18.0,
+    "per_problem": [
+      {
+        "mean_steps": 20.0,
+        "n_variables": 8,
+        "problem": "fover_156_row0_n8"
+      },
+      {
+        "mean_steps": 10.0,
+        "n_variables": 12,
+        "problem": "fover_159_row1_n12"
+      },
+      {
+        "mean_steps": 24.0,
+        "n_variables": 16,
+        "problem": "fover_160_row2_n16"
+      }
+    ]
+  },
+  "steps_to_convergence_inertial_ising": {
+    "mean_steps": 1.6666666666666667,
+    "per_problem": [
+      {
+        "mean_steps": 1.0,
+        "n_variables": 8,
+        "problem": "fover_156_row0_n8",
+        "speedup": 20.0
+      },
+      {
+        "mean_steps": 3.0,
+        "n_variables": 12,
+        "problem": "fover_159_row1_n12",
+        "speedup": 3.3333333333333335
+      },
+      {
+        "mean_steps": 1.0,
+        "n_variables": 16,
+        "problem": "fover_160_row2_n16",
+        "speedup": 24.0
+      }
+    ]
+  }
+}

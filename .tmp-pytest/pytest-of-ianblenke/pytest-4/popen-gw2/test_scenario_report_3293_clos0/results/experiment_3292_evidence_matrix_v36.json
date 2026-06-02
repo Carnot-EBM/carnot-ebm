@@ -1,0 +1,194 @@
+{
+  "carried_forward_blockers": [
+    {
+      "prior_experiment_id": "exp3270",
+      "reason": ".303 methodology flag remains"
+    },
+    {
+      "prior_experiment_id": "exp3271",
+      "reason": ".303 methodology flag remains"
+    },
+    {
+      "prior_experiment_id": "exp3272",
+      "reason": ".303 methodology flag remains"
+    }
+  ],
+  "experiment_id": "exp3292",
+  "gate_summary": {
+    "clean_verifier": {
+      "abstention_rate": 0.0,
+      "clean_verifier_rerun_ready": true,
+      "ready": true,
+      "repair_gate_input_clean_enough": true,
+      "status": "clean"
+    },
+    "fr11": {
+      "controller_memory_only": true,
+      "foundation_weight_updates_performed": false,
+      "ready": true,
+      "status": "clean"
+    },
+    "garak_redteam": {
+      "blocker_reasons": [
+        "garak_attack_success_or_error_gate_failed"
+      ],
+      "dataflip_gate_passed": true,
+      "garak_gate_passed": false,
+      "garak_redteam_eval_ready": true,
+      "ready": true,
+      "status": "blocked"
+    },
+    "garak_toolchain": {
+      "garak_available": true,
+      "garak_runner_ready": true,
+      "ready": true,
+      "status": "clean"
+    },
+    "kan_boundary": {
+      "kan_boundary_decision": "retire_from_prompt_injection_headline",
+      "kan_boundary_decision_ready": true,
+      "ready": true,
+      "status": "sidecar-only"
+    },
+    "repair_gate": {
+      "ready": true,
+      "repair_gate_open": true,
+      "status": "clean"
+    },
+    "repair_panel": {
+      "headline_claim_allowed": false,
+      "ready": true,
+      "repair_panel_ran": true,
+      "status": "flagged"
+    }
+  },
+  "honest_verdict": "complete: matrix_v36_ready=true; paper_ready=false",
+  "matrix_v36_ready": true,
+  "paper_blocker_count": 10,
+  "paper_ready": false,
+  "rows": [
+    {
+      "blocker_reasons": [],
+      "bounded_claims": [],
+      "experiment_id": "exp3282",
+      "paper_blocking": false,
+      "quality_flags": [],
+      "ready": true,
+      "status": "clean",
+      "summary": {}
+    },
+    {
+      "blocker_reasons": [
+        "garak_attack_success_or_error_gate_failed"
+      ],
+      "bounded_claims": [],
+      "experiment_id": "exp3285",
+      "paper_blocking": true,
+      "quality_flags": [],
+      "ready": true,
+      "status": "blocked",
+      "summary": {
+        "garak_gate_passed": false,
+        "garak_redteam_eval_ready": true
+      }
+    },
+    {
+      "blocker_reasons": [],
+      "bounded_claims": [],
+      "experiment_id": "exp3287",
+      "paper_blocking": false,
+      "quality_flags": [],
+      "ready": true,
+      "status": "clean",
+      "summary": {
+        "abstention_rate": 0.0,
+        "clean_verifier_rerun_ready": true,
+        "repair_gate_input_clean_enough": true
+      }
+    },
+    {
+      "blocker_reasons": [],
+      "bounded_claims": [
+        "kan_boundary_decision=retire_from_prompt_injection_headline"
+      ],
+      "experiment_id": "exp3288",
+      "paper_blocking": true,
+      "quality_flags": [],
+      "ready": true,
+      "status": "sidecar-only",
+      "summary": {
+        "kan_boundary_decision": "retire_from_prompt_injection_headline",
+        "kan_boundary_decision_ready": true
+      }
+    },
+    {
+      "blocker_reasons": [],
+      "bounded_claims": [],
+      "experiment_id": "exp3289",
+      "paper_blocking": false,
+      "quality_flags": [],
+      "ready": true,
+      "status": "clean",
+      "summary": {
+        "repair_gate_open": true
+      }
+    },
+    {
+      "blocker_reasons": [],
+      "bounded_claims": [],
+      "experiment_id": "exp3290",
+      "paper_blocking": true,
+      "quality_flags": [
+        {
+          "detail": "duration_s=10.893664",
+          "kind": "DURATION_TOO_SHORT"
+        }
+      ],
+      "ready": true,
+      "status": "flagged",
+      "summary": {
+        "headline_claim_allowed": false,
+        "repair_panel_ran": true,
+        "sota_repair_micro_panel_v10_ready": true
+      }
+    },
+    {
+      "blocker_reasons": [],
+      "bounded_claims": [
+        "controller_memory_only=true",
+        "foundation_weight_updates_performed=false"
+      ],
+      "experiment_id": "exp3291",
+      "paper_blocking": false,
+      "quality_flags": [],
+      "ready": true,
+      "status": "clean",
+      "summary": {
+        "adaptation_score": 1.0,
+        "controller_memory_only": true,
+        "forgetting_rate": 0.017857,
+        "foundation_weight_updates_performed": false,
+        "fr11_garak_abstention_memory_replay_ready": true,
+        "raw_episodes_preserved": true,
+        "retention_score": 0.982143
+      }
+    }
+  ],
+  "task_id": "exp3292-evidence-matrix-v36",
+  "top_gaps": [
+    {
+      "gap": "pass_garak_redteam_gate",
+      "rank": 1,
+      "reason": "garak_attack_success_or_error_gate_failed",
+      "source_experiment_id": "exp3285",
+      "status": "blocked"
+    },
+    {
+      "gap": "repair_panel_duration_and_scope_boundary",
+      "rank": 2,
+      "reason": "DURATION_TOO_SHORT",
+      "source_experiment_id": "exp3290",
+      "status": "flagged"
+    }
+  ]
+}

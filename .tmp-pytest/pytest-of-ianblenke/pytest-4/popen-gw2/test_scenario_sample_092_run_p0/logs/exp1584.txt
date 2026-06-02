@@ -1,0 +1,54 @@
+# Exp 1584 Tenstorrent Wormhole Preflight Transcript
+
+No privileged installation, driver change, or package mutation was performed.
+
+## TT-Metalium checks
+- TT-Metalium import probe: available=False
+  TT-Metalium import probe command/result:
+  {"available": false, "command_result": {"command": ["python3", "-c", "import importlib\nimport json\n\nmodules = []\nfor name in (\"ttnn\", \"tt_lib\", \"tt_metal\"):\n    try:\n        importlib.import_module(name)\n    except Exception:\n        continue\n    modules.append(name)\nprint(json.dumps(modules))\n"], "duration_s": 0.01, "returncode": 1, "stderr": "No module named 'ttnn'", "stdout": "", "timed_out": false}, "modules": [], "name": "TT-Metalium import probe"}
+- TT-Metalium environment variables: available=False
+  {"available": false, "env_var_names": [], "name": "TT-Metalium environment variables"}
+- TT-Metalium source checkout: available=False
+  {"available": false, "name": "TT-Metalium source checkout", "paths": []}
+- TT-Metalium executable lookup: available=False
+  {"available": false, "executables": [], "name": "TT-Metalium executable lookup"}
+
+## Wormhole access checks
+- /dev/tenstorrent device nodes: available=False
+  {"available": false, "name": "/dev/tenstorrent device nodes", "paths": []}
+- Wormhole cloud or remote access environment: available=False
+  {"available": false, "env_var_names": [], "name": "Wormhole cloud or remote access environment"}
+- lspci Wormhole PCI probe: available=False
+  {"available": false, "name": "lspci Wormhole PCI probe", "reason": "lspci not found"}
+- tt-smi device probe: available=False
+  {"available": false, "name": "tt-smi device probe", "reason": "tt-smi not found"}
+
+## Remote reachability checks
+{
+  "tt_metal_github": {
+    "command_result": {
+      "command": [
+        "git",
+        "ls-remote",
+        "--heads",
+        "https://github.com/tenstorrent/tt-metal.git",
+        "main"
+      ],
+      "duration_s": 0.01,
+      "returncode": 2,
+      "stderr": "network blocked",
+      "stdout": "",
+      "timed_out": false
+    },
+    "reachable": false,
+    "status": "unreachable",
+    "url": "https://github.com/tenstorrent/tt-metal.git"
+  }
+}
+
+## Non-destructive smoke
+{
+  "reason": "TT-Metalium and Wormhole access are both required before smoke.",
+  "status": "skipped_unavailable",
+  "successful": false
+}

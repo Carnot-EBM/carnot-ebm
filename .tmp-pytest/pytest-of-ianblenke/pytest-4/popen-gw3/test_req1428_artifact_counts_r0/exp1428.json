@@ -1,0 +1,226 @@
+{
+  "artifact_metadata": {
+    "project_root": "/home/ianblenke/github.com/ianblenke/carnot/.tmp-pytest/pytest-of-ianblenke/pytest-4/popen-gw3/test_req1428_artifact_counts_r0",
+    "run_date": "20260506",
+    "source_experiments": [
+      "exp1397",
+      "exp1427"
+    ],
+    "spec": [
+      "REQ-VERIFY-1428",
+      "SCENARIO-VERIFY-1428"
+    ]
+  },
+  "cache_diagnostics": {
+    "cached_pair_available": true,
+    "cached_pair_hf_ids": [
+      "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "unsloth/gemma-4-31B-it-GGUF"
+    ],
+    "missing_hf_ids": [
+      "unsloth/gemma-4-26B-A4B-it-GGUF"
+    ],
+    "resolver_error": null
+  },
+  "dccd_repair_output_schema": {
+    "additionalProperties": false,
+    "properties": {
+      "draft_certificate": {
+        "additionalProperties": false,
+        "properties": {
+          "certificate_text": {
+            "type": "string"
+          },
+          "state": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "certificate_text",
+          "state"
+        ],
+        "type": "object"
+      },
+      "final_certificate": {
+        "additionalProperties": false,
+        "properties": {
+          "certificate_text": {
+            "type": "string"
+          },
+          "state": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "certificate_text",
+          "state"
+        ],
+        "type": "object"
+      },
+      "repair_action": {
+        "additionalProperties": false,
+        "properties": {
+          "action_type": {
+            "type": "string"
+          },
+          "rationale": {
+            "type": "string"
+          },
+          "target": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "action_type",
+          "target",
+          "rationale"
+        ],
+        "type": "object"
+      },
+      "validator_metadata": {
+        "description": "JSON-compatible metadata for validator replay.",
+        "type": "object"
+      }
+    },
+    "required": [
+      "draft_certificate",
+      "repair_action",
+      "final_certificate",
+      "validator_metadata"
+    ],
+    "type": "object"
+  },
+  "executor_runtime_mode": "live_local_sota_gguf",
+  "experiment": "1428_dccd_schema_constrained_repair_v2",
+  "honest_verdict": "complete_dccd_schema_constrained_repair_v2_short_sample",
+  "local_sota_model_inference_used": true,
+  "local_sota_model_used": "unsloth/Qwen3.6-35B-A3B-GGUF",
+  "model_specs": [
+    {
+      "cache_status": "available",
+      "gpu": 0,
+      "hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "model_path": "/cache/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf",
+      "name": "Qwen3.6-35B-A3B",
+      "role": "primary_repair_model"
+    },
+    {
+      "cache_status": "available",
+      "gpu": 1,
+      "hf_id": "unsloth/gemma-4-31B-it-GGUF",
+      "model_path": "/cache/gemma-4-31B-it-Q4_K_M.gguf",
+      "name": "Gemma4-31B-it",
+      "role": "dense_fallback"
+    },
+    {
+      "cache_status": "missing",
+      "hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "role": "moe_fallback"
+    }
+  ],
+  "rejection_reason_counts": {
+    "constraint_failed": 1,
+    "false_acceptance_guard": 0,
+    "generation_or_validation_failed": 0,
+    "repair_required_still_true": 0,
+    "schema_validation_failed": 1,
+    "semantic_result_not_sat": 0,
+    "semantic_validation_failed": 0,
+    "timeout": 0,
+    "validator_mismatch_no_validator_injected": 0
+  },
+  "repair_executor_v2_deployed": true,
+  "repair_hint_cases_available": 3,
+  "repair_hint_cases_tested": 3,
+  "repair_results": [
+    {
+      "accepted": false,
+      "attempted": true,
+      "candidate": null,
+      "case_id": "repair_0",
+      "corrected_certificate": null,
+      "fallback_reason": "schema_validation_failed",
+      "local_model_used": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "preserved_repair_hint": "Repair the localized FoVer reasoning step before accepting.",
+      "rejection_reason": "schema_validation_failed",
+      "runtime_s": 0.000109,
+      "schema_valid": false,
+      "semantic_accepted": false,
+      "validation_result": {
+        "error": "invalid JSON repair output: Expecting value: line 1 column 1 (char 0)"
+      }
+    },
+    {
+      "accepted": false,
+      "attempted": true,
+      "candidate": {
+        "draft_certificate": "<CARNOT_CERT_STATE:REPAIR_HINT>\nREPAIR_HINT: add bound.",
+        "draft_state": "REPAIR_HINT",
+        "final_certificate": "<CARNOT_CERT_STATE:SAT>\nSAT",
+        "final_state": "SAT",
+        "repair_action_type": "STEP_REWRITE",
+        "repair_rationale": "Repair the localized incorrect step before accepting.",
+        "repair_target": "localized FoVer reasoning step",
+        "validator_metadata": {
+          "expected_semantic_result": "SAT",
+          "repair_hint_case_id": "repair_0"
+        }
+      },
+      "case_id": "repair_1",
+      "corrected_certificate": null,
+      "fallback_reason": "semantic_validation_failed",
+      "local_model_used": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "preserved_repair_hint": "Repair the localized FoVer reasoning step before accepting.",
+      "rejection_reason": "constraint_failed",
+      "runtime_s": 6.1e-05,
+      "schema_valid": true,
+      "semantic_accepted": false,
+      "validation_result": {
+        "constraint_passed": false,
+        "false_acceptance": false,
+        "repair_required": false,
+        "semantic_result": "SAT"
+      }
+    },
+    {
+      "accepted": true,
+      "attempted": true,
+      "candidate": {
+        "draft_certificate": "<CARNOT_CERT_STATE:REPAIR_HINT>\nREPAIR_HINT: add bound.",
+        "draft_state": "REPAIR_HINT",
+        "final_certificate": "<CARNOT_CERT_STATE:SAT>\nSAT",
+        "final_state": "SAT",
+        "repair_action_type": "STEP_REWRITE",
+        "repair_rationale": "Repair the localized incorrect step before accepting.",
+        "repair_target": "localized FoVer reasoning step",
+        "validator_metadata": {
+          "expected_semantic_result": "SAT",
+          "repair_hint_case_id": "repair_0"
+        }
+      },
+      "case_id": "repair_2",
+      "corrected_certificate": "<CARNOT_CERT_STATE:SAT>\nSAT",
+      "fallback_reason": null,
+      "local_model_used": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "preserved_repair_hint": "Repair the localized FoVer reasoning step before accepting.",
+      "rejection_reason": null,
+      "runtime_s": 3.5e-05,
+      "schema_valid": true,
+      "semantic_accepted": true,
+      "validation_result": {
+        "constraint_passed": true,
+        "false_acceptance": false,
+        "repair_required": false,
+        "semantic_result": "SAT"
+      }
+    }
+  ],
+  "repaired_case_success_rate": 0.333333,
+  "repaired_cases_successful": 1,
+  "run_date": "20260506",
+  "schema": "dccd_schema_constrained_repair_v2",
+  "schema_valid_rate": 0.666667,
+  "semantic_acceptance_rate": 0.333333,
+  "status": "complete",
+  "tests_run": []
+}

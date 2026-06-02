@@ -1,0 +1,146 @@
+{
+  "artifact": "experiment_3117_ebt_arm_sidecar_score_correlation_boundary_v3",
+  "diagnostic_rows": [
+    {
+      "exact_outcome": "accepted",
+      "expected_action": "accept",
+      "feature_summary": {
+        "label_blind_violation": 0.0,
+        "surface_complexity": 0.37,
+        "uses_exact_label_reference_for_score": false
+      },
+      "fixture_id": "accept-valid",
+      "label_blind_feature_energy": 0.31,
+      "reject_or_repair_label": 0,
+      "replay_score": {
+        "confidence": 0.72,
+        "energy_terms": [
+          {
+            "name": "constraint_violation_energy",
+            "weighted_value": 0.0
+          },
+          {
+            "name": "confidence_energy",
+            "weighted_value": 0.28
+          }
+        ],
+        "total_energy": 0.31
+      },
+      "sidecar_action": "accept",
+      "task_family": "arithmetic_code_assertions"
+    },
+    {
+      "exact_outcome": "rejected",
+      "expected_action": "reject",
+      "feature_summary": {
+        "label_blind_violation": 1.02,
+        "surface_complexity": 0.37,
+        "uses_exact_label_reference_for_score": false
+      },
+      "fixture_id": "reject-invalid",
+      "label_blind_feature_energy": 2.66,
+      "reject_or_repair_label": 1,
+      "replay_score": {
+        "confidence": 0.42,
+        "energy_terms": [
+          {
+            "name": "constraint_violation_energy",
+            "weighted_value": 1.02
+          },
+          {
+            "name": "confidence_energy",
+            "weighted_value": 0.58
+          }
+        ],
+        "total_energy": 2.66
+      },
+      "sidecar_action": "reject",
+      "task_family": "arithmetic_code_assertions"
+    },
+    {
+      "exact_outcome": "repairable",
+      "expected_action": "reject",
+      "feature_summary": {
+        "label_blind_violation": 1.0,
+        "surface_complexity": 0.37,
+        "uses_exact_label_reference_for_score": false
+      },
+      "fixture_id": "repair-json",
+      "label_blind_feature_energy": 2.6,
+      "reject_or_repair_label": 1,
+      "replay_score": {
+        "confidence": 0.43,
+        "energy_terms": [
+          {
+            "name": "constraint_violation_energy",
+            "weighted_value": 1.0
+          },
+          {
+            "name": "confidence_energy",
+            "weighted_value": 0.57
+          }
+        ],
+        "total_energy": 2.6
+      },
+      "sidecar_action": "reject",
+      "task_family": "repairable"
+    },
+    {
+      "exact_outcome": "rejected",
+      "expected_action": "reject",
+      "feature_summary": {
+        "label_blind_violation": 1.04,
+        "surface_complexity": 0.37,
+        "uses_exact_label_reference_for_score": false
+      },
+      "fixture_id": "fa-arith",
+      "label_blind_feature_energy": 2.71,
+      "reject_or_repair_label": 1,
+      "replay_score": {
+        "confidence": 0.41,
+        "energy_terms": [
+          {
+            "name": "constraint_violation_energy",
+            "weighted_value": 1.04
+          },
+          {
+            "name": "confidence_energy",
+            "weighted_value": 0.59
+          }
+        ],
+        "total_energy": 2.71
+      },
+      "sidecar_action": "reject",
+      "task_family": "arithmetic_code_assertions"
+    },
+    {
+      "exact_outcome": "rejected",
+      "expected_action": "reject",
+      "feature_summary": {
+        "label_blind_violation": 2.0,
+        "surface_complexity": 0.37,
+        "uses_exact_label_reference_for_score": false
+      },
+      "fixture_id": "fa-smt",
+      "label_blind_feature_energy": 4.74,
+      "reject_or_repair_label": 1,
+      "replay_score": {
+        "confidence": 0.3,
+        "energy_terms": [
+          {
+            "name": "constraint_violation_energy",
+            "weighted_value": 2.0
+          },
+          {
+            "name": "confidence_energy",
+            "weighted_value": 0.7
+          }
+        ],
+        "total_energy": 4.74
+      },
+      "sidecar_action": "reject",
+      "task_family": "smt_constraints"
+    }
+  ],
+  "sidecar_score_correlation_boundary_v3_ready": true
+}

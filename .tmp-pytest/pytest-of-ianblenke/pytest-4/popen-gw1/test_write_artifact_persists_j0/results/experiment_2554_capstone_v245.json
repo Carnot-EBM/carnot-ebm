@@ -1,0 +1,189 @@
+{
+  "acceptance_gates": [
+    {
+      "condition": "no_hard_gate",
+      "passed": true,
+      "principle": "Capstones reflect reality; they do not gate. The deliverable is validity of the schema, not a numeric threshold."
+    }
+  ],
+  "arxiv_ready": true,
+  "auroc_adversarially_verified": true,
+  "best_245_auroc": 0.9857142857142858,
+  "best_245_auroc_source": "exp2546_ensemble_v7b",
+  "duration_s": 0.000258,
+  "experiment": "exp2554",
+  "external_baselines": {
+    "carnot_minus_hive": 0.0621,
+    "hive_peer_arxiv": "arXiv:2604.26139",
+    "hive_peer_auroc": 0.9236
+  },
+  "field_principles": {
+    "arxiv_ready": "True only if exp2553.arxiv_ready=True. This is the PRIMARY milestone success criterion. Directly read from exp2553; never inferred or softened.",
+    "auroc_adversarially_verified": "True only if best_245_auroc was produced by an artifact with >=3 seeds AND no flagged_adversarial entries. Phase-3 verifier-ensemble guarantee.",
+    "best_245_auroc": "Cite-safe headline AUROC. Carry-forward 0.9750 if ensemble v7b unavailable. Adversarially-flagged improvements are NOT cite-safe and do NOT replace the clean 5-seed ensemble result.",
+    "duration_s": "Wall-clock measurement for the capstone synthesis itself.",
+    "external_baselines": "HIVE peer (0.9236, arXiv:2604.26139) carried forward for continuous gap tracking. Future .246 work will widen this list as comparator integration proceeds.",
+    "gatemate_status": "Hardware continuity tracking -- mirrors exp2551 GateMate record.",
+    "hardware_terminal_states": "Per-board state after exp2551. Hardware continuity discipline requires each attached board be tracked until terminal.",
+    "honest_verdict": "Terminal-prefix required. Must start with complete:.",
+    "jepa_discrimination_improved": "True if exp2550.fast_path_rate in [0.30, 0.80]. Continuous self-learning milestone deliverable -- distinguishes useful from degenerate fast-path.",
+    "kv260_status": "Hardware continuity tracking -- mirrors exp2551 KV260 record.",
+    "n_experiments_completed": "Count of exp2543-exp2553 artifacts whose honest_verdict starts with a terminal prefix (complete:/success:/passed:/shipped:). Blocked verdicts do NOT count.",
+    "operator_recommendation": "submit_now / review_section_4_first / fix_latex / request_operator_decision. Drives the operator's next action; honesty about ambiguity matters.",
+    "phase4_final_status": "Terminal Phase 4 determination -- 'retired_negative_option_b' requires exp2544.phase4_section_expanded=true AND phase4_honest_negative_documented=true. 'blocked_precondition' otherwise. 'validated_clean' would require a Phase 4 validation artifact, which .245 did not attempt.",
+    "preconditions_checked": "Records which source artifacts were present and read.",
+    "process_flags": "Any non-terminal honesty signals collected from the source artifacts -- fabrication flags, malformed verdict prefixes, blocked-precondition tasks.",
+    "random_seed": "42 -- synthesis is deterministic but the field is convention.",
+    "top_3_gaps_for_246": "Three most critical unresolved issues entering .246.",
+    "top_3_successes": "Three most impactful positive findings of .245."
+  },
+  "gatemate_status": {
+    "bitstream_flashed": false,
+    "flash_attempted": true,
+    "jtag_detected": true,
+    "next_blocker": "openFPGALoader strtol parse error",
+    "progress": "2/3 gates met",
+    "terminal": false
+  },
+  "hardware_terminal_states": {
+    "gatemate": {
+      "bitstream_flashed": false,
+      "flash_attempted": true,
+      "jtag_detected": true,
+      "next_blocker": "openFPGALoader strtol parse error",
+      "progress": "2/3 gates met",
+      "terminal": false
+    },
+    "kv260": {
+      "flash_attempted": false,
+      "next_blocker": "blocked_no_sd_media",
+      "progress": "bitstream ready; SD absent",
+      "pynq_url_reachable": false,
+      "sd_media_inserted": false,
+      "terminal": false
+    }
+  },
+  "honest_verdict": "complete: best_245_auroc=0.9857; phase4_final_status=retired_negative_option_b; arxiv_ready=True",
+  "jepa_discrimination_improved": true,
+  "kv260_status": {
+    "flash_attempted": false,
+    "next_blocker": "blocked_no_sd_media",
+    "progress": "bitstream ready; SD absent",
+    "pynq_url_reachable": false,
+    "sd_media_inserted": false,
+    "terminal": false
+  },
+  "milestone": "2026.05.245",
+  "n_experiments_completed": 10,
+  "n_planned": 11,
+  "operator_recommendation": "submit_now",
+  "phase4_final_status": "retired_negative_option_b",
+  "preconditions_checked": [
+    {
+      "available": true,
+      "check": "ls /home/ianblenke/github.com/ianblenke/carnot/.tmp-pytest/pytest-of-ianblenke/pytest-4/popen-gw1/test_write_artifact_persists_j0/results/experiment_2543_archive.json",
+      "resource": "results/experiment_2543_archive.json"
+    },
+    {
+      "available": true,
+      "check": "ls /home/ianblenke/github.com/ianblenke/carnot/.tmp-pytest/pytest-of-ianblenke/pytest-4/popen-gw1/test_write_artifact_persists_j0/results/experiment_2544_phase4_option_b.json",
+      "resource": "results/experiment_2544_phase4_option_b.json"
+    },
+    {
+      "available": true,
+      "check": "ls /home/ianblenke/github.com/ianblenke/carnot/.tmp-pytest/pytest-of-ianblenke/pytest-4/popen-gw1/test_write_artifact_persists_j0/results/experiment_2545_ising_verifier_impl.json",
+      "resource": "results/experiment_2545_ising_verifier_impl.json"
+    },
+    {
+      "available": true,
+      "check": "ls /home/ianblenke/github.com/ianblenke/carnot/.tmp-pytest/pytest-of-ianblenke/pytest-4/popen-gw1/test_write_artifact_persists_j0/results/experiment_2546_ensemble_v7b.json",
+      "resource": "results/experiment_2546_ensemble_v7b.json"
+    },
+    {
+      "available": true,
+      "check": "ls /home/ianblenke/github.com/ianblenke/carnot/.tmp-pytest/pytest-of-ianblenke/pytest-4/popen-gw1/test_write_artifact_persists_j0/results/experiment_2547_adaptive_conformal_v2.json",
+      "resource": "results/experiment_2547_adaptive_conformal_v2.json"
+    },
+    {
+      "available": true,
+      "check": "ls /home/ianblenke/github.com/ianblenke/carnot/.tmp-pytest/pytest-of-ianblenke/pytest-4/popen-gw1/test_write_artifact_persists_j0/results/experiment_2548_real_corpus_validation.json",
+      "resource": "results/experiment_2548_real_corpus_validation.json"
+    },
+    {
+      "available": true,
+      "check": "ls /home/ianblenke/github.com/ianblenke/carnot/.tmp-pytest/pytest-of-ianblenke/pytest-4/popen-gw1/test_write_artifact_persists_j0/results/experiment_2549_tier0v_hallufield.json",
+      "resource": "results/experiment_2549_tier0v_hallufield.json"
+    },
+    {
+      "available": true,
+      "check": "ls /home/ianblenke/github.com/ianblenke/carnot/.tmp-pytest/pytest-of-ianblenke/pytest-4/popen-gw1/test_write_artifact_persists_j0/results/experiment_2550_jepa_real_eval.json",
+      "resource": "results/experiment_2550_jepa_real_eval.json"
+    },
+    {
+      "available": true,
+      "check": "ls /home/ianblenke/github.com/ianblenke/carnot/.tmp-pytest/pytest-of-ianblenke/pytest-4/popen-gw1/test_write_artifact_persists_j0/results/experiment_2551_hardware_flash.json",
+      "resource": "results/experiment_2551_hardware_flash.json"
+    },
+    {
+      "available": true,
+      "check": "ls /home/ianblenke/github.com/ianblenke/carnot/.tmp-pytest/pytest-of-ianblenke/pytest-4/popen-gw1/test_write_artifact_persists_j0/results/experiment_2552_paper_writethrough.json",
+      "resource": "results/experiment_2552_paper_writethrough.json"
+    },
+    {
+      "available": true,
+      "check": "ls /home/ianblenke/github.com/ianblenke/carnot/.tmp-pytest/pytest-of-ianblenke/pytest-4/popen-gw1/test_write_artifact_persists_j0/results/experiment_2553_arxiv_package_v3.json",
+      "resource": "results/experiment_2553_arxiv_package_v3.json"
+    }
+  ],
+  "process_flags": [
+    {
+      "detail": "baseline duplicated",
+      "experiment": "exp2547",
+      "kind": "TAUTOLOGY",
+      "severity": "critical"
+    },
+    {
+      "detail": "honest_verdict does not start with a terminal prefix: 'blocked_carnot_import_failed: precondition failed'",
+      "experiment": "exp2549",
+      "kind": "NON_TERMINAL_VERDICT",
+      "severity": "info"
+    }
+  ],
+  "random_seed": 42,
+  "schema": "carnot.capstone.v245",
+  "title": "Milestone .245 Capstone Synthesis",
+  "top_3_gaps_for_246": [
+    {
+      "area": "hardware_terminal_states",
+      "rank": 1,
+      "summary": "Both GateMate and KV260 remain non-terminal after exp2551. GateMate: openFPGALoader strtol parse error on the .cfg -- regenerate via cologne-chip-toolchain (gmpack/gmctl) or convert to .bit. KV260: SD media physically absent; PYNQ image URL unreachable from this host -- operator must insert SD card and browser-download the image from pynq.io."
+    },
+    {
+      "area": "tier0v_hallufield_blocked",
+      "rank": 2,
+      "summary": "Tier 0v HalluField verifier prototype blocked on the bare 'from carnot...' import precondition (no module named 'carnot'). Hedge-energy implementation never ran. Fix in .246: PYTHONPATH-aware precondition check OR install the carnot-ebm wheel into the agent environment before running tier0v probes."
+    },
+    {
+      "area": "verifier_real_corpus_generalization",
+      "rank": 3,
+      "summary": "Real-corpus AUROCs reveal severe fit-to-corpus on synthetic baselines: tier0s 0.3758 vs synth 1.0; tier0u 0.5360 vs synth 0.96. Tier0r holds at 0.9414 on n=6548 FoVer corpus. .246 should retire tier0s/tier0u synthetic claims from paper-v6 or replace with real-corpus numbers."
+    }
+  ],
+  "top_3_successes": [
+    {
+      "experiment": "exp2553",
+      "rank": 1,
+      "summary": "arxiv_ready=True for the first time. The .240-.245 arXiv track completed: tectonic compile clean, abstract 212 words, Gate 3 satisfied via Option B redefinition, four-gate evaluation passed."
+    },
+    {
+      "experiment": "exp2544",
+      "rank": 2,
+      "summary": "Phase 4 \u00a74.4 honest negative subsection landed in main.tex citing exp2486/2508/2519/2532. Redefined gate-3 satisfied without validating the bijection -- Option B path operator-authorized."
+    },
+    {
+      "experiment": "exp2546",
+      "rank": 3,
+      "summary": "Ensemble v7b restored AUROC to 0.9857 (5 seeds, std 0.0175). Three-milestone 0.9607 regression resolved by re-routing Tier0r to Group D (proof-path)."
+    }
+  ]
+}

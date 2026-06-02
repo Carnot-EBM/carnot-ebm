@@ -1,0 +1,167 @@
+{
+  "artifact": "experiment_3159_kan_proof_carrying_monitor_expansion_v1",
+  "claim_boundary": {
+    "does_not_prove": [
+      "deployed verifier improvement",
+      "trained KAN network soundness",
+      "generation-path integration",
+      "hardware execution",
+      "live LLM inference"
+    ],
+    "proves": "four replayable exact-row KAN PWA/MILP monitor records, including two new clean rows"
+  },
+  "deployed_verifier_claim_allowed": false,
+  "duration_s": 0.25,
+  "exact_row_coverage_count": 0,
+  "exact_row_sets": {
+    "clean_exact_row_ids": [],
+    "false_accept_row_ids": [],
+    "selected_new_clean_row_ids": [],
+    "source_false_accept_count": 0,
+    "source_live_row_count": 0
+  },
+  "field_principles": {
+    "deployed_verifier_claim_allowed": "bounded monitor evidence is not deployment",
+    "exact_row_coverage_count": "monitor records must tie to exact labels",
+    "honest_verdict": "terminal verdict must use a success prefix unless honestly blocked",
+    "inference_substrate": "bounded monitor work must declare no live LLM inference",
+    "kan_proof_carrying_monitor_expansion_v1_ready": "bounded monitor evidence must be complete",
+    "monitor_record_count": "denominator must be explicit",
+    "new_monitor_record_count": "milestone contribution must be visible",
+    "pwa_milp_bound_records": "proof-carrying data must be inspectable",
+    "residual_blockers": "blocked deployment must be actionable",
+    "source_artifacts": "monitor expansion must trace to files",
+    "tests_run": "touched code/self-checks must run"
+  },
+  "honest_verdict": "complete_kan_proof_carrying_monitor_expansion_v1_blocked_no_deployed_verifier",
+  "implementation_blockers": [
+    "bounded KAN/PWA monitor records could not be expanded over exact rows",
+    "openspec/capabilities/kan/spec.md",
+    "python/carnot/verify/kan_pwa_milp_corrigendum.py",
+    "python/carnot/verify/kan_pwa_milp_tiny.py",
+    "python/carnot/verify/pwa_kan.py",
+    "results/experiment_3126_fragment_time_monitor_satisfiable_drift_audit_v1.json",
+    "results/experiment_3131_kan_pwa_milp_verifier_abstraction_audit_v1.json",
+    "results/experiment_3136_false_accept_root_cause_autopsy_v1.json",
+    "results/experiment_3145_kan_proof_carrying_monitor_boundary_v2.json"
+  ],
+  "inference_substrate": {
+    "deployed_verifier_claim_allowed": false,
+    "executes_models": false,
+    "hardware_execution": false,
+    "live_llm_inference": false,
+    "live_model_inference": false,
+    "local_gguf_inference": false,
+    "mode": "checked_in_artifact_kan_monitor_expansion",
+    "model_weight_mutation": false,
+    "model_weight_training": false,
+    "solver_only_abstraction_accounting": true
+  },
+  "kan_proof_carrying_monitor_expansion_v1_ready": false,
+  "monitor_record_count": 0,
+  "new_monitor_record_count": 0,
+  "prior_monitor_record_count": 0,
+  "pwa_milp_bound_records": [],
+  "reproducibility_checksum": "147cbad378d85a5f11c82c84704fe66bf7a7b188d6b1d76b2ea9cf42db552ca8",
+  "residual_blockers": [
+    "No deployed accept/reject gate consumes these proof records.",
+    "No generation-path integration test exercises these records as a live verifier.",
+    "No trained KAN network soundness proof or production runtime binding is present."
+  ],
+  "run_date": "20260526",
+  "schema": "carnot.kan_proof_carrying_monitor_expansion.v1",
+  "source_artifacts": [
+    {
+      "exists": false,
+      "id": "agents_repo_instructions",
+      "path": "AGENTS.md",
+      "required": false,
+      "sha256": null
+    },
+    {
+      "exists": false,
+      "id": "codex_repo_workflow",
+      "path": "CODEX.md",
+      "required": false,
+      "sha256": null
+    },
+    {
+      "exists": false,
+      "id": "claude_authenticity_rules",
+      "path": "CLAUDE.md",
+      "required": false,
+      "sha256": null
+    },
+    {
+      "exists": false,
+      "id": "kan_openspec",
+      "path": "openspec/capabilities/kan/spec.md",
+      "required": true,
+      "sha256": null
+    },
+    {
+      "exists": false,
+      "id": "exp3126_fragment_monitor",
+      "path": "results/experiment_3126_fragment_time_monitor_satisfiable_drift_audit_v1.json",
+      "required": true,
+      "sha256": null
+    },
+    {
+      "exists": false,
+      "id": "exp3131_kan_abstraction_audit",
+      "path": "results/experiment_3131_kan_pwa_milp_verifier_abstraction_audit_v1.json",
+      "required": true,
+      "sha256": null
+    },
+    {
+      "exists": false,
+      "id": "exp3136_false_accept_autopsy",
+      "path": "results/experiment_3136_false_accept_root_cause_autopsy_v1.json",
+      "required": true,
+      "sha256": null
+    },
+    {
+      "exists": false,
+      "id": "exp3145_proof_carrying_boundary",
+      "path": "results/experiment_3145_kan_proof_carrying_monitor_boundary_v2.json",
+      "required": true,
+      "sha256": null
+    },
+    {
+      "exists": false,
+      "id": "prompt_named_exp3131_artifact_absent",
+      "path": "results/experiment_3131_kan_pwa_proof_carrying_monitor_pilot_v1.json",
+      "required": false,
+      "sha256": null
+    },
+    {
+      "exists": false,
+      "id": "prompt_named_exp3145_artifact_absent",
+      "path": "results/experiment_3145_kan_pwa_monitor_attachment_boundary_v1.json",
+      "required": false,
+      "sha256": null
+    },
+    {
+      "exists": false,
+      "id": "exp3159_module",
+      "path": "python/carnot/eval/kan_proof_carrying_monitor_expansion_v1.py",
+      "required": false,
+      "sha256": null
+    },
+    {
+      "exists": false,
+      "id": "exp3159_tests",
+      "path": "tests/python/test_experiment_3159_kan_proof_carrying_monitor_expansion_v1.py",
+      "required": false,
+      "sha256": null
+    }
+  ],
+  "source_checksums": {},
+  "spec_refs": [
+    "REQ-KAN-3159",
+    "SCENARIO-KAN-3159"
+  ],
+  "tests_run": [
+    "relative-missing-source"
+  ]
+}

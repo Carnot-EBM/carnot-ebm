@@ -1,0 +1,71 @@
+{
+  "accepted_candidate_count": 9,
+  "artifact": "experiment_3028_sota_repair_clean_methodology_rerun_v2",
+  "baseline_metrics": {
+    "candidate_count": 24,
+    "pass_at_1": 0.0,
+    "pass_at_k": 0.0
+  },
+  "candidate_count": 24,
+  "candidate_intent_drift_count": 14,
+  "corrigendum_pending": [
+    {
+      "detail": "false_accept_delta=0.0 (exactly zero). Confirm this is not a stub default.",
+      "kind": "IMPLAUSIBLE_PERFECT",
+      "severity": "info"
+    },
+    {
+      "detail": "schema_failure_rate_delta=0.0 (exactly zero). Confirm this is not a stub default.",
+      "kind": "IMPLAUSIBLE_PERFECT",
+      "severity": "info"
+    },
+    {
+      "detail": "syntax_failure_rate_delta=0.0 (exactly zero). Confirm this is not a stub default.",
+      "kind": "IMPLAUSIBLE_PERFECT",
+      "severity": "info"
+    },
+    {
+      "detail": "duration_s=0.103766 but artifact references compute-bound markers (GGUF / CUDA / live model). Loading and running a real model takes >=60.0s minimum; this completed too fast to have invoked the model.",
+      "kind": "DURATION_TOO_SHORT",
+      "severity": "critical"
+    },
+    {
+      "detail": "Compute-bound artifact missing: random_seed. Methodology unverifiable.",
+      "kind": "METHODOLOGY_MISSING",
+      "severity": "warn"
+    }
+  ],
+  "duration_s": 0.103766,
+  "false_accept_delta": 0.0,
+  "honest_verdict": "complete: clean_repair_rerun_ready=true; n_tasks=24",
+  "inference_substrate": {
+    "cuda_available": true,
+    "kind": "clean_repair_reconstruction",
+    "live_repair_generation_run": false,
+    "model_load_attempted": false,
+    "recorded_before_model_load": true
+  },
+  "intent_drift_count": 0,
+  "model_specs": [
+    {
+      "checksum": "3098fa8e9a753392f81c5d9a409a24704c743208874064816856bc8aca6080e0",
+      "hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "model_path": "/models/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf"
+    }
+  ],
+  "n_tasks": 24,
+  "pass_at_1_delta": 0.375,
+  "pass_at_k_delta": 0.375,
+  "random_seed": null,
+  "rejected_candidate_count": 15,
+  "repair_metrics": {
+    "candidate_count": 24,
+    "pass_at_1": 0.375,
+    "pass_at_k": 0.375
+  },
+  "reproducibility_checksum": "f7c34d69b95aba0b8553c04739345553f046eb952b966831a7f2a31df02276aa",
+  "run_date": "20260525",
+  "schema_failure_rate_delta": 0.0,
+  "syntax_failure_rate_delta": 0.0,
+  "tautology_gate_clean": true
+}

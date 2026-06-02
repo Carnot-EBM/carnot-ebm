@@ -1,0 +1,1 @@
+[success_pattern] test lesson: Description for test lesson

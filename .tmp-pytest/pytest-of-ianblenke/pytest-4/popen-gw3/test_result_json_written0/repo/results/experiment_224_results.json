@@ -1,0 +1,533 @@
+{
+  "experiment": 224,
+  "run_date": "20260413",
+  "title": "Tier 1 live-only retrain \u2014 ConstraintTracker on Exp 219-221 live traces",
+  "metadata": {
+    "source_artifacts": [
+      "results/experiment_219_results.json",
+      "results/experiment_220_results.json",
+      "results/experiment_221_results.json"
+    ],
+    "output_path": "results/experiment_224_results.json",
+    "weights_path": "results/tier1_live_weights.json",
+    "held_out_policy": {
+      "name": "final_quarter_per_experiment",
+      "fraction": 0.25,
+      "case_counts": {
+        "219": 8,
+        "220": 8,
+        "221": 8
+      }
+    },
+    "tracker_policy": {
+      "min_support": 5,
+      "min_precision": 0.75
+    },
+    "training_data": "live_only_exp_219_220_221",
+    "no_simulated_data": true
+  },
+  "training_summary": {
+    "training_cases": 18,
+    "constraint_types_observed": 1,
+    "types_meeting_threshold": 1,
+    "tracker_stats": {
+      "question_grounding_failures:answer_target_mismatch": {
+        "fired": 6,
+        "caught": 6,
+        "total_errors": 6,
+        "precision": 1.0,
+        "recall": 1.0
+      }
+    }
+  },
+  "held_out_summary": {
+    "held_out_cases": 6,
+    "strategies": {
+      "no_learning": {
+        "name": "no_learning",
+        "track_retrieval": false,
+        "overall": {
+          "n_cases": 6,
+          "n_success": 2,
+          "false_positives": 0,
+          "n_repairs_used": 4,
+          "helpful_memory_reuse_events": 0,
+          "retrieval_candidate_events": 0,
+          "retrieval_candidates": 0,
+          "retrieval_hit_events": 0,
+          "retrieval_hits": 0,
+          "total_latency_seconds": 0.0,
+          "baseline_reference_latency_seconds": 0.0,
+          "success_rate": 0.3333333333333333,
+          "mean_latency_seconds": 0.0,
+          "latency_overhead_seconds": 0.0,
+          "mean_latency_overhead_seconds": 0.0,
+          "retrieval_hit_rate": 0.0,
+          "retrieval_precision": 0.0
+        },
+        "by_metric": {
+          "accuracy": {
+            "n_cases": 2,
+            "n_success": 2,
+            "false_positives": 0,
+            "success_rate": 1.0
+          },
+          "pass_rate": {
+            "n_cases": 2,
+            "n_success": 0,
+            "false_positives": 0,
+            "success_rate": 0.0
+          },
+          "constraint_satisfaction": {
+            "n_cases": 2,
+            "n_success": 0,
+            "false_positives": 0,
+            "success_rate": 0.0
+          }
+        },
+        "by_benchmark": {
+          "gsm8k_semantic": {
+            "n_cases": 2,
+            "n_success": 2,
+            "false_positives": 0,
+            "success_rate": 1.0
+          },
+          "humaneval_property": {
+            "n_cases": 2,
+            "n_success": 0,
+            "false_positives": 0,
+            "success_rate": 0.0
+          },
+          "constraint_ir": {
+            "n_cases": 2,
+            "n_success": 0,
+            "false_positives": 0,
+            "success_rate": 0.0
+          }
+        },
+        "by_model": {
+          "TestModel": {
+            "n_cases": 6,
+            "n_success": 2,
+            "false_positives": 0,
+            "success_rate": 0.3333333333333333
+          }
+        },
+        "over_time": {
+          "accuracy": [
+            {
+              "source_experiment": 219,
+              "sample_position": 7,
+              "model_name": "TestModel",
+              "case_id": "gsm8k_semantic-7",
+              "n_cases": 1,
+              "success_rate": 1.0
+            },
+            {
+              "source_experiment": 219,
+              "sample_position": 8,
+              "model_name": "TestModel",
+              "case_id": "gsm8k_semantic-8",
+              "n_cases": 2,
+              "success_rate": 1.0
+            }
+          ],
+          "pass_rate": [
+            {
+              "source_experiment": 220,
+              "sample_position": 7,
+              "model_name": "TestModel",
+              "case_id": "humaneval_property-7",
+              "n_cases": 1,
+              "success_rate": 0.0
+            },
+            {
+              "source_experiment": 220,
+              "sample_position": 8,
+              "model_name": "TestModel",
+              "case_id": "humaneval_property-8",
+              "n_cases": 2,
+              "success_rate": 0.0
+            }
+          ],
+          "constraint_satisfaction": [
+            {
+              "source_experiment": 221,
+              "sample_position": 7,
+              "model_name": "TestModel",
+              "case_id": "constraint_ir-7",
+              "n_cases": 1,
+              "success_rate": 0.0
+            },
+            {
+              "source_experiment": 221,
+              "sample_position": 8,
+              "model_name": "TestModel",
+              "case_id": "constraint_ir-8",
+              "n_cases": 2,
+              "success_rate": 0.0
+            }
+          ]
+        }
+      },
+      "tracker_only_live": {
+        "name": "tracker_only_live",
+        "track_retrieval": false,
+        "overall": {
+          "n_cases": 6,
+          "n_success": 2,
+          "false_positives": 0,
+          "n_repairs_used": 4,
+          "helpful_memory_reuse_events": 0,
+          "retrieval_candidate_events": 0,
+          "retrieval_candidates": 0,
+          "retrieval_hit_events": 0,
+          "retrieval_hits": 0,
+          "total_latency_seconds": 0.0,
+          "baseline_reference_latency_seconds": 0.0,
+          "success_rate": 0.3333333333333333,
+          "mean_latency_seconds": 0.0,
+          "latency_overhead_seconds": 0.0,
+          "mean_latency_overhead_seconds": 0.0,
+          "retrieval_hit_rate": 0.0,
+          "retrieval_precision": 0.0
+        },
+        "by_metric": {
+          "accuracy": {
+            "n_cases": 2,
+            "n_success": 2,
+            "false_positives": 0,
+            "success_rate": 1.0
+          },
+          "pass_rate": {
+            "n_cases": 2,
+            "n_success": 0,
+            "false_positives": 0,
+            "success_rate": 0.0
+          },
+          "constraint_satisfaction": {
+            "n_cases": 2,
+            "n_success": 0,
+            "false_positives": 0,
+            "success_rate": 0.0
+          }
+        },
+        "by_benchmark": {
+          "gsm8k_semantic": {
+            "n_cases": 2,
+            "n_success": 2,
+            "false_positives": 0,
+            "success_rate": 1.0
+          },
+          "humaneval_property": {
+            "n_cases": 2,
+            "n_success": 0,
+            "false_positives": 0,
+            "success_rate": 0.0
+          },
+          "constraint_ir": {
+            "n_cases": 2,
+            "n_success": 0,
+            "false_positives": 0,
+            "success_rate": 0.0
+          }
+        },
+        "by_model": {
+          "TestModel": {
+            "n_cases": 6,
+            "n_success": 2,
+            "false_positives": 0,
+            "success_rate": 0.3333333333333333
+          }
+        },
+        "over_time": {
+          "accuracy": [
+            {
+              "source_experiment": 219,
+              "sample_position": 7,
+              "model_name": "TestModel",
+              "case_id": "gsm8k_semantic-7",
+              "n_cases": 1,
+              "success_rate": 1.0
+            },
+            {
+              "source_experiment": 219,
+              "sample_position": 8,
+              "model_name": "TestModel",
+              "case_id": "gsm8k_semantic-8",
+              "n_cases": 2,
+              "success_rate": 1.0
+            }
+          ],
+          "pass_rate": [
+            {
+              "source_experiment": 220,
+              "sample_position": 7,
+              "model_name": "TestModel",
+              "case_id": "humaneval_property-7",
+              "n_cases": 1,
+              "success_rate": 0.0
+            },
+            {
+              "source_experiment": 220,
+              "sample_position": 8,
+              "model_name": "TestModel",
+              "case_id": "humaneval_property-8",
+              "n_cases": 2,
+              "success_rate": 0.0
+            }
+          ],
+          "constraint_satisfaction": [
+            {
+              "source_experiment": 221,
+              "sample_position": 7,
+              "model_name": "TestModel",
+              "case_id": "constraint_ir-7",
+              "n_cases": 1,
+              "success_rate": 0.0
+            },
+            {
+              "source_experiment": 221,
+              "sample_position": 8,
+              "model_name": "TestModel",
+              "case_id": "constraint_ir-8",
+              "n_cases": 2,
+              "success_rate": 0.0
+            }
+          ]
+        }
+      }
+    },
+    "false_positive_regression_budget": {
+      "policy": "zero_additional_false_positives_vs_no_learning",
+      "tracker_only_live": {
+        "baseline_false_positives": 0,
+        "strategy_false_positives": 0,
+        "additional_false_positives": 0,
+        "within_budget": true
+      }
+    }
+  },
+  "comparison_to_exp223": {
+    "reference_experiment": 223,
+    "reference_strategy": "tracker_only",
+    "note": "Exp 224 trains on ONLY live traces from Exp 219-221 with an explicit separate training phase; weights are persisted. Exp 223 tracker_only also used live traces but in an online pass without saving weights.",
+    "exp223_success_rate": 0.3273809523809524,
+    "exp224_success_rate": 0.3333333333333333,
+    "success_rate_delta": 0.005952380952380931,
+    "exp223_false_positives": 1,
+    "exp224_false_positives": 0,
+    "false_positive_delta": -1,
+    "within_fp_budget": true
+  },
+  "held_out_decisions": [
+    {
+      "source_experiment": 219,
+      "benchmark": "gsm8k_semantic",
+      "metric_name": "accuracy",
+      "domain": "live_gsm8k_semantic_failure",
+      "model_name": "TestModel",
+      "case_id": "gsm8k_semantic-7",
+      "sample_position": 7,
+      "held_out": true,
+      "actual_error": true,
+      "detected": true,
+      "error_types": [
+        "question_grounding_failures:answer_target_mismatch"
+      ],
+      "descriptions": [
+        "answer target mismatch"
+      ],
+      "baseline_success": false,
+      "repair_success": true,
+      "baseline_latency_seconds": 0.0,
+      "repair_latency_seconds": 0.0,
+      "strategies": {
+        "no_learning": {
+          "use_repair": true,
+          "reason": "detected",
+          "final_success": true
+        },
+        "tracker_only_live": {
+          "use_repair": true,
+          "reason": "tracker_supported",
+          "support_models": [
+            "TestModel"
+          ],
+          "matched_error_types": [
+            "question_grounding_failures:answer_target_mismatch"
+          ],
+          "final_success": true
+        }
+      }
+    },
+    {
+      "source_experiment": 219,
+      "benchmark": "gsm8k_semantic",
+      "metric_name": "accuracy",
+      "domain": "live_gsm8k_semantic_failure",
+      "model_name": "TestModel",
+      "case_id": "gsm8k_semantic-8",
+      "sample_position": 8,
+      "held_out": true,
+      "actual_error": true,
+      "detected": true,
+      "error_types": [
+        "question_grounding_failures:answer_target_mismatch"
+      ],
+      "descriptions": [
+        "answer target mismatch"
+      ],
+      "baseline_success": false,
+      "repair_success": true,
+      "baseline_latency_seconds": 0.0,
+      "repair_latency_seconds": 0.0,
+      "strategies": {
+        "no_learning": {
+          "use_repair": true,
+          "reason": "detected",
+          "final_success": true
+        },
+        "tracker_only_live": {
+          "use_repair": true,
+          "reason": "tracker_supported",
+          "support_models": [
+            "TestModel"
+          ],
+          "matched_error_types": [
+            "question_grounding_failures:answer_target_mismatch"
+          ],
+          "final_success": true
+        }
+      }
+    },
+    {
+      "source_experiment": 220,
+      "benchmark": "humaneval_property",
+      "metric_name": "pass_rate",
+      "domain": "code_typed_properties",
+      "model_name": "TestModel",
+      "case_id": "humaneval_property-7",
+      "sample_position": 7,
+      "held_out": true,
+      "actual_error": true,
+      "detected": false,
+      "error_types": [],
+      "descriptions": [],
+      "baseline_success": false,
+      "repair_success": false,
+      "baseline_latency_seconds": 0.0,
+      "repair_latency_seconds": 0.0,
+      "strategies": {
+        "no_learning": {
+          "use_repair": false,
+          "reason": "baseline_only",
+          "final_success": false
+        },
+        "tracker_only_live": {
+          "use_repair": false,
+          "reason": "not_detected",
+          "support_models": [],
+          "matched_error_types": [],
+          "final_success": false
+        }
+      }
+    },
+    {
+      "source_experiment": 220,
+      "benchmark": "humaneval_property",
+      "metric_name": "pass_rate",
+      "domain": "code_typed_properties",
+      "model_name": "TestModel",
+      "case_id": "humaneval_property-8",
+      "sample_position": 8,
+      "held_out": true,
+      "actual_error": true,
+      "detected": false,
+      "error_types": [],
+      "descriptions": [],
+      "baseline_success": false,
+      "repair_success": false,
+      "baseline_latency_seconds": 0.0,
+      "repair_latency_seconds": 0.0,
+      "strategies": {
+        "no_learning": {
+          "use_repair": false,
+          "reason": "baseline_only",
+          "final_success": false
+        },
+        "tracker_only_live": {
+          "use_repair": false,
+          "reason": "not_detected",
+          "support_models": [],
+          "matched_error_types": [],
+          "final_success": false
+        }
+      }
+    },
+    {
+      "source_experiment": 221,
+      "benchmark": "constraint_ir",
+      "metric_name": "constraint_satisfaction",
+      "domain": "constraint_ir",
+      "model_name": "TestModel",
+      "case_id": "constraint_ir-7",
+      "sample_position": 7,
+      "held_out": true,
+      "actual_error": true,
+      "detected": true,
+      "error_types": [],
+      "descriptions": [],
+      "baseline_success": false,
+      "repair_success": false,
+      "baseline_latency_seconds": 0.0,
+      "repair_latency_seconds": 0.0,
+      "strategies": {
+        "no_learning": {
+          "use_repair": true,
+          "reason": "detected",
+          "final_success": false
+        },
+        "tracker_only_live": {
+          "use_repair": true,
+          "reason": "detected_without_error_type",
+          "support_models": [],
+          "matched_error_types": [],
+          "final_success": false
+        }
+      }
+    },
+    {
+      "source_experiment": 221,
+      "benchmark": "constraint_ir",
+      "metric_name": "constraint_satisfaction",
+      "domain": "constraint_ir",
+      "model_name": "TestModel",
+      "case_id": "constraint_ir-8",
+      "sample_position": 8,
+      "held_out": true,
+      "actual_error": true,
+      "detected": true,
+      "error_types": [],
+      "descriptions": [],
+      "baseline_success": false,
+      "repair_success": false,
+      "baseline_latency_seconds": 0.0,
+      "repair_latency_seconds": 0.0,
+      "strategies": {
+        "no_learning": {
+          "use_repair": true,
+          "reason": "detected",
+          "final_success": false
+        },
+        "tracker_only_live": {
+          "use_repair": true,
+          "reason": "detected_without_error_type",
+          "support_models": [],
+          "matched_error_types": [],
+          "final_success": false
+        }
+      }
+    }
+  ]
+}

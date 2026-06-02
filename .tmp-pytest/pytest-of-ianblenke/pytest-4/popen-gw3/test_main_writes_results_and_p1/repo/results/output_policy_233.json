@@ -1,0 +1,82 @@
+{
+  "experiment": "Exp 233",
+  "run_date": "20260413",
+  "title": "Output policy derived from Exp 233 refresh benchmark",
+  "derived_from": "results/experiment_233_results.json",
+  "mode_defaults": {
+    "fallback_mode": "answer_only_terse",
+    "retry_budgets": {
+      "free_form_reasoning": 0,
+      "answer_only_terse": 0,
+      "minimal_json": 1,
+      "grammar_gated_json": 2
+    }
+  },
+  "global_policy": {
+    "request_json_when": [
+      "Request minimal_json for live_gsm8k_semantic_failure when measured claim coverage or exact satisfaction materially exceeds answer_only_terse."
+    ],
+    "accept_terse_when": [
+      "Accept answer_only_terse for repo_spec_grounding when it stays within the measured exact/partial satisfaction envelope of the JSON alternatives."
+    ],
+    "avoid_free_form_when": [
+      "free_form_reasoning",
+      "Avoid free_form_reasoning on live_gsm8k_semantic_failure when terse or JSON modes provide a clearer verifier-visible state.",
+      "Avoid free_form_reasoning on repo_spec_grounding when terse or JSON modes provide a clearer verifier-visible state."
+    ]
+  },
+  "per_task_slice": {
+    "live_gsm8k_semantic_failure": {
+      "recommended_mode": "minimal_json",
+      "retry_budget": 1,
+      "rationale": {
+        "free_form_reasoning": {},
+        "answer_only_terse": {},
+        "minimal_json": {
+          "n_records": 1,
+          "parse_success_rate": 1.0,
+          "retry_rate": 0.0,
+          "mean_retries_used": 0.0,
+          "answer_quality_mean": 1.0,
+          "exact_satisfaction_rate": 1.0,
+          "partial_satisfaction_mean": 1.0,
+          "claim_coverage_mean": 1.0,
+          "repair_usefulness_rate": 0.0,
+          "mean_prompt_tokens": 30.0,
+          "mean_completion_tokens": 18.0,
+          "mean_total_tokens": 48.0,
+          "mean_latency_seconds": 0.2
+        },
+        "grammar_gated_json": {}
+      }
+    },
+    "repo_spec_grounding": {
+      "recommended_mode": "answer_only_terse",
+      "retry_budget": 0,
+      "rationale": {
+        "free_form_reasoning": {},
+        "answer_only_terse": {
+          "n_records": 1,
+          "parse_success_rate": 1.0,
+          "retry_rate": 0.0,
+          "mean_retries_used": 0.0,
+          "answer_quality_mean": 1.0,
+          "exact_satisfaction_rate": 1.0,
+          "partial_satisfaction_mean": 1.0,
+          "claim_coverage_mean": 0.0,
+          "repair_usefulness_rate": 0.0,
+          "mean_prompt_tokens": 28.0,
+          "mean_completion_tokens": 6.0,
+          "mean_total_tokens": 34.0,
+          "mean_latency_seconds": 0.1
+        },
+        "minimal_json": {},
+        "grammar_gated_json": {}
+      }
+    }
+  },
+  "mode_guidance": {
+    "Gemma4-E4B-it": "Prefer minimal_json before grammar_gated_json when JSON is warranted; keep answer_only_terse as the default elsewhere.",
+    "Qwen3.5-0.8B": "Prefer minimal_json before grammar_gated_json when JSON is warranted; keep answer_only_terse as the default elsewhere."
+  }
+}

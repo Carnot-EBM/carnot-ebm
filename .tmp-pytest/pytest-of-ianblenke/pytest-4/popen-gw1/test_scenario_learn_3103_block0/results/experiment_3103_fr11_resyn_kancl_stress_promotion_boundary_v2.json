@@ -1,0 +1,84 @@
+{
+  "artifact": "experiment_3103_fr11_resyn_kancl_stress_promotion_boundary_v2",
+  "blocked_reason": "exp3090_artifact_missing_or_empty",
+  "completeness_mistakes": 0,
+  "continuous_self_learning_task": true,
+  "delayed_regression_delta": 0.0,
+  "duration_s": 4.25,
+  "family_holdout_delta": 0.0,
+  "fr11_stress_ready": false,
+  "honest_verdict": "blocked_precondition_failed",
+  "inference_substrate": {
+    "base_model_weights_updated": false,
+    "cached_artifacts_only": true,
+    "controller_weight_update": false,
+    "kan_model_weight_training": false,
+    "live_llm_inference": false,
+    "live_model_inference": false,
+    "local_gguf_inference": false,
+    "mode": "deterministic_fr11_stress_controller_replay",
+    "model_weight_mutation": false,
+    "model_weight_training": false,
+    "trace_memory_update": false,
+    "training_scope": "bounded_controller_side_anchor_memory_only"
+  },
+  "negative_control_results": {},
+  "online_decisions": [],
+  "preconditions_checked": {
+    "exp3090_artifact_ready": {
+      "ok": false,
+      "path": "results/experiment_3090_fr11_resyn_kancl_completeness_repair_v1.json"
+    },
+    "exp3097_artifact_ready": {
+      "ok": false,
+      "path": "results/experiment_3097_exact_fixture_eval_protocol_audit_v1.json"
+    },
+    "fr11_stress_rows_available": {
+      "observed": 0,
+      "ok": false,
+      "required_min": 48
+    },
+    "protocol_manifest_exists": {
+      "ok": false,
+      "path": "results/exact_fixture_eval_protocol_3097/stratified_eval_manifest.jsonl"
+    },
+    "protocol_targets_supported": {
+      "observed": [],
+      "ok": false
+    }
+  },
+  "prior_retention_delta": 0.0,
+  "promotion_decision": "blocked",
+  "rollback_count": 0,
+  "run_date": "20260526",
+  "schema": "carnot.fr11.resyn_kancl_stress_promotion_boundary.v2",
+  "soundness_mistakes": 0,
+  "source_artifacts": [
+    {
+      "exists": false,
+      "id": "exp3090_prior_fr11",
+      "path": "results/experiment_3090_fr11_resyn_kancl_completeness_repair_v1.json",
+      "role": ".288 FR-11 controller-only ReSyn/KAN-CL evidence",
+      "sha256": null
+    },
+    {
+      "exists": false,
+      "id": "exp3097_protocol",
+      "path": "results/experiment_3097_exact_fixture_eval_protocol_audit_v1.json",
+      "role": ".289 exact fixture evaluation protocol artifact",
+      "sha256": null
+    },
+    {
+      "exists": false,
+      "id": "exp3097_manifest",
+      "path": "results/exact_fixture_eval_protocol_3097/stratified_eval_manifest.jsonl",
+      "role": ".289 stratified exact fixture manifest for FR-11 stress",
+      "sha256": null
+    }
+  ],
+  "stress_decision_label_counts": {},
+  "stress_split_report": {},
+  "tests_run": [
+    "focused-req-3103"
+  ]
+}

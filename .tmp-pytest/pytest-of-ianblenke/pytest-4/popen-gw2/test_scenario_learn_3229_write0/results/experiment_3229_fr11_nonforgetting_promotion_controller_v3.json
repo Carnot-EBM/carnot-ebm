@@ -1,0 +1,274 @@
+{
+  "accepted_trace_count": 3,
+  "accepted_traces": [
+    {
+      "decision": "accepted",
+      "decision_reasons": [
+        "evidence_label_passed",
+        "heldout_drift_checks_passed",
+        "nonforgetting_budget_within_limit"
+      ],
+      "exact_verifier_outcome": "exact_accept_answered",
+      "prior_route_utility": "verified_answer_for_exact_accept",
+      "replay_role": "heldout",
+      "reward_weight": 0.75,
+      "routing_outcome": "verify_then_answer",
+      "row_id": "heldout-ok",
+      "trace_id": "trace-heldout-heldout-ok"
+    },
+    {
+      "decision": "accepted",
+      "decision_reasons": [
+        "evidence_label_passed",
+        "heldout_drift_checks_passed",
+        "nonforgetting_budget_within_limit"
+      ],
+      "exact_verifier_outcome": "exact_accept_answered",
+      "prior_route_utility": "verified_answer_for_exact_accept",
+      "replay_role": "drift",
+      "reward_weight": 0.75,
+      "routing_outcome": "verify_then_answer",
+      "row_id": "drift-ok",
+      "trace_id": "trace-drift-drift-ok"
+    },
+    {
+      "decision": "accepted",
+      "decision_reasons": [
+        "evidence_label_passed",
+        "heldout_drift_checks_passed",
+        "nonforgetting_budget_within_limit"
+      ],
+      "exact_verifier_outcome": "exact_accept_answered",
+      "prior_route_utility": "verified_answer_for_exact_accept",
+      "replay_role": "negative_control",
+      "reward_weight": 0.75,
+      "routing_outcome": "skip_redundant_recheck",
+      "row_id": "negative-ok",
+      "trace_id": "trace-negative_control-negative-ok"
+    }
+  ],
+  "active_roadmap_modified": false,
+  "admission_context": {
+    "drift_check_passed": true,
+    "drift_row_count": 2,
+    "heldout_check_passed": true,
+    "heldout_row_count": 1,
+    "negative_control_regression_count": 0,
+    "nonforgetting_budget": 2.0,
+    "nonforgetting_budget_exceeded": false,
+    "nonforgetting_queue_value": 1.0,
+    "uses_existing_artifacts_only": true
+  },
+  "admission_rules": [
+    {
+      "description": "candidate must be an Exp 3215 controller-only exact-evidence label",
+      "rule_id": "evidence_label_required"
+    },
+    {
+      "description": "source artifact must include nonzero heldout and drift checks",
+      "rule_id": "heldout_and_drift_checks_required"
+    },
+    {
+      "description": "any negative-control regression rejects candidate promotion",
+      "rule_id": "negative_control_regression_blocks"
+    },
+    {
+      "description": "routes affected by Exp 3216 stale-premise propagation are rejected",
+      "rule_id": "stale_premise_rejected"
+    },
+    {
+      "description": "otherwise admissible traces are deferred when the queue exceeds budget",
+      "rule_id": "queue_budget_defers"
+    }
+  ],
+  "artifact": "experiment_3229_fr11_nonforgetting_promotion_controller_v3",
+  "candidate_trace_count": 4,
+  "conductor_file_modified": false,
+  "continuous_self_learning_task": true,
+  "controller_memory_promotion_allowed": true,
+  "controller_memory_training_boundary": {
+    "base_model_weights_updated": false,
+    "controller_memory_updates_are_not_training": true,
+    "controller_memory_updates_are_policy_metadata": true,
+    "controller_memory_updates_may_be_promoted": true,
+    "executes_live_model_inference": false,
+    "fresh_live_inference_calls": 0,
+    "hidden_state_mutation_claimed": false,
+    "kan_model_weight_training": false,
+    "model_weight_learning": false,
+    "model_weight_mutation": false,
+    "model_weight_training": false,
+    "uses_checked_in_artifacts_only": true
+  },
+  "deferred_trace_count": 0,
+  "deferred_traces": [],
+  "duration_s": 2.5,
+  "experiment_id": "experiment_3229_fr11_nonforgetting_promotion_controller_v3",
+  "honest_verdict": "complete: fr11 nonforgetting-aware controller promotion governance materialized; promotion_allowed=true; accepted_trace_count=3; rejected_trace_count=1; deferred_trace_count=0; nonforgetting_budget_exceeded=false; negative_control_regression_count=0; stale_premise_rejection_count=1; model_weight_update_claimed=false; controller_memory_updates_are_not_training",
+  "inference_substrate": "checked_in_artifact_controller_memory_simulation_no_training",
+  "milestone": "2026.05.298",
+  "model_weight_update_claimed": false,
+  "negative_control_regression_count": 0,
+  "nonforgetting_budget_exceeded": false,
+  "nonforgetting_queue_entries": [
+    {
+      "budget": 2.0,
+      "budget_exceeded": false,
+      "entry_id": "affected_heldout_or_drift_routes",
+      "source_artifact": "results/experiment_3216_fr11_grounded_continuation_nonforgetting_queue_v1.json",
+      "value": 1.0
+    },
+    {
+      "budget": 2.0,
+      "budget_exceeded": false,
+      "entry_id": "negative_control_regressions",
+      "source_artifact": "results/experiment_3216_fr11_grounded_continuation_nonforgetting_queue_v1.json",
+      "value": 0.0
+    },
+    {
+      "budget": 2.0,
+      "budget_exceeded": false,
+      "entry_id": "unrouted_retraction_pressure",
+      "source_artifact": "results/experiment_3216_fr11_grounded_continuation_nonforgetting_queue_v1.json",
+      "value": 0.0
+    }
+  ],
+  "promotion_allowed": true,
+  "rejected_trace_count": 1,
+  "rejected_traces": [
+    {
+      "decision": "rejected",
+      "decision_reasons": [
+        "stale_premise_failure"
+      ],
+      "exact_verifier_outcome": "exact_accept_answered",
+      "prior_route_utility": "verified_answer_for_exact_accept",
+      "replay_role": "drift",
+      "reward_weight": 0.75,
+      "routing_outcome": "skip_redundant_recheck",
+      "row_id": "drift-stale",
+      "trace_id": "trace-drift-drift-stale"
+    }
+  ],
+  "rollback_policy": {
+    "rollback_policy_defined": true,
+    "rollback_trigger_count": 3,
+    "rollback_triggers": [
+      {
+        "rollback_action": "revoke promoted controller route and restore prior route metadata",
+        "source": "negative-control replay rows or queue pressure terms",
+        "trigger_id": "negative_control_regression"
+      },
+      {
+        "rollback_action": "remove stale trace from promoted controller memory",
+        "source": "grounded-continuation affected routes and retraction propagation",
+        "trigger_id": "stale_premise_failure"
+      },
+      {
+        "rollback_action": "mark dependent route for re-verification before reuse",
+        "source": "future contradiction graph update invalidating a promoted premise",
+        "trigger_id": "contradiction_graph_update"
+      }
+    ]
+  },
+  "rollback_policy_defined": true,
+  "rollback_trigger_count": 3,
+  "run_date": "20260528",
+  "schema": "carnot.fr11.nonforgetting_promotion_controller.v3",
+  "schema_version": "1.0",
+  "source_artifacts": [
+    {
+      "exists": true,
+      "id": "agents_repo_instructions",
+      "path": "AGENTS.md",
+      "required": false,
+      "sha256": "c893735c3c7ece3f9bf4d48722846ef65e76ff35ebfbfe1d239930339d69470b"
+    },
+    {
+      "exists": true,
+      "id": "codex_repo_workflow",
+      "path": "CODEX.md",
+      "required": false,
+      "sha256": "bab1c6ba20bb432cbd7cd6e3b12fb0089f303cb7742f929297647d6329e46502"
+    },
+    {
+      "exists": true,
+      "id": "claude_no_hidden_weight_update_rules",
+      "path": "CLAUDE.md",
+      "required": false,
+      "sha256": "9721a9b0f160d06accd6d8efc97f51f8596bbee07f2196b6aa2e47a821435c59"
+    },
+    {
+      "exists": true,
+      "id": "research_program",
+      "path": "research-program.md",
+      "required": false,
+      "sha256": "0c08a9a7437a38ea4122ba3b7ecfbbcce8e20fe2544706c48e364dd63a1c479c"
+    },
+    {
+      "exists": true,
+      "id": "research_references",
+      "path": "research-references.md",
+      "required": false,
+      "sha256": "9a053766599a826095e66680030cfdf448cc0210707b2f79264d1b0f4341ff4a"
+    },
+    {
+      "exists": true,
+      "id": "self_learning_openspec",
+      "path": "openspec/capabilities/self-learning/spec.md",
+      "required": false,
+      "sha256": "42e7dc123743f14e37cd52c8a640f65202045588e9c21cb95b77c04c18372872"
+    },
+    {
+      "exists": true,
+      "id": "exp3215_trace_labels",
+      "path": "results/experiment_3215_fr11_evidence_gated_trace_replay_controller_v2.json",
+      "required": true,
+      "sha256": "20afa4f28d37c2d4394dcef8cd41f2af4879b5a3f8af72272805eae643c404f9"
+    },
+    {
+      "exists": true,
+      "id": "exp3216_nonforgetting_queue",
+      "path": "results/experiment_3216_fr11_grounded_continuation_nonforgetting_queue_v1.json",
+      "required": true,
+      "sha256": "efb27e6d2238c422d474c0a87453a424f099a0451001c4fc1090812de0b39990"
+    },
+    {
+      "exists": false,
+      "id": "exp3229_module",
+      "path": "python/carnot/eval/fr11_nonforgetting_promotion_controller_v3.py",
+      "required": false,
+      "sha256": null
+    },
+    {
+      "exists": false,
+      "id": "exp3229_tests",
+      "path": "tests/python/test_experiment_3229_fr11_nonforgetting_promotion_controller_v3.py",
+      "required": false,
+      "sha256": null
+    }
+  ],
+  "source_trace_artifacts": [
+    "results/experiment_3215_fr11_evidence_gated_trace_replay_controller_v2.json",
+    "results/experiment_3216_fr11_grounded_continuation_nonforgetting_queue_v1.json"
+  ],
+  "stale_premise_invalidations": {
+    "affected_route_count": 1,
+    "affected_routes": [
+      {
+        "replay_role": "drift",
+        "route_node_id": "route:trace-drift-drift-stale",
+        "routing_outcome": "skip_redundant_recheck",
+        "row_id": "drift-stale"
+      }
+    ],
+    "affected_trace_ids": [
+      "trace-drift-drift-stale"
+    ],
+    "stale_premise_invalidations": 1
+  },
+  "stale_premise_rejection_count": 1,
+  "tests_run": [
+    "SCENARIO-LEARN-3229 focused"
+  ]
+}

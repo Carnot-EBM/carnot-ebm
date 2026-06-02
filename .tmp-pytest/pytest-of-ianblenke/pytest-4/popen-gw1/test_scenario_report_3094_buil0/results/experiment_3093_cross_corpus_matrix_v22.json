@@ -1,0 +1,291 @@
+{
+  "artifact": "experiment_3093_cross_corpus_matrix_v22",
+  "blocker_delta_from_v21": -2,
+  "blocker_reconciliation_from_ledger": {
+    "blocker_delta_from_v21": -2,
+    "decreases": [
+      {
+        "count": 2,
+        "ledger_category": "fr11_budget",
+        "reason": "controller-only FR-11 gates passed",
+        "row_ids": [
+          "fr11-a",
+          "fr11-b"
+        ]
+      }
+    ],
+    "increases": [],
+    "neutral_replacements": [],
+    "publication_blocker_count_after": 9,
+    "publication_blocker_count_before": 11
+  },
+  "capstone_input_artifacts": [
+    "results/experiment_3093_cross_corpus_matrix_v22.json",
+    "results/source_capstone_v287.json",
+    "results/source_blocker_ledger.json",
+    "results/source_fr11.json",
+    "results/source_ebt_arm.json",
+    "results/source_gatemate_ssqa.json",
+    "results/source_missing_repair_micro_panel.json"
+  ],
+  "headline_model_spec_gaps": [
+    {
+      "missing_model_ids": [
+        "model-b"
+      ],
+      "present_model_ids": [
+        "model-a"
+      ],
+      "reason": "mandated model_specs missing for live LLM artifact",
+      "row_id": "verifier-flag",
+      "source_artifact": "results/source_live_panel.json"
+    }
+  ],
+  "honest_verdict": "complete: matrix_v22_ready=true",
+  "inference_substrate": {
+    "executes_conductor": false,
+    "executes_hardware": false,
+    "executes_models": false,
+    "kind": "aggregation_from_checked_in_artifacts",
+    "no_live_llm_inference": true
+  },
+  "matrix_v22_ready": true,
+  "missing_artifacts": [
+    {
+      "path": "results/source_missing_repair_micro_panel.json",
+      "reason": "expected .288 repair micro-panel artifact is absent"
+    }
+  ],
+  "publication_blocker_count": 9,
+  "publication_blockers": [
+    {
+      "blocker_class": "adversarial_or_methodology_flag",
+      "claim_scope": "local_sota_solution_verifier_gain",
+      "row_id": "verifier-flag",
+      "source_artifact": "results/verifier-flag.json",
+      "source_field": "status",
+      "status": "flagged"
+    },
+    {
+      "blocker_class": "structured_gate_skip",
+      "claim_scope": "verifier_gain_recovery_gate",
+      "row_id": "verifier-gate",
+      "source_artifact": "results/verifier-gate.json",
+      "source_field": "status",
+      "status": "gated_skipped"
+    },
+    {
+      "blocker_class": "bounded_claim",
+      "claim_scope": "repair_headline_boundary",
+      "row_id": "repair-bounded",
+      "source_artifact": "results/repair-bounded.json",
+      "source_field": "status",
+      "status": "bounded"
+    },
+    {
+      "blocker_class": "adversarial_or_methodology_flag",
+      "claim_scope": "solver_grounded_repair_feedback",
+      "row_id": "repair-formal",
+      "source_artifact": "results/repair-formal.json",
+      "source_field": "status",
+      "status": "flagged"
+    },
+    {
+      "blocker_class": "missing_artifact",
+      "claim_scope": "repair_live_rerun",
+      "row_id": "repair-missing",
+      "source_artifact": "results/repair-missing.json",
+      "source_field": "status",
+      "status": "missing"
+    },
+    {
+      "blocker_class": "projection_only",
+      "claim_scope": "future_adapter_context",
+      "row_id": "ebt-sidecar",
+      "source_artifact": "results/ebt-sidecar.json",
+      "source_field": "status",
+      "status": "projection_only"
+    },
+    {
+      "blocker_class": "required_blocker",
+      "claim_scope": "hardware_rerun_gate",
+      "row_id": "gatemate-blocked",
+      "source_artifact": "results/gatemate-blocked.json",
+      "source_field": "status",
+      "status": "blocked"
+    },
+    {
+      "blocker_class": "structured_gate_skip",
+      "claim_scope": "host_visible_readback_gate",
+      "row_id": "ssqa-gated",
+      "source_artifact": "results/ssqa-gated.json",
+      "source_field": "status",
+      "status": "gated_skipped"
+    },
+    {
+      "blocker_class": "bounded_claim",
+      "claim_scope": "paper_readiness",
+      "row_id": "capstone-paper",
+      "source_artifact": "results/capstone-paper.json",
+      "source_field": "status",
+      "status": "bounded"
+    }
+  ],
+  "rows": [
+    {
+      "blocker_class": "adversarial_or_methodology_flag",
+      "claim_scope": "local_sota_solution_verifier_gain",
+      "evidence_class": "panel",
+      "row_id": "verifier-flag",
+      "source_artifact": "results/verifier-flag.json",
+      "source_field": "status",
+      "status": "flagged",
+      "summary": {
+        "source_status": "flagged"
+      }
+    },
+    {
+      "blocker_class": "structured_gate_skip",
+      "claim_scope": "verifier_gain_recovery_gate",
+      "evidence_class": "gate",
+      "row_id": "verifier-gate",
+      "source_artifact": "results/verifier-gate.json",
+      "source_field": "status",
+      "status": "gated_skipped",
+      "summary": {
+        "source_status": "gated_skipped"
+      }
+    },
+    {
+      "blocker_class": "bounded_claim",
+      "claim_scope": "repair_headline_boundary",
+      "evidence_class": "repair",
+      "row_id": "repair-bounded",
+      "source_artifact": "results/repair-bounded.json",
+      "source_field": "status",
+      "status": "bounded",
+      "summary": {
+        "source_status": "bounded"
+      }
+    },
+    {
+      "blocker_class": "adversarial_or_methodology_flag",
+      "claim_scope": "solver_grounded_repair_feedback",
+      "evidence_class": "feedback",
+      "row_id": "repair-formal",
+      "source_artifact": "results/repair-formal.json",
+      "source_field": "status",
+      "status": "flagged",
+      "summary": {
+        "source_status": "flagged"
+      }
+    },
+    {
+      "blocker_class": "missing_artifact",
+      "claim_scope": "repair_live_rerun",
+      "evidence_class": "repair",
+      "row_id": "repair-missing",
+      "source_artifact": "results/repair-missing.json",
+      "source_field": "status",
+      "status": "missing",
+      "summary": {
+        "source_status": "missing"
+      }
+    },
+    {
+      "blocker_class": "none",
+      "claim_scope": "controller_only_online_learning_budget",
+      "evidence_class": "fr11",
+      "row_id": "fr11-budget",
+      "source_artifact": "results/fr11-budget.json",
+      "source_field": "status",
+      "status": "clean",
+      "summary": {
+        "source_status": "clean"
+      }
+    },
+    {
+      "blocker_class": "projection_only",
+      "claim_scope": "future_adapter_context",
+      "evidence_class": "ebt_arm",
+      "row_id": "ebt-sidecar",
+      "source_artifact": "results/ebt-sidecar.json",
+      "source_field": "status",
+      "status": "projection_only",
+      "summary": {
+        "source_status": "projection_only"
+      }
+    },
+    {
+      "blocker_class": "required_blocker",
+      "claim_scope": "hardware_rerun_gate",
+      "evidence_class": "gatemate",
+      "row_id": "gatemate-blocked",
+      "source_artifact": "results/gatemate-blocked.json",
+      "source_field": "status",
+      "status": "blocked",
+      "summary": {
+        "source_status": "blocked"
+      }
+    },
+    {
+      "blocker_class": "structured_gate_skip",
+      "claim_scope": "host_visible_readback_gate",
+      "evidence_class": "ssqa",
+      "row_id": "ssqa-gated",
+      "source_artifact": "results/ssqa-gated.json",
+      "source_field": "status",
+      "status": "gated_skipped",
+      "summary": {
+        "source_status": "gated_skipped"
+      }
+    },
+    {
+      "blocker_class": "bounded_claim",
+      "claim_scope": "paper_readiness",
+      "evidence_class": "capstone",
+      "row_id": "capstone-paper",
+      "source_artifact": "results/capstone-paper.json",
+      "source_field": "status",
+      "status": "bounded",
+      "summary": {
+        "source_status": "bounded"
+      }
+    },
+    {
+      "blocker_class": "none",
+      "claim_scope": "milestone_activation",
+      "evidence_class": "archive",
+      "row_id": "archive-clean",
+      "source_artifact": "results/archive-clean.json",
+      "source_field": "status",
+      "status": "clean",
+      "summary": {
+        "source_status": "clean"
+      }
+    },
+    {
+      "blocker_class": "retired_claim",
+      "claim_scope": "retired_claim",
+      "evidence_class": "archive",
+      "row_id": "old-retired",
+      "source_artifact": "results/old-retired.json",
+      "source_field": "status",
+      "status": "retired",
+      "summary": {
+        "source_status": "retired"
+      }
+    }
+  ],
+  "rows_total": 12,
+  "status_counts": {
+    "blocked": 1,
+    "bounded": 2,
+    "clean": 2,
+    "flagged": 2,
+    "gated_skipped": 2,
+    "missing": 1,
+    "projection_only": 1,
+    "retired": 1
+  }
+}

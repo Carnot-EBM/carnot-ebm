@@ -1,0 +1,45 @@
+{
+  "corrigendum_pending": [
+    {
+      "detail": "duration_s=11.75169",
+      "kind": "DURATION_TOO_SHORT"
+    }
+  ],
+  "cumulative_label_count": 14,
+  "duration_s": 11.75169,
+  "experiment_id": "exp3271",
+  "garak_seed_count": 1,
+  "honest_verdict": "complete: teacher labels and garak seed ready",
+  "model_specs": {
+    "mandated_models": {
+      "unsloth/gemma-4-26B-A4B-it-GGUF": {
+        "cached": true
+      }
+    },
+    "runtime": "llama_cpp",
+    "selected_mandated_model_id": "unsloth/gemma-4-26B-A4B-it-GGUF"
+  },
+  "models_used": [
+    {
+      "examples_labeled": 1,
+      "label_source_role": "headline_label_evidence_panel",
+      "model_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "runtime": "llama_cpp"
+    },
+    {
+      "examples_labeled": 4,
+      "label_source_role": "bulk_manifest_taxonomy_expansion",
+      "model_id": "prompt_injection_v4_manifest_taxonomy_expansion_v1",
+      "runtime": "deterministic_taxonomy"
+    },
+    {
+      "examples_labeled": 1,
+      "label_source_role": "garak_adaptive_seed_deterministic_expansion",
+      "model_id": "prompt_injection_v4_garak_adaptive_seed_deterministic_v1",
+      "runtime": "deterministic_garak_adaptive_seed"
+    }
+  ],
+  "new_label_count": 6,
+  "random_seed": 3271,
+  "teacher_label_shards_5_7_garak_seed_ready": true
+}

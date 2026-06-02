@@ -1,0 +1,78 @@
+{
+  "bitstream_n_support_detail": "active overlay exposes fixed n=64",
+  "bitstream_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+  "bitstream_supports_variable_n": false,
+  "board_summary": {
+    "board_transcript_path": "",
+    "selected_uio": "/dev/uio4"
+  },
+  "duration_s": 2.5,
+  "experiment": "exp2942-kv260-continuation-n-scaling-v1",
+  "experiment_id": 2942,
+  "generated_at": "2026-06-02T19:06:38Z",
+  "honest_verdict": "complete: kv260_fixed_n64_latency_profile_recorded",
+  "inference_substrate": "hardware_smoke",
+  "measured_n_values": [
+    64
+  ],
+  "methodology_note": "Latency rows are direct KV260 UIO measurements over 1000 samples for supported n values only. Unsupported requested n values are left as unsupported, not extrapolated.",
+  "n_samples_per_n": 1000,
+  "no_bitstream_modified": true,
+  "per_n_results": [
+    {
+      "n": 64,
+      "per_sample_us_median": 24.2,
+      "per_sample_us_p95": 24.9
+    }
+  ],
+  "preconditions_checked": [
+    {
+      "available": true,
+      "detail": "test",
+      "resource": "kv260_ssh"
+    },
+    {
+      "available": true,
+      "detail": "carnot_ising_v2_n64",
+      "resource": "kv260_overlay"
+    },
+    {
+      "available": true,
+      "detail": "test",
+      "resource": "kv260_uio0"
+    },
+    {
+      "available": true,
+      "detail": "fixed n=64",
+      "resource": "bitstream_n_support"
+    }
+  ],
+  "problem_specs": [
+    {
+      "beta_final_q88": 256,
+      "max_degree": 16,
+      "n": 64,
+      "random_seed": 2942064,
+      "sparse_upload_sha256": "2ddfb9b93d17f8a1f76d9c219b83a275185532070904723cb661d69a7ccb12de"
+    }
+  ],
+  "random_seeds_used": [
+    2942064
+  ],
+  "reproducibility_checksum": "d891a747e9704f63a033443745684bdb22e9c3ac929e292c73885123437dc0e0",
+  "requested_n_values": [
+    64,
+    128,
+    256,
+    512,
+    1024
+  ],
+  "run_date": "20260523",
+  "schema": "results/v1",
+  "unsupported_n_values": [
+    128,
+    256,
+    512,
+    1024
+  ]
+}

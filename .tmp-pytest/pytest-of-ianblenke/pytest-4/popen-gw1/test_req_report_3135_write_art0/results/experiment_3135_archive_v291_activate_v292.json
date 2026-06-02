@@ -1,0 +1,286 @@
+{
+  "activation_performed_by_this_task": false,
+  "archive_v291_activate_v292_ready": true,
+  "artifact": "experiment_3135_archive_v291_activate_v292",
+  "blocked_reasons": [],
+  "blocker_delta_from_v24": 10,
+  "blocker_delta_from_v24_source": "capstone_blocker_delta_from_v24",
+  "carry_forward_blockers": [
+    {
+      "blocker_id": "publication_blockers_46",
+      "description": "46 publication blockers",
+      "expected_carry_forward_value": 46,
+      "matches_expected": true,
+      "source": "results/experiment_3134_capstone_v291.json",
+      "source_field": "publication_blocker_count",
+      "value": 46
+    },
+    {
+      "blocker_id": "missing_comparative_sota_pair",
+      "description": "missing Qwen3.6/Gemma-4-31B comparative SOTA pair",
+      "expected_carry_forward_value": {
+        "missing_model_ids": [
+          "unsloth/Qwen3.6-35B-A3B-GGUF",
+          "unsloth/gemma-4-31B-it-GGUF"
+        ],
+        "present_model_ids": [
+          "unsloth/gemma-4-26B-A4B-it-GGUF"
+        ]
+      },
+      "matches_expected": true,
+      "source": "results/experiment_3134_capstone_v291.json",
+      "source_field": "claim_allowance_summary.missing_model_ids",
+      "value": {
+        "missing_model_ids": [
+          "unsloth/Qwen3.6-35B-A3B-GGUF",
+          "unsloth/gemma-4-31B-it-GGUF"
+        ],
+        "present_model_ids": [
+          "unsloth/gemma-4-26B-A4B-it-GGUF"
+        ]
+      }
+    },
+    {
+      "blocker_id": "false_accept_rate_0_5",
+      "description": "false_accept_rate=0.5",
+      "expected_carry_forward_value": 0.5,
+      "matches_expected": true,
+      "source": "results/experiment_3134_capstone_v291.json",
+      "source_field": "claim_allowance_summary.false_accept_rate",
+      "value": 0.5
+    },
+    {
+      "blocker_id": "zero_verifier_gain",
+      "description": "zero verifier gain",
+      "expected_carry_forward_value": 0.0,
+      "matches_expected": true,
+      "source": "results/experiment_3133_cross_corpus_matrix_v25.json",
+      "source_field": "verifier_repair_summary.verifier_gain_delta",
+      "value": 0.0
+    },
+    {
+      "blocker_id": "repair_gate_blocked",
+      "description": "repair gate blocked",
+      "expected_carry_forward_value": "blocked_false_accept",
+      "matches_expected": true,
+      "source": "results/experiment_3134_capstone_v291.json",
+      "source_field": "claim_allowance_summary.repair_gate_state",
+      "value": "blocked_false_accept"
+    },
+    {
+      "blocker_id": "fr11_ledger_consistency_0_666667",
+      "description": "FR-11 ledger_consistency_rate=0.666667",
+      "expected_carry_forward_value": 0.666667,
+      "matches_expected": true,
+      "source": "results/experiment_3133_cross_corpus_matrix_v25.json",
+      "source_field": "fr11_summary.ledger_consistency_rate",
+      "value": 0.666667
+    },
+    {
+      "blocker_id": "ebt_arm_projection_only",
+      "description": "EBT/ARM projection-only",
+      "expected_carry_forward_value": "projection_only_sidecar_diagnostic_no_live_integration",
+      "matches_expected": true,
+      "source": "results/experiment_3134_capstone_v291.json",
+      "source_field": "ebt_arm_status",
+      "value": "projection_only_sidecar_diagnostic_no_live_integration"
+    },
+    {
+      "blocker_id": "kan_bounded_only",
+      "description": "KAN bounded only",
+      "expected_carry_forward_value": "bounded_pwa_milp_abstraction_no_deployed_verifier_claim",
+      "matches_expected": true,
+      "source": "results/experiment_3134_capstone_v291.json",
+      "source_field": "kan_status",
+      "value": "bounded_pwa_milp_abstraction_no_deployed_verifier_claim"
+    },
+    {
+      "blocker_id": "no_authenticated_hardware_speedup",
+      "description": "no authenticated hardware speedup",
+      "expected_carry_forward_value": "blocked_hardware_sampler_boundary_no_speedup_claim",
+      "matches_expected": true,
+      "source": "results/experiment_3134_capstone_v291.json",
+      "source_field": "sampler_hardware_status",
+      "value": "blocked_hardware_sampler_boundary_no_speedup_claim"
+    }
+  ],
+  "duration_s": 0.125,
+  "honest_verdict": "complete: archive_v291_activate_v292_ready=true; prior_capstone_ready=true; prior_paper_ready=false; prior_publication_blocker_count=46; blocker_delta_from_v24=10; next_milestone=2026.05.292; roadmap_source=research-roadmap-next.yaml",
+  "inference_substrate": {
+    "executes_conductor": false,
+    "executes_hardware": false,
+    "executes_models": false,
+    "executes_repairs": false,
+    "executes_solvers": false,
+    "executes_verifiers": false,
+    "hardware_commands_run": [],
+    "kind": "aggregation_from_upstream_artifacts",
+    "live_model_calls": 0,
+    "local_repo_only": true,
+    "no_live_llm_inference": true,
+    "source": "checked_in_artifacts"
+  },
+  "missing_source_artifacts": [],
+  "next_milestone": "2026.05.292",
+  "no_historical_artifact_rewrite": true,
+  "no_live_repair_rerun": true,
+  "no_new_board_flash": true,
+  "no_new_hardware_run": true,
+  "no_new_model_execution": true,
+  "no_new_solver_run": true,
+  "no_new_synthesis_run": true,
+  "no_new_verifier_run": true,
+  "no_push": true,
+  "ops_changelog_updated": false,
+  "ops_docs_reconciliation_left_to_conductor": true,
+  "ops_status_updated": false,
+  "prior_capstone_ready": true,
+  "prior_milestone": "2026.05.291",
+  "prior_paper_ready": false,
+  "prior_paper_ready_source_field_present": true,
+  "prior_publication_blocker_count": 46,
+  "prior_publication_blocker_count_source": "capstone_publication_blocker_count",
+  "research_roadmap_next_yaml_modified": false,
+  "research_roadmap_yaml_modified": false,
+  "roadmap_handoff": {
+    "active_roadmap_milestone": "2026.05.292",
+    "expected_milestone": "2026.05.292",
+    "expected_milestone_doc": "openspec/change-proposals/research-roadmap-vNEXT.md",
+    "milestone_doc_matches": true,
+    "milestone_matches": true,
+    "non_empty_tasks": true,
+    "observed_milestone": "2026.05.292",
+    "observed_milestone_doc": "openspec/change-proposals/research-roadmap-vNEXT.md",
+    "requested_staged_roadmap_path": "research-roadmap-next.yaml",
+    "requested_staged_roadmap_present": true,
+    "source_path": "research-roadmap-next.yaml",
+    "source_present": true,
+    "task_ids": [
+      "exp3135-archive-v291-activate-v292"
+    ],
+    "used_active_roadmap_fallback": false
+  },
+  "run_date": "20260526",
+  "schema": "carnot.archive_activation.v291_to_v292.v1",
+  "scripts_research_conductor_modified": false,
+  "source_artifacts": [
+    {
+      "path": "results/experiment_3133_cross_corpus_matrix_v25.json",
+      "present": true,
+      "role": "matrix_v25",
+      "sha256": "8274995d669fe59e6e5acb91dec1b3e448e85064a8e1528f4aacb340b6e127f8"
+    },
+    {
+      "path": "results/experiment_3134_capstone_v291.json",
+      "present": true,
+      "role": "capstone_v291",
+      "sha256": "37c3336df8c8901784ff3cac60271542a2f8b4d6f6b69f62977fbe7fc4390aca"
+    },
+    {
+      "path": "research-roadmap-next.yaml",
+      "present": true,
+      "role": "staged_roadmap",
+      "sha256": "44f0f38a6d0e7907c6caf0a63d18f1ad11f0b0e74ce861988028e7bb038db9f1"
+    },
+    {
+      "path": "research-roadmap.yaml",
+      "present": true,
+      "role": "active_roadmap",
+      "sha256": "44f0f38a6d0e7907c6caf0a63d18f1ad11f0b0e74ce861988028e7bb038db9f1"
+    },
+    {
+      "path": "openspec/change-proposals/research-roadmap-vNEXT.md",
+      "present": true,
+      "role": "vnext_doc",
+      "sha256": "3a2984d67364a61a45e24da4b8c91cf735dc66f35d6da66a1a89458947a45cd6"
+    },
+    {
+      "path": "AGENTS.md",
+      "present": true,
+      "role": "agents_instructions",
+      "sha256": "9991172a3f79ab4223f36ebb7390d1e4bed5395d678159ea5f597ec5ba2b0229"
+    },
+    {
+      "path": "CODEX.md",
+      "present": true,
+      "role": "codex_instructions",
+      "sha256": "16968966a364bde5e758b82299c0bc1ccebcbe30d26aea7807749f2a934345ff"
+    },
+    {
+      "path": "CLAUDE.md",
+      "present": true,
+      "role": "claude_instructions",
+      "sha256": "b5c9335a9d000e7911fc41e984137960961cb7faafc2aa46b690413fee1c5896"
+    },
+    {
+      "path": "scripts/research_conductor.py",
+      "present": true,
+      "role": "research_conductor",
+      "sha256": "65b4c225a375fd5671af37d69057246b42512efe5e668d58e2010bd518e2f007"
+    },
+    {
+      "path": "ops/status.md",
+      "present": true,
+      "role": "ops_status",
+      "sha256": "1838dfeb1a81da0c54eaa4b034482e64e0575e7d4de835954d754f33d4265e3e"
+    },
+    {
+      "path": "ops/changelog.md",
+      "present": true,
+      "role": "ops_changelog",
+      "sha256": "7f3570696a07c8b055984bb5ac6a1b99c278eadaf6020cb6c80176567402fa20"
+    },
+    {
+      "path": "_bmad/traceability.md",
+      "present": true,
+      "role": "traceability",
+      "sha256": "d8a0993e129d03b4625d15d498a21e68b0ef7fea2d4c4d2385a861077211c212"
+    }
+  ],
+  "source_checksums": {
+    "AGENTS.md": "9991172a3f79ab4223f36ebb7390d1e4bed5395d678159ea5f597ec5ba2b0229",
+    "CLAUDE.md": "b5c9335a9d000e7911fc41e984137960961cb7faafc2aa46b690413fee1c5896",
+    "CODEX.md": "16968966a364bde5e758b82299c0bc1ccebcbe30d26aea7807749f2a934345ff",
+    "_bmad/traceability.md": "d8a0993e129d03b4625d15d498a21e68b0ef7fea2d4c4d2385a861077211c212",
+    "openspec/change-proposals/research-roadmap-vNEXT.md": "3a2984d67364a61a45e24da4b8c91cf735dc66f35d6da66a1a89458947a45cd6",
+    "ops/changelog.md": "7f3570696a07c8b055984bb5ac6a1b99c278eadaf6020cb6c80176567402fa20",
+    "ops/status.md": "1838dfeb1a81da0c54eaa4b034482e64e0575e7d4de835954d754f33d4265e3e",
+    "research-roadmap-next.yaml": "44f0f38a6d0e7907c6caf0a63d18f1ad11f0b0e74ce861988028e7bb038db9f1",
+    "research-roadmap.yaml": "44f0f38a6d0e7907c6caf0a63d18f1ad11f0b0e74ce861988028e7bb038db9f1",
+    "results/experiment_3133_cross_corpus_matrix_v25.json": "8274995d669fe59e6e5acb91dec1b3e448e85064a8e1528f4aacb340b6e127f8",
+    "results/experiment_3134_capstone_v291.json": "37c3336df8c8901784ff3cac60271542a2f8b4d6f6b69f62977fbe7fc4390aca",
+    "scripts/research_conductor.py": "65b4c225a375fd5671af37d69057246b42512efe5e668d58e2010bd518e2f007"
+  },
+  "status_summary_291": {
+    "blocker_delta_from_v24": 10,
+    "blocker_delta_source": "capstone_blocker_delta_from_v24",
+    "capstone_ready": true,
+    "ebt_arm_status": "projection_only_sidecar_diagnostic_no_live_integration",
+    "false_accept_rate": 0.5,
+    "fr11_ledger_consistency_rate": 0.666667,
+    "fr11_self_learning_status": "bounded_controller_environment_memory_only_no_weight_update_ledger_0.666667",
+    "kan_status": "bounded_pwa_milp_abstraction_no_deployed_verifier_claim",
+    "live_verifier_status": "blocked",
+    "matrix_v25_ready": true,
+    "next_top_gap": "live_verifier_false_accept_repair_gate",
+    "paper_ready": false,
+    "publication_blocker_count": 46,
+    "publication_blocker_count_source": "capstone_publication_blocker_count",
+    "repair_claim_status": "blocked_repair_ladder_gate_failed_by_live_verifier_gate",
+    "repair_gate_status": "blocked_false_accept",
+    "sampler_hardware_status": "blocked_hardware_sampler_boundary_no_speedup_claim",
+    "sota_cache_status": "bounded_missing_comparative_sota_pair",
+    "source_artifacts": [
+      {
+        "path": "results/experiment_3133_cross_corpus_matrix_v25.json",
+        "role": "matrix_v25_authority"
+      },
+      {
+        "path": "results/experiment_3124_difficulty_stratified_live_sota_verifier_panel_v6.json"
+      }
+    ],
+    "verifier_claim_status": "blocked_false_accept_rate_0.5_no_headline_lift",
+    "verifier_gain_delta": 0.0
+  },
+  "traceability_updated": false
+}

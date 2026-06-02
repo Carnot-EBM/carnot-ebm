@@ -1,0 +1,28 @@
+{
+  "exact_operator_action_required": [],
+  "gatemate_output_contract_ready": true,
+  "honest_verdict": "complete: gatemate_output_contract_ready",
+  "host_reader_command": ".venv/bin/python scripts/gatemate_done_gpio_reader.py --expect done=1",
+  "host_visible_io_plan_ready": true,
+  "pinout_table": [
+    {
+      "blocker_status": "ready",
+      "ccf_binding": "IO_EB_B7",
+      "expected_transcript": [
+        "done=1 PASS"
+      ],
+      "host_read_command": ".venv/bin/python scripts/gatemate_done_gpio_reader.py --expect done=1",
+      "rtl_source": "/home/ianblenke/github.com/ianblenke/carnot/.tmp-pytest/pytest-of-ianblenke/pytest-4/popen-gw1/test_req_hw_088_ready_package_0/hardware/gatemate/ising_n16_gatemate.v:output done",
+      "signal_name": "done"
+    },
+    {
+      "blocker_status": "blocked_missing_physical_pinout",
+      "ccf_binding": "",
+      "expected_transcript": "blocked: no expected transcript",
+      "host_read_command": "",
+      "rtl_source": "/home/ianblenke/github.com/ianblenke/carnot/.tmp-pytest/pytest-of-ianblenke/pytest-4/popen-gw1/test_req_hw_088_ready_package_0/hardware/gatemate/ising_n16_gatemate.v:output spin_out",
+      "signal_name": "spin_out[15:0]"
+    }
+  ],
+  "selected_output_path": "led_gpio_done_status"
+}

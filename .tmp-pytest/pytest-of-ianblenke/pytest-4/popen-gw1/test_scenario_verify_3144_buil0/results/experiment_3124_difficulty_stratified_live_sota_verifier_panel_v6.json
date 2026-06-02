@@ -1,0 +1,107 @@
+{
+  "artifact": "experiment_3124_difficulty_stratified_live_sota_verifier_panel_v6",
+  "difficulty_stratified_live_sota_panel_v6_ready": true,
+  "false_accept_rate": 0.5,
+  "inference_substrate": {
+    "executes_models": true,
+    "loads_model_weights": true,
+    "new_live_model_calls": 5
+  },
+  "live_call_count": 5,
+  "live_rows": [
+    {
+      "exact_answer_match": true,
+      "exact_label": "VALID",
+      "expected_action": "accept",
+      "extracted_answer": "VALID",
+      "fixture_family": "arithmetic_code_assertions",
+      "fixture_id": "accept-valid",
+      "live_correct": true,
+      "live_decision": "accept",
+      "model_hash": "unit-model-hash",
+      "model_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "task_family": "arithmetic_code_assertions"
+    },
+    {
+      "exact_answer_match": true,
+      "exact_label": "INVALID",
+      "expected_action": "reject",
+      "extracted_answer": "INVALID",
+      "fixture_family": "arithmetic_code_assertions",
+      "fixture_id": "reject-invalid",
+      "live_correct": true,
+      "live_decision": "reject",
+      "model_hash": "unit-model-hash",
+      "model_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "task_family": "arithmetic_code_assertions"
+    },
+    {
+      "exact_answer_match": true,
+      "exact_label": "REPAIRABLE",
+      "expected_action": "reject",
+      "extracted_answer": "REPAIRABLE",
+      "fixture_family": "repairable",
+      "fixture_id": "repair-json",
+      "live_correct": true,
+      "live_decision": "reject",
+      "model_hash": "unit-model-hash",
+      "model_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "task_family": "repairable"
+    },
+    {
+      "exact_answer_match": false,
+      "exact_label": "INVALID",
+      "expected_action": "reject",
+      "extracted_answer": "VALID",
+      "fixture_family": "arithmetic_code_assertions",
+      "fixture_id": "fa-arith",
+      "live_correct": false,
+      "live_decision": "accept",
+      "model_hash": "unit-model-hash",
+      "model_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "task_family": "arithmetic_code_assertions"
+    },
+    {
+      "exact_answer_match": false,
+      "exact_label": "UNSAT",
+      "expected_action": "reject",
+      "extracted_answer": "VALID",
+      "fixture_family": "smt_constraints",
+      "fixture_id": "fa-smt",
+      "live_correct": false,
+      "live_decision": "accept",
+      "model_hash": "unit-model-hash",
+      "model_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "task_family": "smt_constraints"
+    }
+  ],
+  "model_specs": [
+    {
+      "cache_status": "missing",
+      "hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "legacy_small_model": false,
+      "present": false,
+      "role": "flagship_moe",
+      "selected": false
+    },
+    {
+      "cache_status": "missing",
+      "hf_id": "unsloth/gemma-4-31B-it-GGUF",
+      "legacy_small_model": false,
+      "present": false,
+      "role": "flagship_dense",
+      "selected": false
+    },
+    {
+      "cache_status": "resolved",
+      "hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "legacy_small_model": false,
+      "present": true,
+      "role": "middle_moe",
+      "selected": true
+    }
+  ],
+  "selected_model_ids": [
+    "unsloth/gemma-4-26B-A4B-it-GGUF"
+  ]
+}

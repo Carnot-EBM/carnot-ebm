@@ -1,0 +1,903 @@
+{
+  "constraintbench_corrigendum_ready": true,
+  "honest_verdict": "complete: fixture exp2926",
+  "model_specs": [
+    {
+      "gpu": 1,
+      "hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "model_path": "/tmp/gemma.gguf",
+      "name": "Gemma4-26B-A4B-it"
+    }
+  ],
+  "models_used": [
+    "unsloth/gemma-4-26B-A4B-it-GGUF"
+  ],
+  "per_task_results": [
+    {
+      "constraints": {
+        "linear_constraints": [
+          {
+            "coefficients": {
+              "x": 1,
+              "y": 2
+            },
+            "op": "<=",
+            "rhs": 6
+          },
+          {
+            "coefficients": {
+              "x": 2,
+              "y": 1
+            },
+            "op": "<=",
+            "rhs": 7
+          }
+        ],
+        "variable_bounds": {
+          "x": [
+            0,
+            4
+          ],
+          "y": [
+            0,
+            4
+          ]
+        }
+      },
+      "elapsed_seconds": 0.1,
+      "exact_verifier_type": "bounded_integer_exhaustive",
+      "feasible": true,
+      "generation_blocker": null,
+      "generation_source": "live_sota_llamacpp_prompt_schema",
+      "gpu_index": 1,
+      "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "model_name": "Gemma4-26B-A4B-it",
+      "model_path": "/tmp/gemma.gguf",
+      "objective_function": {
+        "coefficients": {
+          "x": 3,
+          "y": 2
+        },
+        "sense": "max"
+      },
+      "objective_sense": "max",
+      "objective_value": 11,
+      "optimal": true,
+      "optimum_value": 11,
+      "parse_error": null,
+      "parsed_output": {
+        "variables": {
+          "x": 3,
+          "y": 1
+        }
+      },
+      "parser_repair_applied": false,
+      "parser_repair_note": null,
+      "per_task_seed": 2926,
+      "prompt_hash": "4789b2b9a0588ddfc315a4ec0221dc4d2f174bebccdef7c744c39b973032534c",
+      "raw_response_path": "/home/ianblenke/github.com/ianblenke/carnot/.tmp-pytest/pytest-of-ianblenke/pytest-4/popen-gw0/test_req_verify_2934_prefix_au0/raw/cbmini-2926-linear-001.json",
+      "raw_response_sha256": "e7e4c5ed35ecb653abf0c2b8b9ecf1536e71c17d2f2a2bca7f1335d8fe6e64ad",
+      "syntax_valid": true,
+      "task_id": "cbmini-2926-linear-001",
+      "task_type": "linear_integer",
+      "verifier_result": {
+        "feasible": true,
+        "objective_value": 11,
+        "optimal": true,
+        "optimum_value": 11,
+        "syntax_valid": true,
+        "violation_reasons": []
+      },
+      "violation_class": "none",
+      "violation_reasons": []
+    },
+    {
+      "constraints": {
+        "capacity": 7,
+        "excludes": [
+          [
+            "lamp",
+            "rope"
+          ]
+        ],
+        "item_weights": {
+          "kit": 1,
+          "lamp": 4,
+          "map": 2,
+          "rope": 3
+        },
+        "required_items": [
+          "kit"
+        ]
+      },
+      "elapsed_seconds": 0.1,
+      "exact_verifier_type": "binary_subset_exhaustive",
+      "feasible": false,
+      "generation_blocker": null,
+      "generation_source": "live_sota_llamacpp_prompt_schema",
+      "gpu_index": 1,
+      "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "model_name": "Gemma4-26B-A4B-it",
+      "model_path": "/tmp/gemma.gguf",
+      "objective_function": {
+        "item_values": {
+          "kit": 3,
+          "lamp": 7,
+          "map": 5,
+          "rope": 6
+        },
+        "sense": "max"
+      },
+      "objective_sense": "max",
+      "objective_value": null,
+      "optimal": false,
+      "optimum_value": 15,
+      "parse_error": null,
+      "parsed_output": {
+        "selected_items": [
+          "map",
+          "rope",
+          "lamp",
+          "kit"
+        ]
+      },
+      "parser_repair_applied": false,
+      "parser_repair_note": null,
+      "per_task_seed": 2927,
+      "prompt_hash": "af09044bbe625b8e384b96b32221d8ef3497d313dd80d9a7907216acd6b541b3",
+      "raw_response_path": "/home/ianblenke/github.com/ianblenke/carnot/.tmp-pytest/pytest-of-ianblenke/pytest-4/popen-gw0/test_req_verify_2934_prefix_au0/raw/cbmini-2926-knapsack-001.json",
+      "raw_response_sha256": "dd25704acbe958a6b17c9bdbc3b8e12d466863b694cb112e0b8afb4f60f3c9f8",
+      "syntax_valid": true,
+      "task_id": "cbmini-2926-knapsack-001",
+      "task_type": "knapsack_binary",
+      "verifier_result": {
+        "feasible": false,
+        "objective_value": null,
+        "optimal": false,
+        "optimum_value": 15,
+        "syntax_valid": true,
+        "violation_reasons": [
+          "capacity_exceeded",
+          "excludes:lamp,rope"
+        ]
+      },
+      "violation_class": "infeasible",
+      "violation_reasons": [
+        "capacity_exceeded",
+        "excludes:lamp,rope"
+      ]
+    },
+    {
+      "constraints": {
+        "edges": [
+          [
+            0,
+            1
+          ],
+          [
+            1,
+            2
+          ],
+          [
+            2,
+            3
+          ]
+        ],
+        "n_colors": 3,
+        "n_nodes": 4
+      },
+      "elapsed_seconds": 0.1,
+      "exact_verifier_type": "color_assignment_exhaustive",
+      "feasible": true,
+      "generation_blocker": null,
+      "generation_source": "live_sota_llamacpp_prompt_schema",
+      "gpu_index": 1,
+      "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "model_name": "Gemma4-26B-A4B-it",
+      "model_path": "/tmp/gemma.gguf",
+      "objective_function": {
+        "expression": "sum(color_id for each node)",
+        "sense": "min"
+      },
+      "objective_sense": "min",
+      "objective_value": 3,
+      "optimal": false,
+      "optimum_value": 2,
+      "parse_error": null,
+      "parsed_output": {
+        "colors": {
+          "0": 0,
+          "1": 1,
+          "2": 0,
+          "3": 2
+        }
+      },
+      "parser_repair_applied": false,
+      "parser_repair_note": null,
+      "per_task_seed": 2928,
+      "prompt_hash": "7ddf38d7a73c1ab366aef01b1c66c21949f2095312f3e4ba68728daabe120fd9",
+      "raw_response_path": "/home/ianblenke/github.com/ianblenke/carnot/.tmp-pytest/pytest-of-ianblenke/pytest-4/popen-gw0/test_req_verify_2934_prefix_au0/raw/cbmini-2926-graph-001.json",
+      "raw_response_sha256": "da82759fe11d2070fdcd0a11b9a743d60d70ebef69b3b27f86f61fb91f4a7114",
+      "syntax_valid": true,
+      "task_id": "cbmini-2926-graph-001",
+      "task_type": "graph_coloring",
+      "verifier_result": {
+        "feasible": true,
+        "objective_value": 3,
+        "optimal": false,
+        "optimum_value": 2,
+        "syntax_valid": true,
+        "violation_reasons": []
+      },
+      "violation_class": "suboptimal",
+      "violation_reasons": []
+    },
+    {
+      "constraints": {
+        "linear_constraints": [
+          {
+            "coefficients": {
+              "x": 1,
+              "y": 1
+            },
+            "op": ">=",
+            "rhs": 4
+          },
+          {
+            "coefficients": {
+              "x": 1
+            },
+            "op": ">=",
+            "rhs": 1
+          }
+        ],
+        "variable_bounds": {
+          "x": [
+            0,
+            5
+          ],
+          "y": [
+            0,
+            5
+          ]
+        }
+      },
+      "elapsed_seconds": 0.1,
+      "exact_verifier_type": "bounded_integer_exhaustive",
+      "feasible": false,
+      "generation_blocker": null,
+      "generation_source": "live_sota_llamacpp_prompt_schema",
+      "gpu_index": 1,
+      "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "model_name": "Gemma4-26B-A4B-it",
+      "model_path": "/tmp/gemma.gguf",
+      "objective_function": {
+        "coefficients": {
+          "x": 2,
+          "y": 3
+        },
+        "sense": "min"
+      },
+      "objective_sense": "min",
+      "objective_value": null,
+      "optimal": false,
+      "optimum_value": 8,
+      "parse_error": "no_json_object",
+      "parsed_output": null,
+      "parser_repair_applied": false,
+      "parser_repair_note": null,
+      "per_task_seed": 2929,
+      "prompt_hash": "bf540cae252485f12219983ff54f8cdae8a77be6599d50b72e83c98abc87b2eb",
+      "raw_response_path": "/home/ianblenke/github.com/ianblenke/carnot/.tmp-pytest/pytest-of-ianblenke/pytest-4/popen-gw0/test_req_verify_2934_prefix_au0/raw/cbmini-2926-linear-002.json",
+      "raw_response_sha256": "7ccfa1fbf3940e6f0c0375d87c0f9235a50514e14cb427bdfaf5077987b26ccf",
+      "syntax_valid": false,
+      "task_id": "cbmini-2926-linear-002",
+      "task_type": "linear_integer",
+      "verifier_result": {
+        "feasible": false,
+        "objective_value": null,
+        "optimal": false,
+        "optimum_value": 8,
+        "syntax_valid": false,
+        "violation_reasons": [
+          "no_json_object"
+        ]
+      },
+      "violation_class": "syntax_invalid",
+      "violation_reasons": [
+        "no_json_object"
+      ]
+    },
+    {
+      "constraints": {
+        "capacity": 9,
+        "excludes": [
+          [
+            "gpu",
+            "wifi"
+          ]
+        ],
+        "item_weights": {
+          "cpu": 3,
+          "gpu": 5,
+          "ssd": 2,
+          "wifi": 1
+        },
+        "required_items": []
+      },
+      "elapsed_seconds": 0.1,
+      "exact_verifier_type": "binary_subset_exhaustive",
+      "feasible": true,
+      "generation_blocker": null,
+      "generation_source": "live_sota_llamacpp_prompt_schema",
+      "gpu_index": 1,
+      "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "model_name": "Gemma4-26B-A4B-it",
+      "model_path": "/tmp/gemma.gguf",
+      "objective_function": {
+        "item_values": {
+          "cpu": 8,
+          "gpu": 11,
+          "ssd": 5,
+          "wifi": 2
+        },
+        "sense": "max"
+      },
+      "objective_sense": "max",
+      "objective_value": 19,
+      "optimal": true,
+      "optimum_value": 19,
+      "parse_error": null,
+      "parsed_output": {
+        "selected_items": [
+          "cpu",
+          "gpu"
+        ]
+      },
+      "parser_repair_applied": false,
+      "parser_repair_note": null,
+      "per_task_seed": 2930,
+      "prompt_hash": "d066280e9eaa975a09552dad9b39f8955c4b586e871baf468b05c47463871d40",
+      "raw_response_path": "/home/ianblenke/github.com/ianblenke/carnot/.tmp-pytest/pytest-of-ianblenke/pytest-4/popen-gw0/test_req_verify_2934_prefix_au0/raw/cbmini-2926-knapsack-002.json",
+      "raw_response_sha256": "b13bb0ca2a05e9ef0a7101d499ca4bf869e90a59b5c2d80517b1e6ba9b320d65",
+      "syntax_valid": true,
+      "task_id": "cbmini-2926-knapsack-002",
+      "task_type": "knapsack_binary",
+      "verifier_result": {
+        "feasible": true,
+        "objective_value": 19,
+        "optimal": true,
+        "optimum_value": 19,
+        "syntax_valid": true,
+        "violation_reasons": []
+      },
+      "violation_class": "none",
+      "violation_reasons": []
+    },
+    {
+      "constraints": {
+        "edges": [
+          [
+            0,
+            1
+          ],
+          [
+            1,
+            2
+          ],
+          [
+            2,
+            0
+          ],
+          [
+            2,
+            3
+          ]
+        ],
+        "n_colors": 3,
+        "n_nodes": 4
+      },
+      "elapsed_seconds": 0.1,
+      "exact_verifier_type": "color_assignment_exhaustive",
+      "feasible": false,
+      "generation_blocker": null,
+      "generation_source": "live_sota_llamacpp_prompt_schema",
+      "gpu_index": 1,
+      "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "model_name": "Gemma4-26B-A4B-it",
+      "model_path": "/tmp/gemma.gguf",
+      "objective_function": {
+        "expression": "sum(color_id for each node)",
+        "sense": "min"
+      },
+      "objective_sense": "min",
+      "objective_value": null,
+      "optimal": false,
+      "optimum_value": 3,
+      "parse_error": null,
+      "parsed_output": {
+        "colors": {
+          "0": 0,
+          "1": 0,
+          "2": 0,
+          "3": 0
+        }
+      },
+      "parser_repair_applied": false,
+      "parser_repair_note": null,
+      "per_task_seed": 2931,
+      "prompt_hash": "0c934dfdcd528182152a670878e15f42e15187f43fd7e5bab3d6f2b39524c0a4",
+      "raw_response_path": "/home/ianblenke/github.com/ianblenke/carnot/.tmp-pytest/pytest-of-ianblenke/pytest-4/popen-gw0/test_req_verify_2934_prefix_au0/raw/cbmini-2926-graph-002.json",
+      "raw_response_sha256": "8d9f603e44796aa9dd3fc0a6272b770a2919602d6adfcd5965e281de2230fe34",
+      "syntax_valid": true,
+      "task_id": "cbmini-2926-graph-002",
+      "task_type": "graph_coloring",
+      "verifier_result": {
+        "feasible": false,
+        "objective_value": null,
+        "optimal": false,
+        "optimum_value": 3,
+        "syntax_valid": true,
+        "violation_reasons": [
+          "edge_conflict:0-1",
+          "edge_conflict:1-2",
+          "edge_conflict:2-0",
+          "edge_conflict:2-3"
+        ]
+      },
+      "violation_class": "infeasible",
+      "violation_reasons": [
+        "edge_conflict:0-1",
+        "edge_conflict:1-2",
+        "edge_conflict:2-0",
+        "edge_conflict:2-3"
+      ]
+    },
+    {
+      "constraints": {
+        "linear_constraints": [
+          {
+            "coefficients": {
+              "a": 2,
+              "b": 1,
+              "c": 2
+            },
+            "op": "<=",
+            "rhs": 8
+          },
+          {
+            "coefficients": {
+              "a": 1,
+              "b": -1
+            },
+            "op": ">=",
+            "rhs": 0
+          }
+        ],
+        "variable_bounds": {
+          "a": [
+            0,
+            3
+          ],
+          "b": [
+            0,
+            3
+          ],
+          "c": [
+            0,
+            2
+          ]
+        }
+      },
+      "elapsed_seconds": 0.1,
+      "exact_verifier_type": "bounded_integer_exhaustive",
+      "feasible": true,
+      "generation_blocker": null,
+      "generation_source": "live_sota_llamacpp_prompt_schema",
+      "gpu_index": 1,
+      "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "model_name": "Gemma4-26B-A4B-it",
+      "model_path": "/tmp/gemma.gguf",
+      "objective_function": {
+        "coefficients": {
+          "a": 4,
+          "b": 3,
+          "c": 5
+        },
+        "sense": "max"
+      },
+      "objective_sense": "max",
+      "objective_value": 18,
+      "optimal": false,
+      "optimum_value": 19,
+      "parse_error": null,
+      "parsed_output": {
+        "variables": {
+          "a": 3,
+          "b": 2,
+          "c": 0
+        }
+      },
+      "parser_repair_applied": false,
+      "parser_repair_note": null,
+      "per_task_seed": 2932,
+      "prompt_hash": "7bb9f21bedd782242a9deb33035480cb22af4ceca00cd7191a5d2f8dd24ade49",
+      "raw_response_path": "/home/ianblenke/github.com/ianblenke/carnot/.tmp-pytest/pytest-of-ianblenke/pytest-4/popen-gw0/test_req_verify_2934_prefix_au0/raw/cbmini-2926-linear-003.json",
+      "raw_response_sha256": "76863ca7c51c766aac312c9e2a61ab73eb36315f63afc4004a8e1bd89c6c62f0",
+      "syntax_valid": true,
+      "task_id": "cbmini-2926-linear-003",
+      "task_type": "linear_integer",
+      "verifier_result": {
+        "feasible": true,
+        "objective_value": 18,
+        "optimal": false,
+        "optimum_value": 19,
+        "syntax_valid": true,
+        "violation_reasons": []
+      },
+      "violation_class": "suboptimal",
+      "violation_reasons": []
+    },
+    {
+      "constraints": {
+        "capacity": 8,
+        "excludes": [
+          [
+            "radio",
+            "battery"
+          ]
+        ],
+        "item_weights": {
+          "battery": 4,
+          "case": 1,
+          "radio": 3,
+          "sensor": 2
+        },
+        "required_items": [
+          "case"
+        ]
+      },
+      "elapsed_seconds": 0.1,
+      "exact_verifier_type": "binary_subset_exhaustive",
+      "feasible": false,
+      "generation_blocker": null,
+      "generation_source": "live_sota_llamacpp_prompt_schema",
+      "gpu_index": 1,
+      "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "model_name": "Gemma4-26B-A4B-it",
+      "model_path": "/tmp/gemma.gguf",
+      "objective_function": {
+        "item_values": {
+          "battery": 8,
+          "case": 1,
+          "radio": 7,
+          "sensor": 4
+        },
+        "sense": "max"
+      },
+      "objective_sense": "max",
+      "objective_value": null,
+      "optimal": false,
+      "optimum_value": 13,
+      "parse_error": "no_json_object",
+      "parsed_output": null,
+      "parser_repair_applied": false,
+      "parser_repair_note": null,
+      "per_task_seed": 2933,
+      "prompt_hash": "b600bf4b7c5b7afea5b08a912ce7d1dc0de4f26e0ff87dc8776592b420fa1a0e",
+      "raw_response_path": "/home/ianblenke/github.com/ianblenke/carnot/.tmp-pytest/pytest-of-ianblenke/pytest-4/popen-gw0/test_req_verify_2934_prefix_au0/raw/cbmini-2926-knapsack-003.json",
+      "raw_response_sha256": "7ccfa1fbf3940e6f0c0375d87c0f9235a50514e14cb427bdfaf5077987b26ccf",
+      "syntax_valid": false,
+      "task_id": "cbmini-2926-knapsack-003",
+      "task_type": "knapsack_binary",
+      "verifier_result": {
+        "feasible": false,
+        "objective_value": null,
+        "optimal": false,
+        "optimum_value": 13,
+        "syntax_valid": false,
+        "violation_reasons": [
+          "no_json_object"
+        ]
+      },
+      "violation_class": "syntax_invalid",
+      "violation_reasons": [
+        "no_json_object"
+      ]
+    },
+    {
+      "constraints": {
+        "edges": [
+          [
+            0,
+            1
+          ],
+          [
+            0,
+            2
+          ],
+          [
+            0,
+            3
+          ],
+          [
+            0,
+            4
+          ]
+        ],
+        "n_colors": 3,
+        "n_nodes": 5
+      },
+      "elapsed_seconds": 0.1,
+      "exact_verifier_type": "color_assignment_exhaustive",
+      "feasible": true,
+      "generation_blocker": null,
+      "generation_source": "live_sota_llamacpp_prompt_schema",
+      "gpu_index": 1,
+      "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "model_name": "Gemma4-26B-A4B-it",
+      "model_path": "/tmp/gemma.gguf",
+      "objective_function": {
+        "expression": "sum(color_id for each node)",
+        "sense": "min"
+      },
+      "objective_sense": "min",
+      "objective_value": 1,
+      "optimal": true,
+      "optimum_value": 1,
+      "parse_error": null,
+      "parsed_output": {
+        "colors": {
+          "0": 1,
+          "1": 0,
+          "2": 0,
+          "3": 0,
+          "4": 0
+        }
+      },
+      "parser_repair_applied": false,
+      "parser_repair_note": null,
+      "per_task_seed": 2934,
+      "prompt_hash": "2f700fc01e53654ae70930c141b27fa5e991dc314fc5ce98c7c6919922b48b7c",
+      "raw_response_path": "/home/ianblenke/github.com/ianblenke/carnot/.tmp-pytest/pytest-of-ianblenke/pytest-4/popen-gw0/test_req_verify_2934_prefix_au0/raw/cbmini-2926-graph-003.json",
+      "raw_response_sha256": "e0ad07d175a6bf4be4371a9838a0327c46496c3a84cca166efac193bd8e5e0a8",
+      "syntax_valid": true,
+      "task_id": "cbmini-2926-graph-003",
+      "task_type": "graph_coloring",
+      "verifier_result": {
+        "feasible": true,
+        "objective_value": 1,
+        "optimal": true,
+        "optimum_value": 1,
+        "syntax_valid": true,
+        "violation_reasons": []
+      },
+      "violation_class": "none",
+      "violation_reasons": []
+    },
+    {
+      "constraints": {
+        "linear_constraints": [
+          {
+            "coefficients": {
+              "p": 2,
+              "q": 1
+            },
+            "op": ">=",
+            "rhs": 5
+          },
+          {
+            "coefficients": {
+              "q": 1
+            },
+            "op": ">=",
+            "rhs": 1
+          }
+        ],
+        "variable_bounds": {
+          "p": [
+            0,
+            4
+          ],
+          "q": [
+            0,
+            4
+          ]
+        }
+      },
+      "elapsed_seconds": 0.1,
+      "exact_verifier_type": "bounded_integer_exhaustive",
+      "feasible": false,
+      "generation_blocker": null,
+      "generation_source": "live_sota_llamacpp_prompt_schema",
+      "gpu_index": 1,
+      "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "model_name": "Gemma4-26B-A4B-it",
+      "model_path": "/tmp/gemma.gguf",
+      "objective_function": {
+        "coefficients": {
+          "p": 5,
+          "q": 1
+        },
+        "sense": "min"
+      },
+      "objective_sense": "min",
+      "objective_value": null,
+      "optimal": false,
+      "optimum_value": 8,
+      "parse_error": null,
+      "parsed_output": {
+        "variables": {
+          "p": 5,
+          "q": 0
+        }
+      },
+      "parser_repair_applied": false,
+      "parser_repair_note": null,
+      "per_task_seed": 2935,
+      "prompt_hash": "90f7d759f5a6f97ebeca896b9d023d85e3a5cdf6ff47c160785b7277d28f06d5",
+      "raw_response_path": "/home/ianblenke/github.com/ianblenke/carnot/.tmp-pytest/pytest-of-ianblenke/pytest-4/popen-gw0/test_req_verify_2934_prefix_au0/raw/cbmini-2926-linear-004.json",
+      "raw_response_sha256": "1956cf7d835f4c5d2089d8629f95018a0ba87f00f365410ae5f7e9700a40485f",
+      "syntax_valid": true,
+      "task_id": "cbmini-2926-linear-004",
+      "task_type": "linear_integer",
+      "verifier_result": {
+        "feasible": false,
+        "objective_value": null,
+        "optimal": false,
+        "optimum_value": 8,
+        "syntax_valid": true,
+        "violation_reasons": [
+          "domain:p",
+          "linear_constraint:1"
+        ]
+      },
+      "violation_class": "infeasible",
+      "violation_reasons": [
+        "domain:p",
+        "linear_constraint:1"
+      ]
+    },
+    {
+      "constraints": {
+        "capacity": 10,
+        "excludes": [
+          [
+            "atlas",
+            "guide"
+          ]
+        ],
+        "item_weights": {
+          "atlas": 4,
+          "guide": 2,
+          "med": 2,
+          "water": 3
+        },
+        "required_items": [
+          "water"
+        ]
+      },
+      "elapsed_seconds": 0.1,
+      "exact_verifier_type": "binary_subset_exhaustive",
+      "feasible": true,
+      "generation_blocker": null,
+      "generation_source": "live_sota_llamacpp_prompt_schema",
+      "gpu_index": 1,
+      "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "model_name": "Gemma4-26B-A4B-it",
+      "model_path": "/tmp/gemma.gguf",
+      "objective_function": {
+        "item_values": {
+          "atlas": 8,
+          "guide": 3,
+          "med": 5,
+          "water": 6
+        },
+        "sense": "max"
+      },
+      "objective_sense": "max",
+      "objective_value": 14,
+      "optimal": false,
+      "optimum_value": 19,
+      "parse_error": null,
+      "parsed_output": {
+        "selected_items": [
+          "guide",
+          "water",
+          "med"
+        ]
+      },
+      "parser_repair_applied": false,
+      "parser_repair_note": null,
+      "per_task_seed": 2936,
+      "prompt_hash": "cf89580c8d287a07f506c90fa7dd62338a53ebd34301de176a9759a07063689e",
+      "raw_response_path": "/home/ianblenke/github.com/ianblenke/carnot/.tmp-pytest/pytest-of-ianblenke/pytest-4/popen-gw0/test_req_verify_2934_prefix_au0/raw/cbmini-2926-knapsack-004.json",
+      "raw_response_sha256": "fc0498b8bf07a71c19d53dd53ea33b0d7c4b471d6579fc9edd44e6dfd1b210a4",
+      "syntax_valid": true,
+      "task_id": "cbmini-2926-knapsack-004",
+      "task_type": "knapsack_binary",
+      "verifier_result": {
+        "feasible": true,
+        "objective_value": 14,
+        "optimal": false,
+        "optimum_value": 19,
+        "syntax_valid": true,
+        "violation_reasons": []
+      },
+      "violation_class": "suboptimal",
+      "violation_reasons": []
+    },
+    {
+      "constraints": {
+        "edges": [
+          [
+            0,
+            1
+          ],
+          [
+            1,
+            2
+          ],
+          [
+            2,
+            3
+          ],
+          [
+            3,
+            4
+          ],
+          [
+            4,
+            0
+          ]
+        ],
+        "n_colors": 4,
+        "n_nodes": 5
+      },
+      "elapsed_seconds": 0.1,
+      "exact_verifier_type": "color_assignment_exhaustive",
+      "feasible": false,
+      "generation_blocker": null,
+      "generation_source": "live_sota_llamacpp_prompt_schema",
+      "gpu_index": 1,
+      "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "model_name": "Gemma4-26B-A4B-it",
+      "model_path": "/tmp/gemma.gguf",
+      "objective_function": {
+        "expression": "sum(color_id for each node)",
+        "sense": "min"
+      },
+      "objective_sense": "min",
+      "objective_value": null,
+      "optimal": false,
+      "optimum_value": 4,
+      "parse_error": "no_json_object",
+      "parsed_output": null,
+      "parser_repair_applied": false,
+      "parser_repair_note": null,
+      "per_task_seed": 2937,
+      "prompt_hash": "e6419498786da2a4389b1d3615db1a09f63d7dca4d06524a33b481c6538a6920",
+      "raw_response_path": "/home/ianblenke/github.com/ianblenke/carnot/.tmp-pytest/pytest-of-ianblenke/pytest-4/popen-gw0/test_req_verify_2934_prefix_au0/raw/cbmini-2926-graph-004.json",
+      "raw_response_sha256": "7ccfa1fbf3940e6f0c0375d87c0f9235a50514e14cb427bdfaf5077987b26ccf",
+      "syntax_valid": false,
+      "task_id": "cbmini-2926-graph-004",
+      "task_type": "graph_coloring",
+      "verifier_result": {
+        "feasible": false,
+        "objective_value": null,
+        "optimal": false,
+        "optimum_value": 4,
+        "syntax_valid": false,
+        "violation_reasons": [
+          "no_json_object"
+        ]
+      },
+      "violation_class": "syntax_invalid",
+      "violation_reasons": [
+        "no_json_object"
+      ]
+    }
+  ],
+  "raw_response_dir": "/home/ianblenke/github.com/ianblenke/carnot/.tmp-pytest/pytest-of-ianblenke/pytest-4/popen-gw0/test_req_verify_2934_prefix_au0/raw",
+  "run_date": "20260523"
+}

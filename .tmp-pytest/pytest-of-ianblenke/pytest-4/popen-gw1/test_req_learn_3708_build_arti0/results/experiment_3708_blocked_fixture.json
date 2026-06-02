@@ -1,0 +1,55 @@
+{
+  "acceptance_gate": {
+    "condition": "template_library_bounded == true AND structure_persisted_and_restored == true AND collapse_detected_deploy_arm == false AND pass_rate_vs_true_accuracy_distinct_assert == true",
+    "passed": false,
+    "principle": "Multi-session consolidation is validated only when the library stays bounded, round-trips across sessions, does not collapse, and the two metrics are genuinely distinct (not a tautology)."
+  },
+  "artifact": "experiment_3708_fr11_continuous_self_learning_v13",
+  "collapse_detected_deploy_arm": false,
+  "consolidated_template_transfer_gain_over_cold_start": false,
+  "duration_s": 1.0,
+  "field_principles": {
+    "collapse_detected_deploy_arm": "The conservative-default rule must prevent weight collapse during consolidation (alpha_t grounding).",
+    "consolidated_template_transfer_gain_over_cold_start": "The forward difference -- does a consolidated template beat cold-start on a fresh session's ensemble AUROC?",
+    "duration_s": "Plausibility floor.",
+    "honest_verdict": "Terminal prefix for reconciler classification.",
+    "inference_substrate": "verifier_ensemble_against_cached_candidates (principle: scores cached traces; no LLM load; no compute-bound marker).",
+    "n_online_updates": "Sample-size of the self-learning sweep across all sessions (>=200).",
+    "n_sessions": "Number of session boundaries consolidated across (>=3) -- the v13 forward difference.",
+    "pass_rate_vs_true_accuracy_distinct_assert": "De-flags the tautology where pass_rate and true_accuracy are the same array.",
+    "quality_maintained": "Consolidation + transfer must not cost ensemble quality.",
+    "random_seed": "Determinism precondition.",
+    "reproducibility_checksum": "Drift detection.",
+    "structure_persisted_and_restored": "Cross-session Tier-2 persistence -- the consolidated library round-trips (SHA256) across boundaries.",
+    "template_library_bounded": "True iff the consolidated template library stays under its size cap (merge/evict policy works)."
+  },
+  "fresh_session_transfer_auroc_gain": 0.0,
+  "honest_verdict": "complete: blocked_fr11_module_or_traces_unavailable",
+  "inference_substrate": "verifier_ensemble_against_cached_candidates (principle: scores cached traces; no LLM load; no compute-bound marker).",
+  "n_online_updates": 0,
+  "n_sessions": 0,
+  "pass_rate_vs_true_accuracy_distinct_assert": false,
+  "preconditions_checked": [
+    {
+      "available": true,
+      "detail": "/home/ianblenke/github.com/ianblenke/carnot/.tmp-pytest/pytest-of-ianblenke/pytest-4/popen-gw1/test_req_learn_3708_build_arti0/python/carnot/fr11",
+      "resource": "fr11_module"
+    },
+    {
+      "available": true,
+      "detail": "fixture",
+      "resource": "cached_traces_with_per_verifier_scores_and_labels"
+    },
+    {
+      "available": false,
+      "detail": "RuntimeError: cached traces unavailable",
+      "resource": "cached_trace_scoring"
+    }
+  ],
+  "quality_maintained": false,
+  "random_seed": 3708,
+  "reproducibility_checksum": "2c3b7bbfe0c784815968722a518063207fce3546e310872059e1890523c95f98",
+  "schema": "carnot.fr11_continuous_self_learning_v13",
+  "structure_persisted_and_restored": false,
+  "template_library_bounded": false
+}

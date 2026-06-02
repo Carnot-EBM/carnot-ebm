@@ -1,0 +1,82 @@
+{
+  "artifact": "experiment_3027_adversarial_flag_methodology_corrigendum_v1",
+  "corrigendum_pending": [
+    {
+      "detail": "DURATION_TOO_SHORT fixture detail",
+      "kind": "DURATION_TOO_SHORT",
+      "severity": "critical"
+    },
+    {
+      "detail": "METHODOLOGY_MISSING fixture detail",
+      "kind": "METHODOLOGY_MISSING",
+      "severity": "warn"
+    }
+  ],
+  "flagged_adversarial": true,
+  "hardware_blocked_rows": [
+    {
+      "classification": "hardware_blocked",
+      "matrix_status": "blocked",
+      "row_id": "exp3021_gatemate_transport_shim",
+      "source_artifact_path": "results/experiment_3024_cross_corpus_matrix_v17.json",
+      "source_experiment_id": "exp3021",
+      "supporting_fields": [
+        {
+          "field": "rows[].status",
+          "value": "blocked"
+        }
+      ]
+    }
+  ],
+  "honest_verdict": "complete: methodology_corrigendum_ready=true",
+  "inference_substrate": {
+    "kind": "aggregation_from_upstream_artifacts",
+    "no_live_llm_inference": true
+  },
+  "methodology_corrigendum_ready": true,
+  "missing_metadata_rows": [
+    {
+      "classification": "missing_metadata",
+      "matrix_status": "flagged",
+      "row_id": "exp3016_repair_acceptance_controller",
+      "source_artifact_path": "results/experiment_3016.json",
+      "source_experiment_id": "exp3016",
+      "supporting_fields": [
+        {
+          "field": "random_seed",
+          "value": null
+        }
+      ]
+    }
+  ],
+  "true_methodology_blockers": [
+    {
+      "classification": "true_methodology_blocker",
+      "matrix_status": "flagged",
+      "row_id": "exp3013_sota_logprob_telemetry",
+      "source_artifact_path": "results/experiment_3013.json",
+      "source_experiment_id": "exp3013",
+      "supporting_fields": [
+        {
+          "field": "rows[].status",
+          "value": "flagged"
+        }
+      ]
+    }
+  ],
+  "unresolved_bound_rows": [
+    {
+      "classification": "unresolved_bound",
+      "matrix_status": "flagged",
+      "row_id": "exp3018_beaver_frontier_certificate",
+      "source_artifact_path": "results/experiment_3018.json",
+      "source_experiment_id": "exp3018",
+      "supporting_fields": [
+        {
+          "field": "unresolved_count",
+          "value": 2
+        }
+      ]
+    }
+  ]
+}

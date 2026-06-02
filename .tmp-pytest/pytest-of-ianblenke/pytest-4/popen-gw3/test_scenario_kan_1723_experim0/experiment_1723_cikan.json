@@ -1,0 +1,87 @@
+{
+  "boundary_snapshot_after": [
+    {
+      "expression": "X AND Y",
+      "name": "constraint_0",
+      "penalty": 4.0,
+      "polynomial": "X * Y",
+      "threshold": 0.5,
+      "variable_indices": [
+        0,
+        1
+      ],
+      "variables": [
+        "X",
+        "Y"
+      ]
+    }
+  ],
+  "boundary_snapshot_before": [
+    {
+      "expression": "X AND Y",
+      "name": "constraint_0",
+      "penalty": 4.0,
+      "polynomial": "X * Y",
+      "threshold": 0.5,
+      "variable_indices": [
+        0,
+        1
+      ],
+      "variables": [
+        "X",
+        "Y"
+      ]
+    }
+  ],
+  "constraint": {
+    "expression": "X AND Y",
+    "polynomial": "X * Y",
+    "source": "FourierCSPExtractor(mock_generate)",
+    "variables": [
+      "X",
+      "Y"
+    ]
+  },
+  "experiment_id": 1723,
+  "fixed_boundaries_preserved": true,
+  "honest_verdict": "complete: FourierCSP constraint compiled into fixed CIKAN boundary and preserved through toy residual training",
+  "metrics": {
+    "accuracy": 1.0,
+    "boundary_energy_on_violation": 4.0,
+    "energy_gap": 4.858421411771549,
+    "mean_invalid_energy": 3.3623993124984803,
+    "mean_valid_energy": -1.4960220992730688,
+    "satisfying_energy": -1.4960220992730688,
+    "violating_energy": 3.1494148463214313
+  },
+  "model": {
+    "boundary_penalty": 4.0,
+    "class": "CIKAN",
+    "feature_names": [
+      "X",
+      "Y"
+    ],
+    "n_fixed_boundaries": 1,
+    "n_knots": 5,
+    "residual_trainable": true
+  },
+  "run_date": "20260510",
+  "schema": "carnot.cikan.experiment_1723.v1",
+  "spec_traces": [
+    "REQ-KAN-1723",
+    "SCENARIO-KAN-1723"
+  ],
+  "status": "complete",
+  "training": {
+    "dataset": "toy_boolean_and",
+    "epochs": 40,
+    "final_loss": 0.07783857261323221,
+    "initial_loss": 0.18531653098772807,
+    "learning_rate": 0.2,
+    "loss_decreased": true,
+    "n_train": 4,
+    "tests_run": [
+      "test_scenario_kan_1723_experiment_writes_required_artifact"
+    ]
+  }
+}

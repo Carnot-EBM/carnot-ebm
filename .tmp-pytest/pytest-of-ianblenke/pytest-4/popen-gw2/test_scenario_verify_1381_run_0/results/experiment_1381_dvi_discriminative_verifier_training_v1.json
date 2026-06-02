@@ -1,0 +1,53 @@
+{
+  "artifact_metadata": {
+    "project_root": "/home/ianblenke/github.com/ianblenke/carnot/.tmp-pytest/pytest-of-ianblenke/pytest-4/popen-gw2/test_scenario_verify_1381_run_0",
+    "run_date": "20260505"
+  },
+  "discriminative_improvement_measured": true,
+  "duration_s": 0.003,
+  "dvi_auroc_delta": 0.1875,
+  "dvi_baseline_auroc": 0.8125,
+  "dvi_checkpoint_path": "/home/ianblenke/github.com/ianblenke/carnot/.tmp-pytest/pytest-of-ianblenke/pytest-4/popen-gw2/test_scenario_verify_1381_run_0/models/dvi_checkpoint_v1.pt",
+  "dvi_deployed": true,
+  "dvi_source_checkpoint_kind": "sc_energy_npz",
+  "dvi_source_checkpoint_path": "/home/ianblenke/github.com/ianblenke/carnot/.tmp-pytest/pytest-of-ianblenke/pytest-4/popen-gw2/test_scenario_verify_1381_run_0/models/sc_energy_v2_regularized.pt",
+  "dvi_trained_auroc": 1.0,
+  "epochs_run": 10,
+  "experiment": "1381_dvi_discriminative_verifier_training_v1",
+  "finished_at": "2026-06-02T19:05:23.858706+00:00",
+  "fover_heldout_cases_used": 8,
+  "fover_split_seed": 1381,
+  "fover_train_rows_used": 32,
+  "fresh_llm_inference_used": false,
+  "honest_verdict": "dvi_discriminative_improvement_measured_positive_delta",
+  "l2_weight_decay": 0.0001,
+  "learning_rate": 0.5,
+  "measurement_note": "No fresh LLM inference was used. DVI trained Carnot's SC-Energy verifier boundary on Exp 1374 semantic positives versus FoVer incorrect contrastive negatives, then measured AUROC on the same fixed held-out FoVer split before and after training.",
+  "model_specs_required": false,
+  "negative_case_source": "fover_incorrect_reasoning_steps",
+  "negative_cases_used": 6,
+  "negative_ratio_target": 3,
+  "positive_case_source": "exp1374_primary_semantic_verified",
+  "positive_cases_used": 2,
+  "run_date": "20260505",
+  "schema": "dvi_discriminative_verifier_training_v1",
+  "spec": [
+    "REQ-VERIFY-1381",
+    "SCENARIO-VERIFY-1381"
+  ],
+  "started_at": "2026-06-02T19:05:23.855642+00:00",
+  "status": "complete",
+  "training_loss_history": [
+    0.733457,
+    0.694175,
+    0.664084,
+    0.641014,
+    0.623275,
+    0.609576,
+    0.598942,
+    0.590641,
+    0.584122,
+    0.578972
+  ],
+  "training_method": "secl_style_bce_sc_energy_linear_adapter_v1"
+}

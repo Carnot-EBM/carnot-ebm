@@ -1,0 +1,77 @@
+{
+  "automata_constraints_used": true,
+  "available_case_count": 4,
+  "benchmark_manifest_path": ".tmp-pytest/pytest-of-ianblenke/pytest-4/popen-gw3/test_req_bench_1540_edge_gates0/blocked.jsonl",
+  "blockers": [
+    "cached_sota_pair_error:RuntimeError: cache probe failed",
+    "no_mandated_sota_gguf_runtime",
+    "focused_tests_not_passed"
+  ],
+  "branch_retired": true,
+  "cached_sota_pair": [],
+  "cases_total": 4,
+  "deterministic_validator_final_authority": true,
+  "false_accept_count": 0,
+  "false_accept_rate": 0.0,
+  "feasibility_stage_pass_rate": 1.0,
+  "feature_model_stage_pass_rate": 1.0,
+  "focused_tests_passed": false,
+  "gpu_probe": {
+    "gpu_count": 0
+  },
+  "honest_verdict": "complete_retired: product-line branch retired: scaled corpus below 40-case gate: available=4",
+  "live_inference_blockers": [],
+  "live_prompt_limit": 1,
+  "live_rows_evaluated": 0,
+  "live_sota_model_inference_used": false,
+  "milestone": "20260508",
+  "model_specs": [
+    "unsloth/Qwen3.6-35B-A3B-GGUF",
+    "unsloth/gemma-4-31B-it-GGUF",
+    "unsloth/gemma-4-26B-A4B-it-GGUF"
+  ],
+  "models_used": [],
+  "oracle_agreement_rate": 1.0,
+  "product_line_scale_ready": false,
+  "rescue_context": {
+    "artifact_path": "results/experiment_1523_product_line_parser_feasibility_rescue_v2.json",
+    "baseline_parse_rate": 0.333333,
+    "bounded_cases": 6,
+    "fix_summary": {
+      "feasibility": "the exhaustive solver replaces infeasible or suboptimal selections with an optimum",
+      "feature_model": "unknown features are removed, required features are added, and requires edges are closed",
+      "policy": "final accept is true only when deterministic oracle_agrees is true",
+      "syntax": "parse failures are converted into schema JSON seeded from case contracts"
+    },
+    "manifest_path": "results/product_line_rescue_1523.jsonl",
+    "product_line_rescue_ready": true,
+    "rescue_false_accept_rate": 0.0,
+    "rescue_oracle_agreement_rate": 1.0,
+    "rescue_parse_rate": 1.0,
+    "stage_counts": {
+      "feature_model_consistency_feedback": {
+        "passed": 4,
+        "repaired": 2
+      },
+      "policy_compliance_feedback": {
+        "accepted": 6
+      },
+      "solver_feasibility_feedback": {
+        "passed": 2,
+        "repaired": 4
+      },
+      "syntax_parse_feedback": {
+        "passed": 2,
+        "repaired": 4
+      }
+    }
+  },
+  "retirement_reason": "scaled corpus below 40-case gate: available=4",
+  "schema_version": 1,
+  "stage_classification_counts": {
+    "oracle_agreement": 4
+  },
+  "status": "complete",
+  "syntax_stage_pass_rate": 1.0,
+  "target_cases_requested": 4
+}

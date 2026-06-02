@@ -1,0 +1,1129 @@
+{
+  "answer_accuracy": 0.916667,
+  "benchmark_scope": "forward-authored LLMEval-Logic-style mini fixture, not the full benchmark",
+  "cached_sota_pair_error": null,
+  "cached_sota_pair_used": true,
+  "duration_s": 19.0,
+  "formalization_faithfulness_rate": 1.0,
+  "honest_verdict": "complete: llmeval-logic-style local GGUF formalizations checked by Z3",
+  "inference_substrate": "live_llm_inference_plus_z3",
+  "item_manifest": [
+    {
+      "formalization": {
+        "exclusions": [],
+        "facts": [
+          [
+            "Cat",
+            "milo"
+          ]
+        ],
+        "query": [
+          "Mammal",
+          "milo"
+        ],
+        "rules": [
+          {
+            "if": [
+              [
+                "Cat",
+                "milo"
+              ]
+            ],
+            "then": [
+              "Mammal",
+              "milo"
+            ]
+          }
+        ]
+      },
+      "gold_answer": "necessary",
+      "item_id": "llmlogic-2931-001",
+      "problem": "All cats are mammals. Milo is a cat. Is Milo necessarily a mammal?"
+    },
+    {
+      "formalization": {
+        "exclusions": [],
+        "facts": [
+          [
+            "Student",
+            "nia"
+          ]
+        ],
+        "query": [
+          "Athlete",
+          "nia"
+        ],
+        "rules": []
+      },
+      "gold_answer": "possible",
+      "item_id": "llmlogic-2931-002",
+      "problem": "Nia is a student. Some students may be athletes, but no rule says Nia is one. Is Nia an athlete possible?"
+    },
+    {
+      "formalization": {
+        "exclusions": [
+          [
+            [
+              "Organic",
+              "rho"
+            ],
+            [
+              "Robot",
+              "rho"
+            ]
+          ]
+        ],
+        "facts": [
+          [
+            "Robot",
+            "rho"
+          ]
+        ],
+        "query": [
+          "Organic",
+          "rho"
+        ],
+        "rules": []
+      },
+      "gold_answer": "impossible",
+      "item_id": "llmlogic-2931-003",
+      "problem": "No robot is organic. Rho is a robot. Is Rho organic possible?"
+    },
+    {
+      "formalization": {
+        "exclusions": [],
+        "facts": [
+          [
+            "Archivist",
+            "ivo"
+          ]
+        ],
+        "query": [
+          "Trusted",
+          "ivo"
+        ],
+        "rules": [
+          {
+            "if": [
+              [
+                "Archivist",
+                "ivo"
+              ]
+            ],
+            "then": [
+              "Careful",
+              "ivo"
+            ]
+          },
+          {
+            "if": [
+              [
+                "Careful",
+                "ivo"
+              ]
+            ],
+            "then": [
+              "Trusted",
+              "ivo"
+            ]
+          }
+        ]
+      },
+      "gold_answer": "necessary",
+      "item_id": "llmlogic-2931-004",
+      "problem": "Every archivist is careful. Every careful person is trusted. Ivo is an archivist. Is Ivo trusted necessary?"
+    },
+    {
+      "formalization": {
+        "exclusions": [
+          [
+            [
+              "Active",
+              "tau"
+            ],
+            [
+              "Revoked",
+              "tau"
+            ]
+          ]
+        ],
+        "facts": [
+          [
+            "Revoked",
+            "tau"
+          ]
+        ],
+        "query": [
+          "Active",
+          "tau"
+        ],
+        "rules": []
+      },
+      "gold_answer": "impossible",
+      "item_id": "llmlogic-2931-005",
+      "problem": "A token cannot be both active and revoked. Token tau is revoked. Can tau be active?"
+    },
+    {
+      "formalization": {
+        "exclusions": [],
+        "facts": [
+          [
+            "Licensed",
+            "ada"
+          ]
+        ],
+        "query": [
+          "Pilot",
+          "ada"
+        ],
+        "rules": [
+          {
+            "if": [
+              [
+                "Pilot",
+                "ada"
+              ]
+            ],
+            "then": [
+              "Licensed",
+              "ada"
+            ]
+          }
+        ]
+      },
+      "gold_answer": "possible",
+      "item_id": "llmlogic-2931-006",
+      "problem": "Every pilot is licensed. Ada is licensed, but nothing says Ada is a pilot. Is Ada a pilot necessary?"
+    },
+    {
+      "formalization": {
+        "exclusions": [],
+        "facts": [
+          [
+            "Sterile",
+            "s1"
+          ]
+        ],
+        "query": [
+          "Sealed",
+          "s1"
+        ],
+        "rules": [
+          {
+            "if": [
+              [
+                "Sterile",
+                "s1"
+              ]
+            ],
+            "then": [
+              "Sealed",
+              "s1"
+            ]
+          }
+        ]
+      },
+      "gold_answer": "necessary",
+      "item_id": "llmlogic-2931-007",
+      "problem": "If a sample is sterile then it is sealed. Sample s1 is sterile. Is s1 sealed necessary?"
+    },
+    {
+      "formalization": {
+        "exclusions": [
+          [
+            [
+              "BlueBadge",
+              "b7"
+            ],
+            [
+              "Temporary",
+              "b7"
+            ]
+          ]
+        ],
+        "facts": [
+          [
+            "BlueBadge",
+            "b7"
+          ]
+        ],
+        "query": [
+          "Temporary",
+          "b7"
+        ],
+        "rules": []
+      },
+      "gold_answer": "impossible",
+      "item_id": "llmlogic-2931-008",
+      "problem": "No blue badge is temporary. Badge b7 is blue. Can b7 be temporary?"
+    },
+    {
+      "formalization": {
+        "exclusions": [],
+        "facts": [
+          [
+            "Audited",
+            "kappa"
+          ],
+          [
+            "Signed",
+            "kappa"
+          ]
+        ],
+        "query": [
+          "Reproducible",
+          "kappa"
+        ],
+        "rules": [
+          {
+            "if": [
+              [
+                "Audited",
+                "kappa"
+              ]
+            ],
+            "then": [
+              "Reproducible",
+              "kappa"
+            ]
+          }
+        ]
+      },
+      "gold_answer": "necessary",
+      "item_id": "llmlogic-2931-009",
+      "problem": "Every audited build is reproducible. Build kappa is audited and signed. Is kappa reproducible necessary?"
+    },
+    {
+      "formalization": {
+        "exclusions": [
+          [
+            [
+              "Offline",
+              "n4"
+            ],
+            [
+              "Reachable",
+              "n4"
+            ]
+          ]
+        ],
+        "facts": [
+          [
+            "Offline",
+            "n4"
+          ]
+        ],
+        "query": [
+          "Reachable",
+          "n4"
+        ],
+        "rules": []
+      },
+      "gold_answer": "impossible",
+      "item_id": "llmlogic-2931-010",
+      "problem": "No node can be both offline and reachable. Node n4 is offline. Can n4 be reachable?"
+    },
+    {
+      "formalization": {
+        "exclusions": [],
+        "facts": [
+          [
+            "Fragile",
+            "p2"
+          ],
+          [
+            "Shipped",
+            "p2"
+          ]
+        ],
+        "query": [
+          "Padded",
+          "p2"
+        ],
+        "rules": [
+          {
+            "if": [
+              [
+                "Fragile",
+                "p2"
+              ],
+              [
+                "Shipped",
+                "p2"
+              ]
+            ],
+            "then": [
+              "Padded",
+              "p2"
+            ]
+          }
+        ]
+      },
+      "gold_answer": "necessary",
+      "item_id": "llmlogic-2931-011",
+      "problem": "If a parcel is fragile and shipped, it must be padded. Parcel p2 is fragile and shipped. Is p2 padded necessary?"
+    },
+    {
+      "formalization": {
+        "exclusions": [],
+        "facts": [
+          [
+            "Enrolled",
+            "kai"
+          ]
+        ],
+        "query": [
+          "Graduated",
+          "kai"
+        ],
+        "rules": []
+      },
+      "gold_answer": "possible",
+      "item_id": "llmlogic-2931-012",
+      "problem": "Kai is enrolled. There is no rule connecting enrollment to graduation. Is Kai graduated possible?"
+    }
+  ],
+  "logic_verifier_mini_ready": true,
+  "model_attempts": [
+    {
+      "blocker": null,
+      "hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "live_inference_duration_s": 12.0,
+      "model_name": "Qwen3.6-35B-A3B",
+      "model_path": "/tmp/qwen.gguf",
+      "model_used": true
+    },
+    {
+      "blocker": "not_attempted_runtime_budget",
+      "hf_id": "unsloth/gemma-4-31B-it-GGUF",
+      "model_name": "Gemma4-31B-it",
+      "model_used": false
+    }
+  ],
+  "model_specs": [
+    {
+      "gpu": 0,
+      "hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "model_path": "/tmp/qwen.gguf",
+      "name": "Qwen3.6-35B-A3B"
+    },
+    {
+      "gpu": 1,
+      "hf_id": "unsloth/gemma-4-31B-it-GGUF",
+      "model_path": "/tmp/gemma.gguf",
+      "name": "Gemma4-31B-it"
+    }
+  ],
+  "models_used": [
+    "unsloth/Qwen3.6-35B-A3B-GGUF"
+  ],
+  "n_items": 12,
+  "parseability_rate": 1.0,
+  "per_item_results": [
+    {
+      "answer_correct": false,
+      "elapsed_seconds": 1.0,
+      "generation_blocker": null,
+      "generation_source": "live_sota_llamacpp_logic_json",
+      "gold_answer": "necessary",
+      "gpu_index": 0,
+      "item_id": "llmlogic-2931-001",
+      "model_answer": "possible",
+      "model_hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "model_name": "Qwen3.6-35B-A3B",
+      "model_path": "/tmp/qwen.gguf",
+      "parse_error": null,
+      "parseable": true,
+      "parsed_formalization": {
+        "exclusions": [],
+        "facts": [
+          [
+            "Cat",
+            "milo"
+          ]
+        ],
+        "query": [
+          "Mammal",
+          "milo"
+        ],
+        "rules": [
+          {
+            "if": [
+              [
+                "Cat",
+                "milo"
+              ]
+            ],
+            "then": [
+              "Mammal",
+              "milo"
+            ]
+          }
+        ]
+      },
+      "per_item_seed": 2931,
+      "prompt_hash": "b64c9756aa58f205364f05d56c2d5e82382e50b18e08ffbde9da6dd42304705d",
+      "raw_output_sha256": "049324e4ef17f2cbe3284efaab7aa9df242acb9578ac166a25771994356395db",
+      "raw_response_path": "/home/ianblenke/github.com/ianblenke/carnot/.tmp-pytest/pytest-of-ianblenke/pytest-4/popen-gw0/test_scenario_bench_2931_runne0/llmeval_logic_z3_mini_2931_raw/llmlogic-2931-001.json",
+      "semantic_faithful": true,
+      "solver_answer": "necessary",
+      "violation_class": "answer_wrong",
+      "z3_executed": true,
+      "z3_result": {
+        "knowledge_base_consistent": true,
+        "necessary": true,
+        "possible": true,
+        "solver_answer": "necessary",
+        "z3_error": null,
+        "z3_executed": true
+      }
+    },
+    {
+      "answer_correct": true,
+      "elapsed_seconds": 1.0,
+      "generation_blocker": null,
+      "generation_source": "live_sota_llamacpp_logic_json",
+      "gold_answer": "possible",
+      "gpu_index": 0,
+      "item_id": "llmlogic-2931-002",
+      "model_answer": "possible",
+      "model_hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "model_name": "Qwen3.6-35B-A3B",
+      "model_path": "/tmp/qwen.gguf",
+      "parse_error": null,
+      "parseable": true,
+      "parsed_formalization": {
+        "exclusions": [],
+        "facts": [
+          [
+            "Student",
+            "nia"
+          ]
+        ],
+        "query": [
+          "Athlete",
+          "nia"
+        ],
+        "rules": []
+      },
+      "per_item_seed": 2932,
+      "prompt_hash": "e916dd010788fd5e52077d88de671f1afa69c539c38b70aa87d3478997fdd957",
+      "raw_output_sha256": "4518939d906168b3aa26f680222fe62c769caa39f0acf272e71f0c780598aba2",
+      "raw_response_path": "/home/ianblenke/github.com/ianblenke/carnot/.tmp-pytest/pytest-of-ianblenke/pytest-4/popen-gw0/test_scenario_bench_2931_runne0/llmeval_logic_z3_mini_2931_raw/llmlogic-2931-002.json",
+      "semantic_faithful": true,
+      "solver_answer": "possible",
+      "violation_class": "none",
+      "z3_executed": true,
+      "z3_result": {
+        "knowledge_base_consistent": true,
+        "necessary": false,
+        "possible": true,
+        "solver_answer": "possible",
+        "z3_error": null,
+        "z3_executed": true
+      }
+    },
+    {
+      "answer_correct": true,
+      "elapsed_seconds": 1.0,
+      "generation_blocker": null,
+      "generation_source": "live_sota_llamacpp_logic_json",
+      "gold_answer": "impossible",
+      "gpu_index": 0,
+      "item_id": "llmlogic-2931-003",
+      "model_answer": "impossible",
+      "model_hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "model_name": "Qwen3.6-35B-A3B",
+      "model_path": "/tmp/qwen.gguf",
+      "parse_error": null,
+      "parseable": true,
+      "parsed_formalization": {
+        "exclusions": [
+          [
+            [
+              "Organic",
+              "rho"
+            ],
+            [
+              "Robot",
+              "rho"
+            ]
+          ]
+        ],
+        "facts": [
+          [
+            "Robot",
+            "rho"
+          ]
+        ],
+        "query": [
+          "Organic",
+          "rho"
+        ],
+        "rules": []
+      },
+      "per_item_seed": 2933,
+      "prompt_hash": "ddfd74033897d5c27e70fa4e7c27a6ae4f422b7370d589160665bb8b0d6d4a76",
+      "raw_output_sha256": "033819d8e2f70c946c59da998701303d3a441627cfd0b381a844e7abbf3a1924",
+      "raw_response_path": "/home/ianblenke/github.com/ianblenke/carnot/.tmp-pytest/pytest-of-ianblenke/pytest-4/popen-gw0/test_scenario_bench_2931_runne0/llmeval_logic_z3_mini_2931_raw/llmlogic-2931-003.json",
+      "semantic_faithful": true,
+      "solver_answer": "impossible",
+      "violation_class": "none",
+      "z3_executed": true,
+      "z3_result": {
+        "knowledge_base_consistent": true,
+        "necessary": false,
+        "possible": false,
+        "solver_answer": "impossible",
+        "z3_error": null,
+        "z3_executed": true
+      }
+    },
+    {
+      "answer_correct": true,
+      "elapsed_seconds": 1.0,
+      "generation_blocker": null,
+      "generation_source": "live_sota_llamacpp_logic_json",
+      "gold_answer": "necessary",
+      "gpu_index": 0,
+      "item_id": "llmlogic-2931-004",
+      "model_answer": "necessary",
+      "model_hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "model_name": "Qwen3.6-35B-A3B",
+      "model_path": "/tmp/qwen.gguf",
+      "parse_error": null,
+      "parseable": true,
+      "parsed_formalization": {
+        "exclusions": [],
+        "facts": [
+          [
+            "Archivist",
+            "ivo"
+          ]
+        ],
+        "query": [
+          "Trusted",
+          "ivo"
+        ],
+        "rules": [
+          {
+            "if": [
+              [
+                "Archivist",
+                "ivo"
+              ]
+            ],
+            "then": [
+              "Careful",
+              "ivo"
+            ]
+          },
+          {
+            "if": [
+              [
+                "Careful",
+                "ivo"
+              ]
+            ],
+            "then": [
+              "Trusted",
+              "ivo"
+            ]
+          }
+        ]
+      },
+      "per_item_seed": 2934,
+      "prompt_hash": "3897bc31ba74e0678da780d3833b07be111e5f15d29a175f37134be333905a10",
+      "raw_output_sha256": "cd56178e878d0f57c73417fa17a8d55621c6a45d23f9077abf53532c5be9c4cc",
+      "raw_response_path": "/home/ianblenke/github.com/ianblenke/carnot/.tmp-pytest/pytest-of-ianblenke/pytest-4/popen-gw0/test_scenario_bench_2931_runne0/llmeval_logic_z3_mini_2931_raw/llmlogic-2931-004.json",
+      "semantic_faithful": true,
+      "solver_answer": "necessary",
+      "violation_class": "none",
+      "z3_executed": true,
+      "z3_result": {
+        "knowledge_base_consistent": true,
+        "necessary": true,
+        "possible": true,
+        "solver_answer": "necessary",
+        "z3_error": null,
+        "z3_executed": true
+      }
+    },
+    {
+      "answer_correct": true,
+      "elapsed_seconds": 1.0,
+      "generation_blocker": null,
+      "generation_source": "live_sota_llamacpp_logic_json",
+      "gold_answer": "impossible",
+      "gpu_index": 0,
+      "item_id": "llmlogic-2931-005",
+      "model_answer": "impossible",
+      "model_hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "model_name": "Qwen3.6-35B-A3B",
+      "model_path": "/tmp/qwen.gguf",
+      "parse_error": null,
+      "parseable": true,
+      "parsed_formalization": {
+        "exclusions": [
+          [
+            [
+              "Active",
+              "tau"
+            ],
+            [
+              "Revoked",
+              "tau"
+            ]
+          ]
+        ],
+        "facts": [
+          [
+            "Revoked",
+            "tau"
+          ]
+        ],
+        "query": [
+          "Active",
+          "tau"
+        ],
+        "rules": []
+      },
+      "per_item_seed": 2935,
+      "prompt_hash": "20af653ede1cd3d0c2e6a3cdd60bbcb1be1c404f7f26edc23963bcdb3d94ec73",
+      "raw_output_sha256": "b3d000578c7a557f97429a3edc314acf1c3f10500d23c37cbb56fe20068aaa71",
+      "raw_response_path": "/home/ianblenke/github.com/ianblenke/carnot/.tmp-pytest/pytest-of-ianblenke/pytest-4/popen-gw0/test_scenario_bench_2931_runne0/llmeval_logic_z3_mini_2931_raw/llmlogic-2931-005.json",
+      "semantic_faithful": true,
+      "solver_answer": "impossible",
+      "violation_class": "none",
+      "z3_executed": true,
+      "z3_result": {
+        "knowledge_base_consistent": true,
+        "necessary": false,
+        "possible": false,
+        "solver_answer": "impossible",
+        "z3_error": null,
+        "z3_executed": true
+      }
+    },
+    {
+      "answer_correct": true,
+      "elapsed_seconds": 1.0,
+      "generation_blocker": null,
+      "generation_source": "live_sota_llamacpp_logic_json",
+      "gold_answer": "possible",
+      "gpu_index": 0,
+      "item_id": "llmlogic-2931-006",
+      "model_answer": "possible",
+      "model_hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "model_name": "Qwen3.6-35B-A3B",
+      "model_path": "/tmp/qwen.gguf",
+      "parse_error": null,
+      "parseable": true,
+      "parsed_formalization": {
+        "exclusions": [],
+        "facts": [
+          [
+            "Licensed",
+            "ada"
+          ]
+        ],
+        "query": [
+          "Pilot",
+          "ada"
+        ],
+        "rules": [
+          {
+            "if": [
+              [
+                "Pilot",
+                "ada"
+              ]
+            ],
+            "then": [
+              "Licensed",
+              "ada"
+            ]
+          }
+        ]
+      },
+      "per_item_seed": 2936,
+      "prompt_hash": "96f1b426a11eebbb3983e66b84d8251446aef820cc78b9475108e09376d5fbea",
+      "raw_output_sha256": "084c8cda0d3f5fcd66239a796bb158e2b1ebac33e0cd72b25c94d50c09182048",
+      "raw_response_path": "/home/ianblenke/github.com/ianblenke/carnot/.tmp-pytest/pytest-of-ianblenke/pytest-4/popen-gw0/test_scenario_bench_2931_runne0/llmeval_logic_z3_mini_2931_raw/llmlogic-2931-006.json",
+      "semantic_faithful": true,
+      "solver_answer": "possible",
+      "violation_class": "none",
+      "z3_executed": true,
+      "z3_result": {
+        "knowledge_base_consistent": true,
+        "necessary": false,
+        "possible": true,
+        "solver_answer": "possible",
+        "z3_error": null,
+        "z3_executed": true
+      }
+    },
+    {
+      "answer_correct": true,
+      "elapsed_seconds": 1.0,
+      "generation_blocker": null,
+      "generation_source": "live_sota_llamacpp_logic_json",
+      "gold_answer": "necessary",
+      "gpu_index": 0,
+      "item_id": "llmlogic-2931-007",
+      "model_answer": "necessary",
+      "model_hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "model_name": "Qwen3.6-35B-A3B",
+      "model_path": "/tmp/qwen.gguf",
+      "parse_error": null,
+      "parseable": true,
+      "parsed_formalization": {
+        "exclusions": [],
+        "facts": [
+          [
+            "Sterile",
+            "s1"
+          ]
+        ],
+        "query": [
+          "Sealed",
+          "s1"
+        ],
+        "rules": [
+          {
+            "if": [
+              [
+                "Sterile",
+                "s1"
+              ]
+            ],
+            "then": [
+              "Sealed",
+              "s1"
+            ]
+          }
+        ]
+      },
+      "per_item_seed": 2937,
+      "prompt_hash": "ff7f9d5fe324f7a561e19a64c62dab0e228038855e887f6ac3b2699d4972057a",
+      "raw_output_sha256": "a98740d3e19e23ea342734c44464efa7045aa874c05bc42e85963e317bd399f4",
+      "raw_response_path": "/home/ianblenke/github.com/ianblenke/carnot/.tmp-pytest/pytest-of-ianblenke/pytest-4/popen-gw0/test_scenario_bench_2931_runne0/llmeval_logic_z3_mini_2931_raw/llmlogic-2931-007.json",
+      "semantic_faithful": true,
+      "solver_answer": "necessary",
+      "violation_class": "none",
+      "z3_executed": true,
+      "z3_result": {
+        "knowledge_base_consistent": true,
+        "necessary": true,
+        "possible": true,
+        "solver_answer": "necessary",
+        "z3_error": null,
+        "z3_executed": true
+      }
+    },
+    {
+      "answer_correct": true,
+      "elapsed_seconds": 1.0,
+      "generation_blocker": null,
+      "generation_source": "live_sota_llamacpp_logic_json",
+      "gold_answer": "impossible",
+      "gpu_index": 0,
+      "item_id": "llmlogic-2931-008",
+      "model_answer": "impossible",
+      "model_hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "model_name": "Qwen3.6-35B-A3B",
+      "model_path": "/tmp/qwen.gguf",
+      "parse_error": null,
+      "parseable": true,
+      "parsed_formalization": {
+        "exclusions": [
+          [
+            [
+              "BlueBadge",
+              "b7"
+            ],
+            [
+              "Temporary",
+              "b7"
+            ]
+          ]
+        ],
+        "facts": [
+          [
+            "BlueBadge",
+            "b7"
+          ]
+        ],
+        "query": [
+          "Temporary",
+          "b7"
+        ],
+        "rules": []
+      },
+      "per_item_seed": 2938,
+      "prompt_hash": "ab4a1887b021e17df30bf00c3db2a552a9e65b74003390858b7e3b007ba4f880",
+      "raw_output_sha256": "43aa806c912403a96cb60d13bc619033b128d47cf6835544a8a3e836320712b4",
+      "raw_response_path": "/home/ianblenke/github.com/ianblenke/carnot/.tmp-pytest/pytest-of-ianblenke/pytest-4/popen-gw0/test_scenario_bench_2931_runne0/llmeval_logic_z3_mini_2931_raw/llmlogic-2931-008.json",
+      "semantic_faithful": true,
+      "solver_answer": "impossible",
+      "violation_class": "none",
+      "z3_executed": true,
+      "z3_result": {
+        "knowledge_base_consistent": true,
+        "necessary": false,
+        "possible": false,
+        "solver_answer": "impossible",
+        "z3_error": null,
+        "z3_executed": true
+      }
+    },
+    {
+      "answer_correct": true,
+      "elapsed_seconds": 1.0,
+      "generation_blocker": null,
+      "generation_source": "live_sota_llamacpp_logic_json",
+      "gold_answer": "necessary",
+      "gpu_index": 0,
+      "item_id": "llmlogic-2931-009",
+      "model_answer": "necessary",
+      "model_hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "model_name": "Qwen3.6-35B-A3B",
+      "model_path": "/tmp/qwen.gguf",
+      "parse_error": null,
+      "parseable": true,
+      "parsed_formalization": {
+        "exclusions": [],
+        "facts": [
+          [
+            "Audited",
+            "kappa"
+          ],
+          [
+            "Signed",
+            "kappa"
+          ]
+        ],
+        "query": [
+          "Reproducible",
+          "kappa"
+        ],
+        "rules": [
+          {
+            "if": [
+              [
+                "Audited",
+                "kappa"
+              ]
+            ],
+            "then": [
+              "Reproducible",
+              "kappa"
+            ]
+          }
+        ]
+      },
+      "per_item_seed": 2939,
+      "prompt_hash": "ccc9a0ff16101323300bc20d896463985cbc11020a8ee5a1f774fc8e090ac850",
+      "raw_output_sha256": "496c16cbf8f89a1be71a87608b9e4bd21fbbddcc5e3df10edc561d02998e0c5e",
+      "raw_response_path": "/home/ianblenke/github.com/ianblenke/carnot/.tmp-pytest/pytest-of-ianblenke/pytest-4/popen-gw0/test_scenario_bench_2931_runne0/llmeval_logic_z3_mini_2931_raw/llmlogic-2931-009.json",
+      "semantic_faithful": true,
+      "solver_answer": "necessary",
+      "violation_class": "none",
+      "z3_executed": true,
+      "z3_result": {
+        "knowledge_base_consistent": true,
+        "necessary": true,
+        "possible": true,
+        "solver_answer": "necessary",
+        "z3_error": null,
+        "z3_executed": true
+      }
+    },
+    {
+      "answer_correct": true,
+      "elapsed_seconds": 1.0,
+      "generation_blocker": null,
+      "generation_source": "live_sota_llamacpp_logic_json",
+      "gold_answer": "impossible",
+      "gpu_index": 0,
+      "item_id": "llmlogic-2931-010",
+      "model_answer": "impossible",
+      "model_hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "model_name": "Qwen3.6-35B-A3B",
+      "model_path": "/tmp/qwen.gguf",
+      "parse_error": null,
+      "parseable": true,
+      "parsed_formalization": {
+        "exclusions": [
+          [
+            [
+              "Offline",
+              "n4"
+            ],
+            [
+              "Reachable",
+              "n4"
+            ]
+          ]
+        ],
+        "facts": [
+          [
+            "Offline",
+            "n4"
+          ]
+        ],
+        "query": [
+          "Reachable",
+          "n4"
+        ],
+        "rules": []
+      },
+      "per_item_seed": 2940,
+      "prompt_hash": "461fd665d5b466f225b681a656816b35ffa42f8502948beb8f77d2be08a327b6",
+      "raw_output_sha256": "52e2212c9853a4a66dbadb46942f841778c0b8e32164759532eeae0bc73cfead",
+      "raw_response_path": "/home/ianblenke/github.com/ianblenke/carnot/.tmp-pytest/pytest-of-ianblenke/pytest-4/popen-gw0/test_scenario_bench_2931_runne0/llmeval_logic_z3_mini_2931_raw/llmlogic-2931-010.json",
+      "semantic_faithful": true,
+      "solver_answer": "impossible",
+      "violation_class": "none",
+      "z3_executed": true,
+      "z3_result": {
+        "knowledge_base_consistent": true,
+        "necessary": false,
+        "possible": false,
+        "solver_answer": "impossible",
+        "z3_error": null,
+        "z3_executed": true
+      }
+    },
+    {
+      "answer_correct": true,
+      "elapsed_seconds": 1.0,
+      "generation_blocker": null,
+      "generation_source": "live_sota_llamacpp_logic_json",
+      "gold_answer": "necessary",
+      "gpu_index": 0,
+      "item_id": "llmlogic-2931-011",
+      "model_answer": "necessary",
+      "model_hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "model_name": "Qwen3.6-35B-A3B",
+      "model_path": "/tmp/qwen.gguf",
+      "parse_error": null,
+      "parseable": true,
+      "parsed_formalization": {
+        "exclusions": [],
+        "facts": [
+          [
+            "Fragile",
+            "p2"
+          ],
+          [
+            "Shipped",
+            "p2"
+          ]
+        ],
+        "query": [
+          "Padded",
+          "p2"
+        ],
+        "rules": [
+          {
+            "if": [
+              [
+                "Fragile",
+                "p2"
+              ],
+              [
+                "Shipped",
+                "p2"
+              ]
+            ],
+            "then": [
+              "Padded",
+              "p2"
+            ]
+          }
+        ]
+      },
+      "per_item_seed": 2941,
+      "prompt_hash": "3cd2e4e1166b32dc0ca630598623c46cd45ece616b3afaee5c144c75d39cdfa0",
+      "raw_output_sha256": "afc0f8985778e0d5d5bcd1ab753a86bc04be213b6deea1f4a078b4e2c5d5f1e7",
+      "raw_response_path": "/home/ianblenke/github.com/ianblenke/carnot/.tmp-pytest/pytest-of-ianblenke/pytest-4/popen-gw0/test_scenario_bench_2931_runne0/llmeval_logic_z3_mini_2931_raw/llmlogic-2931-011.json",
+      "semantic_faithful": true,
+      "solver_answer": "necessary",
+      "violation_class": "none",
+      "z3_executed": true,
+      "z3_result": {
+        "knowledge_base_consistent": true,
+        "necessary": true,
+        "possible": true,
+        "solver_answer": "necessary",
+        "z3_error": null,
+        "z3_executed": true
+      }
+    },
+    {
+      "answer_correct": true,
+      "elapsed_seconds": 1.0,
+      "generation_blocker": null,
+      "generation_source": "live_sota_llamacpp_logic_json",
+      "gold_answer": "possible",
+      "gpu_index": 0,
+      "item_id": "llmlogic-2931-012",
+      "model_answer": "possible",
+      "model_hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "model_name": "Qwen3.6-35B-A3B",
+      "model_path": "/tmp/qwen.gguf",
+      "parse_error": null,
+      "parseable": true,
+      "parsed_formalization": {
+        "exclusions": [],
+        "facts": [
+          [
+            "Enrolled",
+            "kai"
+          ]
+        ],
+        "query": [
+          "Graduated",
+          "kai"
+        ],
+        "rules": []
+      },
+      "per_item_seed": 2942,
+      "prompt_hash": "1107ed5928deb74b4adb73308fac302e90d64e3806d8971a41486e7604cbfe88",
+      "raw_output_sha256": "2f6e12a115e68134c9a0c8fb6e5df102788f5c4d41fbf0cee7fbd0306036a733",
+      "raw_response_path": "/home/ianblenke/github.com/ianblenke/carnot/.tmp-pytest/pytest-of-ianblenke/pytest-4/popen-gw0/test_scenario_bench_2931_runne0/llmeval_logic_z3_mini_2931_raw/llmlogic-2931-012.json",
+      "semantic_faithful": true,
+      "solver_answer": "possible",
+      "violation_class": "none",
+      "z3_executed": true,
+      "z3_result": {
+        "knowledge_base_consistent": true,
+        "necessary": false,
+        "possible": true,
+        "solver_answer": "possible",
+        "z3_error": null,
+        "z3_executed": true
+      }
+    }
+  ],
+  "prompts": [
+    "Translate the natural-language logic problem into bounded ground logic.\nReturn exactly one JSON object and no prose.\nThe JSON object must have this shape:\n{\"formalization\": {\"facts\": [[\"Predicate\", \"entity\"]], \"rules\": [{\"if\": [[\"Predicate\", \"entity\"]], \"then\": [\"Predicate\", \"entity\"]}], \"exclusions\": [[[\"Predicate\", \"entity\"], [\"Other\", \"entity\"]]], \"query\": [\"Predicate\", \"entity\"]}, \"answer\": \"necessary|possible|impossible\"}\nUse only ground atoms; a rule is a Horn implication from all if-atoms to the then-atom.\nItem id: llmlogic-2931-001\nProblem: All cats are mammals. Milo is a cat. Is Milo necessarily a mammal?\n",
+    "Translate the natural-language logic problem into bounded ground logic.\nReturn exactly one JSON object and no prose.\nThe JSON object must have this shape:\n{\"formalization\": {\"facts\": [[\"Predicate\", \"entity\"]], \"rules\": [{\"if\": [[\"Predicate\", \"entity\"]], \"then\": [\"Predicate\", \"entity\"]}], \"exclusions\": [[[\"Predicate\", \"entity\"], [\"Other\", \"entity\"]]], \"query\": [\"Predicate\", \"entity\"]}, \"answer\": \"necessary|possible|impossible\"}\nUse only ground atoms; a rule is a Horn implication from all if-atoms to the then-atom.\nItem id: llmlogic-2931-002\nProblem: Nia is a student. Some students may be athletes, but no rule says Nia is one. Is Nia an athlete possible?\n",
+    "Translate the natural-language logic problem into bounded ground logic.\nReturn exactly one JSON object and no prose.\nThe JSON object must have this shape:\n{\"formalization\": {\"facts\": [[\"Predicate\", \"entity\"]], \"rules\": [{\"if\": [[\"Predicate\", \"entity\"]], \"then\": [\"Predicate\", \"entity\"]}], \"exclusions\": [[[\"Predicate\", \"entity\"], [\"Other\", \"entity\"]]], \"query\": [\"Predicate\", \"entity\"]}, \"answer\": \"necessary|possible|impossible\"}\nUse only ground atoms; a rule is a Horn implication from all if-atoms to the then-atom.\nItem id: llmlogic-2931-003\nProblem: No robot is organic. Rho is a robot. Is Rho organic possible?\n",
+    "Translate the natural-language logic problem into bounded ground logic.\nReturn exactly one JSON object and no prose.\nThe JSON object must have this shape:\n{\"formalization\": {\"facts\": [[\"Predicate\", \"entity\"]], \"rules\": [{\"if\": [[\"Predicate\", \"entity\"]], \"then\": [\"Predicate\", \"entity\"]}], \"exclusions\": [[[\"Predicate\", \"entity\"], [\"Other\", \"entity\"]]], \"query\": [\"Predicate\", \"entity\"]}, \"answer\": \"necessary|possible|impossible\"}\nUse only ground atoms; a rule is a Horn implication from all if-atoms to the then-atom.\nItem id: llmlogic-2931-004\nProblem: Every archivist is careful. Every careful person is trusted. Ivo is an archivist. Is Ivo trusted necessary?\n",
+    "Translate the natural-language logic problem into bounded ground logic.\nReturn exactly one JSON object and no prose.\nThe JSON object must have this shape:\n{\"formalization\": {\"facts\": [[\"Predicate\", \"entity\"]], \"rules\": [{\"if\": [[\"Predicate\", \"entity\"]], \"then\": [\"Predicate\", \"entity\"]}], \"exclusions\": [[[\"Predicate\", \"entity\"], [\"Other\", \"entity\"]]], \"query\": [\"Predicate\", \"entity\"]}, \"answer\": \"necessary|possible|impossible\"}\nUse only ground atoms; a rule is a Horn implication from all if-atoms to the then-atom.\nItem id: llmlogic-2931-005\nProblem: A token cannot be both active and revoked. Token tau is revoked. Can tau be active?\n",
+    "Translate the natural-language logic problem into bounded ground logic.\nReturn exactly one JSON object and no prose.\nThe JSON object must have this shape:\n{\"formalization\": {\"facts\": [[\"Predicate\", \"entity\"]], \"rules\": [{\"if\": [[\"Predicate\", \"entity\"]], \"then\": [\"Predicate\", \"entity\"]}], \"exclusions\": [[[\"Predicate\", \"entity\"], [\"Other\", \"entity\"]]], \"query\": [\"Predicate\", \"entity\"]}, \"answer\": \"necessary|possible|impossible\"}\nUse only ground atoms; a rule is a Horn implication from all if-atoms to the then-atom.\nItem id: llmlogic-2931-006\nProblem: Every pilot is licensed. Ada is licensed, but nothing says Ada is a pilot. Is Ada a pilot necessary?\n",
+    "Translate the natural-language logic problem into bounded ground logic.\nReturn exactly one JSON object and no prose.\nThe JSON object must have this shape:\n{\"formalization\": {\"facts\": [[\"Predicate\", \"entity\"]], \"rules\": [{\"if\": [[\"Predicate\", \"entity\"]], \"then\": [\"Predicate\", \"entity\"]}], \"exclusions\": [[[\"Predicate\", \"entity\"], [\"Other\", \"entity\"]]], \"query\": [\"Predicate\", \"entity\"]}, \"answer\": \"necessary|possible|impossible\"}\nUse only ground atoms; a rule is a Horn implication from all if-atoms to the then-atom.\nItem id: llmlogic-2931-007\nProblem: If a sample is sterile then it is sealed. Sample s1 is sterile. Is s1 sealed necessary?\n",
+    "Translate the natural-language logic problem into bounded ground logic.\nReturn exactly one JSON object and no prose.\nThe JSON object must have this shape:\n{\"formalization\": {\"facts\": [[\"Predicate\", \"entity\"]], \"rules\": [{\"if\": [[\"Predicate\", \"entity\"]], \"then\": [\"Predicate\", \"entity\"]}], \"exclusions\": [[[\"Predicate\", \"entity\"], [\"Other\", \"entity\"]]], \"query\": [\"Predicate\", \"entity\"]}, \"answer\": \"necessary|possible|impossible\"}\nUse only ground atoms; a rule is a Horn implication from all if-atoms to the then-atom.\nItem id: llmlogic-2931-008\nProblem: No blue badge is temporary. Badge b7 is blue. Can b7 be temporary?\n",
+    "Translate the natural-language logic problem into bounded ground logic.\nReturn exactly one JSON object and no prose.\nThe JSON object must have this shape:\n{\"formalization\": {\"facts\": [[\"Predicate\", \"entity\"]], \"rules\": [{\"if\": [[\"Predicate\", \"entity\"]], \"then\": [\"Predicate\", \"entity\"]}], \"exclusions\": [[[\"Predicate\", \"entity\"], [\"Other\", \"entity\"]]], \"query\": [\"Predicate\", \"entity\"]}, \"answer\": \"necessary|possible|impossible\"}\nUse only ground atoms; a rule is a Horn implication from all if-atoms to the then-atom.\nItem id: llmlogic-2931-009\nProblem: Every audited build is reproducible. Build kappa is audited and signed. Is kappa reproducible necessary?\n",
+    "Translate the natural-language logic problem into bounded ground logic.\nReturn exactly one JSON object and no prose.\nThe JSON object must have this shape:\n{\"formalization\": {\"facts\": [[\"Predicate\", \"entity\"]], \"rules\": [{\"if\": [[\"Predicate\", \"entity\"]], \"then\": [\"Predicate\", \"entity\"]}], \"exclusions\": [[[\"Predicate\", \"entity\"], [\"Other\", \"entity\"]]], \"query\": [\"Predicate\", \"entity\"]}, \"answer\": \"necessary|possible|impossible\"}\nUse only ground atoms; a rule is a Horn implication from all if-atoms to the then-atom.\nItem id: llmlogic-2931-010\nProblem: No node can be both offline and reachable. Node n4 is offline. Can n4 be reachable?\n",
+    "Translate the natural-language logic problem into bounded ground logic.\nReturn exactly one JSON object and no prose.\nThe JSON object must have this shape:\n{\"formalization\": {\"facts\": [[\"Predicate\", \"entity\"]], \"rules\": [{\"if\": [[\"Predicate\", \"entity\"]], \"then\": [\"Predicate\", \"entity\"]}], \"exclusions\": [[[\"Predicate\", \"entity\"], [\"Other\", \"entity\"]]], \"query\": [\"Predicate\", \"entity\"]}, \"answer\": \"necessary|possible|impossible\"}\nUse only ground atoms; a rule is a Horn implication from all if-atoms to the then-atom.\nItem id: llmlogic-2931-011\nProblem: If a parcel is fragile and shipped, it must be padded. Parcel p2 is fragile and shipped. Is p2 padded necessary?\n",
+    "Translate the natural-language logic problem into bounded ground logic.\nReturn exactly one JSON object and no prose.\nThe JSON object must have this shape:\n{\"formalization\": {\"facts\": [[\"Predicate\", \"entity\"]], \"rules\": [{\"if\": [[\"Predicate\", \"entity\"]], \"then\": [\"Predicate\", \"entity\"]}], \"exclusions\": [[[\"Predicate\", \"entity\"], [\"Other\", \"entity\"]]], \"query\": [\"Predicate\", \"entity\"]}, \"answer\": \"necessary|possible|impossible\"}\nUse only ground atoms; a rule is a Horn implication from all if-atoms to the then-atom.\nItem id: llmlogic-2931-012\nProblem: Kai is enrolled. There is no rule connecting enrollment to graduation. Is Kai graduated possible?\n"
+  ],
+  "random_seed": 2931,
+  "raw_response_dir": "/home/ianblenke/github.com/ianblenke/carnot/.tmp-pytest/pytest-of-ianblenke/pytest-4/popen-gw0/test_scenario_bench_2931_runne0/llmeval_logic_z3_mini_2931_raw",
+  "reproducibility_checksum": "1c8db566e9ea1a2bde98c7ecb056e4820dd45249055f5cfab43c2cb0d5a097f2",
+  "run_date": "20260523",
+  "z3_execution_rate": 1.0
+}

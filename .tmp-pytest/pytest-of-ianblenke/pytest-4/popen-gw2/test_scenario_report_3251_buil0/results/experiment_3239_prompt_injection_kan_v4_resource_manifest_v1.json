@@ -1,0 +1,70 @@
+{
+  "corpus_input_paths": [
+    {
+      "label_counts": {
+        "benign": 2,
+        "injection": 2
+      },
+      "path": "data/prompt_injection_distill/adce94ae07d6f4e7.jsonl",
+      "present": true,
+      "record_type": "json_array_corpus",
+      "role": "source_corpus_balanced_a",
+      "row_count": 4
+    },
+    {
+      "label_counts": {
+        "benign": 2,
+        "injection": 2
+      },
+      "path": "data/prompt_injection_distill/e9aeab292133918b.jsonl",
+      "present": true,
+      "record_type": "json_array_corpus",
+      "role": "source_corpus_balanced_b",
+      "row_count": 4
+    },
+    {
+      "label_counts": {
+        "0": 1,
+        "1": 1
+      },
+      "path": "data/prompt_injection_distill/teacher_outputs_v690.jsonl",
+      "present": true,
+      "record_type": "jsonl_teacher_cache",
+      "role": "teacher_cache_v690",
+      "row_count": 2
+    },
+    {
+      "label_counts": {
+        "0": 1,
+        "1": 1
+      },
+      "path": "results/prompt_injection_teacher_labels_v2.json",
+      "present": true,
+      "record_type": "json_teacher_cache",
+      "role": "teacher_labels_v2_cache",
+      "row_count": 2
+    }
+  ],
+  "downstream_deliverables": [
+    {
+      "path": "results/experiment_3240_prompt_injection_kan_teacher_label_shard_v1.json",
+      "role": "teacher_label_shard"
+    }
+  ],
+  "experiment_id": "exp3239",
+  "honest_verdict": "complete: v4_manifest_ready=true; no labels generated",
+  "inference_substrate": "aggregation_from_upstream_artifacts",
+  "milestone": "2026.05.300",
+  "shard_plan": {
+    "first_teacher_label_shard": {
+      "input_paths": [
+        "data/prompt_injection_distill/adce94ae07d6f4e7.jsonl",
+        "data/prompt_injection_distill/e9aeab292133918b.jsonl"
+      ],
+      "n_prompts": 8,
+      "shard_id": "tl-smoke-000"
+    }
+  },
+  "task_id": "exp3239-prompt-injection-kan-v4-resource-manifest-v1",
+  "v4_manifest_ready": true
+}

@@ -1,0 +1,220 @@
+{
+  "artifact": "experiment_3162_capstone_v293",
+  "blocker_delta_from_v26": 10,
+  "capstone_ready": true,
+  "capstone_v293_ready": true,
+  "duration_s": 1.25,
+  "ebt_arm_status": "projection_only_scalar_auc_1.0_exact_rows_6_no_live_integration_blockers_6",
+  "fr11_improved_from_v292": true,
+  "fr11_promotion_allowed": false,
+  "fr11_self_learning_status": "improved_to_0.857143_but_promotion_blocked_controller_memory_only_no_weight_update",
+  "hardware_energy_kan_headline_safe": false,
+  "headline_forbidden_claims": [
+    "live_verifier_headline",
+    "repair_headline",
+    "fr11_model_weight_learning",
+    "energy_sidecar_live_integration",
+    "kan_deployed_verifier",
+    "hardware_speedup"
+  ],
+  "headline_safe_claims": [
+    "matrix_v27_aggregation_complete",
+    "exact_replay_known_false_accept_rows_preserved",
+    "fr11_controller_memory_ledger_replay_bounded",
+    "kan_exact_monitor_records_bounded"
+  ],
+  "honest_verdict": "complete: capstone_v293_ready=true; capstone_ready=true; paper_ready=false; publication_blocker_count=65; blocker_delta_from_v26=10; next_top_gap=clean_live_verifier_corrigendum_repair_gate",
+  "inference_substrate": {
+    "executes_conductor": false,
+    "executes_hardware": false,
+    "executes_models": false,
+    "executes_repairs": false,
+    "executes_solvers": false,
+    "executes_verifiers": false,
+    "hardware_commands_run_by_capstone": [],
+    "kind": "aggregation_from_checked_in_matrix_v27_capstone_v292_and_dot293_artifacts",
+    "live_model_calls_run_by_capstone": 0,
+    "local_repo_only": true,
+    "no_live_llm_inference": true,
+    "source": "results/experiment_3161_cross_corpus_matrix_v27.json"
+  },
+  "invariant_violations": [],
+  "kan_status": "bounded_monitor_records_4_new_2_no_deployed_verifier_blockers_3",
+  "matrix_v27_summary": {
+    "blocker_delta_from_v26": 10,
+    "matrix_v27_ready": true,
+    "missing_artifact_count": 2,
+    "prior_publication_blocker_count": 55,
+    "publication_blocker_count": 65,
+    "rows_total": 136,
+    "status_counts": {
+      "blocked": 14,
+      "bounded": 22,
+      "clean": 35,
+      "diagnostic_only": 5,
+      "flagged": 12,
+      "gated_skipped": 10,
+      "missing": 2,
+      "projection_only": 5,
+      "retired": 31
+    }
+  },
+  "milestone": "2026.05.293",
+  "missing_artifacts": [
+    {
+      "experiment_id": "exp3152",
+      "path": "results/experiment_3152_clean_live_sota_verifier_rerun_v8.json",
+      "reason": "missing_or_gated_dot293_artifact"
+    },
+    {
+      "experiment_id": "exp3154",
+      "path": "results/experiment_3154_multi_turn_repair_ladder_v3.json",
+      "reason": "missing_or_gated_dot293_artifact"
+    }
+  ],
+  "next_milestone_recommendations": [
+    "Run a clean live verifier rerun with complete duration, seed, checksum, transcript, and model-load evidence.",
+    "Open the repair gate only after the clean live verifier rerun is trusted and the false-accept regression rows stay blocked.",
+    "Execute the multi-turn repair ladder only after the gate opens; otherwise keep repair correctly skipped."
+  ],
+  "next_top_gap": "clean_live_verifier_corrigendum_repair_gate",
+  "no_new_board_flash": true,
+  "no_new_hardware_run": true,
+  "no_new_model_execution": true,
+  "no_new_repair_run": true,
+  "no_new_solver_run": true,
+  "no_new_synthesis_run": true,
+  "no_new_verifier_run": true,
+  "ops_reconciliation_decision": {
+    "capstone_artifact_alone_is_deliverable": true,
+    "ops_changelog_updated": false,
+    "ops_status_updated": false,
+    "reason": "task stop rule delegates ops/status/changelog/traceability reconciliation to conductor",
+    "traceability_updated_after_spec": false
+  },
+  "paper_readiness_checks": [
+    {
+      "check": "capstone_ready",
+      "passed": true
+    },
+    {
+      "check": "publication_blocker_count_zero",
+      "passed": false
+    },
+    {
+      "check": "clean_verifier_evidence",
+      "passed": false
+    },
+    {
+      "check": "repair_status_promotable",
+      "passed": false
+    },
+    {
+      "check": "fr11_promotion_allowed",
+      "passed": false
+    },
+    {
+      "check": "architecture_boundary_headline_safe",
+      "passed": false
+    }
+  ],
+  "paper_ready": false,
+  "publication_blocker_count": 65,
+  "repair_gate_status": "blocked_pending_clean_rerun_gate_failed",
+  "repair_ladder_status": "correctly_skipped_gate_blocked_no_live_repair_attempts",
+  "repair_skip_was_correct": true,
+  "repair_was_executed": false,
+  "required_source_errors": [],
+  "run_date": "20260526",
+  "sampler_hardware_status": "blocked_no_authenticated_speedup_no_hardware_commands_missing_operator_evidence_8",
+  "schema": "carnot.milestone_capstone.v293_matrix_v27_aggregation.v1",
+  "scripts_research_conductor_modified": false,
+  "source_artifacts": [
+    {
+      "alias_loaded": false,
+      "experiment_id": "exp3161",
+      "loaded_path": "results/experiment_3161_cross_corpus_matrix_v27.json",
+      "path": "results/experiment_3161_cross_corpus_matrix_v27.json",
+      "present": true,
+      "primary_present": true,
+      "readable_json_object": true,
+      "ready_field": "matrix_v27_ready",
+      "required": true,
+      "role": "matrix_v27_authority",
+      "sha256": "b06e4c4201dc01ea1306cbfb6a80d6f33720a9f609a4a5d2140fa150354e1671",
+      "source_type": "json"
+    },
+    {
+      "alias_loaded": false,
+      "experiment_id": "exp3148",
+      "loaded_path": "results/experiment_3148_capstone_v292.json",
+      "path": "results/experiment_3148_capstone_v292.json",
+      "present": true,
+      "primary_present": true,
+      "readable_json_object": true,
+      "ready_field": "capstone_ready",
+      "required": false,
+      "role": "capstone_v292_authority",
+      "sha256": "cd2202b1061552517da986d0825ac4f4e15aef29c9d0a8e0b4f2b64614fa7554",
+      "source_type": "json"
+    },
+    {
+      "alias_loaded": false,
+      "experiment_id": "exp3150",
+      "loaded_path": "results/experiment_3150_adversarial_verifier_evidence_corrigendum_v1.json",
+      "path": "results/experiment_3150_adversarial_verifier_evidence_corrigendum_v1.json",
+      "present": true,
+      "primary_present": true,
+      "readable_json_object": true,
+      "ready_field": "adversarial_corrigendum_v1_ready",
+      "required": false,
+      "role": "adversarial_corrigendum",
+      "sha256": "0472fac6ac4c3ce51dff4fbe9e9ade84cc18981abe63f39d5f97480e445bcab2",
+      "source_type": "json"
+    },
+    {
+      "alias_loaded": false,
+      "experiment_id": "exp3152",
+      "loaded_path": "results/experiment_3152_clean_live_sota_verifier_rerun_v8.json",
+      "path": "results/experiment_3152_clean_live_sota_verifier_rerun_v8.json",
+      "present": false,
+      "primary_present": false,
+      "readable_json_object": false,
+      "ready_field": "clean_live_verifier_rerun_v8_ready",
+      "required": false,
+      "role": "clean_live_verifier_rerun",
+      "sha256": null,
+      "source_type": "json"
+    },
+    {
+      "alias_loaded": true,
+      "experiment_id": "exp3155",
+      "loaded_path": "results/experiment_3155_tracefix_counterexample_repair_pilot.json",
+      "path": "results/experiment_3155_tracefix_counterexample_repair_pilot_v1.json",
+      "present": true,
+      "primary_present": false,
+      "readable_json_object": true,
+      "ready_field": "tracefix_counterexample_repair_pilot_v1_ready",
+      "required": false,
+      "role": "tracefix_counterexample_repair",
+      "sha256": "5dd35edf59999ecd73bf106609355d361c2e020b80f99c28b20aafff2d40a3d8",
+      "source_type": "json"
+    }
+  ],
+  "source_checksums": {
+    "results/experiment_3148_capstone_v292.json": "cd2202b1061552517da986d0825ac4f4e15aef29c9d0a8e0b4f2b64614fa7554",
+    "results/experiment_3150_adversarial_verifier_evidence_corrigendum_v1.json": "0472fac6ac4c3ce51dff4fbe9e9ade84cc18981abe63f39d5f97480e445bcab2",
+    "results/experiment_3152_clean_live_sota_verifier_rerun_v8.json": null,
+    "results/experiment_3155_tracefix_counterexample_repair_pilot_v1.json": "5dd35edf59999ecd73bf106609355d361c2e020b80f99c28b20aafff2d40a3d8",
+    "results/experiment_3161_cross_corpus_matrix_v27.json": "b06e4c4201dc01ea1306cbfb6a80d6f33720a9f609a4a5d2140fa150354e1671"
+  },
+  "status_updates_written": false,
+  "verifier_evidence_status": "corrigendum_preserved_exact_replay_but_did_not_unblock_repair_live_evidence_untrusted",
+  "what_293_proved": [
+    "corrigendum preserved exact known-false-accept replay, but live verifier evidence_trusted=false and clean_live_rerun_status=gated_skipped.",
+    "repair was not executed: repair_gate_state=blocked, repair_ladder_status=gated_skipped, repair_attempt_count=0.",
+    "FR-11 improved to ledger_consistency_rate=0.857143, but promotion remains block_fr11_promotion_until_ledger_consistency_reaches_1.0.",
+    "matrix v27 is complete over 136 rows with 65 publication blockers.",
+    "Architecture claims stay bounded: energy_sidecar=projection_only, KAN=bounded, hardware=blocked."
+  ]
+}

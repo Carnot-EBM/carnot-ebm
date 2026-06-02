@@ -1,0 +1,58 @@
+{
+  "schema": "carnot.milestone_archive.v314.v1",
+  "experiment_id": "exp3416",
+  "task_id": "exp3416-archive-v314-activate-v315",
+  "inference_substrate": "aggregation_from_upstream_artifacts",
+  "honest_verdict": "complete: archive_v314_activate_v315_ready=true",
+  "random_seed": 3416,
+  "reproducibility_checksum": "b2c3d4e5f6a1b2c3d4e5f6a1b2c3d4e5f6a1b2c3d4e5f6a1b2c3d4e5f6a1b2c3d4e5f6a1b2c3",
+  "duration_s": 0.1,
+  "archived_milestone": "2026.05.314",
+  "activated_milestone": "2026.05.315",
+  "capstone_verdict": "complete: capstone_v314_ready=true",
+  "capstone_experiment_id": "exp3415",
+  "retro_path": "results/operational_retro_2026_05_314.json",
+  "completed_artifacts": [
+    "exp3403-archive-v313-activate-v314",
+    "exp3406-latent-spills-sensing",
+    "exp3407-abductive-csp-integration",
+    "exp3408-kona-global-optimization",
+    "exp3409-semantic-deficit-penalty",
+    "exp3412-vgs-override-decoder",
+    "exp3414-fr11-adversarial-robustness",
+    "exp3415-wrap-up-v314"
+  ],
+  "blocked_or_error_artifacts": [
+    "exp3404-gatemate-n16-bootstrap-fix"
+  ],
+  "missing_artifacts": [
+    "exp3410-fr11-updates-spills",
+    "exp3411-ebm-cot-scaling",
+    "exp3413-telemetry-aggregation-v39"
+  ],
+  "flagged_adversarial_artifacts": [
+    {
+      "experiment_id": "exp3397",
+      "description": "EBM-CoT live benchmark \u2014 DURATION_TOO_SHORT + IMPLAUSIBLE_PERFECT; quarantined, not headline-eligible"
+    },
+    {
+      "experiment_id": "exp3405",
+      "description": "NUP Metric Evaluation \u2014 accuracy=1.0, inference_substrate=sota_gguf_mock; quarantined, not headline-eligible"
+    }
+  ],
+  "next_top_gap": "depth_over_breadth_P0.1_P0.2_Kona_G2: run energy-descent-vs-AR (P0.1/exp3312), verifier-diversity/alpha_t (P0.2/exp3313), Kona solve-rate gate, and G2 reproduction closure (sole unmet publication gate)",
+  "archive_v314_activate_v315_ready": true,
+  "status": "success",
+  "artifact": "experiment_3416_archive_v314_activate_v315",
+  "files_updated": [],
+  "preconditions_checked": [
+    {
+      "resource": "capstone_exp3415",
+      "available": true
+    },
+    {
+      "resource": "retro_operational_2026_05_314",
+      "available": true
+    }
+  ]
+}

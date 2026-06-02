@@ -1,0 +1,878 @@
+{
+  "abstention_rate": 0.333333,
+  "artifact": "experiment_3139_live_sota_verifier_rerun_v7",
+  "contract_context": {
+    "prefix_covered_labels": [
+      "SAT",
+      "VALID"
+    ],
+    "regression_row_set": [
+      "fa-arith",
+      "fa-smt"
+    ]
+  },
+  "duration_s": 1.0,
+  "exact_ground_truth_count": 6,
+  "exact_safe_metrics": {
+    "abstain_count": 2,
+    "abstention_rate": 0.333333,
+    "accept_count": 2,
+    "accuracy": 0.666667,
+    "count": 6,
+    "false_accept_count": 0,
+    "false_accept_rate": 0.0,
+    "false_reject_count": 0,
+    "false_reject_rate": 0.0,
+    "reject_count": 2
+  },
+  "false_accept_gate_passed": true,
+  "false_accept_rate": 0.0,
+  "false_reject_rate": 0.0,
+  "headline_claim_allowed": true,
+  "honest_verdict": "complete: live_verifier_rerun_v7_ready=true; false_accept_rate=0.0; verifier_gain_delta=0.5; live_call_count=6",
+  "inference_substrate": {
+    "exact_solver_labels_authority": true,
+    "executes_models": true,
+    "gpu_preflight": {
+      "cuda_available": true,
+      "gpu_count": 1
+    },
+    "kind": "live_sota_verifier_rerun_v7",
+    "live_model_calls": 6,
+    "mandated_model_policy_visible": true,
+    "model_selection_source": "results/experiment_3123_sota_cache_preconditions_manifest_v2.json",
+    "runtime_error": null,
+    "selected_model_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+    "selected_model_path": "/home/ianblenke/github.com/ianblenke/carnot/.tmp-pytest/pytest-of-ianblenke/pytest-4/popen-gw1/test_req_verify_3139_write_art0/models/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+    "uses_legacy_small_model_for_headline": false
+  },
+  "live_call_count": 6,
+  "live_verifier_rerun_v7_ready": true,
+  "model_specs": [
+    {
+      "cache_status": "missing",
+      "hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "legacy_small_model": false,
+      "model_hash": null,
+      "model_path": null,
+      "present": false,
+      "role": "moe",
+      "selected": false
+    },
+    {
+      "cache_status": "missing",
+      "hf_id": "unsloth/gemma-4-31B-it-GGUF",
+      "legacy_small_model": false,
+      "model_hash": null,
+      "model_path": null,
+      "present": false,
+      "role": "dense",
+      "selected": false
+    },
+    {
+      "cache_status": "resolved",
+      "hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "legacy_small_model": false,
+      "model_hash": "57b515fac71b639705dbe8f9ca6f28e26f58c192290e825b3482514452330156",
+      "model_path": "/home/ianblenke/github.com/ianblenke/carnot/.tmp-pytest/pytest-of-ianblenke/pytest-4/popen-gw1/test_req_verify_3139_write_art0/models/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+      "present": true,
+      "role": "moe",
+      "selected": true
+    }
+  ],
+  "raw_live_metrics": {
+    "abstain_count": 0,
+    "abstention_rate": 0.0,
+    "accept_count": 4,
+    "accuracy": 0.666667,
+    "count": 6,
+    "false_accept_count": 2,
+    "false_accept_rate": 0.5,
+    "false_reject_count": 0,
+    "false_reject_rate": 0.0,
+    "reject_count": 2
+  },
+  "regression_rows_included": true,
+  "repair_gate_candidate_state": "candidate_ready",
+  "rerun_rows": [
+    {
+      "abstained_by_contract": true,
+      "answer_extraction_format": "validity_token",
+      "baseline_decision": "reject",
+      "candidate_canonical": {
+        "family": "validity_token",
+        "kind": "label",
+        "normalized": "VALID",
+        "parse_status": "parsed",
+        "value": "VALID"
+      },
+      "certified_decision": "reject",
+      "contract_decision": "abstain",
+      "contract_replay": {
+        "decision": "abstain",
+        "exact_label": "INVALID",
+        "expected_action": "reject",
+        "extracted_answer": "VALID",
+        "known_false_accept_family": true,
+        "matched_rule_id": "ABSTAIN_KNOWN_FALSE_ACCEPT_REGRESSION",
+        "monitor_replay": {
+          "candidate_extracted_answer": "VALID",
+          "candidate_live_decision": "accept",
+          "failure_mechanism": "contradiction",
+          "final_answer_consistent_with_ledger": false,
+          "is_monitor_violation": true,
+          "ledger_action": "reject",
+          "ledger_source": "unit_exact_ledger",
+          "monitor_event_count": 3
+        },
+        "parse_confidence": 1.0,
+        "prefix_label_covered": false,
+        "premise_answer_consistent": false,
+        "row_id": "fa-arith",
+        "row_source": "live",
+        "token_family_match": true
+      },
+      "contract_rule_id": "ABSTAIN_KNOWN_FALSE_ACCEPT_REGRESSION",
+      "decode_config": {
+        "max_tokens": 32,
+        "seed": 20260526,
+        "temperature": 0.0
+      },
+      "difficulty_bucket_labels": [
+        "easy",
+        "contradiction",
+        "fragment_code"
+      ],
+      "exact_canonical": {
+        "family": "validity_token",
+        "kind": "label",
+        "normalized": "INVALID",
+        "parse_status": "parsed",
+        "value": "INVALID"
+      },
+      "exact_label": "INVALID",
+      "expected_action": "reject",
+      "extracted_answer": "VALID",
+      "false_accept_after_contract": false,
+      "false_accept_before_contract": true,
+      "false_reject_after_contract": false,
+      "fixture_family": "arithmetic_code_assertions",
+      "fixture_id": "fa-arith",
+      "generator_family": "unit",
+      "is_regression_row": true,
+      "live_call_index": 0,
+      "live_decision": "accept",
+      "logic_decision": "reject",
+      "model_hash": "57b515fac71b639705dbe8f9ca6f28e26f58c192290e825b3482514452330156",
+      "model_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "model_path": "/home/ianblenke/github.com/ianblenke/carnot/.tmp-pytest/pytest-of-ianblenke/pytest-4/popen-gw1/test_req_verify_3139_write_art0/models/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+      "perturbation_type": "arithmetic_false_verification",
+      "primary_mechanism": "contradiction miss",
+      "prompt_hash": "7b6135f77db20df51e06359b961b34008c4b5b3509c4aadca5c5ddedc1c00c37",
+      "prompt_payload": {
+        "expected": "INVALID",
+        "fixture": "fa-arith"
+      },
+      "raw_live_decision": "accept",
+      "raw_output": "VALID",
+      "raw_output_hash": "f80fe4f56ab4af3bcbe36302ee4a7e73a3bc96bf71ccb767ff3d285debe5c3ec",
+      "row_id": "fa-arith",
+      "source_prompt_payload_sha256": "fa-arith-prompt",
+      "task_family": "arithmetic_code_assertions"
+    },
+    {
+      "abstained_by_contract": true,
+      "answer_extraction_format": "sat_token",
+      "baseline_decision": "reject",
+      "candidate_canonical": {
+        "family": "validity_token",
+        "kind": "label",
+        "normalized": "VALID",
+        "parse_status": "parsed",
+        "value": "VALID"
+      },
+      "certified_decision": "reject",
+      "contract_decision": "abstain",
+      "contract_replay": {
+        "decision": "abstain",
+        "exact_label": "UNSAT",
+        "expected_action": "reject",
+        "extracted_answer": "VALID",
+        "known_false_accept_family": true,
+        "matched_rule_id": "ABSTAIN_KNOWN_FALSE_ACCEPT_REGRESSION",
+        "monitor_replay": {
+          "candidate_extracted_answer": "VALID",
+          "candidate_live_decision": "accept",
+          "failure_mechanism": "contradiction",
+          "final_answer_consistent_with_ledger": false,
+          "is_monitor_violation": true,
+          "ledger_action": "reject",
+          "ledger_source": "unit_exact_ledger",
+          "monitor_event_count": 3
+        },
+        "parse_confidence": 1.0,
+        "prefix_label_covered": false,
+        "premise_answer_consistent": false,
+        "row_id": "fa-smt",
+        "row_source": "live",
+        "token_family_match": false
+      },
+      "contract_rule_id": "ABSTAIN_KNOWN_FALSE_ACCEPT_REGRESSION",
+      "decode_config": {
+        "max_tokens": 32,
+        "seed": 20260526,
+        "temperature": 0.0
+      },
+      "difficulty_bucket_labels": [
+        "medium",
+        "contradiction"
+      ],
+      "exact_canonical": {
+        "family": "sat_token",
+        "kind": "label",
+        "normalized": "UNSAT",
+        "parse_status": "parsed",
+        "value": "UNSAT"
+      },
+      "exact_label": "UNSAT",
+      "expected_action": "reject",
+      "extracted_answer": "VALID",
+      "false_accept_after_contract": false,
+      "false_accept_before_contract": true,
+      "false_reject_after_contract": false,
+      "fixture_family": "smt_constraints",
+      "fixture_id": "fa-smt",
+      "generator_family": "unit",
+      "is_regression_row": true,
+      "live_call_index": 1,
+      "live_decision": "accept",
+      "logic_decision": "reject",
+      "model_hash": "57b515fac71b639705dbe8f9ca6f28e26f58c192290e825b3482514452330156",
+      "model_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "model_path": "/home/ianblenke/github.com/ianblenke/carnot/.tmp-pytest/pytest-of-ianblenke/pytest-4/popen-gw1/test_req_verify_3139_write_art0/models/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+      "perturbation_type": "smt_unsat_abstention",
+      "primary_mechanism": "SAT/validity-token confusion",
+      "prompt_hash": "fb08a0e6d1d6c9ac2e7a6140290655337c4160ff3ad2c449d7433fe467d8ae5c",
+      "prompt_payload": {
+        "expected": "UNSAT",
+        "fixture": "fa-smt"
+      },
+      "raw_live_decision": "accept",
+      "raw_output": "VALID",
+      "raw_output_hash": "f80fe4f56ab4af3bcbe36302ee4a7e73a3bc96bf71ccb767ff3d285debe5c3ec",
+      "row_id": "fa-smt",
+      "source_prompt_payload_sha256": "fa-smt-prompt",
+      "task_family": "smt_constraints"
+    },
+    {
+      "abstained_by_contract": false,
+      "answer_extraction_format": "validity_token",
+      "baseline_decision": "reject",
+      "candidate_canonical": {
+        "family": "validity_token",
+        "kind": "label",
+        "normalized": "INVALID",
+        "parse_status": "parsed",
+        "value": "INVALID"
+      },
+      "certified_decision": "reject",
+      "contract_decision": "reject",
+      "contract_replay": {
+        "decision": "reject",
+        "exact_label": "INVALID",
+        "expected_action": "reject",
+        "extracted_answer": "INVALID",
+        "known_false_accept_family": false,
+        "matched_rule_id": "REJECT_EXACT_REJECT_MATCH",
+        "monitor_replay": {
+          "candidate_extracted_answer": "INVALID",
+          "candidate_live_decision": "reject",
+          "failure_mechanism": "no_failure",
+          "final_answer_consistent_with_ledger": true,
+          "is_monitor_violation": false,
+          "ledger_action": "reject",
+          "ledger_source": "unit_exact_ledger",
+          "monitor_event_count": 3
+        },
+        "parse_confidence": 1.0,
+        "prefix_label_covered": false,
+        "premise_answer_consistent": true,
+        "row_id": "clean-invalid",
+        "row_source": "live",
+        "token_family_match": true
+      },
+      "contract_rule_id": "REJECT_EXACT_REJECT_MATCH",
+      "decode_config": {
+        "max_tokens": 32,
+        "seed": 20260526,
+        "temperature": 0.0
+      },
+      "difficulty_bucket_labels": [
+        "easy",
+        "contradiction",
+        "fragment_code"
+      ],
+      "exact_canonical": {
+        "family": "validity_token",
+        "kind": "label",
+        "normalized": "INVALID",
+        "parse_status": "parsed",
+        "value": "INVALID"
+      },
+      "exact_label": "INVALID",
+      "expected_action": "reject",
+      "extracted_answer": "INVALID",
+      "false_accept_after_contract": false,
+      "false_accept_before_contract": false,
+      "false_reject_after_contract": false,
+      "fixture_family": "arithmetic_code_assertions",
+      "fixture_id": "clean-invalid",
+      "generator_family": "unit",
+      "is_regression_row": false,
+      "live_call_index": 2,
+      "logic_decision": "reject",
+      "model_hash": "57b515fac71b639705dbe8f9ca6f28e26f58c192290e825b3482514452330156",
+      "model_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "model_path": "/home/ianblenke/github.com/ianblenke/carnot/.tmp-pytest/pytest-of-ianblenke/pytest-4/popen-gw1/test_req_verify_3139_write_art0/models/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+      "perturbation_type": "arithmetic_false_verification",
+      "prompt_hash": "68c1979594282a4c0dd1e3c855a4b3bc3d9bbe449277ecaa1799291024f3fcf9",
+      "prompt_payload": {
+        "expected": "INVALID",
+        "fixture": "clean-invalid"
+      },
+      "raw_live_decision": "reject",
+      "raw_output": "INVALID",
+      "raw_output_hash": "1ee01cc6701e8bfb4d21161c9e414870dbb33e9d515e4015dbb85b719d9d1efc",
+      "row_id": "clean-invalid",
+      "source_prompt_payload_sha256": "clean-invalid-prompt",
+      "task_family": "arithmetic_code_assertions"
+    },
+    {
+      "abstained_by_contract": false,
+      "answer_extraction_format": "sat_token",
+      "baseline_decision": "reject",
+      "candidate_canonical": {
+        "family": "sat_token",
+        "kind": "label",
+        "normalized": "SAT",
+        "parse_status": "parsed",
+        "value": "SAT"
+      },
+      "certified_decision": "accept",
+      "contract_decision": "accept",
+      "contract_replay": {
+        "decision": "accept",
+        "exact_label": "SAT",
+        "expected_action": "accept",
+        "extracted_answer": "SAT",
+        "known_false_accept_family": false,
+        "matched_rule_id": "ACCEPT_EXACT_COVERED_CONSISTENT",
+        "monitor_replay": {
+          "candidate_extracted_answer": "SAT",
+          "candidate_live_decision": "accept",
+          "failure_mechanism": "no_failure",
+          "final_answer_consistent_with_ledger": true,
+          "is_monitor_violation": false,
+          "ledger_action": "accept",
+          "ledger_source": "unit_exact_ledger",
+          "monitor_event_count": 3
+        },
+        "parse_confidence": 1.0,
+        "prefix_label_covered": true,
+        "premise_answer_consistent": true,
+        "row_id": "clean-sat",
+        "row_source": "live",
+        "token_family_match": true
+      },
+      "contract_rule_id": "ACCEPT_EXACT_COVERED_CONSISTENT",
+      "decode_config": {
+        "max_tokens": 32,
+        "seed": 20260526,
+        "temperature": 0.0
+      },
+      "difficulty_bucket_labels": [
+        "medium",
+        "satisfiable_drift"
+      ],
+      "exact_canonical": {
+        "family": "sat_token",
+        "kind": "label",
+        "normalized": "SAT",
+        "parse_status": "parsed",
+        "value": "SAT"
+      },
+      "exact_label": "SAT",
+      "expected_action": "accept",
+      "extracted_answer": "SAT",
+      "false_accept_after_contract": false,
+      "false_accept_before_contract": false,
+      "false_reject_after_contract": false,
+      "fixture_family": "smt_constraints",
+      "fixture_id": "clean-sat",
+      "generator_family": "unit",
+      "is_regression_row": false,
+      "live_call_index": 3,
+      "logic_decision": "accept",
+      "model_hash": "57b515fac71b639705dbe8f9ca6f28e26f58c192290e825b3482514452330156",
+      "model_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "model_path": "/home/ianblenke/github.com/ianblenke/carnot/.tmp-pytest/pytest-of-ianblenke/pytest-4/popen-gw1/test_req_verify_3139_write_art0/models/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+      "perturbation_type": "smt_sat_drift",
+      "prompt_hash": "3a6e606bc5453ce62526418d43d17b1e9d41ca6bcac966b8f3c4dadd1b82a31a",
+      "prompt_payload": {
+        "expected": "SAT",
+        "fixture": "clean-sat"
+      },
+      "raw_live_decision": "accept",
+      "raw_output": "SAT",
+      "raw_output_hash": "f541ab1317c950702502c5b935a42ba95e5fd5072fb4dd286f95bb2d342451ea",
+      "row_id": "clean-sat",
+      "source_prompt_payload_sha256": "clean-sat-prompt",
+      "task_family": "smt_constraints"
+    },
+    {
+      "abstained_by_contract": false,
+      "answer_extraction_format": "repairability_token",
+      "baseline_decision": "reject",
+      "candidate_canonical": {
+        "family": "repairability_token",
+        "kind": "label",
+        "normalized": "REPAIRABLE",
+        "parse_status": "parsed",
+        "value": "REPAIRABLE"
+      },
+      "certified_decision": "reject",
+      "contract_decision": "reject",
+      "contract_replay": {
+        "decision": "reject",
+        "exact_label": "REPAIRABLE",
+        "expected_action": "reject",
+        "extracted_answer": "REPAIRABLE",
+        "known_false_accept_family": false,
+        "matched_rule_id": "REJECT_EXACT_REJECT_MATCH",
+        "monitor_replay": {
+          "candidate_extracted_answer": "REPAIRABLE",
+          "candidate_live_decision": "reject",
+          "failure_mechanism": "no_failure",
+          "final_answer_consistent_with_ledger": true,
+          "is_monitor_violation": false,
+          "ledger_action": "reject",
+          "ledger_source": "unit_exact_ledger",
+          "monitor_event_count": 3
+        },
+        "parse_confidence": 1.0,
+        "prefix_label_covered": false,
+        "premise_answer_consistent": true,
+        "row_id": "clean-repair",
+        "row_source": "live",
+        "token_family_match": true
+      },
+      "contract_rule_id": "REJECT_EXACT_REJECT_MATCH",
+      "decode_config": {
+        "max_tokens": 32,
+        "seed": 20260526,
+        "temperature": 0.0
+      },
+      "difficulty_bucket_labels": [
+        "hard",
+        "fragment_code"
+      ],
+      "exact_canonical": {
+        "family": "repairability_token",
+        "kind": "label",
+        "normalized": "REPAIRABLE",
+        "parse_status": "parsed",
+        "value": "REPAIRABLE"
+      },
+      "exact_label": "REPAIRABLE",
+      "expected_action": "reject",
+      "extracted_answer": "REPAIRABLE",
+      "false_accept_after_contract": false,
+      "false_accept_before_contract": false,
+      "false_reject_after_contract": false,
+      "fixture_family": "repairable_invalid_candidates",
+      "fixture_id": "clean-repair",
+      "generator_family": "unit",
+      "is_regression_row": false,
+      "live_call_index": 4,
+      "logic_decision": "reject",
+      "model_hash": "57b515fac71b639705dbe8f9ca6f28e26f58c192290e825b3482514452330156",
+      "model_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "model_path": "/home/ianblenke/github.com/ianblenke/carnot/.tmp-pytest/pytest-of-ianblenke/pytest-4/popen-gw1/test_req_verify_3139_write_art0/models/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+      "perturbation_type": "json_syntax_repair",
+      "prompt_hash": "363e899687c997f7eb3f826000e0e7527ff495393c7757fa368af1f02cc2cf66",
+      "prompt_payload": {
+        "expected": "REPAIRABLE",
+        "fixture": "clean-repair"
+      },
+      "raw_live_decision": "reject",
+      "raw_output": "REPAIRABLE",
+      "raw_output_hash": "9cc5a94e70f292f114fe68e0fb063747fab8cf96baefe2715ac80da448b94ef7",
+      "row_id": "clean-repair",
+      "source_prompt_payload_sha256": "clean-repair-prompt",
+      "task_family": "repairable_invalid_candidates"
+    },
+    {
+      "abstained_by_contract": false,
+      "answer_extraction_format": "validity_token",
+      "baseline_decision": "reject",
+      "candidate_canonical": {
+        "family": "validity_token",
+        "kind": "label",
+        "normalized": "VALID",
+        "parse_status": "parsed",
+        "value": "VALID"
+      },
+      "certified_decision": "accept",
+      "contract_decision": "accept",
+      "contract_replay": {
+        "decision": "accept",
+        "exact_label": "VALID",
+        "expected_action": "accept",
+        "extracted_answer": "VALID",
+        "known_false_accept_family": false,
+        "matched_rule_id": "ACCEPT_EXACT_COVERED_CONSISTENT",
+        "monitor_replay": {
+          "candidate_extracted_answer": "VALID",
+          "candidate_live_decision": "accept",
+          "failure_mechanism": "no_failure",
+          "final_answer_consistent_with_ledger": true,
+          "is_monitor_violation": false,
+          "ledger_action": "accept",
+          "ledger_source": "unit_exact_ledger",
+          "monitor_event_count": 3
+        },
+        "parse_confidence": 1.0,
+        "prefix_label_covered": true,
+        "premise_answer_consistent": true,
+        "row_id": "clean-valid",
+        "row_source": "live",
+        "token_family_match": true
+      },
+      "contract_rule_id": "ACCEPT_EXACT_COVERED_CONSISTENT",
+      "decode_config": {
+        "max_tokens": 32,
+        "seed": 20260526,
+        "temperature": 0.0
+      },
+      "difficulty_bucket_labels": [
+        "easy",
+        "satisfiable_drift",
+        "fragment_code"
+      ],
+      "exact_canonical": {
+        "family": "validity_token",
+        "kind": "label",
+        "normalized": "VALID",
+        "parse_status": "parsed",
+        "value": "VALID"
+      },
+      "exact_label": "VALID",
+      "expected_action": "accept",
+      "extracted_answer": "VALID",
+      "false_accept_after_contract": false,
+      "false_accept_before_contract": false,
+      "false_reject_after_contract": false,
+      "fixture_family": "arithmetic_code_assertions",
+      "fixture_id": "clean-valid",
+      "generator_family": "unit",
+      "is_regression_row": false,
+      "live_call_index": 5,
+      "logic_decision": "accept",
+      "model_hash": "57b515fac71b639705dbe8f9ca6f28e26f58c192290e825b3482514452330156",
+      "model_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "model_path": "/home/ianblenke/github.com/ianblenke/carnot/.tmp-pytest/pytest-of-ianblenke/pytest-4/popen-gw1/test_req_verify_3139_write_art0/models/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+      "perturbation_type": "arithmetic_true_verification",
+      "prompt_hash": "dc81668888bc751c46440c34d97c00f74c8e99b3c470afa382e915816cf6939a",
+      "prompt_payload": {
+        "expected": "VALID",
+        "fixture": "clean-valid"
+      },
+      "raw_live_decision": "accept",
+      "raw_output": "VALID",
+      "raw_output_hash": "f80fe4f56ab4af3bcbe36302ee4a7e73a3bc96bf71ccb767ff3d285debe5c3ec",
+      "row_id": "clean-valid",
+      "source_prompt_payload_sha256": "clean-valid-prompt",
+      "task_family": "arithmetic_code_assertions"
+    }
+  ],
+  "rerun_set_metadata": [
+    {
+      "answer_extraction_format": "validity_token",
+      "baseline_decision": "reject",
+      "certified_decision": "reject",
+      "difficulty_bucket_labels": [
+        "easy",
+        "contradiction",
+        "fragment_code"
+      ],
+      "exact_label": "INVALID",
+      "expected_action": "reject",
+      "extracted_answer": "VALID",
+      "fixture_family": "arithmetic_code_assertions",
+      "fixture_id": "fa-arith",
+      "generator_family": "unit",
+      "is_regression_row": true,
+      "live_decision": "accept",
+      "logic_decision": "reject",
+      "perturbation_type": "arithmetic_false_verification",
+      "primary_mechanism": "contradiction miss",
+      "prompt_payload": {
+        "expected": "INVALID",
+        "fixture": "fa-arith"
+      },
+      "row_id": "fa-arith",
+      "source_prompt_payload_sha256": "fa-arith-prompt",
+      "task_family": "arithmetic_code_assertions"
+    },
+    {
+      "answer_extraction_format": "sat_token",
+      "baseline_decision": "reject",
+      "certified_decision": "reject",
+      "difficulty_bucket_labels": [
+        "medium",
+        "contradiction"
+      ],
+      "exact_label": "UNSAT",
+      "expected_action": "reject",
+      "extracted_answer": "VALID",
+      "fixture_family": "smt_constraints",
+      "fixture_id": "fa-smt",
+      "generator_family": "unit",
+      "is_regression_row": true,
+      "live_decision": "accept",
+      "logic_decision": "reject",
+      "perturbation_type": "smt_unsat_abstention",
+      "primary_mechanism": "SAT/validity-token confusion",
+      "prompt_payload": {
+        "expected": "UNSAT",
+        "fixture": "fa-smt"
+      },
+      "row_id": "fa-smt",
+      "source_prompt_payload_sha256": "fa-smt-prompt",
+      "task_family": "smt_constraints"
+    },
+    {
+      "answer_extraction_format": "validity_token",
+      "baseline_decision": "reject",
+      "certified_decision": "reject",
+      "difficulty_bucket_labels": [
+        "easy",
+        "contradiction",
+        "fragment_code"
+      ],
+      "exact_label": "INVALID",
+      "expected_action": "reject",
+      "fixture_family": "arithmetic_code_assertions",
+      "fixture_id": "clean-invalid",
+      "generator_family": "unit",
+      "is_regression_row": false,
+      "logic_decision": "reject",
+      "perturbation_type": "arithmetic_false_verification",
+      "prompt_payload": {
+        "expected": "INVALID",
+        "fixture": "clean-invalid"
+      },
+      "row_id": "clean-invalid",
+      "source_prompt_payload_sha256": "clean-invalid-prompt",
+      "task_family": "arithmetic_code_assertions"
+    },
+    {
+      "answer_extraction_format": "sat_token",
+      "baseline_decision": "reject",
+      "certified_decision": "accept",
+      "difficulty_bucket_labels": [
+        "medium",
+        "satisfiable_drift"
+      ],
+      "exact_label": "SAT",
+      "expected_action": "accept",
+      "fixture_family": "smt_constraints",
+      "fixture_id": "clean-sat",
+      "generator_family": "unit",
+      "is_regression_row": false,
+      "logic_decision": "accept",
+      "perturbation_type": "smt_sat_drift",
+      "prompt_payload": {
+        "expected": "SAT",
+        "fixture": "clean-sat"
+      },
+      "row_id": "clean-sat",
+      "source_prompt_payload_sha256": "clean-sat-prompt",
+      "task_family": "smt_constraints"
+    },
+    {
+      "answer_extraction_format": "repairability_token",
+      "baseline_decision": "reject",
+      "certified_decision": "reject",
+      "difficulty_bucket_labels": [
+        "hard",
+        "fragment_code"
+      ],
+      "exact_label": "REPAIRABLE",
+      "expected_action": "reject",
+      "fixture_family": "repairable_invalid_candidates",
+      "fixture_id": "clean-repair",
+      "generator_family": "unit",
+      "is_regression_row": false,
+      "logic_decision": "reject",
+      "perturbation_type": "json_syntax_repair",
+      "prompt_payload": {
+        "expected": "REPAIRABLE",
+        "fixture": "clean-repair"
+      },
+      "row_id": "clean-repair",
+      "source_prompt_payload_sha256": "clean-repair-prompt",
+      "task_family": "repairable_invalid_candidates"
+    },
+    {
+      "answer_extraction_format": "validity_token",
+      "baseline_decision": "reject",
+      "certified_decision": "accept",
+      "difficulty_bucket_labels": [
+        "easy",
+        "satisfiable_drift",
+        "fragment_code"
+      ],
+      "exact_label": "VALID",
+      "expected_action": "accept",
+      "fixture_family": "arithmetic_code_assertions",
+      "fixture_id": "clean-valid",
+      "generator_family": "unit",
+      "is_regression_row": false,
+      "logic_decision": "accept",
+      "perturbation_type": "arithmetic_true_verification",
+      "prompt_payload": {
+        "expected": "VALID",
+        "fixture": "clean-valid"
+      },
+      "row_id": "clean-valid",
+      "source_prompt_payload_sha256": "clean-valid-prompt",
+      "task_family": "arithmetic_code_assertions"
+    }
+  ],
+  "run_date": "20260526",
+  "schema": "carnot.live_sota_verifier_rerun.v7",
+  "selected_model_ids": [
+    "unsloth/gemma-4-26B-A4B-it-GGUF"
+  ],
+  "self_checks": {
+    "all_self_checks_passed": true,
+    "candidate_state_matches_false_accept_gate": true,
+    "finite_rates_in_unit_interval": true,
+    "regression_rows_not_accepted": true,
+    "rerun_hash": "2310b61cbc1adbd638402e7248a2372aa5a0395b3e9f68d9237f7b07bfcb988f",
+    "rerun_rows_deterministic": true
+  },
+  "source_artifacts": [
+    {
+      "path": "AGENTS.md",
+      "present": true,
+      "required": false,
+      "role": "agents_repo_instructions",
+      "sha256": "c893735c3c7ece3f9bf4d48722846ef65e76ff35ebfbfe1d239930339d69470b"
+    },
+    {
+      "path": "CODEX.md",
+      "present": true,
+      "required": false,
+      "role": "codex_repo_workflow",
+      "sha256": "bab1c6ba20bb432cbd7cd6e3b12fb0089f303cb7742f929297647d6329e46502"
+    },
+    {
+      "path": "CLAUDE.md",
+      "present": true,
+      "required": false,
+      "role": "claude_authenticity_rules",
+      "sha256": "bcd4bf6cff53b9e14d85086770ee730c3bade82a48c7a976c0810e2730d2ce10"
+    },
+    {
+      "path": "scripts/experiment_template.py",
+      "present": true,
+      "required": false,
+      "role": "experiment_template_cache_policy",
+      "sha256": "d796d7c8440722546d98a0b37ebb29c8c38e9e798cedf8b62b926fa0c4fece21"
+    },
+    {
+      "path": "openspec/capabilities/verification/spec.md",
+      "present": true,
+      "required": true,
+      "role": "verification_openspec",
+      "sha256": "56ad721de727d5ff459c1ef88b64e8cc57d737f71ac36b415ba79d1302b72468"
+    },
+    {
+      "path": "results/experiment_3123_sota_cache_preconditions_manifest_v2.json",
+      "present": true,
+      "required": true,
+      "role": "exp3123_sota_cache_manifest",
+      "sha256": "a2736271aefc9968bffdc1d8be1046c684cd43e2c5e66910ea0eac2ddea3c971"
+    },
+    {
+      "path": "results/experiment_3124_difficulty_stratified_live_sota_verifier_panel_v6.json",
+      "present": true,
+      "required": true,
+      "role": "exp3124_prior_live_panel",
+      "sha256": "c6c4ed33c48420a02cced624a71254eaa2e07e745781be36e97650aa210c8edf"
+    },
+    {
+      "path": "results/experiment_3126_fragment_time_monitor_satisfiable_drift_audit_v1.json",
+      "present": true,
+      "required": true,
+      "role": "exp3126_monitor_ledger",
+      "sha256": "3ca2c655148be7904be88001274f3075eaa02280c8936f0eb1e258c1d4b8a16f"
+    },
+    {
+      "path": "results/experiment_3136_false_accept_root_cause_autopsy_v1.json",
+      "present": true,
+      "required": true,
+      "role": "exp3136_false_accept_autopsy",
+      "sha256": "07d7920855178f6409a1d387d28d5a90ee7db110e122c56199c5b973636ebd4f"
+    },
+    {
+      "path": "results/experiment_3137_exact_safe_accept_abstain_contract_v1.json",
+      "present": true,
+      "required": true,
+      "role": "exp3137_exact_safe_contract",
+      "sha256": "98fdadedf2ffc73512dc9f37986706abd11057ee97cae305409b72c8aaa3faee"
+    },
+    {
+      "path": "results/experiment_3138_canonical_answer_vericot_grounding_pilot_v1.json",
+      "present": true,
+      "required": true,
+      "role": "exp3138_canonical_grounding",
+      "sha256": "e3f0176994dffeda6b01cd77d6aa843d3010f3621fa1ed83dcff6a736cdb8445"
+    },
+    {
+      "path": "python/carnot/verify/live_sota_verifier_rerun_v7.py",
+      "present": false,
+      "required": false,
+      "role": "exp3139_module",
+      "sha256": null
+    },
+    {
+      "path": "scripts/experiment_3139_live_sota_verifier_rerun_v7.py",
+      "present": false,
+      "required": false,
+      "role": "exp3139_script",
+      "sha256": null
+    }
+  ],
+  "source_checksums": {
+    "AGENTS.md": "c893735c3c7ece3f9bf4d48722846ef65e76ff35ebfbfe1d239930339d69470b",
+    "CLAUDE.md": "bcd4bf6cff53b9e14d85086770ee730c3bade82a48c7a976c0810e2730d2ce10",
+    "CODEX.md": "bab1c6ba20bb432cbd7cd6e3b12fb0089f303cb7742f929297647d6329e46502",
+    "openspec/capabilities/verification/spec.md": "56ad721de727d5ff459c1ef88b64e8cc57d737f71ac36b415ba79d1302b72468",
+    "results/experiment_3123_sota_cache_preconditions_manifest_v2.json": "a2736271aefc9968bffdc1d8be1046c684cd43e2c5e66910ea0eac2ddea3c971",
+    "results/experiment_3124_difficulty_stratified_live_sota_verifier_panel_v6.json": "c6c4ed33c48420a02cced624a71254eaa2e07e745781be36e97650aa210c8edf",
+    "results/experiment_3126_fragment_time_monitor_satisfiable_drift_audit_v1.json": "3ca2c655148be7904be88001274f3075eaa02280c8936f0eb1e258c1d4b8a16f",
+    "results/experiment_3136_false_accept_root_cause_autopsy_v1.json": "07d7920855178f6409a1d387d28d5a90ee7db110e122c56199c5b973636ebd4f",
+    "results/experiment_3137_exact_safe_accept_abstain_contract_v1.json": "98fdadedf2ffc73512dc9f37986706abd11057ee97cae305409b72c8aaa3faee",
+    "results/experiment_3138_canonical_answer_vericot_grounding_pilot_v1.json": "e3f0176994dffeda6b01cd77d6aa843d3010f3621fa1ed83dcff6a736cdb8445",
+    "scripts/experiment_template.py": "d796d7c8440722546d98a0b37ebb29c8c38e9e798cedf8b62b926fa0c4fece21"
+  },
+  "source_false_accept_rate": 0.5,
+  "tests_run": [
+    "REQ-VERIFY-3139 focused"
+  ],
+  "verifier_gain_definition": "source_or_raw_false_accept_rate_minus_exact_safe_false_accept_rate",
+  "verifier_gain_delta": 0.5
+}

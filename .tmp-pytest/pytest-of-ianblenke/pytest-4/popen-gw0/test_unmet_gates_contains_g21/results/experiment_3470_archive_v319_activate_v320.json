@@ -1,0 +1,112 @@
+{
+  "schema": "carnot.archive_activate.v1",
+  "experiment_id": "exp3470",
+  "task_id": "exp3470-archive-v319-activate-v320",
+  "inference_substrate": "aggregation_from_upstream_artifacts",
+  "honest_verdict": "complete: archive_v319_activate_v320_ready",
+  "random_seed": 3470,
+  "reproducibility_checksum": "3470_archive_v319_v320_agg",
+  "duration_s": 0.1,
+  "archived_milestone": "2026.05.319",
+  "activated_milestone": "2026.05.320",
+  "archive_v319_activate_v320_ready": true,
+  "status": "success",
+  "milestone_319_summary": "Depth-Over-Breadth V.  11 experiments completed (2 hardware blocked, 2 flagged adversarial \u2014 both real tautologies with valid mechanistic explanations).  KEY FINDING: trained EORM energy correctness AUROC 0.629 (+0.113 lift over 0.516 untrained floor, exp3461 CLEAN).  P0.1 v5 (exp3460 FLAGGED): trained energy MATCHES but does NOT BEAT SC at equal compute because GSM8K SC is at CEILING (0.908).  G2 CI dry-run green, handoff ready, external run pending.  PolarFire confirmed reachable.",
+  "experiments_completed_319": [
+    "exp3459",
+    "exp3460",
+    "exp3461",
+    "exp3462",
+    "exp3463",
+    "exp3464",
+    "exp3465",
+    "exp3466",
+    "exp3467",
+    "exp3468",
+    "exp3469"
+  ],
+  "experiments_flagged_319": [
+    "exp3460",
+    "exp3462"
+  ],
+  "experiments_blocked_319": [
+    "exp3465",
+    "exp3466"
+  ],
+  "experiments_retired_319": [],
+  "p01_v5_finding": "trained_energy_ceiling_tie: trained_energy_correctness_auroc=0.629 (signal present); trained_energy_weighted_vote==self_consistency (delta=0.0, McNemar p=1.0) because GSM8K SC=0.908 leaves no headroom. Energy carries signal but cannot improve over a near-perfect SC baseline on this benchmark.",
+  "trained_energy_correctness_auroc_319": 0.629401,
+  "trained_energy_auroc_lift_319": 0.113401,
+  "p01_hypothesis_answered": false,
+  "p01_next_step": "Test on a HEADROOM benchmark (hard math, target SC ~0.4-0.7) where SC is not at ceiling; use process-aware step-level energy + argmax selection to avoid weighted-vote tautology flag; target n>=200 for statistical power.",
+  "g2_status_319": "ci_dryrun_green_handoff_ready_external_run_pending",
+  "g2_handoff_doc": "docs/g2-external-reproducer-handoff.md",
+  "g2_independent_reproducer": false,
+  "fr11_directional_finding_319": "ARM A did NOT collapse at N=50 iterations with ACTIVE_WEIGHT=0.146 (exp3462, flagged adversarial \u2014 directional only, numbers excluded).  Clean rerun at N=200+ needed for forward claims.",
+  "kona_finding_319": "Trained energy does not lift Kona hybrid (delta=0.0, McNemar p=1.0) \u2014 text-reasoning features collapse on Sudoku board strings.  Kona benchmark also saturated (CP solver is domain-specific).",
+  "g1": true,
+  "g2": false,
+  "g3": true,
+  "g4": true,
+  "unmet_gates": [
+    "G2"
+  ],
+  "paper_ready": false,
+  "depth_forcing_function_active": true,
+  "depth_forcing_function_can_relax": false,
+  "next_top_gap": "P0.1 v6 on a benchmark WITH HEADROOM (hard math, SC ~0.4-0.7): test trained-energy selection (argmax, not weighted-vote) to avoid tautology flag; use step-level process-aware energy signals; target n>=200 problems for statistical power.  SIMULTANEOUSLY: ship the G2 self-contained external package for an actual non-operator CI run \u2014 G2 is the SOLE unmet publication gate.",
+  "preconditions_checked": [
+    {
+      "resource": "exp3459_corpus_120",
+      "available": true
+    },
+    {
+      "resource": "exp3460_scoring_v5_flagged",
+      "available": true
+    },
+    {
+      "resource": "exp3461_calibration_v2",
+      "available": true
+    },
+    {
+      "resource": "exp3462_fr11_collapse_v2_flagged",
+      "available": true
+    },
+    {
+      "resource": "exp3463_g2_ci_dryrun",
+      "available": true
+    },
+    {
+      "resource": "exp3464_kona_trained_hybrid",
+      "available": true
+    },
+    {
+      "resource": "exp3465_kv260_continuity",
+      "available": true
+    },
+    {
+      "resource": "exp3466_gatemate_continuity",
+      "available": true
+    },
+    {
+      "resource": "exp3467_polarfire_continuity",
+      "available": true
+    },
+    {
+      "resource": "exp3468_gate_synthesis_v319",
+      "available": true
+    },
+    {
+      "resource": "exp3469_capstone_v319",
+      "available": true
+    }
+  ],
+  "retro_path": "results/operational_retro_2026_05_319.json",
+  "field_provenance": {
+    "honest_verdict": "complete:/success:/passed:/shipped_ prefix required by CLAUDE.md Verdict Terminal-Prefix Discipline.",
+    "inference_substrate": "aggregation_from_upstream_artifacts: no model loaded; reads .319 artifact JSON files only.",
+    "archive_v319_activate_v320_ready": "True when all .319 artifacts are landed and the retro is written; signals the conductor to advance to .320.",
+    "duration_s": "Near-zero: pure JSON read + write, no inference.  adversarial_verify.py applies the near-zero floor for aggregation_from_upstream_artifacts substrate.",
+    "p01_hypothesis_answered": "False: the TRAINED energy shows signal (AUROC 0.629) but TIES SC on a saturated benchmark.  The P0.1 premise requires a headroom benchmark to produce a non-degenerate verdict."
+  }
+}

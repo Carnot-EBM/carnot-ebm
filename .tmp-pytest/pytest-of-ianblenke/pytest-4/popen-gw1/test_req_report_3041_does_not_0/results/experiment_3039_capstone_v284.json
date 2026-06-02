@@ -1,0 +1,52 @@
+{
+  "artifact": "experiment_3039_capstone_v284",
+  "blockers_remaining": [
+    {
+      "area": "matrix_nonclean",
+      "status": "publication_blocking"
+    },
+    {
+      "area": "repair",
+      "status": "bounded"
+    },
+    {
+      "area": "gatemate",
+      "status": "blocked_pinout_missing_bounded"
+    },
+    {
+      "area": "ssqa",
+      "status": "gate_skipped_bounded_no_performance_claim"
+    }
+  ],
+  "capstone_ready": true,
+  "corrigendum_pending": [
+    {
+      "detail": "DURATION_TOO_SHORT fixture detail",
+      "kind": "DURATION_TOO_SHORT",
+      "severity": "critical"
+    },
+    {
+      "detail": "METHODOLOGY_MISSING fixture detail",
+      "kind": "METHODOLOGY_MISSING",
+      "severity": "warn"
+    }
+  ],
+  "flagged_adversarial": true,
+  "gatemate_status": "blocked_pinout_missing_bounded",
+  "honest_verdict": "complete: capstone_ready=true; paper_ready=false",
+  "inference_substrate": {
+    "executes_hardware": false,
+    "executes_models": false,
+    "kind": "aggregation_from_upstream_artifacts"
+  },
+  "paper_ready": false,
+  "paper_ready_checks": [
+    {
+      "check": "repair_promotable",
+      "passed": false,
+      "reason": "repair_claim_status=bounded"
+    }
+  ],
+  "repair_claim_status": "bounded",
+  "ssqa_status": "gate_skipped_bounded_no_performance_claim"
+}

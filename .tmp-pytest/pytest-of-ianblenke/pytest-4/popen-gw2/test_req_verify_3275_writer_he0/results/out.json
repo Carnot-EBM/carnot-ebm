@@ -1,0 +1,231 @@
+{
+  "abstention_count": 0,
+  "abstention_rate": 0.0,
+  "clean_rerun_allowed": true,
+  "clean_verifier_rerun_ready": true,
+  "duration_s": 2.0,
+  "exact_row_fixture_hash": "2248ebb2ebad0f84d9d04eab40b90665b9b89f1dedfb840304542d3a30831d8d",
+  "experiment_id": "exp3275",
+  "false_accept_count": 0,
+  "false_accept_rate": 0.0,
+  "false_reject_count": 0,
+  "false_reject_rate": 0.0,
+  "gate_reasons": [],
+  "gated_skip": false,
+  "gpu_mem_used_mib": 7777,
+  "honest_verdict": "complete: clean local SOTA verifier rerun v14 ready for repair-gate input",
+  "inference_substrate": "local_sota_gguf_exact_row_verifier",
+  "milestone": "2026.05.303",
+  "model_specs": {
+    "mandated_model_ids": [
+      "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "unsloth/gemma-4-31B-it-GGUF"
+    ],
+    "mandated_models": {
+      "unsloth/gemma-4-26B-A4B-it-GGUF": {
+        "cached": true,
+        "expected_quantization": "Q4_K_M",
+        "model_path": "/home/ianblenke/github.com/ianblenke/carnot/.tmp-pytest/pytest-of-ianblenke/pytest-4/popen-gw2/test_req_verify_3275_writer_he0/models/gemma.gguf",
+        "name": "Gemma4-26B-A4B-it",
+        "role": "moe",
+        "size_bytes": 12
+      }
+    },
+    "runtime": "llama_cpp"
+  },
+  "models_used": [
+    {
+      "legacy_small_model": false,
+      "model_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "model_path": "/home/ianblenke/github.com/ianblenke/carnot/.tmp-pytest/pytest-of-ianblenke/pytest-4/popen-gw2/test_req_verify_3275_writer_he0/models/gemma.gguf",
+      "source": "exp3268_clean_receipt"
+    }
+  ],
+  "n_eval": 4,
+  "per_row_results": [
+    {
+      "abstained": false,
+      "decision": "accept",
+      "exact_authority": "context_exact_checker",
+      "expected_decision": "accept",
+      "false_accept": false,
+      "false_reject": false,
+      "fixture_id": "ctx-001",
+      "model_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "model_path": "/home/ianblenke/github.com/ianblenke/carnot/.tmp-pytest/pytest-of-ianblenke/pytest-4/popen-gw2/test_req_verify_3275_writer_he0/models/gemma.gguf",
+      "output_text": "ACCEPT",
+      "prompt_hash": "prompt-ctx-001:expected",
+      "response_hash": "840e2c74114050d417e56a4f87792834ad0c0508d4b4ab5907b49ed4bea5af52",
+      "row_id": "ctx-001:expected",
+      "source_candidate_kind": "fixture_expected_answer",
+      "synthetic_shortcut_row": false,
+      "token_counts": {
+        "completion_tokens": 1,
+        "prompt_tokens": 12,
+        "total_tokens": 13
+      },
+      "transcript_hash": "tx-ctx-001:expected"
+    },
+    {
+      "abstained": false,
+      "decision": "reject",
+      "exact_authority": "context_exact_checker",
+      "expected_decision": "reject",
+      "false_accept": false,
+      "false_reject": false,
+      "fixture_id": "ctx-001",
+      "model_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "model_path": "/home/ianblenke/github.com/ianblenke/carnot/.tmp-pytest/pytest-of-ianblenke/pytest-4/popen-gw2/test_req_verify_3275_writer_he0/models/gemma.gguf",
+      "output_text": "REJECT",
+      "prompt_hash": "prompt-ctx-001:counterexample",
+      "response_hash": "11affde0bbe909a26c8f57c72e0dbc83f85df83bcf9fe4896ea8dd43e84669c1",
+      "row_id": "ctx-001:counterexample",
+      "source_candidate_kind": "fixture_minimal_counterexample",
+      "synthetic_shortcut_row": false,
+      "token_counts": {
+        "completion_tokens": 1,
+        "prompt_tokens": 12,
+        "total_tokens": 13
+      },
+      "transcript_hash": "tx-ctx-001:counterexample"
+    },
+    {
+      "abstained": false,
+      "decision": "accept",
+      "exact_authority": "context_exact_checker",
+      "expected_decision": "accept",
+      "false_accept": false,
+      "false_reject": false,
+      "fixture_id": "ctx-002",
+      "model_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "model_path": "/home/ianblenke/github.com/ianblenke/carnot/.tmp-pytest/pytest-of-ianblenke/pytest-4/popen-gw2/test_req_verify_3275_writer_he0/models/gemma.gguf",
+      "output_text": "ACCEPT",
+      "prompt_hash": "prompt-ctx-002:expected",
+      "response_hash": "840e2c74114050d417e56a4f87792834ad0c0508d4b4ab5907b49ed4bea5af52",
+      "row_id": "ctx-002:expected",
+      "source_candidate_kind": "fixture_expected_answer",
+      "synthetic_shortcut_row": false,
+      "token_counts": {
+        "completion_tokens": 1,
+        "prompt_tokens": 12,
+        "total_tokens": 13
+      },
+      "transcript_hash": "tx-ctx-002:expected"
+    },
+    {
+      "abstained": false,
+      "decision": "reject",
+      "exact_authority": "context_exact_checker",
+      "expected_decision": "reject",
+      "false_accept": false,
+      "false_reject": false,
+      "fixture_id": "ctx-002",
+      "model_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "model_path": "/home/ianblenke/github.com/ianblenke/carnot/.tmp-pytest/pytest-of-ianblenke/pytest-4/popen-gw2/test_req_verify_3275_writer_he0/models/gemma.gguf",
+      "output_text": "REJECT",
+      "prompt_hash": "prompt-ctx-002:counterexample",
+      "response_hash": "11affde0bbe909a26c8f57c72e0dbc83f85df83bcf9fe4896ea8dd43e84669c1",
+      "row_id": "ctx-002:counterexample",
+      "source_candidate_kind": "fixture_minimal_counterexample",
+      "synthetic_shortcut_row": false,
+      "token_counts": {
+        "completion_tokens": 1,
+        "prompt_tokens": 12,
+        "total_tokens": 13
+      },
+      "transcript_hash": "tx-ctx-002:counterexample"
+    }
+  ],
+  "preconditions_checked": [
+    {
+      "name": "exp3268_clean_sota_receipt_eligible",
+      "passed": true,
+      "path": "results/experiment_3268_sota_receipt_methodology_supplement_v1.json"
+    },
+    {
+      "cuda_available": true,
+      "gpu_count": 2,
+      "gpu_mem_used_mib": 4,
+      "name": "cuda_runtime",
+      "passed": true,
+      "returncode": 0
+    },
+    {
+      "available_model_ids": [
+        "unsloth/gemma-4-26B-A4B-it-GGUF"
+      ],
+      "name": "mandated_sota_gguf_cache",
+      "passed": true
+    },
+    {
+      "exact_rows_available": 4,
+      "exact_verifier_authority_preserved": true,
+      "name": "exact_row_fixture_availability",
+      "passed": true,
+      "path": "data/research/context_cot_clbench_parametric_shortcut_v1.jsonl",
+      "sidecar_ready": true
+    }
+  ],
+  "random_seed": 3275,
+  "repair_gate_input_clean_enough": true,
+  "reproducibility_checksum": "d42941d7d29f80c5d8efdf6cccca12768970234929b7262f7011e67782581ec4",
+  "run_date": "20260528",
+  "schema_version": "carnot.clean_local_sota_verifier_rerun.v14",
+  "source_artifacts": [
+    {
+      "path": "results/experiment_3268_sota_receipt_methodology_supplement_v1.json",
+      "present": true,
+      "role": "exp3268_sota_receipt_methodology",
+      "sha256": "5a42689caa88a6eef766efd1b927833fb6836093d87fad83db1302b1d5131e28"
+    },
+    {
+      "path": "results/experiment_3223_distributional_ebm_exact_row_uncertainty_sidecar_v2.json",
+      "present": true,
+      "role": "exp3223_exact_row_sidecar",
+      "sha256": "bf4f5ac6f57c68249a4f2a9a79e81f1b4cf8f05ffe413c34ca776f3843688f2f"
+    },
+    {
+      "path": "data/research/context_cot_clbench_parametric_shortcut_v1.jsonl",
+      "present": true,
+      "role": "context_exact_row_fixture",
+      "sha256": "2309e088448ecf62f04d26a500ff139a8fd53f398d164380fb043ab3ccf116e0"
+    },
+    {
+      "path": "openspec/capabilities/verification/spec.md",
+      "present": false,
+      "role": "verification_openspec",
+      "sha256": null
+    },
+    {
+      "path": "python/carnot/verify/clean_local_sota_verifier_rerun_v14.py",
+      "present": false,
+      "role": "exp3275_module",
+      "sha256": null
+    },
+    {
+      "path": "scripts/experiment_3275_clean_local_sota_verifier_rerun_v14.py",
+      "present": false,
+      "role": "exp3275_script",
+      "sha256": null
+    },
+    {
+      "path": "tests/python/test_experiment_3275_clean_local_sota_verifier_rerun_v14.py",
+      "present": false,
+      "role": "exp3275_tests",
+      "sha256": null
+    }
+  ],
+  "source_checksums": {
+    "data/research/context_cot_clbench_parametric_shortcut_v1.jsonl": "2309e088448ecf62f04d26a500ff139a8fd53f398d164380fb043ab3ccf116e0",
+    "results/experiment_3223_distributional_ebm_exact_row_uncertainty_sidecar_v2.json": "bf4f5ac6f57c68249a4f2a9a79e81f1b4cf8f05ffe413c34ca776f3843688f2f",
+    "results/experiment_3268_sota_receipt_methodology_supplement_v1.json": "5a42689caa88a6eef766efd1b927833fb6836093d87fad83db1302b1d5131e28"
+  },
+  "spec_refs": [
+    "REQ-VERIFY-3275",
+    "SCENARIO-VERIFY-3275"
+  ],
+  "tests_run": [
+    "writer"
+  ]
+}

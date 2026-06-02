@@ -1,0 +1,20 @@
+\subsection{Hardware Validation}
+\label{sec:hardware-validation}
+Experiment 2898 provides a board-level hardware-smoke latency measurement on a Xilinx Kria KV260. The loaded overlay was \texttt{carnot\_ising\_v2\_n64}, with bitstream SHA-256 \texttt{a90028a7931de505edd38caadfccfc1d7d5aa21e8abca5ae48bfb8a63a9876cb} from \texttt{board:/lib/firmware/xilinx/carnot\_ising\_v4}. The uploaded Ising problem used \texttt{n\_spins=64}.
+
+\begin{table}[ht]
+  \centering
+  \begin{tabular}{r r r r}
+    \toprule
+    Seed & Samples & Median latency ($\mu s$) & p95 latency ($\mu s$) \\
+    \midrule
+    42 & 10000 & 24.05 & 24.38 \\
+    137 & 10000 & 24.04 & 24.36 \\
+    271 & 10000 & 24.01 & 24.33 \\
+    \bottomrule
+  \end{tabular}
+  \caption{KV260 per-seed board-level latency from Exp 2898. The cited aggregate p50 is the median of the per-seed medians and the cited p95 is the largest per-seed p95.}
+  \label{tab:kv260-hardware-validation-v1}
+\end{table}
+
+Across these three seeds, the cited aggregate p50 is 24.04\,$\mu s$ and the cited p95 is 24.38\,$\mu s$. No same-basis CPU baseline has been measured yet; this section therefore makes no CPU comparison and no FPGA speedup claim.

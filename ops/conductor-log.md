@@ -7610,3 +7610,5 @@ web search: https://docs.garak.ai/garak/examples/pr |
 | 2026-06-02 17:54 UTC | Archive milestone .340 honestly (convergence-harde | OK | 104 passed in 4.70s |
 | 2026-06-02 18:00 UTC | Fork + vendor alexiglad/EBT (Apache-2.0, PINNED co | OK | 82 passed in 5.54s |
 | 2026-06-02 18:19 UTC | Acquire a small structured-reasoning TRAIN corpus  | OK | 108 passed in 4.63s |
+| 2026-06-02 19:16 UTC | Build + UNIT-TEST the matched-COMPUTE evaluation h | FAIL | Post-tests failed: 85 passed, 1 error in 4.57s |
+| 2026-06-02 19:18 UTC | Build + UNIT-TEST the matched-COMPUTE evaluation h | OK | Deliverable already exists in repo |

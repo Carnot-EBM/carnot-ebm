@@ -1,0 +1,67 @@
+{
+  "adversarial_clean_checks": {
+    "fast_slow_separates_from_recmem": true,
+    "non_tautological_policy_energy": true
+  },
+  "auroc_delta_by_policy": {
+    "eager_replay": 0.0,
+    "fast_slow_memory": 0.0,
+    "recmem_causal_triggered": 0.0
+  },
+  "best_policy": "fast_slow_memory",
+  "continuous_self_learning_task": true,
+  "contradiction_rate_by_policy": {
+    "eager_replay": 0.0,
+    "fast_slow_memory": 0.0,
+    "recmem_causal_triggered": 0.0
+  },
+  "correctness_delta_by_policy": {
+    "eager_replay": 0.0,
+    "fast_slow_memory": 0.0,
+    "recmem_causal_triggered": 0.0
+  },
+  "duplicate_rate_by_policy": {
+    "eager_replay": 0.96,
+    "fast_slow_memory": 0.0,
+    "recmem_causal_triggered": 0.0
+  },
+  "energy_delta_by_policy": {
+    "eager_replay": 0.139,
+    "fast_slow_memory": 0.132,
+    "recmem_causal_triggered": 0.125
+  },
+  "exp2882_flag_diagnosis": {
+    "root_cause": "retroactive_cluster_application"
+  },
+  "forgetting_regression_count_by_policy": {
+    "eager_replay": 0,
+    "fast_slow_memory": 0,
+    "recmem_causal_triggered": 0
+  },
+  "fr11_scaleup_clean": true,
+  "honest_verdict": "complete: causal RecMem and fast/slow memory separated replay metrics cleanly",
+  "live_llm_called": false,
+  "memory_drift_by_policy": {
+    "eager_replay": 0.0,
+    "fast_slow_memory": 0.0,
+    "recmem_causal_triggered": 0.0
+  },
+  "model_weights_mutated": false,
+  "n_examples": 50,
+  "policies_compared": [
+    "eager_replay",
+    "recmem_causal_triggered",
+    "fast_slow_memory"
+  ],
+  "policy_metrics": {
+    "eager_replay": {
+      "token_reduction_pct": 0.0
+    },
+    "fast_slow_memory": {
+      "token_reduction_pct": 98.6
+    },
+    "recmem_causal_triggered": {
+      "token_reduction_pct": 99.3
+    }
+  }
+}

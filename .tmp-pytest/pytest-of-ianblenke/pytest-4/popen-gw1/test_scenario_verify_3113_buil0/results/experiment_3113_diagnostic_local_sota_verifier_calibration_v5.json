@@ -1,0 +1,302 @@
+{
+  "abstention_precision": 0.0,
+  "artifact": "experiment_3113_diagnostic_local_sota_verifier_calibration_v5",
+  "baseline_metrics": {
+    "abstain_count": 0,
+    "abstention_precision": 0.0,
+    "accept_count": 0,
+    "accuracy": 0.5,
+    "false_accept_rate": 0.0,
+    "false_reject_rate": 1.0,
+    "reject_count": 4,
+    "rejection_recall": 1.0
+  },
+  "blocked_reasons": [],
+  "calibration_error": 0.5,
+  "calibration_fixture_ids": [
+    "case-invalid",
+    "case-sat",
+    "case-unsat",
+    "case-valid"
+  ],
+  "calibration_rows": [
+    {
+      "baseline_correct": true,
+      "baseline_decision": "reject",
+      "certified_coherence_correct": true,
+      "certified_coherence_decision": "reject",
+      "coherence_status": "coherent",
+      "exact_label": "INVALID",
+      "expected_action": "reject",
+      "fixture_id": "case-invalid",
+      "has_certified_feedback_v3": true,
+      "has_logic_pilot_signal": true,
+      "logic_correct": true,
+      "logic_decision": "reject",
+      "maxsat_policy_used": true,
+      "perturbation_type": "unit_invalid",
+      "route_confidence": 0.8,
+      "task_family": "unit"
+    },
+    {
+      "baseline_correct": false,
+      "baseline_decision": "reject",
+      "certified_coherence_correct": true,
+      "certified_coherence_decision": "accept",
+      "coherence_status": "coherent",
+      "exact_label": "SAT",
+      "expected_action": "accept",
+      "fixture_id": "case-sat",
+      "has_certified_feedback_v3": true,
+      "has_logic_pilot_signal": true,
+      "logic_correct": true,
+      "logic_decision": "accept",
+      "maxsat_policy_used": true,
+      "perturbation_type": "unit_sat",
+      "route_confidence": 0.8,
+      "task_family": "smt_constraints"
+    },
+    {
+      "baseline_correct": true,
+      "baseline_decision": "reject",
+      "certified_coherence_correct": true,
+      "certified_coherence_decision": "reject",
+      "coherence_status": "coherent",
+      "exact_label": "UNSAT",
+      "expected_action": "reject",
+      "fixture_id": "case-unsat",
+      "has_certified_feedback_v3": true,
+      "has_logic_pilot_signal": true,
+      "logic_correct": true,
+      "logic_decision": "reject",
+      "maxsat_policy_used": true,
+      "perturbation_type": "unit_unsat",
+      "route_confidence": 0.8,
+      "task_family": "smt_constraints"
+    },
+    {
+      "baseline_correct": false,
+      "baseline_decision": "reject",
+      "certified_coherence_correct": true,
+      "certified_coherence_decision": "accept",
+      "coherence_status": "coherent",
+      "exact_label": "VALID",
+      "expected_action": "accept",
+      "fixture_id": "case-valid",
+      "has_certified_feedback_v3": true,
+      "has_logic_pilot_signal": true,
+      "logic_correct": true,
+      "logic_decision": "accept",
+      "maxsat_policy_used": true,
+      "perturbation_type": "unit_valid",
+      "route_confidence": 0.8,
+      "task_family": "unit"
+    }
+  ],
+  "certified_coherence_metrics": {
+    "abstain_count": 0,
+    "abstention_precision": 0.0,
+    "accept_count": 2,
+    "accuracy": 1.0,
+    "false_accept_rate": 0.0,
+    "false_reject_rate": 0.0,
+    "reject_count": 2,
+    "rejection_recall": 1.0
+  },
+  "diagnostic_verifier_calibration_v5_ready": true,
+  "duration_s": 2.25,
+  "exact_ground_truth_count": 4,
+  "exp3115_repair_gate_explanation": {
+    "certified_delta": 0.5,
+    "delta_sign": "positive",
+    "downstream_action": "repair_gate_unblocked",
+    "exact_ground_truth_count": 4,
+    "minimum_exact_ground_truth_count": 4,
+    "missing_required_source_paths": [],
+    "repair_gate_state": "unblocked",
+    "schema": "carnot.exp3115.repair_gate_input.v1",
+    "selected_headline_model_ids": [
+      "unsloth/gemma-4-26B-A4B-it-GGUF"
+    ]
+  },
+  "false_accept_rate": 0.0,
+  "false_reject_rate": 0.0,
+  "honest_verdict": "complete: diagnostic_verifier_calibration_v5_ready=true; repair_gate_state=unblocked; verifier_gain_delta=0.5; verifier_gain_delta_with_certified_coherence=0.5",
+  "inference_substrate": {
+    "cached_trace_source": "results/experiment_3099_local_sota_confidence_abstention_panel_v3.json",
+    "cached_trace_source_executed_models": true,
+    "certified_feedback_source": "results/experiment_3111_certified_coherence_z3_mcs_feedback_v3.json",
+    "exact_solver_labels_authority": true,
+    "executes_solvers": false,
+    "kind": "diagnostic_over_cached_sota_routes_certified_solver_feedback_and_logic_pilot",
+    "live_llm_inference": false,
+    "logic_pilot_source": "results/experiment_3112_logic_regularized_verifier_pilot_v1.json",
+    "new_model_execution": false,
+    "source_certified_feedback_executed_solvers": false,
+    "source_logic_pilot_live_llm_inference": false
+  },
+  "live_llm_inference": false,
+  "logic_pilot_metrics": {
+    "abstain_count": 0,
+    "abstention_precision": 0.0,
+    "accept_count": 2,
+    "accuracy": 1.0,
+    "false_accept_rate": 0.0,
+    "false_reject_rate": 0.0,
+    "reject_count": 2,
+    "rejection_recall": 1.0
+  },
+  "mandatory_headline_model_ids": [
+    "unsloth/Qwen3.6-35B-A3B-GGUF",
+    "unsloth/gemma-4-31B-it-GGUF",
+    "unsloth/gemma-4-26B-A4B-it-GGUF"
+  ],
+  "model_specs": [
+    {
+      "cache_present": true,
+      "cache_status": "cached",
+      "hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "model_path": "/tmp/gemma.gguf",
+      "selected": true
+    }
+  ],
+  "readiness_checks": {
+    "calibration_rows_present": true,
+    "exp3097_protocol_ready": true,
+    "exp3098_maxsat_policy_ready": true,
+    "exp3099_panel_ready": true,
+    "exp3110_model_manifest_ready": true,
+    "exp3111_certified_feedback_ready": true,
+    "exp3112_logic_pilot_ready": true,
+    "finite_metrics": true,
+    "required_sources_present": true
+  },
+  "rejection_recall": 1.0,
+  "repair_gate_state": "unblocked",
+  "run_date": "20260526",
+  "schema": "carnot.diagnostic_local_sota_verifier_calibration.v5",
+  "selected_headline_model_ids": [
+    "unsloth/gemma-4-26B-A4B-it-GGUF"
+  ],
+  "source_artifacts": [
+    {
+      "exists": true,
+      "id": "agents_repo_instructions",
+      "path": "AGENTS.md",
+      "required": false,
+      "sha256": "c893735c3c7ece3f9bf4d48722846ef65e76ff35ebfbfe1d239930339d69470b"
+    },
+    {
+      "exists": true,
+      "id": "codex_repo_workflow",
+      "path": "CODEX.md",
+      "required": false,
+      "sha256": "bab1c6ba20bb432cbd7cd6e3b12fb0089f303cb7742f929297647d6329e46502"
+    },
+    {
+      "exists": true,
+      "id": "claude_authenticity_rules",
+      "path": "CLAUDE.md",
+      "required": false,
+      "sha256": "60076838584bd0f923d71e6b6267219879416ba55267f7ca88d653d5014c9863"
+    },
+    {
+      "exists": true,
+      "id": "experiment_template_cache_policy",
+      "path": "scripts/experiment_template.py",
+      "required": false,
+      "sha256": "d796d7c8440722546d98a0b37ebb29c8c38e9e798cedf8b62b926fa0c4fece21"
+    },
+    {
+      "exists": true,
+      "id": "exp3097_exact_protocol",
+      "path": "results/experiment_3097_exact_fixture_eval_protocol_audit_v1.json",
+      "required": true,
+      "sha256": "ce5354c71b22461a25186dfe478182746943442895c19cd27dbfb83761776f22"
+    },
+    {
+      "exists": true,
+      "id": "exp3097_stratified_manifest",
+      "path": "results/exact_fixture_eval_protocol_3097/stratified_eval_manifest.jsonl",
+      "required": true,
+      "sha256": "c062d6a50ca6e843f7d5a961047e2860263ceae1cbfcc391fab6132c8ed33079"
+    },
+    {
+      "exists": true,
+      "id": "exp3098_maxsat_policy_artifact",
+      "path": "results/experiment_3098_maxsat_abstention_routing_policy_v1.json",
+      "required": true,
+      "sha256": "f5a18bd209c06d7354c58b858590feb0f03feaf1c3d6968209c7344a2a1849a9"
+    },
+    {
+      "exists": true,
+      "id": "exp3098_maxsat_policy_json",
+      "path": "results/maxsat_abstention_routing_policy_3098/policy.json",
+      "required": true,
+      "sha256": "ea86213ada0eed2c259f2cf306079021dfdd39e9749f7fa027bd0c1c1643041f"
+    },
+    {
+      "exists": true,
+      "id": "exp3099_local_sota_panel",
+      "path": "results/experiment_3099_local_sota_confidence_abstention_panel_v3.json",
+      "required": true,
+      "sha256": "144c4390037e1ae1581210c4e7e83df2e782504f252b23ca7c902e394e1c3cc9"
+    },
+    {
+      "exists": true,
+      "id": "exp3099_panel_rows",
+      "path": "results/local_sota_confidence_abstention_panel_3099/rows.jsonl",
+      "required": true,
+      "sha256": "d08e9ab9e10830266088969728c69e5cd87849034827126043a466923a9aed81"
+    },
+    {
+      "exists": true,
+      "id": "exp3110_model_manifest",
+      "path": "results/experiment_3110_sota_model_spec_cache_manifest_corrigendum_v1.json",
+      "required": true,
+      "sha256": "1c652d5faefd102facfd33d3ba0a2dff00219e56ef061fdeb19dea2a7e044a3e"
+    },
+    {
+      "exists": true,
+      "id": "exp3111_certified_feedback_v3",
+      "path": "results/experiment_3111_certified_coherence_z3_mcs_feedback_v3.json",
+      "required": true,
+      "sha256": "7feaea738b032199c3d1c2d6e8097ea20753bf90093bcfa58ba653e5ee13b2a5"
+    },
+    {
+      "exists": true,
+      "id": "exp3112_logic_pilot",
+      "path": "results/experiment_3112_logic_regularized_verifier_pilot_v1.json",
+      "required": true,
+      "sha256": "509f0ff44000275afe271a85d5553713240cb3bbcc6436ed81ea15889ad53275"
+    },
+    {
+      "exists": true,
+      "id": "exp3112_logic_rows",
+      "path": "results/logic_regularized_verifier_pilot_3112/rows.jsonl",
+      "required": true,
+      "sha256": "a81e62bc1f3e66f0949e3bd10e27356a00f45f97de1656970976fcab8889e069"
+    }
+  ],
+  "source_checksums": {
+    "AGENTS.md": "c893735c3c7ece3f9bf4d48722846ef65e76ff35ebfbfe1d239930339d69470b",
+    "CLAUDE.md": "60076838584bd0f923d71e6b6267219879416ba55267f7ca88d653d5014c9863",
+    "CODEX.md": "bab1c6ba20bb432cbd7cd6e3b12fb0089f303cb7742f929297647d6329e46502",
+    "results/exact_fixture_eval_protocol_3097/stratified_eval_manifest.jsonl": "c062d6a50ca6e843f7d5a961047e2860263ceae1cbfcc391fab6132c8ed33079",
+    "results/experiment_3097_exact_fixture_eval_protocol_audit_v1.json": "ce5354c71b22461a25186dfe478182746943442895c19cd27dbfb83761776f22",
+    "results/experiment_3098_maxsat_abstention_routing_policy_v1.json": "f5a18bd209c06d7354c58b858590feb0f03feaf1c3d6968209c7344a2a1849a9",
+    "results/experiment_3099_local_sota_confidence_abstention_panel_v3.json": "144c4390037e1ae1581210c4e7e83df2e782504f252b23ca7c902e394e1c3cc9",
+    "results/experiment_3110_sota_model_spec_cache_manifest_corrigendum_v1.json": "1c652d5faefd102facfd33d3ba0a2dff00219e56ef061fdeb19dea2a7e044a3e",
+    "results/experiment_3111_certified_coherence_z3_mcs_feedback_v3.json": "7feaea738b032199c3d1c2d6e8097ea20753bf90093bcfa58ba653e5ee13b2a5",
+    "results/experiment_3112_logic_regularized_verifier_pilot_v1.json": "509f0ff44000275afe271a85d5553713240cb3bbcc6436ed81ea15889ad53275",
+    "results/local_sota_confidence_abstention_panel_3099/rows.jsonl": "d08e9ab9e10830266088969728c69e5cd87849034827126043a466923a9aed81",
+    "results/logic_regularized_verifier_pilot_3112/rows.jsonl": "a81e62bc1f3e66f0949e3bd10e27356a00f45f97de1656970976fcab8889e069",
+    "results/maxsat_abstention_routing_policy_3098/policy.json": "ea86213ada0eed2c259f2cf306079021dfdd39e9749f7fa027bd0c1c1643041f",
+    "scripts/experiment_template.py": "d796d7c8440722546d98a0b37ebb29c8c38e9e798cedf8b62b926fa0c4fece21"
+  },
+  "tests_run": [
+    "focused-unit"
+  ],
+  "verifier_gain_delta": 0.5,
+  "verifier_gain_delta_with_certified_coherence": 0.5
+}

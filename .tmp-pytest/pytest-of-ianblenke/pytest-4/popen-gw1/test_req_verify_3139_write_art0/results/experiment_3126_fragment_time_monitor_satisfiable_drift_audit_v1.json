@@ -1,0 +1,192 @@
+{
+  "artifact": "experiment_3126_fragment_time_monitor_satisfiable_drift_audit_v1",
+  "fragment_time_monitor_v1_ready": true,
+  "monitor_events": [
+    {
+      "event_index": 1,
+      "event_type": "constraint_ledger",
+      "fixture_id": "fa-arith",
+      "payload": {
+        "ledger_action": "reject",
+        "ledger_source": "unit_exact_ledger"
+      }
+    },
+    {
+      "event_index": 2,
+      "event_type": "candidate_final_answer",
+      "fixture_id": "fa-arith",
+      "payload": {
+        "expected_action": "reject",
+        "extracted_answer": "VALID",
+        "final_answer_consistent_with_exact": false,
+        "final_answer_consistent_with_ledger": false,
+        "ledger_action": "reject",
+        "live_decision": "accept"
+      }
+    },
+    {
+      "event_index": 3,
+      "event_type": "drift_classification",
+      "fixture_id": "fa-arith",
+      "payload": {
+        "failure_mechanism": "contradiction",
+        "is_monitor_violation": true
+      }
+    },
+    {
+      "event_index": 1,
+      "event_type": "constraint_ledger",
+      "fixture_id": "fa-smt",
+      "payload": {
+        "ledger_action": "reject",
+        "ledger_source": "unit_exact_ledger"
+      }
+    },
+    {
+      "event_index": 2,
+      "event_type": "candidate_final_answer",
+      "fixture_id": "fa-smt",
+      "payload": {
+        "expected_action": "reject",
+        "extracted_answer": "VALID",
+        "final_answer_consistent_with_exact": false,
+        "final_answer_consistent_with_ledger": false,
+        "ledger_action": "reject",
+        "live_decision": "accept"
+      }
+    },
+    {
+      "event_index": 3,
+      "event_type": "drift_classification",
+      "fixture_id": "fa-smt",
+      "payload": {
+        "failure_mechanism": "contradiction",
+        "is_monitor_violation": true
+      }
+    },
+    {
+      "event_index": 1,
+      "event_type": "constraint_ledger",
+      "fixture_id": "clean-valid",
+      "payload": {
+        "ledger_action": "accept",
+        "ledger_source": "unit_exact_ledger"
+      }
+    },
+    {
+      "event_index": 2,
+      "event_type": "candidate_final_answer",
+      "fixture_id": "clean-valid",
+      "payload": {
+        "expected_action": "accept",
+        "extracted_answer": "VALID",
+        "final_answer_consistent_with_exact": true,
+        "final_answer_consistent_with_ledger": true,
+        "ledger_action": "accept",
+        "live_decision": "accept"
+      }
+    },
+    {
+      "event_index": 3,
+      "event_type": "drift_classification",
+      "fixture_id": "clean-valid",
+      "payload": {
+        "failure_mechanism": "no_failure",
+        "is_monitor_violation": false
+      }
+    },
+    {
+      "event_index": 1,
+      "event_type": "constraint_ledger",
+      "fixture_id": "clean-sat",
+      "payload": {
+        "ledger_action": "accept",
+        "ledger_source": "unit_exact_ledger"
+      }
+    },
+    {
+      "event_index": 2,
+      "event_type": "candidate_final_answer",
+      "fixture_id": "clean-sat",
+      "payload": {
+        "expected_action": "accept",
+        "extracted_answer": "SAT",
+        "final_answer_consistent_with_exact": true,
+        "final_answer_consistent_with_ledger": true,
+        "ledger_action": "accept",
+        "live_decision": "accept"
+      }
+    },
+    {
+      "event_index": 3,
+      "event_type": "drift_classification",
+      "fixture_id": "clean-sat",
+      "payload": {
+        "failure_mechanism": "no_failure",
+        "is_monitor_violation": false
+      }
+    },
+    {
+      "event_index": 1,
+      "event_type": "constraint_ledger",
+      "fixture_id": "clean-repair",
+      "payload": {
+        "ledger_action": "reject",
+        "ledger_source": "unit_exact_ledger"
+      }
+    },
+    {
+      "event_index": 2,
+      "event_type": "candidate_final_answer",
+      "fixture_id": "clean-repair",
+      "payload": {
+        "expected_action": "reject",
+        "extracted_answer": "REPAIRABLE",
+        "final_answer_consistent_with_exact": true,
+        "final_answer_consistent_with_ledger": true,
+        "ledger_action": "reject",
+        "live_decision": "reject"
+      }
+    },
+    {
+      "event_index": 3,
+      "event_type": "drift_classification",
+      "fixture_id": "clean-repair",
+      "payload": {
+        "failure_mechanism": "no_failure",
+        "is_monitor_violation": false
+      }
+    },
+    {
+      "event_index": 1,
+      "event_type": "constraint_ledger",
+      "fixture_id": "clean-invalid",
+      "payload": {
+        "ledger_action": "reject",
+        "ledger_source": "unit_exact_ledger"
+      }
+    },
+    {
+      "event_index": 2,
+      "event_type": "candidate_final_answer",
+      "fixture_id": "clean-invalid",
+      "payload": {
+        "expected_action": "reject",
+        "extracted_answer": "INVALID",
+        "final_answer_consistent_with_exact": true,
+        "final_answer_consistent_with_ledger": true,
+        "ledger_action": "reject",
+        "live_decision": "reject"
+      }
+    },
+    {
+      "event_index": 3,
+      "event_type": "drift_classification",
+      "fixture_id": "clean-invalid",
+      "payload": {
+        "failure_mechanism": "no_failure",
+        "is_monitor_violation": false
+      }
+    }
+  ]
+}

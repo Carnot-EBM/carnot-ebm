@@ -1,0 +1,777 @@
+{
+  "abstention_calibrated_clean_verifier_v15_ready": true,
+  "abstention_count": 0,
+  "abstention_rate": 0.0,
+  "abstention_reason_counts": {},
+  "calibrated_abstention_policy": {
+    "allowed_decisions": [
+      "accept",
+      "reject",
+      "abstain"
+    ],
+    "grammar": "ACCEPT|REJECT|ABSTAIN",
+    "grammar_constrained_decoding": true,
+    "minimum_decision_coverage": 0.5,
+    "policy_name": "exp3286_strict_leading_token_calibrated_v1",
+    "source_experiment_id": "exp3287",
+    "strict_leading_token": true,
+    "target_false_accept_rate": 0.0,
+    "target_max_abstention_rate": 0.5
+  },
+  "clean_verifier_rerun_ready": true,
+  "coverage_rate": 1.0,
+  "duration_s": 1.0,
+  "exact_checkable_row_count": 20,
+  "exact_row_fixture_hash": "ec405a6b71508c65408935e508410d0e15e8a14d6d1f9793b559f894a4ec499c",
+  "exact_rows_available": 20,
+  "experiment_id": "exp3287",
+  "false_accept_count": 0,
+  "false_accept_rate": 0.0,
+  "false_reject_count": 0,
+  "false_reject_rate": 0.0,
+  "gate_reasons": [],
+  "gpu_mem_used_mib": 7777,
+  "honest_verdict": "complete: abstention-calibrated clean verifier v15 ready for repair gate",
+  "milestone": "2026.05.303",
+  "missing_model_specs": [
+    {
+      "cached": false,
+      "expected_quantization": "Q4_K_M",
+      "hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "model_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "model_path": null,
+      "name": "Qwen3.6-35B-A3B",
+      "reason": "not_cached",
+      "role": "moe"
+    },
+    {
+      "cached": false,
+      "expected_quantization": "Q4_K_M",
+      "hf_id": "unsloth/gemma-4-31B-it-GGUF",
+      "model_id": "unsloth/gemma-4-31B-it-GGUF",
+      "model_path": null,
+      "name": "Gemma4-31B-it",
+      "reason": "not_cached",
+      "role": "dense"
+    }
+  ],
+  "model_specs": {
+    "available_model_count": 1,
+    "cached_sota_pair_attempted": true,
+    "cached_sota_pair_available": false,
+    "cached_sota_pair_specs": [],
+    "calibrated_abstention_policy": {
+      "allowed_decisions": [
+        "accept",
+        "reject",
+        "abstain"
+      ],
+      "grammar": "ACCEPT|REJECT|ABSTAIN",
+      "grammar_constrained_decoding": true,
+      "minimum_decision_coverage": 0.5,
+      "policy_name": "exp3286_strict_leading_token_calibrated_v1",
+      "source_experiment_id": "exp3287",
+      "strict_leading_token": true,
+      "target_false_accept_rate": 0.0,
+      "target_max_abstention_rate": 0.5
+    },
+    "mandated_model_ids": [
+      "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "unsloth/gemma-4-31B-it-GGUF",
+      "unsloth/gemma-4-26B-A4B-it-GGUF"
+    ],
+    "mandated_models": {
+      "unsloth/Qwen3.6-35B-A3B-GGUF": {
+        "cached": false,
+        "expected_quantization": "Q4_K_M",
+        "hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+        "model_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+        "model_path": null,
+        "name": "Qwen3.6-35B-A3B",
+        "role": "moe",
+        "size_bytes": 0
+      },
+      "unsloth/gemma-4-26B-A4B-it-GGUF": {
+        "cached": true,
+        "expected_quantization": "Q4_K_M",
+        "hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+        "model_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+        "model_path": "/home/ianblenke/github.com/ianblenke/carnot/.tmp-pytest/pytest-of-ianblenke/pytest-4/popen-gw2/test_scenario_verify_3287_read0/models/gemma26.gguf",
+        "name": "Gemma4-26B-A4B-it",
+        "role": "moe",
+        "size_bytes": 4
+      },
+      "unsloth/gemma-4-31B-it-GGUF": {
+        "cached": false,
+        "expected_quantization": "Q4_K_M",
+        "hf_id": "unsloth/gemma-4-31B-it-GGUF",
+        "model_id": "unsloth/gemma-4-31B-it-GGUF",
+        "model_path": null,
+        "name": "Gemma4-31B-it",
+        "role": "dense",
+        "size_bytes": 0
+      }
+    },
+    "missing_model_count": 2,
+    "n_gpu_layers_requested": -1,
+    "runtime": "llama_cpp"
+  },
+  "models_used": [
+    {
+      "gpu": 0,
+      "hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "legacy_small_model": false,
+      "model_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "model_path": "/home/ianblenke/github.com/ianblenke/carnot/.tmp-pytest/pytest-of-ianblenke/pytest-4/popen-gw2/test_scenario_verify_3287_read0/models/gemma26.gguf",
+      "name": "Gemma4-26B-A4B-it",
+      "source": "resolve_cached_gguf"
+    }
+  ],
+  "n_eval": 20,
+  "per_class_reason_counts": {
+    "accept": {
+      "accepted_decision": 10
+    },
+    "reject": {
+      "rejected_decision": 10
+    }
+  },
+  "per_row_results": [
+    {
+      "abstained": false,
+      "abstention_reason": "not_abstained",
+      "calibrated_policy": "exp3286_strict_leading_token_calibrated_v1",
+      "decision": "accept",
+      "exact_authority": "context_exact_checker",
+      "expected_decision": "accept",
+      "false_accept": false,
+      "false_reject": false,
+      "fixture_id": "ctx-000",
+      "model_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "model_path": "/home/ianblenke/github.com/ianblenke/carnot/.tmp-pytest/pytest-of-ianblenke/pytest-4/popen-gw2/test_scenario_verify_3287_read0/models/gemma26.gguf",
+      "output_text": "ACCEPT",
+      "prompt_hash": "prompt-ctx-000:expected",
+      "response_hash": "840e2c74114050d417e56a4f87792834ad0c0508d4b4ab5907b49ed4bea5af52",
+      "row_id": "ctx-000:expected",
+      "source_candidate_kind": "fixture_expected_answer",
+      "synthetic_shortcut_row": false,
+      "token_counts": {
+        "completion_tokens": 1,
+        "prompt_tokens": 10,
+        "total_tokens": 11
+      },
+      "transcript_hash": "tx-ctx-000:expected"
+    },
+    {
+      "abstained": false,
+      "abstention_reason": "not_abstained",
+      "calibrated_policy": "exp3286_strict_leading_token_calibrated_v1",
+      "decision": "reject",
+      "exact_authority": "context_exact_checker",
+      "expected_decision": "reject",
+      "false_accept": false,
+      "false_reject": false,
+      "fixture_id": "ctx-000",
+      "model_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "model_path": "/home/ianblenke/github.com/ianblenke/carnot/.tmp-pytest/pytest-of-ianblenke/pytest-4/popen-gw2/test_scenario_verify_3287_read0/models/gemma26.gguf",
+      "output_text": "REJECT",
+      "prompt_hash": "prompt-ctx-000:counterexample",
+      "response_hash": "11affde0bbe909a26c8f57c72e0dbc83f85df83bcf9fe4896ea8dd43e84669c1",
+      "row_id": "ctx-000:counterexample",
+      "source_candidate_kind": "fixture_minimal_counterexample",
+      "synthetic_shortcut_row": false,
+      "token_counts": {
+        "completion_tokens": 1,
+        "prompt_tokens": 10,
+        "total_tokens": 11
+      },
+      "transcript_hash": "tx-ctx-000:counterexample"
+    },
+    {
+      "abstained": false,
+      "abstention_reason": "not_abstained",
+      "calibrated_policy": "exp3286_strict_leading_token_calibrated_v1",
+      "decision": "accept",
+      "exact_authority": "context_exact_checker",
+      "expected_decision": "accept",
+      "false_accept": false,
+      "false_reject": false,
+      "fixture_id": "ctx-001",
+      "model_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "model_path": "/home/ianblenke/github.com/ianblenke/carnot/.tmp-pytest/pytest-of-ianblenke/pytest-4/popen-gw2/test_scenario_verify_3287_read0/models/gemma26.gguf",
+      "output_text": "ACCEPT",
+      "prompt_hash": "prompt-ctx-001:expected",
+      "response_hash": "840e2c74114050d417e56a4f87792834ad0c0508d4b4ab5907b49ed4bea5af52",
+      "row_id": "ctx-001:expected",
+      "source_candidate_kind": "fixture_expected_answer",
+      "synthetic_shortcut_row": false,
+      "token_counts": {
+        "completion_tokens": 1,
+        "prompt_tokens": 10,
+        "total_tokens": 11
+      },
+      "transcript_hash": "tx-ctx-001:expected"
+    },
+    {
+      "abstained": false,
+      "abstention_reason": "not_abstained",
+      "calibrated_policy": "exp3286_strict_leading_token_calibrated_v1",
+      "decision": "reject",
+      "exact_authority": "context_exact_checker",
+      "expected_decision": "reject",
+      "false_accept": false,
+      "false_reject": false,
+      "fixture_id": "ctx-001",
+      "model_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "model_path": "/home/ianblenke/github.com/ianblenke/carnot/.tmp-pytest/pytest-of-ianblenke/pytest-4/popen-gw2/test_scenario_verify_3287_read0/models/gemma26.gguf",
+      "output_text": "REJECT",
+      "prompt_hash": "prompt-ctx-001:counterexample",
+      "response_hash": "11affde0bbe909a26c8f57c72e0dbc83f85df83bcf9fe4896ea8dd43e84669c1",
+      "row_id": "ctx-001:counterexample",
+      "source_candidate_kind": "fixture_minimal_counterexample",
+      "synthetic_shortcut_row": false,
+      "token_counts": {
+        "completion_tokens": 1,
+        "prompt_tokens": 10,
+        "total_tokens": 11
+      },
+      "transcript_hash": "tx-ctx-001:counterexample"
+    },
+    {
+      "abstained": false,
+      "abstention_reason": "not_abstained",
+      "calibrated_policy": "exp3286_strict_leading_token_calibrated_v1",
+      "decision": "accept",
+      "exact_authority": "context_exact_checker",
+      "expected_decision": "accept",
+      "false_accept": false,
+      "false_reject": false,
+      "fixture_id": "ctx-002",
+      "model_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "model_path": "/home/ianblenke/github.com/ianblenke/carnot/.tmp-pytest/pytest-of-ianblenke/pytest-4/popen-gw2/test_scenario_verify_3287_read0/models/gemma26.gguf",
+      "output_text": "ACCEPT",
+      "prompt_hash": "prompt-ctx-002:expected",
+      "response_hash": "840e2c74114050d417e56a4f87792834ad0c0508d4b4ab5907b49ed4bea5af52",
+      "row_id": "ctx-002:expected",
+      "source_candidate_kind": "fixture_expected_answer",
+      "synthetic_shortcut_row": false,
+      "token_counts": {
+        "completion_tokens": 1,
+        "prompt_tokens": 10,
+        "total_tokens": 11
+      },
+      "transcript_hash": "tx-ctx-002:expected"
+    },
+    {
+      "abstained": false,
+      "abstention_reason": "not_abstained",
+      "calibrated_policy": "exp3286_strict_leading_token_calibrated_v1",
+      "decision": "reject",
+      "exact_authority": "context_exact_checker",
+      "expected_decision": "reject",
+      "false_accept": false,
+      "false_reject": false,
+      "fixture_id": "ctx-002",
+      "model_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "model_path": "/home/ianblenke/github.com/ianblenke/carnot/.tmp-pytest/pytest-of-ianblenke/pytest-4/popen-gw2/test_scenario_verify_3287_read0/models/gemma26.gguf",
+      "output_text": "REJECT",
+      "prompt_hash": "prompt-ctx-002:counterexample",
+      "response_hash": "11affde0bbe909a26c8f57c72e0dbc83f85df83bcf9fe4896ea8dd43e84669c1",
+      "row_id": "ctx-002:counterexample",
+      "source_candidate_kind": "fixture_minimal_counterexample",
+      "synthetic_shortcut_row": false,
+      "token_counts": {
+        "completion_tokens": 1,
+        "prompt_tokens": 10,
+        "total_tokens": 11
+      },
+      "transcript_hash": "tx-ctx-002:counterexample"
+    },
+    {
+      "abstained": false,
+      "abstention_reason": "not_abstained",
+      "calibrated_policy": "exp3286_strict_leading_token_calibrated_v1",
+      "decision": "accept",
+      "exact_authority": "context_exact_checker",
+      "expected_decision": "accept",
+      "false_accept": false,
+      "false_reject": false,
+      "fixture_id": "ctx-003",
+      "model_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "model_path": "/home/ianblenke/github.com/ianblenke/carnot/.tmp-pytest/pytest-of-ianblenke/pytest-4/popen-gw2/test_scenario_verify_3287_read0/models/gemma26.gguf",
+      "output_text": "ACCEPT",
+      "prompt_hash": "prompt-ctx-003:expected",
+      "response_hash": "840e2c74114050d417e56a4f87792834ad0c0508d4b4ab5907b49ed4bea5af52",
+      "row_id": "ctx-003:expected",
+      "source_candidate_kind": "fixture_expected_answer",
+      "synthetic_shortcut_row": false,
+      "token_counts": {
+        "completion_tokens": 1,
+        "prompt_tokens": 10,
+        "total_tokens": 11
+      },
+      "transcript_hash": "tx-ctx-003:expected"
+    },
+    {
+      "abstained": false,
+      "abstention_reason": "not_abstained",
+      "calibrated_policy": "exp3286_strict_leading_token_calibrated_v1",
+      "decision": "reject",
+      "exact_authority": "context_exact_checker",
+      "expected_decision": "reject",
+      "false_accept": false,
+      "false_reject": false,
+      "fixture_id": "ctx-003",
+      "model_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "model_path": "/home/ianblenke/github.com/ianblenke/carnot/.tmp-pytest/pytest-of-ianblenke/pytest-4/popen-gw2/test_scenario_verify_3287_read0/models/gemma26.gguf",
+      "output_text": "REJECT",
+      "prompt_hash": "prompt-ctx-003:counterexample",
+      "response_hash": "11affde0bbe909a26c8f57c72e0dbc83f85df83bcf9fe4896ea8dd43e84669c1",
+      "row_id": "ctx-003:counterexample",
+      "source_candidate_kind": "fixture_minimal_counterexample",
+      "synthetic_shortcut_row": false,
+      "token_counts": {
+        "completion_tokens": 1,
+        "prompt_tokens": 10,
+        "total_tokens": 11
+      },
+      "transcript_hash": "tx-ctx-003:counterexample"
+    },
+    {
+      "abstained": false,
+      "abstention_reason": "not_abstained",
+      "calibrated_policy": "exp3286_strict_leading_token_calibrated_v1",
+      "decision": "accept",
+      "exact_authority": "context_exact_checker",
+      "expected_decision": "accept",
+      "false_accept": false,
+      "false_reject": false,
+      "fixture_id": "ctx-004",
+      "model_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "model_path": "/home/ianblenke/github.com/ianblenke/carnot/.tmp-pytest/pytest-of-ianblenke/pytest-4/popen-gw2/test_scenario_verify_3287_read0/models/gemma26.gguf",
+      "output_text": "ACCEPT",
+      "prompt_hash": "prompt-ctx-004:expected",
+      "response_hash": "840e2c74114050d417e56a4f87792834ad0c0508d4b4ab5907b49ed4bea5af52",
+      "row_id": "ctx-004:expected",
+      "source_candidate_kind": "fixture_expected_answer",
+      "synthetic_shortcut_row": false,
+      "token_counts": {
+        "completion_tokens": 1,
+        "prompt_tokens": 10,
+        "total_tokens": 11
+      },
+      "transcript_hash": "tx-ctx-004:expected"
+    },
+    {
+      "abstained": false,
+      "abstention_reason": "not_abstained",
+      "calibrated_policy": "exp3286_strict_leading_token_calibrated_v1",
+      "decision": "reject",
+      "exact_authority": "context_exact_checker",
+      "expected_decision": "reject",
+      "false_accept": false,
+      "false_reject": false,
+      "fixture_id": "ctx-004",
+      "model_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "model_path": "/home/ianblenke/github.com/ianblenke/carnot/.tmp-pytest/pytest-of-ianblenke/pytest-4/popen-gw2/test_scenario_verify_3287_read0/models/gemma26.gguf",
+      "output_text": "REJECT",
+      "prompt_hash": "prompt-ctx-004:counterexample",
+      "response_hash": "11affde0bbe909a26c8f57c72e0dbc83f85df83bcf9fe4896ea8dd43e84669c1",
+      "row_id": "ctx-004:counterexample",
+      "source_candidate_kind": "fixture_minimal_counterexample",
+      "synthetic_shortcut_row": false,
+      "token_counts": {
+        "completion_tokens": 1,
+        "prompt_tokens": 10,
+        "total_tokens": 11
+      },
+      "transcript_hash": "tx-ctx-004:counterexample"
+    },
+    {
+      "abstained": false,
+      "abstention_reason": "not_abstained",
+      "calibrated_policy": "exp3286_strict_leading_token_calibrated_v1",
+      "decision": "accept",
+      "exact_authority": "context_exact_checker",
+      "expected_decision": "accept",
+      "false_accept": false,
+      "false_reject": false,
+      "fixture_id": "ctx-005",
+      "model_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "model_path": "/home/ianblenke/github.com/ianblenke/carnot/.tmp-pytest/pytest-of-ianblenke/pytest-4/popen-gw2/test_scenario_verify_3287_read0/models/gemma26.gguf",
+      "output_text": "ACCEPT",
+      "prompt_hash": "prompt-ctx-005:expected",
+      "response_hash": "840e2c74114050d417e56a4f87792834ad0c0508d4b4ab5907b49ed4bea5af52",
+      "row_id": "ctx-005:expected",
+      "source_candidate_kind": "fixture_expected_answer",
+      "synthetic_shortcut_row": false,
+      "token_counts": {
+        "completion_tokens": 1,
+        "prompt_tokens": 10,
+        "total_tokens": 11
+      },
+      "transcript_hash": "tx-ctx-005:expected"
+    },
+    {
+      "abstained": false,
+      "abstention_reason": "not_abstained",
+      "calibrated_policy": "exp3286_strict_leading_token_calibrated_v1",
+      "decision": "reject",
+      "exact_authority": "context_exact_checker",
+      "expected_decision": "reject",
+      "false_accept": false,
+      "false_reject": false,
+      "fixture_id": "ctx-005",
+      "model_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "model_path": "/home/ianblenke/github.com/ianblenke/carnot/.tmp-pytest/pytest-of-ianblenke/pytest-4/popen-gw2/test_scenario_verify_3287_read0/models/gemma26.gguf",
+      "output_text": "REJECT",
+      "prompt_hash": "prompt-ctx-005:counterexample",
+      "response_hash": "11affde0bbe909a26c8f57c72e0dbc83f85df83bcf9fe4896ea8dd43e84669c1",
+      "row_id": "ctx-005:counterexample",
+      "source_candidate_kind": "fixture_minimal_counterexample",
+      "synthetic_shortcut_row": false,
+      "token_counts": {
+        "completion_tokens": 1,
+        "prompt_tokens": 10,
+        "total_tokens": 11
+      },
+      "transcript_hash": "tx-ctx-005:counterexample"
+    },
+    {
+      "abstained": false,
+      "abstention_reason": "not_abstained",
+      "calibrated_policy": "exp3286_strict_leading_token_calibrated_v1",
+      "decision": "accept",
+      "exact_authority": "context_exact_checker",
+      "expected_decision": "accept",
+      "false_accept": false,
+      "false_reject": false,
+      "fixture_id": "ctx-006",
+      "model_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "model_path": "/home/ianblenke/github.com/ianblenke/carnot/.tmp-pytest/pytest-of-ianblenke/pytest-4/popen-gw2/test_scenario_verify_3287_read0/models/gemma26.gguf",
+      "output_text": "ACCEPT",
+      "prompt_hash": "prompt-ctx-006:expected",
+      "response_hash": "840e2c74114050d417e56a4f87792834ad0c0508d4b4ab5907b49ed4bea5af52",
+      "row_id": "ctx-006:expected",
+      "source_candidate_kind": "fixture_expected_answer",
+      "synthetic_shortcut_row": false,
+      "token_counts": {
+        "completion_tokens": 1,
+        "prompt_tokens": 10,
+        "total_tokens": 11
+      },
+      "transcript_hash": "tx-ctx-006:expected"
+    },
+    {
+      "abstained": false,
+      "abstention_reason": "not_abstained",
+      "calibrated_policy": "exp3286_strict_leading_token_calibrated_v1",
+      "decision": "reject",
+      "exact_authority": "context_exact_checker",
+      "expected_decision": "reject",
+      "false_accept": false,
+      "false_reject": false,
+      "fixture_id": "ctx-006",
+      "model_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "model_path": "/home/ianblenke/github.com/ianblenke/carnot/.tmp-pytest/pytest-of-ianblenke/pytest-4/popen-gw2/test_scenario_verify_3287_read0/models/gemma26.gguf",
+      "output_text": "REJECT",
+      "prompt_hash": "prompt-ctx-006:counterexample",
+      "response_hash": "11affde0bbe909a26c8f57c72e0dbc83f85df83bcf9fe4896ea8dd43e84669c1",
+      "row_id": "ctx-006:counterexample",
+      "source_candidate_kind": "fixture_minimal_counterexample",
+      "synthetic_shortcut_row": false,
+      "token_counts": {
+        "completion_tokens": 1,
+        "prompt_tokens": 10,
+        "total_tokens": 11
+      },
+      "transcript_hash": "tx-ctx-006:counterexample"
+    },
+    {
+      "abstained": false,
+      "abstention_reason": "not_abstained",
+      "calibrated_policy": "exp3286_strict_leading_token_calibrated_v1",
+      "decision": "accept",
+      "exact_authority": "context_exact_checker",
+      "expected_decision": "accept",
+      "false_accept": false,
+      "false_reject": false,
+      "fixture_id": "ctx-007",
+      "model_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "model_path": "/home/ianblenke/github.com/ianblenke/carnot/.tmp-pytest/pytest-of-ianblenke/pytest-4/popen-gw2/test_scenario_verify_3287_read0/models/gemma26.gguf",
+      "output_text": "ACCEPT",
+      "prompt_hash": "prompt-ctx-007:expected",
+      "response_hash": "840e2c74114050d417e56a4f87792834ad0c0508d4b4ab5907b49ed4bea5af52",
+      "row_id": "ctx-007:expected",
+      "source_candidate_kind": "fixture_expected_answer",
+      "synthetic_shortcut_row": false,
+      "token_counts": {
+        "completion_tokens": 1,
+        "prompt_tokens": 10,
+        "total_tokens": 11
+      },
+      "transcript_hash": "tx-ctx-007:expected"
+    },
+    {
+      "abstained": false,
+      "abstention_reason": "not_abstained",
+      "calibrated_policy": "exp3286_strict_leading_token_calibrated_v1",
+      "decision": "reject",
+      "exact_authority": "context_exact_checker",
+      "expected_decision": "reject",
+      "false_accept": false,
+      "false_reject": false,
+      "fixture_id": "ctx-007",
+      "model_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "model_path": "/home/ianblenke/github.com/ianblenke/carnot/.tmp-pytest/pytest-of-ianblenke/pytest-4/popen-gw2/test_scenario_verify_3287_read0/models/gemma26.gguf",
+      "output_text": "REJECT",
+      "prompt_hash": "prompt-ctx-007:counterexample",
+      "response_hash": "11affde0bbe909a26c8f57c72e0dbc83f85df83bcf9fe4896ea8dd43e84669c1",
+      "row_id": "ctx-007:counterexample",
+      "source_candidate_kind": "fixture_minimal_counterexample",
+      "synthetic_shortcut_row": false,
+      "token_counts": {
+        "completion_tokens": 1,
+        "prompt_tokens": 10,
+        "total_tokens": 11
+      },
+      "transcript_hash": "tx-ctx-007:counterexample"
+    },
+    {
+      "abstained": false,
+      "abstention_reason": "not_abstained",
+      "calibrated_policy": "exp3286_strict_leading_token_calibrated_v1",
+      "decision": "accept",
+      "exact_authority": "context_exact_checker",
+      "expected_decision": "accept",
+      "false_accept": false,
+      "false_reject": false,
+      "fixture_id": "ctx-008",
+      "model_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "model_path": "/home/ianblenke/github.com/ianblenke/carnot/.tmp-pytest/pytest-of-ianblenke/pytest-4/popen-gw2/test_scenario_verify_3287_read0/models/gemma26.gguf",
+      "output_text": "ACCEPT",
+      "prompt_hash": "prompt-ctx-008:expected",
+      "response_hash": "840e2c74114050d417e56a4f87792834ad0c0508d4b4ab5907b49ed4bea5af52",
+      "row_id": "ctx-008:expected",
+      "source_candidate_kind": "fixture_expected_answer",
+      "synthetic_shortcut_row": false,
+      "token_counts": {
+        "completion_tokens": 1,
+        "prompt_tokens": 10,
+        "total_tokens": 11
+      },
+      "transcript_hash": "tx-ctx-008:expected"
+    },
+    {
+      "abstained": false,
+      "abstention_reason": "not_abstained",
+      "calibrated_policy": "exp3286_strict_leading_token_calibrated_v1",
+      "decision": "reject",
+      "exact_authority": "context_exact_checker",
+      "expected_decision": "reject",
+      "false_accept": false,
+      "false_reject": false,
+      "fixture_id": "ctx-008",
+      "model_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "model_path": "/home/ianblenke/github.com/ianblenke/carnot/.tmp-pytest/pytest-of-ianblenke/pytest-4/popen-gw2/test_scenario_verify_3287_read0/models/gemma26.gguf",
+      "output_text": "REJECT",
+      "prompt_hash": "prompt-ctx-008:counterexample",
+      "response_hash": "11affde0bbe909a26c8f57c72e0dbc83f85df83bcf9fe4896ea8dd43e84669c1",
+      "row_id": "ctx-008:counterexample",
+      "source_candidate_kind": "fixture_minimal_counterexample",
+      "synthetic_shortcut_row": false,
+      "token_counts": {
+        "completion_tokens": 1,
+        "prompt_tokens": 10,
+        "total_tokens": 11
+      },
+      "transcript_hash": "tx-ctx-008:counterexample"
+    },
+    {
+      "abstained": false,
+      "abstention_reason": "not_abstained",
+      "calibrated_policy": "exp3286_strict_leading_token_calibrated_v1",
+      "decision": "accept",
+      "exact_authority": "context_exact_checker",
+      "expected_decision": "accept",
+      "false_accept": false,
+      "false_reject": false,
+      "fixture_id": "ctx-009",
+      "model_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "model_path": "/home/ianblenke/github.com/ianblenke/carnot/.tmp-pytest/pytest-of-ianblenke/pytest-4/popen-gw2/test_scenario_verify_3287_read0/models/gemma26.gguf",
+      "output_text": "ACCEPT",
+      "prompt_hash": "prompt-ctx-009:expected",
+      "response_hash": "840e2c74114050d417e56a4f87792834ad0c0508d4b4ab5907b49ed4bea5af52",
+      "row_id": "ctx-009:expected",
+      "source_candidate_kind": "fixture_expected_answer",
+      "synthetic_shortcut_row": false,
+      "token_counts": {
+        "completion_tokens": 1,
+        "prompt_tokens": 10,
+        "total_tokens": 11
+      },
+      "transcript_hash": "tx-ctx-009:expected"
+    },
+    {
+      "abstained": false,
+      "abstention_reason": "not_abstained",
+      "calibrated_policy": "exp3286_strict_leading_token_calibrated_v1",
+      "decision": "reject",
+      "exact_authority": "context_exact_checker",
+      "expected_decision": "reject",
+      "false_accept": false,
+      "false_reject": false,
+      "fixture_id": "ctx-009",
+      "model_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "model_path": "/home/ianblenke/github.com/ianblenke/carnot/.tmp-pytest/pytest-of-ianblenke/pytest-4/popen-gw2/test_scenario_verify_3287_read0/models/gemma26.gguf",
+      "output_text": "REJECT",
+      "prompt_hash": "prompt-ctx-009:counterexample",
+      "response_hash": "11affde0bbe909a26c8f57c72e0dbc83f85df83bcf9fe4896ea8dd43e84669c1",
+      "row_id": "ctx-009:counterexample",
+      "source_candidate_kind": "fixture_minimal_counterexample",
+      "synthetic_shortcut_row": false,
+      "token_counts": {
+        "completion_tokens": 1,
+        "prompt_tokens": 10,
+        "total_tokens": 11
+      },
+      "transcript_hash": "tx-ctx-009:counterexample"
+    }
+  ],
+  "preconditions_checked": [
+    {
+      "dominant_root_cause": "model_output_parser_contract_mismatch",
+      "name": "exp3286_calibrated_rerun_plan",
+      "passed": true,
+      "path": "results/experiment_3286_clean_verifier_abstention_root_cause_v1.json",
+      "plan_experiment_id": "exp3287"
+    },
+    {
+      "name": "exp3268_clean_sota_receipt_eligible",
+      "passed": true,
+      "path": "results/experiment_3268_sota_receipt_methodology_supplement_v1.json"
+    },
+    {
+      "gpu_count": 2,
+      "gpu_mem_used_mib": 4,
+      "name": "nvidia_smi",
+      "passed": true,
+      "returncode": 0
+    },
+    {
+      "cuda_available": true,
+      "cuda_device_count": 2,
+      "llama_cpp_import_ok": true,
+      "llama_cpp_supports_gpu_offload": true,
+      "name": "selected_python_cuda",
+      "passed": true
+    },
+    {
+      "available_model_ids": [
+        "unsloth/gemma-4-26B-A4B-it-GGUF"
+      ],
+      "cached_sota_pair_attempted": true,
+      "cached_sota_pair_available": false,
+      "missing_model_specs": [
+        {
+          "cached": false,
+          "expected_quantization": "Q4_K_M",
+          "hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+          "model_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+          "model_path": null,
+          "name": "Qwen3.6-35B-A3B",
+          "reason": "not_cached",
+          "role": "moe"
+        },
+        {
+          "cached": false,
+          "expected_quantization": "Q4_K_M",
+          "hf_id": "unsloth/gemma-4-31B-it-GGUF",
+          "model_id": "unsloth/gemma-4-31B-it-GGUF",
+          "model_path": null,
+          "name": "Gemma4-31B-it",
+          "reason": "not_cached",
+          "role": "dense"
+        }
+      ],
+      "name": "mandated_sota_gguf_cache",
+      "passed": true
+    },
+    {
+      "exact_rows_available": 20,
+      "exact_rows_selected": 20,
+      "name": "exact_row_fixture_availability",
+      "passed": true,
+      "path": "data/research/context_cot_clbench_parametric_shortcut_v1.jsonl",
+      "required_exact_rows": 20
+    }
+  ],
+  "random_seed": 3287,
+  "repair_gate_input_clean_enough": true,
+  "reproducibility_checksum": "6cd48c5308fa5cacbc14c955eee2f9df3bf0f2cb6d006446f3576df36b8aa014",
+  "required_exact_rows": 20,
+  "run_date": "20260528",
+  "schema_version": "carnot.abstention_calibrated_clean_verifier.v15",
+  "source_artifacts": [
+    {
+      "path": "results/experiment_3286_clean_verifier_abstention_root_cause_v1.json",
+      "present": true,
+      "role": "exp3286_abstention_root_cause",
+      "sha256": "9829eeb40a0bab3713fc3fec1d69653a723dc572a86ba51a62e5a31eda5f1c76"
+    },
+    {
+      "path": "results/experiment_3275_clean_sota_verifier_rerun_v14.json",
+      "present": false,
+      "role": "exp3275_requested_clean_sota_rerun",
+      "sha256": null
+    },
+    {
+      "path": "results/experiment_3275_clean_local_sota_verifier_rerun_v14.json",
+      "present": false,
+      "role": "exp3275_local_clean_sota_rerun",
+      "sha256": null
+    },
+    {
+      "path": "results/experiment_3268_sota_receipt_methodology_supplement_v1.json",
+      "present": true,
+      "role": "exp3268_sota_receipt_methodology",
+      "sha256": "ecf5d994355142db18a716f50d2d7897dfee503a272f4005bccccee79b9a27f9"
+    },
+    {
+      "path": "data/research/context_cot_clbench_parametric_shortcut_v1.jsonl",
+      "present": true,
+      "role": "context_exact_row_fixture",
+      "sha256": "5a3bfc24ef603b86b8f66a9e2731c1879566360a1d658388b3fbb62c2db66873"
+    },
+    {
+      "path": "openspec/capabilities/verification/spec.md",
+      "present": false,
+      "role": "verification_openspec",
+      "sha256": null
+    },
+    {
+      "path": "python/carnot/verify/abstention_calibrated_clean_verifier_v15.py",
+      "present": false,
+      "role": "exp3287_module",
+      "sha256": null
+    },
+    {
+      "path": "tests/python/test_experiment_3287_abstention_calibrated_clean_verifier_v15.py",
+      "present": false,
+      "role": "exp3287_tests",
+      "sha256": null
+    }
+  ],
+  "source_checksums": {
+    "data/research/context_cot_clbench_parametric_shortcut_v1.jsonl": "5a3bfc24ef603b86b8f66a9e2731c1879566360a1d658388b3fbb62c2db66873",
+    "results/experiment_3268_sota_receipt_methodology_supplement_v1.json": "ecf5d994355142db18a716f50d2d7897dfee503a272f4005bccccee79b9a27f9",
+    "results/experiment_3286_clean_verifier_abstention_root_cause_v1.json": "9829eeb40a0bab3713fc3fec1d69653a723dc572a86ba51a62e5a31eda5f1c76"
+  },
+  "spec_refs": [
+    "REQ-VERIFY-3287",
+    "SCENARIO-VERIFY-3287"
+  ],
+  "tests_run": [
+    "writer"
+  ]
+}

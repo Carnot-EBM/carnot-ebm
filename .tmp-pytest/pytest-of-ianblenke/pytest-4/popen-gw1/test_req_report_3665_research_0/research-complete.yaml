@@ -1,0 +1,67 @@
+# completed
+
+milestones:
+- id: 2026.06.334
+  finding: previous
+- id: 2026.06.335
+  title: "FACTS made real, but domain-bound on synthetic v3"
+  doc: openspec/change-proposals/research-roadmap-vNEXT.md
+  completed: '2026-06-01'
+  finding: "FACTS DOMAIN-BOUND ON SYNTHETIC V3: .335 made the facts row real with a model-based NLI verifier, but the negative was still measured on the synthetic v3 corpus (grounding AUROC 0.743656 ~= confidence 0.744576). A complementary catch signal exists (McNemar p=0.00031, conditional catch rate about 0.38191 at fixed confidence FPR), while the RAGTruth real benchmark gap remains open. dependency-aware weighting BEAT Carnot (0.932562 vs 0.919446) but exp3656 was TAUTOLOGY-flagged from an aliased AUROC field, so it is an open .336 lead rather than a claim. Code generalization replicated on a balanced second corpus; the fused second-pair detector wins on math; trained-judge-as-cross-domain-fix is RETIRED; FR-11 v9 held without collapse; paper_ready stayed TRUE (G1-G4) and P0.1 stayed honest-negative. .336 is active to clean the dependency-aware lead and test facts on a real benchmark."
+  tasks:
+  - id: exp3652-archive-v334-activate-v335
+    title: "Archive .334 and activate .335"
+    deliverable: results/experiment_3652_archive_v334_activate_v335.json
+    result: OK (codex artifact landed)
+  - id: exp3653-backend-state-diagnostic
+    title: "Backend-state diagnostic"
+    deliverable: results/experiment_3653_backend_state_diagnostic.json
+    result: OK (codex artifact landed)
+  - id: exp3654-real-nli-atomic-claim-grounding-verifier
+    title: "Build a real model-based NLI atomic-claim grounding verifier"
+    deliverable: results/experiment_3654_real_nli_atomic_claim_grounding_verifier.json
+    result: OK (codex artifact landed)
+  - id: exp3655-facts-row-remeasurement-real-nli-v5
+    title: "Re-measure the facts row with the real NLI grounding verifier"
+    deliverable: results/experiment_3655_facts_row_remeasurement_real_nli_v5.json
+    result: OK (codex artifact landed)
+  - id: exp3656-correlation-aware-weighting-paradox-diagnosis
+    title: "Diagnose the correlation-aware weighting paradox"
+    deliverable: results/experiment_3656_correlation_aware_weighting_paradox_diagnosis.json
+    result: OK (codex artifact landed)
+  - id: exp3657-deployable-second-pair-of-eyes-detector
+    title: "Build the deployable second-pair-of-eyes detector"
+    deliverable: results/experiment_3657_deployable_second_pair_of_eyes_detector.json
+    result: OK (codex artifact landed)
+  - id: exp3658-code-generalization-second-corpus-replication
+    title: "Replicate code generalization on a second balanced code corpus"
+    deliverable: results/experiment_3658_code_generalization_second_corpus.json
+    result: OK (codex artifact landed)
+  - id: exp3659-trained-ebm-judge-ood-real-substrate-v3
+    title: "Trained-EBM-judge OOD v3 with a real model substrate"
+    deliverable: results/experiment_3659_trained_ebm_judge_ood_real_substrate_v3.json
+    result: OK (codex artifact landed)
+  - id: exp3660-fr11-continuous-self-learning-v9-online-fusion-weights
+    title: "FR-11 continuous self-learning v9 online fusion weights"
+    deliverable: results/experiment_3660_fr11_continuous_self_learning_v9.json
+    result: OK (codex artifact landed)
+  - id: exp3661-kv260-continuity-v22
+    title: "KV260 SSH reachability continuity v22"
+    deliverable: results/experiment_3661_kv260_continuity_v22.json
+    result: OK (codex artifact landed)
+  - id: exp3662-polarfire-continuity-v22
+    title: "PolarFire opportunistic reachability and continuity audit"
+    deliverable: results/experiment_3662_polarfire_continuity_v22.json
+    result: OK (codex artifact landed)
+  - id: exp3663-gatemate-continuity-audit-v22
+    title: "GateMate continuity audit v22"
+    deliverable: results/experiment_3663_gatemate_continuity_audit_v22.json
+    result: OK (codex artifact landed)
+  - id: exp3664-capstone-and-g-gate-v335
+    title: "Capstone v335 and G1-G4 gate synthesis"
+    deliverable: results/experiment_3664_capstone_and_g_gate_v335.json
+    result: OK (codex artifact landed)
+  - id: exp3665-archive-v335-activate-v336
+    title: "Archive .335 honestly and activate .336"
+    deliverable: results/experiment_3665_archive_v335_activate_v336.json
+    result: OK (codex artifact landed)

@@ -1,0 +1,56 @@
+experiment_3420 started_at=2026-06-02T19:09:06Z
+$ precondition_ssh: fake
+rc=0 duration_s=0.010000
+
+$ precondition_overlay_list: fake
+rc=0 duration_s=0.010000
+[stdout]
+carnot_ising_v2_n64 (loaded)
+
+$ overlay_load: fake
+rc=0 duration_s=0.010000
+[stdout]
+carnot_ising_v2_n64 loaded
+
+$ overlay_list_after_load: fake
+rc=0 duration_s=0.010000
+[stdout]
+carnot_ising_v2_n64 (loaded)
+
+$ precondition_uio0: fake
+rc=0 duration_s=0.010000
+[stdout]
+/dev/uio0
+ok
+
+$ uptime: fake
+rc=0 duration_s=0.010000
+[stdout]
+up 5 days
+
+$ list_uio_devices: fake
+rc=0 duration_s=0.010000
+[stdout]
+/dev/uio0
+/dev/uio1
+
+$ bitstream_sha256_bit: fake
+rc=0 duration_s=0.010000
+
+$ bitstream_sha256_bit_bin_fallback: fake
+rc=0 duration_s=0.010000
+[stdout]
+bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb /lib/firmware/xilinx/carnot_ising_v4/x.bit.bin
+
+$ scp_problem_payload: fake
+rc=0 duration_s=0.010000
+
+$ scp_board_harness: fake
+rc=0 duration_s=0.010000
+
+$ run_board_harness: fake
+rc=0 duration_s=0.010000
+[stdout]
+log line
+{"duration_s": 2.5, "selected_uio": "/dev/uio0", "selected_uio_addr_hex": "0xa0000000", "uio_devices": ["/dev/uio0"], "runs": [{"seed": 42, "n_samples": 1000, "latencies_us": [3.0, 3.1, 3.2, 3.3, 3.4, 3.0, 3.1, 3.2, 3.3, 3.4, 3.0, 3.1, 3.2, 3.3, 3.4, 3.0, 3.1, 3.2, 3.3, 3.4], "final_energy": -42.0, "final_spin_words_hex": ["0x1", "0x2"], "failed_samples": 0}, {"seed": 137, "n_samples": 1000, "latencies_us": [3.0, 3.1, 3.2, 3.3, 3.4, 3.0, 3.1, 3.2, 3.3, 3.4, 3.0, 3.1, 3.2, 3.3, 3.4, 3.0, 3.1, 3.2, 3.3, 3.4], "final_energy": -42.0, "final_spin_words_hex": ["0x1", "0x2"], "failed_samples": 0}, {"seed": 271, "n_samples": 1000, "latencies_us": [3.0, 3.1, 3.2, 3.3, 3.4, 3.0, 3.1, 3.2, 3.3, 3.4, 3.0, 3.1, 3.2, 3.3, 3.4, 3.0, 3.1, 3.2, 3.3, 3.4], "final_energy": -42.0, "final_spin_words_hex": ["0x1", "0x2"], "failed_samples": 0}]}
+

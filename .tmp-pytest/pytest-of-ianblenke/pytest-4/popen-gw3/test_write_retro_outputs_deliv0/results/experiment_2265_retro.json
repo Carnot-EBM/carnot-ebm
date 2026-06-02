@@ -1,0 +1,191 @@
+{
+  "schema": "carnot.operational_retro.v66",
+  "experiment": "2265_retro",
+  "milestone": "2026.05.223",
+  "run_date": "20260517",
+  "generated_at_utc": "2026-05-17T17:40:00Z",
+  "retro_type": "operational_milestone",
+  "source_artifacts": [
+    "ops/conductor-log.md",
+    "results/experiment_2254_pretest_fix.json",
+    "results/experiment_2255_fst_real_scale_live_gen.json",
+    "results/experiment_2258_kancl_n256_clean_reattempt.json",
+    "results/experiment_2260_kv260_rtl_clean_reattempt.json",
+    "results/experiment_2257_odar_real_benchmark.json",
+    "results/experiment_2263_arxiv_sweep.json"
+  ],
+  "missing_requested_artifacts": [
+    {
+      "path": "results/experiment_2255_fst_live_gen.json",
+      "status": "missing_exact_path_used_gate_artifact_alias",
+      "actual_path": "results/experiment_2255_fst_real_scale_live_gen.json",
+      "explanation": "The roadmap requested results/experiment_2255_fst_live_gen.json, but the conductor wrote the terminal gate artifact under the task slug for FST full live generation gate."
+    },
+    {
+      "path": "results/experiment_2256_fr11_multidomain.json",
+      "status": "missing_exact_path",
+      "explanation": "No terminal artifact was present for FR-11 FST multi-domain validation gate; conductor log rows show the task was gate-blocked or pre-emptively skipped before execution."
+    },
+    {
+      "path": "results/experiment_2258_kancl_n256.json",
+      "status": "missing_exact_path_used_gate_artifact_alias",
+      "actual_path": "results/experiment_2258_kancl_n256_clean_reattempt.json",
+      "explanation": "The roadmap requested results/experiment_2258_kancl_n256.json, but the conductor wrote the terminal gate artifact under the task slug for KAN-CL n=256 clean re-attempt gate."
+    },
+    {
+      "path": "results/experiment_2260_kv260_rtl.json",
+      "status": "missing_exact_path_used_gate_artifact_alias",
+      "actual_path": "results/experiment_2260_kv260_rtl_clean_reattempt.json",
+      "explanation": "The roadmap requested results/experiment_2260_kv260_rtl.json, but the conductor wrote the terminal gate artifact under the task slug for KV260 RTL clean re-attempt gate."
+    },
+    {
+      "path": "results/experiment_2264_capstone.json",
+      "status": "missing_exact_path",
+      "explanation": "No terminal artifact was present for .223 full live-generation capstone gate; conductor log rows show the task was gate-blocked or pre-emptively skipped before execution."
+    }
+  ],
+  "field_principles": {
+    "honest_verdict": "Terminal-prefix required.",
+    "criteria_met": "N/total count validates milestone completion fraction.",
+    "top_gaps_resolved": "Records which of the three .222 retro gaps were resolved; tracks multi-milestone gap closure.",
+    "next_milestone_speedup_target_pct": "Quantifies where wall-time can be recovered in .224."
+  },
+  "honest_verdict": "complete: milestone_2026_05_223_retro_5_of_13_terminal_tasks_complete_0_of_3_prior_gaps_resolved_61min_wall_time_35pct_speedup_target",
+  "criteria_met": {
+    "count": 5,
+    "total": 13,
+    "fraction": 0.384615,
+    "display": "5/13",
+    "basis": "13 queued .223 tasks: 4 terminal OK rows were logged before this retrospective, this retrospective adds the 5th terminal deliverable, and 8 distinct tasks remained blocked or gate-skipped.",
+    "primary_gate_success_count_including_retro": 3,
+    "primary_gate_success_display": "3/13",
+    "primary_gate_success_basis": "Only exp2257 ODAR, exp2263 arXiv sweep, and this retrospective met their primary artifact gates; exp2253 and exp2254 were terminal OK rows but their primary booleans were false."
+  },
+  "total_wall_time_min": 61.0,
+  "n_experiments_completed": 4,
+  "n_gate_blocks": 19,
+  "n_compute_bound": 2,
+  "compute": {
+    "total_wall_time_min": 61.0,
+    "wall_time_basis": "From conductor log milestone activation at 2026-05-17 16:38 UTC through capstone gate-block at 2026-05-17 17:39 UTC.",
+    "n_experiments_completed": 4,
+    "n_experiments_completed_including_this_retro": 5,
+    "n_gate_blocks": 19,
+    "n_gate_blocked_distinct_tasks": 7,
+    "n_doomed_rerun_blocks": 3,
+    "n_doomed_rerun_distinct_tasks": 1,
+    "n_distinct_blocked_or_gated_tasks": 8,
+    "n_compute_bound": 2,
+    "compute_bound_tasks": [
+      "Phase 0: Fix Duplicate test_compositional_energy M",
+      "Phase 1: ODAR Real-Inference Routing Overhead Benc"
+    ],
+    "compute_bound_wall_time_min": 17.0
+  },
+  "wall_time_distribution": [
+    {
+      "bucket": "activation_and_cache_hit",
+      "minutes": 3.0,
+      "pct": 4.9,
+      "basis": "16:38 to 16:41 UTC"
+    },
+    {
+      "bucket": "pretest_repair_attempt",
+      "minutes": 4.0,
+      "pct": 6.6,
+      "basis": "16:41 to 16:45 UTC"
+    },
+    {
+      "bucket": "live_generation_gate_churn",
+      "minutes": 6.0,
+      "pct": 9.8,
+      "basis": "16:45 to 16:51 UTC"
+    },
+    {
+      "bucket": "odar_real_benchmark",
+      "minutes": 13.0,
+      "pct": 21.3,
+      "basis": "16:53 to 17:06 UTC"
+    },
+    {
+      "bucket": "kancl_kv260_gate_churn",
+      "minutes": 12.0,
+      "pct": 19.7,
+      "basis": "17:06 to 17:18 UTC"
+    },
+    {
+      "bucket": "downstream_skip_and_doomed_rerun_churn",
+      "minutes": 6.0,
+      "pct": 9.8,
+      "basis": "17:18 to 17:24 UTC"
+    },
+    {
+      "bucket": "arxiv_reference_sweep",
+      "minutes": 13.0,
+      "pct": 21.3,
+      "basis": "17:24 to 17:37 UTC"
+    },
+    {
+      "bucket": "capstone_preemptive_gate_block",
+      "minutes": 2.0,
+      "pct": 3.3,
+      "basis": "17:37 to 17:39 UTC"
+    }
+  ],
+  "top_successes": [
+    "ODAR real-inference benchmark completed with compute_reduction_pct=37.5 and median routing_overhead_ms=0.015469 on n_corpus=100; the result is useful but carries adversarial tautology flags that .224 should review before treating accuracy as settled.",
+    "Post-.222 arXiv sweep found 8 new papers, updated references, and produced a top-3 .224 candidate list.",
+    "Gate discipline prevented fabrication: full live generation, KAN-CL n=256, KV260 RTL, synthesis, and capstone claims stayed blocked once exp2254.pretest_fixed remained false."
+  ],
+  "top_gaps_for_2026_05_224": [
+    "Fix the remaining pre-test ImportError before scheduling dependent work: exp2254 reports pretest_fixed=False with DualGPUExecutionResult missing from carnot.inference.",
+    "Run exp2255 full-answer live generation only after the pre-test gate is green; the one-token probe gap remains open.",
+    "Re-stage KAN-CL n=256, KV260 RTL, and adversarial null-space tasks with complete preconditions and prior_failures metadata so .224 does not repeat 19 GATE_BLOCK rows and 3 DOOMED_RERUN_BLOCK rows."
+  ],
+  "top_gaps_resolved": [
+    {
+      "gap": "Pre-test failure fixed",
+      "source_experiment": "exp2254-pretest-fix",
+      "resolved": false,
+      "status": "unresolved_partial_fix",
+      "evidence": "Duplicate test_compositional_energy basename was renamed, but pretest_fixed=false because tests/python/test_dual_gpu.py still raises ImportError for DualGPUExecutionResult.",
+      "source": "results/experiment_2254_pretest_fix.json"
+    },
+    {
+      "gap": "KAN-CL n=256 validated",
+      "source_experiment": "exp2258-kancl-n256-clean-reattempt",
+      "resolved": false,
+      "status": "blocked",
+      "evidence": "exp2254-pretest-fix.pretest_fixed false",
+      "source": "results/experiment_2258_kancl_n256_clean_reattempt.json"
+    },
+    {
+      "gap": "Live generation beyond one-token probe",
+      "source_experiment": "exp2255-fst-real-scale-live-gen",
+      "resolved": false,
+      "status": "blocked",
+      "evidence": "exp2254-pretest-fix.pretest_fixed false",
+      "source": "results/experiment_2255_fst_real_scale_live_gen.json"
+    }
+  ],
+  "top_gaps_resolved_count": {
+    "count": 0,
+    "total": 3,
+    "display": "0/3",
+    "basis": "All three .222 carry-forward gaps were attempted or gated in .223, but none reached its success gate."
+  },
+  "next_milestone_speedup_target_pct": 35.0,
+  "next_milestone_speedup_basis": "A hard pre-activation pre-test gate and dependency-aware roadmap staging should recover roughly 26 minutes of .223 gate churn out of 61 total wall minutes; 35% is a conservative .224 target after leaving room for real compute.",
+  "recommendations": [
+    "Make DualGPUExecutionResult import/export repair the first .224 task and block all live-generation, KAN-CL, and RTL work until the full pre-test command is green.",
+    "Use a single prerequisite audit for exp2255, exp2258, exp2260, and exp2262 before activation so missing fields or false upstream gates fail once, not every conductor loop.",
+    "Keep ODAR's real-probe benchmark, but add a non-tautological accuracy oracle before using the exact 100%/0pp accuracy figures in planning claims.",
+    "Carry forward exp2263 candidate papers into .224 planning, especially projected Langevin constraints and p-bit FPGA scheduling."
+  ],
+  "explicit_non_actions": [
+    "Did not push.",
+    "Did not modify scripts/research_conductor.py.",
+    "Did not update ops/changelog.md, ops/status.md, or _bmad/traceability.md because the task's STOP-WHEN-DONE rule delegated those reconciliation files to the conductor."
+  ],
+  "acceptance_gate_passed": true
+}

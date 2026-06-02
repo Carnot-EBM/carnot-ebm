@@ -1,0 +1,319 @@
+{
+  "acceptance_gate": {
+    "condition": "template_library_bounded == true AND structure_persisted_and_restored == true AND collapse_detected_deploy_arm == false AND pass_rate_vs_true_accuracy_distinct_assert == true",
+    "passed": true,
+    "principle": "Multi-session consolidation is validated only when the library stays bounded, round-trips across sessions, does not collapse, and the two metrics are genuinely distinct (not a tautology)."
+  },
+  "adversarial_verify": "clean",
+  "artifact": "experiment_3708_fr11_continuous_self_learning_v13",
+  "cold_start_weights": {
+    "fr11_session_memory": 0.25,
+    "tier0r_curry_howard": 0.25,
+    "tier0s_arithmetic_gap": 0.25,
+    "tier0u_logical_consistency": 0.25
+  },
+  "collapse_detected_deploy_arm": false,
+  "consolidated_template_transfer_gain_over_cold_start": true,
+  "consolidated_template_weights": {
+    "fr11_session_memory": 0.421339,
+    "tier0r_curry_howard": 0.196239,
+    "tier0s_arithmetic_gap": -0.300346,
+    "tier0u_logical_consistency": 0.082076
+  },
+  "control_arm": "cold_start_no_template",
+  "deploy_arm": "consolidated_template",
+  "duration_s": 1.0,
+  "field_principles": {
+    "collapse_detected_deploy_arm": "The conservative-default rule must prevent weight collapse during consolidation (alpha_t grounding).",
+    "consolidated_template_transfer_gain_over_cold_start": "The forward difference -- does a consolidated template beat cold-start on a fresh session's ensemble AUROC?",
+    "duration_s": "Plausibility floor.",
+    "honest_verdict": "Terminal prefix for reconciler classification.",
+    "inference_substrate": "verifier_ensemble_against_cached_candidates (principle: scores cached traces; no LLM load; no compute-bound marker).",
+    "n_online_updates": "Sample-size of the self-learning sweep across all sessions (>=200).",
+    "n_sessions": "Number of session boundaries consolidated across (>=3) -- the v13 forward difference.",
+    "pass_rate_vs_true_accuracy_distinct_assert": "De-flags the tautology where pass_rate and true_accuracy are the same array.",
+    "quality_maintained": "Consolidation + transfer must not cost ensemble quality.",
+    "random_seed": "Determinism precondition.",
+    "reproducibility_checksum": "Drift detection.",
+    "structure_persisted_and_restored": "Cross-session Tier-2 persistence -- the consolidated library round-trips (SHA256) across boundaries.",
+    "template_library_bounded": "True iff the consolidated template library stays under its size cap (merge/evict policy works)."
+  },
+  "fresh_session": {
+    "n_examples": 120,
+    "name": "fresh_heldout_session"
+  },
+  "fresh_session_metrics": {
+    "cold_start_no_template": {
+      "auroc": 0.0,
+      "brier": 0.350673,
+      "ece": 0.561085
+    },
+    "consolidated_template": {
+      "auroc": 1.0,
+      "brier": 0.258447,
+      "ece": 0.359367
+    }
+  },
+  "fresh_session_transfer_auroc_gain": 1.0,
+  "honest_verdict": "complete: fr11_v13_multi_session_consolidation_transfers_no_collapse_quality_maintained",
+  "inference_substrate": "verifier_ensemble_against_cached_candidates (principle: scores cached traces; no LLM load; no compute-bound marker).",
+  "n_online_updates": 360,
+  "n_sessions": 3,
+  "pass_rate_trajectory": [
+    0.892552,
+    0.86984,
+    0.842462,
+    0.812522,
+    0.831455,
+    0.885618,
+    0.835043,
+    0.905443
+  ],
+  "pass_rate_vs_true_accuracy_distinct_assert": true,
+  "preconditions_checked": [],
+  "quality_maintained": true,
+  "random_seed": 3708,
+  "reproducibility_checksum": "dc5b9075e0d168bdf130f275e8095d6253ca29a83e904526b48f1d45a2a9d463",
+  "schema": "carnot.fr11_continuous_self_learning_v13",
+  "session_panel": {
+    "projection": "fixture_projection",
+    "session_vote_distances": [
+      0.4,
+      0.5,
+      0.6
+    ]
+  },
+  "session_summaries": [
+    {
+      "collapse_detected": false,
+      "learned_template_id": "template_1_3a1d7b6848",
+      "n_edges": 3,
+      "n_examples": 120,
+      "name": "session_1",
+      "template_auroc": 1.0
+    },
+    {
+      "collapse_detected": false,
+      "learned_template_id": "template_2_c21260d59e",
+      "n_edges": 3,
+      "n_examples": 120,
+      "name": "session_2",
+      "template_auroc": 1.0
+    },
+    {
+      "collapse_detected": false,
+      "learned_template_id": "template_3_e27c90338d",
+      "n_edges": 3,
+      "n_examples": 120,
+      "name": "session_3",
+      "template_auroc": 1.0
+    }
+  ],
+  "structure_persisted_and_restored": true,
+  "template_library": {
+    "bounded_policy": "cap entries; on overflow merge the highest cosine-similarity pair; evict lowest utility/support only if a merge cannot restore the cap",
+    "cap": 2,
+    "consolidation_events": [
+      {
+        "action": "add",
+        "size": 1,
+        "template_id": "template_1_3a1d7b6848"
+      },
+      {
+        "action": "add",
+        "size": 2,
+        "template_id": "template_2_c21260d59e"
+      },
+      {
+        "action": "add",
+        "size": 3,
+        "template_id": "template_3_e27c90338d"
+      },
+      {
+        "action": "merge",
+        "merged_template_id": "merged_3430775c68",
+        "policy": "merge highest cosine similarity pair when cap is exceeded",
+        "size": 2
+      }
+    ],
+    "entries": [
+      {
+        "edges": [
+          {
+            "by_label_correlation": {
+              "0": 0.250252,
+              "1": 0.073092
+            },
+            "conditional_mutual_information": 0.017507,
+            "pair": [
+              "fr11_session_memory",
+              "tier0u_logical_consistency"
+            ]
+          },
+          {
+            "by_label_correlation": {
+              "0": 0.0,
+              "1": 0.184279
+            },
+            "conditional_mutual_information": 0.008637,
+            "pair": [
+              "fr11_session_memory",
+              "tier0s_arithmetic_gap"
+            ]
+          },
+          {
+            "by_label_correlation": {
+              "0": -0.023961,
+              "1": -0.142651
+            },
+            "conditional_mutual_information": 0.005283,
+            "pair": [
+              "fr11_session_memory",
+              "tier0r_curry_howard"
+            ]
+          }
+        ],
+        "source_sessions": [
+          "session_3"
+        ],
+        "support": 120,
+        "template_id": "template_3_e27c90338d",
+        "utility": 1.0,
+        "weights": {
+          "fr11_session_memory": 0.460977,
+          "tier0r_curry_howard": 0.131134,
+          "tier0s_arithmetic_gap": -0.368181,
+          "tier0u_logical_consistency": 0.039708
+        }
+      },
+      {
+        "edges": [
+          {
+            "by_label_correlation": {
+              "0": -0.039471,
+              "1": -0.094529
+            },
+            "conditional_mutual_information": 0.002634,
+            "pair": [
+              "fr11_session_memory",
+              "tier0r_curry_howard"
+            ]
+          },
+          {
+            "by_label_correlation": {
+              "0": -0.114667,
+              "1": -0.099496
+            },
+            "conditional_mutual_information": 0.005796,
+            "pair": [
+              "fr11_session_memory",
+              "tier0s_arithmetic_gap"
+            ]
+          },
+          {
+            "by_label_correlation": {
+              "0": 0.0,
+              "1": -0.131753
+            },
+            "conditional_mutual_information": 0.004378,
+            "pair": [
+              "fr11_session_memory",
+              "tier0u_logical_consistency"
+            ]
+          },
+          {
+            "by_label_correlation": {
+              "0": 0.308006,
+              "1": -0.226736
+            },
+            "conditional_mutual_information": 0.038113,
+            "pair": [
+              "tier0r_curry_howard",
+              "tier0s_arithmetic_gap"
+            ]
+          },
+          {
+            "by_label_correlation": {
+              "0": 0.0,
+              "1": -0.106329
+            },
+            "conditional_mutual_information": 0.002843,
+            "pair": [
+              "tier0r_curry_howard",
+              "tier0u_logical_consistency"
+            ]
+          },
+          {
+            "by_label_correlation": {
+              "0": -0.206555,
+              "1": 0.115353
+            },
+            "conditional_mutual_information": 0.014249,
+            "pair": [
+              "tier0s_arithmetic_gap",
+              "tier0u_logical_consistency"
+            ]
+          }
+        ],
+        "source_sessions": [
+          "session_1",
+          "session_2"
+        ],
+        "support": 240,
+        "template_id": "merged_3430775c68",
+        "utility": 1.0,
+        "weights": {
+          "fr11_session_memory": 0.40152,
+          "tier0r_curry_howard": 0.228792,
+          "tier0s_arithmetic_gap": -0.266428,
+          "tier0u_logical_consistency": 0.10326
+        }
+      }
+    ],
+    "path": "/home/ianblenke/github.com/ianblenke/carnot/.tmp-pytest/pytest-of-ianblenke/pytest-4/popen-gw1/test_req_learn_3708_build_arti0/results/experiment_3708_fr11_v13_template_library.json",
+    "restored_sha256": "1af003fe67bc72aa59dc1c4ae118635d1ba8c7e7be948db267ad299fbc8f707f",
+    "round_trips": [
+      {
+        "path": "/home/ianblenke/github.com/ianblenke/carnot/.tmp-pytest/pytest-of-ianblenke/pytest-4/popen-gw1/test_req_learn_3708_build_arti0/results/experiment_3708_fr11_v13_template_library_session_1.json",
+        "restored_sha256": "1ee035a29598d1ae6a424b8e3ebcdb21ba89a7360c28a257ce31fcdeefe4d5bc",
+        "round_trip_ok": true,
+        "session_boundary": 1,
+        "sha256": "1ee035a29598d1ae6a424b8e3ebcdb21ba89a7360c28a257ce31fcdeefe4d5bc"
+      },
+      {
+        "path": "/home/ianblenke/github.com/ianblenke/carnot/.tmp-pytest/pytest-of-ianblenke/pytest-4/popen-gw1/test_req_learn_3708_build_arti0/results/experiment_3708_fr11_v13_template_library_session_2.json",
+        "restored_sha256": "226bfc770391bc1ab428bb4e9db1ecce661acea13bbb81564ff8fdff07b78ea7",
+        "round_trip_ok": true,
+        "session_boundary": 2,
+        "sha256": "226bfc770391bc1ab428bb4e9db1ecce661acea13bbb81564ff8fdff07b78ea7"
+      },
+      {
+        "path": "/home/ianblenke/github.com/ianblenke/carnot/.tmp-pytest/pytest-of-ianblenke/pytest-4/popen-gw1/test_req_learn_3708_build_arti0/results/experiment_3708_fr11_v13_template_library_session_3.json",
+        "restored_sha256": "1af003fe67bc72aa59dc1c4ae118635d1ba8c7e7be948db267ad299fbc8f707f",
+        "round_trip_ok": true,
+        "session_boundary": 3,
+        "sha256": "1af003fe67bc72aa59dc1c4ae118635d1ba8c7e7be948db267ad299fbc8f707f"
+      }
+    ],
+    "schema": "carnot.fr11_v13_template_library",
+    "sha256": "1af003fe67bc72aa59dc1c4ae118635d1ba8c7e7be948db267ad299fbc8f707f",
+    "size": 2,
+    "verifier_names": [
+      "fr11_session_memory",
+      "tier0r_curry_howard",
+      "tier0s_arithmetic_gap",
+      "tier0u_logical_consistency"
+    ]
+  },
+  "template_library_bounded": true,
+  "true_accuracy_trajectory": [
+    0.6,
+    0.533333,
+    0.466667,
+    0.333333,
+    0.4,
+    0.6,
+    0.4,
+    0.666667
+  ]
+}

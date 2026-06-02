@@ -1,0 +1,55 @@
+{
+  "acceptance_gate": {
+    "condition": "overclaim_removed == true AND math_operating_point_unchanged == true AND e2e_test_passed == true",
+    "passed": true,
+    "principle": "The shipped detector is honest only if it no longer claims the inflated 1.0, the math point is preserved, and the E2E passes."
+  },
+  "adversarial_verify_clean": true,
+  "artifact": "experiment_3706_reconcile_shipped_detector_heldout",
+  "code_surface_abstains": true,
+  "duration_s": 1.0,
+  "e2e_test_passed": true,
+  "field_principles": {
+    "adversarial_verify_clean": "True iff no critical flag.",
+    "duration_s": "Plausibility floor.",
+    "e2e_test_passed": "True iff the shipped-surface E2E test passes after the change.",
+    "honest_verdict": "Terminal prefix for reconciler classification.",
+    "inference_substrate": "verifier_ensemble_against_cached_candidates (principle: scores cached corpora; no LLM load; no compute-bound marker).",
+    "math_operating_point_unchanged": "True iff the strong math operating point (AUROC ~0.98, ECE ~0.009) is preserved -- the reconciliation must not regress math.",
+    "operating_envelope_docstring_updated": "True iff the module docstring states the honest math (+code-or-abstain) operating points.",
+    "overclaim_removed": "BARE bool. True iff the shipped detector no longer claims the inflated in-corpus 1.0 -- the product-integrity fix.",
+    "random_seed": "Determinism precondition.",
+    "reconciliation_action": "recalibrated_to_heldout / narrowed_to_math_only_abstain -- which branch the shipped surface took, traceable to Exp 3705's verdict.",
+    "reproducibility_checksum": "Drift detection.",
+    "shipped_code_operating_point_auroc": "The code AUROC the shipped detector now claims -- the HELD-OUT number if survived, else null (abstain)."
+  },
+  "heldout_calibration": {
+    "brier": 0.18,
+    "ece": 0.08
+  },
+  "honest_verdict": "complete: shipped_detector_narrowed_to_math_only_abstain_on_code_e2e_green",
+  "inference_substrate": "verifier_ensemble_against_cached_candidates (principle: scores cached corpora; no LLM load; no compute-bound marker).",
+  "math_operating_point": {
+    "auroc": 0.979656,
+    "calibration": {
+      "brier": 0.0135,
+      "ece": 0.0085
+    },
+    "operating_point": {
+      "expected_recall": 0.970588,
+      "fpr_budget": 0.1,
+      "threshold": 0.013
+    }
+  },
+  "math_operating_point_unchanged": true,
+  "operating_envelope_docstring_updated": true,
+  "ops_docs_reconciliation_left_to_conductor": true,
+  "overclaim_removed": true,
+  "random_seed": 3706,
+  "reconciliation_action": "narrowed_to_math_only_abstain",
+  "reproducibility_checksum": "bdeee04f4e7c33f9",
+  "schema": "carnot.reconcile_shipped_detector_heldout_3706.v1",
+  "scripts_research_conductor_modified": false,
+  "shipped_code_operating_point_auroc": null,
+  "tests_run": []
+}

@@ -1,0 +1,73 @@
+{
+  "experiment": "1272_prime_verifier_selection_audit",
+  "schema": "prime_verifier_selection_audit_v1",
+  "run_date": "20260504",
+  "status": "complete",
+  "n_fover_pairs": 4,
+  "n_process_error_rows": 2,
+  "n_outcome_correct": 2,
+  "n_outcome_incorrect": 2,
+  "source_artifacts": {
+    "fover_corpus": "results/fover_corpus_v5.json",
+    "exp1256": "results/experiment_1256_verifier_orthogonality_audit_v3.json",
+    "exp1271": "results/experiment_1271_triggered_certificate_extraction_sota_gguf.json"
+  },
+  "exp1256_k_eff": 3.5,
+  "exp1256_max_pairwise_r_k5": 0.25,
+  "per_verifier_metrics": {
+    "Z3MathVerifier": {
+      "process_error_detection_rate": 1.0,
+      "final_answer_agreement": 0.75,
+      "answer_reasoning_consistency": 1.0,
+      "pairwise_correlation_penalty": 0.2,
+      "raw_weight_score": 0.73
+    },
+    "CausalReasoningVerifier": {
+      "process_error_detection_rate": 1.0,
+      "final_answer_agreement": 0.5,
+      "answer_reasoning_consistency": 0.75,
+      "pairwise_correlation_penalty": 0.1,
+      "raw_weight_score": 0.6975
+    },
+    "SymCodeVerifier": {
+      "process_error_detection_rate": 0.0,
+      "final_answer_agreement": 0.75,
+      "answer_reasoning_consistency": 0.5,
+      "pairwise_correlation_penalty": 0.2,
+      "raw_weight_score": 0.29
+    },
+    "SemEnergyProbe": {
+      "process_error_detection_rate": 0.0,
+      "final_answer_agreement": 0.5,
+      "answer_reasoning_consistency": 0.25,
+      "pairwise_correlation_penalty": 0.0,
+      "raw_weight_score": 0.225
+    },
+    "k5_ensemble_summary": {
+      "process_error_detection_rate": 1.0,
+      "final_answer_agreement": 0.75,
+      "answer_reasoning_consistency": 1.0,
+      "pairwise_correlation_penalty": 0.25,
+      "raw_weight_score": 0.684375
+    }
+  },
+  "metric_definitions": {
+    "process_error_detection_rate": "fraction of FoVer process-error rows detected",
+    "final_answer_agreement": "fraction where verifier error signal matches final answer label",
+    "answer_reasoning_consistency": "fraction where verifier signal matches process-or-outcome error",
+    "pairwise_correlation_penalty": "max absolute verifier correlation penalty in [0,1]"
+  },
+  "verifier_weight_vector_written": true,
+  "verifier_weight_vector": {
+    "Z3MathVerifier": 0.277896740423507,
+    "CausalReasoningVerifier": 0.26552462526766596,
+    "SymCodeVerifier": 0.11039733523673566,
+    "SemEnergyProbe": 0.08565310492505353,
+    "k5_ensemble_summary": 0.2605281941470378
+  },
+  "missing_fields": [],
+  "missing_optional_fields": [
+    "exp1271_certificate_outputs"
+  ],
+  "honest_verdict": "prime_verifier_weights_selected_top_Z3MathVerifier"
+}

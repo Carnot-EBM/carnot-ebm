@@ -1,0 +1,65 @@
+{
+  "artifact": "experiment_3111_certified_coherence_z3_mcs_feedback_v3",
+  "certificate_count": 4,
+  "certificates": [
+    {
+      "coherence_status": "incoherent",
+      "exact_label": "INVALID",
+      "fixture_id": "resyn-3084-arith-003",
+      "minimal_correction_set": {
+        "from": 47,
+        "kind": "replace_claimed_value",
+        "to": 43
+      },
+      "solver_authority": "python_ast_runtime_execution",
+      "task_family": "arithmetic_code_assertions",
+      "unsat_core": [
+        "computed_value",
+        "claimed_value"
+      ]
+    },
+    {
+      "coherence_status": "incoherent",
+      "exact_label": "UNSAT",
+      "fixture_id": "resyn-3084-smt-000",
+      "minimal_correction_set": {
+        "constraints_to_relax": [
+          "constraint_0"
+        ],
+        "kind": "remove_conflicting_constraint"
+      },
+      "solver_authority": "z3_solver",
+      "task_family": "smt_constraints",
+      "unsat_core": [
+        "constraint_0",
+        "constraint_1"
+      ]
+    },
+    {
+      "coherence_status": "coherent",
+      "exact_label": "SAT",
+      "fixture_id": "resyn-3084-smt-001",
+      "minimal_correction_set": {},
+      "solver_authority": "z3_solver",
+      "task_family": "smt_constraints",
+      "unsat_core": []
+    },
+    {
+      "coherence_status": "incoherent",
+      "exact_label": "REPAIRABLE",
+      "fixture_id": "resyn-3084-repair-json-000",
+      "minimal_correction_set": {
+        "edits": [
+          {
+            "operation": "insert_delimiter",
+            "token": ","
+          }
+        ],
+        "kind": "json_token_edit"
+      },
+      "solver_authority": "python_json_parser",
+      "task_family": "repairable_invalid_candidates",
+      "unsat_core": []
+    }
+  ]
+}

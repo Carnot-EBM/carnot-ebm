@@ -1,0 +1,52 @@
+{
+  "artifact": "experiment_3156_fr11_ledger_consistency_closure_v1",
+  "continuous_self_learning_targeted": true,
+  "fr11_ledger_consistency_closure_v1_ready": true,
+  "ledger_consistency_rate": 0.75,
+  "no_weight_update_claim": true,
+  "replay_panel_count": 3,
+  "replay_panel_rows": [
+    {
+      "completeness_errors": 0,
+      "consistent": true,
+      "expected_action": "accept",
+      "fixture_family": "safe_variant",
+      "ledger_action": "accept",
+      "mismatch_class": "",
+      "observed_action": "accept",
+      "panel_category": "equivalent_variant",
+      "routing_decision": "normal",
+      "row_id": "safe-variant",
+      "soundness_errors": 0,
+      "source_artifact": "unit-fixture.json"
+    },
+    {
+      "completeness_errors": 0,
+      "consistent": true,
+      "expected_action": "accept",
+      "fixture_family": "risky_math",
+      "ledger_action": "accept",
+      "mismatch_class": "",
+      "observed_action": "accept",
+      "panel_category": "historical_false_accept_family",
+      "routing_decision": "escalate",
+      "row_id": "risky-valid",
+      "soundness_errors": 0,
+      "source_artifact": "unit-fixture.json"
+    },
+    {
+      "completeness_errors": 0,
+      "consistent": false,
+      "expected_action": "reject",
+      "fixture_family": "risky_math",
+      "ledger_action": "reject",
+      "mismatch_class": "contradictory_memory",
+      "observed_action": "accept",
+      "panel_category": "historical_false_accept_family",
+      "routing_decision": "escalate",
+      "row_id": "risky-invalid",
+      "soundness_errors": 0,
+      "source_artifact": "unit-fixture.json"
+    }
+  ]
+}

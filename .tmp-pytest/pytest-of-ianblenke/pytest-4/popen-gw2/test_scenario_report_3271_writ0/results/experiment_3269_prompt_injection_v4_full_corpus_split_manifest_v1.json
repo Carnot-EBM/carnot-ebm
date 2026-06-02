@@ -1,0 +1,46 @@
+{
+  "artifact": "experiment_3269_prompt_injection_v4_full_corpus_split_manifest_v1",
+  "full_corpus_manifest_ready": true,
+  "garak_seed_target": 1000,
+  "shard_plan": [
+    {
+      "category_focus": [
+        "long_reasoning_heavy_attack",
+        "misaligned_instruction_attack"
+      ],
+      "shard_id": "v4-shard-005",
+      "target_examples": 4,
+      "teacher_label_deliverable": "results/experiment_3271_prompt_injection_teacher_label_shards_5_7_garak_seed_v1.json"
+    },
+    {
+      "category_focus": [
+        "aligned_instruction_benign",
+        "dataflip_kad_adaptive_attack"
+      ],
+      "shard_id": "v4-shard-006",
+      "target_examples": 4,
+      "teacher_label_deliverable": "results/experiment_3271_prompt_injection_teacher_label_shards_5_7_garak_seed_v1.json"
+    },
+    {
+      "category_focus": [
+        "tool_rag_indirect_injection_attack",
+        "encoding_attack"
+      ],
+      "shard_id": "v4-shard-007",
+      "target_examples": 4,
+      "teacher_label_deliverable": "results/experiment_3271_prompt_injection_teacher_label_shards_5_7_garak_seed_v1.json"
+    },
+    {
+      "category_focus": [
+        "garak_promptinject_attack",
+        "encoding_attack",
+        "dataflip_kad_adaptive_attack",
+        "long_reasoning_heavy_attack",
+        "tool_rag_indirect_injection_attack"
+      ],
+      "shard_id": "v4-garak-adaptive-seed",
+      "target_examples": 10,
+      "teacher_label_deliverable": "results/experiment_3271_prompt_injection_teacher_label_shards_5_7_garak_seed_v1.json"
+    }
+  ]
+}

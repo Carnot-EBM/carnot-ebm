@@ -1,0 +1,55 @@
+{
+  "paired_runs": [
+    {
+      "benchmark": "gsm8k_semantic",
+      "cases": [
+        {
+          "case_id": "gsm8k-a",
+          "correct": true,
+          "history": [
+            {
+              "iteration": 0,
+              "response": "1 + 1 = 2. Therefore the answer is 2."
+            }
+          ],
+          "initial_correct": true
+        },
+        {
+          "case_id": "gsm8k-b",
+          "correct": false,
+          "history": [
+            {
+              "iteration": 0,
+              "response": "2 + 2 = 5. Therefore the answer is 5."
+            }
+          ],
+          "initial_correct": false
+        },
+        {
+          "case_id": "gsm8k-c",
+          "correct": true,
+          "history": [
+            {
+              "iteration": 1,
+              "response": "3 + 3 = 6. Therefore the answer is 6."
+            }
+          ],
+          "initial_correct": false
+        },
+        {
+          "case_id": "gsm8k-d",
+          "correct": true,
+          "history": [
+            {
+              "iteration": 0,
+              "response": "4 + 4 = 9. Therefore the answer is 8."
+            }
+          ],
+          "initial_correct": true
+        }
+      ],
+      "mode": "verify_repair",
+      "model_name": "Qwen3.5-0.8B"
+    }
+  ]
+}

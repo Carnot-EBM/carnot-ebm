@@ -1,0 +1,380 @@
+{
+  "artifact": "experiment_3088_xgrammar2_structured_repair_emitter_preflight_v1",
+  "blocked_library_missing": false,
+  "cached_examples_only": true,
+  "dependency_probe": {
+    "llguidance": {
+      "available": false,
+      "import_name": "llguidance",
+      "role": "native_json_schema_grammar_backend"
+    },
+    "repo_native_fallback": {
+      "available": true,
+      "role": "post_decode_schema_contract",
+      "schema_path": "python/carnot/schemas/structured_repair_candidate_v1.json"
+    },
+    "xgrammar": {
+      "available": false,
+      "import_name": "xgrammar",
+      "role": "native_token_mask_backend"
+    }
+  },
+  "duration_s": 0.0,
+  "fallback_contract_used": true,
+  "grammar_or_schema_kind": "json_schema",
+  "grammar_or_schema_path": "python/carnot/schemas/structured_repair_candidate_v1.json",
+  "honest_verdict": "blocked_preflight_contract_invalid",
+  "inference_substrate": {
+    "cached_examples_only": true,
+    "conductor_invoked": false,
+    "fresh_repair_generation": false,
+    "fresh_solver_execution": false,
+    "fresh_verifier_scoring": false,
+    "live_llm_inference": false,
+    "local_gguf_inference": false,
+    "mode": "cached_payload_schema_preflight",
+    "model_load_attempted": false,
+    "repair_quality_claimed": false
+  },
+  "invalid_payload_rejection_count": 8,
+  "parser_validation_count": 2,
+  "run_date": "20260525",
+  "schema": "carnot.structured_repair_emitter_preflight.v1",
+  "schema_checksum": null,
+  "source_artifacts": [
+    {
+      "experiment_id": "exp3074",
+      "path": "results/experiment_3074_llguidance_aprad_repair_protocol_v1.json",
+      "present": false,
+      "required": true,
+      "role": "llguidance_aprad_repair_protocol",
+      "sha256": null
+    },
+    {
+      "experiment_id": "exp3075",
+      "path": "results/experiment_3075_gated_grammar_constrained_sota_repair_micro_panel_v1.json",
+      "present": false,
+      "required": false,
+      "role": "referenced_gated_repair_micro_panel",
+      "sha256": null
+    },
+    {
+      "experiment_id": "research_references",
+      "path": "research-references.md",
+      "present": false,
+      "required": false,
+      "role": "structured_generation_context",
+      "sha256": null
+    }
+  ],
+  "structured_generation_ready": false,
+  "structured_library_available": false,
+  "syntax_failure_classes_for_exp3089": [
+    "json_decode_error",
+    "not_json_object",
+    "missing_required_field",
+    "wrong_type",
+    "enum_violation",
+    "extra_property",
+    "invalid_task_intent_hash",
+    "empty_patch",
+    "unchecked_semantic_drift"
+  ],
+  "tests_added_or_reused": [
+    "tests/python/test_experiment_3088_structured_repair_emitter_preflight.py"
+  ],
+  "validation_manifest": {
+    "accepted_invalid_count": 0,
+    "invalid_payload_rejection_count": 8,
+    "invalid_rows": [
+      {
+        "expected_failure_class": "json_decode_error",
+        "name": "malformed_json",
+        "result": {
+          "errors": [
+            "json_decode_error:Expecting property name enclosed in double quotes"
+          ],
+          "failure_class": "json_decode_error",
+          "payload": {},
+          "valid": false
+        }
+      },
+      {
+        "expected_failure_class": "missing_required_field",
+        "name": "missing_patch",
+        "result": {
+          "errors": [
+            "missing_required_field:$.patch"
+          ],
+          "failure_class": "missing_required_field",
+          "payload": {
+            "behavioral_tests": [
+              {
+                "command": ".venv/bin/pytest tests/python/test_cached.py -q",
+                "expected": "pass",
+                "name": "unit"
+              }
+            ],
+            "semantic_drift_checks": [
+              {
+                "authority": "deterministic_tests",
+                "must_pass": true,
+                "name": "intent"
+              }
+            ],
+            "task_id": "cached-repair-001",
+            "task_intent_hash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+            "verifier_authority": "deterministic_tests"
+          },
+          "valid": false
+        }
+      },
+      {
+        "expected_failure_class": "wrong_type",
+        "name": "wrong_behavioral_tests_type",
+        "result": {
+          "errors": [
+            "wrong_type:$.behavioral_tests"
+          ],
+          "failure_class": "wrong_type",
+          "payload": {
+            "behavioral_tests": "pytest",
+            "patch": "--- a/foo.py\n+++ b/foo.py\n@@\n-return 1\n+return 2\n",
+            "semantic_drift_checks": [
+              {
+                "authority": "deterministic_tests",
+                "must_pass": true,
+                "name": "intent"
+              }
+            ],
+            "task_id": "cached-repair-001",
+            "task_intent_hash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+            "verifier_authority": "deterministic_tests"
+          },
+          "valid": false
+        }
+      },
+      {
+        "expected_failure_class": "enum_violation",
+        "name": "wrong_verifier_authority",
+        "result": {
+          "errors": [
+            "enum_violation:$.verifier_authority"
+          ],
+          "failure_class": "enum_violation",
+          "payload": {
+            "behavioral_tests": [
+              {
+                "command": ".venv/bin/pytest tests/python/test_cached.py -q",
+                "expected": "pass",
+                "name": "unit"
+              }
+            ],
+            "patch": "--- a/foo.py\n+++ b/foo.py\n@@\n-return 1\n+return 2\n",
+            "semantic_drift_checks": [
+              {
+                "authority": "deterministic_tests",
+                "must_pass": true,
+                "name": "intent"
+              }
+            ],
+            "task_id": "cached-repair-001",
+            "task_intent_hash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+            "verifier_authority": "self_graded"
+          },
+          "valid": false
+        }
+      },
+      {
+        "expected_failure_class": "extra_property",
+        "name": "extra_field",
+        "result": {
+          "errors": [
+            "extra_property:$.confidence"
+          ],
+          "failure_class": "extra_property",
+          "payload": {
+            "behavioral_tests": [
+              {
+                "command": ".venv/bin/pytest tests/python/test_cached.py -q",
+                "expected": "pass",
+                "name": "unit"
+              }
+            ],
+            "confidence": 0.9,
+            "patch": "--- a/foo.py\n+++ b/foo.py\n@@\n-return 1\n+return 2\n",
+            "semantic_drift_checks": [
+              {
+                "authority": "deterministic_tests",
+                "must_pass": true,
+                "name": "intent"
+              }
+            ],
+            "task_id": "cached-repair-001",
+            "task_intent_hash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+            "verifier_authority": "deterministic_tests"
+          },
+          "valid": false
+        }
+      },
+      {
+        "expected_failure_class": "invalid_task_intent_hash",
+        "name": "invalid_task_intent_hash",
+        "result": {
+          "errors": [
+            "invalid_task_intent_hash:$.task_intent_hash"
+          ],
+          "failure_class": "invalid_task_intent_hash",
+          "payload": {
+            "behavioral_tests": [
+              {
+                "command": ".venv/bin/pytest tests/python/test_cached.py -q",
+                "expected": "pass",
+                "name": "unit"
+              }
+            ],
+            "patch": "--- a/foo.py\n+++ b/foo.py\n@@\n-return 1\n+return 2\n",
+            "semantic_drift_checks": [
+              {
+                "authority": "deterministic_tests",
+                "must_pass": true,
+                "name": "intent"
+              }
+            ],
+            "task_id": "cached-repair-001",
+            "task_intent_hash": "sha256:not-a-hash",
+            "verifier_authority": "deterministic_tests"
+          },
+          "valid": false
+        }
+      },
+      {
+        "expected_failure_class": "empty_patch",
+        "name": "empty_patch",
+        "result": {
+          "errors": [
+            "empty_patch:$.patch"
+          ],
+          "failure_class": "empty_patch",
+          "payload": {
+            "behavioral_tests": [
+              {
+                "command": ".venv/bin/pytest tests/python/test_cached.py -q",
+                "expected": "pass",
+                "name": "unit"
+              }
+            ],
+            "patch": "",
+            "semantic_drift_checks": [
+              {
+                "authority": "deterministic_tests",
+                "must_pass": true,
+                "name": "intent"
+              }
+            ],
+            "task_id": "cached-repair-001",
+            "task_intent_hash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+            "verifier_authority": "deterministic_tests"
+          },
+          "valid": false
+        }
+      },
+      {
+        "expected_failure_class": "unchecked_semantic_drift",
+        "name": "unchecked_semantic_drift",
+        "result": {
+          "errors": [
+            "unchecked_semantic_drift:$.semantic_drift_checks[0].must_pass"
+          ],
+          "failure_class": "unchecked_semantic_drift",
+          "payload": {
+            "behavioral_tests": [
+              {
+                "command": ".venv/bin/pytest tests/python/test_cached.py -q",
+                "expected": "pass",
+                "name": "unit"
+              }
+            ],
+            "patch": "--- a/foo.py\n+++ b/foo.py\n@@\n-return 1\n+return 2\n",
+            "semantic_drift_checks": [
+              {
+                "authority": "deterministic_tests",
+                "must_pass": false,
+                "name": "intent"
+              }
+            ],
+            "task_id": "cached-repair-001",
+            "task_intent_hash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+            "verifier_authority": "deterministic_tests"
+          },
+          "valid": false
+        }
+      }
+    ],
+    "parser_validation_count": 2,
+    "rejected_valid_count": 0,
+    "syntax_failure_classes_for_exp3089": [
+      "json_decode_error",
+      "not_json_object",
+      "missing_required_field",
+      "wrong_type",
+      "enum_violation",
+      "extra_property",
+      "invalid_task_intent_hash",
+      "empty_patch",
+      "unchecked_semantic_drift"
+    ],
+    "valid_rows": [
+      {
+        "errors": [],
+        "failure_class": null,
+        "payload": {
+          "behavioral_tests": [
+            {
+              "command": ".venv/bin/pytest tests/python/test_cached.py -q",
+              "expected": "pass",
+              "name": "unit"
+            }
+          ],
+          "patch": "--- a/foo.py\n+++ b/foo.py\n@@\n-return 1\n+return 2\n",
+          "semantic_drift_checks": [
+            {
+              "authority": "deterministic_tests",
+              "must_pass": true,
+              "name": "intent"
+            }
+          ],
+          "task_id": "cached-repair-001",
+          "task_intent_hash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "verifier_authority": "deterministic_tests"
+        },
+        "valid": true
+      },
+      {
+        "errors": [],
+        "failure_class": null,
+        "payload": {
+          "behavioral_tests": [
+            {
+              "command": ".venv/bin/pytest tests/python/test_solver.py -q",
+              "expected": "pass",
+              "name": "solver-check"
+            }
+          ],
+          "patch": "--- a/solver.py\n+++ b/solver.py\n@@\n-answer = None\n+answer = 4\n",
+          "semantic_drift_checks": [
+            {
+              "authority": "exact_solver",
+              "must_pass": true,
+              "name": "exact-solver"
+            }
+          ],
+          "task_id": "cached-repair-002",
+          "task_intent_hash": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+          "verifier_authority": "exact_solver"
+        },
+        "valid": true
+      }
+    ]
+  }
+}

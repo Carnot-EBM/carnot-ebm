@@ -1,0 +1,493 @@
+{
+  "artifact": "experiment_3096_publication_blocker_triage_and_retirement_ledger_v2",
+  "blocked_reasons": [],
+  "blocker_categories": {
+    "bounded_status": [
+      {
+        "blocker_class": "bounded_claim",
+        "category": "bounded_status",
+        "claim_scope": "repair_headline_boundary",
+        "evidence_class": "repair_bounded_claim",
+        "reducible_in_v289": true,
+        "requires_external_operator_evidence": false,
+        "row_id": "bounded-row",
+        "source_artifact": "results/bounded-row.json",
+        "source_field": "status",
+        "status": "bounded",
+        "v289_action": "convert to clean or retired with matrix-v23 mechanical evidence"
+      }
+    ],
+    "ebt_arm_projection": [
+      {
+        "blocker_class": "projection_only",
+        "category": "ebt_arm_projection",
+        "claim_scope": "future_adapter_context",
+        "evidence_class": "ebt_arm",
+        "reducible_in_v289": true,
+        "requires_external_operator_evidence": false,
+        "row_id": "projection-row",
+        "source_artifact": "results/projection-row.json",
+        "source_field": "status",
+        "status": "projection_only",
+        "v289_action": "add adapter implementation and integration evidence or keep projection-only"
+      }
+    ],
+    "formal_feedback": [
+      {
+        "blocker_class": "adversarial_or_methodology_flag",
+        "category": "formal_feedback",
+        "claim_scope": "solver_grounded_repair_feedback",
+        "evidence_class": "formal_feedback",
+        "reducible_in_v289": true,
+        "requires_external_operator_evidence": false,
+        "row_id": "formal-row",
+        "source_artifact": "results/formal-row.json",
+        "source_field": "status",
+        "status": "flagged",
+        "v289_action": "prove formal-feedback lift over solver-only baselines or retire"
+      }
+    ],
+    "fr11_boundary": [
+      {
+        "blocker_class": "adversarial_or_methodology_flag",
+        "category": "fr11_boundary",
+        "claim_scope": "controller_only_online_learning_budget",
+        "evidence_class": "fr11",
+        "reducible_in_v289": true,
+        "requires_external_operator_evidence": false,
+        "row_id": "fr11-row",
+        "source_artifact": "results/fr11-row.json",
+        "source_field": "status",
+        "status": "flagged",
+        "v289_action": "preserve controller-only boundary unless broader evidence is added"
+      }
+    ],
+    "hardware_evidence": [
+      {
+        "blocker_class": "required_blocker",
+        "category": "hardware_evidence",
+        "claim_scope": "hardware_rerun_gate",
+        "evidence_class": "gatemate",
+        "reducible_in_v289": false,
+        "requires_external_operator_evidence": true,
+        "row_id": "hardware-row",
+        "source_artifact": "results/hardware-row.json",
+        "source_field": "status",
+        "status": "blocked",
+        "v289_action": "wait for external operator host-visible hardware evidence"
+      }
+    ],
+    "missing_artifact": [
+      {
+        "blocker_class": "missing_artifact",
+        "category": "missing_artifact",
+        "claim_scope": "prior_v18_carry_forward",
+        "evidence_class": "capstone",
+        "reducible_in_v289": true,
+        "requires_external_operator_evidence": false,
+        "row_id": "missing-row",
+        "source_artifact": "results/missing-row.json",
+        "source_field": "status",
+        "status": "missing",
+        "v289_action": "write or explicitly retire the missing terminal artifact"
+      }
+    ],
+    "model_spec_gap": [
+      {
+        "blocker_class": "adversarial_or_methodology_flag",
+        "category": "model_spec_gap",
+        "claim_scope": "local_sota_solution_verifier_gain",
+        "evidence_class": "live_llm",
+        "model_spec_gap": {
+          "gap_source": "capstone_v288",
+          "missing_model_ids": [
+            "model-b"
+          ],
+          "present_model_ids": [
+            "model-a"
+          ],
+          "reason": "mandated model_specs missing for live LLM artifact",
+          "row_id": "model-gap-row",
+          "source_artifact": "results/model-gap-row.json"
+        },
+        "reducible_in_v289": true,
+        "requires_external_operator_evidence": false,
+        "row_id": "model-gap-row",
+        "source_artifact": "results/model-gap-row.json",
+        "source_field": "status",
+        "status": "flagged",
+        "v289_action": "add mandatory_headline_model_ids and complete model_specs"
+      }
+    ],
+    "publication_readiness": [
+      {
+        "blocker_class": "bounded_claim",
+        "category": "publication_readiness",
+        "claim_scope": "paper_readiness",
+        "evidence_class": "capstone",
+        "reducible_in_v289": true,
+        "requires_external_operator_evidence": false,
+        "row_id": "publication-row",
+        "source_artifact": "results/publication-row.json",
+        "source_field": "status",
+        "status": "bounded",
+        "v289_action": "recompute only after upstream blockers and model gaps clear"
+      }
+    ],
+    "repair_missing_artifact": [
+      {
+        "blocker_class": "missing_artifact",
+        "category": "repair_missing_artifact",
+        "claim_scope": "repair_live_rerun",
+        "evidence_class": "repair_micro_panel",
+        "reducible_in_v289": true,
+        "requires_external_operator_evidence": false,
+        "row_id": "repair-missing-row",
+        "source_artifact": "results/repair-missing-row.json",
+        "source_field": "status",
+        "status": "missing",
+        "v289_action": "write the missing repair micro-panel artifact or retire the row"
+      }
+    ],
+    "retired_status": [
+      {
+        "blocker_class": "retired_claim",
+        "category": "retired_status",
+        "claim_scope": "retired_repair_claim",
+        "evidence_class": "repair",
+        "reducible_in_v289": false,
+        "requires_external_operator_evidence": false,
+        "row_id": "retired-row",
+        "source_artifact": "results/retired-row.json",
+        "source_field": "status",
+        "status": "retired",
+        "v289_action": "preserve retired provenance outside blocker counts"
+      }
+    ],
+    "verifier_repair": [
+      {
+        "blocker_class": "adversarial_or_methodology_flag",
+        "category": "verifier_repair",
+        "claim_scope": "local_sota_solution_verifier_gain",
+        "evidence_class": "panel",
+        "reducible_in_v289": true,
+        "requires_external_operator_evidence": false,
+        "row_id": "verifier-row",
+        "source_artifact": "results/verifier-row.json",
+        "source_field": "status",
+        "status": "flagged",
+        "v289_action": "run exact verifier/repair reducer tasks before headline experiments"
+      }
+    ]
+  },
+  "blocker_category_counts": {
+    "bounded_status": 1,
+    "ebt_arm_projection": 1,
+    "formal_feedback": 1,
+    "fr11_boundary": 1,
+    "hardware_evidence": 1,
+    "missing_artifact": 1,
+    "model_spec_gap": 1,
+    "publication_readiness": 1,
+    "repair_missing_artifact": 1,
+    "retired_status": 1,
+    "verifier_repair": 1
+  },
+  "blocker_coverage": {
+    "covered_publication_blocker_count": 10,
+    "covered_publication_blocker_ids": [
+      "verifier-row",
+      "formal-row",
+      "repair-missing-row",
+      "fr11-row",
+      "projection-row",
+      "hardware-row",
+      "publication-row",
+      "model-gap-row",
+      "missing-row",
+      "bounded-row"
+    ],
+    "duplicate_publication_blocker_ids": [],
+    "publication_blocker_ids": [
+      "verifier-row",
+      "formal-row",
+      "repair-missing-row",
+      "fr11-row",
+      "projection-row",
+      "hardware-row",
+      "publication-row",
+      "model-gap-row",
+      "missing-row",
+      "bounded-row"
+    ],
+    "retired_row_count": 1,
+    "uncategorized_publication_blocker_ids": []
+  },
+  "blocker_triage_ready": true,
+  "capstone_publication_blocker_count": 10,
+  "duration_s": 0.75,
+  "honest_verdict": "complete: blocker_triage_ready=true; publication_blocker_count_before=10; reducible_in_v289=9; operator_evidence_required=1",
+  "inference_substrate": {
+    "executes_conductor": false,
+    "executes_hardware": false,
+    "executes_live_repair": false,
+    "executes_models": false,
+    "kind": "aggregation_from_checked_in_artifacts",
+    "local_repo_only": true,
+    "no_live_llm_inference": true,
+    "source": "matrix_v22_and_capstone_v288"
+  },
+  "matrix_v23_consumption": {
+    "category_counts": {
+      "bounded_status": 1,
+      "ebt_arm_projection": 1,
+      "formal_feedback": 1,
+      "fr11_boundary": 1,
+      "hardware_evidence": 1,
+      "missing_artifact": 1,
+      "model_spec_gap": 1,
+      "publication_readiness": 1,
+      "repair_missing_artifact": 1,
+      "retired_status": 1,
+      "verifier_repair": 1
+    },
+    "category_order": [
+      "verifier_repair",
+      "formal_feedback",
+      "repair_missing_artifact",
+      "fr11_boundary",
+      "ebt_arm_projection",
+      "hardware_evidence",
+      "publication_readiness",
+      "model_spec_gap",
+      "missing_artifact",
+      "bounded_status",
+      "retired_status"
+    ],
+    "direct_reduction_categories": [
+      "bounded_status",
+      "ebt_arm_projection",
+      "formal_feedback",
+      "fr11_boundary",
+      "missing_artifact",
+      "model_spec_gap",
+      "publication_readiness",
+      "repair_missing_artifact",
+      "verifier_repair"
+    ],
+    "external_operator_category": "hardware_evidence",
+    "publication_blocker_count_authority": "matrix_v22.publication_blocker_count",
+    "publication_blocker_count_before": 10,
+    "retired_category": "retired_status"
+  },
+  "milestone": "2026.05.289",
+  "no_historical_artifact_rewrite": true,
+  "no_live_repair_rerun": true,
+  "no_new_board_flash": true,
+  "no_new_hardware_run": true,
+  "no_new_model_execution": true,
+  "no_new_solver_run": true,
+  "no_new_synthesis_run": true,
+  "no_new_verifier_run": true,
+  "operator_evidence_required": [
+    {
+      "blocker_class": "required_blocker",
+      "category": "hardware_evidence",
+      "claim_scope": "hardware_rerun_gate",
+      "evidence_class": "gatemate",
+      "reducible_in_v289": false,
+      "requires_external_operator_evidence": true,
+      "row_id": "hardware-row",
+      "source_artifact": "results/hardware-row.json",
+      "source_field": "status",
+      "status": "blocked",
+      "v289_action": "wait for external operator host-visible hardware evidence"
+    }
+  ],
+  "ops_docs_reconciliation_left_to_conductor": true,
+  "publication_blocker_count_before": 10,
+  "reducible_in_v289": [
+    {
+      "blocker_class": "adversarial_or_methodology_flag",
+      "category": "verifier_repair",
+      "claim_scope": "local_sota_solution_verifier_gain",
+      "evidence_class": "panel",
+      "reducible_in_v289": true,
+      "requires_external_operator_evidence": false,
+      "row_id": "verifier-row",
+      "source_artifact": "results/verifier-row.json",
+      "source_field": "status",
+      "status": "flagged",
+      "v289_action": "run exact verifier/repair reducer tasks before headline experiments"
+    },
+    {
+      "blocker_class": "adversarial_or_methodology_flag",
+      "category": "formal_feedback",
+      "claim_scope": "solver_grounded_repair_feedback",
+      "evidence_class": "formal_feedback",
+      "reducible_in_v289": true,
+      "requires_external_operator_evidence": false,
+      "row_id": "formal-row",
+      "source_artifact": "results/formal-row.json",
+      "source_field": "status",
+      "status": "flagged",
+      "v289_action": "prove formal-feedback lift over solver-only baselines or retire"
+    },
+    {
+      "blocker_class": "missing_artifact",
+      "category": "repair_missing_artifact",
+      "claim_scope": "repair_live_rerun",
+      "evidence_class": "repair_micro_panel",
+      "reducible_in_v289": true,
+      "requires_external_operator_evidence": false,
+      "row_id": "repair-missing-row",
+      "source_artifact": "results/repair-missing-row.json",
+      "source_field": "status",
+      "status": "missing",
+      "v289_action": "write the missing repair micro-panel artifact or retire the row"
+    },
+    {
+      "blocker_class": "adversarial_or_methodology_flag",
+      "category": "fr11_boundary",
+      "claim_scope": "controller_only_online_learning_budget",
+      "evidence_class": "fr11",
+      "reducible_in_v289": true,
+      "requires_external_operator_evidence": false,
+      "row_id": "fr11-row",
+      "source_artifact": "results/fr11-row.json",
+      "source_field": "status",
+      "status": "flagged",
+      "v289_action": "preserve controller-only boundary unless broader evidence is added"
+    },
+    {
+      "blocker_class": "projection_only",
+      "category": "ebt_arm_projection",
+      "claim_scope": "future_adapter_context",
+      "evidence_class": "ebt_arm",
+      "reducible_in_v289": true,
+      "requires_external_operator_evidence": false,
+      "row_id": "projection-row",
+      "source_artifact": "results/projection-row.json",
+      "source_field": "status",
+      "status": "projection_only",
+      "v289_action": "add adapter implementation and integration evidence or keep projection-only"
+    },
+    {
+      "blocker_class": "bounded_claim",
+      "category": "publication_readiness",
+      "claim_scope": "paper_readiness",
+      "evidence_class": "capstone",
+      "reducible_in_v289": true,
+      "requires_external_operator_evidence": false,
+      "row_id": "publication-row",
+      "source_artifact": "results/publication-row.json",
+      "source_field": "status",
+      "status": "bounded",
+      "v289_action": "recompute only after upstream blockers and model gaps clear"
+    },
+    {
+      "blocker_class": "adversarial_or_methodology_flag",
+      "category": "model_spec_gap",
+      "claim_scope": "local_sota_solution_verifier_gain",
+      "evidence_class": "live_llm",
+      "model_spec_gap": {
+        "gap_source": "capstone_v288",
+        "missing_model_ids": [
+          "model-b"
+        ],
+        "present_model_ids": [
+          "model-a"
+        ],
+        "reason": "mandated model_specs missing for live LLM artifact",
+        "row_id": "model-gap-row",
+        "source_artifact": "results/model-gap-row.json"
+      },
+      "reducible_in_v289": true,
+      "requires_external_operator_evidence": false,
+      "row_id": "model-gap-row",
+      "source_artifact": "results/model-gap-row.json",
+      "source_field": "status",
+      "status": "flagged",
+      "v289_action": "add mandatory_headline_model_ids and complete model_specs"
+    },
+    {
+      "blocker_class": "missing_artifact",
+      "category": "missing_artifact",
+      "claim_scope": "prior_v18_carry_forward",
+      "evidence_class": "capstone",
+      "reducible_in_v289": true,
+      "requires_external_operator_evidence": false,
+      "row_id": "missing-row",
+      "source_artifact": "results/missing-row.json",
+      "source_field": "status",
+      "status": "missing",
+      "v289_action": "write or explicitly retire the missing terminal artifact"
+    },
+    {
+      "blocker_class": "bounded_claim",
+      "category": "bounded_status",
+      "claim_scope": "repair_headline_boundary",
+      "evidence_class": "repair_bounded_claim",
+      "reducible_in_v289": true,
+      "requires_external_operator_evidence": false,
+      "row_id": "bounded-row",
+      "source_artifact": "results/bounded-row.json",
+      "source_field": "status",
+      "status": "bounded",
+      "v289_action": "convert to clean or retired with matrix-v23 mechanical evidence"
+    }
+  ],
+  "required_source_errors": [],
+  "retire_or_promote_criteria": {
+    "bounded_status": "Bounded rows exit only by a mechanical clean or retired matrix-v23 status; capstone prose cannot promote them.",
+    "ebt_arm_projection": "Keep projection-only until a checked-in adapter implementation, tests, and live model-integration evidence exist; otherwise retire as future context.",
+    "formal_feedback": "Retire formal-feedback claims when guided runs do not beat solver-only baselines; promote only with localized counterexample/MCS evidence and positive guided-minus-solver-only lift.",
+    "fr11_boundary": "Keep FR-11 controller-only unless matrix v23 proves zero soundness mistakes, zero completeness mistakes, and non-vacuous controls for any broader claim.",
+    "hardware_evidence": "Keep blocked until external operator evidence provides host-visible GateMate or SSQA smoke/readback artifacts; conductor-side evidence alone cannot promote.",
+    "missing_artifact": "Reduce by writing the missing terminal artifact or by retiring the row with an explicit matrix-v23 citation to the absent source.",
+    "model_spec_gap": "Promote only when the source artifact names mandatory_headline_model_ids and model_specs for every live headline model; otherwise keep as a model_specs gap.",
+    "publication_readiness": "Promote only when matrix v23 publication_blocker_count reaches zero and all headline model-spec and missing-input checks are clear.",
+    "repair_missing_artifact": "Keep missing until the repair micro-panel artifact exists and validates exact semantics; retire if the upstream gate remains skipped.",
+    "retired_status": "Keep retired rows out of publication_blocker_count while preserving source artifact, field, and retired claim wording.",
+    "verifier_repair": "Retire stale verifier/repair claims if exact acceptance/rejection evidence remains flagged; promote only when matrix v23 cites clean verifier or repair evidence with false-accept and false-reject accounting."
+  },
+  "run_date": "20260526",
+  "schema": "carnot.publication_blocker_triage_retirement_ledger.v2",
+  "scripts_research_conductor_modified": false,
+  "source_artifacts": [
+    {
+      "path": "results/experiment_3093_cross_corpus_matrix_v22.json",
+      "present": true,
+      "readable_json_object": true,
+      "required": true,
+      "role": "matrix_v22_authority",
+      "sha256": "0eb78f1a22aae36bb2d68c68a6e1f4000973d336fe81c6b4b6a5094d655e707b",
+      "source_type": "json"
+    },
+    {
+      "path": "results/experiment_3094_capstone_v288.json",
+      "present": true,
+      "readable_json_object": true,
+      "required": true,
+      "role": "capstone_v288_authority",
+      "sha256": "c9b0a6f242ae225db85ceb0ee258ac52a4a0f858bda69cd0d489c4a26035938e",
+      "source_type": "json"
+    },
+    {
+      "path": "results/experiment_3082_publication_blocker_reduction_ledger_v1.json",
+      "present": false,
+      "readable_json_object": false,
+      "required": false,
+      "role": "prior_reduction_ledger_context",
+      "sha256": null,
+      "source_type": "json"
+    }
+  ],
+  "source_checksums": {
+    "results/experiment_3082_publication_blocker_reduction_ledger_v1.json": null,
+    "results/experiment_3093_cross_corpus_matrix_v22.json": "0eb78f1a22aae36bb2d68c68a6e1f4000973d336fe81c6b4b6a5094d655e707b",
+    "results/experiment_3094_capstone_v288.json": "c9b0a6f242ae225db85ceb0ee258ac52a4a0f858bda69cd0d489c4a26035938e"
+  },
+  "source_milestone": "2026.05.288",
+  "status_updates_written": false
+}

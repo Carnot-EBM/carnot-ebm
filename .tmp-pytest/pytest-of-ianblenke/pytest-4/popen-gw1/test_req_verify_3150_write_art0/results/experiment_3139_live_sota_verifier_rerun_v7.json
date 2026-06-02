@@ -1,0 +1,58 @@
+{
+  "abstention_rate": 0.5,
+  "artifact": "experiment_3139_live_sota_verifier_rerun_v7",
+  "corrigendum_pending": [
+    {
+      "detail": "abstention_rate=0.5 and source=0.5",
+      "kind": "TAUTOLOGY"
+    },
+    {
+      "detail": "abstention_rate=0.5 and gain=0.5",
+      "kind": "TAUTOLOGY"
+    },
+    {
+      "detail": "source=0.5 and gain=0.5",
+      "kind": "TAUTOLOGY"
+    },
+    {
+      "detail": "duration_s=9.15 with GGUF",
+      "kind": "DURATION_TOO_SHORT"
+    },
+    {
+      "detail": "Compute-bound artifact missing: random_seed, reproducibility_checksum.",
+      "kind": "METHODOLOGY_MISSING"
+    }
+  ],
+  "duration_s": 9.15859,
+  "false_accept_gate_passed": true,
+  "false_accept_rate": 0.0,
+  "false_reject_rate": 0.0,
+  "flagged_adversarial": true,
+  "headline_claim_allowed": true,
+  "honest_verdict": "complete: live metrics ready but flagged",
+  "inference_substrate": {
+    "executes_models": true,
+    "gpu_preflight": {
+      "cuda_available": true,
+      "no_inference_run": true,
+      "no_model_loaded": true
+    },
+    "kind": "live_sota_verifier_rerun_v7",
+    "live_model_calls": 6,
+    "selected_model_id": "unsloth/gemma-4-26B-A4B-it-GGUF"
+  },
+  "live_call_count": 6,
+  "live_verifier_rerun_v7_ready": true,
+  "model_specs": [
+    {
+      "hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "present": true,
+      "selected": true
+    }
+  ],
+  "regression_rows_included": true,
+  "selected_model_ids": [
+    "unsloth/gemma-4-26B-A4B-it-GGUF"
+  ],
+  "verifier_gain_delta": 0.5
+}

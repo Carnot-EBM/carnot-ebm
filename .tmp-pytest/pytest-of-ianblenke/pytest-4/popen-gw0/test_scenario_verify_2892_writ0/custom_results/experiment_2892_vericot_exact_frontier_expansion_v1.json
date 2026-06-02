@@ -1,0 +1,136 @@
+{
+  "autoformalization_llm_called": false,
+  "duration_s": 2.75,
+  "field_principles": {
+    "autoformalization_llm_called": "Always false; no live or remote LLM is used.",
+    "duration_s": "Measured wall-clock runtime with no artificial delay.",
+    "formal_checks": "Per-supported-row premises, logical steps, solver status, and checksum.",
+    "honest_verdict": "Terminal-prefix verdict grounded in source readiness and promoted checks.",
+    "n_candidate_rows": "All HaluEval/FEVER manifest rows plus optional TruthfulQA taxonomy rows.",
+    "n_unsupported_rows": "Rows deliberately kept outside the frontier.",
+    "n_vericot_supported_rows": "Rows admitted to the bounded VeriCoT frontier.",
+    "selection_rule": "Documents the deterministic row-selection boundary.",
+    "solver_backend": "Identifies Z3 plus local anchor checks used for formal checks.",
+    "source_artifacts": "Records Exp 2877/2878, optional Exp 2888, and the local manifests read.",
+    "tests_run": "Commands used to validate the module and artifact.",
+    "unsupported_reasons": "Counts the exact reason unsupported rows were not promoted.",
+    "vericot_frontier_ready": "True only when prior local evidence is ready and at least one premise-grounded formal check is replayed or built."
+  },
+  "formal_checks": [
+    {
+      "candidate_or_claim": "2001",
+      "check_type": "safe_prefix_year_answer",
+      "dataset": "HaluEval",
+      "expected_solver_status": "sat",
+      "formal_check_sha256": "5a0b26044df2d2893edba1cc6ed45148fae21851a220a2aed75e46a25bce5d4b",
+      "label": 0,
+      "logical_steps": [
+        "candidate_year == expected_year"
+      ],
+      "premise_grounded": true,
+      "premises": [
+        {
+          "name": "prompt_grounded_expected_year",
+          "value": 2001
+        },
+        {
+          "name": "candidate_claimed_year",
+          "value": 2001
+        }
+      ],
+      "solver_backend": "z3-solver 4.16.0 + deterministic premise anchors",
+      "solver_status": "sat",
+      "source": "exp2877_certificate_replay",
+      "stable_id": "halueval-year-right",
+      "vericot_verdict": "safe_prefix_supported",
+      "z3_expression": "2001 == 2001"
+    },
+    {
+      "candidate_or_claim": "Steam is the gaseous state of water.",
+      "check_type": "anchored_entailment",
+      "dataset": "FEVER",
+      "expected_solver_status": "sat",
+      "formal_check_sha256": "3f3eda9a00ad0464f578fb45c39d618e1569dc5929c088cfa92b3d857e43c32b",
+      "label": 0,
+      "logical_steps": [
+        "all_prompt_and_candidate_anchors_present"
+      ],
+      "premise_grounded": true,
+      "premises": [
+        {
+          "anchors": [
+            "gaseous state",
+            "steam or water vapor"
+          ],
+          "name": "prompt_anchors"
+        },
+        {
+          "anchors": [
+            "Steam",
+            "gaseous state"
+          ],
+          "name": "candidate_anchors"
+        }
+      ],
+      "solver_backend": "z3-solver 4.16.0 + deterministic premise anchors",
+      "solver_status": "sat",
+      "source": "exp2877_certificate_replay",
+      "stable_id": "fever-anchor",
+      "vericot_verdict": "entailment_anchor_verified",
+      "z3_expression": "anchor_presence == true"
+    },
+    {
+      "candidate_or_claim": "The album was released in 1999.",
+      "check_type": "halueval_year_answer",
+      "dataset": "HaluEval",
+      "expected_solver_status": "unsat",
+      "formal_check_sha256": "f227d635e22f2f9745dd2dd1cf3863e7ae700b77cbe6468743b67f43322882df",
+      "label": 1,
+      "logical_steps": [
+        "candidate_year == expected_year"
+      ],
+      "premise_grounded": true,
+      "premises": [
+        {
+          "anchor": "2001",
+          "name": "prompt_grounded_expected_year",
+          "value": 2001
+        },
+        {
+          "anchor": "1999",
+          "name": "candidate_claimed_year",
+          "value": 1999
+        }
+      ],
+      "solver_backend": "z3-solver 4.16.0 + deterministic premise anchors",
+      "solver_status": "unsat",
+      "source": "deterministic_manifest_year_parser",
+      "stable_id": "halueval-year-wrong",
+      "vericot_verdict": "contradiction_verified",
+      "z3_expression": "1999 == 2001"
+    }
+  ],
+  "honest_verdict": "complete: deterministic VeriCoT frontier rows available",
+  "n_candidate_rows": 8,
+  "n_unsupported_rows": 5,
+  "n_vericot_supported_rows": 3,
+  "run_date": "20260523",
+  "selection_rule": "Load Exp 2877/2878 and the optional Exp 2888 TruthfulQA taxonomy manifest. Candidate rows are the local HaluEval and FEVER manifests plus TruthfulQA taxonomy rows when present. Promote only rows whose premises can be encoded deterministically: replayable Exp 2877 exact certificates, or HaluEval year-answer rows where the prompt contains the reference year and the candidate contains exactly one year. Label=0 year rows must answer with the reference year alone; label=1 year rows are supported only when the claimed year differs from the grounded reference. All other rows remain unsupported.",
+  "solver_backend": "z3-solver 4.16.0 + deterministic premise anchors",
+  "source_artifacts": [
+    "results/experiment_2877_exact_frontier_expansion_halueval_fever_v2.json",
+    "results/experiment_2878_halueval_fever_error_verifiability_v1.json",
+    "results/experiment_2888_truthfulqa_inficheck_taxonomy_manifest_v1.json",
+    "data/eval_manifests/halueval_20260522.jsonl",
+    "data/eval_manifests/fever_20260522.jsonl"
+  ],
+  "tests_run": [
+    "focused-pytest"
+  ],
+  "unsupported_reasons": {
+    "unsupported_no_deterministic_vericot_template": 2,
+    "unsupported_truthfulqa_taxonomy_has_no_logical_steps": 2,
+    "unsupported_year_only_does_not_establish_entity_grounding": 1
+  },
+  "vericot_frontier_ready": true
+}

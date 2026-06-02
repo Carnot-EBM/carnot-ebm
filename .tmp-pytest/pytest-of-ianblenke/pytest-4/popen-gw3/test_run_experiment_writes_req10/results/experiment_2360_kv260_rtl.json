@@ -1,0 +1,73 @@
+{
+  "experiment": 2360,
+  "finished_at": "2026-06-02T19:10:32.996754+00:00",
+  "full_tree_lint_note": "A literal all-.v sweep was attempted first; it reached hardware/kv260/potts_sampler_v1.v and was stopped after that non-Ising file exceeded the bounded interactive run. The terminal counts above are for the KV260 Ising RTL scope requested by Exp 2360.",
+  "hardware_claim_allowed": false,
+  "hardware_execution_performed": false,
+  "honest_verdict": "complete: rtl_lint_failed_1_error_lines_simulation_passed",
+  "lint_errors_count": 1,
+  "lint_results": [
+    {
+      "command": [
+        "verilator",
+        "--lint-only",
+        "-Wall",
+        "rtl/sample_ising.v"
+      ],
+      "command_string": "verilator --lint-only -Wall rtl/sample_ising.v",
+      "error": "",
+      "lint_errors_count": 1,
+      "lint_warnings_count": 1,
+      "path": "rtl/sample_ising.v",
+      "returncode": 1,
+      "stderr_summary": "%Warning-WIDTH: sample_ising.v:1: width mismatch\n%Error: Exiting due to 1 warning(s)",
+      "stdout_summary": "",
+      "timed_out": false
+    }
+  ],
+  "lint_warnings_count": 1,
+  "rtl_files_linted": [
+    "rtl/sample_ising.v"
+  ],
+  "rtl_lint_passed": false,
+  "rtl_scope": "Ising-named .v files under rtl/ and hardware/kv260/",
+  "run_date": "2026-06-02",
+  "schema": "carnot.kv260_ising_rtl_lint_sim.v1",
+  "simulation_command": "vvp /tmp/ising_sim",
+  "simulation_passed": true,
+  "simulation_result": {
+    "command": [
+      "vvp",
+      "/tmp/ising_sim"
+    ],
+    "command_string": "vvp /tmp/ising_sim",
+    "compile_command": [
+      "iverilog",
+      "-o",
+      "/tmp/ising_sim",
+      "hardware/kv260/ising_sampler_v4.v",
+      "hardware/kv260/ising_sampler_v4_tb.v"
+    ],
+    "compile_returncode": 0,
+    "error": "",
+    "returncode": 0,
+    "stage": "run",
+    "stderr": "",
+    "stderr_summary": "",
+    "stdout": "SIMULATION RESULT: PASS\n",
+    "stdout_head_20": [
+      "SIMULATION RESULT: PASS"
+    ],
+    "stdout_summary": "SIMULATION RESULT: PASS",
+    "testbench": "hardware/kv260/ising_sampler_v4_tb.v",
+    "timed_out": false,
+    "top": "hardware/kv260/ising_sampler_v4.v"
+  },
+  "simulation_testbench": "hardware/kv260/ising_sampler_v4_tb.v",
+  "simulation_top": "hardware/kv260/ising_sampler_v4.v",
+  "status": "complete",
+  "tools_available": {
+    "iverilog": true,
+    "verilator": true
+  }
+}

@@ -1,0 +1,86 @@
+{
+  "artifact": "experiment_2904_kan_hardware_complexity_accounting_v2",
+  "cited_upstream_artifacts": [
+    {
+      "artifact_path": "results/experiment_2893_kan_hardware_complexity_accounting_v1.json",
+      "experiment_id": "exp2893",
+      "fields_imported": [
+        "tiny_pwa_structure.unit_count"
+      ],
+      "sha256": "17e9f7cccbec72debce52d7015796d22d9e4401c926316c130812390da65fb5a"
+    },
+    {
+      "artifact_path": "results/experiment_2898_kv260_ising_sampler_hardware_latency_benchmark_v1.json",
+      "experiment_id": "exp2898",
+      "fields_imported": [
+        "honest_verdict",
+        "inference_substrate",
+        "bitstream_sha256",
+        "bitstream_sha256_source",
+        "kv260_overlay_loaded"
+      ],
+      "sha256": "fbe2115329835af9edb6fbf3be5b1aede9d46e57be98fb0587f0df1aa5ab43ec"
+    },
+    {
+      "artifact_path": "output/carnot_ising_v4_bd/project/carnot_ising_v4.runs/impl_1/carnot_ising_v4_bd_wrapper_utilization_placed.rpt",
+      "experiment_id": "exp2898",
+      "fields_imported": [
+        "CLB LUTs",
+        "Block RAM Tile",
+        "DSPs"
+      ],
+      "sha256": "cb306ce913041423bb6b7b228ad066be5a2c969d2d8c77c38ffb4109b1e9a1fd"
+    },
+    {
+      "artifact_path": "output/carnot_ising_v4_bd/carnot_ising_v4.bit",
+      "experiment_id": "exp2898",
+      "fields_imported": [
+        "sha256"
+      ],
+      "sha256": "93f1d57c8c1cb0b9e01f3dbc76aad53f763d7d4103f07a9ffdfe923510abf461"
+    }
+  ],
+  "claim_boundary": "This is a deterministic aggregation from upstream artifacts. The KV260 counts come from the Exp 2898 bitstream metadata/report path, while the KAN node count comes from Exp 2893's tiny PWA fixture.",
+  "duration_s": 1.0,
+  "exp2898_bitstream_sha256": "93f1d57c8c1cb0b9e01f3dbc76aad53f763d7d4103f07a9ffdfe923510abf461",
+  "exp2898_bitstream_sha256_source": "board:/lib/firmware/xilinx/carnot_ising_v4",
+  "experiment": 2904,
+  "honest_verdict": "complete: KAN hardware complexity accounting v2 aggregated from Exp 2893 KAN shape and Exp 2898 KV260 bitstream utilization; no KAN synthesis claim",
+  "inference_substrate": "aggregation_from_upstream_artifacts",
+  "kan_node_count": 2,
+  "kan_synthesis_claim_made": false,
+  "kv260_bram_used": 0,
+  "kv260_dsp_used": 0,
+  "kv260_lut_used": 52564,
+  "kv260_utilization_source": "output/carnot_ising_v4_bd/project/carnot_ising_v4.runs/impl_1/carnot_ising_v4_bd_wrapper_utilization_placed.rpt",
+  "new_board_execution_claim_made": false,
+  "run_date": "20260523",
+  "scaling_estimate_to_next_size": {
+    "claim_boundary": "Conservative aggregation from upstream KV260 bitstream utilization; not a KAN synthesis, timing-closure result, or new board execution.",
+    "current_kan_node_count": 2,
+    "estimated_bram_utilization_pct": 0.0,
+    "estimated_dsp_utilization_pct": 0.0,
+    "estimated_kv260_bram_used": 0,
+    "estimated_kv260_dsp_used": 0,
+    "estimated_kv260_lut_used": 105128,
+    "estimated_lut_utilization_pct": 89.760929,
+    "fits_kv260_bram_budget": true,
+    "fits_kv260_dsp_budget": true,
+    "fits_kv260_lut_budget": true,
+    "kv260_bram_available": 144,
+    "kv260_dsp_available": 1248,
+    "kv260_lut_available": 117120,
+    "next_kan_node_count": 4,
+    "remaining_bram_after_next_size": 144,
+    "remaining_dsp_after_next_size": 1248,
+    "remaining_lut_after_next_size": 11992,
+    "scaling_basis": "full_exp2898_kv260_bitstream_utilization_divided_by_current_kan_node_count",
+    "scaling_rule": "linear_double_from_current_node_count"
+  },
+  "schema": "carnot.kan_hardware_complexity_accounting.v2",
+  "spec": [
+    "REQ-KAN-2904",
+    "SCENARIO-KAN-2904"
+  ],
+  "status": "complete"
+}

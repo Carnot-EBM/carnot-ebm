@@ -1,0 +1,88 @@
+{
+  "after_ledger_consistency_rate": 1.0,
+  "artifact": "experiment_3172_fr11_nonforgetting_self_learning_pilot_v2",
+  "before_ledger_consistency_rate": 0.857143,
+  "continuous_self_learning_task": true,
+  "controller_memory_update": {
+    "model_weight_update": false,
+    "row_action_overrides": {
+      "resyn-3084-arith-003": "reject",
+      "resyn-3084-smt-000": "reject"
+    }
+  },
+  "fr11_nonforgetting_self_learning_pilot_v2_ready": true,
+  "heldout_consistency_rate": 1.0,
+  "heldout_replay_rows": [
+    {
+      "exact_label": "VALID",
+      "expected_action": "accept",
+      "fixture_family": "graph_coloring",
+      "ledger_action": "accept",
+      "mismatch_class": "",
+      "observed_action": "accept",
+      "panel_category": "admitted_environment",
+      "routing_decision": "normal",
+      "row_id": "graph_coloring-3128-0",
+      "source_artifact": "results/experiment_3128_fr11_evoenv_verifiable_environment_synthesis_v1.json"
+    },
+    {
+      "exact_label": "VALID",
+      "expected_action": "accept",
+      "fixture_family": "interval_order",
+      "ledger_action": "accept",
+      "mismatch_class": "",
+      "observed_action": "accept",
+      "panel_category": "admitted_environment",
+      "routing_decision": "normal",
+      "row_id": "interval_order-3128-0",
+      "source_artifact": "results/experiment_3128_fr11_evoenv_verifiable_environment_synthesis_v1.json"
+    },
+    {
+      "exact_label": "INVALID",
+      "expected_action": "reject",
+      "fixture_family": "arithmetic_code_assertions",
+      "ledger_action": "reject",
+      "mismatch_class": "",
+      "observed_action": "reject",
+      "panel_category": "historical_false_accept_family",
+      "routing_decision": "normal",
+      "row_id": "resyn-3084-arith-001",
+      "source_artifact": "results/experiment_3136_false_accept_root_cause_autopsy_v1.json"
+    }
+  ],
+  "honest_verdict": "complete: unit nonforgetting pilot",
+  "inference_substrate": {
+    "executes_live_model_inference": false,
+    "fresh_live_inference_calls": 0,
+    "model_weight_mutation": false
+  },
+  "model_weight_update_claimed": false,
+  "negative_control_regression_count": 0,
+  "negative_control_replay_rows": [
+    {
+      "exact_label": "VALID",
+      "expected_action": "accept",
+      "fixture_family": "graph_coloring",
+      "ledger_action": "accept",
+      "mismatch_class": "",
+      "observed_action": "accept",
+      "panel_category": "admitted_environment",
+      "routing_decision": "normal",
+      "row_id": "graph_coloring-3128-0",
+      "source_artifact": "results/experiment_3128_fr11_evoenv_verifiable_environment_synthesis_v1.json"
+    },
+    {
+      "exact_label": "VALID",
+      "expected_action": "accept",
+      "fixture_family": "interval_order",
+      "ledger_action": "accept",
+      "mismatch_class": "",
+      "observed_action": "accept",
+      "panel_category": "admitted_environment",
+      "routing_decision": "normal",
+      "row_id": "interval_order-3128-0",
+      "source_artifact": "results/experiment_3128_fr11_evoenv_verifiable_environment_synthesis_v1.json"
+    }
+  ],
+  "promotion_allowed": true
+}

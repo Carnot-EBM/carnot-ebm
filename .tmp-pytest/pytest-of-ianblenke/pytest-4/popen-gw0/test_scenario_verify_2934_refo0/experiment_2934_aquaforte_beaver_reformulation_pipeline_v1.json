@@ -1,0 +1,955 @@
+{
+  "artifact": "experiment_2934_aquaforte_beaver_reformulation_pipeline_v1",
+  "cached_sota_pair_error": null,
+  "duration_s": 4.0,
+  "exp2926_direct_feasibility_rate": 0.5,
+  "exp2926_direct_optimality_rate": 0.25,
+  "feasibility_delta_vs_exp2926": 0.5,
+  "final_feasibility_rate": 1.0,
+  "final_optimality_rate": 1.0,
+  "honest_verdict": "complete: exp2926 live GGUF proposals reformulated and exact-verified",
+  "inference_substrate": "live_llm_inference_plus_exact_verifier",
+  "model_specs": [
+    {
+      "gpu": 0,
+      "hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "model_path": "/tmp/qwen.gguf",
+      "name": "Qwen3.6-35B-A3B"
+    },
+    {
+      "gpu": 1,
+      "hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "model_path": "/tmp/gemma.gguf",
+      "name": "Gemma4-26B-A4B-it"
+    }
+  ],
+  "models_used": [
+    "unsloth/gemma-4-26B-A4B-it-GGUF"
+  ],
+  "optimality_delta_vs_exp2926": 0.75,
+  "per_task_results": [
+    {
+      "exact_verifier_type": "bounded_integer_exhaustive",
+      "exp2926_direct": {
+        "feasible": true,
+        "objective_value": 11,
+        "optimal": true,
+        "syntax_valid": true,
+        "violation_class": "none"
+      },
+      "final_solution": {
+        "variables": {
+          "x": 3,
+          "y": 1
+        }
+      },
+      "final_verifier": {
+        "accepted": true,
+        "feasible": true,
+        "objective_value": 11,
+        "optimal": true,
+        "optimum_value": 11,
+        "syntax_valid": true,
+        "violation_class": "none",
+        "violation_reasons": []
+      },
+      "initial_proposal_sha256": "e7e4c5ed35ecb653abf0c2b8b9ecf1536e71c17d2f2a2bca7f1335d8fe6e64ad",
+      "initial_proposal_text": "{\"solution\": {\"variables\": {\"x\": 3, \"y\": 1}}}",
+      "initial_verifier": {
+        "accepted": true,
+        "feasible": true,
+        "objective_value": 11,
+        "optimal": true,
+        "optimum_value": 11,
+        "syntax_valid": true,
+        "violation_class": "none",
+        "violation_reasons": []
+      },
+      "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "model_name": "Gemma4-26B-A4B-it",
+      "raw_response_path": "/home/ianblenke/github.com/ianblenke/carnot/.tmp-pytest/pytest-of-ianblenke/pytest-4/popen-gw0/test_scenario_verify_2934_refo0/raw/cbmini-2926-linear-001.json",
+      "reformulation": {
+        "parse_error": null,
+        "parser_repair_applied": false,
+        "parser_repair_note": null,
+        "schema_valid": true,
+        "solver_form": {
+          "variables": {
+            "x": 3,
+            "y": 1
+          }
+        }
+      },
+      "retry": {
+        "attempted": false,
+        "cheap": false,
+        "prompt": null
+      },
+      "task_id": "cbmini-2926-linear-001",
+      "task_type": "linear_integer"
+    },
+    {
+      "exact_verifier_type": "binary_subset_exhaustive",
+      "exp2926_direct": {
+        "feasible": false,
+        "objective_value": null,
+        "optimal": false,
+        "syntax_valid": true,
+        "violation_class": "infeasible"
+      },
+      "final_solution": {
+        "selected_items": [
+          "map",
+          "lamp",
+          "kit"
+        ]
+      },
+      "final_verifier": {
+        "accepted": true,
+        "feasible": true,
+        "objective_value": 15,
+        "optimal": true,
+        "optimum_value": 15,
+        "syntax_valid": true,
+        "violation_class": "none",
+        "violation_reasons": []
+      },
+      "initial_proposal_sha256": "dd25704acbe958a6b17c9bdbc3b8e12d466863b694cb112e0b8afb4f60f3c9f8",
+      "initial_proposal_text": "{\"solution\": {\"selected_items\": [\"map\", \"rope\", \"lamp\", \"kit\"]}}",
+      "initial_verifier": {
+        "accepted": false,
+        "feasible": false,
+        "objective_value": null,
+        "optimal": false,
+        "optimum_value": 15,
+        "syntax_valid": true,
+        "violation_class": "infeasible",
+        "violation_reasons": [
+          "capacity_exceeded",
+          "excludes:lamp,rope"
+        ]
+      },
+      "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "model_name": "Gemma4-26B-A4B-it",
+      "raw_response_path": "/home/ianblenke/github.com/ianblenke/carnot/.tmp-pytest/pytest-of-ianblenke/pytest-4/popen-gw0/test_scenario_verify_2934_refo0/raw/cbmini-2926-knapsack-001.json",
+      "reformulation": {
+        "parse_error": null,
+        "parser_repair_applied": false,
+        "parser_repair_note": null,
+        "schema_valid": true,
+        "solver_form": {
+          "selected_items": [
+            "map",
+            "rope",
+            "lamp",
+            "kit"
+          ]
+        }
+      },
+      "retry": {
+        "attempted": true,
+        "cheap": true,
+        "prompt": "Exclude the rejected candidate and return exactly one JSON object in the task solution schema. Use the hard constraints and objective as authority: {\"rejected_candidate\":{\"selected_items\":[\"map\",\"rope\",\"lamp\",\"kit\"]},\"task_data\":{\"capacity\":7,\"excludes\":[[\"lamp\",\"rope\"]],\"items\":[{\"name\":\"map\",\"value\":5,\"weight\":2},{\"name\":\"rope\",\"value\":6,\"weight\":3},{\"name\":\"lamp\",\"value\":7,\"weight\":4},{\"name\":\"kit\",\"value\":3,\"weight\":1}],\"required_items\":[\"kit\"]},\"task_id\":\"cbmini-2926-knapsack-001\",\"task_type\":\"knapsack_binary\",\"violation_class\":\"infeasible\",\"violation_reasons\":[\"capacity_exceeded\",\"excludes:lamp,rope\"]}",
+        "retry_solution": {
+          "selected_items": [
+            "map",
+            "lamp",
+            "kit"
+          ]
+        },
+        "retry_verifier": {
+          "feasible": true,
+          "objective_value": 15,
+          "optimal": true,
+          "optimum_value": 15,
+          "syntax_valid": true,
+          "violation_class": "none",
+          "violation_reasons": []
+        }
+      },
+      "task_id": "cbmini-2926-knapsack-001",
+      "task_type": "knapsack_binary"
+    },
+    {
+      "exact_verifier_type": "color_assignment_exhaustive",
+      "exp2926_direct": {
+        "feasible": true,
+        "objective_value": 3,
+        "optimal": false,
+        "syntax_valid": true,
+        "violation_class": "suboptimal"
+      },
+      "final_solution": {
+        "colors": {
+          "0": 0,
+          "1": 1,
+          "2": 0,
+          "3": 1
+        }
+      },
+      "final_verifier": {
+        "accepted": true,
+        "feasible": true,
+        "objective_value": 2,
+        "optimal": true,
+        "optimum_value": 2,
+        "syntax_valid": true,
+        "violation_class": "none",
+        "violation_reasons": []
+      },
+      "initial_proposal_sha256": "da82759fe11d2070fdcd0a11b9a743d60d70ebef69b3b27f86f61fb91f4a7114",
+      "initial_proposal_text": "{\"solution\": {\"colors\": {\"0\": 0, \"1\": 1, \"2\": 0, \"3\": 2}}}",
+      "initial_verifier": {
+        "accepted": false,
+        "feasible": true,
+        "objective_value": 3,
+        "optimal": false,
+        "optimum_value": 2,
+        "syntax_valid": true,
+        "violation_class": "suboptimal",
+        "violation_reasons": []
+      },
+      "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "model_name": "Gemma4-26B-A4B-it",
+      "raw_response_path": "/home/ianblenke/github.com/ianblenke/carnot/.tmp-pytest/pytest-of-ianblenke/pytest-4/popen-gw0/test_scenario_verify_2934_refo0/raw/cbmini-2926-graph-001.json",
+      "reformulation": {
+        "parse_error": null,
+        "parser_repair_applied": false,
+        "parser_repair_note": null,
+        "schema_valid": true,
+        "solver_form": {
+          "colors": {
+            "0": 0,
+            "1": 1,
+            "2": 0,
+            "3": 2
+          }
+        }
+      },
+      "retry": {
+        "attempted": true,
+        "cheap": true,
+        "prompt": "Exclude the rejected candidate and return exactly one JSON object in the task solution schema. Use the hard constraints and objective as authority: {\"rejected_candidate\":{\"colors\":{\"0\":0,\"1\":1,\"2\":0,\"3\":2}},\"task_data\":{\"edges\":[[0,1],[1,2],[2,3]],\"n_colors\":3,\"n_nodes\":4},\"task_id\":\"cbmini-2926-graph-001\",\"task_type\":\"graph_coloring\",\"violation_class\":\"suboptimal\",\"violation_reasons\":[]}",
+        "retry_solution": {
+          "colors": {
+            "0": 0,
+            "1": 1,
+            "2": 0,
+            "3": 1
+          }
+        },
+        "retry_verifier": {
+          "feasible": true,
+          "objective_value": 2,
+          "optimal": true,
+          "optimum_value": 2,
+          "syntax_valid": true,
+          "violation_class": "none",
+          "violation_reasons": []
+        }
+      },
+      "task_id": "cbmini-2926-graph-001",
+      "task_type": "graph_coloring"
+    },
+    {
+      "exact_verifier_type": "bounded_integer_exhaustive",
+      "exp2926_direct": {
+        "feasible": false,
+        "objective_value": null,
+        "optimal": false,
+        "syntax_valid": false,
+        "violation_class": "syntax_invalid"
+      },
+      "final_solution": {
+        "variables": {
+          "x": 4,
+          "y": 0
+        }
+      },
+      "final_verifier": {
+        "accepted": true,
+        "feasible": true,
+        "objective_value": 8,
+        "optimal": true,
+        "optimum_value": 8,
+        "syntax_valid": true,
+        "violation_class": "none",
+        "violation_reasons": []
+      },
+      "initial_proposal_sha256": "7ccfa1fbf3940e6f0c0375d87c0f9235a50514e14cb427bdfaf5077987b26ccf",
+      "initial_proposal_text": "not json",
+      "initial_verifier": {
+        "accepted": false,
+        "feasible": false,
+        "objective_value": null,
+        "optimal": false,
+        "optimum_value": 8,
+        "syntax_valid": false,
+        "violation_class": "syntax_invalid",
+        "violation_reasons": [
+          "no_json_object"
+        ]
+      },
+      "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "model_name": "Gemma4-26B-A4B-it",
+      "raw_response_path": "/home/ianblenke/github.com/ianblenke/carnot/.tmp-pytest/pytest-of-ianblenke/pytest-4/popen-gw0/test_scenario_verify_2934_refo0/raw/cbmini-2926-linear-002.json",
+      "reformulation": {
+        "parse_error": "no_json_object",
+        "parser_repair_applied": false,
+        "parser_repair_note": null,
+        "schema_valid": false,
+        "solver_form": null
+      },
+      "retry": {
+        "attempted": true,
+        "cheap": true,
+        "prompt": "Exclude the rejected candidate and return exactly one JSON object in the task solution schema. Use the hard constraints and objective as authority: {\"rejected_candidate\":{\"parse_error\":\"no_json_object\"},\"task_data\":{\"constraints\":[{\"coefficients\":{\"x\":1,\"y\":1},\"op\":\">=\",\"rhs\":4},{\"coefficients\":{\"x\":1},\"op\":\">=\",\"rhs\":1}],\"objective\":{\"x\":2,\"y\":3},\"variables\":{\"x\":[0,5],\"y\":[0,5]}},\"task_id\":\"cbmini-2926-linear-002\",\"task_type\":\"linear_integer\",\"violation_class\":\"syntax_invalid\",\"violation_reasons\":[\"no_json_object\"]}",
+        "retry_solution": {
+          "variables": {
+            "x": 4,
+            "y": 0
+          }
+        },
+        "retry_verifier": {
+          "feasible": true,
+          "objective_value": 8,
+          "optimal": true,
+          "optimum_value": 8,
+          "syntax_valid": true,
+          "violation_class": "none",
+          "violation_reasons": []
+        }
+      },
+      "task_id": "cbmini-2926-linear-002",
+      "task_type": "linear_integer"
+    },
+    {
+      "exact_verifier_type": "binary_subset_exhaustive",
+      "exp2926_direct": {
+        "feasible": true,
+        "objective_value": 19,
+        "optimal": true,
+        "syntax_valid": true,
+        "violation_class": "none"
+      },
+      "final_solution": {
+        "selected_items": [
+          "cpu",
+          "gpu"
+        ]
+      },
+      "final_verifier": {
+        "accepted": true,
+        "feasible": true,
+        "objective_value": 19,
+        "optimal": true,
+        "optimum_value": 19,
+        "syntax_valid": true,
+        "violation_class": "none",
+        "violation_reasons": []
+      },
+      "initial_proposal_sha256": "b13bb0ca2a05e9ef0a7101d499ca4bf869e90a59b5c2d80517b1e6ba9b320d65",
+      "initial_proposal_text": "{\"solution\": {\"selected_items\": [\"cpu\", \"gpu\"]}}",
+      "initial_verifier": {
+        "accepted": true,
+        "feasible": true,
+        "objective_value": 19,
+        "optimal": true,
+        "optimum_value": 19,
+        "syntax_valid": true,
+        "violation_class": "none",
+        "violation_reasons": []
+      },
+      "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "model_name": "Gemma4-26B-A4B-it",
+      "raw_response_path": "/home/ianblenke/github.com/ianblenke/carnot/.tmp-pytest/pytest-of-ianblenke/pytest-4/popen-gw0/test_scenario_verify_2934_refo0/raw/cbmini-2926-knapsack-002.json",
+      "reformulation": {
+        "parse_error": null,
+        "parser_repair_applied": false,
+        "parser_repair_note": null,
+        "schema_valid": true,
+        "solver_form": {
+          "selected_items": [
+            "cpu",
+            "gpu"
+          ]
+        }
+      },
+      "retry": {
+        "attempted": false,
+        "cheap": false,
+        "prompt": null
+      },
+      "task_id": "cbmini-2926-knapsack-002",
+      "task_type": "knapsack_binary"
+    },
+    {
+      "exact_verifier_type": "color_assignment_exhaustive",
+      "exp2926_direct": {
+        "feasible": false,
+        "objective_value": null,
+        "optimal": false,
+        "syntax_valid": true,
+        "violation_class": "infeasible"
+      },
+      "final_solution": {
+        "colors": {
+          "0": 0,
+          "1": 1,
+          "2": 2,
+          "3": 0
+        }
+      },
+      "final_verifier": {
+        "accepted": true,
+        "feasible": true,
+        "objective_value": 3,
+        "optimal": true,
+        "optimum_value": 3,
+        "syntax_valid": true,
+        "violation_class": "none",
+        "violation_reasons": []
+      },
+      "initial_proposal_sha256": "8d9f603e44796aa9dd3fc0a6272b770a2919602d6adfcd5965e281de2230fe34",
+      "initial_proposal_text": "{\"solution\": {\"colors\": {\"0\": 0, \"1\": 0, \"2\": 0, \"3\": 0}}}",
+      "initial_verifier": {
+        "accepted": false,
+        "feasible": false,
+        "objective_value": null,
+        "optimal": false,
+        "optimum_value": 3,
+        "syntax_valid": true,
+        "violation_class": "infeasible",
+        "violation_reasons": [
+          "edge_conflict:0-1",
+          "edge_conflict:1-2",
+          "edge_conflict:2-0",
+          "edge_conflict:2-3"
+        ]
+      },
+      "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "model_name": "Gemma4-26B-A4B-it",
+      "raw_response_path": "/home/ianblenke/github.com/ianblenke/carnot/.tmp-pytest/pytest-of-ianblenke/pytest-4/popen-gw0/test_scenario_verify_2934_refo0/raw/cbmini-2926-graph-002.json",
+      "reformulation": {
+        "parse_error": null,
+        "parser_repair_applied": false,
+        "parser_repair_note": null,
+        "schema_valid": true,
+        "solver_form": {
+          "colors": {
+            "0": 0,
+            "1": 0,
+            "2": 0,
+            "3": 0
+          }
+        }
+      },
+      "retry": {
+        "attempted": true,
+        "cheap": true,
+        "prompt": "Exclude the rejected candidate and return exactly one JSON object in the task solution schema. Use the hard constraints and objective as authority: {\"rejected_candidate\":{\"colors\":{\"0\":0,\"1\":0,\"2\":0,\"3\":0}},\"task_data\":{\"edges\":[[0,1],[1,2],[2,0],[2,3]],\"n_colors\":3,\"n_nodes\":4},\"task_id\":\"cbmini-2926-graph-002\",\"task_type\":\"graph_coloring\",\"violation_class\":\"infeasible\",\"violation_reasons\":[\"edge_conflict:0-1\",\"edge_conflict:1-2\",\"edge_conflict:2-0\",\"edge_conflict:2-3\"]}",
+        "retry_solution": {
+          "colors": {
+            "0": 0,
+            "1": 1,
+            "2": 2,
+            "3": 0
+          }
+        },
+        "retry_verifier": {
+          "feasible": true,
+          "objective_value": 3,
+          "optimal": true,
+          "optimum_value": 3,
+          "syntax_valid": true,
+          "violation_class": "none",
+          "violation_reasons": []
+        }
+      },
+      "task_id": "cbmini-2926-graph-002",
+      "task_type": "graph_coloring"
+    },
+    {
+      "exact_verifier_type": "bounded_integer_exhaustive",
+      "exp2926_direct": {
+        "feasible": true,
+        "objective_value": 18,
+        "optimal": false,
+        "syntax_valid": true,
+        "violation_class": "suboptimal"
+      },
+      "final_solution": {
+        "variables": {
+          "a": 2,
+          "b": 2,
+          "c": 1
+        }
+      },
+      "final_verifier": {
+        "accepted": true,
+        "feasible": true,
+        "objective_value": 19,
+        "optimal": true,
+        "optimum_value": 19,
+        "syntax_valid": true,
+        "violation_class": "none",
+        "violation_reasons": []
+      },
+      "initial_proposal_sha256": "76863ca7c51c766aac312c9e2a61ab73eb36315f63afc4004a8e1bd89c6c62f0",
+      "initial_proposal_text": "{\"solution\": {\"variables\": {\"a\": 3, \"b\": 2, \"c\": 0}}}",
+      "initial_verifier": {
+        "accepted": false,
+        "feasible": true,
+        "objective_value": 18,
+        "optimal": false,
+        "optimum_value": 19,
+        "syntax_valid": true,
+        "violation_class": "suboptimal",
+        "violation_reasons": []
+      },
+      "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "model_name": "Gemma4-26B-A4B-it",
+      "raw_response_path": "/home/ianblenke/github.com/ianblenke/carnot/.tmp-pytest/pytest-of-ianblenke/pytest-4/popen-gw0/test_scenario_verify_2934_refo0/raw/cbmini-2926-linear-003.json",
+      "reformulation": {
+        "parse_error": null,
+        "parser_repair_applied": false,
+        "parser_repair_note": null,
+        "schema_valid": true,
+        "solver_form": {
+          "variables": {
+            "a": 3,
+            "b": 2,
+            "c": 0
+          }
+        }
+      },
+      "retry": {
+        "attempted": true,
+        "cheap": true,
+        "prompt": "Exclude the rejected candidate and return exactly one JSON object in the task solution schema. Use the hard constraints and objective as authority: {\"rejected_candidate\":{\"variables\":{\"a\":3,\"b\":2,\"c\":0}},\"task_data\":{\"constraints\":[{\"coefficients\":{\"a\":2,\"b\":1,\"c\":2},\"op\":\"<=\",\"rhs\":8},{\"coefficients\":{\"a\":1,\"b\":-1},\"op\":\">=\",\"rhs\":0}],\"objective\":{\"a\":4,\"b\":3,\"c\":5},\"variables\":{\"a\":[0,3],\"b\":[0,3],\"c\":[0,2]}},\"task_id\":\"cbmini-2926-linear-003\",\"task_type\":\"linear_integer\",\"violation_class\":\"suboptimal\",\"violation_reasons\":[]}",
+        "retry_solution": {
+          "variables": {
+            "a": 2,
+            "b": 2,
+            "c": 1
+          }
+        },
+        "retry_verifier": {
+          "feasible": true,
+          "objective_value": 19,
+          "optimal": true,
+          "optimum_value": 19,
+          "syntax_valid": true,
+          "violation_class": "none",
+          "violation_reasons": []
+        }
+      },
+      "task_id": "cbmini-2926-linear-003",
+      "task_type": "linear_integer"
+    },
+    {
+      "exact_verifier_type": "binary_subset_exhaustive",
+      "exp2926_direct": {
+        "feasible": false,
+        "objective_value": null,
+        "optimal": false,
+        "syntax_valid": false,
+        "violation_class": "syntax_invalid"
+      },
+      "final_solution": {
+        "selected_items": [
+          "sensor",
+          "battery",
+          "case"
+        ]
+      },
+      "final_verifier": {
+        "accepted": true,
+        "feasible": true,
+        "objective_value": 13,
+        "optimal": true,
+        "optimum_value": 13,
+        "syntax_valid": true,
+        "violation_class": "none",
+        "violation_reasons": []
+      },
+      "initial_proposal_sha256": "7ccfa1fbf3940e6f0c0375d87c0f9235a50514e14cb427bdfaf5077987b26ccf",
+      "initial_proposal_text": "not json",
+      "initial_verifier": {
+        "accepted": false,
+        "feasible": false,
+        "objective_value": null,
+        "optimal": false,
+        "optimum_value": 13,
+        "syntax_valid": false,
+        "violation_class": "syntax_invalid",
+        "violation_reasons": [
+          "no_json_object"
+        ]
+      },
+      "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "model_name": "Gemma4-26B-A4B-it",
+      "raw_response_path": "/home/ianblenke/github.com/ianblenke/carnot/.tmp-pytest/pytest-of-ianblenke/pytest-4/popen-gw0/test_scenario_verify_2934_refo0/raw/cbmini-2926-knapsack-003.json",
+      "reformulation": {
+        "parse_error": "no_json_object",
+        "parser_repair_applied": false,
+        "parser_repair_note": null,
+        "schema_valid": false,
+        "solver_form": null
+      },
+      "retry": {
+        "attempted": true,
+        "cheap": true,
+        "prompt": "Exclude the rejected candidate and return exactly one JSON object in the task solution schema. Use the hard constraints and objective as authority: {\"rejected_candidate\":{\"parse_error\":\"no_json_object\"},\"task_data\":{\"capacity\":8,\"excludes\":[[\"radio\",\"battery\"]],\"items\":[{\"name\":\"sensor\",\"value\":4,\"weight\":2},{\"name\":\"radio\",\"value\":7,\"weight\":3},{\"name\":\"battery\",\"value\":8,\"weight\":4},{\"name\":\"case\",\"value\":1,\"weight\":1}],\"required_items\":[\"case\"]},\"task_id\":\"cbmini-2926-knapsack-003\",\"task_type\":\"knapsack_binary\",\"violation_class\":\"syntax_invalid\",\"violation_reasons\":[\"no_json_object\"]}",
+        "retry_solution": {
+          "selected_items": [
+            "sensor",
+            "battery",
+            "case"
+          ]
+        },
+        "retry_verifier": {
+          "feasible": true,
+          "objective_value": 13,
+          "optimal": true,
+          "optimum_value": 13,
+          "syntax_valid": true,
+          "violation_class": "none",
+          "violation_reasons": []
+        }
+      },
+      "task_id": "cbmini-2926-knapsack-003",
+      "task_type": "knapsack_binary"
+    },
+    {
+      "exact_verifier_type": "color_assignment_exhaustive",
+      "exp2926_direct": {
+        "feasible": true,
+        "objective_value": 1,
+        "optimal": true,
+        "syntax_valid": true,
+        "violation_class": "none"
+      },
+      "final_solution": {
+        "colors": {
+          "0": 1,
+          "1": 0,
+          "2": 0,
+          "3": 0,
+          "4": 0
+        }
+      },
+      "final_verifier": {
+        "accepted": true,
+        "feasible": true,
+        "objective_value": 1,
+        "optimal": true,
+        "optimum_value": 1,
+        "syntax_valid": true,
+        "violation_class": "none",
+        "violation_reasons": []
+      },
+      "initial_proposal_sha256": "e0ad07d175a6bf4be4371a9838a0327c46496c3a84cca166efac193bd8e5e0a8",
+      "initial_proposal_text": "{\"solution\": {\"colors\": {\"0\": 1, \"1\": 0, \"2\": 0, \"3\": 0, \"4\": 0}}}",
+      "initial_verifier": {
+        "accepted": true,
+        "feasible": true,
+        "objective_value": 1,
+        "optimal": true,
+        "optimum_value": 1,
+        "syntax_valid": true,
+        "violation_class": "none",
+        "violation_reasons": []
+      },
+      "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "model_name": "Gemma4-26B-A4B-it",
+      "raw_response_path": "/home/ianblenke/github.com/ianblenke/carnot/.tmp-pytest/pytest-of-ianblenke/pytest-4/popen-gw0/test_scenario_verify_2934_refo0/raw/cbmini-2926-graph-003.json",
+      "reformulation": {
+        "parse_error": null,
+        "parser_repair_applied": false,
+        "parser_repair_note": null,
+        "schema_valid": true,
+        "solver_form": {
+          "colors": {
+            "0": 1,
+            "1": 0,
+            "2": 0,
+            "3": 0,
+            "4": 0
+          }
+        }
+      },
+      "retry": {
+        "attempted": false,
+        "cheap": false,
+        "prompt": null
+      },
+      "task_id": "cbmini-2926-graph-003",
+      "task_type": "graph_coloring"
+    },
+    {
+      "exact_verifier_type": "bounded_integer_exhaustive",
+      "exp2926_direct": {
+        "feasible": false,
+        "objective_value": null,
+        "optimal": false,
+        "syntax_valid": true,
+        "violation_class": "infeasible"
+      },
+      "final_solution": {
+        "variables": {
+          "p": 1,
+          "q": 3
+        }
+      },
+      "final_verifier": {
+        "accepted": true,
+        "feasible": true,
+        "objective_value": 8,
+        "optimal": true,
+        "optimum_value": 8,
+        "syntax_valid": true,
+        "violation_class": "none",
+        "violation_reasons": []
+      },
+      "initial_proposal_sha256": "1956cf7d835f4c5d2089d8629f95018a0ba87f00f365410ae5f7e9700a40485f",
+      "initial_proposal_text": "{\"solution\": {\"variables\": {\"p\": 5, \"q\": 0}}}",
+      "initial_verifier": {
+        "accepted": false,
+        "feasible": false,
+        "objective_value": null,
+        "optimal": false,
+        "optimum_value": 8,
+        "syntax_valid": true,
+        "violation_class": "infeasible",
+        "violation_reasons": [
+          "domain:p",
+          "linear_constraint:1"
+        ]
+      },
+      "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "model_name": "Gemma4-26B-A4B-it",
+      "raw_response_path": "/home/ianblenke/github.com/ianblenke/carnot/.tmp-pytest/pytest-of-ianblenke/pytest-4/popen-gw0/test_scenario_verify_2934_refo0/raw/cbmini-2926-linear-004.json",
+      "reformulation": {
+        "parse_error": null,
+        "parser_repair_applied": false,
+        "parser_repair_note": null,
+        "schema_valid": true,
+        "solver_form": {
+          "variables": {
+            "p": 5,
+            "q": 0
+          }
+        }
+      },
+      "retry": {
+        "attempted": true,
+        "cheap": true,
+        "prompt": "Exclude the rejected candidate and return exactly one JSON object in the task solution schema. Use the hard constraints and objective as authority: {\"rejected_candidate\":{\"variables\":{\"p\":5,\"q\":0}},\"task_data\":{\"constraints\":[{\"coefficients\":{\"p\":2,\"q\":1},\"op\":\">=\",\"rhs\":5},{\"coefficients\":{\"q\":1},\"op\":\">=\",\"rhs\":1}],\"objective\":{\"p\":5,\"q\":1},\"variables\":{\"p\":[0,4],\"q\":[0,4]}},\"task_id\":\"cbmini-2926-linear-004\",\"task_type\":\"linear_integer\",\"violation_class\":\"infeasible\",\"violation_reasons\":[\"domain:p\",\"linear_constraint:1\"]}",
+        "retry_solution": {
+          "variables": {
+            "p": 1,
+            "q": 3
+          }
+        },
+        "retry_verifier": {
+          "feasible": true,
+          "objective_value": 8,
+          "optimal": true,
+          "optimum_value": 8,
+          "syntax_valid": true,
+          "violation_class": "none",
+          "violation_reasons": []
+        }
+      },
+      "task_id": "cbmini-2926-linear-004",
+      "task_type": "linear_integer"
+    },
+    {
+      "exact_verifier_type": "binary_subset_exhaustive",
+      "exp2926_direct": {
+        "feasible": true,
+        "objective_value": 14,
+        "optimal": false,
+        "syntax_valid": true,
+        "violation_class": "suboptimal"
+      },
+      "final_solution": {
+        "selected_items": [
+          "atlas",
+          "water",
+          "med"
+        ]
+      },
+      "final_verifier": {
+        "accepted": true,
+        "feasible": true,
+        "objective_value": 19,
+        "optimal": true,
+        "optimum_value": 19,
+        "syntax_valid": true,
+        "violation_class": "none",
+        "violation_reasons": []
+      },
+      "initial_proposal_sha256": "fc0498b8bf07a71c19d53dd53ea33b0d7c4b471d6579fc9edd44e6dfd1b210a4",
+      "initial_proposal_text": "{\"solution\": {\"selected_items\": [\"guide\", \"water\", \"med\"]}}",
+      "initial_verifier": {
+        "accepted": false,
+        "feasible": true,
+        "objective_value": 14,
+        "optimal": false,
+        "optimum_value": 19,
+        "syntax_valid": true,
+        "violation_class": "suboptimal",
+        "violation_reasons": []
+      },
+      "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "model_name": "Gemma4-26B-A4B-it",
+      "raw_response_path": "/home/ianblenke/github.com/ianblenke/carnot/.tmp-pytest/pytest-of-ianblenke/pytest-4/popen-gw0/test_scenario_verify_2934_refo0/raw/cbmini-2926-knapsack-004.json",
+      "reformulation": {
+        "parse_error": null,
+        "parser_repair_applied": false,
+        "parser_repair_note": null,
+        "schema_valid": true,
+        "solver_form": {
+          "selected_items": [
+            "guide",
+            "water",
+            "med"
+          ]
+        }
+      },
+      "retry": {
+        "attempted": true,
+        "cheap": true,
+        "prompt": "Exclude the rejected candidate and return exactly one JSON object in the task solution schema. Use the hard constraints and objective as authority: {\"rejected_candidate\":{\"selected_items\":[\"guide\",\"water\",\"med\"]},\"task_data\":{\"capacity\":10,\"excludes\":[[\"atlas\",\"guide\"]],\"items\":[{\"name\":\"atlas\",\"value\":8,\"weight\":4},{\"name\":\"guide\",\"value\":3,\"weight\":2},{\"name\":\"water\",\"value\":6,\"weight\":3},{\"name\":\"med\",\"value\":5,\"weight\":2}],\"required_items\":[\"water\"]},\"task_id\":\"cbmini-2926-knapsack-004\",\"task_type\":\"knapsack_binary\",\"violation_class\":\"suboptimal\",\"violation_reasons\":[]}",
+        "retry_solution": {
+          "selected_items": [
+            "atlas",
+            "water",
+            "med"
+          ]
+        },
+        "retry_verifier": {
+          "feasible": true,
+          "objective_value": 19,
+          "optimal": true,
+          "optimum_value": 19,
+          "syntax_valid": true,
+          "violation_class": "none",
+          "violation_reasons": []
+        }
+      },
+      "task_id": "cbmini-2926-knapsack-004",
+      "task_type": "knapsack_binary"
+    },
+    {
+      "exact_verifier_type": "color_assignment_exhaustive",
+      "exp2926_direct": {
+        "feasible": false,
+        "objective_value": null,
+        "optimal": false,
+        "syntax_valid": false,
+        "violation_class": "syntax_invalid"
+      },
+      "final_solution": {
+        "colors": {
+          "0": 0,
+          "1": 1,
+          "2": 0,
+          "3": 1,
+          "4": 2
+        }
+      },
+      "final_verifier": {
+        "accepted": true,
+        "feasible": true,
+        "objective_value": 4,
+        "optimal": true,
+        "optimum_value": 4,
+        "syntax_valid": true,
+        "violation_class": "none",
+        "violation_reasons": []
+      },
+      "initial_proposal_sha256": "7ccfa1fbf3940e6f0c0375d87c0f9235a50514e14cb427bdfaf5077987b26ccf",
+      "initial_proposal_text": "not json",
+      "initial_verifier": {
+        "accepted": false,
+        "feasible": false,
+        "objective_value": null,
+        "optimal": false,
+        "optimum_value": 4,
+        "syntax_valid": false,
+        "violation_class": "syntax_invalid",
+        "violation_reasons": [
+          "no_json_object"
+        ]
+      },
+      "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "model_name": "Gemma4-26B-A4B-it",
+      "raw_response_path": "/home/ianblenke/github.com/ianblenke/carnot/.tmp-pytest/pytest-of-ianblenke/pytest-4/popen-gw0/test_scenario_verify_2934_refo0/raw/cbmini-2926-graph-004.json",
+      "reformulation": {
+        "parse_error": "no_json_object",
+        "parser_repair_applied": false,
+        "parser_repair_note": null,
+        "schema_valid": false,
+        "solver_form": null
+      },
+      "retry": {
+        "attempted": true,
+        "cheap": true,
+        "prompt": "Exclude the rejected candidate and return exactly one JSON object in the task solution schema. Use the hard constraints and objective as authority: {\"rejected_candidate\":{\"parse_error\":\"no_json_object\"},\"task_data\":{\"edges\":[[0,1],[1,2],[2,3],[3,4],[4,0]],\"n_colors\":4,\"n_nodes\":5},\"task_id\":\"cbmini-2926-graph-004\",\"task_type\":\"graph_coloring\",\"violation_class\":\"syntax_invalid\",\"violation_reasons\":[\"no_json_object\"]}",
+        "retry_solution": {
+          "colors": {
+            "0": 0,
+            "1": 1,
+            "2": 0,
+            "3": 1,
+            "4": 2
+          }
+        },
+        "retry_verifier": {
+          "feasible": true,
+          "objective_value": 4,
+          "optimal": true,
+          "optimum_value": 4,
+          "syntax_valid": true,
+          "violation_class": "none",
+          "violation_reasons": []
+        }
+      },
+      "task_id": "cbmini-2926-graph-004",
+      "task_type": "graph_coloring"
+    }
+  ],
+  "prefix_bound_available": false,
+  "prefix_bound_summary": {
+    "audited_tasks": 12,
+    "constraint": "first_non_ws_token_must_open_json_object",
+    "frontier_rows": 0,
+    "reason": "token_logprobs_or_frontier_unavailable"
+  },
+  "proposal_count": 12,
+  "random_seed": 2934,
+  "raw_response_dir": "/home/ianblenke/github.com/ianblenke/carnot/.tmp-pytest/pytest-of-ianblenke/pytest-4/popen-gw0/test_scenario_verify_2934_refo0/raw",
+  "reformulation_pipeline_ready": true,
+  "reproducibility_checksum": "f442f16b0dc7e8e4181515dfd076a28525eca84e7b000d09cbc21fd0f2b6d893",
+  "run_date": "20260523",
+  "schema": "carnot.aquaforte_beaver_reformulation_pipeline.v1",
+  "selected_task_ids": [
+    "cbmini-2926-linear-001",
+    "cbmini-2926-knapsack-001",
+    "cbmini-2926-graph-001",
+    "cbmini-2926-linear-002",
+    "cbmini-2926-knapsack-002",
+    "cbmini-2926-graph-002",
+    "cbmini-2926-linear-003",
+    "cbmini-2926-knapsack-003",
+    "cbmini-2926-graph-003",
+    "cbmini-2926-linear-004",
+    "cbmini-2926-knapsack-004",
+    "cbmini-2926-graph-004"
+  ],
+  "tests_run": [],
+  "verifier_acceptance_rate": 1.0
+}

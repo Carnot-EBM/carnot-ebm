@@ -1,0 +1,455 @@
+{
+  "accepted_substrate_classes": [
+    "cpu_fallback_receipt_only",
+    "full_local_sota_receipt"
+  ],
+  "aggregate_required_fields": [
+    "schema_version",
+    "experiment_id",
+    "source_artifacts",
+    "source_checksums",
+    "fields_imported_from_upstream",
+    "methodology_inherited_from_upstream",
+    "upstream_adversarial_flag_summary",
+    "inference_substrate",
+    "no_new_model_execution",
+    "no_new_verifier_run",
+    "duration_s",
+    "flagged_adversarial",
+    "corrigendum_pending",
+    "methodology_note",
+    "honest_verdict"
+  ],
+  "artifact": "experiment_3192_receipt_adversarial_contract_v4",
+  "blocked_verdict_allowances": [
+    "blocked_model_cache_missing:",
+    "blocked_loader_missing:",
+    "blocked_cuda_unavailable:",
+    "blocked_cuda_backend_absent:",
+    "blocked_gpu_offload_unhealthy:",
+    "blocked_receipt_precondition:",
+    "blocked_repair_gate_precondition:",
+    "blocked_missing_artifact:"
+  ],
+  "blocked_verdict_prefixes": [
+    "blocked_"
+  ],
+  "clean_rerun_allowed_conditions": [
+    "proof_execution_sufficient=true",
+    "clean_rerun_allowed=true",
+    "substrate_classification=full_local_sota_receipt",
+    "cpu_fallback_used=false",
+    "cuda/offload evidence present and healthy",
+    "headline_claim_allowed=true for verifier metrics",
+    "controlled_invariance_passed=true",
+    "exact-authority false-accept gate passed"
+  ],
+  "clean_rerun_required_fields": [
+    "clean_rerun_allowed",
+    "substrate_classification=full_local_sota_receipt",
+    "cpu_fallback_used=false",
+    "headline_claim_allowed=true",
+    "cuda_probe.cuda_available=true",
+    "nvidia_smi_probe.available=true",
+    "loader_probe.available=true",
+    "inference_substrate.n_gpu_layers=-1_or_positive_offload",
+    "proof_receipts[].substrate_used=full_local_sota_receipt",
+    "proof_receipts[].model_file_hash",
+    "proof_receipts[].transcript_hash",
+    "throughput_plausibility.passed=true",
+    "stale_transcript_rejection_passed=true",
+    "preconditions_checked"
+  ],
+  "comparison_findings": {
+    "canonical_v3_path": "results/experiment_3178_receipt_backed_authenticity_contract_v3.json",
+    "matrix_v29_diagnostic_only_rows": 9,
+    "matrix_v29_flagged_rows": 18,
+    "matrix_v29_gated_skip_rows": 14,
+    "matrix_v29_next_top_gap": "full_local_sota_receipt_clean_rerun_allowed_repair_gate_unblock",
+    "matrix_v29_publication_blocker_count": 80,
+    "matrix_v29_ready": true,
+    "prompt_v3_alias_path": "results/experiment_3178_receipt_adversarial_contract_v3.json",
+    "prompt_v3_alias_present": false,
+    "receipt_smoke_clean_rerun_allowed": false,
+    "receipt_smoke_headline_claim_allowed": false,
+    "receipt_smoke_proof_receipt_count": 2,
+    "receipt_smoke_ready": true,
+    "receipt_smoke_substrate_classification": "cpu_fallback_receipt_only",
+    "v3_contract_ready": true,
+    "v3_flagged_adversarial": true
+  },
+  "contract_version": "v4",
+  "current_evidence_assessment": {
+    "clean_rerun_allowed": false,
+    "headline_claim_allowed": false,
+    "live_call_count": 2,
+    "proof_execution_sufficient": true,
+    "proof_missing_fields": [],
+    "proof_receipt_count": 2,
+    "source_artifact": "results/experiment_3179_local_sota_receipt_smoke_v3.json",
+    "substrate_classification": "cpu_fallback_receipt_only",
+    "why_clean_rerun_blocked": "current_substrate_is_cpu_fallback_receipt_only"
+  },
+  "diagnostic_only_required_fields": [
+    "schema_version",
+    "experiment_id",
+    "diagnostic_only",
+    "diagnostic_scope",
+    "source_artifacts",
+    "source_checksums",
+    "headline_claim_allowed=false",
+    "deployed_claim_allowed=false",
+    "inference_substrate",
+    "duration_s",
+    "flagged_adversarial",
+    "corrigendum_pending",
+    "methodology_note",
+    "honest_verdict"
+  ],
+  "downstream_unlock_fields": {
+    "aggregate_methodology_clean": {
+      "current_value": true,
+      "field": "aggregate_methodology_clean",
+      "requires_fields": [
+        "schema_version",
+        "experiment_id",
+        "source_artifacts",
+        "source_checksums",
+        "fields_imported_from_upstream",
+        "methodology_inherited_from_upstream",
+        "upstream_adversarial_flag_summary",
+        "inference_substrate",
+        "no_new_model_execution",
+        "no_new_verifier_run",
+        "duration_s",
+        "flagged_adversarial",
+        "corrigendum_pending",
+        "methodology_note",
+        "honest_verdict"
+      ],
+      "requires_inference_substrate": "aggregation_from_upstream_artifacts"
+    },
+    "clean_rerun_allowed": {
+      "current_value": false,
+      "field": "clean_rerun_allowed",
+      "rejects_cpu_fallback": true,
+      "requires_substrate_class": "full_local_sota_receipt",
+      "unlocks": [
+        "exp3194_clean_live_sota_verifier_rerun_v11"
+      ]
+    },
+    "headline_claim_allowed": {
+      "current_value": false,
+      "field": "headline_claim_allowed",
+      "rejected_substrate_classes": [
+        "model_cache_missing",
+        "loader_missing",
+        "cuda_unavailable",
+        "cuda_available_unhealthy",
+        "cpu_fallback_receipt_only"
+      ],
+      "requires_clean_rerun_allowed": true
+    },
+    "proof_execution_sufficient": {
+      "accepted_substrate_classes": [
+        "cpu_fallback_receipt_only",
+        "full_local_sota_receipt"
+      ],
+      "allows_cpu_fallback": true,
+      "current_value": true,
+      "field": "proof_execution_sufficient",
+      "unlocks": [
+        "cuda_offload_probe_debug_context"
+      ]
+    }
+  },
+  "duration_s": 3.0,
+  "experiment_id": "exp3192",
+  "field_principles": {
+    "accepted_substrate_classes": "explicit inference substrate",
+    "aggregate_required_fields": "methodology completeness",
+    "blocked_verdict_prefixes": "honest precondition failure",
+    "clean_rerun_required_fields": "no CPU fallback headline claim",
+    "contract_version": "versioned evidence contract",
+    "downstream_unlock_fields": "machine-readable gates",
+    "experiment_id": "stable experiment identity",
+    "gated_skip_required_fields": "skip artifacts remain auditable",
+    "honest_verdict": "terminal truthful verdict",
+    "proof_execution_required_fields": "reproducible receipt evidence",
+    "rejected_headline_substrate_classes": "no false headline claim",
+    "schema_version": "schema-versioned artifacts",
+    "terminal_verdict_prefixes": "conductor verdict discipline"
+  },
+  "gated_skip_required_fields": [
+    "schema_version",
+    "experiment_id",
+    "gated_skip",
+    "gate_reasons",
+    "blocked_precondition",
+    "upstream_gate_snapshot",
+    "preconditions_checked",
+    "live_call_count=0",
+    "models_used=[]",
+    "proof_receipts_used=[]",
+    "headline_claim_allowed=false",
+    "flagged_adversarial",
+    "corrigendum_pending",
+    "inference_substrate",
+    "duration_s",
+    "honest_verdict"
+  ],
+  "honest_verdict": "complete: receipt_adversarial_contract_v4_ready=true; proof_execution_sufficient=true; clean_rerun_allowed=false",
+  "inference_substrate": {
+    "downloads_models": false,
+    "executes_hardware": false,
+    "executes_models": false,
+    "executes_repairs": false,
+    "executes_solvers": false,
+    "executes_verifiers": false,
+    "kind": "contract_artifact_only",
+    "live_model_calls": 0,
+    "uses_checked_in_artifacts_only": true
+  },
+  "known_substrate_classes": [
+    "model_cache_missing",
+    "loader_missing",
+    "cuda_unavailable",
+    "cuda_available_unhealthy",
+    "cpu_fallback_receipt_only",
+    "full_local_sota_receipt"
+  ],
+  "live_required_fields": [
+    "schema_version",
+    "experiment_id",
+    "model_specs",
+    "selected_model_ids",
+    "preconditions_checked",
+    "proof_receipts",
+    "random_seed",
+    "reproducibility_checksum",
+    "duration_s",
+    "inference_substrate",
+    "flagged_adversarial",
+    "corrigendum_pending",
+    "methodology_note",
+    "honest_verdict"
+  ],
+  "no_conductor_execution": true,
+  "no_new_hardware_run": true,
+  "no_new_model_execution": true,
+  "no_new_repair_run": true,
+  "no_new_solver_run": true,
+  "no_new_verifier_run": true,
+  "proof_execution_required_fields": [
+    "local_sota_receipt_smoke_v3_ready",
+    "substrate_classification",
+    "live_call_count",
+    "proof_receipts",
+    "prompt_hashes",
+    "transcript_hashes",
+    "token_counts",
+    "throughput_plausibility.passed",
+    "stale_transcript_rejection_passed",
+    "proof_receipts[].selected_model_id",
+    "proof_receipts[].model_path",
+    "proof_receipts[].model_file_hash",
+    "proof_receipts[].loader_name",
+    "proof_receipts[].substrate_used",
+    "proof_receipts[].prompt_hash",
+    "proof_receipts[].transcript_hash",
+    "proof_receipts[].token_counts",
+    "proof_receipts[].random_seed",
+    "proof_receipts[].wall_clock_s",
+    "proof_receipts[].command_hash",
+    "proof_receipts[].subprocess_return_code",
+    "proof_receipts[].stderr_tail",
+    "proof_receipts[].throughput_plausibility",
+    "proof_receipts[].replay_count",
+    "proof_receipts[].worker_code_sha256"
+  ],
+  "proof_execution_sufficient_conditions": [
+    "local_sota_receipt_smoke_v3_ready=true",
+    "substrate_classification in accepted_substrate_classes",
+    "live_call_count>=2",
+    "len(proof_receipts)>=2",
+    "all proof_execution_required_fields present",
+    "throughput_plausibility.passed=true",
+    "transcript_hashes unique and not stale",
+    "headline_claim_allowed may remain false"
+  ],
+  "protected_files_modified_by_this_task": {
+    "_bmad/traceability.md": false,
+    "ops/changelog.md": false,
+    "ops/status.md": false,
+    "scripts/research_conductor.py": false
+  },
+  "receipt_adversarial_contract_v4_ready": true,
+  "rejected_headline_substrate_classes": [
+    "model_cache_missing",
+    "loader_missing",
+    "cuda_unavailable",
+    "cuda_available_unhealthy",
+    "cpu_fallback_receipt_only"
+  ],
+  "run_date": "20260527",
+  "schema": "carnot.receipt_adversarial_contract.v4",
+  "schema_version": "carnot.receipt_adversarial_contract.v4",
+  "source_artifacts": [
+    {
+      "path": "AGENTS.md",
+      "present": true,
+      "readable_json_object": null,
+      "required": true,
+      "role": "agents_repo_instructions",
+      "sha256": "c893735c3c7ece3f9bf4d48722846ef65e76ff35ebfbfe1d239930339d69470b",
+      "source_type": "text"
+    },
+    {
+      "path": "CODEX.md",
+      "present": true,
+      "readable_json_object": null,
+      "required": true,
+      "role": "codex_repo_workflow",
+      "sha256": "bab1c6ba20bb432cbd7cd6e3b12fb0089f303cb7742f929297647d6329e46502",
+      "source_type": "text"
+    },
+    {
+      "path": "CLAUDE.md",
+      "present": true,
+      "readable_json_object": null,
+      "required": true,
+      "role": "claude_artifact_rules",
+      "sha256": "03662b137e7c971eeffd704e98d6f004c46e2f450a4a921df3d7ea073cdc4fdf",
+      "source_type": "text"
+    },
+    {
+      "path": "scripts/experiment_template.py",
+      "present": true,
+      "readable_json_object": null,
+      "required": true,
+      "role": "experiment_template_policy",
+      "sha256": "85bfa47e2ce1373b09fa8fb19b8dd438b40efa67c616f9dd4c25b87203b0de51",
+      "source_type": "python"
+    },
+    {
+      "path": "scripts/conductor_gates.py",
+      "present": true,
+      "readable_json_object": null,
+      "required": true,
+      "role": "conductor_gate_policy",
+      "sha256": "30571e724577b8502c47bdd4b2ae9c721f3b857139d54e0aa39aaeed462231fc",
+      "source_type": "python"
+    },
+    {
+      "path": "research-references.md",
+      "present": true,
+      "readable_json_object": null,
+      "required": true,
+      "role": "post_295_research_references",
+      "sha256": "49a93a9e14eefd2699fb68cf6e1dc3c1c24e48805915ec209eb6885429d96daa",
+      "source_type": "text"
+    },
+    {
+      "path": "openspec/capabilities/verification/spec.md",
+      "present": true,
+      "readable_json_object": null,
+      "required": true,
+      "role": "verification_openspec",
+      "sha256": "2565bb2ad0a12d9f8c43152b38f07c056dfaddd164287df41dfbe042e2c22f0f",
+      "source_type": "text"
+    },
+    {
+      "path": "results/experiment_3178_receipt_adversarial_contract_v3.json",
+      "present": false,
+      "readable_json_object": false,
+      "required": false,
+      "role": "prompt_named_v3_alias",
+      "sha256": null,
+      "source_type": "json"
+    },
+    {
+      "path": "results/experiment_3178_receipt_backed_authenticity_contract_v3.json",
+      "present": true,
+      "readable_json_object": true,
+      "required": true,
+      "role": "canonical_v3_contract",
+      "sha256": "05211e5f231e25e350004362e253f5cec80548b07b1bcdc8ddffab92e8625720",
+      "source_type": "json"
+    },
+    {
+      "path": "results/experiment_3179_local_sota_receipt_smoke_v3.json",
+      "present": true,
+      "readable_json_object": true,
+      "required": true,
+      "role": "exp3179_receipt_smoke",
+      "sha256": "7922e7ca868104d3c38e07f4686ca25bd4ed0ebe350a2351d55822cf22d97f2a",
+      "source_type": "json"
+    },
+    {
+      "path": "results/experiment_3189_cross_corpus_matrix_v29.json",
+      "present": true,
+      "readable_json_object": true,
+      "required": true,
+      "role": "matrix_v29_findings",
+      "sha256": "50cb18b3313957d7cb5d44775b208017f38ed91d50884f146f8b4caf6ec8bfad",
+      "source_type": "json"
+    },
+    {
+      "path": "python/carnot/verify/receipt_adversarial_contract_v4.py",
+      "present": false,
+      "readable_json_object": null,
+      "required": false,
+      "role": "exp3192_module",
+      "sha256": null,
+      "source_type": "python"
+    },
+    {
+      "path": "scripts/experiment_3192_receipt_adversarial_contract_v4.py",
+      "present": false,
+      "readable_json_object": null,
+      "required": false,
+      "role": "exp3192_script",
+      "sha256": null,
+      "source_type": "python"
+    },
+    {
+      "path": "tests/python/test_experiment_3192_receipt_adversarial_contract_v4.py",
+      "present": false,
+      "readable_json_object": null,
+      "required": false,
+      "role": "exp3192_tests",
+      "sha256": null,
+      "source_type": "python"
+    }
+  ],
+  "source_checksums": {
+    "AGENTS.md": "c893735c3c7ece3f9bf4d48722846ef65e76ff35ebfbfe1d239930339d69470b",
+    "CLAUDE.md": "03662b137e7c971eeffd704e98d6f004c46e2f450a4a921df3d7ea073cdc4fdf",
+    "CODEX.md": "bab1c6ba20bb432cbd7cd6e3b12fb0089f303cb7742f929297647d6329e46502",
+    "openspec/capabilities/verification/spec.md": "2565bb2ad0a12d9f8c43152b38f07c056dfaddd164287df41dfbe042e2c22f0f",
+    "python/carnot/verify/receipt_adversarial_contract_v4.py": null,
+    "research-references.md": "49a93a9e14eefd2699fb68cf6e1dc3c1c24e48805915ec209eb6885429d96daa",
+    "results/experiment_3178_receipt_adversarial_contract_v3.json": null,
+    "results/experiment_3178_receipt_backed_authenticity_contract_v3.json": "05211e5f231e25e350004362e253f5cec80548b07b1bcdc8ddffab92e8625720",
+    "results/experiment_3179_local_sota_receipt_smoke_v3.json": "7922e7ca868104d3c38e07f4686ca25bd4ed0ebe350a2351d55822cf22d97f2a",
+    "results/experiment_3189_cross_corpus_matrix_v29.json": "50cb18b3313957d7cb5d44775b208017f38ed91d50884f146f8b4caf6ec8bfad",
+    "scripts/conductor_gates.py": "30571e724577b8502c47bdd4b2ae9c721f3b857139d54e0aa39aaeed462231fc",
+    "scripts/experiment_3192_receipt_adversarial_contract_v4.py": null,
+    "scripts/experiment_template.py": "85bfa47e2ce1373b09fa8fb19b8dd438b40efa67c616f9dd4c25b87203b0de51",
+    "tests/python/test_experiment_3192_receipt_adversarial_contract_v4.py": null
+  },
+  "source_errors": [],
+  "terminal_verdict_prefixes": [
+    "complete:",
+    "complete_",
+    "success:",
+    "success_",
+    "passed:",
+    "passed_",
+    "shipped:",
+    "shipped_"
+  ],
+  "tests_run": [
+    "focused"
+  ]
+}

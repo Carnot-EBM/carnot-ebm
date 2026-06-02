@@ -1,0 +1,133 @@
+{
+  "artifact": "experiment_3236_isolated_cuda_python_smoke_v1",
+  "cuda_bindings_device_count": 1,
+  "cuda_bindings_device_names": [
+    "NVIDIA GeForce RTX 3090"
+  ],
+  "cuda_bindings_driver_version": 13020,
+  "cuda_bindings_import_ok": true,
+  "cuda_bindings_probe": {
+    "command": [
+      "/repo/.venv/bin/python",
+      "-I",
+      "-c",
+      "import json, sys\norder = ['json', 'sys']\npayload = {'probe': 'exp3236_cuda_bindings_probe', 'project_modules_preimport': [m for m in sys.modules if m == 'carnot' or m.startswith('carnot.') or m == 'scripts' or m.startswith('scripts.')]}\ntry:\n    import cuda.bindings.runtime as rt\n    order.append('cuda.bindings.runtime')\n    err, count = rt.cudaGetDeviceCount()\n    order.append('cudaGetDeviceCount')\n    runtime_err, runtime_version = rt.cudaRuntimeGetVersion()\n    driver_err, driver_version = rt.cudaDriverGetVersion()\n    ok = str(err).endswith('cudaSuccess') and bool(count and count > 0)\n    names = []\n    if ok:\n        for idx in range(int(count)):\n            prop_err, prop = rt.cudaGetDeviceProperties(idx)\n            if str(prop_err).endswith('cudaSuccess'):\n                raw_name = getattr(prop, 'name', b'')\n                name = raw_name.decode('utf-8', 'replace').rstrip('\\x00') if isinstance(raw_name, bytes) else str(raw_name)\n                names.append(name)\n        order.append('cudaGetDeviceProperties')\n    payload.update({'cuda_bindings_import_ok': True, 'cuda_bindings_runtime_ok': ok, 'cuda_bindings_device_count': int(count or 0) if ok else 0, 'cuda_bindings_device_names': names, 'cuda_bindings_cuda_error': str(err), 'cuda_bindings_runtime_version': runtime_version if str(runtime_err).endswith('cudaSuccess') else None, 'cuda_bindings_driver_version': driver_version if str(driver_err).endswith('cudaSuccess') else None, 'import_order': order})\nexcept Exception as exc:\n    payload.update({'cuda_bindings_import_ok': False, 'cuda_bindings_runtime_ok': False, 'cuda_bindings_device_count': 0, 'cuda_bindings_device_names': [], 'cuda_bindings_cuda_error': None, 'cuda_bindings_runtime_version': None, 'cuda_bindings_driver_version': None, 'import_order': order, 'error': f'{type(exc).__name__}: {exc}'})\nprint(json.dumps(payload, sort_keys=True))\n"
+    ],
+    "cuda_bindings_cuda_error": "cudaSuccess",
+    "cuda_bindings_device_count": 1,
+    "cuda_bindings_device_names": [
+      "NVIDIA GeForce RTX 3090"
+    ],
+    "cuda_bindings_driver_version": 13020,
+    "cuda_bindings_import_ok": true,
+    "cuda_bindings_runtime_ok": true,
+    "cuda_bindings_runtime_version": 12090,
+    "import_order": [
+      "json",
+      "sys",
+      "cuda.bindings.runtime",
+      "cudaGetDeviceCount",
+      "cudaGetDeviceProperties"
+    ],
+    "probe": "exp3236_cuda_bindings_probe",
+    "project_modules_preimport": [],
+    "returncode": 0,
+    "stderr_summary": ""
+  },
+  "cuda_bindings_runtime_ok": true,
+  "cuda_bindings_runtime_version": 12090,
+  "cuda_driver_visible": true,
+  "cuda_python_smoke_passed": true,
+  "cuda_visible_devices": "0",
+  "duration_s": 0.5,
+  "experiment_id": "exp3236",
+  "honest_verdict": "complete: cuda_python_smoke_passed=true; recommended_next_task=exp3237-llama-cpp-cuda-receipt-smoke-v2; no_gguf_model_loaded=true",
+  "inference_substrate": "hardware_smoke",
+  "milestone": "2026.05.300",
+  "no_conductor_execution": true,
+  "no_full_gguf_load": true,
+  "no_llama_cpp_rebuild": true,
+  "no_mandated_gguf_model_inference": true,
+  "no_push": true,
+  "nvidia_smi": {
+    "available": true,
+    "cuda_version": "13.2",
+    "driver_version": "595.71.05",
+    "gpu_count": 1,
+    "gpus": [
+      {
+        "driver_version": "595.71.05",
+        "index": 0,
+        "memory_free_mib": 24126,
+        "memory_total_mib": 24576,
+        "memory_used_mib": 2,
+        "name": "NVIDIA GeForce RTX 3090",
+        "temperature_gpu_c": 48,
+        "utilization_gpu_pct": 0,
+        "uuid": "GPU-uuid"
+      }
+    ],
+    "query_command": [
+      "nvidia-smi",
+      "--query-gpu=index,uuid,name,driver_version,memory.total,memory.used,memory.free,utilization.gpu,temperature.gpu",
+      "--format=csv,noheader,nounits"
+    ],
+    "query_returncode": 0,
+    "query_stderr_summary": "",
+    "query_stdout_summary": "0, GPU-uuid, NVIDIA GeForce RTX 3090, 595.71.05, 24576, 2, 24126, 0, 48\n",
+    "raw_command": [
+      "nvidia-smi"
+    ],
+    "raw_returncode": 0,
+    "raw_stderr_summary": "",
+    "raw_stdout_summary": "NVIDIA-SMI 595.71.05 Driver Version: 595.71.05 CUDA Version: 13.2\n"
+  },
+  "principle_annotations": {
+    "downstream_order": "Exp 3237 may run only after this artifact records cuda_python_smoke_passed=true.",
+    "gate_rule": "cuda_python_smoke_passed requires driver visibility, torch CUDA device count, and cuda.bindings device count.",
+    "no_model_inference": "This task does not load llama.cpp or any mandated GGUF model.",
+    "probe_scope": "Driver visibility, selected Python torch CUDA, and cuda.bindings runtime are separate checks."
+  },
+  "recommended_next_task": "exp3237-llama-cpp-cuda-receipt-smoke-v2",
+  "schema_version": "carnot.isolated_cuda_python_smoke.v1",
+  "selected_python": "/repo/.venv/bin/python",
+  "selected_python_device_count": 1,
+  "selected_python_device_names": [
+    "NVIDIA GeForce RTX 3090"
+  ],
+  "selected_python_torch_cuda_available": true,
+  "selected_python_torch_cuda_version": "12.8",
+  "selected_python_torch_import_ok": true,
+  "selected_python_torch_probe": {
+    "command": [
+      "/repo/.venv/bin/python",
+      "-I",
+      "-c",
+      "import json, sys\norder = ['json', 'sys']\npayload = {'probe': 'exp3236_torch_cuda_probe', 'project_modules_preimport': [m for m in sys.modules if m == 'carnot' or m.startswith('carnot.') or m == 'scripts' or m.startswith('scripts.')]}\ntry:\n    import torch\n    order.append('torch')\nexcept Exception as exc:\n    payload.update({'selected_python_torch_import_ok': False, 'torch_version': None, 'selected_python_torch_cuda_version': None, 'selected_python_torch_cuda_available': False, 'selected_python_device_count': 0, 'selected_python_device_names': [], 'import_order': order, 'error': f'{type(exc).__name__}: {exc}'})\nelse:\n    cuda_error = None\n    try:\n        available = bool(torch.cuda.is_available())\n        order.append('torch.cuda.is_available')\n        count = int(torch.cuda.device_count()) if available else 0\n        order.append('torch.cuda.device_count')\n        names = [torch.cuda.get_device_name(i) for i in range(count)]\n        if count:\n            order.append('torch.cuda.get_device_name')\n    except Exception as exc:\n        available = False\n        count = 0\n        names = []\n        cuda_error = f'{type(exc).__name__}: {exc}'\n    payload.update({'selected_python_torch_import_ok': True, 'torch_version': getattr(torch, '__version__', None), 'selected_python_torch_cuda_version': getattr(torch.version, 'cuda', None), 'selected_python_torch_cuda_available': available, 'selected_python_device_count': count, 'selected_python_device_names': names, 'selected_python_cuda_error': cuda_error, 'import_order': order})\nprint(json.dumps(payload, sort_keys=True))\n"
+    ],
+    "import_order": [
+      "json",
+      "sys",
+      "torch",
+      "torch.cuda.is_available",
+      "torch.cuda.device_count",
+      "torch.cuda.get_device_name"
+    ],
+    "probe": "exp3236_torch_cuda_probe",
+    "project_modules_preimport": [],
+    "returncode": 0,
+    "selected_python_device_count": 1,
+    "selected_python_device_names": [
+      "NVIDIA GeForce RTX 3090"
+    ],
+    "selected_python_torch_cuda_available": true,
+    "selected_python_torch_cuda_version": "12.8",
+    "selected_python_torch_import_ok": true,
+    "stderr_summary": "",
+    "torch_version": "2.11.0+cu128"
+  },
+  "smoke_block_reasons": [],
+  "task_id": "exp3236-isolated-cuda-python-smoke-v1",
+  "tests_run": [],
+  "torch_version": "2.11.0+cu128"
+}

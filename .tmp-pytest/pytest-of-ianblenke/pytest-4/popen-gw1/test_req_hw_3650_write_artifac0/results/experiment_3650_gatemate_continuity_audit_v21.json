@@ -1,0 +1,59 @@
+{
+  "command_probes": {
+    "gatemate_jtag_detect": {
+      "combined_output": "idcode 0x20000001\nfamily GateMate Series\n",
+      "command": "timeout --kill-after=2s 5s openFPGALoader -c dirtyJtag --detect",
+      "exit_code": 0,
+      "stderr": "",
+      "stdout": "idcode 0x20000001\nfamily GateMate Series\n"
+    },
+    "openfpgaloader_which": {
+      "combined_output": "/opt/oss-cad-suite/bin/openFPGALoader\n",
+      "command": "bash -lc 'command -v openFPGALoader'",
+      "exit_code": 0,
+      "stderr": "",
+      "stdout": "/opt/oss-cad-suite/bin/openFPGALoader\n"
+    }
+  },
+  "continuity_history": {
+    "current_milestone": "2026.06.334",
+    "scope": "JTAG detect only; flash/smoke host-IO path intentionally not run."
+  },
+  "duration_s": 2.0,
+  "experiment_id": "exp3650",
+  "field_principles": {
+    "duration_s": "Plausibility floor.",
+    "gatemate_idcode_detected": "Honest detect result; not a fabricated flash pass.",
+    "honest_verdict": "Terminal prefix for reconciler classification.",
+    "inference_substrate": "JTAG detect only; no flash.",
+    "known_blocker": "Names the missing-tool or flash-smoke host-IO hang so the audit trail stays current.",
+    "openfpgaloader_installed": "Records the root blocker honestly so the audit trail is current.",
+    "random_seed": "Determinism precondition.",
+    "reproducibility_checksum": "Drift detection."
+  },
+  "gatemate_idcode_detected": true,
+  "honest_verdict": "complete: gatemate_continuity_audit_recorded_openfpgaloader_state_flash_smoke_host_io_hang_known_blocker",
+  "inference_substrate": "hardware_smoke",
+  "known_blocker": "flash/smoke host-IO hang",
+  "openfpgaloader_installed": true,
+  "openfpgaloader_path": "/opt/oss-cad-suite/bin/openFPGALoader",
+  "preconditions_checked": [
+    {
+      "available": true,
+      "command": "command -v openFPGALoader",
+      "exit_code": 0,
+      "path": "/opt/oss-cad-suite/bin/openFPGALoader",
+      "resource": "openFPGALoader"
+    },
+    {
+      "available": true,
+      "command": "timeout --kill-after=2s 5s openFPGALoader -c dirtyJtag --detect",
+      "exit_code": 0,
+      "resource": "gatemate_jtag_detect"
+    }
+  ],
+  "random_seed": 3650,
+  "reproducibility_checksum": "f76620463c623e02b2d150f5889db30713f032a05ee327e03a5f7c7c3e10aa66",
+  "schema": "carnot.gatemate_continuity_audit.v21",
+  "task_id": "exp3650-gatemate-continuity-audit-v21"
+}

@@ -1,0 +1,437 @@
+{
+  "adversarial_corrigendum_v1_ready": true,
+  "adversarial_flag_counts": {
+    "aggregate_inherited_flag": 3,
+    "duration_too_short": 2,
+    "inconsistent_model_load_evidence": 1,
+    "methodology_missing": 2,
+    "missing_seed_or_checksum": 1,
+    "missing_transcript_evidence": 1,
+    "tautology": 4
+  },
+  "artifact": "experiment_3150_adversarial_verifier_evidence_corrigendum_v1",
+  "audited_artifacts": [
+    {
+      "derived_flag_counts": {},
+      "direct_flag_counts": {
+        "tautology": 1
+      },
+      "experiment_id": "exp3136",
+      "flag_kinds": [
+        "tautology"
+      ],
+      "flag_source": "direct",
+      "flagged": true,
+      "honest_verdict": "complete: autopsy ready but tautological",
+      "inherited_flag": false,
+      "path": "results/experiment_3136_false_accept_root_cause_autopsy_v1.json",
+      "present": true,
+      "readable_json_object": true,
+      "role": "false_accept_autopsy",
+      "safe_gate_role": "blocked_for_unlock"
+    },
+    {
+      "derived_flag_counts": {},
+      "direct_flag_counts": {},
+      "experiment_id": "exp3137",
+      "flag_kinds": [],
+      "flag_source": "clean",
+      "flagged": false,
+      "honest_verdict": "complete: exact replay blocked known false accepts",
+      "inherited_flag": false,
+      "path": "results/experiment_3137_exact_safe_accept_abstain_contract_v1.json",
+      "present": true,
+      "readable_json_object": true,
+      "role": "exact_safe_contract",
+      "safe_gate_role": "safe_exact_replay_gate"
+    },
+    {
+      "derived_flag_counts": {},
+      "direct_flag_counts": {},
+      "experiment_id": "exp3138",
+      "flag_kinds": [],
+      "flag_source": "clean",
+      "flagged": false,
+      "honest_verdict": "complete: canonical grounding blocked regression rows",
+      "inherited_flag": false,
+      "path": "results/experiment_3138_canonical_answer_vericot_grounding_pilot_v1.json",
+      "present": true,
+      "readable_json_object": true,
+      "role": "canonical_grounding",
+      "safe_gate_role": "safe_exact_replay_gate"
+    },
+    {
+      "derived_flag_counts": {
+        "inconsistent_model_load_evidence": 1,
+        "missing_seed_or_checksum": 1,
+        "missing_transcript_evidence": 1
+      },
+      "direct_flag_counts": {
+        "duration_too_short": 1,
+        "methodology_missing": 1,
+        "tautology": 3
+      },
+      "experiment_id": "exp3139",
+      "flag_kinds": [
+        "duration_too_short",
+        "inconsistent_model_load_evidence",
+        "methodology_missing",
+        "missing_seed_or_checksum",
+        "missing_transcript_evidence",
+        "tautology"
+      ],
+      "flag_source": "direct",
+      "flagged": true,
+      "honest_verdict": "complete: live metrics ready but flagged",
+      "inherited_flag": false,
+      "path": "results/experiment_3139_live_sota_verifier_rerun_v7.json",
+      "present": true,
+      "readable_json_object": true,
+      "role": "live_verifier_rerun",
+      "safe_gate_role": "blocked_for_unlock"
+    },
+    {
+      "derived_flag_counts": {},
+      "direct_flag_counts": {},
+      "experiment_id": "exp3140",
+      "flag_kinds": [
+        "aggregate_inherited_flag"
+      ],
+      "flag_source": "inherited",
+      "flagged": true,
+      "honest_verdict": "blocked_other: exp3139 flagged_adversarial=true",
+      "inherited_flag": true,
+      "path": "results/experiment_3140_repair_gate_unlock_decision_v1.json",
+      "present": true,
+      "readable_json_object": true,
+      "role": "repair_gate_decision",
+      "safe_gate_role": "safe_as_block_only"
+    },
+    {
+      "derived_flag_counts": {},
+      "direct_flag_counts": {
+        "duration_too_short": 1,
+        "methodology_missing": 1
+      },
+      "experiment_id": "exp3147",
+      "flag_kinds": [
+        "aggregate_inherited_flag",
+        "duration_too_short",
+        "methodology_missing"
+      ],
+      "flag_source": "direct_and_inherited",
+      "flagged": true,
+      "honest_verdict": "complete: matrix ready but inherits flagged rows",
+      "inherited_flag": true,
+      "path": "results/experiment_3147_cross_corpus_matrix_v26.json",
+      "present": true,
+      "readable_json_object": true,
+      "role": "matrix_v26",
+      "safe_gate_role": "blocked_for_unlock"
+    },
+    {
+      "derived_flag_counts": {},
+      "direct_flag_counts": {},
+      "experiment_id": "exp3148",
+      "flag_kinds": [
+        "aggregate_inherited_flag"
+      ],
+      "flag_source": "inherited",
+      "flagged": true,
+      "honest_verdict": "complete: capstone ready but paper_ready=false",
+      "inherited_flag": true,
+      "path": "results/experiment_3148_capstone_v292.json",
+      "present": true,
+      "readable_json_object": true,
+      "role": "capstone_v292",
+      "safe_gate_role": "blocked_for_unlock"
+    }
+  ],
+  "blocked_downstream_fields": [
+    "exp3139.abstention_rate",
+    "exp3139.false_accept_gate_passed",
+    "exp3139.false_accept_rate",
+    "exp3139.false_reject_rate",
+    "exp3139.headline_claim_allowed",
+    "exp3139.live_verifier_rerun_v7_ready",
+    "exp3139.verifier_gain_delta",
+    "exp3140.false_accept_gate_passed",
+    "exp3140.false_accept_rate",
+    "exp3140.live_model_ready",
+    "exp3140.repair_gate_state_for_unlock",
+    "exp3147.false_accept_recovery_summary.rerun_verifier_gain_delta",
+    "exp3148.verifier_claim_status"
+  ],
+  "duration_s": 1.25,
+  "flagged_artifact_count": 5,
+  "honest_verdict": "complete: adversarial_corrigendum_v1_ready=true; repair_gate_implication=blocked_pending_clean_rerun; live_verifier_evidence_trusted=False",
+  "inference_substrate": {
+    "declares_no_new_live_model_inference": true,
+    "executes_conductor": false,
+    "executes_hardware": false,
+    "executes_models": false,
+    "executes_repairs": false,
+    "executes_solvers": false,
+    "executes_verifiers": false,
+    "kind": "aggregation_from_checked_in_verifier_evidence",
+    "local_repo_only": true,
+    "no_live_llm_inference": true
+  },
+  "known_false_accept_recovery_preserved": true,
+  "live_verifier_evidence_trusted": false,
+  "methodology_requirements_for_rerun": [
+    "record random_seed or random_seeds_used for every live row",
+    "record reproducibility_checksum over prompts, raw outputs, model specs, and runner revision",
+    "record transcript path and sha256 for every live call",
+    "record model-load evidence that agrees with live_call_count and selected_model_ids",
+    "record non-tautological metric recomputation from row-level denominators",
+    "include all known false-accept regression row IDs with exact labels",
+    "report real wall-clock duration for the selected inference substrate"
+  ],
+  "repair_gate_implication": "blocked_pending_clean_rerun",
+  "run_date": "20260526",
+  "safe_downstream_fields": [
+    "exp3136.false_accept_row_ids",
+    "exp3136.regression_row_set",
+    "exp3137.known_false_accept_rows_blocked",
+    "exp3137.regression_row_set",
+    "exp3137.replay_false_accept_rate",
+    "exp3138.false_accept_rows_blocked",
+    "exp3138.residual_false_accept_rows",
+    "exp3140.repair_gate_state_blocked_only"
+  ],
+  "sanity_check_table": [
+    {
+      "check": "field_provenance",
+      "evidence": "audited artifacts record local paths and source roles",
+      "principle": "claims must name their source fields",
+      "safe_for_downstream": true,
+      "status": "passed"
+    },
+    {
+      "check": "non_tautological_recomputation",
+      "evidence": "tautology_flags=4",
+      "principle": "a recomputation must not grade itself by equality alone",
+      "safe_for_downstream": false,
+      "status": "blocked"
+    },
+    {
+      "check": "adversarial_regression_rows",
+      "evidence": "Exp 3137/3138 replay blocks the known regression rows",
+      "principle": "known false accepts must stay in the denominator",
+      "safe_for_downstream": true,
+      "status": "passed"
+    },
+    {
+      "check": "methodology_completeness",
+      "evidence": "missing seed/checksum, missing transcript evidence, inconsistent model-load evidence",
+      "principle": "live claims need seeds, checksums, transcripts, and model-load evidence",
+      "safe_for_downstream": false,
+      "status": "blocked"
+    },
+    {
+      "check": "aggregate_source_trust",
+      "evidence": "aggregate_inherited_flagged_artifacts=3",
+      "principle": "aggregate trust requires source trust",
+      "safe_for_downstream": false,
+      "status": "blocked"
+    }
+  ],
+  "schema": "carnot.adversarial_verifier_evidence_corrigendum.v1",
+  "source_artifacts": [
+    {
+      "experiment_id": "agents_repo_instructions",
+      "path": "AGENTS.md",
+      "present": true,
+      "readable_json_object": null,
+      "required": false,
+      "role": "repo_instructions",
+      "sha256": "c893735c3c7ece3f9bf4d48722846ef65e76ff35ebfbfe1d239930339d69470b",
+      "source_type": "md"
+    },
+    {
+      "experiment_id": "codex_repo_workflow",
+      "path": "CODEX.md",
+      "present": true,
+      "readable_json_object": null,
+      "required": false,
+      "role": "codex_workflow",
+      "sha256": "bab1c6ba20bb432cbd7cd6e3b12fb0089f303cb7742f929297647d6329e46502",
+      "source_type": "md"
+    },
+    {
+      "experiment_id": "claude_authenticity_rules",
+      "path": "CLAUDE.md",
+      "present": true,
+      "readable_json_object": null,
+      "required": false,
+      "role": "authenticity_rules",
+      "sha256": "85549be1f10cf22a08ad899998c87c0eadffd7ffb0e285965438a74cd7812daf",
+      "source_type": "md"
+    },
+    {
+      "experiment_id": "research_references",
+      "path": "research-references.md",
+      "present": true,
+      "readable_json_object": null,
+      "required": false,
+      "role": "research_context",
+      "sha256": "f79d416c30069a9529ece61f6cd9b220191ff889232558b122874019e5ba8855",
+      "source_type": "md"
+    },
+    {
+      "experiment_id": "verifier_authenticity_lint",
+      "path": "scripts/verifier_authenticity_lint.py",
+      "present": true,
+      "readable_json_object": null,
+      "required": false,
+      "role": "authenticity_lint",
+      "sha256": "ff8f51a83c2b3f7d891b7d9ddc4c6772d5bc69a1f3f798c0951544bfbac901fa",
+      "source_type": "py"
+    },
+    {
+      "experiment_id": "harness_fit_lint",
+      "path": "scripts/harness_fit_lint.py",
+      "present": true,
+      "readable_json_object": null,
+      "required": false,
+      "role": "harness_fit_lint",
+      "sha256": "bc37e39e25e18ed03cd101fdebe8ea740356061df43f499da691810ea1446ec4",
+      "source_type": "py"
+    },
+    {
+      "experiment_id": "verification_openspec",
+      "path": "openspec/capabilities/verification/spec.md",
+      "present": true,
+      "readable_json_object": null,
+      "required": true,
+      "role": "verification_spec",
+      "sha256": "2c0a63224cba0859b8321e7d383c49bf0955ea92ac6543046be8b9778edc6be1",
+      "source_type": "md"
+    },
+    {
+      "experiment_id": "exp3136",
+      "path": "results/experiment_3136_false_accept_root_cause_autopsy_v1.json",
+      "present": true,
+      "readable_json_object": true,
+      "required": true,
+      "role": "false_accept_autopsy",
+      "sha256": "dd08ea586c869280cd2776b287400ee686ac2673afa0077d88154f1f410e03e8",
+      "source_type": "json"
+    },
+    {
+      "experiment_id": "exp3137",
+      "path": "results/experiment_3137_exact_safe_accept_abstain_contract_v1.json",
+      "present": true,
+      "readable_json_object": true,
+      "required": true,
+      "role": "exact_safe_contract",
+      "sha256": "f6366cea2f6b3aed13af91f8d0101818fe3b5b67e22b62e1d8e8b90a73285398",
+      "source_type": "json"
+    },
+    {
+      "experiment_id": "exp3138",
+      "path": "results/experiment_3138_canonical_answer_vericot_grounding_pilot_v1.json",
+      "present": true,
+      "readable_json_object": true,
+      "required": true,
+      "role": "canonical_grounding",
+      "sha256": "288173d8448deb94ce041a738d6da669d19511e4a488a1dc839f1ec0fbf2af8f",
+      "source_type": "json"
+    },
+    {
+      "experiment_id": "exp3139",
+      "path": "results/experiment_3139_live_sota_verifier_rerun_v7.json",
+      "present": true,
+      "readable_json_object": true,
+      "required": true,
+      "role": "live_verifier_rerun",
+      "sha256": "a06d869270b1a7a0da83a942d9279b1b0965ada4748ea903a5399661c73b4064",
+      "source_type": "json"
+    },
+    {
+      "experiment_id": "exp3140",
+      "path": "results/experiment_3140_repair_gate_unlock_decision_v1.json",
+      "present": true,
+      "readable_json_object": true,
+      "required": true,
+      "role": "repair_gate_decision",
+      "sha256": "0e08bf6d683f9c52da2977779e6ee5c636c50bd43e18a2bf4202b000224400cf",
+      "source_type": "json"
+    },
+    {
+      "experiment_id": "exp3147",
+      "path": "results/experiment_3147_cross_corpus_matrix_v26.json",
+      "present": true,
+      "readable_json_object": true,
+      "required": true,
+      "role": "matrix_v26",
+      "sha256": "c4fcc7e219c012caefb05136f636d31d4db99ca4b09368240dfe531d12d635d7",
+      "source_type": "json"
+    },
+    {
+      "experiment_id": "exp3148",
+      "path": "results/experiment_3148_capstone_v292.json",
+      "present": true,
+      "readable_json_object": true,
+      "required": true,
+      "role": "capstone_v292",
+      "sha256": "0e9a14515235598c882d88834a87d09a9c3022de934f15682a6b871530cfb86d",
+      "source_type": "json"
+    },
+    {
+      "experiment_id": "exp3150_module",
+      "path": "python/carnot/verify/adversarial_verifier_evidence_corrigendum_v1.py",
+      "present": false,
+      "readable_json_object": null,
+      "required": false,
+      "role": "corrigendum_module",
+      "sha256": null,
+      "source_type": "py"
+    },
+    {
+      "experiment_id": "exp3150_script",
+      "path": "scripts/experiment_3150_adversarial_verifier_evidence_corrigendum_v1.py",
+      "present": false,
+      "readable_json_object": null,
+      "required": false,
+      "role": "corrigendum_script",
+      "sha256": null,
+      "source_type": "py"
+    },
+    {
+      "experiment_id": "exp3150_tests",
+      "path": "tests/python/test_experiment_3150_adversarial_verifier_evidence_corrigendum_v1.py",
+      "present": false,
+      "readable_json_object": null,
+      "required": false,
+      "role": "corrigendum_tests",
+      "sha256": null,
+      "source_type": "py"
+    }
+  ],
+  "source_checksums": {
+    "AGENTS.md": "c893735c3c7ece3f9bf4d48722846ef65e76ff35ebfbfe1d239930339d69470b",
+    "CLAUDE.md": "85549be1f10cf22a08ad899998c87c0eadffd7ffb0e285965438a74cd7812daf",
+    "CODEX.md": "bab1c6ba20bb432cbd7cd6e3b12fb0089f303cb7742f929297647d6329e46502",
+    "openspec/capabilities/verification/spec.md": "2c0a63224cba0859b8321e7d383c49bf0955ea92ac6543046be8b9778edc6be1",
+    "research-references.md": "f79d416c30069a9529ece61f6cd9b220191ff889232558b122874019e5ba8855",
+    "results/experiment_3136_false_accept_root_cause_autopsy_v1.json": "dd08ea586c869280cd2776b287400ee686ac2673afa0077d88154f1f410e03e8",
+    "results/experiment_3137_exact_safe_accept_abstain_contract_v1.json": "f6366cea2f6b3aed13af91f8d0101818fe3b5b67e22b62e1d8e8b90a73285398",
+    "results/experiment_3138_canonical_answer_vericot_grounding_pilot_v1.json": "288173d8448deb94ce041a738d6da669d19511e4a488a1dc839f1ec0fbf2af8f",
+    "results/experiment_3139_live_sota_verifier_rerun_v7.json": "a06d869270b1a7a0da83a942d9279b1b0965ada4748ea903a5399661c73b4064",
+    "results/experiment_3140_repair_gate_unlock_decision_v1.json": "0e08bf6d683f9c52da2977779e6ee5c636c50bd43e18a2bf4202b000224400cf",
+    "results/experiment_3147_cross_corpus_matrix_v26.json": "c4fcc7e219c012caefb05136f636d31d4db99ca4b09368240dfe531d12d635d7",
+    "results/experiment_3148_capstone_v292.json": "0e9a14515235598c882d88834a87d09a9c3022de934f15682a6b871530cfb86d",
+    "scripts/harness_fit_lint.py": "bc37e39e25e18ed03cd101fdebe8ea740356061df43f499da691810ea1446ec4",
+    "scripts/verifier_authenticity_lint.py": "ff8f51a83c2b3f7d891b7d9ddc4c6772d5bc69a1f3f798c0951544bfbac901fa"
+  },
+  "source_errors": [],
+  "tests_run": [
+    ".venv/bin/pytest tests/python/test_experiment_3150_adversarial_verifier_evidence_corrigendum_v1.py -q --no-cov",
+    ".venv/bin/coverage erase && .venv/bin/coverage run --source=python/carnot/verify -m pytest -o addopts='' tests/python/test_experiment_3150_adversarial_verifier_evidence_corrigendum_v1.py -q",
+    ".venv/bin/coverage report --include='python/carnot/verify/adversarial_verifier_evidence_corrigendum_v1.py' --fail-under=100 --show-missing",
+    ".venv/bin/python scripts/check_spec_coverage.py",
+    ".venv/bin/pytest tests/python -q"
+  ]
+}

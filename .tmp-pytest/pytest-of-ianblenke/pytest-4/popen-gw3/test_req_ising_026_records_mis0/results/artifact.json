@@ -1,0 +1,173 @@
+{
+  "commands_run": [
+    {
+      "command": [
+        "verilator",
+        "--version"
+      ],
+      "command_string": "verilator --version",
+      "error": "",
+      "error_class": "none",
+      "returncode": 0,
+      "stderr_summary": "",
+      "stdout_summary": "Verilator 5.000"
+    },
+    {
+      "command": [
+        "iverilog",
+        "-V"
+      ],
+      "command_string": "iverilog -V",
+      "error": "",
+      "error_class": "none",
+      "returncode": 0,
+      "stderr_summary": "",
+      "stdout_summary": "Icarus Verilog version 12"
+    },
+    {
+      "command": [
+        "yosys",
+        "--version"
+      ],
+      "command_string": "yosys --version",
+      "error": "",
+      "error_class": "none",
+      "returncode": 0,
+      "stderr_summary": "",
+      "stdout_summary": "Yosys 0.45"
+    },
+    {
+      "command": [
+        "vivado",
+        "-version"
+      ],
+      "command_string": "vivado -version",
+      "error": "",
+      "error_class": "none",
+      "returncode": 0,
+      "stderr_summary": "",
+      "stdout_summary": "Vivado v2024.2"
+    },
+    {
+      "command": [
+        "verilator",
+        "--lint-only",
+        "--timing",
+        "-Wall",
+        "-Wno-DECLFILENAME",
+        "-Wno-BLKSEQ",
+        "-Wno-WIDTH",
+        "hardware/kv260/discrete_sb_256.v"
+      ],
+      "command_string": "verilator --lint-only --timing -Wall -Wno-DECLFILENAME -Wno-BLKSEQ -Wno-WIDTH hardware/kv260/discrete_sb_256.v",
+      "error": "",
+      "error_class": "none",
+      "returncode": 0,
+      "stderr_summary": "",
+      "stdout_summary": "lint clean"
+    }
+  ],
+  "exp1441_rtl_source_created": true,
+  "exp1441_summary": {
+    "exists": true,
+    "honest_verdict": "rtl_source_and_testbench_created_lint_and_smoke_sim_passed_no_kv260_execution_claim",
+    "path": "/home/ianblenke/github.com/ianblenke/carnot/.tmp-pytest/pytest-of-ianblenke/pytest-4/popen-gw3/test_req_ising_026_records_mis0/results/experiment_1441_discrete_sb_rtl_source_implementation.json",
+    "rtl_source_created": true,
+    "rtl_source_path": "hardware/kv260/discrete_sb_256.v",
+    "status": "complete",
+    "testbench_created": true,
+    "testbench_path": "hardware/kv260/discrete_sb_256_tb.v"
+  },
+  "experiment_id": 1451,
+  "hardware_claim_allowed": false,
+  "hardware_execution_performed": false,
+  "honest_verdict": "rtl_lint_complete_simulation_not_complete_no_hardware_execution_no_kv260_claim",
+  "lint_command": "verilator --lint-only --timing -Wall -Wno-DECLFILENAME -Wno-BLKSEQ -Wno-WIDTH hardware/kv260/discrete_sb_256.v",
+  "lint_errors": [],
+  "rtl_lint_complete": true,
+  "rtl_source_present": true,
+  "run_date": "20260507",
+  "simulation_command": "",
+  "simulation_complete": false,
+  "simulation_errors": [
+    {
+      "error": "hardware/kv260/discrete_sb_256_tb.v",
+      "error_class": "testbench_missing",
+      "returncode": null,
+      "stage": "simulation",
+      "stderr_summary": "hardware/kv260/discrete_sb_256_tb.v",
+      "stdout_summary": ""
+    }
+  ],
+  "source_experiment_id": 1441,
+  "status": "complete",
+  "testbench_present": false,
+  "tool_probe_results": {
+    "iverilog": {
+      "available": true,
+      "probe": {
+        "command": [
+          "iverilog",
+          "-V"
+        ],
+        "command_string": "iverilog -V",
+        "error": "",
+        "error_class": "none",
+        "returncode": 0,
+        "stderr_summary": "",
+        "stdout_summary": "Icarus Verilog version 12"
+      }
+    },
+    "verilator": {
+      "available": true,
+      "probe": {
+        "command": [
+          "verilator",
+          "--version"
+        ],
+        "command_string": "verilator --version",
+        "error": "",
+        "error_class": "none",
+        "returncode": 0,
+        "stderr_summary": "",
+        "stdout_summary": "Verilator 5.000"
+      }
+    },
+    "vivado": {
+      "available": true,
+      "probe": {
+        "command": [
+          "vivado",
+          "-version"
+        ],
+        "command_string": "vivado -version",
+        "error": "",
+        "error_class": "none",
+        "returncode": 0,
+        "stderr_summary": "",
+        "stdout_summary": "Vivado v2024.2"
+      }
+    },
+    "yosys": {
+      "available": true,
+      "probe": {
+        "command": [
+          "yosys",
+          "--version"
+        ],
+        "command_string": "yosys --version",
+        "error": "",
+        "error_class": "none",
+        "returncode": 0,
+        "stderr_summary": "",
+        "stdout_summary": "Yosys 0.45"
+      }
+    }
+  },
+  "tools_available": {
+    "iverilog": true,
+    "verilator": true,
+    "vivado": true,
+    "yosys": true
+  }
+}

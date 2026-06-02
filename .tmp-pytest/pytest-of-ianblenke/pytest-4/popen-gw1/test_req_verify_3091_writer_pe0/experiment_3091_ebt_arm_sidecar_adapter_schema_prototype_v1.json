@@ -1,0 +1,194 @@
+{
+  "adapter_schema_ready": true,
+  "artifact": "experiment_3091_ebt_arm_sidecar_adapter_schema_prototype_v1",
+  "duration_s": 0.25,
+  "honest_verdict": "complete: ebt_arm_sidecar_schema_and_replay_scorer_prototype_only_no_live_inference",
+  "implementation_claim_boundary": "Sidecar schema plus deterministic cached replay scorer only; no EBT/ARM training, no model weight update, no live model inference integration, no benchmark speedup, and no hardware acceleration claim.",
+  "inference_substrate": {
+    "generation_performed": false,
+    "gpu_required": false,
+    "kind": "deterministic_cached_sidecar_replay",
+    "live_llm_inference": false,
+    "live_model_inference": false,
+    "model_weights_loaded": false,
+    "sidecar_only": true
+  },
+  "no_weight_update_claim": true,
+  "non_claims": [
+    "no EBT/ARM training",
+    "no model weight update",
+    "no live model inference integration",
+    "no benchmark speedup",
+    "no hardware acceleration"
+  ],
+  "replay_scorer_path": "python/carnot/inference/ebt_arm_sidecar_adapter.py",
+  "run_date": "20260526",
+  "schema": "carnot.ebt_arm_sidecar_adapter_schema_prototype.v1",
+  "schema_path": "python/carnot/schemas/ebt_arm_sidecar_adapter_v1.json",
+  "sidecar_replay_scorer_ready": true,
+  "source_artifacts": [
+    {
+      "claim_boundary": "source_surface_only_no_adapter_implementation_claim",
+      "id": "exp3073_feasibility_audit",
+      "kind": "prior_feasibility_audit",
+      "path": "results/experiment_3073_ebt_arm_ebm_adapter_feasibility_audit_v1.json"
+    },
+    {
+      "claim_boundary": "spec_anchor",
+      "id": "verification_spec",
+      "kind": "openspec",
+      "path": "openspec/capabilities/verification/spec.md"
+    },
+    {
+      "claim_boundary": "data_shape_only",
+      "id": "sidecar_json_schema",
+      "kind": "schema",
+      "path": "python/carnot/schemas/ebt_arm_sidecar_adapter_v1.json"
+    },
+    {
+      "claim_boundary": "deterministic_cached_replay_only",
+      "id": "sidecar_replay_scorer",
+      "kind": "local_code",
+      "path": "python/carnot/inference/ebt_arm_sidecar_adapter.py"
+    },
+    {
+      "claim_boundary": "focused_schema_and_replay_validation",
+      "id": "sidecar_tests",
+      "kind": "test",
+      "path": "tests/python/test_experiment_3091_ebt_arm_sidecar_adapter_schema_prototype.py"
+    }
+  ],
+  "spec_refs": [
+    "REQ-VERIFY-3091",
+    "SCENARIO-VERIFY-3091"
+  ],
+  "tests_added_or_reused": [
+    "pytest focused"
+  ],
+  "validation_manifest": {
+    "deterministic_replay": true,
+    "fixture_count": 2,
+    "score_records": [
+      {
+        "abstain": false,
+        "candidate_id": "sidecar-fixture-correct",
+        "confidence": 0.95,
+        "energy_terms": [
+          {
+            "name": "constraint_violation_energy",
+            "raw_value": 0.0,
+            "source": "cached_constraints",
+            "weight": 1.0,
+            "weighted_value": 0.0
+          },
+          {
+            "name": "arm_sequence_energy",
+            "raw_value": 0.3,
+            "source": "cached_token_logprobs",
+            "weight": 0.1,
+            "weighted_value": 0.03
+          },
+          {
+            "name": "verifier_feedback_energy",
+            "raw_value": 0.0,
+            "source": "cached_verifier_feedback",
+            "weight": 1.0,
+            "weighted_value": 0.0
+          },
+          {
+            "name": "confidence_energy",
+            "raw_value": 0.05,
+            "source": "cached_confidence_metadata",
+            "weight": 1.0,
+            "weighted_value": 0.05
+          },
+          {
+            "name": "abstention_energy",
+            "raw_value": 0.0,
+            "source": "cached_abstention_metadata",
+            "weight": 5.0,
+            "weighted_value": 0.0
+          },
+          {
+            "name": "exact_label_mismatch_energy",
+            "raw_value": 0.0,
+            "source": "cached_exact_label_reference",
+            "weight": 20.0,
+            "weighted_value": 0.0
+          }
+        ],
+        "inference_substrate": {
+          "generation_performed": false,
+          "gpu_required": false,
+          "kind": "deterministic_cached_sidecar_replay",
+          "live_llm_inference": false,
+          "live_model_inference": false,
+          "model_weights_loaded": false
+        },
+        "input_fingerprint": "b0a104218eeaa382174e975516590eca4b2998504ee8cfe11ce3dd33d9fef978",
+        "record_id": "exp3091-correct",
+        "total_energy": 0.08
+      },
+      {
+        "abstain": true,
+        "candidate_id": "sidecar-fixture-incorrect",
+        "confidence": 0.4,
+        "energy_terms": [
+          {
+            "name": "constraint_violation_energy",
+            "raw_value": 3.0,
+            "source": "cached_constraints",
+            "weight": 1.0,
+            "weighted_value": 3.0
+          },
+          {
+            "name": "arm_sequence_energy",
+            "raw_value": 3.0,
+            "source": "cached_token_logprobs",
+            "weight": 0.1,
+            "weighted_value": 0.3
+          },
+          {
+            "name": "verifier_feedback_energy",
+            "raw_value": 2.0,
+            "source": "cached_verifier_feedback",
+            "weight": 1.0,
+            "weighted_value": 2.0
+          },
+          {
+            "name": "confidence_energy",
+            "raw_value": 0.6,
+            "source": "cached_confidence_metadata",
+            "weight": 1.0,
+            "weighted_value": 0.6
+          },
+          {
+            "name": "abstention_energy",
+            "raw_value": 1.0,
+            "source": "cached_abstention_metadata",
+            "weight": 5.0,
+            "weighted_value": 5.0
+          },
+          {
+            "name": "exact_label_mismatch_energy",
+            "raw_value": 1.0,
+            "source": "cached_exact_label_reference",
+            "weight": 20.0,
+            "weighted_value": 20.0
+          }
+        ],
+        "inference_substrate": {
+          "generation_performed": false,
+          "gpu_required": false,
+          "kind": "deterministic_cached_sidecar_replay",
+          "live_llm_inference": false,
+          "live_model_inference": false,
+          "model_weights_loaded": false
+        },
+        "input_fingerprint": "b18c5b66bf44742153d88b24bfe954f17f56a918a60a374193c3125150df5e73",
+        "record_id": "exp3091-incorrect",
+        "total_energy": 30.9
+      }
+    ]
+  }
+}

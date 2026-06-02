@@ -1,0 +1,1 @@
+controller diagnostics only

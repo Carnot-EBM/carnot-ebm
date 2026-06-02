@@ -1,0 +1,95 @@
+{
+  "artifact": "experiment_2895_paper_v6_evidence_table_v4",
+  "arxiv_submission_performed": false,
+  "blocked_claims": [
+    {
+      "claim": "MBPP generated-code support is blocked and cannot be cited.",
+      "corpus": "MBPP",
+      "reasons": [
+        "flagged_adversarial=true",
+        "DURATION_TOO_SHORT:critical"
+      ],
+      "source_artifact": "results/experiment_2889_mbpp_humaneval_generated_code_clean_row_v1.json"
+    },
+    {
+      "claim": "HumanEval generated-code support is blocked and cannot be cited.",
+      "corpus": "HumanEval",
+      "reasons": [
+        "flagged_adversarial=true",
+        "DURATION_TOO_SHORT:critical"
+      ],
+      "source_artifact": "results/experiment_2889_mbpp_humaneval_generated_code_clean_row_v1.json"
+    }
+  ],
+  "duration_s": 0.5,
+  "field_principles": {
+    "arxiv_submission_performed": "Always false; publication is operator-only.",
+    "blocked_claims": "Rows or support cells held out because flags, blocks, or missing evidence remain.",
+    "duration_s": "Measured wall time for local JSON aggregation; never padded.",
+    "forbidden_claims": "Claims the paper must not make from the current evidence boundary.",
+    "headline_claims": "Clean matrix-v7 headline rows that may support paper-v6 row-level claims.",
+    "honest_verdict": "Terminal synthesis verdict; no paper edit or external submission is implied.",
+    "landing_page_modified": "Always false; docs/index.html is operator-curated.",
+    "markdown_table": "Compact table for paper-v6 integration review; values mirror machine fields.",
+    "paper_evidence_table_ready": "True only when matrix v7 is present, built, and yields at least one headline claim plus bounded non-headline statements.",
+    "pilot_only_statements": "Pilot rows that may be described only as pilots, never benchmarks.",
+    "source_artifacts": "Only source JSON artifacts read from disk for this operator-review table.",
+    "taxonomy_only_statements": "Taxonomy rows with no generated-answer metric promotion."
+  },
+  "forbidden_claims": [
+    "Do not cite MBPP or HumanEval as headline benchmark rows; Exp 2879/2880 mark them pilot-only.",
+    "Do not cite TruthfulQA metrics; matrix v6 still marks TruthfulQA missing.",
+    "Do not claim THRML, TSU, or hardware acceleration from the sampler branch.",
+    "Do not cite MBPP as a headline benchmark row; matrix v7 marks it pilot_only.",
+    "Do not cite HumanEval as a headline benchmark row; matrix v7 marks it pilot_only.",
+    "Do not cite TruthfulQA as a headline benchmark row; matrix v7 marks it taxonomy_only.",
+    "Do not cite MBPP generated-code support; blocked by flagged_adversarial=true, DURATION_TOO_SHORT:critical.",
+    "Do not cite HumanEval generated-code support; blocked by flagged_adversarial=true, DURATION_TOO_SHORT:critical."
+  ],
+  "headline_claims": [
+    {
+      "boundary": "Headline citation is limited to this FoVer AUROC comparison and its stated n/seeds.",
+      "corpus": "FoVer",
+      "source_artifact": "results/experiment_2850_fover_dual_condition_integrity_v4.json",
+      "statement": "FoVer is a headline-citable row from clean matrix-v7 evidence: production AUROC 0.913134, architecture-only AUROC 0.894662, learning contribution +0.018471 over n=1000 examples / 5 seeds."
+    },
+    {
+      "boundary": "VeriCoT support 25/1000; cite as weak calibration evidence, not broad exact verification.",
+      "corpus": "HaluEval/FEVER",
+      "source_artifact": "results/experiment_2864_halueval_fever_full_calibration_v3.json",
+      "statement": "HaluEval/FEVER is a headline-citable local calibration row: HaluEval AUROC 0.553072 (n=500); FEVER AUROC 0.331143 (n=500)."
+    }
+  ],
+  "honest_verdict": "complete: paper-v6 evidence table ready; headline=2; pilot_only=2; taxonomy_only=1; blocked=2",
+  "landing_page_modified": false,
+  "markdown_table": "| Corpus | Evidence class | Paper-v6 use | Blocked/Missing boundary | Source |\n|---|---|---|---|---|\n| FoVer | headline | Headline row | none | results/experiment_2850_fover_dual_condition_integrity_v4.json |\n| HaluEval/FEVER | headline | Headline row | none | results/experiment_2864_halueval_fever_full_calibration_v3.json |\n| MBPP | pilot-only | Pilot statement only | blocked: flagged_adversarial=true; DURATION_TOO_SHORT:critical | results/experiment_2879_code_corpus_manifest_execution_pilot_v1.json |\n| HumanEval | pilot-only | Pilot statement only | blocked: flagged_adversarial=true; DURATION_TOO_SHORT:critical | results/experiment_2879_code_corpus_manifest_execution_pilot_v1.json |\n| TruthfulQA | taxonomy-only | Taxonomy statement only | no generated-answer metric | results/experiment_2888_truthfulqa_inficheck_taxonomy_manifest_v1.json |",
+  "paper_evidence_table_ready": true,
+  "pilot_only_statements": [
+    {
+      "boundary": "Do not cite pass@k/AUROC, generated-code benchmark lift, or headline code performance.",
+      "corpus": "MBPP",
+      "source_artifact": "results/experiment_2879_code_corpus_manifest_execution_pilot_v1.json",
+      "statement": "MBPP is pilot-only: manifest row mbpp-11 has 3 deterministic tests and structural metadata (5/5 references passed)."
+    },
+    {
+      "boundary": "Do not cite pass@k/AUROC, generated-code benchmark lift, or headline code performance.",
+      "corpus": "HumanEval",
+      "source_artifact": "results/experiment_2879_code_corpus_manifest_execution_pilot_v1.json",
+      "statement": "HumanEval is pilot-only: manifest row HumanEval/0 has 7 deterministic tests and structural metadata (5/5 references passed)."
+    }
+  ],
+  "run_date": "20260523",
+  "schema": "carnot.paper_v6_evidence_table.v4",
+  "source_artifacts": [
+    "results/experiment_2894_cross_corpus_matrix_v7.json",
+    "results/experiment_2884_capstone_v272.json"
+  ],
+  "taxonomy_only_statements": [
+    {
+      "boundary": "Taxonomy-only evidence; do not cite TruthfulQA accuracy, AUROC, or generated-answer performance.",
+      "corpus": "TruthfulQA",
+      "source_artifact": "results/experiment_2888_truthfulqa_inficheck_taxonomy_manifest_v1.json",
+      "statement": "TruthfulQA has 100/200 local taxonomy rows; generated-answer metrics are absent."
+    }
+  ]
+}

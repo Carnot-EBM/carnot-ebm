@@ -1,0 +1,616 @@
+{
+  "artifact": "experiment_3136_false_accept_root_cause_autopsy_v1",
+  "blocked_reasons": [],
+  "contradiction_miss_count": 2,
+  "duration_s": 0.5,
+  "exact_label_mismatch_count": 0,
+  "extraction_failure_count": 0,
+  "false_accept_autopsy_v1_ready": true,
+  "false_accept_mechanism_counts": {
+    "SAT/validity-token confusion": 1,
+    "contradiction miss": 1
+  },
+  "false_accept_row_ids": [
+    "resyn-3084-arith-003",
+    "resyn-3084-smt-000"
+  ],
+  "false_accept_rows": [
+    {
+      "answer_extraction_format": "validity_token",
+      "difficulty_buckets": [
+        "easy",
+        "contradiction",
+        "fragment_code"
+      ],
+      "exact_label": "INVALID",
+      "expected_action": "reject",
+      "extracted_answer": "VALID",
+      "failure_mechanism_from_exp3124": "contradiction",
+      "fixture_family": "arithmetic_code_assertions",
+      "label_source": "unit_exact_authority",
+      "live_decision": "accept",
+      "live_model_verdict": "VALID",
+      "mechanism_evidence": {
+        "exact_label": "INVALID",
+        "expected_token_family": "validity_token",
+        "extracted_answer": "VALID",
+        "extracted_token_family": "validity_token",
+        "monitor_failure_mechanism": "contradiction",
+        "monitor_ledger_action": "reject",
+        "prefix_exact_label_covered": true
+      },
+      "monitor_comparison": {
+        "candidate_extracted_answer": "VALID",
+        "candidate_live_decision": "accept",
+        "event_indices": [
+          10,
+          11,
+          12,
+          13
+        ],
+        "exact_label": "INVALID",
+        "expected_action": "reject",
+        "failure_mechanism": "contradiction",
+        "final_answer_consistent_with_exact": false,
+        "final_answer_consistent_with_ledger": false,
+        "is_monitor_violation": true,
+        "ledger_action": "reject",
+        "ledger_source": "exact_label_fallback",
+        "monitor_event_count": 4
+      },
+      "monitor_events": [
+        {
+          "event_index": 10,
+          "event_type": "constraint_ledger",
+          "payload": {
+            "constraint_count": 0,
+            "constraints": [],
+            "ledger_action": "reject",
+            "ledger_source": "exact_label_fallback"
+          }
+        },
+        {
+          "event_index": 11,
+          "event_type": "exact_test_z3_result",
+          "payload": {
+            "exact_label": "INVALID",
+            "expected_action": "reject",
+            "label_source": "unit_exact_authority",
+            "solver_label": "invalid"
+          }
+        },
+        {
+          "event_index": 12,
+          "event_type": "candidate_final_answer",
+          "payload": {
+            "expected_action": "reject",
+            "extracted_answer": "VALID",
+            "final_answer_consistent_with_exact": false,
+            "final_answer_consistent_with_ledger": false,
+            "has_returned_answer": true,
+            "ledger_action": "reject",
+            "live_decision": "accept",
+            "prompt_hash": "arith-prompt",
+            "raw_output_hash": "resyn-3084-arith-003-raw"
+          }
+        },
+        {
+          "event_index": 13,
+          "event_type": "drift_classification",
+          "payload": {
+            "exact_label": "INVALID",
+            "expected_action": "reject",
+            "failure_mechanism": "contradiction",
+            "is_monitor_violation": true,
+            "ledger_action": "reject",
+            "live_decision": "accept"
+          }
+        }
+      ],
+      "must_be_in_rerun_regression": true,
+      "prefix_bound_comparison": {
+        "bound_width": 0.002016,
+        "covered_fixture_labels": [
+          "INVALID",
+          "SAT",
+          "VALID"
+        ],
+        "direct_fixture_match": false,
+        "exact_label_covered": true,
+        "limitation": "bounded_fixture_conditioned_prefix_frontier_not_live_llm_correctness",
+        "prefix_artifact_ready": true
+      },
+      "primary_mechanism": "contradiction miss",
+      "prior_panel_row": {
+        "row_index": 7,
+        "source_fixture_id": "resyn-3084-arith-003"
+      },
+      "prompt_hash": "arith-prompt",
+      "row_id": "resyn-3084-arith-003",
+      "source_prompt_payload_sha256": "arith-source"
+    },
+    {
+      "answer_extraction_format": "sat_token",
+      "difficulty_buckets": [
+        "medium",
+        "contradiction"
+      ],
+      "exact_label": "UNSAT",
+      "expected_action": "reject",
+      "extracted_answer": "VALID",
+      "failure_mechanism_from_exp3124": "contradiction",
+      "fixture_family": "smt_constraints",
+      "label_source": "unit_exact_authority",
+      "live_decision": "accept",
+      "live_model_verdict": "VALID",
+      "mechanism_evidence": {
+        "exact_label": "UNSAT",
+        "expected_token_family": "sat_token",
+        "extracted_answer": "VALID",
+        "extracted_token_family": "validity_token",
+        "monitor_failure_mechanism": "contradiction",
+        "monitor_ledger_action": "reject",
+        "prefix_exact_label_covered": false
+      },
+      "monitor_comparison": {
+        "candidate_extracted_answer": "VALID",
+        "candidate_live_decision": "accept",
+        "event_indices": [
+          10,
+          11,
+          12,
+          13
+        ],
+        "exact_label": "UNSAT",
+        "expected_action": "reject",
+        "failure_mechanism": "contradiction",
+        "final_answer_consistent_with_exact": false,
+        "final_answer_consistent_with_ledger": false,
+        "is_monitor_violation": true,
+        "ledger_action": "reject",
+        "ledger_source": "exact_label_fallback",
+        "monitor_event_count": 4
+      },
+      "monitor_events": [
+        {
+          "event_index": 10,
+          "event_type": "constraint_ledger",
+          "payload": {
+            "constraint_count": 0,
+            "constraints": [],
+            "ledger_action": "reject",
+            "ledger_source": "exact_label_fallback"
+          }
+        },
+        {
+          "event_index": 11,
+          "event_type": "exact_test_z3_result",
+          "payload": {
+            "exact_label": "UNSAT",
+            "expected_action": "reject",
+            "label_source": "unit_exact_authority",
+            "solver_label": "unsat"
+          }
+        },
+        {
+          "event_index": 12,
+          "event_type": "candidate_final_answer",
+          "payload": {
+            "expected_action": "reject",
+            "extracted_answer": "VALID",
+            "final_answer_consistent_with_exact": false,
+            "final_answer_consistent_with_ledger": false,
+            "has_returned_answer": true,
+            "ledger_action": "reject",
+            "live_decision": "accept",
+            "prompt_hash": "smt-prompt",
+            "raw_output_hash": "resyn-3084-smt-000-raw"
+          }
+        },
+        {
+          "event_index": 13,
+          "event_type": "drift_classification",
+          "payload": {
+            "exact_label": "UNSAT",
+            "expected_action": "reject",
+            "failure_mechanism": "contradiction",
+            "is_monitor_violation": true,
+            "ledger_action": "reject",
+            "live_decision": "accept"
+          }
+        }
+      ],
+      "must_be_in_rerun_regression": true,
+      "prefix_bound_comparison": {
+        "bound_width": 0.002016,
+        "covered_fixture_labels": [
+          "INVALID",
+          "SAT",
+          "VALID"
+        ],
+        "direct_fixture_match": false,
+        "exact_label_covered": false,
+        "limitation": "bounded_fixture_conditioned_prefix_frontier_not_live_llm_correctness",
+        "prefix_artifact_ready": true
+      },
+      "primary_mechanism": "SAT/validity-token confusion",
+      "prior_panel_row": {
+        "row_index": 6,
+        "source_fixture_id": "resyn-3084-smt-000"
+      },
+      "prompt_hash": "smt-prompt",
+      "row_id": "resyn-3084-smt-000",
+      "source_prompt_payload_sha256": "smt-source"
+    }
+  ],
+  "fragment_monitor_summary": {
+    "contradiction_count": 2,
+    "fragment_time_monitor_v1_ready": true,
+    "ledger_consistency_rate": 0.666667,
+    "monitor_violation_count": 2,
+    "satisfiable_drift_count": 0
+  },
+  "honest_verdict": "complete: false_accept_autopsy_v1_ready=true; source_false_accept_rate=0.5; false_accept_row_ids=['resyn-3084-arith-003', 'resyn-3084-smt-000']",
+  "inference_substrate": {
+    "executes_conductor": false,
+    "executes_hardware": false,
+    "executes_models": false,
+    "executes_repairs": false,
+    "executes_solvers": false,
+    "executes_verifiers": false,
+    "fresh_live_model_calls": 0,
+    "kind": "aggregation_from_checked_in_verifier_artifacts",
+    "local_repo_only": true,
+    "no_live_llm_inference": true,
+    "source": "results/experiment_3124_difficulty_stratified_live_sota_verifier_panel_v6.json",
+    "upstream_live_model_calls_reused": 5
+  },
+  "matrix_capstone_context": {
+    "capstone_next_top_gap": "live_verifier_false_accept_repair_gate",
+    "capstone_ready": true,
+    "capstone_verifier_claim_status": "blocked_false_accept_rate_0.5_no_headline_lift",
+    "matrix_false_accept_rate": 0.5,
+    "matrix_repair_gate_state": "blocked_false_accept",
+    "matrix_v25_ready": true
+  },
+  "milestone": "2026.05.291",
+  "no_live_repair_rerun": true,
+  "no_new_board_flash": true,
+  "no_new_hardware_run": true,
+  "no_new_model_execution": true,
+  "no_new_solver_run": true,
+  "no_new_synthesis_run": true,
+  "no_new_verifier_run": true,
+  "ops_changelog_updated": false,
+  "ops_docs_reconciliation_left_to_conductor": true,
+  "ops_status_updated": false,
+  "prefix_bound_summary": {
+    "accepted_prefix_count": 2,
+    "bound_width": 0.002016,
+    "explored_prefix_count": 453,
+    "fixture_count": 3,
+    "limitations": [
+      "Bounds apply only to the finite fixture-conditioned token prior."
+    ],
+    "lower_bound": 0.004031,
+    "prefix_closed_bound_pilot_ready": true,
+    "upper_bound": 0.006047
+  },
+  "prompt_ambiguity_count": 0,
+  "recommended_contract_changes": [
+    "Add row-level regression fixtures for known .291 false accepts: resyn-3084-arith-003, resyn-3084-smt-000.",
+    "Require token-family constraints: SAT/UNSAT prompts must reject VALID/INVALID outputs and validity prompts must reject SAT/UNSAT outputs.",
+    "Require every accept on an exact-reject row to carry ledger-backed contradiction evidence before headline verifier or repair gates can open.",
+    "Require monitor replay fields in reruns: ledger_action, exact_label, extracted_answer, live_decision, and final_answer_consistent_with_ledger."
+  ],
+  "recomputed_false_accept_rate": 0.5,
+  "regression_row_set": [
+    "resyn-3084-arith-003",
+    "resyn-3084-smt-000"
+  ],
+  "run_date": "20260526",
+  "schema": "carnot.false_accept_root_cause_autopsy.v291.v1",
+  "scripts_research_conductor_modified": false,
+  "source_artifacts": [
+    {
+      "path": "AGENTS.md",
+      "present": false,
+      "required": false,
+      "role": "agents_repo_instructions",
+      "sha256": null,
+      "source_type": "md"
+    },
+    {
+      "path": "CODEX.md",
+      "present": false,
+      "required": false,
+      "role": "codex_repo_workflow",
+      "sha256": null,
+      "source_type": "md"
+    },
+    {
+      "path": "CLAUDE.md",
+      "present": false,
+      "required": false,
+      "role": "claude_repo_workflow",
+      "sha256": null,
+      "source_type": "md"
+    },
+    {
+      "path": "research-references.md",
+      "present": false,
+      "required": false,
+      "role": "research_references",
+      "sha256": null,
+      "source_type": "md"
+    },
+    {
+      "path": "results/experiment_3124_difficulty_stratified_live_sota_verifier_panel_v6.json",
+      "present": true,
+      "required": true,
+      "role": "exp3124_live_verifier_rows",
+      "sha256": "a971c7b5cc23dbee2e647e3f7d216cffc9be7a6fe7dcc0adb790a0309787117e",
+      "source_type": "json"
+    },
+    {
+      "path": "results/experiment_3125_prefix_closed_deterministic_verifier_bound_pilot_v1.json",
+      "present": true,
+      "required": false,
+      "role": "exp3125_prefix_bound_evidence",
+      "sha256": "b81cfa53fc8adab407f815dcd47d4d28485d174789f585a83c398bf4fe631330",
+      "source_type": "json"
+    },
+    {
+      "path": "results/experiment_3126_fragment_time_monitor_satisfiable_drift_audit_v1.json",
+      "present": true,
+      "required": false,
+      "role": "exp3126_fragment_monitor_ledger",
+      "sha256": "04c626afcebcec0dcc1ced750ad2195c975012b8c4fda7a3855d059c435bfb89",
+      "source_type": "json"
+    },
+    {
+      "path": "results/experiment_3133_cross_corpus_matrix_v25.json",
+      "present": true,
+      "required": false,
+      "role": "exp3133_matrix_v25_summary",
+      "sha256": "0accc71f4465630692c8582957f6f022d2623b28aa9c6f45ce993698ed5a2d33",
+      "source_type": "json"
+    },
+    {
+      "path": "results/experiment_3134_capstone_v291.json",
+      "present": true,
+      "required": false,
+      "role": "exp3134_capstone_v291_summary",
+      "sha256": "a58e468086dad15c0838b0a2743c7ad0d27ce88932c06054cf718c8829206792",
+      "source_type": "json"
+    },
+    {
+      "path": "results/local_sota_confidence_abstention_panel_3099/rows.jsonl",
+      "present": true,
+      "required": false,
+      "role": "exp3099_prior_panel_rows",
+      "sha256": "680479133641fc93a0569930bcf191ca958b3c9c968216b6bfeeb1b49925c2c9",
+      "source_type": "jsonl"
+    }
+  ],
+  "source_checksums": {
+    "AGENTS.md": null,
+    "CLAUDE.md": null,
+    "CODEX.md": null,
+    "research-references.md": null,
+    "results/experiment_3124_difficulty_stratified_live_sota_verifier_panel_v6.json": "a971c7b5cc23dbee2e647e3f7d216cffc9be7a6fe7dcc0adb790a0309787117e",
+    "results/experiment_3125_prefix_closed_deterministic_verifier_bound_pilot_v1.json": "b81cfa53fc8adab407f815dcd47d4d28485d174789f585a83c398bf4fe631330",
+    "results/experiment_3126_fragment_time_monitor_satisfiable_drift_audit_v1.json": "04c626afcebcec0dcc1ced750ad2195c975012b8c4fda7a3855d059c435bfb89",
+    "results/experiment_3133_cross_corpus_matrix_v25.json": "0accc71f4465630692c8582957f6f022d2623b28aa9c6f45ce993698ed5a2d33",
+    "results/experiment_3134_capstone_v291.json": "a58e468086dad15c0838b0a2743c7ad0d27ce88932c06054cf718c8829206792",
+    "results/local_sota_confidence_abstention_panel_3099/rows.jsonl": "680479133641fc93a0569930bcf191ca958b3c9c968216b6bfeeb1b49925c2c9"
+  },
+  "source_false_accept_count": 2,
+  "source_false_accept_rate": 0.5,
+  "source_live_row_count": 5,
+  "source_reject_denominator": 4,
+  "traceability_updated": false,
+  "verifier_rows": [
+    {
+      "answer_extraction_format": "validity_token",
+      "difficulty_buckets": [
+        "easy"
+      ],
+      "exact_label": "VALID",
+      "expected_action": "accept",
+      "extracted_answer": "VALID",
+      "failure_mechanism_from_exp3124": "no_failure",
+      "fixture_family": "arithmetic_code_assertions",
+      "label_source": "unit_exact_authority",
+      "live_decision": "accept",
+      "live_model_verdict": "VALID",
+      "monitor_events": [],
+      "prior_panel_row": {},
+      "prompt_hash": "resyn-3084-arith-000-prompt",
+      "row_id": "resyn-3084-arith-000",
+      "source_prompt_payload_sha256": "resyn-3084-arith-000-source"
+    },
+    {
+      "answer_extraction_format": "validity_token",
+      "difficulty_buckets": [
+        "easy"
+      ],
+      "exact_label": "INVALID",
+      "expected_action": "reject",
+      "extracted_answer": "INVALID",
+      "failure_mechanism_from_exp3124": "no_failure",
+      "fixture_family": "arithmetic_code_assertions",
+      "label_source": "unit_exact_authority",
+      "live_decision": "reject",
+      "live_model_verdict": "INVALID",
+      "monitor_events": [],
+      "prior_panel_row": {},
+      "prompt_hash": "resyn-3084-arith-001-prompt",
+      "row_id": "resyn-3084-arith-001",
+      "source_prompt_payload_sha256": "resyn-3084-arith-001-source"
+    },
+    {
+      "answer_extraction_format": "validity_token",
+      "difficulty_buckets": [
+        "easy",
+        "contradiction",
+        "fragment_code"
+      ],
+      "exact_label": "INVALID",
+      "expected_action": "reject",
+      "extracted_answer": "VALID",
+      "failure_mechanism_from_exp3124": "contradiction",
+      "fixture_family": "arithmetic_code_assertions",
+      "label_source": "unit_exact_authority",
+      "live_decision": "accept",
+      "live_model_verdict": "VALID",
+      "monitor_events": [
+        {
+          "event_index": 10,
+          "event_type": "constraint_ledger",
+          "payload": {
+            "constraint_count": 0,
+            "constraints": [],
+            "ledger_action": "reject",
+            "ledger_source": "exact_label_fallback"
+          }
+        },
+        {
+          "event_index": 11,
+          "event_type": "exact_test_z3_result",
+          "payload": {
+            "exact_label": "INVALID",
+            "expected_action": "reject",
+            "label_source": "unit_exact_authority",
+            "solver_label": "invalid"
+          }
+        },
+        {
+          "event_index": 12,
+          "event_type": "candidate_final_answer",
+          "payload": {
+            "expected_action": "reject",
+            "extracted_answer": "VALID",
+            "final_answer_consistent_with_exact": false,
+            "final_answer_consistent_with_ledger": false,
+            "has_returned_answer": true,
+            "ledger_action": "reject",
+            "live_decision": "accept",
+            "prompt_hash": "arith-prompt",
+            "raw_output_hash": "resyn-3084-arith-003-raw"
+          }
+        },
+        {
+          "event_index": 13,
+          "event_type": "drift_classification",
+          "payload": {
+            "exact_label": "INVALID",
+            "expected_action": "reject",
+            "failure_mechanism": "contradiction",
+            "is_monitor_violation": true,
+            "ledger_action": "reject",
+            "live_decision": "accept"
+          }
+        }
+      ],
+      "prior_panel_row": {
+        "row_index": 7,
+        "source_fixture_id": "resyn-3084-arith-003"
+      },
+      "prompt_hash": "arith-prompt",
+      "row_id": "resyn-3084-arith-003",
+      "source_prompt_payload_sha256": "arith-source"
+    },
+    {
+      "answer_extraction_format": "repairability_token",
+      "difficulty_buckets": [
+        "hard",
+        "fragment_code"
+      ],
+      "exact_label": "REPAIRABLE",
+      "expected_action": "reject",
+      "extracted_answer": "REPAIRABLE",
+      "failure_mechanism_from_exp3124": "no_failure",
+      "fixture_family": "repairable_invalid_candidates",
+      "label_source": "unit_exact_authority",
+      "live_decision": "reject",
+      "live_model_verdict": "REPAIRABLE",
+      "monitor_events": [],
+      "prior_panel_row": {},
+      "prompt_hash": "resyn-3084-repair-json-000-prompt",
+      "row_id": "resyn-3084-repair-json-000",
+      "source_prompt_payload_sha256": "resyn-3084-repair-json-000-source"
+    },
+    {
+      "answer_extraction_format": "sat_token",
+      "difficulty_buckets": [
+        "medium",
+        "contradiction"
+      ],
+      "exact_label": "UNSAT",
+      "expected_action": "reject",
+      "extracted_answer": "VALID",
+      "failure_mechanism_from_exp3124": "contradiction",
+      "fixture_family": "smt_constraints",
+      "label_source": "unit_exact_authority",
+      "live_decision": "accept",
+      "live_model_verdict": "VALID",
+      "monitor_events": [
+        {
+          "event_index": 10,
+          "event_type": "constraint_ledger",
+          "payload": {
+            "constraint_count": 0,
+            "constraints": [],
+            "ledger_action": "reject",
+            "ledger_source": "exact_label_fallback"
+          }
+        },
+        {
+          "event_index": 11,
+          "event_type": "exact_test_z3_result",
+          "payload": {
+            "exact_label": "UNSAT",
+            "expected_action": "reject",
+            "label_source": "unit_exact_authority",
+            "solver_label": "unsat"
+          }
+        },
+        {
+          "event_index": 12,
+          "event_type": "candidate_final_answer",
+          "payload": {
+            "expected_action": "reject",
+            "extracted_answer": "VALID",
+            "final_answer_consistent_with_exact": false,
+            "final_answer_consistent_with_ledger": false,
+            "has_returned_answer": true,
+            "ledger_action": "reject",
+            "live_decision": "accept",
+            "prompt_hash": "smt-prompt",
+            "raw_output_hash": "resyn-3084-smt-000-raw"
+          }
+        },
+        {
+          "event_index": 13,
+          "event_type": "drift_classification",
+          "payload": {
+            "exact_label": "UNSAT",
+            "expected_action": "reject",
+            "failure_mechanism": "contradiction",
+            "is_monitor_violation": true,
+            "ledger_action": "reject",
+            "live_decision": "accept"
+          }
+        }
+      ],
+      "prior_panel_row": {
+        "row_index": 6,
+        "source_fixture_id": "resyn-3084-smt-000"
+      },
+      "prompt_hash": "smt-prompt",
+      "row_id": "resyn-3084-smt-000",
+      "source_prompt_payload_sha256": "smt-source"
+    }
+  ]
+}
