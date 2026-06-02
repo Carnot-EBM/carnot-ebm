@@ -19844,3 +19844,43 @@ The module shall:
 **Then** lambda_min(Sigma) >= 0.1 AND effective_k_participation_ratio >= 3 indicates
 the alpha_t grounding signal survives (G1 GROUNDING-HOLDS); otherwise the ensemble
 has collapsed to fewer independent axes of variation (null-space collapse confirmed).
+
+### REQ-VERIFY-3693: FoVer External De-Entangled Comparator
+
+The repository shall provide a module
+`python/carnot/verify/external_comparator_dependency_vs_deentangled.py` and a
+script `scripts/experiment_3693_external_comparator_dependency_vs_deentangled.py`
+that compare the Exp 3680 dependency-aware FoVer weighting against a published
+de-entangled / class-information-guided external reweighting baseline inspired
+by arXiv:2604.07650.
+- The workflow SHALL score cached FoVer verifier outputs only, using
+  `inference_substrate="verifier_ensemble_against_cached_candidates (principle:
+  scores cached FoVer outputs; no LLM load; no compute-bound marker)."`
+- The workflow SHALL use the same deterministic FoVer splits as Exp 3680 and
+  report dependency-aware, external-comparator, Carnot-current, and Weaver-style
+  AUROCs under the same pooled protocol.
+- The external comparator SHALL be a distinct cross-fitted reweighting method:
+  class-information gain shall guide verifier weights, unconditional
+  score-correlation shall de-entangle redundant verifier axes, and train-fold
+  score orientation shall allow anti-signals without copying Carnot or
+  dependency-aware score vectors.
+- The artifact SHALL include paired dependency-aware minus external-comparator
+  delta bootstrap CI, paired DeLong p-value, a bare top-level
+  `candidate_beats_external_comparator` boolean, an adversarial-verification
+  cleanliness field, and score-vector checksums proving the external score
+  vector is distinct from the dependency-aware score vector.
+- If the FoVer corpus, the four cached verifier scoring paths, or the Exp
+  3667/3680 dependency-aware weighting path is unavailable, the workflow SHALL
+  write `complete: blocked_fover_corpus_or_weightings_unavailable`.
+
+### SCENARIO-VERIFY-3693: External Comparator Narrows Or Confirms Re-Freeze
+
+**Given** the cached FoVer corpus, four verifier score columns, and reproducible
+Exp 3667/3680 dependency-aware weighting
+**When** Exp 3693 computes the class-information-guided de-entangled external
+baseline on the same splits as dependency-aware, Carnot-current, and
+Weaver-style scoring
+**Then** `candidate_beats_external_comparator` is true only when
+dependency-aware AUROC exceeds external-comparator AUROC and the paired delta
+CI excludes zero; otherwise the artifact records the tie/loss/null verdict
+without burying the external baseline result.
