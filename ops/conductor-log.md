@@ -7602,3 +7602,4 @@ web search: https://docs.garak.ai/garak/examples/pr |
 | 2026-06-02 15:46 UTC | Full G4 provenance audit — verify EVERY headline + | OK | 87 passed in 4.84s |
 | 2026-06-02 16:08 UTC | RISK-COVERAGE ABSTENTION characterization of the p | OK | 90 passed in 5.46s |
 | 2026-06-02 16:23 UTC | REPLICATE the headline-class step-error discrimina | OK | 94 passed in 9.56s |
+| 2026-06-02 16:47 UTC | FR-11 continuous self-learning v14 — distribution- | OK | 89 passed in 5.41s |
