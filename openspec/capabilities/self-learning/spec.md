@@ -10515,3 +10515,73 @@ static Carnot weighting.
 | Requirement  | Python | Tests |
 |-------------|--------|-------|
 | REQ-LEARN-3685 | Proposed (python/carnot/fr11/continuous_self_learning_v11.py; scripts/experiment_3685_fr11_continuous_self_learning_v11.py) | Proposed (tests/python/test_experiment_3685_fr11_csl_v11.py) |
+
+---
+
+## REQ-LEARN-3708: FR-11 Continuous Self Learning v13 Multi-Session Template Consolidation
+
+**Given** the FR-11 module and cached per-verifier trace scores with binary
+labels are present, and the cached score stream contains at least three
+distributionally distinct verifier-vote slices
+**When** Exp 3708 runs a closed FR-11 continuous self-learning loop across at
+least three simulated session boundaries
+**Then** the deploy arm SHALL learn one dependency-aware verifier structure per
+session and consolidate those structures into a bounded Tier-2 reusable
+template library
+**And** the library SHALL persist and restore by SHA256 after each session
+boundary
+**And** a consolidated template applied to a fresh held-out session SHALL be
+compared against a cold-start no-template arm on ensemble AUROC
+**And** the artifact SHALL report transfer gain over cold-start, library
+boundedness, persistence round-trip status, collapse status, quality
+maintenance, and pass-rate-vs-true-accuracy distinctness.
+
+### REQ-LEARN-3708 Sub-requirements
+
+- REQ-LEARN-3708-1: Runnable artifacts SHALL use cached traces only, with
+  `inference_substrate` equal to
+  `verifier_ensemble_against_cached_candidates (principle: scores cached traces; no LLM load; no compute-bound marker).`.
+- REQ-LEARN-3708-2: If the FR-11 module, cached per-verifier trace scores, or
+  at least three distributionally distinct session slices are unavailable, the
+  workflow SHALL write the terminal verdict
+  `complete: blocked_fr11_module_or_traces_unavailable`.
+- REQ-LEARN-3708-3: Runnable artifacts SHALL report `n_sessions >= 3` and
+  `n_online_updates >= 200`.
+- REQ-LEARN-3708-4: The acceptance gate SHALL pass only when
+  `template_library_bounded == true`,
+  `structure_persisted_and_restored == true`,
+  `collapse_detected_deploy_arm == false`, and
+  `pass_rate_vs_true_accuracy_distinct_assert == true`.
+- REQ-LEARN-3708-5: Runnable artifacts SHALL include principle annotations for
+  `honest_verdict`, `inference_substrate`, `n_sessions`,
+  `n_online_updates`, `template_library_bounded`,
+  `consolidated_template_transfer_gain_over_cold_start`,
+  `structure_persisted_and_restored`, `collapse_detected_deploy_arm`,
+  `pass_rate_vs_true_accuracy_distinct_assert`, `quality_maintained`,
+  `random_seed`, `reproducibility_checksum`, and `duration_s`.
+- REQ-LEARN-3708-6: The terminal verdict SHALL be
+  `complete: fr11_v13_multi_session_consolidation_transfers_no_collapse_quality_maintained`
+  when the acceptance gate passes, the consolidated template improves held-out
+  AUROC over cold-start, and quality is maintained; otherwise it SHALL be
+  `complete: fr11_v13_consolidation_no_gain_over_cold_start_single_session_sufficient`
+  when the acceptance gate passes without positive transfer gain.
+
+### SCENARIO-LEARN-3708: Consolidated Template Transfers Without Collapse
+
+**Given** three distributionally distinct cached verifier sessions and one
+fresh held-out session with binary labels
+**When** the v13 evaluator learns a dependency structure per session and
+consolidates those structures into a capped template library
+**Then** the library remains at or below its cap, persists and restores with
+matching SHA256 values across the session boundaries, and the consolidated
+deploy template does not collapse onto one verifier
+**And** the deploy arm's pass-rate trajectory is not element-wise identical to
+its true-accuracy trajectory
+**And** the deploy arm's fresh-session AUROC is compared against the cold-start
+no-template AUROC to decide the honest terminal verdict.
+
+## Implementation Status (REQ-LEARN-3708)
+
+| Requirement  | Python | Tests |
+|-------------|--------|-------|
+| REQ-LEARN-3708 | Proposed (python/carnot/fr11/continuous_self_learning_v13.py; scripts/experiment_3708_fr11_continuous_self_learning_v13.py) | Proposed (tests/python/test_experiment_3708_fr11_csl_v13.py) |
