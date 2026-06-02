@@ -15999,3 +15999,79 @@ exclusion manifest and research conductor unmodified.
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-REPORT-3707 | Implemented (`python/carnot/reporting/selection_diagnosis_formal_closure_3707.py`, `scripts/experiment_3707_selection_diagnosis_formal_closure.py`) | Implemented (`tests/python/test_experiment_3707_selection_diagnosis_formal_closure.py`) |
+
+### REQ-REPORT-3713: Archive V339 Convergence And Activate V340 Handoff
+
+The Exp 3713 workflow shall archive milestone `2026.06.339` and confirm that
+`research-roadmap.yaml` is active for milestone `2026.06.340`. It SHALL write
+`results/experiment_3713_archive_v339_activate_v340.json` by aggregating
+existing upstream artifacts, `research-complete.yaml`, `research-roadmap.yaml`,
+and the operator-curated north-star document only. It SHALL NOT run live
+inference, push changes, modify `scripts/research_conductor.py`, modify
+`ops/status.md`, modify `ops/changelog.md`, modify `_bmad/traceability.md`, or
+place any GGUF, CUDA, live-model, `model_specs`, or `target_model` marker in
+the terminal artifact.
+
+The workflow SHALL update the single `2026.06.339` block in
+`research-complete.yaml`, or append it if absent, so the archive records the
+defensible converged `.339` state: Exp 3704 measured dependency-aware AUROC
+`0.924869`, external comparator AUROC `0.928737`, and fusion AUROC `0.928462`
+under the frozen five-seed dual-condition protocol, but the paired strongest
+versus runner-up delta CI includes zero, so no candidate robustly beats the
+frozen FoVer headline and the re-freeze thread is a closed negative; Exp 3704's
+critical TAUTOLOGY flag is recorded as benign because
+`strongest_candidate_auroc == external_comparator_auroc` by construction and is
+scheduled for a clean `.340` corrigendum; Exp 3705 records the `.338`
+code-native AUROC `1.0` as a leak with held-out AUROC `0.993243`; Exp 3706
+narrows the shipped detector to math-only with abstain-on-code and E2E green;
+Exp 3707 formally closes the selection diagnosis with retirement recommended;
+Exp 3709 captures the KV260 terminal latency transcript; Exp 3708 records
+FR-11 v13 as positive; Exp 3712 keeps `paper_ready=true`, preserves P0.1 as
+honest-negative, and keeps the frozen FoVer headline at `0.9131`. The archive
+update SHALL be idempotent.
+
+The terminal artifact SHALL include bare top-level values for `honest_verdict`,
+`inference_substrate`, `v339_outcome_recorded_as`,
+`refreeze_closed_negative_recorded`, `exp3704_benign_flag_recorded`,
+`code_leak_recorded`, `selection_diagnosis_closed_recorded`,
+`kv260_terminal_recorded`, `paper_ready_preserved`, `p01_status_preserved`,
+`n_tasks_archived`, `adversarial_verify_clean`, `random_seed`,
+`reproducibility_checksum`, and `duration_s`, plus `field_principles`
+documenting why each required value exists. `inference_substrate` SHALL be
+exactly
+`aggregation_from_upstream_artifacts (principle: a JSON-read + format task, not live inference; 0.0001s floor; carries NO compute-bound marker so it does not false-flag).`
+`adversarial_verify_clean` SHALL be true only after
+`scripts/adversarial_verify.py` reports no critical flag on the written
+artifact. `honest_verdict` SHALL equal
+`complete: archived_v339_convergence_refreeze_closed_negative_code_leak_narrowed_selection_closed_kv260_terminal_v340_active_paper_ready_true_frozen_headline_unchanged`.
+`n_tasks_archived` SHALL equal the full `.339` planned task count, and
+`duration_s` SHALL use the aggregation-task plausibility floor of at least
+`0.0001`.
+
+#### SCENARIO-REPORT-3713: V339 Archive Records Convergence And Activates V340
+
+**Given** the active roadmap declares milestone `2026.06.340`, Exp 3704 reports
+the dependency-aware, external, and fusion re-freeze candidates with a benign
+TAUTOLOGY flag pending `.340` cleanup, Exp 3705 reports the code AUROC `1.0`
+was a leak, Exp 3706 reports the shipped detector was narrowed to math-only
+with abstain-on-code and E2E green, Exp 3707 reports the selection diagnosis
+formally closed, Exp 3708 reports FR-11 v13 positive, Exp 3709 reports a KV260
+terminal latency transcript, and Exp 3712 reports `paper_ready=true`,
+P0.1 honest-negative, and frozen FoVer headline `0.9131` unchanged
+**When** the Exp 3713 workflow runs
+**Then** it writes the required terminal artifact, records all required
+principle-annotated bare fields, confirms `.340` active, archives all `.339`
+tasks exactly once in `research-complete.yaml`, records the re-freeze thread as
+closed-negative rather than replacing the frozen headline, records Exp 3704's
+flag as benign and scheduled for clean `.340` re-emission, records the code
+detector narrowing, records the selection closure, KV260 terminal state, FR-11
+v13 positive state, paper-ready preservation, and P0.1 honest-negative state,
+passes adversarial verification without a critical flag, leaves
+`scripts/research_conductor.py` unchanged, and leaves ops/status/changelog and
+BMAD traceability reconciliation to the conductor.
+
+## Implementation Status (REQ-REPORT-3713)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-3713 | Implemented (`python/carnot/reporting/archive_v339_activate_v340_3713.py`, `scripts/experiment_3713_archive_v339_activate_v340.py`) | Implemented (`tests/python/test_experiment_3713_archive_v339_activate_v340.py`) |
