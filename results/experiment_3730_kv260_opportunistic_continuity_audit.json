@@ -1,0 +1,64 @@
+{
+  "command_probes": {
+    "kv260_ssh": {
+      "combined_output": "",
+      "command": "ssh -o ConnectTimeout=5 -o BatchMode=yes kria true",
+      "duration_s": 4.594564663013443,
+      "exit_code": 0,
+      "stderr": "",
+      "stdout": ""
+    },
+    "kv260_xmutil_listapps": {
+      "combined_output": "xmutil should be called with root privileges. Please try again using 'sudo'.\n",
+      "command": "ssh kria 'xmutil listapps'",
+      "duration_s": 0.8338186690234579,
+      "exit_code": 1,
+      "stderr": "xmutil should be called with root privileges. Please try again using 'sudo'.\n",
+      "stdout": ""
+    },
+    "kv260_xmutil_listapps_sudo": {
+      "combined_output": "                   Accelerator  Accel_type                    Base    Pid   Base_type  #slots(RPU+PL+AIE)    slot->handle\n               carnot_ising_v4    XRT_FLAT         carnot_ising_v4  id_ok    XRT_FLAT             (0+0+0)              -1\n              k24-starter-kits    XRT_FLAT        k24-starter-kits  id_ok    XRT_FLAT             (0+0+0)              -1\n              k26-starter-kits    XRT_FLAT        k26-starter-kits  id_ok    XRT_FLAT             (0+0+0)              -1\n           carnot_ising_v2_n64    XRT_FLAT     carnot_ising_v2_n64  id_ok    XRT_FLAT             (0+0+0)           0->0,\n",
+      "command": "ssh kria 'sudo xmutil listapps'",
+      "duration_s": 0.9997968829702586,
+      "exit_code": 0,
+      "stderr": "",
+      "stdout": "                   Accelerator  Accel_type                    Base    Pid   Base_type  #slots(RPU+PL+AIE)    slot->handle\n               carnot_ising_v4    XRT_FLAT         carnot_ising_v4  id_ok    XRT_FLAT             (0+0+0)              -1\n              k24-starter-kits    XRT_FLAT        k24-starter-kits  id_ok    XRT_FLAT             (0+0+0)              -1\n              k26-starter-kits    XRT_FLAT        k26-starter-kits  id_ok    XRT_FLAT             (0+0+0)              -1\n           carnot_ising_v2_n64    XRT_FLAT     carnot_ising_v2_n64  id_ok    XRT_FLAT             (0+0+0)           0->0,\n"
+    }
+  },
+  "duration_s": 6.4283,
+  "experiment_id": "exp3730",
+  "field_principles": {
+    "duration_s": "Wall-clock plausibility floor.",
+    "honest_verdict": "Terminal prefix; blocked_kv260_ssh_unreachable if the board is unreachable.",
+    "inference_substrate": "An SSH board check, not live inference.",
+    "kv260_ssh_reachable": "The SSH-reachability fact, not host SD-card presence.",
+    "preconditions_checked": "Records the SSH check was actually run before any board operation.",
+    "random_seed": "Determinism precondition.",
+    "reproducibility_checksum": "Content hash catches drift.",
+    "terminal_state_holds": "Confirms the .340 terminal state did not regress; opportunistic, not mandated."
+  },
+  "honest_verdict": "complete: kv260_terminal_state_holds_ssh_reachable_accelerator_loadable_opportunistic_audit",
+  "inference_substrate": "hardware_smoke",
+  "kv260_overlay_loadable": true,
+  "kv260_overlay_name": "carnot_ising_v4",
+  "kv260_ssh_reachable": true,
+  "latency_harness_rerun": false,
+  "mandate_status": "opportunistic_not_mandated",
+  "operator_regression_note": "none",
+  "preconditions_checked": [
+    {
+      "available": true,
+      "checked_before_board_operations": true,
+      "command": "ssh -o ConnectTimeout=5 -o BatchMode=yes kria true",
+      "exit_code": 0,
+      "resource": "kv260_ssh"
+    }
+  ],
+  "random_seed": 3730,
+  "reproducibility_checksum": "b04efb89048c1a79c3c6cd1fc9795f31aa5568a451923dfea4b4ddaced441549",
+  "schema": "carnot.kv260_opportunistic_continuity_audit.v1",
+  "speedup_claim_made": false,
+  "task_id": "exp3730-kv260-opportunistic-continuity-audit",
+  "terminal_anchor_experiment": "exp3709",
+  "terminal_state_holds": true
+}
