@@ -20566,3 +20566,66 @@ plus disambiguated the re-freeze candidate (read via summarize_artifact.py):
 - **De-entangled / class-information-guided reweighting (arXiv:2604.07650):** the published external
   reweighting baseline that BEAT the dependency-aware candidate at exp3693 (0.9287 vs 0.9249) — the
   external bar the `.339` head-to-head must measure at full G1-rigor and try to fuse with.
+
+## 2026-06-02 Post-.339 Planning Sweep (Milestone 2026.06.340)
+
+`.339` was a CONVERGENCE milestone: every major open research thread reached a terminal/settled
+state. Read via `scripts/summarize_artifact.py`:
+
+- **Re-freeze thread CLOSED-NEGATIVE.** exp3704 ran dependency-aware vs the external de-entangled/CIG
+  baseline vs a FUSION under the FROZEN dual-condition protocol. Under full 5-seed dual-condition
+  rigor **no candidate robustly beats frozen 0.9131** (`refreeze_disambiguated_no_candidate_beats_frozen_headline_stays_0_9131`).
+  The .338 single-condition leads (0.9249 / 0.9287) did NOT hold up under the paired dual-condition CI.
+  **The headline stays frozen at 0.9131.** CAVEAT: exp3704 carries a **benign TAUTOLOGY
+  flagged_adversarial** (`strongest_candidate_auroc == external_comparator_auroc` because the strongest
+  candidate IS the external one — a legitimate copy, not two distinct measurements coinciding). The
+  conclusion does not depend on the flagged field, but the milestone record carries a flagged
+  headline-adjacent artifact → `.340` re-emits it clean (corrigendum, exp1850 pattern).
+- **Code signal was a LEAK.** exp3705 leak-audited + held-out-replicated the .338 code-native AUROC=1.0:
+  in-corpus 1.0, **held-out 0.9932 (≥0.99 → still a leak red-flag)** → `code_native_one_point_zero_was_a_leak_code_claim_narrowed_earned`.
+  exp3706 NARROWED the shipped detector back to **math-only-with-abstain-on-code**, E2E green. The
+  product surface is now honest: math discrimination (AUROC ~0.98 operating point) + explicit
+  abstain-on-code.
+- **Selection diagnosis FORMALLY CLOSED.** exp3707 recorded the closure + an operator retirement
+  recommendation (energy SELECTION is settled-bounded; exp3672 earned-negative + two failed diagnoses).
+- **KV260 TERMINAL.** exp3709 captured a non-fabricated on-board Ising-sampler latency transcript (POC
+  functional anchor, no speedup claim) → terminal candidate. Per north-star §3 the per-milestone
+  hardware mandate may now relax to opportunistic.
+- **FR-11 v13** multi-session Tier-2 consolidation transferred to a fresh session without collapse.
+- **paper_ready = TRUE** (G1 FoVer 0.9131 exp2850; G2 CI run 26725185125; G3; G4). **Backend:** gemini
+  still crashes real workloads (exp3703) → keep codex+requires_codex.
+
+**Strategic position for `.340`:** the autonomous loop has converged. The headline is frozen and proven
+(paper_ready=true), and every self-generable research direction (re-freeze, code, selection, P0.1,
+facts, trained-judge-OOD) is settled — mostly as trustworthy negatives. Per the
+`project_energy_selection_thesis_bounded` memory, a genuinely NEW foundation-model thesis needs a
+**human seed**; the loop will not self-initiate one. So `.340` is a **CONVERGENCE & FINALIZATION**
+milestone: clean up the flagged artifact, HARDEN the publication gates from honor-discipline to
+mechanical (ship the G3 narrowing lint; run a full G4 provenance audit), CHARACTERIZE the proven
+discriminator as a deployable risk-coverage ABSTENTION gate (the one sanctioned new framing — distinct
+from the closed SELECTION question), REPLICATE the headline on a FRESH corpus (legitimate G1
+strengthening, not FoVer-overfit), continue FR-11 self-learning, lift the hardware mandate, and SURFACE
+to the operator that the next substantive direction is theirs to seed.
+
+### New references for .340 (selective-prediction / abstention — the sanctioned new framing)
+
+- **Entropy Alone is Insufficient for Safe Selective Prediction in LLMs (arXiv:2603.21172):** shows
+  entropy/uncertainty heuristics fundamentally FAIL as selective-prediction signals for modern LLMs.
+  This is the motivation for an ENERGY-based selective-prediction signal: Carnot's proven 0.9131
+  step-error discriminator is a candidate abstention signal where entropy fails. The `.340`
+  risk-coverage characterization tests exactly this.
+- **SelectLLM: Calibrating LLMs for Selective Prediction — Balancing Coverage and Risk (OpenReview
+  JJPAy8mvrQ):** the coverage/risk trade-off frame + AURC (Area Under Risk-Coverage Curve) and Target
+  Calibration Error as the deployment-facing metrics for the `.340` abstention-gate characterization.
+- **I-CALM: Incentivizing Confidence-Aware Abstention for LLM Hallucination Mitigation
+  (arXiv:2604.03904):** abstention as a hallucination-mitigation mechanism — directly on-mission
+  (escape hallucinations) and the product framing for the math-only-with-abstain detector.
+- **Selective Risk Certification for LLM Outputs via Information-Lift Statistics: PAC-Bayes (arXiv:2509.12527):**
+  PAC-Bayes risk certification for selective prediction — connects to Carnot's existing PAC-Bayes
+  Soft-Gibbs coverage work; a path to a CERTIFIED abstention operating point.
+- **Learning Conformal Abstention Policies for Adaptive Risk Management (arXiv:2502.06884):** RL +
+  conformal prediction to set abstention thresholds with coverage guarantees — a deployable
+  threshold-selection method for the abstention gate.
+- **A Survey of Process Reward Models (arXiv:2510.08049) + Process Reward Agents (arXiv:2604.09482):**
+  current PRM operating-point / step-level deployment practice — the peer frame for positioning the
+  Carnot step-error discriminator's risk-coverage envelope against SOTA PRMs.
