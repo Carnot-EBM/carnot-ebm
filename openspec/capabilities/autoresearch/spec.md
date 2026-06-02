@@ -3408,3 +3408,32 @@ any verifier-vs-SC positive verdict is emitted.
 **Then** the artifact MUST include paired lift estimates with confidence
 intervals and the `hybrid_beats_both` and
 `verifier_beats_sc_where_headroom_exists` booleans.
+
+### REQ-LEARN-3697: FR-11 Continuous Self-Learning v12 Drift Reset and Cross-Session Persistence
+
+The FR-11 continuous self-learning experiment v12 MUST run on cached
+per-verifier scores and labels without live LLM, GGUF, CUDA, or compute-bound
+markers. It MUST simulate at least 200 online updates across a stream with both
+recoverable drift and transient/non-recoverable drift. The deploy arm MUST use
+drift detection, window-gated reset to the last-known-good dependency structure,
+cross-session persistence of that learned structure, and the conservative
+default collapse guard. The control arm MUST represent v11 continuous
+re-estimation without the reset policy. The artifact MUST report the required
+drift, reset, persistence, collapse, quality, non-tautology, checksum, duration,
+and terminal-verdict fields.
+
+Spec: REQ-LEARN-3697, SCENARIO-LEARN-3697
+
+### SCENARIO-LEARN-3697: v12 Drift Reset Persists Structure Without Collapse
+
+**Given** FR-11 cached verifier traces with labels and distributionally distinct
+slices
+**When** Exp 3697 runs the deploy reset arm and the v11 continuous
+re-estimation control arm across recoverable and transient drift
+**Then** it writes
+`results/experiment_3697_fr11_continuous_self_learning_v12.json`
+**And** the artifact honestly classifies one of success, no-gain, or blocked
+without hard-coding a success verdict
+**And** success requires drift detection, transient reset, SHA256 persistence
+round-trip, no deploy collapse, distinct pass-rate and true-accuracy arrays,
+and maintained ensemble quality.

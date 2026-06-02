@@ -1,0 +1,273 @@
+{
+  "acceptance_gate": {
+    "condition": "drift_detected_deploy_arm == true AND reset_triggered_on_transient_drift == true AND structure_persisted_and_restored == true AND collapse_detected_deploy_arm == false AND pass_rate_vs_true_accuracy_distinct_assert == true",
+    "passed": true,
+    "principle": "Drift-reset self-learning is validated only when the deploy arm detects drift, resets on transient drift, persists+restores across a session, does not collapse, and the two metrics are genuinely distinct (not a tautology)."
+  },
+  "adversarial_verify": "clean",
+  "artifact": "experiment_3697_fr11_continuous_self_learning_v12",
+  "collapse_detected_deploy_arm": false,
+  "control_arm": "v11_continuous_reestimation_no_reset",
+  "deploy_arm": "drift_detect_window_gated_reset_to_last_known_good",
+  "deploy_dependency_edges_last_known_good": [
+    {
+      "by_label_correlation": {
+        "0": -0.412172,
+        "1": -0.236358
+      },
+      "conditional_mutual_information": 0.055955,
+      "pair": [
+        "tier0r_curry_howard",
+        "tier0s_arithmetic_gap"
+      ]
+    },
+    {
+      "by_label_correlation": {
+        "0": -0.278752,
+        "1": -0.265273
+      },
+      "conditional_mutual_information": 0.038158,
+      "pair": [
+        "fr11_session_memory",
+        "tier0s_arithmetic_gap"
+      ]
+    },
+    {
+      "by_label_correlation": {
+        "0": -0.044279,
+        "1": -0.159399
+      },
+      "conditional_mutual_information": 0.007842,
+      "pair": [
+        "fr11_session_memory",
+        "tier0u_logical_consistency"
+      ]
+    }
+  ],
+  "deploy_drift_events": [
+    {
+      "detected": true,
+      "end_index": 350,
+      "kind": "recoverable_drift",
+      "policy_action": "reestimate_dependency_structure",
+      "structure_reestimated": true,
+      "vote_distribution_distance": 0.746212
+    },
+    {
+      "detected": true,
+      "end_index": 525,
+      "kind": "transient_drift",
+      "policy_action": "reset_to_last_known_good",
+      "reset_triggered": true,
+      "vote_distribution_distance": 1.230988
+    }
+  ],
+  "drift_detected_deploy_arm": true,
+  "drift_stream": {
+    "projection": "mean_score",
+    "recoverable_start": 175,
+    "restored_start": 525,
+    "transient_start": 350,
+    "verifier_names": [
+      "fr11_session_memory",
+      "tier0r_curry_howard",
+      "tier0s_arithmetic_gap",
+      "tier0u_logical_consistency"
+    ],
+    "vote_distribution_distances": {
+      "baseline_to_recoverable": 0.746212,
+      "recoverable_to_transient": 1.230988,
+      "transient_to_restored": 1.230988
+    }
+  },
+  "duration_s": 0.679795,
+  "field_principles": {
+    "collapse_detected_deploy_arm": "The conservative-default rule must prevent weight collapse (alpha_t grounding).",
+    "drift_detected_deploy_arm": "The deploy arm must detect both injected drifts.",
+    "duration_s": "Plausibility floor.",
+    "honest_verdict": "Terminal prefix for reconciler classification.",
+    "inference_substrate": "verifier_ensemble_against_cached_candidates (principle: scores cached traces; no LLM load; no compute-bound marker).",
+    "n_online_updates": "Sample-size of the self-learning sweep (>=200).",
+    "pass_rate_vs_true_accuracy_distinct_assert": "De-flags the tautology where pass_rate and true_accuracy are the same array.",
+    "post_transient_drift_quality_gain_over_v11": "The forward difference -- does reset-on-transient beat v11's continuous chase through transient drift?",
+    "quality_maintained": "Reset + persistence + collapse-prevention must not cost ensemble quality.",
+    "random_seed": "Determinism precondition.",
+    "reproducibility_checksum": "Drift detection (of the artifact, vs the corpus drift it measures).",
+    "reset_triggered_on_transient_drift": "The v12 forward difference -- the reset policy must fire on the non-recoverable/transient drift.",
+    "structure_persisted_and_restored": "Cross-session Tier-2 persistence -- the learned structure survives a session boundary (SHA256 round-trip)."
+  },
+  "honest_verdict": "complete: fr11_v12_drift_reset_and_cross_session_persistence_no_collapse_quality_maintained",
+  "inference_substrate": "verifier_ensemble_against_cached_candidates (principle: scores cached traces; no LLM load; no compute-bound marker).",
+  "metrics_all": {
+    "deploy": {
+      "auroc": 0.73733,
+      "brier": 0.322507,
+      "ece": 0.384511
+    },
+    "static_carnot": {
+      "auroc": 0.760204,
+      "brier": 0.232621,
+      "ece": 0.307606
+    },
+    "v11_continuous_reestimation_control": {
+      "auroc": 0.501286,
+      "brier": 0.429278,
+      "ece": 0.434018
+    }
+  },
+  "metrics_by_phase": {
+    "baseline": {
+      "deploy": {
+        "auroc": 0.62961,
+        "brier": 0.196519,
+        "ece": 0.140051
+      },
+      "static_carnot": {
+        "auroc": 0.737021,
+        "brier": 0.165605,
+        "ece": 0.21238
+      },
+      "v11_continuous_reestimation_control": {
+        "auroc": 0.62961,
+        "brier": 0.196519,
+        "ece": 0.140051
+      }
+    },
+    "post_transient": {
+      "deploy": {
+        "auroc": 0.975783,
+        "brier": 0.348481,
+        "ece": 0.43742
+      },
+      "static_carnot": {
+        "auroc": 0.960797,
+        "brier": 0.156384,
+        "ece": 0.261151
+      },
+      "v11_continuous_reestimation_control": {
+        "auroc": 0.175676,
+        "brier": 0.577825,
+        "ece": 0.566608
+      }
+    },
+    "recoverable": {
+      "deploy": {
+        "auroc": 0.975783,
+        "brier": 0.348481,
+        "ece": 0.43742
+      },
+      "static_carnot": {
+        "auroc": 0.960797,
+        "brier": 0.156384,
+        "ece": 0.261151
+      },
+      "v11_continuous_reestimation_control": {
+        "auroc": 0.975783,
+        "brier": 0.348481,
+        "ece": 0.43742
+      }
+    },
+    "transient": {
+      "deploy": {
+        "auroc": 0.029117,
+        "brier": 0.396546,
+        "ece": 0.523154
+      },
+      "static_carnot": {
+        "auroc": 0.03792,
+        "brier": 0.452111,
+        "ece": 0.554076
+      },
+      "v11_continuous_reestimation_control": {
+        "auroc": 0.5,
+        "brier": 0.594286,
+        "ece": 0.594286
+      }
+    }
+  },
+  "n_online_updates": 700,
+  "pass_rate_trajectory": [
+    0.900967,
+    0.89656,
+    0.862692,
+    0.845483,
+    0.420162,
+    0.429074,
+    0.865884,
+    0.856645
+  ],
+  "pass_rate_vs_true_accuracy_distinct_assert": true,
+  "post_transient_drift_quality_gain_over_v11": 0.800107,
+  "preconditions_checked": [
+    {
+      "available": true,
+      "detail": "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/fr11",
+      "resource": "fr11_module"
+    },
+    {
+      "available": true,
+      "detail": "line_count=8829; required>=1000",
+      "resource": "cached_traces_with_per_verifier_scores_and_labels"
+    },
+    {
+      "available": true,
+      "detail": "loaded=tier0r_curry_howard,tier0s_arithmetic_gap,tier0u_logical_consistency",
+      "resource": "text_scoring_verifiers"
+    },
+    {
+      "available": true,
+      "detail": "state_files=21; memory_loaded=True",
+      "resource": "fr11_session_memory_verifier"
+    },
+    {
+      "available": true,
+      "detail": "online graph fit, graph learner, and fixed crossfit baseline importable",
+      "resource": "dependency_aware_weighting_implementation"
+    },
+    {
+      "available": true,
+      "detail": "drift stream builder, online re-estimator, and v10 fixed baseline importable",
+      "resource": "drift_aware_online_reestimation_implementation"
+    }
+  ],
+  "quality_maintained": true,
+  "random_seed": 3697,
+  "reproducibility_checksum": "31f2f37cf5647fba4ba6f20ce44222e4aec9a24a615d1f4f664ac888d098137e",
+  "reset_triggered_on_transient_drift": true,
+  "schema": "carnot.fr11_continuous_self_learning_v12",
+  "structure_memory": {
+    "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_3697_fr11_v12_structure_memory.json",
+    "restored_sha256": "9b0975df07f6fcf7d5cb0dcb5192e11c9d96cb77bd6e3dc2a95c39fef6715bdb",
+    "session_boundary": "fresh_python_process",
+    "sha256": "9b0975df07f6fcf7d5cb0dcb5192e11c9d96cb77bd6e3dc2a95c39fef6715bdb"
+  },
+  "structure_persisted_and_restored": true,
+  "true_accuracy_trajectory": [
+    0.772727,
+    0.738636,
+    0.420455,
+    0.420455,
+    0.215909,
+    0.181818,
+    0.431818,
+    0.416667
+  ],
+  "weights_deploy_restored": {
+    "fr11_session_memory": 0.298966,
+    "tier0r_curry_howard": 0.155157,
+    "tier0s_arithmetic_gap": -0.141176,
+    "tier0u_logical_consistency": 0.404701
+  },
+  "weights_last_known_good": {
+    "fr11_session_memory": 0.298966,
+    "tier0r_curry_howard": 0.155157,
+    "tier0s_arithmetic_gap": -0.141176,
+    "tier0u_logical_consistency": 0.404701
+  },
+  "weights_transient_chase_control": {
+    "fr11_session_memory": -0.308291,
+    "tier0r_curry_howard": -0.091558,
+    "tier0s_arithmetic_gap": 0.104401,
+    "tier0u_logical_consistency": -0.49575
+  }
+}
