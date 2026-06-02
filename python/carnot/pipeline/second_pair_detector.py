@@ -4,13 +4,15 @@ The detector fuses two runtime signals: verifier ensemble energy and model
 confidence-derived error score.  It fits calibration on a deterministic train
 split, then reports held-out discrimination, calibration quality, and fixed-FPR
 operating points for each domain.  Math uses the original verifier ensemble
-energy.  Code uses the Exp 3695 code-native AST/runtime verifier score, because
-the older math-transfer score was blind on the balanced code corpus while the
-code-native signal recovered a deployable code operating point.
+energy.  Code is currently an explicit abstention: Exp 3705 found the Exp 3695
+in-corpus code AUROC=1.0 was separable-by-construction leakage and did not pass
+the held-out survival gate, so the shipped surface returns no code verdict
+instead of publishing a noisy or leaked code score.
 
 Spec: REQ-SPOE-3657, REQ-SPOE-3657-ARTIFACT,
       REQ-SPOE-3671, REQ-SPOE-3696,
-      SCENARIO-SPOE-3657, SCENARIO-SPOE-3658, SCENARIO-SPOE-3696
+      REQ-SPOE-3706, SCENARIO-SPOE-3657, SCENARIO-SPOE-3658,
+      SCENARIO-SPOE-3696, SCENARIO-SPOE-3706
 """
 
 from __future__ import annotations
@@ -36,18 +38,27 @@ SHIP_OUTPUT_REL_PATH = Path("results/experiment_3671_ship_second_pair_of_eyes_de
 RANDOM_SEED = 3657
 SHIP_RANDOM_SEED = 3671
 CODE_OPERATING_POINT_SCOPE = (
-    "math_plus_code; math AUROC 0.98/ECE 0.009 preserved; code path uses "
-    "Exp 3695 AST/runtime verifier with code AUROC 1.0 and calibrated 10% FPR "
-    "threshold 0.983914 on the balanced cached code corpus"
+    "math_only_with_code_abstain; math AUROC 0.98/ECE 0.009 preserved; "
+    "Exp 3705 found the Exp 3695 in-corpus code AUROC 1.0 leaked and "
+    "code_signal_survives_heldout=false, so code-domain candidates return no "
+    "code verdict until a non-leaky held-out code operating point is earned"
 )
-CODE_NATIVE_CODE_PATH_ENABLED = True
+CODE_NATIVE_CODE_PATH_ENABLED = False
+CODE_ABSTAIN_ON_CODE = True
+CODE_ABSTAIN_REASON = (
+    "Exp 3705 leak audit set code_signal_survives_heldout=false after finding "
+    "the Exp 3695 in-corpus 1.0 code AUROC was separable-by-construction; the "
+    "shipped detector is narrowed to math-only for product verdicts."
+)
 CODE_NATIVE_OPERATING_POINT = {
-    "source": "results/experiment_3695_code_native_verifier.json",
-    "auroc": 1.0,
-    "auroc_ci": [1.0, 1.0],
-    "fpr_budget": 0.10,
-    "threshold": 0.983914,
-    "calibration": {"brier": 0.033682, "ece": 0.048653},
+    "source": "results/experiment_3705_code_native_leak_audit_heldout.json",
+    "auroc": None,
+    "auroc_ci": None,
+    "fpr_budget": None,
+    "threshold": None,
+    "calibration": {},
+    "abstain_on_code": True,
+    "reason": CODE_ABSTAIN_REASON,
 }
 FPR_BUDGETS = (0.05, 0.10, 0.20)
 MATERIAL_AUROC_LIFT = 0.01
@@ -502,7 +513,8 @@ def build_ship_artifact_from_examples(
 
     start = time.perf_counter() if started_s is None else float(started_s)
     clean = _clean_examples(examples)
-    train, holdout = stratified_train_holdout(clean, seed=SHIP_RANDOM_SEED)
+    ship_clean = _shipped_detector_examples(clean)
+    train, holdout = stratified_train_holdout(ship_clean, seed=SHIP_RANDOM_SEED)
     if not _has_both_classes(train) or not any(
         _has_both_classes(group) for group in _by_domain(holdout).values()
     ):
@@ -525,6 +537,7 @@ def build_ship_artifact_from_examples(
                 "material_win_per_domain": {},
                 "n_examples_per_domain": _n_examples_per_domain(clean),
                 "heldout_examples_per_domain": _n_examples_per_domain(holdout),
+                "code_abstention": _code_abstention_payload(clean),
             }
         )
         artifact["reproducibility_checksum"] = reproducibility_checksum_for_ship(artifact)
@@ -572,6 +585,7 @@ def build_ship_artifact_from_examples(
             "material_win_per_domain": material_wins,
             "n_examples_per_domain": _n_examples_per_domain(clean),
             "heldout_examples_per_domain": _n_examples_per_domain(holdout),
+            "code_abstention": _code_abstention_payload(clean),
             "calibrator": {
                 "method": "logistic",
                 "feature_names": list(detector.feature_names),
@@ -631,7 +645,8 @@ def score_candidates(
     else:
         corpus_status = {"synthetic": {"status": "provided", "n_examples": len(examples)}}
     clean = _clean_examples(examples)
-    train, holdout = stratified_train_holdout(clean, seed=SHIP_RANDOM_SEED)
+    ship_clean = _shipped_detector_examples(clean)
+    train, holdout = stratified_train_holdout(ship_clean, seed=SHIP_RANDOM_SEED)
     if not _has_both_classes(train) or not any(
         _has_both_classes(group) for group in _by_domain(holdout).values()
     ):
@@ -642,43 +657,59 @@ def score_candidates(
         _coerce_candidate_input(candidate, default_domain=default_domain)
         for candidate in candidates
     ]
-    scored_examples = [
-        LabeledDetectorExample(
-            domain=candidate.domain,
-            label=0,
-            ensemble_energy=_candidate_ensemble_energy(candidate, root_path),
-            confidence_error=_candidate_confidence_error(candidate),
-            example_id=candidate.candidate_id,
-        )
-        for candidate in normalized
-    ]
-    probabilities = detector.predict_proba(scored_examples)
-    rows = []
-    for candidate, example, probability in zip(
-        normalized,
-        scored_examples,
-        probabilities,
-        strict=True,
-    ):
-        operating_point = metrics["operating_points"].get(candidate.domain)
-        rows.append(
-            {
+    scoreable: list[tuple[int, CandidateScoreInput, LabeledDetectorExample]] = []
+    rows_by_index: dict[int, JsonDict] = {}
+    for idx, candidate in enumerate(normalized):
+        confidence_error = _candidate_confidence_error(candidate)
+        if _domain_abstains(candidate.domain):
+            rows_by_index[idx] = {
                 "candidate_id": candidate.candidate_id,
                 "domain": candidate.domain,
-                "calibrated_error_score": _round(probability),
-                "ensemble_energy": _round(example.ensemble_energy),
-                "confidence_error": _round(example.confidence_error),
-                "operating_point": operating_point,
+                "calibrated_error_score": None,
+                "ensemble_energy": None,
+                "confidence_error": _round(confidence_error),
+                "operating_point": None,
+                "code_verdict": "no_code_verdict",
+                "abstained": True,
+                "abstain_reason": CODE_ABSTAIN_REASON,
             }
+            continue
+        scoreable.append(
+            (
+                idx,
+                candidate,
+                LabeledDetectorExample(
+                    domain=candidate.domain,
+                    label=0,
+                    ensemble_energy=_candidate_ensemble_energy(candidate, root_path),
+                    confidence_error=confidence_error,
+                    example_id=candidate.candidate_id,
+                ),
+            )
         )
+    probabilities = detector.predict_proba([example for _, _, example in scoreable])
+    for (idx, candidate, example), probability in zip(scoreable, probabilities, strict=True):
+        operating_point = metrics["operating_points"].get(candidate.domain)
+        rows_by_index[idx] = {
+            "candidate_id": candidate.candidate_id,
+            "domain": candidate.domain,
+            "calibrated_error_score": _round(probability),
+            "ensemble_energy": _round(example.ensemble_energy),
+            "confidence_error": _round(example.confidence_error),
+            "operating_point": operating_point,
+            "abstained": False,
+        }
+    rows = [rows_by_index[idx] for idx in range(len(normalized))]
     return {
         "surface": "score_candidates",
         "wired_surface": WIRED_SURFACE,
         "detector_module_path": DETECTOR_MODULE_PATH,
+        "code_operating_point_scope": CODE_OPERATING_POINT_SCOPE,
         "calibration_source": {
             "random_seed": SHIP_RANDOM_SEED,
             "n_examples_per_domain": _n_examples_per_domain(clean),
             "corpus_status": corpus_status,
+            "code_abstention": _code_abstention_payload(clean),
         },
         "domain_metrics": {
             "fused_detector_auroc_per_domain": metrics[
@@ -1192,6 +1223,8 @@ def _candidate_ensemble_energy(candidate: CandidateScoreInput, root: Path) -> fl
     if candidate.ensemble_energy is not None:
         return float(candidate.ensemble_energy)
     domain = candidate.domain.lower()
+    if _domain_abstains(domain):
+        raise ValueError("code-domain detector is narrowed to no-code-verdict abstention")
     if domain == "code":
         rows = [
             {
@@ -1291,6 +1324,15 @@ def _load_code_examples(
             "path": str(corpus_path),
             "balanced_exp3658": bool(use_balanced_code_corpus),
         }
+    if use_balanced_code_corpus and CODE_ABSTAIN_ON_CODE and "ensemble_scores" not in overrides:
+        return [], {
+            "status": "abstained",
+            "reason": CODE_ABSTAIN_REASON,
+            "path": str(corpus_path),
+            "n_examples": len(rows),
+            "balanced_exp3658": True,
+            "code_native_exp3695": False,
+        }
     if "ensemble_scores" in overrides:
         ensemble_scores = [float(score) for score in overrides["ensemble_scores"]]
         code_native_scored = False
@@ -1372,6 +1414,26 @@ def _clean_examples(examples: Sequence[LabeledDetectorExample]) -> list[LabeledD
                 )
             )
     return clean
+
+
+def _domain_abstains(domain: str) -> bool:
+    return CODE_ABSTAIN_ON_CODE and str(domain).lower() == "code"
+
+
+def _shipped_detector_examples(
+    examples: Sequence[LabeledDetectorExample],
+) -> list[LabeledDetectorExample]:
+    return [example for example in examples if not _domain_abstains(example.domain)]
+
+
+def _code_abstention_payload(examples: Sequence[LabeledDetectorExample]) -> JsonDict:
+    n_code = sum(1 for example in examples if str(example.domain).lower() == "code")
+    return {
+        "abstain_on_code": bool(CODE_ABSTAIN_ON_CODE),
+        "code_verdict": "no_code_verdict" if CODE_ABSTAIN_ON_CODE else "scored",
+        "reason": CODE_ABSTAIN_REASON if CODE_ABSTAIN_ON_CODE else None,
+        "n_code_examples_seen": n_code,
+    }
 
 
 def _feature_array(examples: Sequence[LabeledDetectorExample]) -> np.ndarray:

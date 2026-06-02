@@ -1,7 +1,8 @@
 """Tests for the Phase-1 shipped second-pair detector surface.
 
 Spec: REQ-SPOE-3671, REQ-SPOE-3671-ARTIFACT,
-      SCENARIO-SPOE-3671, SCENARIO-SPOE-3672, SCENARIO-SPOE-3673.
+      SCENARIO-SPOE-3671, SCENARIO-SPOE-3672, SCENARIO-SPOE-3673,
+      REQ-SPOE-3706.
 """
 
 from __future__ import annotations
@@ -57,7 +58,7 @@ def _domain_examples(domain: str, outcome: str, *, n: int = 80) -> list[LabeledD
             "ships_math_and_code",
             _domain_examples("math", "fusion_wins") + _domain_examples("code", "fusion_wins"),
             True,
-            "complete: second_pair_of_eyes_detector_shipped_math_strong_code_honest_e2e_green",
+            "complete: second_pair_of_eyes_detector_shipped_math_only_code_weak_documented_e2e_green",
             True,
         ),
         (
@@ -150,7 +151,7 @@ def test_scenario_spoe_3672_score_candidates_returns_calibrated_operating_point(
 def test_scenario_spoe_3672_score_candidates_mapping_and_computed_energy(
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
-    """SCENARIO-SPOE-3672/3696: mapping inputs and code-native fallbacks are scored."""
+    """SCENARIO-SPOE-3672/3706: mapping inputs score; code abstains."""
 
     from carnot.pipeline import second_pair_detector as spd
 
@@ -189,7 +190,10 @@ def test_scenario_spoe_3672_score_candidates_mapping_and_computed_energy(
     assert scores["mapping-math"]["ensemble_energy"] == pytest.approx(0.33)
     assert scores["mapping-math"]["confidence_error"] == pytest.approx(0.75)
     assert scores["default-domain"]["domain"] == "math"
-    assert scores["code-computed"]["ensemble_energy"] == pytest.approx(0.77)
+    assert scores["code-computed"]["code_verdict"] == "no_code_verdict"
+    assert scores["code-computed"]["abstained"] is True
+    assert scores["code-computed"]["ensemble_energy"] is None
+    assert scores["code-computed"]["calibrated_error_score"] is None
     assert scores["code-computed"]["confidence_error"] == pytest.approx(0.5)
 
 
