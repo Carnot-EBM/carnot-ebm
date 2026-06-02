@@ -10443,3 +10443,75 @@ maintained.
 | Requirement  | Python | Tests |
 |-------------|--------|-------|
 | REQ-LEARN-3673 | Proposed (python/carnot/fr11/continuous_self_learning_v10.py; scripts/experiment_3673_fr11_continuous_self_learning_v10.py) | Proposed (tests/python/test_experiment_3673_fr11_csl_v10.py) |
+
+---
+
+## REQ-LEARN-3685: FR-11 Continuous Self Learning v11 Drift-Aware Online Dependency Re-estimation
+
+**Given** the FR-11 module and cached per-verifier trace scores with binary
+labels are present, and the cached score stream contains two
+distributionally-distinct verifier-vote slices
+**When** Exp 3685 runs a closed FR-11 continuous self-learning loop over at
+least 200 cached examples with an injected mid-stream verifier-vote
+distribution shift
+**Then** the deploy arm SHALL explicitly detect verifier-vote distribution
+drift and re-estimate the dependency structure online after the drift point
+**And** the deploy arm SHALL keep the v10 conservative default,
+uncertainty-gated update rule, and collapse guard so no single verifier weight
+concentrates at 0 or 1
+**And** the control arm SHALL run a naive online update without drift detection
+or the guard, so single-verifier collapse or adaptation failure is visible as a
+positive control
+**And** the artifact SHALL report pre-drift and post-drift AUROC for the deploy
+arm, control arm, v10 fixed-structure online baseline, and static Carnot
+baseline, plus the post-drift AUROC gain over v10, quality maintenance,
+collapse status, drift-detection status, and pass-rate-vs-true-accuracy
+distinctness.
+
+### REQ-LEARN-3685 Sub-requirements
+
+- REQ-LEARN-3685-1: Runnable artifacts SHALL use cached traces only, with
+  `inference_substrate` equal to
+  `verifier_ensemble_against_cached_candidates (principle: scores cached traces; no LLM load).`.
+- REQ-LEARN-3685-2: If the FR-11 module, cached per-verifier trace scores, or
+  two distributionally-distinct verifier-vote slices are unavailable, the
+  workflow SHALL write the terminal verdict
+  `complete: blocked_fr11_module_or_traces_unavailable`.
+- REQ-LEARN-3685-3: `n_online_updates` SHALL be at least 200 for runnable
+  artifacts.
+- REQ-LEARN-3685-4: The acceptance gate SHALL pass only when
+  `drift_detected_deploy_arm == true`,
+  `collapse_detected_deploy_arm == false`,
+  `collapse_detected_control == true`, and
+  `pass_rate_vs_true_accuracy_distinct_assert == true`.
+- REQ-LEARN-3685-5: Runnable artifacts SHALL include principle annotations for
+  `honest_verdict`, `inference_substrate`, `n_online_updates`,
+  `drift_detected_deploy_arm`, `collapse_detected_deploy_arm`,
+  `collapse_detected_control`, `post_drift_auroc_gain_over_v10`,
+  `pass_rate_vs_true_accuracy_distinct_assert`, `quality_maintained`,
+  `random_seed`, `reproducibility_checksum`, and `duration_s`.
+- REQ-LEARN-3685-6: The terminal verdict SHALL be
+  `complete: fr11_v11_drift_aware_online_dependency_aware_recovers_no_collapse_quality_maintained`
+  when the acceptance gate passes, quality is maintained, and the drift-aware
+  deploy arm improves post-drift AUROC over the v10 fixed-structure online
+  baseline, otherwise
+  `complete: fr11_v11_no_gain_over_v10_fixed_structure_online_sufficient`.
+
+### SCENARIO-LEARN-3685: Drift-Aware Re-estimation Recovers Without Collapse
+
+**Given** cached verifier scores whose first slice and second slice have
+different verifier-vote distributions
+**When** the v11 evaluator streams the first slice before the second slice
+**Then** the deploy arm detects the mid-stream drift, re-learns a dependency
+structure using post-drift evidence, keeps verifier weights bounded away from
+single-verifier collapse, and reports pass-rate and true-accuracy trajectories
+that are not element-wise identical
+**And** the naive control arm collapses to one verifier while the deploy arm's
+post-drift AUROC is compared against v10 fixed-structure online weighting and
+static Carnot weighting.
+
+## Implementation Status (REQ-LEARN-3685)
+
+| Requirement  | Python | Tests |
+|-------------|--------|-------|
+| REQ-LEARN-3685 | Proposed (python/carnot/fr11/continuous_self_learning_v11.py; scripts/experiment_3685_fr11_continuous_self_learning_v11.py) | Proposed (tests/python/test_experiment_3685_fr11_csl_v11.py) |
