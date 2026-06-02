@@ -1,0 +1,251 @@
+{
+  "adversarial_verify_clean": true,
+  "adversarial_verify_report": {
+    "artifact": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_3701_capstone_and_g_gate_v338.json",
+    "exp_id": null,
+    "flag_count": 0,
+    "flags": [],
+    "honest_verdict": "complete: capstone_v338_refreeze_reemitted_clean_for_operator_external_ties_or_l",
+    "loaded": true,
+    "max_severity": -1,
+    "title": ""
+  },
+  "candidate_beats_external_comparator": "ties_or_loses",
+  "cited_upstream_artifacts": [
+    {
+      "adversarial_verify": "clean",
+      "honest_verdict": "complete: refreeze_package_reemitted_clean_for_operator_frozen_headline_unchanged",
+      "path": "results/experiment_3692_refreeze_package_clean_reemit.json",
+      "sha256": "d3724c68bac7500d34b3c1f0f71515216d05ba21ef1eae0d502f548ed0270716"
+    },
+    {
+      "adversarial_verify": "clean",
+      "honest_verdict": "complete: dependency_aware_candidate_ties_or_loses_external_baseline_refreeze_narrowed",
+      "path": "results/experiment_3693_external_comparator_dependency_vs_deentangled.json",
+      "sha256": "28eb1aace291b04e832051f50e8a380d577396c5605ec57c3eaf3d570b4b36cf"
+    },
+    {
+      "adversarial_verify": "clean",
+      "honest_verdict": "complete: blocked_no_multi_candidate_corpus",
+      "path": "results/experiment_3694_selection_gap_proper_rediagnosis.json",
+      "sha256": "235cd9c2ee6585fea9d69d00bc0b304605ab436e7b31c85d942cfeea18df40dc"
+    },
+    {
+      "adversarial_verify": "clean",
+      "honest_verdict": "complete: code_native_signal_recovered_beats_chance_floor",
+      "path": "results/experiment_3695_code_native_verifier.json",
+      "sha256": "0da7520fc802b93e398ed7d62abc0cba8f5feebe9458fbece220e594647554ca"
+    },
+    {
+      "adversarial_verify": "clean",
+      "honest_verdict": "complete: detector_reshipped_math_plus_code_operating_point_e2e_green",
+      "path": "results/experiment_3696_reship_detector_math_plus_code.json",
+      "sha256": "660350717b9e197c5134ca104f7335dd0b5e32eaaf24b255579c7dbc191fc819"
+    },
+    {
+      "adversarial_verify": "clean",
+      "honest_verdict": "complete: fr11_v12_drift_reset_and_cross_session_persistence_no_collapse_quality_maintained",
+      "path": "results/experiment_3697_fr11_continuous_self_learning_v12.json",
+      "sha256": "d9a20985a1959370df446c83c6e37a9fb1997a723d9c61db4f1b5ad5b6e3fbee"
+    }
+  ],
+  "code_detector": {
+    "code_native_auroc": 1.0,
+    "code_operating_point_auroc": 1.0,
+    "code_signal_recovered": true,
+    "exp3695_flagged_or_live_critical": false,
+    "exp3696_flagged_or_live_critical": false,
+    "exp3696_reship_status": "reshipped",
+    "status": "code_native_recovered_reshipped"
+  },
+  "code_detector_status": "code_native_recovered_reshipped",
+  "duration_s": 0.36089,
+  "external_comparator": {
+    "dependency_aware_auroc": 0.924869,
+    "dependency_vs_external_delta_ci": {
+      "bootstrap_seeds": [
+        42,
+        137,
+        271,
+        314,
+        1729
+      ],
+      "ci95": [
+        -0.006204,
+        -0.001577
+      ],
+      "n_bootstrap_per_seed": 200,
+      "point": -0.003868,
+      "seed_mean_deltas": [
+        -0.003786,
+        -0.003886,
+        -0.003971,
+        -0.003768,
+        -0.003751
+      ]
+    },
+    "external_comparator_auroc": 0.928737,
+    "flagged_or_live_critical": false,
+    "leak_risk": false,
+    "verdict": "ties_or_loses"
+  },
+  "facts_generalization_retired": true,
+  "field_principles": {
+    "adversarial_verify_clean": "True iff this capstone passes adversarial_verify with no DURATION_TOO_SHORT/critical flag -- the exp3689 fix; a flagged capstone does not count as a clean milestone close.",
+    "candidate_beats_external_comparator": "yes / ties_or_loses / not_measured -- does the dependency-aware candidate beat the published external baseline (exp3693)?",
+    "cited_upstream_artifacts": "sha256 provenance (G4).",
+    "code_detector_status": "code_native_recovered_reshipped / code_remains_math_only_earned / not_measured -- did a code-native signal recover the detector (exp3695/3696)?",
+    "duration_s": "Plausibility floor.",
+    "facts_generalization_retired": "Records facts-generalization as RETIRED (exp3670 same-verdict on REAL RAGTruth).",
+    "fr11_v12_result": "Whether the drift-reset + cross-session-persistence self-learning succeeded without collapse (exp3697).",
+    "frozen_headline_unchanged": "True iff the publication gate still reads 0.9131 -- a dependency-aware win is a candidate, never a silent swap.",
+    "g1": "Headline measured (FoVer 0.9131, 5-seed, CI, adversarial-clean).",
+    "g2": "Independently reproduced (CI runner 26725185125).",
+    "g3": "Prose narrowing-clean.",
+    "g4": "Numbers trace to primary artifacts.",
+    "honest_verdict": "Terminal prefix for reconciler classification.",
+    "inference_substrate": "aggregation_from_upstream_artifacts (principle: reads the gate script + artifacts; no live inference; no compute-bound marker so it does not false-flag like exp3689).",
+    "p01_status": "P0.1 stays honest-negative; do not re-assert a positive.",
+    "paper_ready": "G1 and G2 and G3 and G4 -- must remain true; the milestone does not regress the gate.",
+    "paper_v6_forbidden_claims": "Overclaims to avoid (including: do NOT cite the dependency-aware win as the headline until re-frozen + re-reproduced).",
+    "paper_v6_safe_claims": "Narrowing-clean claims.",
+    "random_seed": "Determinism precondition.",
+    "refreeze_package_status": "reemitted_clean_for_operator / still_flagged / not_prepared -- whether exp3692 produced a clean operator-actionable package; the frozen 0.9131 stays frozen regardless.",
+    "reproducibility_checksum": "Drift detection.",
+    "selection_gap_verdict": "closed_new_method / fundamental_decoupling / not_measured -- the PROPER discrimination-vs-selection diagnosis (exp3694), now non-degenerate.",
+    "trained_judge_ood_retired": "Records the trained-judge-OOD hypothesis as retired (exp3659 same-verdict).",
+    "unmet_gates": "Report which gates are unmet, not a count (publication_blocker_count is retired).",
+    "verifier_value_scope": "The scoped product claim after .338: math DISCRIMINATION (frozen headline) + code (math+code if recovered, else honestly math-only), facts RETIRED, selection (closed or fundamental per exp3694)."
+  },
+  "flagged_upstream_artifacts_excluded": [],
+  "fr11_v12": {
+    "collapse_detected_deploy_arm": false,
+    "drift_detected_deploy_arm": true,
+    "flagged_or_live_critical": false,
+    "quality_maintained": true,
+    "reset_triggered_on_transient_drift": true,
+    "result": "drift_reset_and_cross_session_persistence_no_collapse_quality_maintained",
+    "structure_persisted_and_restored": true
+  },
+  "fr11_v12_result": "drift_reset_and_cross_session_persistence_no_collapse_quality_maintained",
+  "frozen_fover_headline_auroc": 0.9131,
+  "frozen_headline_unchanged": true,
+  "g1": true,
+  "g2": true,
+  "g3": true,
+  "g4": true,
+  "honest_verdict": "complete: capstone_v338_refreeze_reemitted_clean_for_operator_external_ties_or_loses_selection_not_measured_detector_code_code_native_recovered_reshipped_paper_ready_true_frozen_headline_unchanged",
+  "inference_substrate": "aggregation_from_upstream_artifacts",
+  "ops_docs_reconciliation_left_to_conductor": true,
+  "p01_status": "honest-negative",
+  "paper_ready": true,
+  "paper_v6_forbidden_claims": [
+    "Do not cite the dependency-aware win as the headline until re-frozen + re-reproduced.",
+    "Do not silently replace the frozen FoVer 0.9131 headline.",
+    "Do not describe a re-freeze package as operator-ready unless Exp 3692 is live-clean.",
+    "Do not claim the dependency-aware candidate beats the external comparator unless Exp 3693 measured it cleanly.",
+    "Do not re-assert P0.1 as positive; it remains honest-negative.",
+    "Do not re-assert facts-generalization or trained-judge-OOD; both are retired.",
+    "Do not read missing gated-task fields as None and synthesize a result around them.",
+    "Treat any AUROC >= 0.99 on n>=1000 as a leak unless explicit leak-free evidence is present."
+  ],
+  "paper_v6_safe_claims": [
+    "FoVer headline remains frozen at 0.9131 AUROC with G1-G4 satisfied.",
+    "P0.1 remains honest-negative; no positive is re-asserted.",
+    "Facts-generalization and trained-judge-OOD are retired and not re-asserted.",
+    "Dependency-aware weighting has a clean operator re-freeze package, but remains only a headline-advancement candidate pending operator action + CI re-reproduction.",
+    "External comparator verdict: ties_or_loses.",
+    "Selection-gap verdict: not_measured.",
+    "Code detector status: code_native_recovered_reshipped.",
+    "FR-11 v12 result: drift_reset_and_cross_session_persistence_no_collapse_quality_maintained."
+  ],
+  "publication_gate": {
+    "G1": {
+      "detail": "FoVer dual-condition AUROC artifact present (experiment_2850_fover_dual_condition_integrity_v4.json); CI reported=True",
+      "pass": true,
+      "source": "experiment_2850_fover_dual_condition_integrity_v4.json"
+    },
+    "G2": {
+      "detail": "reproducer confirmed: GitHub Actions workflow 'FoVer Headline Independent Reproducer' (.github/workflows/reproduce-fover-headline.yml), run 26725185125 on Carnot-EBM/carnot-ebm, 2026-05-31, conclusion=success. Clean ubuntu-latest runner, fresh CPU-only install from a clean checkout (non-operator environment), recomputed the FoVer headline AUROC via scripts/reproduce_fover_headline.py and asserted the published CIs: condition_A (production) AUROC in [0.9027, 0.9235] and learning_contribution in [0.0125, 0.0245] \u2014 both PASS. This is a CI-run independent reproducer per the Phase-1 ship gate ('could be a teammate, a CI run, or an external user'). Internally further de-risked by exp3430 (fresh git worktree + venv) and the local run on 2026-05-31 (AUROC 0.9131 within CI). NOTE: G2 attests the FoVer verifier-ensemble headline reproduces; it does NOT attest the broader energy-descent existential claim, which remains an honest-negative (Route-1/Route-2 bounded). Run: https://github.com/Carnot-EBM/carnot-ebm/actions/runs/26725185125",
+      "pass": true
+    },
+    "G3": {
+      "detail": "no retracted phrasings asserted as live claims",
+      "hits": [],
+      "pass": true
+    },
+    "G4": {
+      "detail": "experiment_2850_fover_dual_condition_integrity_v4.json: random_seed/seeds=True, reproducibility_checksum=True",
+      "pass": true,
+      "source": "experiment_2850_fover_dual_condition_integrity_v4.json"
+    }
+  },
+  "random_seed": 3701,
+  "refreeze_package": {
+    "adversarial_verify_clean": true,
+    "flagged_or_live_critical": false,
+    "operator_package_ready": true,
+    "status": "reemitted_clean_for_operator"
+  },
+  "refreeze_package_status": "reemitted_clean_for_operator",
+  "reproducibility_checksum": "646afa7f6fabb0a51f7da7a5a34709052a62b2fd12d287a1fbf0e6cec416e6d2",
+  "scripts_research_conductor_modified": false,
+  "selection_gap": {
+    "flagged_or_live_critical": false,
+    "non_degeneracy_assert": false,
+    "per_candidate_auroc": null,
+    "positive_control_valid": false,
+    "verdict": "not_measured",
+    "within_question_rank_corr": null
+  },
+  "selection_gap_verdict": "not_measured",
+  "source_artifacts": [
+    "results/experiment_3692_refreeze_package_clean_reemit.json",
+    "results/experiment_3693_external_comparator_dependency_vs_deentangled.json",
+    "results/experiment_3694_selection_gap_proper_rediagnosis.json",
+    "results/experiment_3695_code_native_verifier.json",
+    "results/experiment_3696_reship_detector_math_plus_code.json",
+    "results/experiment_3697_fr11_continuous_self_learning_v12.json"
+  ],
+  "summarized_upstream_artifacts": [
+    {
+      "exp": 3692,
+      "returncode": 0,
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stdout_sha256": "6f986e5d1dcadc504c13ad1b83a2533f4dbb15f4acdd662dbdd1a440b738075d"
+    },
+    {
+      "exp": 3693,
+      "returncode": 0,
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stdout_sha256": "46ab18a64d2fd43ab63ed33b03f153480858845fe658bf1f8e92c784938f8787"
+    },
+    {
+      "exp": 3694,
+      "returncode": 0,
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stdout_sha256": "5dc52eb924e417fbbccdb8d937f5482aff89f4d6880d2680bc59a3ded6b582f6"
+    },
+    {
+      "exp": 3695,
+      "returncode": 0,
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stdout_sha256": "bda329d7f5bff5267260ce8faff886e941922433ee02433ab6b8f850deaad4c7"
+    },
+    {
+      "exp": 3696,
+      "returncode": 0,
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stdout_sha256": "0ca5a62b789e7415dca0bda3397f278f3e5376490ad7aada143d8e7c3556d2b2"
+    },
+    {
+      "exp": 3697,
+      "returncode": 0,
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stdout_sha256": "8540013a9947452c485a61479a88c9d208a442f218aee9e84fd113ed19506782"
+    }
+  ],
+  "trained_judge_ood_retired": true,
+  "unmet_gates": [],
+  "verifier_value_scope": "math_plus_code_discrimination_facts_retired_selection_not_measured"
+}
