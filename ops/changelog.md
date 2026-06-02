@@ -8181,3 +8181,4 @@ violations. Added 5 new references to research-references.md (.338 planning swee
 arXiv:2511.18630, 2604.04648, 2605.30619, 2605.01831, 2510.04087).
 
 Did NOT modify research-roadmap.yaml or scripts/research_conductor.py. Did NOT push.
+- 2026-06-02: Archive milestone .337 honestly (dependency-aware weighting cleared G1-rigor CLEAN as a re-freeze CANDIDATE 0.9253>0.9131; the re-freeze package + selection diagnosis came back FLAGGED/degenerate and must be redone; code detector stays blind under reweighting; product value robust over self-certainty; FR-11 v11 recovers no-collapse; paper_ready stayed TRUE; frozen 0.9131 unchanged) and activate .338 (✅ Complete) — honest_verdict=complete: archived_v337_dependency_aware_g1_candidate_clean_package_and_selection_to_redo_code_native_needed_v338_active_paper_ready_true_frozen_headline_unchanged; results/experiment_3690_archive_v337_activate_v338.json
