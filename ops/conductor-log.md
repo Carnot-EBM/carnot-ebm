@@ -7607,3 +7607,4 @@ web search: https://docs.garak.ai/garak/examples/pr |
 | 2026-06-02 17:20 UTC | CONVERGENCE SYNTHESIS + operator next-thesis recom | OK | 88 passed in 4.97s |
 | 2026-06-02 17:37 UTC | Capstone v340 + G1-G4 gate synthesis — was the fla | OK | 85 passed in 4.76s |
 | 2026-06-02 17:39 UTC | Milestone 2026.06.341 activated | OK | 8 tasks queued |
+| 2026-06-02 17:54 UTC | Archive milestone .340 honestly (convergence-harde | OK | 104 passed in 4.70s |
