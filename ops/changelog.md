@@ -1,5 +1,9 @@
 # Carnot — Changelog
 
+## 2026-06-02 (Milestone 2026.06.342 Operational Retrospective)
+
+- [outer-loop] Wrote `results/operational_retro_2026_06_342.json` (schema `carnot.operational_retro.v64`). The authoritative timing source reports no experiment commits since activation, leaving `total_wall_time_minutes=0`, `experiments_completed=0`, `compute_bound_experiments_count=0`, `slowest_experiments=[]`, and `gpu_idle_on_compute_bound_tasks=null`. Both GPUs were idle, but no bottleneck was flagged because there were 0 compute-bound tasks. Recommended tooling change: investigate why no experiments were triggered.
+
 ## 2026-06-02 (Milestone 2026.06.341 Operational Retrospective)
 
 - [outer-loop] Completed operational retrospective for milestone 2026.06.341. The authoritative timing source reports no experiment commits since activation, leaving total_wall_time_minutes=0 and experiments_completed=0. Both GPUs were idle, but no bottleneck was flagged because there were 0 compute-bound tasks. Recommended tooling change: investigate why no experiments were triggered.

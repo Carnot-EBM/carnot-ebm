@@ -7632,3 +7632,16 @@ web search: https://docs.garak.ai/garak/examples/pr |
 | 2026-06-02 22:28 UTC | FR-11 continuous self-learning v15 — Tier-1 ONLINE | OK | 87 passed in 5.08s |
 | 2026-06-02 22:30 UTC | THE THESIS TEST (kill-gate part b): matched-COMPUT | GATE_BLOCK | Pre-emptive skip: upstream retired (exp3737-ebt-generation-smoke) |
 | 2026-06-02 23:09 UTC | KV260 opportunistic continuity audit — confirm ter | OK | 90 passed in 4.46s |
+| 2026-06-02 23:40 UTC | Capstone .342 — aggregate the Thesis-A RECOVERY +  | FAIL | Codex CLI error: t"):
++        exp3742.read_json_object(list_path)
+
+ERROR: {
+ |
+| 2026-06-02 23:42 UTC | Capstone .342 — aggregate the Thesis-A RECOVERY +  | FAIL | Codex CLI error: ERROR: {
+  "type": "error",
+  "error": {
+    "type": "image_ |
+| 2026-06-02 23:44 UTC | Capstone .342 — aggregate the Thesis-A RECOVERY +  | FAIL | Codex CLI error: ERROR: {
+  "type": "error",
+  "error": {
+    "type": "image_ |
