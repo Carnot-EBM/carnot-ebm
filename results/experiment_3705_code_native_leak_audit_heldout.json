@@ -1,0 +1,308 @@
+{
+  "acceptance_gate": {
+    "condition": "in_corpus_code_auroc present AND heldout_code_auroc present AND heldout_code_auroc_ci present AND leak_audit_findings present AND adversarial_verify_clean == true",
+    "passed": true,
+    "principle": "A trustworthy code-native verdict requires the suspicious 1.0 reproduced and explained, held-out AUROC + CI, the leak audit, and adversarial-clean."
+  },
+  "adversarial_verify_clean": true,
+  "adversarial_verify_report": {
+    "flag_count": 0,
+    "flags": []
+  },
+  "artifact": "experiment_3705_code_native_leak_audit_heldout",
+  "code_signal_survives_heldout": false,
+  "corpus_status": {
+    "heldout": {
+      "exists": true,
+      "path": "data/code_verification_corpus_v1.jsonl",
+      "source": "cached_jsonl"
+    },
+    "in_corpus": {
+      "exists": true,
+      "path": "data/code_verification_corpus_v2.jsonl",
+      "source": "cached_jsonl"
+    }
+  },
+  "duration_s": 0.486785,
+  "field_principles": {
+    "adversarial_verify_clean": "True iff no critical flag and the suspicious 1.0 was explained, not hidden.",
+    "code_signal_survives_heldout": "BARE bool. False whenever held-out AUROC >=0.99; otherwise true iff held-out AUROC >0.5 with CI excluding 0.5.",
+    "duration_s": "Plausibility floor.",
+    "heldout_calibration_brier_ece": "Calibration of the held-out code signal -- a deployable code operating point must be calibrated.",
+    "heldout_code_auroc": "The code-native AUROC on the DIFFERENT held-out corpus -- the real generalization number.",
+    "heldout_code_auroc_ci": "CI of the held-out AUROC -- must EXCLUDE 0.5 to count as signal; held-out 1.0 is still a leak flag.",
+    "honest_verdict": "Terminal prefix for reconciler classification.",
+    "in_corpus_auroc_diagnosis": "WHY the in-corpus AUROC is ~1.0 (separability / leakage / label-correlated feature).",
+    "in_corpus_code_auroc": "The exp3695 ~1.0 reproduced on the tuned corpus -- the suspicious number being audited.",
+    "inference_substrate": "verifier_ensemble_against_cached_candidates if cached-only (no marker); live_llm_inference only if a real live-model generation step ran (60s floor).",
+    "leak_audit_findings": "Honest record of separability, contamination, label-correlation, and verifier authenticity checks.",
+    "leak_detected": "BARE bool. True iff the in-corpus 1.0 is explained by leak/separability or held-out >=0.99.",
+    "n_examples_heldout": "Sample-size rigor on the held-out corpus.",
+    "n_seeds": "Replication count (>=5).",
+    "random_seed": "Determinism precondition.",
+    "reproducibility_checksum": "Drift detection."
+  },
+  "heldout_calibration_brier_ece": {
+    "brier": 0.084804,
+    "ece": 0.234781
+  },
+  "heldout_code_auroc": 0.993243,
+  "heldout_code_auroc_ci": [
+    0.982808,
+    1.0
+  ],
+  "heldout_code_auroc_metric": {
+    "bootstrap_seeds": [
+      3705,
+      3706,
+      3707,
+      3708,
+      3709
+    ],
+    "ci95": [
+      0.982808,
+      1.0
+    ],
+    "n": 320,
+    "n_negative_correct": 24,
+    "n_positive_errors": 296,
+    "point": 0.993243,
+    "seed_mean_aurocs": [
+      0.993274,
+      0.992713,
+      0.992782,
+      0.992537,
+      0.993587
+    ]
+  },
+  "heldout_feature_summary": {
+    "mean_features": {
+      "ast_parseable": 0.446875,
+      "code_extractor_violation_rate": 0.046458,
+      "dead_code_after_return": 0.0,
+      "early_unconditional_return": 0.0,
+      "execution_attempted": 0.103125,
+      "forbidden_call": 0.0,
+      "missing_entry_point": 0.34375,
+      "missing_value_return": 0.3625,
+      "parse_error": 0.553125,
+      "return_none_literal_rate": 0.0,
+      "runtime_exception_rate": 0.084375,
+      "runtime_return_none_rate": 0.002083,
+      "runtime_type_mismatch_rate": 0.002083,
+      "undefined_name_count_clamped": 0.022917
+    },
+    "n_execution_attempted": 33,
+    "n_scored": 320,
+    "score_variance": 0.031759
+  },
+  "heldout_recall_at_fixed_fpr": {
+    "0.05": {
+      "code_native_actual_fpr": 0.0,
+      "code_native_recall": 0.989865,
+      "code_native_threshold": 0.5
+    },
+    "0.10": {
+      "code_native_actual_fpr": 0.0,
+      "code_native_recall": 0.989865,
+      "code_native_threshold": 0.5
+    },
+    "0.20": {
+      "code_native_actual_fpr": 0.0,
+      "code_native_recall": 0.989865,
+      "code_native_threshold": 0.5
+    }
+  },
+  "honest_verdict": "complete: code_native_one_point_zero_was_a_leak_code_claim_narrowed_earned",
+  "in_corpus_auroc_diagnosis": "Exp3658 is separable-by-construction: mutation metadata maps labels with purity=1.0, return_none negatives are generated differently from canonical positives, and the code-native score has a hard gap min_error_score=0.93 > max_correct_score=0.743333.",
+  "in_corpus_code_auroc": 1.0,
+  "in_corpus_code_auroc_ci": [
+    1.0,
+    1.0
+  ],
+  "in_corpus_code_auroc_metric": {
+    "bootstrap_seeds": [
+      3705,
+      3706,
+      3707,
+      3708,
+      3709
+    ],
+    "ci95": [
+      1.0,
+      1.0
+    ],
+    "n": 60,
+    "n_negative_correct": 30,
+    "n_positive_errors": 30,
+    "point": 1.0,
+    "seed_mean_aurocs": [
+      1.0,
+      1.0,
+      1.0,
+      1.0,
+      1.0
+    ]
+  },
+  "in_corpus_feature_summary": {
+    "mean_features": {
+      "ast_parseable": 1.0,
+      "code_extractor_violation_rate": 0.557001,
+      "dead_code_after_return": 0.5,
+      "early_unconditional_return": 0.5,
+      "execution_attempted": 1.0,
+      "forbidden_call": 0.0,
+      "missing_entry_point": 0.0,
+      "missing_value_return": 0.0,
+      "parse_error": 0.0,
+      "return_none_literal_rate": 0.243056,
+      "runtime_exception_rate": 0.094444,
+      "runtime_return_none_rate": 0.527778,
+      "runtime_type_mismatch_rate": 0.527778,
+      "undefined_name_count_clamped": 0.488889
+    },
+    "n_execution_attempted": 60,
+    "n_scored": 60,
+    "score_variance": 0.163506
+  },
+  "inference_substrate": "verifier_ensemble_against_cached_candidates",
+  "leak_audit_findings": {
+    "contamination_check": {
+      "exact_candidate_overlap": 0,
+      "holdout_n": 18,
+      "kernel_mmd_rbf": 0.012365,
+      "method": "session_isolated_exact_overlap_plus_rbf_kernel_mmd_proxy",
+      "methodology_note": "This is a deterministic split-contamination proxy inspired by cross-context and kernel-divergence audits; it is not a full reproduction of those papers.",
+      "mutation_overlap": [
+        "canonical",
+        "return_none"
+      ],
+      "source_overlap": [
+        "humaneval_manifest_canonical",
+        "humaneval_manifest_return_none_mutant"
+      ],
+      "task_id_overlap": 12,
+      "train_n": 42
+    },
+    "heldout_implausible_perfect_red_flag": true,
+    "in_corpus_construction": {
+      "construction_summary": "Exp3658 positives are cached canonical HumanEval solutions; negatives are deterministic return_none mutants from the same task ids.",
+      "label_correlated_metadata": true,
+      "mean_features_by_error_label": {
+        "correct": {
+          "ast_parseable": 1.0,
+          "code_extractor_violation_rate": 0.506019,
+          "dead_code_after_return": 0.0,
+          "early_unconditional_return": 0.0,
+          "execution_attempted": 1.0,
+          "forbidden_call": 0.0,
+          "missing_entry_point": 0.0,
+          "missing_value_return": 0.0,
+          "parse_error": 0.0,
+          "return_none_literal_rate": 0.016667,
+          "runtime_exception_rate": 0.188889,
+          "runtime_return_none_rate": 0.055556,
+          "runtime_type_mismatch_rate": 0.055556,
+          "undefined_name_count_clamped": 0.488889
+        },
+        "error": {
+          "ast_parseable": 1.0,
+          "code_extractor_violation_rate": 0.607983,
+          "dead_code_after_return": 1.0,
+          "early_unconditional_return": 1.0,
+          "execution_attempted": 1.0,
+          "forbidden_call": 0.0,
+          "missing_entry_point": 0.0,
+          "missing_value_return": 0.0,
+          "parse_error": 0.0,
+          "return_none_literal_rate": 0.469444,
+          "runtime_exception_rate": 0.0,
+          "runtime_return_none_rate": 1.0,
+          "runtime_type_mismatch_rate": 1.0,
+          "undefined_name_count_clamped": 0.488889
+        }
+      },
+      "metadata_label_correlations": {
+        "mutation": {
+          "counts": {
+            "canonical": {
+              "0": 30
+            },
+            "return_none": {
+              "1": 30
+            }
+          },
+          "n_values": 2,
+          "purity": 1.0
+        },
+        "source": {
+          "counts": {
+            "humaneval_manifest_canonical": {
+              "0": 30
+            },
+            "humaneval_manifest_return_none_mutant": {
+              "1": 30
+            }
+          },
+          "n_values": 2,
+          "purity": 1.0
+        }
+      },
+      "score_gap": {
+        "gap": 0.186667,
+        "max_correct_score": 0.743333,
+        "min_error_score": 0.93,
+        "score_gap_separable": true
+      },
+      "score_gap_separable": true,
+      "separable_by_construction": true,
+      "source_corpus": "data/code_verification_corpus_v2.jsonl"
+    },
+    "verifier_authenticity": {
+      "ast_parse_used": true,
+      "constant_score": false,
+      "heuristic_gap_disclosed": true,
+      "implementation_note": "CodeNativeVerifier parses candidate Python with ast.parse, runs CodeExtractor for structural initialization/type/return findings, scores AST anomalies (parse failure, missing entry point, missing value return, literal None returns, early top-level returns and dead code after return), and executes deterministic signature-derived probes through safe_exec_function so runtime exceptions, None returns, and annotation type mismatches contribute an execution-trace signal. Weights are deterministic heuristic proxy weights; the inspected signals are code-native AST/runtime signals, not math-verifier scores.",
+      "runtime_execution_trace_used": true
+    }
+  },
+  "leak_detected": true,
+  "n_examples_heldout": 320,
+  "n_examples_in_corpus": 60,
+  "n_seeds": 5,
+  "ops_docs_reconciliation_left_to_conductor": true,
+  "preconditions_checked": [
+    {
+      "available": true,
+      "detail": {
+        "exists": true,
+        "path": "data/code_verification_corpus_v2.jsonl",
+        "source": "cached_jsonl"
+      },
+      "n_examples": 60,
+      "resource": "exp3658_in_corpus"
+    },
+    {
+      "available": true,
+      "detail": {
+        "exists": true,
+        "path": "data/code_verification_corpus_v1.jsonl",
+        "source": "cached_jsonl"
+      },
+      "minimum_required": 61,
+      "n_examples": 320,
+      "resource": "distinct_heldout_code_corpus"
+    }
+  ],
+  "random_seed": 3705,
+  "reproducibility_checksum": "03a9c19d871300ed",
+  "schema": "carnot.code_native_leak_audit_heldout.v1",
+  "scripts_research_conductor_modified": false,
+  "tests_run": [
+    ".venv/bin/pytest tests/python/test_experiment_3705_code_native_leak_audit_heldout.py -q",
+    ".venv/bin/coverage run --source=scripts -m pytest -o addopts='' tests/python/test_experiment_3705_code_native_leak_audit_heldout.py -q",
+    ".venv/bin/coverage report --include='scripts/experiment_3705_code_native_leak_audit_heldout.py' --fail-under=100 --show-missing",
+    ".venv/bin/python scripts/check_spec_coverage.py",
+    ".venv/bin/pytest tests/python -q"
+  ]
+}
