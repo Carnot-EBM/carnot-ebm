@@ -245,6 +245,40 @@ writes `results/experiment_3671_ship_second_pair_of_eyes_detector.json`.
   or `complete: blocked_no_labeled_corpus_for_detector`.
 - The runner does not modify `scripts/research_conductor.py`.
 
+### REQ-SPOE-3683: Code Operating Point Hardening Verdict
+
+The pipeline MUST provide an Exp 3683 runner that re-measures the shipped
+second-pair detector's code operating point on the balanced Exp 3658 corpus,
+tests the Exp 3667 dependency-aware verifier weighting on the same code rows,
+and evaluates code-specific recalibration on a deterministic code train/holdout
+split.  A recovered code operating point MUST beat the 0.5 AUROC chance floor
+with a CI excluding 0.5 and improve held-out calibration; otherwise the runner
+MUST honestly scope the shipped detector as math-only for code discrimination.
+
+**Acceptance criteria:**
+- The runner checks that the balanced Exp 3658 code corpus is loadable and that
+  `python/carnot/pipeline/second_pair_detector.py` is importable before scoring.
+- The artifact includes `honest_verdict`, `inference_substrate`,
+  `code_auroc_baseline`, `code_auroc_dependency_aware`,
+  `code_auroc_recalibrated`, `code_calibration_brier_ece_after`,
+  `code_recall_at_fixed_fpr`, `module_code_path_updated`, `e2e_test_passed`,
+  `code_operating_point_recovered`, `n_examples_code`, `random_seed`,
+  `reproducibility_checksum`, and `duration_s`.
+- `code_operating_point_recovered` is a bare top-level bool.
+- Baseline reporting includes fused, ensemble-alone, and confidence-alone code
+  AUROC with CI plus calibration on the held-out balanced corpus rows.
+- The dependency-aware row uses the Exp 3667 dependency-aware crossfit weighting
+  against row-aligned code verifier scores rather than replaying Exp 3671
+  metrics or returning a constant score.
+- Code-specific recalibration is fit on a code train split and evaluated on
+  held-out code rows, with Brier, ECE, and recall at fixed FPR reported.
+- The honest verdict is one of:
+  `complete: code_operating_point_recovered_detector_now_math_and_code`,
+  `complete: code_remains_math_only_detector_scoped_honestly`, or
+  `complete: blocked_no_balanced_code_corpus_or_detector_module`.
+- Tests cover recovered, math-only, and blocked outcomes using synthetic
+  fixtures rather than hard-coding a real-corpus success string.
+
 ## Scenarios
 
 ### SCENARIO-INFRA-052: Version-Blocked Model Raises Error
@@ -366,6 +400,17 @@ present
 **Then** the code-domain rows come from `data/code_verification_corpus_v2.jsonl`.
 
 **Spec traces:** REQ-SPOE-3671
+
+### SCENARIO-SPOE-3683: Code Operating Point Outcomes Stay Honest
+
+**Given** synthetic code-operating-point fixtures covering
+`code_operating_point_recovered`, `code_remains_math_only`, and `blocked`
+**When** the Exp 3683 verdict artifact is assembled
+**Then** it returns the corresponding terminal verdict, preserves
+`code_operating_point_recovered` as a bare bool, and only counts AUROC signal
+when the CI excludes the 0.5 chance floor.
+
+**Spec traces:** REQ-SPOE-3683
 
 ### REQ-SAMPLE-020: SparseIsingEBM K-Regular Graph
 

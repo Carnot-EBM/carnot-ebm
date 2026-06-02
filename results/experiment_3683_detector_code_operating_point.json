@@ -1,0 +1,221 @@
+{
+  "acceptance_gate": {
+    "condition": "code_auroc_baseline present AND code_auroc_recalibrated present AND code_calibration_brier_ece_after present",
+    "passed": true,
+    "principle": "A code-hardening verdict requires the baseline, the post-fix AUROC and the post-fix calibration -- a single number cannot decide whether the code operating point is deployable or math-only."
+  },
+  "artifact": "experiment_3683_detector_code_operating_point",
+  "code_auroc_baseline": {
+    "calibration_brier_ece": {
+      "brier": 0.2747,
+      "ece": 0.058093
+    },
+    "confidence": {
+      "bootstrap_seeds": [
+        3683,
+        3684,
+        3685
+      ],
+      "ci95": [
+        0.5,
+        0.5
+      ],
+      "n": 18,
+      "n_negative_correct": 9,
+      "n_positive_errors": 9,
+      "point": 0.5,
+      "seed_mean_aurocs": [
+        0.5,
+        0.5,
+        0.5
+      ]
+    },
+    "ensemble": {
+      "bootstrap_seeds": [
+        3683,
+        3684,
+        3685
+      ],
+      "ci95": [
+        0.3625,
+        0.637634
+      ],
+      "n": 18,
+      "n_negative_correct": 9,
+      "n_positive_errors": 9,
+      "point": 0.5,
+      "seed_mean_aurocs": [
+        0.498038,
+        0.489821,
+        0.507359
+      ]
+    },
+    "fused": {
+      "bootstrap_seeds": [
+        3683,
+        3684,
+        3685
+      ],
+      "ci95": [
+        0.3625,
+        0.637634
+      ],
+      "n": 18,
+      "n_negative_correct": 9,
+      "n_positive_errors": 9,
+      "point": 0.5,
+      "seed_mean_aurocs": [
+        0.498038,
+        0.489821,
+        0.507359
+      ]
+    },
+    "n_holdout": 18
+  },
+  "code_auroc_dependency_aware": {
+    "bootstrap_seeds": [
+      3683,
+      3684,
+      3685
+    ],
+    "ci95": [
+      0.320944,
+      0.600708
+    ],
+    "n": 60,
+    "n_negative_correct": 30,
+    "n_positive_errors": 30,
+    "point": 0.463333,
+    "seed_mean_aurocs": [
+      0.460104,
+      0.462964,
+      0.468642
+    ],
+    "verifier_names": [
+      "ast_structure_verifier",
+      "code_structural_dependency_verifier",
+      "math_signal_transfer"
+    ],
+    "weighting": "exp3667_dependency_aware_crossfit"
+  },
+  "code_auroc_recalibrated": {
+    "bootstrap_seeds": [
+      3683,
+      3684,
+      3685
+    ],
+    "ci95": [
+      0.237465,
+      0.779221
+    ],
+    "n": 18,
+    "n_negative_correct": 9,
+    "n_positive_errors": 9,
+    "point": 0.506173,
+    "seed_mean_aurocs": [
+      0.512752,
+      0.514309,
+      0.495073
+    ]
+  },
+  "code_calibration_brier_ece_after": {
+    "brier": 0.249368,
+    "ece": 0.034219
+  },
+  "code_operating_point_recovered": false,
+  "code_recalibration_protocol": {
+    "feature_names": [
+      "ensemble_energy",
+      "confidence_error"
+    ],
+    "holdout_n": 18,
+    "method": "logistic",
+    "train_n": 42
+  },
+  "code_recall_at_fixed_fpr": {
+    "0.05": {
+      "confidence_actual_fpr": 0.0,
+      "confidence_recall": 0.0,
+      "confidence_threshold": null,
+      "ensemble_actual_fpr": 0.0,
+      "ensemble_recall": 0.0,
+      "ensemble_threshold": null,
+      "fused_actual_fpr": 0.0,
+      "fused_recall": 0.111111,
+      "fused_threshold": 0.537764
+    },
+    "0.10": {
+      "confidence_actual_fpr": 0.0,
+      "confidence_recall": 0.0,
+      "confidence_threshold": null,
+      "ensemble_actual_fpr": 0.0,
+      "ensemble_recall": 0.0,
+      "ensemble_threshold": null,
+      "fused_actual_fpr": 0.0,
+      "fused_recall": 0.111111,
+      "fused_threshold": 0.537764
+    },
+    "0.20": {
+      "confidence_actual_fpr": 0.0,
+      "confidence_recall": 0.0,
+      "confidence_threshold": null,
+      "ensemble_actual_fpr": 0.111111,
+      "ensemble_recall": 0.111111,
+      "ensemble_threshold": 0.46651,
+      "fused_actual_fpr": 0.111111,
+      "fused_recall": 0.222222,
+      "fused_threshold": 0.5213
+    }
+  },
+  "dependency_aware_score_summary": {
+    "n_scores": 60,
+    "score_variance": 0.052372
+  },
+  "duration_s": 3.63492,
+  "e2e_test_passed": true,
+  "field_principles": {
+    "code_auroc_baseline": "The exp3671 0.5 code baseline reconfirmed -- the bar to beat.",
+    "code_auroc_dependency_aware": "Code AUROC with the .336 dependency-aware weighting -- does the math-validated weighting transfer to code?",
+    "code_auroc_recalibrated": "Code AUROC after code-specific recalibration + its CI -- must exclude 0.5 to count as signal.",
+    "code_calibration_brier_ece_after": "Calibration after the fix -- a deployable code operating point must be calibrated.",
+    "code_operating_point_recovered": "BARE bool. True iff a fix lifts code AUROC above 0.5 (CI excludes 0.5) AND improves calibration -- else code is honestly math-only. STORE AS BARE true/false.",
+    "code_recall_at_fixed_fpr": "Recall-at-FPR table for the code operating point a deployer reads.",
+    "duration_s": "Plausibility floor.",
+    "e2e_test_passed": "True iff the shipped surface E2E test still passes after the change.",
+    "honest_verdict": "Terminal prefix for reconciler classification.",
+    "inference_substrate": "verifier_ensemble_against_cached_candidates (principle: scores the cached balanced code corpus; no LLM load).",
+    "module_code_path_updated": "True iff the shipped module's code operating point was updated (or honestly documented math-only).",
+    "n_examples_code": "Sample-size rigor on the code corpus.",
+    "random_seed": "Determinism precondition.",
+    "reproducibility_checksum": "Drift detection."
+  },
+  "honest_verdict": "complete: code_remains_math_only_detector_scoped_honestly",
+  "inference_substrate": "verifier_ensemble_against_cached_candidates (principle: scores the cached balanced code corpus; no LLM load).",
+  "module_code_path_updated": true,
+  "n_examples_code": 60,
+  "ops_docs_reconciliation_left_to_conductor": true,
+  "preconditions_checked": [
+    {
+      "available": true,
+      "detail": {
+        "n_examples": 60,
+        "path": "/home/ianblenke/github.com/ianblenke/carnot/data/code_verification_corpus_v2.jsonl",
+        "status": "loaded"
+      },
+      "n_examples": 60,
+      "resource": "balanced_exp3658_code_corpus"
+    },
+    {
+      "available": true,
+      "detail": "python/carnot/pipeline/second_pair_detector.py",
+      "resource": "second_pair_detector_module"
+    }
+  ],
+  "random_seed": 3683,
+  "reproducibility_checksum": "7b81b9c606579cb2",
+  "schema": "carnot.detector_code_operating_point.v1",
+  "scripts_research_conductor_modified": false,
+  "tests_run": [
+    "pytest tests/python/test_experiment_3683_detector_code_operating_point.py"
+  ]
+}
