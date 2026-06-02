@@ -7585,3 +7585,4 @@ web search: https://docs.garak.ai/garak/examples/pr |
 | 2026-06-02 08:09 UTC | Archive milestone .338 honestly (re-freeze package | OK | 87 passed in 3.97s |
 | 2026-06-02 08:45 UTC | Backend-state diagnostic v5 — fifth probe of gemin | OK | 91 passed in 3.41s |
 | 2026-06-02 09:07 UTC | DISAMBIGUATE the re-freeze candidate at full G1-ri | FLAGGED | adversarial_verify CRITICAL: TAUTOLOGY — result quarantined, not a clean success |
+| 2026-06-02 09:24 UTC | Adversarial leak-audit + HELD-OUT replication of t | OK | 90 passed in 4.30s |
