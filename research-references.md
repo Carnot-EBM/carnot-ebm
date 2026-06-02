@@ -1,3 +1,94 @@
+## 2026-06-01 Post-.337 Planning Sweep (Milestone 2026.06.338)
+
+`.337` took the dependency-aware weighting lead to **G1-rigor — CONFIRMED CLEAN**, but two
+of the three product diagnoses came back degenerate or earned-negative, and the re-freeze
+package tripped a linter false-positive. Read via `scripts/summarize_artifact.py`, the honest
+`.337` outcomes:
+
+- **Dependency-aware weighting cleared G1-rigor — a CLEAN headline candidate.** exp3680 ran the
+  full dual-condition integrity protocol (mirror exp2850): production dependency-aware AUROC
+  **0.9253** vs Carnot-current **0.9131** (= the frozen headline), delta **+0.0122**, 5 seeds,
+  acceptance gate passed, **adversarial-verify clean + leak-free**. `dependency_aware_g1_rigor_confirmed=true`.
+  This is a genuine, apples-to-apples candidate to RAISE the frozen 0.9131.
+- **The re-freeze PACKAGE was prepared but FLAGGED.** exp3681 produced
+  `refreeze_package_ready_for_operator` but carried a **DURATION_TOO_SHORT CRITICAL** flag (a
+  linter false-positive: a 25 s verifier-scoring artifact that still embedded vestigial
+  GGUF/CUDA model_specs markers). The `.337` capstone therefore recorded the package as
+  `g1_rigor_confirmed_package_blocked`. `.338` must RE-EMIT the package CLEAN (no vestigial
+  compute-bound markers; correct `inference_substrate`) so the operator can act on it.
+- **The selection-gap diagnosis (exp3682) came back DEGENERATE — not a real verdict.** It
+  reported `selection_gap_fundamental` but is flagged **TAUTOLOGY**: the per-question-normalized
+  selection (0.3443) == the raw ensemble selection (0.3443) == self-certainty (0.3443) — i.e.
+  the "fixes" were no-ops, `per_candidate_auroc` collapsed to **0.5555** (not 0.93), and the
+  ranking calibration scored **0.15**. The implementation was buggy; the discrimination-vs-selection
+  question is **still open**. `.338` REDOES it properly with verified non-degeneracy +
+  pessimistic/LCB selection.
+- **Code detector: reweighting the MATH verifiers does NOT fix code blindness — earned.** exp3683
+  (clean) confirmed code AUROC stays at **0.5** under the dependency-aware weighting + recalibration;
+  the detector is honestly math-only. The fix is a code-NATIVE signal, not a reweighting.
+- **Product value survives the stronger baseline.** exp3684 (clean): the fused detector adds value
+  OVER self-certainty (not just plain confidence). **FR-11 v11** (exp3685, clean) drift-aware online
+  dependency-aware weighting recovered after drift, no collapse (+0.088 over v10).
+- **paper_ready stays TRUE** (G1–G4; frozen FoVer 0.9131; G2 = CI run 26725185125). P0.1
+  honest-negative; facts-generalization + trained-judge-OOD RETIRED. Backend: gemini stable on a
+  **3rd consecutive probe** (exp3679) — `.338` is flip-eligible, but `.333` was a total
+  gemini-crash wipeout and `.338` carries the headline-FINISH work, so the conservative default is
+  to keep codex+`requires_codex` one more milestone (a 4th probe gates a `.339` flip; operator may
+  override). KV260 **SSH-unreachable for 8 consecutive milestones** (operator-action item).
+
+**`.338` mandate:** (1) **FINISH the re-freeze** — re-emit the operator package CLEAN + add a
+published EXTERNAL comparator for the dependency-aware weighting; (2) **FIX the two product gaps** —
+redo the selection-gap diagnosis correctly (pessimistic/LCB BoN + real per-question calibration +
+self-certainty composition) and give the code-blind detector a genuinely NEW code-native signal
+(attribution-graph / structural / execution), not a reweighting; (3) continue FR-11 + hardware +
+capstone.
+
+### New papers filed this sweep
+
+- **arXiv:2604.07650 — "How Independent are LLMs? Auditing Behavioral Entanglement and Reweighting
+  Verifier Ensembles."** Defines information-theoretic dependency metrics (Difficulty-Weighted
+  Behavioral Entanglement Index; Cumulative Information Gain over the joint-failure manifold) and a
+  **de-entangled reweighting** that beats majority voting by +4.5% across 18 LLMs. *Carnot use:* the
+  closest published external comparator to Carnot's label-conditional dependency-aware weighting —
+  reproduce CIG/de-entangled reweighting on the FoVer ensemble and show Carnot's *label-conditional*
+  structure beats their non-conditional reweighting + the +4.5%-over-majority baseline (exp3693).
+  This is what a credible re-freeze needs: a beat-the-published-baseline claim.
+- **arXiv:2602.07080 — "CodeCircuit: Inferring LLM-Generated Code Correctness via Attribution
+  Graphs"** (code on GitHub). Execution-free white-box code verifier: line-level attribution graphs
+  (SAE transcoders) where correct vs incorrect code show systematic topological differences; beats
+  black-box (temp scaling) and gray-box (chain-of-embedding) on Python/C++/Java. *Carnot use:* a
+  code-NATIVE ensemble member to fix the documented code-blind 0.5 (exp3695) — the technique exp3683
+  proved reweighting cannot supply.
+- **arXiv:2604.04648 — "From Curiosity to Caution: Mitigating Reward Hacking for Best-of-N with
+  Pessimism."** Diagnoses BoN degrading as N grows (selection exploits RM imperfections); fix =
+  pessimism / lower-confidence-bound (LCB) on the reward + an error-model "caution" penalty.
+  *Carnot use:* Carnot's selection-worse-than-SC is textbook BoN reward-hacking — apply pessimistic
+  LCB selection to the per-candidate energies in the redone selection-gap diagnosis (exp3694).
+- **arXiv:2510.09312 — "Verifying Chain-of-Thought Reasoning via Its Computational Graph."** Error
+  "structural signatures" are highly predictive but **domain-specific** (math vs code manifest as
+  distinct patterns). *Carnot use:* external confirmation that a single verifier cannot generalize
+  math→code — supports the per-corpus-member ensemble design behind exp3695.
+- **arXiv:2603.05739 — "Revisiting the (Sub)Optimality of Best-of-N for Inference-Time Alignment."**
+  Formalizes BoN reward-hacking as Goodhart's law; theory for when discrimination ≠ selection.
+  *Carnot use:* cite in the selection-gap write-up.
+- **arXiv:2601.15544 — "RDumb++: Drift-Aware Continual Test-Time Adaptation."** Entropy + KL drift
+  detection with adaptive full/soft resets ("resetting is essential to prevent collapse"). *Carnot
+  use:* a concrete reset-policy baseline for FR-11 v12 (exp3697) — forward diff from v11's
+  re-estimation.
+- **arXiv:2505.15960 — "Efficient PRM Training Data Synthesis via Formal Verification" (FoVer-80K).**
+  The source paper for Carnot's own headline corpus (Z3/Isabelle step labels). *Carnot use:* the
+  canonical FoVer citation for the 0.9131 headline; its formal-verification labeling is the path to a
+  code corpus for the code-native verifier.
+- **arXiv:2506.18203 — "Shrinking the Generation-Verification Gap with Weak Verifiers."** Combines
+  many weak verifiers into a strong selector. *Carnot use:* aggregation recipe to benchmark
+  dependency-aware weighting against (already informs exp3680/3693).
+- **arXiv:2512.15605 — "Autoregressive Language Models are Secretly Energy-Based Models" (ARM-EBM).**
+  Explicit ARM↔EBM bijection (soft-Bellman / MaxEnt-RL). *Carnot use:* theoretical grounding that
+  the self-certainty (token-distribution) signal and an energy verifier are two views of one object —
+  motivates fusing energy + self-certainty in the selection redo (exp3694).
+
+---
+
 ## 2026-06-01 Post-.336 Planning Sweep (Milestone 2026.06.337)
 
 `.336` delivered the first headline-advancing lead in many milestones. Read via
