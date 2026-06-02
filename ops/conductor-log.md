@@ -7573,3 +7573,4 @@ web search: https://docs.garak.ai/garak/examples/pr |
 | 2026-06-02 03:59 UTC | Re-emit the headline re-freeze PACKAGE for the ope | OK | 89 passed in 4.21s |
 | 2026-06-02 04:19 UTC | EXTERNAL comparator for the re-freeze candidate —  | OK | 92 passed in 11.11s |
 | 2026-06-02 04:38 UTC | REDO the discrimination-vs-selection diagnosis PRO | OK | 89 passed in 4.16s |
+| 2026-06-02 04:58 UTC | Build a code-NATIVE verifier for the code-blind de | OK | 90 passed in 4.24s |
