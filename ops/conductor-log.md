@@ -7564,3 +7564,4 @@ web search: https://docs.garak.ai/garak/examples/pr |
 | 2026-06-02 01:25 UTC | KV260 SSH-reachability continuity (UNREACHABLE .33 | OK | 89 passed in 4.27s |
 | 2026-06-02 01:37 UTC | PolarFire opportunistic reachability + continuity  | OK | 88 passed in 4.22s |
 | 2026-06-02 01:47 UTC | GateMate continuity audit (documentation-only — op | OK | 89 passed in 4.80s |
+| 2026-06-02 02:01 UTC | Capstone v337 + G1-G4 gate synthesis — did the dep | FLAGGED | adversarial_verify CRITICAL: DURATION_TOO_SHORT — result quarantined, not a clea |
