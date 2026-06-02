@@ -1,0 +1,69 @@
+{
+  "acceptance_gate": {
+    "condition": "g3_now_mechanically_enforced == true AND pytest_passed == true AND current_paper_lint_clean == true AND conductor_unmodified_assert == true",
+    "passed": true,
+    "principle": "G3 is mechanically defended only when the standalone lint exists, its test is green, the current paper passes it, and the conductor is untouched."
+  },
+  "adversarial_verify_clean": true,
+  "adversarial_verify_report": {
+    "flag_count": 0,
+    "flags": [],
+    "max_severity": -1
+  },
+  "conductor_unmodified_assert": true,
+  "current_paper_lint_clean": true,
+  "duration_s": 1.6247015920234844,
+  "experiment": 3716,
+  "experiment_id": 3716,
+  "field_principles": {
+    "adversarial_verify_clean": "True iff no critical flag.",
+    "conductor_unmodified_assert": "Asserts research_conductor.py was NOT modified.",
+    "current_paper_lint_clean": "BARE bool. True iff the current paper targets pass the new lint (G3 currently passes). STORE AS BARE true/false.",
+    "duration_s": "Plausibility floor.",
+    "forbidden_phrasings_count": "How many forbidden phrasings + retracted numbers the lint checks -- coverage of the CLAUDE.md narrowing table.",
+    "g3_now_mechanically_enforced": "BARE bool. True iff a standalone lint now defends G3 (was honor-discipline + inline scan). STORE AS BARE true/false.",
+    "honest_verdict": "Terminal prefix for reconciler classification.",
+    "inference_substrate": "aggregation_from_upstream_artifacts (principle: a static text lint; no live inference; no compute-bound marker).",
+    "lint_script_path": "scripts/paper_v6_narrowing_lint.py -- the shipped mechanical G3 enforcer.",
+    "precommit_hook_stanza": "The recommended .pre-commit-config.yaml stanza for OPERATOR action -- not auto-wired (operator-curated config).",
+    "pytest_passed": "True iff the parametrized lint test (clean-passes / forbidden-fails / retracted-number-fails) is green.",
+    "random_seed": "Determinism precondition.",
+    "reproducibility_checksum": "Drift detection."
+  },
+  "forbidden_phrasings_count": 18,
+  "g3_now_mechanically_enforced": true,
+  "honest_verdict": "complete: paper_v6_narrowing_lint_shipped_g3_mechanically_enforced_current_paper_clean",
+  "inference_substrate": "aggregation_from_upstream_artifacts (principle: a static text lint; no live inference; no compute-bound marker).",
+  "lint_command": {
+    "cmd": [
+      "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+      "scripts/paper_v6_narrowing_lint.py",
+      "--verbose"
+    ],
+    "returncode": 0,
+    "stderr": "",
+    "stdout": "paper_v6_narrowing_lint: clean (2 files scanned)\n"
+  },
+  "lint_script_path": "scripts/paper_v6_narrowing_lint.py",
+  "operator_action_note": "OPERATOR-ACTION: Review and add precommit_hook_stanza to .pre-commit-config.yaml when operator-curated commit policy approves it.",
+  "paper_targets_present": true,
+  "precommit_hook_stanza": "- repo: local\n  hooks:\n    - id: paper-v6-narrowing-lint\n      name: Paper-v6 narrowing lint\n      entry: python scripts/paper_v6_narrowing_lint.py\n      language: system\n      files: ^(docs/arxiv-paper/main\\.tex|docs/technical-report\\.md|results/paper_v6_.*\\.json)$\n",
+  "pytest_command": {
+    "cmd": [
+      "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+      "-m",
+      "pytest",
+      "-o",
+      "addopts=",
+      "tests/python/test_paper_v6_narrowing_lint.py",
+      "-q"
+    ],
+    "returncode": 0,
+    "stderr": "",
+    "stdout": ".........                                                                [100%]\n9 passed in 0.38s\n"
+  },
+  "pytest_passed": true,
+  "random_seed": 3716,
+  "reproducibility_checksum": "3b018fd9b38c84fd2f529625375a6681f8db6654458f7a6bfbf4db0bf150902f",
+  "schema": "carnot.paper_v6_narrowing_lint.v1"
+}

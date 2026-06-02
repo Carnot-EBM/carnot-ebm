@@ -1893,6 +1893,34 @@ gated tasks recorded as `not_measured`, and the strongest Exp 3704 candidate
 kept out of the frozen headline until operator re-freeze and CI
 re-reproduction happen.
 
+### REQ-PUBLISH-3716: Paper-v6 Narrowing Lint
+
+The repository MUST provide a standalone
+`scripts/paper_v6_narrowing_lint.py` that mechanically enforces the
+Paper-v6 Narrowing Discipline for G3. The lint MUST scan
+`docs/arxiv-paper/main.tex`, `docs/technical-report.md`, and tracked
+`results/paper_v6_*.json` artifacts when present. It MUST reject the forbidden
+Paper-v6 narrowing phrasings and retracted numerical values recorded in
+CLAUDE.md, print `file:line` plus the matched pattern for each violation, and
+exit non-zero on violations.
+
+The lint MUST allow its own pattern definitions and CLAUDE.md to name the
+forbidden prose, MUST exempt immutable historical research-log style records,
+and MUST disclose any heuristic matching limits in the script docstring. It
+MUST be additive infrastructure only: it MUST NOT modify
+`scripts/research_conductor.py` and MUST emit any pre-commit hook wiring as an
+operator-action recommendation rather than editing `.pre-commit-config.yaml`.
+
+### SCENARIO-PUBLISH-3716: Synthetic Narrowing Lint Guards G3
+
+**Given** a synthetic clean paper document, a synthetic document containing a
+forbidden narrowing phrase, and a synthetic document containing a retracted
+numerical value
+**When** the standalone narrowing lint scans each document
+**Then** the clean document passes, the forbidden-phrasing document fails, the
+retracted-number document fails, and the Exp 3716 artifact records that the
+current paper targets are clean and G3 is now mechanically enforced.
+
 
 ## Implementation Status
 
@@ -1937,6 +1965,7 @@ re-reproduction happen.
 | REQ-PUBLISH-041 | Proposed | Exp 3689 v337 dependency-aware capstone and G-gate |
 | REQ-PUBLISH-3701 | Implemented | Exp 3701 v338 re-freeze capstone and publication gate recheck |
 | REQ-PUBLISH-3712 | Proposed | Exp 3712 v339 re-freeze winner capstone and publication gate recheck |
+| REQ-PUBLISH-3716 | Implemented | Exp 3716 standalone Paper-v6 narrowing lint |
 
 ### REQ-PUBLISH-026: HuggingFace Publish Retry
 The experiment 1750 huggingface retry runner MUST attempt to upload the smallest model in models/ with a no-emoji model card. If credentials pass, it MUST upload and record hf_upload_succeeded = True. If blocked, it MUST emit an honest verdict of "blocked_credentials".
