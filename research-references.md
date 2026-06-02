@@ -20469,3 +20469,49 @@ de-tautologized multi-seed re-run with a DeLong significance test before it can 
 - **Think Consistently, Reason Efficiently: Energy-Based Calibration for Implicit CoT (arXiv:2511.07124):**
   energy-based calibration of reasoning traces — relevant to the deployable detector's calibration (Brier/ECE)
   and to FR-11 online fusion-weight calibration.
+
+## 2026-06-02 Post-.337 Planning Sweep (Milestone 2026.06.338)
+
+`.337` produced the project's strongest convergence step in months but with hygiene failures:
+- **exp3680 CONFIRMED the dependency-aware weighting clears G1-rigor**: under the FROZEN dual-condition
+  protocol (5 seeds, production + architecture-only conditions, adversarial-clean, leak-free), production
+  AUROC **0.9253 vs frozen 0.9131** (delta +0.0122), Carnot-current 0.9131 under the identical protocol.
+  This is a genuine headline-advancement CANDIDATE (NOT a swap — the frozen 0.9131 stays frozen until an
+  operator re-freeze).
+- **exp3681 (re-freeze package) was FLAGGED** DURATION_TOO_SHORT + METHODOLOGY_MISSING — a verifier-scoring
+  artifact (25s) that still declared compute-bound GGUF/CUDA markers in its model_specs, tripping the
+  false-positive duration floor. The package is therefore NOT clean and must be redone with the correct
+  `inference_substrate` and NO vestigial compute-bound markers (the recurring .337 hygiene bug — also hit
+  exp3689 capstone, DURATION_TOO_SHORT at 0.3s).
+- **exp3682 (selection-gap diagnosis) was FLAGGED TAUTOLOGY (x2) and degenerate**: per_candidate_auroc
+  collapsed to 0.555 (contradicting exp3672's ~0.93), and all three "fixes" produced identical accuracy
+  0.3443 — the corpus/setup was broken, so the "selection gap is fundamental" verdict is UNTRUSTWORTHY.
+  Needs a clean redo with a corrected corpus AND genuinely new BoN methods (below).
+- **exp3683**: detector code operating point stays math-only (earned product-scope negative; code AUROC ~0.5).
+- **exp3684**: detector product value is ROBUST over the stronger self-certainty baseline on math.
+- **exp3685**: FR-11 v11 drift-aware online dependency-aware weighting recovers without collapse (+0.088
+  post-drift AUROC over v10).
+- **Backend**: gemini probe v3 reported OK, but the actual .337-close PLANNER call CRASHED on gemini
+  (`.js:345500:14` + 1201s timeout). Probe-OK but real-workload-crash → routing stays codex+requires_codex
+  for .338 (the .333 whole-milestone wipeout risk is asymmetric vs the high-value work).
+
+### New references for .338
+
+- **Majority of the Bests: Improving Best-of-N via Bootstrapping (arXiv:2511.18630, Nov 2025):** improves
+  Best-of-N *selection* by bootstrapping the candidate pool / aggregating multiple best-of-subset picks
+  rather than a single argmax. A concrete NEW selection method the .337 selection-gap diagnosis (exp3682)
+  never tried — directly applicable to the .338 clean re-diagnosis of whether an energy verifier's strong
+  discrimination (~0.93 AUROC) can be converted into selection value above self-consistency.
+- **From Curiosity to Caution: Mitigating Reward Hacking for Best-of-N with Pessimism (arXiv:2604.04648,
+  2026):** pessimistic / lower-confidence-bound BoN selection that resists the reward-model overconfidence
+  that makes naive argmax underperform. The second NEW selection method for the .338 re-diagnosis.
+- **Reward Learning from Best-of-N Preference Data: Targets, Tradeoffs, and Design Principles
+  (arXiv:2605.30619, 2026):** the margin (discrimination) vs connectivity (coverage) tradeoff in BoN —
+  the theoretical frame for WHY discrimination AUROC and downstream selection utility decouple
+  (complements arXiv:2512.23067, the Reward Model Selection Crisis).
+- **RMGAP: Benchmarking the Generalization of Reward Models across Diverse Preferences (arXiv:2605.01831,
+  2026):** reward-model generalization benchmark; relevant to scoping the Carnot ensemble's
+  math-domain-bound discrimination claim against a SOTA peer generalization measure.
+- **Best of mini-N in-loop Sampling: A Contextual Quality Reward Model (arXiv:2510.04087, Oct 2025):**
+  contextual-quality reward model for reliable/efficient BoN — a peer to the second-pair-of-eyes detector's
+  candidate-quality scoring.
