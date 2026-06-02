@@ -1,0 +1,405 @@
+{
+  "acceptance_gate": {
+    "condition": "dependency_aware_auroc present AND external_comparator_auroc present AND dependency_vs_external_delta_ci present AND adversarial_verify_clean == true",
+    "passed": true,
+    "principle": "An external-comparator verdict requires both AUROCs measured under the identical protocol and the paired delta CI, adversarial-clean -- comparing only to the internal prior would leave the credibility gap this task closes."
+  },
+  "adversarial_verify_clean": true,
+  "adversarial_verify_report": {
+    "flag_count": 0,
+    "flags": [],
+    "max_severity": -1
+  },
+  "artifact": "experiment_3693_external_comparator_dependency_vs_deentangled",
+  "bootstrap_seeds": [
+    42,
+    137,
+    271,
+    314,
+    1729
+  ],
+  "candidate_beats_external_comparator": false,
+  "carnot_current_auroc": 0.91303,
+  "de_tautology_note": "The external comparator AUROC and dependency-aware AUROC are stored under exactly one field each; score_vector_checksums must differ.",
+  "delong_dependency_vs_external": {
+    "auc_dependency_aware": 0.924869,
+    "auc_difference": -0.003868,
+    "auc_external_comparator": 0.928737,
+    "method": "paired_delong_auc_two_sided",
+    "p_value": 0.001141,
+    "standard_error": 0.001189,
+    "z_value": -3.253236
+  },
+  "delong_p_dependency_vs_external": 0.001141,
+  "dependency_aware_auroc": 0.924869,
+  "dependency_aware_auroc_ci": {
+    "bootstrap_seeds": [
+      42,
+      137,
+      271,
+      314,
+      1729
+    ],
+    "ci95": [
+      0.91699,
+      0.932891
+    ],
+    "n_bootstrap_per_seed": 200,
+    "point": 0.924869,
+    "seed_mean_aurocs": [
+      0.925001,
+      0.92456,
+      0.924508,
+      0.924939,
+      0.925471
+    ]
+  },
+  "dependency_vs_external_delta_ci": {
+    "bootstrap_seeds": [
+      42,
+      137,
+      271,
+      314,
+      1729
+    ],
+    "ci95": [
+      -0.006204,
+      -0.001577
+    ],
+    "n_bootstrap_per_seed": 200,
+    "point": -0.003868,
+    "seed_mean_deltas": [
+      -0.003786,
+      -0.003886,
+      -0.003971,
+      -0.003768,
+      -0.003751
+    ]
+  },
+  "duration_s": 31.647871,
+  "exp3667_source": {
+    "adversarial_verify_clean": true,
+    "auroc_carnot_current": 0.919446,
+    "auroc_dependency_aware_proper": 0.933238,
+    "auroc_weaver_style": 0.87158,
+    "path": "results/experiment_3667_dependency_aware_weighting_clean.json"
+  },
+  "exp3680_source": {
+    "adversarial_verify_clean": true,
+    "leak_free": true,
+    "n_examples": 1000,
+    "n_seeds": 5,
+    "path": "results/experiment_3680_dependency_aware_dual_condition_integrity.json",
+    "production_auroc_carnot_current": 0.913134,
+    "production_auroc_dependency_aware": 0.925328
+  },
+  "external_comparator_auroc": 0.928737,
+  "external_comparator_auroc_ci": {
+    "bootstrap_seeds": [
+      42,
+      137,
+      271,
+      314,
+      1729
+    ],
+    "ci95": [
+      0.921543,
+      0.936042
+    ],
+    "n_bootstrap_per_seed": 200,
+    "point": 0.928737,
+    "seed_mean_aurocs": [
+      0.928787,
+      0.928446,
+      0.928479,
+      0.928707,
+      0.929222
+    ]
+  },
+  "external_comparator_implementation": {
+    "description": "For each train fold, verifier scores are oriented so higher means label=1, difficulty-weighted class-information gain estimates label utility, unconditional oriented-score correlations estimate behavioral entanglement, and normalized weights score held-out FoVer rows. This is not Carnot-current weighting and does not use the label-conditional dependency graph from arXiv:1903.05844.",
+    "folds": 5,
+    "learned_on_labels_for_weight_fit": true,
+    "mean_class_information_gain": {
+      "fr11_session_memory": 0.387345,
+      "tier0r_curry_howard": 0.495652,
+      "tier0s_arithmetic_gap": 0.126306,
+      "tier0u_logical_consistency": 0.000343
+    },
+    "mean_entanglement_penalty": {
+      "fr11_session_memory": 0.19089,
+      "tier0r_curry_howard": 0.212258,
+      "tier0s_arithmetic_gap": 0.093887,
+      "tier0u_logical_consistency": 0.060086
+    },
+    "mean_weights_across_seeds": {
+      "fr11_session_memory": 0.46347,
+      "tier0r_curry_howard": 0.427619,
+      "tier0s_arithmetic_gap": 0.10891,
+      "tier0u_logical_consistency": 2e-06
+    },
+    "method": "crossfit_difficulty_weighted_class_information_gain_deentangled",
+    "reference": "arXiv:2604.07650",
+    "verifier_scores_use_gold_label": false
+  },
+  "external_comparator_mean_orientations_by_seed": [
+    {
+      "fr11_session_memory": 1,
+      "tier0r_curry_howard": 1,
+      "tier0s_arithmetic_gap": -1,
+      "tier0u_logical_consistency": -1
+    },
+    {
+      "fr11_session_memory": 1,
+      "tier0r_curry_howard": 1,
+      "tier0s_arithmetic_gap": -1,
+      "tier0u_logical_consistency": 1
+    },
+    {
+      "fr11_session_memory": 1,
+      "tier0r_curry_howard": 1,
+      "tier0s_arithmetic_gap": -1,
+      "tier0u_logical_consistency": 1
+    },
+    {
+      "fr11_session_memory": 1,
+      "tier0r_curry_howard": 1,
+      "tier0s_arithmetic_gap": -1,
+      "tier0u_logical_consistency": 1
+    },
+    {
+      "fr11_session_memory": 1,
+      "tier0r_curry_howard": 1,
+      "tier0s_arithmetic_gap": -1,
+      "tier0u_logical_consistency": 1
+    }
+  ],
+  "external_comparator_mean_weights_by_seed": [
+    {
+      "fr11_session_memory": 0.464311,
+      "tier0r_curry_howard": 0.437232,
+      "tier0s_arithmetic_gap": 0.098449,
+      "tier0u_logical_consistency": 8e-06
+    },
+    {
+      "fr11_session_memory": 0.415385,
+      "tier0r_curry_howard": 0.453537,
+      "tier0s_arithmetic_gap": 0.131078,
+      "tier0u_logical_consistency": 0.0
+    },
+    {
+      "fr11_session_memory": 0.442087,
+      "tier0r_curry_howard": 0.411115,
+      "tier0s_arithmetic_gap": 0.146798,
+      "tier0u_logical_consistency": 0.0
+    },
+    {
+      "fr11_session_memory": 0.539242,
+      "tier0r_curry_howard": 0.386013,
+      "tier0s_arithmetic_gap": 0.074745,
+      "tier0u_logical_consistency": 0.0
+    },
+    {
+      "fr11_session_memory": 0.456325,
+      "tier0r_curry_howard": 0.450196,
+      "tier0s_arithmetic_gap": 0.093479,
+      "tier0u_logical_consistency": 0.0
+    }
+  ],
+  "field_principles": {
+    "adversarial_verify_clean": "True iff the artifact passes adversarial_verify with no critical flag.",
+    "candidate_beats_external_comparator": "BARE bool. True iff dependency-aware AUROC > external comparator AUROC with the delta CI excluding 0 -- whether the re-freeze candidate beats a published method, not just the internal prior. STORE AS BARE true/false.",
+    "carnot_current_auroc": "Carnot-current weighting under the identical protocol -- the internal bar.",
+    "delong_p_dependency_vs_external": "DeLong paired significance vs the external baseline -- a point estimate cannot decide a head-to-head.",
+    "dependency_aware_auroc": "The re-freeze candidate AUROC under the pooled protocol -- one field, no alias.",
+    "dependency_vs_external_delta_ci": "Paired delta + bootstrap CI of dependency-aware minus the external comparator -- the gap that decides candidate_beats_external.",
+    "duration_s": "Plausibility floor.",
+    "external_comparator_auroc": "The published de-entangled/CIG-style reweighting baseline AUROC -- the external bar; a DISTINCT measurement, one field.",
+    "external_comparator_implementation": "Honest description of the de-entangled/CIG-style baseline implemented (verifier authenticity: a real reweighting, not a relabeled copy of Carnot's).",
+    "honest_verdict": "Terminal prefix for reconciler classification.",
+    "inference_substrate": "verifier_ensemble_against_cached_candidates (principle: scores cached FoVer outputs; no LLM load; no compute-bound marker).",
+    "n_examples": "Sample-size rigor (FoVer n>=1000).",
+    "n_seeds": "Replication count.",
+    "random_seed": "Determinism precondition.",
+    "reproducibility_checksum": "Drift detection.",
+    "weaver_style_baseline_auroc": "The Weaver-style weak-verifier baseline (exp3644) for context."
+  },
+  "honest_verdict": "complete: dependency_aware_candidate_ties_or_loses_external_baseline_refreeze_narrowed",
+  "inference_substrate": "verifier_ensemble_against_cached_candidates (principle: scores cached FoVer outputs; no LLM load; no compute-bound marker).",
+  "n_bootstrap_per_seed": 200,
+  "n_examples": 1000,
+  "n_pooled_examples": 5000,
+  "n_seeds": 5,
+  "per_seed_results": [
+    {
+      "carnot_current_auroc": 0.914952,
+      "dependency_aware_auroc": 0.924802,
+      "dependency_minus_external_auroc": -0.005604,
+      "external_comparator_auroc": 0.930406,
+      "external_mean_orientations": {
+        "fr11_session_memory": 1,
+        "tier0r_curry_howard": 1,
+        "tier0s_arithmetic_gap": -1,
+        "tier0u_logical_consistency": -1
+      },
+      "external_mean_weights": {
+        "fr11_session_memory": 0.464311,
+        "tier0r_curry_howard": 0.437232,
+        "tier0s_arithmetic_gap": 0.098449,
+        "tier0u_logical_consistency": 8e-06
+      },
+      "n_examples": 1000,
+      "seed": 42,
+      "subset_sha256": "57c7dff98df749951de1a043294d12c0203029e92623db86529223e797ef6cd2",
+      "weaver_style_baseline_auroc": 0.85936
+    },
+    {
+      "carnot_current_auroc": 0.908738,
+      "dependency_aware_auroc": 0.92095,
+      "dependency_minus_external_auroc": -0.00362,
+      "external_comparator_auroc": 0.92457,
+      "external_mean_orientations": {
+        "fr11_session_memory": 1,
+        "tier0r_curry_howard": 1,
+        "tier0s_arithmetic_gap": -1,
+        "tier0u_logical_consistency": 1
+      },
+      "external_mean_weights": {
+        "fr11_session_memory": 0.415385,
+        "tier0r_curry_howard": 0.453537,
+        "tier0s_arithmetic_gap": 0.131078,
+        "tier0u_logical_consistency": 0.0
+      },
+      "n_examples": 1000,
+      "seed": 137,
+      "subset_sha256": "761ba450cce1eab0c6343403c958dec8408e37dd3de4a7216545a3fd31307c2d",
+      "weaver_style_baseline_auroc": 0.858032
+    },
+    {
+      "carnot_current_auroc": 0.90145,
+      "dependency_aware_auroc": 0.916566,
+      "dependency_minus_external_auroc": -0.001964,
+      "external_comparator_auroc": 0.91853,
+      "external_mean_orientations": {
+        "fr11_session_memory": 1,
+        "tier0r_curry_howard": 1,
+        "tier0s_arithmetic_gap": -1,
+        "tier0u_logical_consistency": 1
+      },
+      "external_mean_weights": {
+        "fr11_session_memory": 0.442087,
+        "tier0r_curry_howard": 0.411115,
+        "tier0s_arithmetic_gap": 0.146798,
+        "tier0u_logical_consistency": 0.0
+      },
+      "n_examples": 1000,
+      "seed": 271,
+      "subset_sha256": "0ecee5724c62fded647b43fff8f30128571da256f163c3eba53a470489b131ee",
+      "weaver_style_baseline_auroc": 0.845766
+    },
+    {
+      "carnot_current_auroc": 0.917102,
+      "dependency_aware_auroc": 0.930296,
+      "dependency_minus_external_auroc": -0.00222,
+      "external_comparator_auroc": 0.932516,
+      "external_mean_orientations": {
+        "fr11_session_memory": 1,
+        "tier0r_curry_howard": 1,
+        "tier0s_arithmetic_gap": -1,
+        "tier0u_logical_consistency": 1
+      },
+      "external_mean_weights": {
+        "fr11_session_memory": 0.539242,
+        "tier0r_curry_howard": 0.386013,
+        "tier0s_arithmetic_gap": 0.074745,
+        "tier0u_logical_consistency": 0.0
+      },
+      "n_examples": 1000,
+      "seed": 314,
+      "subset_sha256": "53dcb9dc6ecdeb540fb4b53bcc74b7870d31f1cfe4b2e54f204ced776b47c9ed",
+      "weaver_style_baseline_auroc": 0.87406
+    },
+    {
+      "carnot_current_auroc": 0.923426,
+      "dependency_aware_auroc": 0.934028,
+      "dependency_minus_external_auroc": -0.003856,
+      "external_comparator_auroc": 0.937884,
+      "external_mean_orientations": {
+        "fr11_session_memory": 1,
+        "tier0r_curry_howard": 1,
+        "tier0s_arithmetic_gap": -1,
+        "tier0u_logical_consistency": 1
+      },
+      "external_mean_weights": {
+        "fr11_session_memory": 0.456325,
+        "tier0r_curry_howard": 0.450196,
+        "tier0s_arithmetic_gap": 0.093479,
+        "tier0u_logical_consistency": 0.0
+      },
+      "n_examples": 1000,
+      "seed": 1729,
+      "subset_sha256": "42259e022c2757dddabfadcda9ef3407237d27ae1f527be8ae7a4e742d5e0ef8",
+      "weaver_style_baseline_auroc": 0.882472
+    }
+  ],
+  "preconditions_checked": [
+    {
+      "available": true,
+      "detail": "labeled_rows=8829; required>=1000",
+      "resource": "fover_corpus"
+    },
+    {
+      "available": true,
+      "detail": "loaded=tier0r_curry_howard,tier0s_arithmetic_gap,tier0u_logical_consistency",
+      "resource": "four_exp2837_scoring_verifiers"
+    },
+    {
+      "available": true,
+      "detail": "state_files=21; memory_loaded=True",
+      "resource": "fr11_session_memory_state"
+    },
+    {
+      "available": true,
+      "detail": "dependency graph, crossfit scores, and clean panel importable",
+      "resource": "exp3667_dependency_aware_implementation"
+    },
+    {
+      "available": true,
+      "detail": "n_seeds=5; condition_a=0.9131335999999999",
+      "resource": "exp2850_g1_source_artifact"
+    },
+    {
+      "available": true,
+      "detail": "exp3667_dependency=0.933238; exp3680_dependency=0.925328",
+      "resource": "exp3667_exp3680_dependency_weighting_sources"
+    },
+    {
+      "available": true,
+      "detail": "CIG/de-entangled crossfit scorer importable",
+      "resource": "cig_deentangled_external_comparator_implementation"
+    }
+  ],
+  "random_seed": 3693,
+  "random_seeds_used": [
+    42,
+    137,
+    271,
+    314,
+    1729
+  ],
+  "reproducibility_checksum": "48a23cfe353400b61b84267a282c4c878964e35a8c533689a97bfdf92dc39eef",
+  "schema": "carnot.external_comparator_dependency_vs_deentangled.v1",
+  "score_vector_checksums": {
+    "carnot_current": "4ea54b6b0b49c4831b211cfff32f42c4009d7b87bb2e75071f13ad89f676f4a9",
+    "dependency_aware": "3a30b844356d9ff8dd1555945d48a66f6c81bbf8b173a936d3f503b02c7e085a",
+    "external_comparator": "d1ffe8adbf9f7c3902cca80b64201016290beb93fcea72c38d4af34a5039bb44",
+    "weaver_style_baseline": "fb57339591495e4228e454369385c971f3d5428d16fd53c2940dcdcd4da76c9f"
+  },
+  "verifier_names": [
+    "fr11_session_memory",
+    "tier0r_curry_howard",
+    "tier0s_arithmetic_gap",
+    "tier0u_logical_consistency"
+  ],
+  "weaver_style_baseline_auroc": 0.743816
+}
