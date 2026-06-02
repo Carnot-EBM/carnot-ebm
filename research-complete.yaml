@@ -34641,56 +34641,148 @@ milestones:
     deliverable: results/experiment_3677_capstone_and_g_gate_v336.json
     result: OK (codex artifact landed)
 - id: 2026.06.337
-  title: "Dependency-aware G1 candidate, redo package/selection, code-native needed"
+  title: Dependency-aware G1 candidate, redo package/selection, code-native needed
   doc: openspec/change-proposals/research-roadmap-vNEXT.md
   completed: '2026-06-02'
-  finding: "DEPENDENCY-AWARE G1 CANDIDATE: .337 confirmed dependency-aware weighting at full G1-rigor as a re-freeze candidate (0.925328 vs frozen 0.9131, delta +0.012228, five seeds, leak-free, adversarial-clean). The re-freeze package must be re-emitted clean in .338 because exp3681 carried a vestigial marker and was DURATION_TOO_SHORT-flagged. The selection diagnosis remains OPEN: exp3682 was TAUTOLOGY-flagged and degenerate, so .338 must redo it properly rather than retire the question. The detector stayed code-blind under reweighting; a code-native signal is needed. Product value stayed robust over self-certainty, FR-11 v11 recovered no-collapse under drift, paper_ready stayed TRUE (G1-G4), P0.1 stayed honest-negative, and the frozen FoVer 0.9131 stayed frozen."
+  finding: 'DEPENDENCY-AWARE G1 CANDIDATE: .337 confirmed dependency-aware weighting at full G1-rigor as a re-freeze candidate
+    (0.925328 vs frozen 0.9131, delta +0.012228, five seeds, leak-free, adversarial-clean). The re-freeze package must be
+    re-emitted clean in .338 because exp3681 carried a vestigial marker and was DURATION_TOO_SHORT-flagged. The selection
+    diagnosis remains OPEN: exp3682 was TAUTOLOGY-flagged and degenerate, so .338 must redo it properly rather than retire
+    the question. The detector stayed code-blind under reweighting; a code-native signal is needed. Product value stayed robust
+    over self-certainty, FR-11 v11 recovered no-collapse under drift, paper_ready stayed TRUE (G1-G4), P0.1 stayed honest-negative,
+    and the frozen FoVer 0.9131 stayed frozen.'
   tasks:
   - id: exp3678-archive-v336-activate-v337
-    title: "Archive .336 honestly and activate .337"
+    title: Archive .336 honestly and activate .337
     deliverable: results/experiment_3678_archive_v336_activate_v337.json
     result: OK (codex artifact landed)
   - id: exp3679-backend-state-diagnostic-v3
-    title: "Backend-state diagnostic v3"
+    title: Backend-state diagnostic v3
     deliverable: results/experiment_3679_backend_state_diagnostic_v3.json
     result: OK (codex artifact landed)
   - id: exp3680-dependency-aware-dual-condition-integrity-g1-rigor
-    title: "Dependency-aware weighting G1-rigor dual-condition integrity"
+    title: Dependency-aware weighting G1-rigor dual-condition integrity
     deliverable: results/experiment_3680_dependency_aware_dual_condition_integrity.json
     result: CLEAN G1-rigor re-freeze candidate
   - id: exp3681-g2-reproducer-prep-operator-refreeze-package
-    title: "Prepare operator re-freeze package"
+    title: Prepare operator re-freeze package
     deliverable: results/experiment_3681_g2_reproducer_prep_operator_refreeze_package.json
     result: FLAGGED redo clean in .338
   - id: exp3682-discrimination-vs-selection-gap-diagnosis
-    title: "Diagnose discrimination-vs-selection gap"
+    title: Diagnose discrimination-vs-selection gap
     deliverable: results/experiment_3682_discrimination_vs_selection_gap.json
     result: DEGENERATE redo properly in .338
   - id: exp3683-detector-code-operating-point-hardening
-    title: "Harden detector code operating point"
+    title: Harden detector code operating point
     deliverable: results/experiment_3683_detector_code_operating_point.json
     result: CODE-BLIND code-native signal needed
   - id: exp3684-product-value-vs-self-certainty-adversarial-rebaseline
-    title: "Product value versus self-certainty rebaseline"
+    title: Product value versus self-certainty rebaseline
     deliverable: results/experiment_3684_product_value_vs_self_certainty.json
     result: ROBUST over self-certainty
   - id: exp3685-fr11-continuous-self-learning-v11-drift-aware
-    title: "FR-11 v11 drift-aware online dependency-aware weighting"
+    title: FR-11 v11 drift-aware online dependency-aware weighting
     deliverable: results/experiment_3685_fr11_continuous_self_learning_v11.json
     result: OK drift-aware no-collapse
   - id: exp3686-kv260-continuity-v24
-    title: "KV260 continuity v24"
+    title: KV260 continuity v24
     deliverable: results/experiment_3686_kv260_continuity_v24.json
     result: OK (codex artifact landed)
   - id: exp3687-polarfire-continuity-v24
-    title: "PolarFire continuity v24"
+    title: PolarFire continuity v24
     deliverable: results/experiment_3687_polarfire_continuity_v24.json
     result: OK (codex artifact landed)
   - id: exp3688-gatemate-continuity-audit-v24
-    title: "GateMate continuity audit v24"
+    title: GateMate continuity audit v24
     deliverable: results/experiment_3688_gatemate_continuity_audit_v24.json
     result: OK (codex artifact landed)
   - id: exp3689-capstone-and-g-gate-v337
-    title: "Capstone v337 and G1-G4 gate synthesis"
+    title: Capstone v337 and G1-G4 gate synthesis
     deliverable: results/experiment_3689_capstone_and_g_gate_v337.json
     result: FLAGGED hygiene; paper_ready true
+- id: 2026.06.338
+  title: "FINISH the headline re-freeze CLEANLY (re-emit the operator re-freeze package without the vestigial-marker false-flag\
+    \ exp3681 tripped; add an EXTERNAL published comparator the dependency-aware candidate must beat) and FIX the two product\
+    \ gaps that .337 left unresolved (the selection-gap diagnosis exp3682 was a degenerate no-op; the code detector is blind\
+    \ and reweighting math verifiers can't fix it \u2014 needs a code-NATIVE signal), continue FR-11 self-learning + hardware\
+    \ continuity. paper_ready MUST stay TRUE (G1-G4); the frozen FoVer headline 0.9131 stays frozen (the dependency-aware\
+    \ win is an operator re-freeze CANDIDATE, never a silent swap); facts-generalization + trained-judge-OOD + P0.1 stay RETIRED/honest-negative."
+  doc: openspec/change-proposals/research-roadmap-vNEXT.md
+  completed: '2026-06-02'
+  finding: See conductor log for per-experiment results.
+  tasks:
+  - id: exp3690-archive-v337-activate-v338
+    title: Archive milestone .337 honestly (dependency-aware weighting cleared G1-rigor CLEAN as a re-freeze CANDIDATE 0.9253>0.9131;
+      the re-freeze package + selection diagnosis came back FLAGGED/degenerate and must be redone; code detector stays blind
+      under reweighting; product value robust over self-certainty; FR-11 v11 recovers no-collapse; paper_ready stayed TRUE;
+      frozen 0.9131 unchanged) and activate .338
+    deliverable: results/experiment_3690_archive_v337_activate_v338.json
+    result: OK (conductor)
+  - id: exp3691-backend-state-diagnostic-v4
+    title: "Backend-state diagnostic v4 \u2014 fourth probe of gemini quota/crash stability (exp3653/3666/3679 all probed\
+      \ OK BUT the .337-close planner call crashed on gemini); record probe-vs-real-workload divergence; recommend whether\
+      \ .339 may flip to gemini-default; .338 stays on codex (documentation-only)"
+    deliverable: results/experiment_3691_backend_state_diagnostic_v4.json
+    result: OK (conductor)
+  - id: exp3692-refreeze-package-clean-reemit
+    title: "Re-emit the headline re-freeze PACKAGE for the operator CLEAN \u2014 clear the exp3681 vestigial-marker false-flag\
+      \ (additively extend scripts/reproduce_fover_headline.py to compute the dependency-aware AUROC+CI from exp3680, draft\
+      \ the updated CI-workflow assertion bounds, emit the operator checklist) \u2014 PREPARE-ONLY; the frozen 0.9131 stays\
+      \ frozen, the agent never edits north-star.md or triggers the CI run, and the artifact MUST pass adversarial_verify\
+      \ clean"
+    deliverable: results/experiment_3692_refreeze_package_clean_reemit.json
+    result: OK (conductor)
+  - id: exp3693-external-comparator-dependency-vs-deentangled-reweighting
+    title: "EXTERNAL comparator for the re-freeze candidate \u2014 does Carnot's label-conditional dependency-aware weighting\
+      \ (exp3680) beat a PUBLISHED weak-supervision reweighting baseline (de-entangled / CIG-style, arXiv:2604.07650) on the\
+      \ SAME FoVer corpus + protocol, not just Carnot-current? A headline candidate is stronger if it beats an external published\
+      \ method, not only the internal prior"
+    deliverable: results/experiment_3693_external_comparator_dependency_vs_deentangled.json
+    result: OK (conductor)
+  - id: exp3694-selection-gap-proper-rediagnosis
+    title: "REDO the discrimination-vs-selection diagnosis PROPERLY \u2014 exp3682 was a degenerate no-op (TAUTOLOGY-flagged,\
+      \ per_candidate_auroc collapsed to 0.555, identical 0.3443 'fixes'). Fix the corpus so discrimination reproduces (~0.93),\
+      \ then test GENUINELY-NEW methods: pessimistic LCB BoN (arXiv:2604.04648) + bootstrapped BoN (arXiv:2511.18630) + real\
+      \ per-question calibration + self-certainty composition (arXiv:2502.18581). Can an energy verifier's selection beat\
+      \ self-consistency, or is the decoupling fundamental (arXiv:2512.23067)?"
+    deliverable: results/experiment_3694_selection_gap_proper_rediagnosis.json
+    result: OK (conductor)
+  - id: exp3695-code-native-verifier-for-blind-detector
+    title: "Build a code-NATIVE verifier for the code-blind detector \u2014 exp3683 earned that reweighting MATH verifiers\
+      \ leaves code AUROC at 0.5; the fix is a code-NATIVE signal (AST/structural features + execution-trace / runtime instrumentation\
+      \ on the balanced code corpus exp3658), not a reweight. Does a code-native signal beat the 0.5 chance floor with a CI\
+      \ excluding 0.5?"
+    deliverable: results/experiment_3695_code_native_verifier.json
+    result: OK (conductor)
+  - id: exp3696-reship-detector-math-plus-code
+    title: "Re-ship the detector with a math+code operating point (gated on exp3695 code_signal_recovered==true) \u2014 wire\
+      \ the code-native verifier into python/carnot/pipeline/second_pair_detector.py, calibrate the code operating point,\
+      \ and re-run the E2E green; if the gate is not met the detector stays honestly math-only with an explicit abstain-on-code\
+      \ path"
+    deliverable: results/experiment_3696_reship_detector_math_plus_code.json
+    result: OK (conductor)
+  - id: exp3697-fr11-continuous-self-learning-v12-drift-reset
+    title: "FR-11 continuous self-learning v12 \u2014 drift-RESET policy: when detected drift does not recover within a window,\
+      \ reset to the last-known-good dependency structure (forward diff from v11's continuous re-estimation) and persist it\
+      \ across a session boundary (Tier-2 constraint memory), still collapse-guarded"
+    deliverable: results/experiment_3697_fr11_continuous_self_learning_v12.json
+    result: OK (conductor)
+  - id: exp3698-kv260-continuity-v25
+    title: "KV260 SSH-reachability continuity (UNREACHABLE .331-.337 \u2014 re-check + record honest state; flag the 8-milestone\
+      \ outage as an operator-action item)"
+    deliverable: results/experiment_3698_kv260_continuity_v25.json
+    result: OK (conductor)
+  - id: exp3699-polarfire-continuity-v25
+    title: PolarFire opportunistic reachability + continuity audit (per Hardware-Task Continuity)
+    deliverable: results/experiment_3699_polarfire_continuity_v25.json
+    result: OK (conductor)
+  - id: exp3700-gatemate-continuity-audit-v25
+    title: "GateMate continuity audit (documentation-only \u2014 openFPGALoader missing in .331-.337, per known-issues)"
+    deliverable: results/experiment_3700_gatemate_continuity_audit_v25.json
+    result: OK (conductor)
+  - id: exp3701-capstone-and-g-gate-v338
+    title: "Capstone v338 + G1-G4 gate synthesis \u2014 was the operator re-freeze package re-emitted CLEAN? does the dependency-aware\
+      \ candidate beat a published external comparator? was the selection diagnosis run PROPERLY (and is the gap closable)?\
+      \ did a code-native signal recover the code-blind detector? paper_ready must stay TRUE; frozen 0.9131 stays frozen"
+    deliverable: results/experiment_3701_capstone_and_g_gate_v338.json
+    result: OK (conductor)
