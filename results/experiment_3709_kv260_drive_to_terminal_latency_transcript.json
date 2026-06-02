@@ -1,0 +1,125 @@
+{
+  "board_harness_summary": {
+    "sample_count": 32,
+    "schema": "carnot.kv260.remote_latency_harness.v1",
+    "selected_uio": "/dev/uio4",
+    "selected_uio_addr_hex": "0x00000000a0000000"
+  },
+  "board_latency_batch_ms": 10.522808,
+  "board_latency_median_ms": 0.025465,
+  "board_latency_samples": [
+    0.02593,
+    0.02658,
+    0.0257,
+    0.02442,
+    0.023541,
+    0.02557,
+    0.02352,
+    0.025441,
+    0.02544,
+    0.02547,
+    0.025561,
+    0.02368,
+    0.02557,
+    0.023471,
+    0.02552,
+    0.02555,
+    0.025511,
+    0.02551,
+    0.02548,
+    0.025421,
+    0.02352,
+    0.02546,
+    0.025511,
+    0.02531,
+    0.02556,
+    0.025631,
+    0.02384,
+    0.02361,
+    0.02441,
+    0.02562,
+    0.02545,
+    0.025361
+  ],
+  "command_probes": {
+    "kv260_latency_harness": {
+      "combined_output": "BOARD_HARNESS_START exp3709\n{\"final_spin_words_hex\": [\"0x34e1b4e1\", \"0x34e1b4e1\"], \"fixed_compute_budget\": {\"beta_final_q88\": 256, \"max_degree\": 16, \"sample_count\": 32, \"spin_count\": 64, \"trigger_mode\": \"reset_trigger_poll_done_once_per_sample\"}, \"per_batch_wall_ms\": 10.522808, \"per_sample_wall_ms\": [0.02593, 0.02658, 0.0257, 0.02442, 0.023541, 0.02557, 0.02352, 0.025441, 0.02544, 0.02547, 0.025561, 0.02368, 0.02557, 0.023471, 0.02552, 0.02555, 0.025511, 0.02551, 0.02548, 0.025421, 0.02352, 0.02546, 0.025511, 0.02531, 0.02556, 0.025631, 0.02384, 0.02361, 0.02441, 0.02562, 0.02545, 0.025361], \"sample_count\": 32, \"schema\": \"carnot.kv260.remote_latency_harness.v1\", \"selected_uio\": \"/dev/uio4\", \"selected_uio_addr_hex\": \"0x00000000a0000000\"}\n",
+      "command": "ssh kria 'sudo python3 -'",
+      "duration_s": 0.6700734539772384,
+      "exit_code": 0,
+      "stderr": "",
+      "stdout": "BOARD_HARNESS_START exp3709\n{\"final_spin_words_hex\": [\"0x34e1b4e1\", \"0x34e1b4e1\"], \"fixed_compute_budget\": {\"beta_final_q88\": 256, \"max_degree\": 16, \"sample_count\": 32, \"spin_count\": 64, \"trigger_mode\": \"reset_trigger_poll_done_once_per_sample\"}, \"per_batch_wall_ms\": 10.522808, \"per_sample_wall_ms\": [0.02593, 0.02658, 0.0257, 0.02442, 0.023541, 0.02557, 0.02352, 0.025441, 0.02544, 0.02547, 0.025561, 0.02368, 0.02557, 0.023471, 0.02552, 0.02555, 0.025511, 0.02551, 0.02548, 0.025421, 0.02352, 0.02546, 0.025511, 0.02531, 0.02556, 0.025631, 0.02384, 0.02361, 0.02441, 0.02562, 0.02545, 0.025361], \"sample_count\": 32, \"schema\": \"carnot.kv260.remote_latency_harness.v1\", \"selected_uio\": \"/dev/uio4\", \"selected_uio_addr_hex\": \"0x00000000a0000000\"}\n"
+    },
+    "kv260_ssh": {
+      "combined_output": "",
+      "command": "ssh -o ConnectTimeout=5 -o BatchMode=yes kria true",
+      "duration_s": 4.515953308029566,
+      "exit_code": 0,
+      "stderr": "",
+      "stdout": ""
+    },
+    "kv260_xmutil_listapps_after_load": null,
+    "kv260_xmutil_listapps_after_load_sudo": null,
+    "kv260_xmutil_listapps_initial": {
+      "combined_output": "xmutil should be called with root privileges. Please try again using 'sudo'.\n",
+      "command": "ssh kria 'xmutil listapps'",
+      "duration_s": 0.7840728290029801,
+      "exit_code": 1,
+      "stderr": "xmutil should be called with root privileges. Please try again using 'sudo'.\n",
+      "stdout": ""
+    },
+    "kv260_xmutil_listapps_initial_sudo": {
+      "combined_output": "                   Accelerator  Accel_type                    Base    Pid   Base_type  #slots(RPU+PL+AIE)    slot->handle\n               carnot_ising_v4    XRT_FLAT         carnot_ising_v4  id_ok    XRT_FLAT             (0+0+0)              -1\n              k24-starter-kits    XRT_FLAT        k24-starter-kits  id_ok    XRT_FLAT             (0+0+0)              -1\n              k26-starter-kits    XRT_FLAT        k26-starter-kits  id_ok    XRT_FLAT             (0+0+0)              -1\n           carnot_ising_v2_n64    XRT_FLAT     carnot_ising_v2_n64  id_ok    XRT_FLAT             (0+0+0)           0->0,\n",
+      "command": "ssh kria 'sudo xmutil listapps'",
+      "duration_s": 0.8668558230274357,
+      "exit_code": 0,
+      "stderr": "",
+      "stdout": "                   Accelerator  Accel_type                    Base    Pid   Base_type  #slots(RPU+PL+AIE)    slot->handle\n               carnot_ising_v4    XRT_FLAT         carnot_ising_v4  id_ok    XRT_FLAT             (0+0+0)              -1\n              k24-starter-kits    XRT_FLAT        k24-starter-kits  id_ok    XRT_FLAT             (0+0+0)              -1\n              k26-starter-kits    XRT_FLAT        k26-starter-kits  id_ok    XRT_FLAT             (0+0+0)              -1\n           carnot_ising_v2_n64    XRT_FLAT     carnot_ising_v2_n64  id_ok    XRT_FLAT             (0+0+0)           0->0,\n"
+    },
+    "kv260_xmutil_loadapp": null,
+    "kv260_xmutil_loadapp_sudo": null
+  },
+  "duration_s": 6.8374,
+  "experiment_id": "exp3709",
+  "field_principles": {
+    "board_latency_median_ms": "Median on-board latency -- the POC functional anchor (NOT a speedup claim).",
+    "board_latency_samples": "The raw on-board per-sample latency distribution (>=30) -- the terminal-state transcript, not a single fabricated number.",
+    "duration_s": "Plausibility floor.",
+    "honest_verdict": "Terminal prefix for reconciler classification.",
+    "inference_substrate": "SSH-attached board test; per-board duration floor.",
+    "kv260_overlay_loaded": "Confirms the carnot_ising overlay is the latest real-board-deployable bitstream.",
+    "kv260_ssh_reachable": "The honest board state; an unreachable board is a blocked_*, not a fabricated pass.",
+    "preconditions_checked": "Records the SSH-reachability check -- the correct KV260 precondition, not host SD card.",
+    "random_seed": "Determinism precondition.",
+    "reproducibility_checksum": "Drift detection.",
+    "speedup_claim_avoided_assert": "Asserts NO thermalization/equilibrium/hardware-speedup claim is made (Paper-v6 Narrowing #2/#3).",
+    "terminal_condition_met": "True iff a non-fabricated board-latency transcript + overlay confirmation satisfies the north-star sec-3 terminal condition."
+  },
+  "fixed_compute_budget": {
+    "beta_final_q88": 256,
+    "max_degree": 16,
+    "sample_count": 32,
+    "spin_count": 64,
+    "trigger_mode": "reset_trigger_poll_done_once_per_sample"
+  },
+  "honest_verdict": "complete: kv260_board_latency_transcript_captured_poc_anchor_terminal_candidate",
+  "inference_substrate": "hardware_smoke",
+  "kv260_overlay_loaded": "carnot_ising_v2_n64",
+  "kv260_ssh_reachable": true,
+  "latency_interpretation": "POC functional fixed-compute heuristic-budget latency transcript only; no comparative CPU performance claim.",
+  "operator_action_item": "none",
+  "preconditions_checked": [
+    {
+      "available": true,
+      "command": "ssh -o ConnectTimeout=5 -o BatchMode=yes kria true",
+      "exit_code": 0,
+      "resource": "kv260_ssh"
+    }
+  ],
+  "random_seed": 3709,
+  "reproducibility_checksum": "a5c0d7eeff94c38a71202fc0f288610b3062be3c995563c34e75c27dc209f73b",
+  "schema": "carnot.kv260_terminal_latency_transcript.v1",
+  "speedup_claim_avoided_assert": true,
+  "task_id": "exp3709-kv260-drive-to-terminal-latency-transcript",
+  "terminal_condition_met": true
+}

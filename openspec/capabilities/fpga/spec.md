@@ -4425,6 +4425,73 @@ duration.
 
 ---
 
+### REQ-HW-3709
+
+**Title:** KV260 terminal POC latency transcript uses SSH-only reachability and records raw on-board samples
+
+**Description:**
+Experiment 3709 MUST drive the KV260 hardware-task continuity mandate to a
+terminal-candidate board-latency transcript. KV260 lives on SSH, so the ONLY
+permitted precondition is:
+
+`ssh -o ConnectTimeout=5 -o BatchMode=yes kria 'true'`
+
+The host SD-card device-node precondition is permanently retired and MUST NOT be
+used. If SSH is reachable, the experiment MUST run `ssh kria 'xmutil listapps'`
+and, when the Carnot Ising overlay is not already listed, MUST run
+`ssh kria 'xmutil loadapp carnot_ising_v2_n64'` before re-checking the overlay.
+If the board-side `xmutil` command reports that root privileges are required,
+the experiment MAY retry the same `xmutil` operation as `sudo xmutil` over SSH,
+while preserving the original non-sudo probe in the command transcript.
+The experiment MUST then run the on-board Ising sampler over SSH and record
+board-measured per-sample and per-batch wall-clock latency using a fixed compute
+budget. The transcript is a POC functional latency anchor only; it MUST NOT make
+thermalization, equilibrium-sampling, or hardware-speedup-over-CPU claims.
+
+**Acceptance criteria:**
+- `results/experiment_3709_kv260_drive_to_terminal_latency_transcript.json` is generated.
+- The artifact includes `honest_verdict`, `inference_substrate`,
+  `preconditions_checked`, `kv260_ssh_reachable`, `kv260_overlay_loaded`,
+  `board_latency_samples`, `board_latency_median_ms`,
+  `terminal_condition_met`, `speedup_claim_avoided_assert`, `random_seed`,
+  `reproducibility_checksum`, and `duration_s`.
+- The artifact includes field-principle annotations for the required fields,
+  while the required fields store bare values.
+- `inference_substrate` MUST be exactly `"hardware_smoke"` and MUST NOT include
+  GGUF or CUDA markers.
+- If `ssh` fails, the verdict MUST be
+  `"complete: blocked_kv260_ssh_unreachable"` and no overlay, host storage, or
+  sampler command may be run.
+- If `ssh` succeeds and at least 30 positive on-board latency samples are
+  captured with a confirmed Carnot Ising overlay, the verdict MUST be
+  `"complete: kv260_board_latency_transcript_captured_poc_anchor_terminal_candidate"`
+  and `terminal_condition_met` MUST be `true`.
+- No implementation or test path may invoke `/dev/mmcblk*`, `/dev/disk*`, or any
+  host SD-card device-node check as a KV260 precondition.
+
+**Implementation status:** Pending (Exp 3709)
+
+---
+
+### SCENARIO-HW-3709
+
+**Scenario:** KV260 terminal-candidate latency transcript records reachable or blocked state honestly.
+
+**Given:** The KV260 board is the current hardware-task continuity target and
+must be checked by SSH reachability only.
+**When:** Experiment 3709 runs the SSH precondition, confirms or loads the
+Carnot Ising overlay, and runs the board sampler timing harness over SSH.
+**Then:** It writes
+`results/experiment_3709_kv260_drive_to_terminal_latency_transcript.json` with
+the terminal-prefixed verdict, SSH state, overlay state, raw latency
+distribution, fixed compute budget, terminal-condition flag, field principles,
+deterministic seed, checksum, and duration.
+
+**Implementation status:** Pending (Exp 3709)
+
+
+---
+
 ### REQ-HW-3687
 
 **Title:** PolarFire continuity v24 MUST confirm live SSH continuity for milestone .337
