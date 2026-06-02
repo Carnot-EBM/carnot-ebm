@@ -7578,3 +7578,4 @@ web search: https://docs.garak.ai/garak/examples/pr |
 | 2026-06-02 05:32 UTC | FR-11 continuous self-learning v12 — drift-RESET p | OK | 87 passed in 4.72s |
 | 2026-06-02 05:44 UTC | KV260 SSH-reachability continuity (UNREACHABLE .33 | OK | 90 passed in 3.92s |
 | 2026-06-02 06:46 UTC | PolarFire opportunistic reachability + continuity  | OK | 89 passed in 3.84s |
+| 2026-06-02 06:56 UTC | GateMate continuity audit (documentation-only — op | OK | 89 passed in 4.65s |
