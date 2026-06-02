@@ -279,6 +279,41 @@ MUST honestly scope the shipped detector as math-only for code discrimination.
 - Tests cover recovered, math-only, and blocked outcomes using synthetic
   fixtures rather than hard-coding a real-corpus success string.
 
+### REQ-SPOE-3684: Product Value Rebaseline Against Self-Certainty
+
+The pipeline MUST provide an Exp 3684 runner that re-measures the shipped
+second-pair detector against the stronger free self-certainty comparator on the
+FoVer math corpus and balanced Exp 3658 code corpus.  The runner MUST report
+self-certainty-alone AUROC, plain-confidence-alone AUROC, ensemble-alone AUROC,
+and fused ensemble+self-certainty AUROC per domain.  It MUST compute paired
+bootstrap delta CIs for fused ensemble+self-certainty minus self-certainty-alone
+and recall-at-fixed-FPR tables.  If token-level logits or probabilities are not
+available in the cached corpora, the runner MUST use a disclosed proxy and state
+the verifier-authenticity gap rather than silently relabeling plain confidence.
+
+**Acceptance criteria:**
+- The artifact includes `honest_verdict`, `inference_substrate`,
+  `self_certainty_auroc_per_domain`,
+  `plain_confidence_auroc_per_domain`,
+  `fused_ensemble_self_certainty_auroc_per_domain`,
+  `ensemble_minus_self_certainty_delta_ci_per_domain`,
+  `self_certainty_implementation`,
+  `ensemble_adds_value_over_self_certainty`, `n_examples_per_domain`,
+  `random_seed`, `reproducibility_checksum`, and `duration_s`.
+- `ensemble_adds_value_over_self_certainty` is a bare top-level bool and is
+  true only when at least one domain has fused-minus-self-certainty paired delta
+  CI excluding zero on the positive side.
+- The honest verdict is one of:
+  `complete: ensemble_adds_value_over_self_certainty_product_value_robust`,
+  `complete: product_value_collapses_vs_self_certainty_claim_narrowed`, or
+  `complete: blocked_no_labeled_corpus_for_rebaseline`.
+- The runner keeps per-domain null discipline: a collapsed edge against
+  self-certainty narrows only the detector product-value claim and does not
+  affect the separate FoVer discrimination headline.
+- Tests cover `ensemble_adds_value_over_self_certainty`,
+  `value_collapses_vs_stronger_baseline`, and `blocked` with synthetic fixtures
+  rather than hard-coding a real-corpus success string.
+
 ## Scenarios
 
 ### SCENARIO-INFRA-052: Version-Blocked Model Raises Error
@@ -411,6 +446,18 @@ present
 when the CI excludes the 0.5 chance floor.
 
 **Spec traces:** REQ-SPOE-3683
+
+### SCENARIO-SPOE-3684: Product Value Outcomes Stay Honest Against Self-Certainty
+
+**Given** synthetic rebaseline fixtures covering
+`ensemble_adds_value_over_self_certainty`,
+`value_collapses_vs_stronger_baseline`, and `blocked`
+**When** the Exp 3684 product-value artifact is assembled
+**Then** it returns the corresponding terminal verdict, preserves
+`ensemble_adds_value_over_self_certainty` as a bare bool, and only counts
+additive value when the paired delta CI excludes zero.
+
+**Spec traces:** REQ-SPOE-3684
 
 ### REQ-SAMPLE-020: SparseIsingEBM K-Regular Graph
 

@@ -1,0 +1,395 @@
+{
+  "acceptance_gate": {
+    "condition": "self_certainty_auroc_per_domain present AND fused_ensemble_self_certainty_auroc_per_domain present AND ensemble_minus_self_certainty_delta_ci_per_domain present",
+    "passed": true,
+    "principle": "A robust-product verdict requires the stronger baseline, the fused number and the paired delta CI per domain -- comparing only against plain confidence would repeat the weak-baseline inflation this task checks for."
+  },
+  "artifact": "experiment_3684_product_value_vs_self_certainty",
+  "calibrator": {
+    "coef": [
+      0.881965,
+      0.891557
+    ],
+    "feature_names": [
+      "ensemble_energy",
+      "self_certainty_error"
+    ],
+    "intercept": -4.345818,
+    "method": "logistic"
+  },
+  "corpus_status": {
+    "code": {
+      "balanced_exp3658": true,
+      "n_examples": 60,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/data/code_verification_corpus_v2.jsonl",
+      "status": "loaded"
+    },
+    "math": {
+      "n_examples": 6548,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/data/fover_corpus_v4.json",
+      "status": "loaded"
+    }
+  },
+  "duration_s": 7.554371,
+  "ensemble_adds_value_over_self_certainty": true,
+  "ensemble_alone_auroc_per_domain": {
+    "code": {
+      "bootstrap_seeds": [
+        3684,
+        3685,
+        3686
+      ],
+      "ci95": [
+        0.5,
+        0.5
+      ],
+      "n": 18,
+      "n_negative_correct": 9,
+      "n_positive_errors": 9,
+      "point": 0.5,
+      "seed_mean_aurocs": [
+        0.5,
+        0.5,
+        0.5
+      ]
+    },
+    "math": {
+      "bootstrap_seeds": [
+        3684,
+        3685,
+        3686
+      ],
+      "ci95": [
+        0.963435,
+        0.984928
+      ],
+      "n": 1964,
+      "n_negative_correct": 1930,
+      "n_positive_errors": 34,
+      "point": 0.974931,
+      "seed_mean_aurocs": [
+        0.975383,
+        0.9756,
+        0.974378
+      ]
+    }
+  },
+  "ensemble_minus_self_certainty_delta_ci_per_domain": {
+    "code": {
+      "bootstrap_seeds": [
+        3684,
+        3685,
+        3686
+      ],
+      "ci95": [
+        0.0,
+        0.0
+      ],
+      "delta_ci_excludes_zero": false,
+      "n": 18,
+      "n_negative_correct": 9,
+      "n_positive_errors": 9,
+      "point": 0.0,
+      "seed_mean_deltas": [
+        0.0,
+        0.0,
+        0.0
+      ]
+    },
+    "math": {
+      "bootstrap_seeds": [
+        3684,
+        3685,
+        3686
+      ],
+      "ci95": [
+        0.463435,
+        0.484928
+      ],
+      "delta_ci_excludes_zero": true,
+      "n": 1964,
+      "n_negative_correct": 1930,
+      "n_positive_errors": 34,
+      "point": 0.474931,
+      "seed_mean_deltas": [
+        0.475383,
+        0.4756,
+        0.474378
+      ]
+    }
+  },
+  "field_principles": {
+    "duration_s": "Plausibility floor.",
+    "ensemble_adds_value_over_self_certainty": "BARE bool. True iff on >=1 domain the fused detector beats self-certainty-alone with the delta CI excluding 0 -- the robust-product-value verdict. STORE AS BARE true/false.",
+    "ensemble_minus_self_certainty_delta_ci_per_domain": "Paired delta + CI of fused vs self-certainty-alone per domain -- the additive value over the stronger baseline.",
+    "fused_ensemble_self_certainty_auroc_per_domain": "Ensemble + self-certainty fused AUROC per domain -- the product number under the stronger baseline.",
+    "honest_verdict": "Terminal prefix for reconciler classification.",
+    "inference_substrate": "verifier_ensemble_against_cached_candidates (principle: scores cached corpora; no LLM load).",
+    "n_examples_per_domain": "Sample-size rigor per domain.",
+    "plain_confidence_auroc_per_domain": "The original (weaker) baseline -- shows whether the prior claim leaned on a weak comparator.",
+    "random_seed": "Determinism precondition.",
+    "reproducibility_checksum": "Drift detection.",
+    "self_certainty_auroc_per_domain": "The stronger free baseline AUROC per domain (math, code) -- the new bar.",
+    "self_certainty_implementation": "Honest description of the self-certainty implementation or the disclosed proxy + its gap (verifier authenticity)."
+  },
+  "fused_ensemble_self_certainty_auroc_per_domain": {
+    "code": {
+      "bootstrap_seeds": [
+        3684,
+        3685,
+        3686
+      ],
+      "ci95": [
+        0.5,
+        0.5
+      ],
+      "n": 18,
+      "n_negative_correct": 9,
+      "n_positive_errors": 9,
+      "point": 0.5,
+      "seed_mean_aurocs": [
+        0.5,
+        0.5,
+        0.5
+      ]
+    },
+    "math": {
+      "bootstrap_seeds": [
+        3684,
+        3685,
+        3686
+      ],
+      "ci95": [
+        0.963435,
+        0.984928
+      ],
+      "n": 1964,
+      "n_negative_correct": 1930,
+      "n_positive_errors": 34,
+      "point": 0.974931,
+      "seed_mean_aurocs": [
+        0.975383,
+        0.9756,
+        0.974378
+      ]
+    }
+  },
+  "heldout_examples_per_domain": {
+    "code": 18,
+    "math": 1964
+  },
+  "honest_verdict": "complete: ensemble_adds_value_over_self_certainty_product_value_robust",
+  "inference_substrate": "verifier_ensemble_against_cached_candidates (principle: scores cached corpora; no LLM load).",
+  "material_win_per_domain": {
+    "code": false,
+    "math": true
+  },
+  "n_examples_per_domain": {
+    "code": 60,
+    "math": 6548
+  },
+  "ops_docs_reconciliation_left_to_conductor": true,
+  "output_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_3684_product_value_vs_self_certainty.json",
+  "plain_confidence_auroc_per_domain": {
+    "code": {
+      "bootstrap_seeds": [
+        3684,
+        3685,
+        3686
+      ],
+      "ci95": [
+        0.5,
+        0.5
+      ],
+      "n": 18,
+      "n_negative_correct": 9,
+      "n_positive_errors": 9,
+      "point": 0.5,
+      "seed_mean_aurocs": [
+        0.5,
+        0.5,
+        0.5
+      ]
+    },
+    "math": {
+      "bootstrap_seeds": [
+        3684,
+        3685,
+        3686
+      ],
+      "ci95": [
+        0.5,
+        0.5
+      ],
+      "n": 1964,
+      "n_negative_correct": 1930,
+      "n_positive_errors": 34,
+      "point": 0.5,
+      "seed_mean_aurocs": [
+        0.5,
+        0.5,
+        0.5
+      ]
+    }
+  },
+  "prior_confidence_claim_assessment_per_domain": {
+    "code": {
+      "adds_over_self_certainty": false,
+      "beats_plain_confidence": false,
+      "inflated_by_weak_baseline": false
+    },
+    "math": {
+      "adds_over_self_certainty": true,
+      "beats_plain_confidence": true,
+      "inflated_by_weak_baseline": false
+    }
+  },
+  "random_seed": 3684,
+  "recall_at_fixed_fpr_table": {
+    "code": {
+      "0.05": {
+        "ensemble_actual_fpr": 0.0,
+        "ensemble_recall": 0.0,
+        "ensemble_threshold": null,
+        "fused_actual_fpr": 0.0,
+        "fused_recall": 0.0,
+        "fused_threshold": null,
+        "plain_confidence_actual_fpr": 0.0,
+        "plain_confidence_recall": 0.0,
+        "plain_confidence_threshold": null,
+        "self_certainty_actual_fpr": 0.0,
+        "self_certainty_recall": 0.0,
+        "self_certainty_threshold": null
+      },
+      "0.10": {
+        "ensemble_actual_fpr": 0.0,
+        "ensemble_recall": 0.0,
+        "ensemble_threshold": null,
+        "fused_actual_fpr": 0.0,
+        "fused_recall": 0.0,
+        "fused_threshold": null,
+        "plain_confidence_actual_fpr": 0.0,
+        "plain_confidence_recall": 0.0,
+        "plain_confidence_threshold": null,
+        "self_certainty_actual_fpr": 0.0,
+        "self_certainty_recall": 0.0,
+        "self_certainty_threshold": null
+      },
+      "0.20": {
+        "ensemble_actual_fpr": 0.0,
+        "ensemble_recall": 0.0,
+        "ensemble_threshold": null,
+        "fused_actual_fpr": 0.0,
+        "fused_recall": 0.0,
+        "fused_threshold": null,
+        "plain_confidence_actual_fpr": 0.0,
+        "plain_confidence_recall": 0.0,
+        "plain_confidence_threshold": null,
+        "self_certainty_actual_fpr": 0.0,
+        "self_certainty_recall": 0.0,
+        "self_certainty_threshold": null
+      }
+    },
+    "math": {
+      "0.05": {
+        "ensemble_actual_fpr": 0.049741,
+        "ensemble_recall": 0.941176,
+        "ensemble_threshold": 0.358444,
+        "fused_actual_fpr": 0.049741,
+        "fused_recall": 0.941176,
+        "fused_threshold": 0.014246,
+        "plain_confidence_actual_fpr": 0.0,
+        "plain_confidence_recall": 0.0,
+        "plain_confidence_threshold": null,
+        "self_certainty_actual_fpr": 0.0,
+        "self_certainty_recall": 0.0,
+        "self_certainty_threshold": null
+      },
+      "0.10": {
+        "ensemble_actual_fpr": 0.1,
+        "ensemble_recall": 0.970588,
+        "ensemble_threshold": 0.353894,
+        "fused_actual_fpr": 0.1,
+        "fused_recall": 0.970588,
+        "fused_threshold": 0.013334,
+        "plain_confidence_actual_fpr": 0.0,
+        "plain_confidence_recall": 0.0,
+        "plain_confidence_threshold": null,
+        "self_certainty_actual_fpr": 0.0,
+        "self_certainty_recall": 0.0,
+        "self_certainty_threshold": null
+      },
+      "0.20": {
+        "ensemble_actual_fpr": 0.2,
+        "ensemble_recall": 1.0,
+        "ensemble_threshold": 0.351022,
+        "fused_actual_fpr": 0.2,
+        "fused_recall": 1.0,
+        "fused_threshold": 0.012788,
+        "plain_confidence_actual_fpr": 0.0,
+        "plain_confidence_recall": 0.0,
+        "plain_confidence_threshold": null,
+        "self_certainty_actual_fpr": 0.0,
+        "self_certainty_recall": 0.0,
+        "self_certainty_threshold": null
+      }
+    }
+  },
+  "reproducibility_checksum": "313cd4c281c336f1",
+  "schema": "carnot.product_value_vs_self_certainty.v1",
+  "scripts_research_conductor_modified": false,
+  "self_certainty_auroc_per_domain": {
+    "code": {
+      "bootstrap_seeds": [
+        3684,
+        3685,
+        3686
+      ],
+      "ci95": [
+        0.5,
+        0.5
+      ],
+      "n": 18,
+      "n_negative_correct": 9,
+      "n_positive_errors": 9,
+      "point": 0.5,
+      "seed_mean_aurocs": [
+        0.5,
+        0.5,
+        0.5
+      ]
+    },
+    "math": {
+      "bootstrap_seeds": [
+        3684,
+        3685,
+        3686
+      ],
+      "ci95": [
+        0.5,
+        0.5
+      ],
+      "n": 1964,
+      "n_negative_correct": 1930,
+      "n_positive_errors": 34,
+      "point": 0.5,
+      "seed_mean_aurocs": [
+        0.5,
+        0.5,
+        0.5
+      ]
+    }
+  },
+  "self_certainty_implementation": {
+    "cached_corpus_signal_available": "FoVer v4 exposes scalar confidence only; balanced Exp3658 code rows expose no token logits/probabilities and reuse the cached confidence/self-consistency baseline.",
+    "gap": "This is a scalar-confidence proxy, not true arXiv:2502.18581 token-distribution self-certainty; it is disclosed and kept separate from plain_confidence_auroc_per_domain.",
+    "implemented_exact_helper": "token_distribution_self_certainty(probability_distributions)",
+    "paper_definition": "Mean KL divergence between each predicted token distribution and the uniform distribution over that token's support; higher means a more peaked model distribution.",
+    "proxy_disclosure_required": true,
+    "proxy_formula": "p_error=confidence_error; KL=p_error*log(2*p_error)+(1-p_error)*log(2*(1-p_error)); self_certainty_error=(2*p_error-1)*KL so larger scores mean higher error risk.",
+    "proxy_used_for_rebaseline": "signed_bernoulli_uniform_kl_from_confidence_error"
+  },
+  "tests_run": [
+    "pytest tests/python/test_experiment_3684_product_value_vs_self_certainty.py"
+  ]
+}
