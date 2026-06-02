@@ -260,6 +260,63 @@ gates all clear.
 |---|---|---|
 | REQ-VERIFY-2980 | Implemented (`python/carnot/eval/sota_solver_formalization_feedback_v2.py`) | Implemented (`tests/python/test_experiment_2980_sota_solver_formalization_feedback.py`) |
 
+### REQ-VERIFY-3719: Fresh-Corpus Headline Discrimination Replication
+
+The repository shall provide an Exp 3719 cached-corpus replication harness that
+measures the same four FoVer-scoring verifiers
+(`fr11_session_memory`, `tier0r_curry_howard`,
+`tier0s_arithmetic_gap`, and `tier0u_logical_consistency`) on a step-error
+corpus distinct from FoVer and writes
+`results/experiment_3719_headline_replication_fresh_corpus.json`.
+
+The harness MUST prefer an on-disk distinct labeled process or step-error
+corpus and MUST NOT treat FoVer-derived corpora as fresh. When no distinct
+on-disk corpus is available and no mandated local SOTA GGUF generation path is
+run, it MUST write a blocked artifact with
+`honest_verdict="complete: blocked_no_fresh_step_error_corpus"`. When scoring a
+cached corpus, it MUST use
+`inference_substrate="verifier_ensemble_against_cached_candidates"` and MUST
+not record a GGUF marker. If live corpus generation runs, it MUST use
+`inference_substrate="live_llm_inference"` and enforce the live-inference
+preconditions outside the cached-only path.
+
+The terminal artifact MUST include `honest_verdict`, `inference_substrate`,
+`fresh_corpus_source`, `fresh_corpus_auroc`,
+`fresh_corpus_auroc_ci`, `frozen_fover_auroc`,
+`generalizes_beyond_fover`, `n_seeds`, `n_examples`,
+`frozen_headline_unchanged_assert`, `adversarial_verify_clean`,
+`random_seed`, `reproducibility_checksum`, and `duration_s`.
+`generalizes_beyond_fover` MUST be stored as a bare boolean and MUST be true
+only when the fresh-corpus AUROC CI brackets the frozen 0.9131-class
+discrimination. `frozen_fover_auroc` MUST remain the frozen FoVer headline
+comparison and MUST NOT replace or mutate the published FoVer artifact.
+
+### SCENARIO-VERIFY-3719: Distinct Corpus Produces Honest Generalization Verdict
+
+Given a non-FoVer labeled process or step-error corpus is available from
+checked-in traces,
+When the Exp 3719 harness assembles candidate-only text rows, scores the four
+FoVer-scoring verifiers for five deterministic seeds, and computes the
+fresh-corpus AUROC CI,
+Then it writes the required terminal artifact, records source provenance,
+positive/negative balance, per-seed AUROC values, a reproducibility checksum,
+and an honest terminal verdict of either
+`complete: headline_discrimination_generalizes_to_fresh_corpus_g1_strengthened`
+or
+`complete: headline_discrimination_is_fover_specific_generalization_narrowed_honest`
+depending on whether the CI brackets the frozen 0.9131-class value.
+
+If the only available step-level corpus is FoVer-derived or no distinct corpus
+can be assembled, then the same harness writes
+`complete: blocked_no_fresh_step_error_corpus` without scoring or claiming a
+fresh-corpus AUROC.
+
+## Implementation Status (REQ-VERIFY-3719)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-VERIFY-3719 | Implemented (`python/carnot/verify/headline_replication_fresh_corpus.py`) | Implemented (`tests/python/test_experiment_3719_headline_replication_fresh_corpus.py`) |
+
 ### REQ-VERIFY-2992: SOTA Solver Formalization Provenance Reproduction
 
 The repository shall provide an Exp 2992 local SOTA solver-feedback
