@@ -7605,3 +7605,5 @@ web search: https://docs.garak.ai/garak/examples/pr |
 | 2026-06-02 16:47 UTC | FR-11 continuous self-learning v14 — distribution- | OK | 89 passed in 5.41s |
 | 2026-06-02 17:03 UTC | Hardware continuity (consolidated, all 3 boards) — | OK | 90 passed in 5.16s |
 | 2026-06-02 17:20 UTC | CONVERGENCE SYNTHESIS + operator next-thesis recom | OK | 88 passed in 4.97s |
+| 2026-06-02 17:37 UTC | Capstone v340 + G1-G4 gate synthesis — was the fla | OK | 85 passed in 4.76s |
+| 2026-06-02 17:39 UTC | Milestone 2026.06.341 activated | OK | 8 tasks queued |
