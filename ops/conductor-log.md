@@ -7596,3 +7596,4 @@ web search: https://docs.garak.ai/garak/examples/pr |
 | 2026-06-02 13:35 UTC | Plan milestone 2026.06.340 | OK | 11 tasks proposed |
 | 2026-06-02 13:37 UTC | Milestone 2026.06.340 activated | OK | 11 tasks queued |
 | 2026-06-02 13:52 UTC | Archive milestone .339 honestly (CONVERGENCE miles | OK | 107 passed in 4.83s |
+| 2026-06-02 15:01 UTC | Backend-state diagnostic v6 — sixth probe of gemin | OK | 92 passed in 4.46s |
