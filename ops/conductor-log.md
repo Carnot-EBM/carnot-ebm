@@ -7561,3 +7561,4 @@ web search: https://docs.garak.ai/garak/examples/pr |
 | 2026-06-02 00:20 UTC | Harden the shipped detector's CODE operating point | OK | 89 passed in 4.38s |
 | 2026-06-02 00:36 UTC | Adversarial product re-baseline vs self-certainty  | OK | 90 passed in 4.11s |
 | 2026-06-02 00:51 UTC | FR-11 continuous self-learning v11 — drift-aware o | OK | 86 passed in 4.84s |
+| 2026-06-02 01:25 UTC | KV260 SSH-reachability continuity (UNREACHABLE .33 | OK | 89 passed in 4.27s |
