@@ -20629,3 +20629,49 @@ to the operator that the next substantive direction is theirs to seed.
 - **A Survey of Process Reward Models (arXiv:2510.08049) + Process Reward Agents (arXiv:2604.09482):**
   current PRM operating-point / step-level deployment practice — the peer frame for positioning the
   Carnot step-error discriminator's risk-coverage envelope against SOTA PRMs.
+
+### New references for .342 (Thesis-A EBT-as-generator bring-up — training stability + matched-compute)
+
+Added by the .342 planning sweep (Claude Opus 4.8, 2026-06-02). `.341` began Thesis A
+(operator-seeded energy-as-GENERATOR, EBT, arXiv:2507.02092) but its kill-gate part-(a)
+verdict was an INFRASTRUCTURE FALSE-NEGATIVE: the single-step smoke (exp3726) PASSED (38M EBT
+fits the 3090 at 1283 MB, loss finite + decreasing), but the bounded-training task (exp3728)
+bailed at 0 steps on a cwd/import-path precondition bug (`ebt_vendored: false` though the
+module imports fine), and the verdict (exp3729) mislabeled that as "bounded at small scale."
+`.342` corrects the record and runs the GENUINE bounded training + the matched-COMPUTE
+comparison, using the stability recipes below.
+
+- **Energy-Based Transformers are Scalable Learners and Thinkers (arXiv:2507.02092; ICLR 2026):**
+  the anchor. Inference = gradient-descent energy minimization. Load-bearing STABILITY recipe
+  (Sec 3.3 + App I): replay buffer; Langevin noise during sampling; **randomize step-size alpha
+  AND number of optimization steps per batch** (ablation: removing random-alpha "nearly
+  eliminated thinking gains" — not optional); clamp optimization gradients; normalize data.
+  Smallest AR-NLP config ~44M params — close to our ~38M target. Caveat for the thesis: the
+  paper itself says "the FLOP calculation is nuanced" and EBTs win on *scaling rate*, not raw
+  performance at tested scale — exactly why our test must be matched-COMPUTE, not matched-params.
+- **Improved Contrastive Divergence Training of EBMs (arXiv:2012.01316, Du et al.):** the
+  canonical CD-stability fix — add the usually-neglected KL gradient term (the dominant cause of
+  CD divergence) + data augmentation + reservoir/replay sampling. Same lineage as the EBT replay
+  buffer; the most battle-tested concrete recipe to apply directly if the tiny EBT diverges.
+- **Autoregressive LMs are Secretly Energy-Based Models / ARM-EBM bijection (arXiv:2512.15605):**
+  explicit function-space bijection between ARMs and EBMs (max-ent RL soft-Bellman), with
+  theoretical EBM->ARM distillation error bounds. Formalizes WHY energy-as-generator and AR are
+  two views of one object — the comparison axis .342 tests — and gives the distillation-bound
+  framing for the matched-compute argument.
+- **Is Best-of-N the Best of Them? (arXiv:2503.21878):** Best-of-N provably reward-hacks at large
+  N; InferenceTimePessimism (rejection sampling) is optimal and non-degrading. The fair AR
+  best-of-N baseline construction for the energy-descent-vs-AR matched-COMPUTE comparison.
+- **gradient-Reasoner: LLM Reasoning via Test-Time Gradient Descent in Latent Space
+  (arXiv:2603.04948):** closest 2026 instantiation of energy-as-generator-at-inference outside
+  the EBT line; a natural comparator/baseline for energy-descent generation.
+- **Particle Dynamics for Latent-Variable EBMs (arXiv:2510.15447):** discriminator-free,
+  provably-stable LVEBM training via coupled Wasserstein gradient flows (alternating Langevin +
+  stochastic parameter ascent). A fallback stability scheme if the vanilla contrastive loop
+  diverges on the 3090.
+- **sigmaReparam — Stabilizing Transformer Training by Preventing Attention Entropy Collapse
+  (arXiv:2303.06296, Apple):** spectral-norm reparam + learned scalar; architecture-level
+  stabilizer for the small EBT backbone (the energy head can otherwise push attention to
+  collapse), enables stable high-LR training.
+- **A Theoretical Lens for RL-Tuned LMs via EBMs (arXiv:2512.18730):** exact equivalence between
+  the RLVR objective and minimizing expected KL to an optimal reasoning distribution — unifies
+  the verifier-as-energy and generator-as-energy views under one objective.

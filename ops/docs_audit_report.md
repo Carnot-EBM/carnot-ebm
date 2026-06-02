@@ -4,49 +4,50 @@
 # docs_audit_report — 2026-06-02
 
 ## TL;DR (stranger's 30-second take)
-I would close this tab. The page starts strong but immediately devolves into a dense wall of internal metrics, unexplained acronyms, and broken test-path outputs masquerading as results.
+The page starts strong with a clear value proposition and beautiful design, but quickly devolves into an impenetrable wall of internal acronyms, leaked file paths, and perfect benchmark numbers. A stranger would likely close the tab at the "Evidence" section, overwhelmed by the hyper-specific jargon and retrospective blog posts that read like a team dashboard rather than a product landing page.
 
 ## TOP 3 PROBLEMS
-1. Broken test output leaking into public UI — The SOTA 35B result card displays a raw pytest temp path instead of a metric.
-2. Incomprehensible Jargon Soup — "FoVer (5-seed dual-condition)", "PREM variance", and "PRM-BiasBench-style" mean nothing to a stranger.
-3. Perfect number fabrications — Claiming exactly 1.0 extraction rate and 60/60 attack catches sets off immediate snake-oil alarms.
+1. **Leaked internal paths in public copy**: The Live Benchmark results card contains a literal local file path (`@.tmp-pytest/pytest-of-ianblenke/...`) instead of readable copy.
+2. **Dense alphabet soup of acronyms**: The page is littered with undefined terms like "FoVer", "SVAMP", "CCTU", "PREM", and "TTC" that alienate a general audience.
+3. **Suspiciously perfect numbers**: Perfect scores (1.0 True Positive rate, 60/60 attacks caught, exactly 2.0x speedups) appear throughout the results without any anchoring links to prove they aren't fabricated.
 
 ## DETAILED FINDINGS
 ### Bloat
-- Results Grid — 12 cards — Cap at 4-6. A stranger will read zero if presented with a wall of 12 numbers they lack context for.
-- Writing Section — 7 blog posts — Cap at 3. The descriptions are too long and look like a dumped RSS feed.
+- **Recent progress card** — 69 words — Cap at 60 words. The detailed repinning history and multiple AUROC mentions clutter the hero section.
+- **Results grid** — 12 cards — Cap at 6 cards. Showing this many hyper-specific metrics guarantees a stranger will skim none of them.
+- **Blog section** — 7 cards — Cap at 3 or 4 highlights. Too many internal retrospectives overwhelm the narrative.
 
 ### Internal jargon
-- Hero Stat Bar — "FoVer math step-errors (5-seed)" — A stranger has no idea what FoVer is or why a 5-seed matters.
-- Recent Progress Card — "(5-seed dual-condition; architecture-only 0.8947). Repinned from v2 0.9857 after pre-submission adversarial audit" — Pure insider baseball.
-- Features / TTC & PREM — "Process-Reward Energy Model (PREM) variance" — Unexplained acronym and concept.
-- Results / Math reasoning — "EstimationVerifier SVAMP AUC... (vs 0.125 FoVer baseline)" — Jargon acronyms (SVAMP, FoVer) without definitions.
-- Results / Tool use — "CCTU constrained micro-benchmark" — What is CCTU?
-- Results / Adversarial audit — "PRM-BiasBench-style attacks" — Highly specific niche benchmark term.
-- Results / Safety — "(publication gate)" — Internal process terminology.
+- **Stats bar / Recent progress** — `FoVer`, `5-seed dual-condition`, `architecture-only 0.8947` — A stranger has no idea what these datasets, configurations, or split conditions mean.
+- **Capabilities (TTC & PREM)** — `Test-Time Compute (TTC)`, `Process-Reward Energy Model (PREM)` — Throwing undefined acronyms at the user.
+- **Results section** — `HumanEval-50`, `execute-feedback-retry`, `EstimationVerifier SVAMP AUC`, `VeriCoT equation-style CoT fix`, `PRM-BiasBench-style attacks` — Extremely specific nomenclature that assumes deep familiarity with the project's internal testing harness.
+- **Results section** — `@.tmp-pytest/pytest-of-ianblenke/pytest-4/popen-gw0/test_req_verify_2932_run_uses_0/citation_hallucination_field_verifier_2932_raw/spilled-energy-2602-18671:real.txt` — This is a literal leaked test environment path that completely breaks the page's professional facade.
 
 ### Per-milestone narrative
-- Recent Progress Card — "Repinned from v2 0.9857 after pre-submission adversarial audit; see Why We Report Two AUROCs Now." — Reads like a copy-pasted internal slack update or retrospective, not landing page copy.
-- Hero Stats — "382 Completed milestones" — A meaningless metric to anyone outside the core team.
+- **Stats bar** — `382 Completed milestones` — Internal project management trivia that means nothing to an outsider.
+- **Blog section** — "We paid for a hostile audit of our paper draft. Seven fatal findings. Three rescue measurements. Two retractions, one rescue." — This reads exactly like an internal retrospective or sprint closeout, not public marketing copy.
+- **Blog section** — "Our autonomous research loop produced an artifact claiming a complete evaluation... What we found, and the seven-rule detector we shipped to stop it." — Classic copy-pasted sprint post-mortem narrative.
 
 ### Inconsistencies
-- Hero stats claim a "0.9131" AUROC on FoVer, while the Math reasoning card cites a "0.125 FoVer baseline". Is FoVer the benchmark or the baseline model?
+- **"Total confidence" vs Internal Doubt** — The hero promises "total confidence" in checking LLM outputs, but the prominent blog section features posts titled "Caught Cheating", "Two Retractions", and "Five FATAL Findings," making the system seem fundamentally unstable and untrustworthy to a new user.
+- **Hero AUROC vs Results AUROC** — The hero stats claim an AUROC of `0.9131` for "math step-errors", but the safety card in the results section claims a `0.91` AUROC for "Prompt-injection classifier". It’s visually confusing and suggests numbers are being recycled.
 
 ### Missing essentials
-- None of the absolute basics are missing (it has the what, how to install, license, and maintainer), but the "Why trust the numbers?" is deeply undermined by the leaking test paths and perfect scores.
+- **Why should I trust the numbers?** The Results section claims "Every number below is backed by a checked-in experiment artifact", but there is not a single link provided to view these artifacts. Combined with perfect scores, this deeply damages credibility.
+- **Who maintains it?** The footer mentions "Ian Blenke" but provides zero context on the organization, backing, or community behind the project.
 
 ### Fabrication signals
-- Results / Math extraction — "GSM8K extraction TP rate: 0.5 → 1.0" — A perfect 1.0 True Positive rate on anything LLM-related looks fabricated or overfitted.
-- Results / Adversarial audit — "catches 60/60 attacks" — 100% success rate on a tiny sample size of 60 screams "we stopped testing when it looked good."
+- **Math extraction card**: `GSM8K extraction TP rate: 0.5 → 1.0` (A flawless 1.0 True Positive rate raises immediate red flags).
+- **Adversarial audit card**: `k=5 ensemble catches 60/60 attacks` (A perfect 100% catch rate on attacks looks like a synthetic or overfitted benchmark).
+- **Training card**: `2.0x speedup, identical losses` (Exactly 2.0x is a suspiciously round number).
 
 ## WHAT'S WORKING
-- The "Extract → Check → Repair" Bento grid is genuinely great. It clearly and concisely explains the core value loop without getting bogged down in math.
-- The Quickstart tabs (Python vs Rust) are clean and demonstrate immediate usability.
+- The one-sentence elevator pitch ("Catch the reasoning errors your LLM states with total confidence.") is clear, urgent, and well-positioned.
+- The "Quick Start" toggle with side-by-side Python and Rust snippets provides immediate, tangible proof of how the tool integrates into a workflow.
 
 ## RECOMMENDED OPERATOR ACTIONS
-1. Delete the "Recent progress" card from the hero section entirely; it is pure internal narrative bloat.
-2. Fix the leaking pytest path (`@.tmp-pytest/...`) in the "SOTA 35B" result card immediately.
-3. Cull the Results grid from 12 cards to the 4 most impactful, easily understood metrics. Remove the perfect 1.0 and 60/60 claims unless heavily contextualized.
-4. Remove the 382 "Completed milestones" stat from the hero bar.
-5. Strip all unexplained acronyms (FoVer, CCTU, SVAMP, PREM) or replace them with descriptive text ("Math word problems", "Tool use").
-6. Trim the "From the blog" section to the 3 most relevant posts for a newcomer.
+1. Immediately remove the leaked pytest path (`@.tmp-pytest/...`) from the Live Benchmark results card.
+2. Strip out all internal dataset jargon (FoVer, SVAMP, CCTU, VeriCoT) and replace them with plain-English descriptions of what is being measured.
+3. Trim the Results section to the 6 most impactful, realistic metrics, and add hyperlinks directly to the "checked-in artifacts" for proof.
+4. Rewrite the blog card blurbs to focus on the value the framework provides, rather than exposing the project's internal development trauma and sprint retrospectives.
+5. Soften the "perfect" numbers (1.0 TP rate, 60/60) by providing the raw context or linking to the precise constraint environment that makes them possible.
