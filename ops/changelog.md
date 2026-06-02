@@ -8374,3 +8374,4 @@ Added 8 references to research-references.md (arXiv:2507.02092 stability recipe,
 3 WARNINGs all override-present); overdue-priority lint exit 0; canonical-URL lint exit 0.
 
 Did NOT modify research-roadmap.yaml or scripts/research_conductor.py. Did NOT push.
+- 2026-06-02: Archive milestone .341 HONESTLY (Thesis-A EBT bring-up: vendored+audited PASS, tiny-EBT single-step smoke PASS on the 3090, matched-compute harness built+tested -- BUT the bounded-training task blocked on a cwd/import bug and the kill-gate verdict was a FALSE-NEGATIVE) and activate .342 (recover the false-negative + run the GENUINE kill-gate). (⚠️ Research Finding) — honest_verdict=complete: archived_v341_thesis_a_smoke_passed_but_killgate_was_infra_false_negative_part_a_reopened_untested_v342_active_paper_ready_true_frozen_headline_unchanged; results/experiment_3732_archive_v341_activate_v342.json
