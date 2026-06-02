@@ -1692,6 +1692,64 @@ retired, flagged upstream artifacts excluded from citations, skipped or
 flagged gated tasks recorded as `not_measured`, and the dependency-aware win
 kept as a candidate pending operator action plus CI re-reproduction.
 
+### REQ-PUBLISH-3701: Exp 3701 v338 Re-Freeze Capstone And Publication Gate Recheck
+
+The Exp 3701 capstone runner MUST aggregate `publication_gate.py --json` with
+Exp 3692 through Exp 3697 artifacts and write
+`results/experiment_3701_capstone_and_g_gate_v338.json`. The workflow MUST be
+aggregation-only: it SHALL run `scripts/summarize_artifact.py` for each
+upstream artifact, SHALL verify each cited upstream artifact with
+`scripts/adversarial_verify.py` before citing it, SHALL exclude any
+`flagged_adversarial` or live-critical upstream artifact from
+`cited_upstream_artifacts`, SHALL NOT perform live inference, SHALL NOT include
+`model_specs` or `target_model`, and SHALL NOT modify
+`scripts/research_conductor.py`.
+
+The artifact MUST set bare
+`inference_substrate == "aggregation_from_upstream_artifacts"` so the capstone
+does not inherit a compute-bound model marker. It MUST preserve the frozen FoVer
+headline at `0.9131`, set `frozen_headline_unchanged == true` when the gate
+still sources the frozen FoVer artifact, and record any dependency-aware win
+only as a headline-advancement candidate pending operator action plus CI
+re-reproduction. It MUST record G1-G4, `paper_ready`, and `unmet_gates` directly
+from the gate and MUST keep `paper_ready == true` for the capstone to validate.
+
+The artifact MUST record Exp 3692 as `refreeze_package_status` of
+`reemitted_clean_for_operator`, `still_flagged`, or `not_prepared`; Exp 3693 as
+`candidate_beats_external_comparator` of `yes`, `ties_or_loses`, or
+`not_measured`; Exp 3694 as `selection_gap_verdict` of `closed_new_method`,
+`fundamental_decoupling`, or `not_measured`; Exp 3695/3696 as
+`code_detector_status` of `code_native_recovered_reshipped`,
+`code_remains_math_only_earned`, or `not_measured`; and Exp 3697 as
+`fr11_v12_result`. Missing or gated-skipped fields MUST be reported as
+`not_measured` rather than inferred from `None`. Any AUROC greater than or equal
+to `0.99` on `n >= 1000` MUST be treated as a leak unless explicit leak-free
+evidence is present.
+
+The artifact MUST preserve `p01_status == "honest-negative"`, set
+`facts_generalization_retired == true`, set
+`trained_judge_ood_retired == true`, include narrowing-clean
+`paper_v6_safe_claims` and `paper_v6_forbidden_claims`, include field-principle
+metadata for every required top-level field, set `adversarial_verify_clean ==
+true` only when the written capstone passes `scripts/adversarial_verify.py`
+with no critical flag, and emit the terminal verdict
+`complete: capstone_v338_refreeze_<status>_external_<verdict>_selection_<verdict>_detector_code_<status>_paper_ready_true_frozen_headline_unchanged`.
+
+### SCENARIO-PUBLISH-3701: v338 Capstone Rechecks Gate And Closes Cleanly
+
+**Given** the publication gate reports G1-G4 pass and clean Exp 3692 through
+Exp 3697 artifacts are available
+**When** the Exp 3701 v338 capstone runner executes
+**Then** it writes
+`results/experiment_3701_capstone_and_g_gate_v338.json`
+with `inference_substrate == "aggregation_from_upstream_artifacts"`,
+`paper_ready == true`, `frozen_headline_unchanged == true`,
+`adversarial_verify_clean == true`, P0.1 honest-negative, facts-generalization
+and trained-judge-OOD retired, flagged or live-critical upstream artifacts
+excluded from citations, skipped gated tasks recorded as `not_measured`, and
+the dependency-aware candidate kept out of the frozen headline until operator
+re-freeze and CI re-reproduction happen.
+
 
 ## Implementation Status
 
@@ -1734,6 +1792,7 @@ kept as a candidate pending operator action plus CI re-reproduction.
 | REQ-PUBLISH-039 | Implemented | Exp 3488 FoVer G2 clean-room regression verify + lowest-friction external ask |
 | REQ-PUBLISH-040 | Proposed | Exp 3681 G2 reproducer prep for operator re-freeze |
 | REQ-PUBLISH-041 | Proposed | Exp 3689 v337 dependency-aware capstone and G-gate |
+| REQ-PUBLISH-3701 | Implemented | Exp 3701 v338 re-freeze capstone and publication gate recheck |
 
 ### REQ-PUBLISH-026: HuggingFace Publish Retry
 The experiment 1750 huggingface retry runner MUST attempt to upload the smallest model in models/ with a no-emoji model card. If credentials pass, it MUST upload and record hf_upload_succeeded = True. If blocked, it MUST emit an honest verdict of "blocked_credentials".
