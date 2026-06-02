@@ -8238,3 +8238,4 @@ research-references.md (.339 planning sweep: arXiv:2602.06875, 2512.13821, 2601.
 2603.21454, 2502.00678, 2502.20379, 2604.07650).
 
 Did NOT modify research-roadmap.yaml or scripts/research_conductor.py. Did NOT push.
+- 2026-06-02: Archive milestone .338 honestly (re-freeze package re-emitted CLEAN but the external published baseline 0.9287 BEAT the dependency-aware candidate 0.9249 -> re-freeze candidate ambiguous; code-native verifier returned AUROC 1.0 -> IMPLAUSIBLE_PERFECT, provisional, the shipped detector was re-wired on it; selection diagnosis blocked a 2nd time; KV260 reachable again; FR-11 v12 + persistence succeeded; paper_ready stayed TRUE; frozen 0.9131 unchanged) and activate .339 (✅ Complete) — honest_verdict=complete: archived_v338_refreeze_candidate_ambiguous_code_native_provisional_selection_closing_kv260_reachable_v339_active_paper_ready_true_frozen_headline_unchanged; results/experiment_3702_archive_v338_activate_v339.json
