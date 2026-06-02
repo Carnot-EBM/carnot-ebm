@@ -7582,3 +7582,4 @@ web search: https://docs.garak.ai/garak/examples/pr |
 | 2026-06-02 07:15 UTC | Capstone v338 + G1-G4 gate synthesis — was the ope | OK | 87 passed in 4.41s |
 | 2026-06-02 07:53 UTC | Plan milestone 2026.06.339 | OK | 11 tasks proposed |
 | 2026-06-02 07:55 UTC | Milestone 2026.06.339 activated | OK | 11 tasks queued |
+| 2026-06-02 08:09 UTC | Archive milestone .338 honestly (re-freeze package | OK | 87 passed in 3.97s |
