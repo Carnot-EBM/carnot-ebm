@@ -207,6 +207,24 @@ Candidates surfaced from arxiv/HN/Semantic Scholar literature scans. Full rankin
 
 ## DEFERRED / PARKED ITEMS (planner may propose, not mandatory)
 
+### 2026-06-01: KV260 v4-load + latency-number — DO NOT re-investigate (POC-tier)
+Board recovered 2026-06-01 (operator power-cycle); reachable via `ssh kria`, Carnot
+Ising accelerator runs via `xmutil loadapp carnot_ising_v2_n64` (ising_sampler on
+/dev/uio4), exp3568 transcript clean (mean 23.99us, 3000 iters). Two findings,
+both PARKED (KV260 is POC-tier per CLAUDE.md — not a load-bearing perf claim):
+(1) `xmutil loadapp carnot_ising_v4` fails with "Load Error: -1" at the
+app-resolution layer (kernel logs nothing; .dtbo byte-identical to the working v2;
+v4 bitstream header valid but md5-distinct). `fpgautil` (the bypass) is NOT
+installed on the board — forcing v4 needs a hands-on session (install fpgautil OR
+repair the v4 xmutil app registration). (2) The 23.99us vs the .260 graduation
+3.183us (exp2742) is NOT a clean regression and is NOT worth chasing: exp2742 has
+no standalone script, no methodology_note, no recorded n_spins/anneal config, and
+a different field layout (n_cycles_measured=100) — so the baseline workload/
+bitstream is unreconstructable, and Ising latency is problem-dependent. Both
+harnesses use the same Python-poll round-trip (so it is NOT a hw-cycle-vs-software
+difference). Only revisit if KV260 latency becomes a HEADLINE claim again (it
+should not — the real product is the verifier).
+
 ### 2026-05-01: paperbanana for diagrams + infographics (parked, not yet adopted)
 
 **Background:** the project currently produces figures via matplotlib
