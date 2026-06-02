@@ -7559,3 +7559,4 @@ web search: https://docs.garak.ai/garak/examples/pr |
 | 2026-06-01 23:46 UTC | Prepare the headline re-freeze PACKAGE for the ope | FLAGGED | adversarial_verify CRITICAL: DURATION_TOO_SHORT — result quarantined, not a clea |
 | 2026-06-02 00:02 UTC | Diagnose + try to CLOSE the discrimination-vs-sele | FLAGGED | adversarial_verify CRITICAL: TAUTOLOGY, TAUTOLOGY — result quarantined, not a cl |
 | 2026-06-02 00:20 UTC | Harden the shipped detector's CODE operating point | OK | 89 passed in 4.38s |
+| 2026-06-02 00:36 UTC | Adversarial product re-baseline vs self-certainty  | OK | 90 passed in 4.11s |
