@@ -7618,3 +7618,4 @@ web search: https://docs.garak.ai/garak/examples/pr |
 | 2026-06-02 20:01 UTC | Capstone .341 — aggregate the Thesis-A EBT bring-u | OK | 87 passed in 5.06s |
 | 2026-06-02 20:39 UTC | Plan milestone 2026.06.342 | OK | 11 tasks proposed |
 | 2026-06-02 20:41 UTC | Milestone 2026.06.342 activated | OK | 11 tasks queued |
+| 2026-06-02 20:56 UTC | Archive milestone .341 HONESTLY (Thesis-A EBT brin | OK | 105 passed in 5.76s |
