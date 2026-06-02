@@ -1,0 +1,151 @@
+{
+  "acceptance_gate_passed": true,
+  "adversarial_verify_clean": true,
+  "adversarial_verify_report": {
+    "flag_count": 0,
+    "flags": [],
+    "returncode": 0
+  },
+  "artifact": "experiment_3719_headline_replication_fresh_corpus",
+  "disqualified_sources": [
+    {
+      "detail": "Exp 1084 step-level PRM training rows were generated from FoVer pairs.",
+      "path": "data/step_level_prm_training.jsonl",
+      "reason": "fover_derived",
+      "sha256": "e01f36d0e06121dbf9b0dd2f49b74b7426fe6348c4794e54b826d59a8bcd8886"
+    }
+  ],
+  "duration_s": 0.829428,
+  "field_principles": {
+    "adversarial_verify_clean": "True iff the terminal artifact has no adversarial flags.",
+    "duration_s": "Measured runtime.",
+    "fresh_corpus_auroc": "AUROC for the FoVer production score formula on the fresh corpus.",
+    "fresh_corpus_auroc_ci": "Small-n CI95 over the five seeded balanced subsets.",
+    "fresh_corpus_source": "The distinct non-FoVer checked-in process corpus provenance.",
+    "frozen_fover_auroc": "0.9131 frozen FoVer headline comparison; not replaced.",
+    "frozen_headline_unchanged_assert": "The publication headline still rounds to 0.9131.",
+    "generalizes_beyond_fover": "Bare bool: true iff the fresh-corpus CI brackets 0.9131.",
+    "honest_verdict": "Terminal prefix for reconciler classification.",
+    "inference_substrate": "verifier_ensemble_against_cached_candidates because this scores cached candidates only.",
+    "n_examples": "Per-seed balanced subset size used for fresh-corpus AUROC.",
+    "n_seeds": "Replication count.",
+    "random_seed": "Determinism precondition.",
+    "reproducibility_checksum": "Drift detection across source hashes, seeds, and score rows."
+  },
+  "fresh_corpus_auroc": 0.798604,
+  "fresh_corpus_auroc_ci": {
+    "high": 0.804452,
+    "low": 0.792755,
+    "mean": 0.798604
+  },
+  "fresh_corpus_balance": {
+    "correct": 209,
+    "incorrect": 425
+  },
+  "fresh_corpus_source": "Exp 248 GSM8K process-integrity reasoning rows joined to Exp 235 checked-in candidate traces; distinct from FoVer",
+  "fresh_corpus_source_paths": [
+    "results/experiment_235_results.json",
+    "results/experiment_248_results.json",
+    "data/research/process_integrity_corpus_248.jsonl"
+  ],
+  "fresh_corpus_source_sha256": "8f2238859766b7687e60bc1461358eb8482ae3687885e854be3b2747a788b5aa",
+  "fresh_corpus_total_rows": 634,
+  "frozen_fover_auroc": 0.9131,
+  "frozen_headline_unchanged_assert": true,
+  "generalizes_beyond_fover": false,
+  "honest_verdict": "complete: headline_discrimination_is_fover_specific_generalization_narrowed_honest",
+  "inference_substrate": "verifier_ensemble_against_cached_candidates",
+  "methodology_note": "Seeded balanced subsets mirror the frozen FoVer production score formula: fr11_session_memory + 0.9*tier0r_curry_howard + 0.1*tier0u_logical_consistency. tier0s_arithmetic_gap is scored and reported as one of the four FoVer-scoring verifier columns but has zero weight in the frozen production AUROC formula.",
+  "n_examples": 418,
+  "n_seeds": 5,
+  "per_seed_results": [
+    {
+      "fresh_corpus_auroc": 0.794819,
+      "n_examples": 418,
+      "per_verifier_auroc": {
+        "fr11_session_memory": 0.787699,
+        "tier0r_curry_howard": 0.792553,
+        "tier0s_arithmetic_gap": 0.820471,
+        "tier0u_logical_consistency": 0.507154
+      },
+      "seed": 42,
+      "subset_sha256": "718a1bfa35db48a07ddd5a2804f2945e4ab2924fba4e4a093c3287e834e6aff9"
+    },
+    {
+      "fresh_corpus_auroc": 0.802832,
+      "n_examples": 418,
+      "per_verifier_auroc": {
+        "fr11_session_memory": 0.788775,
+        "tier0r_curry_howard": 0.804583,
+        "tier0s_arithmetic_gap": 0.828289,
+        "tier0u_logical_consistency": 0.504773
+      },
+      "seed": 137,
+      "subset_sha256": "2faea415f369431f8235326fd9c6fec27f22055700d79689601e70b1764bd51a"
+    },
+    {
+      "fresh_corpus_auroc": 0.802511,
+      "n_examples": 418,
+      "per_verifier_auroc": {
+        "fr11_session_memory": 0.78818,
+        "tier0r_curry_howard": 0.804904,
+        "tier0s_arithmetic_gap": 0.805785,
+        "tier0u_logical_consistency": 0.502369
+      },
+      "seed": 271,
+      "subset_sha256": "37dbd98eb51a051fb4919e4f82ba9f493b10d07bcf427b6bb36c7e968c0aa08e"
+    },
+    {
+      "fresh_corpus_auroc": 0.792438,
+      "n_examples": 418,
+      "per_verifier_auroc": {
+        "fr11_session_memory": 0.779584,
+        "tier0r_curry_howard": 0.794178,
+        "tier0s_arithmetic_gap": 0.815664,
+        "tier0u_logical_consistency": 0.504773
+      },
+      "seed": 314,
+      "subset_sha256": "5604c756f2db0a60bf516a819f94ff67f34896fdb4ec2c8a000a33cea5e4e3a7"
+    },
+    {
+      "fresh_corpus_auroc": 0.800417,
+      "n_examples": 418,
+      "per_verifier_auroc": {
+        "fr11_session_memory": 0.791042,
+        "tier0r_curry_howard": 0.808349,
+        "tier0s_arithmetic_gap": 0.823516,
+        "tier0u_logical_consistency": 0.502392
+      },
+      "seed": 1729,
+      "subset_sha256": "12d8b87fc12b8a2e6063c509f54485e30058c63e76031dac823aa88c94650e90"
+    }
+  ],
+  "per_verifier_auroc_mean": {
+    "fr11_session_memory": 0.787056,
+    "tier0r_curry_howard": 0.800913,
+    "tier0s_arithmetic_gap": 0.818745,
+    "tier0u_logical_consistency": 0.504292
+  },
+  "random_seed": 3719,
+  "random_seeds_used": [
+    42,
+    137,
+    271,
+    314,
+    1729
+  ],
+  "reproducibility_checksum": "346719ef1b4d916658a16e24a859a7adb388f90f1585bbc4af34da78d9eb474b",
+  "schema": "carnot.headline_replication_fresh_corpus.v1",
+  "verifier_ensemble_formula": {
+    "fr11_session_memory": 1.0,
+    "tier0r_curry_howard": 0.9,
+    "tier0s_arithmetic_gap": 0.0,
+    "tier0u_logical_consistency": 0.1
+  },
+  "verifier_names": [
+    "fr11_session_memory",
+    "tier0r_curry_howard",
+    "tier0s_arithmetic_gap",
+    "tier0u_logical_consistency"
+  ]
+}
