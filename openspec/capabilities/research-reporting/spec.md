@@ -16227,3 +16227,76 @@ exclusion manifest, and research conductor unmodified.
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-REPORT-3722 | Planned (`python/carnot/reporting/convergence_synthesis_operator_next_thesis_3722.py`, `scripts/experiment_3722_convergence_synthesis_operator_next_thesis.py`) | Planned (`tests/python/test_experiment_3722_convergence_synthesis_operator_next_thesis.py`) |
+
+### REQ-REPORT-3724: Archive V340 Convergence-Hardening And Activate V341 Thesis A
+
+The Exp 3724 workflow shall archive milestone `2026.06.340` and confirm that
+`research-roadmap.yaml` is active for milestone `2026.06.341`. It SHALL write
+`results/experiment_3724_archive_v340_activate_v341.json` by aggregating
+existing upstream artifacts, `research-complete.yaml`, `research-roadmap.yaml`,
+`docs/research-notes/phase3-alternative-thesis-menu.md`, and
+`ops/north-star.md` only. It SHALL NOT run live inference, push changes, modify
+`scripts/research_conductor.py`, modify `ops/north-star.md`, modify
+`ops/status.md`, modify `ops/changelog.md`, modify `_bmad/traceability.md`, or
+place any GGUF, CUDA, live-model, `model_specs`, or `target_model` marker in
+the terminal artifact.
+
+The workflow SHALL update the single `2026.06.340` block in
+`research-complete.yaml`, or append it if absent, so the archive records the
+honest convergence-hardening state: Exp 3715 cleanly re-emits the benign
+Exp 3704 re-freeze corrigendum with no candidate beating the frozen headline;
+Exp 3716 makes G3 mechanically enforced through the Paper-v6 narrowing lint;
+Exp 3717 fully traces headline numbers for G4; Exp 3718 characterizes the
+energy discriminator as a risk-coverage abstention gate, while preserving any
+non-critical verifier warnings as non-terminal warnings; Exp 3719 narrows the
+fresh-corpus result as FoVer-specific rather than silently re-freezing the
+headline; Exp 3720 records FR-11 v14 graceful fallback/no-collapse; Exp 3721
+confirms KV260 terminal and recommends lifting the mandate; Exp 3722 records
+the converged-state next-thesis request; and Exp 3723 keeps `paper_ready=true`,
+keeps P0.1 as honest-negative/bounded, and keeps the frozen FoVer headline at
+`0.9131`. The archive update SHALL be idempotent and SHALL archive the full
+`.340` planned task count.
+
+The workflow SHALL also record that milestone `2026.06.341` is the
+operator-seeded Thesis A direction: energy-as-generator EBT, not
+energy-selection reranking. It SHALL derive this from the active roadmap and
+the Phase-3 alternative-thesis menu, and SHALL distinguish the new generation
+mechanism from the bounded P0.1 energy-selection thesis.
+
+The terminal artifact SHALL include bare top-level values for `honest_verdict`,
+`inference_substrate`, `v340_outcome_recorded`,
+`thesis_a_seeded_recorded`, `paper_ready_preserved`,
+`p01_status_preserved`, `n_tasks_archived`, `adversarial_verify_clean`,
+`random_seed`, `reproducibility_checksum`, and `duration_s`, plus
+`field_principles` documenting why each required value exists.
+`inference_substrate` SHALL be exactly
+`aggregation_from_upstream_artifacts (principle: JSON-read + format; 0.0001s floor; no compute-bound marker so it does not false-flag).`
+`adversarial_verify_clean` SHALL be true only after
+`scripts/adversarial_verify.py` reports no critical flag on the written
+artifact. `honest_verdict` SHALL equal
+`complete: archived_v340_convergence_hardened_thesis_a_energy_generator_seeded_v341_active_paper_ready_true_frozen_headline_unchanged`.
+`duration_s` SHALL use the aggregation-task plausibility floor of at least
+`0.0001`.
+
+#### SCENARIO-REPORT-3724: V340 Archive Records Hardening And Activates Thesis A
+
+**Given** the active roadmap declares milestone `2026.06.341` and names Thesis
+A energy-as-generator EBT as an operator seed, the Phase-3 alternative-thesis
+menu marks Thesis A selected, and Exp 3715 through Exp 3723 record the `.340`
+convergence-hardening outcomes with `paper_ready=true`, P0.1 preserved as
+honest-negative/bounded, and frozen FoVer headline `0.9131` unchanged
+**When** the Exp 3724 workflow runs
+**Then** it writes the required terminal artifact, records all required
+principle-annotated bare fields, confirms `.341` active, archives all `.340`
+tasks exactly once in `research-complete.yaml`, records `.340` as convergence
+hardening rather than a new headline, records Thesis A as the operator-seeded
+energy-as-generator direction, preserves the P0.1 energy-selection negative
+boundary, passes adversarial verification without a critical flag, leaves
+`ops/north-star.md` and `scripts/research_conductor.py` unchanged, and leaves
+ops/status/changelog and BMAD traceability reconciliation to the conductor.
+
+## Implementation Status (REQ-REPORT-3724)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-3724 | Implemented (`python/carnot/reporting/archive_v340_activate_v341_3724.py`, `scripts/experiment_3724_archive_v340_activate_v341.py`) | Implemented (`tests/python/test_experiment_3724_archive_v340_activate_v341.py`) |
