@@ -1970,6 +1970,57 @@ items without editing the north-star document.
 **When** the Exp 3717 G4 audit runner starts
 **Then** it emits the blocked-primary-artifact terminal verdict.
 
+### REQ-PUBLISH-3723: v340 Convergence Capstone And Hardened G-Gate Recheck
+
+The Exp 3723 v340 capstone runner MUST aggregate `publication_gate.py --json`
+with clean Exp 3715 through Exp 3722 artifacts and write
+`results/experiment_3723_capstone_and_g_gate_v340.json`. The workflow MUST be
+aggregation-only: it SHALL read upstream artifacts and summarizer output, SHALL
+NOT perform live model inference, SHALL NOT include GGUF/CUDA/live-model
+markers in `model_specs` or `target_model`, and SHALL NOT modify
+`scripts/research_conductor.py`.
+
+The artifact MUST preserve the frozen FoVer headline `0.9131`, record G1-G4
+and `paper_ready` directly from the publication gate, and set
+`frozen_headline_unchanged == true` only when the gate source is still the
+frozen FoVer headline artifact. It MUST record Exp 3715 as
+`exp3704_corrigendum_clean`, Exp 3716 as `g3_mechanically_enforced`, Exp 3717
+as `g4_provenance_audit_result`, Exp 3718 as
+`energy_abstention_verdict`, Exp 3719 as `fresh_corpus_generalization`,
+Exp 3720 as `fr11_v14_result`, Exp 3721 as `kv260_terminal_confirmed`, and
+Exp 3722 as `operator_next_thesis_recorded`. Missing, blocked, or skipped
+sub-results MUST be recorded as `not_measured` rather than inferred from
+`None`; any AUROC greater than or equal to `0.99` on `n >= 1000` MUST be
+treated as a leak unless explicit leak-free evidence is present.
+
+The capstone MUST exclude `flagged_adversarial`, live-critical, and duration
+flagged upstream artifacts from `cited_upstream_artifacts`; cite each included
+artifact with sha256 provenance and adversarial-verification status; preserve
+`p01_status == "honest-negative"`; set facts-generalization and
+trained-judge-OOD as retired; set `selection_diagnosis_closed == true` only
+when Exp 3707 is clean; include Paper-v6 safe and forbidden claim lists; set
+`adversarial_verify_clean == true` only after the written capstone passes
+`scripts/adversarial_verify.py` with no `DURATION_TOO_SHORT` or critical flag;
+and emit the terminal verdict
+`complete: capstone_v340_convergence_gates_hardened_g3_mechanical_g4_audited_abstention_<verdict>_fresh_corpus_<verdict>_kv260_terminal_operator_thesis_requested_paper_ready_true_frozen_headline_unchanged`.
+
+### SCENARIO-PUBLISH-3723: v340 Capstone Closes Convergence Without Regressing Gate
+
+**Given** the publication gate reports G1-G4 pass, Exp 3715 through Exp 3722
+are available, and cited upstream artifacts have no critical or duration
+adversarial flags
+**When** the Exp 3723 v340 capstone runner executes
+**Then** it writes
+`results/experiment_3723_capstone_and_g_gate_v340.json`
+with `inference_substrate == "aggregation_from_upstream_artifacts"`,
+`paper_ready == true`, `frozen_headline_unchanged == true`,
+`adversarial_verify_clean == true`, P0.1 honest-negative, facts-generalization
+and trained-judge-OOD retired, the selection diagnosis formally closed, G3
+recorded as mechanically enforced, G4 recorded as fully traced, skipped
+sub-results recorded as `not_measured`, flagged or live-critical upstream
+artifacts excluded from citations, and the frozen FoVer headline left
+unchanged.
+
 
 ## Implementation Status
 
@@ -2016,6 +2067,7 @@ items without editing the north-star document.
 | REQ-PUBLISH-3712 | Proposed | Exp 3712 v339 re-freeze winner capstone and publication gate recheck |
 | REQ-PUBLISH-3716 | Implemented | Exp 3716 standalone Paper-v6 narrowing lint |
 | REQ-PUBLISH-3717 | Planned | Exp 3717 full G4 headline provenance audit |
+| REQ-PUBLISH-3723 | Proposed | Exp 3723 v340 convergence capstone and hardened G-gate recheck |
 
 ### REQ-PUBLISH-026: HuggingFace Publish Retry
 The experiment 1750 huggingface retry runner MUST attempt to upload the smallest model in models/ with a no-emoji model card. If credentials pass, it MUST upload and record hf_upload_succeeded = True. If blocked, it MUST emit an honest verdict of "blocked_credentials".
