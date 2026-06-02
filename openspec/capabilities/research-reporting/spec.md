@@ -15856,3 +15856,81 @@ conductor.
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-REPORT-3702 | Implemented (`python/carnot/reporting/archive_v338_activate_v339_3702.py`, `scripts/experiment_3702_archive_v338_activate_v339.py`) | Implemented (`tests/python/test_experiment_3702_archive_v338_activate_v339.py`) |
+
+### REQ-REPORT-3703: Backend State Diagnostic Fifth Probe With Real-Workload Divergence
+
+The Exp 3703 workflow shall run the fifth bounded Gemini backend state probe
+after Exp 3653, Exp 3666, Exp 3679, and Exp 3691 recorded OK one-shot Gemini
+prompt probes, while preserving the distinction between bounded health probes
+and real multi-turn Gemini workloads. It shall run at most one bounded Gemini
+CLI version probe, one bounded Gemini prompt probe using
+`gemini-3.1-pro-preview`, and one read-only conductor coercion environment
+probe equivalent to `env | grep -iE 'AGENT_TYPE|FORCE_EXPERIMENTS'`. It SHALL
+NOT loop, retry, call the conductor, modify `scripts/research_conductor.py`,
+mutate shell environment variables, edit conductor configuration, push changes,
+or change `ops/status.md`, `ops/changelog.md`, or `_bmad/traceability.md`.
+
+The workflow SHALL read the Exp 3691 fourth stability probe, the `.338`
+conductor-log tail for the `.337-close` planner failure, and `CLAUDE.md`
+Gemini-Default routing rules, and write
+`results/experiment_3703_backend_state_diagnostic_v5.json` with bare top-level
+values for `honest_verdict`, `inference_substrate`, `gemini_cli_version`,
+`gemini_probe_state`, `real_workload_crash_observed`,
+`consecutive_stable_probes`, `conductor_coercion_env`,
+`recommended_routing`, `conductor_unmodified_assert`, `random_seed`,
+`reproducibility_checksum`, and `duration_s`, plus `field_principles`
+documenting why each required value exists. The prompt probe output SHALL be
+preserved with stdout, stderr, exit code, and combined output.
+`gemini_probe_state` SHALL be one of `ok`, `quota_exhausted_429`, or
+`crash_js_345500`. The workflow SHALL recommend
+`gemini_default_eligible_for_v340` only when the fifth prompt probe exits
+successfully with an OK reply, the previous four probe artifacts recorded OK
+state, and no recent real-workload Gemini crash is observed; otherwise it
+SHALL recommend `codex_requires_codex`.
+
+#### SCENARIO-REPORT-3703-DIVERGENCE: OK Probe But Real Workload Crash Keeps Codex
+
+**Given** Exp 3653, Exp 3666, Exp 3679, and Exp 3691 recorded OK one-shot
+Gemini probes
+**And** Exp 3691 or `ops/conductor-log.md` records the `.337-close` `Plan next
+milestone` Gemini failure with a 1201-second wall-clock timeout or
+`.js:345500:14` crash evidence
+**When** the bounded Exp 3703 Gemini prompt probe exits successfully with an
+OK reply
+**Then** the workflow classifies `gemini_probe_state` as `ok`, records the
+one-shot probe versus real-workload divergence, sets
+`real_workload_crash_observed=true`, preserves raw probe output, asserts the
+conductor and environment were not modified, recommends
+`codex_requires_codex`, and emits
+`complete: backend_diagnosed_gemini_probe_ok_but_real_workload_crash_keep_codex_routing`.
+
+#### SCENARIO-REPORT-3703-STABLE: Fifth Probe Without Real Crash Makes V340 Eligible
+
+**Given** Exp 3653, Exp 3666, Exp 3679, and Exp 3691 recorded OK one-shot
+Gemini probes
+**And** no recent real-workload Gemini crash is observed
+**When** the bounded Exp 3703 Gemini prompt probe exits successfully with an
+OK reply
+**Then** the workflow classifies `gemini_probe_state` as `ok`, records
+`consecutive_stable_probes=5`, preserves raw probe output, asserts the
+conductor and environment were not modified, recommends
+`gemini_default_eligible_for_v340`, and emits
+`complete: backend_diagnosed_gemini_stable_5th_probe_no_real_crash_v340_may_flip`.
+
+#### SCENARIO-REPORT-3703-UNSTABLE: Quota Or Crash Keeps Codex Routing
+
+**Given** Exp 3653, Exp 3666, Exp 3679, and Exp 3691 recorded OK one-shot
+Gemini probes
+**When** the bounded Exp 3703 Gemini prompt probe reports `QUOTA_EXHAUSTED`,
+HTTP `429`, or the Gemini CLI `.js:345500:14` crash frame
+**Then** the workflow classifies `gemini_probe_state` as
+`quota_exhausted_429` or `crash_js_345500`, preserves raw probe output,
+asserts the conductor and environment were not modified, recommends
+`codex_requires_codex`, and emits
+`complete: backend_diagnosed_gemini_still_unstable_keep_codex_routing`.
+
+## Implementation Status (REQ-REPORT-3703)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-3703 | Implemented (`python/carnot/reporting/backend_state_diagnostic_v5_3703.py`, `scripts/experiment_3703_backend_state_diagnostic_v5.py`) | Implemented (`tests/python/test_experiment_3703_backend_state_diagnostic_v5.py`) |
