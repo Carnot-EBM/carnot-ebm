@@ -34819,52 +34819,124 @@ milestones:
     deliverable: results/experiment_3712_capstone_and_g_gate_v339.json
     result: paper_ready true; frozen headline unchanged
 - id: 2026.06.340
-  title: "Convergence hardening and Thesis A handoff"
+  title: Convergence hardening and Thesis A handoff
   doc: openspec/change-proposals/research-roadmap-vNEXT.md
   completed: '2026-06-02'
-  finding: "CONVERGENCE-HARDENING MILESTONE: .340 did not move the frozen headline; it hardened and bounded the converged state. exp3715 cleanly re-emitted the re-freeze corrigendum as CLOSED-NEGATIVE, so no candidate replaces the frozen FoVer 0.9131. exp3716 made G3 mechanically enforced through the Paper-v6 narrowing lint, and exp3717 made G4 fully traced to clean primary artifacts. exp3718 characterized the proven discriminator as a risk-coverage abstention gate; exp3719 recorded that the fresh-corpus result was FoVer-specific rather than a silent new headline. exp3720 kept FR-11 bounded under shift with graceful fallback and no collapse. exp3721 confirmed KV260 terminal and recommended lifting the mandate. exp3722 recorded the converged-state next-thesis request, and the operator seeded Thesis A for .341: energy-as-generator, not selector. P0.1 stayed honest-negative-bounded, paper_ready stayed TRUE (G1-G4), and the frozen FoVer 0.9131 stayed frozen."
+  finding: 'CONVERGENCE-HARDENING MILESTONE: .340 did not move the frozen headline; it hardened and bounded the converged
+    state. exp3715 cleanly re-emitted the re-freeze corrigendum as CLOSED-NEGATIVE, so no candidate replaces the frozen FoVer
+    0.9131. exp3716 made G3 mechanically enforced through the Paper-v6 narrowing lint, and exp3717 made G4 fully traced to
+    clean primary artifacts. exp3718 characterized the proven discriminator as a risk-coverage abstention gate; exp3719 recorded
+    that the fresh-corpus result was FoVer-specific rather than a silent new headline. exp3720 kept FR-11 bounded under shift
+    with graceful fallback and no collapse. exp3721 confirmed KV260 terminal and recommended lifting the mandate. exp3722
+    recorded the converged-state next-thesis request, and the operator seeded Thesis A for .341: energy-as-generator, not
+    selector. P0.1 stayed honest-negative-bounded, paper_ready stayed TRUE (G1-G4), and the frozen FoVer 0.9131 stayed frozen.'
   tasks:
   - id: exp3713-archive-v339-activate-v340
-    title: "Archive .339 honestly and activate .340"
+    title: Archive .339 honestly and activate .340
     deliverable: results/experiment_3713_archive_v339_activate_v340.json
     result: OK (conductor)
   - id: exp3714-backend-state-diagnostic-v6
-    title: "Backend-state diagnostic v6"
+    title: Backend-state diagnostic v6
     deliverable: results/experiment_3714_backend_state_diagnostic_v6.json
     result: OK (conductor)
   - id: exp3715-refreeze-disambiguation-clean-corrigendum
-    title: "Clean corrigendum for re-freeze disambiguation"
+    title: Clean corrigendum for re-freeze disambiguation
     deliverable: results/experiment_3715_refreeze_disambiguation_clean_corrigendum.json
     result: CLOSED-NEGATIVE; clean corrigendum; headline stays frozen
   - id: exp3716-ship-paper-v6-narrowing-lint-g3-mechanical
-    title: "Ship Paper-v6 narrowing lint"
+    title: Ship Paper-v6 narrowing lint
     deliverable: results/experiment_3716_ship_paper_v6_narrowing_lint.json
     result: G3 mechanically enforced; paper clean
   - id: exp3717-g4-full-provenance-audit
-    title: "Full G4 provenance audit"
+    title: Full G4 provenance audit
     deliverable: results/experiment_3717_g4_full_provenance_audit.json
     result: G4 fully traced to clean primary artifacts
   - id: exp3718-risk-coverage-abstention-characterization
-    title: "Risk-coverage abstention characterization"
+    title: Risk-coverage abstention characterization
     deliverable: results/experiment_3718_risk_coverage_abstention_characterization.json
     result: ENERGY signal beats entropy as abstention gate; warnings non-critical
   - id: exp3719-headline-replication-fresh-corpus
-    title: "Headline-class replication on fresh corpus"
+    title: Headline-class replication on fresh corpus
     deliverable: results/experiment_3719_headline_replication_fresh_corpus.json
     result: fresh-corpus result FoVer-specific; frozen headline unchanged
   - id: exp3720-fr11-continuous-self-learning-v14
-    title: "FR-11 continuous self-learning v14"
+    title: FR-11 continuous self-learning v14
     deliverable: results/experiment_3720_fr11_continuous_self_learning_v14.json
     result: graceful fallback under shift; no collapse
   - id: exp3721-hardware-kv260-terminal-confirm-and-continuity
-    title: "Hardware continuity and KV260 terminal confirmation"
+    title: Hardware continuity and KV260 terminal confirmation
     deliverable: results/experiment_3721_hardware_kv260_terminal_confirm_and_continuity.json
     result: KV260 terminal confirmed; mandate lift recommended
   - id: exp3722-convergence-synthesis-operator-next-thesis
-    title: "Convergence synthesis and operator next-thesis request"
+    title: Convergence synthesis and operator next-thesis request
     deliverable: results/experiment_3722_convergence_synthesis_operator_next_thesis.json
     result: converged state synthesized; next-thesis request recorded
   - id: exp3723-capstone-and-g-gate-v340
-    title: "Capstone v340 and G-gate synthesis"
+    title: Capstone v340 and G-gate synthesis
     deliverable: results/experiment_3723_capstone_and_g_gate_v340.json
     result: THESIS-A operator seed recorded for .341
+- id: 2026.06.341
+  title: "PHASE-3 THESIS A BRING-UP \u2014 energy-as-GENERATOR (EBT), operator-seeded 2026-06-02. The energy-as-SELECTOR thesis\
+    \ (P0.1) is comprehensively bounded (project_energy_selection_thesis_bounded); per that memory the next substantive thesis\
+    \ needed a HUMAN seed. The operator seeded Thesis A: a small Energy-Based Transformer whose inference IS gradient-descent\
+    \ energy minimization (NOT AR tokens, NOT reranking) can match/beat autoregression AT EQUAL INFERENCE COMPUTE on one structured-reasoning\
+    \ task. Anchor: Gladstone/Du/Ji 'Energy-Based Transformers are Scalable Learners and Thinkers' arXiv:2507.02092, public\
+    \ Apache-2.0 code github.com/alexiglad/EBT. WHY this sidesteps the bound: nothing is being SELECTED, and EBT needs no\
+    \ verifier so the math-only verifier ceiling does not transfer. .341 clears the CHEAP HALF of the kill-gate: can a tiny\
+    \ EBT even train stably on the 3090 rig? The matched-COMPUTE comparison is .342, GATED on .341 stability passing. CRITICAL\
+    \ discipline carried from P0.1: the eventual comparison is matched-COMPUTE (count energy-descent forward passes; give\
+    \ AR an equal total-inference-FLOP budget), NOT matched-params -- a params-matched 'win' is just extra inference FLOPs,\
+    \ the exact P0.1 trap. Banking the verifier product is unaffected (paper_ready stays TRUE; frozen 0.9131 stays frozen;\
+    \ this is a venture bet with a knife to its own throat)."
+  doc: docs/research-notes/phase3-alternative-thesis-menu.md
+  completed: '2026-06-02'
+  finding: See conductor log for per-experiment results.
+  tasks:
+  - id: exp3724-archive-v340-activate-v341
+    title: 'Archive milestone .340 honestly (convergence-hardening: G3 lint mechanized, G4 provenance audited, discriminator
+      characterized as risk-coverage abstention gate, headline replicated on fresh corpus, KV260 terminal confirmed, operator
+      seeded Thesis A) and activate .341 (Phase-3 Thesis-A EBT bring-up)'
+    deliverable: results/experiment_3724_archive_v340_activate_v341.json
+    result: OK (conductor)
+  - id: exp3725-ebt-fork-vendor-importable
+    title: Fork + vendor alexiglad/EBT (Apache-2.0, PINNED commit) under python/carnot/phase3/ebt_upstream/, audit the energy/inference
+      path, make it importable, smoke a forward+energy pass on CPU. THESIS-A bring-up step 1 of the kill-gate chain.
+    deliverable: results/experiment_3725_ebt_fork_vendor_importable.json
+    result: OK (conductor)
+  - id: exp3726-tiny-ebt-corpus-and-train-step-smoke
+    title: Acquire a small structured-reasoning TRAIN corpus (GSM8K via HF datasets), shrink EBT to ~10-50M params, and smoke
+      a SINGLE real training step on the 3090 confirming the model fits in 24GB and the energy/loss DECREASES. THESIS-A bring-up
+      step 2.
+    deliverable: results/experiment_3726_tiny_ebt_corpus_and_train_step_smoke.json
+    result: OK (conductor)
+  - id: exp3727-matched-compute-eval-harness
+    title: 'Build + UNIT-TEST the matched-COMPUTE evaluation harness: held-out reasoning accuracy of energy-descent generation
+      vs AR generation at EQUAL total inference FLOPs (count EBT descent forward passes; give the AR baseline an equal-FLOP
+      best-of-N budget). The measurement instrument for the .342 decisive comparison -- built + tested BEFORE the real run.
+      THESIS-A bring-up step 3.'
+    deliverable: results/experiment_3727_matched_compute_eval_harness.json
+    result: OK (conductor)
+  - id: exp3728-bounded-checkpointed-train-ebt-and-ar
+    title: Bounded CHECKPOINTED training of the tiny EBT + a matched tiny AR baseline (same params-band, same corpus, same
+      budget) on the 3090, with stability diagnostics (loss curve, convergence, NaN/divergence watch). Each task run trains
+      a BOUNDED chunk (<=1500s wall) then checkpoints + exits so it fits the loop; resumes from checkpoint. THESIS-A bring-up
+      step 4 (the GPU-budget half of the kill-gate).
+    deliverable: results/experiment_3728_bounded_checkpointed_train_ebt_and_ar.json
+    result: OK (conductor)
+  - id: exp3729-stability-kill-gate-verdict
+    title: 'Thesis-A kill-gate part-(a) VERDICT: did the tiny EBT train to STABLE convergence within the bounded 3090 budget?
+      GREEN-LIGHT the .342 matched-compute comparison only if stable; else record energy-as-generator BOUNDED at small scale
+      and STOP. THESIS-A bring-up step 5.'
+    deliverable: results/experiment_3729_stability_kill_gate_verdict.json
+    result: OK (conductor)
+  - id: exp3730-kv260-opportunistic-continuity-audit
+    title: "KV260 opportunistic continuity audit \u2014 confirm terminal state holds (SSH-reachable, accelerator loadable);\
+      \ the per-milestone hardware mandate relaxed to opportunistic at .340. Documentation-only."
+    deliverable: results/experiment_3730_kv260_opportunistic_continuity_audit.json
+    result: OK (conductor)
+  - id: exp3731-capstone-v341
+    title: "Capstone .341 \u2014 aggregate the Thesis-A EBT bring-up outcome (vendored + audited, tiny-EBT fits 3090, matched-compute\
+      \ harness built+tested, bounded train stability, kill-gate verdict). State HONESTLY whether part-(a) of the kill-gate\
+      \ passed (green-light .342) or the route is bounded at small scale. paper_ready MUST stay TRUE; frozen 0.9131 unchanged."
+    deliverable: results/experiment_3731_capstone_v341.json
+    result: OK (conductor)
