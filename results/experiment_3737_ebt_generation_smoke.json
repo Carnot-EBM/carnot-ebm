@@ -1,0 +1,24 @@
+{
+  "experiment": 3737,
+  "schema": "blocked_gate_check_v1",
+  "run_date": "2026-06-02",
+  "started_at": "2026-06-02T21:48:34.310625+00:00",
+  "finished_at": "2026-06-02T21:48:34.310625+00:00",
+  "duration_s": 0.0,
+  "status": "blocked",
+  "title": "EBT energy-descent GENERATION smoke on held-out GSM8K: confirm the trained EBT can actually GENERATE via gradient-descent energy minimization (produces finite, non-degenerate completions) before the expensive matched-compute eval. Gated on exp3736 green_light_342==true. THESIS-A part-(b) de-risk.",
+  "honest_verdict": "blocked_gate_check_failed",
+  "gate_check_summary": "1 of 1 gate(s) failed; first failure: exp3736-real-kill-gate-part-a-verdict.green_light_342 (actual=False == expected=True)",
+  "gates_evaluated": [
+    {
+      "upstream": "exp3736-real-kill-gate-part-a-verdict",
+      "artifact_field": "green_light_342",
+      "op": "==",
+      "expected": true,
+      "actual": false,
+      "passed": false,
+      "reason": "actual=False == expected=True"
+    }
+  ],
+  "blocked_at_layer": "conductor_pre_gate"
+}
