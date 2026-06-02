@@ -1,0 +1,61 @@
+{
+  "command_probes": {
+    "polarfire_carnot_dispatch_path": {
+      "combined_output": "/usr/bin/carnot\n",
+      "command": "ssh polarfire 'which carnot'",
+      "exit_code": 0,
+      "stderr": "",
+      "stdout": "/usr/bin/carnot\n"
+    },
+    "polarfire_ssh": {
+      "combined_output": "",
+      "command": "ssh -o ConnectTimeout=5 polarfire true",
+      "exit_code": 0,
+      "stderr": "",
+      "stdout": ""
+    },
+    "polarfire_uptime": {
+      "combined_output": " 12:29:47 up 3 days, 22:00,  0 user,  load average: 0.02, 0.01, 0.00\n",
+      "command": "ssh polarfire uptime",
+      "exit_code": 0,
+      "stderr": "",
+      "stdout": " 12:29:47 up 3 days, 22:00,  0 user,  load average: 0.02, 0.01, 0.00\n"
+    }
+  },
+  "continuity_history": {
+    "current_milestone": ".339",
+    "last_recorded_reachable_milestone": ".338"
+  },
+  "duration_s": 2.5071,
+  "experiment_id": "exp3710",
+  "field_principles": {
+    "duration_s": "Plausibility floor.",
+    "honest_verdict": "Terminal prefix for reconciler classification.",
+    "inference_substrate": "SSH-attached board test.",
+    "polarfire_carnot_dispatch_path": "Live Carnot dispatch-path value collected only after SSH reachability passes.",
+    "polarfire_continuity_state": "Deflagged summary derived from the distinct PolarFire uptime and dispatch fields.",
+    "polarfire_ssh_reachable": "Honest board state.",
+    "polarfire_uptime": "Live board continuity value collected only after SSH reachability passes.",
+    "preconditions_checked": "Records the SSH-reachability check before claiming continuity.",
+    "random_seed": "Determinism precondition.",
+    "reproducibility_checksum": "Drift detection."
+  },
+  "honest_verdict": "complete: polarfire_continuity_confirmed_reachable",
+  "inference_substrate": "hardware_smoke",
+  "polarfire_carnot_dispatch_path": "/usr/bin/carnot",
+  "polarfire_continuity_state": "reachable_uptime_and_dispatch_path_recorded_deflagged",
+  "polarfire_ssh_reachable": true,
+  "polarfire_uptime": "12:29:47 up 3 days, 22:00,  0 user,  load average: 0.02, 0.01, 0.00",
+  "preconditions_checked": [
+    {
+      "available": true,
+      "command": "ssh -o ConnectTimeout=5 polarfire true",
+      "exit_code": 0,
+      "resource": "polarfire_ssh"
+    }
+  ],
+  "random_seed": 3710,
+  "reproducibility_checksum": "d12100133c55e0a1de7cf606b883d477cde5da39cf8c2eedb236560d06c02acc",
+  "schema": "carnot.polarfire_continuity.v26",
+  "task_id": "exp3710-polarfire-continuity-v26"
+}
