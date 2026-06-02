@@ -9959,6 +9959,74 @@ success string.
 |---|---|---|
 | REQ-VERIFY-3682 | Planned (`python/carnot/verify/discrimination_vs_selection_gap_3682.py`, `scripts/experiment_3682_discrimination_vs_selection_gap.py`) | Planned (`tests/python/test_experiment_3682_discrimination_vs_selection_gap.py`) |
 
+### REQ-VERIFY-3694: Proper Selection-Gap Rediagnosis
+
+The repository shall provide an Exp 3694 workflow that redoes the Exp 3682
+discrimination-versus-selection diagnosis only when the referenced
+multi-candidate corpus is loadable with per-candidate correctness labels and
+cached verifier-energy evidence. The workflow SHALL use cached candidates only,
+SHALL NOT invoke live LLM generation, SHALL NOT modify
+`scripts/research_conductor.py`, and SHALL write
+`results/experiment_3694_selection_gap_proper_rediagnosis.json`. If the corpus
+or cached per-candidate energy evidence is unavailable, it SHALL write the
+terminal verdict `complete: blocked_no_multi_candidate_corpus` rather than
+rerunning the Exp 3682 text-rescoring path that collapsed AUROC to chance.
+
+For runnable inputs, the workflow SHALL first reproduce discrimination before
+testing any selection fix: cross-question per-candidate AUROC MUST be measured
+from the cached verifier scores and SHALL satisfy `per_candidate_auroc >= 0.85`
+before the gap diagnosis can be accepted. It SHALL also report within-question
+energy-vs-correctness rank correlation, self-consistency selection accuracy,
+oracle best-of-N accuracy, and a positive-control flag that is true only when
+oracle accuracy exceeds self-consistency and every attempted fix changes at
+least one selection relative to self-consistency.
+
+The workflow SHALL evaluate four non-degenerate fixes on the same candidate
+rows: component-wise within-question energy normalization, pessimistic LCB BoN
+selection over a deterministic kappa sweep, bootstrapped best-of-subset BoN
+selection, and verifier-energy plus self-certainty fusion. It SHALL report each
+fix's selection accuracy, each fix's flip count versus self-consistency, paired
+bootstrap confidence intervals, and exact McNemar statistics for the best fix
+against self-consistency. It SHALL set `non_degeneracy_assert=true` only when
+the fixes have distinct non-zero flip counts and do not collapse to one
+identical accuracy/selection result.
+
+The terminal artifact SHALL include `honest_verdict`,
+`inference_substrate`, `per_candidate_auroc`, `within_question_rank_corr`,
+`sc_selection_accuracy`, `oracle_bestofn_accuracy`,
+`selection_accuracy_per_question_normalized`,
+`selection_accuracy_pessimistic_lcb`, `selection_accuracy_bootstrapped`,
+`selection_accuracy_self_certainty_fusion`, `per_fix_flip_counts`,
+`non_degeneracy_assert`, `best_fix_vs_sc_delta_ci`,
+`positive_control_valid`, a bare top-level `selection_gap_closed` boolean,
+`n_examples`, `adversarial_verify_clean`, `random_seed`,
+`reproducibility_checksum`, and `duration_s`, with field principles
+documenting why each required field exists. The bare `selection_gap_closed`
+boolean SHALL be true only when at least one fix beats self-consistency with a
+paired delta confidence interval excluding zero in the positive direction while
+`per_candidate_auroc >= 0.85`, `positive_control_valid=true`,
+`non_degeneracy_assert=true`, and `adversarial_verify_clean=true`. The terminal
+verdict SHALL be one of
+`complete: selection_gap_closed_new_method_recovers_value_above_sc`,
+`complete: selection_gap_fundamental_no_non_degenerate_fix_beats_sc_decoupled_as_2512_23067`,
+or `complete: blocked_no_multi_candidate_corpus`.
+
+### SCENARIO-VERIFY-3694: Proper Rediagnosis Blocks Or Classifies Honest Outcomes
+
+Given synthetic cached-energy multi-candidate fixtures covering
+`fix_recovers_selection_value`, `decoupling_fundamental_no_fix_helps`, and
+`blocked` outcomes, when the Exp 3694 artifact builder and classifier run, then
+they emit the required bare booleans, discrimination reproduction gate,
+non-degenerate per-fix flip counts, paired delta statistics, and a terminal
+verdict selected from the measured outcome rather than hard-coding one success
+string.
+
+## Implementation Status (REQ-VERIFY-3694)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-VERIFY-3694 | Planned (`python/carnot/verify/selection_gap_proper_rediagnosis_3694.py`, `scripts/experiment_3694_selection_gap_proper_rediagnosis.py`) | Planned (`tests/python/test_experiment_3694_selection_gap_proper_rediagnosis.py`) |
+
 ### REQ-VERIFY-3646: Trained EBM Judge OOD Counterpoint V2
 
 The repository shall provide an Exp 3646 workflow that trains a small
