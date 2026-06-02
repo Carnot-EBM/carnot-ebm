@@ -20515,3 +20515,54 @@ de-tautologized multi-seed re-run with a DeLong significance test before it can 
 - **Best of mini-N in-loop Sampling: A Contextual Quality Reward Model (arXiv:2510.04087, Oct 2025):**
   contextual-quality reward model for reliable/efficient BoN — a peer to the second-pair-of-eyes detector's
   candidate-quality scoring.
+
+## 2026-06-02 Post-.338 Planning Sweep (Milestone 2026.06.339)
+
+`.338` produced two PROVISIONAL wins that must be validated before they can advance the headline,
+plus disambiguated the re-freeze candidate (read via summarize_artifact.py):
+- **exp3693 external comparator**: the PUBLISHED de-entangled/CIG-style reweighting baseline reached
+  AUROC **0.9287**, which is HIGHER than Carnot's dependency-aware candidate **0.9249** (both beat
+  frozen 0.9131). Verdict `ties_or_loses` — the dependency-aware candidate is NOT uniquely best.
+  The re-freeze choice is now ambiguous: dependency-aware vs external vs a fusion of both.
+- **exp3695 code-native verifier**: code_native AUROC = **1.0** (`code_signal_recovered`). AUROC 1.0
+  on a code corpus is IMPLAUSIBLE_PERFECT (the exp1851/exp3397 fabrication pattern + the capstone
+  "AUROC >= 0.99 on n>=1000 is a leak unless proven leak-free" rule). The detector was already
+  re-shipped on this number (exp3696) — so the 1.0 MUST be leak-audited + held-out-replicated before
+  it headlines, and the shipped surface reconciled with the audit.
+- **exp3694 selection diagnosis**: BLOCKED again (`blocked_no_multi_candidate_corpus`,
+  per_candidate_auroc not reproduced). Second failed diagnosis (exp3682 degenerate, exp3694 blocked).
+  Per the `project_energy_selection_thesis_bounded` memory, energy selection is settled-bounded —
+  `.339` formally CLOSES the diagnosis question rather than grinding a third attempt.
+- **KV260** SSH-reachable again at exp3698 after 8 unreachable milestones — `.339` drives it toward
+  the north-star §3 terminal state (board-latency transcript).
+
+### New references for .339
+
+- **TraceCoder: A Trace-Driven Multi-Agent Framework for Automated Debugging of LLM-Generated Code
+  (arXiv:2602.06875, Feb 2026):** instruments generated code with diagnostic probes to capture
+  fine-grained RUNTIME traces, then does causal analysis to localize the failure root cause. The
+  execution-trace signal source for strengthening + held-out-validating the `.338` code-native
+  verifier (exp3695) beyond a possibly-leaky AST-only AUROC.
+- **The Double Life of Code World Models: Provably Unmasking Malicious Behavior Through Execution
+  Traces (arXiv:2512.13821):** execution-trace analysis as a correctness/behavior discriminator —
+  corroborates that a genuine code signal lives in execution, not in surface structure alone.
+- **Detecting and Correcting Hallucinations in LLM-Generated Code (arXiv:2601.19106):** AST-based
+  detection at 100% precision / 87.6% recall / 0.934 F1 on a CURATED 200-snippet Python set. A
+  cautionary peer: AST signal can look near-perfect on a small curated corpus — exactly why the
+  exp3695 AUROC=1.0 needs a larger HELD-OUT corpus before headlining.
+- **An Execution-Verified Multi-Language Benchmark for Code Semantic Reasoning (arXiv:2605.11006):**
+  a held-out, execution-verified code corpus — a clean independent test set for the code-native
+  verifier held-out replication (NOT the exp3658 corpus it was tuned on).
+- **Cross-Context Verification: Hierarchical Detection of Benchmark Contamination through
+  Session-Isolated Analysis (arXiv:2603.21454, Apr 2026):** contamination/leak detection that
+  achieves perfect separation on contaminated reasoning — a method to audit whether exp3695's
+  AUROC=1.0 is a leakage artifact.
+- **How Contaminated Is Your Benchmark? Quantifying Dataset Leakage with Kernel Divergence
+  (arXiv:2502.00678):** kernel-divergence leak quantification — a second, complementary leak-audit
+  method for the code-native AUROC=1.0.
+- **Multi-Agent Verification: Scaling Test-Time Compute with Multiple Verifiers (arXiv:2502.20379):**
+  combining multiple verifiers at test time — the frame for the re-freeze FUSION candidate
+  (dependency-aware label-conditional weighting + the published de-entangled/CIG baseline).
+- **De-entangled / class-information-guided reweighting (arXiv:2604.07650):** the published external
+  reweighting baseline that BEAT the dependency-aware candidate at exp3693 (0.9287 vs 0.9249) — the
+  external bar the `.339` head-to-head must measure at full G1-rigor and try to fuse with.
