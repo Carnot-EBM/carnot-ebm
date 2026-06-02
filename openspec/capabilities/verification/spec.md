@@ -9903,6 +9903,62 @@ measured outcome rather than hard-coding a single success string.
 |---|---|---|
 | REQ-VERIFY-3672 | Implemented (`python/carnot/verify/ensemble_selection_sc_weak_3672.py`, `scripts/experiment_3672_ensemble_selection_where_sc_weak.py`) | Implemented (`tests/python/test_experiment_3672_ensemble_selection_sc_weak.py`) |
 
+### REQ-VERIFY-3682: Discrimination Versus Selection Gap Diagnosis
+
+The repository shall provide an Exp 3682 workflow that diagnoses whether the
+Exp 3672 verifier-ensemble selection failure is a fixable calibration artifact
+or a fundamental discrimination-versus-selection decoupling on the cached
+multi-candidate corpus. The workflow SHALL use only cached candidates and local
+verifier scoring, SHALL NOT invoke live LLM generation, and SHALL write
+`complete: blocked_no_multi_candidate_corpus` if the Exp 3672 multi-candidate
+corpus cannot be loaded with per-candidate correctness labels.
+
+For runnable inputs, the workflow SHALL report cross-question per-candidate
+AUROC, within-question energy-vs-correctness rank correlation, SC selection
+accuracy, oracle best-of-N accuracy, and a positive-control flag that is true
+only when oracle accuracy exceeds SC and the best attempted fix changes at
+least one selection relative to SC. It SHALL evaluate all requested fixes on
+the same cached candidates: within-question energy normalization, a deterministic
+train/held-out within-question ranking calibration, self-certainty best-of-N,
+and ensemble-plus-self-certainty fusion. The workflow SHALL report the paired
+delta, bootstrap confidence interval, and exact McNemar statistic for the best
+attempted fix against SC.
+
+The terminal artifact SHALL be
+`results/experiment_3682_discrimination_vs_selection_gap.json` and SHALL include
+`honest_verdict`, `inference_substrate`, `per_candidate_auroc`,
+`within_question_rank_corr`, `sc_selection_accuracy`,
+`oracle_bestofn_accuracy`, `flip_count`,
+`selection_accuracy_per_question_normalized`,
+`selection_accuracy_ranking_calibrated`,
+`self_certainty_selection_accuracy`, `best_fix_vs_sc_delta_ci`,
+`positive_control_valid`, a bare top-level `selection_gap_closed` boolean,
+`n_examples`, `random_seed`, `reproducibility_checksum`, and `duration_s`, with
+field principles documenting why each required field exists. The bare
+`selection_gap_closed` boolean SHALL be true only when the positive control is
+valid and at least one ensemble or ensemble-plus-self-certainty fix beats SC
+with a paired delta confidence interval excluding zero in the positive
+direction. The terminal verdict SHALL be one of
+`complete: selection_gap_closed_per_question_calibration_recovers_value`,
+`complete: selection_gap_fundamental_no_fix_beats_sc_discrimination_decoupled_as_2512_23067`,
+or `complete: blocked_no_multi_candidate_corpus`.
+
+### SCENARIO-VERIFY-3682: Honest Selection-Gap Outcomes Are Parametrized
+
+Given synthetic multi-candidate fixtures covering
+`fix_recovers_selection_value`, `decoupling_fundamental_no_fix_helps`, and
+`blocked` outcomes, when the Exp 3682 artifact builder and classifier run, then
+they emit the required bare booleans, discrimination and within-question
+decoupling metrics, positive-control fields, paired delta statistics, and a
+terminal verdict selected from the measured outcome rather than hard-coding one
+success string.
+
+## Implementation Status (REQ-VERIFY-3682)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-VERIFY-3682 | Planned (`python/carnot/verify/discrimination_vs_selection_gap_3682.py`, `scripts/experiment_3682_discrimination_vs_selection_gap.py`) | Planned (`tests/python/test_experiment_3682_discrimination_vs_selection_gap.py`) |
+
 ### REQ-VERIFY-3646: Trained EBM Judge OOD Counterpoint V2
 
 The repository shall provide an Exp 3646 workflow that trains a small
