@@ -78,3 +78,9 @@ The system SHALL provide a training loop for IRED in `scripts/experiment_2099_ir
 ## SCENARIO-INFER-2099: Training IRED on Synthetic Constraints
 Given a synthetic dataset of logic constraints, the training loop runs and the learned IRED energy function correctly minimizes at valid states. The script MUST save the results to `results/experiment_2099_ired_training.json` with `ired_training_successful=true`.
 
+## REQ-EBT-3725: EBT Minimal Vendoring
+The system must vendor the minimal upstream EBT energy function and inference path from alexiglad/EBT, ensuring it is importable from `carnot.phase3.ebt_upstream` and evaluating a finite scalar energy on a CPU smoke test.
+
+## SCENARIO-EBT-3725: EBT Upstream Smoke Test
+Given the vendored subset of the EBT repository, the CPU smoke test runs a forward pass over a random tensor representing an embedding sequence, returning a finite scalar energy value.
+

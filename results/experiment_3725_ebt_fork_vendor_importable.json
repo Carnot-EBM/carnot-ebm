@@ -1,0 +1,13 @@
+{
+  "honest_verdict": "complete: ebt_vendored_pinned_19420cbeae655bbf11930219a675ade6897019e8_license_apache2_importable_energy_path_audited_cpu_smoke_finite",
+  "inference_substrate": "hardware_smoke",
+  "upstream_commit_sha": "19420cbeae655bbf11930219a675ade6897019e8",
+  "license_confirmed": true,
+  "energy_path_audit": "ENERGY_PATH_AUDIT: (i) Energy function signature: EBTDefault.forward(embeddings, start_pos) returning a scalar energy for each prediction. The energy function maps 2*(S-1) tokens to their associated energy using a causal-like transformer. (ii) Inference does energy descent via Langevin dynamics/MCMC steps using `torch.autograd.grad(energy, input)` to iteratively adjust input embeddings to minimize energy. The default inference script uses `mcmc_num_steps` = 2 steps for energy descent. (iii) Training objective at a high level: Minimizing the energy of real tokens and maximizing the energy of corrupted tokens (via contrastive loss) combined with a cross-entropy reconstruction loss on predicting the target sequence.",
+  "importable": true,
+  "smoke_energy_value": 0.5541654229164124,
+  "preconditions_checked": ["network", "torch", "write_access"],
+  "random_seed": 42,
+  "reproducibility_checksum": "2ce68e8f0d8af0a97398ff04cd1dae4f7d09d63953eefe97b08abfffd85c595d",
+  "duration_s": 15
+}
