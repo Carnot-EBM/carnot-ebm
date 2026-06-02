@@ -10585,3 +10585,86 @@ no-template AUROC to decide the honest terminal verdict.
 | Requirement  | Python | Tests |
 |-------------|--------|-------|
 | REQ-LEARN-3708 | Proposed (python/carnot/fr11/continuous_self_learning_v13.py; scripts/experiment_3708_fr11_continuous_self_learning_v13.py) | Proposed (tests/python/test_experiment_3708_fr11_csl_v13.py) |
+
+---
+
+## REQ-LEARN-3720: FR-11 Continuous Self Learning v14 Template Robustness Under Distribution Shift
+
+**Given** the FR-11 module, cached per-verifier trace scores with binary labels,
+and the Exp 3708 v13 bounded template library are present
+**And** the cached score stream contains at least one distributionally shifted
+fresh session slice relative to the v13 template-source slices
+**When** Exp 3720 applies the v13 consolidated template to that shifted fresh
+session
+**Then** the deploy arm SHALL compare the consolidated-template deployment policy
+against a cold-start no-template control on ensemble AUROC
+**And** the conservative-default rule SHALL detect shifted sessions and fall back
+to cold-start when the consolidated template does not beat cold-start with a
+positive paired-bootstrap AUROC delta confidence interval
+**And** the artifact SHALL report the shifted slice source, deploy and cold-start
+AUROCs under shift, fallback status, collapse status, bounded-library status,
+pass-rate-vs-true-accuracy distinctness, and an honest terminal verdict.
+
+### REQ-LEARN-3720 Sub-requirements
+
+- REQ-LEARN-3720-1: Runnable artifacts SHALL use cached traces only, with
+  `inference_substrate` equal to
+  `verifier_ensemble_against_cached_candidates (principle: scores cached traces; no LLM load; no compute-bound marker).`.
+- REQ-LEARN-3720-2: If the FR-11 module, v13 template library, cached
+  per-verifier trace scores, or at least one shifted session slice are
+  unavailable, the workflow SHALL write the terminal verdict
+  `complete: blocked_fr11_module_or_shifted_slice_unavailable`.
+- REQ-LEARN-3720-3: Runnable artifacts SHALL report `n_online_updates >= 200`,
+  `template_library_bounded == true`, and a bare boolean
+  `pass_rate_vs_true_accuracy_distinct_assert`.
+- REQ-LEARN-3720-4: A positive robustness result SHALL require the raw
+  consolidated-template AUROC to exceed cold-start with a paired-bootstrap delta
+  confidence interval whose lower bound is greater than zero.
+- REQ-LEARN-3720-5: A conservative graceful-fallback result SHALL require shift
+  detection, fallback to the cold-start arm, effective deploy AUROC no worse than
+  cold-start AUROC, and no deploy-arm weight collapse.
+- REQ-LEARN-3720-6: The acceptance gate SHALL pass only when
+  `template_robust_or_graceful_fallback == true`,
+  `collapse_detected_deploy_arm == false`,
+  `template_library_bounded == true`, and
+  `pass_rate_vs_true_accuracy_distinct_assert == true`.
+- REQ-LEARN-3720-7: Runnable artifacts SHALL include principle annotations for
+  `honest_verdict`, `inference_substrate`, `shifted_session_source`,
+  `deploy_arm_auroc_under_shift`, `cold_start_auroc_under_shift`,
+  `template_robust_or_graceful_fallback`, `conservative_fallback_triggered`,
+  `collapse_detected_deploy_arm`, `template_library_bounded`,
+  `pass_rate_vs_true_accuracy_distinct_assert`, `n_online_updates`,
+  `random_seed`, `reproducibility_checksum`, and `duration_s`.
+- REQ-LEARN-3720-8: The terminal verdict SHALL be
+  `complete: fr11_v14_template_robust_under_distribution_shift_no_collapse`
+  when the raw consolidated template beats cold-start with the positive delta
+  confidence interval and the acceptance gate passes; SHALL be
+  `complete: fr11_v14_template_falls_back_gracefully_under_shift_no_collapse`
+  when the acceptance gate passes through conservative fallback; SHALL be
+  `complete: fr11_v14_template_hurts_under_shift_deploy_policy_narrowed_honest`
+  when the template hurts under shift and the fallback policy does not prevent
+  the loss; and SHALL be
+  `complete: blocked_fr11_module_or_shifted_slice_unavailable` when required
+  preconditions are absent.
+
+### SCENARIO-LEARN-3720: Shifted Template Deployment Either Helps Or Falls Back
+
+**Given** a v13 consolidated bounded template library and a fresh cached verifier
+slice whose vote distribution differs from the template-source slices
+**When** the v14 evaluator scores the shifted slice with the consolidated
+template and with cold-start uniform weighting
+**Then** the evaluator records raw template, effective deploy, and cold-start
+AUROCs under shift
+**And** a raw template improvement counts as robust only when the paired
+bootstrap AUROC delta confidence interval excludes zero positively
+**And** a non-improving shifted deployment falls back to cold-start when the
+conservative-default shift detector fires
+**And** the artifact acceptance gate passes only if the deployment either helps
+or falls back gracefully without collapse, the template library remains bounded,
+and pass-rate and true-accuracy trajectories are not element-wise identical.
+
+## Implementation Status (REQ-LEARN-3720)
+
+| Requirement  | Python | Tests |
+|-------------|--------|-------|
+| REQ-LEARN-3720 | Implemented (python/carnot/fr11/continuous_self_learning_v14.py; scripts/experiment_3720_fr11_continuous_self_learning_v14.py) | Implemented (tests/python/test_experiment_3720_fr11_csl_v14.py) |
