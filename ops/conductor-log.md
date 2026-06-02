@@ -7569,3 +7569,4 @@ web search: https://docs.garak.ai/garak/examples/pr |
 | 2026-06-02 03:13 UTC | Plan milestone 2026.06.338 | OK | 12 tasks proposed |
 | 2026-06-02 03:15 UTC | Milestone 2026.06.338 activated | OK | 12 tasks queued |
 | 2026-06-02 03:30 UTC | Archive milestone .337 honestly (dependency-aware  | OK | 86 passed in 4.01s |
+| 2026-06-02 03:44 UTC | Backend-state diagnostic v4 — fourth probe of gemi | OK | 91 passed in 3.85s |
