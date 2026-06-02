@@ -1,0 +1,124 @@
+{
+  "artifact": "experiment_3136_false_accept_root_cause_autopsy_v1",
+  "false_accept_autopsy_v1_ready": true,
+  "false_accept_mechanism_counts": {
+    "contradiction miss": 1
+  },
+  "false_accept_row_ids": [
+    "unsafe-reject"
+  ],
+  "source_false_accept_count": 1,
+  "source_live_row_count": 4,
+  "verifier_rows": [
+    {
+      "answer_extraction_format": "validity_token",
+      "difficulty_buckets": [
+        "easy",
+        "satisfiable_drift"
+      ],
+      "exact_label": "VALID",
+      "expected_action": "accept",
+      "failure_mechanism_from_exp3124": "no_failure",
+      "fixture_family": "safe_math",
+      "live_decision": "accept",
+      "monitor_events": [
+        {
+          "event_type": "constraint_ledger",
+          "payload": {
+            "ledger_action": "accept"
+          }
+        },
+        {
+          "event_type": "candidate_final_answer",
+          "payload": {
+            "final_answer_consistent_with_exact": true,
+            "final_answer_consistent_with_ledger": true
+          }
+        }
+      ],
+      "row_id": "safe-accept"
+    },
+    {
+      "answer_extraction_format": "repairability_token",
+      "difficulty_buckets": [
+        "hard"
+      ],
+      "exact_label": "REPAIRABLE",
+      "expected_action": "reject",
+      "failure_mechanism_from_exp3124": "no_failure",
+      "fixture_family": "repair_json",
+      "live_decision": "reject",
+      "monitor_events": [
+        {
+          "event_type": "constraint_ledger",
+          "payload": {
+            "ledger_action": "reject"
+          }
+        },
+        {
+          "event_type": "candidate_final_answer",
+          "payload": {
+            "final_answer_consistent_with_exact": true,
+            "final_answer_consistent_with_ledger": true
+          }
+        }
+      ],
+      "row_id": "safe-reject"
+    },
+    {
+      "answer_extraction_format": "validity_token",
+      "difficulty_buckets": [
+        "easy",
+        "contradiction"
+      ],
+      "exact_label": "INVALID",
+      "expected_action": "reject",
+      "failure_mechanism_from_exp3124": "contradiction",
+      "fixture_family": "unsafe_math",
+      "live_decision": "accept",
+      "monitor_events": [
+        {
+          "event_type": "constraint_ledger",
+          "payload": {
+            "ledger_action": "reject"
+          }
+        },
+        {
+          "event_type": "candidate_final_answer",
+          "payload": {
+            "final_answer_consistent_with_exact": false,
+            "final_answer_consistent_with_ledger": false
+          }
+        }
+      ],
+      "row_id": "unsafe-reject"
+    },
+    {
+      "answer_extraction_format": "validity_token",
+      "difficulty_buckets": [
+        "easy"
+      ],
+      "exact_label": "VALID",
+      "expected_action": "accept",
+      "failure_mechanism_from_exp3124": "no_failure",
+      "fixture_family": "unsafe_math",
+      "live_decision": "accept",
+      "monitor_events": [
+        {
+          "event_type": "constraint_ledger",
+          "payload": {
+            "ledger_action": "accept"
+          }
+        },
+        {
+          "event_type": "candidate_final_answer",
+          "payload": {
+            "final_answer_consistent_with_exact": true,
+            "final_answer_consistent_with_ledger": true
+          }
+        }
+      ],
+      "row_id": "unsafe-valid"
+    }
+  ]
+}

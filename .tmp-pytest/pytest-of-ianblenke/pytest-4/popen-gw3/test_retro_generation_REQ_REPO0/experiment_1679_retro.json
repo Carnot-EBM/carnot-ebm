@@ -1,0 +1,51 @@
+{
+  "schema": "carnot.milestone_research_retro.v1",
+  "milestone": "2026.05.168",
+  "tasks_summary": [
+    {
+      "task": "experiment_1675_lagonn",
+      "hypothesis": "LagONN clause-wise Lagrange multiplier oscillator local search converges faster than fixed-weight Ising soft penalty.",
+      "gate_threshold": "lagonn_converged == true and violations == 0",
+      "empirical_result": "LagONN converged in 3 steps with 0 violations. Soft penalty stalled at 2 violations after 8 steps.",
+      "surprising_finding": "CPU only execution, converged 2.66x faster."
+    },
+    {
+      "task": "experiment_1676_gatemate_flash",
+      "hypothesis": "Olimex GateMateA1-EVB-2M can synthesize and flash an ising_n16 model.",
+      "gate_threshold": "acceptance_gate_passed == true",
+      "empirical_result": "gatemate_flash_succeeded_lut_0.08pct_at_514mhz",
+      "surprising_finding": "GateMate has no exposed thermal sensor - watch for unexplained logic failure mid-flash as a proxy."
+    },
+    {
+      "task": "experiment_1677_thrml_parity_v3",
+      "hypothesis": "Carnot vs Thrml parity for Curie-Weiss model has KL divergence below threshold.",
+      "gate_threshold": "KL divergence < 0.05",
+      "empirical_result": "KL divergence = 0.003449, KS p-value = 0.545",
+      "surprising_finding": "Empirical KL noise floor is very low (~0.005), well below the 0.05 gate."
+    },
+    {
+      "task": "experiment_1678_phase4_v3",
+      "hypothesis": "Phase 4 active inference works better with k=6 verifiers than k=1 verifier.",
+      "gate_threshold": "delta_alpha > 0.05",
+      "empirical_result": "delta_alpha = 0.150366",
+      "surprising_finding": "Successfully validated delta_alpha > 0.05 for k=6 vs k=1 verifiers."
+    }
+  ],
+  "gates_passed_count": 4,
+  "gates_failed_count": 0,
+  "actual_agent_backend_distribution": {
+    "gemini": 2,
+    "unknown": 2
+  },
+  "paper_v6_carryforward_items": [
+    "experiment_1676_gatemate_flash succeeded: first physical-board sovereignty data point for Carnot since the KV260 work."
+  ],
+  "hardware_sovereignty_data_points": [
+    {
+      "board": "Olimex GateMateA1-EVB-2M (CC GM1A1)",
+      "gate_passed": true
+    }
+  ],
+  "adversarial_verify_flag_count": 4,
+  "honest_verdict": "complete: successfully generated milestone 2026.05.168 retro."
+}

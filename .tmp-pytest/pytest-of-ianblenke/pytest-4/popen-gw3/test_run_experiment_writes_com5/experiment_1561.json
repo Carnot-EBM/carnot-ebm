@@ -1,0 +1,327 @@
+{
+  "block_size": 4,
+  "blockers": [
+    {
+      "blocker": "thrml_security_parity_failed",
+      "detail": "THRML graph-color block-Gibbs reached the planted null space at an MH-class rate, so parallel color scheduling is an attack-surface risk on this zero-coupling predicate."
+    }
+  ],
+  "checkpoints": [
+    10,
+    50,
+    100
+  ],
+  "falsification_note": "THRML graph-color block-Gibbs reached the planted null space at an MH-class rate, so parallel color scheduling is an attack-surface risk on this zero-coupling predicate.",
+  "free_bits": 4,
+  "honest_verdict": "complete_thrml_block_gibbs_falsifies_kinetic_security_parity",
+  "kinetic_defense_in_depth_validated": false,
+  "metadata": {
+    "dt_predicate": "DT-MCMC-NULL",
+    "experiment_id": 1561,
+    "hardware_claim_allowed": false,
+    "no_tsu_hardware_claim": true,
+    "project_root": "/home/ianblenke/github.com/ianblenke/carnot",
+    "run_date": "20260508",
+    "schema": "kinetic_defense_zero_coupling_v1",
+    "simulator_only": true,
+    "spec_refs": [
+      "REQ-SAMPLE-057",
+      "SCENARIO-SAMPLE-085"
+    ],
+    "thrml": {
+      "hardware_claim_allowed": false,
+      "thrml_execution_mode": "thrml_0_1_3_graph_color_semantics",
+      "thrml_import_error": null,
+      "thrml_import_path": "/fake/thrml.py",
+      "thrml_import_ready": true,
+      "thrml_version": "0.1.3"
+    }
+  },
+  "mh_faster_than_single_site_gibbs": true,
+  "mh_hitting_time_steps_per_block": 18.8125,
+  "mitigation": "Do not use graph-color block-Gibbs as the security argument on sparse zero-coupling null-space plateaus without an added kinetic throttle: randomize color order with replacement, cap color phases per inference budget, or audit candidate-warm-start null-space mass before adoption.",
+  "n_bits": 64,
+  "n_blocks": 15,
+  "n_chains": 256,
+  "p_n_at_k100_mh": 0.992188,
+  "p_n_at_k100_single_site_gibbs": 0.992188,
+  "p_n_at_k100_thrml_block_gibbs": 1.0,
+  "reward": 10.0,
+  "sampler_results": {
+    "mh": {
+      "chains": 256,
+      "cumulative_null_hit_mass_by_sweep": {
+        "10": 0.125,
+        "100": 1.0,
+        "50": 1.0
+      },
+      "current_null_mass_by_sweep": {
+        "10": 0.125,
+        "100": 0.992188,
+        "50": 0.996094
+      },
+      "energy_distributions": {
+        "10": [
+          {
+            "count": 32,
+            "energy": -150.0,
+            "fraction": 0.125
+          },
+          {
+            "count": 69,
+            "energy": -140.0,
+            "fraction": 0.269531
+          },
+          {
+            "count": 83,
+            "energy": -130.0,
+            "fraction": 0.324219
+          },
+          {
+            "count": 44,
+            "energy": -120.0,
+            "fraction": 0.171875
+          },
+          {
+            "count": 17,
+            "energy": -110.0,
+            "fraction": 0.066406
+          },
+          {
+            "count": 8,
+            "energy": -100.0,
+            "fraction": 0.03125
+          },
+          {
+            "count": 2,
+            "energy": -90.0,
+            "fraction": 0.007812
+          },
+          {
+            "count": 1,
+            "energy": -80.0,
+            "fraction": 0.003906
+          }
+        ],
+        "100": [
+          {
+            "count": 254,
+            "energy": -150.0,
+            "fraction": 0.992188
+          },
+          {
+            "count": 2,
+            "energy": -140.0,
+            "fraction": 0.007812
+          }
+        ],
+        "50": [
+          {
+            "count": 255,
+            "energy": -150.0,
+            "fraction": 0.996094
+          },
+          {
+            "count": 1,
+            "energy": -140.0,
+            "fraction": 0.003906
+          }
+        ]
+      },
+      "mean_global_hitting_sweeps": 16.007812,
+      "mean_hitting_sweeps_by_checkpoint": {
+        "10": 8.75,
+        "100": 16.007812,
+        "50": 16.007812
+      },
+      "sampler": "mh",
+      "unhit_fraction_at_final_checkpoint": 0.0
+    },
+    "single_site_gibbs": {
+      "chains": 256,
+      "cumulative_null_hit_mass_by_sweep": {
+        "10": 0.03125,
+        "100": 1.0,
+        "50": 1.0
+      },
+      "current_null_mass_by_sweep": {
+        "10": 0.03125,
+        "100": 0.992188,
+        "50": 0.996094
+      },
+      "energy_distributions": {
+        "10": [
+          {
+            "count": 8,
+            "energy": -150.0,
+            "fraction": 0.03125
+          },
+          {
+            "count": 34,
+            "energy": -140.0,
+            "fraction": 0.132812
+          },
+          {
+            "count": 61,
+            "energy": -130.0,
+            "fraction": 0.238281
+          },
+          {
+            "count": 56,
+            "energy": -120.0,
+            "fraction": 0.21875
+          },
+          {
+            "count": 54,
+            "energy": -110.0,
+            "fraction": 0.210938
+          },
+          {
+            "count": 25,
+            "energy": -100.0,
+            "fraction": 0.097656
+          },
+          {
+            "count": 10,
+            "energy": -90.0,
+            "fraction": 0.039062
+          },
+          {
+            "count": 7,
+            "energy": -80.0,
+            "fraction": 0.027344
+          },
+          {
+            "count": 1,
+            "energy": -70.0,
+            "fraction": 0.003906
+          }
+        ],
+        "100": [
+          {
+            "count": 254,
+            "energy": -150.0,
+            "fraction": 0.992188
+          },
+          {
+            "count": 2,
+            "energy": -140.0,
+            "fraction": 0.007812
+          }
+        ],
+        "50": [
+          {
+            "count": 255,
+            "energy": -150.0,
+            "fraction": 0.996094
+          },
+          {
+            "count": 1,
+            "energy": -140.0,
+            "fraction": 0.003906
+          }
+        ]
+      },
+      "mean_global_hitting_sweeps": 20.085938,
+      "mean_hitting_sweeps_by_checkpoint": {
+        "10": 9.625,
+        "100": 20.085938,
+        "50": 20.085938
+      },
+      "sampler": "single_site_gibbs",
+      "unhit_fraction_at_final_checkpoint": 0.0
+    },
+    "thrml_block_gibbs": {
+      "chains": 256,
+      "cumulative_null_hit_mass_by_sweep": {
+        "10": 0.554688,
+        "100": 1.0,
+        "50": 1.0
+      },
+      "current_null_mass_by_sweep": {
+        "10": 0.550781,
+        "100": 1.0,
+        "50": 1.0
+      },
+      "energy_distributions": {
+        "10": [
+          {
+            "count": 141,
+            "energy": -150.0,
+            "fraction": 0.550781
+          },
+          {
+            "count": 77,
+            "energy": -140.0,
+            "fraction": 0.300781
+          },
+          {
+            "count": 33,
+            "energy": -130.0,
+            "fraction": 0.128906
+          },
+          {
+            "count": 5,
+            "energy": -120.0,
+            "fraction": 0.019531
+          }
+        ],
+        "100": [
+          {
+            "count": 256,
+            "energy": -150.0,
+            "fraction": 1.0
+          }
+        ],
+        "50": [
+          {
+            "count": 256,
+            "energy": -150.0,
+            "fraction": 1.0
+          }
+        ]
+      },
+      "mean_global_hitting_sweeps": 10.925781,
+      "mean_hitting_sweeps_by_checkpoint": {
+        "10": 8.401408,
+        "100": 10.925781,
+        "50": 10.925781
+      },
+      "sampler": "thrml_block_gibbs",
+      "unhit_fraction_at_final_checkpoint": 0.0
+    }
+  },
+  "single_block_hitting_results": {
+    "mh": {
+      "censored_fraction": 0.0,
+      "chains": 256,
+      "max_observed_hitting_step": 88,
+      "mean_hitting_time_steps": 18.8125,
+      "sampler": "mh",
+      "target_block": "1111"
+    },
+    "single_site_gibbs": {
+      "censored_fraction": 0.0,
+      "chains": 256,
+      "max_observed_hitting_step": 136,
+      "mean_hitting_time_steps": 28.042969,
+      "sampler": "single_site_gibbs",
+      "target_block": "1111"
+    },
+    "thrml_block_gibbs": {
+      "censored_fraction": 0.0,
+      "chains": 256,
+      "max_observed_hitting_step": 75,
+      "mean_hitting_time_steps": 14.289062,
+      "sampler": "thrml_block_gibbs",
+      "target_block": "1111"
+    }
+  },
+  "single_site_gibbs_hitting_time_steps_per_block": 28.042969,
+  "status": "complete",
+  "target_block": "1111",
+  "temperature": 1.0,
+  "thrml_block_gibbs_hitting_time_steps_per_block": 14.289062,
+  "thrml_hits_at_mh_class_rate": true,
+  "thrml_security_parity_with_single_site_gibbs": false
+}

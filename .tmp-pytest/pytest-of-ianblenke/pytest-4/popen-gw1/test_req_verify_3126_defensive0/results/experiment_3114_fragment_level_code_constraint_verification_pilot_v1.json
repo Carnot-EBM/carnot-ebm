@@ -1,0 +1,66 @@
+{
+  "artifact": "experiment_3114_fragment_level_code_constraint_verification_pilot_v1",
+  "fragment_checks": [
+    {
+      "expected_direction": "no change",
+      "failing_constraint": "",
+      "fixture_id": "valid",
+      "fragment_id": "valid:assert_expression",
+      "solver_evidence": {
+        "authority": "unit_fragment_checker"
+      },
+      "status": "pass"
+    },
+    {
+      "expected_direction": "no change",
+      "failing_constraint": "",
+      "fixture_id": "valid",
+      "fragment_id": "valid:assert_claim",
+      "solver_evidence": {
+        "authority": "unit_fragment_checker"
+      },
+      "status": "pass"
+    },
+    {
+      "expected_direction": "no change",
+      "failing_constraint": "",
+      "fixture_id": "invalid",
+      "fragment_id": "invalid:assert_expression",
+      "solver_evidence": {
+        "authority": "unit_fragment_checker"
+      },
+      "status": "pass"
+    },
+    {
+      "expected_direction": "replace claimed value",
+      "failing_constraint": "claimed_value == computed_value",
+      "fixture_id": "invalid",
+      "fragment_id": "invalid:assert_claim",
+      "solver_evidence": {
+        "authority": "unit_fragment_checker"
+      },
+      "status": "fail"
+    },
+    {
+      "expected_direction": "produce parseable JSON",
+      "failing_constraint": "valid_json_document",
+      "fixture_id": "json-repair",
+      "fragment_id": "json-repair:json_document",
+      "solver_evidence": {
+        "authority": "unit_fragment_checker"
+      },
+      "status": "fail"
+    },
+    {
+      "expected_direction": "no change",
+      "failing_constraint": "",
+      "fixture_id": "json-repair",
+      "fragment_id": "json-repair:required_field:mode",
+      "solver_evidence": {
+        "authority": "unit_fragment_checker"
+      },
+      "status": "non-applicable"
+    }
+  ],
+  "fragment_verification_pilot_ready": true
+}

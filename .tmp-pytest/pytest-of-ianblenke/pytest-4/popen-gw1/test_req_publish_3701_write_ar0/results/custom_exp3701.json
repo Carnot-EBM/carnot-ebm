@@ -1,0 +1,198 @@
+{
+  "adversarial_verify_clean": true,
+  "adversarial_verify_report": {
+    "artifact": "/home/ianblenke/github.com/ianblenke/carnot/.tmp-pytest/pytest-of-ianblenke/pytest-4/popen-gw1/test_req_publish_3701_write_ar0/results/custom_exp3701.json",
+    "exp_id": null,
+    "flag_count": 0,
+    "flags": [],
+    "honest_verdict": "complete: capstone_v338_refreeze_reemitted_clean_for_operator_external_ties_or_l",
+    "loaded": true,
+    "max_severity": -1,
+    "title": ""
+  },
+  "candidate_beats_external_comparator": "ties_or_loses",
+  "cited_upstream_artifacts": [
+    {
+      "adversarial_verify": "clean",
+      "honest_verdict": "complete: refreeze_package_reemitted_clean_for_operator_frozen_headline_unchanged",
+      "path": "results/experiment_3692_refreeze_package_clean_reemit.json",
+      "sha256": "700f04daecec906ea759a0425f7e09ba83835d57c01ff609a84f577d9272fd33"
+    },
+    {
+      "adversarial_verify": "clean",
+      "honest_verdict": "complete: dependency_aware_candidate_ties_or_loses_external_baseline_refreeze_narrowed",
+      "path": "results/experiment_3693_external_comparator_dependency_vs_deentangled.json",
+      "sha256": "1d543faadf620c85eff396b1d142520cb007ab13115bf182c070db8e7449f51a"
+    },
+    {
+      "adversarial_verify": "clean",
+      "honest_verdict": "complete: selection_gap_fundamental_decoupling",
+      "path": "results/experiment_3694_selection_gap_proper_rediagnosis.json",
+      "sha256": "a2298c814b6c4be4ab2564f3e69cad0f0d1bf116a0b0fa13c7279278ff0f2acc"
+    },
+    {
+      "adversarial_verify": "clean",
+      "honest_verdict": "complete: code_native_signal_recovered_beats_chance_floor",
+      "path": "results/experiment_3695_code_native_verifier.json",
+      "sha256": "d033b6f0b811720dcfaee3b59f4034e4a1e59b3b4e52015d1c896e3dccf3a17c"
+    },
+    {
+      "adversarial_verify": "clean",
+      "honest_verdict": "complete: detector_reshipped_math_plus_code_operating_point_e2e_green",
+      "path": "results/experiment_3696_reship_detector_math_plus_code.json",
+      "sha256": "e42af22979e17503fa873f8cf0a3b9f0c4ed443e8eb161d457193e8ca2ebc10d"
+    },
+    {
+      "adversarial_verify": "clean",
+      "honest_verdict": "complete: fr11_v12_drift_reset_and_cross_session_persistence_no_collapse_quality_maintained",
+      "path": "results/experiment_3697_fr11_continuous_self_learning_v12.json",
+      "sha256": "dd19c8873db7b4234ffd84930ffce7064cc010687788cb9b955e8dcf0620d67e"
+    }
+  ],
+  "code_detector": {
+    "code_native_auroc": 0.82,
+    "code_operating_point_auroc": 0.83,
+    "code_signal_recovered": true,
+    "exp3695_flagged_or_live_critical": false,
+    "exp3696_flagged_or_live_critical": false,
+    "exp3696_reship_status": "reshipped",
+    "status": "code_native_recovered_reshipped"
+  },
+  "code_detector_status": "code_native_recovered_reshipped",
+  "duration_s": 1.0,
+  "external_comparator": {
+    "dependency_aware_auroc": 0.924869,
+    "dependency_vs_external_delta_ci": {
+      "ci95": [
+        -0.007,
+        -0.001
+      ],
+      "point": -0.004
+    },
+    "external_comparator_auroc": 0.928737,
+    "flagged_or_live_critical": false,
+    "leak_risk": false,
+    "verdict": "ties_or_loses"
+  },
+  "facts_generalization_retired": true,
+  "field_principles": {
+    "adversarial_verify_clean": "True iff this capstone passes adversarial_verify with no DURATION_TOO_SHORT/critical flag -- the exp3689 fix; a flagged capstone does not count as a clean milestone close.",
+    "candidate_beats_external_comparator": "yes / ties_or_loses / not_measured -- does the dependency-aware candidate beat the published external baseline (exp3693)?",
+    "cited_upstream_artifacts": "sha256 provenance (G4).",
+    "code_detector_status": "code_native_recovered_reshipped / code_remains_math_only_earned / not_measured -- did a code-native signal recover the detector (exp3695/3696)?",
+    "duration_s": "Plausibility floor.",
+    "facts_generalization_retired": "Records facts-generalization as RETIRED (exp3670 same-verdict on REAL RAGTruth).",
+    "fr11_v12_result": "Whether the drift-reset + cross-session-persistence self-learning succeeded without collapse (exp3697).",
+    "frozen_headline_unchanged": "True iff the publication gate still reads 0.9131 -- a dependency-aware win is a candidate, never a silent swap.",
+    "g1": "Headline measured (FoVer 0.9131, 5-seed, CI, adversarial-clean).",
+    "g2": "Independently reproduced (CI runner 26725185125).",
+    "g3": "Prose narrowing-clean.",
+    "g4": "Numbers trace to primary artifacts.",
+    "honest_verdict": "Terminal prefix for reconciler classification.",
+    "inference_substrate": "aggregation_from_upstream_artifacts (principle: reads the gate script + artifacts; no live inference; no compute-bound marker so it does not false-flag like exp3689).",
+    "p01_status": "P0.1 stays honest-negative; do not re-assert a positive.",
+    "paper_ready": "G1 and G2 and G3 and G4 -- must remain true; the milestone does not regress the gate.",
+    "paper_v6_forbidden_claims": "Overclaims to avoid (including: do NOT cite the dependency-aware win as the headline until re-frozen + re-reproduced).",
+    "paper_v6_safe_claims": "Narrowing-clean claims.",
+    "random_seed": "Determinism precondition.",
+    "refreeze_package_status": "reemitted_clean_for_operator / still_flagged / not_prepared -- whether exp3692 produced a clean operator-actionable package; the frozen 0.9131 stays frozen regardless.",
+    "reproducibility_checksum": "Drift detection.",
+    "selection_gap_verdict": "closed_new_method / fundamental_decoupling / not_measured -- the PROPER discrimination-vs-selection diagnosis (exp3694), now non-degenerate.",
+    "trained_judge_ood_retired": "Records the trained-judge-OOD hypothesis as retired (exp3659 same-verdict).",
+    "unmet_gates": "Report which gates are unmet, not a count (publication_blocker_count is retired).",
+    "verifier_value_scope": "The scoped product claim after .338: math DISCRIMINATION (frozen headline) + code (math+code if recovered, else honestly math-only), facts RETIRED, selection (closed or fundamental per exp3694)."
+  },
+  "flagged_upstream_artifacts_excluded": [],
+  "fr11_v12": {
+    "collapse_detected_deploy_arm": false,
+    "drift_detected_deploy_arm": true,
+    "flagged_or_live_critical": false,
+    "quality_maintained": true,
+    "reset_triggered_on_transient_drift": true,
+    "result": "drift_reset_and_cross_session_persistence_no_collapse_quality_maintained",
+    "structure_persisted_and_restored": true
+  },
+  "fr11_v12_result": "drift_reset_and_cross_session_persistence_no_collapse_quality_maintained",
+  "frozen_fover_headline_auroc": 0.9131,
+  "frozen_headline_unchanged": true,
+  "g1": true,
+  "g2": true,
+  "g3": true,
+  "g4": true,
+  "honest_verdict": "complete: capstone_v338_refreeze_reemitted_clean_for_operator_external_ties_or_loses_selection_fundamental_decoupling_detector_code_code_native_recovered_reshipped_paper_ready_true_frozen_headline_unchanged",
+  "inference_substrate": "aggregation_from_upstream_artifacts",
+  "ops_docs_reconciliation_left_to_conductor": true,
+  "p01_status": "honest-negative",
+  "paper_ready": true,
+  "paper_v6_forbidden_claims": [
+    "Do not cite the dependency-aware win as the headline until re-frozen + re-reproduced.",
+    "Do not silently replace the frozen FoVer 0.9131 headline.",
+    "Do not describe a re-freeze package as operator-ready unless Exp 3692 is live-clean.",
+    "Do not claim the dependency-aware candidate beats the external comparator unless Exp 3693 measured it cleanly.",
+    "Do not re-assert P0.1 as positive; it remains honest-negative.",
+    "Do not re-assert facts-generalization or trained-judge-OOD; both are retired.",
+    "Do not read missing gated-task fields as None and synthesize a result around them.",
+    "Treat any AUROC >= 0.99 on n>=1000 as a leak unless explicit leak-free evidence is present."
+  ],
+  "paper_v6_safe_claims": [
+    "FoVer headline remains frozen at 0.9131 AUROC with G1-G4 satisfied.",
+    "P0.1 remains honest-negative; no positive is re-asserted.",
+    "Facts-generalization and trained-judge-OOD are retired and not re-asserted.",
+    "Dependency-aware weighting has a clean operator re-freeze package, but remains only a headline-advancement candidate pending operator action + CI re-reproduction.",
+    "External comparator verdict: ties_or_loses.",
+    "Selection-gap verdict: fundamental_decoupling.",
+    "Code detector status: code_native_recovered_reshipped.",
+    "FR-11 v12 result: drift_reset_and_cross_session_persistence_no_collapse_quality_maintained."
+  ],
+  "publication_gate": {
+    "G1": {
+      "detail": "FoVer 0.9131, 5-seed, CI, adversarial-clean",
+      "pass": true,
+      "source": "experiment_2850_fover_dual_condition_integrity_v4.json"
+    },
+    "G2": {
+      "detail": "CI runner 26725185125",
+      "pass": true
+    },
+    "G3": {
+      "detail": "narrowing-clean",
+      "pass": true
+    },
+    "G4": {
+      "detail": "numbers trace to experiment_2850_fover_dual_condition_integrity_v4",
+      "pass": true,
+      "source": "experiment_2850_fover_dual_condition_integrity_v4.json"
+    }
+  },
+  "random_seed": 3701,
+  "refreeze_package": {
+    "adversarial_verify_clean": true,
+    "flagged_or_live_critical": false,
+    "operator_package_ready": true,
+    "status": "reemitted_clean_for_operator"
+  },
+  "refreeze_package_status": "reemitted_clean_for_operator",
+  "reproducibility_checksum": "cd2cd9605fb604a13bc6e5347a0a1dd0ab28f785c2dff87c28aa8741a105a014",
+  "scripts_research_conductor_modified": false,
+  "selection_gap": {
+    "flagged_or_live_critical": false,
+    "non_degeneracy_assert": true,
+    "per_candidate_auroc": 0.91,
+    "positive_control_valid": true,
+    "verdict": "fundamental_decoupling",
+    "within_question_rank_corr": 0.33
+  },
+  "selection_gap_verdict": "fundamental_decoupling",
+  "source_artifacts": [
+    "results/experiment_3692_refreeze_package_clean_reemit.json",
+    "results/experiment_3693_external_comparator_dependency_vs_deentangled.json",
+    "results/experiment_3694_selection_gap_proper_rediagnosis.json",
+    "results/experiment_3695_code_native_verifier.json",
+    "results/experiment_3696_reship_detector_math_plus_code.json",
+    "results/experiment_3697_fr11_continuous_self_learning_v12.json"
+  ],
+  "summarized_upstream_artifacts": [],
+  "trained_judge_ood_retired": true,
+  "unmet_gates": [],
+  "verifier_value_scope": "math_plus_code_discrimination_facts_retired_selection_fundamental_decoupling"
+}

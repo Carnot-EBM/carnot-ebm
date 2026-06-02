@@ -1,0 +1,43 @@
+{
+  "honest_verdict": "complete: rootcause=script_never_sets_verdict; exp3404 never assigns honest_verdict and build_result() does not auto-populate it, so the emitted artifact has no verdict field -> reconciler reads 'unspecified'.",
+  "rootcause_classification": "script_never_sets_verdict",
+  "recommended_fix": "Add an explicit honest_verdict to the Exp 3404 build_result() calls. ExperimentTemplate.build_result() does NOT auto-populate honest_verdict, so the script must pass it: e.g. honest_verdict='blocked_gatemate_toolchain_missing' when PnR/flash tools are absent, or honest_verdict='success_gatemate_n16_flashed' on a real flash. Without this, every run emits a verdict-less artifact the reconciler reads as 'unspecified'.",
+  "preconditions_checked": [
+    {
+      "resource": "toolchain:yosys",
+      "available": true,
+      "detail": "/usr/bin/yosys"
+    },
+    {
+      "resource": "toolchain:nextpnr-himbaechel",
+      "available": false,
+      "detail": "not on PATH"
+    },
+    {
+      "resource": "toolchain:openFPGALoader",
+      "available": false,
+      "detail": "not on PATH"
+    },
+    {
+      "resource": "gatemate_board_detect",
+      "available": false,
+      "detail": "exit=127"
+    },
+    {
+      "resource": "exp3404_script_assigns_honest_verdict",
+      "available": false,
+      "detail": "no honest_verdict assignment found"
+    }
+  ],
+  "toolchain_ok": false,
+  "board_reachable": false,
+  "exp3404_assigns_honest_verdict": false,
+  "no_flash_attempted": true,
+  "status": "success",
+  "inference_substrate": "hardware_smoke",
+  "code_files": [
+    "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiment_3421_gatemate_bootstrap_rootcause_diagnostic_v1.py"
+  ],
+  "experiment": 3421,
+  "duration_s": 0.5
+}

@@ -1,0 +1,90 @@
+{
+  "case_ids": [
+    "humaneval-0"
+  ],
+  "results_by_case": {
+    "humaneval-0": {
+      "case_id": "humaneval-0",
+      "dataset_idx": 0,
+      "task_id": "HumanEval/0",
+      "entry_point": "add",
+      "baseline": {
+        "passed": true,
+        "error_type": "none",
+        "error_message": "",
+        "body": "return a + b",
+        "candidate_code": "def add(a, b):\n    pass\n    return a + b\n",
+        "detected": false,
+        "accepted": true,
+        "official_test_miss_caught_by_pbt": false,
+        "n_static_violations": 0,
+        "n_dynamic_violations": 0,
+        "constraint_feedback": [],
+        "dynamic_violations": [],
+        "probe_inputs": [
+          {}
+        ],
+        "n_pbt_failures": 0,
+        "pbt_violations": [],
+        "pbt_derived_properties": [],
+        "pbt_failure_records": [],
+        "pbt_verified": true,
+        "latency_seconds": 0.000169
+      },
+      "verify_only": {
+        "detected": false,
+        "accepted": true,
+        "official_test_miss_caught_by_pbt": false,
+        "n_pbt_failures": 0,
+        "pbt_violations": [],
+        "latency_seconds": 0.000169
+      },
+      "verify_repair": {
+        "passed": true,
+        "repaired": false,
+        "n_repairs": 0,
+        "final_body": "return a + b",
+        "final_code": "def add(a, b):\n    pass\n    return a + b\n",
+        "final_detected": false,
+        "final_accepted": true,
+        "final_error_type": "none",
+        "final_error_message": ""
+      },
+      "history": [
+        {
+          "iteration": 0,
+          "body": "return a + b",
+          "candidate_code": "def add(a, b):\n    pass\n    return a + b\n",
+          "harness": {
+            "passed": true,
+            "error_type": "none",
+            "error_message": "",
+            "stdout": ""
+          },
+          "instrumentation": {
+            "detected": false,
+            "constraint_feedback": [],
+            "dynamic_violations": [],
+            "n_static_violations": 0,
+            "n_dynamic_violations": 0,
+            "probe_inputs": [
+              {}
+            ]
+          },
+          "pbt": {
+            "verified": true,
+            "derived_properties": [],
+            "failure_records": [],
+            "n_failures": 0,
+            "violations": [],
+            "repair_feedback": "",
+            "wall_clock_seconds": 0.0,
+            "max_examples": 64
+          },
+          "detected": false,
+          "accepted": true
+        }
+      ]
+    }
+  }
+}

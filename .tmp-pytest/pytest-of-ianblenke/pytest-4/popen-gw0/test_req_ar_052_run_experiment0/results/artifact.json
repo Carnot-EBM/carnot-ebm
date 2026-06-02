@@ -1,0 +1,119 @@
+{
+  "honest_verdict": "complete: verifier_beats_sc_on_headroom_corpus_hybrid_wins_under_budget",
+  "inference_substrate": "verifier_ensemble_against_cached_candidates",
+  "corpus_paths": [
+    "corpus.jsonl"
+  ],
+  "selected_stratum": "headroom",
+  "stratum_rule": "self_consistency_majority_support <= 0.666667",
+  "oracle_accuracy": 1.0,
+  "oracle_minus_sc_headroom": 0.6666666666666667,
+  "sc_accuracy": 0.3333333333333333,
+  "verifier_reranked_accuracy": 0.6666666666666666,
+  "verifier_over_sc_lift": {
+    "comparison": "verifier_reranked_vs_self_consistency",
+    "delta": 0.3333333333333333,
+    "ci95": [
+      -1.0,
+      1.0
+    ],
+    "mcnemar_exact_p": 1.0
+  },
+  "hybrid_accuracy": 1.0,
+  "hybrid_over_sc_lift": {
+    "comparison": "hybrid_vs_self_consistency",
+    "delta": 0.6666666666666667,
+    "ci95": [
+      0.0,
+      1.0
+    ],
+    "mcnemar_exact_p": 0.5
+  },
+  "hybrid_over_verifier_lift": {
+    "comparison": "hybrid_vs_verifier_reranked",
+    "delta": 0.33333333333333337,
+    "ci95": [
+      0.0,
+      1.0
+    ],
+    "mcnemar_exact_p": 1.0
+  },
+  "hybrid_beats_both": true,
+  "verifier_beats_sc_where_headroom_exists": true,
+  "n_examples": 3,
+  "mean_candidates_per_example": 3.0,
+  "random_seed": 1860240235,
+  "verifier_temperature": 0.5,
+  "reproducibility_checksum": "f684e1e28ba3fba0",
+  "duration_s": 0.0004932880401611328,
+  "field_provenance": {
+    "honest_verdict": {
+      "principle": "Terminal prefix for reconciler classification."
+    },
+    "inference_substrate": {
+      "principle": "reranks cached candidates with the verifier ensemble; no LLM load."
+    },
+    "oracle_minus_sc_headroom": {
+      "principle": "Selectable headroom; a verifier study is informative only when this is > 0."
+    },
+    "sc_accuracy": {
+      "principle": "Self-consistency majority-vote baseline -- the bar to beat."
+    },
+    "verifier_reranked_accuracy": {
+      "principle": "Best-of-N candidates reranked by verifier-derived answer mass."
+    },
+    "verifier_over_sc_lift": {
+      "principle": "verifier_reranked - sc with paired CI."
+    },
+    "hybrid_accuracy": {
+      "principle": "Verifier+SC vote fusion at matched candidate budget."
+    },
+    "hybrid_beats_both": {
+      "principle": "True iff hybrid point accuracy beats SC-alone and verifier-alone."
+    },
+    "verifier_beats_sc_where_headroom_exists": {
+      "principle": "Core positive-control finding on headroom-bearing cached candidates."
+    },
+    "n_examples": {
+      "principle": "Sample-size rigor."
+    },
+    "random_seed": {
+      "principle": "Determinism precondition."
+    },
+    "reproducibility_checksum": {
+      "principle": "Drift detection."
+    },
+    "duration_s": {
+      "principle": "Plausibility floor for cached scoring."
+    }
+  },
+  "acceptance_gate": {
+    "condition": "oracle_minus_sc_headroom present AND verifier_over_sc_lift present AND hybrid_accuracy present",
+    "required_fields_present": true
+  },
+  "schema": [
+    "acceptance_gate",
+    "corpus_paths",
+    "duration_s",
+    "field_provenance",
+    "honest_verdict",
+    "hybrid_accuracy",
+    "hybrid_beats_both",
+    "hybrid_over_sc_lift",
+    "hybrid_over_verifier_lift",
+    "inference_substrate",
+    "mean_candidates_per_example",
+    "n_examples",
+    "oracle_accuracy",
+    "oracle_minus_sc_headroom",
+    "random_seed",
+    "reproducibility_checksum",
+    "sc_accuracy",
+    "selected_stratum",
+    "stratum_rule",
+    "verifier_beats_sc_where_headroom_exists",
+    "verifier_over_sc_lift",
+    "verifier_reranked_accuracy",
+    "verifier_temperature"
+  ]
+}

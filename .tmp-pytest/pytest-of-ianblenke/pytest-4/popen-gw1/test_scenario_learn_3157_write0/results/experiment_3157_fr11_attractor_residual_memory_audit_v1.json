@@ -1,0 +1,234 @@
+{
+  "artifact": "experiment_3157_fr11_attractor_residual_memory_audit_v1",
+  "continuous_self_learning_targeted": true,
+  "duration_s": 1.5,
+  "fr11_attractor_residual_memory_audit_v1_ready": true,
+  "honest_verdict": "complete: fr11 attractor residual memory audit finished; promotion_recommendation=block_fr11_promotion_until_ledger_consistency_reaches_1.0; no model-weight update claimed",
+  "inference_substrate": {
+    "base_model_weights_updated": false,
+    "controller_residual_memory_only": true,
+    "controller_routing_memory_only": true,
+    "executes_exact_replay": true,
+    "executes_live_model_inference": false,
+    "fresh_live_inference_calls": 0,
+    "kan_model_weight_training": false,
+    "mode": "exact_replay_residual_controller_memory",
+    "model_weight_learning": false,
+    "model_weight_mutation": false,
+    "model_weight_training": false,
+    "uses_checked_in_artifacts_only": true
+  },
+  "ledger_consistency_rate": 0.75,
+  "memory_routing_entropy": 0.57938,
+  "no_weight_update_claim": true,
+  "precondition_checks": {
+    "exp3136_false_accept_autopsy_ready": true,
+    "exp3143_experience_memory_ready": true,
+    "exp3156_ledger_closure_ready": true
+  },
+  "promotion_recommendation": "block_fr11_promotion_until_ledger_consistency_reaches_1.0",
+  "redundant_check_suppression_rate": 0.333333,
+  "replay_panel_count": 3,
+  "residual_memory_rows": [
+    {
+      "completeness_errors": 0,
+      "consistent": true,
+      "contradiction_core_stability": true,
+      "expected_action": "accept",
+      "fixture_family": "safe_variant",
+      "ledger_action": "accept",
+      "memory_routing_entropy": 0.0,
+      "mismatch_class": "",
+      "observed_action": "accept",
+      "panel_category": "equivalent_variant",
+      "repeated_mismatch_count": 0,
+      "residual_policy_route": "suppress",
+      "risky_family": false,
+      "routing_decision": "normal",
+      "row_id": "safe-variant",
+      "soundness_errors": 0,
+      "source_artifact": "unit-fixture.json",
+      "source_routing_decision": "suppress",
+      "stable_verdict_convergence": true,
+      "unsafe_skip": false
+    },
+    {
+      "completeness_errors": 0,
+      "consistent": true,
+      "contradiction_core_stability": true,
+      "expected_action": "accept",
+      "fixture_family": "risky_math",
+      "ledger_action": "accept",
+      "memory_routing_entropy": 0.0,
+      "mismatch_class": "",
+      "observed_action": "accept",
+      "panel_category": "historical_false_accept_family",
+      "repeated_mismatch_count": 1,
+      "residual_policy_route": "escalate",
+      "risky_family": true,
+      "routing_decision": "escalate",
+      "row_id": "risky-valid",
+      "soundness_errors": 0,
+      "source_artifact": "unit-fixture.json",
+      "source_routing_decision": "escalate",
+      "stable_verdict_convergence": true,
+      "unsafe_skip": false
+    },
+    {
+      "completeness_errors": 0,
+      "consistent": false,
+      "contradiction_core_stability": false,
+      "expected_action": "reject",
+      "fixture_family": "risky_math",
+      "ledger_action": "reject",
+      "memory_routing_entropy": 0.0,
+      "mismatch_class": "contradictory_memory",
+      "observed_action": "accept",
+      "panel_category": "historical_false_accept_family",
+      "repeated_mismatch_count": 1,
+      "residual_policy_route": "escalate",
+      "risky_family": true,
+      "routing_decision": "escalate",
+      "row_id": "risky-invalid",
+      "soundness_errors": 0,
+      "source_artifact": "unit-fixture.json",
+      "source_routing_decision": "escalate",
+      "stable_verdict_convergence": false,
+      "unsafe_skip": false
+    }
+  ],
+  "residual_signal_definitions": [
+    {
+      "exact_replay_fields": [
+        "replay_panel_rows[].fixture_family",
+        "replay_panel_rows[].consistent",
+        "false_accept_row_ids"
+      ],
+      "measurement": "Count of non-consistent Exp 3156 closure rows and Exp 3136 false-accept rows sharing the same fixture family.",
+      "policy_use": "Escalate rows from families with repeated mismatch evidence.",
+      "signal_id": "repeated_mismatch_count"
+    },
+    {
+      "exact_replay_fields": [
+        "expected_action",
+        "ledger_action",
+        "observed_action",
+        "consistent"
+      ],
+      "measurement": "Whether exact expected action, ledger action, and observed action converge to the same non-missing verdict.",
+      "policy_use": "Allow suppression only when the verdict is stable.",
+      "signal_id": "stable_verdict_convergence"
+    },
+    {
+      "exact_replay_fields": [
+        "mismatch_class",
+        "expected_action",
+        "observed_action"
+      ],
+      "measurement": "Whether the row avoids contradictory-memory and monitor-replay mismatch classes in exact replay.",
+      "policy_use": "Escalate contradiction-core instability.",
+      "signal_id": "contradiction_core_stability"
+    },
+    {
+      "exact_replay_fields": [
+        "routing_rows[].routing_decision",
+        "routing_decision"
+      ],
+      "measurement": "Normalized Shannon entropy of controller routing actions in the row's fixture family.",
+      "policy_use": "Expose unstable routing memory as a diagnostic signal.",
+      "signal_id": "memory_routing_entropy"
+    }
+  ],
+  "risky_families": [
+    "risky_math"
+  ],
+  "risky_family_count": 2,
+  "risky_family_escalated_count": 2,
+  "risky_family_escalation_rate": 1.0,
+  "run_date": "20260526",
+  "schema": "carnot.fr11.attractor_residual_memory_audit.v1",
+  "source_artifacts": [
+    {
+      "exists": true,
+      "id": "agents_repo_instructions",
+      "path": "AGENTS.md",
+      "required": false,
+      "sha256": "c893735c3c7ece3f9bf4d48722846ef65e76ff35ebfbfe1d239930339d69470b"
+    },
+    {
+      "exists": true,
+      "id": "codex_repo_workflow",
+      "path": "CODEX.md",
+      "required": false,
+      "sha256": "bab1c6ba20bb432cbd7cd6e3b12fb0089f303cb7742f929297647d6329e46502"
+    },
+    {
+      "exists": true,
+      "id": "claude_authenticity_rules",
+      "path": "CLAUDE.md",
+      "required": false,
+      "sha256": "f4bfaaaf0d45f7dc6b4c18e4e11c527f2ebe939c8e445f05d3dd4ccd788550d8"
+    },
+    {
+      "exists": true,
+      "id": "research_program",
+      "path": "research-program.md",
+      "required": false,
+      "sha256": "b93e05d09036374e1c9a70cf3bce2a2c100f5ecac3629ae31b659903953156c5"
+    },
+    {
+      "exists": true,
+      "id": "research_references",
+      "path": "research-references.md",
+      "required": false,
+      "sha256": "bf22b7a70908c0fe59320c4ac9f394efb06e8e738ed72e13f7bff4a6773d2845"
+    },
+    {
+      "exists": true,
+      "id": "self_learning_openspec",
+      "path": "openspec/capabilities/self-learning/spec.md",
+      "required": false,
+      "sha256": "47b43fc12c4a22d2af2005942134b0adffaba2b99550af3f9923e8497c94a4af"
+    },
+    {
+      "exists": true,
+      "id": "exp3156_ledger_closure",
+      "path": "results/experiment_3156_fr11_ledger_consistency_closure_v1.json",
+      "required": true,
+      "sha256": "cef3bd7abc5e5ed2a2e48fae1ba6f25be0ca54ccccc3b67318ed6fabc295c135"
+    },
+    {
+      "exists": true,
+      "id": "exp3143_experience_memory",
+      "path": "results/experiment_3143_fr11_experience_driven_verifier_memory_v1.json",
+      "required": true,
+      "sha256": "bec2e225e82545a4d7f0b6bb61aa8d08bb20e45446dc809e490a3cb038f065ed"
+    },
+    {
+      "exists": true,
+      "id": "exp3136_false_accept_autopsy",
+      "path": "results/experiment_3136_false_accept_root_cause_autopsy_v1.json",
+      "required": true,
+      "sha256": "29eca94122292c128fdeab9ff8520fe5dc7212dfcc7d17f5bcd29acabd215897"
+    },
+    {
+      "exists": false,
+      "id": "exp3157_module",
+      "path": "python/carnot/eval/fr11_attractor_residual_memory_audit_v1.py",
+      "required": false,
+      "sha256": null
+    },
+    {
+      "exists": false,
+      "id": "exp3157_tests",
+      "path": "tests/python/test_experiment_3157_fr11_attractor_residual_memory_audit_v1.py",
+      "required": false,
+      "sha256": null
+    }
+  ],
+  "suppressed_redundant_check_count": 1,
+  "tests_run": [
+    "REQ-LEARN-3157 focused"
+  ],
+  "unsafe_skip_count": 0
+}

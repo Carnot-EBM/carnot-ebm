@@ -1,0 +1,182 @@
+{
+  "artifact": "experiment_3169_repair_ladder_materializer_v4",
+  "duration_s": 2.25,
+  "exact_authority_accept_count": 0,
+  "false_repair_accept_rate": 0.0,
+  "gate_blockers": [
+    "flagged_adversarial=true"
+  ],
+  "gate_state": "blocked_flagged_verifier",
+  "gated_skip": true,
+  "gated_skip_reason": "repair gate blocked: blocked_flagged_verifier; flagged_adversarial=true",
+  "headline_repair_claim_allowed": false,
+  "honest_verdict": "blocked_repair_gate: repair gate blocked: blocked_flagged_verifier; flagged_adversarial=true",
+  "inference_substrate": {
+    "executes_models": false,
+    "executes_repairs": false,
+    "executes_solvers": false,
+    "executes_verifiers": false,
+    "gate_state": "blocked_flagged_verifier",
+    "gated_skip": true,
+    "kind": "repair_ladder_materializer_v4",
+    "legacy_small_models_headline_eligible": false,
+    "live_model_calls": 0,
+    "no_live_inference": true,
+    "repair_calls": 0,
+    "repair_runner_kind": "injected_repair_runner"
+  },
+  "intent_preservation_rate": 0.0,
+  "live_call_count": 0,
+  "model_policy": [
+    "unsloth/Qwen3.6-35B-A3B-GGUF",
+    "unsloth/gemma-4-31B-it-GGUF",
+    "unsloth/gemma-4-26B-A4B-it-GGUF"
+  ],
+  "model_specs": [
+    {
+      "headline_eligible": true,
+      "hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "legacy_small_model": false,
+      "name": "Qwen3.6-35B-A3B",
+      "role": "moe",
+      "tier": "flagship_moe",
+      "usable_locally": false
+    },
+    {
+      "headline_eligible": true,
+      "hf_id": "unsloth/gemma-4-31B-it-GGUF",
+      "legacy_small_model": false,
+      "name": "Gemma4-31B-it",
+      "role": "dense",
+      "tier": "flagship_dense",
+      "usable_locally": false
+    },
+    {
+      "cache_present": false,
+      "headline_eligible": true,
+      "hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "legacy_small_model": false,
+      "model_path": null,
+      "name": "Gemma4-26B-A4B-it",
+      "role": "moe",
+      "tier": "middle_moe",
+      "usable_locally": false
+    }
+  ],
+  "repair_attempt_count": 0,
+  "repair_attempts": [],
+  "repair_ladder_materializer_v4_ready": true,
+  "repair_success_delta": 0.0,
+  "run_date": "20260527",
+  "schema": "carnot.repair_ladder_materializer.v4",
+  "selected_model_ids": [],
+  "selected_repair_rows": [],
+  "source_artifacts": [
+    {
+      "path": "AGENTS.md",
+      "present": true,
+      "required": false,
+      "role": "agents_repo_instructions",
+      "sha256": "c893735c3c7ece3f9bf4d48722846ef65e76ff35ebfbfe1d239930339d69470b"
+    },
+    {
+      "path": "CODEX.md",
+      "present": true,
+      "required": false,
+      "role": "codex_repo_workflow",
+      "sha256": "bab1c6ba20bb432cbd7cd6e3b12fb0089f303cb7742f929297647d6329e46502"
+    },
+    {
+      "path": "CLAUDE.md",
+      "present": true,
+      "required": false,
+      "role": "claude_authenticity_rules",
+      "sha256": "a8a17aaa41d22365440f6f8ba2ebf913573526f796d6d5a37da4faf6a0cad1b0"
+    },
+    {
+      "path": "scripts/experiment_template.py",
+      "present": true,
+      "required": false,
+      "role": "experiment_template_policy",
+      "sha256": "d1e27eebfa50a704e23062573691a5b441f4d53d8fc9afc51f6f879817c17cc8"
+    },
+    {
+      "path": "openspec/capabilities/verification/spec.md",
+      "present": true,
+      "required": true,
+      "role": "verification_openspec",
+      "sha256": "48d4ed6466e4f757d12acaec4d1dd493862f55845b3de6974dae5473dfc62571"
+    },
+    {
+      "path": "results/experiment_3168_repair_gate_decision_v3.json",
+      "present": true,
+      "required": true,
+      "role": "exp3168_repair_gate_decision_v3",
+      "sha256": "560a91d74e51d407872e59b6d4315d283d6372bb465d8b54e1491667d52cde30"
+    },
+    {
+      "path": "results/experiment_3167_clean_live_sota_verifier_rerun_v9.json",
+      "present": true,
+      "required": true,
+      "role": "exp3167_clean_live_verifier_rerun_v9",
+      "sha256": "2c8cb280d21e71e777b3998e644a7a8c3ca4000e43f72d52fec6c31c30a562d6"
+    },
+    {
+      "path": "results/experiment_3137_exact_safe_accept_abstain_contract_v1.json",
+      "present": true,
+      "required": true,
+      "role": "exp3137_exact_safe_contract",
+      "sha256": "691de3f727a66df9e2ff74864dafbba3e03270f9c6787106e47221a194a599ff"
+    },
+    {
+      "path": "results/experiment_3138_canonical_answer_vericot_grounding_pilot_v1.json",
+      "present": true,
+      "required": true,
+      "role": "exp3138_canonical_grounding",
+      "sha256": "6e145cd0d74e9b18937d9190a6e28fe12e27a1d20ba3a97d9d345090b8b8157e"
+    },
+    {
+      "path": "results/experiment_3115_explicit_repair_gate_micro_panel_v4.json",
+      "present": true,
+      "required": false,
+      "role": "exp3115_micro_repair_panel",
+      "sha256": "7be55cd0f44150b17972f70252e52b72f6fc6199ff6dd8eededff706aa1e71d1"
+    },
+    {
+      "path": "python/carnot/verify/repair_ladder_materializer_v4.py",
+      "present": false,
+      "required": false,
+      "role": "exp3169_module",
+      "sha256": null
+    },
+    {
+      "path": "tests/python/test_experiment_3169_repair_ladder_materializer_v4.py",
+      "present": false,
+      "required": false,
+      "role": "exp3169_tests",
+      "sha256": null
+    }
+  ],
+  "source_artifacts_loaded": [
+    "results/experiment_3168_repair_gate_decision_v3.json",
+    "results/experiment_3167_clean_live_sota_verifier_rerun_v9.json",
+    "results/experiment_3137_exact_safe_accept_abstain_contract_v1.json",
+    "results/experiment_3138_canonical_answer_vericot_grounding_pilot_v1.json",
+    "results/experiment_3115_explicit_repair_gate_micro_panel_v4.json"
+  ],
+  "source_checksums": {
+    "AGENTS.md": "c893735c3c7ece3f9bf4d48722846ef65e76ff35ebfbfe1d239930339d69470b",
+    "CLAUDE.md": "a8a17aaa41d22365440f6f8ba2ebf913573526f796d6d5a37da4faf6a0cad1b0",
+    "CODEX.md": "bab1c6ba20bb432cbd7cd6e3b12fb0089f303cb7742f929297647d6329e46502",
+    "openspec/capabilities/verification/spec.md": "48d4ed6466e4f757d12acaec4d1dd493862f55845b3de6974dae5473dfc62571",
+    "results/experiment_3115_explicit_repair_gate_micro_panel_v4.json": "7be55cd0f44150b17972f70252e52b72f6fc6199ff6dd8eededff706aa1e71d1",
+    "results/experiment_3137_exact_safe_accept_abstain_contract_v1.json": "691de3f727a66df9e2ff74864dafbba3e03270f9c6787106e47221a194a599ff",
+    "results/experiment_3138_canonical_answer_vericot_grounding_pilot_v1.json": "6e145cd0d74e9b18937d9190a6e28fe12e27a1d20ba3a97d9d345090b8b8157e",
+    "results/experiment_3167_clean_live_sota_verifier_rerun_v9.json": "2c8cb280d21e71e777b3998e644a7a8c3ca4000e43f72d52fec6c31c30a562d6",
+    "results/experiment_3168_repair_gate_decision_v3.json": "560a91d74e51d407872e59b6d4315d283d6372bb465d8b54e1491667d52cde30",
+    "scripts/experiment_template.py": "d1e27eebfa50a704e23062573691a5b441f4d53d8fc9afc51f6f879817c17cc8"
+  },
+  "tests_run": [
+    "focused-3169"
+  ]
+}

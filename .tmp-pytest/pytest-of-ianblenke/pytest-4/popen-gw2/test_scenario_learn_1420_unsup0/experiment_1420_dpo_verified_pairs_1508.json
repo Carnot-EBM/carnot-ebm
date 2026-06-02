@@ -1,0 +1,144 @@
+{
+  "artifact_metadata": {
+    "project_root": "/home/ianblenke/github.com/ianblenke/carnot/.tmp-pytest/pytest-of-ianblenke/pytest-4/popen-gw2/test_scenario_learn_1420_unsup0",
+    "run_date": "20260506"
+  },
+  "direct_dpo_feasibility": {
+    "packages_checked": {
+      "trl": false
+    },
+    "reason": "no_mandated_gguf_cache_resolved_for_dpo",
+    "supported": false
+  },
+  "dpo_full_finetune_performed": false,
+  "dpo_improvement_pp": 50.0,
+  "dpo_reranker_fallback_used": true,
+  "dpo_vs_baseline_auroc": 1.0,
+  "experiment": "1420_dpo_verified_pairs_1508",
+  "feasibility_note": "Direct DPO fine-tuning was not performed because local GGUF files are llama.cpp inference artifacts, not trainable TRL/PEFT model directories.",
+  "finished_at": "2026-06-02T19:05:22Z",
+  "gguf_model_checks": [
+    {
+      "baseline_scoring_mode": "feature_baseline_preference_scores",
+      "baseline_scoring_performed": true,
+      "cached": false,
+      "hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "llama_cpp_inference_blocker": "model_not_cached",
+      "llama_cpp_inference_performed": false,
+      "model_path": null,
+      "preferred_quant": "Q4_K_M",
+      "role": "primary_policy_baseline"
+    },
+    {
+      "baseline_scoring_mode": "feature_baseline_preference_scores",
+      "baseline_scoring_performed": true,
+      "cached": false,
+      "hf_id": "unsloth/gemma-4-31B-it-GGUF",
+      "llama_cpp_inference_blocker": "model_not_cached",
+      "llama_cpp_inference_performed": false,
+      "model_path": null,
+      "preferred_quant": "Q4_K_M",
+      "role": "dense_baseline"
+    },
+    {
+      "baseline_scoring_mode": "feature_baseline_preference_scores",
+      "baseline_scoring_performed": true,
+      "cached": false,
+      "hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "llama_cpp_inference_blocker": "model_not_cached",
+      "llama_cpp_inference_performed": false,
+      "model_path": null,
+      "preferred_quant": "Q4_K_M",
+      "role": "moe_baseline"
+    }
+  ],
+  "headline_result_allowed": false,
+  "honest_verdict": "gguf_dpo_unsupported_reranker_fallback_measured",
+  "local_sota_model_used": false,
+  "model_specs": [
+    {
+      "hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "role": "primary_policy_baseline"
+    },
+    {
+      "hf_id": "unsloth/gemma-4-31B-it-GGUF",
+      "role": "dense_baseline"
+    },
+    {
+      "hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "role": "moe_baseline"
+    }
+  ],
+  "preference_pair_sample": [
+    {
+      "pair_id": "p1__vs__r0",
+      "preferred_corpus_index": 1,
+      "preferred_id": "p1",
+      "rejected_corpus_index": 0,
+      "rejected_id": "r0"
+    },
+    {
+      "pair_id": "p3__vs__r2",
+      "preferred_corpus_index": 3,
+      "preferred_id": "p3",
+      "rejected_corpus_index": 2,
+      "rejected_id": "r2"
+    },
+    {
+      "pair_id": "p5__vs__r4",
+      "preferred_corpus_index": 5,
+      "preferred_id": "p5",
+      "rejected_corpus_index": 4,
+      "rejected_id": "r4"
+    },
+    {
+      "pair_id": "p7__vs__r6",
+      "preferred_corpus_index": 7,
+      "preferred_id": "p7",
+      "rejected_corpus_index": 6,
+      "rejected_id": "r6"
+    },
+    {
+      "pair_id": "p9__vs__r8",
+      "preferred_corpus_index": 9,
+      "preferred_id": "p9",
+      "rejected_corpus_index": 8,
+      "rejected_id": "r8"
+    }
+  ],
+  "reranker_fallback_metrics": {
+    "baseline_pair_accuracy": 0.5,
+    "n_eval_pairs": 1,
+    "n_train_pairs": 4,
+    "reranker_pair_accuracy": 1.0,
+    "weights": [
+      0.0,
+      0.0,
+      1.53511216,
+      0.34540024,
+      0.2341046,
+      0.0,
+      1.53511216,
+      0.0,
+      0.0
+    ]
+  },
+  "run_date": "20260506",
+  "schema": "dpo_verified_pairs_probe_v1",
+  "source_artifacts": [
+    "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_1395_fr11_self_learning_v5.json",
+    "/home/ianblenke/github.com/ianblenke/carnot/data/fover_corpus.jsonl"
+  ],
+  "source_counts": {
+    "demoted_memory_count": 5,
+    "exp1395_fresh_verified_sample_count": 5,
+    "fover_rows_loaded": 10,
+    "promoted_memory_count": 5
+  },
+  "spec": [
+    "REQ-LEARN-1420",
+    "SCENARIO-LEARN-1420"
+  ],
+  "status": "complete",
+  "verified_pairs_available": 5
+}

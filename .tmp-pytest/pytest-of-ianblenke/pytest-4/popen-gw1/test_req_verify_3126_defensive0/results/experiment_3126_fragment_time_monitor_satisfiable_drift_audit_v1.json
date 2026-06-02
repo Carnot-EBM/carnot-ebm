@@ -1,0 +1,682 @@
+{
+  "artifact": "experiment_3126_fragment_time_monitor_satisfiable_drift_audit_v1",
+  "contradiction_count": 1,
+  "downstream_repair_constraints": {
+    "allowed_failure_mechanisms": [
+      "no_failure",
+      "contradiction",
+      "satisfiable_drift",
+      "extraction_format_failure",
+      "data_prior_mismatch",
+      "unknown",
+      "not_observed"
+    ],
+    "must_check_final_answer_consistency": true,
+    "must_not_treat_satisfiable_drift_as_unsat_contradiction": true,
+    "must_preserve_ledger_hash": true,
+    "must_replay_before_repair": true,
+    "repair_prompt_inputs": [
+      "fixture_id",
+      "constraint_ledger.payload.constraints",
+      "exact_test_z3_result.payload.exact_label",
+      "candidate_final_answer.payload.extracted_answer",
+      "drift_classification.payload.failure_mechanism"
+    ],
+    "repair_requires_monitor_evidence": true,
+    "required_event_types": [
+      "partial_trace_state",
+      "constraint_ledger",
+      "exact_test_z3_result",
+      "candidate_final_answer",
+      "drift_classification"
+    ],
+    "required_ready_field": "fragment_time_monitor_v1_ready"
+  },
+  "duration_s": 1.0,
+  "event_stream_hash": "f7f01a4fbd06715ba6e8948adcc42fe0f6c646c61e7200caa4dfce01fd9168c4",
+  "failure_mechanism_counts": {
+    "contradiction": 1,
+    "data_prior_mismatch": 0,
+    "extraction_format_failure": 1,
+    "no_failure": 1,
+    "not_observed": 1,
+    "satisfiable_drift": 1,
+    "unknown": 0
+  },
+  "fragment_time_monitor_v1_ready": true,
+  "honest_verdict": "complete: fragment_time_monitor_v1_ready=true; monitored_fixture_count=5; monitor_violation_count=3; ledger_consistency_rate=0.333333",
+  "inference_substrate": {
+    "exact_fixture_authority_source": "results/experiment_3097_exact_fixture_eval_protocol_audit_v1.json",
+    "executes_models": false,
+    "fragment_trace_source": "results/experiment_3114_fragment_level_code_constraint_verification_pilot_v1.json",
+    "fresh_live_inference_calls": 0,
+    "kind": "artifact_only_fragment_time_monitor",
+    "upstream_live_model_calls_reused": 4,
+    "upstream_live_trace_source": "results/experiment_3124_difficulty_stratified_live_sota_verifier_panel_v6.json",
+    "uses_checked_in_artifacts_only": true
+  },
+  "ledger_consistency_rate": 0.333333,
+  "ledger_replay_summary": {
+    "contradiction_count": 1,
+    "failure_mechanism_counts": {
+      "contradiction": 1,
+      "data_prior_mismatch": 0,
+      "extraction_format_failure": 1,
+      "no_failure": 1,
+      "not_observed": 1,
+      "satisfiable_drift": 1,
+      "unknown": 0
+    },
+    "ledger_consistency_rate": 0.333333,
+    "ledger_consistent_final_answer_count": 1,
+    "monitor_event_count": 25,
+    "monitor_violation_count": 3,
+    "monitored_fixture_count": 5,
+    "observed_final_answer_count": 3,
+    "satisfiable_drift_count": 1
+  },
+  "monitor_event_count": 25,
+  "monitor_event_schema": {
+    "event_types": {
+      "candidate_final_answer": {
+        "payload_fields": [
+          "observed",
+          "extracted_answer",
+          "live_decision",
+          "final_answer_consistent_with_ledger"
+        ],
+        "purpose": "check returned answers against exact labels and ledger state"
+      },
+      "constraint_ledger": {
+        "payload_fields": [
+          "ledger_action",
+          "ledger_source",
+          "constraints",
+          "ledger_hash"
+        ],
+        "purpose": "replay maintained constraints and expected action"
+      },
+      "drift_classification": {
+        "payload_fields": [
+          "failure_mechanism",
+          "is_monitor_violation"
+        ],
+        "purpose": "separate contradiction from satisfiable drift and format/data failures"
+      },
+      "exact_test_z3_result": {
+        "payload_fields": [
+          "exact_label",
+          "expected_action",
+          "solver_label",
+          "label_source"
+        ],
+        "purpose": "preserve exact test/Z3 authority"
+      },
+      "partial_trace_state": {
+        "payload_fields": [
+          "fragment_count",
+          "fragment_status_counts",
+          "partial_state"
+        ],
+        "purpose": "capture partial fragment state before final repair claims"
+      }
+    },
+    "required_event_fields": [
+      "event_type",
+      "event_version",
+      "event_index",
+      "fixture_id",
+      "payload"
+    ],
+    "schema": "carnot.fragment_time_monitor.event.v1"
+  },
+  "monitor_events": [
+    {
+      "event_index": 0,
+      "event_type": "partial_trace_state",
+      "event_version": "v1",
+      "fixture_id": "invalid",
+      "payload": {
+        "fragment_count": 2,
+        "fragment_ids": [
+          "invalid:assert_claim",
+          "invalid:assert_expression"
+        ],
+        "fragment_status_counts": {
+          "fail": 1,
+          "pass": 1
+        },
+        "partial_state": "fragment_trace_present"
+      },
+      "source_prompt_payload_sha256": "invalid-prompt"
+    },
+    {
+      "event_index": 1,
+      "event_type": "constraint_ledger",
+      "event_version": "v1",
+      "fixture_id": "invalid",
+      "payload": {
+        "constraint_count": 2,
+        "constraints": [
+          {
+            "constraint_id": "invalid:assert_claim",
+            "expected_direction": "replace claimed value",
+            "failing_constraint": "claimed_value == computed_value",
+            "solver_evidence": {
+              "authority": "unit_fragment_checker"
+            },
+            "status": "fail"
+          },
+          {
+            "constraint_id": "invalid:assert_expression",
+            "expected_direction": "no change",
+            "failing_constraint": "",
+            "solver_evidence": {
+              "authority": "unit_fragment_checker"
+            },
+            "status": "pass"
+          }
+        ],
+        "ledger_action": "reject",
+        "ledger_hash": "b87514086f0f068cd5f1a36fb978e3f42ddb24735bf73c0e1515eab190ea7ded",
+        "ledger_source": "fragment_checks"
+      },
+      "source_prompt_payload_sha256": "invalid-prompt"
+    },
+    {
+      "event_index": 2,
+      "event_type": "exact_test_z3_result",
+      "event_version": "v1",
+      "fixture_id": "invalid",
+      "payload": {
+        "answer_extraction_format": "validity_token",
+        "exact_authority_available": true,
+        "exact_label": "INVALID",
+        "expected_action": "reject",
+        "label_source": "unit_exact_authority",
+        "solver_label": "invalid"
+      },
+      "source_prompt_payload_sha256": "invalid-prompt"
+    },
+    {
+      "event_index": 3,
+      "event_type": "candidate_final_answer",
+      "event_version": "v1",
+      "fixture_id": "invalid",
+      "payload": {
+        "expected_action": "reject",
+        "extracted_answer": "VALID",
+        "final_answer_consistent_with_exact": false,
+        "final_answer_consistent_with_ledger": false,
+        "has_returned_answer": true,
+        "ledger_action": "reject",
+        "live_decision": "accept",
+        "observed": true,
+        "prompt_hash": "invalid-prompt-hash",
+        "raw_output_hash": "invalid-raw-hash"
+      },
+      "source_prompt_payload_sha256": "invalid-prompt"
+    },
+    {
+      "event_index": 4,
+      "event_type": "drift_classification",
+      "event_version": "v1",
+      "fixture_id": "invalid",
+      "payload": {
+        "exact_label": "INVALID",
+        "expected_action": "reject",
+        "failure_mechanism": "contradiction",
+        "is_monitor_violation": true,
+        "ledger_action": "reject",
+        "live_decision": "accept"
+      },
+      "source_prompt_payload_sha256": "invalid-prompt"
+    },
+    {
+      "event_index": 5,
+      "event_type": "partial_trace_state",
+      "event_version": "v1",
+      "fixture_id": "json-repair",
+      "payload": {
+        "fragment_count": 2,
+        "fragment_ids": [
+          "json-repair:json_document",
+          "json-repair:required_field:mode"
+        ],
+        "fragment_status_counts": {
+          "fail": 1,
+          "non-applicable": 1
+        },
+        "partial_state": "fragment_trace_present"
+      },
+      "source_prompt_payload_sha256": "json-repair-prompt"
+    },
+    {
+      "event_index": 6,
+      "event_type": "constraint_ledger",
+      "event_version": "v1",
+      "fixture_id": "json-repair",
+      "payload": {
+        "constraint_count": 2,
+        "constraints": [
+          {
+            "constraint_id": "json-repair:json_document",
+            "expected_direction": "produce parseable JSON",
+            "failing_constraint": "valid_json_document",
+            "solver_evidence": {
+              "authority": "unit_fragment_checker"
+            },
+            "status": "fail"
+          },
+          {
+            "constraint_id": "json-repair:required_field:mode",
+            "expected_direction": "no change",
+            "failing_constraint": "",
+            "solver_evidence": {
+              "authority": "unit_fragment_checker"
+            },
+            "status": "non-applicable"
+          }
+        ],
+        "ledger_action": "reject",
+        "ledger_hash": "a2f74075bd042f098419f8017b0e3a99b780b0ea14cdccb3a728c9410822784b",
+        "ledger_source": "fragment_checks"
+      },
+      "source_prompt_payload_sha256": "json-repair-prompt"
+    },
+    {
+      "event_index": 7,
+      "event_type": "exact_test_z3_result",
+      "event_version": "v1",
+      "fixture_id": "json-repair",
+      "payload": {
+        "answer_extraction_format": "repairability_token",
+        "exact_authority_available": true,
+        "exact_label": "REPAIRABLE",
+        "expected_action": "reject",
+        "label_source": "json_parser",
+        "solver_label": "repairable"
+      },
+      "source_prompt_payload_sha256": "json-repair-prompt"
+    },
+    {
+      "event_index": 8,
+      "event_type": "candidate_final_answer",
+      "event_version": "v1",
+      "fixture_id": "json-repair",
+      "payload": {
+        "expected_action": "reject",
+        "extracted_answer": null,
+        "final_answer_consistent_with_exact": false,
+        "final_answer_consistent_with_ledger": null,
+        "has_returned_answer": false,
+        "ledger_action": "reject",
+        "live_decision": "abstain",
+        "observed": true,
+        "prompt_hash": "json-repair-prompt-hash",
+        "raw_output_hash": "json-repair-raw-hash"
+      },
+      "source_prompt_payload_sha256": "json-repair-prompt"
+    },
+    {
+      "event_index": 9,
+      "event_type": "drift_classification",
+      "event_version": "v1",
+      "fixture_id": "json-repair",
+      "payload": {
+        "exact_label": "REPAIRABLE",
+        "expected_action": "reject",
+        "failure_mechanism": "extraction_format_failure",
+        "is_monitor_violation": true,
+        "ledger_action": "reject",
+        "live_decision": "abstain"
+      },
+      "source_prompt_payload_sha256": "json-repair-prompt"
+    },
+    {
+      "event_index": 10,
+      "event_type": "partial_trace_state",
+      "event_version": "v1",
+      "fixture_id": "sat-drift",
+      "payload": {
+        "fragment_count": 0,
+        "fragment_ids": [],
+        "fragment_status_counts": {},
+        "partial_state": "no_fragment_trace"
+      },
+      "source_prompt_payload_sha256": "sat-drift-prompt"
+    },
+    {
+      "event_index": 11,
+      "event_type": "constraint_ledger",
+      "event_version": "v1",
+      "fixture_id": "sat-drift",
+      "payload": {
+        "constraint_count": 0,
+        "constraints": [],
+        "ledger_action": "accept",
+        "ledger_hash": "d768214591fa14a32c8e95a92e1543c748adc5d197ff03d6695c062ff363ad92",
+        "ledger_source": "exact_label_fallback"
+      },
+      "source_prompt_payload_sha256": "sat-drift-prompt"
+    },
+    {
+      "event_index": 12,
+      "event_type": "exact_test_z3_result",
+      "event_version": "v1",
+      "fixture_id": "sat-drift",
+      "payload": {
+        "answer_extraction_format": "sat_token",
+        "exact_authority_available": true,
+        "exact_label": "SAT",
+        "expected_action": "accept",
+        "label_source": "z3_solver",
+        "solver_label": "sat"
+      },
+      "source_prompt_payload_sha256": "sat-drift-prompt"
+    },
+    {
+      "event_index": 13,
+      "event_type": "candidate_final_answer",
+      "event_version": "v1",
+      "fixture_id": "sat-drift",
+      "payload": {
+        "expected_action": "accept",
+        "extracted_answer": "INVALID",
+        "final_answer_consistent_with_exact": false,
+        "final_answer_consistent_with_ledger": false,
+        "has_returned_answer": true,
+        "ledger_action": "accept",
+        "live_decision": "reject",
+        "observed": true,
+        "prompt_hash": "sat-drift-prompt-hash",
+        "raw_output_hash": "sat-drift-raw-hash"
+      },
+      "source_prompt_payload_sha256": "sat-drift-prompt"
+    },
+    {
+      "event_index": 14,
+      "event_type": "drift_classification",
+      "event_version": "v1",
+      "fixture_id": "sat-drift",
+      "payload": {
+        "exact_label": "SAT",
+        "expected_action": "accept",
+        "failure_mechanism": "satisfiable_drift",
+        "is_monitor_violation": true,
+        "ledger_action": "accept",
+        "live_decision": "reject"
+      },
+      "source_prompt_payload_sha256": "sat-drift-prompt"
+    },
+    {
+      "event_index": 15,
+      "event_type": "partial_trace_state",
+      "event_version": "v1",
+      "fixture_id": "unobserved",
+      "payload": {
+        "fragment_count": 0,
+        "fragment_ids": [],
+        "fragment_status_counts": {},
+        "partial_state": "no_fragment_trace"
+      },
+      "source_prompt_payload_sha256": "unobserved-prompt"
+    },
+    {
+      "event_index": 16,
+      "event_type": "constraint_ledger",
+      "event_version": "v1",
+      "fixture_id": "unobserved",
+      "payload": {
+        "constraint_count": 0,
+        "constraints": [],
+        "ledger_action": "accept",
+        "ledger_hash": "d768214591fa14a32c8e95a92e1543c748adc5d197ff03d6695c062ff363ad92",
+        "ledger_source": "exact_label_fallback"
+      },
+      "source_prompt_payload_sha256": "unobserved-prompt"
+    },
+    {
+      "event_index": 17,
+      "event_type": "exact_test_z3_result",
+      "event_version": "v1",
+      "fixture_id": "unobserved",
+      "payload": {
+        "answer_extraction_format": "sat_token",
+        "exact_authority_available": true,
+        "exact_label": "SAT",
+        "expected_action": "accept",
+        "label_source": "unit_exact_authority",
+        "solver_label": "sat"
+      },
+      "source_prompt_payload_sha256": "unobserved-prompt"
+    },
+    {
+      "event_index": 18,
+      "event_type": "candidate_final_answer",
+      "event_version": "v1",
+      "fixture_id": "unobserved",
+      "payload": {
+        "expected_action": "accept",
+        "extracted_answer": null,
+        "final_answer_consistent_with_exact": false,
+        "final_answer_consistent_with_ledger": null,
+        "has_returned_answer": false,
+        "ledger_action": "accept",
+        "live_decision": "missing",
+        "observed": false,
+        "prompt_hash": null,
+        "raw_output_hash": null
+      },
+      "source_prompt_payload_sha256": "unobserved-prompt"
+    },
+    {
+      "event_index": 19,
+      "event_type": "drift_classification",
+      "event_version": "v1",
+      "fixture_id": "unobserved",
+      "payload": {
+        "exact_label": "SAT",
+        "expected_action": "accept",
+        "failure_mechanism": "not_observed",
+        "is_monitor_violation": false,
+        "ledger_action": "accept",
+        "live_decision": "missing"
+      },
+      "source_prompt_payload_sha256": "unobserved-prompt"
+    },
+    {
+      "event_index": 20,
+      "event_type": "partial_trace_state",
+      "event_version": "v1",
+      "fixture_id": "valid",
+      "payload": {
+        "fragment_count": 2,
+        "fragment_ids": [
+          "valid:assert_claim",
+          "valid:assert_expression"
+        ],
+        "fragment_status_counts": {
+          "pass": 2
+        },
+        "partial_state": "fragment_trace_present"
+      },
+      "source_prompt_payload_sha256": "valid-prompt"
+    },
+    {
+      "event_index": 21,
+      "event_type": "constraint_ledger",
+      "event_version": "v1",
+      "fixture_id": "valid",
+      "payload": {
+        "constraint_count": 2,
+        "constraints": [
+          {
+            "constraint_id": "valid:assert_claim",
+            "expected_direction": "no change",
+            "failing_constraint": "",
+            "solver_evidence": {
+              "authority": "unit_fragment_checker"
+            },
+            "status": "pass"
+          },
+          {
+            "constraint_id": "valid:assert_expression",
+            "expected_direction": "no change",
+            "failing_constraint": "",
+            "solver_evidence": {
+              "authority": "unit_fragment_checker"
+            },
+            "status": "pass"
+          }
+        ],
+        "ledger_action": "accept",
+        "ledger_hash": "bdf3cad127503f5fa7d4112aef7f9bdd4ff420c0a550897e9eb42f1aa399d544",
+        "ledger_source": "fragment_checks"
+      },
+      "source_prompt_payload_sha256": "valid-prompt"
+    },
+    {
+      "event_index": 22,
+      "event_type": "exact_test_z3_result",
+      "event_version": "v1",
+      "fixture_id": "valid",
+      "payload": {
+        "answer_extraction_format": "validity_token",
+        "exact_authority_available": true,
+        "exact_label": "VALID",
+        "expected_action": "accept",
+        "label_source": "unit_exact_authority",
+        "solver_label": "valid"
+      },
+      "source_prompt_payload_sha256": "valid-prompt"
+    },
+    {
+      "event_index": 23,
+      "event_type": "candidate_final_answer",
+      "event_version": "v1",
+      "fixture_id": "valid",
+      "payload": {
+        "expected_action": "accept",
+        "extracted_answer": "VALID",
+        "final_answer_consistent_with_exact": true,
+        "final_answer_consistent_with_ledger": true,
+        "has_returned_answer": true,
+        "ledger_action": "accept",
+        "live_decision": "accept",
+        "observed": true,
+        "prompt_hash": "valid-prompt-hash",
+        "raw_output_hash": "valid-raw-hash"
+      },
+      "source_prompt_payload_sha256": "valid-prompt"
+    },
+    {
+      "event_index": 24,
+      "event_type": "drift_classification",
+      "event_version": "v1",
+      "fixture_id": "valid",
+      "payload": {
+        "exact_label": "VALID",
+        "expected_action": "accept",
+        "failure_mechanism": "no_failure",
+        "is_monitor_violation": false,
+        "ledger_action": "accept",
+        "live_decision": "accept"
+      },
+      "source_prompt_payload_sha256": "valid-prompt"
+    }
+  ],
+  "monitor_violation_count": 3,
+  "monitored_fixture_count": 5,
+  "run_date": "20260526",
+  "satisfiable_drift_count": 1,
+  "schema": "carnot.fragment_time_monitor_satisfiable_drift_audit.v1",
+  "self_checks": {
+    "final_answer_consistency_checked": 3,
+    "ledger_replay_passed": true,
+    "monitor_determinism_hash": "f7f01a4fbd06715ba6e8948adcc42fe0f6c646c61e7200caa4dfce01fd9168c4",
+    "monitor_determinism_passed": true
+  },
+  "source_artifacts": [
+    {
+      "exists": true,
+      "id": "agents_repo_instructions",
+      "path": "AGENTS.md",
+      "required": false,
+      "sha256": "c893735c3c7ece3f9bf4d48722846ef65e76ff35ebfbfe1d239930339d69470b"
+    },
+    {
+      "exists": true,
+      "id": "codex_repo_workflow",
+      "path": "CODEX.md",
+      "required": false,
+      "sha256": "bab1c6ba20bb432cbd7cd6e3b12fb0089f303cb7742f929297647d6329e46502"
+    },
+    {
+      "exists": true,
+      "id": "claude_authenticity_rules",
+      "path": "CLAUDE.md",
+      "required": false,
+      "sha256": "674be13b9af34c23add383c0f31c7bed52d157078932c576c2eaa11e44f52314"
+    },
+    {
+      "exists": true,
+      "id": "research_references",
+      "path": "research-references.md",
+      "required": false,
+      "sha256": "d6ab655117822fc02fa4855b8b6ad0628f0868b0550f107b56965dfd68f04342"
+    },
+    {
+      "exists": true,
+      "id": "verification_openspec",
+      "path": "openspec/capabilities/verification/spec.md",
+      "required": false,
+      "sha256": "0bb494580bf2f4452977f77f0100c309aeaf4363d7ccd52b9408cb5eaedec125"
+    },
+    {
+      "exists": true,
+      "id": "exp3097_exact_protocol",
+      "path": "results/experiment_3097_exact_fixture_eval_protocol_audit_v1.json",
+      "required": true,
+      "sha256": "9e9dd89994f74aaa75085c28aefd2222af1b9ac343a8f49bbceb84b9cc5be597"
+    },
+    {
+      "exists": true,
+      "id": "exp3097_stratified_manifest",
+      "path": "results/exact_fixture_eval_protocol_3097/stratified_eval_manifest.jsonl",
+      "required": true,
+      "sha256": "fe1b14fb49452751153d1b9ff64de99fe83c593c06cae6cd5f75e22fb3be568b"
+    },
+    {
+      "exists": true,
+      "id": "exp3114_fragment_level_monitor_source",
+      "path": "results/experiment_3114_fragment_level_code_constraint_verification_pilot_v1.json",
+      "required": true,
+      "sha256": "460f4558a80ea8d962722016fae0ec9afc74282a09b22ba2e4f828f6d6c423b8"
+    },
+    {
+      "exists": true,
+      "id": "exp3124_live_verifier_trace_source",
+      "path": "results/experiment_3124_difficulty_stratified_live_sota_verifier_panel_v6.json",
+      "required": true,
+      "sha256": "623d5186a732edab31eccad21ccfaf2ec294dddf41034826acf284a5a5e75694"
+    },
+    {
+      "exists": false,
+      "id": "exp3126_module",
+      "path": "python/carnot/eval/fragment_time_monitor_satisfiable_drift_audit_v1.py",
+      "required": false,
+      "sha256": null
+    },
+    {
+      "exists": false,
+      "id": "exp3126_script",
+      "path": "scripts/experiment_3126_fragment_time_monitor_satisfiable_drift_audit_v1.py",
+      "required": false,
+      "sha256": null
+    }
+  ],
+  "tests_run": [
+    "relative-write"
+  ]
+}

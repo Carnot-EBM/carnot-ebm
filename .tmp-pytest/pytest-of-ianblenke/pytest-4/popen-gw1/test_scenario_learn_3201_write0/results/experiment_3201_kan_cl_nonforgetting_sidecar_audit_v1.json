@@ -1,0 +1,146 @@
+{
+  "artifact": "experiment_3201_kan_cl_nonforgetting_sidecar_audit_v1",
+  "audit_metric_schema": {
+    "feature_space": [
+      "historical_exact_evidence_key",
+      "row_id",
+      "fixture_family",
+      "exact_label",
+      "answer_abstain_decision",
+      "routing_outcome"
+    ],
+    "metrics": {
+      "exact_label_consistency": "accepted exact labels must answer; rejected exact labels must abstain",
+      "locality_boundary": "the same exact evidence key must retain action, label, decision, and route bin",
+      "negative_control_regression": "negative controls must not change exact action, consistency, or routing",
+      "routing_bin_retention": "trace rows are grouped into answer_path, abstain_path, or explicit route bins"
+    },
+    "not_authority_for": [
+      "model-weight learning",
+      "KAN training",
+      "sidecar verifier promotion"
+    ],
+    "rollback_policy": [
+      "heldout_regression_count > 0",
+      "drift_regression_count > 0",
+      "negative_control_regression_count > 0",
+      "source_drift_case_count > 0",
+      "locality_violation_count > 0"
+    ],
+    "schema_id": "carnot.fr11.kan_cl_nonforgetting_audit_metrics.v1",
+    "schema_version": "1.0"
+  },
+  "drift_regression_count": 0,
+  "drift_replay_count": 1,
+  "duration_s": 2.25,
+  "experiment_id": "experiment_3201_kan_cl_nonforgetting_sidecar_audit_v1",
+  "heldout_regression_count": 0,
+  "heldout_replay_count": 2,
+  "honest_verdict": "complete: kan-cl nonforgetting sidecar audit finished; heldout_replay_count=2; drift_replay_count=1; negative_control_regression_count=0; locality_violation_count=0; rollback_triggered=false; model_weight_update_performed=false; sidecar_promotion_allowed=false",
+  "inference_substrate": {
+    "base_model_weights_updated": false,
+    "controller_memory_replay_only": true,
+    "executes_live_model_inference": false,
+    "fresh_live_inference_calls": 0,
+    "hidden_state_mutation_claimed": false,
+    "kan_model_weight_training": false,
+    "mode": "controller_memory_kan_cl_sidecar_audit",
+    "model_weight_learning": false,
+    "model_weight_mutation": false,
+    "model_weight_training": false,
+    "sidecar_audit_only": true,
+    "sidecar_verifier_authority": false,
+    "uses_checked_in_artifacts_only": true
+  },
+  "locality_violation_count": 0,
+  "locality_violations": [],
+  "model_weight_update_performed": false,
+  "negative_control_regression_count": 0,
+  "negative_control_replay_count": 1,
+  "rollback_reasons": [],
+  "rollback_triggered": false,
+  "routing_bin_summary": {
+    "abstain_path": {
+      "count": 1
+    },
+    "answer_path": {
+      "count": 3
+    }
+  },
+  "run_date": "20260527",
+  "schema": "carnot.fr11.kan_cl_nonforgetting_sidecar_audit.v1",
+  "schema_version": "1.0",
+  "sidecar_promotion_allowed": false,
+  "source_artifacts": [
+    {
+      "exists": true,
+      "id": "agents_repo_instructions",
+      "path": "AGENTS.md",
+      "required": false,
+      "sha256": "c893735c3c7ece3f9bf4d48722846ef65e76ff35ebfbfe1d239930339d69470b"
+    },
+    {
+      "exists": true,
+      "id": "codex_repo_workflow",
+      "path": "CODEX.md",
+      "required": false,
+      "sha256": "bab1c6ba20bb432cbd7cd6e3b12fb0089f303cb7742f929297647d6329e46502"
+    },
+    {
+      "exists": true,
+      "id": "claude_no_hidden_learning_claims",
+      "path": "CLAUDE.md",
+      "required": false,
+      "sha256": "d33a8d20335763a0802687e3a61472ffd1feb8ae88108c156d8d02a78f318701"
+    },
+    {
+      "exists": true,
+      "id": "self_learning_openspec",
+      "path": "openspec/capabilities/self-learning/spec.md",
+      "required": false,
+      "sha256": "daa1a8f83fb3c0ad3e538286c5d1715ff8d23322e92c203c288fb5ce6ca34cc6"
+    },
+    {
+      "exists": true,
+      "id": "exp3200_trace_memory_controller",
+      "path": "results/experiment_3200_fr11_verify_trace_memory_controller_v1.json",
+      "required": true,
+      "sha256": "6559d9c18dd481456f2b8cc952f34f68a3c14f14f577efcf05f29306b1fad282"
+    },
+    {
+      "exists": true,
+      "id": "exp3187_cross_environment_drift_replay",
+      "path": "results/experiment_3187_fr11_cross_environment_drift_replay_v1.json",
+      "required": true,
+      "sha256": "7563819072ea311146fe387797e6f744ad0867365c47b0dfd3f32b4b5a69f8df"
+    },
+    {
+      "exists": false,
+      "id": "exp3201_module",
+      "path": "python/carnot/eval/fr11_kan_cl_nonforgetting_sidecar_audit_v1.py",
+      "required": false,
+      "sha256": null
+    },
+    {
+      "exists": false,
+      "id": "exp3201_tests",
+      "path": "tests/python/test_experiment_3201_kan_cl_nonforgetting_sidecar_audit_v1.py",
+      "required": false,
+      "sha256": null
+    }
+  ],
+  "source_drift_case_count": 0,
+  "source_preconditions": {
+    "exp3187_present": true,
+    "exp3187_ready": true,
+    "exp3187_terminal": true,
+    "exp3200_present": true,
+    "exp3200_terminal": true,
+    "exp3200_trace_count": 4,
+    "source_live_or_mutation_detected": false
+  },
+  "tests_run": [
+    "REQ-LEARN-3201 focused"
+  ],
+  "trace_regressions": []
+}

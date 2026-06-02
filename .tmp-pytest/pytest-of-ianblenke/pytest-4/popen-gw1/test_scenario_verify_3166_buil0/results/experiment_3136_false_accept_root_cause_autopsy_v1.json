@@ -1,0 +1,84 @@
+{
+  "artifact": "experiment_3136_false_accept_root_cause_autopsy_v1",
+  "false_accept_autopsy_v1_ready": true,
+  "false_accept_row_ids": [
+    "row-false"
+  ],
+  "false_accept_rows": [
+    {
+      "answer_extraction_format": "validity_token",
+      "exact_label": "INVALID",
+      "expected_action": "reject",
+      "extracted_answer": "VALID",
+      "fixture_family": "arithmetic_code_assertions",
+      "monitor_events": [
+        {
+          "event_type": "candidate_final_answer",
+          "payload": {
+            "extracted_answer": "VALID",
+            "prompt_hash": "prompt-false",
+            "raw_output_hash": "raw-false"
+          }
+        }
+      ],
+      "primary_mechanism": "contradiction miss",
+      "prior_panel_row": {
+        "confidence": null,
+        "first_token_entropy": null,
+        "first_token_negative_logprob": null,
+        "raw_output_hash": "prior-raw-false"
+      },
+      "prompt_hash": "prompt-false",
+      "row_id": "row-false",
+      "source_prompt_payload_sha256": "payload-false"
+    }
+  ],
+  "honest_verdict": "complete: autopsy ready",
+  "inference_substrate": {
+    "kind": "aggregation_from_checked_in_verifier_artifacts"
+  },
+  "regression_row_set": [
+    "row-false"
+  ],
+  "verifier_rows": [
+    {
+      "decision": "accept",
+      "exact_label": "VALID",
+      "expected_action": "accept",
+      "extracted_answer": "VALID",
+      "matched_rule_id": "ACCEPT_EXACT_COVERED_CONSISTENT",
+      "parse_confidence": 1.0,
+      "prompt_hash": "prompt-clean",
+      "row_id": "row-clean",
+      "row_source": "exact_fixture",
+      "token_family_match": true
+    },
+    {
+      "answer_extraction_format": "validity_token",
+      "exact_label": "INVALID",
+      "expected_action": "reject",
+      "extracted_answer": "VALID",
+      "fixture_family": "arithmetic_code_assertions",
+      "monitor_events": [
+        {
+          "event_type": "candidate_final_answer",
+          "payload": {
+            "extracted_answer": "VALID",
+            "prompt_hash": "prompt-false",
+            "raw_output_hash": "raw-false"
+          }
+        }
+      ],
+      "primary_mechanism": "contradiction miss",
+      "prior_panel_row": {
+        "confidence": null,
+        "first_token_entropy": null,
+        "first_token_negative_logprob": null,
+        "raw_output_hash": "prior-raw-false"
+      },
+      "prompt_hash": "prompt-false",
+      "row_id": "row-false",
+      "source_prompt_payload_sha256": "payload-false"
+    }
+  ]
+}

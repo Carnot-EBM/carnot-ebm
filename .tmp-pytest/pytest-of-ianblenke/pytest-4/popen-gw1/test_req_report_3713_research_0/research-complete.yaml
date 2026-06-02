@@ -1,0 +1,55 @@
+# completed
+
+milestones:
+- id: 2026.06.338
+  finding: previous
+- id: 2026.06.339
+  title: "Convergence: re-freeze closed-negative, code leak narrowed, KV260 terminal"
+  doc: openspec/change-proposals/research-roadmap-vNEXT.md
+  completed: '2026-06-02'
+  finding: "CONVERGENCE MILESTONE: .339 walked both PROVISIONAL .338 wins back to the conservative outcome under full rigor. The re-freeze CLOSED-NEGATIVE state is recorded: exp3704 measured dependency-aware 0.9249, external 0.9287, and fusion 0.9285 under the frozen five-seed dual-condition protocol, but no candidate robustly displaces the frozen headline; the frozen FoVer 0.9131 stayed frozen. exp3704's flagged_adversarial is a benign TAUTOLOGY because strongest_candidate_auroc equals external_comparator_auroc by construction; .340 re-emits it cleanly. The .338 code AUROC 1.0 was a LEAK in exp3705, and exp3706 narrowed the shipped detector to math-only-with-abstain with E2E green. The selection diagnosis FORMALLY CLOSED in exp3707 with retirement recommended. KV260 captured a terminal latency transcript in exp3709. FR-11 v13 was positive; paper_ready stayed TRUE (G1-G4), P0.1 stayed honest-negative, and the frozen FoVer 0.9131 stayed frozen."
+  tasks:
+  - id: exp3702-archive-v338-activate-v339
+    title: "Archive .338 honestly and activate .339"
+    deliverable: results/experiment_3702_archive_v338_activate_v339.json
+    result: OK (codex artifact landed)
+  - id: exp3703-backend-state-diagnostic-v5
+    title: "Backend-state diagnostic v5"
+    deliverable: results/experiment_3703_backend_state_diagnostic_v5.json
+    result: OK (codex artifact landed)
+  - id: exp3704-refreeze-disambiguate-dependency-vs-external-vs-fusion
+    title: "Re-freeze candidate disambiguation"
+    deliverable: results/experiment_3704_refreeze_disambiguate_dependency_vs_external_vs_fusion.json
+    result: CLOSED-NEGATIVE; headline stays frozen
+  - id: exp3705-code-native-leak-audit-and-heldout-replication
+    title: "Code-native leak audit and held-out replication"
+    deliverable: results/experiment_3705_code_native_leak_audit_heldout.json
+    result: LEAK; detector narrowed in exp3706
+  - id: exp3706-reconcile-shipped-detector-with-heldout-audit
+    title: "Reconcile shipped detector with held-out audit"
+    deliverable: results/experiment_3706_reconcile_shipped_detector_heldout.json
+    result: NARROWED to math-only-with-abstain; E2E green
+  - id: exp3707-selection-diagnosis-formal-closure
+    title: "Formal selection diagnosis closure"
+    deliverable: results/experiment_3707_selection_diagnosis_formal_closure.json
+    result: FORMALLY CLOSED; retirement recommended
+  - id: exp3708-fr11-continuous-self-learning-v13-multi-session-consolidation
+    title: "FR-11 v13 multi-session consolidation"
+    deliverable: results/experiment_3708_fr11_continuous_self_learning_v13.json
+    result: POSITIVE; transfer no-collapse
+  - id: exp3709-kv260-drive-to-terminal-latency-transcript
+    title: "KV260 terminal latency transcript"
+    deliverable: results/experiment_3709_kv260_drive_to_terminal_latency_transcript.json
+    result: TERMINAL latency transcript candidate
+  - id: exp3710-polarfire-continuity-v26
+    title: "PolarFire opportunistic reachability and continuity audit"
+    deliverable: results/experiment_3710_polarfire_continuity_v26.json
+    result: OK (codex artifact landed)
+  - id: exp3711-gatemate-continuity-audit-v26
+    title: "GateMate continuity audit v26"
+    deliverable: results/experiment_3711_gatemate_continuity_audit_v26.json
+    result: OK (codex artifact landed)
+  - id: exp3712-capstone-and-g-gate-v339
+    title: "Capstone v339 and G1-G4 gate synthesis"
+    deliverable: results/experiment_3712_capstone_and_g_gate_v339.json
+    result: paper_ready true; frozen headline unchanged

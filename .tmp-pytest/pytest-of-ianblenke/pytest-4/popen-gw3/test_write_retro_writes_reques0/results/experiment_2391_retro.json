@@ -1,0 +1,281 @@
+{
+  "auroc_gap_to_hallscan_at_232_close": 0.1948,
+  "best_232_verifier_auroc": 0.6852,
+  "best_232_verifier_auroc_source": {
+    "metric": "best_auroc_achieved",
+    "source_artifact": "results/experiment_2389_paperv6_table.json",
+    "source_id": "exp2389",
+    "value": 0.6852
+  },
+  "experiment": "2391_retro_v232",
+  "field_principles": {
+    "auroc_gap_to_hallscan_at_232_close": "0.88 - best_232_verifier_auroc. Tracks gap closure.",
+    "fr11_satisfied": "True if exp2383 fr11_nsvif_online_passed=true.",
+    "fst_live_path_ab_completed": "True if exp2382 live_inference_completed=true (key .232 goal).",
+    "honest_verdict": "Terminal-prefix required.",
+    "kv260_yosys_synthesis_succeeded": "True if Yosys synthesis succeeded (KV260 hardware track progress).",
+    "n_experiments_completed": "Count of terminal OK status tasks.",
+    "n_gate_blocks": "Count of GATE_BLOCK tasks.",
+    "retro_complete": "Must be true.",
+    "total_wall_time_min": "Sum of wall time from conductor log."
+  },
+  "fr11_satisfied": false,
+  "fst_live_path_ab_completed": false,
+  "generated_at": "2026-06-02T19:10:33Z",
+  "hive_ensemble_auroc": null,
+  "hive_gap_closed_vs_hallscan": 0.0,
+  "honest_verdict": "complete: retro_complete=true; n_experiments_completed=1; n_failed=11; n_gate_blocks=1; auroc_gap_to_hallscan_at_232_close=0.1948; fst_live_path_ab_completed=False",
+  "kv260_yosys_synthesis_succeeded": false,
+  "milestone": "2026.05.232",
+  "missing_required_artifacts": [
+    "results/experiment_2378_archive.json",
+    "results/experiment_2382_fst_live_path_ab.json",
+    "results/experiment_2383_fr11_nsvif_online.json",
+    "results/experiment_2384_kv260_yosys.json",
+    "results/experiment_2388_phase1_ship_gate.json",
+    "results/experiment_2390_capstone.json"
+  ],
+  "n_experiments_completed": 1,
+  "n_failed": 11,
+  "n_failed_attempts": 11,
+  "n_gate_block_attempts": 1,
+  "n_gate_blocks": 1,
+  "n_planned_tasks": 14,
+  "n_skipped": 1,
+  "phase1_ship_criteria_met": false,
+  "retro_complete": true,
+  "schema": "carnot.operational_retro.v75",
+  "task_outcomes": [
+    {
+      "artifact_present": false,
+      "attempts": 1,
+      "deliverable": "results/experiment_2378.json",
+      "key_result": "cli error",
+      "status": "FAIL",
+      "status_counts": {
+        "FAIL": 1,
+        "GATE_BLOCK": 0,
+        "OK": 0
+      },
+      "task_id": "exp2378-archive-and-activate",
+      "title": "Phase 0: Archive .231 and activate .232"
+    },
+    {
+      "artifact_present": false,
+      "attempts": 1,
+      "deliverable": "results/experiment_2379.json",
+      "key_result": "cli error",
+      "status": "FAIL",
+      "status_counts": {
+        "FAIL": 1,
+        "GATE_BLOCK": 0,
+        "OK": 0
+      },
+      "task_id": "exp2379-halt-tier0j-latent-probe",
+      "title": "Phase 1: HALT Latent Probe Tier 0j"
+    },
+    {
+      "artifact_present": false,
+      "attempts": 1,
+      "deliverable": "results/experiment_2380.json",
+      "key_result": "cli error",
+      "status": "FAIL",
+      "status_counts": {
+        "FAIL": 1,
+        "GATE_BLOCK": 0,
+        "OK": 0
+      },
+      "task_id": "exp2380-hive-4verifier-ensemble",
+      "title": "Phase 1: HIVE-Style 4-Verifier Ensemble"
+    },
+    {
+      "artifact_present": false,
+      "attempts": 1,
+      "deliverable": "results/experiment_2381.json",
+      "key_result": "cli error",
+      "status": "FAIL",
+      "status_counts": {
+        "FAIL": 1,
+        "GATE_BLOCK": 0,
+        "OK": 0
+      },
+      "task_id": "exp2381-fregelogic-z3-neural-hybrid",
+      "title": "Phase 1: FregeLogic Z3+Neural Hybrid"
+    },
+    {
+      "artifact_present": false,
+      "attempts": 1,
+      "deliverable": "results/experiment_2382.json",
+      "key_result": "cli error",
+      "status": "FAIL",
+      "status_counts": {
+        "FAIL": 1,
+        "GATE_BLOCK": 0,
+        "OK": 0
+      },
+      "task_id": "exp2382-fst-live-path-ab",
+      "title": "Phase 2: FST Live PATH A/B"
+    },
+    {
+      "artifact_present": false,
+      "attempts": 1,
+      "deliverable": "results/experiment_2383.json",
+      "key_result": "cli error",
+      "status": "FAIL",
+      "status_counts": {
+        "FAIL": 1,
+        "GATE_BLOCK": 0,
+        "OK": 0
+      },
+      "task_id": "exp2383-fr11-nsvif-online-learning",
+      "title": "Phase 2: FR-11 NSVIF Online Learning"
+    },
+    {
+      "artifact_present": false,
+      "attempts": 1,
+      "deliverable": "results/experiment_2384.json",
+      "key_result": "cli error",
+      "status": "FAIL",
+      "status_counts": {
+        "FAIL": 1,
+        "GATE_BLOCK": 0,
+        "OK": 0
+      },
+      "task_id": "exp2384-kv260-yosys-synthesis",
+      "title": "Phase 3: KV260 Yosys Synthesis"
+    },
+    {
+      "artifact_present": false,
+      "attempts": 1,
+      "deliverable": "results/experiment_2385.json",
+      "key_result": "cli error",
+      "status": "FAIL",
+      "status_counts": {
+        "FAIL": 1,
+        "GATE_BLOCK": 0,
+        "OK": 0
+      },
+      "task_id": "exp2385-kinetic-langevin-vs-casal",
+      "title": "Phase 3: Kinetic Langevin Splitting"
+    },
+    {
+      "artifact_present": false,
+      "attempts": 1,
+      "deliverable": "results/experiment_2386.json",
+      "key_result": "cli error",
+      "status": "FAIL",
+      "status_counts": {
+        "FAIL": 1,
+        "GATE_BLOCK": 0,
+        "OK": 0
+      },
+      "task_id": "exp2386-kac-rbf-vs-kancl",
+      "title": "Phase 3: KAC RBF vs KAN-CL Hard Domains"
+    },
+    {
+      "artifact_present": false,
+      "attempts": 1,
+      "deliverable": "results/experiment_2387.json",
+      "key_result": "cli error",
+      "status": "FAIL",
+      "status_counts": {
+        "FAIL": 1,
+        "GATE_BLOCK": 0,
+        "OK": 0
+      },
+      "task_id": "exp2387-nsvif-smt-lib-policy",
+      "title": "Phase 4: NSVIF SMT-LIB Policy Formalization"
+    },
+    {
+      "artifact_present": false,
+      "attempts": 1,
+      "deliverable": "results/experiment_2388.json",
+      "key_result": "cli error",
+      "status": "FAIL",
+      "status_counts": {
+        "FAIL": 1,
+        "GATE_BLOCK": 0,
+        "OK": 0
+      },
+      "task_id": "exp2388-phase1-ship-gate-check",
+      "title": "Phase 4: Phase 1 Ship Gate Audit"
+    },
+    {
+      "artifact_present": false,
+      "attempts": 1,
+      "deliverable": "results/experiment_2389.json",
+      "key_result": "tests passed",
+      "status": "OK",
+      "status_counts": {
+        "FAIL": 0,
+        "GATE_BLOCK": 0,
+        "OK": 1
+      },
+      "task_id": "exp2389-paperv6-results-table",
+      "title": "Phase 4: Paper-v6 Real-Data Results Table"
+    },
+    {
+      "artifact_present": false,
+      "attempts": 1,
+      "deliverable": "results/experiment_2390.json",
+      "key_result": "upstream retired",
+      "status": "GATE_BLOCK",
+      "status_counts": {
+        "FAIL": 0,
+        "GATE_BLOCK": 1,
+        "OK": 0
+      },
+      "task_id": "exp2390-capstone-v232",
+      "title": "Phase 5: Capstone v232"
+    },
+    {
+      "artifact_present": false,
+      "attempts": 0,
+      "deliverable": "results/experiment_2391.json",
+      "key_result": "No terminal conductor row before retrospective generation.",
+      "status": "SKIP",
+      "status_counts": {
+        "FAIL": 0,
+        "GATE_BLOCK": 0,
+        "OK": 0
+      },
+      "task_id": "exp2391-retro-v232",
+      "title": "Phase 6: Milestone 2026.05.232 Operational Retrospective"
+    }
+  ],
+  "top_3_gaps_for_233": [
+    {
+      "evidence": "11 FAIL attempts across 11 tasks",
+      "rank": 1,
+      "summary": "Fix the Codex CLI failure loop before rerunning AUROC closure tasks."
+    },
+    {
+      "evidence": "HIVE AUROC artifact present=False",
+      "rank": 2,
+      "summary": "Rerun HALT, HIVE, and FregeLogic so the 0.88 AUROC gap can actually close."
+    },
+    {
+      "evidence": "missing_required_artifacts=6",
+      "rank": 3,
+      "summary": "Re-establish evidence for FST live PATH A/B, FR-11, KV260 Yosys, and ship gate."
+    }
+  ],
+  "top_3_successes": [
+    {
+      "evidence": "results/experiment_2389_paperv6_table.json",
+      "rank": 1,
+      "summary": "Paper-v6 results table completed and preserved missing-artifact accounting."
+    },
+    {
+      "evidence": "conductor status GATE_BLOCK for exp2390",
+      "rank": 2,
+      "summary": "Capstone gate blocked synthesis after upstream AUROC/live-inference tasks failed."
+    },
+    {
+      "evidence": "auroc_gap_to_hallscan_at_232_close=0.1948",
+      "rank": 3,
+      "summary": "Close-of-milestone AUROC gap is quantified instead of overclaimed."
+    }
+  ],
+  "total_wall_time_min": 84.0
+}

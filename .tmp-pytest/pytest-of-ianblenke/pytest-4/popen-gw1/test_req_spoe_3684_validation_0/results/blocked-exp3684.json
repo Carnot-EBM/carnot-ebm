@@ -1,0 +1,64 @@
+{
+  "acceptance_gate": {
+    "condition": "self_certainty_auroc_per_domain present AND fused_ensemble_self_certainty_auroc_per_domain present AND ensemble_minus_self_certainty_delta_ci_per_domain present",
+    "passed": false,
+    "principle": "A robust-product verdict requires the stronger baseline, the fused number and the paired delta CI per domain -- comparing only against plain confidence would repeat the weak-baseline inflation this task checks for."
+  },
+  "artifact": "experiment_3684_product_value_vs_self_certainty",
+  "corpus_status": {
+    "code": {
+      "balanced_exp3658": true,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/.tmp-pytest/pytest-of-ianblenke/pytest-4/popen-gw1/test_req_spoe_3684_validation_0/data/code_verification_corpus_v2.jsonl",
+      "status": "missing"
+    },
+    "math": {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/.tmp-pytest/pytest-of-ianblenke/pytest-4/popen-gw1/test_req_spoe_3684_validation_0/data/fover_corpus_v4.json",
+      "status": "missing"
+    }
+  },
+  "duration_s": 1e-05,
+  "ensemble_adds_value_over_self_certainty": false,
+  "ensemble_alone_auroc_per_domain": {},
+  "ensemble_minus_self_certainty_delta_ci_per_domain": {},
+  "field_principles": {
+    "duration_s": "Plausibility floor.",
+    "ensemble_adds_value_over_self_certainty": "BARE bool. True iff on >=1 domain the fused detector beats self-certainty-alone with the delta CI excluding 0 -- the robust-product-value verdict. STORE AS BARE true/false.",
+    "ensemble_minus_self_certainty_delta_ci_per_domain": "Paired delta + CI of fused vs self-certainty-alone per domain -- the additive value over the stronger baseline.",
+    "fused_ensemble_self_certainty_auroc_per_domain": "Ensemble + self-certainty fused AUROC per domain -- the product number under the stronger baseline.",
+    "honest_verdict": "Terminal prefix for reconciler classification.",
+    "inference_substrate": "verifier_ensemble_against_cached_candidates (principle: scores cached corpora; no LLM load).",
+    "n_examples_per_domain": "Sample-size rigor per domain.",
+    "plain_confidence_auroc_per_domain": "The original (weaker) baseline -- shows whether the prior claim leaned on a weak comparator.",
+    "random_seed": "Determinism precondition.",
+    "reproducibility_checksum": "Drift detection.",
+    "self_certainty_auroc_per_domain": "The stronger free baseline AUROC per domain (math, code) -- the new bar.",
+    "self_certainty_implementation": "Honest description of the self-certainty implementation or the disclosed proxy + its gap (verifier authenticity)."
+  },
+  "fused_ensemble_self_certainty_auroc_per_domain": {},
+  "heldout_examples_per_domain": {},
+  "honest_verdict": "complete: blocked_no_labeled_corpus_for_rebaseline",
+  "inference_substrate": "verifier_ensemble_against_cached_candidates (principle: scores cached corpora; no LLM load).",
+  "n_examples_per_domain": {},
+  "ops_docs_reconciliation_left_to_conductor": true,
+  "output_path": "/home/ianblenke/github.com/ianblenke/carnot/.tmp-pytest/pytest-of-ianblenke/pytest-4/popen-gw1/test_req_spoe_3684_validation_0/results/experiment_3684_product_value_vs_self_certainty.json",
+  "plain_confidence_auroc_per_domain": {},
+  "prior_confidence_claim_assessment_per_domain": {},
+  "random_seed": 3684,
+  "recall_at_fixed_fpr_table": {},
+  "reproducibility_checksum": "dde33b52b9106ec3",
+  "schema": "carnot.product_value_vs_self_certainty.v1",
+  "scripts_research_conductor_modified": false,
+  "self_certainty_auroc_per_domain": {},
+  "self_certainty_implementation": {
+    "cached_corpus_signal_available": "FoVer v4 exposes scalar confidence only; balanced Exp3658 code rows expose no token logits/probabilities and reuse the cached confidence/self-consistency baseline.",
+    "gap": "This is a scalar-confidence proxy, not true arXiv:2502.18581 token-distribution self-certainty; it is disclosed and kept separate from plain_confidence_auroc_per_domain.",
+    "implemented_exact_helper": "token_distribution_self_certainty(probability_distributions)",
+    "paper_definition": "Mean KL divergence between each predicted token distribution and the uniform distribution over that token's support; higher means a more peaked model distribution.",
+    "proxy_disclosure_required": true,
+    "proxy_formula": "p_error=confidence_error; KL=p_error*log(2*p_error)+(1-p_error)*log(2*(1-p_error)); self_certainty_error=(2*p_error-1)*KL so larger scores mean higher error risk.",
+    "proxy_used_for_rebaseline": "signed_bernoulli_uniform_kl_from_confidence_error"
+  },
+  "tests_run": [
+    "REQ-SPOE-3684 blocked write_artifact"
+  ]
+}

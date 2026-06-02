@@ -1,0 +1,60 @@
+{
+  "artifact": "experiment_2865_cross_corpus_matrix_v5",
+  "cross_corpus_matrix_built": true,
+  "excluded_from_headline": {
+    "HumanEval": "source_artifact_missing",
+    "MBPP": "source_artifact_missing",
+    "TruthfulQA": "source_artifact_missing"
+  },
+  "honest_verdict": "complete: cross-corpus matrix built from 2 clean corpus rows",
+  "row_status_by_corpus": {
+    "FoVer": "clean",
+    "HaluEval/FEVER": "clean",
+    "HumanEval": "missing",
+    "MBPP": "missing",
+    "TruthfulQA": "missing"
+  },
+  "run_date": "20260522",
+  "source_artifacts": [
+    "results/experiment_2850_fover_dual_condition_integrity_v4.json",
+    "results/experiment_2864_halueval_fever_full_calibration_v3.json"
+  ],
+  "verifier_corpus_dual_matrix": {
+    "FoVer": {
+      "architecture_only_auroc": 0.8946624,
+      "corpus": "FoVer",
+      "honest_verdict": "complete: FoVer dual-condition rerun",
+      "learning_contribution": 0.0184712,
+      "n_examples": 1000,
+      "n_seeds": 5,
+      "production_auroc": 0.9131336,
+      "row_status": "clean",
+      "source_artifact": "results/experiment_2850_fover_dual_condition_integrity_v4.json"
+    },
+    "HaluEval/FEVER": {
+      "corpus": "HaluEval/FEVER",
+      "honest_verdict": "complete: HaluEval/FEVER local calibration ready",
+      "label_counts_by_dataset": {
+        "fever": {
+          "0": 270,
+          "1": 230
+        },
+        "halueval": {
+          "0": 250,
+          "1": 250
+        }
+      },
+      "measured_auroc_by_dataset": {
+        "fever": 0.33114331723027374,
+        "halueval": 0.553072
+      },
+      "n_examples": 1000,
+      "n_examples_by_dataset": {
+        "fever": 500,
+        "halueval": 500
+      },
+      "row_status": "clean",
+      "source_artifact": "results/experiment_2864_halueval_fever_full_calibration_v3.json"
+    }
+  }
+}

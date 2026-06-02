@@ -1,0 +1,250 @@
+{
+  "artifact": "experiment_3094_capstone_v288",
+  "capstone_ready": true,
+  "duration_s": 0.5,
+  "ebt_arm_status": "clean_adapter_implementation_evidence",
+  "fr11_self_learning_status": "clean_controller_only_zero_mistake_budget",
+  "gatemate_status": "clean_host_visible_output_ready",
+  "headline_model_spec_gaps": [],
+  "honest_verdict": "complete: capstone_ready=true; paper_ready=true; matrix_v22_ready=true; publication_blocker_count=0; verifier_gain_status=clean_verifier_gain_exact_grounded; repair_claim_status=clean_or_retired; fr11_self_learning_status=clean_controller_only_zero_mistake_budget; ebt_arm_status=clean_adapter_implementation_evidence; gatemate_status=clean_host_visible_output_ready; ssqa_status=clean_host_visible_readback_ready",
+  "inference_substrate": {
+    "executes_conductor": false,
+    "executes_hardware": false,
+    "executes_live_repair": false,
+    "executes_models": false,
+    "kind": "aggregation_from_checked_in_artifacts",
+    "local_repo_only": true,
+    "no_live_llm_inference": true,
+    "source": "matrix_v22_and_named_capstone_input_artifacts"
+  },
+  "invariant_violations": [],
+  "matrix_v22_summary": {
+    "blocker_delta_from_v21": -9,
+    "honest_verdict": "complete: matrix_v22_ready=true",
+    "matrix_v22_ready": true,
+    "publication_blocker_count": 0,
+    "row_count_observed": 7,
+    "rows_total": 7,
+    "status_counts": {
+      "blocked": 0,
+      "bounded": 0,
+      "clean": 6,
+      "flagged": 0,
+      "gated_skipped": 0,
+      "missing": 0,
+      "projection_only": 0,
+      "retired": 1
+    }
+  },
+  "milestone": "2026.05.288",
+  "missing_capstone_input_artifacts": [],
+  "next_milestone_recommendation": "2026.05.289: clear verifier/repair first (0 blocker rows: verifier gain, formal feedback, and missing repair micro-panel), because repair promotion remains gated by verifier evidence; then collect operator-owned GateMate/SSQA host-visible evidence (0 blocker rows) without claiming speedup; keep EBT/ARM projection-only until live model integration has tests; preserve FR-11 as controller-only unless a later matrix proves broader model-learning boundaries.",
+  "no_live_repair_rerun": true,
+  "no_new_board_flash": true,
+  "no_new_hardware_run": true,
+  "no_new_model_execution": true,
+  "no_new_solver_run": true,
+  "no_new_synthesis_run": true,
+  "no_new_verifier_run": true,
+  "ops_docs_reconciliation_left_to_conductor": true,
+  "paper_ready": true,
+  "paper_ready_checks": [
+    {
+      "check": "capstone_ready",
+      "passed": true,
+      "reason": "matrix v22 authority loaded and row/blocker counts reconcile"
+    },
+    {
+      "check": "publication_blocker_count_zero",
+      "passed": true,
+      "reason": "publication_blocker_count=0"
+    },
+    {
+      "check": "headline_model_spec_gaps_clear",
+      "passed": true,
+      "reason": "headline_model_spec_gaps=0"
+    },
+    {
+      "check": "headline_missing_inputs_clear",
+      "passed": true,
+      "reason": "missing_capstone_input_artifacts=0"
+    }
+  ],
+  "prd_gap_summary": {
+    "ebt_arm_bridge": {
+      "claim_boundary": "Sidecar/schema evidence is not model-integration evidence.",
+      "publication_blocker_count": 0,
+      "publication_blocker_row_ids": [],
+      "row_ids": [
+        "ebt-integrated"
+      ],
+      "statuses_present": [
+        "clean"
+      ]
+    },
+    "fr11": {
+      "claim_boundary": "FR-11 is controller-only; no base model weight update or completeness claim is inferred.",
+      "publication_blocker_count": 0,
+      "publication_blocker_row_ids": [],
+      "row_ids": [
+        "fr11-budget"
+      ],
+      "statuses_present": [
+        "clean"
+      ]
+    },
+    "hardware_evidence": {
+      "claim_boundary": "Operator evidence ingestion is not host-visible hardware speedup or readback evidence.",
+      "publication_blocker_count": 0,
+      "publication_blocker_row_ids": [],
+      "row_ids": [
+        "gatemate-clean",
+        "ssqa-clean"
+      ],
+      "statuses_present": [
+        "clean"
+      ]
+    },
+    "publication_readiness": {
+      "claim_boundary": "Publication remains blocked until the matrix blocker count reaches zero.",
+      "publication_blocker_count": 0,
+      "publication_blocker_row_ids": [],
+      "row_ids": [
+        "capstone-paper"
+      ],
+      "statuses_present": [
+        "clean"
+      ]
+    },
+    "verifier_repair": {
+      "claim_boundary": "Verifier/repair remains a paper blocker until exact verifier evidence and the repair micro-panel clear.",
+      "publication_blocker_count": 0,
+      "publication_blocker_row_ids": [],
+      "row_ids": [
+        "verifier-clean",
+        "repair-retired"
+      ],
+      "statuses_present": [
+        "clean",
+        "retired"
+      ]
+    }
+  },
+  "publication_blocker_count": 0,
+  "publication_blockers": [],
+  "repair_claim_status": "clean_or_retired",
+  "required_source_errors": [],
+  "row_status_counts": {
+    "blocked": 0,
+    "bounded": 0,
+    "clean": 6,
+    "flagged": 0,
+    "gated_skipped": 0,
+    "missing": 0,
+    "projection_only": 0,
+    "retired": 1
+  },
+  "run_date": "20260526",
+  "schema": "carnot.milestone_capstone.v288_matrix_v22_aggregation.v1",
+  "scripts_research_conductor_modified": false,
+  "source_artifacts": [
+    {
+      "experiment_id": "experiment_3093_cross_corpus_matrix_v22",
+      "path": "results/experiment_3093_cross_corpus_matrix_v22.json",
+      "present": true,
+      "readable_json_object": true,
+      "required": true,
+      "role": "matrix_v22_authority",
+      "sha256": "2eacb6bdef8ebe7e3be671821531ac5df61d56ca1eef80e84c06f00a3b6048a0",
+      "source_type": "json"
+    },
+    {
+      "experiment_id": "source_capstone_v287",
+      "path": "results/source_capstone_v287.json",
+      "present": true,
+      "readable_json_object": true,
+      "required": false,
+      "role": "capstone_input_context",
+      "sha256": "7e038d329ecb14b8ff4745d351ef58b3cfa0e94b231b4ef298465b6c44074ec8",
+      "source_type": "json"
+    },
+    {
+      "experiment_id": "source_blocker_ledger",
+      "path": "results/source_blocker_ledger.json",
+      "present": true,
+      "readable_json_object": true,
+      "required": false,
+      "role": "capstone_input_artifact",
+      "sha256": "70d8cf5c1a9f30594b6e3504fa21da702e1f30954a7152d662a1ea70804afc7e",
+      "source_type": "json"
+    },
+    {
+      "experiment_id": "source_fr11",
+      "path": "results/source_fr11.json",
+      "present": true,
+      "readable_json_object": true,
+      "required": false,
+      "role": "capstone_input_artifact",
+      "sha256": "0f6b54922b1794ddc13dd4ca579bbcf6c1ccfcd33bed151d54b3c954b7df43c6",
+      "source_type": "json"
+    },
+    {
+      "experiment_id": "source_ebt_arm",
+      "path": "results/source_ebt_arm.json",
+      "present": true,
+      "readable_json_object": true,
+      "required": false,
+      "role": "capstone_input_artifact",
+      "sha256": "1d546b61a1ec16abfbbcfa2b03528987a215b16781a958a8e1faf1bf9e2a30c0",
+      "source_type": "json"
+    },
+    {
+      "experiment_id": "source_gatemate_ssqa",
+      "path": "results/source_gatemate_ssqa.json",
+      "present": true,
+      "readable_json_object": true,
+      "required": false,
+      "role": "capstone_input_artifact",
+      "sha256": "57a3f14c150ced718e56247e44d3d9069e9bad18c9c4f5ea03a3769a4aaa24b0",
+      "source_type": "json"
+    }
+  ],
+  "source_artifacts_loaded": {
+    "missing_or_malformed": 0,
+    "named_by_matrix_v22": 6,
+    "present": 6,
+    "readable_json_object": 6
+  },
+  "source_checksums": {
+    "results/experiment_3093_cross_corpus_matrix_v22.json": "2eacb6bdef8ebe7e3be671821531ac5df61d56ca1eef80e84c06f00a3b6048a0",
+    "results/source_blocker_ledger.json": "70d8cf5c1a9f30594b6e3504fa21da702e1f30954a7152d662a1ea70804afc7e",
+    "results/source_capstone_v287.json": "7e038d329ecb14b8ff4745d351ef58b3cfa0e94b231b4ef298465b6c44074ec8",
+    "results/source_ebt_arm.json": "1d546b61a1ec16abfbbcfa2b03528987a215b16781a958a8e1faf1bf9e2a30c0",
+    "results/source_fr11.json": "0f6b54922b1794ddc13dd4ca579bbcf6c1ccfcd33bed151d54b3c954b7df43c6",
+    "results/source_gatemate_ssqa.json": "57a3f14c150ced718e56247e44d3d9069e9bad18c9c4f5ea03a3769a4aaa24b0"
+  },
+  "ssqa_status": "clean_host_visible_readback_ready",
+  "status_movement_from_v21": {
+    "blocker_decreases": [
+      {
+        "count": 2,
+        "ledger_category": "fr11_budget",
+        "reason": "controller-only FR-11 gates passed",
+        "row_ids": [
+          "fr11-a",
+          "fr11-b"
+        ]
+      }
+    ],
+    "blocker_delta_from_v21": -9,
+    "blocker_increases": [],
+    "fr11_controller_only_rows_moved": [
+      "fr11-a",
+      "fr11-b"
+    ],
+    "publication_blocker_count_after": 0,
+    "publication_blocker_count_before": 9
+  },
+  "status_updates_written": false,
+  "verifier_gain_status": "clean_verifier_gain_exact_grounded"
+}

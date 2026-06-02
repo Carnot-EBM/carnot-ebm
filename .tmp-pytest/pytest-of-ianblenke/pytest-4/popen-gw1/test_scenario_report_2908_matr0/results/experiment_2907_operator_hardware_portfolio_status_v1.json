@@ -1,0 +1,26 @@
+{
+  "honest_verdict": "complete: operator_hardware_portfolio_status_aggregated",
+  "inference_substrate": "aggregation_from_upstream_artifacts",
+  "per_board_status": {
+    "gatemate": {
+      "last_artifact": "results/experiment_2899_gatemate_a1_n16_ising_tile_bitstream_build_v1.json",
+      "next_step": "Provision nextpnr-gatemate, rerun build, do not flash until bitstream exists.",
+      "state": "blocked_gatemate_toolchain_missing"
+    },
+    "kv260": {
+      "last_artifact": "results/experiment_2898_kv260_ising_sampler_hardware_latency_benchmark_v1.json",
+      "next_step": "Add same-basis CPU baseline before speedup claims.",
+      "state": "ready_live_latency_recorded"
+    },
+    "polarfire": {
+      "last_artifact": "results/experiment_2900_polarfire_carnot_dispatch_smoke_v1.json",
+      "next_step": "Treat as CPU-dispatch proof; fabric acceleration remains separate.",
+      "state": "ready_riscv64_cpu_dispatch_verified"
+    },
+    "thrml": {
+      "last_artifact": "results/experiment_2901_thrml_local_import_repair_v1.json",
+      "next_step": "Use import/parity evidence; require TSU access before hardware claims.",
+      "state": "ready_software_parity_no_tsu_claim"
+    }
+  }
+}

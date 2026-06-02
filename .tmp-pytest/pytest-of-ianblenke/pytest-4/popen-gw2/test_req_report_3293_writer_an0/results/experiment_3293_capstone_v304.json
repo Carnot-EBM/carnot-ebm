@@ -1,0 +1,163 @@
+{
+  "artifact": "experiment_3293_capstone_v304",
+  "blocker_delta_from_v303": -95,
+  "capstone_v304_ready": true,
+  "clean_verifier_abstention_unblocked": true,
+  "duration_s": 1.5,
+  "experiment_id": "exp3293",
+  "fr11_memory_replay_safe": true,
+  "garak_gate_passed": false,
+  "garak_unblocked": true,
+  "gate_status_details": {
+    "clean_verifier": {
+      "abstention_rate": 0.0,
+      "clean_verifier_rerun_ready": true,
+      "ready": true,
+      "repair_gate_input_clean_enough": true,
+      "status": "clean"
+    },
+    "fr11": {
+      "controller_memory_only": true,
+      "foundation_weight_updates_performed": false,
+      "ready": true,
+      "status": "clean"
+    },
+    "garak_redteam": {
+      "blocker_reasons": [
+        "garak_attack_success_or_error_gate_failed"
+      ],
+      "dataflip_gate_passed": true,
+      "garak_gate_passed": false,
+      "garak_redteam_eval_ready": true,
+      "ready": true,
+      "status": "blocked"
+    },
+    "garak_toolchain": {
+      "garak_available": true,
+      "garak_runner_ready": true,
+      "ready": true,
+      "status": "clean"
+    },
+    "kan_boundary": {
+      "kan_boundary_decision": "retire_from_prompt_injection_headline",
+      "kan_boundary_decision_ready": true,
+      "ready": true,
+      "status": "sidecar-only"
+    },
+    "repair_gate": {
+      "ready": true,
+      "repair_gate_open": true,
+      "status": "clean"
+    },
+    "repair_panel": {
+      "headline_claim_allowed": false,
+      "ready": true,
+      "repair_panel_ran": true,
+      "status": "flagged"
+    }
+  },
+  "honest_verdict": "complete: capstone_v304_ready=true; paper_ready=false; publication_blocker_count=10; blocker_delta_from_v303=-95; garak_unblocked=true; garak_gate_passed=false; clean_verifier_abstention_unblocked=true; kan_boundary_resolved=true; repair_gate_open=true; fr11_memory_replay_safe=true; next_top_gap=pass_garak_redteam_gate",
+  "inference_substrate": "artifact_aggregation_only",
+  "kan_boundary_decision": "retire_from_prompt_injection_headline",
+  "kan_boundary_resolved": true,
+  "matrix_v36_summary": {
+    "honest_verdict": "complete: matrix_v36_ready=true; paper_ready=false",
+    "matrix_v36_ready": true,
+    "paper_blocker_count": 10,
+    "paper_ready": false,
+    "top_gap": "pass_garak_redteam_gate"
+  },
+  "milestone": "2026.05.304",
+  "next_top_gap": "pass_garak_redteam_gate",
+  "no_conductor_execution": true,
+  "no_external_submission_or_publication": true,
+  "no_new_cuda_probe": true,
+  "no_new_garak_run": true,
+  "no_new_hardware_run": true,
+  "no_new_kan_training": true,
+  "no_new_model_execution": true,
+  "no_new_repair_run": true,
+  "no_new_teacher_labeling": true,
+  "no_new_verifier_run": true,
+  "no_next_milestone_activation": true,
+  "no_push": true,
+  "ops_changelog_modified_by_this_task": false,
+  "ops_status_modified_by_this_task": false,
+  "paper_ready": false,
+  "paper_ready_blockers": [
+    "matrix_paper_ready_false",
+    "publication_blockers_present",
+    "carried_forward_dot303_blockers_present",
+    "blocked_or_flagged_or_sidecar_rows_present",
+    "garak_gate_not_passed",
+    "repair_micro_panel_not_headline_eligible"
+  ],
+  "principle_annotations": {
+    "aggregation_only": "Capstone v304 reads matrix v36 and the .303 capstone only.",
+    "blocker_delta": "Blocker movement is compared to the .303 capstone count.",
+    "garak": "Garak availability and Garak gate success are separated so runnable does not imply safe.",
+    "paper_ready": "Publication requires clean, unblocked, headline-eligible evidence, not just completed artifacts.",
+    "protected_files": "Roadmap and conductor files stay untouched during closeout.",
+    "repair": "Repair gate reopening is separated from headline-eligible repair evidence."
+  },
+  "prior_capstone_summary": {
+    "capstone_v303_ready": true,
+    "honest_verdict": "complete: capstone_v303_ready=true; paper_ready=false",
+    "next_top_gap": "unblock_garak_redteam_eval",
+    "paper_ready": false,
+    "publication_blocker_count": 105
+  },
+  "prior_milestone": "2026.05.303",
+  "prior_publication_blocker_count": 105,
+  "protected_file_status": {
+    "research-roadmap.yaml": {
+      "git_status_available": true,
+      "modified": false,
+      "status": ""
+    },
+    "scripts/research_conductor.py": {
+      "git_status_available": true,
+      "modified": false,
+      "status": ""
+    }
+  },
+  "protected_files_untouched": true,
+  "publication_blocker_count": 10,
+  "random_seed": 3293,
+  "recommended_next_milestone_title": "Garak Red-Team Gate Pass + Headline-Eligible Repair Evidence",
+  "repair_gate_open": true,
+  "repair_micro_panel_headline_eligible": false,
+  "repair_micro_panel_ready": true,
+  "reproducibility_checksum": "f84530f7d1b9b7dea7c545d7bd97b8267dbc975fe9560ca5475c206b5ef26b9f",
+  "research_roadmap_modified_by_this_task": false,
+  "run_date": "20260528",
+  "schema": "carnot.milestone_capstone.v304_matrix_v36_closeout.v1",
+  "schema_version": "carnot.milestone_capstone.v304_matrix_v36_closeout.v1",
+  "scripts_research_conductor_modified_by_this_task": false,
+  "source_artifacts": [
+    {
+      "honest_verdict": "complete: matrix_v36_ready=true; paper_ready=false",
+      "path": "results/experiment_3292_evidence_matrix_v36.json",
+      "present": true,
+      "readable_json_object": true,
+      "reported_experiment_id": "exp3292",
+      "role": "evidence_matrix_v36",
+      "sha256": "a154f298e8727d714a3d72f5252011770005be27d03312f07d1d2937c9eb32ac"
+    },
+    {
+      "honest_verdict": "complete: capstone_v303_ready=true; paper_ready=false",
+      "path": "results/experiment_3280_capstone_v303.json",
+      "present": true,
+      "readable_json_object": true,
+      "reported_experiment_id": "exp3280",
+      "role": "prior_capstone_v303",
+      "sha256": "f5a2bb32edd3e8163ddaf3d37c281474a2c6d74a401f4721f1901428f09904b4"
+    }
+  ],
+  "source_checksums": {
+    "results/experiment_3280_capstone_v303.json": "f5a2bb32edd3e8163ddaf3d37c281474a2c6d74a401f4721f1901428f09904b4",
+    "results/experiment_3292_evidence_matrix_v36.json": "a154f298e8727d714a3d72f5252011770005be27d03312f07d1d2937c9eb32ac"
+  },
+  "task_id": "exp3293-capstone-v304",
+  "traceability_modified_by_this_task": false
+}

@@ -1,0 +1,67 @@
+{
+  "acceptance_gate": {
+    "condition": "template_robust_or_graceful_fallback == true AND collapse_detected_deploy_arm == false AND template_library_bounded == true AND pass_rate_vs_true_accuracy_distinct_assert == true",
+    "passed": false,
+    "principle": "Distribution-shift robustness is validated only when the template helps OR falls back gracefully, no deploy collapse is detected, the library stays bounded, and the two metrics are distinct."
+  },
+  "adversarial_verify": "clean",
+  "artifact": "experiment_3720_fr11_continuous_self_learning_v14",
+  "cold_start_auroc_under_shift": 0.0,
+  "collapse_detected_deploy_arm": false,
+  "conservative_fallback_triggered": false,
+  "deploy_arm_auroc_under_shift": 0.0,
+  "duration_s": 1.0,
+  "field_principles": {
+    "cold_start_auroc_under_shift": "Cold-start ensemble AUROC on the shifted session -- the control.",
+    "collapse_detected_deploy_arm": "The conservative-default rule must prevent weight collapse under shift (alpha_t grounding).",
+    "conservative_fallback_triggered": "Records whether the conservative-default rule detected the shift and fell back -- the alpha_t-grounding safety behaviour.",
+    "deploy_arm_auroc_under_shift": "Consolidated-template ensemble AUROC on the shifted session.",
+    "duration_s": "Plausibility floor.",
+    "honest_verdict": "Terminal prefix for reconciler classification.",
+    "inference_substrate": "verifier_ensemble_against_cached_candidates (principle: scores cached traces; no LLM load; no compute-bound marker).",
+    "n_online_updates": "Sample-size of the self-learning sweep (>=200).",
+    "pass_rate_vs_true_accuracy_distinct_assert": "De-flags the tautology where pass_rate and true_accuracy are the same array.",
+    "random_seed": "Determinism precondition.",
+    "reproducibility_checksum": "Drift detection.",
+    "shifted_session_source": "The DIFFERENT slice used as the OOD fresh session -- the v14 forward difference.",
+    "template_library_bounded": "True iff the template library stays under its size cap.",
+    "template_robust_or_graceful_fallback": "BARE bool. True iff deploy beats cold-start under shift OR falls back gracefully (>= cold-start, no collapse). STORE AS BARE true/false."
+  },
+  "honest_verdict": "complete: blocked_fr11_module_or_shifted_slice_unavailable",
+  "inference_substrate": "verifier_ensemble_against_cached_candidates (principle: scores cached traces; no LLM load; no compute-bound marker).",
+  "n_online_updates": 0,
+  "pass_rate_vs_true_accuracy_distinct_assert": false,
+  "preconditions_checked": [
+    {
+      "available": false,
+      "detail": "/home/ianblenke/github.com/ianblenke/carnot/.tmp-pytest/pytest-of-ianblenke/pytest-4/popen-gw1/test_req_learn_3720_build_arti0/auto_blocked_root/python/carnot/fr11",
+      "resource": "fr11_module"
+    },
+    {
+      "available": false,
+      "detail": "/home/ianblenke/github.com/ianblenke/carnot/.tmp-pytest/pytest-of-ianblenke/pytest-4/popen-gw1/test_req_learn_3720_build_arti0/auto_blocked_root/results/experiment_3708_fr11_v13_template_library.json",
+      "resource": "v13_template_library"
+    },
+    {
+      "available": true,
+      "detail": "fixture",
+      "resource": "cached_traces_with_per_verifier_scores_and_labels"
+    }
+  ],
+  "random_seed": 3720,
+  "reproducibility_checksum": "7c6f4bca40a2953540950d3aaf28ffba3f6c3b7d87046b2075a217c79d24aa5f",
+  "schema": "carnot.fr11_continuous_self_learning_v14",
+  "shifted_session_source": "blocked_shifted_slice_unavailable",
+  "template_library_bounded": false,
+  "template_robust_or_graceful_fallback": false,
+  "template_vs_cold_delta_ci": {
+    "bootstrap_seeds": [],
+    "ci95": [
+      0.0,
+      0.0
+    ],
+    "n_bootstrap_per_seed": 0,
+    "point": 0.0,
+    "seed_mean_deltas": []
+  }
+}

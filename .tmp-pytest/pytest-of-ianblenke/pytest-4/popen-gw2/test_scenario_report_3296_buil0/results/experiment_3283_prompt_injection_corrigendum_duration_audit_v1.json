@@ -1,0 +1,52 @@
+{
+  "corrigendum_ready": true,
+  "downstream_usage_rules": {
+    "garak": {
+      "allowed": true,
+      "rule": "rerun real Garak"
+    },
+    "kan": {
+      "allowed": true,
+      "headline_allowed": false
+    },
+    "paper_claims": {
+      "headline_performance_metrics_allowed": false
+    },
+    "repair": {
+      "allowed": false,
+      "headline_allowed": false
+    }
+  },
+  "experiment_id": "exp3283",
+  "headline_eligible_metrics": [
+    {
+      "boundary": "integrity claim only",
+      "metric": "artifact_checksums_available",
+      "source_experiment_id": "exp3272",
+      "value": true
+    },
+    {
+      "boundary": "split leakage boundary only",
+      "metric": "split_leakage_boundary",
+      "source_experiment_id": "exp3272",
+      "value": {
+        "leakage_audit_passed": true
+      }
+    }
+  ],
+  "honest_verdict": "complete: corrigendum ready",
+  "provisional_or_sidecar_metrics": [
+    {
+      "boundary": "operational inventory only because count flags remain",
+      "metric": "assembled_example_count",
+      "source_experiment_id": "exp3272",
+      "value": 15000
+    },
+    {
+      "boundary": "KAN sidecar only; DeLong non-inferiority failed",
+      "metric": "full_corpus_auroc",
+      "source_experiment_id": "exp3273",
+      "value": 0.475326
+    }
+  ]
+}

@@ -1,0 +1,272 @@
+{
+  "adapter_implementation_claimed": false,
+  "adapter_surface": [
+    {
+      "claim_boundary": "Protocol exists; no adapter implementation is claimed.",
+      "classification": "near_term_adapter_opportunity",
+      "current_role": "Shared scalar energy, batch energy, and grad_energy contract.",
+      "future_adapter_use": "Host a composite EBT/ARM energy behind the same EnergyFunction protocol.",
+      "local_evidence_present": true,
+      "path": "python/carnot/core/energy.py",
+      "spec_refs": [
+        "REQ-CORE-002",
+        "SCENARIO-CORE-003",
+        "REQ-VERIFY-3073"
+      ],
+      "surface": "core_energy_protocol"
+    },
+    {
+      "claim_boundary": "Pipeline hook exists; no EBT/ARM hook is wired here by this audit.",
+      "classification": "near_term_adapter_opportunity",
+      "current_role": "User-facing extraction, verification, certificate, and repair loop.",
+      "future_adapter_use": "Expose EBT/ARM energy as an additive verifier signal or candidate reranker.",
+      "local_evidence_present": true,
+      "path": "python/carnot/pipeline/verify_repair.py",
+      "spec_refs": [
+        "REQ-VERIFY-001",
+        "REQ-VERIFY-003",
+        "REQ-VERIFY-3073"
+      ],
+      "surface": "verify_repair_pipeline"
+    },
+    {
+      "claim_boundary": "Logprob energy is confidence telemetry, not correctness proof.",
+      "classification": "near_term_adapter_opportunity",
+      "current_role": "Converts logits or logprobs into token rewards and sequence energy.",
+      "future_adapter_use": "Provide an ARM-EBM confidence-energy feature for candidate scoring.",
+      "local_evidence_present": true,
+      "path": "python/carnot/inference/arm_ebm_bridge.py",
+      "spec_refs": [
+        "REQ-VERIFY-3073"
+      ],
+      "surface": "arm_logprob_energy_bridge"
+    },
+    {
+      "claim_boundary": "Bridge shape exists; trained local EBT reasoning quality is not claimed.",
+      "classification": "near_term_adapter_opportunity",
+      "current_role": "Adapts continuous candidate embeddings to an EBT energy call.",
+      "future_adapter_use": "Map candidate latent states into the common energy interface.",
+      "local_evidence_present": true,
+      "path": "python/carnot/models/ebt_reasoning_bridge.py",
+      "spec_refs": [
+        "REQ-NRGPT-002",
+        "REQ-VERIFY-3073"
+      ],
+      "surface": "ebt_reasoning_bridge"
+    },
+    {
+      "claim_boundary": "Loop exists; it is not wired to verifier candidates by this audit.",
+      "classification": "near_term_adapter_opportunity",
+      "current_role": "Minimal gradient descent loop over a continuous energy state.",
+      "future_adapter_use": "Prototype bounded latent refinement after offline scoring gates pass.",
+      "local_evidence_present": true,
+      "path": "python/carnot/models/ebt_gradient_refinement.py",
+      "spec_refs": [
+        "REQ-EBT-1742-1",
+        "REQ-VERIFY-3073"
+      ],
+      "surface": "ebt_gradient_refinement_loop"
+    },
+    {
+      "claim_boundary": "Template reasoning energy is not a general EBT/Kona implementation.",
+      "classification": "near_term_adapter_opportunity",
+      "current_role": "Embeds reasoning text and scores/refines it with Gibbs energy.",
+      "future_adapter_use": "Supply a deterministic fixture embedding path for first offline adapter tests.",
+      "local_evidence_present": true,
+      "path": "python/carnot/inference/reasoning_energy.py",
+      "spec_refs": [
+        "REQ-VERIFY-3073"
+      ],
+      "surface": "reasoning_energy_embedding_path"
+    }
+  ],
+  "artifact": "experiment_3073_ebt_arm_ebm_adapter_feasibility_audit_v1",
+  "blockers": [
+    "No checked-in EBT/ARM adapter currently wires these surfaces into VerifyRepairPipeline.",
+    "No canonical adapter data shape currently binds token logprobs, latent states, and certificates.",
+    "ARM logprob energy is a confidence signal and cannot be treated as correctness evidence alone.",
+    "Current EBT bridge/refinement code does not provide a calibrated verifier objective for real traces.",
+    "This audit did not run live model inference, generation, gradient refinement, or verifier scoring."
+  ],
+  "bounded_theory_context_only": false,
+  "duration_s": 0.5,
+  "ebt_arm_adapter_feasibility_ready": true,
+  "ebt_arm_adapter_feasible": true,
+  "honest_verdict": "complete: ebt_arm_adapter_future_path_feasible_with_prerequisites_no_implementation_claim",
+  "inference_substrate": {
+    "generation_performed": false,
+    "gpu_required": false,
+    "kind": "static_local_code_and_literature_audit",
+    "live_llm_inference": false,
+    "live_model_inference": false,
+    "model_weights_loaded": false,
+    "verifier_scoring_performed": false
+  },
+  "methodology_note": "Static local-code and literature audit only; no live model inference, no adapter wiring, no model weight loading, and no generation or verifier scoring was performed.",
+  "near_term_adapter_opportunities": [
+    {
+      "first_test": "fixture candidate rows with exact labels and no live generation",
+      "implementation_boundary": "Protocol exists; no adapter implementation is claimed.",
+      "surface": "core_energy_protocol"
+    },
+    {
+      "first_test": "fixture candidate rows with exact labels and no live generation",
+      "implementation_boundary": "Pipeline hook exists; no EBT/ARM hook is wired here by this audit.",
+      "surface": "verify_repair_pipeline"
+    },
+    {
+      "first_test": "fixture candidate rows with exact labels and no live generation",
+      "implementation_boundary": "Logprob energy is confidence telemetry, not correctness proof.",
+      "surface": "arm_logprob_energy_bridge"
+    },
+    {
+      "first_test": "fixture candidate rows with exact labels and no live generation",
+      "implementation_boundary": "Bridge shape exists; trained local EBT reasoning quality is not claimed.",
+      "surface": "ebt_reasoning_bridge"
+    },
+    {
+      "first_test": "fixture candidate rows with exact labels and no live generation",
+      "implementation_boundary": "Loop exists; it is not wired to verifier candidates by this audit.",
+      "surface": "ebt_gradient_refinement_loop"
+    },
+    {
+      "first_test": "fixture candidate rows with exact labels and no live generation",
+      "implementation_boundary": "Template reasoning energy is not a general EBT/Kona implementation.",
+      "surface": "reasoning_energy_embedding_path"
+    }
+  ],
+  "paper_context_only_references": [
+    {
+      "claim_boundary": "context_only_not_local_implementation",
+      "id": "arXiv:2507.02092",
+      "topic": "Energy-Based Transformers"
+    },
+    {
+      "claim_boundary": "context_only_not_local_implementation",
+      "id": "arXiv:2512.15605",
+      "topic": "Autoregressive language models as EBMs"
+    },
+    {
+      "claim_boundary": "context_only_not_local_implementation",
+      "id": "arXiv:2605.11011",
+      "topic": "LoopUS latent recurrence"
+    },
+    {
+      "claim_boundary": "context_only_not_local_implementation",
+      "id": "Logical Intelligence Kona public material",
+      "topic": "Kona-style public EBM reasoning positioning"
+    }
+  ],
+  "recommended_next_experiment": "Build an offline fixture adapter over 6-12 exact solver rows: normalize candidate text, verifier certificates, optional token logprobs, and optional latent embeddings; compare constraint-only ranking against a composite constraint+ARM energy score before attempting EBT latent refinement.",
+  "required_prerequisites": [
+    {
+      "gate": "data_shape",
+      "requirement": "A checked-in AdapterExample schema with prompt, candidate_text, verifier certificate, exact label, optional token_logprobs, optional latent vector, model identity, and source artifact provenance."
+    },
+    {
+      "gate": "energy_objective",
+      "requirement": "A predeclared composite energy with calibrated weights for deterministic constraint energy, ARM sequence energy, and optional EBT latent compatibility."
+    },
+    {
+      "gate": "verifier_interface",
+      "requirement": "A sidecar verifier callable that returns scalar energy, confidence, per-term decomposition, violations, and abstention/rollback metadata."
+    },
+    {
+      "gate": "sampling_path",
+      "requirement": "Offline replay and candidate reranking first; only then bounded Langevin latent refinement with fixed seeds, step budget, and no hidden model mutation."
+    },
+    {
+      "gate": "evaluation_metric",
+      "requirement": "Held-out exact-solver or execution labels with AUROC/ranking lift, abstention precision, rejection recall, repair yield, and false-accept rate."
+    },
+    {
+      "gate": "rollback_claim_boundaries",
+      "requirement": "Feature flag, no model-weight mutation, explicit fallback to existing verifiers, and no implementation claim until local code and tests cover it."
+    }
+  ],
+  "run_date": "20260525",
+  "schema": "carnot.ebt_arm_ebm_adapter_feasibility_audit.v1",
+  "source_refs": [
+    {
+      "claim_boundary": "repo_instruction",
+      "id": "CODEX.md",
+      "kind": "local_workflow",
+      "path": "CODEX.md"
+    },
+    {
+      "claim_boundary": "local_architecture_context",
+      "id": "_bmad/architecture.md",
+      "kind": "local_architecture",
+      "path": "_bmad/architecture.md"
+    },
+    {
+      "claim_boundary": "literature_context",
+      "id": "research-references.md",
+      "kind": "local_literature_sweep",
+      "path": "research-references.md"
+    },
+    {
+      "claim_boundary": "Protocol exists; no adapter implementation is claimed.",
+      "id": "core_energy_protocol",
+      "kind": "local_code",
+      "path": "python/carnot/core/energy.py"
+    },
+    {
+      "claim_boundary": "Pipeline hook exists; no EBT/ARM hook is wired here by this audit.",
+      "id": "verify_repair_pipeline",
+      "kind": "local_code",
+      "path": "python/carnot/pipeline/verify_repair.py"
+    },
+    {
+      "claim_boundary": "Logprob energy is confidence telemetry, not correctness proof.",
+      "id": "arm_logprob_energy_bridge",
+      "kind": "local_code",
+      "path": "python/carnot/inference/arm_ebm_bridge.py"
+    },
+    {
+      "claim_boundary": "Bridge shape exists; trained local EBT reasoning quality is not claimed.",
+      "id": "ebt_reasoning_bridge",
+      "kind": "local_code",
+      "path": "python/carnot/models/ebt_reasoning_bridge.py"
+    },
+    {
+      "claim_boundary": "Loop exists; it is not wired to verifier candidates by this audit.",
+      "id": "ebt_gradient_refinement_loop",
+      "kind": "local_code",
+      "path": "python/carnot/models/ebt_gradient_refinement.py"
+    },
+    {
+      "claim_boundary": "Template reasoning energy is not a general EBT/Kona implementation.",
+      "id": "reasoning_energy_embedding_path",
+      "kind": "local_code",
+      "path": "python/carnot/inference/reasoning_energy.py"
+    },
+    {
+      "claim_boundary": "context_only_not_local_implementation",
+      "id": "arXiv:2507.02092",
+      "topic": "Energy-Based Transformers"
+    },
+    {
+      "claim_boundary": "context_only_not_local_implementation",
+      "id": "arXiv:2512.15605",
+      "topic": "Autoregressive language models as EBMs"
+    },
+    {
+      "claim_boundary": "context_only_not_local_implementation",
+      "id": "arXiv:2605.11011",
+      "topic": "LoopUS latent recurrence"
+    },
+    {
+      "claim_boundary": "context_only_not_local_implementation",
+      "id": "Logical Intelligence Kona public material",
+      "topic": "Kona-style public EBM reasoning positioning"
+    }
+  ],
+  "spec_refs": [
+    "REQ-VERIFY-3073",
+    "SCENARIO-VERIFY-3073"
+  ],
+  "tests_or_checks_run": [
+    "pytest focused"
+  ]
+}

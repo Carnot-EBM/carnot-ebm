@@ -1,0 +1,300 @@
+{
+  "artifact": "experiment_3076_fr11_online_soundness_completeness_budget_v1",
+  "completeness_mistake_definition": {
+    "count_key": "completeness_mistakes",
+    "decision_under_audit": "controller_reject_or_abstain",
+    "independent_exact_authority_required": true,
+    "measurement_source": "exp3077_exact_authority_replay",
+    "mistake_type": "completeness",
+    "rate_key": "completeness_mistake_rate",
+    "rollback_trigger": {
+      "action": "rollback_candidate_update",
+      "comparison": ">",
+      "name": "completeness_budget_exhausted",
+      "threshold_key": "max_completeness_mistakes",
+      "trigger_key": "completeness_mistakes"
+    },
+    "severity": "promotion_blocking",
+    "unsafe_condition": "independent_exact_authority_accepts_candidate"
+  },
+  "continuous_self_learning_task": true,
+  "contradiction_mistake_definition": {
+    "count_key": "contradiction_mistakes",
+    "decision_under_audit": "candidate_controller_update",
+    "measurement_source": "exp3077_contradiction_graph_replay",
+    "mistake_type": "contradiction",
+    "rate_key": "contradiction_mistake_rate",
+    "rollback_trigger": {
+      "action": "rollback_candidate_update",
+      "comparison": ">",
+      "name": "contradiction_budget_exhausted",
+      "threshold_key": "max_contradiction_mistakes",
+      "trigger_key": "contradiction_mistakes"
+    },
+    "severity": "promotion_blocking",
+    "unsafe_condition": "candidate_update_increases_exact_contradiction_rate"
+  },
+  "delayed_regression_window": {
+    "evaluation_required": true,
+    "max_allowed_mistakes": 0,
+    "metric_name": "delayed_regression_mistakes",
+    "min_delay_cycles": 1,
+    "min_replay_case_count": 1,
+    "replay_case_source": "exp3061.split_report.delayed_regression_ids",
+    "rollback_trigger": {
+      "action": "rollback_candidate_update",
+      "comparison": ">",
+      "name": "delayed_regression_budget_exhausted",
+      "threshold_key": "max_delayed_regressions",
+      "trigger_key": "delayed_regressions"
+    },
+    "source_metric": "exp3061.delayed_regression_delta",
+    "window_id": "exp3077_delayed_regression_replay_v1"
+  },
+  "duration_s": 0.000219,
+  "field_principles": {
+    "completeness_mistake_definition": "unsafe rejects/abstentions must be defined",
+    "continuous_self_learning_task": "milestone self-learning requirement must be explicit",
+    "delayed_regression_window": "delayed failures must be measurable",
+    "forbidden_claims": "controller learning must not imply model-weight learning",
+    "honest_verdict": "terminal verdict must start with a success prefix unless blocked",
+    "inference_substrate": "protocol work must declare no live model inference",
+    "mistake_budget": "promotion gates must be numeric",
+    "required_controls": "learning must beat no-feedback and shuffled-feedback controls",
+    "soundness_completeness_budget_ready": "FR-11 online learning needs explicit safety accounting",
+    "soundness_mistake_definition": "unsafe accepts must be defined",
+    "source_artifacts": "protocol must trace to prior evidence"
+  },
+  "forbidden_claims": [
+    "model-weight self-learning, model-weight mutation, or native model retraining",
+    "autonomous production self-modification or deployment without human release gates",
+    "native KAN integration, KAN model-weight training, or KAN structural learning",
+    "native EBT integration, EBT model training, or live EBT inference",
+    "live LLM inference, live model adaptation, or local GGUF inference in Exp 3076",
+    "production self-learning promotion without exact soundness/completeness accounting"
+  ],
+  "honest_verdict": "complete_fr11_soundness_completeness_budget_ready",
+  "inference_substrate": {
+    "cached_artifacts_only": true,
+    "controller_weight_update": false,
+    "live_llm_inference": false,
+    "live_model_inference": false,
+    "local_gguf_inference": false,
+    "mode": "cached_artifact_protocol_definition",
+    "model_weight_mutation": false,
+    "model_weight_training": false,
+    "protocol_work_only": true,
+    "trace_memory_update": false,
+    "training_scope": "none_protocol_definition_only"
+  },
+  "mistake_budget": {
+    "max_completeness_mistakes": 0,
+    "max_contradiction_mistakes": 0,
+    "max_delayed_regressions": 0,
+    "max_soundness_mistakes": 0,
+    "no_feedback_max_delta": 0.0,
+    "pilot_id": "exp3077_tiny_online_controller_pilot",
+    "prior_retention_floor": 1.0,
+    "shuffled_feedback_max_delta": 0.0
+  },
+  "prior_artifact_claims_summary": {
+    "all_sources_controller_only": true,
+    "flagged_source_experiments": [
+      "exp3046",
+      "exp3061"
+    ],
+    "interpretation": "Exp 3076 defines accounting only. Flagged prior artifacts may justify a stricter protocol, but they do not justify model-weight learning, native KAN/EBT integration, or production self-modification claims.",
+    "out_of_scope_claims": [
+      "autonomous_production_self_modification",
+      "base_model_weight_mutation",
+      "live_model_inference",
+      "model_weight_self_learning",
+      "native_ebt_integration",
+      "native_kan_integration"
+    ],
+    "usable_claims": [
+      "controller_side_protocol_evidence",
+      "cached_exact_solver_feedback_accounting",
+      "delayed_regression_control_requirements"
+    ]
+  },
+  "required_controls": [
+    {
+      "budget_key": "no_feedback_max_delta",
+      "metric_key": "no_feedback_delta",
+      "name": "no_feedback_control",
+      "promotion_rule": "learning_delta_must_exceed_control",
+      "required": true
+    },
+    {
+      "budget_key": "shuffled_feedback_max_delta",
+      "metric_key": "shuffled_feedback_delta",
+      "name": "shuffled_feedback_control",
+      "promotion_rule": "learning_delta_must_exceed_control",
+      "required": true
+    },
+    {
+      "budget_key": "prior_retention_floor",
+      "metric_key": "prior_retention_score",
+      "name": "prior_retention_floor",
+      "promotion_rule": "retention_score_must_meet_floor",
+      "required": true
+    }
+  ],
+  "rollback_triggers": [
+    {
+      "action": "rollback_candidate_update",
+      "comparison": ">",
+      "name": "soundness_budget_exhausted",
+      "threshold_key": "max_soundness_mistakes",
+      "trigger_key": "soundness_mistakes"
+    },
+    {
+      "action": "rollback_candidate_update",
+      "comparison": ">",
+      "name": "completeness_budget_exhausted",
+      "threshold_key": "max_completeness_mistakes",
+      "trigger_key": "completeness_mistakes"
+    },
+    {
+      "action": "rollback_candidate_update",
+      "comparison": ">",
+      "name": "delayed_regression_budget_exhausted",
+      "threshold_key": "max_delayed_regressions",
+      "trigger_key": "delayed_regressions"
+    },
+    {
+      "action": "rollback_candidate_update",
+      "comparison": ">",
+      "name": "contradiction_budget_exhausted",
+      "threshold_key": "max_contradiction_mistakes",
+      "trigger_key": "contradiction_mistakes"
+    },
+    {
+      "action": "rollback_candidate_update",
+      "comparison": ">",
+      "name": "control_failure",
+      "threshold_key": "control_max_delta",
+      "trigger_key": "control_delta"
+    },
+    {
+      "action": "rollback_candidate_update",
+      "comparison": "<",
+      "name": "prior_retention_floor_breach",
+      "threshold_key": "prior_retention_floor",
+      "trigger_key": "prior_retention_score"
+    }
+  ],
+  "run_date": "20260525",
+  "schema": "carnot.fr11.online_soundness_completeness_budget.v1",
+  "soundness_completeness_budget_ready": true,
+  "soundness_mistake_definition": {
+    "count_key": "soundness_mistakes",
+    "decision_under_audit": "controller_accept",
+    "independent_exact_authority_required": true,
+    "measurement_source": "exp3077_exact_authority_replay",
+    "mistake_type": "soundness",
+    "rate_key": "soundness_mistake_rate",
+    "rollback_trigger": {
+      "action": "rollback_candidate_update",
+      "comparison": ">",
+      "name": "soundness_budget_exhausted",
+      "threshold_key": "max_soundness_mistakes",
+      "trigger_key": "soundness_mistakes"
+    },
+    "severity": "promotion_blocking",
+    "unsafe_condition": "independent_exact_authority_rejects_candidate"
+  },
+  "source_artifacts": [
+    {
+      "artifact": "experiment_3046_fr11_solver_feedback_self_learning_loop_v1",
+      "artifact_path": "results/experiment_3046_fr11_solver_feedback_self_learning_loop_v1.json",
+      "claim_classification": {
+        "controller_only": true,
+        "flagged_adversarial": true,
+        "out_of_scope": [
+          "model_weight_self_learning",
+          "autonomous_production_self_modification",
+          "native_kan_integration",
+          "native_ebt_integration",
+          "live_model_inference",
+          "base_model_weight_mutation"
+        ],
+        "status": "controller_only_flagged"
+      },
+      "evidence_type": "controller_solver_feedback_loop",
+      "ready": true,
+      "ready_field": "fr11_solver_feedback_ready",
+      "schema": "carnot.fr11.solver_feedback_self_learning_loop.v1",
+      "sha256": "71a6dcff1508fefa777c82d6d4e2635f636f1e0ea6395a45b224e952c0032d1a",
+      "source_experiment_id": "exp3046"
+    },
+    {
+      "artifact": "experiment_3060_fr11_solver_self_model_trace_schema_v1",
+      "artifact_path": "results/experiment_3060_fr11_solver_self_model_trace_schema_v1.json",
+      "claim_classification": {
+        "controller_only": true,
+        "flagged_adversarial": false,
+        "out_of_scope": [
+          "model_weight_self_learning",
+          "autonomous_production_self_modification",
+          "native_kan_integration",
+          "native_ebt_integration",
+          "live_model_inference",
+          "base_model_weight_mutation"
+        ],
+        "status": "controller_only_unflagged"
+      },
+      "evidence_type": "controller_trace_schema_protocol",
+      "ready": true,
+      "ready_field": "solver_self_model_trace_ready",
+      "schema": "carnot.fr11.solver_self_model_trace_schema.v1",
+      "sha256": "79c9762500537c65d2d56472eacb477993d39d584f2e797df86edeb882f759a5",
+      "source_experiment_id": "exp3060"
+    },
+    {
+      "artifact": "experiment_3061_fr11_delayed_regression_solver_self_model_pilot_v1",
+      "artifact_path": "results/experiment_3061_fr11_delayed_regression_solver_self_model_pilot_v1.json",
+      "claim_classification": {
+        "controller_only": true,
+        "flagged_adversarial": true,
+        "out_of_scope": [
+          "model_weight_self_learning",
+          "autonomous_production_self_modification",
+          "native_kan_integration",
+          "native_ebt_integration",
+          "live_model_inference",
+          "base_model_weight_mutation"
+        ],
+        "status": "controller_only_flagged"
+      },
+      "evidence_type": "controller_delayed_regression_pilot",
+      "ready": true,
+      "ready_field": "fr11_delayed_regression_ready",
+      "schema": "carnot.fr11.delayed_regression_solver_self_model_pilot.v1",
+      "sha256": "8cfa78d24eab50494b7fbd05ff7a47c474dd318fe0127ee4fa88efcbf28d0e7b",
+      "source_experiment_id": "exp3061"
+    }
+  ],
+  "tests_run": [
+    ".venv/bin/pytest tests/python/test_experiment_3076_fr11_online_soundness_completeness_budget_v1.py -q --no-cov -n0 -> passed: 6 passed",
+    "COVERAGE_FILE=/tmp/carnot_exp3076.coverage .venv/bin/coverage run -m pytest tests/python/test_experiment_3076_fr11_online_soundness_completeness_budget_v1.py -q --no-cov -n0 && coverage report --include='*/python/carnot/eval/fr11_online_soundness_completeness_budget_v1.py' --fail-under=100 -m -> passed: 100% new-code coverage",
+    "ruff check/format on Exp 3076 module, tests, script -> passed",
+    ".venv/bin/pytest tests/python -q -> failed: 20 failed, 7738 passed, 38 skipped, 1 error; unrelated xdist internal error in tests/python/test_experiment_295_apple_verify_repair.py::test_partial_artifact_has_stall_at hit tokenizer MemoryError",
+    ".venv/bin/python scripts/check_spec_coverage.py -> failed: 444 pre-existing tests missing spec references"
+  ],
+  "invariant_violations": [],
+  "flagged_adversarial": true,
+  "corrigendum_pending": [
+    {
+      "kind": "DURATION_TOO_SHORT",
+      "severity": "critical",
+      "detail": "duration_s=0.000219 but artifact references compute-bound markers (GGUF / CUDA / live model). Loading and running a real model takes >=60.0s minimum; this completed too fast to have invoked the model."
+    },
+    {
+      "kind": "METHODOLOGY_MISSING",
+      "severity": "warn",
+      "detail": "Compute-bound artifact missing: model_specs/target_model, random_seed, reproducibility_checksum. Methodology unverifiable."
+    }
+  ]
+}

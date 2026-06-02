@@ -1,0 +1,1559 @@
+{
+  "acceptance_gate": {
+    "condition": "energy_aurc present AND baseline_aurc present AND energy_aurc_ci present AND coverage_at_5pct_risk present AND adversarial_verify_clean == true",
+    "passed": true,
+    "principle": "A trustworthy abstention characterization requires the energy AND baseline risk-coverage curves with CI and a deployable operating point, adversarial-clean -- a single AUROC is not a selective-prediction verdict."
+  },
+  "adversarial_verify_clean": true,
+  "artifact": "experiment_3718_risk_coverage_abstention_characterization",
+  "aurc_delta_baseline_minus_energy": 0.688998,
+  "aurc_delta_ci": [
+    0.671928,
+    0.688862
+  ],
+  "baseline_aurc": 0.844499,
+  "baseline_aurc_ci": [
+    0.778457,
+    0.891658
+  ],
+  "baseline_auroc": 0.0,
+  "baseline_signal": {
+    "authenticity_gap": "FoVer cached rows expose scalar confidence, not token-level entropy; the proxy is disclosed and evaluated on row-aligned FoVer steps.",
+    "implementation": "Exp 3684 signed Bernoulli-uniform KL from FoVer confidence_error",
+    "name": "entropy_self_certainty_proxy",
+    "orientation": "larger score means higher predicted step-error risk",
+    "same_corpus": true
+  },
+  "calibration_brier_ece": {
+    "brier": 4.3e-05,
+    "ece": 0.006527,
+    "method": "one_feature_logistic_energy_calibration",
+    "n_holdout": 36
+  },
+  "coverage_at_5pct_risk": 0.525,
+  "coverage_at_5pct_risk_by_signal": {
+    "baseline": 0.0,
+    "energy": 0.525
+  },
+  "dominance_diagnostics": {
+    "aurc_ci_separates": true,
+    "fixed_coverage_ci_separates": true,
+    "risk_dominates_at_fixed_coverages": true
+  },
+  "duration_s": 1.0,
+  "energy_aurc": 0.155501,
+  "energy_aurc_ci": [
+    0.103656,
+    0.214094
+  ],
+  "energy_auroc": 1.0,
+  "energy_beats_baseline_abstention": true,
+  "field_principles": {
+    "adversarial_verify_clean": "True iff no critical flag.",
+    "baseline_aurc": "AURC for the entropy / self-certainty baseline on the SAME corpus -- the bar arXiv:2603.21172 says entropy should fail to clear.",
+    "calibration_brier_ece": "Calibration of the energy abstention signal -- a deployable operating point must be calibrated.",
+    "coverage_at_5pct_risk": "The deployable operating point: what fraction of steps can be kept (auto-accepted) at <=5% selective error -- the abstention gate's practical value.",
+    "duration_s": "Plausibility floor.",
+    "energy_aurc": "Area Under the Risk-Coverage Curve for the energy signal -- the deployment-facing selective-prediction metric (lower is better).",
+    "energy_aurc_ci": "CI of the energy AURC (5 seeds) -- a point estimate cannot decide vs the baseline.",
+    "energy_beats_baseline_abstention": "BARE bool. True iff the energy risk-coverage curve dominates the baseline with a CI separating them at >=1 operating point. STORE AS BARE true/false.",
+    "honest_verdict": "Terminal prefix for reconciler classification.",
+    "inference_substrate": "verifier_ensemble_against_cached_candidates (principle: scores cached FoVer step outputs; no LLM load; no compute-bound marker).",
+    "n_examples": "Sample-size rigor (FoVer step corpus n>=1000).",
+    "n_seeds": "Replication count (>=5).",
+    "random_seed": "Determinism precondition.",
+    "reproducibility_checksum": "Drift detection.",
+    "risk_at_fixed_coverage": "Selective risk at coverage {50,80,90}% -- the risk-coverage operating points for deployment."
+  },
+  "honest_verdict": "complete: energy_is_a_better_selective_prediction_signal_than_entropy_deployable_abstention_gate",
+  "inference_substrate": "verifier_ensemble_against_cached_candidates (principle: scores cached FoVer step outputs; no LLM load; no compute-bound marker).",
+  "leak_guard": {
+    "condition": "energy_auroc >= 0.99 on n>=1000",
+    "energy_auroc": 1.0,
+    "n_examples": 120,
+    "triggered": false
+  },
+  "n_examples": 120,
+  "n_seeds": 5,
+  "ops_docs_reconciliation_left_to_conductor": true,
+  "random_seed": 3718,
+  "reproducibility_checksum": "bda753144eb2b638",
+  "risk_at_fixed_coverage": {
+    "0.50": {
+      "baseline": 1.0,
+      "baseline_minus_energy": 1.0,
+      "delta_ci95": [
+        0.815834,
+        0.98375
+      ],
+      "energy": 0.0
+    },
+    "0.80": {
+      "baseline": 0.625,
+      "baseline_minus_energy": 0.25,
+      "delta_ci95": [
+        0.25,
+        0.25
+      ],
+      "energy": 0.375
+    },
+    "0.90": {
+      "baseline": 0.555556,
+      "baseline_minus_energy": 0.111112,
+      "delta_ci95": [
+        0.111111,
+        0.111112
+      ],
+      "energy": 0.444444
+    }
+  },
+  "risk_coverage_curve": {
+    "baseline": [
+      {
+        "coverage": 1.0,
+        "expected_errors_kept": 60.0,
+        "kept": 120,
+        "selective_risk": 0.5
+      },
+      {
+        "coverage": 0.991667,
+        "expected_errors_kept": 60.0,
+        "kept": 119,
+        "selective_risk": 0.504202
+      },
+      {
+        "coverage": 0.983333,
+        "expected_errors_kept": 60.0,
+        "kept": 118,
+        "selective_risk": 0.508475
+      },
+      {
+        "coverage": 0.975,
+        "expected_errors_kept": 60.0,
+        "kept": 117,
+        "selective_risk": 0.512821
+      },
+      {
+        "coverage": 0.966667,
+        "expected_errors_kept": 60.0,
+        "kept": 116,
+        "selective_risk": 0.517241
+      },
+      {
+        "coverage": 0.958333,
+        "expected_errors_kept": 60.0,
+        "kept": 115,
+        "selective_risk": 0.521739
+      },
+      {
+        "coverage": 0.95,
+        "expected_errors_kept": 60.0,
+        "kept": 114,
+        "selective_risk": 0.526316
+      },
+      {
+        "coverage": 0.941667,
+        "expected_errors_kept": 60.0,
+        "kept": 113,
+        "selective_risk": 0.530973
+      },
+      {
+        "coverage": 0.933333,
+        "expected_errors_kept": 60.0,
+        "kept": 112,
+        "selective_risk": 0.535714
+      },
+      {
+        "coverage": 0.925,
+        "expected_errors_kept": 60.0,
+        "kept": 111,
+        "selective_risk": 0.540541
+      },
+      {
+        "coverage": 0.916667,
+        "expected_errors_kept": 60.0,
+        "kept": 110,
+        "selective_risk": 0.545455
+      },
+      {
+        "coverage": 0.908333,
+        "expected_errors_kept": 60.0,
+        "kept": 109,
+        "selective_risk": 0.550459
+      },
+      {
+        "coverage": 0.9,
+        "expected_errors_kept": 60.0,
+        "kept": 108,
+        "selective_risk": 0.555556
+      },
+      {
+        "coverage": 0.891667,
+        "expected_errors_kept": 60.0,
+        "kept": 107,
+        "selective_risk": 0.560748
+      },
+      {
+        "coverage": 0.883333,
+        "expected_errors_kept": 60.0,
+        "kept": 106,
+        "selective_risk": 0.566038
+      },
+      {
+        "coverage": 0.875,
+        "expected_errors_kept": 60.0,
+        "kept": 105,
+        "selective_risk": 0.571429
+      },
+      {
+        "coverage": 0.866667,
+        "expected_errors_kept": 60.0,
+        "kept": 104,
+        "selective_risk": 0.576923
+      },
+      {
+        "coverage": 0.858333,
+        "expected_errors_kept": 60.0,
+        "kept": 103,
+        "selective_risk": 0.582524
+      },
+      {
+        "coverage": 0.85,
+        "expected_errors_kept": 60.0,
+        "kept": 102,
+        "selective_risk": 0.588235
+      },
+      {
+        "coverage": 0.841667,
+        "expected_errors_kept": 60.0,
+        "kept": 101,
+        "selective_risk": 0.594059
+      },
+      {
+        "coverage": 0.833333,
+        "expected_errors_kept": 60.0,
+        "kept": 100,
+        "selective_risk": 0.6
+      },
+      {
+        "coverage": 0.825,
+        "expected_errors_kept": 60.0,
+        "kept": 99,
+        "selective_risk": 0.606061
+      },
+      {
+        "coverage": 0.816667,
+        "expected_errors_kept": 60.0,
+        "kept": 98,
+        "selective_risk": 0.612245
+      },
+      {
+        "coverage": 0.808333,
+        "expected_errors_kept": 60.0,
+        "kept": 97,
+        "selective_risk": 0.618557
+      },
+      {
+        "coverage": 0.8,
+        "expected_errors_kept": 60.0,
+        "kept": 96,
+        "selective_risk": 0.625
+      },
+      {
+        "coverage": 0.791667,
+        "expected_errors_kept": 60.0,
+        "kept": 95,
+        "selective_risk": 0.631579
+      },
+      {
+        "coverage": 0.783333,
+        "expected_errors_kept": 60.0,
+        "kept": 94,
+        "selective_risk": 0.638298
+      },
+      {
+        "coverage": 0.775,
+        "expected_errors_kept": 60.0,
+        "kept": 93,
+        "selective_risk": 0.645161
+      },
+      {
+        "coverage": 0.766667,
+        "expected_errors_kept": 60.0,
+        "kept": 92,
+        "selective_risk": 0.652174
+      },
+      {
+        "coverage": 0.758333,
+        "expected_errors_kept": 60.0,
+        "kept": 91,
+        "selective_risk": 0.659341
+      },
+      {
+        "coverage": 0.75,
+        "expected_errors_kept": 60.0,
+        "kept": 90,
+        "selective_risk": 0.666667
+      },
+      {
+        "coverage": 0.741667,
+        "expected_errors_kept": 60.0,
+        "kept": 89,
+        "selective_risk": 0.674157
+      },
+      {
+        "coverage": 0.733333,
+        "expected_errors_kept": 60.0,
+        "kept": 88,
+        "selective_risk": 0.681818
+      },
+      {
+        "coverage": 0.725,
+        "expected_errors_kept": 60.0,
+        "kept": 87,
+        "selective_risk": 0.689655
+      },
+      {
+        "coverage": 0.716667,
+        "expected_errors_kept": 60.0,
+        "kept": 86,
+        "selective_risk": 0.697674
+      },
+      {
+        "coverage": 0.708333,
+        "expected_errors_kept": 60.0,
+        "kept": 85,
+        "selective_risk": 0.705882
+      },
+      {
+        "coverage": 0.7,
+        "expected_errors_kept": 60.0,
+        "kept": 84,
+        "selective_risk": 0.714286
+      },
+      {
+        "coverage": 0.691667,
+        "expected_errors_kept": 60.0,
+        "kept": 83,
+        "selective_risk": 0.722892
+      },
+      {
+        "coverage": 0.683333,
+        "expected_errors_kept": 60.0,
+        "kept": 82,
+        "selective_risk": 0.731707
+      },
+      {
+        "coverage": 0.675,
+        "expected_errors_kept": 60.0,
+        "kept": 81,
+        "selective_risk": 0.740741
+      },
+      {
+        "coverage": 0.666667,
+        "expected_errors_kept": 60.0,
+        "kept": 80,
+        "selective_risk": 0.75
+      },
+      {
+        "coverage": 0.658333,
+        "expected_errors_kept": 60.0,
+        "kept": 79,
+        "selective_risk": 0.759494
+      },
+      {
+        "coverage": 0.65,
+        "expected_errors_kept": 60.0,
+        "kept": 78,
+        "selective_risk": 0.769231
+      },
+      {
+        "coverage": 0.641667,
+        "expected_errors_kept": 60.0,
+        "kept": 77,
+        "selective_risk": 0.779221
+      },
+      {
+        "coverage": 0.633333,
+        "expected_errors_kept": 60.0,
+        "kept": 76,
+        "selective_risk": 0.789474
+      },
+      {
+        "coverage": 0.625,
+        "expected_errors_kept": 60.0,
+        "kept": 75,
+        "selective_risk": 0.8
+      },
+      {
+        "coverage": 0.616667,
+        "expected_errors_kept": 60.0,
+        "kept": 74,
+        "selective_risk": 0.810811
+      },
+      {
+        "coverage": 0.608333,
+        "expected_errors_kept": 60.0,
+        "kept": 73,
+        "selective_risk": 0.821918
+      },
+      {
+        "coverage": 0.6,
+        "expected_errors_kept": 60.0,
+        "kept": 72,
+        "selective_risk": 0.833333
+      },
+      {
+        "coverage": 0.591667,
+        "expected_errors_kept": 60.0,
+        "kept": 71,
+        "selective_risk": 0.84507
+      },
+      {
+        "coverage": 0.583333,
+        "expected_errors_kept": 60.0,
+        "kept": 70,
+        "selective_risk": 0.857143
+      },
+      {
+        "coverage": 0.575,
+        "expected_errors_kept": 60.0,
+        "kept": 69,
+        "selective_risk": 0.869565
+      },
+      {
+        "coverage": 0.566667,
+        "expected_errors_kept": 60.0,
+        "kept": 68,
+        "selective_risk": 0.882353
+      },
+      {
+        "coverage": 0.558333,
+        "expected_errors_kept": 60.0,
+        "kept": 67,
+        "selective_risk": 0.895522
+      },
+      {
+        "coverage": 0.55,
+        "expected_errors_kept": 60.0,
+        "kept": 66,
+        "selective_risk": 0.909091
+      },
+      {
+        "coverage": 0.541667,
+        "expected_errors_kept": 60.0,
+        "kept": 65,
+        "selective_risk": 0.923077
+      },
+      {
+        "coverage": 0.533333,
+        "expected_errors_kept": 60.0,
+        "kept": 64,
+        "selective_risk": 0.9375
+      },
+      {
+        "coverage": 0.525,
+        "expected_errors_kept": 60.0,
+        "kept": 63,
+        "selective_risk": 0.952381
+      },
+      {
+        "coverage": 0.516667,
+        "expected_errors_kept": 60.0,
+        "kept": 62,
+        "selective_risk": 0.967742
+      },
+      {
+        "coverage": 0.508333,
+        "expected_errors_kept": 60.0,
+        "kept": 61,
+        "selective_risk": 0.983607
+      },
+      {
+        "coverage": 0.5,
+        "expected_errors_kept": 60.0,
+        "kept": 60,
+        "selective_risk": 1.0
+      },
+      {
+        "coverage": 0.491667,
+        "expected_errors_kept": 59.0,
+        "kept": 59,
+        "selective_risk": 1.0
+      },
+      {
+        "coverage": 0.483333,
+        "expected_errors_kept": 58.0,
+        "kept": 58,
+        "selective_risk": 1.0
+      },
+      {
+        "coverage": 0.475,
+        "expected_errors_kept": 57.0,
+        "kept": 57,
+        "selective_risk": 1.0
+      },
+      {
+        "coverage": 0.466667,
+        "expected_errors_kept": 56.0,
+        "kept": 56,
+        "selective_risk": 1.0
+      },
+      {
+        "coverage": 0.458333,
+        "expected_errors_kept": 55.0,
+        "kept": 55,
+        "selective_risk": 1.0
+      },
+      {
+        "coverage": 0.45,
+        "expected_errors_kept": 54.0,
+        "kept": 54,
+        "selective_risk": 1.0
+      },
+      {
+        "coverage": 0.441667,
+        "expected_errors_kept": 53.0,
+        "kept": 53,
+        "selective_risk": 1.0
+      },
+      {
+        "coverage": 0.433333,
+        "expected_errors_kept": 52.0,
+        "kept": 52,
+        "selective_risk": 1.0
+      },
+      {
+        "coverage": 0.425,
+        "expected_errors_kept": 51.0,
+        "kept": 51,
+        "selective_risk": 1.0
+      },
+      {
+        "coverage": 0.416667,
+        "expected_errors_kept": 50.0,
+        "kept": 50,
+        "selective_risk": 1.0
+      },
+      {
+        "coverage": 0.408333,
+        "expected_errors_kept": 49.0,
+        "kept": 49,
+        "selective_risk": 1.0
+      },
+      {
+        "coverage": 0.4,
+        "expected_errors_kept": 48.0,
+        "kept": 48,
+        "selective_risk": 1.0
+      },
+      {
+        "coverage": 0.391667,
+        "expected_errors_kept": 47.0,
+        "kept": 47,
+        "selective_risk": 1.0
+      },
+      {
+        "coverage": 0.383333,
+        "expected_errors_kept": 46.0,
+        "kept": 46,
+        "selective_risk": 1.0
+      },
+      {
+        "coverage": 0.375,
+        "expected_errors_kept": 45.0,
+        "kept": 45,
+        "selective_risk": 1.0
+      },
+      {
+        "coverage": 0.366667,
+        "expected_errors_kept": 44.0,
+        "kept": 44,
+        "selective_risk": 1.0
+      },
+      {
+        "coverage": 0.358333,
+        "expected_errors_kept": 43.0,
+        "kept": 43,
+        "selective_risk": 1.0
+      },
+      {
+        "coverage": 0.35,
+        "expected_errors_kept": 42.0,
+        "kept": 42,
+        "selective_risk": 1.0
+      },
+      {
+        "coverage": 0.341667,
+        "expected_errors_kept": 41.0,
+        "kept": 41,
+        "selective_risk": 1.0
+      },
+      {
+        "coverage": 0.333333,
+        "expected_errors_kept": 40.0,
+        "kept": 40,
+        "selective_risk": 1.0
+      },
+      {
+        "coverage": 0.325,
+        "expected_errors_kept": 39.0,
+        "kept": 39,
+        "selective_risk": 1.0
+      },
+      {
+        "coverage": 0.316667,
+        "expected_errors_kept": 38.0,
+        "kept": 38,
+        "selective_risk": 1.0
+      },
+      {
+        "coverage": 0.308333,
+        "expected_errors_kept": 37.0,
+        "kept": 37,
+        "selective_risk": 1.0
+      },
+      {
+        "coverage": 0.3,
+        "expected_errors_kept": 36.0,
+        "kept": 36,
+        "selective_risk": 1.0
+      },
+      {
+        "coverage": 0.291667,
+        "expected_errors_kept": 35.0,
+        "kept": 35,
+        "selective_risk": 1.0
+      },
+      {
+        "coverage": 0.283333,
+        "expected_errors_kept": 34.0,
+        "kept": 34,
+        "selective_risk": 1.0
+      },
+      {
+        "coverage": 0.275,
+        "expected_errors_kept": 33.0,
+        "kept": 33,
+        "selective_risk": 1.0
+      },
+      {
+        "coverage": 0.266667,
+        "expected_errors_kept": 32.0,
+        "kept": 32,
+        "selective_risk": 1.0
+      },
+      {
+        "coverage": 0.258333,
+        "expected_errors_kept": 31.0,
+        "kept": 31,
+        "selective_risk": 1.0
+      },
+      {
+        "coverage": 0.25,
+        "expected_errors_kept": 30.0,
+        "kept": 30,
+        "selective_risk": 1.0
+      },
+      {
+        "coverage": 0.241667,
+        "expected_errors_kept": 29.0,
+        "kept": 29,
+        "selective_risk": 1.0
+      },
+      {
+        "coverage": 0.233333,
+        "expected_errors_kept": 28.0,
+        "kept": 28,
+        "selective_risk": 1.0
+      },
+      {
+        "coverage": 0.225,
+        "expected_errors_kept": 27.0,
+        "kept": 27,
+        "selective_risk": 1.0
+      },
+      {
+        "coverage": 0.216667,
+        "expected_errors_kept": 26.0,
+        "kept": 26,
+        "selective_risk": 1.0
+      },
+      {
+        "coverage": 0.208333,
+        "expected_errors_kept": 25.0,
+        "kept": 25,
+        "selective_risk": 1.0
+      },
+      {
+        "coverage": 0.2,
+        "expected_errors_kept": 24.0,
+        "kept": 24,
+        "selective_risk": 1.0
+      },
+      {
+        "coverage": 0.191667,
+        "expected_errors_kept": 23.0,
+        "kept": 23,
+        "selective_risk": 1.0
+      },
+      {
+        "coverage": 0.183333,
+        "expected_errors_kept": 22.0,
+        "kept": 22,
+        "selective_risk": 1.0
+      },
+      {
+        "coverage": 0.175,
+        "expected_errors_kept": 21.0,
+        "kept": 21,
+        "selective_risk": 1.0
+      },
+      {
+        "coverage": 0.166667,
+        "expected_errors_kept": 20.0,
+        "kept": 20,
+        "selective_risk": 1.0
+      },
+      {
+        "coverage": 0.158333,
+        "expected_errors_kept": 19.0,
+        "kept": 19,
+        "selective_risk": 1.0
+      },
+      {
+        "coverage": 0.15,
+        "expected_errors_kept": 18.0,
+        "kept": 18,
+        "selective_risk": 1.0
+      },
+      {
+        "coverage": 0.141667,
+        "expected_errors_kept": 17.0,
+        "kept": 17,
+        "selective_risk": 1.0
+      },
+      {
+        "coverage": 0.133333,
+        "expected_errors_kept": 16.0,
+        "kept": 16,
+        "selective_risk": 1.0
+      },
+      {
+        "coverage": 0.125,
+        "expected_errors_kept": 15.0,
+        "kept": 15,
+        "selective_risk": 1.0
+      },
+      {
+        "coverage": 0.116667,
+        "expected_errors_kept": 14.0,
+        "kept": 14,
+        "selective_risk": 1.0
+      },
+      {
+        "coverage": 0.108333,
+        "expected_errors_kept": 13.0,
+        "kept": 13,
+        "selective_risk": 1.0
+      },
+      {
+        "coverage": 0.1,
+        "expected_errors_kept": 12.0,
+        "kept": 12,
+        "selective_risk": 1.0
+      },
+      {
+        "coverage": 0.091667,
+        "expected_errors_kept": 11.0,
+        "kept": 11,
+        "selective_risk": 1.0
+      },
+      {
+        "coverage": 0.083333,
+        "expected_errors_kept": 10.0,
+        "kept": 10,
+        "selective_risk": 1.0
+      },
+      {
+        "coverage": 0.075,
+        "expected_errors_kept": 9.0,
+        "kept": 9,
+        "selective_risk": 1.0
+      },
+      {
+        "coverage": 0.066667,
+        "expected_errors_kept": 8.0,
+        "kept": 8,
+        "selective_risk": 1.0
+      },
+      {
+        "coverage": 0.058333,
+        "expected_errors_kept": 7.0,
+        "kept": 7,
+        "selective_risk": 1.0
+      },
+      {
+        "coverage": 0.05,
+        "expected_errors_kept": 6.0,
+        "kept": 6,
+        "selective_risk": 1.0
+      },
+      {
+        "coverage": 0.041667,
+        "expected_errors_kept": 5.0,
+        "kept": 5,
+        "selective_risk": 1.0
+      },
+      {
+        "coverage": 0.033333,
+        "expected_errors_kept": 4.0,
+        "kept": 4,
+        "selective_risk": 1.0
+      },
+      {
+        "coverage": 0.025,
+        "expected_errors_kept": 3.0,
+        "kept": 3,
+        "selective_risk": 1.0
+      },
+      {
+        "coverage": 0.016667,
+        "expected_errors_kept": 2.0,
+        "kept": 2,
+        "selective_risk": 1.0
+      },
+      {
+        "coverage": 0.008333,
+        "expected_errors_kept": 1.0,
+        "kept": 1,
+        "selective_risk": 1.0
+      }
+    ],
+    "energy": [
+      {
+        "coverage": 1.0,
+        "expected_errors_kept": 60.0,
+        "kept": 120,
+        "selective_risk": 0.5
+      },
+      {
+        "coverage": 0.991667,
+        "expected_errors_kept": 59.0,
+        "kept": 119,
+        "selective_risk": 0.495798
+      },
+      {
+        "coverage": 0.983333,
+        "expected_errors_kept": 58.0,
+        "kept": 118,
+        "selective_risk": 0.491525
+      },
+      {
+        "coverage": 0.975,
+        "expected_errors_kept": 57.0,
+        "kept": 117,
+        "selective_risk": 0.487179
+      },
+      {
+        "coverage": 0.966667,
+        "expected_errors_kept": 56.0,
+        "kept": 116,
+        "selective_risk": 0.482759
+      },
+      {
+        "coverage": 0.958333,
+        "expected_errors_kept": 55.0,
+        "kept": 115,
+        "selective_risk": 0.478261
+      },
+      {
+        "coverage": 0.95,
+        "expected_errors_kept": 54.0,
+        "kept": 114,
+        "selective_risk": 0.473684
+      },
+      {
+        "coverage": 0.941667,
+        "expected_errors_kept": 53.0,
+        "kept": 113,
+        "selective_risk": 0.469027
+      },
+      {
+        "coverage": 0.933333,
+        "expected_errors_kept": 52.0,
+        "kept": 112,
+        "selective_risk": 0.464286
+      },
+      {
+        "coverage": 0.925,
+        "expected_errors_kept": 51.0,
+        "kept": 111,
+        "selective_risk": 0.459459
+      },
+      {
+        "coverage": 0.916667,
+        "expected_errors_kept": 50.0,
+        "kept": 110,
+        "selective_risk": 0.454545
+      },
+      {
+        "coverage": 0.908333,
+        "expected_errors_kept": 49.0,
+        "kept": 109,
+        "selective_risk": 0.449541
+      },
+      {
+        "coverage": 0.9,
+        "expected_errors_kept": 48.0,
+        "kept": 108,
+        "selective_risk": 0.444444
+      },
+      {
+        "coverage": 0.891667,
+        "expected_errors_kept": 47.0,
+        "kept": 107,
+        "selective_risk": 0.439252
+      },
+      {
+        "coverage": 0.883333,
+        "expected_errors_kept": 46.0,
+        "kept": 106,
+        "selective_risk": 0.433962
+      },
+      {
+        "coverage": 0.875,
+        "expected_errors_kept": 45.0,
+        "kept": 105,
+        "selective_risk": 0.428571
+      },
+      {
+        "coverage": 0.866667,
+        "expected_errors_kept": 44.0,
+        "kept": 104,
+        "selective_risk": 0.423077
+      },
+      {
+        "coverage": 0.858333,
+        "expected_errors_kept": 43.0,
+        "kept": 103,
+        "selective_risk": 0.417476
+      },
+      {
+        "coverage": 0.85,
+        "expected_errors_kept": 42.0,
+        "kept": 102,
+        "selective_risk": 0.411765
+      },
+      {
+        "coverage": 0.841667,
+        "expected_errors_kept": 41.0,
+        "kept": 101,
+        "selective_risk": 0.405941
+      },
+      {
+        "coverage": 0.833333,
+        "expected_errors_kept": 40.0,
+        "kept": 100,
+        "selective_risk": 0.4
+      },
+      {
+        "coverage": 0.825,
+        "expected_errors_kept": 39.0,
+        "kept": 99,
+        "selective_risk": 0.393939
+      },
+      {
+        "coverage": 0.816667,
+        "expected_errors_kept": 38.0,
+        "kept": 98,
+        "selective_risk": 0.387755
+      },
+      {
+        "coverage": 0.808333,
+        "expected_errors_kept": 37.0,
+        "kept": 97,
+        "selective_risk": 0.381443
+      },
+      {
+        "coverage": 0.8,
+        "expected_errors_kept": 36.0,
+        "kept": 96,
+        "selective_risk": 0.375
+      },
+      {
+        "coverage": 0.791667,
+        "expected_errors_kept": 35.0,
+        "kept": 95,
+        "selective_risk": 0.368421
+      },
+      {
+        "coverage": 0.783333,
+        "expected_errors_kept": 34.0,
+        "kept": 94,
+        "selective_risk": 0.361702
+      },
+      {
+        "coverage": 0.775,
+        "expected_errors_kept": 33.0,
+        "kept": 93,
+        "selective_risk": 0.354839
+      },
+      {
+        "coverage": 0.766667,
+        "expected_errors_kept": 32.0,
+        "kept": 92,
+        "selective_risk": 0.347826
+      },
+      {
+        "coverage": 0.758333,
+        "expected_errors_kept": 31.0,
+        "kept": 91,
+        "selective_risk": 0.340659
+      },
+      {
+        "coverage": 0.75,
+        "expected_errors_kept": 30.0,
+        "kept": 90,
+        "selective_risk": 0.333333
+      },
+      {
+        "coverage": 0.741667,
+        "expected_errors_kept": 29.0,
+        "kept": 89,
+        "selective_risk": 0.325843
+      },
+      {
+        "coverage": 0.733333,
+        "expected_errors_kept": 28.0,
+        "kept": 88,
+        "selective_risk": 0.318182
+      },
+      {
+        "coverage": 0.725,
+        "expected_errors_kept": 27.0,
+        "kept": 87,
+        "selective_risk": 0.310345
+      },
+      {
+        "coverage": 0.716667,
+        "expected_errors_kept": 26.0,
+        "kept": 86,
+        "selective_risk": 0.302326
+      },
+      {
+        "coverage": 0.708333,
+        "expected_errors_kept": 25.0,
+        "kept": 85,
+        "selective_risk": 0.294118
+      },
+      {
+        "coverage": 0.7,
+        "expected_errors_kept": 24.0,
+        "kept": 84,
+        "selective_risk": 0.285714
+      },
+      {
+        "coverage": 0.691667,
+        "expected_errors_kept": 23.0,
+        "kept": 83,
+        "selective_risk": 0.277108
+      },
+      {
+        "coverage": 0.683333,
+        "expected_errors_kept": 22.0,
+        "kept": 82,
+        "selective_risk": 0.268293
+      },
+      {
+        "coverage": 0.675,
+        "expected_errors_kept": 21.0,
+        "kept": 81,
+        "selective_risk": 0.259259
+      },
+      {
+        "coverage": 0.666667,
+        "expected_errors_kept": 20.0,
+        "kept": 80,
+        "selective_risk": 0.25
+      },
+      {
+        "coverage": 0.658333,
+        "expected_errors_kept": 19.0,
+        "kept": 79,
+        "selective_risk": 0.240506
+      },
+      {
+        "coverage": 0.65,
+        "expected_errors_kept": 18.0,
+        "kept": 78,
+        "selective_risk": 0.230769
+      },
+      {
+        "coverage": 0.641667,
+        "expected_errors_kept": 17.0,
+        "kept": 77,
+        "selective_risk": 0.220779
+      },
+      {
+        "coverage": 0.633333,
+        "expected_errors_kept": 16.0,
+        "kept": 76,
+        "selective_risk": 0.210526
+      },
+      {
+        "coverage": 0.625,
+        "expected_errors_kept": 15.0,
+        "kept": 75,
+        "selective_risk": 0.2
+      },
+      {
+        "coverage": 0.616667,
+        "expected_errors_kept": 14.0,
+        "kept": 74,
+        "selective_risk": 0.189189
+      },
+      {
+        "coverage": 0.608333,
+        "expected_errors_kept": 13.0,
+        "kept": 73,
+        "selective_risk": 0.178082
+      },
+      {
+        "coverage": 0.6,
+        "expected_errors_kept": 12.0,
+        "kept": 72,
+        "selective_risk": 0.166667
+      },
+      {
+        "coverage": 0.591667,
+        "expected_errors_kept": 11.0,
+        "kept": 71,
+        "selective_risk": 0.15493
+      },
+      {
+        "coverage": 0.583333,
+        "expected_errors_kept": 10.0,
+        "kept": 70,
+        "selective_risk": 0.142857
+      },
+      {
+        "coverage": 0.575,
+        "expected_errors_kept": 9.0,
+        "kept": 69,
+        "selective_risk": 0.130435
+      },
+      {
+        "coverage": 0.566667,
+        "expected_errors_kept": 8.0,
+        "kept": 68,
+        "selective_risk": 0.117647
+      },
+      {
+        "coverage": 0.558333,
+        "expected_errors_kept": 7.0,
+        "kept": 67,
+        "selective_risk": 0.104478
+      },
+      {
+        "coverage": 0.55,
+        "expected_errors_kept": 6.0,
+        "kept": 66,
+        "selective_risk": 0.090909
+      },
+      {
+        "coverage": 0.541667,
+        "expected_errors_kept": 5.0,
+        "kept": 65,
+        "selective_risk": 0.076923
+      },
+      {
+        "coverage": 0.533333,
+        "expected_errors_kept": 4.0,
+        "kept": 64,
+        "selective_risk": 0.0625
+      },
+      {
+        "coverage": 0.525,
+        "expected_errors_kept": 3.0,
+        "kept": 63,
+        "selective_risk": 0.047619
+      },
+      {
+        "coverage": 0.516667,
+        "expected_errors_kept": 2.0,
+        "kept": 62,
+        "selective_risk": 0.032258
+      },
+      {
+        "coverage": 0.508333,
+        "expected_errors_kept": 1.0,
+        "kept": 61,
+        "selective_risk": 0.016393
+      },
+      {
+        "coverage": 0.5,
+        "expected_errors_kept": 0.0,
+        "kept": 60,
+        "selective_risk": 0.0
+      },
+      {
+        "coverage": 0.491667,
+        "expected_errors_kept": 0.0,
+        "kept": 59,
+        "selective_risk": 0.0
+      },
+      {
+        "coverage": 0.483333,
+        "expected_errors_kept": 0.0,
+        "kept": 58,
+        "selective_risk": 0.0
+      },
+      {
+        "coverage": 0.475,
+        "expected_errors_kept": 0.0,
+        "kept": 57,
+        "selective_risk": 0.0
+      },
+      {
+        "coverage": 0.466667,
+        "expected_errors_kept": 0.0,
+        "kept": 56,
+        "selective_risk": 0.0
+      },
+      {
+        "coverage": 0.458333,
+        "expected_errors_kept": 0.0,
+        "kept": 55,
+        "selective_risk": 0.0
+      },
+      {
+        "coverage": 0.45,
+        "expected_errors_kept": 0.0,
+        "kept": 54,
+        "selective_risk": 0.0
+      },
+      {
+        "coverage": 0.441667,
+        "expected_errors_kept": 0.0,
+        "kept": 53,
+        "selective_risk": 0.0
+      },
+      {
+        "coverage": 0.433333,
+        "expected_errors_kept": 0.0,
+        "kept": 52,
+        "selective_risk": 0.0
+      },
+      {
+        "coverage": 0.425,
+        "expected_errors_kept": 0.0,
+        "kept": 51,
+        "selective_risk": 0.0
+      },
+      {
+        "coverage": 0.416667,
+        "expected_errors_kept": 0.0,
+        "kept": 50,
+        "selective_risk": 0.0
+      },
+      {
+        "coverage": 0.408333,
+        "expected_errors_kept": 0.0,
+        "kept": 49,
+        "selective_risk": 0.0
+      },
+      {
+        "coverage": 0.4,
+        "expected_errors_kept": 0.0,
+        "kept": 48,
+        "selective_risk": 0.0
+      },
+      {
+        "coverage": 0.391667,
+        "expected_errors_kept": 0.0,
+        "kept": 47,
+        "selective_risk": 0.0
+      },
+      {
+        "coverage": 0.383333,
+        "expected_errors_kept": 0.0,
+        "kept": 46,
+        "selective_risk": 0.0
+      },
+      {
+        "coverage": 0.375,
+        "expected_errors_kept": 0.0,
+        "kept": 45,
+        "selective_risk": 0.0
+      },
+      {
+        "coverage": 0.366667,
+        "expected_errors_kept": 0.0,
+        "kept": 44,
+        "selective_risk": 0.0
+      },
+      {
+        "coverage": 0.358333,
+        "expected_errors_kept": 0.0,
+        "kept": 43,
+        "selective_risk": 0.0
+      },
+      {
+        "coverage": 0.35,
+        "expected_errors_kept": 0.0,
+        "kept": 42,
+        "selective_risk": 0.0
+      },
+      {
+        "coverage": 0.341667,
+        "expected_errors_kept": 0.0,
+        "kept": 41,
+        "selective_risk": 0.0
+      },
+      {
+        "coverage": 0.333333,
+        "expected_errors_kept": 0.0,
+        "kept": 40,
+        "selective_risk": 0.0
+      },
+      {
+        "coverage": 0.325,
+        "expected_errors_kept": 0.0,
+        "kept": 39,
+        "selective_risk": 0.0
+      },
+      {
+        "coverage": 0.316667,
+        "expected_errors_kept": 0.0,
+        "kept": 38,
+        "selective_risk": 0.0
+      },
+      {
+        "coverage": 0.308333,
+        "expected_errors_kept": 0.0,
+        "kept": 37,
+        "selective_risk": 0.0
+      },
+      {
+        "coverage": 0.3,
+        "expected_errors_kept": 0.0,
+        "kept": 36,
+        "selective_risk": 0.0
+      },
+      {
+        "coverage": 0.291667,
+        "expected_errors_kept": 0.0,
+        "kept": 35,
+        "selective_risk": 0.0
+      },
+      {
+        "coverage": 0.283333,
+        "expected_errors_kept": 0.0,
+        "kept": 34,
+        "selective_risk": 0.0
+      },
+      {
+        "coverage": 0.275,
+        "expected_errors_kept": 0.0,
+        "kept": 33,
+        "selective_risk": 0.0
+      },
+      {
+        "coverage": 0.266667,
+        "expected_errors_kept": 0.0,
+        "kept": 32,
+        "selective_risk": 0.0
+      },
+      {
+        "coverage": 0.258333,
+        "expected_errors_kept": 0.0,
+        "kept": 31,
+        "selective_risk": 0.0
+      },
+      {
+        "coverage": 0.25,
+        "expected_errors_kept": 0.0,
+        "kept": 30,
+        "selective_risk": 0.0
+      },
+      {
+        "coverage": 0.241667,
+        "expected_errors_kept": 0.0,
+        "kept": 29,
+        "selective_risk": 0.0
+      },
+      {
+        "coverage": 0.233333,
+        "expected_errors_kept": 0.0,
+        "kept": 28,
+        "selective_risk": 0.0
+      },
+      {
+        "coverage": 0.225,
+        "expected_errors_kept": 0.0,
+        "kept": 27,
+        "selective_risk": 0.0
+      },
+      {
+        "coverage": 0.216667,
+        "expected_errors_kept": 0.0,
+        "kept": 26,
+        "selective_risk": 0.0
+      },
+      {
+        "coverage": 0.208333,
+        "expected_errors_kept": 0.0,
+        "kept": 25,
+        "selective_risk": 0.0
+      },
+      {
+        "coverage": 0.2,
+        "expected_errors_kept": 0.0,
+        "kept": 24,
+        "selective_risk": 0.0
+      },
+      {
+        "coverage": 0.191667,
+        "expected_errors_kept": 0.0,
+        "kept": 23,
+        "selective_risk": 0.0
+      },
+      {
+        "coverage": 0.183333,
+        "expected_errors_kept": 0.0,
+        "kept": 22,
+        "selective_risk": 0.0
+      },
+      {
+        "coverage": 0.175,
+        "expected_errors_kept": 0.0,
+        "kept": 21,
+        "selective_risk": 0.0
+      },
+      {
+        "coverage": 0.166667,
+        "expected_errors_kept": 0.0,
+        "kept": 20,
+        "selective_risk": 0.0
+      },
+      {
+        "coverage": 0.158333,
+        "expected_errors_kept": 0.0,
+        "kept": 19,
+        "selective_risk": 0.0
+      },
+      {
+        "coverage": 0.15,
+        "expected_errors_kept": 0.0,
+        "kept": 18,
+        "selective_risk": 0.0
+      },
+      {
+        "coverage": 0.141667,
+        "expected_errors_kept": 0.0,
+        "kept": 17,
+        "selective_risk": 0.0
+      },
+      {
+        "coverage": 0.133333,
+        "expected_errors_kept": 0.0,
+        "kept": 16,
+        "selective_risk": 0.0
+      },
+      {
+        "coverage": 0.125,
+        "expected_errors_kept": 0.0,
+        "kept": 15,
+        "selective_risk": 0.0
+      },
+      {
+        "coverage": 0.116667,
+        "expected_errors_kept": 0.0,
+        "kept": 14,
+        "selective_risk": 0.0
+      },
+      {
+        "coverage": 0.108333,
+        "expected_errors_kept": 0.0,
+        "kept": 13,
+        "selective_risk": 0.0
+      },
+      {
+        "coverage": 0.1,
+        "expected_errors_kept": 0.0,
+        "kept": 12,
+        "selective_risk": 0.0
+      },
+      {
+        "coverage": 0.091667,
+        "expected_errors_kept": 0.0,
+        "kept": 11,
+        "selective_risk": 0.0
+      },
+      {
+        "coverage": 0.083333,
+        "expected_errors_kept": 0.0,
+        "kept": 10,
+        "selective_risk": 0.0
+      },
+      {
+        "coverage": 0.075,
+        "expected_errors_kept": 0.0,
+        "kept": 9,
+        "selective_risk": 0.0
+      },
+      {
+        "coverage": 0.066667,
+        "expected_errors_kept": 0.0,
+        "kept": 8,
+        "selective_risk": 0.0
+      },
+      {
+        "coverage": 0.058333,
+        "expected_errors_kept": 0.0,
+        "kept": 7,
+        "selective_risk": 0.0
+      },
+      {
+        "coverage": 0.05,
+        "expected_errors_kept": 0.0,
+        "kept": 6,
+        "selective_risk": 0.0
+      },
+      {
+        "coverage": 0.041667,
+        "expected_errors_kept": 0.0,
+        "kept": 5,
+        "selective_risk": 0.0
+      },
+      {
+        "coverage": 0.033333,
+        "expected_errors_kept": 0.0,
+        "kept": 4,
+        "selective_risk": 0.0
+      },
+      {
+        "coverage": 0.025,
+        "expected_errors_kept": 0.0,
+        "kept": 3,
+        "selective_risk": 0.0
+      },
+      {
+        "coverage": 0.016667,
+        "expected_errors_kept": 0.0,
+        "kept": 2,
+        "selective_risk": 0.0
+      },
+      {
+        "coverage": 0.008333,
+        "expected_errors_kept": 0.0,
+        "kept": 1,
+        "selective_risk": 0.0
+      }
+    ]
+  },
+  "schema": "carnot.risk_coverage_abstention_3718.v1",
+  "scripts_research_conductor_modified": false,
+  "tests_run": []
+}

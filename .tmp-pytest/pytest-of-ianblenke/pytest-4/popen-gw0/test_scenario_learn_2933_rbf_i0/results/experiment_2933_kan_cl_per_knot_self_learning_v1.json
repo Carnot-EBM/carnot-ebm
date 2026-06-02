@@ -1,0 +1,83 @@
+{
+  "baselines": {
+    "kan_rbf_importance_update": {
+      "final_energy_proxy": 0.004158437536,
+      "final_holdout_utility": 1.0,
+      "final_utility_by_constraint": {
+        "arithmetic_bounds": 1.0,
+        "code_shape": 1.0,
+        "logic_coherence": 1.0
+      },
+      "mean_post_update_utility": 1.0,
+      "mean_pre_update_utility": 0.833333333333,
+      "post_update_utility_by_constraint": {
+        "arithmetic_bounds": 1.0,
+        "code_shape": 1.0,
+        "logic_coherence": 1.0
+      },
+      "updated_knot_or_rbf_count": 12
+    },
+    "no_update": {
+      "final_energy_proxy": 0.5,
+      "final_holdout_utility": 0.5,
+      "mean_post_update_utility": 0.5,
+      "mean_pre_update_utility": 0.5
+    },
+    "replay_scheduler_only": {
+      "final_energy_proxy": 0.5,
+      "final_holdout_utility": 0.5,
+      "mean_post_update_utility": 0.5,
+      "mean_pre_update_utility": 0.5,
+      "replay_scheduler_updated": true,
+      "updated_priority_count": 3
+    }
+  },
+  "continuous_self_learning_targeted": true,
+  "dataset_manifest": {
+    "constraint_count": 3,
+    "constraint_ids": [
+      "arithmetic_bounds",
+      "code_shape",
+      "logic_coherence"
+    ],
+    "dataset_checksum": "f32e309e34834475a59c06d7d4ba59689a9656ff7d7fd93967cc1fb47ca6a75f",
+    "feature_dim": 2,
+    "holdout_example_count": 48,
+    "holdout_per_constraint": {
+      "arithmetic_bounds": 16,
+      "code_shape": 16,
+      "logic_coherence": 16
+    },
+    "random_seed": 2933,
+    "rbf_center_count": 12,
+    "train_example_count": 72,
+    "train_per_constraint": {
+      "arithmetic_bounds": 24,
+      "code_shape": 24,
+      "logic_coherence": 24
+    }
+  },
+  "duration_s": 4.25,
+  "energy_proxy_delta": 0.495841562464,
+  "forgetting_rate": 0.0,
+  "forgetting_threshold": 0.05,
+  "honest_verdict": "complete: kan_rbf_importance_self_learning_passed",
+  "inference_substrate": "local_training_simulation",
+  "kan_cl_self_learning_ready": true,
+  "kan_update_config": {
+    "active_threshold": 0.35,
+    "exact_verifier_rewards": true,
+    "learning_rate": 1.0,
+    "memory_type": "rbf_per_center_importance",
+    "rbf_center_count": 12,
+    "sigma": 0.09
+  },
+  "non_forgetting_passed": true,
+  "random_seed": 2933,
+  "run_date": "20260523",
+  "tests_run": [
+    "unit-placeholder"
+  ],
+  "updated_knot_or_rbf_count": 12,
+  "utility_delta_vs_replay_only": 0.5
+}

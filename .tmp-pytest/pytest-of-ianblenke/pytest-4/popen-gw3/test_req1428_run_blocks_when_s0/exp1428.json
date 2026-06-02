@@ -1,0 +1,136 @@
+{
+  "artifact_metadata": {
+    "project_root": "/home/ianblenke/github.com/ianblenke/carnot/.tmp-pytest/pytest-of-ianblenke/pytest-4/popen-gw3/test_req1428_run_blocks_when_s0",
+    "run_date": "20260506",
+    "source_experiments": [
+      "exp1397",
+      "exp1427"
+    ],
+    "spec": [
+      "REQ-VERIFY-1428",
+      "SCENARIO-VERIFY-1428"
+    ]
+  },
+  "cache_diagnostics": {
+    "cached_pair_available": false,
+    "cached_pair_hf_ids": [],
+    "missing_hf_ids": [
+      "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "unsloth/gemma-4-31B-it-GGUF",
+      "unsloth/gemma-4-26B-A4B-it-GGUF"
+    ],
+    "resolver_error": null
+  },
+  "dccd_repair_output_schema": {
+    "additionalProperties": false,
+    "properties": {
+      "draft_certificate": {
+        "additionalProperties": false,
+        "properties": {
+          "certificate_text": {
+            "type": "string"
+          },
+          "state": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "certificate_text",
+          "state"
+        ],
+        "type": "object"
+      },
+      "final_certificate": {
+        "additionalProperties": false,
+        "properties": {
+          "certificate_text": {
+            "type": "string"
+          },
+          "state": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "certificate_text",
+          "state"
+        ],
+        "type": "object"
+      },
+      "repair_action": {
+        "additionalProperties": false,
+        "properties": {
+          "action_type": {
+            "type": "string"
+          },
+          "rationale": {
+            "type": "string"
+          },
+          "target": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "action_type",
+          "target",
+          "rationale"
+        ],
+        "type": "object"
+      },
+      "validator_metadata": {
+        "description": "JSON-compatible metadata for validator replay.",
+        "type": "object"
+      }
+    },
+    "required": [
+      "draft_certificate",
+      "repair_action",
+      "final_certificate",
+      "validator_metadata"
+    ],
+    "type": "object"
+  },
+  "executor_runtime_mode": "live_local_sota_gguf",
+  "experiment": "1428_dccd_schema_constrained_repair_v2",
+  "honest_verdict": "blocked_sota_model_cache_unavailable",
+  "local_sota_model_inference_used": false,
+  "local_sota_model_used": null,
+  "model_specs": [
+    {
+      "cache_status": "missing",
+      "hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "role": "primary_repair_model"
+    },
+    {
+      "cache_status": "missing",
+      "hf_id": "unsloth/gemma-4-31B-it-GGUF",
+      "role": "dense_fallback"
+    },
+    {
+      "cache_status": "missing",
+      "hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "role": "moe_fallback"
+    }
+  ],
+  "rejection_reason_counts": {
+    "constraint_failed": 0,
+    "false_acceptance_guard": 0,
+    "generation_or_validation_failed": 0,
+    "repair_required_still_true": 0,
+    "schema_validation_failed": 0,
+    "semantic_result_not_sat": 0,
+    "semantic_validation_failed": 0,
+    "timeout": 0,
+    "validator_mismatch_no_validator_injected": 0
+  },
+  "repair_executor_v2_deployed": true,
+  "repair_hint_cases_available": 0,
+  "repair_hint_cases_tested": 0,
+  "repaired_case_success_rate": 0.0,
+  "repaired_cases_successful": 0,
+  "run_date": "20260506",
+  "schema": "dccd_schema_constrained_repair_v2",
+  "schema_valid_rate": 0.0,
+  "semantic_acceptance_rate": 0.0,
+  "status": "blocked",
+  "tests_run": []
+}

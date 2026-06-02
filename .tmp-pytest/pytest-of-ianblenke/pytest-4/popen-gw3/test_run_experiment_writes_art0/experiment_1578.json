@@ -1,0 +1,82 @@
+{
+  "brain_training_dynamics_verdict": "starvation overstated",
+  "brain_training_dynamics_verdict_ready": true,
+  "factorized_converged": true,
+  "factorized_convergence_iteration": 0,
+  "factorized_final_kl": 0.408076,
+  "factorized_gradient_active_fraction_first_1000": 1.0,
+  "factorized_iterations_run": 20,
+  "factorized_trace": [
+    {
+      "gradient_l2": 0.0,
+      "iteration": 0,
+      "kl": 0.412524,
+      "marginal_escape_from_half": 0.0
+    },
+    {
+      "gradient_l2": 0.110771,
+      "iteration": 10,
+      "kl": 0.41063,
+      "marginal_escape_from_half": 0.002854
+    },
+    {
+      "gradient_l2": 0.231659,
+      "iteration": 20,
+      "kl": 0.408076,
+      "marginal_escape_from_half": 0.006236
+    }
+  ],
+  "factorized_wall_time_s": 0.00304,
+  "honest_verdict": "complete: starvation overstated; factorized_final_KL=0.408076, linear_AR_final_KL=0.402800",
+  "linear_ar_converged": true,
+  "linear_ar_convergence_iteration": 0,
+  "linear_ar_final_kl": 0.4028,
+  "linear_ar_gradient_active_fraction_first_1000": 1.0,
+  "linear_ar_iterations_run": 20,
+  "linear_ar_trace": [
+    {
+      "gradient_l2": 0.0,
+      "iteration": 0,
+      "kl": 0.412524,
+      "marginal_escape_from_half": 0.0
+    },
+    {
+      "gradient_l2": 0.236309,
+      "iteration": 10,
+      "kl": 0.407336,
+      "marginal_escape_from_half": 0.005093
+    },
+    {
+      "gradient_l2": 0.245821,
+      "iteration": 20,
+      "kl": 0.4028,
+      "marginal_escape_from_half": 0.009083
+    }
+  ],
+  "linear_ar_wall_time_s": 0.007241,
+  "metadata": {
+    "batch_size": 64,
+    "beta": 2.0,
+    "checkpoint_interval": 10,
+    "constraint_seed": 42,
+    "constraints_per_k": 3,
+    "convergence_kl_threshold": 1.0,
+    "experiment_id": 1578,
+    "factorized_parameter_count": 6,
+    "k": 4,
+    "linear_ar_parameter_count": 21,
+    "max_iterations": 20,
+    "min_iterations": 20,
+    "n": 6,
+    "project_root": "/home/ianblenke/github.com/ianblenke/carnot",
+    "run_date": "20260508",
+    "sampling_seed": 1578,
+    "schema": "brain_reinforce_training_dynamics_k15_v1",
+    "spec_refs": [
+      "REQ-VERIFY-1578",
+      "SCENARIO-VERIFY-1578"
+    ]
+  },
+  "paper_v6_brain_recommendation": "paper_v6: treat BRAIN gradient-starvation as overstated at k=15",
+  "status": "complete"
+}

@@ -1,0 +1,3215 @@
+{
+  "active_roadmap_modified": false,
+  "blocked_reasons": [],
+  "conductor_file_modified": false,
+  "constraint_taxonomy": [
+    {
+      "description": "Binary decision flags such as selected items or rejected prior-bait answers.",
+      "fragment_type": "boolean",
+      "solver_encoding": "Bool"
+    },
+    {
+      "description": "Exact answer matching when the fixture already supplies the target string.",
+      "fragment_type": "string_equality",
+      "solver_encoding": "String equality over canonical answer literals"
+    },
+    {
+      "description": "Integer answer checks, capacities, domains, and finite numeric bounds.",
+      "fragment_type": "arithmetic_interval",
+      "solver_encoding": "QF_LIA integer equality or closed interval bound"
+    },
+    {
+      "description": "Assignment-style one-worker-per-task constraints.",
+      "fragment_type": "all_different",
+      "solver_encoding": "Distinct finite-domain integer variables"
+    },
+    {
+      "description": "Graph coloring adjacency relations and node-color domains.",
+      "fragment_type": "graph_relation",
+      "solver_encoding": "Finite-domain edge inequality constraints"
+    },
+    {
+      "description": "A row is feasible only when every listed hard constraint is satisfied.",
+      "fragment_type": "feasibility",
+      "solver_encoding": "Conjunction of hard constraints"
+    },
+    {
+      "description": "The fixture's exact reference objective remains the optimization authority.",
+      "fragment_type": "objective_bound",
+      "solver_encoding": "Exact optimum equality or inequality bound from the reference solver"
+    }
+  ],
+  "coverage_by_fixture_family": {
+    "assignment": {
+      "exact_solver_row_count": 5,
+      "fragment_types": [
+        "all_different",
+        "boolean",
+        "feasibility",
+        "objective_bound"
+      ],
+      "fully_formalizable": 5,
+      "not_formalizable_without_extraction": 0,
+      "partial_smt_coverage": 1.0,
+      "partially_formalizable": 0,
+      "row_count": 5
+    },
+    "context_defined_entity_facts": {
+      "exact_solver_row_count": 10,
+      "fragment_types": [
+        "boolean",
+        "string_equality"
+      ],
+      "fully_formalizable": 10,
+      "not_formalizable_without_extraction": 0,
+      "partial_smt_coverage": 1.0,
+      "partially_formalizable": 0,
+      "row_count": 10
+    },
+    "graph_coloring": {
+      "exact_solver_row_count": 5,
+      "fragment_types": [
+        "arithmetic_interval",
+        "feasibility",
+        "graph_relation",
+        "objective_bound"
+      ],
+      "fully_formalizable": 5,
+      "not_formalizable_without_extraction": 0,
+      "partial_smt_coverage": 1.0,
+      "partially_formalizable": 0,
+      "row_count": 5
+    },
+    "knapsack": {
+      "exact_solver_row_count": 5,
+      "fragment_types": [
+        "arithmetic_interval",
+        "boolean",
+        "feasibility",
+        "objective_bound"
+      ],
+      "fully_formalizable": 5,
+      "not_formalizable_without_extraction": 0,
+      "partial_smt_coverage": 1.0,
+      "partially_formalizable": 0,
+      "row_count": 5
+    },
+    "local_arithmetic_rules": {
+      "exact_solver_row_count": 10,
+      "fragment_types": [
+        "arithmetic_interval",
+        "boolean"
+      ],
+      "fully_formalizable": 0,
+      "not_formalizable_without_extraction": 0,
+      "partial_smt_coverage": 1.0,
+      "partially_formalizable": 10,
+      "row_count": 10
+    },
+    "symbolic_aliases": {
+      "exact_solver_row_count": 10,
+      "fragment_types": [
+        "boolean",
+        "string_equality"
+      ],
+      "fully_formalizable": 10,
+      "not_formalizable_without_extraction": 0,
+      "partial_smt_coverage": 1.0,
+      "partially_formalizable": 0,
+      "row_count": 10
+    }
+  },
+  "coverage_method": {
+    "exact_checker_authority_preserved": true,
+    "full_context_rule_extraction_claimed": false,
+    "partial_smt_coverage": "(fully_formalizable + partially_formalizable) / fixture_row_count",
+    "row_denominator": "Exp 3210 context JSONL rows plus Exp 3211 ConstraintBench JSONL rows"
+  },
+  "coverage_ready": true,
+  "duration_s": 2.0,
+  "exact_solver_row_count": 45,
+  "experiment_id": "exp3224",
+  "fixture_row_count": 45,
+  "fully_formalizable_count": 35,
+  "fully_smt_coverage": 0.777778,
+  "highest_value_rows_for_exp3225": [
+    {
+      "artifact_source": "exp3210_context",
+      "fixture_family": "local_arithmetic_rules",
+      "formalizability": "partially_formalizable",
+      "priority_score": 1.0,
+      "reason": "local arithmetic rows expose the highest-value extraction gap for exp3225",
+      "row_id": "ctx3210-arithmetic-01",
+      "use_for": "exp3225 clean verifier scoring row selection"
+    },
+    {
+      "artifact_source": "exp3210_context",
+      "fixture_family": "local_arithmetic_rules",
+      "formalizability": "partially_formalizable",
+      "priority_score": 1.0,
+      "reason": "local arithmetic rows expose the highest-value extraction gap for exp3225",
+      "row_id": "ctx3210-arithmetic-02",
+      "use_for": "exp3225 clean verifier scoring row selection"
+    },
+    {
+      "artifact_source": "exp3210_context",
+      "fixture_family": "local_arithmetic_rules",
+      "formalizability": "partially_formalizable",
+      "priority_score": 1.0,
+      "reason": "local arithmetic rows expose the highest-value extraction gap for exp3225",
+      "row_id": "ctx3210-arithmetic-03",
+      "use_for": "exp3225 clean verifier scoring row selection"
+    },
+    {
+      "artifact_source": "exp3210_context",
+      "fixture_family": "local_arithmetic_rules",
+      "formalizability": "partially_formalizable",
+      "priority_score": 1.0,
+      "reason": "local arithmetic rows expose the highest-value extraction gap for exp3225",
+      "row_id": "ctx3210-arithmetic-04",
+      "use_for": "exp3225 clean verifier scoring row selection"
+    },
+    {
+      "artifact_source": "exp3210_context",
+      "fixture_family": "local_arithmetic_rules",
+      "formalizability": "partially_formalizable",
+      "priority_score": 1.0,
+      "reason": "local arithmetic rows expose the highest-value extraction gap for exp3225",
+      "row_id": "ctx3210-arithmetic-05",
+      "use_for": "exp3225 clean verifier scoring row selection"
+    },
+    {
+      "artifact_source": "exp3210_context",
+      "fixture_family": "local_arithmetic_rules",
+      "formalizability": "partially_formalizable",
+      "priority_score": 1.0,
+      "reason": "local arithmetic rows expose the highest-value extraction gap for exp3225",
+      "row_id": "ctx3210-arithmetic-06",
+      "use_for": "exp3225 clean verifier scoring row selection"
+    },
+    {
+      "artifact_source": "exp3210_context",
+      "fixture_family": "local_arithmetic_rules",
+      "formalizability": "partially_formalizable",
+      "priority_score": 1.0,
+      "reason": "local arithmetic rows expose the highest-value extraction gap for exp3225",
+      "row_id": "ctx3210-arithmetic-07",
+      "use_for": "exp3225 clean verifier scoring row selection"
+    },
+    {
+      "artifact_source": "exp3210_context",
+      "fixture_family": "local_arithmetic_rules",
+      "formalizability": "partially_formalizable",
+      "priority_score": 1.0,
+      "reason": "local arithmetic rows expose the highest-value extraction gap for exp3225",
+      "row_id": "ctx3210-arithmetic-08",
+      "use_for": "exp3225 clean verifier scoring row selection"
+    },
+    {
+      "artifact_source": "exp3210_context",
+      "fixture_family": "local_arithmetic_rules",
+      "formalizability": "partially_formalizable",
+      "priority_score": 1.0,
+      "reason": "local arithmetic rows expose the highest-value extraction gap for exp3225",
+      "row_id": "ctx3210-arithmetic-09",
+      "use_for": "exp3225 clean verifier scoring row selection"
+    },
+    {
+      "artifact_source": "exp3210_context",
+      "fixture_family": "local_arithmetic_rules",
+      "formalizability": "partially_formalizable",
+      "priority_score": 1.0,
+      "reason": "local arithmetic rows expose the highest-value extraction gap for exp3225",
+      "row_id": "ctx3210-arithmetic-10",
+      "use_for": "exp3225 clean verifier scoring row selection"
+    },
+    {
+      "artifact_source": "exp3211_constraintbench",
+      "fixture_family": "graph_coloring",
+      "formalizability": "fully_formalizable",
+      "priority_score": 0.94,
+      "reason": "graph-coloring rows exercise relation constraints cleanly",
+      "row_id": "cbpilot-3211-coloring-001",
+      "use_for": "exp3225 clean verifier scoring row selection"
+    },
+    {
+      "artifact_source": "exp3211_constraintbench",
+      "fixture_family": "graph_coloring",
+      "formalizability": "fully_formalizable",
+      "priority_score": 0.94,
+      "reason": "graph-coloring rows exercise relation constraints cleanly",
+      "row_id": "cbpilot-3211-coloring-002",
+      "use_for": "exp3225 clean verifier scoring row selection"
+    }
+  ],
+  "honest_verdict": "complete: partial SMT coverage ready; rows=45 full=35 partial=10",
+  "inference_substrate": "deterministic_artifact_replay_no_llm",
+  "inference_substrate_details": {
+    "executes_models": false,
+    "new_live_model_calls": 0,
+    "offline_exact_artifact_replay": true,
+    "training_performed": false
+  },
+  "milestone": "2026.05.298",
+  "not_formalizable_count": 0,
+  "partial_smt_coverage": 1.0,
+  "partially_formalizable_count": 10,
+  "readiness_checks": {
+    "all_rows_labeled": true,
+    "all_sources_present": true,
+    "counts_match_denominator": true,
+    "deterministic_no_llm_substrate": true,
+    "formalizable_rows_have_solver_material": true,
+    "has_constraintbench_rows": true,
+    "has_context_rows": true
+  },
+  "run_date": "20260528",
+  "schema_version": "carnot.logitext_partial_smt_context_coverage_pilot.v1",
+  "smt_rows": [
+    {
+      "artifact_source": "exp3210_context",
+      "constraint_fragments": [
+        "boolean",
+        "string_equality"
+      ],
+      "exact_solver_pointer": {
+        "checker_type": "exact_alias_string",
+        "row_id": "ctx3210-symbolic-01",
+        "source_fixture_artifact": "data/research/context_cot_clbench_parametric_shortcut_v1.jsonl"
+      },
+      "exp3225_priority_reason": "context answer equality is exact once the fixture-supplied target is trusted",
+      "exp3225_priority_score": 0.7,
+      "fixture_family": "symbolic_aliases",
+      "formalizability": "fully_formalizable",
+      "formalized_fragments": [
+        {
+          "description": "answer equals the fixture's extracted local-context string",
+          "fragment_type": "string_equality"
+        },
+        {
+          "description": "prior-bait answer is rejected by exact string checker",
+          "fragment_type": "boolean"
+        }
+      ],
+      "logitext_boundary": "natural-language extraction is not used as solver evidence in this pilot",
+      "row_id": "ctx3210-symbolic-01",
+      "solver_authority_preserved": true,
+      "solver_ready_representation": {
+        "assertions": [
+          {
+            "left": "answer",
+            "op": "=",
+            "right": "banana"
+          },
+          {
+            "left": "answer",
+            "op": "!=",
+            "right": "planet"
+          }
+        ],
+        "kind": "answer_string_equality",
+        "logic": "QF_S",
+        "variables": {
+          "answer": "String"
+        }
+      },
+      "unformalized_requirements": []
+    },
+    {
+      "artifact_source": "exp3210_context",
+      "constraint_fragments": [
+        "boolean",
+        "string_equality"
+      ],
+      "exact_solver_pointer": {
+        "checker_type": "exact_alias_string",
+        "row_id": "ctx3210-symbolic-02",
+        "source_fixture_artifact": "data/research/context_cot_clbench_parametric_shortcut_v1.jsonl"
+      },
+      "exp3225_priority_reason": "context answer equality is exact once the fixture-supplied target is trusted",
+      "exp3225_priority_score": 0.7,
+      "fixture_family": "symbolic_aliases",
+      "formalizability": "fully_formalizable",
+      "formalized_fragments": [
+        {
+          "description": "answer equals the fixture's extracted local-context string",
+          "fragment_type": "string_equality"
+        },
+        {
+          "description": "prior-bait answer is rejected by exact string checker",
+          "fragment_type": "boolean"
+        }
+      ],
+      "logitext_boundary": "natural-language extraction is not used as solver evidence in this pilot",
+      "row_id": "ctx3210-symbolic-02",
+      "solver_authority_preserved": true,
+      "solver_ready_representation": {
+        "assertions": [
+          {
+            "left": "answer",
+            "op": "=",
+            "right": "blue screwdriver"
+          },
+          {
+            "left": "answer",
+            "op": "!=",
+            "right": "snake"
+          }
+        ],
+        "kind": "answer_string_equality",
+        "logic": "QF_S",
+        "variables": {
+          "answer": "String"
+        }
+      },
+      "unformalized_requirements": []
+    },
+    {
+      "artifact_source": "exp3210_context",
+      "constraint_fragments": [
+        "boolean",
+        "string_equality"
+      ],
+      "exact_solver_pointer": {
+        "checker_type": "exact_alias_string",
+        "row_id": "ctx3210-symbolic-03",
+        "source_fixture_artifact": "data/research/context_cot_clbench_parametric_shortcut_v1.jsonl"
+      },
+      "exp3225_priority_reason": "context answer equality is exact once the fixture-supplied target is trusted",
+      "exp3225_priority_score": 0.7,
+      "fixture_family": "symbolic_aliases",
+      "formalizability": "fully_formalizable",
+      "formalized_fragments": [
+        {
+          "description": "answer equals the fixture's extracted local-context string",
+          "fragment_type": "string_equality"
+        },
+        {
+          "description": "prior-bait answer is rejected by exact string checker",
+          "fragment_type": "boolean"
+        }
+      ],
+      "logitext_boundary": "natural-language extraction is not used as solver evidence in this pilot",
+      "row_id": "ctx3210-symbolic-03",
+      "solver_authority_preserved": true,
+      "solver_ready_representation": {
+        "assertions": [
+          {
+            "left": "answer",
+            "op": "=",
+            "right": "teacup"
+          },
+          {
+            "left": "answer",
+            "op": "!=",
+            "right": "planet"
+          }
+        ],
+        "kind": "answer_string_equality",
+        "logic": "QF_S",
+        "variables": {
+          "answer": "String"
+        }
+      },
+      "unformalized_requirements": []
+    },
+    {
+      "artifact_source": "exp3210_context",
+      "constraint_fragments": [
+        "boolean",
+        "string_equality"
+      ],
+      "exact_solver_pointer": {
+        "checker_type": "exact_alias_string",
+        "row_id": "ctx3210-symbolic-04",
+        "source_fixture_artifact": "data/research/context_cot_clbench_parametric_shortcut_v1.jsonl"
+      },
+      "exp3225_priority_reason": "context answer equality is exact once the fixture-supplied target is trusted",
+      "exp3225_priority_score": 0.7,
+      "fixture_family": "symbolic_aliases",
+      "formalizability": "fully_formalizable",
+      "formalized_fragments": [
+        {
+          "description": "answer equals the fixture's extracted local-context string",
+          "fragment_type": "string_equality"
+        },
+        {
+          "description": "prior-bait answer is rejected by exact string checker",
+          "fragment_type": "boolean"
+        }
+      ],
+      "logitext_boundary": "natural-language extraction is not used as solver evidence in this pilot",
+      "row_id": "ctx3210-symbolic-04",
+      "solver_authority_preserved": true,
+      "solver_ready_representation": {
+        "assertions": [
+          {
+            "left": "answer",
+            "op": "=",
+            "right": "north door"
+          },
+          {
+            "left": "answer",
+            "op": "!=",
+            "right": "gemstone"
+          }
+        ],
+        "kind": "answer_string_equality",
+        "logic": "QF_S",
+        "variables": {
+          "answer": "String"
+        }
+      },
+      "unformalized_requirements": []
+    },
+    {
+      "artifact_source": "exp3210_context",
+      "constraint_fragments": [
+        "boolean",
+        "string_equality"
+      ],
+      "exact_solver_pointer": {
+        "checker_type": "exact_alias_string",
+        "row_id": "ctx3210-symbolic-05",
+        "source_fixture_artifact": "data/research/context_cot_clbench_parametric_shortcut_v1.jsonl"
+      },
+      "exp3225_priority_reason": "context answer equality is exact once the fixture-supplied target is trusted",
+      "exp3225_priority_score": 0.7,
+      "fixture_family": "symbolic_aliases",
+      "formalizability": "fully_formalizable",
+      "formalized_fragments": [
+        {
+          "description": "answer equals the fixture's extracted local-context string",
+          "fragment_type": "string_equality"
+        },
+        {
+          "description": "prior-bait answer is rejected by exact string checker",
+          "fragment_type": "boolean"
+        }
+      ],
+      "logitext_boundary": "natural-language extraction is not used as solver evidence in this pilot",
+      "row_id": "ctx3210-symbolic-05",
+      "solver_authority_preserved": true,
+      "solver_ready_representation": {
+        "assertions": [
+          {
+            "left": "answer",
+            "op": "=",
+            "right": "paperclip"
+          },
+          {
+            "left": "answer",
+            "op": "!=",
+            "right": "bird"
+          }
+        ],
+        "kind": "answer_string_equality",
+        "logic": "QF_S",
+        "variables": {
+          "answer": "String"
+        }
+      },
+      "unformalized_requirements": []
+    },
+    {
+      "artifact_source": "exp3210_context",
+      "constraint_fragments": [
+        "boolean",
+        "string_equality"
+      ],
+      "exact_solver_pointer": {
+        "checker_type": "exact_alias_string",
+        "row_id": "ctx3210-symbolic-06",
+        "source_fixture_artifact": "data/research/context_cot_clbench_parametric_shortcut_v1.jsonl"
+      },
+      "exp3225_priority_reason": "context answer equality is exact once the fixture-supplied target is trusted",
+      "exp3225_priority_score": 0.7,
+      "fixture_family": "symbolic_aliases",
+      "formalizability": "fully_formalizable",
+      "formalized_fragments": [
+        {
+          "description": "answer equals the fixture's extracted local-context string",
+          "fragment_type": "string_equality"
+        },
+        {
+          "description": "prior-bait answer is rejected by exact string checker",
+          "fragment_type": "boolean"
+        }
+      ],
+      "logitext_boundary": "natural-language extraction is not used as solver evidence in this pilot",
+      "row_id": "ctx3210-symbolic-06",
+      "solver_authority_preserved": true,
+      "solver_ready_representation": {
+        "assertions": [
+          {
+            "left": "answer",
+            "op": "=",
+            "right": "green notebook"
+          },
+          {
+            "left": "answer",
+            "op": "!=",
+            "right": "planet"
+          }
+        ],
+        "kind": "answer_string_equality",
+        "logic": "QF_S",
+        "variables": {
+          "answer": "String"
+        }
+      },
+      "unformalized_requirements": []
+    },
+    {
+      "artifact_source": "exp3210_context",
+      "constraint_fragments": [
+        "boolean",
+        "string_equality"
+      ],
+      "exact_solver_pointer": {
+        "checker_type": "exact_alias_string",
+        "row_id": "ctx3210-symbolic-07",
+        "source_fixture_artifact": "data/research/context_cot_clbench_parametric_shortcut_v1.jsonl"
+      },
+      "exp3225_priority_reason": "context answer equality is exact once the fixture-supplied target is trusted",
+      "exp3225_priority_score": 0.7,
+      "fixture_family": "symbolic_aliases",
+      "formalizability": "fully_formalizable",
+      "formalized_fragments": [
+        {
+          "description": "answer equals the fixture's extracted local-context string",
+          "fragment_type": "string_equality"
+        },
+        {
+          "description": "prior-bait answer is rejected by exact string checker",
+          "fragment_type": "boolean"
+        }
+      ],
+      "logitext_boundary": "natural-language extraction is not used as solver evidence in this pilot",
+      "row_id": "ctx3210-symbolic-07",
+      "solver_authority_preserved": true,
+      "solver_ready_representation": {
+        "assertions": [
+          {
+            "left": "answer",
+            "op": "=",
+            "right": "silver key"
+          },
+          {
+            "left": "answer",
+            "op": "!=",
+            "right": "programming language"
+          }
+        ],
+        "kind": "answer_string_equality",
+        "logic": "QF_S",
+        "variables": {
+          "answer": "String"
+        }
+      },
+      "unformalized_requirements": []
+    },
+    {
+      "artifact_source": "exp3210_context",
+      "constraint_fragments": [
+        "boolean",
+        "string_equality"
+      ],
+      "exact_solver_pointer": {
+        "checker_type": "exact_alias_string",
+        "row_id": "ctx3210-symbolic-08",
+        "source_fixture_artifact": "data/research/context_cot_clbench_parametric_shortcut_v1.jsonl"
+      },
+      "exp3225_priority_reason": "context answer equality is exact once the fixture-supplied target is trusted",
+      "exp3225_priority_score": 0.7,
+      "fixture_family": "symbolic_aliases",
+      "formalizability": "fully_formalizable",
+      "formalized_fragments": [
+        {
+          "description": "answer equals the fixture's extracted local-context string",
+          "fragment_type": "string_equality"
+        },
+        {
+          "description": "prior-bait answer is rejected by exact string checker",
+          "fragment_type": "boolean"
+        }
+      ],
+      "logitext_boundary": "natural-language extraction is not used as solver evidence in this pilot",
+      "row_id": "ctx3210-symbolic-08",
+      "solver_authority_preserved": true,
+      "solver_ready_representation": {
+        "assertions": [
+          {
+            "left": "answer",
+            "op": "=",
+            "right": "left stair"
+          },
+          {
+            "left": "answer",
+            "op": "!=",
+            "right": "river delta"
+          }
+        ],
+        "kind": "answer_string_equality",
+        "logic": "QF_S",
+        "variables": {
+          "answer": "String"
+        }
+      },
+      "unformalized_requirements": []
+    },
+    {
+      "artifact_source": "exp3210_context",
+      "constraint_fragments": [
+        "boolean",
+        "string_equality"
+      ],
+      "exact_solver_pointer": {
+        "checker_type": "exact_alias_string",
+        "row_id": "ctx3210-symbolic-09",
+        "source_fixture_artifact": "data/research/context_cot_clbench_parametric_shortcut_v1.jsonl"
+      },
+      "exp3225_priority_reason": "context answer equality is exact once the fixture-supplied target is trusted",
+      "exp3225_priority_score": 0.7,
+      "fixture_family": "symbolic_aliases",
+      "formalizability": "fully_formalizable",
+      "formalized_fragments": [
+        {
+          "description": "answer equals the fixture's extracted local-context string",
+          "fragment_type": "string_equality"
+        },
+        {
+          "description": "prior-bait answer is rejected by exact string checker",
+          "fragment_type": "boolean"
+        }
+      ],
+      "logitext_boundary": "natural-language extraction is not used as solver evidence in this pilot",
+      "row_id": "ctx3210-symbolic-09",
+      "solver_authority_preserved": true,
+      "solver_ready_representation": {
+        "assertions": [
+          {
+            "left": "answer",
+            "op": "=",
+            "right": "copper coin"
+          },
+          {
+            "left": "answer",
+            "op": "!=",
+            "right": "flower"
+          }
+        ],
+        "kind": "answer_string_equality",
+        "logic": "QF_S",
+        "variables": {
+          "answer": "String"
+        }
+      },
+      "unformalized_requirements": []
+    },
+    {
+      "artifact_source": "exp3210_context",
+      "constraint_fragments": [
+        "boolean",
+        "string_equality"
+      ],
+      "exact_solver_pointer": {
+        "checker_type": "exact_alias_string",
+        "row_id": "ctx3210-symbolic-10",
+        "source_fixture_artifact": "data/research/context_cot_clbench_parametric_shortcut_v1.jsonl"
+      },
+      "exp3225_priority_reason": "context answer equality is exact once the fixture-supplied target is trusted",
+      "exp3225_priority_score": 0.7,
+      "fixture_family": "symbolic_aliases",
+      "formalizability": "fully_formalizable",
+      "formalized_fragments": [
+        {
+          "description": "answer equals the fixture's extracted local-context string",
+          "fragment_type": "string_equality"
+        },
+        {
+          "description": "prior-bait answer is rejected by exact string checker",
+          "fragment_type": "boolean"
+        }
+      ],
+      "logitext_boundary": "natural-language extraction is not used as solver evidence in this pilot",
+      "row_id": "ctx3210-symbolic-10",
+      "solver_authority_preserved": true,
+      "solver_ready_representation": {
+        "assertions": [
+          {
+            "left": "answer",
+            "op": "=",
+            "right": "red ladder"
+          },
+          {
+            "left": "answer",
+            "op": "!=",
+            "right": "map book"
+          }
+        ],
+        "kind": "answer_string_equality",
+        "logic": "QF_S",
+        "variables": {
+          "answer": "String"
+        }
+      },
+      "unformalized_requirements": []
+    },
+    {
+      "artifact_source": "exp3210_context",
+      "constraint_fragments": [
+        "arithmetic_interval",
+        "boolean"
+      ],
+      "exact_solver_pointer": {
+        "checker_type": "exact_integer_string",
+        "row_id": "ctx3210-arithmetic-01",
+        "source_fixture_artifact": "data/research/context_cot_clbench_parametric_shortcut_v1.jsonl"
+      },
+      "exp3225_priority_reason": "local arithmetic rows expose the highest-value extraction gap for exp3225",
+      "exp3225_priority_score": 1.0,
+      "fixture_family": "local_arithmetic_rules",
+      "formalizability": "partially_formalizable",
+      "formalized_fragments": [
+        {
+          "description": "answer equals the fixture's extracted integer result",
+          "fragment_type": "arithmetic_interval"
+        },
+        {
+          "description": "prior-bait answer is rejected by exact integer checker",
+          "fragment_type": "boolean"
+        }
+      ],
+      "logitext_boundary": "natural-language extraction is not used as solver evidence in this pilot",
+      "row_id": "ctx3210-arithmetic-01",
+      "solver_authority_preserved": true,
+      "solver_ready_representation": {
+        "assertions": [
+          {
+            "left": "answer",
+            "op": "=",
+            "right": 12
+          }
+        ],
+        "kind": "answer_integer_equality",
+        "logic": "QF_LIA",
+        "rejected_prior_bait": 7,
+        "variables": {
+          "answer": "Int"
+        }
+      },
+      "unformalized_requirements": [
+        "natural_language_local_rule_semantics"
+      ]
+    },
+    {
+      "artifact_source": "exp3210_context",
+      "constraint_fragments": [
+        "arithmetic_interval",
+        "boolean"
+      ],
+      "exact_solver_pointer": {
+        "checker_type": "exact_integer_string",
+        "row_id": "ctx3210-arithmetic-02",
+        "source_fixture_artifact": "data/research/context_cot_clbench_parametric_shortcut_v1.jsonl"
+      },
+      "exp3225_priority_reason": "local arithmetic rows expose the highest-value extraction gap for exp3225",
+      "exp3225_priority_score": 1.0,
+      "fixture_family": "local_arithmetic_rules",
+      "formalizability": "partially_formalizable",
+      "formalized_fragments": [
+        {
+          "description": "answer equals the fixture's extracted integer result",
+          "fragment_type": "arithmetic_interval"
+        },
+        {
+          "description": "prior-bait answer is rejected by exact integer checker",
+          "fragment_type": "boolean"
+        }
+      ],
+      "logitext_boundary": "natural-language extraction is not used as solver evidence in this pilot",
+      "row_id": "ctx3210-arithmetic-02",
+      "solver_authority_preserved": true,
+      "solver_ready_representation": {
+        "assertions": [
+          {
+            "left": "answer",
+            "op": "=",
+            "right": 11
+          }
+        ],
+        "kind": "answer_integer_equality",
+        "logic": "QF_LIA",
+        "rejected_prior_bait": 30,
+        "variables": {
+          "answer": "Int"
+        }
+      },
+      "unformalized_requirements": [
+        "natural_language_local_rule_semantics"
+      ]
+    },
+    {
+      "artifact_source": "exp3210_context",
+      "constraint_fragments": [
+        "arithmetic_interval",
+        "boolean"
+      ],
+      "exact_solver_pointer": {
+        "checker_type": "exact_integer_string",
+        "row_id": "ctx3210-arithmetic-03",
+        "source_fixture_artifact": "data/research/context_cot_clbench_parametric_shortcut_v1.jsonl"
+      },
+      "exp3225_priority_reason": "local arithmetic rows expose the highest-value extraction gap for exp3225",
+      "exp3225_priority_score": 1.0,
+      "fixture_family": "local_arithmetic_rules",
+      "formalizability": "partially_formalizable",
+      "formalized_fragments": [
+        {
+          "description": "answer equals the fixture's extracted integer result",
+          "fragment_type": "arithmetic_interval"
+        },
+        {
+          "description": "prior-bait answer is rejected by exact integer checker",
+          "fragment_type": "boolean"
+        }
+      ],
+      "logitext_boundary": "natural-language extraction is not used as solver evidence in this pilot",
+      "row_id": "ctx3210-arithmetic-03",
+      "solver_authority_preserved": true,
+      "solver_ready_representation": {
+        "assertions": [
+          {
+            "left": "answer",
+            "op": "=",
+            "right": 2
+          }
+        ],
+        "kind": "answer_integer_equality",
+        "logic": "QF_LIA",
+        "rejected_prior_bait": 7,
+        "variables": {
+          "answer": "Int"
+        }
+      },
+      "unformalized_requirements": [
+        "natural_language_local_rule_semantics"
+      ]
+    },
+    {
+      "artifact_source": "exp3210_context",
+      "constraint_fragments": [
+        "arithmetic_interval",
+        "boolean"
+      ],
+      "exact_solver_pointer": {
+        "checker_type": "exact_integer_string",
+        "row_id": "ctx3210-arithmetic-04",
+        "source_fixture_artifact": "data/research/context_cot_clbench_parametric_shortcut_v1.jsonl"
+      },
+      "exp3225_priority_reason": "local arithmetic rows expose the highest-value extraction gap for exp3225",
+      "exp3225_priority_score": 1.0,
+      "fixture_family": "local_arithmetic_rules",
+      "formalizability": "partially_formalizable",
+      "formalized_fragments": [
+        {
+          "description": "answer equals the fixture's extracted integer result",
+          "fragment_type": "arithmetic_interval"
+        },
+        {
+          "description": "prior-bait answer is rejected by exact integer checker",
+          "fragment_type": "boolean"
+        }
+      ],
+      "logitext_boundary": "natural-language extraction is not used as solver evidence in this pilot",
+      "row_id": "ctx3210-arithmetic-04",
+      "solver_authority_preserved": true,
+      "solver_ready_representation": {
+        "assertions": [
+          {
+            "left": "answer",
+            "op": "=",
+            "right": 17
+          }
+        ],
+        "kind": "answer_integer_equality",
+        "logic": "QF_LIA",
+        "rejected_prior_bait": 49,
+        "variables": {
+          "answer": "Int"
+        }
+      },
+      "unformalized_requirements": [
+        "natural_language_local_rule_semantics"
+      ]
+    },
+    {
+      "artifact_source": "exp3210_context",
+      "constraint_fragments": [
+        "arithmetic_interval",
+        "boolean"
+      ],
+      "exact_solver_pointer": {
+        "checker_type": "exact_integer_string",
+        "row_id": "ctx3210-arithmetic-05",
+        "source_fixture_artifact": "data/research/context_cot_clbench_parametric_shortcut_v1.jsonl"
+      },
+      "exp3225_priority_reason": "local arithmetic rows expose the highest-value extraction gap for exp3225",
+      "exp3225_priority_score": 1.0,
+      "fixture_family": "local_arithmetic_rules",
+      "formalizability": "partially_formalizable",
+      "formalized_fragments": [
+        {
+          "description": "answer equals the fixture's extracted integer result",
+          "fragment_type": "arithmetic_interval"
+        },
+        {
+          "description": "prior-bait answer is rejected by exact integer checker",
+          "fragment_type": "boolean"
+        }
+      ],
+      "logitext_boundary": "natural-language extraction is not used as solver evidence in this pilot",
+      "row_id": "ctx3210-arithmetic-05",
+      "solver_authority_preserved": true,
+      "solver_ready_representation": {
+        "assertions": [
+          {
+            "left": "answer",
+            "op": "=",
+            "right": 24
+          }
+        ],
+        "kind": "answer_integer_equality",
+        "logic": "QF_LIA",
+        "rejected_prior_bait": 4,
+        "variables": {
+          "answer": "Int"
+        }
+      },
+      "unformalized_requirements": [
+        "natural_language_local_rule_semantics"
+      ]
+    },
+    {
+      "artifact_source": "exp3210_context",
+      "constraint_fragments": [
+        "arithmetic_interval",
+        "boolean"
+      ],
+      "exact_solver_pointer": {
+        "checker_type": "exact_integer_string",
+        "row_id": "ctx3210-arithmetic-06",
+        "source_fixture_artifact": "data/research/context_cot_clbench_parametric_shortcut_v1.jsonl"
+      },
+      "exp3225_priority_reason": "local arithmetic rows expose the highest-value extraction gap for exp3225",
+      "exp3225_priority_score": 1.0,
+      "fixture_family": "local_arithmetic_rules",
+      "formalizability": "partially_formalizable",
+      "formalized_fragments": [
+        {
+          "description": "answer equals the fixture's extracted integer result",
+          "fragment_type": "arithmetic_interval"
+        },
+        {
+          "description": "prior-bait answer is rejected by exact integer checker",
+          "fragment_type": "boolean"
+        }
+      ],
+      "logitext_boundary": "natural-language extraction is not used as solver evidence in this pilot",
+      "row_id": "ctx3210-arithmetic-06",
+      "solver_authority_preserved": true,
+      "solver_ready_representation": {
+        "assertions": [
+          {
+            "left": "answer",
+            "op": "=",
+            "right": 8
+          }
+        ],
+        "kind": "answer_integer_equality",
+        "logic": "QF_LIA",
+        "rejected_prior_bait": 18,
+        "variables": {
+          "answer": "Int"
+        }
+      },
+      "unformalized_requirements": [
+        "natural_language_local_rule_semantics"
+      ]
+    },
+    {
+      "artifact_source": "exp3210_context",
+      "constraint_fragments": [
+        "arithmetic_interval",
+        "boolean"
+      ],
+      "exact_solver_pointer": {
+        "checker_type": "exact_integer_string",
+        "row_id": "ctx3210-arithmetic-07",
+        "source_fixture_artifact": "data/research/context_cot_clbench_parametric_shortcut_v1.jsonl"
+      },
+      "exp3225_priority_reason": "local arithmetic rows expose the highest-value extraction gap for exp3225",
+      "exp3225_priority_score": 1.0,
+      "fixture_family": "local_arithmetic_rules",
+      "formalizability": "partially_formalizable",
+      "formalized_fragments": [
+        {
+          "description": "answer equals the fixture's extracted integer result",
+          "fragment_type": "arithmetic_interval"
+        },
+        {
+          "description": "prior-bait answer is rejected by exact integer checker",
+          "fragment_type": "boolean"
+        }
+      ],
+      "logitext_boundary": "natural-language extraction is not used as solver evidence in this pilot",
+      "row_id": "ctx3210-arithmetic-07",
+      "solver_authority_preserved": true,
+      "solver_ready_representation": {
+        "assertions": [
+          {
+            "left": "answer",
+            "op": "=",
+            "right": 14
+          }
+        ],
+        "kind": "answer_integer_equality",
+        "logic": "QF_LIA",
+        "rejected_prior_bait": 1,
+        "variables": {
+          "answer": "Int"
+        }
+      },
+      "unformalized_requirements": [
+        "natural_language_local_rule_semantics"
+      ]
+    },
+    {
+      "artifact_source": "exp3210_context",
+      "constraint_fragments": [
+        "arithmetic_interval",
+        "boolean"
+      ],
+      "exact_solver_pointer": {
+        "checker_type": "exact_integer_string",
+        "row_id": "ctx3210-arithmetic-08",
+        "source_fixture_artifact": "data/research/context_cot_clbench_parametric_shortcut_v1.jsonl"
+      },
+      "exp3225_priority_reason": "local arithmetic rows expose the highest-value extraction gap for exp3225",
+      "exp3225_priority_score": 1.0,
+      "fixture_family": "local_arithmetic_rules",
+      "formalizability": "partially_formalizable",
+      "formalized_fragments": [
+        {
+          "description": "answer equals the fixture's extracted integer result",
+          "fragment_type": "arithmetic_interval"
+        },
+        {
+          "description": "prior-bait answer is rejected by exact integer checker",
+          "fragment_type": "boolean"
+        }
+      ],
+      "logitext_boundary": "natural-language extraction is not used as solver evidence in this pilot",
+      "row_id": "ctx3210-arithmetic-08",
+      "solver_authority_preserved": true,
+      "solver_ready_representation": {
+        "assertions": [
+          {
+            "left": "answer",
+            "op": "=",
+            "right": 15
+          }
+        ],
+        "kind": "answer_integer_equality",
+        "logic": "QF_LIA",
+        "rejected_prior_bait": 4,
+        "variables": {
+          "answer": "Int"
+        }
+      },
+      "unformalized_requirements": [
+        "natural_language_local_rule_semantics"
+      ]
+    },
+    {
+      "artifact_source": "exp3210_context",
+      "constraint_fragments": [
+        "arithmetic_interval",
+        "boolean"
+      ],
+      "exact_solver_pointer": {
+        "checker_type": "exact_integer_string",
+        "row_id": "ctx3210-arithmetic-09",
+        "source_fixture_artifact": "data/research/context_cot_clbench_parametric_shortcut_v1.jsonl"
+      },
+      "exp3225_priority_reason": "local arithmetic rows expose the highest-value extraction gap for exp3225",
+      "exp3225_priority_score": 1.0,
+      "fixture_family": "local_arithmetic_rules",
+      "formalizability": "partially_formalizable",
+      "formalized_fragments": [
+        {
+          "description": "answer equals the fixture's extracted integer result",
+          "fragment_type": "arithmetic_interval"
+        },
+        {
+          "description": "prior-bait answer is rejected by exact integer checker",
+          "fragment_type": "boolean"
+        }
+      ],
+      "logitext_boundary": "natural-language extraction is not used as solver evidence in this pilot",
+      "row_id": "ctx3210-arithmetic-09",
+      "solver_authority_preserved": true,
+      "solver_ready_representation": {
+        "assertions": [
+          {
+            "left": "answer",
+            "op": "=",
+            "right": 7
+          }
+        ],
+        "kind": "answer_integer_equality",
+        "logic": "QF_LIA",
+        "rejected_prior_bait": 32,
+        "variables": {
+          "answer": "Int"
+        }
+      },
+      "unformalized_requirements": [
+        "natural_language_local_rule_semantics"
+      ]
+    },
+    {
+      "artifact_source": "exp3210_context",
+      "constraint_fragments": [
+        "arithmetic_interval",
+        "boolean"
+      ],
+      "exact_solver_pointer": {
+        "checker_type": "exact_integer_string",
+        "row_id": "ctx3210-arithmetic-10",
+        "source_fixture_artifact": "data/research/context_cot_clbench_parametric_shortcut_v1.jsonl"
+      },
+      "exp3225_priority_reason": "local arithmetic rows expose the highest-value extraction gap for exp3225",
+      "exp3225_priority_score": 1.0,
+      "fixture_family": "local_arithmetic_rules",
+      "formalizability": "partially_formalizable",
+      "formalized_fragments": [
+        {
+          "description": "answer equals the fixture's extracted integer result",
+          "fragment_type": "arithmetic_interval"
+        },
+        {
+          "description": "prior-bait answer is rejected by exact integer checker",
+          "fragment_type": "boolean"
+        }
+      ],
+      "logitext_boundary": "natural-language extraction is not used as solver evidence in this pilot",
+      "row_id": "ctx3210-arithmetic-10",
+      "solver_authority_preserved": true,
+      "solver_ready_representation": {
+        "assertions": [
+          {
+            "left": "answer",
+            "op": "=",
+            "right": 13
+          }
+        ],
+        "kind": "answer_integer_equality",
+        "logic": "QF_LIA",
+        "rejected_prior_bait": 21,
+        "variables": {
+          "answer": "Int"
+        }
+      },
+      "unformalized_requirements": [
+        "natural_language_local_rule_semantics"
+      ]
+    },
+    {
+      "artifact_source": "exp3210_context",
+      "constraint_fragments": [
+        "boolean",
+        "string_equality"
+      ],
+      "exact_solver_pointer": {
+        "checker_type": "exact_entity_fact_string",
+        "row_id": "ctx3210-entity-01",
+        "source_fixture_artifact": "data/research/context_cot_clbench_parametric_shortcut_v1.jsonl"
+      },
+      "exp3225_priority_reason": "context answer equality is exact once the fixture-supplied target is trusted",
+      "exp3225_priority_score": 0.74,
+      "fixture_family": "context_defined_entity_facts",
+      "formalizability": "fully_formalizable",
+      "formalized_fragments": [
+        {
+          "description": "answer equals the fixture's extracted local-context string",
+          "fragment_type": "string_equality"
+        },
+        {
+          "description": "prior-bait answer is rejected by exact string checker",
+          "fragment_type": "boolean"
+        }
+      ],
+      "logitext_boundary": "natural-language extraction is not used as solver evidence in this pilot",
+      "row_id": "ctx3210-entity-01",
+      "solver_authority_preserved": true,
+      "solver_ready_representation": {
+        "assertions": [
+          {
+            "left": "answer",
+            "op": "=",
+            "right": "Lima"
+          },
+          {
+            "left": "answer",
+            "op": "!=",
+            "right": "Paris"
+          }
+        ],
+        "kind": "answer_string_equality",
+        "logic": "QF_S",
+        "variables": {
+          "answer": "String"
+        }
+      },
+      "unformalized_requirements": []
+    },
+    {
+      "artifact_source": "exp3210_context",
+      "constraint_fragments": [
+        "boolean",
+        "string_equality"
+      ],
+      "exact_solver_pointer": {
+        "checker_type": "exact_entity_fact_string",
+        "row_id": "ctx3210-entity-02",
+        "source_fixture_artifact": "data/research/context_cot_clbench_parametric_shortcut_v1.jsonl"
+      },
+      "exp3225_priority_reason": "context answer equality is exact once the fixture-supplied target is trusted",
+      "exp3225_priority_score": 0.74,
+      "fixture_family": "context_defined_entity_facts",
+      "formalizability": "fully_formalizable",
+      "formalized_fragments": [
+        {
+          "description": "answer equals the fixture's extracted local-context string",
+          "fragment_type": "string_equality"
+        },
+        {
+          "description": "prior-bait answer is rejected by exact string checker",
+          "fragment_type": "boolean"
+        }
+      ],
+      "logitext_boundary": "natural-language extraction is not used as solver evidence in this pilot",
+      "row_id": "ctx3210-entity-02",
+      "solver_authority_preserved": true,
+      "solver_ready_representation": {
+        "assertions": [
+          {
+            "left": "answer",
+            "op": "=",
+            "right": "Mercury"
+          },
+          {
+            "left": "answer",
+            "op": "!=",
+            "right": "Jupiter"
+          }
+        ],
+        "kind": "answer_string_equality",
+        "logic": "QF_S",
+        "variables": {
+          "answer": "String"
+        }
+      },
+      "unformalized_requirements": []
+    },
+    {
+      "artifact_source": "exp3210_context",
+      "constraint_fragments": [
+        "boolean",
+        "string_equality"
+      ],
+      "exact_solver_pointer": {
+        "checker_type": "exact_entity_fact_string",
+        "row_id": "ctx3210-entity-03",
+        "source_fixture_artifact": "data/research/context_cot_clbench_parametric_shortcut_v1.jsonl"
+      },
+      "exp3225_priority_reason": "context answer equality is exact once the fixture-supplied target is trusted",
+      "exp3225_priority_score": 0.74,
+      "fixture_family": "context_defined_entity_facts",
+      "formalizability": "fully_formalizable",
+      "formalized_fragments": [
+        {
+          "description": "answer equals the fixture's extracted local-context string",
+          "fragment_type": "string_equality"
+        },
+        {
+          "description": "prior-bait answer is rejected by exact string checker",
+          "fragment_type": "boolean"
+        }
+      ],
+      "logitext_boundary": "natural-language extraction is not used as solver evidence in this pilot",
+      "row_id": "ctx3210-entity-03",
+      "solver_authority_preserved": true,
+      "solver_ready_representation": {
+        "assertions": [
+          {
+            "left": "answer",
+            "op": "=",
+            "right": "42 C"
+          },
+          {
+            "left": "answer",
+            "op": "!=",
+            "right": "100 C"
+          }
+        ],
+        "kind": "answer_string_equality",
+        "logic": "QF_S",
+        "variables": {
+          "answer": "String"
+        }
+      },
+      "unformalized_requirements": []
+    },
+    {
+      "artifact_source": "exp3210_context",
+      "constraint_fragments": [
+        "boolean",
+        "string_equality"
+      ],
+      "exact_solver_pointer": {
+        "checker_type": "exact_entity_fact_string",
+        "row_id": "ctx3210-entity-04",
+        "source_fixture_artifact": "data/research/context_cot_clbench_parametric_shortcut_v1.jsonl"
+      },
+      "exp3225_priority_reason": "context answer equality is exact once the fixture-supplied target is trusted",
+      "exp3225_priority_score": 0.74,
+      "fixture_family": "context_defined_entity_facts",
+      "formalizability": "fully_formalizable",
+      "formalized_fragments": [
+        {
+          "description": "answer equals the fixture's extracted local-context string",
+          "fragment_type": "string_equality"
+        },
+        {
+          "description": "prior-bait answer is rejected by exact string checker",
+          "fragment_type": "boolean"
+        }
+      ],
+      "logitext_boundary": "natural-language extraction is not used as solver evidence in this pilot",
+      "row_id": "ctx3210-entity-04",
+      "solver_authority_preserved": true,
+      "solver_ready_representation": {
+        "assertions": [
+          {
+            "left": "answer",
+            "op": "=",
+            "right": "Ada Lovelace"
+          },
+          {
+            "left": "answer",
+            "op": "!=",
+            "right": "William Shakespeare"
+          }
+        ],
+        "kind": "answer_string_equality",
+        "logic": "QF_S",
+        "variables": {
+          "answer": "String"
+        }
+      },
+      "unformalized_requirements": []
+    },
+    {
+      "artifact_source": "exp3210_context",
+      "constraint_fragments": [
+        "boolean",
+        "string_equality"
+      ],
+      "exact_solver_pointer": {
+        "checker_type": "exact_entity_fact_string",
+        "row_id": "ctx3210-entity-05",
+        "source_fixture_artifact": "data/research/context_cot_clbench_parametric_shortcut_v1.jsonl"
+      },
+      "exp3225_priority_reason": "context answer equality is exact once the fixture-supplied target is trusted",
+      "exp3225_priority_score": 0.74,
+      "fixture_family": "context_defined_entity_facts",
+      "formalizability": "fully_formalizable",
+      "formalized_fragments": [
+        {
+          "description": "answer equals the fixture's extracted local-context string",
+          "fragment_type": "string_equality"
+        },
+        {
+          "description": "prior-bait answer is rejected by exact string checker",
+          "fragment_type": "boolean"
+        }
+      ],
+      "logitext_boundary": "natural-language extraction is not used as solver evidence in this pilot",
+      "row_id": "ctx3210-entity-05",
+      "solver_authority_preserved": true,
+      "solver_ready_representation": {
+        "assertions": [
+          {
+            "left": "answer",
+            "op": "=",
+            "right": "Ben Nevis"
+          },
+          {
+            "left": "answer",
+            "op": "!=",
+            "right": "Mount Everest"
+          }
+        ],
+        "kind": "answer_string_equality",
+        "logic": "QF_S",
+        "variables": {
+          "answer": "String"
+        }
+      },
+      "unformalized_requirements": []
+    },
+    {
+      "artifact_source": "exp3210_context",
+      "constraint_fragments": [
+        "boolean",
+        "string_equality"
+      ],
+      "exact_solver_pointer": {
+        "checker_type": "exact_entity_fact_string",
+        "row_id": "ctx3210-entity-06",
+        "source_fixture_artifact": "data/research/context_cot_clbench_parametric_shortcut_v1.jsonl"
+      },
+      "exp3225_priority_reason": "context answer equality is exact once the fixture-supplied target is trusted",
+      "exp3225_priority_score": 0.74,
+      "fixture_family": "context_defined_entity_facts",
+      "formalizability": "fully_formalizable",
+      "formalized_fragments": [
+        {
+          "description": "answer equals the fixture's extracted local-context string",
+          "fragment_type": "string_equality"
+        },
+        {
+          "description": "prior-bait answer is rejected by exact string checker",
+          "fragment_type": "boolean"
+        }
+      ],
+      "logitext_boundary": "natural-language extraction is not used as solver evidence in this pilot",
+      "row_id": "ctx3210-entity-06",
+      "solver_authority_preserved": true,
+      "solver_ready_representation": {
+        "assertions": [
+          {
+            "left": "answer",
+            "op": "=",
+            "right": "Xe"
+          },
+          {
+            "left": "answer",
+            "op": "!=",
+            "right": "Au"
+          }
+        ],
+        "kind": "answer_string_equality",
+        "logic": "QF_S",
+        "variables": {
+          "answer": "String"
+        }
+      },
+      "unformalized_requirements": []
+    },
+    {
+      "artifact_source": "exp3210_context",
+      "constraint_fragments": [
+        "boolean",
+        "string_equality"
+      ],
+      "exact_solver_pointer": {
+        "checker_type": "exact_entity_fact_string",
+        "row_id": "ctx3210-entity-07",
+        "source_fixture_artifact": "data/research/context_cot_clbench_parametric_shortcut_v1.jsonl"
+      },
+      "exp3225_priority_reason": "context answer equality is exact once the fixture-supplied target is trusted",
+      "exp3225_priority_score": 0.74,
+      "fixture_family": "context_defined_entity_facts",
+      "formalizability": "fully_formalizable",
+      "formalized_fragments": [
+        {
+          "description": "answer equals the fixture's extracted local-context string",
+          "fragment_type": "string_equality"
+        },
+        {
+          "description": "prior-bait answer is rejected by exact string checker",
+          "fragment_type": "boolean"
+        }
+      ],
+      "logitext_boundary": "natural-language extraction is not used as solver evidence in this pilot",
+      "row_id": "ctx3210-entity-07",
+      "solver_authority_preserved": true,
+      "solver_ready_representation": {
+        "assertions": [
+          {
+            "left": "answer",
+            "op": "=",
+            "right": "Grace Hopper"
+          },
+          {
+            "left": "answer",
+            "op": "!=",
+            "right": "Leonardo da Vinci"
+          }
+        ],
+        "kind": "answer_string_equality",
+        "logic": "QF_S",
+        "variables": {
+          "answer": "String"
+        }
+      },
+      "unformalized_requirements": []
+    },
+    {
+      "artifact_source": "exp3210_context",
+      "constraint_fragments": [
+        "boolean",
+        "string_equality"
+      ],
+      "exact_solver_pointer": {
+        "checker_type": "exact_entity_fact_string",
+        "row_id": "ctx3210-entity-08",
+        "source_fixture_artifact": "data/research/context_cot_clbench_parametric_shortcut_v1.jsonl"
+      },
+      "exp3225_priority_reason": "context answer equality is exact once the fixture-supplied target is trusted",
+      "exp3225_priority_score": 0.74,
+      "fixture_family": "context_defined_entity_facts",
+      "formalizability": "fully_formalizable",
+      "formalized_fragments": [
+        {
+          "description": "answer equals the fixture's extracted local-context string",
+          "fragment_type": "string_equality"
+        },
+        {
+          "description": "prior-bait answer is rejected by exact string checker",
+          "fragment_type": "boolean"
+        }
+      ],
+      "logitext_boundary": "natural-language extraction is not used as solver evidence in this pilot",
+      "row_id": "ctx3210-entity-08",
+      "solver_authority_preserved": true,
+      "solver_ready_representation": {
+        "assertions": [
+          {
+            "left": "answer",
+            "op": "=",
+            "right": "12 km/s"
+          },
+          {
+            "left": "answer",
+            "op": "!=",
+            "right": "299,792 km/s"
+          }
+        ],
+        "kind": "answer_string_equality",
+        "logic": "QF_S",
+        "variables": {
+          "answer": "String"
+        }
+      },
+      "unformalized_requirements": []
+    },
+    {
+      "artifact_source": "exp3210_context",
+      "constraint_fragments": [
+        "boolean",
+        "string_equality"
+      ],
+      "exact_solver_pointer": {
+        "checker_type": "exact_entity_fact_string",
+        "row_id": "ctx3210-entity-09",
+        "source_fixture_artifact": "data/research/context_cot_clbench_parametric_shortcut_v1.jsonl"
+      },
+      "exp3225_priority_reason": "context answer equality is exact once the fixture-supplied target is trusted",
+      "exp3225_priority_score": 0.74,
+      "fixture_family": "context_defined_entity_facts",
+      "formalizability": "fully_formalizable",
+      "formalized_fragments": [
+        {
+          "description": "answer equals the fixture's extracted local-context string",
+          "fragment_type": "string_equality"
+        },
+        {
+          "description": "prior-bait answer is rejected by exact string checker",
+          "fragment_type": "boolean"
+        }
+      ],
+      "logitext_boundary": "natural-language extraction is not used as solver evidence in this pilot",
+      "row_id": "ctx3210-entity-09",
+      "solver_authority_preserved": true,
+      "solver_ready_representation": {
+        "assertions": [
+          {
+            "left": "answer",
+            "op": "=",
+            "right": "Harriet Tubman"
+          },
+          {
+            "left": "answer",
+            "op": "!=",
+            "right": "George Washington"
+          }
+        ],
+        "kind": "answer_string_equality",
+        "logic": "QF_S",
+        "variables": {
+          "answer": "String"
+        }
+      },
+      "unformalized_requirements": []
+    },
+    {
+      "artifact_source": "exp3210_context",
+      "constraint_fragments": [
+        "boolean",
+        "string_equality"
+      ],
+      "exact_solver_pointer": {
+        "checker_type": "exact_entity_fact_string",
+        "row_id": "ctx3210-entity-10",
+        "source_fixture_artifact": "data/research/context_cot_clbench_parametric_shortcut_v1.jsonl"
+      },
+      "exp3225_priority_reason": "context answer equality is exact once the fixture-supplied target is trusted",
+      "exp3225_priority_score": 0.74,
+      "fixture_family": "context_defined_entity_facts",
+      "formalizability": "fully_formalizable",
+      "formalized_fragments": [
+        {
+          "description": "answer equals the fixture's extracted local-context string",
+          "fragment_type": "string_equality"
+        },
+        {
+          "description": "prior-bait answer is rejected by exact string checker",
+          "fragment_type": "boolean"
+        }
+      ],
+      "logitext_boundary": "natural-language extraction is not used as solver evidence in this pilot",
+      "row_id": "ctx3210-entity-10",
+      "solver_authority_preserved": true,
+      "solver_ready_representation": {
+        "assertions": [
+          {
+            "left": "answer",
+            "op": "=",
+            "right": "Peru"
+          },
+          {
+            "left": "answer",
+            "op": "!=",
+            "right": "China"
+          }
+        ],
+        "kind": "answer_string_equality",
+        "logic": "QF_S",
+        "variables": {
+          "answer": "String"
+        }
+      },
+      "unformalized_requirements": []
+    },
+    {
+      "artifact_source": "exp3211_constraintbench",
+      "constraint_fragments": [
+        "arithmetic_interval",
+        "boolean",
+        "feasibility",
+        "objective_bound"
+      ],
+      "exact_solver_pointer": {
+        "authority": "local_exhaustive_enumeration",
+        "checker_backend": "exact_knapsack_subset_enumerator",
+        "row_id": "cbpilot-3211-knapsack-001",
+        "source_fixture_artifact": "data/research/constraintbench_feasibility_objective_pilot_v1.jsonl"
+      },
+      "exp3225_priority_reason": "knapsack combines feasibility and objective-gap checks",
+      "exp3225_priority_score": 0.86,
+      "fixture_family": "knapsack",
+      "formalizability": "fully_formalizable",
+      "formalized_fragments": [
+        {
+          "description": "one Boolean variable per listed item",
+          "fragment_type": "boolean"
+        },
+        {
+          "description": "total selected weight is bounded by capacity",
+          "fragment_type": "arithmetic_interval"
+        },
+        {
+          "description": "required and incompatible-item constraints are hard constraints",
+          "fragment_type": "feasibility"
+        },
+        {
+          "description": "total value is compared with the exact reference optimum",
+          "fragment_type": "objective_bound"
+        }
+      ],
+      "logitext_boundary": "natural-language extraction is not used as solver evidence in this pilot",
+      "row_id": "cbpilot-3211-knapsack-001",
+      "solver_authority_preserved": true,
+      "solver_ready_representation": {
+        "capacity": 7,
+        "incompatible_pairs": [
+          [
+            "lamp",
+            "rope"
+          ]
+        ],
+        "kind": "knapsack_bv_linear",
+        "logic": "QF_LIA",
+        "objective": {
+          "exact_value": 15,
+          "feasible_count": 6,
+          "feasible_reference": true,
+          "name": "total_value",
+          "sense": "max",
+          "solution": {
+            "selected_items": [
+              "kit",
+              "lamp",
+              "map"
+            ]
+          }
+        },
+        "required_items": [
+          "kit"
+        ],
+        "value_terms": {
+          "kit": 3,
+          "lamp": 7,
+          "map": 5,
+          "rope": 6
+        },
+        "variables": {
+          "kit": "Bool",
+          "lamp": "Bool",
+          "map": "Bool",
+          "rope": "Bool"
+        },
+        "weight_terms": {
+          "kit": 1,
+          "lamp": 4,
+          "map": 2,
+          "rope": 3
+        }
+      },
+      "unformalized_requirements": []
+    },
+    {
+      "artifact_source": "exp3211_constraintbench",
+      "constraint_fragments": [
+        "arithmetic_interval",
+        "boolean",
+        "feasibility",
+        "objective_bound"
+      ],
+      "exact_solver_pointer": {
+        "authority": "local_exhaustive_enumeration",
+        "checker_backend": "exact_knapsack_subset_enumerator",
+        "row_id": "cbpilot-3211-knapsack-002",
+        "source_fixture_artifact": "data/research/constraintbench_feasibility_objective_pilot_v1.jsonl"
+      },
+      "exp3225_priority_reason": "knapsack combines feasibility and objective-gap checks",
+      "exp3225_priority_score": 0.86,
+      "fixture_family": "knapsack",
+      "formalizability": "fully_formalizable",
+      "formalized_fragments": [
+        {
+          "description": "one Boolean variable per listed item",
+          "fragment_type": "boolean"
+        },
+        {
+          "description": "total selected weight is bounded by capacity",
+          "fragment_type": "arithmetic_interval"
+        },
+        {
+          "description": "required and incompatible-item constraints are hard constraints",
+          "fragment_type": "feasibility"
+        },
+        {
+          "description": "total value is compared with the exact reference optimum",
+          "fragment_type": "objective_bound"
+        }
+      ],
+      "logitext_boundary": "natural-language extraction is not used as solver evidence in this pilot",
+      "row_id": "cbpilot-3211-knapsack-002",
+      "solver_authority_preserved": true,
+      "solver_ready_representation": {
+        "capacity": 9,
+        "incompatible_pairs": [
+          [
+            "battery",
+            "radio"
+          ]
+        ],
+        "kind": "knapsack_bv_linear",
+        "logic": "QF_LIA",
+        "objective": {
+          "exact_value": 21,
+          "feasible_count": 12,
+          "feasible_reference": true,
+          "name": "total_value",
+          "sense": "max",
+          "solution": {
+            "selected_items": [
+              "battery",
+              "case",
+              "sensor"
+            ]
+          }
+        },
+        "required_items": [],
+        "value_terms": {
+          "battery": 9,
+          "case": 4,
+          "radio": 7,
+          "sensor": 8
+        },
+        "variables": {
+          "battery": "Bool",
+          "case": "Bool",
+          "radio": "Bool",
+          "sensor": "Bool"
+        },
+        "weight_terms": {
+          "battery": 4,
+          "case": 2,
+          "radio": 3,
+          "sensor": 3
+        }
+      },
+      "unformalized_requirements": []
+    },
+    {
+      "artifact_source": "exp3211_constraintbench",
+      "constraint_fragments": [
+        "arithmetic_interval",
+        "boolean",
+        "feasibility",
+        "objective_bound"
+      ],
+      "exact_solver_pointer": {
+        "authority": "local_exhaustive_enumeration",
+        "checker_backend": "exact_knapsack_subset_enumerator",
+        "row_id": "cbpilot-3211-knapsack-003",
+        "source_fixture_artifact": "data/research/constraintbench_feasibility_objective_pilot_v1.jsonl"
+      },
+      "exp3225_priority_reason": "knapsack combines feasibility and objective-gap checks",
+      "exp3225_priority_score": 0.86,
+      "fixture_family": "knapsack",
+      "formalizability": "fully_formalizable",
+      "formalized_fragments": [
+        {
+          "description": "one Boolean variable per listed item",
+          "fragment_type": "boolean"
+        },
+        {
+          "description": "total selected weight is bounded by capacity",
+          "fragment_type": "arithmetic_interval"
+        },
+        {
+          "description": "required and incompatible-item constraints are hard constraints",
+          "fragment_type": "feasibility"
+        },
+        {
+          "description": "total value is compared with the exact reference optimum",
+          "fragment_type": "objective_bound"
+        }
+      ],
+      "logitext_boundary": "natural-language extraction is not used as solver evidence in this pilot",
+      "row_id": "cbpilot-3211-knapsack-003",
+      "solver_authority_preserved": true,
+      "solver_ready_representation": {
+        "capacity": 6,
+        "incompatible_pairs": [],
+        "kind": "knapsack_bv_linear",
+        "logic": "QF_LIA",
+        "objective": {
+          "exact_value": 15,
+          "feasible_count": 6,
+          "feasible_reference": true,
+          "name": "total_value",
+          "sense": "max",
+          "solution": {
+            "selected_items": [
+              "book",
+              "medkit",
+              "snack"
+            ]
+          }
+        },
+        "required_items": [
+          "book"
+        ],
+        "value_terms": {
+          "book": 4,
+          "medkit": 9,
+          "snack": 2,
+          "water": 8
+        },
+        "variables": {
+          "book": "Bool",
+          "medkit": "Bool",
+          "snack": "Bool",
+          "water": "Bool"
+        },
+        "weight_terms": {
+          "book": 2,
+          "medkit": 3,
+          "snack": 1,
+          "water": 3
+        }
+      },
+      "unformalized_requirements": []
+    },
+    {
+      "artifact_source": "exp3211_constraintbench",
+      "constraint_fragments": [
+        "arithmetic_interval",
+        "boolean",
+        "feasibility",
+        "objective_bound"
+      ],
+      "exact_solver_pointer": {
+        "authority": "local_exhaustive_enumeration",
+        "checker_backend": "exact_knapsack_subset_enumerator",
+        "row_id": "cbpilot-3211-knapsack-004",
+        "source_fixture_artifact": "data/research/constraintbench_feasibility_objective_pilot_v1.jsonl"
+      },
+      "exp3225_priority_reason": "knapsack combines feasibility and objective-gap checks",
+      "exp3225_priority_score": 0.86,
+      "fixture_family": "knapsack",
+      "formalizability": "fully_formalizable",
+      "formalized_fragments": [
+        {
+          "description": "one Boolean variable per listed item",
+          "fragment_type": "boolean"
+        },
+        {
+          "description": "total selected weight is bounded by capacity",
+          "fragment_type": "arithmetic_interval"
+        },
+        {
+          "description": "required and incompatible-item constraints are hard constraints",
+          "fragment_type": "feasibility"
+        },
+        {
+          "description": "total value is compared with the exact reference optimum",
+          "fragment_type": "objective_bound"
+        }
+      ],
+      "logitext_boundary": "natural-language extraction is not used as solver evidence in this pilot",
+      "row_id": "cbpilot-3211-knapsack-004",
+      "solver_authority_preserved": true,
+      "solver_ready_representation": {
+        "capacity": 8,
+        "incompatible_pairs": [
+          [
+            "cpu",
+            "gpu"
+          ]
+        ],
+        "kind": "knapsack_bv_linear",
+        "logic": "QF_LIA",
+        "objective": {
+          "exact_value": 20,
+          "feasible_count": 5,
+          "feasible_reference": true,
+          "name": "total_value",
+          "sense": "max",
+          "solution": {
+            "selected_items": [
+              "cpu",
+              "fan",
+              "ssd"
+            ]
+          }
+        },
+        "required_items": [
+          "fan"
+        ],
+        "value_terms": {
+          "cpu": 10,
+          "fan": 4,
+          "gpu": 13,
+          "ssd": 6
+        },
+        "variables": {
+          "cpu": "Bool",
+          "fan": "Bool",
+          "gpu": "Bool",
+          "ssd": "Bool"
+        },
+        "weight_terms": {
+          "cpu": 3,
+          "fan": 2,
+          "gpu": 5,
+          "ssd": 2
+        }
+      },
+      "unformalized_requirements": []
+    },
+    {
+      "artifact_source": "exp3211_constraintbench",
+      "constraint_fragments": [
+        "arithmetic_interval",
+        "boolean",
+        "feasibility",
+        "objective_bound"
+      ],
+      "exact_solver_pointer": {
+        "authority": "local_exhaustive_enumeration",
+        "checker_backend": "exact_knapsack_subset_enumerator",
+        "row_id": "cbpilot-3211-knapsack-005",
+        "source_fixture_artifact": "data/research/constraintbench_feasibility_objective_pilot_v1.jsonl"
+      },
+      "exp3225_priority_reason": "knapsack combines feasibility and objective-gap checks",
+      "exp3225_priority_score": 0.86,
+      "fixture_family": "knapsack",
+      "formalizability": "fully_formalizable",
+      "formalized_fragments": [
+        {
+          "description": "one Boolean variable per listed item",
+          "fragment_type": "boolean"
+        },
+        {
+          "description": "total selected weight is bounded by capacity",
+          "fragment_type": "arithmetic_interval"
+        },
+        {
+          "description": "required and incompatible-item constraints are hard constraints",
+          "fragment_type": "feasibility"
+        },
+        {
+          "description": "total value is compared with the exact reference optimum",
+          "fragment_type": "objective_bound"
+        }
+      ],
+      "logitext_boundary": "natural-language extraction is not used as solver evidence in this pilot",
+      "row_id": "cbpilot-3211-knapsack-005",
+      "solver_authority_preserved": true,
+      "solver_ready_representation": {
+        "capacity": 5,
+        "incompatible_pairs": [
+          [
+            "gamma",
+            "delta"
+          ]
+        ],
+        "kind": "knapsack_bv_linear",
+        "logic": "QF_LIA",
+        "objective": {
+          "exact_value": 12,
+          "feasible_count": 10,
+          "feasible_reference": true,
+          "name": "total_value",
+          "sense": "max",
+          "solution": {
+            "selected_items": [
+              "alpha",
+              "gamma"
+            ]
+          }
+        },
+        "required_items": [],
+        "value_terms": {
+          "alpha": 3,
+          "beta": 4,
+          "delta": 5,
+          "gamma": 9
+        },
+        "variables": {
+          "alpha": "Bool",
+          "beta": "Bool",
+          "delta": "Bool",
+          "gamma": "Bool"
+        },
+        "weight_terms": {
+          "alpha": 1,
+          "beta": 2,
+          "delta": 2,
+          "gamma": 4
+        }
+      },
+      "unformalized_requirements": []
+    },
+    {
+      "artifact_source": "exp3211_constraintbench",
+      "constraint_fragments": [
+        "all_different",
+        "boolean",
+        "feasibility",
+        "objective_bound"
+      ],
+      "exact_solver_pointer": {
+        "authority": "local_exhaustive_enumeration",
+        "checker_backend": "exact_assignment_permutation_enumerator",
+        "row_id": "cbpilot-3211-assignment-001",
+        "source_fixture_artifact": "data/research/constraintbench_feasibility_objective_pilot_v1.jsonl"
+      },
+      "exp3225_priority_reason": "assignment rows stress all-different plus objective scoring",
+      "exp3225_priority_score": 0.9,
+      "fixture_family": "assignment",
+      "formalizability": "fully_formalizable",
+      "formalized_fragments": [
+        {
+          "description": "each task receives one worker and workers are not reused",
+          "fragment_type": "all_different"
+        },
+        {
+          "description": "required and forbidden assignments are hard Boolean clauses",
+          "fragment_type": "boolean"
+        },
+        {
+          "description": "assignment validity is checked before objective quality",
+          "fragment_type": "feasibility"
+        },
+        {
+          "description": "total score is compared with the exact reference optimum",
+          "fragment_type": "objective_bound"
+        }
+      ],
+      "logitext_boundary": "natural-language extraction is not used as solver evidence in this pilot",
+      "row_id": "cbpilot-3211-assignment-001",
+      "solver_authority_preserved": true,
+      "solver_ready_representation": {
+        "all_different": [
+          "pack",
+          "ship",
+          "audit"
+        ],
+        "forbidden_assignments": [],
+        "kind": "assignment_finite_domain",
+        "logic": "QF_FD",
+        "objective": {
+          "exact_value": 24,
+          "feasible_count": 6,
+          "feasible_reference": true,
+          "name": "total_score",
+          "sense": "max",
+          "solution": {
+            "assignment": {
+              "audit": "cy",
+              "pack": "amy",
+              "ship": "bo"
+            }
+          }
+        },
+        "required_assignments": [],
+        "scores": {
+          "audit|amy": 6,
+          "audit|bo": 3,
+          "audit|cy": 9,
+          "pack|amy": 7,
+          "pack|bo": 4,
+          "pack|cy": 6,
+          "ship|amy": 5,
+          "ship|bo": 8,
+          "ship|cy": 4
+        },
+        "variables": {
+          "audit": {
+            "domain": {
+              "amy": 0,
+              "bo": 1,
+              "cy": 2
+            }
+          },
+          "pack": {
+            "domain": {
+              "amy": 0,
+              "bo": 1,
+              "cy": 2
+            }
+          },
+          "ship": {
+            "domain": {
+              "amy": 0,
+              "bo": 1,
+              "cy": 2
+            }
+          }
+        }
+      },
+      "unformalized_requirements": []
+    },
+    {
+      "artifact_source": "exp3211_constraintbench",
+      "constraint_fragments": [
+        "all_different",
+        "boolean",
+        "feasibility",
+        "objective_bound"
+      ],
+      "exact_solver_pointer": {
+        "authority": "local_exhaustive_enumeration",
+        "checker_backend": "exact_assignment_permutation_enumerator",
+        "row_id": "cbpilot-3211-assignment-002",
+        "source_fixture_artifact": "data/research/constraintbench_feasibility_objective_pilot_v1.jsonl"
+      },
+      "exp3225_priority_reason": "assignment rows stress all-different plus objective scoring",
+      "exp3225_priority_score": 0.9,
+      "fixture_family": "assignment",
+      "formalizability": "fully_formalizable",
+      "formalized_fragments": [
+        {
+          "description": "each task receives one worker and workers are not reused",
+          "fragment_type": "all_different"
+        },
+        {
+          "description": "required and forbidden assignments are hard Boolean clauses",
+          "fragment_type": "boolean"
+        },
+        {
+          "description": "assignment validity is checked before objective quality",
+          "fragment_type": "feasibility"
+        },
+        {
+          "description": "total score is compared with the exact reference optimum",
+          "fragment_type": "objective_bound"
+        }
+      ],
+      "logitext_boundary": "natural-language extraction is not used as solver evidence in this pilot",
+      "row_id": "cbpilot-3211-assignment-002",
+      "solver_authority_preserved": true,
+      "solver_ready_representation": {
+        "all_different": [
+          "triage",
+          "repair",
+          "verify"
+        ],
+        "forbidden_assignments": [],
+        "kind": "assignment_finite_domain",
+        "logic": "QF_FD",
+        "objective": {
+          "exact_value": 18,
+          "feasible_count": 2,
+          "feasible_reference": true,
+          "name": "total_score",
+          "sense": "max",
+          "solution": {
+            "assignment": {
+              "repair": "kai",
+              "triage": "ivy",
+              "verify": "jo"
+            }
+          }
+        },
+        "required_assignments": [
+          [
+            "repair",
+            "kai"
+          ]
+        ],
+        "scores": {
+          "repair|ivy": 4,
+          "repair|jo": 9,
+          "repair|kai": 6,
+          "triage|ivy": 8,
+          "triage|jo": 5,
+          "triage|kai": 7,
+          "verify|ivy": 6,
+          "verify|jo": 4,
+          "verify|kai": 8
+        },
+        "variables": {
+          "repair": {
+            "domain": {
+              "ivy": 0,
+              "jo": 1,
+              "kai": 2
+            }
+          },
+          "triage": {
+            "domain": {
+              "ivy": 0,
+              "jo": 1,
+              "kai": 2
+            }
+          },
+          "verify": {
+            "domain": {
+              "ivy": 0,
+              "jo": 1,
+              "kai": 2
+            }
+          }
+        }
+      },
+      "unformalized_requirements": []
+    },
+    {
+      "artifact_source": "exp3211_constraintbench",
+      "constraint_fragments": [
+        "all_different",
+        "boolean",
+        "feasibility",
+        "objective_bound"
+      ],
+      "exact_solver_pointer": {
+        "authority": "local_exhaustive_enumeration",
+        "checker_backend": "exact_assignment_permutation_enumerator",
+        "row_id": "cbpilot-3211-assignment-003",
+        "source_fixture_artifact": "data/research/constraintbench_feasibility_objective_pilot_v1.jsonl"
+      },
+      "exp3225_priority_reason": "assignment rows stress all-different plus objective scoring",
+      "exp3225_priority_score": 0.9,
+      "fixture_family": "assignment",
+      "formalizability": "fully_formalizable",
+      "formalized_fragments": [
+        {
+          "description": "each task receives one worker and workers are not reused",
+          "fragment_type": "all_different"
+        },
+        {
+          "description": "required and forbidden assignments are hard Boolean clauses",
+          "fragment_type": "boolean"
+        },
+        {
+          "description": "assignment validity is checked before objective quality",
+          "fragment_type": "feasibility"
+        },
+        {
+          "description": "total score is compared with the exact reference optimum",
+          "fragment_type": "objective_bound"
+        }
+      ],
+      "logitext_boundary": "natural-language extraction is not used as solver evidence in this pilot",
+      "row_id": "cbpilot-3211-assignment-003",
+      "solver_authority_preserved": true,
+      "solver_ready_representation": {
+        "all_different": [
+          "red",
+          "blue",
+          "green"
+        ],
+        "forbidden_assignments": [
+          [
+            "blue",
+            "omar"
+          ]
+        ],
+        "kind": "assignment_finite_domain",
+        "logic": "QF_FD",
+        "objective": {
+          "exact_value": 26,
+          "feasible_count": 4,
+          "feasible_reference": true,
+          "name": "total_score",
+          "sense": "max",
+          "solution": {
+            "assignment": {
+              "blue": "nora",
+              "green": "paz",
+              "red": "omar"
+            }
+          }
+        },
+        "required_assignments": [],
+        "scores": {
+          "blue|nora": 8,
+          "blue|omar": 4,
+          "blue|paz": 7,
+          "green|nora": 5,
+          "green|omar": 6,
+          "green|paz": 9,
+          "red|nora": 6,
+          "red|omar": 9,
+          "red|paz": 5
+        },
+        "variables": {
+          "blue": {
+            "domain": {
+              "nora": 0,
+              "omar": 1,
+              "paz": 2
+            }
+          },
+          "green": {
+            "domain": {
+              "nora": 0,
+              "omar": 1,
+              "paz": 2
+            }
+          },
+          "red": {
+            "domain": {
+              "nora": 0,
+              "omar": 1,
+              "paz": 2
+            }
+          }
+        }
+      },
+      "unformalized_requirements": []
+    },
+    {
+      "artifact_source": "exp3211_constraintbench",
+      "constraint_fragments": [
+        "all_different",
+        "boolean",
+        "feasibility",
+        "objective_bound"
+      ],
+      "exact_solver_pointer": {
+        "authority": "local_exhaustive_enumeration",
+        "checker_backend": "exact_assignment_permutation_enumerator",
+        "row_id": "cbpilot-3211-assignment-004",
+        "source_fixture_artifact": "data/research/constraintbench_feasibility_objective_pilot_v1.jsonl"
+      },
+      "exp3225_priority_reason": "assignment rows stress all-different plus objective scoring",
+      "exp3225_priority_score": 0.9,
+      "fixture_family": "assignment",
+      "formalizability": "fully_formalizable",
+      "formalized_fragments": [
+        {
+          "description": "each task receives one worker and workers are not reused",
+          "fragment_type": "all_different"
+        },
+        {
+          "description": "required and forbidden assignments are hard Boolean clauses",
+          "fragment_type": "boolean"
+        },
+        {
+          "description": "assignment validity is checked before objective quality",
+          "fragment_type": "feasibility"
+        },
+        {
+          "description": "total score is compared with the exact reference optimum",
+          "fragment_type": "objective_bound"
+        }
+      ],
+      "logitext_boundary": "natural-language extraction is not used as solver evidence in this pilot",
+      "row_id": "cbpilot-3211-assignment-004",
+      "solver_authority_preserved": true,
+      "solver_ready_representation": {
+        "all_different": [
+          "extract",
+          "label",
+          "review"
+        ],
+        "forbidden_assignments": [],
+        "kind": "assignment_finite_domain",
+        "logic": "QF_FD",
+        "objective": {
+          "exact_value": 25,
+          "feasible_count": 2,
+          "feasible_reference": true,
+          "name": "total_score",
+          "sense": "max",
+          "solution": {
+            "assignment": {
+              "extract": "ren",
+              "label": "sue",
+              "review": "tay"
+            }
+          }
+        },
+        "required_assignments": [
+          [
+            "review",
+            "tay"
+          ]
+        ],
+        "scores": {
+          "extract|ren": 8,
+          "extract|sue": 6,
+          "extract|tay": 4,
+          "label|ren": 5,
+          "label|sue": 9,
+          "label|tay": 7,
+          "review|ren": 6,
+          "review|sue": 4,
+          "review|tay": 8
+        },
+        "variables": {
+          "extract": {
+            "domain": {
+              "ren": 0,
+              "sue": 1,
+              "tay": 2
+            }
+          },
+          "label": {
+            "domain": {
+              "ren": 0,
+              "sue": 1,
+              "tay": 2
+            }
+          },
+          "review": {
+            "domain": {
+              "ren": 0,
+              "sue": 1,
+              "tay": 2
+            }
+          }
+        }
+      },
+      "unformalized_requirements": []
+    },
+    {
+      "artifact_source": "exp3211_constraintbench",
+      "constraint_fragments": [
+        "all_different",
+        "boolean",
+        "feasibility",
+        "objective_bound"
+      ],
+      "exact_solver_pointer": {
+        "authority": "local_exhaustive_enumeration",
+        "checker_backend": "exact_assignment_permutation_enumerator",
+        "row_id": "cbpilot-3211-assignment-005",
+        "source_fixture_artifact": "data/research/constraintbench_feasibility_objective_pilot_v1.jsonl"
+      },
+      "exp3225_priority_reason": "assignment rows stress all-different plus objective scoring",
+      "exp3225_priority_score": 0.9,
+      "fixture_family": "assignment",
+      "formalizability": "fully_formalizable",
+      "formalized_fragments": [
+        {
+          "description": "each task receives one worker and workers are not reused",
+          "fragment_type": "all_different"
+        },
+        {
+          "description": "required and forbidden assignments are hard Boolean clauses",
+          "fragment_type": "boolean"
+        },
+        {
+          "description": "assignment validity is checked before objective quality",
+          "fragment_type": "feasibility"
+        },
+        {
+          "description": "total score is compared with the exact reference optimum",
+          "fragment_type": "objective_bound"
+        }
+      ],
+      "logitext_boundary": "natural-language extraction is not used as solver evidence in this pilot",
+      "row_id": "cbpilot-3211-assignment-005",
+      "solver_authority_preserved": true,
+      "solver_ready_representation": {
+        "all_different": [
+          "north",
+          "south",
+          "west"
+        ],
+        "forbidden_assignments": [
+          [
+            "south",
+            "wes"
+          ]
+        ],
+        "kind": "assignment_finite_domain",
+        "logic": "QF_FD",
+        "objective": {
+          "exact_value": 26,
+          "feasible_count": 4,
+          "feasible_reference": true,
+          "name": "total_score",
+          "sense": "max",
+          "solution": {
+            "assignment": {
+              "north": "uma",
+              "south": "vic",
+              "west": "wes"
+            }
+          }
+        },
+        "required_assignments": [],
+        "scores": {
+          "north|uma": 9,
+          "north|vic": 5,
+          "north|wes": 6,
+          "south|uma": 6,
+          "south|vic": 8,
+          "south|wes": 4,
+          "west|uma": 4,
+          "west|vic": 7,
+          "west|wes": 9
+        },
+        "variables": {
+          "north": {
+            "domain": {
+              "uma": 0,
+              "vic": 1,
+              "wes": 2
+            }
+          },
+          "south": {
+            "domain": {
+              "uma": 0,
+              "vic": 1,
+              "wes": 2
+            }
+          },
+          "west": {
+            "domain": {
+              "uma": 0,
+              "vic": 1,
+              "wes": 2
+            }
+          }
+        }
+      },
+      "unformalized_requirements": []
+    },
+    {
+      "artifact_source": "exp3211_constraintbench",
+      "constraint_fragments": [
+        "arithmetic_interval",
+        "feasibility",
+        "graph_relation",
+        "objective_bound"
+      ],
+      "exact_solver_pointer": {
+        "authority": "local_exhaustive_enumeration",
+        "checker_backend": "exact_graph_coloring_enumerator",
+        "row_id": "cbpilot-3211-coloring-001",
+        "source_fixture_artifact": "data/research/constraintbench_feasibility_objective_pilot_v1.jsonl"
+      },
+      "exp3225_priority_reason": "graph-coloring rows exercise relation constraints cleanly",
+      "exp3225_priority_score": 0.94,
+      "fixture_family": "graph_coloring",
+      "formalizability": "fully_formalizable",
+      "formalized_fragments": [
+        {
+          "description": "adjacent nodes must have different finite-domain colors",
+          "fragment_type": "graph_relation"
+        },
+        {
+          "description": "each color variable is bounded to the listed color domain",
+          "fragment_type": "arithmetic_interval"
+        },
+        {
+          "description": "node coverage and edge conflicts are hard constraints",
+          "fragment_type": "feasibility"
+        },
+        {
+          "description": "used-color count is compared with the exact reference optimum",
+          "fragment_type": "objective_bound"
+        }
+      ],
+      "logitext_boundary": "natural-language extraction is not used as solver evidence in this pilot",
+      "row_id": "cbpilot-3211-coloring-001",
+      "solver_authority_preserved": true,
+      "solver_ready_representation": {
+        "edge_inequalities": [
+          [
+            0,
+            1
+          ]
+        ],
+        "kind": "graph_coloring_finite_domain",
+        "logic": "QF_FD",
+        "objective": {
+          "exact_value": 2,
+          "feasible_count": 18,
+          "feasible_reference": true,
+          "name": "used_color_count",
+          "sense": "min",
+          "solution": {
+            "colors": {
+              "0": 0,
+              "1": 1,
+              "2": 0
+            }
+          }
+        },
+        "variables": {
+          "0": {
+            "domain": [
+              0,
+              1,
+              2
+            ]
+          },
+          "1": {
+            "domain": [
+              0,
+              1,
+              2
+            ]
+          },
+          "2": {
+            "domain": [
+              0,
+              1,
+              2
+            ]
+          }
+        }
+      },
+      "unformalized_requirements": []
+    },
+    {
+      "artifact_source": "exp3211_constraintbench",
+      "constraint_fragments": [
+        "arithmetic_interval",
+        "feasibility",
+        "graph_relation",
+        "objective_bound"
+      ],
+      "exact_solver_pointer": {
+        "authority": "local_exhaustive_enumeration",
+        "checker_backend": "exact_graph_coloring_enumerator",
+        "row_id": "cbpilot-3211-coloring-002",
+        "source_fixture_artifact": "data/research/constraintbench_feasibility_objective_pilot_v1.jsonl"
+      },
+      "exp3225_priority_reason": "graph-coloring rows exercise relation constraints cleanly",
+      "exp3225_priority_score": 0.94,
+      "fixture_family": "graph_coloring",
+      "formalizability": "fully_formalizable",
+      "formalized_fragments": [
+        {
+          "description": "adjacent nodes must have different finite-domain colors",
+          "fragment_type": "graph_relation"
+        },
+        {
+          "description": "each color variable is bounded to the listed color domain",
+          "fragment_type": "arithmetic_interval"
+        },
+        {
+          "description": "node coverage and edge conflicts are hard constraints",
+          "fragment_type": "feasibility"
+        },
+        {
+          "description": "used-color count is compared with the exact reference optimum",
+          "fragment_type": "objective_bound"
+        }
+      ],
+      "logitext_boundary": "natural-language extraction is not used as solver evidence in this pilot",
+      "row_id": "cbpilot-3211-coloring-002",
+      "solver_authority_preserved": true,
+      "solver_ready_representation": {
+        "edge_inequalities": [
+          [
+            0,
+            1
+          ],
+          [
+            1,
+            2
+          ],
+          [
+            2,
+            3
+          ]
+        ],
+        "kind": "graph_coloring_finite_domain",
+        "logic": "QF_FD",
+        "objective": {
+          "exact_value": 2,
+          "feasible_count": 24,
+          "feasible_reference": true,
+          "name": "used_color_count",
+          "sense": "min",
+          "solution": {
+            "colors": {
+              "0": 0,
+              "1": 1,
+              "2": 0,
+              "3": 1
+            }
+          }
+        },
+        "variables": {
+          "0": {
+            "domain": [
+              0,
+              1,
+              2
+            ]
+          },
+          "1": {
+            "domain": [
+              0,
+              1,
+              2
+            ]
+          },
+          "2": {
+            "domain": [
+              0,
+              1,
+              2
+            ]
+          },
+          "3": {
+            "domain": [
+              0,
+              1,
+              2
+            ]
+          }
+        }
+      },
+      "unformalized_requirements": []
+    },
+    {
+      "artifact_source": "exp3211_constraintbench",
+      "constraint_fragments": [
+        "arithmetic_interval",
+        "feasibility",
+        "graph_relation",
+        "objective_bound"
+      ],
+      "exact_solver_pointer": {
+        "authority": "local_exhaustive_enumeration",
+        "checker_backend": "exact_graph_coloring_enumerator",
+        "row_id": "cbpilot-3211-coloring-003",
+        "source_fixture_artifact": "data/research/constraintbench_feasibility_objective_pilot_v1.jsonl"
+      },
+      "exp3225_priority_reason": "graph-coloring rows exercise relation constraints cleanly",
+      "exp3225_priority_score": 0.94,
+      "fixture_family": "graph_coloring",
+      "formalizability": "fully_formalizable",
+      "formalized_fragments": [
+        {
+          "description": "adjacent nodes must have different finite-domain colors",
+          "fragment_type": "graph_relation"
+        },
+        {
+          "description": "each color variable is bounded to the listed color domain",
+          "fragment_type": "arithmetic_interval"
+        },
+        {
+          "description": "node coverage and edge conflicts are hard constraints",
+          "fragment_type": "feasibility"
+        },
+        {
+          "description": "used-color count is compared with the exact reference optimum",
+          "fragment_type": "objective_bound"
+        }
+      ],
+      "logitext_boundary": "natural-language extraction is not used as solver evidence in this pilot",
+      "row_id": "cbpilot-3211-coloring-003",
+      "solver_authority_preserved": true,
+      "solver_ready_representation": {
+        "edge_inequalities": [
+          [
+            0,
+            1
+          ],
+          [
+            1,
+            2
+          ],
+          [
+            0,
+            2
+          ]
+        ],
+        "kind": "graph_coloring_finite_domain",
+        "logic": "QF_FD",
+        "objective": {
+          "exact_value": 3,
+          "feasible_count": 96,
+          "feasible_reference": true,
+          "name": "used_color_count",
+          "sense": "min",
+          "solution": {
+            "colors": {
+              "0": 0,
+              "1": 1,
+              "2": 2,
+              "3": 0
+            }
+          }
+        },
+        "variables": {
+          "0": {
+            "domain": [
+              0,
+              1,
+              2,
+              3
+            ]
+          },
+          "1": {
+            "domain": [
+              0,
+              1,
+              2,
+              3
+            ]
+          },
+          "2": {
+            "domain": [
+              0,
+              1,
+              2,
+              3
+            ]
+          },
+          "3": {
+            "domain": [
+              0,
+              1,
+              2,
+              3
+            ]
+          }
+        }
+      },
+      "unformalized_requirements": []
+    },
+    {
+      "artifact_source": "exp3211_constraintbench",
+      "constraint_fragments": [
+        "arithmetic_interval",
+        "feasibility",
+        "graph_relation",
+        "objective_bound"
+      ],
+      "exact_solver_pointer": {
+        "authority": "local_exhaustive_enumeration",
+        "checker_backend": "exact_graph_coloring_enumerator",
+        "row_id": "cbpilot-3211-coloring-004",
+        "source_fixture_artifact": "data/research/constraintbench_feasibility_objective_pilot_v1.jsonl"
+      },
+      "exp3225_priority_reason": "graph-coloring rows exercise relation constraints cleanly",
+      "exp3225_priority_score": 0.94,
+      "fixture_family": "graph_coloring",
+      "formalizability": "fully_formalizable",
+      "formalized_fragments": [
+        {
+          "description": "adjacent nodes must have different finite-domain colors",
+          "fragment_type": "graph_relation"
+        },
+        {
+          "description": "each color variable is bounded to the listed color domain",
+          "fragment_type": "arithmetic_interval"
+        },
+        {
+          "description": "node coverage and edge conflicts are hard constraints",
+          "fragment_type": "feasibility"
+        },
+        {
+          "description": "used-color count is compared with the exact reference optimum",
+          "fragment_type": "objective_bound"
+        }
+      ],
+      "logitext_boundary": "natural-language extraction is not used as solver evidence in this pilot",
+      "row_id": "cbpilot-3211-coloring-004",
+      "solver_authority_preserved": true,
+      "solver_ready_representation": {
+        "edge_inequalities": [
+          [
+            0,
+            1
+          ],
+          [
+            0,
+            2
+          ],
+          [
+            0,
+            3
+          ]
+        ],
+        "kind": "graph_coloring_finite_domain",
+        "logic": "QF_FD",
+        "objective": {
+          "exact_value": 2,
+          "feasible_count": 24,
+          "feasible_reference": true,
+          "name": "used_color_count",
+          "sense": "min",
+          "solution": {
+            "colors": {
+              "0": 0,
+              "1": 1,
+              "2": 1,
+              "3": 1
+            }
+          }
+        },
+        "variables": {
+          "0": {
+            "domain": [
+              0,
+              1,
+              2
+            ]
+          },
+          "1": {
+            "domain": [
+              0,
+              1,
+              2
+            ]
+          },
+          "2": {
+            "domain": [
+              0,
+              1,
+              2
+            ]
+          },
+          "3": {
+            "domain": [
+              0,
+              1,
+              2
+            ]
+          }
+        }
+      },
+      "unformalized_requirements": []
+    },
+    {
+      "artifact_source": "exp3211_constraintbench",
+      "constraint_fragments": [
+        "arithmetic_interval",
+        "feasibility",
+        "graph_relation",
+        "objective_bound"
+      ],
+      "exact_solver_pointer": {
+        "authority": "local_exhaustive_enumeration",
+        "checker_backend": "exact_graph_coloring_enumerator",
+        "row_id": "cbpilot-3211-coloring-005",
+        "source_fixture_artifact": "data/research/constraintbench_feasibility_objective_pilot_v1.jsonl"
+      },
+      "exp3225_priority_reason": "graph-coloring rows exercise relation constraints cleanly",
+      "exp3225_priority_score": 0.94,
+      "fixture_family": "graph_coloring",
+      "formalizability": "fully_formalizable",
+      "formalized_fragments": [
+        {
+          "description": "adjacent nodes must have different finite-domain colors",
+          "fragment_type": "graph_relation"
+        },
+        {
+          "description": "each color variable is bounded to the listed color domain",
+          "fragment_type": "arithmetic_interval"
+        },
+        {
+          "description": "node coverage and edge conflicts are hard constraints",
+          "fragment_type": "feasibility"
+        },
+        {
+          "description": "used-color count is compared with the exact reference optimum",
+          "fragment_type": "objective_bound"
+        }
+      ],
+      "logitext_boundary": "natural-language extraction is not used as solver evidence in this pilot",
+      "row_id": "cbpilot-3211-coloring-005",
+      "solver_authority_preserved": true,
+      "solver_ready_representation": {
+        "edge_inequalities": [
+          [
+            0,
+            1
+          ],
+          [
+            1,
+            2
+          ],
+          [
+            2,
+            3
+          ],
+          [
+            3,
+            0
+          ]
+        ],
+        "kind": "graph_coloring_finite_domain",
+        "logic": "QF_FD",
+        "objective": {
+          "exact_value": 2,
+          "feasible_count": 18,
+          "feasible_reference": true,
+          "name": "used_color_count",
+          "sense": "min",
+          "solution": {
+            "colors": {
+              "0": 0,
+              "1": 1,
+              "2": 0,
+              "3": 1
+            }
+          }
+        },
+        "variables": {
+          "0": {
+            "domain": [
+              0,
+              1,
+              2
+            ]
+          },
+          "1": {
+            "domain": [
+              0,
+              1,
+              2
+            ]
+          },
+          "2": {
+            "domain": [
+              0,
+              1,
+              2
+            ]
+          },
+          "3": {
+            "domain": [
+              0,
+              1,
+              2
+            ]
+          }
+        }
+      },
+      "unformalized_requirements": []
+    }
+  ],
+  "source_errors": [],
+  "source_fixture_artifacts": [
+    {
+      "exists": true,
+      "id": "exp3210_context_artifact",
+      "path": "results/experiment_3210_context_cot_clbench_parametric_shortcut_fixtures_v1.json",
+      "row_count": 30,
+      "sha256": "18725fb6c5f779c7bfe6a7df7658dda8902f7f6b2eb861338005750b5bcb0678",
+      "type": "json"
+    },
+    {
+      "exists": true,
+      "id": "exp3210_context_fixture",
+      "path": "data/research/context_cot_clbench_parametric_shortcut_v1.jsonl",
+      "row_count": 30,
+      "sha256": "a16ceb2356c303b35116bc001292c345915a177e7116357544a924962f108f7b",
+      "type": "jsonl"
+    },
+    {
+      "exists": true,
+      "id": "exp3211_constraint_artifact",
+      "path": "results/experiment_3211_constraintbench_feasibility_objective_pilot_v1.json",
+      "row_count": 15,
+      "sha256": "566a3bc3549c420ad4b1f2d2ffdcdc025c3ffcdd7e62256767079c7ae105ee26",
+      "type": "json"
+    },
+    {
+      "exists": true,
+      "id": "exp3211_constraint_fixture",
+      "path": "data/research/constraintbench_feasibility_objective_pilot_v1.jsonl",
+      "row_count": 15,
+      "sha256": "823c6e509268f230853b60e2fa2b454a09125e78431299afba6df669bff71812",
+      "type": "jsonl"
+    }
+  ],
+  "tests_run": [
+    "SCENARIO-VERIFY-3224 focused"
+  ]
+}

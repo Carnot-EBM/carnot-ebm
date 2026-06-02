@@ -1,0 +1,407 @@
+{
+  "artifact": "experiment_3165_live_sota_authenticity_replay_v2",
+  "blocked_reason": "",
+  "controlled_subprocess_return_codes": [
+    {
+      "name": "torch_cuda_probe",
+      "returncode": 0
+    },
+    {
+      "name": "nvidia_smi_inventory",
+      "returncode": 0
+    },
+    {
+      "name": "model_load_smoke_worker",
+      "returncode": 0
+    }
+  ],
+  "duration_s": 2.25,
+  "fake_evidence_rejection_criteria": [
+    "reject no model loaded",
+    "reject missing transcript hashes"
+  ],
+  "fake_evidence_rejection_passed": true,
+  "fake_evidence_rejection_violations": [],
+  "field_principles": {
+    "blocked_reason": "blocked preflights must be actionable",
+    "fake_evidence_rejection_passed": "authenticity checks must be adversarial",
+    "headline_claim_allowed": "smoke tests do not create headline evidence",
+    "honest_verdict": "terminal verdict must expose complete or blocked state",
+    "inference_substrate": "GPU/model/live status must be explicit",
+    "live_call_count": "live evidence must not be inferred",
+    "live_sota_authenticity_replay_v2_ready": "downstream rerun needs a completed preflight artifact",
+    "locally_usable_model_ids": "actual availability must be auditable",
+    "measured_work_policy_passed": "fast calls need a principled pass criterion",
+    "model_load_evidence": "claimed inference requires load evidence",
+    "model_specs": "mandated local model policy must be visible",
+    "preflight_passed": "downstream gates need one conservative field",
+    "prompt_hashes": "prompts must be replay-identifiable",
+    "random_seed": "methodology completeness must be explicit",
+    "reproducibility_checksum": "rerun provenance must be checkable",
+    "selected_model_ids": "any smoke call must identify selected models",
+    "source_artifacts": "preflight must trace to the v2 contract",
+    "token_counts": "duration plausibility requires measured work",
+    "transcript_hashes": "outputs must be replay-identifiable",
+    "unavailable_model_ids": "comparative gaps must stay visible"
+  },
+  "headline_claim_allowed": false,
+  "honest_verdict": "complete: live_sota_authenticity_replay_v2_ready=true; preflight_passed=true; live_call_count=2; headline_claim_allowed=false; live_verifier_rerun_may_proceed=true",
+  "inference_substrate": {
+    "contract_ready": true,
+    "cpu_probe": {
+      "platform": "Linux-7.0.10-2-cachyos-x86_64-with-glibc2.43",
+      "python_version": "3.14.5"
+    },
+    "downloads_models": false,
+    "executes_models": true,
+    "executes_repairs": false,
+    "executes_solvers": false,
+    "executes_verifiers": false,
+    "gpu_probe": {
+      "cuda_available": true,
+      "gpu_count": 2,
+      "nvidia_smi_inventory": {
+        "available": true,
+        "command": [
+          "nvidia-smi",
+          "--query-gpu=index,name,memory.total,memory.used,memory.free,driver_version",
+          "--format=csv,noheader,nounits"
+        ],
+        "gpus": [
+          {
+            "driver_version": "595.71.05",
+            "index": 0,
+            "memory_free_mib": 24123,
+            "memory_total_mib": 24576,
+            "memory_used_mib": 4,
+            "name": "NVIDIA GeForce RTX 3090"
+          },
+          {
+            "driver_version": "595.71.05",
+            "index": 1,
+            "memory_free_mib": 24123,
+            "memory_total_mib": 24576,
+            "memory_used_mib": 4,
+            "name": "NVIDIA GeForce RTX 3090"
+          }
+        ],
+        "returncode": 0,
+        "stderr_summary": "",
+        "stdout_summary": "0, NVIDIA GeForce RTX 3090, 24576, 4, 24123, 595.71.05\n1, NVIDIA GeForce RTX 3090, 24576, 4, 24123, 595.71.05\n"
+      },
+      "torch_cuda_probe": {
+        "command": [
+          "/venv/python",
+          "-c",
+          "import torch; print(torch.__version__, torch.cuda.is_available(), torch.cuda.device_count())"
+        ],
+        "cuda_available": true,
+        "cuda_device_count": 2,
+        "returncode": 0,
+        "stderr_summary": "",
+        "stdout_summary": "2.11.0+cu128 True 2\n",
+        "torch_version": "2.11.0+cu128"
+      }
+    },
+    "kind": "live_sota_authenticity_replay_v2",
+    "legacy_small_model_used": false,
+    "live_model_calls": 2,
+    "model_load_attempted": true,
+    "no_verifier_panel_scored": true,
+    "runtime": "llama_cpp",
+    "selected_model_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+    "selected_model_path": "/home/ianblenke/github.com/ianblenke/carnot/.tmp-pytest/pytest-of-ianblenke/pytest-4/popen-gw1/test_req_verify_3165_writer_an0/hf-cache/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/abc123/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+    "selected_python": "/venv/python"
+  },
+  "live_call_count": 2,
+  "live_sota_authenticity_replay_v2_ready": true,
+  "locally_usable_model_ids": [
+    "unsloth/gemma-4-26B-A4B-it-GGUF"
+  ],
+  "measured_work_policy_passed": true,
+  "model_load_evidence": {
+    "generation_wall_time_s": 1.25,
+    "load_attempted": true,
+    "load_command": [
+      "/venv/python",
+      "-c",
+      "\nimport argparse\nimport json\nimport time\n\n\ndef _extract_text(raw_response):\n    if isinstance(raw_response, str):\n        return raw_response\n    if not isinstance(raw_response, dict):\n        return \"\"\n    choices = raw_response.get(\"choices\")\n    if not isinstance(choices, list) or not choices:\n        return \"\"\n    first = choices[0]\n    if not isinstance(first, dict):\n        return \"\"\n    if \"text\" in first:\n        return str(first.get(\"text\") or \"\")\n    message = first.get(\"message\")\n    if isinstance(message, dict):\n        return str(message.get(\"content\") or \"\")\n    return \"\"\n\n\nparser = argparse.ArgumentParser()\nparser.add_argument(\"--exp3165-smoke-worker\", action=\"store_true\")\nparser.add_argument(\"--model-path\", required=True)\nparser.add_argument(\"--seed\", type=int, required=True)\nparser.add_argument(\"--prompts-json\", required=True)\nparser.add_argument(\"--max-tokens\", type=int, default=8)\nargs = parser.parse_args()\nprompts = json.loads(args.prompts_json)\n\nstarted = time.monotonic()\nload_wall_time_s = None\nllm = None\ntry:\n    from llama_cpp import Llama\n\n    load_started = time.monotonic()\n    llm = Llama(\n        model_path=args.model_path,\n        n_ctx=512,\n        n_batch=64,\n        n_ubatch=64,\n        n_gpu_layers=-1,\n        main_gpu=0,\n        verbose=False,\n    )\n    load_wall_time_s = time.monotonic() - load_started\n    calls = []\n    for index, prompt in enumerate(prompts):\n        generation_started = time.monotonic()\n        raw = llm(\n            prompt,\n            max_tokens=args.max_tokens,\n            temperature=0.0,\n            top_p=1.0,\n            top_k=1,\n            repeat_penalty=1.0,\n            seed=args.seed + index,\n        )\n        generation_wall_time_s = time.monotonic() - generation_started\n        usage = raw.get(\"usage\", {}) if isinstance(raw, dict) else {}\n        calls.append(\n            {\n                \"prompt\": prompt,\n                \"seed\": args.seed + index,\n                \"output_text\": _extract_text(raw),\n                \"generation_wall_time_s\": round(generation_wall_time_s, 6),\n                \"usage\": usage,\n            }\n        )\n    print(\n        json.dumps(\n            {\n                \"ok\": True,\n                \"runtime\": \"llama_cpp\",\n                \"load_wall_time_s\": round(load_wall_time_s, 6),\n                \"total_worker_wall_time_s\": round(time.monotonic() - started, 6),\n                \"calls\": calls,\n            },\n            sort_keys=True,\n        )\n    )\nexcept Exception as exc:\n    print(\n        json.dumps(\n            {\n                \"ok\": False,\n                \"runtime\": \"llama_cpp\",\n                \"error\": f\"{type(exc).__name__}: {exc}\",\n                \"load_wall_time_s\": (\n                    None if load_wall_time_s is None else round(load_wall_time_s, 6)\n                ),\n                \"total_worker_wall_time_s\": round(time.monotonic() - started, 6),\n            },\n            sort_keys=True,\n        )\n    )\n    raise SystemExit(1)\nfinally:\n    close = getattr(llm, \"close\", None)\n    if callable(close):\n        close()\n",
+      "--exp3165-smoke-worker",
+      "--model-path",
+      "/home/ianblenke/github.com/ianblenke/carnot/.tmp-pytest/pytest-of-ianblenke/pytest-4/popen-gw1/test_req_verify_3165_writer_an0/hf-cache/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/abc123/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+      "--seed",
+      "20260527",
+      "--prompts-json",
+      "[\"Exp 3165 authenticity replay prompt A. Reply with exactly one token: READY.\", \"Exp 3165 authenticity replay prompt B. Reply with exactly one token: VERIFIED.\"]",
+      "--max-tokens",
+      "8"
+    ],
+    "load_command_sha256": "095ce03a4c671ef0c7ed30ce9f0d22993505e32c3ce3aa03c3be7654b186d728",
+    "load_wall_time_s": 3.25,
+    "path_exists": true,
+    "per_call_generation_wall_time_s": [
+      0.5,
+      0.75
+    ],
+    "returncode": 0,
+    "runtime": "llama_cpp",
+    "runtime_error": null,
+    "selected_model_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+    "selected_model_path": "/home/ianblenke/github.com/ianblenke/carnot/.tmp-pytest/pytest-of-ianblenke/pytest-4/popen-gw1/test_req_verify_3165_writer_an0/hf-cache/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/abc123/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+    "stderr_summary": "llama_context: fixture\n",
+    "stdout_summary": "{\"calls\": [{\"generation_wall_time_s\": 0.5, \"output_text\": \"READY\", \"prompt\": \"Exp 3165 authenticity replay prompt A. Reply with exactly one token: READY.\", \"seed\": 20260527, \"usage\": {\"completion_tokens\": 1, \"prompt_tokens\": 7, \"total_tokens\": 8}}, {\"generation_wall_time_s\": 0.75, \"output_text\": \"VERIFIED\", \"prompt\": \"Exp 3165 authenticity replay prompt B. Reply with exactly one token: VERIFIED.\", \"seed\": 20260528, \"usage\": {\"completion_tokens\": 1, \"prompt_tokens\": 7, \"total_tokens\": 8}}], \"load_wall_time_s\": 3.25, \"ok\": true, \"runtime\": \"llama_cpp\", \"total_worker_wall_time_s\": 4.75}\n",
+    "total_worker_wall_time_s": 4.75,
+    "worker_code_sha256": "e998982200bcebd9de8e8fc5ea30d5ec82b388bfaed0af64d6a37093dd94b378"
+  },
+  "model_specs": [
+    {
+      "cache_status": "missing",
+      "expected_quantization": "Q4_K_M",
+      "hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "legacy_small_model": false,
+      "manifest_present": false,
+      "model_path": null,
+      "name": "Qwen3.6-35B-A3B",
+      "path_exists": false,
+      "path_sha256_bounded": null,
+      "path_size_bytes": null,
+      "policy_order": 0,
+      "role": "moe",
+      "selected_for_smoke": false,
+      "tier": "flagship_moe",
+      "usable_locally": false
+    },
+    {
+      "cache_status": "missing",
+      "expected_quantization": "Q4_K_M",
+      "hf_id": "unsloth/gemma-4-31B-it-GGUF",
+      "legacy_small_model": false,
+      "manifest_present": false,
+      "model_path": null,
+      "name": "Gemma4-31B-it",
+      "path_exists": false,
+      "path_sha256_bounded": null,
+      "path_size_bytes": null,
+      "policy_order": 1,
+      "role": "dense",
+      "selected_for_smoke": false,
+      "tier": "flagship_dense",
+      "usable_locally": false
+    },
+    {
+      "cache_status": "resolved",
+      "expected_quantization": "Q4_K_M",
+      "hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "legacy_small_model": false,
+      "manifest_present": true,
+      "model_path": "/home/ianblenke/github.com/ianblenke/carnot/.tmp-pytest/pytest-of-ianblenke/pytest-4/popen-gw1/test_req_verify_3165_writer_an0/hf-cache/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/abc123/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+      "name": "Gemma4-26B-A4B-it",
+      "path_exists": true,
+      "path_sha256_bounded": "b9603e43092b1c6596a0e7da7c87f3cef046cf891325e5871c6d8d31e99ad339",
+      "path_size_bytes": 18,
+      "policy_order": 2,
+      "role": "moe",
+      "selected_for_smoke": true,
+      "tier": "middle_moe",
+      "usable_locally": true
+    }
+  ],
+  "preflight_passed": true,
+  "prompt_hashes": [
+    "bec517cee196abd97731c34e2ba2a9975fe73e5572750dac0faf6e2c3312f5ba",
+    "f91f3daaeca1b37fab761804db7f770e73c73676bbf40cf18f80d003c2728eca"
+  ],
+  "random_seed": 20260527,
+  "repeated_call_policy": {
+    "all_calls_must_reference_same_selected_model_or_declared_model_rotation": true,
+    "minimum_distinct_smoke_calls": 2,
+    "require_distinct_prompt_hashes": true,
+    "require_distinct_response_hashes_or_seeded_prompt_variants": true,
+    "require_distinct_transcript_sha256": true
+  },
+  "repeated_call_policy_passed": true,
+  "reproducibility_checksum": "4fd137297aa0b14de749f2b6e84e623929ca1951f3509130fa26e0e660fa469b",
+  "run_date": "20260527",
+  "schema": "carnot.live_sota_authenticity_replay.v2",
+  "selected_model_ids": [
+    "unsloth/gemma-4-26B-A4B-it-GGUF"
+  ],
+  "source_artifacts": [
+    {
+      "path": "results/experiment_3164_duration_corrected_authenticity_contract_v2.json",
+      "present": true,
+      "readable_json_object": true,
+      "required": true,
+      "role": "exp3164_v2_contract",
+      "sha256": "de5deba249d18673c77a63bb5822a7e8477619d3388a3eba36ef58d7c8423b97",
+      "source_type": "json"
+    },
+    {
+      "path": "AGENTS.md",
+      "present": true,
+      "readable_json_object": null,
+      "required": true,
+      "role": "agents_repo_instructions",
+      "sha256": "c893735c3c7ece3f9bf4d48722846ef65e76ff35ebfbfe1d239930339d69470b",
+      "source_type": "text"
+    },
+    {
+      "path": "CODEX.md",
+      "present": true,
+      "readable_json_object": null,
+      "required": true,
+      "role": "codex_repo_workflow",
+      "sha256": "bab1c6ba20bb432cbd7cd6e3b12fb0089f303cb7742f929297647d6329e46502",
+      "source_type": "text"
+    },
+    {
+      "path": "CLAUDE.md",
+      "present": true,
+      "readable_json_object": null,
+      "required": true,
+      "role": "claude_authenticity_rules",
+      "sha256": "c810eb329dce52d61f977b424195b75124442ef501ade7de2bf4222fe38a7d0e",
+      "source_type": "text"
+    },
+    {
+      "path": "scripts/experiment_template.py",
+      "present": true,
+      "readable_json_object": null,
+      "required": true,
+      "role": "experiment_template_policy",
+      "sha256": "c3bbd4cc8bbfd6dc98e7ebd7ae2fc2c8c832a1182e4822dcccafa9b48a3ef0b5",
+      "source_type": "python"
+    },
+    {
+      "path": "openspec/capabilities/verification/spec.md",
+      "present": true,
+      "readable_json_object": null,
+      "required": true,
+      "role": "verification_openspec",
+      "sha256": "1f234f8578f6a0c79f21bfa239cdb81adbb94620d02a29c01dc0a36caeaa136c",
+      "source_type": "text"
+    },
+    {
+      "path": "results/experiment_3151_live_inference_authenticity_preflight_v1.json",
+      "present": true,
+      "readable_json_object": true,
+      "required": true,
+      "role": "exp3151_duration_failed_preflight",
+      "sha256": "d99285b494f2fedb41dc5a080756ba4dfa8083b6fb1a97193848c5373dfd5dc1",
+      "source_type": "json"
+    },
+    {
+      "path": "results/experiment_3123_sota_cache_preconditions_manifest_v2.json",
+      "present": true,
+      "readable_json_object": true,
+      "required": true,
+      "role": "exp3123_sota_cache_manifest",
+      "sha256": "a32320567e35f20b8e8573af36ea676bbfa206dd3ad02a996acfea97903b65c0",
+      "source_type": "json"
+    },
+    {
+      "path": "python/carnot/verify/live_sota_authenticity_replay_v2.py",
+      "present": false,
+      "readable_json_object": null,
+      "required": false,
+      "role": "exp3165_module",
+      "sha256": null,
+      "source_type": "python"
+    },
+    {
+      "path": "scripts/experiment_3165_live_sota_authenticity_replay_v2.py",
+      "present": false,
+      "readable_json_object": null,
+      "required": false,
+      "role": "exp3165_script",
+      "sha256": null,
+      "source_type": "python"
+    },
+    {
+      "path": "tests/python/test_experiment_3165_live_sota_authenticity_replay_v2.py",
+      "present": false,
+      "readable_json_object": null,
+      "required": false,
+      "role": "exp3165_tests",
+      "sha256": null,
+      "source_type": "python"
+    }
+  ],
+  "source_checksums": {
+    "AGENTS.md": "c893735c3c7ece3f9bf4d48722846ef65e76ff35ebfbfe1d239930339d69470b",
+    "CLAUDE.md": "c810eb329dce52d61f977b424195b75124442ef501ade7de2bf4222fe38a7d0e",
+    "CODEX.md": "bab1c6ba20bb432cbd7cd6e3b12fb0089f303cb7742f929297647d6329e46502",
+    "openspec/capabilities/verification/spec.md": "1f234f8578f6a0c79f21bfa239cdb81adbb94620d02a29c01dc0a36caeaa136c",
+    "results/experiment_3123_sota_cache_preconditions_manifest_v2.json": "a32320567e35f20b8e8573af36ea676bbfa206dd3ad02a996acfea97903b65c0",
+    "results/experiment_3151_live_inference_authenticity_preflight_v1.json": "d99285b494f2fedb41dc5a080756ba4dfa8083b6fb1a97193848c5373dfd5dc1",
+    "results/experiment_3164_duration_corrected_authenticity_contract_v2.json": "de5deba249d18673c77a63bb5822a7e8477619d3388a3eba36ef58d7c8423b97",
+    "scripts/experiment_template.py": "c3bbd4cc8bbfd6dc98e7ebd7ae2fc2c8c832a1182e4822dcccafa9b48a3ef0b5"
+  },
+  "tests_run": [
+    "focused"
+  ],
+  "token_counts": {
+    "completion_tokens": 2,
+    "per_call": [
+      {
+        "completion_tokens": 1,
+        "prompt_tokens": 7,
+        "source": "llama_cpp_usage",
+        "total_tokens": 8
+      },
+      {
+        "completion_tokens": 1,
+        "prompt_tokens": 7,
+        "source": "llama_cpp_usage",
+        "total_tokens": 8
+      }
+    ],
+    "prompt_tokens": 14,
+    "source": "llama_cpp_usage",
+    "total_tokens": 16
+  },
+  "token_scaled_duration_policy": {
+    "fixed_60s_floor_hard_gate": false,
+    "minimum_distinct_smoke_calls": 2,
+    "pass_fail_basis": "measured work evidence plus bounded token throughput",
+    "policy_version": "v2",
+    "reject_if_completion_tokens_per_second_gt": 500.0
+  },
+  "token_scaled_duration_policy_passed": true,
+  "transcript_hashes": [
+    {
+      "model_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "output_token_count": 1,
+      "prompt_hash": "bec517cee196abd97731c34e2ba2a9975fe73e5572750dac0faf6e2c3312f5ba",
+      "prompt_token_count": 7,
+      "random_seed": 20260527,
+      "response_hash": "c2e3ac47f4a325469c1a2d5f117e463ec943c721986d5d9f09ac4540b7d80526",
+      "token_counts": {
+        "completion_tokens": 1,
+        "prompt_tokens": 7,
+        "source": "llama_cpp_usage",
+        "total_tokens": 8
+      },
+      "transcript_sha256": "5c8f7838c2d29c075056ef75735c0debf62d5d5464b45de4b170101c0cf777ca"
+    },
+    {
+      "model_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "output_token_count": 1,
+      "prompt_hash": "f91f3daaeca1b37fab761804db7f770e73c73676bbf40cf18f80d003c2728eca",
+      "prompt_token_count": 7,
+      "random_seed": 20260528,
+      "response_hash": "8766e017df3d4497840e53fa7594a954fd6e68b1b0bf7528045514bc774ea499",
+      "token_counts": {
+        "completion_tokens": 1,
+        "prompt_tokens": 7,
+        "source": "llama_cpp_usage",
+        "total_tokens": 8
+      },
+      "transcript_sha256": "59c11e7d8faefdf8aa0bab6976eef7856431ee0335dc985bc595bdf6c05835a8"
+    }
+  ],
+  "unavailable_model_ids": [
+    "unsloth/Qwen3.6-35B-A3B-GGUF",
+    "unsloth/gemma-4-31B-it-GGUF"
+  ]
+}

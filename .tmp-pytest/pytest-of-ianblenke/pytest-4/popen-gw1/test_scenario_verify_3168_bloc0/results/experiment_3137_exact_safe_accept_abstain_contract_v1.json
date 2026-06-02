@@ -1,0 +1,28 @@
+{
+  "acceptance_contract_v1_ready": true,
+  "artifact": "experiment_3137_exact_safe_accept_abstain_contract_v1",
+  "known_false_accept_rows_blocked": true,
+  "regression_row_set": [
+    "row-fa"
+  ],
+  "repair_gate_prerequisites": {
+    "require_exact_label_authority": true
+  },
+  "replay_false_accept_rate": 0.0,
+  "replay_rows": [
+    {
+      "decision": "abstain",
+      "exact_label": "",
+      "expected_action": "reject",
+      "matched_rule_id": "ABSTAIN_KNOWN_FALSE_ACCEPT_REGRESSION",
+      "row_id": "row-fa"
+    },
+    {
+      "decision": "accept",
+      "exact_label": "",
+      "expected_action": "accept",
+      "matched_rule_id": "ACCEPT_EXACT_COVERED_CONSISTENT",
+      "row_id": "row-ok"
+    }
+  ]
+}

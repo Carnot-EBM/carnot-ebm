@@ -1,0 +1,66 @@
+{
+  "acceptance_gate": {
+    "condition": "blocked before candidate scoring",
+    "passed": false
+  },
+  "adversarial_verify_clean": false,
+  "artifact": "experiment_3704_refreeze_disambiguate_dependency_vs_external_vs_fusion",
+  "carnot_current_auroc": null,
+  "ci_workflow_unmodified_assert": false,
+  "dependency_aware_auroc": null,
+  "duration_s": 1.0,
+  "external_comparator_auroc": null,
+  "field_principles": {
+    "adversarial_verify_clean": "True iff the artifact passes adversarial_verify with no critical flag.",
+    "carnot_current_auroc": "Carnot-current under the identical protocol -- must reproduce the frozen 0.9131 as the protocol sanity check.",
+    "dependency_aware_auroc": "Carnot's label-conditional dependency-aware candidate under the frozen dual-condition protocol -- one field, no alias.",
+    "duration_s": "Plausibility floor.",
+    "external_comparator_auroc": "The published de-entangled/CIG baseline (arXiv:2604.07650) under the identical protocol -- a DISTINCT measurement.",
+    "frozen_headline_unchanged_assert": "Asserts the publication gate still reads 0.9131 and paper_ready is unchanged -- no silent substitution.",
+    "fusion_auroc": "The dependency-aware + external FUSION candidate (arXiv:2502.20379) -- the third DISTINCT candidate.",
+    "honest_verdict": "Terminal prefix for reconciler classification.",
+    "inference_substrate": "verifier_ensemble_against_cached_candidates (principle: scores cached FoVer outputs; no LLM load; no compute-bound marker).",
+    "n_examples": "Sample-size rigor (FoVer n>=1000).",
+    "n_seeds": "Replication count (>=5).",
+    "north_star_unmodified_assert": "Asserts ops/north-star.md was NOT edited (operator-curated).",
+    "operator_checklist": "The ordered OPERATOR-ACTION steps (north-star sec-1 edit, CI-workflow update, trigger run) for the winner -- the re-freeze is operator-only.",
+    "random_seed": "Determinism precondition.",
+    "refreeze_package_reemitted_for_winner": "True iff a clean operator re-freeze package was re-emitted for the WINNING candidate (not the prior dependency-aware-only package).",
+    "reproducibility_checksum": "Drift detection.",
+    "strongest_candidate": "dependency_aware / external / fusion -- which single candidate has the highest pooled AUROC.",
+    "strongest_candidate_auroc": "The winning candidate's pooled AUROC object -- source field plus the number the operator would re-freeze to without creating a second top-level AUROC alias.",
+    "strongest_candidate_beats_frozen": "BARE bool. True iff the winning candidate's AUROC > frozen 0.9131 with the delta CI excluding 0 -- whether ANY candidate is a defensible re-freeze. STORE AS BARE true/false.",
+    "winner_vs_runnerup_delta_ci": "Paired delta + bootstrap CI + DeLong p of winner vs runner-up -- a point estimate cannot decide the ranking."
+  },
+  "frozen_headline_auroc": 0.9131,
+  "frozen_headline_unchanged_assert": false,
+  "fusion_auroc": null,
+  "github_actions_run_triggered": false,
+  "honest_verdict": "complete: blocked_fover_corpus_or_baselines_unavailable",
+  "inference_substrate": "verifier_ensemble_against_cached_candidates (principle: scores cached FoVer outputs; no LLM load; no compute-bound marker).",
+  "n_examples": 0,
+  "n_seeds": 0,
+  "north_star_unmodified_assert": false,
+  "operator_checklist": [],
+  "preconditions_checked": [
+    {
+      "available": true,
+      "detail": "ok",
+      "resource": "synthetic_fixture"
+    },
+    {
+      "available": false,
+      "detail": "RuntimeError: boom",
+      "resource": "candidate_panel_scoring"
+    }
+  ],
+  "random_seed": 3704,
+  "refreeze_package_reemitted_for_winner": false,
+  "reproducibility_checksum": "d186b6d8f5689c32034e006a72ac0abbd09968233548a7dd11c3c48e4cc3c45c",
+  "schema": "carnot.refreeze_disambiguation.v1",
+  "strongest_candidate": "blocked",
+  "strongest_candidate_auroc": null,
+  "strongest_candidate_beats_frozen": false,
+  "winner_vs_frozen_delta_ci": null,
+  "winner_vs_runnerup_delta_ci": null
+}

@@ -1,0 +1,67 @@
+{
+  "blocker_reasons": [
+    "force_answer control failed"
+  ],
+  "controlled_invariance_executor_v2_ready": true,
+  "controlled_invariance_passed": false,
+  "exact_row_count": 3,
+  "exact_rows_evaluated": [
+    {
+      "candidate_answers": [
+        "VALID"
+      ],
+      "exact_authority_decision": "accept",
+      "exact_label": "VALID",
+      "known_false_accept_regression": false,
+      "row_id": "row-valid"
+    },
+    {
+      "candidate_answers": [
+        "VALID"
+      ],
+      "exact_authority_decision": "reject",
+      "exact_label": "INVALID",
+      "known_false_accept_regression": true,
+      "row_id": "row-known-false-accept"
+    },
+    {
+      "candidate_answers": [
+        "SAT"
+      ],
+      "exact_authority_decision": "accept",
+      "exact_label": "SAT",
+      "known_false_accept_regression": false,
+      "row_id": "row-sat"
+    }
+  ],
+  "honest_verdict": "complete: invariance",
+  "known_false_accept_regression_count": 1,
+  "known_false_accept_regression_ids": [
+    "row-known-false-accept"
+  ],
+  "receipt_backed_transcripts": [
+    {
+      "acceptance_authority": false,
+      "prompt_hash": "prompt-a",
+      "transcript_hash": "receipt-a"
+    },
+    {
+      "acceptance_authority": false,
+      "prompt_hash": "prompt-b",
+      "transcript_hash": "receipt-b"
+    }
+  ],
+  "regression_row_results": [
+    {
+      "candidate_answers": [
+        "VALID"
+      ],
+      "exact_authority_decision": "reject",
+      "exact_label": "INVALID",
+      "known_false_accept_regression": true,
+      "row_id": "row-known-false-accept",
+      "semantic_false_accept": false
+    }
+  ],
+  "token_suspicion_used_as_triage_only": true
+}

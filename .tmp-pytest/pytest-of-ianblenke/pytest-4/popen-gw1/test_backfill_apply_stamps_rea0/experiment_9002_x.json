@@ -1,0 +1,19 @@
+{
+  "experiment": 9002,
+  "duration_s": 0.5,
+  "model_specs": [
+    {
+      "name": "Qwen3.6-35B-A3B-GGUF"
+    }
+  ],
+  "honest_verdict": "complete: live_eval_finished",
+  "flagged_adversarial": true,
+  "corrigendum_pending": [
+    {
+      "kind": "DURATION_TOO_SHORT",
+      "severity": "critical",
+      "detail": "duration_s=0.5 but artifact references compute-bound markers (GGUF / CUDA / live model). Loading and running a real model takes >=60.0s minimum; this completed too fast to have invoked the model."
+    }
+  ],
+  "corrigendum_note": "backfill_stamps: flagged_adversarial added by adversarial_verify.py --backfill (completion-gate backstop). Excluded from headline / capstone aggregation."
+}

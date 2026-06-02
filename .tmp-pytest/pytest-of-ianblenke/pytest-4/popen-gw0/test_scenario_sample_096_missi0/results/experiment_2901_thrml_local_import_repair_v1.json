@@ -1,0 +1,98 @@
+{
+  "duration_s": 0.000205184973,
+  "honest_verdict": "complete: thrml_import_repaired_n16_parity_passed_no_hardware_claim",
+  "inference_substrate": "live_llm_inference",
+  "jax_version": "0.10.0",
+  "metadata": {
+    "experiment_id": 2901,
+    "field_principles": {
+      "no_hardware_acceleration_claim": true,
+      "no_tsu_access_claim": true,
+      "pre_repair_traceback_preserved": true,
+      "project_venv_repair_scope": true,
+      "software_only": true
+    },
+    "initial_thrml_import_command_result": {
+      "command": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.tmp-pytest/pytest-of-ianblenke/pytest-4/popen-gw0/test_scenario_sample_096_missi0/.venv/bin/python",
+        "-c",
+        "import importlib.metadata as metadata\nimport json\nimport traceback\n\ntry:\n    import thrml\n    metadata_version = None\n    try:\n        metadata_version = metadata.version(\"thrml\")\n    except Exception:\n        metadata_version = None\n    version = getattr(thrml, \"__version__\", None) or metadata_version or \"unknown\"\n    print(json.dumps({\n        \"metadata_version\": metadata_version,\n        \"path\": getattr(thrml, \"__file__\", None),\n        \"version\": str(version),\n    }, sort_keys=True))\nexcept BaseException:\n    traceback.print_exc()\n    raise\n"
+      ],
+      "duration_s": 0.01,
+      "returncode": 1,
+      "stderr": "Traceback (most recent call last):\n  File \"<stdin>\", line 3, in <module>\nModuleNotFoundError: No module named 'thrml'\n",
+      "stdout": "",
+      "timed_out": false
+    },
+    "initial_thrml_import_succeeded": false,
+    "initial_thrml_import_traceback": "Traceback (most recent call last):\n  File \"<stdin>\", line 3, in <module>\nModuleNotFoundError: No module named 'thrml'",
+    "jax_command_result": {
+      "command": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.tmp-pytest/pytest-of-ianblenke/pytest-4/popen-gw0/test_scenario_sample_096_missi0/.venv/bin/python",
+        "-c",
+        "import jax\nprint(jax.__version__)\n"
+      ],
+      "duration_s": 0.01,
+      "returncode": 0,
+      "stderr": "",
+      "stdout": "0.10.0\n",
+      "timed_out": false
+    },
+    "parity_metrics": {
+      "carnot_mean_energy": -3.25,
+      "case_id": "exp2901:n16_signed_ring_chord:exact_distribution",
+      "max_energy_abs_delta": 0.0,
+      "mean_energy_delta": 0.0,
+      "state_count": 65536,
+      "thrml_mean_energy": -3.25
+    },
+    "project_root": "/home/ianblenke/github.com/ianblenke/carnot/.tmp-pytest/pytest-of-ianblenke/pytest-4/popen-gw0/test_scenario_sample_096_missi0",
+    "python_executable": "/home/ianblenke/github.com/ianblenke/carnot/.tmp-pytest/pytest-of-ianblenke/pytest-4/popen-gw0/test_scenario_sample_096_missi0/.venv/bin/python",
+    "repair_actions": [
+      {
+        "command": [
+          "/home/ianblenke/github.com/ianblenke/carnot/.tmp-pytest/pytest-of-ianblenke/pytest-4/popen-gw0/test_scenario_sample_096_missi0/.venv/bin/python",
+          "-m",
+          "pip",
+          "--disable-pip-version-check",
+          "install",
+          "-U",
+          "thrml"
+        ],
+        "duration_s": 0.01,
+        "mutating_install_performed": true,
+        "returncode": 0,
+        "scope": "project_virtualenv",
+        "status": "repair_install_succeeded",
+        "stderr": "",
+        "stdout": "Successfully installed thrml-0.7.0\n",
+        "timed_out": false
+      }
+    ],
+    "run_date": "20260523",
+    "schema": "thrml_local_import_repair_v1",
+    "terminal_thrml_import_command_result": {
+      "command": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.tmp-pytest/pytest-of-ianblenke/pytest-4/popen-gw0/test_scenario_sample_096_missi0/.venv/bin/python",
+        "-c",
+        "import importlib.metadata as metadata\nimport json\nimport traceback\n\ntry:\n    import thrml\n    metadata_version = None\n    try:\n        metadata_version = metadata.version(\"thrml\")\n    except Exception:\n        metadata_version = None\n    version = getattr(thrml, \"__version__\", None) or metadata_version or \"unknown\"\n    print(json.dumps({\n        \"metadata_version\": metadata_version,\n        \"path\": getattr(thrml, \"__file__\", None),\n        \"version\": str(version),\n    }, sort_keys=True))\nexcept BaseException:\n    traceback.print_exc()\n    raise\n"
+      ],
+      "duration_s": 0.01,
+      "parsed": {
+        "metadata_version": "0.7.0",
+        "path": "/tmp/project/.venv/lib/python/site-packages/thrml/__init__.py",
+        "version": "0.7.0"
+      },
+      "returncode": 0,
+      "stderr": "",
+      "stdout": "{\"metadata_version\": \"0.7.0\", \"path\": \"/tmp/project/.venv/lib/python/site-packages/thrml/__init__.py\", \"version\": \"0.7.0\"}",
+      "timed_out": false
+    },
+    "terminal_thrml_import_path": "/tmp/project/.venv/lib/python/site-packages/thrml/__init__.py"
+  },
+  "parity_energy_delta": 0.0,
+  "random_seed": 202605232901,
+  "reproducibility_checksum": "d8187acc470e1c5499b69fef8f08536f0c248d3397a6c98cde0e9160efec241e",
+  "thrml_import_succeeded": true,
+  "thrml_version_installed": "0.7.0"
+}

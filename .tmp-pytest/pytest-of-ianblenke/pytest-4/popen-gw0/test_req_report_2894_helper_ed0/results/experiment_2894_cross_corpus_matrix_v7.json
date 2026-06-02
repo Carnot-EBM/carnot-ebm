@@ -1,0 +1,646 @@
+{
+  "artifact": "experiment_2894_cross_corpus_matrix_v7",
+  "blocked_rows": {
+    "HumanEval": {
+      "generated_code_status": "blocked_unresolved_adversarial_flags",
+      "reasons": [
+        "flagged_adversarial=true",
+        "DURATION_TOO_SHORT:critical"
+      ],
+      "source_artifact": "results/experiment_2889_mbpp_humaneval_generated_code_clean_row_v1.json"
+    },
+    "MBPP": {
+      "generated_code_status": "blocked_unresolved_adversarial_flags",
+      "reasons": [
+        "flagged_adversarial=true",
+        "DURATION_TOO_SHORT:critical"
+      ],
+      "source_artifact": "results/experiment_2889_mbpp_humaneval_generated_code_clean_row_v1.json"
+    }
+  },
+  "clean_row_count": 5,
+  "cross_corpus_matrix_built": true,
+  "duration_s": 0.5,
+  "field_principles": {
+    "blocked_rows": "Row support blocked by unresolved flags or unclean source evidence.",
+    "clean_row_count": "Counts headline, pilot-only, and taxonomy-only rows admitted to v7.",
+    "cross_corpus_matrix_built": "True when matrix v6 still supplies FoVer and HaluEval/FEVER headline rows.",
+    "duration_s": "Measured wall time; never padded.",
+    "headline_eligible_rows": "Rows still supported by clean headline metric evidence.",
+    "honest_verdict": "Terminal synthesis verdict; no new benchmark run is implied.",
+    "markdown_table": "Compact projection of the same row statuses and support columns.",
+    "matrix_rows": "Machine-readable v7 rows; unsupported columns remain null with reasons.",
+    "missing_rows": "Expected rows absent from the matrix with null fields and reasons.",
+    "pilot_only_rows": "Rows with explicit pilot status and no headline metric promotion.",
+    "source_artifacts": "Existing matrix v6 and .273 support artifacts loaded from disk.",
+    "synthetic_rows_created": "Always false; v7 never fabricates rows or metric cells.",
+    "taxonomy_only_rows": "Rows with local taxonomy evidence but no generated-answer metric."
+  },
+  "headline_eligible_rows": [
+    "FoVer",
+    "HaluEval/FEVER"
+  ],
+  "honest_verdict": "complete: cross-corpus matrix v7 built from 5 clean headline/pilot/taxonomy rows; blocked_support_rows=2",
+  "markdown_table": "| Corpus | Status | Headline | Pilot | Taxonomy | Generated code | VeriCoT | Residual gap |\n|---|---|---:|---:|---:|---|---|---|\n| FoVer | headline_eligible | yes | no | no | n/a | n/a | no_new_dot273_residual_gap_metric |\n| HaluEval/FEVER | headline_eligible | yes | no | no | n/a | 25/1000 | VeriCoT support remains partial |\n| MBPP | pilot_only | no | yes | no | blocked | n/a | pilot only; generated-code flags unresolved |\n| HumanEval | pilot_only | no | yes | no | blocked | n/a | pilot only; generated-code flags unresolved |\n| TruthfulQA | taxonomy_only | no | no | yes | n/a | 0/100 | taxonomy only; no generated-answer metrics |",
+  "matrix_rows": [
+    {
+      "cctu_constraint_category_coverage": {
+        "category_coverage": {
+          "behavior": {
+            "passed": 0,
+            "total": 1
+          },
+          "resource": {
+            "passed": 0,
+            "total": 1
+          },
+          "response": {
+            "passed": 0,
+            "total": 1
+          },
+          "response_verifier": {
+            "passed": 0,
+            "total": 1
+          },
+          "toolset": {
+            "passed": 0,
+            "total": 1
+          }
+        },
+        "constraint_categories": [
+          "behavior",
+          "resource",
+          "response",
+          "response_verifier",
+          "toolset"
+        ],
+        "headline_metric_claim_made": false,
+        "n_cases": 5,
+        "reason": "CCTU pilot coverage is global support metadata, not a corpus metric.",
+        "scope": "global_support_artifact",
+        "source_artifact": "results/experiment_2891_cctu_executable_constraint_validator_pilot_v1.json",
+        "unsupported_categories": {
+          "multi_turn_state": {
+            "supported": false
+          }
+        },
+        "value": "available"
+      },
+      "corpus": "FoVer",
+      "generated_code_status": {
+        "reason": "not_a_code_corpus",
+        "value": null
+      },
+      "headline_eligible": true,
+      "headline_metric_claim_made": true,
+      "kan_complexity": {
+        "analog_kan_claim_made": false,
+        "bop_count": 96,
+        "hardware_claim_boundary": {
+          "board_execution_run": false
+        },
+        "hardware_execution_claim_made": false,
+        "memory_table_entries": 8,
+        "milp_constraints": 27,
+        "nabs_count": 4,
+        "pwa_regions": 4,
+        "reason": "KAN complexity is accounting metadata, not hardware execution.",
+        "rm_count": 2,
+        "scope": "global_support_artifact",
+        "source_artifact": "results/experiment_2893_kan_hardware_complexity_accounting_v1.json",
+        "value": "available"
+      },
+      "label_evidence": {
+        "n_examples": 1000,
+        "status": "valid_metric_panel"
+      },
+      "pilot_only": false,
+      "primary_metric": {
+        "architecture_only_auroc": 0.8946624,
+        "learning_contribution": 0.0184712,
+        "production_auroc": 0.9131336
+      },
+      "residual_gap": {
+        "reason": "no_new_dot273_residual_gap_metric",
+        "value": null
+      },
+      "row_status": "headline_eligible",
+      "source_artifact": "results/experiment_2850_fover_dual_condition_integrity_v4.json",
+      "source_honest_verdict": "complete: FoVer dual-condition integrity rerun",
+      "structural_dependency_verification": {
+        "reason": "not_a_code_corpus",
+        "value": null
+      },
+      "synthetic_row": false,
+      "taxonomy_only": false,
+      "truthfulqa_taxonomy": {
+        "reason": "not_truthfulqa_taxonomy_row",
+        "value": null
+      },
+      "vericot_exact_support": {
+        "reason": "vericot_not_applicable_to_corpus",
+        "value": null
+      }
+    },
+    {
+      "cctu_constraint_category_coverage": {
+        "category_coverage": {
+          "behavior": {
+            "passed": 0,
+            "total": 1
+          },
+          "resource": {
+            "passed": 0,
+            "total": 1
+          },
+          "response": {
+            "passed": 0,
+            "total": 1
+          },
+          "response_verifier": {
+            "passed": 0,
+            "total": 1
+          },
+          "toolset": {
+            "passed": 0,
+            "total": 1
+          }
+        },
+        "constraint_categories": [
+          "behavior",
+          "resource",
+          "response",
+          "response_verifier",
+          "toolset"
+        ],
+        "headline_metric_claim_made": false,
+        "n_cases": 5,
+        "reason": "CCTU pilot coverage is global support metadata, not a corpus metric.",
+        "scope": "global_support_artifact",
+        "source_artifact": "results/experiment_2891_cctu_executable_constraint_validator_pilot_v1.json",
+        "unsupported_categories": {
+          "multi_turn_state": {
+            "supported": false
+          }
+        },
+        "value": "available"
+      },
+      "corpus": "HaluEval/FEVER",
+      "generated_code_status": {
+        "reason": "not_a_code_corpus",
+        "value": null
+      },
+      "headline_eligible": true,
+      "headline_metric_claim_made": true,
+      "kan_complexity": {
+        "analog_kan_claim_made": false,
+        "bop_count": 96,
+        "hardware_claim_boundary": {
+          "board_execution_run": false
+        },
+        "hardware_execution_claim_made": false,
+        "memory_table_entries": 8,
+        "milp_constraints": 27,
+        "nabs_count": 4,
+        "pwa_regions": 4,
+        "reason": "KAN complexity is accounting metadata, not hardware execution.",
+        "rm_count": 2,
+        "scope": "global_support_artifact",
+        "source_artifact": "results/experiment_2893_kan_hardware_complexity_accounting_v1.json",
+        "value": "available"
+      },
+      "label_evidence": {
+        "n_rows_audited": 1000,
+        "status": "valid_labels"
+      },
+      "pilot_only": false,
+      "primary_metric": {
+        "measured_auroc_by_dataset": {
+          "fever": 0.33114331723027374,
+          "halueval": 0.553072
+        },
+        "n_examples_by_dataset": {
+          "fever": 500,
+          "halueval": 500
+        }
+      },
+      "residual_gap": {
+        "reason": "VeriCoT support remains partial",
+        "unsupported_rows": 975,
+        "value": "vericot_support_partial"
+      },
+      "row_status": "headline_eligible",
+      "source_artifact": "results/experiment_2864_halueval_fever_full_calibration_v3.json",
+      "source_honest_verdict": "complete: HaluEval/FEVER local calibration ready",
+      "structural_dependency_verification": {
+        "reason": "not_a_code_corpus",
+        "value": null
+      },
+      "synthetic_row": false,
+      "taxonomy_only": false,
+      "truthfulqa_taxonomy": {
+        "reason": "not_truthfulqa_taxonomy_row",
+        "value": null
+      },
+      "vericot_exact_support": {
+        "candidate_rows": 1000,
+        "reason": "deterministic VeriCoT support for HaluEval/FEVER only",
+        "solver_backend": "z3-solver 4.16.0 + deterministic premise anchors",
+        "source_artifact": "results/experiment_2892_vericot_exact_frontier_expansion_v1.json",
+        "supported_rows": 25,
+        "unsupported_reasons": {
+          "unsupported_no_deterministic_vericot_template": 974,
+          "unsupported_truthfulqa_taxonomy_has_no_logical_steps": 100,
+          "unsupported_year_only_does_not_establish_entity_grounding": 1
+        },
+        "unsupported_rows": 975,
+        "value": 0.025
+      }
+    },
+    {
+      "cctu_constraint_category_coverage": {
+        "category_coverage": {
+          "behavior": {
+            "passed": 0,
+            "total": 1
+          },
+          "resource": {
+            "passed": 0,
+            "total": 1
+          },
+          "response": {
+            "passed": 0,
+            "total": 1
+          },
+          "response_verifier": {
+            "passed": 0,
+            "total": 1
+          },
+          "toolset": {
+            "passed": 0,
+            "total": 1
+          }
+        },
+        "constraint_categories": [
+          "behavior",
+          "resource",
+          "response",
+          "response_verifier",
+          "toolset"
+        ],
+        "headline_metric_claim_made": false,
+        "n_cases": 5,
+        "reason": "CCTU pilot coverage is global support metadata, not a corpus metric.",
+        "scope": "global_support_artifact",
+        "source_artifact": "results/experiment_2891_cctu_executable_constraint_validator_pilot_v1.json",
+        "unsupported_categories": {
+          "multi_turn_state": {
+            "supported": false
+          }
+        },
+        "value": "available"
+      },
+      "corpus": "MBPP",
+      "generated_code_status": {
+        "flag_reasons": [
+          "flagged_adversarial=true",
+          "DURATION_TOO_SHORT:critical"
+        ],
+        "reason": "Exp 2889 has unresolved generated-code flags; no metric promoted.",
+        "source_artifact": "results/experiment_2889_mbpp_humaneval_generated_code_clean_row_v1.json",
+        "status": "blocked_unresolved_adversarial_flags",
+        "value": null
+      },
+      "headline_eligible": false,
+      "headline_metric_claim_made": false,
+      "kan_complexity": {
+        "analog_kan_claim_made": false,
+        "bop_count": 96,
+        "hardware_claim_boundary": {
+          "board_execution_run": false
+        },
+        "hardware_execution_claim_made": false,
+        "memory_table_entries": 8,
+        "milp_constraints": 27,
+        "nabs_count": 4,
+        "pwa_regions": 4,
+        "reason": "KAN complexity is accounting metadata, not hardware execution.",
+        "rm_count": 2,
+        "scope": "global_support_artifact",
+        "source_artifact": "results/experiment_2893_kan_hardware_complexity_accounting_v1.json",
+        "value": "available"
+      },
+      "label_evidence": {
+        "n_tests": 3,
+        "passed": true,
+        "stable_id": "mbpp-11",
+        "status": "explicit_pilot_status"
+      },
+      "pilot_only": true,
+      "primary_metric": {
+        "reason": "pilot_only_no_generated_code_metric",
+        "value": null
+      },
+      "residual_gap": {
+        "reason": "pilot only; generated-code flags unresolved",
+        "value": "pilot_only_generated_code_flags_unresolved"
+      },
+      "row_status": "pilot_only",
+      "source_artifact": "results/experiment_2879_code_corpus_manifest_execution_pilot_v1.json",
+      "source_honest_verdict": "complete: MBPP/HumanEval manifest-only execution pilot ready",
+      "structural_dependency_verification": {
+        "generated_candidate_passed": 0,
+        "generated_candidate_rows": 1,
+        "n_rows_verified": 2,
+        "reason": "static AST structural metadata only; no pass@k/AUROC headline metric",
+        "reference_passed": 1,
+        "reference_rows": 1,
+        "source_artifact": "results/experiment_2890_code_structural_dependency_verifier_v1.json",
+        "unsupported_reasons": {},
+        "value": "available",
+        "violation_types": {
+          "parse_error": 1
+        }
+      },
+      "synthetic_row": false,
+      "taxonomy_only": false,
+      "truthfulqa_taxonomy": {
+        "reason": "not_truthfulqa_taxonomy_row",
+        "value": null
+      },
+      "vericot_exact_support": {
+        "reason": "vericot_not_applicable_to_corpus",
+        "value": null
+      }
+    },
+    {
+      "cctu_constraint_category_coverage": {
+        "category_coverage": {
+          "behavior": {
+            "passed": 0,
+            "total": 1
+          },
+          "resource": {
+            "passed": 0,
+            "total": 1
+          },
+          "response": {
+            "passed": 0,
+            "total": 1
+          },
+          "response_verifier": {
+            "passed": 0,
+            "total": 1
+          },
+          "toolset": {
+            "passed": 0,
+            "total": 1
+          }
+        },
+        "constraint_categories": [
+          "behavior",
+          "resource",
+          "response",
+          "response_verifier",
+          "toolset"
+        ],
+        "headline_metric_claim_made": false,
+        "n_cases": 5,
+        "reason": "CCTU pilot coverage is global support metadata, not a corpus metric.",
+        "scope": "global_support_artifact",
+        "source_artifact": "results/experiment_2891_cctu_executable_constraint_validator_pilot_v1.json",
+        "unsupported_categories": {
+          "multi_turn_state": {
+            "supported": false
+          }
+        },
+        "value": "available"
+      },
+      "corpus": "HumanEval",
+      "generated_code_status": {
+        "flag_reasons": [
+          "flagged_adversarial=true",
+          "DURATION_TOO_SHORT:critical"
+        ],
+        "reason": "Exp 2889 has unresolved generated-code flags; no metric promoted.",
+        "source_artifact": "results/experiment_2889_mbpp_humaneval_generated_code_clean_row_v1.json",
+        "status": "blocked_unresolved_adversarial_flags",
+        "value": null
+      },
+      "headline_eligible": false,
+      "headline_metric_claim_made": false,
+      "kan_complexity": {
+        "analog_kan_claim_made": false,
+        "bop_count": 96,
+        "hardware_claim_boundary": {
+          "board_execution_run": false
+        },
+        "hardware_execution_claim_made": false,
+        "memory_table_entries": 8,
+        "milp_constraints": 27,
+        "nabs_count": 4,
+        "pwa_regions": 4,
+        "reason": "KAN complexity is accounting metadata, not hardware execution.",
+        "rm_count": 2,
+        "scope": "global_support_artifact",
+        "source_artifact": "results/experiment_2893_kan_hardware_complexity_accounting_v1.json",
+        "value": "available"
+      },
+      "label_evidence": {
+        "n_tests": 7,
+        "passed": true,
+        "stable_id": "HumanEval/0",
+        "status": "explicit_pilot_status"
+      },
+      "pilot_only": true,
+      "primary_metric": {
+        "reason": "pilot_only_no_generated_code_metric",
+        "value": null
+      },
+      "residual_gap": {
+        "reason": "pilot only; generated-code flags unresolved",
+        "value": "pilot_only_generated_code_flags_unresolved"
+      },
+      "row_status": "pilot_only",
+      "source_artifact": "results/experiment_2879_code_corpus_manifest_execution_pilot_v1.json",
+      "source_honest_verdict": "complete: MBPP/HumanEval manifest-only execution pilot ready",
+      "structural_dependency_verification": {
+        "generated_candidate_passed": 0,
+        "generated_candidate_rows": 1,
+        "n_rows_verified": 2,
+        "reason": "static AST structural metadata only; no pass@k/AUROC headline metric",
+        "reference_passed": 1,
+        "reference_rows": 1,
+        "source_artifact": "results/experiment_2890_code_structural_dependency_verifier_v1.json",
+        "unsupported_reasons": {},
+        "value": "available",
+        "violation_types": {
+          "missing_function_definition": 1
+        }
+      },
+      "synthetic_row": false,
+      "taxonomy_only": false,
+      "truthfulqa_taxonomy": {
+        "reason": "not_truthfulqa_taxonomy_row",
+        "value": null
+      },
+      "vericot_exact_support": {
+        "reason": "vericot_not_applicable_to_corpus",
+        "value": null
+      }
+    },
+    {
+      "cctu_constraint_category_coverage": {
+        "category_coverage": {
+          "behavior": {
+            "passed": 0,
+            "total": 1
+          },
+          "resource": {
+            "passed": 0,
+            "total": 1
+          },
+          "response": {
+            "passed": 0,
+            "total": 1
+          },
+          "response_verifier": {
+            "passed": 0,
+            "total": 1
+          },
+          "toolset": {
+            "passed": 0,
+            "total": 1
+          }
+        },
+        "constraint_categories": [
+          "behavior",
+          "resource",
+          "response",
+          "response_verifier",
+          "toolset"
+        ],
+        "headline_metric_claim_made": false,
+        "n_cases": 5,
+        "reason": "CCTU pilot coverage is global support metadata, not a corpus metric.",
+        "scope": "global_support_artifact",
+        "source_artifact": "results/experiment_2891_cctu_executable_constraint_validator_pilot_v1.json",
+        "unsupported_categories": {
+          "multi_turn_state": {
+            "supported": false
+          }
+        },
+        "value": "available"
+      },
+      "corpus": "TruthfulQA",
+      "generated_code_status": {
+        "reason": "not_a_code_corpus",
+        "value": null
+      },
+      "headline_eligible": false,
+      "headline_metric_claim_made": false,
+      "kan_complexity": {
+        "analog_kan_claim_made": false,
+        "bop_count": 96,
+        "hardware_claim_boundary": {
+          "board_execution_run": false
+        },
+        "hardware_execution_claim_made": false,
+        "memory_table_entries": 8,
+        "milp_constraints": 27,
+        "nabs_count": 4,
+        "pwa_regions": 4,
+        "reason": "KAN complexity is accounting metadata, not hardware execution.",
+        "rm_count": 2,
+        "scope": "global_support_artifact",
+        "source_artifact": "results/experiment_2893_kan_hardware_complexity_accounting_v1.json",
+        "value": "available"
+      },
+      "label_evidence": {
+        "n_rows_available": 200,
+        "n_rows_materialized": 100,
+        "reason": "local taxonomy rows exist, but generated-answer metrics are unavailable.",
+        "status": "taxonomy_only"
+      },
+      "pilot_only": false,
+      "primary_metric": {
+        "reason": "taxonomy_only_no_generated_answer_metrics",
+        "value": null
+      },
+      "residual_gap": {
+        "reason": "taxonomy only; no generated-answer metrics",
+        "value": "taxonomy_only_no_generated_answer_metrics"
+      },
+      "row_status": "taxonomy_only",
+      "source_artifact": "results/experiment_2888_truthfulqa_inficheck_taxonomy_manifest_v1.json",
+      "source_honest_verdict": "complete: TruthfulQA local taxonomy manifest ready without generated-answer metrics",
+      "structural_dependency_verification": {
+        "reason": "not_a_code_corpus",
+        "value": null
+      },
+      "synthetic_row": false,
+      "taxonomy_only": true,
+      "truthfulqa_taxonomy": {
+        "error_type_counts": {
+          "common_misconception": 20,
+          "fictional_premise": 24
+        },
+        "generated_answer_metrics_available": false,
+        "headline_metric_claim_made": false,
+        "n_rows_available": 200,
+        "n_rows_materialized": 100,
+        "synthetic_labels_created": false,
+        "taxonomy_fields": [
+          "factual_error_type",
+          "evidence_available",
+          "justification_available",
+          "correction_available",
+          "unsupported_reason",
+          "metric_eligibility"
+        ],
+        "value": "taxonomy_available"
+      },
+      "vericot_exact_support": {
+        "candidate_rows": 100,
+        "reason": "TruthfulQA taxonomy has no deterministic logical-step template yet",
+        "solver_backend": "z3-solver 4.16.0 + deterministic premise anchors",
+        "source_artifact": "results/experiment_2892_vericot_exact_frontier_expansion_v1.json",
+        "supported_rows": 0,
+        "unsupported_reasons": {
+          "unsupported_truthfulqa_taxonomy_has_no_logical_steps": 100
+        },
+        "unsupported_rows": 100,
+        "value": 0.0
+      }
+    }
+  ],
+  "missing_rows": {},
+  "pilot_only_rows": [
+    "MBPP",
+    "HumanEval"
+  ],
+  "run_date": "20260523",
+  "schema": "carnot.cross_corpus_matrix.v7",
+  "source_artifacts": [
+    "results/experiment_2880_cross_corpus_matrix_v6.json",
+    "results/experiment_2888_truthfulqa_inficheck_taxonomy_manifest_v1.json",
+    "results/experiment_2889_mbpp_humaneval_generated_code_clean_row_v1.json",
+    "results/experiment_2890_code_structural_dependency_verifier_v1.json",
+    "results/experiment_2891_cctu_executable_constraint_validator_pilot_v1.json",
+    "results/experiment_2892_vericot_exact_frontier_expansion_v1.json",
+    "results/experiment_2893_kan_hardware_complexity_accounting_v1.json"
+  ],
+  "source_status_by_artifact": {
+    "cctu_validator": "clean",
+    "generated_code": "flagged",
+    "kan_complexity": "clean",
+    "matrix_v6": "clean",
+    "structural_verifier": "clean",
+    "truthfulqa_taxonomy": "clean",
+    "vericot_frontier": "clean"
+  },
+  "synthetic_rows_created": false,
+  "taxonomy_only_rows": [
+    "TruthfulQA"
+  ]
+}

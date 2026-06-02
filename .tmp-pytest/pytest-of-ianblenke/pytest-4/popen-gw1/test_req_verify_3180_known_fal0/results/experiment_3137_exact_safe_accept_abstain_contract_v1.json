@@ -1,0 +1,45 @@
+{
+  "acceptance_contract_v1_ready": true,
+  "honest_verdict": "complete: fixture",
+  "known_false_accept_rows_blocked": false,
+  "regression_row_set": [],
+  "replay_rows": [
+    {
+      "candidate_answers": [
+        "VALID"
+      ],
+      "decision": "accept",
+      "exact_label": "VALID",
+      "expected_action": "accept",
+      "extracted_answer": "VALID",
+      "fixture_family": "arithmetic_code_assertions",
+      "matched_rule_id": "ACCEPT_EXACT_COVERED_CONSISTENT",
+      "row_id": "row-valid"
+    },
+    {
+      "answer_extraction_format": "validity_token",
+      "candidate_answers": [
+        "VALID"
+      ],
+      "decision": "reject",
+      "exact_label": "INVALID",
+      "expected_action": "reject",
+      "extracted_answer": "VALID",
+      "fixture_family": "contradiction",
+      "matched_rule_id": "REJECT_EXACT_REJECT_MATCH",
+      "row_id": "row-known-false-accept"
+    },
+    {
+      "candidate_answers": [
+        "SAT"
+      ],
+      "decision": "accept",
+      "exact_label": "SAT",
+      "expected_action": "accept",
+      "extracted_answer": "SAT",
+      "fixture_family": "smt_constraints",
+      "matched_rule_id": "ACCEPT_EXACT_COVERED_CONSISTENT",
+      "row_id": "row-sat"
+    }
+  ]
+}

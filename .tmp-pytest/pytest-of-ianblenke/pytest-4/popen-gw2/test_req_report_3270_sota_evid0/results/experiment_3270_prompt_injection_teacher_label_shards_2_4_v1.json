@@ -1,0 +1,195 @@
+{
+  "artifact": "experiment_3270_prompt_injection_teacher_label_shards_2_4_v1",
+  "blocked_reason": "sota_label_evidence_incomplete_or_unparseable",
+  "checksums": {
+    "model_files": {
+      "unsloth/gemma-4-26B-A4B-it-GGUF": {
+        "checksum_algorithm": "sha256_full",
+        "mtime_ns": 1780427231535698123,
+        "path": "/home/ianblenke/github.com/ianblenke/carnot/.tmp-pytest/pytest-of-ianblenke/pytest-4/popen-gw2/test_req_report_3270_sota_evid0/hf-cache/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/rev1/gemma-4-26B-A4B-it-Q4_K_M.gguf",
+        "sha256": "079b49cffc75ee26cbdfc1c1d6a78c17d19d71a42ca471c406ad33fec7e8816a",
+        "size_bytes": 12,
+        "status": "available"
+      }
+    },
+    "shard_files": {},
+    "source_artifacts": {
+      "results/experiment_3264_prompt_injection_teacher_label_shard_v3.json": "d2ab05d441321b5736b0076604a776e0d71eb89374e6b63c82ff523fb556dccf",
+      "results/experiment_3268_sota_receipt_methodology_supplement_v1.json": "f30e728d8d495376ab485faabb2bfec45679f0a5b5dc6ecc9e9ad37b61426d2c",
+      "results/experiment_3269_prompt_injection_v4_full_corpus_split_manifest_v1.json": "776536cb57d45b7b235d15831013369fbeddf2cb7dcb6b7697196234701098b3"
+    }
+  },
+  "cumulative_label_count": 2000,
+  "duration_s": 0.5,
+  "experiment_id": "exp3270",
+  "headline_label_evidence": {
+    "agreement_count": 0,
+    "agreement_with_source_label": 0.0,
+    "expected_count": 6,
+    "model_id": "",
+    "model_path": "",
+    "parsed_count": 0,
+    "prompt_template_id": "prompt_injection_v4_shards_2_4_sota_binary_panel_v1",
+    "prompt_template_sha256": "859ac65405304c94f4258014e8057ca3a54d75531003649edda2ef31ce732821",
+    "received_count": 0,
+    "rows": []
+  },
+  "honest_verdict": "complete: teacher_label_shards_2_4_ready=false; blocked_reason=sota_label_evidence_incomplete_or_unparseable",
+  "label_distribution": {},
+  "milestone": "2026.05.303",
+  "model_specs": {
+    "mandated_model_ids": [
+      "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "unsloth/gemma-4-31B-it-GGUF"
+    ],
+    "mandated_models": {
+      "unsloth/Qwen3.6-35B-A3B-GGUF": {
+        "cached": false,
+        "expected_quantization": "Q4_K_M",
+        "model_path": null,
+        "name": "Qwen3.6-35B-A3B",
+        "role": "moe",
+        "size_bytes": 0
+      },
+      "unsloth/gemma-4-26B-A4B-it-GGUF": {
+        "cached": true,
+        "expected_quantization": "Q4_K_M",
+        "model_path": "/home/ianblenke/github.com/ianblenke/carnot/.tmp-pytest/pytest-of-ianblenke/pytest-4/popen-gw2/test_req_report_3270_sota_evid0/hf-cache/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/rev1/gemma-4-26B-A4B-it-Q4_K_M.gguf",
+        "name": "Gemma4-26B-A4B-it",
+        "role": "moe",
+        "size_bytes": 12
+      },
+      "unsloth/gemma-4-31B-it-GGUF": {
+        "cached": false,
+        "expected_quantization": "Q4_K_M",
+        "model_path": null,
+        "name": "Gemma4-31B-it",
+        "role": "dense",
+        "size_bytes": 0
+      }
+    },
+    "manifest_labeler_id": "prompt_injection_v4_manifest_taxonomy_expansion_v1",
+    "n_gpu_layers_requested": -1,
+    "prompt_template_id": "prompt_injection_v4_shards_2_4_sota_binary_panel_v1",
+    "prompt_template_sha256": "859ac65405304c94f4258014e8057ca3a54d75531003649edda2ef31ce732821",
+    "random_seed": 3270,
+    "runtime": "llama_cpp",
+    "selected_mandated_model_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+    "selected_mandated_model_path": "/home/ianblenke/github.com/ianblenke/carnot/.tmp-pytest/pytest-of-ianblenke/pytest-4/popen-gw2/test_req_report_3270_sota_evid0/hf-cache/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/rev1/gemma-4-26B-A4B-it-Q4_K_M.gguf",
+    "shard_target_size": 4,
+    "target_shards": [
+      "v4-shard-002",
+      "v4-shard-003",
+      "v4-shard-004"
+    ]
+  },
+  "models_used": [
+    {
+      "examples_labeled": 0,
+      "label_source_role": "headline_label_evidence_panel",
+      "model_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "model_path": "/home/ianblenke/github.com/ianblenke/carnot/.tmp-pytest/pytest-of-ianblenke/pytest-4/popen-gw2/test_req_report_3270_sota_evid0/hf-cache/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/rev1/gemma-4-26B-A4B-it-Q4_K_M.gguf",
+      "runtime": "llama_cpp"
+    },
+    {
+      "examples_labeled": 0,
+      "label_source_role": "bulk_manifest_taxonomy_expansion",
+      "model_id": "prompt_injection_v4_manifest_taxonomy_expansion_v1",
+      "model_path": null,
+      "runtime": "deterministic_taxonomy"
+    }
+  ],
+  "new_label_count": 0,
+  "output_paths": [
+    "results/experiment_3270_prompt_injection_teacher_label_shards_2_4_v1.json"
+  ],
+  "preconditions_checked": [
+    {
+      "name": "exp3269_full_corpus_manifest",
+      "passed": true,
+      "path": "results/experiment_3269_prompt_injection_v4_full_corpus_split_manifest_v1.json"
+    },
+    {
+      "name": "exp3268_clean_sota_receipt",
+      "passed": true,
+      "path": "results/experiment_3268_sota_receipt_methodology_supplement_v1.json"
+    },
+    {
+      "completed_seed_count": 2000,
+      "name": "exp3264_seed_shard",
+      "passed": true,
+      "path": "results/experiment_3264_prompt_injection_teacher_label_shard_v3.json"
+    },
+    {
+      "command_hash": "040e6e45a16e2ee7682efa79f2d20e2b19b0228ce069eca60f8be146e6642d32",
+      "gpu_count": 2,
+      "gpus": [
+        {
+          "driver_version": "595.71.05",
+          "index": 0,
+          "memory_total_mib": 24576,
+          "memory_used_mib": 4,
+          "name": "NVIDIA GeForce RTX 3090",
+          "utilization_gpu_pct": 0
+        },
+        {
+          "driver_version": "595.71.05",
+          "index": 1,
+          "memory_total_mib": 24576,
+          "memory_used_mib": 4,
+          "name": "NVIDIA GeForce RTX 3090",
+          "utilization_gpu_pct": 0
+        }
+      ],
+      "name": "nvidia_smi",
+      "passed": true,
+      "returncode": 0,
+      "stderr_summary": ""
+    },
+    {
+      "command_hash": "91aacefbfcc22e96de376b4da6cf9d2a86851ba654754130c0838ec530d4814c",
+      "cuda_available": true,
+      "cuda_device_count": 2,
+      "cuda_device_name": "NVIDIA GeForce RTX 3090",
+      "llama_cpp_import_ok": true,
+      "llama_cpp_supports_gpu_offload": true,
+      "llama_cpp_system_info": "CUDA : ARCHS = 860",
+      "name": "selected_python_cuda",
+      "passed": true,
+      "probe_error": "",
+      "returncode": 0,
+      "selected_python": "/repo/.venv/bin/python",
+      "stderr_summary": ""
+    },
+    {
+      "available_model_ids": [
+        "unsloth/gemma-4-26B-A4B-it-GGUF"
+      ],
+      "cache_roots": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.tmp-pytest/pytest-of-ianblenke/pytest-4/popen-gw2/test_req_report_3270_sota_evid0/hf-cache"
+      ],
+      "missing_model_ids": [
+        "unsloth/Qwen3.6-35B-A3B-GGUF",
+        "unsloth/gemma-4-31B-it-GGUF"
+      ],
+      "name": "cached_mandated_sota_gguf",
+      "passed": true
+    },
+    {
+      "free_bytes": 1786655375360,
+      "name": "disk_capacity",
+      "passed": true,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/.tmp-pytest/pytest-of-ianblenke/pytest-4/popen-gw2/test_req_report_3270_sota_evid0",
+      "required_free_bytes": 104857600
+    }
+  ],
+  "random_seed": 3270,
+  "reproducibility_checksum": "89ce8a4f7034b3365214a6bac5e3b2c83ff290b7eff44ee9e81517ff849eddd8",
+  "run_date": "20260528",
+  "schema": "carnot.prompt_injection_teacher_label_shards_2_4.v1",
+  "schema_version": "carnot.prompt_injection_teacher_label_shards_2_4.v1",
+  "shard_counts": {},
+  "task_id": "exp3270-prompt-injection-teacher-label-shards-2-4-v1",
+  "teacher_label_shards_2_4_ready": false
+}

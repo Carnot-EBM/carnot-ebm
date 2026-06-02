@@ -1,0 +1,46 @@
+{
+  "artifact": "experiment_2917_spilled_energy_logit_detector_micro_panel_v1",
+  "benchmark_claim_made": false,
+  "blocked_reason": "blocked_no_mandated_sota_gguf_cached",
+  "cached_sota_pair_used": false,
+  "claim_boundary": "diagnostic_only_no_benchmark_claim",
+  "duration_s": 5.25,
+  "examples": [],
+  "field_principles": {
+    "benchmark_claim_made": "Always false; this is a diagnostic micro-panel only.",
+    "claim_boundary": "diagnostic_only_no_benchmark_claim",
+    "detector_training": "No detector is trained; separation metrics are fixed descriptive summaries.",
+    "model_selection": "cached_sota_pair(gpu_indices=(0, 1)) is attempted before single-model fallback.",
+    "runtime_gate": "Missing token logprobs, top-k logprobs, and final-token logits blocks the artifact."
+  },
+  "honest_verdict": "complete: blocked_no_mandated_sota_gguf_cached",
+  "inference_substrate": "live_llm_inference",
+  "logprob_or_logits_available": false,
+  "model_specs": [],
+  "models_used": [],
+  "random_seed": 2917,
+  "run_date": "20260523",
+  "schema_version": 1,
+  "separation_summary": {
+    "available": false,
+    "blocked_reason": "blocked_no_mandated_sota_gguf_cached",
+    "detector_trained": false,
+    "features": {},
+    "n_examples": 0
+  },
+  "spilled_energy_features": {
+    "available": false,
+    "blocked_reason": "blocked_no_mandated_sota_gguf_cached",
+    "detector_trained": false,
+    "feature_names": [
+      "final_token_spilled_energy",
+      "final_token_marginal_energy",
+      "sequence_spilled_energy",
+      "sequence_marginal_energy"
+    ]
+  },
+  "spilled_energy_micro_panel_ready": false,
+  "tests_run": [
+    "pytest tests/python/test_experiment_2917_spilled_energy_logit_detector_micro_panel.py"
+  ]
+}

@@ -1,0 +1,124 @@
+{
+  "artifact": "experiment_3111_certified_coherence_z3_mcs_feedback_v3",
+  "certificates": [
+    {
+      "coherence_status": "coherent",
+      "diagnostics": {
+        "fixture": "easy-valid"
+      },
+      "exact_label": "VALID",
+      "fixture_id": "easy-valid",
+      "maxsat_route": {
+        "action": "accept",
+        "soft_score": 100
+      },
+      "minimal_correction_set": {},
+      "perturbation_type": "unit",
+      "solver_authority": "unit_exact_authority",
+      "solver_label": "valid",
+      "task_family": "unit",
+      "unsat_core": []
+    },
+    {
+      "coherence_status": "incoherent",
+      "diagnostics": {
+        "fixture": "contradiction-invalid"
+      },
+      "exact_label": "INVALID",
+      "fixture_id": "contradiction-invalid",
+      "maxsat_route": {
+        "action": "reject",
+        "soft_score": 100
+      },
+      "minimal_correction_set": {
+        "kind": "unit"
+      },
+      "perturbation_type": "unit",
+      "solver_authority": "unit_exact_authority",
+      "solver_label": "invalid",
+      "task_family": "unit",
+      "unsat_core": [
+        "claim",
+        "authority"
+      ]
+    },
+    {
+      "coherence_status": "coherent",
+      "diagnostics": {
+        "fixture": "medium-sat"
+      },
+      "exact_label": "SAT",
+      "fixture_id": "medium-sat",
+      "maxsat_route": {
+        "action": "accept",
+        "soft_score": 100
+      },
+      "minimal_correction_set": {},
+      "perturbation_type": "unit",
+      "solver_authority": "unit_exact_authority",
+      "solver_label": "sat",
+      "task_family": "unit",
+      "unsat_core": []
+    },
+    {
+      "coherence_status": "incoherent",
+      "diagnostics": {
+        "fixture": "hard-unsat"
+      },
+      "exact_label": "UNSAT",
+      "fixture_id": "hard-unsat",
+      "maxsat_route": {
+        "action": "reject",
+        "soft_score": 100
+      },
+      "minimal_correction_set": {
+        "kind": "unit"
+      },
+      "perturbation_type": "unit",
+      "solver_authority": "unit_exact_authority",
+      "solver_label": "unsat",
+      "task_family": "unit",
+      "unsat_core": [
+        "claim",
+        "authority"
+      ]
+    },
+    {
+      "coherence_status": "coherent",
+      "diagnostics": {
+        "fixture": "drift-valid"
+      },
+      "exact_label": "SAT",
+      "fixture_id": "drift-valid",
+      "maxsat_route": {
+        "action": "accept",
+        "soft_score": 100
+      },
+      "minimal_correction_set": {},
+      "perturbation_type": "unit",
+      "solver_authority": "unit_exact_authority",
+      "solver_label": "sat",
+      "task_family": "unit",
+      "unsat_core": []
+    },
+    {
+      "coherence_status": "coherent",
+      "diagnostics": {
+        "fixture": "repair-json"
+      },
+      "exact_label": "REPAIRABLE",
+      "fixture_id": "repair-json",
+      "maxsat_route": {
+        "action": "reject",
+        "soft_score": 100
+      },
+      "minimal_correction_set": {},
+      "perturbation_type": "unit",
+      "solver_authority": "unit_exact_authority",
+      "solver_label": "repairable",
+      "task_family": "unit",
+      "unsat_core": []
+    }
+  ],
+  "certified_coherence_feedback_v3_ready": true
+}

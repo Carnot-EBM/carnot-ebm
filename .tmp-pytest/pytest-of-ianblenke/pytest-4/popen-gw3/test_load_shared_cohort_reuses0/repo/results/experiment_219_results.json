@@ -1,0 +1,93 @@
+{
+  "experiment": 219,
+  "benchmark": "gsm8k_semantic",
+  "run_date": "20260412",
+  "metadata": {
+    "sample_seed": 218,
+    "sample_size": 2,
+    "source_artifacts": [
+      "results/monitorability_policy_213.json"
+    ]
+  },
+  "cohort": {
+    "case_count": 2,
+    "case_ids": [
+      "gsm8k-1",
+      "gsm8k-2"
+    ],
+    "cases": [
+      {
+        "case_id": "gsm8k-1",
+        "question": "Q1",
+        "ground_truth": 4,
+        "task_slice": "live_gsm8k_semantic_failure",
+        "prompt_seeds": {
+          "baseline": 11,
+          "verify_only": 11,
+          "verify_repair": 11
+        }
+      },
+      {
+        "case_id": "gsm8k-2",
+        "question": "Q2",
+        "ground_truth": 9,
+        "task_slice": "live_gsm8k_semantic_failure",
+        "prompt_seeds": {
+          "baseline": 12,
+          "verify_only": 12,
+          "verify_repair": 12
+        }
+      }
+    ]
+  },
+  "statistics": {
+    "Qwen3.5-0.8B": {
+      "baseline": {
+        "accuracy": 0.2
+      },
+      "verify_only": {
+        "accuracy": 0.18,
+        "n_wrong_detected": 35,
+        "false_positives": 7,
+        "wrong_detection_rate": 0.22293,
+        "false_positive_rate": 0.162791,
+        "confidence_summary": {
+          "mean_error_probability": 0.61,
+          "mean_monitorability_confidence": 0.73
+        }
+      },
+      "verify_repair": {
+        "accuracy": 0.215,
+        "repair_yield": 0.0
+      },
+      "paired_deltas": {
+        "verify_only_minus_baseline": -0.035,
+        "repair_minus_baseline": 0.0
+      }
+    },
+    "Gemma4-E4B-it": {
+      "baseline": {
+        "accuracy": 0.375
+      },
+      "verify_only": {
+        "accuracy": 0.26,
+        "n_wrong_detected": 29,
+        "false_positives": 23,
+        "wrong_detection_rate": 0.232,
+        "false_positive_rate": 0.306667,
+        "confidence_summary": {
+          "mean_error_probability": 0.72,
+          "mean_monitorability_confidence": 0.8
+        }
+      },
+      "verify_repair": {
+        "accuracy": 0.38,
+        "repair_yield": 0.072
+      },
+      "paired_deltas": {
+        "verify_only_minus_baseline": -0.115,
+        "repair_minus_baseline": 0.005
+      }
+    }
+  }
+}

@@ -1,0 +1,75 @@
+{
+  "experiment": "Exp 232",
+  "metadata": {
+    "corpus_path": "data/research/semantic_calibration_corpus_232.jsonl",
+    "output_path": "results/experiment_232_results.json",
+    "source_artifacts": [
+      "results/experiment_219_results.json",
+      "results/experiment_221_results.json"
+    ]
+  },
+  "run_date": "20260413",
+  "summary": {
+    "by_benchmark": {
+      "constraint_ir": 168,
+      "gsm8k_semantic": 400
+    },
+    "by_gold_violation_family": {
+      "entity_quantity_binding_errors": 7,
+      "literal": 20,
+      "none": 196,
+      "omitted_premises": 22,
+      "question_grounding_failures": 24,
+      "search_optimization_limited": 46,
+      "semantic": 24,
+      "unit_aggregation_errors": 4,
+      "unlabeled_live_error": 225
+    },
+    "by_model": {
+      "Gemma4-E4B-it": 281,
+      "Qwen3.5-0.8B": 281,
+      "follow_up_gap_fill": 6
+    },
+    "by_outcome_bucket": {
+      "false_negative": 221,
+      "false_positive": 33,
+      "true_negative": 159,
+      "true_positive": 155
+    },
+    "by_source_artifact": {
+      "exp219_live": 400,
+      "exp221_live": 162,
+      "exp232_followup": 6
+    },
+    "by_source_type": {
+      "live_artifact": 562,
+      "targeted_follow_up": 6
+    },
+    "by_task_slice": {
+      "code_typed_properties": 74,
+      "instruction_grounded": 38,
+      "instruction_surface_only": 38,
+      "live_gsm8k_semantic_failure": 418
+    },
+    "coverage_checks": {
+      "follow_ups_fill_prompt_gaps_only": true,
+      "has_threshold_score_fields": true,
+      "prompt_side_live_missing_outcomes": [
+        "false_positive",
+        "false_negative"
+      ],
+      "semantic_live_has_all_outcomes": true
+    },
+    "n_examples": 568,
+    "score_range": {
+      "max": 1.0,
+      "mean": 0.234678,
+      "min": 0.0
+    },
+    "source_breakdown": {
+      "follow_up_rows": 6,
+      "live_rows": 562
+    }
+  },
+  "title": "Semantic calibration corpus from live semantic and prompt-side artifacts"
+}

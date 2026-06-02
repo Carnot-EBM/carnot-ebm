@@ -1,0 +1,118 @@
+{
+  "blockers": [],
+  "case_scores": [
+    {
+      "case_id": "correct-qwen",
+      "cpu_coherence_score": 1.0,
+      "cpu_energy": 0.0,
+      "expected_inconsistent": false,
+      "generation_source": "live_sota_llamacpp",
+      "hardware_execution_available": false,
+      "kv260_backend": "software-kv260-potts",
+      "kv260_coherence_score": 1.0,
+      "kv260_energy": 0.0,
+      "model_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "model_name": "Qwen3.6-35B-A3B",
+      "potts_q_states": 3,
+      "potts_states": [
+        0,
+        0,
+        0
+      ],
+      "score_delta": 0.0
+    },
+    {
+      "case_id": "correct-gemma",
+      "cpu_coherence_score": 1.0,
+      "cpu_energy": 0.0,
+      "expected_inconsistent": false,
+      "generation_source": "live_sota_llamacpp",
+      "hardware_execution_available": false,
+      "kv260_backend": "software-kv260-potts",
+      "kv260_coherence_score": 1.0,
+      "kv260_energy": 0.0,
+      "model_id": "unsloth/gemma-4-31B-it-GGUF",
+      "model_name": "gemma-4-31B-it",
+      "potts_q_states": 3,
+      "potts_states": [
+        0,
+        0,
+        0
+      ],
+      "score_delta": 0.0
+    },
+    {
+      "case_id": "wrong-qwen",
+      "cpu_coherence_score": 0.06081,
+      "cpu_energy": 2.8,
+      "expected_inconsistent": true,
+      "generation_source": "live_sota_llamacpp",
+      "hardware_execution_available": false,
+      "kv260_backend": "software-kv260-potts",
+      "kv260_coherence_score": 0.06081,
+      "kv260_energy": 2.8,
+      "model_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "model_name": "Qwen3.6-35B-A3B",
+      "potts_q_states": 3,
+      "potts_states": [
+        0,
+        2,
+        1
+      ],
+      "score_delta": 0.0
+    },
+    {
+      "case_id": "format-gemma",
+      "cpu_coherence_score": 0.090718,
+      "cpu_energy": 2.4,
+      "expected_inconsistent": true,
+      "generation_source": "live_sota_llamacpp",
+      "hardware_execution_available": false,
+      "kv260_backend": "software-kv260-potts",
+      "kv260_coherence_score": 0.090718,
+      "kv260_energy": 2.4,
+      "model_id": "unsloth/gemma-4-31B-it-GGUF",
+      "model_name": "gemma-4-31B-it",
+      "potts_q_states": 3,
+      "potts_states": [
+        0,
+        1,
+        2
+      ],
+      "score_delta": 0.0
+    }
+  ],
+  "cases_total": 4,
+  "consistent_cases": 2,
+  "cpu_latency_ms": 12.0,
+  "cpu_score_accuracy": 1.0,
+  "experiment_id": 1658,
+  "hardware_execution_available": false,
+  "honest_verdict": "complete: CPU and KV260 EBRM backends agree on SOTA trace scores with max_score_delta=0.0 and hardware_execution_available=False",
+  "inconsistent_cases": 2,
+  "kv260_latency_ms": 7.0,
+  "kv260_score_accuracy": 1.0,
+  "kv260_speedup_vs_cpu": 1.714286,
+  "latency_delta_ms": -5.0,
+  "live_sota_model_inference_used": true,
+  "max_score_delta": 0.0,
+  "mean_abs_score_delta": 0.0,
+  "models_used": [
+    "unsloth/Qwen3.6-35B-A3B-GGUF",
+    "unsloth/gemma-4-31B-it-GGUF"
+  ],
+  "potts_q_states": 3,
+  "run_date": "20260509",
+  "schema": "hw_eval_cpu_kv260_ebrm_v1",
+  "scoring_delta_within_tolerance": true,
+  "software_fallback_used": true,
+  "sota_manifest_path": "/home/ianblenke/github.com/ianblenke/carnot/.tmp-pytest/pytest-of-ianblenke/pytest-4/popen-gw3/test_scenario_verify_1658_writ0/sota.jsonl",
+  "spec_traces": [
+    "REQ-VERIFY-1658",
+    "SCENARIO-VERIFY-1658"
+  ],
+  "status": "complete",
+  "tests_run": [
+    "tests/python/test_experiment_1658_hw_eval.py"
+  ]
+}

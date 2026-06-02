@@ -1,0 +1,685 @@
+{
+  "adversarial_audit_rerun": {
+    "audit_available": true,
+    "audit_tool": "fake-audit",
+    "findings": [],
+    "flagged": false,
+    "returncode": 0
+  },
+  "artifact": "experiment_2935_cross_corpus_matrix_v10_paper_boundary_corrigendum_v1",
+  "blocked_rows": [
+    "exp2927_gatemate_himbaechel_preflight",
+    "exp2929_gatemate_flash_timing_boundary",
+    "exp2931_llmeval_logic_z3_mini"
+  ],
+  "clean_rows": [
+    "corpus:FoVer",
+    "exp2910_sota_codegen",
+    "exp2924_aggregation_metadata_corrigendum",
+    "exp2925_taxonomy_corrigendum",
+    "exp2926_constraintbench_corrigendum",
+    "exp2933_kan_cl_self_learning"
+  ],
+  "diagnostic_only_rows": [
+    "exp2916_thrml_parity"
+  ],
+  "duration_s": 0.0001,
+  "flagged_rows": [
+    "exp2911_code_hallucination_verifier",
+    "exp2919_constraintbench_mini",
+    "exp2932_citation_field_verifier",
+    "exp2934_reformulation_pipeline"
+  ],
+  "headline_eligible_rows": [
+    "corpus:FoVer",
+    "exp2910_sota_codegen",
+    "exp2926_constraintbench_corrigendum",
+    "exp2933_kan_cl_self_learning"
+  ],
+  "honest_verdict": "complete: matrix_v10_ready=true; matrix_v10_paper_boundary_ready=true; headline_eligible_rows=4; clean=6; flagged=4; blocked=3; missing=2; projection_only=1; diagnostic_only=1; pilot_only=1",
+  "inference_substrate": "aggregation_from_upstream_artifacts",
+  "matrix_rows": [
+    {
+      "claim_boundary": "bounded claim for corpus:FoVer",
+      "corpus_or_task": "corpus:FoVer",
+      "hardware_substrate": "none",
+      "headline_eligible": true,
+      "inference_substrate": "deterministic_fixture",
+      "model_specs_if_live_llm": [],
+      "non_eligible_reason": "",
+      "paper_claim_eligible": true,
+      "row_class": "clean",
+      "row_id": "corpus:FoVer",
+      "source_artifact": "results/upstream_fixture.json",
+      "source_checksum": "fixture",
+      "source_experiment_id": "exp2902",
+      "source_summary": {
+        "headline_eligible": true,
+        "inference_substrate": "deterministic_fixture",
+        "pilot_only": false
+      },
+      "upstream_flags": [],
+      "verifier_type": "v9_fixture"
+    },
+    {
+      "claim_boundary": "",
+      "corpus_or_task": "corpus:MBPP",
+      "hardware_substrate": "none",
+      "headline_eligible": false,
+      "inference_substrate": "deterministic_fixture",
+      "model_specs_if_live_llm": [],
+      "non_eligible_reason": "excluded because pilot-only rows cannot support headline claims",
+      "paper_claim_eligible": false,
+      "row_class": "pilot_only",
+      "row_id": "corpus:MBPP",
+      "source_artifact": "results/upstream_fixture.json",
+      "source_checksum": "fixture",
+      "source_experiment_id": "exp2902",
+      "source_summary": {
+        "headline_eligible": false,
+        "inference_substrate": "deterministic_fixture",
+        "pilot_only": true
+      },
+      "upstream_flags": [
+        "DURATION_TOO_SHORT"
+      ],
+      "verifier_type": "v9_fixture"
+    },
+    {
+      "claim_boundary": "bounded claim for exp2910_sota_codegen",
+      "corpus_or_task": "exp2910 sota codegen",
+      "hardware_substrate": "none",
+      "headline_eligible": true,
+      "inference_substrate": "live_llm_inference",
+      "model_specs_if_live_llm": [
+        {
+          "hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+          "name": "Gemma4-26B-A4B-it"
+        }
+      ],
+      "non_eligible_reason": "",
+      "paper_claim_eligible": true,
+      "row_class": "clean",
+      "row_id": "exp2910_sota_codegen",
+      "source_artifact": "results/upstream_fixture.json",
+      "source_checksum": "fixture",
+      "source_experiment_id": "exp2902",
+      "source_summary": {
+        "headline_eligible": true,
+        "inference_substrate": "live_llm_inference",
+        "model_specs": [
+          {
+            "hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+            "name": "Gemma4-26B-A4B-it"
+          }
+        ],
+        "pilot_only": false
+      },
+      "upstream_flags": [],
+      "verifier_type": "v9_fixture"
+    },
+    {
+      "claim_boundary": "",
+      "corpus_or_task": "exp2911 code hallucination verifier",
+      "hardware_substrate": "none",
+      "headline_eligible": false,
+      "inference_substrate": "deterministic_fixture",
+      "model_specs_if_live_llm": [],
+      "non_eligible_reason": "excluded because unresolved upstream/adversarial flags remain",
+      "paper_claim_eligible": false,
+      "row_class": "flagged",
+      "row_id": "exp2911_code_hallucination_verifier",
+      "source_artifact": "results/upstream_fixture.json",
+      "source_checksum": "fixture",
+      "source_experiment_id": "exp2902",
+      "source_summary": {
+        "headline_eligible": false,
+        "inference_substrate": "deterministic_fixture",
+        "pilot_only": false
+      },
+      "upstream_flags": [
+        "DURATION_TOO_SHORT"
+      ],
+      "verifier_type": "v9_fixture"
+    },
+    {
+      "claim_boundary": "",
+      "corpus_or_task": "exp2915 gatemate bitstream",
+      "hardware_substrate": "GateMate CCGM1A1",
+      "headline_eligible": false,
+      "inference_substrate": "deterministic_fixture",
+      "model_specs_if_live_llm": [],
+      "non_eligible_reason": "excluded because the expected source artifact is missing",
+      "paper_claim_eligible": false,
+      "row_class": "missing",
+      "row_id": "exp2915_gatemate_bitstream",
+      "source_artifact": "results/upstream_fixture.json",
+      "source_checksum": "fixture",
+      "source_experiment_id": "exp2902",
+      "source_summary": {
+        "headline_eligible": false,
+        "inference_substrate": "deterministic_fixture",
+        "pilot_only": false
+      },
+      "upstream_flags": [],
+      "verifier_type": "v9_fixture"
+    },
+    {
+      "claim_boundary": "",
+      "corpus_or_task": "exp2916 thrml parity",
+      "hardware_substrate": "none",
+      "headline_eligible": false,
+      "inference_substrate": "deterministic_fixture",
+      "model_specs_if_live_llm": [],
+      "non_eligible_reason": "excluded because diagnostic-only rows are context, not claims",
+      "paper_claim_eligible": false,
+      "row_class": "diagnostic_only",
+      "row_id": "exp2916_thrml_parity",
+      "source_artifact": "results/upstream_fixture.json",
+      "source_checksum": "fixture",
+      "source_experiment_id": "exp2902",
+      "source_summary": {
+        "headline_eligible": false,
+        "inference_substrate": "deterministic_fixture",
+        "pilot_only": false
+      },
+      "upstream_flags": [],
+      "verifier_type": "v9_fixture"
+    },
+    {
+      "claim_boundary": "",
+      "corpus_or_task": "exp2919 constraintbench mini",
+      "hardware_substrate": "none",
+      "headline_eligible": false,
+      "inference_substrate": "deterministic_fixture",
+      "model_specs_if_live_llm": [],
+      "non_eligible_reason": "excluded because unresolved upstream/adversarial flags remain",
+      "paper_claim_eligible": false,
+      "row_class": "flagged",
+      "row_id": "exp2919_constraintbench_mini",
+      "source_artifact": "results/upstream_fixture.json",
+      "source_checksum": "fixture",
+      "source_experiment_id": "exp2902",
+      "source_summary": {
+        "headline_eligible": false,
+        "inference_substrate": "deterministic_fixture",
+        "pilot_only": false
+      },
+      "upstream_flags": [
+        "DURATION_TOO_SHORT"
+      ],
+      "verifier_type": "v9_fixture"
+    },
+    {
+      "claim_boundary": "",
+      "corpus_or_task": "Matrix v9 aggregation-metadata corrigendum",
+      "hardware_substrate": "none",
+      "headline_eligible": false,
+      "inference_substrate": "aggregation_from_upstream_artifacts",
+      "model_specs_if_live_llm": [],
+      "non_eligible_reason": "exp2924_aggregation_metadata_corrigendum is clean support/context but not claim-eligible",
+      "paper_claim_eligible": false,
+      "row_class": "clean",
+      "row_id": "exp2924_aggregation_metadata_corrigendum",
+      "source_artifact": "results/experiment_2924_aggregation_metadata_corrigendum_v1.json",
+      "source_checksum": "0fe9b640078a5b4352cc6e1c3de63e3a166fd7d6ea85d61988606ea00c050d64",
+      "source_experiment_id": "exp2924",
+      "source_summary": {
+        "aggregation_metadata_clean": true,
+        "honest_verdict": "complete: aggregation metadata clean"
+      },
+      "upstream_flags": [
+        "flagged_adversarial=true",
+        "DURATION_TOO_SHORT:critical"
+      ],
+      "verifier_type": "aggregation provenance audit"
+    },
+    {
+      "claim_boundary": "Supporting paper claim: deterministic code-taxonomy provenance is clean; no code-corpus metric is promoted.",
+      "corpus_or_task": "Code hallucination taxonomy provenance corrigendum",
+      "hardware_substrate": "none",
+      "headline_eligible": false,
+      "inference_substrate": "deterministic_verifier",
+      "model_specs_if_live_llm": [],
+      "non_eligible_reason": "",
+      "paper_claim_eligible": true,
+      "row_class": "clean",
+      "row_id": "exp2925_taxonomy_corrigendum",
+      "source_artifact": "results/experiment_2925_code_hallucination_taxonomy_provenance_corrigendum_v2.json",
+      "source_checksum": "a14f76cfb00f665b892957956de69c58d2fde879509a23e1dd62506f2b76b588",
+      "source_experiment_id": "exp2925",
+      "source_summary": {
+        "honest_verdict": "complete: taxonomy corrigendum clean",
+        "taxonomy_corrigendum_clean": true
+      },
+      "upstream_flags": [
+        "flagged_adversarial=true",
+        "DURATION_TOO_SHORT:critical"
+      ],
+      "verifier_type": "deterministic taxonomy/provenance verifier"
+    },
+    {
+      "claim_boundary": "Bounded ConstraintBench claim: live local GGUF constrained-output rerun reports syntax_valid_rate=0.33, feasibility_rate_overall=0.3, and optimality_rate_given_feasible=0.44.",
+      "corpus_or_task": "ConstraintBench constrained-output rerun",
+      "hardware_substrate": "none",
+      "headline_eligible": true,
+      "inference_substrate": "live_llm_inference",
+      "model_specs_if_live_llm": [
+        {
+          "hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+          "name": "Gemma4-26B-A4B-it"
+        }
+      ],
+      "non_eligible_reason": "",
+      "paper_claim_eligible": true,
+      "row_class": "clean",
+      "row_id": "exp2926_constraintbench_corrigendum",
+      "source_artifact": "results/experiment_2926_constraintbench_constrained_output_rerun_v2.json",
+      "source_checksum": "68342b9538dfdeffcdc0e71d4f2f055541972d1970bc716129376a3d4f905593",
+      "source_experiment_id": "exp2926",
+      "source_summary": {
+        "constraintbench_corrigendum_ready": true,
+        "feasibility_rate_overall": 0.3,
+        "honest_verdict": "complete: constraintbench corrigendum",
+        "optimality_rate_given_feasible": 0.44,
+        "syntax_valid_rate": 0.33
+      },
+      "upstream_flags": [],
+      "verifier_type": "live LLM plus constrained-output verifier"
+    },
+    {
+      "claim_boundary": "",
+      "corpus_or_task": "GateMate himbaechel constraints preflight",
+      "hardware_substrate": "GateMate CCGM1A1",
+      "headline_eligible": false,
+      "inference_substrate": "hardware_toolchain_preflight",
+      "model_specs_if_live_llm": [],
+      "non_eligible_reason": "excluded because the source artifact is blocked",
+      "paper_claim_eligible": false,
+      "row_class": "blocked",
+      "row_id": "exp2927_gatemate_himbaechel_preflight",
+      "source_artifact": "results/experiment_2927_gatemate_himbaechel_constraints_preflight_v3.json",
+      "source_checksum": "33766ca2863f4f7d1af83d644d1be29039ae46d3cd2e823b31a4e8721ed2e47c",
+      "source_experiment_id": "exp2927",
+      "source_summary": {
+        "gatemate_himbaechel_ready": false,
+        "honest_verdict": "blocked_constraints_missing"
+      },
+      "upstream_flags": [],
+      "verifier_type": "hardware toolchain preflight"
+    },
+    {
+      "claim_boundary": "",
+      "corpus_or_task": "GateMate n=16 himbaechel bitstream build",
+      "hardware_substrate": "GateMate CCGM1A1",
+      "headline_eligible": false,
+      "inference_substrate": "unknown",
+      "model_specs_if_live_llm": [],
+      "non_eligible_reason": "excluded because the expected source artifact is missing",
+      "paper_claim_eligible": false,
+      "row_class": "missing",
+      "row_id": "exp2928_gatemate_bitstream",
+      "source_artifact": "results/experiment_2928_gatemate_n16_himbaechel_bitstream_build_v3.json",
+      "source_checksum": null,
+      "source_experiment_id": "exp2928",
+      "source_summary": {},
+      "upstream_flags": [],
+      "verifier_type": "hardware bitstream build"
+    },
+    {
+      "claim_boundary": "",
+      "corpus_or_task": "GateMate flash smoke timing boundary",
+      "hardware_substrate": "GateMate CCGM1A1",
+      "headline_eligible": false,
+      "inference_substrate": "physical_board_smoke",
+      "model_specs_if_live_llm": [],
+      "non_eligible_reason": "excluded because the source artifact is blocked",
+      "paper_claim_eligible": false,
+      "row_class": "blocked",
+      "row_id": "exp2929_gatemate_flash_timing_boundary",
+      "source_artifact": "results/experiment_2929_gatemate_flash_timing_boundary_v1.json",
+      "source_checksum": "4828c8df2f5cfd698cf316f5c172be851de0780097eb32c0c07d3803c34c0e59",
+      "source_experiment_id": "exp2929",
+      "source_summary": {
+        "gatemate_flash_smoke_ready": false,
+        "honest_verdict": "blocked_gatemate_bitstream_missing"
+      },
+      "upstream_flags": [],
+      "verifier_type": "physical board smoke"
+    },
+    {
+      "claim_boundary": "",
+      "corpus_or_task": "KV260 p-bit/SSQA scaling projection",
+      "hardware_substrate": "KV260",
+      "headline_eligible": false,
+      "inference_substrate": "aggregation_plus_simulation",
+      "model_specs_if_live_llm": [],
+      "non_eligible_reason": "excluded because projection-only rows cannot support paper claims",
+      "paper_claim_eligible": false,
+      "row_class": "projection_only",
+      "row_id": "exp2930_kv260_scaling_projection",
+      "source_artifact": "results/experiment_2930_kv260_pbit_ssqa_scaling_projection_v1.json",
+      "source_checksum": "bd7c6d25158b05e14abfa9293bb94f1171bf872d8c2c69c36359abd772cd836e",
+      "source_experiment_id": "exp2930",
+      "source_summary": {
+        "honest_verdict": "complete: projection only",
+        "kv260_scaling_projection_ready": true,
+        "projection_only": true
+      },
+      "upstream_flags": [],
+      "verifier_type": "projection-only resource accounting"
+    },
+    {
+      "claim_boundary": "",
+      "corpus_or_task": "LLMEval-Logic-style Z3 mini benchmark",
+      "hardware_substrate": "none",
+      "headline_eligible": false,
+      "inference_substrate": "live_llm_inference_plus_z3",
+      "model_specs_if_live_llm": [
+        {
+          "hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+          "name": "Gemma4-26B-A4B-it"
+        }
+      ],
+      "non_eligible_reason": "excluded because the source artifact is blocked",
+      "paper_claim_eligible": false,
+      "row_class": "blocked",
+      "row_id": "exp2931_llmeval_logic_z3_mini",
+      "source_artifact": "results/experiment_2931_llmeval_logic_z3_mini_v1.json",
+      "source_checksum": "aca3183a34a55553ae1c3d3a7986fcc443177dd1078ebd3671c1bcd2856b2d38",
+      "source_experiment_id": "exp2931",
+      "source_summary": {
+        "honest_verdict": "blocked_z3_execution_incomplete",
+        "logic_verifier_mini_ready": false
+      },
+      "upstream_flags": [],
+      "verifier_type": "live LLM plus Z3 verifier"
+    },
+    {
+      "claim_boundary": "",
+      "corpus_or_task": "Citation hallucination field verifier",
+      "hardware_substrate": "none",
+      "headline_eligible": false,
+      "inference_substrate": "live_llm_inference_plus_deterministic_verifier",
+      "model_specs_if_live_llm": [
+        {
+          "hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+          "name": "Gemma4-26B-A4B-it"
+        }
+      ],
+      "non_eligible_reason": "excluded because unresolved upstream/adversarial flags remain",
+      "paper_claim_eligible": false,
+      "row_class": "flagged",
+      "row_id": "exp2932_citation_field_verifier",
+      "source_artifact": "results/experiment_2932_citation_hallucination_field_verifier_v1.json",
+      "source_checksum": "ed84acbd8bac98d53cff79a249f34f823f1490ae16e1f2288e36dbdecde069f5",
+      "source_experiment_id": "exp2932",
+      "source_summary": {
+        "citation_verifier_ready": true,
+        "honest_verdict": "complete:citation_field_verifier_ready"
+      },
+      "upstream_flags": [
+        "flagged_adversarial=true",
+        "DURATION_TOO_SHORT:critical"
+      ],
+      "verifier_type": "live LLM plus deterministic citation-field verifier"
+    },
+    {
+      "claim_boundary": "Bounded self-learning claim: KAN per-knot structural-memory update reports utility_delta_vs_replay_only=0.5 with forgetting_rate=0.0.",
+      "corpus_or_task": "KAN per-knot continuous self-learning",
+      "hardware_substrate": "none",
+      "headline_eligible": true,
+      "inference_substrate": "local_training_simulation",
+      "model_specs_if_live_llm": [],
+      "non_eligible_reason": "",
+      "paper_claim_eligible": true,
+      "row_class": "clean",
+      "row_id": "exp2933_kan_cl_self_learning",
+      "source_artifact": "results/experiment_2933_kan_cl_per_knot_self_learning_v1.json",
+      "source_checksum": "1cf7c923872b480151e8e7987e4c700869baaec3ca2e84f60430b95d28a78867",
+      "source_experiment_id": "exp2933",
+      "source_summary": {
+        "forgetting_rate": 0.0,
+        "honest_verdict": "complete: kan_rbf_importance_self_learning_passed",
+        "kan_cl_self_learning_ready": true,
+        "utility_delta_vs_replay_only": 0.5
+      },
+      "upstream_flags": [],
+      "verifier_type": "local training simulation with exact verifier rewards"
+    },
+    {
+      "claim_boundary": "",
+      "corpus_or_task": "AquaForte/BEAVER reformulation pipeline",
+      "hardware_substrate": "none",
+      "headline_eligible": false,
+      "inference_substrate": "live_llm_inference_plus_exact_verifier",
+      "model_specs_if_live_llm": [
+        {
+          "hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+          "name": "Gemma4-26B-A4B-it"
+        }
+      ],
+      "non_eligible_reason": "excluded because unresolved upstream/adversarial flags remain",
+      "paper_claim_eligible": false,
+      "row_class": "flagged",
+      "row_id": "exp2934_reformulation_pipeline",
+      "source_artifact": "results/experiment_2934_aquaforte_beaver_reformulation_pipeline_v1.json",
+      "source_checksum": "8475ac66be1881ff41bdb4651eff983af8408ca06efd6b266b05798d9f18fc64",
+      "source_experiment_id": "exp2934",
+      "source_summary": {
+        "honest_verdict": "complete: reformulated and exact-verified",
+        "reformulation_pipeline_ready": true
+      },
+      "upstream_flags": [
+        "flagged_adversarial=true",
+        "DURATION_TOO_SHORT:critical"
+      ],
+      "verifier_type": "live LLM plus exact verifier"
+    }
+  ],
+  "matrix_v10_paper_boundary_ready": true,
+  "matrix_v10_ready": true,
+  "missing_rows": [
+    "exp2915_gatemate_bitstream",
+    "exp2928_gatemate_bitstream"
+  ],
+  "no_new_hardware_run": true,
+  "no_new_llm_call": true,
+  "paper_claim_boundary": {
+    "boundary_rules": [
+      "Only clean rows with direct bounded support are headline eligible.",
+      "Flagged, blocked, missing, diagnostic-only, and pilot-only rows remain non-headline.",
+      "Projection-only rows are retained for planning context but are not paper-claim eligible.",
+      "A clean corrigendum can add a replacement/supporting row without laundering the older flagged row."
+    ],
+    "headline_claims": {
+      "corpus:FoVer": "bounded claim for corpus:FoVer",
+      "exp2910_sota_codegen": "bounded claim for exp2910_sota_codegen",
+      "exp2926_constraintbench_corrigendum": "Bounded ConstraintBench claim: live local GGUF constrained-output rerun reports syntax_valid_rate=0.33, feasibility_rate_overall=0.3, and optimality_rate_given_feasible=0.44.",
+      "exp2933_kan_cl_self_learning": "Bounded self-learning claim: KAN per-knot structural-memory update reports utility_delta_vs_replay_only=0.5 with forgetting_rate=0.0."
+    },
+    "headline_eligible_rows": [
+      "corpus:FoVer",
+      "exp2910_sota_codegen",
+      "exp2926_constraintbench_corrigendum",
+      "exp2933_kan_cl_self_learning"
+    ],
+    "non_paper_claim_rows": {
+      "corpus:MBPP": {
+        "reason": "excluded because pilot-only rows cannot support headline claims",
+        "row_class": "pilot_only",
+        "source_artifact": "results/upstream_fixture.json"
+      },
+      "exp2911_code_hallucination_verifier": {
+        "reason": "excluded because unresolved upstream/adversarial flags remain",
+        "row_class": "flagged",
+        "source_artifact": "results/upstream_fixture.json"
+      },
+      "exp2915_gatemate_bitstream": {
+        "reason": "excluded because the expected source artifact is missing",
+        "row_class": "missing",
+        "source_artifact": "results/upstream_fixture.json"
+      },
+      "exp2916_thrml_parity": {
+        "reason": "excluded because diagnostic-only rows are context, not claims",
+        "row_class": "diagnostic_only",
+        "source_artifact": "results/upstream_fixture.json"
+      },
+      "exp2919_constraintbench_mini": {
+        "reason": "excluded because unresolved upstream/adversarial flags remain",
+        "row_class": "flagged",
+        "source_artifact": "results/upstream_fixture.json"
+      },
+      "exp2924_aggregation_metadata_corrigendum": {
+        "reason": "exp2924_aggregation_metadata_corrigendum is clean support/context but not claim-eligible",
+        "row_class": "clean",
+        "source_artifact": "results/experiment_2924_aggregation_metadata_corrigendum_v1.json"
+      },
+      "exp2927_gatemate_himbaechel_preflight": {
+        "reason": "excluded because the source artifact is blocked",
+        "row_class": "blocked",
+        "source_artifact": "results/experiment_2927_gatemate_himbaechel_constraints_preflight_v3.json"
+      },
+      "exp2928_gatemate_bitstream": {
+        "reason": "excluded because the expected source artifact is missing",
+        "row_class": "missing",
+        "source_artifact": "results/experiment_2928_gatemate_n16_himbaechel_bitstream_build_v3.json"
+      },
+      "exp2929_gatemate_flash_timing_boundary": {
+        "reason": "excluded because the source artifact is blocked",
+        "row_class": "blocked",
+        "source_artifact": "results/experiment_2929_gatemate_flash_timing_boundary_v1.json"
+      },
+      "exp2930_kv260_scaling_projection": {
+        "reason": "excluded because projection-only rows cannot support paper claims",
+        "row_class": "projection_only",
+        "source_artifact": "results/experiment_2930_kv260_pbit_ssqa_scaling_projection_v1.json"
+      },
+      "exp2931_llmeval_logic_z3_mini": {
+        "reason": "excluded because the source artifact is blocked",
+        "row_class": "blocked",
+        "source_artifact": "results/experiment_2931_llmeval_logic_z3_mini_v1.json"
+      },
+      "exp2932_citation_field_verifier": {
+        "reason": "excluded because unresolved upstream/adversarial flags remain",
+        "row_class": "flagged",
+        "source_artifact": "results/experiment_2932_citation_hallucination_field_verifier_v1.json"
+      },
+      "exp2934_reformulation_pipeline": {
+        "reason": "excluded because unresolved upstream/adversarial flags remain",
+        "row_class": "flagged",
+        "source_artifact": "results/experiment_2934_aquaforte_beaver_reformulation_pipeline_v1.json"
+      }
+    },
+    "ready": true,
+    "supporting_paper_claim_rows": [
+      "exp2925_taxonomy_corrigendum"
+    ]
+  },
+  "pilot_only_rows": [
+    "corpus:MBPP"
+  ],
+  "projection_only_rows": [
+    "exp2930_kv260_scaling_projection"
+  ],
+  "row_classification_counts": {
+    "blocked": 3,
+    "clean": 6,
+    "diagnostic_only": 1,
+    "flagged": 4,
+    "missing": 2,
+    "pilot_only": 1,
+    "projection_only": 1
+  },
+  "run_date": "20260523",
+  "schema": "carnot.cross_corpus_matrix.v10_paper_boundary_corrigendum.v1",
+  "source_artifact_checksums": {
+    "results/experiment_2921_cross_corpus_matrix_v9_paper_boundary_v1.json": "3e9ccfb1c606a95bef97d3b9ad8914eb302b6be6a73b5b2f6659d0d72372623d",
+    "results/experiment_2924_aggregation_metadata_corrigendum_v1.json": "0fe9b640078a5b4352cc6e1c3de63e3a166fd7d6ea85d61988606ea00c050d64",
+    "results/experiment_2925_code_hallucination_taxonomy_provenance_corrigendum_v2.json": "a14f76cfb00f665b892957956de69c58d2fde879509a23e1dd62506f2b76b588",
+    "results/experiment_2926_constraintbench_constrained_output_rerun_v2.json": "68342b9538dfdeffcdc0e71d4f2f055541972d1970bc716129376a3d4f905593",
+    "results/experiment_2927_gatemate_himbaechel_constraints_preflight_v3.json": "33766ca2863f4f7d1af83d644d1be29039ae46d3cd2e823b31a4e8721ed2e47c",
+    "results/experiment_2928_gatemate_n16_himbaechel_bitstream_build_v3.json": null,
+    "results/experiment_2929_gatemate_flash_timing_boundary_v1.json": "4828c8df2f5cfd698cf316f5c172be851de0780097eb32c0c07d3803c34c0e59",
+    "results/experiment_2930_kv260_pbit_ssqa_scaling_projection_v1.json": "bd7c6d25158b05e14abfa9293bb94f1171bf872d8c2c69c36359abd772cd836e",
+    "results/experiment_2931_llmeval_logic_z3_mini_v1.json": "aca3183a34a55553ae1c3d3a7986fcc443177dd1078ebd3671c1bcd2856b2d38",
+    "results/experiment_2932_citation_fixture_v1.json": "fd9f2453c45b224bb106b7bcaa7f86842bfe3df13110369ee0335cf8e7092285",
+    "results/experiment_2932_citation_hallucination_field_verifier_v1.json": "ed84acbd8bac98d53cff79a249f34f823f1490ae16e1f2288e36dbdecde069f5",
+    "results/experiment_2933_kan_cl_per_knot_self_learning_v1.json": "1cf7c923872b480151e8e7987e4c700869baaec3ca2e84f60430b95d28a78867",
+    "results/experiment_2934_aquaforte_beaver_reformulation_pipeline_v1.json": "8475ac66be1881ff41bdb4651eff983af8408ca06efd6b266b05798d9f18fc64"
+  },
+  "upstream_flags_preserved": [
+    {
+      "flags": [
+        "DURATION_TOO_SHORT"
+      ],
+      "identifier": "corpus:MBPP",
+      "row_class": "pilot_only",
+      "source_artifact": "results/upstream_fixture.json"
+    },
+    {
+      "flags": [
+        "DURATION_TOO_SHORT"
+      ],
+      "identifier": "exp2911_code_hallucination_verifier",
+      "row_class": "flagged",
+      "source_artifact": "results/upstream_fixture.json"
+    },
+    {
+      "flags": [
+        "DURATION_TOO_SHORT"
+      ],
+      "identifier": "exp2919_constraintbench_mini",
+      "row_class": "flagged",
+      "source_artifact": "results/upstream_fixture.json"
+    },
+    {
+      "flags": [
+        "flagged_adversarial=true",
+        "DURATION_TOO_SHORT:critical"
+      ],
+      "identifier": "exp2924_aggregation_metadata_corrigendum",
+      "row_class": "clean",
+      "source_artifact": "results/experiment_2924_aggregation_metadata_corrigendum_v1.json"
+    },
+    {
+      "flags": [
+        "flagged_adversarial=true",
+        "DURATION_TOO_SHORT:critical"
+      ],
+      "identifier": "exp2925_taxonomy_corrigendum",
+      "row_class": "clean",
+      "source_artifact": "results/experiment_2925_code_hallucination_taxonomy_provenance_corrigendum_v2.json"
+    },
+    {
+      "flags": [
+        "flagged_adversarial=true",
+        "DURATION_TOO_SHORT:critical"
+      ],
+      "identifier": "exp2932_citation_field_verifier",
+      "row_class": "flagged",
+      "source_artifact": "results/experiment_2932_citation_hallucination_field_verifier_v1.json"
+    },
+    {
+      "flags": [
+        "flagged_adversarial=true",
+        "DURATION_TOO_SHORT:critical"
+      ],
+      "identifier": "exp2934_reformulation_pipeline",
+      "row_class": "flagged",
+      "source_artifact": "results/experiment_2934_aquaforte_beaver_reformulation_pipeline_v1.json"
+    },
+    {
+      "flags": [],
+      "identifier": "exp2911_code_hallucination_verifier",
+      "row_class": "preserved_upstream_flag",
+      "source_artifact": "results/experiment_2924_aggregation_metadata_corrigendum_v1.json"
+    },
+    {
+      "flags": [],
+      "identifier": "exp2919_constraintbench_mini",
+      "row_class": "preserved_upstream_flag",
+      "source_artifact": "results/experiment_2924_aggregation_metadata_corrigendum_v1.json"
+    }
+  ]
+}

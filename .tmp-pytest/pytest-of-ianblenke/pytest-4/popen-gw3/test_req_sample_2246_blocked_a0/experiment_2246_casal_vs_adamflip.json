@@ -1,0 +1,47 @@
+{
+  "adamflip_energy_mean": null,
+  "adamflip_max_constraint_violation": null,
+  "adamflip_violation_mean": null,
+  "casal_energy_mean": null,
+  "casal_max_constraint_violation": null,
+  "casal_validated": false,
+  "casal_violation_mean": null,
+  "energy_mean": {
+    "adamflip": null,
+    "casal": null
+  },
+  "experiment": "2246_casal_vs_adamflip",
+  "field_principles": {
+    "adamflip_violation_mean": "Baseline for comparison; needed so the ratio is auditable.",
+    "casal_validated": "Boolean gate for exp2251 capstone.",
+    "casal_violation_mean": "Primary comparison metric; expected much lower under hard-constraint sampling.",
+    "honest_verdict": "Terminal-prefix required. Use complete: if CASAL violation <= AdamFLIP/2.",
+    "n_samples": "Must be >= 100 for statistical significance on constraint violation claims.",
+    "random_seed": "Reproducibility: both regimes use the same seed for fair comparison."
+  },
+  "honest_verdict": "blocked_casal_missing",
+  "max_constraint_violation": {
+    "adamflip": null,
+    "casal": null
+  },
+  "n_samples": 0,
+  "preconditions_checked": [
+    {
+      "error": "No module named 'carnot.samplers.missing_casal_for_test'",
+      "error_type": "ModuleNotFoundError",
+      "module": "carnot.samplers.missing_casal_for_test",
+      "name": "casal_import",
+      "status": "failed"
+    },
+    {
+      "module": "carnot.training.adamflip",
+      "name": "adamflip_import",
+      "status": "passed"
+    }
+  ],
+  "random_seed": 2246,
+  "regimes": {},
+  "run_date": "20260602",
+  "schema": "casal_vs_adamflip_v1",
+  "status": "blocked"
+}

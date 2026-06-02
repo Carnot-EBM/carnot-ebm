@@ -1,0 +1,174 @@
+{
+  "artifact": "experiment_3100_z3_oracle_feedback_v2",
+  "cached_sota_pair_status": {
+    "available": false,
+    "error": null,
+    "models": []
+  },
+  "dafny_available": false,
+  "dafny_path": null,
+  "duration_s": 1.25,
+  "exact_ground_truth_count": 0,
+  "exp3097_protocol_ready": false,
+  "fixture_results": [],
+  "formal_feedback_delta": 0.0,
+  "formal_feedback_v2_ready": false,
+  "guided_evaluation_feasible": false,
+  "guided_success_count": 0,
+  "headline_blocked_reason": null,
+  "honest_verdict": "blocked_z3_or_protocol_precondition_failed: z3_available=False; exact_ground_truth_count=0",
+  "inference_substrate": {
+    "cached_sota_pair_available": false,
+    "cached_sota_pair_models": [],
+    "dafny_available": false,
+    "formal_feedback_backend": "z3_and_python_test_oracle",
+    "kind": "z3_test_oracle_pilot_without_live_guided_llm",
+    "legacy_small_models_promoted": false,
+    "live_llm_inference": false,
+    "model_cache_status": [
+      {
+        "cached": false,
+        "hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+        "model_path": null
+      },
+      {
+        "cached": false,
+        "hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+        "model_path": null
+      },
+      {
+        "cached": false,
+        "hf_id": "unsloth/gemma-4-31B-it-GGUF",
+        "model_path": null
+      }
+    ],
+    "python_environment": {
+      "executable": "python-test"
+    },
+    "repo_commit": "test-commit",
+    "selected_model": {},
+    "z3_available": false
+  },
+  "model_specs": [
+    {
+      "cache_status": "missing",
+      "cached": false,
+      "checksum_feasibility": {
+        "method": "missing_file"
+      },
+      "hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "model_hash_or_cache_path": null,
+      "model_path": null,
+      "name": "Qwen3.6-35B-A3B",
+      "preferred_quant": "Q4_K_M",
+      "role": "moe"
+    },
+    {
+      "cache_status": "missing",
+      "cached": false,
+      "checksum_feasibility": {
+        "method": "missing_file"
+      },
+      "hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "model_hash_or_cache_path": null,
+      "model_path": null,
+      "name": "Gemma4-26B-A4B-it",
+      "preferred_quant": "Q4_K_M",
+      "role": "moe"
+    },
+    {
+      "cache_status": "missing",
+      "cached": false,
+      "checksum_feasibility": {
+        "method": "missing_file"
+      },
+      "hf_id": "unsloth/gemma-4-31B-it-GGUF",
+      "model_hash_or_cache_path": null,
+      "model_path": null,
+      "name": "Gemma4-31B-it",
+      "preferred_quant": "Q4_K_M",
+      "role": "dense"
+    }
+  ],
+  "no_feedback_success_count": 0,
+  "reproducibility_checksum": "537f8bcada6141de0e690d39759a7c45c5aede3a46eab6e559016a6db166de4a",
+  "run_date": "20260526",
+  "runtime_blocker": "z3_or_protocol_precondition_failed",
+  "schema": "carnot.z3_oracle_feedback.v2",
+  "selected_fixture_count": 0,
+  "selected_fixture_ids": [],
+  "solver_only_success_count": 0,
+  "source_artifacts": [
+    {
+      "exists": false,
+      "id": "codex",
+      "path": "CODEX.md",
+      "role": "repo spec-first workflow",
+      "sha256": null
+    },
+    {
+      "exists": false,
+      "id": "claude",
+      "path": "CLAUDE.md",
+      "role": "artifact authenticity and formal-tool discipline",
+      "sha256": null
+    },
+    {
+      "exists": false,
+      "id": "research_references",
+      "path": "research-references.md",
+      "role": "formal-feedback context",
+      "sha256": null
+    },
+    {
+      "exists": false,
+      "id": "experiment_template",
+      "path": "scripts/experiment_template.py",
+      "role": "SOTA cache helper context",
+      "sha256": null
+    },
+    {
+      "exists": false,
+      "id": "exp3071",
+      "path": "results/experiment_3071_verge_mcs_smt_correction_pilot_v1.json",
+      "role": "prior MCS/Z3 feedback baseline",
+      "sha256": null
+    },
+    {
+      "exists": false,
+      "id": "exp3086",
+      "path": "results/experiment_3086_dafny_z3_formal_feedback_pilot_v1.json",
+      "role": "prior Dafny/Z3 formal-feedback pilot",
+      "sha256": null
+    },
+    {
+      "exists": false,
+      "id": "exp3094",
+      "path": "results/experiment_3094_capstone_v288.json",
+      "role": ".288 capstone noting absent formal-feedback lift",
+      "sha256": null
+    },
+    {
+      "exists": false,
+      "id": "exp3097",
+      "path": "results/experiment_3097_exact_fixture_eval_protocol_audit_v1.json",
+      "role": ".289 exact-fixture protocol",
+      "sha256": null
+    },
+    {
+      "exists": false,
+      "id": "exp3097_manifest",
+      "path": "results/exact_fixture_eval_protocol_3097/stratified_eval_manifest.jsonl",
+      "role": ".289 stratified exact manifest",
+      "sha256": null
+    }
+  ],
+  "stratified_eval_manifest_path": "results/exact_fixture_eval_protocol_3097/stratified_eval_manifest.jsonl",
+  "test_oracle_count": 0,
+  "tests_or_checks_run": [
+    "pytest focused"
+  ],
+  "vacuity_guard_passed": false,
+  "z3_available": false,
+  "z3_path": null
+}

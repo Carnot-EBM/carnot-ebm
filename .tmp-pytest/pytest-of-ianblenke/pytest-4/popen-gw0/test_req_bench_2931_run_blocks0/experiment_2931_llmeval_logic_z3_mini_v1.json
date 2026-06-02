@@ -1,0 +1,428 @@
+{
+  "answer_accuracy": 0.0,
+  "benchmark_scope": "forward-authored LLMEval-Logic-style mini fixture, not the full benchmark",
+  "cached_sota_pair_error": null,
+  "cached_sota_pair_used": false,
+  "duration_s": 2.5,
+  "formalization_faithfulness_rate": 0.0,
+  "honest_verdict": "blocked_sota_gguf_cache_missing",
+  "inference_substrate": "live_llm_inference_plus_z3",
+  "item_manifest": [
+    {
+      "formalization": {
+        "exclusions": [],
+        "facts": [
+          [
+            "Cat",
+            "milo"
+          ]
+        ],
+        "query": [
+          "Mammal",
+          "milo"
+        ],
+        "rules": [
+          {
+            "if": [
+              [
+                "Cat",
+                "milo"
+              ]
+            ],
+            "then": [
+              "Mammal",
+              "milo"
+            ]
+          }
+        ]
+      },
+      "gold_answer": "necessary",
+      "item_id": "llmlogic-2931-001",
+      "problem": "All cats are mammals. Milo is a cat. Is Milo necessarily a mammal?"
+    },
+    {
+      "formalization": {
+        "exclusions": [],
+        "facts": [
+          [
+            "Student",
+            "nia"
+          ]
+        ],
+        "query": [
+          "Athlete",
+          "nia"
+        ],
+        "rules": []
+      },
+      "gold_answer": "possible",
+      "item_id": "llmlogic-2931-002",
+      "problem": "Nia is a student. Some students may be athletes, but no rule says Nia is one. Is Nia an athlete possible?"
+    },
+    {
+      "formalization": {
+        "exclusions": [
+          [
+            [
+              "Organic",
+              "rho"
+            ],
+            [
+              "Robot",
+              "rho"
+            ]
+          ]
+        ],
+        "facts": [
+          [
+            "Robot",
+            "rho"
+          ]
+        ],
+        "query": [
+          "Organic",
+          "rho"
+        ],
+        "rules": []
+      },
+      "gold_answer": "impossible",
+      "item_id": "llmlogic-2931-003",
+      "problem": "No robot is organic. Rho is a robot. Is Rho organic possible?"
+    },
+    {
+      "formalization": {
+        "exclusions": [],
+        "facts": [
+          [
+            "Archivist",
+            "ivo"
+          ]
+        ],
+        "query": [
+          "Trusted",
+          "ivo"
+        ],
+        "rules": [
+          {
+            "if": [
+              [
+                "Archivist",
+                "ivo"
+              ]
+            ],
+            "then": [
+              "Careful",
+              "ivo"
+            ]
+          },
+          {
+            "if": [
+              [
+                "Careful",
+                "ivo"
+              ]
+            ],
+            "then": [
+              "Trusted",
+              "ivo"
+            ]
+          }
+        ]
+      },
+      "gold_answer": "necessary",
+      "item_id": "llmlogic-2931-004",
+      "problem": "Every archivist is careful. Every careful person is trusted. Ivo is an archivist. Is Ivo trusted necessary?"
+    },
+    {
+      "formalization": {
+        "exclusions": [
+          [
+            [
+              "Active",
+              "tau"
+            ],
+            [
+              "Revoked",
+              "tau"
+            ]
+          ]
+        ],
+        "facts": [
+          [
+            "Revoked",
+            "tau"
+          ]
+        ],
+        "query": [
+          "Active",
+          "tau"
+        ],
+        "rules": []
+      },
+      "gold_answer": "impossible",
+      "item_id": "llmlogic-2931-005",
+      "problem": "A token cannot be both active and revoked. Token tau is revoked. Can tau be active?"
+    },
+    {
+      "formalization": {
+        "exclusions": [],
+        "facts": [
+          [
+            "Licensed",
+            "ada"
+          ]
+        ],
+        "query": [
+          "Pilot",
+          "ada"
+        ],
+        "rules": [
+          {
+            "if": [
+              [
+                "Pilot",
+                "ada"
+              ]
+            ],
+            "then": [
+              "Licensed",
+              "ada"
+            ]
+          }
+        ]
+      },
+      "gold_answer": "possible",
+      "item_id": "llmlogic-2931-006",
+      "problem": "Every pilot is licensed. Ada is licensed, but nothing says Ada is a pilot. Is Ada a pilot necessary?"
+    },
+    {
+      "formalization": {
+        "exclusions": [],
+        "facts": [
+          [
+            "Sterile",
+            "s1"
+          ]
+        ],
+        "query": [
+          "Sealed",
+          "s1"
+        ],
+        "rules": [
+          {
+            "if": [
+              [
+                "Sterile",
+                "s1"
+              ]
+            ],
+            "then": [
+              "Sealed",
+              "s1"
+            ]
+          }
+        ]
+      },
+      "gold_answer": "necessary",
+      "item_id": "llmlogic-2931-007",
+      "problem": "If a sample is sterile then it is sealed. Sample s1 is sterile. Is s1 sealed necessary?"
+    },
+    {
+      "formalization": {
+        "exclusions": [
+          [
+            [
+              "BlueBadge",
+              "b7"
+            ],
+            [
+              "Temporary",
+              "b7"
+            ]
+          ]
+        ],
+        "facts": [
+          [
+            "BlueBadge",
+            "b7"
+          ]
+        ],
+        "query": [
+          "Temporary",
+          "b7"
+        ],
+        "rules": []
+      },
+      "gold_answer": "impossible",
+      "item_id": "llmlogic-2931-008",
+      "problem": "No blue badge is temporary. Badge b7 is blue. Can b7 be temporary?"
+    },
+    {
+      "formalization": {
+        "exclusions": [],
+        "facts": [
+          [
+            "Audited",
+            "kappa"
+          ],
+          [
+            "Signed",
+            "kappa"
+          ]
+        ],
+        "query": [
+          "Reproducible",
+          "kappa"
+        ],
+        "rules": [
+          {
+            "if": [
+              [
+                "Audited",
+                "kappa"
+              ]
+            ],
+            "then": [
+              "Reproducible",
+              "kappa"
+            ]
+          }
+        ]
+      },
+      "gold_answer": "necessary",
+      "item_id": "llmlogic-2931-009",
+      "problem": "Every audited build is reproducible. Build kappa is audited and signed. Is kappa reproducible necessary?"
+    },
+    {
+      "formalization": {
+        "exclusions": [
+          [
+            [
+              "Offline",
+              "n4"
+            ],
+            [
+              "Reachable",
+              "n4"
+            ]
+          ]
+        ],
+        "facts": [
+          [
+            "Offline",
+            "n4"
+          ]
+        ],
+        "query": [
+          "Reachable",
+          "n4"
+        ],
+        "rules": []
+      },
+      "gold_answer": "impossible",
+      "item_id": "llmlogic-2931-010",
+      "problem": "No node can be both offline and reachable. Node n4 is offline. Can n4 be reachable?"
+    },
+    {
+      "formalization": {
+        "exclusions": [],
+        "facts": [
+          [
+            "Fragile",
+            "p2"
+          ],
+          [
+            "Shipped",
+            "p2"
+          ]
+        ],
+        "query": [
+          "Padded",
+          "p2"
+        ],
+        "rules": [
+          {
+            "if": [
+              [
+                "Fragile",
+                "p2"
+              ],
+              [
+                "Shipped",
+                "p2"
+              ]
+            ],
+            "then": [
+              "Padded",
+              "p2"
+            ]
+          }
+        ]
+      },
+      "gold_answer": "necessary",
+      "item_id": "llmlogic-2931-011",
+      "problem": "If a parcel is fragile and shipped, it must be padded. Parcel p2 is fragile and shipped. Is p2 padded necessary?"
+    },
+    {
+      "formalization": {
+        "exclusions": [],
+        "facts": [
+          [
+            "Enrolled",
+            "kai"
+          ]
+        ],
+        "query": [
+          "Graduated",
+          "kai"
+        ],
+        "rules": []
+      },
+      "gold_answer": "possible",
+      "item_id": "llmlogic-2931-012",
+      "problem": "Kai is enrolled. There is no rule connecting enrollment to graduation. Is Kai graduated possible?"
+    }
+  ],
+  "logic_verifier_mini_ready": false,
+  "model_attempts": [],
+  "model_specs": [
+    {
+      "gpu": 0,
+      "hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "name": "Qwen3.6-35B-A3B"
+    },
+    {
+      "gpu": 0,
+      "hf_id": "unsloth/gemma-4-31B-it-GGUF",
+      "name": "Gemma4-31B-it"
+    },
+    {
+      "gpu": 0,
+      "hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "name": "Gemma4-26B-A4B-it"
+    }
+  ],
+  "models_used": [],
+  "n_items": 12,
+  "parseability_rate": 0.0,
+  "per_item_results": [],
+  "prompts": [
+    "Translate the natural-language logic problem into bounded ground logic.\nReturn exactly one JSON object and no prose.\nThe JSON object must have this shape:\n{\"formalization\": {\"facts\": [[\"Predicate\", \"entity\"]], \"rules\": [{\"if\": [[\"Predicate\", \"entity\"]], \"then\": [\"Predicate\", \"entity\"]}], \"exclusions\": [[[\"Predicate\", \"entity\"], [\"Other\", \"entity\"]]], \"query\": [\"Predicate\", \"entity\"]}, \"answer\": \"necessary|possible|impossible\"}\nUse only ground atoms; a rule is a Horn implication from all if-atoms to the then-atom.\nItem id: llmlogic-2931-001\nProblem: All cats are mammals. Milo is a cat. Is Milo necessarily a mammal?\n",
+    "Translate the natural-language logic problem into bounded ground logic.\nReturn exactly one JSON object and no prose.\nThe JSON object must have this shape:\n{\"formalization\": {\"facts\": [[\"Predicate\", \"entity\"]], \"rules\": [{\"if\": [[\"Predicate\", \"entity\"]], \"then\": [\"Predicate\", \"entity\"]}], \"exclusions\": [[[\"Predicate\", \"entity\"], [\"Other\", \"entity\"]]], \"query\": [\"Predicate\", \"entity\"]}, \"answer\": \"necessary|possible|impossible\"}\nUse only ground atoms; a rule is a Horn implication from all if-atoms to the then-atom.\nItem id: llmlogic-2931-002\nProblem: Nia is a student. Some students may be athletes, but no rule says Nia is one. Is Nia an athlete possible?\n",
+    "Translate the natural-language logic problem into bounded ground logic.\nReturn exactly one JSON object and no prose.\nThe JSON object must have this shape:\n{\"formalization\": {\"facts\": [[\"Predicate\", \"entity\"]], \"rules\": [{\"if\": [[\"Predicate\", \"entity\"]], \"then\": [\"Predicate\", \"entity\"]}], \"exclusions\": [[[\"Predicate\", \"entity\"], [\"Other\", \"entity\"]]], \"query\": [\"Predicate\", \"entity\"]}, \"answer\": \"necessary|possible|impossible\"}\nUse only ground atoms; a rule is a Horn implication from all if-atoms to the then-atom.\nItem id: llmlogic-2931-003\nProblem: No robot is organic. Rho is a robot. Is Rho organic possible?\n",
+    "Translate the natural-language logic problem into bounded ground logic.\nReturn exactly one JSON object and no prose.\nThe JSON object must have this shape:\n{\"formalization\": {\"facts\": [[\"Predicate\", \"entity\"]], \"rules\": [{\"if\": [[\"Predicate\", \"entity\"]], \"then\": [\"Predicate\", \"entity\"]}], \"exclusions\": [[[\"Predicate\", \"entity\"], [\"Other\", \"entity\"]]], \"query\": [\"Predicate\", \"entity\"]}, \"answer\": \"necessary|possible|impossible\"}\nUse only ground atoms; a rule is a Horn implication from all if-atoms to the then-atom.\nItem id: llmlogic-2931-004\nProblem: Every archivist is careful. Every careful person is trusted. Ivo is an archivist. Is Ivo trusted necessary?\n",
+    "Translate the natural-language logic problem into bounded ground logic.\nReturn exactly one JSON object and no prose.\nThe JSON object must have this shape:\n{\"formalization\": {\"facts\": [[\"Predicate\", \"entity\"]], \"rules\": [{\"if\": [[\"Predicate\", \"entity\"]], \"then\": [\"Predicate\", \"entity\"]}], \"exclusions\": [[[\"Predicate\", \"entity\"], [\"Other\", \"entity\"]]], \"query\": [\"Predicate\", \"entity\"]}, \"answer\": \"necessary|possible|impossible\"}\nUse only ground atoms; a rule is a Horn implication from all if-atoms to the then-atom.\nItem id: llmlogic-2931-005\nProblem: A token cannot be both active and revoked. Token tau is revoked. Can tau be active?\n",
+    "Translate the natural-language logic problem into bounded ground logic.\nReturn exactly one JSON object and no prose.\nThe JSON object must have this shape:\n{\"formalization\": {\"facts\": [[\"Predicate\", \"entity\"]], \"rules\": [{\"if\": [[\"Predicate\", \"entity\"]], \"then\": [\"Predicate\", \"entity\"]}], \"exclusions\": [[[\"Predicate\", \"entity\"], [\"Other\", \"entity\"]]], \"query\": [\"Predicate\", \"entity\"]}, \"answer\": \"necessary|possible|impossible\"}\nUse only ground atoms; a rule is a Horn implication from all if-atoms to the then-atom.\nItem id: llmlogic-2931-006\nProblem: Every pilot is licensed. Ada is licensed, but nothing says Ada is a pilot. Is Ada a pilot necessary?\n",
+    "Translate the natural-language logic problem into bounded ground logic.\nReturn exactly one JSON object and no prose.\nThe JSON object must have this shape:\n{\"formalization\": {\"facts\": [[\"Predicate\", \"entity\"]], \"rules\": [{\"if\": [[\"Predicate\", \"entity\"]], \"then\": [\"Predicate\", \"entity\"]}], \"exclusions\": [[[\"Predicate\", \"entity\"], [\"Other\", \"entity\"]]], \"query\": [\"Predicate\", \"entity\"]}, \"answer\": \"necessary|possible|impossible\"}\nUse only ground atoms; a rule is a Horn implication from all if-atoms to the then-atom.\nItem id: llmlogic-2931-007\nProblem: If a sample is sterile then it is sealed. Sample s1 is sterile. Is s1 sealed necessary?\n",
+    "Translate the natural-language logic problem into bounded ground logic.\nReturn exactly one JSON object and no prose.\nThe JSON object must have this shape:\n{\"formalization\": {\"facts\": [[\"Predicate\", \"entity\"]], \"rules\": [{\"if\": [[\"Predicate\", \"entity\"]], \"then\": [\"Predicate\", \"entity\"]}], \"exclusions\": [[[\"Predicate\", \"entity\"], [\"Other\", \"entity\"]]], \"query\": [\"Predicate\", \"entity\"]}, \"answer\": \"necessary|possible|impossible\"}\nUse only ground atoms; a rule is a Horn implication from all if-atoms to the then-atom.\nItem id: llmlogic-2931-008\nProblem: No blue badge is temporary. Badge b7 is blue. Can b7 be temporary?\n",
+    "Translate the natural-language logic problem into bounded ground logic.\nReturn exactly one JSON object and no prose.\nThe JSON object must have this shape:\n{\"formalization\": {\"facts\": [[\"Predicate\", \"entity\"]], \"rules\": [{\"if\": [[\"Predicate\", \"entity\"]], \"then\": [\"Predicate\", \"entity\"]}], \"exclusions\": [[[\"Predicate\", \"entity\"], [\"Other\", \"entity\"]]], \"query\": [\"Predicate\", \"entity\"]}, \"answer\": \"necessary|possible|impossible\"}\nUse only ground atoms; a rule is a Horn implication from all if-atoms to the then-atom.\nItem id: llmlogic-2931-009\nProblem: Every audited build is reproducible. Build kappa is audited and signed. Is kappa reproducible necessary?\n",
+    "Translate the natural-language logic problem into bounded ground logic.\nReturn exactly one JSON object and no prose.\nThe JSON object must have this shape:\n{\"formalization\": {\"facts\": [[\"Predicate\", \"entity\"]], \"rules\": [{\"if\": [[\"Predicate\", \"entity\"]], \"then\": [\"Predicate\", \"entity\"]}], \"exclusions\": [[[\"Predicate\", \"entity\"], [\"Other\", \"entity\"]]], \"query\": [\"Predicate\", \"entity\"]}, \"answer\": \"necessary|possible|impossible\"}\nUse only ground atoms; a rule is a Horn implication from all if-atoms to the then-atom.\nItem id: llmlogic-2931-010\nProblem: No node can be both offline and reachable. Node n4 is offline. Can n4 be reachable?\n",
+    "Translate the natural-language logic problem into bounded ground logic.\nReturn exactly one JSON object and no prose.\nThe JSON object must have this shape:\n{\"formalization\": {\"facts\": [[\"Predicate\", \"entity\"]], \"rules\": [{\"if\": [[\"Predicate\", \"entity\"]], \"then\": [\"Predicate\", \"entity\"]}], \"exclusions\": [[[\"Predicate\", \"entity\"], [\"Other\", \"entity\"]]], \"query\": [\"Predicate\", \"entity\"]}, \"answer\": \"necessary|possible|impossible\"}\nUse only ground atoms; a rule is a Horn implication from all if-atoms to the then-atom.\nItem id: llmlogic-2931-011\nProblem: If a parcel is fragile and shipped, it must be padded. Parcel p2 is fragile and shipped. Is p2 padded necessary?\n",
+    "Translate the natural-language logic problem into bounded ground logic.\nReturn exactly one JSON object and no prose.\nThe JSON object must have this shape:\n{\"formalization\": {\"facts\": [[\"Predicate\", \"entity\"]], \"rules\": [{\"if\": [[\"Predicate\", \"entity\"]], \"then\": [\"Predicate\", \"entity\"]}], \"exclusions\": [[[\"Predicate\", \"entity\"], [\"Other\", \"entity\"]]], \"query\": [\"Predicate\", \"entity\"]}, \"answer\": \"necessary|possible|impossible\"}\nUse only ground atoms; a rule is a Horn implication from all if-atoms to the then-atom.\nItem id: llmlogic-2931-012\nProblem: Kai is enrolled. There is no rule connecting enrollment to graduation. Is Kai graduated possible?\n"
+  ],
+  "random_seed": 2931,
+  "raw_response_dir": "/home/ianblenke/github.com/ianblenke/carnot/.tmp-pytest/pytest-of-ianblenke/pytest-4/popen-gw0/test_req_bench_2931_run_blocks0/llmeval_logic_z3_mini_2931_raw",
+  "reproducibility_checksum": "d02d9fe124b6b72387cce7fbfa66194dcfda9396f4e17823baf6236f7572baad",
+  "run_date": "20260523",
+  "z3_execution_rate": 0.0
+}

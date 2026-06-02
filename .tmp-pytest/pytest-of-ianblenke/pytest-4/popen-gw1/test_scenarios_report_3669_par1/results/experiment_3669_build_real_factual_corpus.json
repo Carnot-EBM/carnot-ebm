@@ -1,0 +1,72 @@
+{
+  "acceptance_gate": {
+    "condition": "real_factual_corpus_built == true AND corpus_non_degenerate == true AND n_examples >= 200",
+    "passed": false,
+    "principle": "A facts re-measurement is only meaningful on a real, non-degenerate, adequately-sized corpus -- a degenerate or tiny corpus repeats the .335/.330 limitation."
+  },
+  "class_balance": {
+    "correct": 0.5,
+    "hallucinated": 0.5
+  },
+  "class_balance_ok": true,
+  "confidence_baseline_auroc": 1.0,
+  "corpus_non_degenerate": false,
+  "corpus_path": "data/real_factual_corpus_ragtruth.jsonl",
+  "degeneracy_reasons": [
+    "confidence_auroc_at_or_above_0.95"
+  ],
+  "duration_s": 2.5,
+  "field_principles": {
+    "class_balance": "Both classes >= 20% -- guards against the imbalance that made the .335 code corpus fragile.",
+    "confidence_baseline_auroc": "The bar the grounding verifier must beat downstream; MUST be < 0.95 (a perfect confidence baseline = degenerate corpus, exp3574).",
+    "corpus_non_degenerate": "True iff confidence AUROC < 0.95 AND class balance ok -- a degenerate corpus cannot test the facts hypothesis.",
+    "corpus_path": "Where the real corpus lives -- the provenance for exp3670.",
+    "duration_s": "Plausibility floor.",
+    "honest_verdict": "Terminal prefix for reconciler classification.",
+    "inference_substrate": "verifier_ensemble_against_cached_candidates (principle: builds + baselines a cached corpus; no FoVer LLM load).",
+    "n_examples": "Sample-size rigor (>=200 for a percentage-point AUROC claim downstream).",
+    "random_seed": "Determinism precondition.",
+    "real_factual_corpus_built": "BARE bool. True iff a real, non-degenerate, schema-valid corpus was persisted. STORE AS BARE true/false -- gates exp3670.",
+    "reproducibility_checksum": "Drift detection.",
+    "source_benchmark": "RAGTruth / FELM / HaluEval + version -- external-benchmark provenance (the whole point: real, not synthetic)."
+  },
+  "honest_outcome": "degenerate_confidence_perfect",
+  "honest_verdict": "complete: blocked_real_corpus_degenerate_confidence_perfect",
+  "inference_substrate": "verifier_ensemble_against_cached_candidates (principle: builds + baselines a cached corpus; no FoVer LLM load).",
+  "n_correct": 120,
+  "n_examples": 240,
+  "n_hallucinated": 120,
+  "placeholder_tokens_rejected": true,
+  "random_seed": 3669,
+  "real_factual_corpus_built": false,
+  "reproducibility_checksum": "e63c88d64b7d5e92",
+  "sample_examples": [
+    {
+      "answer": "Evergreen University is located beside Lake Clara and opened in 1876.",
+      "evidence_passage": "Evergreen University is located beside Lake Clara. The public records state that it opened in 1876. The site includes Solstice Hall and hosts community research visits each spring.",
+      "is_hallucination": 0,
+      "model_confidence": 0.99,
+      "question": "Where is Evergreen University located and when did it open?"
+    },
+    {
+      "answer": "Evergreen University is next to Lake Clara, but it opened in 1999 and was designed around Solstice Hall.",
+      "evidence_passage": "Evergreen University is located beside Lake Clara. The public records state that it opened in 1876. The site includes Solstice Hall and hosts community research visits each spring.",
+      "is_hallucination": 1,
+      "model_confidence": 0.01,
+      "question": "Where is Evergreen University located and when did it open?"
+    },
+    {
+      "answer": "Harborview Museum is located beside Mason Shipyard and opened in 1912.",
+      "evidence_passage": "Harborview Museum is located beside Mason Shipyard. The public records state that it opened in 1912. The site includes North Gallery and hosts community research visits each spring.",
+      "is_hallucination": 0,
+      "model_confidence": 0.99,
+      "question": "Where is Harborview Museum located and when did it open?"
+    }
+  ],
+  "schema_valid": true,
+  "source_benchmark": "RAGTruth fixture-2026-06-01 (fetched)",
+  "source_urls": [
+    "fixture://ragtruth-response",
+    "fixture://ragtruth-source"
+  ]
+}

@@ -1,0 +1,26 @@
+milestone: 2026.04.99
+milestone_title: Synthetic milestone
+milestone_doc: openspec/change-proposals/synthetic.md
+tasks:
+- id: exp1-dict-gates
+  milestone: 2026.04.99
+  deliverable: results/exp1-dict-gates.json
+  title: Fresh Dict Gates
+  prompt: 'REQUIRED ARTIFACT FIELDS:
+
+    - audit_ok: bool
+
+    '
+  gated_on:
+    not: a-list
+- id: exp2-string-gate
+  milestone: 2026.04.99
+  deliverable: results/exp2-string-gate.json
+  title: Fresh String Gate
+  prompt: 'REQUIRED ARTIFACT FIELDS:
+
+    - audit_ok: bool
+
+    '
+  gated_on:
+  - not-a-dict

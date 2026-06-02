@@ -1,0 +1,37 @@
+{
+  "continuous_self_learning_task": true,
+  "experiment": "2241_fr11_fst_eval",
+  "field_principles": {
+    "continuous_self_learning_task": "Must be true -- FR-11 mandate requires at least one CSL task per milestone.",
+    "fr11_fst_eval_passed": "Boolean gate for exp2242. True only when sample_efficiency_ratio >= 2.0 AND kl_drift_ratio <= 0.5.",
+    "honest_verdict": "Terminal-prefix required. Use complete: if both acceptance gates pass.",
+    "kl_drift_ratio": "Secondary FST gate: <= 0.5 validates 70% KL reduction claim.",
+    "n_corpus": "Records corpus size so statistical significance is auditable.",
+    "preconditions_checked": "Lists which resources were verified before running; pre-empts fabrication.",
+    "sample_efficiency_ratio": "Primary FST gate: >= 2.0 validates the 3x claim from arXiv:2605.12484.",
+    "utility_delta": "Measures raw FR-11 benefit -- energy reduction delta between regimes."
+  },
+  "fr11_fst_eval_passed": false,
+  "honest_verdict": "blocked_fst_module_missing",
+  "kl_drift_ratio": 0.0,
+  "measurement_contract": {
+    "external_llm_api_calls": 0,
+    "output_path": "/home/ianblenke/github.com/ianblenke/carnot/.tmp-pytest/pytest-of-ianblenke/pytest-4/popen-gw3/test_req_learn_2241_blocked_ar0/experiment_2241_fr11_fst_eval.json"
+  },
+  "n_corpus": 0,
+  "preconditions_checked": [
+    {
+      "check": "direct_import",
+      "error": "FileNotFoundError: /home/ianblenke/github.com/ianblenke/carnot/.tmp-pytest/pytest-of-ianblenke/pytest-4/popen-gw3/test_req_learn_2241_blocked_ar0/missing_fast_slow.py",
+      "resource": "/home/ianblenke/github.com/ianblenke/carnot/.tmp-pytest/pytest-of-ianblenke/pytest-4/popen-gw3/test_req_learn_2241_blocked_ar0/missing_fast_slow.py",
+      "status": "failed"
+    }
+  ],
+  "regimes": {},
+  "run_date": "20260517",
+  "sample_efficiency_ratio": 0.0,
+  "schema": "fr11_fst_eval_v1",
+  "status": "blocked",
+  "title": "FR-11 Fast-Slow Training sample-efficiency and KL-drift evaluation",
+  "utility_delta": 0.0
+}

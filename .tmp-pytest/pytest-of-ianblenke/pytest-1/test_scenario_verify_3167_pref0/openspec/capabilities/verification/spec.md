@@ -1,4 +1,0 @@
-REQ-VERIFY-3167
-SCENARIO-VERIFY-3167
-complete gated-skip artifact
-results/experiment_3167_clean_live_sota_verifier_rerun_v9.json

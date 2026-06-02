@@ -1,0 +1,132 @@
+{
+  "acceptance_gate": {
+    "condition": "collapse_detected_deploy_arm == false AND collapse_detected_control == true AND pass_rate_vs_true_accuracy_distinct_assert == true",
+    "passed": true,
+    "principle": "Self-learning is validated only when the guarded arm holds, the control collapses, and the two metrics are genuinely distinct (not a tautology)."
+  },
+  "artifact": "experiment_3673_fr11_continuous_self_learning_v10",
+  "collapse_detected_control": true,
+  "collapse_detected_deploy_arm": false,
+  "control_selected_verifier": "fr11_session_memory",
+  "deploy_dependency_edges_final": [],
+  "deploy_logistic_calibration": {
+    "bias": -12.0,
+    "scale": 25.5
+  },
+  "deploy_n_weight_updates": 0,
+  "deploy_weight_bound": {
+    "max_abs_weight": 0.8,
+    "principle": "Signed verifier weights are rejected if one verifier dominates."
+  },
+  "duration_s": 1.0,
+  "field_principles": {
+    "collapse_detected_control": "Positive control: the naive online arm must collapse, else the test has no contrast.",
+    "collapse_detected_deploy_arm": "The conservative-default + uncertainty-gated rule must prevent weight collapse (alpha_t grounding).",
+    "duration_s": "Plausibility floor.",
+    "honest_verdict": "Terminal prefix for reconciler classification.",
+    "inference_substrate": "Scores cached traces; no LLM load.",
+    "n_online_updates": "Sample-size of the self-learning sweep (>=200).",
+    "online_dependency_aware_auroc_gain": "The forward difference -- does online dependency-aware weighting beat fixed dependency-aware and static Carnot?",
+    "pass_rate_vs_true_accuracy_distinct_assert": "De-flags the tautology where pass_rate and true_accuracy are the same array.",
+    "quality_maintained": "Collapse-prevention must not come at the cost of ensemble quality.",
+    "random_seed": "Determinism precondition.",
+    "reproducibility_checksum": "Drift detection."
+  },
+  "honest_verdict": "complete: fr11_v10_online_no_gain_fixed_weighting_sufficient",
+  "inference_substrate": "verifier_ensemble_against_cached_candidates (principle: scores cached traces; no LLM load).",
+  "metrics_after_control_online_adaptation": {
+    "auroc": 1.0,
+    "brier": 0.04,
+    "ece": 0.2
+  },
+  "metrics_after_deploy_online_adaptation": {
+    "auroc": 1.0,
+    "brier": 1e-06,
+    "ece": 0.000616
+  },
+  "metrics_before_online_adaptation": {
+    "auroc": 1.0,
+    "brier": 0.04,
+    "ece": 0.2
+  },
+  "metrics_fixed_dependency_aware": {
+    "auroc": 1.0,
+    "brier": 0.04,
+    "ece": 0.2
+  },
+  "metrics_fixed_dependency_aware_final_fit": {
+    "auroc": 1.0,
+    "brier": 0.04,
+    "ece": 0.2
+  },
+  "n_online_updates": 240,
+  "observed_catch_utility_by_verifier": {
+    "fr11_session_memory": 1.0,
+    "tier0r_curry_howard": 1.0,
+    "tier0s_arithmetic_gap": 1.0,
+    "tier0u_logical_consistency": 1.0
+  },
+  "online_dependency_aware_auroc_gain": 0.0,
+  "pass_rate_trajectory": [
+    0.433024,
+    0.632778,
+    0.566194,
+    0.599486,
+    0.333148,
+    0.466317,
+    0.466317,
+    0.499609
+  ],
+  "pass_rate_vs_true_accuracy_distinct_assert": true,
+  "preconditions_checked": [],
+  "quality_maintained": true,
+  "random_seed": 3673,
+  "reproducibility_checksum": "098f583e5f57a568bbebfd61a17dcfbfe1ee6f5cdae0d2008105486eb27af3c7",
+  "schema": "carnot.fr11_continuous_self_learning_v10",
+  "true_accuracy_trajectory": [
+    1.0,
+    1.0,
+    1.0,
+    1.0,
+    1.0,
+    1.0,
+    1.0,
+    1.0
+  ],
+  "verifier_names": [
+    "fr11_session_memory",
+    "tier0r_curry_howard",
+    "tier0s_arithmetic_gap",
+    "tier0u_logical_consistency"
+  ],
+  "weights_carnot_static": {
+    "fr11_session_memory": 0.5,
+    "tier0r_curry_howard": 0.45,
+    "tier0s_arithmetic_gap": 0.0,
+    "tier0u_logical_consistency": 0.05
+  },
+  "weights_control_final": {
+    "fr11_session_memory": 1.0,
+    "tier0r_curry_howard": 0.0,
+    "tier0s_arithmetic_gap": 0.0,
+    "tier0u_logical_consistency": 0.0
+  },
+  "weights_deploy_final": {
+    "fr11_session_memory": 0.25,
+    "tier0r_curry_howard": 0.25,
+    "tier0s_arithmetic_gap": 0.25,
+    "tier0u_logical_consistency": 0.25
+  },
+  "weights_deploy_initial": {
+    "fr11_session_memory": 0.25,
+    "tier0r_curry_howard": 0.25,
+    "tier0s_arithmetic_gap": 0.25,
+    "tier0u_logical_consistency": 0.25
+  },
+  "weights_fixed_dependency_aware_mean": {
+    "fr11_session_memory": 0.25,
+    "tier0r_curry_howard": 0.25,
+    "tier0s_arithmetic_gap": 0.25,
+    "tier0u_logical_consistency": 0.25
+  }
+}

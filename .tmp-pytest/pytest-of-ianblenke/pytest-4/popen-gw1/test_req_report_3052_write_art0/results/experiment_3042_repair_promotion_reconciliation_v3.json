@@ -1,0 +1,46 @@
+{
+  "artifact": "experiment_3042_repair_promotion_reconciliation_v3",
+  "honest_verdict": "complete: repair_claim_status=bounded",
+  "inference_substrate": {
+    "kind": "aggregation_from_upstream_artifacts"
+  },
+  "remaining_blockers": [
+    {
+      "blocking": true,
+      "classification": "true_blocker",
+      "rationale": "repair flags remain",
+      "row_id": "exp3028:adversarial_flags",
+      "source_artifact": "results/experiment_3028_sota_repair_clean_methodology_rerun_v2.json",
+      "source_field": "corrigendum_pending"
+    },
+    {
+      "blocking": true,
+      "classification": "true_blocker",
+      "evidence": {
+        "claim_id": "headline_sota_repair_clean_methodology",
+        "classification": "retired"
+      },
+      "row_id": "exp3029:headline_sota_repair_clean_methodology",
+      "source_artifact": "results/experiment_3029_repair_promotion_boundary_audit_v2.json",
+      "source_field": "retired_or_blocked_claims[headline_sota_repair_clean_methodology]"
+    },
+    {
+      "blocking": true,
+      "classification": "true_blocker",
+      "evidence": {
+        "claim_id": "unsupported_exp3016_headline_repair_promotion",
+        "classification": "retired"
+      },
+      "row_id": "exp3029:unsupported_exp3016_headline_repair_promotion",
+      "source_artifact": "results/experiment_3029_repair_promotion_boundary_audit_v2.json",
+      "source_field": "retired_or_blocked_claims[unsupported_exp3016_headline_repair_promotion]"
+    }
+  ],
+  "repair_claim_status": "bounded",
+  "repair_delta_summary": {
+    "n_tasks": 24,
+    "pass_at_1_delta": 0.375
+  },
+  "repair_promotion_candidate": false,
+  "repair_reconciliation_ready": true
+}

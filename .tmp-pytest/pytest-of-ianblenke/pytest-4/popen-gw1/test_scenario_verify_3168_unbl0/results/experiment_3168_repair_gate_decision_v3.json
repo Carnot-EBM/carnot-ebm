@@ -1,0 +1,168 @@
+{
+  "artifact": "experiment_3168_repair_gate_decision_v3",
+  "clean_live_verifier_rerun_v9_ready": true,
+  "clean_rerun_artifact_present": true,
+  "controlled_invariance_passed": true,
+  "duration_s": 2.5,
+  "exact_authority_ready": true,
+  "false_accept_gate_passed": true,
+  "false_accept_rate": 0.0,
+  "flagged_adversarial": false,
+  "gate_criteria": {
+    "clean_live_verifier_rerun_v9_ready": true,
+    "controlled_invariance_passed": true,
+    "exact_labels_present": true,
+    "false_accept_gate_passed": true,
+    "flagged_adversarial": false,
+    "gated_skip": false,
+    "headline_claim_allowed": true,
+    "max_false_accept_rate": 0.1,
+    "regression_rows_included": true
+  },
+  "gated_skip": false,
+  "headline_claim_allowed": true,
+  "honest_verdict": "complete: repair_gate_state=unblocked; false_accept_rate=0.0; selected_repair_rows=1",
+  "inference_substrate": {
+    "aggregation_only": true,
+    "executes_models": false,
+    "executes_repairs": false,
+    "executes_solvers": false,
+    "executes_verifiers": false,
+    "kind": "deterministic_repair_gate_decision_v3",
+    "live_model_calls": 0,
+    "no_live_inference": true,
+    "repair_calls": 0,
+    "source_executes_models": true,
+    "source_live_model_calls_reused": 4
+  },
+  "live_model_ready": true,
+  "regression_rows_included": true,
+  "repair_blockers": [],
+  "repair_gate_decision_v3_ready": true,
+  "repair_gate_state": "unblocked",
+  "run_date": "20260527",
+  "schema": "carnot.repair_gate_decision.v3",
+  "selected_repair_rows": [
+    {
+      "exact_authority_constraints": {
+        "canonical_decision": "abstain",
+        "exact_label": "INVALID",
+        "exact_safe_decision": "abstain",
+        "expected_action": "reject",
+        "minimal_correction_set": {
+          "constraints_to_relax": [
+            "constraint_0"
+          ],
+          "kind": "remove_conflicting_constraint"
+        },
+        "solver_or_test_authority": "z3_solver",
+        "unsat_core": [
+          "constraint_0",
+          "constraint_1"
+        ]
+      },
+      "row_id": "row-fa"
+    }
+  ],
+  "source_artifacts": [
+    {
+      "path": "AGENTS.md",
+      "present": true,
+      "required": false,
+      "role": "agents_repo_instructions",
+      "sha256": "c893735c3c7ece3f9bf4d48722846ef65e76ff35ebfbfe1d239930339d69470b"
+    },
+    {
+      "path": "CODEX.md",
+      "present": true,
+      "required": false,
+      "role": "codex_repo_workflow",
+      "sha256": "bab1c6ba20bb432cbd7cd6e3b12fb0089f303cb7742f929297647d6329e46502"
+    },
+    {
+      "path": "CLAUDE.md",
+      "present": true,
+      "required": false,
+      "role": "claude_authenticity_rules",
+      "sha256": "2935b3305af044aa974d171de046d202dab6ce7c8d8ffa29fc000439320240b6"
+    },
+    {
+      "path": "openspec/capabilities/verification/spec.md",
+      "present": true,
+      "required": true,
+      "role": "verification_openspec",
+      "sha256": "7aa242bace554cadda03d5b17aa209964444416bb651b06ab03a2d53fff391a1"
+    },
+    {
+      "path": "results/experiment_3167_clean_live_sota_verifier_rerun_v9.json",
+      "present": true,
+      "required": true,
+      "role": "exp3167_clean_live_verifier_rerun_v9",
+      "sha256": "17a9fc55a0f3815f18e64c6b0b415f7c764197b22251e64c55be45c081869fad"
+    },
+    {
+      "path": "results/experiment_3166_verifier_invariance_token_suspicion_audit_v1.json",
+      "present": true,
+      "required": true,
+      "role": "exp3166_invariance_token_suspicion_audit",
+      "sha256": "3ede180c91e4a8ad0e4318849ee4b632e03af9f318ad497bddaf250f6240ac23"
+    },
+    {
+      "path": "results/experiment_3137_exact_safe_accept_abstain_contract_v1.json",
+      "present": true,
+      "required": true,
+      "role": "exp3137_exact_safe_contract",
+      "sha256": "b6bebf1304067e604192671783b2a829b9458b6e7d18ffc871a1274496dccd1f"
+    },
+    {
+      "path": "results/experiment_3138_canonical_answer_vericot_grounding_pilot_v1.json",
+      "present": true,
+      "required": true,
+      "role": "exp3138_canonical_grounding",
+      "sha256": "fe91a022a15ef048ac830f87780a66f2b1dcf9dd2e65705d191c2145e8e0dacb"
+    },
+    {
+      "path": "results/experiment_3153_repair_gate_unlock_decision_v2.json",
+      "present": true,
+      "required": false,
+      "role": "exp3153_thin_gate_decision_v2",
+      "sha256": "0601a1566bd2f69df43c725134171d4bc4159924d4cee31431368b02e8c87ead"
+    },
+    {
+      "path": "results/experiment_3140_repair_gate_unlock_decision_v1.json",
+      "present": true,
+      "required": false,
+      "role": "exp3140_repair_gate_decision_v1",
+      "sha256": "f877ca77e2e572415bd37194b9709cb1ba50bb5724715ac30db1ae52c900e360"
+    },
+    {
+      "path": "python/carnot/verify/repair_gate_decision_v3.py",
+      "present": false,
+      "required": false,
+      "role": "exp3168_module",
+      "sha256": null
+    },
+    {
+      "path": "tests/python/test_experiment_3168_repair_gate_decision_v3.py",
+      "present": false,
+      "required": false,
+      "role": "exp3168_tests",
+      "sha256": null
+    }
+  ],
+  "source_checksums": {
+    "AGENTS.md": "c893735c3c7ece3f9bf4d48722846ef65e76ff35ebfbfe1d239930339d69470b",
+    "CLAUDE.md": "2935b3305af044aa974d171de046d202dab6ce7c8d8ffa29fc000439320240b6",
+    "CODEX.md": "bab1c6ba20bb432cbd7cd6e3b12fb0089f303cb7742f929297647d6329e46502",
+    "openspec/capabilities/verification/spec.md": "7aa242bace554cadda03d5b17aa209964444416bb651b06ab03a2d53fff391a1",
+    "results/experiment_3137_exact_safe_accept_abstain_contract_v1.json": "b6bebf1304067e604192671783b2a829b9458b6e7d18ffc871a1274496dccd1f",
+    "results/experiment_3138_canonical_answer_vericot_grounding_pilot_v1.json": "fe91a022a15ef048ac830f87780a66f2b1dcf9dd2e65705d191c2145e8e0dacb",
+    "results/experiment_3140_repair_gate_unlock_decision_v1.json": "f877ca77e2e572415bd37194b9709cb1ba50bb5724715ac30db1ae52c900e360",
+    "results/experiment_3153_repair_gate_unlock_decision_v2.json": "0601a1566bd2f69df43c725134171d4bc4159924d4cee31431368b02e8c87ead",
+    "results/experiment_3166_verifier_invariance_token_suspicion_audit_v1.json": "3ede180c91e4a8ad0e4318849ee4b632e03af9f318ad497bddaf250f6240ac23",
+    "results/experiment_3167_clean_live_sota_verifier_rerun_v9.json": "17a9fc55a0f3815f18e64c6b0b415f7c764197b22251e64c55be45c081869fad"
+  },
+  "tests_run": [
+    "focused-3168"
+  ]
+}

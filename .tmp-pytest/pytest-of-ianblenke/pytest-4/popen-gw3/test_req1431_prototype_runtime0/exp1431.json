@@ -1,0 +1,545 @@
+{
+  "artifact_metadata": {
+    "project_root": "/home/ianblenke/github.com/ianblenke/carnot/.tmp-pytest/pytest-of-ianblenke/pytest-4/popen-gw3/test_req1431_prototype_runtime0",
+    "run_date": "20260506",
+    "source_experiments": [
+      "exp1397",
+      "exp1428",
+      "exp1430",
+      "exp1419_baseline"
+    ],
+    "spec": [
+      "REQ-VERIFY-1431",
+      "SCENARIO-VERIFY-1431"
+    ]
+  },
+  "beats_exp1419_baseline": true,
+  "blocker": null,
+  "blocker_detail": null,
+  "cases_evaluated": 50,
+  "certificate_parse_rate": 1.0,
+  "eligible_for_200_case_scaleup": false,
+  "exp1419_baseline_full_pipeline_pass_rate": 0.305,
+  "experiment": "1431_fullscale_pipeline_v4_micro_gated",
+  "final_full_pipeline_pass_cases": 32,
+  "full_pipeline_delta_vs_exp1419": 0.335,
+  "full_pipeline_pass_rate": 0.64,
+  "honest_verdict": "complete_micro_validation_beats_exp1419_baseline_prototype_no_headline_scaleup",
+  "local_invocation": {
+    "command": "python -m carnot.reporting.fullscale_pipeline_v4_micro_gated --run-date 20260506 --repair-v2 --prm-guided-selection",
+    "prm_guided_selection_enabled": true,
+    "repair_v2_enabled": true
+  },
+  "local_sota_model_inference_used": false,
+  "local_sota_model_used": "unsloth/Qwen3.6-35B-A3B-GGUF",
+  "model_specs": [
+    {
+      "gpu": 0,
+      "hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "model_path": "/cache/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf",
+      "name": "Qwen3.6-35B-A3B"
+    },
+    {
+      "gpu": 1,
+      "hf_id": "unsloth/gemma-4-31B-it-GGUF",
+      "model_path": "/cache/gemma-4-31B-it-Q4_K_M.gguf",
+      "name": "Gemma4-31B-it"
+    }
+  ],
+  "original_full_pipeline_pass_cases": 12,
+  "prm_guided_selection_enabled": true,
+  "repair_hint_cases_total": 20,
+  "repair_success_rate": 1.0,
+  "repair_v2_enabled": true,
+  "repaired_cases_successful": 20,
+  "run_date": "20260506",
+  "runtime_evidence_allows_headline_scaleup": false,
+  "sample_case_ids": [
+    "repair_18",
+    "repair_15",
+    "repair_10",
+    "repair_06",
+    "repair_07",
+    "repair_01",
+    "repair_14",
+    "repair_02",
+    "repair_11",
+    "repair_04",
+    "repair_19",
+    "repair_00",
+    "repair_13",
+    "repair_17",
+    "repair_12",
+    "repair_03",
+    "repair_05",
+    "repair_08",
+    "repair_16",
+    "repair_09",
+    "pass_014",
+    "fail_044",
+    "fail_019",
+    "fail_102",
+    "fail_117",
+    "fail_006",
+    "fail_021",
+    "pass_012",
+    "fail_103",
+    "fail_069",
+    "fail_095",
+    "pass_021",
+    "pass_059",
+    "fail_057",
+    "pass_040",
+    "fail_010",
+    "pass_017",
+    "fail_112",
+    "pass_035",
+    "fail_011",
+    "fail_077",
+    "pass_028",
+    "fail_034",
+    "pass_030",
+    "pass_036",
+    "pass_041",
+    "fail_048",
+    "pass_056",
+    "fail_116",
+    "fail_094"
+  ],
+  "sample_source": "results/experiment_1397_fullscale_pipeline_v2_200cases.json; repair-prioritized sha256(run_date, case_id) 50-case micro sample",
+  "sample_strategy": "selected-prm-repair-cases-first-then-sha256-fill",
+  "schema": "fullscale_pipeline_v4_micro_gated_v1",
+  "selected_repair_case_ids_in_sample": [
+    "repair_00",
+    "repair_01",
+    "repair_02",
+    "repair_03",
+    "repair_04",
+    "repair_05",
+    "repair_06",
+    "repair_07",
+    "repair_08",
+    "repair_09",
+    "repair_10",
+    "repair_11",
+    "repair_12",
+    "repair_13",
+    "repair_14",
+    "repair_15",
+    "repair_16",
+    "repair_17",
+    "repair_18",
+    "repair_19"
+  ],
+  "semantic_validation_pass_rate": 1.0,
+  "source_artifacts": [
+    "results/experiment_1397_fullscale_pipeline_v2_200cases.json",
+    "results/experiment_1428_dccd_schema_constrained_repair_v2.json",
+    "results/experiment_1430_prm_guided_repair_selector.json"
+  ],
+  "source_exp1397_first_50_rows": [
+    {
+      "case_id": "repair_00",
+      "false_acceptance": false,
+      "full_pipeline_pass": false,
+      "repair_required": true,
+      "scheduler_action": "escalate_full_verifier",
+      "semantic_result": "REPAIR_HINT"
+    },
+    {
+      "case_id": "repair_01",
+      "false_acceptance": false,
+      "full_pipeline_pass": false,
+      "repair_required": true,
+      "scheduler_action": "escalate_full_verifier",
+      "semantic_result": "REPAIR_HINT"
+    },
+    {
+      "case_id": "repair_02",
+      "false_acceptance": false,
+      "full_pipeline_pass": false,
+      "repair_required": true,
+      "scheduler_action": "escalate_full_verifier",
+      "semantic_result": "REPAIR_HINT"
+    },
+    {
+      "case_id": "repair_03",
+      "false_acceptance": false,
+      "full_pipeline_pass": false,
+      "repair_required": true,
+      "scheduler_action": "escalate_full_verifier",
+      "semantic_result": "REPAIR_HINT"
+    },
+    {
+      "case_id": "repair_04",
+      "false_acceptance": false,
+      "full_pipeline_pass": false,
+      "repair_required": true,
+      "scheduler_action": "escalate_full_verifier",
+      "semantic_result": "REPAIR_HINT"
+    },
+    {
+      "case_id": "repair_05",
+      "false_acceptance": false,
+      "full_pipeline_pass": false,
+      "repair_required": true,
+      "scheduler_action": "escalate_full_verifier",
+      "semantic_result": "REPAIR_HINT"
+    },
+    {
+      "case_id": "repair_06",
+      "false_acceptance": false,
+      "full_pipeline_pass": false,
+      "repair_required": true,
+      "scheduler_action": "escalate_full_verifier",
+      "semantic_result": "REPAIR_HINT"
+    },
+    {
+      "case_id": "repair_07",
+      "false_acceptance": false,
+      "full_pipeline_pass": false,
+      "repair_required": true,
+      "scheduler_action": "escalate_full_verifier",
+      "semantic_result": "REPAIR_HINT"
+    },
+    {
+      "case_id": "repair_08",
+      "false_acceptance": false,
+      "full_pipeline_pass": false,
+      "repair_required": true,
+      "scheduler_action": "escalate_full_verifier",
+      "semantic_result": "REPAIR_HINT"
+    },
+    {
+      "case_id": "repair_09",
+      "false_acceptance": false,
+      "full_pipeline_pass": false,
+      "repair_required": true,
+      "scheduler_action": "escalate_full_verifier",
+      "semantic_result": "REPAIR_HINT"
+    },
+    {
+      "case_id": "repair_10",
+      "false_acceptance": false,
+      "full_pipeline_pass": false,
+      "repair_required": true,
+      "scheduler_action": "escalate_full_verifier",
+      "semantic_result": "REPAIR_HINT"
+    },
+    {
+      "case_id": "repair_11",
+      "false_acceptance": false,
+      "full_pipeline_pass": false,
+      "repair_required": true,
+      "scheduler_action": "escalate_full_verifier",
+      "semantic_result": "REPAIR_HINT"
+    },
+    {
+      "case_id": "repair_12",
+      "false_acceptance": false,
+      "full_pipeline_pass": false,
+      "repair_required": true,
+      "scheduler_action": "escalate_full_verifier",
+      "semantic_result": "REPAIR_HINT"
+    },
+    {
+      "case_id": "repair_13",
+      "false_acceptance": false,
+      "full_pipeline_pass": false,
+      "repair_required": true,
+      "scheduler_action": "escalate_full_verifier",
+      "semantic_result": "REPAIR_HINT"
+    },
+    {
+      "case_id": "repair_14",
+      "false_acceptance": false,
+      "full_pipeline_pass": false,
+      "repair_required": true,
+      "scheduler_action": "escalate_full_verifier",
+      "semantic_result": "REPAIR_HINT"
+    },
+    {
+      "case_id": "repair_15",
+      "false_acceptance": false,
+      "full_pipeline_pass": false,
+      "repair_required": true,
+      "scheduler_action": "escalate_full_verifier",
+      "semantic_result": "REPAIR_HINT"
+    },
+    {
+      "case_id": "repair_16",
+      "false_acceptance": false,
+      "full_pipeline_pass": false,
+      "repair_required": true,
+      "scheduler_action": "escalate_full_verifier",
+      "semantic_result": "REPAIR_HINT"
+    },
+    {
+      "case_id": "repair_17",
+      "false_acceptance": false,
+      "full_pipeline_pass": false,
+      "repair_required": true,
+      "scheduler_action": "escalate_full_verifier",
+      "semantic_result": "REPAIR_HINT"
+    },
+    {
+      "case_id": "repair_18",
+      "false_acceptance": false,
+      "full_pipeline_pass": false,
+      "repair_required": true,
+      "scheduler_action": "escalate_full_verifier",
+      "semantic_result": "REPAIR_HINT"
+    },
+    {
+      "case_id": "repair_19",
+      "false_acceptance": false,
+      "full_pipeline_pass": false,
+      "repair_required": true,
+      "scheduler_action": "escalate_full_verifier",
+      "semantic_result": "REPAIR_HINT"
+    },
+    {
+      "case_id": "pass_000",
+      "false_acceptance": false,
+      "full_pipeline_pass": true,
+      "repair_required": false,
+      "scheduler_action": "proxy_accept",
+      "semantic_result": "SAT"
+    },
+    {
+      "case_id": "pass_001",
+      "false_acceptance": false,
+      "full_pipeline_pass": true,
+      "repair_required": false,
+      "scheduler_action": "proxy_accept",
+      "semantic_result": "SAT"
+    },
+    {
+      "case_id": "pass_002",
+      "false_acceptance": false,
+      "full_pipeline_pass": true,
+      "repair_required": false,
+      "scheduler_action": "proxy_accept",
+      "semantic_result": "SAT"
+    },
+    {
+      "case_id": "pass_003",
+      "false_acceptance": false,
+      "full_pipeline_pass": true,
+      "repair_required": false,
+      "scheduler_action": "proxy_accept",
+      "semantic_result": "SAT"
+    },
+    {
+      "case_id": "pass_004",
+      "false_acceptance": false,
+      "full_pipeline_pass": true,
+      "repair_required": false,
+      "scheduler_action": "proxy_accept",
+      "semantic_result": "SAT"
+    },
+    {
+      "case_id": "pass_005",
+      "false_acceptance": false,
+      "full_pipeline_pass": true,
+      "repair_required": false,
+      "scheduler_action": "proxy_accept",
+      "semantic_result": "SAT"
+    },
+    {
+      "case_id": "pass_006",
+      "false_acceptance": false,
+      "full_pipeline_pass": true,
+      "repair_required": false,
+      "scheduler_action": "proxy_accept",
+      "semantic_result": "SAT"
+    },
+    {
+      "case_id": "pass_007",
+      "false_acceptance": false,
+      "full_pipeline_pass": true,
+      "repair_required": false,
+      "scheduler_action": "proxy_accept",
+      "semantic_result": "SAT"
+    },
+    {
+      "case_id": "pass_008",
+      "false_acceptance": false,
+      "full_pipeline_pass": true,
+      "repair_required": false,
+      "scheduler_action": "proxy_accept",
+      "semantic_result": "SAT"
+    },
+    {
+      "case_id": "pass_009",
+      "false_acceptance": false,
+      "full_pipeline_pass": true,
+      "repair_required": false,
+      "scheduler_action": "proxy_accept",
+      "semantic_result": "SAT"
+    },
+    {
+      "case_id": "pass_010",
+      "false_acceptance": false,
+      "full_pipeline_pass": true,
+      "repair_required": false,
+      "scheduler_action": "proxy_accept",
+      "semantic_result": "SAT"
+    },
+    {
+      "case_id": "pass_011",
+      "false_acceptance": false,
+      "full_pipeline_pass": true,
+      "repair_required": false,
+      "scheduler_action": "proxy_accept",
+      "semantic_result": "SAT"
+    },
+    {
+      "case_id": "pass_012",
+      "false_acceptance": false,
+      "full_pipeline_pass": true,
+      "repair_required": false,
+      "scheduler_action": "proxy_accept",
+      "semantic_result": "SAT"
+    },
+    {
+      "case_id": "pass_013",
+      "false_acceptance": false,
+      "full_pipeline_pass": true,
+      "repair_required": false,
+      "scheduler_action": "proxy_accept",
+      "semantic_result": "SAT"
+    },
+    {
+      "case_id": "pass_014",
+      "false_acceptance": false,
+      "full_pipeline_pass": true,
+      "repair_required": false,
+      "scheduler_action": "proxy_accept",
+      "semantic_result": "SAT"
+    },
+    {
+      "case_id": "pass_015",
+      "false_acceptance": false,
+      "full_pipeline_pass": true,
+      "repair_required": false,
+      "scheduler_action": "proxy_accept",
+      "semantic_result": "SAT"
+    },
+    {
+      "case_id": "pass_016",
+      "false_acceptance": false,
+      "full_pipeline_pass": true,
+      "repair_required": false,
+      "scheduler_action": "proxy_accept",
+      "semantic_result": "SAT"
+    },
+    {
+      "case_id": "pass_017",
+      "false_acceptance": false,
+      "full_pipeline_pass": true,
+      "repair_required": false,
+      "scheduler_action": "proxy_accept",
+      "semantic_result": "SAT"
+    },
+    {
+      "case_id": "pass_018",
+      "false_acceptance": false,
+      "full_pipeline_pass": true,
+      "repair_required": false,
+      "scheduler_action": "proxy_accept",
+      "semantic_result": "SAT"
+    },
+    {
+      "case_id": "pass_019",
+      "false_acceptance": false,
+      "full_pipeline_pass": true,
+      "repair_required": false,
+      "scheduler_action": "proxy_accept",
+      "semantic_result": "SAT"
+    },
+    {
+      "case_id": "pass_020",
+      "false_acceptance": false,
+      "full_pipeline_pass": true,
+      "repair_required": false,
+      "scheduler_action": "proxy_accept",
+      "semantic_result": "SAT"
+    },
+    {
+      "case_id": "pass_021",
+      "false_acceptance": false,
+      "full_pipeline_pass": true,
+      "repair_required": false,
+      "scheduler_action": "proxy_accept",
+      "semantic_result": "SAT"
+    },
+    {
+      "case_id": "pass_022",
+      "false_acceptance": false,
+      "full_pipeline_pass": true,
+      "repair_required": false,
+      "scheduler_action": "proxy_accept",
+      "semantic_result": "SAT"
+    },
+    {
+      "case_id": "pass_023",
+      "false_acceptance": false,
+      "full_pipeline_pass": true,
+      "repair_required": false,
+      "scheduler_action": "proxy_accept",
+      "semantic_result": "SAT"
+    },
+    {
+      "case_id": "pass_024",
+      "false_acceptance": false,
+      "full_pipeline_pass": true,
+      "repair_required": false,
+      "scheduler_action": "proxy_accept",
+      "semantic_result": "SAT"
+    },
+    {
+      "case_id": "pass_025",
+      "false_acceptance": false,
+      "full_pipeline_pass": true,
+      "repair_required": false,
+      "scheduler_action": "proxy_accept",
+      "semantic_result": "SAT"
+    },
+    {
+      "case_id": "pass_026",
+      "false_acceptance": false,
+      "full_pipeline_pass": true,
+      "repair_required": false,
+      "scheduler_action": "proxy_accept",
+      "semantic_result": "SAT"
+    },
+    {
+      "case_id": "pass_027",
+      "false_acceptance": false,
+      "full_pipeline_pass": true,
+      "repair_required": false,
+      "scheduler_action": "proxy_accept",
+      "semantic_result": "SAT"
+    },
+    {
+      "case_id": "pass_028",
+      "false_acceptance": false,
+      "full_pipeline_pass": true,
+      "repair_required": false,
+      "scheduler_action": "proxy_accept",
+      "semantic_result": "SAT"
+    },
+    {
+      "case_id": "pass_029",
+      "false_acceptance": false,
+      "full_pipeline_pass": true,
+      "repair_required": false,
+      "scheduler_action": "proxy_accept",
+      "semantic_result": "SAT"
+    }
+  ],
+  "status": "complete",
+  "structured_gates_satisfied": true,
+  "tests_run": []
+}

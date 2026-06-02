@@ -1,0 +1,421 @@
+{
+  "acceptance_checks": [
+    {
+      "check": "Derive pass@1 from the first candidate and pass@k from the full candidate set. If k==1, declare that equality is expected; otherwise bit-identical pass@1/pass@k deltas require an explicit per-task explanation.",
+      "id": "pass_at_1_vs_pass_at_k",
+      "required": true
+    },
+    {
+      "check": "Emit per-task baseline, repaired, accepted, rejected, and checker outcomes; the run cannot promote if every side-effect delta is exact zero without case-level support.",
+      "id": "non_vacuous_task_outcomes",
+      "required": true
+    },
+    {
+      "check": "Record top-level random_seed, seed_log, raw transcript paths, and tests_run.",
+      "id": "seed_and_logging",
+      "required": true
+    },
+    {
+      "check": "Record model name, hf_id, path or cache id, checksum/hash, GPU assignment, and decode config.",
+      "id": "model_specs_identity",
+      "required": true
+    },
+    {
+      "check": "Name the deterministic checker, code path/checksum, source field, and pass/fail authority for every accepted repair.",
+      "id": "checker_authority",
+      "required": true
+    }
+  ],
+  "artifact": "experiment_3056_repair_de_tautology_protocol_v1",
+  "blocked_prior_fields": {
+    "duration": {
+      "acceptance_check": "wall_clock_sanity_for_compute_bound_markers",
+      "detail": "duration_s=0.103766 but artifact references compute-bound markers (GGUF / CUDA / live model). Loading and running a real model takes >=60.0s minimum; this completed too fast to have invoked the model.",
+      "kind": "DURATION_TOO_SHORT",
+      "observed_fields": [
+        "duration_s"
+      ],
+      "severity": "critical",
+      "source_artifact": "results/experiment_3028_sota_repair_clean_methodology_rerun_v2.json",
+      "source_field": "corrigendum_pending[4]"
+    },
+    "implausible_perfect_results": {
+      "acceptance_check": "per_case_non_vacuous_delta_evidence",
+      "details": [
+        "false_accept_delta=0.0 (exactly zero). Confirm this is not a stub default.",
+        "schema_failure_rate_delta=0.0 (exactly zero). Confirm this is not a stub default.",
+        "syntax_failure_rate_delta=0.0 (exactly zero). Confirm this is not a stub default."
+      ],
+      "kind": "IMPLAUSIBLE_PERFECT",
+      "observed_fields": [
+        "false_accept_delta",
+        "schema_failure_rate_delta",
+        "syntax_failure_rate_delta"
+      ],
+      "severity": "info",
+      "source_artifact": "results/experiment_3028_sota_repair_clean_methodology_rerun_v2.json",
+      "source_field": "corrigendum_pending[1:4]"
+    },
+    "missing_seed": {
+      "acceptance_check": "top_level_and_per_transcript_seed_logging",
+      "detail": "Compute-bound artifact missing: random_seed. Methodology unverifiable.",
+      "kind": "METHODOLOGY_MISSING",
+      "observed_fields": [
+        "random_seed"
+      ],
+      "severity": "warn",
+      "source_artifact": "results/experiment_3028_sota_repair_clean_methodology_rerun_v2.json",
+      "source_field": "corrigendum_pending[5]"
+    },
+    "tautology": {
+      "acceptance_check": "pass_at_1_vs_pass_at_k_independent_derivation",
+      "detail": "pass_at_1_delta=0.375 and pass_at_k_delta=0.375 agree to >5 sig figs. Two distinct metrics matching this precisely is more likely a bug than a finding.",
+      "kind": "TAUTOLOGY",
+      "observed_fields": [
+        "pass_at_1_delta",
+        "pass_at_k_delta"
+      ],
+      "severity": "critical",
+      "source_artifact": "results/experiment_3028_sota_repair_clean_methodology_rerun_v2.json",
+      "source_field": "corrigendum_pending[0]"
+    },
+    "unresolved_methodology": {
+      "acceptance_check": "all_prior_blockers_checked_before_matrix_v20_promotion",
+      "kind": "UNRESOLVED_METHODOLOGY",
+      "observed_fields": [
+        "remaining_blockers",
+        "repair_claim_status"
+      ],
+      "rows": [
+        {
+          "classification": "missing_metadata",
+          "evidence": [
+            {
+              "detail": "Compute-bound artifact missing: random_seed. Methodology unverifiable.",
+              "kind": "METHODOLOGY_MISSING",
+              "severity": "warn"
+            }
+          ],
+          "rationale": "fixture repair blocker",
+          "row_id": "exp3028:methodology_missing",
+          "source_artifact": "results/experiment_3028_sota_repair_clean_methodology_rerun_v2.json",
+          "source_field": "corrigendum_pending[METHODOLOGY_MISSING]"
+        },
+        {
+          "classification": "unresolved_bound",
+          "evidence": {
+            "check": "repair_promotable",
+            "passed": false,
+            "reason": "bounded"
+          },
+          "rationale": "fixture repair blocker",
+          "row_id": "capstone:repair_bounded",
+          "source_artifact": "results/experiment_3028_sota_repair_clean_methodology_rerun_v2.json",
+          "source_field": "paper_ready_checks[repair_promotable]"
+        }
+      ],
+      "source_artifact": "results/experiment_3042_repair_promotion_reconciliation_v3.json",
+      "source_field": "remaining_blockers"
+    }
+  },
+  "blocked_reasons": [],
+  "duration_s": 1.5,
+  "duration_sanity_rule": {
+    "applies_to": "live local SOTA repair runs",
+    "applies_when_any_marker_present": [
+      "GGUF",
+      "CUDA",
+      "live model",
+      "model_specs"
+    ],
+    "failure_action": "disqualify_matrix_v20_promotion",
+    "minimum_live_compute_duration_s": 60.0,
+    "requires_monotonic_wall_clock": true,
+    "source_blocker": "exp3028.corrigendum_pending[DURATION_TOO_SHORT]"
+  },
+  "exp3059_matrix_v20_required_fields": [
+    "schema",
+    "artifact",
+    "run_date",
+    "started_at",
+    "finished_at",
+    "duration_s",
+    "wall_clock_start_utc",
+    "wall_clock_end_utc",
+    "random_seed",
+    "seed_log",
+    "model_specs",
+    "models_used",
+    "decode_config",
+    "inference_substrate",
+    "n_tasks",
+    "candidate_count",
+    "baseline_metrics",
+    "repair_metrics",
+    "pass_at_1_delta",
+    "pass_at_k_delta",
+    "pass_at_1_derivation",
+    "pass_at_k_derivation",
+    "per_task_results",
+    "non_vacuous_outcome_summary",
+    "accepted_candidate_count",
+    "rejected_candidate_count",
+    "false_accept_delta",
+    "syntax_failure_rate_delta",
+    "schema_failure_rate_delta",
+    "intent_drift_count",
+    "intent_preservation_checks",
+    "checker_authority",
+    "transcript_fingerprints",
+    "raw_transcript_paths",
+    "fingerprint_linkage",
+    "reproducibility_checksum",
+    "duration_sanity_check",
+    "blocked_prior_fields_checked",
+    "promotion_disqualifiers",
+    "adversarial_verify_flags",
+    "tests_run",
+    "honest_verdict"
+  ],
+  "fingerprint_requirements": [
+    {
+      "field": "transcript_fingerprints[].prompt_hash",
+      "required": true,
+      "source_reference": "results/experiment_3043_verified_speculation_transcript_fingerprint_v1.json"
+    },
+    {
+      "field": "transcript_fingerprints[].raw_output_hash",
+      "required": true,
+      "source_reference": "results/experiment_3043_verified_speculation_transcript_fingerprint_v1.json"
+    },
+    {
+      "field": "transcript_fingerprints[].normalized_output_hash",
+      "required": true,
+      "source_reference": "results/experiment_3043_verified_speculation_transcript_fingerprint_v1.json"
+    },
+    {
+      "field": "transcript_fingerprints[].model_hash_or_cache_path",
+      "required": true,
+      "source_reference": "results/experiment_3043_verified_speculation_transcript_fingerprint_v1.json"
+    },
+    {
+      "field": "transcript_fingerprints[].seed",
+      "required": true,
+      "source_reference": "results/experiment_3043_verified_speculation_transcript_fingerprint_v1.json"
+    },
+    {
+      "field": "transcript_fingerprints[].run_index",
+      "required": true,
+      "source_reference": "results/experiment_3043_verified_speculation_transcript_fingerprint_v1.json"
+    },
+    {
+      "field": "raw_transcript_paths[]",
+      "required": true,
+      "source_reference": "results/experiment_3043_verified_speculation_transcript_fingerprint_v1.json"
+    },
+    {
+      "field": "reproducibility_checksum",
+      "required": true,
+      "source_reference": "results/experiment_3043_verified_speculation_transcript_fingerprint_v1.json"
+    }
+  ],
+  "honest_verdict": "complete: repair_de_tautology_protocol_ready=true; blocked_prior_fields=5; required_live_run_fields=42",
+  "inference_substrate": {
+    "executes_conductor": false,
+    "executes_hardware": false,
+    "executes_models": false,
+    "kind": "aggregation_from_upstream_artifacts",
+    "no_live_llm_inference": true,
+    "source": "checked_in_artifacts"
+  },
+  "intent_preservation_checks": [
+    {
+      "id": "draft_intent_anchor",
+      "required": true,
+      "requirement": "Record original task prompt, draft intent summary/hash, failing trace, and expected behavior before applying repair gates."
+    },
+    {
+      "claims_aprad_implementation": false,
+      "id": "aprad_inspired_distribution_distortion_guard",
+      "reference_available": true,
+      "required": true,
+      "requirement": "AprAD-inspired: preserve draft intent while satisfying hard verifier gates; reject repairs that satisfy tests by changing the task, dropping constraints, or replacing the requested behavior."
+    },
+    {
+      "id": "intent_drift_zero_for_promotion",
+      "required": true,
+      "requirement": "Set intent_drift_count and per-case intent_drift; matrix v20 promotion requires intent_drift_count == 0."
+    }
+  ],
+  "milestone": "2026.05.286",
+  "missing_source_artifacts": [],
+  "no_historical_artifact_rewrite": true,
+  "no_new_board_flash": true,
+  "no_new_hardware_run": true,
+  "no_new_model_execution": true,
+  "no_new_solver_run": true,
+  "no_new_synthesis_run": true,
+  "no_new_verifier_run": true,
+  "ops_docs_reconciliation_left_to_conductor": true,
+  "promotion_disqualifiers": [
+    {
+      "id": "prior_tautology_not_cleared",
+      "required_clearance": "TAUTOLOGY remains in blocked_prior_fields_checked."
+    },
+    {
+      "id": "pass_at_1_pass_at_k_delta_bit_identical_without_k1_declaration",
+      "required_clearance": "pass@1 and pass@k deltas match exactly while k>1 or candidate ordering is missing."
+    },
+    {
+      "id": "implausible_perfect_delta_without_per_case_evidence",
+      "required_clearance": "Exact-zero false-accept, syntax, or schema deltas lack per-case checker support."
+    },
+    {
+      "id": "duration_too_short_for_live_compute",
+      "required_clearance": "Live compute markers appear but duration_s is below the sanity rule."
+    },
+    {
+      "id": "missing_random_seed_or_seed_log",
+      "required_clearance": "Top-level seed or per-transcript seed log is missing."
+    },
+    {
+      "id": "missing_model_specs_identity",
+      "required_clearance": "model_specs lacks model identity, path/cache id, checksum/hash, or GPU assignment."
+    },
+    {
+      "id": "missing_transcript_fingerprints",
+      "required_clearance": "Raw transcript paths or transcript fingerprints are missing."
+    },
+    {
+      "id": "checker_authority_missing_or_self_graded",
+      "required_clearance": "Accepted repair was graded by the generator or lacks exact deterministic checker authority."
+    },
+    {
+      "id": "intent_drift_detected",
+      "required_clearance": "Any accepted repair changes task intent or drops required constraints."
+    },
+    {
+      "id": "false_accept_or_syntax_schema_regression",
+      "required_clearance": "False accepts, syntax failures, or schema failures increase versus baseline."
+    },
+    {
+      "id": "legacy_smoke_or_non_headline_model_used",
+      "required_clearance": "Evidence uses smoke-only or non-headline models for a headline local SOTA claim."
+    },
+    {
+      "id": "unresolved_methodology_blocker_present",
+      "required_clearance": "Exp 3042/3055 methodology, bounded, or retirement blockers remain attached."
+    }
+  ],
+  "repair_de_tautology_protocol_ready": true,
+  "required_live_run_fields": [
+    "schema",
+    "artifact",
+    "run_date",
+    "started_at",
+    "finished_at",
+    "duration_s",
+    "wall_clock_start_utc",
+    "wall_clock_end_utc",
+    "random_seed",
+    "seed_log",
+    "model_specs",
+    "models_used",
+    "decode_config",
+    "inference_substrate",
+    "n_tasks",
+    "candidate_count",
+    "baseline_metrics",
+    "repair_metrics",
+    "pass_at_1_delta",
+    "pass_at_k_delta",
+    "pass_at_1_derivation",
+    "pass_at_k_derivation",
+    "per_task_results",
+    "non_vacuous_outcome_summary",
+    "accepted_candidate_count",
+    "rejected_candidate_count",
+    "false_accept_delta",
+    "syntax_failure_rate_delta",
+    "schema_failure_rate_delta",
+    "intent_drift_count",
+    "intent_preservation_checks",
+    "checker_authority",
+    "transcript_fingerprints",
+    "raw_transcript_paths",
+    "fingerprint_linkage",
+    "reproducibility_checksum",
+    "duration_sanity_check",
+    "blocked_prior_fields_checked",
+    "promotion_disqualifiers",
+    "adversarial_verify_flags",
+    "tests_run",
+    "honest_verdict"
+  ],
+  "run_date": "20260525",
+  "schema": "carnot.repair_de_tautology.protocol.v1",
+  "source_artifacts": [
+    {
+      "experiment_id": "exp3028",
+      "path": "results/experiment_3028_sota_repair_clean_methodology_rerun_v2.json",
+      "present": true,
+      "readable": true,
+      "readable_json_object": true,
+      "readable_text": null,
+      "required": true,
+      "role": "blocked_repair_evidence",
+      "sha256": "8513151814ff6a205e6e5550a520b1737393f84cd26d1b91426105f245b0d80f"
+    },
+    {
+      "experiment_id": "exp3042",
+      "path": "results/experiment_3042_repair_promotion_reconciliation_v3.json",
+      "present": true,
+      "readable": true,
+      "readable_json_object": true,
+      "readable_text": null,
+      "required": true,
+      "role": "repair_reconciliation_authority",
+      "sha256": "b1dc412e6ecd997051fa403f13718e640ae119d95f36d785d0fa4c582c5f44c2"
+    },
+    {
+      "experiment_id": "exp3043",
+      "path": "results/experiment_3043_verified_speculation_transcript_fingerprint_v1.json",
+      "present": true,
+      "readable": true,
+      "readable_json_object": true,
+      "readable_text": null,
+      "required": true,
+      "role": "fingerprint_linkage_reference",
+      "sha256": "4e6f5381521d1f1dad288614015198d6dd4de1a20f840785579788980866594e"
+    },
+    {
+      "experiment_id": "exp3055",
+      "path": "results/experiment_3055_repair_headline_retirement_and_blocker_ledger_v1.json",
+      "present": true,
+      "readable": true,
+      "readable_json_object": true,
+      "readable_text": null,
+      "required": true,
+      "role": "repair_blocker_ledger",
+      "sha256": "8ed4a56ea3a7b3e474af42226121963efdc28d95a14edf2407b7c2dba385142d"
+    },
+    {
+      "experiment_id": "research_references",
+      "path": "research-references.md",
+      "present": true,
+      "readable": true,
+      "readable_json_object": null,
+      "readable_text": true,
+      "required": true,
+      "role": "aprad_reference_boundary",
+      "sha256": "eb800c6b26ae97a8c686335ee642cb4aedd1490a7a5c7f2c9fb45d8286b6ef1e"
+    }
+  ],
+  "source_checksums": {
+    "research-references.md": "eb800c6b26ae97a8c686335ee642cb4aedd1490a7a5c7f2c9fb45d8286b6ef1e",
+    "results/experiment_3028_sota_repair_clean_methodology_rerun_v2.json": "8513151814ff6a205e6e5550a520b1737393f84cd26d1b91426105f245b0d80f",
+    "results/experiment_3042_repair_promotion_reconciliation_v3.json": "b1dc412e6ecd997051fa403f13718e640ae119d95f36d785d0fa4c582c5f44c2",
+    "results/experiment_3043_verified_speculation_transcript_fingerprint_v1.json": "4e6f5381521d1f1dad288614015198d6dd4de1a20f840785579788980866594e",
+    "results/experiment_3055_repair_headline_retirement_and_blocker_ledger_v1.json": "8ed4a56ea3a7b3e474af42226121963efdc28d95a14edf2407b7c2dba385142d"
+  }
+}

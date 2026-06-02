@@ -1,0 +1,512 @@
+{
+  "artifact": "experiment_3086_dafny_z3_formal_feedback_pilot_v1",
+  "dafny_available": false,
+  "decode_config": {
+    "max_tokens": 96,
+    "repeat_penalty": 1.05,
+    "stop": [
+      "\n\n"
+    ],
+    "temperature": 0.0,
+    "top_k": 1,
+    "top_p": 1.0
+  },
+  "duration_s": 2.0,
+  "exact_ground_truth_count": 5,
+  "fixture_count": 5,
+  "fixture_results": [
+    {
+      "diagnostics": {
+        "counterexample": {
+          "candidate_result": -1,
+          "expected_result": 1,
+          "x": -1
+        },
+        "exact_authority": "z3_solver",
+        "failing_constraints": [
+          "counterexample"
+        ],
+        "fixture_id": "abs-identity-invalid",
+        "missing_fields": [],
+        "non_vacuous": true,
+        "postcondition_violation": {
+          "candidate_result": -1,
+          "x": -1
+        },
+        "primary_failure": "counterexample",
+        "vacuity_detected": false,
+        "weak_postcondition_detected": false,
+        "weak_postcondition_witness": null
+      },
+      "family": "invalid_candidate",
+      "fixture_id": "abs-identity-invalid",
+      "formal_backend": "z3",
+      "guided_candidate": null,
+      "guided_success": false,
+      "guided_validation": {
+        "diagnostics": {},
+        "exact_authority": "not_checked_parse_failed",
+        "exact_checked": false,
+        "failure_reason": "Expecting value: line 1 column 1 (char 0)",
+        "valid": false
+      },
+      "parse": {
+        "parse_error": "Expecting value: line 1 column 1 (char 0)",
+        "repair": null,
+        "valid_parse": false
+      },
+      "prompt_hash": "6ae730c3a41e885ab913da8f370ee0cdf5ca00aadcd848f81764cabe84a17d4f",
+      "raw_output_excerpt": "not json",
+      "raw_output_hash": "7ccfa1fbf3940e6f0c0375d87c0f9235a50514e14cb427bdfaf5077987b26ccf",
+      "requirement_hash": "6e03802d21b363c5578a5b464e844de316f26afa95ac32023d340f41b7e878f0",
+      "solver_only_success": false,
+      "solver_only_validation": {
+        "diagnostics": {
+          "counterexample": {
+            "candidate_result": -1,
+            "expected_result": 1,
+            "x": -1
+          },
+          "exact_authority": "z3_solver",
+          "failing_constraints": [
+            "counterexample"
+          ],
+          "fixture_id": "abs-identity-invalid",
+          "missing_fields": [],
+          "non_vacuous": true,
+          "postcondition_violation": {
+            "candidate_result": -1,
+            "x": -1
+          },
+          "primary_failure": "counterexample",
+          "vacuity_detected": false,
+          "weak_postcondition_detected": false,
+          "weak_postcondition_witness": null
+        },
+        "exact_authority": "z3_solver",
+        "exact_checked": true,
+        "failure_reason": "counterexample",
+        "valid": false
+      },
+      "z3_fallback_used": true
+    },
+    {
+      "diagnostics": {
+        "counterexample": {
+          "candidate_result": -3,
+          "expected_result": -4,
+          "x": -5
+        },
+        "exact_authority": "z3_solver",
+        "failing_constraints": [
+          "counterexample"
+        ],
+        "fixture_id": "increment-add-two-invalid",
+        "missing_fields": [],
+        "non_vacuous": true,
+        "postcondition_violation": {
+          "candidate_result": -3,
+          "x": -5
+        },
+        "primary_failure": "counterexample",
+        "vacuity_detected": false,
+        "weak_postcondition_detected": false,
+        "weak_postcondition_witness": null
+      },
+      "family": "invalid_candidate",
+      "fixture_id": "increment-add-two-invalid",
+      "formal_backend": "z3",
+      "guided_candidate": null,
+      "guided_success": false,
+      "guided_validation": {
+        "diagnostics": {},
+        "exact_authority": "not_checked_parse_failed",
+        "exact_checked": false,
+        "failure_reason": "Expecting value: line 1 column 1 (char 0)",
+        "valid": false
+      },
+      "parse": {
+        "parse_error": "Expecting value: line 1 column 1 (char 0)",
+        "repair": null,
+        "valid_parse": false
+      },
+      "prompt_hash": "99c0815714de7de0f9a09406f34d6e532f0baf34411d73b02cdc269e4f8488f3",
+      "raw_output_excerpt": "not json",
+      "raw_output_hash": "7ccfa1fbf3940e6f0c0375d87c0f9235a50514e14cb427bdfaf5077987b26ccf",
+      "requirement_hash": "94c7db745c15432a67739922682ba9a92e2da2bbf89c81f35b985d192271dacf",
+      "solver_only_success": false,
+      "solver_only_validation": {
+        "diagnostics": {
+          "counterexample": {
+            "candidate_result": -3,
+            "expected_result": -4,
+            "x": -5
+          },
+          "exact_authority": "z3_solver",
+          "failing_constraints": [
+            "counterexample"
+          ],
+          "fixture_id": "increment-add-two-invalid",
+          "missing_fields": [],
+          "non_vacuous": true,
+          "postcondition_violation": {
+            "candidate_result": -3,
+            "x": -5
+          },
+          "primary_failure": "counterexample",
+          "vacuity_detected": false,
+          "weak_postcondition_detected": false,
+          "weak_postcondition_witness": null
+        },
+        "exact_authority": "z3_solver",
+        "exact_checked": true,
+        "failure_reason": "counterexample",
+        "valid": false
+      },
+      "z3_fallback_used": true
+    },
+    {
+      "diagnostics": {
+        "counterexample": null,
+        "exact_authority": "python_execution",
+        "failing_constraints": [
+          "total == a + b"
+        ],
+        "fixture_id": "sum-total-missing",
+        "missing_fields": [
+          "total"
+        ],
+        "non_vacuous": true,
+        "postcondition_violation": false,
+        "primary_failure": "missing_fields",
+        "vacuity_detected": false,
+        "weak_postcondition_detected": false
+      },
+      "family": "repairable_malformed_candidate",
+      "fixture_id": "sum-total-missing",
+      "formal_backend": "z3",
+      "guided_candidate": null,
+      "guided_success": false,
+      "guided_validation": {
+        "diagnostics": {},
+        "exact_authority": "not_checked_parse_failed",
+        "exact_checked": false,
+        "failure_reason": "Expecting value: line 1 column 1 (char 0)",
+        "valid": false
+      },
+      "parse": {
+        "parse_error": "Expecting value: line 1 column 1 (char 0)",
+        "repair": null,
+        "valid_parse": false
+      },
+      "prompt_hash": "9ec25af644e519954c411191a866b3642f85e8247c25be59d9ce89baecb88497",
+      "raw_output_excerpt": "not json",
+      "raw_output_hash": "7ccfa1fbf3940e6f0c0375d87c0f9235a50514e14cb427bdfaf5077987b26ccf",
+      "requirement_hash": "e4f9a076eeefe8421644a44551bfaae596bcd53ba459e37c29e800cc01211866",
+      "solver_only_success": false,
+      "solver_only_validation": {
+        "diagnostics": {
+          "counterexample": null,
+          "exact_authority": "python_execution",
+          "failing_constraints": [
+            "total == a + b"
+          ],
+          "fixture_id": "sum-total-missing",
+          "missing_fields": [
+            "total"
+          ],
+          "non_vacuous": true,
+          "postcondition_violation": false,
+          "primary_failure": "missing_fields",
+          "vacuity_detected": false,
+          "weak_postcondition_detected": false
+        },
+        "exact_authority": "python_execution",
+        "exact_checked": true,
+        "failure_reason": "missing_fields",
+        "valid": false
+      },
+      "z3_fallback_used": true
+    },
+    {
+      "diagnostics": {
+        "counterexample": null,
+        "exact_authority": "z3_solver",
+        "failing_constraints": [
+          "vacuous_precondition"
+        ],
+        "fixture_id": "vacuous-precondition",
+        "missing_fields": [],
+        "non_vacuous": true,
+        "postcondition_violation": null,
+        "primary_failure": "vacuous_precondition",
+        "vacuity_detected": true,
+        "weak_postcondition_detected": false,
+        "weak_postcondition_witness": null
+      },
+      "family": "vacuous_specification",
+      "fixture_id": "vacuous-precondition",
+      "formal_backend": "z3",
+      "guided_candidate": null,
+      "guided_success": false,
+      "guided_validation": {
+        "diagnostics": {},
+        "exact_authority": "not_checked_parse_failed",
+        "exact_checked": false,
+        "failure_reason": "Expecting value: line 1 column 1 (char 0)",
+        "valid": false
+      },
+      "parse": {
+        "parse_error": "Expecting value: line 1 column 1 (char 0)",
+        "repair": null,
+        "valid_parse": false
+      },
+      "prompt_hash": "899625014b0a1eae70b7799ae530cd7415600045f39ea887d0f49739e0760dde",
+      "raw_output_excerpt": "not json",
+      "raw_output_hash": "7ccfa1fbf3940e6f0c0375d87c0f9235a50514e14cb427bdfaf5077987b26ccf",
+      "requirement_hash": "180627e57d969299f1730689500974015ec865c15b0c44919212307cfa9bdb2c",
+      "solver_only_success": false,
+      "solver_only_validation": {
+        "diagnostics": {
+          "counterexample": null,
+          "exact_authority": "z3_solver",
+          "failing_constraints": [
+            "vacuous_precondition"
+          ],
+          "fixture_id": "vacuous-precondition",
+          "missing_fields": [],
+          "non_vacuous": true,
+          "postcondition_violation": null,
+          "primary_failure": "vacuous_precondition",
+          "vacuity_detected": true,
+          "weak_postcondition_detected": false,
+          "weak_postcondition_witness": null
+        },
+        "exact_authority": "z3_solver",
+        "exact_checked": true,
+        "failure_reason": "vacuous_precondition",
+        "valid": false
+      },
+      "z3_fallback_used": true
+    },
+    {
+      "diagnostics": {
+        "counterexample": null,
+        "exact_authority": "z3_solver",
+        "failing_constraints": [
+          "weak_postcondition"
+        ],
+        "fixture_id": "weak-postcondition",
+        "missing_fields": [],
+        "non_vacuous": true,
+        "postcondition_violation": null,
+        "primary_failure": "weak_postcondition",
+        "vacuity_detected": false,
+        "weak_postcondition_detected": true,
+        "weak_postcondition_witness": {
+          "admitted_result": 2,
+          "expected_result": 1,
+          "x": 0
+        }
+      },
+      "family": "weak_postcondition",
+      "fixture_id": "weak-postcondition",
+      "formal_backend": "z3",
+      "guided_candidate": null,
+      "guided_success": false,
+      "guided_validation": {
+        "diagnostics": {},
+        "exact_authority": "not_checked_parse_failed",
+        "exact_checked": false,
+        "failure_reason": "Expecting value: line 1 column 1 (char 0)",
+        "valid": false
+      },
+      "parse": {
+        "parse_error": "Expecting value: line 1 column 1 (char 0)",
+        "repair": null,
+        "valid_parse": false
+      },
+      "prompt_hash": "4143ee430b0bbb2075bc5757eea7bfe4e4d545b5651abb106ee598f94c37f14e",
+      "raw_output_excerpt": "not json",
+      "raw_output_hash": "7ccfa1fbf3940e6f0c0375d87c0f9235a50514e14cb427bdfaf5077987b26ccf",
+      "requirement_hash": "63e9fefc1cf0cd884b4c0d33b4e708a9a2b059ed7cbd41e3443a109c1553ca1d",
+      "solver_only_success": false,
+      "solver_only_validation": {
+        "diagnostics": {
+          "counterexample": null,
+          "exact_authority": "z3_solver",
+          "failing_constraints": [
+            "weak_postcondition"
+          ],
+          "fixture_id": "weak-postcondition",
+          "missing_fields": [],
+          "non_vacuous": true,
+          "postcondition_violation": null,
+          "primary_failure": "weak_postcondition",
+          "vacuity_detected": false,
+          "weak_postcondition_detected": true,
+          "weak_postcondition_witness": {
+            "admitted_result": 2,
+            "expected_result": 1,
+            "x": 0
+          }
+        },
+        "exact_authority": "z3_solver",
+        "exact_checked": true,
+        "failure_reason": "weak_postcondition",
+        "valid": false
+      },
+      "z3_fallback_used": true
+    }
+  ],
+  "formal_diagnostic_count": 5,
+  "formal_feedback_delta": 0.0,
+  "formal_feedback_ready": false,
+  "guided_success_count": 0,
+  "honest_verdict": "complete: formal_feedback_ready=false; guided_success_count=0; solver_only_success_count=0",
+  "inference_substrate": {
+    "cuda_probe": {
+      "cuda_available": true,
+      "gpu_count": 2
+    },
+    "decode_config": {
+      "max_tokens": 96,
+      "repeat_penalty": 1.05,
+      "stop": [
+        "\n\n"
+      ],
+      "temperature": 0.0,
+      "top_k": 1,
+      "top_p": 1.0
+    },
+    "formal_solver": {
+      "dafny_available": false,
+      "exact_authority_preserved": true,
+      "fallback": "z3",
+      "z3_available": true
+    },
+    "gguf_cache_resolution": {
+      "unsloth/Qwen3.6-35B-A3B-GGUF": null,
+      "unsloth/gemma-4-26B-A4B-it-GGUF": "/home/ianblenke/github.com/ianblenke/carnot/.tmp-pytest/pytest-of-ianblenke/pytest-4/popen-gw1/test_req_verify_3086_model_loa0/models/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+      "unsloth/gemma-4-31B-it-GGUF": null
+    },
+    "gpu_inventory": {
+      "available": true,
+      "gpus": [
+        {
+          "index": 0,
+          "memory_free_mib": 1
+        }
+      ]
+    },
+    "kind": "live_llm_inference_plus_z3",
+    "live_llm_inference": true,
+    "load_config": {
+      "main_gpu": 0,
+      "n_batch": 64,
+      "n_ctx": 1024,
+      "n_gpu_layers": -1,
+      "n_ubatch": 64,
+      "verbose": false
+    },
+    "local_gguf_inference": true,
+    "models_used": [
+      "unsloth/gemma-4-26B-A4B-it-GGUF"
+    ],
+    "python_environment": {
+      "executable": "python-test"
+    },
+    "repo_commit": "test-commit",
+    "runtime": "llama_cpp",
+    "wall_clock_duration_s": 2.0
+  },
+  "legacy_smoke_only_used": false,
+  "load_config": {
+    "main_gpu": 0,
+    "n_batch": 64,
+    "n_ctx": 1024,
+    "n_gpu_layers": -1,
+    "n_ubatch": 64,
+    "verbose": false
+  },
+  "mandatory_headline_model_ids": [
+    "unsloth/Qwen3.6-35B-A3B-GGUF",
+    "unsloth/gemma-4-26B-A4B-it-GGUF",
+    "unsloth/gemma-4-31B-it-GGUF"
+  ],
+  "model_specs": [
+    {
+      "checksum_feasibility": {
+        "full_sha256_feasible": true,
+        "method": "full_sha256",
+        "size_bytes": 26
+      },
+      "family": "gemma",
+      "gpu": 0,
+      "hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "model_hash_or_cache_path": "sha256:59a28dc6de63452ff58e4a322261c22dce1c982e47775b8d75f09d46b3901c2d",
+      "model_path": "/home/ianblenke/github.com/ianblenke/carnot/.tmp-pytest/pytest-of-ianblenke/pytest-4/popen-gw1/test_req_verify_3086_model_loa0/models/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+      "name": "Gemma4-26B-A4B-it"
+    }
+  ],
+  "models_used": [
+    "unsloth/gemma-4-26B-A4B-it-GGUF"
+  ],
+  "non_vacuous_feedback_count": 5,
+  "preconditions_checked": {
+    "cuda_gpu": {
+      "detail": {
+        "cuda_available": true,
+        "gpu_count": 2
+      },
+      "ok": true
+    },
+    "dafny_command": {
+      "ok": false,
+      "path": null
+    },
+    "formal_toolchain": {
+      "ok": true
+    },
+    "gguf_cache": {
+      "detail": {
+        "unsloth/Qwen3.6-35B-A3B-GGUF": null,
+        "unsloth/gemma-4-26B-A4B-it-GGUF": "/home/ianblenke/github.com/ianblenke/carnot/.tmp-pytest/pytest-of-ianblenke/pytest-4/popen-gw1/test_req_verify_3086_model_loa0/models/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+        "unsloth/gemma-4-31B-it-GGUF": null
+      },
+      "ok": true
+    },
+    "selected_model_load": {
+      "detail": "/home/ianblenke/github.com/ianblenke/carnot/.tmp-pytest/pytest-of-ianblenke/pytest-4/popen-gw1/test_req_verify_3086_model_loa0/models/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+      "hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "ok": true
+    },
+    "z3_command": {
+      "ok": true,
+      "path": "/usr/bin/z3"
+    },
+    "z3_python": {
+      "ok": true,
+      "version": "4.16.0"
+    }
+  },
+  "prompt_hash_count": 5,
+  "prompt_hashes": [
+    "6ae730c3a41e885ab913da8f370ee0cdf5ca00aadcd848f81764cabe84a17d4f",
+    "99c0815714de7de0f9a09406f34d6e532f0baf34411d73b02cdc269e4f8488f3",
+    "9ec25af644e519954c411191a866b3642f85e8247c25be59d9ce89baecb88497",
+    "899625014b0a1eae70b7799ae530cd7415600045f39ea887d0f49739e0760dde",
+    "4143ee430b0bbb2075bc5757eea7bfe4e4d545b5651abb106ee598f94c37f14e"
+  ],
+  "reproducibility_checksum": "b445e79853bb276af9be08f1340f9a1a093d96049cf97353645577d6c9cc5a07",
+  "run_date": "20260525",
+  "runtime_blocker": null,
+  "schema": "carnot.dafny_z3_formal_feedback_pilot.v1",
+  "seed": 308600,
+  "solver_only_success_count": 0,
+  "tests_or_checks_run": [
+    "pytest focused"
+  ],
+  "vacuity_guard_passed": true,
+  "z3_available": true
+}

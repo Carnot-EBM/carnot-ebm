@@ -1,0 +1,53 @@
+{
+  "artifact": "experiment_3200_fr11_verify_trace_memory_controller_v1",
+  "continuous_self_learning_task": true,
+  "drift_row_count": 1,
+  "experiment_id": "experiment_3200_fr11_verify_trace_memory_controller_v1",
+  "heldout_row_count": 1,
+  "honest_verdict": "complete: fallback unit source",
+  "inference_substrate": {
+    "base_model_weights_updated": false,
+    "controller_memory_replay_only": true,
+    "executes_live_model_inference": false,
+    "fresh_live_inference_calls": 0,
+    "hidden_state_mutation_claimed": false,
+    "kan_model_weight_training": false,
+    "model_weight_learning": false,
+    "model_weight_mutation": false,
+    "model_weight_training": false,
+    "uses_checked_in_artifacts_only": true
+  },
+  "model_weight_update_performed": false,
+  "negative_control_regression_count": 0,
+  "promotion_allowed": true,
+  "schema_version": "1.0",
+  "trace_count": 2,
+  "trace_records": [
+    {
+      "answer_abstain_decision": "answer",
+      "consistency_judgment": "consistent",
+      "exact_label": "EXACT_ACCEPT",
+      "expected_action": "accept",
+      "observed_action_changed": false,
+      "redundant_check_suppressed": false,
+      "replay_role": "heldout",
+      "routing_outcome": "verify_then_answer",
+      "row_id": "fallback-heldout",
+      "trace_id": "trace-heldout-fallback-heldout",
+      "verification_query": "Does fallback-heldout satisfy exact replay?"
+    },
+    {
+      "answer_abstain_decision": "answer",
+      "consistency_judgment": "consistent",
+      "exact_label": "EXACT_ACCEPT",
+      "expected_action": "accept",
+      "observed_action_changed": false,
+      "redundant_check_suppressed": false,
+      "replay_role": "drift",
+      "routing_outcome": "verify_then_answer",
+      "row_id": "fallback-drift",
+      "trace_id": "trace-drift-fallback-drift",
+      "verification_query": "Does fallback-drift satisfy exact replay?"
+    }
+  ]
+}

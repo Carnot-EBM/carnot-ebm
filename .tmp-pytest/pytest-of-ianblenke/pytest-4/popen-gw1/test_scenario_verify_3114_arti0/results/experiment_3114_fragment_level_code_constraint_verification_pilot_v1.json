@@ -1,0 +1,287 @@
+{
+  "artifact": "experiment_3114_fragment_level_code_constraint_verification_pilot_v1",
+  "duration_s": 2.25,
+  "exact_fixture_count": 5,
+  "failing_fragment_count": 4,
+  "fragment_checks": [
+    {
+      "expected_direction": "no change",
+      "failing_constraint": "",
+      "fixture_id": "arith-valid",
+      "fragment_id": "arith-valid:assert_expression",
+      "solver_evidence": {
+        "authority": "python_ast_literal_evaluator",
+        "computed_value": 5,
+        "expression": "(3 + 2) * 1 - 0"
+      },
+      "status": "pass"
+    },
+    {
+      "expected_direction": "no change",
+      "failing_constraint": "",
+      "fixture_id": "arith-valid",
+      "fragment_id": "arith-valid:assert_claim",
+      "solver_evidence": {
+        "assertion": "assert (((3 + 2) * 1) - 0) == 5",
+        "authority": "python_ast_literal_evaluator",
+        "claimed_fragment": "5",
+        "claimed_value": 5,
+        "computed_value": 5,
+        "expression": "(3 + 2) * 1 - 0"
+      },
+      "status": "pass"
+    },
+    {
+      "expected_direction": "no change",
+      "failing_constraint": "",
+      "fixture_id": "arith-invalid",
+      "fragment_id": "arith-invalid:assert_expression",
+      "solver_evidence": {
+        "authority": "python_ast_literal_evaluator",
+        "computed_value": 14,
+        "expression": "(4 + 3) * 2 - 0"
+      },
+      "status": "pass"
+    },
+    {
+      "expected_direction": "replace claimed value 16 with 14",
+      "failing_constraint": "claimed_value == computed_value",
+      "fixture_id": "arith-invalid",
+      "fragment_id": "arith-invalid:assert_claim",
+      "solver_evidence": {
+        "assertion": "assert (((4 + 3) * 2) - 0) == 16",
+        "authority": "python_ast_literal_evaluator",
+        "claimed_fragment": "16",
+        "claimed_value": 16,
+        "computed_value": 14,
+        "expression": "(4 + 3) * 2 - 0"
+      },
+      "status": "fail"
+    },
+    {
+      "expected_direction": "produce parseable JSON while preserving required fields",
+      "failing_constraint": "valid_json_document",
+      "fixture_id": "json-repair",
+      "fragment_id": "json-repair:json_document",
+      "solver_evidence": {
+        "authority": "python_json_parser",
+        "candidate": "{\"mode\": \"bounded\" \"limit\": 2}",
+        "parse_error": "Expecting ',' delimiter: line 1 column 20 (char 19)"
+      },
+      "status": "fail"
+    },
+    {
+      "expected_direction": "fix JSON syntax before checking required fields",
+      "failing_constraint": "",
+      "fixture_id": "json-repair",
+      "fragment_id": "json-repair:required_field:mode",
+      "solver_evidence": {
+        "authority": "python_json_parser",
+        "field": "mode",
+        "json_parse_passed": false
+      },
+      "status": "non-applicable"
+    },
+    {
+      "expected_direction": "fix JSON syntax before checking required fields",
+      "failing_constraint": "",
+      "fixture_id": "json-repair",
+      "fragment_id": "json-repair:required_field:limit",
+      "solver_evidence": {
+        "authority": "python_json_parser",
+        "field": "limit",
+        "json_parse_passed": false
+      },
+      "status": "non-applicable"
+    },
+    {
+      "expected_direction": "no change",
+      "failing_constraint": "",
+      "fixture_id": "numeric-repair",
+      "fragment_id": "numeric-repair:constraint:0",
+      "solver_evidence": {
+        "assignment": {
+          "rx_1": 2,
+          "ry_1": 1
+        },
+        "authority": "deterministic_integer_constraint_evaluator",
+        "constraint": "rx_1 >= 0",
+        "lhs_value": 2,
+        "rhs_value": 0
+      },
+      "status": "pass"
+    },
+    {
+      "expected_direction": "no change",
+      "failing_constraint": "",
+      "fixture_id": "numeric-repair",
+      "fragment_id": "numeric-repair:constraint:1",
+      "solver_evidence": {
+        "assignment": {
+          "rx_1": 2,
+          "ry_1": 1
+        },
+        "authority": "deterministic_integer_constraint_evaluator",
+        "constraint": "ry_1 >= 0",
+        "lhs_value": 1,
+        "rhs_value": 0
+      },
+      "status": "pass"
+    },
+    {
+      "expected_direction": "increase sum by 8 across ['rx_1', 'ry_1']",
+      "failing_constraint": "rx_1 + ry_1 == 11",
+      "fixture_id": "numeric-repair",
+      "fragment_id": "numeric-repair:constraint:2",
+      "solver_evidence": {
+        "assignment": {
+          "rx_1": 2,
+          "ry_1": 1
+        },
+        "authority": "deterministic_integer_constraint_evaluator",
+        "constraint": "rx_1 + ry_1 == 11",
+        "lhs_value": 3,
+        "rhs_value": 11
+      },
+      "status": "fail"
+    },
+    {
+      "expected_direction": "no change",
+      "failing_constraint": "",
+      "fixture_id": "py-repair",
+      "fragment_id": "py-repair:assert_expression",
+      "solver_evidence": {
+        "authority": "python_ast_literal_evaluator",
+        "computed_value": 12,
+        "expression": "7 * 2 - 2"
+      },
+      "status": "pass"
+    },
+    {
+      "expected_direction": "replace claimed value 13 with 12",
+      "failing_constraint": "claimed_value == computed_value",
+      "fixture_id": "py-repair",
+      "fragment_id": "py-repair:assert_claim",
+      "solver_evidence": {
+        "assertion": "assert ((7 * 2) - 2) == 13",
+        "authority": "python_ast_literal_evaluator",
+        "claimed_fragment": "13",
+        "claimed_value": 13,
+        "computed_value": 12,
+        "expression": "7 * 2 - 2"
+      },
+      "status": "fail"
+    }
+  ],
+  "fragment_count": 12,
+  "fragment_verification_pilot_ready": true,
+  "honest_verdict": "complete: fragment verification pilot ready; fixtures=5; failing_fragments=4",
+  "inference_substrate": {
+    "executes_integer_constraint_evaluator": true,
+    "executes_json_parser": true,
+    "executes_models": false,
+    "executes_python_ast_parser": true,
+    "kind": "offline_fragment_constraint_verification",
+    "live_llm_calls": 0,
+    "no_live_llm_inference": true,
+    "uses_checked_in_artifacts_only": true
+  },
+  "non_applicable_fragment_count": 2,
+  "repair_target_manifest": [
+    {
+      "expected_direction": "replace claimed value 16 with 14",
+      "failing_constraint": "claimed_value == computed_value",
+      "fixture_id": "arith-invalid",
+      "fragment_id": "arith-invalid:assert_claim",
+      "solver_evidence": {
+        "assertion": "assert (((4 + 3) * 2) - 0) == 16",
+        "authority": "python_ast_literal_evaluator",
+        "claimed_fragment": "16",
+        "claimed_value": 16,
+        "computed_value": 14,
+        "expression": "(4 + 3) * 2 - 0"
+      }
+    },
+    {
+      "expected_direction": "produce parseable JSON while preserving required fields",
+      "failing_constraint": "valid_json_document",
+      "fixture_id": "json-repair",
+      "fragment_id": "json-repair:json_document",
+      "solver_evidence": {
+        "authority": "python_json_parser",
+        "candidate": "{\"mode\": \"bounded\" \"limit\": 2}",
+        "parse_error": "Expecting ',' delimiter: line 1 column 20 (char 19)"
+      }
+    },
+    {
+      "expected_direction": "increase sum by 8 across ['rx_1', 'ry_1']",
+      "failing_constraint": "rx_1 + ry_1 == 11",
+      "fixture_id": "numeric-repair",
+      "fragment_id": "numeric-repair:constraint:2",
+      "solver_evidence": {
+        "assignment": {
+          "rx_1": 2,
+          "ry_1": 1
+        },
+        "authority": "deterministic_integer_constraint_evaluator",
+        "constraint": "rx_1 + ry_1 == 11",
+        "lhs_value": 3,
+        "rhs_value": 11
+      }
+    },
+    {
+      "expected_direction": "replace claimed value 13 with 12",
+      "failing_constraint": "claimed_value == computed_value",
+      "fixture_id": "py-repair",
+      "fragment_id": "py-repair:assert_claim",
+      "solver_evidence": {
+        "assertion": "assert ((7 * 2) - 2) == 13",
+        "authority": "python_ast_literal_evaluator",
+        "claimed_fragment": "13",
+        "claimed_value": 13,
+        "computed_value": 12,
+        "expression": "7 * 2 - 2"
+      }
+    }
+  ],
+  "repair_target_manifest_path": "results/fragment_verification_pilot_3114/repair_target_manifest.jsonl",
+  "run_date": "20260526",
+  "schema": "carnot.fragment_level_code_constraint_verification_pilot.v1",
+  "selected_fixture_ids": [
+    "arith-valid",
+    "arith-invalid",
+    "json-repair",
+    "numeric-repair",
+    "py-repair"
+  ],
+  "source_artifacts": [
+    {
+      "path": "results/experiment_3097_exact_fixture_eval_protocol_audit_v1.json",
+      "present": true,
+      "role": "exact fixture protocol audit",
+      "sha256": "9e9dd89994f74aaa75085c28aefd2222af1b9ac343a8f49bbceb84b9cc5be597"
+    },
+    {
+      "path": "results/exact_fixture_eval_protocol_3097/stratified_eval_manifest.jsonl",
+      "present": true,
+      "role": "stratified exact fixture manifest",
+      "sha256": "b97a67181eb926d571dc045d08c8c829dbed267a04e6f553a7a05b87ded28e6f"
+    },
+    {
+      "path": "results/experiment_3100_z3_oracle_feedback_v2.json",
+      "present": true,
+      "role": "z3/test-oracle feedback baseline",
+      "sha256": "1d38b673dfc0e63f1791b2af28a4131e4f83783bf8b99b818b674b219267f2b1"
+    },
+    {
+      "path": "results/experiment_3111_certified_coherence_z3_mcs_feedback_v3.json",
+      "present": true,
+      "role": "certified coherence feedback",
+      "sha256": "c1209b8a2994210c77e3156710acd6be8d6f853aed74a13b9bd23c61b2e745f8"
+    }
+  ],
+  "tests_run": [
+    "focused pytest"
+  ],
+  "unknown_fragment_count": 0
+}

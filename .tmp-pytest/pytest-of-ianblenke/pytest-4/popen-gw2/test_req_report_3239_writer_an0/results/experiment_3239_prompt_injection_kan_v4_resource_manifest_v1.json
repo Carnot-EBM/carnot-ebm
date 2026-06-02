@@ -1,0 +1,438 @@
+{
+  "artifact": "experiment_3239_prompt_injection_kan_v4_resource_manifest_v1",
+  "corpus_input_paths": [
+    {
+      "label_counts": {},
+      "path": "data/prompt_injection_distill/adce94ae07d6f4e7.jsonl",
+      "present": false,
+      "record_type": "json_array_corpus",
+      "role": "source_corpus_balanced_a",
+      "row_count": 0,
+      "sha256": null
+    },
+    {
+      "label_counts": {
+        "benign": 2,
+        "injection": 2
+      },
+      "path": "data/prompt_injection_distill/e9aeab292133918b.jsonl",
+      "present": true,
+      "record_type": "json_array_corpus",
+      "role": "source_corpus_balanced_b",
+      "row_count": 4,
+      "sha256": "e34e01676b737040a0d14b4c1d5b868d7d818f84716a728eaddc64a0cd7e6bc8"
+    },
+    {
+      "label_counts": {
+        "0": 1,
+        "1": 1
+      },
+      "path": "data/prompt_injection_distill/teacher_outputs_v690.jsonl",
+      "present": true,
+      "record_type": "jsonl_teacher_cache",
+      "role": "teacher_cache_v690",
+      "row_count": 2,
+      "sha256": "1f2dc10c299794626f88eea5affc3df8b662e1ec64d50b28a59287e6c557ec97"
+    },
+    {
+      "label_counts": {
+        "0": 1,
+        "1": 1
+      },
+      "path": "results/prompt_injection_teacher_labels_v2.json",
+      "present": true,
+      "record_type": "json_teacher_cache",
+      "role": "teacher_labels_v2_cache",
+      "row_count": 2,
+      "sha256": "f897dc4a4170ede694beb605d982b6da7f23bdef0f059b4fab5825fe625a20e5"
+    }
+  ],
+  "delong_noninferiority_plan": {
+    "acceptance_rule": "Open non-inferiority only when the lower 95% CI bound for AUROC delta is above -0.02 on paired rows.",
+    "baseline_paths": [
+      "results/experiment_690_prompt_injection_kan_true_distillation.json",
+      "results/experiment_691_prompt_injection_kan_cross_dataset.json",
+      "results/prompt_injection_kan_v2.json"
+    ],
+    "candidate_scores_path": "results/experiment_3241_prompt_injection_kan_train_eval_shard_v1.json",
+    "confidence_level": 0.95,
+    "method": "paired_delong_auc_ci",
+    "no_statistics_run_by_exp3239": true,
+    "noninferiority_margin_auroc": -0.02,
+    "primary_metric": "AUROC on paired held-out prompt rows",
+    "receipt_path": "results/experiment_3242_prompt_injection_kan_v4_delong_noninferiority_v1.json",
+    "task_id": "exp3242-prompt-injection-kan-v4-delong-noninferiority-v1"
+  },
+  "delong_plan_ready": true,
+  "downstream_MODEL_SPECS_required": {
+    "legacy_tiny_models_headline_allowed": false,
+    "mandated_sota_gguf_models": [
+      {
+        "gguf_required": true,
+        "hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+        "local_cache_required": true,
+        "required_for": "downstream live-LLM receipts and headline provenance gate"
+      },
+      {
+        "gguf_required": true,
+        "hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+        "local_cache_required": true,
+        "required_for": "downstream live-LLM receipts and headline provenance gate"
+      },
+      {
+        "gguf_required": true,
+        "hf_id": "unsloth/gemma-4-31B-it-GGUF",
+        "local_cache_required": true,
+        "required_for": "downstream live-LLM receipts and headline provenance gate"
+      }
+    ],
+    "minimum_mandated_sota_gguf_count": 1,
+    "required_artifact_fields": [
+      "MODEL_SPECS",
+      "models_used",
+      "selected_model_hf_id",
+      "selected_model_path",
+      "model_sha256_or_revision",
+      "inference_substrate"
+    ],
+    "resolution_rule": "Use cached_sota_pair() or an equivalent local-cache resolver; do not substitute legacy tiny models for headline rows.",
+    "teacher_model": {
+      "cache_key_fields": [
+        "model_sha",
+        "prompt_sha"
+      ],
+      "fallback_format": "fp16 weights only if GGUF is unavailable",
+      "hf_id": "gpt-oss-safeguard-20b",
+      "preferred_format": "Q4_K_M GGUF"
+    }
+  },
+  "downstream_deliverables": [
+    {
+      "path": "results/experiment_3240_prompt_injection_kan_teacher_label_shard_v1.json",
+      "required_before": "kan_train_eval_shard",
+      "role": "teacher_label_shard",
+      "task_id": "exp3240-prompt-injection-kan-teacher-label-shard-v1"
+    },
+    {
+      "path": "results/experiment_3241_prompt_injection_kan_train_eval_shard_v1.json",
+      "required_before": "delong_and_garak_receipts",
+      "role": "kan_train_eval_shard",
+      "task_id": "exp3241-prompt-injection-kan-train-eval-shard-v1"
+    },
+    {
+      "path": "results/experiment_3242_prompt_injection_kan_v4_delong_noninferiority_v1.json",
+      "required_before": "headline_or_publication_claim",
+      "role": "delong_noninferiority_receipt",
+      "task_id": "exp3242-prompt-injection-kan-v4-delong-noninferiority-v1"
+    },
+    {
+      "path": "configs/garak/prompt_injection_kan_v4.yaml",
+      "required_before": "garak_receipt",
+      "role": "garak_config",
+      "task_id": "exp3241-prompt-injection-kan-train-eval-shard-v1"
+    },
+    {
+      "path": "results/experiment_3241_prompt_injection_kan_garak_config_receipts_v1.json",
+      "required_before": "headline_or_publication_claim",
+      "role": "garak_config_receipt",
+      "task_id": "exp3241-prompt-injection-kan-train-eval-shard-v1"
+    }
+  ],
+  "duration_s": 0.25,
+  "existing_artifact_inventory": {
+    "exp690_true_distillation": {
+      "corpus_size": 200,
+      "reference_v1_auroc": 0.7995,
+      "req_safe_011_compliant": true,
+      "teacher_inference_duration_s": 6256.2,
+      "teacher_inference_mean_s_per_prompt": 31.281,
+      "teacher_labeled_count": 200,
+      "teacher_vs_source_agreement_rate": 0.965
+    },
+    "exp691_cross_dataset_mean_auroc": 0.958511,
+    "inventory_policy": "reuse_existing_artifacts_only_no_new_labels",
+    "kan_v2": {
+      "degree": 3,
+      "n_features": 32,
+      "n_hidden": 8,
+      "n_knots": 8,
+      "schema": "carnot.prompt_injection_kan.v2"
+    },
+    "prompt_injection_result_artifacts": [
+      {
+        "path": "results/experiment_652_prompt_injection_kan.json",
+        "present": false,
+        "sha256": null
+      },
+      {
+        "path": "results/experiment_669_prompt_injection_rescue.json",
+        "present": false,
+        "sha256": null
+      },
+      {
+        "path": "results/experiment_679_prompt_injection_kan_cross_dataset.json",
+        "present": false,
+        "sha256": null
+      },
+      {
+        "path": "results/experiment_690_prompt_injection_kan_true_distillation.json",
+        "present": true,
+        "sha256": "303f107f16be9b69793b6bcd0a070a4a406987ea34b85bd48ffb5d9b6e7e5fbc"
+      },
+      {
+        "path": "results/experiment_691_prompt_injection_kan_cross_dataset.json",
+        "present": true,
+        "sha256": "671d59845d1df0c5010abd781923e33591b4087095c6a0f8a0c3b896962e0636"
+      },
+      {
+        "path": "results/prompt_injection_kan_v2.json",
+        "present": true,
+        "sha256": "f991edbabea7258a1f89f083b352cd6d51b9371b267bdd74147dcfa0c97478b6"
+      },
+      {
+        "path": "results/prompt_injection_teacher_labels_v2.json",
+        "present": true,
+        "sha256": "f897dc4a4170ede694beb605d982b6da7f23bdef0f059b4fab5825fe625a20e5"
+      }
+    ],
+    "source_corpus_label_counts": {
+      "benign": 2,
+      "injection": 2
+    },
+    "source_corpus_total_rows": 4,
+    "teacher_cache_label_counts": {
+      "0": 2,
+      "1": 2
+    },
+    "teacher_cache_rows": 4
+  },
+  "experiment_id": "exp3239",
+  "garak_config_plan": {
+    "config_path": "configs/garak/prompt_injection_kan_v4.yaml",
+    "no_garak_run_by_exp3239": true,
+    "probe_groups": [
+      "promptinject",
+      "jailbreak",
+      "encoding",
+      "dan"
+    ],
+    "receipt_path": "results/experiment_3241_prompt_injection_kan_garak_config_receipts_v1.json",
+    "required_receipt_fields": [
+      "garak_config_ready",
+      "config_sha256",
+      "garak_version",
+      "probe_groups",
+      "attempt_count",
+      "failure_count",
+      "no_headline_claim_without_receipt"
+    ],
+    "task_id": "exp3241-prompt-injection-kan-train-eval-shard-v1"
+  },
+  "garak_config_ready": true,
+  "honest_verdict": "complete: v4_manifest_ready=false; concrete input paths are missing; no LLM invoked, no teacher labels generated, no KAN training metrics claimed",
+  "inference_substrate": "aggregation_from_upstream_artifacts",
+  "manifest_blockers": [
+    "data/prompt_injection_distill/adce94ae07d6f4e7.jsonl"
+  ],
+  "milestone": "2026.05.300",
+  "no_conductor_execution": true,
+  "no_delong_run": true,
+  "no_garak_run": true,
+  "no_kan_training": true,
+  "no_llm_invoked": true,
+  "no_new_teacher_labeling": true,
+  "no_push": true,
+  "principle_annotations": {
+    "aggregation_only": "All readiness booleans come from named paths and plans, not from new inference.",
+    "honest_claim_boundary": "The manifest does not claim v4 labels, KAN training, DeLong results, or Garak results exist.",
+    "manifest_ready_gate": "v4_manifest_ready requires concrete present corpus inputs and named downstream deliverables.",
+    "no_llm_invoked": "This artifact reads and hashes existing files only; live teacher labeling is a downstream shard.",
+    "small_first_shard": "The first teacher-label shard is eight prompts so cache, timing, and receipt behavior can fail quickly."
+  },
+  "protected_files_untouched": {
+    "scripts/research_conductor.py": true
+  },
+  "random_seed": 3239,
+  "reproducibility_checksum": "d577b1f58c7a69582c1697f6ca31d714b0ae4801e1f462c25c8bf44de6beaedc",
+  "run_date": "20260528",
+  "schema": "carnot.prompt_injection_kan_v4_resource_manifest.v1",
+  "schema_version": "carnot.prompt_injection_kan_v4_resource_manifest.v1",
+  "shard_plan": {
+    "failed_monolith_target_rows": 15000,
+    "first_teacher_label_shard": {
+      "class_balance": {
+        "benign": 4,
+        "injection": 4
+      },
+      "deliverable_path": "results/experiment_3240_prompt_injection_kan_teacher_label_shard_v1.json",
+      "input_paths": [
+        "data/prompt_injection_distill/adce94ae07d6f4e7.jsonl",
+        "data/prompt_injection_distill/e9aeab292133918b.jsonl"
+      ],
+      "max_expected_wall_time_min": 8,
+      "n_prompts": 8,
+      "rationale": "Eight prompts bounds the first live teacher receipt while proving cache, schema, and timing fields.",
+      "shard_id": "tl-smoke-000"
+    },
+    "monolith_replacement": true,
+    "phases": [
+      {
+        "kan_train_rows": 0,
+        "phase": "smoke",
+        "purpose": "exercise manifests and teacher-cache receipt without training",
+        "source_rows": 64,
+        "teacher_label_rows": 8,
+        "teacher_shard_size": 8
+      },
+      {
+        "kan_train_rows": 512,
+        "phase": "pilot",
+        "purpose": "validate label cache, training script, and paired-score schema before full scale",
+        "source_rows": 512,
+        "teacher_label_rows": 128,
+        "teacher_shard_size": 32
+      },
+      {
+        "estimated_teacher_shards": 118,
+        "kan_train_rows": 15000,
+        "phase": "full",
+        "purpose": "replace the failed 15k monolith with bounded receipts",
+        "source_rows": 15000,
+        "teacher_label_rows": 15000,
+        "teacher_shard_size_after_smoke": 128
+      }
+    ]
+  },
+  "source_artifacts": [
+    {
+      "path": "CLAUDE.md",
+      "present": true,
+      "role": "claude_guidance",
+      "sha256": "f55d1e4029417428437c2de18bdf2174a5cd11fef3724fc035474b69de4bfb0c"
+    },
+    {
+      "path": "research-references.md",
+      "present": true,
+      "role": "research_references",
+      "sha256": "d95ae5cee353b81877c32536178c171b3bdac37661cc475a3c8085f030d7baaf"
+    },
+    {
+      "path": "results/experiment_3234_cli_backend_failure_root_cause_ledger_v1.json",
+      "present": true,
+      "role": "exp3234_failure_ledger",
+      "sha256": "4ee1f67c6daebb71bba189e300b13de582349aa821954c9feea918d5f7e8ac41"
+    },
+    {
+      "path": "results/prompt_injection_kan_v2.json",
+      "present": true,
+      "role": "prompt_injection_kan_v2",
+      "sha256": "f991edbabea7258a1f89f083b352cd6d51b9371b267bdd74147dcfa0c97478b6"
+    },
+    {
+      "path": "results/prompt_injection_teacher_labels_v2.json",
+      "present": true,
+      "role": "prompt_injection_teacher_labels_v2",
+      "sha256": "f897dc4a4170ede694beb605d982b6da7f23bdef0f059b4fab5825fe625a20e5"
+    },
+    {
+      "path": "data/prompt_injection_distill/adce94ae07d6f4e7.jsonl",
+      "present": false,
+      "role": "source_corpus_adce94ae07d6f4e7",
+      "sha256": null
+    },
+    {
+      "path": "data/prompt_injection_distill/e9aeab292133918b.jsonl",
+      "present": true,
+      "role": "source_corpus_e9aeab292133918b",
+      "sha256": "e34e01676b737040a0d14b4c1d5b868d7d818f84716a728eaddc64a0cd7e6bc8"
+    },
+    {
+      "path": "data/prompt_injection_distill/teacher_outputs_v690.jsonl",
+      "present": true,
+      "role": "teacher_outputs_v690",
+      "sha256": "1f2dc10c299794626f88eea5affc3df8b662e1ec64d50b28a59287e6c557ec97"
+    },
+    {
+      "path": "results/experiment_652_prompt_injection_kan.json",
+      "present": false,
+      "role": "exp652_prompt_injection_kan",
+      "sha256": null
+    },
+    {
+      "path": "results/experiment_669_prompt_injection_rescue.json",
+      "present": false,
+      "role": "exp669_prompt_injection_rescue",
+      "sha256": null
+    },
+    {
+      "path": "results/experiment_679_prompt_injection_kan_cross_dataset.json",
+      "present": false,
+      "role": "exp679_cross_dataset_gate",
+      "sha256": null
+    },
+    {
+      "path": "results/experiment_690_prompt_injection_kan_true_distillation.json",
+      "present": true,
+      "role": "exp690_true_distillation",
+      "sha256": "303f107f16be9b69793b6bcd0a070a4a406987ea34b85bd48ffb5d9b6e7e5fbc"
+    },
+    {
+      "path": "results/experiment_691_prompt_injection_kan_cross_dataset.json",
+      "present": true,
+      "role": "exp691_cross_dataset_gate",
+      "sha256": "671d59845d1df0c5010abd781923e33591b4087095c6a0f8a0c3b896962e0636"
+    },
+    {
+      "path": "scripts/experiment_template.py",
+      "present": true,
+      "role": "experiment_template",
+      "sha256": "f77b5c9e4f3bf014c3abb739dbbb4d6f5a992219ef6038a5e302932a75fe8ac1"
+    },
+    {
+      "path": "scripts/research_conductor.py",
+      "present": true,
+      "role": "protected_research_conductor",
+      "sha256": "174bf39c6844215b7beb49f78bcd3a9e447d50c560fdaa10de95b677d8fb98a0"
+    }
+  ],
+  "source_checksums": {
+    "CLAUDE.md": "f55d1e4029417428437c2de18bdf2174a5cd11fef3724fc035474b69de4bfb0c",
+    "data/prompt_injection_distill/e9aeab292133918b.jsonl": "e34e01676b737040a0d14b4c1d5b868d7d818f84716a728eaddc64a0cd7e6bc8",
+    "data/prompt_injection_distill/teacher_outputs_v690.jsonl": "1f2dc10c299794626f88eea5affc3df8b662e1ec64d50b28a59287e6c557ec97",
+    "research-references.md": "d95ae5cee353b81877c32536178c171b3bdac37661cc475a3c8085f030d7baaf",
+    "results/experiment_3234_cli_backend_failure_root_cause_ledger_v1.json": "4ee1f67c6daebb71bba189e300b13de582349aa821954c9feea918d5f7e8ac41",
+    "results/experiment_690_prompt_injection_kan_true_distillation.json": "303f107f16be9b69793b6bcd0a070a4a406987ea34b85bd48ffb5d9b6e7e5fbc",
+    "results/experiment_691_prompt_injection_kan_cross_dataset.json": "671d59845d1df0c5010abd781923e33591b4087095c6a0f8a0c3b896962e0636",
+    "results/prompt_injection_kan_v2.json": "f991edbabea7258a1f89f083b352cd6d51b9371b267bdd74147dcfa0c97478b6",
+    "results/prompt_injection_teacher_labels_v2.json": "f897dc4a4170ede694beb605d982b6da7f23bdef0f059b4fab5825fe625a20e5",
+    "scripts/experiment_template.py": "f77b5c9e4f3bf014c3abb739dbbb4d6f5a992219ef6038a5e302932a75fe8ac1",
+    "scripts/research_conductor.py": "174bf39c6844215b7beb49f78bcd3a9e447d50c560fdaa10de95b677d8fb98a0"
+  },
+  "task_id": "exp3239-prompt-injection-kan-v4-resource-manifest-v1",
+  "teacher_label_plan": {
+    "cache_reuse_paths": [
+      "data/prompt_injection_distill/teacher_outputs_v690.jsonl",
+      "results/prompt_injection_teacher_labels_v2.json"
+    ],
+    "deliverable_path": "results/experiment_3240_prompt_injection_kan_teacher_label_shard_v1.json",
+    "first_shard_size": 8,
+    "full_phase_shard_size_after_smoke": 128,
+    "input_paths": [
+      "data/prompt_injection_distill/adce94ae07d6f4e7.jsonl",
+      "data/prompt_injection_distill/e9aeab292133918b.jsonl"
+    ],
+    "policy": "Reuse existing cache rows first; label only missing prompts in downstream shards, never in this manifest.",
+    "required_receipt_fields": [
+      "teacher_label_shard_ready",
+      "teacher_model_sha",
+      "prompt_sha",
+      "elapsed_s",
+      "teacher_inference_duration_s",
+      "no_training_performed"
+    ],
+    "subsequent_smoke_or_pilot_shard_size": 32,
+    "task_id": "exp3240-prompt-injection-kan-teacher-label-shard-v1"
+  },
+  "teacher_label_plan_ready": true,
+  "v4_manifest_ready": false
+}

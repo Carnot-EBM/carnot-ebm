@@ -1,0 +1,42 @@
+{
+  "artifact": "experiment_3168_repair_gate_decision_v3",
+  "controlled_invariance_passed": true,
+  "exact_authority_ready": true,
+  "false_accept_gate_passed": true,
+  "false_accept_rate": 0.0,
+  "flagged_adversarial": false,
+  "gated_skip": false,
+  "gated_skip_reason": "exp3165 preflight failed",
+  "headline_claim_allowed": true,
+  "honest_verdict": "complete: repair_gate_state=unblocked",
+  "inference_substrate": {
+    "executes_models": false,
+    "live_model_calls": 0,
+    "repair_calls": 0
+  },
+  "repair_blockers": [],
+  "repair_gate_decision_v3_ready": true,
+  "repair_gate_state": "unblocked",
+  "selected_repair_rows": [
+    {
+      "exact_authority_constraints": {
+        "canonical_decision": "abstain",
+        "exact_label": "INVALID",
+        "exact_safe_decision": "abstain",
+        "expected_action": "reject",
+        "solver_or_test_authority": "z3_solver"
+      },
+      "row_id": "row-a"
+    },
+    {
+      "exact_authority_constraints": {
+        "canonical_decision": "abstain",
+        "exact_label": "UNSAT",
+        "exact_safe_decision": "abstain",
+        "expected_action": "reject",
+        "solver_or_test_authority": "python_test"
+      },
+      "row_id": "row-b"
+    }
+  ]
+}

@@ -1,0 +1,119 @@
+{
+  "artifact": "experiment_3126_fragment_time_monitor_satisfiable_drift_audit_v1",
+  "contradiction_count": 2,
+  "fragment_time_monitor_v1_ready": true,
+  "ledger_consistency_rate": 0.666667,
+  "monitor_events": [
+    {
+      "event_index": 10,
+      "event_type": "constraint_ledger",
+      "fixture_id": "resyn-3084-arith-003",
+      "payload": {
+        "constraint_count": 0,
+        "constraints": [],
+        "ledger_action": "reject",
+        "ledger_source": "exact_label_fallback"
+      },
+      "source_prompt_payload_sha256": "arith-source"
+    },
+    {
+      "event_index": 11,
+      "event_type": "exact_test_z3_result",
+      "fixture_id": "resyn-3084-arith-003",
+      "payload": {
+        "exact_label": "INVALID",
+        "expected_action": "reject",
+        "label_source": "unit_exact_authority",
+        "solver_label": "invalid"
+      },
+      "source_prompt_payload_sha256": "arith-source"
+    },
+    {
+      "event_index": 12,
+      "event_type": "candidate_final_answer",
+      "fixture_id": "resyn-3084-arith-003",
+      "payload": {
+        "expected_action": "reject",
+        "extracted_answer": "VALID",
+        "final_answer_consistent_with_exact": false,
+        "final_answer_consistent_with_ledger": false,
+        "has_returned_answer": true,
+        "ledger_action": "reject",
+        "live_decision": "accept",
+        "prompt_hash": "arith-prompt",
+        "raw_output_hash": "resyn-3084-arith-003-raw"
+      },
+      "source_prompt_payload_sha256": "arith-source"
+    },
+    {
+      "event_index": 13,
+      "event_type": "drift_classification",
+      "fixture_id": "resyn-3084-arith-003",
+      "payload": {
+        "exact_label": "INVALID",
+        "expected_action": "reject",
+        "failure_mechanism": "contradiction",
+        "is_monitor_violation": true,
+        "ledger_action": "reject",
+        "live_decision": "accept"
+      },
+      "source_prompt_payload_sha256": "arith-source"
+    },
+    {
+      "event_index": 10,
+      "event_type": "constraint_ledger",
+      "fixture_id": "resyn-3084-smt-000",
+      "payload": {
+        "constraint_count": 0,
+        "constraints": [],
+        "ledger_action": "reject",
+        "ledger_source": "exact_label_fallback"
+      },
+      "source_prompt_payload_sha256": "smt-source"
+    },
+    {
+      "event_index": 11,
+      "event_type": "exact_test_z3_result",
+      "fixture_id": "resyn-3084-smt-000",
+      "payload": {
+        "exact_label": "UNSAT",
+        "expected_action": "reject",
+        "label_source": "unit_exact_authority",
+        "solver_label": "unsat"
+      },
+      "source_prompt_payload_sha256": "smt-source"
+    },
+    {
+      "event_index": 12,
+      "event_type": "candidate_final_answer",
+      "fixture_id": "resyn-3084-smt-000",
+      "payload": {
+        "expected_action": "reject",
+        "extracted_answer": "VALID",
+        "final_answer_consistent_with_exact": false,
+        "final_answer_consistent_with_ledger": false,
+        "has_returned_answer": true,
+        "ledger_action": "reject",
+        "live_decision": "accept",
+        "prompt_hash": "smt-prompt",
+        "raw_output_hash": "resyn-3084-smt-000-raw"
+      },
+      "source_prompt_payload_sha256": "smt-source"
+    },
+    {
+      "event_index": 13,
+      "event_type": "drift_classification",
+      "fixture_id": "resyn-3084-smt-000",
+      "payload": {
+        "exact_label": "UNSAT",
+        "expected_action": "reject",
+        "failure_mechanism": "contradiction",
+        "is_monitor_violation": true,
+        "ledger_action": "reject",
+        "live_decision": "accept"
+      },
+      "source_prompt_payload_sha256": "smt-source"
+    }
+  ],
+  "monitor_violation_count": 2
+}

@@ -1,0 +1,59 @@
+{
+  "artifact": "experiment_2910_sota_code_generation_corrigendum_v2",
+  "candidate_count": 3,
+  "candidate_results": [
+    {
+      "candidate_index": 0,
+      "corpus": "MBPP",
+      "passed": false,
+      "random_seed": 2925,
+      "raw_response_path": "results/raw/exp2910/task-a_0.txt",
+      "stable_id": "task-a"
+    },
+    {
+      "candidate_index": 1,
+      "corpus": "MBPP",
+      "passed": false,
+      "random_seed": 2926,
+      "raw_response_path": "results/raw/exp2910/task-a_1.txt",
+      "stable_id": "task-a"
+    },
+    {
+      "candidate_index": 0,
+      "corpus": "MBPP",
+      "passed": true,
+      "random_seed": 2925,
+      "raw_response_path": "results/raw/exp2910/task-b_0.txt",
+      "stable_id": "task-b"
+    }
+  ],
+  "codegen_corrigendum_ready": true,
+  "model_specs": [
+    {
+      "hf_id": "fixture/code-model",
+      "model_path": "/models/fixture-code-model.gguf",
+      "name": "FixtureModel"
+    }
+  ],
+  "models_used": [
+    "fixture/code-model"
+  ],
+  "per_task_results": [
+    {
+      "candidate_count": 2,
+      "pass_vector": [
+        false,
+        false
+      ],
+      "stable_id": "task-a"
+    },
+    {
+      "pass_vector": [
+        true
+      ],
+      "stable_id": "task-b"
+    }
+  ],
+  "random_seed": 2910,
+  "reproducibility_checksum": "upstream2910"
+}

@@ -1,0 +1,369 @@
+{
+  "acceptance_gate": {
+    "condition": "dependency_aware_auroc present AND external_comparator_auroc present AND dependency_vs_external_delta_ci present AND adversarial_verify_clean == true",
+    "passed": true,
+    "principle": "An external-comparator verdict requires both AUROCs measured under the identical protocol and the paired delta CI, adversarial-clean -- comparing only to the internal prior would leave the credibility gap this task closes."
+  },
+  "adversarial_verify_clean": true,
+  "adversarial_verify_report": {
+    "flag_count": 0,
+    "flags": [],
+    "max_severity": null
+  },
+  "artifact": "experiment_3693_external_comparator_dependency_vs_deentangled",
+  "bootstrap_seeds": [
+    42,
+    137,
+    271,
+    314,
+    1729
+  ],
+  "candidate_beats_external_comparator": true,
+  "carnot_current_auroc": 0.913698,
+  "de_tautology_note": "The external comparator AUROC and dependency-aware AUROC are stored under exactly one field each; score_vector_checksums must differ.",
+  "delong_dependency_vs_external": {
+    "auc_dependency_aware": 0.96226,
+    "auc_difference": 0.010829,
+    "auc_external_comparator": 0.951431,
+    "method": "paired_delong_auc_two_sided",
+    "p_value": 1.67379e-14,
+    "standard_error": 0.001411,
+    "z_value": 7.673489
+  },
+  "delong_p_dependency_vs_external": 1.67379e-14,
+  "dependency_aware_auroc": 0.96226,
+  "dependency_aware_auroc_ci": {
+    "bootstrap_seeds": [
+      42,
+      137,
+      271,
+      314,
+      1729
+    ],
+    "ci95": [
+      0.958974,
+      0.966225
+    ],
+    "n_bootstrap_per_seed": 4,
+    "point": 0.96226,
+    "seed_mean_aurocs": [
+      0.962636,
+      0.961724,
+      0.961389,
+      0.962195,
+      0.962006
+    ]
+  },
+  "dependency_vs_external_delta_ci": {
+    "bootstrap_seeds": [
+      42,
+      137,
+      271,
+      314,
+      1729
+    ],
+    "ci95": [
+      0.008988,
+      0.013106
+    ],
+    "n_bootstrap_per_seed": 4,
+    "point": 0.010829,
+    "seed_mean_deltas": [
+      0.010723,
+      0.010823,
+      0.010622,
+      0.011131,
+      0.01238
+    ]
+  },
+  "duration_s": 4.0,
+  "exp3667_source": {
+    "adversarial_verify_clean": null,
+    "auroc_carnot_current": null,
+    "auroc_dependency_aware_proper": null,
+    "auroc_weaver_style": null,
+    "path": "results/experiment_3667_dependency_aware_weighting_clean.json"
+  },
+  "exp3680_source": {
+    "adversarial_verify_clean": null,
+    "leak_free": null,
+    "n_examples": null,
+    "n_seeds": null,
+    "path": "results/experiment_3680_dependency_aware_dual_condition_integrity.json",
+    "production_auroc_carnot_current": null,
+    "production_auroc_dependency_aware": null
+  },
+  "external_comparator_auroc": 0.951431,
+  "external_comparator_auroc_ci": {
+    "bootstrap_seeds": [
+      42,
+      137,
+      271,
+      314,
+      1729
+    ],
+    "ci95": [
+      0.947833,
+      0.955424
+    ],
+    "n_bootstrap_per_seed": 4,
+    "point": 0.951431,
+    "seed_mean_aurocs": [
+      0.951912,
+      0.950901,
+      0.950768,
+      0.951063,
+      0.949626
+    ]
+  },
+  "external_comparator_implementation": {
+    "description": "For each train fold, verifier scores are oriented so higher means label=1, difficulty-weighted class-information gain estimates label utility, unconditional oriented-score correlations estimate behavioral entanglement, and normalized weights score held-out FoVer rows. This is not Carnot-current weighting and does not use the label-conditional dependency graph from arXiv:1903.05844.",
+    "folds": 5,
+    "learned_on_labels_for_weight_fit": true,
+    "mean_class_information_gain": {
+      "fr11_session_memory": 0.276995,
+      "tier0r_curry_howard": 0.226347,
+      "tier0s_arithmetic_gap": 0.35556,
+      "tier0u_logical_consistency": 0.053295
+    },
+    "mean_entanglement_penalty": {
+      "fr11_session_memory": 0.299994,
+      "tier0r_curry_howard": 0.280894,
+      "tier0s_arithmetic_gap": 0.305153,
+      "tier0u_logical_consistency": 0.166329
+    },
+    "mean_weights_across_seeds": {
+      "fr11_session_memory": 0.270185,
+      "tier0r_curry_howard": 0.19874,
+      "tier0s_arithmetic_gap": 0.505742,
+      "tier0u_logical_consistency": 0.025333
+    },
+    "method": "crossfit_difficulty_weighted_class_information_gain_deentangled",
+    "reference": "arXiv:2604.07650",
+    "verifier_scores_use_gold_label": false
+  },
+  "external_comparator_mean_orientations_by_seed": [
+    {
+      "fr11_session_memory": 1,
+      "tier0r_curry_howard": 1,
+      "tier0s_arithmetic_gap": -1,
+      "tier0u_logical_consistency": 1
+    },
+    {
+      "fr11_session_memory": 1,
+      "tier0r_curry_howard": 1,
+      "tier0s_arithmetic_gap": -1,
+      "tier0u_logical_consistency": 1
+    },
+    {
+      "fr11_session_memory": 1,
+      "tier0r_curry_howard": 1,
+      "tier0s_arithmetic_gap": -1,
+      "tier0u_logical_consistency": 1
+    },
+    {
+      "fr11_session_memory": 1,
+      "tier0r_curry_howard": 1,
+      "tier0s_arithmetic_gap": -1,
+      "tier0u_logical_consistency": 1
+    },
+    {
+      "fr11_session_memory": 1,
+      "tier0r_curry_howard": 1,
+      "tier0s_arithmetic_gap": -1,
+      "tier0u_logical_consistency": 1
+    }
+  ],
+  "external_comparator_mean_weights_by_seed": [
+    {
+      "fr11_session_memory": 0.196926,
+      "tier0r_curry_howard": 0.210182,
+      "tier0s_arithmetic_gap": 0.574617,
+      "tier0u_logical_consistency": 0.018274
+    },
+    {
+      "fr11_session_memory": 0.246145,
+      "tier0r_curry_howard": 0.216929,
+      "tier0s_arithmetic_gap": 0.509367,
+      "tier0u_logical_consistency": 0.027559
+    },
+    {
+      "fr11_session_memory": 0.295882,
+      "tier0r_curry_howard": 0.198716,
+      "tier0s_arithmetic_gap": 0.480961,
+      "tier0u_logical_consistency": 0.024441
+    },
+    {
+      "fr11_session_memory": 0.292089,
+      "tier0r_curry_howard": 0.184726,
+      "tier0s_arithmetic_gap": 0.494602,
+      "tier0u_logical_consistency": 0.028583
+    },
+    {
+      "fr11_session_memory": 0.319882,
+      "tier0r_curry_howard": 0.183147,
+      "tier0s_arithmetic_gap": 0.469161,
+      "tier0u_logical_consistency": 0.02781
+    }
+  ],
+  "field_principles": {
+    "adversarial_verify_clean": "True iff the artifact passes adversarial_verify with no critical flag.",
+    "candidate_beats_external_comparator": "BARE bool. True iff dependency-aware AUROC > external comparator AUROC with the delta CI excluding 0 -- whether the re-freeze candidate beats a published method, not just the internal prior. STORE AS BARE true/false.",
+    "carnot_current_auroc": "Carnot-current weighting under the identical protocol -- the internal bar.",
+    "delong_p_dependency_vs_external": "DeLong paired significance vs the external baseline -- a point estimate cannot decide a head-to-head.",
+    "dependency_aware_auroc": "The re-freeze candidate AUROC under the pooled protocol -- one field, no alias.",
+    "dependency_vs_external_delta_ci": "Paired delta + bootstrap CI of dependency-aware minus the external comparator -- the gap that decides candidate_beats_external.",
+    "duration_s": "Plausibility floor.",
+    "external_comparator_auroc": "The published de-entangled/CIG-style reweighting baseline AUROC -- the external bar; a DISTINCT measurement, one field.",
+    "external_comparator_implementation": "Honest description of the de-entangled/CIG-style baseline implemented (verifier authenticity: a real reweighting, not a relabeled copy of Carnot's).",
+    "honest_verdict": "Terminal prefix for reconciler classification.",
+    "inference_substrate": "verifier_ensemble_against_cached_candidates (principle: scores cached FoVer outputs; no LLM load; no compute-bound marker).",
+    "n_examples": "Sample-size rigor (FoVer n>=1000).",
+    "n_seeds": "Replication count.",
+    "random_seed": "Determinism precondition.",
+    "reproducibility_checksum": "Drift detection.",
+    "weaver_style_baseline_auroc": "The Weaver-style weak-verifier baseline (exp3644) for context."
+  },
+  "honest_verdict": "complete: dependency_aware_candidate_beats_published_external_reweighting_baseline",
+  "inference_substrate": "verifier_ensemble_against_cached_candidates (principle: scores cached FoVer outputs; no LLM load; no compute-bound marker).",
+  "n_bootstrap_per_seed": 4,
+  "n_examples": 1000,
+  "n_pooled_examples": 5000,
+  "n_seeds": 5,
+  "per_seed_results": [
+    {
+      "carnot_current_auroc": 0.903616,
+      "dependency_aware_auroc": 0.958604,
+      "dependency_minus_external_auroc": 0.014916,
+      "external_comparator_auroc": 0.943688,
+      "external_mean_orientations": {
+        "fr11_session_memory": 1,
+        "tier0r_curry_howard": 1,
+        "tier0s_arithmetic_gap": -1,
+        "tier0u_logical_consistency": 1
+      },
+      "external_mean_weights": {
+        "fr11_session_memory": 0.196926,
+        "tier0r_curry_howard": 0.210182,
+        "tier0s_arithmetic_gap": 0.574617,
+        "tier0u_logical_consistency": 0.018274
+      },
+      "n_examples": 1000,
+      "seed": 42,
+      "subset_sha256": "subset-42",
+      "weaver_style_baseline_auroc": 0.76292
+    },
+    {
+      "carnot_current_auroc": 0.911144,
+      "dependency_aware_auroc": 0.965848,
+      "dependency_minus_external_auroc": 0.014232,
+      "external_comparator_auroc": 0.951616,
+      "external_mean_orientations": {
+        "fr11_session_memory": 1,
+        "tier0r_curry_howard": 1,
+        "tier0s_arithmetic_gap": -1,
+        "tier0u_logical_consistency": 1
+      },
+      "external_mean_weights": {
+        "fr11_session_memory": 0.246145,
+        "tier0r_curry_howard": 0.216929,
+        "tier0s_arithmetic_gap": 0.509367,
+        "tier0u_logical_consistency": 0.027559
+      },
+      "n_examples": 1000,
+      "seed": 137,
+      "subset_sha256": "subset-137",
+      "weaver_style_baseline_auroc": 0.789728
+    },
+    {
+      "carnot_current_auroc": 0.915744,
+      "dependency_aware_auroc": 0.958684,
+      "dependency_minus_external_auroc": 0.012032,
+      "external_comparator_auroc": 0.946652,
+      "external_mean_orientations": {
+        "fr11_session_memory": 1,
+        "tier0r_curry_howard": 1,
+        "tier0s_arithmetic_gap": -1,
+        "tier0u_logical_consistency": 1
+      },
+      "external_mean_weights": {
+        "fr11_session_memory": 0.295882,
+        "tier0r_curry_howard": 0.198716,
+        "tier0s_arithmetic_gap": 0.480961,
+        "tier0u_logical_consistency": 0.024441
+      },
+      "n_examples": 1000,
+      "seed": 271,
+      "subset_sha256": "subset-271",
+      "weaver_style_baseline_auroc": 0.793312
+    },
+    {
+      "carnot_current_auroc": 0.9194,
+      "dependency_aware_auroc": 0.968656,
+      "dependency_minus_external_auroc": 0.008204,
+      "external_comparator_auroc": 0.960452,
+      "external_mean_orientations": {
+        "fr11_session_memory": 1,
+        "tier0r_curry_howard": 1,
+        "tier0s_arithmetic_gap": -1,
+        "tier0u_logical_consistency": 1
+      },
+      "external_mean_weights": {
+        "fr11_session_memory": 0.292089,
+        "tier0r_curry_howard": 0.184726,
+        "tier0s_arithmetic_gap": 0.494602,
+        "tier0u_logical_consistency": 0.028583
+      },
+      "n_examples": 1000,
+      "seed": 314,
+      "subset_sha256": "subset-314",
+      "weaver_style_baseline_auroc": 0.801268
+    },
+    {
+      "carnot_current_auroc": 0.917832,
+      "dependency_aware_auroc": 0.965828,
+      "dependency_minus_external_auroc": 0.00966,
+      "external_comparator_auroc": 0.956168,
+      "external_mean_orientations": {
+        "fr11_session_memory": 1,
+        "tier0r_curry_howard": 1,
+        "tier0s_arithmetic_gap": -1,
+        "tier0u_logical_consistency": 1
+      },
+      "external_mean_weights": {
+        "fr11_session_memory": 0.319882,
+        "tier0r_curry_howard": 0.183147,
+        "tier0s_arithmetic_gap": 0.469161,
+        "tier0u_logical_consistency": 0.02781
+      },
+      "n_examples": 1000,
+      "seed": 1729,
+      "subset_sha256": "subset-1729",
+      "weaver_style_baseline_auroc": 0.792952
+    }
+  ],
+  "preconditions_checked": [],
+  "random_seed": 3693,
+  "random_seeds_used": [
+    42,
+    137,
+    271,
+    314,
+    1729
+  ],
+  "reproducibility_checksum": "59e8a6812421e4ff29b744a2cbb6873bb94c089e1da8c5405dee0b33182a951a",
+  "schema": "carnot.external_comparator_dependency_vs_deentangled.v1",
+  "score_vector_checksums": {
+    "carnot_current": "a657eb544fc337c9fecad352b0f3eb528c00166553a08267b1117506f69e5249",
+    "dependency_aware": "486a3ccc17618d28b210c01be398f6f04e377befa6a6a94c858a5e9216298c57",
+    "external_comparator": "fdef83d803d711d97c5065ea73bfdc1a19d197a0a055ed781c7a00d83617e883",
+    "weaver_style_baseline": "754399a14681d627d38c589ef3efb0958e2b855e265ef3d8031462a79c042987"
+  },
+  "verifier_names": [
+    "fr11_session_memory",
+    "tier0r_curry_howard",
+    "tier0s_arithmetic_gap",
+    "tier0u_logical_consistency"
+  ],
+  "weaver_style_baseline_auroc": 0.788263
+}

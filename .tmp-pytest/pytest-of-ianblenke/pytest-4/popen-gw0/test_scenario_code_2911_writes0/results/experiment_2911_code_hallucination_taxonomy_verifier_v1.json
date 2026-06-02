@@ -1,0 +1,360 @@
+{
+  "artifact": "experiment_2911_code_hallucination_taxonomy_verifier_v1",
+  "code_hallucination_categories": [
+    "invented_import",
+    "undefined_name",
+    "invented_attribute_or_method",
+    "invalid_argument"
+  ],
+  "code_hallucination_verifier_ready": true,
+  "duration_s": 3.5,
+  "field_principles": {
+    "code_hallucination_verifier_ready": "True only after every Exp 2910 candidate is labeled.",
+    "duration_s": "Measured wall-clock runtime; no padding.",
+    "honest_verdict": "Terminal verdict; blocked when the Exp 2910 corrigendum is absent.",
+    "inference_substrate": "Always deterministic_verifier; no live generation is performed.",
+    "pass_rate_after_taxonomy_filter": "Pass rate after removing syntax, runtime, and static code-hallucination failures.",
+    "per_candidate_labels": "One row per Exp 2910 candidate with static and task-test labels.",
+    "taxonomy_categories": "Orthogonal labels; one candidate may carry several categories."
+  },
+  "honest_verdict": "complete: Exp 2910 code candidates labeled with deterministic taxonomy",
+  "inference_substrate": "deterministic_verifier",
+  "invalid_argument_rate": 0.25,
+  "invented_attribute_or_method_rate": 0.25,
+  "invented_import_rate": 0.25,
+  "pass_rate_after_taxonomy_filter": 0.5,
+  "per_candidate_labels": [
+    {
+      "candidate_index": 0,
+      "corpus": "MBPP",
+      "error_message": "",
+      "error_type": null,
+      "findings": [],
+      "labels": [
+        "passed"
+      ],
+      "model_hf_id": "local/model-a",
+      "pass_status": "passed",
+      "passed": true,
+      "random_seed": 2910,
+      "raw_response_loaded": true,
+      "raw_response_path": "results/raw/experiment_2910_sota_code_generation_corrigendum_v2/mbpp_task-a_0.txt",
+      "raw_response_sha256": "feadf943a99c9a488ec3e1a7d62f95540a56378163056fa188ecf13d18d887d6",
+      "row_status": "candidate_passed",
+      "stable_id": "task-a",
+      "syntax_error": "",
+      "syntax_success": true,
+      "task_key": "MBPP:task-a",
+      "task_test_outcome_source": "exp2910_sandbox_candidate_results"
+    },
+    {
+      "candidate_index": 1,
+      "corpus": "MBPP",
+      "error_message": "AssertionError",
+      "error_type": "AssertionError",
+      "findings": [],
+      "labels": [
+        "true_test_failure"
+      ],
+      "model_hf_id": "local/model-a",
+      "pass_status": "failed",
+      "passed": false,
+      "random_seed": 2911,
+      "raw_response_loaded": true,
+      "raw_response_path": "results/raw/experiment_2910_sota_code_generation_corrigendum_v2/mbpp_task-a_1.txt",
+      "raw_response_sha256": "5d782c0fca469b1321619e1d3fe6686621a5781aad63aa826f67c6432e117894",
+      "row_status": "candidate_failed",
+      "stable_id": "task-a",
+      "syntax_error": "",
+      "syntax_success": true,
+      "task_key": "MBPP:task-a",
+      "task_test_outcome_source": "exp2910_sandbox_candidate_results"
+    },
+    {
+      "candidate_index": 0,
+      "corpus": "MBPP",
+      "error_message": "SyntaxError",
+      "error_type": "SyntaxError",
+      "findings": [
+        {
+          "category": "syntax_error",
+          "col": 12,
+          "line": 1,
+          "message": "Python AST parse failed.",
+          "snippet": "",
+          "symbol": "invalid syntax"
+        }
+      ],
+      "labels": [
+        "syntax_error"
+      ],
+      "model_hf_id": "local/model-a",
+      "pass_status": "failed",
+      "passed": false,
+      "random_seed": 2910,
+      "raw_response_loaded": true,
+      "raw_response_path": "results/raw/experiment_2910_sota_code_generation_corrigendum_v2/mbpp_task-b_0.txt",
+      "raw_response_sha256": "e6938fd8f563665fcaefec05805213a62ed5a1fa7a136aa6aad7c16602ca1da8",
+      "row_status": "candidate_syntax_failed",
+      "stable_id": "task-b",
+      "syntax_error": "invalid syntax",
+      "syntax_success": false,
+      "task_key": "MBPP:task-b",
+      "task_test_outcome_source": "exp2910_sandbox_candidate_results"
+    },
+    {
+      "candidate_index": 1,
+      "corpus": "MBPP",
+      "error_message": "TypeError",
+      "error_type": "TypeError",
+      "findings": [
+        {
+          "category": "invented_import",
+          "col": 1,
+          "line": 2,
+          "message": "Imported module 'not_a_real_codegen_module' is unavailable.",
+          "snippet": "",
+          "symbol": "not_a_real_codegen_module"
+        },
+        {
+          "category": "undefined_name",
+          "col": 13,
+          "line": 6,
+          "message": "Name 'missing_value' is read but not defined in the candidate.",
+          "snippet": "value = missing_value + 1",
+          "symbol": "missing_value"
+        },
+        {
+          "category": "invented_attribute_or_method",
+          "col": 14,
+          "line": 7,
+          "message": "Attribute or method json.parse is unavailable.",
+          "snippet": "",
+          "symbol": "json.parse"
+        },
+        {
+          "category": "invalid_argument",
+          "col": 12,
+          "line": 8,
+          "message": "Call helper has an incompatible signature: too many positional arguments for helper",
+          "snippet": "",
+          "symbol": "helper"
+        },
+        {
+          "category": "invalid_argument",
+          "col": 27,
+          "line": 8,
+          "message": "Call len has an incompatible signature: too many positional arguments",
+          "snippet": "",
+          "symbol": "len"
+        }
+      ],
+      "labels": [
+        "invented_import",
+        "undefined_name",
+        "invented_attribute_or_method",
+        "invalid_argument",
+        "runtime_error"
+      ],
+      "model_hf_id": "local/model-a",
+      "pass_status": "failed",
+      "passed": false,
+      "random_seed": 2911,
+      "raw_response_loaded": true,
+      "raw_response_path": "results/raw/experiment_2910_sota_code_generation_corrigendum_v2/mbpp_task-b_1.txt",
+      "raw_response_sha256": "cad6aa958eec281edd7fbbbf79dc41d295b19468931a0d379fcead078c7ad2bf",
+      "row_status": "candidate_failed",
+      "stable_id": "task-b",
+      "syntax_error": "",
+      "syntax_success": true,
+      "task_key": "MBPP:task-b",
+      "task_test_outcome_source": "exp2910_sandbox_candidate_results"
+    }
+  ],
+  "run_date": "20260523",
+  "runtime_error_rate": 0.25,
+  "schema": "carnot.code_hallucination_taxonomy_verifier.v1",
+  "summary_by_corpus": {
+    "MBPP": {
+      "category_counts": {
+        "invalid_argument": 1,
+        "invented_attribute_or_method": 1,
+        "invented_import": 1,
+        "runtime_error": 1,
+        "syntax_error": 1,
+        "true_test_failure": 1,
+        "undefined_name": 1
+      },
+      "category_rates": {
+        "invalid_argument": 0.25,
+        "invented_attribute_or_method": 0.25,
+        "invented_import": 0.25,
+        "runtime_error": 0.25,
+        "syntax_error": 0.25,
+        "true_test_failure": 0.25,
+        "undefined_name": 0.25
+      },
+      "n_candidates": 4,
+      "n_failed": 3,
+      "n_passed": 1,
+      "pass_rate": 0.25
+    }
+  },
+  "summary_by_model": {
+    "local/model-a": {
+      "category_counts": {
+        "invalid_argument": 1,
+        "invented_attribute_or_method": 1,
+        "invented_import": 1,
+        "runtime_error": 1,
+        "syntax_error": 1,
+        "true_test_failure": 1,
+        "undefined_name": 1
+      },
+      "category_rates": {
+        "invalid_argument": 0.25,
+        "invented_attribute_or_method": 0.25,
+        "invented_import": 0.25,
+        "runtime_error": 0.25,
+        "syntax_error": 0.25,
+        "true_test_failure": 0.25,
+        "undefined_name": 0.25
+      },
+      "n_candidates": 4,
+      "n_failed": 3,
+      "n_passed": 1,
+      "pass_rate": 0.25
+    }
+  },
+  "summary_by_pass_status": {
+    "failed": {
+      "category_counts": {
+        "invalid_argument": 1,
+        "invented_attribute_or_method": 1,
+        "invented_import": 1,
+        "runtime_error": 1,
+        "syntax_error": 1,
+        "true_test_failure": 1,
+        "undefined_name": 1
+      },
+      "category_rates": {
+        "invalid_argument": 0.3333333333333333,
+        "invented_attribute_or_method": 0.3333333333333333,
+        "invented_import": 0.3333333333333333,
+        "runtime_error": 0.3333333333333333,
+        "syntax_error": 0.3333333333333333,
+        "true_test_failure": 0.3333333333333333,
+        "undefined_name": 0.3333333333333333
+      },
+      "n_candidates": 3,
+      "n_failed": 3,
+      "n_passed": 0,
+      "pass_rate": 0.0
+    },
+    "passed": {
+      "category_counts": {
+        "invalid_argument": 0,
+        "invented_attribute_or_method": 0,
+        "invented_import": 0,
+        "runtime_error": 0,
+        "syntax_error": 0,
+        "true_test_failure": 0,
+        "undefined_name": 0
+      },
+      "category_rates": {
+        "invalid_argument": 0.0,
+        "invented_attribute_or_method": 0.0,
+        "invented_import": 0.0,
+        "runtime_error": 0.0,
+        "syntax_error": 0.0,
+        "true_test_failure": 0.0,
+        "undefined_name": 0.0
+      },
+      "n_candidates": 1,
+      "n_failed": 0,
+      "n_passed": 1,
+      "pass_rate": 1.0
+    }
+  },
+  "summary_by_task": {
+    "MBPP:task-a": {
+      "category_counts": {
+        "invalid_argument": 0,
+        "invented_attribute_or_method": 0,
+        "invented_import": 0,
+        "runtime_error": 0,
+        "syntax_error": 0,
+        "true_test_failure": 1,
+        "undefined_name": 0
+      },
+      "category_rates": {
+        "invalid_argument": 0.0,
+        "invented_attribute_or_method": 0.0,
+        "invented_import": 0.0,
+        "runtime_error": 0.0,
+        "syntax_error": 0.0,
+        "true_test_failure": 0.5,
+        "undefined_name": 0.0
+      },
+      "n_candidates": 2,
+      "n_failed": 1,
+      "n_passed": 1,
+      "pass_rate": 0.5
+    },
+    "MBPP:task-b": {
+      "category_counts": {
+        "invalid_argument": 1,
+        "invented_attribute_or_method": 1,
+        "invented_import": 1,
+        "runtime_error": 1,
+        "syntax_error": 1,
+        "true_test_failure": 0,
+        "undefined_name": 1
+      },
+      "category_rates": {
+        "invalid_argument": 0.5,
+        "invented_attribute_or_method": 0.5,
+        "invented_import": 0.5,
+        "runtime_error": 0.5,
+        "syntax_error": 0.5,
+        "true_test_failure": 0.0,
+        "undefined_name": 0.5
+      },
+      "n_candidates": 2,
+      "n_failed": 2,
+      "n_passed": 0,
+      "pass_rate": 0.0
+    }
+  },
+  "syntax_error_rate": 0.25,
+  "taxonomy_categories": [
+    "invented_import",
+    "undefined_name",
+    "invented_attribute_or_method",
+    "invalid_argument",
+    "syntax_error",
+    "runtime_error",
+    "true_test_failure"
+  ],
+  "taxonomy_filter_definition": [
+    "invented_import",
+    "undefined_name",
+    "invented_attribute_or_method",
+    "invalid_argument",
+    "syntax_error",
+    "runtime_error"
+  ],
+  "tests_run": [
+    "focused-pytest"
+  ],
+  "true_test_failure_rate": 0.25,
+  "undefined_name_rate": 0.25,
+  "upstream_candidate_count": 4,
+  "upstream_codegen_artifact": "results/experiment_2910_sota_code_generation_corrigendum_v2.json",
+  "upstream_per_task_result_count": 2,
+  "verifier_source_paths": [
+    "python/carnot/eval/code_hallucination_taxonomy_verifier.py",
+    "scripts/experiment_2911_code_hallucination_taxonomy_verifier.py",
+    "tests/python/test_experiment_2911_code_hallucination_taxonomy_verifier.py"
+  ]
+}

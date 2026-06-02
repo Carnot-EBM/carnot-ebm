@@ -1,0 +1,281 @@
+{
+  "activation_performed_by_this_task": false,
+  "archive_v294_activate_v295_ready": true,
+  "artifact": "experiment_3177_archive_v294_activate_v295",
+  "blocked_reasons": [],
+  "blocker_delta_from_v27": 8,
+  "blocker_delta_from_v27_source": "capstone_blocker_delta_from_v27",
+  "carry_forward_blockers": [
+    {
+      "blocker_id": "publication_blockers_73",
+      "description": "73 publication blockers",
+      "expected_carry_forward_value": 73,
+      "matches_expected": true,
+      "source": "results/experiment_3176_capstone_v294.json",
+      "source_field": "publication_blocker_count",
+      "value": 73
+    },
+    {
+      "blocker_id": "clean_live_sota_verifier_gated_skip",
+      "description": "gated-skip clean live SOTA verifier",
+      "expected_carry_forward_value": true,
+      "matches_expected": true,
+      "source": "results/experiment_3167_clean_live_sota_verifier_rerun_v9.json",
+      "source_field": "gated_skip",
+      "value": true
+    },
+    {
+      "blocker_id": "gguf_replay_preflight_failed",
+      "description": "failed GGUF replay preflight",
+      "expected_carry_forward_value": false,
+      "matches_expected": true,
+      "source": "results/experiment_3165_live_sota_authenticity_replay_v2.json",
+      "source_field": "preflight_passed",
+      "value": false
+    },
+    {
+      "blocker_id": "adversarial_verifier_state_flagged",
+      "description": "flagged adversarial verifier state",
+      "expected_carry_forward_value": true,
+      "matches_expected": true,
+      "source": "results/experiment_3167_clean_live_sota_verifier_rerun_v9.json",
+      "source_field": "flagged_adversarial",
+      "value": true
+    },
+    {
+      "blocker_id": "repair_gate_blocked",
+      "description": "blocked repair gate",
+      "expected_carry_forward_value": "blocked_flagged_verifier",
+      "matches_expected": true,
+      "source": "results/experiment_3168_repair_gate_decision_v3.json",
+      "source_field": "repair_gate_status",
+      "value": "blocked_flagged_verifier"
+    },
+    {
+      "blocker_id": "no_live_repair_attempts",
+      "description": "no live repair attempts",
+      "expected_carry_forward_value": 0,
+      "matches_expected": true,
+      "source": "results/experiment_3169_repair_ladder_materializer_v4.json",
+      "source_field": "repair_ladder_live_repair_attempts",
+      "value": 0
+    },
+    {
+      "blocker_id": "projection_only_ebcn_kan_sidecar",
+      "description": "projection-only EBCN/KAN sidecar",
+      "expected_carry_forward_value": "contains:projection_only",
+      "matches_expected": true,
+      "source": "results/experiment_3176_capstone_v294.json",
+      "source_field": "ebcn_kan_status",
+      "value": "projection_only_ebcn_kan_diagnostics_no_live_integration_or_deployed_verifier"
+    },
+    {
+      "blocker_id": "no_authenticated_hardware_speedup",
+      "description": "no authenticated hardware speedup",
+      "expected_carry_forward_value": "contains:no_authenticated_speedup",
+      "matches_expected": true,
+      "source": "results/experiment_3176_capstone_v294.json",
+      "source_field": "hardware_boundary",
+      "value": "blocked_no_authenticated_speedup_no_hardware_commands_no_speedup_claim_made"
+    },
+    {
+      "blocker_id": "carried_forward_missing_artifact_1",
+      "description": "one carried-forward missing artifact",
+      "expected_carry_forward_value": 1,
+      "matches_expected": true,
+      "source": "results/experiment_3175_cross_corpus_matrix_v28.json",
+      "source_field": "carried_forward_missing_artifact_count",
+      "value": 1
+    }
+  ],
+  "duration_s": 0.125,
+  "honest_verdict": "complete: archive_v294_activate_v295_ready=true; prior_capstone_ready=true; prior_paper_ready=false; prior_publication_blocker_count=73; blocker_delta_from_v27=8; next_milestone=2026.05.295; roadmap_source=research-roadmap-next.yaml",
+  "inference_substrate": {
+    "executes_conductor": false,
+    "executes_hardware": false,
+    "executes_models": false,
+    "executes_repairs": false,
+    "executes_solvers": false,
+    "executes_verifiers": false,
+    "hardware_commands_run": [],
+    "kind": "aggregation_from_upstream_artifacts",
+    "live_model_calls": 0,
+    "local_repo_only": true,
+    "no_live_llm_inference": true,
+    "source": "checked_in_dot294_capstone_matrix_and_roadmap_handoff_files"
+  },
+  "missing_source_artifacts": [],
+  "next_milestone": "2026.05.295",
+  "no_historical_artifact_rewrite": true,
+  "no_new_board_flash": true,
+  "no_new_hardware_run": true,
+  "no_new_model_execution": true,
+  "no_new_repair_run": true,
+  "no_new_solver_run": true,
+  "no_new_synthesis_run": true,
+  "no_new_verifier_run": true,
+  "no_push": true,
+  "ops_changelog_updated": false,
+  "ops_docs_reconciliation_left_to_conductor": true,
+  "ops_status_updated": false,
+  "prior_capstone_ready": true,
+  "prior_milestone": "2026.05.294",
+  "prior_paper_ready": false,
+  "prior_paper_ready_source_field_present": true,
+  "prior_publication_blocker_count": 73,
+  "prior_publication_blocker_count_source": "capstone_publication_blocker_count",
+  "research_roadmap_next_yaml_modified": false,
+  "research_roadmap_yaml_modified": false,
+  "roadmap_handoff": {
+    "active_roadmap_milestone": "2026.05.295",
+    "expected_milestone": "2026.05.295",
+    "expected_milestone_doc": "openspec/change-proposals/research-roadmap-vNEXT.md",
+    "milestone_doc_matches": true,
+    "milestone_matches": true,
+    "non_empty_tasks": true,
+    "observed_milestone": "2026.05.295",
+    "observed_milestone_doc": "openspec/change-proposals/research-roadmap-vNEXT.md",
+    "requested_staged_roadmap_path": "research-roadmap-next.yaml",
+    "requested_staged_roadmap_present": true,
+    "source_path": "research-roadmap-next.yaml",
+    "source_present": true,
+    "task_ids": [
+      "exp3177-archive-v294-activate-v295"
+    ],
+    "used_active_roadmap_fallback": false
+  },
+  "run_date": "20260527",
+  "schema": "carnot.archive_activation.v294_to_v295.v1",
+  "scripts_research_conductor_modified": false,
+  "source_artifacts": [
+    {
+      "path": "results/experiment_3176_capstone_v294.json",
+      "present": true,
+      "role": "capstone_v294_authority",
+      "sha256": "8a58c9325cd6150225159c79c4ba768541d7a71a9eda5bea7aa8b9722c81014b"
+    },
+    {
+      "path": "results/experiment_3175_cross_corpus_matrix_v28.json",
+      "present": true,
+      "role": "matrix_v28_authority",
+      "sha256": "60d17043df940613770393c1a573c76d713711ff711c2012f2ed0c6556a59f07"
+    },
+    {
+      "path": "results/experiment_3165_live_sota_authenticity_replay_v2.json",
+      "present": true,
+      "role": "failed_gguf_replay_preflight",
+      "sha256": "afc84455990f8270f421c78edca86333ba4a6c48028c09442173fe15f0762829"
+    },
+    {
+      "path": "results/experiment_3167_clean_live_sota_verifier_rerun_v9.json",
+      "present": true,
+      "role": "clean_live_verifier_gated_skip",
+      "sha256": "9a78995196fe97f3179b1888ea8a66a3101b8c75bcf5c42a18c602b96e8d1e41"
+    },
+    {
+      "path": "results/experiment_3168_repair_gate_decision_v3.json",
+      "present": true,
+      "role": "repair_gate_v3",
+      "sha256": "2fc4ab41f723d87c15730299aebb95dd23d4ad24fbdb5bed03174c6f62ff93c0"
+    },
+    {
+      "path": "results/experiment_3169_repair_ladder_materializer_v4.json",
+      "present": true,
+      "role": "repair_ladder_v4",
+      "sha256": "eddcaf2c6a711d5870f86bc9f7663a03893f5a56efe2a011dd76ba9135fa9cc4"
+    },
+    {
+      "path": "research-roadmap-next.yaml",
+      "present": true,
+      "role": "staged_roadmap",
+      "sha256": "f9b732c3b44715460966fbdb204165c353ef44d81e6f5ff1c4fcba36dac27a3b"
+    },
+    {
+      "path": "research-roadmap.yaml",
+      "present": true,
+      "role": "active_roadmap",
+      "sha256": "f9b732c3b44715460966fbdb204165c353ef44d81e6f5ff1c4fcba36dac27a3b"
+    },
+    {
+      "path": "openspec/change-proposals/research-roadmap-vNEXT.md",
+      "present": true,
+      "role": "vnext_doc",
+      "sha256": "d48ec87a5dcb549bd29abec02cf9d048675c95ddc37abafc3626f74e0a9f0534"
+    },
+    {
+      "path": "AGENTS.md",
+      "present": true,
+      "role": "agents_instructions",
+      "sha256": "9991172a3f79ab4223f36ebb7390d1e4bed5395d678159ea5f597ec5ba2b0229"
+    },
+    {
+      "path": "CODEX.md",
+      "present": true,
+      "role": "codex_instructions",
+      "sha256": "16968966a364bde5e758b82299c0bc1ccebcbe30d26aea7807749f2a934345ff"
+    },
+    {
+      "path": "CLAUDE.md",
+      "present": true,
+      "role": "claude_instructions",
+      "sha256": "b5c9335a9d000e7911fc41e984137960961cb7faafc2aa46b690413fee1c5896"
+    },
+    {
+      "path": "scripts/research_conductor.py",
+      "present": true,
+      "role": "research_conductor",
+      "sha256": "65b4c225a375fd5671af37d69057246b42512efe5e668d58e2010bd518e2f007"
+    },
+    {
+      "path": "ops/status.md",
+      "present": true,
+      "role": "ops_status",
+      "sha256": "0503f7f1e5a96395e1b4d2378990edb9b75069344595aa406b6a096745e9a947"
+    },
+    {
+      "path": "ops/changelog.md",
+      "present": true,
+      "role": "ops_changelog",
+      "sha256": "501a9864edf6f664d08a458f56008b3d796b625f8285bc330ded48165182e0b5"
+    }
+  ],
+  "source_checksums": {
+    "AGENTS.md": "9991172a3f79ab4223f36ebb7390d1e4bed5395d678159ea5f597ec5ba2b0229",
+    "CLAUDE.md": "b5c9335a9d000e7911fc41e984137960961cb7faafc2aa46b690413fee1c5896",
+    "CODEX.md": "16968966a364bde5e758b82299c0bc1ccebcbe30d26aea7807749f2a934345ff",
+    "openspec/change-proposals/research-roadmap-vNEXT.md": "d48ec87a5dcb549bd29abec02cf9d048675c95ddc37abafc3626f74e0a9f0534",
+    "ops/changelog.md": "501a9864edf6f664d08a458f56008b3d796b625f8285bc330ded48165182e0b5",
+    "ops/status.md": "0503f7f1e5a96395e1b4d2378990edb9b75069344595aa406b6a096745e9a947",
+    "research-roadmap-next.yaml": "f9b732c3b44715460966fbdb204165c353ef44d81e6f5ff1c4fcba36dac27a3b",
+    "research-roadmap.yaml": "f9b732c3b44715460966fbdb204165c353ef44d81e6f5ff1c4fcba36dac27a3b",
+    "results/experiment_3165_live_sota_authenticity_replay_v2.json": "afc84455990f8270f421c78edca86333ba4a6c48028c09442173fe15f0762829",
+    "results/experiment_3167_clean_live_sota_verifier_rerun_v9.json": "9a78995196fe97f3179b1888ea8a66a3101b8c75bcf5c42a18c602b96e8d1e41",
+    "results/experiment_3168_repair_gate_decision_v3.json": "2fc4ab41f723d87c15730299aebb95dd23d4ad24fbdb5bed03174c6f62ff93c0",
+    "results/experiment_3169_repair_ladder_materializer_v4.json": "eddcaf2c6a711d5870f86bc9f7663a03893f5a56efe2a011dd76ba9135fa9cc4",
+    "results/experiment_3175_cross_corpus_matrix_v28.json": "60d17043df940613770393c1a573c76d713711ff711c2012f2ed0c6556a59f07",
+    "results/experiment_3176_capstone_v294.json": "8a58c9325cd6150225159c79c4ba768541d7a71a9eda5bea7aa8b9722c81014b",
+    "scripts/research_conductor.py": "65b4c225a375fd5671af37d69057246b42512efe5e668d58e2010bd518e2f007"
+  },
+  "status_summary_294": {
+    "blocker_delta_from_v27": 8,
+    "capstone_v294_ready": true,
+    "carried_forward_missing_artifact_count": 1,
+    "clean_verifier_flagged_adversarial": true,
+    "clean_verifier_gated_skip": true,
+    "ebcn_kan_status": "projection_only_ebcn_kan_diagnostics_no_live_integration_or_deployed_verifier",
+    "fr11_self_learning_status": "controller_memory_update_promotable_nonforgetting_passed_no_model_weight_update",
+    "gguf_replay_blocked_reason": "CUDA/GPU substrate unavailable for mandated GGUF replay smoke",
+    "gguf_replay_live_call_count": 0,
+    "gguf_replay_preflight_passed": false,
+    "hardware_boundary": "blocked_no_authenticated_speedup_no_hardware_commands_no_speedup_claim_made",
+    "missing_artifact_count": 1,
+    "next_top_gap": "clean_live_verifier_adversarial_flag_clearance_repair_gate_unblock",
+    "paper_ready": false,
+    "publication_blocker_count": 73,
+    "repair_gate_status": "blocked_flagged_verifier",
+    "repair_ladder_live_repair_attempts": 0,
+    "repair_ladder_status": "materialized_gated_skip_repair_gate_blocked_no_live_repair_attempts",
+    "verifier_status": "gated_skip_preflight_failed_flagged_adversarial_exact_authority_only"
+  },
+  "traceability_updated": false
+}

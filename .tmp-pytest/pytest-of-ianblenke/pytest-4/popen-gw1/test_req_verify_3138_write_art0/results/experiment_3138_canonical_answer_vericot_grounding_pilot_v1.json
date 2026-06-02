@@ -1,0 +1,287 @@
+{
+  "artifact": "experiment_3138_canonical_answer_vericot_grounding_pilot_v1",
+  "canonical_forms_defined": {
+    "code_fragment_verdicts": {
+      "fail": "code fragment rejected",
+      "pass": "code fragment accepted"
+    },
+    "json_like_bounded": {
+      "max_depth": 8,
+      "max_nodes": 64,
+      "sort_keys": true
+    },
+    "numeric": "Decimal-normalized finite number strings",
+    "sat_labels": [
+      "SAT",
+      "UNSAT"
+    ],
+    "validity_labels": [
+      "INVALID",
+      "VALID"
+    ]
+  },
+  "canonical_grounding_pilot_v1_ready": true,
+  "canonicalization_block_count": 2,
+  "canonicalizer_implemented": true,
+  "duration_s": 0.5,
+  "false_accept_rows_blocked": 2,
+  "honest_verdict": "complete: canonical_grounding_pilot_v1_ready=true; regression_rows_evaluated=2; false_accept_rows_blocked=2",
+  "inference_substrate": {
+    "executes_conductor": false,
+    "executes_hardware": false,
+    "executes_models": false,
+    "executes_repairs": false,
+    "executes_solvers": false,
+    "fresh_live_model_calls": 0,
+    "kind": "deterministic_artifact_replay",
+    "local_repo_only": true,
+    "model_backed_verifier_invoked": false,
+    "no_live_llm_inference": true,
+    "upstream_live_model_calls_reused": 2
+  },
+  "ledger_replay_block_count": 2,
+  "ops_docs_reconciliation_left_to_conductor": true,
+  "premise_grounding_block_count": 2,
+  "premise_grounding_record_count": 2,
+  "premise_grounding_rows": 2,
+  "regression_row_replay": [
+    {
+      "answer_to_premise_consistent": false,
+      "blocked_by": [
+        "canonicalization",
+        "premise_grounding",
+        "ledger_replay"
+      ],
+      "candidate_action": "accept",
+      "candidate_answer": "VALID",
+      "candidate_canonical": {
+        "family": "validity_token",
+        "kind": "label",
+        "normalized": "VALID",
+        "parse_status": "parsed",
+        "value": "VALID"
+      },
+      "canonical_equivalent": false,
+      "canonicalization_blocked": true,
+      "contract_replay": {
+        "decision": "abstain",
+        "matched_rule_id": "ABSTAIN_KNOWN_FALSE_ACCEPT_REGRESSION"
+      },
+      "exact_canonical": {
+        "family": "validity_token",
+        "kind": "label",
+        "normalized": "INVALID",
+        "parse_status": "parsed",
+        "value": "INVALID"
+      },
+      "exact_label": "INVALID",
+      "expected_action": "reject",
+      "ledger_replay": {
+        "candidate_extracted_answer": "VALID",
+        "candidate_live_decision": "accept",
+        "failure_mechanism": "contradiction",
+        "final_answer_consistent_with_exact": false,
+        "final_answer_consistent_with_ledger": false,
+        "is_monitor_violation": true,
+        "ledger_action": "reject",
+        "ledger_source": "unit_ledger",
+        "monitor_event_count": 5
+      },
+      "ledger_replay_blocked": true,
+      "premise_grounding_blocked": true,
+      "premise_records": [
+        {
+          "grounded": false,
+          "premise_id": "fa-arith:premise_absent",
+          "reason": "no_fragment_trace",
+          "source": "monitor_ledger",
+          "status": "absent"
+        }
+      ],
+      "premise_to_answer_consistent": false,
+      "row_id": "fa-arith",
+      "solver_certificate_summary": {
+        "certificate_consistent_with_exact": true,
+        "coherence_status": "incoherent",
+        "maxsat_action": "reject",
+        "minimal_correction_set": {
+          "kind": "unit_correction"
+        },
+        "present": true,
+        "solver_authority": "python_ast_runtime_execution",
+        "solver_exact_label": "INVALID",
+        "solver_label": "ASSERTION_FAILS",
+        "unsat_core": [
+          "constraint_0"
+        ]
+      }
+    },
+    {
+      "answer_to_premise_consistent": false,
+      "blocked_by": [
+        "canonicalization",
+        "premise_grounding",
+        "ledger_replay"
+      ],
+      "candidate_action": "accept",
+      "candidate_answer": "VALID",
+      "candidate_canonical": {
+        "family": "validity_token",
+        "kind": "label",
+        "normalized": "VALID",
+        "parse_status": "parsed",
+        "value": "VALID"
+      },
+      "canonical_equivalent": false,
+      "canonicalization_blocked": true,
+      "contract_replay": {
+        "decision": "abstain",
+        "matched_rule_id": "ABSTAIN_KNOWN_FALSE_ACCEPT_REGRESSION"
+      },
+      "exact_canonical": {
+        "family": "sat_token",
+        "kind": "label",
+        "normalized": "UNSAT",
+        "parse_status": "parsed",
+        "value": "UNSAT"
+      },
+      "exact_label": "UNSAT",
+      "expected_action": "reject",
+      "ledger_replay": {
+        "candidate_extracted_answer": "VALID",
+        "candidate_live_decision": "accept",
+        "failure_mechanism": "contradiction",
+        "final_answer_consistent_with_exact": false,
+        "final_answer_consistent_with_ledger": false,
+        "is_monitor_violation": true,
+        "ledger_action": "reject",
+        "ledger_source": "unit_ledger",
+        "monitor_event_count": 5
+      },
+      "ledger_replay_blocked": true,
+      "premise_grounding_blocked": true,
+      "premise_records": [
+        {
+          "grounded": false,
+          "premise_id": "fa-smt:premise_absent",
+          "reason": "no_fragment_trace",
+          "source": "monitor_ledger",
+          "status": "absent"
+        }
+      ],
+      "premise_to_answer_consistent": false,
+      "row_id": "fa-smt",
+      "solver_certificate_summary": {
+        "certificate_consistent_with_exact": true,
+        "coherence_status": "incoherent",
+        "maxsat_action": "reject",
+        "minimal_correction_set": {
+          "kind": "unit_correction"
+        },
+        "present": true,
+        "solver_authority": "z3_solver",
+        "solver_exact_label": "UNSAT",
+        "solver_label": "UNSAT",
+        "unsat_core": [
+          "constraint_0"
+        ]
+      }
+    }
+  ],
+  "regression_rows_evaluated": 2,
+  "residual_false_accept_rows": [],
+  "run_date": "20260526",
+  "schema": "carnot.canonical_answer_vericot_grounding_pilot.v1",
+  "scripts_research_conductor_modified": false,
+  "self_checks": {
+    "all_regression_rows_blocked": true,
+    "no_residual_false_accept_rows": true,
+    "source_replay_deterministic": true
+  },
+  "source_artifacts": [
+    {
+      "path": "AGENTS.md",
+      "present": true,
+      "required": false,
+      "role": "agents_repo_instructions",
+      "sha256": "c893735c3c7ece3f9bf4d48722846ef65e76ff35ebfbfe1d239930339d69470b"
+    },
+    {
+      "path": "CODEX.md",
+      "present": true,
+      "required": false,
+      "role": "codex_repo_workflow",
+      "sha256": "bab1c6ba20bb432cbd7cd6e3b12fb0089f303cb7742f929297647d6329e46502"
+    },
+    {
+      "path": "CLAUDE.md",
+      "present": true,
+      "required": false,
+      "role": "claude_authenticity_rules",
+      "sha256": "c1793de9971fba8e313b572ccdb01dbc35892630c12770621481f2263cbb7eee"
+    },
+    {
+      "path": "research-references.md",
+      "present": true,
+      "required": false,
+      "role": "research_references",
+      "sha256": "02052264f97cb91c562a6ed9cc1eccd1cf22f5d589a3a40ef313af44022c14f7"
+    },
+    {
+      "path": "openspec/capabilities/verification/spec.md",
+      "present": true,
+      "required": false,
+      "role": "verification_openspec",
+      "sha256": "f0771067ffda3d30d7c08fd3dcd770c16587643e5dc3b2e2d9b53f13970d1eea"
+    },
+    {
+      "path": "results/experiment_3136_false_accept_root_cause_autopsy_v1.json",
+      "present": true,
+      "required": true,
+      "role": "exp3136_false_accept_autopsy",
+      "sha256": "2f211bf39ade982fe8a050ed88e0adb5f8070e8d039c9fb74e31420222e52f10"
+    },
+    {
+      "path": "results/experiment_3137_exact_safe_accept_abstain_contract_v1.json",
+      "present": true,
+      "required": true,
+      "role": "exp3137_exact_safe_contract",
+      "sha256": "fa079b2afc2a9da394923e917ec04dd993a44fc0281d62744fac935d8ca7cb8f"
+    },
+    {
+      "path": "results/experiment_3111_certified_coherence_z3_mcs_feedback_v3.json",
+      "present": true,
+      "required": true,
+      "role": "exp3111_certified_coherence_feedback",
+      "sha256": "a74c20a8efde8fba9b30eb3da5b7fd2c028a7490d8a8588a97c4ae86c3419771"
+    },
+    {
+      "path": "results/experiment_3126_fragment_time_monitor_satisfiable_drift_audit_v1.json",
+      "present": true,
+      "required": true,
+      "role": "exp3126_fragment_monitor_ledger",
+      "sha256": "d4760915d49f79c6473864c87b3754a08b90496c56aa46b0939bf4f022dc2313"
+    },
+    {
+      "path": "python/carnot/verify/canonical_answer_vericot_grounding_pilot_v1.py",
+      "present": false,
+      "required": false,
+      "role": "exp3138_module",
+      "sha256": null
+    }
+  ],
+  "source_checksums": {
+    "AGENTS.md": "c893735c3c7ece3f9bf4d48722846ef65e76ff35ebfbfe1d239930339d69470b",
+    "CLAUDE.md": "c1793de9971fba8e313b572ccdb01dbc35892630c12770621481f2263cbb7eee",
+    "CODEX.md": "bab1c6ba20bb432cbd7cd6e3b12fb0089f303cb7742f929297647d6329e46502",
+    "openspec/capabilities/verification/spec.md": "f0771067ffda3d30d7c08fd3dcd770c16587643e5dc3b2e2d9b53f13970d1eea",
+    "research-references.md": "02052264f97cb91c562a6ed9cc1eccd1cf22f5d589a3a40ef313af44022c14f7",
+    "results/experiment_3111_certified_coherence_z3_mcs_feedback_v3.json": "a74c20a8efde8fba9b30eb3da5b7fd2c028a7490d8a8588a97c4ae86c3419771",
+    "results/experiment_3126_fragment_time_monitor_satisfiable_drift_audit_v1.json": "d4760915d49f79c6473864c87b3754a08b90496c56aa46b0939bf4f022dc2313",
+    "results/experiment_3136_false_accept_root_cause_autopsy_v1.json": "2f211bf39ade982fe8a050ed88e0adb5f8070e8d039c9fb74e31420222e52f10",
+    "results/experiment_3137_exact_safe_accept_abstain_contract_v1.json": "fa079b2afc2a9da394923e917ec04dd993a44fc0281d62744fac935d8ca7cb8f"
+  },
+  "tests_run": [
+    "REQ-VERIFY-3138 focused"
+  ]
+}

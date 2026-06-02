@@ -1,0 +1,171 @@
+{
+  "artifact": "experiment_3171_fr11_ledger_counterexample_isolation_v1",
+  "continuous_self_learning_task": true,
+  "environment_variant_split": {
+    "held_out_replay_rows": [
+      {
+        "exact_label": "VALID",
+        "expected_action": "accept",
+        "fixture_family": "modular_balance",
+        "ledger_action": "accept",
+        "mismatch_class": "",
+        "observed_action": "accept",
+        "panel_category": "admitted_environment",
+        "routing_decision": "normal",
+        "row_id": "hold-env",
+        "source_artifact": "results/experiment_3128_fr11_evoenv_verifiable_environment_synthesis_v1.json",
+        "split_role": "held_out_nonforgetting_replay"
+      },
+      {
+        "exact_label": "VALID",
+        "expected_action": "accept",
+        "fixture_family": "modular_balance_vera_equivalent",
+        "ledger_action": "accept",
+        "mismatch_class": "",
+        "observed_action": "accept",
+        "panel_category": "equivalent_variant",
+        "routing_decision": "normal",
+        "row_id": "hold-variant",
+        "source_artifact": "results/experiment_3142_fr11_vera_evoenv_hardening_v2.json",
+        "split_role": "held_out_nonforgetting_replay"
+      },
+      {
+        "exact_label": "INVALID",
+        "expected_action": "reject",
+        "fixture_family": "arithmetic_code_assertions",
+        "ledger_action": "reject",
+        "mismatch_class": "",
+        "observed_action": "reject",
+        "panel_category": "historical_false_accept_family",
+        "routing_decision": "escalate",
+        "row_id": "hold-reject",
+        "source_artifact": "results/experiment_3136_false_accept_root_cause_autopsy_v1.json",
+        "split_role": "held_out_nonforgetting_replay"
+      }
+    ],
+    "negative_control_rows": [
+      {
+        "control_role": "environment_variant_nonforgetting",
+        "exact_label": "VALID",
+        "expected_action": "accept",
+        "fixture_family": "modular_balance",
+        "ledger_action": "accept",
+        "mismatch_class": "",
+        "observed_action": "accept",
+        "panel_category": "admitted_environment",
+        "routing_decision": "normal",
+        "row_id": "hold-env",
+        "source_artifact": "results/experiment_3128_fr11_evoenv_verifiable_environment_synthesis_v1.json",
+        "split_role": "held_out_nonforgetting_replay"
+      },
+      {
+        "control_role": "environment_variant_nonforgetting",
+        "exact_label": "VALID",
+        "expected_action": "accept",
+        "fixture_family": "modular_balance_vera_equivalent",
+        "ledger_action": "accept",
+        "mismatch_class": "",
+        "observed_action": "accept",
+        "panel_category": "equivalent_variant",
+        "routing_decision": "normal",
+        "row_id": "hold-variant",
+        "source_artifact": "results/experiment_3142_fr11_vera_evoenv_hardening_v2.json",
+        "split_role": "held_out_nonforgetting_replay"
+      }
+    ],
+    "split_counts": {
+      "held_out_replay_rows": 3,
+      "negative_control_rows": 2,
+      "training_update_rows": 2
+    },
+    "split_policy": "unit split",
+    "training_update_rows": [
+      {
+        "exact_label": "INVALID",
+        "expected_action": "reject",
+        "fixture_family": "arithmetic_code_assertions",
+        "ledger_action": "reject",
+        "mismatch_class": "contradictory_memory",
+        "observed_action": "accept",
+        "panel_category": "historical_false_accept_family",
+        "routing_decision": "escalate",
+        "row_id": "train-arith",
+        "source_artifact": "results/experiment_3136_false_accept_root_cause_autopsy_v1.json",
+        "split_role": "controller_memory_update"
+      },
+      {
+        "exact_label": "UNSAT",
+        "expected_action": "reject",
+        "fixture_family": "smt_constraints",
+        "ledger_action": "reject",
+        "mismatch_class": "contradictory_memory",
+        "observed_action": "accept",
+        "panel_category": "historical_false_accept_family",
+        "routing_decision": "escalate",
+        "row_id": "train-smt",
+        "source_artifact": "results/experiment_3136_false_accept_root_cause_autopsy_v1.json",
+        "split_role": "controller_memory_update"
+      }
+    ]
+  },
+  "fr11_ledger_counterexample_isolation_ready": true,
+  "honest_verdict": "complete: unit exp3171 split",
+  "inference_substrate": {
+    "fresh_live_inference_calls": 0
+  },
+  "isolated_counterexample_families": [
+    {
+      "failing_row_ids": [
+        "train-arith"
+      ],
+      "fixture_family": "arithmetic_code_assertions"
+    },
+    {
+      "failing_row_ids": [
+        "train-smt"
+      ],
+      "fixture_family": "smt_constraints"
+    }
+  ],
+  "negative_control_rows": [
+    {
+      "control_role": "environment_variant_nonforgetting",
+      "exact_label": "VALID",
+      "expected_action": "accept",
+      "fixture_family": "modular_balance",
+      "ledger_action": "accept",
+      "mismatch_class": "",
+      "observed_action": "accept",
+      "panel_category": "admitted_environment",
+      "routing_decision": "normal",
+      "row_id": "hold-env",
+      "source_artifact": "results/experiment_3128_fr11_evoenv_verifiable_environment_synthesis_v1.json",
+      "split_role": "held_out_nonforgetting_replay"
+    },
+    {
+      "control_role": "environment_variant_nonforgetting",
+      "exact_label": "VALID",
+      "expected_action": "accept",
+      "fixture_family": "modular_balance_vera_equivalent",
+      "ledger_action": "accept",
+      "mismatch_class": "",
+      "observed_action": "accept",
+      "panel_category": "equivalent_variant",
+      "routing_decision": "normal",
+      "row_id": "hold-variant",
+      "source_artifact": "results/experiment_3142_fr11_vera_evoenv_hardening_v2.json",
+      "split_role": "held_out_nonforgetting_replay"
+    }
+  ],
+  "no_model_weight_update_claimed": true,
+  "passing_families": [
+    {
+      "fixture_family": "modular_balance",
+      "passing_row_ids": [
+        "hold-env"
+      ]
+    }
+  ],
+  "prior_ledger_consistency_rate": 0.6,
+  "promotion_allowed": false
+}

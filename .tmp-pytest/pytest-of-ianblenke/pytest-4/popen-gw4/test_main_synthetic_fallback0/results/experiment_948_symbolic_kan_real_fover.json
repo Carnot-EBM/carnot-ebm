@@ -1,0 +1,119 @@
+{
+  "experiment": 948,
+  "title": "Symbolic-KAN Real FoVer",
+  "run_date": "20260602",
+  "started_at": "2026-06-02T19:13:24Z",
+  "finished_at": "2026-06-02T19:13:32Z",
+  "duration_s": 7.704,
+  "status": "success",
+  "random_seed": 42,
+  "reproducibility_checksum": "a6bb133cb1e3638a",
+  "metrics_used": "unknown",
+  "inference_mode": "synthetic_fallback",
+  "n_real_pairs": 10,
+  "n_correct_raw": 5,
+  "n_incorrect_raw": 5,
+  "n_train_pairs": 32,
+  "n_eval_pairs": 8,
+  "n_epochs": 60,
+  "auc_symbolic_real": 0.59375,
+  "auc_symbolic_synthetic": 0.9344,
+  "auc_standard_real": 0.5139,
+  "delta_vs_standard_real": 0.07984999999999998,
+  "delta_vs_synthetic": -0.34065,
+  "honest_verdict": "symbolic_kan_synthetic_fallback",
+  "top_symbolic_labels": [
+    "ADD",
+    "EQ",
+    "MUL",
+    "CMP"
+  ],
+  "label_counts": {
+    "ADD": 7,
+    "MUL": 0,
+    "CMP": 0,
+    "EQ": 1
+  },
+  "interpretability_examples": [
+    {
+      "node": 0,
+      "label": "ADD",
+      "description": "Node 0 [ADD]: checks whether features[6] + features[14] is consistent"
+    },
+    {
+      "node": 1,
+      "label": "ADD",
+      "description": "Node 1 [ADD]: checks whether features[8] + features[11] is consistent"
+    },
+    {
+      "node": 2,
+      "label": "EQ",
+      "description": "Node 2 [EQ]: checks equality: |features[2] - features[1]| (low = equal)"
+    },
+    {
+      "node": 3,
+      "label": "ADD",
+      "description": "Node 3 [ADD]: checks whether features[7] + features[3] is consistent"
+    },
+    {
+      "node": 4,
+      "label": "ADD",
+      "description": "Node 4 [ADD]: checks whether features[0] + features[6] is consistent"
+    },
+    {
+      "node": 5,
+      "label": "ADD",
+      "description": "Node 5 [ADD]: checks whether features[11] + features[5] is consistent"
+    },
+    {
+      "node": 6,
+      "label": "ADD",
+      "description": "Node 6 [ADD]: checks whether features[8] + features[0] is consistent"
+    },
+    {
+      "node": 7,
+      "label": "ADD",
+      "description": "Node 7 [ADD]: checks whether features[10] + features[14] is consistent"
+    }
+  ],
+  "final_train_loss": 0.9554206368047744,
+  "symbolic_kan_config": {
+    "input_dim": 16,
+    "n_nodes": 8,
+    "label_update_interval": 10,
+    "residual_amp": 0.05,
+    "lr": 0.01,
+    "n_segments": 8
+  },
+  "schema": [
+    "auc_standard_real",
+    "auc_symbolic_real",
+    "auc_symbolic_synthetic",
+    "delta_vs_standard_real",
+    "delta_vs_synthetic",
+    "duration_s",
+    "experiment",
+    "final_train_loss",
+    "finished_at",
+    "honest_verdict",
+    "inference_mode",
+    "interpretability_examples",
+    "label_counts",
+    "metrics_used",
+    "n_correct_raw",
+    "n_epochs",
+    "n_eval_pairs",
+    "n_incorrect_raw",
+    "n_real_pairs",
+    "n_train_pairs",
+    "random_seed",
+    "reproducibility_checksum",
+    "run_date",
+    "started_at",
+    "status",
+    "symbolic_kan_config",
+    "title",
+    "top_symbolic_labels"
+  ],
+  "invariant_violations": []
+}

@@ -1,0 +1,110 @@
+{
+  "artifact": "experiment_2910_sota_code_generation_corrigendum_v2",
+  "candidate_results": [
+    {
+      "candidate_index": 0,
+      "corpus": "MBPP",
+      "error_message": "",
+      "error_type": null,
+      "executed": true,
+      "extracted_code": "def solve(x):\n    return x + 1\n",
+      "extraction_status": "python_fence",
+      "extraction_success": true,
+      "model_hf_id": "local/model-a",
+      "n_tests": 2,
+      "passed": true,
+      "random_seed": 2910,
+      "raw_response": "def solve(x):\n    return x + 1\n",
+      "raw_response_path": "results/raw/experiment_2910_sota_code_generation_corrigendum_v2/mbpp_task-a_0.txt",
+      "row_status": "candidate_passed",
+      "runtime_success": true,
+      "stable_id": "task-a",
+      "syntax_success": true,
+      "timed_out": false
+    },
+    {
+      "candidate_index": 1,
+      "corpus": "MBPP",
+      "error_message": "AssertionError",
+      "error_type": "AssertionError",
+      "executed": true,
+      "extracted_code": "def solve(x):\n    return x\n",
+      "extraction_status": "python_fence",
+      "extraction_success": true,
+      "model_hf_id": "local/model-a",
+      "n_tests": 2,
+      "passed": false,
+      "random_seed": 2911,
+      "raw_response": "def solve(x):\n    return x\n",
+      "raw_response_path": "results/raw/experiment_2910_sota_code_generation_corrigendum_v2/mbpp_task-a_1.txt",
+      "row_status": "candidate_failed",
+      "runtime_success": true,
+      "stable_id": "task-a",
+      "syntax_success": true,
+      "timed_out": false
+    },
+    {
+      "candidate_index": 0,
+      "corpus": "MBPP",
+      "error_message": "SyntaxError",
+      "error_type": "SyntaxError",
+      "executed": true,
+      "extracted_code": "def broken(:\n    return 1\n",
+      "extraction_status": "python_fence",
+      "extraction_success": true,
+      "model_hf_id": "local/model-a",
+      "n_tests": 2,
+      "passed": false,
+      "random_seed": 2910,
+      "raw_response": "def broken(:\n    return 1\n",
+      "raw_response_path": "results/raw/experiment_2910_sota_code_generation_corrigendum_v2/mbpp_task-b_0.txt",
+      "row_status": "candidate_syntax_failed",
+      "runtime_success": false,
+      "stable_id": "task-b",
+      "syntax_success": false,
+      "timed_out": false
+    },
+    {
+      "candidate_index": 1,
+      "corpus": "MBPP",
+      "error_message": "TypeError",
+      "error_type": "TypeError",
+      "executed": true,
+      "extracted_code": "import json\nimport not_a_real_codegen_module\ndef helper(x):\n    return x\ndef solve(items):\n    value = missing_value + 1\n    parsed = json.parse('{}')\n    return helper(1, 2) + len(items, 0) + value\n",
+      "extraction_status": "python_fence",
+      "extraction_success": true,
+      "model_hf_id": "local/model-a",
+      "n_tests": 2,
+      "passed": false,
+      "random_seed": 2911,
+      "raw_response": "import json\nimport not_a_real_codegen_module\ndef helper(x):\n    return x\ndef solve(items):\n    value = missing_value + 1\n    parsed = json.parse('{}')\n    return helper(1, 2) + len(items, 0) + value\n",
+      "raw_response_path": "results/raw/experiment_2910_sota_code_generation_corrigendum_v2/mbpp_task-b_1.txt",
+      "row_status": "candidate_failed",
+      "runtime_success": false,
+      "stable_id": "task-b",
+      "syntax_success": true,
+      "timed_out": false
+    }
+  ],
+  "codegen_corrigendum_ready": true,
+  "per_task_results": [
+    {
+      "candidate_count": 2,
+      "corpus": "MBPP",
+      "pass_vector": [
+        true,
+        false
+      ],
+      "stable_id": "task-a"
+    },
+    {
+      "candidate_count": 2,
+      "corpus": "MBPP",
+      "pass_vector": [
+        false,
+        false
+      ],
+      "stable_id": "task-b"
+    }
+  ]
+}

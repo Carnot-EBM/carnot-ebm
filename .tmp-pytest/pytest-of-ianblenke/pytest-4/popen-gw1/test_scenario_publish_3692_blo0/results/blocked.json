@@ -1,0 +1,82 @@
+{
+  "acceptance_gate": {
+    "condition": "adversarial_verify_clean == true AND reproducer_extended == true AND existing_0_9131_reproduction_still_green == true AND north_star_unmodified_assert == true AND frozen_headline_unchanged_assert == true",
+    "passed": false,
+    "principle": "A re-freeze package is operator-actionable only if it is adversarial-clean, additive, keeps the frozen reproducer green, and leaves operator-curated headline state untouched."
+  },
+  "adversarial_verify_clean": true,
+  "artifact": "experiment_3692_refreeze_package_clean_reemit",
+  "candidate_reproduction_asserts_in_ci": false,
+  "candidate_reproduction_result": {
+    "honest_verdict": "blocked_preconditions_not_met"
+  },
+  "ci_workflow_unmodified_assert": true,
+  "draft_ci_workflow_assertion_bounds": {
+    "learning_contribution_dependency_aware": {
+      "assertion": "0.012868 <= learning_contribution_dependency_aware <= 0.03143",
+      "ci95": [
+        0.012868,
+        0.03143
+      ],
+      "ci_source": "derived_from_exp3680_per_seed_results_seed_t_ci95",
+      "point": 0.022149,
+      "source": "results/experiment_3680_dependency_aware_dual_condition_integrity.json"
+    },
+    "not_applied_to_workflow": true,
+    "production_auroc_dependency_aware": {
+      "assertion": "0.91699 <= production_auroc_dependency_aware <= 0.932891",
+      "ci95": [
+        0.91699,
+        0.932891
+      ],
+      "headline_candidate_point": 0.925328,
+      "point": 0.924869,
+      "source": "results/experiment_3680_dependency_aware_dual_condition_integrity.json"
+    },
+    "source_artifact": "results/experiment_3680_dependency_aware_dual_condition_integrity.json"
+  },
+  "duration_s": 0.001,
+  "existing_0_9131_reproduction_still_green": false,
+  "exp3680_dependency_aware_g1_rigor_confirmed": false,
+  "exp3681_clean_reemit_reason": "Exp 3681 was operator-prep correct in structure but failed the artifact linter because cached verifier-scoring outputs carried stale model-declaration fields. Exp 3692 stores sanitized outputs and the bare verifier-scoring substrate value.",
+  "field_principles": {
+    "adversarial_verify_clean": "True iff the artifact passes adversarial_verify with no DURATION_TOO_SHORT or critical flag -- the load-bearing fix vs Exp 3681; a flagged package is not operator-actionable.",
+    "candidate_reproduction_asserts_in_ci": "True iff the new dependency-aware reproduction lands inside Exp 3680's CI -- the new number is independently recomputable.",
+    "ci_workflow_unmodified_assert": "Asserts the .github reproducer workflow was NOT edited and the run was NOT triggered (operator-only external action).",
+    "draft_ci_workflow_assertion_bounds": "The exact CI-workflow assertion bounds the operator would set (drafted in-artifact, NOT applied) -- the operator's re-freeze input.",
+    "duration_s": "Plausibility floor.",
+    "existing_0_9131_reproduction_still_green": "True iff the unchanged 0.9131 reproduction path still passes -- proves the additive change did not regress G2.",
+    "frozen_headline_unchanged_assert": "Asserts the publication gate still reads 0.9131 and paper_ready is unchanged -- no silent substitution.",
+    "honest_verdict": "Terminal prefix for reconciler classification.",
+    "inference_substrate": "Bare verifier-scoring substrate value: re-runs the cached-corpus reproducer; no LLM load; no compute-bound marker.",
+    "north_star_unmodified_assert": "Asserts ops/north-star.md was NOT edited (operator-curated).",
+    "operator_checklist": "The ordered OPERATOR-ACTION steps (north-star sec-1 edit, CI-workflow update, trigger run) -- the re-freeze is operator-only.",
+    "random_seed": "Determinism precondition.",
+    "reproducer_extended": "True iff scripts/reproduce_fover_headline.py was extended ADDITIVELY to compute+assert the candidate number while leaving the 0.9131 path green.",
+    "reproducibility_checksum": "Drift detection."
+  },
+  "frozen_headline_unchanged_assert": true,
+  "frozen_reproduction_result": {
+    "honest_verdict": "blocked_preconditions_not_met"
+  },
+  "github_actions_run_triggered": false,
+  "honest_verdict": "complete: blocked_g1_candidate_not_confirmed_or_reproducer_unavailable",
+  "inference_substrate": "verifier_ensemble_against_cached_candidates",
+  "north_star_unmodified_assert": true,
+  "operator_checklist": [
+    "OPERATOR-ACTION: Edit ops/north-star.md Section 1 methods headline from FoVer AUROC 0.9131 to dependency-aware FoVer AUROC 0.925328 with CI [0.91699, 0.932891], learning contribution 0.022149 with CI [0.012868, 0.03143], source artifact results/experiment_3680_dependency_aware_dual_condition_integrity.json.",
+    "OPERATOR-ACTION: Update .github/workflows/reproduce-fover-headline.yml to run the dependency-aware candidate assertion and use production bounds [0.91699, 0.932891] plus learning-contribution bounds [0.012868, 0.03143].",
+    "OPERATOR-ACTION: Trigger the GitHub Actions FoVer headline reproducer run and record the green run before changing the publication gate. The frozen 0.9131 stays the headline until this checklist is complete and the CI reproducer re-runs green on the new number."
+  ],
+  "publication_gate_paper_ready_after": false,
+  "publication_gate_paper_ready_before": false,
+  "random_seed": 42,
+  "reproducer_extended": false,
+  "reproducer_importable": false,
+  "reproducibility_checksum": "46925008356d6a009fc9372ac8389299f0eb3102be51077ba42afe8038aa08ad",
+  "schema": "carnot.g2_reproducer_clean_refreeze_package.v1",
+  "source_artifacts": [
+    "results/experiment_3680_dependency_aware_dual_condition_integrity.json",
+    "results/experiment_2850_fover_dual_condition_integrity_v4.json"
+  ]
+}

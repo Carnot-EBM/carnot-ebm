@@ -1,0 +1,71 @@
+{
+  "artifact": "experiment_2918_fr11_verifiable_process_rewards_self_learning_v1",
+  "contradiction_rate_after": 0.0,
+  "contradiction_rate_before": 0.142857142857,
+  "delta_energy_proxy": 0.037,
+  "delta_overall": 0.4,
+  "duplicate_rate_after": 0.333333333333,
+  "duplicate_rate_before": 0.3,
+  "duration_s": 4.0,
+  "failed_preconditions": [],
+  "forgetting_rate": 0.0,
+  "fr11_requirement_targeted": "FR-11",
+  "hardware_replay_used": true,
+  "honest_verdict": "complete: verifier_process_rewards_updated_replay_scheduler",
+  "inference_substrate": "deterministic_verifier_plus_replay",
+  "model_weights_mutated": false,
+  "online_self_learning_ready": true,
+  "online_update_performed": true,
+  "pdi_proxy": 0.193285714286,
+  "priority_summary": {
+    "max_after": 0.95,
+    "mean_after": 0.585,
+    "mean_before": 0.5,
+    "min_after": 0.15
+  },
+  "process_reward_definition": {
+    "code": {
+      "components": [
+        "syntax_success",
+        "static_hallucination_labels",
+        "runtime_passed"
+      ],
+      "drives": "syntax_static_runtime",
+      "likelihood_used": false
+    },
+    "hardware": {
+      "components": [
+        "same_basis_match",
+        "final_energy_proxy",
+        "latency_proxy"
+      ],
+      "drives": "basis_energy_latency",
+      "likelihood_used": false
+    },
+    "prior_fr11": {
+      "components": [
+        "prior_fast_slow_memory_event",
+        "held_out_retention"
+      ],
+      "drives": "nonforgetting_replay_retention",
+      "likelihood_used": false
+    }
+  },
+  "replay_corpus_summary": {
+    "code_rows": 4,
+    "hardware_rows": 3,
+    "held_out_prior_rows": 1,
+    "prior_fr11_rows": 3,
+    "reward_weight_mean": 0.605,
+    "total_rows": 10
+  },
+  "replay_scheduler_updated": true,
+  "run_date": "20260523",
+  "scheduler_update_scope": "replay_priority_table_only_no_model_weights",
+  "source_artifacts": {
+    "exp2887": "experiment_2887_fr11_fast_slow_memory_corrigendum_v2.json",
+    "exp2906": "experiment_2906_fr11_hardware_accelerated_replay_pilot_v1.json",
+    "exp2911": "experiment_2911_code_hallucination_taxonomy_verifier_v1.json",
+    "exp2912": "experiment_2912_kv260_same_basis_cpu_gibbs_baseline_v1.json"
+  }
+}

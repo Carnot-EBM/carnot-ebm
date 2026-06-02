@@ -1,0 +1,99 @@
+{
+  "artifact": "experiment_3084_resyn_exact_fixture_bank_generator_v1",
+  "duration_s": 4.0,
+  "exact_fixture_count": 72,
+  "exact_label_sources": [
+    "json_parser",
+    "python_ast_runtime_execution",
+    "z3_solver"
+  ],
+  "family_count": 3,
+  "family_counts": {
+    "arithmetic_code_assertions": 24,
+    "repairable_invalid_candidates": 24,
+    "smt_constraints": 24
+  },
+  "fixture_manifest_path": "results/resyn_exact_fixture_bank_3084/fixture_manifest.jsonl",
+  "fixture_manifest_sha256": "b3de61dd3a3f197edc9d88431f46bd1fbadc5e6de0aea995d38db75c830bdab1",
+  "honest_verdict": "complete: resyn_fixture_bank_ready=true; exact_fixture_count=72; family_count=3; no_llm_labels",
+  "inference_substrate": {
+    "executes_json_parser": true,
+    "executes_models": false,
+    "executes_python_runtime": true,
+    "executes_z3": true,
+    "kind": "deterministic_z3_python_json_fixture_generation",
+    "live_llm_calls": 0,
+    "llm_used_for_labels": false,
+    "no_live_llm_inference": true,
+    "z3_available": true
+  },
+  "perturbation_families": [
+    "arithmetic_false_verification",
+    "arithmetic_true_verification",
+    "json_syntax_repair",
+    "numeric_bound_repair",
+    "python_assertion_repair",
+    "smt_sat_solving",
+    "smt_unsat_abstention"
+  ],
+  "preconditions_checked": {
+    "json_parser_validation": {
+      "detail": "stdlib json",
+      "ok": true
+    },
+    "llm_labeling": {
+      "detail": "not used",
+      "ok": true
+    },
+    "python_runtime_validation": {
+      "detail": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+      "ok": true
+    },
+    "z3_import": {
+      "detail": "4.16.0",
+      "ok": true
+    }
+  },
+  "resyn_fixture_bank_ready": true,
+  "run_date": "20260525",
+  "schema": "carnot.resyn_exact_fixture_bank.v1",
+  "source_artifacts": [
+    {
+      "exists": true,
+      "id": "exp3070",
+      "path": "results/experiment_3070_first_token_abstention_sota_panel_v1.json",
+      "role": "first-token abstention exact-label pressure",
+      "sha256": "a2f8b7b24db044d3a2448e48d66371429493a89a47e403bcee2e1dd8eeb22f5a"
+    },
+    {
+      "exists": true,
+      "id": "exp3083",
+      "path": "results/experiment_3083_verifier_hardness_autopsy_protocol_v1.json",
+      "role": "verifier-hardness recovery protocol",
+      "sha256": "609d2f6fc86f1ea1c4157d62400530386ee23e1b9d166c0b18b8124cf374f43d"
+    },
+    {
+      "exists": true,
+      "id": "codex",
+      "path": "CODEX.md",
+      "role": "repo spec-first and tests-first workflow",
+      "sha256": "b73440c579d01009d4839a518c35b3ee7140d044ded06f5f033068ae17d57051"
+    },
+    {
+      "exists": true,
+      "id": "research_references",
+      "path": "research-references.md",
+      "role": "ReSyn/verifier context",
+      "sha256": "a0c91c8eb3d4481509df6b1427e7b2ccebacc42ecc0b9bd0f5422f407f2dd5de"
+    }
+  ],
+  "task_axes": [
+    "abstaining",
+    "repairing",
+    "solving",
+    "verifying"
+  ],
+  "tests_added_or_reused": [
+    "tests/python/test_experiment_3084_resyn_exact_fixture_bank_generator.py"
+  ]
+}

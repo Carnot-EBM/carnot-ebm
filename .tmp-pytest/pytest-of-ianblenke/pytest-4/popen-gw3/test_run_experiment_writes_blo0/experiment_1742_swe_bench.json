@@ -1,0 +1,61 @@
+{
+  "blockers": [
+    "blocked_no_sota_gguf"
+  ],
+  "config": {
+    "baseline_condition": "sota_greedy_no_eqm",
+    "eqm_decoding_enabled": false,
+    "evaluator_backend": "swebench_or_injected",
+    "max_repairs": 1,
+    "target_model_hf_ids": [
+      "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "unsloth/gemma-4-31B-it-GGUF"
+    ]
+  },
+  "dataset": {
+    "selected_instance_ids": [
+      "django__django-11099"
+    ],
+    "selected_problems": [
+      {
+        "base_commit": "abc123",
+        "dataset_idx": 0,
+        "environment_setup_commit": "def456",
+        "fail_to_pass": [
+          "tests/test_bug.py::test_regression"
+        ],
+        "instance_id": "django__django-11099",
+        "pass_to_pass": [],
+        "repo": "django/django",
+        "version": "1.0"
+      }
+    ],
+    "source": "princeton-nlp/SWE-bench_Lite",
+    "split": "test",
+    "targeted": true
+  },
+  "experiment_id": "1742",
+  "honest_verdict": "blocked_no_sota_gguf",
+  "metadata": {
+    "runtime_seconds": 0.0010786129860207438,
+    "timestamp": "2026-06-02T19:07:12Z"
+  },
+  "metrics": {
+    "baseline_resolve_rate": null,
+    "baseline_resolved": 0,
+    "headline_resolve_rates_available": false,
+    "n_instances": 1,
+    "n_models": 0,
+    "signed_improvement": null,
+    "total_model_instance_pairs": 0,
+    "verify_repair_resolve_rate": null,
+    "verify_repair_resolved": 0
+  },
+  "per_model_results": [],
+  "spec_refs": [
+    "REQ-BENCH-1742",
+    "SCENARIO-BENCH-1742"
+  ],
+  "status": "blocked",
+  "title": "SWE-Bench Lite verify-repair baseline with EqM decoding disabled"
+}

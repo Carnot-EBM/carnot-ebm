@@ -1,0 +1,57 @@
+{
+  "schema": "carnot.operational_retro.v65",
+  "milestone": "2026.05.320",
+  "generated_at": "2026-05-30T23:02:00Z",
+  "retro_type": "operational_full",
+  "total_wall_time_minutes": 23.8,
+  "experiments_completed": 11,
+  "compute_bound_experiments_count": 1,
+  "slowest_experiments": [
+    {
+      "experiment_id": "exp3471",
+      "duration_s": 1358.769,
+      "verdict": "complete: blocked_no_headroom_benchmark_sc_outside_band",
+      "note": "Corpus builder ran Gemma4-26B on MATH Level 5; timed out at wall budget"
+    }
+  ],
+  "gpu_idle_on_compute_bound_tasks": false,
+  "summary": "Milestone .320 (Depth-Over-Breadth VI) pivoted P0.1 off the saturated GSM8K ceiling (SC 0.908) onto a HEADROOM benchmark \u2014 but both attempted substrates were degenerate.  GSM8K was at the ceiling (too easy for a selector); MATH Level 5 was below the band floor (SC 0.265 \u2014 too hard).  The P0.1 crux (exp3472) never ran in-band.  P0.1 REMAINS OPEN because the benchmark-selection precondition was never satisfied \u2014 this is NOT a negative result about the energy substrate itself.  Positive finding: FR-11 depth collapse confirmed and cured (exp3474 CLEAN).  G2 self-contained package verified; external run still PENDING (sole unmet gate).",
+  "key_finding": "P0.1 is still OPEN because BOTH attempted substrates were degenerate: GSM8K at ceiling 0.908 (exp3460/.319), MATH Level 5 at floor SC=0.265 (exp3471, MATH too hard for Gemma4-26B at k=6).  The crux (exp3472) was blocked by an out-of-band corpus \u2014 no energy-vs-SC comparison ever ran.  Root cause: benchmark-difficulty mismatch, not energy substrate failure.  Fix: find a benchmark where SC \u2208 [0.40, 0.70] for Gemma4-26B at k=6 (MATH Level 4, AMC 2024 subset, or MATH-500 filtered).",
+  "milestone_positive": "FR-11 depth collapse confirmed and cured (exp3474, CLEAN).  ARM A collapses at N=200 iterations (onset at iteration 138): entropy\u21920.990, mode_mass\u21920.606, pass_rate\u22481.0 while true_accuracy\u22480 (gap=1.0 \u2014 pure null-space gaming).  ARM B (entropy_beta=0.50) FULLY prevented collapse (entropy=4.907, mode_mass=0.015).  MANDATORY action before Phase-5 deployment: entropy_beta\u22650.50.",
+  "g2_status": "self_contained_package_verified_external_run_pending",
+  "g2_package_sha256": "521ecbc3adfa42bce839d16cdcb48cf552e267fc9a8bc69f86068b92a937e6be",
+  "g2_package_cid": "QmcoN4zKfAT7GPpokzM31acbE4RBkntfPjhXoEun2NMo9c",
+  "g2_independent_reproducer": false,
+  "p01_status": "OPEN \u2014 headroom precondition never satisfied; not a negative",
+  "p01_v6_blocked": true,
+  "p01_v6_block_reason": "MATH Level 5 corpus: n=34 problems completed (n_heldout=21 < 40 minimum), SC accuracy=0.265 (below headroom band floor 0.40).  Gemma4-26B solves Level 5 too rarely for self-consistency to provide a meaningful majority signal \u2014 benchmark is too hard.",
+  "p01_forward_gap": "Build a DIFFICULTY-MATCHED corpus: find a benchmark where Gemma4-26B at k=6 achieves SC \u2208 [0.40, 0.70].  Options: (a) MATH Level 4, (b) AMC 2024 subset, (c) MATH-500 filtered to problems in band.  The per-step trace machinery from exp3471 is ready \u2014 only benchmark selection changes.  Once corpus is in-band and n_heldout\u226540, run the process-energy argmin vs SC comparison (exp3472 design).",
+  "calibration_advisory": "exp3473 (FLAGGED \u2014 TAUTOLOGY): advisory only \u2014 process energy AUROC=0.441 (below chance=0.5) on MATH Level 5; minority_correct_recovery=4.2%.  Numbers excluded per fabrication gate.  Domain-specificity concern: FoVer 4-verifier ensemble may not transfer to MATH without corpus-specific calibration.  Clean rerun required before forward claims.",
+  "fr11_depth_collapse_finding": "Confirmed at N=200 iterations with ACTIVE_WEIGHT=0.146 grounding (exp3474 CLEAN).  Collapse onset at iteration 138.  ARM A: entropy=0.990 (from ~4.9), mode_mass=0.606, pass_rate\u22481.0, true_accuracy\u22480.  ARM B (entropy_beta=0.50): entropy=4.907, mode_mass=0.015 \u2014 no collapse.  This supersedes .319's exp3462 advisory (no collapse at N=50): collapse is depth-sensitive, appearing between N=50 and N=200.",
+  "top_3_highest_leverage_actions": [
+    "P0.1 v7 \u2014 difficulty-matched corpus: find benchmark where Gemma4-26B k=6 SC \u2208 [0.40, 0.70]; use MATH Level 4 / AMC 2024 / MATH-500 filtered; run the exp3472 crux once corpus is in-band and n_heldout\u226540.",
+    "G2 close \u2014 trigger external non-operator run of dist/g2-fover-repro.tar.gz (exp3476 CLEAN package, SHA256+IPFS verified): `tar xzf g2-fover-repro.tar.gz && cd g2-fover-repro && bash run.sh`; confirm condition_A_auroc \u2208 [0.9027, 0.9235].  G2 is the SOLE unmet publication gate.",
+    "FR-11 Phase-5 mandatory: wire entropy_beta\u22650.50 as the default for all Phase-5 pre-deployment FR-11 validation tasks; remove at-risk grounding from the published ensemble (replace with diversity-safe alternative)."
+  ],
+  "experiments_flagged_adversarial": [
+    "exp3473"
+  ],
+  "experiments_blocked": [
+    "exp3471",
+    "exp3472",
+    "exp3475",
+    "exp3477",
+    "exp3478",
+    "exp3480"
+  ],
+  "bottlenecks_identified": [
+    "MATH Level 5 was too hard for Gemma4-26B at k=6 (SC=0.265 below band floor 0.40); needed a difficulty-calibration step before the corpus-builder run.",
+    "Corpus n_heldout=21 was below the 40-problem minimum for a statistically meaningful energy-vs-SC comparison; corpus builder needs to run longer or use a more tractable benchmark."
+  ],
+  "improvements_suggested": [
+    "Add a benchmark-difficulty calibration step to the corpus-builder preconditions: sample 10-20 problems and compute SC before committing to the full run.  Block the run if SC is outside [0.40, 0.70].",
+    "Pre-compile a 'Gemma4-26B difficulty map' for MATH levels and AMC subsets so future P0.1 pivots select the correct level in O(1) instead of O(1 full corpus run)."
+  ],
+  "estimated_time_savings_pct": 30,
+  "meta_reflection": "The .320 iteration shows that benchmark-difficulty mismatch is as expensive as the benchmark itself.  A 1358s corpus build (exp3471) produced a substrate that was out-of-band before the crux could run.  Invest in cheap calibration probes (~50 problems) before committing to full corpus builds.  This is the Depth-Over-Breadth principle applied to the experimental-design layer: find the right question before scaling the run."
+}

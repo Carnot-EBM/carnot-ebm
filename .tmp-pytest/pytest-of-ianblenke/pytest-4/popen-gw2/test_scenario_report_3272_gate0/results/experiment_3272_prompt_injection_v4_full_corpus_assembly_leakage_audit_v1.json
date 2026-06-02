@@ -1,0 +1,156 @@
+{
+  "artifact": "experiment_3272_prompt_injection_v4_full_corpus_assembly_leakage_audit_v1",
+  "assembled_example_count": 0,
+  "blocked_reason": "gated_exp3271_garak_seed_not_ready",
+  "checksums": {
+    "output_files": {},
+    "source_artifacts": {
+      "data/prompt_injection_v4/splits/garak_adaptive_seed_v1.jsonl": "900e2726d63d0215b1f5b71e08e7322fb0458ecadf574f35b0d159a022ff3028",
+      "data/prompt_injection_v4/teacher_label_shards/v4_shard_002_teacher_labels_v1.jsonl": "b7f351bb7bf59bf8bb289ad1674aba0538000977ce6404dcfe3442006b056825",
+      "data/prompt_injection_v4/teacher_label_shards/v4_shard_003_teacher_labels_v1.jsonl": "dcf553274aeca46e33d58ada574d4c26cacabcdc1e6dca0674920812e82f07c3",
+      "data/prompt_injection_v4/teacher_label_shards/v4_shard_004_teacher_labels_v1.jsonl": "b59eae040731be4fe64eef8cbf2e9a5a003475d5c2848e8d1c59024bceb0a25a",
+      "data/prompt_injection_v4/teacher_label_shards/v4_shard_005_teacher_labels_v1.jsonl": "5ec1ab20d376a9fcd9d1a9a9337ff59e129209cd4e620bb18ad981fa222fc157",
+      "data/prompt_injection_v4/teacher_label_shards/v4_shard_006_teacher_labels_v1.jsonl": "a2708b847418317bf50969440d6beae74c1b79c3af8ab8322449eabd63a14acd",
+      "data/prompt_injection_v4/teacher_label_shards/v4_shard_007_teacher_labels_v1.jsonl": "357b595577f4037ecef2d891a8a0c059c0a79a50b11c973fe9437a2759853eab",
+      "results/experiment_3264_prompt_injection_teacher_label_shard_v3.json": "7e7881b090af7bd29c8d431f52c5d17eefd256afd0666c2025f0a5494356d4e0",
+      "results/experiment_3269_prompt_injection_v4_full_corpus_split_manifest_v1.json": "816139fc2f08e9b16a4055c7db143c2736e2a41765055fd4dcc8554faab5d7bc",
+      "results/experiment_3270_prompt_injection_teacher_label_shards_2_4_v1.json": "cbc77214b03833de141c02ccd4ba0e00699edfa0e98571f88491f500d54f4ac0",
+      "results/experiment_3271_prompt_injection_teacher_label_shards_5_7_garak_seed_v1.json": "c8a9b3175c98a4eaadd25bec646bb480493b2013d8097a1d8dad6066e9695398"
+    }
+  },
+  "duplicate_count_removed": 0,
+  "duplicate_rows_removed_sample": [],
+  "duration_s": 0.5,
+  "eval_count": 0,
+  "experiment_id": "exp3272",
+  "full_15k_corpus_ready": false,
+  "garak_count": 0,
+  "holdout_count": 0,
+  "honest_verdict": "complete: full_15k_corpus_ready=false; blocked_reason=gated_exp3271_garak_seed_not_ready; leakage_audit_passed=False",
+  "leakage_audit": {
+    "exact_duplicate_overlap": {
+      "overlap_group_count": 0,
+      "overlap_row_count": 0,
+      "sample": [],
+      "signature_key": ""
+    },
+    "garak_template_family_overlap_count": 0,
+    "garak_training_eligible_false": false,
+    "leakage_audit_passed": false,
+    "near_duplicate_overlap": {
+      "overlap_group_count": 0,
+      "overlap_row_count": 0,
+      "sample": [],
+      "signature_key": ""
+    },
+    "normal_template_family_overlap": {
+      "overlap_group_count": 0,
+      "overlap_row_count": 0,
+      "sample": [],
+      "signature_key": ""
+    }
+  },
+  "leakage_audit_passed": false,
+  "milestone": "2026.05.303",
+  "output_paths": [
+    "results/experiment_3272_prompt_injection_v4_full_corpus_assembly_leakage_audit_v1.json"
+  ],
+  "preconditions_checked": [
+    {
+      "name": "exp3269_full_corpus_manifest",
+      "passed": true,
+      "path": "results/experiment_3269_prompt_injection_v4_full_corpus_split_manifest_v1.json",
+      "target_total_examples": 10
+    },
+    {
+      "name": "exp3264_seed_shard",
+      "passed": true,
+      "path": "results/experiment_3264_prompt_injection_teacher_label_shard_v3.json",
+      "row_count": 2
+    },
+    {
+      "cumulative_label_count": 8,
+      "name": "exp3270_teacher_label_shards_2_4",
+      "passed": true,
+      "path": "results/experiment_3270_prompt_injection_teacher_label_shards_2_4_v1.json",
+      "required_min_count": 8
+    },
+    {
+      "garak_seed_count": 0,
+      "name": "exp3271_garak_seed",
+      "passed": false,
+      "path": "results/experiment_3271_prompt_injection_teacher_label_shards_5_7_garak_seed_v1.json",
+      "required_min_count": 2
+    },
+    {
+      "cumulative_label_count": 8,
+      "name": "exp3271_teacher_label_shards_5_7",
+      "passed": false,
+      "path": "results/experiment_3271_prompt_injection_teacher_label_shards_5_7_garak_seed_v1.json",
+      "required_min_count": 8
+    },
+    {
+      "missing_paths": [],
+      "name": "source_jsonl_files_present",
+      "passed": true
+    }
+  ],
+  "random_seed": 3272,
+  "raw_example_count": 0,
+  "reproducibility_checksum": "6ce610fc7ca8bd5cc2b56a6cf3e53a711cd957a1c718302c87d3b12684589ec0",
+  "run_date": "20260528",
+  "schema": "carnot.prompt_injection_v4_full_corpus_assembly_leakage_audit.v1",
+  "schema_version": "carnot.prompt_injection_v4_full_corpus_assembly_leakage_audit.v1",
+  "split_distribution": {
+    "eval": {
+      "aligned_instruction": 0,
+      "benign": 0,
+      "by_category": {},
+      "injection": 0,
+      "misaligned_instruction": 0,
+      "non_instruction": 0,
+      "total": 0,
+      "training_eligible": 0
+    },
+    "garak": {
+      "aligned_instruction": 0,
+      "benign": 0,
+      "by_category": {},
+      "injection": 0,
+      "misaligned_instruction": 0,
+      "non_instruction": 0,
+      "total": 0,
+      "training_eligible": 0
+    },
+    "holdout": {
+      "aligned_instruction": 0,
+      "benign": 0,
+      "by_category": {},
+      "injection": 0,
+      "misaligned_instruction": 0,
+      "non_instruction": 0,
+      "total": 0,
+      "training_eligible": 0
+    },
+    "train": {
+      "aligned_instruction": 0,
+      "benign": 0,
+      "by_category": {},
+      "injection": 0,
+      "misaligned_instruction": 0,
+      "non_instruction": 0,
+      "total": 0,
+      "training_eligible": 0
+    }
+  },
+  "split_targets": {
+    "eval": 2,
+    "garak": 2,
+    "holdout": 2,
+    "train": 4
+  },
+  "target_total_examples": 10,
+  "task_id": "exp3272-prompt-injection-v4-full-corpus-assembly-leakage-audit-v1",
+  "train_count": 0,
+  "within_source_duplicate_count": 0
+}

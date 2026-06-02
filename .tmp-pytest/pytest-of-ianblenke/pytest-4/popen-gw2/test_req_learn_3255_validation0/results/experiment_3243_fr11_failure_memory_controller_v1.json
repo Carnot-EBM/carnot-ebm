@@ -1,0 +1,84 @@
+{
+  "controller_memory_updates_are_not_training": true,
+  "doomed_rerun_avoidance_count": 3,
+  "experiment_id": "exp3243",
+  "failure_trace_count": 4,
+  "failure_traces": [
+    {
+      "accepted_next_action": "repair_selected_python_torch_cuda_before_exp3237",
+      "category": "backend_failure",
+      "failure_signature": "selected_python_torch_cuda_unavailable,cuda_bindings_runtime_no_devices",
+      "source": "results/experiment_3236_isolated_cuda_python_smoke_v1.json",
+      "stale_premise": false,
+      "trace_id": "fm-exp3236-backend"
+    },
+    {
+      "accepted_next_action": "force_prerequisite_gate",
+      "category": "gate_block",
+      "failure_signature": "exp3236-isolated-cuda-python-smoke-v1.cuda_python_smoke_passed",
+      "source": "results/experiment_3237_llama_cpp_cuda_receipt_smoke_v2.json",
+      "stale_premise": false,
+      "trace_id": "fm-exp3237-gate"
+    },
+    {
+      "accepted_next_action": "force_prerequisite_gate",
+      "category": "missing_artifact",
+      "failure_signature": "exp3238-sota-gguf-receipt-v7.sota_gguf_receipt_ready",
+      "source": "results/experiment_3240_prompt_injection_kan_teacher_label_shard_v1.json",
+      "stale_premise": false,
+      "trace_id": "fm-exp3240-gate"
+    },
+    {
+      "accepted_next_action": "reject_stale_controller_memory_trace",
+      "category": "stale_premise",
+      "failure_signature": "stale_premise_rejection_count=2",
+      "source": "results/experiment_3229_fr11_nonforgetting_promotion_controller_v3.json",
+      "stale_premise": true,
+      "trace_id": "fm-stale"
+    }
+  ],
+  "fr11_controller_update_ready": true,
+  "heldout_replay_count": 4,
+  "heldout_replays": [
+    {
+      "avoided_doomed_rerun": true,
+      "baseline_action": "rerun_without_failure_memory",
+      "controller_decision": "repair_backend_before_rerun",
+      "force_gate": false,
+      "replay_delta": 1,
+      "replay_id": "heldout-001",
+      "source_trace_id": "fm-exp3236-backend"
+    },
+    {
+      "avoided_doomed_rerun": true,
+      "baseline_action": "rerun_without_failure_memory",
+      "controller_decision": "force_prerequisite_gate",
+      "force_gate": true,
+      "replay_delta": 1,
+      "replay_id": "heldout-002",
+      "source_trace_id": "fm-exp3237-gate"
+    },
+    {
+      "avoided_doomed_rerun": true,
+      "baseline_action": "rerun_without_failure_memory",
+      "controller_decision": "force_prerequisite_gate",
+      "force_gate": true,
+      "replay_delta": 1,
+      "replay_id": "heldout-003",
+      "source_trace_id": "fm-exp3240-gate"
+    },
+    {
+      "avoided_doomed_rerun": false,
+      "baseline_action": "rerun_without_failure_memory",
+      "controller_decision": "reject_stale_premise",
+      "force_gate": false,
+      "replay_delta": 1,
+      "replay_id": "heldout-004",
+      "source_trace_id": "fm-stale"
+    }
+  ],
+  "honest_verdict": "complete: fr11 failure-memory controller update ready=true; model_weight_update_claimed=false; no model weights were updated",
+  "milestone": "2026.05.300",
+  "model_weight_update_claimed": false,
+  "task_id": "exp3243-fr11-failure-memory-controller-v1"
+}

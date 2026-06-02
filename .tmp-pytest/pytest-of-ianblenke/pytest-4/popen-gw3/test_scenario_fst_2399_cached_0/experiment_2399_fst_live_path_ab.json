@@ -1,0 +1,150 @@
+{
+  "acceptance_gates": {
+    "fst_live_validated == true": true
+  },
+  "duration_s": 0.08,
+  "experiment": "2399_fst_live_path_ab",
+  "field_principles": {
+    "duration_s": "Guards against fabrication -- live inference takes significant wall time.",
+    "first_live_generation_text": "First 200 chars of generated text (PATH A/B) or cached response (PATH C).",
+    "fst_live_validated": "True if FST pipeline ran end-to-end on ANY path (A, B, or C).",
+    "honest_verdict": "Terminal-prefix required. complete: even if only PATH C succeeded.",
+    "live_path_used": "Which path succeeded: 'A_gguf', 'B_transformers', or 'C_cached'.",
+    "model_used": "Which GGUF or transformers model was loaded (null if PATH C).",
+    "n_test_prompts": "Number of prompts run through FST pipeline.",
+    "path_a_attempted": "True if PATH A was tried.",
+    "path_a_blocked_reason": "Why PATH A failed or was skipped (model_not_cached, llama_cpp_missing, etc).",
+    "path_b_attempted": "True if PATH B was tried.",
+    "preconditions_checked": "Records GGUF cache check, llama_cpp check, transformers check, PATH C check."
+  },
+  "first_live_generation_text": "1",
+  "fst_live_validated": true,
+  "fst_rows": [
+    {
+      "case_id": "cached_0",
+      "energy": 0.0,
+      "fst_certificate": {
+        "enabled": true,
+        "fast_context_available": true,
+        "fast_update_count": 1,
+        "slow_weights_frozen": true
+      },
+      "fst_prompt_prefix_text": "FST verifier-output summary:\n- iteration=1; verified=True; energy=0; violations=0\n\nQuestion: Verify claim: 0 + 1 = 1.\n\nYour previous answer:\n1\n\nPlease provide a corrected answer that fixes any verifie",
+      "fst_terminal_prefix_present": true,
+      "n_violations": 0,
+      "prompt": "Verify claim: 0 + 1 = 1.",
+      "response_text": "1",
+      "source": "cached_live_sota_telemetry",
+      "verified": true
+    },
+    {
+      "case_id": "cached_1",
+      "energy": 0.0,
+      "fst_certificate": {
+        "enabled": true,
+        "fast_context_available": true,
+        "fast_update_count": 2,
+        "slow_weights_frozen": true
+      },
+      "fst_prompt_prefix_text": "FST verifier-output summary:\n- iteration=2; verified=True; energy=0; violations=0\n\nQuestion: Verify claim: 1 + 1 = 2.\n\nYour previous answer:\n1\n\nPlease provide a corrected answer that fixes any verifie",
+      "fst_terminal_prefix_present": true,
+      "n_violations": 0,
+      "prompt": "Verify claim: 1 + 1 = 2.",
+      "response_text": "1",
+      "source": "cached_live_sota_telemetry",
+      "verified": true
+    },
+    {
+      "case_id": "cached_2",
+      "energy": 0.0,
+      "fst_certificate": {
+        "enabled": true,
+        "fast_context_available": true,
+        "fast_update_count": 3,
+        "slow_weights_frozen": true
+      },
+      "fst_prompt_prefix_text": "FST verifier-output summary:\n- iteration=3; verified=True; energy=0; violations=0\n\nQuestion: Verify claim: 2 + 1 = 3.\n\nYour previous answer:\n1\n\nPlease provide a corrected answer that fixes any verifie",
+      "fst_terminal_prefix_present": true,
+      "n_violations": 0,
+      "prompt": "Verify claim: 2 + 1 = 3.",
+      "response_text": "1",
+      "source": "cached_live_sota_telemetry",
+      "verified": true
+    }
+  ],
+  "honest_verdict": "complete: fst_live_validated_via_C_cached",
+  "live_path_used": "C_cached",
+  "model_used": null,
+  "n_test_prompts": 3,
+  "path_a_attempted": false,
+  "path_a_blocked_reason": "forced_path_c",
+  "path_attempts": [
+    {
+      "attempted": false,
+      "blocked_reason": "forced_path_c",
+      "details": {},
+      "model_used": null,
+      "n_rows": 0,
+      "path": "A_gguf",
+      "success": false
+    },
+    {
+      "attempted": false,
+      "blocked_reason": null,
+      "details": {},
+      "model_used": null,
+      "n_rows": 0,
+      "path": "B_transformers",
+      "success": false
+    },
+    {
+      "attempted": true,
+      "blocked_reason": null,
+      "details": {
+        "n_cached_rows": 3,
+        "telemetry_path": "/home/ianblenke/github.com/ianblenke/carnot/.tmp-pytest/pytest-of-ianblenke/pytest-4/popen-gw3/test_scenario_fst_2399_cached_0/telemetry.jsonl"
+      },
+      "model_used": null,
+      "n_rows": 3,
+      "path": "C_cached",
+      "success": true
+    }
+  ],
+  "path_b_attempted": false,
+  "path_b_blocked_reason": null,
+  "preconditions_checked": {
+    "gguf_cache_check": {
+      "available": false,
+      "cache_root": "/home/ianblenke/github.com/ianblenke/carnot/.tmp-pytest/pytest-of-ianblenke/pytest-4/popen-gw3/test_scenario_fst_2399_cached_0/empty_hf",
+      "command": "ls ~/.cache/huggingface/hub/ | grep -i \"qwen3.6\\|gemma-4-26b\\|gemma-4-31b\" | head -5",
+      "matches": []
+    },
+    "llama_cpp_check": {
+      "available": true,
+      "command": ".venv/bin/python -c \"from llama_cpp import Llama; print('llama_cpp OK')\" 2>/dev/null || echo \"llama_cpp_missing\"",
+      "output": "llama_cpp OK"
+    },
+    "path_c_telemetry_check": {
+      "command": "ls /home/ianblenke/github.com/ianblenke/carnot/.tmp-pytest/pytest-of-ianblenke/pytest-4/popen-gw3/test_scenario_fst_2399_cached_0/telemetry.jsonl",
+      "exists": true,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/.tmp-pytest/pytest-of-ianblenke/pytest-4/popen-gw3/test_scenario_fst_2399_cached_0/telemetry.jsonl"
+    },
+    "resolved_gguf_models": [],
+    "transformers_check": {
+      "available": true,
+      "cached_model_candidate": null,
+      "command": ".venv/bin/python -c \"import transformers; print(transformers.__version__)\" 2>/dev/null || echo \"transformers_missing\"",
+      "output": "5.9.0",
+      "version": "5.9.0"
+    }
+  },
+  "run_date": "20260518",
+  "schema": "fst_live_path_ab_v1",
+  "source_notes": {
+    "local_checkout_note": "Neither requested file exists in this checkout; Exp 2399 uses VerifyRepairPipeline plus carnot.training.fast_slow.FastSlowTrainer.",
+    "requested_existing_pipeline": "python/carnot/pipeline/fst_pipeline.py",
+    "requested_exp2365_artifact": "results/experiment_2365_fst_live_gen.json"
+  },
+  "status": "complete",
+  "title": "FST live inference PATH A/B with cached telemetry fallback"
+}

@@ -1,0 +1,465 @@
+{
+  "artifact": "experiment_3269_prompt_injection_v4_full_corpus_split_manifest_v1",
+  "class_taxonomy": [
+    {
+      "category_id": "aligned_instruction_benign",
+      "label_family": "benign",
+      "principle": "Benign instructions must not be conflated with attacks.",
+      "target_examples": 3000
+    },
+    {
+      "category_id": "misaligned_instruction_attack",
+      "label_family": "injection",
+      "principle": "Role override and exfiltration attacks are the core positive class.",
+      "target_examples": 3500
+    },
+    {
+      "category_id": "non_instruction_benign",
+      "label_family": "benign",
+      "principle": "Non-instruction text controls prevent an instruction-only detector.",
+      "target_examples": 2500
+    },
+    {
+      "category_id": "dataflip_kad_adaptive_attack",
+      "label_family": "injection",
+      "principle": "Adaptive attacks pressure detectors that memorize surface forms.",
+      "target_examples": 2000
+    },
+    {
+      "category_id": "long_reasoning_heavy_attack",
+      "label_family": "injection",
+      "principle": "Long prompts catch lightweight filters that fail under reasoning load.",
+      "target_examples": 1500
+    },
+    {
+      "category_id": "encoding_attack",
+      "label_family": "injection",
+      "principle": "Encoded payloads test delimiter and transform robustness.",
+      "target_examples": 1000
+    },
+    {
+      "category_id": "tool_rag_indirect_injection_attack",
+      "label_family": "injection",
+      "principle": "Tool and RAG cases cover indirect prompt-injection surfaces.",
+      "target_examples": 1500
+    }
+  ],
+  "completed_seed_examples": 0,
+  "delong_gate_plan": {
+    "acceptance_rule": "The lower 95% CI bound for candidate-minus-baseline AUROC must be above -0.02 on paired rows before any replacement-grade claim.",
+    "baseline_score_paths": [
+      "results/experiment_690_prompt_injection_kan_true_distillation.json",
+      "results/experiment_691_prompt_injection_kan_cross_dataset.json",
+      "results/experiment_3265_prompt_injection_kan_train_eval_shard_v3.json"
+    ],
+    "candidate_scores_path": "results/experiment_3273_prompt_injection_kan_full_corpus_delong_eval_v1.json",
+    "confidence_level": 0.95,
+    "method": "paired_delong_auc_ci",
+    "minimum_eval_rows": 2000,
+    "minimum_holdout_rows": 2000,
+    "noninferiority_margin_auroc": -0.02,
+    "paired_rows_required": true,
+    "primary_metric": "AUROC on paired eval plus holdout rows",
+    "receipt_path": "results/experiment_3273_prompt_injection_kan_full_corpus_delong_eval_v1.json",
+    "repair_gate_requires_garak_gate": true,
+    "replacement_grade_claim_requires_delong_gate": true,
+    "task_id": "exp3273-prompt-injection-kan-full-corpus-delong-eval-v1"
+  },
+  "downstream_deliverables": [
+    {
+      "path": "results/experiment_3270_prompt_injection_teacher_label_shards_2_4_v1.json",
+      "required_before": "cumulative_label_count_gate_8000",
+      "role": "teacher_label_shards_2_4",
+      "task_id": "exp3270-prompt-injection-teacher-label-shards-2-4-v1"
+    },
+    {
+      "path": "results/experiment_3271_prompt_injection_teacher_label_shards_5_7_garak_seed_v1.json",
+      "required_before": "assembly_leakage_audit",
+      "role": "teacher_label_shards_5_7_plus_garak_seed",
+      "task_id": "exp3271-prompt-injection-teacher-label-shards-5-7-garak-seed-v1"
+    },
+    {
+      "path": "results/experiment_3272_prompt_injection_v4_full_corpus_assembly_leakage_audit_v1.json",
+      "required_before": "full_corpus_training_or_eval",
+      "role": "full_corpus_assembly_leakage_audit",
+      "task_id": "exp3272-prompt-injection-v4-full-corpus-assembly-leakage-audit-v1"
+    },
+    {
+      "path": "data/prompt_injection_v4/full_15k_corpus_v1.jsonl",
+      "required_before": "full_corpus_training_or_eval",
+      "role": "assembled_full_corpus_jsonl",
+      "task_id": "exp3272-prompt-injection-v4-full-corpus-assembly-leakage-audit-v1"
+    },
+    {
+      "path": "data/prompt_injection_v4/splits/train_v1.jsonl",
+      "required_before": "kan_training",
+      "role": "train_split_jsonl",
+      "task_id": "exp3272-prompt-injection-v4-full-corpus-assembly-leakage-audit-v1"
+    },
+    {
+      "path": "data/prompt_injection_v4/splits/eval_v1.jsonl",
+      "required_before": "delong_eval",
+      "role": "eval_split_jsonl",
+      "task_id": "exp3272-prompt-injection-v4-full-corpus-assembly-leakage-audit-v1"
+    },
+    {
+      "path": "data/prompt_injection_v4/splits/holdout_v1.jsonl",
+      "required_before": "replacement_grade_claim",
+      "role": "holdout_split_jsonl",
+      "task_id": "exp3272-prompt-injection-v4-full-corpus-assembly-leakage-audit-v1"
+    },
+    {
+      "path": "data/prompt_injection_v4/splits/garak_adaptive_seed_v1.jsonl",
+      "required_before": "garak_dataflip_redteam_eval",
+      "role": "garak_adaptive_seed_split_jsonl",
+      "task_id": "exp3272-prompt-injection-v4-full-corpus-assembly-leakage-audit-v1"
+    },
+    {
+      "path": "results/experiment_3273_prompt_injection_kan_full_corpus_delong_eval_v1.json",
+      "required_before": "garak_or_repair_gate_claim",
+      "role": "kan_full_corpus_delong_eval",
+      "task_id": "exp3273-prompt-injection-kan-full-corpus-delong-eval-v1"
+    },
+    {
+      "path": "results/experiment_3274_prompt_injection_v4_garak_dataflip_redteam_eval_v1.json",
+      "required_before": "repair_gate_decision",
+      "role": "garak_dataflip_redteam_eval",
+      "task_id": "exp3274-prompt-injection-v4-garak-dataflip-redteam-eval-v1"
+    },
+    {
+      "path": "results/experiment_3276_repair_gate_decision_v8_after_v4_garak_clean_verifier.json",
+      "required_before": "sota_repair_micro_panel",
+      "role": "repair_gate_decision",
+      "task_id": "exp3276-repair-gate-decision-v8-after-v4-garak-clean-verifier"
+    }
+  ],
+  "duration_s": 0.0,
+  "experiment_id": "exp3269",
+  "full_corpus_manifest_ready": false,
+  "garak_seed_target": 1000,
+  "honest_verdict": "complete: full_corpus_manifest_ready=false; target_total_examples=15000; completed_seed_examples=0; planned_new_examples=15000; garak_seed_target=1000; no LLM invoked, no teacher labels generated, no KAN score claim",
+  "inference_substrate": "aggregation_from_upstream_artifacts",
+  "leakage_audit_plan": {
+    "adaptive_attack_isolation": "DataFlip/KAD and Garak rows are evaluation-only pressure.",
+    "cross_split_duplicate_policy": "fail_full_corpus_ready",
+    "dedupe_key": "normalized_text_sha256",
+    "garak_training_eligible": false,
+    "near_duplicate_methods": [
+      "normalized_text_sha256",
+      "minhash_lsh_5gram",
+      "prompt_template_family_holdout_check"
+    ],
+    "receipt_path": "results/experiment_3272_prompt_injection_v4_full_corpus_assembly_leakage_audit_v1.json",
+    "required_report_fields": [
+      "unique_example_count",
+      "duplicate_count",
+      "cross_split_duplicate_count",
+      "near_duplicate_pairs_sample",
+      "split_hashes",
+      "garak_training_eligible_false"
+    ],
+    "task_id": "exp3272-prompt-injection-v4-full-corpus-assembly-leakage-audit-v1",
+    "teacher_cache_leakage_policy": "cache rows may seed labels but not split decisions"
+  },
+  "manifest_blockers": [
+    "exp3264_teacher_label_shard_not_ready",
+    "exp3265_kan_train_eval_shard_not_ready",
+    "completed_seed_examples_not_2000"
+  ],
+  "milestone": "2026.05.303",
+  "monolithic_exp3222_shape_rerun_allowed": false,
+  "no_conductor_execution": true,
+  "no_delong_run": true,
+  "no_garak_run": true,
+  "no_kan_training": true,
+  "no_llm_invoked": true,
+  "no_new_teacher_labeling": true,
+  "no_push": true,
+  "no_repair_run": true,
+  "planned_new_examples": 15000,
+  "principle_annotations": {
+    "class_taxonomy": "Aligned and misaligned instructions must not be conflated.",
+    "completed_seed_examples": "Existing `.302` labels must be separated from new work.",
+    "delong_gate_plan": "Non-inferiority must be statistical, not narrative.",
+    "downstream_deliverables": "Conductor tasks need concrete paths.",
+    "duration_s": "Timing evidence distinguishes aggregation from live inference.",
+    "full_corpus_manifest_ready": "This gates expensive shard labeling work.",
+    "garak_seed_target": "Garak/adaptive pressure is a first-class split.",
+    "honest_verdict": "Terminal prefixes keep the conductor from retrying success.",
+    "leakage_audit_plan": "Detector claims require de-dup and split hygiene.",
+    "planned_new_examples": "Downstream wall-time depends on remaining labels.",
+    "random_seed": "Reproducibility requires a fixed planning seed.",
+    "reproducibility_checksum": "Artifact integrity needs a stable content hash.",
+    "shard_plan": "Split runs avoid the failed monolithic Exp 3222 shape.",
+    "target_total_examples": "The sample-size target must be explicit."
+  },
+  "protected_files_untouched": {
+    "scripts/research_conductor.py": true
+  },
+  "random_seed": 3269,
+  "reproducibility_checksum": "d9ca0ed40885b538cbb648db754cd4afa358b20d647bc24ceb7183c8dada2146",
+  "run_date": "20260528",
+  "schema": "carnot.prompt_injection_v4_full_corpus_split_manifest.v1",
+  "schema_version": "carnot.prompt_injection_v4_full_corpus_split_manifest.v1",
+  "seed_shard_evidence": {
+    "completed_examples": 0,
+    "kan_reproducibility_checksum": "a46f56f9b003883b1360672c8ae9c932b08279e18f0196d3bf869bfc618573ae",
+    "kan_train_eval_shard_path": "results/experiment_3265_prompt_injection_kan_train_eval_shard_v3.json",
+    "kan_train_eval_shard_ready": false,
+    "kan_train_eval_shard_v3_ready": false,
+    "label_counts": {},
+    "n_eval": 0,
+    "n_train": 0,
+    "non_headline_boundary": "single-shard AUROC remains viability-only",
+    "shard_auroc": 0.0,
+    "teacher_label_reproducibility_checksum": "7a26bc47b2890f36c72e2e0a4f48540bc5bc890e7d8fcf4595ea93e140b18ba0",
+    "teacher_label_shard_path": "results/experiment_3264_prompt_injection_teacher_label_shard_v3.json",
+    "teacher_label_shard_ready": false,
+    "teacher_label_shard_v3_ready": false
+  },
+  "shard_plan": [
+    {
+      "category_focus": [
+        "aligned_instruction_benign",
+        "misaligned_instruction_attack",
+        "non_instruction_benign"
+      ],
+      "completed_examples": 0,
+      "kan_eval_deliverable": "results/experiment_3265_prompt_injection_kan_train_eval_shard_v3.json",
+      "reuses_completed_exp3264": false,
+      "role": "completed_seed_shard",
+      "shard_id": "v4-shard-001",
+      "split": "train_eval_holdout_candidate",
+      "status": "missing_seed",
+      "target_examples": 2000,
+      "task_id": "exp3264-prompt-injection-teacher-label-shard-v3",
+      "teacher_label_deliverable": "results/experiment_3264_prompt_injection_teacher_label_shard_v3.json"
+    },
+    {
+      "category_focus": [
+        "aligned_instruction_benign",
+        "misaligned_instruction_attack"
+      ],
+      "completed_examples": 0,
+      "role": "teacher_label_shard",
+      "shard_id": "v4-shard-002",
+      "split": "train_eval_holdout_candidate",
+      "status": "planned",
+      "target_examples": 2000,
+      "task_id": "exp3270-prompt-injection-teacher-label-shards-2-4-v1",
+      "teacher_label_deliverable": "results/experiment_3270_prompt_injection_teacher_label_shards_2_4_v1.json",
+      "training_eligible": true
+    },
+    {
+      "category_focus": [
+        "non_instruction_benign",
+        "encoding_attack"
+      ],
+      "completed_examples": 0,
+      "role": "teacher_label_shard",
+      "shard_id": "v4-shard-003",
+      "split": "train_eval_holdout_candidate",
+      "status": "planned",
+      "target_examples": 2000,
+      "task_id": "exp3270-prompt-injection-teacher-label-shards-2-4-v1",
+      "teacher_label_deliverable": "results/experiment_3270_prompt_injection_teacher_label_shards_2_4_v1.json",
+      "training_eligible": true
+    },
+    {
+      "category_focus": [
+        "dataflip_kad_adaptive_attack",
+        "tool_rag_indirect_injection_attack"
+      ],
+      "completed_examples": 0,
+      "role": "teacher_label_shard",
+      "shard_id": "v4-shard-004",
+      "split": "train_eval_holdout_candidate",
+      "status": "planned",
+      "target_examples": 2000,
+      "task_id": "exp3270-prompt-injection-teacher-label-shards-2-4-v1",
+      "teacher_label_deliverable": "results/experiment_3270_prompt_injection_teacher_label_shards_2_4_v1.json",
+      "training_eligible": true
+    },
+    {
+      "category_focus": [
+        "long_reasoning_heavy_attack",
+        "misaligned_instruction_attack"
+      ],
+      "completed_examples": 0,
+      "role": "teacher_label_shard",
+      "shard_id": "v4-shard-005",
+      "split": "train_eval_holdout_candidate",
+      "status": "planned",
+      "target_examples": 2000,
+      "task_id": "exp3271-prompt-injection-teacher-label-shards-5-7-garak-seed-v1",
+      "teacher_label_deliverable": "results/experiment_3271_prompt_injection_teacher_label_shards_5_7_garak_seed_v1.json",
+      "training_eligible": true
+    },
+    {
+      "category_focus": [
+        "aligned_instruction_benign",
+        "dataflip_kad_adaptive_attack"
+      ],
+      "completed_examples": 0,
+      "role": "teacher_label_shard",
+      "shard_id": "v4-shard-006",
+      "split": "train_eval_holdout_candidate",
+      "status": "planned",
+      "target_examples": 2000,
+      "task_id": "exp3271-prompt-injection-teacher-label-shards-5-7-garak-seed-v1",
+      "teacher_label_deliverable": "results/experiment_3271_prompt_injection_teacher_label_shards_5_7_garak_seed_v1.json",
+      "training_eligible": true
+    },
+    {
+      "category_focus": [
+        "tool_rag_indirect_injection_attack",
+        "encoding_attack"
+      ],
+      "completed_examples": 0,
+      "role": "teacher_label_shard",
+      "shard_id": "v4-shard-007",
+      "split": "train_eval_holdout_candidate",
+      "status": "planned",
+      "target_examples": 2000,
+      "task_id": "exp3271-prompt-injection-teacher-label-shards-5-7-garak-seed-v1",
+      "teacher_label_deliverable": "results/experiment_3271_prompt_injection_teacher_label_shards_5_7_garak_seed_v1.json",
+      "training_eligible": true
+    },
+    {
+      "category_focus": [
+        "dataflip_kad_adaptive_attack",
+        "encoding_attack",
+        "tool_rag_indirect_injection_attack"
+      ],
+      "completed_examples": 0,
+      "role": "garak_adaptive_seed_set",
+      "shard_id": "v4-garak-adaptive-seed",
+      "split": "garak_adaptive_seed",
+      "status": "planned",
+      "target_examples": 1000,
+      "task_id": "exp3271-prompt-injection-teacher-label-shards-5-7-garak-seed-v1",
+      "teacher_label_deliverable": "results/experiment_3271_prompt_injection_teacher_label_shards_5_7_garak_seed_v1.json",
+      "training_eligible": false
+    }
+  ],
+  "source_artifacts": [
+    {
+      "path": "CLAUDE.md",
+      "present": true,
+      "role": "claude_guidance",
+      "sha256": "0f0fbfda64a0a6aa696c6618a0a9bd523b4a21c56ba758eccd2833a5e8323093"
+    },
+    {
+      "path": "research-program.md",
+      "present": true,
+      "role": "research_program",
+      "sha256": "77bb0d27e53be086ef0a70d19a1ff2fa897bd6efbc1cbb2bfaeb51b62a319f26"
+    },
+    {
+      "path": "research-references.md",
+      "present": true,
+      "role": "research_references",
+      "sha256": "0a5a638aa6935cae044e6e973e0bf1e2501baba24767fba94abbd0488ce8b651"
+    },
+    {
+      "path": "data/README.md",
+      "present": false,
+      "role": "optional_data_readme",
+      "sha256": null
+    },
+    {
+      "path": "results/experiment_3239_prompt_injection_kan_v4_resource_manifest_v1.json",
+      "present": true,
+      "role": "exp3239_v4_resource_manifest",
+      "sha256": "eb871cd46a608f7f29aae67b1ae1b7875f8d15a1303e81c58dbf9e8696242821"
+    },
+    {
+      "path": "results/experiment_3264_prompt_injection_teacher_label_shard_v3.json",
+      "present": true,
+      "role": "exp3264_completed_seed_teacher_labels",
+      "sha256": "0d992f09594364f87d28b3d2125f288f6b15397df8ff560665ce3b8fd405bbf5"
+    },
+    {
+      "path": "results/experiment_3265_prompt_injection_kan_train_eval_shard_v3.json",
+      "present": true,
+      "role": "exp3265_seed_kan_viability",
+      "sha256": "3cb6ecbbcfbec03d325aada07a1c79e1e049040df45a25d479618b1172df6488"
+    },
+    {
+      "path": "scripts/research_conductor.py",
+      "present": true,
+      "role": "protected_research_conductor",
+      "sha256": "174bf39c6844215b7beb49f78bcd3a9e447d50c560fdaa10de95b677d8fb98a0"
+    }
+  ],
+  "source_checksums": {
+    "CLAUDE.md": "0f0fbfda64a0a6aa696c6618a0a9bd523b4a21c56ba758eccd2833a5e8323093",
+    "research-program.md": "77bb0d27e53be086ef0a70d19a1ff2fa897bd6efbc1cbb2bfaeb51b62a319f26",
+    "research-references.md": "0a5a638aa6935cae044e6e973e0bf1e2501baba24767fba94abbd0488ce8b651",
+    "results/experiment_3239_prompt_injection_kan_v4_resource_manifest_v1.json": "eb871cd46a608f7f29aae67b1ae1b7875f8d15a1303e81c58dbf9e8696242821",
+    "results/experiment_3264_prompt_injection_teacher_label_shard_v3.json": "0d992f09594364f87d28b3d2125f288f6b15397df8ff560665ce3b8fd405bbf5",
+    "results/experiment_3265_prompt_injection_kan_train_eval_shard_v3.json": "3cb6ecbbcfbec03d325aada07a1c79e1e049040df45a25d479618b1172df6488",
+    "scripts/research_conductor.py": "174bf39c6844215b7beb49f78bcd3a9e447d50c560fdaa10de95b677d8fb98a0"
+  },
+  "split_plan": {
+    "eval": {
+      "selection_rule": "paired_rows_for_primary_auc_and_threshold_tuning",
+      "source_shards": [
+        "v4-shard-001",
+        "v4-shard-002",
+        "v4-shard-003",
+        "v4-shard-004",
+        "v4-shard-005",
+        "v4-shard-006",
+        "v4-shard-007"
+      ],
+      "target_examples": 2000,
+      "training_eligible": false
+    },
+    "garak_adaptive_seed": {
+      "selection_rule": "evaluation_only_garak_dataflip_adaptive_pressure",
+      "source_shards": [
+        "v4-garak-adaptive-seed"
+      ],
+      "target_examples": 1000,
+      "training_eligible": false
+    },
+    "holdout": {
+      "selection_rule": "never_seen_until_final_report_or_repair_gate",
+      "source_shards": [
+        "v4-shard-001",
+        "v4-shard-002",
+        "v4-shard-003",
+        "v4-shard-004",
+        "v4-shard-005",
+        "v4-shard-006",
+        "v4-shard-007"
+      ],
+      "target_examples": 2000,
+      "training_eligible": false
+    },
+    "train": {
+      "selection_rule": "stratified_by_class_taxonomy_and_source_hash",
+      "source_shards": [
+        "v4-shard-001",
+        "v4-shard-002",
+        "v4-shard-003",
+        "v4-shard-004",
+        "v4-shard-005",
+        "v4-shard-006",
+        "v4-shard-007"
+      ],
+      "target_examples": 10000,
+      "training_eligible": true
+    }
+  },
+  "target_total_examples": 15000,
+  "task_id": "exp3269-prompt-injection-v4-full-corpus-split-manifest-v1",
+  "upstream_exp3239": {
+    "honest_verdict": "complete: v4 manifest ready; no labels generated",
+    "path": "results/experiment_3239_prompt_injection_kan_v4_resource_manifest_v1.json",
+    "present": true,
+    "sha256": "eb871cd46a608f7f29aae67b1ae1b7875f8d15a1303e81c58dbf9e8696242821",
+    "v4_manifest_ready": true
+  }
+}

@@ -1,0 +1,2242 @@
+{
+  "artifact": "experiment_2926_constraintbench_constrained_output_rerun_v2",
+  "cached_sota_pair_error": null,
+  "cached_sota_pair_used": true,
+  "constrained_decoder_available": false,
+  "constrained_decoder_backend": {
+    "backend_name": "prompt_schema_with_deterministic_parser_repair",
+    "constrained_decoder_available": false,
+    "decoder_error": "llguidance probing disabled",
+    "fallback_backend_available": true,
+    "grammar": null,
+    "llguidance_version": null
+  },
+  "constraintbench_corrigendum_ready": false,
+  "duration_s": 0.08434224128723145,
+  "feasibility_rate_given_syntax": 1.0,
+  "feasibility_rate_overall": 1.0,
+  "flagged_adversarial": true,
+  "honest_verdict": "blocked_duration_gate_failed",
+  "inference_substrate": "live_llm_inference",
+  "live_inference_duration_s": 12.0,
+  "model_attempts": [
+    {
+      "blocker": null,
+      "hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "live_inference_duration_s": 12.0,
+      "model_name": "Gemma4-26B-A4B-it",
+      "model_path": "/tmp/gemma.gguf",
+      "model_used": true
+    }
+  ],
+  "model_specs": [
+    {
+      "gpu": 1,
+      "hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "model_path": "/tmp/gemma.gguf",
+      "name": "Gemma4-26B-A4B-it"
+    }
+  ],
+  "models_used": [
+    "unsloth/gemma-4-26B-A4B-it-GGUF"
+  ],
+  "n_tasks": 30,
+  "optimality_rate_given_feasible": 1.0,
+  "per_task_results": [
+    {
+      "constraints": {
+        "linear_constraints": [
+          {
+            "coefficients": {
+              "x": 1,
+              "y": 2
+            },
+            "op": "<=",
+            "rhs": 6
+          },
+          {
+            "coefficients": {
+              "x": 2,
+              "y": 1
+            },
+            "op": "<=",
+            "rhs": 7
+          }
+        ],
+        "variable_bounds": {
+          "x": [
+            0,
+            4
+          ],
+          "y": [
+            0,
+            4
+          ]
+        }
+      },
+      "elapsed_seconds": 0.1,
+      "exact_verifier_type": "bounded_integer_exhaustive",
+      "feasible": true,
+      "generation_blocker": null,
+      "generation_source": "live_sota_llamacpp_prompt_schema",
+      "gpu_index": 1,
+      "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "model_name": "Gemma4-26B-A4B-it",
+      "model_path": "/tmp/gemma.gguf",
+      "objective_function": {
+        "coefficients": {
+          "x": 3,
+          "y": 2
+        },
+        "sense": "max"
+      },
+      "objective_sense": "max",
+      "objective_value": 11,
+      "optimal": true,
+      "optimum_value": 11,
+      "parse_error": null,
+      "parsed_output": {
+        "variables": {
+          "x": 3,
+          "y": 1
+        }
+      },
+      "parser_repair_applied": false,
+      "parser_repair_note": null,
+      "per_task_seed": 2926,
+      "prompt_hash": "4789b2b9a0588ddfc315a4ec0221dc4d2f174bebccdef7c744c39b973032534c",
+      "raw_response_path": "",
+      "raw_response_sha256": "e7e4c5ed35ecb653abf0c2b8b9ecf1536e71c17d2f2a2bca7f1335d8fe6e64ad",
+      "syntax_valid": true,
+      "task_id": "cbmini-2926-linear-001",
+      "task_type": "linear_integer",
+      "verifier_result": {
+        "feasible": true,
+        "objective_value": 11,
+        "optimal": true,
+        "optimum_value": 11,
+        "syntax_valid": true,
+        "violation_reasons": []
+      },
+      "violation_class": "none",
+      "violation_reasons": []
+    },
+    {
+      "constraints": {
+        "capacity": 7,
+        "excludes": [
+          [
+            "lamp",
+            "rope"
+          ]
+        ],
+        "item_weights": {
+          "kit": 1,
+          "lamp": 4,
+          "map": 2,
+          "rope": 3
+        },
+        "required_items": [
+          "kit"
+        ]
+      },
+      "elapsed_seconds": 0.1,
+      "exact_verifier_type": "binary_subset_exhaustive",
+      "feasible": true,
+      "generation_blocker": null,
+      "generation_source": "live_sota_llamacpp_prompt_schema",
+      "gpu_index": 1,
+      "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "model_name": "Gemma4-26B-A4B-it",
+      "model_path": "/tmp/gemma.gguf",
+      "objective_function": {
+        "item_values": {
+          "kit": 3,
+          "lamp": 7,
+          "map": 5,
+          "rope": 6
+        },
+        "sense": "max"
+      },
+      "objective_sense": "max",
+      "objective_value": 15,
+      "optimal": true,
+      "optimum_value": 15,
+      "parse_error": null,
+      "parsed_output": {
+        "selected_items": [
+          "map",
+          "lamp",
+          "kit"
+        ]
+      },
+      "parser_repair_applied": false,
+      "parser_repair_note": null,
+      "per_task_seed": 2927,
+      "prompt_hash": "af09044bbe625b8e384b96b32221d8ef3497d313dd80d9a7907216acd6b541b3",
+      "raw_response_path": "",
+      "raw_response_sha256": "ad3b433a0fb8b5be220aef7c31602b4edf4500fc09a89677fcdb597e506913b8",
+      "syntax_valid": true,
+      "task_id": "cbmini-2926-knapsack-001",
+      "task_type": "knapsack_binary",
+      "verifier_result": {
+        "feasible": true,
+        "objective_value": 15,
+        "optimal": true,
+        "optimum_value": 15,
+        "syntax_valid": true,
+        "violation_reasons": []
+      },
+      "violation_class": "none",
+      "violation_reasons": []
+    },
+    {
+      "constraints": {
+        "edges": [
+          [
+            0,
+            1
+          ],
+          [
+            1,
+            2
+          ],
+          [
+            2,
+            3
+          ]
+        ],
+        "n_colors": 3,
+        "n_nodes": 4
+      },
+      "elapsed_seconds": 0.1,
+      "exact_verifier_type": "color_assignment_exhaustive",
+      "feasible": true,
+      "generation_blocker": null,
+      "generation_source": "live_sota_llamacpp_prompt_schema",
+      "gpu_index": 1,
+      "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "model_name": "Gemma4-26B-A4B-it",
+      "model_path": "/tmp/gemma.gguf",
+      "objective_function": {
+        "expression": "sum(color_id for each node)",
+        "sense": "min"
+      },
+      "objective_sense": "min",
+      "objective_value": 2,
+      "optimal": true,
+      "optimum_value": 2,
+      "parse_error": null,
+      "parsed_output": {
+        "colors": {
+          "0": 0,
+          "1": 1,
+          "2": 0,
+          "3": 1
+        }
+      },
+      "parser_repair_applied": false,
+      "parser_repair_note": null,
+      "per_task_seed": 2928,
+      "prompt_hash": "7ddf38d7a73c1ab366aef01b1c66c21949f2095312f3e4ba68728daabe120fd9",
+      "raw_response_path": "",
+      "raw_response_sha256": "b026aee1d9f4e25322137b86c78c3f4d2a9bcbf2b077e36264c460008c64d59d",
+      "syntax_valid": true,
+      "task_id": "cbmini-2926-graph-001",
+      "task_type": "graph_coloring",
+      "verifier_result": {
+        "feasible": true,
+        "objective_value": 2,
+        "optimal": true,
+        "optimum_value": 2,
+        "syntax_valid": true,
+        "violation_reasons": []
+      },
+      "violation_class": "none",
+      "violation_reasons": []
+    },
+    {
+      "constraints": {
+        "linear_constraints": [
+          {
+            "coefficients": {
+              "x": 1,
+              "y": 1
+            },
+            "op": ">=",
+            "rhs": 4
+          },
+          {
+            "coefficients": {
+              "x": 1
+            },
+            "op": ">=",
+            "rhs": 1
+          }
+        ],
+        "variable_bounds": {
+          "x": [
+            0,
+            5
+          ],
+          "y": [
+            0,
+            5
+          ]
+        }
+      },
+      "elapsed_seconds": 0.1,
+      "exact_verifier_type": "bounded_integer_exhaustive",
+      "feasible": true,
+      "generation_blocker": null,
+      "generation_source": "live_sota_llamacpp_prompt_schema",
+      "gpu_index": 1,
+      "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "model_name": "Gemma4-26B-A4B-it",
+      "model_path": "/tmp/gemma.gguf",
+      "objective_function": {
+        "coefficients": {
+          "x": 2,
+          "y": 3
+        },
+        "sense": "min"
+      },
+      "objective_sense": "min",
+      "objective_value": 8,
+      "optimal": true,
+      "optimum_value": 8,
+      "parse_error": null,
+      "parsed_output": {
+        "variables": {
+          "x": 4,
+          "y": 0
+        }
+      },
+      "parser_repair_applied": false,
+      "parser_repair_note": null,
+      "per_task_seed": 2929,
+      "prompt_hash": "bf540cae252485f12219983ff54f8cdae8a77be6599d50b72e83c98abc87b2eb",
+      "raw_response_path": "",
+      "raw_response_sha256": "0231800d0efe5b4ffe6d29429625e10057956391bbdd89321e9fd2a21ca7a6f0",
+      "syntax_valid": true,
+      "task_id": "cbmini-2926-linear-002",
+      "task_type": "linear_integer",
+      "verifier_result": {
+        "feasible": true,
+        "objective_value": 8,
+        "optimal": true,
+        "optimum_value": 8,
+        "syntax_valid": true,
+        "violation_reasons": []
+      },
+      "violation_class": "none",
+      "violation_reasons": []
+    },
+    {
+      "constraints": {
+        "capacity": 9,
+        "excludes": [
+          [
+            "gpu",
+            "wifi"
+          ]
+        ],
+        "item_weights": {
+          "cpu": 3,
+          "gpu": 5,
+          "ssd": 2,
+          "wifi": 1
+        },
+        "required_items": []
+      },
+      "elapsed_seconds": 0.1,
+      "exact_verifier_type": "binary_subset_exhaustive",
+      "feasible": true,
+      "generation_blocker": null,
+      "generation_source": "live_sota_llamacpp_prompt_schema",
+      "gpu_index": 1,
+      "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "model_name": "Gemma4-26B-A4B-it",
+      "model_path": "/tmp/gemma.gguf",
+      "objective_function": {
+        "item_values": {
+          "cpu": 8,
+          "gpu": 11,
+          "ssd": 5,
+          "wifi": 2
+        },
+        "sense": "max"
+      },
+      "objective_sense": "max",
+      "objective_value": 19,
+      "optimal": true,
+      "optimum_value": 19,
+      "parse_error": null,
+      "parsed_output": {
+        "selected_items": [
+          "cpu",
+          "gpu"
+        ]
+      },
+      "parser_repair_applied": false,
+      "parser_repair_note": null,
+      "per_task_seed": 2930,
+      "prompt_hash": "d066280e9eaa975a09552dad9b39f8955c4b586e871baf468b05c47463871d40",
+      "raw_response_path": "",
+      "raw_response_sha256": "b13bb0ca2a05e9ef0a7101d499ca4bf869e90a59b5c2d80517b1e6ba9b320d65",
+      "syntax_valid": true,
+      "task_id": "cbmini-2926-knapsack-002",
+      "task_type": "knapsack_binary",
+      "verifier_result": {
+        "feasible": true,
+        "objective_value": 19,
+        "optimal": true,
+        "optimum_value": 19,
+        "syntax_valid": true,
+        "violation_reasons": []
+      },
+      "violation_class": "none",
+      "violation_reasons": []
+    },
+    {
+      "constraints": {
+        "edges": [
+          [
+            0,
+            1
+          ],
+          [
+            1,
+            2
+          ],
+          [
+            2,
+            0
+          ],
+          [
+            2,
+            3
+          ]
+        ],
+        "n_colors": 3,
+        "n_nodes": 4
+      },
+      "elapsed_seconds": 0.1,
+      "exact_verifier_type": "color_assignment_exhaustive",
+      "feasible": true,
+      "generation_blocker": null,
+      "generation_source": "live_sota_llamacpp_prompt_schema",
+      "gpu_index": 1,
+      "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "model_name": "Gemma4-26B-A4B-it",
+      "model_path": "/tmp/gemma.gguf",
+      "objective_function": {
+        "expression": "sum(color_id for each node)",
+        "sense": "min"
+      },
+      "objective_sense": "min",
+      "objective_value": 3,
+      "optimal": true,
+      "optimum_value": 3,
+      "parse_error": null,
+      "parsed_output": {
+        "colors": {
+          "0": 0,
+          "1": 1,
+          "2": 2,
+          "3": 0
+        }
+      },
+      "parser_repair_applied": false,
+      "parser_repair_note": null,
+      "per_task_seed": 2931,
+      "prompt_hash": "0c934dfdcd528182152a670878e15f42e15187f43fd7e5bab3d6f2b39524c0a4",
+      "raw_response_path": "",
+      "raw_response_sha256": "4e01ea5ba56db54f5053945d1462b2251be98eba7a8224b0c8cdef23340563a1",
+      "syntax_valid": true,
+      "task_id": "cbmini-2926-graph-002",
+      "task_type": "graph_coloring",
+      "verifier_result": {
+        "feasible": true,
+        "objective_value": 3,
+        "optimal": true,
+        "optimum_value": 3,
+        "syntax_valid": true,
+        "violation_reasons": []
+      },
+      "violation_class": "none",
+      "violation_reasons": []
+    },
+    {
+      "constraints": {
+        "linear_constraints": [
+          {
+            "coefficients": {
+              "a": 2,
+              "b": 1,
+              "c": 2
+            },
+            "op": "<=",
+            "rhs": 8
+          },
+          {
+            "coefficients": {
+              "a": 1,
+              "b": -1
+            },
+            "op": ">=",
+            "rhs": 0
+          }
+        ],
+        "variable_bounds": {
+          "a": [
+            0,
+            3
+          ],
+          "b": [
+            0,
+            3
+          ],
+          "c": [
+            0,
+            2
+          ]
+        }
+      },
+      "elapsed_seconds": 0.1,
+      "exact_verifier_type": "bounded_integer_exhaustive",
+      "feasible": true,
+      "generation_blocker": null,
+      "generation_source": "live_sota_llamacpp_prompt_schema",
+      "gpu_index": 1,
+      "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "model_name": "Gemma4-26B-A4B-it",
+      "model_path": "/tmp/gemma.gguf",
+      "objective_function": {
+        "coefficients": {
+          "a": 4,
+          "b": 3,
+          "c": 5
+        },
+        "sense": "max"
+      },
+      "objective_sense": "max",
+      "objective_value": 19,
+      "optimal": true,
+      "optimum_value": 19,
+      "parse_error": null,
+      "parsed_output": {
+        "variables": {
+          "a": 2,
+          "b": 2,
+          "c": 1
+        }
+      },
+      "parser_repair_applied": false,
+      "parser_repair_note": null,
+      "per_task_seed": 2932,
+      "prompt_hash": "7bb9f21bedd782242a9deb33035480cb22af4ceca00cd7191a5d2f8dd24ade49",
+      "raw_response_path": "",
+      "raw_response_sha256": "2c6c5f294d4d8c8b27ffa5fcec35a9c43747e864a20313fedd0e027b588b35d8",
+      "syntax_valid": true,
+      "task_id": "cbmini-2926-linear-003",
+      "task_type": "linear_integer",
+      "verifier_result": {
+        "feasible": true,
+        "objective_value": 19,
+        "optimal": true,
+        "optimum_value": 19,
+        "syntax_valid": true,
+        "violation_reasons": []
+      },
+      "violation_class": "none",
+      "violation_reasons": []
+    },
+    {
+      "constraints": {
+        "capacity": 8,
+        "excludes": [
+          [
+            "radio",
+            "battery"
+          ]
+        ],
+        "item_weights": {
+          "battery": 4,
+          "case": 1,
+          "radio": 3,
+          "sensor": 2
+        },
+        "required_items": [
+          "case"
+        ]
+      },
+      "elapsed_seconds": 0.1,
+      "exact_verifier_type": "binary_subset_exhaustive",
+      "feasible": true,
+      "generation_blocker": null,
+      "generation_source": "live_sota_llamacpp_prompt_schema",
+      "gpu_index": 1,
+      "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "model_name": "Gemma4-26B-A4B-it",
+      "model_path": "/tmp/gemma.gguf",
+      "objective_function": {
+        "item_values": {
+          "battery": 8,
+          "case": 1,
+          "radio": 7,
+          "sensor": 4
+        },
+        "sense": "max"
+      },
+      "objective_sense": "max",
+      "objective_value": 13,
+      "optimal": true,
+      "optimum_value": 13,
+      "parse_error": null,
+      "parsed_output": {
+        "selected_items": [
+          "sensor",
+          "battery",
+          "case"
+        ]
+      },
+      "parser_repair_applied": false,
+      "parser_repair_note": null,
+      "per_task_seed": 2933,
+      "prompt_hash": "b600bf4b7c5b7afea5b08a912ce7d1dc0de4f26e0ff87dc8776592b420fa1a0e",
+      "raw_response_path": "",
+      "raw_response_sha256": "c422ac8a51a73d629159ce8f02810bd9c485868433920641355986dd96a0aceb",
+      "syntax_valid": true,
+      "task_id": "cbmini-2926-knapsack-003",
+      "task_type": "knapsack_binary",
+      "verifier_result": {
+        "feasible": true,
+        "objective_value": 13,
+        "optimal": true,
+        "optimum_value": 13,
+        "syntax_valid": true,
+        "violation_reasons": []
+      },
+      "violation_class": "none",
+      "violation_reasons": []
+    },
+    {
+      "constraints": {
+        "edges": [
+          [
+            0,
+            1
+          ],
+          [
+            0,
+            2
+          ],
+          [
+            0,
+            3
+          ],
+          [
+            0,
+            4
+          ]
+        ],
+        "n_colors": 3,
+        "n_nodes": 5
+      },
+      "elapsed_seconds": 0.1,
+      "exact_verifier_type": "color_assignment_exhaustive",
+      "feasible": true,
+      "generation_blocker": null,
+      "generation_source": "live_sota_llamacpp_prompt_schema",
+      "gpu_index": 1,
+      "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "model_name": "Gemma4-26B-A4B-it",
+      "model_path": "/tmp/gemma.gguf",
+      "objective_function": {
+        "expression": "sum(color_id for each node)",
+        "sense": "min"
+      },
+      "objective_sense": "min",
+      "objective_value": 1,
+      "optimal": true,
+      "optimum_value": 1,
+      "parse_error": null,
+      "parsed_output": {
+        "colors": {
+          "0": 1,
+          "1": 0,
+          "2": 0,
+          "3": 0,
+          "4": 0
+        }
+      },
+      "parser_repair_applied": false,
+      "parser_repair_note": null,
+      "per_task_seed": 2934,
+      "prompt_hash": "2f700fc01e53654ae70930c141b27fa5e991dc314fc5ce98c7c6919922b48b7c",
+      "raw_response_path": "",
+      "raw_response_sha256": "e0ad07d175a6bf4be4371a9838a0327c46496c3a84cca166efac193bd8e5e0a8",
+      "syntax_valid": true,
+      "task_id": "cbmini-2926-graph-003",
+      "task_type": "graph_coloring",
+      "verifier_result": {
+        "feasible": true,
+        "objective_value": 1,
+        "optimal": true,
+        "optimum_value": 1,
+        "syntax_valid": true,
+        "violation_reasons": []
+      },
+      "violation_class": "none",
+      "violation_reasons": []
+    },
+    {
+      "constraints": {
+        "linear_constraints": [
+          {
+            "coefficients": {
+              "p": 2,
+              "q": 1
+            },
+            "op": ">=",
+            "rhs": 5
+          },
+          {
+            "coefficients": {
+              "q": 1
+            },
+            "op": ">=",
+            "rhs": 1
+          }
+        ],
+        "variable_bounds": {
+          "p": [
+            0,
+            4
+          ],
+          "q": [
+            0,
+            4
+          ]
+        }
+      },
+      "elapsed_seconds": 0.1,
+      "exact_verifier_type": "bounded_integer_exhaustive",
+      "feasible": true,
+      "generation_blocker": null,
+      "generation_source": "live_sota_llamacpp_prompt_schema",
+      "gpu_index": 1,
+      "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "model_name": "Gemma4-26B-A4B-it",
+      "model_path": "/tmp/gemma.gguf",
+      "objective_function": {
+        "coefficients": {
+          "p": 5,
+          "q": 1
+        },
+        "sense": "min"
+      },
+      "objective_sense": "min",
+      "objective_value": 8,
+      "optimal": true,
+      "optimum_value": 8,
+      "parse_error": null,
+      "parsed_output": {
+        "variables": {
+          "p": 1,
+          "q": 3
+        }
+      },
+      "parser_repair_applied": false,
+      "parser_repair_note": null,
+      "per_task_seed": 2935,
+      "prompt_hash": "90f7d759f5a6f97ebeca896b9d023d85e3a5cdf6ff47c160785b7277d28f06d5",
+      "raw_response_path": "",
+      "raw_response_sha256": "e3b3a4943ae51231ba2755f8b0ad71c4badb3c854e17787224781b519c1085cd",
+      "syntax_valid": true,
+      "task_id": "cbmini-2926-linear-004",
+      "task_type": "linear_integer",
+      "verifier_result": {
+        "feasible": true,
+        "objective_value": 8,
+        "optimal": true,
+        "optimum_value": 8,
+        "syntax_valid": true,
+        "violation_reasons": []
+      },
+      "violation_class": "none",
+      "violation_reasons": []
+    },
+    {
+      "constraints": {
+        "capacity": 10,
+        "excludes": [
+          [
+            "atlas",
+            "guide"
+          ]
+        ],
+        "item_weights": {
+          "atlas": 4,
+          "guide": 2,
+          "med": 2,
+          "water": 3
+        },
+        "required_items": [
+          "water"
+        ]
+      },
+      "elapsed_seconds": 0.1,
+      "exact_verifier_type": "binary_subset_exhaustive",
+      "feasible": true,
+      "generation_blocker": null,
+      "generation_source": "live_sota_llamacpp_prompt_schema",
+      "gpu_index": 1,
+      "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "model_name": "Gemma4-26B-A4B-it",
+      "model_path": "/tmp/gemma.gguf",
+      "objective_function": {
+        "item_values": {
+          "atlas": 8,
+          "guide": 3,
+          "med": 5,
+          "water": 6
+        },
+        "sense": "max"
+      },
+      "objective_sense": "max",
+      "objective_value": 19,
+      "optimal": true,
+      "optimum_value": 19,
+      "parse_error": null,
+      "parsed_output": {
+        "selected_items": [
+          "atlas",
+          "water",
+          "med"
+        ]
+      },
+      "parser_repair_applied": false,
+      "parser_repair_note": null,
+      "per_task_seed": 2936,
+      "prompt_hash": "cf89580c8d287a07f506c90fa7dd62338a53ebd34301de176a9759a07063689e",
+      "raw_response_path": "",
+      "raw_response_sha256": "c56c70296c2ba78530953c5df42dfba3145485fc7f6cda4ea4510b76aeacbb33",
+      "syntax_valid": true,
+      "task_id": "cbmini-2926-knapsack-004",
+      "task_type": "knapsack_binary",
+      "verifier_result": {
+        "feasible": true,
+        "objective_value": 19,
+        "optimal": true,
+        "optimum_value": 19,
+        "syntax_valid": true,
+        "violation_reasons": []
+      },
+      "violation_class": "none",
+      "violation_reasons": []
+    },
+    {
+      "constraints": {
+        "edges": [
+          [
+            0,
+            1
+          ],
+          [
+            1,
+            2
+          ],
+          [
+            2,
+            3
+          ],
+          [
+            3,
+            4
+          ],
+          [
+            4,
+            0
+          ]
+        ],
+        "n_colors": 4,
+        "n_nodes": 5
+      },
+      "elapsed_seconds": 0.1,
+      "exact_verifier_type": "color_assignment_exhaustive",
+      "feasible": true,
+      "generation_blocker": null,
+      "generation_source": "live_sota_llamacpp_prompt_schema",
+      "gpu_index": 1,
+      "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "model_name": "Gemma4-26B-A4B-it",
+      "model_path": "/tmp/gemma.gguf",
+      "objective_function": {
+        "expression": "sum(color_id for each node)",
+        "sense": "min"
+      },
+      "objective_sense": "min",
+      "objective_value": 4,
+      "optimal": true,
+      "optimum_value": 4,
+      "parse_error": null,
+      "parsed_output": {
+        "colors": {
+          "0": 0,
+          "1": 1,
+          "2": 0,
+          "3": 1,
+          "4": 2
+        }
+      },
+      "parser_repair_applied": false,
+      "parser_repair_note": null,
+      "per_task_seed": 2937,
+      "prompt_hash": "e6419498786da2a4389b1d3615db1a09f63d7dca4d06524a33b481c6538a6920",
+      "raw_response_path": "",
+      "raw_response_sha256": "c76458434cbfc9cbe5fbed1a280976009f8038385866fd7b37774378dbd88777",
+      "syntax_valid": true,
+      "task_id": "cbmini-2926-graph-004",
+      "task_type": "graph_coloring",
+      "verifier_result": {
+        "feasible": true,
+        "objective_value": 4,
+        "optimal": true,
+        "optimum_value": 4,
+        "syntax_valid": true,
+        "violation_reasons": []
+      },
+      "violation_class": "none",
+      "violation_reasons": []
+    },
+    {
+      "constraints": {
+        "linear_constraints": [
+          {
+            "coefficients": {
+              "u": 1,
+              "v": 1
+            },
+            "op": "<=",
+            "rhs": 6
+          },
+          {
+            "coefficients": {
+              "u": 1,
+              "v": -1
+            },
+            "op": ">=",
+            "rhs": 1
+          }
+        ],
+        "variable_bounds": {
+          "u": [
+            0,
+            5
+          ],
+          "v": [
+            0,
+            3
+          ]
+        }
+      },
+      "elapsed_seconds": 0.1,
+      "exact_verifier_type": "bounded_integer_exhaustive",
+      "feasible": true,
+      "generation_blocker": null,
+      "generation_source": "live_sota_llamacpp_prompt_schema",
+      "gpu_index": 1,
+      "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "model_name": "Gemma4-26B-A4B-it",
+      "model_path": "/tmp/gemma.gguf",
+      "objective_function": {
+        "coefficients": {
+          "u": 1,
+          "v": 6
+        },
+        "sense": "max"
+      },
+      "objective_sense": "max",
+      "objective_value": 16,
+      "optimal": true,
+      "optimum_value": 16,
+      "parse_error": null,
+      "parsed_output": {
+        "variables": {
+          "u": 4,
+          "v": 2
+        }
+      },
+      "parser_repair_applied": false,
+      "parser_repair_note": null,
+      "per_task_seed": 2938,
+      "prompt_hash": "5575cc6bd0787a71576c5eaf51fec73869d8e67e10277a4df65fcdcca2d0c3f2",
+      "raw_response_path": "",
+      "raw_response_sha256": "98acb03c41052600a9fafe20008288291236c8fc06f31e8dced8d4f5018f596d",
+      "syntax_valid": true,
+      "task_id": "cbmini-2926-linear-005",
+      "task_type": "linear_integer",
+      "verifier_result": {
+        "feasible": true,
+        "objective_value": 16,
+        "optimal": true,
+        "optimum_value": 16,
+        "syntax_valid": true,
+        "violation_reasons": []
+      },
+      "violation_class": "none",
+      "violation_reasons": []
+    },
+    {
+      "constraints": {
+        "capacity": 6,
+        "excludes": [
+          [
+            "red",
+            "green"
+          ]
+        ],
+        "item_weights": {
+          "blue": 2,
+          "green": 3,
+          "red": 2,
+          "white": 1
+        },
+        "required_items": []
+      },
+      "elapsed_seconds": 0.1,
+      "exact_verifier_type": "binary_subset_exhaustive",
+      "feasible": true,
+      "generation_blocker": null,
+      "generation_source": "live_sota_llamacpp_prompt_schema",
+      "gpu_index": 1,
+      "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "model_name": "Gemma4-26B-A4B-it",
+      "model_path": "/tmp/gemma.gguf",
+      "objective_function": {
+        "item_values": {
+          "blue": 4,
+          "green": 7,
+          "red": 5,
+          "white": 2
+        },
+        "sense": "max"
+      },
+      "objective_sense": "max",
+      "objective_value": 13,
+      "optimal": true,
+      "optimum_value": 13,
+      "parse_error": null,
+      "parsed_output": {
+        "selected_items": [
+          "blue",
+          "green",
+          "white"
+        ]
+      },
+      "parser_repair_applied": false,
+      "parser_repair_note": null,
+      "per_task_seed": 2939,
+      "prompt_hash": "aad727b28bb2894880475884a5aec0187113f42c77cd352f969f5ab3ecca39bd",
+      "raw_response_path": "",
+      "raw_response_sha256": "4ec9fd7894f7464b10ad0bb9f7ca85219e301f3359bf81602f935dc94a4a8e48",
+      "syntax_valid": true,
+      "task_id": "cbmini-2926-knapsack-005",
+      "task_type": "knapsack_binary",
+      "verifier_result": {
+        "feasible": true,
+        "objective_value": 13,
+        "optimal": true,
+        "optimum_value": 13,
+        "syntax_valid": true,
+        "violation_reasons": []
+      },
+      "violation_class": "none",
+      "violation_reasons": []
+    },
+    {
+      "constraints": {
+        "edges": [
+          [
+            0,
+            1
+          ],
+          [
+            0,
+            2
+          ],
+          [
+            0,
+            3
+          ],
+          [
+            1,
+            2
+          ],
+          [
+            2,
+            3
+          ]
+        ],
+        "n_colors": 4,
+        "n_nodes": 4
+      },
+      "elapsed_seconds": 0.1,
+      "exact_verifier_type": "color_assignment_exhaustive",
+      "feasible": true,
+      "generation_blocker": null,
+      "generation_source": "live_sota_llamacpp_prompt_schema",
+      "gpu_index": 1,
+      "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "model_name": "Gemma4-26B-A4B-it",
+      "model_path": "/tmp/gemma.gguf",
+      "objective_function": {
+        "expression": "sum(color_id for each node)",
+        "sense": "min"
+      },
+      "objective_sense": "min",
+      "objective_value": 3,
+      "optimal": true,
+      "optimum_value": 3,
+      "parse_error": null,
+      "parsed_output": {
+        "colors": {
+          "0": 1,
+          "1": 0,
+          "2": 2,
+          "3": 0
+        }
+      },
+      "parser_repair_applied": false,
+      "parser_repair_note": null,
+      "per_task_seed": 2940,
+      "prompt_hash": "275d1845864b7b46926f72782b1dde5557cf84f7806a59f4e7c6082aff5e83be",
+      "raw_response_path": "",
+      "raw_response_sha256": "fbd2dc9e0d2fb7e322571760cb3a0cc35c04e403a74d9c2d2d820fdb524e3aea",
+      "syntax_valid": true,
+      "task_id": "cbmini-2926-graph-005",
+      "task_type": "graph_coloring",
+      "verifier_result": {
+        "feasible": true,
+        "objective_value": 3,
+        "optimal": true,
+        "optimum_value": 3,
+        "syntax_valid": true,
+        "violation_reasons": []
+      },
+      "violation_class": "none",
+      "violation_reasons": []
+    },
+    {
+      "constraints": {
+        "linear_constraints": [
+          {
+            "coefficients": {
+              "r": 1,
+              "s": 1,
+              "t": 1
+            },
+            "op": ">=",
+            "rhs": 5
+          },
+          {
+            "coefficients": {
+              "r": 1,
+              "s": -1
+            },
+            "op": "<=",
+            "rhs": 1
+          }
+        ],
+        "variable_bounds": {
+          "r": [
+            0,
+            4
+          ],
+          "s": [
+            0,
+            4
+          ],
+          "t": [
+            0,
+            3
+          ]
+        }
+      },
+      "elapsed_seconds": 0.1,
+      "exact_verifier_type": "bounded_integer_exhaustive",
+      "feasible": true,
+      "generation_blocker": null,
+      "generation_source": "live_sota_llamacpp_prompt_schema",
+      "gpu_index": 1,
+      "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "model_name": "Gemma4-26B-A4B-it",
+      "model_path": "/tmp/gemma.gguf",
+      "objective_function": {
+        "coefficients": {
+          "r": 2,
+          "s": 2,
+          "t": 4
+        },
+        "sense": "min"
+      },
+      "objective_sense": "min",
+      "objective_value": 10,
+      "optimal": true,
+      "optimum_value": 10,
+      "parse_error": null,
+      "parsed_output": {
+        "variables": {
+          "r": 1,
+          "s": 4,
+          "t": 0
+        }
+      },
+      "parser_repair_applied": false,
+      "parser_repair_note": null,
+      "per_task_seed": 2941,
+      "prompt_hash": "f0b88781ad34768fe5edb3fb64e74c455d527116bc0a54aef581425e50968c3d",
+      "raw_response_path": "",
+      "raw_response_sha256": "1c993790fb79872ee19238c02f9e0d3e183a3b0755c2a6c1ad91a23e03388b3a",
+      "syntax_valid": true,
+      "task_id": "cbmini-2926-linear-006",
+      "task_type": "linear_integer",
+      "verifier_result": {
+        "feasible": true,
+        "objective_value": 10,
+        "optimal": true,
+        "optimum_value": 10,
+        "syntax_valid": true,
+        "violation_reasons": []
+      },
+      "violation_class": "none",
+      "violation_reasons": []
+    },
+    {
+      "constraints": {
+        "capacity": 11,
+        "excludes": [
+          [
+            "forge",
+            "drill"
+          ]
+        ],
+        "item_weights": {
+          "drill": 4,
+          "forge": 5,
+          "guard": 3,
+          "meter": 2
+        },
+        "required_items": [
+          "meter"
+        ]
+      },
+      "elapsed_seconds": 0.1,
+      "exact_verifier_type": "binary_subset_exhaustive",
+      "feasible": true,
+      "generation_blocker": null,
+      "generation_source": "live_sota_llamacpp_prompt_schema",
+      "gpu_index": 1,
+      "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "model_name": "Gemma4-26B-A4B-it",
+      "model_path": "/tmp/gemma.gguf",
+      "objective_function": {
+        "item_values": {
+          "drill": 8,
+          "forge": 9,
+          "guard": 6,
+          "meter": 4
+        },
+        "sense": "max"
+      },
+      "objective_sense": "max",
+      "objective_value": 19,
+      "optimal": true,
+      "optimum_value": 19,
+      "parse_error": null,
+      "parsed_output": {
+        "selected_items": [
+          "forge",
+          "meter",
+          "guard"
+        ]
+      },
+      "parser_repair_applied": false,
+      "parser_repair_note": null,
+      "per_task_seed": 2942,
+      "prompt_hash": "a20a8e3e23385f08330fd8d1358276171dbcc8eadd975a9112e94b77925b66fb",
+      "raw_response_path": "",
+      "raw_response_sha256": "294efb2bf42954a2a24d0a4d4718dbecfbdbb0ef05860934a65a73edc461118c",
+      "syntax_valid": true,
+      "task_id": "cbmini-2926-knapsack-006",
+      "task_type": "knapsack_binary",
+      "verifier_result": {
+        "feasible": true,
+        "objective_value": 19,
+        "optimal": true,
+        "optimum_value": 19,
+        "syntax_valid": true,
+        "violation_reasons": []
+      },
+      "violation_class": "none",
+      "violation_reasons": []
+    },
+    {
+      "constraints": {
+        "edges": [
+          [
+            0,
+            1
+          ],
+          [
+            1,
+            2
+          ],
+          [
+            3,
+            4
+          ],
+          [
+            4,
+            5
+          ],
+          [
+            2,
+            5
+          ]
+        ],
+        "n_colors": 3,
+        "n_nodes": 6
+      },
+      "elapsed_seconds": 0.1,
+      "exact_verifier_type": "color_assignment_exhaustive",
+      "feasible": true,
+      "generation_blocker": null,
+      "generation_source": "live_sota_llamacpp_prompt_schema",
+      "gpu_index": 1,
+      "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "model_name": "Gemma4-26B-A4B-it",
+      "model_path": "/tmp/gemma.gguf",
+      "objective_function": {
+        "expression": "sum(color_id for each node)",
+        "sense": "min"
+      },
+      "objective_sense": "min",
+      "objective_value": 3,
+      "optimal": true,
+      "optimum_value": 3,
+      "parse_error": null,
+      "parsed_output": {
+        "colors": {
+          "0": 0,
+          "1": 1,
+          "2": 0,
+          "3": 1,
+          "4": 0,
+          "5": 1
+        }
+      },
+      "parser_repair_applied": false,
+      "parser_repair_note": null,
+      "per_task_seed": 2943,
+      "prompt_hash": "82528cd804c7973e349f83c209c51f1f08a3540ccac0fda993c304a527f520dc",
+      "raw_response_path": "",
+      "raw_response_sha256": "94269648f0b4c19b0b89deba5159ca70434f905de3887099973fafb6310bb34c",
+      "syntax_valid": true,
+      "task_id": "cbmini-2926-graph-006",
+      "task_type": "graph_coloring",
+      "verifier_result": {
+        "feasible": true,
+        "objective_value": 3,
+        "optimal": true,
+        "optimum_value": 3,
+        "syntax_valid": true,
+        "violation_reasons": []
+      },
+      "violation_class": "none",
+      "violation_reasons": []
+    },
+    {
+      "constraints": {
+        "linear_constraints": [
+          {
+            "coefficients": {
+              "x": 1,
+              "y": 2
+            },
+            "op": "<=",
+            "rhs": 6
+          },
+          {
+            "coefficients": {
+              "x": 2,
+              "y": 1
+            },
+            "op": "<=",
+            "rhs": 7
+          }
+        ],
+        "variable_bounds": {
+          "x": [
+            0,
+            4
+          ],
+          "y": [
+            0,
+            4
+          ]
+        }
+      },
+      "elapsed_seconds": 0.1,
+      "exact_verifier_type": "bounded_integer_exhaustive",
+      "feasible": true,
+      "generation_blocker": null,
+      "generation_source": "live_sota_llamacpp_prompt_schema",
+      "gpu_index": 1,
+      "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "model_name": "Gemma4-26B-A4B-it",
+      "model_path": "/tmp/gemma.gguf",
+      "objective_function": {
+        "coefficients": {
+          "x": 3,
+          "y": 2
+        },
+        "sense": "max"
+      },
+      "objective_sense": "max",
+      "objective_value": 11,
+      "optimal": true,
+      "optimum_value": 11,
+      "parse_error": null,
+      "parsed_output": {
+        "variables": {
+          "x": 3,
+          "y": 1
+        }
+      },
+      "parser_repair_applied": false,
+      "parser_repair_note": null,
+      "per_task_seed": 2944,
+      "prompt_hash": "1b5682b36271e566227fed525ff5c6934a0db6f98e26ab9d663f66a221098329",
+      "raw_response_path": "",
+      "raw_response_sha256": "e7e4c5ed35ecb653abf0c2b8b9ecf1536e71c17d2f2a2bca7f1335d8fe6e64ad",
+      "syntax_valid": true,
+      "task_id": "cbmini-2926-linear-007",
+      "task_type": "linear_integer",
+      "verifier_result": {
+        "feasible": true,
+        "objective_value": 11,
+        "optimal": true,
+        "optimum_value": 11,
+        "syntax_valid": true,
+        "violation_reasons": []
+      },
+      "violation_class": "none",
+      "violation_reasons": []
+    },
+    {
+      "constraints": {
+        "capacity": 7,
+        "excludes": [
+          [
+            "lamp",
+            "rope"
+          ]
+        ],
+        "item_weights": {
+          "kit": 1,
+          "lamp": 4,
+          "map": 2,
+          "rope": 3
+        },
+        "required_items": [
+          "kit"
+        ]
+      },
+      "elapsed_seconds": 0.1,
+      "exact_verifier_type": "binary_subset_exhaustive",
+      "feasible": true,
+      "generation_blocker": null,
+      "generation_source": "live_sota_llamacpp_prompt_schema",
+      "gpu_index": 1,
+      "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "model_name": "Gemma4-26B-A4B-it",
+      "model_path": "/tmp/gemma.gguf",
+      "objective_function": {
+        "item_values": {
+          "kit": 3,
+          "lamp": 7,
+          "map": 5,
+          "rope": 6
+        },
+        "sense": "max"
+      },
+      "objective_sense": "max",
+      "objective_value": 15,
+      "optimal": true,
+      "optimum_value": 15,
+      "parse_error": null,
+      "parsed_output": {
+        "selected_items": [
+          "map",
+          "lamp",
+          "kit"
+        ]
+      },
+      "parser_repair_applied": false,
+      "parser_repair_note": null,
+      "per_task_seed": 2945,
+      "prompt_hash": "6803b155dae45fc63cc4a21af70b22b1fc7a9e918e24f5591a6bf9168dfc03b1",
+      "raw_response_path": "",
+      "raw_response_sha256": "ad3b433a0fb8b5be220aef7c31602b4edf4500fc09a89677fcdb597e506913b8",
+      "syntax_valid": true,
+      "task_id": "cbmini-2926-knapsack-007",
+      "task_type": "knapsack_binary",
+      "verifier_result": {
+        "feasible": true,
+        "objective_value": 15,
+        "optimal": true,
+        "optimum_value": 15,
+        "syntax_valid": true,
+        "violation_reasons": []
+      },
+      "violation_class": "none",
+      "violation_reasons": []
+    },
+    {
+      "constraints": {
+        "edges": [
+          [
+            0,
+            1
+          ],
+          [
+            1,
+            2
+          ],
+          [
+            2,
+            3
+          ]
+        ],
+        "n_colors": 3,
+        "n_nodes": 4
+      },
+      "elapsed_seconds": 0.1,
+      "exact_verifier_type": "color_assignment_exhaustive",
+      "feasible": true,
+      "generation_blocker": null,
+      "generation_source": "live_sota_llamacpp_prompt_schema",
+      "gpu_index": 1,
+      "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "model_name": "Gemma4-26B-A4B-it",
+      "model_path": "/tmp/gemma.gguf",
+      "objective_function": {
+        "expression": "sum(color_id for each node)",
+        "sense": "min"
+      },
+      "objective_sense": "min",
+      "objective_value": 2,
+      "optimal": true,
+      "optimum_value": 2,
+      "parse_error": null,
+      "parsed_output": {
+        "colors": {
+          "0": 0,
+          "1": 1,
+          "2": 0,
+          "3": 1
+        }
+      },
+      "parser_repair_applied": false,
+      "parser_repair_note": null,
+      "per_task_seed": 2946,
+      "prompt_hash": "0abe05e375c7dc72233696db32794d98565933479afdf18f8a5951f2ab4db626",
+      "raw_response_path": "",
+      "raw_response_sha256": "b026aee1d9f4e25322137b86c78c3f4d2a9bcbf2b077e36264c460008c64d59d",
+      "syntax_valid": true,
+      "task_id": "cbmini-2926-graph-007",
+      "task_type": "graph_coloring",
+      "verifier_result": {
+        "feasible": true,
+        "objective_value": 2,
+        "optimal": true,
+        "optimum_value": 2,
+        "syntax_valid": true,
+        "violation_reasons": []
+      },
+      "violation_class": "none",
+      "violation_reasons": []
+    },
+    {
+      "constraints": {
+        "linear_constraints": [
+          {
+            "coefficients": {
+              "x": 1,
+              "y": 1
+            },
+            "op": ">=",
+            "rhs": 4
+          },
+          {
+            "coefficients": {
+              "x": 1
+            },
+            "op": ">=",
+            "rhs": 1
+          }
+        ],
+        "variable_bounds": {
+          "x": [
+            0,
+            5
+          ],
+          "y": [
+            0,
+            5
+          ]
+        }
+      },
+      "elapsed_seconds": 0.1,
+      "exact_verifier_type": "bounded_integer_exhaustive",
+      "feasible": true,
+      "generation_blocker": null,
+      "generation_source": "live_sota_llamacpp_prompt_schema",
+      "gpu_index": 1,
+      "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "model_name": "Gemma4-26B-A4B-it",
+      "model_path": "/tmp/gemma.gguf",
+      "objective_function": {
+        "coefficients": {
+          "x": 2,
+          "y": 3
+        },
+        "sense": "min"
+      },
+      "objective_sense": "min",
+      "objective_value": 8,
+      "optimal": true,
+      "optimum_value": 8,
+      "parse_error": null,
+      "parsed_output": {
+        "variables": {
+          "x": 4,
+          "y": 0
+        }
+      },
+      "parser_repair_applied": false,
+      "parser_repair_note": null,
+      "per_task_seed": 2947,
+      "prompt_hash": "39b4c1a0ce24ef016a7cc66b5a9c465a7f3c50ae16a84f848eebecd3395bdb6e",
+      "raw_response_path": "",
+      "raw_response_sha256": "0231800d0efe5b4ffe6d29429625e10057956391bbdd89321e9fd2a21ca7a6f0",
+      "syntax_valid": true,
+      "task_id": "cbmini-2926-linear-008",
+      "task_type": "linear_integer",
+      "verifier_result": {
+        "feasible": true,
+        "objective_value": 8,
+        "optimal": true,
+        "optimum_value": 8,
+        "syntax_valid": true,
+        "violation_reasons": []
+      },
+      "violation_class": "none",
+      "violation_reasons": []
+    },
+    {
+      "constraints": {
+        "capacity": 9,
+        "excludes": [
+          [
+            "gpu",
+            "wifi"
+          ]
+        ],
+        "item_weights": {
+          "cpu": 3,
+          "gpu": 5,
+          "ssd": 2,
+          "wifi": 1
+        },
+        "required_items": []
+      },
+      "elapsed_seconds": 0.1,
+      "exact_verifier_type": "binary_subset_exhaustive",
+      "feasible": true,
+      "generation_blocker": null,
+      "generation_source": "live_sota_llamacpp_prompt_schema",
+      "gpu_index": 1,
+      "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "model_name": "Gemma4-26B-A4B-it",
+      "model_path": "/tmp/gemma.gguf",
+      "objective_function": {
+        "item_values": {
+          "cpu": 8,
+          "gpu": 11,
+          "ssd": 5,
+          "wifi": 2
+        },
+        "sense": "max"
+      },
+      "objective_sense": "max",
+      "objective_value": 19,
+      "optimal": true,
+      "optimum_value": 19,
+      "parse_error": null,
+      "parsed_output": {
+        "selected_items": [
+          "cpu",
+          "gpu"
+        ]
+      },
+      "parser_repair_applied": false,
+      "parser_repair_note": null,
+      "per_task_seed": 2948,
+      "prompt_hash": "dd5f1f2ba0676293e68756676505ad8db5230159bca5e833b752bfa2003accc8",
+      "raw_response_path": "",
+      "raw_response_sha256": "b13bb0ca2a05e9ef0a7101d499ca4bf869e90a59b5c2d80517b1e6ba9b320d65",
+      "syntax_valid": true,
+      "task_id": "cbmini-2926-knapsack-008",
+      "task_type": "knapsack_binary",
+      "verifier_result": {
+        "feasible": true,
+        "objective_value": 19,
+        "optimal": true,
+        "optimum_value": 19,
+        "syntax_valid": true,
+        "violation_reasons": []
+      },
+      "violation_class": "none",
+      "violation_reasons": []
+    },
+    {
+      "constraints": {
+        "edges": [
+          [
+            0,
+            1
+          ],
+          [
+            1,
+            2
+          ],
+          [
+            2,
+            0
+          ],
+          [
+            2,
+            3
+          ]
+        ],
+        "n_colors": 3,
+        "n_nodes": 4
+      },
+      "elapsed_seconds": 0.1,
+      "exact_verifier_type": "color_assignment_exhaustive",
+      "feasible": true,
+      "generation_blocker": null,
+      "generation_source": "live_sota_llamacpp_prompt_schema",
+      "gpu_index": 1,
+      "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "model_name": "Gemma4-26B-A4B-it",
+      "model_path": "/tmp/gemma.gguf",
+      "objective_function": {
+        "expression": "sum(color_id for each node)",
+        "sense": "min"
+      },
+      "objective_sense": "min",
+      "objective_value": 3,
+      "optimal": true,
+      "optimum_value": 3,
+      "parse_error": null,
+      "parsed_output": {
+        "colors": {
+          "0": 0,
+          "1": 1,
+          "2": 2,
+          "3": 0
+        }
+      },
+      "parser_repair_applied": false,
+      "parser_repair_note": null,
+      "per_task_seed": 2949,
+      "prompt_hash": "3b39449a2519c0ddaf638bb8f2790f4f704ec041c10c908870cdbb56edaa6a3e",
+      "raw_response_path": "",
+      "raw_response_sha256": "4e01ea5ba56db54f5053945d1462b2251be98eba7a8224b0c8cdef23340563a1",
+      "syntax_valid": true,
+      "task_id": "cbmini-2926-graph-008",
+      "task_type": "graph_coloring",
+      "verifier_result": {
+        "feasible": true,
+        "objective_value": 3,
+        "optimal": true,
+        "optimum_value": 3,
+        "syntax_valid": true,
+        "violation_reasons": []
+      },
+      "violation_class": "none",
+      "violation_reasons": []
+    },
+    {
+      "constraints": {
+        "linear_constraints": [
+          {
+            "coefficients": {
+              "a": 2,
+              "b": 1,
+              "c": 2
+            },
+            "op": "<=",
+            "rhs": 8
+          },
+          {
+            "coefficients": {
+              "a": 1,
+              "b": -1
+            },
+            "op": ">=",
+            "rhs": 0
+          }
+        ],
+        "variable_bounds": {
+          "a": [
+            0,
+            3
+          ],
+          "b": [
+            0,
+            3
+          ],
+          "c": [
+            0,
+            2
+          ]
+        }
+      },
+      "elapsed_seconds": 0.1,
+      "exact_verifier_type": "bounded_integer_exhaustive",
+      "feasible": true,
+      "generation_blocker": null,
+      "generation_source": "live_sota_llamacpp_prompt_schema",
+      "gpu_index": 1,
+      "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "model_name": "Gemma4-26B-A4B-it",
+      "model_path": "/tmp/gemma.gguf",
+      "objective_function": {
+        "coefficients": {
+          "a": 4,
+          "b": 3,
+          "c": 5
+        },
+        "sense": "max"
+      },
+      "objective_sense": "max",
+      "objective_value": 19,
+      "optimal": true,
+      "optimum_value": 19,
+      "parse_error": null,
+      "parsed_output": {
+        "variables": {
+          "a": 2,
+          "b": 2,
+          "c": 1
+        }
+      },
+      "parser_repair_applied": false,
+      "parser_repair_note": null,
+      "per_task_seed": 2950,
+      "prompt_hash": "59ececf20adef219605ca81d3218a3a8c9dc7535e4bbaa03a735db63ae7d533c",
+      "raw_response_path": "",
+      "raw_response_sha256": "2c6c5f294d4d8c8b27ffa5fcec35a9c43747e864a20313fedd0e027b588b35d8",
+      "syntax_valid": true,
+      "task_id": "cbmini-2926-linear-009",
+      "task_type": "linear_integer",
+      "verifier_result": {
+        "feasible": true,
+        "objective_value": 19,
+        "optimal": true,
+        "optimum_value": 19,
+        "syntax_valid": true,
+        "violation_reasons": []
+      },
+      "violation_class": "none",
+      "violation_reasons": []
+    },
+    {
+      "constraints": {
+        "capacity": 8,
+        "excludes": [
+          [
+            "radio",
+            "battery"
+          ]
+        ],
+        "item_weights": {
+          "battery": 4,
+          "case": 1,
+          "radio": 3,
+          "sensor": 2
+        },
+        "required_items": [
+          "case"
+        ]
+      },
+      "elapsed_seconds": 0.1,
+      "exact_verifier_type": "binary_subset_exhaustive",
+      "feasible": true,
+      "generation_blocker": null,
+      "generation_source": "live_sota_llamacpp_prompt_schema",
+      "gpu_index": 1,
+      "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "model_name": "Gemma4-26B-A4B-it",
+      "model_path": "/tmp/gemma.gguf",
+      "objective_function": {
+        "item_values": {
+          "battery": 8,
+          "case": 1,
+          "radio": 7,
+          "sensor": 4
+        },
+        "sense": "max"
+      },
+      "objective_sense": "max",
+      "objective_value": 13,
+      "optimal": true,
+      "optimum_value": 13,
+      "parse_error": null,
+      "parsed_output": {
+        "selected_items": [
+          "sensor",
+          "battery",
+          "case"
+        ]
+      },
+      "parser_repair_applied": false,
+      "parser_repair_note": null,
+      "per_task_seed": 2951,
+      "prompt_hash": "739540c361984fc6b33d179a5cd71883d544e4573e1ca832e2e7a137105bb129",
+      "raw_response_path": "",
+      "raw_response_sha256": "c422ac8a51a73d629159ce8f02810bd9c485868433920641355986dd96a0aceb",
+      "syntax_valid": true,
+      "task_id": "cbmini-2926-knapsack-009",
+      "task_type": "knapsack_binary",
+      "verifier_result": {
+        "feasible": true,
+        "objective_value": 13,
+        "optimal": true,
+        "optimum_value": 13,
+        "syntax_valid": true,
+        "violation_reasons": []
+      },
+      "violation_class": "none",
+      "violation_reasons": []
+    },
+    {
+      "constraints": {
+        "edges": [
+          [
+            0,
+            1
+          ],
+          [
+            0,
+            2
+          ],
+          [
+            0,
+            3
+          ],
+          [
+            0,
+            4
+          ]
+        ],
+        "n_colors": 3,
+        "n_nodes": 5
+      },
+      "elapsed_seconds": 0.1,
+      "exact_verifier_type": "color_assignment_exhaustive",
+      "feasible": true,
+      "generation_blocker": null,
+      "generation_source": "live_sota_llamacpp_prompt_schema",
+      "gpu_index": 1,
+      "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "model_name": "Gemma4-26B-A4B-it",
+      "model_path": "/tmp/gemma.gguf",
+      "objective_function": {
+        "expression": "sum(color_id for each node)",
+        "sense": "min"
+      },
+      "objective_sense": "min",
+      "objective_value": 1,
+      "optimal": true,
+      "optimum_value": 1,
+      "parse_error": null,
+      "parsed_output": {
+        "colors": {
+          "0": 1,
+          "1": 0,
+          "2": 0,
+          "3": 0,
+          "4": 0
+        }
+      },
+      "parser_repair_applied": false,
+      "parser_repair_note": null,
+      "per_task_seed": 2952,
+      "prompt_hash": "7c934517bbe4b9fb1fd80964d6594d4d8766f8d0a50cb5652e50daf6abf1bc8d",
+      "raw_response_path": "",
+      "raw_response_sha256": "e0ad07d175a6bf4be4371a9838a0327c46496c3a84cca166efac193bd8e5e0a8",
+      "syntax_valid": true,
+      "task_id": "cbmini-2926-graph-009",
+      "task_type": "graph_coloring",
+      "verifier_result": {
+        "feasible": true,
+        "objective_value": 1,
+        "optimal": true,
+        "optimum_value": 1,
+        "syntax_valid": true,
+        "violation_reasons": []
+      },
+      "violation_class": "none",
+      "violation_reasons": []
+    },
+    {
+      "constraints": {
+        "linear_constraints": [
+          {
+            "coefficients": {
+              "p": 2,
+              "q": 1
+            },
+            "op": ">=",
+            "rhs": 5
+          },
+          {
+            "coefficients": {
+              "q": 1
+            },
+            "op": ">=",
+            "rhs": 1
+          }
+        ],
+        "variable_bounds": {
+          "p": [
+            0,
+            4
+          ],
+          "q": [
+            0,
+            4
+          ]
+        }
+      },
+      "elapsed_seconds": 0.1,
+      "exact_verifier_type": "bounded_integer_exhaustive",
+      "feasible": true,
+      "generation_blocker": null,
+      "generation_source": "live_sota_llamacpp_prompt_schema",
+      "gpu_index": 1,
+      "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "model_name": "Gemma4-26B-A4B-it",
+      "model_path": "/tmp/gemma.gguf",
+      "objective_function": {
+        "coefficients": {
+          "p": 5,
+          "q": 1
+        },
+        "sense": "min"
+      },
+      "objective_sense": "min",
+      "objective_value": 8,
+      "optimal": true,
+      "optimum_value": 8,
+      "parse_error": null,
+      "parsed_output": {
+        "variables": {
+          "p": 1,
+          "q": 3
+        }
+      },
+      "parser_repair_applied": false,
+      "parser_repair_note": null,
+      "per_task_seed": 2953,
+      "prompt_hash": "c1dff90f2acabf8ffda9cde49c941040552b46554565fcf9bf7a57ed1f945697",
+      "raw_response_path": "",
+      "raw_response_sha256": "e3b3a4943ae51231ba2755f8b0ad71c4badb3c854e17787224781b519c1085cd",
+      "syntax_valid": true,
+      "task_id": "cbmini-2926-linear-010",
+      "task_type": "linear_integer",
+      "verifier_result": {
+        "feasible": true,
+        "objective_value": 8,
+        "optimal": true,
+        "optimum_value": 8,
+        "syntax_valid": true,
+        "violation_reasons": []
+      },
+      "violation_class": "none",
+      "violation_reasons": []
+    },
+    {
+      "constraints": {
+        "capacity": 10,
+        "excludes": [
+          [
+            "atlas",
+            "guide"
+          ]
+        ],
+        "item_weights": {
+          "atlas": 4,
+          "guide": 2,
+          "med": 2,
+          "water": 3
+        },
+        "required_items": [
+          "water"
+        ]
+      },
+      "elapsed_seconds": 0.1,
+      "exact_verifier_type": "binary_subset_exhaustive",
+      "feasible": true,
+      "generation_blocker": null,
+      "generation_source": "live_sota_llamacpp_prompt_schema",
+      "gpu_index": 1,
+      "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "model_name": "Gemma4-26B-A4B-it",
+      "model_path": "/tmp/gemma.gguf",
+      "objective_function": {
+        "item_values": {
+          "atlas": 8,
+          "guide": 3,
+          "med": 5,
+          "water": 6
+        },
+        "sense": "max"
+      },
+      "objective_sense": "max",
+      "objective_value": 19,
+      "optimal": true,
+      "optimum_value": 19,
+      "parse_error": null,
+      "parsed_output": {
+        "selected_items": [
+          "atlas",
+          "water",
+          "med"
+        ]
+      },
+      "parser_repair_applied": false,
+      "parser_repair_note": null,
+      "per_task_seed": 2954,
+      "prompt_hash": "f3bebc568bf2c3c04f6f837fc46144036805caa407a048f9721e34d48bfa41d0",
+      "raw_response_path": "",
+      "raw_response_sha256": "c56c70296c2ba78530953c5df42dfba3145485fc7f6cda4ea4510b76aeacbb33",
+      "syntax_valid": true,
+      "task_id": "cbmini-2926-knapsack-010",
+      "task_type": "knapsack_binary",
+      "verifier_result": {
+        "feasible": true,
+        "objective_value": 19,
+        "optimal": true,
+        "optimum_value": 19,
+        "syntax_valid": true,
+        "violation_reasons": []
+      },
+      "violation_class": "none",
+      "violation_reasons": []
+    },
+    {
+      "constraints": {
+        "edges": [
+          [
+            0,
+            1
+          ],
+          [
+            1,
+            2
+          ],
+          [
+            2,
+            3
+          ],
+          [
+            3,
+            4
+          ],
+          [
+            4,
+            0
+          ]
+        ],
+        "n_colors": 4,
+        "n_nodes": 5
+      },
+      "elapsed_seconds": 0.1,
+      "exact_verifier_type": "color_assignment_exhaustive",
+      "feasible": true,
+      "generation_blocker": null,
+      "generation_source": "live_sota_llamacpp_prompt_schema",
+      "gpu_index": 1,
+      "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "model_name": "Gemma4-26B-A4B-it",
+      "model_path": "/tmp/gemma.gguf",
+      "objective_function": {
+        "expression": "sum(color_id for each node)",
+        "sense": "min"
+      },
+      "objective_sense": "min",
+      "objective_value": 4,
+      "optimal": true,
+      "optimum_value": 4,
+      "parse_error": null,
+      "parsed_output": {
+        "colors": {
+          "0": 0,
+          "1": 1,
+          "2": 0,
+          "3": 1,
+          "4": 2
+        }
+      },
+      "parser_repair_applied": false,
+      "parser_repair_note": null,
+      "per_task_seed": 2955,
+      "prompt_hash": "beea91befdd61e0f2b8706f93601bd5a1d3cc6c2eb61234f87df2ab19ce284e7",
+      "raw_response_path": "",
+      "raw_response_sha256": "c76458434cbfc9cbe5fbed1a280976009f8038385866fd7b37774378dbd88777",
+      "syntax_valid": true,
+      "task_id": "cbmini-2926-graph-010",
+      "task_type": "graph_coloring",
+      "verifier_result": {
+        "feasible": true,
+        "objective_value": 4,
+        "optimal": true,
+        "optimum_value": 4,
+        "syntax_valid": true,
+        "violation_reasons": []
+      },
+      "violation_class": "none",
+      "violation_reasons": []
+    }
+  ],
+  "random_seed": 2926,
+  "raw_response_dir": "/home/ianblenke/github.com/ianblenke/carnot/.tmp-pytest/pytest-of-ianblenke/pytest-4/popen-gw0/test_req_bench_2926_duration_g0/raw",
+  "reproducibility_checksum": "d055e89d1c082573bd6978fc7c3b6e2697f0f74dbbdeaad4b8c8ffb935d163da",
+  "run_date": "20260523",
+  "schema": "carnot.constraintbench_constrained_output_rerun.v2",
+  "syntax_feasibility_not_tautological": false,
+  "syntax_valid_rate": 1.0,
+  "task_manifest_path": "/home/ianblenke/github.com/ianblenke/carnot/.tmp-pytest/pytest-of-ianblenke/pytest-4/popen-gw0/test_req_bench_2926_duration_g0/constraintbench_constrained_output_rerun_2926_manifest.json",
+  "tests_run": [],
+  "violation_classes": {
+    "none": 30
+  }
+}

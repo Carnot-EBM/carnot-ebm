@@ -1,0 +1,232 @@
+{
+  "experiment": 227,
+  "benchmark": "humaneval_pbt_exp208_qwen",
+  "title": "Seeded 30-problem HumanEval PBT benchmark on Qwen3.5-0.8B",
+  "run_date": "20260602",
+  "schema": {
+    "artifact": "carnot.humaneval_pbt_exp208_qwen.v1",
+    "benchmark_case_schema": "humaneval_pbt_full.v1"
+  },
+  "metadata": {
+    "started_at": "2026-06-02T19:10:22Z",
+    "finished_at": "2026-06-02T19:10:23Z",
+    "runtime_seconds": 0.806,
+    "model_name": "Qwen3.5-0.8B",
+    "model_hf_id": "Qwen/Qwen3.5-0.8B",
+    "device": "cuda:0",
+    "dataset_source": "HumanEval (openai_humaneval)",
+    "reference_artifact": "/home/ianblenke/github.com/ianblenke/carnot/.tmp-pytest/pytest-of-ianblenke/pytest-4/popen-gw3/test_main_guard_executes_via_r1/guard_reference.json",
+    "reference_experiment": 208,
+    "reference_model_name": "Gemma4-E4B-it",
+    "run_seed": 227,
+    "sample_size": 1,
+    "checkpoint_path": "/home/ianblenke/github.com/ianblenke/carnot/.tmp-pytest/pytest-of-ianblenke/pytest-4/popen-gw3/test_main_guard_executes_via_r1/guard_checkpoint.json",
+    "checkpoint_interval": 10,
+    "max_repairs": 3,
+    "pbt_max_examples": 64,
+    "bootstrap_samples": 8,
+    "confidence_level": 0.95,
+    "inference_mode": "live_gpu",
+    "output_path": "/home/ianblenke/github.com/ianblenke/carnot/.tmp-pytest/pytest-of-ianblenke/pytest-4/popen-gw3/test_main_guard_executes_via_r1/guard_results.json",
+    "force_live": true,
+    "force_cpu": false
+  },
+  "cohort": {
+    "case_count": 1,
+    "case_ids": [
+      "humaneval-0"
+    ],
+    "task_ids": [
+      "HumanEval/0"
+    ],
+    "source_reference_artifact": "/home/ianblenke/github.com/ianblenke/carnot/.tmp-pytest/pytest-of-ianblenke/pytest-4/popen-gw3/test_main_guard_executes_via_r1/guard_reference.json",
+    "cases": [
+      {
+        "case_id": "humaneval-0",
+        "dataset_idx": 0,
+        "task_id": "HumanEval/0",
+        "prompt": "def add(a, b):\n    pass\n",
+        "test": "def check(candidate):\n    assert candidate(1, 2) == 3\n",
+        "entry_point": "add",
+        "sample_position": 1,
+        "prompt_seeds": {
+          "baseline": 4015109907,
+          "verify_only": 4015109907,
+          "verify_repair": 4015109907
+        }
+      }
+    ]
+  },
+  "statistics": {
+    "baseline": {
+      "pass_at_1": 1.0,
+      "ci_lower": 1.0,
+      "ci_upper": 1.0,
+      "n_correct": 1
+    },
+    "verify_only": {
+      "accepted_pass_at_1": 1.0,
+      "n_wrong_answers": 0,
+      "n_wrong_detected": 0,
+      "false_positives": 0,
+      "official_test_misses_caught_by_pbt": 0,
+      "problems_with_pbt_failures": 0,
+      "total_pbt_failures": 0
+    },
+    "verify_repair": {
+      "pass_at_1": 1.0,
+      "ci_lower": 1.0,
+      "ci_upper": 1.0,
+      "n_correct": 1,
+      "n_repaired": 0
+    },
+    "improvement": {
+      "delta": 0.0,
+      "ci_lower": 0.0,
+      "ci_upper": 0.0
+    },
+    "repair_stats": {
+      "n_problems_needing_repair": 0,
+      "n_repaired": 0,
+      "repair_success_rate": 1.0,
+      "avg_repair_iterations": 0.0
+    },
+    "gemma_comparison": {
+      "reference_experiment": 208,
+      "reference_model_name": "Gemma4-E4B-it",
+      "cohort_match": true,
+      "methodology_note": "Comparison note: the Gemma reference is Exp 208 on the same 30-problem cohort, but it predates the Hypothesis-backed verifier. Baseline HumanEval harness outcomes are directly comparable; verify-repair deltas should be read as same-cohort directional evidence rather than identical-stack A/B results. This is a pre-Hypothesis Gemma reference.",
+      "gemma": {
+        "baseline": {
+          "pass_at_1": 0.0,
+          "n_correct": 0
+        },
+        "verify_repair": {
+          "pass_at_1": 0.0,
+          "n_correct": 0
+        },
+        "improvement": {
+          "delta": 0.0
+        },
+        "repair_stats": {
+          "n_repaired": 0,
+          "repair_success_rate": 0.0
+        }
+      },
+      "deltas": {
+        "baseline_pass_at_1": 1.0,
+        "verify_repair_pass_at_1": 1.0,
+        "improvement_delta": 0.0,
+        "repair_success_rate": 0.0
+      },
+      "paired_outcomes": {
+        "baseline": {
+          "qwen_only": 1,
+          "gemma_only": 0,
+          "both": 0,
+          "neither": 0
+        },
+        "verify_repair": {
+          "qwen_only": 1,
+          "gemma_only": 0,
+          "both": 0,
+          "neither": 0
+        }
+      }
+    },
+    "technical_report_summary": {
+      "paragraph": "On the seeded 30-problem HumanEval cohort reused from Exp 208 (n=1), live Qwen3.5-0.8B reached baseline pass@1 100.0% [100.0%, 100.0%] and verify-repair pass@1 100.0% [100.0%, 100.0%], for a paired improvement of +0.0pp [+0.0pp, +0.0pp]. PBT-guided repair fixed 0/0 failing baselines (100.0%). Reference Gemma4-E4B-it on the same 30-problem cohort reported baseline 0.0% and verify-repair 0.0%, so the Qwen-minus-Gemma verify-repair delta was +100.0pp. Comparison note: the Gemma reference is Exp 208 on the same 30-problem cohort, but it predates the Hypothesis-backed verifier. Baseline HumanEval harness outcomes are directly comparable; verify-repair deltas should be read as same-cohort directional evidence rather than identical-stack A/B results. This is a pre-Hypothesis Gemma reference.",
+      "bullets": [
+        "Qwen baseline pass@1: 100.0% across 1 cases.",
+        "Qwen verify-repair pass@1: 100.0% (+0.0pp vs baseline).",
+        "Gemma4-E4B-it reference verify-repair pass@1: 0.0%.",
+        "Qwen-minus-Gemma verify-repair delta: +100.0pp."
+      ]
+    }
+  },
+  "per_problem_results": [
+    {
+      "case_id": "humaneval-0",
+      "dataset_idx": 0,
+      "task_id": "HumanEval/0",
+      "entry_point": "add",
+      "baseline": {
+        "passed": true,
+        "error_type": "none",
+        "error_message": "",
+        "body": "return a + b",
+        "candidate_code": "def add(a, b):\n    pass\n    return a + b\n",
+        "detected": false,
+        "accepted": true,
+        "official_test_miss_caught_by_pbt": false,
+        "n_static_violations": 0,
+        "n_dynamic_violations": 0,
+        "constraint_feedback": [],
+        "dynamic_violations": [],
+        "probe_inputs": [
+          {}
+        ],
+        "n_pbt_failures": 0,
+        "pbt_violations": [],
+        "pbt_derived_properties": [],
+        "pbt_failure_records": [],
+        "pbt_verified": true,
+        "latency_seconds": 0.000171
+      },
+      "verify_only": {
+        "detected": false,
+        "accepted": true,
+        "official_test_miss_caught_by_pbt": false,
+        "n_pbt_failures": 0,
+        "pbt_violations": [],
+        "latency_seconds": 0.000171
+      },
+      "verify_repair": {
+        "passed": true,
+        "repaired": false,
+        "n_repairs": 0,
+        "final_body": "return a + b",
+        "final_code": "def add(a, b):\n    pass\n    return a + b\n",
+        "final_detected": false,
+        "final_accepted": true,
+        "final_error_type": "none",
+        "final_error_message": ""
+      },
+      "history": [
+        {
+          "iteration": 0,
+          "body": "return a + b",
+          "candidate_code": "def add(a, b):\n    pass\n    return a + b\n",
+          "harness": {
+            "passed": true,
+            "error_type": "none",
+            "error_message": "",
+            "stdout": ""
+          },
+          "instrumentation": {
+            "detected": false,
+            "constraint_feedback": [],
+            "dynamic_violations": [],
+            "n_static_violations": 0,
+            "n_dynamic_violations": 0,
+            "probe_inputs": [
+              {}
+            ]
+          },
+          "pbt": {
+            "verified": true,
+            "derived_properties": [],
+            "failure_records": [],
+            "n_failures": 0,
+            "violations": [],
+            "repair_feedback": "",
+            "wall_clock_seconds": 0.0,
+            "max_examples": 64
+          },
+          "detected": false,
+          "accepted": true
+        }
+      ]
+    }
+  ]
+}

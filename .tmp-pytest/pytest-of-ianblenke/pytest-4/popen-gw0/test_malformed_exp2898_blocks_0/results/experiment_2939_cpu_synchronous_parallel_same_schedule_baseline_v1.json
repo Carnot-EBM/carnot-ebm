@@ -1,0 +1,39 @@
+{
+  "cpu_synchronous_parallel_per_sample_us_median": 0.0,
+  "cpu_synchronous_parallel_per_sample_us_p95": 0.0,
+  "duration_s": 1.0,
+  "energy_distribution_equivalence_test": {
+    "ks_pvalue": 0.0,
+    "mmd_squared": 0.0,
+    "principle": "Cross-check that the same broken sampler produces statistically-equivalent distributions on both substrates.",
+    "shape": "{ks_pvalue: float, mmd_squared: float}"
+  },
+  "experiment": "exp2939-cpu-synchronous-parallel-same-schedule-baseline-v1",
+  "experiment_id": 2939,
+  "honest_verdict": "blocked_exp2898_problem_reproduction_failed",
+  "inference_substrate": "live_llm_inference",
+  "kv260_per_sample_us_cited": 24.0,
+  "kv260_speedup_vs_same_schedule_cpu": {
+    "principle": "The apples-to-apples speedup measurement. < 1.0 means KV260 is slower at this n; >= 1.0 means faster.",
+    "unit": "cpu_synchronous_parallel_us_median / kv260_us_per_sample",
+    "value": 0.0
+  },
+  "methodology_note": "",
+  "paper_v6_recommendation": "blocked_exp2898_problem_reproduction_failed: random_seeds_used must be [42, 137, 271]",
+  "preconditions_checked": [
+    {
+      "available": true,
+      "detail": "/home/ianblenke/github.com/ianblenke/carnot/.tmp-pytest/pytest-of-ianblenke/pytest-4/popen-gw0/test_malformed_exp2898_blocks_0/results/experiment_2898_kv260_ising_sampler_hardware_latency_benchmark_v1.json",
+      "resource": "exp2898_artifact"
+    },
+    {
+      "available": true,
+      "detail": "/home/ianblenke/github.com/ianblenke/carnot/.tmp-pytest/pytest-of-ianblenke/pytest-4/popen-gw0/test_malformed_exp2898_blocks_0/results/experiment_2912_kv260_same_basis_cpu_gibbs_baseline_v1.json",
+      "resource": "exp2912_artifact"
+    }
+  ],
+  "random_seed": 2939,
+  "random_seeds_used": [],
+  "reproducibility_checksum": "",
+  "run_date": "20260523"
+}

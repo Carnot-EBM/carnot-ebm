@@ -1,0 +1,400 @@
+{
+  "adaptive_verification_granularity_policy_v1_ready": true,
+  "artifact": "experiment_3195_adaptive_verification_granularity_policy_v1",
+  "authority_boundary": {
+    "ebm_or_llm_authority": false,
+    "exact_authority_final": true,
+    "policy_only_routes_compute": true,
+    "promotion_allowed": false,
+    "receipt_authority": false
+  },
+  "estimated_verifier_call_delta": -2,
+  "evidence_inventory": {
+    "bounded_frontier_records": 3,
+    "bounded_frontier_statuses": [
+      "bounded",
+      "pruned",
+      "viable"
+    ],
+    "counterexample_certificates": 2,
+    "exact_rows_available": 6,
+    "exact_rows_used": 6,
+    "false_accept_families": [
+      "known_false_accept:arithmetic_code_assertions"
+    ],
+    "known_false_accept_rows_covered": 1,
+    "matrix_v29_next_top_gap": "full_local_sota_receipt_clean_rerun_allowed_repair_gate_unblock",
+    "matrix_v29_publication_blocker_count": 80,
+    "receipt_backed_transcripts": 2
+  },
+  "exact_rows_used": 6,
+  "experiment_id": "exp3195",
+  "false_accept_risk_increase": 0.0,
+  "honest_verdict": "complete: adaptive_verification_granularity_policy_v1_ready=true; simulated_rows=6; estimated_verifier_call_delta=-2; promotion_allowed=false",
+  "inference_substrate": {
+    "ebm_trained_or_promoted": false,
+    "kind": "artifact_only_policy_simulation",
+    "llm_called": false,
+    "new_live_model_calls": 0,
+    "new_repair_calls": 0,
+    "new_verifier_scoring_calls": 0
+  },
+  "ops_docs_reconciliation_left_to_conductor": true,
+  "policy_actions": [
+    "final-answer-only",
+    "step-chunk",
+    "counterexample-fragment",
+    "abstain/escalate",
+    "skip redundant recheck"
+  ],
+  "policy_features": [
+    "row_family",
+    "known_false_accept_risk",
+    "certificate_depth",
+    "answer_ambiguity",
+    "prior_verification_outcome",
+    "exact_authority_complete",
+    "receipt_backed_transcript_context"
+  ],
+  "policy_version": "v1",
+  "promotion_allowed": false,
+  "redundant_recheck_suppression_rule": {
+    "action": "skip redundant recheck",
+    "applies_when": [
+      "controlled_invariance_passed=true",
+      "prior_verification_outcome=accept",
+      "exact_authority_complete=true",
+      "answer_ambiguity=false",
+      "known_false_accept_risk=false",
+      "depends_on_flagged_live_verifier=false"
+    ],
+    "authority_preserved": "prior exact-authority outcome remains final",
+    "excluded_when": [
+      "known_false_accept_risk=true",
+      "answer_ambiguity=true",
+      "counterexample_certificate_present=true",
+      "row_family=exact_row:unknown",
+      "exact_authority_complete=false",
+      "depends_on_flagged_live_verifier=true"
+    ],
+    "suppressed_verifier_calls_per_row_vs_uniform_step_chunk": 2
+  },
+  "risk_tradeoffs": {
+    "ambiguous_rows": 1,
+    "ambiguous_rows_below_counterexample_fragment": 0,
+    "false_accept_risk_increase": 0.0,
+    "known_false_accept_rows": 1,
+    "known_false_accept_rows_below_counterexample_fragment": 0,
+    "known_false_accept_rows_skipped": 0,
+    "risk_basis": "known false-accept rows from checked-in exact/certificate artifacts"
+  },
+  "run_date": "20260527",
+  "schedule_counts": {
+    "abstain/escalate": 1,
+    "counterexample-fragment": 2,
+    "final-answer-only": 1,
+    "skip redundant recheck": 1,
+    "step-chunk": 1
+  },
+  "schema_version": "carnot.adaptive_verification_granularity_policy.v1",
+  "scripts_research_conductor_modified": false,
+  "simulated_policy_rows": [
+    {
+      "authority_note": "route only; exact authority remains final",
+      "estimated_verifier_calls": 0,
+      "feature_values": {
+        "answer_ambiguity": false,
+        "candidate_answer_count": 1,
+        "certificate_depth": 1,
+        "checker_authority": "exact_authority_replay",
+        "depends_on_flagged_live_verifier": false,
+        "exact_authority_complete": true,
+        "exact_label": "VALID",
+        "has_counterexample_certificate": false,
+        "known_false_accept_risk": false,
+        "prior_verification_outcome": "accept",
+        "receipt_backed_transcript_context": {
+          "all_receipts_non_authoritative": true,
+          "receipt_count": 2,
+          "substrate_classes": [
+            "cpu_fallback_receipt_only"
+          ]
+        },
+        "row_family": "exact_row:arithmetic_code_assertions",
+        "row_id": "row-clean-valid"
+      },
+      "routing_reason": "exact_accept_recheck_redundant",
+      "row_id": "row-clean-valid",
+      "selected_action": "skip redundant recheck"
+    },
+    {
+      "authority_note": "route only; exact authority remains final",
+      "estimated_verifier_calls": 1,
+      "feature_values": {
+        "answer_ambiguity": false,
+        "candidate_answer_count": 1,
+        "certificate_depth": 1,
+        "checker_authority": "exact_authority_replay",
+        "depends_on_flagged_live_verifier": false,
+        "exact_authority_complete": true,
+        "exact_label": "INVALID",
+        "has_counterexample_certificate": false,
+        "known_false_accept_risk": false,
+        "prior_verification_outcome": "reject",
+        "receipt_backed_transcript_context": {
+          "all_receipts_non_authoritative": true,
+          "receipt_count": 2,
+          "substrate_classes": [
+            "cpu_fallback_receipt_only"
+          ]
+        },
+        "row_family": "exact_row:arithmetic_code_assertions",
+        "row_id": "row-simple-invalid"
+      },
+      "routing_reason": "simple_exact_final_answer_check",
+      "row_id": "row-simple-invalid",
+      "selected_action": "final-answer-only"
+    },
+    {
+      "authority_note": "route only; exact authority remains final",
+      "estimated_verifier_calls": 3,
+      "feature_values": {
+        "answer_ambiguity": true,
+        "candidate_answer_count": 2,
+        "certificate_depth": 5,
+        "checker_authority": "python_ast_runtime_execution",
+        "depends_on_flagged_live_verifier": false,
+        "exact_authority_complete": true,
+        "exact_label": "INVALID",
+        "has_counterexample_certificate": true,
+        "known_false_accept_risk": true,
+        "prior_verification_outcome": "reject",
+        "receipt_backed_transcript_context": {
+          "all_receipts_non_authoritative": true,
+          "receipt_count": 2,
+          "substrate_classes": [
+            "cpu_fallback_receipt_only"
+          ]
+        },
+        "row_family": "known_false_accept:arithmetic_code_assertions",
+        "row_id": "row-known-false"
+      },
+      "routing_reason": "known_or_certified_counterexample_risk",
+      "row_id": "row-known-false",
+      "selected_action": "counterexample-fragment"
+    },
+    {
+      "authority_note": "route only; exact authority remains final",
+      "estimated_verifier_calls": 2,
+      "feature_values": {
+        "answer_ambiguity": false,
+        "candidate_answer_count": 1,
+        "certificate_depth": 1,
+        "checker_authority": "exact_authority_replay",
+        "depends_on_flagged_live_verifier": false,
+        "exact_authority_complete": true,
+        "exact_label": "REPAIRABLE",
+        "has_counterexample_certificate": false,
+        "known_false_accept_risk": false,
+        "prior_verification_outcome": "reject",
+        "receipt_backed_transcript_context": {
+          "all_receipts_non_authoritative": true,
+          "receipt_count": 2,
+          "substrate_classes": [
+            "cpu_fallback_receipt_only"
+          ]
+        },
+        "row_family": "exact_row:json_fragment_repair",
+        "row_id": "row-repair-fragment"
+      },
+      "routing_reason": "repair_or_fragment_row_needs_chunk_context",
+      "row_id": "row-repair-fragment",
+      "selected_action": "step-chunk"
+    },
+    {
+      "authority_note": "route only; exact authority remains final",
+      "estimated_verifier_calls": 1,
+      "feature_values": {
+        "answer_ambiguity": false,
+        "candidate_answer_count": 1,
+        "certificate_depth": 1,
+        "checker_authority": "exact_authority_replay",
+        "depends_on_flagged_live_verifier": false,
+        "exact_authority_complete": true,
+        "exact_label": "REPAIRABLE",
+        "has_counterexample_certificate": false,
+        "known_false_accept_risk": false,
+        "prior_verification_outcome": "reject",
+        "receipt_backed_transcript_context": {
+          "all_receipts_non_authoritative": true,
+          "receipt_count": 2,
+          "substrate_classes": [
+            "cpu_fallback_receipt_only"
+          ]
+        },
+        "row_family": "exact_row:unknown",
+        "row_id": "row-unknown-family"
+      },
+      "routing_reason": "incomplete_or_unknown_authority_boundary",
+      "row_id": "row-unknown-family",
+      "selected_action": "abstain/escalate"
+    },
+    {
+      "authority_note": "route only; exact authority remains final",
+      "estimated_verifier_calls": 3,
+      "feature_values": {
+        "answer_ambiguity": false,
+        "candidate_answer_count": 1,
+        "certificate_depth": 4,
+        "checker_authority": "z3_solver",
+        "depends_on_flagged_live_verifier": false,
+        "exact_authority_complete": true,
+        "exact_label": "SAT",
+        "has_counterexample_certificate": true,
+        "known_false_accept_risk": false,
+        "prior_verification_outcome": "accept",
+        "receipt_backed_transcript_context": {
+          "all_receipts_non_authoritative": true,
+          "receipt_count": 2,
+          "substrate_classes": [
+            "cpu_fallback_receipt_only"
+          ]
+        },
+        "row_family": "satisfiable_drift_anchor",
+        "row_id": "row-drift-anchor"
+      },
+      "routing_reason": "known_or_certified_counterexample_risk",
+      "row_id": "row-drift-anchor",
+      "selected_action": "counterexample-fragment"
+    }
+  ],
+  "simulated_rows": 6,
+  "source_artifacts": [
+    {
+      "path": "AGENTS.md",
+      "present": true,
+      "readable_json_object": null,
+      "required": true,
+      "role": "agents_repo_instructions",
+      "sha256": "56f4d02a89ebd266bfd67e977b285c15a4afb45796097e7121929c37f8198e76",
+      "source_type": "text"
+    },
+    {
+      "path": "CODEX.md",
+      "present": true,
+      "readable_json_object": null,
+      "required": true,
+      "role": "codex_repo_workflow",
+      "sha256": "b9f1739a8c62e903c176f93454896cb3166adf06ee0ecefe4b987f3d403a562a",
+      "source_type": "text"
+    },
+    {
+      "path": "CLAUDE.md",
+      "present": true,
+      "readable_json_object": null,
+      "required": true,
+      "role": "claude_authenticity_rules",
+      "sha256": "dbbc66fa7b6650762f3aba13c8e2849a2accea739b41d8ab6e5ab927cbe5dc06",
+      "source_type": "text"
+    },
+    {
+      "path": "research-references.md",
+      "present": true,
+      "readable_json_object": null,
+      "required": true,
+      "role": "post_295_research_references",
+      "sha256": "9e7a3a49519b7fec56d75835c94027cc9fcdf709ed06dfea590736b1c986057f",
+      "source_type": "text"
+    },
+    {
+      "path": "openspec/capabilities/verification/spec.md",
+      "present": true,
+      "readable_json_object": null,
+      "required": true,
+      "role": "verification_openspec",
+      "sha256": "7010277b9f57c237695a10ebab261f44796fd58f2adfa410e84f141dea889524",
+      "source_type": "text"
+    },
+    {
+      "path": "results/experiment_3180_controlled_invariance_executor_v2.json",
+      "present": true,
+      "readable_json_object": true,
+      "required": true,
+      "role": "exp3180_controlled_invariance_executor_v2",
+      "sha256": "e8eb447264b6341e871c4c0788e939545f239a1105eddd8e7023f08a625c0bfc",
+      "source_type": "json"
+    },
+    {
+      "path": "results/experiment_3183_counterexample_certificate_expansion_v3.json",
+      "present": true,
+      "readable_json_object": true,
+      "required": true,
+      "role": "exp3183_counterexample_certificate_expansion_v3",
+      "sha256": "e609bd82fa9a87ec03486deb22c518b047ee1bbfe231623bac93f3d60fe479c0",
+      "source_type": "json"
+    },
+    {
+      "path": "results/experiment_3189_cross_corpus_matrix_v29.json",
+      "present": true,
+      "readable_json_object": true,
+      "required": true,
+      "role": "exp3189_cross_corpus_matrix_v29",
+      "sha256": "525300e59a304941c95c28f23ab0b79fcd7414aea4c4b4e8668187f92738a0c3",
+      "source_type": "json"
+    },
+    {
+      "path": "python/carnot/verify/adaptive_verification_granularity_policy_v1.py",
+      "present": false,
+      "readable_json_object": null,
+      "required": false,
+      "role": "exp3195_module",
+      "sha256": null,
+      "source_type": "python"
+    },
+    {
+      "path": "scripts/experiment_3195_adaptive_verification_granularity_policy_v1.py",
+      "present": false,
+      "readable_json_object": null,
+      "required": false,
+      "role": "exp3195_script",
+      "sha256": null,
+      "source_type": "python"
+    },
+    {
+      "path": "tests/python/test_experiment_3195_adaptive_verification_granularity_policy_v1.py",
+      "present": false,
+      "readable_json_object": null,
+      "required": false,
+      "role": "exp3195_tests",
+      "sha256": null,
+      "source_type": "python"
+    }
+  ],
+  "source_checksums": {
+    "AGENTS.md": "56f4d02a89ebd266bfd67e977b285c15a4afb45796097e7121929c37f8198e76",
+    "CLAUDE.md": "dbbc66fa7b6650762f3aba13c8e2849a2accea739b41d8ab6e5ab927cbe5dc06",
+    "CODEX.md": "b9f1739a8c62e903c176f93454896cb3166adf06ee0ecefe4b987f3d403a562a",
+    "openspec/capabilities/verification/spec.md": "7010277b9f57c237695a10ebab261f44796fd58f2adfa410e84f141dea889524",
+    "research-references.md": "9e7a3a49519b7fec56d75835c94027cc9fcdf709ed06dfea590736b1c986057f",
+    "results/experiment_3180_controlled_invariance_executor_v2.json": "e8eb447264b6341e871c4c0788e939545f239a1105eddd8e7023f08a625c0bfc",
+    "results/experiment_3183_counterexample_certificate_expansion_v3.json": "e609bd82fa9a87ec03486deb22c518b047ee1bbfe231623bac93f3d60fe479c0",
+    "results/experiment_3189_cross_corpus_matrix_v29.json": "525300e59a304941c95c28f23ab0b79fcd7414aea4c4b4e8668187f92738a0c3"
+  },
+  "source_errors": [],
+  "tests_run": [
+    "REQ-VERIFY-3195 writer"
+  ],
+  "verifier_call_accounting": {
+    "adaptive_verifier_calls": 10,
+    "baseline_policy": "uniform_step_chunk",
+    "baseline_verifier_calls": 12,
+    "call_weights": {
+      "abstain/escalate": 1,
+      "counterexample-fragment": 3,
+      "final-answer-only": 1,
+      "skip redundant recheck": 0,
+      "step-chunk": 2
+    },
+    "estimated_verifier_call_delta": -2
+  }
+}

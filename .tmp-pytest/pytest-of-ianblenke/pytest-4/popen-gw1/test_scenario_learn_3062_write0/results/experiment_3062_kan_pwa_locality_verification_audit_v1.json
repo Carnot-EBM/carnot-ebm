@@ -1,0 +1,73 @@
+{
+  "approximation_error_bound": 0.0,
+  "artifact": "experiment_3062_kan_pwa_locality_verification_audit_v1",
+  "claim_promotion_useful": false,
+  "duration_s": 1.25,
+  "exact_controller_anchor_bound_available": true,
+  "field_principles": {
+    "approximation_error_bound": "PWA abstraction error must be visible even when zero by exact audit",
+    "honest_verdict": "terminal verdict must start with a success prefix unless blocked",
+    "inference_substrate": "exact CPU verifier work must not be confused with live LLM inference",
+    "kan_pwa_verification_ready": "KAN verification claims require trained-KAN exact or bounded evidence",
+    "locality_bound": "locality claims need a numeric bound",
+    "prior_retention_bound": "nonforgetting must be bounded",
+    "promotion_decision": "controller evidence must not imply model-weight learning",
+    "spec_updates": "implementation changes must be spec-anchored",
+    "tests_or_checks_run": "formulaic verifier changes need execution evidence",
+    "verification_path": "implementation or audit path must be explicit"
+  },
+  "honest_verdict": "complete_kan_pwa_locality_exact_controller_audit_not_promoted",
+  "inference_substrate": {
+    "cached_artifacts_only": true,
+    "controller_weight_update": false,
+    "exact_cpu_verifier": true,
+    "kan_model_weight_training": false,
+    "live_llm_inference": false,
+    "live_model_inference": false,
+    "local_gguf_inference": false,
+    "mode": "exact_cpu_controller_anchor_audit",
+    "model_weight_mutation": false,
+    "model_weight_training": false,
+    "trace_memory_update": false,
+    "trained_kan_weight_verification": false,
+    "training_scope": "audit_only_no_learning"
+  },
+  "kan_pwa_verification_ready": false,
+  "locality_bound": 0.75,
+  "prior_retention_bound": 0.0,
+  "promotion_decision": "controller_locality_evidence_only",
+  "run_date": "20260525",
+  "schema": "carnot.fr11.kan_pwa_locality_verification_audit.v1",
+  "smallest_locality_object": {
+    "anchored_prior_count": 2,
+    "anchored_prior_keys": [
+      "prior_guard::invalid",
+      "prior_guard::valid"
+    ],
+    "bound_definition": "locality_bound = 1 - changed_controller_anchor_count / total_controller_anchor_count",
+    "changed_anchor_count": 2,
+    "changed_anchor_keys": [
+      "solver_residual::nonzero",
+      "solver_residual::zero"
+    ],
+    "locality_bound": 0.75,
+    "nonlocal_change_bound": 0.25,
+    "object_type": "controller_anchor_delta_set",
+    "total_anchor_count": 8
+  },
+  "source_artifacts": {
+    "exp3047_artifact": "results/experiment_3047_kan_locality_nonforgetting_probe_v2.json",
+    "exp3047_ready": true,
+    "exp3047_sha256": "5f29fd23f2df7fbabadabc30d2a38b85d2b498f6eafcaced453fa9a91efb7bfd",
+    "exp3061_artifact": "results/experiment_3061_fr11_delayed_regression_solver_self_model_pilot_v1.json",
+    "exp3061_ready": true,
+    "exp3061_sha256": "8cfa78d24eab50494b7fbd05ff7a47c474dd318fe0127ee4fa88efcbf28d0e7b"
+  },
+  "spec_updates": [
+    "openspec/capabilities/self-learning/spec.md: REQ-LEARN-3062"
+  ],
+  "tests_or_checks_run": [
+    "focused-req-3062"
+  ],
+  "verification_path": "exact_controller_anchor_audit"
+}

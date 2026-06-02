@@ -1,0 +1,62 @@
+{
+  "controlled_invariance_executor_v2_ready": true,
+  "controlled_invariance_passed": true,
+  "exact_row_count": 6,
+  "exact_rows_evaluated": [
+    {
+      "exact_authority_decision": "accept",
+      "exact_label": "VALID",
+      "known_false_accept_regression": false,
+      "row_id": "row-clean-valid"
+    },
+    {
+      "exact_authority_decision": "reject",
+      "exact_label": "INVALID",
+      "known_false_accept_regression": false,
+      "row_id": "row-simple-invalid"
+    },
+    {
+      "exact_authority_decision": "reject",
+      "exact_label": "INVALID",
+      "known_false_accept_regression": true,
+      "row_id": "row-known-false"
+    },
+    {
+      "exact_authority_decision": "reject",
+      "exact_label": "REPAIRABLE",
+      "known_false_accept_regression": false,
+      "row_id": "row-repair-fragment"
+    },
+    {
+      "exact_authority_decision": "reject",
+      "exact_label": "REPAIRABLE",
+      "known_false_accept_regression": false,
+      "row_id": "row-unknown-family"
+    },
+    {
+      "exact_authority_decision": "accept",
+      "exact_label": "SAT",
+      "known_false_accept_regression": false,
+      "row_id": "row-drift-anchor"
+    }
+  ],
+  "known_false_accept_regression_count": 1,
+  "known_false_accept_regression_ids": [
+    "row-known-false"
+  ],
+  "receipt_backed_transcript_count": 2,
+  "receipt_backed_transcripts": [
+    {
+      "acceptance_authority": false,
+      "index": 0,
+      "substrate_used": "cpu_fallback_receipt_only",
+      "transcript_hash": "receipt-a"
+    },
+    {
+      "acceptance_authority": false,
+      "index": 1,
+      "substrate_used": "cpu_fallback_receipt_only",
+      "transcript_hash": "receipt-b"
+    }
+  ]
+}

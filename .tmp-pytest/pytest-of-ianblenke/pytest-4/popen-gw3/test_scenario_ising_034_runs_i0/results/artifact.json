@@ -1,0 +1,140 @@
+{
+  "command_results": {
+    "rtl_lint": {
+      "attempted": true,
+      "command": [
+        "iverilog",
+        "-tnull",
+        "-g2012",
+        "hardware/kv260/discrete_sb_256.v"
+      ],
+      "error": "",
+      "returncode": 0,
+      "stderr_summary": "",
+      "stdout_summary": "syntax ok",
+      "timed_out": false
+    },
+    "simulation": {
+      "attempted": true,
+      "command": [
+        "vvp",
+        "hardware/kv260/sim_work/discrete_sb_1437_sim"
+      ],
+      "error": "",
+      "returncode": 0,
+      "stderr_summary": "",
+      "stdout_summary": "simulation passed",
+      "timed_out": false
+    },
+    "simulation_compile": {
+      "attempted": true,
+      "command": [
+        "iverilog",
+        "-g2012",
+        "-o",
+        "hardware/kv260/sim_work/discrete_sb_1437_sim",
+        "hardware/kv260/discrete_sb_256.v",
+        "hardware/kv260/discrete_sb_256_tb.v"
+      ],
+      "error": "",
+      "returncode": 0,
+      "stderr_summary": "",
+      "stdout_summary": "compiled",
+      "timed_out": false
+    }
+  },
+  "exp1422_summary": {
+    "exists": true,
+    "hardware_claim_allowed": false,
+    "hardware_execution_performed": false,
+    "honest_verdict": "rtl_spec_complete_budget_fits_no_synthesis_or_board_execution",
+    "path": "/home/ianblenke/github.com/ianblenke/carnot/.tmp-pytest/pytest-of-ianblenke/pytest-4/popen-gw3/test_scenario_ising_034_runs_i0/results/experiment_1422_discrete_sb_kv260_rtl_spec.json",
+    "rtl_spec_path": "hardware/kv260/discrete_sb_rtl_spec.md",
+    "status": "complete"
+  },
+  "experiment_id": 1437,
+  "hardware_claim_allowed": false,
+  "hardware_execution_performed": false,
+  "honest_verdict": "rtl_lint_and_simulation_complete_no_hardware_execution",
+  "iverilog_available": true,
+  "next_bitfile_step": "Run Vivado synthesis for hardware/kv260/discrete_sb_256.v on a Vivado-equipped host, then generate and validate a KV260 bitfile.",
+  "rtl_lint_complete": true,
+  "rtl_sources_checked": [
+    {
+      "exists": true,
+      "path": "hardware/kv260/discrete_sb_256.v",
+      "source": "exp1422_planned_discrete_sb_source"
+    }
+  ],
+  "run_date": "20260506",
+  "simulation_complete": true,
+  "source_experiment_id": 1422,
+  "status": "complete",
+  "synthesis_attempted": false,
+  "testbench_exists": true,
+  "tool_probes": {
+    "iverilog": {
+      "available": true,
+      "probe": {
+        "attempted": true,
+        "command": [
+          "iverilog",
+          "-V"
+        ],
+        "error": "",
+        "returncode": 0,
+        "stderr_summary": "",
+        "stdout_summary": "Icarus Verilog version 12",
+        "timed_out": false
+      }
+    },
+    "verilator": {
+      "available": false,
+      "probe": {
+        "attempted": true,
+        "command": [
+          "verilator",
+          "--version"
+        ],
+        "error": "verilator",
+        "returncode": null,
+        "stderr_summary": "",
+        "stdout_summary": "",
+        "timed_out": false
+      }
+    },
+    "vivado": {
+      "available": false,
+      "probe": {
+        "attempted": true,
+        "command": [
+          "vivado",
+          "-version"
+        ],
+        "error": "vivado",
+        "returncode": null,
+        "stderr_summary": "",
+        "stdout_summary": "",
+        "timed_out": false
+      }
+    },
+    "yosys": {
+      "available": false,
+      "probe": {
+        "attempted": true,
+        "command": [
+          "yosys",
+          "--version"
+        ],
+        "error": "yosys",
+        "returncode": null,
+        "stderr_summary": "",
+        "stdout_summary": "",
+        "timed_out": false
+      }
+    }
+  },
+  "verilator_available": false,
+  "vivado_available": false,
+  "yosys_available": false
+}

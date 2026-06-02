@@ -1,0 +1,77 @@
+{
+  "budget_matcher_tolerance": 0.001,
+  "duration_s": 1.92658,
+  "experiment": 3727,
+  "field_principles": {
+    "budget_matcher_tolerance": "Defines how tightly AR FLOPs are equalized to EBT FLOPs.",
+    "duration_s": "Wall-clock plausibility floor.",
+    "flop_model_description": "A transparent documented FLOP model makes matched compute auditable rather than hand-wavy.",
+    "honest_verdict": "Terminal prefix; this is a build+test task, terminal on tests passing.",
+    "inference_substrate": "aggregation_from_upstream_artifacts because this builds an instrument and runs no live model.",
+    "random_seed": "Determinism precondition.",
+    "reproducibility_checksum": "Content hash catches drift.",
+    "unit_tests_added": "Names the test file; tests must run and assert.",
+    "unit_tests_passed": "Honest pass count; a failing harness cannot judge P0.1."
+  },
+  "flop_model_description": "FLOP model: total inference FLOPs = parameter_count * sequence_tokens * forward_passes. sequence_tokens = prompt_tokens + generated_tokens. EBT forward_passes = 1 initial sequence pass + K energy-descent passes; AR best-of-M forward_passes = M independent generation passes. The model omits attention-cache and hardware constants so matched-compute comparisons are symmetric and auditable.",
+  "honest_verdict": "complete: matched_compute_eval_harness_built_flop_accounting_documented_unit_tests_5_of_5_pass",
+  "inference_substrate": "aggregation_from_upstream_artifacts (principle: builds an instrument, runs no live model).",
+  "matched_compute_report": {
+    "ar_accuracy": 0.5,
+    "ar_correct": 2,
+    "ar_total_flops": 10000,
+    "budget_match": {
+      "ar_best_of_m": 5,
+      "ar_single_sample_total_flops": 2000,
+      "ar_total_flops": 10000,
+      "relative_error": 0.0,
+      "target_total_flops": 10000,
+      "within_tolerance": true
+    },
+    "ebt_accuracy": 0.75,
+    "ebt_correct": 3,
+    "ebt_total_flops": 10000,
+    "matched_compute_verdict": "ebt_higher_at_equal_flops",
+    "n_examples": 4,
+    "rows": [
+      {
+        "ar_answer": "A",
+        "ar_correct": true,
+        "ebt_answer": "A",
+        "ebt_correct": true,
+        "example_id": "p1",
+        "gold_answer": "A"
+      },
+      {
+        "ar_answer": "wrong",
+        "ar_correct": false,
+        "ebt_answer": "B",
+        "ebt_correct": true,
+        "example_id": "p2",
+        "gold_answer": "B"
+      },
+      {
+        "ar_answer": "wrong",
+        "ar_correct": false,
+        "ebt_answer": "C",
+        "ebt_correct": true,
+        "example_id": "p3",
+        "gold_answer": "C"
+      },
+      {
+        "ar_answer": "D",
+        "ar_correct": true,
+        "ebt_answer": "wrong",
+        "ebt_correct": false,
+        "example_id": "p4",
+        "gold_answer": "D"
+      }
+    ]
+  },
+  "random_seed": 20260602,
+  "reproducibility_checksum": "097026514736b03d8035f4d75324e2bc34543ed43abed8998b74acf9d16d9c73",
+  "schema": "carnot.experiment_3727_matched_compute_eval_harness.v1",
+  "unit_test_command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -m pytest tests/python/test_matched_compute_eval_harness.py -q --basetemp=/tmp/carnot-exp3727-pytest --override-ini addopts=",
+  "unit_tests_added": "tests/python/test_matched_compute_eval_harness.py",
+  "unit_tests_passed": "5_of_5_pass"
+}

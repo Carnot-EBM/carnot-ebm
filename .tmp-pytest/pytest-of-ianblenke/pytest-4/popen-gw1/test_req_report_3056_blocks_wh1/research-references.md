@@ -1,0 +1,1 @@
+- Approximately Aligned Decoding / AprAD balances constraint satisfaction, compute, and output-distribution distortion. Carnot use: preserve draft intent while applying hard verifier gates; no implementation claim.

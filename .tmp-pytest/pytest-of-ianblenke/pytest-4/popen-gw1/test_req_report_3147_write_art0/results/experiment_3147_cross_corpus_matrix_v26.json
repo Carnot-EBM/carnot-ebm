@@ -1,0 +1,794 @@
+{
+  "architecture_boundary_rows": [
+    "dot292:exp3144_ebt_arm_calibration",
+    "dot292:exp3145_kan_monitor_boundary",
+    "dot292:exp3146_hardware_boundary"
+  ],
+  "architecture_boundary_summary": {
+    "architecture_boundary_row_ids": [
+      "dot292:exp3144_ebt_arm_calibration",
+      "dot292:exp3145_kan_monitor_boundary",
+      "dot292:exp3146_hardware_boundary"
+    ],
+    "deployed_kan_verifier_claim": false,
+    "ebt_arm_status": "projection_only",
+    "false_accept_rows_evaluated": 2,
+    "gatemate_evidence_complete": false,
+    "hardware_boundary_status": "blocked",
+    "hardware_commands_run": [],
+    "integration_blocker_count": 1,
+    "kan_attached_monitor_record_count": 2,
+    "kan_does_not_prove": [
+      "deployed verifier improvement",
+      "hardware execution"
+    ],
+    "kan_monitor_status": "bounded",
+    "kona_claim_allowed": false,
+    "live_integration": false,
+    "missing_operator_evidence_count": 1,
+    "speedup_claim_allowed": false,
+    "ssqa_readback_ready": false,
+    "thrml_tsu_claim_allowed": false
+  },
+  "artifact": "experiment_3147_cross_corpus_matrix_v26",
+  "blocker_delta_from_v25": 9,
+  "diagnostic_only_rows": [
+    "carry:diagnostic"
+  ],
+  "duration_s": 0.5,
+  "false_accept_recovery_summary": {
+    "accept_abstain_contract_status": "clean",
+    "autopsy_status": "flagged",
+    "canonical_false_accept_rows_blocked": 2,
+    "canonical_grounding_status": "clean",
+    "corrigendum_pending_count": 2,
+    "false_accept_gate_passed": true,
+    "false_accept_row_ids": [
+      "resyn-3084-arith-003",
+      "resyn-3084-smt-000"
+    ],
+    "flagged_adversarial_artifact_count": 2,
+    "known_false_accept_rows_blocked": true,
+    "live_verifier_status": "flagged",
+    "recomputed_false_accept_rate": 0.5,
+    "recovery_claim_status": "blocked_by_adversarial_corrigendum",
+    "rerun_abstention_rate": 0.5,
+    "rerun_false_accept_rate": 0.0,
+    "rerun_verifier_gain_delta": 0.5,
+    "source_false_accept_rate": 0.5
+  },
+  "fr11_summary": {
+    "admitted_environment_count": 3,
+    "continuous_self_learning_targeted": true,
+    "experience_ledger_consistency_rate": 0.666667,
+    "experience_memory_status": "flagged",
+    "hardened_variant_count": 3,
+    "model_weight_learning_allowed": false,
+    "no_weight_update_claim": true,
+    "promotion_recommendations": [
+      "promote_controller_environment_memory_only_block_model_weight_learning",
+      "promote_controller_routing_memory_only"
+    ],
+    "replay_row_count": 12,
+    "residual_false_accept_risk": 0.0,
+    "residual_false_reject_risk": 0.166667,
+    "vera_evoenv_status": "flagged",
+    "vera_ledger_consistency_rate": 0.833333
+  },
+  "gated_skips": [
+    {
+      "reason": "gated_skip_status",
+      "row_id": "carry:gated",
+      "source_artifact": "results/carry_gated.json",
+      "status": "gated_skipped"
+    },
+    {
+      "reason": "repair gate did not unlock",
+      "row_id": "dot292:exp3141_repair_ladder",
+      "source_artifact": "results/experiment_3141_multi_turn_repair_ladder_v2.json",
+      "status": "gated_skipped"
+    }
+  ],
+  "headline_claim_allowance_summary": {
+    "blocked_headline_claims": [
+      "comparative_sota_pair",
+      "live_verifier_lift_adversarial_flag",
+      "repair_headline",
+      "fr11_model_weight_learning",
+      "ebt_arm_live_integration",
+      "kan_deployed_verifier",
+      "hardware_speedup"
+    ],
+    "canonical_grounding_claim_allowed": true,
+    "comparative_sota_pair_allowed": false,
+    "ebt_arm_live_integration_allowed": false,
+    "exact_safe_contract_claim_allowed": true,
+    "fr11_model_weight_learning_allowed": false,
+    "hardware_speedup_claim_allowed": false,
+    "kan_deployed_verifier_allowed": false,
+    "live_verifier_headline_allowed": false,
+    "missing_model_ids": [
+      "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "unsloth/gemma-4-31B-it-GGUF"
+    ],
+    "present_model_ids": [
+      "unsloth/gemma-4-26B-A4B-it-GGUF"
+    ],
+    "repair_headline_claim_allowed": false,
+    "selected_headline_model_ids": [
+      "unsloth/gemma-4-26B-A4B-it-GGUF"
+    ],
+    "sota_cache_headline_allowed": true
+  },
+  "honest_verdict": "complete: matrix_v26_ready=true; rows_total=15; publication_blocker_count=11; blocker_delta_from_v25=9; missing_artifacts=1",
+  "inference_substrate": {
+    "executes_conductor": false,
+    "executes_hardware": false,
+    "executes_models": false,
+    "executes_repairs": false,
+    "executes_solvers": false,
+    "executes_verifiers": false,
+    "kind": "aggregation_from_checked_in_dot292_artifacts",
+    "local_repo_only": true,
+    "no_live_llm_inference": true,
+    "source": "matrix_v25_capstone_v291_and_dot292_artifacts"
+  },
+  "invariant_violations": [],
+  "matrix_v26_ready": true,
+  "milestone": "2026.05.292",
+  "missing_artifacts": [
+    {
+      "experiment_id": "exp3141",
+      "path": "results/experiment_3141_multi_turn_repair_ladder_v2.json",
+      "reason": "missing_or_malformed_dot292_artifact"
+    }
+  ],
+  "no_live_repair_rerun": true,
+  "no_new_board_flash": true,
+  "no_new_hardware_run": true,
+  "no_new_model_execution": true,
+  "no_new_solver_run": true,
+  "no_new_synthesis_run": true,
+  "no_new_verifier_run": true,
+  "ops_docs_reconciliation_left_to_conductor": true,
+  "prior_publication_blocker_count": 2,
+  "publication_blocker_count": 11,
+  "publication_blockers": [
+    {
+      "blocker_class": "bounded",
+      "claim_scope": "baseline_bounded",
+      "row_id": "carry:bounded",
+      "source_artifact": "results/carry_bounded.json",
+      "source_field": "status",
+      "status": "bounded"
+    },
+    {
+      "blocker_class": "gated_skipped",
+      "claim_scope": "baseline_gate",
+      "row_id": "carry:gated",
+      "source_artifact": "results/carry_gated.json",
+      "source_field": "status",
+      "status": "gated_skipped"
+    },
+    {
+      "blocker_class": "flagged",
+      "claim_scope": "false_accept_recovery_diagnostic",
+      "row_id": "dot292:exp3136_false_accept_autopsy",
+      "source_artifact": "results/experiment_3136_false_accept_root_cause_autopsy_v1.json",
+      "source_field": "false_accept_autopsy_v1_ready",
+      "status": "flagged"
+    },
+    {
+      "blocker_class": "flagged",
+      "claim_scope": "live_sota_verifier_lift",
+      "row_id": "dot292:exp3139_live_verifier_rerun",
+      "source_artifact": "results/experiment_3139_live_sota_verifier_rerun_v7.json",
+      "source_field": "live_verifier_rerun_v7_ready",
+      "status": "flagged"
+    },
+    {
+      "blocker_class": "blocked",
+      "claim_scope": "repair_gate_decision",
+      "row_id": "dot292:exp3140_repair_gate",
+      "source_artifact": "results/experiment_3140_repair_gate_unlock_decision_v1.json",
+      "source_field": "repair_gate_state",
+      "status": "blocked"
+    },
+    {
+      "blocker_class": "gated_skipped",
+      "claim_scope": "repair_live_rerun",
+      "row_id": "dot292:exp3141_repair_ladder",
+      "source_artifact": "results/experiment_3141_multi_turn_repair_ladder_v2.json",
+      "source_field": "multi_turn_repair_ladder_v2_ready",
+      "status": "gated_skipped"
+    },
+    {
+      "blocker_class": "flagged",
+      "claim_scope": "controller_only_environment_memory",
+      "row_id": "dot292:exp3142_fr11_vera_evoenv",
+      "source_artifact": "results/experiment_3142_fr11_vera_evoenv_hardening_v2.json",
+      "source_field": "fr11_vera_evoenv_v2_ready",
+      "status": "flagged"
+    },
+    {
+      "blocker_class": "flagged",
+      "claim_scope": "controller_only_experience_memory",
+      "row_id": "dot292:exp3143_fr11_experience_memory",
+      "source_artifact": "results/experiment_3143_fr11_experience_driven_verifier_memory_v1.json",
+      "source_field": "fr11_experience_verifier_memory_v1_ready",
+      "status": "flagged"
+    },
+    {
+      "blocker_class": "projection_only",
+      "claim_scope": "architecture_energy_budget_boundary",
+      "row_id": "dot292:exp3144_ebt_arm_calibration",
+      "source_artifact": "results/experiment_3144_ebt_arm_false_accept_calibration_boundary_v3.json",
+      "source_field": "ebt_arm_false_accept_calibration_v3_ready",
+      "status": "projection_only"
+    },
+    {
+      "blocker_class": "bounded",
+      "claim_scope": "architecture_kan_verifier_boundary",
+      "row_id": "dot292:exp3145_kan_monitor_boundary",
+      "source_artifact": "results/experiment_3145_kan_proof_carrying_monitor_boundary_v2.json",
+      "source_field": "kan_proof_carrying_monitor_v2_ready",
+      "status": "bounded"
+    },
+    {
+      "blocker_class": "blocked",
+      "claim_scope": "architecture_hardware_sampler_boundary",
+      "row_id": "dot292:exp3146_hardware_boundary",
+      "source_artifact": "results/experiment_3146_hardware_sampler_evidence_boundary_v6.json",
+      "source_field": "hardware_sampler_evidence_boundary_v6_ready",
+      "status": "blocked"
+    }
+  ],
+  "repair_gate_summary": {
+    "false_accept_gate_passed": true,
+    "false_accept_rate": 0.0,
+    "headline_disqualifier_count": 1,
+    "headline_repair_claim_allowed": false,
+    "known_false_accepts_blocked": true,
+    "regression_rows_included": true,
+    "repair_blocker_count": 1,
+    "repair_gate_state": "blocked_other",
+    "repair_gate_status": "blocked",
+    "repair_ladder_missing_path": "results/experiment_3141_multi_turn_repair_ladder_v2.json",
+    "repair_ladder_present": false,
+    "repair_ladder_status": "gated_skipped",
+    "selected_repair_rows": []
+  },
+  "required_source_errors": [],
+  "rows": [
+    {
+      "blocker_class": "none",
+      "claim_scope": "carry",
+      "evidence_class": "v25_carry",
+      "row_id": "carry:clean",
+      "row_origin": "matrix_v25_test",
+      "source_artifact": "results/carry_clean.json",
+      "source_field": "status",
+      "status": "clean",
+      "summary": {
+        "source_status": "clean",
+        "v26_status_rationale": "carried_forward_from_matrix_v25"
+      }
+    },
+    {
+      "blocker_class": "bounded",
+      "claim_scope": "baseline_bounded",
+      "evidence_class": "v25_carry",
+      "row_id": "carry:bounded",
+      "row_origin": "matrix_v25_test",
+      "source_artifact": "results/carry_bounded.json",
+      "source_field": "status",
+      "status": "bounded",
+      "summary": {
+        "source_status": "bounded",
+        "v26_status_rationale": "carried_forward_from_matrix_v25"
+      }
+    },
+    {
+      "blocker_class": "gated_skipped",
+      "claim_scope": "baseline_gate",
+      "evidence_class": "v25_carry",
+      "row_id": "carry:gated",
+      "row_origin": "matrix_v25_test",
+      "source_artifact": "results/carry_gated.json",
+      "source_field": "status",
+      "status": "gated_skipped",
+      "summary": {
+        "source_status": "gated_skipped",
+        "v26_status_rationale": "carried_forward_from_matrix_v25"
+      }
+    },
+    {
+      "blocker_class": "diagnostic_only",
+      "claim_scope": "baseline_diagnostic",
+      "evidence_class": "v25_carry",
+      "row_id": "carry:diagnostic",
+      "row_origin": "matrix_v25_test",
+      "source_artifact": "results/carry_diagnostic.json",
+      "source_field": "status",
+      "status": "diagnostic_only",
+      "summary": {
+        "source_status": "diagnostic_only",
+        "v26_status_rationale": "carried_forward_from_matrix_v25"
+      }
+    },
+    {
+      "blocker_class": "flagged",
+      "claim_scope": "false_accept_recovery_diagnostic",
+      "evidence_class": "false_accept_root_cause_autopsy",
+      "row_id": "dot292:exp3136_false_accept_autopsy",
+      "row_origin": "milestone_292",
+      "source_artifact": "results/experiment_3136_false_accept_root_cause_autopsy_v1.json",
+      "source_field": "false_accept_autopsy_v1_ready",
+      "status": "flagged",
+      "summary": {
+        "corrigendum_pending_count": 1,
+        "false_accept_autopsy_v1_ready": true,
+        "false_accept_mechanism_counts": {
+          "SAT/validity-token confusion": 1,
+          "contradiction miss": 1
+        },
+        "false_accept_row_ids": [
+          "resyn-3084-arith-003",
+          "resyn-3084-smt-000"
+        ],
+        "flagged_adversarial": true,
+        "honest_verdict": "complete: autopsy ready but flagged",
+        "recomputed_false_accept_rate": 0.5,
+        "regression_row_set": [
+          "resyn-3084-arith-003",
+          "resyn-3084-smt-000"
+        ],
+        "source_false_accept_count": 2,
+        "source_false_accept_rate": 0.5,
+        "source_live_row_count": 6
+      }
+    },
+    {
+      "blocker_class": "none",
+      "claim_scope": "exact_safe_accept_abstain_contract",
+      "evidence_class": "exact_safe_accept_abstain_contract",
+      "row_id": "dot292:exp3137_accept_abstain_contract",
+      "row_origin": "milestone_292",
+      "source_artifact": "results/experiment_3137_exact_safe_accept_abstain_contract_v1.json",
+      "source_field": "acceptance_contract_v1_ready",
+      "status": "clean",
+      "summary": {
+        "acceptance_contract_v1_ready": true,
+        "honest_verdict": "complete: acceptance contract ready",
+        "known_false_accept_rows_blocked": true,
+        "repair_gate_prerequisites": {
+          "repair_gate_opens_only_after_live_rerun_replay": true
+        },
+        "replay_abstention_rate": 0.025641,
+        "replay_counts": {
+          "total_rows": 78
+        },
+        "replay_false_accept_rate": 0.0,
+        "replay_false_reject_rate": 0.0
+      }
+    },
+    {
+      "blocker_class": "none",
+      "claim_scope": "canonical_grounding_regression_replay",
+      "evidence_class": "canonical_answer_vericot_grounding_pilot",
+      "row_id": "dot292:exp3138_canonical_grounding",
+      "row_origin": "milestone_292",
+      "source_artifact": "results/experiment_3138_canonical_answer_vericot_grounding_pilot_v1.json",
+      "source_field": "canonical_grounding_pilot_v1_ready",
+      "status": "clean",
+      "summary": {
+        "canonical_grounding_pilot_v1_ready": true,
+        "canonicalization_block_count": 2,
+        "canonicalizer_implemented": true,
+        "false_accept_rows_blocked": 2,
+        "honest_verdict": "complete: canonical grounding ready",
+        "ledger_replay_block_count": 2,
+        "premise_grounding_block_count": 2,
+        "regression_rows_evaluated": 2,
+        "residual_false_accept_rows": []
+      }
+    },
+    {
+      "blocker_class": "flagged",
+      "claim_scope": "live_sota_verifier_lift",
+      "evidence_class": "live_sota_verifier_rerun_v7",
+      "row_id": "dot292:exp3139_live_verifier_rerun",
+      "row_origin": "milestone_292",
+      "source_artifact": "results/experiment_3139_live_sota_verifier_rerun_v7.json",
+      "source_field": "live_verifier_rerun_v7_ready",
+      "status": "flagged",
+      "summary": {
+        "abstention_rate": 0.5,
+        "corrigendum_pending_count": 1,
+        "false_accept_gate_passed": true,
+        "false_accept_rate": 0.0,
+        "false_reject_rate": 0.0,
+        "flagged_adversarial": true,
+        "headline_claim_allowed_source": true,
+        "honest_verdict": "complete: live rerun metrics ready but flagged",
+        "live_call_count": 6,
+        "live_verifier_rerun_v7_ready": true,
+        "regression_rows_included": true,
+        "repair_gate_candidate_state": "candidate_ready",
+        "selected_model_ids": [
+          "unsloth/gemma-4-26B-A4B-it-GGUF"
+        ],
+        "source_false_accept_rate": 0.5,
+        "verifier_gain_delta": 0.5
+      }
+    },
+    {
+      "blocker_class": "blocked",
+      "claim_scope": "repair_gate_decision",
+      "evidence_class": "repair_gate_unlock_decision",
+      "row_id": "dot292:exp3140_repair_gate",
+      "row_origin": "milestone_292",
+      "source_artifact": "results/experiment_3140_repair_gate_unlock_decision_v1.json",
+      "source_field": "repair_gate_state",
+      "status": "blocked",
+      "summary": {
+        "exact_authority_ready": true,
+        "false_accept_gate_passed": true,
+        "false_accept_rate": 0.0,
+        "headline_disqualifier_count": 1,
+        "honest_verdict": "blocked_other: exp3139 flagged_adversarial=true",
+        "known_false_accepts_blocked": true,
+        "live_model_ready": true,
+        "monitor_ledger_ready": true,
+        "regression_rows_included": true,
+        "repair_blocker_count": 1,
+        "repair_gate_decision_v1_ready": true,
+        "repair_gate_state": "blocked_other",
+        "repair_rows_available": true,
+        "selected_repair_rows": []
+      }
+    },
+    {
+      "blocker_class": "gated_skipped",
+      "claim_scope": "repair_live_rerun",
+      "evidence_class": "multi_turn_repair_ladder_v2",
+      "row_id": "dot292:exp3141_repair_ladder",
+      "row_origin": "milestone_292",
+      "source_artifact": "results/experiment_3141_multi_turn_repair_ladder_v2.json",
+      "source_field": "multi_turn_repair_ladder_v2_ready",
+      "status": "gated_skipped",
+      "summary": {
+        "gate_check_summary": "repair gate did not unlock",
+        "gated_skip": true,
+        "headline_repair_claim_allowed": false,
+        "honest_verdict": "",
+        "live_call_count": 0,
+        "multi_turn_repair_ladder_v2_ready": false,
+        "repair_attempt_count": 0,
+        "repair_gate_state": "blocked_other",
+        "source_status": ""
+      }
+    },
+    {
+      "blocker_class": "flagged",
+      "claim_scope": "controller_only_environment_memory",
+      "evidence_class": "fr11_vera_evoenv_hardening",
+      "row_id": "dot292:exp3142_fr11_vera_evoenv",
+      "row_origin": "milestone_292",
+      "source_artifact": "results/experiment_3142_fr11_vera_evoenv_hardening_v2.json",
+      "source_field": "fr11_vera_evoenv_v2_ready",
+      "status": "flagged",
+      "summary": {
+        "admitted_environment_count": 3,
+        "completeness_errors": 0,
+        "continuous_self_learning_targeted": true,
+        "corrigendum_pending_count": 1,
+        "equivalent_variant_count": 3,
+        "flagged_adversarial": true,
+        "fr11_vera_evoenv_v2_ready": true,
+        "hardened_variant_count": 3,
+        "honest_verdict": "complete: solver-only FR-11",
+        "ledger_consistency_rate": 0.833333,
+        "live_call_count": 0,
+        "live_model_variant_generation": false,
+        "no_weight_update_claim": true,
+        "promotion_recommendation": "promote_controller_environment_memory_only_block_model_weight_learning",
+        "soundness_errors": 0
+      }
+    },
+    {
+      "blocker_class": "flagged",
+      "claim_scope": "controller_only_experience_memory",
+      "evidence_class": "fr11_experience_driven_verifier_memory",
+      "row_id": "dot292:exp3143_fr11_experience_memory",
+      "row_origin": "milestone_292",
+      "source_artifact": "results/experiment_3143_fr11_experience_driven_verifier_memory_v1.json",
+      "source_field": "fr11_experience_verifier_memory_v1_ready",
+      "status": "flagged",
+      "summary": {
+        "continuous_self_learning_targeted": true,
+        "corrigendum_pending_count": 1,
+        "escalated_check_count": 5,
+        "estimated_check_savings_rate": 0.166667,
+        "flagged_adversarial": true,
+        "fr11_experience_verifier_memory_v1_ready": true,
+        "honest_verdict": "complete: controller routing memory only",
+        "ledger_consistency_rate": 0.666667,
+        "no_weight_update_claim": true,
+        "promotion_recommendation": "promote_controller_routing_memory_only",
+        "replay_row_count": 12,
+        "residual_false_accept_risk": 0.0,
+        "residual_false_reject_risk": 0.166667,
+        "suppressed_check_count": 7
+      }
+    },
+    {
+      "blocker_class": "projection_only",
+      "claim_scope": "architecture_energy_budget_boundary",
+      "evidence_class": "ebt_arm_false_accept_calibration_boundary",
+      "row_id": "dot292:exp3144_ebt_arm_calibration",
+      "row_origin": "milestone_292",
+      "source_artifact": "results/experiment_3144_ebt_arm_false_accept_calibration_boundary_v3.json",
+      "source_field": "ebt_arm_false_accept_calibration_v3_ready",
+      "status": "projection_only",
+      "summary": {
+        "corrigendum_pending_count": 1,
+        "ebt_arm_false_accept_calibration_v3_ready": true,
+        "false_accept_row_ids": [
+          "resyn-3084-arith-003",
+          "resyn-3084-smt-000"
+        ],
+        "false_accept_rows_evaluated": 2,
+        "flagged_adversarial": true,
+        "honest_verdict": "complete: calibration boundary only",
+        "integration_blocker_count": 1,
+        "live_call_count": 6,
+        "live_integration": false,
+        "live_row_count": 6
+      }
+    },
+    {
+      "blocker_class": "bounded",
+      "claim_scope": "architecture_kan_verifier_boundary",
+      "evidence_class": "kan_proof_carrying_monitor_boundary",
+      "row_id": "dot292:exp3145_kan_monitor_boundary",
+      "row_origin": "milestone_292",
+      "source_artifact": "results/experiment_3145_kan_proof_carrying_monitor_boundary_v2.json",
+      "source_field": "kan_proof_carrying_monitor_v2_ready",
+      "status": "bounded",
+      "summary": {
+        "attached_monitor_record_count": 2,
+        "claim_boundary_does_not_prove": [
+          "deployed verifier improvement",
+          "hardware execution"
+        ],
+        "claim_boundary_proves": "two replayable KAN PWA/MILP proof records",
+        "deployed_verifier_claim": false,
+        "false_accept_relevance": {
+          "would_prevent_live_false_accept": false
+        },
+        "honest_verdict": "complete_kan_records_attached_no_deployed_claim",
+        "implementation_blocker_count": 0,
+        "kan_code_present": true,
+        "kan_proof_carrying_monitor_v2_ready": true,
+        "milp_property_check_count": 1
+      }
+    },
+    {
+      "blocker_class": "blocked",
+      "claim_scope": "architecture_hardware_sampler_boundary",
+      "evidence_class": "hardware_sampler_evidence_boundary",
+      "row_id": "dot292:exp3146_hardware_boundary",
+      "row_origin": "milestone_292",
+      "source_artifact": "results/experiment_3146_hardware_sampler_evidence_boundary_v6.json",
+      "source_field": "hardware_sampler_evidence_boundary_v6_ready",
+      "status": "blocked",
+      "summary": {
+        "gatemate_evidence_complete": false,
+        "hardware_commands_run": [],
+        "hardware_sampler_evidence_boundary_v6_ready": true,
+        "honest_verdict": "complete: hardware boundary ready; evidence blocked",
+        "kona_claim_allowed": false,
+        "missing_operator_evidence_count": 1,
+        "missing_required_source_artifacts": [],
+        "sampler_boundary_decisions": {
+          "gatemate": "blocked",
+          "kona": "out-of-scope",
+          "ssqa": "blocked"
+        },
+        "speedup_claim_allowed": false,
+        "ssqa_readback_ready": false,
+        "thrml_tsu_claim_allowed": false
+      }
+    }
+  ],
+  "rows_total": 15,
+  "run_date": "20260526",
+  "schema": "carnot.cross_corpus_matrix.v26_292_artifact_aggregation.v1",
+  "scripts_research_conductor_modified": false,
+  "source_artifacts": [
+    {
+      "experiment_id": "exp3133",
+      "path": "results/experiment_3133_cross_corpus_matrix_v25.json",
+      "present": true,
+      "readable_json_object": true,
+      "ready_field": "matrix_v25_ready",
+      "required": true,
+      "role": "matrix_v25_authority",
+      "sha256": "41b74b56f2aa61bb238ac96673bd8cf863dfa7c647acd29e002e8dcdc1796457",
+      "source_type": "json"
+    },
+    {
+      "experiment_id": "exp3134",
+      "path": "results/experiment_3134_capstone_v291.json",
+      "present": true,
+      "readable_json_object": true,
+      "ready_field": "capstone_ready",
+      "required": true,
+      "role": "capstone_v291_authority",
+      "sha256": "b125c401b7076d2703c427f5d507670ef0853203378fd9d6d58afdc692e8d143",
+      "source_type": "json"
+    },
+    {
+      "experiment_id": "exp3135",
+      "path": "results/experiment_3135_archive_v291_activate_v292.json",
+      "present": true,
+      "readable_json_object": true,
+      "ready_field": "archive_v291_activate_v292_ready",
+      "required": false,
+      "role": "archive_v291_activate_v292",
+      "sha256": "6cb12266a98883043204eb368e34b10ca654ca922c9752caff59c745ca6653bb",
+      "source_type": "json"
+    },
+    {
+      "experiment_id": "exp3136",
+      "path": "results/experiment_3136_false_accept_root_cause_autopsy_v1.json",
+      "present": true,
+      "readable_json_object": true,
+      "ready_field": "false_accept_autopsy_v1_ready",
+      "required": false,
+      "role": "false_accept_autopsy",
+      "sha256": "ff591bf5dac3c3ecab705a0fc693c754db46590086b51ac9bac9af7ce553b784",
+      "source_type": "json"
+    },
+    {
+      "experiment_id": "exp3137",
+      "path": "results/experiment_3137_exact_safe_accept_abstain_contract_v1.json",
+      "present": true,
+      "readable_json_object": true,
+      "ready_field": "acceptance_contract_v1_ready",
+      "required": false,
+      "role": "accept_abstain_contract",
+      "sha256": "6cc4842b007e7cedcb5e1fcdfb3bbbc8ba0fc3ee16da4e37177dbd6fadae21a9",
+      "source_type": "json"
+    },
+    {
+      "experiment_id": "exp3138",
+      "path": "results/experiment_3138_canonical_answer_vericot_grounding_pilot_v1.json",
+      "present": true,
+      "readable_json_object": true,
+      "ready_field": "canonical_grounding_pilot_v1_ready",
+      "required": false,
+      "role": "canonical_grounding",
+      "sha256": "a39d706a42c52ba2c2083f441e133a05a92e75411ac8623c819cfad7de937f19",
+      "source_type": "json"
+    },
+    {
+      "experiment_id": "exp3139",
+      "path": "results/experiment_3139_live_sota_verifier_rerun_v7.json",
+      "present": true,
+      "readable_json_object": true,
+      "ready_field": "live_verifier_rerun_v7_ready",
+      "required": false,
+      "role": "live_verifier_rerun",
+      "sha256": "d730b513b219401475f98a23cbec268f3755cd870045545984f458054d5b958f",
+      "source_type": "json"
+    },
+    {
+      "experiment_id": "exp3140",
+      "path": "results/experiment_3140_repair_gate_unlock_decision_v1.json",
+      "present": true,
+      "readable_json_object": true,
+      "ready_field": "repair_gate_decision_v1_ready",
+      "required": false,
+      "role": "repair_gate",
+      "sha256": "c03db147a879697c9c95ffffdad6ea34d7497c662de83bad18ad6e75a892a5be",
+      "source_type": "json"
+    },
+    {
+      "experiment_id": "exp3141",
+      "path": "results/experiment_3141_multi_turn_repair_ladder_v2.json",
+      "present": false,
+      "readable_json_object": false,
+      "ready_field": "multi_turn_repair_ladder_v2_ready",
+      "required": false,
+      "role": "repair_ladder",
+      "sha256": null,
+      "source_type": "json"
+    },
+    {
+      "experiment_id": "exp3142",
+      "path": "results/experiment_3142_fr11_vera_evoenv_hardening_v2.json",
+      "present": true,
+      "readable_json_object": true,
+      "ready_field": "fr11_vera_evoenv_v2_ready",
+      "required": false,
+      "role": "fr11_vera_evoenv",
+      "sha256": "a8c562f8b82c0a77be0d573b03d430f4316fe30e92ca324afe7bb805f2a2af65",
+      "source_type": "json"
+    },
+    {
+      "experiment_id": "exp3143",
+      "path": "results/experiment_3143_fr11_experience_driven_verifier_memory_v1.json",
+      "present": true,
+      "readable_json_object": true,
+      "ready_field": "fr11_experience_verifier_memory_v1_ready",
+      "required": false,
+      "role": "fr11_experience_memory",
+      "sha256": "302d50c885619c2943c291a6543246af387e05b8c429aff6b711781b8e027a60",
+      "source_type": "json"
+    },
+    {
+      "experiment_id": "exp3144",
+      "path": "results/experiment_3144_ebt_arm_false_accept_calibration_boundary_v3.json",
+      "present": true,
+      "readable_json_object": true,
+      "ready_field": "ebt_arm_false_accept_calibration_v3_ready",
+      "required": false,
+      "role": "ebt_arm_calibration",
+      "sha256": "286ff8b2270870df40fb2889b4031e3625a1ecadd4827b03ded333d0e26de5db",
+      "source_type": "json"
+    },
+    {
+      "experiment_id": "exp3145",
+      "path": "results/experiment_3145_kan_proof_carrying_monitor_boundary_v2.json",
+      "present": true,
+      "readable_json_object": true,
+      "ready_field": "kan_proof_carrying_monitor_v2_ready",
+      "required": false,
+      "role": "kan_monitor_boundary",
+      "sha256": "72c85081e1200aa9e9d8ddeb493b4b640c7e20adfc759f2c53b8040615b46c8d",
+      "source_type": "json"
+    },
+    {
+      "experiment_id": "exp3146",
+      "path": "results/experiment_3146_hardware_sampler_evidence_boundary_v6.json",
+      "present": true,
+      "readable_json_object": true,
+      "ready_field": "hardware_sampler_evidence_boundary_v6_ready",
+      "required": false,
+      "role": "hardware_boundary",
+      "sha256": "c976fd8bda7cc87d075179652bc03b8081bd5bbe8474b3706619abc1ddbb06d8",
+      "source_type": "json"
+    }
+  ],
+  "source_checksums": {
+    "results/experiment_3133_cross_corpus_matrix_v25.json": "41b74b56f2aa61bb238ac96673bd8cf863dfa7c647acd29e002e8dcdc1796457",
+    "results/experiment_3134_capstone_v291.json": "b125c401b7076d2703c427f5d507670ef0853203378fd9d6d58afdc692e8d143",
+    "results/experiment_3135_archive_v291_activate_v292.json": "6cb12266a98883043204eb368e34b10ca654ca922c9752caff59c745ca6653bb",
+    "results/experiment_3136_false_accept_root_cause_autopsy_v1.json": "ff591bf5dac3c3ecab705a0fc693c754db46590086b51ac9bac9af7ce553b784",
+    "results/experiment_3137_exact_safe_accept_abstain_contract_v1.json": "6cc4842b007e7cedcb5e1fcdfb3bbbc8ba0fc3ee16da4e37177dbd6fadae21a9",
+    "results/experiment_3138_canonical_answer_vericot_grounding_pilot_v1.json": "a39d706a42c52ba2c2083f441e133a05a92e75411ac8623c819cfad7de937f19",
+    "results/experiment_3139_live_sota_verifier_rerun_v7.json": "d730b513b219401475f98a23cbec268f3755cd870045545984f458054d5b958f",
+    "results/experiment_3140_repair_gate_unlock_decision_v1.json": "c03db147a879697c9c95ffffdad6ea34d7497c662de83bad18ad6e75a892a5be",
+    "results/experiment_3141_multi_turn_repair_ladder_v2.json": null,
+    "results/experiment_3142_fr11_vera_evoenv_hardening_v2.json": "a8c562f8b82c0a77be0d573b03d430f4316fe30e92ca324afe7bb805f2a2af65",
+    "results/experiment_3143_fr11_experience_driven_verifier_memory_v1.json": "302d50c885619c2943c291a6543246af387e05b8c429aff6b711781b8e027a60",
+    "results/experiment_3144_ebt_arm_false_accept_calibration_boundary_v3.json": "286ff8b2270870df40fb2889b4031e3625a1ecadd4827b03ded333d0e26de5db",
+    "results/experiment_3145_kan_proof_carrying_monitor_boundary_v2.json": "72c85081e1200aa9e9d8ddeb493b4b640c7e20adfc759f2c53b8040615b46c8d",
+    "results/experiment_3146_hardware_sampler_evidence_boundary_v6.json": "c976fd8bda7cc87d075179652bc03b8081bd5bbe8474b3706619abc1ddbb06d8"
+  },
+  "status_counts": {
+    "blocked": 2,
+    "bounded": 2,
+    "clean": 3,
+    "diagnostic_only": 1,
+    "flagged": 4,
+    "gated_skipped": 2,
+    "missing": 0,
+    "model_spec_gap": 0,
+    "projection_only": 1,
+    "retired": 0
+  },
+  "status_updates_written": false
+}

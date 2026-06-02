@@ -1,0 +1,43 @@
+{
+  "artifact": "experiment_3164_duration_corrected_authenticity_contract_v2",
+  "duration_corrected_authenticity_contract_v2_ready": true,
+  "fake_evidence_rejection_criteria": [
+    "reject no model loaded",
+    "reject missing transcript hashes",
+    "reject impossible token throughput"
+  ],
+  "headline_claim_policy": {
+    "smoke_test_headline_claim_allowed": false,
+    "smoke_test_role": "preflight authenticity evidence only"
+  },
+  "honest_verdict": "complete: duration_corrected_authenticity_contract_v2_ready=true",
+  "measured_work_requirements": [
+    {
+      "observed": true,
+      "requirement": "local_model_path_exists",
+      "source_field": "model_load_evidence.path_exists"
+    },
+    {
+      "observed": true,
+      "requirement": "model_load_proof",
+      "source_field": "model_load_evidence.load_wall_time_s"
+    },
+    {
+      "observed": true,
+      "requirement": "transcript_and_prompt_hashes",
+      "source_field": "transcript_hashes"
+    }
+  ],
+  "required_preflight_fields": [
+    "model_specs.path_exists",
+    "model_load_evidence.load_attempted",
+    "model_load_evidence.returncode",
+    "transcript_hashes.transcript_sha256",
+    "prompt_hashes",
+    "token_counts.total_tokens",
+    "random_seed",
+    "reproducibility_checksum",
+    "controlled_subprocess_return_codes",
+    "inference_substrate"
+  ]
+}

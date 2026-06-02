@@ -1,0 +1,102 @@
+{
+  "adaptation_score": 0.0,
+  "artifact": "experiment_3278_fr11_full_corpus_continual_self_learning_audit_v1",
+  "before_after_metrics": {
+    "adaptation_score": 0.0,
+    "forgetting_rate": 1.0,
+    "heldout_trace_count": 0,
+    "negative_transfer_rate": 0.0,
+    "retention_score": 0.0
+  },
+  "blocked_reason": "full_15k_corpus_not_ready",
+  "continuous_self_learning_task": true,
+  "controller_memory_only": true,
+  "controller_memory_summary": {
+    "attack_category_count": 0,
+    "attack_template_family_count": 0,
+    "controller_memory_only": true,
+    "legacy_gate_signature_count": 0
+  },
+  "duration_s": 0.25,
+  "experiment_id": "exp3278",
+  "failure_stream_count": 0,
+  "failure_stream_counts": {},
+  "forgetting_rate": 1.0,
+  "foundation_weight_updates_performed": false,
+  "fr11_full_corpus_audit_ready": false,
+  "heldout_trace_count": 0,
+  "honest_verdict": "complete: fr11 full-corpus continual self-learning audit ready=false; retention_score=0.0; adaptation_score=0.0; forgetting_rate=1.0; negative_transfer_rate=0.0; controller-memory only; no foundation-model weights were updated; foundation_weight_updates_performed=false",
+  "milestone": "2026.05.303",
+  "negative_transfer_rate": 0.0,
+  "no_weight_update_attestation": {
+    "controller_memory_updated": true,
+    "foundation_model_finetune": false,
+    "foundation_model_weight_update": false,
+    "hidden_state_mutation": false,
+    "kan_sidecar_weight_update": false,
+    "live_llm_invocation": false
+  },
+  "output_paths": [
+    "results/experiment_3278_fr11_full_corpus_continual_self_learning_audit_v1.json"
+  ],
+  "random_seed": 3278,
+  "reproducibility_checksum": "47933924ed9671abd96932e896abd3826d4d0426c16f8a8657fb686f8a54813e",
+  "retention_score": 0.0,
+  "rollback_policy": {
+    "policy": "rollback_controller_memory_update_if_any_threshold_is_violated",
+    "rollback_required": true,
+    "thresholds": {
+      "max_forgetting_rate": 0.05,
+      "max_negative_transfer_rate": 0.05,
+      "min_adaptation_score": 0.8,
+      "min_retention_score": 0.95
+    },
+    "triggered_criteria": [
+      "retention_score",
+      "adaptation_score",
+      "forgetting_rate"
+    ]
+  },
+  "run_date": "20260528",
+  "schema": "carnot.fr11.full_corpus_continual_self_learning_audit.v1",
+  "schema_version": "carnot.fr11.full_corpus_continual_self_learning_audit.v1",
+  "source_artifacts": [
+    {
+      "exists": true,
+      "path": "results/experiment_3272_prompt_injection_v4_full_corpus_assembly_leakage_audit_v1.json",
+      "sha256": "edd3d2fc1be906119862c8876fa0fdc38b0b0339e14fbae3d91299490500caf1"
+    },
+    {
+      "exists": false,
+      "path": "results/experiment_3243_fr11_failure_memory_controller_v1.json",
+      "sha256": null
+    },
+    {
+      "exists": false,
+      "path": "results/experiment_3255_fr11_lifelong_failure_memory_retention_audit_v1.json",
+      "sha256": null
+    },
+    {
+      "exists": false,
+      "path": "data/prompt_injection_v4/frozen_splits/prompt_injection_v4_train_v1.jsonl",
+      "sha256": null
+    },
+    {
+      "exists": false,
+      "path": "data/prompt_injection_v4/frozen_splits/prompt_injection_v4_eval_v1.jsonl",
+      "sha256": null
+    },
+    {
+      "exists": false,
+      "path": "data/prompt_injection_v4/frozen_splits/prompt_injection_v4_holdout_v1.jsonl",
+      "sha256": null
+    },
+    {
+      "exists": false,
+      "path": "data/prompt_injection_v4/frozen_splits/prompt_injection_v4_garak_v1.jsonl",
+      "sha256": null
+    }
+  ],
+  "source_counts": {},
+  "task_id": "exp3278-fr11-full-corpus-continual-self-learning-audit-v1"
+}

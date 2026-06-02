@@ -1,0 +1,72 @@
+{
+  "active_roadmap_modified": false,
+  "blocker": "llama_cpp_cuda_rebuild_failed: returncode=1; stderr=CMake Error: CUDA compiler failed",
+  "clean_rerun_allowed_candidate": false,
+  "clean_subprocess_gpu_offload_probe_passed": false,
+  "clean_subprocess_stderr_tail_after": [
+    "llama_cpp: ggml_cuda_init: failed to initialize CUDA: unknown error"
+  ],
+  "conductor_file_modified": false,
+  "cpu_fallback_only": true,
+  "cuda_receipt_ready": false,
+  "duration_s": 3.0,
+  "env_ledger_artifact": "/home/ianblenke/github.com/ianblenke/carnot/.tmp-pytest/pytest-of-ianblenke/pytest-4/popen-gw1/test_req_025_rebuild_failure_a0/results/experiment_3206_cuda_env_forensics_ledger_v1.json",
+  "env_ledger_honest_verdict": "ledger: repair_llama_cpp_cuda_initialization_or_rebuild",
+  "env_ledger_recommended_next_action": "repair_llama_cpp_cuda_initialization_or_rebuild",
+  "experiment_id": "exp3207",
+  "honest_verdict": "blocked_llama_cpp_cuda_rebuild: llama_cpp_cuda_rebuild_failed: returncode=1; stderr=CMake Error: CUDA compiler failed",
+  "llama_cpp_clean_subprocess_after": {
+    "command": [
+      "/repo/.venv/bin/python",
+      "-I",
+      "-c",
+      "import importlib.metadata, importlib.util, json\npayload = {'probe': 'exp3206_llama_cpp_clean_probe', 'llama_cpp_import_ok': False}\ntry:\n    import llama_cpp\n    from llama_cpp import llama_cpp as low\n    lib = getattr(low, '_lib', None)\n    system_info = ''\n    printer = getattr(low, 'llama_print_system_info', None)\n    if callable(printer):\n        raw = printer()\n        system_info = raw.decode('utf-8', 'replace') if isinstance(raw, bytes) else str(raw)\n    supports = getattr(low, 'llama_supports_gpu_offload', None)\n    payload.update({\n      'llama_cpp_import_ok': True,\n      'llama_cpp_version': getattr(llama_cpp, '__version__', None) or importlib.metadata.version('llama-cpp-python'),\n      'llama_cpp_origin': importlib.util.find_spec('llama_cpp').origin,\n      'shared_library_path': getattr(lib, '_name', None),\n      'llama_cpp_supports_gpu_offload': bool(supports()) if callable(supports) else False,\n      'llama_system_info': system_info,\n    })\nexcept Exception as exc:\n    payload['error'] = f'{type(exc).__name__}: {exc}'\nprint(json.dumps(payload, sort_keys=True))\n"
+    ],
+    "llama_cpp_import_ok": true,
+    "llama_cpp_origin": "/repo/.venv/lib/python/site-packages/llama_cpp/__init__.py",
+    "llama_cpp_supports_gpu_offload": false,
+    "llama_cpp_version": "0.3.23",
+    "llama_system_info": "CUDA : ARCHS = 860",
+    "probe": "exp3206_llama_cpp_clean_probe",
+    "returncode": 0,
+    "shared_library_path": "/repo/.venv/lib/python/site-packages/llama_cpp/lib/libllama.so",
+    "stderr_summary": "ggml_cuda_init: failed to initialize CUDA: unknown error\n"
+  },
+  "llama_cpp_cuda_build_detected_after": true,
+  "milestone": "2026.05.297",
+  "rebuild_attempted": true,
+  "rebuild_command_summary": [
+    "/repo/.venv/bin/python -m pip install --force-reinstall --no-cache-dir --no-binary llama-cpp-python llama-cpp-python==0.3.23",
+    "CMAKE_ARGS=-DGGML_CUDA=ON",
+    "FORCE_CMAKE=1"
+  ],
+  "rebuild_log_tail": [
+    "stdout: building llama-cpp-python with CUDA",
+    "stderr: CMake Error: CUDA compiler failed"
+  ],
+  "schema_version": "carnot.llama_cpp_cuda_rebuild_clean_subprocess.v1",
+  "selected_python": "/repo/.venv/bin/python",
+  "tests_run": [
+    "writer"
+  ],
+  "torch_clean_subprocess_after": {
+    "command": [
+      "/repo/.venv/bin/python",
+      "-I",
+      "-c",
+      "import json, sys\npayload = {'probe': 'exp3206_torch_clean_probe', 'project_modules_preimport': [m for m in sys.modules if m == 'carnot' or m.startswith('carnot.') or m == 'scripts' or m.startswith('scripts.')]}\ntry:\n    import torch\n    available = bool(torch.cuda.is_available())\n    count = int(torch.cuda.device_count()) if available else 0\n    names = [torch.cuda.get_device_name(i) for i in range(count)]\n    payload.update({'torch_import_ok': True, 'torch_version': getattr(torch, '__version__', None), 'torch_cuda_version': getattr(torch.version, 'cuda', None), 'cuda_available': available, 'device_count': count, 'device_names': names})\nexcept Exception as exc:\n    payload.update({'torch_import_ok': False, 'torch_version': None, 'torch_cuda_version': None, 'cuda_available': False, 'device_count': 0, 'device_names': [], 'error': f'{type(exc).__name__}: {exc}'})\nprint(json.dumps(payload, sort_keys=True))\n"
+    ],
+    "cuda_available": true,
+    "device_count": 1,
+    "device_names": [
+      "NVIDIA GeForce RTX 3090"
+    ],
+    "probe": "exp3206_torch_clean_probe",
+    "returncode": 0,
+    "stderr_summary": "",
+    "torch_cuda_version": "12.8",
+    "torch_import_ok": true,
+    "torch_version": "2.11.0+cu128"
+  },
+  "torch_cuda_available_after": true
+}

@@ -1,0 +1,71 @@
+{
+  "bounded_policy": "cap entries; on overflow merge the highest cosine-similarity pair; evict lowest utility/support only if a merge cannot restore the cap",
+  "cap": 2,
+  "consolidation_events": [
+    {
+      "action": "add",
+      "size": 1,
+      "template_id": "template_1_3a1d7b6848"
+    }
+  ],
+  "entries": [
+    {
+      "edges": [
+        {
+          "by_label_correlation": {
+            "0": -0.114667,
+            "1": -0.099496
+          },
+          "conditional_mutual_information": 0.005796,
+          "pair": [
+            "fr11_session_memory",
+            "tier0s_arithmetic_gap"
+          ]
+        },
+        {
+          "by_label_correlation": {
+            "0": 0.0,
+            "1": -0.131753
+          },
+          "conditional_mutual_information": 0.004378,
+          "pair": [
+            "fr11_session_memory",
+            "tier0u_logical_consistency"
+          ]
+        },
+        {
+          "by_label_correlation": {
+            "0": 0.0,
+            "1": -0.106329
+          },
+          "conditional_mutual_information": 0.002843,
+          "pair": [
+            "tier0r_curry_howard",
+            "tier0u_logical_consistency"
+          ]
+        }
+      ],
+      "source_sessions": [
+        "session_1"
+      ],
+      "support": 120,
+      "template_id": "template_1_3a1d7b6848",
+      "utility": 1.0,
+      "weights": {
+        "fr11_session_memory": 0.419141,
+        "tier0r_curry_howard": 0.204514,
+        "tier0s_arithmetic_gap": -0.284093,
+        "tier0u_logical_consistency": 0.092252
+      }
+    }
+  ],
+  "schema": "carnot.fr11_v13_template_library",
+  "sha256": "1ee035a29598d1ae6a424b8e3ebcdb21ba89a7360c28a257ce31fcdeefe4d5bc",
+  "size": 1,
+  "verifier_names": [
+    "fr11_session_memory",
+    "tier0r_curry_howard",
+    "tier0s_arithmetic_gap",
+    "tier0u_logical_consistency"
+  ]
+}

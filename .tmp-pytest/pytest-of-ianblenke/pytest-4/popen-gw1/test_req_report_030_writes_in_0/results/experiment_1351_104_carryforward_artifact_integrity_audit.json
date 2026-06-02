@@ -1,0 +1,239 @@
+{
+  "artifact_metadata": {
+    "project_root": "/home/ianblenke/github.com/Carnot-EBM/carnot-ebm",
+    "run_date": "20260505",
+    "source_experiments": [
+      "exp1337",
+      "exp1338",
+      "exp1339",
+      "exp1340",
+      "exp1341",
+      "exp1342",
+      "exp1343",
+      "exp1344",
+      "exp1345",
+      "exp1346",
+      "exp1347",
+      "exp1348",
+      "exp1349",
+      "exp1350"
+    ]
+  },
+  "artifact_paths_checked": [
+    {
+      "exists": true,
+      "experiment_id": "exp1337",
+      "path": "results/experiment_1337_environment_gate_disk_pretest_stale_skeleton_audit.json"
+    },
+    {
+      "exists": true,
+      "experiment_id": "exp1338",
+      "path": "results/experiment_1338_exp1325_skeleton_and_gate_state_finalizer.json"
+    },
+    {
+      "exists": true,
+      "experiment_id": "exp1339",
+      "path": "results/experiment_1339_xgrammar2_tagdispatch_certificate_grammar_dryrun.json"
+    },
+    {
+      "exists": false,
+      "experiment_id": "exp1340",
+      "path": "results/experiment_1340_trigger_before_constrain_certificate_v6_sota.json"
+    },
+    {
+      "exists": true,
+      "experiment_id": "exp1341",
+      "path": "results/experiment_1341_halluguard_certificate_failure_split.json"
+    },
+    {
+      "exists": false,
+      "experiment_id": "exp1342",
+      "path": "results/experiment_1342_chopchop_nsvif_semantic_validator_gated.json"
+    },
+    {
+      "exists": true,
+      "experiment_id": "exp1343",
+      "path": "results/experiment_1343_margin_aware_beaver_cactus_scheduler.json"
+    },
+    {
+      "exists": true,
+      "experiment_id": "exp1344",
+      "path": "results/experiment_1344_continuous_self_learning_failure_type_memory_policy.json"
+    },
+    {
+      "exists": false,
+      "experiment_id": "exp1345",
+      "path": "results/experiment_1345_dvi_certificate_tail_v3_gated.json"
+    },
+    {
+      "exists": false,
+      "experiment_id": "exp1346",
+      "path": "results/experiment_1346_grpo_vprm_v13_gated_micro_audit.json"
+    },
+    {
+      "exists": true,
+      "experiment_id": "exp1347",
+      "path": "results/experiment_1347_thrml_compatibility_parity_audit.json"
+    },
+    {
+      "exists": true,
+      "experiment_id": "exp1348",
+      "path": "results/experiment_1348_pbit_update_dynamics_dual_bram_packet_v2.json"
+    },
+    {
+      "exists": true,
+      "experiment_id": "exp1349",
+      "path": "results/experiment_1349_ebt_citation_kona_parity_gap_audit.json"
+    },
+    {
+      "exists": true,
+      "experiment_id": "exp1350",
+      "path": "results/experiment_1350_milestone_104_retro_carryforward.json"
+    },
+    {
+      "exists": true,
+      "path": "research-roadmap.yaml"
+    },
+    {
+      "exists": true,
+      "path": "openspec/change-proposals/research-roadmap-vNEXT.md"
+    },
+    {
+      "exists": true,
+      "path": "ops/conductor-log.md"
+    },
+    {
+      "exists": true,
+      "path": "ops/changelog.md"
+    },
+    {
+      "exists": true,
+      "path": "ops/status.md"
+    },
+    {
+      "exists": true,
+      "path": "research-complete.yaml"
+    },
+    {
+      "exists": true,
+      "path": "research-references.md"
+    },
+    {
+      "exists": true,
+      "path": "_bmad/traceability.md"
+    }
+  ],
+  "docs_reconciliation_needed": true,
+  "docs_reconciliation_reasons": [
+    "ops/changelog.md has no exp1351 entry",
+    "ops/status.md has no exp1351 handoff entry",
+    "openspec research-reporting spec lacks REQ-REPORT-030",
+    "_bmad/traceability.md has no REQ-REPORT-030 trace"
+  ],
+  "experiment": "1351_104_carryforward_artifact_integrity_audit",
+  "gates_closed": [
+    {
+      "evidence": "missing valid terminal exp1340 artifact",
+      "gate": "terminal_certificate_parse_gate"
+    },
+    {
+      "evidence": "closed until terminal exp1340 and exp1342 evidence",
+      "gate": "semantic_validator"
+    },
+    {
+      "evidence": "closed because semantic/scheduler evidence is absent or blocked",
+      "gate": "scheduler"
+    },
+    {
+      "evidence": "closed until parse and semantic gates pass",
+      "gate": "dvi_certificate_tail"
+    },
+    {
+      "evidence": "closed until DVI lossless evidence exists",
+      "gate": "grpo_vprm"
+    }
+  ],
+  "gates_open": [
+    {
+      "evidence": "exp1337 environment_ready=true",
+      "gate": "environment_gate"
+    },
+    {
+      "evidence": "exp1338 terminal finalizer",
+      "gate": "exp1325_gate_state_finalized"
+    },
+    {
+      "evidence": "exp1339 dynamic_grammar_ready=true",
+      "gate": "dynamic_grammar"
+    },
+    {
+      "evidence": "exp1341 terminal diagnostic split",
+      "gate": "failure_taxonomy"
+    },
+    {
+      "evidence": "exp1344 terminal replay evidence",
+      "gate": "self_learning_replay"
+    },
+    {
+      "evidence": "exp1347-exp1349 terminal audits",
+      "gate": "hardware_and_external_mapping"
+    }
+  ],
+  "honest_verdict": "handoff_state_missing_exp1340_terminal_certificate_semantic_scheduler_dvi_grpo_closed",
+  "milestone": "2026.04.104",
+  "missing_artifacts": [
+    {
+      "experiment_id": "exp1340",
+      "path": "results/experiment_1340_trigger_before_constrain_certificate_v6_sota.json",
+      "reason": "expected .104/.104-retro source artifact not found"
+    },
+    {
+      "experiment_id": "exp1342",
+      "path": "results/experiment_1342_chopchop_nsvif_semantic_validator_gated.json",
+      "reason": "expected .104/.104-retro source artifact not found"
+    },
+    {
+      "experiment_id": "exp1345",
+      "path": "results/experiment_1345_dvi_certificate_tail_v3_gated.json",
+      "reason": "expected .104/.104-retro source artifact not found"
+    },
+    {
+      "experiment_id": "exp1346",
+      "path": "results/experiment_1346_grpo_vprm_v13_gated_micro_audit.json",
+      "reason": "expected .104/.104-retro source artifact not found"
+    }
+  ],
+  "prior_failure_requirements": [
+    {
+      "addressed_by": "Start .105 with a terminal handoff audit.",
+      "experiment_id": "exp1350-milestone-104-retrospective-and-carryforward",
+      "retire_if_same_verdict": true,
+      "verdict": "milestone_104_9_of_12_criteria_met_carryforward_required"
+    },
+    {
+      "addressed_by": "Keep descendants closed until a replacement certificate artifact exists.",
+      "experiment_id": "exp1340-triggered-certificate-extraction-v6-sota-gguf-semantic-guard",
+      "retire_if_same_verdict": true,
+      "verdict": "missing_terminal_artifact_after_gate_order_failure"
+    },
+    {
+      "addressed_by": "Run only after terminal parse evidence.",
+      "experiment_id": "exp1342-triggered-certificate-semantic-validator-gated-on-exp1340-parse",
+      "retire_if_same_verdict": false,
+      "verdict": "missing_or_gate_blocked_after_exp1340_absent"
+    }
+  ],
+  "project_root": "/home/ianblenke/github.com/Carnot-EBM/carnot-ebm",
+  "run_date": "20260505",
+  "schema": "carnot.carryforward_integrity_audit_104.v1",
+  "stale_or_blocked_artifacts": [
+    {
+      "experiment_id": "exp1343",
+      "path": "results/experiment_1343_margin_aware_beaver_cactus_scheduler.json",
+      "reason": "blocked on missing exp1342 semantic validator artifact",
+      "status": "blocked"
+    }
+  ],
+  "status": "complete",
+  "terminal_certificate_required": true
+}

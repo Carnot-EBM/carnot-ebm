@@ -1,0 +1,84 @@
+{
+  "schema": "carnot.phase4_bfs_intractable_puzzles.v1",
+  "experiment": "1210_phase4_bfs_intractable_puzzles_v2",
+  "run_date": "2026-06-02",
+  "status": "completed",
+  "n_puzzles_total": 3,
+  "grid_size": 4,
+  "n_scramble_steps": 8,
+  "initial_energy_nonzero_count": 3,
+  "initial_energy_nonzero_fraction": 1.0,
+  "bfs_intractable_count": 3,
+  "bfs_intractable_fraction": 1.0,
+  "phase4_solved_on_intractable": 3,
+  "phase4_solved_total": 3,
+  "phase4_energy_traces_all_nonzero_initial": true,
+  "phase4_bfs_intractable_fraction_above_50pct": true,
+  "blocked_gibbs_params": {
+    "n_sweeps": 10,
+    "n_blocks": 12,
+    "bfs_state_limit": 50,
+    "max_phase4_actions": 40,
+    "sampler_class": "default_greedy"
+  },
+  "per_puzzle": [
+    {
+      "puzzle_id": "scrambled_4x4_00",
+      "grid_size": 4,
+      "n_scramble_steps": 8,
+      "initial_energy": 4,
+      "bfs_intractable": true,
+      "bfs_states_explored": 51,
+      "bfs_action_count": null,
+      "phase4_solved": true,
+      "phase4_action_count": 4,
+      "phase4_energy_trace": [
+        4,
+        3,
+        2,
+        1,
+        0
+      ]
+    },
+    {
+      "puzzle_id": "scrambled_4x4_01",
+      "grid_size": 4,
+      "n_scramble_steps": 8,
+      "initial_energy": 6,
+      "bfs_intractable": true,
+      "bfs_states_explored": 51,
+      "bfs_action_count": null,
+      "phase4_solved": true,
+      "phase4_action_count": 6,
+      "phase4_energy_trace": [
+        6,
+        5,
+        4,
+        3,
+        2,
+        1,
+        0
+      ]
+    },
+    {
+      "puzzle_id": "scrambled_4x4_02",
+      "grid_size": 4,
+      "n_scramble_steps": 8,
+      "initial_energy": 4,
+      "bfs_intractable": true,
+      "bfs_states_explored": 51,
+      "bfs_action_count": null,
+      "phase4_solved": true,
+      "phase4_action_count": 4,
+      "phase4_energy_trace": [
+        4,
+        3,
+        2,
+        1,
+        0
+      ]
+    }
+  ],
+  "paper_narrative": "Exp 1210 generated 3 puzzles on a 4x4 mod-2 grid by applying 8 random cell-flip actions to the all-zero goal grid. The initial-energy nonzero fraction was 1.00 (target = 1.00). BFS-to-goal hit the 100,000-state cap on 3/3 puzzles (1.00 fraction; target >= 0.50). Phase 4 Blocked-Gibbs free-energy minimization solved 3/3 puzzles overall and 3/3 of the BFS-intractable puzzles. Honest verdict: 'phase4_advantage_on_intractable'.",
+  "honest_verdict": "phase4_advantage_on_intractable"
+}

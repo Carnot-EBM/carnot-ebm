@@ -1,0 +1,30 @@
+{
+  "ccf_binding": {
+    "pin": "IO_EB_B7",
+    "signal_name": "done"
+  },
+  "expected_transcript": [
+    "done=1 PASS"
+  ],
+  "flash_command": "openFPGALoader -c dirtyJtag -b olimex_gatemateevb bitstream.bit",
+  "flash_succeeded": true,
+  "gatemate_host_visible_smoke_passed": true,
+  "host_reader_command": ".venv/bin/python scripts/gatemate_done_reader.py --expect done=1",
+  "host_visible_transcript_path": "logs/experiment_3050/host_visible_smoke.txt",
+  "observed_transcript": [
+    "done=1 PASS"
+  ],
+  "per_sample_latency_s": 0.015625,
+  "readback_attempted": true,
+  "readback_hash": "1111111111111111111111111111111111111111111111111111111111111111",
+  "readback_supported": true,
+  "sample_count": 16,
+  "sampler_configuration": {
+    "n_spins": 16,
+    "top": "ising_n16_gatemate"
+  },
+  "selected_output_signal": "done",
+  "transcript_matched": true,
+  "transcript_sha256": "109002175b5a2367aa98d95c164cd112f78326393198a187e7acd9ef7275335b",
+  "wall_clock_duration_s": 0.25
+}

@@ -1,0 +1,272 @@
+{
+  "aligned_instruction_false_positive_summary": {
+    "aligned_instruction_case_count": 439,
+    "aligned_instruction_false_positive_count": 439,
+    "aligned_instruction_false_positive_rate": 1.0,
+    "aligned_instruction_max_score": 0.10811,
+    "aligned_instruction_min_score": -0.039132,
+    "aligned_instruction_negative_count": 439,
+    "category_false_positive_rates": {
+      "category:aligned_instruction_benign": 1.0,
+      "category:seed_benign": 1.0
+    },
+    "source_slice": "instruction_alignment:aligned_instruction",
+    "threshold": -0.04082,
+    "threshold_name": "max_f1_eval",
+    "utility_conclusion": "selected high-recall threshold flags aligned benign controls, so it is not a useful bounded triage gate without a new false-positive ceiling"
+  },
+  "artifact": "experiment_3288_kan_sidecar_failure_autopsy_boundary_v1",
+  "baseline_comparison_summary": {
+    "baseline_verdict": "KAN is below random AUROC, below regex/keyword baselines, far below the exact-label upper bound, and its high-recall threshold behaves like a predict-positive baseline",
+    "exact_label_upper_bound": {
+      "auroc": 1.0
+    },
+    "kan": {
+      "auprc": 0.626269,
+      "auroc": 0.475326
+    },
+    "kan_minus_exact_upper_bound_auroc": -0.524674,
+    "kan_minus_prior_302_shard_auroc": -0.31577,
+    "kan_minus_random_auroc": -0.024674,
+    "kan_minus_strongest_trivial_auroc": -0.07004,
+    "max_f1_threshold_behavior": {
+      "false_positive_count": 1239,
+      "false_positive_rate": 1.0,
+      "precision": 0.690095,
+      "predicted_positive_count": 3998,
+      "predicted_positive_rate": 0.9995,
+      "recall": 0.999276,
+      "threshold": -0.04082,
+      "true_negative_count": 0,
+      "true_negative_rate": 0.0
+    },
+    "positive_prevalence_baseline": 0.69025,
+    "prior_302_shard_auroc": 0.791096,
+    "random_auroc_reference": 0.5,
+    "strongest_trivial_baseline": {
+      "auroc": 0.545366,
+      "name": "regex_phrase_baseline"
+    },
+    "trivial_baselines": {
+      "keyword_feature_baseline": {
+        "auprc": 0.782339,
+        "auroc": 0.54185,
+        "kan_minus_auroc": -0.066524
+      },
+      "regex_phrase_baseline": {
+        "auprc": 0.79153,
+        "auroc": 0.545366,
+        "kan_minus_auroc": -0.07004
+      }
+    }
+  },
+  "duration_s": 1.5,
+  "experiment_id": "exp3288",
+  "future_work_prerequisite": "reattempt only after a balanced two-class slice suite, an aligned-benign false-positive ceiling, leakage/provenance-clean labels, and a calibrated threshold beat regex/keyword baselines on held-out evidence",
+  "honest_verdict": "complete: kan_failure_autopsy_ready=true; prior_full_corpus_auroc=0.475326; prior_delong_noninferiority_passed=false; kan_boundary_decision=retire_from_prompt_injection_headline",
+  "kan_boundary_decision": "retire_from_prompt_injection_headline",
+  "kan_boundary_decision_ready": true,
+  "kan_failure_autopsy_ready": true,
+  "leakage_or_provenance_findings": [
+    {
+      "exact_duplicate_overlap_rows": 0,
+      "finding": "normal train/eval/holdout leakage passed, but Garak template family overlap and within-source duplicates remain bounded provenance notes rather than performance explanations",
+      "garak_template_family_overlap_count": 800,
+      "kind": "split_leakage_boundary",
+      "leakage_audit_passed": true,
+      "near_duplicate_overlap_rows": 0,
+      "normal_template_family_overlap_rows": 0,
+      "source_experiment_id": "exp3272",
+      "within_source_duplicate_count": 1196
+    },
+    {
+      "finding": "corrigendum flag preserved for downstream headline eligibility",
+      "flag_kind": "DURATION_TOO_SHORT",
+      "kind": "duration_or_provenance_flag",
+      "source_experiment_id": "exp3270"
+    },
+    {
+      "finding": "corrigendum flag preserved for downstream headline eligibility",
+      "flag_kind": "DURATION_TOO_SHORT",
+      "kind": "duration_or_provenance_flag",
+      "source_experiment_id": "exp3271"
+    },
+    {
+      "finding": "corrigendum flag preserved for downstream headline eligibility",
+      "flag_kind": "TAUTOLOGY",
+      "kind": "duration_or_provenance_flag",
+      "source_experiment_id": "exp3272"
+    },
+    {
+      "corrigendum_ready": true,
+      "finding": "corrigendum already classifies KAN metrics as provisional or sidecar-only; this autopsy turns that into an explicit boundary",
+      "kan_headline_allowed": false,
+      "kind": "corrigendum_kan_boundary",
+      "prior_sidecar_only": true,
+      "source_experiment_id": "exp3283"
+    },
+    {
+      "finding": "cached-panel and template-backed labels limit corpus headline claims and make leakage/provenance-clean reattempt evidence a prerequisite",
+      "kind": "label_provenance_mixture",
+      "provenance_summary": {
+        "exp3270": {
+          "artifact_class": "cached",
+          "row_provenance_counts": {
+            "cached_llm_panel": 12,
+            "template_backed": 5988
+          }
+        },
+        "exp3271": {
+          "artifact_class": "cached",
+          "row_provenance_counts": {
+            "cached_llm_panel": 11,
+            "template_backed": 5994
+          }
+        },
+        "exp3273": {
+          "artifact_class": "aggregation-only",
+          "row_provenance_counts": {}
+        }
+      },
+      "source_experiment_id": "exp3283"
+    }
+  ],
+  "milestone": "2026.05.304",
+  "no_garak_or_repair_run": true,
+  "no_new_kan_training_or_scoring": true,
+  "no_new_model_execution": true,
+  "no_retraining_performed": true,
+  "per_slice_failure_summary": {
+    "global_failure_modes": [
+      "below_random_full_corpus_auroc",
+      "delong_noninferiority_failed",
+      "holdout_auroc_below_random",
+      "single_class_slices_make_slice_auroc_uninformative",
+      "max_f1_threshold_predicts_every_benign_eval_holdout_row_positive"
+    ],
+    "holdout_auroc": 0.407974,
+    "single_class_slice_count": 5,
+    "single_class_slices": [
+      {
+        "auroc": null,
+        "estimated_false_positive_rate": 1.0,
+        "f1_at_selected_threshold": 0.0,
+        "mean_score": -0.016381,
+        "n": 200,
+        "negative_count": 200,
+        "positive_count": 0,
+        "slice": "category:aligned_instruction_benign"
+      },
+      {
+        "auroc": null,
+        "estimated_false_positive_rate": 1.0,
+        "f1_at_selected_threshold": 0.0,
+        "mean_score": -0.002145,
+        "n": 239,
+        "negative_count": 239,
+        "positive_count": 0,
+        "slice": "category:seed_benign"
+      },
+      {
+        "auroc": null,
+        "estimated_false_positive_rate": 0.0,
+        "f1_at_selected_threshold": 0.99375,
+        "mean_score": 0.000748,
+        "n": 161,
+        "negative_count": 0,
+        "positive_count": 161,
+        "slice": "category:seed_injection"
+      },
+      {
+        "auroc": null,
+        "estimated_false_positive_rate": 1.0,
+        "f1_at_selected_threshold": 0.0,
+        "mean_score": -0.008631,
+        "n": 439,
+        "negative_count": 439,
+        "positive_count": 0,
+        "slice": "instruction_alignment:aligned_instruction"
+      },
+      {
+        "auroc": null,
+        "estimated_false_positive_rate": 0.0,
+        "f1_at_selected_threshold": 0.999734,
+        "mean_score": -0.004161,
+        "n": 3761,
+        "negative_count": 0,
+        "positive_count": 3761,
+        "slice": "instruction_alignment:misaligned_instruction"
+      }
+    ],
+    "slice_count": 5,
+    "threshold_failure_summary": {
+      "false_positive_count": 1239,
+      "false_positive_rate": 1.0,
+      "precision": 0.690095,
+      "predicted_positive_count": 3998,
+      "predicted_positive_rate": 0.9995,
+      "recall": 0.999276,
+      "threshold": -0.04082,
+      "true_negative_count": 0,
+      "true_negative_rate": 0.0
+    },
+    "two_class_slice_count": 0
+  },
+  "permitted_downstream_use": [
+    "offline_failure_autopsy",
+    "negative_control_regression_fixture",
+    "future_kan_work_prerequisite_evidence_only"
+  ],
+  "prior_delong_ci": [
+    -0.078814,
+    -0.061267
+  ],
+  "prior_delong_noninferiority_passed": false,
+  "prior_full_corpus_auprc": 0.626269,
+  "prior_full_corpus_auroc": 0.475326,
+  "prior_sidecar_only": true,
+  "prohibited_downstream_use": [
+    "prompt_injection_headline_detector",
+    "repair_gate_authority",
+    "standalone_garak_success_evidence",
+    "production_triage_without_new_calibrated_false_positive_gate"
+  ],
+  "protected_files_untouched": {
+    "_bmad/traceability.md": true,
+    "ops/changelog.md": true,
+    "ops/status.md": true,
+    "scripts/research_conductor.py": true
+  },
+  "random_seed": 3288,
+  "reproducibility_checksum": "35ddfd2d40ce4ffdea217d237392069a69afa3a5f6f1b97604f66ced147e9de7",
+  "run_date": "20260528",
+  "schema": "carnot.kan_sidecar_failure_autopsy_boundary.v1",
+  "schema_version": "carnot.kan_sidecar_failure_autopsy_boundary.v1",
+  "selected_threshold": -0.04082,
+  "selected_threshold_name": "max_f1_eval",
+  "source_artifacts": [
+    {
+      "experiment_id": "exp3273",
+      "path": "results/experiment_3273_prompt_injection_kan_full_corpus_delong_eval_v1.json",
+      "sha256": "c28d062bf104a226894965c753e218a534a5c03a2f00323afb3f3461e01fc101"
+    },
+    {
+      "experiment_id": "exp3272",
+      "path": "results/experiment_3272_prompt_injection_v4_full_corpus_assembly_leakage_audit_v1.json",
+      "sha256": "6f6e91868cfe91c839a2843c44ad48c98a43ff607ec49703afe820e622c1091c"
+    },
+    {
+      "experiment_id": "exp3283",
+      "path": "results/experiment_3283_prompt_injection_corrigendum_duration_audit_v1.json",
+      "sha256": "da634b23ebb5b2b98d63562edc0f2499b8a19b9fd92d0a311d21bd494675aa47"
+    }
+  ],
+  "spec_refs": [
+    "REQ-REPORT-3288",
+    "SCENARIO-REPORT-3288"
+  ],
+  "task_id": "exp3288-kan-sidecar-failure-autopsy-boundary-v1",
+  "tests_run": [
+    "writer"
+  ]
+}

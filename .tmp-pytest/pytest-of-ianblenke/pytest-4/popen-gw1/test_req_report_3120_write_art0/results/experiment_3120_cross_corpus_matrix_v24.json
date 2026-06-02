@@ -1,0 +1,883 @@
+{
+  "architecture_boundary_status": {
+    "clut_status": "bounded_cpu_only_no_hardware_speedup",
+    "ebt_arm_status": "projection_only_no_live_model_integration",
+    "gatemate_status": "blocked_operator_evidence_incomplete",
+    "ssqa_status": "gated_skipped_host_visible_readback_missing"
+  },
+  "artifact": "experiment_3120_cross_corpus_matrix_v24",
+  "blocker_delta_from_v23": 0,
+  "blocker_reconciliation_from_v23": {
+    "added_blocking_rows": [
+      "capstone:v289_paper_readiness",
+      "dot290:exp3110_sota_model_spec_cache_manifest",
+      "dot290:exp3115_explicit_repair_gate_micro_panel",
+      "dot290:exp3116_fr11_curriculum_retention_guard",
+      "dot290:exp3117_ebt_arm_sidecar_score_correlation",
+      "dot290:exp3118_clut_sampler_backend_integration",
+      "dot290:exp3119_gatemate_operator_evidence",
+      "dot290:exp3119_ssqa_readback_evidence"
+    ],
+    "blocker_delta_from_v23": 0,
+    "neutral_replacements": [
+      {
+        "new_row_id": "capstone:v289_paper_readiness",
+        "new_status": "bounded",
+        "old_row_id": "capstone:v288_paper_readiness",
+        "old_status": "bounded",
+        "reason": "Capstone .289 supersedes the prior paper-readiness authority row."
+      },
+      {
+        "new_row_id": "dot290:exp3110_sota_model_spec_cache_manifest",
+        "new_status": "bounded",
+        "old_row_id": "dot289:exp3099_local_sota_confidence_abstention_panel",
+        "old_status": "model_spec_gap",
+        "reason": "Exp 3110 replaces the v23 model-spec metadata gap with explicit cache policy evidence."
+      },
+      {
+        "new_row_id": "dot290:exp3111_certified_coherence_feedback",
+        "new_status": "clean",
+        "old_row_id": "dot289:exp3100_z3_oracle_feedback",
+        "old_status": "blocked",
+        "reason": "Exp 3111 replaces blocked live-pair formal feedback with solver-certified feedback."
+      },
+      {
+        "new_row_id": "dot290:exp3113_diagnostic_verifier_calibration",
+        "new_status": "diagnostic_only",
+        "old_row_id": "dot289:exp3101_local_sota_verifier_calibration_gate",
+        "old_status": "gated_skipped",
+        "reason": "Exp 3113 replaces the v23 calibration gate with a diagnostic calibration artifact."
+      },
+      {
+        "new_row_id": "dot290:exp3115_explicit_repair_gate_micro_panel",
+        "new_status": "bounded",
+        "old_row_id": "dot289:exp3102_structured_repair_micro_panel",
+        "old_status": "missing",
+        "reason": "Exp 3115 replaces the missing repair micro-panel with an explicit boundary artifact."
+      },
+      {
+        "new_row_id": "dot290:exp3116_fr11_curriculum_retention_guard",
+        "new_status": "bounded",
+        "old_row_id": "dot289:exp3103_fr11_stress_promotion_boundary",
+        "old_status": "clean",
+        "reason": "Exp 3116 supersedes the FR-11 stress boundary with controller-only retention evidence."
+      },
+      {
+        "new_row_id": "dot290:exp3117_ebt_arm_sidecar_score_correlation",
+        "new_status": "projection_only",
+        "old_row_id": "dot289:exp3104_ebt_arm_sidecar_pipeline_boundary",
+        "old_status": "projection_only",
+        "reason": "Exp 3117 replaces the sidecar projection row with score-correlation boundary evidence."
+      },
+      {
+        "new_row_id": "dot290:exp3118_clut_sampler_backend_integration",
+        "new_status": "bounded",
+        "old_row_id": "dot289:exp3105_clut_random_variate_sampler_microbench",
+        "old_status": "diagnostic_only",
+        "reason": "Exp 3118 replaces the cLUT microbench row with CPU backend integration evidence."
+      },
+      {
+        "new_row_id": "dot290:exp3119_gatemate_operator_evidence",
+        "new_status": "blocked",
+        "old_row_id": "dot289:exp3106_gatemate_operator_evidence",
+        "old_status": "blocked",
+        "reason": "Exp 3119 supersedes GateMate operator-evidence ingestion v3."
+      },
+      {
+        "new_row_id": "dot290:exp3119_ssqa_readback_evidence",
+        "new_status": "gated_skipped",
+        "old_row_id": "dot289:exp3106_ssqa_readback_evidence",
+        "old_status": "gated_skipped",
+        "reason": "Exp 3119 supersedes SSQA readback gate evidence v3."
+      }
+    ],
+    "publication_blocker_count_after": 10,
+    "publication_blocker_count_before": 10,
+    "retired_blocking_rows": [
+      "capstone:v288_paper_readiness",
+      "dot289:exp3099_local_sota_confidence_abstention_panel",
+      "dot289:exp3100_z3_oracle_feedback",
+      "dot289:exp3101_local_sota_verifier_calibration_gate",
+      "dot289:exp3102_structured_repair_micro_panel",
+      "dot289:exp3104_ebt_arm_sidecar_pipeline_boundary",
+      "dot289:exp3106_gatemate_operator_evidence",
+      "dot289:exp3106_ssqa_readback_evidence"
+    ]
+  },
+  "duration_s": 0.5,
+  "fr11_status": {
+    "completeness_mistakes": 0,
+    "controller_only": true,
+    "fr11_unsolvable_curriculum_ready": true,
+    "no_weight_update_claim": true,
+    "promotion_decision": "controller_only",
+    "soundness_mistakes": 0,
+    "status": "bounded_controller_only_no_weight_update_claim"
+  },
+  "headline_model_spec_gaps": [
+    {
+      "missing_model_ids": [
+        "unsloth/Qwen3.6-35B-A3B-GGUF",
+        "unsloth/gemma-4-31B-it-GGUF"
+      ],
+      "present_model_ids": [
+        "unsloth/gemma-4-26B-A4B-it-GGUF"
+      ],
+      "reason": "mandated headline model cache coverage incomplete; cached SOTA pair unavailable",
+      "row_id": "dot290:exp3110_sota_model_spec_cache_manifest",
+      "source_artifact": "results/experiment_3110_sota_model_spec_cache_manifest_corrigendum_v1.json"
+    }
+  ],
+  "honest_verdict": "complete: matrix_v24_ready=true; rows_total=26; publication_blocker_count=10; blocker_delta_from_v23=0; missing_artifacts=0",
+  "honest_verdict_status_contradictions": [],
+  "inference_substrate": {
+    "executes_conductor": false,
+    "executes_hardware": false,
+    "executes_live_repair": false,
+    "executes_models": false,
+    "executes_solvers": false,
+    "kind": "aggregation_from_checked_in_artifacts",
+    "local_repo_only": true,
+    "no_live_llm_inference": true,
+    "source": "matrix_v23_capstone_v289_and_dot290_artifacts"
+  },
+  "invariant_violations": [],
+  "matrix_v24_ready": true,
+  "milestone": "2026.05.290",
+  "missing_artifacts": [],
+  "no_live_repair_rerun": true,
+  "no_new_board_flash": true,
+  "no_new_hardware_run": true,
+  "no_new_model_execution": true,
+  "no_new_solver_run": true,
+  "no_new_synthesis_run": true,
+  "no_new_verifier_run": true,
+  "ops_docs_reconciliation_left_to_conductor": true,
+  "publication_blocker_count": 10,
+  "publication_blockers": [
+    {
+      "blocker_class": "bounded_claim",
+      "claim_scope": "unchanged_bounded",
+      "row_id": "carry:bounded",
+      "source_artifact": "results/carry_bounded.json",
+      "source_field": "status",
+      "status": "bounded"
+    },
+    {
+      "blocker_class": "adversarial_or_methodology_flag",
+      "claim_scope": "unchanged_flagged",
+      "row_id": "carry:flagged",
+      "source_artifact": "results/carry_flagged.json",
+      "source_field": "status",
+      "status": "flagged"
+    },
+    {
+      "blocker_class": "bounded_claim",
+      "claim_scope": "paper_readiness",
+      "row_id": "capstone:v289_paper_readiness",
+      "source_artifact": "results/experiment_3108_capstone_v289.json",
+      "source_field": "paper_ready",
+      "status": "bounded"
+    },
+    {
+      "blocker_class": "bounded_claim",
+      "claim_scope": "local_sota_model_cache_policy",
+      "row_id": "dot290:exp3110_sota_model_spec_cache_manifest",
+      "source_artifact": "results/experiment_3110_sota_model_spec_cache_manifest_corrigendum_v1.json",
+      "source_field": "sota_model_manifest_ready",
+      "status": "bounded"
+    },
+    {
+      "blocker_class": "bounded_claim",
+      "claim_scope": "repair_live_rerun",
+      "row_id": "dot290:exp3115_explicit_repair_gate_micro_panel",
+      "source_artifact": "results/experiment_3115_explicit_repair_gate_micro_panel_v4.json",
+      "source_field": "repair_micro_panel_v4_artifact_ready",
+      "status": "bounded"
+    },
+    {
+      "blocker_class": "bounded_claim",
+      "claim_scope": "controller_only_self_learning_boundary",
+      "row_id": "dot290:exp3116_fr11_curriculum_retention_guard",
+      "source_artifact": "results/experiment_3116_fr11_unsolvable_curriculum_retention_guard_v1.json",
+      "source_field": "fr11_unsolvable_curriculum_ready",
+      "status": "bounded"
+    },
+    {
+      "blocker_class": "projection_only",
+      "claim_scope": "future_adapter_context",
+      "row_id": "dot290:exp3117_ebt_arm_sidecar_score_correlation",
+      "source_artifact": "results/experiment_3117_ebt_arm_sidecar_score_correlation_boundary_v3.json",
+      "source_field": "sidecar_score_correlation_boundary_v3_ready",
+      "status": "projection_only"
+    },
+    {
+      "blocker_class": "bounded_claim",
+      "claim_scope": "cpu_backend_no_hardware_speedup",
+      "row_id": "dot290:exp3118_clut_sampler_backend_integration",
+      "source_artifact": "results/experiment_3118_clut_sampler_backend_integration_boundary_v2.json",
+      "source_field": "clut_backend_integration_boundary_v2_ready",
+      "status": "bounded"
+    },
+    {
+      "blocker_class": "required_blocker",
+      "claim_scope": "hardware_rerun_gate",
+      "row_id": "dot290:exp3119_gatemate_operator_evidence",
+      "source_artifact": "results/experiment_3119_gatemate_ssqa_operator_evidence_ingestion_v4.json",
+      "source_field": "gatemate_rerun_allowed",
+      "status": "blocked"
+    },
+    {
+      "blocker_class": "structured_gate_skip",
+      "claim_scope": "host_visible_readback_gate",
+      "row_id": "dot290:exp3119_ssqa_readback_evidence",
+      "source_artifact": "results/experiment_3119_gatemate_ssqa_operator_evidence_ingestion_v4.json",
+      "source_field": "ssqa_readback_allowed",
+      "status": "gated_skipped"
+    }
+  ],
+  "required_source_errors": [],
+  "rows": [
+    {
+      "blocker_class": "none",
+      "claim_scope": "unchanged_clean",
+      "evidence_class": "carry",
+      "row_id": "carry:clean",
+      "row_origin": "matrix_v23_test",
+      "source_artifact": "results/carry_clean.json",
+      "source_field": "status",
+      "status": "clean",
+      "summary": {
+        "source_status": "clean",
+        "v24_status_rationale": "carried_forward_from_matrix_v23"
+      }
+    },
+    {
+      "blocker_class": "bounded_claim",
+      "claim_scope": "unchanged_bounded",
+      "evidence_class": "carry",
+      "row_id": "carry:bounded",
+      "row_origin": "matrix_v23_test",
+      "source_artifact": "results/carry_bounded.json",
+      "source_field": "status",
+      "status": "bounded",
+      "summary": {
+        "source_status": "bounded",
+        "v24_status_rationale": "carried_forward_from_matrix_v23"
+      }
+    },
+    {
+      "blocker_class": "adversarial_or_methodology_flag",
+      "claim_scope": "unchanged_flagged",
+      "evidence_class": "carry",
+      "row_id": "carry:flagged",
+      "row_origin": "matrix_v23_test",
+      "source_artifact": "results/carry_flagged.json",
+      "source_field": "status",
+      "status": "flagged",
+      "summary": {
+        "source_status": "flagged",
+        "v24_status_rationale": "carried_forward_from_matrix_v23"
+      }
+    },
+    {
+      "blocker_class": "retired_claim",
+      "claim_scope": "paper_readiness",
+      "evidence_class": "capstone",
+      "row_id": "capstone:v288_paper_readiness",
+      "row_origin": "matrix_v23_test",
+      "source_artifact": "results/capstone_v288_paper_readiness.json",
+      "source_field": "status",
+      "status": "retired",
+      "summary": {
+        "previous_status": "bounded",
+        "source_status": "bounded",
+        "superseding_row_id": "capstone:v289_paper_readiness",
+        "v24_status_rationale": "superseded_by_current_dot290_row"
+      }
+    },
+    {
+      "blocker_class": "retired_claim",
+      "claim_scope": "local_sota_solution_verifier_gain",
+      "evidence_class": "live_llm",
+      "row_id": "dot289:exp3099_local_sota_confidence_abstention_panel",
+      "row_origin": "matrix_v23_test",
+      "source_artifact": "results/dot289_exp3099_local_sota_confidence_abstention_panel.json",
+      "source_field": "status",
+      "status": "retired",
+      "summary": {
+        "previous_status": "model_spec_gap",
+        "source_status": "model_spec_gap",
+        "superseding_row_id": "dot290:exp3110_sota_model_spec_cache_manifest",
+        "v24_status_rationale": "superseded_by_current_dot290_row"
+      }
+    },
+    {
+      "blocker_class": "retired_claim",
+      "claim_scope": "solver_grounded_repair_feedback",
+      "evidence_class": "solver",
+      "row_id": "dot289:exp3100_z3_oracle_feedback",
+      "row_origin": "matrix_v23_test",
+      "source_artifact": "results/dot289_exp3100_z3_oracle_feedback.json",
+      "source_field": "status",
+      "status": "retired",
+      "summary": {
+        "previous_status": "blocked",
+        "source_status": "blocked",
+        "superseding_row_id": "dot290:exp3111_certified_coherence_feedback",
+        "v24_status_rationale": "superseded_by_current_dot290_row"
+      }
+    },
+    {
+      "blocker_class": "retired_claim",
+      "claim_scope": "verifier_gain_recovery_gate",
+      "evidence_class": "gate",
+      "row_id": "dot289:exp3101_local_sota_verifier_calibration_gate",
+      "row_origin": "matrix_v23_test",
+      "source_artifact": "results/dot289_exp3101_local_sota_verifier_calibration_gate.json",
+      "source_field": "status",
+      "status": "retired",
+      "summary": {
+        "previous_status": "gated_skipped",
+        "source_status": "gated_skipped",
+        "superseding_row_id": "dot290:exp3113_diagnostic_verifier_calibration",
+        "v24_status_rationale": "superseded_by_current_dot290_row"
+      }
+    },
+    {
+      "blocker_class": "retired_claim",
+      "claim_scope": "repair_live_rerun",
+      "evidence_class": "repair",
+      "row_id": "dot289:exp3102_structured_repair_micro_panel",
+      "row_origin": "matrix_v23_test",
+      "source_artifact": "results/dot289_exp3102_structured_repair_micro_panel.json",
+      "source_field": "status",
+      "status": "retired",
+      "summary": {
+        "previous_status": "missing",
+        "source_status": "missing",
+        "superseding_row_id": "dot290:exp3115_explicit_repair_gate_micro_panel",
+        "v24_status_rationale": "superseded_by_current_dot290_row"
+      }
+    },
+    {
+      "blocker_class": "retired_claim",
+      "claim_scope": "controller_only_stress_boundary_no_promotion",
+      "evidence_class": "fr11",
+      "row_id": "dot289:exp3103_fr11_stress_promotion_boundary",
+      "row_origin": "matrix_v23_test",
+      "source_artifact": "results/dot289_exp3103_fr11_stress_promotion_boundary.json",
+      "source_field": "status",
+      "status": "retired",
+      "summary": {
+        "previous_status": "clean",
+        "source_status": "clean",
+        "superseding_row_id": "dot290:exp3116_fr11_curriculum_retention_guard",
+        "v24_status_rationale": "superseded_by_current_dot290_row"
+      }
+    },
+    {
+      "blocker_class": "retired_claim",
+      "claim_scope": "future_adapter_context",
+      "evidence_class": "ebt_arm",
+      "row_id": "dot289:exp3104_ebt_arm_sidecar_pipeline_boundary",
+      "row_origin": "matrix_v23_test",
+      "source_artifact": "results/dot289_exp3104_ebt_arm_sidecar_pipeline_boundary.json",
+      "source_field": "status",
+      "status": "retired",
+      "summary": {
+        "previous_status": "projection_only",
+        "source_status": "projection_only",
+        "superseding_row_id": "dot290:exp3117_ebt_arm_sidecar_score_correlation",
+        "v24_status_rationale": "superseded_by_current_dot290_row"
+      }
+    },
+    {
+      "blocker_class": "retired_claim",
+      "claim_scope": "cpu_microbench_diagnostic",
+      "evidence_class": "sampler",
+      "row_id": "dot289:exp3105_clut_random_variate_sampler_microbench",
+      "row_origin": "matrix_v23_test",
+      "source_artifact": "results/dot289_exp3105_clut_random_variate_sampler_microbench.json",
+      "source_field": "status",
+      "status": "retired",
+      "summary": {
+        "previous_status": "diagnostic_only",
+        "source_status": "diagnostic_only",
+        "superseding_row_id": "dot290:exp3118_clut_sampler_backend_integration",
+        "v24_status_rationale": "superseded_by_current_dot290_row"
+      }
+    },
+    {
+      "blocker_class": "retired_claim",
+      "claim_scope": "hardware_rerun_gate",
+      "evidence_class": "fpga",
+      "row_id": "dot289:exp3106_gatemate_operator_evidence",
+      "row_origin": "matrix_v23_test",
+      "source_artifact": "results/dot289_exp3106_gatemate_operator_evidence.json",
+      "source_field": "status",
+      "status": "retired",
+      "summary": {
+        "previous_status": "blocked",
+        "source_status": "blocked",
+        "superseding_row_id": "dot290:exp3119_gatemate_operator_evidence",
+        "v24_status_rationale": "superseded_by_current_dot290_row"
+      }
+    },
+    {
+      "blocker_class": "retired_claim",
+      "claim_scope": "host_visible_readback_gate",
+      "evidence_class": "fpga",
+      "row_id": "dot289:exp3106_ssqa_readback_evidence",
+      "row_origin": "matrix_v23_test",
+      "source_artifact": "results/dot289_exp3106_ssqa_readback_evidence.json",
+      "source_field": "status",
+      "status": "retired",
+      "summary": {
+        "previous_status": "gated_skipped",
+        "source_status": "gated_skipped",
+        "superseding_row_id": "dot290:exp3119_ssqa_readback_evidence",
+        "v24_status_rationale": "superseded_by_current_dot290_row"
+      }
+    },
+    {
+      "blocker_class": "bounded_claim",
+      "claim_scope": "paper_readiness",
+      "evidence_class": "capstone_v289_authority",
+      "row_id": "capstone:v289_paper_readiness",
+      "row_origin": "milestone_290",
+      "source_artifact": "results/experiment_3108_capstone_v289.json",
+      "source_field": "paper_ready",
+      "status": "bounded",
+      "summary": {
+        "capstone_ready": true,
+        "honest_verdict": "complete: capstone_ready=true; paper_ready=false",
+        "paper_ready": false,
+        "publication_blocker_count": 10
+      }
+    },
+    {
+      "blocker_class": "none",
+      "claim_scope": "milestone_activation",
+      "evidence_class": "archive_v289_activate_v290",
+      "row_id": "dot290:exp3109_archive_activation",
+      "row_origin": "milestone_290",
+      "source_artifact": "results/experiment_3109_archive_v289_activate_v290.json",
+      "source_field": "archive_v289_activate_v290_ready",
+      "status": "clean",
+      "summary": {
+        "honest_verdict": "complete: archive=true",
+        "ready": true
+      }
+    },
+    {
+      "blocker_class": "bounded_claim",
+      "claim_scope": "local_sota_model_cache_policy",
+      "evidence_class": "sota_model_spec_cache_manifest",
+      "row_id": "dot290:exp3110_sota_model_spec_cache_manifest",
+      "row_origin": "milestone_290",
+      "source_artifact": "results/experiment_3110_sota_model_spec_cache_manifest_corrigendum_v1.json",
+      "source_field": "sota_model_manifest_ready",
+      "status": "bounded",
+      "summary": {
+        "cached_sota_pair_available": false,
+        "headline_claim_allowed": true,
+        "honest_verdict": "complete: sota_model_manifest_ready=true",
+        "missing_model_ids": [
+          "unsloth/Qwen3.6-35B-A3B-GGUF",
+          "unsloth/gemma-4-31B-it-GGUF"
+        ],
+        "model_spec_gaps": [
+          {
+            "missing_model_ids": [
+              "unsloth/Qwen3.6-35B-A3B-GGUF",
+              "unsloth/gemma-4-31B-it-GGUF"
+            ],
+            "present_model_ids": [
+              "unsloth/gemma-4-26B-A4B-it-GGUF"
+            ],
+            "reason": "mandated headline model cache coverage incomplete; cached SOTA pair unavailable",
+            "row_id": "dot290:exp3110_sota_model_spec_cache_manifest",
+            "source_artifact": "results/experiment_3110_sota_model_spec_cache_manifest_corrigendum_v1.json"
+          }
+        ],
+        "present_model_ids": [
+          "unsloth/gemma-4-26B-A4B-it-GGUF"
+        ],
+        "selected_headline_model_ids": [
+          "unsloth/gemma-4-26B-A4B-it-GGUF"
+        ],
+        "sota_model_manifest_ready": true
+      }
+    },
+    {
+      "blocker_class": "none",
+      "claim_scope": "solver_certified_feedback",
+      "evidence_class": "certified_coherence_feedback",
+      "row_id": "dot290:exp3111_certified_coherence_feedback",
+      "row_origin": "milestone_290",
+      "source_artifact": "results/experiment_3111_certified_coherence_z3_mcs_feedback_v3.json",
+      "source_field": "certified_coherence_feedback_v3_ready",
+      "status": "clean",
+      "summary": {
+        "honest_verdict": "complete: certified_coherence_feedback_v3_ready=true",
+        "ready": true
+      }
+    },
+    {
+      "blocker_class": "diagnostic_only",
+      "claim_scope": "verifier_diagnostic_no_promotion",
+      "evidence_class": "logic_regularized_verifier_pilot",
+      "row_id": "dot290:exp3112_logic_regularized_verifier_pilot",
+      "row_origin": "milestone_290",
+      "source_artifact": "results/experiment_3112_logic_regularized_verifier_pilot_v1.json",
+      "source_field": "logic_regularized_verifier_pilot_ready",
+      "status": "diagnostic_only",
+      "summary": {
+        "exact_ground_truth_count": 27,
+        "false_positive_delta": 0.0,
+        "honest_verdict": "complete: logic_regularized_verifier_pilot_ready=true",
+        "logic_regularized_verifier_pilot_ready": true,
+        "promotion_claim_made": false,
+        "status_rationale": "diagnostic_pilot_no_promotion_claim",
+        "verifier_recall_delta": 1.0
+      }
+    },
+    {
+      "blocker_class": "diagnostic_only",
+      "claim_scope": "repair_gate_diagnostic",
+      "evidence_class": "diagnostic_verifier_calibration",
+      "row_id": "dot290:exp3113_diagnostic_verifier_calibration",
+      "row_origin": "milestone_290",
+      "source_artifact": "results/experiment_3113_diagnostic_local_sota_verifier_calibration_v5.json",
+      "source_field": "diagnostic_verifier_calibration_v5_ready",
+      "status": "diagnostic_only",
+      "summary": {
+        "diagnostic_verifier_calibration_v5_ready": true,
+        "false_accept_rate": 0.0,
+        "honest_verdict": "complete: diagnostic_verifier_calibration_v5_ready=true",
+        "repair_gate_state": "unblocked",
+        "verifier_gain_delta_with_certified_coherence": 0.5
+      }
+    },
+    {
+      "blocker_class": "none",
+      "claim_scope": "repair_target_localization",
+      "evidence_class": "fragment_level_code_constraint_verification",
+      "row_id": "dot290:exp3114_fragment_level_verification",
+      "row_origin": "milestone_290",
+      "source_artifact": "results/experiment_3114_fragment_level_code_constraint_verification_pilot_v1.json",
+      "source_field": "fragment_verification_pilot_ready",
+      "status": "clean",
+      "summary": {
+        "failing_fragment_count": 4,
+        "fragment_verification_pilot_ready": true,
+        "honest_verdict": "complete: fragment verification pilot ready",
+        "repair_target_manifest_path": "results/fragment_verification_pilot_3114/repair_target_manifest.jsonl"
+      }
+    },
+    {
+      "blocker_class": "bounded_claim",
+      "claim_scope": "repair_live_rerun",
+      "evidence_class": "explicit_repair_gate_micro_panel",
+      "row_id": "dot290:exp3115_explicit_repair_gate_micro_panel",
+      "row_origin": "milestone_290",
+      "source_artifact": "results/experiment_3115_explicit_repair_gate_micro_panel_v4.json",
+      "source_field": "repair_micro_panel_v4_artifact_ready",
+      "status": "bounded",
+      "summary": {
+        "false_repair_accept_rate": 0.0,
+        "honest_verdict": "complete: repair_micro_panel_v4_artifact_ready=true",
+        "intent_preservation_rate": 0.0,
+        "repair_micro_panel_v4_artifact_ready": true,
+        "repair_run_executed": true,
+        "repair_success_delta": 0.0,
+        "repair_unblocked": true,
+        "status_rationale": "artifact_exists_but_repair_claim_remains_bounded"
+      }
+    },
+    {
+      "blocker_class": "bounded_claim",
+      "claim_scope": "controller_only_self_learning_boundary",
+      "evidence_class": "fr11_unsolvable_curriculum_retention_guard",
+      "row_id": "dot290:exp3116_fr11_curriculum_retention_guard",
+      "row_origin": "milestone_290",
+      "source_artifact": "results/experiment_3116_fr11_unsolvable_curriculum_retention_guard_v1.json",
+      "source_field": "fr11_unsolvable_curriculum_ready",
+      "status": "bounded",
+      "summary": {
+        "completeness_mistakes": 0,
+        "controller_only": true,
+        "fr11_unsolvable_curriculum_ready": true,
+        "honest_verdict": "complete_fr11_unsolvable_curriculum_controller_only_guard_passed",
+        "no_weight_update_claim": true,
+        "promotion_decision": "controller_only",
+        "soundness_mistakes": 0
+      }
+    },
+    {
+      "blocker_class": "projection_only",
+      "claim_scope": "future_adapter_context",
+      "evidence_class": "ebt_arm_sidecar_score_correlation_boundary",
+      "row_id": "dot290:exp3117_ebt_arm_sidecar_score_correlation",
+      "row_origin": "milestone_290",
+      "source_artifact": "results/experiment_3117_ebt_arm_sidecar_score_correlation_boundary_v3.json",
+      "source_field": "sidecar_score_correlation_boundary_v3_ready",
+      "status": "projection_only",
+      "summary": {
+        "honest_verdict": "complete: sidecar_score_correlation_boundary_v3_ready=true",
+        "no_live_model_integration_claim": true,
+        "no_speedup_claim": true,
+        "no_weight_update_claim": true,
+        "sidecar_score_correlation_boundary_v3_ready": true
+      }
+    },
+    {
+      "blocker_class": "bounded_claim",
+      "claim_scope": "cpu_backend_no_hardware_speedup",
+      "evidence_class": "clut_sampler_backend_integration_boundary",
+      "row_id": "dot290:exp3118_clut_sampler_backend_integration",
+      "row_origin": "milestone_290",
+      "source_artifact": "results/experiment_3118_clut_sampler_backend_integration_boundary_v2.json",
+      "source_field": "clut_backend_integration_boundary_v2_ready",
+      "status": "bounded",
+      "summary": {
+        "clut_backend_integration_boundary_v2_ready": true,
+        "default_backend_preserved": true,
+        "distribution_checks_passed": true,
+        "hardware_claim_made": false,
+        "hardware_command_count": 0,
+        "honest_verdict": "complete: clut_cpu backend adapter is opt-in"
+      }
+    },
+    {
+      "blocker_class": "required_blocker",
+      "claim_scope": "hardware_rerun_gate",
+      "evidence_class": "gatemate_ssqa_operator_evidence_ingestion",
+      "row_id": "dot290:exp3119_gatemate_operator_evidence",
+      "row_origin": "milestone_290",
+      "source_artifact": "results/experiment_3119_gatemate_ssqa_operator_evidence_ingestion_v4.json",
+      "source_field": "gatemate_rerun_allowed",
+      "status": "blocked",
+      "summary": {
+        "gatemate_rerun_allowed": false,
+        "hardware_command_count": 0,
+        "honest_verdict": "complete: operator_evidence_ingestion_v4_ready=true",
+        "missing_operator_action_count": 1,
+        "operator_evidence_ingestion_v4_ready": true,
+        "speedup_claim_made": false
+      }
+    },
+    {
+      "blocker_class": "structured_gate_skip",
+      "claim_scope": "host_visible_readback_gate",
+      "evidence_class": "gatemate_ssqa_operator_evidence_ingestion",
+      "row_id": "dot290:exp3119_ssqa_readback_evidence",
+      "row_origin": "milestone_290",
+      "source_artifact": "results/experiment_3119_gatemate_ssqa_operator_evidence_ingestion_v4.json",
+      "source_field": "ssqa_readback_allowed",
+      "status": "gated_skipped",
+      "summary": {
+        "hardware_readback_attempted": false,
+        "honest_verdict": "complete: operator_evidence_ingestion_v4_ready=true",
+        "operator_evidence_ingestion_v4_ready": true,
+        "ssqa_readback_allowed": false
+      }
+    }
+  ],
+  "rows_total": 26,
+  "run_date": "20260526",
+  "schema": "carnot.cross_corpus_matrix.v24_290_claim_aggregation.v1",
+  "scripts_research_conductor_modified": false,
+  "source_artifacts": [
+    {
+      "experiment_id": "exp3107",
+      "path": "results/experiment_3107_cross_corpus_matrix_v23.json",
+      "present": true,
+      "readable_json_object": true,
+      "ready_field": "matrix_v23_ready",
+      "required": true,
+      "role": "matrix_v23_authority",
+      "sha256": "fb3f785da6c01ee63147d56a7038009fe0dac4a6cad9e31e657f435d1ee17a46",
+      "source_type": "json"
+    },
+    {
+      "experiment_id": "exp3108",
+      "path": "results/experiment_3108_capstone_v289.json",
+      "present": true,
+      "readable_json_object": true,
+      "ready_field": "capstone_ready",
+      "required": true,
+      "role": "capstone_v289_authority",
+      "sha256": "3662425ecd3317366a8d3ecf5ea4fc3ca043138cf173b61069fe6d71d0b53d76",
+      "source_type": "json"
+    },
+    {
+      "experiment_id": "exp3109",
+      "path": "results/experiment_3109_archive_v289_activate_v290.json",
+      "present": true,
+      "readable_json_object": true,
+      "ready_field": "archive_v289_activate_v290_ready",
+      "required": false,
+      "role": "archive_v289_activate_v290",
+      "sha256": "cf1b0a12c00d51de9250b7cfb1cb04f65ef334eb27389df3227ea1aa68d1695f",
+      "source_type": "json"
+    },
+    {
+      "experiment_id": "exp3110",
+      "path": "results/experiment_3110_sota_model_spec_cache_manifest_corrigendum_v1.json",
+      "present": true,
+      "readable_json_object": true,
+      "ready_field": "sota_model_manifest_ready",
+      "required": false,
+      "role": "sota_model_spec_cache_manifest",
+      "sha256": "d21a520943e67db106d0db7645e925d504660f54040566179ceac79f26edae33",
+      "source_type": "json"
+    },
+    {
+      "experiment_id": "exp3111",
+      "path": "results/experiment_3111_certified_coherence_z3_mcs_feedback_v3.json",
+      "present": true,
+      "readable_json_object": true,
+      "ready_field": "certified_coherence_feedback_v3_ready",
+      "required": false,
+      "role": "certified_coherence_feedback",
+      "sha256": "223f541884b10e1989c6ca18d6c7613c3818d26d4f9bba9d804b1caaa925e47e",
+      "source_type": "json"
+    },
+    {
+      "experiment_id": "exp3112",
+      "path": "results/experiment_3112_logic_regularized_verifier_pilot_v1.json",
+      "present": true,
+      "readable_json_object": true,
+      "ready_field": "logic_regularized_verifier_pilot_ready",
+      "required": false,
+      "role": "logic_regularized_verifier_pilot",
+      "sha256": "f7f6065c7a35cddb011cf5ee10ec200cb633c8b15b1ec5ee707ec7a6db1ae49c",
+      "source_type": "json"
+    },
+    {
+      "experiment_id": "exp3113",
+      "path": "results/experiment_3113_diagnostic_local_sota_verifier_calibration_v5.json",
+      "present": true,
+      "readable_json_object": true,
+      "ready_field": "diagnostic_verifier_calibration_v5_ready",
+      "required": false,
+      "role": "diagnostic_verifier_calibration",
+      "sha256": "8fa5fa2eb4a3e65d03b98ac733c36a078702d43a467d61ab025493addb07f8ba",
+      "source_type": "json"
+    },
+    {
+      "experiment_id": "exp3114",
+      "path": "results/experiment_3114_fragment_level_code_constraint_verification_pilot_v1.json",
+      "present": true,
+      "readable_json_object": true,
+      "ready_field": "fragment_verification_pilot_ready",
+      "required": false,
+      "role": "fragment_level_verification",
+      "sha256": "430c1fc2763a89cc5c3cea2883fa5b5bbe81a01bf21a698f6120555fa3c8a811",
+      "source_type": "json"
+    },
+    {
+      "experiment_id": "exp3115",
+      "path": "results/experiment_3115_explicit_repair_gate_micro_panel_v4.json",
+      "present": true,
+      "readable_json_object": true,
+      "ready_field": "repair_micro_panel_v4_artifact_ready",
+      "required": false,
+      "role": "explicit_repair_gate_micro_panel",
+      "sha256": "0e6f719c3b26f6517ddb494a3b54842b2c3f7b77b149b5c4a96d40fc3622eef0",
+      "source_type": "json"
+    },
+    {
+      "experiment_id": "exp3116",
+      "path": "results/experiment_3116_fr11_unsolvable_curriculum_retention_guard_v1.json",
+      "present": true,
+      "readable_json_object": true,
+      "ready_field": "fr11_unsolvable_curriculum_ready",
+      "required": false,
+      "role": "fr11_curriculum_retention_guard",
+      "sha256": "bb13b328206d68784a9ea2f242ffcb44feed88e7f3179505a43642747a263637",
+      "source_type": "json"
+    },
+    {
+      "experiment_id": "exp3117",
+      "path": "results/experiment_3117_ebt_arm_sidecar_score_correlation_boundary_v3.json",
+      "present": true,
+      "readable_json_object": true,
+      "ready_field": "sidecar_score_correlation_boundary_v3_ready",
+      "required": false,
+      "role": "ebt_arm_sidecar_score_correlation",
+      "sha256": "2a0beeb90499393e35c10cd16401d44d0dcacc41f1fc29ada6229fada750e1b6",
+      "source_type": "json"
+    },
+    {
+      "experiment_id": "exp3118",
+      "path": "results/experiment_3118_clut_sampler_backend_integration_boundary_v2.json",
+      "present": true,
+      "readable_json_object": true,
+      "ready_field": "clut_backend_integration_boundary_v2_ready",
+      "required": false,
+      "role": "clut_sampler_backend_integration",
+      "sha256": "1cf50738be1d744de2f7e994e42ea0b0e4df05a5abda7f3408de0c7acc9719d9",
+      "source_type": "json"
+    },
+    {
+      "experiment_id": "exp3119",
+      "path": "results/experiment_3119_gatemate_ssqa_operator_evidence_ingestion_v4.json",
+      "present": true,
+      "readable_json_object": true,
+      "ready_field": "operator_evidence_ingestion_v4_ready",
+      "required": false,
+      "role": "gatemate_ssqa_operator_evidence",
+      "sha256": "fef309f70b921c4d68c0c0e2bd8eb8565f74be9763c61bde89bcd2c905cbab96",
+      "source_type": "json"
+    }
+  ],
+  "source_checksums": {
+    "results/experiment_3107_cross_corpus_matrix_v23.json": "fb3f785da6c01ee63147d56a7038009fe0dac4a6cad9e31e657f435d1ee17a46",
+    "results/experiment_3108_capstone_v289.json": "3662425ecd3317366a8d3ecf5ea4fc3ca043138cf173b61069fe6d71d0b53d76",
+    "results/experiment_3109_archive_v289_activate_v290.json": "cf1b0a12c00d51de9250b7cfb1cb04f65ef334eb27389df3227ea1aa68d1695f",
+    "results/experiment_3110_sota_model_spec_cache_manifest_corrigendum_v1.json": "d21a520943e67db106d0db7645e925d504660f54040566179ceac79f26edae33",
+    "results/experiment_3111_certified_coherence_z3_mcs_feedback_v3.json": "223f541884b10e1989c6ca18d6c7613c3818d26d4f9bba9d804b1caaa925e47e",
+    "results/experiment_3112_logic_regularized_verifier_pilot_v1.json": "f7f6065c7a35cddb011cf5ee10ec200cb633c8b15b1ec5ee707ec7a6db1ae49c",
+    "results/experiment_3113_diagnostic_local_sota_verifier_calibration_v5.json": "8fa5fa2eb4a3e65d03b98ac733c36a078702d43a467d61ab025493addb07f8ba",
+    "results/experiment_3114_fragment_level_code_constraint_verification_pilot_v1.json": "430c1fc2763a89cc5c3cea2883fa5b5bbe81a01bf21a698f6120555fa3c8a811",
+    "results/experiment_3115_explicit_repair_gate_micro_panel_v4.json": "0e6f719c3b26f6517ddb494a3b54842b2c3f7b77b149b5c4a96d40fc3622eef0",
+    "results/experiment_3116_fr11_unsolvable_curriculum_retention_guard_v1.json": "bb13b328206d68784a9ea2f242ffcb44feed88e7f3179505a43642747a263637",
+    "results/experiment_3117_ebt_arm_sidecar_score_correlation_boundary_v3.json": "2a0beeb90499393e35c10cd16401d44d0dcacc41f1fc29ada6229fada750e1b6",
+    "results/experiment_3118_clut_sampler_backend_integration_boundary_v2.json": "1cf50738be1d744de2f7e994e42ea0b0e4df05a5abda7f3408de0c7acc9719d9",
+    "results/experiment_3119_gatemate_ssqa_operator_evidence_ingestion_v4.json": "fef309f70b921c4d68c0c0e2bd8eb8565f74be9763c61bde89bcd2c905cbab96"
+  },
+  "status_counts": {
+    "blocked": 1,
+    "bounded": 6,
+    "clean": 4,
+    "diagnostic_only": 2,
+    "flagged": 1,
+    "gated_skipped": 1,
+    "missing": 0,
+    "model_spec_gap": 0,
+    "projection_only": 1,
+    "retired": 10
+  },
+  "status_updates_written": false,
+  "verifier_repair_status": {
+    "certified_coherence_status": "clean",
+    "diagnostic_calibration_status": "diagnostic_only",
+    "false_repair_accept_rate": 0.0,
+    "fragment_verification_status": "clean",
+    "intent_preservation_rate": 0.0,
+    "logic_pilot_status": "diagnostic_only",
+    "model_manifest_status": "bounded",
+    "publication_blocker_row_ids": [
+      "dot290:exp3110_sota_model_spec_cache_manifest",
+      "dot290:exp3115_explicit_repair_gate_micro_panel"
+    ],
+    "repair_claim_status": "bounded_no_positive_repair_delta",
+    "repair_micro_panel_status": "bounded",
+    "repair_run_executed": true,
+    "repair_success_delta": 0.0,
+    "repair_unblocked": true
+  }
+}

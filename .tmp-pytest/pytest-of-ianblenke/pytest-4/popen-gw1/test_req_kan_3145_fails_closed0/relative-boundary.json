@@ -1,0 +1,199 @@
+{
+  "artifact": "experiment_3145_kan_proof_carrying_monitor_boundary_v2",
+  "attached_monitor_record_count": 0,
+  "claim_boundary": {
+    "does_not_prove": [
+      "trained KAN network soundness",
+      "generation-path integration",
+      "deployed verifier improvement",
+      "hardware execution",
+      "live LLM inference"
+    ],
+    "proves": "two replayable KAN PWA/MILP proof records attached to monitor fixtures"
+  },
+  "deployed_verifier_claim": false,
+  "duration_s": 0.5,
+  "false_accept_relevance": {
+    "attached_false_accept_record_count": 0,
+    "attached_false_accept_row_ids": [],
+    "covered_false_accept_families": [],
+    "covered_primary_mechanisms": [],
+    "deployed_gate_missing": true,
+    "known_false_accept_row_ids": [],
+    "question": "Would the attached KAN proof-carrying records have helped any .291 false-accept family?",
+    "reason": "Records preserve exact fixture authority and KAN PWA proof evidence for replay, but no live accept/reject gate consumes them.",
+    "would_help_replay_audit": false,
+    "would_prevent_live_false_accept": false
+  },
+  "field_principles": {
+    "attached_monitor_record_count": "attachment scale must be visible",
+    "deployed_verifier_claim": "bounded monitor records are not deployment",
+    "false_accept_relevance": "architecture work must address the current blocker or say it does not",
+    "global_error_bound_summary": "network-level claims need propagated bounds",
+    "honest_verdict": "terminal verdict must use a success prefix unless honestly blocked",
+    "implementation_blockers": "design-only output must say what is missing",
+    "inference_substrate": "solver-only work must declare no live LLM inference",
+    "kan_code_present": "implementation claims require code",
+    "kan_proof_carrying_monitor_v2_ready": "KAN follow-up must produce a concrete boundary",
+    "local_error_bound_summary": "unit-level approximation error must be explicit",
+    "milp_property_check_count": "verification claims need property checks",
+    "monitor_record_schema": "proof-carrying records must be replayable",
+    "source_artifacts": "KAN evidence must trace to concrete files",
+    "tests_run": "verifier/abstraction code must be checked"
+  },
+  "global_error_bound_summary": {},
+  "honest_verdict": "complete_kan_proof_carrying_monitor_v2_design_boundary_no_deployed_claim",
+  "implementation_blockers": [
+    "openspec/capabilities/kan/spec.md",
+    "python/carnot/verify/kan_pwa_milp_corrigendum.py",
+    "python/carnot/verify/kan_pwa_milp_tiny.py",
+    "python/carnot/verify/pwa_kan.py",
+    "results/experiment_3126_fragment_time_monitor_satisfiable_drift_audit_v1.json",
+    "results/experiment_3131_kan_pwa_milp_verifier_abstraction_audit_v1.json",
+    "results/experiment_3136_false_accept_root_cause_autopsy_v1.json"
+  ],
+  "inference_substrate": {
+    "deployed_verifier_claim": false,
+    "executes_models": false,
+    "hardware_execution": false,
+    "live_llm_inference": false,
+    "live_model_inference": false,
+    "local_gguf_inference": false,
+    "mode": "checked_in_artifact_kan_monitor_boundary",
+    "model_weight_mutation": false,
+    "model_weight_training": false,
+    "solver_only_abstraction_accounting": true
+  },
+  "kan_code_present": false,
+  "kan_proof_carrying_monitor_v2_ready": false,
+  "local_error_bound_summary": {},
+  "milp_property_check_count": 0,
+  "monitor_record_schema": {
+    "checksum_rule": "sha256 over the record with record_checksum removed",
+    "exact_fixture_link_fields": [
+      "fixture_id",
+      "source_prompt_payload_sha256",
+      "exact_label",
+      "expected_action",
+      "label_source",
+      "ledger_action",
+      "ledger_hash",
+      "live_decision",
+      "monitor_failure_mechanism"
+    ],
+    "milp_property_result_fields": [
+      "property_verified",
+      "certified_upper_bound",
+      "property_threshold",
+      "milp_backend_available",
+      "milp_backend_name",
+      "solver_status",
+      "counterexample_or_certificate"
+    ],
+    "pwa_abstraction_fields": [
+      "units",
+      "output_segments",
+      "property_domain",
+      "property_threshold",
+      "bound_procedures"
+    ],
+    "required_record_fields": [
+      "schema",
+      "record_version",
+      "record_id",
+      "fixture_id",
+      "exact_fixture_link",
+      "pwa_abstraction_parameters",
+      "local_error_bound_summary",
+      "global_error_bound_summary",
+      "milp_property_result",
+      "claim_boundary",
+      "record_checksum"
+    ],
+    "schema": "carnot.kan_proof_carrying_monitor.record.v2"
+  },
+  "monitor_records": [],
+  "reproducibility_checksum": "ea149055ba58cdae523c7c332352da40ad2dbab492d359992335259e8e3d26b9",
+  "run_date": "20260526",
+  "schema": "carnot.kan_proof_carrying_monitor_boundary.v2",
+  "source_artifacts": [
+    {
+      "exists": false,
+      "id": "agents_repo_instructions",
+      "path": "AGENTS.md",
+      "required": false,
+      "sha256": null
+    },
+    {
+      "exists": false,
+      "id": "codex_repo_workflow",
+      "path": "CODEX.md",
+      "required": false,
+      "sha256": null
+    },
+    {
+      "exists": false,
+      "id": "claude_authenticity_rules",
+      "path": "CLAUDE.md",
+      "required": false,
+      "sha256": null
+    },
+    {
+      "exists": false,
+      "id": "kan_openspec",
+      "path": "openspec/capabilities/kan/spec.md",
+      "required": true,
+      "sha256": null
+    },
+    {
+      "exists": false,
+      "id": "research_references",
+      "path": "research-references.md",
+      "required": false,
+      "sha256": null
+    },
+    {
+      "exists": false,
+      "id": "exp3126_fragment_monitor",
+      "path": "results/experiment_3126_fragment_time_monitor_satisfiable_drift_audit_v1.json",
+      "required": true,
+      "sha256": null
+    },
+    {
+      "exists": false,
+      "id": "exp3131_kan_abstraction_audit",
+      "path": "results/experiment_3131_kan_pwa_milp_verifier_abstraction_audit_v1.json",
+      "required": true,
+      "sha256": null
+    },
+    {
+      "exists": false,
+      "id": "exp3136_false_accept_autopsy",
+      "path": "results/experiment_3136_false_accept_root_cause_autopsy_v1.json",
+      "required": true,
+      "sha256": null
+    },
+    {
+      "exists": false,
+      "id": "exp3145_module",
+      "path": "python/carnot/eval/kan_proof_carrying_monitor_boundary_v2.py",
+      "required": false,
+      "sha256": null
+    },
+    {
+      "exists": false,
+      "id": "exp3145_tests",
+      "path": "tests/python/test_experiment_3145_kan_proof_carrying_monitor_boundary_v2.py",
+      "required": false,
+      "sha256": null
+    }
+  ],
+  "source_checksums": {},
+  "spec_refs": [
+    "REQ-KAN-3145",
+    "SCENARIO-KAN-3145"
+  ],
+  "tests_run": [
+    "relative-missing-source"
+  ]
+}

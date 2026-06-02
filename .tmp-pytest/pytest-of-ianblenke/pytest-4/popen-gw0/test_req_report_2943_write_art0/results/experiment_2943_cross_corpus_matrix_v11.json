@@ -1,0 +1,207 @@
+{
+  "artifact": "experiment_2943_cross_corpus_matrix_v11",
+  "cited_upstream_artifacts": [
+    {
+      "artifact_path": "results/experiment_2935_cross_corpus_matrix_v10_paper_boundary_corrigendum_v1.json",
+      "experiment_id": "exp2935",
+      "fields_imported": [
+        "clean_rows",
+        "flagged_rows",
+        "blocked_rows",
+        "rows_clean",
+        "rows_flagged",
+        "rows_blocked",
+        "matrix_rows"
+      ],
+      "sha256": "4ee1d35ccaed361d72ef672a9f7b07b1011359564fe93e41798d8d2eaf3d97c3"
+    },
+    {
+      "artifact_path": "results/experiment_2938_kv260_mmd_vs_cpu_sequential_gibbs_v1.json",
+      "experiment_id": "exp2938",
+      "fields_imported": [
+        "distributions_distinguishable",
+        "per_seed_mmd_squared",
+        "per_seed_mmd_pvalue",
+        "paper_v6_recommendation"
+      ],
+      "sha256": "3f6db790e34f3f907db806cd183a8616d51a9a857a03d2a7a17ac4d136849a03"
+    },
+    {
+      "artifact_path": "results/experiment_2939_cpu_synchronous_parallel_same_schedule_baseline_v1.json",
+      "experiment_id": "exp2939",
+      "fields_imported": [
+        "kv260_speedup_vs_same_schedule_cpu.value",
+        "paper_v6_recommendation"
+      ],
+      "sha256": "36fc6827793c114ca11f3996c98922ba36bbf1f899e5448e513d9cea8e771362"
+    },
+    {
+      "artifact_path": "results/experiment_2940_verifier_ensemble_auprc_code_corpora_v1.json",
+      "experiment_id": "exp2940",
+      "fields_imported": [
+        "code_corpus_auprc",
+        "code_corpus_baseline_random_auprc.value",
+        "fover_corpus_auprc.value",
+        "paper_v6_recommendation"
+      ],
+      "sha256": "0d0e2d125d739ae59e4a1ba3d028145a14a5f2a1d0cbbca782c0191dfabc527b"
+    },
+    {
+      "artifact_path": "results/experiment_2942_kv260_continuation_n_scaling_v1.json",
+      "experiment_id": "exp2942",
+      "fields_imported": [
+        "bitstream_supports_variable_n",
+        "measured_crossover_n",
+        "per_n_results"
+      ],
+      "sha256": "9fd2bde46fadcd32beed1a2efc786771003abce288f5597d296b7b54ed8c4cd2"
+    }
+  ],
+  "deep_think_corrigenda_outcomes": {
+    "exp2938": {
+      "distributions_distinguishable": true,
+      "paper_v6_recommendation": "retract exact-sampling claim",
+      "per_seed_mmd_pvalue": [
+        0.001,
+        0.001,
+        0.001
+      ],
+      "per_seed_mmd_squared": [
+        1.3,
+        1.4,
+        1.5
+      ]
+    },
+    "exp2939": {
+      "paper_v6_recommendation": "retract speedup claim",
+      "same_schedule_speedup": 0.5
+    },
+    "exp2940": {
+      "code_corpus_auprc": 0.75,
+      "fover_corpus_auprc": 0.9,
+      "paper_v6_recommendation": "retain"
+    },
+    "exp2942": {
+      "bitstream_supports_variable_n": false,
+      "measured_crossover_n": 0,
+      "per_n_results": [
+        {
+          "n": 64,
+          "per_sample_us_median": 25.54,
+          "per_sample_us_p95": 25.77
+        }
+      ]
+    }
+  },
+  "duration_s": 0.5,
+  "honest_verdict": "complete: matrix_v11_ready=true; code_corpus_auprc=0.75; kv260_same_schedule_speedup_recorded=0.5; kv260_n_crossover_measured=0",
+  "inference_substrate": "aggregation_from_upstream_artifacts",
+  "kv260_n_crossover_measured": 0,
+  "kv260_same_schedule_speedup_recorded": 0.5,
+  "matrix_rows": [
+    {
+      "row_class": "clean",
+      "row_id": "corpus:FoVer"
+    },
+    {
+      "row_class": "flagged",
+      "row_id": "exp2911_code_hallucination_verifier"
+    },
+    {
+      "claim_boundary": "Retracts exact FPGA sampling; KV260 row is fixed-schedule heuristic evidence.",
+      "headline_eligible": false,
+      "paper_claim_eligible": true,
+      "row_class": "clean",
+      "row_id": "exp2938_kv260_mmd_corrigendum",
+      "summary": {
+        "distributions_distinguishable": true,
+        "paper_v6_recommendation": "retract exact-sampling claim",
+        "per_seed_mmd_pvalue": [
+          0.001,
+          0.001,
+          0.001
+        ],
+        "per_seed_mmd_squared": [
+          1.3,
+          1.4,
+          1.5
+        ]
+      }
+    },
+    {
+      "claim_boundary": "Same-schedule CPU comparison supersedes the earlier sequential-Gibbs speedup framing.",
+      "headline_eligible": false,
+      "paper_claim_eligible": true,
+      "row_class": "clean",
+      "row_id": "exp2939_same_schedule_speedup_corrigendum",
+      "summary": {
+        "paper_v6_recommendation": "retract speedup claim",
+        "same_schedule_speedup": 0.5
+      }
+    },
+    {
+      "claim_boundary": "Adds code-corpus AUPRC/base-rate columns from Exp 2940.",
+      "headline_eligible": true,
+      "paper_claim_eligible": true,
+      "row_class": "clean",
+      "row_id": "exp2940_code_corpus_auprc_corrigendum",
+      "summary": {
+        "code_corpus_auprc": 0.75,
+        "fover_corpus_auprc": 0.9,
+        "paper_v6_recommendation": "retain"
+      }
+    },
+    {
+      "claim_boundary": "Records measured n-scaling rows only; zero crossover means not measured.",
+      "headline_eligible": false,
+      "paper_claim_eligible": true,
+      "row_class": "clean",
+      "row_id": "exp2942_kv260_n_scaling_corrigendum",
+      "summary": {
+        "bitstream_supports_variable_n": false,
+        "measured_crossover_n": 0,
+        "per_n_results": [
+          {
+            "n": 64,
+            "per_sample_us_median": 25.54,
+            "per_sample_us_p95": 25.77
+          }
+        ]
+      }
+    }
+  ],
+  "matrix_v11_ready": true,
+  "no_new_hardware_run": true,
+  "no_new_llm_call": true,
+  "no_new_sampler_run": true,
+  "no_new_verifier_run": true,
+  "per_corpus_auprc": {
+    "FoVer": {
+      "source_experiment_id": "exp2940",
+      "source_field": "fover_corpus_auprc.value",
+      "value": 0.9
+    },
+    "code_corpora": {
+      "baseline_random_auprc": 0.075,
+      "source_experiment_id": "exp2940",
+      "source_field": "code_corpus_auprc",
+      "value": 0.75
+    }
+  },
+  "rows_blocked": [
+    "exp2914_gatemate_toolchain"
+  ],
+  "rows_clean": [
+    "corpus:FoVer",
+    "exp2910_sota_codegen",
+    "exp2938_kv260_mmd_corrigendum",
+    "exp2939_same_schedule_speedup_corrigendum",
+    "exp2940_code_corpus_auprc_corrigendum",
+    "exp2942_kv260_n_scaling_corrigendum"
+  ],
+  "rows_flagged": [
+    "exp2911_code_hallucination_verifier"
+  ],
+  "run_date": "20260523",
+  "schema": "carnot.cross_corpus_matrix.v11_corrigenda_auprc.v1"
+}

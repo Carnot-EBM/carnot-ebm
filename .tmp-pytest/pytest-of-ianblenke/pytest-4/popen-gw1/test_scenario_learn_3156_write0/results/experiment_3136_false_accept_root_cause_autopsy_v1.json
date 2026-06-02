@@ -1,0 +1,140 @@
+{
+  "artifact": "experiment_3136_false_accept_root_cause_autopsy_v1",
+  "false_accept_autopsy_v1_ready": true,
+  "false_accept_mechanism_counts": {
+    "contradiction miss": 1
+  },
+  "false_accept_row_ids": [
+    "unsafe-invalid"
+  ],
+  "source_false_accept_count": 1,
+  "source_live_row_count": 3,
+  "verifier_rows": [
+    {
+      "answer_extraction_format": "validity_token",
+      "difficulty_buckets": [
+        "easy"
+      ],
+      "exact_label": "VALID",
+      "expected_action": "accept",
+      "failure_mechanism_from_exp3124": "no_failure",
+      "fixture_family": "unsafe_math",
+      "live_decision": "accept",
+      "monitor_events": [
+        {
+          "event_type": "constraint_ledger",
+          "fixture_id": "unsafe-valid",
+          "payload": {
+            "ledger_action": "accept"
+          }
+        },
+        {
+          "event_type": "exact_test_z3_result",
+          "fixture_id": "unsafe-valid",
+          "payload": {
+            "exact_authority_available": true,
+            "exact_label": "VALID",
+            "expected_action": "accept"
+          }
+        },
+        {
+          "event_type": "candidate_final_answer",
+          "fixture_id": "unsafe-valid",
+          "payload": {
+            "expected_action": "accept",
+            "final_answer_consistent_with_ledger": true,
+            "has_returned_answer": true,
+            "ledger_action": "accept",
+            "live_decision": "accept"
+          }
+        }
+      ],
+      "routing_decision": "normal",
+      "row_id": "unsafe-valid"
+    },
+    {
+      "answer_extraction_format": "validity_token",
+      "difficulty_buckets": [
+        "easy"
+      ],
+      "exact_label": "INVALID",
+      "expected_action": "reject",
+      "failure_mechanism_from_exp3124": "contradiction",
+      "fixture_family": "unsafe_math",
+      "live_decision": "accept",
+      "monitor_events": [
+        {
+          "event_type": "constraint_ledger",
+          "fixture_id": "unsafe-invalid",
+          "payload": {
+            "ledger_action": "reject"
+          }
+        },
+        {
+          "event_type": "exact_test_z3_result",
+          "fixture_id": "unsafe-invalid",
+          "payload": {
+            "exact_authority_available": true,
+            "exact_label": "INVALID",
+            "expected_action": "reject"
+          }
+        },
+        {
+          "event_type": "candidate_final_answer",
+          "fixture_id": "unsafe-invalid",
+          "payload": {
+            "expected_action": "reject",
+            "final_answer_consistent_with_ledger": true,
+            "has_returned_answer": true,
+            "ledger_action": "reject",
+            "live_decision": "accept"
+          }
+        }
+      ],
+      "routing_decision": "normal",
+      "row_id": "unsafe-invalid"
+    },
+    {
+      "answer_extraction_format": "repairability_token",
+      "difficulty_buckets": [
+        "hard"
+      ],
+      "exact_label": "REPAIRABLE",
+      "expected_action": "reject",
+      "failure_mechanism_from_exp3124": "no_failure",
+      "fixture_family": "repairable_json",
+      "live_decision": "reject",
+      "monitor_events": [
+        {
+          "event_type": "constraint_ledger",
+          "fixture_id": "safe-repair",
+          "payload": {
+            "ledger_action": "reject"
+          }
+        },
+        {
+          "event_type": "exact_test_z3_result",
+          "fixture_id": "safe-repair",
+          "payload": {
+            "exact_authority_available": true,
+            "exact_label": "REPAIRABLE",
+            "expected_action": "reject"
+          }
+        },
+        {
+          "event_type": "candidate_final_answer",
+          "fixture_id": "safe-repair",
+          "payload": {
+            "expected_action": "reject",
+            "final_answer_consistent_with_ledger": true,
+            "has_returned_answer": true,
+            "ledger_action": "reject",
+            "live_decision": "reject"
+          }
+        }
+      ],
+      "routing_decision": "normal",
+      "row_id": "safe-repair"
+    }
+  ]
+}

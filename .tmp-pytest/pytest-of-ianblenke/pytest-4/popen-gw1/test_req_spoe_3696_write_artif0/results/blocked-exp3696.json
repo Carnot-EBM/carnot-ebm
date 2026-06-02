@@ -1,0 +1,72 @@
+{
+  "acceptance_gate": {
+    "condition": "module_code_path_updated == true AND math_operating_point_unchanged == true AND e2e_test_passed == true",
+    "passed": false,
+    "principle": "Re-shipping the detector with a code operating point is correct only if the code path is wired, the math point is preserved, and the E2E passes -- otherwise the change is not deployable."
+  },
+  "adversarial_verify_clean": true,
+  "adversarial_verify_report": {
+    "flag_count": 0,
+    "flags": []
+  },
+  "artifact": "experiment_3696_reship_detector_math_plus_code",
+  "code_operating_point": {
+    "auroc": null,
+    "calibration": {},
+    "operating_point": {},
+    "recall_at_fixed_fpr": {}
+  },
+  "code_operating_point_auroc": null,
+  "code_operating_point_calibration": {},
+  "duration_s": 4.7e-05,
+  "e2e_test_passed": false,
+  "field_principles": {
+    "adversarial_verify_clean": "True iff no critical flag.",
+    "code_operating_point_auroc": "The code AUROC the shipped detector now achieves -- the deployable code number.",
+    "code_operating_point_calibration": "Brier/ECE of the shipped code operating point -- a deployable point must be calibrated.",
+    "duration_s": "Plausibility floor.",
+    "e2e_test_passed": "True iff the shipped-surface E2E test passes after the change.",
+    "honest_verdict": "Terminal prefix for reconciler classification.",
+    "inference_substrate": "verifier_ensemble_against_cached_candidates (principle: scores cached corpora; no LLM load; no compute-bound marker).",
+    "math_operating_point_unchanged": "True iff the strong math operating point (AUROC 0.98, ECE 0.009) is preserved -- the code add must not regress math.",
+    "module_code_path_updated": "True iff the shipped module now wires the code-native signal into a calibrated code operating point.",
+    "random_seed": "Determinism precondition.",
+    "reproducibility_checksum": "Drift detection."
+  },
+  "honest_verdict": "complete: blocked_code_signal_not_recovered_or_module_unavailable",
+  "inference_substrate": "verifier_ensemble_against_cached_candidates (principle: scores cached corpora; no LLM load; no compute-bound marker).",
+  "math_operating_point": {
+    "baseline_exp3671": {
+      "auroc": null,
+      "calibration": {},
+      "operating_point": {}
+    },
+    "updated": {
+      "auroc": null,
+      "calibration": {},
+      "operating_point": {}
+    }
+  },
+  "math_operating_point_unchanged": false,
+  "module_code_path_updated": false,
+  "ops_docs_reconciliation_left_to_conductor": true,
+  "preconditions_checked": [
+    {
+      "available": false,
+      "detail": "/home/ianblenke/github.com/ianblenke/carnot/.tmp-pytest/pytest-of-ianblenke/pytest-4/popen-gw1/test_req_spoe_3696_write_artif0/results/experiment_3695_code_native_verifier.json",
+      "resource": "exp3695_code_signal_recovered"
+    },
+    {
+      "available": true,
+      "detail": "python/carnot/pipeline/second_pair_detector.py",
+      "resource": "second_pair_detector_module"
+    }
+  ],
+  "random_seed": 3696,
+  "reproducibility_checksum": "15c6781e0853e492",
+  "schema": "carnot.reship_detector_math_plus_code_3696.v1",
+  "scripts_research_conductor_modified": false,
+  "tests_run": [
+    "REQ-SPOE-3696 write_artifact"
+  ]
+}

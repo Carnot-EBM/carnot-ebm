@@ -1,0 +1,54 @@
+{
+  "acceptance_gate": {
+    "condition": "drift_detected_deploy_arm == true AND reset_triggered_on_transient_drift == true AND structure_persisted_and_restored == true AND collapse_detected_deploy_arm == false AND pass_rate_vs_true_accuracy_distinct_assert == true",
+    "passed": false,
+    "principle": "Drift-reset self-learning is validated only when the deploy arm detects drift, resets on transient drift, persists+restores across a session, does not collapse, and the two metrics are genuinely distinct (not a tautology)."
+  },
+  "artifact": "experiment_3697_fr11_continuous_self_learning_v12",
+  "collapse_detected_deploy_arm": false,
+  "drift_detected_deploy_arm": false,
+  "duration_s": 1.0,
+  "field_principles": {
+    "collapse_detected_deploy_arm": "The conservative-default rule must prevent weight collapse (alpha_t grounding).",
+    "drift_detected_deploy_arm": "The deploy arm must detect both injected drifts.",
+    "duration_s": "Plausibility floor.",
+    "honest_verdict": "Terminal prefix for reconciler classification.",
+    "inference_substrate": "verifier_ensemble_against_cached_candidates (principle: scores cached traces; no LLM load; no compute-bound marker).",
+    "n_online_updates": "Sample-size of the self-learning sweep (>=200).",
+    "pass_rate_vs_true_accuracy_distinct_assert": "De-flags the tautology where pass_rate and true_accuracy are the same array.",
+    "post_transient_drift_quality_gain_over_v11": "The forward difference -- does reset-on-transient beat v11's continuous chase through transient drift?",
+    "quality_maintained": "Reset + persistence + collapse-prevention must not cost ensemble quality.",
+    "random_seed": "Determinism precondition.",
+    "reproducibility_checksum": "Drift detection (of the artifact, vs the corpus drift it measures).",
+    "reset_triggered_on_transient_drift": "The v12 forward difference -- the reset policy must fire on the non-recoverable/transient drift.",
+    "structure_persisted_and_restored": "Cross-session Tier-2 persistence -- the learned structure survives a session boundary (SHA256 round-trip)."
+  },
+  "honest_verdict": "complete: blocked_fr11_module_or_traces_unavailable",
+  "inference_substrate": "verifier_ensemble_against_cached_candidates (principle: scores cached traces; no LLM load; no compute-bound marker).",
+  "n_online_updates": 0,
+  "pass_rate_vs_true_accuracy_distinct_assert": false,
+  "post_transient_drift_quality_gain_over_v11": 0.0,
+  "preconditions_checked": [
+    {
+      "available": true,
+      "detail": "/home/ianblenke/github.com/ianblenke/carnot/.tmp-pytest/pytest-of-ianblenke/pytest-4/popen-gw1/test_req_learn_3697_build_arti0/python/carnot/fr11",
+      "resource": "fr11_module"
+    },
+    {
+      "available": true,
+      "detail": "fixture",
+      "resource": "cached_traces_with_per_verifier_scores_and_labels"
+    },
+    {
+      "available": false,
+      "detail": "RuntimeError: cached traces unavailable",
+      "resource": "cached_trace_scoring"
+    }
+  ],
+  "quality_maintained": false,
+  "random_seed": 3697,
+  "reproducibility_checksum": "dc6cdc73c41ab5265080216b92158c9e47e2a7d1a8aa59186b948deec8a29ade",
+  "reset_triggered_on_transient_drift": false,
+  "schema": "carnot.fr11_continuous_self_learning_v12",
+  "structure_persisted_and_restored": false
+}

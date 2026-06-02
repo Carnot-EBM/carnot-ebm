@@ -1,0 +1,426 @@
+{
+  "artifact": "experiment_3100_z3_oracle_feedback_v2",
+  "cached_sota_pair_status": {
+    "available": true,
+    "error": null,
+    "models": [
+      {
+        "gpu": 0,
+        "hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+        "model_path": "/home/ianblenke/github.com/ianblenke/carnot/.tmp-pytest/pytest-of-ianblenke/pytest-4/popen-gw1/test_req_verify_3100_artifact_0/models/qwen.gguf",
+        "name": "Qwen3.6-35B-A3B"
+      },
+      {
+        "gpu": 1,
+        "hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+        "model_path": "/home/ianblenke/github.com/ianblenke/carnot/.tmp-pytest/pytest-of-ianblenke/pytest-4/popen-gw1/test_req_verify_3100_artifact_0/models/gemma26.gguf",
+        "name": "Gemma4-26B-A4B-it"
+      }
+    ]
+  },
+  "dafny_available": false,
+  "dafny_path": null,
+  "duration_s": 1.25,
+  "exact_ground_truth_count": 3,
+  "exp3097_protocol_ready": true,
+  "fixture_results": [
+    {
+      "empty_repair_validation": {
+        "diagnostics": {
+          "required_fields": [
+            "limit",
+            "mode"
+          ]
+        },
+        "exact_authority": "python_json_test_oracle",
+        "exact_checked": true,
+        "failure_reason": "empty_repair_or_spec",
+        "valid": false
+      },
+      "expected_answer": "REPAIRABLE",
+      "fixture_id": "repair-json",
+      "guided_candidate": {
+        "candidate": "{\"mode\": \"bounded\", \"limit\": 2}"
+      },
+      "guided_parse": {
+        "parse_error": "",
+        "repair": {
+          "candidate": "{\"mode\": \"bounded\", \"limit\": 2}"
+        },
+        "valid_parse": true
+      },
+      "guided_prompt_hash": "99eb67f8db5d2588713e009b70b71030dd9c71398dec5525714a8732a66dea56",
+      "guided_raw_output_hash": "1a1eca1e9443e3554828cfa5d861fbbafd1d6dbbc8aab217c3af0b578d255928",
+      "guided_success": true,
+      "guided_validation": {
+        "diagnostics": {
+          "parsed_fields": [
+            "limit",
+            "mode"
+          ]
+        },
+        "exact_authority": "python_json_test_oracle",
+        "exact_checked": true,
+        "failure_reason": "",
+        "valid": true
+      },
+      "no_feedback_candidate": {
+        "candidate": "{\"mode\": \"bounded\" \"limit\": 2}"
+      },
+      "no_feedback_success": false,
+      "no_feedback_validation": {
+        "diagnostics": {
+          "error": "Expecting ',' delimiter: line 1 column 20 (char 19)"
+        },
+        "exact_authority": "python_json_test_oracle",
+        "exact_checked": true,
+        "failure_reason": "json_decode_error",
+        "valid": false
+      },
+      "perturbation_type": "json_syntax_repair",
+      "solver_label": "repairable",
+      "solver_only_candidate": null,
+      "solver_only_success": false,
+      "solver_only_validation": {
+        "diagnostics": {
+          "error": "Expecting ',' delimiter: line 1 column 20 (char 19)"
+        },
+        "exact_authority": "python_json_test_oracle",
+        "exact_checked": true,
+        "failure_reason": "json_decode_error",
+        "valid": false
+      },
+      "source_prompt_payload_sha256": "hash-repair-json",
+      "task_family": "repairable_invalid_candidates"
+    },
+    {
+      "empty_repair_validation": {
+        "diagnostics": {
+          "variables": [
+            "rx",
+            "ry"
+          ]
+        },
+        "exact_authority": "z3_solver",
+        "exact_checked": true,
+        "failure_reason": "empty_or_incomplete_assignment",
+        "valid": false
+      },
+      "expected_answer": "REPAIRABLE",
+      "fixture_id": "repair-smt",
+      "guided_candidate": {
+        "candidate_assignment": {
+          "rx": 10,
+          "ry": 1
+        }
+      },
+      "guided_parse": {
+        "parse_error": "",
+        "repair": {
+          "candidate_assignment": {
+            "rx": 10,
+            "ry": 1
+          }
+        },
+        "valid_parse": true
+      },
+      "guided_prompt_hash": "f7faab0f283e67df2689ea1601990710d3654754e017d0c0bd781687397d8882",
+      "guided_raw_output_hash": "b5b63463a465f8f76517cd6db92211389abcb45addde1aa88db9ae80b7a1a5f2",
+      "guided_success": true,
+      "guided_validation": {
+        "diagnostics": {
+          "assignment": {
+            "rx": 10,
+            "ry": 1
+          }
+        },
+        "exact_authority": "z3_solver",
+        "exact_checked": true,
+        "failure_reason": "",
+        "valid": true
+      },
+      "no_feedback_candidate": {
+        "candidate_assignment": {
+          "rx": 2,
+          "ry": 1
+        }
+      },
+      "no_feedback_success": false,
+      "no_feedback_validation": {
+        "diagnostics": {
+          "assignment": {
+            "rx": 2,
+            "ry": 1
+          }
+        },
+        "exact_authority": "z3_solver",
+        "exact_checked": true,
+        "failure_reason": "constraint_violation",
+        "valid": false
+      },
+      "perturbation_type": "numeric_bound_repair",
+      "solver_label": "repairable",
+      "solver_only_candidate": {
+        "candidate_assignment": {
+          "rx": 10,
+          "ry": 1
+        }
+      },
+      "solver_only_success": true,
+      "solver_only_validation": {
+        "diagnostics": {
+          "assignment": {
+            "rx": 10,
+            "ry": 1
+          }
+        },
+        "exact_authority": "z3_solver",
+        "exact_checked": true,
+        "failure_reason": "",
+        "valid": true
+      },
+      "source_prompt_payload_sha256": "hash-repair-smt",
+      "task_family": "repairable_invalid_candidates"
+    },
+    {
+      "empty_repair_validation": {
+        "diagnostics": {},
+        "exact_authority": "python_ast_execution_oracle",
+        "exact_checked": true,
+        "failure_reason": "empty_assertion",
+        "valid": false
+      },
+      "expected_answer": "REPAIRABLE",
+      "fixture_id": "repair-py",
+      "guided_candidate": {
+        "candidate_assertion": "assert ((7 * 2) - 2) == 12"
+      },
+      "guided_parse": {
+        "parse_error": "",
+        "repair": {
+          "candidate_assertion": "assert ((7 * 2) - 2) == 12"
+        },
+        "valid_parse": true
+      },
+      "guided_prompt_hash": "180a1164bf9229914d6d44d0071d3a73b204cc4553bb1d91935b06e243f0b60a",
+      "guided_raw_output_hash": "d40499f307ee2a9ac2a9395c8c59c56b83398d16b470ce0c8461f24bd120e1da",
+      "guided_success": true,
+      "guided_validation": {
+        "diagnostics": {
+          "left": 12,
+          "right": 12
+        },
+        "exact_authority": "python_ast_execution_oracle",
+        "exact_checked": true,
+        "failure_reason": "",
+        "valid": true
+      },
+      "no_feedback_candidate": {
+        "candidate_assertion": "assert ((7 * 2) - 2) == 13"
+      },
+      "no_feedback_success": false,
+      "no_feedback_validation": {
+        "diagnostics": {
+          "left": 12,
+          "right": 13
+        },
+        "exact_authority": "python_ast_execution_oracle",
+        "exact_checked": true,
+        "failure_reason": "assertion_failure",
+        "valid": false
+      },
+      "perturbation_type": "python_assertion_repair",
+      "solver_label": "repairable",
+      "solver_only_candidate": null,
+      "solver_only_success": false,
+      "solver_only_validation": {
+        "diagnostics": {
+          "left": 12,
+          "right": 13
+        },
+        "exact_authority": "python_ast_execution_oracle",
+        "exact_checked": true,
+        "failure_reason": "assertion_failure",
+        "valid": false
+      },
+      "source_prompt_payload_sha256": "hash-repair-py",
+      "task_family": "repairable_invalid_candidates"
+    }
+  ],
+  "formal_feedback_delta": 0.666667,
+  "formal_feedback_v2_ready": true,
+  "guided_evaluation_feasible": true,
+  "guided_success_count": 3,
+  "headline_blocked_reason": null,
+  "honest_verdict": "complete: formal_feedback_v2_ready=true; guided_success_count=3; solver_only_success_count=1; exact_ground_truth_count=3",
+  "inference_substrate": {
+    "cached_sota_pair_available": true,
+    "cached_sota_pair_models": [
+      "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "unsloth/gemma-4-26B-A4B-it-GGUF"
+    ],
+    "dafny_available": false,
+    "formal_feedback_backend": "z3_and_python_test_oracle",
+    "kind": "live_llm_inference_plus_z3_test_oracle",
+    "legacy_small_models_promoted": false,
+    "live_llm_inference": true,
+    "model_cache_status": [
+      {
+        "cached": true,
+        "hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+        "model_path": "/home/ianblenke/github.com/ianblenke/carnot/.tmp-pytest/pytest-of-ianblenke/pytest-4/popen-gw1/test_req_verify_3100_artifact_0/models/qwen.gguf"
+      },
+      {
+        "cached": true,
+        "hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+        "model_path": "/home/ianblenke/github.com/ianblenke/carnot/.tmp-pytest/pytest-of-ianblenke/pytest-4/popen-gw1/test_req_verify_3100_artifact_0/models/gemma26.gguf"
+      },
+      {
+        "cached": false,
+        "hf_id": "unsloth/gemma-4-31B-it-GGUF",
+        "model_path": null
+      }
+    ],
+    "python_environment": {
+      "executable": "python-test"
+    },
+    "repo_commit": "test-commit",
+    "selected_model": {
+      "gpu": 0,
+      "hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "model_path": "/home/ianblenke/github.com/ianblenke/carnot/.tmp-pytest/pytest-of-ianblenke/pytest-4/popen-gw1/test_req_verify_3100_artifact_0/models/qwen.gguf",
+      "name": "Qwen3.6-35B-A3B"
+    },
+    "z3_available": true
+  },
+  "model_specs": [
+    {
+      "cache_status": "cached",
+      "cached": true,
+      "checksum_feasibility": {
+        "full_sha256_feasible": true,
+        "method": "full_sha256",
+        "size_bytes": 25
+      },
+      "hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "model_hash_or_cache_path": "sha256:ad0822a87d07bc88557fb365eb50d06d376c8a1c8bae71f3facacb8d9ba4cc22",
+      "model_path": "/home/ianblenke/github.com/ianblenke/carnot/.tmp-pytest/pytest-of-ianblenke/pytest-4/popen-gw1/test_req_verify_3100_artifact_0/models/qwen.gguf",
+      "name": "Qwen3.6-35B-A3B",
+      "preferred_quant": "Q4_K_M",
+      "role": "moe"
+    },
+    {
+      "cache_status": "cached",
+      "cached": true,
+      "checksum_feasibility": {
+        "full_sha256_feasible": true,
+        "method": "full_sha256",
+        "size_bytes": 28
+      },
+      "hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "model_hash_or_cache_path": "sha256:74ec27affbcbd58fae745bfc453327e951ce08aa9490bcceab836e45c02aa8d4",
+      "model_path": "/home/ianblenke/github.com/ianblenke/carnot/.tmp-pytest/pytest-of-ianblenke/pytest-4/popen-gw1/test_req_verify_3100_artifact_0/models/gemma26.gguf",
+      "name": "Gemma4-26B-A4B-it",
+      "preferred_quant": "Q4_K_M",
+      "role": "moe"
+    },
+    {
+      "cache_status": "missing",
+      "cached": false,
+      "checksum_feasibility": {
+        "method": "missing_file"
+      },
+      "hf_id": "unsloth/gemma-4-31B-it-GGUF",
+      "model_hash_or_cache_path": null,
+      "model_path": null,
+      "name": "Gemma4-31B-it",
+      "preferred_quant": "Q4_K_M",
+      "role": "dense"
+    }
+  ],
+  "no_feedback_success_count": 0,
+  "reproducibility_checksum": "946751cfa7406abee7e18f66cb07e80ccc7699aa1cc0b1c57e0b5aa9c7ed9d41",
+  "run_date": "20260526",
+  "runtime_blocker": null,
+  "schema": "carnot.z3_oracle_feedback.v2",
+  "selected_fixture_count": 3,
+  "selected_fixture_ids": [
+    "repair-json",
+    "repair-smt",
+    "repair-py"
+  ],
+  "solver_only_success_count": 1,
+  "source_artifacts": [
+    {
+      "exists": false,
+      "id": "codex",
+      "path": "CODEX.md",
+      "role": "repo spec-first workflow",
+      "sha256": null
+    },
+    {
+      "exists": false,
+      "id": "claude",
+      "path": "CLAUDE.md",
+      "role": "artifact authenticity and formal-tool discipline",
+      "sha256": null
+    },
+    {
+      "exists": false,
+      "id": "research_references",
+      "path": "research-references.md",
+      "role": "formal-feedback context",
+      "sha256": null
+    },
+    {
+      "exists": false,
+      "id": "experiment_template",
+      "path": "scripts/experiment_template.py",
+      "role": "SOTA cache helper context",
+      "sha256": null
+    },
+    {
+      "exists": false,
+      "id": "exp3071",
+      "path": "results/experiment_3071_verge_mcs_smt_correction_pilot_v1.json",
+      "role": "prior MCS/Z3 feedback baseline",
+      "sha256": null
+    },
+    {
+      "exists": false,
+      "id": "exp3086",
+      "path": "results/experiment_3086_dafny_z3_formal_feedback_pilot_v1.json",
+      "role": "prior Dafny/Z3 formal-feedback pilot",
+      "sha256": null
+    },
+    {
+      "exists": false,
+      "id": "exp3094",
+      "path": "results/experiment_3094_capstone_v288.json",
+      "role": ".288 capstone noting absent formal-feedback lift",
+      "sha256": null
+    },
+    {
+      "exists": true,
+      "id": "exp3097",
+      "path": "results/experiment_3097_exact_fixture_eval_protocol_audit_v1.json",
+      "role": ".289 exact-fixture protocol",
+      "sha256": "38500809c5de08a78f82f0685f132787df3336f4a0556bbb1af0a6b8784289e5"
+    },
+    {
+      "exists": true,
+      "id": "exp3097_manifest",
+      "path": "results/exact_fixture_eval_protocol_3097/stratified_eval_manifest.jsonl",
+      "role": ".289 stratified exact manifest",
+      "sha256": "198c822e31a7893dc9c76d6965747208aa974ddeb856a27f0ad6512bab5bf566"
+    }
+  ],
+  "stratified_eval_manifest_path": "results/exact_fixture_eval_protocol_3097/stratified_eval_manifest.jsonl",
+  "test_oracle_count": 12,
+  "tests_or_checks_run": [
+    "pytest focused"
+  ],
+  "vacuity_guard_passed": true,
+  "z3_available": true,
+  "z3_path": "/usr/bin/z3"
+}

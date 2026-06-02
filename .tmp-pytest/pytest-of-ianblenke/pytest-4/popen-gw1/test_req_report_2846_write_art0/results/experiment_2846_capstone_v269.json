@@ -1,0 +1,350 @@
+{
+  "artifact": "experiment_2846_capstone_v269",
+  "blocked_artifacts": [
+    "exp2838",
+    "exp2839",
+    "exp2840",
+    "exp2844"
+  ],
+  "claim_boundary": {
+    "blocked": [
+      "Exp 2838 MBPP blocked on mbpp_dataset.",
+      "Exp 2839 HumanEval blocked on humaneval_dataset.",
+      "Exp 2840 TruthfulQA blocked on truthfulqa_generation_split.",
+      "Exp 2844 LoopUS/FR-11 self-learning blocked on live_recurrence_backend."
+    ],
+    "measured": [
+      "Exp 2836 reports .venv CUDA torch and one cached Gemma 4 GGUF, but the artifact is adversarially flagged.",
+      "Exp 2837 reports FoVer dual-condition AUROC fields, but the artifact is adversarially flagged and not headline-eligible."
+    ],
+    "not_measured": [
+      "Exp 2842 cross-corpus matrix artifact is absent.",
+      "Exp 2845 paper-v6 Section 5 artifact is absent."
+    ]
+  },
+  "docs_reconciliation": {
+    "_bmad/traceability.md": "not_updated_per_stop_when_done_rule",
+    "ops/changelog.md": "not_updated_per_stop_when_done_rule",
+    "ops/status.md": "not_updated_per_stop_when_done_rule"
+  },
+  "docs_updated": [
+    "openspec/capabilities/research-reporting/spec.md"
+  ],
+  "duration_s": 0.5,
+  "field_principles": {
+    "docs_updated": "Operational reconciliation.",
+    "duration_s": "Real synthesis wall-time; no sleep padding.",
+    "honest_verdict": "Terminal/blocked prefix discipline.",
+    "milestone": "Capstone identity.",
+    "paper_ready": "Operator-only publication gate.",
+    "primary_corpus_results": "Only real upstream metrics.",
+    "self_learning_result": "FR-11 continuous self-learning outcome or block.",
+    "sota_runtime_ready": "Primary operational outcome.",
+    "top_3_next_actions": "Actionable next milestone planning."
+  },
+  "flagged_artifacts": [
+    "exp2836",
+    "exp2837",
+    "exp2841",
+    "exp2843"
+  ],
+  "gate_blocked_or_not_run": {
+    "exp2842": {
+      "blocked_by": [
+        "FoVer",
+        "MBPP",
+        "HumanEval",
+        "TruthfulQA"
+      ],
+      "reason": "cross_corpus_matrix_missing"
+    },
+    "exp2845": {
+      "blocked_by": [
+        "exp2842"
+      ],
+      "reason": "paper_section5_artifact_missing"
+    }
+  },
+  "honest_verdict": "complete: .269 capstone synthesized; sota_runtime_ready=true; paper_ready=false; missing_artifacts=2; blocked_artifacts=4; adversarially_flagged_artifacts=4; no new multi-corpus headline claim",
+  "milestone": "2026.05.269",
+  "missing_artifacts": [
+    "exp2842",
+    "exp2845"
+  ],
+  "paper_ready": false,
+  "paper_section5_status": {
+    "cite_ready": false,
+    "honest_verdict": "missing_artifact",
+    "reason": "Exp 2845 paper-v6 Section 5 artifact is missing; cross-corpus matrix and non-FoVer rows are not clean.",
+    "status": "missing"
+  },
+  "pilot_results": {
+    "exp2841": {
+      "excluded_from_headline_reason": "pilot_only_or_adversarially_flagged",
+      "headline_eligible": false,
+      "honest_verdict": "complete: HaluEval/FEVER readiness pilot",
+      "n_examples": 50,
+      "pilot_auroc_by_dataset": {
+        "FEVER": {
+          "auroc": 0.4326923077,
+          "ready_for_full_benchmark": true
+        },
+        "HaluEval": {
+          "auroc": 0.5769230769,
+          "ready_for_full_benchmark": true
+        }
+      },
+      "pilot_only": true,
+      "recommendation": "Scale FEVER, HaluEval to N>=500.",
+      "status": "flagged"
+    },
+    "exp2843": {
+      "beaver_exact": false,
+      "beaver_method_label": "bounded-prefix/EPR proxy, not exact BEAVER",
+      "bounded_prefix_probe_auc": 0.7756,
+      "excluded_from_headline_reason": "bounded_proxy_not_exact_beaver_or_flagged",
+      "headline_eligible": false,
+      "honest_verdict": "complete: bounded-prefix/EPR proxy",
+      "n_examples": 100,
+      "status": "flagged"
+    }
+  },
+  "primary_corpus_results": {
+    "FoVer": {
+      "architecture_only_auroc_mean": 0.8946624,
+      "blocked_resources": [],
+      "corpus": "FoVer",
+      "corrigendum_pending": [
+        {
+          "kind": "DURATION_TOO_SHORT"
+        }
+      ],
+      "excluded_from_headline_reason": "adversarially_flagged",
+      "flagged_adversarial": true,
+      "headline_eligible": false,
+      "honest_verdict": "complete: FoVer measured",
+      "learning_contribution": 0.0184712,
+      "n_examples": 1000,
+      "n_seeds": 5,
+      "production_auroc_mean": 0.9131336,
+      "status": "flagged"
+    },
+    "HumanEval": {
+      "architecture_only_auroc_mean": null,
+      "blocked_resources": [
+        "humaneval_dataset"
+      ],
+      "corpus": "HumanEval",
+      "corrigendum_pending": [],
+      "excluded_from_headline_reason": "blocked_precondition",
+      "flagged_adversarial": false,
+      "headline_eligible": false,
+      "honest_verdict": "blocked_humaneval_dataset",
+      "learning_contribution": null,
+      "n_examples": null,
+      "n_seeds": 5,
+      "production_auroc_mean": null,
+      "status": "blocked"
+    },
+    "MBPP": {
+      "architecture_only_auroc_mean": null,
+      "blocked_resources": [
+        "mbpp_dataset"
+      ],
+      "corpus": "MBPP",
+      "corrigendum_pending": [],
+      "excluded_from_headline_reason": "blocked_precondition",
+      "flagged_adversarial": false,
+      "headline_eligible": false,
+      "honest_verdict": "blocked_mbpp_dataset",
+      "learning_contribution": null,
+      "n_examples": null,
+      "n_seeds": 5,
+      "production_auroc_mean": null,
+      "status": "blocked"
+    },
+    "TruthfulQA": {
+      "architecture_only_auroc_mean": null,
+      "blocked_resources": [
+        "truthfulqa_generation_split"
+      ],
+      "corpus": "TruthfulQA",
+      "corrigendum_pending": [],
+      "excluded_from_headline_reason": "blocked_precondition",
+      "flagged_adversarial": false,
+      "headline_eligible": false,
+      "honest_verdict": "blocked_truthfulqa_generation_split",
+      "learning_contribution": null,
+      "n_examples": null,
+      "n_seeds": 5,
+      "production_auroc_mean": null,
+      "status": "blocked"
+    }
+  },
+  "pushed": false,
+  "residual_risks": [
+    "A nominally ready SOTA runtime still carries an adversarial duration flag.",
+    "FoVer metrics exist but cannot be used as headline evidence until the flag is resolved.",
+    "No non-FoVer dual-condition AUROC row exists for the .269 headline table."
+  ],
+  "schema": "carnot.milestone_capstone.v269",
+  "scripts_research_conductor_modified": false,
+  "self_learning_result": {
+    "blocked_resources": [
+      "live_recurrence_backend"
+    ],
+    "continuous_self_learning_task": true,
+    "correctness_delta": 0.0,
+    "early_exit_rate": 0.0,
+    "honest_verdict": "blocked_live_recurrence_backend",
+    "mean_energy_delta_loop0_to_final": 0.0,
+    "measured_improvement": false,
+    "methodology_note": null,
+    "n_examples": 0,
+    "requested_n_examples": 50,
+    "status": "blocked"
+  },
+  "sota_runtime_ready": true,
+  "sota_runtime_summary": {
+    "cached_model_ids": [
+      "unsloth/gemma-4-26B-A4B-it-GGUF"
+    ],
+    "corrigendum_pending": [
+      {
+        "kind": "DURATION_TOO_SHORT"
+      }
+    ],
+    "flagged_adversarial": true,
+    "models_missing_from_cache": [
+      "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "unsloth/gemma-4-31B-it-GGUF"
+    ],
+    "selected_python": "/repo/.venv/bin/python",
+    "smoke_load_headline_usable": true,
+    "sota_runtime_ready": true,
+    "status": "flagged",
+    "system_python_torch_cuda_available": false,
+    "venv_torch_cuda_available": true
+  },
+  "source_artifact_status": {
+    "exp2835": {
+      "blocked_resources": [],
+      "corrigendum_pending": [],
+      "flagged_adversarial": false,
+      "honest_verdict": "missing_artifact",
+      "path": "results/experiment_2835_archive_v268.json",
+      "status": "missing"
+    },
+    "exp2836": {
+      "blocked_resources": [],
+      "corrigendum_pending": [
+        {
+          "kind": "DURATION_TOO_SHORT"
+        }
+      ],
+      "flagged_adversarial": true,
+      "honest_verdict": "success: .venv CUDA torch available",
+      "path": "results/experiment_2836_sota_runtime_preflight.json",
+      "status": "flagged"
+    },
+    "exp2837": {
+      "blocked_resources": [],
+      "corrigendum_pending": [
+        {
+          "kind": "DURATION_TOO_SHORT"
+        }
+      ],
+      "flagged_adversarial": true,
+      "honest_verdict": "complete: FoVer measured",
+      "path": "results/experiment_2837_fover_memory_leakage_v3.json",
+      "status": "flagged"
+    },
+    "exp2838": {
+      "blocked_resources": [
+        "mbpp_dataset"
+      ],
+      "corrigendum_pending": [],
+      "flagged_adversarial": false,
+      "honest_verdict": "blocked_mbpp_dataset",
+      "path": "results/experiment_2838_mbpp_dual_condition_v3.json",
+      "status": "blocked"
+    },
+    "exp2839": {
+      "blocked_resources": [
+        "humaneval_dataset"
+      ],
+      "corrigendum_pending": [],
+      "flagged_adversarial": false,
+      "honest_verdict": "blocked_humaneval_dataset",
+      "path": "results/experiment_2839_humaneval_dual_condition_v3.json",
+      "status": "blocked"
+    },
+    "exp2840": {
+      "blocked_resources": [
+        "truthfulqa_generation_split"
+      ],
+      "corrigendum_pending": [],
+      "flagged_adversarial": false,
+      "honest_verdict": "blocked_truthfulqa_generation_split",
+      "path": "results/experiment_2840_truthfulqa_dual_condition_v4.json",
+      "status": "blocked"
+    },
+    "exp2841": {
+      "blocked_resources": [],
+      "corrigendum_pending": [
+        {
+          "kind": "DURATION_TOO_SHORT"
+        }
+      ],
+      "flagged_adversarial": true,
+      "honest_verdict": "complete: HaluEval/FEVER readiness pilot",
+      "path": "results/experiment_2841_halueval_fever_pilot.json",
+      "status": "flagged"
+    },
+    "exp2842": {
+      "blocked_resources": [],
+      "corrigendum_pending": [],
+      "flagged_adversarial": false,
+      "honest_verdict": "missing_artifact",
+      "path": "results/experiment_2842_cross_corpus_matrix_v3.json",
+      "status": "missing"
+    },
+    "exp2843": {
+      "blocked_resources": [],
+      "corrigendum_pending": [
+        {
+          "kind": "DURATION_TOO_SHORT"
+        }
+      ],
+      "flagged_adversarial": true,
+      "honest_verdict": "complete: bounded-prefix/EPR proxy",
+      "path": "results/experiment_2843_beaver_epr_bounded_probe.json",
+      "status": "flagged"
+    },
+    "exp2844": {
+      "blocked_resources": [
+        "live_recurrence_backend"
+      ],
+      "corrigendum_pending": [],
+      "flagged_adversarial": false,
+      "honest_verdict": "blocked_live_recurrence_backend",
+      "path": "results/experiment_2844_loopus_fr11_self_learning_pilot.json",
+      "status": "blocked"
+    },
+    "exp2845": {
+      "blocked_resources": [],
+      "corrigendum_pending": [],
+      "flagged_adversarial": false,
+      "honest_verdict": "missing_artifact",
+      "path": "results/experiment_2845_paper_v6_section5_v3.json",
+      "status": "missing"
+    }
+  },
+  "synthesis_is_compute_free": true,
+  "title": "Milestone 2026.05.269 retrospective capstone",
+  "top_3_next_actions": [
+    "Clear adversarial verification flags on Exp 2836 and Exp 2837 before any runtime or FoVer metric is cited.",
+    "Materialize MBPP, HumanEval, and TruthfulQA local datasets/splits, then rerun dual-condition corpus tasks and regenerate Exp 2842.",
+    "Implement or select the live recurrence backend for Exp 2844, then regenerate paper-v6 Section 5 only after matrix and self-learning gates are clean."
+  ]
+}

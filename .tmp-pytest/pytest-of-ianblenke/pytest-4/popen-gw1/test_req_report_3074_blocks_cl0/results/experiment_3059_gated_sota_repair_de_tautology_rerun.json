@@ -1,0 +1,24 @@
+{
+  "blocked_at_layer": "conductor_pre_gate",
+  "experiment": 3059,
+  "gate_check_summary": "1 of 2 gate(s) failed; first failure: exp3057-local-sota-solution-verifier-gain-panel.verifier_gain_delta (actual=-0.125 > expected=0.0)",
+  "gates_evaluated": [
+    {
+      "actual": true,
+      "artifact_field": "repair_de_tautology_protocol_ready",
+      "expected": true,
+      "passed": true,
+      "upstream": "exp3056-repair-de-tautology-protocol-v1"
+    },
+    {
+      "actual": -0.125,
+      "artifact_field": "verifier_gain_delta",
+      "expected": 0.0,
+      "op": ">",
+      "passed": false,
+      "upstream": "exp3057-local-sota-solution-verifier-gain-panel"
+    }
+  ],
+  "honest_verdict": "blocked_gate_check_failed",
+  "status": "blocked"
+}

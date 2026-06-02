@@ -1,0 +1,161 @@
+{
+  "abstained_count": 0,
+  "abstention_coverage": 0.0,
+  "abstention_panel_v2_ready": false,
+  "abstention_precision": 0.0,
+  "abstention_precision_reaches_0_7": false,
+  "accepted_count": 0,
+  "artifact": "experiment_3085_icalm_task_abstention_sota_panel_v2",
+  "baseline_answer_accuracy": 0.0,
+  "baseline_overacceptance_rate": 0.0,
+  "baseline_row_count": 0,
+  "decode_config": {
+    "max_tokens": 16,
+    "repeat_penalty": 1.0,
+    "stop": [
+      "\n"
+    ],
+    "temperature": 0.0,
+    "top_k": 40,
+    "top_p": 1.0
+  },
+  "duration_s": 1.25,
+  "exact_ground_truth_count": 0,
+  "exp3070_comparison": {
+    "abstention_precision_delta": -0.5,
+    "exp3070_abstention_coverage": 0.5,
+    "exp3070_abstention_precision": 0.5,
+    "exp3070_first_token_panel_ready": true,
+    "exp3070_rejection_recall": 0.25,
+    "reaches_0_7_gate": false,
+    "source_path": "results/experiment_3070_first_token_abstention_sota_panel_v1.json"
+  },
+  "first_token_confidence_coverage": 0.0,
+  "first_token_panel_ready": false,
+  "fixture_manifest_path": "results/resyn_exact_fixture_bank_3084/fixture_manifest.jsonl",
+  "fixture_manifest_sha256": "0b768b0646e3a6ab6e3e2f7fb4398275ebe34c7fe95580e6a451d62400785346",
+  "honest_verdict": "blocked_sota_or_fixture_precondition_failed: no_mandated_gguf_resolved",
+  "inference_substrate": {
+    "confidence_support": {
+      "chosen_token_logprob": false,
+      "first_token_available": false,
+      "top_logprobs": false,
+      "verbal_confidence": false
+    },
+    "cuda_probe": {
+      "cuda_available": true,
+      "gpu_count": 2
+    },
+    "decode_config": {
+      "max_tokens": 16,
+      "repeat_penalty": 1.0,
+      "stop": [
+        "\n"
+      ],
+      "temperature": 0.0,
+      "top_k": 40,
+      "top_p": 1.0
+    },
+    "fixture_manifest_path": "results/resyn_exact_fixture_bank_3084/fixture_manifest.jsonl",
+    "gguf_cache_resolution": {
+      "unsloth/Qwen3.6-35B-A3B-GGUF": null,
+      "unsloth/gemma-4-26B-A4B-it-GGUF": null,
+      "unsloth/gemma-4-31B-it-GGUF": null
+    },
+    "gpu_inventory": {
+      "available": true,
+      "gpus": []
+    },
+    "load_config": {
+      "logits_all": true,
+      "main_gpu": 0,
+      "n_batch": 64,
+      "n_ctx": 2048,
+      "n_gpu_layers": -1,
+      "n_ubatch": 64,
+      "verbose": false
+    },
+    "logprobs_requested": 5,
+    "model_ids": [
+      "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "unsloth/gemma-4-31B-it-GGUF"
+    ],
+    "prompt_policies": [
+      "baseline",
+      "task_abstention"
+    ],
+    "python_environment": {
+      "executable": "python-test"
+    },
+    "quantization": "Q4_K_M",
+    "repo_commit": "test-commit",
+    "runtime": "llama_cpp",
+    "seed": 308500,
+    "selected_model_paths": [],
+    "wall_clock_duration_s": 1.25
+  },
+  "legacy_smoke_only_used": false,
+  "load_config": {
+    "logits_all": true,
+    "main_gpu": 0,
+    "n_batch": 64,
+    "n_ctx": 2048,
+    "n_gpu_layers": -1,
+    "n_ubatch": 64,
+    "verbose": false
+  },
+  "model_specs": [],
+  "models_used": [],
+  "overacceptance_rate": 0.0,
+  "panel_row_count": 0,
+  "panel_rows_path": "results/icalm_task_abstention_sota_panel_3085/rows.jsonl",
+  "panel_rows_sha256": "",
+  "preconditions_checked": {
+    "cuda_gpu": {
+      "detail": {
+        "cuda_available": true,
+        "gpu_count": 2
+      },
+      "ok": true
+    },
+    "fixture_manifest": {
+      "detail": "readable",
+      "ok": true,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/.tmp-pytest/pytest-of-ianblenke/pytest-4/popen-gw1/test_scenario_verify_3085_bloc0/results/resyn_exact_fixture_bank_3084/fixture_manifest.jsonl",
+      "row_count": 6
+    },
+    "gguf_cache": {
+      "detail": {
+        "unsloth/Qwen3.6-35B-A3B-GGUF": null,
+        "unsloth/gemma-4-26B-A4B-it-GGUF": null,
+        "unsloth/gemma-4-31B-it-GGUF": null
+      },
+      "ok": false
+    },
+    "selected_model_load": {
+      "detail": "not_attempted",
+      "hf_id": null,
+      "ok": false
+    }
+  },
+  "prompt_hash_count": 0,
+  "prompt_hashes": [],
+  "prompt_policies": [
+    "baseline",
+    "task_abstention"
+  ],
+  "rejected_count": 0,
+  "rejection_recall": 0.0,
+  "reproducibility_checksum": "33788577db90e7d40b5df9b250dc9bbb3f5ef37f1dc4efce5798ce7b572ee7f6",
+  "run_date": "20260525",
+  "runtime_blocker": "no_mandated_gguf_resolved",
+  "schema": "carnot.icalm_task_abstention_sota_panel.v2",
+  "seed": 308500,
+  "task_abstention_row_count": 0,
+  "task_answer_accuracy": 0.0,
+  "tests_or_checks_run": [
+    "pytest focused"
+  ],
+  "verbal_confidence_coverage": 0.0
+}

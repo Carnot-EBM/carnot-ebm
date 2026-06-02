@@ -1,0 +1,59 @@
+{
+  "artifact": "experiment_2918_fr11_verifiable_process_rewards_self_learning_v1",
+  "contradiction_rate_after": 0.0,
+  "contradiction_rate_before": 0.0,
+  "delta_energy_proxy": 0.0,
+  "delta_overall": 0.0,
+  "duration_s": 1.5,
+  "failed_preconditions": [
+    "missing_exp2911_artifact",
+    "missing_exp2912_artifact"
+  ],
+  "forgetting_rate": 0.0,
+  "fr11_requirement_targeted": "FR-11",
+  "hardware_replay_used": false,
+  "honest_verdict": "blocked_missing_exp2911_artifact",
+  "inference_substrate": "deterministic_verifier_plus_replay",
+  "model_weights_mutated": false,
+  "online_self_learning_ready": false,
+  "online_update_performed": false,
+  "pdi_proxy": 0.0,
+  "process_reward_definition": {
+    "code": {
+      "components": [
+        "syntax_success",
+        "static_hallucination_labels",
+        "runtime_passed"
+      ],
+      "drives": "syntax_static_runtime",
+      "likelihood_used": false
+    },
+    "hardware": {
+      "components": [
+        "same_basis_match",
+        "final_energy_proxy",
+        "latency_proxy"
+      ],
+      "drives": "basis_energy_latency",
+      "likelihood_used": false
+    },
+    "prior_fr11": {
+      "components": [
+        "prior_fast_slow_memory_event",
+        "held_out_retention"
+      ],
+      "drives": "nonforgetting_replay_retention",
+      "likelihood_used": false
+    }
+  },
+  "replay_corpus_summary": {
+    "code_rows": 0,
+    "hardware_rows": 0,
+    "held_out_prior_rows": 0,
+    "prior_fr11_rows": 0,
+    "total_rows": 0
+  },
+  "replay_scheduler_updated": false,
+  "run_date": "20260523",
+  "scheduler_update_scope": "replay_priority_table_only_no_model_weights"
+}

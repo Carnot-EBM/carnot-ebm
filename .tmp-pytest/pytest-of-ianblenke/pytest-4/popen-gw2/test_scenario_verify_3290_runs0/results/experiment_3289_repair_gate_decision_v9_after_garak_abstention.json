@@ -1,0 +1,58 @@
+{
+  "blocked_reasons": [],
+  "experiment_id": "exp3289",
+  "honest_verdict": "complete: repair gate fixture",
+  "permitted_repair_scope": {
+    "claim_boundary": {
+      "headline_claim_allowed": false,
+      "no_generalization_beyond_panel": true,
+      "panel_claim": "diagnostic_micro_panel_only"
+    },
+    "exact_verification_requirements": {
+      "abstentions_recorded_separately": true,
+      "accepted_repairs_require_exact_pass": true,
+      "authority": [
+        "calibrated_clean_verifier_v15",
+        "exact_context_checker"
+      ],
+      "coverage_rate_floor": 1.0,
+      "false_accept_count": 0,
+      "false_accept_rate": 0.0
+    },
+    "max_panel_cases": 8,
+    "model_specs": {
+      "mandated_model_ids": [
+        "unsloth/Qwen3.6-35B-A3B-GGUF",
+        "unsloth/gemma-4-31B-it-GGUF",
+        "unsloth/gemma-4-26B-A4B-it-GGUF"
+      ],
+      "missing_model_ids": [
+        "unsloth/Qwen3.6-35B-A3B-GGUF",
+        "unsloth/gemma-4-31B-it-GGUF"
+      ],
+      "runtime": "llama_cpp_local_gguf_only",
+      "selected_model_ids": [
+        "unsloth/gemma-4-26B-A4B-it-GGUF"
+      ]
+    },
+    "permitted_case_families": [
+      "exact_context_fixture_counterexamples",
+      "localized_code_or_json_fragment_failures",
+      "deterministic_integer_constraint_failures"
+    ],
+    "repair_generation_allowed": true,
+    "repair_task_id": "exp3290-gated-sota-repair-micro-panel-v10",
+    "sample_size": {
+      "max_cases": 8,
+      "min_cases": 4
+    },
+    "scope_label": "bounded_exact_fixture_code_repair_micro_panel",
+    "selected_model_ids": [
+      "unsloth/gemma-4-26B-A4B-it-GGUF"
+    ]
+  },
+  "repair_gate_decision_v9_ready": true,
+  "repair_gate_open": true,
+  "reproducibility_checksum": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+  "schema_version": "carnot.repair_gate_decision.v9"
+}

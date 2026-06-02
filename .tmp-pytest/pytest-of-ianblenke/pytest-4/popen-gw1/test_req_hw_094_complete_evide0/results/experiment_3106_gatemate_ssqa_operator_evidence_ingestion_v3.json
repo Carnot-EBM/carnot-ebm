@@ -1,0 +1,120 @@
+{
+  "artifact": "experiment_3106_gatemate_ssqa_operator_evidence_ingestion_v3",
+  "checked_paths": [
+    {
+      "evidence_class": "gatemate_output_contract_operator_package",
+      "path": "results/experiment_3048_gatemate_output_contract_operator_package_v1.json",
+      "present": true,
+      "readable": true
+    },
+    {
+      "evidence_class": "host_visible_gatemate_smoke_transcript",
+      "path": "results/experiment_3050_gatemate_host_visible_flash_smoke_v5.json",
+      "present": false,
+      "readable": false
+    },
+    {
+      "evidence_class": "checked_in_gatemate_constraints",
+      "path": "hardware/gatemate/ising_n16_gatemate.ccf",
+      "present": true,
+      "readable": true
+    }
+  ],
+  "gatemate_rerun_allowed": false,
+  "hardware_commands_run": [],
+  "honest_verdict": "complete: operator_evidence_ingestion_v3_ready=true",
+  "missing_operator_actions": [
+    {
+      "checked_paths": [
+        "results/experiment_3048_gatemate_output_contract_operator_package_v1.json",
+        "hardware/gatemate/ising_n16_gatemate.ccf"
+      ],
+      "missing_item": "authoritative_pinout_ccf_binding",
+      "operator_action": "Provide an authoritative GateMate CCF Pin_out binding.",
+      "present": false,
+      "source_artifact": "results/experiment_3048_gatemate_output_contract_operator_package_v1.json"
+    },
+    {
+      "checked_paths": [
+        "results/experiment_3048_gatemate_output_contract_operator_package_v1.json"
+      ],
+      "missing_item": "host_reader_command",
+      "operator_action": "Commit a concrete host reader command for done.",
+      "present": false,
+      "source_artifact": "results/experiment_3048_gatemate_output_contract_operator_package_v1.json"
+    },
+    {
+      "checked_paths": [
+        "results/experiment_3048_gatemate_output_contract_operator_package_v1.json"
+      ],
+      "missing_item": "expected_transcript",
+      "operator_action": "Record the expected pass/fail transcript.",
+      "present": false,
+      "source_artifact": "results/experiment_3048_gatemate_output_contract_operator_package_v1.json"
+    },
+    {
+      "checked_paths": [
+        "results/experiment_3048_gatemate_output_contract_operator_package_v1.json"
+      ],
+      "missing_item": "safety_limits",
+      "operator_action": "Open the downstream flash safety gate.",
+      "present": false,
+      "source_artifact": "results/experiment_3048_gatemate_output_contract_operator_package_v1.json"
+    },
+    {
+      "checked_paths": [
+        "results/experiment_3050_gatemate_host_visible_flash_smoke_v5.json"
+      ],
+      "missing_item": "host_visible_smoke_evidence",
+      "missing_required_fields": [
+        "gatemate_host_visible_smoke_passed",
+        "host_visible_transcript_path",
+        "transcript_sha256",
+        "host_reader_command",
+        "expected_transcript",
+        "observed_transcript",
+        "transcript_matched",
+        "selected_output_signal",
+        "ccf_binding",
+        "flash_succeeded",
+        "flash_command",
+        "readback_supported",
+        "readback_attempted",
+        "readback_hash",
+        "sample_count",
+        "wall_clock_duration_s",
+        "per_sample_latency_s",
+        "sampler_configuration"
+      ],
+      "operator_action": "Commit a passing host-visible smoke transcript.",
+      "present": false,
+      "source_artifact": "results/experiment_3050_gatemate_host_visible_flash_smoke_v5.json"
+    }
+  ],
+  "operator_evidence_ingestion_v3_ready": true,
+  "source_artifacts": [
+    {
+      "path": "results/experiment_3048_gatemate_output_contract_operator_package_v1.json",
+      "present": true,
+      "readable": true,
+      "required": false,
+      "role": "gatemate_output_contract_operator_package"
+    },
+    {
+      "path": "results/experiment_3050_gatemate_host_visible_flash_smoke_v5.json",
+      "present": false,
+      "readable": false,
+      "required": false,
+      "role": "host_visible_gatemate_smoke_transcript"
+    },
+    {
+      "path": "hardware/gatemate/ising_n16_gatemate.ccf",
+      "present": true,
+      "readable": true,
+      "required": false,
+      "role": "checked_in_gatemate_constraints"
+    }
+  ],
+  "speedup_claim_made": false,
+  "ssqa_readback_allowed": false
+}

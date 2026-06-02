@@ -1,0 +1,163 @@
+{
+  "abstained_count": 1,
+  "abstention_coverage": 0.125,
+  "abstention_precision": 1.0,
+  "accepted_count": 3,
+  "artifact": "experiment_3070_first_token_abstention_sota_panel_v1",
+  "calibration_split_count": 8,
+  "calibration_threshold": 0.858559,
+  "confidence_signal": "first_token_topk_entropy",
+  "decode_config": {
+    "max_tokens": 4,
+    "repeat_penalty": 1.0,
+    "stop": [
+      "\n"
+    ],
+    "temperature": 0.0,
+    "top_k": 40,
+    "top_p": 1.0
+  },
+  "duration_s": 2.0,
+  "exact_ground_truth_count": 8,
+  "false_negative_rate": 0.25,
+  "false_positive_rate": 0.0,
+  "first_token_auc": 0.75,
+  "first_token_panel_ready": true,
+  "heldout_split_count": 8,
+  "honest_verdict": "complete: first_token_panel_ready=true; first_token_auc=0.75; abstention_precision=1.0; verifier_gain_delta_with_abstention=0.875",
+  "inference_substrate": {
+    "cuda_probe": {
+      "cuda_available": true,
+      "gpu_count": 2,
+      "torch_cuda_version": "12.8",
+      "torch_version": "2.11.0+cu128"
+    },
+    "decode_config": {
+      "max_tokens": 4,
+      "repeat_penalty": 1.0,
+      "stop": [
+        "\n"
+      ],
+      "temperature": 0.0,
+      "top_k": 40,
+      "top_p": 1.0
+    },
+    "exact_solver": "z3",
+    "gguf_cache_resolution": {
+      "unsloth/Qwen3.6-35B-A3B-GGUF": null,
+      "unsloth/gemma-4-26B-A4B-it-GGUF": "/home/ianblenke/github.com/ianblenke/carnot/.tmp-pytest/pytest-of-ianblenke/pytest-4/popen-gw1/test_scenario_verify_3070_live0/models/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+      "unsloth/gemma-4-31B-it-GGUF": null
+    },
+    "gpu_inventory": {
+      "available": true,
+      "free_vram_mib_total": 48240,
+      "gpus": [
+        {
+          "driver_version": "610.43.02",
+          "index": 0,
+          "memory_free_mib": 24120,
+          "memory_total_mib": 24576,
+          "memory_used_mib": 4,
+          "name": "NVIDIA GeForce RTX 3090"
+        },
+        {
+          "driver_version": "610.43.02",
+          "index": 1,
+          "memory_free_mib": 24120,
+          "memory_total_mib": 24576,
+          "memory_used_mib": 4,
+          "name": "NVIDIA GeForce RTX 3090"
+        }
+      ]
+    },
+    "grammar": "VALID_OR_INVALID_GBNF",
+    "load_config": {
+      "logits_all": true,
+      "main_gpu": 0,
+      "n_batch": 64,
+      "n_ctx": 1024,
+      "n_gpu_layers": -1,
+      "n_ubatch": 64,
+      "verbose": false
+    },
+    "logprob_support": {
+      "any_confidence": true,
+      "chosen_token_logprob": true,
+      "top_logprobs": true
+    },
+    "logprobs_requested": 5,
+    "model_ids": [
+      "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "unsloth/gemma-4-31B-it-GGUF"
+    ],
+    "python_environment": {
+      "executable": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+      "platform": "Linux-7.0.10-2-cachyos-x86_64-with-glibc2.43",
+      "version": "3.14.5 (main, May 31 2026, 17:34:14) [GCC 16.1.1 20260430]",
+      "virtual_env": null
+    },
+    "quantization": "Q4_K_M",
+    "repo_commit": "test-commit",
+    "runtime": "llama_cpp",
+    "seed": 307000,
+    "selected_model_paths": [
+      "/home/ianblenke/github.com/ianblenke/carnot/.tmp-pytest/pytest-of-ianblenke/pytest-4/popen-gw1/test_scenario_verify_3070_live0/models/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf"
+    ],
+    "wall_clock_duration_s": 2.0
+  },
+  "legacy_smoke_only_used": false,
+  "model_specs": [
+    {
+      "checksum_feasibility": {
+        "full_sha256_feasible": true,
+        "method": "full_sha256",
+        "size_bytes": 24
+      },
+      "family": "gemma",
+      "gpu": 1,
+      "hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "model_hash_or_cache_path": "sha256:427f6d98d4e29becd30d15186fb7ac9a278ff5bb6fdc5432c01e40549d50272a",
+      "model_path": "/home/ianblenke/github.com/ianblenke/carnot/.tmp-pytest/pytest-of-ianblenke/pytest-4/popen-gw1/test_scenario_verify_3070_live0/models/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+      "name": "Gemma4-26B-A4B-it",
+      "quantization": "Q4_K_M",
+      "role": "moe"
+    }
+  ],
+  "models_used": [
+    "unsloth/gemma-4-26B-A4B-it-GGUF"
+  ],
+  "panel_row_count": 16,
+  "panel_rows_path": "results/raw/experiment_3070_first_token_abstention_sota_panel_v1/rows.jsonl",
+  "panel_rows_sha256": "78f1087152138fa0b2924bbd9524c46ec799ee18d2545a3e7625ea7a15c34cfb",
+  "prior_exp3057_verifier_selected_accuracy": 0.0,
+  "prompt_hashes": [
+    "edbb1a9fa7455bab92fe50ddb2c0d1119ed9454a1afe9ef0fe663d7d3fdaf44c",
+    "51150aa6b35e8a82b03dacfeda5db8708d843d0407b64638edffd70a831bffd3",
+    "7d0b1d480254b5c3fdf35a12fdabe79a92904e089026db8ea92b4fa5e538afb6",
+    "fe66cf51fe5d5d96b15f02a40cc068601743c0f8774c5d58f835c3b6cf2953cc",
+    "9c47095590a17f86fd97b6162d4f691f111243f6cfc39f733f9a1914628006f8",
+    "96a5a076df750ad16c784fe05287783a4ece01b3ca0277370343a433465e1f30",
+    "29007f68eab04c17ae2e8e60bf48ae833e9018bbff35501bcdb88698636e4feb",
+    "96b3fb8117b99a621dc4521d7c5eb9b48f4b194cb5f9f4bd7f558f440cbc2d89",
+    "57c6ddc8a7b8342942878c454edb22798d1191ec68e77aa9d6090c09b8544c9a",
+    "5d133e94d9dfcbb9bb030531482a81fea10591d79079a8e440e3293f0667d8b8",
+    "016ae42b0eeeb35129beccc4600903511b0c6ddf6a7fad06ec8e4c7019214d14",
+    "e8181169f7b0827bd11a8c6dbd40aa03efd3ae72ca096076ea9e3141a898f981",
+    "2b76b984ea1ed7e1681b977228f968ab509274b2545c02aec9e73852fe43a4f8",
+    "95e41a746effdde62161d1d7fdae1aa26ee444a2e37dd4bf0e75b8c37fd4b17e",
+    "3f41fa5389e68c3e1bec210841d912f27510b6f7218558a10daf3971183fa3d5",
+    "be324d15023ef60e2d9b995ac65be22c10665c669b6ea504e551c3a78413d612"
+  ],
+  "rejected_count": 4,
+  "rejection_recall": 0.75,
+  "reproducibility_checksum": "bb758aaef951119dd700bd5b4e1c5dc300937dc658be701ecfc33ab9bdfdfbe9",
+  "run_date": "20260525",
+  "runtime_blocker": null,
+  "schema": "carnot.first_token_abstention_sota_panel.v1",
+  "seed": 307000,
+  "tests_or_checks_run": [
+    "pytest focused"
+  ],
+  "verifier_gain_delta_with_abstention": 0.875
+}

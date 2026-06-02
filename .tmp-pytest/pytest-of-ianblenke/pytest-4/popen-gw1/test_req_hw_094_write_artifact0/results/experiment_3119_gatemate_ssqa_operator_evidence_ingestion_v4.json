@@ -1,0 +1,436 @@
+{
+  "allowed_next_experiment_scope": "blocked: operator must commit authoritative GateMate Pin_out/CCF binding, host reader command, expected transcript, opened safety limits, and host-visible smoke evidence",
+  "artifact": "experiment_3119_gatemate_ssqa_operator_evidence_ingestion_v4",
+  "documented_evidence_locations": [
+    {
+      "path": "hardware/gatemate/ising_n16_gatemate.ccf",
+      "present": true,
+      "readable": true,
+      "required": false,
+      "role": "checked_in_gatemate_constraints",
+      "sha256": "fc7151d16b7656208a4fb22b34c36e3efd38d0a60e1898245f73c3850f93220d",
+      "source_type": "text"
+    },
+    {
+      "path": "results/experiment_3048_gatemate_output_contract_operator_package_v1.json",
+      "present": true,
+      "readable": true,
+      "required": false,
+      "role": "gatemate_output_contract_operator_package",
+      "sha256": "814c1d56df287c8a7121d05c558a7ed557e5b85a3ad5e3c46511df3afaf974ce",
+      "source_type": "json"
+    },
+    {
+      "path": "results/experiment_3050_gatemate_host_visible_flash_smoke_v5.json",
+      "present": false,
+      "readable": false,
+      "required": false,
+      "role": "host_visible_gatemate_smoke_transcript",
+      "sha256": null,
+      "source_type": "json"
+    },
+    {
+      "path": "results/experiment_3106_gatemate_ssqa_operator_evidence_ingestion_v3.json",
+      "present": true,
+      "readable": true,
+      "required": true,
+      "role": "prior_v3_operator_evidence_ingestion",
+      "sha256": "5154e10c380e104f14031a36b041a13ec8e0bf5e447e960d1ceb273ed322ab5d",
+      "source_type": "json"
+    }
+  ],
+  "evidence_files_seen": [
+    {
+      "path": "hardware/gatemate/ising_n16_gatemate.ccf",
+      "present": true,
+      "readable": true,
+      "required": false,
+      "role": "checked_in_gatemate_constraints",
+      "sha256": "fc7151d16b7656208a4fb22b34c36e3efd38d0a60e1898245f73c3850f93220d",
+      "source_type": "text"
+    },
+    {
+      "path": "results/experiment_3048_gatemate_output_contract_operator_package_v1.json",
+      "present": true,
+      "readable": true,
+      "required": false,
+      "role": "gatemate_output_contract_operator_package",
+      "sha256": "814c1d56df287c8a7121d05c558a7ed557e5b85a3ad5e3c46511df3afaf974ce",
+      "source_type": "json"
+    },
+    {
+      "path": "results/experiment_3106_gatemate_ssqa_operator_evidence_ingestion_v3.json",
+      "present": true,
+      "readable": true,
+      "required": true,
+      "role": "prior_v3_operator_evidence_ingestion",
+      "sha256": "5154e10c380e104f14031a36b041a13ec8e0bf5e447e960d1ceb273ed322ab5d",
+      "source_type": "json"
+    }
+  ],
+  "gatemate_evidence_checks": [
+    {
+      "checked_paths": [
+        "results/experiment_3048_gatemate_output_contract_operator_package_v1.json",
+        "hardware/gatemate/ising_n16_gatemate.ccf"
+      ],
+      "evidence": null,
+      "evidence_id": "authoritative_pinout_ccf_binding",
+      "missing_required_fields": [
+        "gatemate_output_contract_ready",
+        "host_visible_io_plan_ready",
+        "ccf_binding_for_done"
+      ],
+      "operator_action": "Provide an authoritative GateMate CCF Pin_out binding.",
+      "path": "results/experiment_3048_gatemate_output_contract_operator_package_v1.json",
+      "present": false,
+      "source_field": "ccf_binding"
+    },
+    {
+      "checked_paths": [
+        "results/experiment_3048_gatemate_output_contract_operator_package_v1.json"
+      ],
+      "evidence": null,
+      "evidence_id": "host_reader_command",
+      "missing_required_fields": [
+        "gatemate_output_contract_ready",
+        "host_visible_io_plan_ready",
+        "host_reader_command"
+      ],
+      "operator_action": "Commit a concrete host reader command for done.",
+      "path": "results/experiment_3048_gatemate_output_contract_operator_package_v1.json",
+      "present": false,
+      "source_field": "host_reader_command"
+    },
+    {
+      "checked_paths": [
+        "results/experiment_3048_gatemate_output_contract_operator_package_v1.json"
+      ],
+      "evidence": null,
+      "evidence_id": "expected_transcript",
+      "missing_required_fields": [
+        "gatemate_output_contract_ready",
+        "host_visible_io_plan_ready",
+        "expected_transcript"
+      ],
+      "operator_action": "Record the expected pass/fail transcript.",
+      "path": "results/experiment_3048_gatemate_output_contract_operator_package_v1.json",
+      "present": false,
+      "source_field": "expected_transcript"
+    },
+    {
+      "checked_paths": [
+        "results/experiment_3048_gatemate_output_contract_operator_package_v1.json"
+      ],
+      "evidence": null,
+      "evidence_id": "safety_limits",
+      "missing_required_fields": [
+        "safety_limits.downstream_flash_gate_open",
+        "safety_limits.max_flash_attempts_without_operator_review"
+      ],
+      "operator_action": "Open the downstream flash safety gate.",
+      "path": "results/experiment_3048_gatemate_output_contract_operator_package_v1.json",
+      "present": false,
+      "source_field": "safety_limits"
+    }
+  ],
+  "gatemate_rerun_allowed": false,
+  "hardware_commands_run": [],
+  "hardware_execution_claim_made": false,
+  "hardware_execution_performed": false,
+  "hardware_readback_attempted": false,
+  "honest_verdict": "complete: operator_evidence_ingestion_v4_ready=true; gatemate_rerun_allowed=false; ssqa_readback_allowed=false; hardware_commands_run=0; speedup_claim_made=false",
+  "host_visible_smoke_evidence": {
+    "checked_paths": [
+      "results/experiment_3050_gatemate_host_visible_flash_smoke_v5.json"
+    ],
+    "gatemate_host_visible_smoke_passed": false,
+    "host_visible_transcript_path": ".",
+    "missing_required_fields": [
+      "gatemate_host_visible_smoke_passed",
+      "host_visible_transcript_path",
+      "transcript_sha256",
+      "host_reader_command",
+      "expected_transcript",
+      "observed_transcript",
+      "transcript_matched",
+      "selected_output_signal",
+      "ccf_binding",
+      "flash_succeeded",
+      "flash_command",
+      "readback_supported",
+      "readback_attempted",
+      "readback_hash",
+      "sample_count",
+      "wall_clock_duration_s",
+      "per_sample_latency_s",
+      "sampler_configuration"
+    ],
+    "path": "results/experiment_3050_gatemate_host_visible_flash_smoke_v5.json",
+    "present": false,
+    "ready": false,
+    "required_fields": [
+      {
+        "claim_scope": "readback",
+        "field_id": "gatemate_host_visible_smoke_passed",
+        "path": "results/experiment_3050_gatemate_host_visible_flash_smoke_v5.json",
+        "present": false
+      },
+      {
+        "claim_scope": "readback",
+        "field_id": "host_visible_transcript_path",
+        "path": "results/experiment_3050_gatemate_host_visible_flash_smoke_v5.json",
+        "present": false
+      },
+      {
+        "claim_scope": "readback",
+        "field_id": "transcript_sha256",
+        "path": "results/experiment_3050_gatemate_host_visible_flash_smoke_v5.json",
+        "present": false
+      },
+      {
+        "claim_scope": "readback",
+        "field_id": "host_reader_command",
+        "path": "results/experiment_3050_gatemate_host_visible_flash_smoke_v5.json",
+        "present": false
+      },
+      {
+        "claim_scope": "readback",
+        "field_id": "expected_transcript",
+        "path": "results/experiment_3050_gatemate_host_visible_flash_smoke_v5.json",
+        "present": false
+      },
+      {
+        "claim_scope": "readback",
+        "field_id": "observed_transcript",
+        "path": "results/experiment_3050_gatemate_host_visible_flash_smoke_v5.json",
+        "present": false
+      },
+      {
+        "claim_scope": "readback",
+        "field_id": "transcript_matched",
+        "path": "results/experiment_3050_gatemate_host_visible_flash_smoke_v5.json",
+        "present": false
+      },
+      {
+        "claim_scope": "readback",
+        "field_id": "selected_output_signal",
+        "path": "results/experiment_3050_gatemate_host_visible_flash_smoke_v5.json",
+        "present": false
+      },
+      {
+        "claim_scope": "readback",
+        "field_id": "ccf_binding",
+        "path": "results/experiment_3050_gatemate_host_visible_flash_smoke_v5.json",
+        "present": false
+      },
+      {
+        "claim_scope": "readback",
+        "field_id": "flash_succeeded",
+        "path": "results/experiment_3050_gatemate_host_visible_flash_smoke_v5.json",
+        "present": false
+      },
+      {
+        "claim_scope": "readback",
+        "field_id": "flash_command",
+        "path": "results/experiment_3050_gatemate_host_visible_flash_smoke_v5.json",
+        "present": false
+      },
+      {
+        "claim_scope": "readback",
+        "field_id": "readback_supported",
+        "path": "results/experiment_3050_gatemate_host_visible_flash_smoke_v5.json",
+        "present": false
+      },
+      {
+        "claim_scope": "readback",
+        "field_id": "readback_attempted",
+        "path": "results/experiment_3050_gatemate_host_visible_flash_smoke_v5.json",
+        "present": false
+      },
+      {
+        "claim_scope": "readback",
+        "field_id": "readback_hash",
+        "path": "results/experiment_3050_gatemate_host_visible_flash_smoke_v5.json",
+        "present": false
+      },
+      {
+        "claim_scope": "acceleration",
+        "field_id": "sample_count",
+        "path": "results/experiment_3050_gatemate_host_visible_flash_smoke_v5.json",
+        "present": false
+      },
+      {
+        "claim_scope": "acceleration",
+        "field_id": "wall_clock_duration_s",
+        "path": "results/experiment_3050_gatemate_host_visible_flash_smoke_v5.json",
+        "present": false
+      },
+      {
+        "claim_scope": "acceleration",
+        "field_id": "per_sample_latency_s",
+        "path": "results/experiment_3050_gatemate_host_visible_flash_smoke_v5.json",
+        "present": false
+      },
+      {
+        "claim_scope": "sampler_behavior",
+        "field_id": "sampler_configuration",
+        "path": "results/experiment_3050_gatemate_host_visible_flash_smoke_v5.json",
+        "present": false
+      }
+    ],
+    "transcript_file_present": false,
+    "transcript_file_sha256": null,
+    "transcript_file_sha256_matched": false,
+    "transcript_matched": false
+  },
+  "inference_substrate": {
+    "executes_conductor": false,
+    "executes_hardware": false,
+    "executes_models": false,
+    "flash_attempted": false,
+    "hardware_readback_attempted": false,
+    "kind": "operator_evidence_ingestion_v4",
+    "local_repo_only": true,
+    "model_inference": false,
+    "no_live_model_inference": true,
+    "no_model_inference": true,
+    "source": "documented_local_artifact_paths",
+    "synthesis_or_pnr_run": false,
+    "timing_or_speedup_claim": false
+  },
+  "milestone": "2026.05.290",
+  "missing_operator_actions": [
+    {
+      "checked_paths": [
+        "results/experiment_3048_gatemate_output_contract_operator_package_v1.json",
+        "hardware/gatemate/ising_n16_gatemate.ccf"
+      ],
+      "missing_item": "authoritative_pinout_ccf_binding",
+      "missing_required_fields": [
+        "gatemate_output_contract_ready",
+        "host_visible_io_plan_ready",
+        "ccf_binding_for_done"
+      ],
+      "operator_action": "Provide an authoritative GateMate CCF Pin_out binding.",
+      "present": false,
+      "source_artifact": "results/experiment_3048_gatemate_output_contract_operator_package_v1.json"
+    },
+    {
+      "checked_paths": [
+        "results/experiment_3048_gatemate_output_contract_operator_package_v1.json"
+      ],
+      "missing_item": "host_reader_command",
+      "missing_required_fields": [
+        "gatemate_output_contract_ready",
+        "host_visible_io_plan_ready",
+        "host_reader_command"
+      ],
+      "operator_action": "Commit a concrete host reader command for done.",
+      "present": false,
+      "source_artifact": "results/experiment_3048_gatemate_output_contract_operator_package_v1.json"
+    },
+    {
+      "checked_paths": [
+        "results/experiment_3048_gatemate_output_contract_operator_package_v1.json"
+      ],
+      "missing_item": "expected_transcript",
+      "missing_required_fields": [
+        "gatemate_output_contract_ready",
+        "host_visible_io_plan_ready",
+        "expected_transcript"
+      ],
+      "operator_action": "Record the expected pass/fail transcript.",
+      "present": false,
+      "source_artifact": "results/experiment_3048_gatemate_output_contract_operator_package_v1.json"
+    },
+    {
+      "checked_paths": [
+        "results/experiment_3048_gatemate_output_contract_operator_package_v1.json"
+      ],
+      "missing_item": "safety_limits",
+      "missing_required_fields": [
+        "safety_limits.downstream_flash_gate_open",
+        "safety_limits.max_flash_attempts_without_operator_review"
+      ],
+      "operator_action": "Open the downstream flash safety gate.",
+      "present": false,
+      "source_artifact": "results/experiment_3048_gatemate_output_contract_operator_package_v1.json"
+    },
+    {
+      "checked_paths": [
+        "results/experiment_3050_gatemate_host_visible_flash_smoke_v5.json"
+      ],
+      "missing_item": "host_visible_smoke_evidence",
+      "missing_required_fields": [
+        "gatemate_host_visible_smoke_passed",
+        "host_visible_transcript_path",
+        "transcript_sha256",
+        "host_reader_command",
+        "expected_transcript",
+        "observed_transcript",
+        "transcript_matched",
+        "selected_output_signal",
+        "ccf_binding",
+        "flash_succeeded",
+        "flash_command",
+        "readback_supported",
+        "readback_attempted",
+        "readback_hash",
+        "sample_count",
+        "wall_clock_duration_s",
+        "per_sample_latency_s",
+        "sampler_configuration"
+      ],
+      "operator_action": "Commit a passing GateMate host-visible smoke transcript with checksum, expected and observed output, CCF binding, flash/readback fields, timing fields, sampler configuration, and a local transcript file.",
+      "present": false,
+      "source_artifact": "results/experiment_3050_gatemate_host_visible_flash_smoke_v5.json"
+    }
+  ],
+  "missing_source_artifacts": [],
+  "operator_evidence_ingestion_v4_ready": true,
+  "run_date": "20260526",
+  "schema": "carnot.gatemate_ssqa_operator_evidence_ingestion.v4",
+  "source_artifact_count": 4,
+  "source_artifacts": [
+    {
+      "path": "hardware/gatemate/ising_n16_gatemate.ccf",
+      "present": true,
+      "readable": true,
+      "required": false,
+      "role": "checked_in_gatemate_constraints",
+      "sha256": "fc7151d16b7656208a4fb22b34c36e3efd38d0a60e1898245f73c3850f93220d",
+      "source_type": "text"
+    },
+    {
+      "path": "results/experiment_3048_gatemate_output_contract_operator_package_v1.json",
+      "present": true,
+      "readable": true,
+      "required": false,
+      "role": "gatemate_output_contract_operator_package",
+      "sha256": "814c1d56df287c8a7121d05c558a7ed557e5b85a3ad5e3c46511df3afaf974ce",
+      "source_type": "json"
+    },
+    {
+      "path": "results/experiment_3050_gatemate_host_visible_flash_smoke_v5.json",
+      "present": false,
+      "readable": false,
+      "required": false,
+      "role": "host_visible_gatemate_smoke_transcript",
+      "sha256": null,
+      "source_type": "json"
+    },
+    {
+      "path": "results/experiment_3106_gatemate_ssqa_operator_evidence_ingestion_v3.json",
+      "present": true,
+      "readable": true,
+      "required": true,
+      "role": "prior_v3_operator_evidence_ingestion",
+      "sha256": "5154e10c380e104f14031a36b041a13ec8e0bf5e447e960d1ceb273ed322ab5d",
+      "source_type": "json"
+    }
+  ],
+  "speedup_claim_made": false,
+  "ssqa_readback_allowed": false,
+  "timing_claim_made": false
+}

@@ -1,0 +1,620 @@
+{
+  "abstention_metrics_required": [
+    {
+      "decision": "accept",
+      "formula": "exact_correct_accepted / accepted_count",
+      "name": "acceptance_precision",
+      "non_vacuous_requirement": "accepted_count > 0 and exact labels hidden from prompts"
+    },
+    {
+      "decision": "accept",
+      "formula": "accepted_count / total_count",
+      "name": "acceptance_coverage",
+      "non_vacuous_requirement": "reported with abstention and rejection counts"
+    },
+    {
+      "decision": "reject",
+      "formula": "exact_incorrect_rejected / exact_incorrect_count",
+      "name": "rejection_recall",
+      "non_vacuous_requirement": "requires at least one exact-incorrect row"
+    },
+    {
+      "decision": "reject",
+      "formula": "exact_incorrect_rejected / rejected_count",
+      "name": "rejection_precision",
+      "non_vacuous_requirement": "rejected_count > 0 and false rejects listed"
+    },
+    {
+      "decision": "abstain",
+      "formula": "risky_or_unverifiable_abstained / abstained_count",
+      "name": "abstention_precision",
+      "non_vacuous_requirement": "abstained_count > 0 with exact-label distribution reported"
+    },
+    {
+      "decision": "abstain",
+      "formula": "abstained_count / total_count",
+      "name": "abstention_coverage",
+      "non_vacuous_requirement": "must not equal gain metrics by construction"
+    },
+    {
+      "decision": "accept",
+      "formula": "exact_incorrect_accepted / exact_incorrect_count",
+      "name": "false_accept_rate",
+      "non_vacuous_requirement": "zero false accepts is required before repair promotion"
+    },
+    {
+      "decision": "reject",
+      "formula": "exact_correct_rejected / exact_correct_count",
+      "name": "false_reject_rate",
+      "non_vacuous_requirement": "tracks Exp 3057-style exact-good false negatives"
+    }
+  ],
+  "artifact": "experiment_3083_verifier_hardness_autopsy_protocol_v1",
+  "blocked_reasons": [],
+  "duration_s": 1.0,
+  "experiment_metric_contracts": {
+    "exp3084": {
+      "blocks_promotion_when": [
+        "any accepted row lacks exact validation",
+        "accept/reject/abstain denominators are missing",
+        "solver-only parity is reported as feedback lift",
+        "label leakage or tiny-model headline substitution is detected"
+      ],
+      "exact_label_provenance_required": true,
+      "formal_feedback_lift_required": false,
+      "metric_groups": [
+        "acceptance",
+        "rejection",
+        "abstention",
+        "formal_feedback"
+      ],
+      "purpose": "exact_fixture_perturbation_bank",
+      "required_metrics": [
+        "acceptance_precision",
+        "rejection_recall",
+        "abstention_precision",
+        "abstention_coverage",
+        "false_accept_rate",
+        "false_reject_rate",
+        "guided_minus_solver_only_success_count",
+        "feedback_localization_accuracy"
+      ],
+      "row_level_decision_counts_required": true,
+      "solver_only_baseline_required": true
+    },
+    "exp3085": {
+      "blocks_promotion_when": [
+        "any accepted row lacks exact validation",
+        "accept/reject/abstain denominators are missing",
+        "solver-only parity is reported as feedback lift",
+        "label leakage or tiny-model headline substitution is detected"
+      ],
+      "exact_label_provenance_required": true,
+      "formal_feedback_lift_required": false,
+      "metric_groups": [
+        "acceptance",
+        "rejection",
+        "abstention",
+        "formal_feedback"
+      ],
+      "purpose": "rubric_conditioned_verifier_rejection",
+      "required_metrics": [
+        "acceptance_precision",
+        "rejection_recall",
+        "abstention_precision",
+        "abstention_coverage",
+        "false_accept_rate",
+        "false_reject_rate",
+        "guided_minus_solver_only_success_count",
+        "feedback_localization_accuracy"
+      ],
+      "row_level_decision_counts_required": true,
+      "solver_only_baseline_required": true
+    },
+    "exp3086": {
+      "blocks_promotion_when": [
+        "any accepted row lacks exact validation",
+        "accept/reject/abstain denominators are missing",
+        "solver-only parity is reported as feedback lift",
+        "label leakage or tiny-model headline substitution is detected"
+      ],
+      "exact_label_provenance_required": true,
+      "formal_feedback_lift_required": false,
+      "metric_groups": [
+        "acceptance",
+        "rejection",
+        "abstention",
+        "formal_feedback"
+      ],
+      "purpose": "i_calm_first_token_abstention_retry",
+      "required_metrics": [
+        "acceptance_precision",
+        "rejection_recall",
+        "abstention_precision",
+        "abstention_coverage",
+        "false_accept_rate",
+        "false_reject_rate",
+        "guided_minus_solver_only_success_count",
+        "feedback_localization_accuracy"
+      ],
+      "row_level_decision_counts_required": true,
+      "solver_only_baseline_required": true
+    },
+    "exp3087": {
+      "blocks_promotion_when": [
+        "any accepted row lacks exact validation",
+        "accept/reject/abstain denominators are missing",
+        "solver-only parity is reported as feedback lift",
+        "label leakage or tiny-model headline substitution is detected"
+      ],
+      "exact_label_provenance_required": true,
+      "formal_feedback_lift_required": false,
+      "metric_groups": [
+        "acceptance",
+        "rejection",
+        "abstention",
+        "formal_feedback"
+      ],
+      "purpose": "task_abstention_execution_consistency",
+      "required_metrics": [
+        "acceptance_precision",
+        "rejection_recall",
+        "abstention_precision",
+        "abstention_coverage",
+        "false_accept_rate",
+        "false_reject_rate",
+        "guided_minus_solver_only_success_count",
+        "feedback_localization_accuracy"
+      ],
+      "row_level_decision_counts_required": true,
+      "solver_only_baseline_required": true
+    },
+    "exp3088": {
+      "blocks_promotion_when": [
+        "any accepted row lacks exact validation",
+        "accept/reject/abstain denominators are missing",
+        "solver-only parity is reported as feedback lift",
+        "label leakage or tiny-model headline substitution is detected"
+      ],
+      "exact_label_provenance_required": true,
+      "formal_feedback_lift_required": true,
+      "metric_groups": [
+        "acceptance",
+        "rejection",
+        "abstention",
+        "formal_feedback"
+      ],
+      "purpose": "formal_feedback_repair_lift",
+      "required_metrics": [
+        "acceptance_precision",
+        "rejection_recall",
+        "abstention_precision",
+        "abstention_coverage",
+        "false_accept_rate",
+        "false_reject_rate",
+        "guided_minus_solver_only_success_count",
+        "feedback_localization_accuracy"
+      ],
+      "row_level_decision_counts_required": true,
+      "solver_only_baseline_required": true
+    },
+    "exp3089": {
+      "blocks_promotion_when": [
+        "any accepted row lacks exact validation",
+        "accept/reject/abstain denominators are missing",
+        "solver-only parity is reported as feedback lift",
+        "label leakage or tiny-model headline substitution is detected"
+      ],
+      "exact_label_provenance_required": true,
+      "formal_feedback_lift_required": true,
+      "metric_groups": [
+        "acceptance",
+        "rejection",
+        "abstention",
+        "formal_feedback"
+      ],
+      "purpose": "matrix_v22_recovery_gate",
+      "required_metrics": [
+        "acceptance_precision",
+        "rejection_recall",
+        "abstention_precision",
+        "abstention_coverage",
+        "false_accept_rate",
+        "false_reject_rate",
+        "guided_minus_solver_only_success_count",
+        "feedback_localization_accuracy"
+      ],
+      "row_level_decision_counts_required": true,
+      "solver_only_baseline_required": true
+    }
+  },
+  "formal_feedback_disqualifiers": [
+    {
+      "condition": "guided_minus_solver_only_success_count <= 0",
+      "id": "solver_only_parity_without_lift",
+      "reason": "Formal feedback must add causal value beyond exact fallback."
+    },
+    {
+      "condition": "feedback lacks failing constraint IDs, MCS rows, or counterexample fields",
+      "id": "feedback_without_localized_counterexample",
+      "reason": "Binary pass/fail feedback is not localized repair evidence."
+    },
+    {
+      "condition": "formal specification can pass while functional behavior is wrong",
+      "id": "vacuous_formal_spec",
+      "reason": "Formal feedback needs a functional or semantic vacuity guard."
+    },
+    {
+      "condition": "feedback exposes the exact label or final answer before candidate generation",
+      "id": "label_leakage",
+      "reason": "Feedback is not evidence if it reveals the answer."
+    }
+  ],
+  "global_disqualifiers": [
+    {
+      "blocks": "all exp3084-exp3089 promotion",
+      "condition": "exact labels, answers, expected fixes, or split identity appear in prompts or candidate IDs",
+      "id": "label_leakage"
+    },
+    {
+      "blocks": "formal-feedback and repair promotion",
+      "condition": "guided or verifier-selected success equals solver-only fallback with no positive delta",
+      "id": "solver_only_parity_without_lift"
+    },
+    {
+      "blocks": "repair and formal-feedback promotion",
+      "condition": "repair copies fixture answer, exact solver assignment, or metric definition",
+      "id": "tautological_repair"
+    },
+    {
+      "blocks": "repair promotion",
+      "condition": "parse/schema/format passes but semantic tests or exact validators are absent or fail",
+      "id": "syntax_only_success"
+    },
+    {
+      "blocks": "headline verifier, abstention, and repair claims",
+      "condition": "headline model identity is replaced by a smaller or different model without explicit boundary",
+      "id": "tiny_model_headline_substitution"
+    }
+  ],
+  "honest_verdict": "complete: verifier_hardness_protocol_ready=true; exp3084_exp3089_gates_declared",
+  "inference_substrate": {
+    "executes_conductor": false,
+    "executes_hardware": false,
+    "executes_models": false,
+    "executes_repair": false,
+    "executes_solver": false,
+    "executes_verifiers": false,
+    "kind": "aggregation_from_upstream_artifacts",
+    "no_live_llm_inference": true,
+    "source": "specified_protocol_sources"
+  },
+  "milestone": "2026.05.288",
+  "no_historical_artifact_rewrite": true,
+  "no_live_llm_inference": true,
+  "no_live_model_inference": true,
+  "no_live_repair_rerun": true,
+  "no_new_solver_run": true,
+  "no_new_verifier_run": true,
+  "ops_docs_reconciliation_left_to_conductor": true,
+  "perturbation_categories": [
+    {
+      "name": "label_preserving_exact_fixture_variants",
+      "non_vacuous_gate": "exact label unchanged and solver-only baseline reported",
+      "primary_axis": "solving",
+      "required_measurement": "solver_accuracy_delta_under_prompt_or_format_changes",
+      "separates_from": [
+        "verifying",
+        "abstaining",
+        "repairing"
+      ]
+    },
+    {
+      "name": "candidate_label_flip_verification_variants",
+      "non_vacuous_gate": "correct and incorrect candidates share prompts without answer leakage",
+      "primary_axis": "verifying",
+      "required_measurement": "accept_reject_confusion_matrix_against_exact_labels",
+      "separates_from": [
+        "solving",
+        "abstaining",
+        "repairing"
+      ]
+    },
+    {
+      "name": "confidence_gray_zone_abstention_variants",
+      "non_vacuous_gate": "abstention precision and coverage use independent denominators",
+      "primary_axis": "abstaining",
+      "required_measurement": "accept_reject_abstain_rates_by_exact_label_and_confidence_bin",
+      "separates_from": [
+        "solving",
+        "verifying",
+        "repairing"
+      ]
+    },
+    {
+      "name": "localized_formal_feedback_repair_variants",
+      "non_vacuous_gate": "feedback localizes a failing constraint and final repair passes semantic checks",
+      "primary_axis": "repairing",
+      "required_measurement": "guided_minus_solver_only_success_count_with_exact_validation",
+      "separates_from": [
+        "solving",
+        "verifying",
+        "abstaining"
+      ]
+    }
+  ],
+  "prior_failure_modes": [
+    {
+      "id": "negative_verifier_gain",
+      "metric": "verifier_gain_delta",
+      "observed_value": -0.125,
+      "present": true,
+      "principle": "new experiments must address known negative verifier-gain results",
+      "source_artifact": "results/experiment_3057_local_sota_solution_verifier_gain_panel_v1.json"
+    },
+    {
+      "id": "exact_good_false_negative",
+      "metric": "false_negative_rate",
+      "observed_value": 1.0,
+      "present": true,
+      "principle": "acceptance and rejection must be measured separately",
+      "source_artifact": "results/experiment_3057_local_sota_solution_verifier_gain_panel_v1.json"
+    },
+    {
+      "id": "low_abstention_precision",
+      "metric": "abstention_precision",
+      "observed_value": 0.5,
+      "present": true,
+      "principle": "abstain is not success unless it catches risky rows",
+      "source_artifact": "results/experiment_3070_first_token_abstention_sota_panel_v1.json"
+    },
+    {
+      "id": "tautological_abstention_metrics",
+      "metric": "corrigendum_kinds",
+      "observed_value": [
+        "TAUTOLOGY",
+        "DURATION_TOO_SHORT"
+      ],
+      "present": true,
+      "principle": "identical metric values need independent row-level denominators",
+      "source_artifact": "results/experiment_3070_first_token_abstention_sota_panel_v1.json"
+    },
+    {
+      "id": "formal_feedback_solver_only_parity",
+      "metric": "guided_minus_solver_only_success_count",
+      "observed_value": 0,
+      "present": true,
+      "principle": "formal feedback must show lift beyond fallback enumeration",
+      "source_artifact": "results/experiment_3071_verge_mcs_smt_correction_pilot_v1.json"
+    },
+    {
+      "id": "provenance_contamination",
+      "metric": "corrigendum_kinds",
+      "observed_value": [
+        "DURATION_TOO_SHORT",
+        "TAUTOLOGY"
+      ],
+      "present": true,
+      "principle": "live-inference claims need credible duration and substrate provenance",
+      "source_artifact": "results/experiment_3057_3070_3071_prior_artifacts"
+    },
+    {
+      "id": "capstone_publication_blockers",
+      "metric": "publication_blocker_count",
+      "observed_value": 42,
+      "present": true,
+      "principle": "matrix/capstone blockers stay blocked until rerun gates clear",
+      "source_artifact": "results/experiment_3080_capstone_v287.json"
+    }
+  ],
+  "prior_metrics": {
+    "exp3057": {
+      "corrigendum_kinds": [
+        "DURATION_TOO_SHORT"
+      ],
+      "exact_solver_agreement": 1.0,
+      "false_negative_rate": 1.0,
+      "false_positive_rate": 0.0,
+      "flagged_adversarial": true,
+      "one_shot_solver_accuracy": 0.125,
+      "verifier_gain_delta": -0.125,
+      "verifier_selected_accuracy": 0.0
+    },
+    "exp3070": {
+      "abstained_count": 4,
+      "abstention_coverage": 0.5,
+      "abstention_precision": 0.5,
+      "accepted_count": 2,
+      "corrigendum_kinds": [
+        "TAUTOLOGY",
+        "DURATION_TOO_SHORT"
+      ],
+      "false_negative_rate": 0.25,
+      "false_positive_rate": 0.25,
+      "first_token_auc": 0.533333,
+      "flagged_adversarial": true,
+      "rejected_count": 2,
+      "rejection_recall": 0.25,
+      "verifier_gain_delta_with_abstention": 0.5
+    },
+    "exp3071": {
+      "corrigendum_kinds": [
+        "DURATION_TOO_SHORT"
+      ],
+      "fixture_count": 6,
+      "flagged_adversarial": true,
+      "formal_fallback_preserved": true,
+      "guided_minus_solver_only_success_count": 0,
+      "guided_success_count": 5,
+      "invalid_llm_proposal_count": 0,
+      "mcs_count": 5,
+      "mcs_feedback_ready": true,
+      "solver_only_success_count": 5
+    },
+    "exp3080": {
+      "capstone_ready": true,
+      "fr11_self_learning_status": "flagged_controller_only_budget_exceeded",
+      "next_milestone_recommendation": "2026.05.288: raise abstention_precision to the gate, rerun Exp3072, and run repair only after verifier-gain gates pass.",
+      "paper_ready": false,
+      "publication_blocker_count": 42,
+      "repair_claim_status": "bounded_and_gated_skipped",
+      "verifier_gain_status": "flagged_or_gated_verifier_gain_recovery_incomplete"
+    }
+  },
+  "repair_disqualifiers": [
+    {
+      "condition": "repair is derived from a known answer, expected output, or solver assignment",
+      "id": "tautological_repair",
+      "reason": "Repair must generalize from localized failure, not copy labels."
+    },
+    {
+      "condition": "only syntax, parser, JSON, or schema status improves",
+      "id": "syntax_only_success",
+      "reason": "Semantic validation is the repair authority."
+    },
+    {
+      "condition": "deterministic fallback output is counted as LLM repair success",
+      "id": "solver_fallback_counted_as_model_repair",
+      "reason": "Fallback and generated repair substrates must stay separate."
+    },
+    {
+      "condition": "repair uses non-headline tiny model output as headline SOTA evidence",
+      "id": "tiny_model_headline_substitution",
+      "reason": "Model identity substitutions need explicit bounded labels."
+    },
+    {
+      "condition": "repaired candidate passes verifier by changing the task intent",
+      "id": "intent_drift",
+      "reason": "Repair must preserve fixture intent and behavioral tests."
+    }
+  ],
+  "research_reference_comparisons": [
+    {
+      "finding": "Verification can be harder than solving and can be insensitive to perturbations.",
+      "id": "verifier_hardness",
+      "local_consequence": "Exp 3084-3085 must include label-preserving and label-flipping perturbations.",
+      "reference_trace_present": true
+    },
+    {
+      "finding": "Confidence-aware abstention moves coverage and reliability together.",
+      "id": "i_calm_abstention",
+      "local_consequence": "Exp 3086 must report coverage, precision, and reliability by decision bucket.",
+      "reference_trace_present": true
+    },
+    {
+      "finding": "Code-task abstention can use execution consistency rather than oracle leakage.",
+      "id": "task_abstention",
+      "local_consequence": "Exp 3087 must separate execution-consistency abstention from correctness labels.",
+      "reference_trace_present": true
+    },
+    {
+      "finding": "Improving generation does not automatically improve self-verification.",
+      "id": "self_verification_asymmetry",
+      "local_consequence": "FR-11 rows must measure verifier improvement separately from solver improvement.",
+      "reference_trace_present": true
+    },
+    {
+      "finding": "Formal feedback needs structural anchors and vacuity guards.",
+      "id": "formal_feedback",
+      "local_consequence": "Exp 3088 must prove guided lift over solver-only and reject syntax-only success.",
+      "reference_trace_present": true
+    }
+  ],
+  "run_date": "20260525",
+  "schema": "carnot.verifier_hardness_autopsy_protocol.v1",
+  "scripts_research_conductor_modified": false,
+  "source_artifacts": [
+    {
+      "kind": "json",
+      "path": "results/experiment_3057_local_sota_solution_verifier_gain_panel_v1.json",
+      "present": true,
+      "readable": true,
+      "required": true,
+      "role": "negative_verifier_gain_evidence",
+      "sha256": "8a84f7f3e6cd15dc46acc48d874dbb9f8df56b8578cd1acca53d0c6171e0a7df",
+      "source_id": "exp3057"
+    },
+    {
+      "kind": "json",
+      "path": "results/experiment_3070_first_token_abstention_sota_panel_v1.json",
+      "present": true,
+      "readable": true,
+      "required": true,
+      "role": "first_token_abstention_evidence",
+      "sha256": "4422eb78d9ae67bc5042caa820cf6cd5b49cc697e4594805342689bf3c5372c3",
+      "source_id": "exp3070"
+    },
+    {
+      "kind": "json",
+      "path": "results/experiment_3071_verge_mcs_smt_correction_pilot_v1.json",
+      "present": true,
+      "readable": true,
+      "required": true,
+      "role": "formal_feedback_mcs_evidence",
+      "sha256": "3779dbdff24156d418f1fcb4822fedcf284de1e3419cf721e12df55f2d86d9a4",
+      "source_id": "exp3071"
+    },
+    {
+      "kind": "json",
+      "path": "results/experiment_3080_capstone_v287.json",
+      "present": true,
+      "readable": true,
+      "required": true,
+      "role": "capstone_v287_blocker_evidence",
+      "sha256": "9c6014a35c5347e59ee275ed9c737666a725c6cbbe69747c0508c1a41d6395fe",
+      "source_id": "exp3080"
+    },
+    {
+      "kind": "text",
+      "path": "AGENTS.md",
+      "present": true,
+      "readable": true,
+      "required": true,
+      "role": "repo_startup_instructions",
+      "sha256": "8a738354389881516e44b9129f87b5755b7a31c01524c01158b541d80bdfdc53",
+      "source_id": "agents"
+    },
+    {
+      "kind": "text",
+      "path": "CODEX.md",
+      "present": true,
+      "readable": true,
+      "required": true,
+      "role": "repo_workflow_instructions",
+      "sha256": "b73440c579d01009d4839a518c35b3ee7140d044ded06f5f033068ae17d57051",
+      "source_id": "codex"
+    },
+    {
+      "kind": "text",
+      "path": "CLAUDE.md",
+      "present": true,
+      "readable": true,
+      "required": true,
+      "role": "verifier_authenticity_instructions",
+      "sha256": "572f62286614d4d2266292e93b3b627b48e0e81c8161891c6a4fb7021347e29a",
+      "source_id": "claude"
+    },
+    {
+      "kind": "text",
+      "path": "research-references.md",
+      "present": true,
+      "readable": true,
+      "required": true,
+      "role": "verifier_hardness_references",
+      "sha256": "0fea660de8252db95a168a870fa2f9e22d585ce180994b077add169d7ed190e3",
+      "source_id": "research_references"
+    }
+  ],
+  "source_checksums": {
+    "AGENTS.md": "8a738354389881516e44b9129f87b5755b7a31c01524c01158b541d80bdfdc53",
+    "CLAUDE.md": "572f62286614d4d2266292e93b3b627b48e0e81c8161891c6a4fb7021347e29a",
+    "CODEX.md": "b73440c579d01009d4839a518c35b3ee7140d044ded06f5f033068ae17d57051",
+    "research-references.md": "0fea660de8252db95a168a870fa2f9e22d585ce180994b077add169d7ed190e3",
+    "results/experiment_3057_local_sota_solution_verifier_gain_panel_v1.json": "8a84f7f3e6cd15dc46acc48d874dbb9f8df56b8578cd1acca53d0c6171e0a7df",
+    "results/experiment_3070_first_token_abstention_sota_panel_v1.json": "4422eb78d9ae67bc5042caa820cf6cd5b49cc697e4594805342689bf3c5372c3",
+    "results/experiment_3071_verge_mcs_smt_correction_pilot_v1.json": "3779dbdff24156d418f1fcb4822fedcf284de1e3419cf721e12df55f2d86d9a4",
+    "results/experiment_3080_capstone_v287.json": "9c6014a35c5347e59ee275ed9c737666a725c6cbbe69747c0508c1a41d6395fe"
+  },
+  "status_updates_written": false,
+  "verifier_hardness_protocol_ready": true
+}

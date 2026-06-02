@@ -1,0 +1,1 @@
+LLGuidance supports JSON schema and grammar-constrained masks. AprAD-style intent preservation separates syntax from semantics.

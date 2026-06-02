@@ -1,0 +1,87 @@
+{
+  "architecture_boundary_status": {
+    "clut_status": "bounded_cpu_only_no_hardware_speedup",
+    "ebt_arm_status": "projection_only_no_live_model_integration",
+    "gatemate_status": "blocked_operator_evidence_incomplete",
+    "ssqa_status": "gated_skipped_host_visible_readback_missing"
+  },
+  "artifact": "experiment_3120_cross_corpus_matrix_v24",
+  "blocker_delta_from_v23": 0,
+  "fr11_status": {
+    "completeness_mistakes": 0,
+    "controller_only": true,
+    "fr11_unsolvable_curriculum_ready": true,
+    "no_weight_update_claim": true,
+    "promotion_decision": "controller_only",
+    "soundness_mistakes": 0,
+    "status": "bounded_controller_only_no_weight_update_claim"
+  },
+  "headline_model_spec_gaps": [
+    {
+      "missing_model_ids": [
+        "unsloth/Qwen3.6-35B-A3B-GGUF",
+        "unsloth/gemma-4-31B-it-GGUF"
+      ],
+      "present_model_ids": [
+        "unsloth/gemma-4-26B-A4B-it-GGUF"
+      ],
+      "reason": "mandated headline model cache coverage incomplete",
+      "row_id": "dot290:exp3110_sota_model_spec_cache_manifest",
+      "source_artifact": "results/experiment_3110_sota_model_spec_cache_manifest_corrigendum_v1.json"
+    }
+  ],
+  "honest_verdict": "complete: matrix_v24_ready=true; rows_total=102; publication_blocker_count=36; blocker_delta_from_v23=0",
+  "inference_substrate": {
+    "executes_conductor": false,
+    "executes_hardware": false,
+    "executes_models": false,
+    "kind": "aggregation_from_checked_in_artifacts",
+    "no_live_llm_inference": true
+  },
+  "matrix_v24_ready": false,
+  "missing_artifacts": [],
+  "publication_blocker_count": 36,
+  "publication_blocker_downgrade_policy": {},
+  "rows_total": 102,
+  "source_artifacts": [
+    {
+      "experiment_id": "exp3111",
+      "path": "results/experiment_3111_certified_coherence_z3_mcs_feedback_v3.json",
+      "present": true,
+      "readable_json_object": true,
+      "role": "certified_coherence_feedback"
+    },
+    {
+      "experiment_id": "exp3115",
+      "path": "results/experiment_3115_explicit_repair_gate_micro_panel_v4.json",
+      "present": true,
+      "readable_json_object": true,
+      "role": "explicit_repair_gate_micro_panel"
+    }
+  ],
+  "status_counts": {
+    "blocked": 5,
+    "bounded": 13,
+    "clean": 31,
+    "diagnostic_only": 4,
+    "flagged": 7,
+    "gated_skipped": 7,
+    "missing": 2,
+    "model_spec_gap": 0,
+    "projection_only": 2,
+    "retired": 31
+  },
+  "verifier_repair_status": {
+    "certified_coherence_status": "clean",
+    "diagnostic_calibration_status": "diagnostic_only",
+    "false_repair_accept_rate": 0.0,
+    "fragment_verification_status": "clean",
+    "intent_preservation_rate": 0.0,
+    "logic_pilot_status": "diagnostic_only",
+    "model_manifest_status": "bounded",
+    "repair_micro_panel_status": "bounded",
+    "repair_run_executed": true,
+    "repair_success_delta": 0.0,
+    "repair_unblocked": true
+  }
+}

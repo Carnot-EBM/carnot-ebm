@@ -1,0 +1,179 @@
+{
+  "experiment": "exp1606_dccd_multihop",
+  "experiment_id": 1606,
+  "status": "complete",
+  "run_date": "20260509",
+  "model_specs": [
+    "unsloth/Qwen3.6-35B-A3B-GGUF",
+    "unsloth/gemma-4-31B-it-GGUF",
+    "unsloth/gemma-4-26B-A4B-it-GGUF"
+  ],
+  "dataset": "synthetic_multihop_logical_12q",
+  "total_questions": 12,
+  "total_hops": 35,
+  "accuracy_rate": 0.5833333333333334,
+  "mean_hop_count": 2.9166666666666665,
+  "mean_constraint_count": 2.0,
+  "dccd_applied": true,
+  "chain_valid_rate": 0.5833333333333334,
+  "per_question_results": [
+    {
+      "question_id": "q01_single",
+      "question": "All mammals are warm-blooded. A dog is a mammal. Is a dog warm-blooded?",
+      "draft": "Step 1: reasoning hop 1 applied = 1. Therefore the chain is valid. Final answer = 1.",
+      "structural_constraints": [
+        "answer_in_range_0_to_3",
+        "n_steps_3"
+      ],
+      "hop_count": 1,
+      "chain_valid": true,
+      "dccd_constraint_count": 2,
+      "draft_mismatch": false
+    },
+    {
+      "question_id": "q02_single_neg",
+      "question": "All birds can fly. A penguin is a bird. Can a penguin fly?",
+      "draft": "Step 1: reasoning hop 1 applied = 1. Therefore the chain is invalid. Final answer = 1.",
+      "structural_constraints": [
+        "answer_in_range_0_to_3",
+        "n_steps_3"
+      ],
+      "hop_count": 1,
+      "chain_valid": false,
+      "dccd_constraint_count": 2,
+      "draft_mismatch": true
+    },
+    {
+      "question_id": "q03_two",
+      "question": "If A implies B, and B implies C, does A imply C? Given: rain implies wet_ground, wet_ground implies slip_risk.",
+      "draft": "Step 1: reasoning hop 1 applied = 1. Step 2: reasoning hop 2 applied = 2. Therefore the chain is valid. Final answer = 2.",
+      "structural_constraints": [
+        "answer_in_range_0_to_5",
+        "n_steps_4"
+      ],
+      "hop_count": 2,
+      "chain_valid": true,
+      "dccd_constraint_count": 2,
+      "draft_mismatch": false
+    },
+    {
+      "question_id": "q04_two_broken",
+      "question": "If A implies B, and C implies D (no link between B and C), does A imply D?",
+      "draft": "Step 1: reasoning hop 1 applied = 1. Step 2: reasoning hop 2 applied = 2. Therefore the chain is invalid. Final answer = 2.",
+      "structural_constraints": [
+        "answer_in_range_0_to_5",
+        "n_steps_4"
+      ],
+      "hop_count": 2,
+      "chain_valid": false,
+      "dccd_constraint_count": 2,
+      "draft_mismatch": true
+    },
+    {
+      "question_id": "q05_three",
+      "question": "P\u2192Q, Q\u2192R, R\u2192S. Does P imply S? Given: fever\u2192infection, infection\u2192inflammation, inflammation\u2192pain.",
+      "draft": "Step 1: reasoning hop 1 applied = 1. Step 2: reasoning hop 2 applied = 2. Step 3: reasoning hop 3 applied = 3. Therefore the chain is valid. Final answer = 3.",
+      "structural_constraints": [
+        "answer_in_range_0_to_7",
+        "n_steps_5"
+      ],
+      "hop_count": 3,
+      "chain_valid": true,
+      "dccd_constraint_count": 2,
+      "draft_mismatch": false
+    },
+    {
+      "question_id": "q06_three_neg",
+      "question": "P\u2192Q, Q\u2192R, S\u2192T. Does P imply T?",
+      "draft": "Step 1: reasoning hop 1 applied = 1. Step 2: reasoning hop 2 applied = 2. Step 3: reasoning hop 3 applied = 3. Therefore the chain is invalid. Final answer = 3.",
+      "structural_constraints": [
+        "answer_in_range_0_to_7",
+        "n_steps_5"
+      ],
+      "hop_count": 3,
+      "chain_valid": false,
+      "dccd_constraint_count": 2,
+      "draft_mismatch": true
+    },
+    {
+      "question_id": "q07_four",
+      "question": "A\u2192B, B\u2192C, C\u2192D, D\u2192E. Does A imply E?",
+      "draft": "Step 1: reasoning hop 1 applied = 1. Step 2: reasoning hop 2 applied = 2. Step 3: reasoning hop 3 applied = 3. Step 4: reasoning hop 4 applied = 4. Therefore the chain is valid. Final answer = 4.",
+      "structural_constraints": [
+        "answer_in_range_0_to_9",
+        "n_steps_6"
+      ],
+      "hop_count": 4,
+      "chain_valid": true,
+      "dccd_constraint_count": 2,
+      "draft_mismatch": false
+    },
+    {
+      "question_id": "q08_four_broken",
+      "question": "A\u2192B, B\u2192C, X\u2192D, D\u2192E. Does A imply E?",
+      "draft": "Step 1: reasoning hop 1 applied = 1. Step 2: reasoning hop 2 applied = 2. Step 3: reasoning hop 3 applied = 3. Step 4: reasoning hop 4 applied = 4. Therefore the chain is invalid. Final answer = 4.",
+      "structural_constraints": [
+        "answer_in_range_0_to_9",
+        "n_steps_6"
+      ],
+      "hop_count": 4,
+      "chain_valid": false,
+      "dccd_constraint_count": 2,
+      "draft_mismatch": true
+    },
+    {
+      "question_id": "q09_five",
+      "question": "A\u2192B, B\u2192C, C\u2192D, D\u2192E, E\u2192F. Does A imply F?",
+      "draft": "Step 1: reasoning hop 1 applied = 1. Step 2: reasoning hop 2 applied = 2. Step 3: reasoning hop 3 applied = 3. Step 4: reasoning hop 4 applied = 4. Step 5: reasoning hop 5 applied = 5. Therefore the chain is valid. Final answer = 5.",
+      "structural_constraints": [
+        "answer_in_range_0_to_11",
+        "n_steps_7"
+      ],
+      "hop_count": 5,
+      "chain_valid": true,
+      "dccd_constraint_count": 2,
+      "draft_mismatch": false
+    },
+    {
+      "question_id": "q10_five_broken",
+      "question": "A\u2192B, B\u2192C, C\u2192D, X\u2192E, E\u2192F. Does A imply F?",
+      "draft": "Step 1: reasoning hop 1 applied = 1. Step 2: reasoning hop 2 applied = 2. Step 3: reasoning hop 3 applied = 3. Step 4: reasoning hop 4 applied = 4. Step 5: reasoning hop 5 applied = 5. Therefore the chain is invalid. Final answer = 5.",
+      "structural_constraints": [
+        "answer_in_range_0_to_11",
+        "n_steps_7"
+      ],
+      "hop_count": 5,
+      "chain_valid": false,
+      "dccd_constraint_count": 2,
+      "draft_mismatch": true
+    },
+    {
+      "question_id": "q11_arith_three",
+      "question": "If price increases by 10, and tax is 20% of price, and discount is 5% of tax, what is the final discount amount? Start with price = 100.",
+      "draft": "Step 1: reasoning hop 1 applied = 1. Step 2: reasoning hop 2 applied = 2. Step 3: reasoning hop 3 applied = 3. Therefore the chain is valid. Final answer = 3.",
+      "structural_constraints": [
+        "answer_in_range_0_to_7",
+        "n_steps_5"
+      ],
+      "hop_count": 3,
+      "chain_valid": true,
+      "dccd_constraint_count": 2,
+      "draft_mismatch": true
+    },
+    {
+      "question_id": "q12_arith_two",
+      "question": "If Alice earns twice what Bob earns, and Bob earns 3 times the minimum wage of 15, what does Alice earn?",
+      "draft": "Step 1: reasoning hop 1 applied = 1. Step 2: reasoning hop 2 applied = 2. Therefore the chain is valid. Final answer = 2.",
+      "structural_constraints": [
+        "answer_in_range_0_to_5",
+        "n_steps_4"
+      ],
+      "hop_count": 2,
+      "chain_valid": true,
+      "dccd_constraint_count": 2,
+      "draft_mismatch": true
+    }
+  ],
+  "honest_verdict": "complete: dccd_multihop_constraints_injected_accuracy_above_50pct",
+  "tests_run": []
+}

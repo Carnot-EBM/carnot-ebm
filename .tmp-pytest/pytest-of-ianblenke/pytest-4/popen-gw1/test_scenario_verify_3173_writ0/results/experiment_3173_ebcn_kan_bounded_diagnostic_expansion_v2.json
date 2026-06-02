@@ -1,0 +1,1788 @@
+{
+  "artifact": "experiment_3173_ebcn_kan_bounded_diagnostic_expansion_v2",
+  "blocked_reasons": [],
+  "clean_verifier_rerun_status": {
+    "artifact_present": true,
+    "gated_skip": true,
+    "headline_claim_allowed": false,
+    "live_call_count": 0,
+    "planned_row_count": 72,
+    "rows_contributed": 0
+  },
+  "deployed_verifier_claim_allowed": false,
+  "duration_s": 1.25,
+  "ebcn_kan_bounded_diagnostic_expansion_v2_ready": true,
+  "ebcn_localization_metrics": {
+    "clean_accept_max_scalar_energy": 0.140422,
+    "false_accept_energy_margin_over_clean_max": 0.4622,
+    "false_accept_min_scalar_energy": 0.602622,
+    "false_accept_vs_clean_auc": 1.0,
+    "known_false_accept_rows_scored": 2,
+    "localization_coverage": 1.0,
+    "localization_covered_row_count": 4,
+    "localization_required_row_count": 4,
+    "scored_row_count": 6,
+    "unscored_exact_row_count": 66
+  },
+  "exact_labeled_row_count": 72,
+  "exact_rows": [
+    {
+      "clean_rerun_live_row": false,
+      "clean_rerun_planned": true,
+      "contract_decision": "accept",
+      "contract_row_source": "live",
+      "contract_rule_id": "ACCEPT_EXACT_COVERED_CONSISTENT",
+      "ebcn_score": {
+        "categories": [
+          "clean_accept",
+          "satisfiable_drift"
+        ],
+        "energy_branches": [
+          {
+            "name": "structural_constraint",
+            "value": 0.0,
+            "weight": 0.45
+          },
+          {
+            "name": "sidecar_global_energy",
+            "value": 0.240756,
+            "weight": 0.35
+          },
+          {
+            "name": "answer_uncertainty",
+            "value": 0.278499,
+            "weight": 0.2
+          }
+        ],
+        "localization_covered": true,
+        "scalar_energy": 0.139964,
+        "violation_expected": false,
+        "violation_localization": []
+      },
+      "exact_label": "VALID",
+      "expected_action": "accept",
+      "failure_mechanism": "no_failure",
+      "fixture_family": "arithmetic_code_assertions",
+      "kan_monitor_record": {
+        "exact_row_set": "clean",
+        "property_verified": true,
+        "record_checksum": "3617f2a6d74165bf69a46c5369bd36fe49fc216ef5495588ec9f35f7783113d9",
+        "record_id": "kan-proof-monitor-expansion-v1:resyn-3084-arith-000",
+        "record_origin": "new_exp3159_exact_clean_row",
+        "solver_status": "optimal"
+      },
+      "known_false_accept": false,
+      "live_decision": "accept",
+      "monitor_event_count": 5,
+      "row_id": "resyn-3084-arith-000",
+      "source_artifact_ids": [
+        "exp3136_false_accept_autopsy",
+        "exp3137_exact_safe_contract",
+        "exp3158_ebcn_energy_sidecar",
+        "exp3159_kan_monitor_expansion",
+        "exp3167_clean_live_verifier_rerun"
+      ]
+    },
+    {
+      "clean_rerun_live_row": false,
+      "clean_rerun_planned": true,
+      "contract_decision": "reject",
+      "contract_row_source": "live",
+      "contract_rule_id": "REJECT_EXACT_REJECT_MATCH",
+      "ebcn_score": {
+        "categories": [
+          "contradiction"
+        ],
+        "energy_branches": [
+          {
+            "name": "structural_constraint",
+            "value": 0.50495,
+            "weight": 0.45
+          },
+          {
+            "name": "sidecar_global_energy",
+            "value": 0.727038,
+            "weight": 0.35
+          },
+          {
+            "name": "answer_uncertainty",
+            "value": 0.584718,
+            "weight": 0.2
+          }
+        ],
+        "localization_covered": true,
+        "scalar_energy": 0.598634,
+        "violation_expected": true,
+        "violation_localization": [
+          {
+            "branch": "structural_constraint",
+            "position": "resyn-3084-arith-001:assert_claim",
+            "severity": 0.50495,
+            "source": "monitor_constraint_ledger"
+          }
+        ]
+      },
+      "exact_label": "INVALID",
+      "expected_action": "reject",
+      "failure_mechanism": "no_failure",
+      "fixture_family": "arithmetic_code_assertions",
+      "kan_monitor_record": {
+        "exact_row_set": "clean",
+        "property_verified": true,
+        "record_checksum": "42d46f9dfda0636b82af207a4a8bace2619a5d2a9221ef90081516ab1bebf2c6",
+        "record_id": "kan-proof-monitor-expansion-v1:resyn-3084-arith-001",
+        "record_origin": "new_exp3159_exact_clean_row",
+        "solver_status": "optimal"
+      },
+      "known_false_accept": false,
+      "live_decision": "reject",
+      "monitor_event_count": 5,
+      "row_id": "resyn-3084-arith-001",
+      "source_artifact_ids": [
+        "exp3136_false_accept_autopsy",
+        "exp3137_exact_safe_contract",
+        "exp3158_ebcn_energy_sidecar",
+        "exp3159_kan_monitor_expansion",
+        "exp3167_clean_live_verifier_rerun"
+      ]
+    },
+    {
+      "clean_rerun_live_row": false,
+      "clean_rerun_planned": true,
+      "contract_decision": "accept",
+      "contract_row_source": "live",
+      "contract_rule_id": "ACCEPT_EXACT_COVERED_CONSISTENT",
+      "ebcn_score": {
+        "categories": [
+          "clean_accept",
+          "satisfiable_drift"
+        ],
+        "energy_branches": [
+          {
+            "name": "structural_constraint",
+            "value": 0.0,
+            "weight": 0.45
+          },
+          {
+            "name": "sidecar_global_energy",
+            "value": 0.24147,
+            "weight": 0.35
+          },
+          {
+            "name": "answer_uncertainty",
+            "value": 0.279539,
+            "weight": 0.2
+          }
+        ],
+        "localization_covered": true,
+        "scalar_energy": 0.140422,
+        "violation_expected": false,
+        "violation_localization": []
+      },
+      "exact_label": "VALID",
+      "expected_action": "accept",
+      "failure_mechanism": "no_failure",
+      "fixture_family": "arithmetic_code_assertions",
+      "kan_monitor_record": null,
+      "known_false_accept": false,
+      "live_decision": "accept",
+      "monitor_event_count": 5,
+      "row_id": "resyn-3084-arith-002",
+      "source_artifact_ids": [
+        "exp3136_false_accept_autopsy",
+        "exp3137_exact_safe_contract",
+        "exp3158_ebcn_energy_sidecar",
+        "exp3167_clean_live_verifier_rerun"
+      ]
+    },
+    {
+      "canonical_candidate_answer": "VALID",
+      "canonical_equivalent": false,
+      "canonical_grounding_blocks": [
+        "canonicalization",
+        "premise_grounding",
+        "ledger_replay"
+      ],
+      "clean_rerun_live_row": false,
+      "clean_rerun_planned": true,
+      "contract_decision": "abstain",
+      "contract_row_source": "live",
+      "contract_rule_id": "ABSTAIN_KNOWN_FALSE_ACCEPT_REGRESSION",
+      "ebcn_score": {
+        "categories": [
+          "known_false_accept",
+          "contradiction"
+        ],
+        "energy_branches": [
+          {
+            "name": "structural_constraint",
+            "value": 0.509804,
+            "weight": 0.45
+          },
+          {
+            "name": "sidecar_global_energy",
+            "value": 0.730236,
+            "weight": 0.35
+          },
+          {
+            "name": "answer_uncertainty",
+            "value": 0.588138,
+            "weight": 0.2
+          }
+        ],
+        "localization_covered": true,
+        "scalar_energy": 0.602622,
+        "violation_expected": true,
+        "violation_localization": [
+          {
+            "branch": "answer_consistency",
+            "position": "candidate_final_answer",
+            "severity": 1.0,
+            "source": "monitor_candidate_final_answer"
+          }
+        ]
+      },
+      "exact_label": "INVALID",
+      "expected_action": "reject",
+      "failure_mechanism": "contradiction",
+      "fixture_family": "arithmetic_code_assertions",
+      "kan_monitor_record": {
+        "exact_row_set": "false_accept",
+        "property_verified": true,
+        "record_checksum": "f0efafed0c752851e9d4e79ed78870aa2f8939f0e684a322b683808dd464c8aa",
+        "record_id": "kan-proof-monitor-expansion-v1:resyn-3084-arith-003",
+        "record_origin": "carried_forward_exp3145",
+        "solver_status": "optimal"
+      },
+      "known_false_accept": true,
+      "live_decision": "accept",
+      "monitor_event_count": 5,
+      "row_id": "resyn-3084-arith-003",
+      "source_artifact_ids": [
+        "exp3136_false_accept_autopsy",
+        "exp3137_exact_safe_contract",
+        "exp3138_canonical_grounding",
+        "exp3158_ebcn_energy_sidecar",
+        "exp3159_kan_monitor_expansion",
+        "exp3167_clean_live_verifier_rerun"
+      ]
+    },
+    {
+      "clean_rerun_live_row": false,
+      "clean_rerun_planned": true,
+      "contract_decision": "accept",
+      "contract_row_source": "exact_fixture",
+      "contract_rule_id": "ACCEPT_EXACT_COVERED_CONSISTENT",
+      "ebcn_score": null,
+      "exact_label": "VALID",
+      "expected_action": "accept",
+      "kan_monitor_record": null,
+      "known_false_accept": false,
+      "monitor_event_count": 0,
+      "row_id": "resyn-3084-arith-004",
+      "source_artifact_ids": [
+        "exp3137_exact_safe_contract",
+        "exp3167_clean_live_verifier_rerun"
+      ]
+    },
+    {
+      "clean_rerun_live_row": false,
+      "clean_rerun_planned": true,
+      "contract_decision": "reject",
+      "contract_row_source": "exact_fixture",
+      "contract_rule_id": "REJECT_EXACT_REJECT_MATCH",
+      "ebcn_score": null,
+      "exact_label": "INVALID",
+      "expected_action": "reject",
+      "kan_monitor_record": null,
+      "known_false_accept": false,
+      "monitor_event_count": 0,
+      "row_id": "resyn-3084-arith-005",
+      "source_artifact_ids": [
+        "exp3137_exact_safe_contract",
+        "exp3167_clean_live_verifier_rerun"
+      ]
+    },
+    {
+      "clean_rerun_live_row": false,
+      "clean_rerun_planned": true,
+      "contract_decision": "accept",
+      "contract_row_source": "exact_fixture",
+      "contract_rule_id": "ACCEPT_EXACT_COVERED_CONSISTENT",
+      "ebcn_score": null,
+      "exact_label": "VALID",
+      "expected_action": "accept",
+      "kan_monitor_record": null,
+      "known_false_accept": false,
+      "monitor_event_count": 0,
+      "row_id": "resyn-3084-arith-006",
+      "source_artifact_ids": [
+        "exp3137_exact_safe_contract",
+        "exp3167_clean_live_verifier_rerun"
+      ]
+    },
+    {
+      "clean_rerun_live_row": false,
+      "clean_rerun_planned": true,
+      "contract_decision": "reject",
+      "contract_row_source": "exact_fixture",
+      "contract_rule_id": "REJECT_EXACT_REJECT_MATCH",
+      "ebcn_score": null,
+      "exact_label": "INVALID",
+      "expected_action": "reject",
+      "kan_monitor_record": null,
+      "known_false_accept": false,
+      "monitor_event_count": 0,
+      "row_id": "resyn-3084-arith-007",
+      "source_artifact_ids": [
+        "exp3137_exact_safe_contract",
+        "exp3167_clean_live_verifier_rerun"
+      ]
+    },
+    {
+      "clean_rerun_live_row": false,
+      "clean_rerun_planned": true,
+      "contract_decision": "accept",
+      "contract_row_source": "exact_fixture",
+      "contract_rule_id": "ACCEPT_EXACT_COVERED_CONSISTENT",
+      "ebcn_score": null,
+      "exact_label": "VALID",
+      "expected_action": "accept",
+      "kan_monitor_record": null,
+      "known_false_accept": false,
+      "monitor_event_count": 0,
+      "row_id": "resyn-3084-arith-008",
+      "source_artifact_ids": [
+        "exp3137_exact_safe_contract",
+        "exp3167_clean_live_verifier_rerun"
+      ]
+    },
+    {
+      "clean_rerun_live_row": false,
+      "clean_rerun_planned": true,
+      "contract_decision": "reject",
+      "contract_row_source": "exact_fixture",
+      "contract_rule_id": "REJECT_EXACT_REJECT_MATCH",
+      "ebcn_score": null,
+      "exact_label": "INVALID",
+      "expected_action": "reject",
+      "kan_monitor_record": null,
+      "known_false_accept": false,
+      "monitor_event_count": 0,
+      "row_id": "resyn-3084-arith-009",
+      "source_artifact_ids": [
+        "exp3137_exact_safe_contract",
+        "exp3167_clean_live_verifier_rerun"
+      ]
+    },
+    {
+      "clean_rerun_live_row": false,
+      "clean_rerun_planned": true,
+      "contract_decision": "accept",
+      "contract_row_source": "exact_fixture",
+      "contract_rule_id": "ACCEPT_EXACT_COVERED_CONSISTENT",
+      "ebcn_score": null,
+      "exact_label": "VALID",
+      "expected_action": "accept",
+      "kan_monitor_record": null,
+      "known_false_accept": false,
+      "monitor_event_count": 0,
+      "row_id": "resyn-3084-arith-010",
+      "source_artifact_ids": [
+        "exp3137_exact_safe_contract",
+        "exp3167_clean_live_verifier_rerun"
+      ]
+    },
+    {
+      "clean_rerun_live_row": false,
+      "clean_rerun_planned": true,
+      "contract_decision": "reject",
+      "contract_row_source": "exact_fixture",
+      "contract_rule_id": "REJECT_EXACT_REJECT_MATCH",
+      "ebcn_score": null,
+      "exact_label": "INVALID",
+      "expected_action": "reject",
+      "kan_monitor_record": null,
+      "known_false_accept": false,
+      "monitor_event_count": 0,
+      "row_id": "resyn-3084-arith-011",
+      "source_artifact_ids": [
+        "exp3137_exact_safe_contract",
+        "exp3167_clean_live_verifier_rerun"
+      ]
+    },
+    {
+      "clean_rerun_live_row": false,
+      "clean_rerun_planned": true,
+      "contract_decision": "accept",
+      "contract_row_source": "exact_fixture",
+      "contract_rule_id": "ACCEPT_EXACT_COVERED_CONSISTENT",
+      "ebcn_score": null,
+      "exact_label": "VALID",
+      "expected_action": "accept",
+      "kan_monitor_record": null,
+      "known_false_accept": false,
+      "monitor_event_count": 0,
+      "row_id": "resyn-3084-arith-012",
+      "source_artifact_ids": [
+        "exp3137_exact_safe_contract",
+        "exp3167_clean_live_verifier_rerun"
+      ]
+    },
+    {
+      "clean_rerun_live_row": false,
+      "clean_rerun_planned": true,
+      "contract_decision": "reject",
+      "contract_row_source": "exact_fixture",
+      "contract_rule_id": "REJECT_EXACT_REJECT_MATCH",
+      "ebcn_score": null,
+      "exact_label": "INVALID",
+      "expected_action": "reject",
+      "kan_monitor_record": null,
+      "known_false_accept": false,
+      "monitor_event_count": 0,
+      "row_id": "resyn-3084-arith-013",
+      "source_artifact_ids": [
+        "exp3137_exact_safe_contract",
+        "exp3167_clean_live_verifier_rerun"
+      ]
+    },
+    {
+      "clean_rerun_live_row": false,
+      "clean_rerun_planned": true,
+      "contract_decision": "accept",
+      "contract_row_source": "exact_fixture",
+      "contract_rule_id": "ACCEPT_EXACT_COVERED_CONSISTENT",
+      "ebcn_score": null,
+      "exact_label": "VALID",
+      "expected_action": "accept",
+      "kan_monitor_record": null,
+      "known_false_accept": false,
+      "monitor_event_count": 0,
+      "row_id": "resyn-3084-arith-014",
+      "source_artifact_ids": [
+        "exp3137_exact_safe_contract",
+        "exp3167_clean_live_verifier_rerun"
+      ]
+    },
+    {
+      "clean_rerun_live_row": false,
+      "clean_rerun_planned": true,
+      "contract_decision": "reject",
+      "contract_row_source": "exact_fixture",
+      "contract_rule_id": "REJECT_EXACT_REJECT_MATCH",
+      "ebcn_score": null,
+      "exact_label": "INVALID",
+      "expected_action": "reject",
+      "kan_monitor_record": null,
+      "known_false_accept": false,
+      "monitor_event_count": 0,
+      "row_id": "resyn-3084-arith-015",
+      "source_artifact_ids": [
+        "exp3137_exact_safe_contract",
+        "exp3167_clean_live_verifier_rerun"
+      ]
+    },
+    {
+      "clean_rerun_live_row": false,
+      "clean_rerun_planned": true,
+      "contract_decision": "accept",
+      "contract_row_source": "exact_fixture",
+      "contract_rule_id": "ACCEPT_EXACT_COVERED_CONSISTENT",
+      "ebcn_score": null,
+      "exact_label": "VALID",
+      "expected_action": "accept",
+      "kan_monitor_record": null,
+      "known_false_accept": false,
+      "monitor_event_count": 0,
+      "row_id": "resyn-3084-arith-016",
+      "source_artifact_ids": [
+        "exp3137_exact_safe_contract",
+        "exp3167_clean_live_verifier_rerun"
+      ]
+    },
+    {
+      "clean_rerun_live_row": false,
+      "clean_rerun_planned": true,
+      "contract_decision": "reject",
+      "contract_row_source": "exact_fixture",
+      "contract_rule_id": "REJECT_EXACT_REJECT_MATCH",
+      "ebcn_score": null,
+      "exact_label": "INVALID",
+      "expected_action": "reject",
+      "kan_monitor_record": null,
+      "known_false_accept": false,
+      "monitor_event_count": 0,
+      "row_id": "resyn-3084-arith-017",
+      "source_artifact_ids": [
+        "exp3137_exact_safe_contract",
+        "exp3167_clean_live_verifier_rerun"
+      ]
+    },
+    {
+      "clean_rerun_live_row": false,
+      "clean_rerun_planned": true,
+      "contract_decision": "accept",
+      "contract_row_source": "exact_fixture",
+      "contract_rule_id": "ACCEPT_EXACT_COVERED_CONSISTENT",
+      "ebcn_score": null,
+      "exact_label": "VALID",
+      "expected_action": "accept",
+      "kan_monitor_record": null,
+      "known_false_accept": false,
+      "monitor_event_count": 0,
+      "row_id": "resyn-3084-arith-018",
+      "source_artifact_ids": [
+        "exp3137_exact_safe_contract",
+        "exp3167_clean_live_verifier_rerun"
+      ]
+    },
+    {
+      "clean_rerun_live_row": false,
+      "clean_rerun_planned": true,
+      "contract_decision": "reject",
+      "contract_row_source": "exact_fixture",
+      "contract_rule_id": "REJECT_EXACT_REJECT_MATCH",
+      "ebcn_score": null,
+      "exact_label": "INVALID",
+      "expected_action": "reject",
+      "kan_monitor_record": null,
+      "known_false_accept": false,
+      "monitor_event_count": 0,
+      "row_id": "resyn-3084-arith-019",
+      "source_artifact_ids": [
+        "exp3137_exact_safe_contract",
+        "exp3167_clean_live_verifier_rerun"
+      ]
+    },
+    {
+      "clean_rerun_live_row": false,
+      "clean_rerun_planned": true,
+      "contract_decision": "accept",
+      "contract_row_source": "exact_fixture",
+      "contract_rule_id": "ACCEPT_EXACT_COVERED_CONSISTENT",
+      "ebcn_score": null,
+      "exact_label": "VALID",
+      "expected_action": "accept",
+      "kan_monitor_record": null,
+      "known_false_accept": false,
+      "monitor_event_count": 0,
+      "row_id": "resyn-3084-arith-020",
+      "source_artifact_ids": [
+        "exp3137_exact_safe_contract",
+        "exp3167_clean_live_verifier_rerun"
+      ]
+    },
+    {
+      "clean_rerun_live_row": false,
+      "clean_rerun_planned": true,
+      "contract_decision": "reject",
+      "contract_row_source": "exact_fixture",
+      "contract_rule_id": "REJECT_EXACT_REJECT_MATCH",
+      "ebcn_score": null,
+      "exact_label": "INVALID",
+      "expected_action": "reject",
+      "kan_monitor_record": null,
+      "known_false_accept": false,
+      "monitor_event_count": 0,
+      "row_id": "resyn-3084-arith-021",
+      "source_artifact_ids": [
+        "exp3137_exact_safe_contract",
+        "exp3167_clean_live_verifier_rerun"
+      ]
+    },
+    {
+      "clean_rerun_live_row": false,
+      "clean_rerun_planned": true,
+      "contract_decision": "accept",
+      "contract_row_source": "exact_fixture",
+      "contract_rule_id": "ACCEPT_EXACT_COVERED_CONSISTENT",
+      "ebcn_score": null,
+      "exact_label": "VALID",
+      "expected_action": "accept",
+      "kan_monitor_record": null,
+      "known_false_accept": false,
+      "monitor_event_count": 0,
+      "row_id": "resyn-3084-arith-022",
+      "source_artifact_ids": [
+        "exp3137_exact_safe_contract",
+        "exp3167_clean_live_verifier_rerun"
+      ]
+    },
+    {
+      "clean_rerun_live_row": false,
+      "clean_rerun_planned": true,
+      "contract_decision": "reject",
+      "contract_row_source": "exact_fixture",
+      "contract_rule_id": "REJECT_EXACT_REJECT_MATCH",
+      "ebcn_score": null,
+      "exact_label": "INVALID",
+      "expected_action": "reject",
+      "kan_monitor_record": null,
+      "known_false_accept": false,
+      "monitor_event_count": 0,
+      "row_id": "resyn-3084-arith-023",
+      "source_artifact_ids": [
+        "exp3137_exact_safe_contract",
+        "exp3167_clean_live_verifier_rerun"
+      ]
+    },
+    {
+      "clean_rerun_live_row": false,
+      "clean_rerun_planned": true,
+      "contract_decision": "reject",
+      "contract_row_source": "live",
+      "contract_rule_id": "REJECT_EXACT_REJECT_MATCH",
+      "ebcn_score": {
+        "categories": [
+          "repairable_drift"
+        ],
+        "energy_branches": [
+          {
+            "name": "structural_constraint",
+            "value": 0.5,
+            "weight": 0.45
+          },
+          {
+            "name": "sidecar_global_energy",
+            "value": 0.722297,
+            "weight": 0.35
+          },
+          {
+            "name": "answer_uncertainty",
+            "value": 0.568966,
+            "weight": 0.2
+          }
+        ],
+        "localization_covered": true,
+        "scalar_energy": 0.591597,
+        "violation_expected": true,
+        "violation_localization": [
+          {
+            "branch": "structural_constraint",
+            "position": "resyn-3084-repair-json-000:json_document",
+            "severity": 0.5,
+            "source": "monitor_constraint_ledger"
+          }
+        ]
+      },
+      "exact_label": "REPAIRABLE",
+      "expected_action": "reject",
+      "failure_mechanism": "no_failure",
+      "fixture_family": "repairable_invalid_candidates",
+      "kan_monitor_record": null,
+      "known_false_accept": false,
+      "live_decision": "reject",
+      "monitor_event_count": 5,
+      "row_id": "resyn-3084-repair-json-000",
+      "source_artifact_ids": [
+        "exp3136_false_accept_autopsy",
+        "exp3137_exact_safe_contract",
+        "exp3158_ebcn_energy_sidecar",
+        "exp3167_clean_live_verifier_rerun"
+      ]
+    },
+    {
+      "clean_rerun_live_row": false,
+      "clean_rerun_planned": true,
+      "contract_decision": "reject",
+      "contract_row_source": "exact_fixture",
+      "contract_rule_id": "REJECT_EXACT_REJECT_MATCH",
+      "ebcn_score": null,
+      "exact_label": "REPAIRABLE",
+      "expected_action": "reject",
+      "kan_monitor_record": null,
+      "known_false_accept": false,
+      "monitor_event_count": 0,
+      "row_id": "resyn-3084-repair-json-003",
+      "source_artifact_ids": [
+        "exp3137_exact_safe_contract",
+        "exp3167_clean_live_verifier_rerun"
+      ]
+    },
+    {
+      "clean_rerun_live_row": false,
+      "clean_rerun_planned": true,
+      "contract_decision": "reject",
+      "contract_row_source": "exact_fixture",
+      "contract_rule_id": "REJECT_EXACT_REJECT_MATCH",
+      "ebcn_score": null,
+      "exact_label": "REPAIRABLE",
+      "expected_action": "reject",
+      "kan_monitor_record": null,
+      "known_false_accept": false,
+      "monitor_event_count": 0,
+      "row_id": "resyn-3084-repair-json-006",
+      "source_artifact_ids": [
+        "exp3137_exact_safe_contract",
+        "exp3167_clean_live_verifier_rerun"
+      ]
+    },
+    {
+      "clean_rerun_live_row": false,
+      "clean_rerun_planned": true,
+      "contract_decision": "reject",
+      "contract_row_source": "exact_fixture",
+      "contract_rule_id": "REJECT_EXACT_REJECT_MATCH",
+      "ebcn_score": null,
+      "exact_label": "REPAIRABLE",
+      "expected_action": "reject",
+      "kan_monitor_record": null,
+      "known_false_accept": false,
+      "monitor_event_count": 0,
+      "row_id": "resyn-3084-repair-json-009",
+      "source_artifact_ids": [
+        "exp3137_exact_safe_contract",
+        "exp3167_clean_live_verifier_rerun"
+      ]
+    },
+    {
+      "clean_rerun_live_row": false,
+      "clean_rerun_planned": true,
+      "contract_decision": "reject",
+      "contract_row_source": "exact_fixture",
+      "contract_rule_id": "REJECT_EXACT_REJECT_MATCH",
+      "ebcn_score": null,
+      "exact_label": "REPAIRABLE",
+      "expected_action": "reject",
+      "kan_monitor_record": null,
+      "known_false_accept": false,
+      "monitor_event_count": 0,
+      "row_id": "resyn-3084-repair-json-012",
+      "source_artifact_ids": [
+        "exp3137_exact_safe_contract",
+        "exp3167_clean_live_verifier_rerun"
+      ]
+    },
+    {
+      "clean_rerun_live_row": false,
+      "clean_rerun_planned": true,
+      "contract_decision": "reject",
+      "contract_row_source": "exact_fixture",
+      "contract_rule_id": "REJECT_EXACT_REJECT_MATCH",
+      "ebcn_score": null,
+      "exact_label": "REPAIRABLE",
+      "expected_action": "reject",
+      "kan_monitor_record": null,
+      "known_false_accept": false,
+      "monitor_event_count": 0,
+      "row_id": "resyn-3084-repair-json-015",
+      "source_artifact_ids": [
+        "exp3137_exact_safe_contract",
+        "exp3167_clean_live_verifier_rerun"
+      ]
+    },
+    {
+      "clean_rerun_live_row": false,
+      "clean_rerun_planned": true,
+      "contract_decision": "reject",
+      "contract_row_source": "exact_fixture",
+      "contract_rule_id": "REJECT_EXACT_REJECT_MATCH",
+      "ebcn_score": null,
+      "exact_label": "REPAIRABLE",
+      "expected_action": "reject",
+      "kan_monitor_record": null,
+      "known_false_accept": false,
+      "monitor_event_count": 0,
+      "row_id": "resyn-3084-repair-json-018",
+      "source_artifact_ids": [
+        "exp3137_exact_safe_contract",
+        "exp3167_clean_live_verifier_rerun"
+      ]
+    },
+    {
+      "clean_rerun_live_row": false,
+      "clean_rerun_planned": true,
+      "contract_decision": "reject",
+      "contract_row_source": "exact_fixture",
+      "contract_rule_id": "REJECT_EXACT_REJECT_MATCH",
+      "ebcn_score": null,
+      "exact_label": "REPAIRABLE",
+      "expected_action": "reject",
+      "kan_monitor_record": null,
+      "known_false_accept": false,
+      "monitor_event_count": 0,
+      "row_id": "resyn-3084-repair-json-021",
+      "source_artifact_ids": [
+        "exp3137_exact_safe_contract",
+        "exp3167_clean_live_verifier_rerun"
+      ]
+    },
+    {
+      "clean_rerun_live_row": false,
+      "clean_rerun_planned": true,
+      "contract_decision": "reject",
+      "contract_row_source": "exact_fixture",
+      "contract_rule_id": "REJECT_EXACT_REJECT_MATCH",
+      "ebcn_score": null,
+      "exact_label": "REPAIRABLE",
+      "expected_action": "reject",
+      "kan_monitor_record": null,
+      "known_false_accept": false,
+      "monitor_event_count": 0,
+      "row_id": "resyn-3084-repair-py-002",
+      "source_artifact_ids": [
+        "exp3137_exact_safe_contract",
+        "exp3167_clean_live_verifier_rerun"
+      ]
+    },
+    {
+      "clean_rerun_live_row": false,
+      "clean_rerun_planned": true,
+      "contract_decision": "reject",
+      "contract_row_source": "exact_fixture",
+      "contract_rule_id": "REJECT_EXACT_REJECT_MATCH",
+      "ebcn_score": null,
+      "exact_label": "REPAIRABLE",
+      "expected_action": "reject",
+      "kan_monitor_record": null,
+      "known_false_accept": false,
+      "monitor_event_count": 0,
+      "row_id": "resyn-3084-repair-py-005",
+      "source_artifact_ids": [
+        "exp3137_exact_safe_contract",
+        "exp3167_clean_live_verifier_rerun"
+      ]
+    },
+    {
+      "clean_rerun_live_row": false,
+      "clean_rerun_planned": true,
+      "contract_decision": "reject",
+      "contract_row_source": "exact_fixture",
+      "contract_rule_id": "REJECT_EXACT_REJECT_MATCH",
+      "ebcn_score": null,
+      "exact_label": "REPAIRABLE",
+      "expected_action": "reject",
+      "kan_monitor_record": null,
+      "known_false_accept": false,
+      "monitor_event_count": 0,
+      "row_id": "resyn-3084-repair-py-008",
+      "source_artifact_ids": [
+        "exp3137_exact_safe_contract",
+        "exp3167_clean_live_verifier_rerun"
+      ]
+    },
+    {
+      "clean_rerun_live_row": false,
+      "clean_rerun_planned": true,
+      "contract_decision": "reject",
+      "contract_row_source": "exact_fixture",
+      "contract_rule_id": "REJECT_EXACT_REJECT_MATCH",
+      "ebcn_score": null,
+      "exact_label": "REPAIRABLE",
+      "expected_action": "reject",
+      "kan_monitor_record": null,
+      "known_false_accept": false,
+      "monitor_event_count": 0,
+      "row_id": "resyn-3084-repair-py-011",
+      "source_artifact_ids": [
+        "exp3137_exact_safe_contract",
+        "exp3167_clean_live_verifier_rerun"
+      ]
+    },
+    {
+      "clean_rerun_live_row": false,
+      "clean_rerun_planned": true,
+      "contract_decision": "reject",
+      "contract_row_source": "exact_fixture",
+      "contract_rule_id": "REJECT_EXACT_REJECT_MATCH",
+      "ebcn_score": null,
+      "exact_label": "REPAIRABLE",
+      "expected_action": "reject",
+      "kan_monitor_record": null,
+      "known_false_accept": false,
+      "monitor_event_count": 0,
+      "row_id": "resyn-3084-repair-py-014",
+      "source_artifact_ids": [
+        "exp3137_exact_safe_contract",
+        "exp3167_clean_live_verifier_rerun"
+      ]
+    },
+    {
+      "clean_rerun_live_row": false,
+      "clean_rerun_planned": true,
+      "contract_decision": "reject",
+      "contract_row_source": "exact_fixture",
+      "contract_rule_id": "REJECT_EXACT_REJECT_MATCH",
+      "ebcn_score": null,
+      "exact_label": "REPAIRABLE",
+      "expected_action": "reject",
+      "kan_monitor_record": null,
+      "known_false_accept": false,
+      "monitor_event_count": 0,
+      "row_id": "resyn-3084-repair-py-017",
+      "source_artifact_ids": [
+        "exp3137_exact_safe_contract",
+        "exp3167_clean_live_verifier_rerun"
+      ]
+    },
+    {
+      "clean_rerun_live_row": false,
+      "clean_rerun_planned": true,
+      "contract_decision": "reject",
+      "contract_row_source": "exact_fixture",
+      "contract_rule_id": "REJECT_EXACT_REJECT_MATCH",
+      "ebcn_score": null,
+      "exact_label": "REPAIRABLE",
+      "expected_action": "reject",
+      "kan_monitor_record": null,
+      "known_false_accept": false,
+      "monitor_event_count": 0,
+      "row_id": "resyn-3084-repair-py-020",
+      "source_artifact_ids": [
+        "exp3137_exact_safe_contract",
+        "exp3167_clean_live_verifier_rerun"
+      ]
+    },
+    {
+      "clean_rerun_live_row": false,
+      "clean_rerun_planned": true,
+      "contract_decision": "reject",
+      "contract_row_source": "exact_fixture",
+      "contract_rule_id": "REJECT_EXACT_REJECT_MATCH",
+      "ebcn_score": null,
+      "exact_label": "REPAIRABLE",
+      "expected_action": "reject",
+      "kan_monitor_record": null,
+      "known_false_accept": false,
+      "monitor_event_count": 0,
+      "row_id": "resyn-3084-repair-py-023",
+      "source_artifact_ids": [
+        "exp3137_exact_safe_contract",
+        "exp3167_clean_live_verifier_rerun"
+      ]
+    },
+    {
+      "clean_rerun_live_row": false,
+      "clean_rerun_planned": true,
+      "contract_decision": "reject",
+      "contract_row_source": "exact_fixture",
+      "contract_rule_id": "REJECT_EXACT_REJECT_MATCH",
+      "ebcn_score": null,
+      "exact_label": "REPAIRABLE",
+      "expected_action": "reject",
+      "kan_monitor_record": null,
+      "known_false_accept": false,
+      "monitor_event_count": 0,
+      "row_id": "resyn-3084-repair-smt-001",
+      "source_artifact_ids": [
+        "exp3137_exact_safe_contract",
+        "exp3167_clean_live_verifier_rerun"
+      ]
+    },
+    {
+      "clean_rerun_live_row": false,
+      "clean_rerun_planned": true,
+      "contract_decision": "reject",
+      "contract_row_source": "exact_fixture",
+      "contract_rule_id": "REJECT_EXACT_REJECT_MATCH",
+      "ebcn_score": null,
+      "exact_label": "REPAIRABLE",
+      "expected_action": "reject",
+      "kan_monitor_record": null,
+      "known_false_accept": false,
+      "monitor_event_count": 0,
+      "row_id": "resyn-3084-repair-smt-004",
+      "source_artifact_ids": [
+        "exp3137_exact_safe_contract",
+        "exp3167_clean_live_verifier_rerun"
+      ]
+    },
+    {
+      "clean_rerun_live_row": false,
+      "clean_rerun_planned": true,
+      "contract_decision": "reject",
+      "contract_row_source": "exact_fixture",
+      "contract_rule_id": "REJECT_EXACT_REJECT_MATCH",
+      "ebcn_score": null,
+      "exact_label": "REPAIRABLE",
+      "expected_action": "reject",
+      "kan_monitor_record": null,
+      "known_false_accept": false,
+      "monitor_event_count": 0,
+      "row_id": "resyn-3084-repair-smt-007",
+      "source_artifact_ids": [
+        "exp3137_exact_safe_contract",
+        "exp3167_clean_live_verifier_rerun"
+      ]
+    },
+    {
+      "clean_rerun_live_row": false,
+      "clean_rerun_planned": true,
+      "contract_decision": "reject",
+      "contract_row_source": "exact_fixture",
+      "contract_rule_id": "REJECT_EXACT_REJECT_MATCH",
+      "ebcn_score": null,
+      "exact_label": "REPAIRABLE",
+      "expected_action": "reject",
+      "kan_monitor_record": null,
+      "known_false_accept": false,
+      "monitor_event_count": 0,
+      "row_id": "resyn-3084-repair-smt-010",
+      "source_artifact_ids": [
+        "exp3137_exact_safe_contract",
+        "exp3167_clean_live_verifier_rerun"
+      ]
+    },
+    {
+      "clean_rerun_live_row": false,
+      "clean_rerun_planned": true,
+      "contract_decision": "reject",
+      "contract_row_source": "exact_fixture",
+      "contract_rule_id": "REJECT_EXACT_REJECT_MATCH",
+      "ebcn_score": null,
+      "exact_label": "REPAIRABLE",
+      "expected_action": "reject",
+      "kan_monitor_record": null,
+      "known_false_accept": false,
+      "monitor_event_count": 0,
+      "row_id": "resyn-3084-repair-smt-013",
+      "source_artifact_ids": [
+        "exp3137_exact_safe_contract",
+        "exp3167_clean_live_verifier_rerun"
+      ]
+    },
+    {
+      "clean_rerun_live_row": false,
+      "clean_rerun_planned": true,
+      "contract_decision": "reject",
+      "contract_row_source": "exact_fixture",
+      "contract_rule_id": "REJECT_EXACT_REJECT_MATCH",
+      "ebcn_score": null,
+      "exact_label": "REPAIRABLE",
+      "expected_action": "reject",
+      "kan_monitor_record": null,
+      "known_false_accept": false,
+      "monitor_event_count": 0,
+      "row_id": "resyn-3084-repair-smt-016",
+      "source_artifact_ids": [
+        "exp3137_exact_safe_contract",
+        "exp3167_clean_live_verifier_rerun"
+      ]
+    },
+    {
+      "clean_rerun_live_row": false,
+      "clean_rerun_planned": true,
+      "contract_decision": "reject",
+      "contract_row_source": "exact_fixture",
+      "contract_rule_id": "REJECT_EXACT_REJECT_MATCH",
+      "ebcn_score": null,
+      "exact_label": "REPAIRABLE",
+      "expected_action": "reject",
+      "kan_monitor_record": null,
+      "known_false_accept": false,
+      "monitor_event_count": 0,
+      "row_id": "resyn-3084-repair-smt-019",
+      "source_artifact_ids": [
+        "exp3137_exact_safe_contract",
+        "exp3167_clean_live_verifier_rerun"
+      ]
+    },
+    {
+      "clean_rerun_live_row": false,
+      "clean_rerun_planned": true,
+      "contract_decision": "reject",
+      "contract_row_source": "exact_fixture",
+      "contract_rule_id": "REJECT_EXACT_REJECT_MATCH",
+      "ebcn_score": null,
+      "exact_label": "REPAIRABLE",
+      "expected_action": "reject",
+      "kan_monitor_record": null,
+      "known_false_accept": false,
+      "monitor_event_count": 0,
+      "row_id": "resyn-3084-repair-smt-022",
+      "source_artifact_ids": [
+        "exp3137_exact_safe_contract",
+        "exp3167_clean_live_verifier_rerun"
+      ]
+    },
+    {
+      "canonical_candidate_answer": "VALID",
+      "canonical_equivalent": false,
+      "canonical_grounding_blocks": [
+        "canonicalization",
+        "premise_grounding",
+        "ledger_replay"
+      ],
+      "clean_rerun_live_row": false,
+      "clean_rerun_planned": true,
+      "contract_decision": "abstain",
+      "contract_row_source": "live",
+      "contract_rule_id": "ABSTAIN_KNOWN_FALSE_ACCEPT_REGRESSION",
+      "ebcn_score": {
+        "categories": [
+          "known_false_accept",
+          "contradiction"
+        ],
+        "energy_branches": [
+          {
+            "name": "structural_constraint",
+            "value": 0.666667,
+            "weight": 0.45
+          },
+          {
+            "name": "sidecar_global_energy",
+            "value": 0.825735,
+            "weight": 0.35
+          },
+          {
+            "name": "answer_uncertainty",
+            "value": 0.702381,
+            "weight": 0.2
+          }
+        ],
+        "localization_covered": true,
+        "scalar_energy": 0.729484,
+        "violation_expected": true,
+        "violation_localization": [
+          {
+            "branch": "answer_consistency",
+            "position": "candidate_final_answer",
+            "severity": 1.0,
+            "source": "monitor_candidate_final_answer"
+          }
+        ]
+      },
+      "exact_label": "UNSAT",
+      "expected_action": "reject",
+      "failure_mechanism": "contradiction",
+      "fixture_family": "smt_constraints",
+      "kan_monitor_record": {
+        "exact_row_set": "false_accept",
+        "property_verified": true,
+        "record_checksum": "0a7355ab76496ae71766da5928e48f2b55efb5dbd2c02910a22b4a69cfd2893a",
+        "record_id": "kan-proof-monitor-expansion-v1:resyn-3084-smt-000",
+        "record_origin": "carried_forward_exp3145",
+        "solver_status": "optimal"
+      },
+      "known_false_accept": true,
+      "live_decision": "accept",
+      "monitor_event_count": 5,
+      "row_id": "resyn-3084-smt-000",
+      "source_artifact_ids": [
+        "exp3136_false_accept_autopsy",
+        "exp3137_exact_safe_contract",
+        "exp3138_canonical_grounding",
+        "exp3158_ebcn_energy_sidecar",
+        "exp3159_kan_monitor_expansion",
+        "exp3167_clean_live_verifier_rerun"
+      ]
+    },
+    {
+      "clean_rerun_live_row": false,
+      "clean_rerun_planned": true,
+      "contract_decision": "accept",
+      "contract_row_source": "exact_fixture",
+      "contract_rule_id": "ACCEPT_EXACT_COVERED_CONSISTENT",
+      "ebcn_score": null,
+      "exact_label": "SAT",
+      "expected_action": "accept",
+      "kan_monitor_record": null,
+      "known_false_accept": false,
+      "monitor_event_count": 0,
+      "row_id": "resyn-3084-smt-001",
+      "source_artifact_ids": [
+        "exp3137_exact_safe_contract",
+        "exp3167_clean_live_verifier_rerun"
+      ]
+    },
+    {
+      "clean_rerun_live_row": false,
+      "clean_rerun_planned": true,
+      "contract_decision": "reject",
+      "contract_row_source": "exact_fixture",
+      "contract_rule_id": "REJECT_EXACT_REJECT_MATCH",
+      "ebcn_score": null,
+      "exact_label": "UNSAT",
+      "expected_action": "reject",
+      "kan_monitor_record": null,
+      "known_false_accept": false,
+      "monitor_event_count": 0,
+      "row_id": "resyn-3084-smt-002",
+      "source_artifact_ids": [
+        "exp3137_exact_safe_contract",
+        "exp3167_clean_live_verifier_rerun"
+      ]
+    },
+    {
+      "clean_rerun_live_row": false,
+      "clean_rerun_planned": true,
+      "contract_decision": "accept",
+      "contract_row_source": "exact_fixture",
+      "contract_rule_id": "ACCEPT_EXACT_COVERED_CONSISTENT",
+      "ebcn_score": null,
+      "exact_label": "SAT",
+      "expected_action": "accept",
+      "kan_monitor_record": null,
+      "known_false_accept": false,
+      "monitor_event_count": 0,
+      "row_id": "resyn-3084-smt-003",
+      "source_artifact_ids": [
+        "exp3137_exact_safe_contract",
+        "exp3167_clean_live_verifier_rerun"
+      ]
+    },
+    {
+      "clean_rerun_live_row": false,
+      "clean_rerun_planned": true,
+      "contract_decision": "reject",
+      "contract_row_source": "exact_fixture",
+      "contract_rule_id": "REJECT_EXACT_REJECT_MATCH",
+      "ebcn_score": null,
+      "exact_label": "UNSAT",
+      "expected_action": "reject",
+      "kan_monitor_record": null,
+      "known_false_accept": false,
+      "monitor_event_count": 0,
+      "row_id": "resyn-3084-smt-004",
+      "source_artifact_ids": [
+        "exp3137_exact_safe_contract",
+        "exp3167_clean_live_verifier_rerun"
+      ]
+    },
+    {
+      "clean_rerun_live_row": false,
+      "clean_rerun_planned": true,
+      "contract_decision": "accept",
+      "contract_row_source": "exact_fixture",
+      "contract_rule_id": "ACCEPT_EXACT_COVERED_CONSISTENT",
+      "ebcn_score": null,
+      "exact_label": "SAT",
+      "expected_action": "accept",
+      "kan_monitor_record": null,
+      "known_false_accept": false,
+      "monitor_event_count": 0,
+      "row_id": "resyn-3084-smt-005",
+      "source_artifact_ids": [
+        "exp3137_exact_safe_contract",
+        "exp3167_clean_live_verifier_rerun"
+      ]
+    },
+    {
+      "clean_rerun_live_row": false,
+      "clean_rerun_planned": true,
+      "contract_decision": "reject",
+      "contract_row_source": "exact_fixture",
+      "contract_rule_id": "REJECT_EXACT_REJECT_MATCH",
+      "ebcn_score": null,
+      "exact_label": "UNSAT",
+      "expected_action": "reject",
+      "kan_monitor_record": null,
+      "known_false_accept": false,
+      "monitor_event_count": 0,
+      "row_id": "resyn-3084-smt-006",
+      "source_artifact_ids": [
+        "exp3137_exact_safe_contract",
+        "exp3167_clean_live_verifier_rerun"
+      ]
+    },
+    {
+      "clean_rerun_live_row": false,
+      "clean_rerun_planned": true,
+      "contract_decision": "accept",
+      "contract_row_source": "exact_fixture",
+      "contract_rule_id": "ACCEPT_EXACT_COVERED_CONSISTENT",
+      "ebcn_score": null,
+      "exact_label": "SAT",
+      "expected_action": "accept",
+      "kan_monitor_record": null,
+      "known_false_accept": false,
+      "monitor_event_count": 0,
+      "row_id": "resyn-3084-smt-007",
+      "source_artifact_ids": [
+        "exp3137_exact_safe_contract",
+        "exp3167_clean_live_verifier_rerun"
+      ]
+    },
+    {
+      "clean_rerun_live_row": false,
+      "clean_rerun_planned": true,
+      "contract_decision": "reject",
+      "contract_row_source": "exact_fixture",
+      "contract_rule_id": "REJECT_EXACT_REJECT_MATCH",
+      "ebcn_score": null,
+      "exact_label": "UNSAT",
+      "expected_action": "reject",
+      "kan_monitor_record": null,
+      "known_false_accept": false,
+      "monitor_event_count": 0,
+      "row_id": "resyn-3084-smt-008",
+      "source_artifact_ids": [
+        "exp3137_exact_safe_contract",
+        "exp3167_clean_live_verifier_rerun"
+      ]
+    },
+    {
+      "clean_rerun_live_row": false,
+      "clean_rerun_planned": true,
+      "contract_decision": "accept",
+      "contract_row_source": "exact_fixture",
+      "contract_rule_id": "ACCEPT_EXACT_COVERED_CONSISTENT",
+      "ebcn_score": null,
+      "exact_label": "SAT",
+      "expected_action": "accept",
+      "kan_monitor_record": null,
+      "known_false_accept": false,
+      "monitor_event_count": 0,
+      "row_id": "resyn-3084-smt-009",
+      "source_artifact_ids": [
+        "exp3137_exact_safe_contract",
+        "exp3167_clean_live_verifier_rerun"
+      ]
+    },
+    {
+      "clean_rerun_live_row": false,
+      "clean_rerun_planned": true,
+      "contract_decision": "reject",
+      "contract_row_source": "exact_fixture",
+      "contract_rule_id": "REJECT_EXACT_REJECT_MATCH",
+      "ebcn_score": null,
+      "exact_label": "UNSAT",
+      "expected_action": "reject",
+      "kan_monitor_record": null,
+      "known_false_accept": false,
+      "monitor_event_count": 0,
+      "row_id": "resyn-3084-smt-010",
+      "source_artifact_ids": [
+        "exp3137_exact_safe_contract",
+        "exp3167_clean_live_verifier_rerun"
+      ]
+    },
+    {
+      "clean_rerun_live_row": false,
+      "clean_rerun_planned": true,
+      "contract_decision": "accept",
+      "contract_row_source": "exact_fixture",
+      "contract_rule_id": "ACCEPT_EXACT_COVERED_CONSISTENT",
+      "ebcn_score": null,
+      "exact_label": "SAT",
+      "expected_action": "accept",
+      "kan_monitor_record": null,
+      "known_false_accept": false,
+      "monitor_event_count": 0,
+      "row_id": "resyn-3084-smt-011",
+      "source_artifact_ids": [
+        "exp3137_exact_safe_contract",
+        "exp3167_clean_live_verifier_rerun"
+      ]
+    },
+    {
+      "clean_rerun_live_row": false,
+      "clean_rerun_planned": true,
+      "contract_decision": "reject",
+      "contract_row_source": "exact_fixture",
+      "contract_rule_id": "REJECT_EXACT_REJECT_MATCH",
+      "ebcn_score": null,
+      "exact_label": "UNSAT",
+      "expected_action": "reject",
+      "kan_monitor_record": null,
+      "known_false_accept": false,
+      "monitor_event_count": 0,
+      "row_id": "resyn-3084-smt-012",
+      "source_artifact_ids": [
+        "exp3137_exact_safe_contract",
+        "exp3167_clean_live_verifier_rerun"
+      ]
+    },
+    {
+      "clean_rerun_live_row": false,
+      "clean_rerun_planned": true,
+      "contract_decision": "accept",
+      "contract_row_source": "exact_fixture",
+      "contract_rule_id": "ACCEPT_EXACT_COVERED_CONSISTENT",
+      "ebcn_score": null,
+      "exact_label": "SAT",
+      "expected_action": "accept",
+      "kan_monitor_record": null,
+      "known_false_accept": false,
+      "monitor_event_count": 0,
+      "row_id": "resyn-3084-smt-013",
+      "source_artifact_ids": [
+        "exp3137_exact_safe_contract",
+        "exp3167_clean_live_verifier_rerun"
+      ]
+    },
+    {
+      "clean_rerun_live_row": false,
+      "clean_rerun_planned": true,
+      "contract_decision": "reject",
+      "contract_row_source": "exact_fixture",
+      "contract_rule_id": "REJECT_EXACT_REJECT_MATCH",
+      "ebcn_score": null,
+      "exact_label": "UNSAT",
+      "expected_action": "reject",
+      "kan_monitor_record": null,
+      "known_false_accept": false,
+      "monitor_event_count": 0,
+      "row_id": "resyn-3084-smt-014",
+      "source_artifact_ids": [
+        "exp3137_exact_safe_contract",
+        "exp3167_clean_live_verifier_rerun"
+      ]
+    },
+    {
+      "clean_rerun_live_row": false,
+      "clean_rerun_planned": true,
+      "contract_decision": "accept",
+      "contract_row_source": "exact_fixture",
+      "contract_rule_id": "ACCEPT_EXACT_COVERED_CONSISTENT",
+      "ebcn_score": null,
+      "exact_label": "SAT",
+      "expected_action": "accept",
+      "kan_monitor_record": null,
+      "known_false_accept": false,
+      "monitor_event_count": 0,
+      "row_id": "resyn-3084-smt-015",
+      "source_artifact_ids": [
+        "exp3137_exact_safe_contract",
+        "exp3167_clean_live_verifier_rerun"
+      ]
+    },
+    {
+      "clean_rerun_live_row": false,
+      "clean_rerun_planned": true,
+      "contract_decision": "reject",
+      "contract_row_source": "exact_fixture",
+      "contract_rule_id": "REJECT_EXACT_REJECT_MATCH",
+      "ebcn_score": null,
+      "exact_label": "UNSAT",
+      "expected_action": "reject",
+      "kan_monitor_record": null,
+      "known_false_accept": false,
+      "monitor_event_count": 0,
+      "row_id": "resyn-3084-smt-016",
+      "source_artifact_ids": [
+        "exp3137_exact_safe_contract",
+        "exp3167_clean_live_verifier_rerun"
+      ]
+    },
+    {
+      "clean_rerun_live_row": false,
+      "clean_rerun_planned": true,
+      "contract_decision": "accept",
+      "contract_row_source": "exact_fixture",
+      "contract_rule_id": "ACCEPT_EXACT_COVERED_CONSISTENT",
+      "ebcn_score": null,
+      "exact_label": "SAT",
+      "expected_action": "accept",
+      "kan_monitor_record": null,
+      "known_false_accept": false,
+      "monitor_event_count": 0,
+      "row_id": "resyn-3084-smt-017",
+      "source_artifact_ids": [
+        "exp3137_exact_safe_contract",
+        "exp3167_clean_live_verifier_rerun"
+      ]
+    },
+    {
+      "clean_rerun_live_row": false,
+      "clean_rerun_planned": true,
+      "contract_decision": "reject",
+      "contract_row_source": "exact_fixture",
+      "contract_rule_id": "REJECT_EXACT_REJECT_MATCH",
+      "ebcn_score": null,
+      "exact_label": "UNSAT",
+      "expected_action": "reject",
+      "kan_monitor_record": null,
+      "known_false_accept": false,
+      "monitor_event_count": 0,
+      "row_id": "resyn-3084-smt-018",
+      "source_artifact_ids": [
+        "exp3137_exact_safe_contract",
+        "exp3167_clean_live_verifier_rerun"
+      ]
+    },
+    {
+      "clean_rerun_live_row": false,
+      "clean_rerun_planned": true,
+      "contract_decision": "accept",
+      "contract_row_source": "exact_fixture",
+      "contract_rule_id": "ACCEPT_EXACT_COVERED_CONSISTENT",
+      "ebcn_score": null,
+      "exact_label": "SAT",
+      "expected_action": "accept",
+      "kan_monitor_record": null,
+      "known_false_accept": false,
+      "monitor_event_count": 0,
+      "row_id": "resyn-3084-smt-019",
+      "source_artifact_ids": [
+        "exp3137_exact_safe_contract",
+        "exp3167_clean_live_verifier_rerun"
+      ]
+    },
+    {
+      "clean_rerun_live_row": false,
+      "clean_rerun_planned": true,
+      "contract_decision": "reject",
+      "contract_row_source": "exact_fixture",
+      "contract_rule_id": "REJECT_EXACT_REJECT_MATCH",
+      "ebcn_score": null,
+      "exact_label": "UNSAT",
+      "expected_action": "reject",
+      "kan_monitor_record": null,
+      "known_false_accept": false,
+      "monitor_event_count": 0,
+      "row_id": "resyn-3084-smt-020",
+      "source_artifact_ids": [
+        "exp3137_exact_safe_contract",
+        "exp3167_clean_live_verifier_rerun"
+      ]
+    },
+    {
+      "clean_rerun_live_row": false,
+      "clean_rerun_planned": true,
+      "contract_decision": "accept",
+      "contract_row_source": "exact_fixture",
+      "contract_rule_id": "ACCEPT_EXACT_COVERED_CONSISTENT",
+      "ebcn_score": null,
+      "exact_label": "SAT",
+      "expected_action": "accept",
+      "kan_monitor_record": null,
+      "known_false_accept": false,
+      "monitor_event_count": 0,
+      "row_id": "resyn-3084-smt-021",
+      "source_artifact_ids": [
+        "exp3137_exact_safe_contract",
+        "exp3167_clean_live_verifier_rerun"
+      ]
+    },
+    {
+      "clean_rerun_live_row": false,
+      "clean_rerun_planned": true,
+      "contract_decision": "reject",
+      "contract_row_source": "exact_fixture",
+      "contract_rule_id": "REJECT_EXACT_REJECT_MATCH",
+      "ebcn_score": null,
+      "exact_label": "UNSAT",
+      "expected_action": "reject",
+      "kan_monitor_record": null,
+      "known_false_accept": false,
+      "monitor_event_count": 0,
+      "row_id": "resyn-3084-smt-022",
+      "source_artifact_ids": [
+        "exp3137_exact_safe_contract",
+        "exp3167_clean_live_verifier_rerun"
+      ]
+    },
+    {
+      "clean_rerun_live_row": false,
+      "clean_rerun_planned": true,
+      "contract_decision": "accept",
+      "contract_row_source": "exact_fixture",
+      "contract_rule_id": "ACCEPT_EXACT_COVERED_CONSISTENT",
+      "ebcn_score": null,
+      "exact_label": "SAT",
+      "expected_action": "accept",
+      "kan_monitor_record": null,
+      "known_false_accept": false,
+      "monitor_event_count": 0,
+      "row_id": "resyn-3084-smt-023",
+      "source_artifact_ids": [
+        "exp3137_exact_safe_contract",
+        "exp3167_clean_live_verifier_rerun"
+      ]
+    }
+  ],
+  "field_principles": {
+    "deployed_verifier_claim_allowed": "bounded diagnostics are not deployment",
+    "ebcn_kan_bounded_diagnostic_expansion_v2_ready": "sidecar diagnostics need explicit readiness",
+    "ebcn_localization_metrics": "energy diagnostics should localize violations",
+    "exact_labeled_row_count": "denominator must be visible",
+    "honest_verdict": "terminal verdict must state complete or blocked status",
+    "inference_substrate": "diagnostic work must declare no live model inference",
+    "kan_monitor_record_count": "KAN evidence must be countable",
+    "known_false_accept_rows_scored": "central regression rows must be included",
+    "live_integration_claim_allowed": "no live integration without evidence",
+    "promotion_blockers": "nonpromotion must be actionable",
+    "source_artifacts": "diagnostics must trace to exact labels"
+  },
+  "honest_verdict": "complete: ebcn_kan_bounded_diagnostic_expansion_v2_ready=true; exact_labeled_row_count=72; known_false_accept_rows_scored=2; kan_monitor_record_count=4; deployed_verifier_claim_allowed=false; live_integration_claim_allowed=false",
+  "inference_substrate": {
+    "clean_rerun_live_call_count_observed": 0,
+    "executes_models": false,
+    "generation_performed": false,
+    "hardware_execution": false,
+    "kind": "checked_in_artifact_ebcn_kan_bounded_diagnostic",
+    "live_integration": false,
+    "loads_model_weights": false,
+    "model_weight_mutation": false,
+    "new_live_model_calls": 0,
+    "offline_diagnostic_only": true,
+    "training_performed": false
+  },
+  "kan_monitor_coverage_metrics": {
+    "exact_set_monitor_record_coverage": 0.055556,
+    "known_false_accept_monitor_record_count": 2,
+    "known_false_accept_monitor_record_coverage": 1.0,
+    "monitor_record_count": 4,
+    "recorded_row_ids": [
+      "resyn-3084-arith-000",
+      "resyn-3084-arith-001",
+      "resyn-3084-arith-003",
+      "resyn-3084-smt-000"
+    ]
+  },
+  "kan_monitor_record_count": 4,
+  "known_false_accept_row_ids": [
+    "resyn-3084-arith-003",
+    "resyn-3084-smt-000"
+  ],
+  "known_false_accept_rows_scored": 2,
+  "live_integration_claim_allowed": false,
+  "matrix_version": "v28",
+  "promotion_blockers": [
+    "tiny denominator: 6 EBCN-scored rows and 4 KAN monitor records over 72 exact labels are insufficient for promotion.",
+    "No live integration or generation-path accept/reject gate consumes EBCN/KAN diagnostics.",
+    "No deployed verifier consumes these diagnostics; deployed_verifier_claim_allowed=false.",
+    "EBCN values are checked-in sidecar proxy replays, not learned live EBCN energies.",
+    "KAN records are bounded proof-carrying monitor metadata, not trained-network soundness.",
+    "Clean live verifier rerun is a gated skip with zero live model calls."
+  ],
+  "readiness_checks": {
+    "ebcn_localization_metrics_finite": true,
+    "exact_labeled_rows_present": true,
+    "inference_substrate_declares_no_live_calls": true,
+    "kan_monitor_record_coverage_countable": true,
+    "known_false_accept_rows_complete": true,
+    "promotion_blockers_explicit": true,
+    "required_sources_present": true
+  },
+  "run_date": "20260527",
+  "schema": "carnot.ebcn_kan_bounded_diagnostic_expansion.v2",
+  "source_artifacts": [
+    {
+      "exists": true,
+      "id": "agents_repo_instructions",
+      "path": "AGENTS.md",
+      "required": true,
+      "sha256": "b3d6581b04f16b85f77defb2837c98dc3b60ed51e10b347ecb36e609f318b619",
+      "source_type": "md"
+    },
+    {
+      "exists": true,
+      "id": "codex_repo_workflow",
+      "path": "CODEX.md",
+      "required": true,
+      "sha256": "1db7ebc1009714f872db83447828a8957c3abb72061832cc1bc307735cd96bbe",
+      "source_type": "md"
+    },
+    {
+      "exists": true,
+      "id": "claude_authenticity_rules",
+      "path": "CLAUDE.md",
+      "required": true,
+      "sha256": "7ef4cd87213dd3e5e3b2421ba98c22f3f5842d83bfe5fe51d232bdeb782c83e5",
+      "source_type": "md"
+    },
+    {
+      "exists": true,
+      "id": "research_references",
+      "path": "research-references.md",
+      "required": false,
+      "sha256": "60ea6986e91a0e2331d43c6c07670adbc8302fd9563bf40b6a667f246e298d0e",
+      "source_type": "md"
+    },
+    {
+      "exists": true,
+      "id": "verification_openspec",
+      "path": "openspec/capabilities/verification/spec.md",
+      "required": true,
+      "sha256": "53a9472b4d78d65f886b379c66bb6ce3c0003b2e041dea0d31d16e3b175d35ad",
+      "source_type": "md"
+    },
+    {
+      "exists": true,
+      "id": "exp3136_false_accept_autopsy",
+      "path": "results/experiment_3136_false_accept_root_cause_autopsy_v1.json",
+      "required": true,
+      "sha256": "3a61c8490030b607c73f50ba2ce145dc4591621ac76f016a42811bedd670776a",
+      "source_type": "json"
+    },
+    {
+      "exists": true,
+      "id": "exp3137_exact_safe_contract",
+      "path": "results/experiment_3137_exact_safe_accept_abstain_contract_v1.json",
+      "required": true,
+      "sha256": "c8d23896f879ceb1e912989e2ba13db0a43cd195a8ff5e8fb18a7be1b4582f2e",
+      "source_type": "json"
+    },
+    {
+      "exists": true,
+      "id": "exp3138_canonical_grounding",
+      "path": "results/experiment_3138_canonical_answer_vericot_grounding_pilot_v1.json",
+      "required": true,
+      "sha256": "fc07294c1e4ea32bb8d174c2e99a5d70aa68a1e7e16252eea28f442812300a21",
+      "source_type": "json"
+    },
+    {
+      "exists": true,
+      "id": "exp3158_ebcn_energy_sidecar",
+      "path": "results/experiment_3158_ebcn_energy_sidecar_calibration_v1.json",
+      "required": true,
+      "sha256": "b8df749e2f3a471079584550e50d191960d9f01673918a6e9d80e1b4bbd2c706",
+      "source_type": "json"
+    },
+    {
+      "exists": true,
+      "id": "exp3159_kan_monitor_expansion",
+      "path": "results/experiment_3159_kan_proof_carrying_monitor_expansion_v1.json",
+      "required": true,
+      "sha256": "ab9d5d5fae878314b0f3b7e1c6e357254a24b91f5d7069eb0e040c86888aa08a",
+      "source_type": "json"
+    },
+    {
+      "exists": true,
+      "id": "exp3167_clean_live_verifier_rerun",
+      "path": "results/experiment_3167_clean_live_sota_verifier_rerun_v9.json",
+      "required": false,
+      "sha256": "093d07548fae5908c968ffa020b584fc5939b86e86002a4f0b4066b765b79711",
+      "source_type": "json"
+    },
+    {
+      "exists": true,
+      "id": "exp3173_module",
+      "path": "python/carnot/eval/ebcn_kan_bounded_diagnostic_expansion_v2.py",
+      "required": false,
+      "sha256": "51dc8c2da7ee63749b492356f93ad23e365789b6abad8f5a33b2d8c22ab814bd",
+      "source_type": "py"
+    },
+    {
+      "exists": true,
+      "id": "exp3173_tests",
+      "path": "tests/python/test_experiment_3173_ebcn_kan_bounded_diagnostic_expansion_v2.py",
+      "required": false,
+      "sha256": "b25807b21d98f061c99926a6c114d388d6b3a8a7b20c02f50095318f654138fb",
+      "source_type": "py"
+    }
+  ],
+  "source_checksums": {
+    "AGENTS.md": "b3d6581b04f16b85f77defb2837c98dc3b60ed51e10b347ecb36e609f318b619",
+    "CLAUDE.md": "7ef4cd87213dd3e5e3b2421ba98c22f3f5842d83bfe5fe51d232bdeb782c83e5",
+    "CODEX.md": "1db7ebc1009714f872db83447828a8957c3abb72061832cc1bc307735cd96bbe",
+    "openspec/capabilities/verification/spec.md": "53a9472b4d78d65f886b379c66bb6ce3c0003b2e041dea0d31d16e3b175d35ad",
+    "python/carnot/eval/ebcn_kan_bounded_diagnostic_expansion_v2.py": "51dc8c2da7ee63749b492356f93ad23e365789b6abad8f5a33b2d8c22ab814bd",
+    "research-references.md": "60ea6986e91a0e2331d43c6c07670adbc8302fd9563bf40b6a667f246e298d0e",
+    "results/experiment_3136_false_accept_root_cause_autopsy_v1.json": "3a61c8490030b607c73f50ba2ce145dc4591621ac76f016a42811bedd670776a",
+    "results/experiment_3137_exact_safe_accept_abstain_contract_v1.json": "c8d23896f879ceb1e912989e2ba13db0a43cd195a8ff5e8fb18a7be1b4582f2e",
+    "results/experiment_3138_canonical_answer_vericot_grounding_pilot_v1.json": "fc07294c1e4ea32bb8d174c2e99a5d70aa68a1e7e16252eea28f442812300a21",
+    "results/experiment_3158_ebcn_energy_sidecar_calibration_v1.json": "b8df749e2f3a471079584550e50d191960d9f01673918a6e9d80e1b4bbd2c706",
+    "results/experiment_3159_kan_proof_carrying_monitor_expansion_v1.json": "ab9d5d5fae878314b0f3b7e1c6e357254a24b91f5d7069eb0e040c86888aa08a",
+    "results/experiment_3167_clean_live_sota_verifier_rerun_v9.json": "093d07548fae5908c968ffa020b584fc5939b86e86002a4f0b4066b765b79711",
+    "tests/python/test_experiment_3173_ebcn_kan_bounded_diagnostic_expansion_v2.py": "b25807b21d98f061c99926a6c114d388d6b3a8a7b20c02f50095318f654138fb"
+  },
+  "source_row_summary": {
+    "clean_rerun_live_row_count": 0,
+    "clean_rerun_planned_row_count": 72,
+    "ebcn_scored_row_count": 6,
+    "exact_labeled_row_count": 72,
+    "kan_monitor_row_count": 4,
+    "known_false_accept_row_count": 2
+  },
+  "spec_refs": [
+    "REQ-VERIFY-3173",
+    "SCENARIO-VERIFY-3173"
+  ],
+  "tests_run": [
+    "focused-REQ-VERIFY-3173"
+  ]
+}

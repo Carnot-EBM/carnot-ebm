@@ -1,0 +1,127 @@
+{
+  "artifact": "experiment_3306_capstone_v305",
+  "blocker_delta_from_v304": -2,
+  "capstone_v305_ready": true,
+  "duration_s": 1.25,
+  "experiment_id": "exp3306",
+  "fr11_memory_replay_safe": true,
+  "garak_attack_success_rate": 0.0,
+  "garak_gate_passed": true,
+  "gate_status_details": {
+    "fr11_replay": {
+      "fr11_replay_safe": true,
+      "source_experiment_id": "exp3304"
+    },
+    "garak_gate": {
+      "dataflip_gate_passed": false,
+      "garak_gate_passed": true,
+      "source_experiment_id": "exp3300"
+    },
+    "repair_headline": {
+      "repair_headline_claim_allowed": false,
+      "source_experiment_id": "exp3303"
+    }
+  },
+  "honest_verdict": "complete: capstone_v305_ready=true; paper_ready=false; publication_blocker_count=8; blocker_delta_from_v304=-2; garak_gate_passed=true; garak_attack_success_rate=0.0; repair_headline_claim_allowed=false; fr11_memory_replay_safe=true; kan_headline_retired=true; next_top_gap=clear_garak_dataflip_and_quality_flags",
+  "inference_substrate": "aggregation_from_upstream_artifacts",
+  "kan_headline_retired": true,
+  "matrix_v37_summary": {
+    "fr11_replay_safe": true,
+    "garak_gate_passed": true,
+    "honest_verdict": "complete: matrix_v37_ready=true; paper_ready=false",
+    "matrix_v37_ready": true,
+    "paper_blocker_count": 8,
+    "paper_ready": false,
+    "repair_headline_claim_allowed": false,
+    "top_gap": "clear_garak_dataflip_and_quality_flags"
+  },
+  "milestone": "2026.05.305",
+  "next_top_gap": "clear_garak_dataflip_and_quality_flags",
+  "no_conductor_execution": true,
+  "no_external_submission_or_publication": true,
+  "no_new_cuda_probe": true,
+  "no_new_fr11_weight_update": true,
+  "no_new_garak_run": true,
+  "no_new_hardware_run": true,
+  "no_new_kan_training": true,
+  "no_new_model_execution": true,
+  "no_new_repair_run": true,
+  "no_new_teacher_labeling": true,
+  "no_new_verifier_run": true,
+  "no_next_milestone_activation": true,
+  "no_push": true,
+  "ops_changelog_modified_by_this_task": false,
+  "ops_status_modified_by_this_task": false,
+  "paper_ready": false,
+  "paper_ready_blockers": [
+    "matrix_paper_ready_false",
+    "publication_blockers_present",
+    "repair_headline_claim_not_allowed"
+  ],
+  "principle_annotations": {
+    "aggregation_only": "Capstone v305 reads matrix v37 and the .304 capstone only.",
+    "blocker_delta": "Blocker movement is compared to the .304 capstone count.",
+    "garak": "Garak attack-success gate pass is separated from DataFlip and quality flags.",
+    "paper_ready": "Publication readiness follows measured blockers, not task completion.",
+    "protected_files": "Roadmap and conductor files stay untouched during closeout.",
+    "repair": "Repair evidence is not headline-eligible until the repair audit allows it."
+  },
+  "prior_capstone_summary": {
+    "capstone_v304_ready": true,
+    "honest_verdict": "complete: capstone_v304_ready=true; paper_ready=false",
+    "next_top_gap": "pass_garak_redteam_gate",
+    "paper_ready": false,
+    "publication_blocker_count": 10
+  },
+  "prior_milestone": "2026.05.304",
+  "prior_publication_blocker_count": 10,
+  "protected_file_status": {
+    "research-roadmap.yaml": {
+      "git_status_available": true,
+      "modified": false,
+      "status": ""
+    },
+    "scripts/research_conductor.py": {
+      "git_status_available": true,
+      "modified": false,
+      "status": ""
+    }
+  },
+  "protected_files_untouched": true,
+  "publication_blocker_count": 8,
+  "random_seed": 3306,
+  "recommended_next_milestone_title": "DataFlip And Quality-Flag Cleanup Before Publication Readiness",
+  "repair_headline_claim_allowed": false,
+  "reproducibility_checksum": "1212a6eb1a87405a6b099ab9612bdc4310c87553717d7cada942ccf14be2c09e",
+  "research_roadmap_modified_by_this_task": false,
+  "run_date": "20260529",
+  "schema": "carnot.milestone_capstone.v305_matrix_v37_closeout.v1",
+  "schema_version": "carnot.milestone_capstone.v305_matrix_v37_closeout.v1",
+  "scripts_research_conductor_modified_by_this_task": false,
+  "source_artifacts": [
+    {
+      "honest_verdict": "complete: matrix_v37_ready=true; paper_ready=false",
+      "path": "results/experiment_3305_evidence_matrix_v37.json",
+      "present": true,
+      "readable_json_object": true,
+      "reported_experiment_id": "exp3305",
+      "role": "evidence_matrix_v37",
+      "sha256": "497f18badd2ebe1201f4bd2543bba5f6f2457d1e2924cb6226e69d52ceee19fb"
+    },
+    {
+      "honest_verdict": "complete: capstone_v304_ready=true; paper_ready=false",
+      "path": "results/experiment_3293_capstone_v304.json",
+      "present": true,
+      "readable_json_object": true,
+      "reported_experiment_id": "exp3293",
+      "role": "prior_capstone_v304",
+      "sha256": "557b85f07885c9d609eded3e0f650293e2f5cf4d12da82a471fd0c2a7ca033a7"
+    }
+  ],
+  "source_checksums": {
+    "results/experiment_3293_capstone_v304.json": "557b85f07885c9d609eded3e0f650293e2f5cf4d12da82a471fd0c2a7ca033a7",
+    "results/experiment_3305_evidence_matrix_v37.json": "497f18badd2ebe1201f4bd2543bba5f6f2457d1e2924cb6226e69d52ceee19fb"
+  },
+  "task_id": "exp3306-capstone-v305",
+  "traceability_modified_by_this_task": false
+}

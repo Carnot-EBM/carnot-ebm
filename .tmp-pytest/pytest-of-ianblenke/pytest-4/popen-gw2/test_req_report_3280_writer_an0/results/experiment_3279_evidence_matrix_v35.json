@@ -1,0 +1,251 @@
+{
+  "experiment_id": "exp3279",
+  "honest_verdict": "complete: matrix_v35_ready=false",
+  "invariant_violations": [
+    "matrix source gate not ready"
+  ],
+  "matrix_v35_ready": false,
+  "next_gap_candidates": [
+    {
+      "gap": "unblock_garak_redteam_eval",
+      "rank": 1,
+      "reason": "blocked_garak_unavailable",
+      "source_experiment_id": "exp3274"
+    }
+  ],
+  "paper_ready": false,
+  "publication_blocker_count_estimate": 105,
+  "publication_blocker_delta_from_v302": 0,
+  "publication_readiness": {
+    "blocking_rows": [
+      "exp3273",
+      "exp3274",
+      "exp3275",
+      "exp3276",
+      "exp3277"
+    ],
+    "flagged_rows": [
+      "exp3270",
+      "exp3271",
+      "exp3272",
+      "exp3274",
+      "exp3275"
+    ],
+    "paper_ready": false,
+    "required_gates": {
+      "clean_verifier": false,
+      "fr11_full_corpus": true,
+      "full_15k_corpus": true,
+      "garak_redteam": false,
+      "kan_full_eval": true,
+      "repair_gate": false,
+      "repair_micro_panel": false
+    }
+  },
+  "rows": [
+    {
+      "blocker_reasons": [],
+      "bounded_claims": [],
+      "experiment_id": "exp3267",
+      "path": "results/exp3267.json",
+      "quality_flags": [],
+      "ready": true,
+      "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "status": "clean",
+      "summary": {}
+    },
+    {
+      "blocker_reasons": [],
+      "bounded_claims": [],
+      "experiment_id": "exp3268",
+      "path": "results/exp3268.json",
+      "quality_flags": [],
+      "ready": true,
+      "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "status": "clean",
+      "summary": {}
+    },
+    {
+      "blocker_reasons": [],
+      "bounded_claims": [],
+      "experiment_id": "exp3269",
+      "path": "results/exp3269.json",
+      "quality_flags": [],
+      "ready": true,
+      "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "status": "clean",
+      "summary": {}
+    },
+    {
+      "blocker_reasons": [],
+      "bounded_claims": [],
+      "experiment_id": "exp3270",
+      "path": "results/exp3270.json",
+      "quality_flags": [
+        {
+          "detail": "duration_s=11.875108",
+          "kind": "DURATION_TOO_SHORT"
+        }
+      ],
+      "ready": true,
+      "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "status": "flagged",
+      "summary": {}
+    },
+    {
+      "blocker_reasons": [],
+      "bounded_claims": [],
+      "experiment_id": "exp3271",
+      "path": "results/exp3271.json",
+      "quality_flags": [
+        {
+          "detail": "duration_s=11.75169",
+          "kind": "DURATION_TOO_SHORT"
+        }
+      ],
+      "ready": true,
+      "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "status": "flagged",
+      "summary": {
+        "cumulative_label_count": 14000,
+        "garak_seed_count": 1000
+      }
+    },
+    {
+      "blocker_reasons": [],
+      "bounded_claims": [],
+      "experiment_id": "exp3272",
+      "path": "results/exp3272.json",
+      "quality_flags": [
+        {
+          "detail": "counts match exactly",
+          "kind": "TAUTOLOGY"
+        }
+      ],
+      "ready": true,
+      "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "status": "flagged",
+      "summary": {
+        "assembled_example_count": 15000,
+        "full_15k_corpus_ready": true,
+        "leakage_audit_passed": true
+      }
+    },
+    {
+      "blocker_reasons": [],
+      "bounded_claims": [
+        "sidecar_only=true",
+        "delong_noninferiority_passed=false"
+      ],
+      "experiment_id": "exp3273",
+      "path": "results/exp3273.json",
+      "quality_flags": [],
+      "ready": true,
+      "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "status": "sidecar-only",
+      "summary": {
+        "delong_noninferiority_passed": false,
+        "full_corpus_auprc": 0.626269,
+        "full_corpus_auroc": 0.475326,
+        "sidecar_only": true,
+        "v4_full_eval_ready": true
+      }
+    },
+    {
+      "blocker_reasons": [
+        "blocked_garak_unavailable"
+      ],
+      "bounded_claims": [],
+      "experiment_id": "exp3274",
+      "path": "results/exp3274.json",
+      "quality_flags": [
+        {
+          "detail": "duration_s=1.138554",
+          "kind": "DURATION_TOO_SHORT"
+        }
+      ],
+      "ready": false,
+      "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "status": "blocked",
+      "summary": {
+        "dataflip_gate_passed": true,
+        "garak_available": false,
+        "garak_gate_passed": false,
+        "garak_redteam_eval_ready": false
+      }
+    },
+    {
+      "blocker_reasons": [
+        "abstention_rate_above_threshold"
+      ],
+      "bounded_claims": [],
+      "experiment_id": "exp3275",
+      "path": "results/exp3275.json",
+      "quality_flags": [
+        {
+          "detail": "duration_s=9.73802",
+          "kind": "DURATION_TOO_SHORT"
+        }
+      ],
+      "ready": false,
+      "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "status": "blocked",
+      "summary": {
+        "clean_verifier_rerun_ready": false,
+        "repair_gate_input_clean_enough": false
+      }
+    },
+    {
+      "blocker_reasons": [
+        "2 of 3 gate(s) failed; first failure: exp3274-prompt-injection-v4-garak-dataflip-redteam-eval-v1.garak_redteam_eval_ready (actual=False == expected=True)",
+        "actual=False == expected=True",
+        "actual=False == expected=True"
+      ],
+      "bounded_claims": [],
+      "experiment_id": "exp3276",
+      "path": "results/exp3276.json",
+      "quality_flags": [],
+      "ready": false,
+      "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "status": "blocked",
+      "summary": {
+        "blocked_at_layer": "conductor_pre_gate",
+        "status": "blocked"
+      }
+    },
+    {
+      "blocker_reasons": [
+        "artifact_missing: results/experiment_3277_sota_repair_micro_panel_v9.json"
+      ],
+      "bounded_claims": [],
+      "experiment_id": "exp3277",
+      "path": "results/exp3277.json",
+      "quality_flags": [],
+      "ready": false,
+      "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "status": "missing",
+      "summary": {}
+    },
+    {
+      "blocker_reasons": [],
+      "bounded_claims": [],
+      "experiment_id": "exp3278",
+      "path": "results/exp3278.json",
+      "quality_flags": [],
+      "ready": true,
+      "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "status": "clean",
+      "summary": {
+        "adaptation_score": 1.0,
+        "controller_memory_only": true,
+        "forgetting_rate": 0.017857,
+        "foundation_weight_updates_performed": false,
+        "fr11_full_corpus_audit_ready": true,
+        "heldout_trace_count": 2056,
+        "negative_transfer_rate": 0.0,
+        "retention_score": 0.982143
+      }
+    }
+  ],
+  "task_id": "exp3279-evidence-matrix-v35"
+}
