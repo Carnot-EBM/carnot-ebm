@@ -415,6 +415,44 @@ abstention for code-domain candidates.
   `narrowed_to_math_only_abstain_on_code`, and `blocked` with synthetic
   fixtures rather than hard-coding a real-corpus success string.
 
+### REQ-SPOE-3718: FoVer Risk-Coverage Abstention Characterization
+
+The pipeline MUST provide an Exp 3718 runner that characterizes the frozen
+FoVer step-error discriminator as a selective-prediction abstention signal,
+not as a best-of-N selector.  The runner MUST load the cached FoVer per-step
+labels, verifier ensemble energy scores, and a same-corpus entropy /
+self-certainty baseline, compute risk-coverage curves for each signal, and
+report AURC, risk at fixed coverage, coverage at a 5% selective-risk target,
+calibration, CIs over at least five deterministic seeds, and an honest terminal
+verdict.  If the per-step scores are unavailable, the runner MUST block without
+fabricating metrics.
+
+**Acceptance criteria:**
+- The runner checks that the FoVer per-step score corpus is cached and contains
+  at least 1000 scored math rows before reporting runnable metrics.
+- The artifact includes `honest_verdict`, `inference_substrate`,
+  `energy_aurc`, `baseline_aurc`, `energy_beats_baseline_abstention`,
+  `coverage_at_5pct_risk`, `risk_at_fixed_coverage`, `energy_aurc_ci`,
+  `n_seeds`, `n_examples`, `calibration_brier_ece`,
+  `adversarial_verify_clean`, `random_seed`, `reproducibility_checksum`, and
+  `duration_s`.
+- `energy_beats_baseline_abstention` is a bare top-level bool and is true only
+  when energy has lower AURC than the baseline and the paired CI separates in
+  favor of energy at the AURC or at least one fixed-coverage operating point.
+- AURC, AUROC, and fixed-coverage risk are reported as distinct metrics; the
+  runner MUST reject bit-identical values across these metric classes.
+- If energy AURC implies AUROC >= 0.99 on at least 1000 rows, the runner MUST
+  treat the result as a leak guard failure and return the honest negative or
+  blocked verdict with diagnostic evidence rather than publishing a positive
+  abstention signal.
+- The honest verdict is one of:
+  `complete: energy_is_a_better_selective_prediction_signal_than_entropy_deployable_abstention_gate`,
+  `complete: energy_ties_or_loses_to_entropy_as_abstention_signal_honest_negative`,
+  or `complete: blocked_fover_perstep_scores_unavailable`.
+- Tests cover `energy_better_abstention_signal`,
+  `energy_ties_or_loses_to_entropy`, and `blocked` with synthetic fixtures
+  rather than hard-coding a real-corpus success string.
+
 ## Scenarios
 
 ### SCENARIO-INFRA-052: Version-Blocked Model Raises Error
@@ -594,6 +632,19 @@ overclaim-removal bool, math-preservation bool, and E2E result from the
 fixture measurements rather than hard-coding a real-corpus success string.
 
 **Spec traces:** REQ-SPOE-3706
+
+### SCENARIO-SPOE-3718: Selective-Prediction Outcomes Stay Honest
+
+**Given** synthetic FoVer step fixtures covering
+`energy_better_abstention_signal`, `energy_ties_or_loses_to_entropy`, and
+`blocked`
+**When** the Exp 3718 risk-coverage artifact is assembled
+**Then** it derives the terminal verdict, bare
+`energy_beats_baseline_abstention` bool, AURC values, fixed-coverage risk
+points, and coverage-at-5%-risk operating point from the fixture measurements
+rather than hard-coding a real-corpus success string.
+
+**Spec traces:** REQ-SPOE-3718
 
 ### REQ-SAMPLE-020: SparseIsingEBM K-Regular Graph
 
