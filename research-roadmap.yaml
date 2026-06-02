@@ -393,7 +393,7 @@ tasks:
           principle: "Terminal prefix for reconciler classification."
         inference_substrate: "aggregation_from_upstream_artifacts (principle: reads north-star + primary artifacts; no live inference; no compute-bound marker)."
         provenance_rows:
-          principle: "Per-number {headline_number, value, primary_artifact, has_seed, has_checksum, adversarial_clean} -- the end-to-end G4 trace."
+          principle: "Per-number {{headline_number, value, primary_artifact, has_seed, has_checksum, adversarial_clean}} -- the end-to-end G4 trace."
         n_numbers_audited:
           principle: "How many headline + north-star numbers were traced (sample-size of the audit)."
         all_numbers_trace_to_clean_artifacts:
@@ -497,7 +497,7 @@ tasks:
         coverage_at_5pct_risk:
           principle: "The deployable operating point: what fraction of steps can be kept (auto-accepted) at <=5% selective error -- the abstention gate's practical value."
         risk_at_fixed_coverage:
-          principle: "Selective risk at coverage {50,80,90}% -- the risk-coverage operating points for deployment."
+          principle: "Selective risk at coverage {{50,80,90}}% -- the risk-coverage operating points for deployment."
         energy_aurc_ci:
           principle: "CI of the energy AURC (5 seeds) -- a point estimate cannot decide vs the baseline."
         n_seeds:
@@ -822,7 +822,7 @@ tasks:
           principle: "Terminal prefix for reconciler classification."
         inference_substrate: "aggregation_from_upstream_artifacts (principle: reads prior artifacts + docs; no live inference; no compute-bound marker)."
         converged_state_ledger:
-          principle: "Per-thread {thread, terminal_status, authoritative_artifact} -- the honest convergence record."
+          principle: "Per-thread {{thread, terminal_status, authoritative_artifact}} -- the honest convergence record."
         all_self_generable_threads_settled:
           principle: "BARE bool. True iff every loop-self-generable thread has a terminal status (the convergence claim). STORE AS BARE true/false."
         candidate_next_theses:
