@@ -104,3 +104,12 @@ Given Exp 3728 reports no stable bounded EBT convergence evidence, the kill-gate
 
 ## SCENARIO-EBT-3729-PASS: Stable Diagnostics Green-Light Matched Compute
 Given Exp 3728 reports converged finite losses with no NaN or divergence, the kill-gate script writes `ebt_trained_stably=true`, `green_light_342=true`, and a one-line recommended `.342` setup that names the Exp 3728 checkpoint evidence and the Exp 3727 matched FLOP budget.
+
+## REQ-EBT-3731: Thesis-A EBT Bring-Up Capstone Aggregation
+The system must provide `scripts/experiment_3731_capstone_v341.py` to aggregate Exp 3724 through Exp 3730 from checked-in JSON artifacts only. The capstone must exclude any upstream artifact carrying `flagged_adversarial=true` from headline aggregation, cite every unflagged upstream artifact with imported fields and SHA256 hashes, preserve the paper-ready and frozen-headline invariants from Exp 3724, carry the kill-gate part-(a) verdict from Exp 3729, and write `results/experiment_3731_capstone_v341.json` with the required principle-annotated fields. The capstone must not claim that energy-as-generator works; `green_light_342=true` only means stable enough to run the matched-compute comparison, while `green_light_342=false` records Thesis-A as bounded at small scale.
+
+## SCENARIO-EBT-3731: Bounded Kill-Gate Produces Honest Capstone
+Given Exp 3729 reports `green_light_342=false`, the capstone writes a terminal `complete:` verdict ending in `bounded_paper_ready_true_frozen_headline_unchanged`, records `kill_gate_part_a_passed=false`, `green_light_342=false`, `thesis_a_bringup_outcome` as bounded at small scale, preserves paper readiness and the frozen FoVer 0.9131 headline, and keeps P0.1 / energy-selection as honest-negative-bounded.
+
+## SCENARIO-EBT-3731-FLAGGED: Flagged Upstream Artifacts Are Excluded
+Given any Exp 3724 through Exp 3730 source artifact carries `flagged_adversarial=true`, the capstone records that experiment in `flagged_artifacts_excluded` and excludes it from headline aggregation and unflagged citation fields rather than laundering it into the milestone outcome.
