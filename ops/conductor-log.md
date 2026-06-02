@@ -7593,3 +7593,5 @@ web search: https://docs.garak.ai/garak/examples/pr |
 | 2026-06-02 12:31 UTC | PolarFire opportunistic reachability + continuity  | OK | 89 passed in 4.53s |
 | 2026-06-02 12:43 UTC | GateMate continuity audit (documentation-only — op | OK | 90 passed in 4.15s |
 | 2026-06-02 13:02 UTC | Capstone v339 + G1-G4 gate synthesis — which singl | OK | 87 passed in 4.54s |
+| 2026-06-02 13:35 UTC | Plan milestone 2026.06.340 | OK | 11 tasks proposed |
+| 2026-06-02 13:37 UTC | Milestone 2026.06.340 activated | OK | 11 tasks queued |
