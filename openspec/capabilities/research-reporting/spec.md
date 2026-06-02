@@ -16300,3 +16300,73 @@ ops/status/changelog and BMAD traceability reconciliation to the conductor.
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-REPORT-3724 | Implemented (`python/carnot/reporting/archive_v340_activate_v341_3724.py`, `scripts/experiment_3724_archive_v340_activate_v341.py`) | Implemented (`tests/python/test_experiment_3724_archive_v340_activate_v341.py`) |
+
+### REQ-REPORT-3732: Archive V341 False-Negative And Activate V342 Handoff
+
+The Exp 3732 workflow shall archive milestone `2026.06.341` and confirm that
+`research-roadmap.yaml` is active for milestone `2026.06.342`. It SHALL write
+`results/experiment_3732_archive_v341_activate_v342.json` by aggregating
+existing upstream artifacts, `research-complete.yaml`, `research-roadmap.yaml`,
+`openspec/change-proposals/research-roadmap-vNEXT.md`, and
+`ops/north-star.md` only. It SHALL NOT run live inference, push changes, modify
+`scripts/research_conductor.py`, modify `ops/north-star.md`, modify
+`ops/status.md`, modify `ops/changelog.md`, modify `_bmad/traceability.md`, or
+place any GGUF, CUDA, live-model, `model_specs`, or `target_model` marker in
+the terminal artifact.
+
+The workflow SHALL update the single `2026.06.341` block in
+`research-complete.yaml`, or append it if absent, so the archive records the
+honest Thesis-A bring-up state: Exp 3725 vendor/audit passed with the EBT fork
+importable; Exp 3726 single-step smoke passed with a 38M EBT fitting one 3090
+and finite decreasing loss; Exp 3727 built and tested the matched-compute
+harness; Exp 3728 blocked at zero bounded-training steps because its
+precondition check saw `ebt_vendored=false` and `smoke_passed=false` despite
+the upstream positive controls; Exp 3729 and Exp 3731 therefore recorded an
+infrastructure false-negative, not a mechanism bound. The archive update SHALL
+be idempotent and SHALL archive the full `.341` planned task count.
+
+The workflow SHALL also record that milestone `2026.06.342` remains the direct
+Thesis-A continuation that corrects the false-negative and runs the genuine
+bounded-training kill gate. It SHALL preserve `paper_ready=true`, preserve the
+frozen FoVer headline at `0.9131`, and preserve P0.1 / energy-selection as
+honest-negative-bounded while keeping energy-as-generator open and untested at
+the bounded-training level.
+
+The terminal artifact SHALL include bare top-level values for `honest_verdict`,
+`inference_substrate`, `v341_outcome_recorded`,
+`kill_gate_false_negative_recorded`, `thesis_a_still_open_recorded`,
+`paper_ready_preserved`, `p01_status_preserved`, `n_tasks_archived`,
+`adversarial_verify_clean`, `random_seed`, `reproducibility_checksum`, and
+`duration_s`, plus `field_principles` documenting why each required value
+exists. `inference_substrate` SHALL be exactly
+`aggregation_from_upstream_artifacts (principle: JSON-read + format; 0.0001s floor; no compute-bound marker so it does not false-flag).`
+`adversarial_verify_clean` SHALL be true only after
+`scripts/adversarial_verify.py` reports no critical flag on the written
+artifact. `honest_verdict` SHALL equal
+`complete: archived_v341_thesis_a_smoke_passed_but_killgate_was_infra_false_negative_part_a_reopened_untested_v342_active_paper_ready_true_frozen_headline_unchanged`.
+`duration_s` SHALL use the aggregation-task plausibility floor of at least
+`0.0001`.
+
+#### SCENARIO-REPORT-3732: V341 Archive Reopens The False-Negative Kill Gate
+
+**Given** the active roadmap declares milestone `2026.06.342`, the `.342`
+design document states that the `.341` bounded-training verdict was an
+infrastructure false-negative, Exp 3725 through Exp 3727 record positive vendor,
+smoke, and harness evidence, Exp 3728 records `blocked_ebt` with zero steps and
+wrong failed preconditions, and Exp 3731 preserves `paper_ready=true`, P0.1 as
+honest-negative-bounded, and frozen FoVer `0.9131`
+**When** the Exp 3732 workflow runs
+**Then** it writes the required terminal artifact, records all required
+principle-annotated bare fields, confirms `.342` active, archives all `.341`
+tasks exactly once in `research-complete.yaml`, records `.341` part-(a) as
+re-opened untested rather than bounded, records Exp 3729 as an infrastructure
+false-negative caused by the Exp 3728 cwd/import-path precondition bug, passes
+adversarial verification without a critical flag, leaves
+`ops/north-star.md` and `scripts/research_conductor.py` unchanged, and leaves
+ops/status/changelog and BMAD traceability reconciliation to the conductor.
+
+## Implementation Status (REQ-REPORT-3732)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-3732 | Planned (`python/carnot/reporting/archive_v341_activate_v342_3732.py`, `scripts/experiment_3732_archive_v341_activate_v342.py`) | Planned (`tests/python/test_experiment_3732_archive_v341_activate_v342.py`) |
