@@ -8146,3 +8146,38 @@ Wrote operational retro for 2026.06.331. Found no experiment commits; 0 experime
 - 2026-06-02: PolarFire opportunistic reachability + continuity audit (per Hardware-Task Continuity) (✅ Complete) — honest_verdict=complete: polarfire_continuity_confirmed_reachable; results/experiment_3687_polarfire_continuity_v24.json
 - 2026-06-02: GateMate continuity audit (documentation-only — openFPGALoader missing in .331-.336, per known-issues) (✅ Complete) — honest_verdict=complete: gatemate_continuity_audit_recorded_openfpgaloader_state_flash_smoke_host_io_hang_known_blocker; results/experiment_3688_gatemate_continuity_audit_v24.json
 - 2026-06-02: Capstone v337 + G1-G4 gate synthesis — did the dependency-aware weighting clear G1-rigor into an operator-ready re-freeze package? is the discrimination-vs-selection gap fixable? did the detector's code operating point recover? does product value survive the self-certainty baseline? paper_ready must stay TRUE; frozen 0.9131 stays frozen. (⚠️ Blocked) — honest_verdict=complete: capstone_v337_dependency_aware_g1_rigor_confirmed_package_blocked_selection_not_measured_detector_code_math_only_earned_paper_ready_true_frozen_headline_unchanged; results/experiment_3689_capstone_and_g_gate_v337.json
+
+## 2026-06-02 — Planned milestone 2026.06.338 (outer-loop Claude Opus 4.8)
+
+Triggered by: conductor "Plan next milestone" step (the autonomous gemini planner FAILED
+with a `.js:345500:14` crash + 1201s timeout at .337 close — replanned by Claude).
+
+Produced `research-roadmap-next.yaml` (milestone 2026.06.338, 12 tasks) + kept the pre-staged
+`openspec/change-proposals/research-roadmap-vNEXT.md`. Theme: FINISH the headline re-freeze
+cleanly + FIX the two product gaps .337 left unresolved.
+
+Grounded in the .337 outcomes (read via summarize_artifact.py):
+- exp3680 CONFIRMED dependency-aware weighting clears G1-rigor (production AUROC 0.9253 > frozen
+  0.9131, +0.0122, 5-seed dual-condition, adversarial-clean, leak-free) — a re-freeze CANDIDATE.
+- exp3681 (re-freeze package) + exp3689 (capstone) were FLAGGED DURATION_TOO_SHORT — vestigial
+  GGUF/CUDA markers on verifier-scoring/aggregation artifacts tripping the duration floor.
+- exp3682 (selection diagnosis) was FLAGGED TAUTOLOGY + degenerate (per_candidate_auroc collapsed
+  to 0.555; no-op fixes) — the question is still open.
+- exp3683 code stays math-only under reweighting; exp3684 product value robust over self-certainty;
+  exp3685 FR-11 v11 recovers no-collapse; paper_ready stayed TRUE; frozen 0.9131 unchanged.
+
+.338 tasks (exp3690–exp3701): archive/activate; backend diag v4 (keep codex — gemini still crashes
+real workloads); CLEAN re-emit of the operator re-freeze package; external published comparator;
+PROPER selection re-diagnosis (pessimistic LCB + bootstrapped BoN + self-certainty, non-degeneracy
+guarded); code-NATIVE verifier for the code-blind detector + conditional re-ship; FR-11 v12
+(drift-reset + cross-session persistence); KV260/PolarFire/GateMate continuity; capstone v338.
+
+Disciplines: all tasks codex+requires_codex (anti-wipeout); inference-substrate hygiene baked into
+every aggregation/scoring prompt (the .337 DURATION fix); anti-poison test clauses; bare gated
+fields; prior_failures (exp3694/3695, retire_if_same=true) + operator_override on legit
+continuations. Validated: YAML parses, milestone == _expected_next_milestone('2026.06.337'),
+exclusion-manifest lint = 5 WARNINGs (all operator_override, activation proceeds), no HARD
+violations. Added 5 new references to research-references.md (.338 planning sweep:
+arXiv:2511.18630, 2604.04648, 2605.30619, 2605.01831, 2510.04087).
+
+Did NOT modify research-roadmap.yaml or scripts/research_conductor.py. Did NOT push.
