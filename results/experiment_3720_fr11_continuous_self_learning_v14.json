@@ -1,0 +1,328 @@
+{
+  "acceptance_gate": {
+    "condition": "template_robust_or_graceful_fallback == true AND collapse_detected_deploy_arm == false AND template_library_bounded == true AND pass_rate_vs_true_accuracy_distinct_assert == true",
+    "passed": true,
+    "principle": "Distribution-shift robustness is validated only when the template helps OR falls back gracefully (never hurts via collapse), the library stays bounded, and the two metrics are genuinely distinct."
+  },
+  "adversarial_verify": "clean",
+  "artifact": "experiment_3720_fr11_continuous_self_learning_v14",
+  "cold_start_auroc_under_shift": 0.708859,
+  "cold_start_metrics_under_shift": {
+    "auroc": 0.708859,
+    "brier": 0.407879,
+    "ece": 0.548139
+  },
+  "cold_start_weights": {
+    "fr11_session_memory": 0.25,
+    "tier0r_curry_howard": 0.25,
+    "tier0s_arithmetic_gap": 0.25,
+    "tier0u_logical_consistency": 0.25
+  },
+  "collapse_detected_deploy_arm": false,
+  "conservative_fallback_triggered": true,
+  "consolidated_template_weights": {
+    "fr11_session_memory": 0.235017,
+    "tier0r_curry_howard": -0.090154,
+    "tier0s_arithmetic_gap": -0.478094,
+    "tier0u_logical_consistency": 0.196736
+  },
+  "control_arm": "cold_start_no_template",
+  "deploy_arm": "consolidated_template_under_shift",
+  "deploy_arm_auroc_under_shift": 0.699111,
+  "deploy_arm_metrics_under_shift": {
+    "auroc": 0.708859,
+    "brier": 0.407879,
+    "ece": 0.548139
+  },
+  "duration_s": 0.817536,
+  "effective_deploy_policy": "cold_start_no_template",
+  "fallback_effective_policy_no_worse_than_cold_start": true,
+  "field_principles": {
+    "cold_start_auroc_under_shift": "Cold-start ensemble AUROC on the shifted session -- the control.",
+    "collapse_detected_deploy_arm": "The conservative-default rule must prevent weight collapse under shift (alpha_t grounding).",
+    "conservative_fallback_triggered": "Records whether the conservative-default rule detected the shift and fell back -- the alpha_t-grounding safety behaviour.",
+    "deploy_arm_auroc_under_shift": "Consolidated-template ensemble AUROC on the shifted session.",
+    "duration_s": "Plausibility floor.",
+    "honest_verdict": "Terminal prefix for reconciler classification.",
+    "inference_substrate": "verifier_ensemble_against_cached_candidates (principle: scores cached traces; no LLM load; no compute-bound marker).",
+    "n_online_updates": "Sample-size of the self-learning sweep (>=200).",
+    "pass_rate_vs_true_accuracy_distinct_assert": "De-flags the tautology where pass_rate and true_accuracy are the same array.",
+    "random_seed": "Determinism precondition.",
+    "reproducibility_checksum": "Drift detection.",
+    "shifted_session_source": "The DIFFERENT slice used as the OOD fresh session -- the v14 forward difference.",
+    "template_library_bounded": "True iff the template library stays under its size cap.",
+    "template_robust_or_graceful_fallback": "BARE bool. True iff deploy beats cold-start under shift OR falls back gracefully (>= cold-start, no collapse). STORE AS BARE true/false."
+  },
+  "honest_verdict": "complete: fr11_v14_template_falls_back_gracefully_under_shift_no_collapse",
+  "inference_substrate": "verifier_ensemble_against_cached_candidates (principle: scores cached traces; no LLM load; no compute-bound marker).",
+  "n_online_updates": 250,
+  "pass_rate_trajectory": [
+    0.681663,
+    0.702604,
+    0.677284,
+    0.676312,
+    0.675888,
+    0.675484,
+    0.63919,
+    0.681737
+  ],
+  "pass_rate_vs_true_accuracy_distinct_assert": true,
+  "preconditions_checked": [
+    {
+      "available": true,
+      "detail": "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/fr11",
+      "resource": "fr11_module"
+    },
+    {
+      "available": true,
+      "detail": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_3708_fr11_v13_template_library.json; size=2; cap=2",
+      "resource": "v13_template_library"
+    },
+    {
+      "available": true,
+      "detail": "line_count=8829; required>=1000",
+      "resource": "cached_traces_with_per_verifier_scores_and_labels"
+    },
+    {
+      "available": true,
+      "detail": "loaded=tier0r_curry_howard,tier0s_arithmetic_gap,tier0u_logical_consistency",
+      "resource": "text_scoring_verifiers"
+    },
+    {
+      "available": true,
+      "detail": "state_files=21; memory_loaded=True",
+      "resource": "fr11_session_memory_verifier"
+    },
+    {
+      "available": true,
+      "detail": "online graph fit, graph learner, and fixed crossfit baseline importable",
+      "resource": "dependency_aware_weighting_implementation"
+    },
+    {
+      "available": true,
+      "detail": "drift stream builder, online re-estimator, and v10 fixed baseline importable",
+      "resource": "drift_aware_online_reestimation_implementation"
+    }
+  ],
+  "random_seed": 3720,
+  "raw_template_beats_cold_start_with_ci": false,
+  "raw_template_metrics_under_shift": {
+    "auroc": 0.699111,
+    "brier": 0.726324,
+    "ece": 0.787959
+  },
+  "reproducibility_checksum": "7c8c580e98ceb7e7e5e38170f0ab26a0f0fd03ee715005afbdc6394dfc996a5d",
+  "schema": "carnot.fr11_continuous_self_learning_v14",
+  "shift_detected_deploy_arm": true,
+  "shift_detection_threshold": 0.3,
+  "shift_vote_distribution_distance": 0.987971,
+  "shifted_session": {
+    "n_examples": 250,
+    "name": "fr11_session_memory_score_shifted_slice_3"
+  },
+  "shifted_session_metadata": {
+    "policy": "choose cached quartile slice with maximum verifier-vote distance from the remaining rows",
+    "projection": "fr11_session_memory_score",
+    "shifted_bin": 3,
+    "source": "fr11_session_memory_score_quartile_3_shifted_slice",
+    "threshold": 0.3,
+    "vote_distribution_distance": 0.987971
+  },
+  "shifted_session_source": "fr11_session_memory_score_quartile_3_shifted_slice",
+  "source_reference_session": {
+    "n_examples": 750,
+    "name": "fr11_session_memory_score_template_source_reference_not_bin_3"
+  },
+  "template_library": {
+    "bounded_policy": "cap entries; on overflow merge the highest cosine-similarity pair; evict lowest utility/support only if a merge cannot restore the cap",
+    "cap": 2,
+    "consolidation_events": [
+      {
+        "action": "add",
+        "size": 1,
+        "template_id": "template_1_fe982c64a1"
+      },
+      {
+        "action": "add",
+        "size": 2,
+        "template_id": "template_2_a15cb826f9"
+      },
+      {
+        "action": "add",
+        "size": 3,
+        "template_id": "template_3_4c762613f6"
+      },
+      {
+        "action": "merge",
+        "merged_template_id": "merged_064de988b8",
+        "policy": "merge highest cosine similarity pair when cap is exceeded",
+        "size": 2
+      }
+    ],
+    "entries": [
+      {
+        "edges": [
+          {
+            "by_label_correlation": {
+              "0": -0.61291,
+              "1": -0.24994
+            },
+            "conditional_mutual_information": 0.122508,
+            "pair": [
+              "tier0r_curry_howard",
+              "tier0s_arithmetic_gap"
+            ]
+          },
+          {
+            "by_label_correlation": {
+              "0": -0.123512,
+              "1": -0.450412
+            },
+            "conditional_mutual_information": 0.066446,
+            "pair": [
+              "fr11_session_memory",
+              "tier0s_arithmetic_gap"
+            ]
+          },
+          {
+            "by_label_correlation": {
+              "0": -0.074859,
+              "1": -0.143694
+            },
+            "conditional_mutual_information": 0.007048,
+            "pair": [
+              "fr11_session_memory",
+              "tier0u_logical_consistency"
+            ]
+          }
+        ],
+        "source_sessions": [
+          "mean_score_session_3"
+        ],
+        "support": 250,
+        "template_id": "template_3_4c762613f6",
+        "utility": 0.981334,
+        "weights": {
+          "fr11_session_memory": 0.322018,
+          "tier0r_curry_howard": 0.109594,
+          "tier0s_arithmetic_gap": -0.038745,
+          "tier0u_logical_consistency": 0.529643
+        }
+      },
+      {
+        "edges": [
+          {
+            "by_label_correlation": {
+              "0": 0.229903,
+              "1": 0.228791
+            },
+            "conditional_mutual_information": 0.027115,
+            "pair": [
+              "fr11_session_memory",
+              "tier0r_curry_howard"
+            ]
+          },
+          {
+            "by_label_correlation": {
+              "0": -0.614113,
+              "1": -0.562504
+            },
+            "conditional_mutual_information": 0.203223,
+            "pair": [
+              "fr11_session_memory",
+              "tier0s_arithmetic_gap"
+            ]
+          },
+          {
+            "by_label_correlation": {
+              "0": 0.0,
+              "1": 0.0
+            },
+            "conditional_mutual_information": 0.0,
+            "pair": [
+              "fr11_session_memory",
+              "tier0u_logical_consistency"
+            ]
+          },
+          {
+            "by_label_correlation": {
+              "0": -0.636267,
+              "1": -0.644225
+            },
+            "conditional_mutual_information": 0.265676,
+            "pair": [
+              "tier0r_curry_howard",
+              "tier0s_arithmetic_gap"
+            ]
+          },
+          {
+            "by_label_correlation": {
+              "0": 0.0,
+              "1": -0.119299
+            },
+            "conditional_mutual_information": 0.00516,
+            "pair": [
+              "tier0s_arithmetic_gap",
+              "tier0u_logical_consistency"
+            ]
+          }
+        ],
+        "source_sessions": [
+          "mean_score_session_0",
+          "mean_score_session_2"
+        ],
+        "support": 500,
+        "template_id": "merged_064de988b8",
+        "utility": 0.781006,
+        "weights": {
+          "fr11_session_memory": 0.16576,
+          "tier0r_curry_howard": -0.180147,
+          "tier0s_arithmetic_gap": -0.645372,
+          "tier0u_logical_consistency": 0.008721
+        }
+      }
+    ],
+    "schema": "carnot.fr11_v13_template_library",
+    "size": 2,
+    "verifier_names": [
+      "fr11_session_memory",
+      "tier0r_curry_howard",
+      "tier0s_arithmetic_gap",
+      "tier0u_logical_consistency"
+    ]
+  },
+  "template_library_bounded": true,
+  "template_robust_or_graceful_fallback": true,
+  "template_vs_cold_delta_ci": {
+    "bootstrap_seeds": [
+      3720,
+      3721,
+      3722,
+      3723,
+      3724
+    ],
+    "ci95": [
+      -0.182126,
+      0.16427
+    ],
+    "n_bootstrap_per_seed": 100,
+    "point": -0.009748,
+    "seed_mean_deltas": [
+      -0.000845,
+      -0.019347,
+      -0.01467,
+      -0.019541,
+      0.002821
+    ]
+  },
+  "true_accuracy_trajectory": [
+    0.125,
+    0.28125,
+    0.1875,
+    0.25,
+    0.1875,
+    0.21875,
+    0.34375,
+    0.192308
+  ]
+}
