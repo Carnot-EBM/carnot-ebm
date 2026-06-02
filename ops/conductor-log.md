@@ -7613,3 +7613,4 @@ web search: https://docs.garak.ai/garak/examples/pr |
 | 2026-06-02 19:16 UTC | Build + UNIT-TEST the matched-COMPUTE evaluation h | FAIL | Post-tests failed: 85 passed, 1 error in 4.57s |
 | 2026-06-02 19:18 UTC | Build + UNIT-TEST the matched-COMPUTE evaluation h | OK | Deliverable already exists in repo |
 | 2026-06-02 19:23 UTC | Bounded CHECKPOINTED training of the tiny EBT + a  | OK | 88 passed in 5.12s |
+| 2026-06-02 19:36 UTC | Thesis-A kill-gate part-(a) VERDICT: did the tiny  | OK | 93 passed in 4.77s |
