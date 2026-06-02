@@ -1,0 +1,491 @@
+milestone: "2026.06.341"
+milestone_title: "PHASE-3 THESIS A BRING-UP — energy-as-GENERATOR (EBT), operator-seeded 2026-06-02. The energy-as-SELECTOR thesis (P0.1) is comprehensively bounded (project_energy_selection_thesis_bounded); per that memory the next substantive thesis needed a HUMAN seed. The operator seeded Thesis A: a small Energy-Based Transformer whose inference IS gradient-descent energy minimization (NOT AR tokens, NOT reranking) can match/beat autoregression AT EQUAL INFERENCE COMPUTE on one structured-reasoning task. Anchor: Gladstone/Du/Ji 'Energy-Based Transformers are Scalable Learners and Thinkers' arXiv:2507.02092, public Apache-2.0 code github.com/alexiglad/EBT. WHY this sidesteps the bound: nothing is being SELECTED, and EBT needs no verifier so the math-only verifier ceiling does not transfer. .341 clears the CHEAP HALF of the kill-gate: can a tiny EBT even train stably on the 3090 rig? The matched-COMPUTE comparison is .342, GATED on .341 stability passing. CRITICAL discipline carried from P0.1: the eventual comparison is matched-COMPUTE (count energy-descent forward passes; give AR an equal total-inference-FLOP budget), NOT matched-params -- a params-matched 'win' is just extra inference FLOPs, the exact P0.1 trap. Banking the verifier product is unaffected (paper_ready stays TRUE; frozen 0.9131 stays frozen; this is a venture bet with a knife to its own throat)."
+milestone_doc: docs/research-notes/phase3-alternative-thesis-menu.md
+
+# OUTER-LOOP / OPERATOR PRE-STAGED ROADMAP (2026-06-02, Claude Opus 4.8). PROVENANCE:
+# Operator selected Thesis A from docs/research-notes/phase3-alternative-thesis-menu.md after the .340
+# convergence milestone surfaced the next-thesis decision. This is the FIRST human-seeded Phase-3
+# paradigm alternative since the energy-selection thesis was bounded -- it is NOT breadth churn
+# (north-star sec-1): it tests a genuinely-different MECHANISM (energy = generator, not selector).
+#
+# ROUTING (current backend reality): gemini still CRASHES real workloads (exp3703), so the cheap-default
+# is CODEX, not gemini, for these REAL GPU TRAINING workloads (the exact class that crashes gemini).
+# The two genuinely-open-ended training-debug tasks (fork-adapt exp3725, stability-debug exp3729) are
+# requires_claude per operator directive 2026-06-02 (EBT training is finicky; meets the multi-file
+# choreography + open-ended-judgment-under-ambiguity bar). Everything else is codex+requires_codex.
+#
+# KILL-GATE (this milestone clears part a only): (a) a tiny EBT (~10-50M) trains to STABLE convergence
+# within a bounded GPU budget on the 3090 rig. If it diverges/NaNs/cannot converge within budget ->
+# energy-as-generator is dead at small scale, STOP (do not proceed to .342). (b) [.342] at EQUAL
+# inference compute the EBT beats matched AR on held-out reasoning accuracy.
+#
+# INVARIANTS: paper_ready stays TRUE (G1-G4 closed 2026-05-31; do NOT regress); frozen FoVer 0.9131
+# stays frozen; P0.1 stays honest-negative; energy-SELECTION stays settled-bounded. The agent never
+# edits ops/north-star.md, never triggers a CI run, never pushes. .341 does NOT re-grind any settled
+# question -- it is a NEW mechanism test. Vendored EBT is Apache-2.0 (license-compatible; audit-untrusted-
+# code rule: read before integrate, pin the commit).
+
+tasks:
+  - id: exp3724-archive-v340-activate-v341
+    operator_override: "2026-05-29 operator directive (standing): routine milestone-transition (archive-vN-activate-vN+1) — false-positive scope-match vs prior archive-v* tasks; structurally never a doomed rerun."
+    milestone: "2026.06.341"
+    title: "Archive milestone .340 honestly (convergence-hardening: G3 lint mechanized, G4 provenance audited, discriminator characterized as risk-coverage abstention gate, headline replicated on fresh corpus, KV260 terminal confirmed, operator seeded Thesis A) and activate .341 (Phase-3 Thesis-A EBT bring-up)"
+    priority: critical
+    max_turns: 20
+    agent_type: codex
+    model: gpt-5.5
+    requires_codex: true
+    estimated_wall_time_min: 6
+    track: ops
+    inference_substrate: aggregation_from_upstream_artifacts
+    requires_gpu: false
+    deliverable: results/experiment_3724_archive_v340_activate_v341.json
+    prompt: |
+      CONTEXT: .340 was a convergence-hardening milestone; .341 begins Phase-3 Thesis A (energy-as-
+      generator EBT bring-up), the first HUMAN-seeded paradigm alternative since energy-selection was
+      bounded. Record .340 honestly and confirm .341 active.
+      EXISTING CODE TO READ FIRST: research-roadmap.yaml (.340, just finished); research-roadmap-next.yaml
+      (.341, this milestone); docs/research-notes/phase3-alternative-thesis-menu.md (the seeded thesis);
+      ops/north-star.md (do NOT edit). Read .340's landed artifacts via scripts/summarize_artifact.py.
+      TASK: archive .340 to research-complete.yaml honestly; confirm .341 active.
+      INFERENCE-SUBSTRATE HYGIENE: aggregation task. Set inference_substrate=aggregation_from_upstream_artifacts
+      and DO NOT put any GGUF/CUDA/live-model marker in model_specs/target_model. Run
+      `python scripts/adversarial_verify.py <your artifact>` and CONFIRM no critical flag before finishing.
+      REQUIRED ARTIFACT FIELDS (principle: documents WHY; store the bare VALUE):
+        honest_verdict:
+          principle: "Terminal prefix lets the reconciler classify the transition complete without re-running it."
+        inference_substrate: "aggregation_from_upstream_artifacts (principle: JSON-read + format; 0.0001s floor; no compute-bound marker so it does not false-flag)."
+        v340_outcome_recorded:
+          principle: "Records .340's converged-hardening state so the record does not revert."
+        thesis_a_seeded_recorded:
+          principle: "Records that the operator seeded Thesis A (energy-as-generator) as the .341 direction -- the human seed the loop could not self-initiate."
+        paper_ready_preserved:
+          principle: "G1-G4 stay met; the transition must not silently regress paper_ready; frozen headline 0.9131 stays frozen."
+        p01_status_preserved:
+          principle: "P0.1 / energy-SELECTION stays honest-negative-bounded; .341 tests a DIFFERENT mechanism (generation), not a re-grind."
+        n_tasks_archived:
+          principle: "Sample-size hygiene -- confirms the full milestone was archived, not a partial."
+        adversarial_verify_clean:
+          principle: "True iff the artifact passes adversarial_verify with no critical flag."
+        random_seed:
+          principle: "Determinism precondition for reproducibility."
+        reproducibility_checksum:
+          principle: "Content hash catches silent drift vs any replication."
+        duration_s:
+          principle: "Wall-clock plausibility floor; missing duration is the fabrication signal."
+      TERMINAL VERDICT: "complete: archived_v340_convergence_hardened_thesis_a_energy_generator_seeded_v341_active_paper_ready_true_frozen_headline_unchanged"
+      Run: cd {project_root} && python scripts/experiment_3724_archive_v340_activate_v341.py
+      Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  - id: exp3725-ebt-fork-vendor-importable
+    milestone: "2026.06.341"
+    title: "Fork + vendor alexiglad/EBT (Apache-2.0, PINNED commit) under python/carnot/phase3/ebt_upstream/, audit the energy/inference path, make it importable, smoke a forward+energy pass on CPU. THESIS-A bring-up step 1 of the kill-gate chain."
+    priority: critical
+    max_turns: 60
+    agent_type: claude
+    model: opus
+    requires_claude: true   # multi-file fork-adapt of an external codebase + audit of an unfamiliar energy/inference path: open-ended judgment under ambiguity, meets the requires_claude bar (operator directive 2026-06-02)
+    estimated_wall_time_min: 30
+    track: phase3
+    inference_substrate: hardware_smoke
+    requires_gpu: false
+    deliverable: results/experiment_3725_ebt_fork_vendor_importable.json
+    prompt: |
+      CONTEXT: Thesis A (operator-seeded) tests energy-AS-GENERATOR: an EBT whose inference is gradient-
+      descent energy minimization. Anchor + code: github.com/alexiglad/EBT (Apache-2.0), arXiv:2507.02092
+      (Gladstone/Du/Ji). This task ONLY vendors + audits + smoke-imports -- no training yet.
+      PRECONDITIONS (check BEFORE any subsequent step; if ANY missing, write honest_verdict
+      blocked_<resource> and EXIT, do NOT fabricate):
+        a. Network for git clone: `curl -sf -o /dev/null https://github.com` succeeds.
+        b. torch importable: `python -c "import torch; print(torch.__version__)"` succeeds.
+        c. Write access to python/carnot/phase3/ exists.
+      CONCRETE STEPS:
+        1. git clone https://github.com/alexiglad/EBT into a temp dir; identify the latest commit SHA and
+           PIN it (record the SHA). CONFIRM the LICENSE is Apache-2.0 (audit-untrusted-code rule: read
+           before integrate). If license is NOT Apache/MIT/BSD-compatible -> blocked_ebt_license_incompatible.
+        2. Vendor the MINIMAL subset needed for a tiny from-scratch EBT (model def + energy/inference path
+           + config) under python/carnot/phase3/ebt_upstream/, preserving the upstream LICENSE + a
+           PROVENANCE.md naming the repo, commit SHA, and what was copied. Do NOT vendor slurm/cluster
+           cruft or pretrained-checkpoint download scripts.
+        3. AUDIT the energy + inference path: write a short ENERGY_PATH_AUDIT note (in the artifact) stating
+           (i) the energy function signature, (ii) how inference does energy descent (gradient steps to
+           convergence) and roughly how many steps the default uses, (iii) the training objective at a high
+           level. This is the audit-untrusted-code requirement -- match what the code DOES to what the
+           paper claims.
+        4. Make it importable from `carnot.phase3.ebt_upstream`; smoke a TINY forward pass + single energy
+           evaluation on CPU (random tiny tensors) and confirm it returns a finite scalar energy.
+      INFERENCE-SUBSTRATE HYGIENE: hardware_smoke / setup task. No GGUF/live-LLM markers. Run
+      `python scripts/adversarial_verify.py <artifact>` and confirm no critical flag.
+      REQUIRED ARTIFACT FIELDS (principle: documents WHY; store the bare VALUE):
+        honest_verdict:
+          principle: "Terminal prefix; blocked_<resource> if a precondition failed."
+        inference_substrate: "hardware_smoke (principle: a vendoring + CPU smoke, not live inference)."
+        upstream_commit_sha:
+          principle: "Pinning the exact commit makes the vendored code reproducible + auditable (audit-untrusted-code rule)."
+        license_confirmed:
+          principle: "Apache-2.0 compatibility is the gate for vendoring into this Apache-2.0 repo."
+        energy_path_audit:
+          principle: "Matches code-does to paper-claims (energy fn, descent steps, training objective) -- the audit-untrusted-code requirement; prevents a dishonest-naming integration."
+        importable:
+          principle: "True iff carnot.phase3.ebt_upstream imports + a CPU forward/energy smoke returns a finite scalar."
+        smoke_energy_value:
+          principle: "The finite scalar energy from the CPU smoke -- evidence the path runs, not just imports."
+        preconditions_checked:
+          principle: "Records WHICH resources were verified (network, torch) before integration; pre-empts silent-missing-resource fabrication."
+        random_seed:
+          principle: "Determinism precondition."
+        reproducibility_checksum:
+          principle: "Content hash catches drift."
+        duration_s:
+          principle: "Wall-clock plausibility floor."
+      TERMINAL VERDICT on success: "complete: ebt_vendored_pinned_<sha>_license_apache2_importable_energy_path_audited_cpu_smoke_finite"
+      Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  - id: exp3726-tiny-ebt-corpus-and-train-step-smoke
+    milestone: "2026.06.341"
+    title: "Acquire a small structured-reasoning TRAIN corpus (GSM8K via HF datasets), shrink EBT to ~10-50M params, and smoke a SINGLE real training step on the 3090 confirming the model fits in 24GB and the energy/loss DECREASES. THESIS-A bring-up step 2."
+    priority: critical
+    max_turns: 50
+    agent_type: codex
+    model: gpt-5.5
+    requires_codex: true   # GPU smoke with a deterministic correctness criterion (energy decreases) -- mechanical; gemini crashes real GPU workloads (exp3703) so codex is the cheap-default here
+    estimated_wall_time_min: 30
+    track: phase3
+    inference_substrate: live_llm_inference
+    requires_gpu: true
+    deliverable: results/experiment_3726_tiny_ebt_corpus_and_train_step_smoke.json
+    prompt: |
+      CONTEXT: Thesis-A bring-up. exp3725 vendored a runnable EBT. This task builds the smallest decisive
+      setup: a small reasoning train corpus + a tiny EBT config + a CONFIRMED single training step on GPU.
+      live gpu task (training a tiny model from scratch on the 3090 rig). PRINT A HEARTBEAT every few steps
+      so the idle-timeout never fires.
+      PRECONDITIONS (check BEFORE any subsequent step; if ANY missing -> blocked_<resource>, EXIT, no fabrication):
+        a. CUDA: `python -c "import torch; assert torch.cuda.is_available() and torch.cuda.device_count()>0"`.
+        b. EBT vendored + importable: `python -c "import carnot.phase3.ebt_upstream"` (from exp3725). If not -> blocked_ebt_not_vendored.
+        c. Network for the dataset: `curl -sf -o /dev/null https://huggingface.co/api/datasets` OR a local GSM8K cache exists.
+      CONCRETE STEPS:
+        1. Acquire a SMALL structured-reasoning train corpus: GSM8K train split via `datasets.load_dataset("gsm8k","main")`
+           (or a local cache). Tokenize a small subset (e.g. 2-4k examples) with a small standard tokenizer.
+           Record n_train. (The data/p01_*.jsonl files are P0.1 GENERATION dumps, NOT a clean train set -- do
+           not use them as the corpus.)
+        2. Configure a TINY EBT (~10-50M params) via the upstream model-size knob. Record the exact param count.
+        3. Run a SINGLE real training step on cuda:0: forward -> energy/loss -> backward -> optimizer step.
+           Confirm (i) the model + a small batch FIT in one 3090's 24GB (record peak VRAM), (ii) the loss is
+           finite (no NaN/inf), (iii) energy/loss DECREASES across a handful of steps (record the first ~10
+           step losses as evidence -- this is the smoke criterion, not a stability claim).
+      INFERENCE-SUBSTRATE HYGIENE: live GPU training. Provide full methodology (random_seed,
+      reproducibility_checksum, model_specs with the tiny-EBT param count + 'from-scratch, not a pretrained
+      LLM'). Long real duration is expected (won't trip DURATION_TOO_SHORT). Run
+      `python scripts/adversarial_verify.py <artifact>`; confirm no critical flag.
+      REQUIRED ARTIFACT FIELDS (principle: documents WHY; store the bare VALUE):
+        honest_verdict:
+          principle: "Terminal prefix; blocked_<resource> if a precondition failed."
+        inference_substrate: "live_llm_inference (principle: a real GPU compute task; strict duration floor, which real training easily clears)."
+        n_train:
+          principle: "Sample-size hygiene for the corpus actually tokenized."
+        ebt_param_count:
+          principle: "Confirms the model is in the tiny ~10-50M target band, not silently full-size."
+        peak_vram_mb:
+          principle: "Evidence the tiny config FITS the 3090's 24GB -- a hard precondition for the .342 real train."
+        first_step_losses:
+          principle: "The first ~10 step losses; energy/loss DECREASING is the smoke criterion that the training step is wired correctly."
+        loss_finite:
+          principle: "No NaN/inf -- the cheapest early signal of EBT training instability (the most likely failure mode)."
+        preconditions_checked:
+          principle: "Records CUDA + EBT-vendored + dataset verified before training; pre-empts silent-missing-resource fabrication."
+        model_specs:
+          principle: "Names the tiny-EBT config (from-scratch, not a pretrained LLM) so the substrate is honest."
+        random_seed:
+          principle: "Determinism precondition for reproducibility."
+        reproducibility_checksum:
+          principle: "Content hash catches silent corpus/config drift."
+        duration_s:
+          principle: "Wall-clock plausibility floor."
+      TERMINAL VERDICT on success: "complete: tiny_ebt_<N>M_fits_3090_<vram>mb_single_train_step_loss_finite_and_decreasing_corpus_gsm8k_n<n_train>"
+      Run: cd {project_root} && python scripts/experiment_3726_tiny_ebt_corpus_and_train_step_smoke.py
+      Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  - id: exp3727-matched-compute-eval-harness
+    milestone: "2026.06.341"
+    title: "Build + UNIT-TEST the matched-COMPUTE evaluation harness: held-out reasoning accuracy of energy-descent generation vs AR generation at EQUAL total inference FLOPs (count EBT descent forward passes; give the AR baseline an equal-FLOP best-of-N budget). The measurement instrument for the .342 decisive comparison -- built + tested BEFORE the real run. THESIS-A bring-up step 3."
+    priority: critical
+    max_turns: 50
+    agent_type: codex
+    model: gpt-5.5
+    requires_codex: true   # building a measurement harness with a deterministic FLOP-accounting correctness criterion -- mechanical
+    estimated_wall_time_min: 25
+    track: phase3
+    inference_substrate: aggregation_from_upstream_artifacts
+    requires_gpu: false
+    deliverable: results/experiment_3727_matched_compute_eval_harness.json
+    prompt: |
+      CONTEXT: Thesis-A bring-up. The CRITICAL P0.1 lesson: energy descent runs N forward passes per
+      prediction, so a 'matched-params' win can be pure extra inference FLOPs (the exact P0.1 trap). The
+      .342 decisive comparison MUST be matched-COMPUTE. This task builds + unit-tests that harness NOW so
+      the .342 run cannot quietly cheat on compute accounting.
+      CONCRETE STEPS:
+        1. Implement a FLOP-accounting function: given an EBT generation (K energy-descent steps over a
+           sequence) compute its total inference FLOPs; given an AR generation (best-of-M sampling) compute
+           its total inference FLOPs. Use a transparent, documented FLOP model (params x tokens x passes).
+        2. Implement the matched-compute comparison driver: for a held-out reasoning set, generate with the
+           EBT (energy descent) and with the AR baseline GIVEN AN EQUAL TOTAL-FLOP BUDGET (tune AR best-of-M
+           so its FLOPs ~= the EBT's), score held-out accuracy on BOTH, and report accuracy AT EQUAL FLOPs.
+        3. UNIT-TEST the harness (tests/python/test_matched_compute_eval_harness.py) with at least: (i) the
+           FLOP accounting is symmetric/correct on a hand-computed toy case, (ii) the budget-matcher actually
+           equalizes FLOPs within a tolerance, (iii) a synthetic case where EBT and AR have known accuracy so
+           the driver returns the expected matched-compute verdict. Every test asserts (no skips). Run the
+           tests and report pass/fail HONESTLY.
+      This task does NOT run the real models -- it builds + validates the instrument (aggregation/harness).
+      INFERENCE-SUBSTRATE HYGIENE: no live-model markers. Run `python scripts/adversarial_verify.py <artifact>`;
+      confirm no critical flag.
+      REQUIRED ARTIFACT FIELDS (principle: documents WHY; store the bare VALUE):
+        honest_verdict:
+          principle: "Terminal prefix; this is a build+test task, terminal on tests passing."
+        inference_substrate: "aggregation_from_upstream_artifacts (principle: builds an instrument, runs no live model)."
+        flop_model_description:
+          principle: "A transparent documented FLOP model is what makes 'matched compute' auditable rather than hand-wavy -- the load-bearing anti-P0.1-trap mechanism."
+        unit_tests_added:
+          principle: "Names the test file; tests-must-run-and-assert."
+        unit_tests_passed:
+          principle: "Honest pass count; a harness whose own tests fail cannot be trusted to judge .342."
+        budget_matcher_tolerance:
+          principle: "Records how tightly AR FLOPs are equalized to EBT FLOPs -- defines what 'equal compute' means quantitatively."
+        random_seed:
+          principle: "Determinism precondition."
+        reproducibility_checksum:
+          principle: "Content hash catches drift."
+        duration_s:
+          principle: "Wall-clock plausibility floor."
+      TERMINAL VERDICT on success: "complete: matched_compute_eval_harness_built_flop_accounting_documented_unit_tests_<P>_of_<T>_pass"
+      Run: cd {project_root} && python scripts/experiment_3727_matched_compute_eval_harness.py
+      Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  - id: exp3728-bounded-checkpointed-train-ebt-and-ar
+    milestone: "2026.06.341"
+    title: "Bounded CHECKPOINTED training of the tiny EBT + a matched tiny AR baseline (same params-band, same corpus, same budget) on the 3090, with stability diagnostics (loss curve, convergence, NaN/divergence watch). Each task run trains a BOUNDED chunk (<=1500s wall) then checkpoints + exits so it fits the loop; resumes from checkpoint. THESIS-A bring-up step 4 (the GPU-budget half of the kill-gate)."
+    priority: critical
+    max_turns: 60
+    agent_type: claude
+    model: opus
+    requires_claude: true   # EBT training is known finicky/unstable; diagnosing + stabilizing divergence is open-ended judgment under ambiguity, the most likely failure mode -- meets the requires_claude bar (operator directive 2026-06-02)
+    estimated_wall_time_min: 30
+    track: phase3
+    inference_substrate: live_llm_inference
+    requires_gpu: true
+    deliverable: results/experiment_3728_bounded_checkpointed_train_ebt_and_ar.json
+    prompt: |
+      CONTEXT: Thesis-A bring-up, the GPU-budget half of the kill-gate. Train the tiny EBT AND a matched
+      tiny AR baseline so .342 can compare them at matched compute. EBT training is FINICKY -- diagnosing
+      and stabilizing instability IS the task. live gpu training. PRINT A HEARTBEAT every few steps so the
+      idle-timeout never fires; bound EACH run to <=1500s wall-clock then CHECKPOINT + EXIT (resume from the
+      checkpoint on the next run -- training spans multiple task runs by design).
+      PRECONDITIONS (check BEFORE any step; if ANY missing -> blocked_<resource>, EXIT, no fabrication):
+        a. CUDA available (torch.cuda.is_available(), device_count>0).
+        b. EBT vendored + importable (carnot.phase3.ebt_upstream) AND exp3726 single-step smoke passed.
+        c. Train corpus available (GSM8K subset from exp3726, cached).
+      CONCRETE STEPS:
+        1. Resume from the latest checkpoint if present; else init the tiny EBT + a matched-param tiny AR.
+        2. Train a BOUNDED chunk (<=1500s wall OR a fixed step budget, whichever first) of BOTH models on the
+           SAME corpus with the SAME optimizer budget. Log a loss heartbeat every K steps (PYTHONUNBUFFERED).
+        3. Emit STABILITY DIAGNOSTICS: the loss curve (downsampled), whether the EBT energy/loss converged or
+           diverged, any NaN/inf events, gradient-norm trend. If the EBT diverges, apply standard
+           stabilizers (lr warmup/decay, grad clip, the upstream's recommended energy-regularization) and
+           record what was tried -- this judgment is why this task is on claude.
+        4. CHECKPOINT both models + the optimizer state + the step counter, then EXIT cleanly. Record
+           cumulative_steps_trained so a later run / .342 knows the training progress.
+      Set honest_verdict to a TERMINAL prefix that states the stability outcome of THIS chunk: stable-so-far,
+      converged, or diverged. (The kill-gate VERDICT is exp3729's job -- this task reports the diagnostics.)
+      INFERENCE-SUBSTRATE HYGIENE: live GPU training; full methodology (random_seed, reproducibility_checksum,
+      model_specs naming BOTH tiny configs as from-scratch). Run `python scripts/adversarial_verify.py <artifact>`;
+      confirm no critical flag.
+      REQUIRED ARTIFACT FIELDS (principle: documents WHY; store the bare VALUE):
+        honest_verdict:
+          principle: "Terminal prefix stating THIS chunk's stability outcome (stable/converged/diverged); blocked_<resource> if a precondition failed."
+        inference_substrate: "live_llm_inference (principle: real GPU training; strict floor, easily cleared)."
+        cumulative_steps_trained:
+          principle: "Records training progress across checkpoint-spanning runs so .342 knows how much budget was spent."
+        ebt_loss_curve:
+          principle: "Downsampled loss trajectory -- the direct evidence for whether EBT training is stable (the kill-gate's core question)."
+        ar_loss_curve:
+          principle: "The matched AR baseline's trajectory -- needed so .342's comparison is apples-to-apples (same corpus/budget)."
+        ebt_converged:
+          principle: "Boolean/:did the EBT energy/loss converge within budget -- the kill-gate part-(a) signal."
+        nan_or_divergence_events:
+          principle: "EBT instability is the most likely failure mode; recording NaN/divergence is the honest fail signal, not a hidden one."
+        stabilizers_applied:
+          principle: "What was tried to stabilize divergence -- the open-ended judgment that justifies routing this to claude; also tells .342 the recipe."
+        peak_vram_mb:
+          principle: "Confirms the bounded train stayed within the 3090's 24GB."
+        preconditions_checked:
+          principle: "CUDA + EBT-vendored + smoke-passed + corpus verified before training; pre-empts silent-missing-resource fabrication."
+        model_specs:
+          principle: "Names BOTH tiny configs (from-scratch, matched param-band) so the substrate + the comparison fairness are honest."
+        random_seed:
+          principle: "Determinism precondition for reproducibility."
+        reproducibility_checksum:
+          principle: "Content hash catches silent corpus/config drift."
+        duration_s:
+          principle: "Wall-clock plausibility floor; long real duration expected for training."
+      TERMINAL VERDICT example: "complete: ebt_train_chunk_<steps>_steps_stable_so_far_loss_converging_no_nan_ar_baseline_co_trained_checkpointed"
+      (or "complete: ebt_train_chunk_diverged_at_step_<N>_nan_after_<stabilizers>_kill_gate_part_a_failing" if it diverges)
+      Run: cd {project_root} && python scripts/experiment_3728_bounded_checkpointed_train_ebt_and_ar.py
+      Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  - id: exp3729-stability-kill-gate-verdict
+    milestone: "2026.06.341"
+    title: "Thesis-A kill-gate part-(a) VERDICT: did the tiny EBT train to STABLE convergence within the bounded 3090 budget? GREEN-LIGHT the .342 matched-compute comparison only if stable; else record energy-as-generator BOUNDED at small scale and STOP. THESIS-A bring-up step 5."
+    priority: critical
+    max_turns: 30
+    agent_type: codex
+    model: gpt-5.5
+    requires_codex: true   # a gated verdict over the exp3728 diagnostics with a deterministic stability criterion -- mechanical/aggregation
+    estimated_wall_time_min: 10
+    track: phase3
+    inference_substrate: aggregation_from_upstream_artifacts
+    requires_gpu: false
+    deliverable: results/experiment_3729_stability_kill_gate_verdict.json
+    prompt: |
+      CONTEXT: Thesis-A bring-up, the kill-gate decision. Read exp3725 (vendor), exp3726 (single-step
+      smoke), exp3728 (bounded checkpointed training + stability diagnostics) via scripts/summarize_artifact.py.
+      KILL-GATE part (a): the tiny EBT trains to STABLE convergence within the bounded GPU budget. Apply the
+      criterion HONESTLY against the exp3728 diagnostics (loss converged, no NaN/divergence, gradient norms
+      bounded). Do NOT manufacture a pass.
+      DECISION:
+        - STABLE -> green-light .342 (the matched-COMPUTE comparison): record green_light_342=true and a
+          one-line note on the recommended .342 setup (which checkpoint, the FLOP budget from exp3727's
+          harness).
+        - UNSTABLE/DIVERGED within budget -> record green_light_342=false and the HONEST conclusion: energy-
+          as-generator is BOUNDED at small scale on this corpus/budget (analogous to the P0.1 honest-negative
+          -- a real finding, not a failure to hide). Recommend whether a different stabilization recipe or a
+          larger budget is worth one more bounded attempt, OR retirement.
+      Whatever the verdict, this is an HONEST scientific outcome. A clean negative here is as valuable as a
+      positive -- it bounds the route cheaply, exactly as the kill-gate was designed to.
+      INFERENCE-SUBSTRATE HYGIENE: aggregation over upstream artifacts; no live-model markers. Run
+      `python scripts/adversarial_verify.py <artifact>`; confirm no critical flag. If you cite exp3728's
+      numbers, populate cited_upstream_artifacts with {experiment_id, fields_imported, sha256}.
+      REQUIRED ARTIFACT FIELDS (principle: documents WHY; store the bare VALUE):
+        honest_verdict:
+          principle: "Terminal prefix stating the kill-gate outcome (stable->green-light, or bounded->stop)."
+        inference_substrate: "aggregation_from_upstream_artifacts (principle: a verdict over upstream diagnostics, no live model)."
+        ebt_trained_stably:
+          principle: "The kill-gate part-(a) boolean; the single most load-bearing field of the milestone."
+        green_light_342:
+          principle: "Gates whether the .342 matched-compute comparison runs; false = route bounded at small scale, STOP."
+        kill_gate_conclusion:
+          principle: "The honest one-paragraph scientific conclusion (green-light, or bounded-at-small-scale-with-evidence) so the record is self-explanatory."
+        cited_upstream_artifacts:
+          principle: "Provenance: makes the verdict's numbers traceable to the real training run (anti-fabrication audit trail)."
+        random_seed:
+          principle: "Determinism precondition."
+        reproducibility_checksum:
+          principle: "Content hash catches drift."
+        duration_s:
+          principle: "Wall-clock plausibility floor."
+      TERMINAL VERDICT example: "complete: kill_gate_part_a_PASS_ebt_trained_stably_green_light_342_matched_compute_comparison"
+      (or "complete: kill_gate_part_a_FAIL_energy_as_generator_bounded_at_small_scale_honest_negative_stop")
+      Run: cd {project_root} && python scripts/experiment_3729_stability_kill_gate_verdict.py
+      Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  - id: exp3730-kv260-opportunistic-continuity-audit
+    operator_override: "2026-05-29 operator directive (standing): active hardware-continuity task (KV260) — false-positive scope-match vs prior kv260-continuity exps; required forward work until terminal. NOTE: .340 confirmed KV260 TERMINAL, so this is now an OPPORTUNISTIC confirm-terminal audit per north-star sec-3 relaxation, not the per-milestone mandate."
+    milestone: "2026.06.341"
+    title: "KV260 opportunistic continuity audit — confirm terminal state holds (SSH-reachable, accelerator loadable); the per-milestone hardware mandate relaxed to opportunistic at .340. Documentation-only."
+    priority: medium
+    max_turns: 20
+    agent_type: codex
+    model: gpt-5.5
+    requires_codex: true
+    estimated_wall_time_min: 8
+    track: hardware
+    inference_substrate: hardware_smoke
+    requires_gpu: false
+    deliverable: results/experiment_3730_kv260_opportunistic_continuity_audit.json
+    prompt: |
+      CONTEXT: KV260 reached TERMINAL state at .340 (non-fabricated board latency transcript, exp3709). The
+      per-milestone hardware mandate is now relaxed to opportunistic (north-star sec-3). This is a light
+      confirm-terminal audit, documentation-only.
+      PRECONDITIONS (KV260 uses SSH ONLY -- per KV260 SSH-Not-SD-Card discipline, never any host block-device
+      precondition; the board boots from its own onboard storage and is reached over the network):
+        a. `ssh -o ConnectTimeout=5 -o BatchMode=yes kria 'true'` returns 0. If non-zero ->
+           honest_verdict blocked_kv260_ssh_unreachable, EXIT (do NOT fabricate, do NOT use any host
+           storage-slot check).
+      CONCRETE STEPS:
+        1. Confirm SSH reachability (precondition a).
+        2. `ssh kria 'xmutil listapps'` -- confirm the Carnot accelerator overlay is present/loadable.
+        3. Record that the terminal state holds (or note any regression for the operator).
+      INFERENCE-SUBSTRATE HYGIENE: hardware_smoke. Run `python scripts/adversarial_verify.py <artifact>`;
+      confirm no critical flag.
+      REQUIRED ARTIFACT FIELDS (principle: documents WHY; store the bare VALUE):
+        honest_verdict:
+          principle: "Terminal prefix; blocked_kv260_ssh_unreachable if the board is unreachable."
+        inference_substrate: "hardware_smoke (principle: an SSH board check, not live inference)."
+        kv260_ssh_reachable:
+          principle: "The SSH-reachability fact (NOT host SD-card presence -- the retired wrong mechanism)."
+        terminal_state_holds:
+          principle: "Confirms the .340 terminal state did not regress; opportunistic, not mandated."
+        preconditions_checked:
+          principle: "Records the SSH check was actually run before any board operation."
+        random_seed:
+          principle: "Determinism precondition."
+        reproducibility_checksum:
+          principle: "Content hash catches drift."
+        duration_s:
+          principle: "Wall-clock plausibility floor."
+      TERMINAL VERDICT: "complete: kv260_terminal_state_holds_ssh_reachable_accelerator_loadable_opportunistic_audit"
+      Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  - id: exp3731-capstone-v341
+    operator_override: "2026-05-29 operator directive (standing): routine capstone (capstone-vN) — false-positive scope-match vs prior capstone tasks; structurally never a doomed rerun."
+    milestone: "2026.06.341"
+    title: "Capstone .341 — aggregate the Thesis-A EBT bring-up outcome (vendored + audited, tiny-EBT fits 3090, matched-compute harness built+tested, bounded train stability, kill-gate verdict). State HONESTLY whether part-(a) of the kill-gate passed (green-light .342) or the route is bounded at small scale. paper_ready MUST stay TRUE; frozen 0.9131 unchanged."
+    priority: high
+    max_turns: 25
+    agent_type: codex
+    model: gpt-5.5
+    requires_codex: true
+    estimated_wall_time_min: 10
+    track: ops
+    inference_substrate: aggregation_from_upstream_artifacts
+    requires_gpu: false
+    deliverable: results/experiment_3731_capstone_v341.json
+    prompt: |
+      CONTEXT: Capstone for .341 (Phase-3 Thesis-A EBT bring-up). Aggregate exp3724-exp3730 HONESTLY.
+      Read each via scripts/summarize_artifact.py. Skip any artifact carrying flagged_adversarial=true from
+      headline aggregation (fabrication gate).
+      TASK: summarize the bring-up: (1) EBT vendored + energy-path audited (exp3725), (2) tiny EBT fits the
+      3090 + single step smoke (exp3726), (3) matched-COMPUTE eval harness built + unit-tested (exp3727),
+      (4) bounded checkpointed training stability (exp3728), (5) kill-gate part-(a) verdict (exp3729:
+      green-light .342 OR bounded-at-small-scale). State the .341 outcome plainly. Do NOT overclaim: a
+      green-light means 'stable enough to run the matched-compute comparison', NOT 'energy-as-generator
+      works'. The actual thesis test is .342.
+      INVARIANTS to RE-ASSERT: paper_ready stays TRUE (G1-G4); frozen FoVer 0.9131 unchanged; P0.1 /
+      energy-SELECTION stays honest-negative-bounded (this milestone tests GENERATION, a different mechanism).
+      INFERENCE-SUBSTRATE HYGIENE: aggregation; no live-model markers; populate cited_upstream_artifacts.
+      Run `python scripts/adversarial_verify.py <artifact>`; confirm no critical flag.
+      REQUIRED ARTIFACT FIELDS (principle: documents WHY; store the bare VALUE):
+        honest_verdict:
+          principle: "Terminal prefix; the milestone's one-line outcome."
+        inference_substrate: "aggregation_from_upstream_artifacts (principle: a capstone reads upstream JSON, runs no live model)."
+        thesis_a_bringup_outcome:
+          principle: "The honest .341 outcome (kill-gate part-a pass->green-light .342, or bounded-at-small-scale) -- so the record is self-explanatory and does not overclaim."
+        kill_gate_part_a_passed:
+          principle: "Boolean carried up from exp3729 -- the milestone's load-bearing result."
+        green_light_342:
+          principle: "Whether the matched-compute comparison is sanctioned next; false = route bounded, do not auto-propose .342."
+        paper_ready_preserved:
+          principle: "G1-G4 stay met; the venture bet must not regress the banked verifier product."
+        frozen_headline_unchanged:
+          principle: "Frozen FoVer 0.9131 stays frozen; .341 never touches the headline."
+        flagged_artifacts_excluded:
+          principle: "Lists any flagged_adversarial artifact excluded from aggregation (fabrication gate)."
+        cited_upstream_artifacts:
+          principle: "Provenance trail from the capstone numbers to the real artifacts."
+        random_seed:
+          principle: "Determinism precondition."
+        reproducibility_checksum:
+          principle: "Content hash catches drift."
+        duration_s:
+          principle: "Wall-clock plausibility floor."
+      TERMINAL VERDICT example: "complete: capstone_v341_thesis_a_ebt_bringup_kill_gate_part_a_<pass|bounded>_paper_ready_true_frozen_headline_unchanged"
+      Run: cd {project_root} && python scripts/experiment_3731_capstone_v341.py
+      Do NOT push. Do NOT modify scripts/research_conductor.py.
