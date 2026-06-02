@@ -10668,3 +10668,62 @@ and pass-rate and true-accuracy trajectories are not element-wise identical.
 | Requirement  | Python | Tests |
 |-------------|--------|-------|
 | REQ-LEARN-3720 | Implemented (python/carnot/fr11/continuous_self_learning_v14.py; scripts/experiment_3720_fr11_continuous_self_learning_v14.py) | Implemented (tests/python/test_experiment_3720_fr11_csl_v14.py) |
+
+---
+
+## REQ-LEARN-3740: FR-11 Continuous Self Learning v15 Tier-1 EBT Stabilizer Counter Tracker
+
+**Given** checked-in EBT training diagnostics that report per-chunk
+`stabilizers_applied`, `nan_or_divergence_events`, and `ebt_converged` tuples
+**When** Exp 3740 runs the FR-11 v15 self-learning tracker
+**Then** the deploy arm SHALL parse Exp 3734, Exp 3735, and any earlier EBT
+training artifacts that expose those fields
+**And** for each observed stabilizer it SHALL update raw CPU counters for
+`P(no-divergence | stabilizer enabled)` and
+`P(no-divergence | stabilizer disabled)`
+**And** it SHALL persist the raw tracker state so a future EBT-training
+milestone resumes from the accumulated counters
+**And** it SHALL emit the stabilizer set with the best observed no-divergence
+correlation as a preliminary recipe for the next bounded run.
+
+### REQ-LEARN-3740 Sub-requirements
+
+- REQ-LEARN-3740-1: Runnable artifacts SHALL use upstream checked-in training
+  diagnostics only, with `inference_substrate` equal to
+  `aggregation_from_upstream_artifacts (principle: reads training diagnostics, no live model).`.
+- REQ-LEARN-3740-2: If no Exp 3734/3735 or earlier EBT training diagnostics
+  expose the required tuple fields, the workflow SHALL persist an empty tracker
+  state and write an `honest_verdict` that includes
+  `no training diagnostics to learn from -- tracker initialized empty`.
+- REQ-LEARN-3740-3: For every observed stabilizer, the tracker state SHALL store
+  raw enabled/disabled totals and enabled/disabled no-divergence counts; rates
+  and deltas SHALL be derived from those counters at artifact-build time.
+- REQ-LEARN-3740-4: The recommended recipe SHALL contain every stabilizer tied
+  for the maximum enabled-minus-disabled no-divergence rate delta, with ties
+  retained rather than fabricated into a strict ranking.
+- REQ-LEARN-3740-5: Runnable artifacts SHALL include bare values for
+  `honest_verdict`, `inference_substrate`, `stabilizer_efficacy_table`,
+  `recommended_recipe`, `n_chunks_observed`, `tier1_counter_update`,
+  `tracker_state_persisted`, `is_preliminary_heuristic`, `random_seed`,
+  `reproducibility_checksum`, and `duration_s`, plus separate field-principle
+  annotations for those fields.
+- REQ-LEARN-3740-6: The artifact SHALL avoid live-model, CUDA, and GGUF
+  substrate markers and SHALL label the table as a small-sample preliminary
+  heuristic rather than a statistical efficacy claim.
+
+### SCENARIO-LEARN-3740: Stabilizer Counters Recommend a Preliminary Recipe
+
+**Given** one EBT chunk that enables `grad_clip` and `kl_cd_fix` without
+divergence, one chunk that disables them and diverges, and one chunk that
+enables only `grad_clip` without divergence
+**When** the v15 tracker updates counters from those chunks
+**Then** `grad_clip` has two enabled no-divergence observations, `kl_cd_fix`
+has one enabled no-divergence observation, both have disabled observations,
+and the recommended recipe contains the stabilizer or stabilizers tied for the
+largest enabled-minus-disabled no-divergence rate delta.
+
+## Implementation Status (REQ-LEARN-3740)
+
+| Requirement  | Python | Tests |
+|-------------|--------|-------|
+| REQ-LEARN-3740 | Implemented (python/carnot/fr11/continuous_self_learning_v15.py; scripts/experiment_3740_fr11_self_learning_v15_stabilizer_tracker.py) | Implemented (tests/python/test_experiment_3740_fr11_csl_v15.py) |

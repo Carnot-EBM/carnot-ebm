@@ -1,0 +1,149 @@
+{
+  "acceptance_gate": {
+    "condition": "tracker_state_persisted == true",
+    "passed": true,
+    "principle": "Continuous self-learning requires resumable counter state."
+  },
+  "artifact": "experiment_3740_fr11_self_learning_v15_stabilizer_tracker",
+  "continuous_self_learning_task": true,
+  "duration_s": 0.852061272,
+  "field_principles": {
+    "duration_s": "Wall-clock plausibility floor.",
+    "honest_verdict": "Terminal prefix; the self-learning outcome.",
+    "inference_substrate": "Reads training diagnostics, no live model.",
+    "is_preliminary_heuristic": "Honest label: over a handful of chunks this is a heuristic, not a statistical claim -- pre-empts SAMPLE_SIZE_BELOW_CLAIM.",
+    "n_chunks_observed": "Sample-size hygiene -- how many training chunks the tracker learned from (small-sample heuristic, labeled preliminary).",
+    "random_seed": "Determinism precondition.",
+    "recommended_recipe": "The upweighted stabilizer set for the next bounded run -- the actionable self-learning output that feeds back into the loop.",
+    "reproducibility_checksum": "Content hash catches drift.",
+    "stabilizer_efficacy_table": "Per-stabilizer no-divergence correlation -- the learned knowledge; the core deliverable.",
+    "tier1_counter_update": "Confirms the mechanic is a CPU counter update (<1us, the Tier-1 hardware path), not a model retrain -- aligns with the hardware-acceleration principle.",
+    "tracker_state_persisted": "True iff the tracker state was saved so a future EBT-training milestone resumes it (continuous, not one-shot)."
+  },
+  "honest_verdict": "complete: fr11_v15_tier1_stabilizer_efficacy_tracker_recipe_recommended_state_persisted_preliminary_over_3_chunks",
+  "inference_substrate": "aggregation_from_upstream_artifacts (principle: reads training diagnostics, no live model).",
+  "is_preliminary_heuristic": true,
+  "n_chunks_observed": 3,
+  "random_seed": 3740,
+  "recommended_recipe": {
+    "is_preliminary_heuristic": true,
+    "max_delta": 0.0,
+    "n_chunks_observed": 3,
+    "selection_basis": "max_enabled_minus_disabled_no_divergence_delta_with_ties_retained",
+    "stabilizers": [
+      "grad_clip",
+      "kl_cd_fix",
+      "langevin_noise",
+      "random_alpha",
+      "random_descent_steps",
+      "replay_buffer"
+    ]
+  },
+  "reproducibility_checksum": "c111843679ae7150d0e757578e54cad6b6a2e60efdd6ececf577cdc18c99f42c",
+  "schema": "carnot.fr11_continuous_self_learning_v15",
+  "source_training_chunks": [
+    {
+      "cumulative_steps_trained": 0,
+      "ebt_converged": false,
+      "experiment_id": 3728,
+      "nan_or_divergence_events": false,
+      "source_path": "experiment_3728_bounded_checkpointed_train_ebt_and_ar.json",
+      "stabilizers_applied": []
+    },
+    {
+      "cumulative_steps_trained": 2,
+      "ebt_converged": null,
+      "experiment_id": 3734,
+      "nan_or_divergence_events": false,
+      "source_path": "experiment_3734_fix_harness_and_bounded_train_chunk1.json",
+      "stabilizers_applied": [
+        "grad_clip",
+        "kl_cd_fix",
+        "langevin_noise",
+        "random_alpha",
+        "random_descent_steps",
+        "replay_buffer"
+      ]
+    },
+    {
+      "cumulative_steps_trained": 0,
+      "ebt_converged": false,
+      "experiment_id": 3735,
+      "nan_or_divergence_events": false,
+      "source_path": "experiment_3735_bounded_train_chunk2_resume.json",
+      "stabilizers_applied": []
+    }
+  ],
+  "stabilizer_efficacy_table": [
+    {
+      "disabled_no_divergence": 2,
+      "disabled_no_divergence_rate": 1.0,
+      "disabled_total": 2,
+      "enabled_no_divergence": 1,
+      "enabled_no_divergence_rate": 1.0,
+      "enabled_total": 1,
+      "no_divergence_rate_delta_enabled_minus_disabled": 0.0,
+      "sample_note": "preliminary_counter_heuristic_not_statistical_claim",
+      "stabilizer": "grad_clip"
+    },
+    {
+      "disabled_no_divergence": 2,
+      "disabled_no_divergence_rate": 1.0,
+      "disabled_total": 2,
+      "enabled_no_divergence": 1,
+      "enabled_no_divergence_rate": 1.0,
+      "enabled_total": 1,
+      "no_divergence_rate_delta_enabled_minus_disabled": 0.0,
+      "sample_note": "preliminary_counter_heuristic_not_statistical_claim",
+      "stabilizer": "kl_cd_fix"
+    },
+    {
+      "disabled_no_divergence": 2,
+      "disabled_no_divergence_rate": 1.0,
+      "disabled_total": 2,
+      "enabled_no_divergence": 1,
+      "enabled_no_divergence_rate": 1.0,
+      "enabled_total": 1,
+      "no_divergence_rate_delta_enabled_minus_disabled": 0.0,
+      "sample_note": "preliminary_counter_heuristic_not_statistical_claim",
+      "stabilizer": "langevin_noise"
+    },
+    {
+      "disabled_no_divergence": 2,
+      "disabled_no_divergence_rate": 1.0,
+      "disabled_total": 2,
+      "enabled_no_divergence": 1,
+      "enabled_no_divergence_rate": 1.0,
+      "enabled_total": 1,
+      "no_divergence_rate_delta_enabled_minus_disabled": 0.0,
+      "sample_note": "preliminary_counter_heuristic_not_statistical_claim",
+      "stabilizer": "random_alpha"
+    },
+    {
+      "disabled_no_divergence": 2,
+      "disabled_no_divergence_rate": 1.0,
+      "disabled_total": 2,
+      "enabled_no_divergence": 1,
+      "enabled_no_divergence_rate": 1.0,
+      "enabled_total": 1,
+      "no_divergence_rate_delta_enabled_minus_disabled": 0.0,
+      "sample_note": "preliminary_counter_heuristic_not_statistical_claim",
+      "stabilizer": "random_descent_steps"
+    },
+    {
+      "disabled_no_divergence": 2,
+      "disabled_no_divergence_rate": 1.0,
+      "disabled_total": 2,
+      "enabled_no_divergence": 1,
+      "enabled_no_divergence_rate": 1.0,
+      "enabled_total": 1,
+      "no_divergence_rate_delta_enabled_minus_disabled": 0.0,
+      "sample_note": "preliminary_counter_heuristic_not_statistical_claim",
+      "stabilizer": "replay_buffer"
+    }
+  ],
+  "tier1_counter_update": "cpu_counter_update_only_lt_1us_no_model_retrain",
+  "tracker_state_path": "results/experiment_3740_fr11_v15_stabilizer_tracker_state.json",
+  "tracker_state_persisted": true,
+  "tracker_state_sha256": "ec1d5db08396329f25d36b4f883dbee1ea9b36472bba23e91b3f89aad86790cf"
+}
