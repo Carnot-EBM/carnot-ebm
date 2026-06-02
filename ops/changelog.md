@@ -8253,3 +8253,47 @@ Did NOT modify research-roadmap.yaml or scripts/research_conductor.py. Did NOT p
 - 2026-06-02: PolarFire opportunistic reachability + continuity audit (per Hardware-Task Continuity; reachable in .338) (✅ Complete) — honest_verdict=complete: polarfire_continuity_confirmed_reachable; results/experiment_3710_polarfire_continuity_v26.json
 - 2026-06-02: GateMate continuity audit (documentation-only — openFPGALoader missing in .331-.338, per known-issues) (✅ Complete) — honest_verdict=complete: gatemate_continuity_audit_recorded_openfpgaloader_state_flash_smoke_host_io_hang_known_blocker; results/experiment_3711_gatemate_continuity_audit_v26.json
 - 2026-06-02: Capstone v339 + G1-G4 gate synthesis — which single candidate is the strongest re-freeze (dependency-aware vs external vs fusion) and was the clean package re-emitted for it? did the code-native AUROC=1.0 survive the held-out leak-audit (or was it a leak, and was the shipped detector reconciled honestly)? was the selection diagnosis formally closed? did KV260 capture its terminal latency transcript? paper_ready must stay TRUE; frozen 0.9131 stays frozen (✅ Complete) — honest_verdict=complete: capstone_v339_refreeze_winner_none_code_native_one_point_zero_was_a_leak_selection_closed_kv260_latency_transcript_captured_terminal_candidate_paper_ready_true_frozen_headline_unchanged; results/experiment_3712_capstone_and_g_gate_v339.json
+
+## 2026-06-02 — Planned milestone 2026.06.340 (outer-loop Claude Opus 4.8)
+
+Triggered by: conductor "Plan next milestone" step (all 11 tasks of .339 completed).
+
+Produced `research-roadmap-next.yaml` (milestone 2026.06.340, 11 tasks exp3713–exp3723) +
+`openspec/change-proposals/research-roadmap-vNEXT.md`. Theme: CONVERGENCE & FINALIZATION.
+
+`.339` confirmed the project has CONVERGED — both PROVISIONAL .338 wins walked back under full rigor
+(read via summarize_artifact.py + publication_gate.py):
+- exp3704: re-freeze CLOSED-NEGATIVE — dependency-aware (0.9249) / external (0.9287) / fusion (0.9285)
+  all fail to robustly beat frozen 0.9131 under the 5-seed dual-condition protocol; headline stays frozen.
+  BUT exp3704 carries a BENIGN TAUTOLOGY flagged_adversarial (strongest_candidate_auroc ==
+  external_comparator_auroc BY CONSTRUCTION) → .340 re-emits it clean (exp3715).
+- exp3705: the .338 code AUROC=1.0 was a LEAK (held-out 0.9932 ≥ 0.99); exp3706 narrowed the shipped
+  detector to math-only-with-abstain-on-code (E2E green).
+- exp3707: selection diagnosis FORMALLY CLOSED (retirement recommended). exp3709: KV260 TERMINAL.
+  exp3708: FR-11 v13 positive. exp3712: paper_ready=TRUE (G1-G4), frozen 0.9131 unchanged.
+- exp3703: gemini still crashes real workloads → keep codex.
+
+Every self-generable research thread is settled (mostly trustworthy negatives); per
+project_energy_selection_thesis_bounded the next substantive thesis needs a HUMAN seed. So .340 does NOT
+re-grind any settled question (north-star anti-churn). .340 tasks: archive/activate; backend diag v6
+(keep codex; gates a .341 flip); CLEAN corrigendum of the benign-flagged exp3704 (headline stays frozen);
+SHIP paper_v6_narrowing_lint.py (G3 honor-discipline → mechanical); full G4 provenance audit (every
+headline number → a clean non-flagged primary artifact); RISK-COVERAGE ABSTENTION characterization of the
+proven 0.9131 discriminator (AURC, energy-vs-entropy selective prediction, arXiv:2603.21172 — the ONE
+sanctioned new framing, distinct from the CLOSED selection question); REPLICATE the headline on a FRESH
+step-error corpus (G1 strengthening, not FoVer-overfit); FR-11 v14 distribution-shift robustness;
+consolidated hardware continuity (CONFIRM KV260 terminal + recommend the mandate lift; PolarFire/GateMate
+opportunistic); CONVERGENCE SYNTHESIS + operator next-thesis decision-request (the meta-gap the loop
+cannot close itself); capstone v340.
+
+Disciplines: all tasks codex+requires_codex (anti-wipeout); inference-substrate hygiene (NO GGUF/CUDA
+markers on aggregation/scoring tasks); anti-poison test clauses; NO gated_on fields (graceful
+disk-presence fallbacks — no None-read cascade); operator_override on all scope-matched legit
+continuations. Added 6 new references to research-references.md (.340 planning sweep: arXiv:2603.21172,
+SelectLLM/AURC, arXiv:2604.03904, arXiv:2509.12527, arXiv:2502.06884, arXiv:2510.08049 + arXiv:2604.09482).
+Validated: YAML parses, milestone == _expected_next_milestone('2026.06.339') = 2026.06.340,
+exclusion-manifest lint (2 HARD fixed: exp3716 override added for the 'narrowing'-word false-match vs
+retired exp1462; exp3721 '/dev/mmcblk' literal removed → exit 0), overdue-priority lint exit 0,
+canonical-URL lint clean.
+
+Did NOT modify research-roadmap.yaml or scripts/research_conductor.py. Did NOT push.

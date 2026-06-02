@@ -1,0 +1,950 @@
+milestone: "2026.06.340"
+milestone_title: "CONVERGENCE & FINALIZATION — .339 confirmed the project has converged: the headline (FoVer 0.9131) is frozen, proven, independently reproduced and narrowing-clean (paper_ready=TRUE), and every self-generable research thread is settled — re-freeze CLOSED-NEGATIVE (no reweighting candidate beats frozen under dual-condition rigor, exp3704), code = LEAK -> math-only-with-abstain (exp3705/3706), selection diagnosis FORMALLY CLOSED (exp3707), P0.1 honest-negative, facts + trained-judge-OOD RETIRED, KV260 TERMINAL (exp3709). Per project_energy_selection_thesis_bounded the next substantive thesis needs a HUMAN seed; the loop will not self-initiate one. So .340 does NOT manufacture breadth (north-star sec-1: a new version of an existing artifact without moving the headline is noise). .340: (1) clean up the benign-flagged exp3704 (corrigendum, headline stays frozen); (2) HARDEN the publication gates from honor-discipline to mechanical — ship the G3 paper_v6_narrowing_lint + run a full G4 provenance audit; (3) characterize the proven 0.9131 discriminator as a deployable RISK-COVERAGE ABSTENTION gate (the one sanctioned new framing, distinct from the CLOSED selection question; arXiv:2603.21172 + AURC); (4) REPLICATE the headline-class discrimination on a FRESH corpus (G1 strengthening, not FoVer-overfit); (5) continue FR-11 self-learning; (6) CONFIRM KV260 terminal + relax the hardware mandate; (7) SURFACE the converged state + candidate next-theses to the OPERATOR (synthesis). paper_ready MUST stay TRUE (G1-G4); frozen 0.9131 stays frozen (any candidate is an operator re-freeze CANDIDATE, never a silent swap)."
+milestone_doc: openspec/change-proposals/research-roadmap-vNEXT.md
+
+# OUTER-LOOP / OPERATOR PRE-STAGED ROADMAP (2026-06-02, Claude Opus 4.8). RATIONALE:
+# .339 was a CONVERGENCE milestone. Both PROVISIONAL .338 wins walked back to the conservative outcome
+# under full rigor:
+#  (A) exp3704: dependency-aware (0.9249) vs external de-entangled/CIG (0.9287) vs FUSION (0.9285) under
+#      the FROZEN 5-seed dual-condition protocol -> NO candidate robustly beats frozen 0.9131 (paired
+#      delta CI does not exclude 0). Headline stays frozen. BUT exp3704 carries a benign TAUTOLOGY
+#      flagged_adversarial (strongest_candidate_auroc == external_comparator_auroc BY CONSTRUCTION --
+#      the external IS the strongest). The conclusion does not depend on the flagged field, but the
+#      record carries a flagged headline-adjacent artifact -> .340 re-emits it CLEAN (exp1850 pattern).
+#  (B) exp3705: the .338 code AUROC=1.0 was a LEAK (held-out 0.9932 >= 0.99 = still a leak red-flag).
+#      exp3706 narrowed the shipped detector to math-only-with-abstain-on-code (E2E green). Code SETTLED.
+#  (C) exp3707: selection diagnosis FORMALLY CLOSED (retirement recommended). energy-SELECTION bounded.
+#  (D) exp3709: KV260 captured a non-fabricated board latency transcript -> TERMINAL candidate. Per
+#      north-star sec-3 the per-milestone hardware mandate may now relax to opportunistic.
+#  (E) FR-11 v13 multi-session consolidation POSITIVE (exp3708). paper_ready stayed TRUE (exp3712).
+# CONVERGENCE: every self-generable thread is settled (mostly trustworthy negatives). Per
+# project_energy_selection_thesis_bounded the next substantive thesis needs a HUMAN seed. .340 therefore
+# does NOT re-grind any settled question (north-star anti-churn). It does: corrigendum the flagged
+# artifact, HARDEN G3 (ship paper_v6_narrowing_lint.py) + G4 (full provenance audit) from honor-discipline
+# to mechanical, characterize the proven discriminator as a RISK-COVERAGE ABSTENTION gate (the ONE
+# sanctioned new framing -- NOT the closed selection question), REPLICATE the headline on a FRESH corpus,
+# continue FR-11, CONFIRM KV260 terminal + relax the mandate, and SURFACE the operator next-thesis decision.
+# INVARIANTS: paper_ready=true (G1-G4 closed 2026-05-31; do NOT regress); frozen FoVer 0.9131 stays frozen
+# (operator re-freeze CANDIDATE only, never a silent swap; the agent never edits north-star.md or triggers
+# the CI run). P0.1 honest-negative. energy-SELECTION settled-bounded (diagnosis CLOSED exp3707).
+# facts-generalization RETIRED (exp3670). trained-judge-OOD RETIRED (exp3659). code = math-only-with-abstain.
+# HYGIENE: every aggregation/verifier-scoring task sets inference_substrate correctly AND carries NO
+# GGUF/CUDA/live-model marker in model_specs, then runs adversarial_verify and CONFIRMS clean before
+# finishing. LEAK-GUARD: any AUROC >= 0.99 on n>=1000 is a leak until proven leak-free. NO poison tests
+# (.325/.326/.332 cascade): parametrize pytests over honest verdicts on realistic synthetic fixtures;
+# never hard-assert one success string against a real corpus; never use Q/R/H-number placeholders. Every
+# gated_on is a BARE scalar (none used here -- graceful disk-presence fallbacks instead).
+# BACKEND: gemini still crashes real workloads (exp3703, .339). Keep codex+requires_codex for ALL .340
+# tasks; exp3714 runs the 6th confirmation probe that gates a .341 flip. Operator may override to
+# gemini-default at activation if quota preservation outweighs the wipeout risk.
+
+tasks:
+  - id: exp3713-archive-v339-activate-v340
+    operator_override: "2026-05-29 operator directive (standing): routine milestone-transition (archive-vN-activate-vN+1) — false-positive scope-match vs prior archive-v* tasks; structurally never a doomed rerun."
+    milestone: "2026.06.340"
+    title: "Archive milestone .339 honestly (CONVERGENCE milestone: re-freeze CLOSED-NEGATIVE — no reweighting candidate beats frozen 0.9131 under dual-condition rigor, but exp3704 carries a benign TAUTOLOGY flag; code AUROC=1.0 was a LEAK -> detector narrowed to math-only-with-abstain; selection diagnosis FORMALLY CLOSED; KV260 TERMINAL; FR-11 v13 positive; paper_ready stayed TRUE; frozen 0.9131 unchanged) and activate .340"
+    priority: critical
+    max_turns: 20
+    agent_type: codex
+    model: gpt-5.5
+    requires_codex: true   # anti-wipeout: gemini still crashes real workloads (exp3703); keep codex until exp3714 confirms a stable probe AND a surviving real workload
+    estimated_wall_time_min: 6
+    track: ops
+    inference_substrate: aggregation_from_upstream_artifacts
+    requires_gpu: false
+    deliverable: results/experiment_3713_archive_v339_activate_v340.json
+    prompt: |
+      CONTEXT: .339 was a CONVERGENCE milestone -- both PROVISIONAL .338 wins walked back to the
+      conservative outcome under full rigor. Record honestly:
+      (A) exp3704 ran dependency-aware (0.9249) vs external de-entangled/CIG (0.9287) vs FUSION (0.9285)
+      under the FROZEN 5-seed dual-condition protocol -> NO candidate robustly beats frozen 0.9131 (the
+      paired delta CI does not exclude 0). Headline stays frozen. NOTE exp3704 carries a benign TAUTOLOGY
+      flagged_adversarial (strongest_candidate_auroc == external_comparator_auroc BY CONSTRUCTION) -> .340
+      re-emits it CLEAN (exp3715). (B) exp3705: the .338 code AUROC=1.0 was a LEAK (held-out 0.9932) ->
+      exp3706 narrowed the shipped detector to math-only-with-abstain-on-code (E2E green). (C) exp3707:
+      selection diagnosis FORMALLY CLOSED (retirement recommended). (D) exp3709: KV260 captured a
+      non-fabricated board latency transcript -> TERMINAL candidate. (E) FR-11 v13 positive (exp3708);
+      paper_ready stayed TRUE (exp3712); frozen 0.9131 UNCHANGED.
+      EXISTING CODE TO READ FIRST: research-roadmap.yaml (.339, just finished); exp3704, exp3705, exp3706,
+      exp3707, exp3709, exp3712 via scripts/summarize_artifact.py; ops/north-star.md.
+      TASK: archive .339 to research-complete.yaml honestly, confirm .340 active.
+      INFERENCE-SUBSTRATE HYGIENE: aggregation task. Set inference_substrate=aggregation_from_upstream_artifacts
+      and DO NOT put any GGUF/CUDA/live-model marker in model_specs/target_model. Run
+      `python scripts/adversarial_verify.py <your artifact>` and CONFIRM no critical flag before finishing.
+      REQUIRED ARTIFACT FIELDS (the principle: annotation documents WHY each field matters; store the bare VALUE):
+        honest_verdict:
+          principle: "Terminal prefix lets the conductor reconciler classify the transition as complete without re-running it."
+        inference_substrate: "aggregation_from_upstream_artifacts (principle: a JSON-read + format task, not live inference; 0.0001s floor; carries NO compute-bound marker so it does not false-flag)."
+        v339_outcome_recorded_as:
+          principle: "Records .339's defensible converged state (re-freeze closed-negative; code leak -> math-only-with-abstain; selection closed; KV260 terminal; FR-11 v13 ok; paper_ready TRUE) so the record does not revert."
+        refreeze_closed_negative_recorded:
+          principle: "Records that under dual-condition rigor NO candidate beats frozen 0.9131 (exp3704) -> the re-freeze thread is a closed negative; headline stays frozen."
+        exp3704_benign_flag_recorded:
+          principle: "Records that exp3704's flagged_adversarial is a benign TAUTOLOGY (strongest==external by construction), to be re-emitted clean in .340 (exp3715)."
+        code_leak_recorded:
+          principle: "Records that the .338 code AUROC=1.0 was a leak (exp3705) and the shipped detector is now math-only-with-abstain (exp3706)."
+        selection_diagnosis_closed_recorded:
+          principle: "Records the selection diagnosis as FORMALLY CLOSED (exp3707), not a third grind."
+        kv260_terminal_recorded:
+          principle: "Records KV260 reached its terminal latency-transcript candidate (exp3709) -> the per-milestone mandate may relax."
+        paper_ready_preserved:
+          principle: "G1-G4 stay met; the transition must not silently regress paper_ready; frozen headline 0.9131 stays frozen."
+        p01_status_preserved:
+          principle: "P0.1 stays honest-negative; the transition does not re-assert a positive."
+        n_tasks_archived:
+          principle: "Sample-size hygiene -- confirms the full milestone was archived, not a partial."
+        adversarial_verify_clean:
+          principle: "True iff the artifact passes adversarial_verify with no critical flag."
+        random_seed:
+          principle: "Determinism precondition for reproducibility."
+        reproducibility_checksum:
+          principle: "Content hash catches silent drift between this artifact and any replication."
+        duration_s:
+          principle: "Wall-clock plausibility floor; missing duration is the fabrication signal."
+      TERMINAL VERDICT: "complete: archived_v339_convergence_refreeze_closed_negative_code_leak_narrowed_selection_closed_kv260_terminal_v340_active_paper_ready_true_frozen_headline_unchanged"
+      Run: cd {project_root} && python scripts/experiment_3713_archive_v339_activate_v340.py
+      Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  - id: exp3714-backend-state-diagnostic-v6
+    operator_override: "2026-06-02 outer-loop directive: per-milestone backend-state diagnostic (6th gemini-recovery probe + routing recommendation) — documentation-only; does not modify the conductor or env; the .340 work stays on codex regardless so a gemini relapse cannot wipe the milestone."
+    milestone: "2026.06.340"
+    title: "Backend-state diagnostic v6 — sixth probe of gemini quota/crash stability (exp3653/3666/3679/3691/3703 all showed probe-OK-but-real-workload-crash); record the probe-vs-real-workload divergence; recommend whether .341 may flip to gemini-default; .340 stays on codex (documentation-only)"
+    priority: critical
+    max_turns: 30
+    agent_type: codex
+    model: gpt-5.5
+    requires_codex: true   # diagnosing gemini must run on a backend that is NOT the one under test
+    estimated_wall_time_min: 8
+    track: ops
+    inference_substrate: hardware_smoke
+    requires_gpu: false
+    deliverable: results/experiment_3714_backend_state_diagnostic_v6.json
+    prompt: |
+      CONTEXT: gemini probes have repeatedly reported OK on a one-shot call (exp3653/3666/3679/3691/3703)
+      while the actual multi-turn real workload CRASHED (`.js:345500:14` + ~1201s timeout) -- the
+      .337-close planner crash, re-confirmed in exp3691 (.338) and exp3703 (.339). This is the SIXTH probe.
+      .340 carries gate-hardening + headline-replication work and .333 was a whole-milestone gemini
+      wipeout, so routing STAYS codex+requires_codex regardless. Documentation-only -- MUST NOT modify
+      scripts/research_conductor.py, env vars, or conductor config.
+      EXISTING CODE TO READ FIRST: results/experiment_3703 (probe v5, real_workload_crash_observed=true)
+      and the .339 conductor-log tail via scripts/summarize_artifact.py / a read of ops/conductor-log.md;
+      CLAUDE.md "Gemini-Default for Experiments" (the GEMINI/CODEX_FORCE_EXPERIMENTS coercion rules).
+      PRECONDITIONS (step 0): codex backend reachable (this task runs on it). A gemini 429/crash is an
+      EXPECTED finding, not a blocker.
+      CONCRETE STEPS:
+        1. Probe gemini non-fatally: `timeout 30 gemini --version` and ONE bounded real call
+           `timeout 60 gemini -m gemini-3.1-pro-preview -p "Reply OK"` -- CAPTURE stdout + exit code;
+           record ok / quota_exhausted_429 / crash_js_345500 verbatim. Do NOT loop or retry.
+        1b. Record the gemini-cli version. If it is UNCHANGED since exp3703 AND exp3703 already recorded
+           probe-OK-but-real-workload-crash, note that re-probing adds no new state (5 identical priors) and
+           the recommendation defaults to keep-codex without belaboring it — the probe stays cheap/bounded.
+        2. Record the probe-vs-real-workload divergence: a flip to gemini-default needs BOTH a stable
+           probe AND evidence a real multi-turn workload survives (which has NOT been observed in 5 probes).
+        3. Record the conductor coercion env (`env | grep -iE 'AGENT_TYPE|FORCE_EXPERIMENTS'`) -- read-only.
+        4. Recommend: a .341 flip requires probe OK AND no observed real-workload crash this milestone;
+           otherwise keep codex+requires_codex (the proven .334-.340 routing).
+      ANTI-POISON TEST DISCIPLINE (MANDATORY): if you ship a pytest, parametrize over the script's honest
+      outcomes (gemini_ok / gemini_quota_exhausted / gemini_crash) on synthetic fixtures; NEVER hard-assert
+      one success string. Run your own test green BEFORE finishing.
+      REQUIRED ARTIFACT FIELDS (principle: documents WHY; store the bare VALUE):
+        honest_verdict:
+          principle: "Terminal prefix for reconciler classification."
+        inference_substrate: "hardware_smoke (principle: a bounded CLI health probe, not live model inference; no compute-bound marker)."
+        gemini_cli_version:
+          principle: "Records the installed gemini-cli version so a future upgrade is auditable."
+        gemini_probe_state:
+          principle: "ok / quota_exhausted_429 / crash_js_345500 -- the one-shot probe result on the 6th probe."
+        real_workload_crash_observed:
+          principle: "True iff a real gemini workload crashed recently (re-confirmed exp3703) -- the divergence a one-shot probe hides."
+        consecutive_stable_probes:
+          principle: "Counts consecutive milestones gemini probed OK; a real-workload crash resets confidence in a flip."
+        conductor_coercion_env:
+          principle: "Records AGENT_TYPE + FORCE_EXPERIMENTS active -- explains why per-task agent_type routes as it does."
+        recommended_routing:
+          principle: "codex_requires_codex (keep) or gemini_default_eligible_for_v341 -- eligibility requires probe OK AND no real-workload crash."
+        conductor_unmodified_assert:
+          principle: "Asserts this diagnostic did NOT modify research_conductor.py or env."
+        random_seed:
+          principle: "Determinism precondition."
+        reproducibility_checksum:
+          principle: "Drift detection."
+        duration_s:
+          principle: "Plausibility floor."
+      TERMINAL VERDICTS: "complete: backend_diagnosed_gemini_probe_ok_but_real_workload_crash_keep_codex_routing" /
+      "complete: backend_diagnosed_gemini_stable_6th_probe_no_real_crash_v341_may_flip" /
+      "complete: backend_diagnosed_gemini_still_unstable_keep_codex_routing"
+      Run: cd {project_root} && python scripts/experiment_3714_backend_state_diagnostic_v6.py
+      Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  - id: exp3715-refreeze-disambiguation-clean-corrigendum
+    operator_override: "2026-06-02 outer-loop directive: corrigendum (exp1850 pattern) of the benign-flagged exp3704, NOT a re-run of the comparison. Forward diff vs exp3704: re-emits the SAME conclusion (no candidate beats frozen 0.9131 under dual-condition rigor) on a CLEAN artifact that stores strongest_candidate as a STRING label + a reference, so the de-tautology linter does not false-fire on strongest==external. False-positive scope-match vs prior re-freeze exps; the frozen 0.9131 stays frozen, the agent never edits north-star.md."
+    milestone: "2026.06.340"
+    title: "CLEAN corrigendum of the re-freeze disambiguation — exp3704 reached the correct conservative conclusion (no candidate beats frozen 0.9131 under dual-condition rigor) but carries a BENIGN TAUTOLOGY flagged_adversarial (strongest_candidate_auroc == external_comparator_auroc BY CONSTRUCTION). Re-emit the disambiguation on a CLEAN, non-flagged artifact (preserve exp3704's numbers + add the correction note, exp1850 pattern), storing strongest_candidate as a STRING label so the de-tautology linter does not false-fire. Headline stays frozen; no record carries a flagged headline-adjacent artifact"
+    priority: high
+    max_turns: 40
+    agent_type: codex
+    model: gpt-5.5
+    requires_codex: true   # anti-wipeout codex routing for .340
+    estimated_wall_time_min: 12
+    track: evidence
+    inference_substrate: aggregation_from_upstream_artifacts
+    requires_gpu: false
+    deliverable: results/experiment_3715_refreeze_disambiguation_clean_corrigendum.json
+    prompt: |
+      CONTEXT: exp3704 reached the correct conclusion -- under the FROZEN 5-seed dual-condition protocol
+      no candidate (dependency-aware 0.9249, external de-entangled/CIG 0.9287, fusion 0.9285) robustly
+      beats frozen 0.9131 (paired delta CI does not exclude 0), so the headline stays frozen. BUT exp3704
+      was stamped flagged_adversarial=True with a CRITICAL TAUTOLOGY between strongest_candidate_auroc and
+      external_comparator_auroc. That flag is a FALSE POSITIVE: the strongest candidate IS the external
+      one, so the two fields are equal BY CONSTRUCTION (a legitimate copy, not two distinct measurements
+      coinciding). The conclusion does not depend on the flagged field, but the fabrication gate quarantines
+      flagged artifacts, so the milestone record carries a flagged headline-adjacent artifact. This task is
+      a CORRIGENDUM (exp1850 pattern): re-emit the disambiguation on a CLEAN, non-flagged artifact that
+      PRESERVES exp3704's original numbers + adds the correction note, and represents the ranking WITHOUT a
+      duplicated AUROC field (store strongest_candidate as a STRING label + a pointer to which candidate
+      field holds the value). This is NOT a re-run of the comparison and NOT a re-freeze. The frozen 0.9131
+      stays frozen; do NOT edit ops/north-star.md; do NOT trigger the CI reproducer.
+      EXISTING CODE TO READ FIRST: results/experiment_3704 (the flagged disambiguation -- its numbers + the
+      TAUTOLOGY flag) and results/experiment_1850_thrml_parity_n128.json (the canonical corrigendum pattern:
+      preserve original numbers + add correction) via scripts/summarize_artifact.py; scripts/adversarial_verify.py
+      (the de-tautology check that fired -- understand WHY a string label + single-source value avoids it);
+      CLAUDE.md "Adversarial Artifact Verification" (TAUTOLOGY) + "Inference-Substrate Declaration Discipline".
+      PRECONDITIONS (step 0): results/experiment_3704 present on disk. If missing -> "complete: blocked_exp3704_unavailable".
+      INFERENCE-SUBSTRATE HYGIENE: aggregation_from_upstream_artifacts; NO GGUF/CUDA marker. After writing,
+      run `python scripts/adversarial_verify.py <your artifact>` and CONFIRM no critical flag (the whole
+      point of the corrigendum) before finishing.
+      DE-TAUTOLOGY (MANDATORY): store each conceptually-distinct AUROC under exactly ONE field name; do NOT
+      duplicate the strongest candidate's AUROC into a second field. Record strongest_candidate as a STRING
+      ("dependency_aware" / "external" / "fusion") + which candidate-AUROC field holds its value.
+      CONCRETE STEPS:
+        1. Read exp3704's three candidate AUROCs + the carnot_current reproduction of 0.9131 + the paired
+           delta CIs vs frozen.
+        2. Re-emit them on a CLEAN artifact: one field per distinct candidate AUROC, strongest_candidate as
+           a STRING label, the no-candidate-beats-frozen conclusion, and a correction_note explaining the
+           exp3704 benign-TAUTOLOGY false-positive (so the audit trail is honest, not hidden).
+        3. ASSERT: headline stays frozen 0.9131, north-star.md NOT modified, the CI run NOT triggered, the
+           publication gate still reads 0.9131.
+      ANTI-POISON TEST DISCIPLINE (MANDATORY): parametrize any pytest over the honest outcomes
+      (corrigendum_clean_no_candidate_beats_frozen / blocked) on synthetic fixtures; NEVER hard-assert one
+      success string. Run your own test green BEFORE finishing.
+      REQUIRED ARTIFACT FIELDS (principle: documents WHY; bare booleans stored bare):
+        honest_verdict:
+          principle: "Terminal prefix for reconciler classification."
+        inference_substrate: "aggregation_from_upstream_artifacts (principle: re-reads exp3704; no live inference; no compute-bound marker)."
+        dependency_aware_auroc:
+          principle: "Preserved from exp3704 -- one field, no alias."
+        external_comparator_auroc:
+          principle: "Preserved from exp3704 -- a DISTINCT measurement, stored once."
+        fusion_auroc:
+          principle: "Preserved from exp3704 -- the third DISTINCT candidate, stored once."
+        strongest_candidate:
+          principle: "A STRING label (dependency_aware/external/fusion) -- NOT a duplicated AUROC field; this is what avoids the de-tautology false-positive."
+        no_candidate_beats_frozen:
+          principle: "BARE bool. True iff no candidate's AUROC > frozen 0.9131 with the paired delta CI excluding 0 (the exp3704 conclusion). STORE AS BARE true/false."
+        correction_note:
+          principle: "Documents the exp3704 benign-TAUTOLOGY false-positive honestly (audit trail, not hidden) -- the exp1850 corrigendum discipline."
+        adversarial_verify_clean:
+          principle: "True iff THIS corrigendum passes adversarial_verify with no critical flag -- the entire purpose of the re-emit."
+        north_star_unmodified_assert:
+          principle: "Asserts ops/north-star.md was NOT edited (operator-curated)."
+        frozen_headline_unchanged_assert:
+          principle: "Asserts the publication gate still reads 0.9131 and paper_ready is unchanged."
+        random_seed:
+          principle: "Determinism precondition."
+        reproducibility_checksum:
+          principle: "Drift detection."
+        duration_s:
+          principle: "Plausibility floor."
+      ACCEPTANCE GATE:
+        - condition: "no_candidate_beats_frozen == true AND adversarial_verify_clean == true AND frozen_headline_unchanged_assert == true"
+          principle: "The corrigendum succeeds only when it re-emits the conservative conclusion (headline stays frozen) on a CLEAN, non-flagged artifact -- otherwise the flagged headline-adjacent artifact remains in the record."
+      TERMINAL VERDICTS: "complete: refreeze_disambiguation_corrigendum_clean_no_candidate_beats_frozen_headline_stays_0_9131" /
+      "complete: blocked_exp3704_unavailable"
+      Run: cd {project_root} && python scripts/experiment_3715_refreeze_disambiguation_clean_corrigendum.py
+      Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  - id: exp3716-ship-paper-v6-narrowing-lint-g3-mechanical
+    operator_override: "2026-06-02 outer-loop directive: NEW mechanical-enforcement infrastructure (ships the paper_v6_narrowing_lint.py that CLAUDE.md says SHOULD exist). Forward diff vs the RETIRED exp1462 (paper-v6-anchored-claims-narrowing, a one-shot prose-narrowing pass): this is not a prose edit but a STANDALONE LINT that mechanically enforces G3 going forward — additive infrastructure, does not edit the paper or the conductor. False-positive scope-match on the word 'narrowing' vs exp1462."
+    milestone: "2026.06.340"
+    title: "SHIP paper_v6_narrowing_lint.py — convert the G3 (prose narrowing-clean) gate from honor-discipline + an inline publication_gate.py phrasing scan to a STANDALONE pre-commit-style lint that scans docs/arxiv-paper/main.tex + docs/technical-report.md + any paper_v6_* artifact for the Paper-v6 Narrowing Discipline forbidden phrasings AND retracted numerical values (FoVer 0.9857, 11680x, etc.). CLAUDE.md says this lint SHOULD exist and does not. Mechanical G3 enforcement, additive (does not modify research_conductor.py)"
+    priority: high
+    max_turns: 50
+    agent_type: codex
+    model: gpt-5.5
+    requires_codex: true   # anti-wipeout codex routing for .340; formulaic linter implementation + tests (codex strength)
+    estimated_wall_time_min: 18
+    track: infra
+    inference_substrate: aggregation_from_upstream_artifacts
+    requires_gpu: false
+    deliverable: results/experiment_3716_ship_paper_v6_narrowing_lint.json
+    prompt: |
+      CONTEXT: G3 (paper prose is narrowing-clean) currently passes via an INLINE phrasing scan inside
+      scripts/publication_gate.py, but CLAUDE.md "Paper-v6 Narrowing Discipline" explicitly says a
+      standalone `paper_v6_narrowing_lint.py` pre-commit hook SHOULD scan docs/arxiv-paper/main.tex +
+      docs/technical-report.md + any new paper_v6_* artifact -- and it does NOT exist yet. north-star §2
+      also notes G3 was historically "UNMET (no narrowing lint exists yet)". This task SHIPS that lint so
+      G3 is mechanically defended, not honor-discipline. Additive infrastructure only: create the script +
+      its tests; do NOT wire it into .pre-commit-config.yaml in a way that blocks unrelated commits without
+      operator sign-off (emit the recommended hook stanza as an OPERATOR-ACTION note instead), and do NOT
+      modify scripts/research_conductor.py.
+      EXISTING CODE TO READ FIRST: CLAUDE.md "Paper-v6 Narrowing Discipline" (the forbidden-phrasings table
+      + the retracted-numerical-values note: FoVer 0.9857, +0.0621 vs HIVE, 11680x speedup, KV260 speedup,
+      thermalization, etc.); scripts/publication_gate.py (the inline G3 phrasing scan -- reuse its phrasing
+      list as the seed); scripts/canonical_url_lint.py + scripts/pages_fever_dream_lint.py (the canonical
+      standalone-lint structure to mirror: tracked-file scan, allow-list, non-zero exit on violation,
+      exempt-files set); scripts/verifier_authenticity_lint.py (another lint exemplar).
+      PRECONDITIONS (step 0): docs/arxiv-paper/main.tex OR docs/technical-report.md present on disk. If
+      neither -> "complete: blocked_no_paper_targets_on_disk".
+      INFERENCE-SUBSTRATE HYGIENE: aggregation_from_upstream_artifacts (a static text lint); NO GGUF/CUDA
+      marker; run adversarial_verify clean.
+      CONCRETE STEPS:
+        1. Implement scripts/paper_v6_narrowing_lint.py: scan the paper targets + any results/paper_v6_*.json
+           for the forbidden phrasings (regex per the CLAUDE.md table) AND the retracted numerical values.
+           Exit non-zero on any hit; print file:line + the matched pattern. Allow-list CLAUDE.md itself +
+           the lint scripts (they name the patterns as prose). Exempt historical/immutable docs (research-log).
+        2. Run it on the CURRENT paper targets and record the result (expect CLEAN -- G3 currently passes).
+        3. Write a parametrized pytest: a synthetic doc containing a forbidden phrasing FAILS the lint; a
+           synthetic clean doc PASSES; a retracted numerical value (0.9857) FAILS. Run green.
+        4. Emit the recommended .pre-commit-config.yaml hook stanza as an OPERATOR-ACTION note (do not
+           auto-wire it).
+      VERIFIER AUTHENTICITY: the lint must actually parse the files and regex-match real patterns (not
+      return a constant pass). Disclose any heuristic limit (e.g. phrasing variants it cannot catch) in the
+      script docstring (the pcib_probe.py honest-heuristic pattern).
+      ANTI-POISON TEST DISCIPLINE (MANDATORY): the pytest parametrizes over (clean_doc_passes /
+      forbidden_phrasing_fails / retracted_number_fails); NEVER hard-assert one string against the real
+      paper. Run your own tests green BEFORE finishing.
+      REQUIRED ARTIFACT FIELDS (principle: documents WHY; bare booleans stored bare):
+        honest_verdict:
+          principle: "Terminal prefix for reconciler classification."
+        inference_substrate: "aggregation_from_upstream_artifacts (principle: a static text lint; no live inference; no compute-bound marker)."
+        lint_script_path:
+          principle: "scripts/paper_v6_narrowing_lint.py -- the shipped mechanical G3 enforcer."
+        forbidden_phrasings_count:
+          principle: "How many forbidden phrasings + retracted numbers the lint checks -- coverage of the CLAUDE.md narrowing table."
+        current_paper_lint_clean:
+          principle: "BARE bool. True iff the current paper targets pass the new lint (G3 currently passes). STORE AS BARE true/false."
+        pytest_passed:
+          principle: "True iff the parametrized lint test (clean-passes / forbidden-fails / retracted-number-fails) is green."
+        g3_now_mechanically_enforced:
+          principle: "BARE bool. True iff a standalone lint now defends G3 (was honor-discipline + inline scan). STORE AS BARE true/false."
+        precommit_hook_stanza:
+          principle: "The recommended .pre-commit-config.yaml stanza for OPERATOR action -- not auto-wired (operator-curated config)."
+        conductor_unmodified_assert:
+          principle: "Asserts research_conductor.py was NOT modified."
+        adversarial_verify_clean:
+          principle: "True iff no critical flag."
+        random_seed:
+          principle: "Determinism precondition."
+        reproducibility_checksum:
+          principle: "Drift detection."
+        duration_s:
+          principle: "Plausibility floor."
+      ACCEPTANCE GATE:
+        - condition: "g3_now_mechanically_enforced == true AND pytest_passed == true AND current_paper_lint_clean == true AND conductor_unmodified_assert == true"
+          principle: "G3 is mechanically defended only when the standalone lint exists, its test is green, the current paper passes it, and the conductor is untouched."
+      TERMINAL VERDICTS: "complete: paper_v6_narrowing_lint_shipped_g3_mechanically_enforced_current_paper_clean" /
+      "complete: blocked_no_paper_targets_on_disk"
+      Run: cd {project_root} && python scripts/experiment_3716_ship_paper_v6_narrowing_lint.py
+      Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  - id: exp3717-g4-full-provenance-audit
+    operator_override: "2026-06-02 outer-loop directive: full G4 provenance audit (forward diff vs prior capstone G4 spot-checks: audits EVERY headline + north-star number end-to-end against CLEAN, non-flagged primary artifacts, and explicitly verifies no cited artifact carries flagged_adversarial). Audit/synthesis class — false-positive scope-match vs prior provenance/capstone tasks; does not edit north-star.md or the paper."
+    milestone: "2026.06.340"
+    title: "Full G4 provenance audit — verify EVERY headline + north-star number (FoVer 0.9131, CI [0.9027,0.9235], FR-11 +0.0185 [0.0125,0.0245], the detector math operating point ~0.98/ECE~0.009) traces to a CLEAN, non-flagged primary results/experiment_*.json carrying random_seed + reproducibility_checksum — and that NO cited source carries flagged_adversarial (the exp3704 lesson). Hardens G4 from a capstone spot-check to an end-to-end audit"
+    priority: high
+    max_turns: 40
+    agent_type: codex
+    model: gpt-5.5
+    requires_codex: true   # anti-wipeout codex routing for .340
+    estimated_wall_time_min: 12
+    track: evidence
+    inference_substrate: aggregation_from_upstream_artifacts
+    requires_gpu: false
+    deliverable: results/experiment_3717_g4_full_provenance_audit.json
+    prompt: |
+      CONTEXT: G4 (every headline number traces to a primary artifact with random_seed +
+      reproducibility_checksum) passes in the capstone, but it has never been audited end-to-end for EVERY
+      headline + north-star number against CLEAN, non-flagged artifacts. The exp3704 lesson (a
+      headline-adjacent artifact carried a flagged_adversarial) shows the audit must also confirm the cited
+      source is NOT flagged. This task hardens G4 from a spot-check to a full provenance audit. It is
+      read-only: do NOT edit ops/north-star.md, the paper, or any artifact.
+      EXISTING CODE TO READ FIRST: ops/north-star.md §1 (the headline numbers: FoVer 0.9131, CI
+      [0.9027,0.9235], FR-11 +0.0185 CI [0.0125,0.0245]); results/experiment_2850_fover_dual_condition_integrity_v4.json
+      (the G1 source) + results/experiment_2837_fover_memory_leakage_v3.json via scripts/summarize_artifact.py;
+      results/experiment_3706 (the shipped detector math operating point ~0.98 / ECE ~0.009);
+      scripts/publication_gate.py (the G4 check) + scripts/adversarial_verify.py (to re-check each cited
+      artifact is clean).
+      PRECONDITIONS (step 0): ops/north-star.md + the cited primary artifacts present on disk. If the
+      primary FoVer artifact is missing -> "complete: blocked_primary_artifact_unavailable".
+      INFERENCE-SUBSTRATE HYGIENE: aggregation_from_upstream_artifacts; NO GGUF/CUDA marker; adversarial_verify clean.
+      CONCRETE STEPS:
+        1. Enumerate every headline + north-star number (FoVer AUROC + CI, FR-11 contribution + CI, the
+           detector math operating point + ECE). For each, resolve the PRIMARY artifact it traces to.
+        2. For each primary artifact: confirm random_seed (or random_seeds_used) + reproducibility_checksum
+           present, the cited number matches the artifact value, AND a LIVE adversarial_verify re-check is
+           CLEAN (no flagged_adversarial). Record per-number provenance rows.
+        3. Verdict: G4 fully traced (every number -> a clean primary artifact) or list the gaps. If any
+           cited source is flagged, record it as an OPERATOR-ACTION corrigendum item (do NOT auto-fix).
+      ANTI-POISON TEST DISCIPLINE (MANDATORY): parametrize any pytest over the honest outcomes
+      (g4_fully_traced_all_clean / g4_gap_found / blocked) on synthetic fixtures; NEVER hard-assert one
+      success string. Run your own test green BEFORE finishing.
+      REQUIRED ARTIFACT FIELDS (principle: documents WHY; bare booleans stored bare):
+        honest_verdict:
+          principle: "Terminal prefix for reconciler classification."
+        inference_substrate: "aggregation_from_upstream_artifacts (principle: reads north-star + primary artifacts; no live inference; no compute-bound marker)."
+        provenance_rows:
+          principle: "Per-number {headline_number, value, primary_artifact, has_seed, has_checksum, adversarial_clean} -- the end-to-end G4 trace."
+        n_numbers_audited:
+          principle: "How many headline + north-star numbers were traced (sample-size of the audit)."
+        all_numbers_trace_to_clean_artifacts:
+          principle: "BARE bool. True iff every audited number traces to a primary artifact with seed + checksum AND a clean adversarial re-check. STORE AS BARE true/false."
+        any_cited_source_flagged:
+          principle: "BARE bool. True iff any cited primary artifact carries flagged_adversarial (the exp3704 lesson) -> an operator corrigendum item. STORE AS BARE true/false."
+        g4_status:
+          principle: "fully_traced / gap_found -- the hardened G4 verdict."
+        operator_action_items:
+          principle: "Any flagged-source corrigenda or missing-seed/checksum gaps for OPERATOR action (read-only audit; no auto-fix)."
+        north_star_unmodified_assert:
+          principle: "Asserts ops/north-star.md was NOT edited (operator-curated)."
+        adversarial_verify_clean:
+          principle: "True iff THIS audit artifact passes adversarial_verify with no critical flag."
+        random_seed:
+          principle: "Determinism precondition."
+        reproducibility_checksum:
+          principle: "Drift detection."
+        duration_s:
+          principle: "Plausibility floor."
+      ACCEPTANCE GATE:
+        - condition: "provenance_rows present AND n_numbers_audited present AND all_numbers_trace_to_clean_artifacts present AND adversarial_verify_clean == true AND north_star_unmodified_assert == true"
+          principle: "A trustworthy G4 audit traces every number to a clean primary artifact, is itself adversarial-clean, and leaves the operator-curated north-star untouched."
+      TERMINAL VERDICTS: "complete: g4_fully_traced_every_headline_number_to_clean_primary_artifact" /
+      "complete: g4_provenance_gap_found_operator_action_items_recorded" /
+      "complete: blocked_primary_artifact_unavailable"
+      Run: cd {project_root} && python scripts/experiment_3717_g4_full_provenance_audit.py
+      Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  - id: exp3718-risk-coverage-abstention-characterization
+    operator_override: "2026-06-02 outer-loop directive: the ONE sanctioned NEW direction (Depth-retirement note: 'the verifier ensemble's discriminating value where SC is NOT near-optimal'). Forward diff vs the CLOSED selection question (exp3707): this is SELECTIVE PREDICTION / ABSTENTION (a risk-coverage operating envelope for the shipped math-only-with-abstain detector), NOT best-of-N SELECTION-beats-SC. It characterizes the DEPLOYABLE value of the proven 0.9131 discriminator as an energy-based abstention signal (arXiv:2603.21172 'entropy alone insufficient' + AURC). Explicitly NOT a selection re-grind. False-positive scope-match vs prior selection/detector exps."
+    milestone: "2026.06.340"
+    title: "RISK-COVERAGE ABSTENTION characterization of the proven 0.9131 discriminator — convert proven DISCRIMINATION (not SELECTION, which is closed) into a deployable SELECTIVE-PREDICTION operating envelope: the risk-coverage curve (AURC), risk@coverage operating points, and calibration of the shipped math-only detector as an abstention gate. Does the ENERGY signal beat the entropy/self-certainty baseline as a selective-prediction signal (arXiv:2603.21172 shows entropy fails)? This is the on-mission product framing (abstain when likely-wrong), distinct from the CLOSED best-of-N selection question"
+    priority: high
+    max_turns: 60
+    agent_type: codex
+    model: gpt-5.5
+    requires_codex: true   # anti-wipeout codex routing for .340; verifier-scoring + risk-coverage math (codex strength)
+    estimated_wall_time_min: 24
+    track: research
+    inference_substrate: verifier_ensemble_against_cached_candidates
+    requires_gpu: false
+    deliverable: results/experiment_3718_risk_coverage_abstention_characterization.json
+    prompt: |
+      CONTEXT: Carnot's verifier ensemble has PROVEN per-step DISCRIMINATION (FoVer AUROC 0.9131, frozen
+      headline). The SELECTION conversion (best-of-N argmax beats self-consistency) is settled-NEGATIVE and
+      the diagnosis is CLOSED (exp3707) -- DO NOT re-run a selection experiment. This task tests the OTHER
+      conversion: discrimination -> SELECTIVE PREDICTION / ABSTENTION. The shipped "second pair of eyes"
+      detector is now math-only-with-abstain (exp3706); its deployable value is "flag/abstain on
+      likely-wrong steps", which is the project's on-mission goal (escape hallucinations). The right metric
+      is the RISK-COVERAGE curve (AURC) and risk@coverage operating points, NOT a single AUROC and NOT
+      best-of-N. arXiv:2603.21172 ("Entropy Alone is Insufficient for Safe Selective Prediction") shows
+      entropy/uncertainty heuristics FAIL as selective-prediction signals -- so the open question is
+      whether the ENERGY signal is a BETTER selective-prediction signal than entropy / self-certainty on
+      the SAME FoVer step corpus. This is genuinely new (never characterized) and explicitly NOT the closed
+      selection question. FORWARD DIFF vs exp3684 (which found the detector's product value robust over
+      self-certainty on math): exp3684 was a single win/lose product-value comparison; THIS task measures
+      the full risk-coverage OPERATING ENVELOPE (AURC + risk@coverage curve), which exp3684 never produced
+      — a deployable abstention envelope, not a single comparison point.
+      EXISTING CODE TO READ FIRST: results/experiment_2850_fover_dual_condition_integrity_v4.json +
+      results/experiment_2837 (the frozen 0.9131 discriminator + per-step scores) and results/experiment_3706
+      (the shipped math-only-with-abstain detector + its math operating point) and results/experiment_3684
+      (the self-certainty baseline comparison) via scripts/summarize_artifact.py;
+      python/carnot/pipeline/second_pair_detector.py; research-references.md "Entropy Alone is Insufficient
+      (arXiv:2603.21172)" + "SelectLLM ... AURC" + "I-CALM (arXiv:2604.03904)" + "Conformal Abstention
+      Policies (arXiv:2502.06884)".
+      PRECONDITIONS (step 0): the FoVer per-step verifier scores + labels loadable (cached); a per-step
+      entropy / self-certainty baseline computable on the SAME corpus. If the per-step scores are not on
+      disk -> "complete: blocked_fover_perstep_scores_unavailable".
+      INFERENCE-SUBSTRATE HYGIENE: verifier_ensemble_against_cached_candidates; NO GGUF/CUDA marker;
+      adversarial_verify clean. LEAK-GUARD: if the energy AURC implies an AUROC >= 0.99 on n>=1000, treat
+      as a leak and investigate.
+      NULL DISCIPLINE: the energy signal counts as a BETTER abstention signal only if its risk-coverage
+      curve dominates the entropy/self-certainty baseline with a CI separating them at >=1 operating point;
+      if energy ties or loses to entropy, record that as an HONEST result (it does NOT regress the frozen
+      discrimination headline -- AURC and AUROC are different metrics).
+      DE-TAUTOLOGY: AURC, AUROC, and risk@coverage are DISTINCT metrics -- store each once; bit-identical
+      values across them are a bug.
+      CONCRETE STEPS:
+        1. Build the risk-coverage curve for the energy signal on the FoVer step corpus: sort by energy,
+           sweep coverage 100%->0%, plot selective risk (error among the kept) vs coverage; compute AURC +
+           risk at fixed coverages (e.g. 50%, 80%, 90%) + the coverage achievable at a target risk (e.g.
+           5% error). 5 seeds, CI.
+        2. Build the SAME risk-coverage curve for the entropy / self-certainty baseline on the SAME corpus.
+        3. Compare: does the energy AURC beat the entropy/self-certainty AURC with a CI separating them?
+           Record energy_aurc, baseline_aurc, energy_beats_baseline_abstention (BARE bool), and the
+           deployable operating point (coverage @ 5% selective risk).
+      ANTI-POISON TEST DISCIPLINE (MANDATORY): parametrize any pytest over the honest outcomes
+      (energy_better_abstention_signal / energy_ties_or_loses_to_entropy / blocked) on synthetic fixtures;
+      NEVER hard-assert one success string against the real corpus. Run your own tests green BEFORE finishing.
+      REQUIRED ARTIFACT FIELDS (principle: documents WHY; bare booleans stored bare):
+        honest_verdict:
+          principle: "Terminal prefix for reconciler classification."
+        inference_substrate: "verifier_ensemble_against_cached_candidates (principle: scores cached FoVer step outputs; no LLM load; no compute-bound marker)."
+        energy_aurc:
+          principle: "Area Under the Risk-Coverage Curve for the energy signal -- the deployment-facing selective-prediction metric (lower is better)."
+        baseline_aurc:
+          principle: "AURC for the entropy / self-certainty baseline on the SAME corpus -- the bar arXiv:2603.21172 says entropy should fail to clear."
+        energy_beats_baseline_abstention:
+          principle: "BARE bool. True iff the energy risk-coverage curve dominates the baseline with a CI separating them at >=1 operating point. STORE AS BARE true/false."
+        coverage_at_5pct_risk:
+          principle: "The deployable operating point: what fraction of steps can be kept (auto-accepted) at <=5% selective error -- the abstention gate's practical value."
+        risk_at_fixed_coverage:
+          principle: "Selective risk at coverage {50,80,90}% -- the risk-coverage operating points for deployment."
+        energy_aurc_ci:
+          principle: "CI of the energy AURC (5 seeds) -- a point estimate cannot decide vs the baseline."
+        n_seeds:
+          principle: "Replication count (>=5)."
+        n_examples:
+          principle: "Sample-size rigor (FoVer step corpus n>=1000)."
+        calibration_brier_ece:
+          principle: "Calibration of the energy abstention signal -- a deployable operating point must be calibrated."
+        adversarial_verify_clean:
+          principle: "True iff no critical flag."
+        random_seed:
+          principle: "Determinism precondition."
+        reproducibility_checksum:
+          principle: "Drift detection."
+        duration_s:
+          principle: "Plausibility floor."
+      ACCEPTANCE GATE:
+        - condition: "energy_aurc present AND baseline_aurc present AND energy_aurc_ci present AND coverage_at_5pct_risk present AND adversarial_verify_clean == true"
+          principle: "A trustworthy abstention characterization requires the energy AND baseline risk-coverage curves with CI and a deployable operating point, adversarial-clean -- a single AUROC is not a selective-prediction verdict."
+      TERMINAL VERDICTS: "complete: energy_is_a_better_selective_prediction_signal_than_entropy_deployable_abstention_gate" /
+      "complete: energy_ties_or_loses_to_entropy_as_abstention_signal_honest_negative" /
+      "complete: blocked_fover_perstep_scores_unavailable"
+      Run: cd {project_root} && python scripts/experiment_3718_risk_coverage_abstention_characterization.py
+      Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  - id: exp3719-headline-replication-fresh-corpus
+    operator_override: "2026-06-02 outer-loop directive: north-star-sanctioned headline strengthening ('replicates on a new seed/corpus'). Forward diff vs all prior FoVer headline exps: re-measures the headline-class step-error DISCRIMINATION on a DIFFERENT step-error corpus (a fresh PRM/ProcessBench-style set, NOT FoVer), to show the 0.9131-class signal is not FoVer-overfit. NOT a re-measure of FoVer. The frozen 0.9131 stays frozen; a second-corpus number is a SUPPORTING datapoint, never a silent swap. False-positive scope-match vs prior FoVer headline exps."
+    milestone: "2026.06.340"
+    title: "REPLICATE the headline-class step-error discrimination on a FRESH corpus — measure the verifier ensemble's AUROC on a DIFFERENT step-error corpus (a fresh PRM/ProcessBench-style set, NOT FoVer) to show the 0.9131-class discrimination generalizes beyond FoVer (G1 strengthening, the north-star-sanctioned 'new corpus' move). The frozen 0.9131 stays frozen; this is a SUPPORTING second datapoint, not a re-freeze"
+    priority: high
+    max_turns: 60
+    agent_type: codex
+    model: gpt-5.5
+    requires_codex: true   # anti-wipeout codex routing for .340; corpus assembly + verifier-scoring (codex strength)
+    estimated_wall_time_min: 26
+    track: research
+    inference_substrate: verifier_ensemble_against_cached_candidates
+    requires_gpu: false
+    deliverable: results/experiment_3719_headline_replication_fresh_corpus.json
+    prompt: |
+      CONTEXT: the frozen headline (FoVer AUROC 0.9131) is strong but FoVer-specific. A defensible headline
+      survives a SECOND, DISTINCT step-error corpus. This task measures the SAME verifier ensemble (the 4
+      FoVer-scoring verifiers: fr11_session_memory, tier0r_curry_howard, tier0s_arithmetic_gap,
+      tier0u_logical_consistency) on a DIFFERENT step-error corpus (a fresh PRM / ProcessBench-style
+      math-reasoning step-error set), 5 seeds, CI. This is the north-star-sanctioned way to ADVANCE the
+      headline ("replicates on a new seed/corpus") -- NOT a re-measure of FoVer (which would be churn). The
+      frozen 0.9131 stays frozen; a second-corpus number is a SUPPORTING datapoint that strengthens G1,
+      never a silent swap. Do NOT edit ops/north-star.md or trigger the CI run.
+      EXISTING CODE TO READ FIRST: results/experiment_2850_fover_dual_condition_integrity_v4.json (the
+      frozen headline protocol + the 4 scoring verifiers) via scripts/summarize_artifact.py;
+      scripts/reproduce_fover_headline.py (READ-ONLY -- the scoring harness to mirror on a new corpus);
+      python/carnot/verify/ (the 4 verifiers); research-references.md "ProcessBench" / "A Survey of Process
+      Reward Models (arXiv:2510.08049)" (candidate fresh step-error corpora).
+      PRECONDITIONS (step 0): a step-error corpus DISTINCT from FoVer is available on disk OR assemblable
+      from on-disk labeled step traces. If a fresh corpus must be GENERATED, name a mandated SOTA GGUF
+      (`unsloth/Qwen3.6-35B-A3B-GGUF` or `unsloth/gemma-4-26B-A4B-it-GGUF`) in MODEL_SPECS, load via the
+      `.gguf` path (NEVER AutoTokenizer on a -GGUF repo id; use llama_cpp vocab_only for a preflight
+      tokenizer check), and gate on it being cached + CUDA available (then inference_substrate=
+      live_llm_inference, 60s floor). If NO distinct corpus and NO generator -> "complete:
+      blocked_no_fresh_step_error_corpus".
+      INFERENCE-SUBSTRATE HYGIENE: if scoring a cached/assembled corpus, verifier_ensemble_against_cached_candidates
+      with NO GGUF marker; if a live GGUF generation step runs, live_llm_inference (60s floor applies).
+      Run adversarial_verify clean. LEAK-GUARD: AUROC >= 0.99 on n>=1000 is a leak until proven leak-free.
+      DE-TAUTOLOGY: the fresh-corpus AUROC and the frozen 0.9131 are DISTINCT measurements -- store each
+      once; bit-identical values are a copy bug.
+      NULL DISCIPLINE: if the fresh-corpus AUROC is materially lower than 0.9131, that is an HONEST scope
+      finding (the discrimination is FoVer-tuned), recorded as such -- it does NOT regress the frozen
+      headline but it DOES narrow the generalization claim.
+      CONCRETE STEPS:
+        1. Assemble / load the fresh step-error corpus (distinct from FoVer); record its source + n + the
+           positive/negative balance.
+        2. Score the 4-verifier ensemble on it, 5 seeds: per-seed AUROC + pooled CI95 + reproducibility_checksum.
+        3. Compare to the frozen 0.9131: record fresh_corpus_auroc + its CI + whether the 0.9131-class
+           discrimination GENERALIZES (CI overlaps / brackets 0.9131-class) or is FoVer-specific. Record
+           generalizes_beyond_fover (BARE bool).
+      ANTI-POISON TEST DISCIPLINE (MANDATORY): parametrize any pytest over the honest outcomes
+      (discrimination_generalizes_to_fresh_corpus / discrimination_is_fover_specific / blocked) on synthetic
+      fixtures; NEVER hard-assert one success string against the real corpus. Run your own tests green BEFORE finishing.
+      REQUIRED ARTIFACT FIELDS (principle: documents WHY; bare booleans stored bare):
+        honest_verdict:
+          principle: "Terminal prefix for reconciler classification."
+        inference_substrate:
+          principle: "verifier_ensemble_against_cached_candidates if cached-only (no marker); live_llm_inference only if a real GGUF generation step ran (60s floor)."
+        fresh_corpus_source:
+          principle: "The DISTINCT step-error corpus used (NOT FoVer) -- names the second datapoint's provenance."
+        fresh_corpus_auroc:
+          principle: "The verifier ensemble's AUROC on the fresh corpus -- the second, supporting headline datapoint."
+        fresh_corpus_auroc_ci:
+          principle: "CI95 of the fresh-corpus AUROC (5 seeds) -- a point estimate cannot decide generalization."
+        frozen_fover_auroc:
+          principle: "0.9131 -- the frozen headline, stored once, for comparison (NOT changed)."
+        generalizes_beyond_fover:
+          principle: "BARE bool. True iff the fresh-corpus AUROC CI brackets the 0.9131-class discrimination (the signal is not FoVer-overfit). STORE AS BARE true/false."
+        n_seeds:
+          principle: "Replication count (>=5)."
+        n_examples:
+          principle: "Sample-size rigor on the fresh corpus (n>=1000 for a sub-pp claim; >=30 for a pp-class claim)."
+        frozen_headline_unchanged_assert:
+          principle: "Asserts the publication gate still reads 0.9131 -- the second corpus is supporting, never a swap."
+        adversarial_verify_clean:
+          principle: "True iff no critical flag (and any >=0.99 AUROC was leak-audited)."
+        random_seed:
+          principle: "Determinism precondition."
+        reproducibility_checksum:
+          principle: "Drift detection."
+        duration_s:
+          principle: "Plausibility floor."
+      ACCEPTANCE GATE:
+        - condition: "fresh_corpus_auroc present AND fresh_corpus_auroc_ci present AND fresh_corpus_source present AND adversarial_verify_clean == true AND frozen_headline_unchanged_assert == true"
+          principle: "A trustworthy second-corpus datapoint requires the fresh AUROC + CI + named distinct source, adversarial-clean, with the frozen headline untouched -- otherwise it is either churn (re-measuring FoVer) or a silent swap."
+      TERMINAL VERDICTS: "complete: headline_discrimination_generalizes_to_fresh_corpus_g1_strengthened" /
+      "complete: headline_discrimination_is_fover_specific_generalization_narrowed_honest" /
+      "complete: blocked_no_fresh_step_error_corpus"
+      Run: cd {project_root} && python scripts/experiment_3719_headline_replication_fresh_corpus.py
+      Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  - id: exp3720-fr11-continuous-self-learning-v14
+    operator_override: "2026-05-29 operator directive (standing): mandatory continuous-self-learning continuation (FR-11 vN+1) with a STATED forward difference (v14: validate the consolidated template library from v13 SURVIVES a distribution SHIFT in the fresh session — apply a consolidated template to a session drawn from a DIFFERENT slice and confirm it still beats cold-start OR conservatively falls back, a Tier-2->Tier-4 robustness step per research-program.md), under the same collapse-preventing conservative-default rule — false-positive scope-match vs prior fr11 exps; exp3708 (v13) is the predecessor with a distinct forward difference."
+    milestone: "2026.06.340"
+    title: "FR-11 continuous self-learning v14 — distribution-SHIFT robustness of the consolidated template library: apply a v13-consolidated template to a fresh session drawn from a DIFFERENT slice (forward diff from v13's same-distribution transfer) and confirm it either still beats cold-start OR conservatively falls back without collapse — the Tier-2->Tier-4 robustness step"
+    priority: medium
+    max_turns: 50
+    agent_type: codex
+    model: gpt-5.5
+    requires_codex: true   # anti-wipeout codex routing for .340
+    estimated_wall_time_min: 18
+    track: self-learning
+    inference_substrate: verifier_ensemble_against_cached_candidates
+    requires_gpu: false
+    deliverable: results/experiment_3720_fr11_continuous_self_learning_v14.json
+    prompt: |
+      CONTEXT: every milestone includes one continuous-self-learning experiment. Forward difference from
+      v13 (exp3708, multi-session consolidation into a bounded template library that transferred to a fresh
+      same-distribution session): v14 tests ROBUSTNESS UNDER DISTRIBUTION SHIFT -- apply a v13-consolidated
+      template to a fresh session drawn from a DIFFERENT slice (a shifted distribution), and confirm the
+      template EITHER still beats cold-start OR the conservative-default rule makes it fall back gracefully
+      to cold-start WITHOUT collapse or quality loss. This is the Tier-2 (constraint memory) -> Tier-4
+      (adaptive structure) robustness step per research-program.md: a learned structure must not HURT when
+      the new session is out-of-distribution. Keep pass_rate vs true_accuracy element-wise distinct
+      (de-flag tautology).
+      EXISTING CODE TO READ FIRST: results/experiment_3708 (FR-11 v13 + the bounded template library) and
+      results/experiment_3697 (v12) and results/experiment_3667 (the dependency-aware structure) via
+      scripts/summarize_artifact.py; the FR-11 module + cached traces + the v13 template-library path.
+      PRECONDITIONS (step 0): FR-11 module + the v13 template library + cached traces present, with at
+      least one DISTRIBUTIONALLY-DISTINCT (shifted) slice to serve as the OOD fresh session. If not ->
+      "complete: blocked_fr11_module_or_shifted_slice_unavailable".
+      INFERENCE-SUBSTRATE HYGIENE: verifier_ensemble_against_cached_candidates; NO GGUF/CUDA marker;
+      adversarial_verify clean.
+      NULL DISCIPLINE: "the template helps under shift" is a real positive only if deploy beats cold-start
+      with a CI; "the template falls back gracefully (no worse than cold-start, no collapse)" is an
+      acceptable conservative outcome; "the template HURTS under shift" is an honest negative that informs
+      the deploy policy.
+      CONCRETE STEPS:
+        1. Take a v13-consolidated template; apply it to a fresh session drawn from a SHIFTED slice. Deploy
+           arm = consolidated-template-under-shift; control arm = cold-start.
+        2. Measure ensemble AUROC for both arms + the conservative-default fallback behaviour (does it
+           detect the shift and fall back?).
+        3. Confirm: deploy either beats cold-start OR falls back gracefully (>= cold-start, no collapse);
+           the library stays bounded; distinct-arrays assert holds.
+      ANTI-POISON TEST DISCIPLINE (MANDATORY): parametrize any pytest over the honest outcomes
+      (template_robust_under_shift / template_falls_back_gracefully / template_hurts_under_shift / blocked)
+      on synthetic fixtures; NEVER hard-assert one success string against real traces; never use
+      Q/R/H-number placeholder tokens. Run your own test green BEFORE finishing.
+      REQUIRED ARTIFACT FIELDS (principle: documents WHY; store the bare VALUE):
+        honest_verdict:
+          principle: "Terminal prefix for reconciler classification."
+        inference_substrate: "verifier_ensemble_against_cached_candidates (principle: scores cached traces; no LLM load; no compute-bound marker)."
+        shifted_session_source:
+          principle: "The DIFFERENT slice used as the OOD fresh session -- the v14 forward difference."
+        deploy_arm_auroc_under_shift:
+          principle: "Consolidated-template ensemble AUROC on the shifted session."
+        cold_start_auroc_under_shift:
+          principle: "Cold-start ensemble AUROC on the shifted session -- the control."
+        template_robust_or_graceful_fallback:
+          principle: "BARE bool. True iff deploy beats cold-start under shift OR falls back gracefully (>= cold-start, no collapse). STORE AS BARE true/false."
+        conservative_fallback_triggered:
+          principle: "Records whether the conservative-default rule detected the shift and fell back -- the alpha_t-grounding safety behaviour."
+        collapse_detected_deploy_arm:
+          principle: "The conservative-default rule must prevent weight collapse under shift (alpha_t grounding)."
+        template_library_bounded:
+          principle: "True iff the template library stays under its size cap."
+        pass_rate_vs_true_accuracy_distinct_assert:
+          principle: "De-flags the tautology where pass_rate and true_accuracy are the same array."
+        n_online_updates:
+          principle: "Sample-size of the self-learning sweep (>=200)."
+        random_seed:
+          principle: "Determinism precondition."
+        reproducibility_checksum:
+          principle: "Drift detection."
+        duration_s:
+          principle: "Plausibility floor."
+      ACCEPTANCE GATE:
+        - condition: "template_robust_or_graceful_fallback == true AND collapse_detected_deploy_arm == false AND template_library_bounded == true AND pass_rate_vs_true_accuracy_distinct_assert == true"
+          principle: "Distribution-shift robustness is validated only when the template helps OR falls back gracefully (never hurts via collapse), the library stays bounded, and the two metrics are genuinely distinct."
+      TERMINAL VERDICTS: "complete: fr11_v14_template_robust_under_distribution_shift_no_collapse" /
+      "complete: fr11_v14_template_falls_back_gracefully_under_shift_no_collapse" /
+      "complete: fr11_v14_template_hurts_under_shift_deploy_policy_narrowed_honest" /
+      "complete: blocked_fr11_module_or_shifted_slice_unavailable"
+      Run: cd {project_root} && python scripts/experiment_3720_fr11_continuous_self_learning_v14.py
+      Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  - id: exp3721-hardware-kv260-terminal-confirm-and-continuity
+    operator_override: "2026-05-29 operator directive (standing) + north-star sec-3: active hardware-continuity task covering ALL attached boards in one consolidated audit. KV260 reached its TERMINAL latency-transcript candidate (exp3709) -> this task CONFIRMS terminal + recommends the operator LIFT the per-milestone KV260 mandate (north-star sec-3 relaxation); PolarFire + GateMate are opportunistic. False-positive scope-match vs prior kv260/polarfire/gatemate exps; required forward work toward the mandate relaxation."
+    milestone: "2026.06.340"
+    title: "Hardware continuity (consolidated, all 3 boards) — CONFIRM KV260 terminal state (overlay loaded + non-fabricated latency transcript on disk from exp3709) and RECOMMEND the operator lift the per-milestone KV260 mandate (north-star sec-3); PolarFire opportunistic reachability; GateMate documentation-only (openFPGALoader missing). SSH-reachability preconditions only; NO host SD-card check; NO speedup claim"
+    priority: low
+    max_turns: 30
+    agent_type: codex
+    model: gpt-5.5
+    requires_codex: true   # anti-wipeout codex routing for .340
+    estimated_wall_time_min: 10
+    track: hardware
+    inference_substrate: hardware_smoke
+    requires_gpu: false
+    deliverable: results/experiment_3721_hardware_kv260_terminal_confirm_and_continuity.json
+    prompt: |
+      CONTEXT: Hardware-Task Continuity requires per-board visibility each milestone; KV260 reached its
+      TERMINAL latency-transcript candidate at exp3709, so per north-star §3 this consolidated task (a)
+      CONFIRMS KV260 terminal and recommends the operator LIFT the per-milestone KV260 mandate, and (b)
+      gives PolarFire + GateMate an opportunistic reachability/continuity audit in the same task slot. KV260
+      lives on SSH; use ONLY SSH reachability as the precondition (host SD-card device checks are
+      PERMANENTLY retired). NARROWING DISCIPLINE (Paper-v6 #2/#3): POC functional latency anchor only -- NO
+      thermalization/equilibrium/hardware-speedup claim.
+      PRECONDITIONS (step 0, per board, non-fatal -- a board down is a recorded honest state, not a
+      milestone blocker):
+        - KV260: `ssh -o ConnectTimeout=5 -o BatchMode=yes kria 'true'` (kria = kv260.local). NEVER a host
+          SD-card device-node check (permanently retired per the KV260 SSH-Not-SD-Card Discipline).
+        - PolarFire: `ssh -o ConnectTimeout=5 polarfire 'true'`.
+        - GateMate: `command -v openFPGALoader` (documentation-only; do NOT run the hanging flash/smoke path).
+      CONCRETE STEPS:
+        1. KV260: if reachable, confirm the carnot_ising overlay (`ssh kria 'xmutil listapps'`) and that
+           the exp3709 board-latency transcript artifact exists on disk + is non-fabricated (>=30 samples,
+           real timings). Record terminal_condition_confirmed + the operator mandate-lift recommendation.
+        2. PolarFire: if reachable, confirm continuity (uptime, carnot dispatch path) with distinct field names.
+        3. GateMate: record openFPGALoader installed-state + the known flash/smoke host-IO hang blocker.
+      INFERENCE-SUBSTRATE HYGIENE: hardware_smoke; NO GGUF/CUDA marker.
+      ANTI-POISON TEST DISCIPLINE (MANDATORY): parametrize any pytest over the honest outcomes
+      (kv260_terminal_confirmed / kv260_unreachable / partial) on synthetic fixtures; NEVER hard-assert one
+      success string. Run your own test green BEFORE finishing.
+      REQUIRED ARTIFACT FIELDS (principle: documents WHY; store the bare VALUE):
+        honest_verdict:
+          principle: "Terminal prefix for reconciler classification."
+        inference_substrate: "hardware_smoke (principle: SSH-attached board tests + a disk check; no live model inference)."
+        preconditions_checked:
+          principle: "Records the per-board SSH-reachability checks -- the correct KV260 precondition, not host SD card."
+        kv260_ssh_reachable:
+          principle: "Honest KV260 board state."
+        kv260_overlay_loaded:
+          principle: "Confirms the carnot_ising overlay is the latest real-board-deployable bitstream."
+        kv260_terminal_transcript_present:
+          principle: "True iff the exp3709 non-fabricated board-latency transcript exists on disk (>=30 samples)."
+        kv260_terminal_condition_confirmed:
+          principle: "BARE bool. True iff overlay confirmed + non-fabricated transcript present -> KV260 is terminal. STORE AS BARE true/false."
+        kv260_mandate_lift_recommendation:
+          principle: "The operator-action recommendation to lift the per-milestone KV260 mandate (north-star §3) now that it is terminal."
+        polarfire_ssh_reachable:
+          principle: "Honest PolarFire board state (opportunistic)."
+        gatemate_openfpgaloader_installed:
+          principle: "Records the GateMate root blocker (tool missing) honestly."
+        speedup_claim_avoided_assert:
+          principle: "Asserts NO thermalization/equilibrium/hardware-speedup claim (Paper-v6 Narrowing #2/#3)."
+        random_seed:
+          principle: "Determinism precondition."
+        reproducibility_checksum:
+          principle: "Drift detection."
+        duration_s:
+          principle: "Plausibility floor."
+      TERMINAL VERDICTS: "complete: kv260_terminal_confirmed_mandate_lift_recommended_polarfire_gatemate_audited" /
+      "complete: kv260_unreachable_polarfire_gatemate_audited" /
+      "complete: hardware_continuity_partial_recorded"
+      Run: cd {project_root} && python scripts/experiment_3721_hardware_kv260_terminal_confirm_and_continuity.py
+      Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  - id: exp3722-convergence-synthesis-operator-next-thesis
+    operator_override: "2026-06-02 outer-loop directive: convergence synthesis + operator next-thesis recommendation (the meta-gap the loop cannot close itself per project_energy_selection_thesis_bounded). Documentation/synthesis-only — does NOT run a new experiment, does NOT pick a thesis, does NOT edit north-star.md or exclusion_manifest.yaml. False-positive scope-match vs prior synthesis/retro tasks."
+    milestone: "2026.06.340"
+    title: "CONVERGENCE SYNTHESIS + operator next-thesis recommendation — lay out the converged state (headline frozen + paper_ready=TRUE; every self-generable thread settled: re-freeze closed-negative, code leak->math-only, selection closed, P0.1 bounded, facts + judge-OOD retired, KV260 terminal) and present the candidate NEXT-THESES for the OPERATOR to choose among (the loop will not self-initiate one per project_energy_selection_thesis_bounded). Synthesis/doc-only — recommends, does not decide"
+    priority: medium
+    max_turns: 30
+    agent_type: codex
+    model: gpt-5.5
+    requires_codex: true   # anti-wipeout codex routing for .340
+    estimated_wall_time_min: 8
+    track: research
+    inference_substrate: aggregation_from_upstream_artifacts
+    requires_gpu: false
+    deliverable: results/experiment_3722_convergence_synthesis_operator_next_thesis.json
+    prompt: |
+      CONTEXT: .339 confirmed the autonomous loop has CONVERGED. The headline (FoVer 0.9131) is frozen,
+      proven, independently reproduced and narrowing-clean (paper_ready=TRUE), and every direction the loop
+      can self-generate is settled -- mostly as trustworthy negatives: P0.1 honest-negative,
+      energy-SELECTION settled-bounded (diagnosis CLOSED exp3707), re-freeze closed-negative (no candidate
+      beats frozen, exp3704/3715), code generalization a leak -> math-only-with-abstain (exp3705/3706),
+      facts-generalization RETIRED (exp3670), trained-judge-OOD RETIRED (exp3659), KV260 TERMINAL (exp3709).
+      Per the project_energy_selection_thesis_bounded memory, a genuinely NEW foundation-model thesis needs
+      a HUMAN seed; the loop will not self-initiate one. This task SYNTHESIZES the converged state and
+      RECOMMENDS candidate next-theses for the OPERATOR -- it does NOT pick one, does NOT run a new
+      experiment, and does NOT edit north-star.md or exclusion_manifest.yaml (operator-curated).
+      EXISTING CODE TO READ FIRST: ops/north-star.md (the headline + the convergence framing);
+      research-program.md (the PRD vision + Continuous Self-Learning tiers + the Product Roadmap Tier
+      A-D table -- candidate next-directions); the .340 results exp3713-exp3721 + the .339 capstone
+      (exp3712) via scripts/summarize_artifact.py; the project_energy_selection_thesis_bounded +
+      project_verifier_domain_bound memories (background, not editable).
+      INFERENCE-SUBSTRATE HYGIENE: aggregation_from_upstream_artifacts; NO GGUF/CUDA marker;
+      adversarial_verify clean.
+      CONCRETE STEPS:
+        1. Synthesize the converged-state ledger: for each thread (headline, P0.1, selection, re-freeze,
+           code, facts, judge-OOD, KV260, self-learning, paper_ready) record its terminal status + the
+           authoritative artifact.
+        2. Enumerate candidate NEXT-THESES for the operator (each with a one-line why-it-is-not-a-re-grind),
+           e.g.: (a) energy-based SELECTIVE PREDICTION at scale if exp3718 shows energy beats entropy; (b) a
+           genuinely DIFFERENT verifier architecture for a domain where SC is weak AND abstention has
+           headroom; (c) FINALIZE-AND-SUBMIT the paper (operator-only) + shift the loop to maintenance; (d)
+           a new product from research-program.md Tier B (safety/jailbreak classifier, compliance checker).
+        3. Emit a clear OPERATOR DECISION REQUEST: the loop has converged; which thesis (or maintenance
+           mode) should drive .341+? Recommend a default but defer the choice to the operator.
+      ANTI-POISON TEST DISCIPLINE (MANDATORY): parametrize any pytest over the honest outcomes
+      (convergence_synthesized_theses_presented / cannot_synthesize) on synthetic fixtures; NEVER
+      hard-assert one success string. Run your own test green BEFORE finishing.
+      REQUIRED ARTIFACT FIELDS (principle: documents WHY; store the bare VALUE):
+        honest_verdict:
+          principle: "Terminal prefix for reconciler classification."
+        inference_substrate: "aggregation_from_upstream_artifacts (principle: reads prior artifacts + docs; no live inference; no compute-bound marker)."
+        converged_state_ledger:
+          principle: "Per-thread {thread, terminal_status, authoritative_artifact} -- the honest convergence record."
+        all_self_generable_threads_settled:
+          principle: "BARE bool. True iff every loop-self-generable thread has a terminal status (the convergence claim). STORE AS BARE true/false."
+        candidate_next_theses:
+          principle: "The enumerated next-theses for the operator, each with a why-it-is-not-a-re-grind line -- the menu the loop cannot choose from itself."
+        recommended_default_thesis:
+          principle: "The loop's recommended default (e.g. finalize-and-submit + maintenance, OR the abstention direction if exp3718 was positive) -- a recommendation, NOT a decision."
+        operator_decision_request:
+          principle: "The explicit ask: the loop has converged; which thesis or maintenance mode drives .341+? -- surfaces the meta-gap the loop cannot close."
+        paper_ready_status:
+          principle: "Records paper_ready=TRUE so the synthesis is grounded in the real gate state."
+        north_star_unmodified_assert:
+          principle: "Asserts ops/north-star.md was NOT edited (operator-curated)."
+        manifest_unmodified_assert:
+          principle: "Asserts ops/exclusion_manifest.yaml was NOT edited (retirement is operator-curated)."
+        adversarial_verify_clean:
+          principle: "True iff no critical flag."
+        random_seed:
+          principle: "Determinism precondition."
+        reproducibility_checksum:
+          principle: "Drift detection."
+        duration_s:
+          principle: "Plausibility floor."
+      TERMINAL VERDICTS: "complete: convergence_synthesized_next_theses_presented_operator_decision_requested" /
+      "complete: convergence_synthesis_cannot_complete"
+      Run: cd {project_root} && python scripts/experiment_3722_convergence_synthesis_operator_next_thesis.py
+      Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  - id: exp3723-capstone-and-g-gate-v340
+    operator_override: "2026-05-29 operator directive (standing): routine per-milestone capstone + G1-G4 gate-status synthesis — false-positive scope-match vs prior capstone-v* / g-gate-synthesis tasks."
+    milestone: "2026.06.340"
+    title: "Capstone v340 + G1-G4 gate synthesis — was the flagged exp3704 re-emitted clean (headline still frozen)? is G3 now mechanically enforced (narrowing lint shipped)? did the full G4 provenance audit trace every number to a clean artifact? does the ENERGY signal beat entropy as an abstention gate? does the discrimination generalize to a FRESH corpus? was KV260 confirmed terminal + the mandate-lift recommended? is the converged-state + operator next-thesis recorded? paper_ready must stay TRUE; frozen 0.9131 stays frozen"
+    priority: high
+    max_turns: 40
+    agent_type: codex
+    model: gpt-5.5
+    requires_codex: true   # anti-wipeout codex routing for .340
+    estimated_wall_time_min: 14
+    track: ops
+    inference_substrate: aggregation_from_upstream_artifacts
+    requires_gpu: false
+    deliverable: results/experiment_3723_capstone_and_g_gate_v340.json
+    prompt: |
+      CONTEXT: capstone the CONVERGENCE & FINALIZATION milestone that (1) re-emitted the benign-flagged
+      exp3704 CLEAN (exp3715, headline still frozen), (2) HARDENED the gates — shipped the G3 narrowing lint
+      (exp3716) + ran the full G4 provenance audit (exp3717), (3) characterized the proven discriminator as
+      a risk-coverage ABSTENTION gate (exp3718), (4) replicated the headline-class discrimination on a FRESH
+      corpus (exp3719), (5) continued FR-11 v14 distribution-shift robustness (exp3720), (6) confirmed KV260
+      terminal + recommended the mandate lift (exp3721), and (7) synthesized the converged state + the
+      operator next-thesis decision (exp3722). Re-check the publication gate.
+      INFERENCE-SUBSTRATE HYGIENE (LOAD-BEARING -- the .337 capstone DURATION false-flag): set
+      inference_substrate=aggregation_from_upstream_artifacts and DO NOT put ANY GGUF/CUDA/live-model
+      marker in model_specs/target_model. After writing the artifact, run `python
+      scripts/adversarial_verify.py <artifact>` and CONFIRM no DURATION_TOO_SHORT/critical flag before finishing.
+      CONCRETE STEPS: run `python scripts/publication_gate.py --json` (expect G1-G4 all pass, paper_ready
+      true, frozen headline 0.9131 UNCHANGED); aggregate exp3715/3716/3717/3718/3719/3720/3721/3722 via
+      scripts/summarize_artifact.py. EXCLUDE flagged_adversarial artifacts (fabrication gate) and CONFIRM
+      each cited artifact cleared adversarial_verify before citing its number. Treat any AUROC >= 0.99 on
+      n>=1000 as a leak unless proven leak-free. If a task was skipped or blocked, record it as
+      "not_measured" -- NEVER read a missing field as None and synthesize around it. Record P0.1 as
+      honest-negative; record facts-generalization + trained-judge-OOD as RETIRED; record the selection
+      diagnosis as formally closed (exp3707). The frozen FoVer headline (0.9131) stays frozen.
+      paper_v6_safe_claims / forbidden_claims per Paper-v6 Narrowing.
+      REQUIRED ARTIFACT FIELDS (principle: documents WHY; store the bare VALUE):
+        honest_verdict:
+          principle: "Terminal prefix for reconciler classification."
+        inference_substrate: "aggregation_from_upstream_artifacts (principle: reads the gate script + artifacts; no live inference; NO compute-bound marker so it does not false-flag)."
+        adversarial_verify_clean:
+          principle: "True iff this capstone passes adversarial_verify with no DURATION_TOO_SHORT/critical flag -- a flagged capstone does not count as a clean milestone close."
+        exp3704_corrigendum_clean:
+          principle: "True iff the benign-flagged exp3704 was re-emitted clean (exp3715) and the headline stayed frozen."
+        g3_mechanically_enforced:
+          principle: "True iff the paper_v6_narrowing_lint shipped + the current paper passes it (exp3716) -- G3 is now mechanical, not honor-discipline."
+        g4_provenance_audit_result:
+          principle: "fully_traced / gap_found / not_measured -- did every headline number trace to a CLEAN primary artifact (exp3717)?"
+        energy_abstention_verdict:
+          principle: "energy_better_than_entropy / energy_ties_or_loses / not_measured -- the deployable abstention-gate result (exp3718)."
+        fresh_corpus_generalization:
+          principle: "generalizes / fover_specific / not_measured -- did the discrimination replicate on a FRESH corpus (exp3719)?"
+        fr11_v14_result:
+          principle: "Whether the consolidated template is robust / falls back gracefully / hurts under distribution shift (exp3720)."
+        kv260_terminal_confirmed:
+          principle: "True iff KV260 was confirmed terminal + the mandate-lift recommended (exp3721)."
+        operator_next_thesis_recorded:
+          principle: "True iff the converged-state synthesis + operator next-thesis decision-request was recorded (exp3722)."
+        verifier_value_scope:
+          principle: "The scoped product claim after .340: math DISCRIMINATION (frozen headline 0.9131, second-corpus datapoint), deployable as an abstention gate if energy>entropy, code = math-only-with-abstain, facts RETIRED, selection CLOSED."
+        g1:
+          principle: "Headline measured (FoVer 0.9131, 5-seed, CI, adversarial-clean)."
+        g2:
+          principle: "Independently reproduced (CI runner 26725185125)."
+        g3:
+          principle: "Prose narrowing-clean (now mechanically enforced via exp3716)."
+        g4:
+          principle: "Numbers trace to primary artifacts (full audit exp3717)."
+        paper_ready:
+          principle: "G1 and G2 and G3 and G4 -- must remain true; the milestone does not regress the gate."
+        frozen_headline_unchanged:
+          principle: "True iff the publication gate still reads 0.9131 -- no silent swap."
+        unmet_gates:
+          principle: "Report which gates are unmet, not a count (publication_blocker_count is retired)."
+        p01_status:
+          principle: "P0.1 stays honest-negative; do not re-assert a positive."
+        facts_generalization_retired:
+          principle: "Records facts-generalization as RETIRED (exp3670)."
+        trained_judge_ood_retired:
+          principle: "Records the trained-judge-OOD hypothesis as retired (exp3659)."
+        selection_diagnosis_closed:
+          principle: "Records the selection diagnosis as formally closed (exp3707)."
+        paper_v6_safe_claims:
+          principle: "Narrowing-clean claims."
+        paper_v6_forbidden_claims:
+          principle: "Overclaims to avoid (do NOT cite a re-freeze candidate as the headline; do NOT cite a code AUROC>=0.99; do NOT claim hardware speedup)."
+        cited_upstream_artifacts:
+          principle: "sha256 provenance (G4)."
+        random_seed:
+          principle: "Determinism precondition."
+        reproducibility_checksum:
+          principle: "Drift detection."
+        duration_s:
+          principle: "Plausibility floor."
+      TERMINAL-VERDICT NOTE: if a sub-result is blocked/skipped, substitute `not_measured` into its
+      placeholder slot in the verdict string (never read a missing field as a positive).
+      TERMINAL VERDICT: "complete: capstone_v340_convergence_gates_hardened_g3_mechanical_g4_audited_abstention_<verdict>_fresh_corpus_<verdict>_kv260_terminal_operator_thesis_requested_paper_ready_true_frozen_headline_unchanged"
+      Run: cd {project_root} && python scripts/experiment_3723_capstone_and_g_gate_v340.py
+      Do NOT push. Do NOT modify scripts/research_conductor.py.

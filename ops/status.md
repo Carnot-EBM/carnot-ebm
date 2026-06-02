@@ -1,5 +1,63 @@
 # Carnot — Operational Status
 
+## Session 2026-06-02 - Milestone 2026.06.340 Research Planning Staged
+
+Planned milestone 2026.06.340 ("CONVERGENCE & FINALIZATION") as the NEXT milestone after all 11 `.339`
+tasks completed. `.339` confirmed the project has **converged**: both PROVISIONAL `.338` wins walked back
+under full rigor. Authority (read via `scripts/summarize_artifact.py` + `scripts/publication_gate.py`):
+`results/experiment_3704_*` (re-freeze CLOSED-NEGATIVE — dependency-aware 0.9249 / external 0.9287 /
+fusion 0.9285 all fail to robustly beat frozen **0.9131** under the 5-seed dual-condition protocol; BUT
+exp3704 carries a **benign TAUTOLOGY** `flagged_adversarial`: `strongest_candidate_auroc ==
+external_comparator_auroc` *by construction*), `results/experiment_3705_*` (code AUROC=1.0 was a **LEAK**
+— held-out 0.9932 ≥ 0.99), `results/experiment_3706_*` (shipped detector NARROWED to
+math-only-with-abstain-on-code, E2E green), `results/experiment_3707_*` (selection diagnosis FORMALLY
+CLOSED, retirement recommended), `results/experiment_3709_*` (KV260 TERMINAL — non-fabricated board
+latency transcript), `results/experiment_3708_*` (FR-11 v13 positive), `results/experiment_3712_*`
+(capstone: **paper_ready = TRUE**, G1-G4 all met, frozen 0.9131 unchanged), `results/experiment_3703_*`
+(gemini still crashes real workloads → keep codex). `publication_gate.py --json`: `paper_ready: true`,
+`unmet_gates: []`.
+
+**The `.339` finding:** every direction the autonomous loop can self-generate is now SETTLED — mostly as
+trustworthy negatives (P0.1 honest-negative, energy-SELECTION settled-bounded + CLOSED, re-freeze
+closed-negative, code leak → math-only-with-abstain, facts + trained-judge-OOD RETIRED, KV260 terminal).
+Per `project_energy_selection_thesis_bounded`, the next substantive thesis needs a **human seed**; the
+loop will not self-initiate one. So `.340` does **not manufacture breadth** (north-star §1: a new version
+of an existing artifact without moving the headline is noise). `.340` (11 tasks, exp3713–exp3723): (0)
+archive/activate + backend diag v6; (1) **record hygiene + gate hardening** — clean corrigendum of the
+benign-flagged exp3704 (exp3715, headline stays frozen), **ship `paper_v6_narrowing_lint.py`** to make G3
+mechanical (exp3716), full **G4 provenance audit** of every headline number against clean non-flagged
+artifacts (exp3717); (2) **deployable value + robustness** — characterize the proven 0.9131 discriminator
+as a **risk-coverage ABSTENTION gate** (AURC, energy-vs-entropy selective prediction, arXiv:2603.21172 —
+the ONE sanctioned new framing, distinct from the CLOSED selection question, exp3718) + **replicate the
+headline on a FRESH corpus** (G1 strengthening, exp3719); (3) FR-11 v14 distribution-shift robustness
+(exp3720), consolidated hardware continuity confirming **KV260 terminal + recommending the mandate lift**
+(exp3721), **convergence synthesis + operator next-thesis decision-request** (exp3722, the meta-gap the
+loop cannot close itself), capstone v340 (exp3723).
+
+Updated `research-references.md` with the 2026-06-02 Post-`.339` sweep (selective-prediction / abstention:
+Entropy-Alone-Insufficient arXiv:2603.21172; SelectLLM + AURC; I-CALM arXiv:2604.03904; Information-Lift
+PAC-Bayes risk certification arXiv:2509.12527; Conformal Abstention arXiv:2502.06884; PRM survey
+arXiv:2510.08049 + Process Reward Agents arXiv:2604.09482). Rewrote
+`openspec/change-proposals/research-roadmap-vNEXT.md` and created `research-roadmap-next.yaml`
+(milestone 2026.06.340, 11 tasks). Invariants carried: paper_ready=true (G1-G4, frozen headline 0.9131
+NEVER silently substituted), P0.1 honest-negative, selection CLOSED, facts + trained-judge-OOD RETIRED,
+code = math-only-with-abstain, inference-substrate hygiene (NO GGUF/CUDA markers on aggregation/scoring
+tasks), anti-poison tests, no `gated_on` fields (graceful disk-presence fallbacks), `operator_override` on
+all scope-matched legit continuations. All tasks codex+`requires_codex` (anti-wipeout; exp3714 = 6th
+gemini probe gating a `.341` flip; operator may override to gemini at activation). Validation passed: YAML
+schema (11 tasks, all `.340`, deliverables+prompts+run-cmds present, no `gated_on`), `milestone ==
+_expected_next_milestone('2026.06.339') = 2026.06.340`, exclusion-manifest lint (2 HARD fixed →
+exp3716 override added for the `narrowing`-word false-match vs retired exp1462, exp3721 `/dev/mmcblk`
+literal removed; now all violations have `operator_override`, exit 0), overdue-priority lint (exit 0),
+canonical-URL lint (clean). Left `research-roadmap.yaml` and `scripts/research_conductor.py` untouched.
+
+**OPERATOR DECISION SURFACED:** the loop has converged (paper_ready=true; all self-generable threads
+settled). exp3722 presents candidate next-theses (energy-based selective prediction at scale; a different
+verifier architecture for a domain where SC is weak *and* abstention has headroom; finalize-and-submit the
+paper + shift to maintenance; a new Tier-B product) for the operator to choose among. The loop recommends
+but does not decide.
+
+
 ## Session 2026-06-01 - Milestone 2026.06.337 Research Planning Staged
 
 Planned milestone 2026.06.337 ("PROMOTE the headline + SCOPE the product honestly") as the NEXT
