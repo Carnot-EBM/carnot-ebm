@@ -232,6 +232,46 @@ retires the trained-judge-OOD hypothesis, and records the dependency-aware win
 only as a future headline-advancement candidate pending re-freeze and
 re-reproduction.
 
+### REQ-PUBLISH-3704: Re-Freeze Candidate Disambiguation
+
+The Exp 3704 re-freeze disambiguation runner MUST measure three distinct FoVer
+candidate score vectors under the identical frozen dual-condition protocol:
+Carnot dependency-aware weighting, the external de-entangled/CIG comparator, and
+a fusion candidate that composes both signals. The artifact MUST also record the
+Carnot-current sanity-check AUROC and confirm the stable publication gate still
+reads the frozen `0.9131` headline.
+
+The runner MUST rank the three candidates by pooled AUROC, record the strongest
+candidate, and include paired delta evidence with bootstrap CI and DeLong p for
+winner-vs-runner-up and winner-vs-frozen. A winner beats frozen only when its
+AUROC is greater than `0.9131` and the paired delta CI excludes zero. If that
+condition is true, the runner MUST emit an operator-only re-freeze package for
+the winning candidate; it MUST NOT edit `ops/north-star.md`, MUST NOT edit the
+FoVer GitHub Actions workflow, MUST NOT trigger a GitHub Actions run, and MUST
+NOT replace the frozen publication-gate headline in-place.
+
+The artifact MUST use
+`inference_substrate="verifier_ensemble_against_cached_candidates ..."` without
+GGUF/CUDA/live-model target markers, MUST treat any pooled candidate AUROC
+greater than or equal to `0.99` as leakage, MUST keep the dependency-aware,
+external, fusion, and frozen AUROCs in distinct top-level fields with no alias,
+and MUST fail closed with
+`complete: blocked_fover_corpus_or_baselines_unavailable` when the FoVer corpus,
+the four verifier outputs, the dependency-aware baseline, the external
+comparator, or `scripts/reproduce_fover_headline.py` is unavailable.
+
+### SCENARIO-PUBLISH-3704: Winner Package Is Operator-Only
+
+**Given** the frozen FoVer corpus, four verifier outputs, dependency-aware
+weighting, external comparator, and reproducer are available
+**When** the Exp 3704 runner measures dependency-aware, external, and fusion
+candidates
+**Then** it records all three distinct AUROCs, picks the single strongest
+candidate, includes paired ranking statistics, emits the clean operator
+checklist only when the winner defensibly beats frozen, and asserts that the
+operator-curated north-star file, reproducer workflow, GitHub run state, and
+frozen `0.9131` publication headline remain unchanged.
+
 ### REQ-PUBLISH-007: High-Severity Integrity Fixes (ISSUE-6 through ISSUE-10)
 
 The paper-v5 high-severity remediation script MUST verify that

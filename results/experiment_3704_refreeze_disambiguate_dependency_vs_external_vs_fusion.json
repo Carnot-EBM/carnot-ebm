@@ -1,0 +1,370 @@
+{
+  "acceptance_gate": {
+    "condition": "dependency_aware_auroc present AND external_comparator_auroc present AND fusion_auroc present AND winner_vs_runnerup_delta_ci present AND adversarial_verify_clean == true AND north_star_unmodified_assert == true AND frozen_headline_unchanged_assert == true",
+    "passed": false,
+    "principle": "A trustworthy re-freeze disambiguation requires all three candidates measured under the identical frozen protocol with the paired ranking CI, adversarial-clean, and the operator-curated headline + frozen number untouched -- otherwise the operator re-freezes to a candidate that is not actually the strongest."
+  },
+  "adversarial_verify_clean": false,
+  "adversarial_verify_report": {
+    "flag_count": 1,
+    "flags": [
+      {
+        "detail": "external_comparator_auroc=0.928737 and strongest_candidate_auroc=0.928737 agree to >5 sig figs. Two distinct metrics matching this precisely is more likely a bug than a finding.",
+        "kind": "TAUTOLOGY",
+        "severity": "critical"
+      }
+    ],
+    "max_severity": 2
+  },
+  "architecture_only_aurocs": {
+    "dependency_aware": 0.902305,
+    "external": 0.896336,
+    "fusion": 0.903396
+  },
+  "artifact": "experiment_3704_refreeze_disambiguate_dependency_vs_external_vs_fusion",
+  "bootstrap_seeds": [
+    42,
+    137,
+    271,
+    314,
+    1729
+  ],
+  "candidate_auroc_ci95": {
+    "dependency_aware": {
+      "bootstrap_seeds": [
+        42,
+        137,
+        271,
+        314,
+        1729
+      ],
+      "ci95": [
+        0.91699,
+        0.932891
+      ],
+      "n_bootstrap_per_seed": 200,
+      "point": 0.924869,
+      "seed_mean_aurocs": [
+        0.925001,
+        0.92456,
+        0.924508,
+        0.924939,
+        0.925471
+      ]
+    },
+    "external": {
+      "bootstrap_seeds": [
+        42,
+        137,
+        271,
+        314,
+        1729
+      ],
+      "ci95": [
+        0.921543,
+        0.936042
+      ],
+      "n_bootstrap_per_seed": 200,
+      "point": 0.928737,
+      "seed_mean_aurocs": [
+        0.928787,
+        0.928446,
+        0.928479,
+        0.928707,
+        0.929222
+      ]
+    },
+    "fusion": {
+      "bootstrap_seeds": [
+        42,
+        137,
+        271,
+        314,
+        1729
+      ],
+      "ci95": [
+        0.921115,
+        0.93591
+      ],
+      "n_bootstrap_per_seed": 200,
+      "point": 0.928462,
+      "seed_mean_aurocs": [
+        0.928518,
+        0.928161,
+        0.928188,
+        0.928441,
+        0.928957
+      ]
+    }
+  },
+  "candidate_ranking": [
+    {
+      "candidate": "external",
+      "pooled_auroc": 0.928737
+    },
+    {
+      "candidate": "fusion",
+      "pooled_auroc": 0.928462
+    },
+    {
+      "candidate": "dependency_aware",
+      "pooled_auroc": 0.924869
+    }
+  ],
+  "carnot_current_auroc": 0.91303,
+  "ci_workflow_unmodified_assert": true,
+  "dependency_aware_auroc": 0.924869,
+  "duration_s": 67.315771,
+  "external_comparator_auroc": 0.928737,
+  "field_principles": {
+    "adversarial_verify_clean": "True iff the artifact passes adversarial_verify with no critical flag.",
+    "carnot_current_auroc": "Carnot-current under the identical protocol -- must reproduce the frozen 0.9131 as the protocol sanity check.",
+    "dependency_aware_auroc": "Carnot's label-conditional dependency-aware candidate under the frozen dual-condition protocol -- one field, no alias.",
+    "duration_s": "Plausibility floor.",
+    "external_comparator_auroc": "The published de-entangled/CIG baseline (arXiv:2604.07650) under the identical protocol -- a DISTINCT measurement.",
+    "frozen_headline_unchanged_assert": "Asserts the publication gate still reads 0.9131 and paper_ready is unchanged -- no silent substitution.",
+    "fusion_auroc": "The dependency-aware + external FUSION candidate (arXiv:2502.20379) -- the third DISTINCT candidate.",
+    "honest_verdict": "Terminal prefix for reconciler classification.",
+    "inference_substrate": "verifier_ensemble_against_cached_candidates (principle: scores cached FoVer outputs; no LLM load; no compute-bound marker).",
+    "n_examples": "Sample-size rigor (FoVer n>=1000).",
+    "n_seeds": "Replication count (>=5).",
+    "north_star_unmodified_assert": "Asserts ops/north-star.md was NOT edited (operator-curated).",
+    "operator_checklist": "The ordered OPERATOR-ACTION steps (north-star sec-1 edit, CI-workflow update, trigger run) for the winner -- the re-freeze is operator-only.",
+    "random_seed": "Determinism precondition.",
+    "refreeze_package_reemitted_for_winner": "True iff a clean operator re-freeze package was re-emitted for the WINNING candidate (not the prior dependency-aware-only package).",
+    "reproducibility_checksum": "Drift detection.",
+    "strongest_candidate": "dependency_aware / external / fusion -- which single candidate has the highest pooled AUROC.",
+    "strongest_candidate_auroc": "The winning candidate's pooled AUROC + the number the operator would re-freeze to.",
+    "strongest_candidate_beats_frozen": "BARE bool. True iff the winning candidate's AUROC > frozen 0.9131 with the delta CI excluding 0 -- whether ANY candidate is a defensible re-freeze. STORE AS BARE true/false.",
+    "winner_vs_runnerup_delta_ci": "Paired delta + bootstrap CI + DeLong p of winner vs runner-up -- a point estimate cannot decide the ranking."
+  },
+  "frozen_headline_auroc": 0.9131,
+  "frozen_headline_unchanged_assert": true,
+  "fusion_auroc": 0.928462,
+  "github_actions_run_triggered": false,
+  "honest_verdict": "complete: refreeze_disambiguated_no_candidate_beats_frozen_headline_stays_0_9131",
+  "inference_substrate": "verifier_ensemble_against_cached_candidates (principle: scores cached FoVer outputs; no LLM load; no compute-bound marker).",
+  "leak_free": true,
+  "n_bootstrap_per_seed": 200,
+  "n_examples": 1000,
+  "n_pooled_examples": 5000,
+  "n_seeds": 5,
+  "north_star_unmodified_assert": true,
+  "operator_checklist": [],
+  "operator_package_note": "The frozen 0.9131 stays the headline until the operator completes the checklist and the CI reproducer re-runs green on the new number.",
+  "per_seed_results": [
+    {
+      "architecture_dependency_aware_auroc": 0.906488,
+      "architecture_external_comparator_auroc": 0.908576,
+      "architecture_fusion_auroc": 0.907772,
+      "carnot_current_auroc": 0.914952,
+      "dependency_aware_auroc": 0.924802,
+      "external_comparator_auroc": 0.930406,
+      "fusion_alpha_mean": 0.06,
+      "fusion_auroc": 0.930058,
+      "learning_contribution_dependency_aware": 0.018314,
+      "learning_contribution_external": 0.02183,
+      "learning_contribution_fusion": 0.022286,
+      "n_examples": 1000,
+      "seed": 42,
+      "subset_sha256": "57c7dff98df749951de1a043294d12c0203029e92623db86529223e797ef6cd2"
+    },
+    {
+      "architecture_dependency_aware_auroc": 0.907564,
+      "architecture_external_comparator_auroc": 0.899952,
+      "architecture_fusion_auroc": 0.90656,
+      "carnot_current_auroc": 0.908738,
+      "dependency_aware_auroc": 0.92095,
+      "external_comparator_auroc": 0.92457,
+      "fusion_alpha_mean": 0.05,
+      "fusion_auroc": 0.924478,
+      "learning_contribution_dependency_aware": 0.013386,
+      "learning_contribution_external": 0.024618,
+      "learning_contribution_fusion": 0.017918,
+      "n_examples": 1000,
+      "seed": 137,
+      "subset_sha256": "761ba450cce1eab0c6343403c958dec8408e37dd3de4a7216545a3fd31307c2d"
+    },
+    {
+      "architecture_dependency_aware_auroc": 0.886662,
+      "architecture_external_comparator_auroc": 0.867926,
+      "architecture_fusion_auroc": 0.886122,
+      "carnot_current_auroc": 0.90145,
+      "dependency_aware_auroc": 0.916566,
+      "external_comparator_auroc": 0.91853,
+      "fusion_alpha_mean": 0.09,
+      "fusion_auroc": 0.91831,
+      "learning_contribution_dependency_aware": 0.029904,
+      "learning_contribution_external": 0.050604,
+      "learning_contribution_fusion": 0.032188,
+      "n_examples": 1000,
+      "seed": 271,
+      "subset_sha256": "0ecee5724c62fded647b43fff8f30128571da256f163c3eba53a470489b131ee"
+    },
+    {
+      "architecture_dependency_aware_auroc": 0.90024,
+      "architecture_external_comparator_auroc": 0.901408,
+      "architecture_fusion_auroc": 0.901592,
+      "carnot_current_auroc": 0.917102,
+      "dependency_aware_auroc": 0.930296,
+      "external_comparator_auroc": 0.932516,
+      "fusion_alpha_mean": 0.09,
+      "fusion_auroc": 0.932004,
+      "learning_contribution_dependency_aware": 0.030056,
+      "learning_contribution_external": 0.031108,
+      "learning_contribution_fusion": 0.030412,
+      "n_examples": 1000,
+      "seed": 314,
+      "subset_sha256": "53dcb9dc6ecdeb540fb4b53bcc74b7870d31f1cfe4b2e54f204ced776b47c9ed"
+    },
+    {
+      "architecture_dependency_aware_auroc": 0.914944,
+      "architecture_external_comparator_auroc": 0.913152,
+      "architecture_fusion_auroc": 0.915352,
+      "carnot_current_auroc": 0.923426,
+      "dependency_aware_auroc": 0.934028,
+      "external_comparator_auroc": 0.937884,
+      "fusion_alpha_mean": 0.17,
+      "fusion_auroc": 0.937464,
+      "learning_contribution_dependency_aware": 0.019084,
+      "learning_contribution_external": 0.024732,
+      "learning_contribution_fusion": 0.022112,
+      "n_examples": 1000,
+      "seed": 1729,
+      "subset_sha256": "42259e022c2757dddabfadcda9ef3407237d27ae1f527be8ae7a4e742d5e0ef8"
+    }
+  ],
+  "preconditions_checked": [
+    {
+      "available": true,
+      "detail": "labeled_rows=8829; required>=1000",
+      "resource": "fover_corpus"
+    },
+    {
+      "available": true,
+      "detail": "loaded=tier0r_curry_howard,tier0s_arithmetic_gap,tier0u_logical_consistency",
+      "resource": "four_exp2837_scoring_verifiers"
+    },
+    {
+      "available": true,
+      "detail": "state_files=21; memory_loaded=True",
+      "resource": "fr11_session_memory_state"
+    },
+    {
+      "available": true,
+      "detail": "dependency graph, crossfit scores, and clean panel importable",
+      "resource": "exp3667_dependency_aware_implementation"
+    },
+    {
+      "available": true,
+      "detail": "n_seeds=5; condition_a=0.9131335999999999",
+      "resource": "exp2850_g1_source_artifact"
+    },
+    {
+      "available": true,
+      "detail": "exp3667_dependency=0.933238; exp3680_dependency=0.925328",
+      "resource": "exp3667_exp3680_dependency_weighting_sources"
+    },
+    {
+      "available": true,
+      "detail": "CIG/de-entangled crossfit scorer importable",
+      "resource": "cig_deentangled_external_comparator_implementation"
+    },
+    {
+      "available": true,
+      "detail": "scripts.reproduce_fover_headline importable",
+      "resource": "fover_headline_reproducer_importable"
+    }
+  ],
+  "publication_gate_paper_ready_after": true,
+  "publication_gate_paper_ready_before": true,
+  "random_seed": 3704,
+  "random_seeds_used": [
+    42,
+    137,
+    271,
+    314,
+    1729
+  ],
+  "refreeze_package_reemitted_for_winner": false,
+  "reproducibility_checksum": "d1efc34829df5175f31e21807ce242f3949ffb7f2876e71968dfb1f49ecce584",
+  "runner_up_candidate": "fusion",
+  "schema": "carnot.refreeze_disambiguation.v1",
+  "score_vector_checksums": {
+    "carnot_current": "6e17dcb027bca33b4a5a4002552d49ba461ee2cb3ac7fa434c2df955a18ad26e",
+    "dependency_aware": "ff3ff7ee3898fe150c4446f90605ed89c5d62704befd2418809c12c1483e1abe",
+    "external_comparator": "140e006e2d5636f4d7e3c10f2e64a4d6e136cf07727ee8cba8f4ef5db9ea8ad0",
+    "fusion": "1a17328d0b796ffdf4c170264fca3ef8516e5764b9e79ce2cf2f04e45514496b"
+  },
+  "strongest_candidate": "external",
+  "strongest_candidate_auroc": 0.928737,
+  "strongest_candidate_beats_frozen": true,
+  "winner_vs_frozen_delta_ci": {
+    "bootstrap_seeds": [
+      42,
+      137,
+      271,
+      314,
+      1729
+    ],
+    "ci95": [
+      0.01225,
+      0.019332
+    ],
+    "comparison": "frozen_0_9131_carnot_current_vector",
+    "delong": {
+      "auc_difference": 0.015706,
+      "auc_first": 0.928737,
+      "auc_second": 0.91303,
+      "method": "paired_delong_auc_two_sided",
+      "p_value": 8.59387e-18,
+      "standard_error": 0.001828,
+      "z_value": 8.59137
+    },
+    "delong_p": 8.59387e-18,
+    "n_bootstrap_per_seed": 200,
+    "point": 0.015706,
+    "seed_mean_deltas": [
+      0.015635,
+      0.01587,
+      0.015715,
+      0.015428,
+      0.015647
+    ],
+    "winner": "external"
+  },
+  "winner_vs_runnerup_delta_ci": {
+    "bootstrap_seeds": [
+      42,
+      137,
+      271,
+      314,
+      1729
+    ],
+    "ci95": [
+      -4.4e-05,
+      0.000625
+    ],
+    "comparison": "fusion",
+    "delong": {
+      "auc_difference": 0.000275,
+      "auc_first": 0.928737,
+      "auc_second": 0.928462,
+      "method": "paired_delong_auc_two_sided",
+      "p_value": 0.129713,
+      "standard_error": 0.000181,
+      "z_value": 1.515235
+    },
+    "delong_p": 0.129713,
+    "n_bootstrap_per_seed": 200,
+    "point": 0.000275,
+    "seed_mean_deltas": [
+      0.000269,
+      0.000285,
+      0.000291,
+      0.000266,
+      0.000265
+    ],
+    "winner": "external"
+  }
+}
