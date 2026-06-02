@@ -15785,3 +15785,74 @@ ops/status/changelog and BMAD traceability reconciliation to the conductor.
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-REPORT-3690 | Implemented (`python/carnot/reporting/archive_v337_activate_v338_3690.py`, `scripts/experiment_3690_archive_v337_activate_v338.py`) | Implemented (`tests/python/test_experiment_3690_archive_v337_activate_v338.py`) |
+
+### REQ-REPORT-3702: Archive V338 And Activate V339 Handoff
+
+The Exp 3702 workflow shall archive milestone `2026.06.338` and confirm that
+`research-roadmap.yaml` is active for milestone `2026.06.339`. It SHALL write
+`results/experiment_3702_archive_v338_activate_v339.json` by aggregating
+existing upstream artifacts and roadmap/archive files only. It SHALL NOT run
+live inference, push changes, modify `scripts/research_conductor.py`, or place
+any GGUF, CUDA, live-model, `model_specs`, or `target_model` marker in the
+terminal artifact.
+
+The workflow SHALL update the single `2026.06.338` block in
+`research-complete.yaml`, or append it if absent, so the archive records the
+defensible `.338` state: Exp 3692 re-emitted the operator re-freeze package
+cleanly, but Exp 3693 found the published external de-entangled/CIG reweighting
+baseline at AUROC `0.928737` above the dependency-aware candidate at AUROC
+`0.924869`, so the re-freeze candidate is ambiguous and must be disambiguated
+in `.339`; Exp 3695 returned code-native AUROC `1.0`, which is provisional and
+requires a `.339` leak audit plus held-out replication even though Exp 3696
+wired the shipped detector and its E2E passed; Exp 3694 blocked the selection
+diagnosis for a second time due to no multi-candidate corpus, so `.339`
+formally closes the already settled-bounded energy-selection question rather
+than grinding a third diagnosis; Exp 3698 made KV260 SSH-reachable again after
+the unreachable streak; Exp 3697 validated FR-11 v12 drift reset and
+cross-session persistence; `paper_ready` remains true; the frozen FoVer `0.9131`
+headline remains unchanged; and P0.1 remains honest-negative. The archive
+update SHALL be idempotent.
+
+The terminal artifact SHALL include bare top-level values for `honest_verdict`,
+`inference_substrate`, `v338_outcome_recorded_as`,
+`refreeze_candidate_ambiguous_recorded`, `code_native_provisional_recorded`,
+`selection_diagnosis_closing_recorded`, `kv260_reachable_again_recorded`,
+`paper_ready_preserved`, `p01_status_preserved`, `n_tasks_archived`,
+`adversarial_verify_clean`, `random_seed`, `reproducibility_checksum`, and
+`duration_s`, plus `field_principles` documenting each required value.
+`inference_substrate` SHALL be exactly
+`aggregation_from_upstream_artifacts (principle: a JSON-read + format task, not live inference; 0.0001s floor; carries NO compute-bound marker so it does not false-flag).`
+`adversarial_verify_clean` SHALL be true only after
+`scripts/adversarial_verify.py` reports no critical flag on the written
+artifact. `honest_verdict` SHALL equal
+`complete: archived_v338_refreeze_candidate_ambiguous_code_native_provisional_selection_closing_kv260_reachable_v339_active_paper_ready_true_frozen_headline_unchanged`.
+`n_tasks_archived` SHALL equal the full `.338` planned task count, and
+`duration_s` SHALL use the aggregation-task plausibility floor of at least
+`0.0001`.
+
+#### SCENARIO-REPORT-3702: V338 Archive Records Ambiguous Candidate And Provisional Code Signal
+
+**Given** the active roadmap declares milestone `2026.06.339`, Exp 3692 reports
+the re-freeze package is adversarial-clean and operator-ready, Exp 3693 reports
+the external comparator AUROC exceeds the dependency-aware candidate, Exp 3695
+reports code-native AUROC `1.0`, Exp 3696 reports the math-plus-code detector
+was wired and E2E green, Exp 3694 reports `blocked_no_multi_candidate_corpus`,
+Exp 3697 reports FR-11 v12 persistence and no collapse, Exp 3698 reports KV260
+SSH reachability, and Exp 3701 reports `paper_ready=true` with the frozen FoVer
+headline unchanged
+**When** the Exp 3702 workflow runs
+**Then** it writes the required terminal artifact, records all required
+principle-annotated bare fields, confirms `.339` active, archives all `.338`
+tasks exactly once in `research-complete.yaml`, records the re-freeze candidate
+as ambiguous rather than uniquely best, records the code-native `1.0` as
+provisional rather than validated headline evidence, records selection
+diagnosis closure as a formal `.339` closeout, passes adversarial verification
+without a critical flag, leaves `scripts/research_conductor.py` unchanged, and
+leaves ops/status/changelog and BMAD traceability reconciliation to the
+conductor.
+
+## Implementation Status (REQ-REPORT-3702)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-3702 | Implemented (`python/carnot/reporting/archive_v338_activate_v339_3702.py`, `scripts/experiment_3702_archive_v338_activate_v339.py`) | Implemented (`tests/python/test_experiment_3702_archive_v338_activate_v339.py`) |
