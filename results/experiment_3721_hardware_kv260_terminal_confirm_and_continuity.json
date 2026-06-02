@@ -1,0 +1,134 @@
+{
+  "command_probes": {
+    "gatemate_openfpgaloader_which": {
+      "combined_output": "/opt/oss-cad-suite/bin/openFPGALoader\n",
+      "command": "bash -lc 'command -v openFPGALoader'",
+      "duration_s": 0.0070938459830358624,
+      "exit_code": 0,
+      "stderr": "",
+      "stdout": "/opt/oss-cad-suite/bin/openFPGALoader\n"
+    },
+    "kv260_ssh": {
+      "combined_output": "",
+      "command": "ssh -o ConnectTimeout=5 -o BatchMode=yes kria true",
+      "duration_s": 2.628893446002621,
+      "exit_code": 0,
+      "stderr": "",
+      "stdout": ""
+    },
+    "kv260_xmutil_listapps": {
+      "combined_output": "xmutil should be called with root privileges. Please try again using 'sudo'.\n",
+      "command": "ssh kria 'xmutil listapps'",
+      "duration_s": 0.7621498000225984,
+      "exit_code": 1,
+      "stderr": "xmutil should be called with root privileges. Please try again using 'sudo'.\n",
+      "stdout": ""
+    },
+    "kv260_xmutil_listapps_sudo": {
+      "combined_output": "                   Accelerator  Accel_type                    Base    Pid   Base_type  #slots(RPU+PL+AIE)    slot->handle\n               carnot_ising_v4    XRT_FLAT         carnot_ising_v4  id_ok    XRT_FLAT             (0+0+0)              -1\n              k24-starter-kits    XRT_FLAT        k24-starter-kits  id_ok    XRT_FLAT             (0+0+0)              -1\n              k26-starter-kits    XRT_FLAT        k26-starter-kits  id_ok    XRT_FLAT             (0+0+0)              -1\n           carnot_ising_v2_n64    XRT_FLAT     carnot_ising_v2_n64  id_ok    XRT_FLAT             (0+0+0)           0->0,\n",
+      "command": "ssh kria 'sudo xmutil listapps'",
+      "duration_s": 0.9226844660006464,
+      "exit_code": 0,
+      "stderr": "",
+      "stdout": "                   Accelerator  Accel_type                    Base    Pid   Base_type  #slots(RPU+PL+AIE)    slot->handle\n               carnot_ising_v4    XRT_FLAT         carnot_ising_v4  id_ok    XRT_FLAT             (0+0+0)              -1\n              k24-starter-kits    XRT_FLAT        k24-starter-kits  id_ok    XRT_FLAT             (0+0+0)              -1\n              k26-starter-kits    XRT_FLAT        k26-starter-kits  id_ok    XRT_FLAT             (0+0+0)              -1\n           carnot_ising_v2_n64    XRT_FLAT     carnot_ising_v2_n64  id_ok    XRT_FLAT             (0+0+0)           0->0,\n"
+    },
+    "polarfire_carnot_dispatch_path": {
+      "combined_output": "/usr/bin/carnot\n",
+      "command": "ssh polarfire 'which carnot'",
+      "duration_s": 0.7749738420243375,
+      "exit_code": 0,
+      "stderr": "",
+      "stdout": "/usr/bin/carnot\n"
+    },
+    "polarfire_ssh": {
+      "combined_output": "",
+      "command": "ssh -o ConnectTimeout=5 polarfire true",
+      "duration_s": 0.7587973779882304,
+      "exit_code": 0,
+      "stderr": "",
+      "stdout": ""
+    },
+    "polarfire_uptime": {
+      "combined_output": " 17:00:50 up 4 days,  2:31,  0 user,  load average: 0.03, 0.01, 0.00\n",
+      "command": "ssh polarfire uptime",
+      "duration_s": 0.7974079509731382,
+      "exit_code": 0,
+      "stderr": "",
+      "stdout": " 17:00:50 up 4 days,  2:31,  0 user,  load average: 0.03, 0.01, 0.00\n"
+    }
+  },
+  "duration_s": 6.6525,
+  "experiment_id": "exp3721",
+  "field_principles": {
+    "duration_s": "Plausibility floor.",
+    "gatemate_openfpgaloader_installed": "Records the GateMate root blocker honestly.",
+    "honest_verdict": "Terminal prefix for reconciler classification.",
+    "inference_substrate": "SSH-attached board tests plus a disk check; no live model inference.",
+    "kv260_mandate_lift_recommendation": "Operator-action recommendation for lifting the per-milestone KV260 mandate once terminal.",
+    "kv260_overlay_loaded": "Confirms the carnot_ising overlay is the latest real-board-deployable bitstream.",
+    "kv260_ssh_reachable": "Honest KV260 board state.",
+    "kv260_terminal_condition_confirmed": "Bare bool: overlay confirmation plus non-fabricated transcript means KV260 is terminal.",
+    "kv260_terminal_transcript_present": "True iff the Exp 3709 non-fabricated board-latency transcript exists on disk with at least 30 samples.",
+    "polarfire_ssh_reachable": "Honest PolarFire board state.",
+    "preconditions_checked": "Records per-board reachability checks, including the correct KV260 SSH precondition rather than host SD-card state.",
+    "random_seed": "Determinism precondition.",
+    "reproducibility_checksum": "Drift detection.",
+    "speedup_claim_avoided_assert": "Asserts no thermalization, equilibrium, or comparative hardware-speedup claim is made."
+  },
+  "gatemate_known_blocker": "flash/smoke host-IO hang blocker recorded; flash and smoke not run",
+  "gatemate_openfpgaloader_installed": true,
+  "gatemate_openfpgaloader_path": "/opt/oss-cad-suite/bin/openFPGALoader",
+  "honest_verdict": "complete: kv260_terminal_confirmed_mandate_lift_recommended_polarfire_gatemate_audited",
+  "inference_substrate": "hardware_smoke",
+  "kv260_mandate_lift_recommendation": "recommend_operator_lift_per_milestone_kv260_mandate",
+  "kv260_overlay_loaded": true,
+  "kv260_overlay_name": "carnot_ising_v4",
+  "kv260_ssh_reachable": true,
+  "kv260_terminal_condition_confirmed": true,
+  "kv260_terminal_transcript_median_ms": 0.025465,
+  "kv260_terminal_transcript_path": "results/experiment_3709_kv260_drive_to_terminal_latency_transcript.json",
+  "kv260_terminal_transcript_present": true,
+  "kv260_terminal_transcript_sample_count": 32,
+  "kv260_terminal_transcript_sha256": "b813db8619cf29c3350fe9e806f68e20f0c8a5c381b6c11cb8dc096f524f6e5e",
+  "kv260_terminal_transcript_validation": {
+    "exists": true,
+    "median_ms": 0.025465,
+    "non_fabricated": true,
+    "overlay_name": "carnot_ising_v2_n64",
+    "path": "results/experiment_3709_kv260_drive_to_terminal_latency_transcript.json",
+    "sample_count": 32,
+    "sha256": "b813db8619cf29c3350fe9e806f68e20f0c8a5c381b6c11cb8dc096f524f6e5e",
+    "validation_reasons": []
+  },
+  "narrowing_scope": "POC functional latency anchor only; no comparative CPU claim.",
+  "polarfire_carnot_dispatch_path": "/usr/bin/carnot",
+  "polarfire_continuity_state": "reachable_uptime_and_dispatch_path_recorded",
+  "polarfire_ssh_reachable": true,
+  "polarfire_uptime": "17:00:50 up 4 days,  2:31,  0 user,  load average: 0.03, 0.01, 0.00",
+  "preconditions_checked": [
+    {
+      "available": true,
+      "command": "ssh -o ConnectTimeout=5 -o BatchMode=yes kria true",
+      "exit_code": 0,
+      "resource": "kv260_ssh"
+    },
+    {
+      "available": true,
+      "command": "ssh -o ConnectTimeout=5 polarfire true",
+      "exit_code": 0,
+      "resource": "polarfire_ssh"
+    },
+    {
+      "available": true,
+      "command": "command -v openFPGALoader",
+      "exit_code": 0,
+      "path": "/opt/oss-cad-suite/bin/openFPGALoader",
+      "resource": "gatemate_openfpgaloader"
+    }
+  ],
+  "random_seed": 3721,
+  "reproducibility_checksum": "70f7d494c5e3bbf9ef9674fea28e61ee409390d7d30181a297b279aa5d035aae",
+  "schema": "carnot.hardware_kv260_terminal_confirm_and_continuity.v1",
+  "speedup_claim_avoided_assert": true,
+  "task_id": "exp3721-hardware-kv260-terminal-confirm-and-continuity"
+}
