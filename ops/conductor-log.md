@@ -7595,3 +7595,4 @@ web search: https://docs.garak.ai/garak/examples/pr |
 | 2026-06-02 13:02 UTC | Capstone v339 + G1-G4 gate synthesis — which singl | OK | 87 passed in 4.54s |
 | 2026-06-02 13:35 UTC | Plan milestone 2026.06.340 | OK | 11 tasks proposed |
 | 2026-06-02 13:37 UTC | Milestone 2026.06.340 activated | OK | 11 tasks queued |
+| 2026-06-02 13:52 UTC | Archive milestone .339 honestly (CONVERGENCE miles | OK | 107 passed in 4.83s |
