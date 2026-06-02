@@ -1587,6 +1587,61 @@ AND does not edit `ops/north-star.md`
 AND does not edit `.github/workflows/reproduce-fover-headline.yml`
 AND does not trigger GitHub Actions.
 
+### REQ-PUBLISH-3692: Clean Re-Emit Of Operator Re-Freeze Package
+
+The Exp 3692 runner MUST re-emit the dependency-aware FoVer headline re-freeze
+package after Exp 3681 was flagged by the adversarial verifier. It MUST verify
+the same preconditions as Exp 3681: Exp 3680 records
+`dependency_aware_g1_rigor_confirmed == true` and
+`scripts/reproduce_fover_headline.py` is importable. If either precondition is
+false, it MUST write
+`results/experiment_3692_refreeze_package_clean_reemit.json` with the terminal
+verdict `complete: blocked_g1_candidate_not_confirmed_or_reproducer_unavailable`.
+
+When preconditions pass, the runner MUST preserve the additive
+dependency-aware candidate path in `scripts/reproduce_fover_headline.py`,
+confirm the unchanged frozen 0.9131 reproduction path still passes, confirm the
+candidate reproduction lands inside Exp 3680-derived confidence bounds, and
+draft the exact CI-workflow assertion bounds for operator use without applying
+them. The artifact MUST use the bare `inference_substrate` value
+`verifier_ensemble_against_cached_candidates`, MUST remove cached reproduction
+marker fields that would cause verifier-scoring artifacts to look compute-bound,
+MUST run `scripts/adversarial_verify.py` on the written artifact, and MUST set
+`adversarial_verify_clean == true` only when no critical flag remains.
+
+The runner MUST NOT edit `ops/north-star.md`, MUST NOT edit
+`.github/workflows/reproduce-fover-headline.yml`, MUST NOT trigger GitHub
+Actions, MUST NOT change the frozen 0.9131 publication-gate source, MUST NOT
+change `paper_ready`, and MUST NOT modify `scripts/research_conductor.py`.
+
+### SCENARIO-PUBLISH-3692: Clean Re-Freeze Package Ready But Headline Unchanged
+
+**Given** Exp 3680 confirms the dependency-aware G1 candidate and the FoVer
+headline reproducer imports
+**When** the Exp 3692 clean re-emit runner executes
+**Then** it writes
+`results/experiment_3692_refreeze_package_clean_reemit.json`
+with `honest_verdict ==
+"complete: refreeze_package_reemitted_clean_for_operator_frozen_headline_unchanged"`
+AND `adversarial_verify_clean == true`
+AND `reproducer_extended == true`
+AND `existing_0_9131_reproduction_still_green == true`
+AND `candidate_reproduction_asserts_in_ci == true`
+AND `north_star_unmodified_assert == true`
+AND `ci_workflow_unmodified_assert == true`
+AND `frozen_headline_unchanged_assert == true`.
+
+### SCENARIO-PUBLISH-3692B: Missing Candidate Or Reproducer Blocks Clean Re-Emit
+
+**Given** Exp 3680 is missing, does not confirm the G1 candidate, or the FoVer
+headline reproducer cannot be imported
+**When** the Exp 3692 clean re-emit runner executes
+**Then** it writes the same artifact path with `honest_verdict ==
+"complete: blocked_g1_candidate_not_confirmed_or_reproducer_unavailable"`
+AND does not edit `ops/north-star.md`
+AND does not edit `.github/workflows/reproduce-fover-headline.yml`
+AND does not trigger GitHub Actions.
+
 ### REQ-PUBLISH-041: Exp 3689 v337 Dependency-Aware Capstone And G-Gate
 
 The Exp 3689 capstone runner MUST aggregate `publication_gate.py --json` with
