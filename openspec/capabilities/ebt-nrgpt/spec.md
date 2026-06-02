@@ -89,3 +89,18 @@ The system must build a small structured-reasoning training corpus from GSM8K tr
 
 ## SCENARIO-EBT-3726: Single-GPU Tiny EBT Bring-Up Artifact
 Given CUDA, the vendored EBT import path, and GSM8K dataset availability, the experiment script tokenizes a bounded GSM8K train subset, trains the tiny EBT for a handful of real optimizer steps on cuda:0 with heartbeat output, and writes `results/experiment_3726_tiny_ebt_corpus_and_train_step_smoke.json` with a terminal `complete:` verdict when the loss is finite and decreases.
+
+## REQ-EBT-3728: Bounded Checkpointed Tiny EBT Stability Diagnostics
+The system must record the bounded tiny-EBT training run as an auditable artifact that exposes whether the model trained to stable convergence inside the GPU budget. The artifact must include the EBT loss curve, convergence boolean, NaN or divergence flag, stabilizers used, peak VRAM, random seed, reproducibility checksum, and duration.
+
+## SCENARIO-EBT-3728: Stability Diagnostics Are Decidable
+Given a bounded checkpointed tiny-EBT training artifact, the recorded diagnostics are sufficient to decide whether the loss converged, no NaN or divergence occurred, and the training evidence is stable enough to gate the next matched-compute comparison.
+
+## REQ-EBT-3729: Stability Kill-Gate Verdict
+The system must provide `scripts/experiment_3729_stability_kill_gate_verdict.py` to aggregate Exp 3725, Exp 3726, Exp 3728, and Exp 3727 artifacts without live-model inference. The verdict must set `ebt_trained_stably` and `green_light_342` from the Exp 3728 diagnostics honestly, cite imported upstream fields with SHA256 hashes, record an aggregation-only inference substrate, and write `results/experiment_3729_stability_kill_gate_verdict.json` with a terminal `complete:` verdict. If Exp 3728 is blocked, divergent, unconverged, or missing bounded-loss evidence, the script must stop the route by setting `green_light_342=false` and concluding that energy-as-generator is bounded at small scale on this corpus and budget.
+
+## SCENARIO-EBT-3729: Honest Negative Stops Matched-Compute Follow-Up
+Given Exp 3728 reports no stable bounded EBT convergence evidence, the kill-gate script writes an honest-negative artifact with `ebt_trained_stably=false`, `green_light_342=false`, the aggregation-only inference substrate, and a conclusion recommending stop or one explicitly bounded stabilization attempt rather than manufacturing a pass.
+
+## SCENARIO-EBT-3729-PASS: Stable Diagnostics Green-Light Matched Compute
+Given Exp 3728 reports converged finite losses with no NaN or divergence, the kill-gate script writes `ebt_trained_stably=true`, `green_light_342=true`, and a one-line recommended `.342` setup that names the Exp 3728 checkpoint evidence and the Exp 3727 matched FLOP budget.
