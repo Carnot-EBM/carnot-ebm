@@ -15934,3 +15934,68 @@ asserts the conductor and environment were not modified, recommends
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-REPORT-3703 | Implemented (`python/carnot/reporting/backend_state_diagnostic_v5_3703.py`, `scripts/experiment_3703_backend_state_diagnostic_v5.py`) | Implemented (`tests/python/test_experiment_3703_backend_state_diagnostic_v5.py`) |
+
+### REQ-REPORT-3707: Selection Diagnosis Formal Closure
+
+The Exp 3707 workflow shall formally close the discrimination-vs-selection
+diagnosis question by synthesizing existing artifacts and references only. It
+SHALL read Exp 3672 as the terminal earned-negative, Exp 3682 as a degenerate
+tautology no-op diagnosis, Exp 3694 as the blocked no-multi-candidate-corpus
+diagnosis, `research-references.md` entries for Reward Model Selection Crisis
+(`arXiv:2512.23067`) and Reward Learning from Best-of-N (`arXiv:2605.30619`),
+and the settled-bounded energy-selection thesis context. It SHALL NOT run a new
+selection experiment, generate a corpus, modify `ops/exclusion_manifest.yaml`,
+modify `scripts/research_conductor.py`, push changes, or place any GGUF, CUDA,
+live-model, `model_specs`, or `target_model` marker in the terminal artifact.
+
+The workflow SHALL write
+`results/experiment_3707_selection_diagnosis_formal_closure.json` with bare
+top-level values for `honest_verdict`, `inference_substrate`,
+`earned_negative_source`, `failed_diagnosis_attempts`, `bounded_thesis_basis`,
+`operator_retirement_recommendation`, `question_closed`,
+`manifest_unmodified_assert`, `adversarial_verify_clean`, `random_seed`,
+`reproducibility_checksum`, and `duration_s`, plus `field_principles`
+documenting why each required value exists. `inference_substrate` SHALL be
+exactly
+`aggregation_from_upstream_artifacts (principle: reads prior artifacts; no live inference; no compute-bound marker).`
+`question_closed` SHALL be a bare boolean and SHALL be true only when the
+closure rests on the Exp 3672 earned-negative, both methodology-failed
+diagnoses are recorded, the bounded thesis plus both published references are
+present, and the artifact recommends operator-curated retirement rather than a
+third diagnosis. `honest_verdict` SHALL be one of
+`complete: selection_diagnosis_formally_closed_retirement_recommended_to_operator`
+or `complete: selection_diagnosis_cannot_close_open_question`.
+`adversarial_verify_clean` SHALL be true only after `scripts/adversarial_verify.py`
+reports no critical flag on the written artifact.
+
+#### SCENARIO-REPORT-3707-CLOSED: Existing Evidence Closes Diagnosis And Recommends Retirement
+
+**Given** Exp 3672 records the clean earned-negative where ensemble selection
+underperforms self-consistency despite headroom, Exp 3682 records a
+tautology-flagged degenerate diagnosis, Exp 3694 records a blocked
+no-multi-candidate-corpus diagnosis, and the bounded thesis plus both published
+decoupling references are present
+**When** the Exp 3707 workflow runs
+**Then** it writes the required terminal artifact, records all required
+principle-annotated bare fields, sets `question_closed=true`, recommends that
+the operator add this diagnosis question to `ops/exclusion_manifest.yaml`, notes
+that only a new human-seeded thesis should reopen it, passes adversarial
+verification without a critical flag, and leaves the exclusion manifest and
+research conductor unmodified.
+
+#### SCENARIO-REPORT-3707-OPEN: Missing Evidence Keeps Question Open
+
+**Given** one of the earned-negative, failed-diagnosis, bounded-thesis, or
+published-reference inputs is missing or contradictory
+**When** the Exp 3707 workflow runs
+**Then** it writes the required terminal artifact, records all required
+principle-annotated bare fields, sets `question_closed=false`, emits the open
+terminal verdict, does not recommend manifest retirement as completed action,
+passes adversarial verification without a critical flag, and leaves the
+exclusion manifest and research conductor unmodified.
+
+## Implementation Status (REQ-REPORT-3707)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-3707 | Implemented (`python/carnot/reporting/selection_diagnosis_formal_closure_3707.py`, `scripts/experiment_3707_selection_diagnosis_formal_closure.py`) | Implemented (`tests/python/test_experiment_3707_selection_diagnosis_formal_closure.py`) |
