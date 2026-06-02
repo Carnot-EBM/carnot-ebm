@@ -15649,3 +15649,64 @@ BMAD traceability reconciliation to the conductor.
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-REPORT-3678 | Implemented (`python/carnot/reporting/archive_v336_activate_v337_3678.py`, `scripts/experiment_3678_archive_v336_activate_v337.py`) | Implemented (`tests/python/test_experiment_3678_archive_v336_activate_v337.py`) |
+
+### REQ-REPORT-3690: Archive V337 And Activate V338 Handoff
+
+The Exp 3690 workflow shall archive milestone `2026.06.337` and confirm that
+`research-roadmap.yaml` is active for milestone `2026.06.338`. It SHALL write
+`results/experiment_3690_archive_v337_activate_v338.json` by aggregating
+existing upstream artifacts and roadmap/archive files only. It SHALL NOT run
+live inference, push changes, or modify `scripts/research_conductor.py`.
+
+The workflow SHALL update the single `2026.06.337` block in
+`research-complete.yaml`, or append it if absent, so the archive records the
+defensible `.337` state: dependency-aware weighting cleared full G1-rigor as a
+re-freeze candidate; the operator re-freeze package was duration-flagged by a
+vestigial compute-bound marker and must be re-emitted cleanly; the selection-gap
+diagnosis was tautology-flagged and remains open; the code detector stayed blind
+under reweighting and needs a code-native signal; product value remained robust
+over self-certainty; FR-11 v11 recovered no-collapse under drift; `paper_ready`
+remains true; the frozen FoVer `0.9131` headline remains unchanged; and P0.1
+remains honest-negative. The archive update SHALL be idempotent.
+
+The terminal artifact SHALL include bare top-level values for
+`honest_verdict`, `inference_substrate`, `v337_outcome_recorded_as`,
+`headline_refreeze_candidate_status`, `refreeze_package_must_redo_recorded`,
+`selection_diagnosis_still_open_recorded`,
+`code_detector_blind_under_reweighting_recorded`, `paper_ready_preserved`,
+`p01_status_preserved`, `n_tasks_archived`, `adversarial_verify_clean`,
+`random_seed`, `reproducibility_checksum`, and `duration_s`, plus
+`field_principles` documenting each required value. `inference_substrate` SHALL
+be exactly `aggregation_from_upstream_artifacts (principle: a JSON-read + format
+task, not live inference; 0.0001s floor; carries NO compute-bound marker so it
+does not false-flag).` and the artifact SHALL NOT include `model_specs` or
+`target_model`. `adversarial_verify_clean` SHALL be true only after
+`scripts/adversarial_verify.py` reports no critical flag on the written
+artifact. `honest_verdict` SHALL equal
+`complete: archived_v337_dependency_aware_g1_candidate_clean_package_and_selection_to_redo_code_native_needed_v338_active_paper_ready_true_frozen_headline_unchanged`.
+`n_tasks_archived` SHALL equal the full `.337` planned task count, and
+`duration_s` SHALL use the aggregation-task plausibility floor of at least
+`0.0001`.
+
+#### SCENARIO-REPORT-3690: V337 Archive Preserves Clean Candidate And Redo Items
+
+**Given** the active roadmap declares milestone `2026.06.338`, Exp 3680 reports
+`dependency_aware_g1_rigor_confirmed=true`, Exp 3681 is adversarial-flagged by
+the vestigial duration marker, Exp 3682 is tautology-flagged, Exp 3683 reports
+the code detector is not recovered, Exp 3684 reports product value over
+self-certainty, Exp 3685 reports FR-11 v11 no-collapse recovery, and Exp 3689
+reports `paper_ready=true` with the frozen FoVer headline unchanged
+**When** the Exp 3690 workflow runs
+**Then** it writes the required terminal artifact, records all required
+principle-annotated bare fields, confirms `.338` active, archives all `.337`
+tasks exactly once in `research-complete.yaml`, records the re-freeze package
+and selection diagnosis as redo items rather than successes, records the need
+for a code-native signal, passes adversarial verification without a critical
+flag, leaves `scripts/research_conductor.py` unchanged, and leaves
+ops/status/changelog and BMAD traceability reconciliation to the conductor.
+
+## Implementation Status (REQ-REPORT-3690)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-3690 | Implemented (`python/carnot/reporting/archive_v337_activate_v338_3690.py`, `scripts/experiment_3690_archive_v337_activate_v338.py`) | Implemented (`tests/python/test_experiment_3690_archive_v337_activate_v338.py`) |
