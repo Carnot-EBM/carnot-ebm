@@ -1,0 +1,55 @@
+{
+  "accuracy_delta_cited": null,
+  "adversarial_verify_clean": true,
+  "adversarial_verify_report": {
+    "critical_flag_count": 0,
+    "flag_count": 0,
+    "flags": []
+  },
+  "cited_upstream_artifacts": [
+    {
+      "experiment_id": 3736,
+      "fields_imported": [
+        "honest_verdict",
+        "green_light_342",
+        "ebt_trained_stably",
+        "training_actually_ran",
+        "kill_gate_conclusion",
+        "real_run_diagnostics.training_actually_ran",
+        "real_run_diagnostics.bounded_run_completed",
+        "random_seed",
+        "reproducibility_checksum",
+        "duration_s"
+      ],
+      "sha256": "1c8e8136c8b787d3ab80c0ac0475b273eb51590916df40044bb67335b54fa35a"
+    }
+  ],
+  "decision_basis": "NOT-RUN: part-(a) did not green-light: training did not complete; no part-(b) thesis verdict was measured.",
+  "duration_s": 0.0001,
+  "ebt_beats_ar_at_matched_compute": false,
+  "experiment": 3739,
+  "field_principles": {
+    "accuracy_delta_cited": "The Exp 3738 delta carried up for the record.",
+    "cited_upstream_artifacts": "Provenance from the verdict to upstream numbers.",
+    "duration_s": "Wall-clock plausibility floor.",
+    "ebt_beats_ar_at_matched_compute": "BARE bool. True only if delta>0, FLOPs matched, and n>=100.",
+    "flops_matched_cited": "Whether the comparison was compute-fair.",
+    "honest_verdict": "Terminal prefix stating the part-(b) thesis outcome (win / bounded / invalid / not-run).",
+    "inference_substrate": "A verdict over upstream numbers, no live model.",
+    "next_step_recommendation": "Honest bounded next move from the verdict.",
+    "random_seed": "Determinism precondition.",
+    "reproducibility_checksum": "Content hash catches drift.",
+    "thesis_a_outcome": "The .342 Thesis-A result string (ebt_beats_ar_at_matched_compute / bounded_at_small_scale / comparison_invalid / part_b_not_run)."
+  },
+  "flops_matched_cited": null,
+  "gap_narrowing_cited": false,
+  "honest_verdict": "complete: kill_gate_part_b_not_run_part_a_did_not_green_light",
+  "inference_substrate": "aggregation_from_upstream_artifacts (principle: a verdict over upstream numbers, no live model).",
+  "n_heldout_cited": null,
+  "next_step_recommendation": "Do not score part-(b) until part-(a) green-lights and Exp 3738 exists; rerun bounded training first when training did not complete.",
+  "part_b_not_run_reason": "part-(a) did not green-light: training did not complete",
+  "random_seed": 3739,
+  "reproducibility_checksum": "feab10b4d8ca872bfba7bad7a7239fb9b6b0e1cfa57e4162b8d88c8b586b9e6f",
+  "schema": "carnot.experiment_3739_kill_gate_part_b_verdict.v1",
+  "thesis_a_outcome": "part_b_not_run"
+}
