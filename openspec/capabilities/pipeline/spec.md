@@ -379,6 +379,42 @@ shipped `score_candidates` surface end-to-end, and write
 - Tests cover `detector_math_plus_code_shipped` and `blocked` with synthetic
   fixtures rather than hard-coding a real-corpus success string.
 
+### REQ-SPOE-3706: Held-Out Reconciliation for Shipped Detector Code Claim
+
+The pipeline MUST reconcile the shipped `second_pair_detector` code operating
+point against the Exp 3705 held-out leak audit unconditionally.  If Exp 3705
+reports `code_signal_survives_heldout == true`, the shipped code operating
+point MUST be recalibrated to the Exp 3705 held-out AUROC and calibration
+rather than the inflated in-corpus 1.0.  If Exp 3705 reports
+`leak_detected == true` or `code_signal_survives_heldout == false`, the shipped
+surface MUST narrow to math-only and return an explicit no-code-verdict
+abstention for code-domain candidates.
+
+**Acceptance criteria:**
+- The runner checks that `results/experiment_3705_code_native_leak_audit_heldout.json`
+  exists and that `python/carnot/pipeline/second_pair_detector.py` is importable
+  before reconciling.
+- The artifact includes `honest_verdict`, `inference_substrate`,
+  `reconciliation_action`, `shipped_code_operating_point_auroc`,
+  `math_operating_point_unchanged`, `overclaim_removed`, `e2e_test_passed`,
+  `operating_envelope_docstring_updated`, `adversarial_verify_clean`,
+  `random_seed`, `reproducibility_checksum`, and `duration_s`.
+- `overclaim_removed`, `math_operating_point_unchanged`, `e2e_test_passed`,
+  `operating_envelope_docstring_updated`, and `adversarial_verify_clean` are
+  bare top-level booleans.
+- `shipped_code_operating_point_auroc` is the Exp 3705 held-out AUROC when the
+  code signal survives held-out audit; otherwise it is `null` because the
+  shipped code surface abstains instead of emitting a code verdict.
+- `math_operating_point_unchanged` is true only when the strong math operating
+  point still rounds to AUROC 0.98 and ECE 0.009.
+- The honest verdict is one of:
+  `complete: shipped_detector_code_recalibrated_to_heldout_e2e_green`,
+  `complete: shipped_detector_narrowed_to_math_only_abstain_on_code_e2e_green`,
+  or `complete: blocked_heldout_audit_unavailable`.
+- Tests cover `code_operating_point_recalibrated_to_heldout`,
+  `narrowed_to_math_only_abstain_on_code`, and `blocked` with synthetic
+  fixtures rather than hard-coding a real-corpus success string.
+
 ## Scenarios
 
 ### SCENARIO-INFRA-052: Version-Blocked Model Raises Error
@@ -546,6 +582,18 @@ derived from the fixture measurements instead of hard-coded to a real-corpus
 success string.
 
 **Spec traces:** REQ-SPOE-3696
+
+### SCENARIO-SPOE-3706: Held-Out Reconciliation Outcomes Stay Honest
+
+**Given** synthetic Exp 3705 audit fixtures covering
+`code_operating_point_recalibrated_to_heldout`,
+`narrowed_to_math_only_abstain_on_code`, and `blocked`
+**When** the Exp 3706 reconciliation artifact is assembled
+**Then** it derives the terminal verdict, shipped code AUROC/null, bare
+overclaim-removal bool, math-preservation bool, and E2E result from the
+fixture measurements rather than hard-coding a real-corpus success string.
+
+**Spec traces:** REQ-SPOE-3706
 
 ### REQ-SAMPLE-020: SparseIsingEBM K-Regular Graph
 

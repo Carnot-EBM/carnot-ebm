@@ -1,6 +1,6 @@
 """Tests for Exp 3696 math+code detector re-ship.
 
-Spec: REQ-SPOE-3696, SCENARIO-SPOE-3696.
+Spec: REQ-SPOE-3696, SCENARIO-SPOE-3696, REQ-SPOE-3706.
 """
 
 from __future__ import annotations
@@ -99,11 +99,11 @@ def test_scenario_spoe_3696_parametrized_honest_outcomes(
     assert set(exp.REQUIRED_ARTIFACT_FIELDS) <= set(artifact)
 
 
-def test_req_spoe_3696_code_loader_uses_exp3695_code_native_score(
+def test_req_spoe_3706_code_loader_abstains_after_heldout_audit(
     tmp_path: Path,
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
-    """REQ-SPOE-3696: balanced code rows use the code-native verifier score."""
+    """REQ-SPOE-3706: balanced code rows abstain instead of using leaked score."""
 
     data = tmp_path / "data"
     data.mkdir()
@@ -130,14 +130,15 @@ def test_req_spoe_3696_code_loader_uses_exp3695_code_native_score(
         use_balanced_code_corpus=True,
     )
 
-    assert status["code"]["code_native_exp3695"] is True
-    assert [example.ensemble_energy for example in examples] == pytest.approx([0.11, 0.81])
+    assert status["code"]["status"] == "abstained"
+    assert status["code"]["code_native_exp3695"] is False
+    assert examples == []
 
 
-def test_req_spoe_3696_runtime_code_candidate_uses_code_native_score(
+def test_req_spoe_3706_runtime_code_candidate_abstains(
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
-    """REQ-SPOE-3696: runtime code candidates use the code-native verifier score."""
+    """REQ-SPOE-3706: runtime code candidates do not compute leaked scores."""
 
     class FakeVerifier:
         def score_rows(self, rows):
@@ -151,7 +152,8 @@ def test_req_spoe_3696_runtime_code_candidate_uses_code_native_score(
         text="def f():\n    return None",
     )
 
-    assert spd._candidate_ensemble_energy(candidate, Path(".")) == pytest.approx(0.73)
+    with pytest.raises(ValueError, match="no-code-verdict"):
+        spd._candidate_ensemble_energy(candidate, Path("."))
 
 
 def test_req_spoe_3696_validation_and_write_artifact(tmp_path: Path) -> None:
@@ -231,10 +233,10 @@ def test_req_spoe_3696_success_build_and_helper_edges(
     artifact = exp.build_artifact(tmp_path, started_s=0.0, now_s=1.0)
 
     assert artifact["honest_verdict"] == (
-        "complete: detector_reshipped_math_plus_code_operating_point_e2e_green"
+        "complete: blocked_code_signal_not_recovered_or_module_unavailable"
     )
-    assert artifact["ship_artifact_summary"]["fused_detector_auroc_per_domain"]["code"] == 1.0
-    assert exp.module_code_path_updated() is True
+    assert artifact["module_code_path_updated"] is False
+    assert exp.module_code_path_updated() is False
     assert exp.math_operating_point_unchanged({}, baseline) is False
     assert exp.compact_adversarial_report({"flags": [{"severity": "warn"}, "skip"]}) == {
         "flag_count": 1,
