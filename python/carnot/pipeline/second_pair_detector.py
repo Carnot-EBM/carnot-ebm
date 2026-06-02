@@ -3,11 +3,14 @@
 The detector fuses two runtime signals: verifier ensemble energy and model
 confidence-derived error score.  It fits calibration on a deterministic train
 split, then reports held-out discrimination, calibration quality, and fixed-FPR
-operating points for each domain.  The code-domain operating point is scoped as
-math-only unless an explicit code AUROC CI excludes chance in Exp 3683.
+operating points for each domain.  Math uses the original verifier ensemble
+energy.  Code uses the Exp 3695 code-native AST/runtime verifier score, because
+the older math-transfer score was blind on the balanced code corpus while the
+code-native signal recovered a deployable code operating point.
 
 Spec: REQ-SPOE-3657, REQ-SPOE-3657-ARTIFACT,
-      SCENARIO-SPOE-3657, SCENARIO-SPOE-3658
+      REQ-SPOE-3671, REQ-SPOE-3696,
+      SCENARIO-SPOE-3657, SCENARIO-SPOE-3658, SCENARIO-SPOE-3696
 """
 
 from __future__ import annotations
@@ -33,8 +36,19 @@ SHIP_OUTPUT_REL_PATH = Path("results/experiment_3671_ship_second_pair_of_eyes_de
 RANDOM_SEED = 3657
 SHIP_RANDOM_SEED = 3671
 CODE_OPERATING_POINT_SCOPE = (
-    "math_primary; code_discrimination_scoped_math_only_until_exp3683_auroc_ci_excludes_chance"
+    "math_plus_code; math AUROC 0.98/ECE 0.009 preserved; code path uses "
+    "Exp 3695 AST/runtime verifier with code AUROC 1.0 and calibrated 10% FPR "
+    "threshold 0.983914 on the balanced cached code corpus"
 )
+CODE_NATIVE_CODE_PATH_ENABLED = True
+CODE_NATIVE_OPERATING_POINT = {
+    "source": "results/experiment_3695_code_native_verifier.json",
+    "auroc": 1.0,
+    "auroc_ci": [1.0, 1.0],
+    "fpr_budget": 0.10,
+    "threshold": 0.983914,
+    "calibration": {"brier": 0.033682, "ece": 0.048653},
+}
 FPR_BUDGETS = (0.05, 0.10, 0.20)
 MATERIAL_AUROC_LIFT = 0.01
 MATERIAL_RECALL_LIFT = 0.01
@@ -43,6 +57,18 @@ INFERENCE_SUBSTRATE = (
 )
 DETECTOR_MODULE_PATH = "python/carnot/pipeline/second_pair_detector.py"
 WIRED_SURFACE = "score_candidates MCP tool and carnot score-candidates CLI"
+
+
+class _LazyCodeNativeVerifierModule:
+    """Expose Exp 3695 lazily so this shipped module avoids import recursion."""
+
+    def __getattr__(self, name: str) -> Any:
+        from carnot.pipeline import code_native_verifier_3695 as module
+
+        return getattr(module, name)
+
+
+code_native_verifier_3695 = _LazyCodeNativeVerifierModule()
 
 VERDICT_FUSION_WINS = (
     "complete: deployable_second_pair_of_eyes_detector_built_fusion_wins_calibrated"
@@ -1170,7 +1196,6 @@ def _candidate_ensemble_energy(candidate: CandidateScoreInput, root: Path) -> fl
         rows = [
             {
                 "candidate_code": candidate.text,
-                "label": True,
                 "task_id": candidate.candidate_id,
                 "metadata": {
                     "corpus": "surface",
@@ -1179,9 +1204,7 @@ def _candidate_ensemble_energy(candidate: CandidateScoreInput, root: Path) -> fl
                 },
             }
         ]
-        from carnot.verify import corrected_cross_domain_remeasurement_v4 as exp3642
-
-        return float(exp3642.score_code_rows(rows, root)[0])
+        return float(_score_code_native_rows(rows)[0])
     rows = [{"step_text": candidate.text}]
     return float(_score_math_rows(rows)[0])
 
@@ -1270,10 +1293,15 @@ def _load_code_examples(
         }
     if "ensemble_scores" in overrides:
         ensemble_scores = [float(score) for score in overrides["ensemble_scores"]]
+        code_native_scored = False
+    elif use_balanced_code_corpus:
+        ensemble_scores = _score_code_native_rows(rows)
+        code_native_scored = True
     else:
         from carnot.verify import corrected_cross_domain_remeasurement_v4 as exp3642
 
         ensemble_scores = exp3642.score_code_rows(rows, root)
+        code_native_scored = False
     if "confidence_scores" in overrides:
         confidence_scores = [float(score) for score in overrides["confidence_scores"]]
     else:
@@ -1297,6 +1325,7 @@ def _load_code_examples(
         "path": str(corpus_path),
         "n_examples": len(examples),
         "balanced_exp3658": bool(use_balanced_code_corpus),
+        "code_native_exp3695": bool(code_native_scored),
     }
 
 
@@ -1305,6 +1334,16 @@ def _score_math_rows(rows: Sequence[Mapping[str, Any]]) -> list[float]:
 
     wrapped = [{"candidate_code": str(row.get("step_text") or "")} for row in rows]
     return [float(score) for score in exp3641.score_math_signal(wrapped, score_overrides={})]
+
+
+def _score_code_native_rows(rows: Sequence[Mapping[str, Any]]) -> list[float]:
+    scored = code_native_verifier_3695.CodeNativeVerifier().score_rows(rows)
+    scores = [float(item.score) for item in scored]
+    if len(scores) != len(rows):
+        raise ValueError("CodeNativeVerifier returned a mismatched number of scores")
+    if not all(math.isfinite(score) for score in scores):
+        raise ValueError("CodeNativeVerifier scores must be finite")
+    return scores
 
 
 def _read_jsonl(path: Path) -> list[JsonDict]:

@@ -150,13 +150,16 @@ def test_scenario_spoe_3672_score_candidates_returns_calibrated_operating_point(
 def test_scenario_spoe_3672_score_candidates_mapping_and_computed_energy(
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
-    """SCENARIO-SPOE-3672: mapping inputs and missing feature fallbacks are scored."""
+    """SCENARIO-SPOE-3672/3696: mapping inputs and code-native fallbacks are scored."""
 
     from carnot.pipeline import second_pair_detector as spd
-    from carnot.verify import corrected_cross_domain_remeasurement_v4 as exp3642
+
+    class FakeVerifier:
+        def score_rows(self, rows):
+            return [type("Score", (), {"score": 0.77})() for _ in rows]
 
     monkeypatch.setattr(spd, "_score_math_rows", lambda rows: [0.33 for _ in rows])
-    monkeypatch.setattr(exp3642, "score_code_rows", lambda rows, root: [0.77 for _ in rows])
+    monkeypatch.setattr(spd.code_native_verifier_3695, "CodeNativeVerifier", FakeVerifier)
 
     response = score_candidates(
         [
