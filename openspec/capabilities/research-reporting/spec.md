@@ -16651,3 +16651,79 @@ The artifact `results/experiment_3773_verifier_product_prm_positioning.json` sha
 ### SCENARIO-REPORT-3773: Exp 3773 Synthesizes Honest Positioning
 
 Given the FoVer result and PRM SOTA references, when Exp 3773 runs, then it outputs the required JSON artifact without running any new LLM evaluation, claiming to retest domain boundaries, or claiming peer reports are Carnot measurements.
+
+### REQ-REPORT-3775: Capstone V345 Recovery And Convergence Synthesis
+
+The Exp 3775 workflow SHALL aggregate Exp 3765 through Exp 3774 from checked-in
+JSON artifacts only, run the disciplined artifact summarizer for each upstream
+experiment, exclude any upstream artifact carrying `flagged_adversarial=true`
+from headline aggregation, record missing upstream artifacts as `not-landed`
+rather than as research negatives, and write
+`results/experiment_3775_capstone_v345.json`.
+
+The artifact SHALL be aggregation-only with no copied live-model markers. It
+SHALL state the `.345` outcome plainly as a recovery plus convergence milestone:
+the `.344` skip cascade was recovered; the definitive Thesis-A close was
+restored to the record as part-(a) PASS/discriminative and part-(b)
+BOUNDED-at-scale/not-generative; G2 and G3 publication gates were mechanized;
+package/CLI/MCP smoke plus distribution mirror/checklist evidence banked the
+verifier toward Phase-1 ship; the certified abstention point is `shipped` only
+when Exp 3767 reproduced the frozen headline in CI95 and Exp 3771 produced a
+usable operating point, otherwise it is `skipped`; FR-11 v17 preserved the
+memory contribution on the live verifier; the verifier product was positioned
+against PRM SOTA without re-deriving peer numbers; and KV260 terminal state was
+confirmed. It SHALL preserve `paper_ready=true`, G1-G4, frozen FoVer `0.9131`,
+and both energy-as-selector and energy-as-generator as
+honest-negative-bounded. It SHALL make no new existential claim and SHALL keep
+the next research decision as an operator-seeding surface.
+
+The terminal artifact SHALL include bare top-level values for `honest_verdict`,
+`inference_substrate`, `v344_skip_cascade_recovered`,
+`thesis_a_definitively_closed`, `both_energy_routes_bounded`,
+`gates_mechanized`, `verifier_banked_for_ship`,
+`certified_abstention_point_status`, `verifier_positioned_vs_prm_sota`,
+`paper_ready_preserved`, `frozen_headline_unchanged`,
+`next_thesis_remains_operator_surface`, `flagged_artifacts_excluded`,
+`not_landed_artifacts_recorded_honestly`, `cited_upstream_artifacts`,
+`random_seed`, `reproducibility_checksum`, and `duration_s`, plus
+`field_principles` documenting why each required value exists. The
+`inference_substrate` value SHALL equal
+`aggregation_from_upstream_artifacts (principle: a capstone reads upstream JSON, runs no live model).`
+The terminal verdict SHALL use the prefix
+`complete: capstone_v345_skip_cascade_recovered_thesis_a_closed_both_energy_routes_bounded_gates_mechanized_verifier_banked_abstention_point_`.
+
+#### SCENARIO-REPORT-3775: Clean V345 Recovery Capstone Re-Banks Product
+
+**Given** clean Exp 3765 through Exp 3774 artifacts record skip-cascade
+recovery, Thesis-A closure, G2/G3 gate hardening, verifier ship surfaces,
+certified abstention, FR-11 v17, PRM positioning, and KV260 terminal
+confirmation
+**When** the Exp 3775 workflow runs
+**Then** it emits the required terminal artifact with `paper_ready_preserved=true`,
+frozen FoVer `0.9131` unchanged, both energy routes bounded,
+`flagged_artifacts_excluded=[]`, `not_landed_artifacts_recorded_honestly=[]`,
+all clean upstream artifacts cited, no copied live-model markers, no new
+existential claim, and no critical adversarial verifier flag.
+
+#### SCENARIO-REPORT-3775-MISSING: Missing Upstream Is Not A Research Negative
+
+**Given** any Exp 3765 through Exp 3774 artifact is absent
+**When** the Exp 3775 workflow runs
+**Then** the capstone records that artifact as `not-landed` in
+`not_landed_artifacts_recorded_honestly`, excludes it from headline aggregation,
+and does not label the un-run task as an honest-negative research finding.
+
+#### SCENARIO-REPORT-3775-FLAGGED: Flagged Upstream Artifacts Are Excluded
+
+**Given** any Exp 3765 through Exp 3774 source artifact carries
+`flagged_adversarial=true`
+**When** the Exp 3775 workflow runs
+**Then** the capstone records that artifact in `flagged_artifacts_excluded`,
+excludes it from `cited_upstream_artifacts` and headline aggregation, and
+derives affected milestone booleans from the remaining clean upstream record.
+
+## Implementation Status (REQ-REPORT-3775)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-3775 | Planned (`python/carnot/reporting/capstone_v345_recovery_3775.py`, `scripts/experiment_3775_capstone_v345.py`) | Planned (`tests/python/test_experiment_3775_capstone_v345.py`) |
