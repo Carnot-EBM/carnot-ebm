@@ -104,10 +104,25 @@ def main():
     print(f"[data] train={len(train_items)} eval={len(eval_items)} blocks={tuple(blocks.shape)}", flush=True)
 
     ebt, ar = sc.build_models(dim, layers, heads, blk, dev)
-    nan = pb.train_models(ebt, ar, blocks, dev, steps, bs=16, langevin=(5, 15),
-                          log=lambda m: print(m, flush=True))
-    print(f"[train] done nan={nan}", flush=True)
-    dec = sc.fit_decoder(ebt, blocks, dev, K, decoder_steps, log=lambda m: print(m, flush=True))
+    import torch.nn as nn
+    ckpt = os.path.join(PROJECT_ROOT, "results", "thesis_a_p1_v2_trained.pt")
+    dec = nn.Sequential(nn.Linear(dim, dim), nn.GELU(), nn.Linear(dim, VOCAB)).to(dev)
+    if os.path.exists(ckpt):
+        # Resume: training + decoder-fit (the expensive ~100min) already done; reload and
+        # skip straight to eval. Lets a re-run after an eval-stage crash be cheap.
+        st = torch.load(ckpt, map_location=dev)
+        ebt.load_state_dict(st["ebt"]); ar.load_state_dict(st["ar"]); dec.load_state_dict(st["dec"])
+        nan = st.get("nan", False)
+        print(f"[resume] loaded trained models from {ckpt} (nan={nan}) — skipping train+decoder", flush=True)
+    else:
+        nan = pb.train_models(ebt, ar, blocks, dev, steps, bs=16, langevin=(5, 15),
+                              log=lambda m: print(m, flush=True))
+        print(f"[train] done nan={nan}", flush=True)
+        dec2 = sc.fit_decoder(ebt, blocks, dev, K, decoder_steps, log=lambda m: print(m, flush=True))
+        dec.load_state_dict(dec2.state_dict())
+        torch.save({"ebt": ebt.state_dict(), "ar": ar.state_dict(),
+                    "dec": dec.state_dict(), "nan": nan}, ckpt)
+        print(f"[ckpt] saved trained models to {ckpt}", flush=True)
 
     ans_len = digits + 1
     ebt.eval(); ar.eval()
@@ -120,7 +135,7 @@ def main():
         g1, _ = pb.ar_greedy(ar, pid, ans_len, dev); ar1 += (g1 == true)
         gV, nf = pb.ar_selfconsistency(ar, pid, ans_len, dev, VOCAB); arV_nf += nf; arV += (gV == true)
         ga, _ = pb.ebt_generate(ebt, pid, ans_len, dev); argmin += (ga == true)
-        gd = sc.ebt_descent_generate(ebt, dec, pid, ans_len, dev, K); descent += (gd == true)
+        gd, _ = sc.ebt_descent_generate(ebt, dec, pid, ans_len, dev, K); descent += (gd == true)
         gb, _ = ebt_beam_generate(ebt, pid, ans_len, dev, beam=beam); beamc += (gb == true)
         if j < 8:
             samples.append({"prompt": p, "true": true_ans, "ar1": dec_ids(g1),
