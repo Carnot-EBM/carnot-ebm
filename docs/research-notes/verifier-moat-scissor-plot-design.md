@@ -27,15 +27,46 @@ representations. Carnot has two different "verifiers":
   testing the wrong thing. **Exclude it (or include only as a deliberate
   negative-control that should track the baselines).**
 
-## The unresolved validity question (the reason we ask Deep Think first)
+## Validity question — RESOLVED by the Deep Think methodology check (2026-06-03)
 
-The headline ensemble scores **step errors** (per-step correctness), not
-**final-answer correctness** directly. The moat claim is about *catching wrong
-answers the baselines wave through*. A wrong final answer may have all-correct steps
-(a final arithmetic slip) or correct steps with a wrong answer. So: **is
-"step-error-catch-rate on the residual" a valid proxy for the final-answer-correctness
-moat?** This is the single thing that, if wrong, wastes the whole GPU sweep — hence
-the methodology check.
+Verdict: **FIX-FIRST.** The naive protocol (raw step-error catch-rate on the full
+residual, with a 0.5B Stage-0 early-stop) was *structurally guaranteed* to mislead.
+The four corrections below are now folded into the metric + staged plan. DT's full
+critique is appended after the prompt.
+
+- **Q1 — the step-error proxy is INVALID.** The residual mixes *logic errors* and
+  *terminal slips* (flawless reasoning, botched final arithmetic/extraction). A step
+  verifier validates every step of a terminal slip → "accepts" a wrong answer → a
+  false positive. Terminal slips RISE with model scale (35B resolves the logic, slips
+  at the end), so the ensemble's apparent FPR inflates at the high end and FLATTENS
+  the scissor — hiding the moat. **Fix:** score a **system-level trajectory verdict** —
+  `reject if (any step invalid) OR (final-answer extraction invalid)`, adding a
+  deterministic final-answer check (SymPy/exact-match) to the step ensemble. (And/or
+  evaluate step-catch only on the subset where the error genuinely lives in a step.)
+- **Q2 — abstaining-verifier vs continuous-baseline is unfair by default.** **Fix:
+  coverage-matched FPR** — compute the ensemble's natural coverage `C = 1 −
+  abstention_rate` on the residual; force each continuous baseline to abstain on its
+  lowest-confidence `(1−C)` fraction; compare FPR strictly on the covered `C` fraction.
+  (Do NOT use AURC for the ensemble — it's a fixed-threshold operator, not a curve.)
+- **Q3 — the 0.5B Stage-0 early-stop is a false-negative TRAP.** 0.5B emits gibberish
+  that cheap baselines catch easily while the AST/Z3 ensemble abstains/crashes on
+  malformed syntax → gap ≈ 0 at 0.5B for *syntactic*, not logical, reasons. The moat
+  only manifests once models are fluent enough to produce confident logical
+  hallucinations. **Fix: two-point bracketing stop** — Stage-0 runs the weakest model
+  AND a mid model past the formatting phase transition (~7–8B, or empirically the
+  smallest model whose AST-parse abstention on its residual is low). Kill the sweep
+  only if there's no edge on the *mid* residual.
+- **Q4 — the residual's composition drifts violently across the ladder.** Confounds
+  that FAKE a moat (parsing success rises with scale; learned-probe OOD on weak
+  models; LLM-judge sharing weights with the generator) and that HIDE one (35B
+  residual is objectively harder math → solver FPR rises organically; P(error)→0 at
+  35B shrinks the denominator → variance explodes). **Fixes:** stratify the scissor by
+  external MATH difficulty Level and plot the slope *within a fixed bucket* (e.g.
+  Level-3 only); force syntactic parity with heavy few-shot prompting on every base
+  model; **ablate the learned probes and re-plot with pure SAT/AST** to prove the moat
+  is independent of probes; lock the LLM-judge to a structurally disjoint frozen model
+  family; use a **dynamic generation budget** — over-generate at strong models until
+  the residual yields exactly `K` trajectories, matching the weak-model denominator.
 
 ## Assets (all on disk, confirmed 2026-06-03)
 
@@ -54,32 +85,45 @@ the methodology check.
   `predict_stouffer`); per-verifier raw scores via the detector's
   `collect_verifier_scores`.
 
-## The metric
+## The metric (revised per the methodology check)
 
 For each base model M at capability c(M):
-1. Generate on a headroom math set; extract final answers; label correct/incorrect.
-2. **Residual subset R(M)** = problems M gets WRONG.
-3. For each item in R(M), get a "this answer is fine" score from each verifier:
+1. Generate on a headroom math set **with heavy few-shot syntactic prompting**
+   (force well-formed output → structural parity across the ladder, Q4); extract
+   final answers; label correct/incorrect by external difficulty **Level**.
+2. **Residual subset R(M)** = problems M gets WRONG. Use a **base-rate-matched
+   budget**: over-generate at strong models until R(M) holds exactly `K` trajectories
+   (constant denominator across the ladder, Q4).
+3. For each item in R(M), get a "this answer is fine" verdict from each verifier:
    - **Baselines:** mean-token-logprob; self-consistency agreement (Maj@K share);
-     LLM-as-judge accept-prob.
-   - **Carnot:** the constraint/probe ensemble score (+ the LLM-verifier as a
-     labelled negative control).
-4. **FPR-on-residual** = fraction of R(M) the verifier rates "fine" (a false accept
-   of a wrong answer) — at a coverage-matched operating point (see open Q2).
-5. **Scissor** = plot FPR-on-residual vs c(M). Predicted: baselines RISE, Carnot
-   constraint-ensemble stays FLAT; divergence ⇒ moat real.
+     LLM-as-judge accept-prob (judge = a structurally disjoint frozen family, Q4).
+   - **Carnot = SYSTEM-LEVEL TRAJECTORY VERDICT (Q1):** `reject if (any step invalid)
+     OR (deterministic final-answer extraction invalid)` — the constraint/probe
+     ensemble + a SymPy/exact-match final check. Also run a **pure-SAT/AST variant
+     (probes ablated, Q4)** to show the moat is probe-independent, and the LLM-verifier
+     as a labelled negative control.
+4. **Coverage-matched FPR-on-residual (Q2):** let `C = 1 − ensemble_abstention_rate`;
+   force each continuous baseline to abstain on its lowest-confidence `(1−C)` fraction;
+   FPR = false-accepts of wrong answers, computed on each method's covered `C` fraction.
+5. **Scissor = FPR-on-residual vs c(M), STRATIFIED within a fixed difficulty Level
+   (Q4)** (e.g. Level-3 only) so the slope isn't confounded by difficulty drift.
+   Predicted: baselines RISE with scale, Carnot trajectory-verdict stays FLAT;
+   divergence ⇒ moat real.
 
-## Staged plan (cheapest decisive cut first — the session's discipline)
+## Staged plan (revised — two-point bracket, not a single weak point)
 
-- **Stage 0 (cheap, ~no GPU): necessary-condition cut.** On the cached single-model
-  residual (368 wrong answers), compute FPR-on-residual for the constraint ensemble
-  vs logprob (and SC where derivable). If the ensemble does NOT beat the cheap
-  baseline AT ALL even here → the moat is absent at this point → **STOP, report the
-  negative, do not run the sweep.** (Pending open-Q3: is a flat single weak point a
-  valid early-stop?) If it beats them →
-- **Stage 1 (GPU, multi-hour): the sweep.** Generate from ≥4 ladder points on the
-  headroom set; repeat the residual-FPR; test for WIDENING. Conductor PAUSED, runs
-  on internal GPU cuda:1 (eGPU drops under sustained load), checkpointed.
+- **Stage 0: two-point bracketing early-stop (Q3).** Run the metric on the **weakest**
+  model AND a **mid** model past the formatting phase transition — empirically the
+  smallest GGUF whose AST-parse abstention on its residual is LOW (candidate:
+  gemma-4-E4B-it ~4B; verify abstention, step up to a ~7–8B if it's still
+  syntactically shaky). The cached single-model residual is one free data point but is
+  NOT a valid stop on its own. **Kill the sweep only if the trajectory-verdict ensemble
+  shows no coverage-matched edge on the MID residual** (where syntax is clean, so a
+  flat gap is about logic, not formatting). Light GPU (small + mid models).
+- **Stage 1 (GPU, multi-hour): the full sweep.** ≥4 ladder points (mid → 26B → 31B →
+  35B) on the stratified headroom set, base-rate-matched `K`, coverage-matched FPR;
+  test for WIDENING within a fixed difficulty Level. Conductor PAUSED, internal GPU
+  cuda:1 (eGPU idle — drops under sustained load), checkpointed per model.
 
 ## Infra discipline (from this session)
 
