@@ -8485,3 +8485,4 @@ menu; exp3760 now explicitly builds on exp3718. Validated: YAML parses (11 tasks
 gated_on resolves to a bare-value field.
 
 Did NOT modify research-roadmap.yaml or scripts/research_conductor.py. Did NOT push.
+- 2026-06-03: KV260 opportunistic continuity audit -- confirm terminal state holds (SSH-reachable, accelerator overlay loadable). Documentation-only; the per-milestone hardware mandate was relaxed to opportunistic at .340 (GateMate/PolarFire stay opportunistic future-work). (✅ Complete) — honest_verdict=complete: kv260_terminal_state_holds_ssh_reachable_accelerator_loadable_opportunistic_audit; results/experiment_3762_kv260_opportunistic_continuity_audit.json
