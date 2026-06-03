@@ -8388,3 +8388,45 @@ Did NOT modify research-roadmap.yaml or scripts/research_conductor.py. Did NOT p
 - 2026-06-02: KV260 opportunistic continuity audit — confirm terminal state holds (SSH-reachable, accelerator overlay loadable). Documentation-only; the per-milestone hardware mandate was relaxed to opportunistic at .340. (✅ Complete) — honest_verdict=complete: kv260_terminal_state_holds_ssh_reachable_accelerator_loadable_opportunistic_audit; results/experiment_3741_kv260_opportunistic_continuity_audit.json
 
 - Generated operational retrospective for milestone 2026.06.342. No experiment commits found since activation.
+
+## 2026-06-02 — [outer-loop] Pre-staged roadmap .343 (Phase-3 Thesis A attempt 3: pin venv/CUDA)
+
+Planned milestone 2026.06.343 (11 tasks). Diagnosed the .342 outcome: the GENUINE Thesis-A
+kill-gate part-(a) was AGAIN infra-blocked, NOT a mechanism result. Root cause verified live:
+exp3734 ran 2 steps with `cuda:false` ON CPU (peak_vram 100MB) yet over-claimed
+"stable_so_far"; exp3735 hit `blocked_cuda`; exp3736 honestly recorded part-(a) UNTESTED.
+The experiment Run commands used bare `python` — `/usr/bin/python3` has NO torch, and ONLY
+`.venv/bin/python` has torch 2.11+cu128 with both RTX 3090s (cuda.is_available()==True,
+device_count==2, idle). The .342 training reached a torch with cuda False and silently dropped
+to CPU instead of blocking.
+
+.343 fix (headline deliverable): every GPU task's Run command AND precondition pins
+`.venv/bin/python`; GPU training tasks HARD-block on `cuda:false` (emit blocked_cuda + capture
+sys.executable/CUDA_VISIBLE_DEVICES/nvidia-smi) and NEVER train on CPU and report a stability
+signal. Then run the GENUINE bounded checkpointed training of the tiny EBT + matched AR
+(EBT-paper stability recipe), render the REAL part-(a) verdict (exp3747, supersedes the
+"untested" exp3736), and IF stable run the matched-COMPUTE comparison (kill-gate part b,
+exp3749/3750). Matched-COMPUTE never matched-params (the P0.1 lesson). cuda_used (bare bool)
+added as the load-bearing anti-CPU-drop field; exp3747 treats cuda_used==false as untested.
+
+Tasks: exp3743 archive/activate (codex), exp3744 corrigendum of the exp3734 CPU-drop (codex),
+exp3745 venv-fix + bounded train chunk1 (claude/opus), exp3746 resume chunk2 (claude/opus,
+gated steps>0), exp3747 real part-a verdict (codex), exp3748 generation smoke (codex+gpu, gated
+green_light_343==true), exp3749 matched-compute (codex+gpu, gated ebt_can_generate==true),
+exp3750 part-b verdict (codex), exp3751 FR-11 v16 stabilizer tracker resumed from v15 (codex,
+self-learning mandate), exp3752 KV260 opportunistic terminal audit (codex), exp3753 capstone
+(codex). INVARIANTS: paper_ready stays TRUE, frozen FoVer 0.9131 frozen, P0.1 settled-bounded
+(this tests GENERATION, a different mechanism).
+
+Routing: gemini still crashes GPU → codex cheap-default; the two open-ended training-debug
+tasks (exp3745/3746) are claude+opus (in-subprocess CUDA diagnosis + EBT divergence
+stabilization = open-ended judgment, operator directive 2026-06-02). Added 7 references to
+research-references.md (.343 additions: arXiv:2408.03314 FLOP-matched template, 2511.05562 NFE
+accounting, 2504.01005, 2505.14999 EORM baseline, 2603.12248, 2307.01668, 2510.08554).
+
+Validated: YAML parses (11 tasks); milestone == _expected_next_milestone('2026.06.342') =
+2026.06.343; exclusion-manifest lint 0 HARD (HARD on exp3748 fixed by adding its prior_failures
+block; 3 WARNINGs all override-present); overdue-priority lint exit 0; canonical-URL lint exit 0;
+gated_on upstreams resolve to bare-value fields.
+
+Did NOT modify research-roadmap.yaml or scripts/research_conductor.py. Did NOT push.

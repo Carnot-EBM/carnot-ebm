@@ -4,50 +4,51 @@
 # docs_audit_report — 2026-06-02
 
 ## TL;DR (stranger's 30-second take)
-I would close the tab at the "Results" section. While the hero section clearly explains the value proposition, the page quickly devolves into an impenetrable wall of internal metrics, defensive narratives about audits, suspiciously perfect 100% scores, and literal test artifact paths bleeding into the HTML.
+A stranger would close the tab within 15 seconds. The page mixes incredibly dense internal jargon and literal leaked `pytest` file paths with impossibly perfect benchmark numbers, making it look like a generated internal dev dashboard rather than a serious, trustworthy open-source tool.
 
 ## TOP 3 PROBLEMS
-1. Broken Templating & Injected Paths — Raw `pytest` temporary directory paths have corrupted the CSS media queries, Google Fonts imports, and result cards.
-2. Fabrication Signals — The "Results" section is filled with mathematically perfect 100% scores (e.g., 60/60 attacks, 1.0 TP rate, 2.0x speedup) without credibility anchors.
-3. Internal Jargon & Defensive Narrative — The "Recent progress" card reads like an internal commit message defending an AUROC drop ("Repinned from v2 0.9857...") rather than a feature pitch.
+1. Literal filepath leak in Results card (`@.tmp-pytest/pytest-of-ianblenke/...`)
+2. Fabrication signals with impossibly perfect numbers (1.0 TP rate, 60/60 attacks caught, "Zero false positives")
+3. Impenetrable acronyms and internal jargon ("FoVer", "PREM variance", "v2 0.9857")
 
 ## DETAILED FINDINGS
 ### Bloat
-- Results section — 12 cards — Cap at 6 cards
-- Blog section — 7 cards — Cap at 3 cards
+- `Recent progress` card in Hero — 65 words — Suggested cap: 30 words. It is overloaded with internal audit history and multi-seed methodology details.
+- `Results` intro paragraph — 41 words — Suggested cap: 20 words. Over-explains the provenance labeling ("infrastructure, hardware, ensemble, synthetic-pilot, and adversarial-audit rows").
+- `Why "Energy-Based"?` card — 70 words — Suggested cap: 40 words. Dives too deeply into physics, thermodynamic samplers, and FPGA Ising machines for a high-level intro.
 
 ### Internal jargon
-- HTML/CSS/Fonts — `@.tmp-pytest/pytest-of-ianblenke/...` — Literal temporary test artifact paths have corrupted the codebase tags and are entirely meaningless to an external reader.
-- Stats Bar (Recent Progress) — `FoVer (5-seed dual-condition; architecture-only 0.8947)` — A stranger has no context for what FoVer is or what these hyper-specific experimental conditions mean.
-- Results (Math reasoning) — `EstimationVerifier SVAMP AUC` — Mixes an internal class name with a benchmark without explaining what the verifier does.
-- Results (Cascade routing) — `HalluGuard v3` — A stranger doesn't know what this internal or unreleased project name refers to.
+- `Hero Stats & Recent Progress` — "FoVer", "5-seed dual-condition", "v2 0.9857" — Alienating; a stranger does not know your internal benchmark suites or version history.
+- `Features / TTC & PREM` — "Test-Time Compute (TTC) & PREM... Process-Reward Energy Model (PREM) variance" — Thick acronym soup with zero plain-English explanation.
+- `Features / Tool use` — "CCTU constrained micro-benchmark" — Unexplained external/internal benchmark.
+- `Results` — "HalluGuard v3", "PRM-BiasBench-style attacks" — Deep-cut references without context.
+- `Preprint` — "paper-v6" — Internal draft versioning exposed to the public.
 
 ### Per-milestone narrative
-- Stats Bar (Recent Progress) — `Repinned from v2 0.9857 after pre-submission adversarial audit; see Why We Report Two AUROCs Now.`
+- `Hero Stats` — "382 Completed milestones" is an internal Jira/project-management brag, not a user-facing value proposition.
+- `Hero / Recent progress` — "Repinned from v2 0.9857 after pre-submission adversarial audit; see Why We Report Two AUROCs Now" reads exactly like a copy-pasted pull request summary.
 
 ### Inconsistencies
-- Model in Quickstart (`Qwen/Qwen3.5-0.8B`) vs Model in Results (`Qwen3.6-35B-A3B`, which is a hallucinated/non-existent model version)
-- Installation package name (`pip install carnot-ebm`) vs Python import namespace (`from carnot.pipeline import VerifyRepairPipeline`)
+- Claiming "No model fine-tuning required" in the *How it works* section vs. reporting "Two-GPU parallel retrain... 2.0x speedup, identical losses" in the *Results* section. A stranger will wonder: "Wait, do I have to train this or not?"
+- The AUROC numbers are scattered and confusing: The Hero boasts `0.9131` (and `0.8947` architecture-only), while the Results section lists `0.91 AUROC (publication gate)` for safety, and `0.90 AUC` for math reasoning. It's unclear what the actual headline capability of the tool is.
 
 ### Missing essentials
-- Performance overhead (latency or compute time added per LLM call)
-- API integration instructions (how to actually pass closed-weight models like Claude/GPT as claimed in the copy)
+- **Who maintains it?** The footer mentions "Ian Blenke" and "Carnot Project", but there's no institutional, startup, or lab backing established up top to justify these massive claims.
+- **Why should I trust the numbers?** The page says "backed by a checked-in experiment artifact", but provides no direct links to reproducible runs for these specific (and wild) claims. 
 
 ### Fabrication signals
-- 100% bar + `Ising sampler live on silicon` (Results)
-- 100% bar + `2.0x speedup, identical losses` (Results)
-- 100% bar + `GSM8K extraction TP rate: 0.5 -> 1.0` (Results)
-- 100% bar + `k=5 ensemble catches 60/60 attacks` (Results)
-- `0.0pp accuracy delta` (Results)
+- `Results / Math extraction` — "GSM8K extraction TP rate: 0.5 → 1.0" — 100% extraction True Positive rate on wild LLM text is virtually impossible and sets off immediate BS detectors.
+- `Results / Adversarial audit` — "k=5 ensemble catches 60/60 attacks" — A perfect 60/60 score signals a toy dataset or overfitted test, not robust security.
+- `Blog / Dogfooding` — "Zero false positives" — Claiming 0 FPR on heuristic code/constraint analysis in the real world destroys credibility.
+- `Results / Code` — "164-problem HumanEval benchmark: 99.3% of wrong code flagged" — Suspiciously high for static/dynamic analysis of generated code.
 
 ## WHAT'S WORKING
-- The hero messaging and "Problem" section are excellent ("LLMs predict. They don't check." and "Carnot is the second pair of eyes").
-- The bento grid design for capabilities is visually appealing and highly scannable.
+- The `Quick Start` tabbed code block is excellent. It immediately grounds the abstract "energy-based verification" into three lines of highly readable Python code.
+- The core problem statement ("LLMs predict. They don't check.") is punchy, relatable, and instantly understandable.
 
 ## RECOMMENDED OPERATOR ACTIONS
-1. Fix the templating errors immediately: remove the `.tmp-pytest/...` paths from the Google Fonts `<link>`, CSS `@media` queries, and the "Live benchmark" card title.
-2. Rewrite the "Recent progress" stat card to remove defensive internal narratives ("Repinned from v2...") and opaque jargon ("FoVer 5-seed").
-3. Prune the Results section to the 4 most impressive, externally recognizable claims and remove the artificial 100% progress bars.
-4. Correct the hallucinated model name `Qwen3.6-35B-A3B` to an actual model version.
-5. Curate the blog section to 3 posts, balancing the "failure post-mortems" with positive technical content.
-6. Add a one-sentence clarification on performance overhead to the Quickstart or Features section.
+1. Immediately delete the raw `@.tmp-pytest/...` filepath string from the `Live benchmark` Results card.
+2. Purge the `Recent progress` card in the hero section of all internal versioning ("v2 0.9857") and statistical minutiae ("5-seed dual-condition"). 
+3. Remove or heavily caveat the perfect numbers (1.0 TP rate, 60/60, "Zero false positives")—replace them with more realistic bounds or explain the narrow scope of those tests.
+4. Delete the `TTC & PREM` bento card entirely, or rewrite it to explain what the feature *does* for the user rather than what acronyms it uses.
+5. Remove the "Completed milestones" stat from the hero and replace it with a user-centric metric (e.g., active users, supported models, or check types).
