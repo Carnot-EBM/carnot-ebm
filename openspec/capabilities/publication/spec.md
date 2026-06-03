@@ -313,6 +313,41 @@ without a critical flag, records `no_candidate_beats_frozen == true`, and
 asserts that `ops/north-star.md`, the FoVer CI reproducer, and the frozen
 `0.9131` publication headline remain unchanged.
 
+### REQ-PUBLISH-3770: Distribution Mirror Readiness Checklist
+
+The Exp 3770 distribution-mirror runner MUST audit only checked-in repository
+configuration and documentation before emitting
+`results/experiment_3770_distribution_mirror_publish_checklist.json`. It MUST
+record whether `.github/workflows/publish-pypi.yml` exists and is configured
+for PyPI OIDC trusted publishing, whether a HuggingFace primary mirror channel
+is named for the `Carnot-EBM` organization, and whether the IPFS
+content-addressed secondary channel has a documented CID and pinning plan.
+
+The artifact MUST use
+`inference_substrate="aggregation_from_upstream_artifacts (principle: a readiness audit over configs/docs, no live model)."`
+and MUST avoid GGUF/CUDA/live-model markers. It MUST emit an ordered
+`operator_publish_checklist` whose entries are marked
+`OPERATOR ACTION -- agent must not execute` and cover PyPI tag-and-push,
+HuggingFace upload, IPFS add, and durable pinning. The runner MUST set
+`agent_published_nothing == true` and MUST NOT execute `git tag`,
+`huggingface-cli upload`, `ipfs add`, or `gh release create`.
+
+The artifact MUST include the required fields `honest_verdict`,
+`inference_substrate`, `pypi_workflow_ready`, `hf_mirror_documented`,
+`ipfs_plan_documented`, `operator_publish_checklist`,
+`agent_published_nothing`, `random_seed`, `reproducibility_checksum`, and
+`duration_s`. Its terminal verdict MUST have the prefix
+`complete: distribution_mirror_readiness_audited_pypi_`.
+
+### SCENARIO-PUBLISH-3770: Operator-Only Distribution Checklist Emitted
+
+**Given** the PyPI OIDC workflow, HuggingFace mirror references, and IPFS CID
+plan are present in checked-in repository files
+**When** the Exp 3770 runner audits distribution readiness
+**Then** it writes the required JSON artifact with all three readiness booleans
+true, emits only operator-action publication steps, asserts that the agent
+published nothing, and passes adversarial verification without a critical flag.
+
 ### REQ-PUBLISH-007: High-Severity Integrity Fixes (ISSUE-6 through ISSUE-10)
 
 The paper-v5 high-severity remediation script MUST verify that

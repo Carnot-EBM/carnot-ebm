@@ -1,0 +1,143 @@
+{
+  "agent_published_nothing": true,
+  "commands_not_executed": [
+    "git tag",
+    "huggingface-cli upload",
+    "ipfs add",
+    "gh release create"
+  ],
+  "duration_s": 0.000896,
+  "experiment": 3770,
+  "field_principles": {
+    "agent_published_nothing": "BARE bool, MUST be true -- capability does not imply authorization.",
+    "duration_s": "Wall-clock plausibility floor.",
+    "hf_mirror_documented": "BARE bool -- is the HuggingFace primary mirror channel named/ready.",
+    "honest_verdict": "Terminal prefix; the readiness-audit outcome.",
+    "inference_substrate": "Readiness audit over configs/docs, no live model.",
+    "ipfs_plan_documented": "BARE bool -- is the IPFS content-addressed secondary channel planned.",
+    "operator_publish_checklist": "Ordered OPERATOR-ONLY publish steps; the agent prepares but never executes.",
+    "pypi_workflow_ready": "BARE bool -- is the OIDC trusted-publishing workflow present and configured.",
+    "random_seed": "Determinism precondition.",
+    "reproducibility_checksum": "Content hash catches drift."
+  },
+  "hf_mirror_documented": true,
+  "honest_verdict": "complete: distribution_mirror_readiness_audited_pypi_true_hf_true_ipfs_true_operator_checklist_emitted_agent_published_nothing",
+  "inference_substrate": "aggregation_from_upstream_artifacts (principle: a readiness audit over configs/docs, no live model).",
+  "ipfs_plan_documented": true,
+  "operator_publish_checklist": [
+    {
+      "action": "create the release tag that triggers trusted publishing",
+      "channel": "pypi",
+      "command": "git tag v<version> -m \"Release v<version>\"",
+      "operator_only": "OPERATOR ACTION -- agent must not execute"
+    },
+    {
+      "action": "push the tag so GitHub Actions publishes via PyPI OIDC",
+      "channel": "pypi",
+      "command": "git push origin v<version>",
+      "operator_only": "OPERATOR ACTION -- agent must not execute"
+    },
+    {
+      "action": "upload the primary mirror artifact into the Carnot-EBM org",
+      "channel": "huggingface",
+      "command": "huggingface-cli upload Carnot-EBM/<repo> <artifact_path> --repo-type model",
+      "operator_only": "OPERATOR ACTION -- agent must not execute"
+    },
+    {
+      "action": "create and locally pin the content-addressed secondary mirror",
+      "channel": "ipfs",
+      "command": "CID=$(ipfs add -r -Q --pin <artifact_path>)",
+      "operator_only": "OPERATOR ACTION -- agent must not execute"
+    },
+    {
+      "action": "durably pin the CID with an operator-controlled pinning service",
+      "channel": "ipfs",
+      "command": "w3 space add $CID  # or pin the CID via Storj/Filebase",
+      "operator_only": "OPERATOR ACTION -- agent must not execute"
+    },
+    {
+      "action": "record the CID beside the HF mirror and in the IPFS manifest",
+      "channel": "records",
+      "command": "edit docs/ipfs_mirror_table.md and results/ipfs_mirrors.json with the new CID",
+      "operator_only": "OPERATOR ACTION -- agent must not execute"
+    }
+  ],
+  "pypi_workflow_ready": true,
+  "random_seed": 3770,
+  "readiness_audit": {
+    "huggingface": {
+      "checks": {
+        "model hub url": true,
+        "org named": true,
+        "repository named": true
+      },
+      "missing": [],
+      "primary_channel": "https://huggingface.co/Carnot-EBM",
+      "ready": true,
+      "repositories": [
+        "Carnot-EBM/carnot-constraint-propagation-arithmetic",
+        "Carnot-EBM/carnot-constraint-propagation-code",
+        "Carnot-EBM/carnot-constraint-propagation-logic",
+        "Carnot-EBM/carnot-ebm",
+        "Carnot-EBM/carnot-estimation-verifier-v1",
+        "Carnot-EBM/carnot-formal-claim-verifier-v1",
+        "Carnot-EBM/carnot-framework",
+        "Carnot-EBM/carnot-guided-decoding-adapter",
+        "Carnot-EBM/carnot-ising-constraint-injector-v2",
+        "Carnot-EBM/carnot-ising-sampler-v1",
+        "Carnot-EBM/carnot-jepa-predictor-v2",
+        "Carnot-EBM/carnot-joint-constraint-v1",
+        "Carnot-EBM/carnot-kan-tier0b-v3",
+        "Carnot-EBM/carnot-step-jepa-probe-v1",
+        "Carnot-EBM/carnot-symbolic-kan-v2",
+        "Carnot-EBM/carnot-thinkprm-v3",
+        "Carnot-EBM/carnot-vjepa-v2",
+        "Carnot-EBM/hallucination-detector",
+        "Carnot-EBM/per-token-ebm-bonsai-17b-nothink",
+        "Carnot-EBM/per-token-ebm-gemma4-e2b-it-nothink",
+        "Carnot-EBM/per-token-ebm-gemma4-e2b-nothink",
+        "Carnot-EBM/per-token-ebm-gemma4-e4b-it-nothink",
+        "Carnot-EBM/per-token-ebm-gemma4-e4b-nothink",
+        "Carnot-EBM/per-token-ebm-gptoss-20b-nothink",
+        "Carnot-EBM/per-token-ebm-lfm25-12b-nothink",
+        "Carnot-EBM/per-token-ebm-lfm25-350m-nothink",
+        "Carnot-EBM/per-token-ebm-qwen3-06b",
+        "Carnot-EBM/per-token-ebm-qwen35-08b-nothink",
+        "Carnot-EBM/per-token-ebm-qwen35-08b-think",
+        "Carnot-EBM/per-token-ebm-qwen35-27b-nothink",
+        "Carnot-EBM/per-token-ebm-qwen35-2b-nothink",
+        "Carnot-EBM/per-token-ebm-qwen35-35b-nothink",
+        "Carnot-EBM/per-token-ebm-qwen35-4b-nothink",
+        "Carnot-EBM/per-token-ebm-qwen35-9b-nothink",
+        "Carnot-EBM/token-activations",
+        "Carnot-EBM/token-activations-qwen35",
+        "Carnot-EBM/wopr-games"
+      ]
+    },
+    "ipfs": {
+      "checks": {
+        "cid documented": true,
+        "ipfs add plan": true,
+        "pinning plan": true
+      },
+      "cid_count": 34,
+      "manifest_entry_count": 34,
+      "missing": [],
+      "ready": true
+    },
+    "pypi": {
+      "checks": {
+        "id-token: write": true,
+        "pypa trusted publisher action": true,
+        "pypi environment": true,
+        "tag trigger v*": true,
+        "workflow_present": true
+      },
+      "missing": [],
+      "path": ".github/workflows/publish-pypi.yml",
+      "ready": true
+    }
+  },
+  "reproducibility_checksum": "7e9d503f90782a77e03187a053b1ec780e320036a598c159590cfd02850a24eb",
+  "schema": "carnot.distribution_mirror_publish_checklist.v1"
+}
