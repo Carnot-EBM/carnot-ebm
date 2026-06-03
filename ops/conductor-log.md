@@ -7654,3 +7654,5 @@ ERROR: {
 | 2026-06-03 02:35 UTC | CLEAN corrigendum of exp3734 + exp3736: the .342 p | SKIP | Pre-tests failing, self-heal failed: 1 failed, 104 passed in 4.33s |
 | 2026-06-03 02:37 UTC | THE FIX + bounded GPU train chunk 1: pin .venv/bin | SKIP | Pre-tests failing, self-heal failed: 1 failed, 104 passed in 4.04s |
 | 2026-06-03 02:39 UTC | THE FIX + bounded GPU train chunk 1: pin .venv/bin | SKIP | Pre-tests failing, self-heal failed: 1 failed, 80 passed in 3.32s |
+| 2026-06-03 02:42 UTC | THE FIX + bounded GPU train chunk 1: pin .venv/bin | SKIP | Pre-tests failing, self-heal failed: 1 failed, 80 passed in 3.44s |
+| 2026-06-03 02:44 UTC | RESUME bounded checkpointed GPU training (chunk 2) | GATE_BLOCK | Pre-emptive skip: upstream retired (exp3745-venv-fix-and-bounded-train-chunk1) |
