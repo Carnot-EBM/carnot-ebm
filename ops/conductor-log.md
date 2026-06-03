@@ -7704,3 +7704,4 @@ ERROR: {
 | 2026-06-03 13:27 UTC | Ship a DEPLOYABLE certified abstention operating p | GATE_BLOCK | Pre-emptive skip: upstream retired (exp3756-g2-mechanical-reproducer) |
 | 2026-06-03 13:27 UTC | FR-11 continuous self-learning v17 -- Tier-1 ONLIN | SKIP | Pre-tests failing, self-heal failed: 1 failed, 80 passed in 3.97s |
 | 2026-06-03 13:29 UTC | Ship a DEPLOYABLE certified abstention operating p | GATE_BLOCK | Pre-emptive skip: upstream retired (exp3756-g2-mechanical-reproducer) |
+| 2026-06-03 13:30 UTC | FR-11 continuous self-learning v17 -- Tier-1 ONLIN | SKIP | Pre-tests failing, self-heal failed: 1 failed, 80 passed in 3.38s |
