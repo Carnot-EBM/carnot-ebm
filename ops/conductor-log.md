@@ -7681,3 +7681,4 @@ ERROR: {
 | 2026-06-03 03:23 UTC | Capstone .343 — aggregate the Thesis-A attempt-3 o | SKIP | Pre-tests failing, self-heal failed: 1 failed, 80 passed in 4.12s |
 | 2026-06-03 12:41 UTC | Plan milestone 2026.06.344 | OK | 11 tasks proposed |
 | 2026-06-03 12:43 UTC | Milestone 2026.06.344 activated | OK | 11 tasks queued |
+| 2026-06-03 12:45 UTC | Archive milestone .343 HONESTLY (the in-loop Thesi | SKIP | Pre-tests failing, self-heal failed: 1 failed, 80 passed in 3.59s |
