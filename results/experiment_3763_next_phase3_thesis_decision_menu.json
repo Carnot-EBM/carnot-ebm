@@ -1,0 +1,79 @@
+{
+  "adversarial_verify_report": {
+    "artifact": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_3763_next_phase3_thesis_decision_menu.json",
+    "exp_id": null,
+    "flag_count": 0,
+    "flags": [],
+    "honest_verdict": "complete: next_phase3_thesis_menu_ranked_top_edlm_residual_corrector_supersedes_",
+    "loaded": true,
+    "max_severity": -1,
+    "title": ""
+  },
+  "cheapest_kill_gate_per_route": {
+    "EDLM (arXiv:2410.21357)": "Train a tiny EDLM diffusion base + Carnot corrector head; measure if it outperforms the tiny AR EBT baseline on perplexity.",
+    "Energy-verifier-as-test-time-reweighter (T3RL arXiv:2603.02203)": "Apply the banked verifier to reweight standard SC votes on a hard evaluation split; measure if performance exceeds pure SC.",
+    "Latent-token diffusion reasoning (arXiv:2602.03769)": "Train a latent diffusion model on a toy reasoning task and apply the energy ensemble; bound coherence delta vs AR.",
+    "ParaRNN (arXiv:2510.21450)": "Swap the transformer substrate for ParaRNN on the tiny EBT baseline; measure perplexity matching."
+  },
+  "duration_s": 0.1,
+  "each_route_sidesteps_both_negatives": {
+    "EDLM (arXiv:2410.21357)": "energy as a RESIDUAL CORRECTOR over a discrete-diffusion base (NOT the sole generator), avoiding pure generation, while using ensemble as grader, avoiding pure selection",
+    "Energy-verifier-as-test-time-reweighter (T3RL arXiv:2603.02203)": "adds EXTERNAL signal to self-consistency, avoiding the pure selection root cause where SC is optimal without external signal.",
+    "Latent-token diffusion reasoning (arXiv:2602.03769)": "grades latent-token coherence rather than pure text generation or test-time selection of existing text.",
+    "ParaRNN (arXiv:2510.21450)": "changes the architectural substrate (recurrent instead of transformer) rather than the energy mode."
+  },
+  "field_principles": {
+    "cheapest_kill_gate_per_route": "The smallest experiment that would bound each route cheaply -- so a seeded route gets a kill-gate, not an open-ended scale commitment (the Phase-Validation discipline).",
+    "duration_s": "Wall-clock plausibility floor.",
+    "each_route_sidesteps_both_negatives": "For each route, the explicit reason it is NOT a re-grind of the bounded selection OR generation routes -- prevents proposing a doomed re-test.",
+    "honest_verdict": "Terminal prefix; the menu-production outcome.",
+    "inference_substrate": "aggregation_from_upstream_artifacts (principle: a literature/menu synthesis, no live model).",
+    "loop_will_not_self_seed": "BARE bool, true -- explicitly records that this is a menu for HUMAN seeding, not a route the loop commits to (the standing finding).",
+    "random_seed": "Determinism precondition.",
+    "ranked_thesis_menu": "The ordered list of routes with anchor/why-sidesteps/kill-gate/risk -- the decision surface for the operator; the core deliverable.",
+    "reproducibility_checksum": "Content hash catches drift.",
+    "supersedes_340_menu": "BARE bool, true -- records that this menu reconciled + superseded the .340 exp3722 menu (post-Thesis-A-bound), rather than emitting an unlinked parallel menu (anti-churn).",
+    "top_recommended_route": "The single highest-ranked route (expected EDLM residual-corrector) with its one-line rationale -- a clear recommendation the operator can accept or override."
+  },
+  "honest_verdict": "complete: next_phase3_thesis_menu_ranked_top_edlm_residual_corrector_supersedes_340_menu_all_routes_sidestep_both_negatives_for_operator_seeding",
+  "inference_substrate": "aggregation_from_upstream_artifacts (principle: a literature/menu synthesis, no live model).",
+  "loop_will_not_self_seed": true,
+  "random_seed": 3763,
+  "ranked_thesis_menu": [
+    {
+      "anchor": "arXiv:2410.21357",
+      "kill_gate": "Train a tiny EDLM diffusion base + Carnot corrector head; measure if it outperforms the tiny AR EBT baseline on perplexity.",
+      "matched_compute_claim": "reaches AR perplexity at matched compute on discrete text",
+      "risk": "Requires adapting discrete-diffusion training infrastructure, which may have unseen instabilities.",
+      "route": "EDLM (arXiv:2410.21357)",
+      "why_sidesteps_both_negatives": "energy as a RESIDUAL CORRECTOR over a discrete-diffusion base (NOT the sole generator), avoiding pure generation, while using ensemble as grader, avoiding pure selection"
+    },
+    {
+      "anchor": "arXiv:2602.03769",
+      "kill_gate": "Train a latent diffusion model on a toy reasoning task and apply the energy ensemble; bound coherence delta vs AR.",
+      "matched_compute_claim": "non-AR latent reasoning matching AR at comparable compute",
+      "risk": "Latent representations may not map smoothly to discrete energy-based abstractions.",
+      "route": "Latent-token diffusion reasoning (arXiv:2602.03769)",
+      "why_sidesteps_both_negatives": "grades latent-token coherence rather than pure text generation or test-time selection of existing text."
+    },
+    {
+      "anchor": "arXiv:2510.21450",
+      "kill_gate": "Swap the transformer substrate for ParaRNN on the tiny EBT baseline; measure perplexity matching.",
+      "matched_compute_claim": "parallelizable nonlinear-recurrent substrate at Transformer-comparable perplexity",
+      "risk": "High substrate risk; may not support the necessary capacity scaling without custom kernels.",
+      "route": "ParaRNN (arXiv:2510.21450)",
+      "why_sidesteps_both_negatives": "changes the architectural substrate (recurrent instead of transformer) rather than the energy mode."
+    },
+    {
+      "anchor": "arXiv:2603.02203",
+      "kill_gate": "Apply the banked verifier to reweight standard SC votes on a hard evaluation split; measure if performance exceeds pure SC.",
+      "matched_compute_claim": "verifier as an EXTERNAL-evidence reweighter of self-consistency votes",
+      "risk": "Relies entirely on the strength of the external verifier, which may saturate quickly.",
+      "route": "Energy-verifier-as-test-time-reweighter (T3RL arXiv:2603.02203)",
+      "why_sidesteps_both_negatives": "adds EXTERNAL signal to self-consistency, avoiding the pure selection root cause where SC is optimal without external signal."
+    }
+  ],
+  "reproducibility_checksum": "d6fe3b6c9346420accd0f8a7fda9b5dd5f64a99fce6c29d8ee7a0c7a76dbbb7f",
+  "supersedes_340_menu": true,
+  "top_recommended_route": "EDLM (arXiv:2410.21357): energy as a RESIDUAL CORRECTOR over a discrete-diffusion base"
+}
