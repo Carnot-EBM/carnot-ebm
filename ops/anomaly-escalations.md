@@ -1,0 +1,53 @@
+# Anomaly Escalations — human-triage queue (frame-violating anomalies the loop did NOT auto-reconcile)
+
+Per Deep Think P3 / Anomaly-Escalation (scripts/anomaly_escalation.py). Each entry is a result the loop would normally silently reconcile as a dead-end, but which trips a frame-violating signal (infra false-negative / fabrication flag / invariant regression). **Human triage: dead-end or breadcrumb?**
+
+## experiment_3680_dependency_aware_dual_condition_integrity.json
+- Flagged a FRAME-VIOLATING ANOMALY (NOT auto-reconciled — human triage: dead-end or breadcrumb?)
+  - INVARIANT regression: production_auroc_dependency_aware_vs_frozen_headline_delta=0.012228 drifted from frozen 0.9131
+- artifact: results/experiment_3680_dependency_aware_dual_condition_integrity.json
+
+## experiment_3681_g2_reproducer_prep_operator_refreeze_package.json
+- Flagged a FRAME-VIOLATING ANOMALY (NOT auto-reconciled — human triage: dead-end or breadcrumb?)
+  - CRITICAL adversarial flag ['DURATION_TOO_SHORT'] on a non-negative verdict
+- artifact: results/experiment_3681_g2_reproducer_prep_operator_refreeze_package.json
+
+## experiment_3728_bounded_checkpointed_train_ebt_and_ar.json
+- Flagged a FRAME-VIOLATING ANOMALY (NOT auto-reconciled — human triage: dead-end or breadcrumb?)
+  - method may not have genuinely run (cumulative_steps_trained=0, a precondition was False (method may have been infra-blocked)) — a 'bounded' verdict here could be an infra false-negative, not a real result (cf. Thesis-A exp3728)
+- artifact: results/experiment_3728_bounded_checkpointed_train_ebt_and_ar.json
+
+## experiment_3735_bounded_train_chunk2_resume.json
+- Flagged a FRAME-VIOLATING ANOMALY (NOT auto-reconciled — human triage: dead-end or breadcrumb?)
+  - method may not have genuinely run (cumulative_steps_trained=0, a precondition was False (method may have been infra-blocked)) — a 'bounded' verdict here could be an infra false-negative, not a real result (cf. Thesis-A exp3728)
+- artifact: results/experiment_3735_bounded_train_chunk2_resume.json
+
+## experiment_2090_crane_humaneval.json
+- Flagged a FRAME-VIOLATING ANOMALY (NOT auto-reconciled — human triage: dead-end or breadcrumb?)
+  - CRITICAL adversarial flag ['DURATION_TOO_SHORT'] on a non-negative verdict
+- artifact: results/experiment_2090_crane_humaneval.json
+
+## experiment_911_drift_probe_tier0i.json
+- Flagged a FRAME-VIOLATING ANOMALY (NOT auto-reconciled — human triage: dead-end or breadcrumb?)
+  - CRITICAL adversarial flag ['DURATION_TOO_SHORT'] on a non-negative verdict
+- artifact: results/experiment_911_drift_probe_tier0i.json
+
+## experiment_2481_capstone_v239.json
+- Flagged a FRAME-VIOLATING ANOMALY (NOT auto-reconciled — human triage: dead-end or breadcrumb?)
+  - method may not have genuinely run (a precondition was False (method may have been infra-blocked)) — a 'bounded' verdict here could be an infra false-negative, not a real result (cf. Thesis-A exp3728)
+- artifact: results/experiment_2481_capstone_v239.json
+
+## experiment_1877_artifact_contract_normalization.json
+- Flagged a FRAME-VIOLATING ANOMALY (NOT auto-reconciled — human triage: dead-end or breadcrumb?)
+  - CRITICAL adversarial flag ['DURATION_TOO_SHORT'] on a non-negative verdict
+- artifact: results/experiment_1877_artifact_contract_normalization.json
+
+## experiment_2101_interwhen.json
+- Flagged a FRAME-VIOLATING ANOMALY (NOT auto-reconciled — human triage: dead-end or breadcrumb?)
+  - CRITICAL adversarial flag(s) ['DURATION_TOO_SHORT'] on a negative verdict (possible infra/fabrication artifact masquerading as a finding)
+- artifact: results/experiment_2101_interwhen.json
+
+## experiment_2110_casal_pinet.json
+- Flagged a FRAME-VIOLATING ANOMALY (NOT auto-reconciled — human triage: dead-end or breadcrumb?)
+  - CRITICAL adversarial flag ['GATE_PASSED_WITHOUT_DATA'] on a non-negative verdict
+- artifact: results/experiment_2110_casal_pinet.json
