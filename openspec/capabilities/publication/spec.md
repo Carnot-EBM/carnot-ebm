@@ -1921,6 +1921,34 @@ numerical value
 retracted-number document fails, and the Exp 3716 artifact records that the
 current paper targets are clean and G3 is now mechanically enforced.
 
+### REQ-PUBLISH-3768: Paper-v6 Narrowing Lint 12th Retraction Wiring
+
+The existing `scripts/paper_v6_narrowing_lint.py` MUST be extended, not
+regenerated, to reject the 12th Paper-v6 retraction: any live claim that
+energy-as-generator works or scales, that an EBT generates tokens or text, or
+that energy-as-generator is viable as a generator at the tested scale. The lint
+MUST continue to scan `docs/arxiv-paper/main.tex`, `docs/technical-report.md`,
+and tracked `results/paper_v6_*.json` artifacts when present, MUST preserve
+allow-list behavior for rule-defining files and the Exp 3768 artifact, and MUST
+remain non-mutating for operator-curated paper docs.
+
+`.pre-commit-config.yaml` MUST include an additive local
+`paper-v6-narrowing-lint` hook that runs the existing lint over the paper-v6
+targets. Exp 3768 MUST write
+`results/experiment_3768_g3_narrowing_lint.json` with bare fields for the G3
+mechanization verdict, inference substrate, 12th-retraction coverage,
+violations found in the current tree, hook wiring, real-behavior test evidence,
+random seed, reproducibility checksum, and duration.
+
+### SCENARIO-PUBLISH-3768: Energy-as-Generator Retraction Is Guarded
+
+**Given** clean Paper-v6 prose and prose that says energy-as-generator works at
+scale
+**When** the Paper-v6 narrowing lint scans each document
+**Then** the clean prose passes, the energy-as-generator prose fails, the
+pre-commit hook is wired additively, and the Exp 3768 artifact reports the
+number of current target files and violations without editing paper docs.
+
 ### REQ-PUBLISH-3717: G4 Full Headline Provenance Audit
 
 The Exp 3717 G4 audit runner MUST enumerate every headline and north-star
