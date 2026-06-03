@@ -7719,3 +7719,4 @@ ERROR: {
 | 2026-06-03 16:42 UTC | G3 narrowing lint (re-do the SKIPPED .344 exp3757) | OK | 91 passed in 4.50s |
 | 2026-06-03 17:01 UTC | Phase-1 SHIP gate (re-do the SKIPPED .344 exp3758) | OK | 86 passed in 14.76s |
 | 2026-06-03 17:14 UTC | Distribution-mirror readiness audit + OPERATOR-ONL | OK | 86 passed in 4.71s |
+| 2026-06-03 17:24 UTC | Ship a DEPLOYABLE certified abstention operating p | OK | 88 passed in 3.67s |
