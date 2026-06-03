@@ -7662,3 +7662,5 @@ ERROR: {
 | 2026-06-03 02:46 UTC | REAL Thesis-A kill-gate part-(a) VERDICT over the  | SKIP | Pre-tests failing, self-heal failed: 1 failed, 80 passed in 3.71s |
 | 2026-06-03 02:48 UTC | REAL Thesis-A kill-gate part-(a) VERDICT over the  | SKIP | Pre-tests failing, self-heal failed: 1 failed, 80 passed in 3.70s |
 | 2026-06-03 02:50 UTC | EBT energy-descent GENERATION smoke on held-out GS | GATE_BLOCK | Pre-emptive skip: upstream retired (exp3747-real-kill-gate-part-a-verdict) |
+| 2026-06-03 02:51 UTC | THE THESIS TEST (kill-gate part b): matched-COMPUT | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp3748-ebt-generation-smoke.ebt_can_gener |
+| 2026-06-03 02:53 UTC | EBT energy-descent GENERATION smoke on held-out GS | GATE_BLOCK | Pre-emptive skip: upstream retired (exp3747-real-kill-gate-part-a-verdict) |
