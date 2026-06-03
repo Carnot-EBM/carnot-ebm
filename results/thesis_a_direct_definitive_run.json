@@ -1,0 +1,141 @@
+{
+  "experiment": "thesis_a_direct_definitive_run",
+  "honest_verdict": "complete: thesis_a_part_a_PASS_ebt_trained_stably_800_steps_and_LEARNED_heldout_margin_0.723_vs_untrained_0.084_part_b_decoder_scale_deferred",
+  "inference_substrate": "live_llm_inference",
+  "operator_authorized": "2026-06-03 direct definitive run on recovered dual-3090 rig",
+  "scope_note": "Decides kill-gate part-(a): EBT CD training stability + held-out energy-landscape learning on real GSM8K. Does NOT decide part-(b) matched-compute reasoning accuracy (EBT outputs embeddings; faithful generation-vs-AR needs an embedding->token decoder + larger scale = next milestone). No reasoning-accuracy claim is made here.",
+  "device": "cuda:1",
+  "cuda_device_count": 2,
+  "ebt_param_count": 37954560,
+  "ar_param_count": 28847874,
+  "cumulative_steps_trained": 800,
+  "nan_or_divergence_events": false,
+  "ebt_trained_stably": true,
+  "ebt_learned_heldout": true,
+  "ar_learned_heldout": true,
+  "ebt_heldout_margin_final": 0.7233336567878723,
+  "ebt_heldout_margin_untrained_baseline": 0.0842966791242361,
+  "ar_heldout_ce_init": 5.70572429895401,
+  "ar_heldout_ce_final": 1.5516911447048187,
+  "eval_trace": [
+    {
+      "step": 100,
+      "ebt_heldout_margin": 0.0095939040184021,
+      "ar_heldout_ce": 2.42165806889534
+    },
+    {
+      "step": 200,
+      "ebt_heldout_margin": 0.09227901697158813,
+      "ar_heldout_ce": 2.271132081747055
+    },
+    {
+      "step": 300,
+      "ebt_heldout_margin": 0.219990074634552,
+      "ar_heldout_ce": 2.0881857126951218
+    },
+    {
+      "step": 400,
+      "ebt_heldout_margin": 0.5724760293960571,
+      "ar_heldout_ce": 1.9141329675912857
+    },
+    {
+      "step": 500,
+      "ebt_heldout_margin": 1.8169824182987213,
+      "ar_heldout_ce": 1.743412733078003
+    },
+    {
+      "step": 600,
+      "ebt_heldout_margin": 1.0748051404953003,
+      "ar_heldout_ce": 1.6583516746759415
+    },
+    {
+      "step": 700,
+      "ebt_heldout_margin": 0.6632305383682251,
+      "ar_heldout_ce": 1.6106515526771545
+    },
+    {
+      "step": 800,
+      "ebt_heldout_margin": 0.7381435036659241,
+      "ar_heldout_ce": 1.5516911447048187
+    }
+  ],
+  "ebt_loss_curve_sampled": [
+    0.1611054241657257,
+    -4.452927589416504,
+    -4.955030918121338,
+    -4.997134685516357,
+    -4.995279788970947,
+    -4.998626708984375,
+    -4.999966144561768,
+    -4.954508304595947,
+    -4.994637489318848,
+    -4.988840103149414,
+    -4.988264560699463,
+    -4.997636318206787,
+    -4.988097190856934,
+    -4.9565534591674805,
+    -4.985128879547119,
+    -4.99147367477417,
+    -4.9665069580078125,
+    -4.999296188354492,
+    -4.947554588317871,
+    -4.995753288269043,
+    -4.994857311248779,
+    -4.99380350112915,
+    -4.997474193572998,
+    -4.940463542938232,
+    -4.999844551086426,
+    -4.995660305023193,
+    -4.999034404754639,
+    -4.994773864746094,
+    -4.996078968048096,
+    -4.999906063079834,
+    -4.998349666595459
+  ],
+  "ar_loss_curve_sampled": [
+    5.708766937255859,
+    2.9013381004333496,
+    2.544246196746826,
+    2.4473564624786377,
+    2.506171226501465,
+    2.40267276763916,
+    2.2860915660858154,
+    2.414541006088257,
+    2.40053391456604,
+    2.4561328887939453,
+    2.2391228675842285,
+    2.0103769302368164,
+    2.146299362182617,
+    2.2562522888183594,
+    2.031801462173462,
+    1.9592061042785645,
+    2.106635093688965,
+    1.8121416568756104,
+    1.8586037158966064,
+    1.945200800895691,
+    2.0131702423095703,
+    1.9080840349197388,
+    1.7046105861663818,
+    1.8225120306015015,
+    1.7012726068496704,
+    1.812528133392334,
+    1.7457373142242432,
+    1.633039951324463,
+    1.5809874534606934,
+    1.6264355182647705,
+    1.804416298866272
+  ],
+  "grad_norm_max": 204.21331787109375,
+  "grad_norm_mean": 3.134373532906175,
+  "peak_vram_mb": 2537,
+  "stabilizers_applied": "replay_buffer, langevin_noise, random_alpha, random_descent_steps, grad_clip, kl_reg",
+  "model_specs": {
+    "ebt": "tiny_ebt_from_scratch_38M_byte",
+    "ar": "tiny_ar_from_scratch_matched_byte",
+    "from_scratch": true,
+    "not_a_pretrained_llm": true
+  },
+  "random_seed": 30603,
+  "reproducibility_checksum": "4edca79e7c36dc478e91d0393b14fed2de7628f7c0aa7ac83ac083185011cef2",
+  "duration_s": 506.97
+}
