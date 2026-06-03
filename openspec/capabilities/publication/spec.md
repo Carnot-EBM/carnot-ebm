@@ -2021,6 +2021,60 @@ sub-results recorded as `not_measured`, flagged or live-critical upstream
 artifacts excluded from citations, and the frozen FoVer headline left
 unchanged.
 
+### REQ-PUBLISH-3767: G2 Local Mechanical FoVer Headline Reproducer
+
+The Exp 3767 local ship-gate runner MUST provide a single committed script at
+`scripts/experiment_3767_g2_mechanical_reproducer.py` that a Phase-1 integrator
+can run with `.venv/bin/python` to recompute the frozen FoVer 0.9131 headline
+using the existing `scripts/reproduce_fover_headline.py` path.
+
+Before scoring, the runner MUST verify that it is running under the repository
+`.venv/bin/python`, that `yaml`, `numpy`, and `sklearn` import, that the local
+FoVer labeled corpus exists at `data/fover_corpus.jsonl` with enough rows for
+the 1,000-example protocol, and that the four scoring verifier paths for
+`fr11_session_memory`, `tier0r_curry_howard`, `tier0s_arithmetic_gap`, and
+`tier0u_logical_consistency` import. If any precondition is missing, it MUST
+write a blocked artifact with a terminal `blocked_<resource>` verdict, null
+reproduction metrics, and `auroc_in_ci95 == false`; it MUST NOT infer or
+fabricate AUROC values.
+
+When preconditions pass, the runner MUST call the existing FoVer headline
+reproducer to score the four-verifier ensemble against the cached FoVer
+candidate corpus for seeds `[42, 137, 271, 314, 1729]` under the dual-condition
+protocol. It MUST NOT load or invoke a live LLM. It MUST compute the
+condition-A mean AUROC and a seed-level 95% CI, emit the five per-seed AUROCs,
+and set the bare downstream gate `auroc_in_ci95` to true only when the
+reproduced mean falls inside the frozen `[0.9027, 0.9235]` CI. A reproduced
+mean outside that CI MUST be recorded as a discrepancy with
+`auroc_in_ci95 == false`; it MUST NOT move or re-version the frozen headline.
+
+The runner MUST write
+`results/experiment_3767_g2_mechanical_reproducer.json` with `honest_verdict`,
+`inference_substrate="verifier_ensemble_against_cached_candidates"`,
+`reproduced_auroc_mean`, `reproduced_auroc_ci95`, `auroc_in_ci95`,
+`per_seed_aurocs`, `frozen_headline_unchanged`, `preconditions_checked`,
+`model_specs`, `random_seeds_used`, `reproducibility_checksum`, and
+`duration_s`.
+
+### SCENARIO-PUBLISH-3767: Local Reproducer Confirms Frozen Headline
+
+**Given** the repository `.venv/bin/python`, FoVer corpus, required Python
+dependencies, and four verifier scoring paths are available
+**When** `scripts/experiment_3767_g2_mechanical_reproducer.py` runs
+**Then** it writes
+`results/experiment_3767_g2_mechanical_reproducer.json` with a `complete:`
+verdict, `inference_substrate == "verifier_ensemble_against_cached_candidates"`,
+five per-seed AUROCs, `auroc_in_ci95 == true`, and
+`frozen_headline_unchanged == true`.
+
+### SCENARIO-PUBLISH-3767B: Missing Local Resource Blocks Without Fabrication
+
+**Given** the interpreter, corpus, dependencies, or verifier imports are missing
+**When** the Exp 3767 local reproducer starts
+**Then** it writes the same artifact path with a terminal `blocked_<resource>`
+verdict, `reproduced_auroc_mean == null`, `per_seed_aurocs == []`, and
+`auroc_in_ci95 == false`.
+
 
 ## Implementation Status
 
@@ -2063,6 +2117,7 @@ unchanged.
 | REQ-PUBLISH-039 | Implemented | Exp 3488 FoVer G2 clean-room regression verify + lowest-friction external ask |
 | REQ-PUBLISH-040 | Proposed | Exp 3681 G2 reproducer prep for operator re-freeze |
 | REQ-PUBLISH-041 | Proposed | Exp 3689 v337 dependency-aware capstone and G-gate |
+| REQ-PUBLISH-3767 | Planned | Exp 3767 G2 local mechanical FoVer headline reproducer |
 | REQ-PUBLISH-3701 | Implemented | Exp 3701 v338 re-freeze capstone and publication gate recheck |
 | REQ-PUBLISH-3712 | Proposed | Exp 3712 v339 re-freeze winner capstone and publication gate recheck |
 | REQ-PUBLISH-3716 | Implemented | Exp 3716 standalone Paper-v6 narrowing lint |

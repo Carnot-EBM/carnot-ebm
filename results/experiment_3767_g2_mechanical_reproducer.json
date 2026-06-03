@@ -1,0 +1,108 @@
+{
+  "artifact": "experiment_3767_g2_mechanical_reproducer",
+  "auroc_in_ci95": true,
+  "condition_b_architecture_only_auroc_mean": 0.8946624,
+  "corpus_sha256": "585a4b8099fae140b850e10d36f121e0a25e645c8d0d264936d5efa0a62b330f",
+  "discrepancy": null,
+  "duration_s": 2.3678126335144043,
+  "experiment": 3767,
+  "field_principles": {
+    "auroc_in_ci95": "BARE bool; true iff reproduced mean is within the frozen CI95. Downstream G2-local gate.",
+    "duration_s": "Wall-clock plausibility floor; seconds for verifier scoring.",
+    "frozen_headline_unchanged": "Confirms this reproduces rather than re-versioning the frozen 0.9131 headline.",
+    "honest_verdict": "Terminal prefix; blocked_<resource> if a precondition failed.",
+    "inference_substrate": "Bare verifier-scoring substrate; scores cached triples on CPU, no live LLM; 1s floor.",
+    "model_specs": "Names the FoVer corpus and four scoring verifiers; explicitly not a live LLM.",
+    "per_seed_aurocs": "The five per-seed AUROCs; sample-size and reproducibility evidence, not a single point estimate.",
+    "preconditions_checked": "Interpreter, dependencies, corpus, and verifier imports checked before scoring; anti-fabrication gate.",
+    "random_seeds_used": "The five seeds; determinism and reproducibility precondition.",
+    "reproduced_auroc_ci95": "The reproduced 95% CI across seeds; the spread that must overlap the frozen [0.9027, 0.9235].",
+    "reproduced_auroc_mean": "The locally-reproduced mean AUROC; confirms the frozen headline still computes in the current environment.",
+    "reproducibility_checksum": "Content hash catches silent corpus/protocol drift."
+  },
+  "frozen_headline_unchanged": true,
+  "honest_verdict": "complete: g2_local_reproducer_committed_auroc_0.913134_in_ci95_true_frozen_headline_confirmed_unchanged",
+  "inference_substrate": "verifier_ensemble_against_cached_candidates",
+  "learning_contribution_ci95": {
+    "high": 0.024480839704138033,
+    "low": 0.012461560295861967,
+    "mean": 0.0184712
+  },
+  "live_model_invoked": false,
+  "methodology_note": "Verifier ensemble against cached FoVer candidates on CPU; no live LLM loaded or invoked. This confirms the frozen 0.9131 headline rather than moving it.",
+  "model_specs": {
+    "candidate_source": "cached_fover_candidate_triples",
+    "corpus": "FoVer step-error corpus",
+    "corpus_path": "/home/ianblenke/github.com/ianblenke/carnot/data/fover_corpus.jsonl",
+    "dual_condition_protocol": true,
+    "live_model": null,
+    "live_model_invoked": false,
+    "n_examples": 1000,
+    "scoring_verifiers": [
+      "fr11_session_memory",
+      "tier0r_curry_howard",
+      "tier0s_arithmetic_gap",
+      "tier0u_logical_consistency"
+    ],
+    "source_headline_artifact": "results/experiment_2837_fover_memory_leakage_v3.json",
+    "verifier_imports": {
+      "fr11_session_memory": "carnot.eval.fover_memory_leakage_v3",
+      "tier0r_curry_howard": "carnot.verify.tier0r_curry_howard",
+      "tier0s_arithmetic_gap": "carnot.verify.tier0s_halluguard",
+      "tier0u_logical_consistency": "carnot.verify.tier0u_logical_consistency"
+    }
+  },
+  "n_examples": 1000,
+  "n_seeds": 5,
+  "per_seed_aurocs": [
+    0.914952,
+    0.908738,
+    0.90145,
+    0.917102,
+    0.923426
+  ],
+  "preconditions_checked": [
+    {
+      "available": true,
+      "detail": "actual=/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python; expected=/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+      "resource": "interpreter"
+    },
+    {
+      "available": true,
+      "detail": "ok",
+      "resource": "python_dependencies"
+    },
+    {
+      "available": true,
+      "detail": "path=/home/ianblenke/github.com/ianblenke/carnot/data/fover_corpus.jsonl; line_count=8829; required>=1000",
+      "resource": "fover_corpus"
+    },
+    {
+      "available": true,
+      "detail": "ok",
+      "resource": "verifier_modules"
+    }
+  ],
+  "random_seeds_used": [
+    42,
+    137,
+    271,
+    314,
+    1729
+  ],
+  "reproduced_auroc_ci95": {
+    "high": 0.923536,
+    "low": 0.902732,
+    "mean": 0.913134
+  },
+  "reproduced_auroc_mean": 0.913134,
+  "reproducibility_checksum": "f3be5c145b65b5219794d8bd996118995edd1d2e1fff5edfe1d41fdd8984345f",
+  "schema": "carnot.g2_mechanical_reproducer.v1",
+  "source_headline": {
+    "condition_a_production_auroc_mean": 0.9131335999999999,
+    "headline_matches_frozen_0_9131": true,
+    "path": "results/experiment_2837_fover_memory_leakage_v3.json",
+    "present": true
+  },
+  "upstream_reproducer_checksum": "748a695343d105129585d0114f1f8d5e6255fea3fd5519a03d9cc927524901e3"
+}
