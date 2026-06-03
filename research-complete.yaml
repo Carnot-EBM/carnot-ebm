@@ -34975,103 +34975,52 @@ milestones:
     deliverable: results/experiment_3742_capstone_v342.json
     result: 'SUPERSEDED by exp3743 archive honesty: part-(a) infra-blocked'
 - id: 2026.06.344
-  title: "CONVERGENCE & PRODUCT-BANKING \u2014 both Phase-3 energy routes are now empirically BOUNDED, so .344 stops grinding\
-    \ the existential question and banks the one surviving positive. Energy-as-SELECTOR was settled by P0.1; energy-as-GENERATOR\
-    \ (operator-seeded Thesis A, EBT arXiv:2507.02092) was closed DEFINITIVELY by the operator's direct dual-3090 runs: part-(a)\
-    \ PASS (tiny 38M byte-EBT trained STABLY 800 steps and learned a discriminative held-out energy landscape, margin 0.723\
-    \ vs untrained 0.084) but part-(b) BOUNDED AT SCALE (with a learned emb->token decoder + 3-digit + 16k steps, EBT scores\
-    \ 0.000 under both decode methods vs AR 0.84 at matched compute -- discriminative-not-generative; neither decoder nor\
-    \ scale fixes it). The .343 in-loop EBT kill-gate (exp3745-3750) was overtaken by those direct runs (kill_zombies reaps\
-    \ unowned GPU procs). Field-consistent: EBT-Policy (arXiv:2510.27545) shows EBT-generation wins only in low-dim continuous\
-    \ control, never discrete text at matched compute. .344: (A) reconcile the DEFINITIVE Thesis-A close honestly; (B) MECHANIZE\
-    \ the publication gates (ship the G2 local reproducer + the G3 narrowing lint, north-star sec-2 forward work); (C) BANK\
-    \ the verifier toward the Phase-1 SOFTWARE-ship gate (pip/CLI/MCP E2E + mirror/publish checklist); (D) ship a deployable\
-    \ CERTIFIED abstention operating point on the proven 0.9131 discriminator (forward from .340 characterization); (E) continue\
-    \ FR-11 self-learning (PIVOTED back to the live verifier from the dead EBT-stabilizer lineage), confirm KV260 terminal,\
-    \ and SURFACE the next-Phase-3-thesis decision to the operator (the loop will NOT self-seed). INVARIANTS: paper_ready\
-    \ stays TRUE (G1-G4); FoVer 0.9131 frozen; both energy routes stay bounded (no re-grind). The agent never edits operator-curated\
-    \ docs, never triggers CI, never publishes, never pushes."
+  title: "V344 zero-experiment SKIP cascade archived"
   doc: openspec/change-proposals/research-roadmap-vNEXT.md
   completed: '2026-06-03'
-  finding: See conductor log for per-experiment results.
+  finding: "RECORD-HONEST SKIP cascade MILESTONE: .344 produced ZERO completed experiments. A malformed research-complete.yaml value with an unquoted embedded colon raised yaml.ScannerError, failed test_public_docs_* in the conductor pre-test gate, and SKIP-cascaded the whole milestone. Only exp3762, exp3763, and exp3764 left partial artifacts; exp3764 honestly reports both_energy_routes_bounded=false because exp3755 was missing. The substantive exp3754-exp3761 agenda never ran and is carried into .345 as recovery work, not a research negative. paper_ready stayed TRUE (G1-G4), and the frozen FoVer 0.9131 stayed frozen."
   tasks:
   - id: exp3754-archive-v343-activate-v344
-    title: 'Archive milestone .343 HONESTLY (the in-loop Thesis-A EBT kill-gate was OVERTAKEN BY EVENTS: the operator ran
-      the genuine kill-gate DIRECTLY -- part-(a) PASS / part-(b) BOUNDED at scale, definitive -- so the conductor''s .343
-      EBT tasks were superseded) and activate .344 (convergence/product-banking: reconcile the definitive Thesis-A close,
-      mechanize the publication gates, bank the verifier toward Phase-1 ship, surface the next-thesis decision to the operator).'
+    title: "Archive .343 and activate .344"
     deliverable: results/experiment_3754_archive_v343_activate_v344.json
-    result: OK (conductor)
+    result: "SKIPPED_BY_PRETEST_GATE: YAML poison stopped the conductor before this archive task ran; carried into .345 as exp3765"
   - id: exp3755-thesis-a-definitive-reconcile
-    title: 'Reconcile the DEFINITIVE Thesis-A close into the research record: ingest the operator''s direct runs (part-(a)
-      PASS / discriminative; part-(b) BOUNDED at scale / not-generative), issue a corrigendum that the in-loop exp3745-3750
-      chain is SUPERSEDED/OBE, mark Thesis A bounded in the phase3 thesis menu, and cite EBT-Policy (arXiv:2510.27545) as
-      the field-consistent boundary (EBT-generation wins only low-dim continuous). Records the bound; does NOT add energy-as-generator
-      to the exclusion manifest (a finding, not a doomed-rerun id).'
+    title: "Thesis-A definitive reconcile"
     deliverable: results/experiment_3755_thesis_a_definitive_reconcile.json
-    result: OK (conductor)
+    result: "SKIPPED_BY_PRETEST_GATE: substantive Thesis-A reconcile never ran; carried into .345 as exp3766"
   - id: exp3756-g2-mechanical-reproducer
-    title: 'G2 mechanical reproducer: commit a standalone, dependency-light script that reproduces the FoVer headline AUROC
-      0.9131 WITHIN CI95 [0.9027, 0.9235] in the current .venv. The GitHub Actions reproducer already closed G2 externally;
-      this hardens the LOCAL ship-gate path and emits auroc_in_ci95 (BARE bool) as the gate for the certified abstention point.
-      Does NOT move the frozen headline.'
+    title: "G2 mechanical reproducer"
     deliverable: results/experiment_3756_g2_mechanical_reproducer.json
-    result: OK (conductor)
+    result: "SKIPPED_BY_PRETEST_GATE: local FoVer reproducer never ran; carried into .345 as exp3767"
   - id: exp3757-g3-narrowing-lint
-    title: 'G3 narrowing lint: EXTEND + WIRE the EXISTING scripts/paper_v6_narrowing_lint.py (it exists but is NOT pre-commit-wired
-      and lacks the 12th retraction) -- ADD the 12th retracted phrasing (''energy-as-generator works/scales'' -- now that
-      Thesis A is bounded), extend the scan to results/paper_v6_* artifacts, and add the missing .pre-commit-config.yaml stanza.
-      Mechanizes G3 from honor-discipline to an ENFORCED lint (north-star sec-2 forward work). Do NOT regenerate the file
-      from scratch.'
+    title: "G3 narrowing lint"
     deliverable: results/experiment_3757_g3_narrowing_lint.json
-    result: OK (conductor)
+    result: "SKIPPED_BY_PRETEST_GATE: narrowing lint extension never ran; carried into .345 as exp3768"
   - id: exp3758-package-cli-mcp-e2e-smoke
-    title: 'Phase-1 SHIP gate: package + CLI + MCP E2E smoke. Build/install the carnot-ebm package, run the verify-repair
-      pipeline end-to-end on a tiny example, and hit the MCP score_candidates tool via a REAL protocol exchange. Confirms
-      >=1 external integration surface works E2E (the PRD Phase-1 software-ship gate, NOT gated on paper/hardware). Uses a
-      small CPU model by default; a SOTA GGUF is optional via cached_sota_pair().'
+    title: "Package CLI MCP E2E smoke"
     deliverable: results/experiment_3758_package_cli_mcp_e2e_smoke.json
-    result: OK (conductor)
+    result: "SKIPPED_BY_PRETEST_GATE: package CLI MCP smoke never ran; carried into .345 as exp3769"
   - id: exp3759-distribution-mirror-publish-checklist
-    title: 'Distribution-mirror readiness audit + OPERATOR-ONLY publish checklist (Decentralization Rule 3): verify the PyPI
-      publish workflow + HuggingFace mirror + IPFS CID plan are documented and ready, and emit a checklist of the steps the
-      OPERATOR (not the agent) performs to publish. Does NOT publish anything (Operator-Only External Publication discipline).'
+    title: "Distribution mirror and operator publish checklist"
     deliverable: results/experiment_3759_distribution_mirror_publish_checklist.json
-    result: OK (conductor)
+    result: "SKIPPED_BY_PRETEST_GATE: distribution mirror checklist never ran; carried into .345 as exp3770"
   - id: exp3760-certified-abstention-operating-point
-    title: 'Ship a DEPLOYABLE certified abstention operating point on the proven 0.9131 step-error discriminator: build the
-      risk-coverage (AURC) curve and SELECT a threshold at a fixed risk target via conformal / PAC-Bayes certification. Forward
-      from .340''s risk-coverage CHARACTERIZATION to a deployable, CERTIFIED operating point. Gated on exp3756 auroc_in_ci95==true
-      (no point certifying a point if the headline does not reproduce).'
+    title: "Certified abstention operating point"
     deliverable: results/experiment_3760_certified_abstention_operating_point.json
-    result: OK (conductor)
+    result: "SKIPPED_BY_PRETEST_GATE: certified abstention point never ran; carried into .345 as exp3771"
   - id: exp3761-fr11-self-learning-v17-verifier-precision-tracker
-    title: 'FR-11 continuous self-learning v17 -- Tier-1 ONLINE per-verifier precision tracker on the LIVE verifier product
-      (pivoted off the dead EBT-stabilizer lineage): for the 4 FoVer-scoring verifiers, track per-verifier precision/recall
-      online across the corpus, upweight high-precision verifiers, and confirm the learned weighting holds the +0.0185 memory-ablation
-      contribution. CPU counter updates only (the Tier-1 hardware path, <1us/update). The self-learning experiment mandated
-      by research-program.md.'
+    title: "FR-11 v17 verifier precision tracker"
     deliverable: results/experiment_3761_fr11_self_learning_v17_verifier_precision_tracker.json
-    result: OK (conductor)
+    result: "SKIPPED_BY_PRETEST_GATE: FR-11 verifier precision tracker never ran; carried into .345 as exp3772"
   - id: exp3762-kv260-opportunistic-continuity-audit
-    title: KV260 opportunistic continuity audit -- confirm terminal state holds (SSH-reachable, accelerator overlay loadable).
-      Documentation-only; the per-milestone hardware mandate was relaxed to opportunistic at .340 (GateMate/PolarFire stay
-      opportunistic future-work).
+    title: "KV260 opportunistic continuity audit"
     deliverable: results/experiment_3762_kv260_opportunistic_continuity_audit.json
-    result: OK (conductor)
+    result: "PARTIAL_ARTIFACT: KV260 audit artifact exists, but the .344 retro still records zero completed experiments under the cascade"
   - id: exp3763-next-phase3-thesis-decision-menu
-    title: 'Next-Phase-3-thesis DECISION MENU for the operator: now that BOTH energy routes (selection + generation) are bounded
-      and the loop will NOT self-seed, produce a ranked menu of the genuinely-different, UNTESTED foundation-model routes
-      -- led by EDLM (energy as a residual-corrector over discrete diffusion, reaches AR perplexity at matched compute), with
-      latent-token diffusion reasoning, ParaRNN nonlinear-recurrent substrate, and energy-verifier-as-test-time-reweighter
-      as alternatives. A decision surface for the operator to SEED, not a commitment by the loop.'
+    title: "Next Phase-3 thesis decision menu"
     deliverable: results/experiment_3763_next_phase3_thesis_decision_menu.json
-    result: OK (conductor)
+    result: "PARTIAL_ARTIFACT: next-thesis menu artifact exists as an operator decision surface, not a self-seeded route"
   - id: exp3764-capstone-v344
-    title: 'Capstone .344 -- aggregate the convergence/product-banking milestone: the definitive Thesis-A close reconciled
-      (both energy routes bounded), the G2 reproducer + G3 narrowing lint mechanized, the verifier banked toward Phase-1 ship
-      (pkg/CLI/MCP E2E + mirror checklist), a certified abstention point shipped, FR-11 pivoted to the live verifier, KV260
-      terminal confirmed, and the next-thesis menu handed to the operator. paper_ready MUST stay TRUE; frozen 0.9131 unchanged;
-      both energy routes stay bounded.'
+    title: "Capstone .344"
     deliverable: results/experiment_3764_capstone_v344.json
-    result: OK (conductor)
+    result: "PARTIAL_ARTIFACT: exp3764 honestly reports missing upstreams"
