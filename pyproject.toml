@@ -163,6 +163,14 @@ testpaths = ["tests/python", "tests/integration"]
 # directory works for any direct python invocation that goes through
 # pytest's rootdir setup.
 pythonpath = ["scripts/experiments"]
+# tmpfs inode-exhaustion fix (2026-06-03): the conductor runs pytest on every
+# task, so pytest's per-run temp dirs (/tmp/pytest-of-USER/pytest-N/) accumulate
+# on the 1M-inode /tmp tmpfs and eventually exhaust inodes, breaking ALL /tmp
+# writes. Keep temp dirs ONLY for failed tests, and only the most recent run, so
+# green runs leave nothing behind. (Belt-and-suspenders with the 30-min reaper in
+# ~/.carnot/orphan-cleanup.sh.)
+tmp_path_retention_count = 1
+tmp_path_retention_policy = "failed"
 # tests/archive/ contains tests for completed experiments and deprecated
 # modules (activation-based EBMs). Run explicitly: pytest tests/archive/
 addopts = [

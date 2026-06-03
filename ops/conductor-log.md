@@ -7656,3 +7656,5 @@ ERROR: {
 | 2026-06-03 02:39 UTC | THE FIX + bounded GPU train chunk 1: pin .venv/bin | SKIP | Pre-tests failing, self-heal failed: 1 failed, 80 passed in 3.32s |
 | 2026-06-03 02:42 UTC | THE FIX + bounded GPU train chunk 1: pin .venv/bin | SKIP | Pre-tests failing, self-heal failed: 1 failed, 80 passed in 3.44s |
 | 2026-06-03 02:44 UTC | RESUME bounded checkpointed GPU training (chunk 2) | GATE_BLOCK | Pre-emptive skip: upstream retired (exp3745-venv-fix-and-bounded-train-chunk1) |
+| 2026-06-03 02:44 UTC | REAL Thesis-A kill-gate part-(a) VERDICT over the  | SKIP | Pre-tests failing, self-heal failed: 1 failed, 80 passed in 3.55s |
+| 2026-06-03 02:46 UTC | RESUME bounded checkpointed GPU training (chunk 2) | GATE_BLOCK | Pre-emptive skip: upstream retired (exp3745-venv-fix-and-bounded-train-chunk1) |
