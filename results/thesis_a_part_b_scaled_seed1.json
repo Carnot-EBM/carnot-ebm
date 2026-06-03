@@ -1,0 +1,97 @@
+{
+  "experiment": "thesis_a_part_b_scaled_seed1",
+  "honest_verdict": "complete: thesis_a_part_b_scaled_BOUNDED_seed1_ebt_0.000_le_ar_0.840_ar1_0.820_headroom_ok",
+  "inference_substrate": "live_llm_inference",
+  "operator_authorized": "2026-06-03 scale-up part-b (bigger model + learned decoder + 3-digit + multi-seed)",
+  "task": "fixed-width 3-digit addition MSD-first (AR-hostile), held-out split",
+  "smoke": false,
+  "training_diverged": false,
+  "headroom_ok": true,
+  "model_specs": {
+    "dim": 768,
+    "n_layers": 4,
+    "ebt_params": 37954560,
+    "ebt_decoder": "learned emb->token MLP on energy-converged embeddings",
+    "from_scratch": true
+  },
+  "ar1_greedy_acc": 0.82,
+  "arV_selfconsistency_acc": 0.84,
+  "arK_selfconsistency_acc": 0.8,
+  "ebt_argmin_acc": 0.0,
+  "ebt_descent_decoder_acc": 0.0,
+  "best_ebt_acc": 0.0,
+  "matched_ar_acc": 0.84,
+  "delta_best_ebt_minus_matched_ar": -0.84,
+  "matched_compute": {
+    "ebt_argmin_evals": 103200,
+    "arV_forward": 103200,
+    "ebt_descent_evals": 12000,
+    "arK_forward": 12000,
+    "argmin_ratio": 1.0,
+    "descent_ratio": 1.0,
+    "K": 30
+  },
+  "n_eval": 100,
+  "ebt_sample_outputs": [
+    {
+      "prompt": "043+359=",
+      "true": "0402",
+      "ar1": "0302",
+      "ebt_argmin": "5588",
+      "ebt_descent_dec": "0=+1"
+    },
+    {
+      "prompt": "131+779=",
+      "true": "0910",
+      "ar1": "0910",
+      "ebt_argmin": "====",
+      "ebt_descent_dec": "303+"
+    },
+    {
+      "prompt": "942+374=",
+      "true": "1316",
+      "ar1": "1316",
+      "ebt_argmin": "5511",
+      "ebt_descent_dec": "010="
+    },
+    {
+      "prompt": "849+679=",
+      "true": "1528",
+      "ar1": "1528",
+      "ebt_argmin": "=1==",
+      "ebt_descent_dec": "0310"
+    },
+    {
+      "prompt": "918+220=",
+      "true": "1138",
+      "ar1": "1138",
+      "ebt_argmin": "5555",
+      "ebt_descent_dec": "110"
+    },
+    {
+      "prompt": "853+917=",
+      "true": "1770",
+      "ar1": "1770",
+      "ebt_argmin": "5555",
+      "ebt_descent_dec": "3031"
+    },
+    {
+      "prompt": "420+640=",
+      "true": "1060",
+      "ar1": "1060",
+      "ebt_argmin": "6888",
+      "ebt_descent_dec": "03=+"
+    },
+    {
+      "prompt": "309+489=",
+      "true": "0798",
+      "ar1": "0798",
+      "ebt_argmin": "\ufffd888",
+      "ebt_descent_dec": "10=1"
+    }
+  ],
+  "device": "cuda:1",
+  "random_seed": 1,
+  "reproducibility_checksum": "174361e0d7563fde04efdefebb009fe23d3ec9d432752176812a42030b7e036c",
+  "duration_s": 6119.84
+}
