@@ -16469,3 +16469,72 @@ The terminal artifact SHALL include bare top-level values for `honest_verdict`, 
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-REPORT-3763 | Planned (`scripts/experiment_3763_next_phase3_thesis_decision_menu.py`) | Planned (`tests/python/test_experiment_3763_next_phase3_thesis_decision_menu.py`) |
+
+### REQ-REPORT-3764: Capstone V344 Thesis-A Closure And Product-Banking Synthesis
+
+The Exp 3764 workflow SHALL aggregate Exp 3754 through Exp 3763 from checked-in
+JSON artifacts and the stable publication gate, run the disciplined artifact
+summarizer for each upstream experiment, exclude any upstream artifact carrying
+`flagged_adversarial=true` from headline aggregation, and write
+`results/experiment_3764_capstone_v344.json`.
+
+The artifact SHALL be aggregation-only with no live-model markers. It SHALL
+record the `.344` outcome plainly: Thesis A is definitively reconciled as
+part-(a) PASS/discriminative and part-(b) BOUNDED at scale/not-generative; both
+energy-as-selector and energy-as-generator remain honest-negative-bounded; the
+single positive being banked is the frozen verifier product, not a new
+existential energy-generation claim. It SHALL also record that G2 local
+reproduction and G3 narrowing lint were mechanized, that package/CLI/MCP smoke
+plus the distribution mirror/checklist bank the verifier toward Phase-1 ship,
+that the certified abstention point is `shipped` only when Exp 3756 reports
+`auroc_in_ci95=true` and otherwise `skipped`, that FR-11 v17 pivots to the live
+verifier while preserving the memory contribution, that KV260 terminal status
+was confirmed when Exp 3762 supports it, and that Exp 3763 handed the next
+Phase-3-thesis decision to the operator without self-committing.
+
+The terminal artifact SHALL include bare top-level values for
+`honest_verdict`, `inference_substrate`, `thesis_a_definitively_closed`,
+`both_energy_routes_bounded`, `gates_mechanized`, `verifier_banked_for_ship`,
+`certified_abstention_point_status`, `paper_ready_preserved`,
+`frozen_headline_unchanged`, `next_thesis_handed_to_operator`,
+`flagged_artifacts_excluded`, `cited_upstream_artifacts`, `random_seed`,
+`reproducibility_checksum`, and `duration_s`, plus `field_principles`
+documenting why each required value exists. `paper_ready_preserved` SHALL
+derive from G1-G4, the frozen FoVer headline SHALL remain `0.9131`, and the
+terminal verdict SHALL use the prefix
+`complete: capstone_v344_thesis_a_closed_both_energy_routes_bounded_gates_mechanized_verifier_banked_abstention_point_`.
+
+#### SCENARIO-REPORT-3764: Clean V344 Capstone Banks Product Without New Existential Claim
+
+**Given** clean Exp 3754 through Exp 3763 artifacts record the `.344`
+Thesis-A closure, G2/G3 gate hardening, verifier ship surfaces, certified
+abstention point, FR-11 live-verifier pivot, KV260 terminal confirmation, and
+next-thesis operator menu
+**When** the Exp 3764 workflow runs
+**Then** it emits the required terminal artifact with `paper_ready_preserved=true`,
+frozen FoVer `0.9131` unchanged, both energy routes bounded, no new existential
+claim, all unflagged upstream artifacts cited, no flagged upstream artifacts
+laundered into headline aggregation, and no critical adversarial verifier flag.
+
+#### SCENARIO-REPORT-3764-GATED: Abstention Point Skips When G2 Headline Reproducer Does Not Pass
+
+**Given** Exp 3756 is missing, flagged, or reports `auroc_in_ci95=false`
+**When** the Exp 3764 workflow runs
+**Then** it records `certified_abstention_point_status="skipped"` and does not
+infer a deployable operating point from Exp 3760.
+
+#### SCENARIO-REPORT-3764-FLAGGED: Flagged Upstream Artifacts Are Excluded
+
+**Given** any Exp 3754 through Exp 3763 source artifact carries
+`flagged_adversarial=true`
+**When** the Exp 3764 workflow runs
+**Then** the capstone records that artifact in `flagged_artifacts_excluded`,
+excludes it from `cited_upstream_artifacts` and headline aggregation, and
+derives affected milestone booleans from the remaining clean upstream record
+rather than fabricating the flagged result.
+
+## Implementation Status (REQ-REPORT-3764)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-3764 | Planned (`python/carnot/reporting/capstone_v344_thesis_a_closed_3764.py`, `scripts/experiment_3764_capstone_v344.py`) | Planned (`tests/python/test_experiment_3764_capstone_v344.py`) |
