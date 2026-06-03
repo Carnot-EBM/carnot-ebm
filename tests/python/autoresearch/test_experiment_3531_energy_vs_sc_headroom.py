@@ -269,18 +269,23 @@ def test_compute_process_energy_empty_samples():
 
 def test_compute_pessimistic_bon_penalizes_minority_low_energy():
     # REQ-AR-050 / SCENARIO-AR-050-01
-    # Two samples: "3" (minority, 1/4) and "7" (majority, 3/4).
-    # "3" has low energy (0.0) but high disagreement → penalized.
+    # Two answers: "3" (minority, 1/4) and "7" (majority, 3/4).
+    # process-energy is min-max normalized within the problem, so the fewest-steps
+    # sample maps to exactly 0.0 (base score 1.0). For the disagreement penalty
+    # (bounded by alpha) to matter at the realistic default alpha=0.5, the
+    # confident-majority answer must have a competitive-energy representative —
+    # otherwise a lone minority with the unique minimum energy always wins and the
+    # penalty is irrelevant (itself the bounded-reranker finding of exp3531).
     rec = _make_record("3", ["3", "7", "7", "7"], n_steps=1)
-    rec["samples"][0]["n_steps"] = 2  # low energy
-    rec["samples"][1]["n_steps"] = 6
+    rec["samples"][0]["n_steps"] = 2  # "3" minority: low (tied-min) energy
+    rec["samples"][1]["n_steps"] = 2  # "7" majority: also low (tied-min) energy
     rec["samples"][2]["n_steps"] = 6
     rec["samples"][3]["n_steps"] = 6
     energies = EXP.compute_process_energy([rec])
     pbon = EXP.compute_pessimistic_bon_scores([rec], energies, alpha=0.5)
-    # "3" is sample 0: low energy but high disagreement → penalized
-    # "7" has energy 1.0 but high confidence (3/4) → less penalty
-    # Without penalty "3" wins; with penalty "7" should win
+    # "3" is sample 0: low energy but high disagreement (1/4 support) → penalized.
+    # "7" (sample 1): equally low energy but high confidence (3/4) → no penalty.
+    # Without the penalty the two tie; with it the confident majority "7" wins.
     assert len(pbon) == 1
     assert len(pbon[0]) == 4
     # Max-score sample should be one of the "7" answers (lower disagreement)

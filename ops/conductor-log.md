@@ -7710,3 +7710,4 @@ ERROR: {
 | 2026-06-03 13:49 UTC | KV260 opportunistic continuity audit -- confirm te | OK | 90 passed in 4.72s |
 | 2026-06-03 14:03 UTC | Next-Phase-3-thesis DECISION MENU for the operator | OK | 84 passed in 3.74s |
 | 2026-06-03 14:20 UTC | Capstone .344 -- aggregate the convergence/product | OK | 88 passed in 4.78s |
+| 2026-06-03 15:03 UTC | Plan next milestone | FAIL | Gemini CLI error: Wall-clock+idle timeout after 1201s (1201s silence). Last ou |

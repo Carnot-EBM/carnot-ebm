@@ -57,4 +57,9 @@ def test_verify_trajectory_spike():
     res = verifier.verify_trajectory(states)
     assert res["rejected"]
     assert res["early_commitment_detected"]
-    assert len(res["energies"]) == 3  # Energies are now fully processed before checking spikes
+    # The verifier aborts evaluation early on a detected spike (the compute-savings
+    # design — see `states_saved`): it appends the spiking step's energy then breaks,
+    # so the spike at step 1 yields exactly 2 calibrated energies, not 3.
+    assert len(res["energies"]) == 2
+    assert res["states_evaluated"] == 2
+    assert res["states_saved"] == 1
