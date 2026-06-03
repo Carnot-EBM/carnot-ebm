@@ -1,0 +1,151 @@
+{
+  "acceptance_gate": {
+    "condition": "fr11_session_memory weight > 0 AND Exp 2837 rounded memory contribution >= +0.0185 AND tracker_state_persisted",
+    "passed": true,
+    "principle": "The learned weighting must not silently drop the FR-11 self-learning component that carries the headline."
+  },
+  "artifact": "experiment_3772_fr11_self_learning_v17_verifier_precision_tracker",
+  "continuous_self_learning_task": true,
+  "duration_s": 0.9650774,
+  "ensemble_auroc_under_learned_weighting": 0.881682,
+  "field_principles": {
+    "duration_s": "Wall-clock plausibility floor.",
+    "ensemble_auroc_under_learned_weighting": "The ensemble AUROC after the learned reweighting -- confirms the self-learning does not regress the banked discriminator.",
+    "honest_verdict": "Terminal prefix; the self-learning outcome.",
+    "inference_substrate": "verifier_ensemble_against_cached_candidates (principle: reads cached verifier scores, no live model).",
+    "learned_weighting": "The upweighting derived from per-verifier precision -- the actionable Tier-1 self-learning output.",
+    "memory_contribution_preserved": "BARE bool -- learned weighting still includes the +0.0185 fr11_session_memory contribution.",
+    "per_verifier_precision_table": "Online precision/recall per scoring verifier -- the learned knowledge; the core deliverable, now on the LIVE verifier.",
+    "pivoted_off_dead_ebt_lineage": "True iff this tracks the LIVE verifier, not EBT stabilizers.",
+    "random_seed": "Determinism precondition.",
+    "reproducibility_checksum": "Content hash catches drift.",
+    "tier1_counter_update": "Confirms the mechanic is a CPU counter update (<1us), not a model retrain.",
+    "tracker_state_persisted": "True iff tracker state was saved so a future milestone resumes it."
+  },
+  "honest_verdict": "complete: fr11_v17_tier1_verifier_precision_tracker_pivoted_to_live_verifier_memory_contribution_preserved_state_persisted",
+  "inference_substrate": "verifier_ensemble_against_cached_candidates (principle: reads cached verifier scores, no live model).",
+  "learned_weighting": {
+    "fr11_session_memory": 0.43956044,
+    "tier0r_curry_howard": 0.395604395,
+    "tier0s_arithmetic_gap": 0.164835165,
+    "tier0u_logical_consistency": 0.0
+  },
+  "memory_contribution_preserved": true,
+  "memory_contribution_reference": 0.01847119999999991,
+  "methodology": {
+    "corpus": "data/fover_corpus.jsonl",
+    "counter_update": "cpu_counter_update_only_lt_1us_no_model_retrain",
+    "lineage": "v17_live_verifier_precision_tracker_not_v15_v16_ebt_stabilizer",
+    "random_seed": 3772,
+    "score_threshold": 0.5
+  },
+  "model_specs": {
+    "corpus": "FoVer cached corpus",
+    "live_model_invoked": false,
+    "n_examples_requested": 1000,
+    "scoring_mode": "cached_verifier_scores_only",
+    "verifiers": [
+      "fr11_session_memory",
+      "tier0r_curry_howard",
+      "tier0s_arithmetic_gap",
+      "tier0u_logical_consistency"
+    ]
+  },
+  "n_examples": 1000,
+  "per_verifier_precision_table": [
+    {
+      "actual_positive_total": 500,
+      "false_negative": 260,
+      "false_positive": 39,
+      "measurement_note": "measured_table_over_fover_n=1000",
+      "n_examples": 1000,
+      "precision": 0.860215054,
+      "predicted_positive_total": 279,
+      "recall": 0.48,
+      "true_negative": 461,
+      "true_positive": 240,
+      "verifier": "fr11_session_memory"
+    },
+    {
+      "actual_positive_total": 500,
+      "false_negative": 452,
+      "false_positive": 14,
+      "measurement_note": "measured_table_over_fover_n=1000",
+      "n_examples": 1000,
+      "precision": 0.774193548,
+      "predicted_positive_total": 62,
+      "recall": 0.096,
+      "true_negative": 486,
+      "true_positive": 48,
+      "verifier": "tier0r_curry_howard"
+    },
+    {
+      "actual_positive_total": 500,
+      "false_negative": 430,
+      "false_positive": 147,
+      "measurement_note": "measured_table_over_fover_n=1000",
+      "n_examples": 1000,
+      "precision": 0.322580645,
+      "predicted_positive_total": 217,
+      "recall": 0.14,
+      "true_negative": 353,
+      "true_positive": 70,
+      "verifier": "tier0s_arithmetic_gap"
+    },
+    {
+      "actual_positive_total": 500,
+      "false_negative": 500,
+      "false_positive": 0,
+      "measurement_note": "measured_table_over_fover_n=1000",
+      "n_examples": 1000,
+      "precision": 0.0,
+      "predicted_positive_total": 0,
+      "recall": 0.0,
+      "true_negative": 500,
+      "true_positive": 0,
+      "verifier": "tier0u_logical_consistency"
+    }
+  ],
+  "pivoted_off_dead_ebt_lineage": true,
+  "preconditions_checked": [
+    {
+      "available": true,
+      "detail": "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/fr11",
+      "resource": "fr11_module"
+    },
+    {
+      "available": true,
+      "detail": "line_count=8829; required>=1000",
+      "resource": "cached_traces_with_per_verifier_scores_and_labels"
+    },
+    {
+      "available": true,
+      "detail": "loaded=tier0r_curry_howard,tier0s_arithmetic_gap,tier0u_logical_consistency",
+      "resource": "text_scoring_verifiers"
+    },
+    {
+      "available": true,
+      "detail": "state_files=21; memory_loaded=True",
+      "resource": "fr11_session_memory_verifier"
+    },
+    {
+      "available": true,
+      "detail": "online graph fit, graph learner, and fixed crossfit baseline importable",
+      "resource": "dependency_aware_weighting_implementation"
+    }
+  ],
+  "random_seed": 3772,
+  "reproducibility_checksum": "dd71bbdde9955759db6f8e44e6864a0f7b9a408ea719d0937ff72579e6eb4004",
+  "schema": "carnot.fr11_continuous_self_learning_v17",
+  "score_threshold": 0.5,
+  "tier1_counter_update": "cpu_counter_update_only_lt_1us_no_model_retrain",
+  "tracker_state_path": "results/experiment_3772_fr11_v17_verifier_precision_tracker_state.json",
+  "tracker_state_persisted": true,
+  "tracker_state_sha256": "e1902448e1ce3c686cc29f069d78d76ba543638a78992e855f1e31e01de123a6",
+  "verifier_names": [
+    "fr11_session_memory",
+    "tier0r_curry_howard",
+    "tier0s_arithmetic_gap",
+    "tier0u_logical_consistency"
+  ]
+}
