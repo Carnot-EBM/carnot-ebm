@@ -16538,3 +16538,50 @@ rather than fabricating the flagged result.
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-REPORT-3764 | Planned (`python/carnot/reporting/capstone_v344_thesis_a_closed_3764.py`, `scripts/experiment_3764_capstone_v344.py`) | Planned (`tests/python/test_experiment_3764_capstone_v344.py`) |
+
+### REQ-REPORT-3765: Archive V344 Skip Cascade And Activate V345 Recovery
+
+The Exp 3765 workflow SHALL archive milestone `2026.06.344` honestly in
+`research-complete.yaml` and confirm milestone `2026.06.345` is active in the
+current roadmap. The archive SHALL record that `.344` produced zero completed
+experiments, that the whole milestone was skipped by a malformed
+`research-complete.yaml` value with an unquoted embedded colon, that the
+malformed YAML raised `yaml.ScannerError` and failed `test_public_docs_*` in the
+conductor pre-test gate, and that the un-landed `.344` agenda is carried into
+`.345` as recovery work rather than as a research negative.
+
+The workflow SHALL replace any generic `.344` conductor archive entry rather
+than duplicating it. Every string value written to `research-complete.yaml` that
+contains a colon SHALL be quoted so a safe-load parse succeeds after the write.
+It SHALL leave `scripts/research_conductor.py`, `ops/north-star.md`,
+`ops/status.md`, `ops/changelog.md`, and `_bmad/traceability.md` unchanged.
+
+The terminal artifact SHALL be written to
+`results/experiment_3765_archive_v344_activate_v345.json` and SHALL include bare
+top-level values for `honest_verdict`, `inference_substrate`,
+`v344_outcome_recorded`, `v344_skip_cause_recorded`, `v345_focus_recorded`,
+`research_complete_yaml_parses`, `paper_ready_preserved`, `n_tasks_archived`,
+`adversarial_verify_clean`, `random_seed`, `reproducibility_checksum`, and
+`duration_s`, plus `field_principles` documenting why each required value
+exists. `inference_substrate` SHALL equal `aggregation_from_upstream_artifacts`
+and the artifact SHALL NOT contain `model_specs` or `target_model`. The terminal
+verdict SHALL equal
+`complete: archived_v344_zero_experiments_skip_cascade_recorded_v345_recovery_active_paper_ready_true_frozen_headline_unchanged`.
+
+#### SCENARIO-REPORT-3765: V344 Archive Records Zero Completed Experiments
+
+**Given** the `.344` operational retro reports zero completed experiments, the
+partial `.344` capstone reports missing Exp 3754 through Exp 3761 and cites only
+the partial Exp 3762 through Exp 3764 record, and the active roadmap is `.345`
+recovery
+**When** the Exp 3765 workflow runs
+**Then** it rewrites the `.344` research-complete entry as a single honest
+skip-cascade archive with 11 tasks, quotes colon-containing YAML values, confirms
+`research-complete.yaml` safe-loads, writes the required aggregation-only
+artifact, and passes adversarial verification with no critical flag.
+
+## Implementation Status (REQ-REPORT-3765)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-3765 | Implemented (`python/carnot/reporting/archive_v344_activate_v345_3765.py`, `scripts/experiment_3765_archive_v344_activate_v345.py`) | Implemented (`tests/python/test_experiment_3765_archive_v344_activate_v345.py`) |

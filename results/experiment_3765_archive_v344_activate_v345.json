@@ -1,0 +1,105 @@
+{
+  "activated_milestone": "2026.06.345",
+  "active_roadmap_path": "research-roadmap.yaml",
+  "adversarial_verify_clean": true,
+  "adversarial_verify_report": {
+    "flag_count": 0,
+    "flags": [],
+    "max_severity": -1
+  },
+  "archived_milestone": "2026.06.344",
+  "duration_s": 2.959919,
+  "experiment_id": "exp3765",
+  "experiments_completed": 0,
+  "field_principles": {
+    "adversarial_verify_clean": "True iff the artifact passes adversarial_verify with no critical flag.",
+    "duration_s": "Wall-clock plausibility floor; missing duration is the fabrication signal.",
+    "honest_verdict": "Terminal prefix lets the reconciler classify the transition complete without re-running it.",
+    "inference_substrate": "JSON-read + format; 0.0001s floor; no compute-bound marker so it does not false-flag.",
+    "n_tasks_archived": "Sample-size hygiene -- confirms the full milestone was archived, not a partial.",
+    "paper_ready_preserved": "G1-G4 stay met; the transition must not silently regress paper_ready; frozen headline 0.9131 stays frozen.",
+    "random_seed": "Determinism precondition for reproducibility.",
+    "reproducibility_checksum": "Content hash catches silent drift vs any replication.",
+    "research_complete_yaml_parses": "BARE bool, MUST be true -- confirms research-complete.yaml safe_loads after the write.",
+    "v344_outcome_recorded": "Records .344's REAL state: 0 completed experiments, whole-milestone SKIP cascade from a malformed-YAML poison; the agenda carried into .345.",
+    "v344_skip_cause_recorded": "Records the ROOT CAUSE (unquoted embedded colon -> yaml.ScannerError -> test_public_docs_* failed -> SKIP cascade) so a future planner does not mis-read .344 as a research negative.",
+    "v345_focus_recorded": "Records the .345 pivot: re-execute the un-landed .344 agenda (reconcile + mechanize-gates + bank-verifier + certified-abstention + self-learning + PRM-positioning)."
+  },
+  "honest_verdict": "complete: archived_v344_zero_experiments_skip_cascade_recorded_v345_recovery_active_paper_ready_true_frozen_headline_unchanged",
+  "inference_substrate": "aggregation_from_upstream_artifacts",
+  "n_tasks_archived": 11,
+  "paper_ready_evidence": {
+    "frozen_headline_auroc": 0.9131,
+    "frozen_headline_unchanged": true,
+    "g1": true,
+    "g2": true,
+    "g3": true,
+    "g4": true,
+    "paper_ready": true
+  },
+  "paper_ready_preserved": true,
+  "partial_artifacts_recorded": [
+    "exp3762",
+    "exp3763",
+    "exp3764"
+  ],
+  "random_seed": 3765,
+  "reproducibility_checksum": "3a4abbfcc8313b1f64399b01f51c90cca990708eb6177079d777a834d71bb41e",
+  "research_complete_yaml_parses": true,
+  "schema": "carnot.archive_activation.v344_to_v345_3765.v1",
+  "source_artifact_checksums": [
+    {
+      "path": "results/operational_retro_2026_06_344.json",
+      "sha256": "b10c20c05f25a9b48e03ccdef4fe6eaca7b53605eb443b1a286b02dcd67023cd"
+    },
+    {
+      "path": "results/experiment_3764_capstone_v344.json",
+      "sha256": "d4877ea1cb9536cbb56106f6f10986bd810993ecf95c17c8699d87d6dbd24d57"
+    }
+  ],
+  "source_document_checksums": [
+    {
+      "path": "research-roadmap.yaml",
+      "sha256": "bc10fc04fba33486ce9ab5a4a612283455224d4865626980bc852e9a18386abf"
+    },
+    {
+      "path": "openspec/change-proposals/research-roadmap-vNEXT.md",
+      "sha256": "06e131765899ff7730e0b47f03714e47aa1f7d856351f6fca57e7dab98691aaa"
+    },
+    {
+      "path": "ops/north-star.md",
+      "sha256": "e288b001d2582b5f8af368df5ef458c334b750daefdef36ec9f707c61b62b973"
+    }
+  ],
+  "task_id": "exp3765-archive-v344-activate-v345",
+  "unlanded_v344_agenda_carried_to_v345": [
+    "exp3754",
+    "exp3755",
+    "exp3756",
+    "exp3757",
+    "exp3758",
+    "exp3759",
+    "exp3760",
+    "exp3761"
+  ],
+  "v344_archive_evidence": {
+    "capstone_both_energy_routes_bounded": false,
+    "missing_upstream_experiment_ids": [
+      3754,
+      3755,
+      3756,
+      3757,
+      3758,
+      3759,
+      3760,
+      3761
+    ],
+    "operational_retro_path": "results/operational_retro_2026_06_344.json",
+    "partial_capstone_path": "results/experiment_3764_capstone_v344.json",
+    "skip_cascade_pattern": "incident_agent_shipped_test_cascade"
+  },
+  "v344_outcome_recorded": "zero_completed_experiments_whole_milestone_skip_cascade_agenda_carried_to_v345",
+  "v344_skip_cause_recorded": "unquoted_embedded_colon_yaml_scannererror_test_public_docs_failed_skip_cascade",
+  "v345_active_confirmed": true,
+  "v345_focus_recorded": "reexecute_unlanded_v344_agenda_reconcile_mechanize_gates_bank_verifier_certified_abstention_self_learning_prm_positioning"
+}
