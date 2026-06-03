@@ -4,48 +4,51 @@
 # docs_audit_report — 2026-06-03
 
 ## TL;DR (stranger's 30-second take)
-I would close the tab shortly after reading the hero section. While the initial pitch is clear, the page immediately devolves into a dense, overwhelming wall of internal acronyms (FoVer, SVAMP, VeriCoT, PREM) and internal status updates ("repinned from v2 0.9857") that mean nothing to an outsider. It feels like reading someone else's Jira dashboard rather than a product landing page.
+I'm closing the tab in 15 seconds. This reads like a leaked internal Jira board mixed with an academic diary, not a product page. I can't tell if this is a usable library, a hardware spec, or a schizoid research log. 
 
 ## TOP 3 PROBLEMS
-1. **Aggressive Internal Jargon:** The results and capabilities sections are riddled with project-specific acronyms and niche benchmark shorthand (FoVer, CCTU, PREM, VeriCoT) that completely alienate non-insiders.
-2. **"Recent Progress" is an Internal Status Report:** The copy detailing "repinned from v2 0.9857" and "pending operator-initiated upload" reads like a copy-pasted commit message or milestone closeout, not copy meant to sell a framework.
-3. **Bloated Results and Suspicious Numbers:** Throwing 12 different benchmark cards at the reader—many containing suspiciously perfect numbers like exactly 60/60 attacks caught or a 1.0 extraction rate—triggers immediate skepticism and visual fatigue.
+1. **Raw Test Paths Leaked** — The "Live benchmark" card literally renders an internal `pytest` tmp directory path instead of a readable metric.
+2. **Impenetrable Acronym Soup** — `FoVer`, `PREM`, `SVAMP`, `CCTU`, `NTK` are used without any definition, making the metrics meaningless.
+3. **Defensive Research Diary** — The page spends more time defending its methodology and talking about internal audits, retractions, and "paper-v6" than telling me how the tool solves my problem.
 
 ## DETAILED FINDINGS
-
 ### Bloat
-- **Results Grid** — 12 cards — Cap at 4 to 6. A stranger will not read 12 distinct, hyper-specific benchmark results; this section is visually overwhelming and dilutes the strongest claims.
-- **Blog / Writing Section** — 7 cards — Cap at 3 to 4. Too many cards for a landing page footer.
+- `Results` section intro text — 46 words — Reads like a defensive legal disclaimer ("Synthetic pilots are included only when..."). Cap at 15.
+- `Recent progress` card in Hero — 59 words — A messy brain dump of AUROC numbers and audit history. Cap at 20 words max, or kill it entirely.
+- `Research operations` card — 48 words — I don't care how you develop it autonomously; I care what it does for me. Delete.
 
 ### Internal jargon
-- **Stats Bar & Recent Progress** — "FoVer", "5-seed dual-condition", "architecture-only" — A stranger has no idea what FoVer is or why a "5-seed dual-condition" matters to their use case.
-- **Capabilities (Bento Card "P")** — "Test-Time Compute (TTC) & PREM", "Process-Reward Energy Model variance" — Dense, undefined academic jargon that disrupts the accessible tone of the previous cards.
-- **Results Grid** — "IterativeSelfRepair", "EstimationVerifier SVAMP", "VeriCoT equation-style CoT fix", "PRM-BiasBench-style attacks", "HalluGuard v3", "CCTU" — This is a barrage of undocumented internal components and niche benchmark names that will cause a visitor's eyes to glaze over.
+- `Hero Stats` — "FoVer math step-errors (5-seed dual-condition)" — I have no idea what dataset or condition this is.
+- `Live benchmark card` — `@.tmp-pytest/pytest-of-ianblenke/pytest-4/popen-gw0/test_req_verify_2932...` — Literally a dumped test path in the UI. Total garbage.
+- `Test-Time Compute (TTC) & PREM` card — "Process-Reward Energy Model (PREM) variance" — Never defined on the page.
+- `Results` grid — "VeriCoT", "Z3", "SVAMP", "CCTU" — Stop using internal bench names without explaining what they actually measure.
+- `Preprint` section — "pending operator-initiated upload" — Is this a software release or a drone strike? Just say "Coming to arXiv."
 
 ### Per-milestone narrative
-- **Recent progress card** — "The verifier ensemble reaches 0.9131 AUROC on FoVer... Repinned from v2 0.9857 after pre-submission adversarial audit" — Pure internal status reporting.
-- **Preprint section** — "The arXiv submission is prepared but pending operator-initiated upload." — Irrelevant internal process trivia.
+- `Recent progress` card — "Repinned from v2 0.9857 after pre-submission adversarial audit; see Why We Report Two AUROCs Now." — This is a retrospective bullet point, not a hero pitch.
+- `Preprint` section — "Carnot position paper (paper-v6)" — Nobody outside your repo cares what internal version control number the draft is on.
 
 ### Inconsistencies
-- **Fine-Tuning Claims vs Results** — The "How it works" section explicitly claims "No model fine-tuning required," but the Results grid highlights a "Two-GPU parallel retrain." 
-- **Baseline Metric Confusion** — The stats bar highlights a "0.9131 Verifier AUROC" for "FoVer math step-errors," but later a Results card cites a "0.125 FoVer baseline" for an "EstimationVerifier SVAMP AUC." The relationship and scale of these metrics contradict each other without context.
+- **"No model fine-tuning required"** (How it works) vs **"Two-GPU parallel retrain"** (Results). Are we training models or not? 
+- **AUROC Whiplash** — Hero claims 0.9131 AUROC (math), Safety card claims 0.91 AUROC (prompt injection), SVAMP card claims 0.90 AUC (estimation). Too many numbers without a single coherent anchor metric.
+- **Hardware confusion** — "pip install carnot-ebm" implies standard compute, but then you casually drop "KV260 FPGA prototype" and "Langevin dynamics" in Rust. Do I need an FPGA to run this?
 
 ### Missing essentials
-- **Maintainer Identity and Backing** — The footer mentions "Ian Blenke · Carnot Project", but it's not clear in the hero if this is a solo open-source project, a commercial startup, or an academic lab. There's no trust anchor.
-- **Hardware Requirements** — The quickstart shows a Qwen 0.8B model, but the page never explicitly states what kind of baseline hardware (VRAM, local vs cloud) is needed to run this pipeline efficiently.
+- **What is the actual overhead?** You claim to check every step, run Z3 solvers, and run property-based tests. How slow is this? "95 microseconds" is mocked in a blog post, but real latency isn't stated.
+- **Why should I trust these numbers?** You boast a 100% success rate on benchmarks immediately above a blog section titled "Caught Cheating" and "Two Retractions and a Rescue". 
+- **System Requirements** — You show Python and Rust side-by-side, but it's unclear if I need GPU/JAX or just standard CPU compute to run the basic verifier.
 
 ### Fabrication signals
-- **Adversarial audit card** — "k=5 ensemble catches 60/60 attacks" — A mathematically perfect 100% score on a suspiciously small sample size (N=60).
-- **Math extraction card** — "GSM8K extraction TP rate: 0.5 -> 1.0" — A perfect 1.0 true positive rate is a massive red flag for a stranger evaluating ML claims.
-- **Training card** — "2.0x speedup, identical losses" — Exactly 2.0x speedup with flawlessly identical losses looks synthetic.
+- `Math extraction` card — **"TP rate: 0.5 -> 1.0"** — A perfect 1.0 (100%) true positive rate on extracting equations from raw LLM output? Instantly suspicious.
+- `Adversarial audit` card — **"catches 60/60 attacks"** — 100% success on adversarial bias attacks without context just looks like an over-fitted, trivially small sample size.
+- `Training` card — **"identical losses"** on a 2.0x speedup parallel retrain. Perfectly identical losses across distributed GPUs? Unlikely.
 
 ## WHAT'S WORKING
-- **The Core Value Proposition:** "Catch the reasoning errors your LLM states with total confidence," followed by the "One-word-at-a-time" vs "Whole-answer check" cards, is an excellent, immediately understandable explanation of the problem space.
-- **The Code Quickstart:** Showing the 3-line Python API alongside the Rust implementation makes the framework feel tangible, real, and easy to drop into existing projects.
+- The 3-step "Extract -> Check -> Repair" explanation is genuinely clear.
+- Providing both Python and Rust quickstart code in a toggle is an excellent developer experience pattern.
 
 ## RECOMMENDED OPERATOR ACTIONS
-1. Rewrite the "Recent progress" and "Preprint" cards to speak directly to the user's benefits, purging all internal narrative about "repinning," "v2 audits," and "operator-initiated uploads."
-2. Define or remove all internal acronyms (PREM, FoVer, CCTU, VeriCoT) across the capabilities and results sections. Speak in terms of what the user is trying to achieve (e.g., "Math reasoning" instead of "FoVer").
-3. Prune the Results grid down to the 4 to 6 most impressive, broadly understandable metrics.
-4. Soften or contextualize the "perfect" numbers (60/60, 1.0 TP rate, 2.0x speedup) to look less like fabricated marketing and more like rigorous science.
-5. Resolve the "No fine-tuning required" contradiction by either clarifying what the "retrain" result means or removing it entirely.
+1. **Sanitize the test paths** — Remove the `@.tmp-pytest/...` monstrosity from the "Live benchmark" card immediately.
+2. **Kill the meta-narrative** — Delete the "Recent progress" card in the hero and rewrite the Results paragraph. Stop talking about internal audits and paper versions on the landing page.
+3. **De-jargon the benchmarks** — Replace "FoVer" and "SVAMP" with "Math Reasoning", and explain what the benchmark actually proves in plain English.
+4. **Anchor the credibility** — If you're going to claim perfect 1.0 and 60/60 scores, add a 5-word caveat on sample size or constraints so it doesn't look fabricated.

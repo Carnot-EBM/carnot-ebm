@@ -65,6 +65,14 @@ def extract_claims(tex: str) -> list[Claim]:
     claims: list[Claim] = []
     for match in CLAIM_RE.finditer(normalized):
         start, end = match.span()
+        value = float(match.group("value"))
+        unit = match.group("unit")
+        # AUROC is bounded to [0, 1] by definition, so a value > 1 is never a real
+        # AUROC claim — it is the claim-extractor mis-reading a milestone token like
+        # ".239 AUROC" (the "239" is the milestone number, not a metric). Skip these
+        # structurally-impossible matches rather than flagging them as mismatches.
+        if unit == "AUROC" and value > 1.0:
+            continue
         claims.append(
             Claim(
                 raw_value=match.group("value"),

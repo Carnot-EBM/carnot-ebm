@@ -1,25 +1,25 @@
 {
   "schema": "carnot.operational_retro.v64",
   "milestone": "2026.06.344",
-  "generated_at": "2026-06-03T14:26:27Z",
+  "generated_at": "2026-06-03T15:07:37Z",
   "retro_type": "operational_full",
   "total_wall_time_minutes": 0,
   "experiments_completed": 0,
   "compute_bound_experiments_count": 0,
   "slowest_experiments": [],
   "gpu_idle_on_compute_bound_tasks": null,
-  "summary": "No experiment commits were found since the activation of milestone 2026.06.344. As a result, no compute-bound tasks were run, explaining the correctly idle GPU states.",
+  "summary": "This milestone produced no experiment commits, resulting in 0 total wall time minutes and 0 completed experiments. Because there were 0 compute-bound tasks, the idle GPU state is not flagged as a bottleneck.",
   "bottlenecks_identified": [
-    "No experiments were run; process was completely idle."
+    "No experiments were committed since the activation of this milestone."
   ],
   "improvements_suggested": [
-    "Investigate why no experiments were committed during this milestone."
+    "Ensure tasks are correctly queued and conductor triggers experiments after activation."
   ],
   "top_3_highest_leverage_actions": [
-    "Check experiment runner triggers.",
-    "Verify milestone activation logic.",
-    "Ensure tasks are queued."
+    "Verify pipeline dispatch mechanism for milestone 2026.06.344.",
+    "Implement an activation-to-first-experiment heartbeat check.",
+    "Validate conductor initialization."
   ],
   "estimated_time_savings_pct": 0,
-  "meta_reflection": "It is critical to verify if the lack of experiments is due to a no-op milestone or a failure in the task submission pipeline."
+  "meta_reflection": "Since no experiments were executed, the GPUs were correctly idle. The primary action is investigating the lack of execution rather than optimizing runtime."
 }
