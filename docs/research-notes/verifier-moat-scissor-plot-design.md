@@ -206,3 +206,69 @@ or is there a specific fix required first?
 
 When the answer returns, fold Q1–Q4 into the "metric" and "staged plan" sections,
 THEN build (Stage 0 first).
+
+---
+
+## Stage-0 outcome (2026-06-03) + the Deep Think follow-up it forces
+
+**Ran the no-GPU necessary-condition cut** (`scripts/scissor_stage0_necessary_condition.py`,
+`results/scissor_stage0_necessary_condition.json`): on one clean model's MATH-L3/4
+residual (61 wrong of 93), **self-consistency AUROC = 0.95** and its FPR-on-residual ≈
+0.08; the **SC-failure subset** (residual items where the samples agree on the wrong
+answer — the ONLY place an independent verifier can add value) is **~5 items.** The Z3
+arithmetic constraint was the wrong tool for algebra-MATH (AUROC 0.51, chance), so the
+*verifier* side is untested — but the *baseline* side is the striking finding: on a
+standard headroom benchmark with a competent model, the cheapest self-verification is
+already near-ceiling, leaving almost no room for a moat to demonstrate value. This is
+the concrete, deflating form of P2's "economically fragile." It forces a strategy
+question before we spend more — paste the prompt below.
+
+```
+You earlier argued an LLM-output verifier's durable moat is ERROR INDEPENDENCE — it
+catches the residual errors the generator's own cheap self-verification (logprob,
+self-consistency, LLM-judge) misses, specifically the "confident correlated
+hallucinations" where the model's own samples agree on the same wrong answer, and
+you predicted this edge WIDENS at the frontier.
+
+NEW EVIDENCE (a cheap pre-experiment). On a standard headroom math benchmark
+(MATH Level 3-4) with one competent model, we measured the cheap baseline directly:
+SELF-CONSISTENCY (majority vote over 6 samples) has AUROC ~0.95 at separating the
+model's correct from incorrect final answers. The "SC-failure subset" — residual
+items where the samples CONFIDENTLY AGREE on a WRONG answer, i.e. the only place an
+independent verifier can beat SC — is only ~8% of the residual (about 5 of 61
+problems). (Our independent verifier on this run was an arithmetic-only checker,
+which is the wrong tool for algebra and scored at chance, so treat the VERIFIER side
+as untested; reason about the BASELINE finding.)
+
+THE QUESTION (strategy, not engineering):
+
+S1. Does SC being near-ceiling (0.95) on standard math UPDATE the moat thesis? If the
+SC-failure subset is ~5% of an already-small residual on normal benchmarks, is the
+moat ECONOMICALLY NARROW — load-bearing in only a thin slice of real cases — and is
+that the concrete realization of your "fragile to subsumption" caveat? Or does the
+moat's value survive precisely because that thin slice is the high-cost tail?
+
+S2. Can an "SC genuinely fails" regime be constructed NATURALLY, or only adversarially?
+Characterize WHEN self-consistency fails: is it a structural property of certain
+problem classes (e.g. a single attractive wrong attractor the sampler collapses onto —
+common knowledge-recall / systematic-misconception tasks) that occurs in the wild, or
+must we contrive it? If the moat only appears under contrived distributions, does it
+matter for a product?
+
+S3. Is there a PRINCIPLED predictor of moat size from problem structure — a way to
+estimate, for a given task distribution, the fraction of errors that are
+confident-correlated (SC-resistant) vs diffuse (SC-catchable) — WITHOUT running the
+full verifier? If so, the moat's addressable market is computable cheaply.
+
+S4. Given all this, is it even worth the cost of wiring the full constraint ensemble
+AND constructing an SC-failure corpus to run the capability sweep — or does the
+SC-near-ceiling finding already settle the strategic question (the moat is real but
+narrow), making the sweep a confirmation we don't need? Give a clear
+RUN-THE-SWEEP / DON'T-BOTHER verdict.
+
+OUTPUT DISCIPLINE: separate "what is true" (your calibrated zone) from "what to build"
+(flag lower-confidence). For each of S1-S4 give confidence + the single cheap check
+that would falsify your answer. The earlier methodology pass on this experiment was
+excellent; hold the same bar.
+```
+
