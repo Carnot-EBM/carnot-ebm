@@ -1,0 +1,52 @@
+{
+  "experiment": "scissor_capability_gate_5problem",
+  "honest_verdict": "complete: capability_gate_HALT_sc_failure_subset_is_normalization_artifact_not_hallucination_no_genuine_confident_correlated_errors_to_test_moat",
+  "inference_substrate": "aggregation_from_upstream_artifacts",
+  "finding": "All 5 confident-correlated SC-failures (residual where samples agree on the WRONG answer) are answer-NORMALIZATION false-negatives: the model is mathematically CORRECT and the corpus answer-matcher is wrong (LaTeX braces 11\\sqrt2 vs 11\\sqrt{2}; subscript 4210_5 vs 4210_{5}; leading zero .0000672 vs 0.0000672; thousands comma 10,080 vs 10080; degree 76 vs 76^circ).",
+  "cases": [
+    {
+      "problem": "Simplify sqrt(242)",
+      "gold": "11\\sqrt2",
+      "model": "11\\sqrt{2}",
+      "real_status": "CORRECT",
+      "artifact": "latex_brace"
+    },
+    {
+      "problem": "555_10 in base 5",
+      "gold": "4210_{5}",
+      "model": "4210_5",
+      "real_status": "CORRECT",
+      "artifact": "subscript_brace"
+    },
+    {
+      "problem": "21/(2^2*5^7) terminating decimal",
+      "gold": ".0000672",
+      "model": "0.0000672",
+      "real_status": "CORRECT",
+      "artifact": "leading_zero"
+    },
+    {
+      "problem": "6 girls 2 boys seating",
+      "gold": "10,080",
+      "model": "10080",
+      "real_status": "CORRECT",
+      "artifact": "thousands_sep"
+    },
+    {
+      "problem": "triangle angle B",
+      "gold": "76^circ",
+      "model": "76",
+      "real_status": "CORRECT(value)",
+      "artifact": "degree_symbol"
+    }
+  ],
+  "implications": [
+    "No genuine confident-correlated hallucinations exist in this corpus -> the moat-CAPABILITY test (does the independent verifier catch the attractors?) CANNOT be run on this data: there is nothing real to catch.",
+    "The corpus correctness LABELS are normalization-contaminated -> the broader residual (61 wrong) likely contains more false-negatives -> the true error rate is LOWER and SC is even BETTER than the measured 0.95 -> reinforces moat-narrow.",
+    "Constructing a valid SC-failure corpus needs robust answer-normalization AND genuine attractor-errors; standard math + naive matching gives NEITHER. This makes the targeted-sweep prerequisite materially harder than the DT S4 plan assumed."
+  ],
+  "recommendation": "Do NOT build the SC-failure-corpus sweep on this substrate. Either (a) accept the converged finding: moat narrow-in-volume AND its SC-failure home is dominated by label noise on standard math -> bank the verifier as a math reasoning-error checker, not a general moat; or (b) if pursuing the moat, first build a label-robust, genuinely-attractor-rich corpus (non-trivial curation) and re-run the 5-problem gate there.",
+  "random_seed": 0,
+  "reproducibility_checksum": "9b8df6725267361effb8c8b3c4cda6deb29a15be6046ec5a7f30089c90cfb439",
+  "duration_s": 0.5
+}
