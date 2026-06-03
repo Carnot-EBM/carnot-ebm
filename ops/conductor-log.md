@@ -7668,3 +7668,14 @@ ERROR: {
 | 2026-06-03 02:55 UTC | EBT energy-descent GENERATION smoke on held-out GS | GATE_BLOCK | Pre-emptive skip: upstream retired (exp3747-real-kill-gate-part-a-verdict) |
 | 2026-06-03 02:56 UTC | THE THESIS TEST (kill-gate part b): matched-COMPUT | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp3748-ebt-generation-smoke.ebt_can_gener |
 | 2026-06-03 02:58 UTC | Thesis-A kill-gate part-(b) VERDICT: at EQUAL infe | SKIP | Pre-tests failing, self-heal failed: 1 failed, 80 passed in 3.85s |
+| 2026-06-03 03:00 UTC | Thesis-A kill-gate part-(b) VERDICT: at EQUAL infe | SKIP | Pre-tests failing, self-heal failed: 1 failed, 80 passed in 4.19s |
+| 2026-06-03 03:02 UTC | Thesis-A kill-gate part-(b) VERDICT: at EQUAL infe | SKIP | Pre-tests failing, self-heal failed: 1 failed, 80 passed in 3.92s |
+| 2026-06-03 03:05 UTC | FR-11 continuous self-learning v16 — Tier-1 ONLINE | SKIP | Pre-tests failing, self-heal failed: 1 failed, 80 passed in 3.99s |
+| 2026-06-03 03:07 UTC | FR-11 continuous self-learning v16 — Tier-1 ONLINE | SKIP | Pre-tests failing, self-heal failed: 1 failed, 80 passed in 4.01s |
+| 2026-06-03 03:09 UTC | FR-11 continuous self-learning v16 — Tier-1 ONLINE | SKIP | Pre-tests failing, self-heal failed: 1 failed, 80 passed in 3.81s |
+| 2026-06-03 03:11 UTC | KV260 opportunistic continuity audit — confirm ter | SKIP | Pre-tests failing, self-heal failed: 1 failed, 80 passed in 3.64s |
+| 2026-06-03 03:14 UTC | KV260 opportunistic continuity audit — confirm ter | SKIP | Pre-tests failing, self-heal failed: 1 failed, 80 passed in 3.64s |
+| 2026-06-03 03:16 UTC | KV260 opportunistic continuity audit — confirm ter | SKIP | Pre-tests failing, self-heal failed: 1 failed, 80 passed in 3.86s |
+| 2026-06-03 03:18 UTC | Capstone .343 — aggregate the Thesis-A attempt-3 o | SKIP | Pre-tests failing, self-heal failed: 1 failed, 80 passed in 4.07s |
+| 2026-06-03 03:21 UTC | Capstone .343 — aggregate the Thesis-A attempt-3 o | SKIP | Pre-tests failing, self-heal failed: 1 failed, 80 passed in 3.80s |
+| 2026-06-03 03:23 UTC | Capstone .343 — aggregate the Thesis-A attempt-3 o | SKIP | Pre-tests failing, self-heal failed: 1 failed, 80 passed in 4.12s |
