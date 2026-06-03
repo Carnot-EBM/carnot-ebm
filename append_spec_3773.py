@@ -1,0 +1,13 @@
+with open('openspec/capabilities/research-reporting/spec.md', 'a') as f:
+    f.write('\n### REQ-REPORT-3773: Verifier Product vs PRM SOTA Positioning\n\n')
+    f.write('The Exp 3773 workflow shall synthesize the settled FoVer AUROC 0.9131 verifier result against external PRM SOTA reports (GenPRM, ThinkPRM, uPRM, ProcessBench).\n')
+    f.write('The artifact `results/experiment_3773_verifier_product_prm_positioning.json` shall include:\n')
+    f.write('- `comparison_table` structured Carnot-vs-PRM-SOTA table, labelling every peer number as-reported.\n')
+    f.write('- `where_carnot_leads` stating Carnot leads on cost/objectivity/certifiability.\n')
+    f.write('- `where_carnot_does_not_lead` stating Carnot does NOT lead on raw F1 vs large reasoning verifiers or on OOD generalization.\n')
+    f.write('- `product_value_proposition` stating the cheap, objective, CERTIFIABLE complement to generative PRMs.\n')
+    f.write('- `peer_numbers_are_as_reported_not_re_derived` set to true.\n')
+    f.write('- `no_generalization_retest_run` set to true.\n')
+    f.write('- `honest_verdict` terminating with an appropriate verdict.\n\n')
+    f.write('### SCENARIO-REPORT-3773: Exp 3773 Synthesizes Honest Positioning\n\n')
+    f.write('Given the FoVer result and PRM SOTA references, when Exp 3773 runs, then it outputs the required JSON artifact without running any new LLM evaluation, claiming to retest domain boundaries, or claiming peer reports are Carnot measurements.\n')

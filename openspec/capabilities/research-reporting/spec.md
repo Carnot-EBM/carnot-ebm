@@ -16635,3 +16635,19 @@ adversarial verification without a critical flag.
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-REPORT-3766 | Planned (`python/carnot/reporting/thesis_a_definitive_reconcile_3766.py`, `scripts/experiment_3766_thesis_a_definitive_reconcile.py`) | Planned (`tests/python/test_experiment_3766_thesis_a_definitive_reconcile.py`) |
+
+### REQ-REPORT-3773: Verifier Product vs PRM SOTA Positioning
+
+The Exp 3773 workflow shall synthesize the settled FoVer AUROC 0.9131 verifier result against external PRM SOTA reports (GenPRM, ThinkPRM, uPRM, ProcessBench).
+The artifact `results/experiment_3773_verifier_product_prm_positioning.json` shall include:
+- `comparison_table` structured Carnot-vs-PRM-SOTA table, labelling every peer number as-reported.
+- `where_carnot_leads` stating Carnot leads on cost/objectivity/certifiability.
+- `where_carnot_does_not_lead` stating Carnot does NOT lead on raw F1 vs large reasoning verifiers or on OOD generalization.
+- `product_value_proposition` stating the cheap, objective, CERTIFIABLE complement to generative PRMs.
+- `peer_numbers_are_as_reported_not_re_derived` set to true.
+- `no_generalization_retest_run` set to true.
+- `honest_verdict` terminating with an appropriate verdict.
+
+### SCENARIO-REPORT-3773: Exp 3773 Synthesizes Honest Positioning
+
+Given the FoVer result and PRM SOTA references, when Exp 3773 runs, then it outputs the required JSON artifact without running any new LLM evaluation, claiming to retest domain boundaries, or claiming peer reports are Carnot measurements.
