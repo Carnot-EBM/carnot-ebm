@@ -20844,3 +20844,52 @@ forward-facing claim.
   all-to-all connectivity via parallel chromatic Gibbs sampling; a reference
   design + chromatic-Gibbs pattern that maps onto THRML's block-Gibbs (TSU
   portable).
+
+## .345 additions — conformal selective-risk certification for the abstention product (2026-06-03)
+
+Added by the `.345 planning sweep (Claude Opus 4.8). **`.345 is a RECOVERY
+milestone:** the `.344 convergence/product-banking agenda did NOT land — a
+malformed-YAML poison in `research-complete.yaml` (a stray unquoted colon)
+failed `test_public_docs_*` and triggered a whole-milestone SKIP cascade
+(`operational_retro_2026_06_344.json`: 0 experiments completed). The YAML was
+fixed post-hoc (commit `1726bfbb2`) but only `exp3762/3763/3764` left partial
+artifacts; the substantive tasks `exp3754–3761` (Thesis-A reconcile, G2 local
+reproducer, G3 narrowing lint, package/CLI/MCP E2E, publish checklist, certified
+abstention, FR-11 v17) **never ran**. `.345 re-executes that agenda — these are
+*unstarted* work skipped by infra, **not doomed reruns**. No new existential
+claim; both energy routes stay bounded; FoVer 0.9131 stays frozen; `paper_ready`
+stays TRUE (G1–G4 confirmed via `scripts/publication_gate.py`).
+
+The references below sharpen the one genuinely-load-bearing recovery task — the
+**certified abstention operating point** on the 0.9131 discriminator. As-reported
+numbers must be independently re-derived before any forward-facing claim.
+
+- **Conformal Selective Prediction with General Risk Control
+  (arXiv:2603.24704, 2026):** selective prediction where the model answers only
+  when reliable and abstains otherwise, with conformal control of the error
+  *among deployed predictions* while holding coverage. The cleanest framework for
+  the `.345 certified-abstention task: pick a fixed selective-risk target, select
+  the threshold on the 0.9131 discriminator score, and attach a distribution-free
+  guarantee. Pairs with the `.344-cited arXiv:2502.06884 (learned conformal
+  abstention policies) and arXiv:2509.12527 (PAC-Bayes selective-risk bound).
+- **Conformal Certification of Reasoning Trace Prefixes / CROP
+  (arXiv:2605.30085, 2026):** calibrates a threshold and returns the longest
+  contiguous *prefix* of a reasoning trace whose per-step risk proxies stay below
+  it, routing the uncertified suffix to review/repair while controlling the
+  marginal probability the prefix contains an annotated error. Step-level
+  conformal certification — directly applicable to a *step-error* discriminator
+  like Carnot's (the FoVer corpus is step-labeled), and a product framing:
+  "certify the verified prefix, abstain/route the rest."
+- **Geometry-Calibrated Conformal Abstention for Language Models
+  (arXiv:2604.27914, 2026):** conformal abstention that lets an LM admit lack of
+  knowledge, calibrated on a geometric uncertainty signal. A cross-check on the
+  calibration design for the abstention certificate; corroborates that an
+  external energy signal (not entropy alone — cf. arXiv:2603.21172) is the right
+  abstention driver.
+- **GenPRM (arXiv:2504.00891) / ThinkPRM (arXiv:2504.16828) / uPRM
+  (arXiv:2605.10158) — re-anchored for the `.345 PRM-positioning task:** the
+  generative-verifier and label-free-verifier SOTA the *discriminative* 0.9131
+  ensemble must be positioned against. Carnot's claim is cheap, objective,
+  energy-grounded scoring + a *certified* abstention operating point — NOT raw F1
+  vs a 32B reasoning verifier. Positioning, not a generalization re-test
+  (verifier-domain-boundedness is settled — see `[[project_verifier_domain_bound]]`).
