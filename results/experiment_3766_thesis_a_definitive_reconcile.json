@@ -1,0 +1,158 @@
+{
+  "adversarial_verify_clean": true,
+  "adversarial_verify_report": {
+    "flag_count": 0,
+    "flags": [],
+    "max_severity": -1
+  },
+  "cited_upstream_artifacts": [
+    {
+      "experiment_id": "thesis_a_direct_definitive_run",
+      "fields_imported": [
+        "honest_verdict",
+        "ebt_param_count",
+        "ar_param_count",
+        "cumulative_steps_trained",
+        "nan_or_divergence_events",
+        "ebt_trained_stably",
+        "ebt_learned_heldout",
+        "ar_learned_heldout",
+        "ebt_heldout_margin_final",
+        "ebt_heldout_margin_untrained_baseline",
+        "ar_heldout_ce_init",
+        "ar_heldout_ce_final",
+        "grad_norm_max",
+        "grad_norm_mean",
+        "peak_vram_mb",
+        "stabilizers_applied",
+        "random_seed",
+        "reproducibility_checksum",
+        "duration_s"
+      ],
+      "sha256": "741f0455493563c68627dc8985edb17763765afcb9e95ca47ba03d21670e939e"
+    },
+    {
+      "experiment_id": "thesis_a_part_b_scaled_seed1",
+      "fields_imported": [
+        "honest_verdict",
+        "task",
+        "training_diverged",
+        "headroom_ok",
+        "ar1_greedy_acc",
+        "arV_selfconsistency_acc",
+        "arK_selfconsistency_acc",
+        "ebt_argmin_acc",
+        "ebt_descent_decoder_acc",
+        "best_ebt_acc",
+        "matched_ar_acc",
+        "delta_best_ebt_minus_matched_ar",
+        "matched_compute.argmin_ratio",
+        "matched_compute.descent_ratio",
+        "matched_compute.K",
+        "n_eval",
+        "random_seed",
+        "reproducibility_checksum",
+        "duration_s"
+      ],
+      "sha256": "018af8627d338069c92c5571921b0fe98f15f59a42edf7a6bf8ca6ec0bb62767"
+    }
+  ],
+  "clean_corrigendum": {
+    "fabricated_in_loop_result_preserved": "none",
+    "superseded_chain_experiment_ids": [
+      "exp3745",
+      "exp3746",
+      "exp3747",
+      "exp3748",
+      "exp3749",
+      "exp3750"
+    ],
+    "supersession_reason": "Exp 3745-3750 in-loop EBT kill-gate chain is SUPERSEDED/OBE by the operator's direct runs because kill_zombies reaped unowned GPU processes; no incomplete in-loop result is treated as real evidence.",
+    "supersession_status": "SUPERSEDED_OBE_by_operator_direct_runs"
+  },
+  "definitive_direct_runs": {
+    "part_a_discriminative": {
+      "ar_heldout_ce_final": 1.5516911447048187,
+      "ar_heldout_ce_init": 5.70572429895401,
+      "ar_learned_heldout": true,
+      "ar_param_count": 28847874,
+      "cumulative_steps_trained": 800,
+      "duration_s": 506.97,
+      "ebt_heldout_margin_final": 0.7233336567878723,
+      "ebt_heldout_margin_untrained_baseline": 0.0842966791242361,
+      "ebt_learned_heldout": true,
+      "ebt_param_count": 37954560,
+      "ebt_trained_stably": true,
+      "grad_norm_max": 204.21331787109375,
+      "grad_norm_mean": 3.134373532906175,
+      "honest_verdict": "complete: thesis_a_part_a_PASS_ebt_trained_stably_800_steps_and_LEARNED_heldout_margin_0.723_vs_untrained_0.084_part_b_decoder_scale_deferred",
+      "margin_summary": "pos/neg margin 0.723 vs untrained 0.084 (~8.6x)",
+      "nan_or_divergence_events": false,
+      "peak_vram_mb": 2537,
+      "random_seed": 30603,
+      "source_artifact": "results/thesis_a_direct_definitive_run.json",
+      "stabilizers_applied": "replay_buffer, langevin_noise, random_alpha, random_descent_steps, grad_clip, kl_reg",
+      "upstream_reproducibility_checksum": "4edca79e7c36dc478e91d0393b14fed2de7628f7c0aa7ac83ac083185011cef2"
+    },
+    "part_b_scaled_seed1": {
+      "ar1_greedy_acc": 0.82,
+      "arK_selfconsistency_acc": 0.8,
+      "arV_selfconsistency_acc": 0.84,
+      "best_ebt_acc": 0.0,
+      "delta_best_ebt_minus_matched_ar": -0.84,
+      "duration_s": 6119.84,
+      "ebt_argmin_acc": 0.0,
+      "ebt_descent_decoder_acc": 0.0,
+      "headroom_ok": true,
+      "honest_verdict": "complete: thesis_a_part_b_scaled_BOUNDED_seed1_ebt_0.000_le_ar_0.840_ar1_0.820_headroom_ok",
+      "matched_ar_acc_label": "0.84",
+      "matched_compute_counts": {
+        "K": 30,
+        "arK_forward": 12000,
+        "arV_forward": 103200,
+        "ebt_argmin_evals": 103200,
+        "ebt_descent_evals": 12000
+      },
+      "matched_compute_ratios": {
+        "argmin_ratio": 1.0,
+        "descent_ratio": 1.0
+      },
+      "n_eval": 100,
+      "random_seed": 1,
+      "source_artifact": "results/thesis_a_part_b_scaled_seed1.json",
+      "task": "fixed-width 3-digit addition MSD-first (AR-hostile), held-out split",
+      "training_diverged": false,
+      "upstream_reproducibility_checksum": "174361e0d7563fde04efdefebb009fe23d3ec9d432752176812a42030b7e036c"
+    }
+  },
+  "duration_s": 0.003369,
+  "ebt_discriminative_not_generative": true,
+  "experiment_id": "exp3766",
+  "field_consistency_citation": "EBT-Policy (arXiv:2510.27545): EBT-generation wins in low-dimensional continuous control, not discrete text at matched compute.",
+  "field_principles": {
+    "cited_upstream_artifacts": "Provenance for the imported definitive numbers (anti-fabrication audit trail).",
+    "duration_s": "Wall-clock plausibility floor.",
+    "ebt_discriminative_not_generative": "BARE bool. The one-line scientific finding: the energy landscape discriminates but does not generate tokens at this scale.",
+    "field_consistency_citation": "EBT-Policy (arXiv:2510.27545) frames the negative as field-consistent, not a Carnot-only artifact.",
+    "honest_verdict": "Terminal prefix; states the reconciliation outcome.",
+    "in_loop_chain_superseded": "Records that exp3745-3750 are OBE'd by the operator's direct runs -- the record-honesty deliverable.",
+    "inference_substrate": "A record reconciliation over upstream JSON, no live model; keeps this artifact out of live-compute methodology claims.",
+    "not_added_to_exclusion_manifest": "Energy-as-generator is recorded as a BOUND, not retired as a doomed rerun id; future human-seeded variants are not pre-blocked.",
+    "random_seed": "Determinism precondition.",
+    "reproducibility_checksum": "Content hash catches drift.",
+    "thesis_a_part_a_outcome": "The definitive part-(a) result (PASS / discriminative) -- the EBT trains stably and learns a held-out energy landscape.",
+    "thesis_a_part_b_outcome": "The definitive part-(b) result (BOUNDED at scale / not-generative) -- the actual thesis signal; the milestone-defining bound.",
+    "thesis_menu_updated": "True iff the Phase-3 thesis menu reflects Thesis A bounded -- keeps the operator's next-thesis surface current."
+  },
+  "honest_verdict": "complete: thesis_a_definitive_reconciled_part_a_PASS_discriminative_part_b_BOUNDED_not_generative_in_loop_chain_superseded_menu_updated_not_retired",
+  "in_loop_chain_superseded": true,
+  "inference_substrate": "aggregation_from_upstream_artifacts (principle: a record reconciliation over upstream JSON, no live model).",
+  "not_added_to_exclusion_manifest": true,
+  "random_seed": 3766,
+  "reproducibility_checksum": "410601ce2b740505b10b6a0ad2cd0c03f4f7639303536ceebdb4ddfe1f9c86c3",
+  "schema": "carnot.archive_activation.thesis_a_definitive_reconcile_3766.v1",
+  "task_id": "exp3766-thesis-a-definitive-reconcile",
+  "thesis_a_part_a_outcome": "PASS_discriminative: tiny 38M byte-EBT trained stably for 800 GSM8K steps and learned a held-out energy landscape",
+  "thesis_a_part_b_outcome": "BOUNDED_at_scale_not_generative: learned emb->token decoder plus 3-digit addition scale-up leaves EBT at 0.000 vs matched AR 0.840",
+  "thesis_menu_updated": true
+}

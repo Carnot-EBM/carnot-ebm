@@ -24,7 +24,7 @@ dozen milestones. Pick ONE to seed (or use this as input to a Deep Think round).
 
 ---
 
-## Thesis A — Energy as the GENERATOR (EBT-as-base)  ·  *SELECTED 2026-06-02; most direct*
+## Thesis A - BOUNDED: Energy as the GENERATOR (EBT-as-base)  ·  *SELECTED 2026-06-02; most direct*
 
 - **Core claim:** A small Energy-Based Transformer whose inference *is* iterative
   energy descent over the output (not left-to-right AR tokens, not reranking) can
@@ -65,6 +65,8 @@ dozen milestones. Pick ONE to seed (or use this as input to a Deep Think round).
 - **Cost:** training-HEAVY (real training, but fork-not-reimplement). **Risk:** EBT
   training is known finicky/unstable — itself the most likely failure mode, and the
   test surfaces it cheaply at tiny scale.
+
+- **Exp 3766 definitive reconciliation (2026-06-03):** Thesis A is BOUNDED: part-(a) PASS/discriminative from `results/thesis_a_direct_definitive_run.json` (800 stable GSM8K steps; held-out margin 0.723 vs untrained 0.084, about 8.6x), but part-(b) BOUNDED/not-generative from `results/thesis_a_part_b_scaled_seed1.json` (learned emb->token decoder, 3-digit addition, 16k steps; EBT 0.000 under argmin and descent+decoder vs AR 0.820 greedy / 0.840 matched self-consistency). Field boundary: EBT-Policy (arXiv:2510.27545) shows EBT-generation wins in low-dimensional continuous control, not discrete text at matched compute.
 
 ## Thesis B — Non-autoregressive global inference (discrete diffusion)  ·  *medium*
 

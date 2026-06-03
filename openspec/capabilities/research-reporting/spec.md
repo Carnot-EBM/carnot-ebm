@@ -16585,3 +16585,53 @@ artifact, and passes adversarial verification with no critical flag.
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-REPORT-3765 | Implemented (`python/carnot/reporting/archive_v344_activate_v345_3765.py`, `scripts/experiment_3765_archive_v344_activate_v345.py`) | Implemented (`tests/python/test_experiment_3765_archive_v344_activate_v345.py`) |
+
+### REQ-REPORT-3766: Thesis-A Definitive Direct-Run Reconciliation
+
+The Exp 3766 workflow SHALL reconcile the operator's definitive direct Thesis-A
+runs into `results/experiment_3766_thesis_a_definitive_reconcile.json` without
+running live inference. It SHALL import the two checked-in upstream artifacts
+`results/thesis_a_direct_definitive_run.json` and
+`results/thesis_a_part_b_scaled_seed1.json`, preserve their load-bearing
+part-(a) and part-(b) numbers under a `definitive_direct_runs` block, and cite
+each upstream file with `{experiment_id, fields_imported, sha256}` provenance.
+
+The artifact SHALL record part-(a) as PASS / discriminative and part-(b) as
+BOUNDED at scale / not-generative. It SHALL record that the in-loop Exp
+3745-3750 EBT kill-gate chain is SUPERSEDED/OBE by the operator's direct runs
+because the in-loop path could not run cleanly when `kill_zombies` reaped
+unowned GPU processes. It SHALL record the supersession without treating any
+fabricated or incomplete in-loop result as real, SHALL keep energy-as-generator
+out of `ops/exclusion_manifest.yaml`, SHALL update the Phase-3 thesis menu so
+Thesis A is marked BOUNDED, and SHALL cite EBT-Policy (arXiv:2510.27545) as the
+field-consistency boundary.
+
+The terminal artifact SHALL include bare top-level values for `honest_verdict`,
+`inference_substrate`, `thesis_a_part_a_outcome`,
+`thesis_a_part_b_outcome`, `ebt_discriminative_not_generative`,
+`in_loop_chain_superseded`, `field_consistency_citation`,
+`thesis_menu_updated`, `not_added_to_exclusion_manifest`,
+`cited_upstream_artifacts`, `random_seed`, `reproducibility_checksum`, and
+`duration_s`, plus `field_principles` documenting why each value exists.
+`inference_substrate` SHALL equal
+`aggregation_from_upstream_artifacts (principle: a record reconciliation over upstream JSON, no live model).`
+The terminal verdict SHALL equal
+`complete: thesis_a_definitive_reconciled_part_a_PASS_discriminative_part_b_BOUNDED_not_generative_in_loop_chain_superseded_menu_updated_not_retired`.
+
+#### SCENARIO-REPORT-3766: Definitive Direct Runs Supersede The In-Loop Chain
+
+**Given** the operator direct-run artifacts report stable 800-step tiny EBT
+training with a held-out energy margin and scaled part-(b) generation bounded
+against matched AR compute
+**When** the Exp 3766 workflow runs
+**Then** it writes the required aggregation-only artifact, preserves the key
+direct-run numbers, marks Thesis A BOUNDED in the research-note menu, records
+the Exp 3745-3750 in-loop chain as superseded rather than fabricated evidence,
+does not add energy-as-generator to the exclusion manifest, and passes
+adversarial verification without a critical flag.
+
+## Implementation Status (REQ-REPORT-3766)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-3766 | Planned (`python/carnot/reporting/thesis_a_definitive_reconcile_3766.py`, `scripts/experiment_3766_thesis_a_definitive_reconcile.py`) | Planned (`tests/python/test_experiment_3766_thesis_a_definitive_reconcile.py`) |
