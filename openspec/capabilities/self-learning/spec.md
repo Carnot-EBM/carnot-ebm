@@ -10727,3 +10727,74 @@ largest enabled-minus-disabled no-divergence rate delta.
 | Requirement  | Python | Tests |
 |-------------|--------|-------|
 | REQ-LEARN-3740 | Implemented (python/carnot/fr11/continuous_self_learning_v15.py; scripts/experiment_3740_fr11_self_learning_v15_stabilizer_tracker.py) | Implemented (tests/python/test_experiment_3740_fr11_csl_v15.py) |
+
+---
+
+## REQ-LEARN-3772: FR-11 v17 Tier-1 Live Verifier Precision Tracker
+
+**Given** the FoVer corpus can be scored by the four live headline verifiers:
+`fr11_session_memory`, `tier0r_curry_howard`, `tier0s_arithmetic_gap`, and
+`tier0u_logical_consistency`
+**When** Exp 3772 runs the FR-11 v17 self-learning tracker
+**Then** it SHALL pivot off the bounded EBT stabilizer lineage and update
+per-verifier raw CPU counters online across the FoVer labels and cached
+verifier scores
+**And** it SHALL derive per-verifier precision and recall from true-positive,
+false-positive, false-negative, and true-negative counters
+**And** it SHALL upweight high-precision verifiers while retaining a positive
+`fr11_session_memory` weight so the +0.0185 FR-11 memory contribution remains
+load-bearing
+**And** it SHALL persist the raw tracker state so a future milestone resumes
+the counter history.
+
+### REQ-LEARN-3772 Sub-requirements
+
+- REQ-LEARN-3772-1: The runnable artifact SHALL use
+  `inference_substrate` equal to
+  `verifier_ensemble_against_cached_candidates (principle: reads cached verifier scores, no live model).`
+  and SHALL avoid live-model, CUDA, GGUF, or retraining claims.
+- REQ-LEARN-3772-2: Each online update SHALL use only one row label and one
+  score per verifier, threshold verifier scores into positive predictions, and
+  update raw TP/FP/FN/TN counters without fitting model weights.
+- REQ-LEARN-3772-3: The per-verifier precision table SHALL include all four
+  scoring verifiers, `n_examples=1000` for the full run, raw counters,
+  precision, recall, and a measured-table note rather than a small-sample
+  heuristic label.
+- REQ-LEARN-3772-4: The learned weighting SHALL be derived from measured
+  precision, normalized, and SHALL include a strictly positive
+  `fr11_session_memory` weight whenever that verifier is present.
+- REQ-LEARN-3772-5: The artifact SHALL recompute ensemble AUROC under the
+  learned weighting and SHALL set `memory_contribution_preserved` to a bare
+  boolean that is true exactly when the learned weighting retains
+  `fr11_session_memory` and the reference Exp 2837 learning contribution is at
+  least +0.0185 when rounded to four decimals.
+- REQ-LEARN-3772-6: If FoVer scores or labels are absent, the artifact SHALL
+  persist an empty tracker state and record an `honest_verdict` containing
+  `no corpus to learn from -- tracker not updated` rather than fabricating a
+  precision table.
+- REQ-LEARN-3772-7: Runnable artifacts SHALL include bare values for
+  `honest_verdict`, `inference_substrate`, `per_verifier_precision_table`,
+  `learned_weighting`, `ensemble_auroc_under_learned_weighting`,
+  `memory_contribution_preserved`, `pivoted_off_dead_ebt_lineage`,
+  `tier1_counter_update`, `tracker_state_persisted`, `random_seed`,
+  `reproducibility_checksum`, and `duration_s`, plus separate field-principle
+  annotations for those fields.
+
+### SCENARIO-LEARN-3772: Live Verifier Tracker Resists Poisoned Weighting
+
+**Given** labeled FoVer-style rows where a non-memory verifier has the highest
+precision but `fr11_session_memory` has real true positives
+**When** the v17 tracker processes rows online and derives learned weights
+**Then** every row increments raw counters exactly once per verifier
+**And** the highest-precision verifier receives the largest learned weight
+**And** `fr11_session_memory` keeps a positive learned weight
+**And** the artifact reports `memory_contribution_preserved=true`, persists
+tracker state, labels the substrate as verifier-scoring only, and records that
+the v17 lineage is the live verifier precision tracker rather than the bounded
+EBT stabilizer tracker.
+
+## Implementation Status (REQ-LEARN-3772)
+
+| Requirement  | Python | Tests |
+|-------------|--------|-------|
+| REQ-LEARN-3772 | Implemented (python/carnot/fr11/continuous_self_learning_v17.py; scripts/experiment_3772_fr11_self_learning_v17_verifier_precision_tracker.py) | Implemented (tests/python/test_experiment_3772_fr11_csl_v17.py) |
