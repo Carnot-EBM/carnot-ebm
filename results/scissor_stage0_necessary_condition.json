@@ -1,0 +1,59 @@
+{
+  "experiment": "scissor_stage0_necessary_condition",
+  "honest_verdict": "complete: scissor_stage0_NECESSARY_CONDITION_NOT_MET_constraint_does_not_beat_self_consistency_on_residual_constraint_fpr_0.818_sc_fpr_0.082_auroc_c_0.514520202020202_s_0.9495389344262295_DO_NOT_BUILD_SWEEP_moat_questionable",
+  "inference_substrate": "aggregation_from_upstream_artifacts",
+  "scope": "Z3 constraint core only (probe-ablated pure-constraint, not full conformal ensemble); ONE clean mid-model; SC baseline (cached logprob is null); 93 MATH L3/L4 problems. NECESSARY-CONDITION cut per the scissor-plot design doc, NOT the full scissor.",
+  "n_problems": 93,
+  "n_residual": 61,
+  "constraint_coverage": 0.613,
+  "auroc_constraint_z3": 0.514520202020202,
+  "auroc_self_consistency": 0.9495389344262295,
+  "matched_operating_points": {
+    "recall_on_correct=0.7": {
+      "constraint_fpr_residual": 0.667,
+      "self_consistency_fpr_residual": 0.066,
+      "constraint_beats_sc": false,
+      "constraint_covered_n": 57,
+      "sc_covered_n": 93
+    },
+    "recall_on_correct=0.8": {
+      "constraint_fpr_residual": 0.818,
+      "self_consistency_fpr_residual": 0.082,
+      "constraint_beats_sc": false,
+      "constraint_covered_n": 57,
+      "sc_covered_n": 93
+    },
+    "recall_on_correct=0.9": {
+      "constraint_fpr_residual": 0.879,
+      "self_consistency_fpr_residual": 0.082,
+      "constraint_beats_sc": false,
+      "constraint_covered_n": 57,
+      "sc_covered_n": 93
+    }
+  },
+  "by_level": {
+    "3": {
+      "n": 80,
+      "n_residual": 55,
+      "auroc_constraint": 0.5018148820326679,
+      "auroc_sc": 0.9552727272727273,
+      "constraint_fpr@rec0.8": 0.828,
+      "sc_fpr@rec0.8": 0.073
+    },
+    "4": {
+      "n": 13,
+      "n_residual": 6,
+      "auroc_constraint": 0.55,
+      "auroc_sc": 0.8928571428571429,
+      "constraint_fpr@rec0.8": 0.75,
+      "sc_fpr@rec0.8": 0.167
+    }
+  },
+  "model_specs": {
+    "verifier": "Z3MathVerifier (arithmetic constraint)",
+    "baseline": "self_consistency_maj@6"
+  },
+  "random_seed": 0,
+  "reproducibility_checksum": "1c06dcf3ed55e78e1a97cb91adaf60407dba894cfd91d7e0553ce355527d12c8",
+  "duration_s": 0.072
+}
