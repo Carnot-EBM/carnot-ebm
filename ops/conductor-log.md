@@ -7700,3 +7700,5 @@ ERROR: {
 | 2026-06-03 13:21 UTC | Distribution-mirror readiness audit + OPERATOR-ONL | SKIP | Pre-tests failing, self-heal failed: 1 failed, 80 passed in 2.98s |
 | 2026-06-03 13:23 UTC | Distribution-mirror readiness audit + OPERATOR-ONL | SKIP | Pre-tests failing, self-heal failed: 1 failed, 80 passed in 3.59s |
 | 2026-06-03 13:25 UTC | Ship a DEPLOYABLE certified abstention operating p | GATE_BLOCK | Pre-emptive skip: upstream retired (exp3756-g2-mechanical-reproducer) |
+| 2026-06-03 13:25 UTC | FR-11 continuous self-learning v17 -- Tier-1 ONLIN | SKIP | Pre-tests failing, self-heal failed: 1 failed, 80 passed in 3.21s |
+| 2026-06-03 13:27 UTC | Ship a DEPLOYABLE certified abstention operating p | GATE_BLOCK | Pre-emptive skip: upstream retired (exp3756-g2-mechanical-reproducer) |
