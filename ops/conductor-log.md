@@ -7660,3 +7660,5 @@ ERROR: {
 | 2026-06-03 02:46 UTC | RESUME bounded checkpointed GPU training (chunk 2) | GATE_BLOCK | Pre-emptive skip: upstream retired (exp3745-venv-fix-and-bounded-train-chunk1) |
 | 2026-06-03 02:46 UTC | RESUME bounded checkpointed GPU training (chunk 2) | GATE_BLOCK | Pre-emptive skip: upstream retired (exp3745-venv-fix-and-bounded-train-chunk1) |
 | 2026-06-03 02:46 UTC | REAL Thesis-A kill-gate part-(a) VERDICT over the  | SKIP | Pre-tests failing, self-heal failed: 1 failed, 80 passed in 3.71s |
+| 2026-06-03 02:48 UTC | REAL Thesis-A kill-gate part-(a) VERDICT over the  | SKIP | Pre-tests failing, self-heal failed: 1 failed, 80 passed in 3.70s |
+| 2026-06-03 02:50 UTC | EBT energy-descent GENERATION smoke on held-out GS | GATE_BLOCK | Pre-emptive skip: upstream retired (exp3747-real-kill-gate-part-a-verdict) |
