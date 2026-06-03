@@ -7696,3 +7696,4 @@ ERROR: {
 | 2026-06-03 13:12 UTC | Phase-1 SHIP gate: package + CLI + MCP E2E smoke.  | SKIP | Pre-tests failing, self-heal failed: 1 failed, 80 passed in 3.23s |
 | 2026-06-03 13:14 UTC | Phase-1 SHIP gate: package + CLI + MCP E2E smoke.  | SKIP | Pre-tests failing, self-heal failed: 1 failed, 80 passed in 3.09s |
 | 2026-06-03 13:16 UTC | Phase-1 SHIP gate: package + CLI + MCP E2E smoke.  | SKIP | Pre-tests failing, self-heal failed: 1 failed, 80 passed in 3.56s |
+| 2026-06-03 13:19 UTC | Distribution-mirror readiness audit + OPERATOR-ONL | SKIP | Pre-tests failing, self-heal failed: 1 failed, 80 passed in 4.41s |
