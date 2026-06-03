@@ -1,0 +1,82 @@
+{
+  "experiment": "thesis_a_p1_discrete_search",
+  "honest_verdict": "complete: thesis_a_p1_v1_INCONCLUSIVE_positive_control_failed_ar_0.000_superseded_by_v2_see_corrigendum",
+  "inference_substrate": "live_llm_inference",
+  "operator_authorized": "2026-06-03 P1 discrete-search adjudication (artifact vs fundamental)",
+  "task": "3-digit MSD-first addition, 16000 steps (matches the bounded run)",
+  "ar_greedy_acc": 0.0,
+  "ebt_energy_argmin_acc": 0.0,
+  "ebt_beam_search_acc": 0.0,
+  "beam_width": 8,
+  "training_diverged": false,
+  "n_eval": 100,
+  "ebt_sample_outputs": [
+    {
+      "prompt": "316+575=",
+      "true": "0891",
+      "ar": "0944",
+      "ebt_argmin": "6661",
+      "ebt_beam": "9611"
+    },
+    {
+      "prompt": "334+844=",
+      "true": "1178",
+      "ar": "0944",
+      "ebt_argmin": "5666",
+      "ebt_beam": "5666"
+    },
+    {
+      "prompt": "661+890=",
+      "true": "1551",
+      "ar": "1244",
+      "ebt_argmin": "4564",
+      "ebt_beam": "4564"
+    },
+    {
+      "prompt": "322+489=",
+      "true": "0811",
+      "ar": "0744",
+      "ebt_argmin": "6656",
+      "ebt_beam": "5666"
+    },
+    {
+      "prompt": "488+613=",
+      "true": "1101",
+      "ar": "0944",
+      "ebt_argmin": "5666",
+      "ebt_beam": "5666"
+    },
+    {
+      "prompt": "800+991=",
+      "true": "1791",
+      "ar": "1044",
+      "ebt_argmin": "4444",
+      "ebt_beam": "4444"
+    },
+    {
+      "prompt": "223+758=",
+      "true": "0981",
+      "ar": "0944",
+      "ebt_argmin": "6656",
+      "ebt_beam": "0656"
+    },
+    {
+      "prompt": "958+394=",
+      "true": "1352",
+      "ar": "0244",
+      "ebt_argmin": "6665",
+      "ebt_beam": "5666"
+    }
+  ],
+  "model_specs": {
+    "ebt": "tiny_ebt_from_scratch_byte_38M",
+    "ar": "matched",
+    "from_scratch": true
+  },
+  "device": "cuda:1",
+  "random_seed": 30603,
+  "reproducibility_checksum": "0b1e880b0b15237a76c62006337a1cdc42d66a039062524a978913deffbdacb4",
+  "duration_s": 4413.46,
+  "corrigendum": "DEGENERATE / SUPERSEDED: the AR positive control collapsed (ar_greedy_acc=0.0, near-constant '0944' output) because this run reused the SMALL matched_compute model at 3-digit, which cannot learn the task either. With AR=0 the test cannot distinguish 'energy landscape fundamentally misshaped' from 'this tiny model learned nothing' \u2014 a positive-control-failed null result (FALSE_NEGATIVE_RISK per CLAUDE.md). The 'FUNDAMENTAL' string in honest_verdict is NOT a valid finding. Re-run in the valid regime (scaled harness, AR=0.84) is thesis_a_p1_discrete_search_v2.",
+  "superseded_by": "thesis_a_p1_discrete_search_v2"
+}
