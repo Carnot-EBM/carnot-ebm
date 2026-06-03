@@ -1,192 +1,206 @@
-# Research Roadmap — Milestone 2026.06.342
+# Research Roadmap — Milestone 2026.06.343
 
-**Status:** Pre-staged by outer-loop Claude (Opus 4.8), 2026-06-02.
-**Predecessor:** 2026.06.341 (Phase-3 Thesis-A EBT bring-up — the FIRST human-seeded paradigm
-alternative since energy-SELECTION was bounded; operator seeded energy-as-GENERATOR, EBT,
-arXiv:2507.02092 / github.com/alexiglad/EBT).
-**Milestone doc for:** `research-roadmap-next.yaml` (`milestone: 2026.06.342`)
+**Phase-3 Thesis A — attempt 3: pin the venv/CUDA, then run the GENUINE
+energy-as-generator kill-gate to completion.**
+
+Outer-loop / operator pre-staged roadmap, drafted 2026-06-02 (Claude Opus 4.8).
 
 ---
 
-## 1. What the previous milestone (.341) ACTUALLY proved (read the artifacts, not the verdict)
+## TL;DR
 
-`.341` was the cheap half of the Thesis-A kill-gate: *can a tiny EBT even train stably on the 3090
-rig?* The recorded milestone verdict was **kill-gate part-(a) FAIL — "energy-as-generator bounded
-at small scale, STOP."** **That verdict is wrong.** Read via `scripts/summarize_artifact.py` +
-direct artifact inspection:
+The operator-seeded Phase-3 Thesis A (energy-as-GENERATOR / EBT, arXiv:2507.02092)
+has now been blocked **three times by infrastructure, never by the mechanism**:
 
-| Step | Artifact | What it ACTUALLY shows |
+| Milestone | What blocked the kill-gate | Verdict mislabel |
 |---|---|---|
-| EBT vendored + audited | exp3725 | `importable=true`, Apache-2.0, commit pinned `19420cbe…`, energy path audited (energy descent via Langevin/MCMC, contrastive + CE training objective), CPU smoke energy `0.554` finite. **Clean PASS.** |
-| Tiny-EBT single-step smoke | exp3726 | **Clean PASS.** 38M-param EBT, fits one 3090 at **1283 MB** peak VRAM, GSM8K n=2048, loss finite AND **monotonically decreasing** across 10 steps (−0.077 → −37.74), 64 train steps wired correctly. This is the POSITIVE CONTROL and it passed. |
-| Matched-compute eval harness | exp3727 | Built + unit-tested (FLOP accounting + budget-matcher). The instrument for the .342 decisive comparison is ready. |
-| Bounded checkpointed training | exp3728 | **`blocked_ebt`, 0 steps, 65.5 s.** `preconditions_checked={ebt_vendored:false, smoke_passed:false}` — **both demonstrably false**: exp3725/3726 prove the module IS importable and the smoke DID pass. The task's precondition logic (`import carnot.phase3.ebt_upstream` + `os.path.exists("results/experiment_3726_*.json")`, a RELATIVE path) evaluated False because the run executed in a bad cwd / sys.path / venv. **It never trained a single step.** |
-| Kill-gate verdict | exp3729 | Read exp3728's `blocked_ebt`/steps=0 and concluded "energy-as-generator is bounded at small scale." `green_light_342=false`. |
+| `.341` | exp3728 cwd/import-path bug → 0 steps | exp3729 called it "bounded at small scale" (false-negative) |
+| `.342` | exp3734 ran 2 steps with **`cuda:false`** (on CPU, 100 MB VRAM) yet claimed "stable_so_far"; exp3735 hit **`blocked_cuda`** | exp3736 correctly said "untested — training did not complete" |
 
-**Diagnosis: the .341 kill-gate "FAIL" is an INFRASTRUCTURE FALSE-NEGATIVE, not a scientific
-finding.** It is exactly the failure mode CLAUDE.md's **FALSE_NEGATIVE_RISK** discipline names: a
-null/negative claim ("the route is bounded") asserted **without a positive control passing the
-bounded run**. The positive control (exp3726 single-step smoke) PASSED — the EBT trains, fits the
-GPU, and the loss decreases. exp3728 bailed before training on a cwd/import-path bug; exp3729
-mislabeled that infra failure as a mechanism result. Per the **Reading-Results Discipline**, a
-verdict synthesized over a `blocked_*` upstream with `steps=0` cannot bound a mechanism.
+`.342` correctly *recovered* the `.341` false-negative (exp3733 corrigendum) and
+correctly *refused to overclaim* (exp3736 = untested, exp3739 = part-b not-run).
+But it **never actually trained the EBT on the GPU**. The mechanism is still
+untested.
 
-**Strategic position:** Thesis A is NOT dead. The kill-gate part-(a) question — *does a tiny EBT
-train to stable convergence in a bounded budget?* — is **still open**, because no genuine bounded
-training run has happened yet. `.342` must (1) correct the record honestly, (2) FIX the harness bug
-and run the genuine bounded training, (3) render the REAL part-(a) verdict, and if stable,
-(4) run the matched-COMPUTE comparison — kill-gate part (b), the actual thesis test.
+**Root cause (verified live 2026-06-02):** the experiment Run commands use bare
+`python scripts/...`. On this box, `/usr/bin/python3` has **no torch at all**, and
+the only interpreter with torch (2.11.0+cu128, both RTX 3090s visible,
+`cuda.is_available()==True`) is **`.venv/bin/python`**. When the conductor's agent
+ran exp3734 it reached a torch whose `cuda.is_available()` returned `False`, then
+**silently dropped to CPU** and reported a 2-step "stable_so_far" signal — a soft
+false-positive — instead of blocking.
 
-This is NOT breadth churn (north-star §1): it is the direct, gated continuation of the
-operator-seeded Thesis-A bring-up, recovering from a same-day infrastructure false-negative.
+**`.343` is the direct, gated continuation that fixes this for good:**
 
----
+1. **Pin `.venv/bin/python`** in every GPU task's Run command AND precondition check.
+2. **HARD-block on `cuda:false`** — emit `blocked_cuda` and STOP. **Never** train on
+   CPU and report a stability signal (the exp3734 anti-pattern). Capture
+   `sys.executable`, `CUDA_VISIBLE_DEVICES`, and `nvidia-smi` on block so the cause
+   is auditable.
+3. Run the **GENUINE** bounded checkpointed training of the tiny EBT + matched tiny
+   AR baseline (the EBT-paper stability recipe), render the **real part-(a) verdict**
+   superseding exp3736, and — if stable — run the **matched-COMPUTE** comparison
+   (kill-gate part b).
 
-## 2. The three biggest gaps (PRD vision vs current state)
-
-1. **The Phase-3 generator thesis has no genuine empirical signal yet.** The PRD endgame (Phase 3)
-   is an open-source EBM/EBT foundation model with non-autoregressive reasoning. Thesis A is the
-   first concrete test of that mechanism. `.341` produced a positive single-step control and then a
-   spurious negative; `.342` must produce the **genuine** bounded-training stability signal and, if
-   stable, the matched-COMPUTE accuracy comparison. Until a real bounded run exists, the route is
-   neither alive nor dead — it is **untested**, and an untested route blocks the Phase-3 decision.
-
-2. **The record carries an unsupported negative claim.** `.341`'s capstone + kill-gate state
-   "energy-as-generator bounded at small scale." Left uncorrected, a future planner reads that as
-   a settled negative (like P0.1) and never revisits the route — enclosing a venture bet on a
-   harness bug. `.342` issues a CLEAN corrigendum (exp1850 pattern): preserve exp3729's numbers,
-   annotate the false-negative root cause, and re-open part-(a) as untested.
-
-3. **Continuous self-learning has not yet touched the training loop itself.** FR-11 self-learning
-   (research-program.md Tiers 1–4) has been exercised on verifier-template consolidation, never on
-   the EBT bring-up. The most likely failure mode of EBT training is divergence; which stabilizer
-   recipe prevents it is exactly the kind of online, counter-update (Tier-1) knowledge the
-   self-learning system should accumulate. `.342` wires a Tier-1 online tracker of per-stabilizer
-   divergence-prevention efficacy across training chunks — a self-learning experiment that is also
-   directly load-bearing for the kill-gate.
+**INVARIANTS (do not regress):** `paper_ready` stays TRUE (G1–G4 closed 2026-05-31);
+frozen FoVer headline 0.9131 stays frozen; P0.1 / energy-**SELECTION** stays
+settled-bounded — this milestone tests **GENERATION**, a different mechanism. The
+banked verifier product is unaffected; this is the venture bet with a knife to its
+own throat.
 
 ---
 
-## 3. Architecture (Thesis-A bring-up, recovered)
+## What `.342` proved (read honestly)
+
+- The record-honesty machinery works: the `.341` infra false-negative was cleanly
+  corrected (exp3733, exp1850 pattern), and the `.342` verdicts refused to overclaim
+  an un-run test (exp3736 "untested", exp3739 "not-run"). **This discipline is the
+  reason we can keep betting cheaply.**
+- The matched-compute harness (exp3727) is built + unit-tested and unused — it waits
+  on a trained EBT.
+- The single-step smoke (exp3726, `.341`) already showed a 38M EBT fits one 3090 at
+  1283 MB with finite, decreasing loss. The model is not the problem.
+- **The only thing standing between us and a real Thesis-A signal is reliable CUDA
+  in the experiment subprocess.** That is a one-line-class fix (`.venv/bin/python`)
+  plus a discipline fix (block, never CPU-drop).
+
+## The 3 biggest gaps vs the PRD vision
+
+1. **No empirical signal on energy-as-generator.** Phase 3's endgame is a
+   hardware-acceleratable EBM/EBT foundation model. The operator seeded the most
+   direct test of that thesis and it remains untested at bounded scale purely for
+   infra reasons. `.343` closes this gap or bounds the route with a real divergence.
+2. **The experiment harness silently degrades GPU→CPU.** A training task that finds
+   `cuda:false` and trains 2 CPU steps while reporting "stable" is a fabrication-class
+   failure mode the adversarial-verify floor did not catch (2 steps is too short to
+   trip duration heuristics, and `inference_substrate` was self-declared
+   `live_llm_inference`). `.343` ships the discipline fix: GPU tasks block on
+   `cuda:false`, never CPU-drop.
+3. **Continuous self-learning has nothing yet to learn from on this substrate.**
+   FR-11 v15 (`.342`) initialised a stabilizer-efficacy tracker over 3 *aborted*
+   chunks. Once the EBT actually trains, the tracker gets real divergence/stability
+   data to upweight an effective recipe (Tier-1 CPU counter-updates) — the
+   self-learning experiment mandated by research-program.md.
+
+---
+
+## Architecture of the milestone
 
 ```
-                       ┌──────────────────────────────────────────────┐
-   .341 (DONE, but    │  exp3725 vendor+audit  ✔   exp3726 smoke  ✔    │
-   verdict false-neg) │  exp3727 matched-compute harness (tested) ✔   │
-                       │  exp3728 BLOCKED (cwd/import bug) ✘ steps=0   │
-                       │  exp3729 verdict = FALSE-NEGATIVE  ✘          │
-                       └───────────────────────┬──────────────────────┘
-                                                │
-  .342 PHASE 0  archive/activate (exp3732) + CLEAN corrigendum of exp3729 (exp3733; record honest)
-                                                │
-  .342 PHASE 1  ┌─────────────────────────────────────────────────────────────────┐
-  (the genuine  │ exp3734  FIX exp3728 (robust importlib check + abs paths, run    │
-   part-a)      │          from {project_root}); ship driver w/ EBT stability      │
-                │          recipe (random-alpha + replay buffer + Langevin noise +  │
-                │          grad-clip + KL-term CD); FIRST bounded train chunk        │
-                │          EBT + matched-AR  ──checkpoint──▶                         │
-                │ exp3735  RESUME chunk 2 (gated: chunk-1 trained >0 steps)          │
-                └───────────────────────────┬─────────────────────────────────────┘
-                                             │
-  .342 PHASE 2  exp3736  REAL kill-gate part-(a) verdict over the GENUINE run
-                          (supersedes false-negative exp3729) → green_light_342 (bare bool)
-                                             │  (gate: stable)
-                ┌────────────────────────────┴────────────────────────────┐
-                │ exp3737 EBT energy-descent GENERATION smoke on held-out    │
-                │ exp3738 matched-COMPUTE comparison: EBT energy-descent vs   │
-                │         AR best-of-N at EQUAL FLOPs (exp3727 harness)       │
-                │ exp3739 kill-gate part-(b) verdict: EBT beat AR @ equal     │
-                │         compute? does gap narrow w/ 2x train? (honest)      │
-                └────────────────────────────────────────────────────────────┘
-                                             │
-  .342 PHASE 3  exp3740 FR-11 v15 Tier-1 online stabilizer-efficacy tracker (self-learning)
-                exp3741 KV260 opportunistic continuity (terminal confirm)
-                exp3742 capstone .342 (honest: record corrected; real part-a; part-b verdict)
+ exp3743  archive .342 / activate .343            (ops, codex)
+    |
+ exp3744  corrigendum: .342 part-(a) was AGAIN     (phase3, codex, aggregation)
+    |     infra-blocked (cuda:false bare-python;
+    |     exp3734 over-claimed "stable" on 2 CPU
+    |     steps); part-(a) STILL untested
+    |
+ exp3745  THE FIX: .venv/bin/python + HARD cuda     (phase3, claude/opus, GPU)
+    |     block (never CPU-drop) + real bounded
+    |     training chunk 1 of tiny EBT + matched AR
+    |          | cumulative_steps_trained (bare int)
+    v          v
+ exp3746  resume bounded training chunk 2     [gated: exp3745 steps > 0]
+    |          | (phase3, claude/opus, GPU)
+    v
+ exp3747  REAL part-(a) verdict (supersedes exp3736) (phase3, codex, aggregation)
+    |          | green_light_343 (bare bool)
+    v          v
+ exp3748  EBT energy-descent generation smoke  [gated: exp3747 green_light_343==true]
+    |          | ebt_can_generate (bare bool)   (phase3, codex, GPU)
+    v          v
+ exp3749  THE THESIS TEST: matched-COMPUTE      [gated: exp3748 ebt_can_generate==true]
+    |          | EBT energy-descent vs AR best-of-M at EQUAL FLOPs, n>=100
+    |          | accuracy_delta (bare float)     (phase3, codex, GPU)
+    v          v
+ exp3750  part-(b) verdict over exp3749               (phase3, codex, aggregation)
+              ebt_beats_ar_at_matched_compute (bare bool)
 
-  INVARIANTS (every task): paper_ready stays TRUE (G1-G4 closed 2026-05-31); frozen FoVer 0.9131
-  stays frozen; P0.1 / energy-SELECTION stays settled-bounded (this tests GENERATION, a different
-  mechanism); never edit ops/north-star.md; never trigger CI; never push.
+ exp3751  FR-11 self-learning v16 — Tier-1 stabilizer tracker (self-learning, codex)
+          resumes exp3740 (v15) state with REAL training diagnostics
+ exp3752  KV260 opportunistic terminal-state audit          (hardware, codex)
+ exp3753  capstone .343 — state the honest Thesis-A outcome (ops, codex)
 ```
 
-## 4. Phase descriptions
+### The genuine two-part kill-gate (unchanged in substance from `.342`, now actually runnable)
 
-- **Phase 0 — Transition + record correction.** Archive `.341` honestly (the kill-gate was an
-  infra false-negative; part-(a) re-opened as untested). Issue a CLEAN corrigendum of exp3729
-  (preserve numbers, annotate root cause). Cheap, codex, aggregation-only.
-- **Phase 1 — The genuine kill-gate part (a).** Fix exp3728's cwd/import precondition bug (robust
-  `importlib.util.find_spec` check, absolute artifact paths, run from `{project_root}`), ship the
-  training driver with the EBT-paper stability recipe (random-alpha + replay buffer + Langevin
-  noise + gradient clamp + the KL-term CD fix from arXiv:2012.01316), and run two bounded
-  checkpointed chunks of the tiny EBT + a matched tiny AR baseline on the SAME corpus/budget.
-  Heartbeat every K steps; ≤1500 s/run then checkpoint+exit; resume. **requires_claude + opus** —
-  divergence diagnosis is open-ended judgment under ambiguity (operator directive 2026-06-02).
-- **Phase 2 — Real verdict + the actual thesis test.** Render the genuine part-(a) verdict over the
-  real run (supersedes exp3729). If stable, smoke EBT generation, then run the matched-COMPUTE
-  comparison (EBT energy-descent vs AR best-of-N at EQUAL inference FLOPs via the exp3727 harness),
-  and render the honest part-(b) verdict. The matched-COMPUTE discipline is load-bearing: a
-  matched-PARAMS "win" is just extra inference FLOPs (the exact P0.1 trap).
-- **Phase 3 — Self-learning + hardware + capstone.** FR-11 v15 Tier-1 online stabilizer-efficacy
-  tracker (CPU counter updates; self-learning mandate). KV260 opportunistic terminal-confirm.
-  Capstone: record the corrected history, the real part-(a) outcome, and the part-(b) verdict —
-  paper_ready stays TRUE, frozen 0.9131 unchanged.
+- **Part (a) — stability.** The tiny EBT trains to STABLE convergence within the
+  bounded 3090 budget. PASS requires ALL of: `cumulative_steps_trained > 0` on a REAL
+  GPU run (not the CPU-drop); no NaN/inf/divergence; bounded gradient norms; a
+  non-degenerate loss/energy trajectory (NOT a monotonic runaway to −∞ — EBT energy
+  is unbounded, so a collapsing energy can masquerade as convergence).
+- **Part (b) — the thesis.** At EQUAL total inference FLOPs, EBT energy-descent
+  generation beats the matched AR best-of-M baseline on held-out GSM8K reasoning
+  accuracy (n≥100), AND/OR the gap narrows with 2× training.
+- **Matched-COMPUTE, never matched-params (the P0.1 lesson, load-bearing):** energy
+  descent runs N forward passes per prediction, so a matched-params "win" is just
+  extra inference FLOPs. Give AR an equal-FLOP best-of-M budget via the exp3727
+  harness. NFE is the cleaner inner-loop unit (arXiv:2511.05562); FLOPs as cross-check
+  (arXiv:2408.03314). A win counts ONLY at equal total inference compute.
 
-## 5. Dependency graph (bare-value gates only; no None-read cascades)
+**An honest NEGATIVE at either part is a real finding** that bounds the route cheaply
+— as valuable as a positive. The kill-gate makes this a *bounded* bet, not a
+P0.1-style grind.
 
-```
-exp3732 (archive/activate) ─▶ exp3733 (corrigendum exp3729)
-exp3734 (fix+driver+chunk1, gpu/opus)
-   └─ cumulative_steps_trained>0 (BARE int) ─▶ exp3735 (resume chunk2, gpu/opus)
-exp3734,exp3735 ─▶ exp3736 (REAL part-a verdict) ─▶ green_light_342 (BARE bool)
-   └─ green_light_342==true ─▶ exp3737 (generation smoke, gpu)
-        └─ ebt_can_generate==true (BARE bool) ─▶ exp3738 (matched-compute, gpu)
-              └─▶ exp3739 (part-b verdict)
-exp3740 (FR-11 v15 self-learning) · exp3741 (KV260) · exp3742 (capstone) — ungated, graceful
-disk-presence fallback (read upstream if present, else record honest "not-run")
-```
+---
 
-`gated_on` is used ONLY on the expensive GPU tasks (exp3735/3737/3738) to genuinely skip GPU+Sonnet
-time when the prerequisite is unmet, and ONLY against **bare-value** fields (per
-`feedback_gated_fields_must_be_bare`: a principle-annotated `{value,principle}` dict breaks the
-comparator). Verdict/aggregation/self-learning/hardware/capstone tasks carry NO `gated_on` and read
-upstream artifacts with a graceful disk-presence fallback (the .340 proven-safe pattern).
+## Routing rationale (current backend reality)
 
-## 6. Hardware requirements
+- **gemini still CRASHES real GPU workloads** (exp3703/exp3714 history) → the
+  cheap-default for REAL GPU/CPU mechanical work is **codex** (`requires_codex`),
+  not gemini.
+- The two open-ended training-debug tasks (**exp3745** fix+diagnose+train,
+  **exp3746** resume+stabilize) are **claude + opus** (`requires_claude`): diagnosing
+  why CUDA was unavailable in-subprocess, the venv-pinning + hard-block fix, and
+  EBT divergence stabilization are multi-file choreography + open-ended judgment
+  under ambiguity (standing operator directive 2026-06-02). The most likely real
+  failure mode lives here.
+- The GPU EVAL tasks (**exp3748** generation smoke, **exp3749** matched-compute) are
+  **codex + requires_codex + gpu**: running the trained models through the
+  already-built + unit-tested exp3727 harness is mechanical with a deterministic
+  FLOP-accounting criterion.
+- Everything else (archive, corrigendum, verdicts, FR-11, KV260, capstone) is
+  **codex + requires_codex** (aggregation / CPU).
 
-- **2x RTX 3090 (CUDA):** Phase-1 training (exp3734/3735) + Phase-2 generation/eval (exp3737/3738).
-  The tiny 38M EBT fits one 3090 at ~1.3 GB (exp3726); the matched AR baseline is the same band.
-- **KV260 (SSH only):** opportunistic terminal-confirm (exp3741). SSH-reachability precondition
-  only — NEVER a host `/dev/mmcblk*` check (KV260 SSH-Not-SD-Card discipline).
-- gemini still crashes real GPU workloads (exp3703) → codex is the non-claude default; the heavy
-  open-ended training-debug tasks are requires_claude+opus.
+## Gating discipline
 
-## 7. Routing & discipline summary
+- `gated_on` is used ONLY on the expensive GPU tasks (exp3746/3748/3749) against
+  **BARE-value** upstream fields (per `feedback_gated_fields_must_be_bare` — a
+  `{value, principle}` dict breaks the gate). Every gated upstream field
+  (`cumulative_steps_trained`, `green_light_343`, `ebt_can_generate`) is emitted as a
+  bare scalar.
+- Verdict / aggregation / self-learning / hardware / capstone tasks carry NO
+  `gated_on` and read upstream with a graceful disk-presence fallback (the `.340`
+  proven-safe pattern: read if present, else record an honest "not-run", never crash
+  on a None read).
+- `prior_failures` blocks (all four sub-fields) on every task whose scope matches a
+  prior failed/blocked attempt (exp3728/3734/3735 for training; exp3729/3736 for the
+  part-a verdict; exp3729 for part-b). `operator_override` on the routine
+  archive/capstone/KV260/FR-11-lineage tasks.
 
-- **requires_claude + opus:** exp3734 (fix+driver+chunk1), exp3735 (resume chunk2) — EBT training is
-  finicky; divergence diagnosis + multi-file driver work meets the requires_claude bar (operator
-  directive 2026-06-02).
-- **codex + requires_codex + gpu:** exp3737 (generation smoke), exp3738 (matched-compute) — running
-  the trained models through the already-tested exp3727 harness is mechanical with a deterministic
-  FLOP-accounting criterion; gemini crashes GPU so codex is the cheap-default.
-- **codex + requires_codex (no gpu):** all archive/corrigendum/verdict/self-learning/hardware/
-  capstone tasks (aggregation or CPU).
-- **PRECONDITIONS blocks** on every GPU task (CUDA + robust EBT-importable + corpus). The exp3728
-  fix is the headline lesson: robust `importlib.util.find_spec` check + absolute paths + run from
-  `{project_root}`; a missing resource → `blocked_<resource>`, never a fabricated pass.
-- **Failed-Experiment Rerun Discipline:** exp3734/3735/3736 scope-match exp3728/exp3729 → each
-  carries a `prior_failures:` block (root cause = infra false-negative, what's different = fixed
-  harness + real training, `retire_if_same_verdict: true`).
-- **operator_override:** routine archive/capstone/KV260/FR-11-lineage tasks carry the standing
-  2026-05-29 override string for false-positive scope-matches.
-- **inference-substrate hygiene:** aggregation tasks set `aggregation_from_upstream_artifacts` and
-  carry NO GGUF/CUDA marker; GPU training/eval sets `live_llm_inference` with full methodology.
-- **Anti-poison-test clause** on tasks that ship code+tests (exp3734, exp3740): the test must assert
-  against the script's real behavior, never poison the conductor pre-test gate.
+## Hardware requirements
 
-## 8. Honest framing (what a green-light does and does not mean)
+- **2× RTX 3090** (CUDA, the training + eval substrate). Verified idle and CUDA-live
+  via `.venv/bin/python` on 2026-06-02. The tiny EBT fits one 3090 at ~1.3 GB.
+- **KV260** opportunistic terminal-state confirm (SSH-only, per KV260
+  SSH-Not-SD-Card discipline). Terminal since `.340`.
 
-A part-(a) PASS means "the tiny EBT trains stably enough to run the matched-compute comparison" —
-NOT "energy-as-generator works." A part-(b) result is the actual thesis signal, and an honest
-NEGATIVE there (EBT does not beat matched-AR at equal compute, gap does not narrow with 2x train) is
-as valuable as a positive — it bounds the route cheaply, exactly as the kill-gate was designed to.
-This remains a venture bet with a knife to its own throat; banking the verifier product is
-unaffected (paper_ready stays TRUE; frozen 0.9131 stays frozen).
+## New references folded in (2026-06-02)
+
+arXiv:2408.03314 (FLOP-matched test-time compute, the methodology template),
+arXiv:2511.05562 (IterRef — NFE fair-compute accounting), arXiv:2504.01005
+(when-to-solve-vs-verify, compute-matched), arXiv:2505.14999 (EORM — small energy
+reranker, the baseline to beat), arXiv:2603.12248 (energy-based fine-tuning),
+arXiv:2307.01668 (diffusion contrastive divergence — fallback negative-sampler),
+arXiv:2510.08554 (DCoLT diffusion GSM8K — direction not magnitude). See
+research-references.md `.343 additions`.
+
+## Success criteria for `.343`
+
+1. The EBT genuinely trains on the GPU (`cumulative_steps_trained > 0` with
+   `cuda:true`), and a REAL part-(a) verdict (exp3747) supersedes the
+   "untested" exp3736 — **stable→green-light, or a genuine divergence→bounded.**
+   Either is a real result; another infra-block is the only outcome that counts as a
+   failure of this milestone.
+2. If part-(a) green-lights: a matched-COMPUTE part-(b) verdict (exp3750) with the
+   honest EBT-vs-AR delta at equal FLOPs, n≥100.
+3. `paper_ready` stays TRUE; frozen 0.9131 unchanged; P0.1 stays settled-bounded.

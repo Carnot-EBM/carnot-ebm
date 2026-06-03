@@ -20675,3 +20675,46 @@ comparison, using the stability recipes below.
 - **A Theoretical Lens for RL-Tuned LMs via EBMs (arXiv:2512.18730):** exact equivalence between
   the RLVR objective and minimizing expected KL to an optimal reasoning distribution — unifies
   the verifier-as-energy and generator-as-energy views under one objective.
+
+## .343 additions — matched-compute methodology + EBT-stability neighbours (2026-06-02)
+
+The `.342` genuine kill-gate part-(a) was AGAIN infra-blocked: exp3734 ran only 2 steps
+with `cuda:false` (on CPU, peak_vram 100 MB) yet over-claimed "stable_so_far", and exp3735
+hit `blocked_cuda`. Root cause: experiment subprocesses ran bare `python` (system python has
+NO torch; only `.venv/bin/python` has torch 2.11+cu128 with both 3090s). `.343` pins
+`.venv/bin/python`, HARD-blocks on `cuda:false` (never trains on CPU and reports a stability
+signal), then runs the GENUINE training + matched-compute comparison. New references below;
+the strongest matched-compute templates are 2408.03314 (FLOP-matched + difficulty binning)
+and 2511.05562 (NFE accounting — the cleaner unit for the EBT energy-descent inner loop).
+
+- **Scaling LLM Test-Time Compute Optimally (arXiv:2408.03314, Snell/Lee/Xu/Kumar, ICLR 2025):**
+  the canonical FLOPs-matched test-time-compute reference; iterative-refinement beats best-of-N
+  at lower compute on EASY problems but the advantage is difficulty-dependent. Methodology
+  template for the EBT-vs-AR matched-FLOP table — bin by difficulty; count EBT energy-descent
+  steps in the SAME unit as AR best-of-N passes or the comparison silently favours EBT.
+- **Effective Test-Time Scaling of Discrete Diffusion via Iterative Refinement / IterRef
+  (arXiv:2511.05562, S. Lee et al., 2025):** reward-guided noise-denoise refinement as
+  Multiple-Try Metropolis; compares under matched compute measured in NFEs (function
+  evaluations) with generator + reward on equal footing. Adopt NFE as the primary fair-compute
+  unit for the EBT inner loop; report FLOPs as cross-check.
+- **When To Solve, When To Verify (arXiv:2504.01005, 2025):** compute-matched analysis of more
+  sampling (self-consistency) vs spending the budget on generative verification. Directly bears
+  on the EBT (simultaneously generator + verifier) budget-allocation question; consistent with
+  the P0.1 "energy-selection doesn't beat SC where SC is strong" finding.
+- **EORM — Learning to Rank Chain-of-Thought with a Small Energy Model (arXiv:2505.14999,
+  E.H. Jiang et al., 2025):** a small energy-based post-hoc CoT reranker. The natural baseline
+  to beat: if a tiny energy RERANKER already captures most of the gain, EBT-as-GENERATOR must
+  justify the extra cost of iterative energy-descent over cheap reranking. Sharpens the ablation.
+- **Matching Features, Not Tokens — Energy-Based Fine-Tuning of LMs (arXiv:2603.12248, Jelassi
+  et al., 2026):** EBFT via strided block-parallel rollout sampling, KL-regularised
+  feature-matching. Most recent EBM-LM training-objective paper; its sampling/feature-matching
+  framing is applicable to stabilising the energy gradient. Caveat: a fine-tuning method on a
+  pretrained LM — stability gains may not transfer to a 38M from-scratch EBT; check its added
+  sampling cost isn't inflating its reported improvement.
+- **Diffusion Contrastive Divergence (arXiv:2307.01668, Wang et al., 2023):** replaces Langevin
+  MCMC in CD with parameter-free diffusion negative-sampling. The alternative negative-sampler
+  to A/B against if the tiny-EBT Langevin inner loop is unstable/expensive at small scale.
+- **DCoLT-class diffusion reasoning (arXiv:2510.08554, 2025):** RL-trained LLaDA diffusion LM
+  reports +9.8% GSM8K / +19.5% HumanEval. A non-AR GSM8K direction sanity-anchor — but these are
+  8B-class RL-post-trained models; do NOT read the magnitude as achievable by a 38M from-scratch
+  EBT. Direction, not magnitude.
