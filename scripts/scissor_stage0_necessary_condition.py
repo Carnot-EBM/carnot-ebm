@@ -150,20 +150,28 @@ def main():
             "sc_fpr@rec0.8": None if sf is None else round(sf, 3),
         }
 
-    # honest verdict
+    # honest verdict — guard against the two confounds DT flagged (wrong tool / wrong regime)
     mp = out["matched_operating_points"].get("recall_on_correct=0.8", {})
     beats = mp.get("constraint_beats_sc")
     au_c, au_s = out["auroc_constraint_z3"], out["auroc_self_consistency"]
-    if beats and au_c and au_c > 0.55:
+    # SC-failure subset = residual items where SC is confident-wrong (the moat's actual home)
+    n_sc_fail = sum(1 for i in range(n) if labels[i] == 0 and sc_scores[i] is not None and sc_scores[i] >= 0.5)
+    out["sc_failure_subset_n"] = n_sc_fail  # where an independent verifier could add value
+    if au_c is not None and au_c < 0.55:
+        verdict = ("complete: scissor_stage0_INCONCLUSIVE_CONFOUNDED_constraint_AUROC_"
+                   f"{au_c:.3f}_at_chance_WRONG_TOOL_z3_arithmetic_on_algebra_MATH_not_a_moat_disproof"
+                   f"_need_domain_matched_or_full_ensemble; also SC_AUROC_{au_s:.3f}_near_ceiling_so_SC_failure_subset_only_{n_sc_fail}_items_WRONG_REGIME")
+    elif au_s is not None and au_s > 0.9 and n_sc_fail < 15:
+        verdict = ("complete: scissor_stage0_INCONCLUSIVE_WRONG_REGIME_SC_AUROC_"
+                   f"{au_s:.3f}_near_ceiling_SC_failure_subset_only_{n_sc_fail}_items_no_room_for_moat_here"
+                   "_moat_test_needs_a_regime_where_SC_genuinely_fails")
+    elif beats and au_c and au_c > 0.55:
         verdict = ("complete: scissor_stage0_NECESSARY_CONDITION_MET_constraint_beats_self_consistency_on_residual"
                    f"_fpr_{mp.get('constraint_fpr_residual')}_vs_{mp.get('self_consistency_fpr_residual')}_auroc_{au_c:.3f}_BUILD_GPU_SWEEP")
-    elif au_c is None or out["constraint_coverage"] < 0.15:
-        verdict = (f"complete: scissor_stage0_INCONCLUSIVE_constraint_coverage_{out['constraint_coverage']}_too_low"
-                   "_z3_rarely_fires_on_this_corpus_need_broader_constraint_set_or_arithmetic_heavy_corpus")
     else:
-        verdict = ("complete: scissor_stage0_NECESSARY_CONDITION_NOT_MET_constraint_does_not_beat_self_consistency_on_residual"
+        verdict = ("complete: scissor_stage0_NECESSARY_CONDITION_NOT_MET_constraint_discriminates_but_does_not_beat_self_consistency"
                    f"_constraint_fpr_{mp.get('constraint_fpr_residual')}_sc_fpr_{mp.get('self_consistency_fpr_residual')}"
-                   f"_auroc_c_{au_c}_s_{au_s}_DO_NOT_BUILD_SWEEP_moat_questionable")
+                   f"_auroc_c_{au_c}_s_{au_s}_moat_questionable")
 
     art = {
         "experiment": "scissor_stage0_necessary_condition",
