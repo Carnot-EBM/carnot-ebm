@@ -1,0 +1,217 @@
+{
+  "build_result": {
+    "attempted": false,
+    "detail": "python -m build unavailable",
+    "passed": null
+  },
+  "cli_passed": true,
+  "cli_result": {
+    "calibration_source": {
+      "code_abstention": {
+        "abstain_on_code": true,
+        "code_verdict": "no_code_verdict",
+        "n_code_examples_seen": 0,
+        "reason": "Exp 3705 leak audit set code_signal_survives_heldout=false after finding the Exp 3695 in-corpus 1.0 code AUROC was separable-by-construction; the shipped detector is narrowed to math-only for product verdicts."
+      },
+      "corpus_status": {
+        "code": {
+          "balanced_exp3658": true,
+          "code_native_exp3695": false,
+          "n_examples": 60,
+          "path": "data/code_verification_corpus_v2.jsonl",
+          "reason": "Exp 3705 leak audit set code_signal_survives_heldout=false after finding the Exp 3695 in-corpus 1.0 code AUROC was separable-by-construction; the shipped detector is narrowed to math-only for product verdicts.",
+          "status": "abstained"
+        },
+        "math": {
+          "n_examples": 6548,
+          "path": "data/fover_corpus_v4.json",
+          "status": "loaded"
+        }
+      },
+      "n_examples_per_domain": {
+        "math": 6548
+      },
+      "random_seed": 3671
+    },
+    "code_operating_point_scope": "math_only_with_code_abstain; math AUROC 0.98/ECE 0.009 preserved; Exp 3705 found the Exp 3695 in-corpus code AUROC 1.0 leaked and code_signal_survives_heldout=false, so code-domain candidates return no code verdict until a non-leaky held-out code operating point is earned",
+    "detector_module_path": "python/carnot/pipeline/second_pair_detector.py",
+    "domain_metrics": {
+      "calibration_brier_ece_per_domain": {
+        "math": {
+          "brier": 0.013543,
+          "ece": 0.008158
+        }
+      },
+      "confidence_alone_auroc_per_domain": {
+        "math": 0.5
+      },
+      "ensemble_alone_auroc_per_domain": {
+        "math": 0.979656
+      },
+      "fused_detector_auroc_per_domain": {
+        "math": 0.979656
+      }
+    },
+    "returncode": 0,
+    "scores": [
+      {
+        "abstained": false,
+        "calibrated_error_score": 0.890356,
+        "candidate_id": "exp3769_math_slip",
+        "confidence_error": 0.8,
+        "domain": "math",
+        "ensemble_energy": 0.8,
+        "operating_point": {
+          "actual_fpr": 0.1,
+          "expected_recall": 0.970588,
+          "fpr_budget": 0.1,
+          "threshold": 0.012717
+        }
+      }
+    ],
+    "stderr_tail": "",
+    "stdout_tail": " the shipped detector is narrowed to math-only for product verdicts.\"\n    },\n    \"corpus_status\": {\n      \"code\": {\n        \"balanced_exp3658\": true,\n        \"code_native_exp3695\": false,\n        \"n_examples\": 60,\n        \"path\": \"data/code_verification_corpus_v2.jsonl\",\n        \"reason\": \"Exp 3705 leak audit set code_signal_survives_heldout=false after finding the Exp 3695 in-corpus 1.0 code AUROC was separable-by-construction; the shipped detector is narrowed to math-only for product verdicts.\",\n        \"status\": \"abstained\"\n      },\n      \"math\": {\n        \"n_examples\": 6548,\n        \"path\": \"data/fover_corpus_v4.json\",\n        \"status\": \"loaded\"\n      }\n    },\n    \"n_examples_per_domain\": {\n      \"math\": 6548\n    },\n    \"random_seed\": 3671\n  },\n  \"code_operating_point_scope\": \"math_only_with_code_abstain; math AUROC 0.98/ECE 0.009 preserved; Exp 3705 found the Exp 3695 in-corpus code AUROC 1.0 leaked and code_signal_survives_heldout=false, so code-domain candidates return no code verdict until a non-leaky held-out code operating point is earned\",\n  \"detector_module_path\": \"python/carnot/pipeline/second_pair_detector.py\",\n  \"domain_metrics\": {\n    \"calibration_brier_ece_per_domain\": {\n      \"math\": {\n        \"brier\": 0.013543,\n        \"ece\": 0.008158\n      }\n    },\n    \"confidence_alone_auroc_per_domain\": {\n      \"math\": 0.5\n    },\n    \"ensemble_alone_auroc_per_domain\": {\n      \"math\": 0.979656\n    },\n    \"fused_detector_auroc_per_domain\": {\n      \"math\": 0.979656\n    }\n  },\n  \"scores\": [\n    {\n      \"abstained\": false,\n      \"calibrated_error_score\": 0.890356,\n      \"candidate_id\": \"exp3769_math_slip\",\n      \"confidence_error\": 0.8,\n      \"domain\": \"math\",\n      \"ensemble_energy\": 0.8,\n      \"operating_point\": {\n        \"actual_fpr\": 0.1,\n        \"expected_recall\": 0.970588,\n        \"fpr_budget\": 0.1,\n        \"threshold\": 0.012717\n      }\n    }\n  ],\n  \"surface\": \"score_candidates\",\n  \"wired_surface\": \"score_candidates MCP tool and carnot score-candidates CLI\"\n}\n",
+    "surface": "score_candidates",
+    "wired_surface": "score_candidates MCP tool and carnot score-candidates CLI"
+  },
+  "duration_s": 14.527,
+  "honest_verdict": "complete: phase1_e2e_smoke_package_import_pipeline_mcp_protocol_cli_passed_wiring_smoke_not_accuracy_claim",
+  "inference_substrate": "live_llm_inference (principle: the pipeline runs a small model E2E).",
+  "is_wiring_smoke_not_accuracy_claim": true,
+  "mcp_protocol_exchange_passed": true,
+  "mcp_protocol_result": {
+    "calibration_source": {
+      "code_abstention": {
+        "abstain_on_code": true,
+        "code_verdict": "no_code_verdict",
+        "n_code_examples_seen": 0,
+        "reason": "Exp 3705 leak audit set code_signal_survives_heldout=false after finding the Exp 3695 in-corpus 1.0 code AUROC was separable-by-construction; the shipped detector is narrowed to math-only for product verdicts."
+      },
+      "corpus_status": {
+        "code": {
+          "balanced_exp3658": true,
+          "code_native_exp3695": false,
+          "n_examples": 60,
+          "path": "data/code_verification_corpus_v2.jsonl",
+          "reason": "Exp 3705 leak audit set code_signal_survives_heldout=false after finding the Exp 3695 in-corpus 1.0 code AUROC was separable-by-construction; the shipped detector is narrowed to math-only for product verdicts.",
+          "status": "abstained"
+        },
+        "math": {
+          "n_examples": 6548,
+          "path": "data/fover_corpus_v4.json",
+          "status": "loaded"
+        }
+      },
+      "n_examples_per_domain": {
+        "math": 6548
+      },
+      "random_seed": 3671
+    },
+    "code_operating_point_scope": "math_only_with_code_abstain; math AUROC 0.98/ECE 0.009 preserved; Exp 3705 found the Exp 3695 in-corpus code AUROC 1.0 leaked and code_signal_survives_heldout=false, so code-domain candidates return no code verdict until a non-leaky held-out code operating point is earned",
+    "detector_module_path": "python/carnot/pipeline/second_pair_detector.py",
+    "domain_metrics": {
+      "calibration_brier_ece_per_domain": {
+        "math": {
+          "brier": 0.013543,
+          "ece": 0.008158
+        }
+      },
+      "confidence_alone_auroc_per_domain": {
+        "math": 0.5
+      },
+      "ensemble_alone_auroc_per_domain": {
+        "math": 0.979656
+      },
+      "fused_detector_auroc_per_domain": {
+        "math": 0.979656
+      }
+    },
+    "is_error": false,
+    "protocol": "mcp_stdio_json_rpc",
+    "scores": [
+      {
+        "abstained": false,
+        "calibrated_error_score": 0.890356,
+        "candidate_id": "exp3769_math_slip",
+        "confidence_error": 0.8,
+        "domain": "math",
+        "ensemble_energy": 0.8,
+        "operating_point": {
+          "actual_fpr": 0.1,
+          "expected_recall": 0.970588,
+          "fpr_budget": 0.1,
+          "threshold": 0.012717
+        }
+      }
+    ],
+    "surface": "score_candidates",
+    "tool_name": "score_candidates",
+    "wired_surface": "score_candidates MCP tool and carnot score-candidates CLI"
+  },
+  "model_specs": [
+    {
+      "cache_status": "cached",
+      "hf_id": "Qwen/Qwen3-0.6B",
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--Qwen--Qwen3-0.6B/snapshots/c1899de289a04d12100db370d81485cdf75e47ca",
+      "name": "Qwen3-0.6B",
+      "role": "small_cpu_wiring_smoke"
+    }
+  ],
+  "package_importable": true,
+  "package_result": {
+    "module_path": "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/__init__.py",
+    "version": "0.1.0b1"
+  },
+  "pipeline_e2e_passed": true,
+  "pipeline_result": {
+    "device": "cpu_forced",
+    "energy": 0.0,
+    "live_generation_preview": "The numeral for 2 + 2",
+    "model_specs": [
+      {
+        "cache_status": "cached",
+        "hf_id": "Qwen/Qwen3-0.6B",
+        "model_path": "/home/ianblenke/.cache/huggingface/hub/models--Qwen--Qwen3-0.6B/snapshots/c1899de289a04d12100db370d81485cdf75e47ca",
+        "name": "Qwen3-0.6B",
+        "role": "small_cpu_wiring_smoke"
+      }
+    ],
+    "n_constraints": 1,
+    "n_violations": 1,
+    "question": "What is 7 + 5?",
+    "response": "We compute 7 + 5 = 13, so the answer is 13.",
+    "verified": false
+  },
+  "preconditions_checked": {
+    "cli_entrypoint": {
+      "detail": "carnot.cli:main callable",
+      "passed": true
+    },
+    "interpreter": {
+      "expected": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+      "passed": true,
+      "value": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python"
+    },
+    "mcp_runtime": {
+      "detail": "mcp runtime importable",
+      "passed": true
+    },
+    "mcp_server_module": {
+      "detail": "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/mcp/server.py",
+      "passed": true
+    },
+    "package_import": {
+      "module_path": "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/__init__.py",
+      "passed": true,
+      "version": "0.1.0b1"
+    }
+  },
+  "random_seed": 3769,
+  "reproducibility_checksum": "547feddc9a7e1159",
+  "surfaces_passed": [
+    "package_import",
+    "pipeline",
+    "mcp_protocol",
+    "cli"
+  ]
+}

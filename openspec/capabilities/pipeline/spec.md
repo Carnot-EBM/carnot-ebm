@@ -245,6 +245,39 @@ writes `results/experiment_3671_ship_second_pair_of_eyes_detector.json`.
   or `complete: blocked_no_labeled_corpus_for_detector`.
 - The runner does not modify `scripts/research_conductor.py`.
 
+### REQ-SPOE-3769: Phase-1 Package CLI MCP Software E2E Smoke
+
+The pipeline MUST provide an Exp 3769 software E2E smoke runner that verifies
+the Phase-1 integrator path without publishing or making a headline accuracy
+claim.  The runner MUST use the repository venv interpreter, confirm the
+`carnot` package import and version, run `VerifyRepairPipeline` on a tiny
+arithmetic-slip example with a small CPU smoke model when cached, exercise the
+`score_candidates` MCP tool through a real stdio JSON-RPC protocol exchange,
+invoke the packaged CLI `score-candidates` command, and write
+`results/experiment_3769_package_cli_mcp_e2e_smoke.json`.
+
+**Acceptance criteria:**
+- Preconditions are checked before E2E work: `.venv/bin/python`, package import,
+  MCP server module importability, MCP protocol runtime, and CLI module
+  resolution.  If any required resource is missing, the artifact returns a
+  `blocked_<resource>` terminal verdict without fabricating surface passes.
+- The package step records whether `import carnot` succeeds, the resolved
+  version, and whether an optional local `python -m build` package build
+  succeeds.
+- The pipeline step records a structured verify/repair result over a hardcoded
+  arithmetic-slip example and labels the result as a wiring smoke, not an
+  accuracy claim.
+- The MCP step starts `python -m carnot.mcp` as a subprocess and calls
+  `score_candidates` over the MCP stdio protocol; in-process mocked handler
+  calls do not satisfy this requirement.
+- The CLI step invokes `python -m carnot.cli score-candidates` on the same tiny
+  candidate payload and verifies the JSON output shape.
+- The artifact includes `honest_verdict`, `inference_substrate`,
+  `package_importable`, `pipeline_e2e_passed`,
+  `mcp_protocol_exchange_passed`, `cli_passed`, `surfaces_passed`,
+  `is_wiring_smoke_not_accuracy_claim`, `preconditions_checked`,
+  `model_specs`, `random_seed`, `reproducibility_checksum`, and `duration_s`.
+
 ### REQ-SPOE-3683: Code Operating Point Hardening Verdict
 
 The pipeline MUST provide an Exp 3683 runner that re-measures the shipped
@@ -574,6 +607,20 @@ present
 **Then** the code-domain rows come from `data/code_verification_corpus_v2.jsonl`.
 
 **Spec traces:** REQ-SPOE-3671
+
+### SCENARIO-SPOE-3769: Package CLI MCP E2E Smoke Is Real Protocol Evidence
+
+**Given** the venv interpreter, importable package, importable MCP server, MCP
+runtime, cached small CPU smoke model, and resolvable CLI module
+**When** Exp 3769 runs
+**Then** it writes the package import, pipeline, MCP protocol, and CLI surface
+outcomes as bare booleans, calls MCP through stdio JSON-RPC rather than an
+in-process function, labels the run as a wiring smoke, and returns the terminal
+verdict
+`complete: phase1_e2e_smoke_package_import_pipeline_mcp_protocol_cli_passed_wiring_smoke_not_accuracy_claim`
+only when all four surfaces pass.
+
+**Spec traces:** REQ-SPOE-3769
 
 ### SCENARIO-SPOE-3683: Code Operating Point Outcomes Stay Honest
 
