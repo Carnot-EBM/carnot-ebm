@@ -1,0 +1,84 @@
+{
+  "experiment": "thesis_a_part_b_matched_compute",
+  "honest_verdict": "complete: thesis_a_part_b_BOUNDED_ebt_does_not_beat_ar_at_matched_compute_ebt_0.000_vs_arN_0.025_ar1_0.062_headroom_ok_honest_negative",
+  "inference_substrate": "live_llm_inference",
+  "operator_authorized": "2026-06-03 direct run; arithmetic regime (operator deferred to recommendation)",
+  "task": "fixed-width 2-digit addition, MSD-first answer (AR-hostile)",
+  "smoke": false,
+  "training_diverged": false,
+  "headroom_ok": true,
+  "positive_control": "AR@1 in (0.05,0.95) => measurable headroom; oracle=1.0. Required before any BOUNDED verdict.",
+  "ar1_greedy_acc": 0.0625,
+  "arN_selfconsistency_acc": 0.025,
+  "ebt_energy_argmin_acc": 0.0,
+  "delta_ebt_minus_arN": -0.025,
+  "ebt_generation": "energy-argmin over full vocab (faithful; not selection among AR samples)",
+  "matched_compute": {
+    "ebt_energy_evals": 61920,
+    "arN_forward_passes": 61920,
+    "ratio_ebt_over_ar": 1.0,
+    "ar_self_consistency_N": 258
+  },
+  "ar1_forward_passes": 240,
+  "n_eval": 80,
+  "ebt_sample_outputs": [
+    {
+      "prompt": "39+71=",
+      "true": "110",
+      "ar1": "112",
+      "ebt": "9=="
+    },
+    {
+      "prompt": "61+76=",
+      "true": "137",
+      "ar1": "132",
+      "ebt": "444"
+    },
+    {
+      "prompt": "27+94=",
+      "true": "121",
+      "ar1": "126",
+      "ebt": "=5="
+    },
+    {
+      "prompt": "06+64=",
+      "true": "070",
+      "ar1": "062",
+      "ebt": "999"
+    },
+    {
+      "prompt": "24+61=",
+      "true": "085",
+      "ar1": "092",
+      "ebt": "095"
+    },
+    {
+      "prompt": "91+19=",
+      "true": "110",
+      "ar1": "092",
+      "ebt": "5=="
+    },
+    {
+      "prompt": "95+32=",
+      "true": "127",
+      "ar1": "126",
+      "ebt": "555"
+    },
+    {
+      "prompt": "58+39=",
+      "true": "097",
+      "ar1": "112",
+      "ebt": "999"
+    }
+  ],
+  "model_specs": {
+    "ebt": "tiny_ebt_from_scratch_byte",
+    "ar": "tiny_ar_from_scratch_matched_byte",
+    "ebt_decoder": "energy_argmin_over_vocab",
+    "from_scratch": true
+  },
+  "device": "cuda:1",
+  "random_seed": 30603,
+  "reproducibility_checksum": "3a0f49c3c81e355a5d39c82686a78ebd7b535d7ff948149060c45d319b911cec",
+  "duration_s": 705.39
+}
