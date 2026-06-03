@@ -40,6 +40,7 @@ RESULTS_ARTIFACT_RE = re.compile(r"^results/paper_v6_[^/]*\.json$")
 
 ALLOWLIST_FILES = {
     "CLAUDE.md",
+    "results/experiment_3768_g3_narrowing_lint.json",
     "scripts/publication_gate.py",
     "scripts/paper_v6_narrowing_lint.py",
 }
@@ -139,6 +140,13 @@ FORBIDDEN_PATTERNS = [
         "PAPER_READY_STREAK",
         r"(?:five[- ]paper_ready streak|\.271/\.272/\.273/\.274/\.275\s+paper_ready=true)",
         "paper_ready streak is not scientific maturity evidence",
+    ),
+    PatternSpec(
+        "ENERGY_AS_GENERATOR_GENERATIVE_SUCCESS",
+        r"(?:\benergy[- ]as[- ]generator\b.{0,80}\b"
+        r"(?:works?(?:\s+at\s+scale)?|scales?|viable\b.{0,40}\bas\s+a\s+generator)\b|"
+        r"\bEBT\b.{0,40}\bgenerat(?:es|ed|ing)\b.{0,40}\b(?:tokens?|text)\b)",
+        "EBT is discriminative-not-generative at tested scale",
     ),
 ]
 

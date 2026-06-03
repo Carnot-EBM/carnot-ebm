@@ -1,6 +1,7 @@
 """Tests for scripts/paper_v6_narrowing_lint.py.
 
-Spec traces: REQ-PUBLISH-3716, SCENARIO-PUBLISH-3716.
+Spec traces: REQ-PUBLISH-3716, SCENARIO-PUBLISH-3716,
+REQ-PUBLISH-3768, SCENARIO-PUBLISH-3768.
 """
 
 from __future__ import annotations
@@ -34,6 +35,12 @@ from scripts import paper_v6_narrowing_lint as lint
             False,
             "0.9857",
         ),
+        (
+            "energy_as_generator_retraction_fails",
+            "The paper now claims energy-as-generator works at scale.",
+            False,
+            "energy-as-generator works at scale",
+        ),
     ],
 )
 def test_synthetic_doc_narrowing_lint_cases(
@@ -43,7 +50,7 @@ def test_synthetic_doc_narrowing_lint_cases(
     should_pass: bool,
     expected_fragment: str | None,
 ) -> None:
-    """SCENARIO-PUBLISH-3716: clean prose passes; forbidden prose and numbers fail."""
+    """SCENARIO-PUBLISH-3716/3768: clean prose passes; retracted prose fails."""
     doc = tmp_path / f"{case_name}.md"
     doc.write_text(text, encoding="utf-8")
 

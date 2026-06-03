@@ -165,6 +165,17 @@ repos:
         pass_filenames: false
         always_run: true
 
+      # Paper-v6 narrowing lint: mechanically enforces the G3 narrowing
+      # discipline over operator paper targets and tracked paper-v6 JSON
+      # artifacts. Additive guard for retracted Paper-v6 prose; the lint
+      # reports violations but never edits operator-curated docs.
+      - id: paper-v6-narrowing-lint
+        name: Paper-v6 narrowing lint
+        entry: python3 scripts/paper_v6_narrowing_lint.py
+        language: system
+        files: '^(docs/arxiv-paper/main\.tex|docs/technical-report\.md|results/paper_v6_.*\.json)$'
+        pass_filenames: false
+
       # Operator-curated docs lint: refuses [conductor]-marked commits
       # that touch README.md, docs/index.html, docs/tutorial.md, etc.
       # per CLAUDE.md "Public Documentation Discipline". Layer 1
