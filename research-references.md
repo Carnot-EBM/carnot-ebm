@@ -20718,3 +20718,129 @@ and 2511.05562 (NFE accounting — the cleaner unit for the EBT energy-descent i
   reports +9.8% GSM8K / +19.5% HumanEval. A non-AR GSM8K direction sanity-anchor — but these are
   8B-class RL-post-trained models; do NOT read the magnitude as achievable by a 38M from-scratch
   EBT. Direction, not magnitude.
+
+## .344 additions — verifier-product peers, the energy-as-generator boundary, and the next-thesis menu (2026-06-03)
+
+Added by the `.344 planning sweep (Claude Opus 4.8). Both Phase-3 energy routes
+are now empirically bounded — energy-as-SELECTOR (P0.1, settled) AND
+energy-as-GENERATOR (Thesis A: the operator's direct definitive runs landed
+`results/thesis_a_direct_definitive_run.json` part-(a) PASS / discriminative,
+and `results/thesis_a_part_b_scaled_seed1.json` part-(b) BOUNDED at scale —
+EBT 0.000 vs AR 0.84 even with a learned decoder + 3-digit + 16k steps). The
+defensible deliverable is the **verifier product** (FoVer 0.9131). These
+references (a) position that product against current PRM SOTA, (b) bound the
+energy-as-generator negative as field-consistent, and (c) seed the operator's
+next-Phase-3-thesis menu. Per adversarial-verify discipline, any number below is
+as-reported by the source and must be independently re-derived before entering a
+forward-facing claim.
+
+### Verifier / PRM product peers (Front 1 — hardening + honest positioning)
+
+- **GenPRM — Scaling Test-Time Compute of PRMs via Generative Reasoning
+  (arXiv:2504.00891, AAAI 2026):** generative PRM with verification CoT + code
+  execution; a 1.5B GenPRM reportedly beats GPT-4o and a 7B surpasses the 72B
+  Qwen2.5-Math-PRM on ProcessBench from ~23K examples. The generative-verifier
+  comparator Carnot's *discriminative* ensemble must be positioned against — our
+  edge is cheap, objective, energy-grounded scoring, not raw F1.
+- **ThinkPRM — Process Reward Models That Think (arXiv:2504.16828, ICLR 2026):**
+  long-CoT generative verifier fine-tuned on ~1% of the step labels
+  discriminative PRMs need; beats LLM-as-judge by ~7.2% on a ProcessBench
+  subset. The label-efficiency frontier — a calibration point for the verifier
+  product's value proposition.
+- **Unsupervised Process Reward Models / uPRM (arXiv:2605.10158, 2026):** trains
+  PRMs with ZERO human step labels via next-token marker probabilities + RL;
+  Best-of-8 competitive with supervised PRMs. The strongest *label-free*
+  verifier-growth lead — a route to expand the Carnot ensemble without
+  FoVer-style annotation cost, and a baseline to beat.
+- **ProcessBench SOTA anchor:** reasoning LLMs as verifiers (QwQ-32B F1 ~83.7,
+  DeepSeek-R1 ~83.5) now exceed dedicated discriminative PRMs
+  (Qwen2.5-Math-PRM-72B ~78.3). Bounds where a discriminative-energy verifier
+  can claim SOTA — Carnot must claim cost/objectivity, not raw F1.
+
+### The energy-as-generator boundary (Front 2 — bounds the Thesis-A negative)
+
+- **EBT-Policy — Energy Unlocks Emergent Physical Reasoning
+  (arXiv:2510.27545, 2026):** the first substantive EBT follow-up. Energy-based
+  generation DOES win — but in **low-dimensional continuous robot control**
+  (converges ~2 steps vs Diffusion-Policy's 100; large real-task gains), NOT
+  discrete text. **Directly bounds Carnot's negative as field-consistent:**
+  nobody has shown EBT-generation beating AR on text at matched compute, and
+  the "incoherent text generations" Carnot observed match the discrete-domain
+  failure mode. Its stability recipe (energy-scaled MCMC step sizes,
+  Nesterov-accelerated gradients, cosine-annealed Langevin noise, RMSNorm
+  pre-sample normalization, grad-clip ≤1.0) is what any *future* operator-seeded
+  tiny-EBT retry would need before re-concluding bounded.
+
+### Verifier domain-boundedness is field-wide (Front 3 — corroborates our negative)
+
+- **Rethinking Reward Models for Multi-Domain Test-Time Scaling
+  (arXiv:2510.00492, 2026):** discriminative reward models degrade sharply
+  out-of-domain; **generative** reward models generalize markedly better. Both
+  corroborates Carnot's "verifier is math-domain-bound" finding and identifies
+  the documented fix (generative, not more discriminative members).
+- **VerifyBench — Systematic Benchmark for Reasoning Verifiers Across Domains
+  (arXiv:2507.09884, 2026):** independent confirmation that verifiers are highly
+  input-structure-sensitive and fail to transfer across domains — the negative
+  is a field phenomenon, not a Carnot artifact. Good defense-of-negative
+  citation.
+- **Generalizable PRMs via Formally Verified Training Data / FoVer
+  (arXiv:2505.15960):** the corpus the 0.9131 headline is built on; anchors
+  provenance and the upper bound on discriminative generalization.
+
+### Continuous / online learning for verifiers (Front 4 — self-learning track)
+
+- **T3RL — Tool Verification for Test-Time Reinforcement Learning
+  (arXiv:2603.02203, 2026):** test-time RL where an external tool reweights
+  self-consistency votes, preventing spurious-consensus mode collapse. Carnot's
+  energy verifier could play exactly this **external-evidence reweighter** role
+  — a concrete product integration that is NOT pure self-consistency (addressing
+  the bounded-selector root cause: SC is near-optimal only when no external
+  signal exists).
+- **Continuous Self-Improvement via Test-Time Training with Verifier-Driven
+  Sample Selection (arXiv:2505.19475):** verifier scores a candidate pool; only
+  high-confidence pseudo-labels feed test-time fine-tuning. Candidate
+  architecture for an online Carnot verifier that adapts to a deployment corpus.
+
+### Genuinely-different EBM-foundation routes (Front 5 — the operator's next-thesis menu)
+
+- **EDLM — Energy-Based Diffusion Language Models (arXiv:2410.21357, ICLR 2025)
+  — TOP next-thesis candidate:** sequence-level EBM in **residual form**
+  correcting parallel discrete-diffusion decoding errors via NCE, trainable off
+  a pretrained AR model. Matches AR perplexity (OWT 17.58 vs 17.56), up to ~49%
+  gen-PPL gain at equal timesteps, ~1.3× sampling speedup. This is
+  energy-as-generator **on discrete text approaching AR at matched compute** —
+  the exact regime the tiny EBT failed — by using energy as a *residual
+  corrector over a diffusion base*, not the sole generator. Sidesteps BOTH the
+  bounded-selector and bounded-generator negatives. A human-seedable "Carnot
+  energy verifier as the residual/corrector head on a discrete-diffusion LLM"
+  thesis.
+- **Reasoning with Latent Tokens in Diffusion Language Models
+  (arXiv:2602.03769, 2026):** latent (undecoded) tokens let non-AR diffusion LMs
+  match/exceed AR at comparable compute on reasoning — the matched-compute
+  parity the tiny EBT lacked. Candidate substrate for "continuous latent space +
+  non-AR reasoning" (the Phase-3 north star), with the energy ensemble grading
+  latent-token coherence.
+- **ParaRNN — Parallel Training of Nonlinear RNNs (arXiv:2510.21450, ICLR 2026
+  Oral):** Newton-parallelized nonlinear RNNs (up to ~665× speedup; 7B
+  LSTM/GRU reach Transformer/Mamba2-comparable perplexity). Concrete
+  matched-quality-at-scale result for the recurrent-EBT substrate question — a
+  parallelizable nonlinear-recurrent energy model as a transformer-EBT
+  alternative. (Extends `[[project_pararnn_parallel_nonlinear]]`.)
+
+### Hardware-accelerated sampling (Front 6 — monitor; the Ising/TSU track)
+
+- **Extropic Z1 TSU + XTR-0 / X-0 (extropic.ai, 2026 early access):** first
+  production-scale TSU — hundreds of thousands of sampling cells/chip, ~10,000×
+  less energy/flip than a digital FP add; XTR-0 pairs an FPGA with two X-0
+  chips; THRML (JAX, Apache-2.0) is the simulator + block-Gibbs library (already
+  vendored). The Z1 becomes a **backend swap** for Carnot's Ising-sampler tier.
+- **Probabilistic Ising Machine with Inertia / PIMI (arXiv:2604.17109, 2026):**
+  densely-connected p-bit Ising machine on a Xilinx FPGA with an inertia term;
+  improved success probability / time-to-solution on Max-Cut and SK benchmarks.
+  Current-SOTA FPGA p-bit reference + benchmark suite for any future KV260
+  sampler comparison.
+- **All-to-all Reconfigurability with Sparse & Higher-Order Ising Machines
+  (Nat. Commun. s41467-024-53270-w; arXiv:2312.08748):** multiplexed FPGA
+  all-to-all connectivity via parallel chromatic Gibbs sampling; a reference
+  design + chromatic-Gibbs pattern that maps onto THRML's block-Gibbs (TSU
+  portable).
