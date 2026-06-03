@@ -24,8 +24,9 @@ The server exposes the following tools:
 5. **`verify_stream`**: Verify multiple candidate responses in parallel with early stopping based on energy margins.
 6. **`verify_and_repair`**: Run verification and return natural-language feedback that the calling LLM can use to self-repair its output.
 7. **`score_agent_outputs`**: Score competing agent responses and return a ranked arbitration result based on energy levels.
-8. **`list_domains`**: List available constraint extraction domains (arithmetic, code, logic, nl) for verification.
-9. **`health_check`**: Returns server version, status, and tool counts (useful as a liveness probe).
+8. **`score_candidates`**: Score candidate outputs with the calibrated second-pair detector.
+9. **`list_domains`**: List available constraint extraction domains (arithmetic, code, logic, nl) for verification.
+10. **`health_check`**: Returns server version, status, and tool counts (useful as a liveness probe).
 
 ## Usage Examples
 
@@ -52,7 +53,24 @@ You can verify an LLM's natural language or reasoning response using `verify_llm
 }
 ```
 
-### Example 3: Verifying with Properties
+### Example 3: Scoring Candidate Outputs
+You can score candidate outputs with the shipped second-pair detector:
+```json
+{
+  "candidates": [
+    {
+      "candidate_id": "candidate-a",
+      "domain": "math",
+      "text": "We compute 7 + 5 = 13, so the answer is 13.",
+      "confidence": 0.2,
+      "ensemble_energy": 0.8
+    }
+  ],
+  "domain": "math"
+}
+```
+
+### Example 4: Verifying with Properties
 You can verify a property of a function:
 ```json
 {

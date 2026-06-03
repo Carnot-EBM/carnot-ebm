@@ -62,6 +62,10 @@ dependencies = [
     # working venv (which happened to have sklearn installed). Declaring it
     # here is the load-bearing fix that lets a fresh clone reproduce G2.
     "scikit-learn>=1.4",
+    # MCP is part of the Phase-1 software ship surface. `python -m carnot.mcp`
+    # must speak real stdio JSON-RPC after a plain package install, not only
+    # after an optional extra.
+    "mcp>=1.0",
 ]
 
 [project.scripts]

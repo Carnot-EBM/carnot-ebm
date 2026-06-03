@@ -32,6 +32,7 @@ Subcommands:
 | `verify` | Verify a Python function against explicit test cases and optional property-based tests. |
 | `verify-code` | Run packaged static + property-based verification on a function. The HumanEval / benchmark entry point. |
 | `score` | Score LLM responses using a pre-trained energy-based model from HuggingFace. |
+| `score-candidates` | Score candidate outputs with the calibrated second-pair detector used by the MCP surface. |
 | `memory` | Export, import, or diff Carnot's persistent verification-memory archives. |
 
 Every subcommand accepts `--help` for the full flag list.
@@ -122,6 +123,17 @@ carnot score \
 Output is a JSON-formatted ranking with per-response energy values.
 
 The first invocation downloads the EBM weights from HuggingFace and caches them locally. Subsequent calls reuse the cache. Set `CARNOT_TRUST_REMOTE_CODE=0` (default) to refuse models that ship custom Python; set `=1` only after auditing the model card.
+
+## `carnot score-candidates`
+
+Score one or more candidate outputs with the shipped calibrated second-pair detector. This is the CLI equivalent of the MCP `score_candidates` tool.
+
+```
+carnot score-candidates --domain <domain>
+                        --candidates-json '[{"candidate_id":"a","domain":"math","text":"...","confidence":0.2,"ensemble_energy":0.8}]'
+```
+
+The output is JSON containing `scores`, where each row includes `calibrated_error_score`, `ensemble_energy`, `confidence_error`, `domain`, and `operating_point`.
 
 ## `carnot memory`
 
