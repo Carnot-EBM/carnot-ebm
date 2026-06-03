@@ -8443,3 +8443,45 @@ Did NOT modify research-roadmap.yaml or scripts/research_conductor.py. Did NOT p
 - Completed operational retrospective for milestone 2026.06.343. Found no experiment commits since activation, and recorded zero metrics as honest negative.
 
 - [outer-loop] Completed operational retrospective for milestone 2026.06.343. Found no experiment commits since activation, leaving total_wall_time_minutes=0 and compute_bound_experiments_count=0. Both GPUs were idle but no compute-bound tasks were run. Recommended tooling change: investigate why no experiments were triggered.
+
+## 2026-06-03 — [outer-loop] Pre-staged roadmap .344 (CONVERGENCE & PRODUCT-BANKING — both energy routes bounded)
+
+Planned milestone 2026.06.344 (11 tasks, Claude Opus 4.8). Key finding driving the
+plan: .343's pre-staged Thesis-A EBT kill-gate was OVERTAKEN BY EVENTS — the operator
+ran the genuine kill-gate DIRECTLY (results/thesis_a_direct_definitive_run.json part-(a)
+PASS / discriminative; results/thesis_a_part_b_scaled_seed1.json part-(b) BOUNDED at
+scale: EBT 0.000 vs AR 0.84 at matched compute, learned decoder + 3-digit + 16k steps).
+So BOTH Phase-3 energy mechanisms — selection (P0.1) AND generation (Thesis A) — are now
+empirically bounded, and the loop will not self-seed a new paradigm (needs human seed).
+.344 therefore pivots from the existential question to CONVERGENCE / PRODUCT-BANKING
+(NOT breadth churn per north-star §1).
+
+Tasks: exp3754 archive/activate; exp3755 Thesis-A DEFINITIVE reconcile (record the bound,
+supersede the in-loop chain, cite EBT-Policy arXiv:2510.27545 as the field boundary);
+exp3756 G2 mechanical local reproducer (auroc_in_ci95 gate); exp3757 EXTEND+WIRE the
+existing paper_v6_narrowing_lint.py (12th retraction + pre-commit, mechanizes G3);
+exp3758 pkg/CLI/MCP E2E smoke (Phase-1 software-ship gate); exp3759 distribution-mirror +
+operator-only publish checklist (publishes nothing); exp3760 certified abstention
+operating point on the 0.9131 discriminator (conformal/PAC-Bayes cert atop exp3718's
+characterization; gated on exp3756.auroc_in_ci95==true) [claude]; exp3761 FR-11 v17 Tier-1
+self-learning PIVOTED off the dead EBT-stabilizer lineage onto the live verifier; exp3762
+KV260 opportunistic terminal confirm; exp3763 next-Phase-3-thesis decision menu for the
+operator (supersedes the .340 exp3722 menu; top route EDLM residual-corrector) [claude];
+exp3764 capstone. INVARIANTS: paper_ready TRUE (G1-G4); frozen FoVer 0.9131 frozen; both
+energy routes stay bounded (no re-grind).
+
+Routing: all CPU/aggregation/SSH (no GPU training — rig idle by design); codex cheap-default
+(gemini crashes GPU + has wiped milestones via 429), claude only on the 2 judgment tasks
+(exp3760 cert, exp3763 menu). Every Run command pins .venv/bin/python (the .343 lesson).
+Added a '.344 additions' references section (verifier-PRM peers GenPRM/ThinkPRM/uPRM;
+EBT-Policy boundary; VerifyBench/multi-domain-RM corroborating domain-boundedness; EDLM/
+latent-token-diffusion/ParaRNN/T3RL next-thesis menu; Extropic Z1 / PIMI hardware).
+
+Adversarial review (sub-agent) applied: exp3757 reframed from "ship" to "EXTEND+WIRE the
+existing lint" (file already exists, unwired); exp3763 now reads+supersedes the .340 exp3722
+menu; exp3760 now explicitly builds on exp3718. Validated: YAML parses (11 tasks); milestone
+== _expected_next_milestone('2026.06.343') == 2026.06.344; exclusion-manifest lint exit 0
+(3 WARNINGs all override-present); overdue-priority lint exit 0; canonical-URL lint exit 0;
+gated_on resolves to a bare-value field.
+
+Did NOT modify research-roadmap.yaml or scripts/research_conductor.py. Did NOT push.
