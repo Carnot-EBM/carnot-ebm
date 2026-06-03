@@ -1,0 +1,59 @@
+{
+  "aurc": 0.000789,
+  "certification_method": "split-conformal (Hoeffding upper bound, assumes exchangeability, delta=0.05)",
+  "certified_risk_bound": 0.037646,
+  "corpus_status": {
+    "code": {
+      "balanced_exp3658": true,
+      "code_native_exp3695": false,
+      "n_examples": 60,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/data/code_verification_corpus_v2.jsonl",
+      "reason": "Exp 3705 leak audit set code_signal_survives_heldout=false after finding the Exp 3695 in-corpus 1.0 code AUROC was separable-by-construction; the shipped detector is narrowed to math-only for product verdicts.",
+      "status": "abstained"
+    },
+    "math": {
+      "n_examples": 6548,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/data/fover_corpus_v4.json",
+      "status": "loaded"
+    }
+  },
+  "coverage_at_operating_point": 0.998218,
+  "duration_s": 0.02842,
+  "field_principles": {
+    "aurc": "Area under the risk-coverage curve -- the deployment-facing summary of the abstention gate's quality.",
+    "certification_method": "split-conformal / PAC-Bayes + its assumptions stated -- so a reviewer can audit the certificate's validity.",
+    "certified_risk_bound": "The certified upper bound on selective risk (with delta, n) -- the GUARANTEE that distinguishes this from a mere characterization.",
+    "coverage_at_operating_point": "Fraction the verifier confidently judges (vs abstains) at the selected threshold -- the coverage half of the trade-off.",
+    "duration_s": "Wall-clock plausibility floor.",
+    "honest_verdict": "Terminal prefix; blocked_<resource> if a precondition failed.",
+    "inference_substrate": "verifier_ensemble_against_cached_candidates (principle: reuses cached discriminator scores, no live model).",
+    "n_calibration": "Calibration sample size -- the certificate's strength scales with it; sample-size rigor.",
+    "n_test": "Held-out test size for the risk estimate (n>=100 for a CLT-valid claim).",
+    "random_seed": "Determinism precondition.",
+    "reproducibility_checksum": "Content hash catches drift.",
+    "risk_target": "The fixed selective-risk target the threshold achieves -- the product spec the operating point meets.",
+    "selected_threshold": "The chosen abstention threshold on the discriminator score -- the deployable operating point.",
+    "usable_operating_point_exists": "BARE bool -- whether a deployable point at the target risk + non-trivial coverage exists; an honest false is a valid finding, not a failure to manufacture."
+  },
+  "honest_verdict": "complete: certified_abstention_point_threshold_0.733216_coverage_0.998218_at_risk_0.05_certified_split_conformal_delta_0.05_n2619",
+  "inference_substrate": "verifier_ensemble_against_cached_candidates (principle: reuses cached discriminator scores, no live model).",
+  "n_calibration": 2619,
+  "n_test": 3929,
+  "output_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_3771_certified_abstention_operating_point.json",
+  "preconditions_checked": [
+    {
+      "available": true,
+      "detail": "/home/ianblenke/github.com/ianblenke/carnot/data/fover_corpus_v4.json",
+      "n_examples": 6548,
+      "resource": "fover_perstep_scores"
+    }
+  ],
+  "random_seed": 3771,
+  "reproducibility_checksum": "356088a2d8cda5e1",
+  "risk_target": 0.05,
+  "selected_threshold": 0.733216,
+  "tests_run": [
+    ".venv/bin/pytest tests/python/test_experiment_3771_certified_abstention_operating_point.py -q"
+  ],
+  "usable_operating_point_exists": true
+}
