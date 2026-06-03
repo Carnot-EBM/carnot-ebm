@@ -1,0 +1,163 @@
+{
+  "activated_milestone": "2026.06.343",
+  "adversarial_verify_clean": true,
+  "adversarial_verify_report": {
+    "flag_count": 0,
+    "flags": [],
+    "max_severity": -1
+  },
+  "archive_v342_activate_v343_ready": true,
+  "archived_milestone": "2026.06.342",
+  "cuda_unavailable_root_cause_recorded": "bare_python_reached_torch_cuda_false_exp3734_silently_trained_two_cpu_steps_future_fix_venv_python_plus_hard_cuda_block",
+  "duration_s": 0.0001,
+  "experiment_id": "exp3743",
+  "field_principles": {
+    "adversarial_verify_clean": "True iff the artifact passes adversarial_verify with no critical flag.",
+    "cuda_unavailable_root_cause_recorded": "Explicitly records the root cause: bare `python` reached a torch with cuda False and exp3734 silently trained 2 CPU steps -- so a future planner knows the fix is .venv/bin/python + hard cuda-block.",
+    "duration_s": "Wall-clock plausibility floor; missing duration is the fabrication signal.",
+    "honest_verdict": "Terminal prefix lets the reconciler classify the transition complete without re-running it.",
+    "inference_substrate": "JSON-read + format; 0.0001s floor; no compute-bound marker so it does not false-flag.",
+    "n_tasks_archived": "Sample-size hygiene -- confirms the full milestone was archived, not a partial.",
+    "p01_status_preserved": "P0.1 / energy-SELECTION stays honest-negative-bounded; .343 tests a DIFFERENT mechanism (generation), not a re-grind.",
+    "paper_ready_preserved": "G1-G4 stay met; the transition must not silently regress paper_ready; frozen headline 0.9131 stays frozen.",
+    "random_seed": "Determinism precondition for reproducibility.",
+    "reproducibility_checksum": "Content hash catches silent drift vs any replication.",
+    "thesis_a_still_open_recorded": "Energy-as-generator remains UNTESTED at the bounded-training level; .343 runs the genuine kill-gate. Distinguishes this from the truly-settled P0.1 selection bound.",
+    "v342_outcome_recorded": "Records .342's REAL state: false-negative corrected + verdicts honest, BUT part-(a) was AGAIN infra-blocked (cuda:false, exp3734 CPU-drop) -- still UNTESTED, not bounded."
+  },
+  "honest_verdict": "complete: archived_v342_thesis_a_record_honest_but_part_a_again_infra_blocked_cuda_false_still_untested_v343_active_paper_ready_true_frozen_headline_unchanged",
+  "inference_substrate": "aggregation_from_upstream_artifacts (principle: JSON-read + format; 0.0001s floor; no compute-bound marker so it does not false-flag).",
+  "n_tasks_archived": 11,
+  "ops_docs_reconciliation_left_to_conductor": true,
+  "p01_status_preserved": "honest-negative-bounded",
+  "paper_ready_evidence": {
+    "frozen_headline_auroc": 0.9131,
+    "frozen_headline_unchanged": true,
+    "g1": true,
+    "g2": true,
+    "g3": true,
+    "g4": true,
+    "paper_ready": true
+  },
+  "paper_ready_preserved": true,
+  "protected_files_left_to_conductor": [
+    "ops/status.md",
+    "ops/changelog.md",
+    "_bmad/traceability.md"
+  ],
+  "random_seed": 3743,
+  "reproducibility_checksum": "0f334e0cf086b49b61d932e571b5f7794ff76babe6b3c63e4ce7acc34df2fa7c",
+  "root_cause_evidence": {
+    "bare_python_cuda_false_recorded": true,
+    "exp3734_cuda_false": true,
+    "exp3734_peak_vram_mb": 100,
+    "exp3734_two_cpu_steps": true,
+    "future_fix_recorded": true
+  },
+  "schema": "carnot.archive_activation.v342_to_v343.v1",
+  "scripts_research_conductor_modified": false,
+  "source_artifact_checksums": [
+    {
+      "exists": true,
+      "name": "exp3732",
+      "path": "results/experiment_3732_archive_v341_activate_v342.json",
+      "sha256": "d405cffc5e555ef1f06b4122a8f0909f770704bd7d32e3326641e59a5c447679"
+    },
+    {
+      "exists": true,
+      "name": "exp3733",
+      "path": "results/experiment_3733_corrigendum_exp3729_false_negative.json",
+      "sha256": "d02cd099a1ee120197042ef80dc51d72660aa101aa13b0d281f143ef26ac9c9f"
+    },
+    {
+      "exists": true,
+      "name": "exp3734",
+      "path": "results/experiment_3734_fix_harness_and_bounded_train_chunk1.json",
+      "sha256": "cb78306f5fef1403154a74bb7612ca4b54014cc84889abd8675df2026de2ed7e"
+    },
+    {
+      "exists": true,
+      "name": "exp3735",
+      "path": "results/experiment_3735_bounded_train_chunk2_resume.json",
+      "sha256": "69c6c9e7867d7bf13a79b278ed0ed1d5575015f32f8e80afab4ba7a7ceb4a9e3"
+    },
+    {
+      "exists": true,
+      "name": "exp3736",
+      "path": "results/experiment_3736_real_kill_gate_part_a_verdict.json",
+      "sha256": "1c8e8136c8b787d3ab80c0ac0475b273eb51590916df40044bb67335b54fa35a"
+    },
+    {
+      "exists": true,
+      "name": "exp3737",
+      "path": "results/experiment_3737_ebt_generation_smoke.json",
+      "sha256": "aa5672f21c9f2c0fc8ba79ee1f617cd90c26fe4d2ecda58a551983fbfba51c29"
+    },
+    {
+      "exists": false,
+      "name": "exp3738",
+      "path": "results/experiment_3738_matched_compute_comparison.json",
+      "sha256": "769b8995b8bf4407c89e906d67601a46266d34922a63ab1754440eecb0657aab"
+    },
+    {
+      "exists": true,
+      "name": "exp3739",
+      "path": "results/experiment_3739_kill_gate_part_b_verdict.json",
+      "sha256": "574a8cb27da28ab189df2afc6cbb747b944ccea0f9c99c14f0efaab48fdc85e8"
+    },
+    {
+      "exists": true,
+      "name": "exp3740",
+      "path": "results/experiment_3740_fr11_self_learning_v15_stabilizer_tracker.json",
+      "sha256": "8f8a791d275817fdf4eb8607735399a50a46b7abef9090cd7fed79bc72636cfd"
+    },
+    {
+      "exists": true,
+      "name": "exp3741",
+      "path": "results/experiment_3741_kv260_opportunistic_continuity_audit.json",
+      "sha256": "687f5b4e5ecd48fa9203343e08f123e7a7842d49145d280554fb357c30a307a9"
+    },
+    {
+      "exists": false,
+      "name": "exp3742",
+      "path": "results/experiment_3742_capstone_v342.json",
+      "sha256": "769b8995b8bf4407c89e906d67601a46266d34922a63ab1754440eecb0657aab"
+    }
+  ],
+  "source_document_checksums": {
+    "openspec/change-proposals/research-roadmap-vNEXT.md": "23b3c542886e670c43c2af93b329cf56195c83fdd59fbf1994067bb0a9a2dfeb",
+    "ops/north-star.md": "e288b001d2582b5f8af368df5ef458c334b750daefdef36ec9f707c61b62b973",
+    "research-roadmap.yaml": "e44761f296e70630f9f7eedd61cd56e670d5595507f8f8696f83185c2c8688e8"
+  },
+  "task_id": "exp3743-archive-v342-activate-v343",
+  "thesis_a_still_open_recorded": "energy_as_generator_bounded_training_untested_v343_genuine_kill_gate_active",
+  "v342_evidence": {
+    "exp3733_false_negative_corrected": true,
+    "exp3734_cpu_drop_detected": true,
+    "exp3734_cumulative_steps_trained": 2,
+    "exp3734_peak_vram_mb": 100,
+    "exp3734_preconditions": {
+      "corpus_ok": true,
+      "cuda": false,
+      "ebt_vendored": true
+    },
+    "exp3734_stability_signal_valid": false,
+    "exp3735_blocked_cuda": true,
+    "exp3736_part_a_untested": true,
+    "exp3737_gate_blocked": true,
+    "exp3738_artifact_present": false,
+    "exp3739_part_b_not_run": true,
+    "exp3740_tracker_state_persisted": true,
+    "exp3741_kv260_terminal_continuity": true
+  },
+  "v342_outcome_recorded": "false_negative_corrected_verdicts_honest_part_a_again_infra_blocked_cuda_false_exp3734_cpu_drop_still_untested_not_bounded",
+  "v343_active_confirmed": true,
+  "v343_evidence": {
+    "active_milestone": "2026.06.343",
+    "genuine_kill_gate_rerun_recorded": true,
+    "hard_cuda_block_recorded": true,
+    "p01_boundary": "honest-negative-bounded",
+    "source": "research-roadmap.yaml; openspec/change-proposals/research-roadmap-vNEXT.md",
+    "venv_python_pinning_recorded": true
+  }
+}

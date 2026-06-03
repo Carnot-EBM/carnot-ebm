@@ -34919,94 +34919,52 @@ milestones:
     deliverable: results/experiment_3731_capstone_v341.json
     result: FALSE-NEGATIVE carried; corrected by .342 handoff
 - id: 2026.06.342
-  title: "PHASE-3 THESIS A \u2014 RECOVER FROM A FALSE-NEGATIVE, THEN RUN THE GENUINE KILL-GATE. .341's recorded kill-gate\
-    \ part-(a) FAIL ('energy-as-generator bounded at small scale') is an INFRASTRUCTURE FALSE-NEGATIVE, not a scientific finding.\
-    \ The positive control PASSED: exp3726's single-step smoke trained a 38M EBT that fits one 3090 at 1283MB with loss finite\
-    \ AND monotonically decreasing. But exp3728 (the bounded training run) bailed at 0 steps in 65.5s because its precondition\
-    \ check evaluated ebt_vendored=false and smoke_passed=false -- BOTH demonstrably wrong (exp3725 importable=true, exp3726\
-    \ result on disk) -- a cwd/import-path bug, NOT a divergence. exp3729 then mislabeled that infra-block as a mechanism\
-    \ bound. Per CLAUDE.md FALSE_NEGATIVE_RISK + Reading-Results disciplines, a null claim with NO positive-control bounded\
-    \ run is unsupported. .342 (a) CLEANLY corrects the record, (b) FIXES the harness bug and runs the GENUINE bounded checkpointed\
-    \ training of the tiny EBT + a matched tiny AR baseline (with the EBT-paper stability recipe: random-alpha + replay buffer\
-    \ + Langevin noise + grad-clip + the KL-term CD fix arXiv:2012.01316), (c) renders the REAL part-(a) verdict superseding\
-    \ exp3729, and (d) IF stable, runs the matched-COMPUTE comparison (EBT energy-descent vs AR best-of-N at EQUAL inference\
-    \ FLOPs via the exp3727 harness) -- kill-gate part (b), the actual thesis test. CRITICAL discipline carried from P0.1:\
-    \ matched-COMPUTE, never matched-params (a params-matched 'win' is just extra inference FLOPs). INVARIANTS: paper_ready\
-    \ stays TRUE (G1-G4 closed 2026-05-31); frozen FoVer 0.9131 stays frozen; P0.1 / energy-SELECTION stays settled-bounded\
-    \ (this tests GENERATION, a different mechanism). Banking the verifier product is unaffected -- this is a venture bet\
-    \ with a knife to its own throat."
+  title: "Thesis A recovery infra-blocked again"
   doc: openspec/change-proposals/research-roadmap-vNEXT.md
   completed: '2026-06-03'
-  finding: See conductor log for per-experiment results.
+  finding: "RECORD-HONEST BUT INFRA-BLOCKED MILESTONE: .342 corrected the .341 false-negative and kept verdicts honest, but the genuine Thesis-A part-(a) kill-gate was again infra-blocked. exp3733 corrected the .341 false-negative. exp3734 ran only 2 steps with cuda:false and 100MB peak vram, so it silently dropped to CPU and its stable_so_far claim is invalid as bounded training evidence. exp3735 blocked_cuda. exp3736 honestly recorded that part-(a) remains UNTESTED; training did not complete. exp3739 honestly recorded part-(b) not run. Energy-as-generator remains UNTESTED at bounded scale. .343 is active to pin .venv/bin/python, hard-block on cuda:false, and run the genuine kill-gate. P0.1 stayed honest-negative-bounded, paper_ready stayed TRUE (G1-G4), and the frozen FoVer 0.9131 stayed frozen."
   tasks:
   - id: exp3732-archive-v341-activate-v342
-    title: 'Archive milestone .341 HONESTLY (Thesis-A EBT bring-up: vendored+audited PASS, tiny-EBT single-step smoke PASS
-      on the 3090, matched-compute harness built+tested -- BUT the bounded-training task blocked on a cwd/import bug and the
-      kill-gate verdict was a FALSE-NEGATIVE) and activate .342 (recover the false-negative + run the GENUINE kill-gate).'
+    title: "Archive .341 and activate .342"
     deliverable: results/experiment_3732_archive_v341_activate_v342.json
-    result: OK (conductor)
+    result: OK previous transition; .341 false-negative reopened
   - id: exp3733-corrigendum-exp3729-false-negative
-    title: 'CLEAN corrigendum of exp3729: the .341 kill-gate part-(a) verdict (''energy-as-generator bounded at small scale,
-      STOP'') is an INFRASTRUCTURE FALSE-NEGATIVE. Preserve exp3729''s numbers, annotate the root cause (exp3728 cwd/import-path
-      bug -> 0 steps; exp3726 positive control PASSED), and re-open part-(a) as UNTESTED. exp1850 corrigendum pattern. Does
-      NOT retire energy-as-generator.'
+    title: "Corrigendum of exp3729 false-negative"
     deliverable: results/experiment_3733_corrigendum_exp3729_false_negative.json
-    result: OK (conductor)
+    result: PASS; .341 false-negative corrected, part-(a) reopened
   - id: exp3734-fix-harness-and-bounded-train-chunk1
-    title: FIX the exp3728 cwd/import false-negative (robust importlib.util.find_spec check + ABSOLUTE artifact paths + run
-      from {project_root}); ship a bounded checkpointed training driver with the EBT-paper stability recipe (random-alpha
-      + replay buffer + Langevin noise + grad-clip + KL-term CD arXiv:2012.01316); run the FIRST bounded chunk (<=1500s) of
-      the tiny EBT + a matched tiny AR baseline on GSM8K, with stability diagnostics, then checkpoint+exit. THESIS-A genuine
-      kill-gate part-(a), run 1.
+    title: "Harness fix and bounded train chunk 1"
     deliverable: results/experiment_3734_fix_harness_and_bounded_train_chunk1.json
-    result: OK (conductor)
+    result: CPU-DROP; 2 CPU steps invalid as stability evidence
   - id: exp3735-bounded-train-chunk2-resume
-    title: 'RESUME bounded checkpointed training (chunk 2): load exp3734''s checkpoint and train another bounded chunk (<=1500s)
-      of BOTH the tiny EBT + matched AR, accumulating steps and extending the stability diagnostics. Gated on exp3734 having
-      trained >0 steps. THESIS-A genuine kill-gate part-(a), run 2.'
+    title: "Resume bounded train chunk 2"
     deliverable: results/experiment_3735_bounded_train_chunk2_resume.json
-    result: OK (conductor)
+    result: BLOCKED_CUDA; no CPU fallback accepted
   - id: exp3736-real-kill-gate-part-a-verdict
-    title: 'REAL Thesis-A kill-gate part-(a) VERDICT over the GENUINE training run (exp3734 + exp3735), SUPERSEDING the false-negative
-      exp3729: did the tiny EBT train to STABLE convergence within the bounded 3090 budget? Emit green_light_342 (BARE bool).
-      GREEN-LIGHT the matched-COMPUTE comparison only if genuinely stable.'
+    title: "Real kill-gate part-(a) verdict"
     deliverable: results/experiment_3736_real_kill_gate_part_a_verdict.json
-    result: OK (conductor)
+    result: UNTESTED; training did not complete
   - id: exp3737-ebt-generation-smoke
-    title: 'EBT energy-descent GENERATION smoke on held-out GSM8K: confirm the trained EBT can actually GENERATE via gradient-descent
-      energy minimization (produces finite, non-degenerate completions) before the expensive matched-compute eval. Gated on
-      exp3736 green_light_342==true. THESIS-A part-(b) de-risk.'
+    title: "EBT generation smoke"
     deliverable: results/experiment_3737_ebt_generation_smoke.json
-    result: OK (conductor)
+    result: GATE-BLOCKED; part-(a) did not green-light
   - id: exp3738-matched-compute-comparison
-    title: 'THE THESIS TEST (kill-gate part b): matched-COMPUTE comparison on held-out GSM8K reasoning accuracy -- EBT energy-descent
-      generation vs AR best-of-N at EQUAL total inference FLOPs (count EBT descent passes; give AR an equal-FLOP best-of-M
-      budget via the exp3727 harness). Gated on exp3737 ebt_can_generate==true. Matched-COMPUTE, NEVER matched-params (the
-      P0.1 trap).'
+    title: "Matched-compute comparison"
     deliverable: results/experiment_3738_matched_compute_comparison.json
-    result: OK (conductor)
+    result: NOT-RUN; no artifact because generation smoke was gate-blocked
   - id: exp3739-kill-gate-part-b-verdict
-    title: 'Thesis-A kill-gate part-(b) VERDICT: at EQUAL inference compute, does the EBT beat the matched AR baseline on
-      held-out reasoning accuracy? Reads exp3738 (matched-compute) honestly. A clean NEGATIVE (AR >= EBT at equal compute,
-      gap does not narrow) bounds the route -- as valuable as a positive. States the .342 Thesis-A outcome.'
+    title: "Kill-gate part-(b) verdict"
     deliverable: results/experiment_3739_kill_gate_part_b_verdict.json
-    result: OK (conductor)
+    result: NOT-RUN; part-(a) did not green-light
   - id: exp3740-fr11-self-learning-v15-stabilizer-tracker
-    title: "FR-11 continuous self-learning v15 \u2014 Tier-1 ONLINE stabilizer-efficacy tracker for EBT training: from the\
-      \ exp3734/3735 stability diagnostics, track which stabilizers (random-alpha, replay buffer, Langevin noise, grad-clip,\
-      \ KL-term CD) correlate with NO-divergence across chunks, upweight the effective ones, and recommend a recipe for the\
-      \ next bounded run. CPU counter-updates only (the Tier-1 hardware path). The self-learning experiment mandated by research-program.md."
+    title: "FR-11 v15 stabilizer tracker"
     deliverable: results/experiment_3740_fr11_self_learning_v15_stabilizer_tracker.json
-    result: OK (conductor)
+    result: PRELIMINARY tracker persisted over aborted chunks
   - id: exp3741-kv260-opportunistic-continuity-audit
-    title: "KV260 opportunistic continuity audit \u2014 confirm terminal state holds (SSH-reachable, accelerator overlay loadable).\
-      \ Documentation-only; the per-milestone hardware mandate was relaxed to opportunistic at .340."
+    title: "KV260 opportunistic continuity audit"
     deliverable: results/experiment_3741_kv260_opportunistic_continuity_audit.json
-    result: OK (conductor)
+    result: OK terminal state held
   - id: exp3742-capstone-v342
-    title: "Capstone .342 \u2014 aggregate the Thesis-A RECOVERY + genuine kill-gate outcome: was the .341 false-negative\
-      \ corrected, did the FIXED harness train the tiny EBT stably (real part-a verdict superseding exp3729), and at EQUAL\
-      \ compute does the EBT beat matched AR (part-b verdict)? State the honest .342 Thesis-A outcome. paper_ready MUST stay\
-      \ TRUE; frozen 0.9131 unchanged."
+    title: "Capstone .342"
     deliverable: results/experiment_3742_capstone_v342.json
-    result: OK (conductor)
+    result: SUPERSEDED by exp3743 archive honesty: part-(a) infra-blocked

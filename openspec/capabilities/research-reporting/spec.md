@@ -16370,3 +16370,77 @@ ops/status/changelog and BMAD traceability reconciliation to the conductor.
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-REPORT-3732 | Planned (`python/carnot/reporting/archive_v341_activate_v342_3732.py`, `scripts/experiment_3732_archive_v341_activate_v342.py`) | Planned (`tests/python/test_experiment_3732_archive_v341_activate_v342.py`) |
+
+### REQ-REPORT-3743: Archive V342 CPU-Drop And Activate V343 Handoff
+
+The Exp 3743 workflow shall archive milestone `2026.06.342` and confirm that
+`research-roadmap.yaml` is active for milestone `2026.06.343`. It SHALL write
+`results/experiment_3743_archive_v342_activate_v343.json` by aggregating
+existing upstream artifacts, `research-complete.yaml`, `research-roadmap.yaml`,
+`openspec/change-proposals/research-roadmap-vNEXT.md`, and
+`ops/north-star.md` only. It SHALL NOT run live inference, push changes, modify
+`scripts/research_conductor.py`, modify `ops/north-star.md`, modify
+`ops/status.md`, modify `ops/changelog.md`, modify `_bmad/traceability.md`, or
+place any GGUF, CUDA, live-model, `model_specs`, or `target_model` marker in
+the terminal artifact.
+
+The workflow SHALL update the single `2026.06.342` block in
+`research-complete.yaml`, or append it if absent, so the archive records the
+honest Thesis-A recovery state: Exp 3733 cleanly corrected the `.341`
+false-negative; Exp 3734 fixed the import harness but trained only two steps
+after its own precondition recorded `cuda=false` and `peak_vram_mb=100`, making
+its `stable_so_far` signal invalid as bounded GPU evidence; Exp 3735 blocked on
+`blocked_cuda`; Exp 3736 therefore honestly recorded part-(a) as untested;
+Exp 3737 was gate-blocked, Exp 3738 did not produce a measured comparison, and
+Exp 3739 honestly recorded part-(b) as not run; Exp 3740 persisted only a
+preliminary stabilizer tracker over aborted chunks; and Exp 3741 confirmed KV260
+terminal continuity. The archive update SHALL be idempotent and SHALL archive
+the full `.342` planned task count.
+
+The workflow SHALL also record that milestone `2026.06.343` is the direct
+Thesis-A continuation that pins `.venv/bin/python`, hard-blocks on CUDA
+unavailability, and reruns the genuine energy-as-generator kill gate. It SHALL
+preserve `paper_ready=true`, preserve the frozen FoVer headline at `0.9131`,
+and preserve P0.1 / energy-selection as honest-negative-bounded while keeping
+energy-as-generator open and untested at the bounded-training level.
+
+The terminal artifact SHALL include bare top-level values for `honest_verdict`,
+`inference_substrate`, `v342_outcome_recorded`,
+`cuda_unavailable_root_cause_recorded`, `thesis_a_still_open_recorded`,
+`paper_ready_preserved`, `p01_status_preserved`, `n_tasks_archived`,
+`adversarial_verify_clean`, `random_seed`, `reproducibility_checksum`, and
+`duration_s`, plus `field_principles` documenting why each required value
+exists. `inference_substrate` SHALL be exactly
+`aggregation_from_upstream_artifacts (principle: JSON-read + format; 0.0001s floor; no compute-bound marker so it does not false-flag).`
+`adversarial_verify_clean` SHALL be true only after
+`scripts/adversarial_verify.py` reports no critical flag on the written
+artifact. `honest_verdict` SHALL equal
+`complete: archived_v342_thesis_a_record_honest_but_part_a_again_infra_blocked_cuda_false_still_untested_v343_active_paper_ready_true_frozen_headline_unchanged`.
+`duration_s` SHALL use the aggregation-task plausibility floor of at least
+`0.0001`.
+
+#### SCENARIO-REPORT-3743: V342 Archive Records CPU Drop And Keeps Thesis Open
+
+**Given** the active roadmap declares milestone `2026.06.343`, the `.343`
+design document records that `.342` was blocked by a bare-python CUDA failure,
+Exp 3733 records the `.341` corrigendum, Exp 3734 records `cuda=false`,
+`cumulative_steps_trained=2`, and `peak_vram_mb=100`, Exp 3735 records
+`blocked_cuda`, Exp 3736 records part-(a) untested, Exp 3739 records part-(b)
+not run, and the preserved paper/product boundary remains `paper_ready=true`,
+P0.1 honest-negative-bounded, and frozen FoVer `0.9131`
+**When** the Exp 3743 workflow runs
+**Then** it writes the required terminal artifact, records all required
+principle-annotated bare fields, confirms `.343` active, archives all `.342`
+tasks exactly once in `research-complete.yaml`, records the Exp 3734 two-step
+CPU-drop as invalid stability evidence, records part-(a) as still untested
+rather than bounded, records `.343` as the genuine rerun with venv-pinning and
+hard CUDA blocking, passes adversarial verification without a critical flag,
+leaves `ops/north-star.md` and `scripts/research_conductor.py` unchanged, and
+leaves ops/status/changelog and BMAD traceability reconciliation to the
+conductor.
+
+## Implementation Status (REQ-REPORT-3743)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-3743 | Planned (`python/carnot/reporting/archive_v342_activate_v343_3743.py`, `scripts/experiment_3743_archive_v342_activate_v343.py`) | Planned (`tests/python/test_experiment_3743_archive_v342_activate_v343.py`) |

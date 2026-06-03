@@ -7647,3 +7647,8 @@ ERROR: {
     "type": "image_ |
 | 2026-06-03 01:59 UTC | Plan milestone 2026.06.343 | OK | 11 tasks proposed |
 | 2026-06-03 02:01 UTC | Milestone 2026.06.343 activated | OK | 11 tasks queued |
+| 2026-06-03 02:28 UTC | Archive milestone .342 HONESTLY (Thesis-A recovery | FAIL | Post-tests failed: 1 failed, 104 passed in 4.32s |
+| 2026-06-03 02:30 UTC | Archive milestone .342 HONESTLY (Thesis-A recovery | OK | Deliverable already exists in repo |
+| 2026-06-03 02:30 UTC | CLEAN corrigendum of exp3734 + exp3736: the .342 p | SKIP | Pre-tests failing, self-heal failed: 1 failed, 104 passed in 4.39s |
+| 2026-06-03 02:33 UTC | CLEAN corrigendum of exp3734 + exp3736: the .342 p | SKIP | Pre-tests failing, self-heal failed: 1 failed, 104 passed in 4.50s |
+| 2026-06-03 02:35 UTC | CLEAN corrigendum of exp3734 + exp3736: the .342 p | SKIP | Pre-tests failing, self-heal failed: 1 failed, 104 passed in 4.33s |
