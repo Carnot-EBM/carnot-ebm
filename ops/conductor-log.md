@@ -7716,3 +7716,4 @@ ERROR: {
 | 2026-06-03 15:59 UTC | Archive milestone .344 HONESTLY (it produced ZERO  | OK | 104 passed in 4.86s |
 | 2026-06-03 16:14 UTC | Reconcile the DEFINITIVE Thesis-A close into the r | OK | 107 passed in 4.47s |
 | 2026-06-03 16:31 UTC | G2 mechanical reproducer (re-do the SKIPPED .344 e | OK | 93 passed in 4.73s |
+| 2026-06-03 16:42 UTC | G3 narrowing lint (re-do the SKIPPED .344 exp3757) | OK | 91 passed in 4.50s |
