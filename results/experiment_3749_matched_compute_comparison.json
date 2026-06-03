@@ -1,0 +1,24 @@
+{
+  "experiment": 3749,
+  "schema": "blocked_gate_check_v1",
+  "run_date": "2026-06-03",
+  "started_at": "2026-06-03T02:50:54.236229+00:00",
+  "finished_at": "2026-06-03T02:50:54.236229+00:00",
+  "duration_s": 0.0,
+  "status": "blocked",
+  "title": "THE THESIS TEST (kill-gate part b): matched-COMPUTE comparison on held-out GSM8K reasoning accuracy -- EBT energy-descent generation vs AR best-of-N at EQUAL total inference FLOPs (count EBT descent passes / NFEs; give AR an equal-FLOP best-of-M budget via the exp3727 harness). Uses .venv/bin/python + hard cuda-block. Gated on exp3748 ebt_can_generate==true. Matched-COMPUTE, NEVER matched-params (the P0.1 trap).",
+  "honest_verdict": "blocked_gate_check_failed",
+  "gate_check_summary": "1 of 1 gate(s) failed; first failure: exp3748-ebt-generation-smoke.ebt_can_generate (upstream artifact not found for task id 'exp3748-ebt-generation-smoke')",
+  "gates_evaluated": [
+    {
+      "upstream": "exp3748-ebt-generation-smoke",
+      "artifact_field": "ebt_can_generate",
+      "op": "==",
+      "expected": true,
+      "actual": null,
+      "passed": false,
+      "reason": "upstream artifact not found for task id 'exp3748-ebt-generation-smoke'"
+    }
+  ],
+  "blocked_at_layer": "conductor_pre_gate"
+}
