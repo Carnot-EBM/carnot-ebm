@@ -7755,3 +7755,4 @@ ERROR: {
 | 2026-06-04 11:20 UTC | Milestone 2026.06.348 activated | OK | 10 tasks queued |
 | 2026-06-04 11:34 UTC | Archive milestone .347 (POST-CONVERGENCE -- landed | OK | 107 passed in 4.28s |
 | 2026-06-04 11:46 UTC | ADVANCE the product headline (north-star sec-1): R | FLAGGED | adversarial_verify CRITICAL: TAUTOLOGY — result quarantined, not a clean success |
+| 2026-06-04 12:00 UTC | RE-CONFIRM the product-headline provenance after t | OK | 87 passed in 4.52s |
