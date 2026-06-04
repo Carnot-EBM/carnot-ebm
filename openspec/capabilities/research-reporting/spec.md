@@ -17253,3 +17253,63 @@ GPU adjudication, and does not report a new energy-as-generator failure.
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-REPORT-3797 | Implemented (`python/carnot/reporting/archive_v347_activate_v348_3797.py`, `scripts/experiment_3797_archive_v347_activate_v348.py`) | Implemented (`tests/python/test_experiment_3797_archive_v347_activate_v348.py`) |
+
+### REQ-REPORT-3805: External Research Refresh .348
+
+The Exp 3805 workflow SHALL confirm that `research-references.md` contains a
+single intact `## .348 additions` section with the planning-sweep context,
+source-reported-number disclaimer, arXiv:2508.01969,
+arXiv:2604.02341, and the EDLM implementation anchor for
+arXiv:2410.21357 / `MinkaiXu/Energy-Diffusion-LLM`. It SHALL then append, not
+replace, additional late-2025 or 2026 arXiv references into that same section
+for the `.348` forward tracks: Tier-3-as-fast-path early rejection and
+early-exit predictive verification, verifier robustness and reward-gaming
+mitigation, selective prediction or conformal abstention for the banked
+verifier product, and EDLM / discrete-diffusion language-model follow-ups.
+
+The filed references SHALL include arXiv:2510.08146, arXiv:2603.23701,
+arXiv:2604.04648, arXiv:2603.06797, arXiv:2605.01643,
+arXiv:2603.21172, arXiv:2604.03904, arXiv:2509.12527,
+arXiv:2602.03769, arXiv:2512.10858, arXiv:2605.26106, and
+arXiv:2603.13243. It SHALL NOT duplicate the already-filed `.348`
+arXiv:2508.01969 anchor or the `.346`/`.347` reward-gaming entries
+arXiv:2604.15149 and arXiv:2602.01750.
+
+The appended bullets SHALL mirror the existing `.348` section style: each paper
+entry includes an arXiv ID, title, submitted or revised date, a one-line
+as-reported summary, and an explicit tie to the relevant `.348` track. Peer
+numbers SHALL be recorded only as source-reported and SHALL require independent
+re-derivation before any forward-facing Carnot claim.
+
+The workflow SHALL use aggregation/documentation provenance hygiene, SHALL NOT
+include GGUF, CUDA, or live-model markers in the terminal artifact, and SHALL
+NOT edit operator-curated docs or `scripts/research_conductor.py`.
+
+The terminal artifact SHALL be written to
+`results/experiment_3805_external_research_refresh.json` and SHALL include bare
+top-level values for `honest_verdict`, `inference_substrate`,
+`references_added`, `n_references_added`, `section_appended_not_replaced`,
+`numbers_are_as_reported`, `random_seed`, `reproducibility_checksum`, and
+`duration_s`, plus `field_principles` documenting why each required value
+exists. `inference_substrate` SHALL equal
+`aggregation_from_upstream_artifacts (principle: a documentation append, no live model).`
+The terminal verdict SHALL equal
+`complete: external_research_refresh_348_filed_references_section_appended_numbers_as_reported`.
+
+#### SCENARIO-REPORT-3805: .348 Research Refresh Extends The Existing Section Append-Only
+
+**Given** `research-references.md` already contains intact `.347 additions`
+and `.348 additions` sections
+**When** the Exp 3805 workflow runs
+**Then** it preserves all prior content byte-for-byte as a prefix, appends the
+new `.348` paper bullets without duplicating the existing `.348`,
+arXiv:2508.01969, arXiv:2604.15149, or arXiv:2602.01750 entries, writes the
+required aggregation-only terminal artifact, marks peer numbers as-reported
+rather than Carnot measurements, and passes adversarial verification without a
+critical flag.
+
+## Implementation Status (REQ-REPORT-3805)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-3805 | Planned (`python/carnot/reporting/external_research_refresh_3805.py`, `scripts/experiment_3805_external_research_refresh.py`) | Planned (`tests/python/test_experiment_3805_external_research_refresh.py`) |
