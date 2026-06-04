@@ -3605,3 +3605,13 @@ does not recommend any verification relaxation.
 rate at most 0.2, frame-violating recall 1.0, `conductor_unmodified=true`,
 `integration_proposal_emitted=true`, upstream artifact provenance, no live-model
 markers, and a terminal verdict that records recommend-only wiring readiness.
+
+
+### REQ-AUTO-016: Headroom Gate Corpus for Grid Tasks
+The system MUST generate a difficulty-stratified grid corpus (n >= 50) and measure matched-compute AR greedy, AR+SC32, and oracle solve rates. It must compute the headroom band (oracle - AR+SC32).
+If AR+SC32 > 0.75, it must ABORT as ceiling-polluted. If AR_greedy ~ 0.20 and AR_SC32 < 0.50 and oracle materially > AR+SC32, it must set headroom_confirmed = true and CONFIRM.
+
+#### SCENARIO-AUTO-016: Headroom Gate Output
+**Given** a generator for grid tasks
+**When** the headroom gate is evaluated
+**Then** it outputs a valid json artifact with bare boolean headroom_confirmed, and principle-annotated values for ar_greedy_solve_rate, ar_sc32_solve_rate, oracle_solve_rate, headroom_margin, corpus_path, n_instances, difficulty_strata, preconditions_checked, inference_substrate, random_seed, reproducibility_checksum, and duration_s.
