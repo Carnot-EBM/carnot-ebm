@@ -87,3 +87,82 @@ small-reasoner class" — the strongest version of the moat per `deep-think-post
 
 **Next step:** operator/Deep-Think review of this framing → if green-lit, stage as a pre-staged
 roadmap milestone with the headroom-gate as task 1 (the EBT seed precedent).
+
+---
+
+## Deep Think reconciliation (2026-06-04) — VERDICT: FIX-FIRST + pivot to distillation-oracle
+
+DT validated the thesis pivot as **mathematically sound** but found a **physical execution
+blocker** in the Carnot-specific bet (P3). The thesis is NOT dead — it is REWRITTEN. Net:
+**Carnot's role is the offline DISTILLATION ORACLE that trains the continuous Q-head, NOT the
+runtime internal Q-head.** Full P1-P5 with confidences in
+`phase3-recursive-refiner-deep-think-prompt.md` response (pasted into session 2026-06-04).
+
+**P1 (90%) — regime vs paradigm: BOTH.** Our EBM negative was regime-polluted (SC near-ceiling
+= zero headroom), BUT the EBM failure on NL is ALSO paradigm-deep: unconstrained Langevin in
+continuous space drifts into off-manifold voids because a global scalar gradient lacks the
+causal/discrete inductive bias for valid syntax. TRM *escapes the energy void* (learned forward
+passes h_{t+1}=f_θ(h_t), not open-ended gradient descent) — BUT likely hits a NEW
+"sequence-compositionality wall" on text: TRM's refine-in-place success leans on the fixed
+spatial topology of GRIDS (local changes don't shatter global structure); text needs
+variable-length capacity + strict left-to-right causality. **Falsification (cheap):** vanilla
+TRM vs matched-compute AR on a strictly-1D variable-length task with AR headroom (algorithmic
+sequence correction / multi-step parity). TRM fails there → the paradigm is grid-bound.
+
+**P2 (95%) — TRM ≠ EBT, profoundly (this is the strongest defense of the pivot).** EBT's
+inference update field is mathematically restricted to be CONSERVATIVE (curl-free; the gradient
+of a scalar energy, symmetric Jacobian). TRM learns a GENERIC discrete-time dynamical system —
+an ARBITRARY (asymmetric) vector field — so it can express conditional logic ("if conflict A,
+shift B"), asymmetric attractors, and algorithmic limit-cycles that EBT is mathematically
+INCAPABLE of expressing. **So our bounded EBT result does NOT cover TRM.** Falsification: fit a
+scalar E to a trained TRM's latent updates Δh s.t. Δh≈−∇E(h); the curl-free constraint
+guarantees you fail (if you succeed, TRM is secretly energy descent).
+
+**P3 (99%, HIGHEST STAKES) — literal "verifier-as-runtime-Q-head" is a FATAL CATEGORY ERROR.**
+External verifiers (SAT/Z3/AST/discrete-energy) require discrete, well-formed, COMPLETE syntax;
+TRM's intermediate recursive latents are continuous, half-baked, and decode to gibberish until
+the final steps. Decode-in-the-loop → the solver throws syntax errors / returns a flat 0 →
+destroys the halting signal and gradient. An end-to-end LEARNED Q-head structurally dominates
+(natively reads continuous latents, per-step granular, differentiable). **THE ONLY VIABLE
+INTEGRATION PATH IS OFFLINE DISTILLATION:** use the Carnot verifier to score unrolled FINAL
+trajectories → train the continuous Q-head via BCE/MSE. **REWRITE THE PITCH:** from "we own the
+verifier they need internally" → **"we own the ORACLE required to DISTILL the internal
+continuous Q-heads they need."** (Note: this is arguably a BETTER fit for the banked verifier —
+used OFFLINE, where its discreteness + ~ms latency don't matter.)
+
+**P4 (85%) — transfer is suspect.** Grids = fixed dimensionality (N×N) + absolute verifiable
+completed states. Open-ended reasoning = dynamically expanding length + long-range causality +
+abstract semantics. Fixed-latent iterative refinement historically face-plants on open-ended
+text (cf. non-autoregressive machine translation). Falsification: TRM on a task whose required
+trace must dynamically grow >> input length; if accuracy collapses on unseen lengths (where AR
+trivially scratchpads), it cannot reach the foundation-model mission.
+
+### Revised plan (supersedes the task order above where they conflict)
+
+**TASK 0 — the "Latent-Symbol Bridge" kill-criterion ($0 scaling compute, DO THIS FIRST).** Take
+an OFF-THE-SHELF TRM that already beats AR on a toy grid. Try to replace its internal Q-head
+with an idealized external programmatic verifier: force-decode the intermediate latents to
+discrete board states at EVERY step t, query the verifier, measure (a) step-latency overhead and
+(b) the false-negative / unparseable rate of intermediate states. If latency balloons and/or
+intermediate states crash the verifier (flat signal, no monotonic correlation with step T), the
+"verifier slots right in at runtime" thesis is **definitively falsified for $0**, and the
+distillation-oracle pivot is confirmed as the only path. Build the distillation pipeline first.
+
+**TASK 0.5 — the P1/P2 cheap falsifications:** (a) vanilla TRM vs matched-AR on a 1D
+variable-length headroom task (does TRM escape grids?); (b) energy-fit to TRM's Δh (confirm
+TRM ≠ EBT). Both cheap, both decide whether to proceed.
+
+**MANDATORY positive-control / headroom gate (tighter than before, per DT):** curate a regime
+where AR greedy ≈ 20% AND **AR + Self-Consistency@32 plateaus FIRMLY < 50%.** **ABORT
+immediately if AR+SC@32 > 75%** — that is the regime-polluted ceiling trap that already produced
+two expensive false negatives (P0.1, Thesis-A). This gate is non-negotiable before any new
+generator training.
+
+**TASK 1+ (only if 0/0.5 pass + headroom confirmed):** train a TRM-style recursive refiner with
+a continuous Q-head DISTILLED from the Carnot-verifier oracle (verifier scores final
+trajectories → BCE/MSE on the Q-head), matched-COMPUTE vs AR, on the headroom corpus.
+
+**Strategic bottom line:** the pivot survives and may be STRONGER — Carnot as the
+verification-oracle that distills the Q-heads the winning small-reasoner class needs, used
+offline where the verifier's discreteness is a feature not a bug. But Task 0 must run first; it
+can kill the naive integration for free.
