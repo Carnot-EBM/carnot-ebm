@@ -17313,3 +17313,111 @@ critical flag.
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-REPORT-3805 | Planned (`python/carnot/reporting/external_research_refresh_3805.py`, `scripts/experiment_3805_external_research_refresh.py`) | Planned (`tests/python/test_experiment_3805_external_research_refresh.py`) |
+
+### REQ-REPORT-3807: Capstone V348 Product Headline And Product Hardening Synthesis
+
+The Exp 3807 workflow SHALL aggregate Exp 3797 through Exp 3806 from
+checked-in JSON artifacts only, run `scripts/summarize_artifact.py` for every
+upstream experiment ID, exclude any upstream artifact carrying
+`flagged_adversarial=true` from headline aggregation, record missing or blocked
+upstream artifacts as `not-landed` or `blocked` rather than as research
+negatives, and write `results/experiment_3807_capstone_v348.json`.
+
+The artifact SHALL be aggregation-only with no copied live-model markers. It
+SHALL state the `.348` outcome plainly as a lean post-convergence milestone:
+the product headline advanced through the Exp 3798 G4 restoration re-run and
+Exp 3799 provenance re-confirmation when clean, or stayed honestly demoted or
+blocked when the re-run cannot be used; the banked verifier product was
+hardened or repaired through Exp 3800 context-compaction mitigation and Exp
+3801 HTTP/REST abstention surface evidence; the endorsed process tool was
+repaired through Exp 3802 anomaly-classifier v2 tuning; Tier-3 self-learning
+was applied as the Exp 3803 FR-11 v20 fast-path gate; references were
+refreshed through Exp 3805; and KV260 terminal continuity was checked through
+Exp 3806. It SHALL make no new existential claim and SHALL not re-grind the
+already-bounded energy-as-selector or energy-as-generator strategic
+conclusions.
+
+The product-headline recommendation SHALL be one of `restorable`,
+`restorable_with_caveat`, `not_yet_eligible`, or `blocked_rerun`. A null or
+regression delta from Exp 3798 SHALL be treated as a valid finding only when
+the artifact is present, not flagged, not blocked, and records
+`positive_control_passed=true`; a blocked, missing, or flagged re-run SHALL be
+recorded as an operator handoff, not as evidence that the historical +18pp
+claim was disproven. Exp 3799 SHALL provide the clean operator-facing
+provenance recommendation when present and not blocked or flagged.
+
+The terminal artifact SHALL include bare top-level values for `honest_verdict`,
+`inference_substrate`, `product_headline_advanced`,
+`product_headline_restorable`, `verifier_product_hardened`,
+`anomaly_classifier_repaired`, `fr11_v20_tier3_fast_path`,
+`energy_as_generator_still_bounded`, `paper_ready_preserved`,
+`frozen_headline_unchanged`, `next_thesis_remains_operator_surface`,
+`flagged_artifacts_excluded`, `not_landed_or_blocked_recorded_honestly`,
+`cited_upstream_artifacts`, `random_seed`, `reproducibility_checksum`, and
+`duration_s`, plus `field_principles` documenting why each required value
+exists. The `inference_substrate` value SHALL equal
+`aggregation_from_upstream_artifacts (principle: a capstone reads upstream JSON, runs no live model).`
+The terminal verdict SHALL use the prefix
+`complete: capstone_v348_product_headline_` and SHALL include
+`verifier_product_hardened`, `anomaly_classifier_repaired`,
+`fr11_v20_tier3_fast_path`, `paper_ready_true`,
+`frozen_headline_unchanged`, and `both_energy_routes_bounded` when those
+invariants hold.
+
+#### SCENARIO-REPORT-3807: Clean V348 Capstone Records Lean Product Hardening Without New Existential Claim
+
+**Given** clean Exp 3797 through Exp 3806 artifacts record `.348` activation,
+G4 product-headline re-run evidence, product-headline provenance
+re-confirmation, context-compaction mitigation, HTTP/REST abstention surface
+evidence, anomaly-classifier v2 tuning, FR-11 v20 fast-path gating, reference
+refresh, and KV260 terminal continuity
+**When** the Exp 3807 workflow runs
+**Then** it emits the required terminal artifact with
+`paper_ready_preserved=true`, frozen FoVer `0.9131` unchanged,
+`energy_as_generator_still_bounded=true`, both energy routes recorded as
+honest-negative-bounded, all clean upstream artifacts cited, no copied
+live-model markers, no new existential claim, and no critical adversarial
+verifier flag.
+
+#### SCENARIO-REPORT-3807-RERUN-GUARD: Blocked Or Flagged G4 Re-Run Is Not A Research Negative
+
+**Given** Exp 3798 is missing, blocked, or carries `flagged_adversarial=true`
+**When** the Exp 3807 workflow validates the product-headline section
+**Then** it excludes Exp 3798 from headline aggregation, records the re-run
+state in `flagged_artifacts_excluded` or
+`not_landed_or_blocked_recorded_honestly`, preserves the historical headline
+as demoted or blocked for the operator, and does not claim the historical +18pp
+result was newly disproven.
+
+#### SCENARIO-REPORT-3807-POSITIVE-CONTROL-GUARD: Null Or Regression Delta Requires Positive Control
+
+**Given** a clean Exp 3798 artifact reports a non-positive repair delta
+**When** the Exp 3807 workflow validates the product-headline section
+**Then** validation SHALL pass only if `positive_control_passed=true`; a failed
+or missing positive control SHALL fail validation rather than becoming a
+valid null or regression product-headline finding.
+
+#### SCENARIO-REPORT-3807-MISSING-BLOCKED: Missing Or Blocked Upstream Is Not A Research Negative
+
+**Given** any Exp 3797 through Exp 3806 artifact is absent or reports a blocked
+terminal verdict
+**When** the Exp 3807 workflow runs
+**Then** the capstone records that artifact in
+`not_landed_or_blocked_recorded_honestly`, excludes missing artifacts from
+headline aggregation, and does not label an un-run or blocked task as a
+research negative.
+
+#### SCENARIO-REPORT-3807-FLAGGED: Flagged Upstream Artifacts Are Excluded
+
+**Given** any Exp 3797 through Exp 3806 source artifact carries
+`flagged_adversarial=true`
+**When** the Exp 3807 workflow runs
+**Then** the capstone records that artifact in `flagged_artifacts_excluded`,
+excludes it from headline aggregation, and derives affected milestone values
+from the remaining clean upstream record.
+
+## Implementation Status (REQ-REPORT-3807)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-3807 | Implemented (`python/carnot/reporting/capstone_v348_product_headline_3807.py`, `scripts/experiment_3807_capstone_v348.py`) | Implemented (`tests/python/test_experiment_3807_capstone_v348.py`) |
