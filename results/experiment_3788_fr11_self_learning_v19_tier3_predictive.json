@@ -1,0 +1,137 @@
+{
+  "acceptance_gate": {
+    "condition": "held-out predictive AUROC reported AND frozen 0.9131 ensemble unchanged AND Exp 2837 rounded memory contribution >= +0.0185 AND Tier-3 predictor state persisted",
+    "passed": true,
+    "principle": "Tier-3 may be weaker than the scorer, but it must be a real additive predictor and must not regress the banked discriminator."
+  },
+  "artifact": "experiment_3788_fr11_self_learning_v19_tier3_predictive",
+  "continuous_self_learning_task": true,
+  "duration_s": 3.58636713,
+  "field_principles": {
+    "duration_s": "Wall-clock plausibility floor; verifier-scoring + a small CPU JAX train is modest.",
+    "headline_ensemble_unchanged": "BARE bool, true -- the frozen 0.9131 scoring ensemble is UNTOUCHED; Tier-3 adds a predictive head, it does not replace the discriminator.",
+    "honest_verdict": "Terminal prefix; the self-learning outcome; blocked_<resource> if a precondition failed.",
+    "inference_substrate": "verifier_ensemble_against_cached_candidates (principle: reads cached verifier scores, no live model).",
+    "is_tier3_not_tier1_or_tier2": "BARE bool, true -- confirms v19 is Tier-3 predictive verification, NOT a re-run of v17 (Tier-1) or v18 (Tier-2).",
+    "memory_contribution_preserved": "BARE bool -- the +0.0185 fr11_session_memory contribution survives (the load-bearing invariant).",
+    "model_specs": "Names the corpus + 4 verifiers + the JEPA predictor -- honest substrate.",
+    "predictive_auroc": "The Tier-3 predictor's held-out AUROC -- the core deliverable; reported honestly even if below the full ensemble.",
+    "random_seed": "Determinism precondition.",
+    "reproducibility_checksum": "Content hash catches drift.",
+    "tracker_state_persisted": "BARE bool, true -- the Tier-3 predictor was persisted so a future milestone resumes it (continuous, not one-shot).",
+    "train_test_split_sizes": "Sample-size hygiene -- the held-out split sizes so the AUROC is interpretable (and leakage is auditable)."
+  },
+  "frozen_headline_ensemble_auroc": 0.9131335999999999,
+  "headline_ensemble_unchanged": true,
+  "honest_verdict": "complete: fr11_v19_tier3_predictive_verifier_trained_predictive_auroc_0.9715_headline_ensemble_unchanged_memory_contribution_preserved_state_persisted",
+  "inference_substrate": "verifier_ensemble_against_cached_candidates (principle: reads cached verifier scores, no live model).",
+  "is_tier3_not_tier1_or_tier2": true,
+  "memory_contribution_preserved": true,
+  "memory_contribution_reference": 0.01847119999999991,
+  "methodology": {
+    "corpus_absolute_path": "/home/ianblenke/github.com/ianblenke/carnot/data/fover_corpus.jsonl",
+    "domain_keys": [
+      "fr11_session_memory",
+      "tier0r_curry_howard",
+      "tier0s_arithmetic_gap",
+      "tier0u_logical_consistency"
+    ],
+    "feature_builder": "four_verifier_scores_to_258_dim_FR11ExtendedJEPA_embedding",
+    "heldout_metric": "sklearn.metrics.roc_auc_score",
+    "lineage": "v19_tier3_predictive_verification_not_v17_tier1_or_v18_tier2",
+    "predictor_api": "FR11ExtendedJEPA.__init__/train/predict/energy",
+    "random_seed": 3788,
+    "scoring_protocol": "ops/reproduction-runbook-fover-headline.md"
+  },
+  "model_specs": {
+    "corpus": "FoVer cached corpus",
+    "corpus_absolute_path": "/home/ianblenke/github.com/ianblenke/carnot/data/fover_corpus.jsonl",
+    "ensemble_status": "frozen_0.9131_scoring_ensemble_unchanged",
+    "execution_path": "cpu_validated_small_predictor_future_gpu_npu_path",
+    "live_model_invoked": false,
+    "n_examples_requested": 1000,
+    "predictive_head": "FR11ExtendedJEPA",
+    "predictive_head_module": "carnot.fr11.tier3_jepa",
+    "predictor_input_dim": 258,
+    "predictor_outputs": [
+      "arithmetic",
+      "code",
+      "logic"
+    ],
+    "scoring_mode": "cached_verifier_scores_only",
+    "tier": "Tier-3 predictive verification",
+    "verifiers": [
+      "fr11_session_memory",
+      "tier0r_curry_howard",
+      "tier0s_arithmetic_gap",
+      "tier0u_logical_consistency"
+    ]
+  },
+  "n_examples": 1000,
+  "n_samples": 200,
+  "preconditions_checked": [
+    {
+      "available": true,
+      "detail": "executable=/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python; loaded=jax,numpy,sklearn; missing=none; FR11ExtendedJEPA_importable=True",
+      "resource": "interpreter_runtime"
+    },
+    {
+      "available": true,
+      "detail": "/home/ianblenke/github.com/ianblenke/carnot/data/fover_corpus.jsonl; line_count=8829; required>=1000",
+      "resource": "fover_corpus_absolute_path"
+    },
+    {
+      "available": true,
+      "detail": "line_count=8829; required>=1000",
+      "resource": "cached_traces_with_per_verifier_scores_and_labels"
+    },
+    {
+      "available": true,
+      "detail": "loaded=tier0r_curry_howard,tier0s_arithmetic_gap,tier0u_logical_consistency",
+      "resource": "text_scoring_verifiers"
+    },
+    {
+      "available": true,
+      "detail": "state_files=21; memory_loaded=True",
+      "resource": "fr11_session_memory_verifier"
+    },
+    {
+      "available": true,
+      "detail": "online graph fit, graph learner, and fixed crossfit baseline importable",
+      "resource": "dependency_aware_weighting_implementation"
+    }
+  ],
+  "predictive_auroc": 0.9715,
+  "predictor_state_path": "results/experiment_3788_fr11_v19_tier3_predictive_jepa_state.npz",
+  "predictor_state_sha256": "8597da248c3f18d33719db592ba9e7a5ef604cb4c8b4e984e081547edb0dabd7",
+  "predictor_training": {
+    "batch_size": 64,
+    "learning_rate": 0.001,
+    "n_epochs": 50,
+    "per_domain_predictive_auroc": {
+      "arithmetic": 0.9696,
+      "code": 0.9709,
+      "logic": 0.9741
+    },
+    "test_fraction": 0.2,
+    "train_macro_auroc": 0.98574375
+  },
+  "random_seed": 3788,
+  "reproducibility_checksum": "81ed8d10639c47ef36dad495500629b0f275a38aec82ad3240c6e644f784e5b4",
+  "schema": "carnot.fr11_continuous_self_learning_v19",
+  "tracker_state_persisted": true,
+  "train_test_split_sizes": {
+    "test": 200,
+    "test_negative": 100,
+    "test_positive": 100,
+    "train": 800,
+    "train_negative": 400,
+    "train_positive": 400
+  },
+  "verifier_names": [
+    "fr11_session_memory",
+    "tier0r_curry_howard",
+    "tier0s_arithmetic_gap",
+    "tier0u_logical_consistency"
+  ]
+}

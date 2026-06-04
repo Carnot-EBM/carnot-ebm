@@ -10869,3 +10869,75 @@ substrate only.
 | Requirement  | Python | Tests |
 |-------------|--------|-------|
 | REQ-LEARN-3778 | Proposed (python/carnot/fr11/continuous_self_learning_v18.py; scripts/experiment_3778_fr11_self_learning_v18_tier2_constraint_memory.py) | Proposed (tests/python/test_experiment_3778_fr11_csl_v18.py) |
+
+---
+
+## REQ-LEARN-3788: FR-11 v19 Tier-3 Predictive Verification Head
+
+**Given** the FoVer cached corpus and the four frozen headline verifier scoring
+paths are present
+**When** Exp 3788 runs the FR-11 v19 self-learning experiment
+**Then** it SHALL train `FR11ExtendedJEPA` as an additive Tier-3 predictive
+head over the cached verifier feature signal and binary step-error labels
+**And** it SHALL report held-out predictive AUROC from a deterministic
+train/test split
+**And** it SHALL persist the trained predictor state so a later milestone can
+resume from the learned predictive head
+**And** it SHALL leave the frozen 0.9131 FoVer scoring ensemble unchanged and
+preserve the +0.0185 `fr11_session_memory` contribution from Exp 2837
+**And** it SHALL identify v19 as Tier-3 predictive verification, not v17
+Tier-1 precision tracking or v18 Tier-2 constraint-memory consolidation.
+
+### REQ-LEARN-3788 Sub-requirements
+
+- REQ-LEARN-3788-1: The runnable artifact SHALL use
+  `inference_substrate` equal to
+  `verifier_ensemble_against_cached_candidates (principle: reads cached verifier scores, no live model).`
+  and SHALL avoid live-model, CUDA, GGUF, or full-ensemble replacement claims.
+- REQ-LEARN-3788-2: Preconditions SHALL run under `.venv/bin/python`, require
+  importable `jax`, `numpy`, `sklearn`, and `FR11ExtendedJEPA`, and require the
+  absolute FoVer corpus path to exist before training.
+- REQ-LEARN-3788-3: If the FoVer corpus or verifier scoring path is missing,
+  the artifact SHALL use a `blocked_<resource>` honest verdict and SHALL record
+  `no corpus to train on` without fabricating predictive AUROC or predictor
+  state.
+- REQ-LEARN-3788-4: The predictor training set SHALL be built by scoring the
+  cached FoVer rows through the four headline verifiers, converting those
+  verifier scores into a 258-dimensional `FR11ExtendedJEPA` embedding, and
+  mapping the binary step-error label into the predictor's violation targets.
+- REQ-LEARN-3788-5: Held-out predictive AUROC SHALL be computed on rows excluded
+  from predictor training; the artifact SHALL include train/test split sizes so
+  the AUROC is auditable.
+- REQ-LEARN-3788-6: Runnable artifacts SHALL include bare values for
+  `honest_verdict`, `inference_substrate`, `predictive_auroc`,
+  `train_test_split_sizes`, `headline_ensemble_unchanged`,
+  `memory_contribution_preserved`, `is_tier3_not_tier1_or_tier2`,
+  `tracker_state_persisted`, `model_specs`, `random_seed`,
+  `reproducibility_checksum`, and `duration_s`, plus separate field-principle
+  annotations for those fields.
+- REQ-LEARN-3788-7: The terminal verdict SHALL start with
+  `complete: fr11_v19_tier3_predictive_verifier_trained_predictive_auroc_`
+  and end with
+  `_headline_ensemble_unchanged_memory_contribution_preserved_state_persisted`
+  when the predictor trains, the frozen ensemble reference is unchanged, the
+  memory contribution is preserved, and predictor state is persisted.
+
+### SCENARIO-LEARN-3788: Predictive Head Persists Real Learned Behavior
+
+**Given** labeled FoVer-style verifier scores with both positive and negative
+step-error labels
+**When** the v19 trainer builds JEPA embeddings, trains `FR11ExtendedJEPA`, and
+persists the predictor state
+**Then** the reloaded predictor produces the same predictions as the trained
+predictor for the same embedding
+**And** poisoning the persisted predictor parameters changes that prediction,
+proving the artifact depends on the real predictive head state
+**And** the artifact reports `headline_ensemble_unchanged=true`,
+`memory_contribution_preserved=true`, `is_tier3_not_tier1_or_tier2=true`,
+`tracker_state_persisted=true`, and verifier-scoring substrate only.
+
+## Implementation Status (REQ-LEARN-3788)
+
+| Requirement  | Python | Tests |
+|-------------|--------|-------|
+| REQ-LEARN-3788 | Proposed (python/carnot/fr11/continuous_self_learning_v19.py; scripts/experiment_3788_fr11_self_learning_v19_tier3_predictive.py) | Proposed (tests/python/test_experiment_3788_fr11_csl_v19.py) |
