@@ -7744,3 +7744,4 @@ ERROR: {
 | 2026-06-04 08:02 UTC | P1 discrete-search adjudication v3 RETRY (the LAST | OK | 83 passed in 5.60s |
 | 2026-06-04 08:20 UTC | FR-11 continuous self-learning v19 -- Tier-3 PREDI | OK | 88 passed in 8.75s |
 | 2026-06-04 08:34 UTC | HARDEN the banked verifier product: surface the .3 | OK | 115 passed, 1 skipped in 11.87s |
+| 2026-06-04 08:51 UTC | HARDEN the banked verifier product: characterize i | OK | 91 passed in 4.69s |
