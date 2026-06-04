@@ -17421,3 +17421,75 @@ from the remaining clean upstream record.
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-REPORT-3807 | Implemented (`python/carnot/reporting/capstone_v348_product_headline_3807.py`, `scripts/experiment_3807_capstone_v348.py`) | Implemented (`tests/python/test_experiment_3807_capstone_v348.py`) |
+
+### REQ-REPORT-3808: Archive V348 And Activate V349 Lean Maintenance
+
+The Exp 3808 workflow SHALL archive milestone `2026.06.348` to
+`research-complete.yaml` and confirm milestone `2026.06.349` is active. The
+workflow MUST read the `.348` capstone artifact
+`results/experiment_3807_capstone_v348.json`, the active roadmap evidence, the
+`.349` design doc, and `publication_gate.py --json` output. It SHALL treat a
+missing `research-roadmap-next.yaml` as acceptable only when
+`research-roadmap.yaml` has already been activated to `2026.06.349`.
+
+The archive row SHALL replace any generic `.348` conductor row rather than
+duplicating it. It SHALL record the real `.348` state honestly: all tasks landed
+terminally, the product code-repair headline stays demoted because the Exp 3798
+G4 re-run produced `delta=0.0pp`, both candidate product positives fail
+provenance after the Exp 2090 live adversarial re-check, the context-compaction
+gaming evasion is closed, the anomaly-escalation classifier is now wirable,
+the HTTP/REST abstention surface is blocked and carried as a repair target, the
+Tier-3 fast-path gate landed, paper readiness is true, FoVer `0.9131` stays
+frozen, both energy routes stay bounded, and EDLM remains an operator seed
+surface. It MUST NOT recast the demoted product headline as a research negative
+or reopen bounded energy conclusions.
+
+Every string value written to `research-complete.yaml` that contains a colon
+SHALL be quoted so `yaml.safe_load` succeeds after the write. The workflow SHALL
+leave `scripts/research_conductor.py`, `ops/north-star.md`, `ops/status.md`,
+`ops/changelog.md`, and `_bmad/traceability.md` unchanged.
+
+The terminal artifact SHALL be written to
+`results/experiment_3808_archive_v348_activate_v349.json` and SHALL include
+bare top-level values for `honest_verdict`, `inference_substrate`,
+`v348_outcome_recorded`, `v349_focus_recorded`,
+`product_headline_demoted_recorded`, `research_complete_yaml_parses`,
+`paper_ready_preserved`, `both_energy_routes_still_bounded`,
+`edlm_remains_operator_seed_surface`, `n_tasks_archived`,
+`adversarial_verify_clean`, `random_seed`, `reproducibility_checksum`, and
+`duration_s`, plus `field_principles` documenting why each required value
+exists. `inference_substrate` SHALL equal
+`aggregation_from_upstream_artifacts` and the artifact SHALL NOT contain
+`model_specs`, `target_model`, `GGUF`, `CUDA`, or `live-model` markers. The
+terminal verdict SHALL equal
+`complete: archived_v348_landed_all_product_headline_demoted_both_positives_fail_provenance_v349_lean_maintenance_active_paper_ready_true_both_energy_routes_bounded_frozen_headline_unchanged_edlm_operator_seed_surface`.
+
+#### SCENARIO-REPORT-3808: V348 Archive Records Demotion And Activates V349
+
+**Given** the `.348` capstone records product-headline demotion, a blocked
+HTTP/REST surface, a closed context-compaction evasion, a wirable anomaly
+classifier, a Tier-3 fast-path gate, `paper_ready=true`, frozen FoVer `0.9131`,
+both energy routes bounded, and an operator-gated EDLM surface
+**And** `publication_gate.py --json` reports G1-G4 all passing
+**When** the Exp 3808 workflow runs
+**Then** it rewrites the `.348` research-complete entry as a single honest
+archive with 10 terminal tasks, records the product headline as demoted because
+both candidate product positives fail provenance, quotes colon-containing YAML
+values, confirms `research-complete.yaml` safe-loads, confirms `.349` is
+active, writes the required aggregation-only artifact, and passes adversarial
+verification with no critical flag.
+
+#### SCENARIO-REPORT-3808-PRODUCT-HEADLINE-GUARD: Demoted Product Headline Is Not A Research Negative
+
+**Given** the `.348` capstone records `headline_stays_demoted=true` and a
+blocked HTTP/REST surface
+**When** the Exp 3808 workflow validates the transition
+**Then** it records `product_headline_demoted_recorded=true`, preserves
+`paper_ready_preserved=true`, records `both_energy_routes_still_bounded=true`,
+and does not report a new energy or product-headline research negative.
+
+## Implementation Status (REQ-REPORT-3808)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-3808 | Implemented (`python/carnot/reporting/archive_v348_activate_v349_3808.py`, `scripts/experiment_3808_archive_v348_activate_v349.py`) | Implemented (`tests/python/test_experiment_3808_archive_v348_activate_v349.py`) |
