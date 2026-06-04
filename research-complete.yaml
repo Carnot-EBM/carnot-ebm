@@ -35146,117 +35146,52 @@ milestones:
     result: 'COMPLETE: capstone recorded exp3777 as blocked, not a negative; paper_ready TRUE, FoVer 0.9131 frozen, both energy
       routes bounded'
 - id: 2026.06.347
-  title: 'POST-CONVERGENCE -- RETRY THE LAST OPEN QUESTION + HARDEN THE BANKED PRODUCT. The project is CONVERGED on its one
-    surviving positive (FoVer 0.9131 verifier, paper_ready=TRUE) and BOTH energy-foundation routes are bounded (selector P0.1
-    + generator Thesis-A); the verifier-moat thread is CLOSED. .346 landed 10/11 -- the SINGLE un-landed task was exp3777
-    (P1 discrete-search v3), which BLOCKED on no-free-GPU. .347 does FIVE things and re-grinds NOTHING bounded: (A) RETRY
-    the LAST open energy-existential question -- the P1 discrete-search adjudication v3 (artifact-vs-fundamental for energy-as-generator),
-    with a GPU-FREE precondition + a clean blocked-fallback (never queue, never fabricate); the harness root-cause was already
-    fixed (n_train 20000->40000). (B) HARDEN the banked verifier product -- a CLI+batch surface for the abstention mode, a
-    CPU gaming-resistance characterization, and a G4 provenance-confirmation that can RESTORE the demoted product headline
-    (exp1999 +18pp / exp2090 +15pp). (C) CONTINUE self-learning -- FR-11 v19 Tier-3 predictive verification (distinct tier
-    from v18''s Tier-2 memory). (D) VALIDATE the .346 Anomaly-Escalation classifier against the historical retro corpus (recommend-only;
-    never auto-relaxes verification). (E) SCAFFOLD the operator''s EDLM seed further -- a NO-TRAIN preflight GO/NO-GO readiness
-    check that lowers the seed cost to one command without committing the loop. Plus record/continuity (external refresh,
-    KV260 opportunistic, capstone). INVARIANTS: paper_ready stays TRUE (G1-G4); FoVer 0.9131 frozen; both energy routes stay
-    bounded (P1 v3 sharpens the MECHANISM only, never reopens the strategic conclusion or seeds a paradigm); the next-Phase-3-thesis
-    decision stays an operator-seeding surface. The agent never edits operator-curated docs, never triggers CI, never publishes,
-    never pushes.'
+  title: "V347 post-convergence terminal handoff archived"
   doc: openspec/change-proposals/research-roadmap-vNEXT.md
   completed: '2026-06-04'
-  finding: See conductor log for per-experiment results.
+  finding: "LANDED TERMINAL MILESTONE: .347 completed its post-convergence archive. The P1 discrete-search v3 retry, exp3787, blocked on no-free-GPU for the second consecutive milestone and set handoff_to_operator=true; it is handed to the operator, not re-queued in .348, and not a research negative. EDLM preflight returned GO but remains operator-gated. The product headline is partially restorable: exp2090 passes G4 and exp1999 fails G4 because provenance is absent on disk. FR-11 Tier-3 predictive self-learning trained, abstention CLI/batch and gaming-resistance product work landed, the anomaly classifier was validated but over-fired and needs tuning, references refreshed, KV260 continuity held, paper_ready TRUE (G1-G4), frozen FoVer 0.9131 unchanged, and both energy routes stayed bounded. .348 is active: restore the demoted code-repair headline to G4 eligibility if the clean re-run supports it, harden/repair the banked product, tune the classifier, wire Tier-3 as a fast path, re-grind nothing bounded, and self-seed no paradigm."
   tasks:
   - id: exp3786-archive-v346-activate-v347
-    title: 'Archive milestone .346 (POST-BOUNDED CONVERGENCE -- landed 10/11: verifier product banked via abstention-mode
-      wiring, FR-11 v18 Tier-2 memory, P3 Anomaly-Escalation prototyped, EDLM seed scaffolded, G4 correction prepped, paper_ready=TRUE;
-      the single un-landed exp3777 P1 v3 blocked on no-free-GPU) and activate .347 (POST-CONVERGENCE: RETRY the last open
-      question P1 v3, HARDEN the banked verifier product, CONTINUE Tier-3 self-learning, VALIDATE the anomaly-escalation classifier,
-      SCAFFOLD the operator''s EDLM seed).'
+    title: "Archive .346 and activate .347 post-convergence"
     deliverable: results/experiment_3786_archive_v346_activate_v347.json
-    result: OK (conductor)
+    result: "COMPLETE: archived .346 as 10 of 11 with exp3777 blocked on no-free-GPU, then activated .347 post-convergence"
   - id: exp3787-p1-discrete-search-adjudication-v3-retry
-    title: 'P1 discrete-search adjudication v3 RETRY (the LAST open energy-existential question): the .346 exp3777 v3 BLOCKED
-      on no-free-GPU. Re-run the discrete-search EBT decode with a VALID positive control (n_train=40000, the regime where
-      from-scratch AR reaches 0.84) and an ar_best>=0.3 gate, to settle artifact-vs-fundamental for energy-as-generator on
-      discrete text. The harness root-cause (starved AR control at n_train=20000) was already diagnosed + fixed in .346. PRECONDITION:
-      a FREE GPU (>=10GB) -- if the rig is busy, exit cleanly to blocked_no_free_gpu (never queue, never fabricate). Outcome:
-      EBT discrete-search acc >0% with AR>=0.3 -> decode-ARTIFACT-bounded (narrow reopen finding for the operator); 0% with
-      AR>=0.3 -> Causal-Inductive-Bias-Gap FUNDAMENTAL (closing-theorem support). energy-as-generator stays BOUNDED from part-b
-      regardless -- this sharpens the MECHANISM, not the strategic conclusion.'
+    title: "P1 discrete-search adjudication v3 retry"
     deliverable: results/experiment_3787_p1_discrete_search_adjudication_v3_retry.json
-    result: OK (conductor)
+    result: "BLOCKED_RESOURCE_HANDOFF: exp3787 blocked on no-free-GPU for the second consecutive milestone and set handoff_to_operator=true; the P1 adjudication is handed to the operator, not re-queued in .348, and not a research negative"
   - id: exp3788-fr11-self-learning-v19-tier3-predictive
-    title: 'FR-11 continuous self-learning v19 -- Tier-3 PREDICTIVE verification on the LIVE verifier (distinct from v17''s
-      Tier-1 precision tracker and v18''s Tier-2 constraint-memory): train the FR11ExtendedJEPA predictor on the FoVer corpus
-      to PREDICT step-error labels from the verifier feature signal, measure predictive AUROC, and CONFIRM the predictive
-      head does not regress the banked discriminator (the +0.0185 memory contribution is preserved and the headline 0.9131
-      ensemble is untouched -- Tier-3 is a NEW predictive head, NOT a replacement of the scoring ensemble). CPU JAX (the Tier-3
-      hardware path: small predictor model on GPU/NPU, here CPU-validated). The self-learning experiment mandated by research-program.md.'
+    title: "FR-11 v19 Tier-3 predictive verification"
     deliverable: results/experiment_3788_fr11_self_learning_v19_tier3_predictive.json
-    result: OK (conductor)
+    result: "COMPLETE: Tier-3 predictor trained with predictive AUROC 0.9715; headline ensemble unchanged and memory contribution preserved"
   - id: exp3789-abstention-cli-batch-surface
-    title: 'HARDEN the banked verifier product: surface the .346 abstention mode (exp3779: opt-in ''abstain below the certified
-      0.733 threshold'' in the verify API) through the CLI + a BATCH-scoring entrypoint, so an integrator can run abstention-gated
-      verification over a file of candidates from the command line. Forward Phase-1 product work (a SECOND integration surface,
-      Decentralization Rule 4). Edits CODE + tests only; emits a doc-update PROPOSAL for the operator-curated CLI docs (does
-      NOT edit them). No accuracy claim -- a wiring smoke.'
+    title: "Abstention CLI and batch surface"
     deliverable: results/experiment_3789_abstention_cli_batch_surface.json
-    result: OK (conductor)
+    result: "COMPLETE: abstention mode surfaced through CLI and batch scoring, default-OFF with E2E behavior confirmed"
   - id: exp3790-verifier-gaming-resistance-characterization
-    title: 'HARDEN the banked verifier product: characterize its GAMING-RESISTANCE. Take cached FoVer step triples and apply
-      PROGRAMMATIC gaming perturbations (plausible-looking-but-wrong arithmetic, operand swaps, sign flips, padded reasoning
-      that does not change the wrong answer) to the candidate steps, then measure whether the shipped 4-verifier ensemble
-      still flags them (does the energy step-error signal degrade gracefully under adversarial-but-cheap perturbation?). CPU,
-      cached -- NO live LLM, NO GPU candidate generation, NOT a moat/independence sweep. Product-robustness data for the deployable
-      verifier; ties to arXiv:2604.15149. Reports a degradation curve, makes NO new headline claim.'
+    title: "Verifier gaming-resistance characterization"
     deliverable: results/experiment_3790_verifier_gaming_resistance_characterization.json
-    result: OK (conductor)
+    result: "COMPLETE: gaming-resistance curve characterized at n=240; context_compaction degradation recorded as product hardening work"
   - id: exp3791-anomaly-escalation-classifier-validation
-    title: 'VALIDATE the .346 Anomaly-Escalation classifier (scripts/anomaly_escalation_classifier.py) against the historical
-      retro/result corpus: run it over a representative sample of past artifacts (operational_retro_*.json + a spread of result
-      artifacts) and measure (a) the false-escalation rate on clean bounded negatives (it must NOT escalate planned kill-gates),
-      (b) that it CORRECTLY flags the known frame-violating cases (the P1 v1/v2 positive-control failures), (c) it never recommends
-      relaxing verification. Recommend-only validation; conductor unmodified. Strengthens the P3 process upgrade with real-corpus
-      evidence before the operator wires it in.'
+    title: "Anomaly-Escalation classifier validation"
     deliverable: results/experiment_3791_anomaly_escalation_classifier_validation.json
-    result: OK (conductor)
+    result: "COMPLETE: classifier validated recommend-only, but false-escalation rate 0.833333 means it needs tuning before wiring"
   - id: exp3792-product-headline-provenance-confirmation-g4
-    title: 'ADVANCE the product headline (north-star sec-1): confirm the demoted code-repair positives trace to primary artifacts
-      with full G4 provenance -- exp1999 (humaneval baseline 0.66 -> repair 0.84, +18pp) and exp2090 (CRANE constrained decoding,
-      n=50, 0.70 -> 0.85, +15pp). For each, verify the numbers, that the artifact carries random_seed + reproducibility_checksum,
-      the n, and the inference substrate, and record whether it FULLY passes G4 (traces to a primary artifact, not prose).
-      Output: a provenance-confirmation table the operator can use to restore (or further qualify) the product headline. Aggregation
-      only; edits NO operator-curated doc.'
+    title: "Product headline G4 provenance confirmation"
     deliverable: results/experiment_3792_product_headline_provenance_confirmation_g4.json
-    result: OK (conductor)
+    result: "COMPLETE: product headline partially restorable; exp2090 passes G4 and exp1999 fails G4 because seed, checksum, n, and substrate are absent on disk"
   - id: exp3793-edlm-no-train-preflight-readiness
-    title: 'SCAFFOLD the operator''s EDLM seed further (NOT a loop commitment): a NO-TRAIN PREFLIGHT readiness check for EDLM
-      (Energy-Based Diffusion Language Models, arXiv:2410.21357 -- the top next-thesis route, energy as a residual-corrector
-      over discrete diffusion that sidesteps BOTH bounded energy negatives). Verify the concrete seeding prerequisites are
-      actually obtainable -- reference impl fetchable, deps installable in a scratch check, the dataset + pretrained AR base
-      reachable, the minimal-kill-gate compute fits the rig -- and emit a GO/NO-GO readiness report so the operator can seed
-      it with one command. Runs NO training; opens NO Phase-3 track; the loop does NOT commit.'
+    title: "EDLM no-train preflight readiness"
     deliverable: results/experiment_3793_edlm_no_train_preflight_readiness.json
-    result: OK (conductor)
+    result: "COMPLETE: EDLM preflight returned GO and emitted an operator seed command; the loop did not commit or self-seed"
   - id: exp3794-external-research-refresh
-    title: 'External research refresh for .347: file the genuinely-new 2026 papers surfaced during planning into research-references.md
-      ''.347 additions'' -- tied to the .347 tracks (EDLM next-thesis preflight, the banked verifier product''s abstention/selective-prediction
-      surface, Tier-3 predictive verification, gaming-resistance). Each entry as-reported, with how it relates. Pure documentation;
-      runs no model.'
+    title: "External research refresh .347"
     deliverable: results/experiment_3794_external_research_refresh.json
-    result: OK (conductor)
+    result: "COMPLETE: .347 references filed append-only with numbers treated as reported"
   - id: exp3795-kv260-opportunistic-continuity-audit
-    title: KV260 opportunistic continuity audit -- confirm terminal state holds (SSH-reachable, accelerator overlay loadable).
-      Documentation-only; the per-milestone hardware mandate was relaxed to opportunistic at .340 (GateMate/PolarFire stay
-      opportunistic future-work).
+    title: "KV260 opportunistic continuity audit"
     deliverable: results/experiment_3795_kv260_opportunistic_continuity_audit.json
-    result: OK (conductor)
+    result: "COMPLETE: KV260 terminal state held; SSH reachable and overlay loadable"
   - id: exp3796-capstone-v347
-    title: 'Capstone .347 -- aggregate the POST-CONVERGENCE milestone: the last energy-existential question RETRIED (P1 discrete-search
-      v3: decode-artifact-bounded / fundamental / inconclusive / blocked-no-free-GPU), the banked verifier product HARDENED
-      (abstention CLI+batch surface, gaming-resistance characterized, product-headline provenance confirmed), Tier-3 predictive
-      self-learning (FR-11 v19), the Anomaly-Escalation classifier VALIDATED, the operator''s EDLM seed PREFLIGHTED, references
-      refreshed, KV260 terminal confirmed. paper_ready MUST stay TRUE; frozen 0.9131 unchanged; both energy routes stay bounded
-      (P1 v3 sharpens the mechanism only).'
+    title: "Capstone .347"
     deliverable: results/experiment_3796_capstone_v347.json
-    result: OK (conductor)
+    result: "COMPLETE: capstone recorded P1 as blocked and handed off, paper_ready TRUE, FoVer 0.9131 frozen, both energy routes bounded, and .348 headline-advancement focus established"

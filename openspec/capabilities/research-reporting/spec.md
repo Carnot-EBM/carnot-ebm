@@ -17179,3 +17179,77 @@ derives affected milestone values from the remaining clean upstream record.
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-REPORT-3796 | Implemented (`python/carnot/reporting/capstone_v347_post_convergence_3796.py`, `scripts/experiment_3796_capstone_v347.py`) | Implemented (`tests/python/test_experiment_3796_capstone_v347.py`) |
+
+### REQ-REPORT-3797: Archive V347 Landed Tasks And Activate V348 Headline Advancement
+
+The Exp 3797 workflow SHALL archive milestone `2026.06.347` honestly in
+`research-complete.yaml` and confirm milestone `2026.06.348` is active in
+`research-roadmap.yaml`. The archive SHALL record `.347` as a landed
+post-convergence milestone whose P1 discrete-search v3 retry, Exp 3787,
+reached the terminal state `blocked_no_free_gpu` for the second consecutive
+milestone and set `handoff_to_operator=true`. This P1 state SHALL be recorded
+as a resource block handed to the operator, not as a research negative and not
+as a task re-queued into `.348`.
+
+The workflow SHALL confirm its transition record against
+`results/experiment_3796_capstone_v347.json`, `ops/changelog.md`, and
+`scripts/publication_gate.py --json`. It SHALL record the `.347` outcome as:
+all planned tasks archived, P1 blocked and handed off, EDLM preflight GO,
+product headline partially restorable (`exp2090` G4 pass and `exp1999` G4
+fail), Tier-3 predictive self-learning trained, banked verifier product
+hardened, the anomaly classifier over-firing and needing tuning, and
+`paper_ready=true`. It SHALL record the `.348` focus as G4 headline
+restoration, banked product harden/repair, anomaly-classifier tuning, and
+Tier-3 self-learning fast-path wiring, while re-grinding no bounded energy
+foundation conclusion and self-seeding no EDLM paradigm.
+
+The workflow SHALL replace any generic `.347` conductor archive entry rather
+than duplicating it. Every string value written to `research-complete.yaml` that
+contains a colon SHALL be quoted so a safe-load parse succeeds after the write.
+It SHALL leave `scripts/research_conductor.py`, `ops/north-star.md`,
+`ops/status.md`, `ops/changelog.md`, and `_bmad/traceability.md` unchanged.
+
+The terminal artifact SHALL be written to
+`results/experiment_3797_archive_v347_activate_v348.json` and SHALL include bare
+top-level values for `honest_verdict`, `inference_substrate`,
+`v347_outcome_recorded`, `v348_focus_recorded`,
+`p1_handed_to_operator_recorded`, `research_complete_yaml_parses`,
+`paper_ready_preserved`, `both_energy_routes_still_bounded`,
+`n_tasks_archived`, `adversarial_verify_clean`, `random_seed`,
+`reproducibility_checksum`, and `duration_s`, plus `field_principles`
+documenting why each required value exists. `inference_substrate` SHALL equal
+`aggregation_from_upstream_artifacts` and the artifact SHALL NOT contain
+`model_specs`, `target_model`, `GGUF`, `CUDA`, or `live-model` markers. The
+terminal verdict SHALL equal
+`complete: archived_v347_landed_all_p1_blocked_no_free_gpu_handed_to_operator_v348_headline_advancement_active_paper_ready_true_both_energy_routes_bounded_frozen_headline_unchanged`.
+
+#### SCENARIO-REPORT-3797: V347 Archive Records P1 Handoff And Activates V348
+
+**Given** the `.347` capstone records `paper_ready=true`, frozen FoVer `0.9131`
+unchanged, both energy routes bounded, Exp 3787 as `blocked_no_free_gpu` with
+`p1_handoff_to_operator=true`, EDLM preflight GO, product headline
+`not_yet_eligible`, Tier-3 predictive self-learning trained, banked verifier
+product hardening, and anomaly-classifier validation needing tuning, and
+`publication_gate.py --json` reports G1-G4 all passing
+**When** the Exp 3797 workflow runs
+**Then** it rewrites the `.347` research-complete entry as a single honest
+archive with 11 terminal tasks, records Exp 3787 as blocked-on-no-free-GPU and
+handed to the operator, quotes colon-containing YAML values, confirms
+`research-complete.yaml` safe-loads, confirms `.348` is active, writes the
+required aggregation-only artifact, and passes adversarial verification with no
+critical flag.
+
+#### SCENARIO-REPORT-3797-P1-HANDOFF-GUARD: Blocked P1 Is Not Re-Queued Or Recast As Negative
+
+**Given** Exp 3796 reports `p1_adjudication=blocked_no_free_gpu` and
+`p1_handoff_to_operator=true`
+**When** the Exp 3797 workflow validates the transition
+**Then** it preserves `both_energy_routes_still_bounded=true`, records
+`p1_handed_to_operator_recorded=true`, confirms `.348` does not re-queue the P1
+GPU adjudication, and does not report a new energy-as-generator failure.
+
+## Implementation Status (REQ-REPORT-3797)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-3797 | Implemented (`python/carnot/reporting/archive_v347_activate_v348_3797.py`, `scripts/experiment_3797_archive_v347_activate_v348.py`) | Implemented (`tests/python/test_experiment_3797_archive_v347_activate_v348.py`) |
