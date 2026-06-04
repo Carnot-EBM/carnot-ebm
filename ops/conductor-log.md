@@ -7730,3 +7730,4 @@ ERROR: {
 | 2026-06-04 02:42 UTC | P1 discrete-search adjudication v3 (the LAST open  | FAIL | Gemini CLI error: Wall-clock+idle timeout after 1202s (1191s silence). Last ou |
 | 2026-06-04 03:20 UTC | P1 discrete-search adjudication v3 (the LAST open  | FAIL | Gemini CLI error: Wall-clock+idle timeout after 1202s (1191s silence). Last ou |
 | 2026-06-04 03:43 UTC | P1 discrete-search adjudication v3 (the LAST open  | FAIL | Gemini CLI error: Wall-clock+idle timeout after 1202s (1191s silence). Last ou |
+| 2026-06-04 05:00 UTC | FR-11 continuous self-learning v18 -- Tier-2 CONST | OK | 90 passed in 4.97s |
