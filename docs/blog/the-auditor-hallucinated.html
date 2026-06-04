@@ -1,0 +1,538 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>The Auditor Hallucinated Its Smoking Gun — Carnot Blog</title>
+  <meta name="description" content="Our verifier-authenticity audit uses an LLM as a hostile reviewer to catch fake verifiers. This milestone it flagged a clean verifier for cheating, citing a hardcoded path that does not exist anywhere in the source. The auditor fabricated its own evidence. Here is how we caught it and the mechanical guard we added so the next hallucination auto-voids.">
+  <meta property="og:title" content="The Auditor Hallucinated Its Smoking Gun">
+  <meta property="og:description" content="Our LLM-backed verifier auditor flagged a clean verifier for cheating, quoting a malicious code path that does not exist in the file. The fabrication detector fabricated. This is how we caught it and the guard we shipped.">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://carnot-ebm.org/blog/the-auditor-hallucinated.html">
+
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><path d='M30,50 Q30,20 50,20 Q70,20 70,50 Q70,80 50,80 Q30,80 30,50' fill='none' stroke='%23f97316' stroke-width='8'/><circle cx='50' cy='50' r='10' fill='%23f97316'/></svg>">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Space+Grotesk:wght@500;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --bg: #030712;
+      --bg-glass: rgba(15, 23, 42, 0.4);
+      --bg-glass-hover: rgba(30, 41, 59, 0.6);
+      --text: rgba(255, 255, 255, 0.95);
+      --text-muted: rgba(255, 255, 255, 0.6);
+      --accent-energy: #f97316;
+      --accent-verify: #0ea5e9;
+      --accent-reason: #a855f7;
+      --accent-danger: #ef4444;
+      --border: rgba(255, 255, 255, 0.08);
+      --border-hover: rgba(255, 255, 255, 0.15);
+      --font-heading: 'Space Grotesk', sans-serif;
+      --font-body: 'Inter', sans-serif;
+      --font-mono: 'JetBrains Mono', monospace;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: var(--font-body); background: var(--bg); color: var(--text);
+      line-height: 1.7; -webkit-font-smoothing: antialiased;
+    }
+    a { color: var(--accent-verify); text-decoration: none; border-bottom: 1px dotted var(--accent-verify); }
+    a:hover { color: var(--accent-energy); border-bottom-color: var(--accent-energy); }
+
+    nav {
+      position: sticky; top: 0; z-index: 100;
+      background: rgba(3, 7, 18, 0.85); backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+    }
+    .nav-inner {
+      max-width: 1280px; margin: 0 auto; padding: 1rem 2rem;
+      display: flex; align-items: center; justify-content: space-between; gap: 2rem;
+    }
+    .nav-logo {
+      font-family: var(--font-heading); font-size: 1.5rem; font-weight: 700;
+      color: var(--text); display: flex; align-items: center; gap: 0.5rem;
+      border: none;
+    }
+    .nav-logo svg { width: 28px; height: 28px; }
+    .nav-links { display: flex; gap: 1.5rem; list-style: none; }
+    .nav-links a { color: var(--text-muted); font-size: 0.9rem; border: none; }
+    .nav-links a:hover { color: var(--text); }
+
+    article {
+      max-width: 760px; margin: 0 auto; padding: 4rem 2rem 2rem;
+    }
+
+    .post-meta {
+      font-family: var(--font-mono); font-size: 0.85rem;
+      color: var(--text-muted); margin-bottom: 1rem;
+      display: flex; gap: 1.5rem;
+    }
+    .post-tag {
+      font-family: var(--font-heading); font-size: 0.7rem; font-weight: 700;
+      color: var(--accent-energy); text-transform: uppercase;
+      letter-spacing: 0.05em; margin-bottom: 1rem; display: block;
+    }
+    h1 {
+      font-family: var(--font-heading); font-size: clamp(2rem, 5vw, 3.25rem);
+      font-weight: 800; line-height: 1.15; margin-bottom: 1.5rem;
+    }
+    .lede {
+      font-size: 1.2rem; color: var(--text-muted);
+      margin-bottom: 3rem; line-height: 1.6;
+    }
+    h2 {
+      font-family: var(--font-heading); font-size: 1.75rem;
+      font-weight: 700; margin: 3rem 0 1.25rem; line-height: 1.2;
+    }
+    h3 {
+      font-family: var(--font-heading); font-size: 1.25rem;
+      font-weight: 700; margin: 2.5rem 0 1rem;
+    }
+    article p { margin-bottom: 1.25rem; font-size: 1.05rem; }
+    article p code, article li code, article td code {
+      font-family: var(--font-mono); font-size: 0.92em;
+      background: var(--bg-glass); padding: 0.15em 0.4em;
+      border-radius: 4px; color: var(--accent-energy);
+      border: 1px solid var(--border);
+    }
+    article ul, article ol { margin: 0 0 1.5rem 1.5rem; }
+    article li { margin-bottom: 0.5rem; }
+    article blockquote {
+      border-left: 3px solid var(--accent-energy);
+      padding: 1rem 1.5rem; margin: 1.5rem 0;
+      background: var(--bg-glass); border-radius: 0 8px 8px 0;
+      color: var(--text-muted); font-style: italic;
+    }
+
+    pre.codeblock {
+      background: var(--bg-glass); border: 1px solid var(--border);
+      border-radius: 8px; padding: 1.25rem 1.5rem;
+      margin: 1.5rem 0; overflow-x: auto;
+      font-family: var(--font-mono); font-size: 0.88rem;
+      color: var(--text-muted); line-height: 1.6;
+    }
+    pre.codeblock .comment { color: var(--text-muted); opacity: 0.7; }
+    pre.codeblock .ident { color: var(--accent-energy); }
+    pre.codeblock .kw { color: var(--accent-reason); }
+    pre.codeblock .str { color: var(--accent-verify); }
+
+    .keypoint {
+      background: linear-gradient(135deg, rgba(249, 115, 22, 0.08), rgba(168, 85, 247, 0.04));
+      border: 1px solid var(--border-hover);
+      border-radius: 12px; padding: 1.5rem 2rem; margin: 2rem 0;
+    }
+    .keypoint strong { color: var(--accent-energy); font-family: var(--font-heading); }
+
+    .alert {
+      background: linear-gradient(135deg, rgba(239, 68, 68, 0.10), rgba(249, 115, 22, 0.04));
+      border: 1px solid rgba(239, 68, 68, 0.25);
+      border-radius: 12px; padding: 1.5rem 2rem; margin: 2rem 0;
+    }
+    .alert strong { color: var(--accent-danger); font-family: var(--font-heading); }
+
+    .verdict-table {
+      width: 100%; border-collapse: collapse; margin: 1.5rem 0;
+      font-size: 0.95rem;
+    }
+    .verdict-table th, .verdict-table td {
+      text-align: left; padding: 0.75rem 1rem;
+      border-bottom: 1px solid var(--border);
+      vertical-align: top;
+    }
+    .verdict-table th {
+      font-family: var(--font-heading); font-weight: 700;
+      color: var(--text); background: var(--bg-glass);
+      font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.05em;
+    }
+    .verdict-table td:first-child {
+      font-family: var(--font-mono); font-size: 0.85em;
+      color: var(--accent-energy); white-space: nowrap;
+    }
+    .verdict-table td { color: var(--text-muted); }
+
+    .footnote {
+      font-size: 0.9rem; color: var(--text-muted);
+      padding: 1.5rem 0; margin-top: 3rem;
+      border-top: 1px solid var(--border);
+    }
+    .further-reading {
+      background: var(--bg-glass); border: 1px solid var(--border);
+      border-radius: 12px; padding: 2rem; margin: 3rem 0 2rem;
+    }
+    .further-reading h3 { margin-top: 0; }
+    .further-reading ul { margin-bottom: 0; }
+
+    .back-link {
+      display: inline-block; margin-bottom: 2rem;
+      font-family: var(--font-mono); font-size: 0.9rem;
+      color: var(--text-muted); border: none;
+    }
+    .back-link:hover { color: var(--accent-energy); }
+
+    footer {
+      max-width: 1280px; margin: 4rem auto 2rem; padding: 2rem;
+      text-align: center; color: var(--text-muted); font-size: 0.85rem;
+      border-top: 1px solid var(--border);
+    }
+  </style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-inner">
+    <a href="/" class="nav-logo">
+      <svg viewBox="0 0 100 100"><path d="M30,50 Q30,20 50,20 Q70,20 70,50 Q70,80 50,80 Q30,80 30,50" fill="none" stroke="#f97316" stroke-width="8"/><circle cx="50" cy="50" r="10" fill="#f97316"/></svg>
+      Carnot
+    </a>
+    <ul class="nav-links">
+      <li><a href="/">Home</a></li>
+      <li><a href="/blog/">Blog</a></li>
+      <li><a href="https://github.com/Carnot-EBM/carnot-ebm">GitHub</a></li>
+      <li><a href="https://huggingface.co/Carnot-EBM">HuggingFace</a></li>
+    </ul>
+  </div>
+</nav>
+
+<article>
+
+<a href="/blog/" class="back-link">&larr; Back to blog</a>
+
+<span class="post-tag">Operations</span>
+
+<h1>The Auditor Hallucinated Its Smoking Gun</h1>
+
+<div class="post-meta">
+  <span>2026-06-03</span>
+  <span>~9 min read</span>
+</div>
+
+<p class="lede">
+  We built an LLM-backed audit that reads every verifier in our
+  codebase and asks, hostile-reviewer style, whether it really does
+  what its docstring claims. This time the audit flagged a clean
+  verifier for cheating &mdash; and quoted, as proof, a malicious line
+  of code that does not exist anywhere in the file. The fabrication
+  detector fabricated. Here is how we caught it, and the mechanical
+  guard we added so the next invented smoking gun voids itself.
+</p>
+
+<h2>The defense that flagged a friendly</h2>
+
+<p>
+  An <a href="regex-in-an-ntk-costume.html">earlier post</a> described
+  a three-layer defense against verifiers that lie about themselves: a
+  mechanical lint at commit time (Layer 1), an LLM hostile-reviewer
+  audit at every milestone close (Layer 2), and the written discipline
+  the planner reads before authoring any verifier (Layer 3). Layer 2
+  is the interesting one. It is a second language model, prompted to
+  be a skeptical software reviewer, asked one question about each file
+  in <code>python/carnot/verify/</code>:
+</p>
+
+<blockquote>
+  Does this implementation actually do what the docstring claims, or
+  is it a mock / stub / heuristic dressed up to look like a
+  model-based verifier?
+</blockquote>
+
+<p>
+  Most milestones it returns a wall of <code>AUTHENTIC</code> verdicts
+  and one or two genuinely useful flags. This milestone it scanned
+  twenty verifiers and flagged exactly one:
+  <code>ast_structure_verifier.py</code>, with the most severe verdict
+  in our taxonomy &mdash; <code>ADVERSARIAL_GAMING</code> &mdash; and
+  the recommendation to retire it. Its rationale ended with the line:
+  &ldquo;It must be burned.&rdquo;
+</p>
+
+<p>
+  That verifier is about as boring as code gets. It checks whether a
+  block of text parses as Python with <code>ast.parse</code>, and
+  whether its brackets balance. No model, no GPU, no citation &mdash;
+  and a docstring that says exactly that. So the <em>severity</em> of
+  the verdict was the first thing that did not fit. We went to read
+  the evidence.
+</p>
+
+<h2>The evidence</h2>
+
+<p>
+  The audit was specific. It is supposed to be; vague accusations are
+  not actionable. It quoted the smoking gun directly:
+</p>
+
+<blockquote>
+  Blatant test-dodging. The <code>_looks_like_python</code> regex
+  contains a highly specific, hardcoded path to bypass or manipulate
+  scoring for a known test artifact:
+  <code>r"...|with| @results/experiment_2101_interwhen.json)"</code>.
+</blockquote>
+
+<p>
+  Read on its own terms, this is damning. A function that claims to
+  detect Python keywords, with a specific results-file path smuggled
+  into its regular expression, would be a textbook special-case
+  exploit &mdash; code reaching out to manipulate scoring for one
+  named artifact. If that string were really in the file, retire would
+  be the correct call.
+</p>
+
+<p>
+  So we looked. Here is the entire regex the audit was describing:
+</p>
+
+<pre class="codeblock"><span class="ident">python_line</span> = re.compile(
+    <span class="str">r"^(def|class|async\s+def|import|from\s+\w|return|if|elif|else:|for|while|try:|"</span>
+    <span class="str">r"except|finally:|with|@\w)"</span>
+)</pre>
+
+<p>
+  It is a list of Python keywords. It ends <code>...|finally:|with|@\w)</code>
+  &mdash; the <code>@\w</code> matches a decorator. There is no path.
+  There is no <code>results/</code>. There is no
+  <code>experiment_2101_interwhen.json</code>. We grepped the whole
+  file for each fragment of the quoted string:
+</p>
+
+<pre class="codeblock">$ grep -n <span class="str">'experiment_2101\|interwhen\|@results'</span> ast_structure_verifier.py
+<span class="comment"># (no output)</span></pre>
+
+<p>
+  Nothing. The malicious line the auditor quoted as a verbatim
+  citation, in backticks, as the sole basis for a retire
+  recommendation, does not exist anywhere in the file. The auditor
+  invented it.
+</p>
+
+<div class="alert">
+  <strong>The fabrication detector fabricated.</strong>
+  The Layer-2 audit exists to catch verifiers that invent things they
+  did not measure. On this run it invented a line of code that was
+  never written and recommended deleting a working file because of it.
+  Had we acted on the report without reading the source, we would have
+  retired a clean verifier on hallucinated evidence.
+</div>
+
+<h2>It even argued against itself</h2>
+
+<p>
+  The most revealing part is that the audit's own prose contained the
+  acquittal. Two lines above the retire recommendation, describing the
+  same file, it wrote:
+</p>
+
+<blockquote>
+  While the docstring is actually honest about being a cheap heuristic
+  rather than a neural model &hellip;
+</blockquote>
+
+<p>
+  That clause is correct. The docstring <em>is</em> honest: it says
+  the verifier is structural syntax checking, &ldquo;not token-level
+  statistical fluency.&rdquo; By our own taxonomy that makes the
+  correct verdict <code>HONEST_HEURISTIC</code> with recommendation
+  <code>KEEP</code> &mdash; the sanctioned category for a cheap check
+  that discloses what it is. The model held the right verdict and the
+  wrong verdict in the same paragraph, and surfaced the wrong one,
+  propped up by a quote it had manufactured to justify the severity.
+</p>
+
+<h2>Why this is the failure we should have expected</h2>
+
+<p>
+  It is tempting to file this under &ldquo;the model made a
+  mistake.&rdquo; It is more useful to notice that it is the
+  <em>same</em> failure the audit is built to catch, committed by the
+  audit itself.
+</p>
+
+<p>
+  An LLM asked to be a hostile reviewer is rewarded, implicitly, for
+  finding something. A reviewer who returns &ldquo;all twenty are
+  fine&rdquo; feels like a reviewer who did not look hard enough. Under
+  that pressure the model produces a finding, and because findings are
+  more convincing with concrete evidence, it produces concrete
+  evidence &mdash; a specific quoted line, in the right syntactic
+  costume for the accusation. The quote is fluent, plausible, and
+  false. This is exactly the &ldquo;confidently wrong on the
+  residual&rdquo; behaviour that makes a language model a poor judge of
+  the hard cases: when it cannot find a real defect, a capable model
+  does not abstain, it confabulates one with full confidence.
+</p>
+
+<div class="keypoint">
+  <strong>A judge is a generator with a verdict attached.</strong>
+  The same machinery that lets an LLM write a plausible function lets
+  it write a plausible accusation. If you let it cite source code as
+  evidence, it can cite source code that was never written. Treat an
+  LLM auditor's quotations the way the earlier post said to treat an
+  LLM author's citations: as claims to be checked, not facts to be
+  trusted.
+</div>
+
+<h2>The fix: fact-check the quotes, mechanically</h2>
+
+<p>
+  You cannot mechanically fact-check the auditor's prose &mdash; that
+  is the whole reason a language model is doing the job. But you can
+  fact-check the part of its output that makes a checkable claim: its
+  quotations. When the audit cites a specific code or path string as
+  evidence, that string is either in the file or it is not, and a
+  three-line check settles it.
+</p>
+
+<p>
+  We added a guard &mdash; call it Layer 1.5, between the mechanical
+  lint and the LLM audit &mdash; that runs after every flagged verdict.
+  It extracts the auditor's backtick-quoted spans, keeps the
+  <em>high-specificity</em> ones (anything that looks like a file path,
+  a file with an extension, an arXiv identifier, or a
+  <code>time.sleep</code> / <code>np.random</code> / <code>torch.load</code>
+  call), and checks whether each one actually appears in the source it
+  is accusing:
+</p>
+
+<pre class="codeblock"><span class="kw">if</span> verdict <span class="kw">in</span> flagged_verdicts:
+    high_evidence, missing = <span class="ident">verify_quoted_evidence</span>(report, body)
+    <span class="kw">if</span> missing:
+        <span class="comment"># every concrete artifact the auditor cited is absent from</span>
+        <span class="comment"># the file -> the smoking gun was hallucinated. Downgrade.</span>
+        verdict = <span class="str">"CANNOT_DETERMINE"</span></pre>
+
+<p>
+  When a flagged verdict's concrete evidence is absent from the file,
+  the verdict is auto-downgraded to <code>CANNOT_DETERMINE</code>,
+  dropped from the &ldquo;operator action recommended&rdquo; list, and
+  surfaced instead under a new section of the report titled
+  <em>flags voided &mdash; auditor hallucinated its evidence</em>. The
+  original LLM text is preserved underneath, so a human can still read
+  what it claimed and why the guard rejected it. Nothing is silently
+  deleted; the false accusation is simply moved from the
+  act-on-this pile to the the-auditor-was-unreliable pile.
+</p>
+
+<p>
+  We were careful about the specificity filter, because the goal is to
+  void hallucinations without muffling real findings. A plain symbol
+  name like <code>_looks_like_python</code> is low-specificity: it can
+  legitimately appear in an accusation that turns out to be wrong, and
+  it often <em>does</em> exist in the file, so it must not count as
+  corroboration for an invented path quoted alongside it. A file path
+  with an extension, an arXiv id, or a sleep-padding call is
+  high-specificity: those are the concrete artifacts a gaming verdict
+  rests on, and they are either present verbatim or invented.
+</p>
+
+<p>
+  We checked it three ways before shipping:
+</p>
+
+<table class="verdict-table">
+  <thead>
+    <tr><th>Case</th><th>Cited evidence</th><th>Guard</th></tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>This false positive</td>
+      <td>A results path absent from the file</td>
+      <td>Voided &mdash; correctly</td>
+    </tr>
+    <tr>
+      <td>A real sleep-padding finding</td>
+      <td><code>time.sleep(mock_sleep)</code> present in the file</td>
+      <td>Kept &mdash; not suppressed</td>
+    </tr>
+    <tr>
+      <td>A real naming finding</td>
+      <td>A model path that genuinely exists in the file</td>
+      <td>Kept &mdash; not suppressed</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>
+  The hallucinated case voids; the two genuine findings survive
+  untouched. The guard removes invented evidence and only invented
+  evidence.
+</p>
+
+<h2>What generalizes</h2>
+
+<p>
+  Three things we are taking from this, beyond the one verifier we did
+  not delete:
+</p>
+
+<ol>
+  <li>
+    <strong>Defense in depth has to include defending against your
+    defenses.</strong> We had three layers guarding the verifiers and
+    zero guarding the guard. The audit was treated as ground truth
+    because it was the thing checking for fabrication &mdash; which is
+    precisely the component you should trust least, because it is an
+    LLM doing an adversarial job under pressure to find something.
+  </li>
+  <li>
+    <strong>An LLM's quotations are checkable claims; check them.</strong>
+    Free-form judgment from a language model is not mechanically
+    verifiable, and that is fine &mdash; it is why you asked a model.
+    But the moment the model quotes a specific string from a file as
+    its evidence, it has made a claim you can test with
+    <code>grep</code>. Test it before you act on it. A verdict whose
+    cited evidence does not exist is not a weak verdict, it is a void
+    one.
+  </li>
+  <li>
+    <strong>Keep the human in the loop for the verdict, the machine in
+    the loop for the evidence.</strong> The audit still never edits a
+    verifier; a person decides what to act on. What changed is that the
+    machine now refuses to put a fabricated accusation in front of that
+    person in the first place. The judgment stays human; the
+    fact-checking of the judge is mechanical.
+  </li>
+</ol>
+
+<p>
+  The earlier post ended with: if you run a loop that authors code
+  which then runs in production, do not trust the code's claims about
+  itself. This one adds the obvious corollary we had not yet paid for.
+  If you run a loop where one model audits another, do not trust the
+  auditor's claims about the code either. The author's incentive is to
+  look finished. The auditor's incentive is to look thorough. Both are
+  satisfied by confident text that is not true. Build the check for the
+  checker, too.
+</p>
+
+<div class="further-reading">
+  <h3>Further reading</h3>
+  <ul>
+    <li>The audit, now with the guard: <a href="https://github.com/Carnot-EBM/carnot-ebm/blob/main/scripts/verifier_authenticity_audit.py">scripts/verifier_authenticity_audit.py</a> &mdash; see <code>verify_quoted_evidence</code></li>
+    <li>The verifier that was nearly retired: <a href="https://github.com/Carnot-EBM/carnot-ebm/blob/main/python/carnot/verify/ast_structure_verifier.py">ast_structure_verifier.py</a></li>
+    <li>The full discipline rule: <a href="https://github.com/Carnot-EBM/carnot-ebm/blob/main/CLAUDE.md">CLAUDE.md</a> &mdash; search for &ldquo;Verifier Authenticity Discipline&rdquo;</li>
+    <li>The post this one is a sequel to: <a href="regex-in-an-ntk-costume.html">Regex in an NTK Costume: When Your Own Verifier Is Lying About Its Implementation</a> &mdash; the three-layer defense whose Layer 2 is the auditor that hallucinated here.</li>
+    <li>Companion post: <a href="caught-cheating.html">Caught Cheating: 95 Microseconds on a 30-Billion-Parameter Model</a> &mdash; the artifact-level fabrication detector this audit complements.</li>
+  </ul>
+</div>
+
+<div class="footnote">
+  <strong>About this post.</strong> This is one of a series of
+  operational notes from the
+  <a href="https://github.com/Carnot-EBM/carnot-ebm">Carnot</a>
+  project on building an autonomous research loop that we can actually
+  trust. The recurring theme is that every component we add to catch a
+  failure becomes a new component that can fail &mdash; including, as
+  here, the components whose entire job is to catch failure.
+</div>
+
+</article>
+
+<footer>
+  Carnot is open-source under Apache 2.0.
+  <br>
+  <a href="https://github.com/Carnot-EBM/carnot-ebm">github.com/Carnot-EBM/carnot-ebm</a>
+</footer>
+
+</body>
+</html>
