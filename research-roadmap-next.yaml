@@ -103,3 +103,82 @@ tasks:
       DISCIPLINE: populate random_seed + reproducibility_checksum + preconditions_checked (Adversarial-
       Verify + Pre-Launch rules). Report the REAL duration. This is a small off-the-shelf-model probe —
       do NOT pad wall-time, do NOT fabricate if the TRM checkpoint is unavailable (emit blocked_*).
+  - id: exp3820-fover-formal-vs-learned-ablation
+    operator_override: >
+      2026-06-04 operator directive: NET-NEW verifier-ensemble ABLATION (DT-Q4 contamination
+      control), not a rerun. Decomposes the frozen FoVer 0.9131 AUROC into formal/unlearned
+      (SAT/Z3/AST/liveness) vs learned-probe contributions by re-scoring CACHED candidates; no
+      new GPU, no generation-vs-baseline claim, so no headroom gate applies.
+    milestone: "2026.06.350"
+    title: "FoVer moat ablation: how much of 0.9131 is the contamination-free FORMAL core (SAT/Z3/AST) vs the learned probes? (DT-Q4 deterministic ablation; informs the exp3680 re-freeze)"
+    priority: high
+    track: research
+    max_turns: 30
+    agent_type: claude
+    model: opus
+    requires_claude: true
+    requires_gpu: false
+    estimated_wall_time_min: 30
+    inference_substrate: verifier_ensemble_against_cached_candidates
+    deliverable: results/experiment_3820_fover_formal_vs_learned_ablation.json
+    prompt: |
+      CONTEXT. The verifier ensemble headline is FoVer AUROC 0.9131 (frozen, paper_ready G1).
+      Deep Think (2026-06-04, scissor-plot Q4) flagged a CONTAMINATION risk: learned probes
+      trained on the strong model's error topology may carry an OOD advantage that inflates the
+      apparent moat. Deterministic-ablation control: re-score the SAME frozen FoVer corpus with
+      (a) the FULL ensemble, (b) FORMAL/UNLEARNED components ONLY (no trained weights), (c)
+      LEARNED probes ONLY. Load-bearing question: how much AUROC does the contamination-free
+      FORMAL-ONLY subset retain? This decomposes the moat into robust (formal) vs fragile
+      (learned) parts and informs the pending exp3680 0.9332-vs-0.9131 re-freeze. This is an
+      ablation of an EXISTING measured number, NOT a beats-baseline test -- no headroom gate.
+
+      CONCRETE STEPS:
+        0. PRECONDITIONS (check first; if any fail write blocked_* and EXIT -- do NOT fabricate):
+           a. The frozen FoVer eval corpus -- the cached (input, candidate, label) triples that
+              produced AUROC 0.9131 (e.g. the exp2837 FoVer dual-condition cached candidates) -- is
+              available. If not locatable, honest_verdict blocked_fover_corpus_not_cached.
+           b. The verifier ensemble code (python/carnot/verify/ + the and_composition/scoring
+              harness) imports and runs.
+        1. Enumerate the ensemble verifiers. Classify EACH as FORMAL/UNLEARNED (no trained weights:
+           Z3MathVerifier, SAT, AST/bracket-structure, liveness, regex/arithmetic checkers) or
+           LEARNED (trained weights/probes: SOSKANEnergyV3, SemEnergyProbe, SAE/NLA probes, KAN-
+           distilled, any energy model). Read each implementation to classify correctly; record the
+           partition + rationale (flag any ambiguous ones).
+        2. Score the frozen corpus THREE ways, AUROC each: full_ensemble, formal_only, learned_only,
+           using the SAME aggregation/composition the 0.9131 headline used.
+        3. SANITY GATE (positive control): full_ensemble AUROC must reproduce 0.9131 within +/-0.01.
+           If not, the harness is unfaithful -> honest_verdict INCONCLUSIVE (deltas untrustworthy).
+        4. Report formal_only_auroc, learned_only_auroc, deltas vs full.
+
+      REQUIRED ARTIFACT FIELDS (each with a principle):
+        full_ensemble_auroc:
+          principle: "Positive control -- must reproduce frozen 0.9131 (+/-0.01) or the ablation is unfaithful and the deltas are meaningless."
+        formal_only_auroc:
+          principle: "The contamination-free moat floor -- AUROC from SAT/Z3/AST/liveness with NO trained weights; robust to the DT-Q4 OOD-contamination critique."
+        learned_only_auroc:
+          principle: "The learned-probe contribution -- high here + low formal = the moat leans on probes that may be OOD-advantaged on the strong model's error topology."
+        verifier_partition:
+          principle: "Records which verifier was classified FORMAL vs LEARNED (+ rationale) so the decomposition is auditable + reproducible."
+        n_candidates_scored:
+          principle: "The AUROC deltas are only meaningful at the same N the 0.9131 headline used."
+        preconditions_checked:
+          principle: "Records which resources (cached corpus, ensemble code) were verified before running; pre-empts the lacked-resource-so-fabricated mode."
+        random_seed:
+          principle: "Determinism precondition for third-party reproduction of the deltas."
+        reproducibility_checksum:
+          principle: "Content hash of (corpus id, partition, N, seed) catches silent drift vs any replication."
+        duration_s:
+          principle: "Verifier-scoring over the corpus takes wall-clock; implausibly short = fabrication signal (floor 1s for this substrate)."
+
+      VERDICT (terminal prefix required):
+        - formal-only retains most of the moat (formal_only_auroc >= ~0.85, near full):
+          complete: formal_core_retains_moat_formalonly<X>_full<Y>_learned<Z>_contamination_free
+        - moat collapses without learned probes (formal_only << full, learned carries it):
+          complete: moat_depends_on_learned_probes_formalonly<X>_full<Y>_learned<Z>_dtq4_contamination_risk_real
+        - full ensemble fails to reproduce 0.9131:
+          complete: INCONCLUSIVE_ablation_harness_unfaithful_full<Y>_expected_0.9131
+        - blocked_fover_corpus_not_cached if precondition fails.
+
+      DISCIPLINE: verifier-scoring-only (no LLM load) -- declare inference_substrate accordingly;
+      populate methodology fields; report real duration; emit blocked_* rather than fabricate if
+      the cached corpus is unavailable.
