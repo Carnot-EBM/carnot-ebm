@@ -19922,3 +19922,47 @@ clean versus perturbed rows
 wrong-step flag-rate deltas, names where the verifier still flags the wrong
 steps, names where detection degrades, passes adversarial artifact verification,
 and leaves the moat/independence thread and 0.9131 headline unchanged.
+
+### REQ-VERIFY-3800: Context-Compaction Gaming Mitigation v2
+
+The repository shall provide a module
+`python/carnot/verify/gaming_resistance_mitigation_v2.py` and a script
+`scripts/experiment_3800_gaming_resistance_mitigation_v2.py` that implement an
+opt-in, deterministic, CPU-only mitigation for the specific
+`context_compaction` perturbation characterized by Exp 3790.
+- The workflow SHALL run under `.venv/bin/python`, confirm numpy/sklearn and
+  the four shipped verifiers are importable, and confirm the cached FoVer
+  corpus is reachable by absolute path before mitigation measurement. Failed
+  setup SHALL write a `blocked_<resource>` terminal artifact without fabricated
+  metrics.
+- The workflow SHALL reuse Exp 3790's deterministic FoVer sampling and
+  `context_compaction` perturbation over at least 200 labeled cached FoVer
+  steps with a fixed `random_seed`; it SHALL NOT call a live LLM, GGUF, CUDA,
+  or cross-verifier moat/independence sweep.
+- The mitigation SHALL be additive and opt-in in the scoring path. Clean
+  unperturbed rows scored without opting into the mitigation SHALL remain
+  bit-identical to the shipped four-verifier ensemble, and clean rows scored
+  with the mitigation SHALL preserve the frozen 0.9131 clean-corpus behavior.
+- The workflow SHALL report the unmitigated `context_compaction` degradation as
+  a positive control, the mitigated degradation, the clean AUROC with versus
+  without mitigation, and an honest `evasion_status` in `{closed, narrowed,
+  failed}`. A partial narrowing is acceptable and SHALL NOT be reported as
+  gaming-proof.
+- The artifact `results/experiment_3800_gaming_resistance_mitigation_v2.json`
+  SHALL include `honest_verdict`, `inference_substrate`, `before_degradation`,
+  `after_degradation`, `clean_auroc_preserved`, `evasion_status`, `n_samples`,
+  `not_a_moat_reopen`, `headline_unchanged`, `tests_assert_real_behavior`,
+  `model_specs`, `random_seed`, `reproducibility_checksum`, and measured
+  `duration_s`.
+
+### SCENARIO-VERIFY-3800: Mitigation Re-Measures Context Compaction Honestly
+
+**Given** the cached FoVer corpus, Exp 3790's context-compaction perturbation,
+and the shipped four-verifier scoring helpers
+**When** Exp 3800 scores clean rows, unmitigated perturbed rows, and opt-in
+mitigated perturbed rows
+**Then** the artifact includes a degraded unmitigated positive-control curve,
+a mitigated after-curve, unchanged clean scoring behavior, real anti-poison
+tests for at least one clean and one perturbed example, no live-model substrate
+claim, and an honest `closed`, `narrowed`, or `failed` verdict without reopening
+the moat/independence thread or moving the 0.9131 headline.

@@ -1,0 +1,132 @@
+{
+  "adversarial_verify_clean": true,
+  "adversarial_verify_report": {
+    "flag_count": 0,
+    "flags": [],
+    "max_severity": -1
+  },
+  "after_degradation": {
+    "clean": {
+      "auroc": 0.940417,
+      "flag_threshold_from_clean_scores": 0.556938,
+      "n_wrong_steps": 120,
+      "wrong_step_flag_rate": 0.875
+    },
+    "context_compaction": {
+      "auroc": 0.966458,
+      "auroc_delta_vs_clean": 0.026042,
+      "classification": "holds",
+      "mean_wrong_score_delta_vs_clean": 0.059646,
+      "n_wrong_steps": 120,
+      "wrong_step_flag_rate": 0.941667,
+      "wrong_step_flag_rate_delta_vs_clean": 0.066667
+    }
+  },
+  "artifact": "experiment_3800_gaming_resistance_mitigation_v2",
+  "before_degradation": {
+    "clean": {
+      "auroc": 0.940417,
+      "flag_threshold_from_clean_scores": 0.556938,
+      "n_wrong_steps": 120,
+      "wrong_step_flag_rate": 0.875
+    },
+    "context_compaction": {
+      "auroc": 0.391806,
+      "auroc_delta_vs_clean": -0.548611,
+      "classification": "degrades",
+      "mean_wrong_score_delta_vs_clean": -0.506604,
+      "n_wrong_steps": 120,
+      "wrong_step_flag_rate": 0.133333,
+      "wrong_step_flag_rate_delta_vs_clean": -0.741667
+    }
+  },
+  "cached_fover_corpus_path": "/home/ianblenke/github.com/ianblenke/carnot/data/fover_corpus.jsonl",
+  "clean_auroc_comparison": {
+    "frozen_headline_auroc": 0.9131,
+    "frozen_headline_ci95": [
+      0.9027,
+      0.9235
+    ],
+    "sample_delta": 0.0,
+    "sample_with_mitigation": 0.940417,
+    "sample_without_mitigation": 0.940417,
+    "score_vectors_identical": true
+  },
+  "clean_auroc_preserved": true,
+  "degradation_delta": {
+    "auroc_delta_recovered": 0.574653,
+    "wrong_step_flag_rate_delta_recovered": 0.808334
+  },
+  "duration_s": 0.276305,
+  "evasion_status": "closed",
+  "field_principles": {
+    "after_degradation": "The mitigated context_compaction degradation; the core deliverable.",
+    "before_degradation": "The un-mitigated context_compaction degradation; the positive control that the evasion is real.",
+    "clean_auroc_preserved": "Bare bool; the opt-in mitigation leaves clean-corpus scoring behavior unchanged.",
+    "duration_s": "Measured wall-clock duration.",
+    "evasion_status": "Bare string in {closed, narrowed, failed}.",
+    "headline_unchanged": "Bare bool; frozen 0.9131 behavior is untouched.",
+    "honest_verdict": "Terminal prefix; the mitigation outcome; blocked_<resource> if a precondition failed.",
+    "inference_substrate": "Re-scores cached and perturbed triples; no live model.",
+    "model_specs": "Names the four verifiers, mitigation, and perturbation.",
+    "n_samples": "Bare int; >=200 for completed runs.",
+    "not_a_moat_reopen": "Bare bool; CPU product mitigation only.",
+    "random_seed": "Determinism precondition.",
+    "reproducibility_checksum": "Content hash catches drift.",
+    "tests_assert_real_behavior": "Bare bool; anti-poison tests exercise real scoring."
+  },
+  "headline_unchanged": true,
+  "honest_verdict": "complete: gaming_resistance_mitigation_v2_context_compaction_closed_clean_auroc_preserved_n240_not_a_moat_reopen_headline_unchanged",
+  "inference_substrate": "verifier_ensemble_against_cached_candidates",
+  "model_specs": {
+    "mitigation": {
+      "clean_rows_score_identically": true,
+      "feature": "original_vs_scored_step_compaction_suspicion",
+      "name": "context_compaction_mitigation",
+      "opt_in": true,
+      "weight": 0.75
+    },
+    "perturbation": "context_compaction",
+    "production_weights": {
+      "fr11_session_memory": 1.0,
+      "tier0r_curry_howard": 0.9,
+      "tier0s_arithmetic_gap": 0.0,
+      "tier0u_logical_consistency": 0.1
+    },
+    "scoring_protocol": "Exp 2837 shipped four-verifier production weighting over cached FoVer rows; Exp 3800 adds an opt-in context-compaction suspicion feature for the specific Exp 3790 perturbation and reports clean scoring unchanged.",
+    "verifiers": [
+      "fr11_session_memory",
+      "tier0r_curry_howard",
+      "tier0s_arithmetic_gap",
+      "tier0u_logical_consistency"
+    ]
+  },
+  "n_samples": 240,
+  "not_a_moat_reopen": true,
+  "preconditions_checked": [
+    {
+      "available": true,
+      "detail": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+      "resource": "interpreter_not_venv"
+    },
+    {
+      "available": true,
+      "detail": "numpy_and_sklearn_importable",
+      "resource": "python_deps_missing"
+    },
+    {
+      "available": true,
+      "detail": "loaded=fr11_session_memory,tier0r_curry_howard,tier0s_arithmetic_gap,tier0u_logical_consistency",
+      "resource": "four_verifiers_unavailable"
+    },
+    {
+      "available": true,
+      "detail": "path=/home/ianblenke/github.com/ianblenke/carnot/data/fover_corpus.jsonl; labeled_rows=8829; required>=240",
+      "resource": "fover_corpus_insufficient"
+    }
+  ],
+  "random_seed": 3790,
+  "reproducibility_checksum": "98225ab085518b8a6b8a8c52e439194882632d9c704ba329d4662e51e63bffa1",
+  "schema": "carnot.gaming_resistance_mitigation_v2.v1",
+  "tests_assert_real_behavior": true
+}
