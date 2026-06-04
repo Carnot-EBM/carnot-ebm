@@ -220,3 +220,77 @@ instead of a self-trained TRM.
   (GPU-7971baff, currently cuda:1) ONLY; the eGPU (GPU-b52387a2, cuda:0) drops off the USB4 bus
   under sustained load and corrupts CUDA. Pin with `CUDA_VISIBLE_DEVICES=GPU-7971baff-...`. NEVER
   run two heavy GPU jobs in parallel across both 3090s.
+
+---
+
+## LITERATURE DEEP-READ (2026-06-04): LDT + Huginn — REFRAMES the bridge test
+
+### LDT (arXiv:2605.08605) — Carnot's transpilation+abstention thesis, ALREADY BUILT AND WORKING
+
+LDT is, mechanically, the thing Carnot's `project_dbae_ebm_phase3` + `project_continuous_ising_rank`
++ the abstention-calibrated verifier have been describing — instantiated and SOTA:
+- **The lattice IS a Cousot abstract-interpretation lattice.** Abstract domain = per-cell candidate
+  sets (cell → subset of {1..9}), ordered pointwise by inclusion; lower=more informative, ⊤=all
+  candidates, ⊥=conflict. Formal methods, not a metaphor.
+- **Projection = thresholded discretization of the latent each step.** Latent = multi-hot (9
+  sigmoids/cell); σ<θ_elim ⇒ eliminate ⇒ discretize into the lattice. This IS the sign(z)→discrete
+  bottleneck (Q11), done rigorously and per-step.
+- **It passes the DISCRETE LATTICE between steps, NOT a continuous embedding** (the key arch
+  difference vs TRM/HRM, which pass opaque latents). So every intermediate state is a valid,
+  interpretable, verifiable partial solution.
+- **Soundness = abstention.** "returns a correct answer or abstains; it is never incorrect."
+  Two heads at opposite ends of soundness/completeness: a candidate-elimination head (must be
+  SOUND — asymmetric BCE w⁺/w⁻=8 penalizing false eliminations) + a CLS conflict head (must be
+  COMPLETE — detect ⊥). This is exactly the abstention-calibrated-verifier + verified-or-abstain
+  pattern. NO Q-head; termination = singleton solution or conflict.
+- **On-policy training mirrors a search-based constraint solver** (a pool of partial lattice
+  states → forward+threshold+branch; same Solve loop at train and inference → no distribution
+  shift, unlike TRM/HRM).
+- **Results: 100% Sudoku-Extreme (TRM 87.4%), 99.9% Maze-Hard (TRM 85.3%), trained in 15 min on
+  1×B200 (TRM: 36h on 4×L40S).** Crushes TRM on accuracy AND ~100× cheaper to train.
+
+**WHY THIS REFRAMES OUR BRIDGE TEST (the strategy shift).** Our Latent-Symbol Bridge question was
+"can an external verifier read a recursive refiner's CONTINUOUS intermediate latents, or is offline
+distillation the only path?" LDT shows there is a THIRD, BETTER path that DISSOLVES the question:
+**architect the refiner's STATE to BE the discrete verifiable structure each step** (don't read
+opaque latents; don't distill — transpile the state itself). The three options are now:
+  (a) runtime external verifier reads continuous intermediate latents → DEAD (DT-P3; + Huginn
+      confirms latents are non-decodable);
+  (b) offline DISTILLATION oracle (Carnot verifier → train a continuous Q-head) → viable;
+  (c) **state-IS-the-lattice (LDT / Carnot transpilation)** → WORKS, sound, SOTA. STRONGEST.
+LDT validates that (c) — Carnot's transpilation+abstention thesis — is the right architecture.
+**But LDT is partly a SCOOP:** it built (c) for CLOSED grid domains with a HAND-BUILT per-cell
+lattice. **The gap LDT leaves = Carnot's differentiated angle:** a GENERAL, multi-domain VERIFIER
+ENSEMBLE (k=15: SAT/Z3/AST/energy/…) as the abstraction lattice for domains where the lattice
+CANNOT be hand-built (open-ended NL reasoning, code, proofs). That is the novel, defensible
+experiment — NOT re-probing HRM's continuous latents (which we now know returns the DT-P3 negative).
+
+### Huginn / Recurrent-Depth (arXiv:2502.05171) — recursion DOES transfer to TEXT, but latents stay opaque
+
+- 3.5B params, recurrent block R repeated r times (input injected every step), test-time r
+  arbitrary; effective depth 132 layers at r=32.
+- **Halting = UNSUPERVISED KL-convergence** (KL(p_i,p_{i+1})<5e-4), hand-set, NO learned Q-head/
+  verifier. Exits early on easy tokens, late on hard (~3.5 more steps on moral-scenario tokens).
+- **Recursion transfers to TEXT reasoning:** GSM8K 42% vs a non-recurrent baseline's 2.2% (5×+),
+  HellaSwag 65%, HumanEval 23%, ARC-Challenge 38%. → counters the HRM "grid-bound/task-specific"
+  worry; partially answers DT-P4: the paradigm is NOT grid-only.
+- **Intermediate latents are NOT decodable to reasoning steps** — hard tokens enter ORBITS (not
+  fixed points), "slider" drifts (iteration counting), path-independent. → empirically CONFIRMS
+  DT-P3: an external verifier cannot read continuous intermediate latents. So verifier-integration
+  must be (b) or (c), never (a).
+- Caveat: undertrained (800B tokens), lags OLMo on memorization; "less capacity to memorize facts,
+  more to reason about context."
+
+### NET PLAN UPDATE
+1. **Down-weight / reframe exp3819 (Latent-Symbol Bridge on HRM):** Huginn already gives the DT-P3
+   answer (continuous latents opaque). Running it on HRM mostly re-confirms a known negative.
+2. **The high-value experiment is now the LDT-gap test:** can Carnot's verifier ensemble act as the
+   per-step abstraction lattice / soundness oracle for a recursive refiner on a domain LDT did NOT
+   cover (multi-domain or open-ended), where the lattice is NOT hand-buildable? That is the novel,
+   defensible contribution — Carnot's k=15 ensemble as a GENERAL abstraction operator vs LDT's
+   single hand-built Sudoku lattice.
+3. **Huginn = the text-transfer existence proof** for whether to pursue text at all (recursion helps
+   on GSM8K); pair with a verifier-guided halt (smarter than blind KL-convergence) as a concrete
+   Carnot angle.
+4. Read in full next if pursued: PTRM (2605.19943, the Q-head selector), GRAM (2605.19376), Coconut
+   (2412.06769), Encode-Think-Decode (2510.07358).
