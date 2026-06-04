@@ -7775,3 +7775,5 @@ ERROR: {
 | 2026-06-04 17:46 UTC | STAGE the EDLM operator-seed (documentation only - | OK | 86 passed in 4.86s |
 | 2026-06-04 18:04 UTC | External research refresh for .349: confirm the pl | OK | 95 passed in 5.43s |
 | 2026-06-04 18:47 UTC | KV260 opportunistic continuity audit -- confirm te | OK | 90 passed in 3.58s |
+| 2026-06-04 19:03 UTC | Capstone .349 -- aggregate the LEAN POST-CONVERGEN | OK | 87 passed in 4.94s |
+| 2026-06-04 19:06 UTC | Milestone 2026.06.350 activated | OK | 2 tasks queued |
