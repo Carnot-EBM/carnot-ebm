@@ -1435,6 +1435,17 @@ when JAX autodiff produces finite gradients through the projected state.
   honest verdict derived from measured projection residuals and differentiable
   projection checks.
 
+### REQ-KONA-040: TRM vs AR Length Generalization Falsification
+
+Carnot MUST provide an Exp 3822 experiment script evaluating whether a TRM architecture generalizes to longer held-out lengths on a 1D task compared to a matched-compute AR baseline.
+
+The Exp 3822 workflow MUST write `results/experiment_3822_trm_escapes_grids_p1.json` with required schema fields.
+
+**Acceptance criteria:**
+- `scripts/experiments/experiment_3822_trm_escapes_grids_p1.py` exists and evaluates TRM vs AR length generalization.
+- Focused tests verify the behavior.
+- `results/experiment_3822_trm_escapes_grids_p1.json` records all required fields and an honest verdict.
+
 ## Scenarios
 
 ### SCENARIO-KONA-001: Stage 1 Primitive — RDT Fixed-Point Convergence
@@ -1953,6 +1964,15 @@ tolerance, the diagnostic result reports convergence steps and final residual,
 and the Exp 1662 artifact records the reusable module path and complete schema.
 
 **Spec traces:** REQ-KONA-039
+
+### SCENARIO-KONA-040: TRM vs AR Length Generalization Output
+
+**Given** a trained TRM block and a matched-compute AR baseline
+**When** the Exp 3822 experiment script is run
+**Then** it outputs `results/experiment_3822_trm_escapes_grids_p1.json` with all REQ-KONA-040 required fields, sets `decision_class` based on length generalization metrics, and correctly confirms AR headroom.
+
+**Spec traces:** REQ-KONA-040
+
 
 ## Out of scope
 
