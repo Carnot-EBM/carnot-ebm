@@ -16964,3 +16964,56 @@ derives affected milestone booleans from the remaining clean upstream record.
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-REPORT-3785 | Planned (`python/carnot/reporting/capstone_v346_convergence_3785.py`, `scripts/experiment_3785_capstone_v346.py`) | Planned (`tests/python/test_experiment_3785_capstone_v346.py`) |
+
+### REQ-REPORT-3786: Archive V346 Ten-Of-Eleven And Activate V347 Post-Convergence
+
+The Exp 3786 workflow SHALL archive milestone `2026.06.346` honestly in
+`research-complete.yaml` and confirm milestone `2026.06.347` is active in
+`research-roadmap.yaml`. The archive SHALL record `.346` as landed `10/11`,
+with the verifier product banked, FR-11 v18 advanced to Tier-2, the P3
+Anomaly-Escalation classifier prototyped, the operator EDLM seed scaffolded,
+G4 correction prep landed, `paper_ready=true`, frozen FoVer `0.9131`
+unchanged, and both energy routes still bounded. The single un-landed task,
+Exp 3777 P1 discrete-search v3, SHALL be recorded as blocked on no free GPU,
+not as a research negative.
+
+The workflow SHALL replace any generic `.346` conductor archive entry rather
+than duplicating it. Every string value written to `research-complete.yaml` that
+contains a colon SHALL be quoted so a safe-load parse succeeds after the write.
+It SHALL leave `scripts/research_conductor.py`, `ops/north-star.md`,
+`ops/status.md`, `ops/changelog.md`, and `_bmad/traceability.md` unchanged.
+
+The terminal artifact SHALL be written to
+`results/experiment_3786_archive_v346_activate_v347.json` and SHALL include bare
+top-level values for `honest_verdict`, `inference_substrate`,
+`v346_outcome_recorded`, `v347_focus_recorded`,
+`research_complete_yaml_parses`, `paper_ready_preserved`,
+`both_energy_routes_still_bounded`, `n_tasks_archived`,
+`adversarial_verify_clean`, `random_seed`, `reproducibility_checksum`, and
+`duration_s`, plus `field_principles` documenting why each required value
+exists. `inference_substrate` SHALL equal
+`aggregation_from_upstream_artifacts` and the artifact SHALL NOT contain
+`model_specs`, `target_model`, `GGUF`, `CUDA`, or `live-model` markers. The
+terminal verdict SHALL equal
+`complete: archived_v346_landed_10_of_11_exp3777_blocked_no_free_gpu_v347_post_convergence_active_paper_ready_true_both_energy_routes_bounded_frozen_headline_unchanged`.
+
+#### SCENARIO-REPORT-3786: V346 Archive Records Resource Block Without Reopening Bounded Work
+
+**Given** the `.346` capstone records `paper_ready=true`, frozen FoVer `0.9131`
+unchanged, both energy routes bounded, the verifier product banked, the P3
+classifier prototyped, the EDLM seed scaffolded, and Exp 3777 as missing or
+blocked rather than landed, and `publication_gate.py --json` reports G1-G4 all
+passing
+**When** the Exp 3786 workflow runs
+**Then** it rewrites the `.346` research-complete entry as a single honest
+archive with 11 total tasks, 10 landed tasks, and Exp 3777 recorded as
+blocked-on-no-free-GPU, quotes colon-containing YAML values, confirms
+`research-complete.yaml` safe-loads, confirms `.347` is active, writes the
+required aggregation-only artifact, and passes adversarial verification with no
+critical flag.
+
+## Implementation Status (REQ-REPORT-3786)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-3786 | Implemented (`python/carnot/reporting/archive_v346_activate_v347_3786.py`, `scripts/experiment_3786_archive_v346_activate_v347.py`) | Implemented (`tests/python/test_experiment_3786_archive_v346_activate_v347.py`) |
