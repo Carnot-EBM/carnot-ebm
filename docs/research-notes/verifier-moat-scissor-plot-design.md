@@ -272,3 +272,71 @@ that would falsify your answer. The earlier methodology pass on this experiment 
 excellent; hold the same bar.
 ```
 
+
+---
+
+## Deep Think round (2026-06-04) — FIX-FIRST methodology validation
+
+Operator ran a methodology-validation DT pass on the scissor-plot protocol. **VERDICT:
+FIX-FIRST — do NOT spend GPU on the protocol as specified.** Three structural flaws + the
+fixes. This RE-QUALIFIES the earlier "closed without a sweep" conclusion: our cheap Stage-0
+cut used a protocol DT now flags as structurally false-negative-prone. (The 5-problem-gate
+finding — standard MATH has ~zero genuine confident-correlated SC-failures, corpus is
+normalization-contaminated — STILL STANDS as a real reason the moat is hard to test on
+standard benchmarks. DT's critique is complementary: it's how to validly run the SWEEP if a
+headroom corpus is ever built.)
+
+**Q1 — step-error-catch-rate on the residual is an INVALID proxy.** It misaligns local
+triggers with final-answer correctness AND hides the penalty the verifier pays on CORRECT
+answers. Under-estimates moat on "terminal slips" (flawless steps, hallucinated final
+extraction → step-verifier correctly finds 0 step-errors, accepts, logged as FP). Over-
+estimates on valid-but-unconventional steps the AST/SMT flags (falsely credited as correct-
+rejection because it's in the residual). FIX: map step verdicts to a trajectory-level rule
+(reject if ANY step flagged), **fix FRR (e.g. 5%) on the base model's CORRECT answers
+(non-residual), then measure FPR on the residual.** Falsification (cheap): run the raw step-
+verifier on a sample of the base model's CORRECT trajectories — if it flags >0%, the proxy
+conflates final-answer errors with formatting strictness. Confidence 99%.
+
+**Q2 — abstaining verifier vs forced-prediction baselines by a POINT metric is invalid**
+(survivorship bias; ensemble abstains on chaotic reasoning where baselines must guess). FIX:
+**coverage-matched risk.** Compute ensemble coverage C on residual; measure ensemble FPR on
+the covered subset; force baselines (logprob/Maj@K) to abstain on their (1−C) least-confident;
+report baseline FPR on their remaining C subset. (Or AURC curve; verify ensemble's operating
+point sits strictly below it.) Falsification: evaluate the baseline strictly on the subset the
+ensemble abstained on — if baseline accuracy drops there, abstention correlates with difficulty
+→ dropping abstentions biases the comparison. Confidence 95%.
+
+**Q3 — the single weak-model (0.5B) Stage-0 cut is a STRUCTURAL false-negative trap.** Weak
+models fail via syntax degradation/repetition that cheap baselines (logprob/SC) easily catch,
+while the formal ensemble massively abstains on AST parse failures → "Baseline > Verifier at
+0.5B" is the mechanically guaranteed (uninformative) outcome. The true moat — catching
+confident, perfectly-formatted, logically-flawed reasoning — cannot manifest until base models
+are strong enough to write coherent-but-wrong proofs that fool SC/logprob. FIX: **two-point
+derivative — run Stage-0 on 0.5B AND a competent mid-tier (7-8B).** Valid early-stop: baseline
+still beats ensemble at 8B AND the gap is flat/shrinking 0.5B→8B. Falsification: AST parse-
+failure (abstention) rate on the 0.5B residual — if high (>30%) and >> the 35B rate, 0.5B is
+generator-syntax-bottlenecked, not a proxy for the verifier's logical capacity. Confidence 99%.
+
+**Q4 — the residual x-axis is confounded** (it's dynamically defined by generator mistakes, so
+dataset fundamentals shift every rung): difficulty drift (35B residual is objectively harder →
+baselines degrade → FAKES a scissor; solvers time out → HIDES a moat); parsing drift (35B
+formats perfectly → ensemble parses more → fakes a reasoning moat that's really a formatting-
+compliance moat); contamination (learned probes trained on 35B-style error topologies → OOD
+advantage on 35B residual); base-rate shifts (P(error)↓ as scale↑ alters prevalence-dependent
+metrics — FPR/TPR immune, Precision/F1 not). CHEAP CONTROLS: **Intersection Residual** (eval
+only on problems BOTH 0.5B and 35B got wrong — $0 difficulty control); **parse-conditioned
+metric** (scissor only on outputs the ensemble parsed at each rung); **deterministic ablation**
+(plot the scissor using only SAT/Z3/AST, learned probes disabled, to kill contamination).
+Falsification: compare mean MATH level (1-5) of the 0.5B vs 35B residual — if significantly
+different, the x-axis is confounded by dataset drift. Confidence 95%.
+
+**FIX-FIRST checklist before any GPU sweep:** (1) trajectory-level verdict + FRR-locked-on-
+correct, FPR-on-residual (Q1); (2) coverage-matched / AURC for abstention (Q2); (3) 0.5B+8B
+two-point derivative, not a single weak cut (Q3); (4) Intersection-Residual + parse-conditioned
++ probe-disabled ablation for confounds (Q4). The four FALSIFICATION CHECKS are individually
+cheap (run the step-verifier on correct trajectories; baseline acc on the abstained subset; AST
+parse-fail rate by tier; residual difficulty by tier) and would tell us whether the confounds
+are real BEFORE committing to the full sweep — that's the recommended cheap next step if the
+moat question is reopened. Bears on the TRM Phase-3 thesis (`phase3-recursive-refiner-thesis.md`):
+the "Carnot-verifier-as-Q-head" payoff assumes the moat is real, which only a VALID scissor
+sweep (or these falsification probes) can establish.
