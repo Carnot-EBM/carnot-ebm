@@ -1,0 +1,484 @@
+{
+  "all_surfaces_agree": true,
+  "candidate_sample": [
+    {
+      "candidate_id": "math-156-0",
+      "expected_verdict": "confident",
+      "source_corpus_path": "/home/ianblenke/github.com/ianblenke/carnot/data/fover_corpus_v4.json"
+    },
+    {
+      "candidate_id": "math-159-1",
+      "expected_verdict": "confident",
+      "source_corpus_path": "/home/ianblenke/github.com/ianblenke/carnot/data/fover_corpus_v4.json"
+    },
+    {
+      "candidate_id": "math-160-2",
+      "expected_verdict": "confident",
+      "source_corpus_path": "/home/ianblenke/github.com/ianblenke/carnot/data/fover_corpus_v4.json"
+    },
+    {
+      "candidate_id": "math-161-3",
+      "expected_verdict": "confident",
+      "source_corpus_path": "/home/ianblenke/github.com/ianblenke/carnot/data/fover_corpus_v4.json"
+    },
+    {
+      "candidate_id": "math-164-4",
+      "expected_verdict": "confident",
+      "source_corpus_path": "/home/ianblenke/github.com/ianblenke/carnot/data/fover_corpus_v4.json"
+    },
+    {
+      "candidate_id": "math-math_v3_1422-200",
+      "expected_verdict": "abstain",
+      "source_corpus_path": "/home/ianblenke/github.com/ianblenke/carnot/data/fover_corpus_v4.json"
+    },
+    {
+      "candidate_id": "math-math_85-29",
+      "expected_verdict": "abstain",
+      "source_corpus_path": "/home/ianblenke/github.com/ianblenke/carnot/data/fover_corpus_v4.json"
+    },
+    {
+      "candidate_id": "math-math_192-51",
+      "expected_verdict": "abstain",
+      "source_corpus_path": "/home/ianblenke/github.com/ianblenke/carnot/data/fover_corpus_v4.json"
+    },
+    {
+      "candidate_id": "math-math_432-83",
+      "expected_verdict": "abstain",
+      "source_corpus_path": "/home/ianblenke/github.com/ianblenke/carnot/data/fover_corpus_v4.json"
+    },
+    {
+      "candidate_id": "math-math_v3_792-133",
+      "expected_verdict": "abstain",
+      "source_corpus_path": "/home/ianblenke/github.com/ianblenke/carnot/data/fover_corpus_v4.json"
+    }
+  ],
+  "certified_threshold_used": 0.733216,
+  "cited_upstream_artifacts": {
+    "certified_threshold": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_3771_certified_abstention_operating_point.json",
+    "cli": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_3789_abstention_cli_batch_surface.json",
+    "http_rest": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_3810_abstention_http_rest_surface_v2.json",
+    "verify_api": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_3779_abstention_operating_point_product_wiring.json"
+  },
+  "duration_s": 15.484236,
+  "field_principles": {
+    "all_surfaces_agree": "BARE bool -- every candidate's verdict + metadata matched across all three surfaces.",
+    "certified_threshold_used": "The shared threshold from Exp 3771 that all three surfaces loaded.",
+    "cited_upstream_artifacts": "Provenance for the three surfaces + the threshold.",
+    "duration_s": "Wall-clock plausibility floor.",
+    "honest_verdict": "Terminal prefix; the parity outcome; blocked_<resource> if a precondition failed.",
+    "inference_substrate": "verifier_ensemble_against_cached_candidates (principle: scores cached triples across three surfaces, no live LLM).",
+    "mismatches": "BARE list -- any per-candidate cross-surface mismatch; a drift finding surfaced honestly.",
+    "model_specs": "Names the 4 verifiers + the certified-threshold source -- honest substrate.",
+    "n_candidates_compared": "BARE int, >=10 -- sample-size hygiene spanning confident + abstain.",
+    "random_seed": "Determinism precondition.",
+    "reproducibility_checksum": "Content hash catches drift.",
+    "surfaces_compared": "BARE list -- the three surfaces compared (verify_api, cli, http_rest); records the Rule-4 coverage.",
+    "tests_assert_real_behavior": "BARE bool, true -- shipped tests assert the real parity behavior."
+  },
+  "honest_verdict": "complete: abstention_cross_surface_parity_smoke_all_surfaces_agree_true_n10_verify_api_cli_http_rest_no_surface_drift",
+  "inference_substrate": "verifier_ensemble_against_cached_candidates (principle: scores cached triples across three surfaces, no live LLM).",
+  "methodology": {
+    "candidate_source": "/home/ianblenke/github.com/ianblenke/carnot/data/fover_corpus_v4.json",
+    "label": "WIRING smoke, not an accuracy claim",
+    "live_llm_inference": false,
+    "random_seed": 3811,
+    "selection": "fixed cached FoVer verifier-scoring candidates spanning verdicts"
+  },
+  "mismatches": [],
+  "model_specs": {
+    "certified_threshold_source": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_3771_certified_abstention_operating_point.json",
+    "cli_entrypoint": "python -m carnot.cli verify-batch",
+    "http_entrypoint": "POST /v1/score-candidates",
+    "live_llm_inference": false,
+    "surfaces": [
+      "verify_api",
+      "cli",
+      "http_rest"
+    ],
+    "verifiers": [
+      "controlled_invariance_executor_v2",
+      "executable_monitor_runtime_adapter",
+      "ast_structure_verifier",
+      "code_structural_dependency_verifier"
+    ],
+    "verify_api_entrypoint": "carnot.pipeline.second_pair_detector.score_candidates",
+    "wiring_smoke_not_accuracy_claim": true
+  },
+  "n_candidates_compared": 10,
+  "output_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_3811_abstention_cross_surface_parity_smoke.json",
+  "parity_rows": [
+    {
+      "candidate_id": "math-156-0",
+      "coverage": 0.998218,
+      "delta": 0.05,
+      "risk": 0.037646,
+      "threshold": 0.733216,
+      "verdict": "confident"
+    },
+    {
+      "candidate_id": "math-159-1",
+      "coverage": 0.998218,
+      "delta": 0.05,
+      "risk": 0.037646,
+      "threshold": 0.733216,
+      "verdict": "confident"
+    },
+    {
+      "candidate_id": "math-160-2",
+      "coverage": 0.998218,
+      "delta": 0.05,
+      "risk": 0.037646,
+      "threshold": 0.733216,
+      "verdict": "confident"
+    },
+    {
+      "candidate_id": "math-161-3",
+      "coverage": 0.998218,
+      "delta": 0.05,
+      "risk": 0.037646,
+      "threshold": 0.733216,
+      "verdict": "confident"
+    },
+    {
+      "candidate_id": "math-164-4",
+      "coverage": 0.998218,
+      "delta": 0.05,
+      "risk": 0.037646,
+      "threshold": 0.733216,
+      "verdict": "confident"
+    },
+    {
+      "candidate_id": "math-math_192-51",
+      "coverage": 0.998218,
+      "delta": 0.05,
+      "risk": 0.037646,
+      "threshold": 0.733216,
+      "verdict": "abstain"
+    },
+    {
+      "candidate_id": "math-math_432-83",
+      "coverage": 0.998218,
+      "delta": 0.05,
+      "risk": 0.037646,
+      "threshold": 0.733216,
+      "verdict": "abstain"
+    },
+    {
+      "candidate_id": "math-math_85-29",
+      "coverage": 0.998218,
+      "delta": 0.05,
+      "risk": 0.037646,
+      "threshold": 0.733216,
+      "verdict": "abstain"
+    },
+    {
+      "candidate_id": "math-math_v3_1422-200",
+      "coverage": 0.998218,
+      "delta": 0.05,
+      "risk": 0.037646,
+      "threshold": 0.733216,
+      "verdict": "abstain"
+    },
+    {
+      "candidate_id": "math-math_v3_792-133",
+      "coverage": 0.998218,
+      "delta": 0.05,
+      "risk": 0.037646,
+      "threshold": 0.733216,
+      "verdict": "abstain"
+    }
+  ],
+  "preconditions_checked": {
+    "certified_threshold": {
+      "available": true,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_3771_certified_abstention_operating_point.json",
+      "selected_threshold": 0.733216
+    },
+    "fover_corpus": {
+      "available": true,
+      "n_examples": 6548,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/data/fover_corpus_v4.json"
+    },
+    "http_rest_surface": {
+      "available": true,
+      "http_rest_surface_added": true,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_3810_abstention_http_rest_surface_v2.json"
+    },
+    "interpreter": {
+      "available": true,
+      "expected_suffix": ".venv/bin/python",
+      "value": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python"
+    },
+    "package_import_and_surfaces": {
+      "available": true,
+      "returncode": 0,
+      "stderr": ""
+    },
+    "upstream_exp3779_verify_api": {
+      "available": true,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_3779_abstention_operating_point_product_wiring.json"
+    },
+    "upstream_exp3789_cli": {
+      "available": true,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_3789_abstention_cli_batch_surface.json"
+    }
+  },
+  "random_seed": 3811,
+  "reproducibility_checksum": "d89e242ea2c00e86",
+  "root": "/home/ianblenke/github.com/ianblenke/carnot",
+  "scripts_research_conductor_modified": false,
+  "surface_rows": {
+    "cli": {
+      "math-156-0": {
+        "candidate_id": "math-156-0",
+        "coverage": 0.998218,
+        "delta": 0.05,
+        "risk": 0.037646,
+        "threshold": 0.733216,
+        "verdict": "confident"
+      },
+      "math-159-1": {
+        "candidate_id": "math-159-1",
+        "coverage": 0.998218,
+        "delta": 0.05,
+        "risk": 0.037646,
+        "threshold": 0.733216,
+        "verdict": "confident"
+      },
+      "math-160-2": {
+        "candidate_id": "math-160-2",
+        "coverage": 0.998218,
+        "delta": 0.05,
+        "risk": 0.037646,
+        "threshold": 0.733216,
+        "verdict": "confident"
+      },
+      "math-161-3": {
+        "candidate_id": "math-161-3",
+        "coverage": 0.998218,
+        "delta": 0.05,
+        "risk": 0.037646,
+        "threshold": 0.733216,
+        "verdict": "confident"
+      },
+      "math-164-4": {
+        "candidate_id": "math-164-4",
+        "coverage": 0.998218,
+        "delta": 0.05,
+        "risk": 0.037646,
+        "threshold": 0.733216,
+        "verdict": "confident"
+      },
+      "math-math_192-51": {
+        "candidate_id": "math-math_192-51",
+        "coverage": 0.998218,
+        "delta": 0.05,
+        "risk": 0.037646,
+        "threshold": 0.733216,
+        "verdict": "abstain"
+      },
+      "math-math_432-83": {
+        "candidate_id": "math-math_432-83",
+        "coverage": 0.998218,
+        "delta": 0.05,
+        "risk": 0.037646,
+        "threshold": 0.733216,
+        "verdict": "abstain"
+      },
+      "math-math_85-29": {
+        "candidate_id": "math-math_85-29",
+        "coverage": 0.998218,
+        "delta": 0.05,
+        "risk": 0.037646,
+        "threshold": 0.733216,
+        "verdict": "abstain"
+      },
+      "math-math_v3_1422-200": {
+        "candidate_id": "math-math_v3_1422-200",
+        "coverage": 0.998218,
+        "delta": 0.05,
+        "risk": 0.037646,
+        "threshold": 0.733216,
+        "verdict": "abstain"
+      },
+      "math-math_v3_792-133": {
+        "candidate_id": "math-math_v3_792-133",
+        "coverage": 0.998218,
+        "delta": 0.05,
+        "risk": 0.037646,
+        "threshold": 0.733216,
+        "verdict": "abstain"
+      }
+    },
+    "http_rest": {
+      "math-156-0": {
+        "candidate_id": "math-156-0",
+        "coverage": 0.998218,
+        "delta": 0.05,
+        "risk": 0.037646,
+        "threshold": 0.733216,
+        "verdict": "confident"
+      },
+      "math-159-1": {
+        "candidate_id": "math-159-1",
+        "coverage": 0.998218,
+        "delta": 0.05,
+        "risk": 0.037646,
+        "threshold": 0.733216,
+        "verdict": "confident"
+      },
+      "math-160-2": {
+        "candidate_id": "math-160-2",
+        "coverage": 0.998218,
+        "delta": 0.05,
+        "risk": 0.037646,
+        "threshold": 0.733216,
+        "verdict": "confident"
+      },
+      "math-161-3": {
+        "candidate_id": "math-161-3",
+        "coverage": 0.998218,
+        "delta": 0.05,
+        "risk": 0.037646,
+        "threshold": 0.733216,
+        "verdict": "confident"
+      },
+      "math-164-4": {
+        "candidate_id": "math-164-4",
+        "coverage": 0.998218,
+        "delta": 0.05,
+        "risk": 0.037646,
+        "threshold": 0.733216,
+        "verdict": "confident"
+      },
+      "math-math_192-51": {
+        "candidate_id": "math-math_192-51",
+        "coverage": 0.998218,
+        "delta": 0.05,
+        "risk": 0.037646,
+        "threshold": 0.733216,
+        "verdict": "abstain"
+      },
+      "math-math_432-83": {
+        "candidate_id": "math-math_432-83",
+        "coverage": 0.998218,
+        "delta": 0.05,
+        "risk": 0.037646,
+        "threshold": 0.733216,
+        "verdict": "abstain"
+      },
+      "math-math_85-29": {
+        "candidate_id": "math-math_85-29",
+        "coverage": 0.998218,
+        "delta": 0.05,
+        "risk": 0.037646,
+        "threshold": 0.733216,
+        "verdict": "abstain"
+      },
+      "math-math_v3_1422-200": {
+        "candidate_id": "math-math_v3_1422-200",
+        "coverage": 0.998218,
+        "delta": 0.05,
+        "risk": 0.037646,
+        "threshold": 0.733216,
+        "verdict": "abstain"
+      },
+      "math-math_v3_792-133": {
+        "candidate_id": "math-math_v3_792-133",
+        "coverage": 0.998218,
+        "delta": 0.05,
+        "risk": 0.037646,
+        "threshold": 0.733216,
+        "verdict": "abstain"
+      }
+    },
+    "verify_api": {
+      "math-156-0": {
+        "candidate_id": "math-156-0",
+        "coverage": 0.998218,
+        "delta": 0.05,
+        "risk": 0.037646,
+        "threshold": 0.733216,
+        "verdict": "confident"
+      },
+      "math-159-1": {
+        "candidate_id": "math-159-1",
+        "coverage": 0.998218,
+        "delta": 0.05,
+        "risk": 0.037646,
+        "threshold": 0.733216,
+        "verdict": "confident"
+      },
+      "math-160-2": {
+        "candidate_id": "math-160-2",
+        "coverage": 0.998218,
+        "delta": 0.05,
+        "risk": 0.037646,
+        "threshold": 0.733216,
+        "verdict": "confident"
+      },
+      "math-161-3": {
+        "candidate_id": "math-161-3",
+        "coverage": 0.998218,
+        "delta": 0.05,
+        "risk": 0.037646,
+        "threshold": 0.733216,
+        "verdict": "confident"
+      },
+      "math-164-4": {
+        "candidate_id": "math-164-4",
+        "coverage": 0.998218,
+        "delta": 0.05,
+        "risk": 0.037646,
+        "threshold": 0.733216,
+        "verdict": "confident"
+      },
+      "math-math_192-51": {
+        "candidate_id": "math-math_192-51",
+        "coverage": 0.998218,
+        "delta": 0.05,
+        "risk": 0.037646,
+        "threshold": 0.733216,
+        "verdict": "abstain"
+      },
+      "math-math_432-83": {
+        "candidate_id": "math-math_432-83",
+        "coverage": 0.998218,
+        "delta": 0.05,
+        "risk": 0.037646,
+        "threshold": 0.733216,
+        "verdict": "abstain"
+      },
+      "math-math_85-29": {
+        "candidate_id": "math-math_85-29",
+        "coverage": 0.998218,
+        "delta": 0.05,
+        "risk": 0.037646,
+        "threshold": 0.733216,
+        "verdict": "abstain"
+      },
+      "math-math_v3_1422-200": {
+        "candidate_id": "math-math_v3_1422-200",
+        "coverage": 0.998218,
+        "delta": 0.05,
+        "risk": 0.037646,
+        "threshold": 0.733216,
+        "verdict": "abstain"
+      },
+      "math-math_v3_792-133": {
+        "candidate_id": "math-math_v3_792-133",
+        "coverage": 0.998218,
+        "delta": 0.05,
+        "risk": 0.037646,
+        "threshold": 0.733216,
+        "verdict": "abstain"
+      }
+    }
+  },
+  "surfaces_compared": [
+    "verify_api",
+    "cli",
+    "http_rest"
+  ],
+  "tests_assert_real_behavior": true
+}
