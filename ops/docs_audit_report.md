@@ -4,50 +4,47 @@
 # docs_audit_report — 2026-06-04
 
 ## TL;DR (stranger's 30-second take)
-I'd bounce at the "Results" section. The hero is strong and clearly tells me what the tool does, but the page quickly devolves into an overwhelming wall of 32+ cards filled with internal acronyms (FoVer, SVAMP, PREM) and suspiciously perfect 100% metrics that scream "lab artifact" rather than a production-ready framework. 
+A stranger would likely bounce after scrolling past the hero. While the initial explanation is excellent, the page quickly devolves into deep internal project jargon, leaked local file paths, and defensive retrospective narratives that feel like reading someone else's Jira board.
 
 ## TOP 3 PROBLEMS
-1. Card Bloat — 32 total cards on the page (way past the ~20 card skim limit) turn the site into an internal dashboard rather than a pitch.
-2. Unexplained Acronym Soup — The Features and Results sections are riddled with internal benchmark and architecture names (FoVer, SVAMP, CCTU, PREM, VeriCoT) that a stranger won't recognize.
-3. Suspiciously Perfect Numbers — Multiple claims of 1.0 TP rates, 2.0x perfect speedups, and 60/60 attack captures trigger immediate fabrication/cherry-picking red flags.
+1. **Severe Internal Jargon & Leaked Paths:** CSS and Results cards literally render local `pytest` file paths (`@.tmp-pytest/...`) and unexplained acronyms ("PREM", "FoVer") on the public page.
+2. **Per-Milestone Narrative:** Copy reads like internal status reports ("Repinned from v2 0.9857", "pending operator-initiated upload") rather than external marketing.
+3. **Suspiciously Perfect Numbers:** Unlinked claims of "1.0 TP rate" and "60/60 attacks" look fabricated without immediate links to the promised artifacts.
 
 ## DETAILED FINDINGS
 ### Bloat
-- Entire Page — 32 cards total (2 Problem, 4 How, 7 Features, 12 Results, 7 Blog). This needs a hard cap of 15-20 max.
-- "Recent progress" card — 49 words, but reads like a dense internal PR summary, not landing page copy.
-- "Results" section — 12 cards is exhausting. A stranger will read zero of them. 
-- Blog section — 7 cards is too many for a landing page footer; 3 recent posts is plenty.
+- Results grid — 12 cards — cap at 6 core metrics; strangers won't read a dozen disparate benchmarks.
+- Writing/Blog section — 7 articles with full descriptions — cap at 3 recent posts.
 
 ### Internal jargon
-- "Stats bar" & "Recent progress" — "FoVer math step-errors (5-seed)", "FoVer (5-seed dual-condition; architecture-only 0.8947)". Complete gibberish to an outsider.
-- "Features" section — "CCTU constrained micro-benchmark", "Process-Reward Energy Model (PREM)", "Test-Time Compute (TTC)".
-- "Results" section — "HumanEval-50, execute-feedback-retry", "EstimationVerifier SVAMP AUC", "Qwen3.6-35B-A3B", "VeriCoT equation-style CoT fix", "PRM-BiasBench-style attacks", "HalluGuard v3". All insider baseball.
+- Results (Live benchmark card) & CSS — `@.tmp-pytest/pytest-of-ianblenke/.../spilled-energy-2602-18671:real.txt` — Massive leak of internal local file paths used as text and CSS classes.
+- Hero (Recent Progress card) — `FoVer`, `5-seed dual-condition`, `architecture-only` — Deeply specific internal constraint configurations with no context.
+- Features (Test-Time Compute card) — `PREM` — Acronym dropped without definition.
+- Results (Math reasoning card) — `EstimationVerifier SVAMP AUC`, `0.125 FoVer baseline` — Internal component names and benchmarks used without a baseline explanation.
 
 ### Per-milestone narrative
-- "Stats bar" — "382 Completed milestones" is an internal team management metric, not a user selling point.
-- "Recent progress" card — "Repinned from v2 0.9857 after pre-submission adversarial audit" is internal changelog/retrospective copy.
-- "Preprint" section — "The arXiv submission is prepared but pending operator-initiated upload" reads exactly like a Jira ticket status.
+- Hero (Recent Progress card) — "Repinned from v2 0.9857 after pre-submission adversarial audit" reads like a pull request comment.
+- Preprint section — "The arXiv submission is prepared but pending operator-initiated upload" is an internal status update, not a feature.
+- Blog section (Two Retractions card) — "We paid for a hostile audit... Two retractions, one rescue." reads like an internal team retrospective.
 
 ### Inconsistencies
-- Claim A ("No model fine-tuning required" in *How it works*) vs Claim B ("Two-GPU parallel retrain" and "continuous self-learning" in *Results/Features*). Are we training models or not?
-- Metric Soup — The page throws 0.9131, 0.8947, 0.9857, 0.91, and 0.90 AUROC/AUC numbers at the user across different cards with no unifying context, making the main claim confusing.
+- "No model fine-tuning required" (How it works section) vs. "Training — Two-GPU parallel retrain: 2.0× speedup" (Results grid). If no fine-tuning is needed, why are you highlighting training/retrain metrics?
+- Hero header says "0.9131 AUROC" but the Recent progress card confusingly says "Repinned from v2 0.9857", mixing current and old internal numbers.
 
 ### Missing essentials
-- Who maintains it? The footer mentions "Ian Blenke" and GitHub, but there is no clear "Backed by [X]" or credibility anchor up front to tell a stranger why they should trust this specific team's verification math.
+- Links to the actual "checked-in experiment artifacts". The Results intro says every number is backed by an artifact, but gives the user no way to click and verify them.
 
 ### Fabrication signals
-- "Training" card — "2.0x speedup, identical losses" (Perfect 2.0x is highly suspect in distributed training).
-- "Math extraction" card — "GSM8K extraction TP rate: 0.5 -> 1.0" (A perfect 1.0 TP rate without a credibility anchor looks fake).
-- "Adversarial audit" card — "k=5 ensemble catches 60/60 attacks" (100% catch rate on small sample sets triggers skepticism).
-- "Cascade routing" card — "0.0pp accuracy delta" (Suspiciously perfect zero).
+- 1.0 (100%) TP rate on "GSM8K extraction" in the Results Grid.
+- 60/60 attacks caught on "PRM-BiasBench-style attacks" in the Results Grid. (Both are suspiciously perfect for a landing page without an immediate link to proof).
 
 ## WHAT'S WORKING
-- The hero section is excellent: "Catch the reasoning errors your LLM states with total confidence" + the 3-step "Extract -> Check -> Repair" explanation clearly and concisely tells the user what the product actually does.
-- The Quickstart section is highly effective, showing tangible Python/Rust API usage in a clean, tabbed code window that proves the tool is real and installable.
+- The core value proposition is extremely clear: "Catch the reasoning errors your LLM states with total confidence" paired with the relatable "47 + 28 = 76" example perfectly explains the tool's purpose.
+- The Quickstart section is highly actionable, showing exactly how to use the tool in Python and Rust right away.
 
 ## RECOMMENDED OPERATOR ACTIONS
-1. Prune the Results section from 12 cards down to the 3-4 most impactful, generalized metrics.
-2. Scrub all internal benchmark acronyms (FoVer, SVAMP, CCTU, PREM, VeriCoT) and replace them with plain-English descriptions of what was tested.
-3. Remove all internal status tracking phrases ("pending operator-initiated upload", "Repinned from v2...", "382 Completed milestones").
-4. Add credibility anchors (sample sizes, error bars) to the perfect 1.0/100% metrics, or replace them with more representative real-world scale numbers.
-5. Cut the Blog section down to the 3 most relevant posts to reduce visual bloat.
+1. Remove all leaked `@.tmp-pytest/...` file paths from the CSS media queries and the HumanEval result card.
+2. Purge or define all internal acronyms ("PREM", "FoVer") and rewrite the "Recent Progress" card to focus on the product, not the audit history.
+3. Trim the Results Grid to 6 key cards, and add hyperlinks to the raw experiment artifacts, especially for the perfect 1.0 and 60/60 claims.
+4. Remove the "Two-GPU parallel retrain" card to resolve the inconsistency with "No model fine-tuning required" (or clarify what is being trained).
+5. Rewrite the "Preprint" and "Blog" descriptions to sound like external resources rather than internal development logs.
