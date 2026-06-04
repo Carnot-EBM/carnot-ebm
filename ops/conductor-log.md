@@ -7726,3 +7726,4 @@ ERROR: {
 | 2026-06-03 19:15 UTC | Capstone .345 -- aggregate the product-banking REC | OK | 89 passed in 4.63s |
 | 2026-06-04 02:00 UTC | Plan milestone 2026.06.346 | OK | 10 tasks proposed |
 | 2026-06-04 02:03 UTC | Milestone 2026.06.346 activated | OK | 10 tasks queued |
+| 2026-06-04 02:18 UTC | Archive milestone .345 (PRODUCT-BANKING RECOVERY - | OK | 106 passed in 4.65s |
