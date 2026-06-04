@@ -552,6 +552,42 @@ The terminal artifact MUST include `honest_verdict`, `inference_substrate`,
 `tests_assert_real_behavior`, `model_specs`, `random_seed`,
 `reproducibility_checksum`, and `duration_s`.
 
+### REQ-SPOE-3801: Abstention HTTP REST Surface
+
+The shipped verifier-scoring product MUST expose a minimal HTTP/REST POST
+surface for non-Python integrators to score one or more candidates and opt into
+the certified Exp 3771 abstention operating point.  The endpoint MUST use only
+the existing lightweight dependency set; if no web framework is already used
+for this product path, it MUST use the Python standard-library HTTP server
+rather than adding a heavy framework dependency.
+
+The HTTP payload MUST accept either a single candidate object or a batch of
+candidate objects.  Abstention mode MUST remain disabled by default; when
+disabled, response rows MUST preserve the existing calibrated
+`score_candidates` row shape and omit confident-or-abstain verdict fields.
+When a request enables abstention mode, each scoreable row MUST return a
+network-facing verdict of `confident` or `abstain`, the confidence-oriented
+abstention score, and certified Exp 3771 coverage, risk, delta, threshold, and
+threshold-source metadata loaded through the same certified-abstention config
+used by the Python, MCP, and CLI surfaces.
+
+The Exp 3801 runner MUST check the `.venv/bin/python` interpreter can import
+`carnot` and the abstention-mode parameter path, MUST read the certified
+threshold from the absolute Exp 3771 artifact before claiming the HTTP surface
+is wired, MUST start the HTTP endpoint on a local test port and POST a
+no-live-LLM batch of cached FoVer-style verifier-scoring candidates, MUST
+confirm above-threshold-to-confident, below-threshold-to-abstain, default-off,
+and batch processing behavior over the network, MUST write a documentation
+proposal instead of editing operator-curated CLI/MCP docs, and MUST write
+`results/experiment_3801_abstention_http_rest_surface.json`.
+
+The terminal artifact MUST include `honest_verdict`, `inference_substrate`,
+`http_rest_surface_added`, `batch_post_works`,
+`default_off_preserves_prior_behavior`, `certified_threshold_used`,
+`e2e_http_abstention_passed`, `no_heavy_new_dependency`,
+`doc_proposal_emitted_not_curated_edit`, `tests_assert_real_behavior`,
+`model_specs`, `random_seed`, `reproducibility_checksum`, and `duration_s`.
+
 ## Scenarios
 
 ### SCENARIO-INFRA-052: Version-Blocked Model Raises Error
@@ -797,6 +833,24 @@ certified Exp 3771 metadata, and the single CLI invocation reports more than one
 processed candidate.
 
 **Spec traces:** REQ-SPOE-3789
+
+### SCENARIO-SPOE-3801: HTTP REST Abstention Is Default-Off And Batch-Capable
+
+**Given** a local HTTP endpoint is serving the packaged verifier-scoring
+surface, a request body contains at least two cached FoVer-style
+verifier-scoring candidates, and the Exp 3771 certified operating point is
+readable
+**When** the caller POSTs without enabling abstention mode
+**Then** each response row preserves the existing calibrated score shape
+without network-facing `confident` or `abstain` verdict fields.
+
+**When** the caller POSTs the same batch with abstention mode enabled
+**Then** the above-threshold candidate returns `confident`, the
+below-threshold candidate returns `abstain`, each row carries the certified
+coverage, risk, delta, and threshold metadata, and the single HTTP request
+reports more than one processed candidate.
+
+**Spec traces:** REQ-SPOE-3801
 
 ### REQ-SAMPLE-020: SparseIsingEBM K-Regular Graph
 

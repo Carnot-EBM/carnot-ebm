@@ -1,0 +1,157 @@
+{
+  "batch_post_works": false,
+  "certified_threshold_used": 0.733216,
+  "default_off_preserves_prior_behavior": false,
+  "doc_proposal_emitted_not_curated_edit": false,
+  "doc_proposal_path": "/home/ianblenke/github.com/ianblenke/carnot/docs/research-notes/abstention-http-rest-doc-proposal-20260604.md",
+  "duration_s": 7.678484,
+  "e2e_evidence": {
+    "abstention_ok": false,
+    "batch_works": true,
+    "default_off_ok": true,
+    "default_response": {
+      "abstention_mode_enabled": false,
+      "batch": {
+        "n_candidates": 2
+      },
+      "scores": [
+        {
+          "abstained": false,
+          "calibrated_error_score": 0.993203,
+          "candidate_id": "exp3801_confident_error",
+          "confidence_error": 1.0,
+          "domain": "math",
+          "ensemble_energy": 1.0,
+          "operating_point": {
+            "actual_fpr": 0.1,
+            "expected_recall": 0.970588,
+            "fpr_budget": 0.1,
+            "threshold": 0.012717
+          }
+        },
+        {
+          "abstained": false,
+          "calibrated_error_score": 0.096153,
+          "candidate_id": "exp3801_uncertain_midpoint",
+          "confidence_error": 0.5,
+          "domain": "math",
+          "ensemble_energy": 0.5,
+          "operating_point": {
+            "actual_fpr": 0.1,
+            "expected_recall": 0.970588,
+            "fpr_budget": 0.1,
+            "threshold": 0.012717
+          }
+        }
+      ],
+      "surface": "http_rest_score_candidates"
+    },
+    "default_status": 200,
+    "enabled_response": {
+      "abstention_mode": {
+        "certified_risk_bound": 0.037646,
+        "certified_threshold": 0.733216,
+        "coverage": 0.998218,
+        "delta": 0.05,
+        "enabled": true,
+        "n_calibration": 2619,
+        "operator_threshold_override": false,
+        "score_orientation": "larger abstention_score means a more confident verifier judgment",
+        "threshold_source": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_3771_certified_abstention_operating_point.json"
+      },
+      "abstention_mode_enabled": true,
+      "batch": {
+        "n_candidates": 2
+      },
+      "scores": [
+        {
+          "candidate_id": "exp3801_confident_error",
+          "coverage": 0.998218,
+          "delta": 0.05,
+          "domain": "math",
+          "risk": 0.037646,
+          "score": 0.993203,
+          "threshold": 0.733216,
+          "threshold_source": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_3771_certified_abstention_operating_point.json",
+          "verdict": "confident"
+        },
+        {
+          "candidate_id": "exp3801_uncertain_midpoint",
+          "coverage": 0.998218,
+          "delta": 0.05,
+          "domain": "math",
+          "risk": 0.037646,
+          "score": 0.903847,
+          "threshold": 0.733216,
+          "threshold_source": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_3771_certified_abstention_operating_point.json",
+          "verdict": "confident"
+        }
+      ],
+      "surface": "http_rest_score_candidates"
+    },
+    "enabled_status": 200
+  },
+  "e2e_http_abstention_passed": false,
+  "field_principles": {
+    "batch_post_works": "BARE bool -- a batch POST processed >1 candidate in one request.",
+    "certified_threshold_used": "The threshold the endpoint loads (default = exp3771's 0.733) -- traces to the certified operating point, not a magic constant.",
+    "default_off_preserves_prior_behavior": "BARE bool -- abstention is OFF by default, so existing integrators see no behavior change (no silent regression).",
+    "doc_proposal_emitted_not_curated_edit": "BARE bool, true -- a doc-update PROPOSAL was written; the operator-curated docs were NOT edited (Public Documentation Discipline).",
+    "duration_s": "Wall-clock plausibility floor.",
+    "e2e_http_abstention_passed": "BARE bool -- the above->confident / below->abstain behavior was confirmed E2E over HTTP on cached examples.",
+    "honest_verdict": "Terminal prefix; blocked_<resource> if a precondition failed.",
+    "http_rest_surface_added": "BARE bool -- the abstention mode is callable over HTTP/REST (the third integration surface; the core deliverable).",
+    "inference_substrate": "verifier_ensemble_against_cached_candidates (principle: scores cached triples, no live LLM).",
+    "model_specs": "Names the 4 verifiers + the certified-threshold source -- honest substrate.",
+    "no_heavy_new_dependency": "BARE bool, true -- no heavy new web framework was added if one was not already present (decentralization/portability hygiene).",
+    "random_seed": "Determinism precondition.",
+    "reproducibility_checksum": "Content hash catches drift.",
+    "tests_assert_real_behavior": "BARE bool, true -- shipped tests assert the real endpoint behavior (anti-poison-test)."
+  },
+  "honest_verdict": "blocked_http_abstention_e2e_failed",
+  "http_rest_surface_added": false,
+  "inference_substrate": "verifier_ensemble_against_cached_candidates (principle: scores cached triples, no live LLM).",
+  "methodology": {
+    "candidate_source": "tiny cached FoVer-style verifier-scoring candidates",
+    "label": "WIRING smoke, not an accuracy claim",
+    "live_llm_inference": false,
+    "random_seed": 3801
+  },
+  "model_specs": {
+    "certified_threshold_source": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_3771_certified_abstention_operating_point.json",
+    "http_entrypoint": "POST /v1/score-candidates",
+    "live_llm_inference": false,
+    "scoring_entrypoint": "carnot.pipeline.second_pair_detector.score_candidates",
+    "verifiers": [
+      "controlled_invariance_executor_v2",
+      "executable_monitor_runtime_adapter",
+      "ast_structure_verifier",
+      "code_structural_dependency_verifier"
+    ],
+    "wiring_smoke_not_accuracy_claim": true
+  },
+  "no_heavy_new_dependency": true,
+  "operator_curated_docs_edited": false,
+  "output_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_3801_abstention_http_rest_surface.json",
+  "preconditions_checked": {
+    "certified_threshold": {
+      "available": true,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_3771_certified_abstention_operating_point.json",
+      "selected_threshold": 0.733216
+    },
+    "interpreter": {
+      "available": true,
+      "expected_suffix": ".venv/bin/python",
+      "value": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python"
+    },
+    "package_import": {
+      "available": true,
+      "returncode": 0,
+      "stderr": ""
+    }
+  },
+  "random_seed": 3801,
+  "reproducibility_checksum": "668b9dedd405a15f",
+  "scripts_research_conductor_modified": false,
+  "tests_assert_real_behavior": false
+}
