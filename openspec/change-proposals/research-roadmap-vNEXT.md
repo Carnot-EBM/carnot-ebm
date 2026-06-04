@@ -1,188 +1,210 @@
-# Research Roadmap — Milestone 2026.06.346
+# Research Roadmap — Milestone 2026.06.347
 
-**POST-BOUNDED CONVERGENCE: settle the LAST open energy-existential question
-(the P1 discrete-search adjudication, v3 — the positive control was starved in
-v1/v2, the harness is now fixed), bank the verifier product, build the P3
-Anomaly-Escalation process upgrade, scaffold the operator's next-thesis seed
-(EDLM), and continue self-learning on the live verifier — without re-grinding
-anything bounded.**
+**POST-CONVERGENCE — RETRY THE LAST OPEN QUESTION + HARDEN THE BANKED PRODUCT**
 
-Planner: Claude Opus 4.8 — 2026-06-03. Outer-loop pre-staged roadmap per the
-Pre-Staged Roadmap Convention.
+**Planned:** 2026-06-04 (Claude Opus 4.8, outer-loop pre-staged roadmap)
+**Supersedes activation of:** 2026.06.346 (POST-BOUNDED CONVERGENCE)
+**Design doc for:** `research-roadmap-next.yaml`
 
 ---
 
-## 1. What the previous milestones proved — the converged state
+## 1. What the previous milestone (.346) proved
 
-The project is **converged on its one surviving positive** and has bounded both
-energy-foundation routes. As of `.345 (which fully landed — 11/11 tasks,
-`paper_ready=true` confirmed live via `scripts/publication_gate.py`):
+`.346` landed **10 of 11** tasks. The project is now **converged** on its one
+surviving positive and has bounded both energy-foundation routes:
 
-### The banked positive (frozen)
-> **Carnot's 4-verifier ensemble reaches AUROC 0.9131 on the FoVer step-error
-> corpus (n=1,000, 5 seeds, dual-condition, CI95 [0.9027, 0.9235]); the FR-11
-> self-learning component contributes +0.0185 (CI95 [0.0125, 0.0245]).**
+- **G1–G4 all met; `paper_ready=TRUE`.** The headline — Carnot's verifier
+  ensemble reaches **AUROC 0.9131** on the FoVer step-error corpus (n=1,000,
+  5 seeds, dual-condition, CI95 [0.9027, 0.9235]) with the FR-11 self-learning
+  component contributing **+0.0185** — is frozen and externally reproduced
+  (GitHub Actions run 26725185125, 2026-05-31; re-reproduced locally in `.345`).
+- **The verifier product was BANKED.** `.346 exp3779` wired the `.345`
+  certified abstention operating point (threshold 0.733, coverage 0.998 at
+  selective-risk ≤ 0.05, split-conformal δ=0.05) into the verify API as a
+  deployable, default-OFF opt-in mode, E2E-confirmed and reachable through the
+  MCP `score_candidates` surface.
+- **FR-11 self-learning advanced to Tier-2.** `exp3778` consolidated per-domain
+  threshold deltas (`Tier2ThresholdMemory`), AUROC under consolidation 0.9097
+  (within the frozen CI), memory contribution preserved, state persisted.
+- **The P3 Anomaly-Escalation classifier was prototyped** (`exp3780`,
+  recommend-only, conductor unmodified) and a change-proposal written.
+- **The operator's EDLM next-thesis seed was scaffolded** (`exp3781`,
+  feasibility brief + minimal kill-gate design; the loop does NOT commit).
+- **G4 technical-report correction was prepped** (`exp3782`, operator proposal;
+  curated doc unedited).
 
-Source `exp2837`/`exp2850`. **G1–G4 all met** (G2 independently reproduced on a
-clean GitHub Actions runner, 2026-05-31, run 26725185125; G2 re-hardened locally
-as `exp3767`, AUROC 0.913134 within CI). The headline is **frozen**. A certified
-abstention operating point shipped in `.345 (`exp3771`: threshold 0.733,
-coverage 0.998 at selective-risk ≤5%, split-conformal, δ=0.05, n=2,619). The
-verifier is **math/structured-reasoning-bound** — earned-negative on facts
-(RAGTruth) and weak on code; this is settled and must NOT be re-tested without a
-genuinely-new architecture. `[[project_verifier_domain_bound]]`
+**The one un-landed task — and the single genuinely-open question.**
+`exp3777` (P1 discrete-search adjudication v3) **blocked on no-free-GPU**
+(`p1_adjudication: blocked_missing_upstream_artifact`). This is the LAST open
+energy-existential question: is the energy-as-generator bound an **artifact**
+of the Langevin+learned-decoder decode (a NARROW reopen would be warranted) or
+**FUNDAMENTAL** (a symmetric energy cannot enforce AR's causal factorization —
+the "Causal Inductive Bias Gap")? The harness root-cause was already diagnosed
+and fixed in `.346` (`n_train` 20000→40000, the regime where the AR positive
+control reaches 0.84). The only thing missing was a free GPU.
 
-### Both energy-foundation routes are bounded
-- **energy-as-SELECTOR** (P0.1) — bounded: reranking does not beat
-  self-consistency where SC is strong (math/CSP), adds no value where SC is weak.
-  `[[project_energy_selection_thesis_bounded]]`
-- **energy-as-GENERATOR** (Thesis A / tiny EBT) — bounded at scale: with a
-  learned emb→token decoder + 3-digit + 16k steps, the EBT scores 0.000 vs AR
-  0.84 at matched compute (discriminative-not-generative). Field-consistent with
-  EBT-Policy (arXiv:2510.27545). `[[project_thesis_a_ebt_seeded]]`
+## 2. The honest strategic state (read this before judging the plan for churn)
 
-### The verifier-moat thread is CLOSED (do not re-open)
-The 2026-06-03 Deep Think round settled the moat (P2) for ~zero GPU: on standard
-MATH, self-consistency AUROC is near-ceiling (~0.95) and the SC-failure residual
-(the moat's only home) was ~5 items — all of which turned out to be
-answer-**normalization** false-negatives, not genuine confident-correlated
-errors. **The verifier's defensible claim is a MATH reasoning/step-error checker
-(the banked FoVer product), NOT a general independence-moat over final answers.**
-A scissor-plot GPU sweep would be re-grinding a closed thread — it is NOT in this
-milestone. `[[reference_deep_think_post_bounded_2026_06]]`
+The project has **answered its core questions**:
 
-### The one genuinely-open energy-existential question — P1 mechanism
-The Deep Think P1 round asked: *is the energy-as-generator bound an ARTIFACT of
-the decode method (Langevin descends off-manifold into the void between valid
-token embeddings) or FUNDAMENTAL (a global symmetric energy E(y₁…y_T) cannot
-enforce AR's step-by-step causal factorization — the "Causal Inductive Bias
-Gap")?* The decisive cheap test: **discard Langevin + learned decoder; decode by
-pure DISCRETE search over valid-token embeddings only** (beam / discrete-MCMC).
-`>0%` → artifact-bounded (decode was the culprit; reopen). Still `0%` with a
-**valid positive control** → landscape itself misshaped → supports
-causal-inductive-bias = FUNDAMENTAL → writes the closing theorem.
+- **Energy-as-selector** (P0.1) — bounded. Does not beat AR/SC where SC is
+  strong (math/CSP) *and* where SC is weak.
+- **Energy-as-generator** (Thesis-A) — bounded at scale (EBT 0.000 vs AR 0.84
+  at matched compute). P1 only sharpens the *mechanism* behind this bound; it
+  does not reopen the strategic conclusion.
+- **The verifier moat** (P2) — CLOSED. The defensible claim is the banked
+  **math step-error product**, NOT a general independence-moat.
+- **Self-seeding a new paradigm** (P3) — the loop CANNOT do it (the Verification
+  Trap). A genuinely-different foundation-model thesis needs a **human seed**.
+  EDLM (energy as a residual-corrector over discrete diffusion, arXiv:2410.21357)
+  is the operator's top candidate; `.346` handed up a feasibility brief.
 
-**This test was attempted twice today and is INCONCLUSIVE — through no fault of
-the energy side:**
-- `thesis_a_p1_discrete_search` (v1): the AR positive control collapsed to 0.0
-  (reused the too-small matched-compute model at 3-digit). DEGENERATE.
-- `thesis_a_p1_discrete_search_v2` (v2): AR still 0.0 because the harness used
-  `n_train=min(20000,…)` — 20k examples starve the from-scratch AR on 3-digit
-  MSD-first addition. The `ar_best<0.3` guard correctly returned INCONCLUSIVE
-  rather than falsely claiming FUNDAMENTAL.
+**What this means for planning.** With both energy routes bounded and the moat
+closed, the loop's *legitimate, non-churn* forward surface narrows to exactly
+three things:
 
-Root cause is **diagnosed and the harness `n_train` is fixed to 40000** (the
-regime where AR reaches 0.84) and a post-train checkpoint was added. The
-corrected **v3** (delete the stale checkpoint, rerun ~100 min on a free GPU)
-settles artifact-vs-fundamental. This is the depth anchor of `.346 and satisfies
-the Failed-Experiment Rerun Discipline cleanly (named prior failures + diagnosed
-root cause + a positive-control gate `ar_best≥0.3`).
+1. **The one open P1 mechanism question** (retry the GPU adjudication).
+2. **Hardening the banked verifier product** (the converged positive) toward
+   real deployability and toward *restoring* the demoted product headline by
+   confirming provenance — north-star §1's own definition of a headline-
+   *advancing* milestone, the opposite of noise.
+3. **Mandated continuous self-learning** (research-program.md) — Tier-3.
 
-> Note: energy-as-generator remains BOUNDED from part-b **regardless** of the v3
-> outcome. P1 only sharpens the *mechanism* (artifact vs fundamental); it does
-> NOT reopen the strategic conclusion or seed a new paradigm.
+`.347` does exactly these, plus the operator-seed scaffold (EDLM no-train
+preflight) and record/continuity hygiene. **It re-grinds nothing bounded and
+runs no scissor-plot/moat sweep.** This is deliberately a LEAN milestone.
 
-### The strategic frame (P3) — the loop cannot self-seed
-A nascent paradigm starts in a "valley of disappointment"; the loop's
-adversarial verifier reads "higher error → prune" and auto-reconciles it as a
-dead-end (the **Verification Trap**). So: **human = epistemic director** (seeds
-frames, triages anomalies); **loop = apex postdoc** (exhaustive bounding,
-falsification, frictionless execution). The one cheap endorsed upgrade is
-**Anomaly-Escalation** — stop auto-reconciling EVERY negative; distinguish a
-clean bounded negative (auto-reconcile) from a frame-VIOLATING anomaly (halt
-pruning, escalate to human). `.346 prototypes it as a standalone classifier +
-change-proposal (never auto-relaxing verification — that conflicts with the
-anti-fabrication discipline; valley-funding stays human-gated).
+**A flag to the operator (north-star §1).** Continued milestones *without* an
+operator seed will increasingly approach the churn boundary. The substantive
+decision — seed EDLM (or another Phase-3 thesis) or freeze the loop into a
+product-maintenance cadence — is **the operator's to make**. `.347` lowers the
+EDLM seed cost to a single command (the preflight) and otherwise spends only on
+the three legitimate surfaces above.
 
----
+## 3. The three gaps between current state and the PRD vision
 
-## 2. The three biggest gaps between current state and the PRD vision
+| Gap | PRD anchor | `.347` response |
+|---|---|---|
+| The last energy-existential mechanism is unadjudicated (GPU-blocked) | "autonomous directed self-learning where the energy function is ground truth" | `exp3787` retry P1 v3 with a GPU-free precondition + clean blocked-fallback |
+| The banked verifier is a NUMBER + an opt-in mode, not yet a hardened, gaming-aware, CLI-surfaced product with a restored headline | Phase-1 "ship a useful operational product" | `exp3789` abstention CLI/batch surface; `exp3790` gaming-resistance characterization; `exp3792` product-headline provenance confirmation (G4) |
+| Self-learning has Tier-1 + Tier-2; Tier-3 (predictive) is unbuilt on the live verifier | research-program.md "Continuous Self-Learning" Tiers 1–4 | `exp3788` FR-11 v19 — Tier-3 predictive verification on the FoVer corpus |
 
-1. **The energy-foundation mechanism is not yet theorem-closed.** Both routes
-   are empirically bounded, but P1 (artifact-vs-fundamental) is the missing
-   mechanistic adjudication that either writes the closing theorem (Causal
-   Inductive Bias Gap is fundamental) or reopens a narrow decode-fix. → `exp3777`.
-2. **The banked verifier product is an artifact, not yet a deployable surface.**
-   The certified abstention operating point exists as a number (`exp3771`) but
-   is not wired into the verify API as an opt-in feature an integrator can call.
-   → `exp3779`.
-3. **The next Phase-3 thesis has no lowered-cost seeding surface.** The operator
-   must seed it (the loop cannot), and the top menu route (EDLM — energy as a
-   residual-corrector over discrete diffusion) has no feasibility scoping. →
-   `exp3781`.
+## 4. Phases
 
----
+**Phase A — Records & continuity (ops).** `exp3786` archive/activate;
+`exp3794` external research refresh; `exp3795` KV260 opportunistic;
+`exp3796` capstone.
 
-## 3. Milestone shape (11 tasks, 5 phases)
+**Phase B — The last open question (phase3 depth, GPU).** `exp3787` P1
+discrete-search v3 RETRY — the depth anchor. Routes claude+opus+max_turns:100
+(GPU from-scratch training + bootstrap risk + open-ended artifact-vs-fundamental
+adjudication). Precondition checks a *free* GPU and exits cleanly to
+`blocked_no_free_gpu` if the rig is busy — never queues, never fabricates.
 
-| # | Task | Phase | Agent | Why it is NOT churn |
-|---|------|-------|-------|----------------------|
-| exp3776 | Archive `.345 / activate `.346 | Activate | codex | routine transition |
-| exp3777 | **P1 discrete-search adjudication v3** (valid positive control) | Settle-the-science | claude/opus, GPU | the last open energy-existential mechanism; rerun discipline satisfied |
-| exp3778 | FR-11 v18 — Tier-2 constraint-memory consolidation on the live verifier | Product+self-learning | codex | NEW tier (v17 was Tier-1); the self-learning mandate |
-| exp3779 | Wire the certified abstention point into the verify API (opt-in feature + E2E) | Product+self-learning | codex | NEW deployable product surface, not a re-measure |
-| exp3780 | **Anomaly-Escalation** classifier prototype + change-proposal | Process (P3) | codex | NEW process capability the DT round endorsed |
-| exp3781 | EDLM next-thesis **feasibility scoping** (operator seeding scaffold) | Scaffold | claude | lowers operator seeding cost; NOT a loop commitment |
-| exp3782 | Technical-report G4 correction PREP (operator proposal; no curated edit) | Record | codex | the standing north-star §1 OPERATOR ACTION, prepared |
-| exp3783 | External research refresh (file the new moat/PRM/entanglement papers) | Record | codex | genuinely-new 2026 papers found in planning |
-| exp3784 | KV260 opportunistic continuity audit | Record | codex | opportunistic hardware mandate (north-star §3) |
-| exp3785 | Capstone `.346 | Record | codex | routine aggregation |
+**Phase C — Harden the banked product (product, CPU).**
+`exp3789` wire the abstention mode into a CLI + batch-scoring surface (forward
+from `.346`'s API opt-in); `exp3790` programmatic gaming-resistance
+characterization of the shipped math step-error verifier (CPU, cached
+perturbations — NOT a moat/independence sweep, NOT GPU candidate generation);
+`exp3792` confirm the demoted product-headline numbers (exp1999 +18pp / exp2090
++15pp) trace to primary artifacts with seed+checksum (G4) so the operator can
+restore them.
 
-### Dependency graph
-All tasks read upstream via **graceful disk-presence fallback** (the `.340
-proven-safe pattern — never crash on a missing field, never label un-run as a
-negative). **No hard `gated_on`** this milestone (keeps the run robust; the
-capstone reads each artifact's presence and records honestly). `exp3777` is the
-one GPU task; if the conductor's GPU-zombie reaper or a competing GPU job
-interferes, it emits `blocked_*` honestly and the operator runs the corrected
-harness directly (the v1/v2 pattern).
+**Phase D — Self-learning, process, operator-seed scaffold.**
+`exp3788` FR-11 v19 Tier-3 predictive verification (distinct tier from v18's
+Tier-2 memory); `exp3791` validate the `.346` anomaly-escalation classifier
+against the historical retro corpus; `exp3793` EDLM no-train preflight
+readiness (GO/NO-GO; lowers the operator's seed cost without committing the
+loop or opening a Phase-3 track).
 
-### Routing reality (unchanged since `.343–`.345)
-Gemini CRASHES real GPU workloads and has wiped milestones via quota 429s
-(`[[incident_333_gemini_quota_crash_wipeout]]`), so the cheap-default is CODEX
-(`requires_codex`). The two judgment-heavy tasks are CLAUDE: `exp3777` (the P1
-adjudication — open-ended mechanistic judgment + GPU/bootstrap risk → `opus`,
-`max_turns: 100`) and `exp3781` (EDLM feasibility synthesis — cross-paper
-judgment). Every Run command pins `.venv/bin/python`
-(`[[incident_ebt_training_venv_python_cuda]]`: bare `python` is
-`/usr/bin/python3` with no torch).
+## 5. Dependency graph (no hard `gated_on`; disk-presence fallback only)
 
-### Invariants re-asserted at capstone
-- `paper_ready` stays **TRUE** (G1–G4).
-- FoVer **0.9131 frozen** — `.346 reproduces/uses it, never moves it.
-- Both energy routes stay **bounded** — P1 v3 sharpens the mechanism only; no
-  re-grind, no new existential claim.
-- The next-Phase-3-thesis decision stays an **operator-seeding surface** — the
-  loop scaffolds (EDLM feasibility) but does NOT commit.
-- The agent never edits operator-curated docs, never triggers CI, never
-  publishes, never pushes.
+```
+exp3786 archive/activate (ops)
+   │
+   ├─ exp3787 P1 v3 retry (GPU)           ── reads .346 v2 harness + part-b regime
+   ├─ exp3788 FR-11 v19 Tier-3 (CPU)      ── reads 4-verifier FoVer scores
+   ├─ exp3789 abstention CLI/batch (CPU)  ── reads exp3779 abstention mode + exp3771 cert
+   ├─ exp3790 gaming-resistance (CPU)     ── reads cached FoVer + exp2837 verifiers
+   ├─ exp3791 anomaly validation (CPU)    ── reads exp3780 classifier + retro corpus
+   ├─ exp3792 product-headline G4 (CPU)   ── reads exp1999 / exp2090 / north-star §1
+   ├─ exp3793 EDLM no-train preflight     ── reads exp3781 brief + exp3763 menu
+   ├─ exp3794 external refresh (ops)
+   └─ exp3795 KV260 opportunistic (ops)
+            │
+         exp3796 capstone .347 ── aggregates all; re-asserts invariants
+```
 
-### Anti-poison-test discipline (the `.344 root cause, carried forward)
-Any shipped test MUST assert against the script's REAL behavior, and any new
-`research-complete.yaml` value containing a colon MUST be quoted. A failing
-shipped test — or a stray unquoted colon — poisons the conductor pre-test gate
-and SKIPs the whole milestone. This remains the single most load-bearing
-discipline for `.346 not repeating `.344.
+Each downstream task reads upstream artifacts with a graceful disk-presence
+fallback (the `.340` proven-safe pattern). No task crashes on a missing field;
+no un-run task is labeled a research negative (the `.344` capstone-confusion
+guard).
 
----
+## 6. Canonical task list (conductor execution order)
 
-## 4. Hardware requirements
+| # | id | track | agent | GPU | substrate |
+|---|---|---|---|---|---|
+| 1 | exp3786 archive .346 / activate .347 | ops | codex | no | aggregation |
+| 2 | exp3787 P1 discrete-search v3 RETRY | phase3 | claude/opus | **yes** | live_llm_inference |
+| 3 | exp3788 FR-11 v19 Tier-3 predictive | self-learning | codex | no | verifier-scoring |
+| 4 | exp3789 abstention CLI + batch surface | product | codex | no | verifier-scoring |
+| 5 | exp3790 verifier gaming-resistance | product | codex | no | verifier-scoring |
+| 6 | exp3791 anomaly-escalation validation | infra | codex | no | aggregation |
+| 7 | exp3792 product-headline provenance (G4) | product | codex | no | aggregation |
+| 8 | exp3793 EDLM no-train preflight readiness | phase3 | claude | no | aggregation |
+| 9 | exp3794 external research refresh .347 | ops | codex | no | aggregation |
+| 10 | exp3795 KV260 opportunistic continuity | hardware | codex | no | hardware_smoke |
+| 11 | exp3796 capstone .347 | ops | codex | no | aggregation |
 
-- `exp3777`: one free CUDA GPU (RTX 3090), ~100 min, from-scratch tiny-EBT +
-  matched-AR training (`n_train=40000`). Precondition-gated; blocks honestly if
-  no free GPU.
-- All other tasks: CPU only (verifier-scoring against cached candidates, or
-  aggregation), plus `exp3784` SSH to the KV260.
+## 7. Routing rationale
 
-## 5. New references filed this sweep (see research-references.md `.346 additions)
-- arXiv:2604.07650 — auditing behavioral entanglement + de-entangled verifier
-  ensemble reweighting (the error-independence methodology; corroborates the
-  closed moat thread).
-- arXiv:2506.07962 — Correlated Errors in LLMs (more accurate models → more
-  correlated errors; the subsumption mechanism, operationalized).
-- arXiv:2601.17223 — Verifiable Process Reward Models (deterministic rule-based
-  step verifiers; corroborates Carnot's objective-energy positioning).
-- arXiv:2604.15149 — LLMs Gaming Verifiers (ICLR 2026 workshop; the
-  null-space-mimicry / verifier-robustness frontier).
-- arXiv:2502.11157 — Dyve, fast/slow dynamic process verification (the
-  fast/slow escalation precedent for the Anomaly-Escalation prototype).
+- **codex is the cheap default** (gemini crashes real GPU workloads and has
+  wiped whole milestones via 429 — `incident_333`; codex is the standing
+  cheap-default for mechanical/aggregation/verifier-scoring work).
+- **The ONE GPU task** (`exp3787`) routes **claude+opus+max_turns:100** —
+  hardware-integration + bootstrap + open-ended mechanistic adjudication is
+  exactly the class that routes to opus; C+E escalation is claude-only.
+- **The ONE judgment task** (`exp3793` EDLM preflight) routes **claude** —
+  cross-paper synthesis + honest GO/NO-GO judgment about a genuinely-different
+  EBM route.
+- **Every `Run` command pins `.venv/bin/python`** (`incident_ebt_training_venv_
+  python_cuda`): bare `python` is `/usr/bin/python3` with no torch/yaml/sklearn,
+  needed even for CPU tasks (adversarial_verify, summarize_artifact, scoring).
+
+## 8. Hardware requirements
+
+- **`exp3787` only** needs a CUDA GPU with ≥10 GB free. It checks `nvidia-smi`
+  free memory and exits to `blocked_no_free_gpu` if the rig is busy — it never
+  queues behind another job (the `.346` v1/v2/v3 pattern where the operator
+  runs the corrected harness directly).
+- **`exp3795`** is an SSH board smoke to the KV260 (SSH-only precondition per
+  KV260 SSH-Not-SD-Card discipline; never a host block-device check).
+- All other tasks are **CPU-only** (verifier-scoring against cached FoVer
+  triples, aggregation, docs).
+
+## 9. Invariants re-asserted at capstone
+
+- `paper_ready` stays **TRUE** (G1–G4, confirmed via `publication_gate.py`).
+- FoVer **0.9131** stays frozen; `.347` *uses* but never *moves* it.
+- **Both energy routes stay bounded** — `exp3787` sharpens the P1 mechanism
+  only; it never reopens the strategic conclusion or seeds a paradigm.
+- The **next-Phase-3-thesis decision remains an operator-seeding surface**; the
+  loop scaffolds (EDLM preflight) but does NOT commit.
+- The agent **never** edits operator-curated docs, triggers CI, publishes, or
+  pushes.
+
+## 10. Anti-recurrence guards carried forward
+
+- **Anti-poison-test** (the `.344` root cause): any shipped test MUST assert
+  against the script's REAL behavior; any new `research-complete.yaml` value
+  containing a colon MUST be quoted (verified via `yaml.safe_load` after write).
+- **Inference-substrate hygiene:** every task declares `inference_substrate`
+  and runs `adversarial_verify.py`; no vestigial GGUF/CUDA markers on
+  aggregation/verifier-scoring tasks.
+- **FALSE_NEGATIVE_RISK discipline:** `exp3787`'s null "FUNDAMENTAL" claim is
+  only valid if the AR positive control reaches `ar_best ≥ 0.3`; otherwise the
+  honest verdict is INCONCLUSIVE (the v1/v2 lesson).
+- **Failed-Experiment Rerun Discipline:** `exp3787` carries a `prior_failures`
+  block naming v1/v2 and the v3 GPU-block, the diagnosed cause, what is
+  different, and `retire_if_same_verdict: true`.
+</content>
