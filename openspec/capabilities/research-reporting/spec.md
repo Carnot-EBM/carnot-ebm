@@ -16778,3 +16778,99 @@ critical flag.
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-REPORT-3776 | Implemented (`python/carnot/reporting/archive_v345_activate_v346_3776.py`, `scripts/experiment_3776_archive_v345_activate_v346.py`) | Implemented (`tests/python/test_experiment_3776_archive_v345_activate_v346.py`) |
+
+### REQ-REPORT-3782: Technical-Report G4 Correction Prep
+
+The Exp 3782 workflow SHALL prepare, but not apply, the G4 correction for the
+operator-curated technical-report trajectory paragraph. The workflow SHALL read
+the primary artifacts `results/experiment_227_results.json`,
+`results/experiment_1999_code_verification_humaneval.json`, and
+`results/experiment_2090_crane_humaneval.json`; confirm that Exp 227 refutes
+the unsupported code-repair headline by reporting a 0.0 improvement delta and
+zero repaired cases; confirm the surviving Exp 1999 and Exp 2090 code-positive
+numbers from artifact fields; and record whether each surviving positive fully
+passes G4 by carrying seed, checksum, and n/sample-size provenance in the
+primary artifact.
+
+The workflow SHALL write the operator-action proposal note
+`docs/research-notes/technical-report-g4-correction-proposal-20260604.md`
+containing the exact old technical-report clause or paragraph to replace, the
+proposed corrected text, and the old-to-new diff. It SHALL NOT edit
+`docs/technical-report.md` or any other operator-curated document. The workflow
+SHALL use aggregation-only provenance hygiene and SHALL NOT include GGUF, CUDA,
+or live-model markers in its terminal artifact.
+
+The terminal artifact SHALL be written to
+`results/experiment_3782_technical_report_g4_correction_prep.json` and SHALL
+include bare top-level values for `honest_verdict`, `inference_substrate`,
+`unsupported_numbers_identified`, `real_numbers_confirmed`,
+`proposed_correction_written`, `operator_curated_doc_unedited`,
+`cited_upstream_artifacts`, `random_seed`, `reproducibility_checksum`, and
+`duration_s`, plus `field_principles` documenting why each required value
+exists. `inference_substrate` SHALL equal
+`aggregation_from_upstream_artifacts (principle: provenance aggregation + drafting, no live model).`
+The terminal verdict SHALL equal
+`complete: g4_correction_prepped_unsupported_numbers_identified_real_numbers_confirmed_proposal_written_operator_curated_doc_unedited`.
+
+#### SCENARIO-REPORT-3782: G4 Correction Is Prepared Without Editing Curated Report
+
+**Given** the north-star G4 catch says the technical-report trajectory paragraph
+overstates code-repair evidence and the cited Exp 227 source is flat
+**When** the Exp 3782 workflow runs
+**Then** it writes an aggregation-only terminal artifact, cites Exp 227, Exp
+1999, and Exp 2090 with hashes, records the unsupported prose numbers as
+refuted, records Exp 1999 and Exp 2090 with honest G4 pass/fail status, writes
+the operator-action proposal note, leaves `docs/technical-report.md` unchanged,
+and passes adversarial verification without a critical flag.
+
+## Implementation Status (REQ-REPORT-3782)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-3782 | Planned (`python/carnot/reporting/technical_report_g4_correction_prep_3782.py`, `scripts/experiment_3782_technical_report_g4_correction_prep.py`) | Planned (`tests/python/test_experiment_3782_technical_report_g4_correction_prep.py`) |
+
+### REQ-REPORT-3783: External Research Refresh .346
+
+The Exp 3783 workflow SHALL append, not replace, a `## .346 additions`
+section to `research-references.md` filing the five externally surfaced papers
+from the `.346` planning sweep: arXiv:2604.07650, arXiv:2506.07962,
+arXiv:2601.17223, arXiv:2604.15149, and arXiv:2502.11157. The appended section
+SHALL mirror the `.344` and `.345` section style: a dated heading, a short
+context paragraph, and one bulleted entry per paper with arXiv ID, title,
+one-line Carnot relevance, and explicit track assignment across closed moat,
+verifier product, anomaly-escalation, and self-learning.
+
+The refresh SHALL record that every peer number is as-reported by the source
+and must be independently re-derived before it enters a forward-facing Carnot
+claim. The workflow SHALL use aggregation/documentation provenance hygiene,
+SHALL NOT include GGUF, CUDA, or live-model markers in the terminal artifact,
+and SHALL NOT edit operator-curated docs or `scripts/research_conductor.py`.
+
+The terminal artifact SHALL be written to
+`results/experiment_3783_external_research_refresh.json` and SHALL include bare
+top-level values for `honest_verdict`, `inference_substrate`,
+`references_added`, `n_references_added`, `section_appended_not_replaced`,
+`numbers_are_as_reported`, `random_seed`, `reproducibility_checksum`, and
+`duration_s`, plus `field_principles` documenting why each required value
+exists. `inference_substrate` SHALL equal
+`aggregation_from_upstream_artifacts (principle: a documentation append, no live model).`
+The terminal verdict SHALL equal
+`complete: external_research_refresh_346_filed_5_references_section_appended_numbers_as_reported`.
+
+#### SCENARIO-REPORT-3783: .346 Research References Are Filed Append-Only
+
+**Given** `research-references.md` already contains `.344 additions` and
+`.345 additions`
+**When** the Exp 3783 workflow runs
+**Then** it preserves all prior content byte-for-byte as a prefix, appends a
+single `.346 additions` section, files exactly the five required arXiv IDs with
+closed-moat / verifier-product / anomaly-escalation / self-learning relevance,
+writes the required aggregation-only terminal artifact, marks peer numbers
+as-reported rather than Carnot measurements, and passes adversarial verification
+without a critical flag.
+
+## Implementation Status (REQ-REPORT-3783)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-3783 | Planned (`python/carnot/reporting/external_research_refresh_3783.py`, `scripts/experiment_3783_external_research_refresh.py`) | Planned (`tests/python/test_experiment_3783_external_research_refresh.py`) |

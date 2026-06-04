@@ -1,0 +1,124 @@
+{
+  "adversarial_verify_clean": true,
+  "adversarial_verify_report": {
+    "flags": [],
+    "max_severity": 0
+  },
+  "cited_upstream_artifacts": [
+    {
+      "experiment_id": 227,
+      "fields_imported": [
+        "metadata.sample_size",
+        "statistics.baseline.pass_at_1",
+        "statistics.verify_repair.pass_at_1",
+        "statistics.improvement.delta",
+        "statistics.repair_stats.n_repaired"
+      ],
+      "path": "results/experiment_227_results.json",
+      "sha256": "b920d555ffe03d8ab44a00f1d9c908e62166142ad1671d380854570a580c3039"
+    },
+    {
+      "experiment_id": 1999,
+      "fields_imported": [
+        "baseline_pass_rate",
+        "repair_pass_rate",
+        "dataset_size"
+      ],
+      "path": "results/experiment_1999_code_verification_humaneval.json",
+      "sha256": "84ce1fb6013d1557ff9633a59e82493297dbb89abe7b7d9ed5867f0befdc507d"
+    },
+    {
+      "experiment_id": 2090,
+      "fields_imported": [
+        "rigid_pass_rate",
+        "crane_pass_rate",
+        "pass_rate_delta",
+        "random_seed",
+        "reproducibility_checksum",
+        "honest_verdict"
+      ],
+      "path": "results/experiment_2090_crane_humaneval.json",
+      "sha256": "97fc4227a4837a543526f64158552465fc336772de298732173bc572583a2418"
+    }
+  ],
+  "duration_s": 0.00429,
+  "field_principles": {
+    "cited_upstream_artifacts": "Provenance for the corrected numbers; anti-fabrication audit trail.",
+    "duration_s": "Wall-clock plausibility floor.",
+    "honest_verdict": "Terminal prefix; the correction-prep outcome.",
+    "inference_substrate": "Provenance aggregation and drafting over upstream artifacts; no fresh inference.",
+    "operator_curated_doc_unedited": "BARE bool, true -- docs/technical-report.md and operator-curated inputs were not edited.",
+    "proposed_correction_written": "BARE bool, true -- the old-to-new diff was written to a research note for the operator.",
+    "random_seed": "Determinism precondition.",
+    "real_numbers_confirmed": "The provenance-confirmed Exp 1999 (+18pp) and Exp 2090 (+15pp) numbers plus whether each passes G4 using seed, checksum, and n.",
+    "reproducibility_checksum": "Content hash catches drift.",
+    "unsupported_numbers_identified": "Lists the refuted prose numbers (8%->80%, 0%->36%, +3.0pp) plus that Exp 227 shows delta=0.0 -- the G4 catch being corrected."
+  },
+  "headline_scope_note": "These code-positive artifacts are proposal evidence only; they are not promoted as the product headline until the operator accepts a clean full-HumanEval repair-run artifact.",
+  "honest_verdict": "complete: g4_correction_prepped_unsupported_numbers_identified_real_numbers_confirmed_proposal_written_operator_curated_doc_unedited",
+  "inference_substrate": "aggregation_from_upstream_artifacts (principle: provenance aggregation + drafting, no live model).",
+  "operator_curated_doc_unedited": true,
+  "operator_curated_docs_checked": [
+    "docs/technical-report.md",
+    "ops/north-star.md"
+  ],
+  "proposal_path": "docs/research-notes/technical-report-g4-correction-proposal-20260604.md",
+  "proposed_correction_written": true,
+  "random_seed": 3782,
+  "real_numbers_confirmed": [
+    {
+      "baseline": 0.66,
+      "delta_pp": 18.0,
+      "experiment_id": 1999,
+      "g4_missing_fields": [
+        "random_seed",
+        "reproducibility_checksum"
+      ],
+      "g4_passes": false,
+      "headline_ready": false,
+      "improved": 0.84,
+      "method": "repair",
+      "n": 50,
+      "n_source": "dataset_size",
+      "path": "results/experiment_1999_code_verification_humaneval.json",
+      "random_seed_present": false,
+      "reproducibility_checksum_present": false
+    },
+    {
+      "baseline": 0.7,
+      "delta_pp": 15.0,
+      "experiment_id": 2090,
+      "g4_missing_fields": [
+        "structured_n"
+      ],
+      "g4_passes": false,
+      "headline_ready": false,
+      "improved": 0.85,
+      "method": "CRANE constrained decoding",
+      "n": 50,
+      "n_source": "honest_verdict_text",
+      "path": "results/experiment_2090_crane_humaneval.json",
+      "random_seed_present": true,
+      "reproducibility_checksum_present": true
+    }
+  ],
+  "reproducibility_checksum": "ff2fe313709bcd1f00870cda83808febffaafd7e64218fff6b395bfce6fc4717",
+  "schema": "carnot.technical_report_g4_correction_prep.v1",
+  "unsupported_numbers_identified": {
+    "exp227": {
+      "baseline_pass_at_1": 0.23333333333333334,
+      "delta_pp": 0.0,
+      "experiment_id": 227,
+      "improvement_delta": 0.0,
+      "n": 30,
+      "n_repaired": 0,
+      "verify_repair_pass_at_1": 0.23333333333333334
+    },
+    "g4_catch": "The cited Exp 227 source is flat, so the unsupported prose numbers must not be used as a product headline.",
+    "refuted_prose_numbers": [
+      "8%->80%",
+      "0%->36%",
+      "+3.0pp"
+    ]
+  }
+}
