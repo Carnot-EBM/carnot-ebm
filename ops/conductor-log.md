@@ -7773,3 +7773,4 @@ ERROR: {
 | 2026-06-04 17:19 UTC | FR-11 continuous self-learning v21 (the mandated s | OK | 89 passed in 6.42s |
 | 2026-06-04 17:33 UTC | Publication-gate REGRESSION confirmation: run scri | OK | 85 passed in 4.54s |
 | 2026-06-04 17:46 UTC | STAGE the EDLM operator-seed (documentation only - | OK | 86 passed in 4.86s |
+| 2026-06-04 18:04 UTC | External research refresh for .349: confirm the pl | OK | 95 passed in 5.43s |
