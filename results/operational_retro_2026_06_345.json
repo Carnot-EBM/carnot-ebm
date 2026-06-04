@@ -1,0 +1,23 @@
+{
+  "schema": "carnot.operational_retro.v64",
+  "milestone": "2026.06.345",
+  "generated_at": "2026-06-04T01:25:44Z",
+  "retro_type": "operational_full",
+  "total_wall_time_minutes": 0,
+  "experiments_completed": 0,
+  "compute_bound_experiments_count": 0,
+  "slowest_experiments": [],
+  "gpu_idle_on_compute_bound_tasks": null,
+  "summary": "No experiment commits found since the activation of milestone 2026.06.345. 0 experiments were completed and 0 total wall time minutes were logged. This means there were 0 compute-bound experiments.",
+  "bottlenecks_identified": [],
+  "improvements_suggested": [
+    "Investigate why no experiments were dispatched to completion since milestone activation."
+  ],
+  "top_3_highest_leverage_actions": [
+    "Add milestone-activation health check: emit conductor warning if experiments_completed == 0 at retro time AND milestone_age_minutes > 60.",
+    "Diagnose activation gap via ops/conductor-log.md.",
+    "Stage research-roadmap-next.yaml for the next milestone immediately."
+  ],
+  "estimated_time_savings_pct": 0,
+  "meta_reflection": "An honest operational review requires empirical data. Without any experiment commits in this milestone window, we cannot identify execution bottlenecks."
+}
