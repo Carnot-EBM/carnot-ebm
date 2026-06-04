@@ -1,0 +1,138 @@
+{
+  "adversarial_verify_clean": true,
+  "adversarial_verify_report": {
+    "flags": [],
+    "max_severity": -1
+  },
+  "append_action": "appended",
+  "arxiv_resolution_summary": {
+    "all_required_arxiv_ids_resolved": true,
+    "verification_basis": "Primary arXiv abstract pages resolved during the .347 filing; entries preserve source-reported claims pending independent Carnot re-derivation."
+  },
+  "duration_s": 0.011354,
+  "field_principles": {
+    "duration_s": "Wall-clock plausibility floor.",
+    "honest_verdict": "Terminal prefix; the refresh outcome.",
+    "inference_substrate": "A documentation append over upstream paper records; prevents confusing this refresh with a compute-bound experiment.",
+    "n_references_added": "BARE int -- sample-size hygiene on the refresh (>=4 this sweep).",
+    "numbers_are_as_reported": "BARE bool, true -- peer numbers are source-reported, not Carnot measurements (adversarial-verify discipline).",
+    "random_seed": "Determinism precondition.",
+    "references_added": "The list of arXiv ids filed -- the deliverable; keeps the project current per research-program.md planning requirement 4.",
+    "reproducibility_checksum": "Content hash catches drift.",
+    "section_appended_not_replaced": "BARE bool, true -- the '.347 additions' section was APPENDED (never-prune rule; no prior content removed)."
+  },
+  "honest_verdict": "complete: external_research_refresh_347_filed_references_section_appended_numbers_as_reported",
+  "inference_substrate": "aggregation_from_upstream_artifacts (principle: a documentation append, no live model).",
+  "n_references_added": 6,
+  "numbers_are_as_reported": true,
+  "random_seed": 3794,
+  "references": [
+    {
+      "arxiv_abs_resolved": true,
+      "arxiv_abs_url": "https://arxiv.org/abs/2605.04291",
+      "arxiv_id": "arXiv:2605.04291",
+      "as_reported_note": "Quality and reasoning-task comparisons are source-reported only; re-derive before forward-facing Carnot use.",
+      "as_reported_summary": "Builds a discrete diffusion language model using Glauber dynamics and a pretrained causal/masked LM as the energy function; reports better quality than prior diffusion LMs and competitive results with comparable autoregressive models.",
+      "numbers_are_as_reported": true,
+      "relevance": "Direct EDLM follow-up surface: energy over the discrete diffusion trajectory, but with pretrained-LM energy support rather than a tiny from-scratch EBT.",
+      "source_kind": "arxiv_abs",
+      "submitted": "submitted 2026-05-05",
+      "title": "Leveraging Pretrained Language Models as Energy Functions for Glauber Dynamics Text Diffusion",
+      "tracks": [
+        "EDLM next-thesis preflight"
+      ],
+      "venue_context": "ACL 2026"
+    },
+    {
+      "arxiv_abs_resolved": true,
+      "arxiv_abs_url": "https://arxiv.org/abs/2601.21484",
+      "arxiv_id": "arXiv:2601.21484",
+      "as_reported_note": "Benchmark gains and convergence claims are source-reported only.",
+      "as_reported_summary": "Frames masked-LM sampling as a reference policy plus an energy term and estimates that term online; reports improvements across autoregressive and diffusion language models on reasoning, coding, and science benchmarks.",
+      "numbers_are_as_reported": true,
+      "relevance": "Energy-as-residual-corrector precedent for the EDLM route: use an energy term to steer a language-model transition kernel without reopening the bounded Thesis-A generator route.",
+      "source_kind": "arxiv_abs",
+      "submitted": "submitted 2026-01-29; last revised 2026-05-19",
+      "title": "ETS: Energy-Guided Test-Time Scaling for Training-Free RL Alignment",
+      "tracks": [
+        "EDLM next-thesis preflight"
+      ],
+      "venue_context": "ICML 2026"
+    },
+    {
+      "arxiv_abs_resolved": true,
+      "arxiv_abs_url": "https://arxiv.org/abs/2605.20270",
+      "arxiv_id": "arXiv:2605.20270",
+      "as_reported_note": "Validity bounds, stream counts, and comparison outcomes are source-reported only.",
+      "as_reported_summary": "Provides a deployment-side conformal wrapper for RLVR-trained LLMs with anytime pathwise selective-risk control; reports evaluation over specialist benchmarks, adversarial shift cells, and live online-LoRA rounds.",
+      "numbers_are_as_reported": true,
+      "relevance": "Clean banked-verifier product surface: a per-round abstain/act certificate for adaptive streams, matching Carnot's selective verification mode better than static threshold prose.",
+      "source_kind": "arxiv_abs",
+      "submitted": "submitted 2026-05-18",
+      "title": "Conformal Selective Acting: Anytime-Valid Risk Control for RLVR-Trained LLMs",
+      "tracks": [
+        "selective-prediction / abstention surface"
+      ]
+    },
+    {
+      "arxiv_abs_resolved": true,
+      "arxiv_abs_url": "https://arxiv.org/abs/2603.12529",
+      "arxiv_id": "arXiv:2603.12529",
+      "as_reported_note": "Length and latency reductions are source-reported only.",
+      "as_reported_summary": "Trains an inference-time early-exit strategy from first-answer positions; reports 14%-55% average CoT length reductions and more than 2x latency reduction on practical reasoning datasets.",
+      "numbers_are_as_reported": true,
+      "relevance": "Tier-3 predictive-verification precedent: predict when reasoning has enough evidence to stop or escalate, instead of verifying only after the full process trace.",
+      "source_kind": "arxiv_abs",
+      "submitted": "submitted 2026-03-13; last revised 2026-05-14",
+      "title": "TERMINATOR: Learning Optimal Exit Points for Early Stopping in Chain-of-Thought Reasoning",
+      "tracks": [
+        "Tier-3 predictive verification"
+      ]
+    },
+    {
+      "arxiv_abs_resolved": true,
+      "arxiv_abs_url": "https://arxiv.org/abs/2603.05488",
+      "arxiv_id": "arXiv:2603.05488",
+      "as_reported_note": "Probe timing and token-reduction numbers are source-reported only.",
+      "as_reported_summary": "Compares activation probes, early forced answering, and CoT monitors; reports that final answers can be decodable from activations earlier than monitors detect and that probe-guided early exit can reduce tokens with similar accuracy.",
+      "numbers_are_as_reported": true,
+      "relevance": "Warns that process monitors can trail latent model belief; Carnot's Tier-3 head should predict verifier outcomes from internal/process features while treating CoT text as gameable evidence.",
+      "source_kind": "arxiv_abs",
+      "submitted": "submitted 2026-03-05; last revised 2026-05-28",
+      "title": "Reasoning Theater: Disentangling Model Beliefs from Chain-of-Thought",
+      "tracks": [
+        "Tier-3 predictive verification",
+        "gaming-resistance"
+      ]
+    },
+    {
+      "arxiv_abs_resolved": true,
+      "arxiv_abs_url": "https://arxiv.org/abs/2602.01750",
+      "arxiv_id": "arXiv:2602.01750",
+      "as_reported_note": "Mitigation and cross-domain generalization outcomes are source-reported only.",
+      "as_reported_summary": "Models reward hacking as a Hacker/Auditor game and uses Auditor-Guided RLHF to gate reward signals; reports mitigation of sycophancy, verbosity, and code-gaming scenarios with cross-domain generalization.",
+      "numbers_are_as_reported": true,
+      "relevance": "Complements the `.346` verifier-gaming entry with a defense surface: adversarial auditing plus reward gating as a peer pattern for Carnot's gaming-resistance characterization.",
+      "source_kind": "arxiv_abs",
+      "submitted": "submitted 2026-02-02",
+      "title": "Adversarial Reward Auditing for Active Detection and Mitigation of Reward Hacking",
+      "tracks": [
+        "gaming-resistance"
+      ]
+    }
+  ],
+  "references_added": [
+    "arXiv:2605.04291",
+    "arXiv:2601.21484",
+    "arXiv:2605.20270",
+    "arXiv:2603.12529",
+    "arXiv:2603.05488",
+    "arXiv:2602.01750"
+  ],
+  "reproducibility_checksum": "ac026cbec39cfe203f1f2b7e47d59f0c53b2c6954cdd27eeadaf6306b93dd0ff",
+  "research_references_path": "research-references.md",
+  "schema": "carnot.external_research_refresh.v1",
+  "section_appended_not_replaced": true,
+  "section_header": "## .347 additions - EDLM preflight, certified abstention, predictive verification, and gaming-resistance (2026-06-04)",
+  "section_sha256": "c7a3e1d35ab3029c1896a92865530efb62b2afab28ef3efd0b1f807bcdb585ed"
+}

@@ -16875,6 +16875,58 @@ without a critical flag.
 |---|---|---|
 | REQ-REPORT-3783 | Planned (`python/carnot/reporting/external_research_refresh_3783.py`, `scripts/experiment_3783_external_research_refresh.py`) | Planned (`tests/python/test_experiment_3783_external_research_refresh.py`) |
 
+### REQ-REPORT-3794: External Research Refresh .347
+
+The Exp 3794 workflow SHALL append, not replace, a `## .347 additions`
+section to `research-references.md` filing four to six externally surfaced
+late-2025 or 2026 papers from the `.347` planning sweep. The refresh SHALL
+cover the `.347` forward tracks: EDLM / energy-based discrete-diffusion
+language modeling follow-ups, selective prediction or conformal abstention for
+LLM verification, predictive or early-exit process verification, and verifier
+robustness or reward-gaming defenses. It SHALL NOT duplicate the `.346`
+arXiv:2604.15149 entry. The filed references SHALL include arXiv:2605.04291,
+arXiv:2601.21484, arXiv:2605.20270, arXiv:2603.12529, arXiv:2603.05488, and
+arXiv:2602.01750.
+
+The appended section SHALL mirror the `.345` and `.346` section style: a dated
+heading, a short context paragraph, and one bulleted entry per paper with arXiv
+ID, title, one-line as-reported summary, and explicit `.347` track assignment.
+The refresh SHALL record that every peer number is source-reported and must be
+independently re-derived before entering a forward-facing Carnot claim.
+
+The workflow SHALL use aggregation/documentation provenance hygiene, SHALL NOT
+include GGUF, CUDA, or live-model markers in the terminal artifact, and SHALL
+NOT edit operator-curated docs or `scripts/research_conductor.py`.
+
+The terminal artifact SHALL be written to
+`results/experiment_3794_external_research_refresh.json` and SHALL include bare
+top-level values for `honest_verdict`, `inference_substrate`,
+`references_added`, `n_references_added`, `section_appended_not_replaced`,
+`numbers_are_as_reported`, `random_seed`, `reproducibility_checksum`, and
+`duration_s`, plus `field_principles` documenting why each required value
+exists. `inference_substrate` SHALL equal
+`aggregation_from_upstream_artifacts (principle: a documentation append, no live model).`
+The terminal verdict SHALL equal
+`complete: external_research_refresh_347_filed_references_section_appended_numbers_as_reported`.
+
+#### SCENARIO-REPORT-3794: .347 Research References Are Filed Append-Only
+
+**Given** `research-references.md` already contains `.345 additions` and
+`.346 additions`
+**When** the Exp 3794 workflow runs
+**Then** it preserves all prior content byte-for-byte as a prefix, appends a
+single `.347 additions` section, files the required arXiv IDs with EDLM /
+selective-prediction / predictive-verification / gaming-resistance relevance,
+writes the required aggregation-only terminal artifact, marks peer numbers
+as-reported rather than Carnot measurements, and passes adversarial
+verification without a critical flag.
+
+## Implementation Status (REQ-REPORT-3794)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-3794 | Planned (`python/carnot/reporting/external_research_refresh_3794.py`, `scripts/experiment_3794_external_research_refresh.py`) | Planned (`tests/python/test_experiment_3794_external_research_refresh.py`) |
+
 ### REQ-REPORT-3785: Capstone V346 Post-Bounded Convergence Synthesis
 
 The Exp 3785 workflow SHALL aggregate Exp 3776 through Exp 3784 from checked-in
