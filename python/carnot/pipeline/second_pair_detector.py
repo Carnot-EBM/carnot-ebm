@@ -11,8 +11,9 @@ instead of publishing a noisy or leaked code score.
 
 Spec: REQ-SPOE-3657, REQ-SPOE-3657-ARTIFACT,
       REQ-SPOE-3671, REQ-SPOE-3696,
-      REQ-SPOE-3706, SCENARIO-SPOE-3657, SCENARIO-SPOE-3658,
-      SCENARIO-SPOE-3696, SCENARIO-SPOE-3706
+      REQ-SPOE-3706, REQ-SPOE-3779, SCENARIO-SPOE-3657,
+      SCENARIO-SPOE-3658, SCENARIO-SPOE-3696, SCENARIO-SPOE-3706,
+      SCENARIO-SPOE-3779
 """
 
 from __future__ import annotations
@@ -633,6 +634,8 @@ def score_candidates(
     root: Path | str = ".",
     examples: Sequence[LabeledDetectorExample] | None = None,
     default_domain: str | None = None,
+    abstention_mode: bool = False,
+    abstention_threshold: float | None = None,
 ) -> JsonDict:
     """Score candidates with the shipped calibrated fused detector surface."""
 
@@ -700,7 +703,27 @@ def score_candidates(
             "abstained": False,
         }
     rows = [rows_by_index[idx] for idx in range(len(normalized))]
-    return {
+    abstention_summary = None
+    if abstention_mode:
+        from carnot.pipeline import certified_abstention_surface as abstention
+
+        config = abstention.load_certified_abstention_config()
+        operator_override = abstention_threshold is not None
+        if operator_override:
+            config = config.with_threshold(float(abstention_threshold))
+        rows = [
+            (
+                abstention.apply_certified_abstention(row, config)
+                if row.get("calibrated_error_score") is not None
+                else row
+            )
+            for row in rows
+        ]
+        abstention_summary = abstention.abstention_mode_summary(
+            config,
+            operator_threshold_override=operator_override,
+        )
+    result = {
         "surface": "score_candidates",
         "wired_surface": WIRED_SURFACE,
         "detector_module_path": DETECTOR_MODULE_PATH,
@@ -725,6 +748,9 @@ def score_candidates(
         },
         "scores": rows,
     }
+    if abstention_summary is not None:
+        result["abstention_mode"] = abstention_summary
+    return result
 
 
 def load_cached_labeled_examples(

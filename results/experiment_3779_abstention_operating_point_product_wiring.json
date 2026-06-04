@@ -1,0 +1,246 @@
+{
+  "abstention_mode_wired": true,
+  "certified_threshold_used": 0.733216,
+  "default_off_preserves_prior_behavior": true,
+  "doc_proposal_emitted_not_curated_edit": true,
+  "doc_proposal_path": "/home/ianblenke/github.com/ianblenke/carnot/docs/research-notes/abstention-mode-doc-proposal-20260604.md",
+  "duration_s": 11.73379,
+  "e2e_abstention_passed": true,
+  "e2e_result": {
+    "default_off_ok": true,
+    "enabled_ok": true,
+    "enabled_scores": [
+      {
+        "abstained": false,
+        "abstention_mode_enabled": true,
+        "abstention_score": 0.993203,
+        "abstention_threshold": 0.733216,
+        "abstention_verdict": "confident_error",
+        "calibrated_error_score": 0.993203,
+        "candidate_id": "exp3779_confident_error",
+        "certified_abstention": {
+          "certified_risk_bound": 0.037646,
+          "coverage": 0.998218,
+          "delta": 0.05,
+          "n_calibration": 2619,
+          "threshold": 0.733216,
+          "threshold_source": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_3771_certified_abstention_operating_point.json"
+        },
+        "confidence_error": 1.0,
+        "domain": "math",
+        "ensemble_energy": 1.0,
+        "operating_point": {
+          "actual_fpr": 0.1,
+          "expected_recall": 0.970588,
+          "fpr_budget": 0.1,
+          "threshold": 0.012717
+        },
+        "route_to_review": false
+      },
+      {
+        "abstain_reason": "uncertain / route to review",
+        "abstained": true,
+        "abstention_mode_enabled": true,
+        "abstention_score": 0.656864,
+        "abstention_threshold": 0.733216,
+        "abstention_verdict": "uncertain / route to review",
+        "calibrated_error_score": 0.656864,
+        "candidate_id": "exp3779_uncertain_midpoint",
+        "certified_abstention": {
+          "certified_risk_bound": 0.037646,
+          "coverage": 0.998218,
+          "delta": 0.05,
+          "n_calibration": 2619,
+          "threshold": 0.733216,
+          "threshold_source": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_3771_certified_abstention_operating_point.json"
+        },
+        "confidence_error": 0.5,
+        "domain": "math",
+        "ensemble_energy": 0.7,
+        "operating_point": {
+          "actual_fpr": 0.1,
+          "expected_recall": 0.970588,
+          "fpr_budget": 0.1,
+          "threshold": 0.012717
+        },
+        "route_to_review": true
+      }
+    ]
+  },
+  "field_principles": {
+    "abstention_mode_wired": "BARE bool -- the opt-in abstention mode is callable in the verify API.",
+    "certified_threshold_used": "Threshold loaded from Exp 3771 so the surface traces to the certified operating point.",
+    "default_off_preserves_prior_behavior": "BARE bool -- default OFF keeps existing integrators unchanged.",
+    "doc_proposal_emitted_not_curated_edit": "BARE bool -- a proposal was written and curated docs were left untouched.",
+    "duration_s": "Wall-clock plausibility floor.",
+    "e2e_abstention_passed": "BARE bool -- above-threshold confident and below-threshold abstain were confirmed.",
+    "honest_verdict": "Terminal prefix; blocked_<resource> if a precondition failed.",
+    "inference_substrate": "Scores cached triples with the verifier ensemble and does not run live LLM inference.",
+    "mcp_surface_confirmed": "BARE bool -- MCP score_candidates accepted the opt-in mode over protocol.",
+    "model_specs": "Names the verifier-scoring substrate and certified-threshold source.",
+    "random_seed": "Determinism precondition.",
+    "reproducibility_checksum": "Content hash catches drift.",
+    "tests_assert_real_behavior": "BARE bool -- tests call the real scoring behavior instead of hard-coded strings."
+  },
+  "honest_verdict": "complete: abstention_mode_wired_into_verify_api_default_off_e2e_passed_doc_proposal_emitted_not_curated_edit",
+  "inference_substrate": "verifier_ensemble_against_cached_candidates",
+  "mcp_protocol_result": {
+    "abstention_mode": {
+      "certified_risk_bound": 0.037646,
+      "certified_threshold": 0.733216,
+      "coverage": 0.998218,
+      "delta": 0.05,
+      "enabled": true,
+      "n_calibration": 2619,
+      "operator_threshold_override": false,
+      "score_orientation": "larger abstention_score means a more confident verifier judgment",
+      "threshold_source": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_3771_certified_abstention_operating_point.json"
+    },
+    "calibration_source": {
+      "code_abstention": {
+        "abstain_on_code": true,
+        "code_verdict": "no_code_verdict",
+        "n_code_examples_seen": 0,
+        "reason": "Exp 3705 leak audit set code_signal_survives_heldout=false after finding the Exp 3695 in-corpus 1.0 code AUROC was separable-by-construction; the shipped detector is narrowed to math-only for product verdicts."
+      },
+      "corpus_status": {
+        "code": {
+          "balanced_exp3658": true,
+          "code_native_exp3695": false,
+          "n_examples": 60,
+          "path": "data/code_verification_corpus_v2.jsonl",
+          "reason": "Exp 3705 leak audit set code_signal_survives_heldout=false after finding the Exp 3695 in-corpus 1.0 code AUROC was separable-by-construction; the shipped detector is narrowed to math-only for product verdicts.",
+          "status": "abstained"
+        },
+        "math": {
+          "n_examples": 6548,
+          "path": "data/fover_corpus_v4.json",
+          "status": "loaded"
+        }
+      },
+      "n_examples_per_domain": {
+        "math": 6548
+      },
+      "random_seed": 3671
+    },
+    "code_operating_point_scope": "math_only_with_code_abstain; math AUROC 0.98/ECE 0.009 preserved; Exp 3705 found the Exp 3695 in-corpus code AUROC 1.0 leaked and code_signal_survives_heldout=false, so code-domain candidates return no code verdict until a non-leaky held-out code operating point is earned",
+    "detector_module_path": "python/carnot/pipeline/second_pair_detector.py",
+    "domain_metrics": {
+      "calibration_brier_ece_per_domain": {
+        "math": {
+          "brier": 0.013543,
+          "ece": 0.008158
+        }
+      },
+      "confidence_alone_auroc_per_domain": {
+        "math": 0.5
+      },
+      "ensemble_alone_auroc_per_domain": {
+        "math": 0.979656
+      },
+      "fused_detector_auroc_per_domain": {
+        "math": 0.979656
+      }
+    },
+    "is_error": false,
+    "protocol": "mcp_stdio_json_rpc",
+    "scores": [
+      {
+        "abstained": false,
+        "abstention_mode_enabled": true,
+        "abstention_score": 0.993203,
+        "abstention_threshold": 0.733216,
+        "abstention_verdict": "confident_error",
+        "calibrated_error_score": 0.993203,
+        "candidate_id": "exp3779_confident_error",
+        "certified_abstention": {
+          "certified_risk_bound": 0.037646,
+          "coverage": 0.998218,
+          "delta": 0.05,
+          "n_calibration": 2619,
+          "threshold": 0.733216,
+          "threshold_source": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_3771_certified_abstention_operating_point.json"
+        },
+        "confidence_error": 1.0,
+        "domain": "math",
+        "ensemble_energy": 1.0,
+        "operating_point": {
+          "actual_fpr": 0.1,
+          "expected_recall": 0.970588,
+          "fpr_budget": 0.1,
+          "threshold": 0.012717
+        },
+        "route_to_review": false
+      },
+      {
+        "abstain_reason": "uncertain / route to review",
+        "abstained": true,
+        "abstention_mode_enabled": true,
+        "abstention_score": 0.656864,
+        "abstention_threshold": 0.733216,
+        "abstention_verdict": "uncertain / route to review",
+        "calibrated_error_score": 0.656864,
+        "candidate_id": "exp3779_uncertain_midpoint",
+        "certified_abstention": {
+          "certified_risk_bound": 0.037646,
+          "coverage": 0.998218,
+          "delta": 0.05,
+          "n_calibration": 2619,
+          "threshold": 0.733216,
+          "threshold_source": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_3771_certified_abstention_operating_point.json"
+        },
+        "confidence_error": 0.5,
+        "domain": "math",
+        "ensemble_energy": 0.7,
+        "operating_point": {
+          "actual_fpr": 0.1,
+          "expected_recall": 0.970588,
+          "fpr_budget": 0.1,
+          "threshold": 0.012717
+        },
+        "route_to_review": true
+      }
+    ],
+    "surface": "score_candidates",
+    "tool_name": "score_candidates",
+    "wired_surface": "score_candidates MCP tool and carnot score-candidates CLI"
+  },
+  "mcp_surface_confirmed": true,
+  "model_specs": {
+    "certified_threshold_artifact_sha256": "f81225b220dd5bac",
+    "certified_threshold_source": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_3771_certified_abstention_operating_point.json",
+    "live_llm_inference": false,
+    "math_signal_verifiers": [
+      "SemEnergyProbe",
+      "Z3MathVerifier",
+      "RPRMStepReward"
+    ],
+    "scoring_entrypoint": "carnot.pipeline.second_pair_detector.score_candidates",
+    "verifiers": [
+      "controlled_invariance_executor_v2",
+      "executable_monitor_runtime_adapter",
+      "ast_structure_verifier",
+      "code_structural_dependency_verifier"
+    ]
+  },
+  "preconditions_checked": {
+    "certified_threshold": {
+      "available": true,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_3771_certified_abstention_operating_point.json",
+      "selected_threshold": 0.733216
+    },
+    "interpreter": {
+      "available": true,
+      "expected_suffix": ".venv/bin/python",
+      "value": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python"
+    },
+    "package_import": {
+      "available": true,
+      "module_path": "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/__init__.py",
+      "version": "0.1.0b1"
+    }
+  },
+  "random_seed": 3779,
+  "reproducibility_checksum": "be758f75fa949d3f",
+  "tests_assert_real_behavior": true
+}
