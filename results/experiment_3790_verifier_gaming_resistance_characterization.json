@@ -1,0 +1,148 @@
+{
+  "adversarial_verify_clean": true,
+  "adversarial_verify_report": {
+    "flag_count": 0,
+    "flags": [],
+    "max_severity": -1
+  },
+  "artifact": "experiment_3790_verifier_gaming_resistance_characterization",
+  "cached_fover_corpus_path": "/home/ianblenke/github.com/ianblenke/carnot/data/fover_corpus.jsonl",
+  "duration_s": 0.189575,
+  "field_principles": {
+    "duration_s": "Measured wall-clock duration, not padded.",
+    "gaming_degradation_curve": "Per-perturbation step-error detection AUROC and flag rate versus clean.",
+    "headline_unchanged": "Bare bool; the frozen 0.9131 headline is untouched.",
+    "honest_verdict": "Terminal prefix; the robustness-characterization outcome; blocked_<resource> if a precondition failed.",
+    "inference_substrate": "Re-scores cached and perturbed FoVer triples through the verifier ensemble; no live model.",
+    "model_specs": "Names the four verifiers and perturbation set; no live model path.",
+    "n_samples": "Bare sample count; >=200 for the completed characterization.",
+    "not_a_moat_reopen": "Bare bool; this is not the closed moat/independence thread.",
+    "perturbations_tested": "Transparent deterministic text transforms applied to wrong steps only.",
+    "random_seed": "Determinism precondition.",
+    "reproducibility_checksum": "Content hash catches drift.",
+    "verifier_degrades_where": "Perturbations whose AUROC or wrong-step flag rate drops materially.",
+    "verifier_holds_where": "Perturbations whose AUROC and wrong-step flag rate do not materially drop."
+  },
+  "gaming_degradation_curve": {
+    "arithmetic_result_plus_one": {
+      "auroc": 0.945694,
+      "auroc_delta_vs_clean": 0.005278,
+      "classification": "holds",
+      "mean_wrong_score_delta_vs_clean": 0.002114,
+      "n_wrong_steps": 120,
+      "wrong_step_flag_rate": 0.875,
+      "wrong_step_flag_rate_delta_vs_clean": 0.0
+    },
+    "clean": {
+      "auroc": 0.940417,
+      "flag_threshold_from_clean_scores": 0.556938,
+      "n_wrong_steps": 120,
+      "wrong_step_flag_rate": 0.875
+    },
+    "context_compaction": {
+      "auroc": 0.391806,
+      "auroc_delta_vs_clean": -0.548611,
+      "classification": "degrades",
+      "mean_wrong_score_delta_vs_clean": -0.506604,
+      "n_wrong_steps": 120,
+      "wrong_step_flag_rate": 0.133333,
+      "wrong_step_flag_rate_delta_vs_clean": -0.741667
+    },
+    "irrelevant_truth_padding": {
+      "auroc": 0.96816,
+      "auroc_delta_vs_clean": 0.027743,
+      "classification": "holds",
+      "mean_wrong_score_delta_vs_clean": 0.08082,
+      "n_wrong_steps": 120,
+      "wrong_step_flag_rate": 0.925,
+      "wrong_step_flag_rate_delta_vs_clean": 0.05
+    },
+    "operand_swap": {
+      "auroc": 0.943854,
+      "auroc_delta_vs_clean": 0.003437,
+      "classification": "holds",
+      "mean_wrong_score_delta_vs_clean": 0.00498,
+      "n_wrong_steps": 120,
+      "wrong_step_flag_rate": 0.875,
+      "wrong_step_flag_rate_delta_vs_clean": 0.0
+    },
+    "sign_flip": {
+      "auroc": 0.942986,
+      "auroc_delta_vs_clean": 0.002569,
+      "classification": "holds",
+      "mean_wrong_score_delta_vs_clean": 0.001695,
+      "n_wrong_steps": 120,
+      "wrong_step_flag_rate": 0.875,
+      "wrong_step_flag_rate_delta_vs_clean": 0.0
+    }
+  },
+  "headline_unchanged": true,
+  "honest_verdict": "complete: verifier_gaming_resistance_characterized_degradation_curve_n240_holds_and_degrades_documented_not_a_moat_reopen_headline_unchanged",
+  "inference_substrate": "verifier_ensemble_against_cached_candidates",
+  "methodology_note": "arXiv:2604.15149 is used as AS-REPORTED motivation only; this artifact is a Carnot measurement of deterministic perturbations over cached FoVer rows.",
+  "model_specs": {
+    "perturbation_set": [
+      "arithmetic_result_plus_one",
+      "operand_swap",
+      "sign_flip",
+      "irrelevant_truth_padding",
+      "context_compaction"
+    ],
+    "production_weights": {
+      "fr11_session_memory": 1.0,
+      "tier0r_curry_howard": 0.9,
+      "tier0s_arithmetic_gap": 0.0,
+      "tier0u_logical_consistency": 0.1
+    },
+    "scoring_protocol": "Exp 2837 shipped four-verifier production weighting over cached FoVer rows; labels are used only for AUROC and flag-rate measurement.",
+    "verifiers": [
+      "fr11_session_memory",
+      "tier0r_curry_howard",
+      "tier0s_arithmetic_gap",
+      "tier0u_logical_consistency"
+    ]
+  },
+  "n_samples": 240,
+  "not_a_moat_reopen": true,
+  "perturbations_tested": [
+    "arithmetic_result_plus_one",
+    "operand_swap",
+    "sign_flip",
+    "irrelevant_truth_padding",
+    "context_compaction"
+  ],
+  "preconditions_checked": [
+    {
+      "available": true,
+      "detail": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+      "resource": "interpreter_not_venv"
+    },
+    {
+      "available": true,
+      "detail": "numpy_and_sklearn_importable",
+      "resource": "python_deps_missing"
+    },
+    {
+      "available": true,
+      "detail": "loaded=fr11_session_memory,tier0r_curry_howard,tier0s_arithmetic_gap,tier0u_logical_consistency",
+      "resource": "four_verifiers_unavailable"
+    },
+    {
+      "available": true,
+      "detail": "path=/home/ianblenke/github.com/ianblenke/carnot/data/fover_corpus.jsonl; labeled_rows=8829; required>=240",
+      "resource": "fover_corpus_insufficient"
+    }
+  ],
+  "random_seed": 3790,
+  "reproducibility_checksum": "3ea85d7a8588989c06b6061755296a2de98c4c808200e471e52e1ff017e29526",
+  "schema": "carnot.verifier_gaming_resistance_characterization.v1",
+  "verifier_degrades_where": [
+    "context_compaction"
+  ],
+  "verifier_holds_where": [
+    "arithmetic_result_plus_one",
+    "operand_swap",
+    "sign_flip",
+    "irrelevant_truth_padding"
+  ]
+}

@@ -19884,3 +19884,41 @@ Weaver-style scoring
 dependency-aware AUROC exceeds external-comparator AUROC and the paired delta
 CI excludes zero; otherwise the artifact records the tie/loss/null verdict
 without burying the external baseline result.
+
+### REQ-VERIFY-3790: FoVer Verifier Gaming-Resistance Characterization
+
+The repository shall provide a module
+`python/carnot/verify/verifier_gaming_resistance_characterization.py` and a
+script `scripts/experiment_3790_verifier_gaming_resistance_characterization.py`
+that characterize the shipped Exp 2837 FoVer verifier ensemble against cheap,
+deterministic gaming perturbations inspired by arXiv:2604.15149.
+- The workflow SHALL run under `.venv/bin/python`, confirm numpy/sklearn and the
+  four shipped verifiers are importable, and confirm the cached FoVer corpus is
+  reachable by absolute path before perturbing data. Failed setup SHALL write a
+  `blocked_<resource>` terminal artifact without fabricated metrics.
+- The workflow SHALL sample at least 200 labeled cached FoVer steps with a fixed
+  `random_seed`, apply only transparent deterministic text perturbations to the
+  wrong-step candidates, and SHALL NOT call a live LLM, GGUF, or CUDA path.
+- The workflow SHALL re-score clean and perturbed rows with the shipped
+  `fr11_session_memory`, `tier0r_curry_howard`, `tier0s_arithmetic_gap`, and
+  `tier0u_logical_consistency` scoring helpers and report per-perturbation
+  AUROC plus wrong-step flag-rate deltas as a degradation curve.
+- The artifact SHALL include the required methodology fields:
+  `honest_verdict`, `inference_substrate`, `gaming_degradation_curve`,
+  `n_samples`, `perturbations_tested`, `verifier_holds_where`,
+  `verifier_degrades_where`, `not_a_moat_reopen`, `headline_unchanged`,
+  `model_specs`, `random_seed`, `reproducibility_checksum`, and measured
+  `duration_s`.
+- The artifact SHALL state `not_a_moat_reopen=true` and
+  `headline_unchanged=true`; it characterizes robustness limits and SHALL NOT
+  claim the frozen 0.9131 headline changed or that the verifier is gaming-proof.
+
+### SCENARIO-VERIFY-3790: Perturbation Curve Records Holds And Degradation
+
+**Given** the cached FoVer corpus and the shipped four-verifier scoring helpers
+**When** Exp 3790 applies deterministic wrong-step perturbations and re-scores
+clean versus perturbed rows
+**Then** the artifact records an honest degradation curve with AUROC and
+wrong-step flag-rate deltas, names where the verifier still flags the wrong
+steps, names where detection degrades, passes adversarial artifact verification,
+and leaves the moat/independence thread and 0.9131 headline unchanged.
