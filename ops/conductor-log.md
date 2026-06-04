@@ -7738,3 +7738,5 @@ ERROR: {
 | 2026-06-04 06:28 UTC | External research refresh for .346: file the genui | OK | 98 passed in 5.84s |
 | 2026-06-04 06:39 UTC | KV260 opportunistic continuity audit -- confirm te | OK | 90 passed in 5.61s |
 | 2026-06-04 06:56 UTC | Capstone .346 -- aggregate the POST-BOUNDED CONVER | OK | 90 passed in 5.36s |
+| 2026-06-04 07:33 UTC | Plan milestone 2026.06.347 | OK | 11 tasks proposed |
+| 2026-06-04 07:35 UTC | Milestone 2026.06.347 activated | OK | 11 tasks queued |
