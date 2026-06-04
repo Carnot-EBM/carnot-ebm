@@ -1,220 +1,242 @@
-# Research Roadmap — Milestone 2026.06.349
+# Research Roadmap — Milestone 2026.06.351
 
-**POST-CONVERGENCE — LEAN MAINTENANCE + OPERATOR-FORK STAGING**
-
-**Planned:** 2026-06-04 (outer-loop, Claude Opus 4.8)
-**Prior milestone:** 2026.06.348 (POST-CONVERGENCE headline-advancement + product harden/repair)
-**Milestone doc convention:** rolling "next" design doc (overwrites the prior `-vNEXT`; the prior is archived in `research-complete.yaml` via the activation task).
-
----
-
-## 0. One-paragraph summary
-
-The project is **converged**. Both energy mechanisms are bounded honest-negatives
-(energy-as-selector P0.1; energy-as-generator Thesis-A/EBT, triple-confirmed
-bounded at scale). The verifier product is **banked and hardened**: FoVer AUROC
-0.9131 frozen, `paper_ready = TRUE` (G1∧G2∧G3∧G4), the context_compaction gaming
-evasion is closed (exp3800), a Tier-3 fast-path gate works (exp3803, 56% skip at
-no regression), and the Anomaly-Escalation classifier was tuned to a usable point
-(exp3802: false-escalation 0.0, frame-violating recall 1.0). The energy-foundation
-dream is closing; the durable asset is the math step-error verifier; the
-irreplaceable engine is the **human as frame-generator** (the documented
-Verification Trap — the loop cannot self-seed a paradigm).
-
-`.349 does **no** new existential research and re-grinds **nothing** bounded. It
-spends only on legitimate post-convergence surfaces (north-star §1): **wire** the
-now-usable Anomaly-Escalation advisory hook (the cheap Deep-Think-P3 upgrade,
-recommend-only, conductor unmodified), **repair** the blocked HTTP/REST abstention
-surface (Decentralization Rule 4, third surface), **record the product-headline
-status honestly** (both candidate product positives now fail provenance), **continue**
-the mandated Tier-3 self-learning, **confirm** the publication-gate invariants, and
-**stage** the EDLM seed as a one-command operator option. It carries the operator
-fork forward prominently: **the substantive next move — SEED EDLM (preflight GO) or
-FREEZE the loop — is the operator's to make.**
+**Status:** PROPOSED (planner draft, 2026-06-04, Claude Opus 4.8)
+**Theme:** Recursive-Refiner Phase-3 thesis — UNBLOCK + cheap kill-gates + the
+distillation-oracle path; verifier-moat deepening (contamination-free formal
+core + error-independence); hardware continuity; lean close-out.
+**Prior milestone:** 2026.06.350 (operator-activated; recursive-refiner Task 0
++ FoVer formal-vs-learned ablation).
+**Milestone doc this file:** `openspec/change-proposals/research-roadmap-vNEXT.md`
+**Provenance:** `docs/research-notes/phase3-recursive-refiner-thesis.md`
+(operator-seeded 2026-06-04), `[[reference_tiny_recursive_reasoning_models]]`,
+`[[reference_deep_think_post_bounded_2026_06]]`.
 
 ---
 
-## 1. What the previous milestone (.348) proved
+## 1. What the previous milestone (.350) proved
 
-| Result | Artifact | Status for .349 |
-|---|---|---|
-| G4 product-headline re-run reproduced **delta = 0.0pp** (the +18pp code-repair lift did NOT survive a clean provenance run; CPU-GGUF reduced-n, baseline 0.13 → repair 0.13) | exp3798 | Product code-repair headline **stays demoted** |
-| Provenance re-confirmation: code-repair re-run is now G4-provenance-complete but delta=0 → `not_yet_eligible` | exp3799 | Headline rests on FoVer methods claim only |
-| context_compaction gaming evasion **CLOSED**, clean AUROC preserved (n=240) | exp3800 | Verifier product hardened; no open evasion remains (panel of 5 perturbations: only context_compaction degraded, now closed) |
-| HTTP/REST abstention surface **BLOCKED** (`blocked_http_abstention_e2e_failed`) | exp3801 | **Repair target for .349** |
-| Anomaly-Escalation classifier tuned: false-escalation 0.83 → **0.0**, recall **1.0**, `supports_wiring_in = true` | exp3802 | **Now wirable as a recommend-only advisory hook (.349)** |
-| Tier-3 fast-path gate: **skip 0.56**, effective AUROC 0.9227 in frozen CI, no regression, operating point persisted | exp3803 | Self-learning continues from here |
-| Capstone: paper_ready TRUE; frozen 0.9131 unchanged; both energy routes bounded; operator fork carried forward | exp3807 | Invariants to re-assert |
+`.350 was a single-focus operator-activated milestone with two tasks:
 
-**Reading-discipline catch (2026-06-04, this planning pass):** exp2090 (CRANE +15pp),
-which exp3799 reported as G4-passing, **flags CRITICAL on a live adversarial re-check**
-(substrate=None, duration 0.009s — not a real 50-problem HumanEval run). So **both**
-candidate product positives (code-repair +18pp and CRANE +15pp) now fail provenance.
-The **FoVer methods headline (0.9131) is the sole defensible headline** — exactly
-north-star §1. `.349` records this honestly rather than consolidating on a flagged
-artifact.
+- **exp3819 — Latent-Symbol Bridge (recursive-refiner Task 0):**
+  `blocked_trm_checkpoint_not_available`. The probe never ran — the ONLY
+  blocker was a missing pretrained TRM checkpoint (and no bounded tiny-train
+  was attempted within budget). The scientific question (can an external
+  discrete verifier read a recursive refiner's intermediate latents in-loop?)
+  remains OPEN, not answered.
+- **exp3820 — FoVer formal-vs-learned ablation:**
+  `complete: INCONCLUSIVE_ablation_harness_unfaithful_full0.8929_expected_0.9131`.
+  The ablation harness reproduced **0.8929** for the full ensemble, outside the
+  ±0.01 sanity band around the frozen **0.9131** headline → the deltas are not
+  yet trustworthy. BUT the run surfaced a **striking, provisional** signal worth
+  confirming: `formal_only_auroc = 0.9612` (AST + SemanticConsistency + Z3,
+  **no trained weights**) > `full = 0.8929` > `learned_only = 0.8898`. If real,
+  the **contamination-free formal core retains/exceeds the entire moat** — the
+  strongest possible answer to the Deep-Think Q4 OOD-contamination critique.
+  Cannot be cited until the harness reproduces 0.9131.
 
----
+**Converged invariants carried forward (unchanged):** `paper_ready = TRUE`
+(G1–G4 pass; G2 closed via the CI reproducer); FoVer **0.9131** frozen;
+energy-as-selector (P0.1) bounded; energy-as-generator (EBT / Thesis-A) bounded
+at small scale. The loop does NOT self-seed a new paradigm (DT-P3 Verification
+Trap) — the recursive-refiner thesis is an **operator seed**, which is why it is
+the live thread this milestone advances.
 
-## 2. The three biggest gaps (PRD vision vs current state) and how .349 touches them
+## 2. The three biggest gaps (current state vs PRD vision)
 
-1. **Self-improving at inference speed (PRD FR-11 / Continuous Self-Learning Tier 3).**
-   v20 (.348) wired the Tier-3 predictor as a fast-path gate on ONE split. The gap:
-   does the 0.56 skip-rate / no-regression operating point **generalize** across
-   seeds/splits, or is it a single-split artifact? → exp3813 (FR-11 v21,
-   cross-split robustness; the mandated self-learning experiment).
+1. **The one live operator-seeded Phase-3 bet is stalled on a $0 blocker.**
+   The recursive-refiner thesis (TRM-style refiner + Carnot verifier as the
+   distillation oracle for a continuous Q-head) is the project's strongest path
+   to the foundation-model mission given both energy routes are bounded. Its
+   first kill-gate (Task 0) blocked purely on checkpoint availability. The
+   `.351 literature sweep RESOLVED this: `huggingface.co/arcprize/trm_arc_prize_verification`
+   (real ARC TRM checkpoint) + `github.com/olivkoch/nano-trm` (clean Sudoku
+   tiny-train). **Gap: run the Deep-Think-revised kill-gate sequence now that it
+   is unblocked.**
 
-2. **Multiple integration surfaces in parallel (Decentralization Rule 4).** The
-   abstention mode is on the verify API + MCP + CLI but the **HTTP/REST surface is
-   broken** (exp3801). A non-Python network integrator currently has no working path.
-   → exp3810 (repair) + exp3811 (cross-surface parity, so no surface drifts ahead).
+2. **The moat's robustness is asserted, not measured.** DT-post-bounded P2 found
+   the verifier moat is **error-INDEPENDENCE, not AUROC**, and is fragile to
+   subsumption by a strong reasoner. exp3820 hints the formal core is the robust
+   part — but the harness was unfaithful, and no residual-FPR / error-overlap
+   test against a strong SOTA reasoner has ever run. **Gap: make the formal-core
+   finding trustworthy AND measure whether the verifier catches errors a strong
+   reasoner misses (the scissor-plot / error-independence test).**
 
-3. **Human-as-frame-generator / the operator fork (Deep-Think P3 Verification Trap).**
-   The loop cannot self-seed the next paradigm; the EDLM preflight is GO but seeding is
-   the operator's call. The gap is **decision-readiness**: the seed should be one
-   operator command away with a sound kill-gate design. → exp3815 (EDLM operator-seed
-   staging package; documentation only, seeds nothing).
+3. **No methods spine for the distillation-oracle path, and continuous
+   self-learning has plateaued.** FR-11 reached v21 with diminishing returns
+   (Tier-3 predictor AUROC 0.9715, fast-path skip ~0.56). The PRD's continuous
+   self-learning goal (Tiers 1–4) now points squarely at **distilling the
+   verifier into a continuous Q-head** (VerifierQ / RL^V machinery) — the same
+   artifact the recursive-refiner thesis needs. **Gap: stand up the offline
+   Q-head distillation pipeline as the next self-learning frontier.**
 
----
-
-## 3. Architecture (what .349 touches — nothing in the frozen core)
+## 3. Architecture of the milestone
 
 ```
-                        FROZEN / UNTOUCHED
-   ┌───────────────────────────────────────────────────────────┐
-   │  FoVer 4-verifier ensemble  →  AUROC 0.9131 (frozen CI)    │
-   │  publication_gate: G1∧G2∧G3∧G4 = paper_ready TRUE          │
-   │  energy-as-selector  (P0.1)            → BOUNDED            │
-   │  energy-as-generator (Thesis-A/EBT)    → BOUNDED           │
-   └───────────────────────────────────────────────────────────┘
-                                │ read-only (use, never move)
-        ┌───────────────────────┼───────────────────────────────┐
-        ▼                       ▼                                ▼
-  PRODUCT HARDEN          ENDORSED-TOOL WIRE              SELF-LEARNING
-  exp3810 HTTP/REST v2    exp3809 Anomaly-Escalation      exp3813 FR-11 v21
-  exp3811 surface parity  advisory hook (recommend-only,  (Tier-3 fast-path
-  (Decentralization R4)   conductor UNMODIFIED, proposal)  cross-split robustness)
-        │                       │                                │
-        └───────────┬───────────┴───────────────┬────────────────┘
-                    ▼                            ▼
-            HEADLINE + INVARIANTS         OPERATOR-FORK STAGING
-        exp3812 product-headline status   exp3815 EDLM seed package
-        exp3814 publication-gate regress   (one-command, kill-gate
-        (paper_ready stays TRUE)            design; SEEDS NOTHING)
-                    │
-                    ▼
-        RECORD / CONTINUITY  →  exp3816 research refresh, exp3817 KV260, exp3818 capstone
+ PHASE A — recursive-refiner CHEAP KILL-GATES (decide whether the thesis proceeds)
+ ┌──────────────────────────────────────────────────────────────────────────┐
+ │ exp3821  Latent-Symbol Bridge Task 0 RE-RUN  (UNBLOCKED via arcprize/      │
+ │          nano-trm) — can an external discrete verifier read intermediate   │
+ │          latents in-loop? Expected FALSIFIED → confirms distillation pivot │
+ │ exp3822  P1 falsification — vanilla TRM vs matched-COMPUTE AR on a 1D       │
+ │          variable-length headroom task: does the paradigm escape grids?    │
+ │ exp3823  P2 falsification — energy-fit to TRM's Δh (curl-free test):        │
+ │          confirm TRM ≠ EBT (asymmetric vector field, not energy descent)   │
+ └──────────────────────────────────────────────────────────────────────────┘
+                                   │ (gate: headroom must exist; P1 must pass)
+ PHASE B — the DISTILLATION-ORACLE path (the actual integration)
+ ┌──────────────────────────────────────────────────────────────────────────┐
+ │ exp3824  Headroom-gate corpus + positive control (MANDATORY before any     │
+ │          generator training): AR greedy ≈20% AND AR+SC@32 < 50%; ABORT if  │
+ │          AR+SC@32 > 75% (the P0.1/Thesis-A ceiling-pollution trap)         │
+ │ exp3825  Distillation-oracle prototype — Carnot verifier scores final TRM  │
+ │          trajectories → train a continuous Q-head (VerifierQ/RL^V offline   │
+ │          Q-learning). [CONTINUOUS SELF-LEARNING — Tier 3/4]                 │
+ │          gated_on exp3824 headroom_confirmed == true                       │
+ └──────────────────────────────────────────────────────────────────────────┘
+ PHASE C — VERIFIER-MOAT deepening (banked product; DT-Q4 + DT-P2)
+ ┌──────────────────────────────────────────────────────────────────────────┐
+ │ exp3826  FoVer ablation FAITHFUL re-run — reproduce 0.9131 ±0.01, then     │
+ │          trust formal_only (the 0.9612 contamination-free-core finding)    │
+ │ exp3827  Verifier error-INDEPENDENCE scissor test — does the ensemble      │
+ │          catch errors a strong SOTA reasoner (Qwen3.6-35B) misses?         │
+ │ exp3828  Verifier-ensemble vs adaptive prompt-injection corpus            │
+ │          (MANDATORY-NEXT priority; AND-composition vs single-KAN 0.475)     │
+ └──────────────────────────────────────────────────────────────────────────┘
+ PHASE D — HARDWARE continuity + INFRA + close-out
+ ┌──────────────────────────────────────────────────────────────────────────┐
+ │ exp3829  GateMate n=16 Ising bitstream flash + timing smoke v3 (owed)      │
+ │ exp3830  KV260 + PolarFire opportunistic continuity audit (SSH precond.)   │
+ │ exp3831  Capstone v350 + external-research refresh (file .351 references)   │
+ │ exp3832  Archive .350 / activate .351 manifest                            │
+ └──────────────────────────────────────────────────────────────────────────┘
 ```
 
-**No task touches:** the frozen ensemble, the energy routes, `scripts/research_conductor.py`,
-or any operator-curated doc (README, landing page, technical-report prose, north-star,
-roadmap.md). Doc changes are emitted as **proposals**, never edits.
+## 4. Phase descriptions
 
----
+### Phase A — Recursive-refiner cheap kill-gates
+The Deep-Think-revised plan (thesis doc §"Revised plan") says: run Task 0 FIRST
+(it can kill the naive in-loop integration for $0), then the P1/P2 cheap
+falsifications. All three are now runnable on the dev rig with the unblocked
+checkpoint. **None requires a SOTA GGUF** — the experimental object is the tiny
+TRM substrate itself, not a general LLM.
+- **exp3821** force-decodes intermediate latents at every refinement step and
+  queries a programmatic grid verifier; measures intermediate-state parseable
+  rate, Spearman(verifier-signal, step), and decode+verify latency overhead.
+  FALSIFIED (expected) confirms Carnot's role is the **offline distillation
+  oracle**, not the runtime Q-head. VIABLE (surprising) reopens in-loop.
+- **exp3822** tests DT-P1: does TRM beat matched-COMPUTE AR on a strictly-1D
+  variable-length task with AR headroom (algorithmic sequence correction /
+  multi-step parity)? If TRM fails there → the paradigm is grid-bound and cannot
+  reach the foundation-model mission. Honest-negative is informative.
+- **exp3823** tests DT-P2: fit a scalar energy E to a trained TRM's latent
+  updates Δh under the constraint Δh ≈ −∇E(h). The curl-free constraint should
+  make this FAIL — proving TRM expresses an asymmetric vector field EBT cannot,
+  so the bounded-EBT result does NOT cover TRM. Pure numerical → codex.
 
-## 4. Phases and tasks (11 tasks)
+### Phase B — The distillation-oracle path
+- **exp3824** is the non-negotiable headroom gate (tighter per DT): curate a
+  grid corpus where AR greedy ≈ 20% AND AR+Self-Consistency@32 plateaus FIRMLY
+  < 50%, and **ABORT if AR+SC@32 > 75%** (the ceiling-pollution trap that
+  produced two prior expensive false negatives). Explicitly NOT a P0.1 rerun:
+  combinatorial grid with confirmed oracle>AR headroom, not NL-math.
+- **exp3825** stands up the offline Q-head distillation pipeline: Carnot's
+  verifier scores unrolled FINAL TRM trajectories → BCE/MSE (or VerifierQ-style
+  IQL/conservative-Q) trains a continuous Q-head that natively reads continuous
+  latents. This is the **continuous self-learning** experiment for this milestone
+  (Tier 3 predictive → Tier 4 adaptive). Scaffolding-heavy + well-documented
+  recipe → codex. Gated on exp3824 confirming headroom (if the corpus is
+  ceiling-polluted, training is meaningless — skip).
 
-**Phase 0 — Transition (1 task)**
-- `exp3808` archive .348 → activate .349. Records the converged state honestly
-  (product headline demoted; gaming closed; anomaly classifier now wirable; HTTP/REST
-  blocked → repair target; both energy routes bounded; paper_ready TRUE). Carries the
-  operator fork forward.
+### Phase C — Verifier-moat deepening
+- **exp3826** repairs the exp3820 harness so the full ensemble reproduces 0.9131
+  ±0.01 (positive control), making the `formal_only = 0.9612` decomposition
+  citable. If real, the contamination-free formal core is the moat's robust floor
+  and the DT-Q4 OOD-contamination critique is answered.
+- **exp3827** implements the DT-P2 scissor test: take a strong SOTA reasoner
+  (`unsloth/Qwen3.6-35B-A3B-GGUF`) as the "subsumer", and measure the
+  **residual false-negative / error-overlap**: of the step-errors the strong
+  reasoner's own self-verification misses, what fraction does Carnot's ensemble
+  catch? Moat survives iff error-INDEPENDENCE is high (not just AUROC parity).
+- **exp3828** runs the pending MANDATORY-NEXT priority: does AND-composition beat
+  the single-KAN 0.475 baseline on an adaptive prompt-injection perturbation
+  corpus? Verifier-scoring against cached/generated adversarial candidates.
 
-**Phase 1 — Product harden + endorsed-tool wiring (3 tasks)**
-- `exp3809` Wire the Anomaly-Escalation classifier as a **recommend-only advisory
-  module** + an offline replay over historical milestone negatives (it must escalate
-  only the genuine frame-violations, auto-reconcile clean bounded negatives) + a
-  conductor-integration **proposal** for the operator. The conductor is NOT modified;
-  the classifier never relaxes verification. (Deep-Think-P3 endorsed upgrade, now usable.)
-- `exp3810` HTTP/REST abstention surface **v2** — diagnose and fix the exp3801 E2E
-  failure (`blocked_http_abstention_e2e_failed`) in `python/carnot/pipeline/abstention_http_rest.py`.
-  Default abstention OFF; third surface per Decentralization Rule 4. (prior_failures: exp3801)
-- `exp3811` Cross-surface abstention **parity smoke** (gated on exp3810 landing): the
-  same cached FoVer candidate produces the same confident/abstain verdict + coverage/risk
-  metadata across verify-API, CLI, and HTTP. No surface drifts ahead.
-
-**Phase 2 — Headline status + self-learning + invariants (3 tasks)**
-- `exp3812` Product-headline **status consolidation** (aggregation): apply the
-  Reading-Results discipline (live adversarial re-check) to show that BOTH candidate
-  product positives fail provenance (exp3798 delta=0; exp2090 CRANE flags CRITICAL);
-  record that the FoVer methods headline is the sole defensible one; emit a doc-update
-  **proposal** to retire the demoted code-repair prose. Edits no operator-curated doc.
-- `exp3813` FR-11 continuous self-learning **v21** (the mandated self-learning task):
-  validate that the v20 Tier-3 fast-path operating point (skip 0.56 / no regression)
-  **generalizes** across a second seed/split — or report honestly that it does not.
-  Reuses the persisted predictor; runs no live model.
-- `exp3814` Publication-gate **regression confirmation**: `publication_gate.py --json`
-  still reports G1∧G2∧G3∧G4 = `paper_ready TRUE`; frozen 0.9131 unchanged; G3 narrowing
-  stays clean. The standing convergence invariant check.
-
-**Phase 3 — Operator-fork staging + record/continuity (4 tasks)**
-- `exp3815` **EDLM operator-seed staging package** (documentation only; SEEDS NOTHING):
-  package the exp3793 one-command seed + a tiny-scale kill-gate design doc (matched-COMPUTE,
-  internal 3090, hard cuda-block, honest-negative-if-it-diverges — mirroring Thesis-A
-  .341) so the operator can seed `.350` in one decision. Explicitly operator-gated.
-- `exp3816` External research refresh for .349 (confirm the `.349 additions` section
-  parses; append-only).
-- `exp3817` KV260 opportunistic continuity audit (SSH-reachable, overlay loadable;
-  terminal state holds — opportunistic per north-star §3).
-- `exp3818` Capstone .349. Re-assert invariants; carry the operator fork forward.
-
----
+### Phase D — Hardware continuity + infra + close-out
+- **exp3829** discharges the Hardware-Task Continuity Discipline debt for the
+  GateMate A1-EVB-2M (not yet terminal): yosys `synth_gatemate` →
+  `nextpnr-himbaechel --device CCGM1A1` → `gmpack` for an n=16 Ising tile,
+  flash via `openFPGALoader -c dirtyJtag -b olimex_gatemateevb`, record
+  sample-level timing. PRECONDITIONS gate on the himbaechel toolchain + board
+  IDCODE; `blocked_*` rather than fabricate if the board is detached.
+- **exp3830** opportunistic SSH-precondition audit of KV260 (terminal) +
+  PolarFire (not yet terminal — needs a hash-verified dispatch run).
+- **exp3831 / exp3832** are the standard aggregation close-out (capstone +
+  research refresh; archive/activate). `inference_substrate:
+  aggregation_from_upstream_artifacts`.
 
 ## 5. Dependency graph
 
 ```
-exp3808 (archive/activate)
-   ├─ exp3809 (anomaly advisory hook)        ─┐
-   ├─ exp3810 (HTTP/REST v2) ── exp3811 (parity, gated_on exp3810.http_rest_surface_added==true)
-   ├─ exp3812 (product-headline status)       │
-   ├─ exp3813 (FR-11 v21 self-learning)       │  all read upstream with graceful
-   ├─ exp3814 (publication-gate regression)   │  disk-presence fallbacks
-   ├─ exp3815 (EDLM seed staging)             │
-   ├─ exp3816 (research refresh)              │
-   └─ exp3817 (KV260 audit)                  ─┘
-        └─ exp3818 (capstone — aggregates exp3808..exp3817)
+exp3821 ─┐ (checkpoint reused)
+         ├─► exp3823 (needs a trained TRM's Δh)
+exp3824 ─┴─► exp3825 (gated_on headroom_confirmed == true)
+exp3822  (independent — 1D task, own AR baseline)
+exp3826 ─► (informs the moat story; independent of A/B)
+exp3827  (independent; strong-reasoner SOTA GGUF)
+exp3828  (independent; cached/adversarial corpus)
+exp3829, exp3830 (independent hardware)
+exp3831, exp3832 (close-out; read all upstream artifacts)
 ```
-
-One hard gate: `exp3811` on `exp3810` producing `http_rest_surface_added == true`
-(a parity smoke is meaningless if the surface didn't land). Every other task reads
-upstream with a graceful fallback and never labels un-run/blocked work as a negative.
-
----
 
 ## 6. Hardware requirements
 
-**None GPU-bound.** All tasks are verifier-scoring against cached candidates,
-aggregation, wiring + E2E smoke, documentation, or an SSH hardware smoke (KV260).
-No live LLM generation is queued — the .348 GPU-contention pattern (exp3798 fell back
-to CPU-GGUF; HumanEval re-runs hand off to the operator) makes a fresh GPU-preferred
-open-ended task low-value this milestone. KV260 is opportunistic (terminal since .340).
+- **exp3821/3822/3823/3825:** tiny TRM (~7–50M params). CPU-runnable for the
+  arcprize-checkpoint inference probe; small-Sudoku tiny-train is GPU-opportunistic
+  (≤20 min on one RTX 3090). GPU experiments MUST invoke `.venv/bin/python`, never
+  bare `python` (the EBT venv/CUDA infra trap — `[[incident_ebt_training_venv_python_cuda]]`).
+- **exp3827:** one RTX 3090 for the `Qwen3.6-35B-A3B-GGUF` strong-reasoner pass
+  (llama.cpp CUDA path; load via the `.gguf` path, NOT `AutoTokenizer` on the
+  GGUF repo id — the GGUF tokenizer rule).
+- **exp3829:** GateMate A1-EVB-2M (USB DirtyJTAG `1209:c0ca`) + oss-cad-suite
+  himbaechel flow. **exp3830:** `ssh kria` + `ssh polarfire`.
+- **Loop-safety:** keep Phase A GPU-light to avoid kill_zombies contention;
+  gemini is NOT used for any model/GPU task (it crashes real GPU workloads,
+  `[[incident_333_gemini_quota_crash_wipeout]]`, exp3703) — claude/opus for
+  judgment+GPU, codex/gpt-5.5 for formulaic numerical/scaffolding.
 
-**Routing:** all tasks `agent_type: codex` + `model: gpt-5.5` + `requires_codex: true`.
-gemini crashes real GPU workloads and has wiped milestones via 429 (incident_333); no
-task here needs Claude/Opus (no open-ended GPU/bootstrap work). Every Run command pins
-`.venv/bin/python` (bare `python` is `/usr/bin/python3` with no torch/yaml/sklearn —
-incident_ebt_training_venv_python_cuda).
+## 7. SOTA-model compliance
 
----
+Per CLAUDE.md, the only task needing a general reasoning LLM is **exp3827**,
+which uses `unsloth/Qwen3.6-35B-A3B-GGUF` (flagship MoE) as the strong-reasoner
+subsumer. The recursive-refiner tasks study the tiny TRM substrate (the object
+under test) and the verifier-scoring tasks read cached corpora — neither is a
+"needs a general LLM" case, so no SOTA GGUF is mandated for them.
 
-## 7. Invariants (re-asserted at capstone)
+## 8. Kill-gates / what would retire a thread
 
-- `paper_ready` stays **TRUE** (G1∧G2∧G3∧G4 via `publication_gate.py`).
-- FoVer **0.9131 frozen** — used, never moved.
-- Both energy routes stay **bounded** (.349 runs no energy-foundation experiment).
-- `scripts/research_conductor.py` **unmodified**; no operator-curated doc edited
-  (proposals only); nothing pushed; no CI triggered; no external publication.
-- The EDLM-seed-vs-freeze decision remains an **operator-seeding surface** — the loop
-  does not self-commit a paradigm (Verification Trap).
+- **exp3821 VIABLE** (surprising) reopens the in-loop Q-head; FALSIFIED (expected)
+  commits the milestone to the distillation-oracle path. Either way the thesis
+  proceeds via distillation — exp3821 only decides WHERE the verifier sits.
+- **exp3822 BOUNDED** (TRM ≤ matched-compute AR on the 1D task) → the paradigm
+  is grid-bound; record and de-prioritize the foundation-model ambition (the
+  thesis narrows to "Carnot owns the oracle for the *grid-class* small-reasoners").
+- **exp3824 ABORT** (AR+SC@32 > 75%) → corpus is ceiling-polluted; fix the corpus
+  before any generator training (do NOT proceed to exp3825).
+- **exp3826 INCONCLUSIVE again** → the ablation harness is structurally unable to
+  reproduce 0.9131; escalate to operator (do not cite formal_only).
 
----
+## 9. Decentralization implications (CLAUDE.md rules 1–7)
 
-## 8. The operator flag (carried forward — now actionable in one command)
+All tasks run on local open substrates (tiny TRM, local GGUF via llama.cpp,
+on-prem FPGA boards). The distillation Q-head (exp3825) is a small, local,
+open-weight artifact — a sovereignty-positive component (rule 1/5). No
+closed-weight dependency is introduced. exp3831 files mirrorable references.
 
-The project is converged and the EDLM preflight is GO. The substantive next move is
-the operator's: **SEED EDLM** (`exp3815` stages the one-command package + kill-gate
-design) **or FREEZE** the loop into product-maintenance. Continued lean-maintenance
-milestones increasingly approach the churn boundary (north-star §1). `.349` is a
-defensible lean milestone that finishes concrete .348 loose ends and makes the seed
-one decision away — but the milestone after `.349` should be the **EDLM seed or an
-explicit freeze**, not a fourth deferral.
+## 10. Parallel staged thesis (NOT activated this milestone)
+
+EDLM (energy as residual-corrector over discrete diffusion) remains an
+operator-seeded staged route (exp3793 preflight GO, exp3815 seed staged). It is
+NOT allocated a task here — the operator activated the recursive-refiner thread
+for `.350, and this milestone continues it. The exp3825 distillation pipeline is
+substrate-agnostic and would serve an EDLM Q-head too if the operator later
+activates that route.
