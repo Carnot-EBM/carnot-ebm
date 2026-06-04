@@ -51,3 +51,8 @@ Per Deep Think P3 / Anomaly-Escalation (scripts/anomaly_escalation.py). Each ent
 - Flagged a FRAME-VIOLATING ANOMALY (NOT auto-reconciled — human triage: dead-end or breadcrumb?)
   - CRITICAL adversarial flag ['GATE_PASSED_WITHOUT_DATA'] on a non-negative verdict
 - artifact: results/experiment_2110_casal_pinet.json
+
+## experiment_3778_fr11_self_learning_v18_tier2_constraint_memory.json
+- Flagged a FRAME-VIOLATING ANOMALY (NOT auto-reconciled — human triage: dead-end or breadcrumb?)
+  - INVARIANT regression: auroc_within_frozen_ci=True drifted from frozen 0.9131
+- artifact: results/experiment_3778_fr11_self_learning_v18_tier2_constraint_memory.json
