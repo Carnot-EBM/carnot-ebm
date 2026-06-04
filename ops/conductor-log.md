@@ -7753,3 +7753,4 @@ ERROR: {
 | 2026-06-04 10:43 UTC | Capstone .347 -- aggregate the POST-CONVERGENCE mi | OK | 88 passed in 4.65s |
 | 2026-06-04 11:18 UTC | Plan milestone 2026.06.348 | OK | 10 tasks proposed |
 | 2026-06-04 11:20 UTC | Milestone 2026.06.348 activated | OK | 10 tasks queued |
+| 2026-06-04 11:34 UTC | Archive milestone .347 (POST-CONVERGENCE -- landed | OK | 107 passed in 4.28s |
