@@ -1044,10 +1044,13 @@ def score_agent_outputs(question: str, responses: list[str]) -> dict[str, Any]:
 def _run_score_candidates(
     candidates: list[dict[str, Any]],
     domain: str | None,
+    abstention_mode: bool = False,
+    abstention_threshold: float | None = None,
 ) -> dict[str, Any]:
     """Score candidates with the calibrated second-pair detector.
 
-    Spec: REQ-SPOE-3671, SCENARIO-SPOE-3672
+    Spec: REQ-SPOE-3671, REQ-SPOE-3779, SCENARIO-SPOE-3672,
+    SCENARIO-SPOE-3779
     """
 
     if not isinstance(candidates, list):
@@ -1072,20 +1075,34 @@ def _run_score_candidates(
 
     from carnot.pipeline.second_pair_detector import score_candidates as _score_candidates
 
-    return _score_candidates(candidates, default_domain=domain)
+    return _score_candidates(
+        candidates,
+        default_domain=domain,
+        abstention_mode=bool(abstention_mode),
+        abstention_threshold=abstention_threshold,
+    )
 
 
 @mcp_server.tool()
 def score_candidates(
     candidates: list[dict[str, Any]],
     domain: str | None = None,
+    abstention_mode: bool = False,
+    abstention_threshold: float | None = None,
 ) -> dict[str, Any]:
     """Return calibrated hallucination/error scores for candidate outputs.
 
-    Spec: REQ-SPOE-3671, SCENARIO-SPOE-3672
+    Spec: REQ-SPOE-3671, REQ-SPOE-3779, SCENARIO-SPOE-3672,
+    SCENARIO-SPOE-3779
     """
 
-    return _guarded_call(_run_score_candidates, candidates, domain)
+    return _guarded_call(
+        _run_score_candidates,
+        candidates,
+        domain,
+        abstention_mode,
+        abstention_threshold,
+    )
 
 
 # ---------------------------------------------------------------------------

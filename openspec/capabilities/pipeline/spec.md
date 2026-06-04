@@ -486,6 +486,40 @@ fabricating metrics.
   `energy_ties_or_loses_to_entropy`, and `blocked` with synthetic fixtures
   rather than hard-coding a real-corpus success string.
 
+### REQ-SPOE-3779: Certified Abstention Operating Point Product Surface
+
+The shipped `score_candidates` verifier-scoring surface MUST expose an opt-in
+abstention mode that is disabled by default.  When disabled, callers MUST
+receive the same score rows as the existing Phase-1 surface.  When enabled,
+each score row MUST include an abstention decision derived from a
+configurable certified operating point whose default values are loaded from
+`results/experiment_3771_certified_abstention_operating_point.json` rather
+than embedded as unexplained literals.
+
+The abstention mode MUST orient its product score so larger values mean a more
+confident verifier judgment.  Rows at or above the configured certified
+threshold MUST return a confident verdict.  Rows below the threshold MUST
+return an abstain verdict that routes the row to review and carries the
+certified coverage, certified risk bound, delta, calibration sample size, and
+threshold source metadata.  Operator overrides MAY supply the threshold through
+the API, MCP tool, or CLI without changing the default certified source.
+
+The Exp 3779 runner MUST check the `.venv/bin/python` interpreter can import
+`carnot`, MUST read the certified threshold from the absolute Exp 3771 artifact
+before claiming the product surface is wired, MUST run a no-live-LLM wiring
+smoke over cached FoVer scoring data, SHOULD confirm the MCP `score_candidates`
+tool through a real stdio protocol exchange when the MCP runtime is available,
+MUST write a separate documentation-update proposal instead of editing the
+operator-curated MCP or CLI docs, and MUST write
+`results/experiment_3779_abstention_operating_point_product_wiring.json`.
+
+The terminal artifact MUST include `honest_verdict`, `inference_substrate`,
+`abstention_mode_wired`, `default_off_preserves_prior_behavior`,
+`certified_threshold_used`, `e2e_abstention_passed`,
+`mcp_surface_confirmed`, `doc_proposal_emitted_not_curated_edit`,
+`tests_assert_real_behavior`, `model_specs`, `random_seed`,
+`reproducibility_checksum`, and `duration_s`.
+
 ## Scenarios
 
 ### SCENARIO-INFRA-052: Version-Blocked Model Raises Error
@@ -692,6 +726,29 @@ points, and coverage-at-5%-risk operating point from the fixture measurements
 rather than hard-coding a real-corpus success string.
 
 **Spec traces:** REQ-SPOE-3718
+
+### SCENARIO-SPOE-3779: Abstention Mode Is Opt-In And Protocol-Reachable
+
+**Given** the Exp 3771 certified operating point artifact is readable and the
+Phase-1 `score_candidates` surface can score math candidates from cached FoVer
+data
+**When** abstention mode is disabled
+**Then** the returned score rows do not contain abstention-mode verdict fields
+and preserve the prior calibrated score and operating-point behavior.
+
+**When** abstention mode is enabled
+**Then** a candidate whose abstention score is at or above the certified
+threshold returns a confident verdict, a candidate below the threshold returns
+`uncertain / route to review`, and every abstain row carries the Exp 3771
+coverage, certified risk, delta, calibration sample size, and threshold-source
+metadata.
+
+**When** the Exp 3779 runner performs the MCP confirmation
+**Then** it calls the packaged `score_candidates` MCP tool through stdio
+JSON-RPC, not an in-process handler, and records whether the external surface
+accepted the opt-in abstention-mode parameter.
+
+**Spec traces:** REQ-SPOE-3779
 
 ### REQ-SAMPLE-020: SparseIsingEBM K-Regular Graph
 

@@ -386,7 +386,8 @@ def cmd_score(args: argparse.Namespace) -> int:
 def cmd_score_candidates(args: argparse.Namespace) -> int:
     """Score candidates with the calibrated second-pair detector.
 
-    Spec: REQ-SPOE-3671, SCENARIO-SPOE-3672
+    Spec: REQ-SPOE-3671, REQ-SPOE-3779, SCENARIO-SPOE-3672,
+    SCENARIO-SPOE-3779
     """
 
     if args.candidates_file is None and args.candidates_json is None:
@@ -408,7 +409,12 @@ def cmd_score_candidates(args: argparse.Namespace) -> int:
     from carnot.pipeline.second_pair_detector import score_candidates
 
     try:
-        result = score_candidates(candidates, default_domain=args.domain)
+        result = score_candidates(
+            candidates,
+            default_domain=args.domain,
+            abstention_mode=bool(args.abstention_mode),
+            abstention_threshold=args.abstention_threshold,
+        )
     except ValueError as exc:
         print(f"Error: {exc}", file=sys.stderr)
         return 1
@@ -596,6 +602,17 @@ def main() -> int:
         "--domain",
         default=None,
         help="Default domain for candidates that omit a domain",
+    )
+    score_candidates_parser.add_argument(
+        "--abstention-mode",
+        action="store_true",
+        help="Enable the certified abstention operating point",
+    )
+    score_candidates_parser.add_argument(
+        "--abstention-threshold",
+        type=float,
+        default=None,
+        help="Override the certified abstention threshold for this call",
     )
 
     # --- memory subcommands ---
