@@ -1,0 +1,61 @@
+{
+  "cited_upstream_artifacts": [
+    "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_227_results.json",
+    "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_1999_code_verification_humaneval.json",
+    "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_2090_crane_humaneval.json"
+  ],
+  "duration_s": 0.000596,
+  "exp1999_g4_pass": false,
+  "exp2090_g4_pass": true,
+  "experiment": 3792,
+  "honest_verdict": "complete: product_headline_provenance_confirmed_exp1999_g4_false_exp2090_g4_true_headline_not_yet_eligible_operator_curated_doc_unedited",
+  "inference_substrate": "aggregation_from_upstream_artifacts",
+  "operator_curated_doc_unedited": true,
+  "product_headline_restorable": "not_yet_headline_eligible",
+  "provenance_table": [
+    {
+      "caveat": "missing random_seed; missing reproducibility_checksum",
+      "checksum_present": false,
+      "g4_pass": false,
+      "headline_numbers_match_north_star": true,
+      "n": 50,
+      "number": "exp1999_humaneval_repair_0.66_to_0.84",
+      "observed_after": 0.84,
+      "observed_before": 0.66,
+      "seed_present": false,
+      "source_artifact": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_1999_code_verification_humaneval.json",
+      "substrate": "not_recorded"
+    },
+    {
+      "caveat": "G4 seed/checksum present; still needs clean full-HumanEval live evidence before any operator-facing product headline.",
+      "checksum_present": true,
+      "g4_pass": true,
+      "headline_numbers_match_north_star": true,
+      "n": 50,
+      "number": "exp2090_crane_rigid_0.70_to_crane_0.85",
+      "observed_after": 0.85,
+      "observed_before": 0.7,
+      "seed_present": true,
+      "source_artifact": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_2090_crane_humaneval.json",
+      "substrate": "model_used_field_present_redacted_for_aggregation_hygiene"
+    }
+  ],
+  "random_seed": {
+    "exp1999": null,
+    "exp2090": 42
+  },
+  "refuted_exp227_contrast": {
+    "available": true,
+    "baseline_pass_at_1": 0.23333333333333334,
+    "improvement_delta": 0.0,
+    "n": 30,
+    "n_repaired": 0,
+    "source_artifact": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_227_results.json",
+    "verify_repair_pass_at_1": 0.23333333333333334
+  },
+  "reproducibility_checksum": {
+    "exp1999": null,
+    "exp2090": "bfb0acdb53773a49"
+  },
+  "schema": "carnot.product_headline_provenance_confirmation_g4.v1"
+}

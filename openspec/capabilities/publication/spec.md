@@ -2033,6 +2033,40 @@ items without editing the north-star document.
 **When** the Exp 3717 G4 audit runner starts
 **Then** it emits the blocked-primary-artifact terminal verdict.
 
+### REQ-PUBLISH-3792: Product Headline G4 Provenance Confirmation
+
+The Exp 3792 product-headline provenance confirmation runner MUST aggregate
+only checked-in upstream artifacts for the demoted HumanEval product numbers
+named in `ops/north-star.md` §1: Exp 1999's 0.66 to 0.84 repair result and
+Exp 2090's 0.70 to 0.85 CRANE result. The runner MUST also cite Exp 227 as
+the refuted contrast source and MUST NOT edit `docs/technical-report.md`,
+`ops/north-star.md`, or `scripts/research_conductor.py`.
+
+For each surviving product number, the runner MUST record the primary artifact
+absolute path, sample size, whether the north-star numbers match, whether a
+top-level `random_seed` and `reproducibility_checksum` are present, the
+source substrate caveat, and a G4 pass/fail boolean. A number passes G4 only
+when it resolves to a primary `results/experiment_*.json` artifact carrying
+both seed and checksum fields. Missing artifacts MUST be recorded honestly as
+`artifact_not_found_cannot_confirm_g4` rather than fabricated as passing.
+
+The artifact `results/experiment_3792_product_headline_provenance_confirmation_g4.json`
+MUST use `inference_substrate="aggregation_from_upstream_artifacts"`, include
+`provenance_table`, `exp1999_g4_pass`, `exp2090_g4_pass`,
+`product_headline_restorable`, `operator_curated_doc_unedited`,
+`cited_upstream_artifacts`, `random_seed`, `reproducibility_checksum`, and
+`duration_s`, and emit the terminal verdict prefix
+`complete: product_headline_provenance_confirmed_exp1999_g4_<bool>_exp2090_g4_<bool>_headline_<status>_operator_curated_doc_unedited`.
+
+### SCENARIO-PUBLISH-3792: Product Headline Confirmation Classifies G4 Honestly
+
+**Given** Exp 1999, Exp 2090, and Exp 227 primary artifacts are available
+**When** the Exp 3792 runner aggregates them
+**Then** it confirms the Exp 1999 and Exp 2090 north-star numbers, records a
+per-number provenance table, classifies G4 pass/fail from seed/checksum fields,
+cites all three upstream artifacts, and leaves operator-curated documents
+unedited.
+
 ### REQ-PUBLISH-3723: v340 Convergence Capstone And Hardened G-Gate Recheck
 
 The Exp 3723 v340 capstone runner MUST aggregate `publication_gate.py --json`
@@ -2186,6 +2220,7 @@ verdict, `reproduced_auroc_mean == null`, `per_seed_aurocs == []`, and
 | REQ-PUBLISH-3716 | Implemented | Exp 3716 standalone Paper-v6 narrowing lint |
 | REQ-PUBLISH-3717 | Planned | Exp 3717 full G4 headline provenance audit |
 | REQ-PUBLISH-3723 | Proposed | Exp 3723 v340 convergence capstone and hardened G-gate recheck |
+| REQ-PUBLISH-3792 | Implemented | Exp 3792 product-headline G4 provenance confirmation |
 
 ### REQ-PUBLISH-026: HuggingFace Publish Retry
 The experiment 1750 huggingface retry runner MUST attempt to upload the smallest model in models/ with a no-emoji model card. If credentials pass, it MUST upload and record hf_upload_succeeded = True. If blocked, it MUST emit an honest verdict of "blocked_credentials".
