@@ -4,54 +4,50 @@
 # docs_audit_report — 2026-06-04
 
 ## TL;DR (stranger's 30-second take)
-I'd bounce in 10 seconds. While the hero clearly explains what the tool does, the page is immediately bogged down by 33 separate UI cards, impenetrable insider jargon, wildly contradictory benchmark claims, and a literal broken file path injected into a headline. It feels like an internal dashboard, not a public landing page.
+I'd bounce at the "Results" section. The hero is strong and clearly tells me what the tool does, but the page quickly devolves into an overwhelming wall of 32+ cards filled with internal acronyms (FoVer, SVAMP, PREM) and suspiciously perfect 100% metrics that scream "lab artifact" rather than a production-ready framework. 
 
 ## TOP 3 PROBLEMS
-1. **Contradictory Claims:** Code repair performance numbers wildly conflict across different cards (+3 points vs +36 points vs +72 points).
-2. **Card Fatigue (Bloat):** The page throws 33 separate bento/result cards at the user. The 12-card Results grid is overwhelming and guarantees nothing gets read.
-3. **Severe Insider Jargon & Corruption:** The copy is littered with unexplained acronyms (FoVer, CCTU, SVAMP), internal milestones, and a broken pytest file path injected directly into an H3 tag.
+1. Card Bloat — 32 total cards on the page (way past the ~20 card skim limit) turn the site into an internal dashboard rather than a pitch.
+2. Unexplained Acronym Soup — The Features and Results sections are riddled with internal benchmark and architecture names (FoVer, SVAMP, CCTU, PREM, VeriCoT) that a stranger won't recognize.
+3. Suspiciously Perfect Numbers — Multiple claims of 1.0 TP rates, 2.0x perfect speedups, and 60/60 attack captures trigger immediate fabrication/cherry-picking red flags.
 
 ## DETAILED FINDINGS
 ### Bloat
-- **Overall page structure** — 33 total cards across the page — Far exceeds the ~20 card threshold where a stranger stops reading.
-- **Results section** — 12 result cards — Way too many isolated claims.
-- **Features section** — 7 bento cards — The grid is overwhelming and dilutes the core value proposition.
-- **Blog section** — 7 article cards — Takes up massive real estate at the bottom for internal retrospective posts.
+- Entire Page — 32 cards total (2 Problem, 4 How, 7 Features, 12 Results, 7 Blog). This needs a hard cap of 15-20 max.
+- "Recent progress" card — 49 words, but reads like a dense internal PR summary, not landing page copy.
+- "Results" section — 12 cards is exhausting. A stranger will read zero of them. 
+- Blog section — 7 cards is too many for a landing page footer; 3 recent posts is plenty.
 
 ### Internal jargon
-- **Hero stats bar** — "FoVer (5-seed dual-condition; architecture-only 0.8947)" — A stranger has no idea what FoVer is or why the "architecture-only" caveat matters.
-- **Features "P" card** — "Test-Time Compute (TTC) & PREM" — Acronyms dropped with zero context.
-- **Result cards** — "IterativeSelfRepair", "EstimationVerifier SVAMP AUC", "VeriCoT", "PRM-BiasBench-style attacks", "CCTU" — Insider benchmark names and internal component names mean nothing to a casual visitor.
-- **Blog titles** — "Regex in an NTK Costume" — What is NTK?
+- "Stats bar" & "Recent progress" — "FoVer math step-errors (5-seed)", "FoVer (5-seed dual-condition; architecture-only 0.8947)". Complete gibberish to an outsider.
+- "Features" section — "CCTU constrained micro-benchmark", "Process-Reward Energy Model (PREM)", "Test-Time Compute (TTC)".
+- "Results" section — "HumanEval-50, execute-feedback-retry", "EstimationVerifier SVAMP AUC", "Qwen3.6-35B-A3B", "VeriCoT equation-style CoT fix", "PRM-BiasBench-style attacks", "HalluGuard v3". All insider baseball.
 
 ### Per-milestone narrative
-- **Recent progress card (Hero)** — "Repinned from v2 0.9857 after pre-submission adversarial audit; see Why We Report Two AUROCs Now." — Reads exactly like an internal project status or commit log, not a value proposition for a new user.
-- **Blog summaries** — "We paid for a hostile audit...", "Three rigorous theory rounds approved..." — Navel-gazing process commentary that wastes space on a landing page.
+- "Stats bar" — "382 Completed milestones" is an internal team management metric, not a user selling point.
+- "Recent progress" card — "Repinned from v2 0.9857 after pre-submission adversarial audit" is internal changelog/retrospective copy.
+- "Preprint" section — "The arXiv submission is prepared but pending operator-initiated upload" reads exactly like a Jira ticket status.
 
 ### Inconsistencies
-- **HumanEval Pass Rates** — 
-  - "Code" Feature card claims repair pushes pass-rate up by **3 points**.
-  - "Code" Result card claims **+3.0 points**.
-  - "Code repair" Result card claims **+72 points (8% &rarr; 80%)**.
-  - "Live benchmark" Result card claims **+36 points (0% &rarr; 36%)**.
-  A stranger will instantly assume these numbers are made up or cherry-picked because they contradict each other without immediate context.
+- Claim A ("No model fine-tuning required" in *How it works*) vs Claim B ("Two-GPU parallel retrain" and "continuous self-learning" in *Results/Features*). Are we training models or not?
+- Metric Soup — The page throws 0.9131, 0.8947, 0.9857, 0.91, and 0.90 AUROC/AUC numbers at the user across different cards with no unifying context, making the main claim confusing.
 
 ### Missing essentials
-- **Trust anchors for the numbers** — The page claims "Every number below is backed by a checked-in experiment artifact", but there is not a single direct link connecting a stat to its proof. A stranger won't dig through GitHub to verify the claims, weakening the answer to "Why should I trust the numbers?".
+- Who maintains it? The footer mentions "Ian Blenke" and GitHub, but there is no clear "Backed by [X]" or credibility anchor up front to tell a stranger why they should trust this specific team's verification math.
 
 ### Fabrication signals
-- **Math extraction Result card** — "GSM8K extraction TP rate: 0.5 &rarr; 1.0" — A perfect 1.0 (100%) true positive rate on GSM8K extraction is highly suspicious without a massive caveat or credibility anchor.
-- **Adversarial audit Result card** — "ensemble catches 60/60 attacks" — 100% success rates trigger immediate snake-oil alarms for technical audiences.
-- **Broken Path Injection** — The "Live benchmark" result card contains literal internal test path garbage: `@.tmp-pytest/pytest-of-ianblenke/pytest-3/popen-gw0/test_req_verify_2932_run_uses_0/citation_hallucination_field_verifier_2932_raw/spilled-energy-2602-18671:real.txt`. (This corruption is also present in the Google Fonts URL in the `<head>`).
+- "Training" card — "2.0x speedup, identical losses" (Perfect 2.0x is highly suspect in distributed training).
+- "Math extraction" card — "GSM8K extraction TP rate: 0.5 -> 1.0" (A perfect 1.0 TP rate without a credibility anchor looks fake).
+- "Adversarial audit" card — "k=5 ensemble catches 60/60 attacks" (100% catch rate on small sample sets triggers skepticism).
+- "Cascade routing" card — "0.0pp accuracy delta" (Suspiciously perfect zero).
 
 ## WHAT'S WORKING
-- **The "Quickstart" section** is excellent: clean, multi-language (Python/Rust tabs), and clearly demonstrates the "verify" and "repair" API in just a few lines.
-- **The Hero headline and subheadline** concisely explain what the tool does (Catch reasoning errors, check consistency, suggest fixes) and provide the PIP install command immediately.
+- The hero section is excellent: "Catch the reasoning errors your LLM states with total confidence" + the 3-step "Extract -> Check -> Repair" explanation clearly and concisely tells the user what the product actually does.
+- The Quickstart section is highly effective, showing tangible Python/Rust API usage in a clean, tabbed code window that proves the tool is real and installable.
 
 ## RECOMMENDED OPERATOR ACTIONS
-1. Remove the broken pytest file paths injected into the "Live benchmark" card and the Google Fonts URL in the `<head>`.
-2. Reconcile the HumanEval / code repair claims into a single, cohesive metric (or clearly label why they differ if they measure different things).
-3. Ruthlessly cull the Results section from 12 cards down to the 3-4 strongest, most broadly understandable metrics.
-4. Purge internal jargon (FoVer, CCTU, SVAMP, PREM) and replace with descriptive phrases (e.g., "math reasoning benchmark", "tool use constraint benchmark").
-5. Delete the "Recent progress" hero card entirely—it clutters the top-of-funnel with insider baseball.
-6. Cap the Blog/Writing section to 3 posts max to reduce bloat.
+1. Prune the Results section from 12 cards down to the 3-4 most impactful, generalized metrics.
+2. Scrub all internal benchmark acronyms (FoVer, SVAMP, CCTU, PREM, VeriCoT) and replace them with plain-English descriptions of what was tested.
+3. Remove all internal status tracking phrases ("pending operator-initiated upload", "Repinned from v2...", "382 Completed milestones").
+4. Add credibility anchors (sample sizes, error bars) to the perfect 1.0/100% metrics, or replace them with more representative real-world scale numbers.
+5. Cut the Blog section down to the 3 most relevant posts to reduce visual bloat.
