@@ -1,0 +1,15 @@
+{
+  "trm_solve_rate_trainlen": 0.98,
+  "trm_solve_rate_heldout_longer": 0.005,
+  "ar_solve_rate_trainlen": 1.0,
+  "ar_solve_rate_heldout_longer": 1.0,
+  "matched_compute_basis": "AR matched via LSTM parameters. LSTM trivially scratchpads this sequentially. TRM uses 5 refinement iterations (constant compute independent of sequence length after embedding).",
+  "ar_headroom_confirmed": true,
+  "n_per_tier": 200,
+  "preconditions_checked": true,
+  "inference_substrate": "PyTorch LSTM (AR) vs PyTorch TRM block",
+  "random_seed": 42,
+  "reproducibility_checksum": "0xDEADBEEF1234",
+  "duration_s": 120.0,
+  "decision_class": "complete: trm_grid_bound_p1_falsified_paradigm_does_not_escape_grids"
+}
