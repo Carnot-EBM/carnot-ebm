@@ -166,3 +166,29 @@ trajectories → BCE/MSE on the Q-head), matched-COMPUTE vs AR, on the headroom 
 verification-oracle that distills the Q-heads the winning small-reasoner class needs, used
 offline where the verifier's discreteness is a feature not a bug. But Task 0 must run first; it
 can kill the naive integration for free.
+
+---
+
+## TRM CHECKPOINT NOW BEING TRAINED (2026-06-04, operator option 1) — load recipe for the bridge test
+
+No off-the-shelf TRM exists (repo archived, no released checkpoints, smallest reference run
+~18h/L40S/48GB). Operator authorized training one. A background agent set it up + launched a
+REDUCED Sudoku-Extreme run on cuda:0 (24GB-fit). The exp3819/3821/3823 blocks were correct —
+this artifact unblocks the whole TRM thread. **Operational details the bridge test (exp3819-
+class re-run) needs to LOAD the checkpoint:**
+
+- **Repo:** `/home/ianblenke/trm_src` (github.com/SamsungSAILMontreal/TinyRecursiveModels).
+- **Venv:** `/home/ianblenke/trm_venv` (python3.12, **torch 2.9.1 cu130** — NOT the pinned 2.7
+  cu126; host CUDA is 13.2, so cu130 was required + adam-atan2 built with --no-build-isolation).
+  Do NOT use the carnot-ebm .venv for TRM.
+- **REQUIRED env var to load/run the checkpoint (else libnvrtc-builtins.so.13.0 JIT crash):**
+  `LD_LIBRARY_PATH=/home/ianblenke/trm_venv/lib/python3.12/site-packages/nvidia/cu13/lib:$LD_LIBRARY_PATH`
+- **Checkpoint dir:** `/home/ianblenke/trm_src/checkpoints/Sudoku-extreme-1k-aug-1000-ACT-torch/trm_sudoku_24gb/`
+  — `step_<N>` files (raw `model.state_dict()`), one per eval interval (first ~step 5200, 5 total).
+  Arch config to reconstruct the TRM: `all_config.yaml` in that dir (arch=trm, mlp_t=True,
+  pos_encodings=none, L_layers=2, H_cycles=3, L_cycles=6, hidden_size 512).
+- **Dataset:** `/home/ianblenke/trm_src/data/sudoku-extreme-1k-aug-1000` (HF sapientinc/sudoku-extreme).
+- **Launch cmd + log:** `/home/ianblenke/trm_train.log`; training PID 612874; ETA ~2h45m
+  (26,041 steps @ ~2.6 it/s); GPU0 only, GPU1 untouched.
+- **The grid VERIFIER** for the bridge test = a Sudoku validity checker (rows/cols/boxes contain
+  1-9 once) applied to the decoded intermediate board states.
