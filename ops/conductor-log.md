@@ -7766,3 +7766,4 @@ ERROR: {
 | 2026-06-04 15:05 UTC | Plan milestone 2026.06.349 | OK | 11 tasks proposed |
 | 2026-06-04 15:07 UTC | Milestone 2026.06.349 activated | OK | 11 tasks queued |
 | 2026-06-04 15:21 UTC | Archive milestone .348 (POST-CONVERGENCE -- landed | OK | 107 passed in 4.30s |
+| 2026-06-04 16:08 UTC | WIRE the Anomaly-Escalation classifier as a recomm | OK | 103 passed in 4.65s |
