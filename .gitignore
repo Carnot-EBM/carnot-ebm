@@ -142,3 +142,7 @@ tests/python/test_conductor_supervisor.py
 
 # Conductor pre-test fingerprint cache — local-only, regenerated on first run
 ops/.pretest-cache.json
+
+# Vendored EBT repo (has its own .git) — must NOT be committed as a submodule gitlink;
+# an orphaned ebt_tmp gitlink with no .gitmodules broke every GitHub Pages build (checkout step).
+ebt_tmp/
