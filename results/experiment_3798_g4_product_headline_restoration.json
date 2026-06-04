@@ -60,5 +60,18 @@
     "status",
     "title"
   ],
-  "invariant_violations": []
+  "invariant_violations": [],
+  "flagged_adversarial": true,
+  "corrigendum_pending": [
+    {
+      "kind": "TAUTOLOGY",
+      "severity": "critical",
+      "detail": "baseline_pass1=0.13333333333333333 and repair_pass1=0.13333333333333333 agree to >5 sig figs. Two distinct metrics matching this precisely is more likely a bug than a finding."
+    },
+    {
+      "kind": "IMPLAUSIBLE_PERFECT",
+      "severity": "info",
+      "detail": "repair_delta_pp=0.0 (exactly zero). Confirm this is not a stub default."
+    }
+  ]
 }
