@@ -25,7 +25,7 @@ import ast
 import json
 import os
 import sys
-from typing import cast
+from typing import Any, cast
 
 _TYPE_MAP: dict[str, type] = {
     "int": int,
@@ -100,6 +100,82 @@ def _resolve_type(name: str) -> type:
     if t is None:
         raise ValueError(f"Unknown type {name!r}. Supported: {', '.join(sorted(_TYPE_MAP))}")
     return t
+
+
+def _load_candidate_batch(
+    *,
+    candidates_json: str | None = None,
+    candidates_file: str | None = None,
+) -> list[dict[str, Any]]:
+    """Load a batch of verifier-scoring candidates for CLI surfaces.
+
+    Spec: REQ-SPOE-3789, SCENARIO-SPOE-3789
+    """
+
+    if candidates_file is None and candidates_json is None:
+        raise ValueError("provide --candidates-json or --candidates-file")
+    if candidates_file is not None:
+        with open(candidates_file, encoding="utf-8") as f:
+            raw = f.read()
+        return _parse_candidate_batch_text(raw)
+    return _candidate_payload_as_list(json.loads(candidates_json or ""))
+
+
+def _parse_candidate_batch_text(raw: str) -> list[dict[str, Any]]:
+    """Parse a JSON-array or line-delimited candidate file.
+
+    Spec: REQ-SPOE-3789
+    """
+
+    stripped = raw.strip()
+    if not stripped:
+        raise ValueError("candidate batch is empty")
+    try:
+        payload = json.loads(stripped)
+    except json.JSONDecodeError:
+        candidates: list[dict[str, Any]] = []
+        for line_number, line in enumerate(raw.splitlines(), start=1):
+            row = line.strip()
+            if not row:
+                continue
+            candidates.append(_candidate_from_line(row, line_number))
+        return _candidate_payload_as_list(candidates)
+    return _candidate_payload_as_list(payload)
+
+
+def _candidate_from_line(raw: str, line_number: int) -> dict[str, Any]:
+    """Parse one candidate line as JSON object or raw text.
+
+    Spec: REQ-SPOE-3789
+    """
+
+    try:
+        payload = json.loads(raw)
+    except json.JSONDecodeError:
+        return {"candidate_id": f"line-{line_number}", "text": raw}
+    if isinstance(payload, dict):
+        return payload
+    if isinstance(payload, str):
+        return {"candidate_id": f"line-{line_number}", "text": payload}
+    raise ValueError(f"candidate line {line_number} must be a JSON object or raw text")
+
+
+def _candidate_payload_as_list(payload: Any) -> list[dict[str, Any]]:
+    """Validate candidate payload shape after JSON or line parsing.
+
+    Spec: REQ-SPOE-3789
+    """
+
+    if not isinstance(payload, list):
+        raise ValueError("candidates payload must be a JSON list")
+    if not payload:
+        raise ValueError("candidate batch is empty")
+    candidates: list[dict[str, Any]] = []
+    for idx, candidate in enumerate(payload):
+        if not isinstance(candidate, dict):
+            raise ValueError(f"candidate at index {idx} must be a JSON object")
+        candidates.append(candidate)
+    return candidates
 
 
 def cmd_verify(args: argparse.Namespace) -> int:
@@ -390,20 +466,13 @@ def cmd_score_candidates(args: argparse.Namespace) -> int:
     SCENARIO-SPOE-3779
     """
 
-    if args.candidates_file is None and args.candidates_json is None:
-        print("Error: provide --candidates-json or --candidates-file", file=sys.stderr)
-        return 1
     try:
-        if args.candidates_file is not None:
-            with open(args.candidates_file, encoding="utf-8") as f:
-                candidates = json.load(f)
-        else:
-            candidates = json.loads(args.candidates_json)
-    except (OSError, json.JSONDecodeError) as exc:
+        candidates = _load_candidate_batch(
+            candidates_json=args.candidates_json,
+            candidates_file=args.candidates_file,
+        )
+    except (OSError, json.JSONDecodeError, ValueError) as exc:
         print(f"Error reading candidates: {exc}", file=sys.stderr)
-        return 1
-    if not isinstance(candidates, list):
-        print("Error: candidates payload must be a JSON list", file=sys.stderr)
         return 1
 
     from carnot.pipeline.second_pair_detector import score_candidates
@@ -418,6 +487,40 @@ def cmd_score_candidates(args: argparse.Namespace) -> int:
     except ValueError as exc:
         print(f"Error: {exc}", file=sys.stderr)
         return 1
+    print(json.dumps(result, indent=2, sort_keys=True))
+    return 0
+
+
+def cmd_verify_batch(args: argparse.Namespace) -> int:
+    """Verify a batch of candidates through the abstention-capable score surface.
+
+    Spec: REQ-SPOE-3789, SCENARIO-SPOE-3789
+    """
+
+    try:
+        candidates = _load_candidate_batch(candidates_file=args.candidates_file)
+    except (OSError, json.JSONDecodeError, ValueError) as exc:
+        print(f"Error reading candidates: {exc}", file=sys.stderr)
+        return 1
+
+    from carnot.pipeline.second_pair_detector import score_candidates
+
+    try:
+        result = score_candidates(
+            candidates,
+            default_domain=args.domain,
+            abstention_mode=bool(args.abstention_mode),
+            abstention_threshold=args.abstention_threshold,
+        )
+    except ValueError as exc:
+        print(f"Error: {exc}", file=sys.stderr)
+        return 1
+    result["cli_surface"] = "verify-batch"
+    result["batch"] = {
+        "input_path": args.candidates_file,
+        "n_candidates": len(candidates),
+        "abstention_mode_enabled": bool(args.abstention_mode),
+    }
     print(json.dumps(result, indent=2, sort_keys=True))
     return 0
 
@@ -495,7 +598,8 @@ def cmd_memory_diff(args: argparse.Namespace) -> int:
 def main() -> int:
     """CLI entry point.
 
-    Spec: REQ-CODE-006, REQ-CODE-020, REQ-INFER-015, REQ-LEARN-1407
+    Spec: REQ-CODE-006, REQ-CODE-020, REQ-INFER-015, REQ-LEARN-1407,
+          REQ-SPOE-3789
     """
     parser = argparse.ArgumentParser(
         prog="carnot",
@@ -560,6 +664,33 @@ def main() -> int:
         "--pbt",
         action="store_true",
         help="Enable Hypothesis-backed packaged verification",
+    )
+
+    # --- verify-batch subcommand ---
+    verify_batch_parser = subparsers.add_parser(
+        "verify-batch",
+        help="Verify a candidate batch with optional certified abstention",
+    )
+    verify_batch_parser.add_argument(
+        "--candidates-file",
+        required=True,
+        help="Path to a JSON array, JSONL, or one-candidate-per-line text file",
+    )
+    verify_batch_parser.add_argument(
+        "--domain",
+        default=None,
+        help="Default domain for candidates that omit a domain",
+    )
+    verify_batch_parser.add_argument(
+        "--abstention-mode",
+        action="store_true",
+        help="Enable the certified abstention operating point",
+    )
+    verify_batch_parser.add_argument(
+        "--abstention-threshold",
+        type=float,
+        default=None,
+        help="Override the certified abstention threshold for this call",
     )
 
     # --- score subcommand ---
@@ -682,6 +813,8 @@ def main() -> int:
         return cmd_verify(parsed)
     if parsed.command == "verify-code":
         return cmd_verify_code(parsed)
+    if parsed.command == "verify-batch":
+        return cmd_verify_batch(parsed)
     if parsed.command == "score":
         return cmd_score(parsed)
     if parsed.command == "score-candidates":
