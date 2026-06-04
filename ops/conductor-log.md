@@ -7778,3 +7778,4 @@ ERROR: {
 | 2026-06-04 19:03 UTC | Capstone .349 -- aggregate the LEAN POST-CONVERGEN | OK | 87 passed in 4.94s |
 | 2026-06-04 19:06 UTC | Milestone 2026.06.350 activated | OK | 2 tasks queued |
 | 2026-06-04 19:13 UTC | Latent-Symbol Bridge: can an external discrete ver | OK | 84 passed in 5.45s |
+| 2026-06-04 19:28 UTC | FoVer moat ablation: how much of 0.9131 is the con | FAIL | Gemini CLI error: Stalled after 600s silence. Last output: rminal with at leas |

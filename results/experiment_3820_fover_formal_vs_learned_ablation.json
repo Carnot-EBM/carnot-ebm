@@ -1,0 +1,40 @@
+{
+  "honest_verdict": "complete: INCONCLUSIVE_ablation_harness_unfaithful_full0.8929_expected_0.9131",
+  "full_ensemble_auroc": 0.8928656,
+  "formal_only_auroc": 0.9612012,
+  "learned_only_auroc": 0.8897999999999999,
+  "verifier_partition": {
+    "formal": [
+      "ASTStructureVerifier",
+      "SemanticConsistencyVerifier",
+      "Z3MathVerifier"
+    ],
+    "learned": [
+      "SOSKANEnergyV3",
+      "SemEnergyProbe"
+    ],
+    "rationale": "AST, SemanticConsistency, and Z3Math use explicit rules/logic without trained weights. SOSKANEnergyV3 and SemEnergyProbe use trained models/probes."
+  },
+  "n_candidates_scored": 1000,
+  "preconditions_checked": [
+    "fover_corpus_cached",
+    "ensemble_code_imports_and_runs"
+  ],
+  "random_seed": "42, 137, 271, 314, 1729",
+  "reproducibility_checksum": "df3e9d5c45000d6c49b1691d2ac149ff023ea984e4af56fd028aeade74ff7c05",
+  "duration_s": 3.6467487812042236,
+  "inference_substrate": "verifier-scoring-only",
+  "methodology": {
+    "fields": {
+      "full_ensemble_auroc": "Positive control -- must reproduce frozen 0.9131 (+/-0.01) or the ablation is unfaithful and the deltas are meaningless.",
+      "formal_only_auroc": "The contamination-free moat floor -- AUROC from SAT/Z3/AST/liveness with NO trained weights; robust to the DT-Q4 OOD-contamination critique.",
+      "learned_only_auroc": "The learned-probe contribution -- high here + low formal = the moat leans on probes that may be OOD-advantaged on the strong model's error topology.",
+      "verifier_partition": "Records which verifier was classified FORMAL vs LEARNED (+ rationale) so the decomposition is auditable + reproducible.",
+      "n_candidates_scored": "The AUROC deltas are only meaningful at the same N the 0.9131 headline used.",
+      "preconditions_checked": "Records which resources (cached corpus, ensemble code) were verified before running; pre-empts the lacked-resource-so-fabricated mode.",
+      "random_seed": "Determinism precondition for third-party reproduction of the deltas.",
+      "reproducibility_checksum": "Content hash of (corpus id, partition, N, seed) catches silent drift vs any replication.",
+      "duration_s": "Verifier-scoring over the corpus takes wall-clock; implausibly short = fabrication signal (floor 1s for this substrate)."
+    }
+  }
+}
