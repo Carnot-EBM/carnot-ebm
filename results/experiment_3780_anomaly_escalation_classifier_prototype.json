@@ -1,0 +1,73 @@
+{
+  "change_proposal_written": true,
+  "classified_examples": [
+    {
+      "classification": "clean_bounded_negative",
+      "honest_verdict": "complete: thesis_a_definitive_reconciled_part_a_PASS_discriminative_part_b_BOUNDED_not_generative_in_loop_chain_superseded_menu_updated_not_retired",
+      "rationale": "verdict matches expected negative metadata for Thesis-A-bounded",
+      "recommendation": "standard_auto_reconcile",
+      "source": "results/experiment_3766_thesis_a_definitive_reconcile.json",
+      "verification_relaxation_recommended": false
+    },
+    {
+      "classification": "frame_violating_anomaly",
+      "honest_verdict": "inconclusive: p1_v2_ar_positive_control_failed_ar_best_below_0_3",
+      "rationale": "load-bearing positive control failed: AR positive control; pause pruning and ask a human without relaxing verification.",
+      "recommendation": "halt_pruning_escalate_to_human",
+      "source": "openspec/change-proposals/research-roadmap-vNEXT.md#p1-v2",
+      "verification_relaxation_recommended": false
+    },
+    {
+      "classification": "clean_positive",
+      "honest_verdict": "complete: abstention_mode_wired_into_verify_api_default_off_e2e_passed_doc_proposal_emitted_not_curated_edit",
+      "rationale": "terminal positive verdict with no frame-violation signals",
+      "recommendation": "standard_positive_reconcile",
+      "source": "results/experiment_3779_abstention_operating_point_product_wiring.json",
+      "verification_relaxation_recommended": false
+    }
+  ],
+  "classifier_only_recommends": true,
+  "classifier_shipped": true,
+  "clean_vs_anomaly_examples": {
+    "clean_bounded_negative": {
+      "honest_verdict": "complete: thesis_a_definitive_reconciled_part_a_PASS_discriminative_part_b_BOUNDED_not_generative_in_loop_chain_superseded_menu_updated_not_retired",
+      "rationale": "verdict matches expected negative metadata for Thesis-A-bounded",
+      "recommendation": "standard_auto_reconcile",
+      "source": "results/experiment_3766_thesis_a_definitive_reconcile.json"
+    },
+    "clean_positive": {
+      "honest_verdict": "complete: abstention_mode_wired_into_verify_api_default_off_e2e_passed_doc_proposal_emitted_not_curated_edit",
+      "rationale": "terminal positive verdict with no frame-violation signals",
+      "recommendation": "standard_positive_reconcile",
+      "source": "results/experiment_3779_abstention_operating_point_product_wiring.json"
+    },
+    "frame_violating_anomaly": {
+      "honest_verdict": "inconclusive: p1_v2_ar_positive_control_failed_ar_best_below_0_3",
+      "rationale": "load-bearing positive control failed: AR positive control; pause pruning and ask a human without relaxing verification.",
+      "recommendation": "halt_pruning_escalate_to_human",
+      "source": "openspec/change-proposals/research-roadmap-vNEXT.md#p1-v2"
+    }
+  },
+  "duration_s": 0.000553,
+  "field_principles": {
+    "change_proposal_written": "BARE bool -- true means the operator-wiring change proposal exists and the conductor was not modified.",
+    "classifier_only_recommends": "BARE bool -- true means the classifier recommends pause+escalate and never prunes, edits, or relaxes verification.",
+    "classifier_shipped": "BARE bool -- scripts/anomaly_escalation_classifier.py exists and runs.",
+    "clean_vs_anomaly_examples": "Example classifications showing at least one clean bounded negative and one frame-violating anomaly.",
+    "duration_s": "Wall-clock plausibility floor.",
+    "honest_verdict": "Terminal prefix; the prototype outcome.",
+    "inference_substrate": "A classifier over artifact metadata, no live model; prevents confusing this prototype with a compute-bound experiment.",
+    "n_test_artifacts_classified": "Count of example artifacts run through the classifier; sample evidence that the prototype executes on concrete artifact metadata.",
+    "never_relaxes_verification": "BARE bool -- true means design and proposal forbid auto-relaxing verification; valley funding stays human-gated.",
+    "random_seed": "Determinism precondition.",
+    "reproducibility_checksum": "Content hash catches drift.",
+    "tests_assert_real_behavior": "BARE bool -- true means shipped tests assert the real classifier behavior rather than a poisoned placeholder."
+  },
+  "honest_verdict": "complete: anomaly_escalation_classifier_prototyped_recommend_only_change_proposal_written_never_relaxes_verification_conductor_unmodified",
+  "inference_substrate": "aggregation_from_upstream_artifacts",
+  "n_test_artifacts_classified": 3,
+  "never_relaxes_verification": true,
+  "random_seed": 3780,
+  "reproducibility_checksum": "cd58f5d9682f50af5752f365c7fabfedbccfe1a1e57c54e3205509b1c9bd8d83",
+  "tests_assert_real_behavior": true
+}
