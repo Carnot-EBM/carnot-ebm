@@ -4,51 +4,54 @@
 # docs_audit_report — 2026-06-04
 
 ## TL;DR (stranger's 30-second take)
-I am closing this tab immediately. The page is littered with internal project jargon, contradictory performance claims, and literally leaks temporary pytest filepaths directly into the public benchmark cards.
+I'd bounce in 10 seconds. While the hero clearly explains what the tool does, the page is immediately bogged down by 33 separate UI cards, impenetrable insider jargon, wildly contradictory benchmark claims, and a literal broken file path injected into a headline. It feels like an internal dashboard, not a public landing page.
 
 ## TOP 3 PROBLEMS
-1. **Critical HTML/Data Leak** — The "Live benchmark" card contains a raw local filepath (`@.tmp-pytest/.../spilled-energy...:real.txt`) instead of a readable metric.
-2. **Card Bloat** — There are 31 distinct cards on this page (7 bento, 12 result, 7 blog, etc.), guaranteeing a stranger will skim none of them.
-3. **Internal Lab-Notebook Tone** — Sections like "Recent Progress" and the Blog list read like private post-mortems and status updates rather than clear product marketing.
+1. **Contradictory Claims:** Code repair performance numbers wildly conflict across different cards (+3 points vs +36 points vs +72 points).
+2. **Card Fatigue (Bloat):** The page throws 33 separate bento/result cards at the user. The 12-card Results grid is overwhelming and guarantees nothing gets read.
+3. **Severe Insider Jargon & Corruption:** The copy is littered with unexplained acronyms (FoVer, CCTU, SVAMP), internal milestones, and a broken pytest file path injected directly into an H3 tag.
 
 ## DETAILED FINDINGS
-
 ### Bloat
-- **Overall Page Structure** — 31 total cards — Cap at ~15-20 max across the whole page to prevent cognitive overload.
-- **Results Section** — 12 individual result cards — Cap at 6 maximum. Pick the strongest, most comprehensible evidence and drop the rest.
-- **Blog Section** — 7 post cards — Cap at 3 recent/relevant posts.
+- **Overall page structure** — 33 total cards across the page — Far exceeds the ~20 card threshold where a stranger stops reading.
+- **Results section** — 12 result cards — Way too many isolated claims.
+- **Features section** — 7 bento cards — The grid is overwhelming and dilutes the core value proposition.
+- **Blog section** — 7 article cards — Takes up massive real estate at the bottom for internal retrospective posts.
 
 ### Internal jargon
-- **Stats Bar** — `FoVer math step-errors (5-seed)` — A stranger has no context for what "FoVer" is or why a "5-seed" matters to the headline.
-- **Results Grid** — `@.tmp-pytest/pytest-of-ianblenke/pytest-3/popen-gw0/test_req_verify_2932_run_uses_0/citation_hallucination_field_verifier_2932_raw/spilled-energy-2602-18671:real.txt` — This is a catastrophic leak of an internal test path into public marketing copy.
-- **Results Grid** — `CCTU constrained micro-benchmark`, `SVAMP AUC`, `VeriCoT equation-style CoT fix` — Deep insider terminology and acronyms used without any prior definition.
-- **Bento Grid** — `PREM` (Process-Reward Energy Model) — Introduced completely out of nowhere in the last card. 
+- **Hero stats bar** — "FoVer (5-seed dual-condition; architecture-only 0.8947)" — A stranger has no idea what FoVer is or why the "architecture-only" caveat matters.
+- **Features "P" card** — "Test-Time Compute (TTC) & PREM" — Acronyms dropped with zero context.
+- **Result cards** — "IterativeSelfRepair", "EstimationVerifier SVAMP AUC", "VeriCoT", "PRM-BiasBench-style attacks", "CCTU" — Insider benchmark names and internal component names mean nothing to a casual visitor.
+- **Blog titles** — "Regex in an NTK Costume" — What is NTK?
 
 ### Per-milestone narrative
-- **Recent Progress Card** — `Repinned from v2 0.9857 after pre-submission adversarial audit... The canonical source repository is...` — This reads like a git commit message or an internal ops log, not landing page copy.
-- **Preprint Section** — `The arXiv submission is prepared but pending operator-initiated upload.` — Pure internal status reporting. 
-- **Blog Post Titles** — `Two Retractions and a Rescue`, `Caught Cheating: 95 Microseconds...` — These sound like sprint retrospectives, not thought leadership for external users.
+- **Recent progress card (Hero)** — "Repinned from v2 0.9857 after pre-submission adversarial audit; see Why We Report Two AUROCs Now." — Reads exactly like an internal project status or commit log, not a value proposition for a new user.
+- **Blog summaries** — "We paid for a hostile audit...", "Three rigorous theory rounds approved..." — Navel-gazing process commentary that wastes space on a landing page.
 
 ### Inconsistencies
-- **HumanEval Pass Rate Claims** vs **HumanEval Pass Rate Claims**: The "Code" bento card says `+3.0 points on pass-rate` for HumanEval. Later, the "Code repair" results card says `8% → 80% pass rate (+72pp)`. Then, the "Live benchmark" card says `0% → 36%`. A stranger cannot trust the tool if it claims three wildly different impacts on the exact same benchmark.
-- **AUROC Claims** vs **AUROC Claims**: The stats bar headline highlights `0.9131` AUROC. The paragraph right beneath it mentions `0.8947` and `0.9857`. A completely separate safety card claims `0.91`. You are confusing the reader with conflicting numbers.
+- **HumanEval Pass Rates** — 
+  - "Code" Feature card claims repair pushes pass-rate up by **3 points**.
+  - "Code" Result card claims **+3.0 points**.
+  - "Code repair" Result card claims **+72 points (8% &rarr; 80%)**.
+  - "Live benchmark" Result card claims **+36 points (0% &rarr; 36%)**.
+  A stranger will instantly assume these numbers are made up or cherry-picked because they contradict each other without immediate context.
 
 ### Missing essentials
-- **What "Energy" actually is practically**: The concept card explains the physics analogy, but the quickstart just shows `result.verified = False`. The page never shows the stranger what the "Energy" metric *actually looks like* or how a developer uses it in code.
-- **Credibility/Maintainer**: The footer says "Ian Blenke · Carnot Project" but there is no "About" section explaining why this person/project should be trusted with catching LLM reasoning errors.
+- **Trust anchors for the numbers** — The page claims "Every number below is backed by a checked-in experiment artifact", but there is not a single direct link connecting a stat to its proof. A stranger won't dig through GitHub to verify the claims, weakening the answer to "Why should I trust the numbers?".
 
 ### Fabrication signals
-- **Math extraction TP rate (1.0)** — `GSM8K extraction TP rate: 0.5 → 1.0` — A perfect 1.0 True Positive rate is a massive red flag for over-fitting or a broken evaluation pipeline.
-- **Adversarial audit (60/60)** — `k=5 ensemble catches 60/60 attacks` — Perfect scores (100%) against adversarial sets signal cherry-picking or lack of rigorous scale.
-- **Speedup (2.0x)** — `2.0× speedup, identical losses` — Exactly 2.0x is suspiciously round without a decimal (e.g., 2.04x).
+- **Math extraction Result card** — "GSM8K extraction TP rate: 0.5 &rarr; 1.0" — A perfect 1.0 (100%) true positive rate on GSM8K extraction is highly suspicious without a massive caveat or credibility anchor.
+- **Adversarial audit Result card** — "ensemble catches 60/60 attacks" — 100% success rates trigger immediate snake-oil alarms for technical audiences.
+- **Broken Path Injection** — The "Live benchmark" result card contains literal internal test path garbage: `@.tmp-pytest/pytest-of-ianblenke/pytest-3/popen-gw0/test_req_verify_2932_run_uses_0/citation_hallucination_field_verifier_2932_raw/spilled-energy-2602-18671:real.txt`. (This corruption is also present in the Google Fonts URL in the `<head>`).
 
 ## WHAT'S WORKING
-- **The Quickstart block** is excellent. The tabs for Python and Rust clearly demonstrate that the tool is actually just 3-5 lines of code to integrate.
-- **The Visual Design** is highly professional. The glassmorphism, typography, and micro-interactions make the project feel modern and well-funded.
+- **The "Quickstart" section** is excellent: clean, multi-language (Python/Rust tabs), and clearly demonstrates the "verify" and "repair" API in just a few lines.
+- **The Hero headline and subheadline** concisely explain what the tool does (Catch reasoning errors, check consistency, suggest fixes) and provide the PIP install command immediately.
 
 ## RECOMMENDED OPERATOR ACTIONS
-1. **IMMEDIATELY** scrub the `@.tmp-pytest/...` filepath out of the "Live benchmark" results card.
-2. Reconcile the conflicting HumanEval pass-rate claims into a single, unified, verifiable claim so you don't look like you are manipulating numbers.
-3. Slash the Results Grid from 12 cards down to 6. Drop the hyper-specific, jargon-heavy cards (SVAMP, VeriCoT, CCTU).
-4. Rewrite the "Recent Progress" stats card to focus strictly on the value proposition, deleting all internal audit/pinning narratives.
-5. Soften the "perfect" 1.0 and 60/60 scores by either providing the exact credibility anchor (e.g., sample size) or adjusting the claim to be mathematically defensible to a skeptical reader.
+1. Remove the broken pytest file paths injected into the "Live benchmark" card and the Google Fonts URL in the `<head>`.
+2. Reconcile the HumanEval / code repair claims into a single, cohesive metric (or clearly label why they differ if they measure different things).
+3. Ruthlessly cull the Results section from 12 cards down to the 3-4 strongest, most broadly understandable metrics.
+4. Purge internal jargon (FoVer, CCTU, SVAMP, PREM) and replace with descriptive phrases (e.g., "math reasoning benchmark", "tool use constraint benchmark").
+5. Delete the "Recent progress" hero card entirely—it clutters the top-of-funnel with insider baseball.
+6. Cap the Blog/Writing section to 3 posts max to reduce bloat.
