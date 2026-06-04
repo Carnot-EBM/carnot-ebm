@@ -11023,3 +11023,76 @@ verifier-scoring substrate only.
 | Requirement  | Python | Tests |
 |-------------|--------|-------|
 | REQ-LEARN-3803 | Implemented (python/carnot/fr11/continuous_self_learning_v20.py; scripts/experiment_3803_fr11_v20_tier3_fast_path_gate.py, Exp 3803) | Implemented (tests/python/test_experiment_3803_fr11_v20_fast_path_gate.py) |
+
+---
+
+## REQ-LEARN-3813: FR-11 v21 Fast-Path Operating-Point Robustness
+
+**Given** Exp 3788 persisted a trained `FR11ExtendedJEPA` Tier-3 predictor and
+Exp 3803 persisted a fast-path operating point with threshold `T` and skip rate
+0.56
+**When** Exp 3813 runs the FR-11 v21 robustness measurement
+**Then** it SHALL load the persisted predictor state and the persisted v20
+operating point and SHALL NOT retrain the predictor or re-tune the threshold
+**And** it SHALL construct a second held-out FoVer split with a different seed
+that is disjoint from both the v19 predictor-training rows and the v20
+measurement rows
+**And** it SHALL apply the persisted threshold unchanged: confident rows use the
+Tier-3 predictor score, and uncertain rows fall through to the frozen
+four-verifier ensemble
+**And** it SHALL report the second-split skip rate and effective AUROC honestly,
+including the valid finding that the v20 operating point may require
+per-split recalibration.
+
+### REQ-LEARN-3813 Sub-requirements
+
+- REQ-LEARN-3813-1: Preconditions SHALL run under `.venv/bin/python`, require
+  importable `jax`, `numpy`, `sklearn`, and `FR11ExtendedJEPA`, and require both
+  the v19 predictor state and v20 operating-point state to load before any
+  second-split measurement is reported.
+- REQ-LEARN-3813-2: If the interpreter, persisted predictor state, persisted
+  operating-point state, FoVer corpus, or cached verifier scoring path is
+  missing, the artifact SHALL use a `blocked_<resource>` honest verdict and
+  SHALL NOT fabricate skip rate, effective AUROC, or generalization success.
+- REQ-LEARN-3813-3: The second split SHALL preserve original FoVer row IDs and
+  SHALL prove that the v19 predictor-training split, the v20 measurement split,
+  and the v21 second held-out split are mutually disjoint.
+- REQ-LEARN-3813-4: The v20 persisted operating-point threshold SHALL be reused
+  unchanged; Exp 3813 SHALL NOT sweep thresholds or select a new operating
+  point to match the v20 skip rate.
+- REQ-LEARN-3813-5: `operating_point_generalizes` SHALL be true only when the
+  second-split skip rate is within the configured robustness band around 0.56,
+  the second-split effective AUROC is inside frozen CI95 `[0.9027, 0.9235]`,
+  `accuracy_regression=false`, and the frozen headline ensemble remains
+  unchanged.
+- REQ-LEARN-3813-6: Runnable artifacts SHALL include bare values for
+  `honest_verdict`, `inference_substrate`, `v20_operating_point_threshold`,
+  `skip_rate_second_split`, `effective_auroc_second_split`,
+  `operating_point_generalizes`, `three_split_sizes`, `accuracy_regression`,
+  `headline_ensemble_unchanged`, `is_measurement_not_retrain`, `model_specs`,
+  `random_seed`, `reproducibility_checksum`, and `duration_s`, plus separate
+  field-principle annotations for those fields.
+- REQ-LEARN-3813-7: The terminal verdict SHALL be
+  `complete: fr11_v21_fast_path_robustness_skip_<x>_effective_auroc_<y>_operating_point_generalizes_<true|false>_headline_ensemble_unchanged_measurement_not_retrain`
+  when the persisted operating point is measured on the second split, whether
+  or not it generalizes.
+
+### SCENARIO-LEARN-3813: Persisted Fast-Path Gate Is Measured Without Re-Tuning
+
+**Given** labeled FoVer-style verifier scores, original row IDs, a persisted
+`FR11ExtendedJEPA` state, and a persisted v20 operating-point threshold
+**When** the v21 robustness measurement excludes the reconstructed v19
+training rows and v20 measurement rows
+**Then** the second split is disjoint from both earlier splits
+**And** the persisted threshold is applied unchanged to compute skip rate and
+effective AUROC
+**And** poisoning the persisted predictor state changes the second-split gate
+behavior, proving the result uses the real persisted Tier-3 predictor
+**And** the artifact reports `is_measurement_not_retrain=true`,
+`headline_ensemble_unchanged=true`, and verifier-scoring substrate only.
+
+## Implementation Status (REQ-LEARN-3813)
+
+| Requirement  | Python | Tests |
+|-------------|--------|-------|
+| REQ-LEARN-3813 | Proposed (python/carnot/fr11/continuous_self_learning_v21.py; scripts/experiment_3813_fr11_v21_fast_path_robustness.py, Exp 3813) | Proposed (tests/python/test_experiment_3813_fr11_v21_fast_path_robustness.py) |
