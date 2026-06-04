@@ -1,0 +1,228 @@
+{
+  "adversarial_verify_clean": true,
+  "adversarial_verify_report": {
+    "flags": [],
+    "max_severity": -1
+  },
+  "append_action": "appended",
+  "arxiv_resolution_summary": {
+    "all_added_arxiv_ids_resolved": true,
+    "verification_basis": "Primary arXiv abstract pages were resolved during the .349 filing; entries preserve source-reported claims pending independent Carnot re-derivation."
+  },
+  "duration_s": 0.012795,
+  "field_principles": {
+    "duration_s": "Wall-clock plausibility floor.",
+    "honest_verdict": "Terminal prefix; the refresh outcome.",
+    "inference_substrate": "A documentation append over upstream paper records; prevents confusing this refresh with a compute-bound experiment.",
+    "n_references_added": "BARE int -- sample-size hygiene on the refresh.",
+    "numbers_are_as_reported": "BARE bool, true -- peer numbers are source-reported, not Carnot measurements (adversarial-verify discipline).",
+    "random_seed": "Determinism precondition.",
+    "references_added": "The list of arXiv ids filed this sweep -- the deliverable; keeps the project current per research-program.md planning requirement 4.",
+    "references_section_intact": "BARE bool, true -- the planner-appended '.349 additions' section is present + parses.",
+    "reproducibility_checksum": "Content hash catches drift.",
+    "section_appended_not_replaced": "BARE bool, true -- the section was APPENDED/confirmed-intact (never-prune rule; no prior content removed)."
+  },
+  "honest_verdict": "complete: external_research_refresh_349_section_intact_references_appended_numbers_as_reported",
+  "inference_substrate": "aggregation_from_upstream_artifacts (principle: a documentation append, no live model).",
+  "n_references_added": 10,
+  "numbers_are_as_reported": true,
+  "random_seed": 3816,
+  "references": [
+    {
+      "arxiv_abs_resolved": true,
+      "arxiv_abs_url": "https://arxiv.org/abs/2605.28920",
+      "arxiv_id": "arXiv:2605.28920",
+      "as_reported_note": "Guarantees and application outcomes are source-reported only.",
+      "as_reported_summary": "Adapts conformal risk control to generative tasks and reports applications to conversational AI asking enough clarifying questions and agent-output correctness.",
+      "numbers_are_as_reported": true,
+      "relevance": "Banked abstention product surface: calibrate an act/abstain decision over generated artifacts rather than treating generation as a fixed classifier output.",
+      "source_kind": "arxiv_abs",
+      "submitted": "submitted 2026-05-27",
+      "title": "Conf-Gen: Conformal Uncertainty Quantification for Generative Models",
+      "tracks": [
+        "selective-prediction / abstention surface"
+      ],
+      "venue_context": "ICML 2026"
+    },
+    {
+      "arxiv_abs_resolved": true,
+      "arxiv_abs_url": "https://arxiv.org/abs/2606.03731",
+      "arxiv_id": "arXiv:2606.03731",
+      "as_reported_note": "Risk-control and utility claims are source-reported only.",
+      "as_reported_summary": "Samples from an approximate LLM posterior conditioned on a calibrated high-scoring region and reports target risk control with higher downstream utility than post-hoc filtering.",
+      "numbers_are_as_reported": true,
+      "relevance": "Forward surface for banked abstention: move the conformal guarantee inside the sampling path instead of only filtering finished answers.",
+      "source_kind": "arxiv_abs",
+      "submitted": "submitted 2026-06-03",
+      "title": "Conformal Language Modeling via Posterior Sampling",
+      "tracks": [
+        "selective-prediction / abstention surface"
+      ]
+    },
+    {
+      "arxiv_abs_resolved": true,
+      "arxiv_abs_url": "https://arxiv.org/abs/2602.03814",
+      "arxiv_id": "arXiv:2602.03814",
+      "as_reported_note": "Risk adherence and efficiency outcomes are source-reported only.",
+      "as_reported_summary": "Uses distribution-free risk control to set reasoning stop thresholds that limit error while minimizing compute.",
+      "numbers_are_as_reported": true,
+      "relevance": "Direct peer for .349 fast-path verification: Tier-3 can expose a risk target and compute budget instead of a hand-tuned confidence cutoff.",
+      "source_kind": "arxiv_abs",
+      "submitted": "submitted 2026-02-03; last revised 2026-05-14",
+      "title": "Conformal Thinking: Risk Control for Reasoning on a Compute Budget",
+      "tracks": [
+        "selective-prediction / abstention surface",
+        "Tier-3 fast-path process verification"
+      ],
+      "venue_context": "ICML 2026"
+    },
+    {
+      "arxiv_abs_resolved": true,
+      "arxiv_abs_url": "https://arxiv.org/abs/2602.15014",
+      "arxiv_id": "arXiv:2602.15014",
+      "as_reported_note": "FLOP, scale, and benchmark claims are source-reported only.",
+      "as_reported_summary": "Studies uniform-state and interpolating discrete diffusion scaling; reports about 12% FLOP efficiency for masked diffusion training and a 1.7B uniform-state model outperforming autoregressive and masked diffusion baselines on GSM8K despite worse perplexity.",
+      "numbers_are_as_reported": true,
+      "relevance": "Operator-seed boundary for EDLM: compare diffusion families under matched compute and avoid treating perplexity as the only substrate selection signal.",
+      "source_kind": "arxiv_abs",
+      "submitted": "submitted 2026-02-16",
+      "title": "Scaling Beyond Masked Diffusion Language Models",
+      "tracks": [
+        "EDLM operator-seed"
+      ]
+    },
+    {
+      "arxiv_abs_resolved": true,
+      "arxiv_abs_url": "https://arxiv.org/abs/2603.06123",
+      "arxiv_id": "arXiv:2603.06123",
+      "as_reported_note": "Efficiency and performance-impact claims are source-reported only.",
+      "as_reported_summary": "Uses latent prompt representations to crop the diffusion context before generation and reports large FLOP reductions with minimal performance impact across reasoning, code, instruction, and QA tasks.",
+      "numbers_are_as_reported": true,
+      "relevance": "Fast-path cue for the EDLM seed: diffusion can expose a pre-generation length/compute estimate that the Tier-3 gate can route or reject.",
+      "source_kind": "arxiv_abs",
+      "submitted": "submitted 2026-03-06",
+      "title": "Diffusion Language Models Are Natively Length-Aware",
+      "tracks": [
+        "EDLM operator-seed",
+        "Tier-3 fast-path process verification"
+      ]
+    },
+    {
+      "arxiv_abs_resolved": true,
+      "arxiv_abs_url": "https://arxiv.org/abs/2603.06617",
+      "arxiv_id": "arXiv:2603.06617",
+      "as_reported_note": "Benchmark and speed claims are source-reported only.",
+      "as_reported_summary": "Introduces an AR-diffusion latent trajectory model and reports Evo 8B is competitive on reasoning, code, and language benchmarks while maintaining fast inference.",
+      "numbers_are_as_reported": true,
+      "relevance": "EDLM operator-seed route can consider hybrid AR/diffusion transition kernels instead of a pure discrete-diffusion commitment.",
+      "source_kind": "arxiv_abs",
+      "submitted": "submitted 2026-02-20",
+      "title": "Evo: Autoregressive-Diffusion Large Language Models with Evolving Balance",
+      "tracks": [
+        "EDLM operator-seed"
+      ]
+    },
+    {
+      "arxiv_abs_resolved": true,
+      "arxiv_abs_url": "https://arxiv.org/abs/2509.01025",
+      "arxiv_id": "arXiv:2509.01025",
+      "as_reported_note": "Planning, math, and code-infill numbers are source-reported only.",
+      "as_reported_summary": "Adds token insertion to masked diffusion, reports higher length fidelity, about 60% higher maze-planning success than masked diffusion baselines, and LLaDA-8B GSM8K gains from 58% to 67% after retrofit.",
+      "numbers_are_as_reported": true,
+      "relevance": "EDLM follow-up surface: variable-length any-order diffusion addresses a core fixed-length weakness before the operator spends a seed run.",
+      "source_kind": "arxiv_abs",
+      "submitted": "submitted 2025-08-31; last revised 2025-09-07",
+      "title": "Any-Order Flexible Length Masked Diffusion",
+      "tracks": [
+        "EDLM operator-seed"
+      ]
+    },
+    {
+      "arxiv_abs_resolved": true,
+      "arxiv_abs_url": "https://arxiv.org/abs/2606.02020",
+      "arxiv_id": "arXiv:2606.02020",
+      "as_reported_note": "Accuracy, token-reduction, and comparison numbers are source-reported only.",
+      "as_reported_summary": "Finds a two-phase CoT entropy pattern and reports a CUSUM change-point controller with 63.06% accuracy and 11.1% token reduction on early exit.",
+      "numbers_are_as_reported": true,
+      "relevance": "Predictive verification cue for .349: monitor process convergence as a sequential signal before paying for full slow-path verification.",
+      "source_kind": "arxiv_abs",
+      "submitted": "submitted 2026-06-01",
+      "title": "Unveiling the Entropy Dynamics of Chain-of-Thought Reasoning",
+      "tracks": [
+        "Tier-3 fast-path process verification"
+      ]
+    },
+    {
+      "arxiv_abs_resolved": true,
+      "arxiv_abs_url": "https://arxiv.org/abs/2604.06787",
+      "arxiv_id": "arXiv:2604.06787",
+      "as_reported_note": "Length-reduction and performance claims are source-reported only.",
+      "as_reported_summary": "Introduces Dynamic Thought Sufficiency in Reasoning with reflection signal monitoring and a sufficiency check; reports 28.9%-34.9% reasoning-length reductions with minimal performance loss.",
+      "numbers_are_as_reported": true,
+      "relevance": "Fast-path process verifier precedent: exit only after a sufficiency assessment, not merely after a fixed token budget.",
+      "source_kind": "arxiv_abs",
+      "submitted": "submitted 2026-04-08",
+      "title": "When Is Thinking Enough? Early Exit via Sufficiency Assessment for Efficient Reasoning",
+      "tracks": [
+        "Tier-3 fast-path process verification"
+      ],
+      "venue_context": "ACL 2026"
+    },
+    {
+      "arxiv_abs_resolved": true,
+      "arxiv_abs_url": "https://arxiv.org/abs/2604.16890",
+      "arxiv_id": "arXiv:2604.16890",
+      "as_reported_note": "Token and accuracy-efficiency claims are source-reported only.",
+      "as_reported_summary": "Post-trains models to internalize dynamic early exit at semantic-step granularity and reports a 32.0% token reduction on Qwen3-8B versus the vanilla model.",
+      "numbers_are_as_reported": true,
+      "relevance": "Training-side complement to the .349 Tier-3 gate: make concise high-confidence traces easier for the verifier to accept quickly.",
+      "source_kind": "arxiv_abs",
+      "submitted": "submitted 2026-04-18",
+      "title": "Step-GRPO: Internalizing Dynamic Early Exit for Efficient Reasoning",
+      "tracks": [
+        "Tier-3 fast-path process verification"
+      ],
+      "venue_context": "ACL 2026"
+    }
+  ],
+  "references_added": [
+    "arXiv:2605.28920",
+    "arXiv:2606.03731",
+    "arXiv:2602.03814",
+    "arXiv:2602.15014",
+    "arXiv:2603.06123",
+    "arXiv:2603.06617",
+    "arXiv:2509.01025",
+    "arXiv:2606.02020",
+    "arXiv:2604.06787",
+    "arXiv:2604.16890"
+  ],
+  "references_section_intact": true,
+  "reproducibility_checksum": "1feaec31b6101e9e1bba22cf6ec4a419c85f90d7f1e3a9294536a930d026ed58",
+  "research_references_path": "research-references.md",
+  "schema": "carnot.external_research_refresh.v1",
+  "section_appended_not_replaced": true,
+  "section_header": "## .349 additions - geometry-calibrated conformal abstention, selective conformal judging, and the EDLM reasoning datapoint (2026-06-04)",
+  "section_parse_summary": {
+    "excluded_duplicate_ids": [
+      "arXiv:2604.27914",
+      "arXiv:2602.13110",
+      "arXiv:2410.21357",
+      "arXiv:2604.13991",
+      "arXiv:2507.02092"
+    ],
+    "required_planner_anchors_present": [
+      "Added by the `.349 planning sweep",
+      "Numbers are source-reported by the papers",
+      "arXiv:2604.27914",
+      "arXiv:2602.13110",
+      "EDLM reasoning datapoint",
+      "arXiv:2410.21357",
+      "reference_deep_think_post_bounded_2026_06",
+      "project_energy_selection_thesis_bounded",
+      "project_thesis_a_ebt_seeded"
+    ],
+    "single_349_section": true
+  },
+  "section_sha256": "4f1c32ceae191741c86f98afaef827216e35930df53582338809fe5271d77b26"
+}
