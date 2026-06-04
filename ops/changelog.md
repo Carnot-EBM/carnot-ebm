@@ -8511,3 +8511,45 @@ Did NOT modify research-roadmap.yaml or scripts/research_conductor.py. Did NOT p
 - 2026-06-03: Verifier-product HONEST positioning vs PRM SOTA: build a structured comparison of Carnot's discriminative 0.9131 step-error ensemble against the generative-PRM and label-free-PRM frontier (GenPRM, ThinkPRM, uPRM, ProcessBench reasoning-LLM verifiers), stating PLAINLY where Carnot leads (cheap, objective, energy-grounded CPU scoring + a CERTIFIED abstention operating point) and where it does NOT (raw F1 vs a 32B reasoning verifier; OOD generalization -- settled domain-bound). A paper/product positioning deliverable; NO generalization re-test. (✅ Complete) — honest_verdict=complete: verifier_product_positioned_vs_prm_sota_leads_cost_objectivity_certifiability_does_not_lead_f1_or_ood_no_generalization_retest; results/experiment_3773_verifier_product_prm_positioning.json
 - 2026-06-03: KV260 opportunistic continuity audit -- confirm terminal state holds (SSH-reachable, accelerator overlay loadable). Documentation-only; the per-milestone hardware mandate was relaxed to opportunistic at .340 (GateMate/PolarFire stay opportunistic future-work). (✅ Complete) — honest_verdict=complete: kv260_terminal_state_holds_ssh_reachable_accelerator_loadable_opportunistic_audit; results/experiment_3774_kv260_opportunistic_continuity_audit.json
 - 2026-06-03: Capstone .345 -- aggregate the product-banking RECOVERY milestone: the .344 SKIP-cascade recovered (archive + Thesis-A definitive reconcile restored), the publication gates mechanized (G2 local reproducer + G3 narrowing lint), the verifier banked toward Phase-1 ship (pkg/CLI/MCP E2E + mirror checklist), a CERTIFIED abstention point shipped, FR-11 v17 on the live verifier, the verifier product positioned vs PRM SOTA, and KV260 terminal confirmed. paper_ready MUST stay TRUE; frozen 0.9131 unchanged; both energy routes stay bounded. (✅ Complete) — honest_verdict=complete: capstone_v345_skip_cascade_recovered_thesis_a_closed_both_energy_routes_bounded_gates_mechanized_verifier_banked_abstention_point_shipped_fr11_v17_prm_positioned_paper_ready_true_frozen_headline_unchanged; results/experiment_3775_capstone_v345.json
+
+## 2026-06-03 — [outer-loop] Pre-staged roadmap .346 (POST-BOUNDED CONVERGENCE)
+
+Planned milestone 2026.06.346 (10 tasks, Claude Opus 4.8). Context: .345 fully landed
+(11/11, paper_ready=TRUE, certified abstention point shipped, G2 re-reproduced locally).
+The project is converged on its one surviving positive (FoVer 0.9131 verifier) and both
+energy-foundation routes are bounded. Planning sweep finding: the verifier-MOAT / scissor-plot
+thread (Deep Think P2) is ALREADY CLOSED for ~zero GPU — the defensible claim is the banked
+math step-error product, NOT a general independence-moat — so .346 does NOT run a scissor sweep
+(that would re-grind a closed thread).
+
+The ONE genuinely-open energy-existential question is P1 (artifact-vs-fundamental for
+energy-as-generator on discrete text). The discrete-search test ran twice today (v1/v2) and was
+INCONCLUSIVE because the from-scratch AR POSITIVE CONTROL was starved (n_train=20000 vs the 40000
+needed for AR=0.84); root cause diagnosed + harness fixed (confirmed scripts/thesis_a_p1_discrete_
+search_v2.py:99 now reads min(40000,...)). .346's depth anchor is exp3777 = the v3 rerun with a
+valid positive control + an ar_best>=0.3 gate; prior_failures names v1/v2 (rerun discipline satisfied).
+
+Tasks: exp3776 archive/activate; exp3777 P1 discrete-search v3 [claude/opus, GPU, the depth anchor];
+exp3778 FR-11 v18 Tier-2 constraint-memory self-learning (distinct tier from v17's Tier-1);
+exp3779 wire the certified abstention point into the verify API as a deployable opt-in feature
+(banks the product surface); exp3780 P3 Anomaly-Escalation classifier prototype + change-proposal
+(recommend-only, never auto-relaxes verification, conductor unmodified); exp3781 EDLM next-thesis
+feasibility SCOPING [claude] (operator seeding scaffold, not a loop commitment); exp3782
+technical-report G4 correction PREP (operator proposal, no curated edit); exp3783 external research
+refresh (5 new 2026 papers: verifier entanglement 2604.07650, correlated errors 2506.07962, VPRM
+2601.17223, gaming-verifiers 2604.15149, Dyve 2502.11157); exp3784 KV260 opportunistic; exp3785
+capstone. INVARIANTS: paper_ready TRUE; FoVer 0.9131 frozen; both energy routes stay bounded
+(P1 v3 sharpens the mechanism only).
+
+Routing: codex cheap-default (gemini crashes GPU + wiped milestones via 429); the ONE GPU task
+(exp3777) is claude+opus+max_turns:100; exp3781 (EDLM synthesis) is claude. Every Run command pins
+.venv/bin/python (the interpreter discipline). No hard gated_on (the .340 proven-safe disk-fallback
+pattern). Added a '.346 additions' references section.
+
+Validated: YAML parses (10 tasks); milestone == _expected_next_milestone('2026.06.345') ==
+2026.06.346; exclusion-manifest lint exit 0 (5 WARNINGs, all override-present, 0 HARD after adding
+exp3781's operator_override); overdue-priority lint exit 0; canonical-URL lint exit 0. Adversarial
+sub-agent review: no BLOCKER (confirmed the harness root-cause fix, the positive-control gate
+soundness, operator-curated-doc safety, no closed-thread re-open, no churn).
+
+Did NOT modify research-roadmap.yaml or scripts/research_conductor.py. Did NOT push.

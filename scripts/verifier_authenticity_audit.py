@@ -175,6 +175,47 @@ def parse_verdict(report: str) -> str:
     return m.group(1).strip() if m else "UNKNOWN"
 
 
+def verify_quoted_evidence(report: str, body: str) -> tuple[list[str], list[str], list[str]]:
+    """Audit-integrity guard (Layer 1.5).
+
+    An LLM hostile-reviewer can HALLUCINATE its smoking gun — e.g. the 2026-06-03
+    run flagged ast_structure_verifier.py ADVERSARIAL_GAMING citing a hardcoded
+    path `...|with| @results/experiment_2101_interwhen.json)` that does NOT exist
+    anywhere in the source (verified by grep). Acting on that would have RETIRED a
+    clean honest-heuristic verifier on fabricated evidence — exactly the fabrication
+    the audit exists to PREVENT, committed BY the audit.
+
+    This checks every backtick-quoted span the auditor cited: a span is
+    "source-checkable" if it looks like a concrete code/path literal (has a
+    structural char like / . _ ( ) = @ AND a >=4-char alnum run). For each, we test
+    whether it — or a distinctive >=6-char sub-token of it — literally appears in the
+    source (whitespace-normalized). Returns (checkable, present, missing). When a
+    FLAGGED verdict has checkable evidence but NONE of it is present in source, the
+    caller treats the verdict as likely-hallucinated and auto-downgrades it.
+    """
+    norm_body = re.sub(r"\s+", "", body)
+    checkable: list[str] = []
+    present: list[str] = []
+    missing: list[str] = []
+    for span in re.findall(r"`([^`]+)`", report):
+        core = span.strip()
+        if len(core) < 6:
+            continue
+        if not re.search(r"[/._()=@\\]", core):       # not a code/path-looking literal
+            continue
+        if not re.search(r"[A-Za-z0-9]{4,}", core):    # no substantial alnum content
+            continue
+        checkable.append(core)
+        norm_core = re.sub(r"\s+", "", core)
+        hit = norm_core in norm_body
+        if not hit:
+            # the full quote may be paraphrased/partial; accept a distinctive sub-token
+            toks = re.findall(r"[A-Za-z0-9_./-]{6,}", core)
+            hit = any(re.sub(r"\s+", "", t) in norm_body for t in toks)
+        (present if hit else missing).append(core)
+    return checkable, present, missing
+
+
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument(
@@ -222,6 +263,8 @@ def main() -> int:
               "ADVERSARIAL_GAMING": 0, "CANNOT_DETERMINE": 0, "UNKNOWN": 0,
               "OUTRIGHT_FAKE": 0}
     flagged_files = []
+    # (file, original_verdict, missing_evidence[]) for flags voided by the integrity guard
+    integrity_voids: list[tuple[str, str, list[str]]] = []
 
     for i, f in enumerate(files, 1):
         rel = f.relative_to(PROJECT_ROOT)

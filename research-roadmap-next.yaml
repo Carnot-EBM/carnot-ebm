@@ -1,0 +1,785 @@
+milestone: "2026.06.346"
+milestone_title: "POST-BOUNDED CONVERGENCE -- the project is converged on its one surviving positive (FoVer 0.9131 verifier, paper_ready=TRUE) and has bounded both energy-foundation routes (selector P0.1 + generator Thesis-A). The verifier-moat thread is CLOSED (the math step-error checker is the defensible product, NOT a general independence-moat -- do NOT re-run a scissor-plot GPU sweep). .346 does FIVE things and re-grinds NOTHING: (A) SETTLE the LAST open energy-existential question -- the P1 discrete-search adjudication v3 (artifact-vs-fundamental for energy-as-generator on discrete text). v1/v2 today were INCONCLUSIVE because the from-scratch AR POSITIVE CONTROL was starved (n_train=20000 vs the 40000 needed for AR=0.84); root cause diagnosed + harness fixed; v3 reruns with a VALID positive control and an ar_best>=0.3 gate. (B) BANK the verifier product -- wire the certified abstention operating point into the verify API as a deployable opt-in feature. (C) BUILD the P3 Anomaly-Escalation process upgrade (a standalone classifier + change-proposal; never auto-relaxes verification). (D) SCAFFOLD the operator's next-thesis seed (EDLM feasibility scoping -- lowers seeding cost; NOT a loop commitment). (E) CONTINUE self-learning (FR-11 v18 Tier-2 constraint-memory on the live verifier) + record/ship continuity (G4 correction prep, refs refresh, KV260 opportunistic, capstone). INVARIANTS: paper_ready stays TRUE (G1-G4); FoVer 0.9131 frozen; both energy routes stay bounded (P1 v3 only sharpens the mechanism, never reopens the strategic conclusion or seeds a paradigm); the next-Phase-3-thesis decision stays an operator-seeding surface. The agent never edits operator-curated docs, never triggers CI, never publishes, never pushes."
+milestone_doc: openspec/change-proposals/research-roadmap-vNEXT.md
+
+# OUTER-LOOP / OPERATOR PRE-STAGED ROADMAP (2026-06-03, Claude Opus 4.8). PROVENANCE:
+# .345 fully landed (11/11): G2 re-reproduced locally (auroc 0.913134 in CI), certified abstention point
+# shipped (exp3771: threshold 0.733, coverage 0.998 at risk<=0.05, split-conformal delta=0.05 n=2619),
+# Thesis-A definitive reconcile restored, G3 narrowing lint wired, pkg/CLI/MCP E2E smoke passed, FR-11 v17
+# (Tier-1 verifier-precision tracker) ran, PRM positioning done, KV260 terminal confirmed, paper_ready=TRUE.
+#
+# .346 is a CONVERGENCE milestone, NOT breadth churn (north-star sec-1). The verifier-moat (P2) thread is
+# CLOSED for ~zero GPU per the 2026-06-03 Deep Think round (reference_deep_think_post_bounded_2026_06):
+# on standard MATH, SC AUROC ~0.95 near-ceiling and the SC-failure residual was ~5 items, all answer-
+# NORMALIZATION false-negatives -- so the verifier's defensible claim is the banked math step-error product,
+# NOT a general independence-moat. A scissor-plot GPU sweep would re-grind a closed thread -- it is NOT here.
+#
+# THE ONE GENUINELY-OPEN energy-existential question is P1 (artifact-vs-fundamental for energy-as-generator
+# on discrete text). The discrete-search test ran TWICE today (thesis_a_p1_discrete_search v1/v2) and is
+# INCONCLUSIVE -- NOT because the energy side failed, but because the from-scratch AR POSITIVE CONTROL
+# collapsed to 0.0 (v1 used the too-small model; v2 used n_train=20000, which starves AR on 3-digit MSD-first
+# addition). Root cause diagnosed; harness n_train fixed to 40000 (where AR=0.84) + post-train checkpoint
+# added. v3 (exp3777) reruns with a VALID positive control and an ar_best>=0.3 gate -> settles artifact-vs-
+# fundamental. This satisfies the Failed-Experiment Rerun Discipline cleanly (prior_failures block names v1/v2,
+# the diagnosed cause, what is different, retire_if_same_verdict). energy-as-generator stays BOUNDED from
+# part-b REGARDLESS of the v3 outcome -- P1 only sharpens the mechanism.
+#
+# ROUTING: gemini CRASHES real GPU workloads + has wiped milestones via 429 (incident_333), so the cheap-
+# default is CODEX (requires_codex). The ONE GPU task (exp3777) is CLAUDE+opus+max_turns:100 (GPU/bootstrap
+# risk -> opus per the hardware-integration routing rule; C+E escalation is claude-only). The other judgment
+# task is exp3781 (EDLM feasibility synthesis) -> claude. Everything else is codex (mechanical/aggregation).
+#
+# INTERPRETER DISCIPLINE (incident_ebt_training_venv_python_cuda): EVERY Run command pins .venv/bin/python --
+# bare `python` is /usr/bin/python3 with NO torch/yaml/sklearn. Even CPU tasks need project deps for
+# scripts/adversarial_verify.py + scripts/summarize_artifact.py + verifier scoring.
+#
+# ANTI-POISON-TEST (the .344 ROOT CAUSE): any shipped test MUST assert against the script's REAL behavior and
+# any new research-complete.yaml value containing a colon MUST be quoted. A failing shipped test -- or a stray
+# unquoted colon -- poisons the conductor pre-test gate and SKIPs the whole milestone.
+#
+# GATING: NO hard gated_on this milestone (the .340 proven-safe pattern). Every task reads upstream with a
+# graceful disk-presence fallback -- never crash on a missing field, never label un-run work as a negative.
+# INVARIANTS re-asserted at capstone: paper_ready TRUE; FoVer 0.9131 frozen; both energy routes bounded.
+
+tasks:
+  - id: exp3776-archive-v345-activate-v346
+    operator_override: "2026-05-29 operator directive (standing): routine milestone-transition (archive-vN-activate-vN+1) -- false-positive scope-match vs prior archive-v* tasks; structurally never a doomed rerun. Records .345 as fully-landed (11/11) and activates the .346 post-bounded convergence agenda."
+    milestone: "2026.06.346"
+    title: "Archive milestone .345 (PRODUCT-BANKING RECOVERY -- fully landed 11/11: G2 re-reproduced locally, certified abstention point shipped, Thesis-A reconcile restored, G3 narrowing lint wired, pkg/CLI/MCP E2E passed, FR-11 v17, PRM positioning, KV260 terminal, paper_ready=TRUE) and activate .346 (POST-BOUNDED CONVERGENCE: settle the last energy-existential question via the P1 discrete-search v3 adjudication, bank the verifier product, build the P3 Anomaly-Escalation upgrade, scaffold the operator's EDLM next-thesis seed, continue self-learning)."
+    priority: critical
+    max_turns: 20
+    agent_type: codex
+    model: gpt-5.5
+    requires_codex: true   # mechanical archive/activate (gemini crashes GPU + has wiped milestones via 429; codex is the standing cheap-default)
+    estimated_wall_time_min: 6
+    track: ops
+    inference_substrate: aggregation_from_upstream_artifacts
+    requires_gpu: false
+    deliverable: results/experiment_3776_archive_v345_activate_v346.json
+    prompt: |
+      CONTEXT: .345 (PRODUCT-BANKING RECOVERY) fully landed -- 11/11 tasks completed. Confirm against the
+      changelog + the .345 capstone, then archive .345 to research-complete.yaml and activate .346. .346 is a
+      CONVERGENCE milestone (north-star sec-1): the project is converged on its one surviving positive (FoVer
+      0.9131, paper_ready=TRUE) and both energy routes (selector + generator) are bounded. The verifier-moat
+      thread is CLOSED (the math step-error checker is the defensible product, NOT a general independence-moat;
+      do NOT re-open a scissor-plot sweep). .346 settles the LAST open energy-existential question (P1 discrete-
+      search v3), banks the verifier product, builds the P3 Anomaly-Escalation upgrade, scaffolds the operator's
+      EDLM next-thesis seed, and continues self-learning -- and re-grinds NOTHING.
+      EXISTING CODE TO READ FIRST: research-roadmap.yaml (.345, just finished); research-roadmap-next.yaml
+      (.346, this milestone); openspec/change-proposals/research-roadmap-vNEXT.md (the .346 design doc);
+      results/experiment_3775_capstone_v345.json (the .345 capstone); ops/north-star.md (do NOT edit);
+      scripts/publication_gate.py (run it --json to confirm paper_ready still true).
+      TASK: archive .345 to research-complete.yaml HONESTLY (it fully landed -- record the convergence state);
+      confirm .346 active.
+      CRITICAL (the .344 root cause): QUOTE any string value containing a colon when you write into research-
+      complete.yaml. After writing, `.venv/bin/python -c "import yaml; yaml.safe_load(open('research-complete.yaml'))"`
+      MUST succeed.
+      INFERENCE-SUBSTRATE HYGIENE: aggregation task. Set inference_substrate=aggregation_from_upstream_artifacts;
+      put NO GGUF/CUDA/live-model marker in model_specs/target_model. Run
+      `.venv/bin/python scripts/adversarial_verify.py <your artifact>` and CONFIRM no critical flag.
+      REQUIRED ARTIFACT FIELDS (principle documents WHY; store the bare VALUE):
+        honest_verdict:
+          principle: "Terminal prefix lets the reconciler classify the transition complete without re-running it."
+        inference_substrate: "aggregation_from_upstream_artifacts (principle: JSON-read + format; 0.0001s floor; no compute-bound marker so it does not false-flag)."
+        v345_outcome_recorded:
+          principle: "Records .345's REAL state: fully landed 11/11, verifier product banked, paper_ready TRUE."
+        v346_focus_recorded:
+          principle: "Records the .346 pivot: settle P1 discrete-search v3, bank the verifier product, build Anomaly-Escalation, scaffold EDLM, continue self-learning -- re-grinding nothing bounded."
+        research_complete_yaml_parses:
+          principle: "BARE bool, MUST be true -- confirms research-complete.yaml safe_loads after the write (anti-recurrence of the .344 poison)."
+        paper_ready_preserved:
+          principle: "BARE bool -- G1-G4 stay met (confirmed via publication_gate.py); the transition must not silently regress paper_ready; frozen 0.9131 stays frozen."
+        both_energy_routes_still_bounded:
+          principle: "BARE bool -- records that .346 does not reopen the bounded conclusion (P1 v3 only sharpens the mechanism)."
+        n_tasks_archived:
+          principle: "Sample-size hygiene -- confirms the full .345 milestone was archived, not a partial."
+        adversarial_verify_clean:
+          principle: "True iff the artifact passes adversarial_verify with no critical flag."
+        random_seed:
+          principle: "Determinism precondition for reproducibility."
+        reproducibility_checksum:
+          principle: "Content hash catches silent drift vs any replication."
+        duration_s:
+          principle: "Wall-clock plausibility floor; missing duration is the fabrication signal."
+      TERMINAL VERDICT: "complete: archived_v345_fully_landed_v346_convergence_active_paper_ready_true_both_energy_routes_bounded_frozen_headline_unchanged"
+      Run: cd {project_root} && .venv/bin/python scripts/experiment_3776_archive_v345_activate_v346.py
+      Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  - id: exp3777-p1-discrete-search-adjudication-v3
+    milestone: "2026.06.346"
+    title: "P1 discrete-search adjudication v3 (the LAST open energy-existential question): rerun the discrete-search EBT decode with a VALID positive control (n_train=40000, the regime where from-scratch AR reaches 0.84) and an ar_best>=0.3 gate, to settle artifact-vs-fundamental for energy-as-generator on discrete text. v1/v2 today were INCONCLUSIVE because the AR positive control was STARVED (n_train=20000); root cause diagnosed + harness fixed. Outcome: EBT discrete-search acc >0% -> decode-ARTIFACT-bounded (reopen narrow); still 0% with AR>=0.3 -> Causal-Inductive-Bias-Gap FUNDAMENTAL (writes the closing theorem). energy-as-generator stays BOUNDED from part-b regardless -- this sharpens the MECHANISM, not the strategic conclusion."
+    priority: critical
+    max_turns: 100
+    agent_type: claude
+    model: opus
+    requires_claude: true   # GPU from-scratch training + bootstrap risk + open-ended mechanistic adjudication (artifact-vs-fundamental) is exactly the hardware-integration + multi-step-reasoning class that routes to claude/opus; gemini crashes GPU, codex risks bailing mid-train
+    requires_gpu: true
+    estimated_wall_time_min: 110
+    track: phase3
+    inference_substrate: live_llm_inference
+    prior_failures:
+      - experiment_id: thesis_a_p1_discrete_search
+        verdict: "complete: thesis_a_p1_v1_INCONCLUSIVE_positive_control_failed_ar_0.000_superseded_by_v2_see_corrigendum"
+        addressed_by: "v1 reused the SMALL matched-compute model at 3-digit, so the from-scratch AR positive control collapsed to 0.0 (no headroom -- cannot distinguish 'energy landscape misshaped' from 'tiny model learned nothing'). v3 uses the SCALED harness where AR reaches 0.84, giving a valid positive control."
+        retire_if_same_verdict: true
+      - experiment_id: thesis_a_p1_discrete_search_v2
+        verdict: "complete: thesis_a_p1_v2_INCONCLUSIVE_positive_control_failed_ar_best_0.000_below_0.3_cannot_adjudicate_artifact_vs_fundamental_rerun_with_stronger_ar"
+        addressed_by: "v2 used n_train=min(20000,...) which starved the from-scratch AR (ar_best=0.0); the ar_best<0.3 guard correctly returned INCONCLUSIVE. Root cause diagnosed: the scaled harness that achieved AR=0.84 uses min(40000,...). v3 deletes the stale checkpoint and reruns the corrected harness (n_train=40000); the ar_best>=0.3 positive-control gate must PASS before any artifact-vs-fundamental claim is made."
+        retire_if_same_verdict: true
+    deliverable: results/experiment_3777_p1_discrete_search_adjudication_v3.json
+    prompt: |
+      CONTEXT: This is the ONE genuinely-open energy-existential question. Both energy-foundation routes are
+      already empirically BOUNDED -- this task does NOT reopen that conclusion; it sharpens the MECHANISM behind
+      the energy-as-generator bound: is it an ARTIFACT of the decode method (Langevin + a learned emb->token
+      decoder descend off-manifold into the void between valid token embeddings) or FUNDAMENTAL (a global
+      symmetric energy E(y_1..y_T) cannot enforce AR's step-by-step causal factorization -- the "Causal Inductive
+      Bias Gap")? The decisive cheap test: discard Langevin + the learned decoder; decode by PURE DISCRETE SEARCH
+      over VALID-token embeddings ONLY (beam / discrete-MCMC). The test ran TWICE today and is INCONCLUSIVE --
+      NOT because the energy side failed, but because the from-scratch AR POSITIVE CONTROL collapsed to 0.0 (v1
+      used the too-small model; v2 used n_train=20000, which starves AR on 3-digit MSD-first addition). The
+      ar_best<0.3 guard CORRECTLY returned INCONCLUSIVE rather than falsely claiming FUNDAMENTAL (a starved
+      control is FALSE_NEGATIVE_RISK per CLAUDE.md). Root cause diagnosed; the harness n_train is fixed to 40000
+      (the regime where AR reaches 0.84) and a post-train checkpoint was added. This v3 reruns the corrected
+      harness with a VALID positive control. energy-as-generator stays BOUNDED from part-b REGARDLESS of the
+      outcome; the strategic conclusion does not move.
+      EXISTING CODE TO READ FIRST (read via scripts/summarize_artifact.py where useful):
+      scripts/thesis_a_p1_discrete_search_v2.py (the harness -- CONFIRM n_train is fixed to 40000; if it still
+      reads min(20000,...) FIX it to min(40000,...) before running, since that is the diagnosed root cause);
+      results/thesis_a_p1_discrete_search_v2.json (the v2 INCONCLUSIVE artifact + its root_cause_diagnosis block);
+      results/thesis_a_p1_discrete_search.json (the v1 corrigendum); results/thesis_a_part_b_scaled_seed1.json
+      (the part-b bounded run where AR=0.84 -- the regime to match); scripts/thesis_a_part_b_scaled.py (the
+      n_train=40000 reference harness); docs/research-notes/phase3-post-bounded-deep-think-prompts.md (the P1
+      frame); CLAUDE.md "Adversarial Artifact Verification" FALSE_NEGATIVE_RISK (the positive-control discipline).
+      PRECONDITIONS (check BEFORE training; if ANY missing -> honest_verdict blocked_<resource>, EXIT, no fabrication):
+        a. INTERPRETER: run under .venv/bin/python; `import torch` succeeds and torch.cuda.is_available() is True
+           with >=1 device. If torch missing or no CUDA -> blocked_cuda_unavailable.
+        b. GPU FREE: a CUDA device is not already saturated by a competing job (check nvidia-smi free memory >=
+           ~10GB on at least one device). If no free GPU -> blocked_no_free_gpu (the operator will run the
+           corrected harness directly -- the v1/v2 pattern). Do NOT queue behind another GPU job.
+        c. DELETE the stale checkpoint from v2 before training (the v2 diagnosis says the stale ckpt must be
+           deleted), so v3 trains fresh in the corrected n_train=40000 regime.
+      CONCRETE STEPS:
+        1. Confirm/fix n_train=40000 in the harness (the diagnosed root cause). Train the from-scratch tiny EBT
+           AND the matched-compute AR baseline in the SCALED regime (dim=768/4L, ~12000 steps + the learned-
+           decoder phase), n_eval>=100, with the post-train checkpoint.
+        2. POSITIVE-CONTROL GATE (load-bearing): compute ar_best = max(ar_greedy_acc, ar_selfconsistency_acc).
+           If ar_best < 0.3 -> the positive control is STILL starved -> honest_verdict
+           "complete: thesis_a_p1_v3_INCONCLUSIVE_positive_control_failed_ar_best_<x>_below_0.3" and STOP (do NOT
+           claim artifact-or-fundamental). Set positive_control_passed=false. (Per retire_if_same_verdict, a third
+           INCONCLUSIVE retires the in-loop discrete-search approach -> hand to operator.)
+        3. ONLY IF ar_best>=0.3: read the EBT discrete-search accuracy (ebt_beam_search_acc / ebt_energy_argmin_acc).
+           ebt_best = max over the discrete-search decodes. ADJUDICATE:
+             - ebt_best > 0.0  -> "decode-ARTIFACT-bounded": discrete search beats Langevin+learned-decoder ->
+               the bound was (partly) a decode artifact -> a NARROW reopen of energy-as-generator decode is
+               warranted (record as a finding for the operator; this is NOT a paradigm seed, NOT a re-grind).
+             - ebt_best == 0.0 -> "FUNDAMENTAL (Causal-Inductive-Bias-Gap)": even pure on-manifold discrete
+               search cannot generate -> supports the closing theorem that a symmetric energy cannot enforce
+               causal factorization on discrete text. Record the theorem-support finding.
+        4. Report per-method accuracies, sample outputs, training_diverged, n_train used, seeds. Be HONEST: a
+           starved control or a divergence is a blocked/inconclusive result, never a fabricated 'FUNDAMENTAL'.
+        5. If you ship a test it MUST assert against the script's real behavior (anti-poison-test, the .344 root
+           cause).
+      INFERENCE-SUBSTRATE HYGIENE: live_llm_inference (from-scratch training + decode); full methodology
+      (random_seed, reproducibility_checksum, model_specs naming the EBT + matched AR + n_train). A ~100-min GPU
+      run has a large real duration (no DURATION_TOO_SHORT risk). Run `.venv/bin/python
+      scripts/adversarial_verify.py <artifact>`; confirm no critical flag (watch FALSE_NEGATIVE_RISK -- a null
+      'FUNDAMENTAL' claim is INVALID unless positive_control_passed=true).
+      REQUIRED ARTIFACT FIELDS (principle documents WHY; store the bare VALUE):
+        honest_verdict:
+          principle: "Terminal prefix; blocked_<resource> if a precondition failed; INCONCLUSIVE if the positive control failed."
+        inference_substrate: "live_llm_inference (principle: from-scratch EBT+AR training and decode on GPU)."
+        positive_control_passed:
+          principle: "BARE bool -- ar_best>=0.3. The LOAD-BEARING gate: a null 'FUNDAMENTAL' claim is only valid if the AR positive control reached non-trivial accuracy (else it is FALSE_NEGATIVE_RISK, the v1/v2 failure)."
+        ar_best:
+          principle: "max(ar_greedy, ar_selfconsistency) -- the positive-control accuracy; must be >=0.3 (and ideally ~0.84, the part-b regime) to adjudicate."
+        ebt_best:
+          principle: "max EBT accuracy over the discrete-search decodes (beam / energy-argmin) -- the energy-as-generator signal under on-manifold discrete search."
+        adjudication:
+          principle: "BARE string in {decode_artifact_bounded, fundamental_causal_inductive_bias_gap, inconclusive_positive_control_failed} -- the milestone-defining mechanistic verdict."
+        n_train:
+          principle: "BARE int -- MUST be 40000 (the diagnosed-fixed value); records that the starved-control root cause was addressed."
+        per_method_accuracies:
+          principle: "ar_greedy/ar_selfconsistency/ebt_argmin/ebt_beam -- the full table, so a reviewer can audit the adjudication."
+        training_diverged:
+          principle: "BARE bool -- a divergence invalidates the run (report as blocked/inconclusive, not a finding)."
+        energy_as_generator_still_bounded:
+          principle: "BARE bool, MUST be true -- this task sharpens the MECHANISM only; the part-b strategic bound stands regardless of the v3 outcome."
+        preconditions_checked:
+          principle: "CUDA + free-GPU + stale-ckpt-deleted verified before training; the anti-fabrication gate."
+        model_specs:
+          principle: "Names the from-scratch EBT + matched AR + n_train -- honest substrate."
+        random_seed:
+          principle: "Determinism precondition."
+        reproducibility_checksum:
+          principle: "Content hash catches drift vs the v2 run."
+        duration_s:
+          principle: "Wall-clock plausibility floor; a ~100-min GPU train is expected."
+      TERMINAL VERDICT examples:
+        "complete: thesis_a_p1_v3_decode_artifact_bounded_ar_best_<x>_ebt_best_<y>_positive_control_passed_energy_as_generator_still_bounded"
+        "complete: thesis_a_p1_v3_FUNDAMENTAL_causal_inductive_bias_gap_ar_best_<x>_ebt_best_0.000_positive_control_passed"
+        "complete: thesis_a_p1_v3_INCONCLUSIVE_positive_control_failed_ar_best_<x>_below_0.3"
+      Run: cd {project_root} && .venv/bin/python scripts/experiment_3777_p1_discrete_search_adjudication_v3.py
+      Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  - id: exp3778-fr11-self-learning-v18-tier2-constraint-memory
+    operator_override: "2026-05-29 operator directive (standing): versioned lineage continuation (FR-11 vN+1). STATED forward difference: v17 (.345) was a Tier-1 online per-verifier PRECISION tracker; v18 is a Tier-2 CONSTRAINT-MEMORY consolidation (a DIFFERENT self-learning tier, python/carnot/fr11/tier2_memory.py) -- it consolidates per-domain threshold deltas across the corpus, not per-verifier precision counters. False-positive scope-match vs prior FR-11 exps."
+    milestone: "2026.06.346"
+    title: "FR-11 continuous self-learning v18 -- Tier-2 CONSTRAINT-MEMORY consolidation on the LIVE verifier (distinct from v17's Tier-1 precision tracker): use the Tier2ThresholdMemory module to learn per-domain score-threshold deltas across the FoVer corpus, persist them, and CONFIRM the consolidated deltas do not regress the banked discriminator (ensemble AUROC stays >= the frozen 0.9131 within CI, and the +0.0185 memory contribution is preserved). CPU only (Tier-2 hardware path: CPU+system-memory, <1ms/lookup). The self-learning experiment mandated by research-program.md."
+    priority: high
+    max_turns: 40
+    agent_type: codex
+    model: gpt-5.5
+    requires_codex: true   # a CPU memory-consolidation tracker over cached verifier scores using the existing Tier2ThresholdMemory API -- formulaic; codex is the standing cheap-default
+    estimated_wall_time_min: 14
+    track: self-learning
+    inference_substrate: verifier_ensemble_against_cached_candidates
+    requires_gpu: false
+    deliverable: results/experiment_3778_fr11_self_learning_v18_tier2_constraint_memory.json
+    prompt: |
+      CONTEXT: research-program.md mandates one continuous-self-learning experiment per milestone (Tiers 1-4).
+      v17 (.345, exp3772) was the Tier-1 online per-verifier PRECISION tracker. v18 advances to TIER-2 (constraint
+      memory): consolidate per-domain score-threshold deltas across the FoVer corpus so a future deployment
+      resumes learned thresholds (the Tier-2 hardware path: CPU + system memory, <1ms/lookup -- NOT a model
+      retrain). This is a genuine forward step, not a re-run of v17.
+      EXISTING CODE TO READ FIRST: python/carnot/fr11/tier2_memory.py (the Tier2ThresholdMemory API:
+      __init__(db_path), update_domain_delta(domain_key, examples, labels), get_domain_delta(domain_key),
+      apply_delta(domain_key, raw_score) -- REUSE this, do not reinvent); results/experiment_2837_fover_memory_
+      leakage_v3.json (the 4 scoring verifiers fr11_session_memory/tier0r_curry_howard/tier0s_arithmetic_gap/
+      tier0u_logical_consistency + the +0.0185 memory-ablation contribution to preserve); ops/reproduction-
+      runbook-fover-headline.md (the scoring protocol); results/experiment_3772_fr11_self_learning_v17_*.json
+      (v17, to confirm v18 is a different tier); research-program.md 'Continuous Self-Learning' Tier-2 section.
+      PRECONDITIONS (check BEFORE consolidation; if ANY missing -> blocked_<resource>, EXIT, no fabrication):
+        a. INTERPRETER: run under .venv/bin/python; pyyaml/numpy/sklearn importable; Tier2ThresholdMemory importable.
+        b. FoVer scores/labels reachable (the cached candidate triples from the runbook's path, ABSOLUTE path).
+           If absent -> blocked_fover_corpus_missing (graceful, honest -- record 'no corpus to consolidate from',
+           NOT a fabricated delta table).
+      CONCRETE STEPS:
+        1. Score the 4-verifier ensemble against the cached FoVer triples (verifier-scoring, ~16s, no live LLM).
+        2. Consolidate per-domain threshold deltas via Tier2ThresholdMemory.update_domain_delta over the corpus;
+           persist to the db_path so a future milestone resumes them (tracker_state_persisted=true).
+        3. Recompute the ensemble AUROC with the consolidated deltas applied (apply_delta). CONFIRM it does NOT
+           regress the banked discriminator: ensemble AUROC stays within/above the frozen CI95 [0.9027, 0.9235]
+           AND the +0.0185 fr11_session_memory (memory) contribution is preserved (the learned consolidation must
+           not silently drop the self-learning component the headline depends on).
+        4. Report per-domain deltas + the AUROC under consolidation. If you ship code+tests, the test MUST assert
+           against the tracker's real behavior (anti-poison-test, the .344 root cause).
+      INFERENCE-SUBSTRATE HYGIENE: verifier-scoring; reuses cached scores; full methodology (random_seed,
+      reproducibility_checksum, model_specs naming the corpus + 4 verifiers). Run `.venv/bin/python
+      scripts/adversarial_verify.py <artifact>`; confirm no critical flag.
+      REQUIRED ARTIFACT FIELDS (principle documents WHY; store the bare VALUE):
+        honest_verdict:
+          principle: "Terminal prefix; the self-learning outcome; blocked_<resource> if a precondition failed."
+        inference_substrate: "verifier_ensemble_against_cached_candidates (principle: reads cached verifier scores, no live model)."
+        per_domain_threshold_deltas:
+          principle: "The consolidated per-domain deltas -- the Tier-2 learned knowledge; the core deliverable."
+        ensemble_auroc_under_consolidation:
+          principle: "The ensemble AUROC after applying the consolidated deltas -- confirms the self-learning does not regress the banked discriminator."
+        auroc_within_frozen_ci:
+          principle: "BARE bool -- the consolidated AUROC stays within/above the frozen CI95 [0.9027, 0.9235]; the no-regression invariant."
+        memory_contribution_preserved:
+          principle: "BARE bool -- the +0.0185 fr11_session_memory contribution survives consolidation (the load-bearing invariant)."
+        is_tier2_not_tier1:
+          principle: "BARE bool, true -- confirms v18 is Tier-2 constraint-memory consolidation, NOT a re-run of v17's Tier-1 precision tracker (the lineage-continuation forward difference)."
+        tier2_lookup_is_cpu_memory:
+          principle: "Confirms the mechanic is a CPU + system-memory lookup (<1ms, the Tier-2 hardware path), not a model retrain -- aligns with the hardware-acceleration principle."
+        tracker_state_persisted:
+          principle: "BARE bool, true -- the Tier-2 memory db was persisted so a future milestone resumes it (continuous, not one-shot)."
+        model_specs:
+          principle: "Names the corpus + 4 verifiers -- honest substrate."
+        random_seed:
+          principle: "Determinism precondition."
+        reproducibility_checksum:
+          principle: "Content hash catches drift."
+        duration_s:
+          principle: "Wall-clock plausibility floor; verifier-scoring + consolidation is modest."
+      TERMINAL VERDICT: "complete: fr11_v18_tier2_constraint_memory_consolidated_auroc_within_frozen_ci_memory_contribution_preserved_state_persisted"
+      Run: cd {project_root} && .venv/bin/python scripts/experiment_3778_fr11_self_learning_v18_tier2_constraint_memory.py
+      Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  - id: exp3779-abstention-operating-point-product-wiring
+    milestone: "2026.06.346"
+    title: "BANK the verifier product: wire the .345 certified abstention operating point (exp3771: threshold 0.733, coverage 0.998 at selective-risk<=0.05, split-conformal delta=0.05) into the verify API as a DEPLOYABLE opt-in feature -- an 'abstain below threshold' mode an integrator can call -- and confirm it E2E. Forward Phase-1 product work (turns the certified NUMBER into a usable SURFACE). Edits CODE + tests only; emits a doc-update PROPOSAL for the operator-curated CLI/MCP docs (does NOT edit them)."
+    priority: high
+    max_turns: 50
+    agent_type: codex
+    model: gpt-5.5
+    requires_codex: true   # wiring an opt-in threshold into an existing scoring API + E2E test scaffolding -- formulaic; codex is the standing cheap-default
+    estimated_wall_time_min: 22
+    track: product
+    inference_substrate: verifier_ensemble_against_cached_candidates
+    requires_gpu: false
+    deliverable: results/experiment_3779_abstention_operating_point_product_wiring.json
+    prompt: |
+      CONTEXT: .345 shipped a CERTIFIED abstention operating point as an artifact (exp3771: threshold 0.733,
+      coverage 0.998 at selective-risk<=0.05, split-conformal delta=0.05, n=2619). It is a NUMBER, not yet a
+      usable product SURFACE. This task banks it: wire it into the verify API as an opt-in 'abstention mode' --
+      when enabled, the verifier returns a confident judgment above the threshold and ABSTAINS (returns
+      'uncertain / route to review') below it. This is forward Phase-1 product work, NOT a re-measure of the
+      abstention curve (.345 already characterized + certified it).
+      EXISTING CODE TO READ FIRST: results/experiment_3771_certified_abstention_operating_point.json (the
+      certified threshold + coverage + risk to wire in); python/carnot/pipeline/ (VerifyRepairPipeline + the
+      scoring entrypoint); the MCP server module (the score_candidates tool); python/carnot/verify/ (the 4
+      scoring verifiers); ops/mcp-server.md + docs/cli-usage.md (OPERATOR-CURATED -- read for the interface
+      shape, do NOT edit their prose; emit a proposal instead).
+      PRECONDITIONS (check BEFORE wiring; if ANY missing -> blocked_<resource>, EXIT, no fabrication):
+        a. INTERPRETER: run under .venv/bin/python; `import carnot` succeeds.
+        b. The certified threshold is readable from exp3771's artifact (ABSOLUTE path). If absent ->
+           blocked_no_certified_threshold (graceful, honest).
+      CONCRETE STEPS:
+        1. Add an opt-in abstention mode to the verify/scoring API (a new keyword/param, default OFF so existing
+           behavior is unchanged): when ON, scores at/above the certified threshold return a confident verdict;
+           below it return an 'abstain' verdict carrying the certified coverage + risk + delta metadata. Load the
+           threshold from a config (default = the exp3771 value) so it is operator-tunable, not hardcoded-magic.
+        2. E2E CONFIRM: run the abstention-mode path on a tiny set of cached FoVer examples (verifier-scoring, no
+           live LLM) and assert (a) above-threshold -> confident, (b) below-threshold -> abstain, (c) default-OFF
+           preserves prior behavior. Optionally hit it through the MCP score_candidates tool via a REAL protocol
+           exchange to confirm the surface (re-use the .345 exp3769 MCP harness pattern).
+        3. Ship tests for the new mode (each MUST assert against the real behavior -- anti-poison-test, the .344
+           root cause). Keep 100% coverage discipline on the new code (CLAUDE.md).
+        4. Do NOT edit the operator-curated docs (ops/mcp-server.md, docs/cli-usage.md). Instead WRITE a short
+           doc-update PROPOSAL (e.g. docs/research-notes/abstention-mode-doc-proposal-{date}.md) describing the
+           new param for the operator to fold into the curated docs.
+      INFERENCE-SUBSTRATE HYGIENE: verifier-scoring; full methodology (random_seed, reproducibility_checksum,
+      model_specs naming the 4 verifiers + the certified threshold source). Label this a WIRING smoke (not an
+      accuracy claim) to avoid IMPLAUSIBLE_PERFECT. Run `.venv/bin/python scripts/adversarial_verify.py
+      <artifact>`; confirm no critical flag.
+      REQUIRED ARTIFACT FIELDS (principle documents WHY; store the bare VALUE):
+        honest_verdict:
+          principle: "Terminal prefix; blocked_<resource> if a precondition failed."
+        inference_substrate: "verifier_ensemble_against_cached_candidates (principle: scores cached triples, no live LLM)."
+        abstention_mode_wired:
+          principle: "BARE bool -- the opt-in abstention mode is callable in the verify API (the deployable product surface; the core deliverable)."
+        default_off_preserves_prior_behavior:
+          principle: "BARE bool -- the new mode is OFF by default, so existing integrators see no behavior change (no silent regression)."
+        certified_threshold_used:
+          principle: "The threshold the mode loads (default = exp3771's 0.733) -- traces the feature to the certified operating point, not a magic constant."
+        e2e_abstention_passed:
+          principle: "BARE bool -- the above->confident / below->abstain behavior was confirmed E2E on cached examples."
+        mcp_surface_confirmed:
+          principle: "BARE bool -- whether the mode is reachable through the MCP score_candidates protocol (the >=1 external integration surface)."
+        doc_proposal_emitted_not_curated_edit:
+          principle: "BARE bool, true -- a doc-update PROPOSAL was written for the operator; the operator-curated CLI/MCP docs were NOT edited (Public Documentation Discipline)."
+        tests_assert_real_behavior:
+          principle: "BARE bool, true -- shipped tests assert the real abstention behavior (anti-poison-test)."
+        model_specs:
+          principle: "Names the 4 verifiers + the certified-threshold source -- honest substrate."
+        random_seed:
+          principle: "Determinism precondition."
+        reproducibility_checksum:
+          principle: "Content hash catches drift."
+        duration_s:
+          principle: "Wall-clock plausibility floor."
+      TERMINAL VERDICT: "complete: abstention_mode_wired_into_verify_api_default_off_e2e_passed_doc_proposal_emitted_not_curated_edit"
+      Run: cd {project_root} && .venv/bin/python scripts/experiment_3779_abstention_operating_point_product_wiring.py
+      Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  - id: exp3780-anomaly-escalation-classifier-prototype
+    milestone: "2026.06.346"
+    title: "BUILD the P3 Anomaly-Escalation process upgrade (the cheap endorsed upgrade from the 2026-06-03 Deep Think round): a STANDALONE classifier (scripts/anomaly_escalation_classifier.py) + a change-proposal that distinguishes a CLEAN bounded negative (auto-reconcile, as today) from a FRAME-VIOLATING anomaly (halt pruning, escalate to human). Prototype + spec ONLY -- it NEVER auto-relaxes verification (that conflicts with the anti-fabrication discipline; valley-funding stays human-gated). Does NOT modify scripts/research_conductor.py."
+    priority: medium
+    max_turns: 45
+    agent_type: codex
+    model: gpt-5.5
+    requires_codex: true   # a standalone heuristic classifier + change-proposal following the existing lint/classifier patterns -- formulaic; codex is the standing cheap-default
+    estimated_wall_time_min: 18
+    track: infra
+    inference_substrate: aggregation_from_upstream_artifacts
+    requires_gpu: false
+    deliverable: results/experiment_3780_anomaly_escalation_classifier_prototype.json
+    prompt: |
+      CONTEXT: The 2026-06-03 Deep Think P3 round found the autonomous loop CANNOT self-seed paradigms (the
+      Verification Trap: a nascent paradigm starts in a 'valley of disappointment'; the adversarial verifier
+      reads 'higher error -> prune' and auto-reconciles it as a dead-end -- we watched the loop silently auto-
+      reconcile Thesis-A-bounded). The ONE cheap endorsed upgrade is ANOMALY-ESCALATION: stop auto-reconciling
+      EVERY negative; distinguish a CLEAN bounded negative (a planned kill-gate that returned its expected
+      negative -> auto-reconcile, as today) from a FRAME-VIOLATING anomaly (an unexpected result that violates a
+      modeling assumption -> halt pruning, escalate to a human). CAVEAT (load-bearing): this NEVER automates
+      verification-relaxation or 'suspends verifiers to incubate' -- that conflicts with Carnot's anti-fabrication
+      discipline. Valley-funding stays HUMAN-GATED. This task ships a PROTOTYPE classifier + a change-proposal
+      for the operator to wire in; it does NOT modify the conductor.
+      EXISTING CODE TO READ FIRST: scripts/paper_v6_narrowing_lint.py + scripts/pages_fever_dream_lint.py (the
+      sibling standalone-classifier patterns + how a classifier reads artifacts and emits a verdict);
+      scripts/adversarial_verify.py (the existing post-hoc flag taxonomy -- the anomaly classifier is
+      COMPLEMENTARY, operating on honest_verdict + prior-expectation, not on fabrication patterns); CLAUDE.md
+      'Failed-Experiment Rerun Discipline' (the clean-bounded-negative definition: partial/blocked/no_improvement
+      tokens that map to expected negatives); reference_deep_think_post_bounded_2026_06 P3 (the Verification Trap
+      + the human-gated valley-funding caveat); a handful of recent results/operational_retro_*.json (examples of
+      negatives the loop auto-reconciled).
+      TASK:
+        1. Write scripts/anomaly_escalation_classifier.py: given an experiment artifact (honest_verdict +
+           optional prior-expectation/gate metadata), classify it as one of {clean_bounded_negative,
+           frame_violating_anomaly, clean_positive}. Heuristic, transparent rules (NOT an LLM call): a negative
+           whose verdict matches a declared/expected kill-gate or a known-bounded lineage -> clean_bounded_negative
+           (auto-reconcile, as today); a negative that CONTRADICTS a stated assumption, or a result whose
+           direction/magnitude is far outside the experiment's own predicted envelope, or a positive-control
+           failure on a load-bearing test -> frame_violating_anomaly (recommend HALT pruning + escalate to human).
+        2. The classifier ONLY RECOMMENDS (emits a recommendation field + rationale). It does NOT prune, does NOT
+           edit any artifact, and NEVER recommends relaxing verification -- escalation is always 'pause + ask a
+           human', never 'lower the bar'.
+        3. Ship tests asserting: a planned-bounded negative -> clean_bounded_negative; a positive-control-failed
+           result (e.g. the P1 v2 INCONCLUSIVE pattern) -> frame_violating_anomaly; a clean positive -> clean_positive.
+           Each test asserts the REAL classifier behavior (anti-poison-test, the .344 root cause).
+        4. Write a change-proposal (openspec/change-proposals/anomaly-escalation-conductor-hook.md) describing how
+           the OPERATOR would wire it into the conductor's reconciliation path (an advisory hook that pauses for
+           human review on frame_violating_anomaly), explicitly noting it must NEVER auto-relax verification.
+        5. Do NOT modify scripts/research_conductor.py.
+      INFERENCE-SUBSTRATE HYGIENE: aggregation/infra; NO GGUF/CUDA markers. Run `.venv/bin/python
+      scripts/adversarial_verify.py <artifact>`; confirm no critical flag.
+      REQUIRED ARTIFACT FIELDS (principle documents WHY; store the bare VALUE):
+        honest_verdict:
+          principle: "Terminal prefix; the prototype outcome."
+        inference_substrate: "aggregation_from_upstream_artifacts (principle: a classifier over artifact metadata, no live model)."
+        classifier_shipped:
+          principle: "BARE bool -- scripts/anomaly_escalation_classifier.py exists and runs (the P3 deliverable)."
+        classifier_only_recommends:
+          principle: "BARE bool, true -- the classifier recommends (pause+escalate) and NEVER prunes, edits, or relaxes verification (the load-bearing anti-fabrication caveat)."
+        n_test_artifacts_classified:
+          principle: "Count of example artifacts run through the classifier -- sample evidence it works on real data."
+        clean_vs_anomaly_examples:
+          principle: "The example classifications (>=1 clean_bounded_negative, >=1 frame_violating_anomaly) -- demonstrates the distinction the P3 upgrade requires."
+        change_proposal_written:
+          principle: "BARE bool, true -- the operator-wiring change-proposal was written (the conductor was NOT modified)."
+        never_relaxes_verification:
+          principle: "BARE bool, true -- the design+proposal explicitly forbid auto-relaxing verification (valley-funding stays human-gated)."
+        tests_assert_real_behavior:
+          principle: "BARE bool, true -- shipped tests assert the real classifier behavior (anti-poison-test)."
+        random_seed:
+          principle: "Determinism precondition."
+        reproducibility_checksum:
+          principle: "Content hash catches drift."
+        duration_s:
+          principle: "Wall-clock plausibility floor."
+      TERMINAL VERDICT: "complete: anomaly_escalation_classifier_prototyped_recommend_only_change_proposal_written_never_relaxes_verification_conductor_unmodified"
+      Run: cd {project_root} && .venv/bin/python scripts/experiment_3780_anomaly_escalation_classifier_prototype.py
+      Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  - id: exp3781-edlm-next-thesis-feasibility-scoping
+    operator_override: "2026-05-29 operator directive (standing): versioned lineage continuation of the operator's next-thesis surface (exp3763 was a RANKED MENU; this is a feasibility SCOPING of the menu's TOP route, EDLM). STATED forward difference: exp3763 ranked candidate routes; exp3781 produces a concrete deps/dataset/compute/minimal-kill-gate brief for the single top route so the operator can decide whether to seed it. NOT a doomed rerun and NOT a loop commitment -- false-positive scope-match vs exp3763."
+    milestone: "2026.06.346"
+    title: "SCAFFOLD the operator's next-thesis seed (NOT a loop commitment): a feasibility scoping of EDLM (Energy-Based Diffusion Language Models, arXiv:2410.21357 -- the TOP route on exp3763's next-thesis menu: energy as a RESIDUAL-CORRECTOR over discrete diffusion, sidestepping BOTH the bounded-selector and bounded-generator negatives). Produce a concrete, honest feasibility brief -- deps, datasets, a minimal kill-gate experiment design, the compute estimate, and the explicit reasons this route is NOT pre-blocked by the two energy negatives -- so the OPERATOR can decide whether to seed it. The loop scaffolds; it does NOT open a new Phase-3 track."
+    priority: medium
+    max_turns: 45
+    agent_type: claude
+    requires_claude: true   # cross-paper synthesis + honest judgment about whether/how a genuinely-different EBM-foundation route is feasible, and why it is not pre-blocked by the two bounded negatives -- open-ended judgment, not mechanical aggregation; the positive criterion for claude
+    estimated_wall_time_min: 20
+    track: phase3
+    inference_substrate: aggregation_from_upstream_artifacts
+    requires_gpu: false
+    deliverable: results/experiment_3781_edlm_next_thesis_feasibility_scoping.json
+    prompt: |
+      CONTEXT: Both energy-foundation routes are bounded and the loop CANNOT self-seed a new paradigm (P3
+      Verification Trap) -- a genuinely-different thesis needs a HUMAN seed. exp3763 (.344) handed the operator a
+      ranked next-thesis menu; the TOP route is EDLM (arXiv:2410.21357): a sequence-level EBM in RESIDUAL form
+      correcting parallel discrete-diffusion decoding errors via NCE, trainable off a pretrained AR model;
+      reportedly matches AR perplexity (OWT 17.58 vs 17.56) at matched compute. EDLM uses energy as a
+      residual-corrector over a diffusion base, NOT as the sole generator -- so it sidesteps the bounded-generator
+      negative (Thesis-A was energy-as-SOLE-generator) AND the bounded-selector negative (P0.1 was energy-as-
+      reranker-of-AR/SC). This task LOWERS the operator's seeding cost by producing a feasibility brief. It is
+      explicitly NOT a commitment by the loop and does NOT open a Phase-3 track.
+      EXISTING CODE TO READ FIRST: results/experiment_3763_next_phase3_thesis_decision_menu.json (the ranked
+      menu, EDLM at top); docs/research-notes/phase3-alternative-thesis-menu.md (the menu note);
+      research-references.md '.344 additions' Front-5 (the EDLM entry + latent-token-diffusion + ParaRNN
+      alternatives); project_thesis_a_ebt_seeded + project_energy_selection_thesis_bounded (the two negatives the
+      route must demonstrably sidestep); reference_deep_think_post_bounded_2026_06 P3 (human=epistemic-director).
+      TASK (feasibility scoping -- a BRIEF, not a prototype):
+        1. Summarize EDLM's mechanism precisely (residual energy over discrete diffusion via NCE off a pretrained
+           AR base) and state EXPLICITLY why it is NOT pre-blocked by either energy negative (it is neither sole-
+           generator nor AR-reranker). If you find a reason it IS subsumed by the negatives, say so honestly --
+           that is a valid finding that saves the operator a dead seed.
+        2. Enumerate the concrete prerequisites: code (is there a reference impl? deps -- torch/diffusion libs),
+           datasets, a pretrained AR base, and the realistic compute estimate (GPU-hours) for a MINIMAL kill-gate.
+        3. Design a minimal, FALSIFIABLE kill-gate experiment (the smallest run that would tell the operator
+           'seed it' vs 'don't'): a clear acceptance gate (e.g. residual-EDLM gen-PPL <= AR base at matched
+           compute on a tiny corpus), a positive control (per the P1 lesson -- a starved control invalidates a
+           null), and the same anti-fabrication discipline.
+        4. State the honest decision the operator faces (seed / don't seed / need-more-info) with the rationale.
+           Do NOT run any training. Do NOT commit the loop to the thesis.
+      INFERENCE-SUBSTRATE HYGIENE: aggregation/synthesis; NO GGUF/CUDA markers. Run `.venv/bin/python
+      scripts/adversarial_verify.py <artifact>`; confirm no critical flag.
+      REQUIRED ARTIFACT FIELDS (principle documents WHY; store the bare VALUE):
+        honest_verdict:
+          principle: "Terminal prefix; the feasibility-scoping outcome."
+        inference_substrate: "aggregation_from_upstream_artifacts (principle: a literature/feasibility synthesis, no live model)."
+        edlm_mechanism_summary:
+          principle: "Precise statement of EDLM's residual-corrector-over-diffusion mechanism -- the operator needs the mechanism to judge the seed."
+        why_not_blocked_by_energy_negatives:
+          principle: "The explicit argument that EDLM is neither energy-as-sole-generator (Thesis-A bound) nor energy-as-AR-reranker (P0.1 bound) -- the load-bearing reason this is a genuinely-different route, OR an honest finding that it IS subsumed."
+        prerequisites:
+          principle: "Deps + datasets + AR base + compute estimate -- the concrete seeding cost the brief lowers."
+        minimal_kill_gate_design:
+          principle: "The smallest falsifiable experiment (gate + positive control) that decides seed-vs-don't -- the actionable deliverable."
+        compute_estimate_gpu_hours:
+          principle: "Honest GPU-hours for the minimal kill-gate -- so the operator can weigh the seed against the rig's availability."
+        operator_decision_framing:
+          principle: "The seed/don't-seed/need-more-info framing with rationale -- this is a decision SURFACE for the operator, not a loop commitment."
+        loop_does_not_commit:
+          principle: "BARE bool, true -- the loop scaffolds only; it does NOT open a Phase-3 track or run training (P3 human-seeds-frames discipline)."
+        random_seed:
+          principle: "Determinism precondition."
+        reproducibility_checksum:
+          principle: "Content hash catches drift."
+        duration_s:
+          principle: "Wall-clock plausibility floor."
+      TERMINAL VERDICT: "complete: edlm_feasibility_scoped_residual_corrector_not_blocked_by_either_negative_minimal_kill_gate_designed_operator_decision_surface_loop_does_not_commit"
+      Run: cd {project_root} && .venv/bin/python scripts/experiment_3781_edlm_next_thesis_feasibility_scoping.py
+      Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  - id: exp3782-technical-report-g4-correction-prep
+    operator_override: "2026-05-29 north-star sec-1 (standing operator-curated authorization): the technical-report trajectory paragraph overstates the code-repair result (8%->80% / 0%->36% trace to NO artifact; cited exp227 shows delta=0.0). north-star sec-1 explicitly flags this as an OPERATOR ACTION. This task PREPARES the correction (a proposal); it does NOT edit the operator-curated technical report. False-positive scope-match vs prior doc/positioning tasks."
+    milestone: "2026.06.346"
+    title: "Technical-report G4 correction PREP (the standing north-star sec-1 OPERATOR ACTION): draft the corrected trajectory paragraph that replaces the unsupported '8%->80%' / '0%->36%' / '+3.0pp' code-repair numbers with the real provenance-confirmed numbers (exp1999 0.66->0.84 +18pp; exp2090 CRANE 0.70->0.85 +15pp), as an OPERATOR-action proposal. Does NOT edit docs/technical-report.md (operator-curated) -- emits the proposed diff to a research-note for the operator to apply."
+    priority: medium
+    max_turns: 30
+    agent_type: codex
+    model: gpt-5.5
+    requires_codex: true   # provenance-aggregation + drafting a proposed correction -- mechanical; codex is the standing cheap-default
+    estimated_wall_time_min: 12
+    track: product
+    inference_substrate: aggregation_from_upstream_artifacts
+    requires_gpu: false
+    deliverable: results/experiment_3782_technical_report_g4_correction_prep.json
+    prompt: |
+      CONTEXT: north-star sec-1 records a standing OPERATOR ACTION: the technical-report trajectory paragraph
+      overstates the code-repair result. The cited source exp227 shows improvement delta=0.0 (n_repaired=0); no
+      artifact supports '8%->80%' or '0%->36%'; baselines are 11-66%, never 0%. The genuine surviving code
+      positives are exp1999 (humaneval 0.66 -> repair 0.84, +18pp) and exp2090 (CRANE constrained decoding, n=50,
+      0.70 -> 0.85, +15pp), and even those need full provenance confirmation before headlining. docs/technical-
+      report.md is OPERATOR-CURATED (Public Documentation Discipline) -- this task PREPARES the correction; the
+      OPERATOR applies it.
+      EXISTING CODE TO READ FIRST (via scripts/summarize_artifact.py where useful): ops/north-star.md sec-1 (the
+      OPERATOR ACTION text + the demoted numbers); results/experiment_227_results.json (delta=0.0, the refuted
+      source); results/experiment_1999_*.json (0.66->0.84) + results/experiment_2090_*.json (CRANE 0.70->0.85) --
+      CONFIRM these numbers + that each carries random_seed + reproducibility_checksum (G4); the technical-report
+      trajectory paragraph (read for the exact text to correct -- do NOT edit it).
+      TASK:
+        1. Verify the real numbers from the primary artifacts (exp1999, exp2090) and their provenance (seed +
+           checksum + n). Record whether each fully passes G4 (traces to a primary artifact with seed+checksum).
+        2. DRAFT a corrected trajectory paragraph that (a) removes the unsupported 8%->80% / 0%->36% / +3.0pp
+           claims and (b) states the real exp1999/exp2090 numbers WITH their provenance + n, scoped honestly (and
+           noting if a number still needs a clean live-GPU full-HumanEval repair run before headlining).
+        3. Write the proposed correction to docs/research-notes/technical-report-g4-correction-proposal-{date}.md
+           as an OPERATOR-ACTION proposal (the exact old text -> new text diff). Do NOT edit docs/technical-
+           report.md or any operator-curated doc.
+        4. Confirm the agent edited NO operator-curated doc.
+      INFERENCE-SUBSTRATE HYGIENE: aggregation; NO GGUF/CUDA markers; populate cited_upstream_artifacts for
+      exp227/exp1999/exp2090. Run `.venv/bin/python scripts/adversarial_verify.py <artifact>`; confirm no
+      critical flag.
+      REQUIRED ARTIFACT FIELDS (principle documents WHY; store the bare VALUE):
+        honest_verdict:
+          principle: "Terminal prefix; the correction-prep outcome."
+        inference_substrate: "aggregation_from_upstream_artifacts (principle: provenance aggregation + drafting, no live model)."
+        unsupported_numbers_identified:
+          principle: "Lists the refuted prose numbers (8%->80%, 0%->36%, +3.0pp) + that exp227 shows delta=0.0 -- the G4 catch being corrected."
+        real_numbers_confirmed:
+          principle: "The provenance-confirmed exp1999 (+18pp) / exp2090 (+15pp) numbers + whether each passes G4 (seed+checksum+n)."
+        proposed_correction_written:
+          principle: "BARE bool, true -- the old->new diff was written to a research-note for the operator."
+        operator_curated_doc_unedited:
+          principle: "BARE bool, true -- docs/technical-report.md (and all operator-curated docs) were NOT edited (Public Documentation Discipline)."
+        cited_upstream_artifacts:
+          principle: "Provenance for the corrected numbers (anti-fabrication audit trail)."
+        random_seed:
+          principle: "Determinism precondition."
+        reproducibility_checksum:
+          principle: "Content hash catches drift."
+        duration_s:
+          principle: "Wall-clock plausibility floor."
+      TERMINAL VERDICT: "complete: g4_correction_prepped_unsupported_numbers_identified_real_numbers_confirmed_proposal_written_operator_curated_doc_unedited"
+      Run: cd {project_root} && .venv/bin/python scripts/experiment_3782_technical_report_g4_correction_prep.py
+      Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  - id: exp3783-external-research-refresh
+    operator_override: "2026-05-29 operator directive (standing): routine per-milestone external research refresh -- false-positive scope-match vs prior research-refresh/sweep tasks; structurally never a doomed rerun. Files genuinely-new 2026 papers (verifier entanglement, correlated errors, VPRM, gaming-verifiers, fast/slow process verification) surfaced during .346 planning."
+    milestone: "2026.06.346"
+    title: "External research refresh for .346: file the genuinely-new 2026 papers surfaced during planning into research-references.md '.346 additions' -- verifier-ensemble behavioral-entanglement auditing (arXiv:2604.07650), correlated errors in LLMs (arXiv:2506.07962), Verifiable Process Reward Models (arXiv:2601.17223), LLMs Gaming Verifiers (arXiv:2604.15149), Dyve fast/slow process verification (arXiv:2502.11157). Each entry as-reported, with how it relates to the closed moat thread / the verifier product / the anomaly-escalation upgrade. Pure documentation; runs no model."
+    priority: low
+    max_turns: 30
+    agent_type: codex
+    model: gpt-5.5
+    requires_codex: true   # documentation aggregation into the references file following the existing '.NNN additions' pattern -- mechanical; codex is the standing cheap-default
+    estimated_wall_time_min: 10
+    track: ops
+    inference_substrate: aggregation_from_upstream_artifacts
+    requires_gpu: false
+    deliverable: results/experiment_3783_external_research_refresh.json
+    prompt: |
+      CONTEXT: .346 planning surfaced genuinely-new 2026 papers directly relevant to the converged state. File
+      them into research-references.md as a '.346 additions' section (append-only; never delete prior content per
+      the never-prune rule). Each number is AS-REPORTED by the source and must be independently re-derived before
+      entering any forward-facing claim (adversarial-verify discipline).
+      EXISTING CODE TO READ FIRST: research-references.md '.344 additions' + '.345 additions' (the existing
+      section format to mirror -- a dated '## .346 additions' header + bulleted entries with arXiv ids +
+      one-line relevance); reference_deep_think_post_bounded_2026_06 (the closed-moat context the entanglement /
+      correlated-errors papers corroborate); project_verifier_domain_bound (the settled domain-bound finding).
+      TASK: append a '## .346 additions' section to research-references.md with these entries (verify each arXiv
+      id resolves; if WebFetch is unavailable, file from the planning-sweep summary and mark 'title/abstract
+      as-reported, id to confirm'):
+        - arXiv:2604.07650 -- auditing behavioral entanglement of LLMs + de-entangled verifier-ensemble
+          reweighting (up to ~4.5% over majority voting). The error-INDEPENDENCE methodology; CORROBORATES the
+          closed moat thread (apparent agreement can be correlated errors).
+        - arXiv:2506.07962 -- Correlated Errors in LLMs: more accurate models have MORE correlated errors. The
+          subsumption mechanism behind the moat being narrow, operationalized.
+        - arXiv:2601.17223 -- Verifiable Process Reward Models (deterministic rule-based step verifiers vs
+          neural judges). CORROBORATES Carnot's objective-energy positioning vs LLM-as-judge.
+        - arXiv:2604.15149 -- LLMs Gaming Verifiers (ICLR 2026 LLM Reasoning Workshop). The verifier-robustness /
+          null-space-mimicry frontier -- relevant to the energy verifier's gaming-resistance argument.
+        - arXiv:2502.11157 -- Dyve, Thinking Fast and Slow for Dynamic Process Verification. The fast/slow
+          escalation precedent for the .346 Anomaly-Escalation prototype (exp3780).
+      Tie each to the relevant track (closed moat / verifier product / anomaly-escalation / self-learning).
+      Do NOT edit any operator-curated doc (README, landing page, etc.) -- only research-references.md.
+      INFERENCE-SUBSTRATE HYGIENE: aggregation/docs; NO GGUF/CUDA markers. Run `.venv/bin/python
+      scripts/adversarial_verify.py <artifact>`; confirm no critical flag.
+      REQUIRED ARTIFACT FIELDS (principle documents WHY; store the bare VALUE):
+        honest_verdict:
+          principle: "Terminal prefix; the refresh outcome."
+        inference_substrate: "aggregation_from_upstream_artifacts (principle: a documentation append, no live model)."
+        references_added:
+          principle: "The list of arXiv ids filed -- the deliverable; keeps the project current per research-program.md planning requirement 4."
+        n_references_added:
+          principle: "BARE int -- sample-size hygiene on the refresh (>=5 this sweep)."
+        section_appended_not_replaced:
+          principle: "BARE bool, true -- the '.346 additions' section was APPENDED (never-prune rule; no prior content removed)."
+        numbers_are_as_reported:
+          principle: "BARE bool, true -- peer numbers are source-reported, not Carnot measurements (adversarial-verify discipline)."
+        random_seed:
+          principle: "Determinism precondition."
+        reproducibility_checksum:
+          principle: "Content hash catches drift."
+        duration_s:
+          principle: "Wall-clock plausibility floor."
+      TERMINAL VERDICT: "complete: external_research_refresh_346_filed_5_references_section_appended_numbers_as_reported"
+      Run: cd {project_root} && .venv/bin/python scripts/experiment_3783_external_research_refresh.py
+      Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  - id: exp3784-kv260-opportunistic-continuity-audit
+    operator_override: "2026-05-29 operator directive (standing): active hardware-continuity task (KV260) -- false-positive scope-match vs prior kv260-continuity exps. .340 confirmed KV260 TERMINAL, so this is an OPPORTUNISTIC confirm-terminal audit per north-star sec-3 relaxation, not the per-milestone mandate."
+    milestone: "2026.06.346"
+    title: "KV260 opportunistic continuity audit -- confirm terminal state holds (SSH-reachable, accelerator overlay loadable). Documentation-only; the per-milestone hardware mandate was relaxed to opportunistic at .340 (GateMate/PolarFire stay opportunistic future-work)."
+    priority: low
+    max_turns: 20
+    agent_type: codex
+    model: gpt-5.5
+    requires_codex: true   # SSH board smoke -- mechanical; codex is the standing cheap-default
+    estimated_wall_time_min: 8
+    track: hardware
+    inference_substrate: hardware_smoke
+    requires_gpu: false
+    deliverable: results/experiment_3784_kv260_opportunistic_continuity_audit.json
+    prompt: |
+      CONTEXT: KV260 reached TERMINAL state at .340 (non-fabricated board latency transcript, re-confirmed
+      through .345). The per-milestone hardware mandate is relaxed to opportunistic (north-star sec-3). Light
+      confirm-terminal audit, documentation-only.
+      PRECONDITIONS (KV260 uses SSH ONLY -- per KV260 SSH-Not-SD-Card discipline; NEVER a host block-device
+      check; the board boots from its own onboard storage and is reached over the network):
+        a. `ssh -o ConnectTimeout=5 -o BatchMode=yes kria 'true'` returns 0. If non-zero ->
+           honest_verdict blocked_kv260_ssh_unreachable, EXIT (do NOT fabricate, do NOT use any host
+           storage-slot check).
+      CONCRETE STEPS:
+        1. Confirm SSH reachability (precondition a).
+        2. `ssh kria 'xmutil listapps'` -- confirm the Carnot accelerator overlay is present/loadable.
+        3. Record that the terminal state holds (or note any regression for the operator).
+      INFERENCE-SUBSTRATE HYGIENE: hardware_smoke. Run `.venv/bin/python scripts/adversarial_verify.py
+      <artifact>`; confirm no critical flag.
+      REQUIRED ARTIFACT FIELDS (principle documents WHY; store the bare VALUE):
+        honest_verdict:
+          principle: "Terminal prefix; blocked_kv260_ssh_unreachable if the board is unreachable."
+        inference_substrate: "hardware_smoke (principle: an SSH board check, not live inference)."
+        kv260_ssh_reachable:
+          principle: "The SSH-reachability fact (NOT host SD-card presence -- the retired wrong mechanism)."
+        terminal_state_holds:
+          principle: "Confirms the .340 terminal state did not regress; opportunistic, not mandated."
+        preconditions_checked:
+          principle: "Records the SSH check was actually run before any board operation."
+        random_seed:
+          principle: "Determinism precondition."
+        reproducibility_checksum:
+          principle: "Content hash catches drift."
+        duration_s:
+          principle: "Wall-clock plausibility floor."
+      TERMINAL VERDICT: "complete: kv260_terminal_state_holds_ssh_reachable_accelerator_loadable_opportunistic_audit"
+      Run: cd {project_root} && .venv/bin/python scripts/experiment_3784_kv260_opportunistic_continuity_audit.py
+      Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  - id: exp3785-capstone-v346
+    operator_override: "2026-05-29 operator directive (standing): routine capstone (capstone-vN) -- false-positive scope-match vs prior capstone tasks; structurally never a doomed rerun."
+    milestone: "2026.06.346"
+    title: "Capstone .346 -- aggregate the POST-BOUNDED CONVERGENCE milestone: the last energy-existential question adjudicated (P1 discrete-search v3: decode-artifact-bounded / fundamental / inconclusive), the verifier product banked (certified abstention point wired into the verify API), the P3 Anomaly-Escalation classifier prototyped, the operator's EDLM next-thesis seed scaffolded, FR-11 v18 Tier-2 self-learning, G4 correction prepped, references refreshed, KV260 terminal confirmed. paper_ready MUST stay TRUE; frozen 0.9131 unchanged; both energy routes stay bounded (P1 v3 sharpens the mechanism only)."
+    priority: high
+    max_turns: 25
+    agent_type: codex
+    model: gpt-5.5
+    requires_codex: true   # capstone aggregation over upstream artifacts -- mechanical; codex is the standing cheap-default
+    estimated_wall_time_min: 10
+    track: ops
+    inference_substrate: aggregation_from_upstream_artifacts
+    requires_gpu: false
+    deliverable: results/experiment_3785_capstone_v346.json
+    prompt: |
+      CONTEXT: Capstone for .346 (POST-BOUNDED CONVERGENCE). Aggregate exp3776-exp3784 HONESTLY. Read each via
+      scripts/summarize_artifact.py. Skip any artifact carrying flagged_adversarial=true from headline
+      aggregation (fabrication gate). For any upstream artifact that is MISSING or BLOCKED (e.g. exp3777 if no
+      free GPU), record it honestly as not-landed/blocked -- do NOT label an un-run or blocked task as a research
+      negative (the .344 capstone-confusion guard).
+      TASK: summarize the milestone:
+        (1) the LAST energy-existential question adjudicated -- exp3777 P1 discrete-search v3: report the
+            adjudication value {decode_artifact_bounded | fundamental_causal_inductive_bias_gap |
+            inconclusive_positive_control_failed | blocked_*} AND positive_control_passed. Be precise: a null
+            'FUNDAMENTAL' is only valid if positive_control_passed=true; an inconclusive/blocked outcome means the
+            mechanism is still open (hand to operator), NOT that energy-as-generator is newly disproven (it was
+            already bounded from part-b).
+        (2) the verifier product banked -- exp3779 abstention mode wired into the verify API (default-off, E2E).
+        (3) the P3 Anomaly-Escalation classifier prototyped (exp3780, recommend-only, conductor unmodified).
+        (4) the operator's EDLM next-thesis seed scaffolded (exp3781, feasibility brief + minimal kill-gate; loop
+            does NOT commit).
+        (5) FR-11 v18 Tier-2 constraint-memory self-learning (exp3778, memory contribution preserved).
+        (6) G4 correction prepped (exp3782, operator-curated doc unedited); references refreshed (exp3783);
+            KV260 terminal confirmed (exp3784).
+      State the .346 outcome PLAINLY: a CONVERGENCE milestone -- it settles/sharpens the last open mechanism,
+      banks the verifier product into a deployable surface, builds the endorsed process upgrade, and scaffolds the
+      operator's next seed; it makes NO new existential claim and re-grinds nothing.
+      INVARIANTS to RE-ASSERT: paper_ready stays TRUE (G1-G4, confirm via publication_gate.py); frozen FoVer
+      0.9131 unchanged; energy-as-selector AND energy-as-generator both stay honest-negative-bounded (P1 v3
+      sharpens the mechanism; it does NOT reopen the strategic conclusion); the next-Phase-3-thesis decision
+      remains an operator-seeding surface.
+      INFERENCE-SUBSTRATE HYGIENE: aggregation; NO live-model markers; populate cited_upstream_artifacts. QUOTE
+      any string containing a colon if you touch research-complete.yaml (the .344 poison must not recur). Run
+      `.venv/bin/python scripts/adversarial_verify.py <artifact>`; confirm no critical flag.
+      REQUIRED ARTIFACT FIELDS (principle documents WHY; store the bare VALUE):
+        honest_verdict:
+          principle: "Terminal prefix; the milestone's one-line outcome."
+        inference_substrate: "aggregation_from_upstream_artifacts (principle: a capstone reads upstream JSON, runs no live model)."
+        p1_adjudication:
+          principle: "The exp3777 verdict {decode_artifact_bounded | fundamental | inconclusive | blocked} -- the milestone-defining mechanistic result."
+        p1_positive_control_passed:
+          principle: "BARE bool -- whether the AR positive control reached >=0.3; a null 'FUNDAMENTAL' is invalid without it (the v1/v2 lesson)."
+        energy_as_generator_still_bounded:
+          principle: "BARE bool, true -- the part-b strategic bound stands regardless of the P1 mechanism verdict."
+        verifier_product_banked:
+          principle: "Records the abstention mode wired into the verify API (exp3779) -- the deployable product surface."
+        anomaly_escalation_prototyped:
+          principle: "BARE bool -- the P3 classifier prototype + change-proposal landed (recommend-only, conductor unmodified)."
+        edlm_seed_scaffolded:
+          principle: "Records the EDLM feasibility brief + minimal kill-gate handed to the operator (exp3781) -- the loop does NOT commit."
+        fr11_v18_self_learning:
+          principle: "Records the Tier-2 constraint-memory consolidation (exp3778, memory contribution preserved) -- the self-learning mandate."
+        paper_ready_preserved:
+          principle: "BARE bool -- G1-G4 stay met; the milestone must not regress the banked verifier product."
+        frozen_headline_unchanged:
+          principle: "BARE bool -- frozen FoVer 0.9131 stays frozen; .346 uses but never moves it."
+        next_thesis_remains_operator_surface:
+          principle: "BARE bool -- the next-Phase-3 decision remains an operator-seeding surface; the loop does not self-commit."
+        flagged_artifacts_excluded:
+          principle: "Lists any flagged_adversarial artifact excluded from aggregation (fabrication gate)."
+        not_landed_or_blocked_recorded_honestly:
+          principle: "Lists any upstream task that did not land or blocked (e.g. exp3777 if no free GPU) -- recorded as not-run/blocked, NOT as a research negative (the .344 capstone-confusion guard)."
+        cited_upstream_artifacts:
+          principle: "Provenance trail from the capstone summary to the real artifacts."
+        random_seed:
+          principle: "Determinism precondition."
+        reproducibility_checksum:
+          principle: "Content hash catches drift."
+        duration_s:
+          principle: "Wall-clock plausibility floor."
+      TERMINAL VERDICT example: "complete: capstone_v346_p1_<adjudication>_energy_as_generator_still_bounded_verifier_product_banked_anomaly_escalation_prototyped_edlm_scaffolded_fr11_v18_paper_ready_true_frozen_headline_unchanged"
+      Run: cd {project_root} && .venv/bin/python scripts/experiment_3785_capstone_v346.py
+      Do NOT push. Do NOT modify scripts/research_conductor.py.
