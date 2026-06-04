@@ -77,6 +77,15 @@ models/openai_privacy_filter/
 #   must be tracked (e.g. a small hand-built artifact), add a negation
 #   with `!models/<dirname>/`.
 
+# Large training checkpoints.  The conductor's bounded-training drivers
+# (Thesis-A EBT, etc.) save *.pt checkpoints under results/; one of them
+# (results/experiment_3734_checkpoint.pt, 765 MB) exceeded GitHub's 100 MB
+# limit and silently blocked every push for 143 commits.  History was
+# purged with git-filter-repo 2026-06-03.  These patterns keep checkpoints
+# untracked so it cannot recur.  Result JSON artifacts are still tracked.
+results/**/*.pt
+results/*.pt
+
 # Vivado intermediate / future-build artifacts.  The .gen/ subtree
 # contains >100 MB synthesized netlists (carnot_ising_bd_*_sim_netlist.v
 # and .vhdl) that GitHub also rejected.
