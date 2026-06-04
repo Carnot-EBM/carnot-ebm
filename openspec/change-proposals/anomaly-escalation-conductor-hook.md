@@ -19,8 +19,9 @@ between:
 
 ## Proposed Operator Wiring
 
-Add `scripts/anomaly_escalation_classifier.py` as an advisory hook in the
-operator-controlled reconciliation path after an experiment artifact exists and
+Use `carnot.autoresearch.anomaly_escalation_advisory.classify_negative` as a
+recommend-only advisory call in the operator-controlled reconciliation path.
+The operator applies the recommendation after an experiment artifact exists and
 after the existing adversarial verification pass has preserved fabrication
 discipline.
 
@@ -29,13 +30,17 @@ Recommended conductor-side behavior for the operator to implement:
 1. Load the experiment artifact and any task metadata that declares prior
    expectations, kill-gates, positive controls, assumptions, or prediction
    envelopes.
-2. Call the classifier and record its recommendation in the reconciliation log.
-3. If the classifier returns `clean_bounded_negative`, continue the existing
-   auto-reconciliation path.
-4. If the classifier returns `clean_positive`, continue the existing positive
-   reconciliation path.
-5. If the classifier returns `frame_violating_anomaly`, pause pruning for that
-   line and escalate to a human reviewer with the classifier rationale.
+2. Call `classify_negative(artifact_or_verdict)` at the start of the
+   conductor's negative-result reconcile branch, after the artifact has passed
+   `scripts/adversarial_verify.py` and before automatic pruning/reconciliation
+   records the negative as closed.
+3. Record the advisory dictionary (`recommendation`, `reason`,
+   `frame_violation`) in the reconciliation log.
+4. If the advisory returns `recommendation="auto_reconcile"`, continue the
+   existing auto-reconciliation path. For a non-negative terminal result, keep
+   the existing positive reconciliation path.
+5. If the advisory returns `recommendation="escalate_to_human"`, pause pruning
+   for that line and escalate to a human reviewer with the advisory reason.
 
 ## Non-Negotiable Anti-Fabrication Caveat
 
@@ -52,5 +57,7 @@ adds a frame-audit signal over honest verdict plus prior expectation metadata.
 ## Conductor Scope
 
 This proposal does not modify `scripts/research_conductor.py`. It describes the
-operator wiring point for a future change. Exp 3780 ships only the standalone
-prototype classifier and this proposal.
+operator wiring point for a future change. Exp 3809 wires the tuned Exp 3802
+classifier through a standalone advisory wrapper, validates it with offline
+replay, and emits this proposal for the operator to apply. The classifier and
+wrapper are advisory only; neither can relax verification.
