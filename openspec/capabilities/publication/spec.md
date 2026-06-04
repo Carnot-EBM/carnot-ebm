@@ -2113,6 +2113,47 @@ as a caveat, and leaves operator-curated documents unedited.
 `exp3798_did_not_produce_clean_artifact_headline_stays_demoted`, does not
 fabricate G4 provenance, and keeps the product headline not headline-eligible.
 
+### REQ-PUBLISH-3812: Product Headline Status Consolidation With Live Re-check
+
+The Exp 3812 product-headline status consolidation runner MUST aggregate
+Exp 3798, Exp 3799, and Exp 2090 by absolute artifact path and MUST run a live
+`scripts/adversarial_verify.py` re-check on each upstream artifact before
+recording the product-headline status. The runner MUST treat Exp 3799's
+Exp 2090 G4 stamp as stale when the live re-check of Exp 2090 reports a
+critical flag, and MUST record that both candidate product positives fail to
+support a headline: the Exp 3798 code-repair rerun because it produced
+`repair_delta_pp=0.0`, and Exp 2090 CRANE because the live re-check is
+critical.
+
+The artifact
+`results/experiment_3812_product_headline_status_consolidation.json` MUST use
+`inference_substrate="aggregation_from_upstream_artifacts"`, include
+`honest_verdict`, `product_headline_status_table`,
+`code_repair_supports_headline`, `crane_supports_headline`,
+`sole_defensible_headline`, `product_headline_recommendation`,
+`doc_proposal_emitted_not_curated_edit`, `operator_curated_doc_unedited`,
+`cited_upstream_artifacts`, `random_seed`, `reproducibility_checksum`, and
+`duration_s`, avoid live-model substrate markers in the aggregation artifact,
+and pass `scripts/adversarial_verify.py` without critical flags. It SHALL NOT
+edit `docs/technical-report.md`, `ops/north-star.md`, status documents,
+changelogs, traceability documents, or `scripts/research_conductor.py`; it MUST
+write only a doc-update proposal at
+`docs/research-notes/product-headline-status-doc-proposal-20260604.md` for the
+operator-curated technical report.
+
+The terminal verdict MUST equal
+`complete: product_headline_status_recorded_code_repair_false_crane_false_sole_defensible_fover_0.9131_stays_demoted_doc_proposal_emitted_operator_curated_doc_unedited`.
+
+### SCENARIO-PUBLISH-3812: Product Headline Consolidation Demotes Stale Positives
+
+**Given** Exp 3798, Exp 3799, and Exp 2090 artifacts are available and the live
+re-check reports Exp 2090 as critical
+**When** the Exp 3812 runner aggregates the product-headline evidence
+**Then** it records code repair and CRANE as not supporting a product headline,
+cites all three upstream artifacts, identifies FoVer 0.9131 as the sole
+defensible headline, emits the doc-update proposal, and leaves
+operator-curated documents unedited.
+
 ### REQ-PUBLISH-3723: v340 Convergence Capstone And Hardened G-Gate Recheck
 
 The Exp 3723 v340 capstone runner MUST aggregate `publication_gate.py --json`
@@ -2267,6 +2308,7 @@ verdict, `reproduced_auroc_mean == null`, `per_seed_aurocs == []`, and
 | REQ-PUBLISH-3717 | Planned | Exp 3717 full G4 headline provenance audit |
 | REQ-PUBLISH-3723 | Proposed | Exp 3723 v340 convergence capstone and hardened G-gate recheck |
 | REQ-PUBLISH-3792 | Implemented | Exp 3792 product-headline G4 provenance confirmation |
+| REQ-PUBLISH-3812 | Implemented | Exp 3812 product-headline status consolidation |
 
 ### REQ-PUBLISH-026: HuggingFace Publish Retry
 The experiment 1750 huggingface retry runner MUST attempt to upload the smallest model in models/ with a no-emoji model card. If credentials pass, it MUST upload and record hf_upload_succeeded = True. If blocked, it MUST emit an honest verdict of "blocked_credentials".
