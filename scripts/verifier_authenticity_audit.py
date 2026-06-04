@@ -175,7 +175,7 @@ def parse_verdict(report: str) -> str:
     return m.group(1).strip() if m else "UNKNOWN"
 
 
-def verify_quoted_evidence(report: str, body: str) -> tuple[list[str], list[str], list[str]]:
+def verify_quoted_evidence(report: str, body: str) -> tuple[list[str], list[str]]:
     """Audit-integrity guard (Layer 1.5).
 
     An LLM hostile-reviewer can HALLUCINATE its smoking gun — e.g. the 2026-06-03
@@ -185,35 +185,44 @@ def verify_quoted_evidence(report: str, body: str) -> tuple[list[str], list[str]
     clean honest-heuristic verifier on fabricated evidence — exactly the fabrication
     the audit exists to PREVENT, committed BY the audit.
 
-    This checks every backtick-quoted span the auditor cited: a span is
-    "source-checkable" if it looks like a concrete code/path literal (has a
-    structural char like / . _ ( ) = @ AND a >=4-char alnum run). For each, we test
-    whether it — or a distinctive >=6-char sub-token of it — literally appears in the
-    source (whitespace-normalized). Returns (checkable, present, missing). When a
-    FLAGGED verdict has checkable evidence but NONE of it is present in source, the
-    caller treats the verdict as likely-hallucinated and auto-downgrades it.
+    We can't fact-check prose, but we CAN fact-check the auditor's HIGH-SPECIFICITY
+    quoted evidence: a backtick-span that looks like a file path, a file with an
+    extension, an arXiv id, or a `time.sleep`/`np.random`-class call. Those are the
+    concrete artifacts a gaming verdict rests on, and they either appear verbatim in
+    the source or they were invented. (Plain symbol names like `_looks_like_python`
+    are LOW specificity — they can legitimately be referenced even when the verdict
+    is wrong — so they don't count.) Returns (high_specificity_spans, missing_ones).
+    A span counts as present if it — or a distinctive >=6-char sub-token — appears in
+    the whitespace-normalized source. When a FLAGGED verdict has any high-specificity
+    evidence MISSING, the caller treats the smoking gun as hallucinated and
+    auto-downgrades the verdict.
     """
     norm_body = re.sub(r"\s+", "", body)
-    checkable: list[str] = []
-    present: list[str] = []
+
+    def is_present(core: str) -> bool:
+        if re.sub(r"\s+", "", core) in norm_body:
+            return True
+        toks = re.findall(r"[A-Za-z0-9_./-]{6,}", core)
+        return any(re.sub(r"\s+", "", t) in norm_body for t in toks)
+
+    high: list[str] = []
     missing: list[str] = []
     for span in re.findall(r"`([^`]+)`", report):
         core = span.strip()
         if len(core) < 6:
             continue
-        if not re.search(r"[/._()=@\\]", core):       # not a code/path-looking literal
+        is_high_specificity = bool(
+            re.search(r"\.(json|py|ya?ml|txt|md|csv|pt|safetensors)\b", core)
+            or "/" in core
+            or re.search(r"arxiv:\s*\d", core, re.IGNORECASE)
+            or re.search(r"\b(np\.random|numpy\.random|time\.sleep|torch\.load)\b", core)
+        )
+        if not is_high_specificity:
             continue
-        if not re.search(r"[A-Za-z0-9]{4,}", core):    # no substantial alnum content
-            continue
-        checkable.append(core)
-        norm_core = re.sub(r"\s+", "", core)
-        hit = norm_core in norm_body
-        if not hit:
-            # the full quote may be paraphrased/partial; accept a distinctive sub-token
-            toks = re.findall(r"[A-Za-z0-9_./-]{6,}", core)
-            hit = any(re.sub(r"\s+", "", t) in norm_body for t in toks)
-        (present if hit else missing).append(core)
-    return checkable, present, missing
+        high.append(core)
+        if not is_present(core):
+            missing.append(core)
+    return high, missing
 
 
 def main() -> int:
@@ -293,12 +302,36 @@ def main() -> int:
             counts["UNKNOWN"] += 1
             continue
         verdict = parse_verdict(report)
+        guard_note = ""
+        if verdict in flagged_verdicts:
+            high_evidence, missing = verify_quoted_evidence(report, body)
+            if missing:
+                # Every concrete code/path string the auditor cited as evidence is
+                # ABSENT from the source → the smoking gun was hallucinated. Downgrade
+                # so the operator is not steered to RETIRE a verifier on fabricated
+                # evidence. The original LLM text is preserved below for transparency.
+                integrity_voids.append((str(rel), verdict, missing[:6]))
+                guard_note = (
+                    "\n> **AUDIT-INTEGRITY GUARD (Layer 1.5) — VERDICT AUTO-DOWNGRADED.** "
+                    f"The `{verdict}` verdict cited high-specificity evidence (file paths / "
+                    "extensions / arXiv ids / sleep-calls) that does NOT appear in the source "
+                    "file (checked literally + by distinctive sub-token). This is the auditor "
+                    "hallucinating its smoking gun (cf. the 2026-06-03 ast_structure_verifier "
+                    "false positive). Verdict downgraded to `CANNOT_DETERMINE` and removed "
+                    "from the action list; DO NOT retire on this basis. Absent evidence: "
+                    + "; ".join(f"`{m}`" for m in missing[:6]) + "\n"
+                )
+                print(f"    [integrity-guard] VOIDED {rel}: {verdict} cited "
+                      f"{len(missing)} absent evidence string(s)", file=sys.stderr)
+                verdict = "CANNOT_DETERMINE"
         counts[verdict] = counts.get(verdict, 0) + 1
         if verdict in flagged_verdicts:
             flagged_files.append((str(rel), verdict))
         out.append(f"## {rel}\n")
         out.append(f"**Verdict:** `{verdict}`\n")
         out.append(report.strip())
+        if guard_note:
+            out.append(guard_note)
         out.append("\n")
 
     # Summary at top
@@ -315,6 +348,16 @@ def main() -> int:
         summary.append("### FLAGGED — operator action recommended")
         for path, verdict in flagged_files:
             summary.append(f"- `{path}` — **{verdict}**")
+    if integrity_voids:
+        summary.append("")
+        summary.append("### AUDIT-INTEGRITY GUARD — flags voided (auditor hallucinated its evidence)")
+        summary.append("These verdicts were FLAGGED by the LLM reviewer but cited concrete "
+                       "code/path strings that do NOT exist in the source. Auto-downgraded to "
+                       "`CANNOT_DETERMINE`; **do NOT act on them.** They indicate the audit RUN "
+                       "was partly unreliable, not that the verifier is fake.")
+        for path, verdict, missing in integrity_voids:
+            ev = "; ".join(f"`{m}`" for m in missing) if missing else "(none captured)"
+            summary.append(f"- `{path}` — was **{verdict}**; absent evidence: {ev}")
     summary.append("")
     summary.append("---")
     summary.append("")
