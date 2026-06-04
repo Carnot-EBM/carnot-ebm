@@ -7750,3 +7750,4 @@ ERROR: {
 | 2026-06-04 10:00 UTC | SCAFFOLD the operator's EDLM seed further (NOT a l | OK | 82 passed in 4.57s |
 | 2026-06-04 10:12 UTC | External research refresh for .347: file the genui | OK | 93 passed in 4.70s |
 | 2026-06-04 10:24 UTC | KV260 opportunistic continuity audit -- confirm te | OK | 90 passed in 4.87s |
+| 2026-06-04 10:43 UTC | Capstone .347 -- aggregate the POST-CONVERGENCE mi | OK | 88 passed in 4.65s |
