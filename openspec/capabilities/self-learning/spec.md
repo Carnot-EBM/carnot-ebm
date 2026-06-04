@@ -10941,3 +10941,85 @@ proving the artifact depends on the real predictive head state
 | Requirement  | Python | Tests |
 |-------------|--------|-------|
 | REQ-LEARN-3788 | Proposed (python/carnot/fr11/continuous_self_learning_v19.py; scripts/experiment_3788_fr11_self_learning_v19_tier3_predictive.py) | Proposed (tests/python/test_experiment_3788_fr11_csl_v19.py) |
+
+---
+
+## REQ-LEARN-3803: FR-11 v20 Tier-3 Fast-Path Cascade Gate
+
+**Given** Exp 3788 persisted a trained `FR11ExtendedJEPA` Tier-3 predictor and
+the FoVer cached corpus plus the four frozen headline verifier scoring paths
+are present
+**When** Exp 3803 runs the FR-11 v20 self-learning application experiment
+**Then** it SHALL load the persisted v19 predictor state and SHALL NOT retrain
+the predictor
+**And** it SHALL evaluate the fast-path gate on FoVer rows excluded from the
+v19 predictor training split
+**And** it SHALL sweep confidence thresholds where confident predictor scores
+short-circuit full four-verifier scoring and uncertain rows fall through to the
+unchanged frozen ensemble scorer
+**And** it SHALL choose an operating point whose combined fast-path plus
+fall-through AUROC remains inside the frozen Exp 2837 condition-A CI95
+`[0.9027, 0.9235]`
+**And** it SHALL persist the selected operating point so the next milestone can
+resume the Tier-3 fast-path policy.
+
+### REQ-LEARN-3803 Sub-requirements
+
+- REQ-LEARN-3803-1: The runnable artifact SHALL use `inference_substrate`
+  equal to
+  `verifier_ensemble_against_cached_candidates (principle: reads cached scores + the persisted predictor, no live model).`
+  and SHALL avoid live-model, CUDA, GGUF, or predictor-retraining claims.
+- REQ-LEARN-3803-2: Preconditions SHALL run under `.venv/bin/python`, require
+  importable `jax`, `numpy`, `sklearn`, and `FR11ExtendedJEPA`, require the
+  v19 predictor state file to load, and require the absolute FoVer corpus path
+  to exist before gate evaluation.
+- REQ-LEARN-3803-3: If the interpreter, v19 predictor state, FoVer corpus, or
+  cached verifier scoring path is missing, the artifact SHALL use a
+  `blocked_<resource>` honest verdict and SHALL NOT fabricate skip rate,
+  effective AUROC, or operating-point persistence.
+- REQ-LEARN-3803-4: The held-out split SHALL be disjoint from the v19 predictor
+  training rows by reconstructing the v19 deterministic split from the same
+  labels and random seed, using only v19 test rows for gate measurement.
+- REQ-LEARN-3803-5: The gate SHALL compute predictor confidence as
+  `abs(predictor_probability - 0.5)`, short-circuit rows whose confidence is at
+  least the candidate threshold, and use frozen full-ensemble scores for all
+  rows below that threshold.
+- REQ-LEARN-3803-6: The chosen operating point SHALL maximize skip rate among
+  swept thresholds whose combined effective AUROC is inside the frozen CI; if
+  no threshold satisfies the CI, the artifact SHALL report a no-saving finding
+  rather than claiming a regressing compute saving.
+- REQ-LEARN-3803-7: Runnable artifacts SHALL include bare values for
+  `honest_verdict`, `inference_substrate`, `skip_rate_at_no_regression`,
+  `effective_auroc_at_operating_point`, `compute_saving_vs_accuracy_curve`,
+  `accuracy_regression`, `held_out_split_sizes`,
+  `headline_ensemble_unchanged`, `is_tier3_application_not_retrain`,
+  `operating_point_persisted`, `model_specs`, `random_seed`,
+  `reproducibility_checksum`, and `duration_s`, plus separate field-principle
+  annotations for those fields.
+- REQ-LEARN-3803-8: The terminal verdict SHALL be
+  `complete: fr11_v20_tier3_fast_path_gate_skip_rate_<x>_effective_auroc_<y>_in_frozen_ci_no_accuracy_regression_headline_ensemble_unchanged_operating_point_persisted`
+  when the operating point is persisted, the effective AUROC is inside the
+  frozen CI, no accuracy regression is reported, and the frozen headline
+  ensemble remains the fall-through path.
+
+### SCENARIO-LEARN-3803: Fast-Path Gate Uses Persisted Predictor Without Replacing Fall-Through
+
+**Given** labeled FoVer-style verifier scores, a persisted `FR11ExtendedJEPA`
+state, and a deterministic v19 split with both positive and negative held-out
+rows
+**When** the v20 gate evaluates predictor probabilities on the held-out rows
+and sweeps confidence thresholds
+**Then** confident rows take predictor scores and increment the skip-rate
+counter
+**And** uncertain rows keep the frozen full-ensemble scores exactly
+**And** poisoning the persisted predictor state changes the chosen gate curve,
+proving the result uses the real persisted Tier-3 predictor
+**And** the artifact reports `headline_ensemble_unchanged=true`,
+`is_tier3_application_not_retrain=true`, `operating_point_persisted=true`, and
+verifier-scoring substrate only.
+
+## Implementation Status (REQ-LEARN-3803)
+
+| Requirement  | Python | Tests |
+|-------------|--------|-------|
+| REQ-LEARN-3803 | Implemented (python/carnot/fr11/continuous_self_learning_v20.py; scripts/experiment_3803_fr11_v20_tier3_fast_path_gate.py, Exp 3803) | Implemented (tests/python/test_experiment_3803_fr11_v20_fast_path_gate.py) |
