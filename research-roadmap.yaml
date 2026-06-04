@@ -227,7 +227,7 @@ tasks:
       its Jacobian is symmetric). TRM learns a GENERIC discrete-time dynamical system — an arbitrary
       (asymmetric) vector field — so it can express conditional logic / asymmetric attractors / limit
       cycles EBT is mathematically INCAPABLE of. Therefore our bounded EBT result does NOT cover TRM.
-      Falsification: capture a trained TRM's latent updates Δh = h_{t+1} − h_t over many states, then
+      Falsification: capture a trained TRM's latent updates Δh = h_{{t+1}} − h_t over many states, then
       try to fit a scalar E(h) such that Δh ≈ −∇E(h). The curl-free / symmetric-Jacobian constraint
       should make this FAIL (large curl residual). If it SUCCEEDS, TRM is secretly energy descent
       (also a valuable, surprising finding). Framing: docs/research-notes/phase3-recursive-refiner-thesis.md
@@ -304,7 +304,7 @@ tasks:
       docs/research-notes/phase3-recursive-refiner-thesis.md (§"MANDATORY positive-control gate").
 
       CRITICAL: emit the gate field `headroom_confirmed` as a BARE boolean (true/false), NOT a
-      principle-annotated {value, principle} dict — the conductor's gated_on compares the raw value
+      principle-annotated {{value, principle}} dict — the conductor's gated_on compares the raw value
       and a dict breaks the downstream gate (feedback_gated_fields_must_be_bare).
 
       EXISTING CODE TO READ FIRST:
@@ -796,13 +796,13 @@ tasks:
       EXISTING CODE TO READ FIRST:
         - results/experiment_3818_capstone_v349.json (the prior capstone shape)
         - results/operational_retro_2026_06_350.json
-        - results/experiment_38{19,20,21,22,23,24,25,26,27,28,29,30}*.json (this milestone's artifacts)
+        - results/experiment_38{{19,20,21,22,23,24,25,26,27,28,29,30}}*.json (this milestone's artifacts)
         - scripts/publication_gate.py (confirm paper_ready G1-G4 unchanged)
 
       CONCRETE STEPS:
         0. PRECONDITIONS: the upstream artifacts above are readable (aggregation has no GPU/model precond).
         1. Read each .350/.351 artifact; record honest_verdict + flagged_adversarial. Build a
-           cited_upstream_artifacts list of {experiment_id, fields_imported, sha256}.
+           cited_upstream_artifacts list of {{experiment_id, fields_imported, sha256}}.
         2. Run `{project_root}/.venv/bin/python scripts/publication_gate.py --json`; confirm
            paper_ready and the G1-G4 gate status are UNCHANGED (FoVer 0.9131 frozen).
         3. Summarize the recursive-refiner thesis status after this milestone (Task 0 outcome, P1/P2
@@ -818,7 +818,7 @@ tasks:
         recursive_refiner_thesis_status:
           principle: "The strategic state of the live operator-seeded thesis after this milestone — the input the operator needs for the next GO/NO-GO."
         cited_upstream_artifacts:
-          principle: "{experiment_id, fields_imported, sha256} provenance so the capstone's numbers trace to real measurements (no synthesis from nothing)."
+          principle: "{{experiment_id, fields_imported, sha256}} provenance so the capstone's numbers trace to real measurements (no synthesis from nothing)."
         flagged_artifacts_skipped:
           principle: "Records which upstream artifacts were SKIPPED for carrying flagged_adversarial (the fabrication gate)."
         inference_substrate / duration_s:
