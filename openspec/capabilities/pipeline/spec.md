@@ -615,6 +615,34 @@ The Exp 3810 runner MUST write
 `doc_proposal_emitted_not_curated_edit`, `tests_assert_real_behavior`,
 `model_specs`, `random_seed`, `reproducibility_checksum`, and `duration_s`.
 
+### REQ-SPOE-3811: Abstention Cross-Surface Parity Smoke
+
+The pipeline MUST provide an Exp 3811 no-live-LLM parity smoke that compares
+the certified Exp 3771 abstention operating point across the verify API,
+CLI/batch, and HTTP/REST surfaces.  The smoke MUST first confirm that the
+`.venv/bin/python` interpreter imports `carnot`, the Exp 3810 artifact reports
+`http_rest_surface_added=true`, all three surfaces are invokable, and cached
+FoVer verifier-scoring examples are reachable by absolute path.  If any
+precondition is missing, it MUST write an honest `blocked_<resource>` artifact
+without fabricating parity evidence.
+
+When runnable, the smoke MUST choose a deterministic fixed sample of at least
+10 cached FoVer-style verifier-scoring candidates spanning both scores at or
+above the certified threshold and scores below it.  It MUST call the verify
+API, the CLI batch path, and the HTTP/REST endpoint with the same certified
+threshold loaded from Exp 3771 and compare each candidate's
+confident-or-abstain verdict plus coverage, risk, delta, and threshold
+metadata within float tolerance.  A mismatch MUST be reported as drift in the
+artifact rather than hidden.
+
+The Exp 3811 runner MUST write
+`results/experiment_3811_abstention_cross_surface_parity_smoke.json` and
+include `honest_verdict`, `inference_substrate`, `surfaces_compared`,
+`all_surfaces_agree`, `n_candidates_compared`, `mismatches`,
+`certified_threshold_used`, `tests_assert_real_behavior`,
+`cited_upstream_artifacts`, `model_specs`, `random_seed`,
+`reproducibility_checksum`, and `duration_s`.
+
 ## Scenarios
 
 ### SCENARIO-INFRA-052: Version-Blocked Model Raises Error
@@ -893,6 +921,20 @@ artifact, and the same endpoint still preserves default-off score row shape
 when the flag is omitted.
 
 **Spec traces:** REQ-SPOE-3810
+
+### SCENARIO-SPOE-3811: Verify API CLI And HTTP Abstention Metadata Match
+
+**Given** Exp 3771, Exp 3779, Exp 3789, and Exp 3810 artifacts are readable,
+Exp 3810 reports `http_rest_surface_added=true`, and cached FoVer-style
+verifier-scoring candidates are reachable
+**When** the Exp 3811 smoke scores the fixed candidate sample through verify
+API, CLI/batch, and HTTP/REST with abstention mode enabled
+**Then** every candidate has the same `confident` or `abstain` verdict across
+all three surfaces, the certified coverage, risk, delta, and threshold metadata
+match within float tolerance, at least one confident and one abstain candidate
+are exercised, and any mismatch is recorded in the artifact as drift.
+
+**Spec traces:** REQ-SPOE-3811
 
 ### REQ-SAMPLE-020: SparseIsingEBM K-Regular Graph
 
