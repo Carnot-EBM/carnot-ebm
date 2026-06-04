@@ -184,7 +184,7 @@ tasks:
           principle: "Terminal prefix; blocked_<resource> if no inference path was usable; the real repair delta otherwise."
         inference_substrate: "live_llm_inference (principle: live SOTA-GGUF HumanEval generation + repair)."
         inference_path:
-          principle: "BARE string in {gpu_live, cpu_gguf_reduced_n} -- which path actually ran; CPU fallback is honest, blocked if neither."
+          principle: "BARE string in {{gpu_live, cpu_gguf_reduced_n}} -- which path actually ran; CPU fallback is honest, blocked if neither."
         baseline_pass1:
           principle: "The baseline HumanEval pass@1 -- the positive control; MUST be non-trivial (a 0.0 baseline = broken harness = blocked, not a finding)."
         repair_pass1:
@@ -200,7 +200,7 @@ tasks:
         g4_provenance_complete:
           principle: "BARE bool, true -- the artifact carries random_seed AND reproducibility_checksum AND n AND inference_substrate (the G4 gate exp1999 failed)."
         product_headline_restorable:
-          principle: "BARE string in {restorable, restorable_with_caveat, stays_demoted} -- the honest operator-facing recommendation based on the measured delta + provenance."
+          principle: "BARE string in {{restorable, restorable_with_caveat, stays_demoted}} -- the honest operator-facing recommendation based on the measured delta + provenance."
         operator_curated_doc_unedited:
           principle: "BARE bool, true -- docs/technical-report.md and all operator-curated docs were NOT edited (Public Documentation Discipline)."
         model_specs:
@@ -259,8 +259,8 @@ tasks:
            reproducibility_checksum, inference_substrate, positive_control_passed, g4_provenance_complete.
         2. Decide G4 pass/fail for the re-run number: PASSES iff it resolves to exp3798's primary artifact carrying
            BOTH random_seed AND reproducibility_checksum AND a non-trivial n AND positive_control_passed.
-        3. Build an updated provenance-confirmation TABLE: {number, source artifact, n, seed present, checksum
-           present, substrate, positive_control_passed, G4 pass/fail, caveat}. Include the re-run code-repair number
+        3. Build an updated provenance-confirmation TABLE: {{number, source artifact, n, seed present, checksum
+           present, substrate, positive_control_passed, G4 pass/fail, caveat}}. Include the re-run code-repair number
            AND the already-passing exp2090 CRANE +15pp. State PLAINLY whether the product headline is now
            restorable, restorable_with_caveat, or still not_yet_eligible.
         4. Do NOT edit docs/technical-report.md or any operator-curated doc. This artifact + table ARE the
@@ -272,13 +272,13 @@ tasks:
           principle: "Terminal prefix; the re-confirmation outcome."
         inference_substrate: "aggregation_from_upstream_artifacts (principle: provenance aggregation over the re-run, no live model)."
         provenance_table:
-          principle: "Per-number {source, n, seed_present, checksum_present, substrate, positive_control, g4_pass, caveat} -- the core deliverable the operator uses to restore/qualify the headline."
+          principle: "Per-number {{source, n, seed_present, checksum_present, substrate, positive_control, g4_pass, caveat}} -- the core deliverable the operator uses to restore/qualify the headline."
         rerun_code_repair_g4_pass:
           principle: "BARE bool -- whether the exp3798 re-run number now fully traces to a primary artifact with seed+checksum+n (G4)."
         exp2090_g4_pass:
           principle: "BARE bool -- the CRANE +15pp number's G4 status (already passing per .347; re-asserted)."
         product_headline_restorable:
-          principle: "BARE string in {restorable, restorable_with_caveat, not_yet_headline_eligible} -- the honest operator-facing recommendation."
+          principle: "BARE string in {{restorable, restorable_with_caveat, not_yet_headline_eligible}} -- the honest operator-facing recommendation."
         operator_curated_doc_unedited:
           principle: "BARE bool, true -- docs/technical-report.md and all operator-curated docs were NOT edited (Public Documentation Discipline)."
         cited_upstream_artifacts:
@@ -361,7 +361,7 @@ tasks:
         clean_auroc_preserved:
           principle: "BARE bool, true -- the mitigation keeps the clean-corpus AUROC within the frozen 0.9131 CI (the load-bearing invariant; a clean regression fails the mitigation)."
         evasion_status:
-          principle: "BARE string in {closed, narrowed, failed} -- the honest mitigation result for the context_compaction evasion."
+          principle: "BARE string in {{closed, narrowed, failed}} -- the honest mitigation result for the context_compaction evasion."
         n_samples:
           principle: "BARE int, >=200 -- sample-size rigor so the before/after curves are CLT-valid."
         not_a_moat_reopen:
@@ -423,7 +423,7 @@ tasks:
         1. Add a minimal HTTP/REST endpoint (use the stdlib http.server or whatever lightweight server pattern the
            repo already uses -- do NOT add a heavy new framework dependency if one is not already present) that
            accepts a POST with one or more candidates and runs the verify pipeline in abstention mode: for each
-           candidate, return JSON {verdict: confident|abstain, score, coverage, risk, delta}. Load the threshold
+           candidate, return JSON {{verdict: confident|abstain, score, coverage, risk, delta}}. Load the threshold
            from the same config the wiring uses (default = exp3771's 0.733), NOT a hardcoded constant. Default
            abstention OFF (a request flag turns it on) so existing behavior is unchanged.
         2. E2E CONFIRM: start the endpoint in-process / on a test port, POST a tiny batch of cached FoVer examples
@@ -818,7 +818,7 @@ tasks:
         product_headline_advanced:
           principle: "Records exp3798 (G4 re-run delta + g4_provenance_complete) + exp3799 (restorable/with-caveat/not-yet-eligible) -- the headline-advancement result (or honest block)."
         product_headline_restorable:
-          principle: "BARE string in {restorable, restorable_with_caveat, not_yet_eligible, blocked_rerun} -- the operator-facing recommendation."
+          principle: "BARE string in {{restorable, restorable_with_caveat, not_yet_eligible, blocked_rerun}} -- the operator-facing recommendation."
         verifier_product_hardened:
           principle: "Records the context_compaction mitigation (exp3800 evasion_status + clean_auroc_preserved) + the HTTP/REST 3rd surface (exp3801) -- the deployable-product advances."
         anomaly_classifier_repaired:
