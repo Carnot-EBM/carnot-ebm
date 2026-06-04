@@ -1,0 +1,105 @@
+# ACTIVATED PRE-STAGED ROADMAP (operator directive 2026-06-04). Single focused task: the
+# recursive-refiner Task 0 (Latent-Symbol Bridge $0 kill-criterion). Conductor will archive
+# .349 mechanically and activate this at the next rollover. To CANCEL before it runs: delete
+# research-roadmap-next.yaml. Provenance: docs/research-notes/phase3-recursive-refiner-thesis.md.
+
+milestone: "2026.06.350"   # e.g. "2026.06.350" — MUST match expected-next or the planner overwrites this
+milestone_title: "Recursive-refiner Task 0 — Latent-Symbol Bridge integration-feasibility probe ($0 scaling, CPU-only, loop-safe falsification). Operator-activated 2026-06-04 (paradigm GO/NO-GO stays operator-only; this is one bounded falsification)."
+milestone_doc: docs/research-notes/phase3-recursive-refiner-thesis.md
+
+tasks:
+  - id: task0-latent-symbol-bridge
+    operator_override: >
+      2026-06-04 operator directive (draft Task 0): NET-NEW $0 integration-feasibility probe,
+      NOT a generation-vs-AR rerun of Thesis-A/P0.1. Distinct question — can an external
+      discrete verifier read a recursive refiner's INTERMEDIATE latents in-loop? No baseline
+      to beat, so the headroom/FALSE_NEGATIVE_RISK trap does not apply; both outcomes informative.
+    milestone: "2026.06.350"
+    title: "Latent-Symbol Bridge: can an external discrete verifier serve as a recursive refiner's in-loop Q-head, or is offline distillation the only path?"
+    priority: high
+    track: research
+    max_turns: 40
+    agent_type: claude
+    model: opus
+    requires_claude: true   # judgment: interpret whether intermediate latents are parseable + whether the verifier signal monotonically tracks refinement (open-ended, not a deterministic gate) AND gemini crashes real model/GPU workloads (exp3703); codex acceptable fallback if claude quota-blocked
+    requires_gpu: false     # off-the-shelf ~7M TRM runs on CPU in minutes; deliberately GPU-free to stay loop-safe (no kill_zombies contention)
+    estimated_wall_time_min: 60
+    inference_substrate: live_llm_inference   # loads + runs a real (tiny) TRM model; duration floor 60s easily met by N trajectories x steps x decode+verify
+    deliverable: results/experiment_TASK0_latent_symbol_bridge.json
+    prompt: |
+      CONTEXT. Deep Think (2026-06-04, P3, 99%) ruled that using Carnot's EXTERNAL discrete
+      verifier (SAT/Z3/AST/programmatic) as the RUNTIME internal Q-head of a recursive latent
+      refiner (TRM-class) is likely a FATAL CATEGORY ERROR: intermediate recursive latents are
+      continuous + half-baked and decode to gibberish until the final steps, so an external
+      verifier in the inner loop throws syntax errors / returns a flat signal -> dead halt
+      criterion. The pivot (if confirmed): Carnot's verifier is instead the OFFLINE DISTILLATION
+      ORACLE that trains a continuous learned Q-head. THIS TASK falsifies (or confirms) the
+      in-loop assumption for ~$0 scaling compute, BEFORE any generator is built. Full framing:
+      docs/research-notes/phase3-recursive-refiner-thesis.md.
+
+      This is NOT a generation-beats-AR test (no baseline to beat) — do NOT apply a headroom
+      gate. Both outcomes are valuable: FALSIFIED confirms the distillation pivot (expected);
+      VIABLE is a surprising positive reopening in-loop integration.
+
+      CONCRETE STEPS:
+        0. PRECONDITIONS (check BEFORE anything else; if any fail, write the blocked verdict and EXIT — DO NOT fabricate):
+           a. `python -c "import torch; print(torch.__version__)"` succeeds.
+           b. An off-the-shelf TRM (Tiny Recursive Model) is obtainable: clone
+              github.com/SamsungSAILMontreal/TinyRecursiveModels (or the canonical TRM repo) AND
+              a PRETRAINED checkpoint on a toy GRID task (Sudoku-Extreme / Maze / ARC) is available
+              OR a tiny TRM is trainable on a small grid set within a bounded budget (<= ~20 min CPU/GPU).
+           c. The grid task's PROGRAMMATIC verifier exists (e.g. a Sudoku validity / maze-solved checker) —
+              this stands in for "Carnot's external discrete verifier as the in-loop Q-head".
+           If (b) yields no checkpoint AND a bounded tiny-train is infeasible, write
+           honest_verdict `blocked_trm_checkpoint_not_available` with preconditions_checked populated, and EXIT.
+        1. Load the (pretrained or tiny-trained) TRM + the programmatic grid verifier.
+        2. Run the TRM's recursive refinement loop on N >= 100 held-out instances, capturing the
+           intermediate latent state h_t at EVERY refinement step t (inner+outer loop).
+        3. At each step t, DECODE h_t to a discrete board state via the model's own output head (argmax).
+        4. Feed each decoded intermediate state to the PROGRAMMATIC verifier. Record per (t): is it
+           structurally parseable / well-formed? and the verifier's scalar signal (e.g. #constraints
+           satisfied, or accept/reject).
+        5. Compute the metrics below.
+        6. Apply the falsification gate -> emit the terminal verdict.
+
+      REQUIRED ARTIFACT FIELDS (each with a `principle` note):
+        intermediate_state_unparseable_rate_by_step:
+          principle: "If early/mid-step decoded states are mostly unparseable, an external discrete verifier physically cannot read them in-loop (DT P3). High early-step unparseable rate = in-loop integration dead."
+        verifier_signal_step_spearman:
+          principle: "A usable in-loop Q-head signal must MONOTONICALLY track refinement progress; Spearman(verifier_signal, step) not significantly > 0 means the external verifier gives no useful halt gradient."
+        verifier_signal_vs_final_correctness_auroc:
+          principle: "If the per-step external-verifier reading does not predict final-trajectory correctness, it is useless as a halt criterion regardless of parseability."
+        decode_verify_latency_overhead_x:
+          principle: "In-loop decode+verify must not balloon per-step latency vs a bare refinement step (DT P3); a large multiplier kills the runtime-integration case on cost alone."
+        n_trajectories:
+          principle: "N>=100 so the parseable/monotonicity rates are not single-trajectory noise."
+        n_steps_per_trajectory:
+          principle: "Records the refinement depth over which the bridge was probed."
+        preconditions_checked:
+          principle: "Records WHICH resources (torch, TRM checkpoint, grid verifier) were verified before running; pre-empts the fabrication mode where the agent lacked the model and synthesized a result."
+        inference_substrate:
+          principle: "Declares this loaded + ran a real model so the duration floor + methodology checks apply."
+        random_seed:
+          principle: "Determinism precondition for a third party to reproduce the parseable/monotonicity numbers."
+        reproducibility_checksum:
+          principle: "Content hash of (checkpoint id, task, N, seed) catches silent drift between this run and any replication."
+        duration_s:
+          principle: "Real model inference over N trajectories takes wall-clock time; implausibly short = fabrication signal."
+
+      FALSIFICATION GATE (acceptance):
+        - FALSIFIED (in-loop dead -> distillation is the only path; EXPECTED per DT): early/mid-step
+          intermediate_state_unparseable_rate high (e.g. >50% unparseable before the final ~20% of steps)
+          OR verifier_signal_step_spearman not significantly positive OR decode_verify_latency_overhead_x large.
+          honest_verdict: `complete: latent_symbol_bridge_FALSIFIED_inloop_verifier_dead_distillation_only_path_unparse<X>_spearman<Y>_latency<Z>x`
+          principle: "Confirms the P3 pivot — Carnot's verifier role is the OFFLINE distillation oracle, not the runtime Q-head."
+        - VIABLE (surprising positive — reopens in-loop integration): intermediate states mostly
+          parseable through the loop AND verifier_signal_step_spearman > 0.5 AND latency overhead modest.
+          honest_verdict: `complete: latent_symbol_bridge_VIABLE_inloop_signal_monotonic_unparse<X>_spearman<Y>`
+          principle: "An external verifier CAN read intermediate latents — the naive in-loop Q-head bet survives and is worth a deeper look."
+        - PARTIAL/mixed: honest_verdict `complete: latent_symbol_bridge_PARTIAL_<metrics>`.
+        - honest_verdict MUST start with a terminal prefix (`complete:`/`complete_`/`success:`/`passed:`/`shipped:`)
+          per CLAUDE.md Verdict Terminal-Prefix Discipline; or `blocked_<resource>` if a precondition failed.
+
+      DISCIPLINE: populate random_seed + reproducibility_checksum + preconditions_checked (Adversarial-
+      Verify + Pre-Launch rules). Report the REAL duration. This is a small off-the-shelf-model probe —
+      do NOT pad wall-time, do NOT fabricate if the TRM checkpoint is unavailable (emit blocked_*).
