@@ -10194,3 +10194,24 @@ fabricating numbers.
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-VERIFY-3659 | Implemented (`python/carnot/verify/trained_ebm_judge_ood_real_substrate_v3.py`, `scripts/experiment_3659_trained_ebm_judge_ood_real_substrate_v3.py`) | Implemented (`tests/python/test_experiment_3659_trained_ebm_judge_ood_real_substrate_v3.py`) |
+
+### REQ-VERIFY-3820: FoVer Formal vs Learned Moat Ablation
+
+The system SHALL provide a deterministic ablation control (Exp 3820) to rescore the frozen FoVer eval corpus across three partition conditions: the FULL ensemble, the FORMAL/UNLEARNED components only, and the LEARNED probes only.
+
+The workflow SHALL:
+- Verify preconditions (cached FoVer corpus availability).
+- Enumerate the AndCompositionVerifier ensemble verifiers, classifying each as FORMAL or LEARNED.
+- Compute the condition-A style AUROC (using max aggregation for the AND composition) on the five evaluation seeds for each partition.
+- Fail the sanity gate (INCONCLUSIVE_ablation_harness_unfaithful) if the full-ensemble AUROC does not reproduce 0.9131 within +/- 0.01 OR if the harness uses a different composition method. 
+- Write results/experiment_3820_fover_formal_vs_learned_ablation.json containing the fields honest_verdict, full_ensemble_auroc, formal_only_auroc, learned_only_auroc, verifier_partition, n_candidates_scored, preconditions_checked, random_seed, reproducibility_checksum, and duration_s.
+
+### SCENARIO-VERIFY-3820: Ablation Script Follows Contract And Reports Unfaithful Harness
+
+Given that the actual frozen FoVer 0.9131 was produced by Tier0r+Tier0u+Memory and the AndCompositionVerifier max-aggregation AUROC does not reproduce 0.9131 within +/-0.01, the Exp 3820 script SHALL correctly score the partitions, fail the sanity gate, and output an INCONCLUSIVE_ablation_harness_unfaithful verdict.
+
+## Implementation Status (REQ-VERIFY-3820)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-VERIFY-3820 | Implemented (python/carnot/verify/experiment_3820_fover_formal_vs_learned_ablation.py) | Implemented (tests/python/test_experiment_3820_fover_formal_vs_learned_ablation.py) |

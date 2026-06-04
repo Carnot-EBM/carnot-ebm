@@ -1,12 +1,17 @@
 import json
+from carnot.verify.and_composition_verifier import build_default_verifier_ensemble
 from sklearn.metrics import roc_auc_score
 
-data = []
-with open("data/realistic_factual_corpus_v2.jsonl") as f:
-    for line in f:
-        data.append(json.loads(line))
+with open("data/fover_corpus.jsonl") as f:
+    rows = [json.loads(line) for line in f]
 
-y_true = [1 - d["is_hallucination"] for d in data]
-y_score = [d["model_confidence"] for d in data]
+v = build_default_verifier_ensemble()
 
-print(f"AUROC: {roc_auc_score(y_true, y_score)}")
+scores = []
+labels = []
+for row in rows:
+    res = v.verify("", row.get("step_text", ""))
+    scores.append(max(res.per_verifier_scores.values()))
+    labels.append(1 if row["label"] in {"incorrect", 1, "1"} else 0)
+
+print("Full ensemble AUROC:", roc_auc_score(labels, scores))
