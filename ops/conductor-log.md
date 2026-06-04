@@ -7784,3 +7784,4 @@ ERROR: {
 | 2026-06-04 20:13 UTC | Milestone 2026.06.351 activated | OK | 12 tasks queued |
 | 2026-06-04 20:27 UTC | Latent-Symbol Bridge Task 0 RE-RUN (UNBLOCKED): ca | OK | 88 passed in 5.03s |
 | 2026-06-04 20:39 UTC | DT-P1 falsification: vanilla TRM vs matched-COMPUT | OK | 85 passed in 4.27s |
+| 2026-06-04 20:53 UTC | DT-P2 falsification: energy-fit to a trained TRM's | OK | 100 passed in 5.95s |
