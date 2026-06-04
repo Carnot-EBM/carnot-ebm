@@ -1,0 +1,122 @@
+{
+  "acceptance_gate": {
+    "condition": "consolidated AUROC >= frozen CI low AND Exp 2837 rounded memory contribution >= +0.0185 AND Tier-2 SQLite state persisted",
+    "passed": true,
+    "principle": "Constraint-memory consolidation must not silently regress the FoVer discriminator or drop the FR-11 memory contribution."
+  },
+  "artifact": "experiment_3778_fr11_self_learning_v18_tier2_constraint_memory",
+  "auroc_within_frozen_ci": true,
+  "continuous_self_learning_task": true,
+  "duration_s": 0.884174824,
+  "ensemble_auroc_under_consolidation": 0.909748,
+  "field_principles": {
+    "auroc_within_frozen_ci": "BARE bool -- the consolidated AUROC stays within/above the frozen CI95 [0.9027, 0.9235]; the no-regression invariant.",
+    "duration_s": "Wall-clock plausibility floor; verifier-scoring + consolidation is modest.",
+    "ensemble_auroc_under_consolidation": "The ensemble AUROC after applying the consolidated deltas -- confirms the self-learning does not regress the banked discriminator.",
+    "honest_verdict": "Terminal prefix; the self-learning outcome; blocked_<resource> if a precondition failed.",
+    "inference_substrate": "verifier_ensemble_against_cached_candidates (principle: reads cached verifier scores, no live model).",
+    "is_tier2_not_tier1": "BARE bool, true -- confirms v18 is Tier-2 constraint-memory consolidation, NOT a re-run of v17's Tier-1 precision tracker.",
+    "memory_contribution_preserved": "BARE bool -- the +0.0185 fr11_session_memory contribution survives consolidation.",
+    "model_specs": "Names the corpus + 4 verifiers -- honest substrate.",
+    "per_domain_threshold_deltas": "The consolidated per-domain deltas -- the Tier-2 learned knowledge; the core deliverable.",
+    "random_seed": "Determinism precondition.",
+    "reproducibility_checksum": "Content hash catches drift.",
+    "tier2_lookup_is_cpu_memory": "Confirms the mechanic is a CPU + system-memory lookup (<1ms, the Tier-2 hardware path), not a model retrain.",
+    "tracker_state_persisted": "BARE bool, true -- the Tier-2 memory db was persisted so a future milestone resumes it."
+  },
+  "frozen_ci95": {
+    "high": 0.9235,
+    "low": 0.9027
+  },
+  "honest_verdict": "complete: fr11_v18_tier2_constraint_memory_consolidated_auroc_within_frozen_ci_memory_contribution_preserved_state_persisted",
+  "inference_substrate": "verifier_ensemble_against_cached_candidates (principle: reads cached verifier scores, no live model).",
+  "is_tier2_not_tier1": true,
+  "memory_contribution_preserved": true,
+  "memory_contribution_reference": 0.01847119999999991,
+  "methodology": {
+    "corpus_absolute_path": "/home/ianblenke/github.com/ianblenke/carnot/data/fover_corpus.jsonl",
+    "delta_apply_api": "Tier2ThresholdMemory.apply_delta",
+    "delta_update_api": "Tier2ThresholdMemory.update_domain_delta",
+    "domain_keys": [
+      "fr11_session_memory",
+      "tier0r_curry_howard",
+      "tier0s_arithmetic_gap",
+      "tier0u_logical_consistency"
+    ],
+    "lineage": "v18_tier2_constraint_memory_not_v17_tier1_precision_tracker",
+    "random_seed": 3778,
+    "scoring_protocol": "ops/reproduction-runbook-fover-headline.md"
+  },
+  "model_specs": {
+    "corpus": "FoVer cached corpus",
+    "corpus_absolute_path": "/home/ianblenke/github.com/ianblenke/carnot/data/fover_corpus.jsonl",
+    "live_model_invoked": false,
+    "n_examples_requested": 1000,
+    "scoring_mode": "cached_verifier_scores_only",
+    "tier": "Tier-2 constraint memory",
+    "verifiers": [
+      "fr11_session_memory",
+      "tier0r_curry_howard",
+      "tier0s_arithmetic_gap",
+      "tier0u_logical_consistency"
+    ]
+  },
+  "n_examples": 1000,
+  "n_examples_by_domain": {
+    "fr11_session_memory": 1000,
+    "tier0r_curry_howard": 1000,
+    "tier0s_arithmetic_gap": 1000,
+    "tier0u_logical_consistency": 1000
+  },
+  "per_domain_threshold_deltas": {
+    "fr11_session_memory": -0.140416667,
+    "tier0r_curry_howard": -0.266355,
+    "tier0s_arithmetic_gap": -0.20019,
+    "tier0u_logical_consistency": -0.498790119
+  },
+  "preconditions_checked": [
+    {
+      "available": true,
+      "detail": "executable=/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python; loaded=yaml,numpy,sklearn; missing=none; Tier2ThresholdMemory_importable=True",
+      "resource": "interpreter_runtime"
+    },
+    {
+      "available": true,
+      "detail": "/home/ianblenke/github.com/ianblenke/carnot/data/fover_corpus.jsonl; line_count=8829; required>=1000",
+      "resource": "fover_corpus_absolute_path"
+    },
+    {
+      "available": true,
+      "detail": "line_count=8829; required>=1000",
+      "resource": "cached_traces_with_per_verifier_scores_and_labels"
+    },
+    {
+      "available": true,
+      "detail": "loaded=tier0r_curry_howard,tier0s_arithmetic_gap,tier0u_logical_consistency",
+      "resource": "text_scoring_verifiers"
+    },
+    {
+      "available": true,
+      "detail": "state_files=21; memory_loaded=True",
+      "resource": "fr11_session_memory_verifier"
+    },
+    {
+      "available": true,
+      "detail": "online graph fit, graph learner, and fixed crossfit baseline importable",
+      "resource": "dependency_aware_weighting_implementation"
+    }
+  ],
+  "random_seed": 3778,
+  "reproducibility_checksum": "422ee715a3d6877911a2b327dc110d27070f2124b3e1fd53d62526c4dba0d2bb",
+  "schema": "carnot.fr11_continuous_self_learning_v18",
+  "tier2_lookup_is_cpu_memory": "cpu_plus_system_memory_sqlite_lookup_lt_1ms_no_model_retrain",
+  "tier2_memory_state_path": "results/experiment_3778_fr11_v18_tier2_threshold_memory.db",
+  "tier2_memory_state_sha256": "57736bbb54beb401dc9879bbd36fbbf94b49bbd89c8148b9a65246af66439a5a",
+  "tracker_state_persisted": true,
+  "verifier_names": [
+    "fr11_session_memory",
+    "tier0r_curry_howard",
+    "tier0s_arithmetic_gap",
+    "tier0u_logical_consistency"
+  ]
+}
