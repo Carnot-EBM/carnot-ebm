@@ -3041,3 +3041,14 @@ Discipline — no partial-token substring (blocked/marginal/no_improvement) at t
 **Then** RANDOM_SEED != EXP_ID, ensuring the seed was computed from benchmark content
 rather than copied from the experiment number (the tautology seed anti-pattern that
 triggers GATE_PASSED_WITHOUT_DATA in adversarial_verify.py).
+
+## Latent Symbol Bridge Falsification (Exp 3819)
+
+### REQ-3819: Deep Think P3 Falsification Run
+The system shall execute an off-the-shelf Tiny Recursive Model (TRM) and pass its intermediate latent states through a programmatic verifier to test the hypothesis that intermediate latents decode to gibberish and cannot provide a useful Q-head signal in-loop. It MUST write `honest_verdict: "blocked_trm_checkpoint_not_available"` if the required checkpoint is not available and bounded tiny-train is infeasible under 20 minutes.
+
+### SCENARIO-3819: Preconditions Falsification Gate Fast-Fails
+**Given** an environment without a pretrained TRM checkpoint
+**When** the Latent Symbol Bridge experiment is initiated
+**Then** the experiment gracefully handles the missing resource by emitting `honest_verdict: "blocked_trm_checkpoint_not_available"` and sets corresponding metrics to 0 or defaults.
+
