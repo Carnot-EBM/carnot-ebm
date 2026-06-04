@@ -3508,3 +3508,29 @@ halting pruning for human review without relaxing verification.
 **Given** a terminal positive artifact with no anomaly signals
 **When** the anomaly-escalation classifier evaluates it
 **Then** it classifies the artifact as `clean_positive`.
+
+### REQ-AUTO-016: Historical Validation For The Advisory Anomaly Classifier
+
+The autoresearch system SHALL provide a deterministic validation runner
+(`scripts/experiment_3791_anomaly_escalation_classifier_validation.py`) that
+evaluates the shipped advisory classifier against at least 30 historical
+artifacts drawn from `results/operational_retro_*.json`,
+`results/experiment_*.json`, and known P1 v1/v2 positive-control failure
+artifacts. The runner SHALL label each sample as `clean_bounded_negative`,
+`frame_violating_anomaly`, or `clean_positive` by explicit corpus rules, run
+the real classifier over those samples, and write
+`results/experiment_3791_anomaly_escalation_classifier_validation.json` with a
+confusion matrix, false-escalation rate for clean bounded negatives, recall on
+known frame-violating anomalies, upstream artifact provenance, deterministic
+checksum, and a bare `never_relaxes_verification=true` guarantee. The
+validation SHALL remain advisory-only and MUST NOT modify
+`scripts/research_conductor.py`.
+
+#### SCENARIO-AUTO-013: Historical Validation Quantifies Advisory Hook Risk
+
+**Given** the historical results corpus and an importable advisory classifier
+**When** the Exp 3791 validation runner evaluates the labeled sample
+**Then** the output artifact reports at least 30 validation artifacts, includes
+a prediction-vs-expected confusion matrix, reports false-escalation rate and
+frame-violating recall, cites the upstream artifacts, confirms that no
+recommendation relaxes verification, and leaves the conductor unmodified.
