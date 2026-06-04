@@ -16,6 +16,7 @@ import json
 from pathlib import Path
 from typing import Any, cast
 
+from carnot.pipeline import certified_abstention_surface as abstention
 from carnot.pipeline import second_pair_detector as spd
 
 
@@ -38,9 +39,13 @@ class AbstentionHTTPServer(ThreadingHTTPServer):
         *,
         root: Path | str = REPO_ROOT,
         examples: Sequence[spd.LabeledDetectorExample] | None = None,
+        certified_threshold_path: Path | str | None = None,
     ) -> None:
         self.carnot_root = Path(root)
         self.carnot_examples = examples
+        self.carnot_certified_threshold_path = _certified_threshold_path(
+            certified_threshold_path
+        )
         super().__init__(server_address, AbstentionRequestHandler)
 
 
@@ -60,6 +65,7 @@ class AbstentionRequestHandler(BaseHTTPRequestHandler):
                 payload,
                 root=server.carnot_root,
                 examples=server.carnot_examples,
+                certified_threshold_path=server.carnot_certified_threshold_path,
             )
         except json.JSONDecodeError as exc:
             self._send_json(400, _error_response("INVALID_JSON", str(exc)))
@@ -99,10 +105,16 @@ def make_server(
     *,
     root: Path | str = REPO_ROOT,
     examples: Sequence[spd.LabeledDetectorExample] | None = None,
+    certified_threshold_path: Path | str | None = None,
 ) -> AbstentionHTTPServer:
     """Create an in-process HTTP server for tests or local integration."""
 
-    return AbstentionHTTPServer(server_address, root=root, examples=examples)
+    return AbstentionHTTPServer(
+        server_address,
+        root=root,
+        examples=examples,
+        certified_threshold_path=certified_threshold_path,
+    )
 
 
 def score_candidates_http_payload(
@@ -113,6 +125,7 @@ def score_candidates_http_payload(
     domain: str | None = None,
     abstention_mode: bool | None = None,
     abstention_threshold: float | None = None,
+    certified_threshold_path: Path | str | None = None,
 ) -> JsonDict:
     """Score a JSON-compatible HTTP payload through the product verifier path."""
 
@@ -125,10 +138,28 @@ def score_candidates_http_payload(
         root=root,
         examples=examples,
         default_domain=str(request_domain) if request_domain is not None else None,
-        abstention_mode=request_abstention_mode,
-        abstention_threshold=float(threshold_value) if threshold_value is not None else None,
+        abstention_mode=False,
     )
-    abstention_summary = result.get("abstention_mode", {})
+    abstention_summary: Mapping[str, Any] = {}
+    if request_abstention_mode:
+        config = abstention.load_certified_abstention_config(
+            _certified_threshold_path(certified_threshold_path)
+        )
+        operator_override = threshold_value is not None
+        if operator_override:
+            config = config.with_threshold(float(threshold_value))
+        result["scores"] = [
+            (
+                abstention.apply_certified_abstention(row, config)
+                if row.get("calibrated_error_score") is not None
+                else row
+            )
+            for row in result["scores"]
+        ]
+        abstention_summary = abstention.abstention_mode_summary(
+            config,
+            operator_threshold_override=operator_override,
+        )
     return {
         "surface": HTTP_SURFACE,
         "abstention_mode_enabled": request_abstention_mode,
@@ -172,6 +203,12 @@ def _payload_field(payload: object, field: str, override: Any) -> Any:
     if isinstance(payload, Mapping):
         return payload.get(field)
     return None
+
+
+def _certified_threshold_path(path: Path | str | None) -> Path:
+    if path is None:
+        return abstention.DEFAULT_CERTIFIED_THRESHOLD_PATH
+    return Path(path).resolve()
 
 
 def _http_row(

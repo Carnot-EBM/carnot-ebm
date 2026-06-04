@@ -1,14 +1,8 @@
 {
-  "batch_post_works": false,
+  "batch_post_works": true,
   "certified_threshold_used": 0.733216,
-  "default_off_preserves_prior_behavior": false,
-  "doc_proposal_emitted_not_curated_edit": false,
-  "doc_proposal_path": "/home/ianblenke/github.com/ianblenke/carnot/docs/research-notes/abstention-http-rest-doc-proposal-20260604.md",
-  "duration_s": 8.303796,
-  "e2e_evidence": {
-    "abstention_ok": false,
-    "batch_works": true,
-    "default_off_ok": true,
+  "default_off_preserves_prior_behavior": true,
+  "diagnostic_evidence": {
     "default_response": {
       "abstention_mode_enabled": false,
       "batch": {
@@ -89,18 +83,113 @@
       ],
       "surface": "http_rest_score_candidates"
     },
+    "enabled_status": 200,
+    "old_below_threshold_score": 0.903847,
+    "old_below_threshold_verdict": "confident",
+    "old_expected_verdict": "abstain",
+    "root_cause": "Exp 3801 used a supposed below-threshold HTTP smoke candidate with ensemble_energy=0.5 and confidence_error=0.5; against the cached FoVer calibration it scored above the certified threshold, so HTTP correctly returned confident and the E2E expected the wrong branch."
+  },
+  "doc_proposal_emitted_not_curated_edit": true,
+  "doc_proposal_path": "/home/ianblenke/github.com/ianblenke/carnot/docs/research-notes/abstention-http-rest-doc-proposal-20260604.md",
+  "duration_s": 15.318896,
+  "e2e_evidence": {
+    "abstention_ok": true,
+    "batch_works": true,
+    "default_off_ok": true,
+    "default_response": {
+      "abstention_mode_enabled": false,
+      "batch": {
+        "n_candidates": 2
+      },
+      "scores": [
+        {
+          "abstained": false,
+          "calibrated_error_score": 0.993203,
+          "candidate_id": "exp3810_above_threshold",
+          "confidence_error": 1.0,
+          "domain": "math",
+          "ensemble_energy": 1.0,
+          "operating_point": {
+            "actual_fpr": 0.1,
+            "expected_recall": 0.970588,
+            "fpr_budget": 0.1,
+            "threshold": 0.012717
+          }
+        },
+        {
+          "abstained": false,
+          "calibrated_error_score": 0.656864,
+          "candidate_id": "exp3810_below_threshold",
+          "confidence_error": 0.5,
+          "domain": "math",
+          "ensemble_energy": 0.7,
+          "operating_point": {
+            "actual_fpr": 0.1,
+            "expected_recall": 0.970588,
+            "fpr_budget": 0.1,
+            "threshold": 0.012717
+          }
+        }
+      ],
+      "surface": "http_rest_score_candidates"
+    },
+    "default_status": 200,
+    "enabled_response": {
+      "abstention_mode": {
+        "certified_risk_bound": 0.037646,
+        "certified_threshold": 0.733216,
+        "coverage": 0.998218,
+        "delta": 0.05,
+        "enabled": true,
+        "n_calibration": 2619,
+        "operator_threshold_override": false,
+        "score_orientation": "larger abstention_score means a more confident verifier judgment",
+        "threshold_source": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_3771_certified_abstention_operating_point.json"
+      },
+      "abstention_mode_enabled": true,
+      "batch": {
+        "n_candidates": 2
+      },
+      "scores": [
+        {
+          "candidate_id": "exp3810_above_threshold",
+          "coverage": 0.998218,
+          "delta": 0.05,
+          "domain": "math",
+          "risk": 0.037646,
+          "score": 0.993203,
+          "threshold": 0.733216,
+          "threshold_source": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_3771_certified_abstention_operating_point.json",
+          "verdict": "confident"
+        },
+        {
+          "candidate_id": "exp3810_below_threshold",
+          "coverage": 0.998218,
+          "delta": 0.05,
+          "domain": "math",
+          "risk": 0.037646,
+          "score": 0.656864,
+          "threshold": 0.733216,
+          "threshold_source": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_3771_certified_abstention_operating_point.json",
+          "verdict": "abstain"
+        }
+      ],
+      "surface": "http_rest_score_candidates"
+    },
     "enabled_status": 200
   },
-  "e2e_http_abstention_passed": false,
+  "e2e_failure_root_cause": "Exp 3801 used a supposed below-threshold HTTP smoke candidate with ensemble_energy=0.5 and confidence_error=0.5; against the cached FoVer calibration it scored above the certified threshold, so HTTP correctly returned confident and the E2E expected the wrong branch.",
+  "e2e_http_abstention_passed": true,
   "field_principles": {
     "batch_post_works": "BARE bool -- a batch POST processed >1 candidate in one request.",
     "certified_threshold_used": "The threshold the endpoint loads (default = exp3771's 0.733) -- traces to the certified operating point, not a magic constant.",
     "default_off_preserves_prior_behavior": "BARE bool -- abstention is OFF by default, so existing integrators see no behavior change (no silent regression).",
-    "doc_proposal_emitted_not_curated_edit": "BARE bool, true -- a doc-update PROPOSAL was written; the operator-curated docs were NOT edited (Public Documentation Discipline).",
+    "doc_proposal_emitted_not_curated_edit": "BARE bool, true -- a doc-update PROPOSAL was written/updated; the operator-curated docs were NOT edited (Public Documentation Discipline).",
     "duration_s": "Wall-clock plausibility floor.",
-    "e2e_http_abstention_passed": "BARE bool -- the above->confident / below->abstain behavior was confirmed E2E over HTTP on cached examples.",
+    "e2e_failure_root_cause": "The diagnosed cause of the exp3801 E2E failure -- the repair audit trail (what was actually wrong).",
+    "e2e_http_abstention_passed": "BARE bool -- the above->confident / below->abstain behavior was confirmed E2E over HTTP on cached examples (the assertion exp3801 failed).",
     "honest_verdict": "Terminal prefix; blocked_<resource> if a precondition failed.",
-    "http_rest_surface_added": "BARE bool -- the abstention mode is callable over HTTP/REST (the third integration surface; the core deliverable).",
+    "http_rest_surface_added": "BARE bool -- the abstention mode is now callable over HTTP/REST AND passes E2E (the core deliverable; the gate exp3811 reads).",
     "inference_substrate": "verifier_ensemble_against_cached_candidates (principle: scores cached triples, no live LLM).",
     "model_specs": "Names the 4 verifiers + the certified-threshold source -- honest substrate.",
     "no_heavy_new_dependency": "BARE bool, true -- no heavy new web framework was added if one was not already present (decentralization/portability hygiene).",
@@ -108,14 +197,14 @@
     "reproducibility_checksum": "Content hash catches drift.",
     "tests_assert_real_behavior": "BARE bool, true -- shipped tests assert the real endpoint behavior (anti-poison-test)."
   },
-  "honest_verdict": "blocked_http_abstention_e2e_failed",
-  "http_rest_surface_added": false,
+  "honest_verdict": "complete: abstention_http_rest_surface_v2_repaired_e2e_passed_default_off_batch_post_works_doc_proposal_emitted_not_curated_edit",
+  "http_rest_surface_added": true,
   "inference_substrate": "verifier_ensemble_against_cached_candidates (principle: scores cached triples, no live LLM).",
   "methodology": {
     "candidate_source": "tiny cached FoVer-style verifier-scoring candidates",
     "label": "WIRING smoke, not an accuracy claim",
     "live_llm_inference": false,
-    "random_seed": 3801
+    "random_seed": 3810
   },
   "model_specs": {
     "certified_threshold_source": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_3771_certified_abstention_operating_point.json",
@@ -132,7 +221,7 @@
   },
   "no_heavy_new_dependency": true,
   "operator_curated_docs_edited": false,
-  "output_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_3801_abstention_http_rest_surface.json",
+  "output_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_3810_abstention_http_rest_surface_v2.json",
   "preconditions_checked": {
     "certified_threshold": {
       "available": true,
@@ -150,8 +239,8 @@
       "stderr": ""
     }
   },
-  "random_seed": 3801,
-  "reproducibility_checksum": "668b9dedd405a15f",
+  "random_seed": 3810,
+  "reproducibility_checksum": "da5d23b05f8b11ec",
   "scripts_research_conductor_modified": false,
-  "tests_assert_real_behavior": false
+  "tests_assert_real_behavior": true
 }

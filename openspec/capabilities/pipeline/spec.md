@@ -588,6 +588,33 @@ The terminal artifact MUST include `honest_verdict`, `inference_substrate`,
 `doc_proposal_emitted_not_curated_edit`, `tests_assert_real_behavior`,
 `model_specs`, `random_seed`, `reproducibility_checksum`, and `duration_s`.
 
+### REQ-SPOE-3810: Abstention HTTP REST Surface Repair
+
+The Exp 3801 HTTP/REST abstention surface repair MUST diagnose the blocked
+E2E assertion before claiming completion and MUST preserve the minimal
+standard-library HTTP implementation.  The repair MUST show that the endpoint
+loads the certified abstention operating point through the same configuration
+path used by the wiring smoke, with the default threshold sourced from the
+absolute Exp 3771 artifact rather than a hard-coded value.
+
+The repaired endpoint MUST accept either one candidate or a batch, keep
+abstention disabled by default, and when abstention is explicitly enabled,
+return per-candidate `verdict`, `score`, `coverage`, `risk`, and `delta`
+metadata over HTTP.  The repair E2E MUST exercise a real above-threshold
+candidate that returns `confident`, a real below-threshold candidate that
+returns `abstain`, default-off prior behavior, and a batch POST containing
+more than one candidate.  The smoke MUST use cached verifier-scoring examples
+only and MUST not make an accuracy claim.
+
+The Exp 3810 runner MUST write
+`results/experiment_3810_abstention_http_rest_surface_v2.json` and include
+`honest_verdict`, `inference_substrate`, `e2e_failure_root_cause`,
+`http_rest_surface_added`, `batch_post_works`,
+`default_off_preserves_prior_behavior`, `certified_threshold_used`,
+`e2e_http_abstention_passed`, `no_heavy_new_dependency`,
+`doc_proposal_emitted_not_curated_edit`, `tests_assert_real_behavior`,
+`model_specs`, `random_seed`, `reproducibility_checksum`, and `duration_s`.
+
 ## Scenarios
 
 ### SCENARIO-INFRA-052: Version-Blocked Model Raises Error
@@ -851,6 +878,21 @@ coverage, risk, delta, and threshold metadata, and the single HTTP request
 reports more than one processed candidate.
 
 **Spec traces:** REQ-SPOE-3801
+
+### SCENARIO-SPOE-3810: HTTP REST Repair Confirms Real Abstention Branch
+
+**Given** the Exp 3771 certified abstention artifact is readable, a local
+HTTP endpoint is serving the packaged verifier-scoring surface, and the repair
+runner has reproduced the Exp 3801 failed assertion
+**When** the caller POSTs a cached verifier-scoring batch with abstention mode
+enabled
+**Then** one row with score at or above the certified threshold returns
+`confident`, one row with score below the certified threshold returns
+`abstain`, both rows carry certified metadata from the configured threshold
+artifact, and the same endpoint still preserves default-off score row shape
+when the flag is omitted.
+
+**Spec traces:** REQ-SPOE-3810
 
 ### REQ-SAMPLE-020: SparseIsingEBM K-Regular Graph
 
