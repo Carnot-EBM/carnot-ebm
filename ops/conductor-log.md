@@ -7748,3 +7748,4 @@ ERROR: {
 | 2026-06-04 09:41 UTC | VALIDATE the .346 Anomaly-Escalation classifier (s | OK | 110 passed in 3.60s |
 | 2026-06-04 09:54 UTC | ADVANCE the product headline (north-star sec-1): c | OK | 88 passed in 4.94s |
 | 2026-06-04 10:00 UTC | SCAFFOLD the operator's EDLM seed further (NOT a l | OK | 82 passed in 4.57s |
+| 2026-06-04 10:12 UTC | External research refresh for .347: file the genui | OK | 93 passed in 4.70s |
