@@ -17069,3 +17069,113 @@ critical flag.
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-REPORT-3786 | Implemented (`python/carnot/reporting/archive_v346_activate_v347_3786.py`, `scripts/experiment_3786_archive_v346_activate_v347.py`) | Implemented (`tests/python/test_experiment_3786_archive_v346_activate_v347.py`) |
+
+### REQ-REPORT-3796: Capstone V347 Lean Post-Convergence Synthesis
+
+The Exp 3796 workflow SHALL aggregate Exp 3786 through Exp 3795 from
+checked-in JSON artifacts only, run `scripts/summarize_artifact.py` for every
+upstream experiment ID, exclude any upstream artifact carrying
+`flagged_adversarial=true` from headline aggregation, record missing or blocked
+upstream artifacts as `not-landed` or `blocked` rather than as research
+negatives, and write `results/experiment_3796_capstone_v347.json`.
+
+The artifact SHALL be aggregation-only with no copied live-model markers. It
+SHALL state the `.347` outcome plainly as a lean post-convergence milestone:
+it retries or settles the last open P1 mechanism without reopening the
+strategic energy conclusion, hardens the banked verifier product via Exp 3789
+abstention CLI/batch wiring, Exp 3790 gaming-resistance characterization, and
+Exp 3792 product-headline provenance confirmation, advances FR-11 to v19
+Tier-3 predictive self-learning via Exp 3788, validates the recommend-only
+Anomaly-Escalation classifier via Exp 3791, preflights the operator's EDLM seed
+via Exp 3793 without self-committing, refreshes references via Exp 3794, and
+confirms KV260 terminal continuity via Exp 3795. It SHALL make no new
+existential claim and SHALL not re-grind the already-bounded
+energy-as-selector or energy-as-generator strategic conclusion.
+
+The P1 adjudication SHALL be copied from clean Exp 3787 when that artifact is
+present and not flagged. Allowed values are `decode_artifact_bounded`,
+`fundamental_causal_inductive_bias_gap`,
+`inconclusive_positive_control_failed`, or `blocked_no_free_gpu`. A
+`fundamental_causal_inductive_bias_gap` adjudication SHALL be valid only when
+`p1_positive_control_passed=true`; otherwise the capstone SHALL fail
+validation. If Exp 3787 is missing, blocked, or excluded, the capstone SHALL
+report `blocked_no_free_gpu` or another explicit `blocked_*` adjudication and
+SHALL state that the mechanism remains open for the operator, not that
+energy-as-generator has newly failed.
+
+The terminal artifact SHALL include bare top-level values for `honest_verdict`,
+`inference_substrate`, `p1_adjudication`, `p1_positive_control_passed`,
+`energy_as_generator_still_bounded`, `verifier_product_hardened`,
+`product_headline_restorable`, `fr11_v19_tier3_self_learning`,
+`anomaly_escalation_validated`, `edlm_seed_preflighted`,
+`paper_ready_preserved`, `frozen_headline_unchanged`,
+`next_thesis_remains_operator_surface`, `flagged_artifacts_excluded`,
+`not_landed_or_blocked_recorded_honestly`, `cited_upstream_artifacts`,
+`random_seed`, `reproducibility_checksum`, and `duration_s`, plus
+`field_principles` documenting why each required value exists. The
+`inference_substrate` value SHALL equal
+`aggregation_from_upstream_artifacts (principle: a capstone reads upstream JSON, runs no live model).`
+The terminal verdict SHALL use the prefix `complete: capstone_v347_p1_` and
+SHALL include `energy_as_generator_still_bounded`,
+`verifier_product_hardened`, `fr11_v19_tier3`,
+`anomaly_validated`, `edlm_preflighted`,
+`paper_ready_true`, and `frozen_headline_unchanged` when those invariants hold.
+
+#### SCENARIO-REPORT-3796: Clean V347 Capstone Records Lean Post-Convergence Without New Existential Claim
+
+**Given** clean Exp 3786 through Exp 3795 artifacts record V347 activation, the
+Exp 3787 P1 retry state, FR-11 v19 Tier-3 predictive learning, abstention
+CLI/batch hardening, gaming-resistance characterization, anomaly-escalation
+validation, product-headline provenance confirmation, EDLM preflight, reference
+refresh, and KV260 terminal confirmation
+**When** the Exp 3796 workflow runs
+**Then** it emits the required terminal artifact with
+`paper_ready_preserved=true`, frozen FoVer `0.9131` unchanged,
+`energy_as_generator_still_bounded=true`, both energy routes recorded as
+honest-negative-bounded, all clean upstream artifacts cited, no copied
+live-model markers, no new existential claim, and no critical adversarial
+verifier flag.
+
+#### SCENARIO-REPORT-3796-P1-GUARD: Blocked Or Inconclusive P1 Does Not Become A Research Negative
+
+**Given** Exp 3787 reports `blocked_no_free_gpu` or an inconclusive positive
+control outcome
+**When** the Exp 3796 workflow validates the capstone
+**Then** it records the blocked or inconclusive status honestly, preserves
+`energy_as_generator_still_bounded=true`, states that the mechanism remains
+open for operator handoff, and does not report a new energy-as-generator
+failure.
+
+#### SCENARIO-REPORT-3796-FUNDAMENTAL-GUARD: Fundamental P1 Requires Positive Control
+
+**Given** Exp 3787 reports `p1_adjudication` or `adjudication` as
+`fundamental_causal_inductive_bias_gap`
+**When** the Exp 3796 workflow validates the capstone
+**Then** validation SHALL pass only if `p1_positive_control_passed=true`; a
+failed or missing positive control SHALL fail validation rather than becoming a
+null `FUNDAMENTAL` result.
+
+#### SCENARIO-REPORT-3796-MISSING-BLOCKED: Missing Or Blocked Upstream Is Not A Research Negative
+
+**Given** any Exp 3786 through Exp 3795 artifact is absent or reports a blocked
+terminal verdict
+**When** the Exp 3796 workflow runs
+**Then** the capstone records that artifact in
+`not_landed_or_blocked_recorded_honestly`, excludes missing artifacts from
+headline aggregation, and does not label an un-run or blocked task as a
+research negative.
+
+#### SCENARIO-REPORT-3796-FLAGGED: Flagged Upstream Artifacts Are Excluded
+
+**Given** any Exp 3786 through Exp 3795 source artifact carries
+`flagged_adversarial=true`
+**When** the Exp 3796 workflow runs
+**Then** the capstone records that artifact in `flagged_artifacts_excluded`,
+excludes it from `cited_upstream_artifacts` and headline aggregation, and
+derives affected milestone values from the remaining clean upstream record.
+
+## Implementation Status (REQ-REPORT-3796)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-3796 | Implemented (`python/carnot/reporting/capstone_v347_post_convergence_3796.py`, `scripts/experiment_3796_capstone_v347.py`) | Implemented (`tests/python/test_experiment_3796_capstone_v347.py`) |
