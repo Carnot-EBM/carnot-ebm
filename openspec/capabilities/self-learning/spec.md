@@ -10798,3 +10798,74 @@ EBT stabilizer tracker.
 | Requirement  | Python | Tests |
 |-------------|--------|-------|
 | REQ-LEARN-3772 | Implemented (python/carnot/fr11/continuous_self_learning_v17.py; scripts/experiment_3772_fr11_self_learning_v17_verifier_precision_tracker.py) | Implemented (tests/python/test_experiment_3772_fr11_csl_v17.py) |
+
+---
+
+## REQ-LEARN-3778: FR-11 v18 Tier-2 Constraint-Memory Threshold Consolidation
+
+**Given** the FoVer cached corpus and the four headline verifier scoring paths
+are present
+**When** Exp 3778 runs the FR-11 v18 self-learning consolidator
+**Then** it SHALL reuse `Tier2ThresholdMemory` to consolidate one persisted
+score-threshold delta per headline verifier domain across the FoVer labels and
+cached verifier scores
+**And** it SHALL recompute ensemble AUROC after applying the persisted deltas
+through `Tier2ThresholdMemory.apply_delta`
+**And** the consolidated AUROC SHALL remain within or above the frozen Exp 2837
+condition-A CI95 `[0.9027, 0.9235]`
+**And** the +0.0185 `fr11_session_memory` contribution from Exp 2837 SHALL
+remain preserved
+**And** the artifact SHALL identify v18 as Tier-2 CPU + system-memory lookup
+state, not v17 Tier-1 precision counters or a model retrain.
+
+### REQ-LEARN-3778 Sub-requirements
+
+- REQ-LEARN-3778-1: The runnable artifact SHALL use
+  `inference_substrate` equal to
+  `verifier_ensemble_against_cached_candidates (principle: reads cached verifier scores, no live model).`
+  and SHALL avoid live-model, CUDA, GGUF, or retraining claims.
+- REQ-LEARN-3778-2: Preconditions SHALL run under `.venv/bin/python`, require
+  importable `pyyaml`, `numpy`, `sklearn`, and `Tier2ThresholdMemory`, and
+  require the absolute FoVer corpus path to exist before consolidation.
+- REQ-LEARN-3778-3: If the FoVer corpus or verifier scoring path is missing,
+  the artifact SHALL use a `blocked_<resource>` honest verdict and SHALL record
+  `no corpus to consolidate from` without fabricating
+  `per_domain_threshold_deltas`.
+- REQ-LEARN-3778-4: Each domain delta SHALL be produced by calling
+  `Tier2ThresholdMemory.update_domain_delta(domain_key, examples, labels)` over
+  the real score column for that domain, and the reported delta SHALL equal the
+  value read back through `get_domain_delta(domain_key)`.
+- REQ-LEARN-3778-5: Consolidated ensemble scores SHALL be computed only by
+  applying `Tier2ThresholdMemory.apply_delta(domain_key, raw_score)` before the
+  existing headline ensemble weighting and AUROC calculation.
+- REQ-LEARN-3778-6: Runnable artifacts SHALL include bare values for
+  `honest_verdict`, `inference_substrate`, `per_domain_threshold_deltas`,
+  `ensemble_auroc_under_consolidation`, `auroc_within_frozen_ci`,
+  `memory_contribution_preserved`, `is_tier2_not_tier1`,
+  `tier2_lookup_is_cpu_memory`, `tracker_state_persisted`, `model_specs`,
+  `random_seed`, `reproducibility_checksum`, and `duration_s`, plus separate
+  field-principle annotations for those fields.
+- REQ-LEARN-3778-7: The terminal verdict SHALL be
+  `complete: fr11_v18_tier2_constraint_memory_consolidated_auroc_within_frozen_ci_memory_contribution_preserved_state_persisted`
+  when the consolidated AUROC no-regression gate passes, the memory
+  contribution is preserved, and the Tier-2 memory database is persisted.
+
+### SCENARIO-LEARN-3778: Constraint Memory Applies Real Persisted Deltas
+
+**Given** labeled FoVer-style scores where each verifier domain has at least 32
+examples and `fr11_session_memory` remains part of the ensemble
+**When** the v18 consolidator updates `Tier2ThresholdMemory` for each domain
+and recomputes AUROC through `apply_delta`
+**Then** each reported delta round-trips from the persisted database
+**And** applying a poisoned persisted delta after consolidation changes the
+adjusted score returned by `apply_delta`, proving the result uses the
+tracker's real persisted behavior
+**And** the artifact reports `memory_contribution_preserved=true`,
+`is_tier2_not_tier1=true`, `tracker_state_persisted=true`, and verifier-scoring
+substrate only.
+
+## Implementation Status (REQ-LEARN-3778)
+
+| Requirement  | Python | Tests |
+|-------------|--------|-------|
+| REQ-LEARN-3778 | Proposed (python/carnot/fr11/continuous_self_learning_v18.py; scripts/experiment_3778_fr11_self_learning_v18_tier2_constraint_memory.py) | Proposed (tests/python/test_experiment_3778_fr11_csl_v18.py) |

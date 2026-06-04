@@ -1,3 +1,6 @@
+"""
+Thesis-A P1 v3 \u2014 discrete-search adjudication, CORRECTED REGIME (n_train=40000).
+"""
 import os
 import sys
 import time
@@ -26,6 +29,8 @@ VOCAB = pb.VOCAB
 
 @torch.no_grad()
 def ebt_beam_generate(ebt, pid, ans_len, device, beam=8, topk=12):
+    """GLOBAL discrete search: beam search over the answer tokens minimising cumulative
+    per-position EBT energy, evaluated only at valid token embeddings."""
     emb = ebt.token_embedding.weight
     cand_ids = torch.arange(VOCAB, device=device)
     cand_emb = emb[cand_ids]
@@ -62,6 +67,8 @@ def main():
     blk = 48
     print(f"[setup] dev={dev} digits={digits} steps={steps} dim={dim} layers={layers} beam={beam}", flush=True)
 
+    mu = (10 ** digits) ** 2
+    # CRITICAL FIX: hardcode to 40000
     n_train = 40000
     train_items = pb.build_corpus(digits, n_train, seed)
     tp = {t[0] for t in train_items}
@@ -71,13 +78,13 @@ def main():
 
     ebt, ar = sc.build_models(dim, layers, heads, blk, dev)
     import torch.nn as nn
-    ckpt = os.path.join(PROJECT_ROOT, "results", "thesis_a_p1_v3_trained.pt")
+    ckpt = os.path.join(PROJECT_ROOT, "results", "experiment_3777_p1_v3_trained.pt")
     dec = nn.Sequential(nn.Linear(dim, dim), nn.GELU(), nn.Linear(dim, VOCAB)).to(dev)
     if os.path.exists(ckpt):
         st = torch.load(ckpt, map_location=dev)
         ebt.load_state_dict(st["ebt"]); ar.load_state_dict(st["ar"]); dec.load_state_dict(st["dec"])
         nan = st.get("nan", False)
-        print(f"[resume] loaded trained models from {ckpt} (nan={nan}) — skipping train+decoder", flush=True)
+        print(f"[resume] loaded trained models from {ckpt} (nan={nan}) \u2014 skipping train+decoder", flush=True)
     else:
         nan = pb.train_models(ebt, ar, blocks, dev, steps, bs=16, langevin=(5, 15),
                               log=lambda m: print(m, flush=True))
@@ -111,50 +118,60 @@ def main():
     n = len(items)
     ar1_acc, arV_acc = ar1 / n, arV / n
     am_acc, de_acc, bm_acc = argmin / n, descent / n, beamc / n
-    ar_best = max(ar1_acc, arV_acc)
-    ebt_best = max(am_acc, de_acc, bm_acc)
+    ar_best = float(max(ar1_acc, arV_acc))
+    ebt_best = float(max(am_acc, de_acc, bm_acc))
 
-    positive_control_passed = ar_best >= 0.3
+    positive_control_passed = bool(ar_best >= 0.3)
+
     if not positive_control_passed:
         verdict = f"complete: thesis_a_p1_v3_INCONCLUSIVE_positive_control_failed_ar_best_{ar_best:.3f}_below_0.3"
-        adjudication = "inconclusive_positive_control_failed"
+        adj = "inconclusive_positive_control_failed"
     elif ebt_best > 0.0:
         verdict = f"complete: thesis_a_p1_v3_decode_artifact_bounded_ar_best_{ar_best:.3f}_ebt_best_{ebt_best:.3f}_positive_control_passed_energy_as_generator_still_bounded"
-        adjudication = "decode_artifact_bounded"
+        adj = "decode_artifact_bounded"
     else:
         verdict = f"complete: thesis_a_p1_v3_FUNDAMENTAL_causal_inductive_bias_gap_ar_best_{ar_best:.3f}_ebt_best_0.000_positive_control_passed"
-        adjudication = "fundamental_causal_inductive_bias_gap"
+        adj = "fundamental_causal_inductive_bias_gap"
 
     art = {
+        "experiment": "experiment_3777_p1_discrete_search_adjudication_v3",
         "honest_verdict": verdict,
         "inference_substrate": "live_llm_inference",
         "positive_control_passed": positive_control_passed,
         "ar_best": ar_best,
         "ebt_best": ebt_best,
-        "adjudication": adjudication,
-        "n_train": n_train,
+        "adjudication": adj,
+        "n_train": 40000,
         "per_method_accuracies": {
             "ar_greedy": ar1_acc,
             "ar_selfconsistency": arV_acc,
             "ebt_argmin": am_acc,
             "ebt_beam": bm_acc,
-            "ebt_learned_decoder": de_acc
+            "ebt_descent": de_acc
         },
         "training_diverged": bool(nan),
         "energy_as_generator_still_bounded": True,
         "preconditions_checked": True,
-        "model_specs": {"ebt": "scaled_ebt_from_scratch", "ar": "matched_compute_ar", "n_train": n_train},
+        "model_specs": {
+            "dim": dim,
+            "n_layers": layers,
+            "ebt": "scaled_ebt_from_scratch",
+            "ar": "matched",
+            "n_train": 40000
+        },
         "random_seed": seed,
         "reproducibility_checksum": hashlib.sha256(
             json.dumps({"seed": seed, "digits": digits, "steps": steps, "dim": dim,
-                        "layers": layers, "beam": beam, "n_train": n_train}, sort_keys=True).encode()).hexdigest(),
+                        "layers": layers, "beam": beam, "n_train": 40000}, sort_keys=True).encode()).hexdigest(),
         "duration_s": round(time.time() - t0, 2),
         "ebt_sample_outputs": samples,
     }
-
     with open(os.path.join(PROJECT_ROOT, "results", "experiment_3777_p1_discrete_search_adjudication_v3.json"), "w") as f:
         json.dump(art, f, indent=2)
     print("\n" + verdict, flush=True)
+    print(f"[done] ar1={ar1_acc:.3f} arV={arV_acc:.3f} argmin={am_acc:.3f} descent={de_acc:.3f} "
+          f"beam={bm_acc:.3f} dur={art['duration_s']}s", flush=True)
+    print("[samples] " + json.dumps(samples[:5]), flush=True)
 
 if __name__ == "__main__":
     main()
