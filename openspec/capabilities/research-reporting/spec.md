@@ -16727,3 +16727,54 @@ derives affected milestone booleans from the remaining clean upstream record.
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-REPORT-3775 | Planned (`python/carnot/reporting/capstone_v345_recovery_3775.py`, `scripts/experiment_3775_capstone_v345.py`) | Planned (`tests/python/test_experiment_3775_capstone_v345.py`) |
+
+### REQ-REPORT-3776: Archive V345 Fully-Landed Recovery And Activate V346 Convergence
+
+The Exp 3776 workflow SHALL archive milestone `2026.06.345` honestly in
+`research-complete.yaml` and confirm milestone `2026.06.346` is active in
+`research-roadmap.yaml`. The archive SHALL record `.345` as fully landed
+(`11/11` tasks), with the verifier product banked, the certified abstention
+point shipped, `paper_ready=true`, frozen FoVer `0.9131` unchanged, and both
+energy-as-selector and energy-as-generator still bounded. It SHALL record `.346`
+as a convergence milestone that settles the P1 discrete-search v3 mechanism,
+banks the verifier product surface, builds Anomaly-Escalation, scaffolds EDLM,
+continues self-learning, and re-grinds nothing already bounded.
+
+The workflow SHALL replace any generic `.345` conductor archive entry rather
+than duplicating it. Every string value written to `research-complete.yaml` that
+contains a colon SHALL be quoted so a safe-load parse succeeds after the write.
+It SHALL leave `scripts/research_conductor.py`, `ops/north-star.md`,
+`ops/status.md`, `ops/changelog.md`, and `_bmad/traceability.md` unchanged.
+
+The terminal artifact SHALL be written to
+`results/experiment_3776_archive_v345_activate_v346.json` and SHALL include bare
+top-level values for `honest_verdict`, `inference_substrate`,
+`v345_outcome_recorded`, `v346_focus_recorded`,
+`research_complete_yaml_parses`, `paper_ready_preserved`,
+`both_energy_routes_still_bounded`, `n_tasks_archived`,
+`adversarial_verify_clean`, `random_seed`, `reproducibility_checksum`, and
+`duration_s`, plus `field_principles` documenting why each required value
+exists. `inference_substrate` SHALL equal
+`aggregation_from_upstream_artifacts` and the artifact SHALL NOT contain
+`model_specs`, `target_model`, `GGUF`, `CUDA`, or `live-model` markers. The
+terminal verdict SHALL equal
+`complete: archived_v345_fully_landed_v346_convergence_active_paper_ready_true_both_energy_routes_bounded_frozen_headline_unchanged`.
+
+#### SCENARIO-REPORT-3776: V345 Archive Records Fully-Landed Convergence State
+
+**Given** the `.345` capstone reports all upstream recovery tasks landed,
+`paper_ready=true`, frozen FoVer `0.9131` unchanged, a shipped abstention point,
+and both energy routes bounded, and `publication_gate.py --json` reports G1-G4
+all passing
+**When** the Exp 3776 workflow runs
+**Then** it rewrites the `.345` research-complete entry as a single fully-landed
+archive with 11 tasks, quotes colon-containing YAML values, confirms
+`research-complete.yaml` safe-loads, confirms `.346` is active, writes the
+required aggregation-only artifact, and passes adversarial verification with no
+critical flag.
+
+## Implementation Status (REQ-REPORT-3776)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-3776 | Implemented (`python/carnot/reporting/archive_v345_activate_v346_3776.py`, `scripts/experiment_3776_archive_v345_activate_v346.py`) | Implemented (`tests/python/test_experiment_3776_archive_v345_activate_v346.py`) |

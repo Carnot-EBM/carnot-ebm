@@ -1,0 +1,96 @@
+{
+  "activated_milestone": "2026.06.346",
+  "active_roadmap_path": "research-roadmap.yaml",
+  "adversarial_verify_clean": true,
+  "adversarial_verify_report": {
+    "flag_count": 0,
+    "flags": [],
+    "max_severity": -1
+  },
+  "archived_milestone": "2026.06.345",
+  "both_energy_routes_still_bounded": true,
+  "duration_s": 3.241885,
+  "experiment_id": "exp3776",
+  "field_principles": {
+    "adversarial_verify_clean": "True iff the artifact passes adversarial_verify with no critical flag.",
+    "both_energy_routes_still_bounded": "BARE bool -- records that .346 does not reopen the bounded conclusion (P1 v3 only sharpens the mechanism).",
+    "duration_s": "Wall-clock plausibility floor; missing duration is the fabrication signal.",
+    "honest_verdict": "Terminal prefix lets the reconciler classify the transition complete without re-running it.",
+    "inference_substrate": "JSON-read + format; 0.0001s floor; no compute-bound marker so it does not false-flag.",
+    "n_tasks_archived": "Sample-size hygiene -- confirms the full .345 milestone was archived, not a partial.",
+    "paper_ready_preserved": "BARE bool -- G1-G4 stay met (confirmed via publication_gate.py); the transition must not silently regress paper_ready; frozen 0.9131 stays frozen.",
+    "random_seed": "Determinism precondition for reproducibility.",
+    "reproducibility_checksum": "Content hash catches silent drift vs any replication.",
+    "research_complete_yaml_parses": "BARE bool, MUST be true -- confirms research-complete.yaml safe_loads after the write (anti-recurrence of the .344 poison).",
+    "v345_outcome_recorded": "Records .345's REAL state: fully landed 11/11, verifier product banked, paper_ready TRUE.",
+    "v346_focus_recorded": "Records the .346 pivot: settle P1 discrete-search v3, bank the verifier product, build Anomaly-Escalation, scaffold EDLM, continue self-learning -- re-grinding nothing bounded."
+  },
+  "honest_verdict": "complete: archived_v345_fully_landed_v346_convergence_active_paper_ready_true_both_energy_routes_bounded_frozen_headline_unchanged",
+  "inference_substrate": "aggregation_from_upstream_artifacts",
+  "n_tasks_archived": 11,
+  "paper_ready_evidence": {
+    "capstone_paper_ready": true,
+    "frozen_headline_auroc": 0.9131,
+    "frozen_headline_unchanged": true,
+    "g1": true,
+    "g2": true,
+    "g3": true,
+    "g4": true,
+    "paper_ready": true,
+    "publication_gate_source": "scripts/publication_gate.py --json",
+    "unmet_gates": []
+  },
+  "paper_ready_preserved": true,
+  "random_seed": 3776,
+  "reproducibility_checksum": "6f6a34bc7d96e77637e93ff8ec254589088f00d498ad423d6825a8d863702e6e",
+  "research_complete_yaml_parses": true,
+  "schema": "carnot.archive_activation.v345_to_v346_3776.v1",
+  "source_artifact_checksums": [
+    {
+      "path": "results/experiment_3775_capstone_v345.json",
+      "sha256": "4bc1bebc6bd691458c682bdd71fbb90ee2e9c46350f8aef83cf330f48b4638bd"
+    }
+  ],
+  "source_document_checksums": [
+    {
+      "path": "research-roadmap.yaml",
+      "sha256": "1f1e0a95fec32afa234c81c1e15330d57950edffeb6d5f7dbdda5db112dcf81e"
+    },
+    {
+      "path": "openspec/change-proposals/research-roadmap-vNEXT.md",
+      "sha256": "ecf2fd8cc0423fca8fea463e4c027636e52feb2d4fa939a5aceedf42680b4015"
+    },
+    {
+      "path": "ops/changelog.md",
+      "sha256": "9fed0d05bbb008a998e08beeec73301ff6c0b3194704f11d88a251f71aedb8f2"
+    },
+    {
+      "path": "ops/north-star.md",
+      "sha256": "e288b001d2582b5f8af368df5ef458c334b750daefdef36ec9f707c61b62b973"
+    }
+  ],
+  "task_id": "exp3776-archive-v345-activate-v346",
+  "v345_capstone_evidence": {
+    "both_energy_routes_bounded": true,
+    "capstone_path": "results/experiment_3775_capstone_v345.json",
+    "certified_abstention_point_status": "shipped",
+    "energy_as_generator_status": "honest-negative-bounded",
+    "energy_as_selector_status": "honest-negative-bounded",
+    "flagged_artifacts_excluded": [],
+    "fully_landed": true,
+    "honest_verdict": "complete: capstone_v345_skip_cascade_recovered_thesis_a_closed_both_energy_routes_bounded_gates_mechanized_verifier_banked_abstention_point_shipped_fr11_v17_prm_positioned_paper_ready_true_frozen_headline_unchanged",
+    "n_tasks_with_capstone": 11,
+    "n_upstream_tasks_landed": 10,
+    "not_landed_artifacts_recorded_honestly": [],
+    "verifier_product_banked": true
+  },
+  "v345_outcome_recorded": "fully_landed_11_of_11_verifier_product_banked_certified_abstention_shipped_paper_ready_true_both_energy_routes_bounded",
+  "v346_activation_evidence": {
+    "active_milestone": "2026.06.346",
+    "active_roadmap_path": "research-roadmap.yaml",
+    "convergence_focus": "settle_p1_discrete_search_v3_bank_verifier_product_build_anomaly_escalation_scaffold_edlm_continue_self_learning_regrind_nothing_bounded",
+    "first_task": "exp3776-archive-v345-activate-v346"
+  },
+  "v346_active_confirmed": true,
+  "v346_focus_recorded": "settle_p1_discrete_search_v3_bank_verifier_product_build_anomaly_escalation_scaffold_edlm_continue_self_learning_regrind_nothing_bounded"
+}
