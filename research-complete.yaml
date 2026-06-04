@@ -35146,52 +35146,175 @@ milestones:
     result: 'COMPLETE: capstone recorded exp3777 as blocked, not a negative; paper_ready TRUE, FoVer 0.9131 frozen, both energy
       routes bounded'
 - id: 2026.06.347
-  title: "V347 post-convergence terminal handoff archived"
+  title: V347 post-convergence terminal handoff archived
   doc: openspec/change-proposals/research-roadmap-vNEXT.md
   completed: '2026-06-04'
-  finding: "LANDED TERMINAL MILESTONE: .347 completed its post-convergence archive. The P1 discrete-search v3 retry, exp3787, blocked on no-free-GPU for the second consecutive milestone and set handoff_to_operator=true; it is handed to the operator, not re-queued in .348, and not a research negative. EDLM preflight returned GO but remains operator-gated. The product headline is partially restorable: exp2090 passes G4 and exp1999 fails G4 because provenance is absent on disk. FR-11 Tier-3 predictive self-learning trained, abstention CLI/batch and gaming-resistance product work landed, the anomaly classifier was validated but over-fired and needs tuning, references refreshed, KV260 continuity held, paper_ready TRUE (G1-G4), frozen FoVer 0.9131 unchanged, and both energy routes stayed bounded. .348 is active: restore the demoted code-repair headline to G4 eligibility if the clean re-run supports it, harden/repair the banked product, tune the classifier, wire Tier-3 as a fast path, re-grind nothing bounded, and self-seed no paradigm."
+  finding: 'LANDED TERMINAL MILESTONE: .347 completed its post-convergence archive. The P1 discrete-search v3 retry, exp3787,
+    blocked on no-free-GPU for the second consecutive milestone and set handoff_to_operator=true; it is handed to the operator,
+    not re-queued in .348, and not a research negative. EDLM preflight returned GO but remains operator-gated. The product
+    headline is partially restorable: exp2090 passes G4 and exp1999 fails G4 because provenance is absent on disk. FR-11 Tier-3
+    predictive self-learning trained, abstention CLI/batch and gaming-resistance product work landed, the anomaly classifier
+    was validated but over-fired and needs tuning, references refreshed, KV260 continuity held, paper_ready TRUE (G1-G4),
+    frozen FoVer 0.9131 unchanged, and both energy routes stayed bounded. .348 is active: restore the demoted code-repair
+    headline to G4 eligibility if the clean re-run supports it, harden/repair the banked product, tune the classifier, wire
+    Tier-3 as a fast path, re-grind nothing bounded, and self-seed no paradigm.'
   tasks:
   - id: exp3786-archive-v346-activate-v347
-    title: "Archive .346 and activate .347 post-convergence"
+    title: Archive .346 and activate .347 post-convergence
     deliverable: results/experiment_3786_archive_v346_activate_v347.json
-    result: "COMPLETE: archived .346 as 10 of 11 with exp3777 blocked on no-free-GPU, then activated .347 post-convergence"
+    result: 'COMPLETE: archived .346 as 10 of 11 with exp3777 blocked on no-free-GPU, then activated .347 post-convergence'
   - id: exp3787-p1-discrete-search-adjudication-v3-retry
-    title: "P1 discrete-search adjudication v3 retry"
+    title: P1 discrete-search adjudication v3 retry
     deliverable: results/experiment_3787_p1_discrete_search_adjudication_v3_retry.json
-    result: "BLOCKED_RESOURCE_HANDOFF: exp3787 blocked on no-free-GPU for the second consecutive milestone and set handoff_to_operator=true; the P1 adjudication is handed to the operator, not re-queued in .348, and not a research negative"
+    result: 'BLOCKED_RESOURCE_HANDOFF: exp3787 blocked on no-free-GPU for the second consecutive milestone and set handoff_to_operator=true;
+      the P1 adjudication is handed to the operator, not re-queued in .348, and not a research negative'
   - id: exp3788-fr11-self-learning-v19-tier3-predictive
-    title: "FR-11 v19 Tier-3 predictive verification"
+    title: FR-11 v19 Tier-3 predictive verification
     deliverable: results/experiment_3788_fr11_self_learning_v19_tier3_predictive.json
-    result: "COMPLETE: Tier-3 predictor trained with predictive AUROC 0.9715; headline ensemble unchanged and memory contribution preserved"
+    result: 'COMPLETE: Tier-3 predictor trained with predictive AUROC 0.9715; headline ensemble unchanged and memory contribution
+      preserved'
   - id: exp3789-abstention-cli-batch-surface
-    title: "Abstention CLI and batch surface"
+    title: Abstention CLI and batch surface
     deliverable: results/experiment_3789_abstention_cli_batch_surface.json
-    result: "COMPLETE: abstention mode surfaced through CLI and batch scoring, default-OFF with E2E behavior confirmed"
+    result: 'COMPLETE: abstention mode surfaced through CLI and batch scoring, default-OFF with E2E behavior confirmed'
   - id: exp3790-verifier-gaming-resistance-characterization
-    title: "Verifier gaming-resistance characterization"
+    title: Verifier gaming-resistance characterization
     deliverable: results/experiment_3790_verifier_gaming_resistance_characterization.json
-    result: "COMPLETE: gaming-resistance curve characterized at n=240; context_compaction degradation recorded as product hardening work"
+    result: 'COMPLETE: gaming-resistance curve characterized at n=240; context_compaction degradation recorded as product
+      hardening work'
   - id: exp3791-anomaly-escalation-classifier-validation
-    title: "Anomaly-Escalation classifier validation"
+    title: Anomaly-Escalation classifier validation
     deliverable: results/experiment_3791_anomaly_escalation_classifier_validation.json
-    result: "COMPLETE: classifier validated recommend-only, but false-escalation rate 0.833333 means it needs tuning before wiring"
+    result: 'COMPLETE: classifier validated recommend-only, but false-escalation rate 0.833333 means it needs tuning before
+      wiring'
   - id: exp3792-product-headline-provenance-confirmation-g4
-    title: "Product headline G4 provenance confirmation"
+    title: Product headline G4 provenance confirmation
     deliverable: results/experiment_3792_product_headline_provenance_confirmation_g4.json
-    result: "COMPLETE: product headline partially restorable; exp2090 passes G4 and exp1999 fails G4 because seed, checksum, n, and substrate are absent on disk"
+    result: 'COMPLETE: product headline partially restorable; exp2090 passes G4 and exp1999 fails G4 because seed, checksum,
+      n, and substrate are absent on disk'
   - id: exp3793-edlm-no-train-preflight-readiness
-    title: "EDLM no-train preflight readiness"
+    title: EDLM no-train preflight readiness
     deliverable: results/experiment_3793_edlm_no_train_preflight_readiness.json
-    result: "COMPLETE: EDLM preflight returned GO and emitted an operator seed command; the loop did not commit or self-seed"
+    result: 'COMPLETE: EDLM preflight returned GO and emitted an operator seed command; the loop did not commit or self-seed'
   - id: exp3794-external-research-refresh
-    title: "External research refresh .347"
+    title: External research refresh .347
     deliverable: results/experiment_3794_external_research_refresh.json
-    result: "COMPLETE: .347 references filed append-only with numbers treated as reported"
+    result: 'COMPLETE: .347 references filed append-only with numbers treated as reported'
   - id: exp3795-kv260-opportunistic-continuity-audit
-    title: "KV260 opportunistic continuity audit"
+    title: KV260 opportunistic continuity audit
     deliverable: results/experiment_3795_kv260_opportunistic_continuity_audit.json
-    result: "COMPLETE: KV260 terminal state held; SSH reachable and overlay loadable"
+    result: 'COMPLETE: KV260 terminal state held; SSH reachable and overlay loadable'
   - id: exp3796-capstone-v347
-    title: "Capstone .347"
+    title: Capstone .347
     deliverable: results/experiment_3796_capstone_v347.json
-    result: "COMPLETE: capstone recorded P1 as blocked and handed off, paper_ready TRUE, FoVer 0.9131 frozen, both energy routes bounded, and .348 headline-advancement focus established"
+    result: 'COMPLETE: capstone recorded P1 as blocked and handed off, paper_ready TRUE, FoVer 0.9131 frozen, both energy
+      routes bounded, and .348 headline-advancement focus established'
+- id: 2026.06.348
+  title: 'POST-CONVERGENCE -- ADVANCE THE HEADLINE (G4 RESTORATION) + HARDEN/REPAIR THE BANKED PRODUCT. The project is CONVERGED
+    (FoVer 0.9131 verifier, paper_ready=TRUE/G1-G4), both energy routes are bounded, the verifier-moat thread is CLOSED, and
+    .347 landed all tasks. Two things changed at .347 that SET the .348 agenda: (1) exp3787 (P1 discrete-search v3) BLOCKED
+    on no-free-GPU for the SECOND consecutive milestone and set handoff_to_operator=true -- per its retirement ramp it is
+    HANDED to the operator and .348 does NOT re-queue it; (2) exp3792 confirmed the product headline is PARTIALLY restorable
+    -- exp2090 (CRANE +15pp) PASSES G4 but exp1999 (code-repair +18pp) FAILS G4 (the on-disk artifact has no seed/checksum/n/substrate).
+    .348 does SIX non-churn things, each mapping to a legitimate post-convergence surface (north-star sec-1): (A) ADVANCE
+    the headline -- a clean, provenance-complete RE-RUN of the exp1999 code-verification-HumanEval repair pipeline to make
+    it G4-eligible and possibly RESTORE the product headline (GPU-preferred, reduced-n CPU-GGUF fallback, clean blocked fallback).
+    (B) RE-CONFIRM provenance after the re-run (gated). (C) HARDEN the banked product -- MITIGATE the context_compaction gaming
+    evasion exp3790 found, and add a THIRD integration surface (HTTP/REST) per Decentralization Rule 4. (D) REPAIR the endorsed
+    process tool -- TUNE the over-firing Anomaly-Escalation classifier (0.83 false-escalation -> target <=0.2) and re-validate.
+    (E) CONTINUE mandated self-learning -- WIRE the trained Tier-3 predictor (exp3788, predictive AUROC 0.9715) as a deployable
+    fast-path/early-exit cascade gate and measure the compute saving. Plus record/continuity (external refresh, KV260 opportunistic,
+    capstone). INVARIANTS: paper_ready stays TRUE (G1-G4); FoVer 0.9131 frozen; both energy routes stay bounded (.348 runs
+    NO energy-foundation experiment); the next-Phase-3-thesis decision (EDLM seed -- preflight returned GO -- vs freeze) stays
+    an operator-seeding surface; the loop never self-seeds a paradigm, never edits operator-curated docs, never triggers CI,
+    never publishes, never pushes.'
+  doc: openspec/change-proposals/research-roadmap-vNEXT.md
+  completed: '2026-06-04'
+  finding: See conductor log for per-experiment results.
+  tasks:
+  - id: exp3797-archive-v347-activate-v348
+    title: 'Archive milestone .347 (POST-CONVERGENCE -- landed all tasks: P1 discrete-search v3 RETRIED and blocked-on-no-free-GPU
+      a 2nd time + handed to operator (exp3787); EDLM preflight GO (exp3793); product headline partially restorable -- exp2090
+      G4-pass, exp1999 G4-fail (exp3792); Tier-3 predictor trained AUROC 0.9715 (exp3788); abstention CLI+batch added (exp3789);
+      gaming-resistance degrades on context_compaction (exp3790); anomaly classifier needs tuning, false-escalation 0.83 (exp3791);
+      paper_ready=TRUE) and activate .348 (ADVANCE the headline via G4 restoration, HARDEN/REPAIR the banked product, REPAIR
+      the over-firing classifier, CONTINUE Tier-3 self-learning).'
+    deliverable: results/experiment_3797_archive_v347_activate_v348.json
+    result: OK (conductor)
+  - id: exp3798-g4-product-headline-restoration
+    title: 'ADVANCE the product headline (north-star sec-1): RE-RUN the exp1999 code-verification-HumanEval repair pipeline
+      (baseline pass@1 -> verify-repair pass@1) with FULL G4 provenance (random_seed + reproducibility_checksum + n + inference_substrate
+      + model_specs), on a mandated SOTA GGUF (cached_sota_pair), so the demoted +18pp code-repair number becomes G4-eligible
+      and the product headline can be RESTORED. GPU-PREFERRED for live generation; reduced-n CPU-GGUF fallback for provenance;
+      clean blocked fallback if neither path is usable (never half-run, never fabricate). Reports the real delta HONESTLY
+      -- if the re-run does not reproduce +18pp, that is a valid finding and the headline stays demoted.'
+    deliverable: results/experiment_3798_g4_product_headline_restoration.json
+    result: OK (conductor)
+  - id: exp3799-product-headline-provenance-reconfirmation
+    title: 'RE-CONFIRM the product-headline provenance after the G4 re-run (gated on exp3798 producing a clean artifact):
+      read exp3798''s output, verify it carries random_seed + reproducibility_checksum + n + inference_substrate and the measured
+      delta, and produce an updated provenance-confirmation table the operator can use to RESTORE (or keep demoting) the product
+      code-repair headline -- alongside the already-G4-passing exp2090 (CRANE +15pp). Aggregation only; edits NO operator-curated
+      doc.'
+    deliverable: results/experiment_3799_product_headline_provenance_reconfirmation.json
+    result: OK (conductor)
+  - id: exp3800-gaming-resistance-mitigation-v2
+    title: 'HARDEN the banked product: MITIGATE the context_compaction gaming evasion. .347 exp3790 found the shipped 4-verifier
+      ensemble DEGRADES under the context_compaction perturbation (true-but-irrelevant padding that hides the wrong step).
+      Implement a targeted, CPU-only mitigation (e.g. a compaction-robust feature / normalization in the scoring path) and
+      RE-MEASURE the gaming-degradation curve to show whether the evasion is closed (or quantify how much it narrows) -- WITHOUT
+      regressing clean-corpus AUROC (the frozen 0.9131 ensemble behavior on un-perturbed FoVer must be preserved). CPU, cached
+      triples -- NO live LLM, NO GPU, NOT a moat reopen. Reports a before/after curve; makes NO new headline claim.'
+    deliverable: results/experiment_3800_gaming_resistance_mitigation_v2.json
+    result: OK (conductor)
+  - id: exp3801-abstention-http-rest-surface
+    title: 'HARDEN the banked product: add the THIRD integration surface (HTTP/REST) for the certified abstention mode. .346
+      wired it into the verify API; .347 added the CLI+batch surface; this adds a minimal HTTP/REST endpoint (POST a candidate
+      -> confident-or-abstain verdict + the certified coverage/risk/delta metadata) so a non-Python integrator can call abstention-gated
+      verification over the network (Decentralization Rule 4). Edits CODE + tests only; default abstention OFF; emits a doc-update
+      PROPOSAL for the operator-curated docs (does NOT edit them). No accuracy claim -- a wiring smoke.'
+    deliverable: results/experiment_3801_abstention_http_rest_surface.json
+    result: OK (conductor)
+  - id: exp3802-anomaly-escalation-classifier-v2-tuning
+    title: 'REPAIR the endorsed process tool: TUNE the Anomaly-Escalation classifier (scripts/anomaly_escalation_classifier.py).
+      .347 exp3791 validated it and found false-escalation rate 0.83 (it escalates 83% of CLEAN bounded negatives) with frame-violating
+      recall 1.0 -> supports_wiring_in=false. Tune the classification rules to drive false-escalation DOWN to a usable level
+      (target <=0.2) WITHOUT dropping frame-violating recall below 1.0, then RE-VALIDATE against the same historical corpus
+      and report the new confusion matrix. The classifier MUST still only ever recommend pause+escalate, never relax verification.
+      Recommend-only; conductor unmodified.'
+    deliverable: results/experiment_3802_anomaly_escalation_classifier_v2_tuning.json
+    result: OK (conductor)
+  - id: exp3803-fr11-self-learning-v20-tier3-fast-path-gate
+    title: 'FR-11 continuous self-learning v20 -- APPLY the Tier-3 predictor as a fast-path/early-exit cascade gate (distinct
+      from v19''s TRAINING of it): wire the trained FR11ExtendedJEPA predictor (exp3788, predictive AUROC 0.9715) so that
+      when it is CONFIDENT, the pipeline FAST-PATH-SKIPS the full 4-verifier ensemble scoring, and only falls through to full
+      scoring when the predictor is uncertain. Measure the COMPUTE SAVING (fraction of candidates short-circuited) AND confirm
+      NO accuracy regression vs full scoring on a held-out FoVer split (the frozen 0.9131 effective AUROC is preserved at
+      the chosen confidence threshold). The Partial-Reward-Model early-rejection pattern (arXiv:2508.01969). CPU; the mandated
+      self-learning experiment.'
+    deliverable: results/experiment_3803_fr11_v20_tier3_fast_path_gate.json
+    result: OK (conductor)
+  - id: exp3805-external-research-refresh
+    title: 'External research refresh for .348: file the genuinely-new 2026 papers surfaced during planning into research-references.md
+      ''.348 additions'' -- tied to the .348 tracks (Tier-3-as-fast-path early rejection, the banked verifier product''s robustness/abstention
+      surface, the EDLM operator-seed route). Each entry as-reported, with how it relates. Pure documentation; runs no model.
+      NOTE: the planner already appended a ''.348 additions'' section during planning -- this task CONFIRMS it parses + APPENDS
+      any further papers found, never deleting prior content (never-prune).'
+    deliverable: results/experiment_3805_external_research_refresh.json
+    result: OK (conductor)
+  - id: exp3806-kv260-opportunistic-continuity-audit
+    title: KV260 opportunistic continuity audit -- confirm terminal state holds (SSH-reachable, accelerator overlay loadable).
+      Documentation-only; the per-milestone hardware mandate was relaxed to opportunistic at .340 (GateMate/PolarFire stay
+      opportunistic future-work).
+    deliverable: results/experiment_3806_kv260_opportunistic_continuity_audit.json
+    result: OK (conductor)
+  - id: exp3807-capstone-v348
+    title: 'Capstone .348 -- aggregate the POST-CONVERGENCE headline-advancement + product-harden/repair milestone: the product
+      headline ADVANCED (G4 restoration re-run exp3798 + provenance re-confirmation exp3799 -> restorable / with-caveat /
+      stays-demoted), the banked product HARDENED/REPAIRED (context_compaction gaming MITIGATED exp3800; HTTP/REST 3rd surface
+      exp3801), the endorsed process tool REPAIRED (anomaly classifier v2 tuned exp3802), Tier-3 self-learning APPLIED as
+      a fast-path gate (FR-11 v20 exp3803), references refreshed (exp3805), KV260 terminal confirmed (exp3806). paper_ready
+      MUST stay TRUE; frozen 0.9131 unchanged; both energy routes stay bounded (.348 runs no energy-foundation experiment);
+      the EDLM seed-vs-freeze decision stays an operator surface.'
+    deliverable: results/experiment_3807_capstone_v348.json
+    result: OK (conductor)
