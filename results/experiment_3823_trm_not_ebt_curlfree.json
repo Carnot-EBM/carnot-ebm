@@ -1,0 +1,61 @@
+{
+  "duration_s": {
+    "principle": "Standard methodology field; measured wall-clock duration for the precondition and diagnostic run.",
+    "value": 0.9054028987884521
+  },
+  "field_principles": {
+    "duration_s": "Standard methodology field; measured wall-clock duration for the precondition and diagnostic run.",
+    "inference_substrate": "Standard methodology field; names the actual substrate used for deterministic numerical testing.",
+    "jacobian_antisymmetry_fraction": "Fraction of the update Jacobian that is antisymmetric; >0 implies a non-conservative (curl-bearing) field EBT cannot express.",
+    "n_states_sampled": "M>=50 instances so the curl/residual estimates are not single-trajectory artifacts.",
+    "positive_control_fit_residual": "Same fit on a KNOWN conservative field must give ~0 residual -- proves the test detects conservativity and a large TRM residual is real, not a fitter failure.",
+    "preconditions_checked": "Standard methodology field; records torch/numpy and checkpoint-source gates before TRM inference.",
+    "random_seed": "Standard methodology field; deterministic numerical test, real compute over M states.",
+    "reproducibility_checksum": "Standard methodology field; stable checksum catches silent source or configuration drift.",
+    "scalar_potential_fit_residual": "Relative residual of the best -grad(E) fit to TRM's update field; large residual = TRM != energy descent."
+  },
+  "honest_verdict": "blocked_trm_checkpoint_not_available",
+  "inference_substrate": {
+    "principle": "Standard methodology field; names the actual substrate used for deterministic numerical testing.",
+    "value": "none (blocked)"
+  },
+  "jacobian_antisymmetry_fraction": {
+    "principle": "Fraction of the update Jacobian that is antisymmetric; >0 implies a non-conservative (curl-bearing) field EBT cannot express.",
+    "value": null
+  },
+  "n_states_sampled": {
+    "principle": "M>=50 instances so the curl/residual estimates are not single-trajectory artifacts.",
+    "value": 0
+  },
+  "positive_control_fit_residual": {
+    "principle": "Same fit on a KNOWN conservative field must give ~0 residual -- proves the test detects conservativity and a large TRM residual is real, not a fitter failure.",
+    "value": null
+  },
+  "preconditions_checked": {
+    "principle": "Standard methodology field; records torch/numpy and checkpoint-source gates before TRM inference.",
+    "value": {
+      "block_reason": "blocked_trm_checkpoint_not_available",
+      "checkpoint_load_error": "checkpoint source is not a local file path",
+      "numpy_available": true,
+      "source_artifact_available": true,
+      "torch_available": true,
+      "trm_checkpoint_loadable": false,
+      "trm_checkpoint_path": null,
+      "trm_checkpoint_source": "nano-trm tiny-train (0-epoch unparseability probe)"
+    }
+  },
+  "random_seed": {
+    "principle": "Standard methodology field; deterministic numerical test, real compute over M states.",
+    "value": 3823
+  },
+  "reproducibility_checksum": {
+    "principle": "Standard methodology field; stable checksum catches silent source or configuration drift.",
+    "value": "3ac7bd2f3a013d078997cb589f892b002dd79133973e97b029a4eef82ca4a0ae"
+  },
+  "scalar_potential_fit_residual": {
+    "principle": "Relative residual of the best -grad(E) fit to TRM's update field; large residual = TRM != energy descent.",
+    "value": null
+  },
+  "schema": "carnot.trm_curlfree_falsification.v1",
+  "trm_checkpoint_source": "nano-trm tiny-train (0-epoch unparseability probe)"
+}
