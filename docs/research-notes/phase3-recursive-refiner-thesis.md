@@ -192,3 +192,31 @@ class re-run) needs to LOAD the checkpoint:**
   (26,041 steps @ ~2.6 it/s); GPU0 only, GPU1 untouched.
 - **The grid VERIFIER** for the bridge test = a Sudoku validity checker (rows/cols/boxes contain
   1-9 once) applied to the decoded intermediate board states.
+
+---
+
+## LEAPFROG: official HRM Sudoku checkpoint DOWNLOADED (2026-06-04, post-eGPU-crash)
+
+The from-scratch TRM training was lost to the eGPU drop. Instead of re-training (~2h45m + eGPU
+risk), downloaded a TRUSTED off-the-shelf recursive-latent refiner — answers the operator's
+"borrow existing parts to save training time". The bridge test (exp3819-class) can probe THIS
+instead of a self-trained TRM.
+
+- **HRM Sudoku checkpoint:** `/home/ianblenke/hrm_ckpt/sudoku-extreme/` — `checkpoint` (109MB
+  state_dict, ~27M-param HRM) + `all_config.yaml` (arch config). Source:
+  `sapientinc/HRM-checkpoint-sudoku-extreme` (OFFICIAL, Sapient — the lab that made HRM, TRM's
+  direct parent; trusted provenance, preferred over the unaudited community `Sanjin2024/...TRM`
+  per audit-before-integration). HRM is the same recursive-latent-refinement family — equally
+  valid for the bridge hypothesis (can an external verifier read its intermediate latents?).
+- **To LOAD it:** needs the HRM repo (github.com/sapientinc/HRM — reachable, cloneable to a
+  scratch dir OUTSIDE the carnot repos, like the TRM clone, to avoid the gitlink-breaks-Pages
+  bug). `torch.load` the `checkpoint` into the HRM arch built from `all_config.yaml`.
+- **CAUTION:** `torch.load` of a 3rd-party checkpoint can execute pickle code — it's the OFFICIAL
+  Sapient checkpoint (low risk) but load with care / `weights_only=True` if the format allows.
+- Alternatives if HRM integration is heavy: the exact-match community TRM checkpoint
+  `Sanjin2024/TinyRecursiveModels-Sudoku-Extreme-mlp` loads into our existing ~/trm_src TRM code
+  (but unaudited — pickle risk), or re-train TRM on the INTERNAL GPU only (no eGPU, ~2h45m).
+- **GPU lesson (cost us a crash + reboot):** run sustained GPU jobs on the INTERNAL 3090
+  (GPU-7971baff, currently cuda:1) ONLY; the eGPU (GPU-b52387a2, cuda:0) drops off the USB4 bus
+  under sustained load and corrupts CUDA. Pin with `CUDA_VISIBLE_DEVICES=GPU-7971baff-...`. NEVER
+  run two heavy GPU jobs in parallel across both 3090s.
