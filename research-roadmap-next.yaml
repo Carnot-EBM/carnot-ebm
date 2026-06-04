@@ -1,0 +1,173 @@
+# ============================================================================
+# Pre-staged roadmap for 2026.06.352 (operator-staged, Claude Opus 4.8, 2026-06-04).
+#
+# WHY THIS FILE EXISTS / HOW IT ACTIVATES (Pre-Staged Roadmap Convention):
+#   The conductor preserves + auto-activates this file when the active milestone
+#   (.351) closes, because `milestone:` below == expected-next (.352). Until then
+#   it sits inert. The operator staged it; the planner is the fallback, not the default.
+#
+# PROVENANCE: the LDT + Huginn deep-read (2026-06-04), recorded in
+#   docs/research-notes/phase3-recursive-refiner-thesis.md and memory
+#   reference_tiny_recursive_reasoning_models.md. It re-frames the next recursive-
+#   refiner probe AWAY from re-reading HRM's continuous intermediate latents (which
+#   would only re-confirm the Deep-Think P3 negative that Huginn already gives us:
+#   recursive latents are non-decodable orbits) and TOWARD the one open question LDT
+#   leaves on the table.
+#
+# THE GAP THIS PROBES. LDT (arXiv:2605.08605) IS Carnot's transpilation+abstention
+#   thesis, built and SOTA — but ONLY for CLOSED grid domains with a HAND-BUILT
+#   abstract-interpretation lattice (per-cell candidate sets for Sudoku). Its power
+#   comes from two lattice properties: (1) SOUND elimination (it never eliminates a
+#   correct candidate) and (2) informative CONFLICT detection (it shrinks the wrong-
+#   candidate set). Carnot's differentiated bet is that a GENERAL multi-domain
+#   verifier ENSEMBLE (k=15) can serve as the abstraction lattice for OPEN-ENDED
+#   domains where no lattice can be hand-built. This task MEASURES whether the
+#   ensemble actually has LDT's two lattice properties on a non-grid domain
+#   (FoVer step-level math reasoning) — by re-scoring CACHED candidates. $0, CPU,
+#   no GPU, no generator training.
+#
+# WHY LOOP-SAFE: it is a PROPERTY MEASUREMENT, not a generation-beats-AR test, so
+#   there is NO baseline-to-beat and the headroom / FALSE_NEGATIVE_RISK trap does
+#   not apply in the usual way — BUT a degenerate null (the ensemble eliminates
+#   nothing, or only by also eliminating correct answers) is still informative and
+#   is guarded by a random-elimination positive control at matched soundness.
+#   It re-scores cached artifacts (verifier_ensemble_against_cached_candidates
+#   substrate) so it dodges every GPU liability (kill_zombies / eGPU drop / pause).
+# ============================================================================
+
+milestone: "2026.06.352"
+milestone_title: "LDT-gap probe — is Carnot's k=15 verifier ensemble a SOUND abstraction lattice (LDT's two properties) on an open-ended non-grid domain, or only a scorer?"
+milestone_doc: docs/research-notes/phase3-recursive-refiner-thesis.md
+
+tasks:
+  - id: exp3833-ldt-gap-ensemble-as-sound-abstraction-lattice
+    operator_override: >
+      2026-06-04 operator directive (LDT-gap re-stage): NET-NEW lattice-property
+      measurement, NOT a rerun of the exp3821-class HRM/TRM latent-bridge probe
+      (superseded — Huginn already confirms recursive latents are non-decodable,
+      re-reading HRM's would only re-confirm the DT-P3 negative). Distinct question:
+      does the EXISTING k=15 verifier ensemble exhibit LDT's two abstraction-lattice
+      properties (sound elimination + informative conflict detection) on an OPEN-ENDED
+      domain with NO hand-built lattice? Re-scores cached FoVer candidates; $0, CPU,
+      no generator. No baseline-to-beat-AR, so the headroom trap does not apply; the
+      degenerate-null case is guarded by a random-elimination positive control.
+    milestone: "2026.06.352"
+    title: "Verifier-ensemble-as-sound-abstraction-lattice: measure elimination SOUNDNESS (never reject a correct candidate) + INFORMATIVENESS (shrink the wrong set) on FoVer math, the two properties LDT's hand-built lattice provides."
+    priority: high
+    track: research
+    max_turns: 45
+    agent_type: claude
+    model: opus
+    requires_claude: true   # judgment: re-framing the ensemble as a lattice OPERATOR (precision/recall of REJECTION, soundness-matched comparison vs random) rather than a classifier (AUROC); interpreting whether the soundness/informativeness operating point clears LDT's bar is open-ended, not a deterministic gate. gemini crashes nothing here (CPU/$0) but mis-frames the lattice view; codex acceptable fallback if claude quota-blocked.
+    requires_gpu: false     # re-scores cached candidates with the existing ensemble; deliberately CPU-only to stay loop-safe (no kill_zombies / eGPU contention).
+    estimated_wall_time_min: 50
+    inference_substrate: verifier_ensemble_against_cached_candidates   # scores the k=15 ensemble against pre-existing (question, step_text, label) triples; does NOT load any LLM. Duration floor 1s.
+    deliverable: results/experiment_3833_ldt_gap_ensemble_as_sound_lattice.json
+    prompt: |
+      CONTEXT. The LDT + Huginn deep-read (2026-06-04; docs/research-notes/
+      phase3-recursive-refiner-thesis.md; memory reference_tiny_recursive_reasoning_models)
+      established: LDT (arXiv:2605.08605) is Carnot's transpilation+abstention thesis
+      built and SOTA, but it works ONLY because it has a HAND-BUILT abstract-interpretation
+      lattice for a CLOSED grid domain (Sudoku). LDT's power is two lattice properties:
+        (1) SOUND elimination  — its elimination head NEVER rules out a candidate that is
+            actually correct (the w+/w- = 8 "never false-eliminate" margin);
+        (2) informative CONFLICT detection — it actually SHRINKS the set of wrong
+            candidates (a lattice that eliminates nothing is useless).
+      Carnot's differentiated bet is that a GENERAL multi-domain verifier ENSEMBLE (k=15)
+      can stand in for the hand-built lattice on OPEN-ENDED domains where no lattice can be
+      authored by hand. THIS TASK measures whether the EXISTING ensemble actually has those
+      two properties on a non-grid domain, by re-scoring CACHED candidates. It is a property
+      measurement — NOT a generation-beats-AR test. There is no baseline to beat; do NOT
+      apply a generation headroom gate. The degenerate-null case (ensemble eliminates
+      nothing, or only by also eliminating correct answers) is guarded by a random-
+      elimination positive control at MATCHED soundness.
+
+      CONCRETE STEPS:
+        0. PRECONDITIONS (check BEFORE anything else; if any fail, write the blocked verdict and EXIT — DO NOT fabricate):
+           a. `python -c "import carnot.verify"` succeeds (the k=15 ensemble module imports).
+           b. A cached FoVer step-level corpus with gold labels is present and non-empty:
+              `python -c "import json; d=json.load(open('data/fover_test_v4.json')); assert len(d) > 200 and {'question_id','step_text','label'} <= set(d[0])"`.
+              (Fallback corpora if v4 absent: data/fover_test_v3.json, data/fover_test.json.)
+           c. The ensemble exposes a per-candidate scalar score (e.g. and_composition_verifier
+              `.score(text)` / `.verify(question, response)`; or the canonical ensemble entry
+              used by experiment_2837 / experiment_3430). Confirm you can score ONE candidate
+              end-to-end before scaling.
+           If (a)/(b)/(c) fail, write honest_verdict `blocked_<resource>` (e.g.
+           `blocked_fover_corpus_not_available` / `blocked_verify_module_import`) with
+           preconditions_checked populated, and EXIT.
+        1. Load the cached FoVer corpus (N >= 200 step-candidates with gold correct/incorrect
+           labels). Use the SAME ensemble scoring path as the frozen-0.9131 headline
+           (experiment_2837 / experiment_3430) so the operating point is comparable; cite the
+           upstream artifact ids you reuse in cited_upstream_artifacts.
+        2. Score every candidate with the ensemble. This produces a scalar per candidate.
+        3. Treat the ensemble as an ELIMINATION OPERATOR: eliminate every candidate whose
+           score falls on the "reject" side of a threshold tau. Sweep tau across its range.
+        4. For each tau compute, over the corpus:
+             - elimination_soundness(tau) = P(candidate RETAINED | candidate is gold-CORRECT)
+               = 1 - false_elimination_rate. LDT requires this == 1.0 (sound).
+             - elimination_informativeness(tau) = fraction of gold-INCORRECT candidates that
+               are eliminated (recall of rejection / wrong-set shrinkage).
+        5. Read off the operating point at the HIGHEST soundness the ensemble can sustain
+           (report informativeness at soundness >= 0.99 and >= 0.98 and >= 0.95). This is the
+           sound-elimination curve — the lattice-operator analogue of an ROC.
+        6. POSITIVE CONTROL: a RANDOM elimination operator that eliminates the same NUMBER of
+           candidates as the ensemble does at a chosen soundness target. Because random
+           elimination cannot preferentially spare correct candidates, its soundness at a
+           matched elimination COUNT is the chance baseline. The ensemble is a real lattice
+           operator ONLY if, at matched elimination count, its soundness materially exceeds
+           the random operator's (i.e. it eliminates wrong candidates while sparing correct
+           ones, which random cannot). Report both.
+        7. Apply the acceptance gate -> emit the terminal verdict.
+
+      REQUIRED ARTIFACT FIELDS (each with a `principle` note):
+        elimination_soundness_at_informativeness_curve:
+          principle: "The lattice-operator analogue of an ROC: informativeness as a function of soundness. LDT's lattice sits at soundness==1.0; how much can the ensemble eliminate while staying sound is THE measurement."
+        informativeness_at_soundness_0_99:
+          principle: "At near-LDT soundness (<=1% false-elimination of correct candidates), how much of the wrong-candidate set does the ensemble remove? Near 0 => a scorer, not a usable lattice operator on this domain."
+        false_elimination_rate_at_operating_point:
+          principle: "The direct soundness violation rate — how often the ensemble rules OUT a gold-correct candidate. LDT's whole guarantee is that this is 0; a non-zero floor here bounds how 'sound' the open-domain lattice can be."
+        random_control_soundness_at_matched_elimination_count:
+          principle: "Guards the degenerate null: if the ensemble's soundness does not exceed random elimination at the same elimination COUNT, the ensemble carries no real deductive (lattice) power — it is just deleting candidates. Positive control per the FALSE_NEGATIVE_RISK discipline."
+        ensemble_vs_random_soundness_margin:
+          principle: "The load-bearing number: (ensemble soundness - random soundness) at matched elimination count. >0 and material => the ensemble functions as a SOUND abstraction lattice on an open-ended domain; ~0 => LDT-style integration still needs the hand-built lattice."
+        n_candidates:
+          principle: "N>=200 so the soundness/informativeness rates are not small-sample noise (CLT minimum for percentage-point claims)."
+        cited_upstream_artifacts:
+          principle: "Records WHICH cached candidate set + ensemble path was reused (experiment_2837 / experiment_3430), with sha256, so the lattice-property numbers trace to the same substrate as the frozen-0.9131 headline."
+        preconditions_checked:
+          principle: "Records that the ensemble import + corpus + single-candidate score were verified before scaling; pre-empts the fabrication mode where the agent lacked the corpus and synthesized a curve."
+        inference_substrate:
+          principle: "Declares verifier_ensemble_against_cached_candidates so the linter applies the 1s floor and skips the live-LLM methodology check (no model is loaded)."
+        random_seed:
+          principle: "Determinism precondition: the random-elimination control + any tie-breaking must be reproducible for a third party to re-derive the margin."
+        reproducibility_checksum:
+          principle: "Content hash of (corpus id, ensemble path, N, seed, tau grid) catches silent drift between this run and any replication."
+        duration_s:
+          principle: "Re-scoring N candidates with the k=15 ensemble takes real wall-clock; implausibly short = fabrication signal (but the 1s verifier-scoring floor, not the 60s LLM floor, applies)."
+
+      FALSIFICATION GATE (acceptance):
+        - LATTICE-VIABLE (the ensemble IS a sound abstraction lattice on an open-ended
+          domain — the strongest result, validates Carnot's differentiated gap-fill):
+          at soundness >= 0.99 the ensemble removes a MATERIAL fraction of incorrect
+          candidates (informativeness_at_soundness_0_99 >= 0.30) AND
+          ensemble_vs_random_soundness_margin is materially > 0 at matched elimination count.
+          honest_verdict: `complete: ldt_gap_LATTICE_VIABLE_ensemble_sound_abstraction_inform<I>_soundmargin<M>`
+          principle: "The k=15 ensemble supplies LDT's two lattice properties without a hand-built lattice -> Carnot fills the open-domain gap LDT leaves; a deeper recursive-refiner integration is worth pursuing."
+        - LATTICE-WEAK (the ensemble is a scorer, not a sound lattice operator — EXPECTED-
+          PLAUSIBLE given the verifier is math-domain-bound): it CANNOT sustain high soundness
+          while eliminating (informativeness_at_soundness_0_99 < 0.30) OR
+          ensemble_vs_random_soundness_margin ~ 0 (no edge over random at matched count).
+          honest_verdict: `complete: ldt_gap_LATTICE_WEAK_ensemble_is_scorer_not_sound_lattice_inform<I>_soundmargin<M>`
+          principle: "LDT-style sound-abstraction integration still requires a hand-built lattice; the ensemble's value remains as a graded scorer (frozen-0.9131 AUROC), not a sound elimination operator. Honest-negative, bounds the transpilation thesis to closed domains."
+        - PARTIAL/mixed (sound but uninformative, or informative but not sound):
+          honest_verdict: `complete: ldt_gap_PARTIAL_<metrics>`.
+        - honest_verdict MUST start with a terminal prefix (`complete:`/`complete_`/`success:`/`passed:`/`shipped:`)
+          per CLAUDE.md Verdict Terminal-Prefix Discipline; or `blocked_<resource>` if a precondition failed.
+
+      DISCIPLINE: populate random_seed + reproducibility_checksum + preconditions_checked +
+      cited_upstream_artifacts (Adversarial-Verify + Pre-Launch + Inference-Substrate rules).
+      Report the REAL duration. Do NOT aggregate any artifact carrying flagged_adversarial:true.
+      Do NOT touch the frozen-0.9131 headline — this is a NEW lattice-property lens on the
+      SAME ensemble, not a re-measurement of the AUROC. This re-frame SUPERSEDES the
+      exp3821-class HRM/TRM latent-symbol-bridge probe (Huginn already settled that recursive
+      latents are non-decodable; re-reading HRM's would only re-confirm the DT-P3 negative).
