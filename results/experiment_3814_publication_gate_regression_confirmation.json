@@ -1,0 +1,157 @@
+{
+  "any_gate_regressed": false,
+  "cited_upstream_artifacts": [
+    {
+      "exists": true,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/scripts/publication_gate.py",
+      "random_seed": null,
+      "random_seeds_used": null,
+      "reproducibility_checksum": null,
+      "role": "gate_runner",
+      "sha256": "e69f55eb33295352f65e27d1586d5bfcadcde2988dbb5e870d39155de46640c4"
+    },
+    {
+      "exists": true,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/ops/north-star.md",
+      "random_seed": null,
+      "random_seeds_used": null,
+      "reproducibility_checksum": null,
+      "role": "gate_definition",
+      "sha256": "e288b001d2582b5f8af368df5ef458c334b750daefdef36ec9f707c61b62b973"
+    },
+    {
+      "exists": true,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_2850_fover_dual_condition_integrity_v4.json",
+      "random_seed": 42,
+      "random_seeds_used": [
+        42,
+        137,
+        271,
+        314,
+        1729
+      ],
+      "reproducibility_checksum": "b3d8a0ea0ed6180e0120eb909513436d2e0a43055fe09d096d57d93faf21c2c9",
+      "role": "g1_g4_headline_source",
+      "sha256": "b1beb0456398b3a0cc5c673ff40a6e192f514c084346a6467b8d0acd31028f93"
+    },
+    {
+      "exists": true,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/ops/publication_gate_state.json",
+      "random_seed": null,
+      "random_seeds_used": null,
+      "reproducibility_checksum": null,
+      "role": "g2_manual_state",
+      "sha256": "46fc9829af95ec5465a6adaf11ca507d92ef9eef7188520b09707a2c8e37ffa8"
+    },
+    {
+      "exists": true,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/ops/reproduction-runbook-fover-headline.md",
+      "random_seed": null,
+      "random_seeds_used": null,
+      "reproducibility_checksum": null,
+      "role": "g2_reproduction_runbook",
+      "sha256": "d06304a4186fc29c76536954f906c7e0cdf1f250e48217487b4be5bc55ff6145"
+    },
+    {
+      "exists": true,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/docs/technical-report.md",
+      "random_seed": null,
+      "random_seeds_used": null,
+      "reproducibility_checksum": null,
+      "role": "g3_technical_report_source",
+      "sha256": "f7c7832ddd26843f07a689a75ee563a1adf81effe571577c7fc4a1cd1bceee90"
+    },
+    {
+      "exists": true,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/docs/arxiv-paper/main.tex",
+      "random_seed": null,
+      "random_seeds_used": null,
+      "reproducibility_checksum": null,
+      "role": "g3_paper_source",
+      "sha256": "7ce70cb4407b60236756ad9abd1afc722d5110e33bf368cd46fe5d78a74af4ca"
+    }
+  ],
+  "duration_s": 0.106825,
+  "experiment": 3814,
+  "field_principles": {
+    "any_gate_regressed": "BARE bool -- surfaces any regression honestly for the operator.",
+    "cited_upstream_artifacts": "Provenance for the gate sources.",
+    "duration_s": "Wall-clock plausibility floor.",
+    "frozen_fover_auroc_unchanged": "BARE bool -- the frozen 0.9131 headline is unchanged.",
+    "g1_pass": "BARE bool -- headline measured (FoVer 0.9131, 5-seed, CI, adversarial-clean) still passes.",
+    "g2_pass": "BARE bool -- the independent CI reproducer still attests the headline within CI.",
+    "g3_pass": "BARE bool -- prose stays narrowing-clean.",
+    "g4_pass": "BARE bool -- headline numbers still trace to a primary artifact with random_seed + reproducibility_checksum.",
+    "gate_definitions_unchanged": "BARE bool -- no gate was redefined to show progress.",
+    "honest_verdict": "Terminal prefix; the regression-check outcome.",
+    "inference_substrate": "Runs the gate script and records booleans; no live model.",
+    "paper_ready": "BARE bool -- G1 and G2 and G3 and G4.",
+    "random_seed": "Determinism precondition.",
+    "reproducibility_checksum": "Content hash catches drift."
+  },
+  "frozen_fover_auroc": 0.9131,
+  "frozen_fover_auroc_unchanged": true,
+  "g1_pass": true,
+  "g2_pass": true,
+  "g3_pass": true,
+  "g4_pass": true,
+  "gate_definition_sha256_after": "e288b001d2582b5f8af368df5ef458c334b750daefdef36ec9f707c61b62b973",
+  "gate_definition_sha256_before": "e288b001d2582b5f8af368df5ef458c334b750daefdef36ec9f707c61b62b973",
+  "gate_definition_source": "/home/ianblenke/github.com/ianblenke/carnot/ops/north-star.md",
+  "gate_definitions_unchanged": true,
+  "headline_source_artifact": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_2850_fover_dual_condition_integrity_v4.json",
+  "honest_verdict": "complete: publication_gate_regression_confirmed_g1_g2_g3_g4_pass_paper_ready_true_frozen_fover_0.9131_unchanged_no_gate_redefined",
+  "inference_substrate": "aggregation_from_upstream_artifacts",
+  "paper_ready": true,
+  "preconditions": {
+    "executable": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+    "ok": true,
+    "publication_gate_script": "/home/ianblenke/github.com/ianblenke/carnot/scripts/publication_gate.py",
+    "publication_gate_script_exists": true,
+    "resolved_executable": "/usr/bin/python3.14",
+    "venv_python": true
+  },
+  "publication_gate_command": {
+    "command": [
+      "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+      "/home/ianblenke/github.com/ianblenke/carnot/scripts/publication_gate.py",
+      "--json"
+    ],
+    "returncode": 0,
+    "stderr": "",
+    "stdout": "{\n  \"paper_ready\": true,\n  \"gates\": {\n    \"G1\": {\n      \"pass\": true,\n      \"detail\": \"FoVer dual-condition AUROC artifact present (experiment_2850_fover_dual_condition_integrity_v4.json); CI reported=True\",\n      \"source\": \"experiment_2850_fover_dual_condition_integrity_v4.json\"\n    },\n    \"G2\": {\n      \"pass\": true,\n      \"detail\": \"reproducer confirmed: GitHub Actions workflow 'FoVer Headline Independent Reproducer' (.github/workflows/reproduce-fover-headline.yml), run 26725185125 on Carnot-EBM/carnot-ebm, 2026-05-31, conclusion=success. Clean ubuntu-latest runner, fresh CPU-only install from a clean checkout (non-operator environment), recomputed the FoVer headline AUROC via scripts/reproduce_fover_headline.py and asserted the published CIs: condition_A (production) AUROC in [0.9027, 0.9235] and learning_contribution in [0.0125, 0.0245] \\u2014 both PASS. This is a CI-run independent reproducer per the Phase-1 ship gate ('could be a teammate, a CI run, or an external user'). Internally further de-risked by exp3430 (fresh git worktree + venv) and the local run on 2026-05-31 (AUROC 0.9131 within CI). NOTE: G2 attests the FoVer verifier-ensemble headline reproduces; it does NOT attest the broader energy-descent existential claim, which remains an honest-negative (Route-1/Route-2 bounded). Run: https://github.com/Carnot-EBM/carnot-ebm/actions/runs/26725185125\"\n    },\n    \"G3\": {\n      \"pass\": true,\n      \"detail\": \"no retracted phrasings asserted as live claims\",\n      \"hits\": []\n    },\n    \"G4\": {\n      \"pass\": true,\n      \"detail\": \"experiment_2850_fover_dual_condition_integrity_v4.json: random_seed/seeds=True, reproducibility_checksum=True\",\n      \"source\": \"experiment_2850_fover_dual_condition_integrity_v4.json\"\n    }\n  },\n  \"unmet_gates\": [],\n  \"note\": \"Stable 4-condition gate (ops/north-star.md \\u00a72). Replaces the redefinable publication_blocker_count. Report unmet_gates, not a count.\"\n}\n"
+  },
+  "publication_gate_json": {
+    "gates": {
+      "G1": {
+        "detail": "FoVer dual-condition AUROC artifact present (experiment_2850_fover_dual_condition_integrity_v4.json); CI reported=True",
+        "pass": true,
+        "source": "experiment_2850_fover_dual_condition_integrity_v4.json"
+      },
+      "G2": {
+        "detail": "reproducer confirmed: GitHub Actions workflow 'FoVer Headline Independent Reproducer' (.github/workflows/reproduce-fover-headline.yml), run 26725185125 on Carnot-EBM/carnot-ebm, 2026-05-31, conclusion=success. Clean ubuntu-latest runner, fresh CPU-only install from a clean checkout (non-operator environment), recomputed the FoVer headline AUROC via scripts/reproduce_fover_headline.py and asserted the published CIs: condition_A (production) AUROC in [0.9027, 0.9235] and learning_contribution in [0.0125, 0.0245] \u2014 both PASS. This is a CI-run independent reproducer per the Phase-1 ship gate ('could be a teammate, a CI run, or an external user'). Internally further de-risked by exp3430 (fresh git worktree + venv) and the local run on 2026-05-31 (AUROC 0.9131 within CI). NOTE: G2 attests the FoVer verifier-ensemble headline reproduces; it does NOT attest the broader energy-descent existential claim, which remains an honest-negative (Route-1/Route-2 bounded). Run: https://github.com/Carnot-EBM/carnot-ebm/actions/runs/26725185125",
+        "pass": true
+      },
+      "G3": {
+        "detail": "no retracted phrasings asserted as live claims",
+        "hits": [],
+        "pass": true
+      },
+      "G4": {
+        "detail": "experiment_2850_fover_dual_condition_integrity_v4.json: random_seed/seeds=True, reproducibility_checksum=True",
+        "pass": true,
+        "source": "experiment_2850_fover_dual_condition_integrity_v4.json"
+      }
+    },
+    "note": "Stable 4-condition gate (ops/north-star.md \u00a72). Replaces the redefinable publication_blocker_count. Report unmet_gates, not a count.",
+    "paper_ready": true,
+    "unmet_gates": []
+  },
+  "random_seed": 3814,
+  "reproducibility_checksum": "b7addaa51d43df7c770dad0e7fceecf7b09dc0e11a3b8036802928aa4f34e461",
+  "schema": "carnot.publication_gate_regression_confirmation.v1",
+  "spec_refs": [
+    "REQ-PUBLISH-3814",
+    "SCENARIO-PUBLISH-3814"
+  ]
+}

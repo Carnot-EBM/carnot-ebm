@@ -56,3 +56,8 @@ Per Deep Think P3 / Anomaly-Escalation (scripts/anomaly_escalation.py). Each ent
 - Flagged a FRAME-VIOLATING ANOMALY (NOT auto-reconciled — human triage: dead-end or breadcrumb?)
   - INVARIANT regression: auroc_within_frozen_ci=True drifted from frozen 0.9131
 - artifact: results/experiment_3778_fr11_self_learning_v18_tier2_constraint_memory.json
+
+## experiment_3813_fr11_v21_fast_path_robustness.json
+- Flagged a FRAME-VIOLATING ANOMALY (NOT auto-reconciled — human triage: dead-end or breadcrumb?)
+  - INVARIANT regression: effective_auroc_in_frozen_ci=False drifted from frozen 0.9131
+- artifact: results/experiment_3813_fr11_v21_fast_path_robustness.json
