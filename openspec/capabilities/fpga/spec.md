@@ -5012,6 +5012,83 @@ inference checks.
 
 ---
 
+### REQ-HW-3784
+
+**Title:** KV260 opportunistic terminal-state continuity audit confirms .340 still holds after .345 reconfirmation
+
+**Description:**
+Experiment 3784 MUST perform a light, documentation-only KV260 terminal-state
+continuity audit after Exp 3709 established the non-fabricated board-latency
+terminal transcript and Exps 3730, 3741, 3762, and 3774 re-confirmed it
+through milestone .345. The per-milestone hardware mandate is relaxed to
+opportunistic, so this audit MUST only check whether the terminal state still
+holds. The ONLY permitted KV260 precondition is SSH reachability:
+
+`ssh -o ConnectTimeout=5 -o BatchMode=yes kria 'true'`
+
+The host SD-card device-node precondition is permanently retired and MUST NOT be
+used. If the SSH precondition exits non-zero, the experiment MUST stop after
+writing an honest blocked artifact with
+`honest_verdict="blocked_kv260_ssh_unreachable"` and MUST NOT run `xmutil` or
+any other board operation. If SSH is reachable, the experiment MUST run
+`ssh kria 'xmutil listapps'` to confirm whether a Carnot accelerator overlay is
+present/loadable. If `xmutil` reports that root privileges are required, the
+experiment MAY retry the same list operation as `sudo xmutil listapps` over SSH
+while preserving the original non-sudo probe. The artifact MUST record whether
+the .340 terminal state still holds, or note a regression for the operator when
+the accelerator overlay is not listed.
+
+The audit is a hardware smoke check only. It MUST NOT claim live model
+inference, thermalization, equilibrium sampling, or hardware speedup.
+
+**Acceptance criteria:**
+- `results/experiment_3784_kv260_opportunistic_continuity_audit.json` is
+  generated.
+- The artifact includes `honest_verdict`, `inference_substrate`,
+  `kv260_ssh_reachable`, `terminal_state_holds`, `preconditions_checked`,
+  `random_seed`, `reproducibility_checksum`, and `duration_s`.
+- The artifact includes field-principle annotations for each required field,
+  documenting why the value exists while the required field stores the bare
+  value.
+- `inference_substrate` MUST be exactly `"hardware_smoke"` and MUST NOT include
+  GGUF, CUDA, or live-inference markers.
+- `preconditions_checked` MUST show that the SSH reachability check ran before
+  any `xmutil` operation.
+- If KV260 SSH is unreachable, `honest_verdict` MUST be exactly
+  `"blocked_kv260_ssh_unreachable"`, `kv260_ssh_reachable=false`, and no overlay
+  command may run.
+- If KV260 SSH is reachable and a `carnot_ising` overlay appears in the
+  `xmutil listapps` transcript, `terminal_state_holds=true` and
+  `honest_verdict` MUST be exactly
+  `"complete: kv260_terminal_state_holds_ssh_reachable_accelerator_loadable_opportunistic_audit"`.
+- If KV260 SSH is reachable but no Carnot overlay appears, the artifact MUST
+  record `terminal_state_holds=false` and an operator regression note.
+- No implementation or test path may invoke `/dev/mmcblk*`, `/dev/disk*`, a
+  host storage-slot check, a latency-harness rerun, or a live-inference command.
+
+**Implementation status:** Pending (Exp 3784)
+
+---
+
+### SCENARIO-HW-3784
+
+**Scenario:** KV260 opportunistic audit records terminal, overlay-regressed, and SSH-blocked states honestly.
+
+**Given:** KV260 terminal state was established by Exp 3709 and re-confirmed by
+Exps 3730, 3741, 3762, and 3774, with the hardware mandate now opportunistic.
+**When:** Experiment 3784 runs the SSH precondition and, only when reachable,
+checks `xmutil listapps` over SSH for a Carnot accelerator overlay.
+**Then:** It writes
+`results/experiment_3784_kv260_opportunistic_continuity_audit.json` with the
+terminal or blocked verdict, bare required values, field principles,
+deterministic seed, checksum, duration, and no retired host-storage or live
+inference checks.
+
+**Implementation status:** Pending (Exp 3784)
+
+
+---
+
 ### REQ-HW-3687
 
 **Title:** PolarFire continuity v24 MUST confirm live SSH continuity for milestone .337
