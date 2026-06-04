@@ -16,7 +16,7 @@
 | `OUTRIGHT_FAKE` | 0 |
 
 ### FLAGGED — operator action recommended
-- `python/carnot/verify/ast_structure_verifier.py` — **ADVERSARIAL_GAMING**
+- `python/carnot/verify/ast_structure_verifier.py` — **ADVERSARIAL_GAMING** — ⚠️ **FALSE POSITIVE (verified 2026-06-03, do NOT act).** The gemini reviewer's smoking gun — a hardcoded path `...|with| @results/experiment_2101_interwhen.json)` allegedly in the `_looks_like_python` regex — DOES NOT EXIST in the source (`grep` for `experiment_2101` / `interwhen` / `@results` returns nothing; the regex ends `...|finally:|with|@\w)`). The auditor hallucinated its evidence. The file is a clean **HONEST_HEURISTIC → KEEP** (honest docstring, `ast.parse` + bracket-balance, no fake model inference). A Layer-1.5 integrity guard was added to `scripts/verifier_authenticity_audit.py` so future runs auto-void hallucinated-evidence flags.
 
 ---
 
