@@ -35032,102 +35032,52 @@ milestones:
     deliverable: results/experiment_3764_capstone_v344.json
     result: 'PARTIAL_ARTIFACT: exp3764 honestly reports missing upstreams'
 - id: 2026.06.345
-  title: 'PRODUCT-BANKING RECOVERY -- the .344 convergence/product-banking agenda did NOT land: a malformed-YAML poison in
-    research-complete.yaml (an unquoted embedded colon in an exp3742 result value) failed test_public_docs_* and triggered
-    a WHOLE-MILESTONE SKIP cascade (operational_retro_2026_06_344.json: 0 experiments completed). The YAML was fixed post-hoc
-    (commit 1726bfbb2) but only exp3762/3763/3764 left partial artifacts; the substantive tasks exp3754-3761 (Thesis-A reconcile,
-    G2 local reproducer, G3 narrowing lint, pkg/CLI/MCP E2E, publish checklist, certified abstention, FR-11 v17) NEVER RAN.
-    .345 RE-EXECUTES that agenda -- these are UNSTARTED work skipped by infra, NOT doomed reruns. (A) recover the record (archive
-    .344 honestly + reconcile the DEFINITIVE Thesis-A close); (B) MECHANIZE the publication gates locally (G2 local reproducer
-    + G3 narrowing lint extend+wire); (C) BANK the verifier toward the Phase-1 SOFTWARE-ship gate (pkg/CLI/MCP E2E + mirror/publish
-    checklist) and ship a DEPLOYABLE CERTIFIED abstention operating point on the proven 0.9131 discriminator; (D) continue
-    FR-11 self-learning on the LIVE verifier, position the verifier product honestly vs PRM SOTA, confirm KV260 terminal.
-    INVARIANTS: paper_ready stays TRUE (G1-G4); FoVer 0.9131 frozen; both energy routes stay bounded (no re-grind); the next-Phase-3-thesis
-    decision stays an operator-seeding surface (exp3763 already handed the menu; the loop will NOT self-seed). The agent never
-    edits operator-curated docs, never triggers CI, never publishes, never pushes.'
+  title: "V345 product-banking recovery fully landed and archived"
   doc: openspec/change-proposals/research-roadmap-vNEXT.md
   completed: '2026-06-04'
-  finding: See conductor log for per-experiment results.
+  finding: "FULLY-LANDED MILESTONE: .345 had 11/11 tasks completed. The .344 skip cascade was recovered, Thesis-A closure was restored, G2/G3 gates were mechanized, package/CLI/MCP/distribution surfaces passed, the certified abstention point shipped, FR-11 v17 ran, PRM positioning landed, and KV260 terminal state held. The verifier product banked for ship, paper_ready TRUE (G1-G4), frozen FoVer 0.9131 unchanged, and both energy routes stayed bounded. .346 convergence agenda is active: settle P1 discrete-search v3, bank the verifier product surface, build Anomaly-Escalation, scaffold EDLM, continue self-learning, and re-grind nothing already bounded."
   tasks:
   - id: exp3765-archive-v344-activate-v345
-    title: 'Archive milestone .344 HONESTLY (it produced ZERO completed experiments -- a malformed-YAML poison in research-complete.yaml
-      SKIP-cascaded the whole milestone per operational_retro_2026_06_344.json; only exp3762/3763/3764 left partial artifacts,
-      the substantive exp3754-3761 never ran) and activate .345 (PRODUCT-BANKING RECOVERY: re-execute the un-landed .344 agenda
-      -- reconcile the definitive Thesis-A close, mechanize the publication gates, bank the verifier toward Phase-1 ship +
-      a certified abstention point, continue self-learning).'
+    title: "Archive .344 and activate .345 recovery"
     deliverable: results/experiment_3765_archive_v344_activate_v345.json
-    result: OK (conductor)
+    result: "COMPLETE: archived .344 zero-experiment skip cascade honestly and activated .345 recovery"
   - id: exp3766-thesis-a-definitive-reconcile
-    title: 'Reconcile the DEFINITIVE Thesis-A close into the research record (re-do the SKIPPED .344 exp3755): ingest the
-      operator''s direct runs (part-(a) PASS / discriminative; part-(b) BOUNDED at scale / not-generative), issue a corrigendum
-      that the in-loop exp3745-3750 chain is SUPERSEDED/OBE, mark Thesis A bounded in the phase3 thesis menu, and cite EBT-Policy
-      (arXiv:2510.27545) as the field-consistent boundary. Records the bound; does NOT add energy-as-generator to the exclusion
-      manifest (a finding, not a doomed-rerun id).'
+    title: "Thesis-A definitive reconcile restored"
     deliverable: results/experiment_3766_thesis_a_definitive_reconcile.json
-    result: OK (conductor)
+    result: "COMPLETE: Thesis-A reconciled as PASS/discriminative for part-a and BOUNDED/not-generative for part-b"
   - id: exp3767-g2-mechanical-reproducer
-    title: 'G2 mechanical reproducer (re-do the SKIPPED .344 exp3756): commit a standalone, dependency-light script that reproduces
-      the FoVer headline AUROC 0.9131 WITHIN CI95 [0.9027, 0.9235] in the current .venv. The GitHub Actions reproducer already
-      closed G2 externally (run 26725185125, 2026-05-31); this hardens the LOCAL ship-gate path and emits auroc_in_ci95 (BARE
-      bool) as the gate for the certified abstention point. Does NOT move the frozen headline.'
+    title: "G2 local mechanical reproducer"
     deliverable: results/experiment_3767_g2_mechanical_reproducer.json
-    result: OK (conductor)
+    result: "COMPLETE: local FoVer reproducer landed within CI with AUROC 0.913134; frozen headline unchanged"
   - id: exp3768-g3-narrowing-lint
-    title: 'G3 narrowing lint (re-do the SKIPPED .344 exp3757): EXTEND + WIRE the EXISTING scripts/paper_v6_narrowing_lint.py
-      (it exists but is NOT pre-commit-wired and lacks the 12th retraction) -- ADD the 12th retracted phrasing (''energy-as-generator
-      works/scales'' -- now that Thesis A is bounded), extend the scan to results/paper_v6_* artifacts, and add the missing
-      .pre-commit-config.yaml stanza. Mechanizes G3 from honor-discipline to an ENFORCED lint. Do NOT regenerate the file
-      from scratch.'
+    title: "G3 narrowing lint wired"
     deliverable: results/experiment_3768_g3_narrowing_lint.json
-    result: OK (conductor)
+    result: "COMPLETE: narrowing lint extended, twelfth retraction added, pre-commit wired"
   - id: exp3769-package-cli-mcp-e2e-smoke
-    title: 'Phase-1 SHIP gate (re-do the SKIPPED .344 exp3758): package + CLI + MCP E2E smoke. Build/install the carnot-ebm
-      package, run the verify-repair pipeline end-to-end on a tiny example, and hit the MCP score_candidates tool via a REAL
-      protocol exchange. Confirms >=1 external integration surface works E2E (the PRD Phase-1 software-ship gate, NOT gated
-      on paper/hardware). Uses a small CPU model by default; a SOTA GGUF is optional via cached_sota_pair().'
+    title: "Package CLI MCP E2E smoke"
     deliverable: results/experiment_3769_package_cli_mcp_e2e_smoke.json
-    result: OK (conductor)
+    result: "COMPLETE: package import, pipeline, protocol exchange, and CLI smoke passed"
   - id: exp3770-distribution-mirror-publish-checklist
-    title: 'Distribution-mirror readiness audit + OPERATOR-ONLY publish checklist (re-do the SKIPPED .344 exp3759, Decentralization
-      Rule 3): verify the PyPI publish workflow + HuggingFace mirror + IPFS CID plan are documented and ready, and emit a
-      checklist of the steps the OPERATOR (not the agent) performs to publish. Does NOT publish anything (Operator-Only External
-      Publication discipline).'
+    title: "Distribution mirror and publish checklist"
     deliverable: results/experiment_3770_distribution_mirror_publish_checklist.json
-    result: OK (conductor)
+    result: "COMPLETE: PyPI workflow, HF mirror, IPFS plan, and operator-only publish checklist ready; agent published nothing"
   - id: exp3771-certified-abstention-operating-point
-    title: 'Ship a DEPLOYABLE certified abstention operating point (re-do the SKIPPED .344 exp3760) on the proven 0.9131 step-error
-      discriminator: build the risk-coverage (AURC) curve and SELECT a threshold at a fixed risk target via conformal / PAC-Bayes
-      certification. Forward from .340''s risk-coverage CHARACTERIZATION to a deployable, CERTIFIED operating point. Gated
-      on exp3767 auroc_in_ci95==true (no point certifying a point if the headline does not reproduce).'
+    title: "Certified abstention operating point"
     deliverable: results/experiment_3771_certified_abstention_operating_point.json
-    result: OK (conductor)
+    result: "COMPLETE: deployable certified abstention point shipped at threshold 0.733216 with coverage 0.998218"
   - id: exp3772-fr11-self-learning-v17-verifier-precision-tracker
-    title: 'FR-11 continuous self-learning v17 (re-do the SKIPPED .344 exp3761) -- Tier-1 ONLINE per-verifier precision tracker
-      on the LIVE verifier product (pivoted off the dead EBT-stabilizer lineage): for the 4 FoVer-scoring verifiers, track
-      per-verifier precision/recall online across the corpus, upweight high-precision verifiers, and confirm the learned weighting
-      holds the +0.0185 memory-ablation contribution. CPU counter updates only (the Tier-1 hardware path, <1us/update). The
-      self-learning experiment mandated by research-program.md.'
+    title: "FR-11 v17 verifier precision tracker"
     deliverable: results/experiment_3772_fr11_self_learning_v17_verifier_precision_tracker.json
-    result: OK (conductor)
+    result: "COMPLETE: Tier-1 verifier precision tracker preserved the memory contribution on the verifier product"
   - id: exp3773-verifier-product-prm-positioning
-    title: 'Verifier-product HONEST positioning vs PRM SOTA: build a structured comparison of Carnot''s discriminative 0.9131
-      step-error ensemble against the generative-PRM and label-free-PRM frontier (GenPRM, ThinkPRM, uPRM, ProcessBench reasoning-LLM
-      verifiers), stating PLAINLY where Carnot leads (cheap, objective, energy-grounded CPU scoring + a CERTIFIED abstention
-      operating point) and where it does NOT (raw F1 vs a 32B reasoning verifier; OOD generalization -- settled domain-bound).
-      A paper/product positioning deliverable; NO generalization re-test.'
+    title: "Verifier product PRM positioning"
     deliverable: results/experiment_3773_verifier_product_prm_positioning.json
-    result: OK (conductor)
+    result: "COMPLETE: verifier product positioned honestly versus PRM SOTA; peer numbers treated as reported"
   - id: exp3774-kv260-opportunistic-continuity-audit
-    title: KV260 opportunistic continuity audit -- confirm terminal state holds (SSH-reachable, accelerator overlay loadable).
-      Documentation-only; the per-milestone hardware mandate was relaxed to opportunistic at .340 (GateMate/PolarFire stay
-      opportunistic future-work).
+    title: "KV260 opportunistic continuity audit"
     deliverable: results/experiment_3774_kv260_opportunistic_continuity_audit.json
-    result: OK (conductor)
+    result: "COMPLETE: KV260 terminal state held; reachable and overlay loadable"
   - id: exp3775-capstone-v345
-    title: 'Capstone .345 -- aggregate the product-banking RECOVERY milestone: the .344 SKIP-cascade recovered (archive +
-      Thesis-A definitive reconcile restored), the publication gates mechanized (G2 local reproducer + G3 narrowing lint),
-      the verifier banked toward Phase-1 ship (pkg/CLI/MCP E2E + mirror checklist), a CERTIFIED abstention point shipped,
-      FR-11 v17 on the live verifier, the verifier product positioned vs PRM SOTA, and KV260 terminal confirmed. paper_ready
-      MUST stay TRUE; frozen 0.9131 unchanged; both energy routes stay bounded.'
+    title: "Capstone .345"
     deliverable: results/experiment_3775_capstone_v345.json
-    result: OK (conductor)
+    result: "COMPLETE: capstone .345 aggregated all 11/11 tasks; paper_ready TRUE, FoVer 0.9131 frozen, both energy routes bounded"

@@ -195,7 +195,7 @@ tasks:
         ebt_best:
           principle: "max EBT accuracy over the discrete-search decodes (beam / energy-argmin) -- the energy-as-generator signal under on-manifold discrete search."
         adjudication:
-          principle: "BARE string in {decode_artifact_bounded, fundamental_causal_inductive_bias_gap, inconclusive_positive_control_failed} -- the milestone-defining mechanistic verdict."
+          principle: "BARE string in {{decode_artifact_bounded, fundamental_causal_inductive_bias_gap, inconclusive_positive_control_failed}} -- the milestone-defining mechanistic verdict."
         n_train:
           principle: "BARE int -- MUST be 40000 (the diagnosed-fixed value); records that the starved-control root cause was addressed."
         per_method_accuracies:
@@ -407,8 +407,8 @@ tasks:
       negatives the loop auto-reconciled).
       TASK:
         1. Write scripts/anomaly_escalation_classifier.py: given an experiment artifact (honest_verdict +
-           optional prior-expectation/gate metadata), classify it as one of {clean_bounded_negative,
-           frame_violating_anomaly, clean_positive}. Heuristic, transparent rules (NOT an LLM call): a negative
+           optional prior-expectation/gate metadata), classify it as one of {{clean_bounded_negative,
+           frame_violating_anomaly, clean_positive}}. Heuristic, transparent rules (NOT an LLM call): a negative
            whose verdict matches a declared/expected kill-gate or a known-bounded lineage -> clean_bounded_negative
            (auto-reconcile, as today); a negative that CONTRADICTS a stated assumption, or a result whose
            direction/magnitude is far outside the experiment's own predicted envelope, or a positive-control
@@ -722,8 +722,8 @@ tasks:
       negative (the .344 capstone-confusion guard).
       TASK: summarize the milestone:
         (1) the LAST energy-existential question adjudicated -- exp3777 P1 discrete-search v3: report the
-            adjudication value {decode_artifact_bounded | fundamental_causal_inductive_bias_gap |
-            inconclusive_positive_control_failed | blocked_*} AND positive_control_passed. Be precise: a null
+            adjudication value {{decode_artifact_bounded | fundamental_causal_inductive_bias_gap |
+            inconclusive_positive_control_failed | blocked_*}} AND positive_control_passed. Be precise: a null
             'FUNDAMENTAL' is only valid if positive_control_passed=true; an inconclusive/blocked outcome means the
             mechanism is still open (hand to operator), NOT that energy-as-generator is newly disproven (it was
             already bounded from part-b).
@@ -749,7 +749,7 @@ tasks:
           principle: "Terminal prefix; the milestone's one-line outcome."
         inference_substrate: "aggregation_from_upstream_artifacts (principle: a capstone reads upstream JSON, runs no live model)."
         p1_adjudication:
-          principle: "The exp3777 verdict {decode_artifact_bounded | fundamental | inconclusive | blocked} -- the milestone-defining mechanistic result."
+          principle: "The exp3777 verdict {{decode_artifact_bounded | fundamental | inconclusive | blocked}} -- the milestone-defining mechanistic result."
         p1_positive_control_passed:
           principle: "BARE bool -- whether the AR positive control reached >=0.3; a null 'FUNDAMENTAL' is invalid without it (the v1/v2 lesson)."
         energy_as_generator_still_bounded:
