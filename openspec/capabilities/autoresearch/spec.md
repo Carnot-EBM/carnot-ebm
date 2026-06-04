@@ -3565,3 +3565,43 @@ positive-control failure
 **When** the tuned classifier evaluates the artifact
 **Then** it classifies the artifact as `frame_violating_anomaly` and still only
 recommends human escalation without relaxing verification.
+
+### REQ-AUTO-018: Recommend-Only Anomaly Escalation Advisory Hook
+
+The autoresearch system SHALL provide a standalone advisory wrapper around the
+tuned Exp 3802 anomaly-escalation classifier. The wrapper SHALL expose a pure
+`classify_negative(artifact_or_verdict)` function returning only
+`recommendation`, `reason`, and `frame_violation`, where `recommendation` is
+one of `auto_reconcile` or `escalate_to_human`. It SHALL call the tuned
+classifier, SHALL have no side effects, and MUST NOT relax verification, edit
+artifacts, prune research state, or modify `scripts/research_conductor.py`.
+
+The Exp 3809 workflow SHALL validate the wrapper by replaying the Exp 3791/3802
+historical labeled sample with at least 30 artifacts. It SHALL report a
+confusion matrix, false-escalation rate for clean bounded negatives, recall on
+frame-violating anomalies, upstream artifact provenance, deterministic checksum,
+and `never_relaxes_verification=true` in
+`results/experiment_3809_anomaly_escalation_advisory_hook.json`. The workflow
+SHALL update only the conductor-hook change proposal, describing where an
+operator may call the advisory in the reconciliation path.
+It SHALL leave the actual conductor unmodified.
+
+#### SCENARIO-AUTO-015: Advisory Wrapper Replays Tuned Classifier Without Relaxing Verification
+
+**Given** the tuned Exp 3802 classifier artifact, the Exp 3791/3802 historical
+sample, and a clean bounded negative artifact
+**When** `classify_negative` evaluates the clean negative
+**Then** it recommends `auto_reconcile`, reports `frame_violation=false`, and
+does not recommend any verification relaxation.
+
+**Given** a P1 v1 or P1 v2 frame-violating positive-control failure artifact
+**When** `classify_negative` evaluates the anomaly
+**Then** it recommends `escalate_to_human`, reports `frame_violation=true`, and
+does not recommend any verification relaxation.
+
+**Given** the Exp 3791/3802 labeled replay corpus
+**When** the Exp 3809 workflow replays the advisory wrapper
+**Then** the artifact reports at least 30 replay negatives, false-escalation
+rate at most 0.2, frame-violating recall 1.0, `conductor_unmodified=true`,
+`integration_proposal_emitted=true`, upstream artifact provenance, no live-model
+markers, and a terminal verdict that records recommend-only wiring readiness.
