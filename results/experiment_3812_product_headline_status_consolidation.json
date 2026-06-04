@@ -1,0 +1,169 @@
+{
+  "artifact_provenance_status": [
+    {
+      "checksum_present": true,
+      "critical_flag_kinds": [
+        "TAUTOLOGY"
+      ],
+      "exists": true,
+      "experiment_id": 3798,
+      "live_adversarial_recheck": "CRITICAL",
+      "n": 30,
+      "seed_present": true,
+      "source_artifact": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_3798_g4_product_headline_restoration.json",
+      "stamped_flagged_adversarial": true,
+      "substrate": "live_llm_inference"
+    },
+    {
+      "checksum_present": true,
+      "critical_flag_kinds": [],
+      "exists": true,
+      "experiment_id": 3799,
+      "live_adversarial_recheck": "clean",
+      "n": null,
+      "seed_present": true,
+      "source_artifact": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_3799_product_headline_provenance_reconfirmation.json",
+      "stale_exp2090_g4_stamp": true,
+      "stamped_flagged_adversarial": null,
+      "substrate": "aggregation_from_upstream_artifacts"
+    },
+    {
+      "checksum_present": true,
+      "critical_flag_kinds": [
+        "DURATION_TOO_SHORT"
+      ],
+      "exists": true,
+      "experiment_id": 2090,
+      "live_adversarial_recheck": "CRITICAL",
+      "n": 50,
+      "seed_present": true,
+      "source_artifact": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_2090_crane_humaneval.json",
+      "stamped_flagged_adversarial": null,
+      "substrate": null
+    }
+  ],
+  "cited_upstream_artifacts": [
+    {
+      "exists": true,
+      "experiment_id": 3798,
+      "live_adversarial_recheck": "CRITICAL",
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_3798_g4_product_headline_restoration.json",
+      "random_seed": 42,
+      "reproducibility_checksum": "a854c6f82908fec3"
+    },
+    {
+      "exists": true,
+      "experiment_id": 3799,
+      "live_adversarial_recheck": "clean",
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_3799_product_headline_provenance_reconfirmation.json",
+      "random_seed": {
+        "exp2090": 42,
+        "exp3798": 42
+      },
+      "reproducibility_checksum": {
+        "exp2090": "bfb0acdb53773a49",
+        "exp3798": "a854c6f82908fec3"
+      }
+    },
+    {
+      "exists": true,
+      "experiment_id": 2090,
+      "live_adversarial_recheck": "CRITICAL",
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_2090_crane_humaneval.json",
+      "random_seed": 42,
+      "reproducibility_checksum": "bfb0acdb53773a49"
+    }
+  ],
+  "code_repair_supports_headline": false,
+  "crane_supports_headline": false,
+  "doc_proposal_emitted_not_curated_edit": true,
+  "doc_proposal_path": "/home/ianblenke/github.com/ianblenke/carnot/docs/research-notes/product-headline-status-doc-proposal-20260604.md",
+  "duration_s": 0.049042,
+  "experiment": 3812,
+  "field_principles": {
+    "cited_upstream_artifacts": "Provenance for Exp 3798, Exp 3799, and Exp 2090.",
+    "code_repair_supports_headline": "BARE bool, false; the Exp 3798 rerun delta is 0.0pp and cannot support the old product headline.",
+    "crane_supports_headline": "BARE bool, false; Exp 2090 is critical on live artifact re-check despite the stale Exp 3799 stamp.",
+    "doc_proposal_emitted_not_curated_edit": "BARE bool, true; a proposal document is emitted while curated docs are untouched.",
+    "duration_s": "Wall-clock plausibility floor.",
+    "honest_verdict": "Terminal prefix; the status-recording outcome.",
+    "inference_substrate": "Provenance aggregation plus live artifact re-check; no live model run.",
+    "operator_curated_doc_unedited": "BARE bool, true; operator-curated docs were not edited.",
+    "product_headline_recommendation": "BARE string in {stays_demoted, restorable_via_operator_gpu_rerun}.",
+    "product_headline_status_table": "Per-number source, sample size, seed/checksum presence, source substrate, live re-check status, G4/pass support decision, and why.",
+    "random_seed": "Determinism precondition.",
+    "reproducibility_checksum": "Content hash catches drift.",
+    "sole_defensible_headline": "BARE string; FoVer 0.9131 with G1-G4 is the only defensible headline."
+  },
+  "honest_verdict": "complete: product_headline_status_recorded_code_repair_false_crane_false_sole_defensible_fover_0.9131_stays_demoted_doc_proposal_emitted_operator_curated_doc_unedited",
+  "inference_substrate": "aggregation_from_upstream_artifacts",
+  "operator_curated_doc_unedited": true,
+  "operator_restore_path": "A clean operator-run GPU HumanEval rerun for CRANE or code repair, with full seed/checksum provenance and clean live artifact verification, is the only path to restore a product headline.",
+  "preconditions": {
+    "adversarial_verify_importable": true,
+    "executable": "/usr/bin/python3.14",
+    "ok": false,
+    "summarize_artifact_importable": true,
+    "venv_python": false
+  },
+  "product_headline_recommendation": "stays_demoted",
+  "product_headline_status_table": [
+    {
+      "checksum_present": true,
+      "g4_pass": false,
+      "live_adversarial_recheck": "CRITICAL",
+      "n": 30,
+      "number": "exp3798_code_repair_rerun_delta_0.0pp",
+      "seed_present": true,
+      "source_artifact": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_3798_g4_product_headline_restoration.json",
+      "substrate": "live_llm_inference",
+      "why": "exp3798 rerun reproduced delta=0.0pp; the historical +18pp product headline did not survive, so code repair does not support a headline"
+    },
+    {
+      "checksum_present": true,
+      "g4_pass": false,
+      "live_adversarial_recheck": "CRITICAL",
+      "n": 50,
+      "number": "exp2090_crane_plus15pp",
+      "seed_present": true,
+      "source_artifact": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_2090_crane_humaneval.json",
+      "substrate": null,
+      "why": "exp3799's stale exp2090_g4_pass=true stamp is overridden by live CRITICAL re-check; substrate=None and duration_s=0.009 are not credible support for the 50-problem HumanEval product headline"
+    }
+  ],
+  "publication_gate_state": {
+    "gates": {
+      "G1": {
+        "detail": "FoVer dual-condition AUROC artifact present (experiment_2850_fover_dual_condition_integrity_v4.json); CI reported=True",
+        "pass": true,
+        "source": "experiment_2850_fover_dual_condition_integrity_v4.json"
+      },
+      "G2": {
+        "detail": "reproducer confirmed: GitHub Actions workflow 'FoVer Headline Independent Reproducer' (.github/workflows/reproduce-fover-headline.yml), run 26725185125 on Carnot-EBM/carnot-ebm, 2026-05-31, conclusion=success. Clean ubuntu-latest runner, fresh CPU-only install from a clean checkout (non-operator environment), recomputed the FoVer headline AUROC via scripts/reproduce_fover_headline.py and asserted the published CIs: condition_A (production) AUROC in [0.9027, 0.9235] and learning_contribution in [0.0125, 0.0245] \u2014 both PASS. This is a CI-run independent reproducer per the Phase-1 ship gate ('could be a teammate, a CI run, or an external user'). Internally further de-risked by exp3430 (fresh git worktree + venv) and the local run on 2026-05-31 (AUROC 0.9131 within CI). NOTE: G2 attests the FoVer verifier-ensemble headline reproduces; it does NOT attest the broader energy-descent existential claim, which remains an honest-negative (Route-1/Route-2 bounded). Run: https://github.com/Carnot-EBM/carnot-ebm/actions/runs/26725185125",
+        "pass": true
+      },
+      "G3": {
+        "detail": "no retracted phrasings asserted as live claims",
+        "hits": [],
+        "pass": true
+      },
+      "G4": {
+        "detail": "experiment_2850_fover_dual_condition_integrity_v4.json: random_seed/seeds=True, reproducibility_checksum=True",
+        "pass": true,
+        "source": "experiment_2850_fover_dual_condition_integrity_v4.json"
+      }
+    },
+    "note": "Stable 4-condition gate (ops/north-star.md \u00a72). Replaces the redefinable publication_blocker_count. Report unmet_gates, not a count.",
+    "paper_ready": true,
+    "unmet_gates": []
+  },
+  "random_seed": 3812,
+  "reproducibility_checksum": "ea9742d1daf35a146119f36afa6a1fe79af80e25865c001cf47573c118dc800b",
+  "schema": "carnot.product_headline_status_consolidation.v1",
+  "sole_defensible_headline": "FoVer methods headline 0.9131 (G1-G4 pass via publication_gate.py)",
+  "spec_refs": [
+    "REQ-PUBLISH-3812",
+    "SCENARIO-PUBLISH-3812"
+  ],
+  "technical_report_unedited_assert": true
+}
