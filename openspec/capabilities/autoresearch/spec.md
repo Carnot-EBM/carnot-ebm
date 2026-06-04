@@ -3470,3 +3470,41 @@ without hard-coding a success verdict
 **And** success requires drift detection, transient reset, SHA256 persistence
 round-trip, no deploy collapse, distinct pass-rate and true-accuracy arrays,
 and maintained ensemble quality.
+
+### REQ-AUTO-015: Advisory Anomaly-Escalation Classifier
+
+The autoresearch system SHALL provide a standalone, deterministic classifier
+(`scripts/anomaly_escalation_classifier.py`) that reads an experiment artifact's
+`honest_verdict` and optional prior-expectation / kill-gate metadata and returns
+one of:
+
+- `clean_bounded_negative`
+- `frame_violating_anomaly`
+- `clean_positive`
+
+The classifier SHALL treat a negative as `clean_bounded_negative` only when it
+matches a declared expected kill-gate, expected negative verdict, or known
+bounded lineage. It SHALL treat a result as `frame_violating_anomaly` when a
+load-bearing positive control fails, a stated assumption is contradicted, or an
+observed direction/magnitude falls materially outside the experiment's declared
+prediction envelope. The classifier SHALL emit only an advisory recommendation
+and rationale; it MUST NOT prune, edit artifacts, modify the conductor, or
+recommend relaxing verification. Any anomaly recommendation SHALL be "pause
+pruning and ask a human," preserving human-gated valley funding.
+
+#### SCENARIO-AUTO-012: Anomaly Classifier Separates Bounded Negatives From Frame Violations
+
+**Given** a planned kill-gate artifact whose negative `honest_verdict` matches
+its expected bounded-negative metadata
+**When** the anomaly-escalation classifier evaluates it
+**Then** it classifies the artifact as `clean_bounded_negative` and recommends
+standard auto-reconciliation.
+
+**Given** an inconclusive artifact with a load-bearing positive-control failure
+**When** the anomaly-escalation classifier evaluates it
+**Then** it classifies the artifact as `frame_violating_anomaly` and recommends
+halting pruning for human review without relaxing verification.
+
+**Given** a terminal positive artifact with no anomaly signals
+**When** the anomaly-escalation classifier evaluates it
+**Then** it classifies the artifact as `clean_positive`.
