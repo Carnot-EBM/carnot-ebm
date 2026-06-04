@@ -118,7 +118,7 @@ tasks:
   - id: exp3809-anomaly-escalation-advisory-hook
     operator_override: "2026-05-29 operator directive (standing): versioned continuation of the Anomaly-Escalation tool lineage (.346 exp3780 prototype; .347 exp3791 validation; .348 exp3802 tuning). STATED forward difference: exp3802 made the classifier USABLE (false-escalation 0.0, recall 1.0, supports_wiring_in=true); exp3809 WIRES it as a standalone recommend-only ADVISORY module + an offline replay over historical negatives + a conductor-integration PROPOSAL for the operator -- the deployment step (not a re-tune). The conductor is NOT modified; this is the Deep-Think-P3 endorsed cheap upgrade. False-positive scope-match vs prior anomaly/classifier exps."
     milestone: "2026.06.349"
-    title: "WIRE the Anomaly-Escalation classifier as a recommend-only ADVISORY module (now that .348 exp3802 made it usable: false-escalation 0.0, frame-violating recall 1.0). Build a standalone advisory wrapper (input: a milestone negative's artifact/verdict; output: {auto_reconcile | escalate_to_human} + reason) that NEVER relaxes verification (it only ever recommends pause+escalate), run an OFFLINE REPLAY over historical milestone negatives to confirm it escalates only the genuine frame-violations and auto-reconciles the clean bounded negatives, and emit a conductor-integration PROPOSAL for the operator. Does NOT modify scripts/research_conductor.py. This is the Deep-Think-P3 endorsed cheap upgrade -- stop auto-reconciling EVERY negative; surface the frame-violating anomaly to the human."
+    title: "WIRE the Anomaly-Escalation classifier as a recommend-only ADVISORY module (now that .348 exp3802 made it usable: false-escalation 0.0, frame-violating recall 1.0). Build a standalone advisory wrapper (input: a milestone negative's artifact/verdict; output: {{auto_reconcile | escalate_to_human}} + reason) that NEVER relaxes verification (it only ever recommends pause+escalate), run an OFFLINE REPLAY over historical milestone negatives to confirm it escalates only the genuine frame-violations and auto-reconciles the clean bounded negatives, and emit a conductor-integration PROPOSAL for the operator. Does NOT modify scripts/research_conductor.py. This is the Deep-Think-P3 endorsed cheap upgrade -- stop auto-reconciling EVERY negative; surface the frame-violating anomaly to the human."
     priority: high
     max_turns: 50
     agent_type: codex
@@ -158,8 +158,8 @@ tasks:
       CONCRETE STEPS:
         1. Build a standalone advisory wrapper (a NEW module, e.g. python/carnot/ops/anomaly_escalation_advisory.py
            or alongside the existing classifier script -- do NOT edit research_conductor.py) with a pure function:
-           classify_negative(artifact_or_verdict) -> {recommendation: 'auto_reconcile' | 'escalate_to_human',
-           reason: str, frame_violation: bool}. It calls the tuned exp3802 classifier; it has NO side effects and
+           classify_negative(artifact_or_verdict) -> {{recommendation: 'auto_reconcile' | 'escalate_to_human',
+           reason: str, frame_violation: bool}}. It calls the tuned exp3802 classifier; it has NO side effects and
            NO ability to relax verification.
         2. OFFLINE REPLAY: run the wrapper over a corpus of historical milestone negatives (reuse the exp3802/exp3791
            labeled sample, n>=30). Confirm it escalates the genuine frame-violations (recall 1.0 -- the P1 v1/v2
@@ -249,7 +249,7 @@ tasks:
            batch of cached FoVer examples, observe the failing assertion). Identify the root cause (e.g. the
            threshold not loaded from config, a status/JSON-shape mismatch, batch handling, a port/lifecycle bug).
         2. FIX the module so it: accepts a POST with one or more candidates; runs the verify pipeline in abstention
-           mode; returns JSON {verdict: confident|abstain, score, coverage, risk, delta} per candidate; loads the
+           mode; returns JSON {{verdict: confident|abstain, score, coverage, risk, delta}} per candidate; loads the
            threshold from the same config the wiring uses (default = exp3771's 0.733), NOT a hardcoded constant;
            defaults abstention OFF (a request flag turns it on). Do NOT add a heavy new web framework if one is not
            already present (use stdlib http.server or the repo's existing pattern).
@@ -414,8 +414,8 @@ tasks:
         1. Run scripts/summarize_artifact.py on exp3798, exp3799, AND exp2090. For exp2090, CONFIRM the LIVE
            adversarial re-check flags CRITICAL (do NOT trust exp3799's stale 'g4_pass' -- the Reading-Results
            discipline mandates the live re-check). Record each artifact's real provenance status.
-        2. Build the honest product-headline status table: {number, source artifact, n, seed present, checksum
-           present, substrate, live_adversarial_recheck (clean|CRITICAL), G4 pass/fail, why}. Both candidate
+        2. Build the honest product-headline status table: {{number, source artifact, n, seed present, checksum
+           present, substrate, live_adversarial_recheck (clean|CRITICAL), G4 pass/fail, why}}. Both candidate
            positives (code-repair re-run delta=0; CRANE flagged CRITICAL) FAIL to support a headline.
         3. State PLAINLY that the FoVer methods headline (0.9131, G1-G4 via publication_gate.py) is the SOLE
            defensible headline and the product code-repair headline STAYS DEMOTED -- a clean CRANE re-run with full
@@ -432,7 +432,7 @@ tasks:
           principle: "Terminal prefix; the status-recording outcome."
         inference_substrate: "aggregation_from_upstream_artifacts (principle: provenance aggregation + a live re-check, no live model)."
         product_headline_status_table:
-          principle: "Per-number {source, n, seed_present, checksum_present, substrate, live_adversarial_recheck, g4_pass, why} -- the core deliverable the operator uses."
+          principle: "Per-number {{source, n, seed_present, checksum_present, substrate, live_adversarial_recheck, g4_pass, why}} -- the core deliverable the operator uses."
         code_repair_supports_headline:
           principle: "BARE bool, false -- the exp3798 re-run delta=0.0 does not support a headline."
         crane_supports_headline:
@@ -440,7 +440,7 @@ tasks:
         sole_defensible_headline:
           principle: "BARE string -- the FoVer methods headline (0.9131, G1-G4) is the sole defensible one; the product code-repair headline stays demoted."
         product_headline_recommendation:
-          principle: "BARE string in {stays_demoted, restorable_via_operator_gpu_rerun} -- the honest operator-facing recommendation; a clean CRANE/code-repair GPU re-run is the only restore path and is handed to the operator."
+          principle: "BARE string in {{stays_demoted, restorable_via_operator_gpu_rerun}} -- the honest operator-facing recommendation; a clean CRANE/code-repair GPU re-run is the only restore path and is handed to the operator."
         doc_proposal_emitted_not_curated_edit:
           principle: "BARE bool, true -- a doc-update PROPOSAL was written; the technical report and all operator-curated docs were NOT edited (Public Documentation Discipline)."
         operator_curated_doc_unedited:
@@ -872,7 +872,7 @@ tasks:
         verifier_product_repaired:
           principle: "Records exp3810 (HTTP/REST 3rd surface e2e_passed) + exp3811 (cross-surface parity, or honest block) -- the deployable-product advances."
         product_headline_status:
-          principle: "BARE string in {stays_demoted, restorable_via_operator_gpu_rerun} -- exp3812's honest recommendation; both candidate positives fail provenance, FoVer 0.9131 sole defensible."
+          principle: "BARE string in {{stays_demoted, restorable_via_operator_gpu_rerun}} -- exp3812's honest recommendation; both candidate positives fail provenance, FoVer 0.9131 sole defensible."
         fr11_v21_self_learning:
           principle: "Records exp3813: fast-path operating-point robustness on the second split (skip, effective AUROC, operating_point_generalizes, headline ensemble unchanged) -- the mandated self-learning step."
         publication_gate_confirmed:
