@@ -17623,3 +17623,95 @@ passes adversarial verification without a critical flag.
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-REPORT-3816 | Planned (`python/carnot/reporting/external_research_refresh_3816.py`, `scripts/experiment_3816_external_research_refresh_v349.py`) | Planned (`tests/python/test_experiment_3816_external_research_refresh_v349.py`) |
+
+### REQ-REPORT-3818: Capstone V349 Lean Maintenance Aggregation
+
+The Exp 3818 workflow SHALL aggregate Exp 3808 through Exp 3817 as a lean
+post-convergence maintenance capstone for milestone `2026.06.349`. It SHALL
+read each upstream artifact through `scripts/summarize_artifact.py` and SHALL
+run `scripts/adversarial_verify.py` over each real upstream artifact before
+citing it. Any upstream artifact carrying `flagged_adversarial=true` SHALL be
+excluded from headline aggregation and recorded in
+`flagged_artifacts_excluded`. Any missing, un-run, or blocked upstream task
+SHALL be recorded in `not_landed_or_blocked_recorded_honestly` as
+`not-landed` or `blocked`, not as a research negative.
+
+The workflow SHALL record the .349 outcome plainly: a LEAN POST-CONVERGENCE
+maintenance milestone that wires the endorsed Anomaly-Escalation advisory hook,
+repairs the HTTP/REST product surface and confirms cross-surface parity, records
+the product-headline status honestly, continues the mandated Tier-3
+self-learning step, confirms publication-gate invariants, stages the EDLM seed
+for the operator, refreshes references, and confirms KV260 terminal continuity.
+It SHALL make no new existential claim, SHALL re-grind no bounded energy route,
+and SHALL preserve the frozen FoVer `0.9131` headline.
+
+The terminal artifact SHALL be written to
+`results/experiment_3818_capstone_v349.json` and SHALL include bare top-level
+values for `honest_verdict`, `inference_substrate`,
+`anomaly_advisory_hook_wired`, `verifier_product_repaired`,
+`product_headline_status`, `fr11_v21_self_learning`,
+`publication_gate_confirmed`, `edlm_seed_staged`,
+`energy_routes_still_bounded`, `paper_ready_preserved`,
+`frozen_headline_unchanged`, `next_thesis_remains_operator_surface`,
+`flagged_artifacts_excluded`, `not_landed_or_blocked_recorded_honestly`,
+`cited_upstream_artifacts`, `random_seed`, `reproducibility_checksum`, and
+`duration_s`, plus `field_principles` documenting why each required value
+exists. `inference_substrate` SHALL equal
+`aggregation_from_upstream_artifacts (principle: a capstone reads upstream JSON, runs no live model).`
+The artifact SHALL populate `cited_upstream_artifacts`, SHALL NOT include
+`model_specs`, `target_model`, `GGUF`, `CUDA`, `live-model`, or
+`live_llm_inference` markers, and SHALL pass adversarial verification without a
+critical flag. `honest_verdict` SHALL equal
+`complete: capstone_v349_anomaly_advisory_wired_http_rest_repaired_parity_confirmed_product_headline_stays_demoted_fr11_v21_self_learning_publication_gate_confirmed_edlm_seed_staged_paper_ready_true_frozen_headline_unchanged_both_energy_routes_bounded`
+on the complete path.
+
+#### SCENARIO-REPORT-3818: V349 Capstone Aggregates Landed Maintenance Work
+
+**Given** Exp 3809 records a recommend-only advisory hook with replay
+false-escalation `0.0`, frame-violating recall `1.0`,
+`never_relaxes_verification=true`, `conductor_unmodified=true`, and an emitted
+integration proposal
+**And** Exp 3810 records the repaired default-off HTTP/REST third surface with
+E2E passing, and Exp 3811 records `all_surfaces_agree=true`
+**And** Exp 3812 records `product_headline_recommendation=stays_demoted`
+because code repair supports no headline and CRANE fails live provenance while
+FoVer `0.9131` is the sole defensible headline
+**And** Exp 3813 records the second-split FR-11 v21 robustness measurement,
+including skip rate, effective AUROC, `operating_point_generalizes`, and
+unchanged headline ensemble
+**And** Exp 3814 records G1-G4 passing, `paper_ready=true`, frozen FoVer
+`0.9131` unchanged, and no gate redefined
+**And** Exp 3815 records a one-command EDLM seed package, kill-gate design,
+`loop_does_not_seed=true`, and operator gating
+**And** Exp 3816 records the references refresh and Exp 3817 records the KV260
+terminal state
+**When** the Exp 3818 workflow runs
+**Then** it writes the required aggregation-only artifact, records .349 as a
+lean maintenance milestone, preserves `paper_ready=true` and frozen FoVer
+`0.9131`, records both energy routes as still bounded, keeps the next
+thesis/freeze decision as an operator surface, and passes adversarial
+verification with no critical flag.
+
+#### SCENARIO-REPORT-3818-BLOCKED-PARITY: Blocked Surface Work Is Recorded Honestly
+
+**Given** Exp 3810 or Exp 3811 is missing or has a blocked verdict
+**When** the Exp 3818 workflow runs
+**Then** the capstone records the missing or blocked task in
+`not_landed_or_blocked_recorded_honestly`, records the product surface as
+blocked rather than repaired, and does not treat the blocked surface as a
+research negative.
+
+#### SCENARIO-REPORT-3818-FLAGGED: Flagged Upstream Artifacts Are Excluded
+
+**Given** any Exp 3808 through Exp 3817 source artifact carries
+`flagged_adversarial=true`
+**When** the Exp 3818 workflow runs
+**Then** the capstone records that artifact in `flagged_artifacts_excluded`,
+excludes it from headline aggregation, and derives milestone claims only from
+clean upstream artifacts.
+
+## Implementation Status (REQ-REPORT-3818)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-3818 | Planned (`python/carnot/reporting/capstone_v349_3818.py`, `scripts/experiment_3818_capstone_v349.py`) | Planned (`tests/python/test_experiment_3818_capstone_v349.py`) |
