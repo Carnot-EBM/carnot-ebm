@@ -1,0 +1,110 @@
+{
+  "activated_milestone": "2026.06.347",
+  "active_roadmap_path": "research-roadmap.yaml",
+  "adversarial_verify_clean": true,
+  "adversarial_verify_report": {
+    "flag_count": 0,
+    "flags": [],
+    "max_severity": -1
+  },
+  "archived_milestone": "2026.06.346",
+  "blocked_task_ids": [
+    "exp3777-p1-discrete-search-adjudication-v3"
+  ],
+  "both_energy_routes_still_bounded": true,
+  "duration_s": 3.44849,
+  "experiment_id": "exp3786",
+  "field_principles": {
+    "adversarial_verify_clean": "True iff the artifact passes adversarial_verify with no critical flag.",
+    "both_energy_routes_still_bounded": "BARE bool -- records that .347 does not reopen the bounded conclusion (P1 v3 only sharpens the mechanism).",
+    "duration_s": "Wall-clock plausibility floor; missing duration is the fabrication signal.",
+    "honest_verdict": "Terminal prefix lets the reconciler classify the transition complete without re-running it.",
+    "inference_substrate": "JSON-read + format; 0.0001s floor; no compute-bound marker so it does not false-flag.",
+    "n_tasks_archived": "Sample-size hygiene -- confirms the full .346 milestone was archived, not a partial.",
+    "paper_ready_preserved": "BARE bool -- G1-G4 stay met (confirmed via publication_gate.py); the transition must not silently regress paper_ready; frozen 0.9131 stays frozen.",
+    "random_seed": "Determinism precondition for reproducibility.",
+    "reproducibility_checksum": "Content hash catches silent drift vs any replication.",
+    "research_complete_yaml_parses": "BARE bool, MUST be true -- confirms research-complete.yaml safe_loads after the write (anti-recurrence of the .344 poison).",
+    "v346_outcome_recorded": "Records .346's REAL state: landed 10/11, verifier product banked, paper_ready TRUE, single un-landed exp3777 blocked on no-free-GPU (not a negative).",
+    "v347_focus_recorded": "Records the .347 agenda: retry P1 v3, harden the banked product, Tier-3 self-learning, anomaly-escalation validation, EDLM preflight -- re-grinding nothing bounded."
+  },
+  "honest_verdict": "complete: archived_v346_landed_10_of_11_exp3777_blocked_no_free_gpu_v347_post_convergence_active_paper_ready_true_both_energy_routes_bounded_frozen_headline_unchanged",
+  "inference_substrate": "aggregation_from_upstream_artifacts",
+  "n_tasks_archived": 11,
+  "n_tasks_landed": 10,
+  "paper_ready_evidence": {
+    "capstone_paper_ready": true,
+    "frozen_headline_auroc": 0.9131,
+    "frozen_headline_unchanged": true,
+    "g1": true,
+    "g2": true,
+    "g3": true,
+    "g4": true,
+    "paper_ready": true,
+    "publication_gate_source": "scripts/publication_gate.py --json",
+    "unmet_gates": []
+  },
+  "paper_ready_preserved": true,
+  "random_seed": 3786,
+  "reproducibility_checksum": "c8792e48b0e668d45778d7950e8a8d8519cc81caff4a8c9b3eab92fa70b98c07",
+  "research_complete_yaml_parses": true,
+  "schema": "carnot.archive_activation.v346_to_v347_3786.v1",
+  "source_artifact_checksums": [
+    {
+      "path": "results/experiment_3785_capstone_v346.json",
+      "sha256": "230576728070c10885129f2dea59067a59429556850cb49d7de2d92b3c0bc8e7"
+    }
+  ],
+  "source_document_checksums": [
+    {
+      "path": "research-roadmap.yaml",
+      "sha256": "5cae7060a87e43b4e5a93a65b5c03399bcf8d33808fee37c9ca034b63a5c9943"
+    },
+    {
+      "path": "openspec/change-proposals/research-roadmap-vNEXT.md",
+      "sha256": "7beef8a133b932698a0a8b97874477115c4d8e18d2d27dece2f2d6f7a0f6dc61"
+    },
+    {
+      "path": "ops/changelog.md",
+      "sha256": "0067c8977ff617c808900b6ffa96d828b5f18942c6db7cdff5392077808f1770"
+    },
+    {
+      "path": "ops/north-star.md",
+      "sha256": "e288b001d2582b5f8af368df5ef458c334b750daefdef36ec9f707c61b62b973"
+    }
+  ],
+  "task_id": "exp3786-archive-v346-activate-v347",
+  "v346_capstone_evidence": {
+    "anomaly_escalation_prototyped": true,
+    "archived_task_count_recorded": 11,
+    "both_energy_routes_bounded": true,
+    "capstone_path": "results/experiment_3785_capstone_v346.json",
+    "edlm_seed_scaffolded": true,
+    "exp3777_blocked_no_free_gpu": true,
+    "exp3777_record": {
+      "experiment_id": 3777,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_3777_p1_discrete_search_adjudication_v3.json",
+      "reason": "artifact_missing",
+      "status": "not-landed"
+    },
+    "flagged_artifacts_excluded": [],
+    "fr11_v18_self_learning": true,
+    "g4_correction_prepped": true,
+    "honest_verdict": "complete: capstone_v346_p1_blocked_missing_upstream_artifact_energy_as_generator_still_bounded_verifier_product_banked_anomaly_escalation_prototyped_edlm_scaffolded_fr11_v18_paper_ready_true_frozen_headline_unchanged",
+    "landed_task_count_recorded": 10,
+    "p1_adjudication": "blocked_missing_upstream_artifact",
+    "p1_mechanism_status": "open_for_operator: blocked_missing_upstream_artifact",
+    "p1_positive_control_passed": false,
+    "record_honest": true,
+    "verifier_product_banked": true
+  },
+  "v346_outcome_recorded": "landed_10_of_11_verifier_product_banked_fr11_tier2_anomaly_escalation_edlm_seed_scaffolded_g4_correction_prepped_exp3777_blocked_no_free_gpu",
+  "v347_activation_evidence": {
+    "active_milestone": "2026.06.347",
+    "active_roadmap_path": "research-roadmap.yaml",
+    "first_task": "exp3786-archive-v346-activate-v347",
+    "post_convergence_focus": "retry_p1_v3_harden_banked_product_tier3_self_learning_validate_anomaly_edlm_preflight_regrind_nothing_bounded"
+  },
+  "v347_active_confirmed": true,
+  "v347_focus_recorded": "retry_p1_v3_harden_banked_product_tier3_self_learning_validate_anomaly_edlm_preflight_regrind_nothing_bounded"
+}

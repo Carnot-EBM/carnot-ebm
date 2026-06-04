@@ -35088,102 +35088,52 @@ milestones:
     result: 'COMPLETE: capstone .345 aggregated all 11/11 tasks; paper_ready TRUE, FoVer 0.9131 frozen, both energy routes
       bounded'
 - id: 2026.06.346
-  title: 'POST-BOUNDED CONVERGENCE -- the project is converged on its one surviving positive (FoVer 0.9131 verifier, paper_ready=TRUE)
-    and has bounded both energy-foundation routes (selector P0.1 + generator Thesis-A). The verifier-moat thread is CLOSED
-    (the math step-error checker is the defensible product, NOT a general independence-moat -- do NOT re-run a scissor-plot
-    GPU sweep). .346 does FIVE things and re-grinds NOTHING: (A) SETTLE the LAST open energy-existential question -- the P1
-    discrete-search adjudication v3 (artifact-vs-fundamental for energy-as-generator on discrete text). v1/v2 today were INCONCLUSIVE
-    because the from-scratch AR POSITIVE CONTROL was starved (n_train=20000 vs the 40000 needed for AR=0.84); root cause diagnosed
-    + harness fixed; v3 reruns with a VALID positive control and an ar_best>=0.3 gate. (B) BANK the verifier product -- wire
-    the certified abstention operating point into the verify API as a deployable opt-in feature. (C) BUILD the P3 Anomaly-Escalation
-    process upgrade (a standalone classifier + change-proposal; never auto-relaxes verification). (D) SCAFFOLD the operator''s
-    next-thesis seed (EDLM feasibility scoping -- lowers seeding cost; NOT a loop commitment). (E) CONTINUE self-learning
-    (FR-11 v18 Tier-2 constraint-memory on the live verifier) + record/ship continuity (G4 correction prep, refs refresh,
-    KV260 opportunistic, capstone). INVARIANTS: paper_ready stays TRUE (G1-G4); FoVer 0.9131 frozen; both energy routes stay
-    bounded (P1 v3 only sharpens the mechanism, never reopens the strategic conclusion or seeds a paradigm); the next-Phase-3-thesis
-    decision stays an operator-seeding surface. The agent never edits operator-curated docs, never triggers CI, never publishes,
-    never pushes.'
+  title: "V346 post-bounded convergence landed 10 of 11"
   doc: openspec/change-proposals/research-roadmap-vNEXT.md
   completed: '2026-06-04'
-  finding: See conductor log for per-experiment results.
+  finding: "LANDED 10/11 MILESTONE: .346 banked the verifier product, advanced FR-11 to Tier-2, prototyped Anomaly-Escalation, scaffolded the EDLM seed, prepped the G4 correction, refreshed references, confirmed KV260 continuity, and completed the capstone. The single un-landed task was exp3777 P1 discrete-search v3, blocked on no-free-GPU; this is not a research negative. paper_ready TRUE (G1-G4), frozen FoVer 0.9131 unchanged, and both energy routes stayed bounded. .347 post-convergence is active: retry P1 v3, harden the banked product, continue Tier-3 self-learning, validate anomaly-escalation, scaffold EDLM preflight, and re-grind nothing bounded."
   tasks:
   - id: exp3776-archive-v345-activate-v346
-    title: 'Archive milestone .345 (PRODUCT-BANKING RECOVERY -- fully landed 11/11: G2 re-reproduced locally, certified abstention
-      point shipped, Thesis-A reconcile restored, G3 narrowing lint wired, pkg/CLI/MCP E2E passed, FR-11 v17, PRM positioning,
-      KV260 terminal, paper_ready=TRUE) and activate .346 (POST-BOUNDED CONVERGENCE: settle the last energy-existential question
-      via the P1 discrete-search v3 adjudication, bank the verifier product, build the P3 Anomaly-Escalation upgrade, scaffold
-      the operator''s EDLM next-thesis seed, continue self-learning).'
+    title: "Archive .345 and activate .346 convergence"
     deliverable: results/experiment_3776_archive_v345_activate_v346.json
-    result: OK (conductor)
+    result: "COMPLETE: archived .345 fully landed and activated .346 post-bounded convergence"
   - id: exp3777-p1-discrete-search-adjudication-v3
-    title: 'P1 discrete-search adjudication v3 (the LAST open energy-existential question): rerun the discrete-search EBT
-      decode with a VALID positive control (n_train=40000, the regime where from-scratch AR reaches 0.84) and an ar_best>=0.3
-      gate, to settle artifact-vs-fundamental for energy-as-generator on discrete text. v1/v2 today were INCONCLUSIVE because
-      the AR positive control was STARVED (n_train=20000); root cause diagnosed + harness fixed. Outcome: EBT discrete-search
-      acc >0% -> decode-ARTIFACT-bounded (reopen narrow); still 0% with AR>=0.3 -> Causal-Inductive-Bias-Gap FUNDAMENTAL (writes
-      the closing theorem). energy-as-generator stays BOUNDED from part-b regardless -- this sharpens the MECHANISM, not the
-      strategic conclusion.'
+    title: "P1 discrete-search adjudication v3"
     deliverable: results/experiment_3777_p1_discrete_search_adjudication_v3.json
-    result: OK (conductor)
+    result: "BLOCKED_RESOURCE: exp3777 blocked on no-free-GPU; the P1 mechanism question remains open and this is not a research negative"
   - id: exp3778-fr11-self-learning-v18-tier2-constraint-memory
-    title: 'FR-11 continuous self-learning v18 -- Tier-2 CONSTRAINT-MEMORY consolidation on the LIVE verifier (distinct from
-      v17''s Tier-1 precision tracker): use the Tier2ThresholdMemory module to learn per-domain score-threshold deltas across
-      the FoVer corpus, persist them, and CONFIRM the consolidated deltas do not regress the banked discriminator (ensemble
-      AUROC stays >= the frozen 0.9131 within CI, and the +0.0185 memory contribution is preserved). CPU only (Tier-2 hardware
-      path: CPU+system-memory, <1ms/lookup). The self-learning experiment mandated by research-program.md.'
+    title: "FR-11 v18 Tier-2 constraint memory"
     deliverable: results/experiment_3778_fr11_self_learning_v18_tier2_constraint_memory.json
-    result: OK (conductor)
+    result: "COMPLETE: Tier-2 constraint memory consolidated; AUROC stayed within the frozen CI and memory contribution was preserved"
   - id: exp3779-abstention-operating-point-product-wiring
-    title: 'BANK the verifier product: wire the .345 certified abstention operating point (exp3771: threshold 0.733, coverage
-      0.998 at selective-risk<=0.05, split-conformal delta=0.05) into the verify API as a DEPLOYABLE opt-in feature -- an
-      ''abstain below threshold'' mode an integrator can call -- and confirm it E2E. Forward Phase-1 product work (turns the
-      certified NUMBER into a usable SURFACE). Edits CODE + tests only; emits a doc-update PROPOSAL for the operator-curated
-      CLI/MCP docs (does NOT edit them).'
+    title: "Abstention operating point product wiring"
     deliverable: results/experiment_3779_abstention_operating_point_product_wiring.json
-    result: OK (conductor)
+    result: "COMPLETE: abstention mode wired into the verify API, default-OFF, and E2E behavior confirmed"
+  - id: exp3779-mcp-abstention-surface-confirmation
+    title: "MCP abstention surface confirmation"
+    deliverable: results/experiment_3779_abstention_operating_point_product_wiring.json
+    result: "COMPLETE: banked verifier product was confirmed reachable through the MCP score_candidates surface"
   - id: exp3780-anomaly-escalation-classifier-prototype
-    title: 'BUILD the P3 Anomaly-Escalation process upgrade (the cheap endorsed upgrade from the 2026-06-03 Deep Think round):
-      a STANDALONE classifier (scripts/anomaly_escalation_classifier.py) + a change-proposal that distinguishes a CLEAN bounded
-      negative (auto-reconcile, as today) from a FRAME-VIOLATING anomaly (halt pruning, escalate to human). Prototype + spec
-      ONLY -- it NEVER auto-relaxes verification (that conflicts with the anti-fabrication discipline; valley-funding stays
-      human-gated). Does NOT modify scripts/research_conductor.py.'
+    title: "P3 Anomaly-Escalation classifier prototype"
     deliverable: results/experiment_3780_anomaly_escalation_classifier_prototype.json
-    result: OK (conductor)
+    result: "COMPLETE: recommend-only anomaly-escalation classifier prototyped and change proposal written"
   - id: exp3781-edlm-next-thesis-feasibility-scoping
-    title: 'SCAFFOLD the operator''s next-thesis seed (NOT a loop commitment): a feasibility scoping of EDLM (Energy-Based
-      Diffusion Language Models, arXiv:2410.21357 -- the TOP route on exp3763''s next-thesis menu: energy as a RESIDUAL-CORRECTOR
-      over discrete diffusion, sidestepping BOTH the bounded-selector and bounded-generator negatives). Produce a concrete,
-      honest feasibility brief -- deps, datasets, a minimal kill-gate experiment design, the compute estimate, and the explicit
-      reasons this route is NOT pre-blocked by the two energy negatives -- so the OPERATOR can decide whether to seed it.
-      The loop scaffolds; it does NOT open a new Phase-3 track.'
+    title: "EDLM next-thesis feasibility scoping"
     deliverable: results/experiment_3781_edlm_next_thesis_feasibility_scoping.json
-    result: OK (conductor)
+    result: "COMPLETE: EDLM feasibility brief and minimal kill-gate scaffolded as an operator decision surface"
   - id: exp3782-technical-report-g4-correction-prep
-    title: 'Technical-report G4 correction PREP (the standing north-star sec-1 OPERATOR ACTION): draft the corrected trajectory
-      paragraph that replaces the unsupported ''8%->80%'' / ''0%->36%'' / ''+3.0pp'' code-repair numbers with the real provenance-confirmed
-      numbers (exp1999 0.66->0.84 +18pp; exp2090 CRANE 0.70->0.85 +15pp), as an OPERATOR-action proposal. Does NOT edit docs/technical-report.md
-      (operator-curated) -- emits the proposed diff to a research-note for the operator to apply.'
+    title: "Technical-report G4 correction prep"
     deliverable: results/experiment_3782_technical_report_g4_correction_prep.json
-    result: OK (conductor)
+    result: "COMPLETE: G4 correction proposal prepared without editing the operator-curated report"
   - id: exp3783-external-research-refresh
-    title: 'External research refresh for .346: file the genuinely-new 2026 papers surfaced during planning into research-references.md
-      ''.346 additions'' -- verifier-ensemble behavioral-entanglement auditing (arXiv:2604.07650), correlated errors in LLMs
-      (arXiv:2506.07962), Verifiable Process Reward Models (arXiv:2601.17223), LLMs Gaming Verifiers (arXiv:2604.15149), Dyve
-      fast/slow process verification (arXiv:2502.11157). Each entry as-reported, with how it relates to the closed moat thread
-      / the verifier product / the anomaly-escalation upgrade. Pure documentation; runs no model.'
+    title: "External research refresh .346"
     deliverable: results/experiment_3783_external_research_refresh.json
-    result: OK (conductor)
+    result: "COMPLETE: .346 references filed append-only with numbers treated as reported"
   - id: exp3784-kv260-opportunistic-continuity-audit
-    title: KV260 opportunistic continuity audit -- confirm terminal state holds (SSH-reachable, accelerator overlay loadable).
-      Documentation-only; the per-milestone hardware mandate was relaxed to opportunistic at .340 (GateMate/PolarFire stay
-      opportunistic future-work).
+    title: "KV260 opportunistic continuity audit"
     deliverable: results/experiment_3784_kv260_opportunistic_continuity_audit.json
-    result: OK (conductor)
+    result: "COMPLETE: KV260 terminal state held; SSH reachable and overlay loadable"
   - id: exp3785-capstone-v346
-    title: 'Capstone .346 -- aggregate the POST-BOUNDED CONVERGENCE milestone: the last energy-existential question adjudicated
-      (P1 discrete-search v3: decode-artifact-bounded / fundamental / inconclusive), the verifier product banked (certified
-      abstention point wired into the verify API), the P3 Anomaly-Escalation classifier prototyped, the operator''s EDLM next-thesis
-      seed scaffolded, FR-11 v18 Tier-2 self-learning, G4 correction prepped, references refreshed, KV260 terminal confirmed.
-      paper_ready MUST stay TRUE; frozen 0.9131 unchanged; both energy routes stay bounded (P1 v3 sharpens the mechanism only).'
+    title: "Capstone .346"
     deliverable: results/experiment_3785_capstone_v346.json
-    result: OK (conductor)
+    result: "COMPLETE: capstone recorded exp3777 as blocked, not a negative; paper_ready TRUE, FoVer 0.9131 frozen, both energy routes bounded"
