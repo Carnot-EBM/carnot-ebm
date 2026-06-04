@@ -17493,3 +17493,74 @@ and does not report a new energy or product-headline research negative.
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-REPORT-3808 | Implemented (`python/carnot/reporting/archive_v348_activate_v349_3808.py`, `scripts/experiment_3808_archive_v348_activate_v349.py`) | Implemented (`tests/python/test_experiment_3808_archive_v348_activate_v349.py`) |
+
+### REQ-REPORT-3815: EDLM Operator Seed Staging Package
+
+The Exp 3815 workflow SHALL package the EDLM operator-seed decision surface
+without seeding the paradigm. It SHALL read the checked-in Exp 3793 no-train
+preflight readiness artifact from an absolute path, read the Exp 3781 EDLM
+feasibility scoping artifact, and read the Phase-3 alternative-thesis menu
+framing. If the Exp 3793 artifact is absent, the workflow SHALL write an honest
+blocked artifact with `honest_verdict` prefixed by
+`blocked_edlm_preflight_missing` and SHALL NOT fabricate an operator seed
+command or staging note.
+
+When Exp 3793 is present and records readiness GO plus
+`minimal_kill_gate_sound=true`, the workflow SHALL write
+`docs/research-notes/edlm-operator-seed-staging-20260604.md`. The note SHALL
+contain the exact one-command seed from Exp 3793, explicitly state that the
+loop SEEDS NOTHING, clones nothing, trains nothing, and runs no model, and
+describe the tiny-scale kill-gate design mirroring Thesis-A `.341`: part (a)
+stability on the internal 3090 with `.venv/bin/python` and a hard cuda-block;
+part (b) matched-COMPUTE comparison at equal total inference FLOPs versus an
+autoregressive baseline; and an honest-negative exit when training diverges,
+NaNs, or the corpus/baseline leaves no headroom. The note SHALL state that EDLM
+tests a different discrete-diffusion plus sequence-energy correction mechanism
+from the already-bounded P0.1 selection and Thesis-A generation routes, without
+claiming that it escapes those bounds before a kill-gate run exists.
+
+The terminal artifact SHALL be written to
+`results/experiment_3815_edlm_operator_seed_staging_package.json` and SHALL
+include bare top-level values for `honest_verdict`, `inference_substrate`,
+`staging_note_written`, `operator_seed_command`,
+`kill_gate_design_documented`, `loop_does_not_seed`,
+`edlm_remains_operator_gated`, `operator_curated_doc_unedited`,
+`cited_upstream_artifacts`, `random_seed`, `reproducibility_checksum`, and
+`duration_s`, plus `field_principles` documenting why each required value
+exists. `inference_substrate` SHALL equal
+`aggregation_from_upstream_artifacts (principle: a documentation package over existing artifacts, no live model, no clone, no train).`
+The terminal artifact SHALL NOT contain `model_specs`, `target_model`, `GGUF`,
+`CUDA`, or `live-model` markers. `honest_verdict` SHALL equal
+`complete: edlm_operator_seed_staged_one_command_seed_packaged_kill_gate_design_documented_loop_does_not_seed_operator_gated_operator_curated_doc_unedited`
+on the complete path. The workflow SHALL leave `README.md`,
+`docs/index.html`, `docs/roadmap.md`, `ops/north-star.md`,
+`ops/status.md`, `ops/changelog.md`, `_bmad/traceability.md`, and
+`scripts/research_conductor.py` unchanged.
+
+#### SCENARIO-REPORT-3815: EDLM Seed Package Is Operator-Ready But Not Seeded
+
+**Given** Exp 3793 records readiness GO, `minimal_kill_gate_sound=true`, and an
+operator seed command, Exp 3781 records the feasibility/kill-gate framing, and
+the Phase-3 menu records EDLM as an operator-gated different mechanism
+**When** the Exp 3815 workflow runs under `.venv/bin/python`
+**Then** it writes the required research note and terminal artifact, copies the
+exact one-command seed, documents the stability and matched-COMPUTE kill-gate
+design, records `loop_does_not_seed=true`, records
+`edlm_remains_operator_gated=true`, cites Exp 3793 and Exp 3781 by absolute
+path, edits no operator-curated document, creates no EDLM clone or model
+artifact, and passes adversarial verification without a critical flag.
+
+#### SCENARIO-REPORT-3815-MISSING-PREFLIGHT: Missing Exp 3793 Blocks Honestly
+
+**Given** the Exp 3793 no-train preflight artifact is absent
+**When** the Exp 3815 workflow runs
+**Then** it writes a blocked artifact prefixed by
+`blocked_edlm_preflight_missing`, leaves `staging_note_written=false`, leaves
+`operator_seed_command=null`, records that the loop did not seed, and does not
+write the operator staging note.
+
+## Implementation Status (REQ-REPORT-3815)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-3815 | Planned (`python/carnot/reporting/edlm_operator_seed_staging_3815.py`, `scripts/experiment_3815_edlm_operator_seed_staging_package.py`) | Planned (`tests/python/test_experiment_3815_edlm_operator_seed_staging_package.py`) |
