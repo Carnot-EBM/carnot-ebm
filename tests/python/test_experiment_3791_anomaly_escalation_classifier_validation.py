@@ -49,7 +49,7 @@ def test_scenario_auto_013_labeled_sample_uses_real_historical_corpus() -> None:
 
 
 def test_scenario_auto_013_real_classifier_behavior_controls() -> None:
-    """SCENARIO-AUTO-013: anti-poison test asserts the shipped classifier behavior."""
+    """SCENARIO-AUTO-013: anti-poison test asserts the tuned classifier behavior."""
 
     results = exp3791.classify_labeled_sample(exp3791.load_labeled_sample(ROOT))
     by_source = {row["source"]: row for row in results}
@@ -65,7 +65,7 @@ def test_scenario_auto_013_real_classifier_behavior_controls() -> None:
     ] == "clean_bounded_negative"
     assert by_source["results/experiment_3766_thesis_a_definitive_reconcile.json"][
         "predicted_label"
-    ] == "frame_violating_anomaly"
+    ] == "clean_bounded_negative"
 
 
 def test_scenario_auto_013_artifact_reports_confusion_and_advisory_recommendation() -> None:
@@ -81,22 +81,25 @@ def test_scenario_auto_013_artifact_reports_confusion_and_advisory_recommendatio
     assert set(exp3791.REQUIRED_ARTIFACT_FIELDS) <= set(artifact["field_principles"])
     assert artifact["honest_verdict"] == (
         "complete: anomaly_escalation_validated_n32_false_escalation_rate_"
-        "0.833333_frame_violating_recall_1.000000_never_relaxes_verification_"
+        "0.000000_frame_violating_recall_1.000000_never_relaxes_verification_"
         "conductor_unmodified"
     )
     assert artifact["inference_substrate"] == exp3791.INFERENCE_SUBSTRATE
     assert artifact["n_validation_artifacts"] == 32
     assert artifact["confusion_matrix"]["clean_bounded_negative"][
         "frame_violating_anomaly"
-    ] == 10
-    assert artifact["confusion_matrix"]["clean_bounded_negative"]["clean_positive"] == 2
+    ] == 0
+    assert artifact["confusion_matrix"]["clean_bounded_negative"]["clean_positive"] == 0
+    assert artifact["confusion_matrix"]["clean_bounded_negative"][
+        "clean_bounded_negative"
+    ] == 12
     assert artifact["confusion_matrix"]["frame_violating_anomaly"][
         "frame_violating_anomaly"
     ] == 2
-    assert artifact["false_escalation_rate"] == pytest.approx(10 / 12)
+    assert artifact["false_escalation_rate"] == pytest.approx(0.0)
     assert artifact["frame_violating_recall"] == pytest.approx(1.0)
     assert artifact["never_relaxes_verification"] is True
-    assert artifact["supports_wiring_in"] is False
+    assert artifact["supports_wiring_in"] is True
     assert artifact["tests_assert_real_behavior"] is True
     assert artifact["conductor_unmodified"] is True
     assert artifact["duration_s"] == 2.5

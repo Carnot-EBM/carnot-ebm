@@ -1,0 +1,508 @@
+{
+  "cited_upstream_artifacts": [
+    "openspec/change-proposals/anomaly-escalation-conductor-hook.md",
+    "results/experiment_3530_p01_route2_selectable_headroom_corpus_build_v1.json",
+    "results/experiment_3531_p01_route2_energy_vs_sc_on_headroom_corpus_v1.json",
+    "results/experiment_3655_facts_row_remeasurement_real_nli_v5.json",
+    "results/experiment_3670_facts_row_real_benchmark.json",
+    "results/experiment_3672_ensemble_selection_where_sc_weak.json",
+    "results/experiment_3729_stability_kill_gate_verdict.json",
+    "results/experiment_3731_capstone_v341.json",
+    "results/experiment_3736_real_kill_gate_part_a_verdict.json",
+    "results/experiment_3739_kill_gate_part_b_verdict.json",
+    "results/experiment_3766_thesis_a_definitive_reconcile.json",
+    "results/experiment_3767_g2_mechanical_reproducer.json",
+    "results/experiment_3768_g3_narrowing_lint.json",
+    "results/experiment_3769_package_cli_mcp_e2e_smoke.json",
+    "results/experiment_3770_distribution_mirror_publish_checklist.json",
+    "results/experiment_3771_certified_abstention_operating_point.json",
+    "results/experiment_3778_fr11_self_learning_v18_tier2_constraint_memory.json",
+    "results/experiment_3779_abstention_operating_point_product_wiring.json",
+    "results/experiment_3780_anomaly_escalation_classifier_prototype.json",
+    "results/experiment_3782_technical_report_g4_correction_prep.json",
+    "results/experiment_3783_external_research_refresh.json",
+    "results/experiment_3788_fr11_self_learning_v19_tier3_predictive.json",
+    "results/experiment_3789_abstention_cli_batch_surface.json",
+    "results/experiment_3790_verifier_gaming_resistance_characterization.json",
+    "results/experiment_3791_anomaly_escalation_classifier_validation.json",
+    "results/operational_retro_2026_04_25.json",
+    "results/operational_retro_2026_04_26.json",
+    "results/operational_retro_2026_04_27.json",
+    "results/operational_retro_2026_04_28.json",
+    "results/operational_retro_2026_04_29.json",
+    "results/thesis_a_p1_discrete_search.json",
+    "results/thesis_a_p1_discrete_search_v2.json",
+    "results/thesis_a_part_b_matched_compute.json",
+    "results/thesis_a_part_b_scaled_seed1.json"
+  ],
+  "conductor_unmodified": true,
+  "confusion_matrix_after": {
+    "clean_bounded_negative": {
+      "clean_bounded_negative": 12,
+      "clean_positive": 0,
+      "frame_violating_anomaly": 0
+    },
+    "clean_positive": {
+      "clean_bounded_negative": 0,
+      "clean_positive": 18,
+      "frame_violating_anomaly": 0
+    },
+    "frame_violating_anomaly": {
+      "clean_bounded_negative": 0,
+      "clean_positive": 0,
+      "frame_violating_anomaly": 2
+    }
+  },
+  "duration_s": 0.0001,
+  "false_escalation_rate_after": 0.0,
+  "false_escalation_rate_before": 0.833333,
+  "field_principles": {
+    "cited_upstream_artifacts": "Provenance for the validation corpus (anti-fabrication audit trail).",
+    "confusion_matrix_after": "The post-tuning confusion matrix vs the expected labels -- the validation evidence.",
+    "duration_s": "Wall-clock plausibility floor.",
+    "false_escalation_rate_after": "The tuned false-escalation rate (target <=0.2) -- the core deliverable; reported honestly even if the target was not reached.",
+    "false_escalation_rate_before": "0.83 from exp3791 -- the positive control that the problem is real.",
+    "frame_violating_recall_after": "BARE float, MUST stay 1.0 -- the tuning must not lose the known frame-violating cases (the P1 v1/v2 positive-control failures); a drop is a trade-off to report, not hide.",
+    "honest_verdict": "Terminal prefix; the tuning outcome; blocked_<resource> if a precondition failed.",
+    "inference_substrate": "aggregation_from_upstream_artifacts (principle: a classifier over artifact metadata, no live model).",
+    "n_validation_artifacts": "BARE int, >=30 -- sample-size rigor so the rates are interpretable.",
+    "never_relaxes_verification": "BARE bool, true -- the tuned classifier still only recommends pause+escalate; it never recommends relaxing verification.",
+    "random_seed": "Determinism precondition.",
+    "reproducibility_checksum": "Content hash catches drift.",
+    "supports_wiring_in": "BARE bool -- whether the tuned classifier is now usable (false-escalation <=0.2 AND recall 1.0); honest recommendation to the operator.",
+    "tests_assert_real_behavior": "BARE bool, true -- shipped tests assert the real tuned classifier behavior (anti-poison-test)."
+  },
+  "frame_violating_recall_after": 1.0,
+  "honest_verdict": "complete: anomaly_escalation_v2_tuned_false_escalation_0.833333_to_0.000000_frame_violating_recall_1.0_never_relaxes_verification_supports_wiring_in_true_conductor_unmodified",
+  "inference_substrate": "aggregation_from_upstream_artifacts (principle: a classifier over artifact metadata, no live model).",
+  "misflagged_clean_bounded_negatives_before": [
+    {
+      "honest_verdict": "complete: thesis_a_definitive_reconciled_part_a_PASS_discriminative_part_b_BOUNDED_not_generative_in_loop_chain_superseded_menu_updated_not_retired",
+      "prior_predicted_label": "frame_violating_anomaly",
+      "prior_rationale": "negative or inconclusive verdict lacks expected kill-gate or bounded-lineage metadata; pause pruning and ask a human without relaxing verification.",
+      "rule_fired": "negative_missing_expected_metadata",
+      "source": "results/experiment_3766_thesis_a_definitive_reconcile.json",
+      "was_false_escalation": true
+    },
+    {
+      "honest_verdict": "complete: thesis_a_part_b_BOUNDED_ebt_does_not_beat_ar_at_matched_compute_ebt_0.000_vs_arN_0.025_ar1_0.062_headroom_ok_honest_negative",
+      "prior_predicted_label": "frame_violating_anomaly",
+      "prior_rationale": "negative or inconclusive verdict lacks expected kill-gate or bounded-lineage metadata; pause pruning and ask a human without relaxing verification.",
+      "rule_fired": "negative_missing_expected_metadata",
+      "source": "results/thesis_a_part_b_matched_compute.json",
+      "was_false_escalation": true
+    },
+    {
+      "honest_verdict": "complete: thesis_a_part_b_scaled_BOUNDED_seed1_ebt_0.000_le_ar_0.840_ar1_0.820_headroom_ok",
+      "prior_predicted_label": "frame_violating_anomaly",
+      "prior_rationale": "negative or inconclusive verdict lacks expected kill-gate or bounded-lineage metadata; pause pruning and ask a human without relaxing verification.",
+      "rule_fired": "negative_missing_expected_metadata",
+      "source": "results/thesis_a_part_b_scaled_seed1.json",
+      "was_false_escalation": true
+    },
+    {
+      "honest_verdict": "complete: kill_gate_part_a_FAIL_energy_as_generator_bounded_at_small_scale_honest_negative_stop",
+      "prior_predicted_label": "frame_violating_anomaly",
+      "prior_rationale": "negative or inconclusive verdict lacks expected kill-gate or bounded-lineage metadata; pause pruning and ask a human without relaxing verification.",
+      "rule_fired": "negative_missing_expected_metadata",
+      "source": "results/experiment_3729_stability_kill_gate_verdict.json",
+      "was_false_escalation": true
+    },
+    {
+      "honest_verdict": "complete: capstone_v341_thesis_a_ebt_bringup_kill_gate_part_a_bounded_paper_ready_true_frozen_headline_unchanged",
+      "prior_predicted_label": "frame_violating_anomaly",
+      "prior_rationale": "negative or inconclusive verdict lacks expected kill-gate or bounded-lineage metadata; pause pruning and ask a human without relaxing verification.",
+      "rule_fired": "negative_missing_expected_metadata",
+      "source": "results/experiment_3731_capstone_v341.json",
+      "was_false_escalation": true
+    },
+    {
+      "honest_verdict": "complete: kill_gate_part_b_not_run_part_a_did_not_green_light",
+      "prior_predicted_label": "clean_positive",
+      "prior_rationale": "terminal positive verdict with no frame-violation signals",
+      "rule_fired": "terminal_positive_precedence",
+      "source": "results/experiment_3739_kill_gate_part_b_verdict.json",
+      "was_false_escalation": false
+    },
+    {
+      "honest_verdict": "complete: real_kill_gate_part_a_untested_training_did_not_complete",
+      "prior_predicted_label": "clean_positive",
+      "prior_rationale": "terminal positive verdict with no frame-violation signals",
+      "rule_fired": "terminal_positive_precedence",
+      "source": "results/experiment_3736_real_kill_gate_part_a_verdict.json",
+      "was_false_escalation": false
+    },
+    {
+      "honest_verdict": "complete: facts_domain_bound_on_real_benchmark_335_negative_genuinely_earned",
+      "prior_predicted_label": "frame_violating_anomaly",
+      "prior_rationale": "negative or inconclusive verdict lacks expected kill-gate or bounded-lineage metadata; pause pruning and ask a human without relaxing verification.",
+      "rule_fired": "negative_missing_expected_metadata",
+      "source": "results/experiment_3670_facts_row_real_benchmark.json",
+      "was_false_escalation": true
+    },
+    {
+      "honest_verdict": "complete: ensemble_no_selection_value_even_with_headroom_sc_weak_earned_negative",
+      "prior_predicted_label": "frame_violating_anomaly",
+      "prior_rationale": "negative or inconclusive verdict lacks expected kill-gate or bounded-lineage metadata; pause pruning and ask a human without relaxing verification.",
+      "rule_fired": "negative_missing_expected_metadata",
+      "source": "results/experiment_3672_ensemble_selection_where_sc_weak.json",
+      "was_false_escalation": true
+    },
+    {
+      "honest_verdict": "complete: facts_domain_bound_even_with_real_nli_334_negative_confirmed_earned",
+      "prior_predicted_label": "frame_violating_anomaly",
+      "prior_rationale": "negative or inconclusive verdict lacks expected kill-gate or bounded-lineage metadata; pause pruning and ask a human without relaxing verification.",
+      "rule_fired": "negative_missing_expected_metadata",
+      "source": "results/experiment_3655_facts_row_remeasurement_real_nli_v5.json",
+      "was_false_escalation": true
+    },
+    {
+      "honest_verdict": "complete: energy_does_not_beat_sc_even_with_headroom_route2_selection_premise_bounded_informative_negative",
+      "prior_predicted_label": "frame_violating_anomaly",
+      "prior_rationale": "negative or inconclusive verdict lacks expected kill-gate or bounded-lineage metadata; pause pruning and ask a human without relaxing verification.",
+      "rule_fired": "negative_missing_expected_metadata",
+      "source": "results/experiment_3531_p01_route2_energy_vs_sc_on_headroom_corpus_v1.json",
+      "was_false_escalation": true
+    },
+    {
+      "honest_verdict": "complete: p01_no_selectable_headroom_even_at_level4_5_sc_majority_is_near_optimal_route2_premise_bounded",
+      "prior_predicted_label": "frame_violating_anomaly",
+      "prior_rationale": "negative or inconclusive verdict lacks expected kill-gate or bounded-lineage metadata; pause pruning and ask a human without relaxing verification.",
+      "rule_fired": "negative_missing_expected_metadata",
+      "source": "results/experiment_3530_p01_route2_selectable_headroom_corpus_build_v1.json",
+      "was_false_escalation": true
+    }
+  ],
+  "n_validation_artifacts": 32,
+  "never_relaxes_verification": true,
+  "random_seed": 3802,
+  "recommendation_basis": "supports_wiring_in is true because tuned false escalation is <=0.2, P1 v1/v2 frame-violating recall remains 1.0, and recommendations never relax verification.",
+  "reproducibility_checksum": "7e64d7d4adc45e501776804783537c06b9dfcd44167c3eb4fd2bfb6f2098ff8f",
+  "root_cause_analysis": "10 clean bounded negatives fired negative_missing_expected_metadata because historical artifacts encoded planned kill-gates in verdict text instead of expected-negative metadata; 2 clean kill-gate negatives fired terminal_positive_precedence because complete-prefixed did_not/not_run verdicts were checked before tuned bounded-negative verdict text.",
+  "rule_tuning_summary": "Added explicit verdict-text positive-control-failure escalation before clean-negative handling, then allowed tuned bounded, kill-gate, and headroom-negative verdict text to auto-reconcile when no frame-violation signal is present.",
+  "supports_wiring_in": true,
+  "tests_assert_real_behavior": true,
+  "validation_rows_after": [
+    {
+      "expected_label": "clean_bounded_negative",
+      "honest_verdict": "complete: thesis_a_definitive_reconciled_part_a_PASS_discriminative_part_b_BOUNDED_not_generative_in_loop_chain_superseded_menu_updated_not_retired",
+      "label_rule": "planned Thesis-A bounded-negative reconciliation",
+      "predicted_label": "clean_bounded_negative",
+      "rationale": "verdict text matches tuned bounded-negative verdict text",
+      "recommendation": "standard_auto_reconcile",
+      "source": "results/experiment_3766_thesis_a_definitive_reconcile.json",
+      "verification_relaxation_recommended": false
+    },
+    {
+      "expected_label": "clean_bounded_negative",
+      "honest_verdict": "complete: thesis_a_part_b_BOUNDED_ebt_does_not_beat_ar_at_matched_compute_ebt_0.000_vs_arN_0.025_ar1_0.062_headroom_ok_honest_negative",
+      "label_rule": "matched-compute Part B bounded negative with headroom",
+      "predicted_label": "clean_bounded_negative",
+      "rationale": "verdict text matches tuned bounded-negative verdict text",
+      "recommendation": "standard_auto_reconcile",
+      "source": "results/thesis_a_part_b_matched_compute.json",
+      "verification_relaxation_recommended": false
+    },
+    {
+      "expected_label": "clean_bounded_negative",
+      "honest_verdict": "complete: thesis_a_part_b_scaled_BOUNDED_seed1_ebt_0.000_le_ar_0.840_ar1_0.820_headroom_ok",
+      "label_rule": "scaled Part B bounded negative with headroom",
+      "predicted_label": "clean_bounded_negative",
+      "rationale": "verdict text matches tuned bounded-negative verdict text",
+      "recommendation": "standard_auto_reconcile",
+      "source": "results/thesis_a_part_b_scaled_seed1.json",
+      "verification_relaxation_recommended": false
+    },
+    {
+      "expected_label": "clean_bounded_negative",
+      "honest_verdict": "complete: kill_gate_part_a_FAIL_energy_as_generator_bounded_at_small_scale_honest_negative_stop",
+      "label_rule": "planned kill-gate negative from stability verdict",
+      "predicted_label": "clean_bounded_negative",
+      "rationale": "verdict text matches tuned bounded-negative verdict text",
+      "recommendation": "standard_auto_reconcile",
+      "source": "results/experiment_3729_stability_kill_gate_verdict.json",
+      "verification_relaxation_recommended": false
+    },
+    {
+      "expected_label": "clean_bounded_negative",
+      "honest_verdict": "complete: capstone_v341_thesis_a_ebt_bringup_kill_gate_part_a_bounded_paper_ready_true_frozen_headline_unchanged",
+      "label_rule": "capstone records bounded kill-gate outcome",
+      "predicted_label": "clean_bounded_negative",
+      "rationale": "verdict text matches tuned bounded-negative verdict text",
+      "recommendation": "standard_auto_reconcile",
+      "source": "results/experiment_3731_capstone_v341.json",
+      "verification_relaxation_recommended": false
+    },
+    {
+      "expected_label": "clean_bounded_negative",
+      "honest_verdict": "complete: kill_gate_part_b_not_run_part_a_did_not_green_light",
+      "label_rule": "Part B kill-gate was not run after Part A did not green-light",
+      "predicted_label": "clean_bounded_negative",
+      "rationale": "verdict text matches tuned bounded-negative verdict text",
+      "recommendation": "standard_auto_reconcile",
+      "source": "results/experiment_3739_kill_gate_part_b_verdict.json",
+      "verification_relaxation_recommended": false
+    },
+    {
+      "expected_label": "clean_bounded_negative",
+      "honest_verdict": "complete: real_kill_gate_part_a_untested_training_did_not_complete",
+      "label_rule": "Part A kill-gate did not complete the planned training gate",
+      "predicted_label": "clean_bounded_negative",
+      "rationale": "verdict text matches tuned bounded-negative verdict text",
+      "recommendation": "standard_auto_reconcile",
+      "source": "results/experiment_3736_real_kill_gate_part_a_verdict.json",
+      "verification_relaxation_recommended": false
+    },
+    {
+      "expected_label": "clean_bounded_negative",
+      "honest_verdict": "complete: facts_domain_bound_on_real_benchmark_335_negative_genuinely_earned",
+      "label_rule": "earned facts-domain negative with acceptance gate",
+      "predicted_label": "clean_bounded_negative",
+      "rationale": "verdict text matches tuned bounded-negative verdict text",
+      "recommendation": "standard_auto_reconcile",
+      "source": "results/experiment_3670_facts_row_real_benchmark.json",
+      "verification_relaxation_recommended": false
+    },
+    {
+      "expected_label": "clean_bounded_negative",
+      "honest_verdict": "complete: ensemble_no_selection_value_even_with_headroom_sc_weak_earned_negative",
+      "label_rule": "earned selection-value negative with headroom gate",
+      "predicted_label": "clean_bounded_negative",
+      "rationale": "verdict text matches tuned bounded-negative verdict text",
+      "recommendation": "standard_auto_reconcile",
+      "source": "results/experiment_3672_ensemble_selection_where_sc_weak.json",
+      "verification_relaxation_recommended": false
+    },
+    {
+      "expected_label": "clean_bounded_negative",
+      "honest_verdict": "complete: facts_domain_bound_even_with_real_nli_334_negative_confirmed_earned",
+      "label_rule": "earned facts-domain remeasurement negative",
+      "predicted_label": "clean_bounded_negative",
+      "rationale": "verdict text matches tuned bounded-negative verdict text",
+      "recommendation": "standard_auto_reconcile",
+      "source": "results/experiment_3655_facts_row_remeasurement_real_nli_v5.json",
+      "verification_relaxation_recommended": false
+    },
+    {
+      "expected_label": "clean_bounded_negative",
+      "honest_verdict": "complete: energy_does_not_beat_sc_even_with_headroom_route2_selection_premise_bounded_informative_negative",
+      "label_rule": "Route 2 informative negative on headroom corpus",
+      "predicted_label": "clean_bounded_negative",
+      "rationale": "verdict text matches tuned bounded-negative verdict text",
+      "recommendation": "standard_auto_reconcile",
+      "source": "results/experiment_3531_p01_route2_energy_vs_sc_on_headroom_corpus_v1.json",
+      "verification_relaxation_recommended": false
+    },
+    {
+      "expected_label": "clean_bounded_negative",
+      "honest_verdict": "complete: p01_no_selectable_headroom_even_at_level4_5_sc_majority_is_near_optimal_route2_premise_bounded",
+      "label_rule": "Route 2 selectable-headroom bounded premise result",
+      "predicted_label": "clean_bounded_negative",
+      "rationale": "verdict text matches tuned bounded-negative verdict text",
+      "recommendation": "standard_auto_reconcile",
+      "source": "results/experiment_3530_p01_route2_selectable_headroom_corpus_build_v1.json",
+      "verification_relaxation_recommended": false
+    },
+    {
+      "expected_label": "frame_violating_anomaly",
+      "honest_verdict": "complete: thesis_a_p1_v1_INCONCLUSIVE_positive_control_failed_ar_0.000_superseded_by_v2_see_corrigendum",
+      "label_rule": "P1 v1 load-bearing AR positive control failed",
+      "predicted_label": "frame_violating_anomaly",
+      "rationale": "verdict text records a load-bearing positive control failure; pause pruning and ask a human without relaxing verification.",
+      "recommendation": "halt_pruning_escalate_to_human",
+      "source": "results/thesis_a_p1_discrete_search.json",
+      "verification_relaxation_recommended": false
+    },
+    {
+      "expected_label": "frame_violating_anomaly",
+      "honest_verdict": "complete: thesis_a_p1_v2_INCONCLUSIVE_positive_control_failed_ar_best_0.000_below_0.3_cannot_adjudicate_artifact_vs_fundamental_rerun_with_stronger_ar",
+      "label_rule": "P1 v2 load-bearing AR positive control failed",
+      "predicted_label": "frame_violating_anomaly",
+      "rationale": "verdict text records a load-bearing positive control failure; pause pruning and ask a human without relaxing verification.",
+      "recommendation": "halt_pruning_escalate_to_human",
+      "source": "results/thesis_a_p1_discrete_search_v2.json",
+      "verification_relaxation_recommended": false
+    },
+    {
+      "expected_label": "clean_positive",
+      "honest_verdict": "",
+      "label_rule": "operational retrospective baseline sample",
+      "predicted_label": "clean_positive",
+      "rationale": "non-negative artifact with no frame-violation signals",
+      "recommendation": "standard_positive_reconcile",
+      "source": "results/operational_retro_2026_04_25.json",
+      "verification_relaxation_recommended": false
+    },
+    {
+      "expected_label": "clean_positive",
+      "honest_verdict": "",
+      "label_rule": "operational retrospective baseline sample",
+      "predicted_label": "clean_positive",
+      "rationale": "non-negative artifact with no frame-violation signals",
+      "recommendation": "standard_positive_reconcile",
+      "source": "results/operational_retro_2026_04_26.json",
+      "verification_relaxation_recommended": false
+    },
+    {
+      "expected_label": "clean_positive",
+      "honest_verdict": "",
+      "label_rule": "operational retrospective baseline sample",
+      "predicted_label": "clean_positive",
+      "rationale": "non-negative artifact with no frame-violation signals",
+      "recommendation": "standard_positive_reconcile",
+      "source": "results/operational_retro_2026_04_27.json",
+      "verification_relaxation_recommended": false
+    },
+    {
+      "expected_label": "clean_positive",
+      "honest_verdict": "",
+      "label_rule": "operational retrospective baseline sample",
+      "predicted_label": "clean_positive",
+      "rationale": "non-negative artifact with no frame-violation signals",
+      "recommendation": "standard_positive_reconcile",
+      "source": "results/operational_retro_2026_04_28.json",
+      "verification_relaxation_recommended": false
+    },
+    {
+      "expected_label": "clean_positive",
+      "honest_verdict": "",
+      "label_rule": "operational retrospective baseline sample",
+      "predicted_label": "clean_positive",
+      "rationale": "non-negative artifact with no frame-violation signals",
+      "recommendation": "standard_positive_reconcile",
+      "source": "results/operational_retro_2026_04_29.json",
+      "verification_relaxation_recommended": false
+    },
+    {
+      "expected_label": "clean_positive",
+      "honest_verdict": "complete: abstention_mode_wired_into_verify_api_default_off_e2e_passed_doc_proposal_emitted_not_curated_edit",
+      "label_rule": "normal passing advisory/product-wiring result",
+      "predicted_label": "clean_positive",
+      "rationale": "terminal positive verdict with no frame-violation signals",
+      "recommendation": "standard_positive_reconcile",
+      "source": "results/experiment_3779_abstention_operating_point_product_wiring.json",
+      "verification_relaxation_recommended": false
+    },
+    {
+      "expected_label": "clean_positive",
+      "honest_verdict": "complete: anomaly_escalation_classifier_prototyped_recommend_only_change_proposal_written_never_relaxes_verification_conductor_unmodified",
+      "label_rule": "normal passing prototype artifact",
+      "predicted_label": "clean_positive",
+      "rationale": "terminal positive verdict with no frame-violation signals",
+      "recommendation": "standard_positive_reconcile",
+      "source": "results/experiment_3780_anomaly_escalation_classifier_prototype.json",
+      "verification_relaxation_recommended": false
+    },
+    {
+      "expected_label": "clean_positive",
+      "honest_verdict": "complete: g4_correction_prepped_unsupported_numbers_identified_real_numbers_confirmed_proposal_written_operator_curated_doc_unedited",
+      "label_rule": "normal passing reporting-prep result",
+      "predicted_label": "clean_positive",
+      "rationale": "terminal positive verdict with no frame-violation signals",
+      "recommendation": "standard_positive_reconcile",
+      "source": "results/experiment_3782_technical_report_g4_correction_prep.json",
+      "verification_relaxation_recommended": false
+    },
+    {
+      "expected_label": "clean_positive",
+      "honest_verdict": "complete: external_research_refresh_346_filed_5_references_section_appended_numbers_as_reported",
+      "label_rule": "normal passing external-refresh result",
+      "predicted_label": "clean_positive",
+      "rationale": "terminal positive verdict with no frame-violation signals",
+      "recommendation": "standard_positive_reconcile",
+      "source": "results/experiment_3783_external_research_refresh.json",
+      "verification_relaxation_recommended": false
+    },
+    {
+      "expected_label": "clean_positive",
+      "honest_verdict": "complete: fr11_v19_tier3_predictive_verifier_trained_predictive_auroc_0.9715_headline_ensemble_unchanged_memory_contribution_preserved_state_persisted",
+      "label_rule": "normal passing FR-11 result",
+      "predicted_label": "clean_positive",
+      "rationale": "terminal positive verdict with no frame-violation signals",
+      "recommendation": "standard_positive_reconcile",
+      "source": "results/experiment_3788_fr11_self_learning_v19_tier3_predictive.json",
+      "verification_relaxation_recommended": false
+    },
+    {
+      "expected_label": "clean_positive",
+      "honest_verdict": "complete: abstention_cli_batch_surface_added_default_off_e2e_passed_doc_proposal_emitted_not_curated_edit",
+      "label_rule": "normal passing abstention CLI result",
+      "predicted_label": "clean_positive",
+      "rationale": "terminal positive verdict with no frame-violation signals",
+      "recommendation": "standard_positive_reconcile",
+      "source": "results/experiment_3789_abstention_cli_batch_surface.json",
+      "verification_relaxation_recommended": false
+    },
+    {
+      "expected_label": "clean_positive",
+      "honest_verdict": "complete: verifier_gaming_resistance_characterized_degradation_curve_n240_holds_and_degrades_documented_not_a_moat_reopen_headline_unchanged",
+      "label_rule": "normal passing verifier characterization result",
+      "predicted_label": "clean_positive",
+      "rationale": "terminal positive verdict with no frame-violation signals",
+      "recommendation": "standard_positive_reconcile",
+      "source": "results/experiment_3790_verifier_gaming_resistance_characterization.json",
+      "verification_relaxation_recommended": false
+    },
+    {
+      "expected_label": "clean_positive",
+      "honest_verdict": "complete: fr11_v18_tier2_constraint_memory_consolidated_auroc_within_frozen_ci_memory_contribution_preserved_state_persisted",
+      "label_rule": "normal passing FR-11 memory result",
+      "predicted_label": "clean_positive",
+      "rationale": "terminal positive verdict with no frame-violation signals",
+      "recommendation": "standard_positive_reconcile",
+      "source": "results/experiment_3778_fr11_self_learning_v18_tier2_constraint_memory.json",
+      "verification_relaxation_recommended": false
+    },
+    {
+      "expected_label": "clean_positive",
+      "honest_verdict": "complete: certified_abstention_point_threshold_0.733216_coverage_0.998218_at_risk_0.05_certified_split_conformal_delta_0.05_n2619",
+      "label_rule": "normal passing certified-abstention result",
+      "predicted_label": "clean_positive",
+      "rationale": "terminal positive verdict with no frame-violation signals",
+      "recommendation": "standard_positive_reconcile",
+      "source": "results/experiment_3771_certified_abstention_operating_point.json",
+      "verification_relaxation_recommended": false
+    },
+    {
+      "expected_label": "clean_positive",
+      "honest_verdict": "complete: distribution_mirror_readiness_audited_pypi_true_hf_true_ipfs_true_operator_checklist_emitted_agent_published_nothing",
+      "label_rule": "normal passing distribution-readiness result",
+      "predicted_label": "clean_positive",
+      "rationale": "terminal positive verdict with no frame-violation signals",
+      "recommendation": "standard_positive_reconcile",
+      "source": "results/experiment_3770_distribution_mirror_publish_checklist.json",
+      "verification_relaxation_recommended": false
+    },
+    {
+      "expected_label": "clean_positive",
+      "honest_verdict": "complete: phase1_e2e_smoke_package_import_pipeline_mcp_protocol_cli_passed_wiring_smoke_not_accuracy_claim",
+      "label_rule": "normal passing package CLI smoke result",
+      "predicted_label": "clean_positive",
+      "rationale": "terminal positive verdict with no frame-violation signals",
+      "recommendation": "standard_positive_reconcile",
+      "source": "results/experiment_3769_package_cli_mcp_e2e_smoke.json",
+      "verification_relaxation_recommended": false
+    },
+    {
+      "expected_label": "clean_positive",
+      "honest_verdict": "complete: g3_narrowing_lint_shipped_19_phrasings_12th_added_violations_0_precommit_wired",
+      "label_rule": "normal passing narrowing-lint result",
+      "predicted_label": "clean_positive",
+      "rationale": "terminal positive verdict with no frame-violation signals",
+      "recommendation": "standard_positive_reconcile",
+      "source": "results/experiment_3768_g3_narrowing_lint.json",
+      "verification_relaxation_recommended": false
+    },
+    {
+      "expected_label": "clean_positive",
+      "honest_verdict": "complete: g2_local_reproducer_committed_auroc_0.913134_in_ci95_true_frozen_headline_confirmed_unchanged",
+      "label_rule": "normal passing mechanical reproducer result",
+      "predicted_label": "clean_positive",
+      "rationale": "terminal positive verdict with no frame-violation signals",
+      "recommendation": "standard_positive_reconcile",
+      "source": "results/experiment_3767_g2_mechanical_reproducer.json",
+      "verification_relaxation_recommended": false
+    }
+  ],
+  "validation_sample_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_3791_anomaly_escalation_classifier_validation.json"
+}

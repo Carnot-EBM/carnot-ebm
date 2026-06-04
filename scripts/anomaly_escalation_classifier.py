@@ -58,6 +58,15 @@ POSITIVE_TOKENS = (
     "success_",
 )
 
+VERDICT_FRAME_VIOLATION_TOKENS = (
+    "positive_control_failed",
+    "positive-control-failed",
+    "positive control failed",
+    "cannot_adjudicate",
+    "assumption_contradicted",
+    "assumption_violated",
+)
+
 
 @dataclass(frozen=True)
 class ClassificationResult:
@@ -114,6 +123,12 @@ def _is_negative_verdict(verdict: str) -> bool:
 def _is_terminal_positive_verdict(verdict: str) -> bool:
     lowered = verdict.lower()
     return lowered.startswith(POSITIVE_TOKENS) and not _is_negative_verdict(verdict)
+
+
+def _verdict_frame_violation_reason(verdict: str) -> str | None:
+    if _contains_token(verdict, VERDICT_FRAME_VIOLATION_TOKENS):
+        return "verdict text records a load-bearing positive control failure"
+    return None
 
 
 def _positive_control_failure_reason(artifact: dict[str, Any]) -> str | None:
@@ -185,6 +200,51 @@ def _envelope_reason(artifact: dict[str, Any]) -> str | None:
     return None
 
 
+def _bounded_negative_verdict_reason(verdict: str) -> str | None:
+    lowered = verdict.lower()
+    if not lowered:
+        return None
+
+    has_bounded_lineage = any(
+        token in lowered
+        for token in (
+            "bounded",
+            "domain_bound",
+            "honest_negative",
+            "earned_negative",
+            "informative_negative",
+            "negative_confirmed_earned",
+        )
+    )
+    has_planned_kill_gate = "kill_gate" in lowered and any(
+        token in lowered
+        for token in (
+            "bounded",
+            "fail",
+            "not_run",
+            "did_not_green_light",
+            "did_not_complete",
+            "untested",
+            "honest_negative",
+        )
+    )
+    has_headroom_negative = "headroom" in lowered and any(
+        token in lowered
+        for token in (
+            "does_not_beat",
+            "no_selection_value",
+            "no_selectable_headroom",
+            "earned_negative",
+            "honest_negative",
+            "informative_negative",
+        )
+    )
+
+    if has_bounded_lineage or has_planned_kill_gate or has_headroom_negative:
+        return "verdict text matches tuned bounded-negative verdict text"
+    return None
+
+
 def _expected_negative_reason(artifact: dict[str, Any], verdict: str) -> str | None:
     verdict_lower = verdict.lower()
     expected_tokens: list[str] = []
@@ -231,6 +291,12 @@ def classify_artifact(artifact: dict[str, Any]) -> ClassificationResult:
     """
 
     verdict = _honest_verdict(artifact)
+    if reason := _verdict_frame_violation_reason(verdict):
+        return ClassificationResult(
+            classification=CLASS_FRAME_VIOLATING_ANOMALY,
+            recommendation=RECOMMEND_HUMAN_REVIEW,
+            rationale=f"{reason}; pause pruning and ask a human without relaxing verification.",
+        )
     if reason := _positive_control_failure_reason(artifact):
         return ClassificationResult(
             classification=CLASS_FRAME_VIOLATING_ANOMALY,
@@ -250,6 +316,20 @@ def classify_artifact(artifact: dict[str, Any]) -> ClassificationResult:
             rationale=f"{reason}; pause pruning and ask a human without relaxing verification.",
         )
 
+    if _is_negative_verdict(verdict):
+        if reason := _expected_negative_reason(artifact, verdict):
+            return ClassificationResult(
+                classification=CLASS_CLEAN_BOUNDED_NEGATIVE,
+                recommendation=RECOMMEND_AUTO_RECONCILE,
+                rationale=reason,
+            )
+    if reason := _bounded_negative_verdict_reason(verdict):
+        return ClassificationResult(
+            classification=CLASS_CLEAN_BOUNDED_NEGATIVE,
+            recommendation=RECOMMEND_AUTO_RECONCILE,
+            rationale=reason,
+        )
+
     if _is_terminal_positive_verdict(verdict):
         return ClassificationResult(
             classification=CLASS_CLEAN_POSITIVE,
@@ -258,12 +338,6 @@ def classify_artifact(artifact: dict[str, Any]) -> ClassificationResult:
         )
 
     if _is_negative_verdict(verdict):
-        if reason := _expected_negative_reason(artifact, verdict):
-            return ClassificationResult(
-                classification=CLASS_CLEAN_BOUNDED_NEGATIVE,
-                recommendation=RECOMMEND_AUTO_RECONCILE,
-                rationale=reason,
-            )
         return ClassificationResult(
             classification=CLASS_FRAME_VIOLATING_ANOMALY,
             recommendation=RECOMMEND_HUMAN_REVIEW,

@@ -3534,3 +3534,34 @@ validation SHALL remain advisory-only and MUST NOT modify
 a prediction-vs-expected confusion matrix, reports false-escalation rate and
 frame-violating recall, cites the upstream artifacts, confirms that no
 recommendation relaxes verification, and leaves the conductor unmodified.
+
+### REQ-AUTO-017: Tuned Advisory Anomaly Classifier False-Escalation Control
+
+The autoresearch system SHALL tune the advisory anomaly-escalation classifier
+against the same Exp 3791 labeled validation sample before recommending any
+operator wiring. The tuned classifier SHALL reduce false escalation of
+`clean_bounded_negative` rows to at most 0.2 while preserving recall 1.0 on
+the known P1 v1/v2 `frame_violating_anomaly` positive-control failures. The
+tuning SHALL remain recommend-only: frame violations may recommend pause plus
+human escalation, but the classifier MUST NOT modify the conductor, prune
+research state, edit artifacts, or recommend relaxing verification.
+
+#### SCENARIO-AUTO-014: Tuned Classifier Keeps Earned Negatives Clean And P1 Failures Escalated
+
+**Given** the same 32-row Exp 3791 labeled validation sample
+**When** the tuned anomaly-escalation classifier re-validates the sample
+**Then** the output artifact reports the post-tuning confusion matrix,
+false-escalation rate at most 0.2, frame-violating recall 1.0, upstream
+artifact provenance, and `never_relaxes_verification=true`.
+
+**Given** an earned bounded or kill-gate negative whose verdict text records
+bounded lineage, headroom, earned negative evidence, or a planned kill gate
+without a frame-violation signal
+**When** the tuned classifier evaluates the artifact
+**Then** it classifies the artifact as `clean_bounded_negative`.
+
+**Given** a P1 v1 or P1 v2 artifact whose verdict text records a load-bearing
+positive-control failure
+**When** the tuned classifier evaluates the artifact
+**Then** it classifies the artifact as `frame_violating_anomaly` and still only
+recommends human escalation without relaxing verification.

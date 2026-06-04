@@ -1,6 +1,6 @@
 """Tests for the advisory anomaly-escalation classifier.
 
-Spec refs: REQ-AUTO-015, SCENARIO-AUTO-012.
+Spec refs: REQ-AUTO-015, REQ-AUTO-017, SCENARIO-AUTO-012, SCENARIO-AUTO-014.
 """
 
 from __future__ import annotations
@@ -26,6 +26,18 @@ def test_req_auto_015_spec_anchor_exists() -> None:
     assert "scripts/anomaly_escalation_classifier.py" in spec
     assert "MUST NOT prune" in spec
     assert "recommend relaxing verification" in spec
+
+
+def test_req_auto_017_spec_anchor_exists() -> None:
+    """REQ-AUTO-017: OpenSpec declares the tuned false-escalation target."""
+
+    spec = SPEC_PATH.read_text(encoding="utf-8")
+
+    assert "REQ-AUTO-017" in spec
+    assert "SCENARIO-AUTO-014" in spec
+    assert "false escalation" in spec
+    assert "at most 0.2" in spec
+    assert "P1 v1/v2" in spec
 
 
 def test_scenario_auto_012_planned_bounded_negative_is_clean() -> None:
@@ -209,6 +221,42 @@ def test_req_auto_015_unexpected_negative_and_neutral_artifact_defaults() -> Non
     assert "lacks expected kill-gate" in unexpected_negative.rationale
     assert neutral.classification == "clean_positive"
     assert "non-negative artifact" in neutral.rationale
+
+
+def test_scenario_auto_014_real_earned_negatives_are_not_false_escalated() -> None:
+    """SCENARIO-AUTO-014: exp3791 false escalations become bounded negatives."""
+
+    matched_compute = classifier.classify_file(Path("results/thesis_a_part_b_matched_compute.json"))
+    part_b_not_run = classifier.classify_file(
+        Path("results/experiment_3739_kill_gate_part_b_verdict.json")
+    )
+
+    assert matched_compute.classification == "clean_bounded_negative"
+    assert matched_compute.recommendation == "standard_auto_reconcile"
+    assert matched_compute.verification_relaxation_recommended is False
+    assert "bounded-negative verdict text" in matched_compute.rationale
+
+    assert part_b_not_run.classification == "clean_bounded_negative"
+    assert part_b_not_run.recommendation == "standard_auto_reconcile"
+    assert part_b_not_run.verification_relaxation_recommended is False
+    assert "bounded-negative verdict text" in part_b_not_run.rationale
+
+
+def test_scenario_auto_014_p1_positive_control_failures_still_escalate() -> None:
+    """SCENARIO-AUTO-014: P1 v1/v2 positive controls preserve anomaly recall."""
+
+    p1_v1 = classifier.classify_file(Path("results/thesis_a_p1_discrete_search.json"))
+    p1_v2 = classifier.classify_file(Path("results/thesis_a_p1_discrete_search_v2.json"))
+
+    assert p1_v1.classification == "frame_violating_anomaly"
+    assert p1_v1.recommendation == "halt_pruning_escalate_to_human"
+    assert p1_v1.verification_relaxation_recommended is False
+    assert "positive control failure" in p1_v1.rationale
+
+    assert p1_v2.classification == "frame_violating_anomaly"
+    assert p1_v2.recommendation == "halt_pruning_escalate_to_human"
+    assert p1_v2.verification_relaxation_recommended is False
+    assert "positive control failure" in p1_v2.rationale
 
 
 def test_req_auto_015_envelope_non_anomalies_and_bad_shapes_are_tolerated() -> None:
