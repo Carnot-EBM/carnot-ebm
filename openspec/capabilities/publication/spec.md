@@ -2067,6 +2067,52 @@ per-number provenance table, classifies G4 pass/fail from seed/checksum fields,
 cites all three upstream artifacts, and leaves operator-curated documents
 unedited.
 
+### REQ-PUBLISH-3799: Product Headline G4 Reconfirmation After Rerun
+
+The Exp 3799 product-headline provenance reconfirmation runner MUST aggregate
+only checked-in upstream artifacts after the Exp 3798 rerun of the demoted
+Exp 1999 code-repair claim. It SHALL read
+`results/experiment_3798_g4_product_headline_restoration.json` by absolute
+path, reassert Exp 2090's already-G4 CRANE result, cite both upstream artifacts,
+and SHALL NOT edit `docs/technical-report.md`, `ops/north-star.md`, status
+documents, changelogs, or `scripts/research_conductor.py`.
+
+For the rerun code-repair number, G4 passes only when the Exp 3798 primary
+artifact is present, reports `g4_provenance_complete=true`, carries a top-level
+`random_seed`, a top-level `reproducibility_checksum`, a non-trivial `n`, and
+`positive_control_passed=true`. The runner MUST record the observed
+`baseline_pass1`, `repair_pass1`, and `repair_delta_pp` as table row evidence
+without promoting a zero-delta or adversarial-stamped upstream result into a
+restored product headline. If the Exp 3798 artifact is absent, the artifact MUST
+record `exp3798_did_not_produce_clean_artifact_headline_stays_demoted` rather
+than fabricating a passing provenance row.
+
+The artifact
+`results/experiment_3799_product_headline_provenance_reconfirmation.json` MUST
+use `inference_substrate="aggregation_from_upstream_artifacts"`, include
+`honest_verdict`, `provenance_table`, `rerun_code_repair_g4_pass`,
+`exp2090_g4_pass`, `product_headline_restorable`,
+`operator_curated_doc_unedited`, `cited_upstream_artifacts`, `random_seed`,
+`reproducibility_checksum`, and `duration_s`, avoid live-model substrate marker
+strings in the aggregation artifact, pass `scripts/adversarial_verify.py`
+without critical flags, and emit the terminal verdict prefix
+`complete: product_headline_provenance_reconfirmed_rerun_g4_<bool>_exp2090_g4_<bool>_headline_<status>_operator_curated_doc_unedited`.
+
+### SCENARIO-PUBLISH-3799: Product Headline Reconfirmation Preserves Caveats
+
+**Given** Exp 3798 and Exp 2090 primary artifacts are available
+**When** the Exp 3799 runner aggregates them
+**Then** it records a per-number table for the rerun code-repair number and
+the CRANE number, classifies G4 from primary-artifact provenance fields, cites
+both upstream artifacts, preserves any upstream zero-delta or adversarial caveat
+as a caveat, and leaves operator-curated documents unedited.
+
+**Given** the Exp 3798 rerun artifact is unavailable
+**When** the Exp 3799 runner starts
+**Then** it writes an honest blocked record with
+`exp3798_did_not_produce_clean_artifact_headline_stays_demoted`, does not
+fabricate G4 provenance, and keeps the product headline not headline-eligible.
+
 ### REQ-PUBLISH-3723: v340 Convergence Capstone And Hardened G-Gate Recheck
 
 The Exp 3723 v340 capstone runner MUST aggregate `publication_gate.py --json`
