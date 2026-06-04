@@ -520,6 +520,38 @@ The terminal artifact MUST include `honest_verdict`, `inference_substrate`,
 `tests_assert_real_behavior`, `model_specs`, `random_seed`,
 `reproducibility_checksum`, and `duration_s`.
 
+### REQ-SPOE-3789: Abstention CLI Batch Surface
+
+The shipped CLI MUST expose a batch verification surface that reads more than
+one candidate from a file and can opt into the certified Exp 3771 abstention
+operating point without changing default behavior.  The batch input MUST accept
+either a JSON array of candidate objects or one candidate per non-empty line.
+Line-delimited inputs MAY be JSON objects or raw candidate text rows.
+
+When abstention mode is disabled, the CLI batch surface MUST preserve the
+existing calibrated `score_candidates` row shape and omit abstention verdict
+fields.  When abstention mode is enabled, every scoreable row MUST include the
+confident-or-abstain verdict, review route, certified threshold, coverage,
+certified risk bound, delta, calibration sample size, and threshold-source
+metadata loaded through the same certified-abstention config used by the Python
+and MCP surfaces.  The batch surface MUST process at least two candidates in a
+single invocation and emit structured JSON.
+
+The Exp 3789 runner MUST check the `.venv/bin/python` interpreter can import
+`carnot`, MUST load the certified threshold from the absolute Exp 3771 artifact
+before claiming the CLI surface is wired, MUST run a no-live-LLM CLI wiring
+smoke over cached FoVer-style verifier-scoring candidates, MUST write a
+documentation-update proposal instead of editing operator-curated CLI/MCP docs,
+and MUST write
+`results/experiment_3789_abstention_cli_batch_surface.json`.
+
+The terminal artifact MUST include `honest_verdict`, `inference_substrate`,
+`cli_abstention_surface_added`, `batch_path_works`,
+`default_off_preserves_prior_behavior`, `certified_threshold_used`,
+`e2e_cli_abstention_passed`, `doc_proposal_emitted_not_curated_edit`,
+`tests_assert_real_behavior`, `model_specs`, `random_seed`,
+`reproducibility_checksum`, and `duration_s`.
+
 ## Scenarios
 
 ### SCENARIO-INFRA-052: Version-Blocked Model Raises Error
@@ -749,6 +781,22 @@ JSON-RPC, not an in-process handler, and records whether the external surface
 accepted the opt-in abstention-mode parameter.
 
 **Spec traces:** REQ-SPOE-3779
+
+### SCENARIO-SPOE-3789: CLI Batch Abstention Is Default-Off
+
+**Given** a readable batch candidate file containing at least two cached
+verifier-scoring candidates and the Exp 3771 certified operating point
+**When** the CLI batch surface runs without `--abstention-mode`
+**Then** each row preserves the existing calibrated score shape without
+abstention verdict fields.
+
+**When** the same CLI batch surface runs with `--abstention-mode`
+**Then** the above-threshold candidate returns a confident verdict, the
+below-threshold candidate returns `uncertain / route to review`, both rows carry
+certified Exp 3771 metadata, and the single CLI invocation reports more than one
+processed candidate.
+
+**Spec traces:** REQ-SPOE-3789
 
 ### REQ-SAMPLE-020: SparseIsingEBM K-Regular Graph
 
