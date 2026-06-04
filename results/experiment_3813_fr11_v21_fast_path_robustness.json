@@ -1,0 +1,160 @@
+{
+  "acceptance_gate": {
+    "condition": "second-split skip rate within band of persisted 0.56 AND effective AUROC in frozen CI AND accuracy_regression=false AND headline ensemble unchanged",
+    "passed": false,
+    "principle": "The v20 operating point is deployable only if the persisted threshold holds on a disjoint second split without re-tuning."
+  },
+  "accuracy_regression": false,
+  "artifact": "experiment_3813_fr11_v21_fast_path_robustness",
+  "combined_scores_sha256": "0d47d51ff6151c9b7f018799407970b62197451560223283eba8c1e2e1b8bd5c",
+  "continuous_self_learning_task": true,
+  "duration_s": 1.835466862,
+  "effective_auroc_in_frozen_ci": false,
+  "effective_auroc_second_split": 0.9594,
+  "fallthrough_count_second_split": 81,
+  "fallthrough_full_ensemble_auroc_second_split": 0.9196,
+  "field_principles": {
+    "accuracy_regression": "BARE bool, must be false for generalization -- the gate trades compute for nothing if it degrades the verdict on the second split.",
+    "duration_s": "Wall-clock plausibility floor; verifier-scoring on a second split is modest.",
+    "effective_auroc_second_split": "The combined fast-path+fallthrough AUROC on the second split -- must stay within the frozen CI [0.9027, 0.9235] for the gate to generalize without regression.",
+    "headline_ensemble_unchanged": "BARE bool, true -- the frozen 0.9131 full-scoring ensemble is the fall-through and is UNTOUCHED; the gate is additive.",
+    "honest_verdict": "Terminal prefix; the robustness outcome; blocked_<resource> if a precondition failed.",
+    "inference_substrate": "verifier_ensemble_against_cached_candidates (principle: reads cached scores + the persisted predictor + operating point, no live model).",
+    "is_measurement_not_retrain": "BARE bool, true -- confirms v21 MEASURES the persisted operating point (does not retrain or re-tune) -- the lineage-continuation forward difference.",
+    "model_specs": "Names the corpus + 4 verifiers + the Tier-3 predictor -- honest substrate.",
+    "operating_point_generalizes": "BARE bool -- whether the v20 operating point holds out-of-sample (skip within band AND no AUROC regression); false is a valid finding (needs per-split recalibration).",
+    "random_seed": "Determinism precondition.",
+    "reproducibility_checksum": "Content hash catches drift.",
+    "skip_rate_second_split": "The skip rate of the persisted gate on the SECOND held-out split -- the out-of-sample generalization evidence vs v20's 0.56.",
+    "three_split_sizes": "Sample-size + leakage hygiene -- the predictor-training split, the v20 measurement split, and the v21 second split are all disjoint.",
+    "v20_operating_point_threshold": "The persisted v20 threshold T reused UNCHANGED -- confirms v21 measures, it does not re-tune."
+  },
+  "frozen_ci95": {
+    "high": 0.9235355665466916,
+    "low": 0.9027316334533082
+  },
+  "frozen_headline_ensemble_auroc": 0.9131335999999999,
+  "headline_ensemble_unchanged": true,
+  "honest_verdict": "complete: fr11_v21_fast_path_robustness_skip_0.5950_effective_auroc_0.9594_operating_point_generalizes_false_headline_ensemble_unchanged_measurement_not_retrain",
+  "inference_substrate": "verifier_ensemble_against_cached_candidates (principle: reads cached scores + the persisted predictor + operating point, no live model).",
+  "is_measurement_not_retrain": true,
+  "methodology": {
+    "corpus_absolute_path": "/home/ianblenke/github.com/ianblenke/carnot/data/fover_corpus.jsonl",
+    "domain_keys": [
+      "fr11_session_memory",
+      "tier0r_curry_howard",
+      "tier0s_arithmetic_gap",
+      "tier0u_logical_consistency"
+    ],
+    "fallthrough_path": "Exp 2837 frozen four-verifier ensemble scoring",
+    "feature_builder": "v19_four_verifier_scores_to_258_dim_FR11ExtendedJEPA_embedding",
+    "fixed_threshold_source": "Exp 3803 persisted operating point, reused unchanged",
+    "gate_confidence": "abs(mean_domain_probability - 0.5)",
+    "lineage": "v21_second_split_robustness_measurement_not_retrain_or_retune",
+    "predictor_api": "FR11ExtendedJEPA.predict loaded from persisted v19 state",
+    "random_seed": 3813,
+    "scoring_protocol": "ops/reproduction-runbook-fover-headline.md",
+    "second_split": "different seed, original FoVer row IDs disjoint from v19 train and v20 measurement"
+  },
+  "model_specs": {
+    "corpus": "FoVer cached corpus",
+    "corpus_absolute_path": "/home/ianblenke/github.com/ianblenke/carnot/data/fover_corpus.jsonl",
+    "ensemble_status": "frozen_0.9131_scoring_ensemble_is_fallthrough_unchanged",
+    "live_model_invoked": false,
+    "n_examples_second_split": 200,
+    "operating_point_source": "results/experiment_3803_fr11_v20_tier3_fast_path_gate_state.json",
+    "predictive_head": "FR11ExtendedJEPA",
+    "predictive_head_module": "carnot.fr11.tier3_jepa",
+    "predictor_input_dim": 258,
+    "predictor_outputs": [
+      "arithmetic",
+      "code",
+      "logic"
+    ],
+    "predictor_state_source": "results/experiment_3788_fr11_v19_tier3_predictive_jepa_state.npz",
+    "scoring_mode": "cached_verifier_scores_only_with_persisted_tier3_fast_path_gate",
+    "tier": "Tier-3 predictive verification robustness measurement",
+    "verifiers": [
+      "fr11_session_memory",
+      "tier0r_curry_howard",
+      "tier0s_arithmetic_gap",
+      "tier0u_logical_consistency"
+    ]
+  },
+  "n_samples": 200,
+  "operating_point_generalizes": false,
+  "operating_point_state_path": "results/experiment_3803_fr11_v20_tier3_fast_path_gate_state.json",
+  "operating_point_state_sha256": "3054fedc82ad0fad63cea0f315aa7c1e72c444750b257f0cdceb931312d58506",
+  "preconditions_checked": [
+    {
+      "available": true,
+      "detail": "executable=/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python; loaded=jax,numpy,sklearn; missing=none; FR11ExtendedJEPA_importable=True",
+      "resource": "interpreter_runtime"
+    },
+    {
+      "available": true,
+      "detail": "predictor_state=(/home/ianblenke/github.com/ianblenke/carnot/results/experiment_3788_fr11_v19_tier3_predictive_jepa_state.npz; predictor=FR11ExtendedJEPA; predictive_auroc=0.9715; sha256=8597da248c3f18d33719db592ba9e7a5ef604cb4c8b4e984e081547edb0dabd7); operating_point=/home/ianblenke/github.com/ianblenke/carnot/results/experiment_3803_fr11_v20_tier3_fast_path_gate_state.json; threshold=0.48; skip_rate=0.56; sha256=3054fedc82ad0fad63cea0f315aa7c1e72c444750b257f0cdceb931312d58506",
+      "resource": "persisted_fast_path_state"
+    },
+    {
+      "available": true,
+      "detail": "/home/ianblenke/github.com/ianblenke/carnot/data/fover_corpus.jsonl; line_count=8829; required>=1200",
+      "resource": "fover_corpus_absolute_path"
+    },
+    {
+      "available": true,
+      "detail": "line_count=8829; required>=1000",
+      "resource": "cached_traces_with_per_verifier_scores_and_labels"
+    },
+    {
+      "available": true,
+      "detail": "loaded=tier0r_curry_howard,tier0s_arithmetic_gap,tier0u_logical_consistency",
+      "resource": "text_scoring_verifiers"
+    },
+    {
+      "available": true,
+      "detail": "state_files=21; memory_loaded=True",
+      "resource": "fr11_session_memory_verifier"
+    },
+    {
+      "available": true,
+      "detail": "online graph fit, graph learner, and fixed crossfit baseline importable",
+      "resource": "dependency_aware_weighting_implementation"
+    }
+  ],
+  "predictor_probabilities_sha256": "ed7b132477faa1ca4a91e9e92e28ca2f29a926908c90f531b1b013285cfe1f63",
+  "predictor_state_path": "results/experiment_3788_fr11_v19_tier3_predictive_jepa_state.npz",
+  "predictor_state_sha256": "8597da248c3f18d33719db592ba9e7a5ef604cb4c8b4e984e081547edb0dabd7",
+  "random_seed": 3813,
+  "reproducibility_checksum": "6edd6e4453048abc7fead65897cc5ab4671a3e4a6171bcab1479075554ff460c",
+  "schema": "carnot.fr11_continuous_self_learning_v21",
+  "skip_count_second_split": 119,
+  "skip_rate_band": 0.1,
+  "skip_rate_second_split": 0.595,
+  "skip_rate_within_band": true,
+  "three_split_sizes": {
+    "all_disjoint": true,
+    "predictor_training": 800,
+    "row_id_hashes": {
+      "predictor_training_sha256": "84c76276f3bc6a39a21f5ebadecc3fa5755c58567db3a00edbd13d92cc8f413c",
+      "v20_measurement_sha256": "f2379ffbd36287dc1b2710cd2a0552b8b38c56fe4c0b2395e88d56fd06624430",
+      "v21_second_sha256": "4f1b476f47f0a6e01d47116ed248f2912ac18ee9ed95b9f8bc99f118258b39fe"
+    },
+    "train_disjoint_from_v20_measurement": true,
+    "train_disjoint_from_v21_second": true,
+    "v20_measurement": 200,
+    "v20_measurement_disjoint_from_v21_second": true,
+    "v21_second": 200,
+    "v21_second_negative": 100,
+    "v21_second_positive": 100
+  },
+  "v20_operating_point_threshold": 0.48,
+  "v20_reported_effective_auroc": 0.92275,
+  "v20_reported_skip_rate": 0.56,
+  "verifier_names": [
+    "fr11_session_memory",
+    "tier0r_curry_howard",
+    "tier0s_arithmetic_gap",
+    "tier0u_logical_consistency"
+  ]
+}
