@@ -7771,3 +7771,4 @@ ERROR: {
 | 2026-06-04 16:44 UTC | Cross-surface abstention PARITY smoke (gated on ex | OK | 87 passed in 27.93s |
 | 2026-06-04 16:59 UTC | RECORD the product-headline status HONESTLY (G4 hy | OK | 86 passed in 4.53s |
 | 2026-06-04 17:19 UTC | FR-11 continuous self-learning v21 (the mandated s | OK | 89 passed in 6.42s |
+| 2026-06-04 17:33 UTC | Publication-gate REGRESSION confirmation: run scri | OK | 85 passed in 4.54s |
