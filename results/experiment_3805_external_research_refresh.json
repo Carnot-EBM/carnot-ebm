@@ -1,0 +1,252 @@
+{
+  "adversarial_verify_clean": true,
+  "adversarial_verify_report": {
+    "flags": [],
+    "max_severity": -1
+  },
+  "append_action": "appended",
+  "arxiv_resolution_summary": {
+    "all_added_arxiv_ids_resolved": true,
+    "verification_basis": "Primary arXiv abstract pages resolved during the .348 filing; entries preserve source-reported claims pending independent Carnot re-derivation."
+  },
+  "duration_s": 0.02209,
+  "field_principles": {
+    "duration_s": "Wall-clock plausibility floor.",
+    "honest_verdict": "Terminal prefix; the refresh outcome.",
+    "inference_substrate": "A documentation append over upstream paper records; prevents confusing this refresh with a compute-bound experiment.",
+    "n_references_added": "BARE int -- sample-size hygiene on the refresh.",
+    "numbers_are_as_reported": "BARE bool, true -- peer numbers are source-reported, not Carnot measurements (adversarial-verify discipline).",
+    "random_seed": "Determinism precondition.",
+    "references_added": "The list of arXiv ids filed this sweep -- the deliverable; keeps the project current per research-program.md planning requirement 4.",
+    "reproducibility_checksum": "Content hash catches drift.",
+    "section_appended_not_replaced": "BARE bool, true -- the '.348 additions' section was APPENDED/confirmed-intact (never-prune rule; no prior content removed)."
+  },
+  "honest_verdict": "complete: external_research_refresh_348_filed_references_section_appended_numbers_as_reported",
+  "inference_substrate": "aggregation_from_upstream_artifacts (principle: a documentation append, no live model).",
+  "n_references_added": 12,
+  "numbers_are_as_reported": true,
+  "random_seed": 3805,
+  "references": [
+    {
+      "arxiv_abs_resolved": true,
+      "arxiv_abs_url": "https://arxiv.org/abs/2510.08146",
+      "arxiv_id": "arXiv:2510.08146",
+      "as_reported_note": "Savings and accuracy-preservation claims are source-reported only.",
+      "as_reported_summary": "Uses sequence-level entropy from token logprobs as a reasoning early-stopping confidence signal; reports 25-50% computational savings while maintaining task accuracy.",
+      "numbers_are_as_reported": true,
+      "relevance": "A direct early-stop peer for the Tier-3 fast-path gate, with the important constraint that entropy must be checked against Carnot's verifier signal before becoming a product threshold.",
+      "source_kind": "arxiv_abs",
+      "submitted": "submitted 2025-10-09; last revised 2025-10-28",
+      "title": "Think Just Enough: Sequence-Level Entropy as a Confidence Signal for LLM Reasoning",
+      "tracks": [
+        "FR-11 v20 Tier-3-as-fast-path"
+      ]
+    },
+    {
+      "arxiv_abs_resolved": true,
+      "arxiv_abs_url": "https://arxiv.org/abs/2603.23701",
+      "arxiv_id": "arXiv:2603.23701",
+      "as_reported_note": "Architecture trends and benchmark outcomes are source-reported only.",
+      "as_reported_summary": "Re-evaluates layer-wise early exit in modern LLMs and reports that newer recipes reduce layer redundancy, making early-exit benefits model- and architecture-dependent.",
+      "numbers_are_as_reported": true,
+      "relevance": "Cautionary boundary for Tier-3-as-fast-path: fast-path gates should be verifier-calibrated and model-specific, not assumed from older early-exit literature.",
+      "source_kind": "arxiv_abs",
+      "submitted": "submitted 2026-03-24",
+      "title": "The Diminishing Returns of Early-Exit Decoding in Modern LLMs",
+      "tracks": [
+        "FR-11 v20 Tier-3-as-fast-path"
+      ]
+    },
+    {
+      "arxiv_abs_resolved": true,
+      "arxiv_abs_url": "https://arxiv.org/abs/2604.04648",
+      "arxiv_id": "arXiv:2604.04648",
+      "as_reported_note": "Reward-hacking mitigation and theoretical claims are source-reported only.",
+      "as_reported_summary": "Penalizes uncertain out-of-distribution reward estimates in Best-of-N selection; reports substantial mitigation of reward hacking from atypical high-scoring responses.",
+      "numbers_are_as_reported": true,
+      "relevance": "Concrete mitigation for the banked verifier's reward-gaming surface: use pessimistic uncertainty penalties rather than trusting the highest verifier score under distribution shift.",
+      "source_kind": "arxiv_abs",
+      "submitted": "submitted 2026-04-06",
+      "title": "From Curiosity to Caution: Mitigating Reward Hacking for Best-of-N with Pessimism",
+      "tracks": [
+        "verifier robustness / reward-gaming mitigation"
+      ],
+      "venue_context": "ICLR 2026"
+    },
+    {
+      "arxiv_abs_resolved": true,
+      "arxiv_abs_url": "https://arxiv.org/abs/2603.06797",
+      "arxiv_id": "arXiv:2603.06797",
+      "as_reported_note": "Regret framing and alignment improvements are source-reported only.",
+      "as_reported_summary": "Adapts inference-time alignment to reward-tail heaviness; reports that per-prompt pessimism/optimism interpolation improves alignment relative to fixed reward-model selection rules.",
+      "numbers_are_as_reported": true,
+      "relevance": "Complements the context-compaction mitigation: verifier routing can treat extreme reward tails as a risk signal instead of blindly expanding compute.",
+      "source_kind": "arxiv_abs",
+      "submitted": "submitted 2026-03-06",
+      "title": "Best-of-Tails: Bridging Optimism and Pessimism in Inference-Time Alignment",
+      "tracks": [
+        "verifier robustness / reward-gaming mitigation"
+      ]
+    },
+    {
+      "arxiv_abs_resolved": true,
+      "arxiv_abs_url": "https://arxiv.org/abs/2605.01643",
+      "arxiv_id": "arXiv:2605.01643",
+      "as_reported_note": "Pipeline outcomes and incentive-equilibrium claims are source-reported only.",
+      "as_reported_summary": "Models solver/auditor oversight as an incentive equilibrium and reports that adaptive reward profiles preserve oversight pressure and reduce hallucinated incorrect attempts in an LLM coding pipeline.",
+      "numbers_are_as_reported": true,
+      "relevance": "Useful robustness frame for Carnot's banked verifier: score the correction event and auditor inspection incentives, not only the solver's final answer.",
+      "source_kind": "arxiv_abs",
+      "submitted": "submitted 2026-05-02; last revised 2026-05-11",
+      "title": "AI Alignment via Incentives and Correction",
+      "tracks": [
+        "verifier robustness / reward-gaming mitigation"
+      ]
+    },
+    {
+      "arxiv_abs_resolved": true,
+      "arxiv_abs_url": "https://arxiv.org/abs/2603.21172",
+      "arxiv_id": "arXiv:2603.21172",
+      "as_reported_note": "Risk-coverage and calibration outcomes are source-reported only.",
+      "as_reported_summary": "Finds model-dependent failures of entropy-only abstention and reports improved risk-coverage and calibration from combining entropy with a correctness probe.",
+      "numbers_are_as_reported": true,
+      "relevance": "Direct banked-abstention product warning: Carnot should privilege verifier/probe-backed abstention over entropy-only routing.",
+      "source_kind": "arxiv_abs",
+      "submitted": "submitted 2026-03-22",
+      "title": "Entropy Alone is Insufficient for Safe Selective Prediction in LLMs",
+      "tracks": [
+        "selective-prediction / abstention surface"
+      ]
+    },
+    {
+      "arxiv_abs_resolved": true,
+      "arxiv_abs_url": "https://arxiv.org/abs/2604.03904",
+      "arxiv_id": "arXiv:2604.03904",
+      "as_reported_note": "False-answer and frontier behavior are source-reported only.",
+      "as_reported_summary": "Uses prompt-only confidence elicitation, explicit abstention rewards, and humility norms; reports a coverage-reliability frontier that reduces false answers by shifting error-prone cases to abstention.",
+      "numbers_are_as_reported": true,
+      "relevance": "Peer abstention-control surface for the banked verifier product, especially where deployment wants a tunable reliability/coverage frontier rather than a single fixed threshold.",
+      "source_kind": "arxiv_abs",
+      "submitted": "submitted 2026-04-05",
+      "title": "I-CALM: Incentivizing Confidence-Aware Abstention for LLM Hallucination Mitigation",
+      "tracks": [
+        "selective-prediction / abstention surface"
+      ]
+    },
+    {
+      "arxiv_abs_resolved": true,
+      "arxiv_abs_url": "https://arxiv.org/abs/2509.12527",
+      "arxiv_id": "arXiv:2509.12527",
+      "as_reported_note": "Coverage, risk, and critical-error numbers are source-reported only.",
+      "as_reported_summary": "Introduces information-lift selective-risk certificates and reports 77.0% coverage at 2% risk plus blocking 96% of critical errors in high-stakes scenarios.",
+      "numbers_are_as_reported": true,
+      "relevance": "Certification route for the banked abstention product: pair Carnot's verifier score with an auditable selective-risk bound.",
+      "source_kind": "arxiv_abs",
+      "submitted": "submitted 2025-09-16; last revised 2025-11-19",
+      "title": "Selective Risk Certification for LLM Outputs via Information-Lift Statistics: PAC-Bayes, Robustness, and Skeleton Design",
+      "tracks": [
+        "selective-prediction / abstention surface"
+      ]
+    },
+    {
+      "arxiv_abs_resolved": true,
+      "arxiv_abs_url": "https://arxiv.org/abs/2602.03769",
+      "arxiv_id": "arXiv:2602.03769",
+      "as_reported_note": "Reasoning and speed/quality tradeoff claims are source-reported only.",
+      "as_reported_summary": "Shows that diffusion LMs use predicted-but-undecoded latent tokens for global coherence and reports a smooth speed/quality tradeoff by modulating how many latent tokens participate.",
+      "numbers_are_as_reported": true,
+      "relevance": "EDLM-adjacent substrate evidence: the operator-seed route can exploit diffusion's latent-token lookahead instead of repeating the bounded tiny EBT generator path.",
+      "source_kind": "arxiv_abs",
+      "submitted": "submitted 2026-02-03",
+      "title": "Reasoning with Latent Tokens in Diffusion Language Models",
+      "tracks": [
+        "EDLM operator-seed"
+      ]
+    },
+    {
+      "arxiv_abs_resolved": true,
+      "arxiv_abs_url": "https://arxiv.org/abs/2512.10858",
+      "arxiv_id": "arXiv:2512.10858",
+      "as_reported_note": "Model size, FLOP, and scaling-law claims are source-reported only.",
+      "as_reported_summary": "Studies scaling laws for discrete diffusion language models and reports a 10B-parameter uniform-diffusion model trained for 10^22 FLOPs while narrowing the likelihood gap at scale.",
+      "numbers_are_as_reported": true,
+      "relevance": "Scaling precondition for the EDLM operator seed: discrete diffusion is a foundation-model substrate with scale behavior, not merely a small-model generator novelty.",
+      "source_kind": "arxiv_abs",
+      "submitted": "submitted 2025-12-11; last revised 2026-02-15",
+      "title": "Scaling Behavior of Discrete Diffusion Language Models",
+      "tracks": [
+        "EDLM operator-seed"
+      ]
+    },
+    {
+      "arxiv_abs_resolved": true,
+      "arxiv_abs_url": "https://arxiv.org/abs/2605.26106",
+      "arxiv_id": "arXiv:2605.26106",
+      "as_reported_note": "Training-FLOP and reasoning-benchmark gains are source-reported only.",
+      "as_reported_summary": "Loops early-middle masked-diffusion transformer layers and reports up to 3.3x fewer training FLOPs for matched performance plus up to 8.5 GSM8K points from the looped design.",
+      "numbers_are_as_reported": true,
+      "relevance": "Compute-scaling follow-up for EDLM: recurrent depth and adaptive loop counts give an operator-seed route for test-time compute in masked diffusion without self-seeding the paradigm.",
+      "source_kind": "arxiv_abs",
+      "submitted": "submitted 2026-05-25",
+      "title": "Looped Diffusion Language Models",
+      "tracks": [
+        "EDLM operator-seed"
+      ]
+    },
+    {
+      "arxiv_abs_resolved": true,
+      "arxiv_abs_url": "https://arxiv.org/abs/2603.13243",
+      "arxiv_id": "arXiv:2603.13243",
+      "as_reported_note": "Accuracy, latency, and stability figures are source-reported only.",
+      "as_reported_summary": "Prepends an autoregressive natural-language plan to a diffusion LM and reports large reasoning/code gains with stable diffusion inference across seeds.",
+      "numbers_are_as_reported": true,
+      "relevance": "Operator-seed design hint for EDLM: use an external plan or verifier as globally visible conditioning rather than asking the diffusion model to discover the full reasoning scaffold alone.",
+      "source_kind": "arxiv_abs",
+      "submitted": "submitted 2026-02-20",
+      "title": "Think First, Diffuse Fast: Improving Diffusion Language Model Reasoning via Autoregressive Plan Conditioning",
+      "tracks": [
+        "EDLM operator-seed"
+      ]
+    }
+  ],
+  "references_added": [
+    "arXiv:2510.08146",
+    "arXiv:2603.23701",
+    "arXiv:2604.04648",
+    "arXiv:2603.06797",
+    "arXiv:2605.01643",
+    "arXiv:2603.21172",
+    "arXiv:2604.03904",
+    "arXiv:2509.12527",
+    "arXiv:2602.03769",
+    "arXiv:2512.10858",
+    "arXiv:2605.26106",
+    "arXiv:2603.13243"
+  ],
+  "reproducibility_checksum": "70398279ede2c2055ab8721557293d5788be1e67ded08e2e75a9ade7b2255ad4",
+  "research_references_path": "research-references.md",
+  "schema": "carnot.external_research_refresh.v1",
+  "section_appended_not_replaced": true,
+  "section_confirmed_intact": true,
+  "section_header": "## .348 additions - early-rejection predictive verification, outcome-guided process rewards, EDLM impl confirmation (2026-06-04)",
+  "section_parse_summary": {
+    "excluded_duplicate_ids": [
+      "arXiv:2508.01969",
+      "arXiv:2604.15149",
+      "arXiv:2602.01750"
+    ],
+    "required_planner_anchors_present": [
+      "Added by the `.348 planning sweep",
+      "Numbers are source-reported by the papers",
+      "arXiv:2508.01969",
+      "arXiv:2604.02341",
+      "MinkaiXu/Energy-Diffusion-LLM",
+      "arXiv:2410.21357",
+      "reference_deep_think_post_bounded_2026_06",
+      "project_energy_selection_thesis_bounded",
+      "project_thesis_a_ebt_seeded"
+    ],
+    "single_348_section": true
+  },
+  "section_sha256": "ff9c567aa8ed16e252e91661ad9983cf0fa4d476106bba20f2c433d0bf50a7d0"
+}
