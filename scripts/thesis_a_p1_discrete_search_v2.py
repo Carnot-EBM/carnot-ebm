@@ -96,7 +96,7 @@ def main():
     print(f"[setup] dev={dev} digits={digits} steps={steps} dim={dim} layers={layers} beam={beam}", flush=True)
 
     mu = (10 ** digits) ** 2
-    n_train = min(20000, int(mu * 0.7))
+    n_train = min(40000, int(mu * 0.7))   # MUST match the scaled harness (40k) — 20k starves AR
     train_items = pb.build_corpus(digits, n_train, seed)
     tp = {t[0] for t in train_items}
     eval_items = pb.build_corpus(digits, 4000, seed + 777, exclude=tp)

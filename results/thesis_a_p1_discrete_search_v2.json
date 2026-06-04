@@ -1,0 +1,96 @@
+{
+  "experiment": "thesis_a_p1_discrete_search_v2",
+  "honest_verdict": "complete: thesis_a_p1_v2_INCONCLUSIVE_positive_control_failed_ar_best_0.000_below_0.3_cannot_adjudicate_artifact_vs_fundamental_rerun_with_stronger_ar",
+  "inference_substrate": "live_llm_inference",
+  "operator_authorized": "2026-06-03 P1 discrete-search adjudication v2 (corrected regime: scaled harness where AR succeeds)",
+  "supersedes": "thesis_a_p1_discrete_search (v1 degenerate: positive control AR=0 at 3-digit on the small model)",
+  "task": "3-digit MSD-first addition, scaled harness (dim=768/4L, 12000 steps + 1500-step learned decoder)",
+  "ar_greedy_acc": 0.0,
+  "ar_selfconsistency_acc": 0.0,
+  "ebt_energy_argmin_acc": 0.0,
+  "ebt_learned_decoder_acc": 0.0,
+  "ebt_beam_search_acc": 0.0,
+  "ar_best": 0.0,
+  "ebt_best": 0.0,
+  "beam_width": 8,
+  "training_diverged": false,
+  "n_eval": 100,
+  "ebt_sample_outputs": [
+    {
+      "prompt": "316+575=",
+      "true": "0891",
+      "ar1": "0999",
+      "ebt_argmin": "0000",
+      "ebt_descent": "1+00",
+      "ebt_beam": "4000"
+    },
+    {
+      "prompt": "334+844=",
+      "true": "1178",
+      "ar1": "1299",
+      "ebt_argmin": "444+",
+      "ebt_descent": "0011",
+      "ebt_beam": "444+"
+    },
+    {
+      "prompt": "661+890=",
+      "true": "1551",
+      "ar1": "1599",
+      "ebt_argmin": "0002",
+      "ebt_descent": "0060",
+      "ebt_beam": "0002"
+    },
+    {
+      "prompt": "322+489=",
+      "true": "0811",
+      "ar1": "0799",
+      "ebt_argmin": "444+",
+      "ebt_descent": "0000",
+      "ebt_beam": "44+4"
+    },
+    {
+      "prompt": "488+613=",
+      "true": "1101",
+      "ar1": "1109",
+      "ebt_argmin": "2000",
+      "ebt_descent": "0060",
+      "ebt_beam": "4000"
+    },
+    {
+      "prompt": "800+991=",
+      "true": "1791",
+      "ar1": "1890",
+      "ebt_argmin": "2222",
+      "ebt_descent": "1000",
+      "ebt_beam": "8222"
+    },
+    {
+      "prompt": "223+758=",
+      "true": "0981",
+      "ar1": "0999",
+      "ebt_argmin": "0++0",
+      "ebt_descent": "3000",
+      "ebt_beam": "0++0"
+    },
+    {
+      "prompt": "958+394=",
+      "true": "1352",
+      "ar1": "0799",
+      "ebt_argmin": "0000",
+      "ebt_descent": "3=61",
+      "ebt_beam": "0000"
+    }
+  ],
+  "model_specs": {
+    "dim": 768,
+    "n_layers": 4,
+    "ebt": "scaled_ebt_from_scratch",
+    "ar": "matched",
+    "from_scratch": true
+  },
+  "device": "cuda:1",
+  "random_seed": 30603,
+  "reproducibility_checksum": "c5177d34febc8a3411d45a1c0f7e916cf3895e9f67b0806b5ca0ceea9e35ac81",
+  "duration_s": 5150.14,
+  "root_cause_diagnosis": "AR positive control collapsed (ar_best=0.0) because this harness used n_train=min(20000,...) while the scaled harness that achieved AR=0.84 uses min(40000,...). 20k training examples starve the from-scratch AR on 3-digit MSD-first addition. ALL methods floored at 0 (no headroom). The ar_best<0.3 guard correctly returned INCONCLUSIVE rather than falsely claiming FUNDAMENTAL. Script n_train fixed to 40000; a corrected v3 (delete the stale ckpt, rerun ~100min) can settle artifact-vs-fundamental. Energy-as-generator remains BOUNDED from part-b regardless; P1 only sharpens the mechanism, not the strategic conclusion."
+}
