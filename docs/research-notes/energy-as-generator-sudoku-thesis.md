@@ -133,3 +133,49 @@ narrow gold basin. Two compressions, two failure modes now isolated:
   the space so the basin is findable (exactly how the refiner, 0.182, generates — it
   works in a compact learned latent). That is v3.
 Artifact: results/sudoku_ebt_compression_v2.json.
+
+## v3 — LATENT (DBAE) compression — and the DECISIVE conclusion (2026-06-05)
+
+Added the SECOND compression: a DBAE autoencoder compresses the 729-dim grid into a
+256-dim latent z; energy + annealed-Langevin descent happen IN z (the compact,
+supposedly-findable space). scripts/experiments/sudoku_latent_energy_v3.py.
+
+| metric | v1 (raw, local) | v2 (raw, global) | v3 (latent, global) |
+|---|---|---|---|
+| solve-rate | 0.000 | 0.000 | **0.000** |
+| AE test-recon (exact) | — | — | **1.000** |
+| energy carving | none | gold -5 / neg +5 | gold -5 / neg +5 |
+| flatland | BELOW (drift) | CARVED | CARVED |
+
+**THE WALL IS AMORTIZED INFERENCE, not representation or carving.** v3 removes the
+last excuse: the autoencoder reconstructs UNSEEN solutions PERFECTLY (recon 1.000),
+so the target z_true provably exists and decodes exactly; the energy carves cleanly
+(z_true at -5, everything else +5). And solve-rate is STILL 0. The decode-time
+Langevin ends at HIGH energy (+5.26), never reaching the deep narrow z_true (-5):
+the carved landscape is a high-energy PLATEAU with a measure-zero spike at the
+solution, and gradient/Langevin descent from a random start has NO funnel toward
+it. (Classic EBM-CD pathology: the model drives its own descent endpoints high
+without creating a path to the true minimum; descent and negatives chase each
+other.)
+
+**Complete v1->v2->v3 ablation isolates the wall:** representation (v3 AE=1.0) ✓,
+volume carving (v2/v3 global negs) ✓, dimensional compression (v3 latent) ✓ — and
+pure energy-descent STILL generates nothing. The missing piece is a LEARNED
+inference map (amortization). The refiner (0.182) wins precisely because it does
+NOT descend an energy — it learns the generation map end-to-end (a trained funnel
+toward the answer). 
+
+**Conclusion for Carnot Phase-3 (this is the load-bearing takeaway):**
+- Energy-as-generator via descent is NOT the path — not because energy can't learn
+  (it scores perfectly) but because finding the minimum of a sharply-peaked energy
+  is an unsolved search problem that compression does not fix.
+- Generation needs a LEARNED, AMORTIZED inference map = recursive REFINEMENT
+  (TRM-style). Pursue that substrate.
+- The energy/verifier's defensible role is SCORING + being the training ORACLE for
+  the learned generator (the distillation-oracle thesis) — NOT the generator via
+  descent. v1->v3 is direct empirical proof.
+- Re Kona: their 96% is therefore amortized inference (a learned trace producer),
+  with the energy as objective/guide — NOT naive gradient-descent on a
+  contrastively-trained energy, which we exhaustively show fails (3 experiments,
+  even with perfect latent + perfect carving).
+Artifact: results/sudoku_latent_energy_v3.json.
