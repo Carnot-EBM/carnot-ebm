@@ -35573,3 +35573,86 @@ milestones:
       CI95, two positive controls. Confirms or refutes exp3827''s small-sample ''moat survives''.'
     deliverable: results/experiment_3844_verifier_error_independence_scissor_at_scale.json
     result: blocked_fover_balanced_corpus_not_available
+- id: 2026.06.355
+  title: 'Adjudicate the verifier-MOAT durability (DT-P2): build the balanced corpus that blocked exp3844, run the error-independence
+    scissor AT SCALE with bootstrap CI + positive controls, and MEASURE verifier-vs-reasoner independence (arXiv:2604.07650)
+    rather than assume it.'
+  doc: openspec/change-proposals/research-roadmap-v355.md
+  completed: '2026-06-05'
+  finding: See conductor log for per-experiment results.
+  tasks:
+  - id: exp3845-archive-v354-activate-v355
+    title: Archive milestone .354 honestly (exp3833 LDT-lattice LATTICE_VIABLE inform0.591 but margin-over-random=0.010 razor-thin;
+      exp3844 scissor-at-scale BLOCKED on missing balanced corpus) and activate .355 (verifier-moat-durability adjudication).
+    deliverable: results/experiment_3845_archive_v354_activate_v355.json
+    result: OK (conductor)
+  - id: exp3846-build-balanced-step-error-corpus
+    title: "Build the BALANCED step-error corpus that blocked exp3844: PRMBench (arXiv:2501.03124, 9 error axes) as primary,\
+      \ FoVer v3 as fallback \u2014 N>=1000, >=100 gold-INCORRECT steps, 9-axis labels preserved, seed-controlled. The precondition\
+      \ fix for the scissor-at-scale."
+    deliverable: data/step_error_balanced_v1.json
+    result: OK (conductor)
+  - id: exp3847-moat-scissor-at-scale-v2
+    title: 'MOAT SCISSOR AT SCALE (supersedes exp3844): of the gold step-errors Qwen3.6-35B''s OWN self-verification MISSES,
+      what fraction does Carnot''s k=15 ensemble independently catch? On the balanced corpus, N>=1000, residual_catch bootstrap
+      CI95, TWO positive controls (reasoner non-degenerate; ensemble AUROC reproduces frozen 0.9131+/-0.02).'
+    deliverable: results/experiment_3847_moat_scissor_at_scale_v2.json
+    result: OK (conductor)
+  - id: exp3848-verifier-reasoner-independence-audit
+    title: 'INDEPENDENCE AUDIT (arXiv:2604.07650): is Carnot''s catch of the reasoner''s residual errors REAL decorrelation
+      or a shared blind spot? Measure error-mask correlation (phi/Matthews) reasoner-vs-ensemble AND per-verifier-vs-reasoner,
+      decompose by the 9 PRMBench error axes. The measurement that makes the moat claim defensible vs the fake-independence
+      trap.'
+    deliverable: results/experiment_3848_verifier_reasoner_independence_audit.json
+    result: OK (conductor)
+  - id: exp3849-thinkprm-complementarity
+    title: "ThinkPRM COMPLEMENTARITY (arXiv:2504.16828 refutation-risk test): a strong generative long-CoT PRM is hard to\
+      \ out-AUROC, so the moat must rest on COMPLEMENTARY catch. Of the errors the Qwen3.6 generative self-verify (the strong-single-PRM\
+      \ baseline) MISSES, what fraction does the cheap NON-LLM ensemble catch? Reuses exp3847's cached masks \u2014 CPU only."
+    deliverable: results/experiment_3849_thinkprm_complementarity.json
+    result: OK (conductor)
+  - id: exp3850-graph-grounding-fact-verifier-prototype
+    title: "Graph-grounding fact-verifier PROTOTYPE (NEW architecture for the earned-negative FACTS domain): a KG-alignment\
+      \ grounding check (MemGraphRAG/HalluGraph-inspired) on RAGTruth \u2014 does graph grounding catch factual hallucinations\
+      \ the math-bound ensemble structurally cannot? Prototype-first, small scale."
+    deliverable: results/experiment_3850_graph_grounding_fact_verifier_prototype.json
+    result: OK (conductor)
+  - id: exp3851-graph-verifier-facts-complementarity
+    title: 'Facts-domain COMPLEMENTARITY (gated on exp3850 facts_catch_delta>0): does the graph-grounding verifier catch factual
+      hallucinations the math-bound ensemble misses, and would an ensemble of {math verifiers + graph verifier} be a broader
+      fact-aware system? Quantify the independent contribution + correlation.'
+    deliverable: results/experiment_3851_graph_verifier_facts_complementarity.json
+    result: OK (conductor)
+  - id: exp3852-fr11-v22-online-independence-reweighting
+    title: "FR-11 continuous self-learning v22 (research-program.md MANDATE) \u2014 Tier-1 ONLINE independence-reweighting\
+      \ of the verifier ensemble (arXiv:2604.07650 method): upweight verifiers that catch the residual OTHER verifiers (and\
+      \ the reasoner) miss; confirm the learned weighting holds the +0.0185 memory-ablation contribution + frozen 0.9131.\
+      \ CPU counter updates (<1us/update, the Tier-1 hardware path)."
+    deliverable: results/experiment_3852_fr11_self_learning_v22_independence_reweighting.json
+    result: OK (conductor)
+  - id: exp3853-ldt-lattice-margin-sharpening
+    title: "LDT-lattice margin sharpening: exp3833 landed LATTICE_VIABLE but ensemble_vs_random_soundness_margin=0.010 (razor-thin\
+      \ vs a COUNT-matched random control). Is the sound-elimination edge REAL? Re-test against a SCORE-MATCHED (stratified)\
+      \ random control with a bootstrap CI on the margin \u2014 does the ensemble preferentially spare correct candidates\
+      \ beyond what its score distribution alone gives?"
+    deliverable: results/experiment_3853_ldt_lattice_margin_sharpening.json
+    result: OK (conductor)
+  - id: exp3854-gatemate-ising-tile-flash
+    title: 'GateMate A1-EVB-2M hardware continuity (terminal-state attempt): synthesize + place-and-route an n>=16 Carnot
+      Ising tile via yosys synth_gatemate -> nextpnr-himbaechel -> gmpack, flash over DirtyJTAG (openFPGALoader -c dirtyJtag
+      -b olimex_gatemateevb), and record sample-level on-board timing. Reaches gatemate_bitstream_flashed terminal state if
+      the board accepts the bitstream.'
+    deliverable: results/experiment_3854_gatemate_ising_tile_flash.json
+    result: OK (conductor)
+  - id: exp3855-polarfire-soc-smoke-v3
+    title: "PolarFire SoC Discovery Kit hardware continuity (terminal-state attempt): precondition-gated SSH round-trip Carnot\
+      \ dispatch \u2014 run an Ising energy-eval workload on the board over SSH, verify the result hash matches a CPU-computed\
+      \ reference, record run_duration_s>=5 + soc_temp. Reaches polarfire_workload_validated terminal state on a hash match."
+    deliverable: results/experiment_3855_polarfire_soc_smoke_v3.json
+    result: OK (conductor)
+  - id: exp3856-capstone-v355
+    title: "Capstone .355 \u2014 aggregate the VERIFIER-MOAT DURABILITY verdict (does the moat survive at scale with MEASURED\
+      \ independence?), the facts-domain graph-grounding prototype outcome, the FR-11 v22 self-learning result, the LDT-margin\
+      \ sharpening, and the two FPGA boards. paper_ready stays TRUE; frozen 0.9131 unchanged."
+    deliverable: results/experiment_3856_capstone_v355.json
+    result: OK (conductor)
