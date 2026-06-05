@@ -21023,3 +21023,68 @@ Converged invariants unchanged: `paper_ready` stays TRUE (G1-G4), FoVer 0.9131 s
 - **arXiv:2605.25133 — "Trust but Verify: Prover-Verifier Deliberation for Selective LLM Prediction" (2026):** Track: certified abstention on clean cores. Introduces Prover-Verifier Deliberation for selective LLM prediction. Claims source-reported only.
 - **arXiv:2603.02247 — "OnDA: On-device Channel Pruning for Efficient Personalized Keyword Spotting" (2026):** Track: adaptive-structure / pruning self-learning. Introduces online structured channel pruning with weight adaptation. Claims source-reported only.
 - **arXiv:2603.23985 — "DieT: Dimension-wise Global Pruning of LLMs via Merging Task-specific Importance Score" (2026):** Track: adaptive-structure / pruning self-learning. A training-free structured pruning method via majority voting. Claims source-reported only.
+
+## Milestone .355 planning sweep (2026-06-05) — verifier-MOAT-DURABILITY adjudication
+
+**Context.** `.354 left the load-bearing product question OPEN: exp3844 (the moat
+error-independence scissor AT SCALE) BLOCKED on a missing balanced corpus (FoVer v4 is
+98%-correct-heavy), so the exp3827 small-sample "moat survives" (residual_catch=0.90,
+overlap=0.50, suspiciously round) is UNCONFIRMED. `.355's spine measures the moat properly:
+does Carnot's k=15 ensemble independently catch the step-errors a strong frontier reasoner's
+OWN self-verification MISSES, with the independence MEASURED (not assumed) per 2604.07650.
+The papers below underwrite that adjudication. Numbers are source-reported by the papers —
+NOT Carnot measurements; re-derive before any forward-facing use. Converged invariants
+unchanged: `paper_ready` stays TRUE (G1-G4), FoVer 0.9131 stays frozen.
+
+- **arXiv:2602.03485 — "The Self-Verification Dilemma" (Feb 2026):** Track: moat durability
+  [DIRECTLY SUPPORTS]. On thousands of o1/R1 traces, self-verification steps are "the vast
+  majority confirmatory rather than corrective, rarely identifying errors and altering
+  outcomes." The strongest single support that strong reasoners self-verify a LOT but catch
+  LITTLE → a residual error set persists for an external verifier to occupy. Caveat: the
+  paper's own fix is internal (suppress redundant rechecks), so it documents the gap without
+  claiming an external verifier fills it — which is exactly Carnot's scissor experiment.
+- **arXiv:2501.03124 — "PRMBench" (ACL 2025):** Track: moat corpus. 6,216 problems / 83,456
+  step labels across 9 fine-grained error axes (soundness, deception-resistance, etc.). The
+  canonical balanced successor to ProcessBench — the corpus `.355 builds the scissor on, and
+  whose 9 axes enable a per-error-axis independence decomposition (which error classes does
+  the ensemble catch that the reasoner misses?).
+- **arXiv:2504.01005 — "When To Solve, When To Verify" (2025):** Track: external-verifier
+  value-over-SC [SUPPORTS]. Compute-optimal analysis: a HYBRID discriminative-verifier +
+  self-consistency beats SOTA generative verification by up to +15.3% (AIME2025) at fixed
+  budget. Names the regime where an external verifier adds value over majority-vote.
+- **arXiv:2603.17775 — "CoVerRL: Breaking the Consensus Trap" (Mar 2026, re-cited):** SC
+  collapses into a destructive feedback loop reinforcing confident wrong majorities, and
+  verifiers "often fail to identify minority-yet-correct solutions." Names the exact failure
+  mode where an INDEPENDENT external verifier is required (SC cannot rescue a wrong consensus).
+- **arXiv:2604.07650 — "How Independent are LLMs? Auditing Behavioral Entanglement and
+  Reweighting Verifier Ensembles" (2026, re-cited as LOAD-BEARING CAVEAT):** Shared training
+  lineage produces correlated failure masquerading as agreement; reweighting by inferred
+  independence yields +4.5% over majority vote. The partial-REFUTATION risk: an LLM-backed
+  verifier ensemble may have NO real independence against the model it checks. Carnot's moat
+  survives only if its NON-LLM verifiers (Z3/AST/SAT/energy) are MEASURED-decorrelated from
+  the reasoner. Supplies the independence-audit method for `.355.
+- **arXiv:2504.16828 — "ThinkPRM / Process Reward Models That Think" (re-cited as REFUTATION
+  RISK):** A generative long-CoT PRM on 8K labels beats discriminative PRMs (700K labels),
+  beats LLM-as-judge +7.2% (ProcessBench), wins OOD. The moat must rest on COMPLEMENTARY catch
+  (error-independence), not on out-scoring a strong single generative PRM on AUROC — `.355
+  tests complementarity, not head-to-head AUROC.
+- **arXiv:2504.05419 — "Reasoning Models Know When They're Right: Probing Hidden States" (2025):**
+  Reasoning models ENCODE correctness in hidden states but "do not efficiently use this internal
+  knowledge during inference." Implies an external probe/verifier accessing that residual signal
+  is complementary, not subsumed.
+- **arXiv:2606.00610 — "MemGraphRAG" (May 30 2026):** Track: NEW-architecture facts domain.
+  Memory-based multi-agent graph construction for fragmented/conflicting KGs. Candidate
+  architecture for Carnot's earned-negative FACTS domain — graph grounding is a mechanistically
+  DIFFERENT verifier from reasoning-step PRMs (good for ensemble independence). Prototype-first
+  per memory reference_memgraphrag_fact_verifier_architecture.
+- **arXiv:2512.09148 — "Detecting Hallucinations in GraphRAG via Attention Patterns & Semantic
+  Alignment" (Dec 2025):** A VERIFICATION layer over graph-RAG (detects ungrounded-vs-subgraph),
+  closer to Carnot's verifier framing than MemGraphRAG's generation focus. Reference for the
+  `.355 graph-grounding fact-verifier prototype.
+- **arXiv:2512.01659 — "HalluGraph: Auditable Hallucination Detection via KG Alignment" (Dec
+  2025):** Legal-RAG factual-hallucination detector via explicit, auditable KG alignment. A
+  factual-error verifier with provenance — complements reasoning-step verifiers in a
+  multi-verifier ensemble.
+- **Cross-cutting — "Don't Always Pick the Highest-Performing Model" (2026):** "Diverse
+  imperfect judges outperform correlated perfect ones." DIRECTLY supports error-independence:
+  ensemble value comes from decorrelation, not member strength.

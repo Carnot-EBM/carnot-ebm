@@ -3336,5 +3336,24 @@
   "tests_run": [
     ".venv/bin/pytest -o addopts='' tests/python/test_experiment_3836_formal_core_certified_abstention.py -q",
     ".venv/bin/coverage run --include='*/formal_core_certified_abstention_3836.py' -m pytest -o addopts='' -q tests/python/test_experiment_3836_formal_core_certified_abstention.py && .venv/bin/coverage report --include='*/formal_core_certified_abstention_3836.py' --fail-under=100 --show-missing"
-  ]
+  ],
+  "flagged_adversarial": true,
+  "corrigendum_pending": [
+    {
+      "kind": "TAUTOLOGY",
+      "severity": "critical",
+      "detail": "conformal_delta=0.05 and risk_target=0.05 agree to >5 sig figs. Two distinct metrics matching this precisely is more likely a bug than a finding."
+    },
+    {
+      "kind": "TAUTOLOGY",
+      "severity": "critical",
+      "detail": "formal_core_candidate_risk_bound=0.038869 and formal_core_certified_risk_bound=0.038869 agree to >5 sig figs. Two distinct metrics matching this precisely is more likely a bug than a finding."
+    },
+    {
+      "kind": "TAUTOLOGY",
+      "severity": "critical",
+      "detail": "formal_core_candidate_threshold=0.9 and formal_core_certified_threshold=0.9 agree to >5 sig figs. Two distinct metrics matching this precisely is more likely a bug than a finding."
+    }
+  ],
+  "corrigendum_note": "backfill_stamps: flagged_adversarial added by adversarial_verify.py --backfill (completion-gate backstop). Excluded from headline / capstone aggregation."
 }
