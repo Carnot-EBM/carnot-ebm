@@ -7843,3 +7843,5 @@ ERROR: {
 | 2026-06-05 08:07 UTC | ThinkPRM COMPLEMENTARITY (arXiv:2504.16828 refutat | GATE_BLOCK | Pre-emptive skip: upstream retired (exp3847-moat-scissor-at-scale-v2) |
 | 2026-06-05 08:07 UTC | Graph-grounding fact-verifier PROTOTYPE (NEW archi | SKIP | Pre-tests failing, self-heal failed: 1 failed, 80 passed in 3.55s |
 | 2026-06-05 08:09 UTC | ThinkPRM COMPLEMENTARITY (arXiv:2504.16828 refutat | GATE_BLOCK | Pre-emptive skip: upstream retired (exp3847-moat-scissor-at-scale-v2) |
+| 2026-06-05 08:09 UTC | Graph-grounding fact-verifier PROTOTYPE (NEW archi | SKIP | Pre-tests failing, self-heal failed: 1 failed, 80 passed in 3.34s |
+| 2026-06-05 08:11 UTC | ThinkPRM COMPLEMENTARITY (arXiv:2504.16828 refutat | GATE_BLOCK | Pre-emptive skip: upstream retired (exp3847-moat-scissor-at-scale-v2) |
