@@ -7830,3 +7830,8 @@ ERROR: {
 | 2026-06-05 07:18 UTC | Milestone 2026.06.355 activated | OK | 12 tasks queued |
 | 2026-06-05 07:24 UTC | Archive milestone .354 honestly (exp3833 LDT-latti | FAIL | Gemini CLI error: /usr/lib/node_modules/@google/gemini-cli/bundle/chunk-NBZI34 |
 | 2026-06-05 07:38 UTC | Archive milestone .354 honestly (exp3833 LDT-latti | FAIL | Gemini CLI error: /usr/lib/node_modules/@google/gemini-cli/bundle/chunk-NBZI34 |
+| 2026-06-05 07:52 UTC | Archive milestone .354 honestly (exp3833 LDT-latti | FAIL | Gemini CLI error: /usr/lib/node_modules/@google/gemini-cli/bundle/chunk-NBZI34 |
+| 2026-06-05 07:54 UTC | Build the BALANCED step-error corpus that blocked  | SKIP | Pre-tests failing, self-heal failed: 1 failed, 86 passed in 3.89s |
+| 2026-06-05 07:57 UTC | Build the BALANCED step-error corpus that blocked  | SKIP | Pre-tests failing, self-heal failed: 1 failed, 86 passed in 4.04s |
+| 2026-06-05 07:59 UTC | Build the BALANCED step-error corpus that blocked  | SKIP | Pre-tests failing, self-heal failed: 1 failed, 86 passed in 3.86s |
+| 2026-06-05 08:01 UTC | MOAT SCISSOR AT SCALE (supersedes exp3844): of the | GATE_BLOCK | Pre-emptive skip: upstream retired (exp3846-build-balanced-step-error-corpus) |
