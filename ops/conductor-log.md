@@ -7820,3 +7820,4 @@ ERROR: {
 | 2026-06-05 05:03 UTC | Publication-gate REGRESSION confirmation: run scri | OK | 85 passed in 4.28s |
 | 2026-06-05 05:16 UTC | External research refresh for .353: confirm the pl | OK | 87 passed in 3.73s |
 | 2026-06-05 05:30 UTC | KV260 opportunistic continuity audit — confirm ter | FAIL | Gemini CLI error: Stalled after 600s silence. Last output: t: 'Too Many Reques |
+| 2026-06-05 05:37 UTC | KV260 opportunistic continuity audit — confirm ter | OK | 90 passed in 4.75s |
