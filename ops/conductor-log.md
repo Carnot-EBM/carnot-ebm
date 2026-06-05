@@ -7890,3 +7890,4 @@ ERROR: {
 | 2026-06-05 15:21 UTC | MOAT SCISSOR AT SCALE v4 (supersedes blocked exp38 | OK | 98 passed in 5.14s |
 | 2026-06-05 16:01 UTC | Plan milestone 2026.06.358 | OK | 11 tasks proposed |
 | 2026-06-05 16:03 UTC | Milestone 2026.06.358 activated | OK | 11 tasks queued |
+| 2026-06-05 16:17 UTC | Archive .357 -> activate .358; backend routing dia | OK | 104 passed in 5.30s |
