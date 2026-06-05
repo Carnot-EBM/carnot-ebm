@@ -85,6 +85,50 @@ required; ~1 µs per step vs ~200 ms for Z3.  The restricted namespace prevents
 arbitrary code execution: only numeric literals and the four arithmetic operators
 are passed through.
 
+### REQ-DATA-3858: Balanced Step-Error Corpus V2
+
+The system shall build `data/step_error_balanced_v2.json` as a deterministic
+step-level corpus for downstream verifier-moat residual estimates. The artifact
+shall:
+- Check PRMBench Hugging Face reachability and FoVer v3 fallback availability
+  before corpus construction, blocking with `blocked_no_step_error_source` when
+  neither source is available.
+- Prefer PRMBench (`hitsmy/PRMBench_Preview`) when reachable, mapping each
+  `modified_process` step to `{question_id, question, step_text, label,
+  error_axis}` where `label="incorrect"` iff the 1-based step index is present
+  in PRMBench `error_steps`, and `error_axis` preserves the row
+  `classification`.
+- Draw a seed-controlled balanced subset with `n_items >= 1000` and
+  `n_incorrect_steps >= 100` when PRMBench is available.
+- Fall back to a deduplicated merge of FoVer v3 variants when PRMBench is
+  unreachable, preserving the exact exp2837 scoreable keys and using
+  `error_axis=null` without synthesizing or padding incorrect rows.
+- Emit gate fields as bare JSON values, including bare integer
+  `n_incorrect_steps` and bare boolean `schema_compatible_with_2837`, with
+  human-readable field principles recorded separately.
+
+### SCENARIO-DATA-3858: PRMBench primary build is balanced and schema-scoreable
+
+**Given** PRMBench rows with `modified_process`, `error_steps`, and
+`classification` fields  
+**When** the corpus builder runs with a fixed random seed  
+**Then** it writes a deterministic artifact whose items follow the exp2837
+`{question_id|question, step_text, label}` scoring schema, preserve the
+PRMBench error axes, report `n_items >= 1000`, report bare integer
+`n_incorrect_steps >= 100`, and set bare boolean
+`schema_compatible_with_2837=true` after one item is scored through the frozen
+exp2837 verifier path.
+
+### SCENARIO-DATA-3858-FALLBACK: FoVer v3 fallback is honest and unsynthetic
+
+**Given** PRMBench is unreachable and one or more FoVer v3 corpus files are
+available  
+**When** the corpus builder runs  
+**Then** it merges and deduplicates the FoVer rows, samples the largest balanced
+set possible, records `primary_source="fover_v3_fallback"`, sets every
+`error_axis` to null, and reports the true incorrect count without synthetic
+padding.
+
 ## Scenarios
 
 ### SCENARIO-DATA-005: FoVer v2 target met
@@ -122,3 +166,4 @@ are passed through.
 | REQ-DATA-005 | Implemented (Exp 712) |
 | REQ-DATA-006 | Implemented (Exp 712) |
 | REQ-DATA-007 | Implemented (Exp 712) |
+| REQ-DATA-3858 | Implemented (Exp 3858) |
