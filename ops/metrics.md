@@ -3208,3 +3208,4 @@ Note: `scripts/session-metrics.py` referenced by `CLAUDE.md` is not present in t
 | Turn | Start | End | Description | Tokens (est) |
 |------|-------|-----|-------------|------|
 | 1 | 2026-06-05T15:31:37Z | 2026-06-05T15:32:08Z | Wrote operational retro for 2026.06.357 | ~3k |
+| 2026-06-05T23:36:24Z | 2026-06-05T23:37:22Z | Write an operational retrospective for milestone 2026.06.358 |
