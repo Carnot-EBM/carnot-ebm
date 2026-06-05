@@ -100,3 +100,36 @@ results/experiment_sudoku_energy_vs_ar_v1.json + sudoku_{ar_baseline,ebt,refiner
 
 - 2026-06-05: thesis seeded; harness built (AR/EBT/refiner); experiment run on the
   internal RTX 3090 (~3.5h, both 3090s survived — internal-GPU pinning held); verdict above.
+
+## v2 — ENERGY COMPRESSION test (operator follow-up, 2026-06-05)
+
+Diagnosis of v1's score-vs-generate failure via Kona's "energy compression": v1
+used LOCAL corruption negatives, so the energy was only carved near the data →
+broad low-energy "hallucinated flatlands" globally → decode drifted into them.
+v2 (scripts/experiments/sudoku_energy_compression_v2.py) changes ONE variable:
+GLOBAL negatives via Langevin / persistent contrastive divergence (PCD) + an
+anti-collapse energy-magnitude regularizer = restrict the low-energy VOLUME
+(compress the partition function). Decode = annealed Langevin.
+
+| metric | v1 (local negs) | v2 (global/PCD negs) |
+|---|---|---|
+| solve-rate | 0.000 | 0.000 |
+| blank-cell acc | 0.109 (chance) | 0.110 (chance) |
+| mean violations | 132-145 | **79.4** (improved) |
+| decoded-grid energy vs gold | BELOW (FLATLAND) | **ABOVE (CARVED)** |
+
+**VERDICT: volume compression WORKS but is NECESSARY-NOT-SUFFICIENT.** The energies
+carved cleanly + stably (gold pinned -5.0, Langevin negs +5.0, no divergence) and
+the FLATLAND DIAGNOSTIC FLIPPED — decoded grids went from BELOW gold energy (v1
+low-energy garbage) to ABOVE gold (v2 +0.16 vs -5.0). So energy compression did its
+job: the low-energy flatlands got pushed up; decode no longer drifts into low-energy
+garbage (violations 132->79). BUT solve-rate is still 0: decode can't FIND the
+narrow gold basin. Two compressions, two failure modes now isolated:
+- **Failure 1 (v1): low-energy flatlands** — fixed by VOLUME compression (global
+  negatives). Confirmed.
+- **Failure 2 (v2 exposes): no smooth global FUNNEL / large basin of attraction** —
+  the carved landscape has the right minimum (gold) but descent from a blank start
+  can't reach the needle. The fix is DIMENSIONAL/LATENT (DBAE) compression: compress
+  the space so the basin is findable (exactly how the refiner, 0.182, generates — it
+  works in a compact learned latent). That is v3.
+Artifact: results/sudoku_ebt_compression_v2.json.
