@@ -19966,3 +19966,47 @@ a mitigated after-curve, unchanged clean scoring behavior, real anti-poison
 tests for at least one clean and one perturbed example, no live-model substrate
 claim, and an honest `closed`, `narrowed`, or `failed` verdict without reopening
 the moat/independence thread or moving the 0.9131 headline.
+
+### REQ-VERIFY-3865: LDT Lattice Margin Sharpening v2
+
+The repository shall provide a module
+`python/carnot/verify/ldt_lattice_margin_sharpening_v2.py` and a script
+`scripts/experiments/experiment_3865_ldt_lattice_margin_sharpening_v2.py`
+that sharpen Exp 3833's LDT-style abstraction-lattice measurement against a
+score-matched random elimination control.
+- The workflow SHALL run under `.venv/bin/python`, confirm `import carnot.verify`
+  succeeds, confirm `data/fover_test_v4.json` exists and is loadable, confirm
+  `scripts/experiment_3833_ldt_gap_ensemble_as_sound_lattice.py` is importable,
+  and reproduce at least one finite candidate score before computing claims.
+  Failed setup SHALL write a terminal `blocked_<resource>` artifact without
+  fabricated metrics.
+- The workflow SHALL re-score cached FoVer candidates with the Exp 3833 scoring
+  path only. It SHALL NOT call a live LLM, GPU, GGUF, or CUDA path, and SHALL
+  preserve the frozen FoVer 0.9131 AUROC/LENS headline unchanged.
+- The workflow SHALL reproduce Exp 3833's soundness/informativeness curve,
+  including `informativeness_at_soundness_0_99_reproduced` near 0.59 and
+  `count_matched_margin_reproduced` near 0.010 on the checked-in corpus.
+- The workflow SHALL build a score-matched random control by stratifying
+  candidates into deterministic score bins and eliminating the same number of
+  candidates per bin as the ensemble operating point, but randomly within each
+  bin. It SHALL report the ensemble soundness margin over this sharper control
+  and a deterministic bootstrap CI95 using at least 1000 bootstrap resamples.
+- The artifact `results/experiment_3865_ldt_lattice_margin_sharpening_v2.json`
+  SHALL include `honest_verdict`, `ensemble_vs_score_matched_margin`,
+  `margin_ci95`, `informativeness_at_soundness_0_99_reproduced`,
+  `count_matched_margin_reproduced`, `n_candidates`, `random_seed`,
+  `reproducibility_checksum`, `preconditions_checked`, `inference_substrate`,
+  `duration_s`, and `field_principles` entries explaining each required field.
+
+### SCENARIO-VERIFY-3865: Score-Matched Control Decides Real Versus Marginal Lattice Edge
+
+**Given** the cached FoVer v4 corpus and the Exp 3833 scoring script are
+available
+**When** Exp 3865 re-scores the cached candidates and compares the best
+soundness>=0.99 elimination operator with a score-matched random control
+**Then** the artifact records the reproduced Exp 3833 curve and count-matched
+margin, records `ensemble_vs_score_matched_margin` with a CI95 from at least
+1000 bootstrap resamples, sets `honest_verdict` to `complete:
+ldt_margin_LATTICE_REAL_scorematched_margin...` only when the CI lower bound is
+above zero, and otherwise sets `complete:
+ldt_margin_LATTICE_MARGINAL_scorematched_margin..._ci_includes_zero_edge_is_score_dist_not_deductive`.
