@@ -7884,3 +7884,4 @@ ERROR: {
 | 2026-06-05 13:25 UTC | FR-11 continuous self-learning v23 (research-progr | OK | 89 passed in 4.06s |
 | 2026-06-05 13:46 UTC | LDT-lattice margin sharpening (re-issue of exp3853 | OK | 91 passed in 5.43s |
 | 2026-06-05 14:27 UTC | GateMate A1-EVB-2M hardware continuity (terminal-s | FLAGGED | adversarial_verify CRITICAL: TAUTOLOGY — result quarantined, not a clean success |
+| 2026-06-05 14:44 UTC | PolarFire SoC Discovery Kit hardware continuity (t | OK | 93 passed in 5.12s |
