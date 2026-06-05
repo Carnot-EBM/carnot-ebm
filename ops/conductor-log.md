@@ -7879,3 +7879,4 @@ ERROR: {
 | 2026-06-05 11:51 UTC | Facts-domain COMPLEMENTARITY (gated on exp3862 fac | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_3863_graph_v |
 | 2026-06-05 11:53 UTC | INDEPENDENCE AUDIT (arXiv:2604.07650): is Carnot's | GATE_BLOCK | Pre-emptive skip: upstream retired (exp3859-moat-scissor-at-scale-v3) |
 | 2026-06-05 11:53 UTC | ThinkPRM COMPLEMENTARITY (arXiv:2504.16828 refutat | GATE_BLOCK | Pre-emptive skip: upstream retired (exp3859-moat-scissor-at-scale-v3) |
+| 2026-06-05 12:29 UTC | Facts-domain COMPLEMENTARITY (gated on exp3862 fac | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_3863_graph_v |
