@@ -1,5 +1,42 @@
 # Carnot — Operational Status
 
+## Session 2026-06-05 - Milestone 2026.06.358 Research Planning Staged
+
+Planned milestone **2026.06.358** ("ADJUDICATE THE FORWARD BETS") as the NEXT milestone after
+.357 (single task exp3869 moat-scissor-v4) completed **INCONCLUSIVE** — both positive controls
+degenerate on the OUT-OF-DISTRIBUTION PRMBench corpus (reasoner self-verify AUROC=0.5;
+carnot_ensemble_auroc=0.55, near chance). The math-bound ensemble does not discriminate on PRMBench.
+
+**The shape:** the project is converged (paper_ready=TRUE; frozen FoVer 0.9131, G1–G4 met) and the
+remaining work is the three operator-seeded FORWARD BETS, each now one disciplined run from a verdict:
+- **EBT energy-as-GENERATOR (Thesis A, Phase-3):** part-(b) DT-P1 was INCONCLUSIVE only because the
+  *re-trained* AR control collapsed to 0.01; a scaled checkpoint cleanly had AR=0.84/EBT-argmin=0.0
+  (`thesis_a_part_b_scaled_seed1.json`). .358 re-runs the global-beam-search adjudication on a
+  CONFIRMED-HEADROOM checkpoint (exp3871 → ARTIFACT vs FUNDAMENTAL) + a System-2 K-curve (exp3872).
+- **Verifier MOAT at scale (DT-P2):** build an IN-DISTRIBUTION error-rich corpus where the ensemble
+  discriminates (exp3873, AUROC≥0.65 gate) THEN run the scissor (exp3874).
+- **Facts via graph-grounding:** de-fabricate the exp3862 signal (exp3875, real wall-clock + per-item
+  scores) then complementarity (exp3876).
+Plus standing mandates: FR-11 v24 self-learning (exp3877), GateMate corrigendum (exp3878),
+PolarFire/KV260 continuity (exp3879), capstone v358 (exp3880). 11 tasks total (exp3870–exp3880).
+
+Wrote `openspec/change-proposals/research-roadmap-vNEXT.md` + `research-roadmap-next.yaml` (11 tasks).
+Updated `research-references.md` (Post-.357 sweep). All tasks codex+requires_codex (anti-wipeout;
+operator standing gemini↔codex flip authority). Validation: YAML schema OK; milestone ==
+_expected_next_milestone('2026.06.357') = 2026.06.358; exclusion-manifest lint (1 HARD /dev/mmcblk
+literal FIXED → 5 WARNING all with operator_override, exit 0); canonical-URL + overdue-priority lints
+exit 0. Left `research-roadmap.yaml` and `scripts/research_conductor.py` untouched. Did NOT push.
+
+**Invariants carried:** paper_ready=TRUE; frozen 0.9131 NEVER substituted (durability + generation
+LENSES only); verifier math-domain-bound; P0.1 energy-SELECTION honest-negative (EBT is GENERATION,
+different mechanism); gated fields BARE; no flagged-adversarial artifact aggregated.
+
+**OPERATOR DECISION SURFACED (exp3880 capstone):** the milestone's adjudications (EBT
+ARTIFACT/FUNDAMENTAL; moat SURVIVES/SUBSUMED on an in-band corpus) feed the next-thesis decision —
+the loop recommends, the operator decides the next forward bet.
+
+
+
 ## Session 2026-06-05 - Milestone 2026.06.356 Staged + POISON-TEST WIPEOUT FIXED
 
 **LOAD-BEARING OPERATIONAL FIX (outer-loop, this session).** Milestone `.355 was a

@@ -21121,3 +21121,50 @@ New papers added this sweep (the `.355 references remain current):
 - **arXiv:2604.02341 — "LLM Reasoning with Process Rewards for Outcome-Guided Steps":**
   outcome-conditioned PRM centering + multi-scale coherence into GRPO; PRM-landscape
   reference confirming the step-level-verification framing Carnot's FoVer headline occupies.
+
+## 2026-06-05 Post-`.357 sweep (milestone `.358 planning — outer-loop, Claude Opus 4.8)
+
+**Context:** `.357 ran the verifier-MOAT-at-scale scissor (exp3869) a 4th time and it
+came back **INCONCLUSIVE** — both positive controls degenerate on the PRMBench corpus:
+the strong reasoner's self-verify AUROC=0.5 (it caught zero gold-incorrect steps) AND
+Carnot's ensemble AUROC=0.55 (near chance). Root cause: `data/step_error_balanced_v2.json`
+(PRMBench, 500 errors) is **out-of-distribution** for the FoVer-trained math-bound ensemble,
+which only discriminates on FoVer-family step-errors. The moat-at-scale durability question
+(DT-P2) is therefore STILL open and now needs an **in-distribution** error-rich corpus
+(ensemble AUROC >= 0.65) before the scissor can adjudicate. Separately, the Phase-3
+energy-as-GENERATOR bet (Thesis A) is the operator-seeded forward thread: part-(b) DT-P1
+adjudication (exp/thesis_a_p1_discrete_search_v2) was INCONCLUSIVE because the re-trained
+AR positive control collapsed to 0.010 (< 0.3), even though an earlier scaled checkpoint
+cleanly had AR=0.84 / EBT-argmin=0.0 (`results/thesis_a_part_b_scaled_seed1.json`). The
+adjudication needs a confirmed-headroom checkpoint (AR in [0.4, 0.95]) before the global
+discrete beam search can separate ARTIFACT (greedy-decode bottleneck) from FUNDAMENTAL
+(energy landscape misshaped for algorithmic generation).
+
+New / reconfirmed papers this sweep:
+
+- **arXiv:2507.02092 — "Energy-Based Transformers are Scalable Learners and Thinkers"
+  (EBT; alexiglad/EBT):** the Phase-3 Thesis-A reference. Core claim relevant to `.358:
+  three System-2 facets (dynamic compute allocation, uncertainty modeling, explicit
+  prediction verification) emerge from unsupervised energy learning; reported up to 35%
+  faster pretraining and +29% inference-time gains via energy-descent "thinking." The
+  `.358 EBT diagnostic directly tests the load-bearing sub-claim — does adding
+  energy-descent steps (K) at inference monotonically improve generation accuracy on a
+  confirmed-headroom regime, or does it plateau/degrade (which would bound the
+  thinking-as-optimization story at our scale)?
+- **arXiv:2504.16828 — "Process Reward Models That Think" (ThinkPRM):** a long-CoT
+  verifier that generates a verification chain-of-thought per step. The strongest
+  generative-PRM comparator for the moat-independence test: if Carnot's cheap non-LLM
+  ensemble catches step-errors ThinkPRM-style self-verification misses, the moat is
+  error-independent (durable); if it merely re-catches, it is subsumption-risk (DT-P2).
+- **arXiv:2601.17223 — "Beyond Outcome Verification: Verifiable Process Reward Models for
+  Structured Reasoning":** externally-checkable per-step verification (vs neural-judge
+  opacity/reward-hacking). Methodological warrant for building the `.358 in-distribution
+  error-rich corpus from verifiable step labels rather than judge labels.
+- **arXiv:2505.19706 — "Improving Process Reward Models with Error-Aware [supervision]":**
+  error-category-aware PRM training. Relevant to the in-distribution moat corpus design
+  (stratify by error axis so the ensemble's discriminable error classes are represented)
+  and to FR-11 v24 independence-reweighting per error category.
+- **Complementarity finding (survey arXiv:2510.08049 + 2505.19706):** outcome reward
+  models can identify step errors, sometimes surpassing open-source PRMs — independent
+  literature evidence that decorrelated verifier *families* are complementary, the exact
+  property the moat scissor measures.
