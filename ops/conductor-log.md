@@ -7813,3 +7813,4 @@ ERROR: {
 | 2026-06-05 02:05 UTC | Milestone 2026.06.353 activated | OK | 10 tasks queued |
 | 2026-06-05 02:15 UTC | Archive milestone .352 (LDT-gap probe) and activat | OK | 94 passed in 4.32s |
 | 2026-06-05 02:28 UTC | Contamination-free FORMAL core 5-seed CI replicati | OK | 84 passed in 4.76s |
+| 2026-06-05 03:13 UTC | Ship a CERTIFIED abstention operating point on the | OK | 94 passed in 4.29s |
