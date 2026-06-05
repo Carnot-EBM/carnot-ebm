@@ -7876,3 +7876,6 @@ ERROR: {
 | 2026-06-05 11:04 UTC | Graph-grounding fact-verifier PROTOTYPE (NEW archi | FLAGGED | adversarial_verify CRITICAL: DURATION_TOO_SHORT — result quarantined, not a clea |
 | 2026-06-05 11:06 UTC | INDEPENDENCE AUDIT (arXiv:2604.07650): is Carnot's | GATE_BLOCK | Pre-emptive skip: upstream retired (exp3859-moat-scissor-at-scale-v3) |
 | 2026-06-05 11:06 UTC | ThinkPRM COMPLEMENTARITY (arXiv:2504.16828 refutat | GATE_BLOCK | Pre-emptive skip: upstream retired (exp3859-moat-scissor-at-scale-v3) |
+| 2026-06-05 11:51 UTC | Facts-domain COMPLEMENTARITY (gated on exp3862 fac | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_3863_graph_v |
+| 2026-06-05 11:53 UTC | INDEPENDENCE AUDIT (arXiv:2604.07650): is Carnot's | GATE_BLOCK | Pre-emptive skip: upstream retired (exp3859-moat-scissor-at-scale-v3) |
+| 2026-06-05 11:53 UTC | ThinkPRM COMPLEMENTARITY (arXiv:2504.16828 refutat | GATE_BLOCK | Pre-emptive skip: upstream retired (exp3859-moat-scissor-at-scale-v3) |
