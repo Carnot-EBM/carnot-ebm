@@ -7825,3 +7825,4 @@ ERROR: {
 | 2026-06-05 05:58 UTC | Capstone .353 — aggregate the contamination-free-f | OK | cache hit: 82 passed in 3.74s |
 | 2026-06-05 06:00 UTC | Milestone 2026.06.354 activated | OK | 2 tasks queued |
 | 2026-06-05 06:08 UTC | Verifier-ensemble-as-sound-abstraction-lattice: me | OK | 85 passed in 4.28s |
+| 2026-06-05 06:28 UTC | Verifier error-INDEPENDENCE scissor AT SCALE (DT-P | FLAGGED | adversarial_verify CRITICAL: DURATION_TOO_SHORT — result quarantined, not a clea |

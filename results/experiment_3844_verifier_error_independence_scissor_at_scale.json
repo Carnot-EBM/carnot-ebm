@@ -135,5 +135,23 @@
   "residual_catch_ci95": null,
   "residual_catch_rate": null,
   "status": "blocked_fover_balanced_corpus_not_available",
-  "title": "verifier_error_independence_scissor_at_scale"
+  "title": "verifier_error_independence_scissor_at_scale",
+  "flagged_adversarial": true,
+  "corrigendum_pending": [
+    {
+      "kind": "IMPLAUSIBLE_PERFECT",
+      "severity": "info",
+      "detail": "n_residual_errors=0.0 (exactly zero). Confirm this is not a stub default."
+    },
+    {
+      "kind": "DURATION_TOO_SHORT",
+      "severity": "critical",
+      "detail": "duration_s=1.4844427108764648 but artifact references compute-bound markers (GGUF / CUDA / live model). Loading and running a real model takes >=60.0s minimum; this completed too fast to have invoked the model."
+    },
+    {
+      "kind": "METHODOLOGY_MISSING",
+      "severity": "warn",
+      "detail": "Compute-bound artifact missing: random_seed. Methodology unverifiable."
+    }
+  ]
 }
