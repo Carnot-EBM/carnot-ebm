@@ -7786,3 +7786,4 @@ ERROR: {
 | 2026-06-04 20:39 UTC | DT-P1 falsification: vanilla TRM vs matched-COMPUT | OK | 85 passed in 4.27s |
 | 2026-06-04 20:53 UTC | DT-P2 falsification: energy-fit to a trained TRM's | OK | 100 passed in 5.95s |
 | 2026-06-04 23:55 UTC | Headroom-gate corpus + positive control (MANDATORY | OK | Deliverable already exists in repo |
+| 2026-06-05 00:11 UTC | Distillation-oracle prototype: Carnot verifier sco | OK | 95 passed, 16 warnings in 8.40s |
