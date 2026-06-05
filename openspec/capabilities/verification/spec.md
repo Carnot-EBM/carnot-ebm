@@ -10215,3 +10215,52 @@ Given that the actual frozen FoVer 0.9131 was produced by Tier0r+Tier0u+Memory a
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-VERIFY-3820 | Implemented (python/carnot/verify/experiment_3820_fover_formal_vs_learned_ablation.py) | Implemented (tests/python/test_experiment_3820_fover_formal_vs_learned_ablation.py) |
+
+### REQ-VERIFY-3837: FoVer Learned Contribution Error-Category Characterization
+
+The system SHALL provide an Exp 3837 workflow that characterizes where the Exp
+3826 learned-probe delta lives by rescoring the same five deterministic FoVer
+candidate panels under the formal-only scorer
+`0.9*tier0r_curry_howard + 0.1*tier0u_logical_consistency` and the learned-only
+`fr11_session_memory` scorer. The workflow SHALL check that `carnot.verify`
+imports, that the cached FoVer corpus is present, that the Exp 3826 upstream
+artifact is readable with SHA256 provenance, and that the FoVer test/corpus
+schema has either an explicit error-category field or else records that coarse
+categories were derived from step text.
+
+For runnable inputs, the workflow SHALL choose a separate operating threshold
+for each scorer from its own score column, tabulate per category the four
+paired correctness cells `(formal-correct & learned-correct)`,
+`(formal-wrong & learned-correct)`, `(formal-correct & learned-wrong)`, and
+`(both-wrong)`, and name the categories where
+`formal-wrong & learned-correct` is concentrated as the formal core's gap
+regions. The workflow SHALL also identify categories where both scorers are
+wrong as ensemble blind spots, and SHALL emit a terminal artifact at
+`results/experiment_3837_fover_error_category_learned_contribution.json`.
+
+The artifact SHALL include `learned_contribution_by_category`,
+`formal_core_gap_categories`, `both_wrong_categories`,
+`category_derivation_method`, `n_candidates_scored`, `preconditions_checked`,
+`cited_upstream_artifacts`, `honest_verdict`, `random_seed`,
+`reproducibility_checksum`, `duration_s`, `inference_substrate`, and a
+`field_provenance` block with a principle entry for each required field. If any
+precondition fails, the workflow SHALL write a blocked artifact whose
+`honest_verdict` starts with `blocked_<resource>` and SHALL NOT fabricate
+category counts.
+
+### SCENARIO-VERIFY-3837: Learned Contribution Categories Are Named Or Declared Uniform
+
+Given synthetic FoVer candidate panels with formal and learned score columns,
+gold labels, and either explicit or text-derived categories, when the Exp 3837
+workflow builds its artifact, then it selects scorer-specific operating
+thresholds, computes the four paired correctness counts per category, reports
+formal-core gap categories from the learned-catches/formal-misses cell, reports
+both-wrong blind spots, preserves Exp 3826 SHA256 provenance, and emits either
+`complete: learned_contribution_characterized_topgap_<category>_formal_core_blindspots_documented`
+or `complete: learned_contribution_characterized_NO_category_signal_delta_uniform`.
+
+## Implementation Status (REQ-VERIFY-3837)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-VERIFY-3837 | Implemented (`python/carnot/verify/experiment_3837_fover_error_category_learned_contribution.py`, `scripts/run_experiment_3837.py`) | Implemented (`tests/python/test_experiment_3837_fover_error_category_learned_contribution.py`) |
