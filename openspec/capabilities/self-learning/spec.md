@@ -11096,3 +11096,17 @@ behavior, proving the result uses the real persisted Tier-3 predictor
 | Requirement  | Python | Tests |
 |-------------|--------|-------|
 | REQ-LEARN-3813 | Proposed (python/carnot/fr11/continuous_self_learning_v21.py; scripts/experiment_3813_fr11_v21_fast_path_robustness.py, Exp 3813) | Proposed (tests/python/test_experiment_3813_fr11_v21_fast_path_robustness.py) |
+
+## REQ-LEARN-061: Tier 4 Adaptive Structure Prototype
+**Given** the active verifier set and their scores on the corpus
+**When** Tier 4 evaluates marginal contributions
+**Then** verifiers with marginal contribution < 0.002 are pruned
+**And** the pruned structure is evaluated to ensure it holds the 0.9131 CI
+**And** residual gap regions (gold-incorrect but missed by all retained verifiers) are flagged.
+
+## SCENARIO-LEARN-105: Tier 4 Prunes Redundant Verifiers
+**Given** an ensemble with tier0r_curry_howard, tier0u_logical_consistency, fr11_session_memory, tier0s_arithmetic_gap
+**When** the marginal contribution is evaluated
+**Then** tier0u and tier0s are pruned (marginal < 0.002)
+**And** the remaining structure holds AUROC > 0.903
+**And** compute_saving_fraction = 0.5
