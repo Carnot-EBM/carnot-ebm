@@ -35405,3 +35405,69 @@ milestones:
       (DT-Q4 deterministic ablation; informs the exp3680 re-freeze)'
     deliverable: results/experiment_3820_fover_formal_vs_learned_ablation.json
     result: OK (conductor)
+- id: 2026.06.351
+  title: "Recursive-refiner Phase-3 thesis \u2014 UNBLOCK + cheap kill-gates + distillation-oracle path; verifier-moat deepening\
+    \ (contamination-free formal core, error-independence); hardware continuity; lean close-out."
+  doc: openspec/change-proposals/research-roadmap-vNEXT.md
+  completed: '2026-06-05'
+  finding: See conductor log for per-experiment results.
+  tasks:
+  - id: exp3821-latent-symbol-bridge-unblocked
+    title: 'Latent-Symbol Bridge Task 0 RE-RUN (UNBLOCKED): can an external discrete verifier read a recursive refiner''s
+      intermediate latents in-loop, or is offline distillation the only path?'
+    deliverable: results/experiment_3821_latent_symbol_bridge_unblocked.json
+    result: OK (conductor)
+  - id: exp3822-trm-escapes-grids-p1
+    title: "DT-P1 falsification: vanilla TRM vs matched-COMPUTE AR on a strictly-1D variable-length headroom task (algorithmic\
+      \ sequence correction / multi-step parity) \u2014 does the paradigm escape grids?"
+    deliverable: results/experiment_3822_trm_escapes_grids_p1.json
+    result: OK (conductor)
+  - id: exp3823-trm-not-ebt-curlfree
+    title: "DT-P2 falsification: energy-fit to a trained TRM's latent updates \u0394h under the curl-free constraint (\u0394\
+      h \u2248 \u2212\u2207E(h)) \u2014 confirm TRM \u2260 EBT (asymmetric vector field, not energy descent)."
+    deliverable: results/experiment_3823_trm_not_ebt_curlfree.json
+    result: OK (conductor)
+  - id: exp3824-headroom-gate-corpus
+    title: "Headroom-gate corpus + positive control (MANDATORY before any generator training): curate a grid corpus where\
+      \ AR greedy \u2248 20% AND AR+SC@32 < 50%; ABORT if AR+SC@32 > 75% (the ceiling-pollution trap)."
+    deliverable: results/experiment_3824_headroom_gate_corpus.json
+    result: OK (conductor)
+  - id: exp3825-distillation-oracle-qhead
+    title: "Distillation-oracle prototype: Carnot verifier scores final TRM trajectories -> train a continuous Q-head (offline\
+      \ Q-learning / BCE-MSE) that natively reads continuous latents. [CONTINUOUS SELF-LEARNING \u2014 Tier 3/4]"
+    deliverable: results/experiment_3825_distillation_oracle_qhead.json
+    result: OK (conductor)
+  - id: exp3826-fover-ablation-faithful
+    title: "FoVer formal-vs-learned ablation FAITHFUL re-run: fix the harness so full_ensemble reproduces 0.9131 \xB10.01,\
+      \ then trust formal_only (the provisional 0.9612 contamination-free-core finding)."
+    deliverable: results/experiment_3826_fover_ablation_faithful.json
+    result: OK (conductor)
+  - id: exp3827-verifier-error-independence-scissor
+    title: 'Verifier error-INDEPENDENCE scissor test (DT-P2): of the step-errors a strong SOTA reasoner (Qwen3.6-35B) self-verification
+      MISSES, what fraction does Carnot''s ensemble catch? Moat = error-independence, not AUROC.'
+    deliverable: results/experiment_3827_verifier_error_independence_scissor.json
+    result: OK (conductor)
+  - id: exp3828-verifier-vs-prompt-injection
+    title: 'Verifier-ensemble vs adaptive prompt-injection corpus (MANDATORY-NEXT pickup): does AND-composition beat single-KAN
+      0.475 on adversarial perturbations?'
+    deliverable: results/experiment_3828_verifier_vs_prompt_injection.json
+    result: OK (conductor)
+  - id: exp3829-gatemate-n16-flash-smoke-v3
+    title: 'GateMate A1-EVB-2M: n=16 Ising tile bitstream flash + timing smoke v3 (himbaechel flow; hardware-continuity debt
+      owed).'
+    deliverable: results/experiment_3829_gatemate_n16_flash_smoke_v3.json
+    result: OK (conductor)
+  - id: exp3830-kv260-polarfire-continuity-audit
+    title: KV260 + PolarFire opportunistic continuity audit (SSH preconditions; KV260 terminal, PolarFire needs a hash-verified
+      dispatch).
+    deliverable: results/experiment_3830_kv260_polarfire_continuity_audit.json
+    result: OK (conductor)
+  - id: exp3831-capstone-v350-research-refresh
+    title: 'Capstone v350 + external research refresh: aggregate .350/.351 verdicts, confirm converged invariants, file fresh
+      references.'
+    deliverable: results/experiment_3831_capstone_v350_research_refresh.json
+    result: OK (conductor)
+  - id: exp3832-archive-v350-activate-v351
+    title: Archive .350 / activate .351 manifest (routine milestone transition).
+    deliverable: results/experiment_3832_archive_v350_activate_v351.json
+    result: OK (conductor)

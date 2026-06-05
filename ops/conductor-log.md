@@ -7788,3 +7788,24 @@ ERROR: {
 | 2026-06-04 23:55 UTC | Headroom-gate corpus + positive control (MANDATORY | OK | Deliverable already exists in repo |
 | 2026-06-05 00:11 UTC | Distillation-oracle prototype: Carnot verifier sco | OK | 95 passed, 16 warnings in 8.40s |
 | 2026-06-05 00:22 UTC | FoVer formal-vs-learned ablation FAITHFUL re-run:  | OK | 86 passed in 3.74s |
+| 2026-06-05 00:45 UTC | Verifier error-INDEPENDENCE scissor test (DT-P2):  | FAIL | Post-tests failed: 1 failed, 83 passed in 5.32s |
+| 2026-06-05 00:47 UTC | Verifier error-INDEPENDENCE scissor test (DT-P2): | OK | Deliverable already exists in repo |
+| 2026-06-05 00:48 UTC | Verifier-ensemble vs adaptive prompt-injection cor | SKIP | Pre-tests failing, self-heal failed: 1 failed, 83 passed in 4.73s |
+| 2026-06-05 00:50 UTC | Verifier-ensemble vs adaptive prompt-injection cor | SKIP | Pre-tests failing, self-heal failed: 1 failed, 83 passed in 4.74s |
+| 2026-06-05 00:52 UTC | Verifier-ensemble vs adaptive prompt-injection cor | SKIP | Pre-tests failing, self-heal failed: 1 failed, 83 passed in 4.39s |
+| 2026-06-05 00:54 UTC | GateMate A1-EVB-2M: n=16 Ising tile bitstream flas | SKIP | Pre-tests failing, self-heal failed: 1 failed, 83 passed in 4.27s |
+| 2026-06-05 00:57 UTC | GateMate A1-EVB-2M: n=16 Ising tile bitstream flas | SKIP | Pre-tests failing, self-heal failed: 1 failed, 83 passed in 5.47s |
+| 2026-06-05 00:59 UTC | GateMate A1-EVB-2M: n=16 Ising tile bitstream flas | SKIP | Pre-tests failing, self-heal failed: 1 failed, 83 passed in 5.09s |
+| 2026-06-05 01:01 UTC | KV260 + PolarFire opportunistic continuity audit ( | SKIP | Pre-tests failing, self-heal failed: 1 failed, 83 passed in 4.83s |
+| 2026-06-05 01:04 UTC | KV260 + PolarFire opportunistic continuity audit ( | SKIP | Pre-tests failing, self-heal failed: 1 failed, 83 passed in 4.49s |
+| 2026-06-05 01:06 UTC | KV260 + PolarFire opportunistic continuity audit ( | SKIP | Pre-tests failing, self-heal failed: 1 failed, 83 passed in 4.90s |
+| 2026-06-05 01:08 UTC | Capstone v350 + external research refresh: aggrega | SKIP | Pre-tests failing, self-heal failed: 1 failed, 83 passed in 4.82s |
+| 2026-06-05 01:11 UTC | Capstone v350 + external research refresh: aggrega | SKIP | Pre-tests failing, self-heal failed: 1 failed, 83 passed in 5.67s |
+| 2026-06-05 01:13 UTC | Capstone v350 + external research refresh: aggrega | SKIP | Pre-tests failing, self-heal failed: 1 failed, 83 passed in 4.83s |
+| 2026-06-05 01:15 UTC | Archive .350 / activate .351 manifest (routine mil | SKIP | Pre-tests failing, self-heal failed: 1 failed, 83 passed in 4.69s |
+| 2026-06-05 01:17 UTC | Archive .350 / activate .351 manifest (routine mil | SKIP | Pre-tests failing, self-heal failed: 1 failed, 83 passed in 4.57s |
+| 2026-06-05 01:20 UTC | Archive .350 / activate .351 manifest (routine mil | SKIP | Pre-tests failing, self-heal failed: 1 failed, 83 passed in 5.25s |
+| 2026-06-05 01:22 UTC | Milestone 2026.06.352 activated | OK | 1 tasks queued |
+| 2026-06-05 01:24 UTC | Verifier-ensemble-as-sound-abstraction-lattice: me | SKIP | Pre-tests failing, self-heal failed: 1 failed, 83 passed in 4.75s |
+| 2026-06-05 01:27 UTC | Verifier-ensemble-as-sound-abstraction-lattice: me | SKIP | Pre-tests failing, self-heal failed: 1 failed, 83 passed in 4.96s |
+| 2026-06-05 01:29 UTC | Verifier-ensemble-as-sound-abstraction-lattice: me | SKIP | Pre-tests failing, self-heal failed: 1 failed, 83 passed in 4.76s |
