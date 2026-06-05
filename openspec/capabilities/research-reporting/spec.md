@@ -17725,3 +17725,13 @@ the publication gate and recording its output. The JSON artifact SHALL include
 `archived_milestone`, `activated_milestone`, `paper_ready_at_boundary`,
 `frozen_fover_auroc_unchanged`, `honest_verdict`, `random_seed`,
 `reproducibility_checksum`, `duration_s`, and `inference_substrate`.
+
+### REQ-REPORT-3841: External Research Refresh .353
+The system shall confirm the '.353 additions' section is intact in research-references.md.
+The system shall append further genuinely-new 2026 papers for the .353 tracks.
+The system shall output a valid artifact with honest_verdict='complete: external_research_refresh_353_section_intact_references_appended_numbers_as_reported'.
+
+### SCENARIO-REPORT-3841: Refresh Appends Papers
+**Given** the .353 section exists
+**When** the refresh script is run
+**Then** it appends the new papers and generates the JSON artifact.
