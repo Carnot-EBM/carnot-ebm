@@ -17807,3 +17807,69 @@ unchanged.
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-REPORT-3857 | Planned (`python/carnot/reporting/archive_v355_activate_v356_3857.py`, `scripts/experiments/experiment_3857_archive_v355_activate_v356.py`) | Planned (`tests/python/test_experiment_3857_archive_v355_activate_v356.py`) |
+
+### REQ-REPORT-3870: Archive .357 Verdict and Activate .358
+
+The Exp 3870 workflow SHALL archive milestone `2026.06.357` honestly in
+`research-complete.yaml` and confirm milestone `2026.06.358` is active in
+`research-roadmap.yaml`. Before appending any research record, it SHALL confirm
+that `research-complete.yaml` exists and safe-loads. If `research-complete.yaml`
+does not safe-load, the workflow SHALL write a blocked artifact whose
+`honest_verdict` starts with `blocked_research_complete_yaml_poison` and SHALL
+NOT edit `research-complete.yaml`.
+
+On the complete path, the workflow SHALL read the Exp 3869 verdict by invoking
+`scripts/summarize_artifact.py` for
+`results/experiment_3869_moat_scissor_v4_existing_corpus.json` rather than
+reading that JSON directly. It SHALL append an append-only `.357` archive record
+to `research-complete.yaml`, preserving all existing content as a prefix. The
+archive record SHALL record that Exp 3869 completed INCONCLUSIVE because both
+positive controls were degenerate on the out-of-distribution PRMBench corpus.
+Every appended `result:` value that contains `: ` SHALL be single-quoted so the
+YAML parse gate cannot be poisoned again. After the append, the workflow SHALL
+confirm `research-complete.yaml` still safe-loads and SHALL run
+`tests/python/test_docs.py` as the pre-test gate check. The workflow SHALL leave
+`ops/changelog.md`, `ops/status.md`, `_bmad/traceability.md`, and
+`scripts/research_conductor.py` unchanged; those documents are reconciled by the
+conductor's separate status step for this milestone.
+
+The terminal artifact SHALL be written to
+`results/experiment_3870_archive_v357_activate_v358.json` and SHALL include bare
+top-level values for `honest_verdict`, `archived_milestone`,
+`activated_milestone`, `research_complete_yaml_parses`,
+`backend_routing_recommendation`, `duration_s`, and `inference_substrate`, plus
+`field_principles` documenting why each required value exists. It SHALL also
+record the Exp 3869 summary command, the summarized Exp 3869 verdict, whether
+`tests/python/test_docs.py` passed, and the active roadmap path. The backend
+routing recommendation SHALL record codex as the reliable conductor backend for
+`.356` and `.357`, and SHALL preserve the standing operator gemini<->codex flip
+authority. On the complete path, `honest_verdict` SHALL equal
+`complete: archived_v357_inconclusive_exp3869_positive_controls_degenerate_v358_active_codex_backend_recommended`.
+
+#### SCENARIO-REPORT-3870: V357 Archive Records Inconclusive Verdict And Activates V358
+
+**Given** `.358` is active in `research-roadmap.yaml`, `research-complete.yaml`
+exists and safe-loads, and the Exp 3869 artifact can be summarized
+**When** the Exp 3870 workflow runs
+**Then** it invokes `scripts/summarize_artifact.py`, appends a `.357` archive
+record with single-quoted colon-containing `result:` values, confirms
+`research-complete.yaml` still safe-loads, runs `tests/python/test_docs.py`,
+records codex as the reliable backend with the standing operator flip authority,
+writes the required terminal artifact, and leaves `ops/changelog.md`,
+`ops/status.md`, `_bmad/traceability.md`, and `scripts/research_conductor.py`
+unchanged.
+
+#### SCENARIO-REPORT-3870-BLOCKED-YAML: Corrupt Research Record Blocks Before Append
+
+**Given** `research-complete.yaml` does not safe-load
+**When** the Exp 3870 workflow runs
+**Then** it writes a blocked artifact prefixed by
+`blocked_research_complete_yaml_poison`, records the failed YAML parse in
+`preconditions_checked`, and leaves `research-complete.yaml` byte-for-byte
+unchanged.
+
+## Implementation Status (REQ-REPORT-3870)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-3870 | Planned (`python/carnot/reporting/archive_v357_activate_v358_3870.py`, `scripts/experiments/experiment_3870_archive_v357_activate_v358.py`) | Planned (`tests/python/test_experiment_3870_archive_v357_activate_v358.py`) |
