@@ -8619,3 +8619,5 @@ Did NOT modify research-roadmap.yaml or scripts/research_conductor.py. Did NOT p
 - 2026-06-05: FoVer formal-vs-learned ablation FAITHFUL re-run: fix the harness so full_ensemble reproduces 0.9131 ±0.01, then trust formal_only (the provisional 0.9612 contamination-free-core finding). (✅ Complete) — honest_verdict=complete: formal_core_retains_moat_formalonly0.8947_full0.9131_learned0.8699_contamination_free; results/experiment_3826_fover_ablation_faithful.json
 
 - 2026-06-05: Operational Retrospective for 2026.06.352 — no data available this milestone.
+
+- 2026-06-04: Archive milestone .352 (converged invariants intact, FoVer frozen 0.9131) and activate .353 (Harden the contamination-free formal core, Tier-4 self-learning, EDLM kill-gate execution surface). (✅ Complete) — honest_verdict=complete: archived_v352_activated_v353; results/experiment_3834_archive_v352_activate_v353.json
