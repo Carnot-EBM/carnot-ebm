@@ -7847,3 +7847,5 @@ ERROR: {
 | 2026-06-05 08:11 UTC | ThinkPRM COMPLEMENTARITY (arXiv:2504.16828 refutat | GATE_BLOCK | Pre-emptive skip: upstream retired (exp3847-moat-scissor-at-scale-v2) |
 | 2026-06-05 08:12 UTC | Graph-grounding fact-verifier PROTOTYPE (NEW archi | SKIP | Pre-tests failing, self-heal failed: 1 failed, 80 passed in 3.67s |
 | 2026-06-05 08:14 UTC | Facts-domain COMPLEMENTARITY (gated on exp3850 fac | GATE_BLOCK | Pre-emptive skip: upstream retired (exp3850-graph-grounding-fact-verifier-protot |
+| 2026-06-05 08:14 UTC | FR-11 continuous self-learning v22 (research-progr | SKIP | Pre-tests failing, self-heal failed: 1 failed, 80 passed in 3.45s |
+| 2026-06-05 08:16 UTC | Facts-domain COMPLEMENTARITY (gated on exp3850 fac | GATE_BLOCK | Pre-emptive skip: upstream retired (exp3850-graph-grounding-fact-verifier-protot |
