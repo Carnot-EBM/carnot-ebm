@@ -138,6 +138,15 @@ Given Exp 3738 reports that FLOPs were not matched within tolerance, the Exp 373
 ## SCENARIO-EBT-3739-NOT-RUN: Missing Or Blocked Part-B Is Not A Negative
 Given Exp 3736 does not green-light part-(b), Exp 3738 is absent, or Exp 3738 is blocked before producing a valid heldout comparison, the Exp 3739 verdict writes `thesis_a_outcome=part_b_not_run`, `ebt_beats_ar_at_matched_compute=false`, leaves unavailable metrics null, explains the fallback reason, and never labels the un-run comparison as an honest bounded negative.
 
+## REQ-EBT-3871: Thesis-A Part-B DTP1 Headroom-Confirmed Beam Search
+The system must provide `scripts/experiments/experiment_3871_thesis_a_partb_dtp1_headroom_confirmed.py` to run the Deep-Think-P1 Thesis-A part-b probe only after a positive-control AR checkpoint has headroom. The workflow must check CUDA and scaled-harness import preconditions, reuse the scaled Thesis-A part-b model/training path and the P1 v2 cumulative-energy discrete beam decode, evaluate AR best-of-N, greedy EBT energy-argmin, and EBT global beam search at matched inference compute over at least three configured seeds, and write `results/experiment_3871_thesis_a_partb_dtp1_headroom_confirmed.json` with a terminal `complete:` or `blocked_` verdict. The artifact must include a bare boolean `positive_control_passed`, principle-annotated AR/argmin/beam/adjudication/FLOP fields, seed lists, held-out count, precondition evidence, model specs, reproducibility checksum, duration, and inference substrate.
+
+## SCENARIO-EBT-3871-HEADROOM: Positive Control Gates The Probe
+Given no evaluated seed reaches held-out AR accuracy in `[0.4, 0.95]`, the Exp 3871 workflow writes an inconclusive terminal artifact beginning `complete: thesis_a_partb_INCONCLUSIVE_no_headroom_ar`, sets `positive_control_passed=false`, and does not label the EBT beam result as ARTIFACT or FUNDAMENTAL.
+
+## SCENARIO-EBT-3871-ADJUDICATION: Beam Accuracy Decides Artifact Versus Fundamental
+Given the positive-control AR accuracy is in `[0.4, 0.95]`, the Exp 3871 workflow writes ARTIFACT when beam accuracy recovers at least half of AR accuracy, writes FUNDAMENTAL when both beam and greedy argmin remain below 20% of AR accuracy, and otherwise writes INCONCLUSIVE while preserving matched-FLOP accounting.
+
 ## REQ-EBT-3731: Thesis-A EBT Bring-Up Capstone Aggregation
 The system must provide `scripts/experiment_3731_capstone_v341.py` to aggregate Exp 3724 through Exp 3730 from checked-in JSON artifacts only. The capstone must exclude any upstream artifact carrying `flagged_adversarial=true` from headline aggregation, cite every unflagged upstream artifact with imported fields and SHA256 hashes, preserve the paper-ready and frozen-headline invariants from Exp 3724, carry the kill-gate part-(a) verdict from Exp 3729, and write `results/experiment_3731_capstone_v341.json` with the required principle-annotated fields. The capstone must not claim that energy-as-generator works; `green_light_342=true` only means stable enough to run the matched-compute comparison, while `green_light_342=false` records Thesis-A as bounded at small scale.
 
