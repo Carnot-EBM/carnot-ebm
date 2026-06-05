@@ -59,5 +59,44 @@ HRM Sudoku-Extreme checkpoint (~/hrm_ckpt), if it loads safely (pickle audit fir
   (GPU-b52387a2) is flaky under load. Conductor PAUSED during runs (kill_zombies).
 - Harness: scripts/experiments/sudoku_energy_vs_ar_v1.py (--model {ar,ebt,refiner}).
 
-## Status
-- 2026-06-05: thesis seeded; harness build started (AR + headroom gate first).
+## Status — COMPLETE 2026-06-05 (DECISIVE; unlike P1 arithmetic)
+
+| Generator (matched compute) | exact-grid solve | blank-cell acc | violations | params |
+|---|---|---|---|---|
+| AR greedy | 0.002 | 0.342 | 7.6 | 3.2M |
+| AR SC@32 | **0.000** | — | — | 3.2M |
+| EBT argmin decode | 0.000 | 0.109 (=chance) | 132 | 3.2M |
+| EBT energy-descent decode | 0.000 | 0.109 (=chance) | 145 | 3.2M |
+| **Refiner (TRM-style)** | **0.182** | **0.652** | 9.4 | **1.8M** |
+
+**VERDICT: VALIDATE the regime claim via REFINEMENT; REFUTE naive energy-descent.**
+
+1. **HEADROOM confirmed (the control P1 lacked):** AR genuinely learns (blank-cell
+   0.342 = 3x chance) but solves ~0% — the non-degenerate weak-AR regime.
+2. **EBT = perfect SCORER, failed GENERATOR:** the NCE energy converged (loss
+   0.0001, gold-vs-corrupt gap ~17) — it scores Sudoku validity near-perfectly. But
+   both decoders (per-cell argmin AND continuous energy-descent, Kona's literal
+   mechanism) give 0.000 solve, chance-level blank cells, and worse-than-random
+   violations. The wall in energy-as-generator is the DECODE/SEARCH + global
+   landscape shaping, NOT the energy learning. (Contrastive training shapes the
+   energy only near valid solutions; the global space the decoder searches is full
+   of bad minima.)
+3. **Refiner WINS:** recursive refinement (end-to-end, deep supervision) solves
+   18.2% — +18pp over AR — with FEWER params. It GENERATES where energy-descent
+   does not.
+4. **DT-P2 made concrete:** recursive refinement (arbitrary learned vector field)
+   generates; contrastive-energy-descent (curl-free scorer) does not.
+5. **Re Kona:** the 96% is plausibly a REFINEMENT/amortized-inference result (or a
+   far more sophisticated energy training+inference), NOT the naive "gradient-descend
+   a contrastively-trained energy" recipe — which we show fails.
+6. **For Carnot Phase-3:** pursue recursive REFINEMENT (TRM-style) as the generator
+   substrate, not energy-descent. The energy function's defensible role stays
+   SCORING/verification (EBT near-perfect), consistent with the energy-as-sound-
+   lattice reframe.
+
+Caveat: single seed; tiny matched-compute first pass (refiner 18.2% vs TRM/HRM SOTA
+~87/55% at full scale) — the COMPARISON is the point, not the absolutes. Artifacts:
+results/experiment_sudoku_energy_vs_ar_v1.json + sudoku_{ar_baseline,ebt,refiner}_v1.json.
+
+- 2026-06-05: thesis seeded; harness built (AR/EBT/refiner); experiment run on the
+  internal RTX 3090 (~3.5h, both 3090s survived — internal-GPU pinning held); verdict above.
