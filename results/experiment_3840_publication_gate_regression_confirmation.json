@@ -1,0 +1,212 @@
+{
+  "duration_s": 0.297115,
+  "experiment": 3840,
+  "field_provenance": {
+    "duration_s": {
+      "principle": "plausibility floor for an aggregation-only run",
+      "source": "time.perf_counter wall-clock measurement"
+    },
+    "frozen_fover_auroc": {
+      "principle": "MUST read 0.9131 \u2014 the headline must not have moved",
+      "source": "results/experiment_2850_fover_dual_condition_integrity_v4.json"
+    },
+    "g1": {
+      "principle": "each gate boolean \u2014 the four conditions for paper_ready",
+      "source": "publication_gate.py --json gates.G1.pass"
+    },
+    "g2": {
+      "principle": "each gate boolean \u2014 the four conditions for paper_ready",
+      "source": "publication_gate.py --json gates.G2.pass"
+    },
+    "g3": {
+      "principle": "each gate boolean \u2014 the four conditions for paper_ready",
+      "source": "publication_gate.py --json gates.G3.pass"
+    },
+    "g4": {
+      "principle": "each gate boolean \u2014 the four conditions for paper_ready",
+      "source": "publication_gate.py --json gates.G4.pass"
+    },
+    "honest_verdict": {
+      "principle": "terminal complete: prefix or blocked_<resource>",
+      "source": "closed-set Exp 3840 verdict synthesis"
+    },
+    "inference_substrate": {
+      "principle": "must not claim live model execution",
+      "source": "Exp 3840 aggregation design"
+    },
+    "paper_ready": {
+      "principle": "G1^G2^G3^G4 \u2014 the standing convergence invariant, MUST be true",
+      "source": "publication_gate.py --json paper_ready"
+    },
+    "random_seed": {
+      "principle": "stable reproducibility marker for this aggregation run",
+      "source": "Exp 3840 deterministic aggregation constant"
+    },
+    "reproducibility_checksum": {
+      "principle": "detects accidental artifact drift",
+      "source": "sha256 over artifact payload with this field blanked"
+    },
+    "unmet_gates": {
+      "principle": "empty list expected; any entry is a regression to surface",
+      "source": "publication_gate.py --json unmet_gates"
+    }
+  },
+  "flagged_adversarial_true_gate_feeders": [],
+  "frozen_fover_auroc": 0.9131,
+  "frozen_fover_auroc_unchanged": true,
+  "g1": true,
+  "g2": true,
+  "g3": true,
+  "g4": true,
+  "honest_verdict": "complete: publication_gate_regression_confirmed_g1_g2_g3_g4_pass_paper_ready_true_frozen_fover_0.9131_unchanged",
+  "inference_substrate": "aggregation_from_publication_gate_and_artifact_summaries",
+  "live_critical_spot_check_experiments": [
+    "3836"
+  ],
+  "no_flagged_adversarial_true_gate_feeder": true,
+  "paper_ready": true,
+  "publication_gate_command": {
+    "command": [
+      "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+      "/home/ianblenke/github.com/ianblenke/carnot/scripts/publication_gate.py",
+      "--json"
+    ],
+    "returncode": 0,
+    "stderr": "",
+    "stdout": "{\n  \"paper_ready\": true,\n  \"gates\": {\n    \"G1\": {\n      \"pass\": true,\n      \"detail\": \"FoVer dual-condition AUROC artifact present (experiment_2850_fover_dual_condition_integrity_v4.json); CI reported=True\",\n      \"source\": \"experiment_2850_fover_dual_condition_integrity_v4.json\"\n    },\n    \"G2\": {\n      \"pass\": true,\n      \"detail\": \"reproducer confirmed: GitHub Actions workflow 'FoVer Headline Independent Reproducer' (.github/workflows/reproduce-fover-headline.yml), run 26725185125 on Carnot-EBM/carnot-ebm, 2026-05-31, conclusion=success. Clean ubuntu-latest runner, fresh CPU-only install from a clean checkout (non-operator environment), recomputed the FoVer headline AUROC via scripts/reproduce_fover_headline.py and asserted the published CIs: condition_A (production) AUROC in [0.9027, 0.9235] and learning_contribution in [0.0125, 0.0245] \\u2014 both PASS. This is a CI-run independent reproducer per the Phase-1 ship gate ('could be a teammate, a CI run, or an external user'). Internally further de-risked by exp3430 (fresh git worktree + venv) and the local run on 2026-05-31 (AUROC 0.9131 within CI). NOTE: G2 attests the FoVer verifier-ensemble headline reproduces; it does NOT attest the broader energy-descent existential claim, which remains an honest-negative (Route-1/Route-2 bounded). Run: https://github.com/Carnot-EBM/carnot-ebm/actions/runs/26725185125\"\n    },\n    \"G3\": {\n      \"pass\": true,\n      \"detail\": \"no retracted phrasings asserted as live claims\",\n      \"hits\": []\n    },\n    \"G4\": {\n      \"pass\": true,\n      \"detail\": \"experiment_2850_fover_dual_condition_integrity_v4.json: random_seed/seeds=True, reproducibility_checksum=True\",\n      \"source\": \"experiment_2850_fover_dual_condition_integrity_v4.json\"\n    }\n  },\n  \"unmet_gates\": [],\n  \"note\": \"Stable 4-condition gate (ops/north-star.md \\u00a72). Replaces the redefinable publication_blocker_count. Report unmet_gates, not a count.\"\n}\n"
+  },
+  "publication_gate_json": {
+    "gates": {
+      "G1": {
+        "detail": "FoVer dual-condition AUROC artifact present (experiment_2850_fover_dual_condition_integrity_v4.json); CI reported=True",
+        "pass": true,
+        "source": "experiment_2850_fover_dual_condition_integrity_v4.json"
+      },
+      "G2": {
+        "detail": "reproducer confirmed: GitHub Actions workflow 'FoVer Headline Independent Reproducer' (.github/workflows/reproduce-fover-headline.yml), run 26725185125 on Carnot-EBM/carnot-ebm, 2026-05-31, conclusion=success. Clean ubuntu-latest runner, fresh CPU-only install from a clean checkout (non-operator environment), recomputed the FoVer headline AUROC via scripts/reproduce_fover_headline.py and asserted the published CIs: condition_A (production) AUROC in [0.9027, 0.9235] and learning_contribution in [0.0125, 0.0245] \u2014 both PASS. This is a CI-run independent reproducer per the Phase-1 ship gate ('could be a teammate, a CI run, or an external user'). Internally further de-risked by exp3430 (fresh git worktree + venv) and the local run on 2026-05-31 (AUROC 0.9131 within CI). NOTE: G2 attests the FoVer verifier-ensemble headline reproduces; it does NOT attest the broader energy-descent existential claim, which remains an honest-negative (Route-1/Route-2 bounded). Run: https://github.com/Carnot-EBM/carnot-ebm/actions/runs/26725185125",
+        "pass": true
+      },
+      "G3": {
+        "detail": "no retracted phrasings asserted as live claims",
+        "hits": [],
+        "pass": true
+      },
+      "G4": {
+        "detail": "experiment_2850_fover_dual_condition_integrity_v4.json: random_seed/seeds=True, reproducibility_checksum=True",
+        "pass": true,
+        "source": "experiment_2850_fover_dual_condition_integrity_v4.json"
+      }
+    },
+    "note": "Stable 4-condition gate (ops/north-star.md \u00a72). Replaces the redefinable publication_blocker_count. Report unmet_gates, not a count.",
+    "paper_ready": true,
+    "unmet_gates": []
+  },
+  "random_seed": 3840,
+  "reproducibility_checksum": "5946b59947fdc085127ee36991f8576c04e47edc18750eba6310a795d0e8f0af",
+  "schema": "carnot.publication_gate_regression_3840.v1",
+  "spec_refs": [
+    "REQ-PUBLISH-3840",
+    "SCENARIO-PUBLISH-3840"
+  ],
+  "spot_check_artifacts": {
+    "3835": [
+      {
+        "feeds_publication_gate": false,
+        "honest_verdict": "complete: formal_core_5seed_CONFIRMED_formalonly0.8947_full0.9131_contamination_free_ci0.0209",
+        "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_3835_formal_core_5seed_ci.json",
+        "stamped_flagged_adversarial": false
+      }
+    ],
+    "3836": [
+      {
+        "feeds_publication_gate": false,
+        "honest_verdict": "complete: formal_core_certified_abstention_threshold0.9_coverage1.0_at_risk_0.05_contamination_free",
+        "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_3836_formal_core_certified_abstention_operating_point.json",
+        "stamped_flagged_adversarial": false
+      }
+    ],
+    "3837": [
+      {
+        "feeds_publication_gate": false,
+        "honest_verdict": "complete: learned_contribution_characterized_topgap_arithmetic_formal_core_blindspots_documented",
+        "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_3837_fover_error_category_learned_contribution.json",
+        "stamped_flagged_adversarial": false
+      }
+    ],
+    "3838": [
+      {
+        "feeds_publication_gate": false,
+        "honest_verdict": "complete: fr11_v22_tier4_adaptive_structure_pruned2_auroc0.9132_in_frozen_ci_compute_saving0.50_residual_flagged_state_persisted",
+        "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_3838_tier4_adaptive_structure.json",
+        "stamped_flagged_adversarial": false
+      },
+      {
+        "feeds_publication_gate": false,
+        "honest_verdict": null,
+        "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_3838_tier4_structure_state.json",
+        "stamped_flagged_adversarial": false
+      }
+    ]
+  },
+  "spot_check_experiment_ids": [
+    3835,
+    3836,
+    3837,
+    3838
+  ],
+  "spot_check_summaries": {
+    "3835": {
+      "blocked_resource": "",
+      "command": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "/home/ianblenke/github.com/ianblenke/carnot/scripts/summarize_artifact.py",
+        "3835"
+      ],
+      "live_recheck": "clean",
+      "ok": true,
+      "returncode": 0,
+      "stderr": "",
+      "stdout": "==============================================================================\nARTIFACT  experiment_3835_formal_core_5seed_ci.json\n------------------------------------------------------------------------------\n  verdict          : complete: formal_core_5seed_CONFIRMED_formalonly0.8947_full0.9131_contamination_free_ci0.0209\n  flagged_adversarial (stamped): None   |   LIVE re-check: clean\n  acceptance gates : (none found \u2014 claim has no self-reported gate)\n  duration_s       : 1.0198335647583008   substrate: verifier-scoring-only\n  headline metrics :\n      formal_only_auroc_mean = 0.894662\n      full_ensemble_auroc_mean = 0.913134\n      learned_only_auroc_mean = 0.869946\n      n_candidates_scored = 1000\n  adversarial flags: none\n==============================================================================\n"
+    },
+    "3836": {
+      "blocked_resource": "",
+      "command": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "/home/ianblenke/github.com/ianblenke/carnot/scripts/summarize_artifact.py",
+        "3836"
+      ],
+      "live_recheck": "critical",
+      "ok": true,
+      "returncode": 2,
+      "stderr": "",
+      "stdout": "==============================================================================\nARTIFACT  experiment_3836_formal_core_certified_abstention_operating_point.json\n------------------------------------------------------------------------------\n  verdict          : complete: formal_core_certified_abstention_threshold0.9_coverage1.0_at_risk_0.05_contamination_free\n  flagged_adversarial (stamped): None   |   LIVE re-check: CRITICAL\n    *** GAP: live verifier flags CRITICAL but artifact is NOT stamped flagged_adversarial. Do not cite as clean. ***\n  acceptance gates : (none found \u2014 claim has no self-reported gate)\n  duration_s       : 0.184481   substrate: verifier-scoring-only formal core (tier0r_curry_howard + tier0u_logical_consistency; no fr11_session_memory; no trained weights).\n  headline metrics :\n      conformal_delta = 0.05  <-- flagged\n      coverage_delta_vs_full_ensemble = 0.001782\n      n_candidates_scored = 6548\n  adversarial flags:\n      [critical] TAUTOLOGY: conformal_delta=0.05 and risk_target=0.05 agree to >5 sig figs. Two distinct metrics matching th\n      [critical] TAUTOLOGY: formal_core_candidate_risk_bound=0.038869 and formal_core_certified_risk_bound=0.038869 agree to\n      [critical] TAUTOLOGY: formal_core_candidate_threshold=0.9 and formal_core_certified_threshold=0.9 agree to >5 sig figs\n==============================================================================\n"
+    },
+    "3837": {
+      "blocked_resource": "",
+      "command": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "/home/ianblenke/github.com/ianblenke/carnot/scripts/summarize_artifact.py",
+        "3837"
+      ],
+      "live_recheck": "clean",
+      "ok": true,
+      "returncode": 0,
+      "stderr": "",
+      "stdout": "==============================================================================\nARTIFACT  experiment_3837_fover_error_category_learned_contribution.json\n------------------------------------------------------------------------------\n  verdict          : complete: learned_contribution_characterized_topgap_arithmetic_formal_core_blindspots_documented\n  flagged_adversarial (stamped): None   |   LIVE re-check: clean\n  acceptance gates : (none found \u2014 claim has no self-reported gate)\n  duration_s       : 1.103431   substrate: verifier-scoring-only over cached Exp 3826 FoVer candidate panels; formal_only=0.9*tier0r_curry_howard+0.1*tier0u_logical_consistency; learned_only=fr11_session_memory; no live LLM load.\n  headline metrics :\n      n_candidates_scored = 5000\n      n_unique_candidates_scored = 3549\n  adversarial flags: none\n==============================================================================\n"
+    },
+    "3838": {
+      "blocked_resource": "",
+      "command": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "/home/ianblenke/github.com/ianblenke/carnot/scripts/summarize_artifact.py",
+        "3838"
+      ],
+      "live_recheck": "clean",
+      "ok": true,
+      "returncode": 0,
+      "stderr": "",
+      "stdout": "==============================================================================\nARTIFACT  experiment_3838_tier4_adaptive_structure.json\n------------------------------------------------------------------------------\n  verdict          : complete: fr11_v22_tier4_adaptive_structure_pruned2_auroc0.9132_in_frozen_ci_compute_saving0.50_residual_flagged_state_persisted\n  flagged_adversarial (stamped): None   |   LIVE re-check: clean\n  acceptance gates : (none found \u2014 claim has no self-reported gate)\n  duration_s       : 1.5419199466705322   substrate: verifier-scoring-only (CPU)\n  headline metrics :\n      n_candidates_scored = 1000\n      pruned_ensemble_auroc = 0.9131556\n  adversarial flags: none\n==============================================================================\nARTIFACT  experiment_3838_tier4_structure_state.json\n------------------------------------------------------------------------------\n  verdict          : None\n  flagged_adversarial (stamped): None   |   LIVE re-check: clean\n  acceptance gates : (none found \u2014 claim has no self-reported gate)\n  duration_s       : None   substrate: None\n  adversarial flags: none\n==============================================================================\n"
+    }
+  },
+  "unmet_gates": []
+}

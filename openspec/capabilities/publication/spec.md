@@ -2191,6 +2191,50 @@ and `paper_ready` from that JSON, confirms the frozen FoVer AUROC remains
 `gate_definitions_unchanged == true`, cites the gate source artifacts, and
 leaves the fixed gate definitions unchanged.
 
+### REQ-PUBLISH-3840: v353 Publication Gate Regression Confirmation
+
+The Exp 3840 publication-gate regression runner MUST execute the existing
+`scripts/publication_gate.py --json` gate under the repository `.venv/bin/python`
+and MUST record the G1, G2, G3, G4, `paper_ready`, and `unmet_gates` values
+exactly as the gate reports them. The runner MUST read the frozen FoVer headline
+source artifact and record `frozen_fover_auroc == 0.9131` only when the frozen
+headline remains unchanged. The runner SHALL NOT redefine G1-G4, SHALL NOT move
+the frozen FoVer headline, SHALL NOT edit operator-curated ops documents, and
+SHALL NOT modify `scripts/research_conductor.py`.
+
+The runner MUST spot-check Exp 3835, Exp 3836, Exp 3837, and Exp 3838 with
+`scripts/summarize_artifact.py`, record their stamped `flagged_adversarial`
+state, and confirm no `.353` artifact stamped `flagged_adversarial: true` feeds
+any publication gate source. A live summarizer critical flag MUST be recorded
+as reader-discipline evidence and MUST NOT be silently converted into a clean
+citation.
+
+The artifact
+`results/experiment_3840_publication_gate_regression_confirmation.json` MUST
+include a `field_provenance` block for `g1`, `g2`, `g3`, `g4`, `paper_ready`,
+`unmet_gates`, `frozen_fover_auroc`, `honest_verdict`, `random_seed`,
+`reproducibility_checksum`, `duration_s`, and `inference_substrate`. If all
+four gates pass, `paper_ready` is true, no stamped adversarial `.353` artifact
+feeds a gate, and the frozen FoVer AUROC remains `0.9131`, the terminal verdict
+MUST equal
+`complete: publication_gate_regression_confirmed_g1_g2_g3_g4_pass_paper_ready_true_frozen_fover_0.9131_unchanged`.
+If any gate regresses, the verdict MUST use the
+`complete: publication_gate_REGRESSION_DETECTED_unmet_<gates>` prefix. If a
+required runner, gate JSON, headline artifact, or spot-check artifact is
+unavailable, the runner MUST write an honest `blocked_<resource>` artifact.
+
+### SCENARIO-PUBLISH-3840: v353 Structure Additions Do Not Move Publication Gates
+
+**Given** the repository `.venv/bin/python`, `scripts/publication_gate.py`, the
+frozen FoVer headline artifact, and Exp 3835 through Exp 3838 artifacts are
+available
+**When** the Exp 3840 runner executes
+**Then** it records G1-G4, `paper_ready`, and `unmet_gates` from the gate JSON,
+confirms the frozen FoVer AUROC remains `0.9131`, spot-checks the `.353`
+artifacts through the artifact summarizer, records any live critical reader
+flags, confirms no stamped `flagged_adversarial: true` `.353` artifact feeds a
+gate, and emits the required publication-gate regression confirmation artifact.
+
 ### REQ-PUBLISH-3723: v340 Convergence Capstone And Hardened G-Gate Recheck
 
 The Exp 3723 v340 capstone runner MUST aggregate `publication_gate.py --json`
@@ -2347,6 +2391,7 @@ verdict, `reproduced_auroc_mean == null`, `per_seed_aurocs == []`, and
 | REQ-PUBLISH-3792 | Implemented | Exp 3792 product-headline G4 provenance confirmation |
 | REQ-PUBLISH-3812 | Implemented | Exp 3812 product-headline status consolidation |
 | REQ-PUBLISH-3814 | Planned | Exp 3814 publication gate regression confirmation |
+| REQ-PUBLISH-3840 | Planned | Exp 3840 v353 publication gate regression confirmation |
 
 ### REQ-PUBLISH-026: HuggingFace Publish Retry
 The experiment 1750 huggingface retry runner MUST attempt to upload the smallest model in models/ with a no-emoji model card. If credentials pass, it MUST upload and record hf_upload_succeeded = True. If blocked, it MUST emit an honest verdict of "blocked_credentials".
