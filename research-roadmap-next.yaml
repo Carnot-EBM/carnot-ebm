@@ -172,7 +172,7 @@ tasks:
       exp3821-class HRM/TRM latent-symbol-bridge probe (Huginn already settled that recursive
       latents are non-decodable; re-reading HRM's would only re-confirm the DT-P3 negative).
 
-  - id: exp3837-verifier-error-independence-scissor-at-scale
+  - id: exp3844-verifier-error-independence-scissor-at-scale
     operator_override: >
       2026-06-04 operator directive (moat-durability confirmation-at-scale): exp3827
       reported the error-independence moat SURVIVES (residual_catch=0.9000,
@@ -195,7 +195,7 @@ tasks:
     requires_gpu: true      # the SOTA reasoner must self-verify N>=1000 steps via llama.cpp on the internal RTX 3090.
     estimated_wall_time_min: 75
     inference_substrate: live_llm_inference   # loads + runs Qwen3.6-35B-A3B-GGUF for self-verification over N>=1000 items; duration floor 60s.
-    deliverable: results/experiment_3837_verifier_error_independence_scissor_at_scale.json
+    deliverable: results/experiment_3844_verifier_error_independence_scissor_at_scale.json
     prompt: |
       CONTEXT. The Deep-Think post-bounded round (memory deep-think-post-bounded-2026-06,
       P2) reframed the verifier MOAT as error-INDEPENDENCE, not raw AUROC: Carnot's value
