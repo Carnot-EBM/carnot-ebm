@@ -86,7 +86,7 @@ tasks:
         0. PRECONDITIONS (check BEFORE anything else; if any fail, write the blocked verdict and EXIT — DO NOT fabricate):
            a. `python -c "import carnot.verify"` succeeds (the k=15 ensemble module imports).
            b. A cached FoVer step-level corpus with gold labels is present and non-empty:
-              `python -c "import json; d=json.load(open('data/fover_test_v4.json')); assert len(d) > 200 and {'question_id','step_text','label'} <= set(d[0])"`.
+              `python -c "import json; d=json.load(open('data/fover_test_v4.json')); assert len(d) > 200 and {{'question_id','step_text','label'}} <= set(d[0])"`.
               (Fallback corpora if v4 absent: data/fover_test_v3.json, data/fover_test.json.)
            c. The ensemble exposes a per-candidate scalar score (e.g. and_composition_verifier
               `.score(text)` / `.verify(question, response)`; or the canonical ensemble entry

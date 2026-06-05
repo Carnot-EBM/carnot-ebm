@@ -1,0 +1,124 @@
+{
+  "duration_s": {
+    "principle": "Standard methodology field; unrolling and Q-head training take real wall-clock.",
+    "value": 3.848780870437622
+  },
+  "field_principles": {
+    "duration_s": "Standard methodology field; unrolling and Q-head training take real wall-clock.",
+    "inference_substrate": "Standard methodology field; names the actual latent-unrolling substrate used.",
+    "n_heldout_trajectories": "Sample sizes; AUROC needs N>=30 per side (CLT) and the split must be honest.",
+    "n_train_trajectories": "Sample sizes; AUROC needs N>=30 per side (CLT) and the split must be honest.",
+    "per_step_calibration_curve": "Per-step held-out Q-head score means for correct and incorrect trajectories; this is the calibration curve requested for the prototype.",
+    "per_step_calibration_monotonic": "Whether Q_head(h_t) rises toward correct trajectories with t -- the property that makes it a usable continuous internal halt signal.",
+    "preconditions_checked": "Standard methodology field; records torch, headroom, corpus, and recursive-refiner source gates before unrolling and training.",
+    "qhead_ablated_auroc": "AUROC with test-time-compute/identity-conditioning ablated; guards the 2512.11847 crutch -- the moat must be the Q-head, not voting.",
+    "qhead_heldout_auroc": "The distilled Q-head's predictive AUROC on held-out trajectories -- the core feasibility metric for the offline-distillation pivot.",
+    "random_seed": "Standard methodology field; deterministic split, training, and reproducibility.",
+    "reproducibility_checksum": "Standard methodology field; catches silent source, data, or metric drift.",
+    "verifier_oracle_label_source": "Which verifier produced the distillation labels -- the audit trail back to a real measurement in the offline-oracle role."
+  },
+  "honest_verdict": "complete: distillation_oracle_qhead_feasible_auroc1.000_ablated1.000_calibration_monotonic",
+  "inference_substrate": {
+    "principle": "Standard methodology field; names the actual latent-unrolling substrate used.",
+    "value": "nano-trm source importable; prototype_recursive_refiner_continuous_latents"
+  },
+  "n_heldout_trajectories": {
+    "principle": "Sample sizes; AUROC needs N>=30 per side (CLT) and the split must be honest.",
+    "value": 48
+  },
+  "n_train_trajectories": {
+    "principle": "Sample sizes; AUROC needs N>=30 per side (CLT) and the split must be honest.",
+    "value": 72
+  },
+  "per_step_calibration_curve": {
+    "principle": "Per-step held-out Q-head score means for correct and incorrect trajectories; this is the calibration curve requested for the prototype.",
+    "value": [
+      {
+        "correct_mean_score": 0.9707686444123586,
+        "incorrect_mean_score": 0.01590178022161126,
+        "separation": 0.9548668641907473,
+        "step": 1
+      },
+      {
+        "correct_mean_score": 0.9953652044137319,
+        "incorrect_mean_score": 0.0028310862188744876,
+        "separation": 0.9925341181948574,
+        "step": 2
+      },
+      {
+        "correct_mean_score": 0.9984029789765676,
+        "incorrect_mean_score": 0.0009983444987382325,
+        "separation": 0.9974046344778293,
+        "step": 3
+      },
+      {
+        "correct_mean_score": 0.9990487138430277,
+        "incorrect_mean_score": 0.0005768795413637741,
+        "separation": 0.998471834301664,
+        "step": 4
+      },
+      {
+        "correct_mean_score": 0.9992466926574707,
+        "incorrect_mean_score": 0.0004407774395076558,
+        "separation": 0.998805915217963,
+        "step": 5
+      },
+      {
+        "correct_mean_score": 0.9993230541547139,
+        "incorrect_mean_score": 0.0003874203313090321,
+        "separation": 0.9989356338234049,
+        "step": 6
+      },
+      {
+        "correct_mean_score": 0.9993598103523255,
+        "incorrect_mean_score": 0.0003640360228018835,
+        "separation": 0.9989957743295236,
+        "step": 7
+      },
+      {
+        "correct_mean_score": 0.9993834654490154,
+        "incorrect_mean_score": 0.00035304738169846434,
+        "separation": 0.9990304180673168,
+        "step": 8
+      }
+    ]
+  },
+  "per_step_calibration_monotonic": {
+    "principle": "Whether Q_head(h_t) rises toward correct trajectories with t -- the property that makes it a usable continuous internal halt signal.",
+    "value": true
+  },
+  "preconditions_checked": {
+    "principle": "Standard methodology field; records torch, headroom, corpus, and recursive-refiner source gates before unrolling and training.",
+    "value": {
+      "corpus_available": true,
+      "corpus_path": "data/headroom_corpus_exp3824.json",
+      "headroom_artifact_available": true,
+      "headroom_confirmed": true,
+      "n_corpus_records": 60,
+      "torch_available": true,
+      "trm_source_loadable": true,
+      "trm_source_status": "nano-trm TRMModule source importable"
+    }
+  },
+  "qhead_ablated_auroc": {
+    "principle": "AUROC with test-time-compute/identity-conditioning ablated; guards the 2512.11847 crutch -- the moat must be the Q-head, not voting.",
+    "value": 1.0
+  },
+  "qhead_heldout_auroc": {
+    "principle": "The distilled Q-head's predictive AUROC on held-out trajectories -- the core feasibility metric for the offline-distillation pivot.",
+    "value": 1.0
+  },
+  "random_seed": {
+    "principle": "Standard methodology field; deterministic split, training, and reproducibility.",
+    "value": 3825
+  },
+  "reproducibility_checksum": {
+    "principle": "Standard methodology field; catches silent source, data, or metric drift.",
+    "value": "e3e3dc0d8d26cdc1"
+  },
+  "schema": "carnot.distillation_oracle_qhead.v1",
+  "verifier_oracle_label_source": {
+    "principle": "Which verifier produced the distillation labels -- the audit trail back to a real measurement in the offline-oracle role.",
+    "value": "scripts.experiments.experiment_3825_distillation_oracle_qhead.verify_final_trajectory constraint_oracle_v1"
+  }
+}
