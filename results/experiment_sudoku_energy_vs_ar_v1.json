@@ -1,0 +1,47 @@
+{
+  "experiment": "sudoku_energy_vs_ar_v1",
+  "title": "Energy-as-generator vs autoregression vs recursive refinement on Sudoku-Extreme (regime-corrected)",
+  "honest_verdict": "complete: sudoku_energy_as_generator_REFINEMENT_VALIDATES_energy_descent_REFUTES_decode_is_the_wall — recursive refinement solves 0.182 vs AR 0.000-0.002 (+18pp, VALIDATES the regime claim) while EBT is a near-perfect energy SCORER (gap 17, loss 0.0001) that FAILS to GENERATE (argmin+descent decode 0.000, worse-than-random); the GENERATOR PARADIGM matters (DT-P2), the wall in energy-as-generator is the decode/search not the energy learning",
+  "inference_substrate": "live_llm_inference",
+  "human_seeded_by": "operator 2026-06-05 after the Kona EBM Sudoku demo",
+  "regime_note": "Carnot's P1/Thesis-A tested energy-as-generator on ARITHMETIC (self-consistency near-ceiling, no headroom) and came back INCONCLUSIVE/bounded. This is the regime-corrected test: Sudoku-Extreme, where AR is structurally weak (real headroom). Unlike P1, this is a DECISIVE test.",
+  "task": "Sudoku-Extreme (9x9, ~/trm_src/data/sudoku-extreme-1k-aug-1000), held-out exact-81-cell-grid solve-rate, no partial credit",
+  "n_eval": 500,
+  "matched_compute_note": "All three generators trained from scratch, matched budget (hidden 256, ~15000 steps, train_n 400000, seed 0); AR/EBT 4 transformer layers (~3.2M params), refiner 2 layers x 8 recursion cycles (~1.8M params — FEWER params, yet wins). EBT batch reduced to 96 (vs 256) to fit the 9-forward NCE step in 24GB; this gives EBT FEWER distinct examples but MORE forward-compute per step, so EBT is not under-trained (energy converged: loss 0.0001).",
+
+  "ar_solve_greedy": 0.002,
+  "ar_solve_sc32": 0.000,
+  "ar_blank_cell_acc": 0.342,
+  "ar_mean_violations": 7.6,
+  "ar_n_params": 3206155,
+  "ar_train_seconds": 1460,
+  "ar_note": "HEADROOM POSITIVE CONTROL: AR is genuinely LEARNING (blank-cell acc 0.342 = 3x the 0.11 chance level) but cannot SOLVE the full puzzle (0.2% greedy, 0% SC@32, 7.6 violations). This is the non-degenerate weak-AR regime P1 never established — there AR collapsed to 0 AND wasn't learning, so artifact-vs-fundamental was unanswerable.",
+
+  "ebt_argmin_solve": 0.000,
+  "ebt_descent_solve": 0.000,
+  "ebt_blank_cell_acc": 0.109,
+  "ebt_argmin_mean_violations": 132.4,
+  "ebt_descent_mean_violations": 145.1,
+  "ebt_scorer_nce_loss": 0.0001,
+  "ebt_energy_gap_gold_vs_corrupt": 17.0,
+  "ebt_n_params": 3206913,
+  "ebt_train_seconds": 4710,
+  "ebt_finding": "A near-PERFECT energy SCORER is NOT a GENERATOR. The EBT's NCE energy converged to loss 0.0001, scoring the true solution ~0 vs corrupted grids ~17 (a 17-unit gap). But DECODING that energy from a blank grid — BOTH per-cell coordinate argmin AND continuous-relaxation energy-descent (Kona's literal mechanism) — gives 0.000 exact-grid solve, blank-cell accuracy 0.109 (= 1/9 chance), and 132-145 mean violations (WORSE than random; AR had 7.6). Mechanism: contrastive training shapes the energy only NEAR valid solutions (gold +/- local corruption), so the GLOBAL landscape the decoder must search is full of bad local minima the energy never learned to penalize. The wall in 'energy as generator' is the DECODE/SEARCH + global-landscape-shaping, NOT the energy learning.",
+
+  "refiner_solve_rate": 0.182,
+  "refiner_blank_cell_acc": 0.652,
+  "refiner_mean_violations": 9.4,
+  "refiner_n_params": 1804553,
+  "refiner_train_seconds": 2762,
+  "refiner_finding": "Recursive refinement (TRM recipe: z<-block(x,y,z); y<-head(z); iterate 8 cycles, trained END-TO-END on the generation task with deep supervision) SOLVES 18.2% of Sudoku-Extreme exactly — a +18 percentage-point win over AR (0.000-0.002) — with FEWER params (1.8M vs 3.2M). It GENERATES where the EBT energy-descent does NOT.",
+
+  "synthesis": "VALIDATE the regime claim via REFINEMENT; REFUTE naive energy-descent. (1) On Sudoku (the weak-AR regime), a non-autoregressive holistic generator beats AR by +18pp — confirming Kona's structural argument that AR cannot revise and constraint-satisfaction favours holistic refinement. (2) BUT the WINNING non-AR generator is recursive REFINEMENT, not energy-DESCENT: our EBT learns a perfect energy SCORER yet generates nothing. (3) This makes the DT-P2 distinction concrete: recursive refinement (arbitrary learned vector field, trained end-to-end on generation) generates; contrastive-energy-descent (curl-free, trained as a scorer) does not. (4) Implication: Kona's 96% is plausibly a REFINEMENT/amortized-inference result (or uses a far more sophisticated energy-training + inference scheme than naive descent), NOT the literal 'gradient-descend a contrastively-trained energy' recipe — which we show fails. (5) For Carnot Phase-3: pursue recursive REFINEMENT (TRM-style) as the generator substrate, not energy-descent. The energy function's defensible role remains SCORING/verification (where the EBT is near-perfect), consistent with the energy-as-sound-lattice reframe.",
+
+  "adversarial_caveats": "AR is an HONEST matched-compute control (same hidden/steps/data/seed), genuinely learning (blank-cell 3x chance) — not a strawman. EBT was given TWO decoders (argmin + energy-descent) and a fully-converged energy (loss 0.0001) — the 0% is not under-training. Refiner is end-to-end deep-supervision. Metric is EXACT 81-cell match, no partial credit, no constraint-checker leniency. Single seed (0); a 2-3 seed replication would tighten the 18.2% but the qualitative ordering (refiner >> AR > EBT-decode~0) is large and unlikely to invert. The 18.2% is far below TRM/HRM SOTA (~87%/55%) because this is a TINY matched-compute first pass, not a scaled run; the comparison is the point, not the absolute.",
+
+  "random_seed": 0,
+  "reproducibility_note": "Sudoku-Extreme-1k-aug-1000, exact-grid solve-rate, seed 0, internal RTX 3090; harness scripts/experiments/sudoku_energy_vs_ar_v1.py (--model {ar,ebt,refiner}); per-model result jsons sudoku_{ar_baseline,ebt,refiner}_v1.json.",
+  "duration_s": 8932,
+  "model_specs": ["from-scratch transformer/EBT/refiner, no pretrained LLM; Sudoku-Extreme tokens"],
+  "gpu": "NVIDIA GeForce RTX 3090 (internal, GPU-7971baff; eGPU avoided)"
+}
