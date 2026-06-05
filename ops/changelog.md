@@ -8621,3 +8621,4 @@ Did NOT modify research-roadmap.yaml or scripts/research_conductor.py. Did NOT p
 - 2026-06-05: Operational Retrospective for 2026.06.352 — no data available this milestone.
 
 - 2026-06-04: Archive milestone .352 (converged invariants intact, FoVer frozen 0.9131) and activate .353 (Harden the contamination-free formal core, Tier-4 self-learning, EDLM kill-gate execution surface). (✅ Complete) — honest_verdict=complete: archived_v352_activated_v353; results/experiment_3834_archive_v352_activate_v353.json
+- 2026-06-05: Archive milestone .352 (LDT-gap probe) and activate .353 (CONTAMINATION-FREE FORMAL CORE hardening + Tier-4 self-learning + EDLM operator execution surface). (✅ Complete) — honest_verdict=complete: archived_v352_activated_v353_invariants_intact_fover_0.9131_unchanged; results/experiment_3834_archive_v352_activate_v353.json
