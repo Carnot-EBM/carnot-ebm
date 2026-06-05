@@ -486,6 +486,47 @@ fabricating metrics.
   `energy_ties_or_loses_to_entropy`, and `blocked` with synthetic fixtures
   rather than hard-coding a real-corpus success string.
 
+### REQ-SPOE-3836: Formal-Core Certified Abstention Operating Point
+
+The pipeline MUST provide an Exp 3836 runner that certifies a deployable
+abstention threshold for the contamination-free FoVer formal core alone.  The
+runner MUST gate on Exp 3835 reporting `formal_only_auroc_mean >= 0.85`, MUST
+check that `carnot.verify` imports and `data/fover_test_v4.json` is present,
+MUST score the Exp 3771-aligned cached FoVer candidate rows using only
+`0.9*tier0r_curry_howard + 0.1*tier0u_logical_consistency`, and MUST NOT
+include `fr11_session_memory` or any trained-weight scorer in the formal-core
+scalar.
+
+The runner MUST build a risk-coverage curve over the formal-core score, reuse
+the Exp 3771 split-conformal calibration/test protocol at selective-risk target
+0.05 and delta 0.05, compare certified coverage against the Exp 3771 full
+ensemble operating point, and write
+`results/experiment_3836_formal_core_certified_abstention_operating_point.json`.
+If any precondition fails, the runner MUST write a blocked artifact with an
+`honest_verdict` beginning with `blocked_` and MUST NOT fabricate threshold,
+coverage, or AURC metrics.
+
+**Acceptance criteria:**
+- The artifact includes `formal_core_certified_threshold`,
+  `formal_core_certified_coverage_at_risk_0_05`,
+  `coverage_delta_vs_full_ensemble`, `conformal_delta`, `n_calibration`,
+  `n_test`, `cited_upstream_artifacts`, `preconditions_checked`,
+  `honest_verdict`, `random_seed`, `reproducibility_checksum`, `duration_s`,
+  `inference_substrate`, and a `field_provenance` block that states the
+  principle for every required field.
+- `cited_upstream_artifacts` records the Exp 3835 and Exp 3771 artifact paths
+  and SHA256 checksums, plus the Exp 3835 formal-only AUROC gate value and the
+  Exp 3771 full-ensemble certified coverage reference.
+- The honest verdict is
+  `complete: formal_core_certified_abstention_threshold<t>_coverage<c>_at_risk_0.05_contamination_free`
+  when a certified threshold exists at coverage greater than 0.90; otherwise it
+  is
+  `complete: formal_core_certified_abstention_WEAK_coverage<c>_clean_core_low_coverage_full_ensemble_remains_product`.
+- Tests cover `formal_core_certified_threshold_shipped`,
+  `formal_core_certified_threshold_weak`, `blocked_precondition`, and
+  `no_fr11_session_memory_in_formal_score` with synthetic fixtures rather than
+  hard-coding a real-corpus success string.
+
 ### REQ-SPOE-3779: Certified Abstention Operating Point Product Surface
 
 The shipped `score_candidates` verifier-scoring surface MUST expose an opt-in
@@ -849,6 +890,21 @@ points, and coverage-at-5%-risk operating point from the fixture measurements
 rather than hard-coding a real-corpus success string.
 
 **Spec traces:** REQ-SPOE-3718
+
+### SCENARIO-SPOE-3836: Formal-Core Certification Stays Contamination-Free
+
+**Given** synthetic FoVer step fixtures covering
+`formal_core_certified_threshold_shipped`,
+`formal_core_certified_threshold_weak`, `blocked_precondition`, and
+`no_fr11_session_memory_in_formal_score`
+**When** the Exp 3836 formal-core certified abstention artifact is assembled
+**Then** it derives the formal-only score from tier0r and tier0u only, reports
+the split-conformal threshold and certified coverage when the risk bound holds,
+reports the honest weak verdict when it does not, blocks on missing or weak
+upstream prerequisites, and records the Exp 3835 / Exp 3771 SHA256 provenance
+without editing operator-curated docs.
+
+**Spec traces:** REQ-SPOE-3836
 
 ### SCENARIO-SPOE-3779: Abstention Mode Is Opt-In And Protocol-Reachable
 
