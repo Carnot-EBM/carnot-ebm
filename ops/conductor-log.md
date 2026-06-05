@@ -7854,3 +7854,4 @@ ERROR: {
 | 2026-06-05 08:18 UTC | FR-11 continuous self-learning v22 (research-progr | SKIP | Pre-tests failing, self-heal failed: 1 failed, 80 passed in 3.16s |
 | 2026-06-05 08:21 UTC | LDT-lattice margin sharpening: exp3833 landed LATT | SKIP | Pre-tests failing, self-heal failed: 1 failed, 80 passed in 3.56s |
 | 2026-06-05 08:23 UTC | LDT-lattice margin sharpening: exp3833 landed LATT | SKIP | Pre-tests failing, self-heal failed: 1 failed, 80 passed in 4.57s |
+| 2026-06-05 08:25 UTC | LDT-lattice margin sharpening: exp3833 landed LATT | SKIP | Pre-tests failing, self-heal failed: 1 failed, 80 passed in 3.30s |
