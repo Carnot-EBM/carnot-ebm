@@ -1,0 +1,24 @@
+{
+  "experiment": 3872,
+  "schema": "blocked_gate_check_v1",
+  "run_date": "2026-06-05",
+  "started_at": "2026-06-05T16:33:56.647066+00:00",
+  "finished_at": "2026-06-05T16:33:56.647066+00:00",
+  "duration_s": 0.0,
+  "status": "blocked",
+  "title": "EBT System-2 diagnostic (gated on exp3871 positive_control_passed): on the SAME confirmed-headroom checkpoint, does held-out generation accuracy improve MONOTONICALLY as the energy-descent budget K grows (1,2,4,8,16 steps)? Tests the core EBT 'thinking = optimization' claim \u2014 monotone gain => thinking helps; flat/degrading => the landscape gives no usable descent signal at this scale.",
+  "honest_verdict": "blocked_gate_check_failed",
+  "gate_check_summary": "1 of 1 gate(s) failed; first failure: exp3871-thesis-a-partb-dtp1-adjudication-headroom-confirmed.positive_control_passed (actual=False == expected=True)",
+  "gates_evaluated": [
+    {
+      "upstream": "exp3871-thesis-a-partb-dtp1-adjudication-headroom-confirmed",
+      "artifact_field": "positive_control_passed",
+      "op": "==",
+      "expected": true,
+      "actual": false,
+      "passed": false,
+      "reason": "actual=False == expected=True"
+    }
+  ],
+  "blocked_at_layer": "conductor_pre_gate"
+}
