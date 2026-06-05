@@ -1,5 +1,9 @@
 # Carnot — Changelog
 
+## 2026-06-05 (Milestone 2026.06.358 Operational Retrospective)
+
+- [outer-loop] Wrote `results/operational_retro_2026_06_358.json` (schema `carnot.operational_retro.v64`). The authoritative timing source reports no experiment commits since activation, leaving `total_wall_time_minutes=0`, `experiments_completed=0`, `compute_bound_experiments_count=0`, `slowest_experiments=[]`, and `gpu_idle_on_compute_bound_tasks=null`. Both GPUs were idle, but no bottleneck was flagged because there were 0 compute-bound tasks. Recommended tooling change: investigate why no experiments were dispatched to completion since milestone activation.
+
 ## 2026-06-05 (Milestone 2026.06.358 Planning — outer-loop, Claude Opus 4.8)
 
 - [outer-loop] Planned milestone **2026.06.358** ("ADJUDICATE THE FORWARD BETS"). Wrote `openspec/change-proposals/research-roadmap-vNEXT.md` (design doc) and `research-roadmap-next.yaml` (11 tasks, exp3870–exp3880). Triggered by the planning-agent invocation after .357 (exp3869 moat-scissor-v4) landed INCONCLUSIVE.

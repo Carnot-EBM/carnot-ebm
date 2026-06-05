@@ -7895,3 +7895,27 @@ ERROR: {
 | 2026-06-05 16:33 UTC | EBT System-2 diagnostic (gated on exp3871 positive | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp3871-thesis-a-partb-dtp1-adjudication-h |
 | 2026-06-05 16:36 UTC | EBT System-2 diagnostic (gated on exp3871 positive | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp3871-thesis-a-partb-dtp1-adjudication-h |
 | 2026-06-05 16:38 UTC | EBT System-2 diagnostic (gated on exp3871 positive | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp3871-thesis-a-partb-dtp1-adjudication-h |
+| 2026-06-05 19:41 UTC | BUILD an IN-DISTRIBUTION error-rich step-error cor | SKIP | Pre-tests failing, self-heal failed:  |
+| 2026-06-05 19:44 UTC | BUILD an IN-DISTRIBUTION error-rich step-error cor | SKIP | Pre-tests failing, self-heal failed:  |
+| 2026-06-05 19:46 UTC | BUILD an IN-DISTRIBUTION error-rich step-error cor | SKIP | Pre-tests failing, self-heal failed:  |
+| 2026-06-05 19:48 UTC | MOAT SCISSOR IN-DISTRIBUTION (DT-P2, gated on exp3 | GATE_BLOCK | Pre-emptive skip: upstream retired (exp3873-build-in-distribution-error-rich-cor |
+| 2026-06-05 19:48 UTC | Graph-grounding fact verifier, DE-FABRICATED (re-r | SKIP | Pre-tests failing, self-heal failed:  |
+| 2026-06-05 19:50 UTC | MOAT SCISSOR IN-DISTRIBUTION (DT-P2, gated on exp3 | GATE_BLOCK | Pre-emptive skip: upstream retired (exp3873-build-in-distribution-error-rich-cor |
+| 2026-06-05 19:50 UTC | Graph-grounding fact verifier, DE-FABRICATED (re-r | SKIP | Pre-tests failing, self-heal failed:  |
+| 2026-06-05 19:52 UTC | MOAT SCISSOR IN-DISTRIBUTION (DT-P2, gated on exp3 | GATE_BLOCK | Pre-emptive skip: upstream retired (exp3873-build-in-distribution-error-rich-cor |
+| 2026-06-05 19:53 UTC | Graph-grounding fact verifier, DE-FABRICATED (re-r | SKIP | Pre-tests failing, self-heal failed:  |
+| 2026-06-05 19:55 UTC | Facts COMPLEMENTARITY (gated on exp3875 facts_catc | GATE_BLOCK | Pre-emptive skip: upstream retired (exp3875-graph-grounding-fact-verifier-defabr |
+| 2026-06-05 19:55 UTC | FR-11 continuous self-learning v24 (research-progr | SKIP | Pre-tests failing, self-heal failed:  |
+| 2026-06-05 19:57 UTC | Facts COMPLEMENTARITY (gated on exp3875 facts_catc | GATE_BLOCK | Pre-emptive skip: upstream retired (exp3875-graph-grounding-fact-verifier-defabr |
+| 2026-06-05 19:57 UTC | FR-11 continuous self-learning v24 (research-progr | SKIP | Pre-tests failing, self-heal failed:  |
+| 2026-06-05 19:59 UTC | Facts COMPLEMENTARITY (gated on exp3875 facts_catc | GATE_BLOCK | Pre-emptive skip: upstream retired (exp3875-graph-grounding-fact-verifier-defabr |
+| 2026-06-05 19:59 UTC | FR-11 continuous self-learning v24 (research-progr | SKIP | Pre-tests failing, self-heal failed:  |
+| 2026-06-05 20:01 UTC | GateMate A1-EVB-2M continuity — corrigendum the ex | SKIP | Pre-tests failing, self-heal failed:  |
+| 2026-06-05 20:04 UTC | GateMate A1-EVB-2M continuity — corrigendum the ex | SKIP | Pre-tests failing, self-heal failed:  |
+| 2026-06-05 20:06 UTC | GateMate A1-EVB-2M continuity — corrigendum the ex | SKIP | Pre-tests failing, self-heal failed:  |
+| 2026-06-05 20:08 UTC | PolarFire + KV260 consolidated opportunistic conti | SKIP | Pre-tests failing, self-heal failed:  |
+| 2026-06-05 20:10 UTC | PolarFire + KV260 consolidated opportunistic conti | SKIP | Pre-tests failing, self-heal failed:  |
+| 2026-06-05 20:13 UTC | PolarFire + KV260 consolidated opportunistic conti | SKIP | Pre-tests failing, self-heal failed:  |
+| 2026-06-05 20:15 UTC | Capstone .358 — aggregate the forward-bet verdicts | SKIP | Pre-tests failing, self-heal failed:  |
+| 2026-06-05 20:17 UTC | Capstone .358 — aggregate the forward-bet verdicts | SKIP | Pre-tests failing, self-heal failed:  |
+| 2026-06-05 20:19 UTC | Capstone .358 — aggregate the forward-bet verdicts | SKIP | Pre-tests failing, self-heal failed:  |
