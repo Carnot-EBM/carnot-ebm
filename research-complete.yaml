@@ -35822,3 +35822,20 @@ milestones:
       durability test.'
     deliverable: results/experiment_3869_moat_scissor_v4_existing_corpus.json
     result: OK (conductor)
+- id: 2026.06.357
+  correction_type: v357_inconclusive_archive_activation
+  title: 'Archive .357 inconclusive moat-scissor verdict and activate .358'
+  doc: docs/research-notes/verifier-moat-scissor-plot-design.md
+  completed: '2026-06-05'
+  finding: 'INCONCLUSIVE: exp3869 moat-scissor-v4 ran on the existing PRMBench corpus, but both positive controls degenerate on the out-of-distribution PRMBench distribution. The archive carries the verdict forward without turning the null result into a moat negative. Milestone .358 is active and will rebuild the verifier scissor on an in-distribution error-rich corpus.'
+  activation_recorded: exp3870-archive-v357-activate-v358
+  backend_routing_recommendation: 'codex remains the reliable conductor backend for .356/.357; gemini remains opt-in under the standing operator gemini<->codex flip authority dated 2026-06-05'
+  tasks:
+  - id: exp3869-moat-scissor-v4-against-existing-corpus
+    title: 'MOAT SCISSOR AT SCALE v4 against existing PRMBench corpus'
+    deliverable: results/experiment_3869_moat_scissor_v4_existing_corpus.json
+    result: 'complete: moat_scissor_v4_INCONCLUSIVE_reasoner_self_verify_auroc_and_carnot_ensemble_auroc (INCONCLUSIVE: both positive controls degenerate on the out-of-distribution PRMBench corpus; reasoner_self_verify_auroc=0.5; carnot_ensemble_auroc=0.551792)'
+  - id: exp3870-archive-v357-activate-v358
+    title: 'Archive .357 and activate .358 with backend routing diagnostic'
+    deliverable: results/experiment_3870_archive_v357_activate_v358.json
+    result: 'COMPLETE: exp3870 archived .357 and activated .358; codex backend diagnostic recorded'

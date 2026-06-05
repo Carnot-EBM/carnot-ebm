@@ -29,7 +29,7 @@
 # the fault that blocked the EBT kill-gate twice).
 #
 # GATED FIELDS ARE EMITTED BARE (feedback_gated_fields_must_be_bare): a
-# {value,principle} dict breaks the gated_on resolver.
+# {{value,principle}} dict breaks the gated_on resolver.
 # ============================================================================
 
 milestone: "2026.06.358"
@@ -170,7 +170,7 @@ tasks:
         3. Compute held-out accuracy for all three. Adjudicate per the gate below. >=3 seeds.
 
       REQUIRED ARTIFACT FIELDS:
-        positive_control_passed: BARE BOOL  # gated_on field — emit a bare true/false, NOT a {value,principle} dict.
+        positive_control_passed: BARE BOOL  # gated_on field — emit a bare true/false, NOT a {{value,principle}} dict.
         ar_best_accuracy: {{ principle: "The positive control — must be in [0.4,0.95]; AR<0.3 means no headroom and INCONCLUSIVE, never FUNDAMENTAL (the v2 trap)." }}
         ebt_argmin_accuracy: {{ principle: "Greedy energy-argmin decode accuracy — the BOUNDED baseline (~0.0 in the scaled run)." }}
         ebt_beam_accuracy: {{ principle: "Global discrete beam-search accuracy — THE decisive probe; high => greedy was the bottleneck (ARTIFACT), ~0 => landscape misshaped (FUNDAMENTAL)." }}
@@ -316,7 +316,7 @@ tasks:
            the results/ artifact carrying the gate field.
 
       REQUIRED ARTIFACT FIELDS:
-        carnot_ensemble_auroc_on_corpus: BARE FLOAT  # gated_on field — emit a bare float, NOT a {value,principle} dict.
+        carnot_ensemble_auroc_on_corpus: BARE FLOAT  # gated_on field — emit a bare float, NOT a {{value,principle}} dict.
         n_incorrect_steps: {{ principle: "Set-B size budget — the residual scissor CI is meaningful only at >=100 errors (the 22-error FoVer-test failure mode)." }}
         n_total_items, frac_synthetic: {{ principle: "Provenance — keeps generated items a minority so the corpus stays a real measurement, not a synthetic artifact." }}
         corpus_path: {{ principle: "Where the scissor reads the corpus from (data/in_distribution_error_corpus_v1.json)." }}
@@ -475,7 +475,7 @@ tasks:
            was not actually invoked -> emit blocked_graph_verifier_not_invoked, do NOT fabricate.
 
       REQUIRED ARTIFACT FIELDS:
-        facts_catch_delta: BARE FLOAT  # gated_on field — emit a bare float, NOT a {value,principle} dict.
+        facts_catch_delta: BARE FLOAT  # gated_on field — emit a bare float, NOT a {{value,principle}} dict.
         graph_auroc: {{ principle: "The new-architecture verifier's facts AUROC — must reproduce exp3862's ~0.64 with a non-fabricated run to be bankable." }}
         math_baseline_auroc: {{ principle: "The math ensemble on facts — the earned-negative baseline graph-grounding must beat." }}
         per_item_scores_path: {{ principle: "Persist per-item graph+ensemble scores so exp3876 complementarity can run (the exp3863 blocker)." }}
