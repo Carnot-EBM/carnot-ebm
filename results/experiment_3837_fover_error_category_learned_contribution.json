@@ -1,0 +1,260 @@
+{
+  "artifact": "experiment_3837_fover_error_category_learned_contribution",
+  "both_wrong_categories": [
+    {
+      "both_wrong": 108,
+      "both_wrong_clean_false_alarms": 5,
+      "both_wrong_error_misses": 103,
+      "category": "other"
+    },
+    {
+      "both_wrong": 93,
+      "both_wrong_clean_false_alarms": 77,
+      "both_wrong_error_misses": 16,
+      "category": "arithmetic"
+    }
+  ],
+  "candidate_panel": {
+    "category_derivation_method": {
+      "categories": [
+        "arithmetic",
+        "logical",
+        "formal-tool-checkable",
+        "other"
+      ],
+      "detail": "No explicit error-category field was found in the FoVer corpus/test schema; categories were derived from step_text using coarse arithmetic/logical/formal-tool-checkable/other rules.",
+      "method": "text_derived"
+    },
+    "formal_score_definition": "0.9*tier0r_curry_howard + 0.1*tier0u_logical_consistency",
+    "learned_score_definition": "fr11_session_memory",
+    "n_candidates_per_seed": 1000,
+    "n_seed_candidate_instances": 5000,
+    "n_unique_candidates": 3549,
+    "random_seeds": [
+      42,
+      137,
+      271,
+      314,
+      1729
+    ]
+  },
+  "category_derivation_method": {
+    "categories": [
+      "arithmetic",
+      "logical",
+      "formal-tool-checkable",
+      "other"
+    ],
+    "detail": "No explicit error-category field was found in the FoVer corpus/test schema; categories were derived from step_text using coarse arithmetic/logical/formal-tool-checkable/other rules.",
+    "method": "text_derived"
+  },
+  "category_signal_summary": {
+    "nonzero_category_count": 3,
+    "status": "topgap",
+    "top_count": 215,
+    "uniform": false
+  },
+  "cited_upstream_artifacts": {
+    "exp3826": {
+      "formal_only_auroc": 0.8946624,
+      "full_ensemble_auroc": 0.9131335999999999,
+      "learned_only_auroc": 0.8699464000000001,
+      "n_candidates_scored": 1000,
+      "path": "results/experiment_3826_fover_ablation_faithful.json",
+      "sha256": "c54c5ce2cab536c0223300316639d56b79e56559a66f409b625a3c9c6bf10afd",
+      "verifier_partition": {
+        "formal": [
+          "tier0r_curry_howard",
+          "tier0u_logical_consistency"
+        ],
+        "learned": [
+          "fr11_session_memory"
+        ],
+        "rationale": "tier0r and tier0u are formal rule-based structures without weights. fr11_session_memory relies on traces/learned state. The 0.9131 harness did not use SOSKAN/SemEnergy."
+      }
+    }
+  },
+  "duration_s": 1.103431,
+  "field_provenance": {
+    "both_wrong_categories": {
+      "principle": "ensemble blind spots -- neither formal nor learned catches these (residual for Tier-4 / future verifiers)"
+    },
+    "category_derivation_method": {
+      "principle": "states whether categories came from a corpus field or were text-derived -- no silent methodology gap"
+    },
+    "cited_upstream_artifacts": {
+      "principle": "Exp 3826 partition/aggregation source with sha256 drift evidence"
+    },
+    "duration_s": {
+      "principle": "real wall-clock duration, excluded from checksum"
+    },
+    "field_provenance": {
+      "principle": "machine-readable principles for required fields"
+    },
+    "formal_core_gap_categories": {
+      "principle": "named error subtypes a contamination-free-only verifier would not catch -- honest scope of the clean-core claim"
+    },
+    "honest_verdict": {
+      "principle": "terminal prefix naming top gap or uniform category signal"
+    },
+    "inference_substrate": {
+      "principle": "declares cached verifier scoring only; no live LLM"
+    },
+    "learned_contribution_by_category": {
+      "principle": "where the +0.0184 lives -- the categories the formal core misses; the paper's limitations data"
+    },
+    "n_candidates_scored": {
+      "principle": "number of scored Exp 3826 candidate instances"
+    },
+    "preconditions_checked": {
+      "principle": "resources checked before scoring; blockers prevent fabricated counts"
+    },
+    "random_seed": {
+      "principle": "Exp 3826 deterministic five-seed candidate panels"
+    },
+    "reproducibility_checksum": {
+      "principle": "deterministic hash over scores, counts, and provenance"
+    }
+  },
+  "formal_core_gap_categories": [
+    {
+      "category": "arithmetic",
+      "formal_wrong_learned_correct": 215,
+      "learned_contribution_share": 0.617816,
+      "learned_error_catches": 43
+    },
+    {
+      "category": "other",
+      "formal_wrong_learned_correct": 128,
+      "learned_contribution_share": 0.367816,
+      "learned_error_catches": 128
+    },
+    {
+      "category": "formal-tool-checkable",
+      "formal_wrong_learned_correct": 5,
+      "learned_contribution_share": 0.014368,
+      "learned_error_catches": 5
+    }
+  ],
+  "honest_verdict": "complete: learned_contribution_characterized_topgap_arithmetic_formal_core_blindspots_documented",
+  "inference_substrate": "verifier-scoring-only over cached Exp 3826 FoVer candidate panels; formal_only=0.9*tier0r_curry_howard+0.1*tier0u_logical_consistency; learned_only=fr11_session_memory; no live LLM load.",
+  "learned_contribution_by_category": [
+    {
+      "both_wrong": 93,
+      "both_wrong_clean_false_alarms": 77,
+      "both_wrong_error_misses": 16,
+      "category": "arithmetic",
+      "formal_correct_learned_correct": 3134,
+      "formal_correct_learned_wrong": 586,
+      "formal_wrong_learned_correct": 215,
+      "learned_clean_rescues": 172,
+      "learned_contribution_share": 0.617816,
+      "learned_error_catches": 43,
+      "total": 4028
+    },
+    {
+      "both_wrong": 108,
+      "both_wrong_clean_false_alarms": 5,
+      "both_wrong_error_misses": 103,
+      "category": "other",
+      "formal_correct_learned_correct": 635,
+      "formal_correct_learned_wrong": 80,
+      "formal_wrong_learned_correct": 128,
+      "learned_clean_rescues": 0,
+      "learned_contribution_share": 0.367816,
+      "learned_error_catches": 128,
+      "total": 951
+    },
+    {
+      "both_wrong": 0,
+      "both_wrong_clean_false_alarms": 0,
+      "both_wrong_error_misses": 0,
+      "category": "formal-tool-checkable",
+      "formal_correct_learned_correct": 1,
+      "formal_correct_learned_wrong": 0,
+      "formal_wrong_learned_correct": 5,
+      "learned_clean_rescues": 0,
+      "learned_contribution_share": 0.014368,
+      "learned_error_catches": 5,
+      "total": 6
+    },
+    {
+      "both_wrong": 0,
+      "both_wrong_clean_false_alarms": 0,
+      "both_wrong_error_misses": 0,
+      "category": "logical",
+      "formal_correct_learned_correct": 13,
+      "formal_correct_learned_wrong": 2,
+      "formal_wrong_learned_correct": 0,
+      "learned_clean_rescues": 0,
+      "learned_contribution_share": 0.0,
+      "learned_error_catches": 0,
+      "total": 15
+    }
+  ],
+  "n_candidates_scored": 5000,
+  "n_unique_candidates_scored": 3549,
+  "operating_thresholds": {
+    "formal_only": {
+      "accuracy": 0.8902,
+      "balanced_accuracy": 0.8902,
+      "fn": 295,
+      "fp": 254,
+      "selection_rule": "max_balanced_accuracy_on_scored_characterization_panel",
+      "threshold": 0.1557,
+      "tn": 2246,
+      "tnr": 0.8984,
+      "tp": 2205,
+      "tpr": 0.882
+    },
+    "learned_only": {
+      "accuracy": 0.8262,
+      "balanced_accuracy": 0.8262,
+      "fn": 195,
+      "fp": 674,
+      "selection_rule": "max_balanced_accuracy_on_scored_characterization_panel",
+      "threshold": 0.333333,
+      "tn": 1826,
+      "tnr": 0.7304,
+      "tp": 2305,
+      "tpr": 0.922
+    }
+  },
+  "ops_docs_reconciliation_left_to_conductor": true,
+  "preconditions_checked": [
+    {
+      "available": true,
+      "detail": "import carnot.verify succeeded",
+      "resource": "carnot_verify_import"
+    },
+    {
+      "available": true,
+      "detail": "/home/ianblenke/github.com/ianblenke/carnot/data/fover_corpus.jsonl",
+      "resource": "fover_corpus"
+    },
+    {
+      "available": true,
+      "detail": "/home/ianblenke/github.com/ianblenke/carnot/data/fover_test_v4.json",
+      "resource": "fover_test_v4"
+    },
+    {
+      "available": true,
+      "detail": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_3826_fover_ablation_faithful.json",
+      "resource": "exp3826_artifact"
+    }
+  ],
+  "random_seed": [
+    42,
+    137,
+    271,
+    314,
+    1729
+  ],
+  "reproducibility_checksum": "166666208507cd106f0e322a8d84671a2994c8c2698f7562b54318de44fed0f8",
+  "schema": "carnot.fover_error_category_learned_contribution.v1",
+  "scripts_research_conductor_modified": false,
+  "tests_run": [
+    ".venv/bin/pytest -o addopts='' tests/python/test_experiment_3837_fover_error_category_learned_contribution.py -q",
+    ".venv/bin/coverage run --include='*/experiment_3837_fover_error_category_learned_contribution.py' -m pytest -o addopts='' -q tests/python/test_experiment_3837_fover_error_category_learned_contribution.py && .venv/bin/coverage report --include='*/experiment_3837_fover_error_category_learned_contribution.py' --fail-under=100 --show-missing"
+  ]
+}
