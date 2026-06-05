@@ -2915,12 +2915,20 @@ that GPU + NPU paths continue.
 
 ## SOTA Local Models (mandatory for new experiments)
 
-New experiments that need an LLM must include at least one of these three
+New experiments that need an LLM must include at least one of these
 state-of-the-art GGUF-quantized local models in their `MODEL_SPECS`:
 
 1. `unsloth/Qwen3.6-35B-A3B-GGUF` — Qwen 3.6 35B MoE, ~3B active, flagship MoE
 2. `unsloth/gemma-4-31B-it-GGUF` — Gemma 4 31B dense, instruction-tuned, flagship dense
 3. `unsloth/gemma-4-26B-A4B-it-GGUF` — Gemma 4 26B MoE, ~4B active, middle MoE
+4. `unsloth/gemma-4-12B-it-GGUF` — Gemma 4 12B dense, instruction-tuned (released
+   2026-06-05, operator-approved SOTA). The lightweight SOTA option: small enough
+   for fast iteration / higher batch throughput on a single 3090 while still being
+   headline-eligible, unlike the sub-1B smoke-test models. Prefer it when an
+   experiment needs many LLM calls (e.g. per-step self-verification over a large
+   corpus) where the 35B/31B wall-clock is the bottleneck. Verify the exact repo
+   id + cache it in a PRECONDITIONS step before first use (it is newly released;
+   do not assume it is already in `~/.cache/huggingface/hub`).
 
 Use the llama.cpp loader path (already wired — Exp 450 closed the Gemma 4
 tokenizer bugs). Keep Qwen3.5-0.8B / Gemma4-E4B only for cheap CPU smoke-tests
