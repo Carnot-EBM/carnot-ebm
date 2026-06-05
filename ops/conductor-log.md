@@ -7870,3 +7870,6 @@ ERROR: {
 | 2026-06-05 10:06 UTC | Build the BALANCED step-error corpus the moat scis | OK | 90 passed in 4.55s |
 | 2026-06-05 10:08 UTC | MOAT SCISSOR AT SCALE (re-issue of exp3847; supers | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp3858-build-balanced-step-error-corpus-v |
 | 2026-06-05 10:10 UTC | MOAT SCISSOR AT SCALE (re-issue of exp3847; supers | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp3858-build-balanced-step-error-corpus-v |
+| 2026-06-05 10:12 UTC | MOAT SCISSOR AT SCALE (re-issue of exp3847; supers | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp3858-build-balanced-step-error-corpus-v |
+| 2026-06-05 10:14 UTC | INDEPENDENCE AUDIT (arXiv:2604.07650): is Carnot's | GATE_BLOCK | Pre-emptive skip: upstream retired (exp3859-moat-scissor-at-scale-v3) |
+| 2026-06-05 10:14 UTC | ThinkPRM COMPLEMENTARITY (arXiv:2504.16828 refutat | GATE_BLOCK | Pre-emptive skip: upstream retired (exp3859-moat-scissor-at-scale-v3) |
