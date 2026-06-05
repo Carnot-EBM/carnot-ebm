@@ -1,0 +1,53 @@
+{
+  "honest_verdict": "complete: formal_core_5seed_CONFIRMED_formalonly0.8947_full0.9131_contamination_free_ci0.0209",
+  "full_ensemble_auroc_mean": 0.913134,
+  "formal_only_auroc_mean": 0.894662,
+  "learned_only_auroc_mean": 0.869946,
+  "per_condition_ci95": {
+    "full_ensemble_auroc": {
+      "mean": 0.913134,
+      "low": 0.902732,
+      "high": 0.923536
+    },
+    "formal_only_auroc": {
+      "mean": 0.894662,
+      "low": 0.884199,
+      "high": 0.905126
+    },
+    "learned_only_auroc": {
+      "mean": 0.869946,
+      "low": 0.853083,
+      "high": 0.88681
+    }
+  },
+  "formal_core_above_learned": true,
+  "verifier_partition": {
+    "formal": [
+      "tier0r_curry_howard",
+      "tier0u_logical_consistency"
+    ],
+    "learned": [
+      "fr11_session_memory"
+    ],
+    "rationale": "tier0r and tier0u are formal rule-based structures without weights. fr11_session_memory relies on traces/learned state. The 0.9131 harness did not use SOSKAN/SemEnergy."
+  },
+  "n_candidates_scored": 1000,
+  "preconditions_checked": [
+    "fover_corpus_cached",
+    "ensemble_code_imports_and_runs"
+  ],
+  "cited_upstream_artifacts": {
+    "exp3826": "results/experiment_3826_fover_ablation_faithful.json",
+    "exp2837_aggregation_path": "scripts/experiment_2837_fover_memory_leakage_v3.py"
+  },
+  "random_seeds_used": [
+    42,
+    137,
+    271,
+    314,
+    1729
+  ],
+  "reproducibility_checksum": "e34f6ea9219be9ebad92609d9cb7d500ba5b887c947c5ec484d8ea59b83e553f",
+  "duration_s": 1.0198335647583008,
+  "inference_substrate": "verifier-scoring-only"
+}
