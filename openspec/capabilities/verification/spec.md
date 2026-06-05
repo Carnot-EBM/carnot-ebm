@@ -10474,3 +10474,62 @@ real duration, populated precondition evidence, and no per-step score claims.
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-VERIFY-3869 | Implemented (`python/carnot/eval/moat_scissor_v4_existing_corpus.py`, `scripts/experiments/experiment_3869_moat_scissor_v4_existing_corpus.py`) | Implemented (`tests/python/test_experiment_3869_moat_scissor_v4_existing_corpus.py`) |
+
+### REQ-VERIFY-3873: In-Distribution Error-Rich FoVer Corpus
+
+The repository SHALL provide an Exp 3873 corpus builder that writes
+`data/in_distribution_error_corpus_v1.json` and
+`results/experiment_3873_in_distribution_error_rich_corpus.json` from local
+FoVer-family rows. Before building, the runner SHALL verify that
+`import carnot.verify` succeeds and that `data/fover_corpus_v4.json`,
+`data/fover_corpus_v3.json`, `data/fover_corpus_expanded.json`, and
+`data/fover_test.json` all exist and JSON-load. If either precondition fails,
+it SHALL write a terminal `blocked_carnot_verify_import` or
+`blocked_corpus_missing` artifact without fabricating corpus metrics.
+
+For runnable inputs, the builder SHALL pool all FoVer-family incorrect steps,
+deduplicated by `question_id + step_text`, and select a deterministic matching
+pool of correct steps so the emitted corpus is approximately balanced. If the
+deduplicated incorrect pool contains fewer than 150 errors, the builder SHALL
+generate additional FoVer-style math step errors by perturbing correct
+arithmetic or logic steps, tag every generated item with `synthetic=true`, and
+keep generated items below 40% of the error class.
+
+The runner SHALL score every emitted item with the Exp 2837 production FoVer
+ensemble path
+`0.9*tier0r_curry_howard + 0.1*tier0u_logical_consistency + fr11_session_memory`,
+persist per-item scores for downstream scissor reuse, compute
+`carnot_ensemble_auroc_on_corpus`, and apply the falsification gate:
+`CORPUS_READY` only when `n_incorrect_steps >= 150` and
+`carnot_ensemble_auroc_on_corpus >= 0.65`; otherwise `INSUFFICIENT`. The
+terminal artifact SHALL include bare gate fields for
+`carnot_ensemble_auroc_on_corpus`, `n_incorrect_steps`, `n_total_items`,
+`frac_synthetic`, `corpus_path`, `per_item_ensemble_scores_path`,
+`preconditions_checked`, `random_seed`, `reproducibility_checksum`,
+`duration_s`, and `inference_substrate`, with principle notes in
+`field_principles`.
+
+### SCENARIO-VERIFY-3873: FoVer Corpus Is Error-Rich And Ensemble-Scoreable
+
+Given the FoVer-family corpus files exist and `carnot.verify` imports, when
+Exp 3873 runs, then it writes the in-distribution corpus with at least 150
+gold-incorrect steps, generated errors remain a minority of the error class,
+the results artifact records the bare
+`carnot_ensemble_auroc_on_corpus` and `n_incorrect_steps` fields, per-item
+ensemble scores are persisted, and the honest verdict is
+`complete: in_distribution_corpus_READY_nerr<N>_auroc<a>_moat_scissor_can_run`
+only when the AUROC gate clears.
+
+### SCENARIO-VERIFY-3873-BLOCKED: Missing Preconditions Do Not Fabricate Corpus Metrics
+
+Given `carnot.verify` is not importable or any required FoVer-family corpus
+file is missing or malformed, when Exp 3873 runs, then it writes
+`results/experiment_3873_in_distribution_error_rich_corpus.json` with a
+terminal `blocked_<resource>` honest verdict, populated precondition evidence,
+null AUROC, zero counts, no per-item score claims, and a real duration.
+
+## Implementation Status (REQ-VERIFY-3873)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-VERIFY-3873 | Planned (`python/carnot/eval/in_distribution_error_rich_corpus.py`, `scripts/experiments/experiment_3873_in_distribution_error_rich_corpus.py`) | Planned (`tests/python/test_experiment_3873_in_distribution_error_rich_corpus.py`) |
