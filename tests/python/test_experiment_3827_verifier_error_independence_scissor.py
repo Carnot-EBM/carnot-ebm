@@ -21,8 +21,14 @@ def test_blocked_no_cuda(mock_torch, tmp_path):
     
     exp = Exp3827()
     with patch("experiment_3827_verifier_error_independence_scissor.repo_root", new=tmp_path):
+        # The experiment writes its blocked-path artifact to repo_root/results/;
+        # create that dir under the patched tmp repo_root (the sibling
+        # blocked-model-not-cached test does this — this one omitted it, which
+        # made the blocked-path artifact write throw FileNotFoundError and
+        # poisoned the conductor pre-test gate, cascade-skipping every later task).
+        (tmp_path / "results").mkdir(parents=True, exist_ok=True)
         res = exp.run()
-    
+
     assert res["status"] == "blocked_no_cuda"
 
 
