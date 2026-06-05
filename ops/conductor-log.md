@@ -7862,3 +7862,4 @@ ERROR: {
 | 2026-06-05 08:36 UTC | PolarFire SoC Discovery Kit hardware continuity (t | SKIP | Pre-tests failing, self-heal failed: 1 failed, 80 passed in 3.47s |
 | 2026-06-05 08:38 UTC | PolarFire SoC Discovery Kit hardware continuity (t | SKIP | Pre-tests failing, self-heal failed: 1 failed, 80 passed in 3.29s |
 | 2026-06-05 08:41 UTC | Capstone .355 — aggregate the VERIFIER-MOAT DURABI | SKIP | Pre-tests failing, self-heal failed: 1 failed, 80 passed in 4.14s |
+| 2026-06-05 08:43 UTC | Capstone .355 — aggregate the VERIFIER-MOAT DURABI | SKIP | Pre-tests failing, self-heal failed: 1 failed, 80 passed in 3.41s |
