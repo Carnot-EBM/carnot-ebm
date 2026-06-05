@@ -35483,3 +35483,75 @@ milestones:
       + INFORMATIVENESS (shrink the wrong set) on FoVer math, the two properties LDT''s hand-built lattice provides.'
     deliverable: results/experiment_3833_ldt_gap_ensemble_as_sound_lattice.json
     result: OK (conductor)
+- id: 2026.06.353
+  title: Harden the contamination-free FORMAL core (5-seed CI + certified clean-core product + honest learned-contribution)
+    + Tier-4 adaptive-structure self-learning + the operator's EDLM execution surface
+  doc: openspec/change-proposals/research-roadmap-v353.md
+  completed: '2026-06-05'
+  finding: See conductor log for per-experiment results.
+  tasks:
+  - id: exp3834-archive-v352-activate-v353
+    title: Archive milestone .352 (LDT-gap probe) and activate .353 (CONTAMINATION-FREE FORMAL CORE hardening + Tier-4 self-learning
+      + EDLM operator execution surface).
+    deliverable: results/experiment_3834_archive_v352_activate_v353.json
+    result: OK (conductor)
+  - id: exp3835-formal-core-5seed-ci-replication
+    title: 'Contamination-free FORMAL core 5-seed CI replication (the depth anchor): replicate exp3826''s formal_only=0.8947
+      / full=0.9131 / learned=0.8699 decomposition across 5 disjoint seeds, report per-condition mean +/- CI95, and a positive
+      control, so the contamination-free moat floor is paper-citable per the Adversarial-Confirmation Discipline.'
+    deliverable: results/experiment_3835_formal_core_5seed_ci.json
+    result: OK (conductor)
+  - id: exp3836-certified-abstention-on-formal-core
+    title: "Ship a CERTIFIED abstention operating point on the FORMAL CORE ONLY (gated on Exp 3835 formal_only_auroc_mean\
+      \ >= 0.85): build the risk-coverage (AURC) curve on the contamination-free formal scorer (0.9*tier0r + 0.1*tier0u, NO\
+      \ learned probe) and select a split-conformal-certified threshold at a fixed selective-risk target \u2014 the cleanest\
+      \ possible product claim (no learned-probe contamination + a certified guarantee)."
+    deliverable: ''
+    result: OK (conductor)
+  - id: exp3837-learned-contribution-characterization
+    title: "Characterize the LEARNED-probe contribution HONESTLY (the +0.0184 full-minus-formal gap): per-error-category breakdown\
+      \ of which step-error subtypes the learned fr11_session_memory probe catches that the contamination-free formal core\
+      \ MISSES \u2014 bounding exactly where the formal core has gaps, for the paper's limitations section."
+    deliverable: ''
+    result: OK (conductor)
+  - id: exp3838-fr11-v22-tier4-adaptive-structure
+    title: "FR-11 continuous self-learning v22 \u2014 Tier-4 ADAPTIVE-STRUCTURE on the live verifier (the one untried tier;\
+      \ v17 was Tier-1 reweight, v18 Tier-2 memory, v19/v20/v21 Tier-3 predict). Across the FoVer corpus, accumulate per-verifier\
+      \ marginal contribution and PRUNE verifiers whose contribution is below a threshold, while FLAGGING residual error regions\
+      \ no verifier catches \u2014 confirm the pruned structure holds the frozen 0.9131 within CI while shrinking the active\
+      \ verifier set (compute saving)."
+    deliverable: ''
+    result: OK (conductor)
+  - id: exp3839-edlm-minimal-kill-gate-operator-gated
+    title: "EDLM minimal kill-gate EXECUTION (operator-gated \u2014 runs IFF the operator has seeded): IF the Energy-Diffusion-LLM\
+      \ repo is cloned AND a GPU is free, run the tiny-scale matched-COMPUTE stability + AR-comparison kill-gate from the\
+      \ staging note; ELSE exit cleanly blocked (the loop never self-seeds)."
+    deliverable: ''
+    result: OK (conductor)
+  - id: exp3840-publication-gate-regression
+    title: 'Publication-gate REGRESSION confirmation: run scripts/publication_gate.py --json and confirm G1-G4 ALL still pass
+      and paper_ready stays TRUE after the .353 formal-core / Tier-4 / EDLM changes; confirm the frozen FoVer 0.9131 is unchanged.
+      The standing convergence invariant guard (north-star sec-2).'
+    deliverable: ''
+    result: OK (conductor)
+  - id: exp3841-external-research-refresh-v353
+    title: 'External research refresh for .353: confirm the planner-appended ''## .353 additions'' section in research-references.md
+      parses + is intact (contamination-free formal core + Tier-4 adaptive-structure papers), and APPEND any further genuinely-new
+      2026 papers found across the .353 tracks. Each entry as-reported, with how it relates. Pure documentation; runs no model;
+      append-only (never-prune).'
+    deliverable: ''
+    result: OK (conductor)
+  - id: exp3842-kv260-opportunistic-continuity-audit
+    title: "KV260 opportunistic continuity audit \u2014 confirm terminal state holds (SSH-reachable, accelerator overlay loadable).\
+      \ Documentation-only; the per-milestone hardware mandate was relaxed to opportunistic at .340 (GateMate/PolarFire stay\
+      \ opportunistic future-work)."
+    deliverable: ''
+    result: OK (conductor)
+  - id: exp3843-capstone-v353
+    title: "Capstone .353 \u2014 aggregate the contamination-free-formal-core hardening milestone: the formal core 5-seed-CI\
+      \ replicated (exp3835), a certified abstention point on the clean core (exp3836), the learned contribution characterized\
+      \ honestly (exp3837), Tier-4 adaptive-structure self-learning (exp3838), the EDLM operator-gated kill-gate executed-or-blocked\
+      \ (exp3839), publication gates regression-confirmed (exp3840). paper_ready MUST stay TRUE; frozen 0.9131 unchanged;\
+      \ both energy routes stay bounded."
+    deliverable: ''
+    result: OK (conductor)
