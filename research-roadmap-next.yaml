@@ -171,3 +171,105 @@ tasks:
       SAME ensemble, not a re-measurement of the AUROC. This re-frame SUPERSEDES the
       exp3821-class HRM/TRM latent-symbol-bridge probe (Huginn already settled that recursive
       latents are non-decodable; re-reading HRM's would only re-confirm the DT-P3 negative).
+
+  - id: exp3837-verifier-error-independence-scissor-at-scale
+    operator_override: >
+      2026-06-04 operator directive (moat-durability confirmation-at-scale): exp3827
+      reported the error-independence moat SURVIVES (residual_catch=0.9000,
+      overlap=0.5000) but on a 100-item subset with suspiciously round numbers —
+      a candidate small-sample artifact. The Adversarial-Confirmation Discipline
+      requires a score-300+ finding to be replicated at scale with a CI before it is
+      paper-citable. This is the confirmation, NOT a doomed rerun: prior attempt
+      exp3827 SUCCEEDED; this widens N 100->1000+ and adds bootstrap CI + two positive
+      controls. requires_codex because it is a live GPU (Qwen3.6-35B GGUF) workload and
+      gemini crashes real GPU workloads (exp3703); the moat verdict is a deterministic
+      CI gate so codex suffices (no claude judgment needed).
+    milestone: "2026.06.354"
+    title: "Verifier error-INDEPENDENCE scissor AT SCALE (DT-P2 moat-durability): of the gold step-errors a strong SOTA reasoner (Qwen3.6-35B) self-verification MISSES, what fraction does Carnot's k=15 ensemble independently catch? N>=1000, bootstrap CI95, two positive controls. Confirms or refutes exp3827's small-sample 'moat survives'."
+    priority: critical
+    track: research
+    max_turns: 50
+    agent_type: codex
+    model: gpt-5.5
+    requires_codex: true    # live GPU (Qwen3.6-35B GGUF) self-verification; gemini crashes GPU workloads (exp3703). Verdict is a deterministic CI gate, so codex suffices.
+    requires_gpu: true      # the SOTA reasoner must self-verify N>=1000 steps via llama.cpp on the internal RTX 3090.
+    estimated_wall_time_min: 75
+    inference_substrate: live_llm_inference   # loads + runs Qwen3.6-35B-A3B-GGUF for self-verification over N>=1000 items; duration floor 60s.
+    deliverable: results/experiment_3837_verifier_error_independence_scissor_at_scale.json
+    prompt: |
+      CONTEXT. The Deep-Think post-bounded round (memory deep-think-post-bounded-2026-06,
+      P2) reframed the verifier MOAT as error-INDEPENDENCE, not raw AUROC: Carnot's value
+      is durable only if it independently catches errors that a strong frontier reasoner's
+      OWN self-verification MISSES. If Carnot mostly re-catches what the reasoner already
+      catches, the product is at o1-subsumption risk. exp3827
+      (results/experiment_3827_verifier_error_independence_scissor.json) gave a PRELIMINARY
+      positive — `verifier_moat_survives_error_independent_residualcatch0.9000_overlap0.5000`
+      — but on a 100-item FoVer subset with suspiciously round numbers (0.90 / 0.50). THIS
+      TASK confirms or refutes that at scale (N>=1000) with a bootstrap CI and two positive
+      controls. It is a PROPERTY MEASUREMENT (error-set independence), NOT a generation-beats-
+      AR test — do NOT apply a generation headroom gate.
+
+      EXISTING CODE TO READ FIRST:
+        - results/experiment_3827_verifier_error_independence_scissor.json (the 100-item
+          method + exact residual_catch / overlap definitions — reuse them verbatim).
+        - scripts/experiments/experiment_3827_verifier_error_independence_scissor.py (the
+          Exp3827 class: reasoner self-verification path + Carnot ensemble scoring path).
+        - scripts/experiment_2837_fover_memory_leakage_v3.py (the production k=15 ensemble
+          aggregation that yields the frozen 0.9131 — the positive-control reference).
+        - data/fover_test_v4.json (cached corpus, N>=1000, gold step labels).
+
+      CONCRETE STEPS:
+        0. PRECONDITIONS (check BEFORE anything; on failure write blocked_<resource> + EXIT, no fabrication):
+           a. `/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -c "import torch; assert torch.cuda.is_available() and torch.cuda.device_count() > 0"` succeeds.
+           b. The SOTA reasoner GGUF is cached: `ls ~/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/` returns a .gguf (else fallback unsloth/gemma-4-26B-A4B-it-GGUF). Load via the .gguf path + llama.cpp (NOT AutoTokenizer on the GGUF repo id — it has no HF tokenizer files; use cached_sota_pair()/the .gguf model_path).
+           c. `import carnot.verify` succeeds AND data/fover_test_v4.json present with {question_id|question, step_text, label} (fallback v3, then test.json).
+           If any fail: honest_verdict `blocked_<resource>` (e.g. blocked_no_cuda / blocked_model_not_cached_qwen3.6_35b / blocked_fover_corpus_not_available), preconditions_checked populated, EXIT.
+        1. Draw N>=1000 balanced (≈50/50 correct/incorrect-step) FoVer items, seed-controlled.
+        2. STRONG REASONER SELF-VERIFICATION: for each step, ask Qwen3.6-35B (its own
+           self-verification, same prompt as exp3827) whether the step is correct. Record
+           the reasoner's per-step accept/reject. This is the live-GPU part.
+        3. CARNOT ENSEMBLE: score each step with the k=15 ensemble (the 2837 path).
+        4. Partition the gold-INCORRECT steps into: (A) caught by the reasoner's self-verify,
+           (B) MISSED by the reasoner (the residual). Compute:
+             - residual_catch_rate = fraction of set (B) that Carnot's ensemble catches
+               (flags as incorrect at its operating threshold). BOOTSTRAP CI95 (>=1000 resamples).
+             - error_overlap_jaccard = |reasoner-caught ∩ carnot-caught| / |reasoner-caught ∪ carnot-caught| over gold-incorrect steps. Low => independent moats.
+        5. POSITIVE CONTROLS (both MUST pass or the result is INCONCLUSIVE):
+             - reasoner_self_verify_auroc in a sane non-degenerate range (e.g. [0.55, 0.95]) — the reasoner is actually doing self-verification, not all-accept/all-reject.
+             - carnot_ensemble_auroc reproduces the frozen headline within +/-0.02 (~0.913 on this corpus) — the ensemble path is faithful (else deltas are void, exp3820 mode).
+        6. Apply the gate -> emit the terminal verdict.
+
+      REQUIRED ARTIFACT FIELDS (each with a `principle` note):
+        residual_catch_rate:
+          principle: "THE moat metric — of the reasoner's MISSED errors, what fraction Carnot independently catches. High => error-independent durable value; low => o1-subsumption risk (DT-P2)."
+        residual_catch_ci95:
+          principle: "Bootstrap CI95 — turns exp3827's round-number point estimate into a defensible interval; the lower bound is the gate field (Adversarial-Confirmation Discipline)."
+        error_overlap_jaccard:
+          principle: "Independence check — low overlap between reasoner-caught and Carnot-caught errors means the two verifiers occupy different null spaces (the moat); high overlap means Carnot is redundant with frontier self-verification."
+        reasoner_self_verify_auroc:
+          principle: "Positive control — a degenerate (all-accept/all-reject) reasoner would inflate residual_catch trivially; this confirms the reasoner genuinely self-verifies."
+        carnot_ensemble_auroc:
+          principle: "Positive control — MUST reproduce the frozen 0.9131 +/-0.02 on this corpus or the ensemble path is unfaithful and ALL residual numbers are void (exp3820 mode)."
+        n_items, n_residual_errors:
+          principle: "N>=1000 and the residual-set size — the residual_catch CI is only meaningful if the residual error set is itself large enough (report n_residual_errors; if <30, widen N)."
+        preconditions_checked, cited_upstream_artifacts (exp3827 + 2837 with sha256),
+        model_specs, random_seed, random_seeds_used, reproducibility_checksum,
+        duration_s, inference_substrate:
+          principle: "Pre-Launch + Adversarial-Verify + Inference-Substrate methodology — a live 35B GGUF run over N>=1000 takes real wall-clock; implausibly short = fabrication."
+
+      FALSIFICATION GATE (acceptance):
+        - MOAT_SURVIVES_AT_SCALE: both positive controls pass AND residual_catch_ci95 lower
+          bound > 0.5 AND error_overlap_jaccard < 0.6.
+          honest_verdict: `complete: scissor_at_scale_MOAT_SURVIVES_residcatch<mean>_ci<lo>-<hi>_overlap<j>_n<N>`
+          principle: "Confirms exp3827 at scale — Carnot's verifier catches a majority of the strong reasoner's residual errors independently; durable, paper-citable moat."
+        - MOAT_SUBSUMED: positive controls pass AND (residual_catch_ci95 upper < 0.3 OR error_overlap_jaccard > 0.7).
+          honest_verdict: `complete: scissor_at_scale_MOAT_SUBSUMED_residcatch<mean>_overlap<j>_o1_subsumption_risk_n<N>`
+          principle: "Refutes the durable-moat claim — Carnot largely re-catches what the reasoner already catches; the product is at frontier-subsumption risk and the paper must scope the claim down."
+        - INCONCLUSIVE: a positive control fails (reasoner degenerate OR carnot_ensemble_auroc off frozen by >0.02).
+          honest_verdict: `complete: scissor_at_scale_INCONCLUSIVE_<which_control_failed>`
+        - honest_verdict MUST start with a terminal prefix (`complete:`/`complete_`/`success:`/`passed:`/`shipped:`) or `blocked_<resource>`.
+
+      DISCIPLINE: populate random_seed(s) + reproducibility_checksum + preconditions_checked +
+      cited_upstream_artifacts + model_specs. Report the REAL duration (live LLM floor 60s).
+      Do NOT aggregate any artifact carrying flagged_adversarial:true. Do NOT move the frozen
+      0.9131. Do NOT push. Do NOT modify scripts/research_conductor.py.
