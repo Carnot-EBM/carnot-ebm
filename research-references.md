@@ -20979,3 +20979,42 @@ Added by the `.351 planning sweep (Claude Opus 4.8). The `.350 operator-activate
 - **arXiv:2511.05562 — "Effective Test-Time Scaling of Discrete Diffusion through Iterative Refinement (IterRef)" (2025):** Track: EDLM operator-seed / energy-guided decoding. Iterative-refinement TTS for discrete diffusion (≤2x reward at equal compute); pairs with Constrained Discrete Diffusion (arXiv:2503.09790, differentiable zero-violation projection) — an alternative refinement substrate where Carnot energy acts as the projection/verification operator. EDLM-adjacent.
 - **arXiv:2602.06737 — "Optimal Abstractions for Verifying Properties of KANs" (Feb 2026):** Track: KAN-for-verification/energy. DP-at-unit-level + knapsack abstraction to formally verify KAN properties with error bounds — most relevant 2025-26 KAN-verification result; informs Carnot's SOS-integrated-KAN energy head formal-verifiability thread.
 - **Extropic hardware watch:** XTR-0 dev board (CPU+FPGA + 2 X0-die sockets) shipped Q3 2025; Z1 = first production-scale TSU (hundreds of thousands of sampling cells/chip, standard CMOS, Gibbs-sampling EBM compilation), Early Access 2026. THRML 0.1.3 (JAX, Apache-2.0) is the official TSU simulator — already in Carnot's venv (import path needs repair per exp2883). Z1 early-access is the item to watch; no new FPGA-Ising-machine paper beyond the Extropic line surfaced.
+
+## .353 additions — contamination-free FORMAL core hardening + Tier-4 adaptive-structure self-learning (2026-06-05)
+
+Added by the `.353 planning sweep (Claude Opus 4.8). Context: the project is CONVERGED — the sole
+defensible headline is the FoVer 0.9131 math step-error verifier; both energy-foundation routes
+(selector P0.1, generator Thesis-A / EBT) are bounded; the loop will NOT self-seed the next
+paradigm (Verification Trap, Deep-Think P3 — the operator seeds EDLM or freezes). `.353's depth
+anchor is the one GENUINELY-NEW finding from `.350-`.352: exp3826's CONTAMINATION-FREE FORMAL CORE
+(formal_only SAT/Z3/AST = 0.8947 vs full 0.9131 vs learned 0.8699). The papers below underwrite
+hardening that finding + the mandated Tier-4 (adaptive-structure) self-learning experiment. Numbers
+are source-reported by the papers — NOT Carnot measurements; re-derive before any forward-facing use.
+Converged invariants unchanged: `paper_ready` stays TRUE (G1-G4), FoVer 0.9131 stays frozen.
+
+- **arXiv:2603.29500 — "Learning to Generate Formally Verifiable Step-by-Step Logic Reasoning via
+  Structured Formal Intermediaries" (2026):** Track: contamination-free formal core. Generates
+  reasoning with structured formal intermediaries so EACH step is machine-checkable by a formal
+  tool — the same SAT/Z3/AST-checkable spine that gives Carnot's formal_only ablation its
+  contamination-free property. Directly relevant to framing the exp3826 formal core as the
+  publishable, contamination-resistant headline (not a degraded variant). Claims source-reported only.
+- **arXiv:2510.08049 — "A Survey of Process Reward Models: From Outcome Signals to Process
+  Supervisions" (v3, 2026):** Track: verifier-product positioning / formal core. Taxonomy of PRMs
+  separating human-annotated, model-judged, and formally-verified supervision; the survey row Carnot's
+  contamination-free formal core occupies (formal-tool-annotated, no human labels, no LLM-judge
+  contamination). Useful for the honest PRM-SOTA positioning table. Claims source-reported only.
+- **arXiv:2505.19475 — "VDS-TTT: Continuous Self-Improvement via Test-time Training with
+  Verifier-Driven Sample Selection" (2025):** Track: continuous self-learning (Tier-3/Tier-4). A
+  learned verifier scores generations and SELECTS high-confidence pseudo-labeled examples to adapt
+  on — the closest peer to Carnot's FR-11 loop using the energy verifier as the selection signal.
+  Methods reference for Tier-4 adaptive-structure (the verifier decides what enters the adaptation
+  set). Numbers source-reported only.
+- **arXiv:2603.24840 — "Prune as You Generate: Online Rollout Pruning for Faster and Better RLVR"
+  (2026):** Track: Tier-4 adaptive-structure / fast-path. Online pruning of low-value trajectories
+  during generation under a verifier signal; the online-pruning pattern Carnot's Tier-4 adapts to the
+  VERIFIER-SET level (prune marginal verifiers / flag uncovered residual regions) rather than the
+  rollout level. Efficiency claims source-reported only.
+- **arXiv:2602.06737 (cross-ref from `.351) — "Optimal Abstractions for Verifying Properties of KANs"
+  (2026):** Re-cited for Tier-4: the DP-at-unit-level + knapsack abstraction is the formal route to a
+  STRUCTURALLY-adaptive KAN energy head (add/prune knots) while retaining formal verifiability — the
+  Tier-4 "adaptive structure with a hardware/formal path" requirement in research-program.md.

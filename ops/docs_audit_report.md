@@ -4,47 +4,46 @@
 # docs_audit_report — 2026-06-04
 
 ## TL;DR (stranger's 30-second take)
-A stranger would likely bounce after scrolling past the hero. While the initial explanation is excellent, the page quickly devolves into deep internal project jargon, leaked local file paths, and defensive retrospective narratives that feel like reading someone else's Jira board.
+A stranger would quickly close this tab. Despite a strong opening hook, the page rapidly devolves into an overwhelming wall of acronyms, leaked internal file paths, and contradictory benchmark claims that destroy credibility.
 
 ## TOP 3 PROBLEMS
-1. **Severe Internal Jargon & Leaked Paths:** CSS and Results cards literally render local `pytest` file paths (`@.tmp-pytest/...`) and unexplained acronyms ("PREM", "FoVer") on the public page.
-2. **Per-Milestone Narrative:** Copy reads like internal status reports ("Repinned from v2 0.9857", "pending operator-initiated upload") rather than external marketing.
-3. **Suspiciously Perfect Numbers:** Unlinked claims of "1.0 TP rate" and "60/60 attacks" look fabricated without immediate links to the promised artifacts.
+1. Credibility collapse from wildly inconsistent HumanEval claims (+3 points vs 0% -> 36% vs 8% -> 80%) across different cards.
+2. Incomprehensible internal jargon and leaked internal file paths (e.g., `@.tmp-pytest/...`) polluting the Results text.
+3. Cognitive overload from displaying 12 Result cards and 7 Blog cards, turning the landing page into a data dump.
 
 ## DETAILED FINDINGS
 ### Bloat
-- Results grid — 12 cards — cap at 6 core metrics; strangers won't read a dozen disparate benchmarks.
-- Writing/Blog section — 7 articles with full descriptions — cap at 3 recent posts.
+- Results section — 12 cards — cap at 6
+- Blog section — 7 cards — cap at 3
+- Overall page — 32 bento/result/blog cards — cap at ~15 total to avoid overwhelm
 
 ### Internal jargon
-- Results (Live benchmark card) & CSS — `@.tmp-pytest/pytest-of-ianblenke/.../spilled-energy-2602-18671:real.txt` — Massive leak of internal local file paths used as text and CSS classes.
-- Hero (Recent Progress card) — `FoVer`, `5-seed dual-condition`, `architecture-only` — Deeply specific internal constraint configurations with no context.
-- Features (Test-Time Compute card) — `PREM` — Acronym dropped without definition.
-- Results (Math reasoning card) — `EstimationVerifier SVAMP AUC`, `0.125 FoVer baseline` — Internal component names and benchmarks used without a baseline explanation.
+- Results card (Live benchmark) — `@.tmp-pytest/pytest-of-ianblenke/...` — Leaked internal file path that looks like garbage text to a reader.
+- Hero Stats & Results — `FoVer`, `SVAMP`, `CCTU`, `PRM-BiasBench`, `VeriCoT`, `HalluGuard v3` — Undefined benchmark names and architectures that assume deep insider knowledge.
+- Features section — `PREM`, `TTC` — Internal capability acronyms used without any foundational explanation.
 
 ### Per-milestone narrative
-- Hero (Recent Progress card) — "Repinned from v2 0.9857 after pre-submission adversarial audit" reads like a pull request comment.
-- Preprint section — "The arXiv submission is prepared but pending operator-initiated upload" is an internal status update, not a feature.
-- Blog section (Two Retractions card) — "We paid for a hostile audit... Two retractions, one rescue." reads like an internal team retrospective.
+- Hero (Recent progress card) — `Repinned from v2 0.9857 after pre-submission adversarial audit`
+- Preprint section — `The arXiv submission is prepared but pending operator-initiated upload`
 
 ### Inconsistencies
-- "No model fine-tuning required" (How it works section) vs. "Training — Two-GPU parallel retrain: 2.0× speedup" (Results grid). If no fine-tuning is needed, why are you highlighting training/retrain metrics?
-- Hero header says "0.9131 AUROC" but the Recent progress card confusingly says "Repinned from v2 0.9857", mixing current and old internal numbers.
+- "+3.0 points on pass-rate" (Code feature card) vs "0% -> 36% after Carnot correction" (Live benchmark result) vs "8% -> 80% pass rate (+72pp)" (Code repair result) on the HumanEval benchmark.
 
 ### Missing essentials
-- Links to the actual "checked-in experiment artifacts". The Results intro says every number is backed by an artifact, but gives the user no way to click and verify them.
+- Link to the actual artifacts: The text states "Every number below is backed by a checked-in experiment artifact" but provides zero links, making the "trust me" claim an unverifiable dead end for a stranger.
 
 ### Fabrication signals
-- 1.0 (100%) TP rate on "GSM8K extraction" in the Results Grid.
-- 60/60 attacks caught on "PRM-BiasBench-style attacks" in the Results Grid. (Both are suspiciously perfect for a landing page without an immediate link to proof).
+- 1.0 (100%) TP rate — Results card (Math extraction: GSM8K extraction)
+- 60/60 attacks (100% success) — Results card (Adversarial audit: PRM-BiasBench-style)
 
 ## WHAT'S WORKING
-- The core value proposition is extremely clear: "Catch the reasoning errors your LLM states with total confidence" paired with the relatable "47 + 28 = 76" example perfectly explains the tool's purpose.
-- The Quickstart section is highly actionable, showing exactly how to use the tool in Python and Rust right away.
+- The hero copy ("LLMs predict. They don't check.") is punchy and immediately explains the value proposition.
+- The Quickstart section is excellent, effectively demonstrating the simplicity of the API in just five lines across Python and Rust.
 
 ## RECOMMENDED OPERATOR ACTIONS
-1. Remove all leaked `@.tmp-pytest/...` file paths from the CSS media queries and the HumanEval result card.
-2. Purge or define all internal acronyms ("PREM", "FoVer") and rewrite the "Recent Progress" card to focus on the product, not the audit history.
-3. Trim the Results Grid to 6 key cards, and add hyperlinks to the raw experiment artifacts, especially for the perfect 1.0 and 60/60 claims.
-4. Remove the "Two-GPU parallel retrain" card to resolve the inconsistency with "No model fine-tuning required" (or clarify what is being trained).
-5. Rewrite the "Preprint" and "Blog" descriptions to sound like external resources rather than internal development logs.
+1. Unify and clarify the HumanEval benchmark claims into a single, unambiguous metric (or explicitly label why there are three different baselines).
+2. Purge the leaked `@.tmp-pytest/...` internal file paths from the Results text and CSS font links (fix the templating script that corrupted the HTML).
+3. Trim the Results grid down to a maximum of 6 highly defensible metrics.
+4. Replace internal jargon (FoVer, SVAMP, CCTU, PREM, TTC) with plain-English descriptions of the capabilities being evaluated.
+5. Remove the "pending operator-initiated upload" and "Repinned from v2..." internal status notes.
+6. Provide a credibility anchor or context for the perfect 1.0/100% scores, or drop them entirely to preserve trust.
