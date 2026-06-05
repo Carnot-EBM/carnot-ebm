@@ -35555,3 +35555,21 @@ milestones:
       \ both energy routes stay bounded."
     deliverable: ''
     result: OK (conductor)
+- id: 2026.06.354
+  title: "LDT-gap probe \u2014 is Carnot's k=15 verifier ensemble a SOUND abstraction lattice (LDT's two properties) on an\
+    \ open-ended non-grid domain, or only a scorer?"
+  doc: docs/research-notes/phase3-recursive-refiner-thesis.md
+  completed: '2026-06-05'
+  finding: See conductor log for per-experiment results.
+  tasks:
+  - id: exp3833-ldt-gap-ensemble-as-sound-abstraction-lattice
+    title: 'Verifier-ensemble-as-sound-abstraction-lattice: measure elimination SOUNDNESS (never reject a correct candidate)
+      + INFORMATIVENESS (shrink the wrong set) on FoVer math, the two properties LDT''s hand-built lattice provides.'
+    deliverable: results/experiment_3833_ldt_gap_ensemble_as_sound_lattice.json
+    result: OK (conductor)
+  - id: exp3844-verifier-error-independence-scissor-at-scale
+    title: 'Verifier error-INDEPENDENCE scissor AT SCALE (DT-P2 moat-durability): of the gold step-errors a strong SOTA reasoner
+      (Qwen3.6-35B) self-verification MISSES, what fraction does Carnot''s k=15 ensemble independently catch? N>=1000, bootstrap
+      CI95, two positive controls. Confirms or refutes exp3827''s small-sample ''moat survives''.'
+    deliverable: results/experiment_3844_verifier_error_independence_scissor_at_scale.json
+    result: OK (conductor)
