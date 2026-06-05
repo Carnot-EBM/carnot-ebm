@@ -1,0 +1,150 @@
+{
+  "acceptance_gate": {
+    "condition": "auroc_in_frozen_ci == true AND memory_ablation_contribution_preserved == true",
+    "passed": true,
+    "principle": "Self-learning may persist the independence state only as a continuation artifact; the frozen 0.9131 headline remains fixed."
+  },
+  "artifact": "experiment_3864_fr11_self_learning_v23_independence_reweighting",
+  "auroc_in_frozen_ci": true,
+  "continuous_self_learning_task": true,
+  "duration_s": 0.692622423,
+  "fallback_static_weighting": {
+    "fr11_session_memory": 0.5,
+    "tier0r_curry_howard": 0.45,
+    "tier0s_arithmetic_gap": 0.0,
+    "tier0u_logical_consistency": 0.05
+  },
+  "field_principles": {
+    "auroc_in_frozen_ci": "BARE bool (not a {value,principle} dict -- gated-fields-must-be-bare) -- the INVARIANT gate: the reweighting may not break the frozen 0.9131.",
+    "duration_s": "Adversarial-Verify + Inference-Substrate; verifier-scoring substrate (no LLM loaded).",
+    "honest_verdict": "Terminal prefix; complete or blocked_<resource>.",
+    "independence_weight_per_verifier": "The learned online weighting -- which verifiers the tracker upweighted for independence; the self-learning artifact + input to the moat story.",
+    "inference_substrate": "Adversarial-Verify + Inference-Substrate; verifier-scoring substrate (no LLM loaded).",
+    "memory_ablation_contribution_preserved": "Bare bool -- the +0.0185 learned contribution survives the reweighting.",
+    "preconditions_checked": "Adversarial-Verify + Inference-Substrate; verifier-scoring substrate (no LLM loaded).",
+    "random_seed": "Adversarial-Verify + Inference-Substrate; verifier-scoring substrate (no LLM loaded).",
+    "reproducibility_checksum": "Adversarial-Verify + Inference-Substrate; verifier-scoring substrate (no LLM loaded).",
+    "reweighted_ensemble_auroc": "The independence-reweighted ensemble's AUROC; must not regress the frozen headline below CI.",
+    "state_persisted_path": "Where the learned weighting is saved for the next FR-11 milestone (continuity of the self-learning loop).",
+    "update_cost_note": "Qualitative Tier-1 hardware-path claim (pure CPU counter updates, <1us/update); NOT a fabricated wall-time."
+  },
+  "frozen_ci95": {
+    "high": 0.9235355665466916,
+    "low": 0.9027316334533082
+  },
+  "frozen_headline_ensemble_auroc": 0.9131,
+  "honest_verdict": "complete: fr11_v23_independence_reweighting_learned_auroc0.9059_in_frozen_ci_memory_contribution_preserved_state_persisted",
+  "independence_weight_per_verifier": {
+    "fr11_session_memory": 0.618378022,
+    "tier0r_curry_howard": 0.356117249,
+    "tier0s_arithmetic_gap": 0.005413865,
+    "tier0u_logical_consistency": 0.020090863
+  },
+  "inference_substrate": "verifier_ensemble_against_cached_candidates (principle: reads cached verifier scores; no LLM loaded).",
+  "memory_ablation_contribution_preserved": true,
+  "memory_contribution_reference": 0.01847119999999991,
+  "methodology": {
+    "hardware_path": "Tier-1 hardware path: pure CPU counter updates over cached verifier scores; qualitatively <1us/update, no fabricated wall-time timing.",
+    "random_seed": 3864,
+    "score_threshold": 0.5,
+    "weighting_rule": "(frozen_prior + prior_floor) * (precision_floor + online_precision) * (1 + unique_error_catch_rate)"
+  },
+  "model_specs": {
+    "corpus": "FoVer cached corpus",
+    "live_model_invoked": false,
+    "n_examples": 1000,
+    "scoring_mode": "cached_verifier_scores_only",
+    "verifiers": [
+      "fr11_session_memory",
+      "tier0r_curry_howard",
+      "tier0s_arithmetic_gap",
+      "tier0u_logical_consistency"
+    ]
+  },
+  "n_examples": 1000,
+  "per_verifier_independence_table": [
+    {
+      "actual_positive_total": 500,
+      "false_negative": 268,
+      "false_positive": 38,
+      "independence_score": 0.332,
+      "measurement_note": "online_unique_error_catches_over_cached_verifier_masks",
+      "n_examples": 1000,
+      "precision": 0.859259259,
+      "predicted_positive_total": 270,
+      "true_negative": 462,
+      "true_positive": 232,
+      "unique_error_catches": 166,
+      "verifier": "fr11_session_memory"
+    },
+    {
+      "actual_positive_total": 500,
+      "false_negative": 462,
+      "false_positive": 22,
+      "independence_score": 0.02,
+      "measurement_note": "online_unique_error_catches_over_cached_verifier_masks",
+      "n_examples": 1000,
+      "precision": 0.633333333,
+      "predicted_positive_total": 60,
+      "true_negative": 478,
+      "true_positive": 38,
+      "unique_error_catches": 10,
+      "verifier": "tier0r_curry_howard"
+    },
+    {
+      "actual_positive_total": 500,
+      "false_negative": 438,
+      "false_positive": 164,
+      "independence_score": 0.044,
+      "measurement_note": "online_unique_error_catches_over_cached_verifier_masks",
+      "n_examples": 1000,
+      "precision": 0.274336283,
+      "predicted_positive_total": 226,
+      "true_negative": 336,
+      "true_positive": 62,
+      "unique_error_catches": 22,
+      "verifier": "tier0s_arithmetic_gap"
+    },
+    {
+      "actual_positive_total": 500,
+      "false_negative": 500,
+      "false_positive": 0,
+      "independence_score": 0.0,
+      "measurement_note": "online_unique_error_catches_over_cached_verifier_masks",
+      "n_examples": 1000,
+      "precision": 0.0,
+      "predicted_positive_total": 0,
+      "true_negative": 500,
+      "true_positive": 0,
+      "unique_error_catches": 0,
+      "verifier": "tier0u_logical_consistency"
+    }
+  ],
+  "preconditions_checked": [
+    {
+      "available": true,
+      "detail": "import carnot.verify succeeded",
+      "resource": "carnot_verify_import"
+    },
+    {
+      "available": true,
+      "detail": "data/fover_corpus.jsonl line_count=8829; required>=1000",
+      "resource": "cached_score_corpus"
+    }
+  ],
+  "random_seed": 3864,
+  "reproducibility_checksum": "718107037ba99ac5cbdff5749886d83d8ed0016d1843d7f13cdd2569003e073c",
+  "reweighted_ensemble_auroc": 0.90592,
+  "schema": "carnot.fr11_continuous_self_learning_v23",
+  "score_threshold": 0.5,
+  "state_persisted": true,
+  "state_persisted_path": "results/experiment_3864_fr11_v23_independence_reweighting_state.json",
+  "state_sha256": "26868b7411c37fcc2fed7d7eea8e14f6943edf10b5d5152ad867b900d02773d6",
+  "update_cost_note": "Tier-1 hardware path: pure CPU counter updates over cached verifier scores; qualitatively <1us/update, no fabricated wall-time timing.",
+  "verifier_names": [
+    "fr11_session_memory",
+    "tier0r_curry_howard",
+    "tier0s_arithmetic_gap",
+    "tier0u_logical_consistency"
+  ]
+}
