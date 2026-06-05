@@ -116,3 +116,8 @@ Per Deep Think P3 / Anomaly-Escalation (scripts/anomaly_escalation.py). Each ent
 - Flagged a FRAME-VIOLATING ANOMALY (NOT auto-reconciled — human triage: dead-end or breadcrumb?)
   - INVARIANT regression: frozen_fover_auroc_unchanged=True drifted from frozen 0.9131
 - artifact: results/experiment_3865_ldt_lattice_margin_sharpening_v2.json
+
+## experiment_3868_capstone_v356.json
+- Flagged a FRAME-VIOLATING ANOMALY (NOT auto-reconciled — human triage: dead-end or breadcrumb?)
+  - INVARIANT regression: frozen_fover_auroc_unchanged=True drifted from frozen 0.9131
+- artifact: results/experiment_3868_capstone_v356.json

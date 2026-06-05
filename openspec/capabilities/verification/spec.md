@@ -10415,3 +10415,62 @@ or the error masks are highly correlated, it SHALL emit
 When the Exp 3862 fixture is missing, lacks per-item score rows, or has
 `facts_catch_delta <= 0`, it SHALL write `blocked_graph_prototype_unavailable`
 instead of fabricating complementarity.
+
+### REQ-VERIFY-3869: Existing-Corpus Moat Scissor v4
+
+The repository SHALL provide an Exp 3869 existing-corpus moat-scissor runner
+that writes `results/experiment_3869_moat_scissor_v4_existing_corpus.json`
+from the checked-in `data/step_error_balanced_v2.json` corpus as-is. The
+runner SHALL NOT rebuild or subsample the corpus and SHALL NOT apply any
+generation-headroom gate, because this is an error-set independence
+measurement rather than a generation-beats-AR evaluation.
+
+Before live scoring, the runner SHALL check CUDA availability with the project
+virtualenv, a cached Qwen3.6-35B GGUF path with fallback to the cached
+Gemma-4-26B GGUF path, `import carnot.verify`, `import llama_cpp`, and a
+JSON-loadable `data/step_error_balanced_v2.json` containing at least 100
+gold-incorrect rows. If any precondition fails, it SHALL write a terminal
+`blocked_<resource>` artifact with populated `preconditions_checked`, null
+metric fields, and no fabricated scores.
+
+For successful measurements, the runner SHALL ask the selected GGUF reasoner
+the Exp 3827 self-verification prompt for every corpus step, score every step
+with the Exp 2837 production aggregation
+`0.9*tier0r_curry_howard + 0.1*tier0u_logical_consistency + fr11_session_memory`,
+and compute over gold-incorrect steps the reasoner-caught set, reasoner-missed
+residual set, Carnot-caught set, residual catch rate, bootstrap CI95 with at
+least 1000 resamples, and error-overlap Jaccard.
+
+The terminal artifact SHALL include principle-annotated fields for
+`residual_catch_rate`, `residual_catch_ci95`, `error_overlap_jaccard`,
+`n_residual_errors`, `reasoner_self_verify_auroc`, `carnot_ensemble_auroc`,
+`corpus_source`, `n_items`, `preconditions_checked`, `model_specs`,
+`random_seed`, `random_seeds_used`, `reproducibility_checksum`, `duration_s`,
+and `inference_substrate`.
+
+### SCENARIO-VERIFY-3869: Existing PRMBench Corpus Produces Moat Verdict
+
+Given the checked-in `data/step_error_balanced_v2.json` corpus contains 1000
+items with 500 gold-incorrect PRMBench-sourced steps and the live runtime
+preconditions pass, when Exp 3869 scores the full corpus with the selected
+GGUF reasoner self-verification path and the Carnot ensemble path, then it
+computes positive controls and applies the falsification gate:
+`MOAT_SURVIVES_AT_SCALE` only when both positive controls are non-degenerate,
+the residual-catch CI95 lower bound is above 0.5, the overlap Jaccard is below
+0.6, and at least 30 residual errors exist; `MOAT_SUBSUMED` only when both
+positive controls are non-degenerate and the residual-catch CI95 upper bound
+is below 0.3 or overlap is above 0.7; otherwise `INCONCLUSIVE`.
+
+### SCENARIO-VERIFY-3869-BLOCKED: Missing Live Resources Do Not Fabricate Metrics
+
+Given CUDA, the selected GGUF cache, `carnot.verify`, `llama_cpp`, or the
+existing step-error corpus precondition is unavailable, when Exp 3869 runs,
+then it writes `results/experiment_3869_moat_scissor_v4_existing_corpus.json`
+with a terminal `blocked_<resource>` honest verdict, null moat metrics, a
+real duration, populated precondition evidence, and no per-step score claims.
+
+## Implementation Status (REQ-VERIFY-3869)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-VERIFY-3869 | Implemented (`python/carnot/eval/moat_scissor_v4_existing_corpus.py`, `scripts/experiments/experiment_3869_moat_scissor_v4_existing_corpus.py`) | Implemented (`tests/python/test_experiment_3869_moat_scissor_v4_existing_corpus.py`) |
