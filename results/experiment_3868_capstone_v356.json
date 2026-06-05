@@ -1,0 +1,238 @@
+{
+  "artifacts_skipped_flagged": [
+    {
+      "experiment_id": 3862,
+      "honest_verdict": "complete: graph_grounding_prototype_SIGNAL_auroc0.643_delta0.232_new_architecture_has_facts_traction",
+      "path": "results/experiment_3862_graph_grounding_fact_verifier_prototype_v2.json",
+      "reason": "flagged_adversarial==true"
+    },
+    {
+      "experiment_id": 3866,
+      "honest_verdict": "success: gatemate_ising_tile_n16_flashed_terminal_lut19_fmax139.12_timingnone_no_readback",
+      "path": "results/experiment_3866_gatemate_ising_tile_flash_v2.json",
+      "reason": "flagged_adversarial==true"
+    }
+  ],
+  "artifacts_skipped_live_critical": [
+    {
+      "experiment_id": 3863,
+      "honest_verdict": "blocked_graph_prototype_unavailable",
+      "path": "results/experiment_3863_graph_verifier_facts_complementarity_v2.json",
+      "reason": "live_adversarial_verify_critical"
+    }
+  ],
+  "cited_upstream_artifacts": [
+    {
+      "experiment_id": 3858,
+      "honest_verdict": "complete: balanced_step_error_corpus_v2_n1000_nincorrect500_sourceprmbench_9axistrue_schema_ok",
+      "path": "data/step_error_balanced_v2.json",
+      "sha256": "decaf6672426262388a46861cdb9afe45c8c52336ced5bc020cdbc54fbd6dd8c",
+      "summarize_artifact_returncode": 0
+    },
+    {
+      "experiment_id": 3859,
+      "honest_verdict": "blocked_gate_check_failed",
+      "path": "results/experiment_3859_moat_scissor_at_scale_v3.json",
+      "sha256": "e9a2ad9f7d60f0ac593411115a7567c2e55026c89a7acf127cdede2e40fd76c7",
+      "summarize_artifact_returncode": 0
+    },
+    {
+      "experiment_id": 3864,
+      "honest_verdict": "complete: fr11_v23_independence_reweighting_learned_auroc0.9059_in_frozen_ci_memory_contribution_preserved_state_persisted",
+      "path": "results/experiment_3864_fr11_self_learning_v23_independence_reweighting.json",
+      "sha256": "3a52f9e0f8a327b2381d69eb84182d67da6fd462d94c31c014245955551034f7",
+      "summarize_artifact_returncode": 0
+    },
+    {
+      "experiment_id": 3865,
+      "honest_verdict": "complete: ldt_margin_LATTICE_REAL_scorematched_margin0.006_ci0.002-0.008_genuine_deductive_power",
+      "path": "results/experiment_3865_ldt_lattice_margin_sharpening_v2.json",
+      "sha256": "3f023d9c28fcd16966615ae1e5536e70ceda97185bc1a4223aa49f6678e06cbc",
+      "summarize_artifact_returncode": 0
+    },
+    {
+      "experiment_id": 3867,
+      "honest_verdict": "success: polarfire_carnot_dispatch_hash_verified_terminal_duration12.61s_tempunknown",
+      "path": "results/experiment_3867_polarfire_soc_smoke_v4.json",
+      "sha256": "dd7b6e03c0572c128e10bc2ef08078eda310886cea4efb8dcf42034484d7de47",
+      "summarize_artifact_returncode": 0
+    }
+  ],
+  "duration_s": 0.422142941999482,
+  "facts_new_architecture_outcome": {
+    "new_architecture_opened": false,
+    "outcome": "excluded_flagged_or_live_critical"
+  },
+  "field_principles": {
+    "artifacts_skipped_flagged": "Which upstream artifacts were excluded for flagged_adversarial==true (Fabrication Gate transparency).",
+    "cited_upstream_artifacts": "Aggregation substrate (0.0001s floor); full provenance of the capstone numbers with sha256 for every aggregated upstream artifact.",
+    "duration_s": "Aggregation substrate (0.0001s floor); wall-clock duration with a floor so fast aggregation is still explicit.",
+    "facts_new_architecture_outcome": "Did graph-grounding open the earned-negative facts domain (a forward path off the domain-bound ceiling)?",
+    "frozen_fover_auroc_unchanged": "Bare bool -- the 0.9131 headline did not move.",
+    "hardware_board_states": "GateMate + PolarFire terminal/partial states -- hardware-continuity compliance.",
+    "honest_verdict": "Terminal-prefix milestone result matching the required capstone_v356 acceptance shape.",
+    "inference_substrate": "Aggregation substrate (0.0001s floor); no live model or hardware execution is performed by the capstone.",
+    "ldt_margin_outcome": "Self-learning invariant held + whether the LDT lattice edge is real or marginal.",
+    "moat_durability_verdict": "THE milestone headline -- the scissor verdict CONDITIONED on the independence audit; the single sentence the operator needs to decide product-forward strategy.",
+    "moat_is_real_independence": "Bare bool -- true only if residual_catch CI lower bound is high AND reasoner_carnot_error_correlation is low (exp3860); guards against citing a fake moat (2604.07650).",
+    "operator_forward_recommendation": "The loop scaffolds, the operator decides (Verification Trap P3) -- the concrete next-paradigm or freeze recommendation given the moat verdict.",
+    "paper_ready": "Bare bool -- G1-G4 converged invariant; MUST stay true.",
+    "preconditions_checked": "Aggregation substrate (0.0001s floor); records upstream existence, summarize_artifact return codes, Fabrication Gate status, and publication-gate evaluation.",
+    "self_learning_v23_outcome": "Self-learning invariant held and whether the v23 independence state preserved the frozen headline CI.",
+    "thinkprm_complementarity_summary": "Does the cheap ensemble add catch over a strong generative PRM."
+  },
+  "frozen_fover_auroc": 0.9131,
+  "frozen_fover_auroc_unchanged": true,
+  "hardware_board_states": {
+    "gatemate": {
+      "state": "excluded_flagged"
+    },
+    "polarfire": {
+      "no_fpga_fabric_claim": true,
+      "source_verdict": "success: polarfire_carnot_dispatch_hash_verified_terminal_duration12.61s_tempunknown",
+      "state": "terminal_hash_verified"
+    }
+  },
+  "honest_verdict": "complete: capstone_v356_moat_inconclusive_independence_mixed_facts_excluded_paper_ready_true_frozen_headline_unchanged",
+  "inference_substrate": "aggregation_from_upstream_artifacts (principle: capstone reads upstream JSON plus summarize_artifact status; no live model or hardware action).",
+  "ldt_margin_outcome": {
+    "edge": "real_but_below_0_010",
+    "ensemble_vs_score_matched_margin": 0.005634645292,
+    "frozen_fover_auroc_unchanged": true,
+    "margin_ci95": [
+      0.002183821363,
+      0.007993519741
+    ],
+    "outcome": "real_but_below_0_010",
+    "source_verdict": "complete: ldt_margin_LATTICE_REAL_scorematched_margin0.006_ci0.002-0.008_genuine_deductive_power",
+    "threshold_0_010_held": false
+  },
+  "moat_conditioning_details": {
+    "moat_is_real_independence": false,
+    "rationale": "exp3859 scissor or exp3860 independence audit is missing, so residual_catch cannot be cited as a moat.",
+    "reasoner_carnot_error_correlation": null,
+    "residual_catch_ci95_low": null,
+    "verdict": "INCONCLUSIVE"
+  },
+  "moat_durability_verdict": "INCONCLUSIVE - exp3859 scissor or exp3860 independence audit is missing, so residual_catch cannot be cited as a moat.",
+  "moat_is_real_independence": false,
+  "operator_forward_recommendation": "Do not self-seed a product claim; rerun the missing scissor/audit chain and let the operator decide the next paradigm after the conditioned verdict lands.",
+  "paper_ready": true,
+  "preconditions_checked": {
+    "publication_gate_checked": true,
+    "publication_gate_unmet": [],
+    "upstream_artifacts": {
+      "3858": {
+        "exists": true,
+        "flagged_adversarial": false,
+        "live_critical": false,
+        "path": "data/step_error_balanced_v2.json",
+        "summarize_artifact_returncode": 0
+      },
+      "3859": {
+        "exists": true,
+        "flagged_adversarial": false,
+        "live_critical": false,
+        "path": "results/experiment_3859_moat_scissor_at_scale_v3.json",
+        "summarize_artifact_returncode": 0
+      },
+      "3860": {
+        "exists": false,
+        "flagged_adversarial": false,
+        "live_critical": false,
+        "path": "results/experiment_3860_verifier_reasoner_independence_audit.json",
+        "summarize_artifact_returncode": 1
+      },
+      "3861": {
+        "exists": false,
+        "flagged_adversarial": false,
+        "live_critical": false,
+        "path": "results/experiment_3861_thinkprm_complementarity.json",
+        "summarize_artifact_returncode": 1
+      },
+      "3862": {
+        "exists": true,
+        "flagged_adversarial": true,
+        "live_critical": false,
+        "path": "results/experiment_3862_graph_grounding_fact_verifier_prototype_v2.json",
+        "summarize_artifact_returncode": 2
+      },
+      "3863": {
+        "exists": true,
+        "flagged_adversarial": false,
+        "live_critical": true,
+        "path": "results/experiment_3863_graph_verifier_facts_complementarity_v2.json",
+        "summarize_artifact_returncode": 2
+      },
+      "3864": {
+        "exists": true,
+        "flagged_adversarial": false,
+        "live_critical": false,
+        "path": "results/experiment_3864_fr11_self_learning_v23_independence_reweighting.json",
+        "summarize_artifact_returncode": 0
+      },
+      "3865": {
+        "exists": true,
+        "flagged_adversarial": false,
+        "live_critical": false,
+        "path": "results/experiment_3865_ldt_lattice_margin_sharpening_v2.json",
+        "summarize_artifact_returncode": 0
+      },
+      "3866": {
+        "exists": true,
+        "flagged_adversarial": true,
+        "live_critical": false,
+        "path": "results/experiment_3866_gatemate_ising_tile_flash_v2.json",
+        "summarize_artifact_returncode": 2
+      },
+      "3867": {
+        "exists": true,
+        "flagged_adversarial": false,
+        "live_critical": false,
+        "path": "results/experiment_3867_polarfire_soc_smoke_v4.json",
+        "summarize_artifact_returncode": 0
+      }
+    }
+  },
+  "publication_gate": {
+    "gates": {
+      "G1": {
+        "detail": "FoVer dual-condition AUROC artifact present (experiment_2850_fover_dual_condition_integrity_v4.json); CI reported=True",
+        "pass": true,
+        "source": "experiment_2850_fover_dual_condition_integrity_v4.json"
+      },
+      "G2": {
+        "detail": "reproducer confirmed: GitHub Actions workflow 'FoVer Headline Independent Reproducer' (.github/workflows/reproduce-fover-headline.yml), run 26725185125 on Carnot-EBM/carnot-ebm, 2026-05-31, conclusion=success. Clean ubuntu-latest runner, fresh CPU-only install from a clean checkout (non-operator environment), recomputed the FoVer headline AUROC via scripts/reproduce_fover_headline.py and asserted the published CIs: condition_A (production) AUROC in [0.9027, 0.9235] and learning_contribution in [0.0125, 0.0245] \u2014 both PASS. This is a CI-run independent reproducer per the Phase-1 ship gate ('could be a teammate, a CI run, or an external user'). Internally further de-risked by exp3430 (fresh git worktree + venv) and the local run on 2026-05-31 (AUROC 0.9131 within CI). NOTE: G2 attests the FoVer verifier-ensemble headline reproduces; it does NOT attest the broader energy-descent existential claim, which remains an honest-negative (Route-1/Route-2 bounded). Run: https://github.com/Carnot-EBM/carnot-ebm/actions/runs/26725185125",
+        "pass": true
+      },
+      "G3": {
+        "detail": "no retracted phrasings asserted as live claims",
+        "hits": [],
+        "pass": true
+      },
+      "G4": {
+        "detail": "experiment_2850_fover_dual_condition_integrity_v4.json: random_seed/seeds=True, reproducibility_checksum=True",
+        "pass": true,
+        "source": "experiment_2850_fover_dual_condition_integrity_v4.json"
+      }
+    },
+    "note": "Stable 4-condition gate (ops/north-star.md \u00a72). Replaces the redefinable publication_blocker_count. Report unmet_gates, not a count.",
+    "paper_ready": true,
+    "unmet_gates": []
+  },
+  "random_seed": 3868,
+  "reproducibility_checksum": "8649ae4049cda752d5a24e4e8b34d078d45e591d6b38618bee988ee2be07672b",
+  "self_learning_v23_outcome": {
+    "auroc_in_frozen_ci": true,
+    "frozen_headline_ensemble_auroc": 0.9131,
+    "memory_ablation_contribution_preserved": true,
+    "outcome": "self_learning_v23_invariant_held",
+    "reweighted_ensemble_auroc": 0.90592,
+    "source_verdict": "complete: fr11_v23_independence_reweighting_learned_auroc0.9059_in_frozen_ci_memory_contribution_preserved_state_persisted",
+    "state_persisted_path": "results/experiment_3864_fr11_v23_independence_reweighting_state.json"
+  },
+  "thinkprm_complementarity_summary": {
+    "cheap_ensemble_adds_catch": false,
+    "outcome": "missing_exp3861"
+  }
+}
