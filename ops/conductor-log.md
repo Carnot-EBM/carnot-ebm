@@ -7866,3 +7866,4 @@ ERROR: {
 | 2026-06-05 08:45 UTC | Capstone .355 — aggregate the VERIFIER-MOAT DURABI | SKIP | Pre-tests failing, self-heal failed: 1 failed, 80 passed in 3.28s |
 | 2026-06-05 09:31 UTC | Plan milestone 2026.06.356 | OK | 12 tasks proposed |
 | 2026-06-05 09:34 UTC | Milestone 2026.06.356 activated | OK | 12 tasks queued |
+| 2026-06-05 09:51 UTC | Archive milestone .355 honestly (TOTAL WIPEOUT — z | OK | 105 passed in 4.86s |
