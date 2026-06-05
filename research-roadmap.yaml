@@ -1,928 +1,139 @@
 # ============================================================================
-# Pre-staged roadmap for 2026.06.356 (Claude Opus 4.8, outer-loop planner, 2026-06-05).
+# Pre-staged roadmap for 2026.06.357 (operator-outer-loop, Claude Opus 4.8, 2026-06-05).
 #
-# ACTIVATION (Pre-Staged Roadmap Convention): the conductor preserves + auto-activates
-#   this file when the active milestone (.355) closes, because `milestone:` below ==
-#   expected-next (.356) and today is in calendar month 2026-06.
+# WHY: the verifier-MOAT-at-scale measurement has been blocked THREE times for
+# THREE DIFFERENT mechanical reasons, never on its merits:
+#   1. exp3844 (.354): blocked_fover_balanced_corpus_not_available — FoVer test
+#      corpus is 98% correct (only 22 error-steps); can't power a residual CI.
+#   2. exp3847 (.355): killed by a transient gemini-429 quota flap (whole milestone
+#      wipeout); it was correctly requires_codex but the quota window took it.
+#   3. exp3859 (.356): blocked_gate_check_failed — exp3858 BUILT a PERFECT corpus
+#      (data/step_error_balanced_v2.json: 1000 items, 500 incorrect, PRMBench,
+#      9 error axes) BUT wrote it to a data/ path; the gated_on resolver looks for
+#      results/experiment_3858*.json by task-id and reported "upstream artifact not
+#      found." A gate-RESOLUTION path bug, not a real failure.
 #
-# THE MILESTONE IN ONE LINE. RE-ISSUE the verifier-MOAT durability adjudication (Deep-Think
-#   P2) that `.355 failed to run. `.355 was a TOTAL WIPEOUT: (1) a corrupted research-complete.yaml
-#   line (an unquoted `:` in the appended exp3833 verdict) broke test_docs.py's YAML parse,
-#   poisoning the conductor's pre-test gate and SKIP-cascading every experiment since `.350
-#   (FIXED by the outer-loop this session — value quoted, 81 passed/0 failed); (2) the gemini-CLI
-#   crashed on the archive task (chunk-NBZI34 bundle crash / 429s). `.356 re-runs the SAME spine
-#   (build the balanced corpus, run the error-independence scissor AT SCALE with bootstrap CI +
-#   positive controls, MEASURE verifier-vs-reasoner independence per arXiv:2604.07650) with the
-#   gate unblocked and ALL tasks routed codex+requires_codex (anti-wipeout, the .337/.340 pattern).
-#   Plus: a NEW-architecture graph-grounding facts prototype, the mandated self-learning task
-#   (online independence-reweighting), an LDT-margin sharpening, and the two non-terminal FPGA boards.
+# The hard part is now DONE: data/step_error_balanced_v2.json is the error-rich
+# corpus the moat scissor always needed (n_incorrect_steps=500 >> the >=100 a
+# meaningful residual CI requires). This task runs the measurement DIRECTLY
+# against that existing corpus file — NO gated_on (so the .356 gate-resolution bug
+# cannot recur), requires_codex (so a gemini-429 flap cannot recur), and the
+# corpus precondition is satisfiable (so the exp3844 sparsity block cannot recur).
+# All three prior root causes are addressed; this is a legitimate rerun per the
+# Failed-Experiment Rerun Discipline.
 #
-# DESIGN DOC: openspec/change-proposals/research-roadmap-v356.md (alias research-roadmap-vNEXT.md)
-# REFERENCES: research-references.md "Milestone .356 planning sweep (2026-06-05)".
-#
-# INVARIANTS (must hold at capstone): paper_ready stays TRUE (G1-G4); FoVer 0.9131 stays FROZEN
-#   (this milestone adds a durability LENS, it does NOT re-measure the headline AUROC).
+# NOTE FOR THE OPERATOR (durable fix, separate from this run): the gate-resolution
+# bug is real and will keep biting any task whose deliverable is a data/ file that
+# a downstream task gates on. The proper fix is either (a) planner convention —
+# corpus-build tasks emit n_incorrect_steps to a results/experiment_<id>.json
+# artifact (with the corpus data alongside in data/), or (b) the conductor's
+# gated_on resolver should consult the upstream task's declared `deliverable:` path,
+# not only results/experiment_<id>*.json. This pre-stage sidesteps it; it does not
+# fix it.
 # ============================================================================
 
-milestone: "2026.06.356"
-milestone_title: "Re-issue the verifier-MOAT durability adjudication (DT-P2) after the .355 poison-test wipeout: build the balanced corpus, run the error-independence scissor AT SCALE (bootstrap CI + positive controls), and MEASURE verifier-vs-reasoner independence (arXiv:2604.07650) rather than assume it. All-codex anti-wipeout routing; pre-test gate now unblocked."
-milestone_doc: openspec/change-proposals/research-roadmap-v356.md
+milestone: "2026.06.357"
+milestone_title: "Verifier-MOAT-at-scale — FINALLY run the scissor against the existing 500-error PRMBench corpus (3x-unblocked: corpus exists, no gated_on, requires_codex)."
+milestone_doc: docs/research-notes/verifier-moat-scissor-plot-design.md
 
 tasks:
-  # ──────────────────────────── Phase 0: Activation ────────────────────────────
-  - id: exp3857-archive-v355-activate-v356
+  - id: exp3869-moat-scissor-v4-against-existing-corpus
     operator_override: >
-      2026-06-05 operator directive (standing): routine milestone-transition task
-      (archive-vN-activate-vN+1) — false-positive scope-match vs every prior
-      archive-v* / activate-v* task; structurally never a doomed rerun. Honestly
-      records the .355 TOTAL WIPEOUT (poison-test YAML corruption + gemini-CLI crash,
-      both diagnosed + the poison FIXED by the outer-loop this session) and activates .356.
-    milestone: "2026.06.356"
-    title: "Archive milestone .355 honestly (TOTAL WIPEOUT — zero usable artifacts: a corrupted research-complete.yaml line poisoned test_docs.py's YAML parse → conductor pre-test gate SKIP-cascade since .350, plus a gemini-CLI crash on the archive task; the poison was FIXED by the outer-loop this session) and activate .356 (re-issued verifier-moat-durability adjudication, all-codex anti-wipeout routing)."
-    priority: critical
-    track: infra
-    max_turns: 50
-    agent_type: codex
-    model: gpt-5.5
-    requires_codex: true   # all-codex anti-wipeout routing; the .355 archive crashed via gemini-CLI. Multi-file reconcile is well-specified mechanical work codex handles.
-    requires_gpu: false
-    estimated_wall_time_min: 30
-    inference_substrate: aggregation_from_upstream_artifacts
-    deliverable: results/experiment_3857_archive_v355_activate_v356.json
-    prompt: |
-      CONTEXT. Milestone .355 was a TOTAL WIPEOUT — it produced ZERO usable result artifacts.
-      Root cause (both diagnosed by the outer-loop this session):
-        1. POISON-TEST CASCADE. During .354's archive, the exp3833 verdict was appended to
-           research-complete.yaml UNQUOTED: `result: complete: ldt_gap_LATTICE_VIABLE_...`. The bare
-           `: ` makes YAML read the value as a nested mapping → yaml.scanner.ScannerError. That broke
-           tests/python/test_docs.py::test_public_docs_cover_latest_pbt_and_fpga_reporting (it parses
-           the YAML), which the conductor's smart-subset pre-test gate runs on EVERY task. One failing
-           test (`1 failed, 80-86 passed`) SKIP-cascaded every experiment from .350 onward and all of
-           .355. THE OUTER-LOOP ALREADY FIXED THIS: lines 35485 + 35569 were quoted; `81 passed, 0
-           failed`; the full YAML now parses. Record this fix honestly in the changelog.
-        2. GEMINI-CLI CRASH. The .355 archive task (YAML requested claude) ran via gemini-CLI and
-           crashed (`chunk-NBZI34` bundle crash; 429 "Too Many Requests"). .356 routes EVERY task
-           codex+requires_codex (the .337/.340 anti-wipeout pattern).
-      The scientific question (DT-P2 verifier-moat durability) was NEVER answered, so .356 re-issues
-      the .355 spine verbatim in intent with fresh IDs (exp3857-exp3868).
-
-      EXISTING CODE TO READ FIRST:
-        - research-roadmap.yaml (the .355 file being archived — all tasks SKIPPED/GATE_BLOCKED).
-        - openspec/change-proposals/research-roadmap-v356.md (the .356 design doc — activation target).
-        - ops/conductor-log.md (tail — the .355 SKIP/FAIL cascade evidence).
-        - ops/changelog.md, ops/status.md, ops/known-issues.md, research-complete.yaml.
-
-      TASK. Reconcile the .355 wipeout into the research record and stage .356. Do NOT regenerate
-      research-complete.yaml from scratch (append only); do NOT re-introduce the unquoted-colon bug
-      (any verdict value containing `: ` MUST be single-quoted).
-
-      CONCRETE STEPS:
-        0. PRECONDITIONS: the .356 design doc exists AND research-complete.yaml parses
-           (`.venv/bin/python -c "import yaml; yaml.safe_load(open('research-complete.yaml'))"` exits 0).
-           If the YAML does NOT parse, write blocked_research_complete_yaml_corrupt + EXIT (do NOT
-           proceed — the gate is still poisoned).
-        1. Append a .355 archive block to ops/changelog.md: record the TOTAL WIPEOUT, both root causes,
-           and the outer-loop poison fix (quoted lines 35485/35569). Traceable to this planning turn.
-        2. Update ops/status.md: the moat-durability question is STILL open (re-issued as .356);
-           note the poison fix; KV260 terminal (graduated), GateMate + PolarFire still pending.
-        3. Update research-complete.yaml: append a .355 entry recording the wipeout (every verdict
-           string with `: ` MUST be quoted). Append exp3857 activation.
-        4. Confirm paper_ready is still TRUE and FoVer 0.9131 frozen (run scripts/publication_gate.py
-           --json if present; report unmet_gates). Do NOT change the frozen headline.
-        5. Emit the activation artifact with the fields below.
-
-      REQUIRED ARTIFACT FIELDS (each with a `principle` note):
-        archived_milestone: {{ principle: "Provenance — which milestone this reconciles (.355)." }}
-        activated_milestone: {{ principle: "Provenance — the next milestone staged (.356)." }}
-        v355_wipeout_root_causes: {{ principle: "Records BOTH causes (poison-test YAML corruption + gemini-CLI crash) so the failure is auditable and not silently re-incurred." }}
-        poison_test_fixed: {{ principle: "Bare bool — true iff research-complete.yaml now parses AND the core pre-test subset is green; the load-bearing unblock for the whole milestone." }}
-        pretest_subset_green: {{ principle: "Bare bool — test_pipeline_extract.py + test_docs.py pass (the conductor smart-subset core); confirms the gate is no longer poisoned." }}
-        paper_ready: {{ principle: "Bare bool — converged invariant G1-G4; MUST stay true across the transition." }}
-        frozen_fover_auroc_unchanged: {{ principle: "Bare bool — the 0.9131 headline must not move during archive/activate." }}
-        preconditions_checked: {{ principle: "Records the YAML-parse + doc-exists checks before reconciling." }}
-        inference_substrate: {{ principle: "aggregation_from_upstream_artifacts — reads JSON + edits docs, no model loaded (0.0001s floor)." }}
-        duration_s: {{ principle: "Real wall-clock of the reconcile." }}
-
-      VERDICT: honest_verdict MUST start with a terminal prefix. Example:
-        `complete: archived_v355_total_wipeout_poison_fixed_pretest_green_v356_active_moat_durability_reissued_paper_ready_true_frozen_headline_unchanged`.
-
-      Run: cd {project_root} && .venv/bin/python scripts/experiments/experiment_3857_archive_v355_activate_v356.py
-      Do NOT push. Do NOT modify scripts/research_conductor.py.
-
-  # ──────────────────── Phase 1: Verifier-moat durability (the spine) ────────────────────
-  - id: exp3858-build-balanced-step-error-corpus-v2
-    operator_override: >
-      2026-06-05 operator directive (standing): re-issue of the .355 exp3846 corpus build, which
-      SKIPPED (not failed) under the poison-test wipeout — an environmental block, not a failed
-      method. False-positive scope-match vs prior dataset-build tasks; the corpus did not exist
-      because the milestone never ran. requires_codex: dataset-construction ETL is codex's strength.
-    milestone: "2026.06.356"
-    title: "Build the BALANCED step-error corpus the moat scissor needs: PRMBench (arXiv:2501.03124, 9 error axes) primary, FoVer v3 fallback — N>=1000, >=100 gold-INCORRECT steps, 9-axis labels preserved, seed-controlled. The precondition the .354 scissor (exp3844) blocked on."
-    priority: critical
-    track: research
-    max_turns: 50
-    agent_type: codex
-    model: gpt-5.5
-    requires_codex: true
-    requires_gpu: false
-    estimated_wall_time_min: 40
-    inference_substrate: aggregation_from_upstream_artifacts   # downloads/merges existing labeled datasets; no LLM loaded.
-    deliverable: data/step_error_balanced_v2.json
-    prompt: |
-      CONTEXT. The moat scissor AT SCALE (exp3844, .354) BLOCKED because the cached FoVer v4 corpus is
-      98%-correct-heavy (1286/1308 correct) — only ~22 gold-incorrect steps, far too few for a residual
-      CI. The .355 corpus build (exp3846) SKIPPED under the poison-test wipeout. To measure the moat at
-      scale we need a BALANCED corpus with a LARGE gold-incorrect set AND per-error-axis labels (for the
-      independence decomposition). PRMBench (arXiv:2501.03124) is the canonical balanced successor to
-      ProcessBench: 6,216 problems / 83,456 step labels across 9 fine-grained error axes. Fallback: the
-      existing balanced FoVer v3 variants (data/fover_corpus_v3.json ~216 items ~47% incorrect;
-      fover_test_v3.json; fover_train_v3.json; fover_corpus_expanded.json).
-
-      EXISTING CODE TO READ FIRST:
-        - scripts/experiment_2837_fover_memory_leakage_v3.py (the canonical step-candidate schema:
-          {{question_id|question, step_text, label}} the ensemble scores — match it EXACTLY).
-        - data/fover_corpus_v3.json, data/fover_test_v3.json, data/fover_train_v3.json (fallback + schema).
-        - scripts/experiment_template.py (dataset helpers).
-
-      TASK. Build data/step_error_balanced_v2.json: a single labeled step-error corpus, N>=1000, with
-      >=100 gold-INCORRECT steps (target ~40-50% incorrect), seed-controlled, schema-compatible with the
-      exp2837 ensemble scoring path, with the 9 PRMBench error-axis labels preserved where available
-      (per-item `error_axis`; null for FoVer fallback items).
-
-      CONCRETE STEPS:
-        0. PRECONDITIONS (check BEFORE building; on failure write blocked_<resource> + EXIT, no fabrication):
-           a. Network/HF reachable for PRMBench: `curl -sf -o /dev/null https://huggingface.co/api/datasets/hitsmy/PRMBench_Preview` (or the canonical PRMBench dataset id). If unreachable, fall through to the FoVer-v3 fallback (NOT a block — record primary_source=fover_v3_fallback).
-           b. At least one FoVer v3 variant present for the fallback: `ls data/fover_corpus_v3.json data/fover_test_v3.json` returns a file.
-           If NEITHER PRMBench nor any FoVer v3 file is available: honest_verdict `blocked_no_step_error_source` + preconditions_checked, EXIT.
-        1. PRIMARY: download PRMBench (HF datasets), parse into {{question_id, step_text, label
-           (correct/incorrect), error_axis (one of the 9 PRMBench categories)}}. Map PRMBench's
-           step-correctness convention to a binary gold label faithfully; document it in `label_mapping_note`.
-        2. Draw a balanced subset: N>=1000, n_incorrect>=100 (prefer ~45/55..55/45). Seed-controlled.
-        3. FALLBACK (PRMBench unreachable): merge fover_corpus_v3 + fover_test_v3 + fover_train_v3 +
-           fover_corpus_expanded.json into a deduped balanced set; error_axis=null. If merged incorrect
-           count < 100, take the LARGEST balanced set available and record n_incorrect honestly (do NOT
-           pad with synthetic items — the scissor will widen N or report INCONCLUSIVE downstream).
-        4. Write data/step_error_balanced_v2.json + emit the result artifact. Validate every item is
-           scoreable by loading 1 item through the exp2837 ensemble path.
-
-      REQUIRED ARTIFACT FIELDS (each with a `principle` note; n_incorrect_steps is the GATE field):
-        n_items: {{ principle: "Total corpus size; N>=1000 so downstream residual-catch CIs are not small-sample noise." }}
-        n_incorrect_steps: {{ principle: "THE GATE field — emit as a BARE int (gated-fields-must-be-bare). The gold-incorrect set size; the scissor's residual is a SUBSET of this, so >=100 is required for a meaningful residual CI." }}
-        incorrect_fraction: {{ principle: "Balance check — must be materially > the v4 corpus's 1.7% so a real residual set exists." }}
-        primary_source: {{ principle: "prmbench | fover_v3_fallback — provenance + whether 9-axis labels are present." }}
-        error_axis_coverage: {{ principle: "Which of the 9 PRMBench axes are represented (null for fover fallback) — enables exp3860's per-axis independence decomposition." }}
-        label_mapping_note: {{ principle: "How PRMBench step-correctness mapped to the binary gold label — auditability." }}
-        schema_compatible_with_2837: {{ principle: "Bare bool — confirms 1 item scored end-to-end through the frozen ensemble path." }}
-        preconditions_checked: {{ principle: "Records source availability checked before building — pre-empts fabricating a corpus." }}
-        random_seed: {{ principle: "Determinism for the balanced draw — a third party must reproduce the exact subset." }}
-        reproducibility_checksum: {{ principle: "Content hash of (source, N, seed, balance) catches silent drift vs any replication." }}
-        inference_substrate, duration_s: {{ principle: "aggregation substrate (no model loaded); real wall-clock of the ETL." }}
-
-      ACCEPTANCE GATE:
-        - complete (corpus built): n_items>=1000 AND n_incorrect_steps>=100 AND schema_compatible_with_2837==true.
-          honest_verdict: `complete: balanced_step_error_corpus_v2_n<N>_nincorrect<K>_source<src>_9axis<bool>_schema_ok`
-        - complete (best-effort fallback, smaller): PRMBench unreachable AND merged FoVer n_incorrect<100:
-          `complete: balanced_corpus_v2_fover_fallback_n<N>_nincorrect<K>_below_target_scissor_will_widen_or_inconclusive`
-        - honest_verdict MUST start with a terminal prefix or be `blocked_<resource>`.
-
-      DISCIPLINE: do NOT synthesize/pad incorrect items. Do NOT touch the frozen ensemble. Emit
-      n_incorrect_steps as a BARE int.
-      Run: cd {project_root} && .venv/bin/python scripts/experiments/experiment_3858_build_balanced_step_error_corpus_v2.py
-      Do NOT push. Do NOT modify scripts/research_conductor.py.
-
-  - id: exp3859-moat-scissor-at-scale-v3
-    operator_override: >
-      2026-06-05 operator directive (standing): re-issue of the .355 exp3847 scissor (which SKIPPED
-      under the poison-test wipeout) AND legit continuation of the .354 exp3844 (which BLOCKED on a
-      missing balanced corpus — an honest non-terminal state). The blocker is addressed by upstream
-      exp3858; this re-runs the SAME measurement against the now-available corpus. requires_codex:
-      live Qwen3.6-35B GGUF on the 3090; verdict is a deterministic CI gate.
+      2026-06-05 operator-outer-loop directive: the moat-at-scale scissor has been
+      blocked 3x for 3 DIFFERENT mechanical reasons (exp3844 FoVer-sparsity, exp3847
+      gemini-429-flap, exp3859 gated_on-resolution-bug) — never on its merits. The
+      error-rich corpus now EXISTS (data/step_error_balanced_v2.json, 500 incorrect
+      steps, PRMBench). This run reads that corpus DIRECTLY (no gated_on → the .356
+      gate bug cannot recur), requires_codex (→ the gemini-flap cannot recur), and
+      the corpus precondition is satisfiable (→ the sparsity block cannot recur).
+      Legitimate rerun: all three prior root causes addressed.
+    milestone: "2026.06.357"
     prior_failures:
       - experiment_id: exp3844-verifier-error-independence-scissor-at-scale
         verdict: blocked_fover_balanced_corpus_not_available
-        addressed_by: "exp3844 blocked because FoVer v4 is 98% correct-heavy (~22 residual items). exp3858 (this milestone, upstream gate) builds data/step_error_balanced_v2.json with >=100 gold-incorrect steps; this attempt runs against THAT corpus, so the precondition is satisfied."
+        addressed_by: "FoVer test had only 22 error-steps; this runs against data/step_error_balanced_v2.json with 500 incorrect steps (PRMBench, exp3858)."
+        retire_if_same_verdict: false
+      - experiment_id: exp3859-moat-scissor-at-scale-v3
+        verdict: blocked_gate_check_failed
+        addressed_by: "exp3859 gated_on exp3858's results-artifact which did not exist (corpus was written to data/). This task has NO gated_on and reads the corpus file directly, so the resolution bug cannot recur."
         retire_if_same_verdict: true
-    gated_on:
-      - upstream: exp3858-build-balanced-step-error-corpus-v2
-        artifact_field: n_incorrect_steps
-        op: '>='
-        value: 100
-    milestone: "2026.06.356"
-    title: "MOAT SCISSOR AT SCALE (re-issue of exp3847; supersedes blocked exp3844): of the gold step-errors Qwen3.6-35B's OWN self-verification MISSES, what fraction does Carnot's k=15 ensemble independently catch? On the balanced corpus, N>=1000, residual_catch bootstrap CI95, TWO positive controls (reasoner non-degenerate; ensemble AUROC reproduces frozen 0.9131+/-0.02)."
+    title: "MOAT SCISSOR AT SCALE v4 (supersedes blocked exp3844/exp3859): against the EXISTING data/step_error_balanced_v2.json (500 gold-incorrect steps), of the step-errors a strong SOTA reasoner (Qwen3.6-35B) self-verification MISSES, what fraction does Carnot's k=15 ensemble INDEPENDENTLY catch? Residual-catch + bootstrap CI95 + 2 positive controls. The DT-P2 o1-subsumption durability test."
     priority: critical
     track: research
     max_turns: 50
     agent_type: codex
     model: gpt-5.5
-    requires_codex: true
-    requires_gpu: true      # Qwen3.6-35B self-verifies N>=1000 steps via llama.cpp on the internal RTX 3090.
+    requires_codex: true    # live GPU (Qwen3.6-35B GGUF self-verification); gemini crashes GPU workloads (exp3703) AND just caused the .355 wipeout. Verdict is a deterministic CI gate, so codex suffices.
+    requires_gpu: true      # the SOTA reasoner self-verifies N=1000 steps via llama.cpp on the internal RTX 3090.
     estimated_wall_time_min: 80
-    inference_substrate: live_llm_inference   # loads + runs the SOTA GGUF for self-verification; duration floor 60s.
-    deliverable: results/experiment_3859_moat_scissor_at_scale_v3.json
+    inference_substrate: live_llm_inference   # loads + runs Qwen3.6-35B-A3B-GGUF over the 1000-item corpus; duration floor 60s.
+    deliverable: results/experiment_3869_moat_scissor_v4_existing_corpus.json
     prompt: |
-      CONTEXT. The Deep-Think P2 reframe: Carnot's value is durable ONLY if it independently catches
-      the step-errors a strong frontier reasoner's OWN self-verification misses. exp3827 gave a
-      PRELIMINARY positive (residual_catch=0.9000, overlap=0.5000) on 100 items with suspiciously round
-      numbers; exp3844 (at scale) BLOCKED on a missing balanced corpus; the .355 re-attempt (exp3847)
-      SKIPPED under the poison-test wipeout. This confirms-or-refutes the moat at scale on
-      data/step_error_balanced_v2.json (built by exp3858, >=100 gold-incorrect steps). It is a PROPERTY
+      CONTEXT. The verifier-MOAT durability question (DT-P2, memory deep-think-post-bounded-2026-06):
+      Carnot's verifier value is durable only if it independently catches reasoning errors that a
+      strong frontier reasoner's OWN self-verification MISSES; if it just re-catches what the reasoner
+      already catches, the product is at o1-subsumption risk. exp3827 gave a preliminary "moat survives"
+      (residual_catch=0.90) but on ~15 errors (small-sample). The at-scale confirmation was blocked 3x
+      (exp3844 FoVer-sparsity, exp3847 gemini-flap, exp3859 gated_on-bug). The error-rich corpus now
+      EXISTS: data/step_error_balanced_v2.json (1000 items, 500 gold-incorrect steps, sourced from
+      PRMBench, 9 error axes). THIS TASK runs the measurement directly against it. It is a PROPERTY
       MEASUREMENT (error-set independence), NOT a generation-beats-AR test — do NOT apply a generation
       headroom gate.
 
-      EXISTING CODE TO READ FIRST:
-        - results/experiment_3827_verifier_error_independence_scissor.json + its script (the exact
-          residual_catch / overlap definitions + reasoner self-verify prompt — reuse VERBATIM).
-        - scripts/experiment_2837_fover_memory_leakage_v3.py (the frozen k=15 ensemble path -> 0.9131).
-        - data/step_error_balanced_v2.json (the new balanced corpus; fall back to the largest fover_v3
-          balanced set if absent).
+      EXISTING CODE/DATA TO READ FIRST:
+        - data/step_error_balanced_v2.json — the corpus. Items have keys
+          [error_axis, label, question, question_id, source, step_text]; label in {{correct, incorrect}};
+          n_items=1000, n_incorrect_steps=500. Use it AS-IS; do NOT rebuild it.
+        - scripts/experiments/experiment_3827_verifier_error_independence_scissor.py (or the .355/.356
+          exp3847/exp3859 scripts if present) — the residual_catch / overlap definitions + the reasoner
+          self-verify prompt + the Carnot ensemble scoring path. Reuse them verbatim.
+        - scripts/experiment_2837_fover_memory_leakage_v3.py — the production k=15 ensemble path.
 
       CONCRETE STEPS:
         0. PRECONDITIONS (check BEFORE anything; on failure write blocked_<resource> + EXIT, no fabrication):
-           a. `cd {project_root} && .venv/bin/python -c "import torch; assert torch.cuda.is_available() and torch.cuda.device_count()>0"` AND a FREE GPU (>=10GB). If the rig is busy, honest_verdict `blocked_no_free_gpu`, EXIT (never queue, never fabricate).
-           b. SOTA GGUF cached: `ls ~/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/` returns a .gguf (fallback unsloth/gemma-4-26B-A4B-it-GGUF). Load via the .gguf model_path + llama.cpp (NOT AutoTokenizer on the GGUF repo id — no HF tokenizer files; use cached_sota_pair()).
-           c. `import carnot.verify` succeeds AND data/step_error_balanced_v2.json present with n_incorrect>=100 (else fover_v3 fallback; if that too has n_incorrect<30, honest_verdict `blocked_residual_set_too_small`).
-           If any fail: honest_verdict `blocked_<resource>` + preconditions_checked, EXIT.
-        1. Draw N>=1000 balanced items (seed-controlled).
-        2. STRONG REASONER SELF-VERIFICATION: ask Qwen3.6-35B (its own self-verify, exp3827 prompt
-           verbatim) accept/reject per step. The live-GPU part.
+           a. `/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -c "import torch; assert torch.cuda.is_available() and torch.cuda.device_count() > 0"`.
+           b. Qwen3.6-35B GGUF cached: `ls ~/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/` returns a .gguf (load via the .gguf path + llama_cpp, NOT AutoTokenizer on the GGUF repo id). Fallback unsloth/gemma-4-26B-A4B-it-GGUF.
+           c. `import carnot.verify` succeeds.
+           d. data/step_error_balanced_v2.json exists AND json-loads AND has >=100 items with label==incorrect (assert len([x for x in d['items'] if x['label']=='incorrect']) >= 100).
+           If any fail: honest_verdict blocked_<resource> (blocked_no_cuda / blocked_model_not_cached_qwen3.6_35b / blocked_carnot_verify_import / blocked_corpus_missing), preconditions_checked populated, EXIT.
+        1. Load the corpus (all 1000 items). No subsampling needed (it is already balanced 500/500).
+        2. STRONG REASONER SELF-VERIFICATION: for each step, ask Qwen3.6-35B (its own self-verification,
+           same prompt as exp3827) whether the step is correct. Record per-step accept/reject. (live GPU)
         3. CARNOT ENSEMBLE: score each step with the k=15 ensemble (the 2837 path).
-        4. Partition gold-INCORRECT steps into (A) caught by reasoner self-verify, (B) MISSED by reasoner
-           (the residual). Compute:
-             - residual_catch_rate = fraction of (B) Carnot catches at its operating threshold; BOOTSTRAP CI95 (>=1000 resamples).
-             - error_overlap_jaccard = |reasoner-caught ∩ carnot-caught| / |union| over gold-incorrect.
-        5. POSITIVE CONTROLS (both MUST pass or result is INCONCLUSIVE):
-             - reasoner_self_verify_auroc in [0.55, 0.95] (genuine self-verify, not all-accept/all-reject).
-             - carnot_ensemble_auroc reproduces frozen 0.9131 within +/-0.02 on this corpus (else deltas void, exp3820 mode).
+        4. Partition the 500 gold-INCORRECT steps into (A) caught by the reasoner self-verify, (B) MISSED
+           by the reasoner (the residual). Compute:
+             - residual_catch_rate = fraction of set (B) that Carnot catches. BOOTSTRAP CI95 (>=1000 resamples).
+             - error_overlap_jaccard = |reasoner-caught ∩ carnot-caught| / |union| over gold-incorrect steps.
+        5. POSITIVE CONTROLS (both MUST be non-degenerate or the result is INCONCLUSIVE):
+             - reasoner_self_verify_auroc in [0.55, 0.97] (the reasoner genuinely self-verifies, not all-accept/all-reject).
+             - carnot_ensemble_auroc on THIS corpus is non-degenerate (>= 0.65) — NOTE: this is a PRMBench-sourced
+               corpus, NOT FoVer, so do NOT expect the frozen 0.9131; just confirm the ensemble discriminates here.
         6. Apply the gate -> terminal verdict.
 
-      REQUIRED ARTIFACT FIELDS (each with a `principle` note; n_residual_errors is a GATE field):
-        residual_catch_rate: {{ principle: "THE moat metric — of the reasoner's MISSED errors, the fraction Carnot independently catches. High => durable; low => o1-subsumption risk." }}
-        residual_catch_ci95: {{ principle: "Bootstrap CI95 — turns exp3827's round point estimate into a defensible interval; the LOWER bound is the gate field." }}
-        error_overlap_jaccard: {{ principle: "Independence check — low overlap => reasoner & Carnot occupy different null spaces (the moat); high => Carnot is redundant with frontier self-verify." }}
-        reasoner_self_verify_auroc: {{ principle: "Positive control — a degenerate reasoner would inflate residual_catch trivially." }}
-        carnot_ensemble_auroc: {{ principle: "Positive control — MUST reproduce frozen 0.9131 +/-0.02 or ALL residual numbers are void." }}
-        n_items: {{ principle: "N>=1000 — the residual CI is meaningful only at scale." }}
-        n_residual_errors: {{ principle: "GATE field — emit as a BARE int. Residual-set size (downstream exp3860/3861/3864); if <30, widen N or report INCONCLUSIVE." }}
-        per_item_error_masks: {{ principle: "Persist reasoner-mask + carnot-mask + gold-label + error_axis per item so exp3860/3861/3864 reuse them WITHOUT re-running the GPU." }}
-        preconditions_checked, cited_upstream_artifacts (exp3827 + 2837 + exp3858 with sha256),
-        model_specs, random_seed, random_seeds_used, reproducibility_checksum, duration_s, inference_substrate:
-          principle: "Pre-Launch + Adversarial-Verify + Inference-Substrate — a live 35B GGUF over N>=1000 takes real wall-clock; implausibly short = fabrication."
+      REQUIRED ARTIFACT FIELDS (each with a `principle` note):
+        residual_catch_rate: {{ principle: "THE moat metric — of the reasoner's MISSED errors, the fraction Carnot independently catches. High => durable error-independent value; low => o1-subsumption risk (DT-P2)." }}
+        residual_catch_ci95: {{ principle: "Bootstrap CI95 — the lower bound is the gate; turns exp3827's ~15-error point estimate into a defensible interval (Adversarial-Confirmation)." }}
+        error_overlap_jaccard: {{ principle: "Independence check — low overlap between reasoner-caught and Carnot-caught errors = different null spaces (the moat); high overlap = Carnot redundant with frontier self-verification." }}
+        n_residual_errors: {{ principle: "Size of set B (reasoner-missed gold errors); the residual CI is meaningful only if this is >=30. With 500 gold errors this should be comfortably met." }}
+        reasoner_self_verify_auroc: {{ principle: "Positive control — a degenerate reasoner would trivially inflate residual_catch; confirms genuine self-verification." }}
+        carnot_ensemble_auroc: {{ principle: "Positive control — the ensemble must discriminate on THIS corpus (>=0.65). PRMBench != FoVer, so the frozen 0.9131 does NOT apply here." }}
+        corpus_source: {{ principle: "Records that this ran against data/step_error_balanced_v2.json (PRMBench, 500 incorrect) — the provenance that makes the residual CI meaningful, unlike exp3844's 22-error FoVer." }}
+        n_items, preconditions_checked, model_specs, random_seed, random_seeds_used,
+        reproducibility_checksum, duration_s, inference_substrate:
+          {{ principle: "Pre-Launch + Adversarial-Verify + Inference-Substrate methodology — a live 35B GGUF run over 1000 steps takes real wall-clock; implausibly short = fabrication." }}
 
       FALSIFICATION GATE (acceptance):
-        - MOAT_SURVIVES_AT_SCALE: both controls pass AND residual_catch_ci95 lower bound > 0.5 AND error_overlap_jaccard < 0.6.
-          honest_verdict: `complete: scissor_at_scale_MOAT_SURVIVES_residcatch<mean>_ci<lo>-<hi>_overlap<j>_n<N>`
-        - MOAT_SUBSUMED: both controls pass AND (residual_catch_ci95 upper < 0.3 OR error_overlap_jaccard > 0.7).
-          honest_verdict: `complete: scissor_at_scale_MOAT_SUBSUMED_residcatch<mean>_overlap<j>_subsumption_risk_n<N>`
-        - INCONCLUSIVE: a positive control fails (reasoner degenerate OR carnot_ensemble_auroc off frozen by >0.02 OR n_residual_errors<30).
-          honest_verdict: `complete: scissor_at_scale_INCONCLUSIVE_<which>`
-        - honest_verdict MUST start with a terminal prefix or `blocked_<resource>`.
+        - MOAT_SURVIVES_AT_SCALE: both positive controls non-degenerate AND residual_catch_ci95 lower bound > 0.5 AND error_overlap_jaccard < 0.6.
+          honest_verdict: `complete: moat_scissor_v4_MOAT_SURVIVES_residcatch<mean>_ci<lo>-<hi>_overlap<j>_nres<N>`
+          principle: "Confirms exp3827 at scale on an error-rich corpus — Carnot catches a majority of the strong reasoner's residual errors independently; durable, paper-citable moat."
+        - MOAT_SUBSUMED: both controls non-degenerate AND (residual_catch_ci95 upper < 0.3 OR error_overlap_jaccard > 0.7).
+          honest_verdict: `complete: moat_scissor_v4_MOAT_SUBSUMED_residcatch<mean>_overlap<j>_o1_subsumption_risk_nres<N>`
+          principle: "Refutes the durable-moat claim — Carnot largely re-catches what the reasoner already catches; the product is at frontier-subsumption risk; the paper must scope the claim down."
+        - INCONCLUSIVE: a positive control is degenerate (reasoner all-accept/reject OR carnot_ensemble_auroc < 0.65) OR n_residual_errors < 30.
+          honest_verdict: `complete: moat_scissor_v4_INCONCLUSIVE_<which_control_or_nres_failed>`
+        - honest_verdict MUST start with a terminal prefix (`complete:`/`complete_`/`success:`/`passed:`/`shipped:`) or `blocked_<resource>`.
 
-      DISCIPLINE: populate seeds + checksum + preconditions + cited_upstream + model_specs. Report REAL
-      duration (live LLM floor 60s). Do NOT aggregate flagged_adversarial:true artifacts. Do NOT move the
-      frozen 0.9131. Persist per_item_error_masks. Emit n_residual_errors as a BARE int.
-      Run: cd {project_root} && .venv/bin/python scripts/experiments/experiment_3859_moat_scissor_at_scale_v3.py
-      Do NOT push. Do NOT modify scripts/research_conductor.py.
-
-  - id: exp3860-verifier-reasoner-independence-audit-v2
-    operator_override: >
-      2026-06-05 operator directive (standing): re-issue of the .355 exp3848 independence audit (which
-      GATE_BLOCKED under the wipeout). NET-NEW measurement that scope-matches the scissor only on the
-      "error-independence" keyword — it is NOT a rerun of the blocked scissor. Consumes exp3859's
-      persisted error-masks (CPU, no GPU) and measures verifier-vs-reasoner error CORRELATION
-      (arXiv:2604.07650) to test whether the moat's independence is REAL or a shared blind spot.
-    gated_on:
-      - upstream: exp3859-moat-scissor-at-scale-v3
-        artifact_field: n_residual_errors
-        op: '>='
-        value: 30
-    milestone: "2026.06.356"
-    title: "INDEPENDENCE AUDIT (arXiv:2604.07650): is Carnot's catch of the reasoner's residual errors REAL decorrelation or a shared blind spot? Measure error-mask correlation (phi/Matthews) reasoner-vs-ensemble AND per-verifier-vs-reasoner, decompose by the 9 PRMBench error axes. The measurement that makes the moat claim defensible vs the fake-independence trap."
-    priority: critical
-    track: research
-    max_turns: 45
-    agent_type: codex
-    model: gpt-5.5
-    requires_codex: true   # all-codex anti-wipeout; correlation computation + gate application is deterministic. Capstone (exp3868) does the interpretive synthesis.
-    requires_gpu: false      # reuses exp3859's persisted per_item_error_masks + re-scores cached candidates; NO GPU.
-    estimated_wall_time_min: 40
-    inference_substrate: verifier_ensemble_against_cached_candidates
-    deliverable: results/experiment_3860_verifier_reasoner_independence_audit_v2.json
-    prompt: |
-      CONTEXT. arXiv:2604.07650 (Behavioral Entanglement) is the load-bearing REFUTATION RISK for the
-      moat: verifiers sharing an LLM lineage with the reasoner produce CORRELATED FAILURE masquerading
-      as independence. A naive scissor (exp3859) can report a fake moat if the verifier and reasoner
-      share blind spots. This task MEASURES the independence the moat claim assumes. Carnot's core
-      verifiers are NON-LLM (Z3/AST/SAT/energy), so the prior is decorrelation from an LLM reasoner —
-      but 2604.07650 says PROVE it, don't assume it.
-
-      EXISTING CODE TO READ FIRST:
-        - results/experiment_3859_moat_scissor_at_scale_v3.json (per_item_error_masks: reasoner-mask,
-          carnot-mask, gold-label, per-item error_axis — reuse; do NOT re-run the GPU).
-        - data/step_error_balanced_v2.json (the corpus + 9-axis error labels).
-        - scripts/experiment_2837_fover_memory_leakage_v3.py (per-verifier scores for the per-verifier decomposition).
-
-      CONCRETE STEPS:
-        0. PRECONDITIONS: exp3859 artifact exists with per_item_error_masks AND n_residual_errors>=30.
-           If absent/too-small, honest_verdict `blocked_scissor_masks_unavailable`, EXIT.
-        1. Build the 2x2 error-mask contingency over gold-INCORRECT steps: {{reasoner caught/missed}} x
-           {{carnot caught/missed}}. Compute the phi / Matthews correlation between the reasoner-error-mask
-           and the carnot-error-mask. NEAR-ZERO or NEGATIVE => genuinely independent moats (good);
-           STRONGLY POSITIVE => shared blind spot (the moat is fake-independence per 2604.07650).
-        2. PER-VERIFIER: for each of the k verifiers, correlate its individual catch-mask with the
-           reasoner's. Identify which verifiers carry the REAL independence (low correlation + non-trivial
-           residual catch) vs which are redundant with the reasoner. (Re-score cached candidates
-           per-verifier if the masks are ensemble-only.)
-        3. PER-ERROR-AXIS (9 PRMBench axes, where present): per axis report residual_catch and the
-           reasoner-carnot correlation. Surfaces WHICH error classes Carnot catches independently.
-        4. Apply the gate -> terminal verdict.
-
-      REQUIRED ARTIFACT FIELDS (each with a `principle` note):
-        reasoner_carnot_error_correlation: {{ principle: "THE independence number (phi/Matthews over gold-incorrect masks). Near 0 / negative => real decorrelation; strongly positive => shared blind spot (fake independence). Conditions the capstone's moat verdict." }}
-        per_verifier_reasoner_correlation: {{ principle: "Which verifiers carry the real independence vs are redundant — the actionable input for exp3864's independence-reweighting." }}
-        per_error_axis_residual_catch: {{ principle: "The moat's SHAPE — which of the 9 PRMBench error classes Carnot catches independently; scopes the paper claim to the axes it actually owns." }}
-        independence_is_real: {{ principle: "Bare bool — true iff reasoner_carnot_error_correlation materially <= a small positive threshold AND >=1 axis has independent residual catch. The gate the capstone reads." }}
-        n_residual_errors, n_gold_incorrect: {{ principle: "Sample sizes the correlations rest on; per-axis numbers only reportable where the axis cell has enough items." }}
-        cited_upstream_artifacts (exp3859 + exp3858 with sha256), preconditions_checked,
-        random_seed, reproducibility_checksum, inference_substrate, duration_s:
-          principle: "Adversarial-Verify + Inference-Substrate; verifier-scoring substrate (no LLM loaded), 1s floor."
-
-      ACCEPTANCE GATE:
-        - INDEPENDENCE_REAL: reasoner_carnot_error_correlation <= ~0.2 AND >=1 axis with independent residual catch.
-          honest_verdict: `complete: independence_REAL_corr<r>_axes<list>_moat_is_genuine_not_shared_blindspot`
-        - INDEPENDENCE_FAKE: reasoner_carnot_error_correlation strongly positive (> ~0.5).
-          honest_verdict: `complete: independence_FAKE_corr<r>_shared_blindspot_moat_overstated_2604.07650`
-        - MIXED: moderate correlation, axis-dependent.
-          honest_verdict: `complete: independence_MIXED_corr<r>_axis_dependent_<detail>`
-        - honest_verdict MUST start with a terminal prefix or `blocked_<resource>`.
-
-      DISCIPLINE: reuse exp3859's masks (no GPU). Do NOT move the frozen 0.9131. Do NOT aggregate flagged
-      artifacts. Report REAL duration.
-      Run: cd {project_root} && .venv/bin/python scripts/experiments/experiment_3860_verifier_reasoner_independence_audit_v2.py
-      Do NOT push. Do NOT modify scripts/research_conductor.py.
-
-  - id: exp3861-thinkprm-complementarity-v2
-    operator_override: >
-      2026-06-05 operator directive (standing): re-issue of the .355 exp3849 (which GATE_BLOCKED under
-      the wipeout). Formulaic set-arithmetic over exp3859's cached masks (CPU, no GPU) testing the
-      ThinkPRM refutation risk (arXiv:2504.16828). Legit continuation, not a doomed rerun.
-    gated_on:
-      - upstream: exp3859-moat-scissor-at-scale-v3
-        artifact_field: n_residual_errors
-        op: '>='
-        value: 30
-    milestone: "2026.06.356"
-    title: "ThinkPRM COMPLEMENTARITY (arXiv:2504.16828 refutation-risk test, re-issue of exp3849): a strong generative long-CoT PRM is hard to out-AUROC, so the moat must rest on COMPLEMENTARY catch. Of the errors the Qwen3.6 generative self-verify (the strong-single-PRM baseline) MISSES, what fraction does the cheap NON-LLM ensemble catch? Reuses exp3859's cached masks — CPU only. (Cf. arXiv:2506.18203 weak-verifier complementarity.)"
-    priority: high
-    track: research
-    max_turns: 40
-    agent_type: codex
-    model: gpt-5.5
-    requires_codex: true
-    requires_gpu: false
-    estimated_wall_time_min: 25
-    inference_substrate: aggregation_from_upstream_artifacts
-    deliverable: results/experiment_3861_thinkprm_complementarity_v2.json
-    prompt: |
-      CONTEXT. arXiv:2504.16828 (ThinkPRM): a single strong GENERATIVE long-CoT PRM beats discriminative
-      PRMs and LLM-judges and wins OOD — hard to out-AUROC. arXiv:2506.18203 (Weaver) shows a pool of
-      cheap DECORRELATED weak verifiers closes most of the oracle gap. Therefore Carnot's moat must NOT
-      be argued as "we beat the strong PRM on AUROC"; it must be argued as COMPLEMENTARY catch. The
-      Qwen3.6-35B long-CoT self-verification run in exp3859 IS a strong-single-generative-PRM baseline.
-      This task asks: of the gold-incorrect steps that strong generative PRM MISSES, what fraction does
-      Carnot's cheap NON-LLM k=15 ensemble catch — and vice versa? It reuses exp3859's persisted masks;
-      no new GPU run.
-
-      EXISTING CODE TO READ FIRST:
-        - results/experiment_3859_moat_scissor_at_scale_v3.json (per_item_error_masks: generative PRM =
-          reasoner self-verify mask; the carnot mask; gold labels).
-        - research-references.md "arXiv:2504.16828" + "arXiv:2506.18203" entries.
-
-      CONCRETE STEPS:
-        0. PRECONDITIONS: exp3859 per_item_error_masks present, n_residual_errors>=30. Else
-           `blocked_scissor_masks_unavailable`, EXIT.
-        1. Treat the reasoner-self-verify mask as the strong generative-PRM baseline B.
-           carnot_catches_B_misses = fraction of gold-incorrect that B MISSES but Carnot catches.
-           B_catches_carnot_misses = the symmetric fraction.
-        2. union_catch_rate = fraction of gold-incorrect caught by (B OR Carnot). Compare to B-alone and
-           Carnot-alone. The lift of the UNION over the best single is the complementarity value.
-        3. Cost framing: Carnot's ensemble is NON-LLM (no GGUF inference) — the union buys catch at
-           near-zero marginal compute over B. Report a one-line qualitative cost_note (no fabricated timing).
-        4. Apply the gate -> terminal verdict.
-
-      REQUIRED ARTIFACT FIELDS (each with a `principle` note):
-        carnot_catches_prm_misses: {{ principle: "THE complementarity metric — the cheap NON-LLM ensemble's independent contribution over a strong generative PRM. >0 and material => moat survives the ThinkPRM refutation risk." }}
-        prm_catches_carnot_misses: {{ principle: "The symmetric direction — honest accounting of where the generative PRM adds value (Carnot is not strictly dominant)." }}
-        union_catch_rate: {{ principle: "Best-of-both catch." }}
-        union_lift_over_best_single: {{ principle: "Bare float — union_catch_rate minus max(B_alone, carnot_alone); the headline complementarity number." }}
-        cost_note: {{ principle: "Qualitative — the ensemble is non-LLM so the union is near-free over B; NOT a fabricated wall-time." }}
-        cited_upstream_artifacts (exp3859 with sha256), preconditions_checked, random_seed,
-        reproducibility_checksum, inference_substrate, duration_s:
-          principle: "Aggregation substrate (0.0001s floor); methodology trace to the cached masks."
-
-      ACCEPTANCE GATE:
-        - COMPLEMENTARY: union_lift_over_best_single materially > 0 (e.g. >= 0.05) AND carnot_catches_prm_misses > 0.
-          honest_verdict: `complete: thinkprm_COMPLEMENTARY_unionlift<L>_carnot_adds<C>_over_strong_generative_prm`
-        - SUBSUMED_BY_PRM: union_lift ~ 0 AND carnot_catches_prm_misses ~ 0.
-          honest_verdict: `complete: thinkprm_SUBSUMED_carnot_redundant_with_strong_generative_prm_unionlift<L>`
-        - honest_verdict MUST start with a terminal prefix or `blocked_<resource>`.
-
-      DISCIPLINE: reuse exp3859 masks (no GPU). No fabricated timings. Do NOT move the frozen 0.9131.
-      Run: cd {project_root} && .venv/bin/python scripts/experiments/experiment_3861_thinkprm_complementarity_v2.py
-      Do NOT push. Do NOT modify scripts/research_conductor.py.
-
-  # ──────────────── Phase 2: Facts domain via a NEW architecture (graph grounding) ────────────────
-  - id: exp3862-graph-grounding-fact-verifier-prototype-v2
-    operator_override: >
-      2026-06-05 operator directive (standing): re-issue of the .355 exp3850 (which SKIPPED under the
-      wipeout). Versioned-lineage continuation of the facts-domain thread with a STATED forward
-      difference — the prior facts attempts used the math-bound k=15 ensemble (earned-negative, memory
-      project_verifier_domain_bound, which forbids re-testing generalization WITHOUT a new architecture).
-      This introduces a mechanistically-NEW verifier (graph-RAG / KG-alignment grounding, MemGraphRAG
-      arXiv:2606.00610 / HalluGraph arXiv:2512.01659), NOT a rerun of the bounded ensemble on facts.
-    milestone: "2026.06.356"
-    title: "Graph-grounding fact-verifier PROTOTYPE (NEW architecture for the earned-negative FACTS domain, re-issue of exp3850): a KG-alignment grounding check (MemGraphRAG/HalluGraph-inspired) on RAGTruth — does graph grounding catch factual hallucinations the math-bound ensemble structurally cannot? Prototype-first, small scale."
-    priority: high
-    track: research
-    max_turns: 60
-    agent_type: codex
-    model: gpt-5.5
-    requires_codex: true   # all-codex anti-wipeout; the prototype is a well-scoped new module (triple-extract + KG-align + score) codex can build to spec. Capstone does the interpretive read.
-    requires_gpu: false      # CPU-first: embedding-based KG alignment + a small entailment check; avoids GPU contention with the scissor (exp3859). A small CPU/edge model is acceptable; a SOTA GGUF is OPTIONAL via cached_sota_pair() if a free GPU exists.
-    estimated_wall_time_min: 55
-    inference_substrate: verifier_ensemble_against_cached_candidates   # if it invokes a model for triple extraction, redeclare live_llm_inference; default is cached-embedding/rule-based scoring.
-    deliverable: results/experiment_3862_graph_grounding_fact_verifier_prototype_v2.json
-    prompt: |
-      CONTEXT. Carnot's k=15 ensemble is a math-domain REASONING verifier; it is earned-negative on
-      FACTS (RAGTruth + NLI) and re-testing generalization WITHOUT a new architecture is forbidden
-      (memory project_verifier_domain_bound). The one route with a plausible mechanism is a
-      mechanistically-DIFFERENT verifier: graph-RAG / knowledge-graph-alignment grounding. Recent work:
-      MemGraphRAG (arXiv:2606.00610), HalluGraph (arXiv:2512.01659, KG-alignment hallucination detection
-      with provenance), GraphRAG-attention detection (arXiv:2512.09148). This task PROTOTYPES such a
-      verifier — small scale, prototype-first — to see if it catches factual hallucinations the math-bound
-      ensemble structurally cannot. NOT a rerun of the bounded ensemble on facts.
-
-      EXISTING CODE TO READ FIRST:
-        - data/ for any RAGTruth / factual-hallucination corpus already cached (search ragtruth*,
-          *halluc*, *facts*); python/carnot/verify/ for the existing verifier interface to match.
-        - research-references.md entries 2606.00610 / 2512.01659 / 2512.09148.
-        - scripts/experiment_template.py (cached_sota_pair, dataset helpers).
-
-      TASK. Build a SMALL prototype graph-grounding fact-verifier: given a (claim, retrieved-context)
-      pair, (1) extract claim triples (subject, relation, object), (2) align them against a graph/KB
-      built from the retrieved context, (3) emit a grounding score (low = grounded, high = ungrounded).
-      Test on a small RAGTruth-style labeled set. Report whether it has ANY signal on the facts domain
-      (AUROC materially > 0.5) — a prototype, not a SOTA claim.
-
-      CONCRETE STEPS:
-        0. PRECONDITIONS (on failure write blocked_<resource> + EXIT):
-           a. A factual-hallucination labeled corpus is available (RAGTruth or equivalent in data/; if
-              none cached, attempt a small download; if unreachable, honest_verdict `blocked_facts_corpus_not_available`).
-           b. `import carnot.verify` succeeds (to match the verifier interface).
-           c. If using a SOTA GGUF for triple extraction: a FREE GPU; else fall back to a small CPU model /
-              rule-based triple extraction (record which).
-        1. Implement the prototype (a new module under python/carnot/verify/, honestly named for what it
-           does — e.g. graph_grounding_probe.py; docstring DISCLOSES the heuristic/model gap per the
-           Verifier Authenticity Discipline — no NTK/SAE claims unless the substrate is invoked).
-        2. Score the labeled set; compute AUROC for ungrounded-claim detection.
-        3. COMPARE to the math-bound ensemble's AUROC on the SAME facts set (the earned-negative baseline)
-           — the delta is the prototype's facts-domain contribution.
-        4. Apply the gate -> terminal verdict.
-
-      REQUIRED ARTIFACT FIELDS (each with a `principle` note; facts_catch_delta is the GATE field):
-        graph_grounding_auroc: {{ principle: "The prototype's facts-domain signal; materially > 0.5 => the NEW architecture has traction where the math ensemble is earned-negative." }}
-        math_ensemble_auroc_on_facts: {{ principle: "The earned-negative baseline on the SAME set — the comparison that shows the graph verifier does something the ensemble structurally cannot." }}
-        facts_catch_delta: {{ principle: "GATE field — emit as a BARE float. graph_grounding_auroc - math_ensemble_auroc_on_facts; gate for exp3863 (only worth a complementarity eval if > 0)." }}
-        triple_extraction_method: {{ principle: "gguf | small_cpu_model | rule_based — honest record of the substrate." }}
-        verifier_authenticity_disclosed: {{ principle: "Bare bool — the new module's docstring discloses heuristic-vs-model gap per the Verifier Authenticity Discipline." }}
-        n_facts_items: {{ principle: "Prototype sample size; small is acceptable but report it honestly — not a headline claim." }}
-        preconditions_checked, model_specs, random_seed, reproducibility_checksum, inference_substrate, duration_s:
-          principle: "Pre-Launch + Adversarial-Verify + Inference-Substrate; if a model is invoked the live floor applies, else declare the verifier-scoring substrate."
-
-      ACCEPTANCE GATE:
-        - SIGNAL: graph_grounding_auroc materially > 0.5 (e.g. >= 0.6) AND facts_catch_delta > 0.
-          honest_verdict: `complete: graph_grounding_prototype_SIGNAL_auroc<A>_delta<D>_new_architecture_has_facts_traction`
-        - NO_SIGNAL: graph_grounding_auroc ~ 0.5 OR facts_catch_delta <= 0.
-          honest_verdict: `complete: graph_grounding_prototype_NO_SIGNAL_auroc<A>_facts_remain_out_of_reach_even_with_graph_grounding`
-        - honest_verdict MUST start with a terminal prefix or `blocked_<resource>`.
-
-      DISCIPLINE: prototype-first, honest sample size, no SOTA claim. Honest module naming + docstring
-      disclosure. Do NOT move the frozen 0.9131 (SEPARATE verifier on a SEPARATE domain). Emit
-      facts_catch_delta as a BARE float. Report REAL duration.
-      Run: cd {project_root} && .venv/bin/python scripts/experiments/experiment_3862_graph_grounding_fact_verifier_prototype_v2.py
-      Do NOT push. Do NOT modify scripts/research_conductor.py.
-
-  - id: exp3863-graph-verifier-facts-complementarity-v2
-    operator_override: >
-      2026-06-05 operator directive (standing): re-issue of the .355 exp3851 (which GATE_BLOCKED under
-      the wipeout). Reuses exp3862's per-item scores (CPU); the facts-domain mirror of the exp3860
-      independence lens. Legit continuation, not a doomed rerun.
-    gated_on:
-      - upstream: exp3862-graph-grounding-fact-verifier-prototype-v2
-        artifact_field: facts_catch_delta
-        op: '>'
-        value: 0.0
-    milestone: "2026.06.356"
-    title: "Facts-domain COMPLEMENTARITY (gated on exp3862 facts_catch_delta>0, re-issue of exp3851): does the graph-grounding verifier catch factual hallucinations the math-bound ensemble misses, and would {{math verifiers + graph verifier}} be a broader fact-aware system? Quantify the independent contribution + error-mask correlation."
-    priority: medium
-    track: research
-    max_turns: 40
-    agent_type: codex
-    model: gpt-5.5
-    requires_codex: true
-    requires_gpu: false      # reuses exp3862's per-item graph scores + the ensemble's facts scores; CPU set-arithmetic + correlation.
-    estimated_wall_time_min: 30
-    inference_substrate: verifier_ensemble_against_cached_candidates
-    deliverable: results/experiment_3863_graph_verifier_facts_complementarity_v2.json
-    prompt: |
-      CONTEXT. exp3862 prototyped a graph-grounding fact-verifier with facts-domain signal
-      (facts_catch_delta > 0, the gate). This task quantifies whether it is COMPLEMENTARY to the
-      math-bound ensemble: does it catch ungrounded claims the ensemble misses, and is its error-mask
-      decorrelated from the ensemble's (the exp3860 independence lens, applied to facts)? A YES means
-      {{math verifiers + graph verifier}} is a genuinely broader fact-aware system — a forward path off
-      the verifier's domain-bound ceiling.
-
-      EXISTING CODE TO READ FIRST:
-        - results/experiment_3862_graph_grounding_fact_verifier_prototype_v2.json (per-item graph scores +
-          the math-ensemble scores on the facts set).
-        - results/experiment_3860_verifier_reasoner_independence_audit_v2.json (the correlation method to mirror).
-
-      CONCRETE STEPS:
-        0. PRECONDITIONS: exp3862 artifact present with per-item graph + ensemble facts scores AND
-           facts_catch_delta>0. Else `blocked_graph_prototype_unavailable`, EXIT.
-        1. Over the facts set's gold-ungrounded items, compute graph_catches_ensemble_misses + the
-           symmetric direction; union_facts_catch_rate.
-        2. Correlate the graph-verifier error-mask with the ensemble error-mask (phi/Matthews) — low =
-           genuinely complementary verifier for an extended ensemble.
-        3. Apply the gate -> terminal verdict.
-
-      REQUIRED ARTIFACT FIELDS (each with a `principle` note):
-        graph_catches_ensemble_misses: {{ principle: "The graph verifier's independent facts contribution over the math ensemble." }}
-        facts_error_mask_correlation: {{ principle: "Decorrelation on the facts domain — low => a genuinely additive verifier, not a redundant one." }}
-        union_facts_catch_rate: {{ principle: "Best-of-both on facts; the lift over the math-ensemble-alone is the value of adding the graph verifier." }}
-        extended_ensemble_recommended: {{ principle: "Bare bool — true iff graph_catches_ensemble_misses material AND facts_error_mask_correlation low; the forward-path signal for the capstone." }}
-        n_facts_items, cited_upstream_artifacts (exp3862 with sha256), preconditions_checked,
-        random_seed, reproducibility_checksum, inference_substrate, duration_s:
-          principle: "Adversarial-Verify + Inference-Substrate methodology; verifier-scoring substrate."
-
-      ACCEPTANCE GATE:
-        - COMPLEMENTARY: graph_catches_ensemble_misses material AND facts_error_mask_correlation low.
-          honest_verdict: `complete: graph_verifier_COMPLEMENTARY_catches<C>_corr<r>_extended_ensemble_recommended`
-        - REDUNDANT: low independent catch OR high correlation.
-          honest_verdict: `complete: graph_verifier_REDUNDANT_with_math_ensemble_on_facts_<detail>`
-        - honest_verdict MUST start with a terminal prefix or `blocked_<resource>`.
-
-      DISCIPLINE: reuse cached scores (no GPU). Do NOT move the frozen 0.9131.
-      Run: cd {project_root} && .venv/bin/python scripts/experiments/experiment_3863_graph_verifier_facts_complementarity_v2.py
-      Do NOT push. Do NOT modify scripts/research_conductor.py.
-
-  # ──────────────── Phase 3: Self-learning (MANDATE) + LDT sharpening ────────────────
-  - id: exp3864-fr11-v23-online-independence-reweighting
-    operator_override: >
-      2026-06-05 operator directive (standing): re-issue of the .355 exp3852 FR-11 self-learning task
-      (which SKIPPED under the wipeout). Versioned-lineage continuation of the FR-11 chain with a STATED
-      forward difference vs the retired exp1200 online-constraint-reweighting — exp1200 reweighted by
-      precision alone (the precision-REWEIGHTING-is-0%-improvement dead end); THIS upweights by INFERRED
-      INDEPENDENCE (arXiv:2604.07650: catch errors no other verifier catches), a different signal, run
-      as the research-program.md mandated per-milestone self-learning task with the frozen-0.9131 CI as
-      a hard invariant. Not a rerun of the precision approach.
-    milestone: "2026.06.356"
-    title: "FR-11 continuous self-learning v23 (research-program.md MANDATE, re-issue of exp3852) — Tier-1 ONLINE independence-reweighting of the verifier ensemble (arXiv:2604.07650 method): upweight verifiers that catch the residual OTHER verifiers (and the reasoner) miss; confirm the learned weighting holds the +0.0185 memory-ablation contribution + frozen 0.9131. CPU counter updates (<1us/update, the Tier-1 hardware path)."
-    priority: high
-    track: research
-    max_turns: 45
-    agent_type: codex
-    model: gpt-5.5
-    requires_codex: true     # pure CPU counter/weight updates over cached per-verifier scores (Tier-1 hardware path); deterministic invariant gate.
-    requires_gpu: false
-    estimated_wall_time_min: 35
-    inference_substrate: verifier_ensemble_against_cached_candidates
-    deliverable: results/experiment_3864_fr11_self_learning_v23_independence_reweighting.json
-    prompt: |
-      CONTEXT. The research-program.md mandate: every milestone advances continuous self-learning, and
-      every mechanism must have a hardware path. arXiv:2604.07650 shows reweighting a verifier ensemble
-      by INFERRED INDEPENDENCE (upweighting members whose errors decorrelate from the rest) yields +4.5%
-      over majority vote; arXiv:2506.18203 (Weaver) corroborates that combining decorrelated weak
-      verifiers closes the oracle gap. This is the exact Tier-1 ONLINE mechanism to run on Carnot's own
-      ensemble — and it directly serves the moat thesis: upweight the verifiers that catch the residual
-      errors the others (and the reasoner) miss. Prior FR-11: v17 (per-verifier precision tracker), v18
-      (constraint memory), v21 (fast-path robustness), v22 (Tier-4 adaptive structure) — this is the
-      independence-reweighting tracker.
-
-      EXISTING CODE TO READ FIRST:
-        - results/experiment_3772_fr11_self_learning_v17_verifier_precision_tracker.json (the v17
-          per-verifier precision tracker state + the +0.0185 memory-ablation contribution it preserved).
-        - results/experiment_3860_verifier_reasoner_independence_audit_v2.json (per_verifier_reasoner_correlation
-          — the independence signal to reweight on, if exp3860 has run; else derive independence from
-          cached per-verifier masks on the corpus directly).
-        - scripts/experiment_2837_fover_memory_leakage_v3.py (the ensemble aggregation the reweighting modifies).
-
-      CONCRETE STEPS:
-        0. PRECONDITIONS: `import carnot.verify` succeeds AND a cached per-verifier score corpus exists
-           (data/step_error_balanced_v2.json or fover_corpus_v3). Else `blocked_<resource>`, EXIT.
-        1. Online over the corpus, maintain per-verifier counters: precision, AND an independence score =
-           (how often this verifier catches an error NO other verifier in the ensemble catches).
-        2. Derive an online weighting that upweights high-precision AND high-independence verifiers (the
-           2604.07650 reweighting, pure counter updates — record the <1us/update Tier-1 hardware-path
-           claim qualitatively, no fabricated timing).
-        3. Evaluate the reweighted ensemble AUROC on the corpus. CONFIRM it (a) does NOT drop the frozen
-           0.9131 below its CI (auroc_in_frozen_ci, BARE bool — INVARIANT, MUST be a bare bool not a dict),
-           and (b) preserves the +0.0185 memory-ablation contribution.
-        4. Persist the learned weighting state for the next milestone's FR-11. Apply the gate -> verdict.
-
-      REQUIRED ARTIFACT FIELDS (each with a `principle` note):
-        reweighted_ensemble_auroc: {{ principle: "The independence-reweighted ensemble's AUROC; must not regress the frozen headline below CI." }}
-        auroc_in_frozen_ci: { principle: "BARE bool (not a {{value,principle}} dict — gated-fields-must-be-bare) — the INVARIANT gate: the reweighting may not break the frozen 0.9131." }
-        independence_weight_per_verifier: {{ principle: "The learned online weighting — which verifiers the tracker upweighted for independence; the self-learning artifact + input to the moat story." }}
-        memory_ablation_contribution_preserved: {{ principle: "Bare bool — the +0.0185 learned contribution survives the reweighting." }}
-        update_cost_note: {{ principle: "Qualitative Tier-1 hardware-path claim (pure CPU counter updates, <1us/update); NOT a fabricated wall-time." }}
-        state_persisted_path: {{ principle: "Where the learned weighting is saved for the next FR-11 milestone (continuity of the self-learning loop)." }}
-        preconditions_checked, random_seed, reproducibility_checksum, inference_substrate, duration_s:
-          principle: "Adversarial-Verify + Inference-Substrate; verifier-scoring substrate (no LLM loaded)."
-
-      ACCEPTANCE GATE:
-        - complete (self-learning held the invariant): auroc_in_frozen_ci==true AND memory_ablation_contribution_preserved==true.
-          honest_verdict: `complete: fr11_v23_independence_reweighting_learned_auroc<A>_in_frozen_ci_memory_contribution_preserved_state_persisted`
-        - complete (reweighting regressed): auroc_in_frozen_ci==false.
-          honest_verdict: `complete: fr11_v23_independence_reweighting_REGRESSED_below_frozen_ci_reverted_to_static_weights`
-        - honest_verdict MUST start with a terminal prefix or `blocked_<resource>`.
-
-      DISCIPLINE: emit auroc_in_frozen_ci as a BARE bool. CPU only. Do NOT move the frozen 0.9131.
-      Run: cd {project_root} && .venv/bin/python scripts/experiments/experiment_3864_fr11_self_learning_v23_independence_reweighting.py
-      Do NOT push. Do NOT modify scripts/research_conductor.py.
-
-  - id: exp3865-ldt-lattice-margin-sharpening-v2
-    operator_override: >
-      2026-06-05 operator directive (standing): re-issue of the .355 exp3853 (which SKIPPED under the
-      wipeout). Versioned-lineage continuation of exp3833 (which SUCCEEDED, LATTICE_VIABLE) with a
-      STATED forward difference — exp3833's ensemble_vs_random_soundness_margin was a razor-thin 0.010
-      against a COUNT-matched random control. This sharpens with a SCORE-MATCHED (stratified) random
-      control + bootstrap CI on the margin. NET-NEW sharpening, not a rerun of a failed method.
-    milestone: "2026.06.356"
-    title: "LDT-lattice margin sharpening (re-issue of exp3853): exp3833 landed LATTICE_VIABLE but ensemble_vs_random_soundness_margin=0.010 (razor-thin vs a COUNT-matched random control). Is the sound-elimination edge REAL? Re-test against a SCORE-MATCHED (stratified) random control with a bootstrap CI on the margin."
-    priority: medium
-    track: research
-    max_turns: 40
-    agent_type: codex
-    model: gpt-5.5
-    requires_codex: true     # re-scores the SAME cached FoVer candidates with the existing ensemble; deterministic CI gate.
-    requires_gpu: false
-    estimated_wall_time_min: 30
-    inference_substrate: verifier_ensemble_against_cached_candidates
-    deliverable: results/experiment_3865_ldt_lattice_margin_sharpening_v2.json
-    prompt: |
-      CONTEXT. exp3833 (results/experiment_3833_ldt_gap_ensemble_as_sound_lattice.json) measured the
-      k=15 ensemble as an LDT-style abstraction-lattice operator and landed LATTICE_VIABLE:
-      informativeness_at_soundness_0_99 = 0.591 (removes 59% of wrong candidates at <1% false-elim),
-      false_elimination 0.007. BUT ensemble_vs_random_soundness_margin = 0.010 — a razor-thin edge over
-      a COUNT-matched random elimination operator. A count-matched random control is WEAK: it ignores the
-      score distribution. The sharper question: does the ensemble preferentially SPARE correct candidates
-      beyond what a control with the SAME score-distribution (stratified/score-matched random elimination)
-      would, with a bootstrap CI on the margin so we know if 0.010 is signal or noise?
-
-      EXISTING CODE TO READ FIRST:
-        - results/experiment_3833_ldt_gap_ensemble_as_sound_lattice.json + its script (the soundness/
-          informativeness curve method + the count-matched random control — reuse, then EXTEND).
-        - data/fover_test_v4.json (the cached candidate set exp3833 used; N=1308).
-
-      CONCRETE STEPS:
-        0. PRECONDITIONS: `import carnot.verify` succeeds AND the exp3833 corpus + script reproduce one
-           candidate score. Else `blocked_<resource>`, EXIT.
-        1. Reproduce exp3833's sound-elimination curve (sanity: informativeness_at_soundness_0_99 ~ 0.59).
-        2. Build a SCORE-MATCHED random control: stratify candidates into score bins; the control
-           eliminates the SAME number per bin as the ensemble, but RANDOMLY within each bin. Its soundness
-           at matched per-bin counts is the sharper chance baseline (ensemble's score distribution, none
-           of its per-candidate discrimination).
-        3. Compute ensemble_vs_score_matched_margin = ensemble soundness - score-matched-control soundness
-           at matched elimination, with a BOOTSTRAP CI95 (>=1000 resamples).
-        4. Apply the gate -> terminal verdict.
-
-      REQUIRED ARTIFACT FIELDS (each with a `principle` note):
-        ensemble_vs_score_matched_margin: {{ principle: "THE sharpened number — the ensemble's edge over a control that already has its score distribution. Materially >0 => real per-candidate discrimination; ~0 => exp3833's 0.010 was the score distribution, not deductive power." }}
-        margin_ci95: {{ principle: "Bootstrap CI95 on the margin — if the lower bound is <=0, the lattice edge is within noise (downgrades exp3833's LATTICE_VIABLE to MARGINAL)." }}
-        informativeness_at_soundness_0_99_reproduced: {{ principle: "Sanity replication of exp3833's 0.59." }}
-        count_matched_margin_reproduced: {{ principle: "exp3833's 0.010 count-matched margin, reproduced — anchors the comparison." }}
-        n_candidates, random_seed, reproducibility_checksum, preconditions_checked, inference_substrate, duration_s:
-          principle: "Adversarial-Verify + Inference-Substrate; verifier-scoring substrate, determinism for the stratified control."
-
-      ACCEPTANCE GATE:
-        - LATTICE_REAL: margin_ci95 lower bound > 0 (the ensemble beats a score-matched control).
-          honest_verdict: `complete: ldt_margin_LATTICE_REAL_scorematched_margin<M>_ci<lo>-<hi>_genuine_deductive_power`
-        - LATTICE_MARGINAL: margin_ci95 lower bound <= 0 (the 0.010 was the score distribution, not discrimination).
-          honest_verdict: `complete: ldt_margin_LATTICE_MARGINAL_scorematched_margin<M>_ci_includes_zero_edge_is_score_dist_not_deductive`
-        - honest_verdict MUST start with a terminal prefix or `blocked_<resource>`.
-
-      DISCIPLINE: re-score cached candidates (no GPU). Do NOT move the frozen 0.9131 (lattice LENS, not an
-      AUROC re-measurement). Report REAL duration.
-      Run: cd {project_root} && .venv/bin/python scripts/experiments/experiment_3865_ldt_lattice_margin_sharpening_v2.py
-      Do NOT push. Do NOT modify scripts/research_conductor.py.
-
-  # ──────────────── Phase 4: Hardware continuity (MANDATORY — one task per non-terminal board) ────────────────
-  - id: exp3866-gatemate-ising-tile-flash-v2
-    prior_failures:
-      - experiment_id: exp2899-gatemate-toolchain
-        verdict: blocked_gatemate_toolchain_missing
-        addressed_by: "exp2899 looked for the obsolete `nextpnr-gatemate` binary which does not exist in current oss-cad-suite. 2026-05-23 the GateMate flow was verified end-to-end with yosys 0.64 synth_gatemate -> nextpnr-himbaechel --device CCGM1A1 -> gmpack; this task uses the CORRECTED himbaechel invocation + openFPGALoader -c dirtyJtag, so the toolchain-missing block no longer applies."
-        retire_if_same_verdict: true
-    milestone: "2026.06.356"
-    title: "GateMate A1-EVB-2M hardware continuity (terminal-state attempt, re-issue of exp3854): synthesize + place-and-route an n>=16 Carnot Ising tile via yosys synth_gatemate -> nextpnr-himbaechel -> gmpack, flash over DirtyJTAG (openFPGALoader -c dirtyJtag -b olimex_gatemateevb), record sample-level on-board timing. Reaches gatemate_bitstream_flashed terminal state if the board accepts the bitstream."
-    priority: medium
-    track: hardware
-    max_turns: 100
-    agent_type: codex
-    model: gpt-5.5
-    requires_codex: true     # all-codex anti-wipeout; the hardware toolchain flow is a well-documented command sequence codex can drive with precondition-gating.
-    requires_gpu: false
-    estimated_wall_time_min: 70
-    inference_substrate: hardware_smoke
-    deliverable: results/experiment_3866_gatemate_ising_tile_flash_v2.json
-    prompt: |
-      CONTEXT. CLAUDE.md Hardware-Task Continuity Discipline mandates one task per attached non-terminal
-      board each milestone. KV260 is GRADUATED (terminal). GateMate A1-EVB-2M is PENDING: the toolchain
-      was verified end-to-end 2026-05-23 (yosys 0.64 synth_gatemate -> nextpnr-himbaechel --device CCGM1A1
-      --json X --vopt out=X.cfg.bit -> gmpack X.cfg.bit X.bit) on a toy counter; the only prior blocker
-      (exp2899) was the obsolete `nextpnr-gatemate` binary name. The .355 attempt (exp3854) SKIPPED under
-      the poison-test wipeout. Terminal state: an n>=16 Carnot Ising tile flashed via openFPGALoader +
-      sample-level timing recorded (gatemate_bitstream_flashed=true).
-
-      EXISTING CODE TO READ FIRST:
-        - ops/hardware-bringup-prep.md (GateMate section: exact toolchain invocation + board enumeration).
-        - docs/jtag-wiring-gatemate-dirtyjtag.md (DirtyJTAG reference).
-        - crates/carnot-ising/ or python/carnot/models/ising.py + any existing RTL for the Ising tile
-          (search for prior KV260/GateMate Ising RTL to reuse the n=16 coupling-graph design).
-
-      CONCRETE STEPS:
-        0. PRECONDITIONS (check BEFORE synthesis; on failure write blocked_<resource> + EXIT, no fabrication):
-           a. `command -v yosys && yosys -V` (need 0.64+ with synth_gatemate).
-           b. `command -v nextpnr-himbaechel && nextpnr-himbaechel --help` (NOT nextpnr-gatemate).
-           c. `command -v gmpack` (CologneChip packer).
-           d. Board reachable: `openFPGALoader -c dirtyJtag --detect` returns the colognechip/GateMate
-              GM1Ax IDCODE (NOT --scan; use --detect or --scan-usb).
-           If ANY fail: honest_verdict `blocked_gatemate_<which>` (e.g. blocked_gatemate_himbaechel_missing /
-           blocked_gatemate_board_not_detected) + preconditions_checked, EXIT.
-        1. Prepare/locate an n>=16 Carnot Ising tile RTL (reuse the KV260/prior Ising coupling design; a
-           quadratic-Ising energy-eval tile is sufficient — POC tier per the FPGA re-scope).
-        2. Synthesize: yosys synth_gatemate; P&R: nextpnr-himbaechel --device CCGM1A1; pack: gmpack.
-           Capture LUT/DFF utilization + Fmax.
-        3. Flash: openFPGALoader -c dirtyJtag -b olimex_gatemateevb <bit>. Confirm the board accepts it.
-        4. Record sample-level on-board timing (a small number of energy-eval cycles with a real duration —
-           duration_s must be plausible for a hardware round-trip, NOT 0). If the board does not accept the
-           bitstream or no readback path exists, record the synthesis+P&R+flash result HONESTLY + emit the
-           partial verdict (do NOT fabricate timing).
-        5. Apply the gate -> terminal verdict.
-
-      REQUIRED ARTIFACT FIELDS (each with a `principle` note):
-        gatemate_bitstream_flashed: {{ principle: "Bare bool — the terminal-state gate; true only if openFPGALoader accepted the bitstream on the real board." }}
-        synth_pnr_pack_succeeded: {{ principle: "Bare bool — the toolchain end-to-end produced a bitstream (separable from the flash step)." }}
-        lut_dff_utilization, fmax_mhz: {{ principle: "Real synthesis/P&R numbers — anchors the n=16 tile to actual GateMate resources." }}
-        sample_timing_us: {{ principle: "On-board energy-eval cycle timing IF a readback path exists; null + a note if not (no fabricated timing)." }}
-        preconditions_checked: {{ principle: "Records the toolchain + board-detect checks — pre-empts the exp1680-class fabrication of a hardware result without the hardware." }}
-        thermal_note, run_duration_s, inference_substrate, reproducibility_checksum:
-          principle: "hardware_smoke substrate; plausible wall-clock for a real flash round-trip; the per-board hardware-artifact fields."
-
-      ACCEPTANCE GATE:
-        - TERMINAL (board accepted bitstream): gatemate_bitstream_flashed==true.
-          honest_verdict: `success: gatemate_ising_tile_n16_flashed_terminal_lut<L>_fmax<F>_timing<T>`
-        - PARTIAL (toolchain produced bitstream, board flash incomplete): synth_pnr_pack_succeeded==true, gatemate_bitstream_flashed==false.
-          honest_verdict: `complete: gatemate_synth_pnr_pack_succeeded_flash_pending_<reason>_lut<L>_fmax<F>`
-        - blocked_<resource> if a precondition failed.
-        - honest_verdict MUST start with a terminal prefix or `blocked_<resource>`.
-
-      DISCIPLINE: NEVER fabricate a hardware result; precondition-gate and emit blocked/partial honestly
-      (exp1680 is the fabrication exemplar this rule prevents). Real durations only.
-      Run: cd {project_root} && .venv/bin/python scripts/experiments/experiment_3866_gatemate_ising_tile_flash_v2.py
-      Do NOT push. Do NOT modify scripts/research_conductor.py.
-
-  - id: exp3867-polarfire-soc-smoke-v4
-    prior_failures:
-      - experiment_id: exp1680-polarfire-smoke-v2
-        verdict: fabricated_implausible_perfect_run_duration_zero
-        addressed_by: "exp1680 v2 fabricated TPR=1.0 with run_duration_s=0 (no SSH round-trip). This v4 is precondition-gated on `ssh -o ConnectTimeout=5 polarfire true` returning 0, requires a hash-verified workload match AND run_duration_s>=5, structurally preventing the fabrication mode; if SSH is unreachable it exits to blocked_polarfire_ssh_timeout, never fabricates."
-        retire_if_same_verdict: true
-    milestone: "2026.06.356"
-    title: "PolarFire SoC Discovery Kit hardware continuity (terminal-state attempt, re-issue of exp3855): precondition-gated SSH round-trip Carnot dispatch — run an Ising energy-eval workload on the board over SSH, verify the result hash matches a CPU-computed reference, record run_duration_s>=5 + soc_temp. Reaches polarfire_workload_validated terminal state on a hash match."
-    priority: medium
-    track: hardware
-    max_turns: 100
-    agent_type: codex
-    model: gpt-5.5
-    requires_codex: true     # all-codex anti-wipeout; SSH dispatch + hash-match is a deterministic precondition-gated flow.
-    requires_gpu: false
-    estimated_wall_time_min: 50
-    inference_substrate: hardware_smoke
-    deliverable: results/experiment_3867_polarfire_soc_smoke_v4.json
-    prompt: |
-      CONTEXT. CLAUDE.md Hardware-Task Continuity Discipline: PolarFire SoC Discovery Kit is PENDING
-      (SSH-reachable, Linux riscv64 booted; no end-to-end Carnot dispatch yet). exp1680 (v2) is the
-      FABRICATION exemplar (TPR=1.0, run_duration_s=0, no SSH round-trip). The .355 attempt (exp3855)
-      SKIPPED under the poison-test wipeout. Terminal state: a hash-verified Carnot workload completes on
-      the board (polarfire_workload_validated=true).
-
-      EXISTING CODE TO READ FIRST:
-        - ops/hardware-bringup-prep.md (PolarFire section: ssh alias, board OS, required hardware fields).
-        - python/carnot/models/ising.py (the Ising energy-eval to dispatch — a small deterministic
-          workload whose result can be hash-matched against a CPU reference).
-
-      CONCRETE STEPS:
-        0. PRECONDITIONS (check BEFORE dispatch; on failure write blocked_<resource> + EXIT, no fabrication):
-           a. `ssh -o ConnectTimeout=5 -o BatchMode=yes polarfire 'true'` returns 0 (board reachable).
-           b. Python available on the board: `ssh polarfire 'python3 --version'` succeeds.
-           If either fails: honest_verdict `blocked_polarfire_ssh_timeout` / `blocked_polarfire_no_python` +
-           preconditions_checked, EXIT.
-        1. Compute a CPU reference: a small deterministic Ising energy-eval (fixed coupling matrix + fixed
-           spin configs, seed-controlled) -> a reference result + its sha256.
-        2. Dispatch the SAME workload to the board over SSH (scp the script + spins, run, capture stdout).
-        3. Hash-verify: the board's result hash MUST equal the CPU reference hash. Record the match.
-        4. Record run_duration_s (real SSH round-trip wall-clock, MUST be >=5s for a genuine dispatch),
-           soc_temp_max_c if readable, thermal_note.
-        5. Apply the gate -> terminal verdict.
-
-      REQUIRED ARTIFACT FIELDS (each with a `principle` note):
-        polarfire_workload_validated: {{ principle: "Bare bool — terminal-state gate; true only if the board's result hash matches the CPU reference (a real dispatch, not a fabricated TPR)." }}
-        result_hash_match: {{ principle: "Bare bool — the structural anti-fabrication check; the board must reproduce the exact reference result." }}
-        board_result_sha256, cpu_reference_sha256: {{ principle: "The two hashes compared — auditable provenance that the workload ran ON the board." }}
-        run_duration_s: {{ principle: "Real SSH round-trip wall-clock; >=5s floor structurally prevents the exp1680 run_duration_s=0 fabrication." }}
-        soc_temp_max_c, thermal_note: {{ principle: "Per-board hardware-artifact fields (thermal envelope of the dispatch)." }}
-        preconditions_checked, random_seed, reproducibility_checksum, inference_substrate:
-          principle: "Pre-Launch + Inference-Substrate (hardware_smoke); SSH-reachability precondition is the anti-fabrication gate."
-
-      ACCEPTANCE GATE:
-        - TERMINAL (hash match): polarfire_workload_validated==true AND result_hash_match==true AND run_duration_s>=5.
-          honest_verdict: `success: polarfire_carnot_dispatch_hash_verified_terminal_duration<D>s_temp<T>`
-        - PARTIAL (ran but hash mismatch): result_hash_match==false.
-          honest_verdict: `complete: polarfire_dispatch_ran_hash_MISMATCH_<detail>_workload_not_validated`
-        - blocked_polarfire_ssh_timeout / blocked_polarfire_no_python if a precondition failed.
-        - honest_verdict MUST start with a terminal prefix or `blocked_<resource>`.
-
-      DISCIPLINE: NEVER fabricate (exp1680 exemplar). SSH-precondition-gate; real durations only.
-      Run: cd {project_root} && .venv/bin/python scripts/experiments/experiment_3867_polarfire_soc_smoke_v4.py
-      Do NOT push. Do NOT modify scripts/research_conductor.py.
-
-  # ──────────────────────────── Phase 5: Capstone ────────────────────────────
-  - id: exp3868-capstone-v356
-    operator_override: >
-      2026-06-05 operator directive (standing): routine capstone task — false-positive scope-match vs
-      every prior capstone-v* task; structurally never a doomed rerun. Aggregates the .356 verdicts.
-    milestone: "2026.06.356"
-    title: "Capstone .356 — aggregate the VERIFIER-MOAT DURABILITY verdict (does the moat survive at scale with MEASURED independence?), the facts-domain graph-grounding prototype outcome, the FR-11 v23 self-learning result, the LDT-margin sharpening, and the two FPGA boards. paper_ready stays TRUE; frozen 0.9131 unchanged."
-    priority: critical
-    track: infra
-    max_turns: 50
-    agent_type: codex
-    model: gpt-5.5
-    requires_codex: true     # all-codex anti-wipeout; the capstone is a structured aggregation with a fixed reading order (summarize_artifact.py) + gate checks.
-    requires_gpu: false
-    estimated_wall_time_min: 40
-    inference_substrate: aggregation_from_upstream_artifacts
-    deliverable: results/experiment_3868_capstone_v356.json
-    prompt: |
-      CONTEXT. Capstone for .356. The milestone re-issued the Deep-Think P2 verifier-moat-durability
-      adjudication that .355 failed to run (poison-test wipeout, now fixed). The HEADLINE read is NOT the
-      scissor's residual_catch alone — it is the scissor verdict CONDITIONED on the independence audit
-      (exp3860): a high residual_catch with a high reasoner-carnot error correlation is a FAKE moat
-      (2604.07650), not a real one. Aggregate honestly.
-
-      EXISTING CODE TO READ FIRST (aggregate ONLY non-flagged artifacts):
-        - exp3858 (corpus), exp3859 (scissor at scale), exp3860 (independence audit), exp3861 (ThinkPRM
-          complementarity), exp3862/3863 (graph-grounding facts), exp3864 (FR-11 v23), exp3865 (LDT margin),
-          exp3866 (GateMate), exp3867 (PolarFire).
-        - scripts/publication_gate.py (confirm G1-G4 / paper_ready still TRUE).
-        - scripts/summarize_artifact.py (READ each upstream artifact via this tool, not raw JSON, per the
-          Reading-Results Discipline — check flagged_adversarial + gate self-reports before citing).
-
-      CONCRETE STEPS:
-        0. PRECONDITIONS: the upstream artifacts exist. For each, run summarize_artifact.py; SKIP any
-           carrying flagged_adversarial==true (Fabrication Gate). Note which were skipped + why.
-        1. Compute the CONDITIONED moat verdict: combine exp3859 (residual_catch_ci95, overlap) with
-           exp3860 (reasoner_carnot_error_correlation, independence_is_real). State plainly: MOAT DURABLE
-           / MOAT SUBSUMED / MOAT FAKE-INDEPENDENCE / INCONCLUSIVE — and WHY.
-        2. Record the complementarity (exp3861), facts-domain (exp3862/3863 — does a NEW architecture open
-           the facts ceiling?), self-learning (exp3864), LDT margin (exp3865 — did the 0.010 hold?), and
-           hardware (exp3866/3867 board states).
-        3. Confirm paper_ready TRUE (G1-G4) and FoVer 0.9131 frozen-unchanged. State the forward
-           recommendation for the operator (the loop does NOT self-seed — Verification Trap P3).
-        4. Emit the capstone artifact.
-
-      REQUIRED ARTIFACT FIELDS (each with a `principle` note):
-        moat_durability_verdict: {{ principle: "THE milestone headline — the scissor verdict CONDITIONED on the independence audit; the single sentence the operator needs to decide product-forward strategy." }}
-        moat_is_real_independence: {{ principle: "Bare bool — true only if residual_catch CI lower bound is high AND reasoner_carnot_error_correlation is low (exp3860); guards against citing a fake moat (2604.07650)." }}
-        thinkprm_complementarity_summary: {{ principle: "Does the cheap ensemble add catch over a strong generative PRM." }}
-        facts_new_architecture_outcome: {{ principle: "Did graph-grounding open the earned-negative facts domain (a forward path off the domain-bound ceiling)?" }}
-        self_learning_v23_outcome, ldt_margin_outcome: {{ principle: "Self-learning invariant held + whether the LDT lattice edge is real or marginal." }}
-        hardware_board_states: {{ principle: "GateMate + PolarFire terminal/partial states — hardware-continuity compliance." }}
-        paper_ready: {{ principle: "Bare bool — G1-G4 converged invariant; MUST stay true." }}
-        frozen_fover_auroc_unchanged: {{ principle: "Bare bool — the 0.9131 headline did not move." }}
-        artifacts_skipped_flagged: {{ principle: "Which upstream artifacts were excluded for flagged_adversarial==true (Fabrication Gate transparency)." }}
-        operator_forward_recommendation: {{ principle: "The loop scaffolds, the operator decides (Verification Trap P3) — the concrete next-paradigm or freeze recommendation given the moat verdict." }}
-        preconditions_checked, cited_upstream_artifacts (all aggregated, with sha256), inference_substrate, duration_s:
-          principle: "Aggregation substrate (0.0001s floor); full provenance of the capstone numbers."
-
-      ACCEPTANCE GATE:
-        - complete: all available non-flagged upstream aggregated, paper_ready==true, frozen headline unchanged.
-          honest_verdict: `complete: capstone_v356_moat_<verdict>_independence_<real|fake|mixed>_facts_<outcome>_paper_ready_true_frozen_headline_unchanged`
-        - honest_verdict MUST start with a terminal prefix.
-
-      DISCIPLINE: do NOT aggregate flagged_adversarial==true artifacts. Do NOT move the frozen 0.9131.
-      Read each artifact via summarize_artifact.py (Reading-Results Discipline). The moat verdict MUST be
-      conditioned on the independence audit — never cite residual_catch alone.
-      Run: cd {project_root} && .venv/bin/python scripts/experiments/experiment_3868_capstone_v356.py
+      DISCIPLINE: populate random_seed(s) + reproducibility_checksum + preconditions_checked + model_specs.
+      Report the REAL duration (live LLM floor 60s). Do NOT aggregate any artifact carrying
+      flagged_adversarial:true. Do NOT move the frozen FoVer 0.9131 (this is a different corpus).
       Do NOT push. Do NOT modify scripts/research_conductor.py.
