@@ -10310,3 +10310,65 @@ above 0.5 while `error_overlap_jaccard < 0.6`, the artifact SHALL emit
 residual-catch upper bound is below 0.3 or `error_overlap_jaccard > 0.7`, it
 SHALL emit `complete: scissor_at_scale_MOAT_SUBSUMED...`; otherwise it SHALL
 emit a terminal `complete: scissor_at_scale_INCONCLUSIVE...` verdict.
+
+### REQ-VERIFY-3862: Graph-Grounding Fact Verifier Prototype
+
+The repository SHALL provide an Exp 3862 prototype verifier that is
+mechanistically different from the math-bound FoVer ensemble for the facts
+domain. Given a `(claim, retrieved_context)` pair, the verifier SHALL extract
+small subject-relation-object triples from the claim, build a lightweight
+knowledge graph from the retrieved context, align claim triples against the
+context graph, and emit a grounding energy where lower means grounded and
+higher means ungrounded.
+
+The implementation SHALL honestly disclose its extraction substrate. If no
+cached SOTA GGUF or small CPU extraction model is invoked, the module SHALL name
+the method `rule_based` and the docstring SHALL state that it is a heuristic
+graph-alignment probe rather than a model-backed KG-alignment system. The score
+path SHALL use only answer/claim text and retrieved evidence, not labels,
+gold-answer fields, or model confidence.
+
+The Exp 3862 workflow SHALL check for an available factual-hallucination corpus
+such as cached RAGTruth rows under `data/`, verify that `import carnot.verify`
+succeeds, and record whether a free GPU-backed GGUF extractor or a CPU/rule
+fallback was used. If no labeled facts corpus is available and a small download
+cannot be reached, it SHALL write a blocked artifact whose `honest_verdict`
+starts with `blocked_facts_corpus_not_available`. If the verifier interface
+cannot import, it SHALL write `blocked_carnot_verify_import`.
+
+For runnable inputs, the workflow SHALL score a deterministic small
+RAGTruth-style sample, compute AUROC for ungrounded-claim detection, compute
+the math-bound ensemble baseline AUROC on the same facts rows, and report the
+bare numeric `facts_catch_delta =
+graph_grounding_auroc - math_ensemble_auroc_on_facts`. It SHALL write
+`results/experiment_3862_graph_grounding_fact_verifier_prototype_v2.json` with
+principle-annotated fields for `graph_grounding_auroc`,
+`math_ensemble_auroc_on_facts`, `facts_catch_delta`,
+`triple_extraction_method`, `verifier_authenticity_disclosed`,
+`n_facts_items`, `preconditions_checked`, `model_specs`, `random_seed`,
+`reproducibility_checksum`, `inference_substrate`, and `duration_s`.
+
+### SCENARIO-VERIFY-3862: Graph Grounding Prototype Gates Signal Honestly
+
+Given small labeled factual fixtures with answer/evidence pairs and injected
+graph-grounding scores plus math-bound baseline scores, when the Exp 3862
+artifact builder runs, then it computes AUROC on the same facts rows, emits
+`facts_catch_delta` as a bare float, chooses
+`complete: graph_grounding_prototype_SIGNAL_...` only when
+`graph_grounding_auroc >= 0.6` and `facts_catch_delta > 0`, chooses
+`complete: graph_grounding_prototype_NO_SIGNAL_...` otherwise, and keeps the
+frozen FoVer math headline as an untouched comparison context rather than a
+facts-domain result.
+
+### SCENARIO-VERIFY-3862-BLOCKED: Missing Preconditions Produce Terminal Blocked Artifacts
+
+Given no cached labeled factual corpus or an import failure for `carnot.verify`,
+when the Exp 3862 workflow runs, then it writes the required artifact fields
+with zero sample count, null AUROCs, a terminal `blocked_<resource>` verdict,
+and no fabricated graph-grounding signal.
+
+## Implementation Status (REQ-VERIFY-3862)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-VERIFY-3862 | Planned (`python/carnot/verify/graph_grounding_probe.py`, `scripts/experiments/experiment_3862_graph_grounding_fact_verifier_prototype_v2.py`) | Planned (`tests/python/test_experiment_3862_graph_grounding_fact_verifier.py`) |

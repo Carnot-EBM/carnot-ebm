@@ -82,7 +82,7 @@ tasks:
 
       EXISTING CODE/DATA TO READ FIRST:
         - data/step_error_balanced_v2.json — the corpus. Items have keys
-          [error_axis, label, question, question_id, source, step_text]; label in {correct, incorrect};
+          [error_axis, label, question, question_id, source, step_text]; label in {{correct, incorrect}};
           n_items=1000, n_incorrect_steps=500. Use it AS-IS; do NOT rebuild it.
         - scripts/experiments/experiment_3827_verifier_error_independence_scissor.py (or the .355/.356
           exp3847/exp3859 scripts if present) — the residual_catch / overlap definitions + the reasoner
@@ -111,16 +111,16 @@ tasks:
         6. Apply the gate -> terminal verdict.
 
       REQUIRED ARTIFACT FIELDS (each with a `principle` note):
-        residual_catch_rate: { principle: "THE moat metric — of the reasoner's MISSED errors, the fraction Carnot independently catches. High => durable error-independent value; low => o1-subsumption risk (DT-P2)." }
-        residual_catch_ci95: { principle: "Bootstrap CI95 — the lower bound is the gate; turns exp3827's ~15-error point estimate into a defensible interval (Adversarial-Confirmation)." }
-        error_overlap_jaccard: { principle: "Independence check — low overlap between reasoner-caught and Carnot-caught errors = different null spaces (the moat); high overlap = Carnot redundant with frontier self-verification." }
-        n_residual_errors: { principle: "Size of set B (reasoner-missed gold errors); the residual CI is meaningful only if this is >=30. With 500 gold errors this should be comfortably met." }
-        reasoner_self_verify_auroc: { principle: "Positive control — a degenerate reasoner would trivially inflate residual_catch; confirms genuine self-verification." }
-        carnot_ensemble_auroc: { principle: "Positive control — the ensemble must discriminate on THIS corpus (>=0.65). PRMBench != FoVer, so the frozen 0.9131 does NOT apply here." }
-        corpus_source: { principle: "Records that this ran against data/step_error_balanced_v2.json (PRMBench, 500 incorrect) — the provenance that makes the residual CI meaningful, unlike exp3844's 22-error FoVer." }
+        residual_catch_rate: {{ principle: "THE moat metric — of the reasoner's MISSED errors, the fraction Carnot independently catches. High => durable error-independent value; low => o1-subsumption risk (DT-P2)." }}
+        residual_catch_ci95: {{ principle: "Bootstrap CI95 — the lower bound is the gate; turns exp3827's ~15-error point estimate into a defensible interval (Adversarial-Confirmation)." }}
+        error_overlap_jaccard: {{ principle: "Independence check — low overlap between reasoner-caught and Carnot-caught errors = different null spaces (the moat); high overlap = Carnot redundant with frontier self-verification." }}
+        n_residual_errors: {{ principle: "Size of set B (reasoner-missed gold errors); the residual CI is meaningful only if this is >=30. With 500 gold errors this should be comfortably met." }}
+        reasoner_self_verify_auroc: {{ principle: "Positive control — a degenerate reasoner would trivially inflate residual_catch; confirms genuine self-verification." }}
+        carnot_ensemble_auroc: {{ principle: "Positive control — the ensemble must discriminate on THIS corpus (>=0.65). PRMBench != FoVer, so the frozen 0.9131 does NOT apply here." }}
+        corpus_source: {{ principle: "Records that this ran against data/step_error_balanced_v2.json (PRMBench, 500 incorrect) — the provenance that makes the residual CI meaningful, unlike exp3844's 22-error FoVer." }}
         n_items, preconditions_checked, model_specs, random_seed, random_seeds_used,
         reproducibility_checksum, duration_s, inference_substrate:
-          { principle: "Pre-Launch + Adversarial-Verify + Inference-Substrate methodology — a live 35B GGUF run over 1000 steps takes real wall-clock; implausibly short = fabrication." }
+          {{ principle: "Pre-Launch + Adversarial-Verify + Inference-Substrate methodology — a live 35B GGUF run over 1000 steps takes real wall-clock; implausibly short = fabrication." }}
 
       FALSIFICATION GATE (acceptance):
         - MOAT_SURVIVES_AT_SCALE: both positive controls non-degenerate AND residual_catch_ci95 lower bound > 0.5 AND error_overlap_jaccard < 0.6.
