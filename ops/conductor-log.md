@@ -7815,3 +7815,4 @@ ERROR: {
 | 2026-06-05 02:28 UTC | Contamination-free FORMAL core 5-seed CI replicati | OK | 84 passed in 4.76s |
 | 2026-06-05 03:13 UTC | Ship a CERTIFIED abstention operating point on the | OK | 94 passed in 4.29s |
 | 2026-06-05 03:59 UTC | Characterize the LEARNED-probe contribution HONEST | OK | 89 passed in 3.99s |
+| 2026-06-05 04:10 UTC | FR-11 continuous self-learning v22 — Tier-4 ADAPTI | OK | 84 passed in 3.60s |
