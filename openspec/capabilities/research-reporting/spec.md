@@ -17735,3 +17735,75 @@ The system shall output a valid artifact with honest_verdict='complete: external
 **Given** the .353 section exists
 **When** the refresh script is run
 **Then** it appends the new papers and generates the JSON artifact.
+
+### REQ-REPORT-3857: Archive .355 Wipeout and Activate .356
+
+The Exp 3857 workflow SHALL reconcile milestone `2026.06.355` as a total
+wipeout and confirm milestone `2026.06.356` is active. Before appending any
+research record, it SHALL confirm that
+`openspec/change-proposals/research-roadmap-v356.md` exists and that
+`research-complete.yaml` safe-loads. If `research-complete.yaml` is corrupt,
+the workflow SHALL write a blocked artifact whose `honest_verdict` starts with
+`blocked_research_complete_yaml_corrupt` and SHALL NOT edit
+`research-complete.yaml`.
+
+On the complete path, the workflow SHALL append an append-only corrective
+record to `research-complete.yaml` rather than regenerating the file from
+scratch. The corrective record SHALL state that `.355` produced zero usable
+result artifacts, SHALL record both root causes: the poison-test YAML
+corruption from the unquoted `complete: ...` exp3833 verdict and the gemini-CLI
+`chunk-NBZI34` / `429 Too Many Requests` crash, SHALL record that the poison
+was fixed by quoting the two exp3833 result values at lines 35485 and 35569,
+and SHALL record Exp 3857 as the activation of `.356`. Every appended
+`result:` value that contains `: ` SHALL be single-quoted so the YAML parse
+gate cannot be poisoned again. The workflow SHALL leave
+`ops/changelog.md`, `ops/status.md`, `_bmad/traceability.md`, and
+`scripts/research_conductor.py` unchanged; those documents are reconciled by
+the conductor's separate status step for this milestone.
+
+The workflow SHALL run the conductor smart-subset core
+`tests/python/test_pipeline_extract.py tests/python/test_docs.py` and SHALL
+run `scripts/publication_gate.py --json` when present. The terminal artifact
+SHALL be written to
+`results/experiment_3857_archive_v355_activate_v356.json` and SHALL include
+bare top-level values for `honest_verdict`, `archived_milestone`,
+`activated_milestone`, `v355_wipeout_root_causes`, `poison_test_fixed`,
+`pretest_subset_green`, `paper_ready`, `frozen_fover_auroc_unchanged`,
+`preconditions_checked`, `inference_substrate`, `random_seed`,
+`reproducibility_checksum`, and `duration_s`, plus `field_principles`
+documenting why each required value exists. `poison_test_fixed` SHALL be true
+only when `research-complete.yaml` parses and the smart-subset core is green.
+`paper_ready` SHALL remain true, the frozen FoVer AUROC SHALL remain `0.9131`,
+and `honest_verdict` SHALL equal
+`complete: archived_v355_total_wipeout_poison_fixed_pretest_green_v356_active_moat_durability_reissued_paper_ready_true_frozen_headline_unchanged`
+on the complete path.
+
+#### SCENARIO-REPORT-3857: Wipeout Is Archived Without Repo-Wide Doc Reconciliation
+
+**Given** `.356` is active in `research-roadmap.yaml`, the `.356` design doc
+exists, `research-complete.yaml` parses, and the publication gate reports
+`paper_ready=true`
+**When** the Exp 3857 workflow runs
+**Then** it appends a corrective `.355` wipeout record without replacing the
+existing file, single-quotes colon-containing `result:` values, records both
+root causes and the line 35485/35569 poison fix, records Exp 3857 as the
+`.356` activation, writes the required artifact with
+`poison_test_fixed=true`, `pretest_subset_green=true`, `paper_ready=true`, and
+`frozen_fover_auroc_unchanged=true`, and leaves `ops/changelog.md`,
+`ops/status.md`, `_bmad/traceability.md`, and
+`scripts/research_conductor.py` unchanged.
+
+#### SCENARIO-REPORT-3857-BLOCKED-YAML: Corrupt Research Record Blocks Before Append
+
+**Given** `research-complete.yaml` does not safe-load
+**When** the Exp 3857 workflow runs
+**Then** it writes a blocked artifact prefixed by
+`blocked_research_complete_yaml_corrupt`, records the failed YAML parse in
+`preconditions_checked`, and leaves `research-complete.yaml` byte-for-byte
+unchanged.
+
+## Implementation Status (REQ-REPORT-3857)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-3857 | Planned (`python/carnot/reporting/archive_v355_activate_v356_3857.py`, `scripts/experiments/experiment_3857_archive_v355_activate_v356.py`) | Planned (`tests/python/test_experiment_3857_archive_v355_activate_v356.py`) |

@@ -1,0 +1,47 @@
+{
+  "activated_milestone": "2026.06.356",
+  "active_roadmap_path": "research-roadmap.yaml",
+  "archived_milestone": "2026.06.355",
+  "duration_s": 10.763145,
+  "experiment_id": "exp3857",
+  "field_principles": {
+    "activated_milestone": "Provenance -- the next milestone staged (.356).",
+    "archived_milestone": "Provenance -- which milestone this reconciles (.355).",
+    "duration_s": "Real wall-clock of the reconcile.",
+    "frozen_fover_auroc_unchanged": "Bare bool -- the 0.9131 FoVer headline must not move during archive/activate.",
+    "honest_verdict": "Terminal prefix makes the archive/activation boundary auditable by the conductor.",
+    "inference_substrate": "aggregation_from_upstream_artifacts -- reads JSON and appends docs; no model loaded.",
+    "paper_ready": "Bare bool -- converged G1-G4 invariant across the transition.",
+    "poison_test_fixed": "Bare bool -- true iff research-complete.yaml parses and the core pre-test subset is green.",
+    "preconditions_checked": "Records the YAML-parse and .356 design-doc existence checks before reconciling.",
+    "pretest_subset_green": "Bare bool -- test_pipeline_extract.py plus test_docs.py pass; this is the conductor smart-subset core.",
+    "random_seed": "Determinism precondition for reproducibility.",
+    "reproducibility_checksum": "Content hash catches silent drift vs replication.",
+    "v355_wipeout_root_causes": "Records both causes so the failure is auditable and not silently re-incurred."
+  },
+  "frozen_fover_auroc": 0.9131,
+  "frozen_fover_auroc_unchanged": true,
+  "honest_verdict": "complete: archived_v355_total_wipeout_poison_fixed_pretest_green_v356_active_moat_durability_reissued_paper_ready_true_frozen_headline_unchanged",
+  "inference_substrate": "aggregation_from_upstream_artifacts",
+  "paper_ready": true,
+  "poison_test_fixed": true,
+  "preconditions_checked": {
+    "active_milestone": "2026.06.356",
+    "active_roadmap_path": "research-roadmap.yaml",
+    "research_complete_yaml_parsed_after": true,
+    "research_complete_yaml_parsed_before": true,
+    "v356_design_doc_exists": true
+  },
+  "pretest_subset_green": true,
+  "publication_gate_unmet_gates": [],
+  "random_seed": 3857,
+  "reproducibility_checksum": "35e0951e24f9e61da4e6afd1e4ea7736a4a47528104a397e8215f2aad26225d5",
+  "research_complete_append_only": true,
+  "schema": "carnot.archive_activation.v355_to_v356_3857.v1",
+  "task_id": "exp3857-archive-v355-activate-v356",
+  "v355_wipeout_root_causes": [
+    "poison-test YAML corruption: .354 appended the exp3833 verdict as an unquoted `complete: ...` result, so the bare `: ` poisoned research-complete.yaml and made test_docs.py fail during the conductor smart-subset pre-test gate",
+    "gemini-CLI crash: the .355 archive task ran through gemini and failed in bundle chunk-NBZI34 with 429 Too Many Requests, leaving the archive artifact unusable"
+  ],
+  "v356_active_confirmed": true
+}
