@@ -7882,3 +7882,4 @@ ERROR: {
 | 2026-06-05 12:29 UTC | Facts-domain COMPLEMENTARITY (gated on exp3862 fac | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_3863_graph_v |
 | 2026-06-05 13:08 UTC | Facts-domain COMPLEMENTARITY (gated on exp3862 fac | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_3863_graph_v |
 | 2026-06-05 13:25 UTC | FR-11 continuous self-learning v23 (research-progr | OK | 89 passed in 4.06s |
+| 2026-06-05 13:46 UTC | LDT-lattice margin sharpening (re-issue of exp3853 | OK | 91 passed in 5.43s |
