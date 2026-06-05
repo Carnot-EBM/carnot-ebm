@@ -35808,3 +35808,17 @@ milestones:
       \ sharpening, and the two FPGA boards. paper_ready stays TRUE; frozen 0.9131 unchanged."
     deliverable: results/experiment_3868_capstone_v356.json
     result: OK (conductor)
+- id: 2026.06.357
+  title: "Verifier-MOAT-at-scale \u2014 FINALLY run the scissor against the existing 500-error PRMBench corpus (3x-unblocked:\
+    \ corpus exists, no gated_on, requires_codex)."
+  doc: docs/research-notes/verifier-moat-scissor-plot-design.md
+  completed: '2026-06-05'
+  finding: See conductor log for per-experiment results.
+  tasks:
+  - id: exp3869-moat-scissor-v4-against-existing-corpus
+    title: 'MOAT SCISSOR AT SCALE v4 (supersedes blocked exp3844/exp3859): against the EXISTING data/step_error_balanced_v2.json
+      (500 gold-incorrect steps), of the step-errors a strong SOTA reasoner (Qwen3.6-35B) self-verification MISSES, what fraction
+      does Carnot''s k=15 ensemble INDEPENDENTLY catch? Residual-catch + bootstrap CI95 + 2 positive controls. The DT-P2 o1-subsumption
+      durability test.'
+    deliverable: results/experiment_3869_moat_scissor_v4_existing_corpus.json
+    result: OK (conductor)
