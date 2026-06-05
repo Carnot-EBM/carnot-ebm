@@ -3912,6 +3912,68 @@ available.
 
 ---
 
+### REQ-HW-3867
+
+**Title:** PolarFire SoC Ising CPU dispatch v4 MUST be SSH-precondition-gated and hash-verified
+
+**Description:**
+Experiment 3867 MUST dispatch a deterministic Carnot Ising energy-evaluation
+workload to the Microchip PolarFire SoC Discovery Kit over SSH and verify that
+the board reproduces the exact CPU reference result. The experiment MUST first
+check `ssh -o ConnectTimeout=5 -o BatchMode=yes polarfire 'true'` and then
+`ssh polarfire 'python3 --version'`. If either precondition fails, it MUST write
+a blocked artifact (`blocked_polarfire_ssh_timeout` or
+`blocked_polarfire_no_python`) and MUST NOT SCP or run the workload.
+
+When preconditions pass, the experiment MUST build a seed-controlled fixed Ising
+coupling matrix and fixed spin configurations, compute the CPU reference
+energies locally, SCP the same workload and a self-contained Python runner to
+the board, run it on the PolarFire Linux riscv64 CPU substrate, capture stdout,
+and compare the board result SHA256 to the CPU reference SHA256. The terminal
+gate requires `polarfire_workload_validated=true`, `result_hash_match=true`,
+and a real SSH round-trip `run_duration_s >= 5`.
+
+**Acceptance criteria:**
+- `scripts/experiments/experiment_3867_polarfire_soc_smoke_v4.py` writes
+  `results/experiment_3867_polarfire_soc_smoke_v4.json`.
+- The artifact includes `polarfire_workload_validated`, `result_hash_match`,
+  `board_result_sha256`, `cpu_reference_sha256`, `run_duration_s`,
+  `soc_temp_max_c`, `thermal_note`, `preconditions_checked`, `random_seed`,
+  `reproducibility_checksum`, `inference_substrate`, and `honest_verdict`.
+- Each required artifact field has a `principle` note in `field_provenance`,
+  while `polarfire_workload_validated` and `result_hash_match` remain bare
+  booleans.
+- A failed SSH precondition emits `blocked_polarfire_ssh_timeout` and exits
+  before Python probing, SCP, or workload execution.
+- A missing board Python precondition emits `blocked_polarfire_no_python` and
+  exits before SCP or workload execution.
+- A hash match with `run_duration_s >= 5` emits an `honest_verdict` beginning
+  with `success: polarfire_carnot_dispatch_hash_verified_terminal`.
+- A hash mismatch emits an `honest_verdict` beginning with
+  `complete: polarfire_dispatch_ran_hash_MISMATCH` and does not validate the
+  workload.
+
+**Implementation status:** Pending (Exp 3867)
+
+---
+
+### SCENARIO-HW-3867
+
+**Scenario:** PolarFire runs a deterministic Ising energy workload and matches the CPU hash.
+
+**Given:** `ssh polarfire` is reachable and `python3` is available on the board.
+**When:** Experiment 3867 copies the deterministic Ising workload plus runner to
+the board, runs the workload over SSH, captures stdout, and probes SoC
+temperature if readable.
+**Then:** It writes `results/experiment_3867_polarfire_soc_smoke_v4.json` with
+precondition evidence, CPU and board result hashes, the hash-match boolean,
+real `run_duration_s`, thermal fields, principle annotations, and a terminal,
+partial, or blocked verdict without fabricating board evidence.
+
+**Implementation status:** Pending (Exp 3867)
+
+---
+
 ### REQ-HW-3577
 
 **Title:** KV260 hardware-task continuity verification
