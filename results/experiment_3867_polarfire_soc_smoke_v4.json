@@ -1,0 +1,153 @@
+{
+  "board_result": {
+    "energies": [
+      9,
+      -9,
+      9,
+      -9,
+      9,
+      -9
+    ],
+    "energy_max": 9,
+    "energy_min": -9,
+    "energy_sum": 0,
+    "n_configs": 6,
+    "n_spins": 8,
+    "random_seed": 3867,
+    "schema": "carnot.ising_energy_result.v1",
+    "spec_refs": [
+      "REQ-HW-3867",
+      "SCENARIO-HW-3867"
+    ],
+    "workload_sha256": "3362f3ea747532dda1d29228eb78931110e84b4aef9d1ee82b058c2a0dc2973b"
+  },
+  "board_result_sha256": "b00b011cd654e5dec0513334bd78ea288f72ea95a2d10b7ddcd6eb51040138cb",
+  "command_transcript": [
+    {
+      "command": "ssh polarfire 'mkdir -p /tmp/carnot_exp3867_311137_1780670490'",
+      "output_excerpt": "",
+      "returncode": 0,
+      "stage": "remote_mkdir"
+    },
+    {
+      "command": "scp -q /tmp/carnot_exp3867_p6h3qf7w/runner.py /tmp/carnot_exp3867_p6h3qf7w/workload.json polarfire:/tmp/carnot_exp3867_311137_1780670490/",
+      "output_excerpt": "",
+      "returncode": 0,
+      "stage": "scp_push"
+    },
+    {
+      "command": "ssh polarfire 'cd /tmp/carnot_exp3867_311137_1780670490 && python3 runner.py workload.json --min-runtime-s 5.050 # local_workload_path=/tmp/carnot_exp3867_p6h3qf7w/workload.json'",
+      "output_excerpt": "{\"energies\":[9,-9,9,-9,9,-9],\"energy_max\":9,\"energy_min\":-9,\"energy_sum\":0,\"n_configs\":6,\"n_spins\":8,\"random_seed\":3867,\"schema\":\"carnot.ising_energy_result.v1\",\"spec_refs\":[\"REQ-HW-3867\",\"SCENARIO-HW-3867\"],\"workload_sha256\":\"3362f3ea747532dda1d29228eb78931110e84b4aef9d1ee82b058c2a0dc2973b\"}\ncycles=2102",
+      "returncode": 0,
+      "stage": "remote_ising_eval"
+    },
+    {
+      "command": "ssh polarfire 'rm -rf /tmp/carnot_exp3867_311137_1780670490'",
+      "output_excerpt": "",
+      "returncode": 0,
+      "stage": "remote_cleanup"
+    },
+    {
+      "command": "ssh polarfire 'python3 - <<'\"'\"'PY'\"'\"'\nfrom pathlib import Path\nfor path in sorted(Path('\"'\"'/sys/class/thermal'\"'\"').glob('\"'\"'thermal_zone*/temp'\"'\"')):\n    try:\n        print(path.read_text().strip())\n    except OSError:\n        pass\nPY'",
+      "output_excerpt": "",
+      "returncode": 0,
+      "stage": "thermal_probe"
+    }
+  ],
+  "cpu_reference_result": {
+    "energies": [
+      9,
+      -9,
+      9,
+      -9,
+      9,
+      -9
+    ],
+    "energy_max": 9,
+    "energy_min": -9,
+    "energy_sum": 0,
+    "n_configs": 6,
+    "n_spins": 8,
+    "random_seed": 3867,
+    "schema": "carnot.ising_energy_result.v1",
+    "spec_refs": [
+      "REQ-HW-3867",
+      "SCENARIO-HW-3867"
+    ],
+    "workload_sha256": "3362f3ea747532dda1d29228eb78931110e84b4aef9d1ee82b058c2a0dc2973b"
+  },
+  "cpu_reference_sha256": "b00b011cd654e5dec0513334bd78ea288f72ea95a2d10b7ddcd6eb51040138cb",
+  "experiment": 3867,
+  "field_provenance": {
+    "board_result_sha256": {
+      "principle": "The board-side result hash compared against the CPU reference -- auditable provenance that the workload ran on the board."
+    },
+    "cpu_reference_sha256": {
+      "principle": "The local reference result hash compared against the board result -- auditable provenance for the deterministic CPU baseline."
+    },
+    "honest_verdict": {
+      "principle": "Terminal prefix records whether the live board run succeeded, completed with non-terminal evidence, or stopped at a precondition."
+    },
+    "inference_substrate": {
+      "principle": "Inference-Substrate declaration for a hardware_smoke SSH-attached board run."
+    },
+    "polarfire_workload_validated": {
+      "principle": "Bare bool -- terminal-state gate; true only if the board's result hash matches the CPU reference and the real dispatch duration reaches the floor."
+    },
+    "preconditions_checked": {
+      "principle": "Pre-Launch + Inference-Substrate hardware_smoke gate; SSH reachability and board Python checks must pass before dispatch."
+    },
+    "random_seed": {
+      "principle": "Pre-Launch reproducibility field controlling the fixed Ising workload."
+    },
+    "reproducibility_checksum": {
+      "principle": "Content-addressed checksum over the artifact, excluding this checksum, so later drift is detectable."
+    },
+    "result_hash_match": {
+      "principle": "Bare bool -- the structural anti-fabrication check; the board must reproduce the exact reference result."
+    },
+    "run_duration_s": {
+      "principle": "Real SSH round-trip wall-clock; >=5s floor structurally prevents the exp1680 run_duration_s=0 fabrication."
+    },
+    "soc_temp_max_c": {
+      "principle": "Per-board hardware-artifact thermal field; null only when the board does not expose readable thermal sysfs values."
+    },
+    "thermal_note": {
+      "principle": "Per-board hardware-artifact field describing the passive-cooling envelope of the dispatch."
+    }
+  },
+  "honest_verdict": "success: polarfire_carnot_dispatch_hash_verified_terminal_duration12.61s_tempunknown",
+  "inference_substrate": "hardware_smoke",
+  "no_fpga_fabric_claim": true,
+  "polarfire_workload_validated": true,
+  "preconditions_checked": [
+    {
+      "command": "ssh -o ConnectTimeout=5 -o BatchMode=yes polarfire true",
+      "exit_code": 0,
+      "observed": "returncode=0",
+      "passed": true,
+      "principle": "Pre-Launch + Inference-Substrate hardware_smoke gate; SSH reachability and board Python checks must pass before dispatch.",
+      "resource": "polarfire_ssh"
+    },
+    {
+      "command": "ssh polarfire 'python3 --version'",
+      "exit_code": 0,
+      "observed": "Python 3.12.12",
+      "passed": true,
+      "principle": "Pre-Launch + Inference-Substrate hardware_smoke gate; SSH reachability and board Python checks must pass before dispatch.",
+      "resource": "polarfire_python"
+    }
+  ],
+  "random_seed": 3867,
+  "reproducibility_checksum": "a80a9aaee15f5a7d864cbe663fd430c90c74ace452af777caaa1332a60efa632",
+  "result_hash_match": true,
+  "run_duration_s": 12.605785,
+  "schema": "carnot.polarfire_soc_ising_dispatch.v4",
+  "soc_temp_max_c": null,
+  "spec_refs": [
+    "REQ-HW-3867",
+    "SCENARIO-HW-3867"
+  ],
+  "thermal_note": "passively cooled; no active fan; sustained-load results may differ from production with active cooling",
+  "workload_sha256": "3362f3ea747532dda1d29228eb78931110e84b4aef9d1ee82b058c2a0dc2973b"
+}
