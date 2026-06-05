@@ -1,0 +1,232 @@
+{
+  "bitstream_path": "/home/ianblenke/github.com/ianblenke/carnot/build/gatemate/experiment_3866_gatemate_ising_tile_flash_v2/gatemate_ising_n16.bit",
+  "bitstream_sha256": "17fe84e12e1377006b8ba2195a6158c696524e80250812d6a94863c98379e217",
+  "build_log_paths": [
+    "/home/ianblenke/github.com/ianblenke/carnot/logs/experiment_3866_gatemate_ising_tile_flash_v2/synthesis.log",
+    "/home/ianblenke/github.com/ianblenke/carnot/logs/experiment_3866_gatemate_ising_tile_flash_v2/pnr.log",
+    "/home/ianblenke/github.com/ianblenke/carnot/logs/experiment_3866_gatemate_ising_tile_flash_v2/pack.log",
+    "/home/ianblenke/github.com/ianblenke/carnot/logs/experiment_3866_gatemate_ising_tile_flash_v2/flash.log"
+  ],
+  "command_transcript": [
+    {
+      "command": "/opt/oss-cad-suite/bin/yosys -l /home/ianblenke/github.com/ianblenke/carnot/logs/experiment_3866_gatemate_ising_tile_flash_v2/synthesis.log -p 'read_verilog -sv /home/ianblenke/github.com/ianblenke/carnot/rtl/gatemate_ising_n16.v; synth_gatemate -top gatemate_ising_n16 -nomx8 -luttree -json /home/ianblenke/github.com/ianblenke/carnot/build/gatemate/experiment_3866_gatemate_ising_tile_flash_v2/gatemate_ising_n16.json; stat'",
+      "output_excerpt": "  148 port bits\n      250 cells\n        1   CC_BUFG\n       53   CC_DFF\n      107   CC_IBUF\n       12   CC_L2T4\n       16   CC_L2T5\n        1   CC_LUT1\n       18   CC_LUT2\n        1   CC_MX2\n       41   CC_OBUF\n\n2.53. Executing CHECK pass (checking for obvious problems).\nChecking module gatemate_ising_n16...\nFound and reported 0 problems.\n\n2.54. Executing OPT_CLEAN pass (remove unused cells and wires).\nFinding unused cells or wires in module \\gatemate_ising_n16..\n\n2.55. Executing JSON backend.\n\n3. Printing statistics.\n\n=== gatemate_ising_n16 ===\n\n        +----------Local Count, excluding submodules.\n        | \n       75 wires\n      391 wire bits\n       28 public wires\n      233 public wire bits\n       19 ports\n      148 port bits\n      250 cells\n        1   CC_BUFG\n       53   CC_DFF\n      107   CC_IBUF\n       12   CC_L2T4\n       16   CC_L2T5\n        1   CC_LUT1\n       18   CC_LUT2\n        1   CC_MX2\n       41   CC_OBUF\n\nWarnings: 1 unique messages, 1 total\nEnd of script. Logfile hash: bf65512184, time: 0.21s, user: 0.12s, system: 0.02s, MEM: 181.42 MB peak\nYosys 0.64+149 (git sha1 2dc69a757, clang++ 18.1.8 -fPIC -O3)\nTime spent: 34% 15x read_verilog (0 sec), 33% 1x abc (0 sec), ...",
+      "returncode": 0,
+      "stage": "synthesis"
+    },
+    {
+      "command": "/opt/oss-cad-suite/bin/nextpnr-himbaechel --device CCGM1A1 --json /home/ianblenke/github.com/ianblenke/carnot/build/gatemate/experiment_3866_gatemate_ising_tile_flash_v2/gatemate_ising_n16.json --write /home/ianblenke/github.com/ianblenke/carnot/build/gatemate/experiment_3866_gatemate_ising_tile_flash_v2/gatemate_ising_n16.pnr.json --freq 12.0 --vopt allow-unconstrained --vopt out=/home/ianblenke/github.com/ianblenke/carnot/build/gatemate/experiment_3866_gatemate_ising_tile_flash_v2/gatemate_ising_n16.cfg.bit",
+      "output_excerpt": "nblenke/carnot/rtl/gatemate_ising_n16.v:106.18-109.32\nInfo:                               /opt/oss-cad-suite/lib/../share/yosys/techmap.v:583.21-583.22\nInfo:      setup  0.10  22.62 Source $auto$ff.cc:337:slice$247.DIN\nInfo: 1.53 ns logic, 21.09 ns routing\n\nInfo: Max frequency for clock '$iopadmap$S_AXI_ACLK': 139.12 MHz (PASS at 12.00 MHz)\n\nInfo: Max delay <async> -> posedge $iopadmap$S_AXI_ACLK: 22.62 ns\n\nInfo: Slack histogram:\nInfo:  legend: * represents 1 endpoint(s)\nInfo:          + represents [1,1) endpoint(s)\nInfo: [ 76145,  76410) |**** \nInfo: [ 76410,  76675) |** \nInfo: [ 76675,  76940) | \nInfo: [ 76940,  77205) |******* \nInfo: [ 77205,  77470) |** \nInfo: [ 77470,  77735) |** \nInfo: [ 77735,  78000) | \nInfo: [ 78000,  78265) | \nInfo: [ 78265,  78530) | \nInfo: [ 78530,  78795) |* \nInfo: [ 78795,  79060) | \nInfo: [ 79060,  79325) |** \nInfo: [ 79325,  79590) |*** \nInfo: [ 79590,  79855) |**** \nInfo: [ 79855,  80120) |***** \nInfo: [ 80120,  80385) |******* \nInfo: [ 80385,  80650) |*********** \nInfo: [ 80650,  80915) |**** \nInfo: [ 80915,  81180) | \nInfo: [ 81180,  81445) |* \nInfo: Update configuration based on routing..\n\n148 warnings, 0 errors\n\nInfo: Program finished normally.",
+      "returncode": 0,
+      "stage": "pnr"
+    },
+    {
+      "command": "/opt/oss-cad-suite/bin/gmpack /home/ianblenke/github.com/ianblenke/carnot/build/gatemate/experiment_3866_gatemate_ising_tile_flash_v2/gatemate_ising_n16.cfg.bit /home/ianblenke/github.com/ianblenke/carnot/build/gatemate/experiment_3866_gatemate_ising_tile_flash_v2/gatemate_ising_n16.bit",
+      "output_excerpt": "",
+      "returncode": 0,
+      "stage": "pack"
+    },
+    {
+      "command": "/opt/oss-cad-suite/bin/openFPGALoader -c dirtyJtag -b olimex_gatemateevb /home/ianblenke/github.com/ianblenke/carnot/build/gatemate/experiment_3866_gatemate_ising_tile_flash_v2/gatemate_ising_n16.bit",
+      "output_excerpt": "Board default cable overridden with dirtyJtag\nJtag frequency : requested 6000000 Hz -> real 6000000 Hz\n\nLoad SRAM via JTAG: [==================================================] 100.00%\n\nDone",
+      "returncode": 0,
+      "stage": "flash"
+    }
+  ],
+  "duration_s": 6.345193,
+  "experiment": 3866,
+  "field_provenance": {
+    "duration_s": {
+      "principle": "Standard artifact duration field consumed by adversarial verification."
+    },
+    "fmax_mhz": {
+      "principle": "Real P&R timing output records whether the routed tile has a plausible clock margin on CCGM1A1."
+    },
+    "gatemate_bitstream_flashed": {
+      "principle": "Bare bool -- the terminal-state gate; true only if openFPGALoader accepted the bitstream on the real board."
+    },
+    "honest_verdict": {
+      "principle": "Self-declared terminal, partial, or blocked state lets the conductor separate real hardware progress from honest precondition failure."
+    },
+    "inference_substrate": {
+      "principle": "Declares this as hardware_smoke so duration checks use the hardware boundary rather than live-LLM expectations."
+    },
+    "lut_dff_utilization": {
+      "principle": "Real synthesis/P&R numbers anchor the n=16 tile to actual GateMate resources instead of a paper estimate."
+    },
+    "preconditions_checked": {
+      "principle": "Records the toolchain and board-detect checks before fabrication, preventing exp1680-class hardware fabrication."
+    },
+    "reproducibility_checksum": {
+      "principle": "Content-addressed hash of RTL, commands, tool evidence, bitstream, and flash outcome catches silent drift."
+    },
+    "run_duration_s": {
+      "principle": "Real wall-clock duration makes the hardware flash round-trip auditable and catches zero-duration fabricated runs."
+    },
+    "sample_timing_note": {
+      "principle": "Explains why sample_timing_us is null when the board can be flashed but the programmed design has no supported host-visible timing path."
+    },
+    "sample_timing_us": {
+      "principle": "On-board energy-eval cycle timing is populated only if a real readback path exists; null prevents fabricated timing."
+    },
+    "synth_pnr_pack_succeeded": {
+      "principle": "Bare bool -- the toolchain end-to-end produced a bitstream, separable from the flash step."
+    },
+    "thermal_note": {
+      "principle": "GateMate is passively cooled, so the artifact must disclose that burst smoke results are not sustained-load thermal evidence."
+    }
+  },
+  "fmax_mhz": 139.12,
+  "gatemate_bitstream_flashed": true,
+  "honest_verdict": "success: gatemate_ising_tile_n16_flashed_terminal_lut19_fmax139.12_timingnone_no_readback",
+  "inference_substrate": "hardware_smoke",
+  "lut_dff_utilization": {
+    "dff_count": 53,
+    "lut_count": 19,
+    "nextpnr_resources": {
+      "CFG_CTRL": {
+        "available": 1,
+        "percent": 0,
+        "used": 0
+      },
+      "CLKIN": {
+        "available": 1,
+        "percent": 100,
+        "used": 1
+      },
+      "CPE_COMP": {
+        "available": 20480,
+        "percent": 0,
+        "used": 0
+      },
+      "CPE_CPLINES": {
+        "available": 20480,
+        "percent": 0,
+        "used": 0
+      },
+      "CPE_FF": {
+        "available": 40960,
+        "percent": 0,
+        "used": 53
+      },
+      "CPE_LT": {
+        "available": 40960,
+        "percent": 0,
+        "used": 103
+      },
+      "CPE_RAMIO": {
+        "available": 40960,
+        "percent": 0,
+        "used": 22
+      },
+      "GLBOUT": {
+        "available": 1,
+        "percent": 100,
+        "used": 1
+      },
+      "GPIO": {
+        "available": 162,
+        "percent": 91,
+        "used": 148
+      },
+      "IOSEL": {
+        "available": 162,
+        "percent": 91,
+        "used": 148
+      },
+      "PLL": {
+        "available": 4,
+        "percent": 0,
+        "used": 0
+      },
+      "RAM_HALF": {
+        "available": 64,
+        "percent": 0,
+        "used": 0
+      },
+      "SERDES": {
+        "available": 1,
+        "percent": 0,
+        "used": 0
+      },
+      "USR_RSTN": {
+        "available": 1,
+        "percent": 0,
+        "used": 0
+      }
+    },
+    "principle": "Real synthesis/P&R numbers anchor the n=16 tile to actual GateMate resources instead of a paper estimate.",
+    "yosys_cell_counts": {
+      "CC_BUFG": 1,
+      "CC_DFF": 53,
+      "CC_IBUF": 107,
+      "CC_L2T4": 12,
+      "CC_L2T5": 16,
+      "CC_LUT1": 1,
+      "CC_LUT2": 18,
+      "CC_MX2": 1,
+      "CC_OBUF": 41
+    }
+  },
+  "model_specs": {
+    "device": "CCGM1A1",
+    "n_spins": 16,
+    "rtl_path": "rtl/gatemate_ising_n16.v",
+    "rtl_top": "gatemate_ising_n16"
+  },
+  "preconditions_checked": [
+    {
+      "available": true,
+      "blocker": "",
+      "command": "command -v yosys && yosys -V && yosys -Q -p 'help synth_gatemate'",
+      "detail": "ell $_DFFE_????_ 01 -cell $_DLATCH_???_ 01\n        techmap -map +/gatemate/reg_map.v\n        opt_expr -mux_undef\n        simplemap\n        opt_clean\n\n    map_muxs:\n        muxcover  -mux4 -mux8\n        opt -full\n        simplemap\n        techmap -map +/gatemate/mux_map.v\n\n    map_luts:\n        abc  -genlib +/gatemate/lut_tree_cells.genlib    (with -luttree)\n        techmap -map +/gatemate/lut_tree_map.v    (with -luttree)\n        gatemate_foldinv    (with -luttree)\n        techmap -map +/gatemate/inv_map.v    (with -luttree)\n        abc  -dress -lut 4    (without -luttree)\n        clean\n\n    map_cells:\n        techmap -map +/gatemate/lut_map.v\n        clean\n\n    map_bufg:    (skip if '-noclkbuf')\n        clkbufmap -buf CC_BUFG O:I\n        clean\n\n    check:\n        hierarchy -check\n        stat -width\n        check -noinit\n        blackbox =A:whitebox\n\n    vlog:\n        opt_clean -purge\n        write_verilog -noattr <file-name>\n\n    json:\n        write_json <file-name>\n\nEnd of script. Logfile hash: ce4836ed80, time: 0.00s, user: 0.00s, system: 0.00s, MEM: 181.42 MB peak\nYosys 0.64+149 (git sha1 2dc69a757, clang++ 18.1.8 -fPIC -O3)\nTime spent: 99% 1x help (0 sec), 0% 0x id_gc (0 sec)",
+      "path": "/opt/oss-cad-suite/bin/yosys",
+      "resource": "yosys",
+      "synth_gatemate_returncode": 0,
+      "version": "Yosys 0.64+149 (git sha1 2dc69a757, clang++ 18.1.8 -fPIC -O3)",
+      "version_returncode": 0
+    },
+    {
+      "available": true,
+      "blocker": "",
+      "command": "command -v nextpnr-himbaechel && nextpnr-himbaechel --help",
+      "detail": "               enable experimental timing-driven ripup\n                                        in router\n  --router2-tmg-ripup                   enable experimental timing-driven ripup\n                                        in router (deprecated; use --tmg-ripup \n                                        instead)\n  --router2-alt-weights                 use alternate router2 weights\n  --report arg                          write timing and utilization report in \n                                        JSON format to file\n  --detailed-timing-report              Append detailed net timing data to the \n                                        JSON report\n  --placed-svg arg                      write render of placement to SVG file\n  --routed-svg arg                      write render of routing to SVG file\n\nArchitecture specific options:\n  --device arg                          name of device to use\n  --chipdb arg                          override path to chip database file\n  --list-uarch                          list included uarches\n  -o [ --vopt ] arg                     options to pass to the himb\u00e4chel uarch\n                                        (use help as argument to get more info)",
+      "path": "/opt/oss-cad-suite/bin/nextpnr-himbaechel",
+      "resource": "nextpnr-himbaechel",
+      "returncode": 0
+    },
+    {
+      "available": true,
+      "blocker": "",
+      "command": "command -v gmpack",
+      "detail": "/opt/oss-cad-suite/bin/gmpack",
+      "path": "/opt/oss-cad-suite/bin/gmpack",
+      "resource": "gmpack"
+    },
+    {
+      "available": true,
+      "blocker": "",
+      "command": "command -v openFPGALoader",
+      "detail": "/opt/oss-cad-suite/bin/openFPGALoader",
+      "path": "/opt/oss-cad-suite/bin/openFPGALoader",
+      "resource": "openFPGALoader"
+    },
+    {
+      "available": true,
+      "blocker": "",
+      "command": "openFPGALoader -c dirtyJtag --detect",
+      "detail": "Jtag frequency : requested 6000000 Hz -> real 6000000 Hz\nindex 0:\n\tidcode 0x20000001\n\tmanufacturer colognechip\n\tfamily GateMate Series\n\tmodel  GM1Ax\n\tirlength 6",
+      "resource": "gatemate_board_detect",
+      "returncode": 0
+    }
+  ],
+  "random_seed": 41442,
+  "reproducibility_checksum": "a9b8ae9f03aaddc614d9519d48acfd48f0e8a9c60e8bd7e2586a2cb7884364c8",
+  "run_date": "20260605",
+  "run_duration_s": 6.345193,
+  "sample_timing_note": "No supported GateMate host-visible readback/timing path is present for this DirtyJTAG-flashed RTL; sample_timing_us is null and not fabricating timing.",
+  "sample_timing_us": null,
+  "soc_temp_max_c": null,
+  "synth_pnr_pack_succeeded": true,
+  "thermal_note": "passively cooled; no active fan; sustained-load results may differ from production with active cooling"
+}

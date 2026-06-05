@@ -3849,6 +3849,69 @@ when a precondition is hard-missing — and never `unspecified`.
 
 ---
 
+### REQ-HW-109
+
+**Title:** Exp 3866 GateMate n=16 Ising tile terminal flash v2 MUST precondition-gate hardware and preserve real resource evidence
+
+**Description:**
+Experiment 3866 MUST drive the GateMate A1-EVB-2M n=16 Carnot Ising tile toward
+terminal state using the current open-source GateMate flow:
+`yosys synth_gatemate`, `nextpnr-himbaechel --device CCGM1A1`, `gmpack`, and
+`openFPGALoader -c dirtyJtag -b olimex_gatemateevb`. Before any synthesis or
+fabrication step, it MUST check the exact toolchain and board resources:
+`yosys -V` with `synth_gatemate` support, `nextpnr-himbaechel --help`,
+`gmpack`, `openFPGALoader`, and `openFPGALoader -c dirtyJtag --detect` proving
+the Cologne Chip GateMate/GM1Ax IDCODE. If any precondition fails, the
+experiment MUST write a blocked artifact and MUST NOT run synthesis, P&R,
+packing, or flashing.
+
+When the preconditions pass, the experiment MUST synthesize, place-and-route,
+pack, and attempt exactly one real board flash. The artifact MUST record real
+LUT/DFF utilization and Fmax parsed from the actual tool transcripts. If the
+bitstream flashes but the current RTL/tooling exposes no host-visible sample
+readback path, `sample_timing_us` MUST be null with an explanatory note rather
+than a fabricated timing value. The terminal gate is the real board accepting
+the bitstream: `gatemate_bitstream_flashed=true`.
+
+**Acceptance criteria:**
+- `scripts/experiments/experiment_3866_gatemate_ising_tile_flash_v2.py` writes
+  `results/experiment_3866_gatemate_ising_tile_flash_v2.json`.
+- The artifact includes `honest_verdict`, `gatemate_bitstream_flashed`,
+  `synth_pnr_pack_succeeded`, `lut_dff_utilization`, `fmax_mhz`,
+  `sample_timing_us`, `sample_timing_note`, `preconditions_checked`,
+  `thermal_note`, `run_duration_s`, `duration_s`, `inference_substrate`, and
+  `reproducibility_checksum`.
+- The required artifact fields have principle annotations in
+  `field_provenance`, while `gatemate_bitstream_flashed` and
+  `synth_pnr_pack_succeeded` remain bare booleans.
+- A missing precondition emits an `honest_verdict` beginning with
+  `blocked_gatemate_<resource>` and exits before synthesis.
+- A successful synth/P&R/pack but failed flash emits an `honest_verdict`
+  beginning with `complete: gatemate_synth_pnr_pack_succeeded_flash_pending`.
+- A board-accepted bitstream emits an `honest_verdict` beginning with
+  `success: gatemate_ising_tile_n16_flashed_terminal`.
+
+**Implementation status:** Implemented (Exp 3866)
+
+---
+
+### SCENARIO-HW-109
+
+**Scenario:** GateMate n=16 Ising tile flash v2 records terminal, partial, or blocked state without fabrication.
+
+**Given:** The GateMate toolchain may or may not be installed and the
+Olimex GateMate A1-EVB-2M may or may not be detected over onboard DirtyJTAG.
+**When:** Experiment 3866 runs its preconditions and, only on pass, runs the
+synth_gatemate -> nextpnr-himbaechel -> gmpack -> openFPGALoader flow.
+**Then:** It writes the v2 artifact with precondition evidence, real
+utilization/Fmax values when the flow reaches P&R, a real flash result, and
+null sample timing with a note whenever no host-visible timing/readback path is
+available.
+
+**Implementation status:** Implemented (Exp 3866)
+
+---
+
 ### REQ-HW-3577
 
 **Title:** KV260 hardware-task continuity verification
