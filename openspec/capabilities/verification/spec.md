@@ -10264,3 +10264,49 @@ or `complete: learned_contribution_characterized_NO_category_signal_delta_unifor
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-VERIFY-3837 | Implemented (`python/carnot/verify/experiment_3837_fover_error_category_learned_contribution.py`, `scripts/run_experiment_3837.py`) | Implemented (`tests/python/test_experiment_3837_fover_error_category_learned_contribution.py`) |
+
+### REQ-VERIFY-3844: Verifier Error-Independence Scissor At Scale
+
+The repository SHALL provide an Exp 3844 FoVer verifier moat measurement that
+reuses Exp 3827's error-set definitions at N>=1000: label `1` is a
+gold-incorrect step, a strong reasoner catches an error when its self-verifier
+rejects the step, Carnot catches an error when the production Exp 2837
+Tier0r/Tier0u/FR-11 ensemble flags the step at its operating threshold,
+`residual_catch_rate` is the fraction of reasoner-missed gold-incorrect steps
+that Carnot catches, and `error_overlap_jaccard` is the Jaccard overlap between
+reasoner-caught and Carnot-caught gold-incorrect sets.
+
+The workflow SHALL check CUDA availability, resolve a cached mandated SOTA GGUF
+via the llama.cpp path (preferring `unsloth/Qwen3.6-35B-A3B-GGUF` and falling
+back to `unsloth/gemma-4-26B-A4B-it-GGUF`), verify `carnot.verify` imports, and
+load a FoVer test corpus with `{question_id|question, step_text, label}`
+fields. If any precondition fails, it SHALL write
+`results/experiment_3844_verifier_error_independence_scissor_at_scale.json`
+with an `honest_verdict` starting with `blocked_<resource>` and SHALL NOT
+fabricate live metrics.
+
+For runnable inputs, the workflow SHALL draw a seed-controlled balanced FoVer
+panel with N>=1000, ask the live SOTA GGUF self-verification prompt from Exp
+3827 for each step, score the same rows with the Exp 2837 production ensemble,
+bootstrap the residual catch rate with at least 1000 resamples, and apply the
+terminal gate without any generation-headroom gate. The artifact SHALL include
+principle-annotated fields for `residual_catch_rate`,
+`residual_catch_ci95`, `error_overlap_jaccard`,
+`reasoner_self_verify_auroc`, `carnot_ensemble_auroc`, `n_items`,
+`n_residual_errors`, `preconditions_checked`, `cited_upstream_artifacts`,
+`model_specs`, `random_seed`, `random_seeds_used`,
+`reproducibility_checksum`, `duration_s`, and `inference_substrate`.
+
+### SCENARIO-VERIFY-3844: Positive Controls Gate Error-Independent Residual Catch
+
+Given a balanced FoVer panel, reasoner self-verification scores, and Carnot
+production ensemble scores, when the Exp 3844 artifact is built, then both
+positive controls must pass before any moat verdict is promoted:
+`reasoner_self_verify_auroc` must be in a sane non-degenerate range and
+`carnot_ensemble_auroc` must reproduce the frozen 0.9131 headline within
+0.02. If the controls pass and the bootstrap residual-catch lower bound is
+above 0.5 while `error_overlap_jaccard < 0.6`, the artifact SHALL emit
+`complete: scissor_at_scale_MOAT_SURVIVES...`; if the controls pass and the
+residual-catch upper bound is below 0.3 or `error_overlap_jaccard > 0.7`, it
+SHALL emit `complete: scissor_at_scale_MOAT_SUBSUMED...`; otherwise it SHALL
+emit a terminal `complete: scissor_at_scale_INCONCLUSIVE...` verdict.

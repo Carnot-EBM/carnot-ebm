@@ -1,0 +1,139 @@
+{
+  "carnot_ensemble_auroc": null,
+  "cited_upstream_artifacts": {
+    "exp2837_result": {
+      "exists": true,
+      "flagged_adversarial": false,
+      "path": "results/experiment_2837_fover_memory_leakage_v3.json",
+      "sha256": "7e6974be7c94c8627a3be7e4a46d4038f38ab4e587941bed7afb479d6bd21b2c"
+    },
+    "exp2837_script": {
+      "exists": true,
+      "path": "scripts/experiment_2837_fover_memory_leakage_v3.py",
+      "sha256": "4b93a8da8c23b4606a443bd779479eeaa3322474e2b7121af1d71a9d1dbde57a"
+    },
+    "exp3827_result": {
+      "exists": true,
+      "flagged_adversarial": false,
+      "path": "results/experiment_3827_verifier_error_independence_scissor.json",
+      "sha256": "4488a1e4a828d193c640e8513e9b26838c543d1a7dca917ed9570d8e08aac350"
+    },
+    "exp3827_script": {
+      "exists": true,
+      "path": "scripts/experiments/experiment_3827_verifier_error_independence_scissor.py",
+      "sha256": "cdf24c884024bcc9dc1128c26b8572b4c424bea3a92f72fdfe3dc2add5f9e1c8"
+    }
+  },
+  "duration_s": 1.4844427108764648,
+  "error_overlap_jaccard": null,
+  "experiment": 3844,
+  "field_principles": {
+    "carnot_ensemble_auroc": {
+      "principle": "Positive control -- MUST reproduce the frozen 0.9131 +/-0.02 on this corpus or the ensemble path is unfaithful and ALL residual numbers are void (exp3820 mode)."
+    },
+    "cited_upstream_artifacts": {
+      "principle": "Adversarial-Verify provenance -- cites exp3827 and exp2837 artifacts and their scripts with SHA256 so method reuse is auditable."
+    },
+    "duration_s": {
+      "principle": "Real measured wall-clock duration; live 35B GGUF scoring over N>=1000 should not look implausibly short."
+    },
+    "error_overlap_jaccard": {
+      "principle": "Independence check -- low overlap between reasoner-caught and Carnot-caught errors means the two verifiers occupy different null spaces (the moat); high overlap means Carnot is redundant with frontier self-verification."
+    },
+    "inference_substrate": {
+      "principle": "Declares live llama.cpp self-verification plus Carnot verifier scoring."
+    },
+    "model_specs": {
+      "principle": "Inference-substrate methodology -- records the actual GGUF path loaded by llama.cpp rather than a tokenizer-less HuggingFace repo id."
+    },
+    "n_items": {
+      "principle": "N>=1000 -- the scale-up requirement that makes exp3827's 100-item preliminary result falsifiable."
+    },
+    "n_residual_errors": {
+      "principle": "Residual-set size -- the residual_catch CI is only meaningful if the residual error set is itself large enough; if <30, widen N."
+    },
+    "preconditions_checked": {
+      "principle": "Pre-Launch methodology -- records CUDA, GGUF, carnot.verify, llama.cpp, FoVer corpus, and upstream artifact checks before live scoring."
+    },
+    "random_seed": {
+      "principle": "Balanced FoVer panel seed for exact reproduction."
+    },
+    "random_seeds_used": {
+      "principle": "All deterministic seeds used by sampling and bootstrap stages."
+    },
+    "reasoner_self_verify_auroc": {
+      "principle": "Positive control -- a degenerate (all-accept/all-reject) reasoner would inflate residual_catch trivially; this confirms the reasoner genuinely self-verifies."
+    },
+    "reproducibility_checksum": {
+      "principle": "Adversarial-verify checksum over panel identity, scores, upstream hashes, model specs, and seeds."
+    },
+    "residual_catch_ci95": {
+      "principle": "Bootstrap CI95 -- turns exp3827's round-number point estimate into a defensible interval; the lower bound is the gate field (Adversarial-Confirmation Discipline)."
+    },
+    "residual_catch_rate": {
+      "principle": "THE moat metric -- of the reasoner's MISSED errors, what fraction Carnot independently catches. High => error-independent durable value; low => o1-subsumption risk (DT-P2)."
+    }
+  },
+  "honest_verdict": "blocked_fover_balanced_corpus_not_available",
+  "inference_substrate": "none_blocked_preflight",
+  "model_specs": {
+    "fallback_used": false,
+    "hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+    "loader": "llama_cpp.Llama",
+    "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/snapshots/a483e9e6cbd595906af30beda3187c2663a1118c/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf",
+    "n_gpu_layers": -1
+  },
+  "n_gold_incorrect": 0,
+  "n_items": 0,
+  "n_residual_errors": 0,
+  "preconditions_checked": [
+    {
+      "available": true,
+      "detail": "device_count=2",
+      "resource": "cuda_available"
+    },
+    {
+      "available": true,
+      "detail": "import carnot.verify OK",
+      "resource": "carnot_verify_import"
+    },
+    {
+      "available": true,
+      "detail": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/snapshots/a483e9e6cbd595906af30beda3187c2663a1118c/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf",
+      "resource": "qwen3.6_35b_gguf_cached"
+    },
+    {
+      "available": true,
+      "detail": "import llama_cpp OK",
+      "resource": "llama_cpp_import"
+    },
+    {
+      "available": true,
+      "detail": "/home/ianblenke/github.com/ianblenke/carnot/data/fover_test_v4.json rows=1308 required>=1000",
+      "resource": "fover_test_corpus"
+    },
+    {
+      "available": false,
+      "detail": "/home/ianblenke/github.com/ianblenke/carnot/data/fover_test_v4.json positives=22 negatives=1286 required_positive>=500 required_negative>=500",
+      "resource": "fover_balanced_panel_capacity"
+    },
+    {
+      "available": true,
+      "detail": "exp3827 and exp2837 artifacts/scripts have sha256",
+      "resource": "upstream_artifacts_available"
+    },
+    {
+      "available": true,
+      "detail": "no cited upstream artifact has flagged_adversarial=true",
+      "resource": "upstream_adversarial_flags_absent"
+    }
+  ],
+  "random_seed": null,
+  "random_seeds_used": {},
+  "reasoner_self_verify_auroc": null,
+  "reproducibility_checksum": "39bd5c795d70057bb1cbb1cfedf840f69bb70db36ec7561e6d503018b3cd75c9",
+  "residual_catch_ci95": null,
+  "residual_catch_rate": null,
+  "status": "blocked_fover_balanced_corpus_not_available",
+  "title": "verifier_error_independence_scissor_at_scale"
+}
