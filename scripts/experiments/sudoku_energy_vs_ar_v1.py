@@ -193,6 +193,218 @@ def train_ar(args, device):
     return model, metrics
 
 
+# ------------------------------------------------------------- EBT (energy model)
+class EBT(nn.Module):
+    """Energy E(candidate_solution | puzzle): a bidirectional transformer scoring a
+    FULL filled grid against the puzzle. Low energy = constraints satisfied. The
+    candidate can be passed as hard tokens OR as soft per-cell digit distributions
+    (B,81,9) so we can do continuous-relaxation ENERGY DESCENT (Kona's claim)."""
+    def __init__(self, hidden=256, layers=4, heads=4):
+        super().__init__()
+        self.puz = nn.Embedding(VOCAB, hidden)          # puzzle tokens (0..10)
+        self.dig = nn.Embedding(N_DIGITS, hidden)       # candidate digits (0..8)
+        self.seg = nn.Embedding(2, hidden)              # 0=puzzle, 1=candidate
+        self.pos = nn.Embedding(2 * SEQ, hidden)
+        enc = nn.TransformerEncoderLayer(hidden, heads, hidden * 4, batch_first=True,
+                                         activation="gelu", dropout=0.0, norm_first=True)
+        self.blocks = nn.TransformerEncoder(enc, layers)
+        self.energy = nn.Sequential(nn.LayerNorm(hidden), nn.Linear(hidden, 1))
+
+    def cand_embed(self, cand):
+        # cand: (B,81) digit tokens in [0,8]  OR  (B,81,9) soft distribution
+        if cand.dim() == 2:
+            return self.dig(cand)
+        return cand @ self.dig.weight                    # soft: (B,81,9)@(9,H)->(B,81,H)
+
+    def forward(self, x, cand):  # x:(B,81) tokens 0..10 ; cand: see cand_embed
+        B = x.shape[0]
+        pe = self.puz(x) + self.seg(torch.zeros(SEQ, dtype=torch.long, device=x.device))
+        ce = self.cand_embed(cand) + self.seg(torch.ones(SEQ, dtype=torch.long, device=x.device))
+        h = torch.cat([pe, ce], 1) + self.pos(torch.arange(2 * SEQ, device=x.device))[None]
+        h = self.blocks(h)
+        return self.energy(h[:, SEQ:]).mean(1).squeeze(-1)   # (B,) mean per-cell energy
+
+
+def gold_digits(y):                  # label tokens 2..10 -> digit class 0..8
+    return (y - DIGIT0).clamp(0, 8)
+
+
+def corrupt(yd, xb, frac, rng):
+    """Reassign `frac` of the BLANK cells of digit-grid yd to random digits."""
+    blanks = (xb == BLANK)
+    flip = (torch.rand_like(yd.float()) < frac) & blanks
+    rand = torch.randint(0, N_DIGITS, yd.shape, device=yd.device)
+    return torch.where(flip, rand, yd)
+
+
+def train_ebt(args, device):
+    xtr, ytr = load_split("train", args.train_n, args.seed)
+    xev, yev = load_split("test", args.eval_n, args.seed + 1)
+    model = EBT(args.hidden, args.layers, args.heads).to(device)
+    nparams = sum(p.numel() for p in model.parameters())
+    opt = torch.optim.AdamW(model.parameters(), lr=args.lr, weight_decay=0.01, betas=(0.9, 0.95))
+    sched = torch.optim.lr_scheduler.OneCycleLR(opt, args.lr, total_steps=args.steps, pct_start=0.1)
+    model.train(); n = xtr.shape[0]; K = 8; t0 = time.time()
+    g = torch.Generator(device=device)
+    for step in range(args.steps):
+        idx = torch.randint(0, n, (args.batch,))
+        xb = xtr[idx].to(device); yd = gold_digits(ytr[idx].to(device))
+        e_gold = model(xb, yd)                                 # (B,)
+        negs = []
+        for _ in range(K):
+            frac = 0.1 + 0.5 * torch.rand(1).item()
+            negs.append(model(xb, corrupt(yd, xb, frac, g)))
+        e_neg = torch.stack(negs, 1)                           # (B,K)
+        logits = -torch.cat([e_gold[:, None], e_neg], 1)       # gold should be lowest E
+        loss = F.cross_entropy(logits, torch.zeros(xb.shape[0], dtype=torch.long, device=device))
+        loss = loss + 1e-3 * (e_gold ** 2).mean()              # tiny anchor vs collapse
+        opt.zero_grad(); loss.backward()
+        torch.nn.utils.clip_grad_norm_(model.parameters(), 1.0); opt.step(); sched.step()
+        if step % args.log_every == 0 or step == args.steps - 1:
+            print(f"[ebt] step={step} loss={loss.item():.4f} e_gold={e_gold.mean().item():.3f} "
+                  f"e_neg={e_neg.mean().item():.3f} t={time.time()-t0:.0f}s", flush=True)
+    metrics = evaluate_ebt(model, xev, yev, device, args)
+    metrics.update({"n_params": nparams, "train_seconds": time.time() - t0})
+    return model, metrics
+
+
+@torch.no_grad()
+def decode_argmin(model, xb):
+    """Greedy coordinate per-cell argmin: for each blank cell pick the digit that
+    minimises energy holding others at current best (1 sweep from a uniform start)."""
+    B = xb.shape[0]
+    yd = gold_digits(xb.clone())                  # givens correct; blanks -> clamp 0
+    yd = torch.where(xb == BLANK, torch.zeros_like(yd), yd)
+    blanks = (xb == BLANK)
+    for c in range(SEQ):
+        bmask = blanks[:, c]
+        if bmask.sum() == 0:
+            continue
+        best_e = torch.full((B,), 1e9, device=xb.device); best_d = yd[:, c].clone()
+        for d in range(N_DIGITS):
+            trial = yd.clone(); trial[:, c] = d
+            e = model(xb, trial)
+            upd = (e < best_e) & bmask
+            best_d = torch.where(upd, torch.full_like(best_d, d), best_d); best_e = torch.where(upd, e, best_e)
+        yd[:, c] = torch.where(bmask, best_d, yd[:, c])
+    return yd
+
+
+def decode_descent(model, xb, steps=200, lr=0.3):
+    """Continuous-relaxation ENERGY DESCENT (Kona): optimise soft per-cell digit
+    logits to minimise E, givens clamped one-hot, then argmax."""
+    B = xb.shape[0]
+    blanks = (xb == BLANK)
+    L = torch.zeros(B, SEQ, N_DIGITS, device=xb.device, requires_grad=True)
+    given_oh = F.one_hot(gold_digits(xb).clamp(0, 8), N_DIGITS).float()
+    opt = torch.optim.Adam([L], lr=lr)
+    for _ in range(steps):
+        probs = F.softmax(L, -1)
+        soft = torch.where(blanks[..., None], probs, given_oh)   # clamp givens
+        e = model(xb, soft).mean()
+        opt.zero_grad(); e.backward(); opt.step()
+    with torch.no_grad():
+        probs = F.softmax(L, -1)
+        out = torch.where(blanks, probs.argmax(-1), gold_digits(xb).clamp(0, 8))
+    return out
+
+
+@torch.no_grad()
+def evaluate_ebt(model, xev, yev, device, args, bs=128):
+    model.eval()
+    res = {decoder: {"hits": 0, "blank_correct": 0.0, "viol": 0}
+           for decoder in ["argmin", "descent"]}
+    n = xev.shape[0]; blank_total = 0.0
+    for i in range(0, n, bs):
+        xb = xev[i:i + bs].to(device); yb = yev[i:i + bs].to(device); yd = gold_digits(yb)
+        blanks = (xb == BLANK); blank_total += blanks.float().sum().item()
+        am = decode_argmin(model, xb)
+        with torch.enable_grad():
+            dc = decode_descent(model, xb, steps=args.descent_steps, lr=args.descent_lr)
+        for name, pred in [("argmin", am), ("descent", dc)]:
+            res[name]["hits"] += (pred == yd).all(-1).sum().item()
+            res[name]["blank_correct"] += ((pred == yd) & blanks).float().sum().item()
+            res[name]["viol"] += sudoku_violations(pred).sum().item()
+    out = {"n_eval": n}
+    for name in res:
+        out[f"ebt_{name}_solve_rate"] = res[name]["hits"] / n
+        out[f"ebt_{name}_blank_cell_acc"] = res[name]["blank_correct"] / max(1, blank_total)
+        out[f"ebt_{name}_mean_violations"] = res[name]["viol"] / n
+    out["ebt_best_solve_rate"] = max(out["ebt_argmin_solve_rate"], out["ebt_descent_solve_rate"])
+    return out
+
+
+# ------------------------------------------------------- TRM-style recursive refiner
+class Refiner(nn.Module):
+    """Tiny recursive refiner (TRM recipe): hold current-answer y + latent z; iterate
+    z <- block(x,y,z) then y <- head(z); output final y. Non-AR, holistic."""
+    def __init__(self, hidden=256, layers=2, heads=4, n_cycles=8):
+        super().__init__()
+        self.n_cycles = n_cycles
+        self.puz = nn.Embedding(VOCAB, hidden)
+        self.dig = nn.Embedding(N_DIGITS, hidden)
+        self.pos = nn.Embedding(SEQ, hidden)
+        self.zin = nn.Linear(hidden * 3, hidden)
+        enc = nn.TransformerEncoderLayer(hidden, heads, hidden * 4, batch_first=True,
+                                         activation="gelu", dropout=0.0, norm_first=True)
+        self.block = nn.TransformerEncoder(enc, layers)
+        self.head = nn.Linear(hidden, N_DIGITS)
+
+    def forward(self, x, n_cycles=None, deep_supervision=False):
+        B = x.shape[0]; dev = x.device
+        T = n_cycles or self.n_cycles
+        xe = self.puz(x) + self.pos(torch.arange(SEQ, device=dev))[None]
+        # init y from the puzzle givens (blanks -> digit 0), z from zeros
+        yd = torch.where(x == BLANK, torch.zeros_like(x), gold_digits(x).clamp(0, 8))
+        z = torch.zeros(B, SEQ, xe.shape[-1], device=dev)
+        outs = []
+        for t in range(T):
+            ye = self.dig(yd)
+            z = self.block(self.zin(torch.cat([xe, ye, z], -1)))
+            logits = self.head(z)
+            yd = logits.argmax(-1).detach()                  # update current answer
+            if deep_supervision or t == T - 1:
+                outs.append(logits)
+        return outs if deep_supervision else outs[-1]
+
+
+def train_refiner(args, device):
+    xtr, ytr = load_split("train", args.train_n, args.seed)
+    xev, yev = load_split("test", args.eval_n, args.seed + 1)
+    model = Refiner(args.hidden, max(2, args.layers // 2), args.heads, args.n_cycles).to(device)
+    nparams = sum(p.numel() for p in model.parameters())
+    opt = torch.optim.AdamW(model.parameters(), lr=args.lr, weight_decay=0.01, betas=(0.9, 0.95))
+    sched = torch.optim.lr_scheduler.OneCycleLR(opt, args.lr, total_steps=args.steps, pct_start=0.1)
+    model.train(); n = xtr.shape[0]; t0 = time.time()
+    for step in range(args.steps):
+        idx = torch.randint(0, n, (args.batch,))
+        xb = xtr[idx].to(device); yd = gold_digits(ytr[idx].to(device))
+        outs = model(xb, deep_supervision=True)              # list of (B,81,9)
+        loss = sum(F.cross_entropy(o.reshape(-1, N_DIGITS), yd.reshape(-1)) for o in outs) / len(outs)
+        opt.zero_grad(); loss.backward()
+        torch.nn.utils.clip_grad_norm_(model.parameters(), 1.0); opt.step(); sched.step()
+        if step % args.log_every == 0 or step == args.steps - 1:
+            print(f"[refiner] step={step} loss={loss.item():.4f} t={time.time()-t0:.0f}s", flush=True)
+    metrics = evaluate_refiner(model, xev, yev, device)
+    metrics.update({"n_params": nparams, "train_seconds": time.time() - t0})
+    return model, metrics
+
+
+@torch.no_grad()
+def evaluate_refiner(model, xev, yev, device, bs=256):
+    model.eval(); n = xev.shape[0]; hits = 0; blank_correct = 0.0; blank_total = 0.0; viol = 0
+    for i in range(0, n, bs):
+        xb = xev[i:i + bs].to(device); yd = gold_digits(yev[i:i + bs].to(device))
+        pred = model(xb).argmax(-1)
+        blanks = (xb == BLANK); blank_total += blanks.float().sum().item()
+        hits += (pred == yd).all(-1).sum().item()
+        blank_correct += ((pred == yd) & blanks).float().sum().item()
+        viol += sudoku_violations(pred).sum().item()
+    return {"refiner_solve_rate": hits / n,
+            "refiner_blank_cell_acc": blank_correct / max(1, blank_total),
+            "refiner_mean_violations": viol / n, "n_eval": n}
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--model", choices=["ar", "ebt", "refiner"], default="ar")
@@ -207,6 +419,9 @@ def main():
     ap.add_argument("--sc_k", type=int, default=32)
     ap.add_argument("--seed", type=int, default=0)
     ap.add_argument("--log_every", type=int, default=500)
+    ap.add_argument("--descent_steps", type=int, default=200)  # EBT energy-descent iters
+    ap.add_argument("--descent_lr", type=float, default=0.3)
+    ap.add_argument("--n_cycles", type=int, default=8)         # refiner recursion depth
     ap.add_argument("--out", default="results/sudoku_energy_vs_ar_v1.json")
     args = ap.parse_args()
 
@@ -217,8 +432,10 @@ def main():
 
     if args.model == "ar":
         _, metrics = train_ar(args, device)
-    else:
-        raise SystemExit(f"--model {args.model} not yet wired (AR foundation first)")
+    elif args.model == "ebt":
+        _, metrics = train_ebt(args, device)
+    elif args.model == "refiner":
+        _, metrics = train_refiner(args, device)
 
     metrics.update({"model": args.model, "args": vars(args),
                     "gpu": torch.cuda.get_device_name(0)})
