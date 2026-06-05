@@ -4,51 +4,43 @@
 # docs_audit_report — 2026-06-05
 
 ## TL;DR (stranger's 30-second take)
-I would bounce in 10 seconds. While the hero section provides a clear, strong value proposition, the rest of the page devolves into a wall of opaque internal acronyms, broken UI strings (literal leaked file paths), and suspiciously perfect metrics without immediate proof. It reads like a dumped internal lab notebook, not a product landing page.
+The stranger would close the tab. The page reads like an internal lab notebook littered with impenetrable acronyms, suspiciously perfect numbers, and literal file-path templating bugs injected into the text.
 
 ## TOP 3 PROBLEMS
-1. Leaked raw file paths in user-facing text — Results Grid ("Live benchmark")
-2. Extreme jargon overload that alienates outsiders — Stats Bar / Features ("FoVer", "PREM", "CCTU")
-3. Suspiciously perfect numbers that trigger skepticism — Results Grid / Blog ("1.0 TP", "60/60", "Zero false positives")
+1. Templating bugs injecting `.tmp-pytest` file paths into fonts, CSS, and results cards.
+2. Impenetrable acronyms (FoVer, SVAMP, CCTU, PREM) used without definitions.
+3. Suspiciously perfect metrics (1.0 TP, 60/60, exact 2.0x speedup) with no immediate proof.
 
 ## DETAILED FINDINGS
 ### Bloat
-- Results grid — 12 cards — Cap at 6 best-in-class results. A stranger won't read 12 highly technical micro-benchmarks.
-- Blog section — 7 cards — Cap at 3-4 featured posts.
-- Features / Bento grid — 7 cards — The final card "Test-Time Compute (TTC) & PREM" feels tacked on and breaks the visual flow. Cap at 6.
+- Results grid — 12 cards — cap at 6 core cards. Twelve hyper-specific metric cards overwhelm the reader and dilute the impact of the best numbers.
 
 ### Internal jargon
-- Stats bar / Recent progress — "FoVer", "5-seed dual-condition", "architecture-only" — A stranger has no idea what dataset or setting "FoVer" refers to.
-- Features: Typed constraints — "CCTU constrained tool-use micro-benchmark" — Obscure or internal benchmark name.
-- Features: Test-Time Compute — "TTC", "PREM" — These read like internal project codenames rather than established industry terms.
-- Results: Math reasoning — "SVAMP", "EstimationVerifier", "FoVer baseline" — Alphabet soup that obscures the actual achievement.
-- Results: Live benchmark — `@.tmp-pytest/pytest-of-ianblenke/pytest-3/popen-gw0/test_req_verify_2932_run_uses_0/citation_hallucination_field_verifier_2932_raw/spilled-energy-2602-18671:real.txt` — This is a raw internal test file path that leaked into the production HTML.
-- Features: APIs — "VerdictRecord", "SessionMemory" — Leaking internal struct/class names before explaining what they do.
-- Preprint — "paper-v6" — Internal versioning noise.
+- Results / Hero section — `FoVer`, `SVAMP`, `CCTU`, `VeriCoT`, `PREM` — A stranger has no idea what these niche benchmarks or acronyms mean without context.
+- Sitewide — `@.tmp-pytest/pytest-of-ianblenke/...` — A broken regex has leaked internal pytest temporary paths into the HTML, rendering the font imports, CSS media queries, and the 35B SOTA card unreadable.
 
 ### Per-milestone narrative
-- Recent progress card — "Repinned from v2 0.9857 after pre-submission adversarial audit..." — Reads exactly like an internal retrospective or copy-pasted commit message, not product marketing copy.
+- Recent progress card — "Repinned from v2 0.9857 after pre-submission adversarial audit" — Reads like an internal commit message or retrospective.
+- Results: Safety card — "0.91 AUROC (publication gate)" — Mentions an internal project management threshold.
 
 ### Inconsistencies
-- AUROC noise — Stats bar claims 0.9131 AUROC. The "Recent progress" card mentions 0.9131, 0.8947, and 0.9857. The Results grid claims 0.91 AUROC (Prompt-injection) and 0.90 AUC (SVAMP). The barrage of similar-but-different AUC scores without clear framing is contradictory and confusing.
-- No fine-tuning vs Retraining — The "How it works" section explicitly claims "No model fine-tuning required", but the Results grid highlights a "Two-GPU parallel retrain... identical losses", implying training is a core part of the workflow.
+- Hero stat: "0.9131 AUROC on FoVer" (implies FoVer is a dataset) vs Math reasoning card: "0.90 AUC (vs 0.125 FoVer baseline)" (implies FoVer is a baseline model).
 
 ### Missing essentials
-- Nothing strictly missing from the core checklist (has a 1-sentence description, install instructions, license, maintainer, and artifact claims), but it lacks clarity on *why* there is a Rust vs Python split for a user who just wants to `pip install` a Python package.
+- Who maintains it? The page lacks an "About" or maintainer statement (is this an academic lab, startup, or solo dev?) to contextualize the authority of the "SOTA" claims.
 
 ### Fabrication signals
-- Results: Math extraction — "GSM8K extraction TP rate: 0.5 -> 1.0" (A perfect 1.0 True Positive rate is highly suspect).
-- Results: Adversarial audit — "catches 60/60 attacks" (100% recall on a small sample size looks like a toy evaluation).
-- Results: Cascade routing — "0.0pp accuracy delta" (Exactly zero drop is suspicious).
-- Blog: Dogfooding — "Zero false positives." (Claiming absolutely 0 FPR in a production LLM pipeline is an instant credibility killer).
+- Math extraction card — "GSM8K extraction TP rate: 0.5 -> 1.0" (A 1.0 true positive rate on unstructured LLM math output is suspiciously perfect).
+- Adversarial audit card — "k=5 ensemble catches 60/60 attacks" (100% success rate without a credibility anchor).
+- Training card — "2.0x speedup, identical losses" (Perfect scaling and identical floating-point losses across distributed GPUs is notoriously rare).
 
 ## WHAT'S WORKING
-- The hero section is excellent: "Catch the reasoning errors your LLM states with total confidence" alongside `pip install carnot-ebm` instantly communicates what the tool does and how to get it.
-- The "Extract -> Check -> Repair" bento grid breaks down the complex mechanism into clean, understandable steps.
+- The "Extract → Check → Repair" Bento grid clearly explains the framework's core value proposition in a digestible 3-step loop.
+- The Python/Rust Quickstart toggle gives immediate, tangible proof of what the API feels like.
 
 ## RECOMMENDED OPERATOR ACTIONS
-1. Remove the leaked file path (`@.tmp-pytest/...`) from the "Live benchmark" result card immediately.
-2. Scrub all instances of "FoVer", "PREM", "CCTU", and internal version numbers like "paper-v6" or "v2 0.9857". Replace them with descriptive, generic terms.
-3. Remove the perfect metrics ("1.0 TP", "60/60", "Zero false positives") or explicitly anchor them with context (e.g., "on a 60-prompt pilot").
-4. Prune the Results grid from 12 cards down to the 6 most impressive, easy-to-understand metrics.
-5. Rewrite the "Recent progress" card to focus on current user value rather than a historical narrative of changing benchmark scores.
+1. Fix the templating bug injecting `.tmp-pytest` file paths into the `<link>` font URLs, `@media` queries, and Results cards.
+2. Prune the Results grid from 12 down to the 6 most impactful metrics.
+3. Define or remove opaque internal acronyms (FoVer, CCTU, PREM).
+4. Rewrite the "Recent progress" card to focus on what the user gets, rather than the internal audit history.
+5. Soften or contextualize the "perfect" metrics (1.0 TP, 60/60, identical losses) with caveats or links so they don't trigger skepticism.
