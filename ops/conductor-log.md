@@ -7873,3 +7873,6 @@ ERROR: {
 | 2026-06-05 10:12 UTC | MOAT SCISSOR AT SCALE (re-issue of exp3847; supers | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp3858-build-balanced-step-error-corpus-v |
 | 2026-06-05 10:14 UTC | INDEPENDENCE AUDIT (arXiv:2604.07650): is Carnot's | GATE_BLOCK | Pre-emptive skip: upstream retired (exp3859-moat-scissor-at-scale-v3) |
 | 2026-06-05 10:14 UTC | ThinkPRM COMPLEMENTARITY (arXiv:2504.16828 refutat | GATE_BLOCK | Pre-emptive skip: upstream retired (exp3859-moat-scissor-at-scale-v3) |
+| 2026-06-05 11:04 UTC | Graph-grounding fact-verifier PROTOTYPE (NEW archi | FLAGGED | adversarial_verify CRITICAL: DURATION_TOO_SHORT — result quarantined, not a clea |
+| 2026-06-05 11:06 UTC | INDEPENDENCE AUDIT (arXiv:2604.07650): is Carnot's | GATE_BLOCK | Pre-emptive skip: upstream retired (exp3859-moat-scissor-at-scale-v3) |
+| 2026-06-05 11:06 UTC | ThinkPRM COMPLEMENTARITY (arXiv:2504.16828 refutat | GATE_BLOCK | Pre-emptive skip: upstream retired (exp3859-moat-scissor-at-scale-v3) |
