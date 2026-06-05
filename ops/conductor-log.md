@@ -7841,3 +7841,5 @@ ERROR: {
 | 2026-06-05 08:05 UTC | MOAT SCISSOR AT SCALE (supersedes exp3844): of the | GATE_BLOCK | Pre-emptive skip: upstream retired (exp3846-build-balanced-step-error-corpus) |
 | 2026-06-05 08:05 UTC | INDEPENDENCE AUDIT (arXiv:2604.07650): is Carnot's | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp3847-moat-scissor-at-scale-v2.n_residua |
 | 2026-06-05 08:07 UTC | ThinkPRM COMPLEMENTARITY (arXiv:2504.16828 refutat | GATE_BLOCK | Pre-emptive skip: upstream retired (exp3847-moat-scissor-at-scale-v2) |
+| 2026-06-05 08:07 UTC | Graph-grounding fact-verifier PROTOTYPE (NEW archi | SKIP | Pre-tests failing, self-heal failed: 1 failed, 80 passed in 3.55s |
+| 2026-06-05 08:09 UTC | ThinkPRM COMPLEMENTARITY (arXiv:2504.16828 refutat | GATE_BLOCK | Pre-emptive skip: upstream retired (exp3847-moat-scissor-at-scale-v2) |
