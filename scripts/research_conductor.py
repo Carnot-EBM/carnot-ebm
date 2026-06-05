@@ -1020,6 +1020,166 @@ PRETEST_CACHE_FILE = PROJECT_ROOT / "ops" / ".pretest-cache.json"
 PRETEST_FINGERPRINT_DIRS = ("python/carnot", "tests/python", "scripts")
 PRETEST_FINGERPRINT_FILES = ("pyproject.toml", "Cargo.toml", "uv.lock")
 
+# ---------------------------------------------------------------------------
+# Pre-test poison-test auto-quarantine (2026-06-04).
+#
+# WHY: the smart-subset pre-test gate runs core tests + tests for recently
+# changed files BEFORE launching each task. When a prior task ships a broken
+# *experiment-specific* test (e.g. a test-setup bug that throws regardless of
+# the product code), that committed test re-enters the subset and FAILS the
+# gate for every *subsequent, unrelated* task — cascade-skipping the whole
+# milestone tail. This happened 3+ times: exp3521 (.325), exp3544 (.326),
+# exp3612 (.332), and exp3827 (.351 -> blocked exp3828-3833, .352 archived
+# empty). The established MANUAL remediation is to move the poison test into
+# tests/python/quarantine/ (which conftest.py's collect_ignore_glob excludes
+# from BOTH the smart subset and the full suite). This automates that exact
+# remediation: after a test fails the pre-test GATE on N consecutive runs, it
+# is moved to quarantine/ and the operator is NOTIFIED via a prominent log +
+# ops/known-issues.md entry, so a single agent's broken test can no longer
+# halt an entire milestone.
+#
+# SAFETY: only *experiment-specific* tests (tests/python/test_experiment_*.py
+# / test_exp*.py) are auto-quarantinable. Those test ONE experiment script, so
+# quarantining loses only that experiment's regression coverage (flagged, not
+# silent) — never a core or shared-module test. A core/shared test failing the
+# gate is a REAL regression and MUST still block; it is never auto-quarantined.
+# The N-consecutive-failure threshold tolerates a transient/flaky double-fail.
+# ---------------------------------------------------------------------------
+PRETEST_POISON_COUNTER_FILE = PROJECT_ROOT / "ops" / ".pretest-poison-counter.json"
+PRETEST_QUARANTINE_DIR = PROJECT_ROOT / "tests" / "python" / "quarantine"
+PRETEST_POISON_THRESHOLD = 3  # consecutive gate failures before auto-quarantine
+
+
+def _failed_name_to_test_file(failed_name: str) -> str | None:
+    """Extract the test file path from a captured failure line.
+
+    failed_name looks like ``"FAILED tests/python/test_x.py::test_y"`` or
+    ``"ERROR tests/python/test_x.py::test_y"``. Returns the ``tests/python/...``
+    file path, or None if it cannot be parsed.
+    """
+    parts = failed_name.split(None, 1)
+    if len(parts) != 2:
+        return None
+    nodeid = parts[1].strip()
+    path = nodeid.split("::", 1)[0]
+    return path or None
+
+
+def _is_auto_quarantinable(test_file: str) -> bool:
+    """Only experiment-specific tests may be auto-quarantined (see SAFETY note).
+
+    Matches ``tests/python/test_experiment_*.py`` and ``tests/python/test_exp*.py``
+    only. Core tests (pipeline/docs/cli) and shared-module tests are excluded —
+    a failure there is a real regression that must keep blocking the gate.
+    """
+    if not test_file.startswith("tests/python/test_"):
+        return False
+    if not test_file.endswith(".py"):
+        return False
+    if "/quarantine/" in test_file:
+        return False
+    base = test_file[len("tests/python/") :]
+    return base.startswith("test_experiment_") or base.startswith("test_exp")
+
+
+def _compute_poison_quarantine_decision(
+    failed_names: list[str],
+    counter: dict[str, int],
+    threshold: int = PRETEST_POISON_THRESHOLD,
+) -> tuple[list[str], dict[str, int]]:
+    """Pure decision: given this gate run's failures + the prior counter,
+    return (files_to_quarantine, updated_counter).
+
+    - Increments the consecutive-fail counter for each auto-quarantinable test
+      file that failed this run.
+    - Resets (drops) the counter for any previously-tracked file that did NOT
+      fail this run (it passed or wasn't collected — no longer poisoning).
+    - Any file whose counter reaches ``threshold`` is returned for quarantine
+      and removed from the updated counter.
+
+    Kept pure (no IO) so the threshold/eligibility logic is unit-testable.
+    """
+    failed_files = set()
+    for name in failed_names:
+        tf = _failed_name_to_test_file(name)
+        if tf and _is_auto_quarantinable(tf):
+            failed_files.add(tf)
+
+    updated = {f: c for f, c in counter.items() if f in failed_files}
+    for f in failed_files:
+        updated[f] = updated.get(f, 0) + 1
+
+    to_quarantine = [f for f, c in updated.items() if c >= threshold]
+    for f in to_quarantine:
+        updated.pop(f, None)
+    return to_quarantine, updated
+
+
+def _load_poison_counter() -> dict[str, int]:
+    try:
+        with open(PRETEST_POISON_COUNTER_FILE) as fh:
+            data = json.load(fh)
+        return {str(k): int(v) for k, v in data.items()} if isinstance(data, dict) else {}
+    except Exception:
+        return {}
+
+
+def _save_poison_counter(counter: dict[str, int]) -> None:
+    try:
+        PRETEST_POISON_COUNTER_FILE.parent.mkdir(parents=True, exist_ok=True)
+        with open(PRETEST_POISON_COUNTER_FILE, "w") as fh:
+            json.dump(counter, fh, indent=2, sort_keys=True)
+    except Exception as exc:
+        logger.warning("Failed to write poison-counter cache: %s", exc)
+
+
+def _quarantine_poison_test(test_file: str) -> bool:
+    """Move a confirmed poison test into tests/python/quarantine/ and record a
+    NOTIFY in ops/known-issues.md. Returns True if the move succeeded.
+    """
+    src = PROJECT_ROOT / test_file
+    if not src.exists():
+        return False
+    try:
+        PRETEST_QUARANTINE_DIR.mkdir(parents=True, exist_ok=True)
+        dst = PRETEST_QUARANTINE_DIR / src.name
+        shutil.move(str(src), str(dst))
+        logger.warning(
+            "AUTO-QUARANTINED poison test %s -> quarantine/ after %d consecutive "
+            "pre-test GATE failures. It was cascade-blocking later tasks. NOTIFY: "
+            "the test's setup is broken (not the product); fix + un-quarantine.",
+            test_file,
+            PRETEST_POISON_THRESHOLD,
+        )
+        try:
+            ki = PROJECT_ROOT / "ops" / "known-issues.md"
+            with open(ki, "a") as fh:
+                fh.write(
+                    f"\n- [AUTO-QUARANTINE {datetime.now(UTC).strftime('%Y-%m-%dT%H:%M:%SZ')}] {test_file} moved to "
+                    f"tests/python/quarantine/ after {PRETEST_POISON_THRESHOLD} consecutive "
+                    f"pre-test gate failures (poison-test cascade guard). The experiment "
+                    f"script is unaffected; the TEST setup is broken. Fix the test and move "
+                    f"it back to tests/python/ to restore its regression coverage.\n"
+                )
+        except Exception:
+            pass
+        return True
+    except Exception as exc:
+        logger.warning("Failed to auto-quarantine %s: %s", test_file, exc)
+        return False
+
+
+def _handle_pretest_poison(failed_names: list[str]) -> None:
+    """Update the consecutive-fail counter and auto-quarantine any test that has
+    failed the pre-test gate ``PRETEST_POISON_THRESHOLD`` times in a row.
+    Called only on a FAILED smart-subset pre-test (the gate path).
+    """
+    counter = _load_poison_counter()
+    to_quarantine, updated = _compute_poison_quarantine_decision(failed_names, counter)
+    for test_file in to_quarantine:
+        _quarantine_poison_test(test_file)
+    _save_poison_counter(updated)
+
 
 def _compute_pretest_fingerprint() -> str:
     """Hash mtimes + sizes of files that could affect test outcomes.
@@ -1297,6 +1457,10 @@ def run_tests(full: bool = False) -> tuple[bool, str]:
                 end_fp[:12],
             )
         _save_pretest_cache(end_fp, summary, mode)
+        # Gate is green — clear the poison-test consecutive-fail counter so a
+        # later transient failure starts counting fresh.
+        if not full and PRETEST_POISON_COUNTER_FILE.exists():
+            _save_poison_counter({})
     elif failed_names:
         # Log up to 10 failed/errored test ids so the journal records the
         # diagnostic detail. Operators can grep journalctl for these names
@@ -1307,6 +1471,12 @@ def run_tests(full: bool = False) -> tuple[bool, str]:
             len(failed_names),
             "; ".join(failed_names[:10]),
         )
+        # Auto-quarantine any experiment-specific test that has failed the
+        # smart-subset GATE on PRETEST_POISON_THRESHOLD consecutive runs — the
+        # poison-test cascade guard (2026-06-04). Only runs in subset (gate)
+        # mode; the full suite is post-commit validation, not a launch gate.
+        if not full:
+            _handle_pretest_poison(failed_names)
     return success, summary
 
 
