@@ -1,5 +1,54 @@
 # Carnot — Operational Status
 
+## Session 2026-06-05 - Milestone 2026.06.356 Staged + POISON-TEST WIPEOUT FIXED
+
+**LOAD-BEARING OPERATIONAL FIX (outer-loop, this session).** Milestone `.355 was a
+**TOTAL WIPEOUT** — zero usable artifacts. Two compounding root causes, both diagnosed:
+
+1. **Pre-test gate poison (FIXED).** During `.354's archive, the exp3833 verdict was
+   appended to `research-complete.yaml` UNQUOTED (lines 35485 + 35569):
+   `result: complete: ldt_gap_LATTICE_VIABLE_...`. The bare `: ` makes YAML parse the
+   value as a nested mapping → `yaml.scanner.ScannerError: mapping values are not allowed
+   here`. That broke `tests/python/test_docs.py::test_public_docs_cover_latest_pbt_and_fpga_reporting`
+   (it parses the YAML), which the conductor's smart-subset pre-test gate runs on EVERY
+   task → `1 failed, 80-86 passed` SKIP-cascaded every experiment from `.350 onward and
+   all of `.355. **FIX:** quoted both values. `research-complete.yaml` now parses;
+   `test_pipeline_extract.py + test_docs.py` → **81 passed, 0 failed**. The gate is
+   unblocked. (This is the `incident_agent_shipped_test_cascade` mode, root-caused to a
+   data-file corruption rather than a shipped test.)
+2. **gemini-CLI crash (ROUTED AROUND).** The `.355 archive task ran via gemini-CLI and
+   crashed (`chunk-NBZI34` bundle crash; 429s) despite the YAML requesting claude — the
+   `incident_333_gemini_quota_crash_wipeout` pattern. `.356 routes **every task
+   codex+`requires_codex`** (the `.337/`.340 anti-wipeout precedent; codex is the reliable
+   backend in this conductor env).
+
+**Milestone `.356 staged.** Re-issues the `.355 verifier-MOAT durability adjudication
+(Deep-Think P2) verbatim in intent with fresh IDs (exp3857–exp3868), gate now unblocked,
+all-codex routing. 12 tasks: archive/activate (exp3857); **the spine** — build the balanced
+step-error corpus (exp3858, PRMBench/FoVer v3), run the error-independence scissor AT SCALE
+(exp3859, live Qwen3.6-35B, bootstrap CI95 + 2 positive controls), MEASURE verifier-vs-reasoner
+independence per arXiv:2604.07650 (exp3860), ThinkPRM complementarity (exp3861); **facts via a
+NEW architecture** — graph-grounding prototype (exp3862) + complementarity (exp3863); **the
+self-learning MANDATE** — FR-11 v23 online independence-reweighting (exp3864); LDT-margin
+sharpening (exp3865); **hardware continuity** — GateMate (exp3866) + PolarFire (exp3867); and
+the capstone (exp3868, moat verdict CONDITIONED on the independence audit).
+
+Updated `research-references.md` (`.356 sweep: arXiv:2506.18203 Weaver weak-verifier
+complementarity; 2604.15149 LLMs-Gaming-Verifiers; 2604.02341 outcome-guided PRM). Wrote
+`openspec/change-proposals/research-roadmap-v356.md` (+ identical `research-roadmap-vNEXT.md`)
+and `research-roadmap-next.yaml` (12 tasks). Validation: YAML schema (12 tasks, all `.356`,
+deliverables+prompts+run-cmds, codex routing, prior_failures 4-subfield, gated_on bare scalars);
+`milestone == _expected_next_milestone('2026.06.355') = 2026.06.356`; exclusion-manifest lint
+(4 SCOPE_MATCHED warnings, all carry `operator_override` → activation proceeds); canonical-URL
+lint exit 0; overdue-priority lint exit 0. Left `research-roadmap.yaml` and
+`scripts/research_conductor.py` untouched. Did NOT push.
+
+**Invariants carried:** `paper_ready=true` (G1-G4, frozen headline 0.9131 NEVER silently
+substituted — `.356 adds a durability LENS, not a new headline); verifier math-domain-bound;
+KV260 terminal; GateMate + PolarFire non-terminal (one task each per Hardware-Task Continuity);
+gated fields emitted BARE; no flagged-adversarial artifact aggregated.
+
+
 ## Session 2026-06-02 - Milestone 2026.06.340 Research Planning Staged
 
 Planned milestone 2026.06.340 ("CONVERGENCE & FINALIZATION") as the NEXT milestone after all 11 `.339`

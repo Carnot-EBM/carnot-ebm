@@ -21088,3 +21088,36 @@ unchanged: `paper_ready` stays TRUE (G1-G4), FoVer 0.9131 stays frozen.
 - **Cross-cutting — "Don't Always Pick the Highest-Performing Model" (2026):** "Diverse
   imperfect judges outperform correlated perfect ones." DIRECTLY supports error-independence:
   ensemble value comes from decorrelation, not member strength.
+
+## Milestone .356 planning sweep (2026-06-05, outer-loop Claude Opus 4.8)
+
+**Context:** `.356 RE-ISSUES the `.355 verifier-moat-durability adjudication. `.355
+produced ZERO usable artifacts — a total wipeout from two compounding blockers the
+outer-loop fixed/routed-around this session: (1) a corrupted `research-complete.yaml`
+line (an unquoted `:` inside the appended exp3833 verdict, `result: complete: ldt_gap_...`)
+broke `test_docs.py`'s YAML parse, poisoning the conductor's smart-subset pre-test gate
+and SKIP-cascading every milestone from `.350 onward — FIXED by quoting the value (81
+passed, 0 failed; YAML parses); (2) the gemini-CLI crashing/stalling on the archive task
+(`chunk-NBZI34` bundle crash; 429s) — ROUTED AROUND by setting every `.356 task
+`agent_type: codex` + `requires_codex: true` (the proven anti-wipeout pattern from
+`.337/`.340, cf. incident_333_gemini_quota_crash_wipeout). The scientific spine is
+unchanged because the `.355 question was never answered.
+
+New papers added this sweep (the `.355 references remain current):
+
+- **arXiv:2506.18203 — "Shrinking the Generation-Verification Gap with Weak Verifiers":**
+  DIRECTLY supports the moat thesis. A pool of WEAK, cheap verifiers (Weaver) combined via
+  a latent-variable weighting closes most of the gap to an oracle verifier and approaches a
+  far stronger single verifier — the value comes from COMBINING decorrelated weak signals,
+  not from any single member's strength. This is the literature warrant for Carnot's cheap
+  NON-LLM k=15 ensemble being complementary to (not subsumed by) a strong generative PRM,
+  and for the FR-11 independence-reweighting mechanism (upweight members that catch what
+  others miss). Cite alongside 2604.07650 + 2504.16828.
+- **arXiv:2604.15149 — "LLMs Gaming Verifiers / Isomorphic Perturbation Testing (IPT)"
+  (ICLR 2026 workshop):** diagnoses verifier shortcut-learning via invariance to logically
+  isomorphic tasks. Relevant to the verifier-robustness / null-space-mimicry thread; a
+  future hardening lens for the ensemble once the moat is established. File-only this
+  milestone (not a `.356 experiment).
+- **arXiv:2604.02341 — "LLM Reasoning with Process Rewards for Outcome-Guided Steps":**
+  outcome-conditioned PRM centering + multi-scale coherence into GRPO; PRM-landscape
+  reference confirming the step-level-verification framing Carnot's FoVer headline occupies.
