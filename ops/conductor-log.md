@@ -7812,3 +7812,4 @@ ERROR: {
 | 2026-06-05 02:03 UTC | Plan milestone 2026.06.353 | OK | 10 tasks proposed |
 | 2026-06-05 02:05 UTC | Milestone 2026.06.353 activated | OK | 10 tasks queued |
 | 2026-06-05 02:15 UTC | Archive milestone .352 (LDT-gap probe) and activat | OK | 94 passed in 4.32s |
+| 2026-06-05 02:28 UTC | Contamination-free FORMAL core 5-seed CI replicati | OK | 84 passed in 4.76s |
