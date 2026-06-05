@@ -21018,3 +21018,8 @@ Converged invariants unchanged: `paper_ready` stays TRUE (G1-G4), FoVer 0.9131 s
   (2026):** Re-cited for Tier-4: the DP-at-unit-level + knapsack abstraction is the formal route to a
   STRUCTURALLY-adaptive KAN energy head (add/prune knots) while retaining formal verifiability — the
   Tier-4 "adaptive structure with a hardware/formal path" requirement in research-program.md.
+- **arXiv:2605.30914 — "Automating Formal Verification with Reinforcement Learning and Recursive Inference" (2026):** Track: contamination-free formal verification. Introduces RLVR for formal verification. Claims source-reported only.
+- **arXiv:2604.03789 — "Automated Conjecture Resolution with Formal Verification" (2026):** Track: contamination-free formal verification. Proposes Rethlas and Archon for automated conjecture resolution. Claims source-reported only.
+- **arXiv:2605.25133 — "Trust but Verify: Prover-Verifier Deliberation for Selective LLM Prediction" (2026):** Track: certified abstention on clean cores. Introduces Prover-Verifier Deliberation for selective LLM prediction. Claims source-reported only.
+- **arXiv:2603.02247 — "OnDA: On-device Channel Pruning for Efficient Personalized Keyword Spotting" (2026):** Track: adaptive-structure / pruning self-learning. Introduces online structured channel pruning with weight adaptation. Claims source-reported only.
+- **arXiv:2603.23985 — "DieT: Dimension-wise Global Pruning of LLMs via Merging Task-specific Importance Score" (2026):** Track: adaptive-structure / pruning self-learning. A training-free structured pruning method via majority voting. Claims source-reported only.
