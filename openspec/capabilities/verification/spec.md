@@ -10372,3 +10372,46 @@ and no fabricated graph-grounding signal.
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-VERIFY-3862 | Planned (`python/carnot/verify/graph_grounding_probe.py`, `scripts/experiments/experiment_3862_graph_grounding_fact_verifier_prototype_v2.py`) | Planned (`tests/python/test_experiment_3862_graph_grounding_fact_verifier.py`) |
+
+### REQ-VERIFY-3863: Graph-Verifier Facts Complementarity
+
+The repository SHALL provide an Exp 3863 cached-artifact complementarity
+builder that reads
+`results/experiment_3862_graph_grounding_fact_verifier_prototype_v2.json`
+without running live inference or GPU scoring. The builder SHALL first verify
+that the Exp 3862 artifact is present, contains per-item facts rows with gold
+ungrounded labels plus graph-verifier and math-ensemble scores, and reports
+`facts_catch_delta > 0`. If any precondition fails, it SHALL write a terminal
+artifact whose `honest_verdict` is exactly
+`blocked_graph_prototype_unavailable`.
+
+For runnable inputs, the builder SHALL threshold the cached graph and
+math-ensemble facts scores into ungrounded-claim catches, compute over
+gold-ungrounded rows the graph-verifier catches of ensemble misses, the
+symmetric ensemble catches of graph misses, and the best-of-both
+`union_facts_catch_rate`. It SHALL also compute the phi/Matthews correlation
+between the graph-verifier error mask and the math-ensemble error mask across
+the facts rows.
+
+The Exp 3863 terminal artifact SHALL write
+`results/experiment_3863_graph_verifier_facts_complementarity_v2.json` and
+include `honest_verdict`, `graph_catches_ensemble_misses`,
+`facts_error_mask_correlation`, `union_facts_catch_rate`,
+`extended_ensemble_recommended`, `n_facts_items`,
+`cited_upstream_artifacts`, `preconditions_checked`, `random_seed`,
+`reproducibility_checksum`, `inference_substrate`, and `duration_s`. Each of
+these fields SHALL have a principle note in `field_principles`, and the cited
+upstream artifact SHALL include the Exp 3862 SHA-256 digest.
+
+### SCENARIO-VERIFY-3863: Complementarity Gate Separates Additive From Redundant
+
+Given an Exp 3862 fixture with positive `facts_catch_delta` and per-item facts
+scores, when Exp 3863 runs, then it emits
+`complete: graph_verifier_COMPLEMENTARY_catches<C>_corr<r>_extended_ensemble_recommended`
+only when graph catches of ensemble misses are material and the phi/Matthews
+facts error-mask correlation is low. If independent graph catch is too small
+or the error masks are highly correlated, it SHALL emit
+`complete: graph_verifier_REDUNDANT_with_math_ensemble_on_facts_<detail>`.
+When the Exp 3862 fixture is missing, lacks per-item score rows, or has
+`facts_catch_delta <= 0`, it SHALL write `blocked_graph_prototype_unavailable`
+instead of fabricating complementarity.
