@@ -1,0 +1,82 @@
+{
+  "acceptance_gate": {
+    "condition": "graph_grounding_auroc >= 0.6 AND facts_catch_delta > 0",
+    "passed": true,
+    "principle": "Signal requires material graph-grounding AUROC and a positive same-set delta over the math-bound facts baseline."
+  },
+  "duration_s": 1.020443,
+  "facts_catch_delta": 0.231667,
+  "field_principles": {
+    "duration_s": "Real measured wall-clock duration.",
+    "facts_catch_delta": "GATE field -- emit as a BARE float. graph_grounding_auroc - math_ensemble_auroc_on_facts; gate for exp3863 (only worth a complementarity eval if > 0).",
+    "graph_grounding_auroc": "The prototype's facts-domain signal; materially > 0.5 => the NEW architecture has traction where the math ensemble is earned-negative.",
+    "honest_verdict": "Terminal verdict prefix; blocked outcomes start with blocked_<resource>.",
+    "inference_substrate": "Declares verifier-scoring substrate; if a model is not invoked, says so plainly.",
+    "math_ensemble_auroc_on_facts": "The earned-negative baseline on the SAME set -- the comparison that shows the graph verifier does something the ensemble structurally cannot.",
+    "model_specs": "Inference-Substrate: names the graph extractor and same-row math-bound baseline scorer actually used.",
+    "n_facts_items": "Prototype sample size; small is acceptable but report it honestly -- not a headline claim.",
+    "preconditions_checked": "Pre-Launch + Adversarial-Verify: corpus, import, and extractor-substrate checks are explicit before scoring.",
+    "random_seed": "Determinism precondition for row selection and reproducibility.",
+    "reproducibility_checksum": "Stable checksum over labels, scores, method, and sample source.",
+    "triple_extraction_method": "gguf | small_cpu_model | rule_based -- honest record of the substrate.",
+    "verifier_authenticity_disclosed": "Bare bool -- the new module's docstring discloses heuristic-vs-model gap per the Verifier Authenticity Discipline."
+  },
+  "frozen_fover_0_9131_untouched": true,
+  "graph_grounding_auroc": 0.643056,
+  "honest_verdict": "complete: graph_grounding_prototype_SIGNAL_auroc0.643_delta0.232_new_architecture_has_facts_traction",
+  "inference_substrate": "rule_based_graph_alignment_verifier_scoring_only (principle: no live LLM, no GGUF, no NLI checkpoint; scores cached answer/evidence pairs plus math-bound reasoning heuristics on the same rows).",
+  "math_ensemble_auroc_on_facts": 0.411389,
+  "model_specs": {
+    "math_ensemble_baseline": {
+      "frozen_fover_headline_unchanged": 0.9131,
+      "method": "math_bound_tier0r_tier0u_formal_core_on_same_facts_rows",
+      "weights": {
+        "tier0r_curry_howard": 0.9,
+        "tier0u_logical_consistency": 0.1
+      }
+    },
+    "triple_extractor": {
+      "detail": "regex/content-token heuristic SRO extraction",
+      "method": "rule_based",
+      "model_invoked": false
+    }
+  },
+  "n_facts_items": 120,
+  "preconditions_checked": [
+    {
+      "available": true,
+      "detail": "import_ok",
+      "resource": "carnot.verify"
+    },
+    {
+      "available": true,
+      "detail": "/home/ianblenke/github.com/ianblenke/carnot/data/real_factual_corpus_ragtruth.jsonl",
+      "resource": "facts_corpus"
+    },
+    {
+      "available": true,
+      "detail": "gguf path unused; rule_based extractor selected",
+      "resource": "free_gpu_for_gguf"
+    },
+    {
+      "available": true,
+      "detail": "rule_based",
+      "resource": "triple_extractor"
+    }
+  ],
+  "random_seed": 3862,
+  "reproducibility_checksum": "ba136387419bfa48",
+  "sample_source": "data/real_factual_corpus_ragtruth.jsonl",
+  "score_summary": {
+    "graph_score_max": 0.762583,
+    "graph_score_min": 0.16625,
+    "math_score_max": 0.904,
+    "math_score_min": 0.12780000000000002,
+    "n_negative_grounded": 60,
+    "n_positive_hallucinations": 60
+  },
+  "scripts_research_conductor_modified": false,
+  "tests_run": [],
+  "triple_extraction_method": "rule_based",
+  "verifier_authenticity_disclosed": true
+}
